@@ -1,14 +1,11 @@
 ## Tasks
-- generate Doxygen
-- add remaining equations to Latex documentation
-- Line model
-- Sychronous generator model
+- Sychronous generator model interfaced through current source
 - connect with CIM parser
 - Improve Logging
 
 ## Libraries
 ### Windows
-In DPSolver create a folder called lib and copy the Eigen library in there.
+Create a folder called Libraries and copy the Eigen library in there.
 
 ### Linux
 Copy the Eigen folder to /usr/local/include/eigen using `sudo cp -rf eigen /usr/local/include/eigen`
