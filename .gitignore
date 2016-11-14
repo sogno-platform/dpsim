@@ -11,3 +11,4 @@ __MACOSX
 # DP solver logs
 data.csv
 log.txt
+*.csv
