@@ -1,8 +1,5 @@
 ## Tasks
-- generate Doxygen
-- add remaining equations to Latex documentation
-- Line model
-- Sychronous generator model
+- Sychronous generator model interfaced through current source
 - connect with CIM parser
 - Improve Logging
 
