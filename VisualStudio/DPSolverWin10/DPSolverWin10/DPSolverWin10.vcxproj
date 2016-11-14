@@ -18,6 +18,34 @@
       <Platform>x64</Platform>
     </ProjectConfiguration>
   </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\..\Source\Components.h" />
+    <ClInclude Include="..\..\..\Source\Components\Capacitor.h" />
+    <ClInclude Include="..\..\..\Source\Components\CircuitElement.h" />
+    <ClInclude Include="..\..\..\Source\Components\CurrentSource.h" />
+    <ClInclude Include="..\..\..\Source\Components\Inductor.h" />
+    <ClInclude Include="..\..\..\Source\Components\InterfaceCurrentSource.h" />
+    <ClInclude Include="..\..\..\Source\Components\InterfacedInductor.h" />
+    <ClInclude Include="..\..\..\Source\Components\LinearResistor.h" />
+    <ClInclude Include="..\..\..\Source\Components\VoltageSourceWithResistance.h" />
+    <ClInclude Include="..\..\..\Source\LinearDPSim.h" />
+    <ClInclude Include="..\..\..\Source\Log.h" />
+    <ClInclude Include="..\..\..\Source\MathLibrary.h" />
+    <ClInclude Include="..\..\..\Source\ModularSolver.h" />
+    <ClInclude Include="..\..\..\Source\TopologyReader.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\..\Source\Components\Capacitor.cpp" />
+    <ClCompile Include="..\..\..\Source\Components\CurrentSource.cpp" />
+    <ClCompile Include="..\..\..\Source\Components\Inductor.cpp" />
+    <ClCompile Include="..\..\..\Source\Components\InterfacedInductor.cpp" />
+    <ClCompile Include="..\..\..\Source\Components\LinearResistor.cpp" />
+    <ClCompile Include="..\..\..\Source\Components\VoltageSourceWithResistance.cpp" />
+    <ClCompile Include="..\..\..\Source\DPSolverMain.cpp" />
+    <ClCompile Include="..\..\..\Source\LinearDPSim.cpp" />
+    <ClCompile Include="..\..\..\Source\Log.cpp" />
+    <ClCompile Include="..\..\..\Source\TopologyReader.cpp" />
+  </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{DFBB524F-1AA2-4113-924A-068B8410F395}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
@@ -102,7 +130,7 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>..\..\..\lib\eigen;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\..\..\Libraries\eigen;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -143,34 +171,6 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
   </ItemDefinitionGroup>
-  <ItemGroup>
-    <ClInclude Include="..\..\..\src\Components.h" />
-    <ClInclude Include="..\..\..\src\Components\Capacitor.h" />
-    <ClInclude Include="..\..\..\src\Components\CircuitElement.h" />
-    <ClInclude Include="..\..\..\src\Components\CurrentSource.h" />
-    <ClInclude Include="..\..\..\src\Components\Inductor.h" />
-    <ClInclude Include="..\..\..\src\Components\InterfaceCurrentSource.h" />
-    <ClInclude Include="..\..\..\src\Components\InterfacedInductor.h" />
-    <ClInclude Include="..\..\..\src\Components\LinearResistor.h" />
-    <ClInclude Include="..\..\..\src\Components\VoltageSourceWithResistance.h" />
-    <ClInclude Include="..\..\..\src\LinearDPSim.h" />
-    <ClInclude Include="..\..\..\src\Log.h" />
-    <ClInclude Include="..\..\..\src\MathLibrary.h" />
-    <ClInclude Include="..\..\..\src\ModularSolver.h" />
-    <ClInclude Include="..\..\..\src\TopologyReader.h" />
-  </ItemGroup>
-  <ItemGroup>
-    <ClCompile Include="..\..\..\src\Components\Capacitor.cpp" />
-    <ClCompile Include="..\..\..\src\Components\CurrentSource.cpp" />
-    <ClCompile Include="..\..\..\src\Components\Inductor.cpp" />
-    <ClCompile Include="..\..\..\src\Components\InterfacedInductor.cpp" />
-    <ClCompile Include="..\..\..\src\Components\LinearResistor.cpp" />
-    <ClCompile Include="..\..\..\src\Components\VoltageSourceWithResistance.cpp" />
-    <ClCompile Include="..\..\..\src\LinearDPSim.cpp" />
-    <ClCompile Include="..\..\..\src\DPSolverMain.cpp" />
-    <ClCompile Include="..\..\..\src\Log.cpp" />
-    <ClCompile Include="..\..\..\src\TopologyReader.cpp" />
-  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>
