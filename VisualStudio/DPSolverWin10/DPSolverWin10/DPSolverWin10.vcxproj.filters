@@ -89,5 +89,8 @@
     <ClCompile Include="..\..\..\Source\Components\CurrentSource.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\..\Source\ModularSolver.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

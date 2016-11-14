@@ -97,6 +97,9 @@ int TopologyReader::parseConfig(Config &conf, std::vector<CircuitElement*> &circ
 		else if (it->type.compare("LinearResistor") == 0) {
 			tmpCircElement = new LinearResistor(it->name, std::stoi(it->node1), std::stoi(it->node2), std::stod(it->parameters[0]));
 		}
+		else if (it->type.compare("InterfacedInductor") == 0) {
+			tmpCircElement = new InterfacedInductor(it->name, std::stoi(it->node1), std::stoi(it->node2), std::stod(it->parameters[0]));
+		}
 		else {
 
 		}

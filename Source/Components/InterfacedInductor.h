@@ -2,9 +2,9 @@
 #define INTERFACEDINDUCTOR_H
 
 #include <iostream>
-#include "InterfaceCurrentSource.h"
+#include "CircuitElement.h"
 
-class InterfacedInductor : public InterfaceCurrentSource {
+class InterfacedInductor : public CircuitElement {
 	protected:
 		double inductance;
 		double voltageRe;
@@ -18,8 +18,10 @@ class InterfacedInductor : public InterfaceCurrentSource {
 		InterfacedInductor() { };
 		InterfacedInductor(std::string name, int src, int dest, double inductance);
 		
-		void Init(int compOffset, double om, double dt);
-		void Step(DPSMatrix& j, int compOffset, double om, double dt, double t);
+		void applyMatrixStamp(DPSMatrix& g, DPSMatrix& j, int compOffset, double om, double dt);
+		void Init(DPSMatrix& g, DPSMatrix& j, int compOffset, double om, double dt);
+		void Step(DPSMatrix& g, DPSMatrix& j, int compOffset, double om, double dt, double t);
+		virtual void PostStep(DPSMatrix& g, DPSMatrix& j, DPSMatrix& vt, int compOffset, double om, double dt, double t);
 
 };
 #endif

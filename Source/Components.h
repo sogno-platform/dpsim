@@ -4,3 +4,4 @@
 #include "Components/Inductor.h"
 #include "Components/CurrentSource.h"
 #include "Components/VoltageSourceWithResistance.h"
+#include "Components/InterfacedInductor.h"
