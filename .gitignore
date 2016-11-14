@@ -1,0 +1,13 @@
+# Folders
+Libraries
+lib
+build
+Build
+
+# Mac
+__MACOSX
+.DS_Store
+
+# DP solver logs
+data.csv
+log.txt

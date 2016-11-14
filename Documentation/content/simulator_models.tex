@@ -1,0 +1,47 @@
+\chapter{Simulator Models}
+
+\section{Basic Components}
+
+\subsection{Inductor}
+
+\begin{equation}
+        \frac{di(t)}{dt} = \frac{1}{L} \cdot v(t) - j \omega \cdot i(t)
+\end{equation}
+
+Apply trapezoidal rule:
+
+\begin{equation}
+        i(t) = i(t - \Delta t) + \frac{\Delta t}{2} \left[ \frac{1}{L} \cdot v(t) - j \omega \cdot i(t) + \frac{1}{L} \cdot v(t - \Delta t) - j \omega \cdot i(t - \Delta t) \right]
+\end{equation}
+
+\begin{align}
+        a &= \frac{\Delta t}{2L} \\
+        b &= \frac{\Delta t \omega}{2}
+\end{align}
+
+\begin{align}
+        i(t) &= i(t - \Delta t) + a \cdot v(t) - j b \cdot i(t) + a \cdot v(t - \Delta t) - j b \cdot i(t - \Delta t) \\
+        i(t) &= \frac{1-b^2-j2b}{1+b^2} \cdot i(t - \Delta t) + \frac{a-jab}{1+b^2} \left[ v(t) - v(t - \Delta t) \right]
+\end{align}
+
+\subsection{Capacitor}
+
+\begin{equation}
+        \frac{dv(t)}{dt} = \frac{1}{C} \cdot i(t) - j \omega \cdot v(t)
+\end{equation}
+
+Apply trapezoidal rule:
+
+\begin{equation}
+        v(t) = v(t - \Delta t) + \frac{\Delta t}{2} \left[ \frac{1}{C} \cdot i(t) - j \omega \cdot v(t) + \frac{1}{C} \cdot i(t - \Delta t) - j \omega \cdot v(t - \Delta t) \right]
+\end{equation}
+
+\begin{align}
+        a &= \frac{\Delta t}{2C} \\
+        b &= \frac{\Delta t \omega}{2}
+\end{align}
+
+\begin{align}
+        v(t) &= v(t - \Delta t) + a \cdot i(t) - j b \cdot v(t) + a \cdot i(t - \Delta t) - j b \cdot v(t - \Delta t) \\
+        i(t) &= -i(t- \Delta t) + \frac{1+jb}{a} \cdot v(t) + \frac{-1+jb}{a} \cdot v(t - \Delta t)
+\end{align}

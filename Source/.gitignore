@@ -1,0 +1,5 @@
+# Generated files
+*.csv
+*.log
+*.o
+DPSolver
