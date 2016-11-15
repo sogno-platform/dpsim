@@ -19,18 +19,20 @@ void InterfacedInductor::applyMatrixStamp(DPSMatrix& g, DPSMatrix& j, int compOf
 void InterfacedInductor::Step(DPSMatrix& g, DPSMatrix& j, int compOffset, double om, double dt, double t) {
 	// Calculate current for this step
 	currentStepRe = currentRe + dt * (1. / inductance * voltageRe + om * currentIm);
-	currentStepIm = currentIm + dt * (1. / inductance * voltageRe - om * currentRe);
+	currentStepIm = currentIm + dt * (1. / inductance * voltageIm - om * currentRe);
 
 	// Update current source accordingly
 	if (node1 >= 0) {
-		j(node1, 0) = j(node1, 0) + currentStepRe;
-		j(compOffset + node1, 0) = j(compOffset + node1, 0) + currentStepIm;
+		j(node1, 0) = j(node1, 0) - currentStepRe;
+		j(compOffset + node1, 0) = j(compOffset + node1, 0) - currentStepIm;
 	}
 
 	if (node2 >= 0) {
-		j(node2, 0) = j(node2, 0) - currentStepRe;
-		j(compOffset + node2, 0) = j(compOffset + node2, 0) - currentStepIm;
+		j(node2, 0) = j(node2, 0) + currentStepRe;
+		j(compOffset + node2, 0) = j(compOffset + node2, 0) + currentStepIm;
 	}	
+	currentRe = currentStepRe;
+	currentIm = currentStepIm;
 }
 
 void InterfacedInductor::PostStep(DPSMatrix& g, DPSMatrix& j, DPSMatrix& vt, int compOffset, double om, double dt, double t) {

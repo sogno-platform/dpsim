@@ -1,6 +1,6 @@
 #include "LinearResistor.h"
 
-LinearResistor::LinearResistor(std::string name, int src, int dest, double resistance) : CircuitElement(src, dest) {
+LinearResistor::LinearResistor(std::string name, int src, int dest, double resistance) : CircuitElement(name, src, dest) {
 	this->resistance = resistance;
 	this->conductance = 1.0 / resistance;
 }	

@@ -1,12 +1,13 @@
 #include <iostream>
 #include <string>
 #include "MathLibrary.h"
-#include "LinearDPSim.h"
+#include "Simulation.h"
 #include "Components.h"
-#include "Log.h"
+#include "Logger.h"
 #include "TopologyReader.h"
 
 void readCmdLineArguments(char* &confFilename, int argc, char* argv[]);
+void UpdateProgressBar(double t, double tf);
 
 int main(int argc, char* argv[]) {
 
@@ -17,6 +18,7 @@ int main(int argc, char* argv[]) {
 	// Read config file
 	std::ifstream confFile;
 	Config conf;
+
 	TopologyReader topoReader;
 	confFile.open(confFilename);
 	if (topoReader.readConfig(confFile, conf) != 0 || conf.elements.size() == 0) {
@@ -35,32 +37,43 @@ int main(int argc, char* argv[]) {
 	}
 
 	// Define Object for saving data on a file
-	Log log("data.csv", "log.txt");
+	Logger log, vtLog, jLog;
 	
 	// Add components to new simulation	and create system matrix
-	std::cout << "Create System matrix" << std::endl;
+	std::cout << std::endl << "Create System matrix" << std::endl;
 
-	LinearDPSim newSim(circElements, om, dt, tf);	
+	Simulation newSim(circElements, om, dt, tf, log);	
 
-	std::cout << "Init Completed" << std::endl;
-
+	std::cout << "Initialization Completed" << std::endl;
 	std::cout << "Entering Main Simulation Loop" << std::endl;
+	std::cout << std::endl;
 
 	// Get Current Simulation Time
-	t = newSim.getTime();
+	t = newSim.GetTime();
 
 	// Main Simulation Loop
-	while (newSim.step())
+	while (newSim.Step())
 	{
 		// Save Simulation Step
-		log.AddDataLine(t, newSim.getVoltages());
+		vtLog.Log() << newSim.GetVoltageDataLine().str();
+		jLog.Log() << newSim.GetCurrentDataLine().str();
 		// Get Current Simulation Time
-		t = newSim.getTime();
+		t = newSim.GetTime();
+
+		UpdateProgressBar(t, tf);
 	}
-	
+	std::cout << "#######################   (100%)" << std::endl;;
+	std::cout << std::endl;
 	std::cout << "Simulation finished" << std::endl;
+
+	log.WriteLogToFile("log.txt");
+	vtLog.WriteLogToFile("data_vt.csv");
+	jLog.WriteLogToFile("data_j.csv");
+
+	std::cout << "Saved data points" << std::endl;
+
 	std::cin.get();
-	return 0;
+	return 0;	
 }
 
 void readCmdLineArguments(char* &confFilename, int argc, char* argv[]) {
@@ -82,5 +95,22 @@ void readCmdLineArguments(char* &confFilename, int argc, char* argv[]) {
 	if (!confFilename) {
 		std::cerr << "no netlist file given" << std::endl;
 		exit(1);
+	}
+}
+
+void UpdateProgressBar(double t, double tf) {
+
+	if (t / tf <= 0.33) {
+		std::cout << "                        (0%)\r";
+	}
+	else if (t / tf > 0.33 && t / tf <= 0.66) {
+		std::cout << "#####                     (33%)\r";
+	}
+	else if (t / tf > 0.66 && t / tf < 1) {
+		std::cout << "#############             (66%)\r";
+	}
+	else {
+		std::cout << "#######################   (100%)";
+		std::cout << std::endl;
 	}
 }

@@ -1,6 +1,6 @@
 #include "Inductor.h"
 
-Inductor::Inductor(std::string name, int src, int dest, double inductance) : CircuitElement(src, dest) {
+Inductor::Inductor(std::string name, int src, int dest, double inductance) : CircuitElement(name, src, dest) {
 	this->inductance = inductance;
 }	
 		

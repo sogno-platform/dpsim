@@ -19,6 +19,7 @@ def plotResults(filename, node):
 	voltageEmt = voltageRe*np.cos(2*np.pi*50*time) - voltageIm*np.sin(2*np.pi*50*time)
 	fig, ax1 = plt.subplots()
 	ax1.plot(time, voltageEmt, 'b-', time, voltage, 'r-')
+	plt.yticks(np.arange(-10, 10, 1.0))
 	ax1.set_xlabel('time [s]')
 	ax1.set_ylabel('voltage [V]')
 	ax1.grid(True)

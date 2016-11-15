@@ -1,12 +1,13 @@
-#ifndef LINEARDPSIM_H
-#define LINEARDPSIM_H
+#ifndef Simulation_H
+#define Simulation_H
 
 #include <iostream>
 #include <vector>
 #include "MathLibrary.h"
 #include "Components.h"
+#include "Logger.h"
 
-class LinearDPSim {
+class Simulation {
 protected:
 	/// Number of nodes
 	int numNodes; 
@@ -31,18 +32,22 @@ protected:
 	/// LU decomposition of system matrix A
 	Eigen::PartialPivLU<DPSMatrix> luFactored;
 
-	void addElements(std::vector<CircuitElement*> elements);
-	void createSystemMatrix();
-	void initialize();
+	void AddElements(std::vector<CircuitElement*> elements);
+	void CreateSystemMatrix();
+	void Initialize();
 
 public:
-	LinearDPSim();
-	LinearDPSim(std::vector<CircuitElement*> elements, double om, double dt, double tf);
-	~LinearDPSim();
+	Simulation();
+	Simulation(std::vector<CircuitElement*> elements, double om, double dt, double tf);
+	Simulation(std::vector<CircuitElement*> elements, double om, double dt, double tf, Logger& logger);
+	~Simulation();
 	
-	double getTime();
-	int step();
-	DPSMatrix getVoltages();
+	double GetTime();
+	int Step();
+	DPSMatrix GetVoltages();
+	std::ostringstream GetVoltageDataLine();
+	std::ostringstream GetCurrentDataLine();
+
 };
 
 #endif

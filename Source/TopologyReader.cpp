@@ -19,6 +19,9 @@ int TopologyReader::readConfig(std::ifstream &f, Config &conf) {
 		
 	getline(f, s);
 
+	if (!s.empty() && s[0] == '#')
+		getline(f, s);
+
 	if (conf.timeStep.empty()) {
 		std::string::size_type p = s.find(',');
 		conf.timeStep = s.substr(0, p);
@@ -35,7 +38,7 @@ int TopologyReader::readConfig(std::ifstream &f, Config &conf) {
 		
 		getline(f, s);
 
-		if (!s.empty() && s[0] == '#') 			
+		if (!s.empty() && s[0] == '#')
 			continue;
 
 		Element element;

@@ -4,7 +4,7 @@
 #include <fstream>
 #include <vector>
 #include <string>
-#include "LinearDPSim.h"
+#include "Simulation.h"
 #include "Components.h"
 
 typedef struct { 

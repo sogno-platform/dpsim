@@ -24,14 +24,12 @@
     <ClInclude Include="..\..\..\Source\Components\CircuitElement.h" />
     <ClInclude Include="..\..\..\Source\Components\CurrentSource.h" />
     <ClInclude Include="..\..\..\Source\Components\Inductor.h" />
-    <ClInclude Include="..\..\..\Source\Components\InterfaceCurrentSource.h" />
     <ClInclude Include="..\..\..\Source\Components\InterfacedInductor.h" />
     <ClInclude Include="..\..\..\Source\Components\LinearResistor.h" />
     <ClInclude Include="..\..\..\Source\Components\VoltageSourceWithResistance.h" />
-    <ClInclude Include="..\..\..\Source\LinearDPSim.h" />
-    <ClInclude Include="..\..\..\Source\Log.h" />
+    <ClInclude Include="..\..\..\Source\Simulation.h" />
+    <ClInclude Include="..\..\..\Source\Logger.h" />
     <ClInclude Include="..\..\..\Source\MathLibrary.h" />
-    <ClInclude Include="..\..\..\Source\ModularSolver.h" />
     <ClInclude Include="..\..\..\Source\TopologyReader.h" />
   </ItemGroup>
   <ItemGroup>
@@ -41,10 +39,9 @@
     <ClCompile Include="..\..\..\Source\Components\InterfacedInductor.cpp" />
     <ClCompile Include="..\..\..\Source\Components\LinearResistor.cpp" />
     <ClCompile Include="..\..\..\Source\Components\VoltageSourceWithResistance.cpp" />
-    <ClCompile Include="..\..\..\Source\DPSolverMain.cpp" />
-    <ClCompile Include="..\..\..\Source\LinearDPSim.cpp" />
-    <ClCompile Include="..\..\..\Source\Log.cpp" />
-    <ClCompile Include="..\..\..\Source\ModularSolver.cpp" />
+    <ClCompile Include="..\..\..\Source\DPsimMain.cpp" />
+    <ClCompile Include="..\..\..\Source\Simulation.cpp" />
+    <ClCompile Include="..\..\..\Source\Logger.cpp" />
     <ClCompile Include="..\..\..\Source\TopologyReader.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">

@@ -21,6 +21,7 @@ class CircuitElement {
 
 		int getNode1() { return node1; }
 		int getNode2() { return node2; }
+		std::string GetName() { return name; }
 
 		virtual void applyMatrixStamp(DPSMatrix& g, DPSMatrix& j, int compOffset, double om, double dt) = 0;
 		virtual void Init(DPSMatrix& g, DPSMatrix& j, int compOffset, double om, double dt) { }
