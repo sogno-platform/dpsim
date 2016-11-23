@@ -1,10 +1,9 @@
 #ifndef VOLTAGESOURCEWITHRESISTANCE_H
 #define VOLTAGESOURCEWITHRESISTANCE_H
 
-#include <iostream>
-#include "CircuitElement.h"
+#include "BaseComponent.h"
 
-class VoltageSourceWithResistance : public CircuitElement {
+class VoltageSourceWithResistance : public BaseComponent {
 	protected:
 		double voltageDiffr;
 		double voltageDiffi;

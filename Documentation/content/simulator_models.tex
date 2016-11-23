@@ -45,3 +45,40 @@ Apply trapezoidal rule:
         v(t) &= v(t - \Delta t) + a \cdot i(t) - j b \cdot v(t) + a \cdot i(t - \Delta t) - j b \cdot v(t - \Delta t) \\
         i(t) &= -i(t- \Delta t) + \frac{1+jb}{a} \cdot v(t) + \frac{-1+jb}{a} \cdot v(t - \Delta t)
 \end{align}
+
+\section{Synchronous Machine}
+
+The model is according to \cite{wang2010methods} and \cite{kundur1994power}. 
+
+\subsubsection{Prerequisites}
+Park's transformation is commonly used to achieve a model with static parameters:
+%
+\begin{equation}
+\mathbf{K_s} = \frac{2}{3}
+ \begin{bmatrix} 
+  \cos \theta & \cos(\theta-\frac{2\pi}{3}) & \cos(\theta+\frac{2\pi}{3}) \\
+  \sin \theta & \sin(\theta-\frac{2\pi}{3}) & \sin(\theta+\frac{2\pi}{3}) \\
+  \frac{1}{2} & \frac{1}{2} & \frac{1}{2}
+ \end{bmatrix}
+\end{equation}
+%
+Note that the scaling factor $\frac{2}{3}$ is not always used. 
+
+\subsubsection{Model}
+
+The mechanical equations are:
+%
+\begin{align}
+\frac{d\theta_r}{dt} &= \omega_r \\
+\frac{d\omega_r}{dt} &= \frac{P}{2J} (T_e-T_m)
+\end{align}
+%
+where $\theta_r$ is the rotor position, $\omega_r$ is the angular electrical speed, $P$ is the number of poles, $J$ is the moment of inertia, $T_m$ and $T_e$ are the mechanical and electrical torque, respectively. Motor convention is used for all models. 
+
+The electrical model in the phase domain is described by the following equations:
+%
+\begin{align}
+  \mathbf{v}_{abcs} &= \mathbf{R}_s \mathbf{i}_{abcs} + \frac{d}{dt} \boldsymbol{\lambda}_{abcs} \\
+  \mathbf{v}_{qdr} &= \mathbf{R}_r \mathbf{i}_{qdr} + \frac{d}{dt}  \boldsymbol{\lambda}_{qdr}
+\end{align}
+%

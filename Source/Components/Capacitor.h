@@ -3,9 +3,9 @@
 
 #include <iostream>
 
-#include "CircuitElement.h"
+#include "BaseComponent.h"
 
-class Capacitor : public CircuitElement {
+class Capacitor : public BaseComponent {
 	protected:
 		double capacitance;
 		double deltavr;

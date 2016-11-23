@@ -39,9 +39,6 @@
     <ClInclude Include="..\..\..\Source\Components\Capacitor.h">
       <Filter>Header Files\Components</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\Source\Components\CircuitElement.h">
-      <Filter>Header Files\Components</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\..\Source\Components\CurrentSource.h">
       <Filter>Header Files\Components</Filter>
     </ClInclude>
@@ -55,6 +52,12 @@
       <Filter>Header Files\Components</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\Source\Components\VoltageSourceWithResistance.h">
+      <Filter>Header Files\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Source\Components\SynchronousGenerator.h">
+      <Filter>Header Files\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Source\Components\BaseComponent.h">
       <Filter>Header Files\Components</Filter>
     </ClInclude>
   </ItemGroup>
@@ -88,6 +91,9 @@
     </ClCompile>
     <ClCompile Include="..\..\..\Source\DPsimMain.cpp">
       <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Source\Components\SynchronousGenerator.cpp">
+      <Filter>Source Files\Components</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

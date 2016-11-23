@@ -1,0 +1,14 @@
+\begin{thebibliography}{1}
+
+\bibitem{wang2010methods}
+L.~Wang, J.~Jatskevich, V.~Dinavahi, H.~Dommel, J.~Martinez, K.~Strunz,
+  M.~Rioual, G.~Chang, and R.~Iravani, ``Methods of interfacing rotating
+  machine models in transient simulation programs,'' {\em IEEE Transactions on
+  Power Delivery}, vol.~25, no.~2, pp.~891--903, 2010.
+
+\bibitem{kundur1994power}
+P.~Kundur, N.~J. Balu, and M.~G. Lauby, {\em Power system stability and
+  control}, vol.~7.
+\newblock McGraw-hill New York, 1994.
+
+\end{thebibliography}

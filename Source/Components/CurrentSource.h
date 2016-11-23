@@ -1,11 +1,9 @@
 #ifndef CURRENTSOURCE_H
 #define CURRENTSOURCE_H
 
-#include <iostream>
+#include "BaseComponent.h"
 
-#include "CircuitElement.h"
-
-class CurrentSource : public CircuitElement 
+class CurrentSource : public BaseComponent
 {
 	public:
 		CurrentSource() {;};

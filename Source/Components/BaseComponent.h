@@ -7,17 +7,17 @@
 #include "../MathLibrary.h"
 
 /// Base class for all elements that might be added to the matrix.
-class CircuitElement {
+class BaseComponent {
 	protected:
 		std::string name;
 		int node1;
 		int node2;
 
 	public:	
-		CircuitElement() { }
-		CircuitElement(int src, int dest) { this->node1 = src - 1; this->node2 = dest - 1; }
-		CircuitElement(std::string name, int src, int dest) { this->name = name;  this->node1 = src - 1; this->node2 = dest - 1; }
-		virtual ~CircuitElement() { }
+		BaseComponent() { }
+		BaseComponent(int src, int dest) { this->node1 = src - 1; this->node2 = dest - 1; }
+		BaseComponent(std::string name, int src, int dest) { this->name = name;  this->node1 = src - 1; this->node2 = dest - 1; }
+		virtual ~BaseComponent() { }
 
 		int getNode1() { return node1; }
 		int getNode2() { return node2; }

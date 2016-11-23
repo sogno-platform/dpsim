@@ -1,10 +1,9 @@
 #ifndef INTERFACEDINDUCTOR_H
 #define INTERFACEDINDUCTOR_H
 
-#include <iostream>
-#include "CircuitElement.h"
+#include "BaseComponent.h"
 
-class InterfacedInductor : public CircuitElement {
+class InterfacedInductor : public BaseComponent {
 	protected:
 		double inductance;
 		double voltageRe;

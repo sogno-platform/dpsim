@@ -1,10 +1,9 @@
 #ifndef INDUCTOR_H
 #define INDUCTOR_H
 
-#include <iostream>
-#include "CircuitElement.h"
+#include "BaseComponent.h"
 
-class Inductor : public CircuitElement {
+class Inductor : public BaseComponent {
 	protected:
 		double inductance;
 		double deltavr;

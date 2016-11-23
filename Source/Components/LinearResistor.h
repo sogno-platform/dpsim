@@ -3,9 +3,9 @@
 
 #include <iostream>
 
-#include "CircuitElement.h"
+#include "BaseComponent.h"
 
-class LinearResistor : public CircuitElement
+class LinearResistor : public BaseComponent
 {
 	protected:
 		double resistance;
