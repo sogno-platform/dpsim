@@ -82,3 +82,153 @@ The electrical model in the phase domain is described by the following equations
   \mathbf{v}_{qdr} &= \mathbf{R}_r \mathbf{i}_{qdr} + \frac{d}{dt}  \boldsymbol{\lambda}_{qdr}
 \end{align}
 %
+where
+%
+\begin{align}
+  \mathbf{v}_{abcs} &= 
+  \begin{bmatrix}
+    v_{as} & v_{bs} & v_{cs}
+  \end{bmatrix}^T \\
+  %  
+  \mathbf{v}_{qdr} &= 
+  \begin{bmatrix}
+    v_{kq1} & v_{kq2} & v_{fd} & v_{kd} 
+  \end{bmatrix}^T \\
+  %
+  \mathbf{i}_{abcs} &= 
+  \begin{bmatrix}
+    i_{as} & i_{bs} & i_{cs}
+  \end{bmatrix}^T \\
+  %  
+  \mathbf{i}_{qdr} &= 
+  \begin{bmatrix}
+    i_{kq1} & i_{kq2} & i_{fd} & i_{kd} 
+  \end{bmatrix}^T \\
+  %
+  \boldsymbol{\lambda}_{abcs} &= 
+  \begin{bmatrix}
+    \lambda_{as} & \lambda_{bs} & \lambda_{cs}
+  \end{bmatrix}^T \\
+  %  
+  \boldsymbol{\lambda}_{qdr} &= 
+  \begin{bmatrix}
+    \lambda_{kq1} & \lambda_{kq2} & \lambda_{fd} & \lambda_{kd} 
+  \end{bmatrix}^T \\
+  %
+  \mathbf{R}_s &= diag
+  \begin{bmatrix}
+    r_s & r_s & r_s 
+  \end{bmatrix} \\
+  %
+  \mathbf{R}_r &= diag
+  \begin{bmatrix}
+    r_{kq1} & r_{kq2} & r_{fd} & r_{kd}
+  \end{bmatrix}
+\end{align}
+%
+The flux linkages are:
+%
+\begin{align}
+  \boldsymbol{\lambda}_{abcs} &= \mathbf{L}_{ss} \mathbf{i}_{abcs} + \mathbf{L}_{sr} \mathbf{i}_{qdr}  \\
+  \boldsymbol{\lambda}_{qdr} &= (\mathbf{L}_{sr})^T \mathbf{i}_{abcs} + \mathbf{L}_{rr} \mathbf{i}_{qdr}
+\end{align}
+%
+where the inductances are time variant variables as defined in \cite{krause2002sudhoff}.
+TODO: electromagnetic torque
+
+\subsubsection{Equations in Rotor Reference Frame}
+
+This section depicts the synchronous generator equations in terms of machine variables referred to the stator windings which is indicated by the prime symbol. Due to the transform of the stator variables to the rotor reference frame, the stator equations change, whereas the rotor equations remain the same.
+%
+\begin{align}
+  \mathbf{v}_{dq0s} &= \mathbf{R}_{qds} \mathbf{i}_{qd0s} + \frac{d}{dt} \boldsymbol{\lambda}_{qd0s} + \omega_r \boldsymbol{\lambda}_{dqs} \\
+  \mathbf{v}_{qdr}' &= \mathbf{R}_r' \mathbf{i}_{qdr}' + \frac{d}{dt}  \boldsymbol{\lambda}_{qdr}'
+\end{align}
+%
+where
+%
+\begin{align}
+  (\boldsymbol{\lambda}_{dqs})^T &= 
+  \begin{bmatrix}
+    \lambda_{ds} & -\lambda_{qs} & 0
+  \end{bmatrix}
+\end{align}
+%
+The flux linkages are:
+%
+\begin{align}
+  \boldsymbol{\lambda}_{qd0s} &= \mathbf{L}_{qdss} \mathbf{i}_{qd0s} + \mathbf{L}_{qdsr} \mathbf{i}_{qdr}'  \\
+  \boldsymbol{\lambda}_{qdr} &= \mathbf{L}_{qdfs} \mathbf{i}_{qd0s} + \mathbf{L}_{qdff} \mathbf{i}_{qdr}'
+\end{align}
+%
+where
+%
+\begin{align}
+  \mathbf{L}_{qdss} &= 
+  \begin{bmatrix}
+    L_{q} & 0 & 0 \\
+    0 & L_{q} & 0 \\
+    0 & 0 & L_{ls}
+  \end{bmatrix} \\
+  %  
+  \mathbf{L}_{qdsr} &= 
+  \begin{bmatrix}
+    L_{mq} & L_{mq} & 0 & 0 \\
+    0 & 0 & L_{md} & L_{md} \\
+    0 & 0 & 0 & 0
+  \end{bmatrix} \\
+  %
+  \mathbf{L}_{qdfs} &=
+  \begin{bmatrix}
+    L_{mq} & 0 & 0 \\
+    L_{mq} & 0 & 0 \\
+    0 & L_{md} & 0 \\
+    0 & L_{md} & 0
+  \end{bmatrix} \\
+  %
+  \mathbf{L}_{qdff} &=
+  \begin{bmatrix}
+    L_{kq1} & L_{mq} & 0 & 0 \\
+    L_{mq} & L_{kq2} & 0 & 0 \\
+    0 & 0 & L_{fd} & L_{md} \\
+    0 & 0 & L_{md} & L_{kd}
+  \end{bmatrix} \\
+  %
+\end{align}
+%
+with 
+%
+\begin{align}
+  L_{q} &= L_{ls} + L_{mq} \\
+  L_{d} &= L_{ls} + L_{md} \\
+  L_{kq1} &= L_{lkq1} + L_{mq} \\
+  L_{kq2} &= L_{lkq2} + L_{mq} \\
+  L_{fd} &= L_{lfd} + L_{md} \\
+  L_{kd} &= L_{lkd} + L_{md}
+\end{align}
+\subsubsection{State Space Model}
+%
+\begin{equation}
+  \frac{d}{dt}
+  \begin{pmatrix}
+    \mathbf{i}_{qd0s} \\
+    \mathbf{i}_{qdr}
+  \end{pmatrix}
+  = \mathbf{L}^{-1} \left[
+  \begin{pmatrix}
+    \mathbf{v}_{qd0s} \\
+    \mathbf{v}_{qdr}
+  \end{pmatrix}
+  - \mathbf{R}
+  \begin{pmatrix}
+    \mathbf{i}_{qd0s} \\
+    \mathbf{i}_{qdr}
+  \end{pmatrix}
+  - \omega_r
+  \begin{pmatrix}
+    \boldsymbol{\lambda}_{dq} \\
+    0
+  \end{pmatrix}
+  \right]
+\end{equation}
+%
