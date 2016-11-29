@@ -69,8 +69,8 @@ Note that the scaling factor $\frac{2}{3}$ is not always used.
 The mechanical equations are:
 %
 \begin{align}
-\frac{d\theta_r}{dt} &= \omega_r \\
-\frac{d\omega_r}{dt} &= \frac{P}{2J} (T_e-T_m)
+\frac{d\theta_r}{dt} &= \omega_r \label{eq:d_theta} \\
+\frac{d\omega_r}{dt} &= \frac{P}{2J} (T_e-T_m) \label{eq:d_omega}
 \end{align}
 %
 where $\theta_r$ is the rotor position, $\omega_r$ is the angular electrical speed, $P$ is the number of poles, $J$ is the moment of inertia, $T_m$ and $T_e$ are the mechanical and electrical torque, respectively. Motor convention is used for all models. 
@@ -86,34 +86,34 @@ where
 %
 \begin{align}
   \mathbf{v}_{abcs} &= 
-  \begin{bmatrix}
+  \begin{pmatrix}
     v_{as} & v_{bs} & v_{cs}
-  \end{bmatrix}^T \\
+  \end{pmatrix}^T \\
   %  
   \mathbf{v}_{qdr} &= 
-  \begin{bmatrix}
+  \begin{pmatrix}
     v_{kq1} & v_{kq2} & v_{fd} & v_{kd} 
-  \end{bmatrix}^T \\
+  \end{pmatrix}^T \\
   %
   \mathbf{i}_{abcs} &= 
-  \begin{bmatrix}
+  \begin{pmatrix}
     i_{as} & i_{bs} & i_{cs}
-  \end{bmatrix}^T \\
+  \end{pmatrix}^T \\
   %  
   \mathbf{i}_{qdr} &= 
-  \begin{bmatrix}
+  \begin{pmatrix}
     i_{kq1} & i_{kq2} & i_{fd} & i_{kd} 
-  \end{bmatrix}^T \\
+  \end{pmatrix}^T \\
   %
   \boldsymbol{\lambda}_{abcs} &= 
-  \begin{bmatrix}
+  \begin{pmatrix}
     \lambda_{as} & \lambda_{bs} & \lambda_{cs}
-  \end{bmatrix}^T \\
+  \end{pmatrix}^T \\
   %  
   \boldsymbol{\lambda}_{qdr} &= 
-  \begin{bmatrix}
+  \begin{pmatrix}
     \lambda_{kq1} & \lambda_{kq2} & \lambda_{fd} & \lambda_{kd} 
-  \end{bmatrix}^T \\
+  \end{pmatrix}^T \\
   %
   \mathbf{R}_s &= diag
   \begin{bmatrix}
@@ -130,7 +130,7 @@ The flux linkages are:
 %
 \begin{align}
   \boldsymbol{\lambda}_{abcs} &= \mathbf{L}_{ss} \mathbf{i}_{abcs} + \mathbf{L}_{sr} \mathbf{i}_{qdr}  \\
-  \boldsymbol{\lambda}_{qdr} &= (\mathbf{L}_{sr})^T \mathbf{i}_{abcs} + \mathbf{L}_{rr} \mathbf{i}_{qdr}
+  \boldsymbol{\lambda}_{qdr} &= \mathbf{L}_{rs} \mathbf{i}_{abcs} + \mathbf{L}_{rr} \mathbf{i}_{qdr}
 \end{align}
 %
 where the inductances are time variant variables as defined in \cite{krause2002sudhoff}.
@@ -140,26 +140,61 @@ TODO: electromagnetic torque
 
 This section depicts the synchronous generator equations in terms of machine variables referred to the stator windings which is indicated by the prime symbol. Due to the transform of the stator variables to the rotor reference frame, the stator equations change, whereas the rotor equations remain the same.
 %
-\begin{align}
-  \mathbf{v}_{dq0s} &= \mathbf{R}_{qds} \mathbf{i}_{qd0s} + \frac{d}{dt} \boldsymbol{\lambda}_{qd0s} + \omega_r \boldsymbol{\lambda}_{dqs} \\
-  \mathbf{v}_{qdr}' &= \mathbf{R}_r' \mathbf{i}_{qdr}' + \frac{d}{dt}  \boldsymbol{\lambda}_{qdr}'
-\end{align}
+\begin{equation}
+  \begin{pmatrix}
+    \mathbf{v}_{qd0s} \\
+    \mathbf{v}_{qdr}
+  \end{pmatrix}
+  =  
+  \mathbf{R}'
+  \begin{pmatrix}
+    \mathbf{i}_{qd0s} \\
+    \mathbf{i}_{qdr}'
+  \end{pmatrix}
+  +
+  \frac{d}{dt}
+  \begin{pmatrix}
+    \boldsymbol{\lambda}_{qd0s} \\
+    \boldsymbol{\lambda}_{qdr}'
+  \end{pmatrix}
+  + \omega_r
+  \begin{pmatrix}
+    \boldsymbol{\lambda}_{dqs} \\
+    0
+  \end{pmatrix}
+\end{equation}
 %
 where
 %
 \begin{align}
-  (\boldsymbol{\lambda}_{dqs})^T &= 
+  \mathbf{R}' &= diag
   \begin{bmatrix}
+    r_s & r_s & r_s & r_{kq1}' & r_{kq2}' & r_{fd}' & r_{kd}' 
+  \end{bmatrix} \\
+  \boldsymbol{\lambda}_{dqs} &= 
+  \begin{pmatrix}
     \lambda_{ds} & -\lambda_{qs} & 0
-  \end{bmatrix}
+  \end{pmatrix}^T
 \end{align}
 %
 The flux linkages are:
 %
-\begin{align}
-  \boldsymbol{\lambda}_{qd0s} &= \mathbf{L}_{qdss} \mathbf{i}_{qd0s} + \mathbf{L}_{qdsr} \mathbf{i}_{qdr}'  \\
-  \boldsymbol{\lambda}_{qdr} &= \mathbf{L}_{qdfs} \mathbf{i}_{qd0s} + \mathbf{L}_{qdff} \mathbf{i}_{qdr}'
-\end{align}
+\begin{equation}
+  \begin{pmatrix}
+    \boldsymbol{\lambda}_{qd0s} \\
+    \boldsymbol{\lambda}_{qdr}'
+  \end{pmatrix}
+  =
+  \begin{bmatrix}
+    \mathbf{L}_{qdss} & \mathbf{L}_{qdsr}' \\
+    \mathbf{L}_{qdrs}' & \mathbf{L}_{rr}'    
+  \end{bmatrix}
+  \begin{pmatrix}
+    \mathbf{i}_{qd0s} \\
+    \mathbf{i}_{qdr}'
+  \end{pmatrix}
+  \label{eq:flux}
+\end{equation}
 %
 where
 %
@@ -167,18 +202,18 @@ where
   \mathbf{L}_{qdss} &= 
   \begin{bmatrix}
     L_{q} & 0 & 0 \\
-    0 & L_{q} & 0 \\
+    0 & L_{d} & 0 \\
     0 & 0 & L_{ls}
   \end{bmatrix} \\
   %  
-  \mathbf{L}_{qdsr} &= 
+  \mathbf{L}_{qdsr}' &= 
   \begin{bmatrix}
     L_{mq} & L_{mq} & 0 & 0 \\
     0 & 0 & L_{md} & L_{md} \\
     0 & 0 & 0 & 0
   \end{bmatrix} \\
   %
-  \mathbf{L}_{qdfs} &=
+  \mathbf{L}_{qdrs}' &=
   \begin{bmatrix}
     L_{mq} & 0 & 0 \\
     L_{mq} & 0 & 0 \\
@@ -186,12 +221,12 @@ where
     0 & L_{md} & 0
   \end{bmatrix} \\
   %
-  \mathbf{L}_{qdff} &=
+  \mathbf{L}_{rr}' &=
   \begin{bmatrix}
-    L_{kq1} & L_{mq} & 0 & 0 \\
-    L_{mq} & L_{kq2} & 0 & 0 \\
-    0 & 0 & L_{fd} & L_{md} \\
-    0 & 0 & L_{md} & L_{kd}
+    L_{kq1}' & L_{mq} & 0 & 0 \\
+    L_{mq} & L_{kq2}' & 0 & 0 \\
+    0 & 0 & L_{fd}' & L_{md} \\
+    0 & 0 & L_{md} & L_{kd}'
   \end{bmatrix} \\
   %
 \end{align}
@@ -201,34 +236,134 @@ with
 \begin{align}
   L_{q} &= L_{ls} + L_{mq} \\
   L_{d} &= L_{ls} + L_{md} \\
-  L_{kq1} &= L_{lkq1} + L_{mq} \\
-  L_{kq2} &= L_{lkq2} + L_{mq} \\
-  L_{fd} &= L_{lfd} + L_{md} \\
-  L_{kd} &= L_{lkd} + L_{md}
+  L_{kq1'} &= L_{lkq1'} + L_{mq} \\
+  L_{kq2'} &= L_{lkq2'} + L_{mq} \\
+  L_{fd'} &= L_{lfd'} + L_{md} \\
+  L_{kd'} &= L_{lkd'} + L_{md}
 \end{align}
+
 \subsubsection{State Space Model}
+The flux linkage variables are chosen as electrical states of the state-space representation. Then, the currents can be calculated from equation \ref{eq:flux}.
 %
 \begin{equation}
   \frac{d}{dt}
   \begin{pmatrix}
-    \mathbf{i}_{qd0s} \\
-    \mathbf{i}_{qdr}
+    \boldsymbol{\lambda}_{qd0s} \\
+    \boldsymbol{\lambda}_{qdr}'
   \end{pmatrix}
-  = \mathbf{L}^{-1} \left[
+  =
   \begin{pmatrix}
     \mathbf{v}_{qd0s} \\
-    \mathbf{v}_{qdr}
+    \mathbf{v}_{qdr}'
   \end{pmatrix}
-  - \mathbf{R}
+  - \mathbf{R}'
   \begin{pmatrix}
     \mathbf{i}_{qd0s} \\
-    \mathbf{i}_{qdr}
+    \mathbf{i}_{qdr}'
   \end{pmatrix}
   - \omega_r
   \begin{pmatrix}
-    \boldsymbol{\lambda}_{dq} \\
+    \boldsymbol{\lambda}_{dqs} \\
     0
   \end{pmatrix}
-  \right]
+\end{equation}
+%
+and the currents are 
+%
+\begin{align} 
+   \begin{pmatrix}
+    \mathbf{i}_{qd0s} \\
+    \mathbf{i}_{qdr}'
+  \end{pmatrix}
+  = 
+  \begin{bmatrix}
+    \mathbf{L}_{qdss} & \mathbf{L}_{qdsr}' \\
+    \mathbf{L}_{qdrs}' & \mathbf{L}_{rr}'    
+  \end{bmatrix}^{-1}
+  \begin{pmatrix}
+    \boldsymbol{\lambda}_{qd0s} \\
+    \boldsymbol{\lambda}_{qdr}
+  \end{pmatrix}
+\end{align}
+%
+The voltages of the damper windings are always zero since they are short-circuited. The state-space representation of the mechanical part is
+%
+\begin{align}
+ \frac{d}{dt}
+  \begin{pmatrix}
+    \theta_r \\
+    \omega_r
+  \end{pmatrix}
+  =
+  \begin{bmatrix}
+    0 & 1 \\
+    0 & 0 \\
+  \end{bmatrix}
+  \begin{pmatrix}
+    \theta_r \\
+    \omega_r
+  \end{pmatrix}
+  + 
+  \begin{pmatrix}
+    0 \\
+    \frac{P}{2J} \left( T_e - T_m \right)
+  \end{pmatrix} 
+\end{align}
+%
+where the electric torque is
+%
+\begin{equation}
+  T_e = \frac{3P}{4} \left( \boldsymbol{\lambda}_{ds} \mathbf{i}_{qs} - \boldsymbol{\lambda}_{qs} \mathbf{i}_{ds} \right)
+\end{equation}
+%
+
+\subsubsection{Alternative State Space Representation}
+Defining q- and d-axis flux linkages 
+%
+\begin{align}
+  \lambda_{mq} &= L_{mq} \left( i_{qs} + i_{kq1}' + i_{kq2}' \right) \\
+  \lambda_{md} &= L_{md} \left( i_{ds} + i_{fd}' + i_{kd}' \right) \\
+\end{align}
+%
+allows to rewrite the equations.
+%
+\begin{align}
+  \frac{d}{dt}
+  \begin{pmatrix}
+    \boldsymbol{\lambda}_{qd0s} \\
+    \boldsymbol{\lambda}_{qdr}'
+  \end{pmatrix}
+  =
+  \begin{pmatrix}
+    \mathbf{v}_{qd0s} \\
+    \mathbf{v}_{qdr}'
+  \end{pmatrix}
+  - \mathbf{R}' \mathbf{L}'^{-1}
+  \begin{pmatrix}
+    \boldsymbol{\lambda}_{qd0s} \\
+    \boldsymbol{\lambda}_{qdr}' \\
+    \boldsymbol{\lambda}_{mq} \\
+    \boldsymbol{\lambda}_{md}
+  \end{pmatrix}
+  - \omega_r
+  \begin{pmatrix}
+    \boldsymbol{\lambda}_{dqs} \\
+    0
+  \end{pmatrix}
+\end{align}
+%
+where TODO:
+%
+\begin{equation}
+  \mathbf{L}'^{-1} = 
+  \begin{bmatrix}
+    \mathbf{L}_{ls}^{-1} & 0 & 0 & 0 & 0 & 0 & 0 \\
+    0 & 0 & 0 & 0 & 0 & 0 & 0 \\
+    0 & 0 & 0 & 0 & 0 & 0 & 0 \\
+    0 & 0 & 0 & 0 & 0 & 0 & 0 \\
+    0 & 0 & 0 & 0 & 0 & 0 & 0 \\
+    0 & 0 & 0 & 0 & 0 & 0 & 0 \\
+    0 & 0 & 0 & 0 & 0 & 0 & 0
+  \end{bmatrix}
 \end{equation}
 %
