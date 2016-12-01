@@ -1,6 +1,6 @@
 #include "InterfacedInductor.h"
 
-InterfacedInductor::InterfacedInductor(std::string name, int src, int dest, double inductance) : CircuitElement(name, src, dest) {
+InterfacedInductor::InterfacedInductor(std::string name, int src, int dest, double inductance) : BaseComponent(name, src, dest) {
 	this->inductance = inductance;
 }
 

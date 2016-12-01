@@ -1,5 +1,5 @@
-#ifndef INTERFACEDINDUCTOR_H
-#define INTERFACEDINDUCTOR_H
+#ifndef SYNCHRONOUSGENERATOR_H
+#define SYNCHRONOUSGENERATOR_H
 
 #include "BaseComponent.h"
 
@@ -45,10 +45,39 @@ class SynchronousGenerator : public BaseComponent {
 		double mInertia;
 		/// number of poles
 		int mPoleNumber;
+		/// rotor speed omega_r
+		double mOmega_r;
+		/// voltage vector q d 0 kq1 kq2 df kd
+		DPSMatrix mVoltages = DPSMatrix::Zero(1, 7);
+		/// flux linkage vector
+		DPSMatrix mFluxes = DPSMatrix::Zero(1, 7);
+		/// current vector
+		DPSMatrix mCurrents = DPSMatrix::Zero(1, 7);
+		/// inductance matrix
+		DPSMatrix mInductanceMat = DPSMatrix::Zero(7, 7);
+		/// resistance matrix
+		DPSMatrix mResistanceMat = DPSMatrix::Zero(7, 7);
+		/// reactance matrix
+		DPSMatrix mReactanceMat = DPSMatrix::Zero(7, 7);
+		/// omega - flux matrix
+		DPSMatrix mOmegaFluxMat = DPSMatrix::Zero(7, 7);
+		/// interface voltage vector abcs
+		DPSMatrix mAbcsVoltages = DPSMatrix::Zero(1, 3);
+		/// interface current vector abcs
+		DPSMatrix mAbcsCurrents = DPSMatrix::Zero(1, 3);
+		/// interface voltage vector dq0
+		DPSMatrix mDq0Voltages = DPSMatrix::Zero(1, 3);
+		/// interface current vector dq0
+		DPSMatrix mDq0Currents = DPSMatrix::Zero(1, 3);
+
+		double voltageRe;
+		double voltageIm;
+		double currentRe;
+		double currentIm;
 
 	public:
 		SynchronousGenerator() { };
-		SynchronousGenerator(std::string name, int src, int dest, double statorRes, double leakInd, double mutInd_d, 
+		SynchronousGenerator(std::string name, int node1, int node2, int node3, double statorRes, double leakInd, double mutInd_d, 
 			double mutInd_q, double fieldRes, double fieldLeakInd, double dampRes_d, double dampLeakInd_d, double dampRes1_q, double dampLeakInd1_q,
 			double dampRes2_q, double dampLeakInd2_q, double inertia, int poleNumber);
 		
@@ -56,6 +85,8 @@ class SynchronousGenerator : public BaseComponent {
 		void Init(DPSMatrix& g, DPSMatrix& j, int compOffset, double om, double dt);
 		void Step(DPSMatrix& g, DPSMatrix& j, int compOffset, double om, double dt, double t);
 		void PostStep(DPSMatrix& g, DPSMatrix& j, DPSMatrix& vt, int compOffset, double om, double dt, double t);
+		void ParkTransform(double theta, DPSMatrix& in, DPSMatrix& out);
+		void InverseParkTransform(double theta, DPSMatrix& in, DPSMatrix& out);
 
 };
 #endif

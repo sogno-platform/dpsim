@@ -22,7 +22,7 @@ protected:
 	/// Time variable that is incremented at every step
 	double t;
 	/// Stores a list of circuit elements that are used to generate the system matrix
-	std::vector<CircuitElement*> elements;
+	std::vector<BaseComponent*> elements;
 	/// System matrix that is modified by matrix stamps 
 	DPSMatrix A;
 	/// Vector of known quantities
@@ -32,14 +32,14 @@ protected:
 	/// LU decomposition of system matrix A
 	Eigen::PartialPivLU<DPSMatrix> luFactored;
 
-	void AddElements(std::vector<CircuitElement*> elements);
+	void AddElements(std::vector<BaseComponent*> elements);
 	void CreateSystemMatrix();
 	void Initialize();
 
 public:
 	Simulation();
-	Simulation(std::vector<CircuitElement*> elements, double om, double dt, double tf);
-	Simulation(std::vector<CircuitElement*> elements, double om, double dt, double tf, Logger& logger);
+	Simulation(std::vector<BaseComponent*> elements, double om, double dt, double tf);
+	Simulation(std::vector<BaseComponent*> elements, double om, double dt, double tf, Logger& logger);
 	~Simulation();
 	
 	double GetTime();

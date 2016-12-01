@@ -1,6 +1,6 @@
 #include "Capacitor.h"
 
-Capacitor::Capacitor(std::string name, int src, int dest, double capacitance) : CircuitElement(src, dest) {
+Capacitor::Capacitor(std::string name, int src, int dest, double capacitance) : BaseComponent(src, dest) {
 	this->capacitance = capacitance;
 };	
 		

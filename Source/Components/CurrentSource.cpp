@@ -1,6 +1,6 @@
 #include "CurrentSource.h"
 
-CurrentSource::CurrentSource(std::string name, int src, int dest, double current, double phase) : CircuitElement(name, src, dest) {
+CurrentSource::CurrentSource(std::string name, int src, int dest, double current, double phase) : BaseComponent(name, src, dest) {
 	this->currentr = current*cos(phase);
 	this->currenti = current*sin(phase);
 };

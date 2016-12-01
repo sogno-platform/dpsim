@@ -62,7 +62,18 @@ Park's transformation is commonly used to achieve a model with static parameters
  \end{bmatrix}
 \end{equation}
 %
-Note that the scaling factor $\frac{2}{3}$ is not always used. 
+Note that the scaling factor $\frac{2}{3}$, which ensures an equal length of the current dq-axis and stator reference frame current, is not always used. 
+%
+\begin{equation}
+(\mathbf{K_s})^{-1} = 
+ \begin{bmatrix} 
+  \cos \theta & \sin \theta & 1 \\
+  \cos(\theta-\frac{2\pi}{3}) & \sin(\theta-\frac{2\pi}{3}) & 1 \\
+  \cos(\theta+\frac{2\pi}{3}) & \sin(\theta+\frac{2\pi}{3}) & 1
+ \end{bmatrix}
+\end{equation}
+%
+where $\theta$ is the rotor angle in this case.
 
 \subsubsection{Model}
 
@@ -268,7 +279,36 @@ The flux linkage variables are chosen as electrical states of the state-space re
   \end{pmatrix}
 \end{equation}
 %
-and the currents are 
+or
+%
+\begin{equation}
+  \frac{d}{dt}
+  \begin{pmatrix}
+    \boldsymbol{\lambda}_{qd0s} \\
+    \boldsymbol{\lambda}_{qdr}'
+  \end{pmatrix}
+  =
+  \begin{pmatrix}
+    \mathbf{v}_{qd0s} \\
+    \mathbf{v}_{qdr}'
+  \end{pmatrix}
+  - \mathbf{R}'
+  \begin{bmatrix}
+    \mathbf{L}_{qdss} & \mathbf{L}_{qdsr}' \\
+    \mathbf{L}_{qdrs}' & \mathbf{L}_{rr}'    
+  \end{bmatrix}^{-1}
+  \begin{pmatrix}
+    \boldsymbol{\lambda}_{qd0s} \\
+    \boldsymbol{\lambda}_{qdr}
+  \end{pmatrix}  
+    - \omega_r
+  \begin{pmatrix}
+    \boldsymbol{\lambda}_{dqs} \\
+    0
+  \end{pmatrix}
+\end{equation}
+%
+since the currents are 
 %
 \begin{align} 
    \begin{pmatrix}
@@ -325,45 +365,4 @@ Defining q- and d-axis flux linkages
   \lambda_{md} &= L_{md} \left( i_{ds} + i_{fd}' + i_{kd}' \right) \\
 \end{align}
 %
-allows to rewrite the equations.
-%
-\begin{align}
-  \frac{d}{dt}
-  \begin{pmatrix}
-    \boldsymbol{\lambda}_{qd0s} \\
-    \boldsymbol{\lambda}_{qdr}'
-  \end{pmatrix}
-  =
-  \begin{pmatrix}
-    \mathbf{v}_{qd0s} \\
-    \mathbf{v}_{qdr}'
-  \end{pmatrix}
-  - \mathbf{R}' \mathbf{L}'^{-1}
-  \begin{pmatrix}
-    \boldsymbol{\lambda}_{qd0s} \\
-    \boldsymbol{\lambda}_{qdr}' \\
-    \boldsymbol{\lambda}_{mq} \\
-    \boldsymbol{\lambda}_{md}
-  \end{pmatrix}
-  - \omega_r
-  \begin{pmatrix}
-    \boldsymbol{\lambda}_{dqs} \\
-    0
-  \end{pmatrix}
-\end{align}
-%
-where TODO:
-%
-\begin{equation}
-  \mathbf{L}'^{-1} = 
-  \begin{bmatrix}
-    \mathbf{L}_{ls}^{-1} & 0 & 0 & 0 & 0 & 0 & 0 \\
-    0 & 0 & 0 & 0 & 0 & 0 & 0 \\
-    0 & 0 & 0 & 0 & 0 & 0 & 0 \\
-    0 & 0 & 0 & 0 & 0 & 0 & 0 \\
-    0 & 0 & 0 & 0 & 0 & 0 & 0 \\
-    0 & 0 & 0 & 0 & 0 & 0 & 0 \\
-    0 & 0 & 0 & 0 & 0 & 0 & 0
-  \end{bmatrix}
-\end{equation}
-%
+allows to rewrite the equations

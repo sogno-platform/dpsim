@@ -29,7 +29,7 @@ class TopologyReader {
 		TopologyReader();
 		~TopologyReader();
 		int readConfig(std::ifstream &f, Config &conf);
-		int parseConfig(Config &conf, std::vector<CircuitElement*> &circElements, double &timeStep, double &finalTime);
+		int parseConfig(Config &conf, std::vector<BaseComponent*> &circElements, double &timeStep, double &finalTime);
 };
 
 

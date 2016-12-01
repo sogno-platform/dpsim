@@ -4,7 +4,7 @@ Simulation::Simulation() {
 
 }
 
-Simulation::Simulation(std::vector<CircuitElement*> elements, double om, double dt, double tf) {
+Simulation::Simulation(std::vector<BaseComponent*> elements, double om, double dt, double tf) {
 	this->dt = dt;
 	this->tf = tf;
 	this->om = om;
@@ -14,8 +14,8 @@ Simulation::Simulation(std::vector<CircuitElement*> elements, double om, double 
 	Initialize();
 }
 
-Simulation::Simulation(std::vector<CircuitElement*> elements, double om, double dt, double tf, Logger& logger) : Simulation(elements, om, dt, tf) {
-	for (std::vector<CircuitElement*>::iterator it = elements.begin(); it != elements.end(); ++it) {
+Simulation::Simulation(std::vector<BaseComponent*> elements, double om, double dt, double tf, Logger& logger) : Simulation(elements, om, dt, tf) {
+	for (std::vector<BaseComponent*>::iterator it = elements.begin(); it != elements.end(); ++it) {
 		logger.Log(Logtype::INFO) << "Added " << (*it)->GetName() << " of type " << typeid(*(*it)).name() << " to simulation." << std::endl;
 		(*it)->Init(A, j, compOffset, om, dt);
 	}
@@ -37,7 +37,7 @@ void Simulation::Initialize() {
 	t = 0;
 	
 	// Create the matrices
-	for (std::vector<CircuitElement*>::iterator it = elements.begin(); it != elements.end(); ++it) {
+	for (std::vector<BaseComponent*>::iterator it = elements.begin(); it != elements.end(); ++it) {
 		(*it)->Init(A, j, compOffset, om, dt);
 	}
 
@@ -45,8 +45,8 @@ void Simulation::Initialize() {
 }
 	
 
-void Simulation::AddElements(std::vector<CircuitElement*> newElements) {
-	for (std::vector<CircuitElement*>::iterator it = newElements.begin(); it != newElements.end(); ++it) {
+void Simulation::AddElements(std::vector<BaseComponent*> newElements) {
+	for (std::vector<BaseComponent*>::iterator it = newElements.begin(); it != newElements.end(); ++it) {
 		elements.push_back((*it));
 
 	}
@@ -54,7 +54,7 @@ void Simulation::AddElements(std::vector<CircuitElement*> newElements) {
 
 void Simulation::CreateSystemMatrix() {
 	int maxNode = 0;
-	for (std::vector<CircuitElement*>::iterator it = elements.begin(); it != elements.end(); ++it) {
+	for (std::vector<BaseComponent*>::iterator it = elements.begin(); it != elements.end(); ++it) {
 		if ((*it)->getNode1() > maxNode)
 			maxNode = (*it)->getNode1();
 		if ((*it)->getNode2() > maxNode)
@@ -75,13 +75,13 @@ int Simulation::Step()
 {
 	j.setZero();
 	
-	for (std::vector<CircuitElement*>::iterator it = elements.begin(); it != elements.end(); ++it) {
+	for (std::vector<BaseComponent*>::iterator it = elements.begin(); it != elements.end(); ++it) {
 		(*it)->Step(A, j, compOffset, om, dt, t);
 	}
 	
 	vt = luFactored.solve(j);
  
-	for (std::vector<CircuitElement*>::iterator it = elements.begin(); it != elements.end(); ++it) {
+	for (std::vector<BaseComponent*>::iterator it = elements.begin(); it != elements.end(); ++it) {
 		(*it)->PostStep(A, j, vt, compOffset, om, dt, t);
 	}
 

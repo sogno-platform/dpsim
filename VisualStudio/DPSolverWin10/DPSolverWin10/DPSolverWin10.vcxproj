@@ -28,9 +28,11 @@
     <ClInclude Include="..\..\..\Source\Components\LinearResistor.h" />
     <ClInclude Include="..\..\..\Source\Components\SynchronousGenerator.h" />
     <ClInclude Include="..\..\..\Source\Components\VoltageSourceWithResistance.h" />
+    <ClInclude Include="..\..\..\Source\NetlistSim.h" />
     <ClInclude Include="..\..\..\Source\Simulation.h" />
     <ClInclude Include="..\..\..\Source\Logger.h" />
     <ClInclude Include="..\..\..\Source\MathLibrary.h" />
+    <ClInclude Include="..\..\..\Source\SysGenUnitTest.h" />
     <ClInclude Include="..\..\..\Source\TopologyReader.h" />
   </ItemGroup>
   <ItemGroup>
@@ -42,8 +44,10 @@
     <ClCompile Include="..\..\..\Source\Components\SynchronousGenerator.cpp" />
     <ClCompile Include="..\..\..\Source\Components\VoltageSourceWithResistance.cpp" />
     <ClCompile Include="..\..\..\Source\DPsimMain.cpp" />
+    <ClCompile Include="..\..\..\Source\NetlistSim.cpp" />
     <ClCompile Include="..\..\..\Source\Simulation.cpp" />
     <ClCompile Include="..\..\..\Source\Logger.cpp" />
+    <ClCompile Include="..\..\..\Source\SynGenUnitTest.cpp" />
     <ClCompile Include="..\..\..\Source\TopologyReader.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">

@@ -60,6 +60,12 @@
     <ClInclude Include="..\..\..\Source\Components\BaseComponent.h">
       <Filter>Header Files\Components</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\Source\NetlistSim.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Source\SysGenUnitTest.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\..\Source\TopologyReader.cpp">
@@ -94,6 +100,12 @@
     </ClCompile>
     <ClCompile Include="..\..\..\Source\Components\SynchronousGenerator.cpp">
       <Filter>Source Files\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Source\SynGenUnitTest.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Source\NetlistSim.cpp">
+      <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

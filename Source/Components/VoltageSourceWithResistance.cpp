@@ -1,6 +1,6 @@
 #include "VoltageSourceWithResistance.h"
 
-VoltageSourceWithResistance::VoltageSourceWithResistance(std::string name, int src, int dest, double voltage, double phase, double resistance) : CircuitElement(src, dest) {
+VoltageSourceWithResistance::VoltageSourceWithResistance(std::string name, int src, int dest, double voltage, double phase, double resistance) : BaseComponent(src, dest) {
 	this->name = name;
 	this->voltageDiffr = voltage*cos(phase);
 	this->voltageDiffi = voltage*sin(phase);

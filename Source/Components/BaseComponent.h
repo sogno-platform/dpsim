@@ -1,5 +1,5 @@
-#ifndef CIRCUITELEMENT_H
-#define CIRCUITELEMENT_H
+#ifndef BASECOMPONENT_H
+#define BASECOMPONENT_H
 
 #include <string>
 #include <iostream>
@@ -12,9 +12,11 @@ class BaseComponent {
 		std::string name;
 		int node1;
 		int node2;
+		int node3;
 
 	public:	
 		BaseComponent() { }
+		BaseComponent(std::string name) { this->name = name; }
 		BaseComponent(int src, int dest) { this->node1 = src - 1; this->node2 = dest - 1; }
 		BaseComponent(std::string name, int src, int dest) { this->name = name;  this->node1 = src - 1; this->node2 = dest - 1; }
 		virtual ~BaseComponent() { }

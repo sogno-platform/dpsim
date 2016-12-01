@@ -79,14 +79,14 @@ int TopologyReader::readConfig(std::ifstream &f, Config &conf) {
 
 /// Use the parsed configuration structure to create circuit elements
 
-int TopologyReader::parseConfig(Config &conf, std::vector<CircuitElement*> &circElements, double &timeStep, double &finalTime) {
+int TopologyReader::parseConfig(Config &conf, std::vector<BaseComponent*> &circElements, double &timeStep, double &finalTime) {
 
 	timeStep = std::stod(conf.timeStep);
 	finalTime = std::stod(conf.finalTime);
 		
 	for (std::vector<Element>::iterator it = conf.elements.begin(); it != conf.elements.end(); ++it) {
 		
-		CircuitElement* tmpCircElement;
+		BaseComponent* tmpCircElement;
 
 		if (it->type.compare("VoltageSourceWithResistance") == 0) {
 			tmpCircElement = new VoltageSourceWithResistance(it->name, std::stoi(it->node1), std::stoi(it->node2), std::stod(it->parameters[0]), std::stod(it->parameters[1]), std::stod(it->parameters[2]));
