@@ -9,8 +9,11 @@
 
 class Simulation {
 protected:
+	
+
+public:
 	/// Number of nodes
-	int numNodes; 
+	int numNodes;
 	/// Index offset for imaginary part
 	int compOffset;
 	/// Angular frequency of the phasor
@@ -23,20 +26,19 @@ protected:
 	double t;
 	/// Stores a list of circuit elements that are used to generate the system matrix
 	std::vector<BaseComponent*> elements;
-	/// System matrix that is modified by matrix stamps 
-	DPSMatrix A;
-	/// Vector of known quantities
-	DPSMatrix j;
-	/// Vector of unknown quantities
-	DPSMatrix vt;
 	/// LU decomposition of system matrix A
 	Eigen::PartialPivLU<DPSMatrix> luFactored;
 
 	void AddElements(std::vector<BaseComponent*> elements);
 	void CreateSystemMatrix();
 	void Initialize();
+	/// System matrix that is modified by matrix stamps 
+	DPSMatrix A;
+	/// Vector of known quantities
+	DPSMatrix j;
+	/// Vector of unknown quantities
+	DPSMatrix vt;
 
-public:
 	Simulation();
 	Simulation(std::vector<BaseComponent*> elements, double om, double dt, double tf);
 	Simulation(std::vector<BaseComponent*> elements, double om, double dt, double tf, Logger& logger);

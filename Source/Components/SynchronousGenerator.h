@@ -47,12 +47,14 @@ class SynchronousGenerator : public BaseComponent {
 		int mPoleNumber;
 		/// rotor speed omega_r
 		double mOmega_r;
+		/// theta
+		double mTheta_r;
 		/// voltage vector q d 0 kq1 kq2 df kd
-		DPSMatrix mVoltages = DPSMatrix::Zero(1, 7);
+		DPSMatrix mVoltages = DPSMatrix::Zero(7, 1);
 		/// flux linkage vector
-		DPSMatrix mFluxes = DPSMatrix::Zero(1, 7);
+		DPSMatrix mFluxes = DPSMatrix::Zero(7, 1);
 		/// current vector
-		DPSMatrix mCurrents = DPSMatrix::Zero(1, 7);
+		DPSMatrix mCurrents = DPSMatrix::Zero(7 ,1);
 		/// inductance matrix
 		DPSMatrix mInductanceMat = DPSMatrix::Zero(7, 7);
 		/// resistance matrix
@@ -62,31 +64,34 @@ class SynchronousGenerator : public BaseComponent {
 		/// omega - flux matrix
 		DPSMatrix mOmegaFluxMat = DPSMatrix::Zero(7, 7);
 		/// interface voltage vector abcs
-		DPSMatrix mAbcsVoltages = DPSMatrix::Zero(1, 3);
+		DPSMatrix mAbcsVoltages = DPSMatrix::Zero(3, 1);
 		/// interface current vector abcs
-		DPSMatrix mAbcsCurrents = DPSMatrix::Zero(1, 3);
+		DPSMatrix mAbcsCurrents = DPSMatrix::Zero(3, 1);
 		/// interface voltage vector dq0
-		DPSMatrix mDq0Voltages = DPSMatrix::Zero(1, 3);
+		DPSMatrix mDq0Voltages = DPSMatrix::Zero(3, 1);
 		/// interface current vector dq0
-		DPSMatrix mDq0Currents = DPSMatrix::Zero(1, 3);
-
-		double voltageRe;
-		double voltageIm;
-		double currentRe;
-		double currentIm;
+		DPSMatrix mDq0Currents = DPSMatrix::Zero(3, 1);
+		/// mechanical Power Pm [W]
+		double mMechPower;
+		/// mechanical torque
+		double mMechTorque;
+		/// electrical torque
+		double mElecTorque;
 
 	public:
 		SynchronousGenerator() { };
-		SynchronousGenerator(std::string name, int node1, int node2, int node3, double statorRes, double leakInd, double mutInd_d, 
+		SynchronousGenerator(std::string name, int node1, int node2, int node3, double nomVolt, double statorRes, double leakInd, double mutInd_d,
 			double mutInd_q, double fieldRes, double fieldLeakInd, double dampRes_d, double dampLeakInd_d, double dampRes1_q, double dampLeakInd1_q,
 			double dampRes2_q, double dampLeakInd2_q, double inertia, int poleNumber);
 		
 		void applyMatrixStamp(DPSMatrix& g, DPSMatrix& j, int compOffset, double om, double dt);
-		void Init(DPSMatrix& g, DPSMatrix& j, int compOffset, double om, double dt);
-		void Step(DPSMatrix& g, DPSMatrix& j, int compOffset, double om, double dt, double t);
+		void Init(DPSMatrix& g, DPSMatrix& j, int compOffset, double om, double dt) { }
+		void Step(DPSMatrix& g, DPSMatrix& j, int compOffset, double om, double dt, double t) { }
+		void Init(DPSMatrix& g, DPSMatrix& j, int compOffset, double om, double dt, DPSMatrix initAbcsCurrents, DPSMatrix initAbcsVoltages, double initFieldVoltage, double initFieldCurrent, double initTheta_r);
+		void Step(DPSMatrix& g, DPSMatrix& j, int compOffset, double om, double dt, double t, double fieldVoltage, double fieldCurrent, double mechPower);
 		void PostStep(DPSMatrix& g, DPSMatrix& j, DPSMatrix& vt, int compOffset, double om, double dt, double t);
-		void ParkTransform(double theta, DPSMatrix& in, DPSMatrix& out);
-		void InverseParkTransform(double theta, DPSMatrix& in, DPSMatrix& out);
+		DPSMatrix ParkTransform(double theta, DPSMatrix& in);
+		DPSMatrix InverseParkTransform(double theta, DPSMatrix& in);
 
 };
 #endif

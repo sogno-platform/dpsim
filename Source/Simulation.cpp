@@ -65,6 +65,7 @@ void Simulation::CreateSystemMatrix() {
 	compOffset = numNodes;
 	A = DPSMatrix::Zero(2 * numNodes, 2 * numNodes);
 	j = DPSMatrix::Zero(2 * numNodes, 1);
+	vt = DPSMatrix::Zero(2 * numNodes, 1);
 }
 
 double Simulation::GetTime() {
