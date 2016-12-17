@@ -4,3 +4,4 @@
 #include <Eigen/Dense>
 
 typedef Eigen::MatrixXd DPSMatrix;
+#define DPS_PI M_PI

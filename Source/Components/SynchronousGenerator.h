@@ -9,6 +9,24 @@
 
 class SynchronousGenerator : public BaseComponent {
 	protected:
+		
+		// ### Stator base values ###
+		/// specifies if the machine parameters are transformed to per unit
+		bool mUsePerUnit;
+		/// base stator voltage
+		double mBaseVoltage;
+		/// base stator current
+		double mBaseCurrent;
+		/// base stator impedance
+		double mBaseImpedance;
+		/// base angular frequency
+		double mBaseAngFreq;
+		/// base stator inductance
+		double mBaseInductance;
+		/// base torque
+		double mBaseTorque;
+
+		// ### Machine parameters ###
 		/// nominal power Pn [VA]
 		double mNomPower;
 		/// nominal voltage Vn [V] (RMS)
@@ -18,37 +36,51 @@ class SynchronousGenerator : public BaseComponent {
 		/// nominal field current Ifn [A]
 		double mNomFieldCur;
 		/// stator resistance Rs[Ohm]
-		double mStatorRes;
+		double mRs;
 		/// leakage inductance Ll [H]
-		double mLeakInd;
+		double mLl;
 		/// d-axis mutual inductance Lmd [H]
-		double mMutInd_d;
+		double mLmd;
 		/// q-axis mutual inductance Lmq [H]
-		double mMutInd_q;
+		double mLmq;
 		/// field resistance Rfd [Ohm]
-		double mFieldRes;
+		double mRf;
 		/// field leakage inductance Llfd [H]
-		double mFieldLeakInd;
+		double mLlfd;
 		/// d-axis damper resistance Rkd [Ohm]
-		double mDampRes_d;
+		double mRkd;
 		/// d-axis damper leakage inductance Llkd [H]
-		double mDampLeakInd_d;
+		double mLlkd;
 		/// q-axis damper resistance 1 Rkq1 [Ohm]
-		double mDampRes1_q;
+		double mRkq1;
 		/// q-axis damper leakage inductance 1 Llkq1 [H]
-		double mDampLeakInd1_q;
+		double mLlkq1;
 		/// q-axis damper resistance 2 Rkq2 [Ohm]
-		double mDampRes2_q;
+		double mRkq2;
 		/// q-axis damper leakage inductance 2 Llkq2 [H]
-		double mDampLeakInd2_q;
+		double mLlkq2;
 		/// inertia J [kg*m^2]
 		double mInertia;
 		/// number of poles
 		int mPoleNumber;
+		/// inertia coefficient
+		double mInertiaCoeff;
+		/// q winding inductance
+		double mLaq;
+		/// d winding inductance
+		double mLad;
+
+		// ### State variables ###
 		/// rotor speed omega_r
 		double mOmega_r;
 		/// theta
 		double mTheta_r;
+		/// mechanical Power Pm [W]
+		double mMechPower;
+		/// mechanical torque
+		double mMechTorque;
+		/// electrical torque
+		double mElecTorque;
 		/// voltage vector q d 0 kq1 kq2 df kd
 		DPSMatrix mVoltages = DPSMatrix::Zero(7, 1);
 		/// flux linkage vector
@@ -71,17 +103,12 @@ class SynchronousGenerator : public BaseComponent {
 		DPSMatrix mDq0Voltages = DPSMatrix::Zero(3, 1);
 		/// interface current vector dq0
 		DPSMatrix mDq0Currents = DPSMatrix::Zero(3, 1);
-		/// mechanical Power Pm [W]
-		double mMechPower;
-		/// mechanical torque
-		double mMechTorque;
-		/// electrical torque
-		double mElecTorque;
-
+		
 	public:
 		SynchronousGenerator() { };
-		SynchronousGenerator(std::string name, int node1, int node2, int node3, double nomVolt, double statorRes, double leakInd, double mutInd_d,
-			double mutInd_q, double fieldRes, double fieldLeakInd, double dampRes_d, double dampLeakInd_d, double dampRes1_q, double dampLeakInd1_q,
+		SynchronousGenerator(std::string name, int node1, int node2, int node3,
+			bool usePerUnit, double nomPower, double nomVolt, double nomFreq, double statorRes, double leakInd, double mutInd_d, double mutInd_q,
+			double fieldRes, double fieldLeakInd, double dampRes_d, double dampLeakInd_d, double dampRes1_q, double dampLeakInd1_q,
 			double dampRes2_q, double dampLeakInd2_q, double inertia, int poleNumber);
 		
 		void applyMatrixStamp(DPSMatrix& g, DPSMatrix& j, int compOffset, double om, double dt);
