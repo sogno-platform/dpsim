@@ -5,7 +5,7 @@
 
 ## Libraries
 ### Windows
-Create a folder called Libraries and copy the Eigen library in there.
+Create a folder called Libraries in DPsim and copy the Eigen library in there.
 
 ### Linux
 Copy the Eigen folder to /usr/local/include/eigen using `sudo cp -rf eigen /usr/local/include/eigen`
