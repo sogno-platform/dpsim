@@ -1,7 +1,7 @@
 ## Tasks
 - Sychronous generator model interfaced through current source
 - connect with CIM parser
-- Improve Logging
+- include boost library for additional math functions and general tasks
 
 ## Libraries
 ### Windows
