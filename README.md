@@ -1,11 +1,11 @@
 ## Tasks
 - Sychronous generator model interfaced through current source
 - connect with CIM parser
-- Improve Logging
+- include boost library for additional math functions and general tasks
 
 ## Libraries
 ### Windows
-Create a folder called Libraries and copy the Eigen library in there.
+Create a folder called Libraries in DPsim and copy the Eigen library in there.
 
 ### Linux
 Copy the Eigen folder to /usr/local/include/eigen using `sudo cp -rf eigen /usr/local/include/eigen`
