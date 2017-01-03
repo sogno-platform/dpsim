@@ -1,70 +1,138 @@
 #include "SynchronousGenerator.h"
 
-SynchronousGenerator::SynchronousGenerator(std::string name, int node1, int node2, int node3, 
-	bool usePerUnit, double nomPower, double nomVolt, double nomFreq, double statorRes, double leakInd, double mutInd_d, double mutInd_q, 
-	double fieldRes, double fieldLeakInd, double dampRes_d, double dampLeakInd_d, double dampRes1_q, double dampLeakInd1_q,
-	double dampRes2_q, double dampLeakInd2_q, double inertia, int poleNumber) {
+SynchronousGenerator::SynchronousGenerator(std::string name, int node1, int node2, int node3,
+	SynchGenStateType stateType, double nomPower, double nomVolt, double nomFreq, int poleNumber, double nomFieldCur,
+	SynchGenParamType paramType, double Rs, double Ll, double Lmd, double Lmd0, double Lmq, double Lmq0,
+	double Rfd, double Llfd, double Rkd, double Llkd,
+	double Rkq1, double Llkq1, double Rkq2, double Llkq2,
+	double inertia) {
 
 	this->node1 = node1 - 1;
 	this->node2 = node2 - 1;
 	this->node3 = node3 - 1;
 
-	mUsePerUnit = usePerUnit;
+	mStateType = stateType;
 	mNomPower = nomPower;
 	mNomVolt = nomVolt;
 	mNomFreq = nomFreq;
 	mPoleNumber = poleNumber;
-	mInertia = inertia;
+	mNomFieldCur = nomFieldCur;
 
-	mBaseVoltage = mNomVolt * sqrt(2) / sqrt(3);
-	mBaseCurrent = mNomPower * sqrt(2) / (mNomVolt * sqrt(3));
-	mBaseImpedance = mBaseVoltage / mBaseCurrent;
-	mBaseAngFreq = 2 * DPS_PI * mNomFreq;
-	mBaseInductance = mBaseImpedance / mBaseAngFreq;	
-	mBaseTorque = mNomPower * mPoleNumber / (2 * mBaseAngFreq);
-	double test = pow((2. / mPoleNumber), 2);
-	mInertiaCoeff = 0.5 * pow((2. / mPoleNumber), 2) * mInertia * pow(mBaseAngFreq, 2) / mNomPower;
-	mOmega_r = 2 * DPS_PI * mNomFreq;
+	// base stator values
+	mBase_V_RMS = mNomVolt / sqrt(3);
+	mBase_v = mBase_V_RMS * sqrt(2);
+	mBase_I_RMS = mNomPower / (3 * mBase_V_RMS);
+	mBase_i = mBase_I_RMS * sqrt(2);
+	mBase_Z = mBase_v / mBase_i;
+	mBase_OmElec = 2 * DPS_PI * mNomFreq;
+	mBase_OmMech = mBase_OmElec / (mPoleNumber / 2);
+	mBase_L = mBase_Z / mBase_OmElec;
+	mBase_Psi = mBase_L * mBase_i;
+	mBase_T = mNomPower / mBase_OmMech;
 
-	if (mUsePerUnit) {
-		mRs = statorRes / mBaseImpedance;
-		mLl = leakInd / mBaseInductance;
-		mLmd = mutInd_d / mBaseInductance;
-		mLmq = mutInd_q / mBaseInductance;
-		mRf = fieldRes / mBaseImpedance;
-		mLlkd = dampLeakInd_d / mBaseInductance;
-		mLlfd = fieldLeakInd / mBaseInductance;
-		mRkd = dampRes_d / mBaseImpedance;
-		mRkq1 = dampRes1_q / mBaseImpedance;
-		mRkq2 = dampRes2_q / mBaseImpedance;
-		mLlkq1 = dampLeakInd1_q / mBaseInductance;
-		mLlkq2 = dampLeakInd2_q / mBaseInductance;
-			
-	} else {
-		mRs = statorRes;
-		mLl = leakInd;
-		mLmd = mutInd_d;
-		mLmq = mutInd_q;
-		mRf = fieldRes;
-		mLlkd = dampLeakInd_d;
-		mLlfd = fieldLeakInd;
-		mRkd = dampRes_d;
-		mRkq1 = dampRes1_q;
-		mRkq2 = dampRes2_q;
-		mLlkq1 = dampLeakInd1_q;
-		mLlkq2 = dampLeakInd2_q;	
+	if (paramType == SynchGenParamType::perUnit) {
+		// steady state per unit initial value
+		InitWithPerUnitParam(Rs, Ll, Lmd, Lmd0, Lmq, Lmq0, Rfd, Llfd, Rkd, Llkd, Rkq1, Llkq1, Rkq2, Llkq2, inertia);
 	}
-	
-	mLaq = 1 / (1 / mLmq + 1 / mLl + 1 / mLlkq1 + 1 / mLlkq2);
-	mLad = 1 / (1 / mLmd + 1 / mLl + 1 / mLlkd + 1 / mLlfd);
+	else	if (paramType == SynchGenParamType::statorReferred) {
+		// steady state stator referred initial value
+		InitWithStatorRefParam(Rs, Ll, Lmd, Lmd0, Lmq, Lmq0, Rfd, Llfd, Rkd, Llkd, Rkq1, Llkq1, Rkq2, Llkq2, inertia);
+	}
 }
 
-void SynchronousGenerator::applyMatrixStamp(DPSMatrix& g, DPSMatrix& j, int compOffset, double om, double dt) {
-	// Compensated current source
+void SynchronousGenerator::InitWithPerUnitParam(
+	double Rs, double Ll, double Lmd, double Lmd0, double Lmq, double Lmq0,
+	double Rfd, double Llfd, double Rkd, double Llkd,
+	double Rkq1, double Llkq1, double Rkq2, double Llkq2,
+	double H) {
+
+	// base rotor values
+	mBase_ifd = Lmd * mNomFieldCur;
+	mBase_vfd = mNomPower / mBase_ifd;
+	mBase_Zfd = mBase_vfd / mBase_ifd;
+	mBase_Lfd = mBase_Zfd / mBase_OmElec;
+
+	if (mStateType == SynchGenStateType::perUnit) {
+		mRs = Rs;
+		mLl = Ll;
+		mLmd = Lmd;
+		mLmd0 = Lmd0;
+		mLmq = Lmq;
+		mLmq0 = Lmq0;
+		mRfd = Rfd;
+		mLlfd = Llfd;
+		mRkd = Rkd;
+		mLlkd = Llkd;
+		mRkq1 = Rkq1;
+		mLlkq1 = Llkq1;
+		mRkq2 = Rkq2;
+		mLlkq2 = Llkq2;
+		mH = H;
+		// Additional inductances according to Krause
+		mLaq = 1 / (1 / mLmq + 1 / mLl + 1 / mLlkq1 + 1 / mLlkq2);
+		mLad = 1 / (1 / mLmd + 1 / mLl + 1 / mLlkd + 1 / mLlfd);
+	}
+	else if (mStateType == SynchGenStateType::statorReferred) {
+		mRs = Rs * mBase_Z;
+		mLl = Ll * mBase_L;
+		mLmd = Lmd * mBase_L;
+		mLmd0 = Lmd0 * mBase_L;
+		mLmq = Lmq * mBase_L;
+		mLmq0 = Lmq0 * mBase_L;
+		mRfd = Rfd * mBase_Z;
+		mLlfd = Llfd * mBase_L;
+		mRkd = Rkd * mBase_Z;
+		mLlkd = Llkd * mBase_L;
+		mRkq1 = Rkq1 * mBase_Z;
+		mLlkq1 = Llkq1 * mBase_L;
+		mRkq2 = Rkq2 * mBase_Z;
+		mLlkq2 = Llkq2 * mBase_L;
+		// Additional inductances according to Krause
+		mLaq = 1 / (1 / mLmq + 1 / mLl + 1 / mLlkq1 + 1 / mLlkq2) * mBase_L;
+		mLad = 1 / (1 / mLmd + 1 / mLl + 1 / mLlkd + 1 / mLlfd) * mBase_L;
+	}
+}
+
+void SynchronousGenerator::InitWithStatorRefParam(
+	double Rs, double Ll, double Lmd, double Lmd0, double Lmq, double Lmq0,
+	double Rfd, double Llfd, double Rkd, double Llkd,
+	double Rkq1, double Llkq1, double Rkq2, double Llkq2,
+	double J) {
+
+	// base rotor values
+	mBase_ifd = Lmd / mBase_L * mNomFieldCur;
+	mBase_vfd = mNomPower / mBase_ifd;
+	mBase_Zfd = mBase_vfd / mBase_ifd;
+	mBase_Lfd = mBase_Zfd / mBase_OmElec;
+	
+	if (mStateType == SynchGenStateType::perUnit) {
+		// combination not supported
+	}
+	else if (mStateType == SynchGenStateType::statorReferred) {
+		mRs = Rs;
+		mLl = Ll;
+		mLmd = Lmd;
+		mLmd0 = Lmd0;
+		mLmq = Lmq;
+		mLmq0 = Lmq0;
+		mRfd = Rfd;
+		mLlfd = Llfd;
+		mRkd = Rkd;
+		mLlkd = Llkd;
+		mRkq1 = Rkq1;
+		mLlkq1 = Llkq1;
+		mRkq2 = Rkq2;
+		mLlkq2 = Llkq2;
+		mJ = J;
+		mOmMech = mBase_OmMech;
+		// Additional inductances according to Krause
+		mLaq = 1 / (1 / mLmq + 1 / mLl + 1 / mLlkq1 + 1 / mLlkq2);
+		mLad = 1 / (1 / mLmd + 1 / mLl + 1 / mLlkd + 1 / mLlfd);
+	}
 }
 
 void SynchronousGenerator::Init(DPSMatrix& g, DPSMatrix& j, int compOffset, double om, double dt,
-	DPSMatrix initAbcsCurrents, DPSMatrix initAbcsVoltages, double initFieldVoltage, double initFieldCurrent, double initTheta_r) {
+	double initActivePower, double initReactivePower, double initTerminalVolt, double initVoltAngle) {
 
 	// Create matrices for state space representation 
 	mInductanceMat << mLl + mLmq, 0, 0, mLmq, mLmq, 0, 0,
@@ -80,7 +148,7 @@ void SynchronousGenerator::Init(DPSMatrix& g, DPSMatrix& j, int compOffset, doub
 		0, 0, mRs, 0, 0, 0, 0,
 		0, 0, 0, mRkq1, 0, 0, 0,
 		0, 0, 0, 0, mRkq2, 0, 0,
-		0, 0, 0, 0, 0, mRf, 0,
+		0, 0, 0, 0, 0, mRfd, 0,
 		0, 0, 0, 0, 0, 0, mRkd;
 
 	mOmegaFluxMat << 0, 1, 0, 0, 0, 0, 0,
@@ -93,129 +161,152 @@ void SynchronousGenerator::Init(DPSMatrix& g, DPSMatrix& j, int compOffset, doub
 
 	mReactanceMat = mInductanceMat.inverse();
 
-	// Initialize currents, fluxes, voltages and angle	
-	mTheta_r = initTheta_r;
-	mAbcsCurrents = initAbcsCurrents;
-	mAbcsVoltages = initAbcsVoltages;
-	mVoltages(5, 0) = initFieldVoltage;
-	mCurrents(5, 0) = initFieldCurrent;
+	if (mStateType == SynchGenStateType::perUnit) {
+		// steady state per unit initial value
+		InitStatesInPerUnit(initActivePower, initReactivePower, initTerminalVolt, initVoltAngle);
+	} else	if (mStateType == SynchGenStateType::statorReferred) {
+		// steady state stator referred initial value
+		InitStatesInStatorRefFrame(initActivePower, initReactivePower, initTerminalVolt, initVoltAngle);		
+	}	
 
-	if (mUsePerUnit) {
-		mAbcsCurrents = (1 / mBaseCurrent) * mAbcsCurrents;
-		mAbcsVoltages = (1 / mBaseVoltage) * mAbcsVoltages;
-		mVoltages(5, 0) = mVoltages(5, 0) / mBaseVoltage;
-		mCurrents(5, 0) = mCurrents(5, 0) / mBaseCurrent;
-	}
-
-	mDq0Currents = ParkTransform(mTheta_r, mAbcsCurrents);
-	mCurrents(0, 0) = -mDq0Currents(0, 0);
-	mCurrents(1, 0) = -mDq0Currents(1, 0);
-	mCurrents(2, 0) = -mDq0Currents(2, 0);
-
-	mFluxes = mInductanceMat * mCurrents;
-	double imq = (mFluxes(0, 0) / mLl + mFluxes(3, 0) / mLlkq1 + mFluxes(4, 0) / mLlkq2) * mLaq;
-	double imd = (mFluxes(1, 0) / mLl + mFluxes(5, 0) / mLlfd + mFluxes(6, 0) / mLlkd) * mLad;
-
-	mDq0Voltages = ParkTransform(mTheta_r, mAbcsVoltages);
-	mVoltages(0, 0) = mDq0Voltages(0, 0);
-	mVoltages(1, 0) = mDq0Voltages(1, 0);
-	mVoltages(2, 0) = mDq0Voltages(2, 0);
-
-	if (mUsePerUnit) {
-		mAbcsCurrents = initAbcsCurrents;
-		mAbcsVoltages = initAbcsVoltages;
-	}
-
-	DPSMatrix correctedVoltages = mOmega_r * mOmegaFluxMat * mFluxes + mResistanceMat * mCurrents;
-	DPSMatrix test1 = mVoltages;
-	DPSMatrix test2 = mOmega_r * mOmegaFluxMat * mFluxes;
-	DPSMatrix test3 = mResistanceMat * mCurrents;//mReactanceMat * mFluxes;
-	mVoltages(1,0) = correctedVoltages(1,0);
 	mDq0Voltages(0, 0) = mVoltages(0, 0);
 	mDq0Voltages(1, 0) = mVoltages(1, 0);
-	mDq0Voltages(2, 0) = mVoltages(2, 0);
-	mAbcsVoltages = InverseParkTransform(mTheta_r, mDq0Voltages);
-	double testvolt4 = mAbcsCurrents(0, 0) * mBaseImpedance * 1000;
-	double testvolt5 = mAbcsCurrents(1, 0) * mBaseImpedance * 1000;
-	double testvolt6 = mAbcsCurrents(2, 0) * mBaseImpedance * 1000;
-	double phimq = 0;
-	double phimd = 0;
+	mDq0Voltages(2, 0) = mVoltages(2, 0);	
+	mDq0Voltages = mDq0Voltages * mBase_v;
+	mAbcsVoltages = InverseParkTransform(mThetaMech, mDq0Voltages);
 
+	mDq0Currents(0, 0) = mCurrents(0, 0);
+	mDq0Currents(1, 0) = mCurrents(1, 0);
+	mDq0Currents(2, 0) = mCurrents(2, 0);
+	mDq0Currents = mDq0Currents * mBase_i;
+	mAbcsCurrents = InverseParkTransform(mThetaMech, mDq0Currents);
+
+	double testvolt4 = mAbcsCurrents(0, 0) * mBase_Z * 1000;
+	double testvolt5 = mAbcsCurrents(1, 0) * mBase_Z * 1000;
+	double testvolt6 = mAbcsCurrents(2, 0) * mBase_Z * 1000;
 }
 
-/// Performs an Euler forward step with the state space model of a synchronous generator 
-/// to calculate the flux and current from the voltage vector.
+void SynchronousGenerator::InitStatesInPerUnit(double initActivePower, double initReactivePower,
+	double initTerminalVolt, double initVoltAngle) {
+
+	double init_P = initActivePower / mNomPower;
+	double init_Q = initReactivePower / mNomPower;
+	double init_S = sqrt(pow(init_P, 2.) + pow(init_Q, 2.));
+	double init_vt = initTerminalVolt / mBase_v;
+	double init_it = init_S / init_vt;
+
+	// power factor
+	double init_pf = acos(init_P / init_S);
+
+	// load angle
+	double init_delta = atan(((mLmq + mLl) * init_it * cos(init_pf) - mRs * init_it * sin(init_pf)) /
+		(init_vt + mRs * init_it * cos(init_pf) + (mLmq + mLl) * init_it * sin(init_pf)));
+	double init_delta_deg = init_delta / DPS_PI * 180;
+
+	// dq stator voltages and currents
+	double init_vd = init_vt * sin(init_delta);
+	double init_vq = init_vt * cos(init_delta);
+	double init_id = init_it * sin(init_delta + init_pf);
+	double init_iq = init_it * cos(init_delta + init_pf);
+
+	// rotor voltage and current
+	double init_ifd = (init_vq + mRs * init_iq + (mLmd + mLl) * init_id) / mLmd;
+	double init_vfd = mRfd * init_ifd;
+
+	// flux linkages
+	double init_psid = init_vq + mRs * init_iq;
+	double init_psiq = -init_vd - mRs * init_id;
+	double init_psifd = (mLmd + mLlfd) * init_ifd - mLmd * init_id;
+	double init_psid1 = mLmd * (init_ifd - init_id);
+	double init_psiq1 = -mLmq * init_iq;
+	double init_psiq2 = -mLmq * init_iq;
+
+	// rotor mechanical variables
+	double init_Te = init_P + mRs * pow(init_it, 2.);
+	mOmMech = 1;
+
+	mVoltages(0, 0) = init_vq;
+	mVoltages(1, 0) = init_vd;
+	mVoltages(2, 0) = 0;
+	mVoltages(3, 0) = 0;
+	mVoltages(4, 0) = 0;
+	mVoltages(5, 0) = init_vfd;
+	mVoltages(6, 0) = 0;
+
+	mCurrents(0, 0) = init_iq;
+	mCurrents(1, 0) = init_id;
+	mCurrents(2, 0) = 0;
+	mCurrents(3, 0) = 0;
+	mCurrents(4, 0) = 0;
+	mCurrents(5, 0) = init_ifd;
+	mCurrents(6, 0) = 0;
+
+	mFluxes(0, 0) = init_psiq;
+	mFluxes(1, 0) = init_psid;
+	mFluxes(2, 0) = 0;
+	mFluxes(3, 0) = init_psiq1;
+	mFluxes(4, 0) = init_psiq2;
+	mFluxes(5, 0) = init_psifd;
+	mFluxes(6, 0) = init_psid1;
+
+	// Initialize mechanical angle
+	mThetaMech = initVoltAngle + init_delta;
+}
+
+void SynchronousGenerator::InitStatesInStatorRefFrame(double initActivePower, double initReactivePower,
+	double initTerminalVolt, double initVoltAngle) {
+
+	double init_P = initActivePower;
+	double init_Q = initReactivePower;
+	double init_S = sqrt(pow(init_P, 2.) + pow(init_Q, 2.));
+	double init_vt = initTerminalVolt / mBase_v;
+	double init_it = init_S / init_vt;
+
+	// power factor
+	double init_pf = acos(init_P / init_S);
+
+	// load angle
+	double init_delta = atan(((mLmq + mLl) * mBase_OmElec * init_it * cos(init_pf) - mRs * init_it * sin(init_pf)) /
+		(init_vt + mRs * init_it * cos(init_pf) + (mLmq + mLl) * mBase_OmElec * init_it * sin(init_pf)));
+	double init_delta_deg = init_delta / DPS_PI * 180;
+
+	// dq stator voltages and currents
+	double init_vd = init_vt * sin(init_delta);
+	double init_vq = init_vt * cos(init_delta);
+	double init_id = init_it * sin(init_delta + init_pf);
+	double init_iq = init_it * cos(init_delta + init_pf);
+
+	// rotor voltage and current
+	double init_ifd = (init_vq + mRs * init_iq + (mLmd + mLl) * init_id) / mLmd;
+	// TODO calculate remaining initial values
+
+	// rotor mechanical variables, TODO torque
+	mOmMech = mBase_OmMech;
+
+	mCurrents(0, 0) = init_iq;
+	mCurrents(1, 0) = init_id;
+	mCurrents(2, 0) = 0;
+	mCurrents(3, 0) = 0;
+	mCurrents(4, 0) = 0;
+	mCurrents(5, 0) = init_ifd;
+	mCurrents(6, 0) = 0;
+
+	mVoltages(0, 0) = init_vq;
+	mVoltages(1, 0) = init_vd;
+	mVoltages(2, 0) = 0;
+
+	// Initialize mechanical angle
+	mThetaMech = initVoltAngle + init_delta;
+}
+
 void SynchronousGenerator::Step(DPSMatrix& g, DPSMatrix& j, int compOffset, double om, double dt, double t,
-	double fieldVoltage, double fieldCurrent, double mechPower) {	
+	double fieldVoltage, double mechPower) {
 
-	if (mUsePerUnit) {
-		// retrieve voltages
-		mAbcsVoltages = (1 / mBaseVoltage) * mAbcsVoltages;
-		mAbcsCurrents = (1 / mBaseCurrent) * mAbcsCurrents;
-		mVoltages(5, 0) = fieldVoltage / mBaseVoltage;
-		mCurrents(5, 0) = fieldCurrent / mBaseCurrent;
-
-		// dq-transform of interface voltage
-		mDq0Voltages = ParkTransform(mTheta_r, mAbcsVoltages);
-		mVoltages(0, 0) = mDq0Voltages(0, 0);
-		mVoltages(1, 0) = mDq0Voltages(1, 0);
-		mVoltages(2, 0) = mDq0Voltages(2, 0);
-
-		// calculate mechanical states
-		mMechPower = mechPower / mNomPower;
-		mMechTorque = mechPower / mOmega_r / mBaseTorque;			
-		mElecTorque = mBaseAngFreq * (mFluxes(1, 0)*mCurrents(0, 0) - mFluxes(0, 0)*mCurrents(1, 0));		
-
-		// Euler step forward
-		mTheta_r = mTheta_r + dt * mOmega_r;
-		mOmega_r = mOmega_r + dt * (mBaseAngFreq / (2 * mInertiaCoeff) * ( mMechTorque - mElecTorque ) );		
-		//mFluxes = mFluxes + dt * (mVoltages - mResistanceMat * mReactanceMat * mFluxes - mOmega_r * mOmegaFluxMat * mFluxes);
-
-		DPSMatrix test = mVoltages - mResistanceMat * mReactanceMat * mFluxes - mOmega_r / mBaseAngFreq * mOmegaFluxMat * mFluxes;
-
-		// inverse dq-transform
-		mCurrents = mReactanceMat * mFluxes;
-		mDq0Currents(0, 0) = mCurrents(0, 0);
-		mDq0Currents(1, 0) = mCurrents(1, 0);
-		mDq0Currents(2, 0) = mCurrents(2, 0);
-		mAbcsCurrents = InverseParkTransform(mTheta_r, mDq0Currents);
-		mAbcsCurrents = mBaseCurrent * mAbcsCurrents;
+	if (mStateType == SynchGenStateType::perUnit) {
+		StepInPerUnit(om, dt, t, fieldVoltage, mechPower);
 	}
-	else {
-		// retrieve voltages 
-		mVoltages(5, 0) = fieldVoltage;
-		mCurrents(5, 0) = fieldCurrent;
-
-		// dq-transform of interface voltage
-		mDq0Voltages = ParkTransform(mTheta_r, mAbcsVoltages);
-		mVoltages(0, 0) = mDq0Voltages(0, 0);
-		mVoltages(1, 0) = mDq0Voltages(1, 0);
-		mVoltages(2, 0) = mDq0Voltages(2, 0);
-
-		// calculate mechanical states
-		mMechPower = mechPower;
-		mMechTorque = mechPower / mOmega_r;
-		
-		// Euler step forward
-		DPSMatrix test1 = mVoltages;
-		DPSMatrix test2 = mOmega_r * mOmegaFluxMat * mFluxes;
-		DPSMatrix test3 = mResistanceMat * mCurrents;//mReactanceMat * mFluxes;
-
-		//mFluxes = mFluxes + dt * (mVoltages - mResistanceMat * mReactanceMat * mFluxes - mOmega_r * mOmegaFluxMat * mFluxes);
-						
-		
-
-		// inverse dq-transform
-		mCurrents = mReactanceMat * mFluxes;
-		mDq0Currents(0, 0) = -mCurrents(0, 0);
-		mDq0Currents(1, 0) = -mCurrents(1, 0);
-		mDq0Currents(2, 0) = -mCurrents(2, 0);
-		mAbcsCurrents = InverseParkTransform(mTheta_r, mDq0Currents);
-
-		//mTheta_r = mTheta_r + dt * mOmega_r;
-		mElecTorque = -3. * mPoleNumber / 4. * (mFluxes(1, 0)*mCurrents(0, 0) - mFluxes(0, 0)*mCurrents(1, 0));
-		//mOmega_r = mOmega_r + dt * (mPoleNumber / (2 * mInertia) * (mMechTorque - mElecTorque));
-		
+	else if (mStateType == SynchGenStateType::perUnit) {
+		StepInStatorRefFrame(om, dt, t, fieldVoltage, mechPower);
 	}
 
 	// Update current source accordingly
@@ -233,7 +324,75 @@ void SynchronousGenerator::Step(DPSMatrix& g, DPSMatrix& j, int compOffset, doub
 	}
 }
 
-/// Retrieves calculated voltage from simulation for next step
+void SynchronousGenerator::StepInPerUnit(double om, double dt, double t, double fieldVoltage, double mechPower) {
+	// retrieve voltages
+	mAbcsVoltages = (1 / mBase_v) * mAbcsVoltages;
+	mAbcsCurrents = (1 / mBase_i) * mAbcsCurrents;
+	// mVoltages(5, 0) = fieldVoltage / mBase_v;
+	// TODO calculate effect of changed field voltage mCurrents(5, 0) = fieldCurrent / mBase_i;
+
+	// dq-transform of interface voltage
+	mDq0Voltages = ParkTransform(mThetaMech, mAbcsVoltages);
+	mVoltages(0, 0) = mDq0Voltages(0, 0);
+	mVoltages(1, 0) = mDq0Voltages(1, 0);
+	mVoltages(2, 0) = mDq0Voltages(2, 0);
+
+	// calculate mechanical states
+	mMechPower = mechPower / mNomPower;
+	mMechTorque = mechPower / mOmMech;
+	mElecTorque = mBase_OmElec * (mFluxes(1, 0)*mCurrents(0, 0) - mFluxes(0, 0)*mCurrents(1, 0));
+
+	// Euler step forward
+	mThetaMech = mThetaMech + dt * mOmMech;
+	mOmMech = mOmMech + dt * (mBase_OmElec / (2 * mH) * (mMechTorque - mElecTorque));
+	//mFluxes = mFluxes + dt * (mVoltages - mResistanceMat * mReactanceMat * mFluxes - mOmega_r * mOmegaFluxMat * mFluxes);
+
+	DPSMatrix test = mVoltages - mResistanceMat * mReactanceMat * mFluxes - mOmMech / mBase_OmElec * mOmegaFluxMat * mFluxes;
+
+	mCurrents = mReactanceMat * mFluxes;
+
+	// inverse dq-transform
+	mDq0Currents(0, 0) = mCurrents(0, 0);
+	mDq0Currents(1, 0) = mCurrents(1, 0);
+	mDq0Currents(2, 0) = mCurrents(2, 0);
+	mAbcsCurrents = InverseParkTransform(mThetaMech, mDq0Currents);
+	mAbcsCurrents = mBase_i * mAbcsCurrents;
+}
+
+void SynchronousGenerator::StepInStatorRefFrame(double om, double dt, double t, double fieldVoltage, double mechPower) {
+	// retrieve voltages 
+	mVoltages(5, 0) = fieldVoltage;
+	// TODO mCurrents(5, 0) = fieldCurrent;
+
+	// dq-transform of interface voltage
+	mDq0Voltages = ParkTransform(mThetaMech, mAbcsVoltages);
+	mVoltages(0, 0) = mDq0Voltages(0, 0);
+	mVoltages(1, 0) = mDq0Voltages(1, 0);
+	mVoltages(2, 0) = mDq0Voltages(2, 0);
+
+	// calculate mechanical states
+	mMechPower = mechPower;
+	mMechTorque = mechPower / mOmMech;
+
+	// Euler step forward
+	DPSMatrix test1 = mVoltages;
+	DPSMatrix test2 = mOmMech * mOmegaFluxMat * mFluxes;
+	DPSMatrix test3 = mResistanceMat * mCurrents;//mReactanceMat * mFluxes;
+
+	//mFluxes = mFluxes + dt * (mVoltages - mResistanceMat * mReactanceMat * mFluxes - mOmega_r * mOmegaFluxMat * mFluxes);
+
+	// inverse dq-transform
+	mCurrents = mReactanceMat * mFluxes;
+	mDq0Currents(0, 0) = -mCurrents(0, 0);
+	mDq0Currents(1, 0) = -mCurrents(1, 0);
+	mDq0Currents(2, 0) = -mCurrents(2, 0);
+	mAbcsCurrents = InverseParkTransform(mThetaMech, mDq0Currents);
+
+	//mTheta_r = mTheta_r + dt * mOmega_r;
+	mElecTorque = -3. * mPoleNumber / 4. * (mFluxes(1, 0)*mCurrents(0, 0) - mFluxes(0, 0)*mCurrents(1, 0));
+	//mOmega_r = mOmega_r + dt * (mPoleNumber / (2 * mInertia) * (mMechTorque - mElecTorque));
+}
+
 void SynchronousGenerator::PostStep(DPSMatrix& g, DPSMatrix& j, DPSMatrix& vt, int compOffset, double om, double dt, double t) {
 	if (node1 >= 0) {
 		mAbcsVoltages(0,0) = vt(node1, 0);		
@@ -258,8 +417,12 @@ void SynchronousGenerator::PostStep(DPSMatrix& g, DPSMatrix& j, DPSMatrix& vt, i
 DPSMatrix SynchronousGenerator::ParkTransform(double theta, DPSMatrix& in) {
 	DPSMatrix ParkMat(3,3);
 	ParkMat << 2. / 3. * cos(theta), 2. / 3. * cos(theta - 2. * M_PI / 3.), 2. / 3. * cos(theta + 2. * M_PI / 3.),
-		2. / 3. * sin(theta), 2. / 3. * sin(theta - 2. * M_PI / 3.), 2. / 3. * sin(theta + 2. * M_PI / 3.),
-		1. / 3., 1. / 3., 1. / 3.;
+	2. / 3. * sin(theta), 2. / 3. * sin(theta - 2. * M_PI / 3.), 2. / 3. * sin(theta + 2. * M_PI / 3.),
+	1. / 3., 1. / 3., 1. / 3.;
+
+	// ParkMat << 2. / 3. * cos(theta), 2. / 3. * cos(theta - 2. * M_PI / 3.), 2. / 3. * cos(theta + 2. * M_PI / 3.),
+	//	- 2. / 3. * sin(theta), - 2. / 3. * sin(theta - 2. * M_PI / 3.), - 2. / 3. * sin(theta + 2. * M_PI / 3.),
+	//	1. / 3., 1. / 3., 1. / 3.;
 
 	return ParkMat * in;
 }
