@@ -166,10 +166,10 @@ void SynchronousGenerator::Init(DPSMatrix& g, DPSMatrix& j, int compOffset, doub
 		-1, 0, 0, 0, 0, 0, 0,
 		0, -1, 0, 0, 0, 0, 0,
 		0, 0, -1, 0, 0, 0, 0,
-		0, 0, 0, 0, 0, 0, 0,
-		0, 0, 0, 0, 0, 0, 0,
-		0, 0, 0, 0, 0, 0, 0,
-		0, 0, 0, 0, 0, 0, 0;
+		0, 0, 0, 1, 0, 0, 0,
+		0, 0, 0, 0, 1, 0, 0,
+		0, 0, 0, 0, 0, 1, 0,
+		0, 0, 0, 0, 0, 0, 1;
 
 	mReactanceMat = mInductanceMat.inverse();
 
@@ -192,10 +192,6 @@ void SynchronousGenerator::Init(DPSMatrix& g, DPSMatrix& j, int compOffset, doub
 	mDq0Currents(2, 0) = mCurrents(2, 0);
 	mDq0Currents = mDq0Currents * mBase_i;
 	mAbcsCurrents = InverseParkTransform(mThetaMech, mDq0Currents);
-
-	double testvolt4 = mAbcsCurrents(0, 0) * mBase_Z * 1000;
-	double testvolt5 = mAbcsCurrents(1, 0) * mBase_Z * 1000;
-	double testvolt6 = mAbcsCurrents(2, 0) * mBase_Z * 1000;
 }
 
 void SynchronousGenerator::InitStatesInPerUnit(double initActivePower, double initReactivePower,
@@ -317,7 +313,7 @@ void SynchronousGenerator::Step(DPSMatrix& g, DPSMatrix& j, int compOffset, doub
 	if (mStateType == SynchGenStateType::perUnit) {
 		StepInPerUnit(om, dt, t, fieldVoltage, mechPower);
 	}
-	else if (mStateType == SynchGenStateType::perUnit) {
+	else if (mStateType == SynchGenStateType::statorReferred) {
 		StepInStatorRefFrame(om, dt, t, fieldVoltage, mechPower);
 	}
 
@@ -357,7 +353,7 @@ void SynchronousGenerator::StepInPerUnit(double om, double dt, double t, double 
 	// Euler step forward	
 	mOmMech = mOmMech + dt * (1 / (2 * mH) * (mMechTorque - mElecTorque));
 	DPSMatrix dtFluxes = mVoltages - mResistanceMat * (mReactanceMat * mFluxes) - mOmMech * mOmegaFluxMat * mFluxes;
-	mFluxes = mFluxes + dt * dtFluxes;
+	mFluxes = mFluxes + dt * (mVoltages - mResistanceMat * (mReactanceMat * mFluxes) - mOmMech * mOmegaFluxMat * mFluxes);
 	
 	mCurrents = mReverseCurrents * mReactanceMat * mFluxes;
 
@@ -429,9 +425,10 @@ void SynchronousGenerator::PostStep(DPSMatrix& g, DPSMatrix& j, DPSMatrix& vt, i
 
 DPSMatrix SynchronousGenerator::ParkTransform(double theta, DPSMatrix& in) {
 	DPSMatrix ParkMat(3,3);
-	ParkMat << 2. / 3. * cos(theta), 2. / 3. * cos(theta - 2. * M_PI / 3.), 2. / 3. * cos(theta + 2. * M_PI / 3.),
-	2. / 3. * sin(theta), 2. / 3. * sin(theta - 2. * M_PI / 3.), 2. / 3. * sin(theta + 2. * M_PI / 3.),
-	1. / 3., 1. / 3., 1. / 3.;
+	ParkMat << 
+		2. / 3. * cos(theta), 2. / 3. * cos(theta - 2. * M_PI / 3.), 2. / 3. * cos(theta + 2. * M_PI / 3.),
+		2. / 3. * sin(theta), 2. / 3. * sin(theta - 2. * M_PI / 3.), 2. / 3. * sin(theta + 2. * M_PI / 3.),
+		1. / 3., 1. / 3., 1. / 3.;
 
 	// ParkMat << 2. / 3. * cos(theta), 2. / 3. * cos(theta - 2. * M_PI / 3.), 2. / 3. * cos(theta + 2. * M_PI / 3.),
 	//	- 2. / 3. * sin(theta), - 2. / 3. * sin(theta - 2. * M_PI / 3.), - 2. / 3. * sin(theta + 2. * M_PI / 3.),
@@ -442,7 +439,8 @@ DPSMatrix SynchronousGenerator::ParkTransform(double theta, DPSMatrix& in) {
 
 DPSMatrix SynchronousGenerator::InverseParkTransform(double theta, DPSMatrix& in) {
 	DPSMatrix InverseParkMat(3,3);
-	InverseParkMat << cos(theta), sin(theta), 1,
+	InverseParkMat << 
+		cos(theta), sin(theta), 1,
 		cos(theta - 2. * M_PI / 3.), sin(theta - 2. * M_PI / 3.), 1,
 		cos(theta + 2. * M_PI / 3.), sin(theta + 2. * M_PI / 3.), 1;
 
