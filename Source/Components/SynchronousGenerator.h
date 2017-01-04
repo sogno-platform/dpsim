@@ -134,6 +134,8 @@ class SynchronousGenerator : public BaseComponent {
 		DPSMatrix mDq0Voltages = DPSMatrix::Zero(3, 1);
 		/// interface current vector dq0
 		DPSMatrix mDq0Currents = DPSMatrix::Zero(3, 1);
+		/// matrix for reversing current directions in calculations
+		DPSMatrix mReverseCurrents = DPSMatrix::Zero(7, 7);
 		
 	public:
 		SynchronousGenerator() { };

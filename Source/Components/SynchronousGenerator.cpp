@@ -135,7 +135,8 @@ void SynchronousGenerator::Init(DPSMatrix& g, DPSMatrix& j, int compOffset, doub
 	double initActivePower, double initReactivePower, double initTerminalVolt, double initVoltAngle) {
 
 	// Create matrices for state space representation 
-	mInductanceMat << mLl + mLmq, 0, 0, mLmq, mLmq, 0, 0,
+	mInductanceMat << 
+		mLl + mLmq, 0, 0, mLmq, mLmq, 0, 0,
 		0, mLl + mLmd, 0, 0, 0, mLmd, mLmd,
 		0, 0, mLl, 0, 0, 0, 0,
 		mLmq, 0, 0, mLlkq1 + mLmq, mLmq, 0, 0,
@@ -143,7 +144,8 @@ void SynchronousGenerator::Init(DPSMatrix& g, DPSMatrix& j, int compOffset, doub
 		0, mLmd, 0, 0, 0, mLlfd + mLmd, mLmd,
 		0, mLmd, 0, 0, 0, mLmd, mLlkd + mLmd;
 
-	mResistanceMat << mRs, 0, 0, 0, 0, 0, 0,
+	mResistanceMat << 
+		mRs, 0, 0, 0, 0, 0, 0,
 		0, mRs, 0, 0, 0, 0, 0,
 		0, 0, mRs, 0, 0, 0, 0,
 		0, 0, 0, mRkq1, 0, 0, 0,
@@ -151,9 +153,19 @@ void SynchronousGenerator::Init(DPSMatrix& g, DPSMatrix& j, int compOffset, doub
 		0, 0, 0, 0, 0, mRfd, 0,
 		0, 0, 0, 0, 0, 0, mRkd;
 
-	mOmegaFluxMat << 0, 1, 0, 0, 0, 0, 0,
+	mOmegaFluxMat << 
+		0, 1, 0, 0, 0, 0, 0,
 		-1, 0, 0, 0, 0, 0, 0,
 		0, 0, 0, 0, 0, 0, 0,
+		0, 0, 0, 0, 0, 0, 0,
+		0, 0, 0, 0, 0, 0, 0,
+		0, 0, 0, 0, 0, 0, 0,
+		0, 0, 0, 0, 0, 0, 0;
+
+	mReverseCurrents <<	
+		-1, 0, 0, 0, 0, 0, 0,
+		0, -1, 0, 0, 0, 0, 0,
+		0, 0, -1, 0, 0, 0, 0,
 		0, 0, 0, 0, 0, 0, 0,
 		0, 0, 0, 0, 0, 0, 0,
 		0, 0, 0, 0, 0, 0, 0,
@@ -339,17 +351,15 @@ void SynchronousGenerator::StepInPerUnit(double om, double dt, double t, double 
 
 	// calculate mechanical states
 	mMechPower = mechPower / mNomPower;
-	mMechTorque = mechPower / mOmMech;
-	mElecTorque = mBase_OmElec * (mFluxes(1, 0)*mCurrents(0, 0) - mFluxes(0, 0)*mCurrents(1, 0));
+	mMechTorque = mMechPower / mOmMech;
+	mElecTorque = (mFluxes(1, 0)*mCurrents(0, 0) - mFluxes(0, 0)*mCurrents(1, 0));
 
-	// Euler step forward
-	mThetaMech = mThetaMech + dt * mOmMech;
-	mOmMech = mOmMech + dt * (mBase_OmElec / (2 * mH) * (mMechTorque - mElecTorque));
-	//mFluxes = mFluxes + dt * (mVoltages - mResistanceMat * mReactanceMat * mFluxes - mOmega_r * mOmegaFluxMat * mFluxes);
-
-	DPSMatrix test = mVoltages - mResistanceMat * mReactanceMat * mFluxes - mOmMech / mBase_OmElec * mOmegaFluxMat * mFluxes;
-
-	mCurrents = mReactanceMat * mFluxes;
+	// Euler step forward	
+	mOmMech = mOmMech + dt * (1 / (2 * mH) * (mMechTorque - mElecTorque));
+	DPSMatrix dtFluxes = mVoltages - mResistanceMat * (mReactanceMat * mFluxes) - mOmMech * mOmegaFluxMat * mFluxes;
+	mFluxes = mFluxes + dt * dtFluxes;
+	
+	mCurrents = mReverseCurrents * mReactanceMat * mFluxes;
 
 	// inverse dq-transform
 	mDq0Currents(0, 0) = mCurrents(0, 0);
@@ -357,6 +367,9 @@ void SynchronousGenerator::StepInPerUnit(double om, double dt, double t, double 
 	mDq0Currents(2, 0) = mCurrents(2, 0);
 	mAbcsCurrents = InverseParkTransform(mThetaMech, mDq0Currents);
 	mAbcsCurrents = mBase_i * mAbcsCurrents;
+
+	// Update mechanical rotor angle with respect to electrical angle
+	mThetaMech = mThetaMech + dt * (mOmMech * mBase_OmMech);
 }
 
 void SynchronousGenerator::StepInStatorRefFrame(double om, double dt, double t, double fieldVoltage, double mechPower) {
