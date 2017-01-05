@@ -18,42 +18,9 @@
       <Platform>x64</Platform>
     </ProjectConfiguration>
   </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="..\..\..\Source\Components.h" />
-    <ClInclude Include="..\..\..\Source\Components\Capacitor.h" />
-    <ClInclude Include="..\..\..\Source\Components\BaseComponent.h" />
-    <ClInclude Include="..\..\..\Source\Components\CurrentSource.h" />
-    <ClInclude Include="..\..\..\Source\Components\Inductor.h" />
-    <ClInclude Include="..\..\..\Source\Components\InterfacedInductor.h" />
-    <ClInclude Include="..\..\..\Source\Components\LinearResistor.h" />
-    <ClInclude Include="..\..\..\Source\Components\SynchronousGenerator.h" />
-    <ClInclude Include="..\..\..\Source\Components\VoltageSourceWithResistance.h" />
-    <ClInclude Include="..\..\..\Source\NetlistSim.h" />
-    <ClInclude Include="..\..\..\Source\Simulation.h" />
-    <ClInclude Include="..\..\..\Source\Logger.h" />
-    <ClInclude Include="..\..\..\Source\MathLibrary.h" />
-    <ClInclude Include="..\..\..\Source\SysGenUnitTest.h" />
-    <ClInclude Include="..\..\..\Source\TopologyReader.h" />
-  </ItemGroup>
-  <ItemGroup>
-    <ClCompile Include="..\..\..\Source\Components\Capacitor.cpp" />
-    <ClCompile Include="..\..\..\Source\Components\CurrentSource.cpp" />
-    <ClCompile Include="..\..\..\Source\Components\Inductor.cpp" />
-    <ClCompile Include="..\..\..\Source\Components\InterfacedInductor.cpp" />
-    <ClCompile Include="..\..\..\Source\Components\LinearResistor.cpp" />
-    <ClCompile Include="..\..\..\Source\Components\SynchronousGenerator.cpp" />
-    <ClCompile Include="..\..\..\Source\Components\VoltageSourceWithResistance.cpp" />
-    <ClCompile Include="..\..\..\Source\DPsimMain.cpp" />
-    <ClCompile Include="..\..\..\Source\NetlistSim.cpp" />
-    <ClCompile Include="..\..\..\Source\Simulation.cpp" />
-    <ClCompile Include="..\..\..\Source\Logger.cpp" />
-    <ClCompile Include="..\..\..\Source\SynGenUnitTest.cpp" />
-    <ClCompile Include="..\..\..\Source\TopologyReader.cpp" />
-  </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectGuid>{DFBB524F-1AA2-4113-924A-068B8410F395}</ProjectGuid>
-    <Keyword>Win32Proj</Keyword>
-    <RootNamespace>DPSolverWin10</RootNamespace>
+    <ProjectGuid>{AF003803-2597-43B7-9274-C51E32376E1F}</ProjectGuid>
+    <RootNamespace>DPsimVS2015</RootNamespace>
     <WindowsTargetPlatformVersion>8.1</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
@@ -61,27 +28,27 @@
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
     <PlatformToolset>v140</PlatformToolset>
-    <CharacterSet>Unicode</CharacterSet>
+    <CharacterSet>MultiByte</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
     <PlatformToolset>v140</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
-    <CharacterSet>Unicode</CharacterSet>
+    <CharacterSet>MultiByte</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
     <PlatformToolset>v140</PlatformToolset>
-    <CharacterSet>Unicode</CharacterSet>
+    <CharacterSet>MultiByte</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
     <PlatformToolset>v140</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
-    <CharacterSet>Unicode</CharacterSet>
+    <CharacterSet>MultiByte</CharacterSet>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
   <ImportGroup Label="ExtensionSettings">
@@ -101,80 +68,81 @@
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <LinkIncremental>true</LinkIncremental>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <LinkIncremental>true</LinkIncremental>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-    <LinkIncremental>false</LinkIncremental>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <LinkIncremental>false</LinkIncremental>
-  </PropertyGroup>
+  <PropertyGroup />
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
-      <PrecompiledHeader>
-      </PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>..\..\..\Libraries\eigen-3.2.10;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <SDLCheck>true</SDLCheck>
+      <AdditionalIncludeDirectories>..\..\Libraries\eigen;</AdditionalIncludeDirectories>
     </ClCompile>
-    <Link>
-      <SubSystem>Console</SubSystem>
-      <GenerateDebugInformation>true</GenerateDebugInformation>
-    </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
-      <PrecompiledHeader>
-      </PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>..\..\..\Libraries\eigen;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <SDLCheck>true</SDLCheck>
     </ClCompile>
-    <Link>
-      <SubSystem>Console</SubSystem>
-      <GenerateDebugInformation>true</GenerateDebugInformation>
-    </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
-      <PrecompiledHeader>
-      </PrecompiledHeader>
       <Optimization>MaxSpeed</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <SDLCheck>true</SDLCheck>
     </ClCompile>
     <Link>
-      <SubSystem>Console</SubSystem>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-      <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
-      <PrecompiledHeader>
-      </PrecompiledHeader>
       <Optimization>MaxSpeed</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <SDLCheck>true</SDLCheck>
     </ClCompile>
     <Link>
-      <SubSystem>Console</SubSystem>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-      <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
   </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\Source\Components.h" />
+    <ClInclude Include="..\..\Source\Components\BaseComponent.h" />
+    <ClInclude Include="..\..\Source\Components\Capacitor.h" />
+    <ClInclude Include="..\..\Source\Components\CurrentSource.h" />
+    <ClInclude Include="..\..\Source\Components\Inductor.h" />
+    <ClInclude Include="..\..\Source\Components\InterfaceCurrentSource.h" />
+    <ClInclude Include="..\..\Source\Components\InterfacedInductor.h" />
+    <ClInclude Include="..\..\Source\Components\LinearResistor.h" />
+    <ClInclude Include="..\..\Source\Components\SynchronousGenerator.h" />
+    <ClInclude Include="..\..\Source\Components\VoltageSourceWithResistance.h" />
+    <ClInclude Include="..\..\Source\Logger.h" />
+    <ClInclude Include="..\..\Source\MathLibrary.h" />
+    <ClInclude Include="..\..\Source\NetlistSim.h" />
+    <ClInclude Include="..\..\Source\Simulation.h" />
+    <ClInclude Include="..\..\Source\SysGenUnitTest.h" />
+    <ClInclude Include="..\..\Source\TopologyReader.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\Source\Components\Capacitor.cpp" />
+    <ClCompile Include="..\..\Source\Components\CurrentSource.cpp" />
+    <ClCompile Include="..\..\Source\Components\Inductor.cpp" />
+    <ClCompile Include="..\..\Source\Components\InterfacedInductor.cpp" />
+    <ClCompile Include="..\..\Source\Components\LinearResistor.cpp" />
+    <ClCompile Include="..\..\Source\Components\SynchronousGenerator.cpp" />
+    <ClCompile Include="..\..\Source\Components\VoltageSourceWithResistance.cpp" />
+    <ClCompile Include="..\..\Source\DPsimMain.cpp" />
+    <ClCompile Include="..\..\Source\Logger.cpp" />
+    <ClCompile Include="..\..\Source\NetlistSim.cpp" />
+    <ClCompile Include="..\..\Source\Simulation.cpp" />
+    <ClCompile Include="..\..\Source\SynGenUnitTest.cpp" />
+    <ClCompile Include="..\..\Source\TopologyReader.cpp" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>
