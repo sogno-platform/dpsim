@@ -17,9 +17,7 @@ Simulation::Simulation(std::vector<BaseComponent*> elements, double om, double d
 Simulation::Simulation(std::vector<BaseComponent*> elements, double om, double dt, double tf, Logger& logger) : Simulation(elements, om, dt, tf) {
 	for (std::vector<BaseComponent*>::iterator it = elements.begin(); it != elements.end(); ++it) {
 		logger.Log(Logtype::INFO) << "Added " << (*it)->GetName() << " of type " << typeid(*(*it)).name() << " to simulation." << std::endl;
-		(*it)->Init(A, j, compOffset, om, dt);
 	}
-
 	logger.Log(Logtype::INFO) << "System matrix A:" << std::endl;
 	logger.Log() << A << std::endl;
 	logger.Log(Logtype::INFO) << "Known variables matrix j:" << std::endl;
