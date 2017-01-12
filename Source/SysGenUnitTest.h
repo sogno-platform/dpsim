@@ -1,6 +1,15 @@
 #ifndef  SYSGENUNITTEST_H
 #define SYSGENUNITTEST_H
 
-void SysGenUnitTest();
+#include <iostream>
+#include <string>
+#include "MathLibrary.h"
+#include "Simulation.h"
+#include "Components.h"
+#include "Logger.h"
+
+
+void SysGenUnitTestBalancedResLoad();
+void SysGenUnitTestResLoadAndFault();
 
 #endif

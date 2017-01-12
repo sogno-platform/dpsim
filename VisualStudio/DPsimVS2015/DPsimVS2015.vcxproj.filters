@@ -19,6 +19,12 @@
     <Filter Include="Quelldateien\Components">
       <UniqueIdentifier>{6526eb9a-0b45-4cac-b9eb-6d2dc664196f}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Quelldateien\UnitTests">
+      <UniqueIdentifier>{33241b73-3048-40ec-b68c-e3cedd1b1f63}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Headerdateien\UnitTests">
+      <UniqueIdentifier>{fc223e5c-0c3b-447b-8518-b7db8009719b}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\Source\Components.h">
@@ -34,9 +40,6 @@
       <Filter>Headerdateien</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Source\Simulation.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\Source\SysGenUnitTest.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Source\TopologyReader.h">
@@ -69,6 +72,12 @@
     <ClInclude Include="..\..\Source\Components\Capacitor.h">
       <Filter>Headerdateien\Components</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\Source\SysGenUnitTest.h">
+      <Filter>Headerdateien\UnitTests</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\Components\SynGenDynPhasor.h">
+      <Filter>Headerdateien\Components</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\Source\DPsimMain.cpp">
@@ -81,9 +90,6 @@
       <Filter>Quelldateien</Filter>
     </ClCompile>
     <ClCompile Include="..\..\Source\Simulation.cpp">
-      <Filter>Quelldateien</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\Source\SynGenUnitTest.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
     <ClCompile Include="..\..\Source\TopologyReader.cpp">
@@ -108,6 +114,12 @@
       <Filter>Quelldateien\Components</Filter>
     </ClCompile>
     <ClCompile Include="..\..\Source\Components\CurrentSource.cpp">
+      <Filter>Quelldateien\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\SynGenUnitTest.cpp">
+      <Filter>Quelldateien\UnitTests</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\Components\SynGenDynPhasor.cpp">
       <Filter>Quelldateien\Components</Filter>
     </ClCompile>
   </ItemGroup>

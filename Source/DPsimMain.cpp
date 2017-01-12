@@ -6,7 +6,9 @@
 int main(int argc, char* argv[]) {
 
 	//NetlistSim(argc, argv);
-	SysGenUnitTest();
+	
+	//SysGenUnitTestBalancedResLoad();
+	SysGenUnitTestResLoadAndFault();
 
 	std::cin.get();
 	return 0;	
