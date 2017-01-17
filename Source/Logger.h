@@ -22,6 +22,7 @@ class Logger {
 		std::ostringstream& Log();
 		std::ostringstream& Log(Logtype type);
 		void WriteLogToFile(std::string fileName);
+		static std::ostringstream VectorToDataLine(double time, DPSMatrix vector);
 };
 #endif
 

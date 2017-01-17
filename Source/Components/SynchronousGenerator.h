@@ -105,7 +105,6 @@ class SynchronousGenerator : public BaseComponent {
 		double mOmMech;
 		/// theta
 		double mThetaMech;
-		/// 
 		/// mechanical Power Pm [W]
 		double mMechPower;
 		/// mechanical torque
@@ -118,14 +117,6 @@ class SynchronousGenerator : public BaseComponent {
 		DPSMatrix mFluxes = DPSMatrix::Zero(7, 1);
 		/// current vector
 		DPSMatrix mCurrents = DPSMatrix::Zero(7 ,1);
-		/// inductance matrix
-		DPSMatrix mInductanceMat = DPSMatrix::Zero(7, 7);
-		/// resistance matrix
-		DPSMatrix mResistanceMat = DPSMatrix::Zero(7, 7);
-		/// reactance matrix
-		DPSMatrix mReactanceMat = DPSMatrix::Zero(7, 7);
-		/// omega - flux matrix
-		DPSMatrix mOmegaFluxMat = DPSMatrix::Zero(7, 7);
 		/// interface voltage vector abcs
 		DPSMatrix mAbcsVoltages = DPSMatrix::Zero(3, 1);
 		/// interface current vector abcs
@@ -134,7 +125,17 @@ class SynchronousGenerator : public BaseComponent {
 		DPSMatrix mDq0Voltages = DPSMatrix::Zero(3, 1);
 		/// interface current vector dq0
 		DPSMatrix mDq0Currents = DPSMatrix::Zero(3, 1);
-		/// matrix for reversing current directions in calculations
+		
+		// ### Useful Matrices ###
+		/// inductance matrix
+		DPSMatrix mInductanceMat = DPSMatrix::Zero(7, 7);
+		/// resistance matrix
+		DPSMatrix mResistanceMat = DPSMatrix::Zero(7, 7);
+		/// reactance matrix
+		DPSMatrix mReactanceMat = DPSMatrix::Zero(7, 7);
+		/// omega - flux matrix
+		DPSMatrix mOmegaFluxMat = DPSMatrix::Zero(7, 7);	
+		/// matrix for reversing stator current directions in calculations with respect to other currents
 		DPSMatrix mReverseCurrents = DPSMatrix::Zero(7, 7);
 		
 	public:
@@ -201,5 +202,9 @@ class SynchronousGenerator : public BaseComponent {
 
 		/// Inverse Park transform as described in Krause
 		DPSMatrix InverseParkTransform(double theta, DPSMatrix& in);
+
+		DPSMatrix GetVoltages() { return mVoltages; }
+		DPSMatrix GetCurrents() { return mCurrents; }
+		DPSMatrix GetFluxes() { return mFluxes; }
 };
 #endif

@@ -49,3 +49,13 @@ void Logger::WriteLogToFile(std::string fileName) {
 
 	mLogFile.close();
 }
+
+std::ostringstream Logger::VectorToDataLine(double time, DPSMatrix vector) {
+	std::ostringstream output;
+	output << std::scientific << time;
+	for (int i = 0; i < vector.rows(); i++) {
+		output << ", " << vector(i, 0);
+	}
+	output << std::endl;
+	return output;
+}

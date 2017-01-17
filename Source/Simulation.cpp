@@ -97,21 +97,9 @@ DPSMatrix Simulation::GetVoltages() {
 }
 
 std::ostringstream Simulation::GetVoltageDataLine() {
-	std::ostringstream output;
-	output << std::scientific << t;
-	for (int i = 0; i < vt.rows(); i++) {
-		output << ", " << vt(i, 0);
-	}
-	output << std::endl;
-	return output;
+	return Logger::VectorToDataLine(t, vt);
 }
 
 std::ostringstream Simulation::GetCurrentDataLine() {
-	std::ostringstream output;
-	output << std::scientific << t;
-	for (int i = 0; i < j.rows(); i++) {
-		output << ", " << j(i, 0);
-	}
-	output << std::endl;
-	return output;
+	return Logger::VectorToDataLine(t, j);
 }

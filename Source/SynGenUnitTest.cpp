@@ -144,7 +144,7 @@ void SysGenUnitTestBalancedResLoad() {
 
 void SysGenUnitTestResLoadAndFault() {
 	// Define Object for saving data on a file
-	Logger log, vtLog, jLog;
+	Logger log, vtLog, jLog, synGenLogVolt, synGenLogCurr, synGenLogFlux;
 
 	// Define machine parameters in per unit
 	double nomPower = 555e6;
@@ -198,7 +198,7 @@ void SysGenUnitTestResLoadAndFault() {
 	// Set up simulation
 	double tf, dt, t;
 	double om = 2.0*M_PI*60.0;
-	tf = 0.2; dt = 0.000050; t = 0;
+	tf = 0.2; dt = 0.0000001; t = 0;
 	Simulation newSim(circElements, om, dt, tf, log);
 	Simulation newSimBreakerOn(circElementsBreakerOn, om, dt, tf, log);
 
@@ -207,8 +207,8 @@ void SysGenUnitTestResLoadAndFault() {
 	double initReactivePower = 0;
 	double initTerminalVolt = 24000 / sqrt(3) * sqrt(2);
 	double initVoltAngle = -DPS_PI / 2;
-	((SynchronousGenerator*)newSim.elements[0])->Init(newSim.A, newSim.j, 0, om, dt,
-		initActivePower, initReactivePower, initTerminalVolt, initVoltAngle);
+	SynchronousGenerator* synGen = (SynchronousGenerator*)newSim.elements[0];
+	synGen->Init(newSim.A, newSim.j, 0, om, dt, initActivePower, initReactivePower, initTerminalVolt, initVoltAngle);
 
 	// Calculate initial values for circuit at generator connection point
 	double initApparentPower = sqrt(pow(initActivePower, 2) + pow(initReactivePower, 2));
@@ -230,15 +230,11 @@ void SysGenUnitTestResLoadAndFault() {
 	std::cout << "j vector:" << std::endl;
 	std::cout << newSim.j << std::endl;
 
+	int logCount = 0;
+
 	// Main Simulation Loop
 	while (newSim.t < tf)
 	{
-		std::cout << newSim.t << std::endl;
-		//std::cout << "j vector:" << std::endl;
-		//std::cout << newSim.j << std::endl;
-		//std::cout << "vt vector:" << std::endl;
-		//std::cout << newSim.vt << std::endl;
-
 		// Set to zero because all components will add their contribution for the current time step to the current value
 		newSim.j.setZero();
 
@@ -271,8 +267,17 @@ void SysGenUnitTestResLoadAndFault() {
 		}
 
 		// Save simulation step data
-		vtLog.Log() << newSim.GetVoltageDataLine().str();
-		jLog.Log() << newSim.GetCurrentDataLine().str();
+		logCount++;
+		if (logCount == 1000) {
+			synGenLogFlux.Log() << Logger::VectorToDataLine(newSim.t, synGen->GetFluxes()).str();
+			synGenLogVolt.Log() << Logger::VectorToDataLine(newSim.t, synGen->GetVoltages()).str();
+			synGenLogCurr.Log() << Logger::VectorToDataLine(newSim.t, synGen->GetCurrents()).str();
+			vtLog.Log() << newSim.GetVoltageDataLine().str();
+			jLog.Log() << newSim.GetCurrentDataLine().str();
+
+			std::cout << newSim.t << std::endl;
+			logCount = 0;
+		}		
 
 		// timestep
 		newSim.t += dt;
@@ -282,6 +287,9 @@ void SysGenUnitTestResLoadAndFault() {
 	log.WriteLogToFile("log.txt");
 	vtLog.WriteLogToFile("data_vt.csv");
 	jLog.WriteLogToFile("data_j.csv");
+	synGenLogFlux.WriteLogToFile("data_synGen_flux.csv");
+	synGenLogVolt.WriteLogToFile("data_synGen_volt.csv");
+	synGenLogCurr.WriteLogToFile("data_synGen_curr.csv");
 
 	std::cout << "Simulation finished." << std::endl;
 }

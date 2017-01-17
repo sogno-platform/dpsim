@@ -3,6 +3,7 @@
 
 #include <string>
 #include <iostream>
+#include "../Logger.h"
 
 #include "../MathLibrary.h"
 

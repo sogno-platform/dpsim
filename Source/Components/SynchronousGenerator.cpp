@@ -337,7 +337,7 @@ void SynchronousGenerator::StepInPerUnit(double om, double dt, double t, double 
 	mAbcsVoltages = (1 / mBase_v) * mAbcsVoltages;
 	mAbcsCurrents = (1 / mBase_i) * mAbcsCurrents;
 	// mVoltages(5, 0) = fieldVoltage / mBase_v;
-	// TODO calculate effect of changed field voltage mCurrents(5, 0) = fieldCurrent / mBase_i;
+	// TODO calculate effect of changed field voltage
 
 	// dq-transform of interface voltage
 	mDq0Voltages = ParkTransform(mThetaMech, mAbcsVoltages);
@@ -352,8 +352,9 @@ void SynchronousGenerator::StepInPerUnit(double om, double dt, double t, double 
 
 	// Euler step forward	
 	mOmMech = mOmMech + dt * (1 / (2 * mH) * (mMechTorque - mElecTorque));
-	DPSMatrix dtFluxes = mVoltages - mResistanceMat * (mReactanceMat * mFluxes) - mOmMech * mOmegaFluxMat * mFluxes;
-	mFluxes = mFluxes + dt * (mVoltages - mResistanceMat * (mReactanceMat * mFluxes) - mOmMech * mOmegaFluxMat * mFluxes);
+	DPSMatrix currents = mReverseCurrents * mReactanceMat * mFluxes;
+	DPSMatrix dtFluxes = mVoltages - mResistanceMat * currents - mOmMech * mOmegaFluxMat * mFluxes;
+	mFluxes = mFluxes + dt * mBase_OmElec * dtFluxes;
 	
 	mCurrents = mReverseCurrents * mReactanceMat * mFluxes;
 
