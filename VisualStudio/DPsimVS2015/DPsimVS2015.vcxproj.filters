@@ -60,9 +60,6 @@
     <ClInclude Include="..\..\Source\Components\LinearResistor.h">
       <Filter>Headerdateien\Components</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\Source\Components\SynchronousGenerator.h">
-      <Filter>Headerdateien\Components</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\Source\Components\VoltageSourceWithResistance.h">
       <Filter>Headerdateien\Components</Filter>
     </ClInclude>
@@ -72,11 +69,14 @@
     <ClInclude Include="..\..\Source\Components\Capacitor.h">
       <Filter>Headerdateien\Components</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\Source\SysGenUnitTest.h">
-      <Filter>Headerdateien\UnitTests</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\Source\Components\SynGenDynPhasor.h">
+    <ClInclude Include="..\..\Source\Components\SynchronGeneratorEMT.h">
       <Filter>Headerdateien\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\Components\SynchronGenerator.h">
+      <Filter>Headerdateien\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\SynchronGenUnitTest.h">
+      <Filter>Headerdateien\UnitTests</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -104,9 +104,6 @@
     <ClCompile Include="..\..\Source\Components\LinearResistor.cpp">
       <Filter>Quelldateien\Components</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\Source\Components\SynchronousGenerator.cpp">
-      <Filter>Quelldateien\Components</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\Source\Components\VoltageSourceWithResistance.cpp">
       <Filter>Quelldateien\Components</Filter>
     </ClCompile>
@@ -116,11 +113,14 @@
     <ClCompile Include="..\..\Source\Components\CurrentSource.cpp">
       <Filter>Quelldateien\Components</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\Source\SynGenUnitTest.cpp">
-      <Filter>Quelldateien\UnitTests</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\Source\Components\SynGenDynPhasor.cpp">
+    <ClCompile Include="..\..\Source\Components\SynchronGenerator.cpp">
       <Filter>Quelldateien\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\Components\SynchronGeneratorEMT.cpp">
+      <Filter>Quelldateien\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\SynchronGenUnitTest.cpp">
+      <Filter>Quelldateien\UnitTests</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

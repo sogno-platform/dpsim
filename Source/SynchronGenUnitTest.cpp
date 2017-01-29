@@ -1,6 +1,6 @@
-#include "SysGenUnitTest.h"
+#include "SynchronGenUnitTest.h"
 
-void SysGenUnitTestBalancedResLoad() {
+void SynGenUnitTestBalancedResLoad() {
 	
 	// Define Object for saving data on a file
 	Logger log, vtLog, jLog;
@@ -50,7 +50,7 @@ void SysGenUnitTestBalancedResLoad() {
 	double Llkq2 = 0.125;
 
 	// Declare circuit components
-	BaseComponent* gen = new SynchronousGenerator("gen", 1, 2, 3, 
+	BaseComponent* gen = new SynchronGeneratorEMT("gen", 1, 2, 3,
 		SynchGenStateType::perUnit, nomPower, nomPhPhVoltRMS, nomFreq, poleNum, nomFieldCurr,
 		SynchGenParamType::perUnit, Rs, Ll, Lmd, Lmd0, Lmq, Lmq0, Rfd, Llfd, Rkd, Llkd, Rkq1, Llkq1, Rkq2, Llkq2, H);
 	double loadRes = 1037.8378;
@@ -75,7 +75,7 @@ void SysGenUnitTestBalancedResLoad() {
 	double initReactivePower = 0;
 	double initTerminalVolt = 24000 / sqrt(3) * sqrt(2);
 	double initVoltAngle = -DPS_PI / 2;
-	((SynchronousGenerator*)newSim.elements[0])->Init(newSim.A, newSim.j, 0, om, dt,
+	((SynchronGeneratorEMT*)newSim.elements[0])->Init(newSim.A, newSim.j, 0, om, dt,
 		initActivePower, initReactivePower, initTerminalVolt, initVoltAngle);
 
 	// Calculate initial values for circuit at generator connection point
@@ -112,7 +112,7 @@ void SysGenUnitTestBalancedResLoad() {
 		// Individual step function for generator
 		double fieldVoltage = 7.0821;
 		double mechPower = 5.5558e5;
-		((SynchronousGenerator*)newSim.elements[0])->Step(newSim.A, newSim.j, 0, om, dt, newSim.t, fieldVoltage, mechPower);
+		((SynchronGeneratorEMT*)newSim.elements[0])->Step(newSim.A, newSim.j, 0, om, dt, newSim.t, fieldVoltage, mechPower);
 
 		// Solve circuit for vector j with generator output current
 		newSim.vt = newSim.luFactored.solve(newSim.j);
@@ -138,7 +138,7 @@ void SysGenUnitTestBalancedResLoad() {
 	std::cout << "Simulation finished." << std::endl;
 }
 
-void SysGenUnitTestPhaseToPhaseFault() {
+void SynGenUnitTestPhaseToPhaseFault() {
 	// Define Object for saving data on a file
 	Logger log, vtLog, jLog, synGenLogVolt, synGenLogCurr, synGenLogFlux;
 
@@ -167,7 +167,7 @@ void SysGenUnitTestPhaseToPhaseFault() {
 	double Llkq2 = 0.125;
 
 	// Declare circuit components
-	BaseComponent* gen = new SynchronousGenerator("gen", 1, 2, 3,
+	BaseComponent* gen = new SynchronGeneratorEMT("gen", 1, 2, 3,
 		SynchGenStateType::perUnit, nomPower, nomPhPhVoltRMS, nomFreq, poleNum, nomFieldCurr,
 		SynchGenParamType::perUnit, Rs, Ll, Lmd, Lmd0, Lmq, Lmq0, Rfd, Llfd, Rkd, Llkd, Rkq1, Llkq1, Rkq2, Llkq2, H);
 	double loadRes = 1037.8378;
@@ -203,7 +203,7 @@ void SysGenUnitTestPhaseToPhaseFault() {
 	double initReactivePower = 0;
 	double initTerminalVolt = 24000 / sqrt(3) * sqrt(2);
 	double initVoltAngle = -DPS_PI / 2;
-	SynchronousGenerator* synGen = (SynchronousGenerator*)newSim.elements[0];
+	SynchronGeneratorEMT* synGen = (SynchronGeneratorEMT*)newSim.elements[0];
 	synGen->Init(newSim.A, newSim.j, 0, om, dt, initActivePower, initReactivePower, initTerminalVolt, initVoltAngle);
 
 	// Calculate initial values for circuit at generator connection point
@@ -242,7 +242,7 @@ void SysGenUnitTestPhaseToPhaseFault() {
 		// Individual step function for generator
 		double fieldVoltage = 7.0821;
 		double mechPower = 5.5558e5;
-		((SynchronousGenerator*)newSim.elements[0])->Step(newSim.A, newSim.j, 0, om, dt, newSim.t, fieldVoltage, mechPower);
+		((SynchronGeneratorEMT*)newSim.elements[0])->Step(newSim.A, newSim.j, 0, om, dt, newSim.t, fieldVoltage, mechPower);
 
 		// Change system matrix at step time
 		if (newSim.t > (0.1 - dt*0.9) && newSim.t < (0.1 + dt*0.9)) {
@@ -290,7 +290,7 @@ void SysGenUnitTestPhaseToPhaseFault() {
 	std::cout << "Simulation finished." << std::endl;
 }
 
-void SysGenUnitTestThreePhaseFault() {
+void SynGenUnitTestThreePhaseFault() {
 	// Define Object for saving data on a file
 	Logger log, vtLog, jLog, synGenLogVolt, synGenLogCurr, synGenLogFlux;
 
@@ -319,7 +319,7 @@ void SysGenUnitTestThreePhaseFault() {
 	double Llkq2 = 0.125;
 
 	// Declare circuit components
-	BaseComponent* gen = new SynchronousGenerator("gen", 1, 2, 3,
+	BaseComponent* gen = new SynchronGeneratorEMT("gen", 1, 2, 3,
 		SynchGenStateType::perUnit, nomPower, nomPhPhVoltRMS, nomFreq, poleNum, nomFieldCurr,
 		SynchGenParamType::perUnit, Rs, Ll, Lmd, Lmd0, Lmq, Lmq0, Rfd, Llfd, Rkd, Llkd, Rkq1, Llkq1, Rkq2, Llkq2, H);
 	double loadRes = 1037.8378;
@@ -358,7 +358,7 @@ void SysGenUnitTestThreePhaseFault() {
 	double initReactivePower = 0;
 	double initTerminalVolt = 24000 / sqrt(3) * sqrt(2);
 	double initVoltAngle = -DPS_PI / 2;
-	SynchronousGenerator* synGen = (SynchronousGenerator*)newSim.elements[0];
+	SynchronGeneratorEMT* synGen = (SynchronGeneratorEMT*)newSim.elements[0];
 	synGen->Init(newSim.A, newSim.j, 0, om, dt, initActivePower, initReactivePower, initTerminalVolt, initVoltAngle);
 
 	// Calculate initial values for circuit at generator connection point
@@ -391,7 +391,7 @@ void SysGenUnitTestThreePhaseFault() {
 		// Individual step function for generator
 		double fieldVoltage = 7.0821;
 		double mechPower = 5.5558e5;
-		((SynchronousGenerator*)newSim.elements[0])->Step(newSim.A, newSim.j, 0, om, dt, newSim.t, fieldVoltage, mechPower);
+		((SynchronGeneratorEMT*)newSim.elements[0])->Step(newSim.A, newSim.j, 0, om, dt, newSim.t, fieldVoltage, mechPower);
 
 		// Change system matrix at step time
 		if (newSim.t > (0.05 - dt*0.9) && newSim.t < (0.05 + dt*0.9)) {

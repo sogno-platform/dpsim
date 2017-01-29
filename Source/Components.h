@@ -5,4 +5,5 @@
 #include "Components/CurrentSource.h"
 #include "Components/VoltageSourceWithResistance.h"
 #include "Components/InterfacedInductor.h"
-#include "Components/SynchronousGenerator.h"
+#include "Components/SynchronGeneratorEMT.h"
+#include "Components/SynchronGenerator.h"

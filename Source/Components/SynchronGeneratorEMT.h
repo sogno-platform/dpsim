@@ -1,5 +1,5 @@
-#ifndef SYNCHRONOUSGENERATOR_H
-#define SYNCHRONOUSGENERATOR_H
+#ifndef SYNCHRONGENERATOREMT_H
+#define SYNCHRONGENERATOREMT_H
 
 #include "BaseComponent.h"
 
@@ -13,7 +13,7 @@ enum class SynchGenParamType { perUnit, statorReferred };
 /// parameter names include underscores and typical variables names found in literature instead of
 /// descriptive names in order to shorten formulas and increase the readability
 
-class SynchronousGenerator : public BaseComponent {
+class SynchronGeneratorEMT : public BaseComponent {
 	protected:
 				
 		// ### Machine parameters ###
@@ -139,7 +139,7 @@ class SynchronousGenerator : public BaseComponent {
 		DPSMatrix mReverseCurrents = DPSMatrix::Zero(7, 7);
 		
 	public:
-		SynchronousGenerator() { };
+		SynchronGeneratorEMT() { };
 		void applyMatrixStamp(DPSMatrix& g, DPSMatrix& j, int compOffset, double om, double dt) { }
 		void Init(DPSMatrix& g, DPSMatrix& j, int compOffset, double om, double dt) { }
 		void Step(DPSMatrix& g, DPSMatrix& j, int compOffset, double om, double dt, double t) { }
@@ -147,7 +147,7 @@ class SynchronousGenerator : public BaseComponent {
 		/// Initializes the per unit or stator referred machine parameters with the machine parameters given in per unit or 
 		/// stator referred parameters depending on the setting of parameter type.
 		/// The initialization mode depends on the setting of state type.
-		SynchronousGenerator::SynchronousGenerator(std::string name, int node1, int node2, int node3,
+		SynchronGeneratorEMT(std::string name, int node1, int node2, int node3,
 			SynchGenStateType stateType, double nomPower, double nomVolt, double nomFreq, int poleNumber, double nomFieldCur,
 			SynchGenParamType paramType, double Rs, double Ll, double Lmd, double Lmd0, double Lmq, double Lmq0,
 			double Rfd, double Llfd, double Rkd, double Llkd,
