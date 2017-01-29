@@ -10,6 +10,7 @@
 
 
 void SysGenUnitTestBalancedResLoad();
-void SysGenUnitTestResLoadAndFault();
+void SysGenUnitTestPhaseToPhaseFault();
+void SysGenUnitTestThreePhaseFault();
 
 #endif

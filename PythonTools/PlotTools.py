@@ -51,3 +51,23 @@ def plotResultsSynGenUnitTest(filename, node1, node2, node3):
 	ax1.set_ylabel('Magnitude')
 	ax1.grid(True)
 	plt.show()
+
+def plotResultsSynGenUnitTestVar(filename, varNum):
+
+	df = pd.read_csv(filename, header=None)
+	print(df.shape)
+
+	if (df.shape[1]) < varNum or varNum < 0:
+		print('Variable not available')
+		exit()
+
+	time = np.array(df.ix[:,0])
+	mag = np.array(df.ix[:,varNum])
+
+	fig, ax1 = plt.subplots()
+	ax1.plot(time, mag, 'b-')
+	#plt.yticks(np.arange(-10, 10, 1.0))
+	ax1.set_xlabel('time [s]')
+	ax1.set_ylabel('Magnitude')
+	ax1.grid(True)
+	plt.show()

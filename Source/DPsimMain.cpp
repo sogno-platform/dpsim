@@ -8,7 +8,8 @@ int main(int argc, char* argv[]) {
 	//NetlistSim(argc, argv);
 	
 	//SysGenUnitTestBalancedResLoad();
-	SysGenUnitTestResLoadAndFault();
+	//SysGenUnitTestPhaseToPhaseFault();
+	SysGenUnitTestThreePhaseFault();
 
 	std::cin.get();
 	return 0;	
