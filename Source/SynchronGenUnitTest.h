@@ -8,9 +8,12 @@
 #include "Components.h"
 #include "Logger.h"
 
-
+// EMT generator tests
 void SynGenUnitTestBalancedResLoad();
 void SynGenUnitTestPhaseToPhaseFault();
 void SynGenUnitTestThreePhaseFault();
+
+// Dynamic Phasor generator tests
+void SynGenDPUnitTestBalancedResLoad();
 
 #endif

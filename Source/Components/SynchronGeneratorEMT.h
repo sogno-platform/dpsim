@@ -1,10 +1,7 @@
 #ifndef SYNCHRONGENERATOREMT_H
 #define SYNCHRONGENERATOREMT_H
 
-#include "BaseComponent.h"
-
-enum class SynchGenStateType { perUnit, statorReferred };
-enum class SynchGenParamType { perUnit, statorReferred };
+#include "../Components.h"
 
 /// Synchronous generator model
 /// If parInPerUnit is not set, the parameters have to be given with their respective stator or rotor 
