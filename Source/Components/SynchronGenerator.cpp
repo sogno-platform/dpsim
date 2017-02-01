@@ -1,5 +1,5 @@
 #include "SynchronGenerator.h"
-/*
+
 using namespace DPsim;
 
 SynchronGenerator::SynchronGenerator(std::string name, int node1, int node2, int node3,
@@ -230,20 +230,20 @@ void SynchronGenerator::Step(DPSMatrix& g, DPSMatrix& j, int compOffset, double 
 		StepInPerUnit(om, dt, t, fieldVoltage, mechPower);
 	}
 	else if (mStateType == SynchGenStateType::statorReferred) {
-		StepInStatorRefFrame(om, dt, t, fieldVoltage, mechPower);
+		//StepInStatorRefFrame(om, dt, t, fieldVoltage, mechPower);
 	}
 
 	// Update current source accordingly
 	if (node1 >= 0) {
-		j(node1, 0) = j(node1, 0) + mAbcsCurrents(0, 0);
+		j(node1, 0) = j(node1, 0) + mAbcsCurrents(0, 0).real();
 		j(compOffset + node1, 0) = j(compOffset + node1, 0);
 	}
 	if (node2 >= 0) {
-		j(node2, 0) = j(node2, 0) + mAbcsCurrents(1, 0);
+		j(node2, 0) = j(node2, 0) + mAbcsCurrents(1, 0).real();
 		j(compOffset + node2, 0) = j(compOffset + node2, 0);
 	}
 	if (node3 >= 0) {
-		j(node3, 0) = j(node3, 0) + mAbcsCurrents(2, 0);
+		j(node3, 0) = j(node3, 0) + mAbcsCurrents(2, 0).real();
 		j(compOffset + node3, 0) = j(compOffset + node3, 0);
 	}
 }
@@ -325,4 +325,3 @@ MatrixComp SynchronGenerator::InverseParkTransform(Complex theta, MatrixComp& in
 
 	return InverseParkMat * in;
 }
-*/

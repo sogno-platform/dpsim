@@ -1,7 +1,8 @@
 #ifndef SYNCHRONGENERATOREMT_H
 #define SYNCHRONGENERATOREMT_H
 
-#include "../Components.h"
+#include "BaseComponent.h"
+#include "ComponentCommons.h"
 
 /// Synchronous generator model
 /// If parInPerUnit is not set, the parameters have to be given with their respective stator or rotor 

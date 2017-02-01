@@ -115,6 +115,7 @@
     <ClInclude Include="..\..\Source\Components.h" />
     <ClInclude Include="..\..\Source\Components\BaseComponent.h" />
     <ClInclude Include="..\..\Source\Components\Capacitor.h" />
+    <ClInclude Include="..\..\Source\Components\ComponentCommons.h" />
     <ClInclude Include="..\..\Source\Components\CurrentSource.h" />
     <ClInclude Include="..\..\Source\Components\Inductor.h" />
     <ClInclude Include="..\..\Source\Components\InterfaceCurrentSource.h" />

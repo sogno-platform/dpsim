@@ -1,9 +1,8 @@
-/*
-
 #ifndef SYNCHRONGENERATOR_H
 #define SYNCHRONGENERATOR_H
 
-#include "../Components.h"
+#include "BaseComponent.h"
+#include "ComponentCommons.h"
 
 namespace DPsim {
 
@@ -163,14 +162,7 @@ namespace DPsim {
 			Real Rkq2, Real Llkq2,
 			Real H);
 
-		/// Not finished yet.
-		void InitWithStatorRefParam(
-			Real Rs, Real Ll, Real Lmd, Real Lmd0, Real Lmq, Real Lmq0,
-			Real Rfd, Real Llfd, Real Rkd, Real Llkd,
-			Real Rkq1, Real Llkq1, Real Rkq2, Real Llkq2,
-			Real J);
-
-		/// Initializes states in per unit or stator referred variables depending on the setting of the state type. 
+				/// Initializes states in per unit or stator referred variables depending on the setting of the state type. 
 		/// Function parameters have to be given in real units.
 		void Init(DPSMatrix& g, DPSMatrix& j, int compOffset, Real om, Real dt,
 			Real initActivePower, Real initReactivePower, Real initTerminalVolt, Real initVoltAngle);
@@ -178,10 +170,6 @@ namespace DPsim {
 		/// Initializes states in per unit. All machine parameters are assumed to be in per unit.
 		/// Function parameters have to be given in real units.
 		void InitStatesInPerUnit(Real initActivePower, Real initReactivePower,
-			Real initTerminalVolt, Real initVoltAngle);
-
-		/// Not finished yet
-		void InitStatesInStatorRefFrame(Real initActivePower, Real initReactivePower,
 			Real initTerminalVolt, Real initVoltAngle);
 
 		/// Performs an Euler forward step with the state space model of a synchronous generator 
@@ -192,9 +180,6 @@ namespace DPsim {
 		/// to calculate the flux and current from the voltage vector in per unit.
 		void StepInPerUnit(Real om, Real dt, Real t, Real fieldVoltage, Real mechPower);
 
-		/// Not finished yet.
-		void StepInStatorRefFrame(Real om, Real dt, Real t, Real fieldVoltage, Real mechPower);
-
 		/// Retrieves calculated voltage from simulation for next step
 		void PostStep(DPSMatrix& g, DPSMatrix& j, DPSMatrix& vt, int compOffset, Real om, Real dt, Real t);
 
@@ -204,10 +189,9 @@ namespace DPsim {
 		/// Inverse Park transform as described in Krause
 		MatrixComp InverseParkTransform(Complex theta, MatrixComp& in);
 
-		DPSMatrix GetVoltages() { return mVoltages; }
-		DPSMatrix GetCurrents() { return mCurrents; }
-		DPSMatrix GetFluxes() { return mFluxes; }
+		MatrixComp GetVoltages() { return mVoltages; }
+		MatrixComp GetCurrents() { return mCurrents; }
+		MatrixComp GetFluxes() { return mFluxes; }
 	};
 }
 #endif
-*/
