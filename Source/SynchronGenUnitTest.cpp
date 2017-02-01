@@ -69,7 +69,7 @@ void SynGenUnitTestBalancedResLoad() {
 	// Set up simulation
 	double tf, dt, t;
 	double om = 2.0*M_PI*60.0;
-	tf = 0.1; dt = 0.000050; t = 0;
+	tf = 0.1; dt = 0.0000001; t = 0;
 	Simulation newSim(circElements, om, dt, tf, log);
 
 	// Initialize generator
@@ -442,6 +442,7 @@ void SynGenUnitTestThreePhaseFault() {
 }
 
 void SynGenDPUnitTestBalancedResLoad() {
+	/*
 	// Define Object for saving data on a file
 	Logger log, vtLog, jLog;
 
@@ -556,4 +557,7 @@ void SynGenDPUnitTestBalancedResLoad() {
 	jLog.WriteLogToFile("data_j.csv");
 
 	std::cout << "Simulation finished." << std::endl;
+
+	*/
+
 }

@@ -78,6 +78,9 @@
     <ClInclude Include="..\..\Source\SynchronGenUnitTest.h">
       <Filter>Headerdateien\UnitTests</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\Source\Components\ComponentCommons.h">
+      <Filter>Headerdateien\Components</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\Source\DPsimMain.cpp">

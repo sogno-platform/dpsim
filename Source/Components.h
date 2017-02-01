@@ -10,8 +10,6 @@
 #include "Components/InterfacedInductor.h"
 #include "Components/SynchronGeneratorEMT.h"
 #include "Components/SynchronGenerator.h"
-
-enum class SynchGenStateType { perUnit, statorReferred };
-enum class SynchGenParamType { perUnit, statorReferred };
+#include "Components/ComponentCommons.h"
 
 #endif // !COMPONENTS_H
