@@ -4,7 +4,7 @@ Capacitor::Capacitor(std::string name, int src, int dest, double capacitance) : 
 	this->capacitance = capacitance;
 };	
 		
-void Capacitor::applyMatrixStamp(DPSMatrix& g, DPSMatrix& j, int compOffset, double om, double dt) {
+void Capacitor::applySystemMatrixStamp(DPSMatrix& g, int compOffset, double om, double dt) {
 	double gcr = 2.0*capacitance/dt;
 	double gci = om*capacitance;	
 
@@ -34,11 +34,9 @@ void Capacitor::applyMatrixStamp(DPSMatrix& g, DPSMatrix& j, int compOffset, dou
 		g(node2, compOffset + node1) = g(node2, compOffset + node1) + gci;
 	}
 }
-		
-void Capacitor::Init(DPSMatrix& g, DPSMatrix& j, int compOffset, double om, double dt) {
-	applyMatrixStamp(g, j, compOffset, om, dt);
 
-	// Initialize internal state
+/// Initialize internal state
+void Capacitor::init(int compOffset, double om, double dt) {
 	currr = 0;
 	curri = 0;
 	cureqr = 0;
@@ -47,7 +45,7 @@ void Capacitor::Init(DPSMatrix& g, DPSMatrix& j, int compOffset, double om, doub
 	deltavi = 0;
 }
 
-void Capacitor::Step(DPSMatrix& g, DPSMatrix& j, int compOffset, double om, double dt, double t) {
+void Capacitor::step(DPSMatrix& g, DPSMatrix& j, int compOffset, double om, double dt, double t) {
 	// Initialize internal state
 	cureqr =  currr + 2.0*capacitance/dt*deltavr+om*capacitance*deltavi;
 	cureqi =  curri + 2.0*capacitance/dt*deltavi-om*capacitance*deltavr;
@@ -66,7 +64,7 @@ void Capacitor::Step(DPSMatrix& g, DPSMatrix& j, int compOffset, double om, doub
 }
 
 
-void Capacitor::PostStep(DPSMatrix& g, DPSMatrix& j, DPSMatrix& vt, int compOffset, double om, double dt, double t) {
+void Capacitor::postStep(DPSMatrix& g, DPSMatrix& j, DPSMatrix& vt, int compOffset, double om, double dt, double t) {
 	double vposr, vnegr;
 	double vposi, vnegi;
 	double gcr = 2.0*capacitance/dt;

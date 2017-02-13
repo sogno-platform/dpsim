@@ -40,16 +40,16 @@ void NetlistSim(int argc, char* argv[]) {
 	std::cout << std::endl;
 
 	// Get Current Simulation Time
-	t = newSim.GetTime();
+	t = newSim.getTime();
 
 	// Main Simulation Loop
 	while (newSim.Step())
 	{
 		// Save Simulation Step
-		vtLog.Log() << newSim.GetVoltageDataLine().str();
-		jLog.Log() << newSim.GetCurrentDataLine().str();
+		vtLog.Log() << Logger::VectorToDataLine(newSim.getTime(), newSim.getLeftSideVector()).str();
+		jLog.Log() << Logger::VectorToDataLine(newSim.getTime(), newSim.getRightSideVector()).str();
 		// Get Current Simulation Time
-		t = newSim.GetTime();
+		t = newSim.getTime();
 
 		UpdateProgressBar(t, tf);
 	}

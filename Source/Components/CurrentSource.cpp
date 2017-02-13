@@ -5,7 +5,7 @@ CurrentSource::CurrentSource(std::string name, int src, int dest, double current
 	this->currenti = current*sin(phase);
 };
 	
-void CurrentSource::applyMatrixStamp(DPSMatrix& g, DPSMatrix& j, int compOffset, double om, double dt) {
+void CurrentSource::applyRightSideVectorStamp(DPSMatrix& j, int compOffset, double om, double dt) {
 	if (node1 != 0) {
 		j(node1, 0) = j(node1, 0) + currentr;
 		j(node1, 0) = j(compOffset+node1, 0) + currenti;
@@ -15,11 +15,3 @@ void CurrentSource::applyMatrixStamp(DPSMatrix& g, DPSMatrix& j, int compOffset,
 		j(node2, 1) = j(compOffset+node2, 1) - currenti;
 	}
 };
-
-void CurrentSource::Init(DPSMatrix& g, DPSMatrix& j, int compOffset, double om, double dt) {
-	applyMatrixStamp(g, j, compOffset, om, dt);
-}
-
-void CurrentSource::Step(DPSMatrix& g, DPSMatrix& j, int compOffset, double om, double dt, double t) {
-
-}

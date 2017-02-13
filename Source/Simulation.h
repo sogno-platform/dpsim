@@ -13,43 +13,46 @@ protected:
 
 public:
 	/// Number of nodes
-	int numNodes;
+	int mNumNodes;
 	/// Index offset for imaginary part
-	int compOffset;
+	int mCompOffset;
 	/// Angular frequency of the phasor
-	double om;
+	double mSystemOmega;
 	/// Final time of the simulation
-	double tf;
+	double mFinalTime;
 	/// Simulation time step
-	double dt;
+	double mTimeStep;
 	/// Time variable that is incremented at every step
-	double t;
+	double mTime;
 	/// Stores a list of circuit elements that are used to generate the system matrix
-	std::vector<BaseComponent*> elements;
+	std::vector<BaseComponent*> mElements;
+	/// Circuit list vector
+	std::vector<std::vector<BaseComponent*> > mElementsVector;
 	/// LU decomposition of system matrix A
-	Eigen::PartialPivLU<DPSMatrix> luFactored;
-
-	void AddElements(std::vector<BaseComponent*> elements);
-	void CreateSystemMatrix();
-	void Initialize();
-	/// System matrix that is modified by matrix stamps 
-	DPSMatrix A;
+	Eigen::PartialPivLU<DPSMatrix> mLuFactored;
+	/// LU decomposition of system matrix A
+	std::vector<Eigen::PartialPivLU<DPSMatrix> > mLuFactoredVector;		
+	/// System matrix A that is modified by matrix stamps 
+	DPSMatrix mSystemMatrix;
+	/// System matrices list for swtiching events
+	std::vector<DPSMatrix> mSystemMatrixVector;
 	/// Vector of known quantities
-	DPSMatrix j;
+	DPSMatrix mRightSideVector;
 	/// Vector of unknown quantities
-	DPSMatrix vt;
+	DPSMatrix mLeftSideVector;
 
 	Simulation();
 	Simulation(std::vector<BaseComponent*> elements, double om, double dt, double tf);
 	Simulation(std::vector<BaseComponent*> elements, double om, double dt, double tf, Logger& logger);
 	~Simulation();
-	
-	double GetTime();
-	int Step();
-	DPSMatrix GetVoltages();
-	std::ostringstream GetVoltageDataLine();
-	std::ostringstream GetCurrentDataLine();
 
+	void CreateSystemMatrix(std::vector<BaseComponent*> elements);
+	void Initialize();
+	
+	double getTime() { return mTime; }
+	int Step();
+	DPSMatrix getLeftSideVector() { return mLeftSideVector; }
+	DPSMatrix getRightSideVector() { return mRightSideVector; }
 };
 
 #endif

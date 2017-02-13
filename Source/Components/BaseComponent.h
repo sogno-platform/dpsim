@@ -24,11 +24,12 @@ class BaseComponent {
 
 		int getNode1() { return node1; }
 		int getNode2() { return node2; }
-		std::string GetName() { return name; }
+		std::string getName() { return name; }
 
-		virtual void applyMatrixStamp(DPSMatrix& g, DPSMatrix& j, int compOffset, double om, double dt) = 0;
-		virtual void Init(DPSMatrix& g, DPSMatrix& j, int compOffset, double om, double dt) { }
-		virtual void Step(DPSMatrix& g, DPSMatrix& j, int compOffset, double om, double dt, double t) { }
-		virtual void PostStep(DPSMatrix& g, DPSMatrix& j, DPSMatrix& vt, int compOffset, double om,  double dt, double t) { }
+		virtual void applySystemMatrixStamp(DPSMatrix& g, int compOffset, double om, double dt) = 0;
+		virtual void applyRightSideVectorStamp(DPSMatrix& j, int compOffset, double om, double dt) { }
+		virtual void init(double om, double dt) { }
+		virtual void step(DPSMatrix& g, DPSMatrix& j, int compOffset, double om, double dt, double t) { }
+		virtual void postStep(DPSMatrix& g, DPSMatrix& j, DPSMatrix& vt, int compOffset, double om,  double dt, double t) { }
 };
 #endif

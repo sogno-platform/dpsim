@@ -5,7 +5,7 @@ LinearResistor::LinearResistor(std::string name, int src, int dest, double resis
 	this->conductance = 1.0 / resistance;
 }	
 		
-void LinearResistor::applyMatrixStamp(DPSMatrix& g, DPSMatrix& j, int compOffset, double om, double dt) {
+void LinearResistor::applySystemMatrixStamp(DPSMatrix& g, int compOffset, double om, double dt) {
 
 	// Set diagonal entries
 	if (node1 >= 0) {
@@ -27,8 +27,5 @@ void LinearResistor::applyMatrixStamp(DPSMatrix& g, DPSMatrix& j, int compOffset
 		g(compOffset + node2, compOffset + node1) = g(compOffset + node2, compOffset + node1) - conductance;
 	}
 }
-		
-void LinearResistor::Init(DPSMatrix& g, DPSMatrix& j, int compOffset, double om, double dt) {
-	applyMatrixStamp(g, j, compOffset, om, dt);
-}
+	
 

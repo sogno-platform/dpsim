@@ -51,9 +51,6 @@
     <ClInclude Include="..\..\Source\Components\Inductor.h">
       <Filter>Headerdateien\Components</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\Source\Components\InterfaceCurrentSource.h">
-      <Filter>Headerdateien\Components</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\Source\Components\InterfacedInductor.h">
       <Filter>Headerdateien\Components</Filter>
     </ClInclude>
@@ -80,6 +77,9 @@
     </ClInclude>
     <ClInclude Include="..\..\Source\Components\ComponentCommons.h">
       <Filter>Headerdateien\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\SimpleCircuitUnitTest.h">
+      <Filter>Headerdateien\UnitTests</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -123,6 +123,9 @@
       <Filter>Quelldateien\Components</Filter>
     </ClCompile>
     <ClCompile Include="..\..\Source\SynchronGenUnitTest.cpp">
+      <Filter>Quelldateien\UnitTests</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\SimpleCircuitUnitTest.cpp">
       <Filter>Quelldateien\UnitTests</Filter>
     </ClCompile>
   </ItemGroup>

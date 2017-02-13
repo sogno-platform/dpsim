@@ -4,7 +4,7 @@ Inductor::Inductor(std::string name, int src, int dest, double inductance) : Bas
 	this->inductance = inductance;
 }	
 		
-void Inductor::applyMatrixStamp(DPSMatrix& g, DPSMatrix& j, int compOffset, double om, double dt) {
+void Inductor::applySystemMatrixStamp(DPSMatrix& g, int compOffset, double om, double dt) {
 	double a = 2.0*inductance / dt;
 	double b = om*inductance;
 
@@ -39,11 +39,10 @@ void Inductor::applyMatrixStamp(DPSMatrix& g, DPSMatrix& j, int compOffset, doub
 		g(node2, compOffset + node1) = g(node2, compOffset + node1) + gli;			
 	}
 }
-		
-void Inductor::Init(DPSMatrix& g, DPSMatrix& j, int compOffset, double om, double dt) {
-	applyMatrixStamp(g, j, compOffset, om, dt);
 
-	// Initialize internal state
+
+/// Initialize internal state
+void Inductor::init(int compOffset, double om, double dt) {
 	currr = 0;
 	curri = 0;
 	cureqr = 0;
@@ -53,7 +52,7 @@ void Inductor::Init(DPSMatrix& g, DPSMatrix& j, int compOffset, double om, doubl
 }
 
 
-void Inductor::Step(DPSMatrix& g, DPSMatrix& j, int compOffset, double om, double dt, double t) {
+void Inductor::step(DPSMatrix& g, DPSMatrix& j, int compOffset, double om, double dt, double t) {
 	// Initialize internal state
 	cureqr =  glr*deltavr-gli*deltavi+pr*currr-pi*curri;
 	cureqi =  gli*deltavr+glr*deltavi+pi*currr+pr*curri;
@@ -72,7 +71,7 @@ void Inductor::Step(DPSMatrix& g, DPSMatrix& j, int compOffset, double om, doubl
 }
 
 
-void Inductor::PostStep(DPSMatrix& g, DPSMatrix& j, DPSMatrix& vt, int compOffset, double om, double dt, double t) {
+void Inductor::postStep(DPSMatrix& g, DPSMatrix& j, DPSMatrix& vt, int compOffset, double om, double dt, double t) {
 	double vposr, vnegr;
 	double vposi, vnegi;
 

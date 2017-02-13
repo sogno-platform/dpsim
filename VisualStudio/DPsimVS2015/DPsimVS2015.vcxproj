@@ -118,7 +118,6 @@
     <ClInclude Include="..\..\Source\Components\ComponentCommons.h" />
     <ClInclude Include="..\..\Source\Components\CurrentSource.h" />
     <ClInclude Include="..\..\Source\Components\Inductor.h" />
-    <ClInclude Include="..\..\Source\Components\InterfaceCurrentSource.h" />
     <ClInclude Include="..\..\Source\Components\InterfacedInductor.h" />
     <ClInclude Include="..\..\Source\Components\LinearResistor.h" />
     <ClInclude Include="..\..\Source\Components\SynchronGeneratorEMT.h" />
@@ -127,6 +126,7 @@
     <ClInclude Include="..\..\Source\Logger.h" />
     <ClInclude Include="..\..\Source\MathLibrary.h" />
     <ClInclude Include="..\..\Source\NetlistSim.h" />
+    <ClInclude Include="..\..\Source\SimpleCircuitUnitTest.h" />
     <ClInclude Include="..\..\Source\Simulation.h" />
     <ClInclude Include="..\..\Source\SynchronGenUnitTest.h" />
     <ClInclude Include="..\..\Source\TopologyReader.h" />
@@ -143,6 +143,7 @@
     <ClCompile Include="..\..\Source\DPsimMain.cpp" />
     <ClCompile Include="..\..\Source\Logger.cpp" />
     <ClCompile Include="..\..\Source\NetlistSim.cpp" />
+    <ClCompile Include="..\..\Source\SimpleCircuitUnitTest.cpp" />
     <ClCompile Include="..\..\Source\Simulation.cpp" />
     <ClCompile Include="..\..\Source\SynchronGenUnitTest.cpp" />
     <ClCompile Include="..\..\Source\TopologyReader.cpp" />

@@ -3,6 +3,7 @@
 
 #define _USE_MATH_DEFINES
 #include <cmath>
+#include <complex>
 #include <Eigen/Dense>
 #include <Eigen/SparseCore>
 
@@ -13,7 +14,7 @@ typedef Eigen::MatrixXd DPSMatrix;
 namespace DPsim
 {
 	// ### Constants ###
-	#define DPsim_PI M_PI
+	#define PI M_PI
 
 	// ### Types ###
 	typedef uint64_t UInt;

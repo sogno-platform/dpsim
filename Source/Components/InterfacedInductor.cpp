@@ -4,19 +4,17 @@ InterfacedInductor::InterfacedInductor(std::string name, int src, int dest, doub
 	this->inductance = inductance;
 }
 
-void InterfacedInductor::Init(DPSMatrix& g, DPSMatrix& j, int compOffset, double om, double dt) {
-	// Initialize internal state
+
+/// Initialize internal state
+void InterfacedInductor::init(int compOffset, double om, double dt) {
 	currentRe = 0;
 	currentIm = 0;
 	voltageRe = 0;
 	voltageIm = 0;
 }
 
-void InterfacedInductor::applyMatrixStamp(DPSMatrix& g, DPSMatrix& j, int compOffset, double om, double dt) {
 
-}
-
-void InterfacedInductor::Step(DPSMatrix& g, DPSMatrix& j, int compOffset, double om, double dt, double t) {
+void InterfacedInductor::step(DPSMatrix& g, DPSMatrix& j, int compOffset, double om, double dt, double t) {
 	// Calculate current for this step
 	currentStepRe = currentRe + dt * (1. / inductance * voltageRe + om * currentIm);
 	currentStepIm = currentIm + dt * (1. / inductance * voltageIm - om * currentRe);
@@ -35,7 +33,7 @@ void InterfacedInductor::Step(DPSMatrix& g, DPSMatrix& j, int compOffset, double
 	currentIm = currentStepIm;
 }
 
-void InterfacedInductor::PostStep(DPSMatrix& g, DPSMatrix& j, DPSMatrix& vt, int compOffset, double om, double dt, double t) {
+void InterfacedInductor::postStep(DPSMatrix& g, DPSMatrix& j, DPSMatrix& vt, int compOffset, double om, double dt, double t) {
 	double vposr, vnegr;
 	double vposi, vnegi;
 

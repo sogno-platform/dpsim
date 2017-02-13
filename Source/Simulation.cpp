@@ -5,101 +5,95 @@ Simulation::Simulation() {
 }
 
 Simulation::Simulation(std::vector<BaseComponent*> elements, double om, double dt, double tf) {
-	this->dt = dt;
-	this->tf = tf;
-	this->om = om;
-
-	AddElements(elements);
-	CreateSystemMatrix();
+	this->mTimeStep = dt;
+	this->mFinalTime = tf;
+	this->mSystemOmega = om;
+	
+	CreateSystemMatrix(elements);
 	Initialize();
+
+	mSystemMatrix = mSystemMatrixVector[0];
+	mRightSideVector = DPSMatrix::Zero(2 * mNumNodes, 1);
+	mLeftSideVector = DPSMatrix::Zero(2 * mNumNodes, 1);
 }
 
 Simulation::Simulation(std::vector<BaseComponent*> elements, double om, double dt, double tf, Logger& logger) : Simulation(elements, om, dt, tf) {
 	for (std::vector<BaseComponent*>::iterator it = elements.begin(); it != elements.end(); ++it) {
-		logger.Log(Logtype::INFO) << "Added " << (*it)->GetName() << " of type " << typeid(*(*it)).name() << " to simulation." << std::endl;
+		logger.Log(Logtype::INFO) << "Added " << (*it)->getName() << " of type " << typeid(*(*it)).name() << " to simulation." << std::endl;
 	}
 	logger.Log(Logtype::INFO) << "System matrix A:" << std::endl;
-	logger.Log() << A << std::endl;
+	logger.Log() << mSystemMatrix << std::endl;
 	logger.Log(Logtype::INFO) << "Known variables matrix j:" << std::endl;
-	logger.Log() << j << std::endl;
+	logger.Log() << mRightSideVector << std::endl;
 }
 
 
 Simulation::~Simulation() {
-	
 }
 
 
 void Simulation::Initialize() {
 	// Initialize time variable
-	t = 0;
+	mTime = 0;
 	
-	// Create the matrices
-	for (std::vector<BaseComponent*>::iterator it = elements.begin(); it != elements.end(); ++it) {
-		(*it)->Init(A, j, compOffset, om, dt);
+	// 
+	for (std::vector<BaseComponent*>::iterator it = mElements.begin(); it != mElements.end(); ++it) {
+		(*it)->init(mSystemOmega, mTimeStep);
+		(*it)->applyRightSideVectorStamp(mRightSideVector, mCompOffset, mSystemOmega, mTimeStep);
 	}
 
-	luFactored = Eigen::PartialPivLU<DPSMatrix>(A);
+
+	mLuFactored = Eigen::PartialPivLU<DPSMatrix>(mSystemMatrix);
 }
 	
-
-void Simulation::AddElements(std::vector<BaseComponent*> newElements) {
+void Simulation::CreateSystemMatrix(std::vector<BaseComponent*> newElements) {
+	std::vector<BaseComponent*> elements;
 	for (std::vector<BaseComponent*>::iterator it = newElements.begin(); it != newElements.end(); ++it) {
 		elements.push_back((*it));
-
 	}
-}
+	mElementsVector.push_back(elements);
 
-void Simulation::CreateSystemMatrix() {
 	int maxNode = 0;
-	for (std::vector<BaseComponent*>::iterator it = elements.begin(); it != elements.end(); ++it) {
+	for (std::vector<BaseComponent*>::iterator it = mElements.begin(); it != mElements.end(); ++it) {
 		if ((*it)->getNode1() > maxNode)
 			maxNode = (*it)->getNode1();
 		if ((*it)->getNode2() > maxNode)
 			maxNode = (*it)->getNode2();
 	}
+		
+	mNumNodes = maxNode + 1;
+	mCompOffset = mNumNodes;
+	DPSMatrix systemMatrix = DPSMatrix::Zero(2 * mNumNodes, 2 * mNumNodes);
+	mSystemMatrixVector.push_back(systemMatrix);
+
+	for (std::vector<BaseComponent*>::iterator it = elements.begin(); it != elements.end(); ++it) {
+		(*it)->applySystemMatrixStamp(mSystemMatrix, mCompOffset, mSystemOmega, mTimeStep);
+	}
+
+	Eigen::PartialPivLU<DPSMatrix> luFactored = Eigen::PartialPivLU<DPSMatrix>(systemMatrix);
+	mLuFactoredVector.push_back(luFactored);
 	
-	numNodes = maxNode + 1;
-	compOffset = numNodes;
-	A = DPSMatrix::Zero(2 * numNodes, 2 * numNodes);
-	j = DPSMatrix::Zero(2 * numNodes, 1);
-	vt = DPSMatrix::Zero(2 * numNodes, 1);
 }
 
-double Simulation::GetTime() {
-	return t;
-}
-	
+
 int Simulation::Step()
 {
-	j.setZero();
+	mRightSideVector.setZero();
 	
-	for (std::vector<BaseComponent*>::iterator it = elements.begin(); it != elements.end(); ++it) {
-		(*it)->Step(A, j, compOffset, om, dt, t);
+	for (std::vector<BaseComponent*>::iterator it = mElements.begin(); it != mElements.end(); ++it) {
+		(*it)->step(mSystemMatrix, mRightSideVector, mCompOffset, mSystemOmega, mTimeStep, mTime);
 	}
 	
-	vt = luFactored.solve(j);
+	mLeftSideVector = mLuFactored.solve(mRightSideVector);
  
-	for (std::vector<BaseComponent*>::iterator it = elements.begin(); it != elements.end(); ++it) {
-		(*it)->PostStep(A, j, vt, compOffset, om, dt, t);
+	for (std::vector<BaseComponent*>::iterator it = mElements.begin(); it != mElements.end(); ++it) {
+		(*it)->postStep(mSystemMatrix, mRightSideVector, mLeftSideVector, mCompOffset, mSystemOmega, mTimeStep, mTime);
 	}
 
-	t += dt;
+	mTime += mTimeStep;
 
-	if(t >= tf)
+	if(mTime >= mFinalTime)
 		return 0;
 	else
 		return 1;
-}
-
-DPSMatrix Simulation::GetVoltages() {
-	return vt;
-}
-
-std::ostringstream Simulation::GetVoltageDataLine() {
-	return Logger::VectorToDataLine(t, vt);
-}
-
-std::ostringstream Simulation::GetCurrentDataLine() {
-	return Logger::VectorToDataLine(t, j);
 }
