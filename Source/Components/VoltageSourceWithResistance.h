@@ -3,7 +3,9 @@
 
 #include "BaseComponent.h"
 
-class VoltageSourceWithResistance : public BaseComponent {
+namespace DPsim {
+
+	class VoltageSourceWithResistance : public BaseComponent {
 	protected:
 		double voltageDiffr;
 		double voltageDiffi;
@@ -13,12 +15,12 @@ class VoltageSourceWithResistance : public BaseComponent {
 		double voltageAtDesti;
 		int internalNodeNum;
 		double resistance;
-		double conductance;		
+		double conductance;
 		double currentr;
 		double currenti;
 
 	public:
-		VoltageSourceWithResistance() {;};
+		VoltageSourceWithResistance() { ; };
 		VoltageSourceWithResistance(std::string name, int src, int dest, double voltage, double phase, double resistance);
 
 		void applySystemMatrixStamp(DPSMatrix& g, int compOffset, double om, double dt);
@@ -26,5 +28,6 @@ class VoltageSourceWithResistance : public BaseComponent {
 		void init(int compOffset, double om, double dt) { }
 		void step(DPSMatrix& g, DPSMatrix& j, int compOffset, double om, double dt, double t);
 		void postStep(DPSMatrix& g, DPSMatrix& j, DPSMatrix& vt, int compOffset, double om, double dt, double t) { }
-};
+	};
+}
 #endif

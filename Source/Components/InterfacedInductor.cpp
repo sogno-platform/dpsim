@@ -20,14 +20,14 @@ void InterfacedInductor::step(DPSMatrix& g, DPSMatrix& j, int compOffset, double
 	currentStepIm = currentIm + dt * (1. / inductance * voltageIm - om * currentRe);
 
 	// Update current source accordingly
-	if (node1 >= 0) {
-		j(node1, 0) = j(node1, 0) - currentStepRe;
-		j(compOffset + node1, 0) = j(compOffset + node1, 0) - currentStepIm;
+	if (mNode1 >= 0) {
+		j(mNode1, 0) = j(mNode1, 0) - currentStepRe;
+		j(compOffset + mNode1, 0) = j(compOffset + mNode1, 0) - currentStepIm;
 	}
 
-	if (node2 >= 0) {
-		j(node2, 0) = j(node2, 0) + currentStepRe;
-		j(compOffset + node2, 0) = j(compOffset + node2, 0) + currentStepIm;
+	if (mNode2 >= 0) {
+		j(mNode2, 0) = j(mNode2, 0) + currentStepRe;
+		j(compOffset + mNode2, 0) = j(compOffset + mNode2, 0) + currentStepIm;
 	}	
 	currentRe = currentStepRe;
 	currentIm = currentStepIm;
@@ -38,18 +38,18 @@ void InterfacedInductor::postStep(DPSMatrix& g, DPSMatrix& j, DPSMatrix& vt, int
 	double vposi, vnegi;
 
 	// extract solution
-	if (node1 >= 0) {
-		vposr = vt(node1, 0);
-		vposi = vt(compOffset + node1, 0);
+	if (mNode1 >= 0) {
+		vposr = vt(mNode1, 0);
+		vposi = vt(compOffset + mNode1, 0);
 	}
 	else {
 		vposr = 0;
 		vposi = 0;
 	}
 
-	if (node2 >= 0) {
-		vnegr = vt(node2, 0);
-		vnegi = vt(compOffset + node2, 0);
+	if (mNode2 >= 0) {
+		vnegr = vt(mNode2, 0);
+		vnegi = vt(compOffset + mNode2, 0);
 	}
 	else {
 		vnegr = 0;

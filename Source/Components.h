@@ -11,5 +11,6 @@
 #include "Components/SynchronGeneratorEMT.h"
 #include "Components/SynchronGenerator.h"
 #include "Components/ComponentCommons.h"
+#include "Components/VoltSourceResFreq.h"
 
 #endif // !COMPONENTS_H

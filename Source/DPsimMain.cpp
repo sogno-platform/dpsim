@@ -2,6 +2,7 @@
 #include <string>
 #include "NetlistSim.h"
 #include "SynchronGenUnitTest.h"
+#include "SimpleCircuitUnitTest.h"
 #include <complex>
 
 int main(int argc, char* argv[]) {
@@ -10,11 +11,13 @@ int main(int argc, char* argv[]) {
 	
 	//SynGenUnitTestBalancedResLoad();
 	//SynGenUnitTestPhaseToPhaseFault();
-	//SynGenUnitTestThreePhaseFault();
-	
-	SynGenDPUnitTestBalancedResLoad();
+	//SynGenUnitTestThreePhaseFault();	
+	//SynGenDPUnitTestBalancedResLoad();
 
-	std::cin.get();
+	//RXLineResLoad();
+	VarFreqRXLineResLoad();
+
+	//std::cin.get();
 	return 0;	
 }
 

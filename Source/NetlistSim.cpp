@@ -1,5 +1,7 @@
 #include "NetlistSim.h"
 
+using namespace DPsim;
+
 void NetlistSim(int argc, char* argv[]) {
 
 	// Extract command line arguments
@@ -43,7 +45,7 @@ void NetlistSim(int argc, char* argv[]) {
 	t = newSim.getTime();
 
 	// Main Simulation Loop
-	while (newSim.Step())
+	while (newSim.Step(log))
 	{
 		// Save Simulation Step
 		vtLog.Log() << Logger::VectorToDataLine(newSim.getTime(), newSim.getLeftSideVector()).str();

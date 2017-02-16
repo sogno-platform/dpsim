@@ -81,6 +81,9 @@
     <ClInclude Include="..\..\Source\SimpleCircuitUnitTest.h">
       <Filter>Headerdateien\UnitTests</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\Source\Components\VoltSourceResFreq.h">
+      <Filter>Headerdateien\Components</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\Source\DPsimMain.cpp">
@@ -127,6 +130,9 @@
     </ClCompile>
     <ClCompile Include="..\..\Source\SimpleCircuitUnitTest.cpp">
       <Filter>Quelldateien\UnitTests</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\Components\VoltSourceResFreq.cpp">
+      <Filter>Quelldateien\Components</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

@@ -1,6 +1,65 @@
 import numpy as np
 import matplotlib.pyplot as plt
 import pandas as pd
+from scipy.interpolate import interp1d
+
+
+def plotNodeResults(filename, node):
+	node = node - 1
+	df = pd.read_csv(filename, header=None)
+	print(df.shape)
+
+	if (df.shape[1] - 1) / 2 < node or node < 0:
+		print('Node not available')
+		exit()
+
+	time = np.array(df.ix[:,0])
+	voltageRe = np.array(df.ix[:,node + 1])
+	voltageIm = np.array(df.ix[:, int((df.shape[1] - 1) / 2 + node + 1)])
+
+	voltage = np.sqrt(voltageRe**2+voltageIm**2)
+	voltageEmt = voltageRe*np.cos(2*np.pi*50*time) - voltageIm*np.sin(2*np.pi*50*time)
+	fig, ax1 = plt.subplots()
+	ax1.plot(time, voltageEmt, 'b-', time, voltage, 'r-')
+	#plt.yticks(np.arange(-10, 10, 1.0))
+	ax1.set_xlabel('time [s]')
+	ax1.set_ylabel('mag [V] or [A]')
+	ax1.grid(True)
+	plt.show()
+	
+def plotInterpolatedNodeResults(filename, node):
+	node = node - 1
+	df = pd.read_csv(filename, header=None)
+	print(df.shape)
+
+	if (df.shape[1] - 1) / 2 < node or node < 0:
+		print('Node not available')
+		exit()
+	
+	time = np.array(df.ix[:,0])
+	voltageRe = np.array(df.ix[:,node + 1])
+	voltageIm = np.array(df.ix[:, int((df.shape[1] - 1) / 2 + node + 1)])
+	
+	print(time)
+	print(voltageRe)
+	interpTime = np.arange(df.ix[0, 0], df.ix[ df.shape[0] - 1, 0], 0.00005)
+	fVoltageRe = interp1d(time, voltageRe)
+	fVoltageIm = interp1d(time, voltageIm)
+	
+
+	interpVoltageRe = fVoltageRe(interpTime)
+	interpVoltageIm = fVoltageIm(interpTime)
+	
+	voltageMeas = np.sqrt(voltageRe**2+voltageIm**2)
+	voltage = np.sqrt(interpVoltageRe**2+interpVoltageIm**2)
+	voltageEmt = interpVoltageRe*np.cos(2*np.pi*50*interpTime) - interpVoltageIm*np.sin(2*np.pi*50*interpTime)
+	fig, ax1 = plt.subplots()
+	ax1.plot(interpTime, voltageEmt, 'b-', interpTime, voltage, 'r-')
+	ax1.plot(time, voltageMeas, 'g-')
+	ax1.set_xlabel('time [s]')
+	ax1.set_ylabel('mag [V] or [A]')
+	ax1.grid(True)
+	plt.show()
 
 def plotResultsInterfacedInductor(filename, node):
 	node = node - 1

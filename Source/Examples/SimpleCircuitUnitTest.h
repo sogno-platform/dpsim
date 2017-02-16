@@ -2,5 +2,6 @@
 #define SIMPLECIRCUITUNITTEST_H
 
 void RXLineResLoad();
+void VarFreqRXLineResLoad();
 
 #endif

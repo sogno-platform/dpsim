@@ -6,12 +6,12 @@ CurrentSource::CurrentSource(std::string name, int src, int dest, double current
 };
 	
 void CurrentSource::applyRightSideVectorStamp(DPSMatrix& j, int compOffset, double om, double dt) {
-	if (node1 != 0) {
-		j(node1, 0) = j(node1, 0) + currentr;
-		j(node1, 0) = j(compOffset+node1, 0) + currenti;
+	if (mNode1 != 0) {
+		j(mNode1, 0) = j(mNode1, 0) + currentr;
+		j(mNode1, 0) = j(compOffset+mNode1, 0) + currenti;
 	}
-	if (node2 != 0) {
-		j(node2, 1) = j(node2, 1) - currentr;
-		j(node2, 1) = j(compOffset+node2, 1) - currenti;
+	if (mNode2 != 0) {
+		j(mNode2, 1) = j(mNode2, 1) - currentr;
+		j(mNode2, 1) = j(compOffset+mNode2, 1) - currenti;
 	}
 };

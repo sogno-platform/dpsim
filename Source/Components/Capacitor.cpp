@@ -8,30 +8,30 @@ void Capacitor::applySystemMatrixStamp(DPSMatrix& g, int compOffset, double om, 
 	double gcr = 2.0*capacitance/dt;
 	double gci = om*capacitance;	
 
-	if (node1 >= 0) {
-		g(node1,node1) = g(node1,node1) + gcr;
-		g(compOffset+node1,compOffset+node1) = g(compOffset+node1,compOffset+node1) + gcr;
-		g(compOffset+node1,node1) = g(compOffset+node1,node1) + gci;
-		g(node1,compOffset+node1) = g(node1,compOffset+node1) - gci;	
+	if (mNode1 >= 0) {
+		g(mNode1,mNode1) = g(mNode1,mNode1) + gcr;
+		g(compOffset+mNode1,compOffset+mNode1) = g(compOffset+mNode1,compOffset+mNode1) + gcr;
+		g(compOffset+mNode1,mNode1) = g(compOffset+mNode1,mNode1) + gci;
+		g(mNode1,compOffset+mNode1) = g(mNode1,compOffset+mNode1) - gci;	
 	}
 
-	if (node2 >= 0) {
-		g(node2, node2) = g(node2, node2) + gcr;
-		g(compOffset + node2, compOffset + node2) = g(compOffset + node2, compOffset + node2) + gcr;
-		g(compOffset + node2, node2) = g(compOffset + node2, node2) + gci;
-		g(node2, compOffset + node2) = g(node2, compOffset + node2) - gci;
+	if (mNode2 >= 0) {
+		g(mNode2, mNode2) = g(mNode2, mNode2) + gcr;
+		g(compOffset + mNode2, compOffset + mNode2) = g(compOffset + mNode2, compOffset + mNode2) + gcr;
+		g(compOffset + mNode2, mNode2) = g(compOffset + mNode2, mNode2) + gci;
+		g(mNode2, compOffset + mNode2) = g(mNode2, compOffset + mNode2) - gci;
 	}
 
-	if (node1 >= 0 && node2 >= 0) {
-		g(node1, node2) = g(node1, node2) - gcr;
-		g(compOffset + node1, compOffset + node2) = g(compOffset + node1, compOffset + node2) - gcr;
-		g(compOffset + node1, node2) = g(compOffset + node1, node2) - gci;
-		g(node1, compOffset + node2) = g(node1, compOffset + node2) + gci;
+	if (mNode1 >= 0 && mNode2 >= 0) {
+		g(mNode1, mNode2) = g(mNode1, mNode2) - gcr;
+		g(compOffset + mNode1, compOffset + mNode2) = g(compOffset + mNode1, compOffset + mNode2) - gcr;
+		g(compOffset + mNode1, mNode2) = g(compOffset + mNode1, mNode2) - gci;
+		g(mNode1, compOffset + mNode2) = g(mNode1, compOffset + mNode2) + gci;
 
-		g(node2, node1) = g(node2, node1) - gcr;
-		g(compOffset + node2, compOffset + node1) = g(compOffset + node2, compOffset + node1) - gcr;
-		g(compOffset + node2, node1) = g(compOffset + node2, node1) - gci;
-		g(node2, compOffset + node1) = g(node2, compOffset + node1) + gci;
+		g(mNode2, mNode1) = g(mNode2, mNode1) - gcr;
+		g(compOffset + mNode2, compOffset + mNode1) = g(compOffset + mNode2, compOffset + mNode1) - gcr;
+		g(compOffset + mNode2, mNode1) = g(compOffset + mNode2, mNode1) - gci;
+		g(mNode2, compOffset + mNode1) = g(mNode2, compOffset + mNode1) + gci;
 	}
 }
 
@@ -52,14 +52,14 @@ void Capacitor::step(DPSMatrix& g, DPSMatrix& j, int compOffset, double om, doub
 
 	//cout << "cureq = " << cureq << endl;
 
-	if (node1 >= 0)	{
-		j(node1, 0) = j(node1, 0) + cureqr;
-		j(compOffset+node1, 0) = j(compOffset+node1, 0) + cureqi;
+	if (mNode1 >= 0)	{
+		j(mNode1, 0) = j(mNode1, 0) + cureqr;
+		j(compOffset+mNode1, 0) = j(compOffset+mNode1, 0) + cureqi;
 	}
 
-	if (node2 >= 0)	{
-		j(node2, 0) = j(node2, 1) - cureqr;
-		j(compOffset+node2, 0) = j(compOffset+node2, 0) - cureqi;
+	if (mNode2 >= 0)	{
+		j(mNode2, 0) = j(mNode2, 1) - cureqr;
+		j(compOffset+mNode2, 0) = j(compOffset+mNode2, 0) - cureqi;
 	}
 }
 
@@ -71,17 +71,17 @@ void Capacitor::postStep(DPSMatrix& g, DPSMatrix& j, DPSMatrix& vt, int compOffs
 	double gci = om*capacitance;			
 
 	// extract solution
-	if (node1 >= 0) {
-		vposr = vt(node1, 0);
-		vposi = vt(compOffset+node1, 0);
+	if (mNode1 >= 0) {
+		vposr = vt(mNode1, 0);
+		vposi = vt(compOffset+mNode1, 0);
 	}
 	else {
 		vposr = 0;
 		vposi = 0;
 	}
-	if (node2 >= 0) {
-		vnegr = vt(node2, 0);
-		vnegi = vt(compOffset+node2, 0);
+	if (mNode2 >= 0) {
+		vnegr = vt(mNode2, 0);
+		vnegi = vt(compOffset+mNode2, 0);
 	}
 	else {
 		vnegr = 0;

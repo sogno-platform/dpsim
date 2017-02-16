@@ -123,6 +123,7 @@
     <ClInclude Include="..\..\Source\Components\SynchronGeneratorEMT.h" />
     <ClInclude Include="..\..\Source\Components\SynchronGenerator.h" />
     <ClInclude Include="..\..\Source\Components\VoltageSourceWithResistance.h" />
+    <ClInclude Include="..\..\Source\Components\VoltSourceResFreq.h" />
     <ClInclude Include="..\..\Source\Logger.h" />
     <ClInclude Include="..\..\Source\MathLibrary.h" />
     <ClInclude Include="..\..\Source\NetlistSim.h" />
@@ -140,6 +141,7 @@
     <ClCompile Include="..\..\Source\Components\SynchronGeneratorEMT.cpp" />
     <ClCompile Include="..\..\Source\Components\SynchronGenerator.cpp" />
     <ClCompile Include="..\..\Source\Components\VoltageSourceWithResistance.cpp" />
+    <ClCompile Include="..\..\Source\Components\VoltSourceResFreq.cpp" />
     <ClCompile Include="..\..\Source\DPsimMain.cpp" />
     <ClCompile Include="..\..\Source\Logger.cpp" />
     <ClCompile Include="..\..\Source\NetlistSim.cpp" />
