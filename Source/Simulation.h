@@ -11,13 +11,18 @@ namespace DPsim {
 
 	struct switchConfiguration {
 		Real switchTime;
-		Int systemIndex;
+		UInt systemIndex;
 	};
+
+	enum class SimulationType{DynPhasor, EMT};
 
 	class Simulation {
 
 	protected:
-		Int mCurrentSwitchTimeIndex;
+		/// Simulation type
+		SimulationType mSimType;
+		/// Index of the next switching
+		UInt mCurrentSwitchTimeIndex;
 		/// Vector of switch times
 		std::vector<switchConfiguration> mSwitchEventVector;
 
@@ -55,6 +60,7 @@ namespace DPsim {
 		Simulation();
 		Simulation(std::vector<BaseComponent*> elements, Real om, Real dt, Real tf);
 		Simulation(std::vector<BaseComponent*> elements, Real om, Real dt, Real tf, Logger& logger);
+		Simulation(std::vector<BaseComponent*> elements, Real om, Real dt, Real tf, Logger& logger, SimulationType simType);
 		~Simulation();
 
 		/// TODO: check that every system matrix has the same dimensions

@@ -1,5 +1,7 @@
 #include "SynchronGenUnitTest.h"
 
+#include "../Simulation.h"
+
 using namespace DPsim;
 
 void SynGenUnitTestBalancedResLoad() {

@@ -19,10 +19,10 @@
     <Filter Include="Quelldateien\Components">
       <UniqueIdentifier>{6526eb9a-0b45-4cac-b9eb-6d2dc664196f}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Quelldateien\UnitTests">
+    <Filter Include="Quelldateien\Examples">
       <UniqueIdentifier>{33241b73-3048-40ec-b68c-e3cedd1b1f63}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Headerdateien\UnitTests">
+    <Filter Include="Headerdateien\Examples">
       <UniqueIdentifier>{fc223e5c-0c3b-447b-8518-b7db8009719b}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
@@ -57,9 +57,6 @@
     <ClInclude Include="..\..\Source\Components\LinearResistor.h">
       <Filter>Headerdateien\Components</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\Source\Components\VoltageSourceWithResistance.h">
-      <Filter>Headerdateien\Components</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\Source\Components\BaseComponent.h">
       <Filter>Headerdateien\Components</Filter>
     </ClInclude>
@@ -72,17 +69,29 @@
     <ClInclude Include="..\..\Source\Components\SynchronGenerator.h">
       <Filter>Headerdateien\Components</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\Source\SynchronGenUnitTest.h">
-      <Filter>Headerdateien\UnitTests</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\Source\Components\ComponentCommons.h">
       <Filter>Headerdateien\Components</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\Source\SimpleCircuitUnitTest.h">
-      <Filter>Headerdateien\UnitTests</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\Source\Components\VoltSourceResFreq.h">
       <Filter>Headerdateien\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\Components\InductorEMT.h">
+      <Filter>Headerdateien\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\Components\LinearResistorEMT.h">
+      <Filter>Headerdateien\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\Examples\SynchronGenUnitTest.h">
+      <Filter>Headerdateien\Examples</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\Components\VoltSourceRes.h">
+      <Filter>Headerdateien\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\Components\VoltSourceResEMT.h">
+      <Filter>Headerdateien\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\Examples\SimpleCircuitTest.h">
+      <Filter>Headerdateien\Examples</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -110,9 +119,6 @@
     <ClCompile Include="..\..\Source\Components\LinearResistor.cpp">
       <Filter>Quelldateien\Components</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\Source\Components\VoltageSourceWithResistance.cpp">
-      <Filter>Quelldateien\Components</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\Source\Components\Capacitor.cpp">
       <Filter>Quelldateien\Components</Filter>
     </ClCompile>
@@ -125,14 +131,26 @@
     <ClCompile Include="..\..\Source\Components\SynchronGeneratorEMT.cpp">
       <Filter>Quelldateien\Components</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\Source\SynchronGenUnitTest.cpp">
-      <Filter>Quelldateien\UnitTests</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\Source\SimpleCircuitUnitTest.cpp">
-      <Filter>Quelldateien\UnitTests</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\Source\Components\VoltSourceResFreq.cpp">
       <Filter>Quelldateien\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\Components\InductorEMT.cpp">
+      <Filter>Quelldateien\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\Components\LinearResistorEMT.cpp">
+      <Filter>Quelldateien\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\Examples\SynchronGenUnitTest.cpp">
+      <Filter>Quelldateien\Examples</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\Components\VoltSourceRes.cpp">
+      <Filter>Quelldateien\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\Components\VoltSourceResEMT.cpp">
+      <Filter>Quelldateien\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\Examples\SimpleCircuitTest.cpp">
+      <Filter>Quelldateien\Examples</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

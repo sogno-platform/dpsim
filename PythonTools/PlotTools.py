@@ -3,6 +3,26 @@ import matplotlib.pyplot as plt
 import pandas as pd
 from scipy.interpolate import interp1d
 
+def plotEmtNodeResults(filename, node):
+	node = node - 1
+	df = pd.read_csv(filename, header=None)
+	print(df.shape)
+
+	if (df.shape[1] - 1) / 2 < node or node < 0:
+		print('Node not available')
+		exit()
+
+	time = np.array(df.ix[:,0])
+	voltage = np.array(df.ix[:,node + 1])	
+	
+	fig, ax1 = plt.subplots()
+	ax1.plot(time, voltage, 'b-')
+	#plt.yticks(np.arange(-10, 10, 1.0))
+	ax1.set_xlabel('time [s]')
+	ax1.set_ylabel('mag [V] or [A]')
+	ax1.grid(True)
+	plt.show()
+
 
 def plotNodeResults(filename, node):
 	node = node - 1

@@ -1,8 +1,8 @@
 #include <iostream>
 #include <string>
 #include "NetlistSim.h"
-#include "SynchronGenUnitTest.h"
-#include "SimpleCircuitUnitTest.h"
+#include "Examples/SynchronGenUnitTest.h"
+#include "Examples/SimpleCircuitTest.h"
 #include <complex>
 
 int main(int argc, char* argv[]) {
@@ -15,8 +15,9 @@ int main(int argc, char* argv[]) {
 	//SynGenDPUnitTestBalancedResLoad();
 
 	//RXLineResLoad();
-	VarFreqRXLineResLoad();
-
+	//VarFreqRXLineResLoad();
+	RXLineResLoadEMT();
+	
 	//std::cin.get();
 	return 0;	
 }
