@@ -121,7 +121,7 @@ void Simulation::CreateSystemMatrix(std::vector<BaseComponent*> newElements) {
 }
 
 
-int Simulation::Step(Logger& logger)
+int Simulation::step(Logger& logger)
 {
 	mRightSideVector.setZero();
 	
@@ -135,20 +135,30 @@ int Simulation::Step(Logger& logger)
 		(*it)->postStep(mSystemMatrix, mRightSideVector, mLeftSideVector, mCompOffset, mSystemOmega, mTimeStep, mTime);
 	}
 
-	mTime += mTimeStep;
-
 	if (mCurrentSwitchTimeIndex < mSwitchEventVector.size()) {
 		if (mTime >= mSwitchEventVector[mCurrentSwitchTimeIndex].switchTime) {
 			switchSystemMatrix(mSwitchEventVector[mCurrentSwitchTimeIndex].systemIndex);			
 			mCurrentSwitchTimeIndex++;	
-			logger.Log(Logtype::INFO) << "Switched to system " << mCurrentSwitchTimeIndex << std::endl;
+			logger.Log(Logtype::INFO) << "Switched to system " << mCurrentSwitchTimeIndex << " at " << mTime << std::endl;
 		}
 	}
 
-	if(mTime >= mFinalTime)
+	if (mTime >= mFinalTime) {
 		return 0;
-	else
+	}
+	else {
 		return 1;
+	}
+
+}
+
+int Simulation::step(Logger& logger, Logger& leftSideVectorLog, Logger& rightSideVectorLog)  {
+	int retValue = step(logger);
+
+	leftSideVectorLog.Log() << Logger::VectorToDataLine(getTime(), getLeftSideVector()).str();
+	rightSideVectorLog.Log() << Logger::VectorToDataLine(getTime(), getRightSideVector()).str();
+
+	return retValue;
 }
 
 void Simulation::switchSystemMatrix(int systemMatrixIndex) {
@@ -163,4 +173,8 @@ void Simulation::setSwitchTime(Real switchTime, Int systemIndex) {
 	newSwitchConf.switchTime = switchTime;
 	newSwitchConf.systemIndex = systemIndex;
 	mSwitchEventVector.push_back(newSwitchConf);
+}
+
+void Simulation::increaseByTimeStep() {
+	mTime = mTime + mTimeStep;
 }

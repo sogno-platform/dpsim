@@ -3,16 +3,11 @@
 using namespace DPsim;
 
 InductorEMT::InductorEMT(std::string name, int src, int dest, double inductance) : BaseComponent(name, src, dest) {
-	this->mInductance = inductance;
+	mInductance = inductance;
 }
 
 void InductorEMT::applySystemMatrixStamp(DPSMatrix& g, int compOffset, double om, double dt) {
-	double a = 2.0*mInductance / dt;
-	double b = om*mInductance;
-
-	mGl = a / (a*a + b*b);	
-	mP = cos(2 * atan(om / (2 / dt)));
-	
+	mGl = dt / (2.0 * mInductance);
 
 	if (mNode1 >= 0) {
 		g(mNode1, mNode1) = g(mNode1, mNode1) + mGl;
@@ -29,7 +24,6 @@ void InductorEMT::applySystemMatrixStamp(DPSMatrix& g, int compOffset, double om
 }
 
 
-/// Initialize internal state
 void InductorEMT::init(double om, double dt) {
 	mCurr = 0;	
 	mCureq = 0;	
@@ -39,7 +33,7 @@ void InductorEMT::init(double om, double dt) {
 
 void InductorEMT::step(DPSMatrix& g, DPSMatrix& j, int compOffset, double om, double dt, double t) {
 	// Initialize internal state
-	mCureq = mGl*mDeltav + mP*mCurr;
+	mCureq = mGl*mDeltav + mCurr;
 		
 	if (mNode1 >= 0) {
 		j(mNode1, 0) = j(mNode1, 0) - mCureq;		
@@ -52,7 +46,7 @@ void InductorEMT::step(DPSMatrix& g, DPSMatrix& j, int compOffset, double om, do
 
 
 void InductorEMT::postStep(DPSMatrix& g, DPSMatrix& j, DPSMatrix& vt, int compOffset, double om, double dt, double t) {
-	double vpos, vneg;	
+	Real vpos, vneg;	
 
 	if (mNode1 >= 0) {
 		vpos = vt(mNode1, 0);		

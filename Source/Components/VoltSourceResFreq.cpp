@@ -53,9 +53,9 @@ void VoltSourceResFreq::applyRightSideVectorStamp(DPSMatrix& j, int compOffset, 
 
 void VoltSourceResFreq::step(DPSMatrix& g, DPSMatrix& j, int compOffset, Real om, Real dt, Real t) {
 	if (t >= mSwitchTime) {
-		Real fadeInOut = sin(2*PI*10*(t - mSwitchTime)) * mOmegaSource * (t - mSwitchTime);
-		mVoltageDiffr = mVoltageAmp*cos(mVoltagePhase + fadeInOut);
-		mVoltageDiffi = mVoltageAmp*sin(mVoltagePhase + fadeInOut);
+		Real fadeInOut = sin(2 * PI * 0.1 *(t - mSwitchTime)) * mOmegaSource * (t - mSwitchTime);
+		mVoltageDiffr = mVoltageAmp*cos(mVoltagePhase + mOmegaSource * t);
+		mVoltageDiffi = mVoltageAmp*sin(mVoltagePhase + mOmegaSource * t);
 		mCurrentr = mVoltageDiffr / mResistance;
 		mCurrenti = mVoltageDiffi / mResistance;
 	}

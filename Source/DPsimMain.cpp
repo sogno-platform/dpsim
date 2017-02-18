@@ -15,8 +15,9 @@ int main(int argc, char* argv[]) {
 	//SynGenDPUnitTestBalancedResLoad();
 
 	//RXLineResLoad();
-	//VarFreqRXLineResLoad();
-	RXLineResLoadEMT();
+	VarFreqRXLineResLoad();
+	//RXLineResLoadEMT();
+	VarFreqRXLineResLoadEMT();
 	
 	//std::cin.get();
 	return 0;	

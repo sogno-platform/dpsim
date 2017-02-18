@@ -3,12 +3,153 @@ import matplotlib.pyplot as plt
 import pandas as pd
 from scipy.interpolate import interp1d
 
+def plotNodeVoltageInterpDpRef(filenameRef, filenameDP, node):
+	node = node - 1
+	dfRef = pd.read_csv(filenameRef, header=None)
+	dfDP = pd.read_csv(filenameDP, header=None)
+	
+	if (dfRef.shape[1] - 1) < node or node < 0:
+		print('Node not available')
+		exit()
+		
+	if (dfDP.shape[1] - 1) / 2 < node or node < 0:
+		print('Node not available')
+		exit()
+	
+	# Ref
+	timeRef = np.array(dfRef.ix[:,0])
+	voltageRef = np.array(dfRef.ix[:,node + 1])
+	
+	#DP interpolated
+	timeDP = np.array(dfDP.ix[:,0])
+	voltageReDP = np.array(dfDP.ix[:,node + 1])
+	voltageImDP = np.array(dfDP.ix[:, int((dfDP.shape[1] - 1) / 2 + node + 1)])
+	
+	interpTime = np.arange(dfDP.ix[0, 0], dfDP.ix[ dfDP.shape[0] - 1, 0], 0.00005)
+	fVoltageRe = interp1d(timeDP, voltageReDP)
+	fVoltageIm = interp1d(timeDP, voltageImDP)
+	interpVoltageRe = fVoltageRe(interpTime)
+	interpVoltageIm = fVoltageIm(interpTime)	
+	
+	voltageShiftDPInterp = interpVoltageRe*np.cos(2*np.pi*50*interpTime) - interpVoltageIm*np.sin(2*np.pi*50*interpTime)
+	voltageAbsDP = np.sqrt(voltageReDP**2+voltageImDP**2)	
+		
+	fig, ax1 = plt.subplots()
+	ax1.plot(timeRef, voltageRef, 'm:', label='Ref')
+	ax1.plot(interpTime, voltageShiftDPInterp, 'b--', label='DP interp')
+	ax1.plot(timeDP, voltageAbsDP, 'r-', label='DP abs')
+	
+	# Now add the legend with some customizations.
+	legend = ax1.legend(loc='lower right', shadow=True)
+
+	# The frame is matplotlib.patches.Rectangle instance surrounding the legend.
+	frame = legend.get_frame()
+	frame.set_facecolor('0.90')
+
+	ax1.set_xlabel('time [s]')
+	ax1.set_ylabel('mag [V]')
+	ax1.grid(True)
+	plt.show()
+
+def plotNodeVoltageDpEmtRef(filenameRef, filenameDP, filenameEMT, node):
+	node = node - 1
+	dfRef = pd.read_csv(filenameRef, header=None)
+	dfEMT = pd.read_csv(filenameEMT, header=None)
+	dfDP = pd.read_csv(filenameDP, header=None)
+	
+	if (dfRef.shape[1] - 1) < node or node < 0:
+		print('Node not available')
+		exit()
+
+	if (dfEMT.shape[1] - 1) < node or node < 0:
+		print('Node not available')
+		exit()
+		
+	if (dfDP.shape[1] - 1) / 2 < node or node < 0:
+		print('Node not available')
+		exit()
+	
+	# Ref
+	timeRef = np.array(dfRef.ix[:,0])
+	voltageRef = np.array(dfRef.ix[:,node + 1])
+	
+	# EMT
+	timeEMT = np.array(dfEMT.ix[:,0])
+	voltageEMT = np.array(dfEMT.ix[:,node + 1])	
+	
+	#DP
+	timeDP = np.array(dfDP.ix[:,0])
+	voltageReDP = np.array(dfDP.ix[:,node + 1])
+	voltageImDP = np.array(dfDP.ix[:, int((dfDP.shape[1] - 1) / 2 + node + 1)])
+	voltageAbsDP = np.sqrt(voltageReDP**2+voltageImDP**2)
+	voltageShiftDP = voltageReDP*np.cos(2*np.pi*50*timeDP) - voltageImDP*np.sin(2*np.pi*50*timeDP)
+		
+	fig, ax1 = plt.subplots()
+	ax1.plot(timeRef, voltageRef, 'm:', label='Ref')
+	ax1.plot(timeEMT, voltageEMT, 'g--', label='EMT')
+	ax1.plot(timeDP, voltageShiftDP, 'b--', label='DP shift')
+	ax1.plot(timeDP, voltageAbsDP, 'r-', label='DP abs')
+	
+	# Now add the legend with some customizations.
+	legend = ax1.legend(loc='lower right', shadow=True)
+
+	# The frame is matplotlib.patches.Rectangle instance surrounding the legend.
+	frame = legend.get_frame()
+	frame.set_facecolor('0.90')
+
+	ax1.set_xlabel('time [s]')
+	ax1.set_ylabel('mag [V]')
+	ax1.grid(True)
+	plt.show()
+
+
+def plotNodeVoltageDpEmt(filenameDP, filenameEMT, node):
+	node = node - 1
+	dfEMT = pd.read_csv(filenameEMT, header=None)
+	dfDP = pd.read_csv(filenameDP, header=None)
+
+	if (dfEMT.shape[1] - 1) < node or node < 0:
+		print('Node not available')
+		exit()
+		
+	if (dfDP.shape[1] - 1) / 2 < node or node < 0:
+		print('Node not available')
+		exit()
+	
+	# EMT
+	timeEMT = np.array(dfEMT.ix[:,0])
+	voltageEMT = np.array(dfEMT.ix[:,node + 1])	
+	
+	#DP
+	timeDP = np.array(dfDP.ix[:,0])
+	voltageReDP = np.array(dfDP.ix[:,node + 1])
+	voltageImDP = np.array(dfDP.ix[:, int((dfDP.shape[1] - 1) / 2 + node + 1)])
+	voltageAbsDP = np.sqrt(voltageReDP**2+voltageImDP**2)
+	voltageShiftDP = voltageReDP*np.cos(2*np.pi*50*timeDP) - voltageImDP*np.sin(2*np.pi*50*timeDP)
+		
+	fig, ax1 = plt.subplots()
+	ax1.plot(timeEMT, voltageEMT, 'g--', label='EMT')
+	ax1.plot(timeDP, voltageShiftDP, 'b--', label='DP shift')
+	ax1.plot(timeDP, voltageAbsDP, 'r-', label='DP abs')
+	
+	# Now add the legend with some customizations.
+	legend = ax1.legend(loc='lower right', shadow=True)
+
+	# The frame is matplotlib.patches.Rectangle instance surrounding the legend.
+	frame = legend.get_frame()
+	frame.set_facecolor('0.90')
+
+	ax1.set_xlabel('time [s]')
+	ax1.set_ylabel('mag [V]')
+	ax1.grid(True)
+	plt.show()
+
 def plotEmtNodeResults(filename, node):
 	node = node - 1
 	df = pd.read_csv(filename, header=None)
 	print(df.shape)
 
-	if (df.shape[1] - 1) / 2 < node or node < 0:
+	if (df.shape[1] - 1) < node or node < 0:
 		print('Node not available')
 		exit()
 
@@ -60,8 +201,6 @@ def plotInterpolatedNodeResults(filename, node):
 	voltageRe = np.array(df.ix[:,node + 1])
 	voltageIm = np.array(df.ix[:, int((df.shape[1] - 1) / 2 + node + 1)])
 	
-	print(time)
-	print(voltageRe)
 	interpTime = np.arange(df.ix[0, 0], df.ix[ df.shape[0] - 1, 0], 0.00005)
 	fVoltageRe = interp1d(time, voltageRe)
 	fVoltageIm = interp1d(time, voltageIm)
@@ -74,8 +213,8 @@ def plotInterpolatedNodeResults(filename, node):
 	voltage = np.sqrt(interpVoltageRe**2+interpVoltageIm**2)
 	voltageEmt = interpVoltageRe*np.cos(2*np.pi*50*interpTime) - interpVoltageIm*np.sin(2*np.pi*50*interpTime)
 	fig, ax1 = plt.subplots()
-	ax1.plot(interpTime, voltageEmt, 'b-', interpTime, voltage, 'r-')
-	ax1.plot(time, voltageMeas, 'g-')
+	ax1.plot(interpTime, voltageEmt, 'b-')
+	ax1.plot(time, voltageMeas, 'r-')
 	ax1.set_xlabel('time [s]')
 	ax1.set_ylabel('mag [V] or [A]')
 	ax1.grid(True)

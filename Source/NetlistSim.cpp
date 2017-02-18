@@ -1,4 +1,5 @@
 #include "NetlistSim.h"
+#include "Utilities.h"
 
 using namespace DPsim;
 
@@ -45,7 +46,7 @@ void NetlistSim(int argc, char* argv[]) {
 	t = newSim.getTime();
 
 	// Main Simulation Loop
-	while (newSim.Step(log))
+	while (newSim.step(log))
 	{
 		// Save Simulation Step
 		vtLog.Log() << Logger::VectorToDataLine(newSim.getTime(), newSim.getLeftSideVector()).str();
@@ -53,7 +54,7 @@ void NetlistSim(int argc, char* argv[]) {
 		// Get Current Simulation Time
 		t = newSim.getTime();
 
-		UpdateProgressBar(t, tf);
+		updateProgressBar(t, tf);
 	}
 	std::cout << "#######################   (100%)" << std::endl;;
 	std::cout << std::endl;
@@ -88,19 +89,3 @@ void readCmdLineArguments(char* &confFilename, int argc, char* argv[]) {
 	}
 }
 
-void UpdateProgressBar(double t, double tf) {
-
-	if (t / tf <= 0.33) {
-		std::cout << "                        (0%)\r";
-	}
-	else if (t / tf > 0.33 && t / tf <= 0.66) {
-		std::cout << "#####                     (33%)\r";
-	}
-	else if (t / tf > 0.66 && t / tf < 1) {
-		std::cout << "#############             (66%)\r";
-	}
-	else {
-		std::cout << "#######################   (100%)";
-		std::cout << std::endl;
-	}
-}

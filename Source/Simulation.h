@@ -66,11 +66,16 @@ namespace DPsim {
 		/// TODO: check that every system matrix has the same dimensions
 		void CreateSystemMatrix(std::vector<BaseComponent*> elements);
 		void Initialize();
-		int Step(Logger& logger);
+		/// Solve system A * x = z for x and current time
+		int step(Logger& logger);
+		/// Solve system A * x = z for x and current time. Log current values of both vectors.
+		int step(Logger& logger, Logger& leftSideVectorLog, Logger& rightSideVectorLog);
 		void switchSystemMatrix(int systemMatrixIndex);
 		void setSwitchTime(Real switchTime, Int systemIndex);
+		void increaseByTimeStep();
 
 		double getTime() { return mTime; }
+		double getFinalTime() { return mFinalTime; }
 		DPSMatrix getLeftSideVector() { return mLeftSideVector; }
 		DPSMatrix getRightSideVector() { return mRightSideVector; }
 	};

@@ -4,5 +4,6 @@
 void RXLineResLoad();
 void VarFreqRXLineResLoad();
 void RXLineResLoadEMT();
+void VarFreqRXLineResLoadEMT();
 
 #endif

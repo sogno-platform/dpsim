@@ -12,6 +12,7 @@
 #include "Components/SynchronGenerator.h"
 #include "Components/ComponentCommons.h"
 #include "Components/VoltSourceResFreq.h"
+#include "Components/VoltSourceResFreqEMT.h"
 #include "Components/LinearResistorEMT.h"
 #include "Components/InductorEMT.h"
 #include "Components/VoltSourceResEMT.h"
