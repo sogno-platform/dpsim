@@ -17,7 +17,7 @@ int main(int argc, char* argv[]) {
 	//RXLineResLoad();
 	VarFreqRXLineResLoad();
 	//RXLineResLoadEMT();
-	VarFreqRXLineResLoadEMT();
+	//VarFreqRXLineResLoadEMT();
 	
 	//std::cin.get();
 	return 0;	
