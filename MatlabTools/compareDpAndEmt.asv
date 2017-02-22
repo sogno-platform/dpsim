@@ -1,0 +1,98 @@
+%function [ ] = compareDpAndEmt( )
+clear all;
+
+path = '../VisualStudio/DPsimVS2015/Logs/';
+filenameRef = strcat(path, 'LeftVectorLog_VarFreqRXLineResLoadEMT_5e-05_0.5.csv');
+filenameVoltageDPshift = strcat(path, 'LeftVectorLog_VarFreqRXLineResLoad_0.001_0.5.csv');
+filenameVoltageEMT = strcat(path, 'LeftVectorLog_VarFreqRXLineResLoadEMT_0.001_0.5.csv');
+
+%% Read from CSV files
+voltageRef = csvread(filenameRef);
+voltageDP = csvread(filenameVoltageDPshift);
+voltageEMT = csvread(filenameVoltageEMT);
+
+%% Shift DP values
+voltageShiftDP = voltageDP(:,1);
+for col = 2:((size(voltageDP,2)-1) / 2 + 1)
+    for row = 1:(size(voltageDP,1))
+        voltageShiftDP(row,col) = voltageDP(row,col)*cos(2*pi*50*voltageDP(row,1)) - ...
+            voltageDP(row,col+((size(voltageDP,2)-1) / 2))*sin(2*pi*50*voltageDP(row,1));
+    end
+end
+
+for i = 1:size(voltageShiftDP,1)
+    if max(voltageRef(:,1)) >= voltageShiftDP(i,1)
+        indices(i) = find(voltageRef(:,1) == voltageShiftDP(i,1),1);
+        voltageRefAligned(i,:) = voltageRef(i,1);
+        voltageDPshiftAligned(i,:) = voltageShiftDP(i,:);
+        voltageEMTAligned(i,:) = voltageEMT(i,:);
+    end
+end
+
+%% Calculate DP abs
+voltageAbsDP = voltageDP(:,1);
+for col = 2:((size(voltageDP,2)-1) / 2 + 1)
+    for row = 1:(size(voltageDP,1))
+        voltageAbsDP(row,col) = sqrt(voltageDP(row,col)^2 + ...
+            voltageDP(row,col+((size(voltageDP,2)-1) / 2))^2);
+    end
+end
+
+%% Calculate MSEs
+mseDP = sum(voltageRefAligned - voltageDPshiftAligned).^2 / size(voltageRefAligned,1)
+mseEMT = sum(voltageRefAligned - voltageEMTAligned).^2 / size(voltageRefAligned,1)
+
+%% Plot
+figure1 = figure;
+axes1 = axes('Parent',figure1);
+hold(axes1,'on');
+
+EMTplot = plot(voltageEMT(:,1),voltageEMT(:,4), 'b--')
+DPplot = plot(voltageShiftDP(:,1),voltageShiftDP(:,4), 'r--')
+DPabsPlot = plot(voltageAbsDP(:,1),voltageAbsDP(:,4), 'k-')
+RefPlot = plot(voltageRef(:,1),voltageRef(:,4), 'm:')
+
+legend('EMT', 'DP shift', 'DP abs', 'Ref')
+
+%% Interpolation
+voltageDPInterp(:,1) =  voltageRef(:,1);
+voltageDPInterp(:,2) =  interp1(voltageDP(:,1)', voltageDP(:,2)', voltageDPInterp(:,1)')';
+
+for col = 2:size(voltageDP,2)
+    time = ;
+    values =;
+    new_time = voltageDPInterp(:,1)';
+    new_values = interp1(voltageDP(:,1)',  voltageDP(:,col)', new_time);
+    voltageDPInterp(:,col) =  new_values';
+end
+
+voltageEMTInterp(:,1) =  voltageRef(:,1);
+for col = 2:size(voltageEMT,2)
+    voltageEMTInterp(:,col) =  interp1(voltageEMT(:,col), voltageEMT(:,col), voltageEMTInterp(:,1));
+end
+
+%% Shift DP values
+voltageShiftDPInterp = voltageDPInterp(:,1);
+for col = 2:((size(voltageDP,2)-1) / 2 + 1)
+    for row = 1:(size(voltageDP,1))
+        voltageShiftDPInterp(row,col) = voltageDPInterp(row,col)*cos(2*pi*50*voltageDPInterp(row,1)) - ...
+            voltageDPInterp(row,col+((size(voltageDPInterp,2)-1) / 2))*sin(2*pi*50*voltageDPInterp(row,1));
+    end
+end
+
+%% Plot
+figure2 = figure;
+axes2 = axes('Parent',figure2);
+hold(axes2,'on');
+
+voltageEMTInterpPlot = plot(voltageEMTInterp(:,1),voltageEMTInterp(:,4), 'b--')
+DPInterpplot = plot(voltageShiftDPInterp(:,1),voltageShiftDPInterp(:,4), 'r--')
+DPabsInterpPlot = plot(voltageAbsDP(:,1),voltageAbsDP(:,4), 'k-')
+RefInterpsPlot = plot(voltageRef(:,1),voltageRef(:,4), 'm:')
+
+legend('EMT', 'DP shift', 'DP abs', 'Ref')
+plot(voltageDPInterp(:,1), voltageDPInterp(:,2))
+
+
+%end
+

@@ -2,7 +2,7 @@
 
 using namespace DPsim;
 
-VoltSourceResFreqEMT::VoltSourceResFreqEMT(std::string name, int src, int dest, Real voltage, Real phase, Real resistance, Real omegaSource, Real switchTime) : BaseComponent(src, dest) {
+VoltSourceResFreqEMT::VoltSourceResFreqEMT(std::string name, int src, int dest, Real voltage, Real phase, Real resistance, Real omegaSource, Real switchTime, Real rampTime) : BaseComponent(src, dest) {
 	mName = name;
 	mResistance = resistance;
 	mConductance = 1. / resistance;
@@ -10,6 +10,7 @@ VoltSourceResFreqEMT::VoltSourceResFreqEMT(std::string name, int src, int dest, 
 	mVoltagePhase = phase;
 	mSwitchTime = switchTime;
 	mOmegaSource = omegaSource;
+	mRampTime = rampTime;
 	mVoltageDiff = mVoltageAmp*cos(mVoltagePhase);	
 	mCurrent = mVoltageDiff / mResistance;
 }
@@ -43,8 +44,12 @@ void VoltSourceResFreqEMT::applyRightSideVectorStamp(DPSMatrix& j, int compOffse
 
 
 void VoltSourceResFreqEMT::step(DPSMatrix& g, DPSMatrix& j, int compOffset, Real om, Real dt, Real t) {
-	if (t >= mSwitchTime) {
-		Real fadeInOut = sin(2*PI*0.1 * (t - mSwitchTime)) * mOmegaSource;
+	if (t >= mSwitchTime && t < mSwitchTime + mRampTime) {
+		Real fadeInOut = 0.5 + 0.5 * sin( (t - mSwitchTime) / mRampTime * PI + - PI / 2);
+		mVoltageDiff = mVoltageAmp*cos(mVoltagePhase + (om + fadeInOut * mOmegaSource) * t);
+		mCurrent = mVoltageDiff / mResistance;
+	}
+	else if (t >= mSwitchTime + mRampTime) {
 		mVoltageDiff = mVoltageAmp*cos(mVoltagePhase + (om + mOmegaSource) * t);
 		mCurrent = mVoltageDiff / mResistance;
 	}
@@ -52,7 +57,7 @@ void VoltSourceResFreqEMT::step(DPSMatrix& g, DPSMatrix& j, int compOffset, Real
 		mVoltageDiff = mVoltageAmp*cos(mVoltagePhase + om*t);
 		mCurrent = mVoltageDiff / mResistance;
 	}
-	
+		
 	if (mNode1 >= 0) {
 		j(mNode1, 0) = j(mNode1, 0) + mCurrent;
 	}

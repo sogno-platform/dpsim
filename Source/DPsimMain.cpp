@@ -15,10 +15,12 @@ int main(int argc, char* argv[]) {
 	//SynGenDPUnitTestBalancedResLoad();
 
 	//RXLineResLoad();
-	VarFreqRXLineResLoad();
+	//VarFreqRXLineResLoad();
 	//RXLineResLoadEMT();
 	//VarFreqRXLineResLoadEMT();
 	
+	runDpEmtVarFreqStudy();
+
 	//std::cin.get();
 	return 0;	
 }

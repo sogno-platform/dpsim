@@ -2,7 +2,7 @@
 
 using namespace DPsim;
 
-VoltSourceResFreq::VoltSourceResFreq(std::string name, int src, int dest, Real voltage, Real phase, Real resistance, Real omegaSource, Real switchTime) : BaseComponent(src, dest) {
+VoltSourceResFreq::VoltSourceResFreq(std::string name, int src, int dest, Real voltage, Real phase, Real resistance, Real omegaSource, Real switchTime, Real rampTime) : BaseComponent(src, dest) {
 	mName = name;
 	mResistance = resistance;
 	mConductance = 1. / resistance;
@@ -10,6 +10,7 @@ VoltSourceResFreq::VoltSourceResFreq(std::string name, int src, int dest, Real v
 	mVoltagePhase = phase;
 	mSwitchTime = switchTime;
 	mOmegaSource = omegaSource;
+	mRampTime = rampTime;
 	mVoltageDiffr = mVoltageAmp*cos(mVoltagePhase);
 	mVoltageDiffi = mVoltageAmp*sin(mVoltagePhase);
 	mCurrentr = mVoltageDiffr / mResistance;
@@ -52,10 +53,22 @@ void VoltSourceResFreq::applyRightSideVectorStamp(DPSMatrix& j, int compOffset, 
 
 
 void VoltSourceResFreq::step(DPSMatrix& g, DPSMatrix& j, int compOffset, Real om, Real dt, Real t) {
-	if (t >= mSwitchTime) {
-		Real fadeInOut = sin(2 * PI * 0.1 *(t - mSwitchTime)) * mOmegaSource * (t - mSwitchTime);
+	if (t >= mSwitchTime && t < mSwitchTime + mRampTime) {
+		Real fadeInOut = 0.5 + 0.5 * sin((t - mSwitchTime) / mRampTime * PI + -PI / 2);
+		mVoltageDiffr = mVoltageAmp*cos(mVoltagePhase + fadeInOut * mOmegaSource * t);
+		mVoltageDiffi = mVoltageAmp*sin(mVoltagePhase + fadeInOut * mOmegaSource * t);
+		mCurrentr = mVoltageDiffr / mResistance;
+		mCurrenti = mVoltageDiffi / mResistance;
+	}
+	else if (t >= mSwitchTime + mRampTime) {
 		mVoltageDiffr = mVoltageAmp*cos(mVoltagePhase + mOmegaSource * t);
 		mVoltageDiffi = mVoltageAmp*sin(mVoltagePhase + mOmegaSource * t);
+		mCurrentr = mVoltageDiffr / mResistance;
+		mCurrenti = mVoltageDiffi / mResistance;
+	}
+	else {
+		mVoltageDiffr = mVoltageAmp*cos(mVoltagePhase);
+		mVoltageDiffi = mVoltageAmp*sin(mVoltagePhase);
 		mCurrentr = mVoltageDiffr / mResistance;
 		mCurrenti = mVoltageDiffi / mResistance;
 	}
