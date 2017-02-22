@@ -1,6 +1,8 @@
 #include "TopologyReader.h"
 #include "Components.h"
 
+using namespace DPsim;
+
 TopologyReader::TopologyReader() {
 
 }
@@ -9,10 +11,6 @@ TopologyReader::~TopologyReader() {
 
 }
 
-/// Parse topology file
-/// @param f Openend stream containing the configuration file.
-/// @param conf Configuration structure that is filled out during parsing.
-/// @return 0 if successfull, nonzero otherwise.
 
 int TopologyReader::readConfig(std::ifstream &f, Config &conf) {
 	std::string s;
@@ -89,7 +87,7 @@ int TopologyReader::parseConfig(Config &conf, std::vector<BaseComponent*> &circE
 		BaseComponent* tmpCircElement;
 
 		if (it->type.compare("VoltageSourceWithResistance") == 0) {
-			tmpCircElement = new VoltageSourceWithResistance(it->name, std::stoi(it->node1), std::stoi(it->node2), std::stod(it->parameters[0]), std::stod(it->parameters[1]), std::stod(it->parameters[2]));
+			tmpCircElement = new VoltSourceRes(it->name, std::stoi(it->node1), std::stoi(it->node2), std::stod(it->parameters[0]), std::stod(it->parameters[1]), std::stod(it->parameters[2]));
 		}
 		else if (it->type.compare("Inductor") == 0) {
 			tmpCircElement = new Inductor(it->name, std::stoi(it->node1), std::stoi(it->node2), std::stod(it->parameters[0]));

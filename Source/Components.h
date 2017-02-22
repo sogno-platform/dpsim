@@ -7,10 +7,15 @@
 #include "Components/Inductor.h"
 #include "Components/Inductor2.h"
 #include "Components/CurrentSource.h"
-#include "Components/VoltageSourceWithResistance.h"
+#include "Components/VoltSourceRes.h"
 #include "Components/InterfacedInductor.h"
 #include "Components/SynchronGeneratorEMT.h"
 #include "Components/SynchronGenerator.h"
 #include "Components/ComponentCommons.h"
+#include "Components/VoltSourceResFreq.h"
+#include "Components/VoltSourceResFreqEMT.h"
+#include "Components/LinearResistorEMT.h"
+#include "Components/InductorEMT.h"
+#include "Components/VoltSourceResEMT.h"
 
 #endif // !COMPONENTS_H

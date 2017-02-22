@@ -1,51 +1,91 @@
 #include "Simulation.h"
 
-Simulation::Simulation() {
+using namespace DPsim;
 
+Simulation::Simulation() {
+	this->mCurrentSwitchTimeIndex = 0;
+	mSimType = SimulationType::DynPhasor;
 }
 
-Simulation::Simulation(std::vector<BaseComponent*> elements, double om, double dt, double tf) {
-	this->mTimeStep = dt;
-	this->mFinalTime = tf;
-	this->mSystemOmega = om;
+Simulation::Simulation(std::vector<BaseComponent*> elements, Real om, Real dt, Real tf) : Simulation() {
+	mTimeStep = dt;
+	mFinalTime = tf;
+	mSystemOmega = om;
 	
 	CreateSystemMatrix(elements);
 	Initialize();
-
-	mSystemMatrix = mSystemMatrixVector[0];
-	mRightSideVector = DPSMatrix::Zero(2 * mNumNodes, 1);
-	mLeftSideVector = DPSMatrix::Zero(2 * mNumNodes, 1);
 }
 
-Simulation::Simulation(std::vector<BaseComponent*> elements, double om, double dt, double tf, Logger& logger) : Simulation(elements, om, dt, tf) {
+Simulation::Simulation(std::vector<BaseComponent*> elements, Real om, Real dt, Real tf, Logger& logger) : Simulation() {
+	mTimeStep = dt;
+	mFinalTime = tf;
+	mSystemOmega = om;
+
+	CreateSystemMatrix(elements);
+	Initialize();
+
 	for (std::vector<BaseComponent*>::iterator it = elements.begin(); it != elements.end(); ++it) {
 		logger.Log(Logtype::INFO) << "Added " << (*it)->getName() << " of type " << typeid(*(*it)).name() << " to simulation." << std::endl;
 	}
 	logger.Log(Logtype::INFO) << "System matrix A:" << std::endl;
 	logger.Log() << mSystemMatrix << std::endl;
+	logger.Log(Logtype::INFO) << "LU decomposition:" << std::endl;
+	logger.Log() << mLuFactored.matrixLU() << std::endl;
+	logger.Log(Logtype::INFO) << "Known variables matrix j:" << std::endl;
+	logger.Log() << mRightSideVector << std::endl;
+}
+
+Simulation::Simulation(std::vector<BaseComponent*> elements, Real om, Real dt, Real tf, Logger& logger, SimulationType simType) {
+	mSimType = simType;
+
+	mTimeStep = dt;
+	mFinalTime = tf;
+	mSystemOmega = om;
+
+	CreateSystemMatrix(elements);
+	Initialize();
+
+	for (std::vector<BaseComponent*>::iterator it = elements.begin(); it != elements.end(); ++it) {
+		logger.Log(Logtype::INFO) << "Added " << (*it)->getName() << " of type " << typeid(*(*it)).name() << " to simulation." << std::endl;
+	}
+	logger.Log(Logtype::INFO) << "System matrix A:" << std::endl;
+	logger.Log() << mSystemMatrix << std::endl;
+	logger.Log(Logtype::INFO) << "LU decomposition:" << std::endl;
+	logger.Log() << mLuFactored.matrixLU() << std::endl;
 	logger.Log(Logtype::INFO) << "Known variables matrix j:" << std::endl;
 	logger.Log() << mRightSideVector << std::endl;
 }
 
 
 Simulation::~Simulation() {
+
 }
 
 
 void Simulation::Initialize() {
+	mSystemMatrix = mSystemMatrixVector[0];
+	mLuFactored = mLuFactoredVector[0];
+	if (mSimType == SimulationType::EMT) {
+		mRightSideVector = DPSMatrix::Zero(mNumNodes, 1);
+		mLeftSideVector = DPSMatrix::Zero(mNumNodes, 1);
+	}
+	else {
+		mRightSideVector = DPSMatrix::Zero(2 * mNumNodes, 1);
+		mLeftSideVector = DPSMatrix::Zero(2 * mNumNodes, 1);
+	}	
+	mElements = mElementsVector[0];
+
 	// Initialize time variable
 	mTime = 0;
-	
-	// 
+
+	// Initialize right side vector and components
 	for (std::vector<BaseComponent*>::iterator it = mElements.begin(); it != mElements.end(); ++it) {
 		(*it)->init(mSystemOmega, mTimeStep);
 		(*it)->applyRightSideVectorStamp(mRightSideVector, mCompOffset, mSystemOmega, mTimeStep);
 	}
-
-
-	mLuFactored = Eigen::PartialPivLU<DPSMatrix>(mSystemMatrix);
 }
-	
+
+
 void Simulation::CreateSystemMatrix(std::vector<BaseComponent*> newElements) {
 	std::vector<BaseComponent*> elements;
 	for (std::vector<BaseComponent*>::iterator it = newElements.begin(); it != newElements.end(); ++it) {
@@ -54,29 +94,34 @@ void Simulation::CreateSystemMatrix(std::vector<BaseComponent*> newElements) {
 	mElementsVector.push_back(elements);
 
 	int maxNode = 0;
-	for (std::vector<BaseComponent*>::iterator it = mElements.begin(); it != mElements.end(); ++it) {
+	for (std::vector<BaseComponent*>::iterator it = newElements.begin(); it != newElements.end(); ++it) {
 		if ((*it)->getNode1() > maxNode)
 			maxNode = (*it)->getNode1();
 		if ((*it)->getNode2() > maxNode)
 			maxNode = (*it)->getNode2();
-	}
-		
+	}		
+
 	mNumNodes = maxNode + 1;
 	mCompOffset = mNumNodes;
-	DPSMatrix systemMatrix = DPSMatrix::Zero(2 * mNumNodes, 2 * mNumNodes);
+	DPSMatrix systemMatrix;
+
+	if (mSimType == SimulationType::EMT) {
+		systemMatrix = DPSMatrix::Zero(mNumNodes, mNumNodes);
+	}
+	else {
+		systemMatrix = DPSMatrix::Zero(2 * mNumNodes, 2 * mNumNodes);
+	}
+	for (std::vector<BaseComponent*>::iterator it = elements.begin(); it != elements.end(); ++it) {
+		(*it)->applySystemMatrixStamp(systemMatrix, mCompOffset, mSystemOmega, mTimeStep);
+	}
 	mSystemMatrixVector.push_back(systemMatrix);
 
-	for (std::vector<BaseComponent*>::iterator it = elements.begin(); it != elements.end(); ++it) {
-		(*it)->applySystemMatrixStamp(mSystemMatrix, mCompOffset, mSystemOmega, mTimeStep);
-	}
-
 	Eigen::PartialPivLU<DPSMatrix> luFactored = Eigen::PartialPivLU<DPSMatrix>(systemMatrix);
-	mLuFactoredVector.push_back(luFactored);
-	
+	mLuFactoredVector.push_back(luFactored);	
 }
 
 
-int Simulation::Step()
+int Simulation::step(Logger& logger)
 {
 	mRightSideVector.setZero();
 	
@@ -90,10 +135,46 @@ int Simulation::Step()
 		(*it)->postStep(mSystemMatrix, mRightSideVector, mLeftSideVector, mCompOffset, mSystemOmega, mTimeStep, mTime);
 	}
 
-	mTime += mTimeStep;
+	if (mCurrentSwitchTimeIndex < mSwitchEventVector.size()) {
+		if (mTime >= mSwitchEventVector[mCurrentSwitchTimeIndex].switchTime) {
+			switchSystemMatrix(mSwitchEventVector[mCurrentSwitchTimeIndex].systemIndex);			
+			mCurrentSwitchTimeIndex++;	
+			logger.Log(Logtype::INFO) << "Switched to system " << mCurrentSwitchTimeIndex << " at " << mTime << std::endl;
+		}
+	}
 
-	if(mTime >= mFinalTime)
+	if (mTime >= mFinalTime) {
 		return 0;
-	else
+	}
+	else {
 		return 1;
+	}
+
+}
+
+int Simulation::step(Logger& logger, Logger& leftSideVectorLog, Logger& rightSideVectorLog)  {
+	int retValue = step(logger);
+
+	leftSideVectorLog.Log() << Logger::VectorToDataLine(getTime(), getLeftSideVector()).str();
+	rightSideVectorLog.Log() << Logger::VectorToDataLine(getTime(), getRightSideVector()).str();
+
+	return retValue;
+}
+
+void Simulation::switchSystemMatrix(int systemMatrixIndex) {
+	if (systemMatrixIndex < mSystemMatrixVector.size()) {
+		mSystemMatrix = mSystemMatrixVector[systemMatrixIndex];
+		mLuFactored = mLuFactoredVector[systemMatrixIndex];
+	}	
+}
+
+void Simulation::setSwitchTime(Real switchTime, Int systemIndex) {
+	switchConfiguration newSwitchConf;
+	newSwitchConf.switchTime = switchTime;
+	newSwitchConf.systemIndex = systemIndex;
+	mSwitchEventVector.push_back(newSwitchConf);
+}
+
+void Simulation::increaseByTimeStep() {
+	mTime = mTime + mTimeStep;
 }

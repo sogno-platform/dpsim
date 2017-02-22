@@ -1,6 +1,0 @@
-#ifndef SIMPLECIRCUITUNITTEST_H
-#define SIMPLECIRCUITUNITTEST_H
-
-void RXLineResLoad();
-
-#endif

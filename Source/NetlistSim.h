@@ -10,7 +10,6 @@
 #include "TopologyReader.h"
 
 void readCmdLineArguments(char* &confFilename, int argc, char* argv[]);
-void UpdateProgressBar(double t, double tf);
 void NetlistSim(int argc, char* argv[]);
 
 #endif

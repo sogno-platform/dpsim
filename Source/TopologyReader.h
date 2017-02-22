@@ -28,6 +28,11 @@ class TopologyReader {
 	public:
 		TopologyReader();
 		~TopologyReader();
+
+		/// Parse topology file
+		/// @param f Openend stream containing the configuration file.
+		/// @param conf Configuration structure that is filled out during parsing.
+		/// @return 0 if successfull, nonzero otherwise.
 		int readConfig(std::ifstream &f, Config &conf);
 		int parseConfig(Config &conf, std::vector<BaseComponent*> &circElements, double &timeStep, double &finalTime);
 };

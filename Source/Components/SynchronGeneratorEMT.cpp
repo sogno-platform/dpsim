@@ -7,9 +7,9 @@ SynchronGeneratorEMT::SynchronGeneratorEMT(std::string name, int node1, int node
 	double Rkq1, double Llkq1, double Rkq2, double Llkq2,
 	double inertia) {
 
-	this->node1 = node1 - 1;
-	this->node2 = node2 - 1;
-	this->node3 = node3 - 1;
+	this->mNode1 = node1 - 1;
+	this->mNode2 = node2 - 1;
+	this->mNode3 = node3 - 1;
 
 	mStateType = stateType;
 	mNomPower = nomPower;
@@ -318,17 +318,17 @@ void SynchronGeneratorEMT::step(DPSMatrix& g, DPSMatrix& j, int compOffset, doub
 	}
 
 	// Update current source accordingly
-	if (node1 >= 0) {
-		j(node1, 0) = j(node1, 0) + mAbcsCurrents(0, 0);
-		j(compOffset + node1, 0) = j(compOffset + node1, 0);
+	if (mNode1 >= 0) {
+		j(mNode1, 0) = j(mNode1, 0) + mAbcsCurrents(0, 0);
+		j(compOffset + mNode1, 0) = j(compOffset + mNode1, 0);
 	}
-	if (node2 >= 0) {
-		j(node2, 0) = j(node2, 0) + mAbcsCurrents(1, 0);
-		j(compOffset + node2, 0) = j(compOffset + node2, 0);
+	if (mNode2 >= 0) {
+		j(mNode2, 0) = j(mNode2, 0) + mAbcsCurrents(1, 0);
+		j(compOffset + mNode2, 0) = j(compOffset + mNode2, 0);
 	}
-	if (node3 >= 0) {
-		j(node3, 0) = j(node3, 0) + mAbcsCurrents(2, 0);
-		j(compOffset + node3, 0) = j(compOffset + node3, 0);
+	if (mNode3 >= 0) {
+		j(mNode3, 0) = j(mNode3, 0) + mAbcsCurrents(2, 0);
+		j(compOffset + mNode3, 0) = j(compOffset + mNode3, 0);
 	}
 }
 
@@ -412,20 +412,20 @@ void SynchronGeneratorEMT::stepInStatorRefFrame(double om, double dt, double t, 
 }
 
 void SynchronGeneratorEMT::postStep(DPSMatrix& g, DPSMatrix& j, DPSMatrix& vt, int compOffset, double om, double dt, double t) {
-	if (node1 >= 0) {
-		mAbcsVoltages(0,0) = vt(node1, 0);		
+	if (mNode1 >= 0) {
+		mAbcsVoltages(0,0) = vt(mNode1, 0);		
 	}
 	else {
 		mAbcsVoltages(0, 0) = 0;		
 	}
-	if (node2 >= 0) {
-		mAbcsVoltages(1, 0) = vt(node2, 0);		
+	if (mNode2 >= 0) {
+		mAbcsVoltages(1, 0) = vt(mNode2, 0);		
 	}
 	else {
 		mAbcsVoltages(1, 0) = 0;		
 	}
-	if (node3 >= 0) {
-		mAbcsVoltages(2, 0) = vt(node3, 0);		
+	if (mNode3 >= 0) {
+		mAbcsVoltages(2, 0) = vt(mNode3, 0);		
 	}
 	else {
 		mAbcsVoltages(2, 0) = 0;

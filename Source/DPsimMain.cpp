@@ -1,7 +1,8 @@
 #include <iostream>
 #include <string>
 #include "NetlistSim.h"
-#include "SynchronGenUnitTest.h"
+#include "Examples/SynchronGenUnitTest.h"
+#include "Examples/SimpleCircuitTest.h"
 #include <complex>
 
 int main(int argc, char* argv[]) {
@@ -10,11 +11,17 @@ int main(int argc, char* argv[]) {
 	
 	//SynGenUnitTestBalancedResLoad();
 	//SynGenUnitTestPhaseToPhaseFault();
-	//SynGenUnitTestThreePhaseFault();
-	
-	SynGenDPUnitTestBalancedResLoad();
+	//SynGenUnitTestThreePhaseFault();	
+	//SynGenDPUnitTestBalancedResLoad();
 
-	std::cin.get();
+	//RXLineResLoad();
+	//VarFreqRXLineResLoad();
+	//RXLineResLoadEMT();
+	//VarFreqRXLineResLoadEMT();
+	
+	runDpEmtVarFreqStudy();
+
+	//std::cin.get();
 	return 0;	
 }
 

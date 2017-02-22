@@ -1,12 +1,12 @@
-#ifndef LINEARRESISTOR_H
-#define LINEARRESISTOR_H
+#ifndef LINEARRESISTOREMT_H
+#define LINEARRESISTOREMT_H
 
 #include <iostream>
 #include "BaseComponent.h"
 
 namespace DPsim {
 
-	class LinearResistor : public BaseComponent {
+	class LinearResistorEMT : public BaseComponent {
 	protected:
 		double resistance;
 		double conductance;
@@ -17,8 +17,8 @@ namespace DPsim {
 		double voltageAtDesti;
 
 	public:
-		LinearResistor() { ; };
-		LinearResistor(std::string name, int src, int dest, double resistance);
+		LinearResistorEMT() { ; };
+		LinearResistorEMT(std::string name, int src, int dest, double resistance);
 
 		void applySystemMatrixStamp(DPSMatrix& g, int compOffset, double om, double dt);
 		void applyRightSideVectorStamp(DPSMatrix& j, int compOffset, double om, double dt) { }

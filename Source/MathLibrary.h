@@ -17,8 +17,8 @@ namespace DPsim
 	#define PI M_PI
 
 	// ### Types ###
-	typedef uint64_t UInt;
-	typedef int64_t Int;
+	typedef unsigned int UInt;
+	typedef int Int;
 	typedef double Real;
 	typedef std::complex<Real> Complex;
 	static const Complex jComp(0.0, 1.0);
