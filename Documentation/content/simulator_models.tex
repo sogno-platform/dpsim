@@ -4,25 +4,82 @@
 
 \subsection{Inductor}
 
-\begin{equation}
-        \frac{di(t)}{dt} = \frac{1}{L} \cdot v(t) - j \omega \cdot i(t)
-\end{equation}
+The presence of an inductor or a capacitor in a circuit introduce dynamic that requires the knowledge of the "past" behavior of the component to represent its quantities at a given time.
 
-Apply trapezoidal rule:
+An inductor can be described by the following equations: 
 
 \begin{equation}
-        i(t) = i(t - \Delta t) + \frac{\Delta t}{2} \left[ \frac{1}{L} \cdot v(t) - j \omega \cdot i(t) + \frac{1}{L} \cdot v(t - \Delta t) - j \omega \cdot i(t - \Delta t) \right]
+        v_L(t) = L \frac{di_L(t)}{dt}
 \end{equation}
 
-\begin{align}
-        a &= \frac{\Delta t}{2L} \\
-        b &= \frac{\Delta t \omega}{2}
-\end{align}
+\begin{equation}
+        i_L(t) = i_L(t- \Delta t) + \frac{1}{L} \cdot \int_{t- \Delta t}^{t} v_L(\tau) d \tau 
+\end{equation}
+
+In dynamic phasors the inductor equations become:
+
+\begin{equation}
+        v_L(t) = L \frac{di_L(t)}{dt} + j \omega \cdot L \cdot  i_L(t)
+\end{equation}
+
+\begin{equation}
+        i_L(t) = i_L(t- \Delta t) +  \int_{t- \Delta t}^{t} \frac{1}{L} \cdot v_L(\tau) -j \omega \cdot i_L(\tau)d \tau 
+\end{equation}
+
+A numerical solution for these equations can only be obtained at a finite number of points, therefore a discretization of time is required.
+There are different integration methods available to solve the integration problem. The method chosen in this work is the trapezoidal rule.
+
+Given the following equation, that defines the value of a variable $y$ at the point $k+1$.
+
+\begin{equation}
+	y(k+1) = y(k) + \int_{t_k}^{t_k+ \Delta t} x(\tau)d \tau
+\end{equation}
+
+With the trapezoidal rule $y(k+1)$ is calculated as following:
+
+\begin{equation}
+	y(k+1)=y(k)+ \frac{x(k)+x(k+1)}{2} \cdot \Delta t
+\end{equation}
+
+Applying trapezoidal rule for the inductor equation:
+
+\begin{equation}
+        i_L(k+1) = i_L(k) + \frac{\Delta t}{2} \left[ \frac{1}{L} \cdot v_L(k+1) - j \omega \cdot i_L(k+1) + \frac{1}{L} \cdot v(k) - j \omega \cdot i_L(k) \right]
+\end{equation}
+
+Defining:
 
 \begin{align}
-        i(t) &= i(t - \Delta t) + a \cdot v(t) - j b \cdot i(t) + a \cdot v(t - \Delta t) - j b \cdot i(t - \Delta t) \\
-        i(t) &= \frac{1-b^2-j2b}{1+b^2} \cdot i(t - \Delta t) + \frac{a-jab}{1+b^2} \left[ v(t) - v(t - \Delta t) \right]
+	a &= \frac{\Delta t}{2L} \\
+	b &= \frac{\Delta t \omega}{2}
 \end{align}
+		
+The equation can be rewritten as
+
+\begin{align}
+        i_L(k+1) &= i_L(k) + a \cdot v_L(k+1) - j b \cdot i_L(k+1) + a \cdot v(k) - j b \cdot i_L(k) \\
+        i_L(k+1) &= i_L(k) \cdot \frac{1-jb}{1+jb} + \frac{a}{1+jb} \cdot [v_L(k)+v_L(k+1)] \\
+        i_L(k+1) &= \frac{1-b^2-j2b}{1+b^2} \cdot i_L(k) + \frac{a-jab}{1+b^2} \left[ v_L(k+1) + v_L(k) \right]
+\end{align}
+
+The inductor in calculation step k+1 can be substituted with a resistance $R_L$ in parallel with a current source $I_L(k)$. The value of $I_L(k)$ depends only on the previous time step.
+
+\begin{figure}[ht]
+	\centering
+	\includegraphics[scale=0.6]{img/Inductor.png} 
+	\caption{Equivalent circuit of an Inductor}
+	\label{fig:Inductor}
+\end{figure}
+
+
+\begin{equation}
+	I_L(k) = i_L(k) \cdot \frac{1-b^2-2bj}{1+b^2} + v_L(k) \cdot \frac{a-jab}{1+b^2}
+\end{equation}
+
+\begin{equation}
+	R_L = \frac{1+b^2}{a-jab}
+\end{equation}	
+
 
 \subsection{Capacitor}
 
