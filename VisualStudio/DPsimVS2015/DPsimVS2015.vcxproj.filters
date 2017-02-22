@@ -74,9 +74,10 @@
     </ClInclude>
     <ClInclude Include="..\..\Source\SimpleCircuitUnitTest.h">
       <Filter>Headerdateien\UnitTests</Filter>
+	</ClInclude>
     <ClInclude Include="..\..\Source\Components\Inductor2.h">
       <Filter>Headerdateien\Components</Filter>
-
+	</ClInclude>
     <ClInclude Include="..\..\Source\Components\VoltSourceResFreq.h">
       <Filter>Headerdateien\Components</Filter>
     </ClInclude>
@@ -154,10 +155,12 @@
     <ClCompile Include="..\..\Source\Examples\SynchronGenUnitTest.cpp">
       <Filter>Quelldateien\Examples</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\Source\SimpleCircuitUnitTest.cpp">
-      <Filter>Quelldateien\UnitTests</Filter>
+    <ClCompile Include="..\..\Examples\SimpleCircuitUnitTest.cpp">
+      <Filter>Quelldateien\Examples</Filter>
+	</ClCompile>
     <ClCompile Include="..\..\Source\Components\Inductor2.cpp">
       <Filter>Quelldateien\Components</Filter>
+	</ClCompile>
     <ClCompile Include="..\..\Source\Components\VoltSourceRes.cpp">
       <Filter>Quelldateien\Components</Filter>
     </ClCompile>
