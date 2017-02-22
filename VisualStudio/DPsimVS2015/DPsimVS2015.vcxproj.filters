@@ -81,6 +81,9 @@
     <ClInclude Include="..\..\Source\Components\ComponentCommons.h">
       <Filter>Headerdateien\Components</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\Source\Components\Inductor2.h">
+      <Filter>Headerdateien\Components</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\Source\DPsimMain.cpp">
@@ -124,6 +127,9 @@
     </ClCompile>
     <ClCompile Include="..\..\Source\SynchronGenUnitTest.cpp">
       <Filter>Quelldateien\UnitTests</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\Components\Inductor2.cpp">
+      <Filter>Quelldateien\Components</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

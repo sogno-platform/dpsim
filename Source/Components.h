@@ -5,6 +5,7 @@
 #include "Components/LinearResistor.h"
 #include "Components/Capacitor.h"
 #include "Components/Inductor.h"
+#include "Components/Inductor2.h"
 #include "Components/CurrentSource.h"
 #include "Components/VoltageSourceWithResistance.h"
 #include "Components/InterfacedInductor.h"
