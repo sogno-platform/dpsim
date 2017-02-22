@@ -83,25 +83,61 @@ The inductor in calculation step k+1 can be substituted with a resistance $R_L$ 
 
 \subsection{Capacitor}
 
-\begin{equation}
-        \frac{dv(t)}{dt} = \frac{1}{C} \cdot i(t) - j \omega \cdot v(t)
-\end{equation}
-
-Apply trapezoidal rule:
+The same approach used for the inductor is used now for the capacitor.
+A capacitor can be described by the following equations:
 
 \begin{equation}
-        v(t) = v(t - \Delta t) + \frac{\Delta t}{2} \left[ \frac{1}{C} \cdot i(t) - j \omega \cdot v(t) + \frac{1}{C} \cdot i(t - \Delta t) - j \omega \cdot v(t - \Delta t) \right]
+	i_C(t)= C \frac{d v_c}{dt}
 \end{equation}
 
+\begin{equation}
+	v_C(t)= v_C(t - \Delta t) + \frac{1}{C} \int_{t - \Delta t}^{t} i_C (\tau) d \tau
+\end{equation}
+
+In dynamic phasor the capacitor equations become:
+
+\begin{equation}
+        i_C(t)= C \frac{d v_c}{dt} + j \omega \cdot C \cdot v_C(t)
+\end{equation}
+
+\begin{equation}
+        v_C(t) = v_C(t- \Delta t) +  \int_{t- \Delta t}^{t} \frac{1}{C} \cdot i_C(\tau) -j \omega \cdot v_C(\tau)d \tau 
+\end{equation}
+
+Applying trapezoidal rule for the capacitor equation:
+
+\begin{equation}
+        v_C(k+1) = v_C(k) + \frac{\Delta t}{2} \left[ \frac{1}{C} \cdot i_C(k+1) - j \omega \cdot v_C(k+1) + \frac{1}{C} \cdot i_C(k) - j \omega \cdot v_C(k) \right]
+\end{equation}
+
+Defining:
 \begin{align}
         a &= \frac{\Delta t}{2C} \\
         b &= \frac{\Delta t \omega}{2}
 \end{align}
 
 \begin{align}
-        v(t) &= v(t - \Delta t) + a \cdot i(t) - j b \cdot v(t) + a \cdot i(t - \Delta t) - j b \cdot v(t - \Delta t) \\
-        i(t) &= -i(t- \Delta t) + \frac{1+jb}{a} \cdot v(t) + \frac{-1+jb}{a} \cdot v(t - \Delta t)
+        v_C(k+1) &= v_C(k) + a \cdot i_C(k+1) - j b \cdot v_C(k+1) + a \cdot i_C(k) - j b \cdot v_C(k) \\
+        i_C(k+1) &= -i_C(k) + \frac{1+jb}{a} \cdot v_C(k+1) - \frac{1-jb}{a} \cdot v_C(k)
 \end{align}
+
+The capacitor in calculation step k+1 can also be substituted with a resistance $R_C$ in parallel with a current source $I_C(k)$. The value of $I_C(k)$ depends only on the previous time step.
+
+\begin{figure}[ht]
+	\centering
+	\includegraphics[scale=0.6]{img/Capacitor.png} 
+	\caption{Equivalent circuit of a Capacitor}
+	\label{fig:Capacitor}
+\end{figure}
+
+\begin{equation}
+	R_C = \frac{a}{1+jb}
+\end{equation}
+
+\begin{equation}
+	I_C = \frac{1-jb}{a} v_C(k) + i_C(k)
+\end{equation}
+
 
 \section{Synchronous Machine}
 
