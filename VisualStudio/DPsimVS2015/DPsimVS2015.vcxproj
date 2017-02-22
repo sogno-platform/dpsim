@@ -117,6 +117,7 @@
     <ClInclude Include="..\..\Source\Components\Capacitor.h" />
     <ClInclude Include="..\..\Source\Components\ComponentCommons.h" />
     <ClInclude Include="..\..\Source\Components\CurrentSource.h" />
+    <ClInclude Include="..\..\Source\Components\Inductor2.h" />
     <ClInclude Include="..\..\Source\Components\Inductor.h" />
     <ClInclude Include="..\..\Source\Components\InterfacedInductor.h" />
     <ClInclude Include="..\..\Source\Components\LinearResistor.h" />
@@ -135,6 +136,7 @@
     <ClCompile Include="..\..\Source\Components\Capacitor.cpp" />
     <ClCompile Include="..\..\Source\Components\CurrentSource.cpp" />
     <ClCompile Include="..\..\Source\Components\Inductor.cpp" />
+    <ClCompile Include="..\..\Source\Components\Inductor2.cpp" />
     <ClCompile Include="..\..\Source\Components\InterfacedInductor.cpp" />
     <ClCompile Include="..\..\Source\Components\LinearResistor.cpp" />
     <ClCompile Include="..\..\Source\Components\SynchronGeneratorEMT.cpp" />

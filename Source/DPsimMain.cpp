@@ -6,7 +6,7 @@
 
 int main(int argc, char* argv[]) {
 
-	//NetlistSim(argc, argv);
+	NetlistSim(argc, argv);
 	
 	//SynGenUnitTestBalancedResLoad();
 	//SynGenUnitTestPhaseToPhaseFault();
