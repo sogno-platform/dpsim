@@ -129,6 +129,7 @@
     <ClInclude Include="..\..\Source\Components\VoltSourceResEMT.h" />
     <ClInclude Include="..\..\Source\Components\VoltSourceResFreq.h" />
     <ClInclude Include="..\..\Source\Components\VoltSourceResFreqEMT.h" />
+    <ClInclude Include="..\..\Source\Examples\ReferenceCircuits.h" />
     <ClInclude Include="..\..\Source\Examples\SimpleCircuitTest.h" />
     <ClInclude Include="..\..\Source\Examples\SynchronGenUnitTest.h" />
     <ClInclude Include="..\..\Source\Logger.h" />
@@ -154,6 +155,7 @@
     <ClCompile Include="..\..\Source\Components\VoltSourceResFreq.cpp" />
     <ClCompile Include="..\..\Source\Components\VoltSourceResFreqEMT.cpp" />
     <ClCompile Include="..\..\Source\DPsimMain.cpp" />
+    <ClCompile Include="..\..\Source\Examples\ReferenceCircuits.cpp" />
     <ClCompile Include="..\..\Source\Examples\SimpleCircuitTest.cpp" />
     <ClCompile Include="..\..\Source\Examples\SynchronGenUnitTest.cpp" />
     <ClCompile Include="..\..\Source\Logger.cpp" />

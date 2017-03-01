@@ -3,11 +3,16 @@
 #include "NetlistSim.h"
 #include "Examples/SynchronGenUnitTest.h"
 #include "Examples/SimpleCircuitTest.h"
+#include "Examples/ReferenceCircuits.h"
 #include <complex>
 
 int main(int argc, char* argv[]) {
 
-	NetlistSim(argc, argv);
+	//simulationExample1();
+	//simulationExample1L2();
+	simulationExample3();
+	
+	//NetlistSim(argc, argv);
 	
 	//SynGenUnitTestBalancedResLoad();
 	//SynGenUnitTestPhaseToPhaseFault();
@@ -19,7 +24,7 @@ int main(int argc, char* argv[]) {
 	//RXLineResLoadEMT();
 	//VarFreqRXLineResLoadEMT();
 	
-	runDpEmtVarFreqStudy();
+	//runDpEmtVarFreqStudy();
 
 	//std::cin.get();
 	return 0;	

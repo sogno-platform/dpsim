@@ -1,6 +1,6 @@
 #include "Capacitor.h"
 
-Capacitor::Capacitor(std::string name, int src, int dest, double capacitance) : BaseComponent(src, dest) {
+Capacitor::Capacitor(std::string name, int src, int dest, double capacitance) : BaseComponent(name, src, dest) {
 	this->capacitance = capacitance;
 };	
 		
@@ -36,7 +36,7 @@ void Capacitor::applySystemMatrixStamp(DPSMatrix& g, int compOffset, double om, 
 }
 
 /// Initialize internal state
-void Capacitor::init(int compOffset, double om, double dt) {
+void Capacitor::init(double om, double dt) {
 	currr = 0;
 	curri = 0;
 	cureqr = 0;
@@ -58,7 +58,7 @@ void Capacitor::step(DPSMatrix& g, DPSMatrix& j, int compOffset, double om, doub
 	}
 
 	if (mNode2 >= 0)	{
-		j(mNode2, 0) = j(mNode2, 1) - cureqr;
+		j(mNode2, 0) = j(mNode2, 0) - cureqr;
 		j(compOffset+mNode2, 0) = j(compOffset+mNode2, 0) - cureqi;
 	}
 }
