@@ -1,4 +1,4 @@
-#ifndef SIMPLECIRCUITTEST_H
+﻿#ifndef SIMPLECIRCUITTEST_H
 #define SIMPLECIRCUITTEST_H
 
 #include "../MathLibrary.h"

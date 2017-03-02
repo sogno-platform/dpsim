@@ -72,12 +72,9 @@
     <ClInclude Include="..\..\Source\Components\ComponentCommons.h">
       <Filter>Headerdateien\Components</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\Source\SimpleCircuitUnitTest.h">
-      <Filter>Headerdateien\UnitTests</Filter>
-	</ClInclude>
     <ClInclude Include="..\..\Source\Components\Inductor2.h">
       <Filter>Headerdateien\Components</Filter>
-	</ClInclude>
+    </ClInclude>
     <ClInclude Include="..\..\Source\Components\VoltSourceResFreq.h">
       <Filter>Headerdateien\Components</Filter>
     </ClInclude>
@@ -104,6 +101,9 @@
     </ClInclude>
     <ClInclude Include="..\..\Source\Utilities.h">
       <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\Examples\ReferenceCircuits.h">
+      <Filter>Headerdateien\Examples</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -155,12 +155,9 @@
     <ClCompile Include="..\..\Source\Examples\SynchronGenUnitTest.cpp">
       <Filter>Quelldateien\Examples</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\Examples\SimpleCircuitUnitTest.cpp">
-      <Filter>Quelldateien\Examples</Filter>
-	</ClCompile>
     <ClCompile Include="..\..\Source\Components\Inductor2.cpp">
       <Filter>Quelldateien\Components</Filter>
-	</ClCompile>
+    </ClCompile>
     <ClCompile Include="..\..\Source\Components\VoltSourceRes.cpp">
       <Filter>Quelldateien\Components</Filter>
     </ClCompile>
@@ -175,6 +172,9 @@
     </ClCompile>
     <ClCompile Include="..\..\Source\Utilities.cpp">
       <Filter>Quelldateien</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\Examples\ReferenceCircuits.cpp">
+      <Filter>Quelldateien\Examples</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

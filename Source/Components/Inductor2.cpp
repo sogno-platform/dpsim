@@ -21,7 +21,7 @@ void Inductor2::applySystemMatrixStamp(DPSMatrix& g, int compOffset, double om, 
 		g(mNode1, compOffset + mNode1) = g(mNode1, compOffset + mNode1) - gli;
 	}
 
-	else if (mNode2 >= 0) {
+	if (mNode2 >= 0) {
 		g(mNode2, mNode2) = g(mNode2, mNode2) + glr;
 		g(compOffset + mNode2, compOffset + mNode2) = g(compOffset + mNode2, compOffset + mNode2) + glr;
 		g(compOffset + mNode2, mNode2) = g(compOffset + mNode2, mNode2) + gli;
