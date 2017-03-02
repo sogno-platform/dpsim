@@ -1,7 +1,7 @@
-function [ ] = compareDpAndEmtInterp(filenameRef, filenameVoltageDP, filenameVoltageEMT, plotNode)
+function [mseDPInterp, mseEMTInterp] = compareDpAndEmtInterp(filenameRef, filenameVoltageDP, filenameVoltageEMT, plotNode)
 
 % Increment node to skip time column
-plotNode = plotNode + 1
+plotNode = plotNode + 1;
 
 % Read from CSV files
 voltageRef = csvread(filenameRef);

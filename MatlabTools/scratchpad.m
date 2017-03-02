@@ -1,7 +1,14 @@
-function [mseDP, mseEMT] = compareDpAndEmt(filenameRef, filenameVoltageDP, filenameVoltageEMT, plotNode)
+filenameDP = 'LeftVectorLog_VarFreqRXLineResLoad';
+filenameEMT = 'LeftVectorLog_VarFreqRXLineResLoadEMT';
+path = '../VisualStudio/DPsimVS2015/Logs/';
+finalTime = '_0.6';
+timeStepRef = '_5e-05';
+dataType = '.csv';
 
-% Increment node to skip time column
-plotNode = plotNode + 1;
+timeStep = '_0.001';
+filenameVoltageDP = strcat(path, filenameDP, timeStep, finalTime, dataType);
+filenameVoltageEMT = strcat(path, filenameEMT, timeStep, finalTime, dataType);
+filenameRef = strcat(path, filenameEMT, timeStepRef, finalTime, dataType);
 
 % Read from CSV files
 voltageRef = csvread(filenameRef);
@@ -34,31 +41,12 @@ for row = 1:size(voltageShiftDP,1)
     end
 end
 for i = 1:size(indices,2)
-    row = indices(1,i);
+    row = indices(1,i)
     for col = 1:size(voltageRef,2)
         voltageRefAligned(i,col) = voltageRef(row,col);
-        voltageShiftDPAligned(i,col) = voltageShiftDP(i,col);
-        voltageEMTAligned(i,col) = voltageEMT(i,col);
     end
 end
 
 % Calculate MSEs
-mseDP = sum((voltageRefAligned - voltageShiftDPAligned).^2) / size(voltageRefAligned,1)
-mseEMT = sum((voltageRefAligned - voltageEMTAligned).^2) / size(voltageRefAligned,1)
-
-% Plot
-figure1 = figure('Name',['DP EMT Comparison ' num2str(voltageDP(2,1))],'NumberTitle','off');
-axes1 = axes('Parent',figure1);
-hold(axes1,'on');
-
-EMTplot = plot(voltageEMT(:,1),voltageEMT(:,plotNode), 'b--');
-DPplot = plot(voltageShiftDP(:,1),voltageShiftDP(:,plotNode), 'r-.');
-DPabsPlot = plot(voltageAbsDP(:,1),voltageAbsDP(:,plotNode), 'k-');
-RefPlot = plot(voltageRef(:,1),voltageRef(:,plotNode), 'm:');
-
-legend('EMT', 'DP shift', 'DP abs', 'Ref')
-xlabel('time [s]')
-ylabel('voltage [V]')
-
-end
-
+mseDP = sum((voltageRefAligned - voltageShiftDP).^2) / size(voltageRefAligned,1)
+mseEMT = sum((voltageRefAligned - voltageEMT).^2) / size(voltageRefAligned,1)

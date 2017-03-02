@@ -1,7 +1,7 @@
 function [ ] = plotDpEmtVoltage(filenameVoltageDP, filenameVoltageEMT, plotNode)
 
 % Increment node to skip time column
-plotNode = plotNode + 1
+plotNode = plotNode + 1;
 
 % Read values from CSV files
 voltageDP = csvread(filenameVoltageDP);
