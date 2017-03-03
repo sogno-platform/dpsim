@@ -8,10 +8,11 @@
 
 int main(int argc, char* argv[]) {
 
-	//simulationExample1();
-	//simulationExample1L2();
-	simulationExample3();
-	
+
+
+	simulationExampleIdealVS();
+	//simulationExample3();
+
 	//NetlistSim(argc, argv);
 	
 	//SynGenUnitTestBalancedResLoad();

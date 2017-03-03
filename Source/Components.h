@@ -17,5 +17,6 @@
 #include "Components/LinearResistorEMT.h"
 #include "Components/InductorEMT.h"
 #include "Components/VoltSourceResEMT.h"
+#include "Components/IdealVoltageSource.h"
 
 #endif // !COMPONENTS_H

@@ -94,14 +94,22 @@ void Simulation::CreateSystemMatrix(std::vector<BaseComponent*> newElements) {
 	mElementsVector.push_back(elements);
 
 	int maxNode = 0;
+	int numIdealVS = 0;
 	for (std::vector<BaseComponent*>::iterator it = newElements.begin(); it != newElements.end(); ++it) {
 		if ((*it)->getNode1() > maxNode)
 			maxNode = (*it)->getNode1();
 		if ((*it)->getNode2() > maxNode)
 			maxNode = (*it)->getNode2();
+		std::string type = typeid(*(*it)).name();
+
+		if (type == "class DPsim::IdealVoltageSource")
+		{
+			numIdealVS = numIdealVS + 1;
+		}
+	
 	}		
 
-	mNumNodes = maxNode + 1;
+	mNumNodes = maxNode + 1 + numIdealVS;
 	mCompOffset = mNumNodes;
 	DPSMatrix systemMatrix;
 
