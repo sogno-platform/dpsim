@@ -8,5 +8,7 @@ void simulationExample1L2();
 void simulationExample2();
 void simulationExample3();
 void simulationExampleIdealVS();
+void simulationExampleIdealVS2();
+void simulationExampleIdealVS3();
 
 #endif

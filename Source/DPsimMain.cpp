@@ -10,7 +10,9 @@ int main(int argc, char* argv[]) {
 
 
 
-	simulationExampleIdealVS();
+	simulationExampleIdealVS3();
+	//simulationExampleIdealVS();
+
 	//simulationExample3();
 
 	//NetlistSim(argc, argv);

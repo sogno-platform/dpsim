@@ -120,7 +120,7 @@ void Simulation::CreateSystemMatrix(std::vector<BaseComponent*> newElements) {
 		systemMatrix = DPSMatrix::Zero(2 * mNumNodes, 2 * mNumNodes);
 	}
 	for (std::vector<BaseComponent*>::iterator it = elements.begin(); it != elements.end(); ++it) {
-		(*it)->applySystemMatrixStamp(systemMatrix, mCompOffset, mSystemOmega, mTimeStep);
+			(*it)->applySystemMatrixStamp(systemMatrix, mCompOffset, mSystemOmega, mTimeStep);
 	}
 	mSystemMatrixVector.push_back(systemMatrix);
 

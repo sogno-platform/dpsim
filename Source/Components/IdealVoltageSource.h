@@ -15,10 +15,13 @@ namespace DPsim {
 		Real mVoltageAtDesti;
 		Real mCurrentr;
 		Real mCurrenti;
+		int number;
+		
 
 	public:
+		
 		IdealVoltageSource() { ; };
-		IdealVoltageSource(std::string name, int src, int dest, Real voltage, Real phase);
+		IdealVoltageSource(std::string name, int src, int dest, Real voltage, Real phase, int num);
 
 		void applySystemMatrixStamp(DPSMatrix& g, int compOffset, Real om, Real dt);
 		void applyRightSideVectorStamp(DPSMatrix& j, int compOffset, Real om, Real dt);
