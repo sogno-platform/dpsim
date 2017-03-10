@@ -299,8 +299,8 @@ void simulationExampleRXLine()
 	std::cout << '\n';
 
 	// Set up simulation
-	Real timeStep = 0.0005;
-	Simulation newSim(circElements0, 2.0*M_PI*50.0, timeStep, 0.2, log);
+	Real timeStep = 0.001;
+	Simulation newSim(circElements0, 2.0*M_PI*50.0, timeStep, 0.3, log);
 
 	// Main Simulation Loop
 	std::cout << "Start simulation." << std::endl;
