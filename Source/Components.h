@@ -18,5 +18,6 @@
 #include "Components/InductorEMT.h"
 #include "Components/VoltSourceResEMT.h"
 #include "Components/IdealVoltageSource.h"
+#include "Components/RxLine.h"
 
 #endif // !COMPONENTS_H

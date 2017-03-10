@@ -10,7 +10,8 @@ int main(int argc, char* argv[]) {
 
 
 
-	simulationExampleIdealVS3();
+	simulationExampleRXLine();
+	simulationExampleRXLine2();
 	//simulationExampleIdealVS();
 
 	//simulationExample3();

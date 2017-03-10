@@ -10,5 +10,6 @@ void simulationExample3();
 void simulationExampleIdealVS();
 void simulationExampleIdealVS2();
 void simulationExampleIdealVS3();
-
+void simulationExampleRXLine();
+void simulationExampleRXLine2();
 #endif

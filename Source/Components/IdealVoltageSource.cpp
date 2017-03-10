@@ -2,11 +2,9 @@
 
 using namespace DPsim;
 
-IdealVoltageSource::IdealVoltageSource(std::string name, int src, int dest, Real voltage, Real phase, int num) : BaseComponent(src, dest) {
+IdealVoltageSource::IdealVoltageSource(std::string name, int src, int dest, Real voltage, Real phase, int num) : BaseComponent(name, src, dest) {
 	this->number = num;
-	this->mName = name;
 	this->mVoltageDiffr = voltage*cos(phase);
-
 	this->mVoltageDiffi = voltage*sin(phase);
 }
 

@@ -95,6 +95,7 @@ void Simulation::CreateSystemMatrix(std::vector<BaseComponent*> newElements) {
 
 	int maxNode = 0;
 	int numIdealVS = 0;
+	int numRxLines = 0;
 	for (std::vector<BaseComponent*>::iterator it = newElements.begin(); it != newElements.end(); ++it) {
 		if ((*it)->getNode1() > maxNode)
 			maxNode = (*it)->getNode1();
@@ -106,10 +107,15 @@ void Simulation::CreateSystemMatrix(std::vector<BaseComponent*> newElements) {
 		{
 			numIdealVS = numIdealVS + 1;
 		}
+
+		if (type == "class RxLine")
+		{
+			numRxLines = numRxLines + 1;
+		}
 	
 	}		
 
-	mNumNodes = maxNode + 1 + numIdealVS;
+	mNumNodes = maxNode + 1 + numIdealVS + numRxLines;
 	mCompOffset = mNumNodes;
 	DPSMatrix systemMatrix;
 
