@@ -4,6 +4,7 @@
 #include <string>
 #include <iostream>
 #include "../Logger.h"
+#include "../Simulation.h"
 
 #include "../MathLibrary.h"
 
@@ -27,10 +28,10 @@ class BaseComponent {
 		int getNode2() { return mNode2; }
 		std::string getName() { return mName; }
 
-		virtual void applySystemMatrixStamp(DPSMatrix& g, int compOffset, double om, double dt) = 0;
-		virtual void applyRightSideVectorStamp(DPSMatrix& j, int compOffset, double om, double dt) { }
+		virtual void applySystemMatrixStamp(Simulation& sim) = 0;
+		virtual void applyRightSideVectorStamp(Simulation& sim) { }
 		virtual void init(double om, double dt) { }
-		virtual void step(DPSMatrix& g, DPSMatrix& j, int compOffset, double om, double dt, double t) { }
-		virtual void postStep(DPSMatrix& g, DPSMatrix& j, DPSMatrix& vt, int compOffset, double om,  double dt, double t) { }
+		virtual void step(Simulation& sim) { }
+		virtual void postStep(Simulation& sim) { }
 };
 #endif

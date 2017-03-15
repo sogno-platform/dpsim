@@ -94,14 +94,28 @@ void Simulation::CreateSystemMatrix(std::vector<BaseComponent*> newElements) {
 	mElementsVector.push_back(elements);
 
 	int maxNode = 0;
+	int numIdealVS = 0;
+	int numRxLines = 0;
 	for (std::vector<BaseComponent*>::iterator it = newElements.begin(); it != newElements.end(); ++it) {
 		if ((*it)->getNode1() > maxNode)
 			maxNode = (*it)->getNode1();
 		if ((*it)->getNode2() > maxNode)
 			maxNode = (*it)->getNode2();
+		std::string type = typeid(*(*it)).name();
+
+		if (type == "class DPsim::IdealVoltageSource")
+		{
+			numIdealVS = numIdealVS + 1;
+		}
+
+		if (type == "class RxLine")
+		{
+			numRxLines = numRxLines + 1;
+		}
+	
 	}		
 
-	mNumNodes = maxNode + 1;
+	mNumNodes = maxNode + 1 + numIdealVS + numRxLines;
 	mCompOffset = mNumNodes;
 	DPSMatrix systemMatrix;
 
@@ -112,7 +126,7 @@ void Simulation::CreateSystemMatrix(std::vector<BaseComponent*> newElements) {
 		systemMatrix = DPSMatrix::Zero(2 * mNumNodes, 2 * mNumNodes);
 	}
 	for (std::vector<BaseComponent*>::iterator it = elements.begin(); it != elements.end(); ++it) {
-		(*it)->applySystemMatrixStamp(systemMatrix, mCompOffset, mSystemOmega, mTimeStep);
+			(*it)->applySystemMatrixStamp(systemMatrix, mCompOffset, mSystemOmega, mTimeStep);
 	}
 	mSystemMatrixVector.push_back(systemMatrix);
 

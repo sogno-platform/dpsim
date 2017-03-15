@@ -7,11 +7,11 @@ LinearResistor::LinearResistor(std::string name, int src, int dest, double resis
 	this->conductance = 1.0 / resistance;
 }	
 		
-void LinearResistor::applySystemMatrixStamp(DPSMatrix& g, int compOffset, double om, double dt) {
+void LinearResistor::applySystemMatrixStamp(Simulation& sim) {
 
 	// Set diagonal entries
 	if (mNode1 >= 0) {
-		g(mNode1,mNode1) = g(mNode1,mNode1) + conductance;
+		sim->g(mNode1,mNode1) = g(mNode1,mNode1) + conductance;
 		g(compOffset+mNode1,compOffset+mNode1) = g(compOffset+mNode1,compOffset+mNode1) + conductance;
 	}
 	
