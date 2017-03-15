@@ -105,6 +105,15 @@
     <ClInclude Include="..\..\Source\Examples\ReferenceCircuits.h">
       <Filter>Headerdateien\Examples</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\Source\Components\RxLine.h">
+      <Filter>Headerdateien\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\Components\PiLine.h">
+      <Filter>Headerdateien\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\Components\IdealVoltageSource.h">
+      <Filter>Headerdateien\Components</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\Source\DPsimMain.cpp">
@@ -175,6 +184,12 @@
     </ClCompile>
     <ClCompile Include="..\..\Source\Examples\ReferenceCircuits.cpp">
       <Filter>Quelldateien\Examples</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\Components\RxLine.cpp">
+      <Filter>Quelldateien\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\Components\IdealVoltageSource.cpp">
+      <Filter>Quelldateien\Components</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
