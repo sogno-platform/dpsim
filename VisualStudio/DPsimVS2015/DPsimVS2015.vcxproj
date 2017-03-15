@@ -139,6 +139,7 @@
     <ClInclude Include="..\..\Source\MathLibrary.h" />
     <ClInclude Include="..\..\Source\NetlistSim.h" />
     <ClInclude Include="..\..\Source\Simulation.h" />
+    <ClInclude Include="..\..\Source\SystemModel.h" />
     <ClInclude Include="..\..\Source\TopologyReader.h" />
     <ClInclude Include="..\..\Source\Utilities.h" />
   </ItemGroup>
@@ -167,6 +168,7 @@
     <ClCompile Include="..\..\Source\Logger.cpp" />
     <ClCompile Include="..\..\Source\NetlistSim.cpp" />
     <ClCompile Include="..\..\Source\Simulation.cpp" />
+    <ClCompile Include="..\..\Source\SystemModel.cpp" />
     <ClCompile Include="..\..\Source\TopologyReader.cpp" />
     <ClCompile Include="..\..\Source\Utilities.cpp" />
   </ItemGroup>
