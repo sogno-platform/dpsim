@@ -326,9 +326,9 @@ void simulationExampleRXLine2()
 
 	std::vector<BaseComponent*> circElements0;
 	circElements0.push_back(new IdealVoltageSource("v_1", 1, 0, 10, 0, 1));
-	circElements0.push_back(new Inductor2("l_L", 3, 2, 0.001));
-	circElements0.push_back(new LinearResistor("r_L", 1, 3, 0.1));
-	circElements0.push_back(new LinearResistor("r_1", 2, 0, 20));
+	circElements0.push_back(new Inductor2("l_L", 2, 3, 0.001));
+	circElements0.push_back(new LinearResistor("r_L", 1, 2, 0.1));
+	circElements0.push_back(new LinearResistor("r_1", 3, 0, 20));
 
 
 	std::cout << "The contents of circElements0 are:";

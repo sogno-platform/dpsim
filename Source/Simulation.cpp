@@ -128,6 +128,8 @@ void Simulation::CreateSystemMatrix(std::vector<BaseComponent*> newElements) {
 	for (std::vector<BaseComponent*>::iterator it = elements.begin(); it != elements.end(); ++it) {
 			(*it)->applySystemMatrixStamp(systemMatrix, mCompOffset, mSystemOmega, mTimeStep);
 	}
+	
+
 	mSystemMatrixVector.push_back(systemMatrix);
 
 	Eigen::PartialPivLU<DPSMatrix> luFactored = Eigen::PartialPivLU<DPSMatrix>(systemMatrix);

@@ -23,17 +23,27 @@ protected:
 	double glr, gli;
 	double pr, pi;
 
-	int newnode;
+	double correctr, correcti;
+	double cureqr_ind, cureqi_ind;
+	double deltavr_ind;
+	double deltavi_ind;
+	double glr_ind, gli_ind;
+	double currr_ind;
+	double curri_ind;
+
+	//int newnode;
 
 
 public:
 	RxLine() { };
 	RxLine(std::string name, int src, int dest, int newNode, double resistance, double inductance);
+	//RxLine(std::string name, int src, int dest, double resistance, double inductance);
 
 	void applySystemMatrixStamp(DPSMatrix& g, int compOffset, double om, double dt);
 	void applyRightSideVectorStamp(DPSMatrix& j, int compOffset, double om, double dt) { }
 	void init(double om, double dt);
 	void step(DPSMatrix& g, DPSMatrix& j, int compOffset, double om, double dt, double t);
 	void postStep(DPSMatrix& g, DPSMatrix& j, DPSMatrix& vt, int compOffset, double om, double dt, double t);
+
 };
 #endif
