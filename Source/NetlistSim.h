@@ -9,7 +9,10 @@
 #include "Logger.h"
 #include "TopologyReader.h"
 
-void readCmdLineArguments(char* &confFilename, int argc, char* argv[]);
-void NetlistSim(int argc, char* argv[]);
+namespace DPsim {
+
+	void readCmdLineArguments(char* &confFilename, int argc, char* argv[]);
+	void NetlistSim(int argc, char* argv[]);
+}
 
 #endif

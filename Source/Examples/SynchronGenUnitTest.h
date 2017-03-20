@@ -1,12 +1,16 @@
 #ifndef  SYNCHRONGENUNITTEST_H
 #define SYNCHRONGENUNITTEST_H
 
-// EMT generator tests
-void SynGenUnitTestBalancedResLoad();
-void SynGenUnitTestPhaseToPhaseFault();
-void SynGenUnitTestThreePhaseFault();
+#include "../MathLibrary.h"
 
-// Dynamic Phasor generator tests
-void SynGenDPUnitTestBalancedResLoad();
+namespace Dpsim {
+	// EMT generator tests
+	void SynGenUnitTestBalancedResLoad();
+	void SynGenUnitTestPhaseToPhaseFault();
+	void SynGenUnitTestThreePhaseFault();
+
+	// Dynamic Phasor generator tests
+	void SynGenDPUnitTestBalancedResLoad();
+}
 
 #endif

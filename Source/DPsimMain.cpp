@@ -6,12 +6,14 @@
 #include "Examples/ReferenceCircuits.h"
 #include <complex>
 
+using namespace DPsim;
+
 int main(int argc, char* argv[]) {
 
 
 
-	simulationExampleRXLine();
-	simulationExampleRXLine2();
+	//simulationExampleRXLine();
+	//simulationExampleRXLine2();
 	//simulationExampleIdealVS();
 
 	//simulationExample3();

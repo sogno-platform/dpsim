@@ -1,5 +1,7 @@
 #include "Inductor2.h"
 
+using namespace DPsim;
+
 Inductor2::Inductor2(std::string name, int src, int dest, double inductance) : BaseComponent(name, src, dest) {
 	this->inductance = inductance;
 }

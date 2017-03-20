@@ -4,16 +4,18 @@
 #include "BaseComponent.h"
 #include "ComponentCommons.h"
 
-/// Synchronous generator model
-/// If parInPerUnit is not set, the parameters have to be given with their respective stator or rotor 
-/// referred values. The calculation to per unit is performed in the initialization.
-/// The case where parInPerUnit is not set will be implemented later.
-/// parameter names include underscores and typical variables names found in literature instead of
-/// descriptive names in order to shorten formulas and increase the readability
+namespace DPsim {
 
-class SynchronGeneratorEMT : public BaseComponent {
+	/// Synchronous generator model
+	/// If parInPerUnit is not set, the parameters have to be given with their respective stator or rotor 
+	/// referred values. The calculation to per unit is performed in the initialization.
+	/// The case where parInPerUnit is not set will be implemented later.
+	/// parameter names include underscores and typical variables names found in literature instead of
+	/// descriptive names in order to shorten formulas and increase the readability
+
+	class SynchronGeneratorEMT : public BaseComponent {
 	protected:
-				
+
 		// ### Machine parameters ###
 		/// nominal power Pn [VA]
 		double mNomPower;
@@ -33,7 +35,7 @@ class SynchronGeneratorEMT : public BaseComponent {
 		/// unsaturated d-axis mutual inductance Lmd [H]
 		double mLmd0;
 		/// q-axis mutual inductance Lmq [H]
-		double mLmq;	
+		double mLmq;
 		/// unsaturated q-axis mutual inductance Lmq [H]
 		double mLmq0;
 		/// field resistance Rfd [Ohm]
@@ -56,7 +58,7 @@ class SynchronGeneratorEMT : public BaseComponent {
 		double mLaq;
 		/// d winding inductance
 		double mLad;
-						
+
 		/// inertia J [kg*m^2]
 		double mJ;
 		/// number of poles
@@ -96,7 +98,7 @@ class SynchronGeneratorEMT : public BaseComponent {
 		double mBase_Zfd;
 		/// base field inductance
 		double mBase_Lfd;
-		
+
 
 		// ### State variables ###
 		/// rotor speed omega_r
@@ -114,7 +116,7 @@ class SynchronGeneratorEMT : public BaseComponent {
 		/// flux linkage vector
 		DPSMatrix mFluxes = DPSMatrix::Zero(7, 1);
 		/// current vector
-		DPSMatrix mCurrents = DPSMatrix::Zero(7 ,1);
+		DPSMatrix mCurrents = DPSMatrix::Zero(7, 1);
 		/// interface voltage vector abcs
 		DPSMatrix mAbcsVoltages = DPSMatrix::Zero(3, 1);
 		/// interface current vector abcs
@@ -123,7 +125,7 @@ class SynchronGeneratorEMT : public BaseComponent {
 		DPSMatrix mDq0Voltages = DPSMatrix::Zero(3, 1);
 		/// interface current vector dq0
 		DPSMatrix mDq0Currents = DPSMatrix::Zero(3, 1);
-		
+
 		// ### Useful Matrices ###
 		/// inductance matrix
 		DPSMatrix mInductanceMat = DPSMatrix::Zero(7, 7);
@@ -132,13 +134,13 @@ class SynchronGeneratorEMT : public BaseComponent {
 		/// reactance matrix
 		DPSMatrix mReactanceMat = DPSMatrix::Zero(7, 7);
 		/// omega - flux matrix
-		DPSMatrix mOmegaFluxMat = DPSMatrix::Zero(7, 7);	
+		DPSMatrix mOmegaFluxMat = DPSMatrix::Zero(7, 7);
 		/// matrix for reversing stator current directions in calculations with respect to other currents
 		DPSMatrix mReverseCurrents = DPSMatrix::Zero(7, 7);
-		
+
 	public:
 		SynchronGeneratorEMT() { };
-		
+
 		/// Initializes the per unit or stator referred machine parameters with the machine parameters given in per unit or 
 		/// stator referred parameters depending on the setting of parameter type.
 		/// The initialization mode depends on the setting of state type.
@@ -147,7 +149,7 @@ class SynchronGeneratorEMT : public BaseComponent {
 			SynchGenParamType paramType, double Rs, double Ll, double Lmd, double Lmd0, double Lmq, double Lmq0,
 			double Rfd, double Llfd, double Rkd, double Llkd,
 			double Rkq1, double Llkq1, double Rkq2, double Llkq2,
-			double inertia);		
+			double inertia);
 
 		/// Initializes the per unit or stator referred machine parameters with the machine parameters given in per unit.
 		/// The initialization mode depends on the setting of state type.
@@ -168,7 +170,7 @@ class SynchronGeneratorEMT : public BaseComponent {
 		/// Function parameters have to be given in real units.
 		void init(double om, double dt,
 			double initActivePower, double initReactivePower, double initTerminalVolt, double initVoltAngle);
-		
+
 		/// Initializes states in per unit. All machine parameters are assumed to be in per unit.
 		/// Function parameters have to be given in real units.
 		void initStatesInPerUnit(double initActivePower, double initReactivePower,
@@ -188,7 +190,7 @@ class SynchronGeneratorEMT : public BaseComponent {
 
 		/// Not finished yet.
 		void stepInStatorRefFrame(double om, double dt, double t, double fieldVoltage, double mechPower);
-					
+
 		/// Retrieves calculated voltage from simulation for next step
 		void postStep(DPSMatrix& g, DPSMatrix& j, DPSMatrix& vt, int compOffset, double om, double dt, double t);
 
@@ -206,5 +208,6 @@ class SynchronGeneratorEMT : public BaseComponent {
 		void applyRightSideVectorStamp(DPSMatrix& j, int compOffset, double om, double dt) { }
 		void init(int compOffset, double om, double dt) { }
 		void step(DPSMatrix& g, DPSMatrix& j, int compOffset, double om, double dt, double t) { }
-};
+	};
+}
 #endif

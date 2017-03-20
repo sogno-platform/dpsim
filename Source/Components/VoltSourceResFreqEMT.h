@@ -21,11 +21,11 @@ namespace DPsim {
 		VoltSourceResFreqEMT() { ; };
 		VoltSourceResFreqEMT(std::string name, int src, int dest, Real voltage, Real phase, Real resistance, Real omegaSource, Real switchTime, Real rampTime);
 
-		void applySystemMatrixStamp(DPSMatrix& g, int compOffset, Real om, Real dt);
-		void applyRightSideVectorStamp(DPSMatrix& j, int compOffset, Real om, Real dt);
-		void init(int compOffset, Real om, Real dt) { }
-		void step(DPSMatrix& g, DPSMatrix& j, int compOffset, Real om, Real dt, Real t);
-		void postStep(DPSMatrix& g, DPSMatrix& j, DPSMatrix& vt, int compOffset, Real om, Real dt, Real t) { }
+		void init(double om, double dt);
+		void applySystemMatrixStamp(SystemModel& system);
+		void applyRightSideVectorStamp(SystemModel& system) { }
+		void step(SystemModel& system);
+		void postStep(SystemModel& system);
 	};
 
 }

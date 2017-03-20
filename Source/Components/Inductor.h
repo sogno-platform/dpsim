@@ -3,26 +3,31 @@
 
 #include "BaseComponent.h"
 
-class Inductor : public BaseComponent {
-protected:
-	double inductance;
-	double deltavr;
-	double deltavi;
-	double currr;
-	double curri;
-	double cureqr;
-	double cureqi;
-	double glr, gli;
-	double pr, pi;
-		
-public:
-	Inductor() { };
-	Inductor(std::string name, int src, int dest, double inductance);
+namespace DPsim {
 
-	void applySystemMatrixStamp(DPSMatrix& g, int compOffset, double om, double dt);
-	void applyRightSideVectorStamp(DPSMatrix& j, int compOffset, double om, double dt) { }
-	void init(double om, double dt);
-	void step(DPSMatrix& g, DPSMatrix& j, int compOffset, double om, double dt, double t);
-	void postStep(DPSMatrix& g, DPSMatrix& j, DPSMatrix& vt, int compOffset, double om, double dt, double t);
-};
+	class Inductor : public BaseComponent {
+	protected:
+		Real inductance;
+		Real deltavr;
+		Real deltavi;
+		Real currr;
+		Real curri;
+		Real cureqr;
+		Real cureqi;
+		Real mGlr;
+		Real mGli;
+		Real mPrevCurFacRe;
+		Real mPrevCurFacIm;
+
+	public:
+		Inductor() { };
+		Inductor(std::string name, int src, int dest, double inductance);
+
+		void init(Real om, Real dt);
+		void applySystemMatrixStamp(SystemModel& system);
+		void applyRightSideVectorStamp(SystemModel& system) { }
+		void step(SystemModel& system);
+		void postStep(SystemModel& system);
+	};
+}
 #endif

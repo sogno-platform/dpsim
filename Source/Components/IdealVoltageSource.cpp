@@ -8,50 +8,40 @@ IdealVoltageSource::IdealVoltageSource(std::string name, int src, int dest, Real
 	this->mVoltageDiffi = voltage*sin(phase);
 }
 
-void IdealVoltageSource::applySystemMatrixStamp(DPSMatrix& g, int compOffset, Real om, Real dt) {
+void IdealVoltageSource::applySystemMatrixStamp(SystemModel& system) {
 	
 		
 	if (mNode1 >= 0) {
-		g(compOffset - number, mNode1) = 1;
-		g(mNode1, compOffset - number) = 1;
-		g(2* compOffset - number, mNode1+compOffset) = 1;
-		g(mNode1 + compOffset, 2 * compOffset - number) = 1;
-
+		system.setSystemMatrixElement(system.getCompOffset() - number, mNode1, 1);
+		system.setSystemMatrixElement(mNode1, system.getCompOffset() - number, 1);
+		system.setSystemMatrixElement(2* system.getCompOffset() - number, mNode1 + system.getCompOffset(), 1);
+		system.setSystemMatrixElement(mNode1 + system.getCompOffset(), 2 * system.getCompOffset() - number, 1);
 	}
 
 	if (mNode2 >= 0) {
-		g(compOffset - number, mNode2) = -1;
-		g(mNode2, compOffset - number) = -1;
-		g(2 * compOffset - number, mNode2 + compOffset) = -1;
-		g(mNode2 + compOffset, 2 * compOffset - number) = -1;
+		system.setSystemMatrixElement(system.getCompOffset() - number, mNode2, -1);
+		system.setSystemMatrixElement(mNode2, system.getCompOffset() - number, -1);
+		system.setSystemMatrixElement(2 * system.getCompOffset() - number, mNode2 + system.getCompOffset(), -1);
+		system.setSystemMatrixElement(mNode2 + system.getCompOffset(), 2 * system.getCompOffset() - number, -1);
 	}
 	Logger log;
 	
-	log.Log() << g << std::endl;
+	log.Log() << system.getCurrentSystemMatrix() << std::endl;
 	log.WriteLogToFile("test.log");
-
-
-
 }
 
-void IdealVoltageSource::applyRightSideVectorStamp(DPSMatrix& j, int compOffset, Real om, Real dt) {
+void IdealVoltageSource::applyRightSideVectorStamp(SystemModel& system) {
 	// Apply matrix stamp for equivalent current source
+	system.addToRightSideVector(system.getCompOffset() - number, mVoltageDiffr);
+	system.addToRightSideVector(2 * system.getCompOffset() - number, mVoltageDiffi);
 
-		j(compOffset - number, 0) = j(compOffset - number, 0) + mVoltageDiffr;
-		j(2 * compOffset - number, 0) = j(2 * compOffset - number, 0) + mVoltageDiffi;
-
-
-		Logger log2;
-
-		log2.Log() << j << std::endl;
-		log2.WriteLogToFile("test2.log");
-
+	Logger log2;
+	log2.Log() << j << std::endl;
+	log2.WriteLogToFile("test2.log");
 }
 
-void IdealVoltageSource::step(DPSMatrix& g, DPSMatrix& j, int compOffset, Real om, Real dt, Real t) {
+void IdealVoltageSource::step(SystemModel& system) {
 	// Apply matrix stamp for equivalent current source
-
-	j(compOffset - number, 0) = j(compOffset - number, 0) + mVoltageDiffr;
-	j(2 * compOffset - number, 0) = j(2 * compOffset - number, 0) + mVoltageDiffi;
-
+	system.addToRightSideVector(system.getCompOffset() - number, mVoltageDiffr);
+	system.addToRightSideVector(2 * system.getCompOffset() - number, mVoltageDiffi);
 }

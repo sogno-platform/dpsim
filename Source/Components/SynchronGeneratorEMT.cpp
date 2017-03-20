@@ -1,5 +1,7 @@
 #include "SynchronGeneratorEMT.h"
 
+using namespace DPsim;
+
 SynchronGeneratorEMT::SynchronGeneratorEMT(std::string name, int node1, int node2, int node3,
 	SynchGenStateType stateType, double nomPower, double nomVolt, double nomFreq, int poleNumber, double nomFieldCur,
 	SynchGenParamType paramType, double Rs, double Ll, double Lmd, double Lmd0, double Lmq, double Lmq0,

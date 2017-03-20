@@ -15,7 +15,7 @@ VoltSourceResFreqEMT::VoltSourceResFreqEMT(std::string name, int src, int dest, 
 	mCurrent = mVoltageDiff / mResistance;
 }
 
-void VoltSourceResFreqEMT::applySystemMatrixStamp(DPSMatrix& g, int compOffset, Real om, Real dt) {
+void VoltSourceResFreqEMT::applySystemMatrixStamp(SystemModel& system) {
 	// Apply matrix stamp for equivalent resistance
 	if (mNode1 >= 0) {
 		g(mNode1, mNode1) = g(mNode1, mNode1) + mConductance;
