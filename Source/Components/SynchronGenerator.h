@@ -193,8 +193,6 @@ namespace DPsim {
 		void init(Real om, Real dt) { }
 		void applySystemMatrixStamp(SystemModel& system) { }
 		void applyRightSideVectorStamp(SystemModel& system) { }
-		void step(SystemModel& system) { }
-		void postStep(SystemModel& system) { }
 	};
 }
 #endif

@@ -410,19 +410,19 @@ void SynchronGeneratorEMT::stepInStatorRefFrame(Real om, Real dt, Real fieldVolt
 
 void SynchronGeneratorEMT::postStep(SystemModel& system) {
 	if (mNode1 >= 0) {
-		mAbcsVoltages(0,0) = vt(mNode1, 0);		
+		mAbcsVoltages(0,0) = system.getRealFromLeftSideVector(mNode1);		
 	}
 	else {
 		mAbcsVoltages(0, 0) = 0;		
 	}
 	if (mNode2 >= 0) {
-		mAbcsVoltages(1, 0) = vt(mNode2, 0);		
+		mAbcsVoltages(1, 0) = system.getRealFromLeftSideVector(mNode2);
 	}
 	else {
 		mAbcsVoltages(1, 0) = 0;		
 	}
 	if (mNode3 >= 0) {
-		mAbcsVoltages(2, 0) = vt(mNode3, 0);		
+		mAbcsVoltages(2, 0) = system.getRealFromLeftSideVector(mNode3);
 	}
 	else {
 		mAbcsVoltages(2, 0) = 0;

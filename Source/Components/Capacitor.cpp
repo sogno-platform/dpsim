@@ -32,7 +32,7 @@ void Capacitor::init(Real om, Real dt) {
 	deltavi = 0;
 }
 
-void Capacitor::step(SystemModel& system) {
+void Capacitor::step(SystemModel& system, Real time) {
 	// Initialize internal state
 	cureqr =  currr + mGcr * deltavr + mGci * deltavi;
 	cureqi =  curri + mGcr * deltavi - mGci * deltavr;

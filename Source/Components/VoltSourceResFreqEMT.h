@@ -21,10 +21,10 @@ namespace DPsim {
 		VoltSourceResFreqEMT() { ; };
 		VoltSourceResFreqEMT(std::string name, int src, int dest, Real voltage, Real phase, Real resistance, Real omegaSource, Real switchTime, Real rampTime);
 
-		void init(double om, double dt);
+		void init(Real om, Real dt);
 		void applySystemMatrixStamp(SystemModel& system);
 		void applyRightSideVectorStamp(SystemModel& system) { }
-		void step(SystemModel& system);
+		void step(SystemModel& system, Real time);
 		void postStep(SystemModel& system);
 	};
 

@@ -28,9 +28,7 @@ namespace DPsim {
 		std::vector<switchConfiguration> mSwitchEventVector;
 		/// Structure that holds all system information.
 		SystemModel mSystemModel;
-		/// Stores a list of circuit elements that are used to generate the system matrix
-		std::vector<BaseComponent*> mElements;
-
+		
 		/// Circuit list vector
 		std::vector<std::vector<BaseComponent*> > mElementsVector;
 
@@ -38,6 +36,9 @@ namespace DPsim {
 		void initialize(std::vector<BaseComponent*> elements);
 
 	public:				
+		/// Stores a list of circuit elements that are used to generate the system matrix
+		std::vector<BaseComponent*> mElements;
+
 		/// Sets parameters to default values.
 		Simulation();
 		/// Creates system matrix according to 
@@ -57,8 +58,13 @@ namespace DPsim {
 
 		double getTime() { return mTime; }
 		double getFinalTime() { return mFinalTime; }
-		DPSMatrix getLeftSideVector() {  }
-		DPSMatrix getRightSideVector() {  }
+		Matrix getLeftSideVector() { return mSystemModel.getLeftSideVector(); }
+		Matrix getRightSideVector() { return mSystemModel.getRightSideVector(); }
+		Matrix getSystemMatrix() { return mSystemModel.getCurrentSystemMatrix(); }
+		int stepGeneratorTest(Logger& logger, Logger& leftSideVectorLog, Logger& rightSideVectorLog, SynchronGeneratorEMT* generator,
+			Logger& synGenLogFlux, Logger& synGenLogVolt, Logger& synGenLogCurr, Real fieldVoltage, Real mechPower);
+
+		void addSystemTopology(std::vector<BaseComponent*> newElements);
 	};
 
 }

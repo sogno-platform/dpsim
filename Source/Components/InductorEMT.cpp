@@ -29,7 +29,7 @@ void InductorEMT::init(Real om, Real dt) {
 }
 
 
-void InductorEMT::step(SystemModel& system) {
+void InductorEMT::step(SystemModel& system, Real time) {
 	// Initialize internal state
 	mCureq = mGl * mDeltav + mCurr;
 		

@@ -92,9 +92,6 @@ int TopologyReader::parseConfig(Config &conf, std::vector<BaseComponent*> &circE
 		else if (it->type.compare("Inductor") == 0) {
 			tmpCircElement = new Inductor(it->name, std::stoi(it->node1), std::stoi(it->node2), std::stod(it->parameters[0]));
 		}
-		else if (it->type.compare("Inductor2") == 0) {
-			tmpCircElement = new Inductor2(it->name, std::stoi(it->node1), std::stoi(it->node2), std::stod(it->parameters[0]));
-		}
 		else if (it->type.compare("Capacitor") == 0) {
 			tmpCircElement = new Capacitor(it->name, std::stoi(it->node1), std::stoi(it->node2), std::stod(it->parameters[0]));
 		}

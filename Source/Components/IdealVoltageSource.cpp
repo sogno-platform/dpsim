@@ -32,16 +32,16 @@ void IdealVoltageSource::applySystemMatrixStamp(SystemModel& system) {
 
 void IdealVoltageSource::applyRightSideVectorStamp(SystemModel& system) {
 	// Apply matrix stamp for equivalent current source
-	system.addToRightSideVector(system.getCompOffset() - number, mVoltageDiffr);
-	system.addToRightSideVector(2 * system.getCompOffset() - number, mVoltageDiffi);
+	system.addRealToRightSideVector(system.getCompOffset() - number, mVoltageDiffr);
+	system.addRealToRightSideVector(2 * system.getCompOffset() - number, mVoltageDiffi);
 
 	Logger log2;
 	log2.Log() << j << std::endl;
 	log2.WriteLogToFile("test2.log");
 }
 
-void IdealVoltageSource::step(SystemModel& system) {
+void IdealVoltageSource::step(SystemModel& system, Real time) {
 	// Apply matrix stamp for equivalent current source
-	system.addToRightSideVector(system.getCompOffset() - number, mVoltageDiffr);
-	system.addToRightSideVector(2 * system.getCompOffset() - number, mVoltageDiffi);
+	system.addRealToRightSideVector(system.getCompOffset() - number, mVoltageDiffr);
+	system.addRealToRightSideVector(2 * system.getCompOffset() - number, mVoltageDiffi);
 }

@@ -55,7 +55,7 @@ void RxLine::init(Real om, Real dt) {
 	mDeltaVim = 0;
 }
 
-void RxLine::step(SystemModel& system) {
+void RxLine::step(SystemModel& system, Real time) {
 	// Initialize internal state
 	mCurEqRe = mPrevCurFacRe * mCurrRe + mPrevCurFacIm * mCurrIm + mGlr * mDeltaVre - mGli * mDeltaVim;
 	mCurEqIm = -mPrevCurFacIm * mCurrRe + mPrevCurFacRe * mCurrIm + mGli * mDeltaVre + mGlr * mDeltaVim;

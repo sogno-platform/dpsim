@@ -125,7 +125,6 @@
     <ClInclude Include="..\..\Source\Components\LinearResistorEMT.h" />
     <ClInclude Include="..\..\Source\Components\PiLine.h" />
     <ClInclude Include="..\..\Source\Components\RxLine.h" />
-    <ClInclude Include="..\..\Source\Components\Souc.h" />
     <ClInclude Include="..\..\Source\Components\SynchronGenerator.h" />
     <ClInclude Include="..\..\Source\Components\SynchronGeneratorEMT.h" />
     <ClInclude Include="..\..\Source\Components\VoltSourceRes.h" />
@@ -138,6 +137,7 @@
     <ClInclude Include="..\..\Source\Logger.h" />
     <ClInclude Include="..\..\Source\MathLibrary.h" />
     <ClInclude Include="..\..\Source\NetlistSim.h" />
+    <ClInclude Include="..\..\Source\Simulation.h" />
     <ClInclude Include="..\..\Source\SystemModel.h" />
     <ClInclude Include="..\..\Source\TopologyReader.h" />
     <ClInclude Include="..\..\Source\Utilities.h" />

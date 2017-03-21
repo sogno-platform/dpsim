@@ -17,52 +17,43 @@ VoltSourceResFreq::VoltSourceResFreq(std::string name, int src, int dest, Real v
 	mCurrenti = mVoltageDiffi / mResistance;
 }
 
-void VoltSourceResFreq::applySystemMatrixStamp(DPSMatrix& g, int compOffset, Real om, Real dt) {
+void VoltSourceResFreq::applySystemMatrixStamp(SystemModel& system) {
 	// Apply matrix stamp for equivalent resistance
 	if (mNode1 >= 0) {
-		g(mNode1, mNode1) = g(mNode1, mNode1) + mConductance;
-		g(compOffset + mNode1, compOffset + mNode1) = g(compOffset + mNode1, compOffset + mNode1) + mConductance;
+		system.addCompToSystemMatrix(mNode1, mNode1, mConductance, 0);
 	}
-
 	if (mNode2 >= 0) {
-		g(mNode2, mNode2) = g(mNode2, mNode2) + mConductance;
-		g(compOffset + mNode2, compOffset + mNode2) = g(compOffset + mNode2, compOffset + mNode2) + mConductance;
+		system.addCompToSystemMatrix(mNode2, mNode2, mConductance, 0);
 	}
 
 	if (mNode1 >= 0 && mNode2 >= 0) {
-		g(mNode1, mNode2) = g(mNode1, mNode2) - mConductance;
-		g(compOffset + mNode1, compOffset + mNode2) = g(compOffset + mNode1, compOffset + mNode2) - mConductance;
-
-		g(mNode2, mNode1) = g(mNode2, mNode1) - mConductance;
-		g(compOffset + mNode2, compOffset + mNode1) = g(compOffset + mNode2, compOffset + mNode1) - mConductance;
+		system.addCompToSystemMatrix(mNode1, mNode2, -mConductance, 0);
+		system.addCompToSystemMatrix(mNode2, mNode1, -mConductance, 0);
 	}
 }
 
-void VoltSourceResFreq::applyRightSideVectorStamp(DPSMatrix& j, int compOffset, Real om, Real dt) {
+void VoltSourceResFreq::applyRightSideVectorStamp(SystemModel& system) {
 	// Apply matrix stamp for equivalent current source
 	if (mNode1 >= 0) {
-		j(mNode1, 0) = j(mNode1, 0) + mCurrentr;
-		j(mNode1 + compOffset, 0) = j(compOffset + mNode1, 0) + mCurrenti;
+		system.addCompToRightSideVector(mNode1, mCurrentr, mCurrenti);
 	}
-
 	if (mNode2 >= 0) {
-		j(mNode2, 0) = j(mNode2, 0) - mCurrentr;
-		j(mNode2 + compOffset, 0) = j(compOffset + mNode2, 0) - mCurrenti;
+		system.addCompToRightSideVector(mNode2, -mCurrentr, -mCurrenti);
 	}
 }
 
 
-void VoltSourceResFreq::step(DPSMatrix& g, DPSMatrix& j, int compOffset, Real om, Real dt, Real t) {
-	if (t >= mSwitchTime && t < mSwitchTime + mRampTime) {
-		Real fadeInOut = 0.5 + 0.5 * sin((t - mSwitchTime) / mRampTime * PI + -PI / 2);
-		mVoltageDiffr = mVoltageAmp*cos(mVoltagePhase + fadeInOut * mOmegaSource * t);
-		mVoltageDiffi = mVoltageAmp*sin(mVoltagePhase + fadeInOut * mOmegaSource * t);
+void VoltSourceResFreq::step(SystemModel& system, Real time) {
+	if (time >= mSwitchTime && time < mSwitchTime + mRampTime) {
+		Real fadeInOut = 0.5 + 0.5 * sin((time - mSwitchTime) / mRampTime * PI + -PI / 2);
+		mVoltageDiffr = mVoltageAmp*cos(mVoltagePhase + fadeInOut * mOmegaSource * time);
+		mVoltageDiffi = mVoltageAmp*sin(mVoltagePhase + fadeInOut * mOmegaSource * time);
 		mCurrentr = mVoltageDiffr / mResistance;
 		mCurrenti = mVoltageDiffi / mResistance;
 	}
 	else if (t >= mSwitchTime + mRampTime) {
-		mVoltageDiffr = mVoltageAmp*cos(mVoltagePhase + mOmegaSource * t);
-		mVoltageDiffi = mVoltageAmp*sin(mVoltagePhase + mOmegaSource * t);
+		mVoltageDiffr = mVoltageAmp*cos(mVoltagePhase + mOmegaSource * time);
+		mVoltageDiffi = mVoltageAmp*sin(mVoltagePhase + mOmegaSource * time);
 		mCurrentr = mVoltageDiffr / mResistance;
 		mCurrenti = mVoltageDiffi / mResistance;
 	}
@@ -73,13 +64,11 @@ void VoltSourceResFreq::step(DPSMatrix& g, DPSMatrix& j, int compOffset, Real om
 		mCurrenti = mVoltageDiffi / mResistance;
 	}
 
+	// Apply matrix stamp for equivalent current source
 	if (mNode1 >= 0) {
-		j(mNode1, 0) = j(mNode1, 0) + mCurrentr;
-		j(mNode1 + compOffset, 0) = j(mNode1 + compOffset, 0) + mCurrenti;
+		system.addCompToRightSideVector(mNode1, mCurrentr, mCurrenti);
 	}
-
 	if (mNode2 >= 0) {
-		j(mNode2, 0) = j(mNode2, 0) - mCurrentr;
-		j(mNode2 + compOffset, 0) = j(mNode2 + compOffset, 0) - mCurrenti;
+		system.addCompToRightSideVector(mNode2, -mCurrentr, -mCurrenti);
 	}
 }

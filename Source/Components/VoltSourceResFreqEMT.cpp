@@ -31,7 +31,7 @@ void VoltSourceResFreqEMT::applySystemMatrixStamp(SystemModel& system) {
 	}
 }
 
-void VoltSourceResFreqEMT::applyRightSideVectorStamp(DPSMatrix& j, int compOffset, Real om, Real dt) {
+void VoltSourceResFreqEMT::applyRightSideVectorStamp(SystemModel& system) {
 	// Apply matrix stamp for equivalent current source
 	if (mNode1 >= 0) {
 		j(mNode1, 0) = j(mNode1, 0) + mCurrent;
@@ -43,26 +43,25 @@ void VoltSourceResFreqEMT::applyRightSideVectorStamp(DPSMatrix& j, int compOffse
 }
 
 
-void VoltSourceResFreqEMT::step(DPSMatrix& g, DPSMatrix& j, int compOffset, Real om, Real dt, Real t) {
-	if (t >= mSwitchTime && t < mSwitchTime + mRampTime) {
-		Real fadeInOut = 0.5 + 0.5 * sin( (t - mSwitchTime) / mRampTime * PI + - PI / 2);
-		mVoltageDiff = mVoltageAmp*cos(mVoltagePhase + (om + fadeInOut * mOmegaSource) * t);
+void VoltSourceResFreqEMT::step(SystemModel& system, Real time) {
+	if (time >= mSwitchTime && time < mSwitchTime + mRampTime) {
+		Real fadeInOut = 0.5 + 0.5 * sin( (time - mSwitchTime) / mRampTime * PI + - PI / 2);
+		mVoltageDiff = mVoltageAmp*cos(mVoltagePhase + (system.getOmega() + fadeInOut * mOmegaSource) * time);
 		mCurrent = mVoltageDiff / mResistance;
 	}
-	else if (t >= mSwitchTime + mRampTime) {
-		mVoltageDiff = mVoltageAmp*cos(mVoltagePhase + (om + mOmegaSource) * t);
+	else if (time >= mSwitchTime + mRampTime) {
+		mVoltageDiff = mVoltageAmp*cos(mVoltagePhase + (system.getOmega() + mOmegaSource) * time);
 		mCurrent = mVoltageDiff / mResistance;
 	}
 	else {
-		mVoltageDiff = mVoltageAmp*cos(mVoltagePhase + om*t);
+		mVoltageDiff = mVoltageAmp*cos(mVoltagePhase + system.getOmega() * time);
 		mCurrent = mVoltageDiff / mResistance;
 	}
 		
 	if (mNode1 >= 0) {
-		j(mNode1, 0) = j(mNode1, 0) + mCurrent;
+		system.addRealToRightSideVector(mNode1, mCurrent);
 	}
-
 	if (mNode2 >= 0) {
-		j(mNode2, 0) = j(mNode2, 0) - mCurrent;
+		system.addRealToRightSideVector(mNode2, -mCurrent);
 	}
 }

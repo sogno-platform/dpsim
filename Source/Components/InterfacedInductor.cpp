@@ -16,7 +16,7 @@ void InterfacedInductor::init(Real om, Real dt) {
 }
 
 
-void InterfacedInductor::step(SystemModel& system) {
+void InterfacedInductor::step(SystemModel& system, Real time) {
 	// Calculate current for this step
 	mCurrentStepRe = mCurrentRe + system.getTimeStep() * (1. / mInductance * mVoltageRe + system.getOmega() * mCurrentIm);
 	mCurrentStepIm = mCurrentIm + system.getTimeStep() * (1. / mInductance * mVoltageIm - system.getOmega() * mCurrentRe);

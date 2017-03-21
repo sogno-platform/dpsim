@@ -36,7 +36,7 @@ void VoltSourceRes::applyRightSideVectorStamp(SystemModel& system) {
 	}
 }
 
-void VoltSourceRes::step(SystemModel& system) {
+void VoltSourceRes::step(SystemModel& system, Real time) {
 	if (mNode1 >= 0) {
 		system.addCompToRightSideVector(mNode1, mCurrentr, mCurrenti);
 	}

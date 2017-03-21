@@ -44,63 +44,58 @@ Simulation::~Simulation() {
 }
 
 
-void Simulation::initialize(std::vector<BaseComponent*> newElements) {
-	mSystemModel.initialize(newElements);
-
-	mElementsVector.push_back(newElements);
-
+void Simulation::initialize(std::vector<BaseComponent*> newElements) {	
 	int maxNode = 0;
 	int numIdealVS = 0;
 	int numRxLines = 0;
-	for (std::vector<BaseComponent*>::iterator it = newElements.begin(); it != newElements.end(); ++it) {
-		if ((*it)->getNode1() > maxNode)
-			maxNode = (*it)->getNode1();
-		if ((*it)->getNode2() > maxNode)
-			maxNode = (*it)->getNode2();
-		std::string type = typeid(*(*it)).name();
 
-		if (type == "class DPsim::IdealVoltageSource")
-		{
-			numIdealVS = numIdealVS + 1;
-		}
-
-		if (type == "class RxLine")
-		{
-			numRxLines = numRxLines + 1;
-		}
-
-	}
-
-	mNumNodes = maxNode + 1 + numIdealVS + numRxLines;
-	mCompOffset = mNumNodes;
-
+	mElementsVector.push_back(newElements);
 	mElements = mElementsVector[0];
 
-	addSystemMatrix(newElements);
+	// Calculate the number of nodes by going through the list of elements
+	for (std::vector<BaseComponent*>::iterator it = mElements.begin(); it != mElements.end(); ++it) {
+		if ((*it)->getNode1() > maxNode) {
+			maxNode = (*it)->getNode1();
+		}		
+		if ((*it)->getNode2() > maxNode) {
+			maxNode = (*it)->getNode2();
+		}
+		std::string type = typeid(*(*it)).name();
+
+		if (type == "class DPsim::IdealVoltageSource") {
+			numIdealVS = numIdealVS + 1;
+		}
+		if (type == "class RxLine") {
+			numRxLines = numRxLines + 1;
+		}
+	}
+
+	Int numNodes = maxNode + 1 + numIdealVS + numRxLines;
+	mSystemModel.initialize(numNodes);
+	addSystemTopology(mElements);
 	
 	// Initialize right side vector and components
-	for (std::vector<BaseComponent*>::iterator it = mSystemModel.getElements().begin(); it != mSystemModel.getElements().end(); ++it) {
+	for (std::vector<BaseComponent*>::iterator it = mElements.begin(); it != mElements.end(); ++it) {
 		(*it)->init(mSystemModel.getOmega(), mSystemModel.getTimeStep());
-		(*it)->applyRightSideVectorStamp(mRightSideVector, mCompOffset, mSystemOmega, mTimeStep);
+		(*it)->applyRightSideVectorStamp(mSystemModel);
 	}
 }
 
-void Simulation::addSystemMatrix(std::vector<BaseComponent*> newElements) {
+void Simulation::addSystemTopology(std::vector<BaseComponent*> newElements) {
 	Matrix systemMatrix;
 
-	if (mSimType == SimulationType::EMT) {
-		systemMatrix = Matrix::Zero(mNumNodes, mNumNodes);
+	if (mSystemModel.getSimType() == SimulationType::EMT) {
+		systemMatrix = Matrix::Zero(mSystemModel.getNumNodes(), mSystemModel.getNumNodes());
 	}
 	else {
-		systemMatrix = Matrix::Zero(2 * mNumNodes, 2 * mNumNodes);
+		systemMatrix = Matrix::Zero(2 * mSystemModel.getNumNodes(), 2 * mSystemModel.getNumNodes());
 	}
-	for (std::vector<BaseComponent*>::iterator it = newElements.begin(); it != newElements.end(); ++it) {
-		(*it)->applySystemMatrixStamp(systemMatrix, mCompOffset, mSystemOmega, mTimeStep);
-	}
-	mSystemMatrixVector.push_back(systemMatrix);
 
-	Eigen::PartialPivLU<DPSMatrix> luFactored = Eigen::PartialPivLU<DPSMatrix>(systemMatrix);
-	mLuFactoredVector.push_back(luFactored);
+	for (std::vector<BaseComponent*>::iterator it = newElements.begin(); it != newElements.end(); ++it) {
+		(*it)->applySystemMatrixStamp(mSystemModel);
+	}
+
+	mSystemModel.addSystemMatrix(systemMatrix);
 }
 
 
@@ -109,13 +104,13 @@ int Simulation::step(Logger& logger)
 	mSystemModel.getRightSideVector().setZero();
 	
 	for (std::vector<BaseComponent*>::iterator it = mElements.begin(); it != mElements.end(); ++it) {
-		(*it)->step(mSystemMatrix, mRightSideVector, mCompOffset, mSystemOmega, mTimeStep, mTime);
+		(*it)->step(mSystemModel, mTime);
 	}
 	
-	mLeftSideVector = mLuFactored.solve(mRightSideVector);
+	mSystemModel.solve();
  
 	for (std::vector<BaseComponent*>::iterator it = mElements.begin(); it != mElements.end(); ++it) {
-		(*it)->postStep(mSystemMatrix, mRightSideVector, mLeftSideVector, mCompOffset, mSystemOmega, mTimeStep, mTime);
+		(*it)->postStep(mSystemModel);
 	}
 
 	if (mCurrentSwitchTimeIndex < mSwitchEventVector.size()) {
@@ -142,6 +137,58 @@ int Simulation::step(Logger& logger, Logger& leftSideVectorLog, Logger& rightSid
 	rightSideVectorLog.Log() << Logger::VectorToDataLine(getTime(), getRightSideVector()).str();
 
 	return retValue;
+}
+
+int Simulation::stepGeneratorTest(Logger& logger, Logger& leftSideVectorLog, Logger& rightSideVectorLog, SynchronGeneratorEMT* generator,
+	Logger& synGenLogFlux, Logger& synGenLogVolt, Logger& synGenLogCurr, Real fieldVoltage, Real mechPower)
+{
+	// Set to zero because all components will add their contribution for the current time step to the current value
+	mSystemModel.getRightSideVector().setZero();
+
+	// Execute step for all circuit components
+	for (std::vector<BaseComponent*>::iterator it = mElements.begin(); it != mElements.end(); ++it) {
+		(*it)->step(mSystemModel, mTime);
+	}
+
+	// Individual step function for generator
+	generator->step(mSystemModel, fieldVoltage, mechPower);
+	
+	// Solve circuit for vector j with generator output current
+	mSystemModel.solve();
+
+	// Execute PostStep for all components, generator states are recalculated based on new terminal voltage	
+	for (std::vector<BaseComponent*>::iterator it = mElements.begin(); it != mElements.end(); ++it) {
+		(*it)->postStep(mSystemModel);
+	}
+
+	if (mCurrentSwitchTimeIndex < mSwitchEventVector.size()) {
+		if (mTime >= mSwitchEventVector[mCurrentSwitchTimeIndex].switchTime) {
+			switchSystemMatrix(mSwitchEventVector[mCurrentSwitchTimeIndex].systemIndex);
+			mCurrentSwitchTimeIndex++;
+			logger.Log(Logtype::INFO) << "Switched to system " << mCurrentSwitchTimeIndex << " at " << mTime << std::endl;
+		}
+	}
+
+	// Save simulation step data
+	int logCount = 0;
+	logCount++;
+	if (logCount == 10) {
+		std::cout << mTime << std::endl;
+		synGenLogFlux.Log() << Logger::VectorToDataLine(mTime, generator->getFluxes()).str();
+		synGenLogVolt.Log() << Logger::VectorToDataLine(mTime, generator->getVoltages()).str();
+		synGenLogCurr.Log() << Logger::VectorToDataLine(mTime, generator->getCurrents()).str();
+		leftSideVectorLog.Log() << Logger::VectorToDataLine(getTime(), getLeftSideVector()).str();
+		rightSideVectorLog.Log() << Logger::VectorToDataLine(getTime(), getRightSideVector()).str();
+		logCount = 0;
+	}
+
+	if (mTime >= mFinalTime) {
+		return 0;
+	}
+	else {
+		return 1;
+	}
+
 }
 
 void Simulation::switchSystemMatrix(int systemMatrixIndex) {

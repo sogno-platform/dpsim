@@ -33,7 +33,7 @@ namespace DPsim {
 		virtual void init(Real om, Real dt) { }
 		virtual void applySystemMatrixStamp(SystemModel& system) = 0;
 		virtual void applyRightSideVectorStamp(SystemModel& system) { }		
-		virtual void step(SystemModel& system) { }
+		virtual void step(SystemModel& system, Real time) { }
 		virtual void postStep(SystemModel& system) { }
 	};
 }

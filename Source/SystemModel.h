@@ -39,51 +39,36 @@ namespace DPsim {
 		DPSMatrix mLeftSideVector;
 
 	public:
-		SystemModel() {}
-		void initialize();
-		void addSystemMatrix();
+		SystemModel() { }
+		void initialize(Int numNodes);
+		void addSystemMatrix(Matrix systemMatrix);
 
 		Matrix getCurrentSystemMatrix() { return mSystemMatrix; }
 		Matrix getLUdecomp() { return mLuFactored.matrixLU(); }
 		Matrix getRightSideVector() { return mRightSideVector; }
+		Matrix getLeftSideVector() { return mLeftSideVector; }
 		Real getTimeStep() { return mTimeStep; }
 		Real getOmega() { return mSystemOmega; }
 		Int getCompOffset() { return mCompOffset; }
 		Real getRealFromLeftSideVector(Int row) { return mLeftSideVector(row, 0); }
 		Real getImagFromLeftSideVector(Int row) { return mLeftSideVector(row + mCompOffset, 0); }
-
-		void addRealToSystemMatrix(Int row, Int column, Real value) {
-			mSystemMatrix(row, column) = mSystemMatrix(row, column) + value;
-		}
-
-		void addCompToSystemMatrix(Int row, Int column, Real reValue, Real imValue) {
-			mSystemMatrix(row, column) = mSystemMatrix(row, column) + reValue; 
-			mSystemMatrix(row + mCompOffset, column + mCompOffset) = mSystemMatrix(row + mCompOffset, column + mCompOffset) + reValue;
-			mSystemMatrix(row, column + mCompOffset) = mSystemMatrix(row, column + mCompOffset) - imValue;
-			mSystemMatrix(row + mCompOffset, column) = mSystemMatrix(row + mCompOffset, column) + imValue;
-		}
-
-		void setSystemMatrixElement(Int row, Int column, Real value) {
-			mSystemMatrix(row, column) = value;
-		}
+		SimulationType getSimType() { return mSimType; }
+		Int getNumNodes() { return mNumNodes; }		
 		
-		void addCompToRightSideVector(Int row, Real reValue, Real imValue) {
-			mRightSideVector(row, 0) = mRightSideVector(row, 0) + reValue;
-			mRightSideVector(row + mCompOffset, 0) = mRightSideVector(row + mCompOffset, 0) + imValue;
-		}
-
-		void addRealToRightSideVector(Int row, Real value) {
-			mRightSideVector(row, 0) = value;
-		}
-
 		void setSimType(SimulationType simType) { mSimType = simType; }
 		void setTimeStep(Real timeStep) { mTimeStep = timeStep; }
 		void setOmega(Real omega) { mSystemOmega = omega; }
-		void InitializeRightSideVector(DPsim::Matrix& rightSideVector) { mRightSideVector = rightSideVector; }
-		void InitializeLeftSideVector(DPsim::Matrix& leftSideVector) { mLeftSideVector = leftSideVector; }
-		
-		void switchSystemMatrix(int systemMatrixIndex);
+		void setSystemMatrixElement(Int row, Int column, Real value) { mSystemMatrix(row, column) = value; }
 
+		void InitializeRightSideVector(DPsim::Matrix& rightSideVector) { mRightSideVector = rightSideVector; }
+		void InitializeLeftSideVector(DPsim::Matrix& leftSideVector) { mLeftSideVector = leftSideVector; }		
+		void switchSystemMatrix(Int systemMatrixIndex);
+		void addRealToSystemMatrix(Int row, Int column, Real value);
+		void addCompToSystemMatrix(Int row, Int column, Real reValue, Real imValue);
+		void addCompToRightSideVector(Int row, Real reValue, Real imValue);
+		void addRealToRightSideVector(Int row, Real value);
+
+		void solve();
 	};
 }
 #endif

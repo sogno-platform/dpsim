@@ -38,7 +38,7 @@ void Inductor::init(Real om, Real dt) {
 }
 
 
-void Inductor::step(SystemModel& system) {
+void Inductor::step(SystemModel& system, Real time) {
 	// Initialize internal state
 	mCurEqRe = mGlr * mDeltaVre - mGli * mDeltaVim + mPrevCurFacRe * mCurrRe - mPrevCurFacIm * mCurrIm;
 	mCurEqIm = mGli * mDeltaVre + mGlr * mDeltaVim + mPrevCurFacIm * mCurrRe + mPrevCurFacRe * mCurrIm;
