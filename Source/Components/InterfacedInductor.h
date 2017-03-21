@@ -20,7 +20,7 @@ namespace DPsim {
 		InterfacedInductor(std::string name, int src, int dest, Real inductance);
 
 		void init(Real om, Real dt);
-		void applySystemMatrixStamp(SystemModel& system);
+		void applySystemMatrixStamp(SystemModel& system) { }
 		void applyRightSideVectorStamp(SystemModel& system) { }
 		void step(SystemModel& system, Real time);
 		void postStep(SystemModel& system);

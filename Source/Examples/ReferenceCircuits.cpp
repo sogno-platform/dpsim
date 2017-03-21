@@ -6,7 +6,7 @@
 
 using namespace DPsim;
 
-void simulationExample1()
+void DPsim::simulationExample1()
 {
 	// Define Object for saving data on a file
 	Logger log, leftVectorLog, rightVectorLog;
@@ -45,16 +45,16 @@ void simulationExample1()
 	rightVectorLog.WriteLogToFile("Logs/RightVectorLog_" + fileName.str() + ".csv");
 }
 
-void simulationExample1L2()
+void DPsim::simulationExample1L2()
 {
 	// Define Object for saving data on a file
 	Logger log, leftVectorLog, rightVectorLog;
 
 	std::vector<BaseComponent*> circElements0;
 	circElements0.push_back(new VoltSourceRes("v_in", 1, 0, 10, 0, 1));
-	circElements0.push_back(new Inductor2("l_1", 1, 2, 0.02));
-	circElements0.push_back(new Inductor2("l_2", 2, 0, 0.1));
-	circElements0.push_back(new Inductor2("l_3", 2, 3, 0.05));
+	circElements0.push_back(new Inductor("l_1", 1, 2, 0.02));
+	circElements0.push_back(new Inductor("l_2", 2, 0, 0.1));
+	circElements0.push_back(new Inductor("l_3", 2, 3, 0.05));
 	circElements0.push_back(new LinearResistor("r_2", 3, 0, 2));
 
 	std::cout << "The contents of circElements0 are:";
@@ -84,15 +84,15 @@ void simulationExample1L2()
 	rightVectorLog.WriteLogToFile("Logs/RightVectorLog_" + fileName.str() + ".csv");
 }
 
-void simulationExample2()
+void DPsim::simulationExample2()
 {
 	// Define Object for saving data on a file
 	Logger log, leftVectorLog, rightVectorLog;
 
 	std::vector<BaseComponent*> circElements0;
 	circElements0.push_back(new VoltSourceRes("v_in", 1, 0, 10, 0, 1));
-	circElements0.push_back(new Inductor2("l_1", 1, 2, 0.02));
-	circElements0.push_back(new Inductor2("l_2", 2, 0, 0.1));
+	circElements0.push_back(new Inductor("l_1", 1, 2, 0.02));
+	circElements0.push_back(new Inductor("l_2", 2, 0, 0.1));
 	
 	std::cout << "The contents of circElements0 are:";
 	for (std::vector<BaseComponent*>::iterator it = circElements0.begin(); it != circElements0.end(); ++it) {
@@ -121,7 +121,7 @@ void simulationExample2()
 	rightVectorLog.WriteLogToFile("Logs/RightVectorLog_" + fileName.str() + ".csv");
 }
 
-void simulationExample3()
+void DPsim::simulationExample3()
 {
 	// Define Object for saving data on a file
 	Logger log, leftVectorLog, rightVectorLog;
@@ -129,7 +129,7 @@ void simulationExample3()
 	std::vector<BaseComponent*> circElements0;
 	circElements0.push_back(new VoltSourceRes("v_in", 1, 0, 10, 0, 1));
 	circElements0.push_back(new Capacitor("c_1", 1, 2, 0.001));
-	circElements0.push_back(new Inductor2("l_1", 2, 0, 0.001));
+	circElements0.push_back(new Inductor("l_1", 2, 0, 0.001));
 	circElements0.push_back(new LinearResistor("r_2", 2, 0, 1));
 
 	std::cout << "The contents of circElements0 are:";
@@ -159,7 +159,7 @@ void simulationExample3()
 	rightVectorLog.WriteLogToFile("Logs/RightVectorLog_" + fileName.str() + ".csv");
 }
 
-void simulationExampleIdealVS()
+void DPsim::simulationExampleIdealVS()
 {
 	// Define Object for saving data on a file
 	Logger log, leftVectorLog, rightVectorLog;
@@ -197,7 +197,7 @@ void simulationExampleIdealVS()
 	rightVectorLog.WriteLogToFile("Logs/RightVectorLog_" + fileName.str() + ".csv");
 }
 
-void simulationExampleIdealVS2()
+void DPsim::simulationExampleIdealVS2()
 {
 	// Define Object for saving data on a file
 	Logger log, leftVectorLog, rightVectorLog;
@@ -206,7 +206,7 @@ void simulationExampleIdealVS2()
 	circElements0.push_back(new IdealVoltageSource("v_in", 1, 0, 10, 0, 1));
 	circElements0.push_back(new LinearResistor("r_1", 1, 2, 1));
 	circElements0.push_back(new Capacitor("c_1", 2, 3, 0.001));
-	circElements0.push_back(new Inductor2("l_1", 3, 0, 0.001));
+	circElements0.push_back(new Inductor("l_1", 3, 0, 0.001));
 	circElements0.push_back(new LinearResistor("r_2", 3, 0, 1));
 
 	std::cout << "The contents of circElements0 are:";
@@ -237,7 +237,7 @@ void simulationExampleIdealVS2()
 }
 
 
-void simulationExampleIdealVS3()
+void DPsim::simulationExampleIdealVS3()
 {
 	// Define Object for saving data on a file
 	Logger log, leftVectorLog, rightVectorLog;
@@ -281,7 +281,7 @@ void simulationExampleIdealVS3()
 	rightVectorLog.WriteLogToFile("Logs/RightVectorLog_" + fileName.str() + ".csv");
 }
 
-void simulationExampleRXLine()
+void DPsim::simulationExampleRXLine()
 {
 	// Define Object for saving data on a file
 	Logger log, leftVectorLog, rightVectorLog;
@@ -319,14 +319,14 @@ void simulationExampleRXLine()
 	rightVectorLog.WriteLogToFile("Logs/RightVectorLog_" + fileName.str() + ".csv");
 }
 
-void simulationExampleRXLine2()
+void DPsim::simulationExampleRXLine2()
 {
 	// Define Object for saving data on a file
 	Logger log, leftVectorLog, rightVectorLog;
 
 	std::vector<BaseComponent*> circElements0;
 	circElements0.push_back(new IdealVoltageSource("v_1", 1, 0, 10, 0, 1));
-	circElements0.push_back(new Inductor2("l_L", 3, 2, 0.001));
+	circElements0.push_back(new Inductor("l_L", 3, 2, 0.001));
 	circElements0.push_back(new LinearResistor("r_L", 1, 3, 0.1));
 	circElements0.push_back(new LinearResistor("r_1", 2, 0, 20));
 

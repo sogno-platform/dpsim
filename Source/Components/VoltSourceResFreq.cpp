@@ -51,7 +51,7 @@ void VoltSourceResFreq::step(SystemModel& system, Real time) {
 		mCurrentr = mVoltageDiffr / mResistance;
 		mCurrenti = mVoltageDiffi / mResistance;
 	}
-	else if (t >= mSwitchTime + mRampTime) {
+	else if (time >= mSwitchTime + mRampTime) {
 		mVoltageDiffr = mVoltageAmp*cos(mVoltagePhase + mOmegaSource * time);
 		mVoltageDiffi = mVoltageAmp*sin(mVoltagePhase + mOmegaSource * time);
 		mCurrentr = mVoltageDiffr / mResistance;

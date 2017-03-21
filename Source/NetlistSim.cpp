@@ -3,7 +3,7 @@
 
 using namespace DPsim;
 
-void NetlistSim(int argc, char* argv[]) {
+void DPsim::NetlistSim(int argc, char* argv[]) {
 
 	// Extract command line arguments
 	char* confFilename = nullptr;
@@ -67,7 +67,7 @@ void NetlistSim(int argc, char* argv[]) {
 	std::cout << "Saved data points" << std::endl;	
 }
 
-void readCmdLineArguments(char* &confFilename, int argc, char* argv[]) {
+void DPsim::readCmdLineArguments(char* &confFilename, int argc, char* argv[]) {
 	for (int i = 1; i < argc; i++) {
 		// Find and extract netlist file path
 		if (!std::string(argv[i]).compare("-nl") || !std::string(argv[i]).compare("--netlist")) {

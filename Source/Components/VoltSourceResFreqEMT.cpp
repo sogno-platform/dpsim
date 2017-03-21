@@ -18,27 +18,24 @@ VoltSourceResFreqEMT::VoltSourceResFreqEMT(std::string name, int src, int dest, 
 void VoltSourceResFreqEMT::applySystemMatrixStamp(SystemModel& system) {
 	// Apply matrix stamp for equivalent resistance
 	if (mNode1 >= 0) {
-		g(mNode1, mNode1) = g(mNode1, mNode1) + mConductance;
+		system.addRealToSystemMatrix(mNode1, mNode1, mConductance);
 	}
-
 	if (mNode2 >= 0) {
-		g(mNode2, mNode2) = g(mNode2, mNode2) + mConductance;
+		system.addRealToSystemMatrix(mNode2, mNode2, mConductance);
 	}
-
 	if (mNode1 >= 0 && mNode2 >= 0) {
-		g(mNode1, mNode2) = g(mNode1, mNode2) - mConductance;
-		g(mNode2, mNode1) = g(mNode2, mNode1) - mConductance;
+		system.addRealToSystemMatrix(mNode1, mNode2, -mConductance);
+		system.addRealToSystemMatrix(mNode2, mNode1, -mConductance);
 	}
 }
 
 void VoltSourceResFreqEMT::applyRightSideVectorStamp(SystemModel& system) {
 	// Apply matrix stamp for equivalent current source
 	if (mNode1 >= 0) {
-		j(mNode1, 0) = j(mNode1, 0) + mCurrent;
+		system.addRealToRightSideVector(mNode1, mCurrent);
 	}
-
 	if (mNode2 >= 0) {
-		j(mNode2, 0) = j(mNode2, 0) - mCurrent;
+		system.addRealToRightSideVector(mNode2, -mCurrent);
 	}
 }
 

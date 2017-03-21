@@ -61,8 +61,9 @@ namespace DPsim {
 		Matrix getLeftSideVector() { return mSystemModel.getLeftSideVector(); }
 		Matrix getRightSideVector() { return mSystemModel.getRightSideVector(); }
 		Matrix getSystemMatrix() { return mSystemModel.getCurrentSystemMatrix(); }
-		int stepGeneratorTest(Logger& logger, Logger& leftSideVectorLog, Logger& rightSideVectorLog, SynchronGeneratorEMT* generator,
-			Logger& synGenLogFlux, Logger& synGenLogVolt, Logger& synGenLogCurr, Real fieldVoltage, Real mechPower);
+		int stepGeneratorTest(Logger& logger, Logger& leftSideVectorLog, Logger& rightSideVectorLog, 
+			BaseComponent* generator, Logger& synGenLogFlux, Logger& synGenLogVolt, Logger& synGenLogCurr, Real fieldVoltage, Real mechPower, 
+			Real logTimeStep, Real& lastLogTime);
 
 		void addSystemTopology(std::vector<BaseComponent*> newElements);
 	};

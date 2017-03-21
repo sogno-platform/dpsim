@@ -7,7 +7,7 @@ using namespace DPsim;
 void SynGenUnitTestBalancedResLoad() {
 	
 	// Define Object for saving data on a file
-	Logger log, vtLog, jLog;
+	Logger log, vtLog, jLog, synGenLogVolt, synGenLogCurr, synGenLogFlux;
 
 	// Define machine parameters - stator referred
 	//double nomPower = 555e6;
@@ -79,8 +79,7 @@ void SynGenUnitTestBalancedResLoad() {
 	double initReactivePower = 0;
 	double initTerminalVolt = 24000 / sqrt(3) * sqrt(2);
 	double initVoltAngle = -DPS_PI / 2;
-	((SynchronGeneratorEMT*)newSim.mElements[0])->init(om, dt,
-		initActivePower, initReactivePower, initTerminalVolt, initVoltAngle);
+	((SynchronGeneratorEMT*)gen)->init(om, dt, initActivePower, initReactivePower, initTerminalVolt, initVoltAngle);
 
 	// Calculate initial values for circuit at generator connection point
 	double initApparentPower = sqrt(pow(initActivePower, 2) + pow(initReactivePower, 2));
@@ -100,14 +99,16 @@ void SynGenUnitTestBalancedResLoad() {
 	std::cout << "j vector:" << std::endl;
 	std::cout << newSim.getRightSideVector() << std::endl;
 
-	double fieldVoltage = 7.0821;
-	double mechPower = 5.5558e5;
+	Real fieldVoltage = 7.0821;
+	Real mechPower = 5.5558e5;
+	Real lastLogTime = 0;
+	Real logTimeStep = 0.00005;
 
 	// Main Simulation Loop
 	while (newSim.getTime() < tf)
 	{
 		std::cout << newSim.getTime() << std::endl;		
-		newSim.stepGeneratorTest(log, vtLog, jLog, fieldVoltage, mechPower);
+		newSim.stepGeneratorTest(log, vtLog, jLog, gen, synGenLogFlux, synGenLogVolt, synGenLogCurr, fieldVoltage, mechPower, logTimeStep, lastLogTime);
 		newSim.increaseByTimeStep();
 	}
 
@@ -177,15 +178,14 @@ void SynGenUnitTestPhaseToPhaseFault() {
 	double om = 2.0*M_PI*60.0;
 	tf = 0.2; dt = 0.00005; t = 0;
 	Simulation newSim(circElements, om, dt, tf, log);
-	Simulation newSimBreakerOn(circElementsBreakerOn, om, dt, tf, log);
+	newSim.addSystemTopology(circElementsBreakerOn);
 
 	// Initialize generator
 	double initActivePower = 555e3;
 	double initReactivePower = 0;
 	double initTerminalVolt = 24000 / sqrt(3) * sqrt(2);
 	double initVoltAngle = -DPS_PI / 2;
-	SynchronGeneratorEMT* synGen = (SynchronGeneratorEMT*)newSim.mElements[0];
-	synGen->init(om, dt, initActivePower, initReactivePower, initTerminalVolt, initVoltAngle);
+	((SynchronGeneratorEMT*)gen)->init(om, dt, initActivePower, initReactivePower, initTerminalVolt, initVoltAngle);
 
 	// Calculate initial values for circuit at generator connection point
 	double initApparentPower = sqrt(pow(initActivePower, 2) + pow(initReactivePower, 2));
@@ -194,58 +194,22 @@ void SynGenUnitTestPhaseToPhaseFault() {
 	
 	std::cout << "A matrix:" << std::endl;
 	std::cout << newSim.getSystemMatrix() << std::endl;
-	std::cout << "A matrix breaker on:" << std::endl;
-	std::cout << newSimBreakerOn.getSystemMatrix() << std::endl;
 	std::cout << "vt vector:" << std::endl;
 	std::cout << newSim.getLeftSideVector() << std::endl;
 	std::cout << "j vector:" << std::endl;
 	std::cout << newSim.getRightSideVector() << std::endl;
 
-	int logCount = 0;
-
-	double fieldVoltage = 7.0821;
-	double mechPower = 5.5558e5;
+	Real fieldVoltage = 7.0821;
+	Real mechPower = 5.5558e5;
+	Real lastLogTime = 0;
+	Real logTimeStep = 0.00005;
+	newSim.setSwitchTime(0.1, 1);
 
 	// Main Simulation Loop
-	while (newSim.mTime < tf)
-	{
+	while (newSim.getTime() < tf) {
 		std::cout << newSim.getTime() << std::endl;
-		newSim.stepGeneratorTest(log, vtLog, jLog, fieldVoltage, mechPower);
+		newSim.stepGeneratorTest(log, vtLog, jLog, gen, synGenLogFlux, synGenLogVolt, synGenLogCurr, fieldVoltage, mechPower, logTimeStep, lastLogTime);
 		newSim.increaseByTimeStep();
-
-		// Change system matrix at step time
-		if (newSim.mTime > (0.1 - dt*0.9) && newSim.mTime < (0.1 + dt*0.9)) {
-			newSim.mSystemMatrix = newSimBreakerOn.mSystemMatrix;
-			newSim.mLuFactored = Eigen::PartialPivLU<DPSMatrix>(newSim.mSystemMatrix);
-
-			std::cout << "A matrix:" << std::endl;
-			std::cout << newSim.mSystemMatrix << std::endl;
-			log.Log() << newSim.mSystemMatrix;
-		}
-
-		// Solve circuit for vector j with generator output current
-		newSim.mLeftSideVector = newSim.mLuFactored.solve(newSim.mRightSideVector);
-
-		// Execute PostStep for all components, generator states are recalculated based on new terminal voltage
-		for (std::vector<BaseComponent*>::iterator it = newSim.mElements.begin(); it != newSim.mElements.end(); ++it) {
-			(*it)->postStep(newSim.mSystemMatrix, newSim.mRightSideVector, newSim.mLeftSideVector, newSim.mCompOffset, om, dt, newSim.mTime);
-		}
-
-		// Save simulation step data
-		//logCount++;
-		//if (logCount == 1000) {
-		synGenLogFlux.Log() << Logger::VectorToDataLine(newSim.mTime, synGen->getFluxes()).str();
-		synGenLogVolt.Log() << Logger::VectorToDataLine(newSim.mTime, synGen->getVoltages()).str();
-		synGenLogCurr.Log() << Logger::VectorToDataLine(newSim.mTime, synGen->getCurrents()).str();
-		vtLog.Log() << Logger::VectorToDataLine(newSim.getTime(), newSim.getLeftSideVector()).str();
-		jLog.Log() << Logger::VectorToDataLine(newSim.getTime(), newSim.getRightSideVector()).str();
-
-			std::cout << newSim.mTime << std::endl;
-			logCount = 0;
-		//}		
-
-		// timestep
-		newSim.mTime += dt;
 	}
 
 	// Write simulation data to file
@@ -320,15 +284,14 @@ void SynGenUnitTestThreePhaseFault() {
 	double om = 2.0*M_PI*60.0;
 	tf = 0.1; dt = 0.0000001; t = 0;
 	Simulation newSim(circElements, om, dt, tf, log);
-	Simulation newSimBreakerOn(circElementsBreakerOn, om, dt, tf, log);
+	newSim.addSystemTopology(circElementsBreakerOn);
 
 	// Initialize generator
 	double initActivePower = 555e3;
 	double initReactivePower = 0;
 	double initTerminalVolt = 24000 / sqrt(3) * sqrt(2);
 	double initVoltAngle = -DPS_PI / 2;
-	SynchronGeneratorEMT* synGen = (SynchronGeneratorEMT*)newSim.mElements[0];
-	synGen->init(om, dt, initActivePower, initReactivePower, initTerminalVolt, initVoltAngle);
+	((SynchronGeneratorEMT*)gen)->init(om, dt, initActivePower, initReactivePower, initTerminalVolt, initVoltAngle);
 
 	// Calculate initial values for circuit at generator connection point
 	double initApparentPower = sqrt(pow(initActivePower, 2) + pow(initReactivePower, 2));
@@ -337,58 +300,22 @@ void SynGenUnitTestThreePhaseFault() {
 
 	std::cout << "A matrix:" << std::endl;
 	std::cout << newSim.getSystemMatrix() << std::endl;
-	std::cout << "A matrix breaker on:" << std::endl;
-	std::cout << newSimBreakerOn.getSystemMatrix() << std::endl;
 	std::cout << "vt vector:" << std::endl;
 	std::cout << newSim.getLeftSideVector() << std::endl;
 	std::cout << "j vector:" << std::endl;
 	std::cout << newSim.getRightSideVector() << std::endl;
-
-	int logCount = 0;
-
-	double fieldVoltage = 7.0821;
-	double mechPower = 5.5558e5;
+	
+	Real fieldVoltage = 7.0821;
+	Real mechPower = 5.5558e5;
+	Real lastLogTime = 0;
+	Real logTimeStep = 0.00005;
+	newSim.setSwitchTime(0.1, 1);
 
 	// Main Simulation Loop
-	while (newSim.mTime < tf)
-	{
+	while (newSim.getTime() < tf) {
 		std::cout << newSim.getTime() << std::endl;
-		newSim.stepGeneratorTest(log, vtLog, jLog, fieldVoltage, mechPower);
-		newSim.increaseByTimeStep();
-
-		// Change system matrix at step time
-		if (newSim.mTime > (0.05 - dt*0.9) && newSim.mTime < (0.05 + dt*0.9)) {
-			newSim.mSystemMatrix = newSimBreakerOn.mSystemMatrix;
-			newSim.mLuFactored = Eigen::PartialPivLU<DPSMatrix>(newSim.mSystemMatrix);
-
-			std::cout << "A matrix:" << std::endl;
-			std::cout << newSim.mSystemMatrix << std::endl;
-			log.Log() << newSim.mSystemMatrix;
-		}
-
-		// Solve circuit for vector j with generator output current
-		newSim.mLeftSideVector = newSim.mLuFactored.solve(newSim.mRightSideVector);
-
-		// Execute PostStep for all components, generator states are recalculated based on new terminal voltage
-		for (std::vector<BaseComponent*>::iterator it = newSim.mElements.begin(); it != newSim.mElements.end(); ++it) {
-			(*it)->postStep(newSim.mSystemMatrix, newSim.mRightSideVector, newSim.mLeftSideVector, newSim.mCompOffset, om, dt, newSim.mTime);
-		}
-
-		// Save simulation step data
-		logCount++;
-		if (logCount == 1000) {
-			synGenLogFlux.Log() << Logger::VectorToDataLine(newSim.mTime, synGen->getFluxes()).str();
-			synGenLogVolt.Log() << Logger::VectorToDataLine(newSim.mTime, synGen->getVoltages()).str();
-			synGenLogCurr.Log() << Logger::VectorToDataLine(newSim.mTime, synGen->getCurrents()).str();
-			vtLog.Log() << Logger::VectorToDataLine(newSim.getTime(), newSim.getLeftSideVector()).str();
-			jLog.Log() << Logger::VectorToDataLine(newSim.getTime(), newSim.getRightSideVector()).str();
-
-			std::cout << newSim.mTime << std::endl;
-			logCount = 0;
-		}
-
-		// timestep
-		newSim.mTime += dt;
+		newSim.stepGeneratorTest(log, vtLog, jLog, gen, synGenLogFlux, synGenLogVolt, synGenLogCurr, fieldVoltage, mechPower, logTimeStep, lastLogTime);
+		newSim.increaseByTimeStep();		
 	}
 
 	// Write simulation data to file
@@ -403,7 +330,6 @@ void SynGenUnitTestThreePhaseFault() {
 }
 
 void SynGenDPUnitTestBalancedResLoad() {
-
 	// Define Object for saving data on a file
 	Logger log, vtLog, jLog, synGenLogVolt, synGenLogCurr, synGenLogFlux;
 
@@ -457,9 +383,7 @@ void SynGenDPUnitTestBalancedResLoad() {
 	double initReactivePower = 0;
 	double initTerminalVolt = 24000 / sqrt(3) * sqrt(2);
 	double initVoltAngle = -DPS_PI / 2;
-	((SynchronGenerator*)newSim.mElements[0])->init(om, dt,
-		initActivePower, initReactivePower, initTerminalVolt, initVoltAngle);
-	SynchronGenerator* synGen = (SynchronGenerator*)newSim.mElements[0];
+	((SynchronGenerator*)gen)->init(om, dt, initActivePower, initReactivePower, initTerminalVolt, initVoltAngle);
 
 	// Calculate initial values for circuit at generator connection point
 	double initApparentPower = sqrt(pow(initActivePower, 2) + pow(initReactivePower, 2));
@@ -472,36 +396,17 @@ void SynGenDPUnitTestBalancedResLoad() {
 	std::cout << newSim.getLeftSideVector() << std::endl;
 	std::cout << "j vector:" << std::endl;
 	std::cout << newSim.getRightSideVector() << std::endl;
-
-	int logCount = 0;
-
-	double fieldVoltage = 7.0821;
-	double mechPower = 5.5558e5;
+	
+	Real fieldVoltage = 7.0821;
+	Real mechPower = 5.5558e5;
+	Real lastLogTime = 0;
+	Real logTimeStep = 0.00005;
 
 	// Main Simulation Loop
-	while (newSim.mTime < tf)
-	{
+	while (newSim.getTime() < tf) {
 		std::cout << newSim.getTime() << std::endl;
-		newSim.stepGeneratorTest(log, vtLog, jLog, fieldVoltage, mechPower);
-		newSim.increaseByTimeStep();
-
-		// Save simulation step data
-		logCount++;
-		if (logCount == 10) {
-			std::cout << newSim.mTime << std::endl;
-
-			synGenLogFlux.Log() << Logger::VectorToDataLine(newSim.mTime, synGen->getFluxes()).str();
-			synGenLogVolt.Log() << Logger::VectorToDataLine(newSim.mTime, synGen->getVoltages()).str();
-			synGenLogCurr.Log() << Logger::VectorToDataLine(newSim.mTime, synGen->getCurrents()).str();
-			vtLog.Log() << Logger::VectorToDataLine(newSim.getTime(), newSim.getLeftSideVector()).str();
-			jLog.Log() << Logger::VectorToDataLine(newSim.getTime(), newSim.getRightSideVector()).str();
-
-			std::cout << newSim.mTime << std::endl;
-			logCount = 0;
-		}		
-
-		// timestep
-		newSim.mTime += dt;
+		newSim.stepGeneratorTest(log, vtLog, jLog, gen, synGenLogFlux, synGenLogVolt, synGenLogCurr, fieldVoltage, mechPower, logTimeStep, lastLogTime);
+		newSim.increaseByTimeStep();		
 	}
 
 	// Write simulation data to file

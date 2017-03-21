@@ -5,7 +5,7 @@
 
 using namespace DPsim;
 
-void RXLineResLoad() {
+void DPsim::RXLineResLoad() {
 	// Define Object for saving data on a file
 	Logger log, leftVectorLog, rightVectorLog;
 
@@ -22,7 +22,7 @@ void RXLineResLoad() {
 	// Set up simulation
 	Real timeStep = 0.001;
 	Simulation newSim(circElements1, 2.0*M_PI*50.0, timeStep, 0.3, log);
-	newSim.CreateSystemMatrix(circElements2);
+	newSim.addSystemTopology(circElements2);
 	newSim.setSwitchTime(0.1, 1);
 			
 	// Main Simulation Loop
@@ -42,7 +42,7 @@ void RXLineResLoad() {
 	rightVectorLog.WriteLogToFile("Logs/RightVectorLog_" + fileName.str() + ".csv");
 }
 
-void VarFreqRXLineResLoad(Real timeStep, Real finalTime, Real freqStep, Real loadStep, Real rampTime) {
+void DPsim::VarFreqRXLineResLoad(Real timeStep, Real finalTime, Real freqStep, Real loadStep, Real rampTime) {
 	// Define Object for saving data on a file
 	Logger log, leftVectorLog, rightVectorLog;
 
@@ -58,7 +58,7 @@ void VarFreqRXLineResLoad(Real timeStep, Real finalTime, Real freqStep, Real loa
 
 	// Set up simulation
 	Simulation newSim(circElements1, 2.0*PI*50.0, timeStep, finalTime, log);
-	newSim.CreateSystemMatrix(circElements2);
+	newSim.addSystemTopology(circElements2);
 	newSim.setSwitchTime(loadStep, 1);
 
 	// Main Simulation Loop
@@ -78,7 +78,7 @@ void VarFreqRXLineResLoad(Real timeStep, Real finalTime, Real freqStep, Real loa
 	rightVectorLog.WriteLogToFile("Logs/RightVectorLog_" + fileName.str() + ".csv");
 }
 
-void RXLineResLoadEMT() {
+void DPsim::RXLineResLoadEMT() {
 	// Define Object for saving data on a file
 	Logger log, leftVectorLog, rightVectorLog;
 
@@ -95,7 +95,7 @@ void RXLineResLoadEMT() {
 	// Set up simulation
 	Real timeStep = 0.001;
 	Simulation newSim(circElements1, 2.0*PI*50.0, timeStep, 0.3, log, SimulationType::EMT);
-	newSim.CreateSystemMatrix(circElements2);
+	newSim.addSystemTopology(circElements2);
 	newSim.setSwitchTime(0.1, 1);
 
 	// Main Simulation Loop
@@ -115,7 +115,7 @@ void RXLineResLoadEMT() {
 	rightVectorLog.WriteLogToFile("Logs/RightVectorLog_" + fileName.str() + ".csv");
 }
 
-void VarFreqRXLineResLoadEMT(Real timeStep, Real finalTime, Real freqStep, Real loadStep, Real rampTime) {
+void DPsim::VarFreqRXLineResLoadEMT(Real timeStep, Real finalTime, Real freqStep, Real loadStep, Real rampTime) {
 	// Define Object for saving data on a file
 	Logger log, leftVectorLog, rightVectorLog;
 
@@ -131,7 +131,7 @@ void VarFreqRXLineResLoadEMT(Real timeStep, Real finalTime, Real freqStep, Real 
 
 	// Set up simulation
 	Simulation newSim(circElements1, 2.0*PI*50.0, timeStep, finalTime, log, SimulationType::EMT);
-	newSim.CreateSystemMatrix(circElements2);
+	newSim.addSystemTopology(circElements2);
 	newSim.setSwitchTime(loadStep, 1);
 
 	// Main Simulation Loop
@@ -151,7 +151,7 @@ void VarFreqRXLineResLoadEMT(Real timeStep, Real finalTime, Real freqStep, Real 
 	rightVectorLog.WriteLogToFile("Logs/RightVectorLog_" + fileName.str() + ".csv");
 }
 
-void runDpEmtVarFreqStudy() {
+void DPsim::runDpEmtVarFreqStudy() {
 	Real timeStep = 0.0;
 	Real finalTime = 0.6;
 	Real freqStep = 0.4;

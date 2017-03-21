@@ -74,9 +74,6 @@ int TopologyReader::readConfig(std::ifstream &f, Config &conf) {
 	return 0;
 }
 
-
-/// Use the parsed configuration structure to create circuit elements
-
 int TopologyReader::parseConfig(Config &conf, std::vector<BaseComponent*> &circElements, double &timeStep, double &finalTime) {
 
 	timeStep = std::stod(conf.timeStep);

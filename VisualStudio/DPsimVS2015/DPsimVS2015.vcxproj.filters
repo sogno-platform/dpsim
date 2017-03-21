@@ -102,17 +102,17 @@
     <ClInclude Include="..\..\Source\Utilities.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\Source\Examples\ReferenceCircuits.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\Source\Examples\SimpleCircuitTest.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\Source\Examples\SynchronGenUnitTest.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\Source\Simulation.h">
       <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\Examples\ReferenceCircuits.h">
+      <Filter>Headerdateien\Examples</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\Examples\SimpleCircuitTest.h">
+      <Filter>Headerdateien\Examples</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\Examples\SynchronGenUnitTest.h">
+      <Filter>Headerdateien\Examples</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -170,15 +170,6 @@
     <ClCompile Include="..\..\Source\Components\VoltSourceResFreqEMT.cpp">
       <Filter>Quelldateien\Components</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\Source\Examples\ReferenceCircuits.cpp">
-      <Filter>Quelldateien</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\Source\Examples\SimpleCircuitTest.cpp">
-      <Filter>Quelldateien</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\Source\Examples\SynchronGenUnitTest.cpp">
-      <Filter>Quelldateien</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\Source\Logger.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
@@ -193,6 +184,15 @@
     </ClCompile>
     <ClCompile Include="..\..\Source\Utilities.cpp">
       <Filter>Quelldateien</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\Examples\SimpleCircuitTest.cpp">
+      <Filter>Quelldateien\Examples</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\Examples\SynchronGenUnitTest.cpp">
+      <Filter>Quelldateien\Examples</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\Examples\ReferenceCircuits.cpp">
+      <Filter>Quelldateien\Examples</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
