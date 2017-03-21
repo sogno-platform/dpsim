@@ -171,14 +171,14 @@ namespace DPsim {
 
 		/// Performs an Euler forward step with the state space model of a synchronous generator 
 		/// to calculate the flux and current from the voltage vector.
-		void step(DPSMatrix& g, DPSMatrix& j, int compOffset, Real om, Real dt, Real t, Real fieldVoltage, Real mechPower);
+		void step(SystemModel& system, Real fieldVoltage, Real mechPower);
 
 		/// Performs an Euler forward step with the state space model of a synchronous generator 
 		/// to calculate the flux and current from the voltage vector in per unit.
-		void stepInPerUnit(Real om, Real dt, Real t, Real fieldVoltage, Real mechPower);
+		void stepInPerUnit(Real om, Real dt, Real fieldVoltage, Real mechPower);
 
 		/// Retrieves calculated voltage from simulation for next step
-		void postStep(DPSMatrix& g, DPSMatrix& j, DPSMatrix& vt, int compOffset, Real om, Real dt, Real t);
+		void postStep(SystemModel& system);
 
 		/// Park transform as described in Krause
 		DPSMatrix abcToDq0Transform(Real theta, DPSMatrix& in);
@@ -190,11 +190,11 @@ namespace DPsim {
 		DPSMatrix getCurrents() { return mCurrents; }
 		DPSMatrix getFluxes() { return mFluxes; }
 
-		void init(double om, double dt);
-		void applySystemMatrixStamp(SystemModel& system);
+		void init(Real om, Real dt) { }
+		void applySystemMatrixStamp(SystemModel& system) { }
 		void applyRightSideVectorStamp(SystemModel& system) { }
-		void step(SystemModel& system);
-		void postStep(SystemModel& system);
+		void step(SystemModel& system) { }
+		void postStep(SystemModel& system) { }
 	};
 }
 #endif

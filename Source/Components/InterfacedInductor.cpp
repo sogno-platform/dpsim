@@ -2,47 +2,43 @@
 
 using namespace DPsim;
 
-InterfacedInductor::InterfacedInductor(std::string name, int src, int dest, double inductance) : BaseComponent(name, src, dest) {
-	this->inductance = inductance;
+InterfacedInductor::InterfacedInductor(std::string name, int src, int dest, Real inductance) : BaseComponent(name, src, dest) {
+	this->mInductance = inductance;
 }
 
 
 /// Initialize internal state
-void InterfacedInductor::init(int compOffset, double om, double dt) {
-	currentRe = 0;
-	currentIm = 0;
-	voltageRe = 0;
-	voltageIm = 0;
+void InterfacedInductor::init(Real om, Real dt) {
+	mCurrentRe = 0;
+	mCurrentIm = 0;
+	mVoltageRe = 0;
+	mVoltageIm = 0;
 }
 
 
-void InterfacedInductor::step(DPSMatrix& g, DPSMatrix& j, int compOffset, double om, double dt, double t) {
+void InterfacedInductor::step(SystemModel& system) {
 	// Calculate current for this step
-	currentStepRe = currentRe + dt * (1. / inductance * voltageRe + om * currentIm);
-	currentStepIm = currentIm + dt * (1. / inductance * voltageIm - om * currentRe);
+	mCurrentStepRe = mCurrentRe + system.getTimeStep() * (1. / mInductance * mVoltageRe + system.getOmega() * mCurrentIm);
+	mCurrentStepIm = mCurrentIm + system.getTimeStep() * (1. / mInductance * mVoltageIm - system.getOmega() * mCurrentRe);
 
 	// Update current source accordingly
 	if (mNode1 >= 0) {
-		j(mNode1, 0) = j(mNode1, 0) - currentStepRe;
-		j(compOffset + mNode1, 0) = j(compOffset + mNode1, 0) - currentStepIm;
+		system.addCompToRightSideVector(mNode1, -mCurrentStepRe, -mCurrentStepIm);
 	}
-
 	if (mNode2 >= 0) {
-		j(mNode2, 0) = j(mNode2, 0) + currentStepRe;
-		j(compOffset + mNode2, 0) = j(compOffset + mNode2, 0) + currentStepIm;
+		system.addCompToRightSideVector(mNode2, mCurrentStepRe, mCurrentStepIm);
 	}	
-	currentRe = currentStepRe;
-	currentIm = currentStepIm;
+	mCurrentRe = mCurrentStepRe;
+	mCurrentIm = mCurrentStepIm;
 }
 
-void InterfacedInductor::postStep(DPSMatrix& g, DPSMatrix& j, DPSMatrix& vt, int compOffset, double om, double dt, double t) {
-	double vposr, vnegr;
-	double vposi, vnegi;
+void InterfacedInductor::postStep(SystemModel& system) {
+	double vposr, vnegr, vposi, vnegi;
 
 	// extract solution
 	if (mNode1 >= 0) {
-		vposr = vt(mNode1, 0);
-		vposi = vt(compOffset + mNode1, 0);
+		vposr = system.getRealFromLeftSideVector(mNode1);
+		vposi = system.getImagFromLeftSideVector(mNode1);
 	}
 	else {
 		vposr = 0;
@@ -50,14 +46,14 @@ void InterfacedInductor::postStep(DPSMatrix& g, DPSMatrix& j, DPSMatrix& vt, int
 	}
 
 	if (mNode2 >= 0) {
-		vnegr = vt(mNode2, 0);
-		vnegi = vt(compOffset + mNode2, 0);
+		vnegr = system.getRealFromLeftSideVector(mNode2);
+		vnegi = system.getImagFromLeftSideVector(mNode2);
 	}
 	else {
 		vnegr = 0;
 		vnegi = 0;
 	}
-	voltageRe = vposr - vnegr;
-	voltageIm = vposi - vnegi;
+	mVoltageRe = vposr - vnegr;
+	mVoltageIm = vposi - vnegi;
 }
 

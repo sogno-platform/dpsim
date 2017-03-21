@@ -2,25 +2,23 @@
 
 using namespace DPsim;
 
-LinearResistorEMT::LinearResistorEMT(std::string name, int src, int dest, double resistance) : BaseComponent(name, src, dest) {
-	this->resistance = resistance;
-	this->conductance = 1.0 / resistance;
+LinearResistorEMT::LinearResistorEMT(std::string name, int src, int dest, Real resistance) : BaseComponent(name, src, dest) {
+	this->mResistance = resistance;
+	this->mConductance = 1.0 / resistance;
 }
 
-void LinearResistorEMT::applySystemMatrixStamp(DPSMatrix& g, int compOffset, double om, double dt) {
+void LinearResistorEMT::applySystemMatrixStamp(SystemModel& system) {
 	// Set diagonal entries
 	if (mNode1 >= 0) {
-		g(mNode1, mNode1) = g(mNode1, mNode1) + conductance;		
+		system.addRealToSystemMatrix(mNode1, mNode1, mConductance);
 	}
-
 	if (mNode2 >= 0) {
-		g(mNode2, mNode2) = g(mNode2, mNode2) + conductance;
+		system.addRealToSystemMatrix(mNode2, mNode2, mConductance);
 	}
-
 	// Set off diagonal entries
 	if (mNode1 >= 0 && mNode2 >= 0) {
-		g(mNode1, mNode2) = g(mNode1, mNode2) - conductance;
-		g(mNode2, mNode1) = g(mNode2, mNode1) - conductance;
+		system.addRealToSystemMatrix(mNode1, mNode2, -mConductance);
+		system.addRealToSystemMatrix(mNode2, mNode1, -mConductance);
 	}
 }
 

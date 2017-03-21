@@ -18,7 +18,7 @@ namespace DPsim {
 		InductorEMT() { };
 		InductorEMT(std::string name, int src, int dest, double inductance);
 
-		void init(double om, double dt);
+		void init(Real om, Real dt);
 		void applySystemMatrixStamp(SystemModel& system);
 		void applyRightSideVectorStamp(SystemModel& system) { }
 		void step(SystemModel& system);

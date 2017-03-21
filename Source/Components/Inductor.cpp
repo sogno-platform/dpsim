@@ -3,11 +3,11 @@
 using namespace DPsim;
 
 Inductor::Inductor(std::string name, int src, int dest, double inductance) : BaseComponent(name, src, dest) {
-	this->inductance = inductance;
+	this->mInductance = inductance;
 }	
 		
 void Inductor::applySystemMatrixStamp(SystemModel& system) {
-	double a = system.getTimeStep() / (2. * inductance);
+	double a = system.getTimeStep() / (2. * mInductance);
 	double b = system.getTimeStep() * system.getOmega() / 2.;
 	mGlr = a / (1 + b*b);
 	mGli = -a*b / (1 + b*b);
@@ -29,40 +29,37 @@ void Inductor::applySystemMatrixStamp(SystemModel& system) {
 
 
 void Inductor::init(Real om, Real dt) {
-	currr = 0;
-	curri = 0;
-	cureqr = 0;
-	cureqi = 0;
-	deltavr = 0;
-	deltavi = 0;
+	mCurrRe = 0;
+	mCurrIm = 0;
+	mCurEqRe = 0;
+	mCurEqIm = 0;
+	mDeltaVre = 0;
+	mDeltaVim = 0;
 }
 
 
 void Inductor::step(SystemModel& system) {
 	// Initialize internal state
-	cureqr = mGlr * deltavr - mGli * deltavi + pr * currr - pi * curri;
-	cureqi = mGli * deltavr + mGlr * deltavi + pi * currr + pr * curri;
+	mCurEqRe = mGlr * mDeltaVre - mGli * mDeltaVim + mPrevCurFacRe * mCurrRe - mPrevCurFacIm * mCurrIm;
+	mCurEqIm = mGli * mDeltaVre + mGlr * mDeltaVim + mPrevCurFacIm * mCurrRe + mPrevCurFacRe * mCurrIm;
 		
 	if (mNode1 >= 0) {
-		j(mNode1, 0) = j(mNode1, 0) - cureqr;
-		j(compOffset+mNode1, 0) = j(compOffset+mNode1, 0) - cureqi;
+		system.addCompToRightSideVector(mNode1, -mCurEqRe, -mCurEqIm);
 	}
-
 	if (mNode2 >= 0)	{
-		j(mNode2, 0) = j(mNode2, 0) + cureqr;
-		j(compOffset+mNode2, 0) = j(compOffset+mNode2, 0) + cureqi;
+		system.addCompToRightSideVector(mNode2, mCurEqRe, mCurEqIm);
 	}
 }
 
 
 void Inductor::postStep(SystemModel& system) {
-	double vposr, vnegr;
-	double vposi, vnegi;
+	double vposr, vnegr, vposi, vnegi;
 
 	// extract solution
 	if (mNode1 >= 0)	{
-		vposr = vt(mNode1, 0);
-		vposi = vt(compOffset+mNode1, 0);
+		system.getRealFromLeftSideVector(mNode1);
+		vposr = system.getRealFromLeftSideVector(mNode1);
+		vposi = system.getImagFromLeftSideVector(mNode1);
 	}
 	else {
 		vposr = 0;
@@ -70,15 +67,15 @@ void Inductor::postStep(SystemModel& system) {
 	}
 	
 	if (mNode2 >= 0) {
-		vnegr = vt(mNode2, 0);
-		vnegi = vt(compOffset+mNode2, 0);
+		vnegr = system.getRealFromLeftSideVector(mNode1);
+		vnegi = system.getImagFromLeftSideVector(mNode1);
 	}
 	else {
 		vnegr = 0;
 		vnegi = 0;
 	}
-	deltavr = vposr-vnegr;
-	deltavi = vposi-vnegi;
-	currr =  glr*deltavr-gli*deltavi+cureqr;
-	curri =  gli*deltavr+glr*deltavi+cureqi;
+	mDeltaVre = vposr - vnegr;
+	mDeltaVim = vposi - vnegi;
+	mCurrRe = mGlr * mDeltaVre - mGli * mDeltaVim + mCurEqRe;
+	mCurrIm = mGli * mDeltaVre + mGlr * mDeltaVim + mCurEqIm;
 }

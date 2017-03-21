@@ -52,11 +52,19 @@ namespace DPsim {
 		Real getRealFromLeftSideVector(Int row) { return mLeftSideVector(row, 0); }
 		Real getImagFromLeftSideVector(Int row) { return mLeftSideVector(row + mCompOffset, 0); }
 
+		void addRealToSystemMatrix(Int row, Int column, Real value) {
+			mSystemMatrix(row, column) = mSystemMatrix(row, column) + value;
+		}
+
 		void addCompToSystemMatrix(Int row, Int column, Real reValue, Real imValue) {
 			mSystemMatrix(row, column) = mSystemMatrix(row, column) + reValue; 
 			mSystemMatrix(row + mCompOffset, column + mCompOffset) = mSystemMatrix(row + mCompOffset, column + mCompOffset) + reValue;
 			mSystemMatrix(row, column + mCompOffset) = mSystemMatrix(row, column + mCompOffset) - imValue;
 			mSystemMatrix(row + mCompOffset, column) = mSystemMatrix(row + mCompOffset, column) + imValue;
+		}
+
+		void setSystemMatrixElement(Int row, Int column, Real value) {
+			mSystemMatrix(row, column) = value;
 		}
 		
 		void addCompToRightSideVector(Int row, Real reValue, Real imValue) {
@@ -64,11 +72,7 @@ namespace DPsim {
 			mRightSideVector(row + mCompOffset, 0) = mRightSideVector(row + mCompOffset, 0) + imValue;
 		}
 
-		void setSystemMatrixElement(Int row, Int column, Real value) {
-			mSystemMatrix(row, column) = value;
-		}
-
-		void addToRightSideVector(Int row, Real value) {
+		void addRealToRightSideVector(Int row, Real value) {
 			mRightSideVector(row, 0) = value;
 		}
 

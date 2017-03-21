@@ -145,69 +145,69 @@ namespace DPsim {
 		/// stator referred parameters depending on the setting of parameter type.
 		/// The initialization mode depends on the setting of state type.
 		SynchronGeneratorEMT(std::string name, int node1, int node2, int node3,
-			SynchGenStateType stateType, double nomPower, double nomVolt, double nomFreq, int poleNumber, double nomFieldCur,
-			SynchGenParamType paramType, double Rs, double Ll, double Lmd, double Lmd0, double Lmq, double Lmq0,
-			double Rfd, double Llfd, double Rkd, double Llkd,
-			double Rkq1, double Llkq1, double Rkq2, double Llkq2,
-			double inertia);
+			SynchGenStateType stateType, Real nomPower, Real nomVolt, Real nomFreq, int poleNumber, Real nomFieldCur,
+			SynchGenParamType paramType, Real Rs, Real Ll, Real Lmd, Real Lmd0, Real Lmq, Real Lmq0,
+			Real Rfd, Real Llfd, Real Rkd, Real Llkd,
+			Real Rkq1, Real Llkq1, Real Rkq2, Real Llkq2,
+			Real inertia);
 
 		/// Initializes the per unit or stator referred machine parameters with the machine parameters given in per unit.
 		/// The initialization mode depends on the setting of state type.
 		void initWithPerUnitParam(
-			double Rs, double Ll, double Lmd, double Lmd0, double Lmq, double Lmq0,
-			double Rfd, double Llfd, double Rkd, double Llkd, double Rkq1, double Llkq1,
-			double Rkq2, double Llkq2,
-			double H);
+			Real Rs, Real Ll, Real Lmd, Real Lmd0, Real Lmq, Real Lmq0,
+			Real Rfd, Real Llfd, Real Rkd, Real Llkd, Real Rkq1, Real Llkq1,
+			Real Rkq2, Real Llkq2,
+			Real H);
 
 		/// Not finished yet.
 		void initWithStatorRefParam(
-			double Rs, double Ll, double Lmd, double Lmd0, double Lmq, double Lmq0,
-			double Rfd, double Llfd, double Rkd, double Llkd,
-			double Rkq1, double Llkq1, double Rkq2, double Llkq2,
-			double J);
+			Real Rs, Real Ll, Real Lmd, Real Lmd0, Real Lmq, Real Lmq0,
+			Real Rfd, Real Llfd, Real Rkd, Real Llkd,
+			Real Rkq1, Real Llkq1, Real Rkq2, Real Llkq2,
+			Real J);
 
 		/// Initializes states in per unit or stator referred variables depending on the setting of the state type. 
 		/// Function parameters have to be given in real units.
-		void init(double om, double dt,
-			double initActivePower, double initReactivePower, double initTerminalVolt, double initVoltAngle);
+		void init(Real om, Real dt,
+			Real initActivePower, Real initReactivePower, Real initTerminalVolt, Real initVoltAngle);
 
 		/// Initializes states in per unit. All machine parameters are assumed to be in per unit.
 		/// Function parameters have to be given in real units.
-		void initStatesInPerUnit(double initActivePower, double initReactivePower,
-			double initTerminalVolt, double initVoltAngle);
+		void initStatesInPerUnit(Real initActivePower, Real initReactivePower,
+			Real initTerminalVolt, Real initVoltAngle);
 
 		/// Not finished yet
-		void initStatesInStatorRefFrame(double initActivePower, double initReactivePower,
-			double initTerminalVolt, double initVoltAngle);
+		void initStatesInStatorRefFrame(Real initActivePower, Real initReactivePower,
+			Real initTerminalVolt, Real initVoltAngle);
 
 		/// Performs an Euler forward step with the state space model of a synchronous generator 
 		/// to calculate the flux and current from the voltage vector.
-		void step(DPSMatrix& g, DPSMatrix& j, int compOffset, double om, double dt, double t, double fieldVoltage, double mechPower);
+		void step(SystemModel& system, Real fieldVoltage, Real mechPower);
 
 		/// Performs an Euler forward step with the state space model of a synchronous generator 
 		/// to calculate the flux and current from the voltage vector in per unit.
-		void stepInPerUnit(double om, double dt, double t, double fieldVoltage, double mechPower);
+		void stepInPerUnit(Real om, Real dt, Real fieldVoltage, Real mechPower);
 
 		/// Not finished yet.
-		void stepInStatorRefFrame(double om, double dt, double t, double fieldVoltage, double mechPower);
+		void stepInStatorRefFrame(Real om, Real dt, Real fieldVoltage, Real mechPower);
 
 		/// Retrieves calculated voltage from simulation for next step
-		void postStep(DPSMatrix& g, DPSMatrix& j, DPSMatrix& vt, int compOffset, double om, double dt, double t);
+		void postStep(SystemModel& system);
 
 		/// Park transform as described in Krause
-		DPSMatrix parkTransform(double theta, DPSMatrix& in);
+		DPSMatrix parkTransform(Real theta, DPSMatrix& in);
 
 		/// Inverse Park transform as described in Krause
-		DPSMatrix inverseParkTransform(double theta, DPSMatrix& in);
+		DPSMatrix inverseParkTransform(Real theta, DPSMatrix& in);
 
 		DPSMatrix getVoltages() { return mVoltages; }
 		DPSMatrix getCurrents() { return mCurrents; }
 		DPSMatrix getFluxes() { return mFluxes; }
 
-		void applySystemMatrixStamp(DPSMatrix& g, int compOffset, double om, double dt) { }
-		void applyRightSideVectorStamp(DPSMatrix& j, int compOffset, double om, double dt) { }
-		void init(int compOffset, double om, double dt) { }
-		void step(DPSMatrix& g, DPSMatrix& j, int compOffset, double om, double dt, double t) { }
+		void init(Real om, Real dt) { }
+		void applySystemMatrixStamp(SystemModel& system) { }
+		void applyRightSideVectorStamp(SystemModel& system) { }
+		void step(SystemModel& system) { }
 	};
 }
 #endif

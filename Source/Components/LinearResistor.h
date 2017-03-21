@@ -8,23 +8,23 @@ namespace DPsim {
 
 	class LinearResistor : public BaseComponent {
 	protected:
-		double resistance;
-		double conductance;
-		double voltageAtSourcer;
-		double voltageAtSourcei;
+		Real mResistance;
+		Real mConductance;
+		Real mVoltageAtNode1Re;
+		Real mVoltageAtNode1Im;
 
-		double voltageAtDestr;
-		double voltageAtDesti;
+		Real mVoltageAtNode2Re;
+		Real mVoltageAtNode2Im;
 
 	public:
 		LinearResistor() { ; };
-		LinearResistor(std::string name, int src, int dest, double resistance);
+		LinearResistor(std::string name, int src, int dest, Real resistance);
 
-		void init(double om, double dt);
+		void init(Real om, Real dt);
 		void applySystemMatrixStamp(SystemModel& system);
 		void applyRightSideVectorStamp(SystemModel& system) { }
-		void step(SystemModel& system);
-		void postStep(SystemModel& system);
+		void step(SystemModel& system) { }
+		void postStep(SystemModel& system) { }
 	};
 }
 #endif

@@ -11,7 +11,7 @@ VoltSourceResEMT::VoltSourceResEMT(std::string name, int src, int dest, Real vol
 	mCurrent = mVoltageDiff / mResistance;
 }
 
-void VoltSourceResEMT::applySystemMatrixStamp(DPSMatrix& g, int compOffset, Real om, Real dt) {
+void VoltSourceResEMT::applySystemMatrixStamp(SystemModel& system) {
 	// Apply matrix stamp for equivalent resistance
 	if (mNode1 >= 0) {
 		g(mNode1, mNode1) = g(mNode1, mNode1) + mConductance;
@@ -27,7 +27,7 @@ void VoltSourceResEMT::applySystemMatrixStamp(DPSMatrix& g, int compOffset, Real
 	}
 }
 
-void VoltSourceResEMT::applyRightSideVectorStamp(DPSMatrix& j, int compOffset, Real om, Real dt) {
+void VoltSourceResEMT::applyRightSideVectorStamp(SystemModel& system) {
 	// Apply matrix stamp for equivalent current source
 	if (mNode1 >= 0) {
 		j(mNode1, 0) = j(mNode1, 0) + mCurrent;		
@@ -39,7 +39,7 @@ void VoltSourceResEMT::applyRightSideVectorStamp(DPSMatrix& j, int compOffset, R
 }
 
 
-void VoltSourceResEMT::step(DPSMatrix& g, DPSMatrix& j, int compOffset, Real om, Real dt, Real t) {
+void VoltSourceResEMT::step(SystemModel& system) {
 	mVoltageDiff = mVoltageAmp*cos(mVoltagePhase + om * t);
 	mCurrent = mVoltageDiff / mResistance;
 

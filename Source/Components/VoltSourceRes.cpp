@@ -12,50 +12,35 @@ VoltSourceRes::VoltSourceRes(std::string name, int src, int dest, Real voltage, 
 	this->mCurrenti = mVoltageDiffi / resistance;
 }
 
-void VoltSourceRes::applySystemMatrixStamp(DPSMatrix& g, int compOffset, Real om, Real dt) {
+void VoltSourceRes::applySystemMatrixStamp(SystemModel& system) {
 	// Apply matrix stamp for equivalent resistance
 	if (mNode1 >= 0) {
-		g(mNode1, mNode1) = g(mNode1, mNode1) + mConductance;
-		g(compOffset + mNode1, compOffset + mNode1) = g(compOffset + mNode1, compOffset + mNode1) + mConductance;
+		system.addCompToSystemMatrix(mNode1, mNode1, mConductance, 0);
 	}
-
 	if (mNode2 >= 0) {
-		g(mNode2, mNode2) = g(mNode2, mNode2) + mConductance;
-		g(compOffset + mNode2, compOffset + mNode2) = g(compOffset + mNode2, compOffset + mNode2) + mConductance;
+		system.addCompToSystemMatrix(mNode2, mNode2, mConductance, 0);
 	}
-
 	if (mNode1 >= 0 && mNode2 >= 0) {
-		g(mNode1, mNode2) = g(mNode1, mNode2) - mConductance;
-		g(compOffset + mNode1, compOffset + mNode2) = g(compOffset + mNode1, compOffset + mNode2) - mConductance;
-
-		g(mNode2, mNode1) = g(mNode2, mNode1) - mConductance;
-		g(compOffset + mNode2, compOffset + mNode1) = g(compOffset + mNode2, compOffset + mNode1) - mConductance;
+		system.addCompToSystemMatrix(mNode1, mNode2, -mConductance, 0);
+		system.addCompToSystemMatrix(mNode2, mNode1, -mConductance, 0);
 	}
 }
 
-void VoltSourceRes::applyRightSideVectorStamp(DPSMatrix& j, int compOffset, Real om, Real dt) {
+void VoltSourceRes::applyRightSideVectorStamp(SystemModel& system) {
 	// Apply matrix stamp for equivalent current source
 	if (mNode1 >= 0) {
-		j(mNode1, 0) = j(mNode1, 0) + mCurrentr;
-		j(mNode1 + compOffset, 0) = j(compOffset + mNode1, 0) + mCurrenti;
+		system.addCompToRightSideVector(mNode1, mCurrentr, mCurrenti);
 	}
-
 	if (mNode2 >= 0) {
-		j(mNode2, 0) = j(mNode2, 0) - mCurrentr;
-		j(mNode2 + compOffset, 0) = j(compOffset + mNode2, 0) - mCurrenti;
+		system.addCompToRightSideVector(mNode2, -mCurrentr, -mCurrenti);
 	}
 }
 
-
-void VoltSourceRes::step(DPSMatrix& g, DPSMatrix& j, int compOffset, Real om, Real dt, Real t) {
-
+void VoltSourceRes::step(SystemModel& system) {
 	if (mNode1 >= 0) {
-		j(mNode1, 0) = j(mNode1, 0) + mCurrentr;
-		j(mNode1 + compOffset, 0) = j(mNode1 + compOffset, 0) + mCurrenti;
+		system.addCompToRightSideVector(mNode1, mCurrentr, mCurrenti);
 	}
-
 	if (mNode2 >= 0) {
-		j(mNode2, 0) = j(mNode2, 0) - mCurrentr;
-		j(mNode2 + compOffset, 0) = j(mNode2 + compOffset, 0) - mCurrenti;
+		system.addCompToRightSideVector(mNode2, -mCurrentr, -mCurrenti);
 	}
 }

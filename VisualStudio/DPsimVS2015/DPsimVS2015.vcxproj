@@ -119,7 +119,6 @@
     <ClInclude Include="..\..\Source\Components\CurrentSource.h" />
     <ClInclude Include="..\..\Source\Components\IdealVoltageSource.h" />
     <ClInclude Include="..\..\Source\Components\Inductor.h" />
-    <ClInclude Include="..\..\Source\Components\Inductor2.h" />
     <ClInclude Include="..\..\Source\Components\InductorEMT.h" />
     <ClInclude Include="..\..\Source\Components\InterfacedInductor.h" />
     <ClInclude Include="..\..\Source\Components\LinearResistor.h" />
@@ -133,10 +132,12 @@
     <ClInclude Include="..\..\Source\Components\VoltSourceResEMT.h" />
     <ClInclude Include="..\..\Source\Components\VoltSourceResFreq.h" />
     <ClInclude Include="..\..\Source\Components\VoltSourceResFreqEMT.h" />
+    <ClInclude Include="..\..\Source\Examples\ReferenceCircuits.h" />
+    <ClInclude Include="..\..\Source\Examples\SimpleCircuitTest.h" />
+    <ClInclude Include="..\..\Source\Examples\SynchronGenUnitTest.h" />
     <ClInclude Include="..\..\Source\Logger.h" />
     <ClInclude Include="..\..\Source\MathLibrary.h" />
     <ClInclude Include="..\..\Source\NetlistSim.h" />
-    <ClInclude Include="..\..\Source\simulation.h" />
     <ClInclude Include="..\..\Source\SystemModel.h" />
     <ClInclude Include="..\..\Source\TopologyReader.h" />
     <ClInclude Include="..\..\Source\Utilities.h" />
@@ -146,7 +147,6 @@
     <ClCompile Include="..\..\Source\Components\CurrentSource.cpp" />
     <ClCompile Include="..\..\Source\Components\IdealVoltageSource.cpp" />
     <ClCompile Include="..\..\Source\Components\Inductor.cpp" />
-    <ClCompile Include="..\..\Source\Components\Inductor2.cpp" />
     <ClCompile Include="..\..\Source\Components\InductorEMT.cpp" />
     <ClCompile Include="..\..\Source\Components\InterfacedInductor.cpp" />
     <ClCompile Include="..\..\Source\Components\LinearResistor.cpp" />
@@ -160,7 +160,15 @@
     <ClCompile Include="..\..\Source\Components\VoltSourceResFreq.cpp" />
     <ClCompile Include="..\..\Source\Components\VoltSourceResFreqEMT.cpp" />
     <ClCompile Include="..\..\Source\DPsimMain.cpp" />
+    <ClCompile Include="..\..\Source\Examples\ReferenceCircuits.cpp" />
+    <ClCompile Include="..\..\Source\Examples\SimpleCircuitTest.cpp" />
+    <ClCompile Include="..\..\Source\Examples\SynchronGenUnitTest.cpp" />
+    <ClCompile Include="..\..\Source\Logger.cpp" />
+    <ClCompile Include="..\..\Source\NetlistSim.cpp" />
+    <ClCompile Include="..\..\Source\Simulation.cpp" />
     <ClCompile Include="..\..\Source\SystemModel.cpp" />
+    <ClCompile Include="..\..\Source\TopologyReader.cpp" />
+    <ClCompile Include="..\..\Source\Utilities.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

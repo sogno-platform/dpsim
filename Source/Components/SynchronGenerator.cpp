@@ -3,11 +3,11 @@
 using namespace DPsim;
 
 SynchronGenerator::SynchronGenerator(std::string name, int node1, int node2, int node3,
-	SynchGenStateType stateType, double nomPower, double nomVolt, double nomFreq, int poleNumber, double nomFieldCur,
-	SynchGenParamType paramType, double Rs, double Ll, double Lmd, double Lmd0, double Lmq, double Lmq0,
-	double Rfd, double Llfd, double Rkd, double Llkd,
-	double Rkq1, double Llkq1, double Rkq2, double Llkq2,
-	double inertia) {
+	SynchGenStateType stateType, Real nomPower, Real nomVolt, Real nomFreq, int poleNumber, Real nomFieldCur,
+	SynchGenParamType paramType, Real Rs, Real Ll, Real Lmd, Real Lmd0, Real Lmq, Real Lmq0,
+	Real Rfd, Real Llfd, Real Rkd, Real Llkd,
+	Real Rkq1, Real Llkq1, Real Rkq2, Real Llkq2,
+	Real inertia) {
 
 	this->mNode1 = node1 - 1;
 	this->mNode2 = node2 - 1;
@@ -40,10 +40,10 @@ SynchronGenerator::SynchronGenerator(std::string name, int node1, int node2, int
 }
 
 void SynchronGenerator::initWithPerUnitParam(
-	double Rs, double Ll, double Lmd, double Lmd0, double Lmq, double Lmq0,
-	double Rfd, double Llfd, double Rkd, double Llkd,
-	double Rkq1, double Llkq1, double Rkq2, double Llkq2,
-	double H) {
+	Real Rs, Real Ll, Real Lmd, Real Lmd0, Real Lmq, Real Lmq0,
+	Real Rfd, Real Llfd, Real Rkd, Real Llkd,
+	Real Rkq1, Real Llkq1, Real Rkq2, Real Llkq2,
+	Real H) {
 
 	// base rotor values
 	mBase_ifd = Lmd * mNomFieldCur;
@@ -92,8 +92,8 @@ void SynchronGenerator::initWithPerUnitParam(
 	}
 }
 
-void SynchronGenerator::init(double om, double dt,
-	double initActivePower, double initReactivePower, double initTerminalVolt, double initVoltAngle) {
+void SynchronGenerator::init(Real om, Real dt,
+	Real initActivePower, Real initReactivePower, Real initTerminalVolt, Real initVoltAngle) {
 
 	// Create matrices for state space representation 
 	mInductanceMat <<
@@ -156,8 +156,8 @@ void SynchronGenerator::init(double om, double dt,
 	mAbcsCurrents = dq0ToAbcTransform(mThetaMech, mDq0Currents);
 }
 
-void SynchronGenerator::initStatesInPerUnit(double initActivePower, double initReactivePower,
-	double initTerminalVolt, double initVoltAngle) {
+void SynchronGenerator::initStatesInPerUnit(Real initActivePower, Real initReactivePower,
+	Real initTerminalVolt, Real initVoltAngle) {
 
 	double init_P = initActivePower / mNomPower;
 	double init_Q = initReactivePower / mNomPower;
@@ -223,11 +223,10 @@ void SynchronGenerator::initStatesInPerUnit(double initActivePower, double initR
 	mThetaMech = initVoltAngle + init_delta - PI / 2.;
 }
 
-void SynchronGenerator::step(DPSMatrix& g, DPSMatrix& j, int compOffset, double om, double dt, double t,
-	double fieldVoltage, double mechPower) {
+void SynchronGenerator::step(SystemModel& system, Real fieldVoltage, Real mechPower) {
 
 	if (mStateType == SynchGenStateType::perUnit) {
-		stepInPerUnit(om, dt, t, fieldVoltage, mechPower);
+		stepInPerUnit(system.getOmega(), system.getTimeStep(), fieldVoltage, mechPower);
 	}
 	else if (mStateType == SynchGenStateType::statorReferred) {
 		//StepInStatorRefFrame(om, dt, t, fieldVoltage, mechPower);
@@ -235,20 +234,17 @@ void SynchronGenerator::step(DPSMatrix& g, DPSMatrix& j, int compOffset, double 
 
 	// Update current source accordingly
 	if (mNode1 >= 0) {
-		j(mNode1, 0) = j(mNode1, 0) + mAbcsCurrents(0, 0);
-		j(compOffset + mNode1, 0) = j(compOffset + mNode1, 0) + mAbcsCurrents(3, 0);
+		system.addCompToRightSideVector(mNode1, mAbcsCurrents(0, 0), mAbcsCurrents(3, 0));
 	}
 	if (mNode2 >= 0) {
-		j(mNode2, 0) = j(mNode2, 0) + mAbcsCurrents(1, 0);
-		j(compOffset + mNode2, 0) = j(compOffset + mNode2, 0) + mAbcsCurrents(4, 0);
+		system.addCompToRightSideVector(mNode2, mAbcsCurrents(1, 0), mAbcsCurrents(4, 0));
 	}
 	if (mNode3 >= 0) {
-		j(mNode3, 0) = j(mNode3, 0) + mAbcsCurrents(2, 0);
-		j(compOffset + mNode3, 0) = j(compOffset + mNode3, 0) + mAbcsCurrents(5, 0);
+		system.addCompToRightSideVector(mNode3, mAbcsCurrents(2, 0), mAbcsCurrents(5, 0));
 	}
 }
 
-void SynchronGenerator::stepInPerUnit(double om, double dt, double t, double fieldVoltage, double mechPower) {
+void SynchronGenerator::stepInPerUnit(Real om, Real dt, Real fieldVoltage, Real mechPower) {
 	// retrieve voltages
 	mAbcsVoltages = (1 / mBase_v) * mAbcsVoltages;
 	mAbcsCurrents = (1 / mBase_i) * mAbcsCurrents;
@@ -285,26 +281,26 @@ void SynchronGenerator::stepInPerUnit(double om, double dt, double t, double fie
 	mThetaMech = mThetaMech + dt * ((mOmMech - 1) * mBase_OmMech);
 }
 
-void SynchronGenerator::postStep(DPSMatrix& g, DPSMatrix& j, DPSMatrix& vt, int compOffset, double om, double dt, double t) {
+void SynchronGenerator::postStep(SystemModel& system) {
 	if (mNode1 >= 0) {
-		mAbcsVoltages(0, 0) = vt(mNode1, 0);
-		mAbcsVoltages(3, 0) = vt(mNode1 + compOffset, 0);
+		mAbcsVoltages(0, 0) = system.getRealFromLeftSideVector(mNode1);
+		mAbcsVoltages(3, 0) = system.getImagFromLeftSideVector(mNode1);
 	}
 	else {
 		mAbcsVoltages(0, 0) = 0;
 		mAbcsVoltages(3, 0) = 0;
 	}
 	if (mNode2 >= 0) {
-		mAbcsVoltages(1, 0) = vt(mNode2, 0);
-		mAbcsVoltages(4, 0) = vt(mNode2 + compOffset, 0);
+		mAbcsVoltages(1, 0) = system.getRealFromLeftSideVector(mNode2);
+		mAbcsVoltages(4, 0) = system.getImagFromLeftSideVector(mNode2);
 	}
 	else {
 		mAbcsVoltages(1, 0) = 0;
 		mAbcsVoltages(4, 0) = 0;
 	}
 	if (mNode3 >= 0) {
-		mAbcsVoltages(2, 0) = vt(mNode3, 0);
-		mAbcsVoltages(5, 0) = vt(mNode3 + compOffset, 0);
+		mAbcsVoltages(2, 0) = system.getRealFromLeftSideVector(mNode3);
+		mAbcsVoltages(5, 0) = system.getImagFromLeftSideVector(mNode3);
 	}
 	else {
 		mAbcsVoltages(2, 0) = 0;

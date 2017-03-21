@@ -7,13 +7,13 @@ namespace DPsim {
 
 	class Inductor : public BaseComponent {
 	protected:
-		Real inductance;
-		Real deltavr;
-		Real deltavi;
-		Real currr;
-		Real curri;
-		Real cureqr;
-		Real cureqi;
+		Real mInductance;
+		Real mDeltaVre;
+		Real mDeltaVim;
+		Real mCurrRe;
+		Real mCurrIm;
+		Real mCurEqRe;
+		Real mCurEqIm;
 		Real mGlr;
 		Real mGli;
 		Real mPrevCurFacRe;

@@ -2,31 +2,24 @@
 
 using namespace DPsim;
 
-LinearResistor::LinearResistor(std::string name, int src, int dest, double resistance) : BaseComponent(name, src, dest) {
-	this->resistance = resistance;
-	this->conductance = 1.0 / resistance;
+LinearResistor::LinearResistor(std::string name, int src, int dest, Real resistance) : BaseComponent(name, src, dest) {
+	this->mResistance = resistance;
+	this->mConductance = 1.0 / resistance;
 }	
 		
-void LinearResistor::applySystemMatrixStamp(DPSMatrix& g, int compOffset, double om, double dt) {
+void LinearResistor::applySystemMatrixStamp(SystemModel& system) {
 
 	// Set diagonal entries
 	if (mNode1 >= 0) {
-		g(mNode1,mNode1) = g(mNode1,mNode1) + conductance;
-		g(compOffset+mNode1,compOffset+mNode1) = g(compOffset+mNode1,compOffset+mNode1) + conductance;
-	}
-	
+		system.addCompToSystemMatrix(mNode1, mNode1, mConductance, 0);
+	}	
 	if (mNode2 >= 0) {
-		g(mNode2,mNode2) = g(mNode2,mNode2) + conductance;
-		g(compOffset+mNode2,compOffset+mNode2) = g(compOffset+mNode2,compOffset+mNode2) + conductance;
+		system.addCompToSystemMatrix(mNode2, mNode2, mConductance, 0);
 	}
-
 	// Set off diagonal entries
 	if (mNode1 >= 0 && mNode2 >= 0) {
-		g(mNode1, mNode2) = g(mNode1, mNode2) - conductance;
-		g(compOffset + mNode1, compOffset + mNode2) = g(compOffset + mNode1, compOffset + mNode2) - conductance;
-
-		g(mNode2, mNode1) = g(mNode2, mNode1) - conductance;
-		g(compOffset + mNode2, compOffset + mNode1) = g(compOffset + mNode2, compOffset + mNode1) - conductance;
+		system.addCompToSystemMatrix(mNode1, mNode2, -mConductance, 0);		
+		system.addCompToSystemMatrix(mNode2, mNode1, -mConductance, 0);
 	}
 }
 	

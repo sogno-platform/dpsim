@@ -8,31 +8,33 @@ namespace DPsim {
 	class RxLine : public BaseComponent {
 	protected:
 
-		double resistance;
-		double conductance;
-		double voltageAtSourcer;
-		double voltageAtSourcei;
-		double voltageAtDestr;
-		double voltageAtDesti;
+		Real mResistance;
+		Real mConductance;
+		Real mVoltageAtNode1Re;
+		Real mVoltageAtNode1Im;
+		Real mVoltageAtNode2Re;
+		Real mVoltageAtNode2Im;
 
-		double inductance;
-		double deltavr;
-		double deltavi;
-		double currr;
-		double curri;
-		double cureqr;
-		double cureqi;
-		double glr, gli;
-		double pr, pi;
-
-		int newnode;
+		Real mInductance;
+		Real mDeltaVre;
+		Real mDeltaVim;
+		Real mCurrRe;
+		Real mCurrIm;
+		Real mCurEqRe;
+		Real mCurEqIm;
+		Real mGlr;
+		Real mGli;
+		Real mPrevCurFacRe;
+		Real mPrevCurFacIm;
+		
+		Int newnode;
 
 
 	public:
 		RxLine() { };
-		RxLine(std::string name, int src, int dest, int newNode, double resistance, double inductance);
+		RxLine(std::string name, int src, int dest, int newNode, Real resistance, Real inductance);
 
-		void init(double om, double dt);
+		void init(Real om, Real dt);
 		void applySystemMatrixStamp(SystemModel& system);
 		void applyRightSideVectorStamp(SystemModel& system) { }
 		void step(SystemModel& system);
