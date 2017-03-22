@@ -17,8 +17,10 @@ namespace DPsim {
 		/// Capacitance [F]
 		Real capacitance;
 		
-		/// Real and imaginary part of the voltage across the capacitor [V]
+		/// Real part of the voltage across the capacitor [V]
 		Real deltavr;
+
+		/// Imaginary part of the voltage across the capacitor [V]
 		Real deltavi;
 		
 		/// Real and imaginary part of the current trough the capacitor [A]
@@ -37,7 +39,7 @@ namespace DPsim {
 		Capacitor() { };
 
 		/// define capacitor name, conected nodes and capacitance
-		Capacitor(std::string name, int src, int dest, double capacitance);
+		Capacitor(std::string name, Int src, Int dest, Real capacitance);
 
 		/// initializes variables detalvr, deltavi, currr, curri, cureqr and curreqi
 		void init(Real om, Real dt);

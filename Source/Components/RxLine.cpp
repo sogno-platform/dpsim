@@ -3,21 +3,12 @@
 using namespace DPsim;
 
 RxLine::RxLine(std::string name, int src, int dest, int node3, Real resistance, Real inductance) : BaseComponent(name, src, dest, node3) {
-	this->mResistance = resistance;
-	this->mConductance = 1.0 / resistance;
-	this->mInductance = inductance;
+	mResistance = resistance;
+	mConductance = 1.0 / resistance;
+	mInductance = inductance;
 }
 
-//RxLine::RxLine(std::string name, int src, int dest, double resistance, double inductance) : BaseComponent(name, src, dest) {
-//
-//	this->resistance = resistance;
-//	//this->conductance = 1.0 / resistance;
-//	this->inductance = inductance;
-//
-//
-//}
-//
-//
+
 //void RxLine::applySystemMatrixStamp(DPSMatrix& g, int compOffset, double om, double dt) {
 //	double a = dt / (2 * inductance);
 //	double b = dt*om / 2;
@@ -150,7 +141,7 @@ void RxLine::applySystemMatrixStamp(SystemModel& system) {
 	mGli = -a*b / (1 + b*b);
 	mPrevCurFacRe = (1 - b*b) / (1 + b*b);
 	mPrevCurFacIm = 2 * b / (1 + b*b);
-
+	
 	// Resistive part
 	// Set diagonal entries
 	if (mNode1 >= 0) {

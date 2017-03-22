@@ -3,7 +3,7 @@
 using namespace DPsim;
 
 Inductor::Inductor(std::string name, int src, int dest, double inductance) : BaseComponent(name, src, dest) {
-	this->mInductance = inductance;
+	mInductance = inductance;
 }	
 		
 void Inductor::applySystemMatrixStamp(SystemModel& system) {
