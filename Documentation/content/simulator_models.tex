@@ -138,6 +138,47 @@ The capacitor in calculation step k+1 can also be substituted with a resistance 
 	I_C = \frac{1-jb}{a} v_C(k) + i_C(k)
 \end{equation}
 
+\subsection{Voltage Source}
+
+A real voltage source can be represented as a voltage source $V$ in series with a resistance $R$, with
+
+\begin{equation}
+V=Va \cdot cos(\omega t + \phi)
+\end{equation}
+In dynamic phasors the voltage source V becomes
+
+\begin{equation}
+V = Va \cdot cos (\phi) + jVa \cdot sin(\phi) 
+\end{equation}
+
+As nodal analysis does not support voltage source, it is transformed to a current source using the Norton Equivalent as shown in figure \ref{fig:Real_Voltage_Source}.
+
+\begin{figure}[ht]
+	\centering
+	\includegraphics[scale=0.5]{img/VoltageSourceRes.png} 
+	\caption{Real Voltage Source}
+	\label{fig:Real_Voltage_Source}
+\end{figure}
+
+\subsection{Ideal Voltage Source}
+An ideal voltage source does not have the resistance in series and therefore cannot be transformed to a current source. In this case, the modified nodal analysis approach is used. The voltage source is represented, by adding a new equation to the problem and adding the current trough the voltage source as unknown. 
+
+\begin{figure}
+	\centering
+	\includegraphics[scale=0.6]{img/IdealVoltageSource.png}
+	\caption{Matrix stamp of ideal voltage source}
+	\label{fig:Ideal_Voltage_Source}
+\end{figure}
+
+For a voltage source between node j and node k. The added equation is the following:
+\begin{equation}
+e_j - e_k = V
+\end{equation}
+Moreover, the current trough the voltage source is added in the equation of node j and subtracted in the equation of node k.
+
+
+
+
 
 \section{Synchronous Machine}
 

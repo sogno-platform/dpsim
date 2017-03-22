@@ -37,4 +37,5 @@ namespace DPsim {
 		virtual void postStep(SystemModel& system) { }
 	};
 }
+
 #endif

@@ -22,5 +22,6 @@ void LinearResistor::applySystemMatrixStamp(SystemModel& system) {
 		system.addCompToSystemMatrix(mNode2, mNode1, -mConductance, 0);
 	}
 }
+
 	
 
