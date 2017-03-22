@@ -139,7 +139,7 @@ using namespace DPsim;
 //}
 
 
-RxLine::RxLine(std::string name, int src, int dest, int newNode, double resistance, double inductance) : BaseComponent(name, src, dest, newNode) {
+RxLine::RxLine(std::string name, int src, int dest, int node3, double resistance, double inductance) : BaseComponent(name, src, dest, node3) {
 
 	this->resistance = resistance;
 	this->conductance = 1.0 / resistance;
