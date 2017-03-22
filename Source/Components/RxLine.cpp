@@ -2,11 +2,11 @@
 
 using namespace DPsim;
 
-<<<<<<< HEAD
 RxLine::RxLine(std::string name, int src, int dest, int node3, Real resistance, Real inductance) : BaseComponent(name, src, dest, node3) {
 	this->mResistance = resistance;
 	this->mConductance = 1.0 / resistance;
 	this->mInductance = inductance;
+}
 
 //RxLine::RxLine(std::string name, int src, int dest, double resistance, double inductance) : BaseComponent(name, src, dest) {
 //

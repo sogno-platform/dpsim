@@ -3,7 +3,6 @@
 
 #include "BaseComponent.h"
 
-<<<<<<< HEAD
 namespace DPsim {
 
 	class RxLine : public BaseComponent {
