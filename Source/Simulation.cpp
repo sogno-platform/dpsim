@@ -65,7 +65,7 @@ void Simulation::initialize(std::vector<BaseComponent*> newElements) {
 		if (type == "class DPsim::IdealVoltageSource") {
 			numIdealVS = numIdealVS + 1;
 		}
-		if (type == "class RxLine") {
+		if (type == "class DPsim::RxLine") {
 			numRxLines = numRxLines + 1;
 		}
 	}
@@ -95,13 +95,15 @@ void Simulation::addSystemTopology(std::vector<BaseComponent*> newElements) {
 		(*it)->applySystemMatrixStamp(mSystemModel);
 	}
 
+	systemMatrix = getSystemMatrix();
+
 	mSystemModel.addSystemMatrix(systemMatrix);
 }
 
 
 int Simulation::step(Logger& logger)
 {
-	mSystemModel.getRightSideVector().setZero();
+	mSystemModel.setRightSideVectorToZero(getRightSideVector());
 	
 	for (std::vector<BaseComponent*>::iterator it = mElements.begin(); it != mElements.end(); ++it) {
 		(*it)->step(mSystemModel, mTime);

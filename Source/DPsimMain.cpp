@@ -12,11 +12,14 @@ int main(int argc, char* argv[]) {
 
 
 
-	//simulationExampleRXLine();
-	//simulationExampleRXLine2();
-	//simulationExampleIdealVS();
-
+	//simulationExample1();
+	//simulationExample2();
 	//simulationExample3();
+	//simulationExampleIdealVS();
+	//simulationExampleIdealVS2();
+	//simulationExampleIdealVS3();
+	simulationExampleRXLine3();
+	//simulationExampleRXLine2();
 
 	//NetlistSim(argc, argv);
 	
