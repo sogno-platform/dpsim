@@ -19,7 +19,8 @@ int main(int argc, char* argv[]) {
 	//simulationExampleIdealVS2();
 	//simulationExampleIdealVS3();
 	simulationExampleRXLine3();
-	//simulationExampleRXLine2();
+	simulationExampleRXLine();
+	simulationExampleRXLine2();
 
 	//NetlistSim(argc, argv);
 	

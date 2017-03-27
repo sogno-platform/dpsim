@@ -66,7 +66,10 @@ void Simulation::initialize(std::vector<BaseComponent*> newElements) {
 			numIdealVS = numIdealVS + 1;
 		}
 		if (type == "class DPsim::RxLine") {
-			numRxLines = numRxLines + 1;
+			if ((*it)->getNode3() != -1) {
+				numRxLines = numRxLines + 1;
+			}
+			
 		}
 	}
 

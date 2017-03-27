@@ -1,4 +1,4 @@
-function [ ] = compareDpResults(filenameVoltageDP1, filenameVoltageDP2, node1, node2)
+function [ ] = compareDpResults(filenameVoltageDP1, filenameVoltageDP2, node1, node2, titel)
 
 % Increment node to skip time column
 plotNode1 = node1 + 1;
@@ -46,7 +46,7 @@ end
 %mseDP = sum((voltageEMT - voltageShiftDP).^2) / size(voltageEMT,1)
 
 %% Plot
-figure1 = figure('Name', 'Comparison','NumberTitle','off');
+figure1 = figure('Name', titel,'NumberTitle','off');
 axes1 = axes('Parent',figure1);
 hold(axes1,'on');
 

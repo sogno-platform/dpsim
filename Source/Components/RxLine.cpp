@@ -7,6 +7,7 @@ RxLine::RxLine(std::string name, int node1, int node2, Real resistance, Real ind
 	mConductance = 1.0 / resistance;
 	mInductance = inductance;
 	type = LineTypes::RxLine2Node;
+	mNode3 = -1;
 }
 
 RxLine::RxLine(std::string name, int node1, int node2, int node3, Real resistance, Real inductance) : BaseComponent(name, node1, node2, node3) {
@@ -28,7 +29,7 @@ void RxLine::applySystemMatrixStamp(SystemModel& system) {
 		glr_ind = a / (1 + b*b);
 		gli_ind = -a*b / (1 + b*b);
 		mPrevCurFacRe = (1 - b*b) / (1 + b*b);
-		mPrevCurFacIm = 2 * b / (1 + b*b);
+		mPrevCurFacIm = -2. * b / (1 + b*b);
 
 		correctr = (1 + 2 * b*b + R*a + b*b*b*b + R*a*b*b) / ((1 + b*b + R*a)*(1 + b*b + R*a) + R*R*a*a*b*b);
 		correcti = R*a*b*(1 + b*b) / ((1 + b*b + R*a)*(1 + b*b + R*a) + R*R*a*a*b*b);
@@ -97,6 +98,8 @@ void RxLine::init(Real om, Real dt) {
 
 	deltavr_ind = 0;
 	deltavi_ind = 0;
+	curri_ind = 0;
+	currr_ind = 0;
 	cureqr_ind = 0;
 	cureqi_ind = 0;
 }
@@ -106,8 +109,8 @@ void RxLine::step(SystemModel& system, Real time) {
 	if (type == LineTypes::RxLine2Node) {
 
 		// Initialize internal state
-		cureqr_ind = mPrevCurFacRe*mCurEqRe + mPrevCurFacIm*mCurEqIm + mGlr*deltavr_ind - mGli*deltavi_ind;
-		cureqi_ind = -mPrevCurFacIm*mCurEqRe + mPrevCurFacRe*mCurEqIm + mGli*deltavr_ind + mGlr*deltavi_ind;
+		cureqr_ind = mPrevCurFacRe*currr_ind - mPrevCurFacIm*mCurrIm + mGlr*deltavr_ind - mGli*deltavi_ind;
+		cureqi_ind = mPrevCurFacIm*currr_ind + mPrevCurFacRe*mCurrIm + mGli*deltavr_ind + mGlr*deltavi_ind;
 
 		mCurEqRe = cureqr_ind*correctr - cureqi_ind*correcti;
 		mCurEqIm = cureqi_ind*correctr + correcti*cureqr_ind;
@@ -174,8 +177,8 @@ void RxLine::postStep(SystemModel& system) {
 		deltavr_ind = vposr - mResistance*mCurrRe - vnegr;
 		deltavi_ind = vposi - mResistance*mCurrIm - vnegi;
 
-		//currr_ind = glr_ind*deltavr_ind - gli_ind*deltavi_ind + cureqr_ind;
-		//curri_ind = gli_ind*deltavr_ind + glr_ind*deltavi_ind + cureqi_ind;
+		currr_ind = glr_ind*deltavr_ind - gli_ind*deltavi_ind + cureqr_ind;
+		curri_ind = gli_ind*deltavr_ind + glr_ind*deltavi_ind + cureqi_ind;
 	}
 
 	else{

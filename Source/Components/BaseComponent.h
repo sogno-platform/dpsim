@@ -28,6 +28,8 @@ namespace DPsim {
 
 		int getNode1() { return mNode1; }
 		int getNode2() { return mNode2; }
+		int getNode3() { return mNode3; }
+
 		std::string getName() { return mName; }
 
 		virtual void init(Real om, Real dt) { }
