@@ -23,6 +23,8 @@ namespace DPsim {
 		Real mSystemOmega;
 		/// Simulation time step
 		Real mTimeStep;
+		/// Number of ideal Voltage Sources
+		Int mNumIdealVS;
 
 		
 		/// LU decomposition of system matrix A
@@ -40,7 +42,7 @@ namespace DPsim {
 
 	public:
 		SystemModel() { }
-		void initialize(Int numNodes);
+		void initialize(Int numNodes, Int numIdealVS);
 		void addSystemMatrix(Matrix systemMatrix);
 
 		Matrix getCurrentSystemMatrix() { return mSystemMatrix; }
@@ -54,6 +56,7 @@ namespace DPsim {
 		Real getImagFromLeftSideVector(Int row) { return mLeftSideVector(row + mCompOffset, 0); }
 		SimulationType getSimType() { return mSimType; }
 		Int getNumNodes() { return mNumNodes; }		
+		Int getNumIdealVS() { return mNumIdealVS; }
 		
 		void setSimType(SimulationType simType) { mSimType = simType; }
 		void setTimeStep(Real timeStep) { mTimeStep = timeStep; }

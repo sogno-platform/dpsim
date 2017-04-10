@@ -2,8 +2,9 @@
 
 using namespace DPsim;
 
-void SystemModel::initialize(Int numNodes) {
+void SystemModel::initialize(Int numNodes, Int numIdealVS) {
 	mNumNodes = numNodes;
+	mNumIdealVS = numIdealVS;
 	mCompOffset = mNumNodes;
 
 	if (mSimType == SimulationType::EMT) {

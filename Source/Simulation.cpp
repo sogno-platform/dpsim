@@ -46,7 +46,7 @@ Simulation::~Simulation() {
 
 void Simulation::initialize(std::vector<BaseComponent*> newElements) {	
 	int maxNode = 0;
-	int numIdealVS = 0;
+	Int numIdealVS = 0;
 	int numRxLines = 0;
 
 	mElementsVector.push_back(newElements);
@@ -74,7 +74,7 @@ void Simulation::initialize(std::vector<BaseComponent*> newElements) {
 	}
 
 	Int numNodes = maxNode + 1 + numIdealVS + numRxLines;
-	mSystemModel.initialize(numNodes);
+	mSystemModel.initialize(numNodes,numIdealVS);
 	addSystemTopology(mElements);
 	
 	// Initialize right side vector and components
