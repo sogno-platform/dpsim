@@ -10,6 +10,7 @@ Every component is a part of the class "BaseComponent", which has as variables t
 \item applySystemMatrixStamp: This function stamps the conductance matrix $G$.
 
 \item applyRightSideMatrixStamp: This function stamps the vector $A$.
+
 step: This function upgrade the values of the vector $A$ in each calculation step.
 
 \item postStep: This function upgrades the variables which depends on the solution of the equation $e=G^{-1} \cdot A$.
@@ -28,191 +29,77 @@ The program calculates the conductance $G = \frac{1}{R}$ and apply the matrix St
 
 \subsection{Inductor}
 
+The inductor model is developed based on the Resistive Companion Method presented in \ref{ResistiveCompanion}.
+
+For a constant frequency and fixed time step, the value of $R_L$ will be constant. Therefore the matrix stamp of the conductance matrix will me made just once. By the other hand, the value of $A_L$ needs to be updated each time step, since it depends on the voltage and current of the inductor at the previous step.
+
 The inductor has the following parameters defined by the user:
 
 \begin{itemize}
 \item name: Name of the component
 \item src: First node where the inductor is connected
 \item dest: Second node where the inductor is connected
-\item resistance: Inductance given in H
+\item inductance: Inductance given in H
 \end{itemize}
 
-The presence of an inductor or a capacitor in a circuit introduces dynamics that require the knowledge of the "past" behavior of the component to represent its quantities at a given time.
-
-An inductor can be described by the following equations: 
-
-\begin{equation}
-        v_L(t) = L \frac{di_L(t)}{dt}
-\end{equation}
-
-\begin{equation}
-        i_L(t) = i_L(t- \Delta t) + \frac{1}{L} \cdot \int_{t- \Delta t}^{t} v_L(\tau) d \tau 
-\end{equation}
-
-In dynamic phasors the inductor equations become:
-
-\begin{equation}
-        v_L(t) = L \frac{di_L(t)}{dt} + j \omega \cdot L \cdot  i_L(t)
-\end{equation}
-
-\begin{equation}
-        i_L(t) = i_L(t- \Delta t) +  \int_{t- \Delta t}^{t} \frac{1}{L} \cdot v_L(\tau) -j \omega \cdot i_L(\tau)d \tau 
-\end{equation}
-
-A numerical solution for these equations can only be obtained at a finite number of points, therefore a discretization of time is required.
-For modeling inductors and capacitors, resistive companion method is used. Each dynamic component is transformed into a DC equivalent circuit, which represent one iteration of an integration method.
-There are different integration methods available to solve the integration problem. The method chosen in this work is the trapezoidal rule.
-
-Given the following equation, that defines the value of a variable $y$ at the point $k+1$.
-
-\begin{equation}
-	y(k+1) = y(k) + \int_{t_k}^{t_k+ \Delta t} x(\tau)d \tau
-\end{equation}
-
-With the trapezoidal rule $y(k+1)$ is calculated as following:
-
-\begin{equation}
-	y(k+1)=y(k)+ \frac{x(k)+x(k+1)}{2} \cdot \Delta t
-\end{equation}
-
-Applying trapezoidal rule for the inductor equation:
-\begin{equation}
-        i_L(k+1) = i_L(k) + \frac{\Delta t}{2} \left[ \frac{1}{L} \cdot v_L(k+1) - j \omega \cdot i_L(k+1) + \frac{1}{L} \cdot v(k) - j \omega \cdot i_L(k) \right]
-\end{equation}
-
-Defining:
-
-\begin{align}
-	a &= \frac{\Delta t}{2L} \\
-	b &= \frac{\Delta t \omega}{2}
-\end{align}
-		
-The equation can be rewritten as
-
-\begin{align}
-        i_L(k+1) &= i_L(k) + a \cdot v_L(k+1) - j b \cdot i_L(k+1) + a \cdot v(k) - j b \cdot i_L(k) \\
-        i_L(k+1) &= \frac{1-b^2-j2b}{1+b^2}i_L(k) + \frac{a-jab}{1+b^2} v_L(k) + \frac{a-jab}{1+b^2} v_L(k+1)
-\end{align}
-
-The equation shows that the inductor current at the time k+1 has a part which depends on the voltage and current at the time k and a part which depends on the actual voltage. Therefore, the inductor can be substituted with a resistance $R_L$ in parallel with a current source $A_L(k)$. The value of $R_L$ is constant for a constant frequency and constant time step. The value of $A_L(k)$ depends on the knowledge of the previous step and has to be upgraded for each iteration.
- 
-\begin{equation}
-	A_L(k) = i_L(k) \cdot \frac{1-b^2-2bj}{1+b^2} + v_L(k) \cdot \frac{a-jab}{1+b^2}
-\end{equation}
-
-\begin{equation}
-	R_L = \frac{1+b^2}{a-jab}
-\end{equation}	
-
-For an inductor connected between nodes j and k, the matrix stamp is made as following.
-
-\begin{align}
-\begin{split}
-&
-\begin{matrix}
-& \cdots & j & \quad k & \cdots
-\end{matrix}\\[-6pt]
-\begin{matrix}
-\vdots\\[6pt]
-j\\[6pt]
-k\\[6pt]
-\vdots\\
-\end{matrix}
-&
-\begin{bmatrix}
-	\quad & \quad &  \\[6pt]
-	\quad & \dfrac{1}{R_L} & \dfrac{-1}{R_L} & \quad  \\[6pt]
-	\quad & \dfrac{-1}{R_L} & \dfrac{1}{R_L} & \quad \\[6pt]
-	\quad &  & 
-\end{bmatrix}
-\begin{bmatrix}
-	\quad \\[6pt]
-	e_j(k+1)\\[6pt]
-	e_k(k+1)\\[6pt]
-	\quad
-\end{bmatrix}
-=
-\begin{bmatrix}
-	\quad \\[6pt]
-	-A_L(k)\\[6pt]
-	A_L(k)\\[6pt]
-	\quad
-\end{bmatrix}
-\end{split}
-\end{align}
-
-\begin{figure}[ht]
-	\centering
-	\includegraphics[scale=0.6]{img/Inductor.png} 
-	\caption{Equivalent circuit of an Inductor}
-	\label{fig:Inductor}
-\end{figure}
-
-The function "applySystemMatrixStamp" will calculate $\frac{1}{R_L}$ and apply the stamp of the conductance matrix $G$.
+The function "applySystemMatrixStamp" will stamp $R_L$ to the conductance matrix $G$ as in \ref{ResistiveCompanionInductor}
 
 The function "init" defines as zero the initial values of current and voltage of the inductor as well the initial value of the equivalent current source $A_L$.
 
-The function "step" is called every time step. It recalculates the value of the equivalent current source $A_L$ and apply the stamp of the vector $A$.
+\begin{align*}
+v_L(0)&=0V \\
+i_L(0)&=0A \\
+A_L(0)&=0A \\
+\end{align*}
 
-The function "poststep" will calculate the voltage across the inductor, based on the solution of $e$ and upgrade the values of current and equivalent current source.
+The function "step" is called each time step. It recalculates the value of the equivalent current source $A_L$ using equation \ref{eq:AL} and apply the stamp of the vector $A$ as in \ref{ResistiveCompanionInductor}, where $j=src$ and $k=dest$.
+
+The function "poststep" will calculate the inductor voltage $v_L$, based on the solution of the vector $e$ at the actual step (k+1) and the inductor current, based on the calculated $v_L$ and on the value of $A_L$ from the previous step (k).
+
+\begin{equation} \label{eq:inductorVoltage}
+v_L(k+1) = e_{src}(k+1) - e_{dest}(k+1)
+\end{equation}
+
+\begin{equation} \label{eq:inductorCurrent}
+i_L(k+1) = \frac{v_L(k+1)}{R_L} + A_L(k)
+\end{equation}
  
 
 \subsection{Capacitor}
 
-The same approach used for the inductor is used now for the capacitor.
-A capacitor can be described by the following equations:
+The capacitor model is also developed based on the Resistive Companion Method and is similar to the inductor model.
+
+It has the following parameters defined by the user:
+
+\begin{itemize}
+\item name: Name of the component
+\item src: First node where the inductor is connected
+\item dest: Second node where the inductor is connected
+\item capacitance: Capacitance given in F
+\end{itemize}
+
+The function "applySystemMatrixStamp" will stamp $R_C$ to the conductance matrix $G$ as in \ref{ResistiveCompanionCapacitor}.
+
+The function "init" defines as zero the initial values of current and voltage of the capacitor as well the initial value of the equivalent current source $A_C$.
+
+\begin{align*}
+v_C(0)&=0V \\
+i_C(0)&=0A \\
+A_C(0)&=0A \\
+\end{align*}
+
+The function "step" is called each time step. It recalculates the value of the equivalent current source $A_C$ as in equation \ref{eq:AC} and stamps its value to the vector $A$ as in \ref{ResistiveCompanionCapacitor}.
+
+The function "poststep" will calculate the capacitor voltage $v_C$ and current $i_C$, based on the solution of $e$ at the actual step.
 
 \begin{equation}
-	i_C(t)= C \frac{d v_c}{dt}
+v_C(k+1) = e_{src}(k+1) - e_{dest}(k+1)
 \end{equation}
 
 \begin{equation}
-	v_C(t)= v_C(t - \Delta t) + \frac{1}{C} \int_{t - \Delta t}^{t} i_C (\tau) d \tau
+i_C(k+1) = \frac{v_C(k+1)}{R_C} - A_L(k)
 \end{equation}
-
-In dynamic phasor the capacitor equations become:
-
-\begin{equation}
-        i_C(t)= C \frac{d v_c}{dt} + j \omega \cdot C \cdot v_C(t)
-\end{equation}
-
-\begin{equation}
-        v_C(t) = v_C(t- \Delta t) +  \int_{t- \Delta t}^{t} \frac{1}{C} \cdot i_C(\tau) -j \omega \cdot v_C(\tau)d \tau 
-\end{equation}
-
-Applying trapezoidal rule for the capacitor equation:
-
-\begin{equation}
-        v_C(k+1) = v_C(k) + \frac{\Delta t}{2} \left[ \frac{1}{C} \cdot i_C(k+1) - j \omega \cdot v_C(k+1) + \frac{1}{C} \cdot i_C(k) - j \omega \cdot v_C(k) \right]
-\end{equation}
-
-Defining:
-\begin{align}
-        a &= \frac{\Delta t}{2C} \\
-        b &= \frac{\Delta t \omega}{2}
-\end{align}
-
-\begin{align}
-        v_C(k+1) &= v_C(k) + a \cdot i_C(k+1) - j b \cdot v_C(k+1) + a \cdot i_C(k) - j b \cdot v_C(k) \\
-        i_C(k+1) &= -i_C(k) + \frac{1+jb}{a} \cdot v_C(k+1) - \frac{1-jb}{a} \cdot v_C(k)
-\end{align}
-
-The capacitor in calculation step k+1 can also be substituted with a resistance $R_C$ in parallel with a current source $A_C(k)$.The value of $R_C$ is constant for a constant frequency and constant time step. The value of $A_C(k)$ depends only on the previous time step and changes for each iteration.
-
-\begin{figure}[ht]
-	\centering
-	\includegraphics[scale=0.6]{img/Capacitor.png} 
-	\caption{Equivalent circuit of a Capacitor}
-	\label{fig:Capacitor}
-\end{figure}
-
-\begin{equation}
-	R_C = \frac{a}{1+jb}
-\end{equation}
-
-\begin{equation}
-	A_C = \frac{1-jb}{a} v_C(k) + i_C(k)
-\end{equation}
+ 
 
 \subsection{Real Voltage Source}
 
@@ -236,25 +123,150 @@ As nodal analysis does not support voltage source, it is transformed to a curren
 	\label{fig:Real_Voltage_Source}
 \end{figure}
 
-\subsection{Ideal Voltage Source}
-An ideal voltage source does not have the resistance in series and therefore cannot be transformed to a current source. In this case, the modified nodal analysis approach is used. The voltage source is represented, by adding a new equation to the problem and adding the current trough the voltage source as unknown. 
+The matrix stamp for a real voltage source is therefore as follow.
 
-\begin{figure}
+\begin{align}
+\begin{split}
+&
+\begin{matrix}
+& \cdots & j & \quad k & \cdots
+\end{matrix}\\[-6pt]
+\begin{matrix}
+\vdots\\[6pt]
+j\\[6pt]
+k\\[6pt]
+\vdots\\
+\end{matrix}
+&
+\begin{bmatrix}
+	\quad & \quad &  \\[6pt]
+	\quad & \dfrac{1}{R} & \dfrac{-1}{R} & \quad  \\[6pt]
+	\quad & \dfrac{-1}{R} & \dfrac{1}{R} & \quad \\[6pt]
+	\quad &  & 
+\end{bmatrix}
+\begin{bmatrix}
+	\quad \\[6pt]
+	e_j(k+1)\\[6pt]
+	e_k(k+1)\\[6pt]
+	\quad
+\end{bmatrix}
+=
+\begin{matrix}
+\vdots\\[6pt]
+j\\[6pt]
+k\\[6pt]
+\vdots\\
+\end{matrix}
+\begin{bmatrix}
+	\quad \\[6pt]
+	\dfrac{V}{R} \\[6pt]
+	-\dfrac{V}{R} \\[6pt]
+	\quad
+\end{bmatrix}
+\end{split}
+\end{align}
+
+The following parameters are defined by the user for the real voltage source:
+
+\begin{itemize}
+\item name: Name of the component
+\item src: Node connected to voltage source positive terminal
+\item dest: Node connected to voltage source negative terminal
+\item voltage: Voltage in V
+\item phase: Phase shift in degrees
+\item resistance: Series resistance in ohms 
+\end{itemize}
+
+The function "applySystemMatrixStamp" will stamp the resistance $R$ at the conductance matrix $G$.
+The function "applyRightSideVectorStamp" will stamp the equivalent current source $I=\frac{V}{R}$ to the vector $A$.
+The function step will repeat the stamp of the vector $A$ each time step.
+
+\subsection{Ideal Voltage Source}
+
+The model of the ideal voltage source uses the modified nodal analysis as presented in \ref{IdealVoltageSource}.
+The following parameters are defined by the user:
+
+\begin{itemize}
+\item name: Name of the component
+\item src: Node connected to voltage source positive terminal
+\item dest: Node connected to voltage source negative terminal
+\item voltage: Voltage in V
+\item phase: Phase shift in degrees
+\item num: Number of the voltage source (the voltage sources have to be numbered in sequence) 
+\end{itemize}
+
+The function "applyMatrixStamp" will stamp the conductance matrix according to \ref{IdealVoltageSource}. The additional unknown $i_{jk}$ of the voltage source number 1 (with variable num=1) will be added in the first line after the last node voltage and so on. Therefore, for a circuit with n voltage sources and m nodes, the vector of unknown variable $e$ and the vector $A$ will have the size $m+n$. The conductance matrix G will have the size $(m+n)X(m+n)$.
+
+\begin{equation}
+	e=
+	\begin{bmatrix}
+		e_1 \\
+		\vdots \\
+		e_m \\
+		i_1 \\
+		\vdots \\
+		i_n
+	\end{bmatrix}
+\end{equation}
+
+The function "applyRightSideVectorStamp" will stamp the voltage at the corresponding line of the vector $A$.
+The function step will repeat the stamp of the vector $A$ each time step.
+
+\subsection{Current Source}
+
+For the current source, the following parameters are defined by the user:
+
+\begin{itemize}
+\item name: Name of the component
+\item src: Node connected to current source positive terminal
+\item dest: Node connected to current source negative terminal
+\item current: Current in A
+\item phase: Phase shift in degrees
+\end{itemize}
+
+The function "applyRightSideVectorStamp" will stamp the current at the vector $A$ as in section \ref{CurrentSourceMatrixStamp}.
+
+\subsection{RX Line}
+The RX Line model corresponds to a resistance in series with a inductance. The inductance is represented using resistive companion and therefore replaced by a resitance in parallel to a current source.
+
+\begin{figure}[ht]
 	\centering
-	\includegraphics[scale=0.6]{img/IdealVoltageSource.png}
-	\caption{Matrix stamp of ideal voltage source}
-	\label{fig:Ideal_Voltage_Source}
+	\includegraphics[scale=0.5]{img/RxLine.png} 
+	\caption{RX Line model}
+	\label{fig:RxLine}
 \end{figure}
 
-For a voltage source between node j and node k. The added equation is the following:
+The user can define the RX Line in two ways. The first one is with the following parameters:
+
+\begin{itemize}
+\item name: Name of the component
+\item node1: First node, where the resistance is connected
+\item node2: Second node, where the inductance is connected
+\item node3: Node between resistance and inductance 
+\item resistance: Resistance in ohms
+\item inductance: Inductance in H
+\end{itemize}
+
+In this case, the function "applySystemMatrixStamp" will stamp the resistances $R$ between node1 and node3 and $R_L$ between node3 and node2 to the conductance matrix $G$. The function step will recalculate the value of $A_L$ as in equation \ref{eq:AL} and stamp it to the vector $A$. The function post step will update the values of inductor current and voltage using equations \ref{eq:inductorCurrent} and \ref{eq:inductorVoltage}.
+
+The second way of define the RXLine is defining only two nodes (node1 and node2).In this case, the following equivalent current is considered.
+
+\begin{figure}[ht]
+	\centering
+	\includegraphics[scale=0.5]{img/RxLine2.png} 
+	\caption{RX Line model with two nodes}
+	\label{fig:RxLine2}
+\end{figure}
+
 \begin{equation}
-e_j - e_k = V
+A_{Leq}=A_L \cdot \frac{R_L}{R_L+R}
 \end{equation}
-Moreover, the current trough the voltage source is added in the equation of node j and subtracted in the equation of node k.
 
+The function "applySystemMatrixStamp" will stamp the resistance $R+R_L$ between node1 and node2 to the conductance matrix $G$. The function step will update the values of $A_{Leq}$ according to the previous time step and stamp it to the vector $A$.
+The function "poststep" will calculate the values of the line current and voltage and the voltage across the inductor.
 
-
-
+In both cases, the function init is setting every initial value to zero.
+ 
 \section{Synchronous Machine}
 
 The model is according to \cite{wang2010methods} and \cite{kundur1994power}. 
