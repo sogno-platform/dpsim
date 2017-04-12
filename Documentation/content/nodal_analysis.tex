@@ -95,7 +95,7 @@ k\\[6pt]
 
 \begin{figure}[h]
 	\centering
-	\includegraphics[scale=0.8]{img/Resistor.png}
+	\includegraphics[scale=0.6]{img/Resistor.png}
 	\caption{Resistor between nodes j and k}
 	\label{fig:Resistor}
 \end{figure}
@@ -128,12 +128,12 @@ k\\
 
 \subsection{Voltage Source and Modified Nodal Analysis} \label{IdealVoltageSource}
 An ideal voltage source cannot be included in nodal analysis. In this case, the modified nodal analysis approach is used. The voltage source is represented by adding a new equation to the problem and adding the current trough the voltage source $i_{jk}$ as unknown. 
-For a voltage source with positive terminal connected to node j and negative terminal connected to node k. The added equation is the following:
+For a voltage source with positive terminal connected to node j and negative terminal connected to node k, the added equation is the following:
 \begin{equation}
 e_j - e_k = V
 \end{equation}
-Moreover, the current trough the voltage source $i_{jk}$ is added to the equation of node j and subtracted to the equation of node k.
-Therefore, the conductance matrix $G$ and the vector $A$ are stamped as following.
+Moreover, the new unknown $i_{jk}$ is added to the equation of node j and subtracted to the equation of node k.
+Therefore, the conductance matrix $G$ and the vector $A$ are stamped as following:
 
 \begin{align}
 	& \begin{matrix}
@@ -182,8 +182,9 @@ Therefore, the conductance matrix $G$ and the vector $A$ are stamped as followin
 \end{figure}
 
 \subsection{Other components}
-Components such as capacitor, inductor and real voltage source can be represented by equivalent circuits, composed by current source and resistance. That means that the matrix stamp of these components is made by stamping an equivalent current source and resistance on the respective matrices. 
-The method used to represent capacitor and inductor is detailed in \ref{ResistiveCompanion}.
+Components such as capacitor, inductor and real voltage source (ideal voltage source in series with a resistance) can be represented by equivalent circuits, composed by a current source and a resistance. That means that the matrix stamp of these components is made by stamping a current source and a resistance on the matrix equation.
+
+The method used to represent capacitors and inductors is detailed in section \ref{ResistiveCompanion}. The model used for a real voltage source is presented in subsection \ref{sub:RealVoltageSource}.
 
  
 \section{Resistive Companion Method} \label{ResistiveCompanion}
@@ -212,6 +213,7 @@ In dynamic phasors the inductor equations become:
 \end{equation}
 
 A numerical solution for these equations can only be obtained at a finite number of points, therefore a discretization of time is required.
+
 For modeling inductors and capacitors, resistive companion method is used. Each dynamic component is transformed into a DC equivalent circuit, which represent one iteration of an integration method.
 There are different integration methods available to solve the integration problem. The method chosen in this work is the trapezoidal rule.
 
@@ -227,7 +229,7 @@ With the trapezoidal rule $y(k+1)$ is calculated as following:
 	y(k+1)=y(k)+ \frac{x(k)+x(k+1)}{2} \cdot \Delta t
 \end{equation}
 
-Applying trapezoidal rule for the inductor equation:
+Applying trapezoidal rule for the inductor equation in dynamic phasor:
 \begin{equation}
         i_L(k+1) = i_L(k) + \frac{\Delta t}{2} \left[ \frac{1}{L} \cdot v_L(k+1) - j \omega \cdot i_L(k+1) + \frac{1}{L} \cdot v(k) - j \omega \cdot i_L(k) \right]
 \end{equation}
@@ -246,7 +248,15 @@ The equation can be rewritten as
         i_L(k+1) &= \frac{1-b^2-j2b}{1+b^2}i_L(k) + \frac{a-jab}{1+b^2} v_L(k) + \frac{a-jab}{1+b^2} v_L(k+1)
 \end{align}
 
-The equation shows that the inductor current at the time k+1 has a part which depends on the voltage and current at the time k and a part which depends on the actual voltage. Therefore, the inductor can be substituted with a resistance $R_L$ in parallel with a current source $A_L(k)$. The value of $R_L$ is constant for a constant frequency and constant time step. The value of $A_L(k)$ depends on the knowledge of the previous step and has to be upgraded for each iteration.
+The equation shows that the inductor current at the step k+1 has a part which depends on the voltage and current at the step k and a part which depends on the actual voltage. Therefore, the inductor can be substituted with a resistance $R_L$ in parallel with a current source $A_L(k)$. The value of $R_L$ is constant for a constant frequency and constant time step. The value of $A_L(k)$ depends on the knowledge of the previous step and has to be updated for each iteration.
+
+\begin{figure}[ht]
+	\centering
+	\includegraphics[scale=0.6]{img/Inductor.png} 
+	\caption{Equivalent circuit of an Inductor}
+	\label{fig:Inductor}
+\end{figure}
+
  
 \begin{equation} \label{eq:AL}
 	A_L(k) = i_L(k) \cdot \frac{1-b^2-2bj}{1+b^2} + v_L(k) \cdot \frac{a-jab}{1+b^2}
@@ -299,13 +309,6 @@ k\\[6pt]
 \end{split}
 \end{align}
 
-\begin{figure}[ht]
-	\centering
-	\includegraphics[scale=0.6]{img/Inductor.png} 
-	\caption{Equivalent circuit of an Inductor}
-	\label{fig:Inductor}
-\end{figure}
-
 \subsection{Capacitor} \label{ResistiveCompanionCapacitor}
 
 The same approach used for the inductor is used now for the capacitor.
@@ -343,7 +346,7 @@ Defining:
 
 \begin{align}
         v_C(k+1) &= v_C(k) + a \cdot i_C(k+1) - j b \cdot v_C(k+1) + a \cdot i_C(k) - j b \cdot v_C(k) \\
-        i_C(k+1) &= -i_C(k) + \frac{1+jb}{a} \cdot v_C(k+1) - \frac{1-jb}{a} \cdot v_C(k)
+        i_C(k+1) &= \frac{1+jb}{a} \cdot v_C(k+1) - \frac{1-jb}{a} \cdot v_C(k) -i_C(k)
 \end{align}
 
 The capacitor in calculation step k+1 can also be substituted with a resistance $R_C$ in parallel with a current source $A_C(k)$.The value of $R_C$ is constant for a constant frequency and constant time step. The value of $A_C(k)$ depends only on the previous time step and changes for each iteration.

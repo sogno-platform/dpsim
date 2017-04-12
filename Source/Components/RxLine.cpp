@@ -177,8 +177,8 @@ void RxLine::postStep(SystemModel& system) {
 		deltavr_ind = vposr - mResistance*mCurrRe - vnegr;
 		deltavi_ind = vposi - mResistance*mCurrIm - vnegi;
 
-		currr_ind = glr_ind*deltavr_ind - gli_ind*deltavi_ind + cureqr_ind;
-		curri_ind = gli_ind*deltavr_ind + glr_ind*deltavi_ind + cureqi_ind;
+		currr_ind = mCurrRe;
+		curri_ind = mCurrIm;
 	}
 
 	else{
