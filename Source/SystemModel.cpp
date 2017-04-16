@@ -2,17 +2,22 @@
 
 using namespace DPsim;
 
-void SystemModel::initialize(Int numNodes) {
+void SystemModel::initialize(Int numNodes, Int numIdealVS) {
 	mNumNodes = numNodes;
+	mNumIdealVS = numIdealVS;
 	mCompOffset = mNumNodes;
 
 	if (mSimType == SimulationType::EMT) {
 		mRightSideVector = Matrix::Zero(mNumNodes, 1);
 		mLeftSideVector = DPSMatrix::Zero(mNumNodes, 1);
+		mSystemMatrix = DPSMatrix::Zero(mNumNodes, mNumNodes);
+
 	}
 	else {
 		mRightSideVector = DPSMatrix::Zero(2 * mNumNodes, 1);
 		mLeftSideVector = DPSMatrix::Zero(2 * mNumNodes, 1);
+		mSystemMatrix = DPSMatrix::Zero(2 * mNumNodes, 2 * mNumNodes);
+
 	}
 
 	switchSystemMatrix(0);	
@@ -20,9 +25,11 @@ void SystemModel::initialize(Int numNodes) {
 
 void SystemModel::addSystemMatrix(Matrix systemMatrix) {	
 	mSystemMatrixVector.push_back(systemMatrix);
+	//mSystemMatrix = systemMatrix;
 
 	Eigen::PartialPivLU<DPSMatrix> luFactored = Eigen::PartialPivLU<DPSMatrix>(systemMatrix);
 	mLuFactoredVector.push_back(luFactored);
+	mLuFactored = luFactored;
 }
 
 void SystemModel::addRealToSystemMatrix(Int row, Int column, Real value) {
@@ -56,4 +63,8 @@ void SystemModel::switchSystemMatrix(Int systemMatrixIndex) {
 		mSystemMatrix = mSystemMatrixVector[systemMatrixIndex];
 		mLuFactored = mLuFactoredVector[systemMatrixIndex];
 	}
+}
+
+void SystemModel::setRightSideVectorToZero(DPsim::Matrix& rightSideVector) {
+	mRightSideVector.setZero();
 }

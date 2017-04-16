@@ -16,20 +16,24 @@ namespace DPsim {
 		/// Inductance [H]
 		Real mInductance;
 		
-		/// Real and imaginary part of the voltage across the inductor [V]
+		/// Real part of the voltage across the inductor [V]
 		Real mDeltaVre;
+		/// Imaginary part of the voltage across the inductor [V]
 		Real mDeltaVim;
 		
-		/// Real and imaginary part of the current trough the inductor [A]
+		/// Real part of the current trough the inductor [A]
 		Real mCurrRe;
+		/// Imaginary part of the current trough the inductor [A]
 		Real mCurrIm;
 		
-		/// Real and imaginary part of the DC equivalent current source [A]
+		/// Real part of the DC equivalent current source [A]
 		Real mCurEqRe;
+		/// Imaginary part of the DC equivalent current source [A]
 		Real mCurEqIm;
 		
-		/// Real and imaginary part of the DC equivalent conductance [S]
+		/// Real part of the DC equivalent conductance [S]
 		Real mGlr;
+		/// Imaginary part of the DC equivalent conductance [S]
 		Real mGli;
 		
 		/// Auxiliar variables
@@ -48,10 +52,10 @@ namespace DPsim {
 		/// Stamps DC equivalent resistance to the conductance matrix
 		void applySystemMatrixStamp(SystemModel& system);
 		
-		/// Stamps DC equivalent current source to the current vector
+		/// Does nothing
 		void applyRightSideVectorStamp(SystemModel& system) { }
 		
-		/// calculates the value of the current source for one time step and apply it to the current vector
+		/// calculates the value of the DC equivalent current source for one time step and apply matrix stamp to the current vector
 		void step(SystemModel& system, Real time);
 		
 		/// Recalculates variables detalvr, deltavi, currr and curri based on the simulation results of one time step

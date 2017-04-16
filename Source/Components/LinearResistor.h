@@ -8,12 +8,23 @@ namespace DPsim {
 
 	class LinearResistor : public BaseComponent {
 	protected:
+
+		///Resistance [ohm]
 		Real mResistance;
+		
+		///Conductance [S]
 		Real mConductance;
+
+		///Real Part of the voltage at node 1 [V]
 		Real mVoltageAtNode1Re;
+
+		///Imaginary Part of the voltage at node 1 [V]
 		Real mVoltageAtNode1Im;
 
+		///Real Part of the voltage at node 2 [V]
 		Real mVoltageAtNode2Re;
+
+		///Imaginary Part of the voltage at node 2 [V]
 		Real mVoltageAtNode2Im;
 
 	public:

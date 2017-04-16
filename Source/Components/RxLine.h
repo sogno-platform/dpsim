@@ -1,7 +1,7 @@
 #ifndef RXLINE_H
 #define RXLINE_H
 
-#include "BaseComponent.h"
+#include "../Components.h"
 
 namespace DPsim {
 
@@ -25,6 +25,8 @@ namespace DPsim {
 		Real mGli;
 		Real mPrevCurFacRe;
 		Real mPrevCurFacIm;
+
+		LineTypes type;
 		
 		double correctr, correcti;
 		double cureqr_ind, cureqi_ind;
@@ -36,7 +38,8 @@ namespace DPsim {
 
 	public:
 		RxLine() { };
-		RxLine(std::string name, int src, int dest, int node3, Real resistance, Real inductance);
+		RxLine(std::string name, int node1, int node2, Real resistance, Real inductance);
+		RxLine(std::string name, int node1, int node2, int node3, Real resistance, Real inductance);
 
 		void init(Real om, Real dt);
 		void applySystemMatrixStamp(SystemModel& system);

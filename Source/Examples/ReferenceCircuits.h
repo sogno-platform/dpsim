@@ -14,5 +14,6 @@ namespace DPsim {
 	void simulationExampleIdealVS3();
 	void simulationExampleRXLine();
 	void simulationExampleRXLine2();
+	void simulationExampleRXLine3();
 }
 #endif

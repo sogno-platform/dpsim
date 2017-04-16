@@ -12,7 +12,7 @@ void Inductor::applySystemMatrixStamp(SystemModel& system) {
 	mGlr = a / (1 + b*b);
 	mGli = -a*b / (1 + b*b);
 	mPrevCurFacRe = (1 - b*b) / (1 + b*b);
-	mPrevCurFacIm = - 2 * b / (1 + b*b);
+	mPrevCurFacIm = - 2. * b / (1 + b*b);
 			 
 	if (mNode1 >= 0) {
 		system.addCompToSystemMatrix(mNode1, mNode1, mGlr, mGli);
@@ -67,8 +67,9 @@ void Inductor::postStep(SystemModel& system) {
 	}
 	
 	if (mNode2 >= 0) {
-		vnegr = system.getRealFromLeftSideVector(mNode1);
-		vnegi = system.getImagFromLeftSideVector(mNode1);
+		system.getRealFromLeftSideVector(mNode2);
+		vnegr = system.getRealFromLeftSideVector(mNode2);
+		vnegi = system.getImagFromLeftSideVector(mNode2);
 	}
 	else {
 		vnegr = 0;

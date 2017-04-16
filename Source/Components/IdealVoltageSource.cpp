@@ -8,7 +8,8 @@ IdealVoltageSource::IdealVoltageSource(std::string name, int src, int dest, Real
 	this->mVoltageDiffi = voltage*sin(phase);
 }
 
-void IdealVoltageSource::applySystemMatrixStamp(SystemModel& system) {		
+void IdealVoltageSource::applySystemMatrixStamp(SystemModel& system) {
+	number = system.getNumIdealVS() - number + 1;
 	if (mNode1 >= 0) {
 		system.setSystemMatrixElement(system.getCompOffset() - number, mNode1, 1);
 		system.setSystemMatrixElement(mNode1, system.getCompOffset() - number, 1);

@@ -14,13 +14,10 @@ namespace DPsim {
 	protected:
 
 		//  ### Real Voltage source parameters ###
-		/// Real and imaginary part of the voltage [V]
+		/// Real part of the voltage [V]
 		Real mVoltageDiffr;
+		/// Imaginary part of the voltage [V]
 		Real mVoltageDiffi;
-		Real mVoltageAtSourcer;
-		Real mVoltageAtSourcei;
-		Real mVoltageAtDestr;
-		Real mVoltageAtDesti;
 
 		/// Resistance [ohm]
 		Real mResistance;
@@ -28,8 +25,9 @@ namespace DPsim {
 		/// conductance [S]
 		Real mConductance;
 
-		/// equivalent current source [A]
+		/// Real part of equivalent current source [A]
 		Real mCurrentr;
+		/// Imaginary part of equivalent current source [A]
 		Real mCurrenti;
 
 	public:
