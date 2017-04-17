@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.0//EN" "http://www.w3.org/TR/2001/PR-SVG-20010719/DTD/svg10.dtd">
+<svg width="5cm" height="2cm" viewBox="418 232 99 31" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+  <polyline style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" points="435,248 453,248 455,238 459,258 463,238 467,258 471,238 475,258 477,248 495,248 "/>
+  <text font-size="13.874" style="fill: #000000;text-anchor:start;font-family:sans-serif;font-style:normal;font-weight:700" x="418" y="253.5">
+    <tspan x="418" y="253.5">j</tspan>
+  </text>
+  <text font-size="13.874" style="fill: #000000;text-anchor:start;font-family:sans-serif;font-style:normal;font-weight:700" x="508" y="253.292">
+    <tspan x="508" y="253.292">k</tspan>
+  </text>
+</svg>

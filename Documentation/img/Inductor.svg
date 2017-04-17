@@ -1,0 +1,422 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   width="146.98976mm"
+   height="75.742065mm"
+   viewBox="0 0 146.98976 75.742065"
+   version="1.1"
+   id="svg8"
+   inkscape:version="0.92.1 r15371"
+   sodipodi:docname="Inductor.svg">
+  <defs
+     id="defs2" />
+  <sodipodi:namedview
+     id="base"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:pageopacity="0.0"
+     inkscape:pageshadow="2"
+     inkscape:zoom="1.4"
+     inkscape:cx="352.15791"
+     inkscape:cy="95.2047"
+     inkscape:document-units="mm"
+     inkscape:current-layer="layer1"
+     showgrid="false"
+     inkscape:window-width="1858"
+     inkscape:window-height="1057"
+     inkscape:window-x="54"
+     inkscape:window-y="-8"
+     inkscape:window-maximized="1"
+     fit-margin-top="0"
+     fit-margin-left="0"
+     fit-margin-right="0"
+     fit-margin-bottom="0" />
+  <metadata
+     id="metadata5">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title></dc:title>
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <g
+     inkscape:label="Ebene 1"
+     inkscape:groupmode="layer"
+     id="layer1"
+     transform="translate(-40.925934,159.34578)">
+    <text
+       id="text89"
+       y="47.535728"
+       x="14.306716"
+       style="font-style:normal;font-weight:normal;font-size:6.56410265px;font-family:sans-serif;text-anchor:start;fill:#000000;stroke-width:0.51282048"
+       font-size="12.8">
+      <tspan
+         id="tspan87"
+         y="47.535728"
+         x="14.306716"
+         style="stroke-width:0.51282048" />
+    </text>
+    <g
+       id="g203"
+       transform="matrix(0.38998293,0,0,0.34549591,-30.208597,-206.33874)">
+      <polygon
+         style="fill:#ffffff"
+         points="327.79,253.958 303.79,253.958 303.79,240.458 327.79,240.458 327.79,233.708 351.79,247.208 327.79,260.708 "
+         id="polygon197" />
+      <polygon
+         style="fill:none;fill-opacity:0;stroke:#000000;stroke-width:2"
+         points="327.79,253.958 303.79,253.958 303.79,240.458 327.79,240.458 327.79,233.708 351.79,247.208 327.79,260.708 "
+         id="polygon199" />
+      <polygon
+         style="fill:none;fill-opacity:0;stroke:#000000;stroke-width:2"
+         points="327.79,253.958 303.79,253.958 303.79,240.458 327.79,240.458 327.79,233.708 351.79,247.208 327.79,260.708 "
+         id="polygon201" />
+    </g>
+    <flowRoot
+       xml:space="preserve"
+       id="flowRoot932"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:4.93888903px;line-height:1.25;font-family:BKM-cmmi10;-inkscape-font-specification:BKM-cmmi10;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none"><flowRegion
+         id="flowRegion934"
+         style="font-size:4.93888903px"><rect
+           id="rect936"
+           width="135.81914"
+           height="40.238647"
+           x="141.97282"
+           y="144.69202"
+           style="font-size:4.93888903px" /></flowRegion><flowPara
+         id="flowPara938" /></flowRoot>    <g
+       id="g120"
+       transform="translate(7.9375004)">
+      <path
+         inkscape:connector-curvature="0"
+         style="fill:none;fill-opacity:0;stroke:#000000;stroke-width:0.73413211"
+         d="m 56.063826,-125.85478 v 4.62964 c 3.217359,-0.5787 6.434718,-1.15741 6.434718,1.73612 0,2.89353 -6.434718,3.47224 -6.434718,1.73612 0,-1.73612 6.434718,-1.15741 6.434718,1.73612 0,2.89352 -6.434718,3.47223 -6.434718,1.73611 0,-1.73611 6.434718,-1.15741 6.434718,1.73612 0,2.89353 -6.434718,3.47224 -6.434718,1.73612 0,-1.73612 6.434718,-1.15741 6.434718,1.73612 0,2.89352 -4.826039,2.31482 -6.434718,1.73611 v 4.62965"
+         id="path65" />
+      <g
+         transform="matrix(0.38998293,0,0,0.34549591,-35.500267,-206.33874)"
+         id="g71">
+        <line
+           style="fill:none;fill-opacity:0;stroke:#000000;stroke-width:2"
+           x1="234.78999"
+           y1="194.69701"
+           x2="234.78999"
+           y2="228.48"
+           id="line67" />
+        <polyline
+           style="fill:none;fill-opacity:0;stroke:#000000;stroke-width:2"
+           points="229.79,220.716 234.79,230.716 239.79,220.716 "
+           id="polyline69" />
+      </g>
+      <text
+         transform="scale(1.0624325,0.94123627)"
+         id="text4348-7"
+         y="-150.79448"
+         x="52.188889"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:6.06026077px;line-height:1.25;font-family:BKM-cmmi10;-inkscape-font-specification:BKM-cmmi10;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.18938315"
+         xml:space="preserve"><tspan
+           style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:4.93888903px;font-family:BKM-cmmi10;-inkscape-font-specification:BKM-cmmi10;stroke-width:0.18938315"
+           y="-150.79448"
+           x="52.188889"
+           id="tspan4346-9"
+           sodipodi:role="line">j</tspan></text>
+      <text
+         transform="scale(1.0624325,0.94123627)"
+         id="text4490"
+         y="-143.71431"
+         x="57.126202"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:4.93888903px;line-height:1.25;font-family:BKM-cmmi10;-inkscape-font-specification:BKM-cmmi10;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.18938315"
+         xml:space="preserve"><tspan
+           dy="0 0 -0.71577889"
+           style="font-size:4.93888903px;stroke-width:0.18938315"
+           y="-143.71431"
+           x="57.126202"
+           id="tspan4488"
+           sodipodi:role="line">I<tspan
+   dy="0.71577889"
+   id="tspan972"
+   style="font-size:2.82222223px;stroke-width:0.18938315">L</tspan>(k+1)</tspan></text>
+      <text
+         transform="scale(1.0624325,0.94123627)"
+         id="text1022"
+         y="-120.57177"
+         x="30.778271"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:4.93888903px;line-height:1.25;font-family:BKM-cmmi10;-inkscape-font-specification:BKM-cmmi10;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.18938315"
+         xml:space="preserve"><tspan
+           dy="0 0 -0.71577889"
+           style="font-size:4.93888903px;stroke-width:0.18938315"
+           y="-120.57177"
+           x="30.778271"
+           id="tspan1020"
+           sodipodi:role="line">V<tspan
+   dy="0.71577889"
+   id="tspan1024"
+   style="font-size:2.82222223px;stroke-width:0.18938315">L</tspan>(k+1)</tspan></text>
+      <text
+         transform="scale(1.0624325,0.94123627)"
+         id="text1092"
+         y="-144.88281"
+         x="44.626583"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:4.93888903px;line-height:1.25;font-family:BKM-cmmi10;-inkscape-font-specification:BKM-cmmi10;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.18938315"
+         xml:space="preserve"><tspan
+           style="font-size:4.93888903px;stroke-width:0.18938315"
+           y="-144.88281"
+           x="44.626583"
+           id="tspan1090"
+           sodipodi:role="line">+</tspan></text>
+      <text
+         transform="scale(1.0624325,0.94123627)"
+         id="text1096"
+         y="-108.62946"
+         x="46.385143"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:4.93888903px;line-height:1.25;font-family:BKM-cmmi10;-inkscape-font-specification:BKM-cmmi10;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.18938315"
+         xml:space="preserve"><tspan
+           style="font-size:4.93888903px;stroke-width:0.18938315"
+           y="-108.62946"
+           x="46.385143"
+           id="tspan1094"
+           sodipodi:role="line">-</tspan></text>
+      <text
+         transform="scale(1.0624325,0.94123627)"
+         id="text1100-8"
+         y="-104.33463"
+         x="51.464218"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:4.93888903px;line-height:1.25;font-family:BKM-cmmi10;-inkscape-font-specification:BKM-cmmi10;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.18938315"
+         xml:space="preserve"><tspan
+           style="font-size:4.93888903px;stroke-width:0.18938315"
+           y="-104.33463"
+           x="51.464218"
+           id="tspan1098-5"
+           sodipodi:role="line">k</tspan></text>
+    </g>
+    <g
+       id="g156"
+       transform="matrix(0.93405325,0,0,1,7.4231184,0)">
+      <polyline
+         transform="matrix(0.38998293,0,0,0.34549591,-35.500267,-206.33874)"
+         style="fill:none;fill-opacity:0;stroke:#000000;stroke-width:2"
+         points="411.5,217 411.5,235 401.5,237 421.5,241 401.5,245 421.5,249 401.5,253 421.5,257 411.5,259 411.5,277 "
+         id="polyline111" />
+      <g
+         transform="matrix(0.38998293,0,0,0.34549591,-35.500267,-206.33874)"
+         id="g117">
+        <circle
+           r="16"
+           style="fill:#ffffff"
+           cx="531.5"
+           cy="247"
+           id="ellipse113" />
+        <circle
+           r="16"
+           style="fill:none;fill-opacity:0;stroke:#000000;stroke-width:2"
+           cx="531.5"
+           cy="247"
+           id="ellipse115" />
+      </g>
+      <g
+         transform="matrix(0.38998293,0,0,0.34549591,-35.500267,-206.33874)"
+         id="g123">
+        <line
+           style="fill:none;fill-opacity:0;stroke:#000000;stroke-width:2"
+           x1="531.5"
+           y1="231"
+           x2="531.5"
+           y2="258.52802"
+           id="line119" />
+        <polyline
+           style="fill:none;fill-opacity:0;stroke:#000000;stroke-width:2"
+           points="526.5,250.764 531.5,260.764 536.5,250.764 "
+           id="polyline121" />
+      </g>
+      <polyline
+         transform="matrix(0.38998293,0,0,0.34549591,-35.500267,-206.33874)"
+         style="fill:none;fill-opacity:0;stroke:#000000;stroke-width:2"
+         points="411.5,217 411.5,196 531.5,196 531.5,231 "
+         id="polyline125" />
+      <polyline
+         transform="matrix(0.38998293,0,0,0.34549591,-35.500267,-206.33874)"
+         style="fill:none;fill-opacity:0;stroke:#000000;stroke-width:2"
+         points="411.5,277 411.5,298 531.5,298 531.5,263 "
+         id="polyline127" />
+      <line
+         style="fill:none;fill-opacity:0;stroke:#000000;stroke-width:0.73413211"
+         x1="148.58649"
+         y1="-138.63779"
+         x2="148.39151"
+         y2="-154.1851"
+         id="line149" />
+      <line
+         style="fill:none;fill-opacity:0;stroke:#000000;stroke-width:0.73413211"
+         x1="148.58649"
+         y1="-87.673325"
+         x2="148.39151"
+         y2="-103.22065"
+         id="line151" />
+      <g
+         transform="matrix(0.38998293,0,0,0.34549591,-35.500267,-206.33874)"
+         id="g157">
+        <line
+           style="fill:none;fill-opacity:0;stroke:#000000;stroke-width:2"
+           x1="471.78799"
+           y1="152.953"
+           x2="471.78799"
+           y2="182.481"
+           id="line153" />
+        <polyline
+           style="fill:none;fill-opacity:0;stroke:#000000;stroke-width:2"
+           points="466.788,174.717 471.788,184.717 476.788,174.717 "
+           id="polyline155" />
+      </g>
+      <text
+         transform="scale(1.0624325,0.94123627)"
+         font-size="12.8"
+         style="font-style:normal;font-weight:normal;font-size:4.6984458px;font-family:sans-serif;text-anchor:start;fill:#000000;stroke-width:0.36706606"
+         x="138.18486"
+         y="-141.67717"
+         id="text161">
+        <tspan
+           style="stroke-width:0.36706606"
+           x="138.18486"
+           y="-141.67717"
+           id="tspan159">+</tspan>
+      </text>
+      <text
+         transform="scale(1.0624325,0.94123627)"
+         font-size="12.8"
+         style="font-style:normal;font-weight:normal;font-size:4.6984458px;font-family:sans-serif;text-anchor:start;fill:#000000;stroke-width:0.36706606"
+         x="139.03865"
+         y="-112.28581"
+         id="text165">
+        <tspan
+           style="stroke-width:0.36706606"
+           x="139.03865"
+           y="-112.28581"
+           id="tspan163">-</tspan>
+      </text>
+      <text
+         transform="scale(1.0624325,0.94123627)"
+         id="text4510"
+         y="-126.9029"
+         x="105.76005"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:5.11026525px;line-height:1.25;font-family:BKM-cmmi10;-inkscape-font-specification:BKM-cmmi10;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.18938315"
+         xml:space="preserve"><tspan
+           dy="0"
+           style="font-size:5.11026525px;stroke-width:0.18938315"
+           y="-126.9029"
+           x="105.76005"
+           id="tspan4508"
+           sodipodi:role="line">R<tspan
+   dy="0.71577889"
+   id="tspan1076"
+   style="font-size:2.92015147px;stroke-width:0.18938315">L</tspan></tspan></text>
+      <text
+         transform="scale(1.0624325,0.94123627)"
+         id="text4490-5"
+         y="-159.18787"
+         x="143.62994"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:5.11026525px;line-height:1.25;font-family:BKM-cmmi10;-inkscape-font-specification:BKM-cmmi10;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.18938315"
+         xml:space="preserve"><tspan
+           dy="0 0 -0.71577889"
+           style="font-size:5.11026525px;stroke-width:0.18938315"
+           y="-159.18787"
+           x="143.62994"
+           id="tspan4488-1"
+           sodipodi:role="line">I<tspan
+   dy="0.71577889"
+   id="tspan972-6"
+   style="font-size:2.92015147px;stroke-width:0.18938315">L</tspan>(k+1)</tspan></text>
+      <text
+         transform="scale(1.0624325,0.94123627)"
+         id="text1080"
+         y="-127.02669"
+         x="169.75476"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:5.11026525px;line-height:1.25;font-family:BKM-cmmi10;-inkscape-font-specification:BKM-cmmi10;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.18938315"
+         xml:space="preserve"><tspan
+           dy="0 0.71577889 -0.71577889"
+           style="font-size:5.11026525px;stroke-width:0.18938315"
+           y="-127.02669"
+           x="169.75476"
+           id="tspan1078"
+           sodipodi:role="line">A<tspan
+   id="tspan1082"
+   style="font-size:2.92015147px;stroke-width:0.18938315">C</tspan>(k)</tspan></text>
+      <text
+         transform="scale(1.0624325,0.94123627)"
+         id="text1086"
+         y="-127.16196"
+         x="130.11955"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:5.11026525px;line-height:1.25;font-family:BKM-cmmi10;-inkscape-font-specification:BKM-cmmi10;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.18938315"
+         xml:space="preserve"><tspan
+           dy="0 0 -0.71577889"
+           style="font-size:5.11026525px;stroke-width:0.18938315"
+           y="-127.16196"
+           x="130.11955"
+           id="tspan1084"
+           sodipodi:role="line">V<tspan
+   dy="0.71577889"
+   id="tspan1088"
+   style="font-size:2.92015147px;stroke-width:0.18938315">L</tspan>(k+1)</tspan></text>
+      <text
+         transform="scale(1.0624325,0.94123627)"
+         id="text1100"
+         y="-88.879509"
+         x="138.50652"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:5.11026525px;line-height:1.25;font-family:BKM-cmmi10;-inkscape-font-specification:BKM-cmmi10;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.18938315"
+         xml:space="preserve"><tspan
+           style="font-size:5.11026525px;stroke-width:0.18938315"
+           y="-88.879509"
+           x="138.50652"
+           id="tspan1098"
+           sodipodi:role="line">k</tspan></text>
+      <text
+         transform="scale(1.0624325,0.94123627)"
+         id="text4348-7-5"
+         y="-165.91624"
+         x="139.15765"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:6.06026077px;line-height:1.25;font-family:BKM-cmmi10;-inkscape-font-specification:BKM-cmmi10;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.18938315"
+         xml:space="preserve"><tspan
+           style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:5.11026525px;font-family:BKM-cmmi10;-inkscape-font-specification:BKM-cmmi10;stroke-width:0.18938315"
+           y="-165.91624"
+           x="139.15765"
+           id="tspan4346-9-2"
+           sodipodi:role="line">j</tspan></text>
+    </g>
+    <flowRoot
+       xml:space="preserve"
+       id="flowRoot69"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:26.66666603px;line-height:1.25;font-family:BKM-cmmi10;-inkscape-font-specification:BKM-cmmi10;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none"><flowRegion
+         id="flowRegion71"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:BKM-cmmi10;-inkscape-font-specification:BKM-cmmi10"><rect
+           id="rect73"
+           width="387.85715"
+           height="360"
+           x="-62.857143"
+           y="-9.5886412"
+           style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:BKM-cmmi10;-inkscape-font-specification:BKM-cmmi10" /></flowRegion><flowPara
+         id="flowPara75" /></flowRoot>    <flowRoot
+       xml:space="preserve"
+       id="flowRoot73"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:18.66666603px;line-height:1.25;font-family:BKM-cmmi10;-inkscape-font-specification:BKM-cmmi10;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none"
+       transform="matrix(0.26458333,0,0,0.26458333,4.6643684,-179.08312)"><flowRegion
+         id="flowRegion75"
+         style="font-size:18.66666603px"><rect
+           id="rect77"
+           width="991.96979"
+           height="587.90875"
+           x="-161.6244"
+           y="740.68201"
+           style="font-size:18.66666603px" /></flowRegion><flowPara
+         id="flowPara79"></flowPara></flowRoot>  </g>
+</svg>
