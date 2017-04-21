@@ -1,4 +1,4 @@
-function [ ] = plotDpEmtVoltage(filenameVoltageDP, filenameVoltageEMT, plotNode)
+function [mseDP ] = plotDpEmtVoltage(filenameVoltageDP, filenameVoltageEMT, plotNode)
 
 % Increment node to skip time column
 plotNode = plotNode + 1;
