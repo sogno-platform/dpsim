@@ -6,21 +6,24 @@
 
 #include "MathLibrary.h"
 
-enum class Logtype { INFO, WARN, ERROR };
+enum class LogLevel { NONE, ERROR, WARN, INFO };
 
 class Logger {
 	private:
 		std::string mLogFileName;
 		std::ofstream mLogFile;
 		std::ostringstream mLogStream;
+		std::ostringstream mNullStream;
+		LogLevel mLogLevel;
 
 	public:
 		Logger();
+		Logger(LogLevel level);
 		~Logger();
 	
 		int AddDataLine(double time, DPSMatrix data);
 		std::ostringstream& Log();
-		std::ostringstream& Log(Logtype type);
+		std::ostringstream& Log(LogLevel level);
 		void WriteLogToFile(std::string fileName);
 		static std::ostringstream VectorToDataLine(double time, DPSMatrix vector);
 };
