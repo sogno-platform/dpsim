@@ -1,9 +1,9 @@
-#ifndef  SYNCHRONGENUNITTEST_H
+#ifndef SYNCHRONGENUNITTEST_H
 #define SYNCHRONGENUNITTEST_H
 
 #include "../MathLibrary.h"
 
-namespace Dpsim {
+namespace DPsim {
 	// EMT generator tests
 	void SynGenUnitTestBalancedResLoad();
 	void SynGenUnitTestPhaseToPhaseFault();

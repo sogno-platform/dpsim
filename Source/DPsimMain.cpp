@@ -4,6 +4,7 @@
 #include "Examples/SynchronGenUnitTest.h"
 #include "Examples/SimpleCircuitTest.h"
 #include "Examples/ReferenceCircuits.h"
+#include "Examples/VillasTest.h"
 #include <complex>
 
 using namespace DPsim;
@@ -12,15 +13,16 @@ int main(int argc, char* argv[]) {
 
 
 
-	simulationExample1();
-	simulationExample2();
-	simulationExample3();
-	simulationExampleIdealVS();
-	simulationExampleIdealVS2();
-	simulationExampleIdealVS3();
-	simulationExampleRXLine3();
-	simulationExampleRXLine();
-	simulationExampleRXLine2();
+	villasExample();
+	//simulationExample1();
+	//simulationExample2();
+	//simulationExample3();
+	//simulationExampleIdealVS();
+	//simulationExampleIdealVS2();
+	//simulationExampleIdealVS3();
+	//simulationExampleRXLine3();
+	//simulationExampleRXLine();
+	//simulationExampleRXLine2();
 
 	//NetlistSim(argc, argv);
 	

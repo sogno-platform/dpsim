@@ -65,6 +65,6 @@ void SystemModel::switchSystemMatrix(Int systemMatrixIndex) {
 	}
 }
 
-void SystemModel::setRightSideVectorToZero(DPsim::Matrix& rightSideVector) {
+void SystemModel::setRightSideVectorToZero() {
 	mRightSideVector.setZero();
 }
