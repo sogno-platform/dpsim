@@ -25,6 +25,10 @@ void VillasInterface::registerVoltageSource(ExternalVoltageSource *evs, int num)
 	mExtComponents[num] = evs;
 }
 
+void VillasInterface::registerCurrentSource(ExternalCurrentSource *ecs, int num) {
+	mExtComponents[num] = ecs;
+}
+
 void VillasInterface::readValues() {
 	struct sample *sample;
 	int ret = 0;
@@ -42,8 +46,11 @@ void VillasInterface::readValues() {
 		// TODO integer format?
 		ExternalVoltageSource *evs = dynamic_cast<ExternalVoltageSource*>(it->second);
 		if (evs)
-			evs->setVoltage(sample->data[0].f);
-		// TODO other classes
+			evs->setVoltage(sample->data[it->first].f);
+
+		ExternalCurrentSource *ecs = dynamic_cast<ExternalCurrentSource*>(it->second);
+		if (ecs)
+			ecs->setCurrent(sample->data[it->first].f);
 		sample_put(sample);
 	}
 }

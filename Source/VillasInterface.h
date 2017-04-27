@@ -6,6 +6,7 @@
 #include <villas/shmem.h>
 
 #include "ExternalInterface.h"
+#include "Components/ExternalCurrentSource.h"
 #include "Components/ExternalVoltageSource.h"
 
 namespace DPsim {
@@ -21,6 +22,7 @@ namespace DPsim {
 		VillasInterface(const char* name);
 		~VillasInterface();
 		void registerVoltageSource(ExternalVoltageSource* evs, int num);
+		void registerCurrentSource(ExternalCurrentSource* ecs, int num);
 		virtual void readValues();
 	};
 };

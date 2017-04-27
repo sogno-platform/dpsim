@@ -7,16 +7,16 @@ using namespace DPsim;
 
 void DPsim::villasExample()
 {
-	// Very simple test circuit. Just 2 resistors and a voltage read from VILLASnode.
+	// Very simple test circuit. Just 2 resistors and a current read from VILLASnode.
 	Logger log, llog, rlog;
 	std::vector<BaseComponent*> comps;
 
-	ExternalVoltageSource *evs = new ExternalVoltageSource("v1", 1, 0, 5, 0, 1);
-	comps.push_back(evs);
+	ExternalCurrentSource *ecs = new ExternalCurrentSource("i1", 1, 0, 0, 0);
+	comps.push_back(ecs);
 	comps.push_back(new LinearResistor("r1", 1, 2, 1));
-	comps.push_back(new LinearResistor("r2", 2, 0, 1));
+	comps.push_back(new LinearResistor("r1", 2, 0, 1));
 	VillasInterface *villas = new VillasInterface("/villas1");
-	villas->registerVoltageSource(evs, 0);
+	villas->registerCurrentSource(ecs, 0);
 
 	// Set up simulation
 	Real timeStep = 0.01;
