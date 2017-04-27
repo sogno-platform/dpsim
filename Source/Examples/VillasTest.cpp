@@ -18,12 +18,6 @@ void DPsim::villasExample()
 	VillasInterface *villas = new VillasInterface("/villas1");
 	villas->registerVoltageSource(evs, 0);
 
-	std::cout << "The contents of circElements0 are:";
-	for (std::vector<BaseComponent*>::iterator it = comps.begin(); it != comps.end(); ++it) {
-		std::cout << "Added " << (*it)->getName() << std::endl;
-	}
-	std::cout << '\n';
-
 	// Set up simulation
 	Real timeStep = 0.01;
 	Simulation newSim(comps, 2.0*M_PI*50.0, timeStep, 0.1, log);
@@ -37,8 +31,11 @@ void DPsim::villasExample()
 		updateProgressBar(newSim.getTime(), newSim.getFinalTime());
 	}
 	std::cout << "Simulation finished." << std::endl;
-	villas->shutdown();
 	log.WriteLogToFile("output.log");
 	rlog.WriteLogToFile("rvector.log");
 	llog.WriteLogToFile("lvector.log");
+	for (auto comp : comps) {
+		delete comp;
+	}
+	delete villas;
 }

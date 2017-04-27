@@ -19,8 +19,8 @@ namespace DPsim {
 		std::unordered_map<int, BaseComponent*> mExtComponents;
 	public:
 		VillasInterface(const char* name);
+		~VillasInterface();
 		void registerVoltageSource(ExternalVoltageSource* evs, int num);
 		virtual void readValues();
-		void shutdown();
 	};
 };

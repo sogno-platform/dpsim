@@ -17,6 +17,10 @@ VillasInterface::VillasInterface(const char* name) {
 	}
 }
 
+VillasInterface::~VillasInterface() {
+	shmem_shared_close(mShmem, mBase);
+}
+
 void VillasInterface::registerVoltageSource(ExternalVoltageSource *evs, int num) {
 	mExtComponents[num] = evs;
 }
@@ -42,9 +46,4 @@ void VillasInterface::readValues() {
 		// TODO other classes
 		sample_put(sample);
 	}
-}
-
-// TODO put this in destructor
-void VillasInterface::shutdown() {
-	shmem_shared_close(mShmem, mBase);
 }

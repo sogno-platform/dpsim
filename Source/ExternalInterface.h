@@ -11,5 +11,6 @@ namespace DPsim {
 	class ExternalInterface {
 	public:
 		virtual void readValues() = 0;
+		virtual ~ExternalInterface() {};
 	};
 }
