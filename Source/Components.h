@@ -18,5 +18,6 @@
 #include "Components/VoltSourceResEMT.h"
 #include "Components/IdealVoltageSource.h"
 #include "Components/RxLine.h"
+#include "Components/PiLine.h"
 
 #endif // !COMPONENTS_H
