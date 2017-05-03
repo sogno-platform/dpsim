@@ -21,14 +21,6 @@ VillasInterface::~VillasInterface() {
 	shmem_shared_close(mShmem, mBase);
 }
 
-void VillasInterface::registerVoltageSource(ExternalVoltageSource *evs, int num) {
-	mExtComponents[num] = evs;
-}
-
-void VillasInterface::registerCurrentSource(ExternalCurrentSource *ecs, int num) {
-	mExtComponents[num] = ecs;
-}
-
 void VillasInterface::readValues() {
 	struct sample *sample;
 	int ret = 0;
@@ -38,19 +30,22 @@ void VillasInterface::readValues() {
 		std::cerr << "Fatal error: failed to read sample from shmem interface" << std::endl;
 		std::exit(1);
 	}
-	for (auto it = mExtComponents.begin(); it != mExtComponents.end(); ++it) {
-		if (sample->length <= it->first) {
-			std::cerr << "Warning: missing data in received sample" << std::endl;
-			continue;
-		}
+	int sz = mExtComponents.size();
+	if (sample->length < mExtComponents.size()) {
+		std::cerr << "Warning: missing data in received sample" << std::endl;
+		sz = sample->length;
+	}
+	for (int i = 0; i < sz; i++) {
 		// TODO integer format?
-		ExternalVoltageSource *evs = dynamic_cast<ExternalVoltageSource*>(it->second);
-		if (evs)
-			evs->setVoltage(sample->data[it->first].f);
+		if (i < mExtComponents.size()) {
+			ExternalVoltageSource *evs = dynamic_cast<ExternalVoltageSource*>(mExtComponents[i]);
+			if (evs)
+				evs->setVoltage(sample->data[i].f);
 
-		ExternalCurrentSource *ecs = dynamic_cast<ExternalCurrentSource*>(it->second);
-		if (ecs)
-			ecs->setCurrent(sample->data[it->first].f);
+			ExternalCurrentSource *ecs = dynamic_cast<ExternalCurrentSource*>(mExtComponents[i]);
+			if (ecs)
+				ecs->setCurrent(sample->data[i].f);
+		}
 		sample_put(sample);
 	}
 }

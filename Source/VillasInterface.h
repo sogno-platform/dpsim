@@ -17,12 +17,9 @@ namespace DPsim {
 		struct shmem_shared* mShmem;
 		void* mBase;
 
-		std::unordered_map<int, BaseComponent*> mExtComponents;
 	public:
 		VillasInterface(const char* name);
 		~VillasInterface();
-		void registerVoltageSource(ExternalVoltageSource* evs, int num);
-		void registerCurrentSource(ExternalCurrentSource* ecs, int num);
 		virtual void readValues();
 	};
 };
