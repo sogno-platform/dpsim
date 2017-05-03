@@ -82,6 +82,11 @@ void PiLine::init(Real om, Real dt) {
 	mDeltaVre = 0;
 	mDeltaVim = 0;
 
+	mVoltageAtNode1Re = 0;
+	mVoltageAtNode1Im = 0;
+
+	mVoltageAtNode2Re = 0;
+	mVoltageAtNode2Im = 0;
 }
 
 void PiLine::step(SystemModel& system, Real time) {
@@ -98,6 +103,7 @@ void PiLine::step(SystemModel& system, Real time) {
 	}
 
 	// Initialize internal state capacitance 1
+
 	mCurEqCapRe1 = mCurrCapRe1 + mGcr * mVoltageAtNode1Re + mGci * mVoltageAtNode1Im;
 	mCurEqCapIm1 = mCurrCapIm1 + mGcr * mVoltageAtNode1Im - mGci * mVoltageAtNode1Re;
 
@@ -122,20 +128,13 @@ void PiLine::postStep(SystemModel& system) {
 		vposr = system.getRealFromLeftSideVector(mNode3);
 		vposi = system.getImagFromLeftSideVector(mNode3);
 	}
-	else {
-		vposr = 0;
-		vposi = 0;
-	}
 
 	if (mNode2 >= 0) {
 		system.getRealFromLeftSideVector(mNode2);
 		vnegr = system.getRealFromLeftSideVector(mNode2);
 		vnegi = system.getImagFromLeftSideVector(mNode2);
 	}
-	else {
-		vnegr = 0;
-		vnegi = 0;
-	}
+
 	mDeltaVre = vposr - vnegr;
 	mDeltaVim = vposi - vnegi;
 	mCurrIndRe = mGlr * mDeltaVre - mGli * mDeltaVim + mCurEqIndRe;
