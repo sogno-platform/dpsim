@@ -15,6 +15,7 @@ VillasInterface::VillasInterface(const char* name) {
 		std::perror("Failed to open/map shared memory object");
 		std::exit(1);
 	}
+	mSeq = 0;
 }
 
 VillasInterface::~VillasInterface() {
@@ -47,5 +48,34 @@ void VillasInterface::readValues() {
 				ecs->setCurrent(sample->data[i].f);
 		}
 		sample_put(sample);
+	}
+}
+
+void VillasInterface::writeValues(SystemModel& model) {
+	struct sample *sample;
+	sample_alloc(&mShmem->pool, &sample, 1);
+	int len = mExportedVoltages.size();
+	if (sample->capacity < len) {
+		std::cerr << "struct sample returned from pool has to small capacity" << std::endl;
+		len = sample->capacity;
+	}
+	sample->length = len;
+	Matrix lvect = model.getLeftSideVector();
+	for (int i = 0; i < len; i++) {
+		Real f = 0.0f;
+		VoltDiff vd = mExportedVoltages[i];
+		if (vd.from > 0)
+			f += lvect(vd.from-1, 0);
+		if (vd.to > 0)
+			f -= lvect(vd.to-1, 0);
+		sample->data[i].f = f;
+	}
+	sample->sequence = mSeq++;
+	clock_gettime(CLOCK_REALTIME, &sample->ts.origin);
+	int ret = 0;
+	while (ret == 0)
+		ret = shmem_shared_write(mShmem, &sample, 1);
+	if (ret < 0) {
+		std::cerr << "Failed to write samples to shmem interface" << std::endl;
 	}
 }

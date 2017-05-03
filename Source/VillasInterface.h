@@ -1,7 +1,6 @@
 #pragma once
 
 #include <atomic>
-#include <unordered_map>
 
 #include <villas/shmem.h>
 
@@ -15,11 +14,13 @@ namespace DPsim {
 	private:
 		const char* mShmemName;
 		struct shmem_shared* mShmem;
+		int mSeq;
 		void* mBase;
 
 	public:
 		VillasInterface(const char* name);
 		~VillasInterface();
 		virtual void readValues();
+		virtual void writeValues(SystemModel &model);
 	};
 };

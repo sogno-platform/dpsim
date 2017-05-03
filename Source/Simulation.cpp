@@ -122,6 +122,10 @@ int Simulation::step(Logger& logger)
 		(*it)->postStep(mSystemModel);
 	}
 
+	for (auto it = mExternalInterfaces.begin(); it != mExternalInterfaces.end(); ++it) {
+		(*it)->writeValues(mSystemModel);
+	}
+
 	if (mCurrentSwitchTimeIndex < mSwitchEventVector.size()) {
 		if (mTime >= mSwitchEventVector[mCurrentSwitchTimeIndex].switchTime) {
 			switchSystemMatrix(mSwitchEventVector[mCurrentSwitchTimeIndex].systemIndex);			
