@@ -12,8 +12,8 @@ namespace DPsim {
 	public:
 		ExternalCurrentSource() {};
 
-		ExternalCurrentSource(std::string name, int src, int dest, Real current, Real phase);
+		ExternalCurrentSource(std::string name, int src, int dest);
 
-		void setCurrent(Real current);
+		void setCurrent(Real real, Real imag);
 	};
 }

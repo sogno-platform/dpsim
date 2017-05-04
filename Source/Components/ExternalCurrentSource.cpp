@@ -2,11 +2,10 @@
 
 using namespace DPsim;
 
-ExternalCurrentSource::ExternalCurrentSource(std::string name, int src, int dest, Real current, Real phase) : CurrentSource(name, src, dest, current, phase) {
-	this->mPhase = phase;
+ExternalCurrentSource::ExternalCurrentSource(std::string name, int src, int dest) : CurrentSource(name, src, dest, 0, 0) {
 }
 
-void ExternalCurrentSource::setCurrent(Real current) {
-	this->currentr = current*cos(this->mPhase);
-	this->currenti = current*sin(this->mPhase);
+void ExternalCurrentSource::setCurrent(Real real, Real imag) {
+	this->currentr = real;
+	this->currenti = imag;
 }
