@@ -51,7 +51,10 @@ void VillasInterface::readValues() {
 
 void VillasInterface::writeValues(SystemModel& model) {
 	struct sample *sample;
-	sample_alloc(&mShmem->pool, &sample, 1);
+	if (sample_alloc(&mShmem->pool, &sample, 1) < 1) {
+		std::cerr << "fatal error: shmem pool underrun" << std::endl;
+		std::exit(1);
+	}
 	Int len = 0;
 	for (auto vd : mExportedVoltages) {
 		Real real = 0, imag = 0;
