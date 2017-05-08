@@ -11,13 +11,12 @@ void SystemModel::initialize(Int numNodes, Int numIdealVS) {
 		mRightSideVector = Matrix::Zero(mNumNodes, 1);
 		mLeftSideVector = DPSMatrix::Zero(mNumNodes, 1);
 		mSystemMatrix = DPSMatrix::Zero(mNumNodes, mNumNodes);
-
 	}
 	else {
 		mRightSideVector = DPSMatrix::Zero(2 * mNumNodes, 1);
 		mLeftSideVector = DPSMatrix::Zero(2 * mNumNodes, 1);
 		mSystemMatrix = DPSMatrix::Zero(2 * mNumNodes, 2 * mNumNodes);
-
+		mCurrentMatrix.resize(mNumNodes, mNumNodes);
 	}
 
 	switchSystemMatrix(0);	
@@ -67,4 +66,36 @@ void SystemModel::switchSystemMatrix(Int systemMatrixIndex) {
 
 void SystemModel::setRightSideVectorToZero() {
 	mRightSideVector.setZero();
+}
+
+
+void SystemModel::resetCurrents() {
+	mCurrentMatrix.setZero();
+}
+
+void SystemModel::addCurrent(Int node1, Int node2, Complex value) {
+	if (node1 >= 0) {
+		if (node2 >= 0) {
+			mCurrentMatrix.coeffRef(node1, node2) += value;
+			mCurrentMatrix.coeffRef(node2, node1) -= value;
+		} else {
+			mCurrentMatrix.coeffRef(node1, node1) += value;
+		}
+	} else if (node2 >= 0) {
+		mCurrentMatrix.coeffRef(node2, node2) -= value;
+	}
+}
+
+Complex SystemModel::getCurrent(Int node1, Int node2) {
+	if (node1 >= 0) {
+		if (node2 >= 0) {
+			return mCurrentMatrix.coeffRef(node1, node2);
+		}
+		return mCurrentMatrix.coeffRef(node1, node1);
+	}
+	else if (node2 >= 0) {
+		return -mCurrentMatrix.coeffRef(node2, node2);
+	}
+	// shouldn't happen, but return a sensible value anyway
+	return Complex(0, 0);
 }

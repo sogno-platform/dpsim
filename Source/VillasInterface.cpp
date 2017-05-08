@@ -74,6 +74,19 @@ void VillasInterface::writeValues(SystemModel& model) {
 		if (vd.imagIdx > len)
 			len = vd.imagIdx;
 	}
+	for (auto cd : mExportedCurrents) {
+		Complex current = cd.comp->getCurrent(model);
+		if (cd.realIdx >= sample->capacity || cd.imagIdx >= sample->capacity) {
+			std::cerr << "fatal error: not enough space in allocated struct sample" << std::endl;
+			std::exit(1);
+		}
+		sample->data[cd.realIdx].f = current.real();
+		sample->data[cd.imagIdx].f = current.imag();
+		if (cd.realIdx > len)
+			len = cd.realIdx;
+		if (cd.imagIdx > len)
+			len = cd.imagIdx;
+	}
 	sample->length = len+1;
 	sample->sequence = mSeq++;
 	clock_gettime(CLOCK_REALTIME, &sample->ts.origin);

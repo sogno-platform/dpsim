@@ -40,6 +40,9 @@ namespace DPsim {
 		/// Vector of unknown quantities
 		DPSMatrix mLeftSideVector;
 
+		/** Matrix of all edge currents; diagonal is used for currents to ground. */
+		SparseMatrixComp mCurrentMatrix;
+
 	public:
 		SystemModel() { }
 		void initialize(Int numNodes, Int numIdealVS);
@@ -71,6 +74,10 @@ namespace DPsim {
 		void addCompToRightSideVector(Int row, Real reValue, Real imValue);
 		void addRealToRightSideVector(Int row, Real value);
 		void setRightSideVectorToZero();
+
+		void resetCurrents();
+		void addCurrent(Int node1, Int node2, Complex value);
+		Complex getCurrent(Int node1, Int node2);
 
 		void solve();
 	};
