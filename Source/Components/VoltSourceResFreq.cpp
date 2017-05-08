@@ -42,7 +42,6 @@ void VoltSourceResFreq::applyRightSideVectorStamp(SystemModel& system) {
 	}
 }
 
-
 void VoltSourceResFreq::step(SystemModel& system, Real time) {
 	if (time >= mSwitchTime && time < mSwitchTime + mRampTime) {
 		Real fadeInOut = 0.5 + 0.5 * sin((time - mSwitchTime) / mRampTime * PI + -PI / 2);
@@ -71,4 +70,18 @@ void VoltSourceResFreq::step(SystemModel& system, Real time) {
 	if (mNode2 >= 0) {
 		system.addCompToRightSideVector(mNode2, -mCurrentr, -mCurrenti);
 	}
+}
+
+Complex VoltSourceResFreq::getCurrent(SystemModel& system) {
+	Real real = mCurrentr;
+	Real imag = mCurrenti;
+	if (mNode1 >= 0) {
+		real += system.getRealFromLeftSideVector(mNode1)*mConductance;
+		imag += system.getImagFromLeftSideVector(mNode1)*mConductance;
+	}
+	if (mNode2 >= 0) {
+		real -= system.getRealFromLeftSideVector(mNode2)*mConductance;
+		imag -= system.getImagFromLeftSideVector(mNode2)*mConductance;
+	}
+	return Complex(real, imag);
 }

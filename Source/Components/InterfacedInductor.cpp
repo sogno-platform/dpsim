@@ -57,3 +57,6 @@ void InterfacedInductor::postStep(SystemModel& system) {
 	mVoltageIm = vposi - vnegi;
 }
 
+Complex InterfacedInductor::getCurrent(SystemModel& system) {
+	return Complex(mCurrentRe, mCurrentIm);
+}
