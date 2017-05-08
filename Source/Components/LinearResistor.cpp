@@ -23,5 +23,16 @@ void LinearResistor::applySystemMatrixStamp(SystemModel& system) {
 	}
 }
 
-	
-
+Complex LinearResistor::getCurrent(SystemModel& model) {
+	Real realVolt = 0, imagVolt = 0;
+	if (mNode1 >= 0) {
+		realVolt += model.getRealFromLeftSideVector(mNode1);
+		imagVolt += model.getImagFromLeftSideVector(mNode2);
+	}
+	if (mNode2 >= 0) {
+		realVolt -= model.getRealFromLeftSideVector(mNode1);
+		imagVolt -= model.getImagFromLeftSideVector(mNode2);
+	}
+	Complex curr(realVolt*mConductance, imagVolt*mConductance);
+	return curr;
+}
