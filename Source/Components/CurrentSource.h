@@ -19,6 +19,7 @@ namespace DPsim {
 		void applyRightSideVectorStamp(SystemModel& system);
 		void step(SystemModel& system, Real time);
 		void postStep(SystemModel& system) { }
+		virtual Complex getCurrent(SystemModel& system);
 	};
 }
 #endif

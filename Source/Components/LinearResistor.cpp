@@ -33,6 +33,5 @@ Complex LinearResistor::getCurrent(SystemModel& model) {
 		realVolt -= model.getRealFromLeftSideVector(mNode1);
 		imagVolt -= model.getImagFromLeftSideVector(mNode2);
 	}
-	Complex curr(realVolt*mConductance, imagVolt*mConductance);
-	return curr;
+	return Complex(realVolt*mConductance, imagVolt*mConductance);
 }

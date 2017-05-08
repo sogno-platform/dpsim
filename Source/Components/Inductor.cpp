@@ -80,3 +80,7 @@ void Inductor::postStep(SystemModel& system) {
 	mCurrRe = mGlr * mDeltaVre - mGli * mDeltaVim + mCurEqRe;
 	mCurrIm = mGli * mDeltaVre + mGlr * mDeltaVim + mCurEqIm;
 }
+
+Complex Inductor::getCurrent(SystemModel& system) {
+	return Complex(mCurrRe, mCurrIm);
+}
