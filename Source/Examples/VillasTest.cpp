@@ -11,15 +11,14 @@ void DPsim::villasExample()
 	Logger log, llog, rlog;
 	std::vector<BaseComponent*> comps;
 
-	ExternalCurrentSource *ecs = new ExternalCurrentSource("i1", 1, 0);
-	comps.push_back(ecs);
+	ExternalVoltageSource *evs = new ExternalVoltageSource("v1", 1, 0, 1);
+	comps.push_back(evs);
 	comps.push_back(new LinearResistor("r1", 1, 2, 1));
 	LinearResistor *r2 = new LinearResistor("r2", 2, 0, 1);
 	comps.push_back(r2);
 	VillasInterface *villas = new VillasInterface("/villas1");
-	villas->registerCurrentSource(ecs, 0, 1);
-	villas->registerExportedVoltage(1, 0, 0, 1);
-	villas->registerExportedCurrent(r2, 2, 3);
+	villas->registerVoltageSource(evs, 0, 1);
+	villas->registerExportedCurrent(evs, 0, 1);
 
 	// Set up simulation
 	Real timeStep = 0.01;
