@@ -377,6 +377,77 @@ In both cases, the function "init" is setting every initial value to zero.
 The model is according to \cite{wang2010methods} and \cite{kundur1994power}. 
 
 \subsubsection{Prerequisites}
+
+
+\subsubsection{Magnetic Circuits}
+
+Considering two magnetically coupled windings with number of turns $N_1$ and $N_2$, resistance $r_1$ and $r_2$ and winding currents $i_1$ and $i_2$ respectively, the flux linkage with the respective windings, produced by the total effect of both currents are given by equations \ref{eq:FluxLinkage1} and \ref{eq:FluxLinkage2}.
+
+\begin{equation} \label{eq:FluxLinkage1}
+	\Psi_1 = N_1(\Phi_{l1} + \Phi_{m1} + \Phi_{m2})
+\end{equation}
+\begin{equation} \label{eq:FluxLinkage2}
+	\Psi_2 = N_2(\Phi_{l2} + \Phi_{m2} + \Phi_{m1})
+\end{equation}
+\\
+where
+
+$\Phi_{m1}$ is the mutual flux linking both windings due to current $i_1$;
+
+$\Phi_{m2}$ is the mutual flux linking both windings due to current $i_2$;
+
+$\Phi_{l1}$ is the leakage flux linking winding 1 only;
+
+$\Phi_{l2}$ is the leakage flux linking winding 2 only.
+
+The flux linkage can also be expressed in terms of self and mutual inductance as in equation \ref{eq:FluxLinkageInductances}
+
+\begin{equation} \label{eq:FluxLinkageInductances}
+	\begin{bmatrix}
+		\Psi_1\\
+		\Psi_2
+	\end{bmatrix}
+		=
+	\begin{bmatrix}
+		L_{11} & L_{12}\\
+		L_{21} & L_{22}
+	\end{bmatrix}
+		\cdot
+	\begin{bmatrix}
+		i_1\\
+		i_2		
+	\end{bmatrix}
+\end{equation}
+\\
+where $L_{11}$ and $L_{22}$ are the self inductances of windings 1 and 2 respectively and defined as the flux linkage per unit current in the same winding. $L_{12}$ and $L_{21}$ are the mutual inductance between two windings, defined as the flux linkage with one winding per unit current in the other winding.
+
+\begin{equation}
+	L_{11} = N_1(\Phi_{m1} + \Phi_{l1}) / i_1
+\end{equation}
+\begin{equation}
+	L_{22} = N_2(\Phi_{m2} + \Phi_{l2}) / i_2
+\end{equation}
+
+\begin{equation}
+	L_{12} = N_1 \Phi_{m2} / i_2
+\end{equation}
+\begin{equation}
+	L_{21} = N_2 \Phi_{m1} / i_1
+\end{equation}
+
+The terminal voltages $e_1$ and $e_2$ are defined as following:
+
+\begin{equation} \label{eq:VoltageEquation1}
+	e_1 = \frac{d \Psi_1}{d t} + r_1 i_1
+\end{equation}
+\begin{equation} \label{eq:VoltageEquation2}
+	e_2 = \frac{d \Psi_2}{d t} + r_2 i_2
+\end{equation}
+
+Equations \ref{eq:FluxLinkageInductances}, \ref{eq:VoltageEquation1} and \ref{eq:VoltageEquation2} give the performance of the circuit.
+
+\subsubsection{Park's transformation}
+
 Park's transformation is commonly used to achieve a model with static parameters:
 %
 \begin{equation}
