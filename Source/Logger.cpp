@@ -1,7 +1,11 @@
 #include "Logger.h"
 
 Logger::Logger() {
+	mLogLevel = LogLevel::INFO;
+}
 
+Logger::Logger(LogLevel level) {
+	mLogLevel = level;
 }
 
 Logger::~Logger() {
@@ -22,16 +26,24 @@ std::ostringstream& Logger::Log() {
 	return mLogStream;
 }
 
-std::ostringstream& Logger::Log(Logtype type) {
-	switch (type) {
-		case Logtype::INFO:
+std::ostringstream& Logger::Log(LogLevel level) {
+	if (level > mLogLevel) {
+		return mNullStream;
+	}
+
+	switch (level) {
+		case LogLevel::INFO:		
 			mLogStream << "INFO: ";
 			break;
-		case Logtype::WARN:
+		case LogLevel::WARN:
 			mLogStream << "WARN: ";
 			break;
-		case Logtype::ERROR:
+		case LogLevel::ERROR:
 			mLogStream << "ERROR: ";
+			break;
+		case LogLevel::NONE:
+			mNullStream.str("");
+			return mNullStream;
 			break;
 	}
 	return mLogStream;

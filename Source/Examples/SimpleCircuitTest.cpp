@@ -198,3 +198,37 @@ void DPsim::runDpEmtVarFreqStudy() {
 	VarFreqRXLineResLoadEMT(timeStep, finalTime, freqStep, loadStep, rampTime);
 	VarFreqRXLineResLoad(timeStep, finalTime, freqStep, loadStep, rampTime);
 }
+
+void DPsim::RXLineResLoadStatic() {
+	// Define Object for saving data on a file
+	Logger log(LogLevel::NONE), leftVectorLog(LogLevel::NONE), rightVectorLog(LogLevel::NONE);
+
+	// Declare circuit components
+	std::vector<BaseComponent*> circElements0;
+	circElements0.push_back(new VoltSourceRes("v_s", 1, 0, 10000, 0, 1));
+	circElements0.push_back(new LinearResistor("r_line", 1, 2, 1));
+	circElements0.push_back(new Inductor("l_line", 2, 3, 1));	
+	circElements0.push_back(new LinearResistor("r_load", 3, 0, 1000));
+
+	// Set up simulation
+	Real timeStep = 0.001;
+	Simulation newSim(circElements0, 2.0*M_PI*50.0, timeStep, 0.3, log);	
+
+	// Main Simulation Loop
+	std::cout << "Start simulation." << std::endl;
+	while (newSim.step(log, leftVectorLog, rightVectorLog))
+	{
+		newSim.increaseByTimeStep();
+		updateProgressBar(newSim.getTime(), newSim.getFinalTime());
+	}
+	std::cout << "Simulation finished." << std::endl;
+
+	// Write simulation data to file
+	/*
+	std::ostringstream fileName;
+	fileName << "RXLineResLoad_" << timeStep;
+	log.WriteLogToFile("Logs/Log_" + fileName.str() + ".log");
+	leftVectorLog.WriteLogToFile("Logs/LeftVectorLog_" + fileName.str() + ".csv");
+	rightVectorLog.WriteLogToFile("Logs/RightVectorLog_" + fileName.str() + ".csv");
+	*/
+}

@@ -22,13 +22,13 @@ Simulation::Simulation(std::vector<BaseComponent*> elements, Real om, Real dt, R
 	: Simulation(elements, om, dt, tf) {
 
 	for (std::vector<BaseComponent*>::iterator it = elements.begin(); it != elements.end(); ++it) {
-		logger.Log(Logtype::INFO) << "Added " << (*it)->getName() << " of type " << typeid(*(*it)).name() << " to simulation." << std::endl;
+		logger.Log(LogLevel::INFO) << "Added " << (*it)->getName() << " of type " << typeid(*(*it)).name() << " to simulation." << std::endl;
 	}
-	logger.Log(Logtype::INFO) << "System matrix A:" << std::endl;
+	logger.Log(LogLevel::INFO) << "System matrix A:" << std::endl;
 	logger.Log() << mSystemModel.getCurrentSystemMatrix() << std::endl;
-	logger.Log(Logtype::INFO) << "LU decomposition:" << std::endl;
+	logger.Log(LogLevel::INFO) << "LU decomposition:" << std::endl;
 	logger.Log() << mSystemModel.getLUdecomp() << std::endl;
-	logger.Log(Logtype::INFO) << "Known variables matrix j:" << std::endl;
+	logger.Log(LogLevel::INFO) << "Known variables matrix j:" << std::endl;
 	logger.Log() << mSystemModel.getRightSideVector() << std::endl;
 }
 
@@ -122,7 +122,7 @@ int Simulation::step(Logger& logger)
 		if (mTime >= mSwitchEventVector[mCurrentSwitchTimeIndex].switchTime) {
 			switchSystemMatrix(mSwitchEventVector[mCurrentSwitchTimeIndex].systemIndex);			
 			mCurrentSwitchTimeIndex++;	
-			logger.Log(Logtype::INFO) << "Switched to system " << mCurrentSwitchTimeIndex << " at " << mTime << std::endl;
+			logger.Log(LogLevel::INFO) << "Switched to system " << mCurrentSwitchTimeIndex << " at " << mTime << std::endl;
 		}
 	}
 
@@ -176,7 +176,7 @@ int Simulation::stepGeneratorTest(Logger& logger, Logger& leftSideVectorLog, Log
 			switchSystemMatrix(mSwitchEventVector[mCurrentSwitchTimeIndex].systemIndex);
 
 			mCurrentSwitchTimeIndex++;
-			logger.Log(Logtype::INFO) << "Switched to system " << mCurrentSwitchTimeIndex << " at " << mTime << std::endl;
+			logger.Log(LogLevel::INFO) << "Switched to system " << mCurrentSwitchTimeIndex << " at " << mTime << std::endl;
 		}
 	}
 
