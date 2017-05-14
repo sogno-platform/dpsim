@@ -7,7 +7,7 @@ EXEC = DPSolver
 SOURCES = $(wildcard *.cpp) $(wildcard Components/*.cpp) $(wildcard Examples/*.cpp)
 OBJECTS = $(SOURCES:.cpp=.o)
 
-INCLUDES = -I /usr/local/include/eigen
+INCLUDES = -I /usr/local/include/eigen -I /usr/include/eigen3/
 
 # Main target
 $(EXEC): $(OBJECTS)
