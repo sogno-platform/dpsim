@@ -4,7 +4,7 @@ CC_FLAGS = -ggdb -w -lm -std=c++11 $(INCLUDES)
 
 # File names
 EXEC = DPSolver
-SOURCES = $(wildcard *.cpp) $(wildcard Components/*.cpp)
+SOURCES = $(wildcard *.cpp) $(wildcard Components/*.cpp) $(wildcard Examples/*.cpp)
 OBJECTS = $(SOURCES:.cpp=.o)
 
 INCLUDES = -I /usr/local/include/eigen
