@@ -45,10 +45,10 @@ namespace DPsim {
 		void initialize(Int numNodes, Int numIdealVS);
 		void addSystemMatrix(Matrix systemMatrix);
 
-		Matrix getCurrentSystemMatrix() { return mSystemMatrix; }
-		Matrix getLUdecomp() { return mLuFactored.matrixLU(); }
-		Matrix getRightSideVector() { return mRightSideVector; }
-		Matrix getLeftSideVector() { return mLeftSideVector; }
+		Matrix & getCurrentSystemMatrix() { return mSystemMatrix; }
+		const Matrix & getLUdecomp() { return mLuFactored.matrixLU(); }
+		Matrix & getRightSideVector() { return mRightSideVector; }
+		Matrix & getLeftSideVector() { return mLeftSideVector; }
 		Real getTimeStep() { return mTimeStep; }
 		Real getOmega() { return mSystemOmega; }
 		Int getCompOffset() { return mCompOffset; }
