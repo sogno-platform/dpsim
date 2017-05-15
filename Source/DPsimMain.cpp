@@ -13,7 +13,8 @@ int main(int argc, char* argv[]) {
 
 
 
-	villasExample();
+	//villasExample();
+	villasDistributedExample(argc, argv);
 	//simulationExample1();
 	//simulationExample2();
 	//simulationExample3();

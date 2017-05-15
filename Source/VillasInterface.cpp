@@ -23,6 +23,10 @@ VillasInterface::~VillasInterface() {
 }
 
 void VillasInterface::readValues() {
+	if (!mInit) {
+		mInit = 1;
+		return;
+	}
 	struct sample *sample;
 	int ret = 0;
 	while (ret == 0)
@@ -47,6 +51,7 @@ void VillasInterface::readValues() {
 		if (evs)
 			evs->setVoltage(real, imag);
 	}
+	sample_put(sample);
 }
 
 void VillasInterface::writeValues(SystemModel& model) {

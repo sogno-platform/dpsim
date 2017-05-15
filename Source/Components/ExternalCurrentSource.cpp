@@ -2,7 +2,8 @@
 
 using namespace DPsim;
 
-ExternalCurrentSource::ExternalCurrentSource(std::string name, int src, int dest) : CurrentSource(name, src, dest, 0, 0) {
+ExternalCurrentSource::ExternalCurrentSource(std::string name, int src, int dest, Real initCurrent, Real initPhase) :
+	CurrentSource(name, src, dest, initCurrent, initPhase) {
 }
 
 void ExternalCurrentSource::setCurrent(Real real, Real imag) {

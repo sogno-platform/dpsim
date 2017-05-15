@@ -30,6 +30,7 @@ namespace DPsim {
 		std::vector<ExtComponent> mExtComponents;
 		std::vector<VoltDiff> mExportedVoltages;
 		std::vector<ExtComponent> mExportedCurrents;
+		bool mInit = 0;
 	public:
 		void registerVoltageSource(ExternalVoltageSource* evs, Int realIdx, Int imagIdx);
 		void registerCurrentSource(ExternalCurrentSource* ecs, Int realIdx, Int imagIdx);
