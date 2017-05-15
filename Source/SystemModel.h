@@ -75,10 +75,6 @@ namespace DPsim {
 		void addRealToRightSideVector(Int row, Real value);
 		void setRightSideVectorToZero();
 
-		void resetCurrents();
-		void addCurrent(Int node1, Int node2, Complex value);
-		Complex getCurrent(Int node1, Int node2);
-
 		void solve();
 	};
 }
