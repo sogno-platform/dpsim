@@ -19,7 +19,3 @@ void CurrentSource::applyRightSideVectorStamp(SystemModel& system) {
 void CurrentSource::step(SystemModel& system, Real time) {
 	this->applyRightSideVectorStamp(system);
 }
-
-Complex CurrentSource::getCurrent(SystemModel& system) {
-	return Complex(currentr, currenti);
-}
