@@ -500,6 +500,8 @@ $i_a$, $i_b$ and $i_c$ are the instantaneous stator currents in phases a, b and 
 
 $i_{fd}$, $i_{kd}$ and $i_{kd}$ are the field and amortisseur circuit currents.
 
+The stator inductances are negative, because the currents $i_a$, $i_b$ and $i_c$ are considered leaving the stator windings.
+ 
 The equations of the stator phase to neutral voltages are
 
 \begin{equation}
@@ -533,7 +535,7 @@ The permeance of the magnetic flux path $P$ (inverse of the reluctance $\Re$) in
 	P = P_0 + P_2 \cos 2 \alpha
 \end{equation}
 
-Inductance is directly proportional to permeance and the relative position between the phase a and the rotor is $\theta$. Therefore, we can write the self-inductance $l_{aa}$ as in equation \ref{eq:SelfInductanceA}. Knowing that the windings of phases b and c are identical to phase a and displaced from it by  $120 \circ$ and $240 \circ$ respectively, we can also determine the self-inductances $l_{bb}$ and $l_{cc}$. A more detailed derivation of the self-inductances is in \cite{kundur1994power}.
+Inductance is directly proportional to permeance and the relative position between the phase a and the rotor is $\theta$. Therefore, we can write the self-inductance $l_{aa}$ as in equation \ref{eq:SelfInductanceA}. Knowing that the windings of phases b and c are identical to phase a and displaced from it by  $120^{\circ}$ and $240^{\circ}$ respectively, we can also determine the self-inductances $l_{bb}$ and $l_{cc}$. A more detailed derivation of the self-inductances is in \cite{kundur1994power}.
 
 \begin{equation} \label{eq:SelfInductanceA}
 	l_{aa} = L_{aa0} + L_{aa2} \cos 2 \theta
@@ -555,6 +557,18 @@ The mutual inductance between two windings can be deduced evaluating the flux li
 \end{equation}
 \begin{equation} \label{eq:SelfInductanceA}
 	l_{ac} = - L_{ab0} - L_{ab2} \cos (2 \theta - \frac{\pi}{3})
+\end{equation}
+
+The rotor circuits see a constant reluctance. The variation in time for the mutual inductances between rotor and stator are due to their relative position. The inductance is maximum when stator and rotor are in lined up and zero when they are displaced by $90^{\circ}$.
+
+\begin{equation}
+	l_{afd} = L_{afd} \cos \theta
+\end{equation}
+\begin{equation}
+	l_{akd} = L_{akd} \cos \theta
+\end{equation}
+\begin{equation}
+	l_{akq} = -L_{akq} \sin \theta
 \end{equation}
 
 \subsubsection{Park's transformation}
