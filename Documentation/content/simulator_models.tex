@@ -381,7 +381,14 @@ The model is according to \cite{wang2010methods} and \cite{kundur1994power}.
 
 \subsubsection{Magnetic Circuits}
 
-Considering two magnetically coupled windings with number of turns $N_1$ and $N_2$, resistance $r_1$ and $r_2$ and winding currents $i_1$ and $i_2$ respectively, the flux linkage with the respective windings, produced by the total effect of both currents are given by equations \ref{eq:FluxLinkage1} and \ref{eq:FluxLinkage2}.
+Considering the magnetic circuit of figure \ref{fig:MagneticCircuit} with two magnetically coupled windings with number of turns $N_1$ and $N_2$, resistance $r_1$ and $r_2$ and currents $i_1$ and $i_2$ respectively, the flux linkage with the respective windings, produced by the total effect of both currents are given by equations \ref{eq:FluxLinkage1} and \ref{eq:FluxLinkage2}.
+
+\begin{figure}[h]
+	\centering
+	\includegraphics[scale=0.6]{img/MagneticCircuit.png} 
+	\caption{Magnetically coupled circuit}
+	\label{fig:MagneticCircuit}
+\end{figure}
 
 \begin{equation} \label{eq:FluxLinkage1}
 	\Psi_1 = N_1(\Phi_{l1} + \Phi_{m1} + \Phi_{m2})
@@ -475,8 +482,8 @@ The flux linkage for stator phase windings a, b and c are given by
 	=
 	\begin{bmatrix}
 		-l_{aa} & -l_{ab} & -l_{ac} & l_{afd} & l_{akd} & l_{akq} \\  
-		-l_{ab} & -l_{bb} & -l_{bc} & l_{afd} & l_{akd} & l_{akq} \\  
-		-l_{ac} & -l_{bc} & -l_{cc} & l_{afd} & l_{akd} & l_{akq}  
+		-l_{ab} & -l_{bb} & -l_{bc} & l_{bfd} & l_{bkd} & l_{bkq} \\  
+		-l_{ac} & -l_{bc} & -l_{cc} & l_{cfd} & l_{ckd} & l_{ckq}  
 	\end{bmatrix}
 	\begin{bmatrix}
 		i_a \\
@@ -569,6 +576,79 @@ The rotor circuits see a constant reluctance. The variation in time for the mutu
 \end{equation}
 \begin{equation}
 	l_{akq} = -L_{akq} \sin \theta
+\end{equation}
+
+Similarly 
+
+\begin{equation}
+	l_{bfd} = L_{afd} \cos (\theta - 2 \pi / 3)
+\end{equation}
+\begin{equation}
+	l_{bkd} = L_{akd} \cos (\theta - 2 \pi / 3)
+\end{equation}
+\begin{equation}
+	l_{bkq} = -L_{akq} \sin (\theta - 2 \pi / 3)
+\end{equation}
+\begin{equation}
+	l_{cfd} = L_{cfd} \cos (\theta + 2 \pi / 3)
+\end{equation}
+\begin{equation}
+	l_{ckd} = L_{ckd} \cos (\theta + 2 \pi / 3)
+\end{equation}
+\begin{equation}
+	l_{ckq} = -L_{ckq} \sin (\theta + 2 \pi / 3)
+\end{equation}
+
+The self-inductances of the rotor circuit and the mutual inductance between rotor windings do not vary with the rotor position, since the rotos circuits see constant reluctance. Therefore, the flux linkage for the rotor windings are given by
+
+\begin{equation}
+	\begin{bmatrix}
+		\Psi_{fd} \\
+		\Psi_{kd} \\
+		\Psi_{kq}
+	\end{bmatrix}
+	=
+	\begin{bmatrix}
+		-l_{afd} & -l_{bfd} & -l_{cfd} & L_{ffd} & L_{fkd} & 0 \\  
+		-l_{akd} & -l_{bkd} & -l_{ckd} & L_{fkd} & L_{kkd} & 0 \\  
+		-l_{akq} & -l_{bkq} & -l_{ckq} & 0       & 0       & L_{kkq}  
+	\end{bmatrix}
+	\begin{bmatrix}
+		i_a \\
+		i_b \\
+		i_c \\
+		i_{fd} \\
+		i_{kd} \\
+		i_{kq}
+	\end{bmatrix}
+\end{equation}
+
+The rotor voltage equations are
+
+\begin{equation}
+	\begin{bmatrix}
+		e_{fd} \\
+		0 \\
+		0
+	\end{bmatrix}
+	=
+	\frac{d}{dt}
+	\begin{bmatrix}
+		\Psi_{fd} \\
+		\Psi_{kd} \\
+		\Psi_{kq}
+	\end{bmatrix}
+	+
+	\begin{bmatrix}
+		R_{fd} & 0 & 0 \\
+		0 & R_{kd} & 0 \\
+		0 & 0 & R_{kq}
+	\end{bmatrix}
+	\begin{bmatrix}
+		i_{fd} \\
+		i_{kd} \\
+		i_{kq}
+	\end{bmatrix}
 \end{equation}
 
 \subsubsection{Park's transformation}
