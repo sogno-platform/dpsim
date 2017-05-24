@@ -12,7 +12,7 @@ int main(int argc, char* argv[]) {
 
 
 
-	simulationExample1();
+	/*simulationExample1();
 	simulationExample2();
 	simulationExample3();
 	simulationExampleIdealVS();
@@ -22,12 +22,12 @@ int main(int argc, char* argv[]) {
 	simulationExampleRXLine();
 	simulationExampleRXLine2();
 	simulationExamplePiLine();
-	simulationExamplePiLine2();
+	simulationExamplePiLine2();*/
 
 
 	//NetlistSim(argc, argv);
 	
-	//SynGenUnitTestBalancedResLoad();
+	SynGenUnitTestBalancedResLoad();
 	//SynGenUnitTestPhaseToPhaseFault();
 	//SynGenUnitTestThreePhaseFault();	
 	//SynGenDPUnitTestBalancedResLoad();

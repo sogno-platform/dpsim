@@ -5,7 +5,7 @@ using namespace DPsim;
 Simulation::Simulation() {
 	mTime = 0;
 	mCurrentSwitchTimeIndex = 0;
-	mSystemModel.setSimType(SimulationType::DynPhasor);
+	mSystemModel.setSimType(SimulationType::EMT);
 }
 
 Simulation::Simulation(std::vector<BaseComponent*> elements, Real om, Real dt, Real tf) 
