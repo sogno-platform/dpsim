@@ -457,13 +457,6 @@ The model is according to \cite{wang2010methods} and \cite{kundur1994power}.
 
 Considering the magnetic circuit of figure \ref{fig:MagneticCircuit} with two magnetically coupled windings with number of turns $N_1$ and $N_2$, resistance $r_1$ and $r_2$ and currents $i_1$ and $i_2$ respectively, the flux linkage with the respective windings, produced by the total effect of both currents are given by equations \ref{eq:FluxLinkage1} and \ref{eq:FluxLinkage2}.
 
-\begin{figure}[h]
-	\centering
-	\includegraphics[scale=0.6]{img/MagneticCircuit.png} 
-	\caption{Magnetically coupled circuit}
-	\label{fig:MagneticCircuit}
-\end{figure}
-
 \begin{equation} \label{eq:FluxLinkage1}
 	\lambda_1 = N_1(\Phi_{l1} + \Phi_{m1} + \Phi_{m2})
 \end{equation}
@@ -480,6 +473,13 @@ $\Phi_{m2}$ is the mutual flux linking both windings due to current $i_2$;
 $\Phi_{l1}$ is the leakage flux linking winding 1 only;
 
 $\Phi_{l2}$ is the leakage flux linking winding 2 only.
+
+\begin{figure}[h]
+	\centering
+	\includegraphics[scale=0.6]{img/MagneticCircuit.png} 
+	\caption{Magnetically coupled circuit}
+	\label{fig:MagneticCircuit}
+\end{figure}
 
 The flux linkage can also be expressed in terms of self and mutual inductance as in equation \ref{eq:FluxLinkageInductances}
 
@@ -542,6 +542,34 @@ The terminal voltages $e_1$ and $e_2$ are defined as following:
 
 Equations \ref{eq:FluxLinkageInductances}, \ref{eq:VoltageEquation1} and \ref{eq:VoltageEquation2} give the performance of the magnetically coupled circuit.
 
+\subsubsection{Park's transformation}
+
+Park's transformation is commonly used to achieve a model with static parameters:
+%
+\begin{equation}
+\mathbf{K_s} = \frac{2}{3}
+ \begin{bmatrix} 
+  \cos \theta & \cos(\theta-\frac{2\pi}{3}) & \cos(\theta+\frac{2\pi}{3}) \\
+  \sin \theta & \sin(\theta-\frac{2\pi}{3}) & \sin(\theta+\frac{2\pi}{3}) \\
+  \frac{1}{2} & \frac{1}{2} & \frac{1}{2}
+ \end{bmatrix}
+\end{equation}
+%
+Note that the scaling factor $\frac{2}{3}$, which ensures an equal length of the current dq-axis and stator reference frame current, is not always used. 
+%
+\begin{equation}
+(\mathbf{K_s})^{-1} = 
+ \begin{bmatrix} 
+  \cos \theta & \sin \theta & 1 \\
+  \cos(\theta-\frac{2\pi}{3}) & \sin(\theta-\frac{2\pi}{3}) & 1 \\
+  \cos(\theta+\frac{2\pi}{3}) & \sin(\theta+\frac{2\pi}{3}) & 1
+ \end{bmatrix}
+\end{equation}
+%
+where $\theta$ is the rotor angle in this case.
+
+\subsubsection{Model}
+
 \subsubsection{Synchronous Machine Basic equations}
 
 We can derive the equations of the synchronous machine similarly to the equations of the magnetic circuit.
@@ -555,17 +583,18 @@ The flux linkage for stator phase windings a, b and c are given by
 	\end{bmatrix}
 	=
 	\begin{bmatrix}
-		-l_{aa} & -l_{ab} & -l_{ca} & l_{afd} & l_{akd} & l_{akq} \\  
-		-l_{ab} & -l_{bb} & -l_{bc} & l_{bfd} & l_{bkd} & l_{bkq} \\  
-		-l_{ca} & -l_{bc} & -l_{cc} & l_{cfd} & l_{ckd} & l_{ckq}  
+		l_{aa} & l_{ab} & l_{ca} & l_{akq1} & l_{akq2} & l_{afd} & l_{akd} \\  
+		l_{ab} & l_{bb} & l_{bc} & l_{bkq1} & l_{bkq2} & l_{bfd} & l_{bkd} \\  
+		l_{ca} & l_{bc} & l_{cc} & l_{ckq1} & l_{ckq2} & l_{cfd} & l_{ckd} \\  
 	\end{bmatrix}
 	\begin{bmatrix}
 		i_a \\
 		i_b \\
 		i_c \\
+		i_{kq1} \\
+		i_{kq2} \\
 		i_{fd} \\
 		i_{kd} \\
-		i_{kq}
 	\end{bmatrix}
 \end{equation}
 
@@ -575,21 +604,19 @@ $l_{aa}$, $l_{bb}$ and $l_{cc}$ are the self-inductances of the stator windings;
 
 $l_{ab}$, $l_{bc}$ and $l_{ca}$ are the mutual inductances between the stator windings;
 
-$l_{afd}$, $l_{akd}$ and $l_{akq}$ are the mutual inductances between stator and rotor windings;
+$l_{akq1}$, $l_{akq2}$, $l_{afd}$ and $l_{akd}$ are the mutual inductances between stator and rotor windings;
 
 $i_a$, $i_b$ and $i_c$ are the instantaneous stator currents in phases a, b and c;
 
-$i_{fd}$, $i_{kd}$ and $i_{kd}$ are the field and amortisseur circuit currents.
-
-The stator inductances are negative, because the currents $i_a$, $i_b$ and $i_c$ are considered leaving the stator windings.
+$i_{kq1}$, $i_{kq2}$, $i_{fd}$ and $i_{kd}$ are the field and amortisseur circuit currents.
  
 The equations of the stator phase to neutral voltages are
 
 \begin{equation} \label{eq:VotlageStator}
 	\begin{bmatrix}
-		e_a \\
-		e_b \\
-		e_c
+		v_a \\
+		v_b \\
+		v_c
 	\end{bmatrix}
 	=
 	\frac{d}{dt}
@@ -619,81 +646,94 @@ The permeance of the magnetic flux path $P$ (inverse of the reluctance $\Re$) in
 Inductance is directly proportional to permeance and the relative position between the phase a and the rotor is $\theta$. Therefore, we can write the self-inductance $l_{aa}$ as in equation \ref{eq:SelfInductanceA}. Knowing that the windings of phases b and c are identical to phase a and displaced from it by  $120^{\circ}$ and $240^{\circ}$ respectively, we can also determine the self-inductances $l_{bb}$ and $l_{cc}$. A more detailed derivation of the self-inductances is in \cite{kundur1994power}.
 
 \begin{equation} \label{eq:SelfInductanceA}
-	l_{aa} = L_{aa0} + L_{aa2} \cos 2 \theta
+	l_{aa} = L_{aa0} - L_{aa2} \cos 2 \theta
 \end{equation}
 \begin{equation} \label{eq:SelfInductanceB}
-	l_{bb} = L_{aa0} + L_{aa2} \cos 2 (\theta - \frac{2 \pi}{3})
+	l_{bb} = L_{aa0} - L_{aa2} \cos 2 (\theta - \frac{2 \pi}{3})
 \end{equation}
 \begin{equation} \label{eq:SelfInductanceC}
-	l_{cc} = L_{aa0} + L_{aa2} \cos 2 (\theta + \frac{2 \pi}{3})
+	l_{cc} = L_{aa0} - L_{aa2} \cos 2 (\theta + \frac{2 \pi}{3})
 \end{equation}
 
 The mutual inductance between two stator windings can be deduced evaluating the flux linking one phase due to the current in the other phase. The mutual inductance will also have a second harmonic variation due to the non-uniform air gap.
 
 \begin{equation} \label{eq:MutualInductanceAB}
-	l_{ab} = -L_{ab0} - L_{aa2} \cos (2 \theta + \frac{\pi}{3})
+	l_{ab} = -L_{ab0} - L_{aa2} \cos 2(\theta + \frac{\pi}{3})
 \end{equation}
 \begin{equation} \label{eq:MutualInductanceBC}
-	l_{bc} = -L_{ab0} - L_{aa2} \cos (2 \theta - \pi)
+	l_{bc} = -L_{ab0} - L_{aa2} \cos 2(\theta + \pi)
 \end{equation}
 \begin{equation} \label{eq:MutualInductanceCA}
-	l_{ca} = - L_{ab0} - L_{aa2} \cos (2 \theta - \frac{\pi}{3})
+	l_{ca} = - L_{ab0} - L_{aa2} \cos 2(\theta + \frac{\pi}{3})
 \end{equation}
 
 The rotor circuits see a constant reluctance. The variation in time for the mutual inductances between rotor and stator are due to their relative position. The inductance is maximum when stator and rotor are lined up and zero when they are displaced by $90^{\circ}$.
 
 \begin{equation}
-	l_{afd} = L_{afd} \cos \theta
+	l_{akq1} = L_{akq1} \cos \theta
 \end{equation}
 \begin{equation}
-	l_{akd} = L_{akd} \cos \theta
+	l_{akq2} = L_{akq2} \cos \theta
 \end{equation}
 \begin{equation}
-	l_{akq} = -L_{akq} \sin \theta
+	l_{afd} = L_{afd} \sin \theta
+\end{equation}
+\begin{equation}
+	l_{akd} = L_{akd} \sin \theta
 \end{equation}
 
-Similarly  
+Similarly, the mutual inductances between phase b and rotor windings and phase c and rotor windings are defined as
 
 \begin{equation}
-	l_{bfd} = L_{afd} \cos (\theta - 2 \pi / 3)
+	l_{bkq1} = L_{akq1} \cos (\theta - \dfrac{2 \pi}{3})
 \end{equation}
 \begin{equation}
-	l_{bkd} = L_{akd} \cos (\theta - 2 \pi / 3)
+	l_{bkq2} = L_{akq2} \cos (\theta - \dfrac{2 \pi}{3})
 \end{equation}
 \begin{equation}
-	l_{bkq} = -L_{akq} \sin (\theta - 2 \pi / 3)
+	l_{bfd} = L_{afd} \sin (\theta - \dfrac{2 \pi}{3})
 \end{equation}
 \begin{equation}
-	l_{cfd} = L_{cfd} \cos (\theta + 2 \pi / 3)
+	l_{bkd} = L_{akd} \sin (\theta - \dfrac{2 \pi}{3})
+\end{equation}
+
+\begin{equation}
+	l_{ckq1} = L_{akq1} \cos (\theta + \dfrac{2 \pi}{3})
 \end{equation}
 \begin{equation}
-	l_{ckd} = L_{ckd} \cos (\theta + 2 \pi / 3)
+	l_{ckq2} = L_{akq2} \cos (\theta + \dfrac{2 \pi}{3})
 \end{equation}
 \begin{equation}
-	l_{ckq} = -L_{ckq} \sin (\theta + 2 \pi / 3)
+	l_{cfd} = L_{afd} \sin (\theta + \dfrac{2 \pi}{3})
+\end{equation}
+\begin{equation}
+	l_{ckd} = L_{akd} \sin (\theta + \dfrac{2 \pi}{3})
 \end{equation}
 
 The self-inductances of the rotor circuit and the mutual inductance between rotor windings do not vary with the rotor position, since the rotos circuits see constant reluctance. Therefore, the flux linkage for the rotor windings are given by
 
 \begin{equation} \label{eq:FluxRotor}
 	\begin{bmatrix}
+		\lambda_{kq1} \\
+		\lambda_{kq2} \\
 		\lambda_{fd} \\
 		\lambda_{kd} \\
-		\lambda_{kq}
 	\end{bmatrix}
 	=
 	\begin{bmatrix}
-		-l_{afd} & -l_{bfd} & -l_{cfd} & L_{ffd} & L_{fkd} & 0 \\  
-		-l_{akd} & -l_{bkd} & -l_{ckd} & L_{fkd} & L_{kkd} & 0 \\  
-		-l_{akq} & -l_{bkq} & -l_{ckq} & 0       & 0       & L_{kkq}  
+		l_{akq1} & l_{bkq1} & l_{ckq1} & L_{kq1} & L_{kq1kq2} & 0 & 0 \\  
+		l_{akq2} & l_{bkq2} & l_{ckq2} & L_{kq1kq2} & L_{kq2} & 0 & 0 \\ 
+		l_{afd} & l_{bfd} & l_{cfd} & 0 & 0 & L_{fd} & L_{fdkd} \\
+		l_{akd} & l_{bkd} & l_{ckd} & 0 & 0 & L_{fdkd} & L_{kd} \\  
 	\end{bmatrix}
 	\begin{bmatrix}
 		i_a \\
 		i_b \\
 		i_c \\
+		i_{kq1} \\
+		i_{kq2} \\
 		i_{fd} \\
-		i_{kd} \\
-		i_{kq}
+		i_{kd}
 	\end{bmatrix}
 \end{equation}
 
@@ -701,31 +741,35 @@ The rotor voltage equations are
 
 \begin{equation} \label{eq:VotlageRotor}
 	\begin{bmatrix}
-		e_{fd} \\
-		0 \\
-		0
+		v_{kq1} \\
+		v_{kq2} \\
+		v_{fd} \\
+		v_{kd}
 	\end{bmatrix}
 	=
 	\frac{d}{dt}
 	\begin{bmatrix}
+		\lambda_{kq1} \\
+		\lambda_{kq2} \\
 		\lambda_{fd} \\
-		\lambda_{kd} \\
-		\lambda_{kq}
+		\lambda_{kd}
 	\end{bmatrix}
 	+
 	\begin{bmatrix}
-		R_{fd} & 0 & 0 \\
-		0 & R_{kd} & 0 \\
-		0 & 0 & R_{kq}
+		R_{kq1} & 0 & 0 & 0 \\
+		0 & R_{kq2} & 0 & 0 \\
+		0 & 0 & R_{fd} & 0 \\
+		0 & 0 & 0 & R_{kd}
 	\end{bmatrix}
 	\begin{bmatrix}
+		i_{kq1} \\
+		i_{kq2} \\
 		i_{fd} \\
-		i_{kd} \\
-		i_{kq}
+		i_{kd}
 	\end{bmatrix}
 \end{equation}
 
-The equations \ref{eq:FluxStator} and \ref{eq:FluxRotor} can be rewritten as in equation \ref{eq:FluxRotorStator}. The flux equations together with the voltage equations \ref{eq:VotlageStator} and \ref{eq:VotlageRotor} completely describe the electrical performance of asynchronous machine.
+Replacing the inductances values in equations \ref{eq:FluxStator} and \ref{eq:FluxRotor}, we can write the flux equation as in equation \ref{eq:FluxRotorStator}. The flux equation together with the voltage equations \ref{eq:VotlageStator} and \ref{eq:VotlageRotor} completely describe the electrical performance of a synchronous machine.
 
 \begin{equation} \label{eq:FluxRotorStator}
 	\begin{bmatrix}
@@ -735,7 +779,7 @@ The equations \ref{eq:FluxStator} and \ref{eq:FluxRotor} can be rewritten as in 
 	=
 	\begin{bmatrix}
 		\mathbf{L}_s & \mathbf{L}_{rs} \\
-		-\mathbf{L}_{rs}^{T} & \mathbf{L}_r
+		\mathbf{L}_{rs}^{T} & \mathbf{L}_r
 	\end{bmatrix}
 	\begin{bmatrix}
 		\mathbf{i}_{abcs} \\
@@ -749,15 +793,15 @@ Where
 	\mathbf{L}_s
 	=
 	\begin{bmatrix}
-		-L_{aa0} - L_{aa2} \cos 2 \theta &
-		L_{ab0} + L_{aa2} \cos (2 \theta + \dfrac{\pi}{3}) &
-		L_{ab0} + L_{aa2}\cos (2 \theta - \dfrac{\pi}{3}) \\[6pt]
-		L_{ab0} + L_{aa2} \cos (2 \theta + \dfrac{\pi}{3}) &
-		-L_{aa0} - L_{aa2} \cos 2(\theta - \dfrac{2 \pi}{3})&
-		L_{ab0} + L_{aa2}\cos (2 \theta - \pi) \\[6pt]
-		L_{ab0} + L_{aa2} \cos (2 \theta - \dfrac{\pi}{3}) &
-		L_{ab0} + L_{aa2} \cos (2 \theta - \pi)&
-		-L_{aa0} - L_{aa2}\cos 2(\theta + \dfrac{2 \pi}{3}) \\[6pt]
+		L_{aa0} - L_{aa2} \cos 2 \theta &
+		-L_{ab0} - L_{aa2} \cos 2(\theta - \dfrac{\pi}{3}) &
+		-L_{ab0} - L_{aa2}\cos 2(\theta + \dfrac{\pi}{3}) &\\[6pt]
+		-L_{ab0} - L_{aa2} \cos 2(\theta - \dfrac{\pi}{3}) &
+		L_{aa0} - L_{aa2} \cos 2(\theta - \dfrac{2 \pi}{3})&
+		-L_{ab0} - L_{aa2}\cos 2(\theta + \pi) \\[6pt]
+		-L_{ab0} - L_{aa2} \cos 2(\theta + \dfrac{\pi}{3}) &
+		-L_{ab0} - L_{aa2} \cos 2(\theta + \pi)&
+		L_{aa0} - L_{aa2}\cos 2(\theta + \dfrac{2 \pi}{3}) \\[6pt]
 	\end{bmatrix}
 \end{equation}
 
@@ -765,15 +809,18 @@ Where
 	\mathbf{L}_{rs}
 	=
 	\begin{bmatrix}
-		L_{afd} \cos \theta &
-		L_{akd} \cos \theta &
-		-L_{ak1} \sin \theta \\[6pt]
-		L_{afd} \cos (\theta - \dfrac{2 \pi}{3}) &
-		L_{akd} \cos (\theta - \dfrac{2 \pi}{3}) &
-		-L_{ak1} \sin (\theta - \dfrac{2 \pi}{3}) \\[6pt]
-		L_{afd} \cos (\theta + \dfrac{2 \pi}{3}) &
-		L_{akd} \cos (\theta + \dfrac{2 \pi}{3}) &
-		-L_{ak1} \sin (\theta + \dfrac{2 \pi}{3}) \\[6pt]
+		L_{akq1} \cos \theta &
+		L_{akq2} \cos \theta &
+		L_{afd} \sin \theta &
+		L_{akd} \sin \theta \\[6pt]
+		L_{akq1} \cos (\theta - \dfrac{2 \pi}{3}) &
+		L_{akq2} \cos (\theta - \dfrac{2 \pi}{3}) &
+		L_{afd} \sin (\theta - \dfrac{2 \pi}{3}) &
+		L_{akd} \sin (\theta - \dfrac{2 \pi}{3}) \\[6pt]
+		L_{akq1} \cos (\theta + \dfrac{2 \pi}{3}) &
+		L_{akq2} \cos (\theta + \dfrac{2 \pi}{3}) &
+		L_{afd} \sin (\theta + \dfrac{2 \pi}{3}) &
+		L_{akd} \sin (\theta + \dfrac{2 \pi}{3}) \\[6pt]
 	\end{bmatrix}
 \end{equation}
 
@@ -781,9 +828,10 @@ Where
 	\mathbf{L}_r
 	=
 	\begin{bmatrix}
-		L_{ffd} & L_{fkd} & 0 \\  
-		L_{fkd} & L_{kkd} & 0 \\  
-		0       & 0       & L_{kkq}  
+		L_{kq1} & L_{kq1kq2} & 0 & 0 \\  
+		L_{kq1kq2} & L_{kq2} & 0 & 0 \\ 
+		0 & 0 & L_{fd} & L_{fdkd} \\
+		0 & 0 & L_{fdkd} & L_{kd} \\  
 	\end{bmatrix}
 \end{equation}
 
@@ -795,7 +843,7 @@ Where
   %  
   \mathbf{i}_{qdr} &= 
   \begin{bmatrix}
-    i_{fd} & i_{kd} & i_{kq} 
+    i_{kq1} & i_{kq2} & i_{fd} & i_{kd}
   \end{bmatrix}^T \\
   %
   \boldsymbol{\lambda}_{abcs} &= 
@@ -805,37 +853,10 @@ Where
   %  
   \boldsymbol{\lambda}_{dqr} &= 
   \begin{bmatrix}
-    \lambda_{fd} & \lambda_{kd} & \lambda_{kq} 
+     \lambda_{kq1} & \lambda_{kq2} & \lambda_{fd} & \lambda_{kd} 
   \end{bmatrix}^T \\
  \end{align}
 
-\subsubsection{Park's transformation}
-
-Park's transformation is commonly used to achieve a model with static parameters:
-%
-\begin{equation}
-\mathbf{K_s} = \frac{2}{3}
- \begin{bmatrix} 
-  \cos \theta & \cos(\theta-\frac{2\pi}{3}) & \cos(\theta+\frac{2\pi}{3}) \\
-  \sin \theta & \sin(\theta-\frac{2\pi}{3}) & \sin(\theta+\frac{2\pi}{3}) \\
-  \frac{1}{2} & \frac{1}{2} & \frac{1}{2}
- \end{bmatrix}
-\end{equation}
-%
-Note that the scaling factor $\frac{2}{3}$, which ensures an equal length of the current dq-axis and stator reference frame current, is not always used. 
-%
-\begin{equation}
-(\mathbf{K_s})^{-1} = 
- \begin{bmatrix} 
-  \cos \theta & \sin \theta & 1 \\
-  \cos(\theta-\frac{2\pi}{3}) & \sin(\theta-\frac{2\pi}{3}) & 1 \\
-  \cos(\theta+\frac{2\pi}{3}) & \sin(\theta+\frac{2\pi}{3}) & 1
- \end{bmatrix}
-\end{equation}
-%
-where $\theta$ is the rotor angle in this case.
-
-\subsubsection{Model}
 
 The mechanical equations are:
 %
@@ -846,6 +867,8 @@ The mechanical equations are:
 %
 where $\theta_r$ is the rotor position, $\omega_r$ is the angular electrical speed, $P$ is the number of poles, $J$ is the moment of inertia, $T_m$ and $T_e$ are the mechanical and electrical torque, respectively. Motor convention is used for all models. 
 
+\iffalse
+\subsection{Model}
 The electrical model in the phase domain is described by the following equations:
 %
 \begin{align}
@@ -906,6 +929,7 @@ The flux linkages are:
 %
 where the inductances are time variant variables as defined in \cite{krause2002sudhoff}.
 TODO: electromagnetic torque
+\fi
 
 \subsubsection{Equations in Rotor Reference Frame}
 
