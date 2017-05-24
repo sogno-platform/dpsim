@@ -371,6 +371,80 @@ The function "poststep" will calculate the values of the line voltage and curren
 \end{equation}
 
 In both cases, the function "init" is setting every initial value to zero.
+
+\subsection{Pi Line}
+The Pi Line model corresponds to a resistance in series with a inductance and two shunt capacitors as shown in figure \ref{fig:PiLine}. The inductance and the capacitance are represented using resistive companion and therefore replaced by a resitance in parallel to a current source.
+
+The following parameters are defined by the user:
+
+\begin{itemize}
+\item name: Name of the component
+\item node1: First node, where the resistance and the first capacitor are connected
+\item node2: Second node, where the inductance and the second capacitor are connected
+\item node3: Node between resistance and inductance 
+\item resistance: Resistance in ohms
+\item inductance: Inductance in H
+\item capacitance: Capacitance in F
+\end{itemize}
+
+\begin{figure}[h]
+	\centering
+	\includegraphics[scale=0.5]{img/PiLine.png} 
+	\caption{Pi Line model}
+	\label{fig:PiLine}
+\end{figure}
+
+The function "init" will initialize all currents and voltages with zero.
+
+The function "applySystemMatrixStamp" will stamp the resistances $R$ between node1 and node3, $R_L$ between node3 and node2, $R_{C1}$ between node1 and reference node and $R_{C2}$ between node2 and reference node to the conductance matrix $G$.
+
+The function "step" will recalculate the value of $A_L$, $A_{C1}$ and $A_{C2}$ and stamp it to the vector $A$.
+
+The function "poststep" will update the values of inductor and capacitors current and voltage.
+
+\begin{align}
+\begin{split}
+&
+\begin{matrix}
+& \quad \cdots & \quad node1 \quad & \quad node2 \quad &  \quad node3 & \cdots
+\end{matrix}\\[-6pt]
+G \quad = \quad
+\begin{matrix}
+\vdots\\[8pt]
+node1\\[8pt]
+node2\\[8pt]
+node3\\[8pt]
+\vdots\\
+\end{matrix}
+&
+\begin{bmatrix}
+	\quad & \quad &  \\[8pt]
+	\quad & \quad \dfrac{1}{R} + \dfrac{1}{R_{C1}} & \quad & \quad \dfrac{-1}{R} & \quad  \\[8pt]
+	\quad & \quad & \quad \dfrac{1}{R_L} + \dfrac{1}{R_{C2}} & \quad \dfrac{-1}{R_L} & \quad \\[8pt]
+	\quad & \quad \dfrac{-1}{R} & \quad \dfrac{-1}{R_L} & \dfrac{1}{R}+\dfrac{1}{R_L} & \quad\\[8pt]
+	\quad\\ 
+\end{bmatrix}
+\end{split}
+\end{align}
+\begin{align}
+\begin{split}
+A\quad = \quad
+\begin{matrix}
+\vdots\\[8pt]
+node1\\[8pt]
+node2\\[8pt]
+node3\\[8pt]
+\vdots\\
+\end{matrix}
+\begin{bmatrix}
+	\quad \\[8pt]
+	A_{C1}(k) \\[8pt]
+	A_L(k) + A_{C2}(k) \\[8pt]
+	-A_L(k) \\[8pt]
+	\quad
+\end{bmatrix}
+\end{split}
+\end{align}
  
 \section{Synchronous Machine}
 

@@ -19,21 +19,18 @@ void PiLine::applySystemMatrixStamp(SystemModel& system) {
 	mPrevCurFacIm = -2. * b / (1 + b*b);
 
 	// Resistive part
-	// Set diagonal entries
 	if (mNode1 >= 0) {
 		system.addCompToSystemMatrix(mNode1, mNode1, mConductance, 0);
 	}
 	if (mNode3 >= 0) {
 		system.addCompToSystemMatrix(mNode3, mNode3, mConductance, 0);
 	}
-	// Set off diagonal entries
 	if (mNode1 >= 0 && mNode3 >= 0) {
 		system.addCompToSystemMatrix(mNode1, mNode3, -mConductance, 0);
 		system.addCompToSystemMatrix(mNode3, mNode1, -mConductance, 0);
 	}
 
-	// Inductance part
-	// Set diagonal entries
+	// Inductive part
 	if (mNode3 >= 0) {
 		system.addCompToSystemMatrix(mNode3, mNode3, mGlr, mGli);
 	}
@@ -91,7 +88,7 @@ void PiLine::init(Real om, Real dt) {
 
 void PiLine::step(SystemModel& system, Real time) {
 
-	// Initialize internal state inductance
+	// Calculate current source of inductor
 	mCurEqIndRe = mGlr * mDeltaVre - mGli * mDeltaVim + mPrevCurFacRe * mCurrIndRe - mPrevCurFacIm * mCurrIndIm;
 	mCurEqIndIm = mGli * mDeltaVre + mGlr * mDeltaVim + mPrevCurFacIm * mCurrIndRe + mPrevCurFacRe * mCurrIndIm;
 
@@ -102,8 +99,7 @@ void PiLine::step(SystemModel& system, Real time) {
 		system.addCompToRightSideVector(mNode2, mCurEqIndRe, mCurEqIndIm);
 	}
 
-	// Initialize internal state capacitance 1
-
+	// Calculate current source of capacitor 1
 	mCurEqCapRe1 = mCurrCapRe1 + mGcr * mVoltageAtNode1Re + mGci * mVoltageAtNode1Im;
 	mCurEqCapIm1 = mCurrCapIm1 + mGcr * mVoltageAtNode1Im - mGci * mVoltageAtNode1Re;
 
@@ -111,7 +107,7 @@ void PiLine::step(SystemModel& system, Real time) {
 		system.addCompToRightSideVector(mNode1, mCurEqCapRe1, mCurEqCapIm1);
 	}
 
-	// Initialize internal state capacitance 2
+	// calculate curret source of capacitor 2
 	mCurEqCapRe2 = mCurrCapRe2 + mGcr * mVoltageAtNode2Re + mGci * mVoltageAtNode2Im;
 	mCurEqCapIm2 = mCurrCapIm2 + mGcr * mVoltageAtNode2Im - mGci * mVoltageAtNode2Re;
 	if (mNode2 >= 0) {
