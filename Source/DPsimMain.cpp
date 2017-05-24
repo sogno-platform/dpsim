@@ -15,6 +15,7 @@ int main(int argc, char* argv[]) {
 
 	//villasExample();
 	villasDistributedExample(argc, argv);
+	//villasDistributedRef();
 	//simulationExample1();
 	//simulationExample2();
 	//simulationExample3();
