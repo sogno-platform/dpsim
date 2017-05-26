@@ -47,7 +47,7 @@ Simulation::~Simulation() {
 void Simulation::initialize(std::vector<BaseComponent*> newElements) {	
 	int maxNode = 0;
 	Int numIdealVS = 0;
-	int numRxLines = 0;
+	int numLines = 0;
 
 	mElementsVector.push_back(newElements);
 	mElements = mElementsVector[0];
@@ -65,15 +65,15 @@ void Simulation::initialize(std::vector<BaseComponent*> newElements) {
 		if (dynamic_cast<IdealVoltageSource*>(*it)) {
 			numIdealVS = numIdealVS + 1;
 		}
-		if (dynamic_cast<RxLine*>(*it)) {
+		if (dynamic_cast<RxLine*>(*it) || dynamic_cast<PiLine*>(*it)) {
 			if ((*it)->getNode3() != -1) {
-				numRxLines = numRxLines + 1;
+				numLines = numLines + 1;
 			}
 			
 		}
 	}
 
-	Int numNodes = maxNode + 1 + numIdealVS + numRxLines;
+	Int numNodes = maxNode + 1 + numIdealVS + numLines;
 	mSystemModel.initialize(numNodes,numIdealVS);
 	addSystemTopology(mElements);
 	

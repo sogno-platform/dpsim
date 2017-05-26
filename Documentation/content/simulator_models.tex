@@ -377,6 +377,188 @@ In both cases, the function "init" is setting every initial value to zero.
 The model is according to \cite{wang2010methods} and \cite{kundur1994power}. 
 
 \subsubsection{Prerequisites}
+
+
+\subsubsection{Magnetic Circuits}
+
+Considering two magnetically coupled windings with number of turns $N_1$ and $N_2$, resistance $r_1$ and $r_2$ and winding currents $i_1$ and $i_2$ respectively, the flux linkage with the respective windings, produced by the total effect of both currents are given by equations \ref{eq:FluxLinkage1} and \ref{eq:FluxLinkage2}.
+
+\begin{equation} \label{eq:FluxLinkage1}
+	\Psi_1 = N_1(\Phi_{l1} + \Phi_{m1} + \Phi_{m2})
+\end{equation}
+\begin{equation} \label{eq:FluxLinkage2}
+	\Psi_2 = N_2(\Phi_{l2} + \Phi_{m2} + \Phi_{m1})
+\end{equation}
+\\
+where
+
+$\Phi_{m1}$ is the mutual flux linking both windings due to current $i_1$;
+
+$\Phi_{m2}$ is the mutual flux linking both windings due to current $i_2$;
+
+$\Phi_{l1}$ is the leakage flux linking winding 1 only;
+
+$\Phi_{l2}$ is the leakage flux linking winding 2 only.
+
+The flux linkage can also be expressed in terms of self and mutual inductance as in equation \ref{eq:FluxLinkageInductances}
+
+\begin{equation} \label{eq:FluxLinkageInductances}
+	\begin{bmatrix}
+		\Psi_1\\
+		\Psi_2
+	\end{bmatrix}
+		=
+	\begin{bmatrix}
+		L_{11} & L_{12}\\
+		L_{21} & L_{22}
+	\end{bmatrix}
+		\cdot
+	\begin{bmatrix}
+		i_1\\
+		i_2		
+	\end{bmatrix}
+\end{equation}
+\\
+where $L_{11}$ and $L_{22}$ are the self inductances of windings 1 and 2 respectively and defined as the flux linkage per unit current in the same winding. $L_{12}$ and $L_{21}$ are the mutual inductance between two windings, defined as the flux linkage with one winding per unit current in the other winding.
+
+\begin{equation}
+	L_{11} = \frac{N_1(\Phi_{m1} + \Phi_{l1})}{i_1}
+\end{equation}
+\begin{equation}
+	L_{22} =  \frac{N_2(\Phi_{m2} + \Phi_{l2})}{i_2}
+\end{equation}
+
+\begin{equation}
+	L_{12} = \frac{N_1 \Phi_{m2}}{i_2}
+\end{equation}
+\begin{equation}
+	L_{21} = \frac{N_2 \Phi_{m1}}{i_1}
+\end{equation}
+
+The mutual fluxes $\Phi_{m1}$ and $\Phi_{m2}$ can be defined as in equations \ref{eq:MutualFlux1} and \ref{eq:MutualFlux2}, where $\Re_m$ is the reluctance of the path of the magnetizing fluxes. 
+
+\begin{equation} \label{eq:MutualFlux1}
+	\Phi_{m1} = \frac{N_1 i_1}{\Re_m} 
+\end{equation} 
+\begin{equation} \label{eq:MutualFlux2}
+	\Phi_{m2} = \frac{N_2 i_2}{\Re_m} 
+\end{equation}
+
+From these equations, it is possible to see that
+
+\begin{equation}
+	L_{12}=L_{21}= \frac{N_1 N_2}{\Re_m}
+\end{equation}
+
+The terminal voltages $e_1$ and $e_2$ are defined as following:
+
+\begin{equation} \label{eq:VoltageEquation1}
+	e_1 = \frac{d \Psi_1}{d t} + r_1 i_1
+\end{equation}
+\begin{equation} \label{eq:VoltageEquation2}
+	e_2 = \frac{d \Psi_2}{d t} + r_2 i_2
+\end{equation}
+
+Equations \ref{eq:FluxLinkageInductances}, \ref{eq:VoltageEquation1} and \ref{eq:VoltageEquation2} give the performance of the magnetically coupled circuit.
+
+\subsubsection{Synchronous Machine Basic equations}
+
+We can derive the equations of the synchronous machine similarly to the equations of the magnetic circuit.
+
+The flux linkage for stator phase windings a, b and c are given by
+\begin{equation}
+	\begin{bmatrix}
+		\Psi_a \\
+		\Psi_b \\
+		\Psi_c
+	\end{bmatrix}
+	=
+	\begin{bmatrix}
+		-l_{aa} & -l_{ab} & -l_{ac} & l_{afd} & l_{akd} & l_{akq} \\  
+		-l_{ab} & -l_{bb} & -l_{bc} & l_{afd} & l_{akd} & l_{akq} \\  
+		-l_{ac} & -l_{bc} & -l_{cc} & l_{afd} & l_{akd} & l_{akq}  
+	\end{bmatrix}
+	\begin{bmatrix}
+		i_a \\
+		i_b \\
+		i_c \\
+		i_{fd} \\
+		i_{kd} \\
+		i_{kq}
+	\end{bmatrix}
+\end{equation}
+
+where
+
+$l_{aa}$, $l_{bb}$ and $l_{cc}$ are the self-inductances of the stator windings;
+
+$l_{ab}$, $l_{bc}$ and $l_{ac}$ are the mutual inductances between the stator windings;
+
+$l_{afd}$, $l_{akd}$ and $l_{akq}$ are the mutual inductances between stator and rotor windings;
+
+$i_a$, $i_b$ and $i_c$ are the instantaneous stator currents in phases a, b and c;
+
+$i_{fd}$, $i_{kd}$ and $i_{kd}$ are the field and amortisseur circuit currents.
+
+The equations of the stator phase to neutral voltages are
+
+\begin{equation}
+	\begin{bmatrix}
+		e_a \\
+		e_b \\
+		e_c
+	\end{bmatrix}
+	=
+	\frac{d}{dt}
+	\begin{bmatrix}
+		\Psi_a \\
+		\Psi_b \\
+		\Psi_c
+	\end{bmatrix}
+	-R_a
+	\begin{bmatrix}
+		i_a \\
+		i_b \\
+		i_c
+	\end{bmatrix}
+\end{equation}
+
+where $R_a$ is the armature resistance per phase.
+
+It is important to notice that the inductances are time-varying. They vary with the rotor position, due to the variation in the reluctance of the magnetic flux path (non-uniform air gap). 
+
+The permeance of the magnetic flux path $P$ (inverse of the reluctance $\Re$) in function of the rotor position $\alpha$ can be writen as
+
+\begin{equation}
+	P = P_0 + P_2 \cos 2 \alpha
+\end{equation}
+
+Inductance is directly proportional to permeance and the relative position between the phase a and the rotor is $\theta$. Therefore, we can write the self-inductance $l_{aa}$ as in equation \ref{eq:SelfInductanceA}. Knowing that the windings of phases b and c are identical to phase a and displaced from it by  $120 \circ$ and $240 \circ$ respectively, we can also determine the self-inductances $l_{bb}$ and $l_{cc}$. A more detailed derivation of the self-inductances is in \cite{kundur1994power}.
+
+\begin{equation} \label{eq:SelfInductanceA}
+	l_{aa} = L_{aa0} + L_{aa2} \cos 2 \theta
+\end{equation}
+\begin{equation} \label{eq:SelfInductanceA}
+	l_{bb} = L_{aa0} + L_{aa2} \cos 2 (\theta - \frac{2 \pi}{3})
+\end{equation}
+\begin{equation} \label{eq:SelfInductanceA}
+	l_{cc} = L_{aa0} + L_{aa2} \cos 2 (\theta + \frac{2 \pi}{3})
+\end{equation}
+
+The mutual inductance between two windings can be deduced evaluating the flux linking one phase due to the current in the other phase. The mutual inductance will also have a second harmonic variation due to the non-uniform air gap.
+
+\begin{equation} \label{eq:SelfInductanceA}
+	l_{ab} = -L_{ab0} - L_{ab2} \cos (2 \theta + \frac{\pi}{3})
+\end{equation}
+\begin{equation} \label{eq:SelfInductanceA}
+	l_{bc} = -L_{ab0} - L_{ab2} \cos (2 \theta - \pi)
+\end{equation}
+\begin{equation} \label{eq:SelfInductanceA}
+	l_{ac} = - L_{ab0} - L_{ab2} \cos (2 \theta - \frac{\pi}{3})
+\end{equation}
+
+\subsubsection{Park's transformation}
+
 Park's transformation is commonly used to achieve a model with static parameters:
 %
 \begin{equation}

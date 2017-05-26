@@ -1,0 +1,18 @@
+stages:
+  - prepare
+  - build
+
+docker:
+  stage: prepare
+  script:
+    - docker build -t dpsim-dev .
+  tags:
+    - shell
+
+build:
+  stage: build
+  script:
+    - make -C Source
+  image: dpsim-dev
+  tags:
+    - docker

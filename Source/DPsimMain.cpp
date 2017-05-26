@@ -11,8 +11,6 @@ using namespace DPsim;
 
 int main(int argc, char* argv[]) {
 
-
-
 	//villasExample();
 	villasDistributedExample(argc, argv);
 	//villasDistributedRef();

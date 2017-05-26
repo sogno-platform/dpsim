@@ -12,7 +12,7 @@ TEST_SOURCES = $(wildcard Tests/Test*.cpp)
 TEST_OBJS = $(TEST_SOURCES:.cpp=.o)
 TEST_BINS = $(TEST_SOURCES:.cpp=)
 
-INCLUDES = -I /usr/include/eigen3
+INCLUDES = -I /usr/local/include/eigen -I /usr/include/eigen3
 
 .PHONY: tests clean
 

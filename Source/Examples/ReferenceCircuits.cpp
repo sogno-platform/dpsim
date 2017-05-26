@@ -396,3 +396,86 @@ void DPsim::simulationExampleRXLine3()
 	leftVectorLog.WriteLogToFile("Logs/LeftVectorLog_" + fileName.str() + ".csv");
 	rightVectorLog.WriteLogToFile("Logs/RightVectorLog_" + fileName.str() + ".csv");
 }
+
+void DPsim::simulationExamplePiLine()
+{
+	// Define Object for saving data on a file
+	Logger log, leftVectorLog, rightVectorLog;
+
+	std::vector<BaseComponent*> circElements0;
+	circElements0.push_back(new IdealVoltageSource("v_1", 1, 0, 345, 0, 1));
+	circElements0.push_back(new LinearResistor("r1", 1, 2, 5));
+	circElements0.push_back(new PiLine("PiLine1", 2, 3, 4, 6.4, 0.186, 0.004));
+	circElements0.push_back(new LinearResistor("r_load", 3, 0, 150));
+
+
+
+	std::cout << "The contents of circElements0 are:";
+	for (std::vector<BaseComponent*>::iterator it = circElements0.begin(); it != circElements0.end(); ++it) {
+		std::cout << "Added " << (*it)->getName() << std::endl;
+	}
+	std::cout << '\n';
+
+	// Set up simulation
+	Real timeStep = 0.001;
+	Simulation newSim(circElements0, 2.0*M_PI*50.0, timeStep, 0.3, log);
+
+	// Main Simulation Loop
+	std::cout << "Start simulation." << std::endl;
+	while (newSim.step(log, leftVectorLog, rightVectorLog))
+	{
+		newSim.increaseByTimeStep();
+		updateProgressBar(newSim.getTime(), newSim.getFinalTime());
+	}
+	std::cout << "Simulation finished." << std::endl;
+
+	// Write simulation data to file
+	std::ostringstream fileName;
+	fileName << "SimulationExamplePiLine_" << timeStep;
+	log.WriteLogToFile("Logs/Log_" + fileName.str() + ".log");
+	leftVectorLog.WriteLogToFile("Logs/LeftVectorLog_" + fileName.str() + ".csv");
+	rightVectorLog.WriteLogToFile("Logs/RightVectorLog_" + fileName.str() + ".csv");
+}
+
+void DPsim::simulationExamplePiLine2()
+{
+	// Define Object for saving data on a file
+	Logger log, leftVectorLog, rightVectorLog;
+
+	std::vector<BaseComponent*> circElements0;
+	circElements0.push_back(new IdealVoltageSource("v_1", 1, 0, 345, 0, 1));
+	circElements0.push_back(new LinearResistor("r1", 1, 2, 5));
+	circElements0.push_back(new Capacitor("c_1", 2, 0, 0.002));
+	circElements0.push_back(new LinearResistor("r_load", 2, 4, 6.4));
+	circElements0.push_back(new Inductor("l_1", 4, 3, 0.186));
+	circElements0.push_back(new Capacitor("c_2", 3, 0, 0.002));
+	circElements0.push_back(new LinearResistor("r_load", 3, 0, 150));
+
+
+
+	std::cout << "The contents of circElements0 are:";
+	for (std::vector<BaseComponent*>::iterator it = circElements0.begin(); it != circElements0.end(); ++it) {
+		std::cout << "Added " << (*it)->getName() << std::endl;
+	}
+	std::cout << '\n';
+
+	// Set up simulation
+	Real timeStep = 0.001;
+	Simulation newSim(circElements0, 2.0*M_PI*50.0, timeStep, 0.3, log);
+
+	// Main Simulation Loop
+	std::cout << "Start simulation." << std::endl;
+	while (newSim.step(log, leftVectorLog, rightVectorLog))
+	{
+		newSim.increaseByTimeStep();
+		updateProgressBar(newSim.getTime(), newSim.getFinalTime());
+	}
+	std::cout << "Simulation finished." << std::endl;
+
+	// Write simulation data to file
+	std::ostringstream fileName;
+	fileName << "SimulationExamplePiLine2_" << timeStep;
+	log.WriteLogToFile("Logs/Log_" + fileName.str() + ".log");
+	leftVectorLog.WriteLogToFile("Logs/LeftVectorLog_" + fileName.str() + ".csv");
+	rightVectorLog.WriteLogToFile("Logs/RightVectorLog_" + fileName.str() + ".csv");
+}
