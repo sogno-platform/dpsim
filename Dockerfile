@@ -5,5 +5,6 @@ RUN dnf -y install \
 	gcc-c++ \
 	make \
 	eigen3-devel \
-	doxygen
-	
+	doxygen \
+	numpy \
+	python-pandas

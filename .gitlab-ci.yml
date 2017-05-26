@@ -1,6 +1,7 @@
 stages:
   - prepare
   - build
+  - test
 
 docker:
   stage: prepare
@@ -16,3 +17,11 @@ build:
   image: dpsim-dev
   tags:
     - docker
+
+test:
+  stage: test
+  script:
+    - make -C Source test
+    - cd Source/Tests
+    - python run_tests.py
+  image: dpsim-dev
