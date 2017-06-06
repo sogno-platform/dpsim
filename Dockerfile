@@ -1,4 +1,4 @@
-FROM fedora:latest
+FROM villas/node
 MAINTAINER Steffen Vogel <stvogel@eonerc.rwth-aachen.de>
 
 RUN dnf -y install \
