@@ -28,6 +28,7 @@ std::ostringstream& Logger::Log() {
 
 std::ostringstream& Logger::Log(LogLevel level) {
 	if (level > mLogLevel) {
+		mNullStream.str("");
 		return mNullStream;
 	}
 
