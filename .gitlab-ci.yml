@@ -3,9 +3,6 @@ stages:
   - build
   - test
 
-before_script:
-  - git submodule foreach git checkout .
-
 docker:
   stage: prepare
   script:
