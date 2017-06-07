@@ -23,5 +23,5 @@ test:
   script:
     - make -C Source tests
     - cd Source/Tests
-    - python run_tests.py
+    - python3 run_tests.py
   image: dpsim-dev

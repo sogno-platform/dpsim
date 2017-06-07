@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/python3
 #
 # Script for automatically running the tests and comparing the results against
 # given CSV files (from some other simulator).
