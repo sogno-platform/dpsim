@@ -1,3 +1,3 @@
 [submodule "Source/VILLASnode"]
 	path = Source/VILLASnode
-	url = git@git.rwth-aachen.de:VILLASframework/VILLASnode
+	url = ssh://git@git.rwth-aachen.de:VILLASframework/VILLASnode.git
