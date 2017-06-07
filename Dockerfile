@@ -8,7 +8,3 @@ RUN dnf -y install \
 	doxygen \
 	numpy \
 	python-pandas
-
-ADD https://villas.fein-aachen.org/packages/villas.repo /etc/yum.repos.d/
-
-RUN dnf -y install villas-node

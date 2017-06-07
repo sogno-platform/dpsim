@@ -1,7 +1,14 @@
+variables:
+  PREFIX: /usr/
+  GIT_SUBMODULE_STRATEGY: recursive
+
 stages:
   - prepare
   - build
   - test
+
+before_script:
+  - git submodule foreach git checkout .
 
 docker:
   stage: prepare
@@ -13,6 +20,7 @@ docker:
 build:
   stage: build
   script:
+    - make -C Source/VILLASnode install-libvillas-ext
     - make -C Source
   image: dpsim-dev
   tags:
