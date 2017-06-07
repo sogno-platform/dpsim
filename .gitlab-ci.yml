@@ -21,7 +21,7 @@ build:
 test:
   stage: test
   script:
-    - make -C Source test
+    - make -C Source tests
     - cd Source/Tests
     - python run_tests.py
   image: dpsim-dev
