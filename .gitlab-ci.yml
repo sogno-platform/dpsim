@@ -1,3 +1,6 @@
+variables:
+  DOCKER_IMAGE: dpsim-dev-${CI_COMMIT_REF_NAME}
+
 stages:
   - prepare
   - build
@@ -6,7 +9,7 @@ stages:
 docker:
   stage: prepare
   script:
-    - docker build -t dpsim-dev .
+    - docker build -t ${DOCKER_IMAGE} .
   tags:
     - shell
 
@@ -14,7 +17,7 @@ build:
   stage: build
   script:
     - make -C Source
-  image: dpsim-dev
+  image: ${DOCKER_IMAGE}
   tags:
     - docker
 
@@ -24,4 +27,4 @@ test:
     - make -C Source tests
     - cd Source/Tests
     - python3 run_tests.py
-  image: dpsim-dev
+  image: ${DOCKER_IMAGE}
