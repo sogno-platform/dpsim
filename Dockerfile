@@ -7,7 +7,8 @@ RUN dnf -y install \
 	eigen3-devel \
 	doxygen \
 	numpy \
-	python-pandas
+	python-pandas \
+    python-numpy
 
 ADD https://villas.fein-aachen.org/packages/villas.repo /etc/yum.repos.d/
 
