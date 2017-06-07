@@ -3,7 +3,7 @@
 
 #include "../MathLibrary.h"
 
-namespace Dpsim {
+namespace DPsim {
 	// EMT generator tests
 	void SynGenUnitTestBalancedResLoad();
 	void SynGenUnitTestPhaseToPhaseFault();

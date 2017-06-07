@@ -1,10 +1,11 @@
 #include "SynchronGenUnitTest.h"
 
 #include "../Simulation.h"
+#include "../Utilities.h"
 
 using namespace DPsim;
 
-void SynGenUnitTestBalancedResLoad() {
+void DPsim::SynGenUnitTestBalancedResLoad() {
 	
 	// Define Object for saving data on a file
 	Logger log, vtLog, jLog, synGenLogVolt, synGenLogCurr, synGenLogFlux;
@@ -58,9 +59,9 @@ void SynGenUnitTestBalancedResLoad() {
 		SynchGenStateType::perUnit, nomPower, nomPhPhVoltRMS, nomFreq, poleNum, nomFieldCurr,
 		SynchGenParamType::perUnit, Rs, Ll, Lmd, Lmd0, Lmq, Lmq0, Rfd, Llfd, Rkd, Llkd, Rkq1, Llkq1, Rkq2, Llkq2, H);
 	double loadRes = 1037.8378;
-	BaseComponent* r1 = new LinearResistor("r1", 0, 1, loadRes);
-	BaseComponent* r2 = new LinearResistor("r2", 0, 2, loadRes);
-	BaseComponent* r3 = new LinearResistor("r3", 0, 3, loadRes);
+	BaseComponent* r1 = new LinearResistorEMT("r1", 0, 1, loadRes);
+	BaseComponent* r2 = new LinearResistorEMT("r2", 0, 2, loadRes);
+	BaseComponent* r3 = new LinearResistorEMT("r3", 0, 3, loadRes);
 
 	std::vector<BaseComponent*> circElements;
 	circElements.push_back(gen);
@@ -120,7 +121,7 @@ void SynGenUnitTestBalancedResLoad() {
 	std::cout << "Simulation finished." << std::endl;
 }
 
-void SynGenUnitTestPhaseToPhaseFault() {
+void DPsim::SynGenUnitTestPhaseToPhaseFault() {
 	// Define Object for saving data on a file
 	Logger log, vtLog, jLog, synGenLogVolt, synGenLogCurr, synGenLogFlux;
 
@@ -223,7 +224,7 @@ void SynGenUnitTestPhaseToPhaseFault() {
 	std::cout << "Simulation finished." << std::endl;
 }
 
-void SynGenUnitTestThreePhaseFault() {
+void DPsim::SynGenUnitTestThreePhaseFault() {
 	// Define Object for saving data on a file
 	Logger log, vtLog, jLog, synGenLogVolt, synGenLogCurr, synGenLogFlux;
 
@@ -329,7 +330,7 @@ void SynGenUnitTestThreePhaseFault() {
 	std::cout << "Simulation finished." << std::endl;
 }
 
-void SynGenDPUnitTestBalancedResLoad() {
+void DPsim::SynGenDPUnitTestBalancedResLoad() {
 	// Define Object for saving data on a file
 	Logger log, vtLog, jLog, synGenLogVolt, synGenLogCurr, synGenLogFlux;
 
