@@ -9,6 +9,7 @@
 #include "Components/ExternalVoltageSource.h"
 
 namespace DPsim {
+
 	/** \brief Implements ExternalInterface by using the shared memory interface of VILLASnode.
 	 *
 	 * For this class, the indexes are the offsets in the data member of VILLAS's
@@ -17,9 +18,8 @@ namespace DPsim {
 	class VillasInterface : public ExternalInterface {
 	private:
 		const char* mShmemName;
-		struct shmem_shared* mShmem;
+		struct shmem_int mShmem;
 		int mSeq;
-		void* mBase;
 
 	public:
 		/** Create a VillasInterface using the given shmem object name.
@@ -28,6 +28,7 @@ namespace DPsim {
 		 * configuration of VILLASnode).
 		 */
 		VillasInterface(const char* name);
+		VillasInterface(const char* name, struct shmem_conf* conf);
 		~VillasInterface();
 		/** Read a single struct sample from the shared input queue and pass the contained
 		 * values to all registered current/voltage sources.

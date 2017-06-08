@@ -9,9 +9,21 @@
 using namespace DPsim;
 
 VillasInterface::VillasInterface(const char* name) {
+	struct shmem_conf conf;
+	conf.queuelen = 512;
+	conf.samplelen = 64;
+	conf.polling = 0;
 	this->mShmemName = name;
-	mShmem = shmem_shared_open(name, &this->mBase);
-	if (!mShmem) {
+	if (shmem_int_open(name, &this->mShmem, &conf) < 0) {
+		std::perror("Failed to open/map shared memory object");
+		std::exit(1);
+	}
+	mSeq = 0;
+}
+
+VillasInterface::VillasInterface(const char* name, struct shmem_conf* conf) {
+	this->mShmemName = name;
+	if (shmem_int_open(name, &this->mShmem, conf) < 0) {
 		std::perror("Failed to open/map shared memory object");
 		std::exit(1);
 	}
@@ -19,7 +31,7 @@ VillasInterface::VillasInterface(const char* name) {
 }
 
 VillasInterface::~VillasInterface() {
-	shmem_shared_close(mShmem, mBase);
+	shmem_int_close(&mShmem);
 }
 
 void VillasInterface::readValues() {
@@ -30,7 +42,7 @@ void VillasInterface::readValues() {
 	struct sample *sample;
 	int ret = 0;
 	while (ret == 0)
-		ret = shmem_shared_read(mShmem, &sample, 1);
+		ret = shmem_int_read(&mShmem, &sample, 1);
 	if (ret < 0) {
 		std::cerr << "Fatal error: failed to read sample from shmem interface" << std::endl;
 		std::exit(1);
@@ -56,7 +68,7 @@ void VillasInterface::readValues() {
 
 void VillasInterface::writeValues(SystemModel& model) {
 	struct sample *sample;
-	if (sample_alloc(&mShmem->pool, &sample, 1) < 1) {
+	if (sample_alloc(&mShmem.shared->pool, &sample, 1) < 1) {
 		std::cerr << "fatal error: shmem pool underrun" << std::endl;
 		std::exit(1);
 	}
@@ -100,7 +112,7 @@ void VillasInterface::writeValues(SystemModel& model) {
 	clock_gettime(CLOCK_REALTIME, &sample->ts.origin);
 	int ret = 0;
 	while (ret == 0)
-		ret = shmem_shared_write(mShmem, &sample, 1);
+		ret = shmem_int_write(&mShmem, &sample, 1);
 	if (ret < 0) {
 		std::cerr << "Failed to write samples to shmem interface" << std::endl;
 	}
