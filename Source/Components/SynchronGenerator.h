@@ -145,8 +145,8 @@ namespace DPsim {
 		/// stator referred parameters depending on the setting of parameter type.
 		/// The initialization mode depends on the setting of state type.
 		SynchronGenerator(std::string name, int node1, int node2, int node3,
-			SynchGenStateType stateType, Real nomPower, Real nomVolt, Real nomFreq, int poleNumber, Real nomFieldCur,
-			SynchGenParamType paramType, Real Rs, Real Ll, Real Lmd, Real Lmd0, Real Lmq, Real Lmq0,
+			Real nomPower, Real nomVolt, Real nomFreq, int poleNumber, Real nomFieldCur,
+			Real Rs, Real Ll, Real Lmd, Real Lmd0, Real Lmq, Real Lmq0,
 			Real Rfd, Real Llfd, Real Rkd, Real Llkd,
 			Real Rkq1, Real Llkq1, Real Rkq2, Real Llkq2,
 			Real inertia);

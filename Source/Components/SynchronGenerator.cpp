@@ -3,8 +3,8 @@
 using namespace DPsim;
 
 SynchronGenerator::SynchronGenerator(std::string name, int node1, int node2, int node3,
-	SynchGenStateType stateType, Real nomPower, Real nomVolt, Real nomFreq, int poleNumber, Real nomFieldCur,
-	SynchGenParamType paramType, Real Rs, Real Ll, Real Lmd, Real Lmd0, Real Lmq, Real Lmq0,
+	Real nomPower, Real nomVolt, Real nomFreq, int poleNumber, Real nomFieldCur,
+	Real Rs, Real Ll, Real Lmd, Real Lmd0, Real Lmq, Real Lmq0,
 	Real Rfd, Real Llfd, Real Rkd, Real Llkd,
 	Real Rkq1, Real Llkq1, Real Rkq2, Real Llkq2,
 	Real inertia) {
@@ -13,7 +13,6 @@ SynchronGenerator::SynchronGenerator(std::string name, int node1, int node2, int
 	this->mNode2 = node2 - 1;
 	this->mNode3 = node3 - 1;
 
-	mStateType = stateType;
 	mNomPower = nomPower;
 	mNomVolt = nomVolt;
 	mNomFreq = nomFreq;
@@ -32,10 +31,7 @@ SynchronGenerator::SynchronGenerator(std::string name, int node1, int node2, int
 	mBase_Psi = mBase_L * mBase_i;
 	mBase_T = mNomPower / mBase_OmMech;
 
-	if (paramType == SynchGenParamType::perUnit) {
-		// steady state per unit initial value
-		initWithPerUnitParam(Rs, Ll, Lmd, Lmd0, Lmq, Lmq0, Rfd, Llfd, Rkd, Llkd, Rkq1, Llkq1, Rkq2, Llkq2, inertia);
-	}
+	initWithPerUnitParam(Rs, Ll, Lmd, Lmd0, Lmq, Lmq0, Rfd, Llfd, Rkd, Llkd, Rkq1, Llkq1, Rkq2, Llkq2, inertia);
 
 }
 
@@ -50,46 +46,26 @@ void SynchronGenerator::initWithPerUnitParam(
 	mBase_vfd = mNomPower / mBase_ifd;
 	mBase_Zfd = mBase_vfd / mBase_ifd;
 	mBase_Lfd = mBase_Zfd / mBase_OmElec;
-
-	if (mStateType == SynchGenStateType::perUnit) {
-		mRs = Rs;
-		mLl = Ll;
-		mLmd = Lmd;
-		mLmd0 = Lmd0;
-		mLmq = Lmq;
-		mLmq0 = Lmq0;
-		mRfd = Rfd;
-		mLlfd = Llfd;
-		mRkd = Rkd;
-		mLlkd = Llkd;
-		mRkq1 = Rkq1;
-		mLlkq1 = Llkq1;
-		mRkq2 = Rkq2;
-		mLlkq2 = Llkq2;
-		mH = H;
-		// Additional inductances according to Krause
-		mLaq = 1 / (1 / mLmq + 1 / mLl + 1 / mLlkq1 + 1 / mLlkq2);
-		mLad = 1 / (1 / mLmd + 1 / mLl + 1 / mLlkd + 1 / mLlfd);
-	}
-	else if (mStateType == SynchGenStateType::statorReferred) {
-		mRs = Rs * mBase_Z;
-		mLl = Ll * mBase_L;
-		mLmd = Lmd * mBase_L;
-		mLmd0 = Lmd0 * mBase_L;
-		mLmq = Lmq * mBase_L;
-		mLmq0 = Lmq0 * mBase_L;
-		mRfd = Rfd * mBase_Z;
-		mLlfd = Llfd * mBase_L;
-		mRkd = Rkd * mBase_Z;
-		mLlkd = Llkd * mBase_L;
-		mRkq1 = Rkq1 * mBase_Z;
-		mLlkq1 = Llkq1 * mBase_L;
-		mRkq2 = Rkq2 * mBase_Z;
-		mLlkq2 = Llkq2 * mBase_L;
-		// Additional inductances according to Krause
-		mLaq = 1 / (1 / mLmq + 1 / mLl + 1 / mLlkq1 + 1 / mLlkq2) * mBase_L;
-		mLad = 1 / (1 / mLmd + 1 / mLl + 1 / mLlkd + 1 / mLlfd) * mBase_L;
-	}
+	
+	mRs = Rs;
+	mLl = Ll;
+	mLmd = Lmd;
+	mLmd0 = Lmd0;
+	mLmq = Lmq;
+	mLmq0 = Lmq0;
+	mRfd = Rfd;
+	mLlfd = Llfd;
+	mRkd = Rkd;
+	mLlkd = Llkd;
+	mRkq1 = Rkq1;
+	mLlkq1 = Llkq1;
+	mRkq2 = Rkq2;
+	mLlkq2 = Llkq2;
+	mH = H;
+	// Additional inductances according to Krause
+	mLaq = 1 / (1 / mLmq + 1 / mLl + 1 / mLlkq1 + 1 / mLlkq2);
+	mLad = 1 / (1 / mLmd + 1 / mLl + 1 / mLlkd + 1 / mLlfd);
+	
 }
 
 void SynchronGenerator::init(Real om, Real dt,
@@ -133,16 +109,10 @@ void SynchronGenerator::init(Real om, Real dt,
 		0, 0, 0, 0, 0, 0, 1;
 
 	mReactanceMat = mInductanceMat.inverse();
-
-	if (mStateType == SynchGenStateType::perUnit) {
-		// steady state per unit initial value
-		initStatesInPerUnit(initActivePower, initReactivePower, initTerminalVolt, initVoltAngle);
-	}
-	else if (mStateType == SynchGenStateType::statorReferred) {
-		// steady state stator referred initial value
-		//InitStatesInStatorRefFrame(initActivePower, initReactivePower, initTerminalVolt, initVoltAngle);
-	}
-
+	
+	// steady state per unit initial value
+	initStatesInPerUnit(initActivePower, initReactivePower, initTerminalVolt, initVoltAngle);
+	
 	mDq0Voltages(0, 0) = mVoltages(0, 0);
 	mDq0Voltages(1, 0) = mVoltages(1, 0);
 	mDq0Voltages(2, 0) = mVoltages(2, 0);

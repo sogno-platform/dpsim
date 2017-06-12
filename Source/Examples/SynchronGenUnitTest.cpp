@@ -56,8 +56,8 @@ void DPsim::SynGenUnitTestBalancedResLoad() {
 
 	// Declare circuit components
 	BaseComponent* gen = new SynchronGeneratorEMT("gen", 1, 2, 3,
-		SynchGenStateType::perUnit, nomPower, nomPhPhVoltRMS, nomFreq, poleNum, nomFieldCurr,
-		SynchGenParamType::perUnit, Rs, Ll, Lmd, Lmd0, Lmq, Lmq0, Rfd, Llfd, Rkd, Llkd, Rkq1, Llkq1, Rkq2, Llkq2, H);
+		nomPower, nomPhPhVoltRMS, nomFreq, poleNum, nomFieldCurr,
+		Rs, Ll, Lmd, Lmd0, Lmq, Lmq0, Rfd, Llfd, Rkd, Llkd, Rkq1, Llkq1, Rkq2, Llkq2, H);
 	double loadRes = 1037.8378;
 	BaseComponent* r1 = new LinearResistorEMT("r1", 0, 1, loadRes);
 	BaseComponent* r2 = new LinearResistorEMT("r2", 0, 2, loadRes);
@@ -83,15 +83,15 @@ void DPsim::SynGenUnitTestBalancedResLoad() {
 	((SynchronGeneratorEMT*)gen)->init(om, dt, initActivePower, initReactivePower, initTerminalVolt, initVoltAngle);
 
 	// Calculate initial values for circuit at generator connection point
-	double initApparentPower = sqrt(pow(initActivePower, 2) + pow(initReactivePower, 2));
-	double initTerminalCurr = initApparentPower / (3 * initTerminalVolt)* sqrt(2);	
-	double initPowerFactor = acos(initActivePower / initApparentPower);
-	double initVolt1 = initTerminalVolt * cos(initVoltAngle);
-	double initVolt2 = initTerminalVolt * cos(initVoltAngle - 2 * M_PI / 3);
-	double initVolt3 = initTerminalVolt * cos(initVoltAngle + 2 * M_PI / 3);
-	double initCurrent1 = initTerminalCurr * cos(initVoltAngle + initPowerFactor);
-	double initCurrent2 = initTerminalCurr * cos(initVoltAngle + initPowerFactor - 2 * M_PI / 3);
-	double initCurrent3 = initTerminalCurr * cos(initVoltAngle + initPowerFactor + 2 * M_PI / 3);
+	//double initApparentPower = sqrt(pow(initActivePower, 2) + pow(initReactivePower, 2));
+	//double initTerminalCurr = initApparentPower / (3 * initTerminalVolt)* sqrt(2);	
+	//double initPowerFactor = acos(initActivePower / initApparentPower);
+	//double initVolt1 = initTerminalVolt * cos(initVoltAngle);
+	//double initVolt2 = initTerminalVolt * cos(initVoltAngle - 2 * M_PI / 3);
+	//double initVolt3 = initTerminalVolt * cos(initVoltAngle + 2 * M_PI / 3);
+	//double initCurrent1 = initTerminalCurr * cos(initVoltAngle + initPowerFactor);
+	//double initCurrent2 = initTerminalCurr * cos(initVoltAngle + initPowerFactor - 2 * M_PI / 3);
+	//double initCurrent3 = initTerminalCurr * cos(initVoltAngle + initPowerFactor + 2 * M_PI / 3);
 
 	std::cout << "A matrix:" << std::endl;
 	std::cout << newSim.getSystemMatrix() << std::endl;
@@ -117,6 +117,9 @@ void DPsim::SynGenUnitTestBalancedResLoad() {
 	log.WriteLogToFile("log.txt");
 	vtLog.WriteLogToFile("data_vt.csv");
 	jLog.WriteLogToFile("data_j.csv");
+	synGenLogFlux.WriteLogToFile("data_synGen_flux.csv");
+	synGenLogVolt.WriteLogToFile("data_synGen_volt.csv");
+	synGenLogCurr.WriteLogToFile("data_synGen_curr.csv");
 	
 	std::cout << "Simulation finished." << std::endl;
 }
@@ -151,8 +154,8 @@ void DPsim::SynGenUnitTestPhaseToPhaseFault() {
 
 	// Declare circuit components
 	BaseComponent* gen = new SynchronGeneratorEMT("gen", 1, 2, 3,
-		SynchGenStateType::perUnit, nomPower, nomPhPhVoltRMS, nomFreq, poleNum, nomFieldCurr,
-		SynchGenParamType::perUnit, Rs, Ll, Lmd, Lmd0, Lmq, Lmq0, Rfd, Llfd, Rkd, Llkd, Rkq1, Llkq1, Rkq2, Llkq2, H);
+		nomPower, nomPhPhVoltRMS, nomFreq, poleNum, nomFieldCurr,
+		Rs, Ll, Lmd, Lmd0, Lmq, Lmq0, Rfd, Llfd, Rkd, Llkd, Rkq1, Llkq1, Rkq2, Llkq2, H);
 	double loadRes = 1037.8378;
 	BaseComponent* r1 = new LinearResistor("r1", 0, 1, loadRes);
 	BaseComponent* r2 = new LinearResistor("r2", 0, 2, loadRes);
@@ -254,8 +257,8 @@ void DPsim::SynGenUnitTestThreePhaseFault() {
 
 	// Declare circuit components
 	BaseComponent* gen = new SynchronGeneratorEMT("gen", 1, 2, 3,
-		SynchGenStateType::perUnit, nomPower, nomPhPhVoltRMS, nomFreq, poleNum, nomFieldCurr,
-		SynchGenParamType::perUnit, Rs, Ll, Lmd, Lmd0, Lmq, Lmq0, Rfd, Llfd, Rkd, Llkd, Rkq1, Llkq1, Rkq2, Llkq2, H);
+		nomPower, nomPhPhVoltRMS, nomFreq, poleNum, nomFieldCurr,
+		Rs, Ll, Lmd, Lmd0, Lmq, Lmq0, Rfd, Llfd, Rkd, Llkd, Rkq1, Llkq1, Rkq2, Llkq2, H);
 	double loadRes = 1037.8378;
 	BaseComponent* r1 = new LinearResistor("r1", 0, 1, loadRes);
 	BaseComponent* r2 = new LinearResistor("r2", 0, 2, loadRes);
@@ -360,8 +363,8 @@ void DPsim::SynGenDPUnitTestBalancedResLoad() {
 
 	// Declare circuit components
 	BaseComponent* gen = new SynchronGenerator("gen", 1, 2, 3,
-		SynchGenStateType::perUnit, nomPower, nomPhPhVoltRMS, nomFreq, poleNum, nomFieldCurr,
-		SynchGenParamType::perUnit, Rs, Ll, Lmd, Lmd0, Lmq, Lmq0, Rfd, Llfd, Rkd, Llkd, Rkq1, Llkq1, Rkq2, Llkq2, H);
+		nomPower, nomPhPhVoltRMS, nomFreq, poleNum, nomFieldCurr,
+		Rs, Ll, Lmd, Lmd0, Lmq, Lmq0, Rfd, Llfd, Rkd, Llkd, Rkq1, Llkq1, Rkq2, Llkq2, H);
 	double loadRes = 1037.8378;
 	BaseComponent* r1 = new LinearResistor("r1", 0, 1, loadRes);
 	BaseComponent* r2 = new LinearResistor("r2", 0, 2, loadRes);
