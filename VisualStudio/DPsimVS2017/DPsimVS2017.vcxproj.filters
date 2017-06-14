@@ -19,6 +19,12 @@
     <Filter Include="Quelldateien\Components">
       <UniqueIdentifier>{649f12e4-8160-4866-93e5-a23f1ef1fea7}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Headerdateien\Examples">
+      <UniqueIdentifier>{02de652b-ce57-449d-b742-9ca9d9cf9642}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Quelldateien\Examples">
+      <UniqueIdentifier>{23077820-7956-4fb4-ad7a-176559d36f8a}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\Source\Components.h">
