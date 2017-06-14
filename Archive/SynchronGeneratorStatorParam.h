@@ -1,5 +1,5 @@
-#ifndef SYNCHRONGENERATOREMT_H
-#define SYNCHRONGENERATOREMT_H
+#ifndef SYNCHRONGENERATOR_H
+#define SYNCHRONGENERATOR_H
 
 #include "BaseComponent.h"
 #include "ComponentCommons.h"
@@ -13,104 +13,104 @@ namespace DPsim {
 	/// parameter names include underscores and typical variables names found in literature instead of
 	/// descriptive names in order to shorten formulas and increase the readability
 
-	class SynchronGeneratorEMT : public BaseComponent {
+	class SynchronGenerator : public BaseComponent {
 	protected:
 
 		// ### Machine parameters ###
 		/// nominal power Pn [VA]
-		double mNomPower;
+		Real mNomPower;
 		/// nominal voltage Vn [V] (RMS)
-		double mNomVolt;
+		Real mNomVolt;
 		/// nominal frequency fn [Hz]
-		double mNomFreq;
+		Real mNomFreq;
 		/// nominal field current Ifn [A]
-		double mNomFieldCur;
+		Real mNomFieldCur;
 
 		/// stator resistance Rs[Ohm]
-		double mRs;
+		Real mRs;
 		/// leakage inductance Ll [H]
-		double mLl;
+		Real mLl;
 		/// d-axis mutual inductance Lmd [H]
-		double mLmd;
+		Real mLmd;
 		/// unsaturated d-axis mutual inductance Lmd [H]
-		double mLmd0;
+		Real mLmd0;
 		/// q-axis mutual inductance Lmq [H]
-		double mLmq;
+		Real mLmq;
 		/// unsaturated q-axis mutual inductance Lmq [H]
-		double mLmq0;
+		Real mLmq0;
 		/// field resistance Rfd [Ohm]
-		double mRfd;
+		Real mRfd;
 		/// field leakage inductance Llfd [H]
-		double mLlfd;
+		Real mLlfd;
 		/// d-axis damper resistance Rkd [Ohm]
-		double mRkd;
+		Real mRkd;
 		/// d-axis damper leakage inductance Llkd [H]
-		double mLlkd;
+		Real mLlkd;
 		/// q-axis damper resistance 1 Rkq1 [Ohm]
-		double mRkq1;
+		Real mRkq1;
 		/// q-axis damper leakage inductance 1 Llkq1 [H]
-		double mLlkq1;
+		Real mLlkq1;
 		/// q-axis damper resistance 2 Rkq2 [Ohm]
-		double mRkq2;
+		Real mRkq2;
 		/// q-axis damper leakage inductance 2 Llkq2 [H]
-		double mLlkq2;
+		Real mLlkq2;
 		/// q winding inductance
-		double mLaq;
+		Real mLaq;
 		/// d winding inductance
-		double mLad;
+		Real mLad;
 
 		/// inertia J [kg*m^2]
-		double mJ;
+		Real mJ;
 		/// number of poles
 		int mPoleNumber;
 		/// inertia coefficient H
-		double mH;
+		Real mH;
 
 		// ### Stator base values ###
 		/// specifies if the machine parameters are transformed to per unit
 		SynchGenStateType mStateType;
 		/// base stator voltage
-		double mBase_v;
+		Real mBase_v;
 		/// base stator voltage RMS
-		double mBase_V_RMS;
+		Real mBase_V_RMS;
 		/// base stator current
-		double mBase_i;
+		Real mBase_i;
 		/// base stator current RMS
-		double mBase_I_RMS;
+		Real mBase_I_RMS;
 		/// base stator impedance
-		double mBase_Z;
+		Real mBase_Z;
 		/// base electrical angular frequency
-		double mBase_OmElec;
+		Real mBase_OmElec;
 		/// base mechanical angular frequency
-		double mBase_OmMech;
+		Real mBase_OmMech;
 		/// base stator inductance
-		double mBase_L;
+		Real mBase_L;
 		/// base torque
-		double mBase_T;
+		Real mBase_T;
 		/// base flux linkage
-		double mBase_Psi;
+		Real mBase_Psi;
 
 		/// base field current
-		double mBase_ifd;
+		Real mBase_ifd;
 		/// base field voltage
-		double mBase_vfd;
+		Real mBase_vfd;
 		/// base field impedance
-		double mBase_Zfd;
+		Real mBase_Zfd;
 		/// base field inductance
-		double mBase_Lfd;
+		Real mBase_Lfd;
 
 
 		// ### State variables ###
 		/// rotor speed omega_r
-		double mOmMech;
+		Real mOmMech;
 		/// theta
-		double mThetaMech;
+		Real mThetaMech;
 		/// mechanical Power Pm [W]
-		double mMechPower;
+		Real mMechPower;
 		/// mechanical torque
-		double mMechTorque;
+		Real mMechTorque;
 		/// electrical torque
-		double mElecTorque;
+		Real mElecTorque;
 		/// voltage vector q d 0 kq1 kq2 df kd
 		DPSMatrix mVoltages = DPSMatrix::Zero(7, 1);
 		/// flux linkage vector
@@ -118,9 +118,9 @@ namespace DPsim {
 		/// current vector
 		DPSMatrix mCurrents = DPSMatrix::Zero(7, 1);
 		/// interface voltage vector abcs
-		DPSMatrix mAbcsVoltages = DPSMatrix::Zero(3, 1);
+		DPSMatrix mAbcsVoltages = DPSMatrix::Zero(6, 1);
 		/// interface current vector abcs
-		DPSMatrix mAbcsCurrents = DPSMatrix::Zero(3, 1);
+		DPSMatrix mAbcsCurrents = DPSMatrix::Zero(6, 1);
 		/// interface voltage vector dq0
 		DPSMatrix mDq0Voltages = DPSMatrix::Zero(3, 1);
 		/// interface current vector dq0
@@ -139,14 +139,14 @@ namespace DPsim {
 		DPSMatrix mReverseCurrents = DPSMatrix::Zero(7, 7);
 
 	public:
-		SynchronGeneratorEMT() { };
-
+		SynchronGenerator() { };
+		
 		/// Initializes the per unit or stator referred machine parameters with the machine parameters given in per unit or 
 		/// stator referred parameters depending on the setting of parameter type.
 		/// The initialization mode depends on the setting of state type.
-		SynchronGeneratorEMT(std::string name, int node1, int node2, int node3,
-			Real nomPower, Real nomVolt, Real nomFreq, int poleNumber, Real nomFieldCur,
-			Real Rs, Real Ll, Real Lmd, Real Lmd0, Real Lmq, Real Lmq0,
+		SynchronGenerator(std::string name, int node1, int node2, int node3,
+			SynchGenStateType stateType, Real nomPower, Real nomVolt, Real nomFreq, int poleNumber, Real nomFieldCur,
+			SynchGenParamType paramType, Real Rs, Real Ll, Real Lmd, Real Lmd0, Real Lmq, Real Lmq0,
 			Real Rfd, Real Llfd, Real Rkd, Real Llkd,
 			Real Rkq1, Real Llkq1, Real Rkq2, Real Llkq2,
 			Real inertia);
@@ -158,14 +158,14 @@ namespace DPsim {
 			Real Rfd, Real Llfd, Real Rkd, Real Llkd, Real Rkq1, Real Llkq1,
 			Real Rkq2, Real Llkq2,
 			Real H);
-				
+
 		/// Initializes states in per unit or stator referred variables depending on the setting of the state type. 
-		/// Function parameters have to be given in real units.
+		/// Function parameters have to be given in Real units.
 		void init(Real om, Real dt,
 			Real initActivePower, Real initReactivePower, Real initTerminalVolt, Real initVoltAngle);
 
 		/// Initializes states in per unit. All machine parameters are assumed to be in per unit.
-		/// Function parameters have to be given in real units.
+		/// Function parameters have to be given in Real units.
 		void initStatesInPerUnit(Real initActivePower, Real initReactivePower,
 			Real initTerminalVolt, Real initVoltAngle);
 
@@ -181,10 +181,10 @@ namespace DPsim {
 		void postStep(SystemModel& system);
 
 		/// Park transform as described in Krause
-		DPSMatrix parkTransform(Real theta, DPSMatrix& in);
+		DPSMatrix abcToDq0Transform(Real theta, DPSMatrix& in);
 
 		/// Inverse Park transform as described in Krause
-		DPSMatrix inverseParkTransform(Real theta, DPSMatrix& in);
+		DPSMatrix dq0ToAbcTransform(Real theta, DPSMatrix& in);
 
 		DPSMatrix getVoltages() { return mVoltages; }
 		DPSMatrix getCurrents() { return mCurrents; }
@@ -193,7 +193,6 @@ namespace DPsim {
 		void init(Real om, Real dt) { }
 		void applySystemMatrixStamp(SystemModel& system) { }
 		void applyRightSideVectorStamp(SystemModel& system) { }
-		void step(SystemModel& system, Real time) { }
 	};
 }
 #endif

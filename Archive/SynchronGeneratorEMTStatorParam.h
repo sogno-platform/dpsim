@@ -145,8 +145,8 @@ namespace DPsim {
 		/// stator referred parameters depending on the setting of parameter type.
 		/// The initialization mode depends on the setting of state type.
 		SynchronGeneratorEMT(std::string name, int node1, int node2, int node3,
-			Real nomPower, Real nomVolt, Real nomFreq, int poleNumber, Real nomFieldCur,
-			Real Rs, Real Ll, Real Lmd, Real Lmd0, Real Lmq, Real Lmq0,
+			SynchGenStateType stateType, Real nomPower, Real nomVolt, Real nomFreq, int poleNumber, Real nomFieldCur,
+			SynchGenParamType paramType, Real Rs, Real Ll, Real Lmd, Real Lmd0, Real Lmq, Real Lmq0,
 			Real Rfd, Real Llfd, Real Rkd, Real Llkd,
 			Real Rkq1, Real Llkq1, Real Rkq2, Real Llkq2,
 			Real inertia);
@@ -158,7 +158,14 @@ namespace DPsim {
 			Real Rfd, Real Llfd, Real Rkd, Real Llkd, Real Rkq1, Real Llkq1,
 			Real Rkq2, Real Llkq2,
 			Real H);
-				
+
+		/// Not finished yet.
+		void initWithStatorRefParam(
+			Real Rs, Real Ll, Real Lmd, Real Lmd0, Real Lmq, Real Lmq0,
+			Real Rfd, Real Llfd, Real Rkd, Real Llkd,
+			Real Rkq1, Real Llkq1, Real Rkq2, Real Llkq2,
+			Real J);
+
 		/// Initializes states in per unit or stator referred variables depending on the setting of the state type. 
 		/// Function parameters have to be given in real units.
 		void init(Real om, Real dt,
@@ -169,6 +176,10 @@ namespace DPsim {
 		void initStatesInPerUnit(Real initActivePower, Real initReactivePower,
 			Real initTerminalVolt, Real initVoltAngle);
 
+		/// Not finished yet
+		void initStatesInStatorRefFrame(Real initActivePower, Real initReactivePower,
+			Real initTerminalVolt, Real initVoltAngle);
+
 		/// Performs an Euler forward step with the state space model of a synchronous generator 
 		/// to calculate the flux and current from the voltage vector.
 		void step(SystemModel& system, Real fieldVoltage, Real mechPower);
@@ -176,6 +187,9 @@ namespace DPsim {
 		/// Performs an Euler forward step with the state space model of a synchronous generator 
 		/// to calculate the flux and current from the voltage vector in per unit.
 		void stepInPerUnit(Real om, Real dt, Real fieldVoltage, Real mechPower);
+
+		/// Not finished yet.
+		void stepInStatorRefFrame(Real om, Real dt, Real fieldVoltage, Real mechPower);
 
 		/// Retrieves calculated voltage from simulation for next step
 		void postStep(SystemModel& system);
