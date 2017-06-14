@@ -598,18 +598,18 @@ The flux linkage for stator phase windings a, b and c are given by
 	\end{bmatrix}
 	=
 	\begin{bmatrix}
-		l_{aa} & l_{ab} & l_{ca} & l_{akq1} & l_{akq2} & l_{afd} & l_{akd} \\  
-		l_{ab} & l_{bb} & l_{bc} & l_{bkq1} & l_{bkq2} & l_{bfd} & l_{bkd} \\  
-		l_{ca} & l_{bc} & l_{cc} & l_{ckq1} & l_{ckq2} & l_{cfd} & l_{ckd} \\  
+		-l_{aa} & -l_{ab} & -l_{ca} & l_{afd} & l_{akd} & l_{akq1} & l_{akq2} \\  
+		-l_{ab} & -l_{bb} & -l_{bc} & l_{bfd} & l_{bkd} & l_{bkq1} & l_{bkq2} \\  
+		-l_{ca} & -l_{bc} & -l_{cc} & l_{cfd} & l_{ckd} & l_{ckq1} & l_{ckq2} \\  
 	\end{bmatrix}
 	\begin{bmatrix}
 		i_a \\
 		i_b \\
 		i_c \\
-		i_{kq1} \\
-		i_{kq2} \\
 		i_{fd} \\
 		i_{kd} \\
+		i_{kq1} \\
+		i_{kq2} \\
 	\end{bmatrix}
 \end{equation}
 
@@ -661,94 +661,98 @@ The permeance of the magnetic flux path $P$ (inverse of the reluctance $\Re$) in
 Inductance is directly proportional to permeance and the relative position between the phase a and the rotor is $\theta$. Therefore, we can write the self-inductance $l_{aa}$ as in equation \ref{eq:SelfInductanceA}. Knowing that the windings of phases b and c are identical to phase a and displaced from it by  $120^{\circ}$ and $240^{\circ}$ respectively, we can also determine the self-inductances $l_{bb}$ and $l_{cc}$. A more detailed derivation of the self-inductances is in \cite{kundur1994power}.
 
 \begin{equation} \label{eq:SelfInductanceA}
-	l_{aa} = L_{aa0} - L_{aa2} \cos 2 \theta
+	l_{aa} = L_{aa0} + L_{aa2} \cos 2 \theta
 \end{equation}
 \begin{equation} \label{eq:SelfInductanceB}
-	l_{bb} = L_{aa0} - L_{aa2} \cos 2 (\theta - \frac{2 \pi}{3})
+	l_{bb} = L_{aa0} + L_{aa2} \cos 2 (\theta - \frac{2 \pi}{3})
 \end{equation}
 \begin{equation} \label{eq:SelfInductanceC}
-	l_{cc} = L_{aa0} - L_{aa2} \cos 2 (\theta + \frac{2 \pi}{3})
+	l_{cc} = L_{aa0} + L_{aa2} \cos 2 (\theta + \frac{2 \pi}{3})
 \end{equation}
 
 The mutual inductance between two stator windings can be deduced evaluating the flux linking one phase due to the current in the other phase. The mutual inductance will also have a second harmonic variation due to the non-uniform air gap.
 
 \begin{equation} \label{eq:MutualInductanceAB}
-	l_{ab} = -L_{ab0} - L_{aa2} \cos 2(\theta + \frac{\pi}{3})
+	l_{ab} = -L_{ab0} - L_{aa2} \cos (2 \theta + \frac{\pi}{3})
 \end{equation}
 \begin{equation} \label{eq:MutualInductanceBC}
-	l_{bc} = -L_{ab0} - L_{aa2} \cos 2(\theta + \pi)
+	l_{bc} = -L_{ab0} - L_{aa2} \cos (2 \theta - \pi)
 \end{equation}
 \begin{equation} \label{eq:MutualInductanceCA}
-	l_{ca} = - L_{ab0} - L_{aa2} \cos 2(\theta + \frac{\pi}{3})
+	l_{ca} = - L_{ab0} - L_{aa2} \cos (2 \theta - \frac{\pi}{3})
 \end{equation}
 
 The rotor circuits see a constant reluctance. The variation in time for the mutual inductances between rotor and stator are due to their relative position. The inductance is maximum when stator and rotor are lined up and zero when they are displaced by $90^{\circ}$.
 
+
 \begin{equation}
-	l_{akq1} = L_{akq1} \cos \theta
+	l_{afd} = L_{afd} \cos \theta
 \end{equation}
 \begin{equation}
-	l_{akq2} = L_{akq2} \cos \theta
+	l_{akd} = L_{akd} \cos \theta
 \end{equation}
 \begin{equation}
-	l_{afd} = L_{afd} \sin \theta
+	l_{akq1} = - L_{akq1} \sin \theta
 \end{equation}
 \begin{equation}
-	l_{akd} = L_{akd} \sin \theta
+	l_{akq2} = - L_{akq2} \sin \theta
 \end{equation}
+
 
 Similarly, the mutual inductances between phase b and rotor windings and phase c and rotor windings are defined as
 
 \begin{equation}
-	l_{bkq1} = L_{akq1} \cos (\theta - \dfrac{2 \pi}{3})
+	l_{bfd} = L_{afd} \cos (\theta - \dfrac{2 \pi}{3})
 \end{equation}
 \begin{equation}
-	l_{bkq2} = L_{akq2} \cos (\theta - \dfrac{2 \pi}{3})
+	l_{bkd} = L_{akd} \cos (\theta - \dfrac{2 \pi}{3})
 \end{equation}
 \begin{equation}
-	l_{bfd} = L_{afd} \sin (\theta - \dfrac{2 \pi}{3})
+	l_{bkq1} = - L_{akq1} \sin (\theta - \dfrac{2 \pi}{3})
 \end{equation}
 \begin{equation}
-	l_{bkd} = L_{akd} \sin (\theta - \dfrac{2 \pi}{3})
+	l_{bkq2} = - L_{akq2} \sin (\theta - \dfrac{2 \pi}{3})
 \end{equation}
 
 \begin{equation}
-	l_{ckq1} = L_{akq1} \cos (\theta + \dfrac{2 \pi}{3})
+	l_{cfd} = L_{afd} \cos (\theta + \dfrac{2 \pi}{3})
 \end{equation}
 \begin{equation}
-	l_{ckq2} = L_{akq2} \cos (\theta + \dfrac{2 \pi}{3})
+	l_{ckd} = L_{akd} \cos (\theta + \dfrac{2 \pi}{3})
 \end{equation}
 \begin{equation}
-	l_{cfd} = L_{afd} \sin (\theta + \dfrac{2 \pi}{3})
+	l_{ckq1} = - L_{akq1} \sin (\theta + \dfrac{2 \pi}{3})
 \end{equation}
 \begin{equation}
-	l_{ckd} = L_{akd} \sin (\theta + \dfrac{2 \pi}{3})
+	l_{ckq2} = - L_{akq2} \sin (\theta + \dfrac{2 \pi}{3})
 \end{equation}
 
 The self-inductances of the rotor circuit and the mutual inductance between rotor windings do not vary with the rotor position, since the rotos circuits see constant reluctance. Therefore, the flux linkage for the rotor windings are given by
 
 \begin{equation} \label{eq:FluxRotor}
 	\begin{bmatrix}
+		\lambda_{fd} \\
+		\lambda_{kd} \\		
 		\lambda_{kq1} \\
 		\lambda_{kq2} \\
-		\lambda_{fd} \\
-		\lambda_{kd} \\
+
 	\end{bmatrix}
 	=
 	\begin{bmatrix}
-		l_{akq1} & l_{bkq1} & l_{ckq1} & L_{kq1} & L_{kq1kq2} & 0 & 0 \\  
-		l_{akq2} & l_{bkq2} & l_{ckq2} & L_{kq1kq2} & L_{kq2} & 0 & 0 \\ 
-		l_{afd} & l_{bfd} & l_{cfd} & 0 & 0 & L_{fd} & L_{fdkd} \\
-		l_{akd} & l_{bkd} & l_{ckd} & 0 & 0 & L_{fdkd} & L_{kd} \\  
+		-l_{afd} & -l_{bfd} & -l_{cfd} & L_{fd} & L_{fdkd} & 0 & 0 \\
+		-l_{akd} & -l_{bkd} & -l_{ckd} & L_{fdkd} & L_{kd} & 0 & 0  \\  	
+		-l_{akq1} & -l_{bkq1} & -l_{ckq1} & 0 & 0 & L_{kq1} & L_{kq1kq2} \\  
+		-l_{akq2} & -l_{bkq2} & -l_{ckq2} & 0 & 0 & L_{kq1kq2} & L_{kq2} \\
+		
 	\end{bmatrix}
 	\begin{bmatrix}
 		i_a \\
 		i_b \\
 		i_c \\
+		i_{fd} \\
+		i_{kd} \\
 		i_{kq1} \\
 		i_{kq2} \\
-		i_{fd} \\
-		i_{kd}
 	\end{bmatrix}
 \end{equation}
 
@@ -756,31 +760,32 @@ The rotor voltage equations are
 
 \begin{equation} \label{eq:VotlageRotor}
 	\begin{bmatrix}
+		v_{fd} \\
+		v_{kd} \\		
 		v_{kq1} \\
 		v_{kq2} \\
-		v_{fd} \\
-		v_{kd}
+
 	\end{bmatrix}
 	=
 	\frac{d}{dt}
 	\begin{bmatrix}
+		\lambda_{fd} \\
+		\lambda_{kd} \\
 		\lambda_{kq1} \\
 		\lambda_{kq2} \\
-		\lambda_{fd} \\
-		\lambda_{kd}
 	\end{bmatrix}
 	+
 	\begin{bmatrix}
-		R_{kq1} & 0 & 0 & 0 \\
-		0 & R_{kq2} & 0 & 0 \\
-		0 & 0 & R_{fd} & 0 \\
-		0 & 0 & 0 & R_{kd}
+		R_{fd} & 0 & 0 & 0 \\
+		0 & R_{kd} & 0 & 0 \\
+		0 & 0 & R_{kq1} & 0 \\
+		0 & 0 & 0 & R_{kq2}
 	\end{bmatrix}
 	\begin{bmatrix}
+		i_{fd} \\
+		i_{kd} \\		
 		i_{kq1} \\
 		i_{kq2} \\
-		i_{fd} \\
-		i_{kd}
 	\end{bmatrix}
 \end{equation}
 
@@ -794,7 +799,7 @@ Replacing the inductances values in equations \ref{eq:FluxStator} and \ref{eq:Fl
 	=
 	\begin{bmatrix}
 		\mathbf{L}_s & \mathbf{L}_{rs} \\
-		\mathbf{L}_{rs}^{T} & \mathbf{L}_r
+		-\mathbf{L}_{rs}^{T} & \mathbf{L}_r
 	\end{bmatrix}
 	\begin{bmatrix}
 		\mathbf{i}_{abcs} \\
@@ -808,15 +813,15 @@ Where
 	\mathbf{L}_s
 	=
 	\begin{bmatrix}
-		L_{aa0} - L_{aa2} \cos 2 \theta &
-		-L_{ab0} - L_{aa2} \cos 2(\theta - \dfrac{\pi}{3}) &
-		-L_{ab0} - L_{aa2}\cos 2(\theta + \dfrac{\pi}{3}) &\\[6pt]
-		-L_{ab0} - L_{aa2} \cos 2(\theta - \dfrac{\pi}{3}) &
-		L_{aa0} - L_{aa2} \cos 2(\theta - \dfrac{2 \pi}{3})&
-		-L_{ab0} - L_{aa2}\cos 2(\theta + \pi) \\[6pt]
-		-L_{ab0} - L_{aa2} \cos 2(\theta + \dfrac{\pi}{3}) &
-		-L_{ab0} - L_{aa2} \cos 2(\theta + \pi)&
-		L_{aa0} - L_{aa2}\cos 2(\theta + \dfrac{2 \pi}{3}) \\[6pt]
+		-L_{aa0} - L_{aa2} \cos 2 \theta &
+		L_{ab0} + L_{aa2} \cos (2 \theta + \dfrac{\pi}{3}) &
+		L_{ab0} + L_{aa2}\cos (2 \theta - \dfrac{\pi}{3}) &\\[6pt]
+		L_{ab0} + L_{aa2} \cos (2 \theta + \dfrac{\pi}{3}) &
+		-L_{aa0} - L_{aa2} \cos 2(\theta - \dfrac{2 \pi}{3})&
+		L_{ab0} + L_{aa2}\cos (2 \theta - \pi) \\[6pt]
+		L_{ab0} + L_{aa2} \cos (2 \theta - \dfrac{\pi}{3}) &
+		L_{ab0} + L_{aa2} \cos (2 \theta - \pi)&
+		-L_{aa0} - L_{aa2}\cos 2(\theta + \dfrac{2 \pi}{3}) \\[6pt]
 	\end{bmatrix}
 \end{equation}
 
@@ -824,18 +829,18 @@ Where
 	\mathbf{L}_{rs}
 	=
 	\begin{bmatrix}
-		L_{akq1} \cos \theta &
-		L_{akq2} \cos \theta &
-		L_{afd} \sin \theta &
-		L_{akd} \sin \theta \\[6pt]
-		L_{akq1} \cos (\theta - \dfrac{2 \pi}{3}) &
-		L_{akq2} \cos (\theta - \dfrac{2 \pi}{3}) &
-		L_{afd} \sin (\theta - \dfrac{2 \pi}{3}) &
-		L_{akd} \sin (\theta - \dfrac{2 \pi}{3}) \\[6pt]
-		L_{akq1} \cos (\theta + \dfrac{2 \pi}{3}) &
-		L_{akq2} \cos (\theta + \dfrac{2 \pi}{3}) &
-		L_{afd} \sin (\theta + \dfrac{2 \pi}{3}) &
-		L_{akd} \sin (\theta + \dfrac{2 \pi}{3}) \\[6pt]
+		L_{afd} \cos \theta &
+		L_{akd} \cos \theta &
+		-L_{akq1} \sin \theta &
+		-L_{akq2} \sin \theta \\[6pt]
+		L_{afd} \cos (\theta - \dfrac{2 \pi}{3}) &
+		L_{akd} \cos (\theta - \dfrac{2 \pi}{3}) &
+		-L_{akq1} \sin (\theta - \dfrac{2 \pi}{3}) &
+		-L_{akq2} \sin(\theta - \dfrac{2 \pi}{3}) \\[6pt]
+		L_{afd} \cos (\theta + \dfrac{2 \pi}{3}) &
+		L_{akd} \cos (\theta + \dfrac{2 \pi}{3}) &
+		-L_{akq1} \sin (\theta + \dfrac{2 \pi}{3}) &
+		-L_{akq2} \sin(\theta + \dfrac{2 \pi}{3}) \\[6pt]
 	\end{bmatrix}
 \end{equation}
 
@@ -843,10 +848,10 @@ Where
 	\mathbf{L}_r
 	=
 	\begin{bmatrix}
-		L_{kq1} & L_{kq1kq2} & 0 & 0 \\  
-		L_{kq1kq2} & L_{kq2} & 0 & 0 \\ 
-		0 & 0 & L_{fd} & L_{fdkd} \\
-		0 & 0 & L_{fdkd} & L_{kd} \\  
+		L_{fd} & L_{fdkd} & 0 & 0 \\  
+		L_{fdkd} & L_{kd} & 0 & 0 \\ 
+		0 & 0 & L_{kq1} & L_{kq1kq1} \\
+		0 & 0 & L_{kq1kq2} & L_{kq2} \\  
 	\end{bmatrix}
 \end{equation}
 
@@ -858,7 +863,7 @@ Where
   %  
   \mathbf{i}_{qdr} &= 
   \begin{bmatrix}
-    i_{kq1} & i_{kq2} & i_{fd} & i_{kd}
+    i_{fd} & i_{kd} & i_{kq1} & i_{kq2} 
   \end{bmatrix}^T \\
   %
   \boldsymbol{\lambda}_{abcs} &= 
@@ -868,7 +873,7 @@ Where
   %  
   \boldsymbol{\lambda}_{dqr} &= 
   \begin{bmatrix}
-     \lambda_{kq1} & \lambda_{kq2} & \lambda_{fd} & \lambda_{kd} 
+     \lambda_{fd} & \lambda_{kd} & \lambda_{kq1} & \lambda_{kq2} 
   \end{bmatrix}^T \\
  \end{align}
 
