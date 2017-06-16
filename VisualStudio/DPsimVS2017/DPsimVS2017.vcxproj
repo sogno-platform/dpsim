@@ -22,7 +22,7 @@
     <ProjectGuid>{2E20637A-B198-46C9-8D43-1DA50E8D1709}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
     <RootNamespace>DPsimVS2017</RootNamespace>
-    <WindowsTargetPlatformVersion>10.0.14393.0</WindowsTargetPlatformVersion>
+    <WindowsTargetPlatformVersion>8.1</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
@@ -100,6 +100,7 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>..\..\Libraries\eigen;</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -141,36 +142,61 @@
     <ClInclude Include="..\..\Source\Components.h" />
     <ClInclude Include="..\..\Source\Components\BaseComponent.h" />
     <ClInclude Include="..\..\Source\Components\Capacitor.h" />
+    <ClInclude Include="..\..\Source\Components\ComponentCommons.h" />
     <ClInclude Include="..\..\Source\Components\CurrentSource.h" />
+    <ClInclude Include="..\..\Source\Components\IdealVoltageSource.h" />
     <ClInclude Include="..\..\Source\Components\Inductor.h" />
+    <ClInclude Include="..\..\Source\Components\InductorEMT.h" />
     <ClInclude Include="..\..\Source\Components\InterfaceCurrentSource.h" />
     <ClInclude Include="..\..\Source\Components\InterfacedInductor.h" />
     <ClInclude Include="..\..\Source\Components\LinearResistor.h" />
-    <ClInclude Include="..\..\Source\Components\SynchronousGenerator.h" />
-    <ClInclude Include="..\..\Source\Components\VoltageSourceWithResistance.h" />
+    <ClInclude Include="..\..\Source\Components\LinearResistorEMT.h" />
+    <ClInclude Include="..\..\Source\Components\PiLine.h" />
+    <ClInclude Include="..\..\Source\Components\RxLine.h" />
+    <ClInclude Include="..\..\Source\Components\SynchronGenerator.h" />
+    <ClInclude Include="..\..\Source\Components\SynchronGeneratorEMT.h" />
+    <ClInclude Include="..\..\Source\Components\VoltSourceRes.h" />
+    <ClInclude Include="..\..\Source\Components\VoltSourceResEMT.h" />
+    <ClInclude Include="..\..\Source\Components\VoltSourceResFreq.h" />
+    <ClInclude Include="..\..\Source\Components\VoltSourceResFreqEMT.h" />
+    <ClInclude Include="..\..\Source\Examples\ReferenceCircuits.h" />
+    <ClInclude Include="..\..\Source\Examples\SimpleCircuitTest.h" />
+    <ClInclude Include="..\..\Source\Examples\SynchronGenUnitTest.h" />
     <ClInclude Include="..\..\Source\Logger.h" />
     <ClInclude Include="..\..\Source\MathLibrary.h" />
-    <ClInclude Include="..\..\Source\ModularSolver.h" />
     <ClInclude Include="..\..\Source\NetlistSim.h" />
     <ClInclude Include="..\..\Source\Simulation.h" />
-    <ClInclude Include="..\..\Source\SysGenUnitTest.h" />
+    <ClInclude Include="..\..\Source\SystemModel.h" />
     <ClInclude Include="..\..\Source\TopologyReader.h" />
+    <ClInclude Include="..\..\Source\Utilities.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\Source\Components\Capacitor.cpp" />
     <ClCompile Include="..\..\Source\Components\CurrentSource.cpp" />
+    <ClCompile Include="..\..\Source\Components\IdealVoltageSource.cpp" />
     <ClCompile Include="..\..\Source\Components\Inductor.cpp" />
+    <ClCompile Include="..\..\Source\Components\InductorEMT.cpp" />
     <ClCompile Include="..\..\Source\Components\InterfacedInductor.cpp" />
     <ClCompile Include="..\..\Source\Components\LinearResistor.cpp" />
-    <ClCompile Include="..\..\Source\Components\SynchronousGenerator.cpp" />
-    <ClCompile Include="..\..\Source\Components\VoltageSourceWithResistance.cpp" />
+    <ClCompile Include="..\..\Source\Components\LinearResistorEMT.cpp" />
+    <ClCompile Include="..\..\Source\Components\PiLine.cpp" />
+    <ClCompile Include="..\..\Source\Components\RxLine.cpp" />
+    <ClCompile Include="..\..\Source\Components\SynchronGenerator.cpp" />
+    <ClCompile Include="..\..\Source\Components\SynchronGeneratorEMT.cpp" />
+    <ClCompile Include="..\..\Source\Components\VoltSourceRes.cpp" />
+    <ClCompile Include="..\..\Source\Components\VoltSourceResEMT.cpp" />
+    <ClCompile Include="..\..\Source\Components\VoltSourceResFreq.cpp" />
+    <ClCompile Include="..\..\Source\Components\VoltSourceResFreqEMT.cpp" />
     <ClCompile Include="..\..\Source\DPsimMain.cpp" />
+    <ClCompile Include="..\..\Source\Examples\ReferenceCircuits.cpp" />
+    <ClCompile Include="..\..\Source\Examples\SimpleCircuitTest.cpp" />
+    <ClCompile Include="..\..\Source\Examples\SynchronGenUnitTest.cpp" />
     <ClCompile Include="..\..\Source\Logger.cpp" />
-    <ClCompile Include="..\..\Source\ModularSolver.cpp" />
     <ClCompile Include="..\..\Source\NetlistSim.cpp" />
     <ClCompile Include="..\..\Source\Simulation.cpp" />
-    <ClCompile Include="..\..\Source\SynGenUnitTest.cpp" />
+    <ClCompile Include="..\..\Source\SystemModel.cpp" />
     <ClCompile Include="..\..\Source\TopologyReader.cpp" />
+    <ClCompile Include="..\..\Source\Utilities.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

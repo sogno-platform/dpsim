@@ -111,6 +111,8 @@ namespace DPsim {
 		double mMechTorque;
 		/// electrical torque
 		double mElecTorque;
+
+
 		/// voltage vector q d 0 kq1 kq2 df kd
 		DPSMatrix mVoltages = DPSMatrix::Zero(7, 1);
 		/// flux linkage vector
@@ -125,6 +127,45 @@ namespace DPsim {
 		DPSMatrix mDq0Voltages = DPSMatrix::Zero(3, 1);
 		/// interface current vector dq0
 		DPSMatrix mDq0Currents = DPSMatrix::Zero(3, 1);
+
+		/// voltage vector q d 0 fd kd kq1 kq2
+		double mVd;
+		double mVq;
+		double mV0;
+		double mVfd;
+		double mVkd;
+		double mVkq1;
+		double mVkq2;
+
+		/// current vector q d 0 fd kd kq1 kq2
+		double mId;
+		double mIq;
+		double mI0;
+		double mIfd;
+		double mIkd;
+		double mIkq1;
+		double mIkq2;
+
+		/// flux linkage vector q d 0 fd kd kq1 kq2
+		double mPsid;
+		double mPsiq;
+		double mPsi0;
+		double mPsifd;
+		double mPsikd;
+		double mPsikq1;
+		double mPsikq2;
+
+		/// Interface voltage vector
+		double mVa;
+		double mVb;
+		double mVc;
+
+		/// Interface voltage vector
+		double mIa;
+		double mIb;
+		double mIc;
+
+
 
 		// ### Useful Matrices ###
 		/// inductance matrix
@@ -182,9 +223,11 @@ namespace DPsim {
 
 		/// Park transform as described in Krause
 		DPSMatrix parkTransform(Real theta, DPSMatrix& in);
+		DPSMatrix parkTransform2(Real theta, double a, double b, double c);
 
 		/// Inverse Park transform as described in Krause
 		DPSMatrix inverseParkTransform(Real theta, DPSMatrix& in);
+		DPSMatrix inverseParkTransform2(Real theta, double d, double q, double zero);
 
 		DPSMatrix getVoltages() { return mVoltages; }
 		DPSMatrix getCurrents() { return mCurrents; }
