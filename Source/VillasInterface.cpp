@@ -8,22 +8,20 @@
 
 using namespace DPsim;
 
-VillasInterface::VillasInterface(const char* name) {
+VillasInterface::VillasInterface(const char* wname, const char* rname) {
 	struct shmem_conf conf;
 	conf.queuelen = 512;
 	conf.samplelen = 64;
 	conf.polling = 0;
-	this->mShmemName = name;
-	if (shmem_int_open(name, &this->mShmem, &conf) < 0) {
+	if (shmem_int_open(wname, rname, &this->mShmem, &conf) < 0) {
 		std::perror("Failed to open/map shared memory object");
 		std::exit(1);
 	}
 	mSeq = 0;
 }
 
-VillasInterface::VillasInterface(const char* name, struct shmem_conf* conf) {
-	this->mShmemName = name;
-	if (shmem_int_open(name, &this->mShmem, conf) < 0) {
+VillasInterface::VillasInterface(const char* wname, const char *rname, struct shmem_conf* conf) {
+	if (shmem_int_open(wname, rname, &this->mShmem, conf) < 0) {
 		std::perror("Failed to open/map shared memory object");
 		std::exit(1);
 	}
@@ -68,7 +66,7 @@ void VillasInterface::readValues() {
 
 void VillasInterface::writeValues(SystemModel& model) {
 	struct sample *sample;
-	if (sample_alloc(&mShmem.shared->pool, &sample, 1) < 1) {
+	if (shmem_int_alloc(&mShmem, &sample, 1) < 1) {
 		std::cerr << "fatal error: shmem pool underrun" << std::endl;
 		std::exit(1);
 	}

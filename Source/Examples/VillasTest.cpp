@@ -18,7 +18,7 @@ void DPsim::villasExample()
 	comps.push_back(new LinearResistor("r_line", 2, 3, 1));
 	comps.push_back(new Inductor("l_line", 3, 4, 1));
 	comps.push_back(new LinearResistor("r_load", 4, 0, 1000));
-	VillasInterface *villas = new VillasInterface("/villas1");
+	VillasInterface *villas = new VillasInterface("/villas1-in", "/villas1-out");
 	villas->registerVoltageSource(evs, 0, 1);
 	villas->registerExportedCurrent(evs, 0, 1);
 
@@ -65,14 +65,14 @@ void DPsim::villasDistributedExample(int argc, char *argv[])
 		comps.push_back(new Inductor("l_1", 1, 2, 1e-3));
 		ExternalVoltageSource *evs = new ExternalVoltageSource("v_t", 2, 0, 0, 0, 1);
 		comps.push_back(evs);
-		villas = new VillasInterface("/villas0");
+		villas = new VillasInterface("/dpsim01", "/dpsim10");
 		villas->registerVoltageSource(evs, 0, 1);
 		villas->registerExportedCurrent(evs, 0, 1);
 	} else if (!strcmp(argv[1], "1")) {
 		ExternalCurrentSource *ecs = new ExternalCurrentSource("v_s", 1, 0, 0, 0);
 		comps.push_back(ecs);
 		comps.push_back(new LinearResistor("r_2", 1, 0, 1));
-		villas = new VillasInterface("/villas1");
+		villas = new VillasInterface("/dpsim10", "/dpsim01");
 		villas->registerCurrentSource(ecs, 0, 1);
 		villas->registerExportedVoltage(1, 0, 0, 1);
 	} else {

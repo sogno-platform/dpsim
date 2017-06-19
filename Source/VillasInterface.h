@@ -17,18 +17,22 @@ namespace DPsim {
 	 */
 	class VillasInterface : public ExternalInterface {
 	private:
-		const char* mShmemName;
 		struct shmem_int mShmem;
 		int mSeq;
 
 	public:
-		/** Create a VillasInterface using the given shmem object name.
+		/** Create a VillasInterface using the given shmem object names.
 		 *
-		 * @param name The name of the POSIX shmem object (like given in the
-		 * configuration of VILLASnode).
+		 * @param wname The name of the POSIX shmem object (like given in the
+		 * configuration of VILLASnode) were samples will be written to.
+		 * @param rname The name of the POSIX shmem object were samples will be read from.
 		 */
-		VillasInterface(const char* name);
-		VillasInterface(const char* name, struct shmem_conf* conf);
+		VillasInterface(const char* wname, const char* rname);
+		/** Create a VillasInterface with a specific configuration for the output queue.
+		 *
+		 * @param conf The configuration object for the output queue (see VILLASnode's documentation).
+		 */
+		VillasInterface(const char* wname, const char* rname, struct shmem_conf* conf);
 		~VillasInterface();
 		/** Read a single struct sample from the shared input queue and pass the contained
 		 * values to all registered current/voltage sources.
