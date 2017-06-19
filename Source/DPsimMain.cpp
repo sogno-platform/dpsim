@@ -4,16 +4,16 @@
 #include "Examples/SynchronGenUnitTest.h"
 #include "Examples/SimpleCircuitTest.h"
 #include "Examples/ReferenceCircuits.h"
-#include "Examples/VillasTest.h"
+#include "Examples/ShmemTest.h"
 #include <complex>
 
 using namespace DPsim;
 
 int main(int argc, char* argv[]) {
 
-	//villasExample();
-	villasDistributedExample(argc, argv);
-	//villasDistributedRef();
+	//shmemExample();
+	shmemDistributedExample(argc, argv);
+	//shmemDistributedRef();
 	//simulationExample1();
 	//simulationExample2();
 	//simulationExample3();
