@@ -65,7 +65,13 @@ void SynchronGeneratorEMT::initWithPerUnitParam(
 	mH = H;
 	// Additional inductances according to Krause
 	mLaq = 1 / (1 / mLmq + 1 / mLl + 1 / mLlkq1 + 1 / mLlkq2);
-	mLad = 1 / (1 / mLmd + 1 / mLl + 1 / mLlkd + 1 / mLlfd);	
+	mLad = 1 / (1 / mLmd + 1 / mLl + 1 / mLlkd + 1 / mLlfd);
+
+	// Determinant of Ld (inductance matrix of d axis)
+	detLd = (mLmd + mLl)*(-mLlfd*mLlkd - mLlfd*mLmd - mLmd*mLlkd) + mLmd*mLmd*(mLlfd + mLlkd);
+	// Determinant of Lq (inductance matrix of q axis)
+	detLq = -mLmq*mLlkq2*(mLlkq1 + mLl) - mLl*mLlkq1*(mLlkq2 + mLmq);
+
 
 
 
@@ -76,65 +82,67 @@ void SynchronGeneratorEMT::initWithPerUnitParam(
 void SynchronGeneratorEMT::init(Real om, Real dt,
 	Real initActivePower, Real initReactivePower, Real initTerminalVolt, Real initVoltAngle) {
 
-	// Create matrices for state space representation 
-	mInductanceMat << 
-		mLl + mLmq, 0, 0, mLmq, mLmq, 0, 0,
-		0, mLl + mLmd, 0, 0, 0, mLmd, mLmd,
-		0, 0, mLl, 0, 0, 0, 0,
-		mLmq, 0, 0, mLlkq1 + mLmq, mLmq, 0, 0,
-		mLmq, 0, 0, mLmq, mLlkq2 + mLmq, 0, 0,
-		0, mLmd, 0, 0, 0, mLlfd + mLmd, mLmd,
-		0, mLmd, 0, 0, 0, mLmd, mLlkd + mLmd;
+	//// Create matrices for state space representation 
+	//mInductanceMat << 
+	//	mLl + mLmq, 0, 0, mLmq, mLmq, 0, 0,
+	//	0, mLl + mLmd, 0, 0, 0, mLmd, mLmd,
+	//	0, 0, mLl, 0, 0, 0, 0,
+	//	mLmq, 0, 0, mLlkq1 + mLmq, mLmq, 0, 0,
+	//	mLmq, 0, 0, mLmq, mLlkq2 + mLmq, 0, 0,
+	//	0, mLmd, 0, 0, 0, mLlfd + mLmd, mLmd,
+	//	0, mLmd, 0, 0, 0, mLmd, mLlkd + mLmd;
 
-	mResistanceMat << 
-		mRs, 0, 0, 0, 0, 0, 0,
-		0, mRs, 0, 0, 0, 0, 0,
-		0, 0, mRs, 0, 0, 0, 0,
-		0, 0, 0, mRkq1, 0, 0, 0,
-		0, 0, 0, 0, mRkq2, 0, 0,
-		0, 0, 0, 0, 0, mRfd, 0,
-		0, 0, 0, 0, 0, 0, mRkd;
+	//mResistanceMat << 
+	//	mRs, 0, 0, 0, 0, 0, 0,
+	//	0, mRs, 0, 0, 0, 0, 0,
+	//	0, 0, mRs, 0, 0, 0, 0,
+	//	0, 0, 0, mRkq1, 0, 0, 0,
+	//	0, 0, 0, 0, mRkq2, 0, 0,
+	//	0, 0, 0, 0, 0, mRfd, 0,
+	//	0, 0, 0, 0, 0, 0, mRkd;
 
-	mOmegaFluxMat << 
-		0, 1, 0, 0, 0, 0, 0,
-		-1, 0, 0, 0, 0, 0, 0,
-		0, 0, 0, 0, 0, 0, 0,
-		0, 0, 0, 0, 0, 0, 0,
-		0, 0, 0, 0, 0, 0, 0,
-		0, 0, 0, 0, 0, 0, 0,
-		0, 0, 0, 0, 0, 0, 0;
+	//mOmegaFluxMat << 
+	//	0, 1, 0, 0, 0, 0, 0,
+	//	-1, 0, 0, 0, 0, 0, 0,
+	//	0, 0, 0, 0, 0, 0, 0,
+	//	0, 0, 0, 0, 0, 0, 0,
+	//	0, 0, 0, 0, 0, 0, 0,
+	//	0, 0, 0, 0, 0, 0, 0,
+	//	0, 0, 0, 0, 0, 0, 0;
 
-	mReverseCurrents <<	
-		-1, 0, 0, 0, 0, 0, 0,
-		0, -1, 0, 0, 0, 0, 0,
-		0, 0, -1, 0, 0, 0, 0,
-		0, 0, 0, 1, 0, 0, 0,
-		0, 0, 0, 0, 1, 0, 0,
-		0, 0, 0, 0, 0, 1, 0,
-		0, 0, 0, 0, 0, 0, 1;
+	//mReverseCurrents <<	
+	//	-1, 0, 0, 0, 0, 0, 0,
+	//	0, -1, 0, 0, 0, 0, 0,
+	//	0, 0, -1, 0, 0, 0, 0,
+	//	0, 0, 0, 1, 0, 0, 0,
+	//	0, 0, 0, 0, 1, 0, 0,
+	//	0, 0, 0, 0, 0, 1, 0,
+	//	0, 0, 0, 0, 0, 0, 1;
 
-	mReactanceMat = mInductanceMat.inverse();
+	//mReactanceMat = mInductanceMat.inverse();
 	
 	// steady state per unit initial value
 	initStatesInPerUnit(initActivePower, initReactivePower, initTerminalVolt, initVoltAngle);
 	
-
-	// I STOPED HERE VERIFYING THE RESULTS MATRIX x VARIABBLES - IT IS NOT WORKING YET!!!
-	mDq0Voltages(0, 0) = mVoltages(0, 0);
+	/*mDq0Voltages(0, 0) = mVoltages(0, 0);
 	mDq0Voltages(1, 0) = mVoltages(1, 0);
 	mDq0Voltages(2, 0) = mVoltages(2, 0);	
 	mDq0Voltages = mDq0Voltages * mBase_v;
-	mAbcsVoltages = inverseParkTransform(mThetaMech, mDq0Voltages);
+	mAbcsVoltages = inverseParkTransform(mThetaMech, mDq0Voltages);*/
 
-	mVa = inverseParkTransform2(mThetaMech, mVd, mVq, mV0)(0);
-	mVb = inverseParkTransform2(mThetaMech, mVd, mVq, mV0)(1);
-	mVc = inverseParkTransform2(mThetaMech, mVd, mVq, mV0)(2);
+	mVa = inverseParkTransform2(mThetaMech2, mVd* mBase_v, mVq* mBase_v, mV0* mBase_v)(0);
+	mVb = inverseParkTransform2(mThetaMech2, mVd* mBase_v, mVq* mBase_v, mV0* mBase_v)(1);
+	mVc = inverseParkTransform2(mThetaMech2, mVd* mBase_v, mVq* mBase_v, mV0* mBase_v)(2);
 
-	mDq0Currents(0, 0) = mCurrents(0, 0);
-	mDq0Currents(1, 0) = mCurrents(1, 0);
-	mDq0Currents(2, 0) = mCurrents(2, 0);
-	mDq0Currents = mDq0Currents * mBase_i;
-	mAbcsCurrents = inverseParkTransform(mThetaMech, mDq0Currents);
+	//mDq0Currents(0, 0) = mCurrents(0, 0);
+	//mDq0Currents(1, 0) = mCurrents(1, 0);
+	//mDq0Currents(2, 0) = mCurrents(2, 0);
+	//mDq0Currents = mDq0Currents * mBase_i;
+	//mAbcsCurrents = inverseParkTransform(mThetaMech, mDq0Currents);
+
+	mIa = inverseParkTransform2(mThetaMech2, mId* mBase_i, mIq* mBase_i, mI0* mBase_i)(0);
+	mIb = inverseParkTransform2(mThetaMech2, mId* mBase_i, mIq* mBase_i, mI0* mBase_i)(1);
+	mIc = inverseParkTransform2(mThetaMech2, mId* mBase_i, mIq* mBase_i, mI0* mBase_i)(2);
 }
 
 void SynchronGeneratorEMT::initStatesInPerUnit(Real initActivePower, Real initReactivePower,
@@ -176,7 +184,7 @@ void SynchronGeneratorEMT::initStatesInPerUnit(Real initActivePower, Real initRe
 	double init_Te = init_P + mRs * pow(init_it, 2.);
 	mOmMech = 1;
 
-	mVoltages(0, 0) = init_vq;
+	/*mVoltages(0, 0) = init_vq;
 	mVoltages(1, 0) = init_vd;
 	mVoltages(2, 0) = 0;
 	mVoltages(3, 0) = 0;
@@ -199,10 +207,10 @@ void SynchronGeneratorEMT::initStatesInPerUnit(Real initActivePower, Real initRe
 	mFluxes(3, 0) = init_psiq1;
 	mFluxes(4, 0) = init_psiq2;
 	mFluxes(5, 0) = init_psifd;
-	mFluxes(6, 0) = init_psid1;
+	mFluxes(6, 0) = init_psid1;*/
 
-	mVq = init_vq;
 	mVd = init_vd;
+	mVq = init_vq;
 	mV0 = 0;
 	mVfd = init_vfd;
 	mVkd = 0;
@@ -227,7 +235,7 @@ void SynchronGeneratorEMT::initStatesInPerUnit(Real initActivePower, Real initRe
 
 	// Initialize mechanical angle
 	//mThetaMech = initVoltAngle + init_delta;
-	mThetaMech = initVoltAngle + init_delta - M_PI/90;
+	mThetaMech2 = initVoltAngle + init_delta - M_PI/2;
 }
 
 void SynchronGeneratorEMT::step(SystemModel& system, Real fieldVoltage, Real mechPower) {
@@ -244,13 +252,24 @@ void SynchronGeneratorEMT::step(SystemModel& system, Real fieldVoltage, Real mec
 	if (mNode3 >= 0) {
 		system.addRealToRightSideVector(mNode3, mIc);
 	}
+
+	//// Update current source accordingly
+	//if (mNode1 >= 0) {
+	//	system.addRealToRightSideVector(mNode1, mAbcsCurrents(0, 0));
+	//}
+	//if (mNode2 >= 0) {
+	//	system.addRealToRightSideVector(mNode2, mAbcsCurrents(1, 0));
+	//}
+	//if (mNode3 >= 0) {
+	//	system.addRealToRightSideVector(mNode3, mAbcsCurrents(2, 0));
+	//}
 }
 
 void SynchronGeneratorEMT::stepInPerUnit(Real om, Real dt, Real fieldVoltage, Real mechPower) {
 	
-	// retrieve voltages
-	mAbcsVoltages = (1 / mBase_v) * mAbcsVoltages;
-	mAbcsCurrents = (1 / mBase_i) * mAbcsCurrents;
+	//// retrieve voltages
+	//mAbcsVoltages = (1 / mBase_v) * mAbcsVoltages;
+	//mAbcsCurrents = (1 / mBase_i) * mAbcsCurrents;
 
 
 	mVa = (1 / mBase_v) * mVa;
@@ -261,108 +280,172 @@ void SynchronGeneratorEMT::stepInPerUnit(Real om, Real dt, Real fieldVoltage, Re
 	mIb = (1 / mBase_i) * mIb;
 	mIc = (1 / mBase_i) * mIc;
 
-	mVoltages(5, 0) = fieldVoltage / mBase_v;
+	//mVoltages(5, 0) = fieldVoltage / mBase_v;
+	mVfd = fieldVoltage / mBase_v;
 	// TODO calculate effect of changed field voltage
 
 	// dq-transform of interface voltage
-	mVd = parkTransform2(mThetaMech, mVa, mVb, mVc)(0);
-	mVq = parkTransform2(mThetaMech, mVa, mVb, mVc)(1);
-	mV0 = parkTransform2(mThetaMech, mVa, mVb, mVc)(2);
+	mVd = parkTransform2(mThetaMech2, mVa, mVb, mVc)(0);
+	mVq = parkTransform2(mThetaMech2, mVa, mVb, mVc)(1);
+	mV0 = parkTransform2(mThetaMech2, mVa, mVb, mVc)(2);
 
-	mDq0Voltages = parkTransform(mThetaMech, mAbcsVoltages);
+	/*mDq0Voltages = parkTransform(mThetaMech, mAbcsVoltages);
 	mVoltages(0, 0) = mDq0Voltages(0, 0);
 	mVoltages(1, 0) = mDq0Voltages(1, 0);
-	mVoltages(2, 0) = mDq0Voltages(2, 0);
+	mVoltages(2, 0) = mDq0Voltages(2, 0);*/
 
 	// calculate mechanical states
 	mMechPower = mechPower / mNomPower;
 	mMechTorque = mMechPower / mOmMech;
+
 	mElecTorque = (mPsid*mIq - mPsiq*mId);
 	//mElecTorque = (mFluxes(1, 0)*mCurrents(0, 0) - mFluxes(0, 0)*mCurrents(1, 0));
 
 	// Euler step forward	
 	mOmMech = mOmMech + dt * (1 / (2 * mH) * (mMechTorque - mElecTorque));
+	
+	//DPSMatrix currents = mReverseCurrents * mReactanceMat * mFluxes;
+
+	//DPSMatrix dtFluxes = mVoltages - mResistanceMat * currents - mOmMech * mOmegaFluxMat * mFluxes;
 
 
-	// Determinant of Ld_eq (inductance matrix of d axis)
-	double detLd = (mLmd + mLl)*(-mLlfd*mLlkd - mLlfd*mLmd - mLmd*mLlkd) + mLmd*mLmd*(mLlfd + mLlkd);
+	//for (int i = 0; i < dtFluxes.size(); i++)
+	//{
+	//	if (dtFluxes(i, 0) < 0.000001)
+	//		dtFluxes(i, 0) = 0;
+	//}
+
+	//mFluxes = mFluxes + dt * mBase_OmElec * dtFluxes;
+
+
+	double dtPsid = mVd + mRs*mId + mPsiq*mOmMech;
+	if (dtPsid < 0.000001)
+		dtPsid = 0;
+	double dtPsiq = mVq + mRs*mIq - mPsid*mOmMech;
+	if (dtPsiq < 0.000001)
+		dtPsiq = 0;
+	double dtPsi0 = mV0 + mRs*mI0;
+	if (dtPsi0 < 0.000001)
+		dtPsi0 = 0;
+	double dtPsifd = mVfd - mRfd*mIfd;
+	if (dtPsifd < 0.000001)
+		dtPsifd = 0;
+	double dtPsikd = -mRkd*mIkd;
+	if (dtPsikd < 0.000001)
+		dtPsikd = 0;
+	double dtPsikq1 = -mRkq1*mIkq1;
+	if (dtPsikq1 < 0.000001)
+		dtPsikq1 = 0;
+	double dtPsikq2 = -mRkq2*mIkq2;
+	if (dtPsikq2 < 0.000001)
+		dtPsikq2 = 0;
+
+	mPsid = mPsid + dt*mBase_OmElec*dtPsid;
+	mPsiq = mPsiq + dt*mBase_OmElec*dtPsiq;
+	mPsi0 = mPsi0 + dt*mBase_OmElec*dtPsi0;
+	mPsifd = mPsifd + dt*mBase_OmElec*dtPsifd;
+	mPsikd = mPsikd + dt*mBase_OmElec*dtPsikd;
+	mPsikq1 = mPsikq1 + dt*mBase_OmElec*dtPsikq1;
+	mPsikq2 = mPsikq2 + dt*mBase_OmElec*dtPsikq2;
+
+	
+	//mCurrents = mReverseCurrents * mReactanceMat * mFluxes;
 
 	//Calculation of currents based on inverse of inductance matrix
 	mId = ((mLlfd*mLlkd + mLmd*(mLlfd + mLlkd))*mPsid - mLmd*mLlkd*mPsifd - mLlfd*mLmd*mPsikd) / detLd;
 	mIfd = (mLlkd*mLmd*mPsid - (mLl*mLlkd + mLmd*(mLl + mLlkd))*mPsifd + mLmd*mLl) / detLd;
 	mIkd = (mLmd*mLlfd*mPsid + mLmd*mLl*mPsifd - (mLmd*(mLlfd + mLl) + mLl*mLlfd)*mPsikd) / detLd;
-
-
-
-	DPSMatrix currents = mReverseCurrents * mReactanceMat * mFluxes;
-
-
-	DPSMatrix dtFluxes = mVoltages - mResistanceMat * currents - mOmMech * mOmegaFluxMat * mFluxes;
-	
-	for (int i = 0; i < dtFluxes.size(); i++)
-	{
-		if (dtFluxes(i, 0) < 0.000001)
-			dtFluxes(i, 0) = 0;
-	}
-	mFluxes = mFluxes + dt * mBase_OmElec * dtFluxes;
-	
-	mCurrents = mReverseCurrents * mReactanceMat * mFluxes;
+	mIq = ((mLlkq1*mLlkq2 + mLmq*(mLlkq1 + mLlkq2))*mPsiq - mLmq*mLlkq2*mPsikq1 - mLmq*mLlkq1*mPsikq2) / detLq;
+	mIkq1 = (mLmq*mLlkq2*mPsiq - (mLmq*(mLlkq2 + mLl) + mLl*mLlkq2)*mPsikq1 + mLmq*mLl*mPsikq2) / detLq;
+	mIkq2 = (mLmq*mLlkq1*mPsiq + mLmq*mLl*mPsikq1 - (mLmq*(mLlkq1 + mLl) + mLl*mLlkq1)*mPsikq2) / detLq;
+	mI0 = -mPsi0 / mLl;
 
 	// Update mechanical rotor angle with respect to electrical angle
-	mThetaMech = mThetaMech + dt * (mOmMech * mBase_OmMech);
+	//mThetaMech = mThetaMech + dt * (mOmMech * mBase_OmMech);
+	mThetaMech2 = mThetaMech2 + dt * (mOmMech * mBase_OmMech);
 
-	// inverse dq-transform
-	mDq0Currents(0, 0) = mCurrents(0, 0);
-	mDq0Currents(1, 0) = mCurrents(1, 0);
-	mDq0Currents(2, 0) = mCurrents(2, 0);
-	mAbcsCurrents = inverseParkTransform(mThetaMech, mDq0Currents);
-	mAbcsCurrents = mBase_i * mAbcsCurrents;
+	//// inverse dq-transform
+	//mDq0Currents(0, 0) = mCurrents(0, 0);
+	//mDq0Currents(1, 0) = mCurrents(1, 0);
+	//mDq0Currents(2, 0) = mCurrents(2, 0);
+	//mAbcsCurrents = inverseParkTransform(mThetaMech, mDq0Currents);
+	//mAbcsCurrents = mBase_i * mAbcsCurrents;
+
+	mIa = mBase_i * inverseParkTransform2(mThetaMech2, mId, mIq, mI0)(0);
+	mIb = mBase_i * inverseParkTransform2(mThetaMech2, mId, mIq, mI0)(1);
+	mIc = mBase_i * inverseParkTransform2(mThetaMech2, mId, mIq, mI0)(2);
+
+	mCurrents2 << mIq,
+		mId,
+		mI0,
+		mIkq1,
+		mIkq2,
+		mIfd,
+		mIkd;
+
+	mVoltages2 << mVq,
+		mVd,
+		mV0,
+		mVkq1,
+		mVkq2,
+		mVfd,
+		mVkd;
+
+	mFluxes2 << mVq,
+		mPsid,
+		mPsi0,
+		mPsikq1,
+		mPsikq2,
+		mPsifd,
+		mPsikd;
 }
 
 void SynchronGeneratorEMT::postStep(SystemModel& system) {
 	if (mNode1 >= 0) {
-		mAbcsVoltages(0,0) = system.getRealFromLeftSideVector(mNode1);		
+		//mAbcsVoltages(0,0) = system.getRealFromLeftSideVector(mNode1);
+		mVa = system.getRealFromLeftSideVector(mNode1);
 	}
 	else {
-		mAbcsVoltages(0, 0) = 0;		
+		//mAbcsVoltages(0, 0) = 0;
+		mVa = 0;
 	}
 	if (mNode2 >= 0) {
-		mAbcsVoltages(1, 0) = system.getRealFromLeftSideVector(mNode2);
+		//mAbcsVoltages(1, 0) = system.getRealFromLeftSideVector(mNode2);
+		mVb = system.getRealFromLeftSideVector(mNode2);
 	}
 	else {
-		mAbcsVoltages(1, 0) = 0;		
+		//mAbcsVoltages(1, 0) = 0;
+		mVb = 0;
 	}
 	if (mNode3 >= 0) {
-		mAbcsVoltages(2, 0) = system.getRealFromLeftSideVector(mNode3);
+		//mAbcsVoltages(2, 0) = system.getRealFromLeftSideVector(mNode3);
+		mVc = system.getRealFromLeftSideVector(mNode3);
 	}
 	else {
-		mAbcsVoltages(2, 0) = 0;
+		//mAbcsVoltages(2, 0) = 0;
+		mVc = 0;
 	}
 }
 
-DPSMatrix SynchronGeneratorEMT::parkTransform(Real theta, DPSMatrix& in) {
-	DPSMatrix ParkMat(3,3);
-	// Park transform according to Krause
-	//ParkMat << 
-	//	2. / 3. * cos(theta), 2. / 3. * cos(theta - 2. * M_PI / 3.), 2. / 3. * cos(theta + 2. * M_PI / 3.),
-	//	2. / 3. * sin(theta), 2. / 3. * sin(theta - 2. * M_PI / 3.), 2. / 3. * sin(theta + 2. * M_PI / 3.),
-	//	1. / 3., 1. / 3., 1. / 3.;
-
-	// Park transform according to Kundur
-	 ParkMat << 2. / 3. * cos(theta), 2. / 3. * cos(theta - 2. * M_PI / 3.), 2. / 3. * cos(theta + 2. * M_PI / 3.),
-		- 2. / 3. * sin(theta), - 2. / 3. * sin(theta - 2. * M_PI / 3.), - 2. / 3. * sin(theta + 2. * M_PI / 3.),
-		1. / 3., 1. / 3., 1. / 3.;
-
-	return ParkMat * in;
-}
+//DPSMatrix SynchronGeneratorEMT::parkTransform(Real theta, DPSMatrix& in) {
+//	DPSMatrix ParkMat(3,3);
+//	// Park transform according to Krause
+//	ParkMat << 
+//		2. / 3. * cos(theta), 2. / 3. * cos(theta - 2. * M_PI / 3.), 2. / 3. * cos(theta + 2. * M_PI / 3.),
+//		2. / 3. * sin(theta), 2. / 3. * sin(theta - 2. * M_PI / 3.), 2. / 3. * sin(theta + 2. * M_PI / 3.),
+//		1. / 3., 1. / 3., 1. / 3.;
+//
+//	//// Park transform according to Kundur
+//	// ParkMat << 2. / 3. * cos(theta), 2. / 3. * cos(theta - 2. * M_PI / 3.), 2. / 3. * cos(theta + 2. * M_PI / 3.),
+//	//	- 2. / 3. * sin(theta), - 2. / 3. * sin(theta - 2. * M_PI / 3.), - 2. / 3. * sin(theta + 2. * M_PI / 3.),
+//	//	1. / 3., 1. / 3., 1. / 3.;
+//
+//	return ParkMat * in;
+//}
 
 DPSMatrix SynchronGeneratorEMT::parkTransform2(Real theta, double a, double b, double c) {
-	DPSMatrix ParkMat(3, 1);
-	// Park transform according to Krause
-	//ParkMat << 
-	//	2. / 3. * cos(theta), 2. / 3. * cos(theta - 2. * M_PI / 3.), 2. / 3. * cos(theta + 2. * M_PI / 3.),
-	//	2. / 3. * sin(theta), 2. / 3. * sin(theta - 2. * M_PI / 3.), 2. / 3. * sin(theta + 2. * M_PI / 3.),
-	//	1. / 3., 1. / 3., 1. / 3.;
+	
+	DPSMatrix dq0vector(3, 1);
 
 	// Park transform according to Kundur
 	double d, q, zero;
@@ -371,43 +454,44 @@ DPSMatrix SynchronGeneratorEMT::parkTransform2(Real theta, double a, double b, d
 	q = -2. / 3. * sin(theta)*a - 2. / 3. * sin(theta - 2. * M_PI / 3.)*b - 2. / 3. * sin(theta + 2. * M_PI / 3.)*c;
 	zero = 1. / 3. * a, 1. / 3. * b, 1. / 3. * c;
 
-	ParkMat << d,
+	dq0vector << d,
 		q,
 		0;
 
-	return ParkMat;
+	return dq0vector;
 }
 
-DPSMatrix SynchronGeneratorEMT::inverseParkTransform(Real theta, DPSMatrix& in) {
-	DPSMatrix InverseParkMat(3,3);
-	//// Park transform according to Krause
-	//InverseParkMat << 
-	//	cos(theta), sin(theta), 1,
-	//	cos(theta - 2. * M_PI / 3.), sin(theta - 2. * M_PI / 3.), 1,
-	//	cos(theta + 2. * M_PI / 3.), sin(theta + 2. * M_PI / 3.), 1;
-
-	// Park transform according to Krause
-	InverseParkMat <<
-		cos(theta), -sin(theta), 1. / sqrt(3),
-		cos(theta - 2. * M_PI / 3.), -sin(theta - 2. * M_PI / 3.), 1. / sqrt(3),
-		cos(theta + 2. * M_PI / 3.), -sin(theta + 2. * M_PI / 3.), 1. / sqrt(3);
-
-	return InverseParkMat * in;
-}
+//DPSMatrix SynchronGeneratorEMT::inverseParkTransform(Real theta, DPSMatrix& in) {
+//	DPSMatrix InverseParkMat(3,3);
+//	// Park transform according to Krause
+//	InverseParkMat << 
+//		cos(theta), sin(theta), 1,
+//		cos(theta - 2. * M_PI / 3.), sin(theta - 2. * M_PI / 3.), 1,
+//		cos(theta + 2. * M_PI / 3.), sin(theta + 2. * M_PI / 3.), 1;
+//
+//	//// Park transform according to Kundur
+//	//InverseParkMat <<
+//	//	cos(theta), -sin(theta), 1.,
+//	//	cos(theta - 2. * M_PI / 3.), -sin(theta - 2. * M_PI / 3.), 1.,
+//	//	cos(theta + 2. * M_PI / 3.), -sin(theta + 2. * M_PI / 3.), 1.;
+//
+//	return InverseParkMat * in;
+//}
 
 DPSMatrix SynchronGeneratorEMT::inverseParkTransform2(Real theta, double d, double q, double zero) {
-	DPSMatrix InverseParkMat(3, 1);
+	
+	DPSMatrix abcVector(3, 1);
 
 	double a, b, c;
 
-		// Park transform according to Krause
-	a = cos(theta)*d - sin(theta)*q + (1. / sqrt(3))*zero;
-	b = cos(theta - 2. * M_PI / 3.)*d - sin(theta - 2. * M_PI / 3.)*q + (1. / sqrt(3))*zero;
-	c=	cos(theta + 2. * M_PI / 3.)*d - sin(theta + 2. * M_PI / 3.)*q + (1. / sqrt(3))*zero;
+		// Park transform according to Kundur
+	a = cos(theta)*d - sin(theta)*q + 1.*zero;
+	b = cos(theta - 2. * M_PI / 3.)*d - sin(theta - 2. * M_PI / 3.)*q + 1.*zero;
+	c=	cos(theta + 2. * M_PI / 3.)*d - sin(theta + 2. * M_PI / 3.)*q + 1.*zero;
 
-	InverseParkMat << a,
+	abcVector << a,
 		b,
 		c;
 
-	return InverseParkMat;
+	return abcVector;
 }
