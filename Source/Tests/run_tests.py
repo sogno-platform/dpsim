@@ -16,7 +16,7 @@ EPSILON = 1e-6
 def run_test(binary, dpCsv, expectedCsv):
     ret = subprocess.call("./" + binary)
     if ret:
-        print(binary + " binary returned code " + ret, file=sys.stderr)
+        print(binary + " binary returned code " + str(ret), file=sys.stderr)
         return ret
     dpData = pandas.read_csv(dpCsv, header=None)
     expectedData = pandas.read_csv(expectedCsv, header=None)
