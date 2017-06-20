@@ -122,6 +122,8 @@ void DPsim::SynGenUnitTestBalancedResLoad() {
 	synGenLogCurr.WriteLogToFile("data_synGen_curr.csv");
 	
 	std::cout << "Simulation finished." << std::endl;
+	for (auto elem : circElements)
+		delete elem;
 }
 
 void DPsim::SynGenUnitTestPhaseToPhaseFault() {
@@ -225,6 +227,8 @@ void DPsim::SynGenUnitTestPhaseToPhaseFault() {
 	synGenLogCurr.WriteLogToFile("data_synGen_curr.csv");
 
 	std::cout << "Simulation finished." << std::endl;
+	for (auto elem : circElements)
+		delete elem;
 }
 
 void DPsim::SynGenUnitTestThreePhaseFault() {
@@ -331,6 +335,11 @@ void DPsim::SynGenUnitTestThreePhaseFault() {
 	synGenLogCurr.WriteLogToFile("data_synGen_curr.csv");
 
 	std::cout << "Simulation finished." << std::endl;
+	for (auto elem : circElements)
+		delete elem;
+	delete rBreaker1;
+	delete rBreaker2;
+	delete rBreaker3;
 }
 
 void DPsim::SynGenDPUnitTestBalancedResLoad() {
@@ -422,5 +431,6 @@ void DPsim::SynGenDPUnitTestBalancedResLoad() {
 	synGenLogCurr.WriteLogToFile("data_synGen_curr.csv");
 
 	std::cout << "Simulation finished." << std::endl;
-
+	for (auto elem : circElements)
+		delete elem;
 }
