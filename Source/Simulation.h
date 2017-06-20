@@ -7,6 +7,7 @@
 #include "Components.h"
 #include "Logger.h"
 #include "SystemModel.h"
+#include "ExternalInterface.h"
 
 namespace DPsim {
 
@@ -32,6 +33,9 @@ namespace DPsim {
 		/// Circuit list vector
 		std::vector<std::vector<BaseComponent*> > mElementsVector;
 
+		/// Vector of ExternalInterfaces
+		std::vector<ExternalInterface*> mExternalInterfaces;
+
 		/// TODO: check that every system matrix has the same dimensions		
 		void initialize(std::vector<BaseComponent*> elements);
 
@@ -55,6 +59,7 @@ namespace DPsim {
 		void switchSystemMatrix(int systemMatrixIndex);
 		void setSwitchTime(Real switchTime, Int systemIndex);
 		void increaseByTimeStep();
+		void addExternalInterface(ExternalInterface*);
 
 		double getTime() { return mTime; }
 		double getFinalTime() { return mFinalTime; }

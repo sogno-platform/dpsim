@@ -72,3 +72,7 @@ void Capacitor::postStep(SystemModel& system) {
 	currr = mGcr * deltavr - mGci * deltavi - cureqr;
 	curri = mGci * deltavr + mGcr * deltavi - cureqi;
 }
+
+Complex Capacitor::getCurrent(SystemModel& system) {
+	return Complex(currr, curri);
+}

@@ -44,3 +44,17 @@ void VoltSourceRes::step(SystemModel& system, Real time) {
 		system.addCompToRightSideVector(mNode2, -mCurrentr, -mCurrenti);
 	}
 }
+
+Complex VoltSourceRes::getCurrent(SystemModel& system) {
+	Real real = mCurrentr;
+	Real imag = mCurrenti;
+	if (mNode1 >= 0) {
+		real += system.getRealFromLeftSideVector(mNode1)*mConductance;
+		imag += system.getImagFromLeftSideVector(mNode1)*mConductance;
+	}
+	if (mNode2 >= 0) {
+		real -= system.getRealFromLeftSideVector(mNode2)*mConductance;
+		imag -= system.getImagFromLeftSideVector(mNode2)*mConductance;
+	}
+	return Complex(real, imag);
+}

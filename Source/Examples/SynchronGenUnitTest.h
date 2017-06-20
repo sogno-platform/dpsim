@@ -1,4 +1,4 @@
-#ifndef  SYNCHRONGENUNITTEST_H
+#ifndef SYNCHRONGENUNITTEST_H
 #define SYNCHRONGENUNITTEST_H
 
 #include "../MathLibrary.h"

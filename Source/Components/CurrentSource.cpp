@@ -8,10 +8,18 @@ CurrentSource::CurrentSource(std::string name, int src, int dest, double current
 };
 	
 void CurrentSource::applyRightSideVectorStamp(SystemModel& system) {
-	if (mNode1 != 0) {
+	if (mNode1 >= 0) {
 		system.addCompToRightSideVector(mNode1, currentr, currenti);		
 	}
-	if (mNode2 != 0) {
+	if (mNode2 >= 0) {
 		system.addCompToRightSideVector(mNode2, -currentr, -currenti);
 	}
-};
+}
+
+void CurrentSource::step(SystemModel& system, Real time) {
+	this->applyRightSideVectorStamp(system);
+}
+
+Complex CurrentSource::getCurrent(SystemModel &system) {
+	return Complex(currentr, currenti);
+}

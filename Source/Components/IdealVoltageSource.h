@@ -48,6 +48,7 @@ namespace DPsim {
 		
 		void postStep(SystemModel& system) { }
 
+		virtual Complex getCurrent(SystemModel& system);
 	};
 }
 #endif
