@@ -260,9 +260,9 @@ void DPsim::SynGenUnitTestThreePhaseFault() {
 		nomPower, nomPhPhVoltRMS, nomFreq, poleNum, nomFieldCurr,
 		Rs, Ll, Lmd, Lmd0, Lmq, Lmq0, Rfd, Llfd, Rkd, Llkd, Rkq1, Llkq1, Rkq2, Llkq2, H);
 	double loadRes = 1037.8378;
-	BaseComponent* r1 = new LinearResistor("r1", 0, 1, loadRes);
-	BaseComponent* r2 = new LinearResistor("r2", 0, 2, loadRes);
-	BaseComponent* r3 = new LinearResistor("r3", 0, 3, loadRes);
+	BaseComponent* r1 = new LinearResistorEMT("r1", 0, 1, loadRes);
+	BaseComponent* r2 = new LinearResistorEMT("r2", 0, 2, loadRes);
+	BaseComponent* r3 = new LinearResistorEMT("r3", 0, 3, loadRes);
 
 	std::vector<BaseComponent*> circElements;
 	circElements.push_back(gen);
@@ -272,9 +272,9 @@ void DPsim::SynGenUnitTestThreePhaseFault() {
 
 	// Declare circuit components for resistance change
 	double breakerRes = 0.01;
-	BaseComponent* rBreaker1 = new LinearResistor("rbreak1", 1, 2, breakerRes);
-	BaseComponent* rBreaker2 = new LinearResistor("rbreak2", 2, 3, breakerRes);
-	BaseComponent* rBreaker3 = new LinearResistor("rbreak3", 1, 3, breakerRes);
+	BaseComponent* rBreaker1 = new LinearResistorEMT("rbreak1", 1, 2, breakerRes);
+	BaseComponent* rBreaker2 = new LinearResistorEMT("rbreak2", 2, 3, breakerRes);
+	BaseComponent* rBreaker3 = new LinearResistorEMT("rbreak3", 1, 3, breakerRes);
 	std::vector<BaseComponent*> circElementsBreakerOn;
 	circElementsBreakerOn.push_back(rBreaker1);
 	circElementsBreakerOn.push_back(rBreaker2);
@@ -286,9 +286,10 @@ void DPsim::SynGenUnitTestThreePhaseFault() {
 	// Set up simulation
 	double tf, dt, t;
 	double om = 2.0*M_PI*60.0;
-	tf = 0.1; dt = 0.0000001; t = 0;
+	tf = 0.2; dt = 0.0000001; t = 0;
 	Simulation newSim(circElements, om, dt, tf, log);
 	newSim.addSystemTopology(circElementsBreakerOn);
+	newSim.switchSystemMatrix(0);
 
 	// Initialize generator
 	double initActivePower = 555e3;
