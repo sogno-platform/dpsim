@@ -46,9 +46,8 @@ namespace DPsim {
 		/// Sets parameters to default values.
 		Simulation();
 		/// Creates system matrix according to 
-		Simulation(std::vector<BaseComponent*> elements, Real om, Real dt, Real tf);
-		Simulation(std::vector<BaseComponent*> elements, Real om, Real dt, Real tf, Logger& logger);
-		Simulation(std::vector<BaseComponent*> elements, Real om, Real dt, Real tf, Logger& logger, SimulationType simType);
+		Simulation(std::vector<BaseComponent*> elements, Real om, Real dt, Real tf, SimulationType simType = SimulationType::DynPhasor);
+		Simulation(std::vector<BaseComponent*> elements, Real om, Real dt, Real tf, Logger& logger, SimulationType simType = SimulationType::DynPhasor);
 		~Simulation();
 
 		
