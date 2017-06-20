@@ -229,6 +229,7 @@ void DPsim::SynGenUnitTestPhaseToPhaseFault() {
 	std::cout << "Simulation finished." << std::endl;
 	for (auto elem : circElements)
 		delete elem;
+	delete rBreaker;
 }
 
 void DPsim::SynGenUnitTestThreePhaseFault() {
