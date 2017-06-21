@@ -36,3 +36,7 @@ void IdealVoltageSource::step(SystemModel& system, Real time) {
 	system.addRealToRightSideVector(system.getCompOffset() - number, mVoltageDiffr);
 	system.addRealToRightSideVector(2 * system.getCompOffset() - number, mVoltageDiffi);
 }
+
+Complex IdealVoltageSource::getCurrent(SystemModel& system) {
+	return Complex(system.getRealFromLeftSideVector(system.getCompOffset()-number), system.getRealFromLeftSideVector(2*system.getCompOffset()-number));
+}

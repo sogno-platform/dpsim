@@ -40,6 +40,10 @@ void DPsim::RXLineResLoad() {
 	log.WriteLogToFile("Logs/Log_" + fileName.str() + ".log");
 	leftVectorLog.WriteLogToFile("Logs/LeftVectorLog_" + fileName.str() + ".csv");
 	rightVectorLog.WriteLogToFile("Logs/RightVectorLog_" + fileName.str() + ".csv");
+	for (auto elem : circElements0)
+		delete elem;
+	delete circElements1[3];
+	delete circElements2[3];
 }
 
 void DPsim::VarFreqRXLineResLoad(Real timeStep, Real finalTime, Real freqStep, Real loadStep, Real rampTime) {
@@ -76,6 +80,10 @@ void DPsim::VarFreqRXLineResLoad(Real timeStep, Real finalTime, Real freqStep, R
 	log.WriteLogToFile("Logs/Log_" + fileName.str() + ".log");
 	leftVectorLog.WriteLogToFile("Logs/LeftVectorLog_" + fileName.str() + ".csv");
 	rightVectorLog.WriteLogToFile("Logs/RightVectorLog_" + fileName.str() + ".csv");
+	for (auto elem : circElements0)
+		delete elem;
+	delete circElements1[3];
+	delete circElements2[3];
 }
 
 void DPsim::RXLineResLoadEMT() {
@@ -113,6 +121,10 @@ void DPsim::RXLineResLoadEMT() {
 	log.WriteLogToFile("Logs/Log_" + fileName.str() + ".log");
 	leftVectorLog.WriteLogToFile("Logs/LeftVectorLog_" + fileName.str() + ".csv");
 	rightVectorLog.WriteLogToFile("Logs/RightVectorLog_" + fileName.str() + ".csv");
+	for (auto elem : circElements0)
+		delete elem;
+	delete circElements1[3];
+	delete circElements2[3];
 }
 
 void DPsim::VarFreqRXLineResLoadEMT(Real timeStep, Real finalTime, Real freqStep, Real loadStep, Real rampTime) {
@@ -149,6 +161,10 @@ void DPsim::VarFreqRXLineResLoadEMT(Real timeStep, Real finalTime, Real freqStep
 	log.WriteLogToFile("Logs/Log_" + fileName.str() + ".log");
 	leftVectorLog.WriteLogToFile("Logs/LeftVectorLog_" + fileName.str() + ".csv");
 	rightVectorLog.WriteLogToFile("Logs/RightVectorLog_" + fileName.str() + ".csv");
+	for (auto elem : circElements0)
+		delete elem;
+	delete circElements1[3];
+	delete circElements2[3];
 }
 
 void DPsim::runDpEmtVarFreqStudy() {
@@ -231,4 +247,6 @@ void DPsim::RXLineResLoadStatic() {
 	leftVectorLog.WriteLogToFile("Logs/LeftVectorLog_" + fileName.str() + ".csv");
 	rightVectorLog.WriteLogToFile("Logs/RightVectorLog_" + fileName.str() + ".csv");
 	*/
+	for (auto elem : circElements0)
+		delete elem;
 }

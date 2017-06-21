@@ -165,6 +165,37 @@ def plotEmtNodeResults(filename, node):
 	plt.show()
 
 
+def plotDpDiff(filename1, node1, filename2, node2):
+    node1 = node1 - 1
+    node2 = node2 - 1
+    df1 = pd.read_csv(filename1, header=None)
+    df2 = pd.read_csv(filename2, header=None)
+
+    if (df1.shape[1] - 1) / 2 < node1 or node1 < 0:
+        print('Node 1 not available')
+        exit()
+
+    if (df2.shape[1] - 1) / 2 < node2 or node2 < 0:
+        print('Node 2 not available')
+        exit()
+
+    # this assumes same timestep for both runs
+    time = np.array(df1.ix[:,0])
+    re1 = np.array(df1.ix[:,node1 + 1])
+    re2 = np.array(df2.ix[:,node2 + 1])
+    im1 = np.array(df1.ix[:,int((df1.shape[1] - 1) / 2 + node1 + 1)])
+    im2 = np.array(df2.ix[:,int((df2.shape[1] - 1) / 2 + node2 + 1)])
+    abs1 = np.sqrt(re1**2+im1**2)
+    abs2 = np.sqrt(re2**2+im2**2)
+    diff = np.sqrt((re1-re2)**2+(im1-im2)**2)
+
+    fig, ax = plt.subplots()
+    ax.plot(time, abs1, 'b-', time, abs2, 'r-', time, diff, 'g-')
+    ax.set_xlabel('time [s]')
+    ax.set_ylabel('mag [V]')
+    ax.grid(True)
+    plt.show()
+
 def plotNodeResults(filename, node):
 	node = node - 1
 	df = pd.read_csv(filename, header=None)

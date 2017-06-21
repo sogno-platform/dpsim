@@ -55,6 +55,9 @@ namespace DPsim {
 		
 		/// Recalculates variables detalvr, deltavi, currr and curri based on the simulation results of one time step
 		void postStep(SystemModel& system);
+
+		/// Return current from the previous step
+		Complex getCurrent(SystemModel& system);
 	};
 }
 #endif

@@ -5,12 +5,12 @@ using namespace DPsim;
 Simulation::Simulation() {
 	mTime = 0;
 	mCurrentSwitchTimeIndex = 0;
-	mSystemModel.setSimType(SimulationType::EMT);
 }
 
-Simulation::Simulation(std::vector<BaseComponent*> elements, Real om, Real dt, Real tf) 
+Simulation::Simulation(std::vector<BaseComponent*> elements, Real om, Real dt, Real tf, SimulationType simType) 
 	: Simulation() {
 
+	mSystemModel.setSimType(simType);
 	mSystemModel.setTimeStep(dt);
 	mSystemModel.setOmega(om);
 	mFinalTime = tf;
@@ -18,8 +18,8 @@ Simulation::Simulation(std::vector<BaseComponent*> elements, Real om, Real dt, R
 	initialize(elements);
 }
 
-Simulation::Simulation(std::vector<BaseComponent*> elements, Real om, Real dt, Real tf, Logger& logger) 
-	: Simulation(elements, om, dt, tf) {
+Simulation::Simulation(std::vector<BaseComponent*> elements, Real om, Real dt, Real tf, Logger& logger, SimulationType simType) 
+	: Simulation(elements, om, dt, tf, simType) {
 
 	for (std::vector<BaseComponent*>::iterator it = elements.begin(); it != elements.end(); ++it) {
 		logger.Log(LogLevel::INFO) << "Added " << (*it)->getName() << " of type " << typeid(*(*it)).name() << " to simulation." << std::endl;
@@ -30,12 +30,6 @@ Simulation::Simulation(std::vector<BaseComponent*> elements, Real om, Real dt, R
 	logger.Log() << mSystemModel.getLUdecomp() << std::endl;
 	logger.Log(LogLevel::INFO) << "Known variables matrix j:" << std::endl;
 	logger.Log() << mSystemModel.getRightSideVector() << std::endl;
-}
-
-Simulation::Simulation(std::vector<BaseComponent*> elements, Real om, Real dt, Real tf, Logger& logger, SimulationType simType) {
-	mSystemModel.setSimType(simType);
-
-	Simulation(elements, om, dt, tf, logger);
 }
 
 
@@ -62,10 +56,10 @@ void Simulation::initialize(std::vector<BaseComponent*> newElements) {
 		}
 		std::string type = typeid(*(*it)).name();
 
-		if (type == "class DPsim::IdealVoltageSource") {
+		if (dynamic_cast<IdealVoltageSource*>(*it)) {
 			numIdealVS = numIdealVS + 1;
 		}
-		if (type == "class DPsim::RxLine" || type == "class DPsim::PiLine") {
+		if (dynamic_cast<RxLine*>(*it) || dynamic_cast<PiLine*>(*it)) {
 			if ((*it)->getNode3() != -1) {
 				numLines = numLines + 1;
 			}
@@ -106,8 +100,12 @@ void Simulation::addSystemTopology(std::vector<BaseComponent*> newElements) {
 
 int Simulation::step(Logger& logger)
 {
-	mSystemModel.setRightSideVectorToZero(getRightSideVector());
+	mSystemModel.setRightSideVectorToZero();
 	
+	for (auto it = mExternalInterfaces.begin(); it != mExternalInterfaces.end(); ++it) {
+		(*it)->readValues();
+	}
+
 	for (std::vector<BaseComponent*>::iterator it = mElements.begin(); it != mElements.end(); ++it) {
 		(*it)->step(mSystemModel, mTime);
 	}
@@ -116,6 +114,10 @@ int Simulation::step(Logger& logger)
  
 	for (std::vector<BaseComponent*>::iterator it = mElements.begin(); it != mElements.end(); ++it) {
 		(*it)->postStep(mSystemModel);
+	}
+
+	for (auto it = mExternalInterfaces.begin(); it != mExternalInterfaces.end(); ++it) {
+		(*it)->writeValues(mSystemModel);
 	}
 
 	if (mCurrentSwitchTimeIndex < mSwitchEventVector.size()) {
@@ -221,4 +223,8 @@ void Simulation::setSwitchTime(Real switchTime, Int systemIndex) {
 
 void Simulation::increaseByTimeStep() {
 	mTime = mTime + mSystemModel.getTimeStep();
+}
+
+void Simulation::addExternalInterface(ExternalInterface *eint) {
+	this->mExternalInterfaces.push_back(eint);
 }

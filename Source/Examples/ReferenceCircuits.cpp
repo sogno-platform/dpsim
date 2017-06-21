@@ -43,6 +43,8 @@ void DPsim::simulationExample1()
 	log.WriteLogToFile("Logs/Log_" + fileName.str() + ".log");
 	leftVectorLog.WriteLogToFile("Logs/LeftVectorLog_" + fileName.str() + ".csv");
 	rightVectorLog.WriteLogToFile("Logs/RightVectorLog_" + fileName.str() + ".csv");
+	for (auto elem : circElements0)
+		delete elem;
 }
 
 void DPsim::simulationExample1L2()
@@ -82,6 +84,8 @@ void DPsim::simulationExample1L2()
 	log.WriteLogToFile("Logs/Log_" + fileName.str() + ".log");
 	leftVectorLog.WriteLogToFile("Logs/LeftVectorLog_" + fileName.str() + ".csv");
 	rightVectorLog.WriteLogToFile("Logs/RightVectorLog_" + fileName.str() + ".csv");
+	for (auto elem : circElements0)
+		delete elem;
 }
 
 void DPsim::simulationExample2()
@@ -119,6 +123,8 @@ void DPsim::simulationExample2()
 	log.WriteLogToFile("Logs/Log_" + fileName.str() + ".log");
 	leftVectorLog.WriteLogToFile("Logs/LeftVectorLog_" + fileName.str() + ".csv");
 	rightVectorLog.WriteLogToFile("Logs/RightVectorLog_" + fileName.str() + ".csv");
+	for (auto elem : circElements0)
+		delete elem;
 }
 
 void DPsim::simulationExample3()
@@ -157,6 +163,8 @@ void DPsim::simulationExample3()
 	log.WriteLogToFile("Logs/Log_" + fileName.str() + ".log");
 	leftVectorLog.WriteLogToFile("Logs/LeftVectorLog_" + fileName.str() + ".csv");
 	rightVectorLog.WriteLogToFile("Logs/RightVectorLog_" + fileName.str() + ".csv");
+	for (auto elem : circElements0)
+		delete elem;
 }
 
 void DPsim::simulationExampleIdealVS()
@@ -195,6 +203,8 @@ void DPsim::simulationExampleIdealVS()
 	log.WriteLogToFile("Logs/Log_" + fileName.str() + ".log");
 	leftVectorLog.WriteLogToFile("Logs/LeftVectorLog_" + fileName.str() + ".csv");
 	rightVectorLog.WriteLogToFile("Logs/RightVectorLog_" + fileName.str() + ".csv");
+	for (auto elem : circElements0)
+		delete elem;
 }
 
 void DPsim::simulationExampleIdealVS2()
@@ -234,6 +244,8 @@ void DPsim::simulationExampleIdealVS2()
 	log.WriteLogToFile("Logs/Log_" + fileName.str() + ".log");
 	leftVectorLog.WriteLogToFile("Logs/LeftVectorLog_" + fileName.str() + ".csv");
 	rightVectorLog.WriteLogToFile("Logs/RightVectorLog_" + fileName.str() + ".csv");
+	for (auto elem : circElements0)
+		delete elem;
 }
 
 
@@ -279,6 +291,8 @@ void DPsim::simulationExampleIdealVS3()
 	log.WriteLogToFile("Logs/Log_" + fileName.str() + ".log");
 	leftVectorLog.WriteLogToFile("Logs/LeftVectorLog_" + fileName.str() + ".csv");
 	rightVectorLog.WriteLogToFile("Logs/RightVectorLog_" + fileName.str() + ".csv");
+	for (auto elem : circElements0)
+		delete elem;
 }
 
 void DPsim::simulationExampleRXLine()
@@ -317,6 +331,8 @@ void DPsim::simulationExampleRXLine()
 	log.WriteLogToFile("Logs/Log_" + fileName.str() + ".log");
 	leftVectorLog.WriteLogToFile("Logs/LeftVectorLog_" + fileName.str() + ".csv");
 	rightVectorLog.WriteLogToFile("Logs/RightVectorLog_" + fileName.str() + ".csv");
+	for (auto elem : circElements0)
+		delete elem;
 }
 
 void DPsim::simulationExampleRXLine2()
@@ -357,6 +373,8 @@ void DPsim::simulationExampleRXLine2()
 	log.WriteLogToFile("Logs/Log_" + fileName.str() + ".log");
 	leftVectorLog.WriteLogToFile("Logs/LeftVectorLog_" + fileName.str() + ".csv");
 	rightVectorLog.WriteLogToFile("Logs/RightVectorLog_" + fileName.str() + ".csv");
+	for (auto elem : circElements0)
+		delete elem;
 }
 
 void DPsim::simulationExampleRXLine3()
@@ -395,6 +413,8 @@ void DPsim::simulationExampleRXLine3()
 	log.WriteLogToFile("Logs/Log_" + fileName.str() + ".log");
 	leftVectorLog.WriteLogToFile("Logs/LeftVectorLog_" + fileName.str() + ".csv");
 	rightVectorLog.WriteLogToFile("Logs/RightVectorLog_" + fileName.str() + ".csv");
+	for (auto elem : circElements0)
+		delete elem;
 }
 
 void DPsim::simulationExamplePiLine()
@@ -435,6 +455,8 @@ void DPsim::simulationExamplePiLine()
 	log.WriteLogToFile("Logs/Log_" + fileName.str() + ".log");
 	leftVectorLog.WriteLogToFile("Logs/LeftVectorLog_" + fileName.str() + ".csv");
 	rightVectorLog.WriteLogToFile("Logs/RightVectorLog_" + fileName.str() + ".csv");
+	for (auto elem : circElements0)
+		delete elem;
 }
 
 void DPsim::simulationExamplePiLine2()
@@ -478,4 +500,6 @@ void DPsim::simulationExamplePiLine2()
 	log.WriteLogToFile("Logs/Log_" + fileName.str() + ".log");
 	leftVectorLog.WriteLogToFile("Logs/LeftVectorLog_" + fileName.str() + ".csv");
 	rightVectorLog.WriteLogToFile("Logs/RightVectorLog_" + fileName.str() + ".csv");
+	for (auto elem : circElements0)
+		delete elem;
 }
