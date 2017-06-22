@@ -1,32 +1,19 @@
 #include "Logger.h"
 
-Logger::Logger() {
-	mLogLevel = LogLevel::INFO;
-}
-
-Logger::Logger(LogLevel level) {
-	mLogLevel = level;
+Logger::Logger(std::string filename, LogLevel level) : mLogFile(filename), mLogLevel(level), mNullStream() {
+	mNullStream.setstate(std::ios_base::badbit);
+	if (!mLogFile.is_open()) {
+		std::cerr << "Cannot open log file " << filename << std::endl;
+		mLogLevel = LogLevel::NONE;
+	}
 }
 
 Logger::~Logger() {
-
+	if (mLogFile.is_open())
+		mLogFile.close();
 }
 
-int Logger::AddDataLine(double time, DPSMatrix data) {
-	mLogStream << std::scientific << time;
-	for (int i = 0; i < data.rows(); i++) {
-		mLogStream << ", " << data(i, 0);
-	}
-	mLogStream << std::endl;
-
-	return 0;
-}
-
-std::ostringstream& Logger::Log() {
-	return mLogStream;
-}
-
-std::ostringstream& Logger::Log(LogLevel level) {
+std::ostream& Logger::Log(LogLevel level) {
 	if (level > mLogLevel) {
 		mNullStream.str("");
 		return mNullStream;
@@ -34,41 +21,25 @@ std::ostringstream& Logger::Log(LogLevel level) {
 
 	switch (level) {
 		case LogLevel::INFO:		
-			mLogStream << "INFO: ";
+			mLogFile << "INFO: ";
 			break;
 		case LogLevel::WARN:
-			mLogStream << "WARN: ";
+			mLogFile << "WARN: ";
 			break;
 		case LogLevel::ERROR:
-			mLogStream << "ERROR: ";
+			mLogFile << "ERROR: ";
 			break;
 		case LogLevel::NONE:
-			mNullStream.str("");
 			return mNullStream;
 			break;
 	}
-	return mLogStream;
+	return mLogFile;
 }
 
-void Logger::WriteLogToFile(std::string fileName) {
-	mLogFileName = fileName;
-	mLogFile.open(mLogFileName);
-
-	if (!mLogFile.is_open()) {
-		std::cout << "Cannot open log file" << mLogFileName << std::endl;
+void Logger::LogDataLine(double time, DPSMatrix& data) {
+	mLogFile << std::scientific << time;
+	for (int i = 0; i < data.rows(); i++) {
+		mLogFile << ", " << data(i, 0);
 	}
-
-	mLogFile << mLogStream.str();
-
-	mLogFile.close();
-}
-
-std::ostringstream Logger::VectorToDataLine(double time, DPSMatrix vector) {
-	std::ostringstream output;
-	output << std::scientific << time;
-	for (int i = 0; i < vector.rows(); i++) {
-		output << ", " << vector(i, 0);
-	}
-	output << std::endl;
-	return output;
+	mLogFile << std::endl;
 }

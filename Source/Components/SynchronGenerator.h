@@ -186,9 +186,9 @@ namespace DPsim {
 		/// Inverse Park transform as described in Krause
 		DPSMatrix dq0ToAbcTransform(Real theta, DPSMatrix& in);
 
-		DPSMatrix getVoltages() { return mVoltages; }
-		DPSMatrix getCurrents() { return mCurrents; }
-		DPSMatrix getFluxes() { return mFluxes; }
+		DPSMatrix& getVoltages() { return mVoltages; }
+		DPSMatrix& getCurrents() { return mCurrents; }
+		DPSMatrix& getFluxes() { return mFluxes; }
 
 		void init(Real om, Real dt) { }
 		void applySystemMatrixStamp(SystemModel& system) { }

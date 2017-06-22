@@ -249,9 +249,9 @@ namespace DPsim {
 
 
 
-		DPSMatrix getVoltages() { return mVoltages2; }
-		DPSMatrix getCurrents() { return mCurrents2; }
-		DPSMatrix getFluxes() { return mFluxes2; }
+		DPSMatrix& getVoltages() { return mVoltages2; }
+		DPSMatrix& getCurrents() { return mCurrents2; }
+		DPSMatrix& getFluxes() { return mFluxes2; }
 
 
 		void init(Real om, Real dt) { }

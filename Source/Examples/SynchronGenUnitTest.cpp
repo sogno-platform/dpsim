@@ -8,7 +8,12 @@ using namespace DPsim;
 void DPsim::SynGenUnitTestBalancedResLoad() {
 	
 	// Define Object for saving data on a file
-	Logger log, vtLog, jLog, synGenLogVolt, synGenLogCurr, synGenLogFlux;
+	Logger log("log.txt"),
+		vtLog("data_vt.csv"),
+		jLog("data_j.csv"),
+		synGenLogVolt("data_synGen_flux.csv"),
+		synGenLogCurr("data_synGen_volt.csv"),
+		synGenLogFlux("data_synGen_curr.csv");
 
 	// Define machine parameters - stator referred
 	//double nomPower = 555e6;
@@ -112,14 +117,6 @@ void DPsim::SynGenUnitTestBalancedResLoad() {
 		newSim.stepGeneratorTest(log, vtLog, jLog, gen, synGenLogFlux, synGenLogVolt, synGenLogCurr, fieldVoltage, mechPower, logTimeStep, lastLogTime);
 		newSim.increaseByTimeStep();
 	}
-
-	// Write simulation data to file
-	log.WriteLogToFile("log.txt");
-	vtLog.WriteLogToFile("data_vt.csv");
-	jLog.WriteLogToFile("data_j.csv");
-	synGenLogFlux.WriteLogToFile("data_synGen_flux.csv");
-	synGenLogVolt.WriteLogToFile("data_synGen_volt.csv");
-	synGenLogCurr.WriteLogToFile("data_synGen_curr.csv");
 	
 	std::cout << "Simulation finished." << std::endl;
 	for (auto elem : circElements)
@@ -128,7 +125,12 @@ void DPsim::SynGenUnitTestBalancedResLoad() {
 
 void DPsim::SynGenUnitTestPhaseToPhaseFault() {
 	// Define Object for saving data on a file
-	Logger log, vtLog, jLog, synGenLogVolt, synGenLogCurr, synGenLogFlux;
+	Logger log("log.txt"),
+		vtLog("data_vt.csv"),
+		jLog("data_j.csv"),
+		synGenLogVolt("data_synGen_flux.csv"),
+		synGenLogCurr("data_synGen_volt.csv"),
+		synGenLogFlux("data_synGen_curr.csv");
 
 	// Define machine parameters in per unit
 	double nomPower = 555e6;
@@ -218,14 +220,6 @@ void DPsim::SynGenUnitTestPhaseToPhaseFault() {
 		newSim.increaseByTimeStep();
 	}
 
-	// Write simulation data to file
-	log.WriteLogToFile("log.txt");
-	vtLog.WriteLogToFile("data_vt.csv");
-	jLog.WriteLogToFile("data_j.csv");
-	synGenLogFlux.WriteLogToFile("data_synGen_flux.csv");
-	synGenLogVolt.WriteLogToFile("data_synGen_volt.csv");
-	synGenLogCurr.WriteLogToFile("data_synGen_curr.csv");
-
 	std::cout << "Simulation finished." << std::endl;
 	for (auto elem : circElements)
 		delete elem;
@@ -233,7 +227,12 @@ void DPsim::SynGenUnitTestPhaseToPhaseFault() {
 
 void DPsim::SynGenUnitTestThreePhaseFault() {
 	// Define Object for saving data on a file
-	Logger log, vtLog, jLog, synGenLogVolt, synGenLogCurr, synGenLogFlux;
+	Logger log("log.txt"),
+		vtLog("data_vt.csv"),
+		jLog("data_j.csv"),
+		synGenLogVolt("data_synGen_flux.csv"),
+		synGenLogCurr("data_synGen_volt.csv"),
+		synGenLogFlux("data_synGen_curr.csv");
 
 	// Define machine parameters in per unit
 	double nomPower = 555e6;
@@ -328,14 +327,6 @@ void DPsim::SynGenUnitTestThreePhaseFault() {
 		newSim.increaseByTimeStep();		
 	}
 
-	// Write simulation data to file
-	log.WriteLogToFile("log.txt");
-	vtLog.WriteLogToFile("data_vt.csv");
-	jLog.WriteLogToFile("data_j.csv");
-	synGenLogFlux.WriteLogToFile("data_synGen_flux.csv");
-	synGenLogVolt.WriteLogToFile("data_synGen_volt.csv");
-	synGenLogCurr.WriteLogToFile("data_synGen_curr.csv");
-
 	std::cout << "Simulation finished." << std::endl;
 	for (auto elem : circElements)
 		delete elem;
@@ -346,7 +337,12 @@ void DPsim::SynGenUnitTestThreePhaseFault() {
 
 void DPsim::SynGenDPUnitTestBalancedResLoad() {
 	// Define Object for saving data on a file
-	Logger log, vtLog, jLog, synGenLogVolt, synGenLogCurr, synGenLogFlux;
+	Logger log("log.txt"),
+		vtLog("data_vt.csv"),
+		jLog("data_j.csv"),
+		synGenLogVolt("data_synGen_flux.csv"),
+		synGenLogCurr("data_synGen_volt.csv"),
+		synGenLogFlux("data_synGen_curr.csv");
 
 	// Define machine parameters in per unit
 	double nomPower = 555e6;
@@ -423,14 +419,6 @@ void DPsim::SynGenDPUnitTestBalancedResLoad() {
 		newSim.stepGeneratorTest(log, vtLog, jLog, gen, synGenLogFlux, synGenLogVolt, synGenLogCurr, fieldVoltage, mechPower, logTimeStep, lastLogTime);
 		newSim.increaseByTimeStep();		
 	}
-
-	// Write simulation data to file
-	log.WriteLogToFile("log.txt");
-	vtLog.WriteLogToFile("data_vt.csv");
-	jLog.WriteLogToFile("data_j.csv");
-	synGenLogFlux.WriteLogToFile("data_synGen_flux.csv");
-	synGenLogVolt.WriteLogToFile("data_synGen_volt.csv");
-	synGenLogCurr.WriteLogToFile("data_synGen_curr.csv");
 
 	std::cout << "Simulation finished." << std::endl;
 	for (auto elem : circElements)

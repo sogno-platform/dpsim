@@ -140,8 +140,8 @@ int Simulation::step(Logger& logger)
 int Simulation::step(Logger& logger, Logger& leftSideVectorLog, Logger& rightSideVectorLog)  {
 	int retValue = step(logger);
 
-	leftSideVectorLog.Log() << Logger::VectorToDataLine(getTime(), getLeftSideVector()).str();
-	rightSideVectorLog.Log() << Logger::VectorToDataLine(getTime(), getRightSideVector()).str();
+	leftSideVectorLog.LogDataLine(getTime(), getLeftSideVector());
+	rightSideVectorLog.LogDataLine(getTime(), getRightSideVector());
 
 	return retValue;
 }
@@ -187,18 +187,18 @@ int Simulation::stepGeneratorTest(Logger& logger, Logger& leftSideVectorLog, Log
 		lastLogTime = mTime;
 		std::cout << mTime << std::endl;
 
-		leftSideVectorLog.Log() << Logger::VectorToDataLine(getTime(), getLeftSideVector()).str();
-		rightSideVectorLog.Log() << Logger::VectorToDataLine(getTime(), getRightSideVector()).str();
+		leftSideVectorLog.LogDataLine(getTime(), getLeftSideVector());
+		rightSideVectorLog.LogDataLine(getTime(), getRightSideVector());
 
 		if (mSystemModel.getSimType() == SimulationType::DynPhasor) {
-			synGenLogFlux.Log() << Logger::VectorToDataLine(mTime, ((SynchronGenerator*)generator)->getFluxes()).str();
-			synGenLogVolt.Log() << Logger::VectorToDataLine(mTime, ((SynchronGenerator*)generator)->getVoltages()).str();
-			synGenLogCurr.Log() << Logger::VectorToDataLine(mTime, ((SynchronGenerator*)generator)->getCurrents()).str();
+			synGenLogFlux.LogDataLine(mTime, ((SynchronGenerator*)generator)->getFluxes());
+			synGenLogVolt.LogDataLine(mTime, ((SynchronGenerator*)generator)->getVoltages());
+			synGenLogCurr.LogDataLine(mTime, ((SynchronGenerator*)generator)->getCurrents());
 		}
 		else {
-			synGenLogFlux.Log() << Logger::VectorToDataLine(mTime, ((SynchronGeneratorEMT*)generator)->getFluxes()).str();
-			synGenLogVolt.Log() << Logger::VectorToDataLine(mTime, ((SynchronGeneratorEMT*)generator)->getVoltages()).str();
-			synGenLogCurr.Log() << Logger::VectorToDataLine(mTime, ((SynchronGeneratorEMT*)generator)->getCurrents()).str();
+			synGenLogFlux.LogDataLine(mTime, ((SynchronGeneratorEMT*)generator)->getFluxes());
+			synGenLogVolt.LogDataLine(mTime, ((SynchronGeneratorEMT*)generator)->getVoltages());
+			synGenLogCurr.LogDataLine(mTime, ((SynchronGeneratorEMT*)generator)->getCurrents());
 		}
 	}
 
