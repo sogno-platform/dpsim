@@ -11,10 +11,13 @@ enum class LogLevel { NONE, ERROR, WARN, INFO };
 class Logger {
 	private:
 		std::ofstream mLogFile;
-		std::ostringstream mNullStream;
 		LogLevel mLogLevel;
 
+		static std::ostringstream nullStream;
+		static std::ostream& getNullStream();
+
 	public:
+		Logger();
 		Logger(std::string filename, LogLevel level = LogLevel::INFO);
 		~Logger();
 	

@@ -1,7 +1,13 @@
 #include "Logger.h"
 
-Logger::Logger(std::string filename, LogLevel level) : mLogFile(filename), mLogLevel(level), mNullStream() {
-	mNullStream.setstate(std::ios_base::badbit);
+std::ostringstream Logger::nullStream;
+
+Logger::Logger() : mLogFile() {
+	mLogLevel = LogLevel::NONE;
+	mLogFile.setstate(std::ios_base::badbit);
+}
+
+Logger::Logger(std::string filename, LogLevel level) : mLogFile(filename), mLogLevel(level) {
 	if (!mLogFile.is_open()) {
 		std::cerr << "Cannot open log file " << filename << std::endl;
 		mLogLevel = LogLevel::NONE;
@@ -15,8 +21,7 @@ Logger::~Logger() {
 
 std::ostream& Logger::Log(LogLevel level) {
 	if (level > mLogLevel) {
-		mNullStream.str("");
-		return mNullStream;
+		return getNullStream();
 	}
 
 	switch (level) {
@@ -30,7 +35,7 @@ std::ostream& Logger::Log(LogLevel level) {
 			mLogFile << "ERROR: ";
 			break;
 		case LogLevel::NONE:
-			return mNullStream;
+			return getNullStream();
 			break;
 	}
 	return mLogFile;
@@ -42,4 +47,10 @@ void Logger::LogDataLine(double time, DPSMatrix& data) {
 		mLogFile << ", " << data(i, 0);
 	}
 	mLogFile << std::endl;
+}
+
+std::ostream& Logger::getNullStream() {
+	if (nullStream.good())
+		nullStream.setstate(std::ios_base::badbit);
+	return nullStream;
 }
