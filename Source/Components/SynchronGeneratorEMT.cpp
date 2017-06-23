@@ -72,73 +72,17 @@ void SynchronGeneratorEMT::initWithPerUnitParam(
 	// Determinant of Lq (inductance matrix of q axis)
 	detLq = -mLmq*mLlkq2*(mLlkq1 + mLl) - mLl*mLlkq1*(mLlkq2 + mLmq);
 
-
-
-
-	
-
 }
 
 void SynchronGeneratorEMT::init(Real om, Real dt,
 	Real initActivePower, Real initReactivePower, Real initTerminalVolt, Real initVoltAngle) {
-
-	//// Create matrices for state space representation 
-	//mInductanceMat << 
-	//	mLl + mLmq, 0, 0, mLmq, mLmq, 0, 0,
-	//	0, mLl + mLmd, 0, 0, 0, mLmd, mLmd,
-	//	0, 0, mLl, 0, 0, 0, 0,
-	//	mLmq, 0, 0, mLlkq1 + mLmq, mLmq, 0, 0,
-	//	mLmq, 0, 0, mLmq, mLlkq2 + mLmq, 0, 0,
-	//	0, mLmd, 0, 0, 0, mLlfd + mLmd, mLmd,
-	//	0, mLmd, 0, 0, 0, mLmd, mLlkd + mLmd;
-
-	//mResistanceMat << 
-	//	mRs, 0, 0, 0, 0, 0, 0,
-	//	0, mRs, 0, 0, 0, 0, 0,
-	//	0, 0, mRs, 0, 0, 0, 0,
-	//	0, 0, 0, mRkq1, 0, 0, 0,
-	//	0, 0, 0, 0, mRkq2, 0, 0,
-	//	0, 0, 0, 0, 0, mRfd, 0,
-	//	0, 0, 0, 0, 0, 0, mRkd;
-
-	//mOmegaFluxMat << 
-	//	0, 1, 0, 0, 0, 0, 0,
-	//	-1, 0, 0, 0, 0, 0, 0,
-	//	0, 0, 0, 0, 0, 0, 0,
-	//	0, 0, 0, 0, 0, 0, 0,
-	//	0, 0, 0, 0, 0, 0, 0,
-	//	0, 0, 0, 0, 0, 0, 0,
-	//	0, 0, 0, 0, 0, 0, 0;
-
-	//mReverseCurrents <<	
-	//	-1, 0, 0, 0, 0, 0, 0,
-	//	0, -1, 0, 0, 0, 0, 0,
-	//	0, 0, -1, 0, 0, 0, 0,
-	//	0, 0, 0, 1, 0, 0, 0,
-	//	0, 0, 0, 0, 1, 0, 0,
-	//	0, 0, 0, 0, 0, 1, 0,
-	//	0, 0, 0, 0, 0, 0, 1;
-
-	//mReactanceMat = mInductanceMat.inverse();
 	
 	// steady state per unit initial value
 	initStatesInPerUnit(initActivePower, initReactivePower, initTerminalVolt, initVoltAngle);
-	
-	/*mDq0Voltages(0, 0) = mVoltages(0, 0);
-	mDq0Voltages(1, 0) = mVoltages(1, 0);
-	mDq0Voltages(2, 0) = mVoltages(2, 0);	
-	mDq0Voltages = mDq0Voltages * mBase_v;
-	mAbcsVoltages = inverseParkTransform(mThetaMech, mDq0Voltages);*/
 
 	mVa = inverseParkTransform2(mThetaMech2, mVd* mBase_v, mVq* mBase_v, mV0* mBase_v)(0);
 	mVb = inverseParkTransform2(mThetaMech2, mVd* mBase_v, mVq* mBase_v, mV0* mBase_v)(1);
 	mVc = inverseParkTransform2(mThetaMech2, mVd* mBase_v, mVq* mBase_v, mV0* mBase_v)(2);
-
-	//mDq0Currents(0, 0) = mCurrents(0, 0);
-	//mDq0Currents(1, 0) = mCurrents(1, 0);
-	//mDq0Currents(2, 0) = mCurrents(2, 0);
-	//mDq0Currents = mDq0Currents * mBase_i;
-	//mAbcsCurrents = inverseParkTransform(mThetaMech, mDq0Currents);
 
 	mIa = inverseParkTransform2(mThetaMech2, mId* mBase_i, mIq* mBase_i, mI0* mBase_i)(0);
 	mIb = inverseParkTransform2(mThetaMech2, mId* mBase_i, mIq* mBase_i, mI0* mBase_i)(1);
@@ -184,31 +128,6 @@ void SynchronGeneratorEMT::initStatesInPerUnit(Real initActivePower, Real initRe
 	double init_Te = init_P + mRs * pow(init_it, 2.);
 	mOmMech = 1;
 
-	/*mVoltages(0, 0) = init_vq;
-	mVoltages(1, 0) = init_vd;
-	mVoltages(2, 0) = 0;
-	mVoltages(3, 0) = 0;
-	mVoltages(4, 0) = 0;
-	mVoltages(5, 0) = init_vfd;
-	mVoltages(6, 0) = 0;
-
-
-	mCurrents(0, 0) = init_iq;
-	mCurrents(1, 0) = init_id;
-	mCurrents(2, 0) = 0;
-	mCurrents(3, 0) = 0;
-	mCurrents(4, 0) = 0;
-	mCurrents(5, 0) = init_ifd;
-	mCurrents(6, 0) = 0;
-
-	mFluxes(0, 0) = init_psiq;
-	mFluxes(1, 0) = init_psid;
-	mFluxes(2, 0) = 0;
-	mFluxes(3, 0) = init_psiq1;
-	mFluxes(4, 0) = init_psiq2;
-	mFluxes(5, 0) = init_psifd;
-	mFluxes(6, 0) = init_psid1;*/
-
 	mVd = init_vd;
 	mVq = init_vq;
 	mV0 = 0;
@@ -238,9 +157,9 @@ void SynchronGeneratorEMT::initStatesInPerUnit(Real initActivePower, Real initRe
 	mThetaMech2 = initVoltAngle + init_delta - M_PI/2;
 }
 
-void SynchronGeneratorEMT::step(SystemModel& system, Real fieldVoltage, Real mechPower) {
+void SynchronGeneratorEMT::step(SystemModel& system, Real fieldVoltage, Real mechPower, Real time) {
 
-	stepInPerUnit(system.getOmega(), system.getTimeStep(), fieldVoltage, mechPower);
+	stepInPerUnit(system.getOmega(), system.getTimeStep(), fieldVoltage, mechPower, time, system.getNumMethod());
 	
 	// Update current source accordingly
 	if (mNode1 >= 0) {
@@ -253,25 +172,10 @@ void SynchronGeneratorEMT::step(SystemModel& system, Real fieldVoltage, Real mec
 		system.addRealToRightSideVector(mNode3, mIc);
 	}
 
-	//// Update current source accordingly
-	//if (mNode1 >= 0) {
-	//	system.addRealToRightSideVector(mNode1, mAbcsCurrents(0, 0));
-	//}
-	//if (mNode2 >= 0) {
-	//	system.addRealToRightSideVector(mNode2, mAbcsCurrents(1, 0));
-	//}
-	//if (mNode3 >= 0) {
-	//	system.addRealToRightSideVector(mNode3, mAbcsCurrents(2, 0));
-	//}
 }
 
-void SynchronGeneratorEMT::stepInPerUnit(Real om, Real dt, Real fieldVoltage, Real mechPower) {
+void SynchronGeneratorEMT::stepInPerUnit(Real om, Real dt, Real fieldVoltage, Real mechPower, Real time, NumericalMethod numMethod) {
 	
-	//// retrieve voltages
-	//mAbcsVoltages = (1 / mBase_v) * mAbcsVoltages;
-	//mAbcsCurrents = (1 / mBase_i) * mAbcsCurrents;
-
-
 	mVa = (1 / mBase_v) * mVa;
 	mVb = (1 / mBase_v) * mVb;
 	mVc = (1 / mBase_v) * mVc;
@@ -280,7 +184,6 @@ void SynchronGeneratorEMT::stepInPerUnit(Real om, Real dt, Real fieldVoltage, Re
 	mIb = (1 / mBase_i) * mIb;
 	mIc = (1 / mBase_i) * mIc;
 
-	//mVoltages(5, 0) = fieldVoltage / mBase_v;
 	mVfd = fieldVoltage / mBase_v;
 	// TODO calculate effect of changed field voltage
 
@@ -289,56 +192,67 @@ void SynchronGeneratorEMT::stepInPerUnit(Real om, Real dt, Real fieldVoltage, Re
 	mVq = parkTransform2(mThetaMech2, mVa, mVb, mVc)(1);
 	mV0 = parkTransform2(mThetaMech2, mVa, mVb, mVc)(2);
 
-	/*mDq0Voltages = parkTransform(mThetaMech, mAbcsVoltages);
-	mVoltages(0, 0) = mDq0Voltages(0, 0);
-	mVoltages(1, 0) = mDq0Voltages(1, 0);
-	mVoltages(2, 0) = mDq0Voltages(2, 0);*/
+	if (numMethod == NumericalMethod::Euler) {
 
-	// calculate mechanical states
-	mMechPower = mechPower / mNomPower;
-	mMechTorque = mMechPower / mOmMech;
-
-	mElecTorque = (mPsid*mIq - mPsiq*mId);
-	//mElecTorque = (mFluxes(1, 0)*mCurrents(0, 0) - mFluxes(0, 0)*mCurrents(1, 0));
-
-	// Euler step forward	
-	mOmMech = mOmMech + dt * (1 / (2 * mH) * (mMechTorque - mElecTorque));
+		mMechPower = mechPower / mNomPower;
+		mMechTorque = mMechPower / mOmMech;
 	
-	//DPSMatrix currents = mReverseCurrents * mReactanceMat * mFluxes;
+		mElecTorque = (mPsid*mIq - mPsiq*mId);
 
-	//DPSMatrix dtFluxes = mVoltages - mResistanceMat * currents - mOmMech * mOmegaFluxMat * mFluxes;
+		// Euler step forward	
+		mOmMech = mOmMech + dt * (1 / (2 * mH) * (mMechTorque - mElecTorque));
 
+	}
+	else {
 
-	//for (int i = 0; i < dtFluxes.size(); i++)
-	//{
-	//	if (dtFluxes(i, 0) < 0.000001)
-	//		dtFluxes(i, 0) = 0;
-	//}
+		//Two steps Adams-Bashforth
+		if (time <= dt) {
+			// calculate mechanical states
+			mMechPower = mechPower / mNomPower;
+			mMechTorque = mMechPower / mOmMech;
+			mElecTorque = (mPsid*mIq - mPsiq*mId);
 
-	//mFluxes = mFluxes + dt * mBase_OmElec * dtFluxes;
+			mOmMech_past = mOmMech;
+			mOmMech = mOmMech + dt * (1 / (2 * mH) * (mMechTorque - mElecTorque));
+		}
+		else {
+			// calculate mechanical states
+			mMechPower = mechPower / mNomPower;
+			mMechTorque = mMechPower / mOmMech;
+			mMechTorque_past = mMechPower / mOmMech_past;
 
+			mElecTorque = (mPsid*mIq - mPsiq*mId);
+			mElecTorque_past = (mPsid_past*mIq - mPsiq_past*mId);
+			mOmMech_past = mOmMech;
+			mOmMech = mOmMech + (3. / 2.)*dt* (1 / (2 * mH) * (mMechTorque - mElecTorque)) - (1. / 2.)*dt* (1 / (2 * mH) * (mMechTorque_past - mElecTorque_past));
+		}
+	}
+	
 
 	double dtPsid = mVd + mRs*mId + mPsiq*mOmMech;
-	if (dtPsid < 0.000001)
-		dtPsid = 0;
+	//if (dtPsid < 0.000001)
+	//	dtPsid = 0;
 	double dtPsiq = mVq + mRs*mIq - mPsid*mOmMech;
-	if (dtPsiq < 0.000001)
-		dtPsiq = 0;
+	//if (dtPsiq < 0.000001)
+	//	dtPsiq = 0;
 	double dtPsi0 = mV0 + mRs*mI0;
-	if (dtPsi0 < 0.000001)
-		dtPsi0 = 0;
+	//if (dtPsi0 < 0.000001)
+	//	dtPsi0 = 0;
 	double dtPsifd = mVfd - mRfd*mIfd;
-	if (dtPsifd < 0.000001)
-		dtPsifd = 0;
+	//if (dtPsifd < 0.000001)
+	//	dtPsifd = 0;
 	double dtPsikd = -mRkd*mIkd;
-	if (dtPsikd < 0.000001)
-		dtPsikd = 0;
+	//if (dtPsikd < 0.000001)
+	//	dtPsikd = 0;
 	double dtPsikq1 = -mRkq1*mIkq1;
-	if (dtPsikq1 < 0.000001)
-		dtPsikq1 = 0;
+	//if (dtPsikq1 < 0.000001)
+	//	dtPsikq1 = 0;
 	double dtPsikq2 = -mRkq2*mIkq2;
-	if (dtPsikq2 < 0.000001)
-		dtPsikq2 = 0;
+	//if (dtPsikq2 < 0.000001)
+	//	dtPsikq2 = 0;
+
+	mPsid_past = mPsid;
+	mPsiq_past = mPsiq;
 
 	mPsid = mPsid + dt*mBase_OmElec*dtPsid;
 	mPsiq = mPsiq + dt*mBase_OmElec*dtPsiq;
@@ -349,9 +263,10 @@ void SynchronGeneratorEMT::stepInPerUnit(Real om, Real dt, Real fieldVoltage, Re
 	mPsikq2 = mPsikq2 + dt*mBase_OmElec*dtPsikq2;
 
 	
-	//mCurrents = mReverseCurrents * mReactanceMat * mFluxes;
 
 	//Calculation of currents based on inverse of inductance matrix
+	mId_past = mId;
+	mIq_past = mIq;
 	mId = ((mLlfd*mLlkd + mLmd*(mLlfd + mLlkd))*mPsid - mLmd*mLlkd*mPsifd - mLlfd*mLmd*mPsikd) / detLd;
 	mIfd = (mLlkd*mLmd*mPsid - (mLl*mLlkd + mLmd*(mLl + mLlkd))*mPsifd + mLmd*mLl) / detLd;
 	mIkd = (mLmd*mLlfd*mPsid + mLmd*mLl*mPsifd - (mLmd*(mLlfd + mLl) + mLl*mLlfd)*mPsikd) / detLd;
@@ -364,12 +279,6 @@ void SynchronGeneratorEMT::stepInPerUnit(Real om, Real dt, Real fieldVoltage, Re
 	//mThetaMech = mThetaMech + dt * (mOmMech * mBase_OmMech);
 	mThetaMech2 = mThetaMech2 + dt * (mOmMech * mBase_OmMech);
 
-	//// inverse dq-transform
-	//mDq0Currents(0, 0) = mCurrents(0, 0);
-	//mDq0Currents(1, 0) = mCurrents(1, 0);
-	//mDq0Currents(2, 0) = mCurrents(2, 0);
-	//mAbcsCurrents = inverseParkTransform(mThetaMech, mDq0Currents);
-	//mAbcsCurrents = mBase_i * mAbcsCurrents;
 
 	mIa = mBase_i * inverseParkTransform2(mThetaMech2, mId, mIq, mI0)(0);
 	mIb = mBase_i * inverseParkTransform2(mThetaMech2, mId, mIq, mI0)(1);
@@ -402,27 +311,21 @@ void SynchronGeneratorEMT::stepInPerUnit(Real om, Real dt, Real fieldVoltage, Re
 
 void SynchronGeneratorEMT::postStep(SystemModel& system) {
 	if (mNode1 >= 0) {
-		//mAbcsVoltages(0,0) = system.getRealFromLeftSideVector(mNode1);
 		mVa = system.getRealFromLeftSideVector(mNode1);
 	}
 	else {
-		//mAbcsVoltages(0, 0) = 0;
 		mVa = 0;
 	}
 	if (mNode2 >= 0) {
-		//mAbcsVoltages(1, 0) = system.getRealFromLeftSideVector(mNode2);
 		mVb = system.getRealFromLeftSideVector(mNode2);
 	}
 	else {
-		//mAbcsVoltages(1, 0) = 0;
 		mVb = 0;
 	}
 	if (mNode3 >= 0) {
-		//mAbcsVoltages(2, 0) = system.getRealFromLeftSideVector(mNode3);
 		mVc = system.getRealFromLeftSideVector(mNode3);
 	}
 	else {
-		//mAbcsVoltages(2, 0) = 0;
 		mVc = 0;
 	}
 }
