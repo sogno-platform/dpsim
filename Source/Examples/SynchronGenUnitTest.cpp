@@ -77,8 +77,9 @@ void DPsim::SynGenUnitTestBalancedResLoad() {
 	// Set up simulation
 	double tf, dt, t;
 	double om = 2.0*M_PI*60.0;
-	tf = 0.1; dt = 0.00005; t = 0;
+	tf = 0.1; dt = 0.000001; t = 0;
 	Simulation newSim(circElements, om, dt, tf, log, SimulationType::EMT);
+	newSim.setNumericalMethod(NumericalMethod::Euler);
 
 	// Initialize generator
 	double initActivePower = 555e3;
@@ -114,7 +115,7 @@ void DPsim::SynGenUnitTestBalancedResLoad() {
 	while (newSim.getTime() < tf)
 	{
 		std::cout << newSim.getTime() << std::endl;		
-		newSim.stepGeneratorTest(log, vtLog, jLog, gen, synGenLogFlux, synGenLogVolt, synGenLogCurr, fieldVoltage, mechPower, logTimeStep, lastLogTime);
+		newSim.stepGeneratorTest(log, vtLog, jLog, gen, synGenLogFlux, synGenLogVolt, synGenLogCurr, fieldVoltage, mechPower, logTimeStep, lastLogTime, newSim.getTime());
 		newSim.increaseByTimeStep();
 	}
 	
@@ -216,7 +217,7 @@ void DPsim::SynGenUnitTestPhaseToPhaseFault() {
 	// Main Simulation Loop
 	while (newSim.getTime() < tf) {
 		std::cout << newSim.getTime() << std::endl;
-		newSim.stepGeneratorTest(log, vtLog, jLog, gen, synGenLogFlux, synGenLogVolt, synGenLogCurr, fieldVoltage, mechPower, logTimeStep, lastLogTime);
+		newSim.stepGeneratorTest(log, vtLog, jLog, gen, synGenLogFlux, synGenLogVolt, synGenLogCurr, fieldVoltage, mechPower, logTimeStep, lastLogTime, newSim.getTime());
 		newSim.increaseByTimeStep();
 	}
 
@@ -277,7 +278,7 @@ void DPsim::SynGenUnitTestThreePhaseFault() {
 	double breakerRes = 0.01;
 	BaseComponent* rBreaker1 = new LinearResistorEMT("rbreak1", 1, 2, breakerRes);
 	BaseComponent* rBreaker2 = new LinearResistorEMT("rbreak2", 2, 3, breakerRes);
-	BaseComponent* rBreaker3 = new LinearResistorEMT("rbreak3", 1, 3, breakerRes);
+	BaseComponent* rBreaker3 = new LinearResistorEMT("rbreak3", 3, 1, breakerRes);
 	std::vector<BaseComponent*> circElementsBreakerOn;
 	circElementsBreakerOn.push_back(rBreaker1);
 	circElementsBreakerOn.push_back(rBreaker2);
@@ -289,8 +290,9 @@ void DPsim::SynGenUnitTestThreePhaseFault() {
 	// Set up simulation
 	double tf, dt, t;
 	double om = 2.0*M_PI*60.0;
-	tf = 0.3; dt = 0.0000001; t = 0;
+	tf = 0.3; dt = 0.000001; t = 0;
 	Simulation newSim(circElements, om, dt, tf, log, SimulationType::EMT);
+	newSim.setNumericalMethod(NumericalMethod::Euler);
 	newSim.addSystemTopology(circElementsBreakerOn);
 	newSim.switchSystemMatrix(0);
 
@@ -323,7 +325,7 @@ void DPsim::SynGenUnitTestThreePhaseFault() {
 	// Main Simulation Loop
 	while (newSim.getTime() < tf) {
 		std::cout << newSim.getTime() << std::endl;
-		newSim.stepGeneratorTest(log, vtLog, jLog, gen, synGenLogFlux, synGenLogVolt, synGenLogCurr, fieldVoltage, mechPower, logTimeStep, lastLogTime);
+		newSim.stepGeneratorTest(log, vtLog, jLog, gen, synGenLogFlux, synGenLogVolt, synGenLogCurr, fieldVoltage, mechPower, logTimeStep, lastLogTime, newSim.getTime());
 		newSim.increaseByTimeStep();		
 	}
 
@@ -416,7 +418,7 @@ void DPsim::SynGenDPUnitTestBalancedResLoad() {
 	// Main Simulation Loop
 	while (newSim.getTime() < tf) {
 		std::cout << newSim.getTime() << std::endl;
-		newSim.stepGeneratorTest(log, vtLog, jLog, gen, synGenLogFlux, synGenLogVolt, synGenLogCurr, fieldVoltage, mechPower, logTimeStep, lastLogTime);
+		newSim.stepGeneratorTest(log, vtLog, jLog, gen, synGenLogFlux, synGenLogVolt, synGenLogCurr, fieldVoltage, mechPower, logTimeStep, lastLogTime, newSim.getTime());
 		newSim.increaseByTimeStep();		
 	}
 

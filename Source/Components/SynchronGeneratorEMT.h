@@ -118,22 +118,12 @@ namespace DPsim {
 		/// electrical torque
 		double mElecTorque;
 
-
-		///// voltage vector q d 0 kq1 kq2 df kd
-		//DPSMatrix mVoltages = DPSMatrix::Zero(7, 1);
-		///// flux linkage vector
-		//DPSMatrix mFluxes = DPSMatrix::Zero(7, 1);
-		///// current vector
-		//DPSMatrix mCurrents = DPSMatrix::Zero(7, 1);
-		///// interface voltage vector abcs
-		//DPSMatrix mAbcsVoltages = DPSMatrix::Zero(3, 1);
-		///// interface current vector abcs
-		//DPSMatrix mAbcsCurrents = DPSMatrix::Zero(3, 1);
-		///// interface voltage vector dq0
-		//DPSMatrix mDq0Voltages = DPSMatrix::Zero(3, 1);
-		///// interface current vector dq0
-		//DPSMatrix mDq0Currents = DPSMatrix::Zero(3, 1);
-
+		/// mechanical torque
+		double mMechTorque_past;
+		/// electrical torque
+		double mElecTorque_past;
+		/// rotor speed omega_r
+		double mOmMech_past;
 
 		/// voltage vector q d 0 kq1 kq2 df kd
 		DPSMatrix mVoltages2 = DPSMatrix::Zero(7, 1);
@@ -160,6 +150,9 @@ namespace DPsim {
 		double mIkq1;
 		double mIkq2;
 
+		double mId_past;
+		double mIq_past;
+
 		/// flux linkage vector q d 0 fd kd kq1 kq2
 		double mPsid;
 		double mPsiq;
@@ -168,6 +161,9 @@ namespace DPsim {
 		double mPsikd;
 		double mPsikq1;
 		double mPsikq2;
+
+		double mPsid_past;
+		double mPsiq_past;
 
 		/// Interface voltage vector
 		double mVa;
@@ -179,19 +175,6 @@ namespace DPsim {
 		double mIb;
 		double mIc;
 
-
-
-		//// ### Useful Matrices ###
-		///// inductance matrix
-		//DPSMatrix mInductanceMat = DPSMatrix::Zero(7, 7);
-		///// resistance matrix
-		//DPSMatrix mResistanceMat = DPSMatrix::Zero(7, 7);
-		///// reactance matrix
-		//DPSMatrix mReactanceMat = DPSMatrix::Zero(7, 7);
-		///// omega - flux matrix
-		//DPSMatrix mOmegaFluxMat = DPSMatrix::Zero(7, 7);
-		///// matrix for reversing stator current directions in calculations with respect to other currents
-		//DPSMatrix mReverseCurrents = DPSMatrix::Zero(7, 7);
 
 	public:
 		SynchronGeneratorEMT() { };
@@ -226,11 +209,11 @@ namespace DPsim {
 
 		/// Performs an Euler forward step with the state space model of a synchronous generator 
 		/// to calculate the flux and current from the voltage vector.
-		void step(SystemModel& system, Real fieldVoltage, Real mechPower);
+		void step(SystemModel& system, Real fieldVoltage, Real mechPower, Real time);
 
 		/// Performs an Euler forward step with the state space model of a synchronous generator 
 		/// to calculate the flux and current from the voltage vector in per unit.
-		void stepInPerUnit(Real om, Real dt, Real fieldVoltage, Real mechPower);
+		void stepInPerUnit(Real om, Real dt, Real fieldVoltage, Real mechPower, Real time, NumericalMethod numMethod);
 
 		/// Retrieves calculated voltage from simulation for next step
 		void postStep(SystemModel& system);
@@ -243,6 +226,7 @@ namespace DPsim {
 		//DPSMatrix inverseParkTransform(Real theta, DPSMatrix& in);
 		DPSMatrix inverseParkTransform2(Real theta, double d, double q, double zero);
 
+<<<<<<< Updated upstream
 		//DPSMatrix getVoltages() { return mVoltages; }
 		//DPSMatrix getCurrents() { return mCurrents; }
 		//DPSMatrix getFluxes() { return mFluxes; }
@@ -252,6 +236,11 @@ namespace DPsim {
 		DPSMatrix& getVoltages() { return mVoltages2; }
 		DPSMatrix& getCurrents() { return mCurrents2; }
 		DPSMatrix& getFluxes() { return mFluxes2; }
+=======
+		DPSMatrix getVoltages() { return mVoltages2; }
+		DPSMatrix getCurrents() { return mCurrents2; }
+		DPSMatrix getFluxes() { return mFluxes2; }
+>>>>>>> Stashed changes
 
 
 		void init(Real om, Real dt) { }
