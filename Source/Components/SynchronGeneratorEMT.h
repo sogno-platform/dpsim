@@ -226,21 +226,9 @@ namespace DPsim {
 		//DPSMatrix inverseParkTransform(Real theta, DPSMatrix& in);
 		DPSMatrix inverseParkTransform2(Real theta, double d, double q, double zero);
 
-<<<<<<< Updated upstream
-		//DPSMatrix getVoltages() { return mVoltages; }
-		//DPSMatrix getCurrents() { return mCurrents; }
-		//DPSMatrix getFluxes() { return mFluxes; }
-
-
-
 		DPSMatrix& getVoltages() { return mVoltages2; }
 		DPSMatrix& getCurrents() { return mCurrents2; }
 		DPSMatrix& getFluxes() { return mFluxes2; }
-=======
-		DPSMatrix getVoltages() { return mVoltages2; }
-		DPSMatrix getCurrents() { return mCurrents2; }
-		DPSMatrix getFluxes() { return mFluxes2; }
->>>>>>> Stashed changes
 
 
 		void init(Real om, Real dt) { }
