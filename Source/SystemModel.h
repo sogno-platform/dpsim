@@ -46,7 +46,7 @@ namespace DPsim {
 	public:
 		SystemModel() { }
 		void initialize(Int numNodes, Int numIdealVS);
-		void addSystemMatrix(Matrix systemMatrix);
+		void addSystemMatrix(Matrix& systemMatrix);
 
 		Matrix & getCurrentSystemMatrix() { return mSystemMatrix; }
 		const Matrix & getLUdecomp() { return mLuFactored.matrixLU(); }
