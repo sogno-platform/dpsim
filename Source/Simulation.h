@@ -1,6 +1,7 @@
 #ifndef Simulation_H
 #define Simulation_H
 
+#include <signal.h>
 #include <iostream>
 #include <vector>
 #include "MathLibrary.h"
@@ -14,6 +15,9 @@ namespace DPsim {
 	struct switchConfiguration {
 		Real switchTime;
 		UInt systemIndex;
+	};
+
+	class TimerExpiredException {
 	};
 
 	class Simulation {
@@ -36,8 +40,11 @@ namespace DPsim {
 		/// Vector of ExternalInterfaces
 		std::vector<ExternalInterface*> mExternalInterfaces;
 
+		uint64_t mRtTimerCount = 0;
+
 		/// TODO: check that every system matrix has the same dimensions		
 		void initialize(std::vector<BaseComponent*> elements);
+
 
 	public:				
 		/// Stores a list of circuit elements that are used to generate the system matrix
@@ -72,6 +79,9 @@ namespace DPsim {
 			Real logTimeStep, Real& lastLogTime, Real time);
 
 		void addSystemTopology(std::vector<BaseComponent*> newElements);
+
+		void runRT(Logger& logger);
+		static void alarmHandler(int, siginfo_t*, void*);
 	};
 
 }

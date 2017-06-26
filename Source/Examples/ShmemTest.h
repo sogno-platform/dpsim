@@ -4,6 +4,7 @@
 namespace DPsim {
 
 	void shmemExample();
+	void shmemRTExample();
 	void shmemDistributedExample(int argc, char *argv[]);
 	void shmemDistributedRef();
 }

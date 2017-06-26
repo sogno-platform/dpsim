@@ -1,5 +1,8 @@
 #include "Simulation.h"
 
+#include <signal.h>
+#include <time.h>
+
 using namespace DPsim;
 
 Simulation::Simulation() {
@@ -135,6 +138,66 @@ int Simulation::step(Logger& logger)
 		return 1;
 	}
 
+}
+
+void Simulation::alarmHandler(int sig, siginfo_t* si, void* ctx) {
+	Simulation *sim = static_cast<Simulation*>(si->si_value.sival_ptr);
+	/* only throw an exception if we're actually behind */
+	if (++sim->mRtTimerCount * sim->mSystemModel.getTimeStep() > sim->mTime)
+		throw TimerExpiredException();
+}
+
+void Simulation::runRT(Logger& logger) {
+	int ret, sig;
+	sigset_t alrmset;
+	struct sigaction sa;
+	struct sigevent evp;
+	struct itimerspec ts;
+	timer_t timer;
+
+	sa.sa_sigaction = Simulation::alarmHandler;
+	sa.sa_flags = SA_SIGINFO;
+	sigemptyset(&sa.sa_mask);
+	if (sigaction(SIGALRM, &sa, NULL)) {
+		std::perror("Failed to establish SIGALRM handler");
+		std::exit(1);
+	}
+
+	evp.sigev_notify = SIGEV_SIGNAL;
+	evp.sigev_signo = SIGALRM;
+	evp.sigev_value.sival_ptr = this;
+	if (timer_create(CLOCK_MONOTONIC, &evp, &timer)) {
+		std::perror("Failed to create timer");
+		std::exit(1);
+	}
+
+	sigemptyset(&alrmset);
+	sigaddset(&alrmset, SIGALRM);
+
+	ts.it_value.tv_sec = (time_t) mSystemModel.getTimeStep();
+	ts.it_value.tv_nsec = (long) (mSystemModel.getTimeStep() * 1e9);
+	ts.it_interval = ts.it_value;
+	if (timer_settime(&timer, 0, &ts, NULL)) {
+		std::perror("Failed to arm timer");
+		std::exit(1);
+	}
+	while (true) {
+		try {
+			ret = step(logger);
+		} catch (TimerExpiredException& e) {
+			// TODO recover here
+			std::cerr << "timestep expired at " << mTime << std::endl;
+			std::abort();
+		}
+		/* XXX explicit synchronization?
+		 * best way for real cases is probably implicit synchronization by
+		 * blocking reads from the shmem interface */
+		//sigwait(&alrmset, &sig);
+		increaseByTimeStep();
+		if (!ret)
+			break;
+	}
+	timer_delete(timer);
 }
 
 int Simulation::step(Logger& logger, Logger& leftSideVectorLog, Logger& rightSideVectorLog)  {

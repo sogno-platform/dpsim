@@ -90,6 +90,7 @@ void ShmemInterface::writeValues(SystemModel& model) {
 	try {
 		if (shmem_int_alloc(&mShmem, &sample, 1) < 1) {
 			std::cerr << "fatal error: shmem pool underrun" << std::endl;
+			std::cerr << "at seq" << mSeq << std::endl;
 			std::exit(1);
 		}
 		for (auto vd : mExportedVoltages) {

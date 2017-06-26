@@ -13,7 +13,7 @@ int main(int argc, char* argv[]) {
 
 
 
-	//shmemExample();
+	shmemRTExample();
 	//shmemDistributedExample(argc, argv);
 	//shmemDistributedRef();
 	/*simulationExample1();
@@ -42,7 +42,7 @@ int main(int argc, char* argv[]) {
 	
 	//SynGenUnitTestBalancedResLoad();
 	//SynGenUnitTestPhaseToPhaseFault();
-	SynGenUnitTestThreePhaseFault();	
+	//SynGenUnitTestThreePhaseFault();	
 	//SynGenDPUnitTestBalancedResLoad();
 
 	//RXLineResLoad();

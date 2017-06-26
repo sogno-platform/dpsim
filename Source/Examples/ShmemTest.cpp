@@ -41,6 +41,40 @@ void DPsim::shmemExample()
 	delete villas;
 }
 
+void DPsim::shmemRTExample() {
+	// Same circuit as above, but now with realtime support.
+	std::vector<BaseComponent*> comps;
+	struct shmem_conf conf;
+	conf.samplelen = 4;
+	conf.queuelen = 1024;
+	conf.polling = false;
+	Logger log;
+
+	ExternalVoltageSource *evs = new ExternalVoltageSource("v_s", 1, 0, 0, 0, 1);
+	comps.push_back(evs);
+	comps.push_back(new LinearResistor("r_s", 1, 2, 1));
+	comps.push_back(new LinearResistor("r_line", 2, 3, 1));
+	comps.push_back(new Inductor("l_line", 3, 4, 1));
+	comps.push_back(new LinearResistor("r_load", 4, 0, 1000));
+	ShmemInterface *villas = new ShmemInterface("/villas1-in", "/villas1-out", &conf);
+	villas->registerVoltageSource(evs, 0, 1);
+	villas->registerExportedCurrent(evs, 0, 1);
+
+	// Set up simulation
+	Real timeStep = 0.001;
+	Simulation newSim(comps, 2.0*M_PI*50.0, timeStep, 5.0, log);
+	newSim.addExternalInterface(villas);
+
+	// Main Simulation Loop
+	std::cout << "Start simulation." << std::endl;
+	newSim.runRT(log);
+	std::cout << "Simulation finished." << std::endl;
+	for (auto comp : comps) {
+		delete comp;
+	}
+	delete villas;
+}
+
 void DPsim::shmemDistributedExample(int argc, char *argv[])
 {
 	// Testing the interface with a simple circuit,
