@@ -28,3 +28,5 @@ test:
     - cd Source/Tests
     - python3 run_tests.py
   image: ${DOCKER_IMAGE}
+  tags:
+    - docker
