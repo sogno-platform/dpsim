@@ -18,6 +18,7 @@ namespace DPsim {
 	class ShmemInterface : public ExternalInterface {
 	private:
 		struct shmem_int mShmem;
+		struct sample *mLastSample;
 		int mSeq;
 
 	public:
