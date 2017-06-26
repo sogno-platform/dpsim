@@ -8,12 +8,10 @@
 
 using namespace DPsim;
 
-ShmemInterface::ShmemInterface(const char* wname, const char* rname) {
-	struct shmem_conf conf;
-	conf.queuelen = 512;
-	conf.samplelen = 64;
-	conf.polling = 0;
-	if (shmem_int_open(wname, rname, &this->mShmem, &conf) < 0) {
+void ShmemInterface::init(const char* wname, const char* rname, struct shmem_conf* conf) {
+	/* using a static shmem_conf as a default argument for the constructor
+	 * doesn't seem to work, so use this as a workaround */
+	if (shmem_int_open(wname, rname, &this->mShmem, conf) < 0) {
 		std::perror("Failed to open/map shared memory object");
 		std::exit(1);
 	}
@@ -28,12 +26,16 @@ ShmemInterface::ShmemInterface(const char* wname, const char* rname) {
 	std::memset(&mLastSample->data, 0, mLastSample->capacity * sizeof(float));
 }
 
+ShmemInterface::ShmemInterface(const char* wname, const char* rname) {
+	struct shmem_conf conf;
+	conf.queuelen = 512;
+	conf.samplelen = 64;
+	conf.polling = 0;
+	init(wname, rname, &conf);
+}
+
 ShmemInterface::ShmemInterface(const char* wname, const char *rname, struct shmem_conf* conf) {
-	if (shmem_int_open(wname, rname, &this->mShmem, conf) < 0) {
-		std::perror("Failed to open/map shared memory object");
-		std::exit(1);
-	}
-	mSeq = 0;
+	init(wname, rname, conf);
 }
 
 ShmemInterface::~ShmemInterface() {

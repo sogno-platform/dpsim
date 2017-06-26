@@ -21,6 +21,8 @@ namespace DPsim {
 		struct sample *mLastSample;
 		int mSeq;
 
+		void init(const char *wname, const char *rname, struct shmem_conf *conf);
+
 	public:
 		/** Create a ShmemInterface using the given shmem object names.
 		 *
