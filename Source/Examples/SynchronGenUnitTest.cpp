@@ -8,7 +8,12 @@ using namespace DPsim;
 void DPsim::SynGenUnitTestBalancedResLoad() {
 	
 	// Define Object for saving data on a file
-	Logger log, vtLog, jLog, synGenLogVolt, synGenLogCurr, synGenLogFlux;
+	Logger log("log.txt"),
+		vtLog("data_vt.csv"),
+		jLog("data_j.csv"),
+		synGenLogVolt("data_synGen_flux.csv"),
+		synGenLogCurr("data_synGen_volt.csv"),
+		synGenLogFlux("data_synGen_curr.csv");
 
 	// Define machine parameters - stator referred
 	//double nomPower = 555e6;
@@ -72,8 +77,9 @@ void DPsim::SynGenUnitTestBalancedResLoad() {
 	// Set up simulation
 	double tf, dt, t;
 	double om = 2.0*M_PI*60.0;
-	tf = 0.1; dt = 0.00005; t = 0;
+	tf = 0.1; dt = 0.000001; t = 0;
 	Simulation newSim(circElements, om, dt, tf, log, SimulationType::EMT);
+	newSim.setNumericalMethod(NumericalMethod::Euler);
 
 	// Initialize generator
 	double initActivePower = 555e3;
@@ -109,17 +115,9 @@ void DPsim::SynGenUnitTestBalancedResLoad() {
 	while (newSim.getTime() < tf)
 	{
 		std::cout << newSim.getTime() << std::endl;		
-		newSim.stepGeneratorTest(log, vtLog, jLog, gen, synGenLogFlux, synGenLogVolt, synGenLogCurr, fieldVoltage, mechPower, logTimeStep, lastLogTime);
+		newSim.stepGeneratorTest(log, vtLog, jLog, gen, synGenLogFlux, synGenLogVolt, synGenLogCurr, fieldVoltage, mechPower, logTimeStep, lastLogTime, newSim.getTime());
 		newSim.increaseByTimeStep();
 	}
-
-	// Write simulation data to file
-	log.WriteLogToFile("log.txt");
-	vtLog.WriteLogToFile("data_vt.csv");
-	jLog.WriteLogToFile("data_j.csv");
-	synGenLogFlux.WriteLogToFile("data_synGen_flux.csv");
-	synGenLogVolt.WriteLogToFile("data_synGen_volt.csv");
-	synGenLogCurr.WriteLogToFile("data_synGen_curr.csv");
 	
 	std::cout << "Simulation finished." << std::endl;
 	for (auto elem : circElements)
@@ -128,7 +126,12 @@ void DPsim::SynGenUnitTestBalancedResLoad() {
 
 void DPsim::SynGenUnitTestPhaseToPhaseFault() {
 	// Define Object for saving data on a file
-	Logger log, vtLog, jLog, synGenLogVolt, synGenLogCurr, synGenLogFlux;
+	Logger log("log.txt"),
+		vtLog("data_vt.csv"),
+		jLog("data_j.csv"),
+		synGenLogVolt("data_synGen_flux.csv"),
+		synGenLogCurr("data_synGen_volt.csv"),
+		synGenLogFlux("data_synGen_curr.csv");
 
 	// Define machine parameters in per unit
 	double nomPower = 555e6;
@@ -214,17 +217,9 @@ void DPsim::SynGenUnitTestPhaseToPhaseFault() {
 	// Main Simulation Loop
 	while (newSim.getTime() < tf) {
 		std::cout << newSim.getTime() << std::endl;
-		newSim.stepGeneratorTest(log, vtLog, jLog, gen, synGenLogFlux, synGenLogVolt, synGenLogCurr, fieldVoltage, mechPower, logTimeStep, lastLogTime);
+		newSim.stepGeneratorTest(log, vtLog, jLog, gen, synGenLogFlux, synGenLogVolt, synGenLogCurr, fieldVoltage, mechPower, logTimeStep, lastLogTime, newSim.getTime());
 		newSim.increaseByTimeStep();
 	}
-
-	// Write simulation data to file
-	log.WriteLogToFile("log.txt");
-	vtLog.WriteLogToFile("data_vt.csv");
-	jLog.WriteLogToFile("data_j.csv");
-	synGenLogFlux.WriteLogToFile("data_synGen_flux.csv");
-	synGenLogVolt.WriteLogToFile("data_synGen_volt.csv");
-	synGenLogCurr.WriteLogToFile("data_synGen_curr.csv");
 
 	std::cout << "Simulation finished." << std::endl;
 	for (auto elem : circElements)
@@ -234,7 +229,12 @@ void DPsim::SynGenUnitTestPhaseToPhaseFault() {
 
 void DPsim::SynGenUnitTestThreePhaseFault() {
 	// Define Object for saving data on a file
-	Logger log, vtLog, jLog, synGenLogVolt, synGenLogCurr, synGenLogFlux;
+	Logger log("log.txt"),
+		vtLog("data_vt.csv"),
+		jLog("data_j.csv"),
+		synGenLogVolt("data_synGen_flux.csv"),
+		synGenLogCurr("data_synGen_volt.csv"),
+		synGenLogFlux("data_synGen_curr.csv");
 
 	// Define machine parameters in per unit
 	double nomPower = 555e6;
@@ -265,9 +265,9 @@ void DPsim::SynGenUnitTestThreePhaseFault() {
 		nomPower, nomPhPhVoltRMS, nomFreq, poleNum, nomFieldCurr,
 		Rs, Ll, Lmd, Lmd0, Lmq, Lmq0, Rfd, Llfd, Rkd, Llkd, Rkq1, Llkq1, Rkq2, Llkq2, H);
 	double loadRes = 1037.8378;
-	BaseComponent* r1 = new LinearResistorEMT("r1", 0, 1, loadRes);
-	BaseComponent* r2 = new LinearResistorEMT("r2", 0, 2, loadRes);
-	BaseComponent* r3 = new LinearResistorEMT("r3", 0, 3, loadRes);
+	BaseComponent* r1 = new LinearResistorEMT("r1", 1, 0, loadRes);
+	BaseComponent* r2 = new LinearResistorEMT("r2", 2, 0, loadRes);
+	BaseComponent* r3 = new LinearResistorEMT("r3", 3, 0, loadRes);
 
 	std::vector<BaseComponent*> circElements;
 	circElements.push_back(gen);
@@ -276,10 +276,10 @@ void DPsim::SynGenUnitTestThreePhaseFault() {
 	circElements.push_back(r3);
 
 	// Declare circuit components for resistance change
-	double breakerRes = 0.01;
-	BaseComponent* rBreaker1 = new LinearResistorEMT("rbreak1", 1, 2, breakerRes);
-	BaseComponent* rBreaker2 = new LinearResistorEMT("rbreak2", 2, 3, breakerRes);
-	BaseComponent* rBreaker3 = new LinearResistorEMT("rbreak3", 1, 3, breakerRes);
+	double breakerRes = 0.001;
+	BaseComponent* rBreaker1 = new LinearResistorEMT("rbreak1", 1, 0, breakerRes);
+	BaseComponent* rBreaker2 = new LinearResistorEMT("rbreak2", 2, 0, breakerRes);
+	BaseComponent* rBreaker3 = new LinearResistorEMT("rbreak3", 3, 0, breakerRes);
 	std::vector<BaseComponent*> circElementsBreakerOn;
 	circElementsBreakerOn.push_back(rBreaker1);
 	circElementsBreakerOn.push_back(rBreaker2);
@@ -291,9 +291,11 @@ void DPsim::SynGenUnitTestThreePhaseFault() {
 	// Set up simulation
 	double tf, dt, t;
 	double om = 2.0*M_PI*60.0;
-	tf = 0.1; dt = 0.0000001; t = 0;
+	tf = 0.3; dt = 0.000001; t = 0;
 	Simulation newSim(circElements, om, dt, tf, log, SimulationType::EMT);
+	newSim.setNumericalMethod(NumericalMethod::Euler);
 	newSim.addSystemTopology(circElementsBreakerOn);
+	newSim.switchSystemMatrix(0);
 
 	// Initialize generator
 	double initActivePower = 555e3;
@@ -319,21 +321,14 @@ void DPsim::SynGenUnitTestThreePhaseFault() {
 	Real lastLogTime = 0;
 	Real logTimeStep = 0.00005;
 	newSim.setSwitchTime(0.1, 1);
+	newSim.setSwitchTime(0.2, 0);
 
 	// Main Simulation Loop
 	while (newSim.getTime() < tf) {
 		std::cout << newSim.getTime() << std::endl;
-		newSim.stepGeneratorTest(log, vtLog, jLog, gen, synGenLogFlux, synGenLogVolt, synGenLogCurr, fieldVoltage, mechPower, logTimeStep, lastLogTime);
+		newSim.stepGeneratorTest(log, vtLog, jLog, gen, synGenLogFlux, synGenLogVolt, synGenLogCurr, fieldVoltage, mechPower, logTimeStep, lastLogTime, newSim.getTime());
 		newSim.increaseByTimeStep();		
 	}
-
-	// Write simulation data to file
-	log.WriteLogToFile("log.txt");
-	vtLog.WriteLogToFile("data_vt.csv");
-	jLog.WriteLogToFile("data_j.csv");
-	synGenLogFlux.WriteLogToFile("data_synGen_flux.csv");
-	synGenLogVolt.WriteLogToFile("data_synGen_volt.csv");
-	synGenLogCurr.WriteLogToFile("data_synGen_curr.csv");
 
 	std::cout << "Simulation finished." << std::endl;
 	for (auto elem : circElements)
@@ -345,7 +340,12 @@ void DPsim::SynGenUnitTestThreePhaseFault() {
 
 void DPsim::SynGenDPUnitTestBalancedResLoad() {
 	// Define Object for saving data on a file
-	Logger log, vtLog, jLog, synGenLogVolt, synGenLogCurr, synGenLogFlux;
+	Logger log("log.txt"),
+		vtLog("data_vt.csv"),
+		jLog("data_j.csv"),
+		synGenLogVolt("data_synGen_flux.csv"),
+		synGenLogCurr("data_synGen_volt.csv"),
+		synGenLogFlux("data_synGen_curr.csv");
 
 	// Define machine parameters in per unit
 	double nomPower = 555e6;
@@ -419,17 +419,9 @@ void DPsim::SynGenDPUnitTestBalancedResLoad() {
 	// Main Simulation Loop
 	while (newSim.getTime() < tf) {
 		std::cout << newSim.getTime() << std::endl;
-		newSim.stepGeneratorTest(log, vtLog, jLog, gen, synGenLogFlux, synGenLogVolt, synGenLogCurr, fieldVoltage, mechPower, logTimeStep, lastLogTime);
+		newSim.stepGeneratorTest(log, vtLog, jLog, gen, synGenLogFlux, synGenLogVolt, synGenLogCurr, fieldVoltage, mechPower, logTimeStep, lastLogTime, newSim.getTime());
 		newSim.increaseByTimeStep();		
 	}
-
-	// Write simulation data to file
-	log.WriteLogToFile("log.txt");
-	vtLog.WriteLogToFile("data_vt.csv");
-	jLog.WriteLogToFile("data_j.csv");
-	synGenLogFlux.WriteLogToFile("data_synGen_flux.csv");
-	synGenLogVolt.WriteLogToFile("data_synGen_volt.csv");
-	synGenLogCurr.WriteLogToFile("data_synGen_curr.csv");
 
 	std::cout << "Simulation finished." << std::endl;
 	for (auto elem : circElements)

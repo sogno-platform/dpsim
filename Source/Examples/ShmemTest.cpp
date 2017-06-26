@@ -9,7 +9,7 @@ void DPsim::shmemExample()
 {
 	// Very simple test circuit. Just a few resistors and an inductance.
 	// Voltage is read from VILLASnode and current through everything is written back.
-	Logger log, llog, rlog;
+	Logger log("output.log"), llog("lvector.log"), rlog("rvector.log");
 	std::vector<BaseComponent*> comps;
 
 	ExternalVoltageSource *evs = new ExternalVoltageSource("v_s", 1, 0, 0, 0, 1);
@@ -35,9 +35,6 @@ void DPsim::shmemExample()
 		updateProgressBar(newSim.getTime(), newSim.getFinalTime());
 	}
 	std::cout << "Simulation finished." << std::endl;
-	log.WriteLogToFile("output.log");
-	rlog.WriteLogToFile("rvector.log");
-	llog.WriteLogToFile("lvector.log");
 	for (auto comp : comps) {
 		delete comp;
 	}
@@ -53,7 +50,7 @@ void DPsim::shmemDistributedExample(int argc, char *argv[])
 	// supply side, whose values are received from the respective other circuit.
 	// Here, the two instances directly communicate with each other without using
 	// VILLASnode in between.
-	Logger log, llog, rlog;
+	Logger log("output.log"), llog("lvector.log"), rlog("rvector.log");
 	std::vector<BaseComponent*> comps;
 	ShmemInterface *shmem;
 
@@ -95,9 +92,7 @@ void DPsim::shmemDistributedExample(int argc, char *argv[])
 		updateProgressBar(newSim.getTime(), newSim.getFinalTime());
 	}
 	std::cout << "Simulation finished." << std::endl;
-	log.WriteLogToFile("output" + std::string(argv[1]) + ".log");
-	rlog.WriteLogToFile("rvector" + std::string(argv[1]) + ".log");
-	llog.WriteLogToFile("lvector" + std::string(argv[1]) + ".log");
+
 	for (auto comp : comps) {
 		delete comp;
 	}
@@ -107,7 +102,7 @@ void DPsim::shmemDistributedExample(int argc, char *argv[])
 void DPsim::shmemDistributedRef()
 {
 	// Same circuit as above, but the simulation is done normally in one instance.
-	Logger log, llog, rlog;
+	Logger log("output.log"), llog("lvector.log"), rlog("rvector.log");
 	std::vector<BaseComponent*> comps;
 
 	comps.push_back(new VoltSourceRes("v_s", 1, 0, 10000, 0, 1));
@@ -126,9 +121,7 @@ void DPsim::shmemDistributedRef()
 		updateProgressBar(newSim.getTime(), newSim.getFinalTime());
 	}
 	std::cout << "Simulation finished." << std::endl;
-	log.WriteLogToFile("output.log");
-	rlog.WriteLogToFile("rvector.log");
-	llog.WriteLogToFile("lvector.log");
+
 	for (auto comp : comps) {
 		delete comp;
 	}

@@ -31,7 +31,7 @@ void DPsim::NetlistSim(int argc, char* argv[]) {
 	}
 
 	// Define Object for saving data on a file
-	Logger log, vtLog, jLog;
+	Logger log("log.txt"), vtLog("data_vt.txt"), jLog("data_j.txt");
 
 	// Add components to new simulation	and create system matrix
 	std::cout << std::endl << "Create System matrix" << std::endl;
@@ -49,8 +49,8 @@ void DPsim::NetlistSim(int argc, char* argv[]) {
 	while (newSim.step(log))
 	{
 		// Save Simulation Step
-		vtLog.Log() << Logger::VectorToDataLine(newSim.getTime(), newSim.getLeftSideVector()).str();
-		jLog.Log() << Logger::VectorToDataLine(newSim.getTime(), newSim.getRightSideVector()).str();
+		vtLog.LogDataLine(newSim.getTime(), newSim.getLeftSideVector());
+		jLog.LogDataLine(newSim.getTime(), newSim.getRightSideVector());
 		// Get Current Simulation Time
 		t = newSim.getTime();
 
@@ -59,10 +59,6 @@ void DPsim::NetlistSim(int argc, char* argv[]) {
 	std::cout << "#######################   (100%)" << std::endl;;
 	std::cout << std::endl;
 	std::cout << "Simulation finished" << std::endl;
-
-	log.WriteLogToFile("log.txt");
-	vtLog.WriteLogToFile("data_vt.csv");
-	jLog.WriteLogToFile("data_j.csv");
 
 	std::cout << "Saved data points" << std::endl;	
 }

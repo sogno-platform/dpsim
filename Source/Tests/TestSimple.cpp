@@ -3,7 +3,7 @@
 using namespace DPsim;
 
 int main(int argc, char *argv[]) {
-	Logger logNone(LogLevel::NONE), llog;
+	Logger llog("TestSimple.csv"), logNone;
 
 	std::vector<BaseComponent*> comps;
 	comps.push_back(new VoltSourceRes("v_s", 1, 0, 10000, 0, 1));
@@ -17,5 +17,4 @@ int main(int argc, char *argv[]) {
 	while (sim.step(logNone, llog, logNone)) {
 		sim.increaseByTimeStep();
 	}
-	llog.WriteLogToFile("TestSimple.csv");
 }
