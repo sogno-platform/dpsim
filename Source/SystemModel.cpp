@@ -22,7 +22,7 @@ void SystemModel::initialize(Int numNodes, Int numIdealVS) {
 	switchSystemMatrix(0);	
 }
 
-void SystemModel::addSystemMatrix(Matrix systemMatrix) {	
+void SystemModel::addSystemMatrix(Matrix& systemMatrix) {	
 	mSystemMatrixVector.push_back(systemMatrix);
 	//mSystemMatrix = systemMatrix;
 
