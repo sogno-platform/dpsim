@@ -9,12 +9,15 @@
 namespace DPsim {
 
 	enum class SimulationType { DynPhasor, EMT };
+	enum class NumericalMethod { Euler, AdamBashforth };
 
 	class SystemModel {
 
 	private:
 		/// Simulation type
 		SimulationType mSimType;
+		///Numerical method
+		NumericalMethod mNumMethod;
 		/// Number of nodes
 		int mNumNodes;
 		/// Index offset for imaginary part
@@ -60,11 +63,14 @@ namespace DPsim {
 		SimulationType getSimType() { return mSimType; }
 		Int getNumNodes() { return mNumNodes; }		
 		Int getNumIdealVS() { return mNumIdealVS; }
+		NumericalMethod getNumMethod() { return mNumMethod; }
+		
 		
 		void setSimType(SimulationType simType) { mSimType = simType; }
 		void setTimeStep(Real timeStep) { mTimeStep = timeStep; }
 		void setOmega(Real omega) { mSystemOmega = omega; }
 		void setSystemMatrixElement(Int row, Int column, Real value) { mSystemMatrix(row, column) = value; }
+		void setNumMethod(NumericalMethod numMethod) { mNumMethod = numMethod; }
 
 		void InitializeRightSideVector(DPsim::Matrix& rightSideVector) { mRightSideVector = rightSideVector; }
 		void InitializeLeftSideVector(DPsim::Matrix& leftSideVector) { mLeftSideVector = leftSideVector; }		
