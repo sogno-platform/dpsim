@@ -80,13 +80,13 @@ void SynchronGeneratorEMT::init(Real om, Real dt,
 	// steady state per unit initial value
 	initStatesInPerUnit(initActivePower, initReactivePower, initTerminalVolt, initVoltAngle);
 
-	mVa = inverseParkTransform2(mThetaMech2, mVd* mBase_v, mVq* mBase_v, mV0* mBase_v)(0);
-	mVb = inverseParkTransform2(mThetaMech2, mVd* mBase_v, mVq* mBase_v, mV0* mBase_v)(1);
-	mVc = inverseParkTransform2(mThetaMech2, mVd* mBase_v, mVq* mBase_v, mV0* mBase_v)(2);
+	mVa = inverseParkTransform2(mThetaMech, mVd* mBase_v, mVq* mBase_v, mV0* mBase_v)(0);
+	mVb = inverseParkTransform2(mThetaMech, mVd* mBase_v, mVq* mBase_v, mV0* mBase_v)(1);
+	mVc = inverseParkTransform2(mThetaMech, mVd* mBase_v, mVq* mBase_v, mV0* mBase_v)(2);
 
-	mIa = inverseParkTransform2(mThetaMech2, mId* mBase_i, mIq* mBase_i, mI0* mBase_i)(0);
-	mIb = inverseParkTransform2(mThetaMech2, mId* mBase_i, mIq* mBase_i, mI0* mBase_i)(1);
-	mIc = inverseParkTransform2(mThetaMech2, mId* mBase_i, mIq* mBase_i, mI0* mBase_i)(2);
+	mIa = inverseParkTransform2(mThetaMech, mId* mBase_i, mIq* mBase_i, mI0* mBase_i)(0);
+	mIb = inverseParkTransform2(mThetaMech, mId* mBase_i, mIq* mBase_i, mI0* mBase_i)(1);
+	mIc = inverseParkTransform2(mThetaMech, mId* mBase_i, mIq* mBase_i, mI0* mBase_i)(2);
 }
 
 void SynchronGeneratorEMT::initStatesInPerUnit(Real initActivePower, Real initReactivePower,
@@ -154,7 +154,7 @@ void SynchronGeneratorEMT::initStatesInPerUnit(Real initActivePower, Real initRe
 
 	// Initialize mechanical angle
 	//mThetaMech = initVoltAngle + init_delta;
-	mThetaMech2 = initVoltAngle + init_delta - M_PI/2;
+	mThetaMech = initVoltAngle + init_delta - M_PI/2;
 }
 
 void SynchronGeneratorEMT::step(SystemModel& system, Real fieldVoltage, Real mechPower, Real time) {
@@ -188,9 +188,9 @@ void SynchronGeneratorEMT::stepInPerUnit(Real om, Real dt, Real fieldVoltage, Re
 	// TODO calculate effect of changed field voltage
 
 	// dq-transform of interface voltage
-	mVd = parkTransform2(mThetaMech2, mVa, mVb, mVc)(0);
-	mVq = parkTransform2(mThetaMech2, mVa, mVb, mVc)(1);
-	mV0 = parkTransform2(mThetaMech2, mVa, mVb, mVc)(2);
+	mVd = parkTransform2(mThetaMech, mVa, mVb, mVc)(0);
+	mVq = parkTransform2(mThetaMech, mVa, mVb, mVc)(1);
+	mV0 = parkTransform2(mThetaMech, mVa, mVb, mVc)(2);
 
 	if (numMethod == NumericalMethod::Euler) {
 
@@ -206,7 +206,7 @@ void SynchronGeneratorEMT::stepInPerUnit(Real om, Real dt, Real fieldVoltage, Re
 	else {
 
 		//Two steps Adams-Bashforth
-		if (time <= dt) {
+		if (time < dt) {
 			// calculate mechanical states
 			mMechPower = mechPower / mNomPower;
 			mMechTorque = mMechPower / mOmMech;
@@ -276,13 +276,12 @@ void SynchronGeneratorEMT::stepInPerUnit(Real om, Real dt, Real fieldVoltage, Re
 	mI0 = -mPsi0 / mLl;
 
 	// Update mechanical rotor angle with respect to electrical angle
-	//mThetaMech = mThetaMech + dt * (mOmMech * mBase_OmMech);
-	mThetaMech2 = mThetaMech2 + dt * (mOmMech * mBase_OmMech);
+	mThetaMech = mThetaMech + dt * (mOmMech * mBase_OmMech);
 
 
-	mIa = mBase_i * inverseParkTransform2(mThetaMech2, mId, mIq, mI0)(0);
-	mIb = mBase_i * inverseParkTransform2(mThetaMech2, mId, mIq, mI0)(1);
-	mIc = mBase_i * inverseParkTransform2(mThetaMech2, mId, mIq, mI0)(2);
+	mIa = mBase_i * inverseParkTransform2(mThetaMech, mId, mIq, mI0)(0);
+	mIb = mBase_i * inverseParkTransform2(mThetaMech, mId, mIq, mI0)(1);
+	mIc = mBase_i * inverseParkTransform2(mThetaMech, mId, mIq, mI0)(2);
 
 	mCurrents2 << mIq,
 		mId,
@@ -330,21 +329,6 @@ void SynchronGeneratorEMT::postStep(SystemModel& system) {
 	}
 }
 
-//DPSMatrix SynchronGeneratorEMT::parkTransform(Real theta, DPSMatrix& in) {
-//	DPSMatrix ParkMat(3,3);
-//	// Park transform according to Krause
-//	ParkMat << 
-//		2. / 3. * cos(theta), 2. / 3. * cos(theta - 2. * M_PI / 3.), 2. / 3. * cos(theta + 2. * M_PI / 3.),
-//		2. / 3. * sin(theta), 2. / 3. * sin(theta - 2. * M_PI / 3.), 2. / 3. * sin(theta + 2. * M_PI / 3.),
-//		1. / 3., 1. / 3., 1. / 3.;
-//
-//	//// Park transform according to Kundur
-//	// ParkMat << 2. / 3. * cos(theta), 2. / 3. * cos(theta - 2. * M_PI / 3.), 2. / 3. * cos(theta + 2. * M_PI / 3.),
-//	//	- 2. / 3. * sin(theta), - 2. / 3. * sin(theta - 2. * M_PI / 3.), - 2. / 3. * sin(theta + 2. * M_PI / 3.),
-//	//	1. / 3., 1. / 3., 1. / 3.;
-//
-//	return ParkMat * in;
-//}
 
 DPSMatrix SynchronGeneratorEMT::parkTransform2(Real theta, double a, double b, double c) {
 	
@@ -364,22 +348,6 @@ DPSMatrix SynchronGeneratorEMT::parkTransform2(Real theta, double a, double b, d
 	return dq0vector;
 }
 
-//DPSMatrix SynchronGeneratorEMT::inverseParkTransform(Real theta, DPSMatrix& in) {
-//	DPSMatrix InverseParkMat(3,3);
-//	// Park transform according to Krause
-//	InverseParkMat << 
-//		cos(theta), sin(theta), 1,
-//		cos(theta - 2. * M_PI / 3.), sin(theta - 2. * M_PI / 3.), 1,
-//		cos(theta + 2. * M_PI / 3.), sin(theta + 2. * M_PI / 3.), 1;
-//
-//	//// Park transform according to Kundur
-//	//InverseParkMat <<
-//	//	cos(theta), -sin(theta), 1.,
-//	//	cos(theta - 2. * M_PI / 3.), -sin(theta - 2. * M_PI / 3.), 1.,
-//	//	cos(theta + 2. * M_PI / 3.), -sin(theta + 2. * M_PI / 3.), 1.;
-//
-//	return InverseParkMat * in;
-//}
 
 DPSMatrix SynchronGeneratorEMT::inverseParkTransform2(Real theta, double d, double q, double zero) {
 	
