@@ -229,27 +229,30 @@ void SynchronGeneratorEMT::stepInPerUnit(Real om, Real dt, Real fieldVoltage, Re
 	}
 	
 
-	double dtPsid = mVd + mRs*mId + mPsiq*mOmMech;
+	double dtPsid = mVd + mRs*mId + mPsiq*mOmMech;	
+	double dtPsiq = mVq + mRs*mIq - mPsid*mOmMech;	
+	double dtPsi0 = mV0 + mRs*mI0;
+	double dtPsifd = mVfd - mRfd*mIfd;
+	double dtPsikd = -mRkd*mIkd;
+	double dtPsikq1 = -mRkq1*mIkq1;
+	double dtPsikq2 = -mRkq2*mIkq2;
+
 	//if (dtPsid < 0.000001)
 	//	dtPsid = 0;
-	double dtPsiq = mVq + mRs*mIq - mPsid*mOmMech;
 	//if (dtPsiq < 0.000001)
 	//	dtPsiq = 0;
-	double dtPsi0 = mV0 + mRs*mI0;
 	//if (dtPsi0 < 0.000001)
 	//	dtPsi0 = 0;
-	double dtPsifd = mVfd - mRfd*mIfd;
 	//if (dtPsifd < 0.000001)
 	//	dtPsifd = 0;
-	double dtPsikd = -mRkd*mIkd;
 	//if (dtPsikd < 0.000001)
 	//	dtPsikd = 0;
-	double dtPsikq1 = -mRkq1*mIkq1;
 	//if (dtPsikq1 < 0.000001)
 	//	dtPsikq1 = 0;
-	double dtPsikq2 = -mRkq2*mIkq2;
 	//if (dtPsikq2 < 0.000001)
 	//	dtPsikq2 = 0;
+
+
 
 	mPsid_past = mPsid;
 	mPsiq_past = mPsiq;

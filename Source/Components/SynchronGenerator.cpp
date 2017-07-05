@@ -77,53 +77,53 @@ void SynchronGenerator::initWithPerUnitParam(
 void SynchronGenerator::init(Real om, Real dt,
 	Real initActivePower, Real initReactivePower, Real initTerminalVolt, Real initVoltAngle) {
 
-	// Create matrices for state space representation 
-	mInductanceMat <<
-		mLl + mLmq, 0, 0, mLmq, mLmq, 0, 0,
-		0, mLl + mLmd, 0, 0, 0, mLmd, mLmd,
-		0, 0, mLl, 0, 0, 0, 0,
-		mLmq, 0, 0, mLlkq1 + mLmq, mLmq, 0, 0,
-		mLmq, 0, 0, mLmq, mLlkq2 + mLmq, 0, 0,
-		0, mLmd, 0, 0, 0, mLlfd + mLmd, mLmd,
-		0, mLmd, 0, 0, 0, mLmd, mLlkd + mLmd;
+	//// Create matrices for state space representation 
+	//mInductanceMat <<
+	//	mLl + mLmq, 0, 0, mLmq, mLmq, 0, 0,
+	//	0, mLl + mLmd, 0, 0, 0, mLmd, mLmd,
+	//	0, 0, mLl, 0, 0, 0, 0,
+	//	mLmq, 0, 0, mLlkq1 + mLmq, mLmq, 0, 0,
+	//	mLmq, 0, 0, mLmq, mLlkq2 + mLmq, 0, 0,
+	//	0, mLmd, 0, 0, 0, mLlfd + mLmd, mLmd,
+	//	0, mLmd, 0, 0, 0, mLmd, mLlkd + mLmd;
 
-	mResistanceMat <<
-		mRs, 0, 0, 0, 0, 0, 0,
-		0, mRs, 0, 0, 0, 0, 0,
-		0, 0, mRs, 0, 0, 0, 0,
-		0, 0, 0, mRkq1, 0, 0, 0,
-		0, 0, 0, 0, mRkq2, 0, 0,
-		0, 0, 0, 0, 0, mRfd, 0,
-		0, 0, 0, 0, 0, 0, mRkd;
+	//mResistanceMat <<
+	//	mRs, 0, 0, 0, 0, 0, 0,
+	//	0, mRs, 0, 0, 0, 0, 0,
+	//	0, 0, mRs, 0, 0, 0, 0,
+	//	0, 0, 0, mRkq1, 0, 0, 0,
+	//	0, 0, 0, 0, mRkq2, 0, 0,
+	//	0, 0, 0, 0, 0, mRfd, 0,
+	//	0, 0, 0, 0, 0, 0, mRkd;
 
-	mOmegaFluxMat <<
-		0, 1, 0, 0, 0, 0, 0,
-		-1, 0, 0, 0, 0, 0, 0,
-		0, 0, 0, 0, 0, 0, 0,
-		0, 0, 0, 0, 0, 0, 0,
-		0, 0, 0, 0, 0, 0, 0,
-		0, 0, 0, 0, 0, 0, 0,
-		0, 0, 0, 0, 0, 0, 0;
+	//mOmegaFluxMat <<
+	//	0, 1, 0, 0, 0, 0, 0,
+	//	-1, 0, 0, 0, 0, 0, 0,
+	//	0, 0, 0, 0, 0, 0, 0,
+	//	0, 0, 0, 0, 0, 0, 0,
+	//	0, 0, 0, 0, 0, 0, 0,
+	//	0, 0, 0, 0, 0, 0, 0,
+	//	0, 0, 0, 0, 0, 0, 0;
 
-	mReverseCurrents <<
-		-1, 0, 0, 0, 0, 0, 0,
-		0, -1, 0, 0, 0, 0, 0,
-		0, 0, -1, 0, 0, 0, 0,
-		0, 0, 0, 1, 0, 0, 0,
-		0, 0, 0, 0, 1, 0, 0,
-		0, 0, 0, 0, 0, 1, 0,
-		0, 0, 0, 0, 0, 0, 1;
+	//mReverseCurrents <<
+	//	-1, 0, 0, 0, 0, 0, 0,
+	//	0, -1, 0, 0, 0, 0, 0,
+	//	0, 0, -1, 0, 0, 0, 0,
+	//	0, 0, 0, 1, 0, 0, 0,
+	//	0, 0, 0, 0, 1, 0, 0,
+	//	0, 0, 0, 0, 0, 1, 0,
+	//	0, 0, 0, 0, 0, 0, 1;
 
 	//mReactanceMat = mInductanceMat.inverse();
 	//
 	// steady state per unit initial value
 	initStatesInPerUnit(initActivePower, initReactivePower, initTerminalVolt, initVoltAngle);
 	
-	mDq0Voltages(0, 0) = mVoltages(0, 0);
-	mDq0Voltages(1, 0) = mVoltages(1, 0);
-	mDq0Voltages(2, 0) = mVoltages(2, 0);
-	mDq0Voltages = mDq0Voltages * mBase_v;
-	mAbcsVoltages = dq0ToAbcTransform(mThetaMech, mDq0Voltages);
+	//mDq0Voltages(0, 0) = mVoltages(0, 0);
+	//mDq0Voltages(1, 0) = mVoltages(1, 0);
+	//mDq0Voltages(2, 0) = mVoltages(2, 0);
+	//mDq0Voltages = mDq0Voltages * mBase_v;
+	//mAbcsVoltages = dq0ToAbcTransform(mThetaMech, mDq0Voltages);
 
 	mVaRe = dq0ToAbcTransform2(mThetaMech, mVd* mBase_v, mVq* mBase_v, mV0* mBase_v)(0);
 	mVbRe = dq0ToAbcTransform2(mThetaMech, mVd* mBase_v, mVq* mBase_v, mV0* mBase_v)(1);
@@ -133,11 +133,11 @@ void SynchronGenerator::init(Real om, Real dt,
 	mVcIm = dq0ToAbcTransform2(mThetaMech, mVd* mBase_v, mVq* mBase_v, mV0* mBase_v)(5);
 
 
-	mDq0Currents(0, 0) = mCurrents(0, 0);
-	mDq0Currents(1, 0) = mCurrents(1, 0);
-	mDq0Currents(2, 0) = mCurrents(2, 0);
-	mDq0Currents = mDq0Currents * mBase_i;
-	mAbcsCurrents = dq0ToAbcTransform(mThetaMech, mDq0Currents);
+	//mDq0Currents(0, 0) = mCurrents(0, 0);
+	//mDq0Currents(1, 0) = mCurrents(1, 0);
+	//mDq0Currents(2, 0) = mCurrents(2, 0);
+	//mDq0Currents = mDq0Currents * mBase_i;
+	//mAbcsCurrents = dq0ToAbcTransform(mThetaMech, mDq0Currents);
 
 	mIaRe = dq0ToAbcTransform2(mThetaMech, mId * mBase_i, mIq * mBase_i, mI0 * mBase_i)(0);
 	mIbRe = dq0ToAbcTransform2(mThetaMech, mId * mBase_i, mIq * mBase_i, mI0 * mBase_i)(1);
@@ -186,13 +186,13 @@ void SynchronGenerator::initStatesInPerUnit(Real initActivePower, Real initReact
 	double init_Te = init_P + mRs * pow(init_it, 2.);
 	mOmMech = 1;
 
-	mVoltages(0, 0) = init_vq;
-	mVoltages(1, 0) = init_vd;
-	mVoltages(2, 0) = 0;
-	mVoltages(3, 0) = 0;
-	mVoltages(4, 0) = 0;
-	mVoltages(5, 0) = init_vfd;
-	mVoltages(6, 0) = 0;
+	//mVoltages(0, 0) = init_vq;
+	//mVoltages(1, 0) = init_vd;
+	//mVoltages(2, 0) = 0;
+	//mVoltages(3, 0) = 0;
+	//mVoltages(4, 0) = 0;
+	//mVoltages(5, 0) = init_vfd;
+	//mVoltages(6, 0) = 0;
 
 	mVd = init_vd;
 	mVq = init_vq;
@@ -202,13 +202,13 @@ void SynchronGenerator::initStatesInPerUnit(Real initActivePower, Real initReact
 	mVkq1 = 0;
 	mVkq2 = 0;
 
-	mCurrents(0, 0) = init_iq;
-	mCurrents(1, 0) = init_id;
-	mCurrents(2, 0) = 0;
-	mCurrents(3, 0) = 0;
-	mCurrents(4, 0) = 0;
-	mCurrents(5, 0) = init_ifd;
-	mCurrents(6, 0) = 0;
+	//mCurrents(0, 0) = init_iq;
+	//mCurrents(1, 0) = init_id;
+	//mCurrents(2, 0) = 0;
+	//mCurrents(3, 0) = 0;
+	//mCurrents(4, 0) = 0;
+	//mCurrents(5, 0) = init_ifd;
+	//mCurrents(6, 0) = 0;
 
 	mId = init_id;
 	mIq = init_iq;
@@ -218,13 +218,13 @@ void SynchronGenerator::initStatesInPerUnit(Real initActivePower, Real initReact
 	mIkq1 = 0;
 	mIkq2 = 0;
 
-	mFluxes(0, 0) = init_psiq;
-	mFluxes(1, 0) = init_psid;
-	mFluxes(2, 0) = 0;
-	mFluxes(3, 0) = init_psiq1;
-	mFluxes(4, 0) = init_psiq2;
-	mFluxes(5, 0) = init_psifd;
-	mFluxes(6, 0) = init_psid1;
+	//mFluxes(0, 0) = init_psiq;
+	//mFluxes(1, 0) = init_psid;
+	//mFluxes(2, 0) = 0;
+	//mFluxes(3, 0) = init_psiq1;
+	//mFluxes(4, 0) = init_psiq2;
+	//mFluxes(5, 0) = init_psifd;
+	//mFluxes(6, 0) = init_psid1;
 
 	
 	mPsid = init_psid;
@@ -270,8 +270,8 @@ void SynchronGenerator::step(SystemModel& system, Real fieldVoltage, Real mechPo
 
 void SynchronGenerator::stepInPerUnit(Real om, Real dt, Real fieldVoltage, Real mechPower) {
 	//// retrieve voltages
-	mAbcsVoltages = (1 / mBase_v) * mAbcsVoltages;
-    mAbcsCurrents = (1 / mBase_i) * mAbcsCurrents;
+	//mAbcsVoltages = (1 / mBase_v) * mAbcsVoltages;
+ //   mAbcsCurrents = (1 / mBase_i) * mAbcsCurrents;
 
 	mVaRe = (1 / mBase_v) * mVaRe;
 	mVaIm = (1 / mBase_v) * mVaIm;
@@ -291,10 +291,10 @@ void SynchronGenerator::stepInPerUnit(Real om, Real dt, Real fieldVoltage, Real 
 	// TODO calculate effect of changed field voltage
 
 	//// dq-transform of interface voltage
-	mDq0Voltages = abcToDq0Transform(mThetaMech, mAbcsVoltages);
-	mVoltages(0, 0) = mDq0Voltages(0, 0);
-	mVoltages(1, 0) = mDq0Voltages(1, 0);
-	mVoltages(2, 0) = mDq0Voltages(2, 0);
+	//mDq0Voltages = abcToDq0Transform(mThetaMech, mAbcsVoltages);
+	//mVoltages(0, 0) = mDq0Voltages(0, 0);
+	//mVoltages(1, 0) = mDq0Voltages(1, 0);
+	//mVoltages(2, 0) = mDq0Voltages(2, 0);
 
 	mVq = abcToDq0Transform2(mThetaMech, mVaRe, mVbRe, mVcRe, mVaIm, mVbIm, mVcIm)(0);
 	mVd = abcToDq0Transform2(mThetaMech, mVaRe, mVbRe, mVcRe, mVaIm, mVbIm, mVcIm)(1);
@@ -309,19 +309,30 @@ void SynchronGenerator::stepInPerUnit(Real om, Real dt, Real fieldVoltage, Real 
 	// Euler step forward	
 	mOmMech = mOmMech + dt * (1 / (2 * mH) * (mMechTorque - mElecTorque));
 
-	Matrix currents = mReverseCurrents * mReactanceMat * mFluxes;
-	DPSMatrix dtFluxes = mVoltages - mResistanceMat * currents - mOmMech * mOmegaFluxMat * mFluxes;
-	mFluxes = mFluxes + dt * mBase_OmElec * dtFluxes;
+	//Matrix currents = mReverseCurrents * mReactanceMat * mFluxes;
 
-	mCurrents = mReverseCurrents * mReactanceMat * mFluxes;
+	////Calculation of currents based on inverse of inductance matrix
+	double Id = ((mLlfd*mLlkd + mLmd*(mLlfd + mLlkd))*mPsid - mLmd*mLlkd*mPsifd - mLlfd*mLmd*mPsikd) / detLd;
+	double Ifd = (mLlkd*mLmd*mPsid - (mLl*mLlkd + mLmd*(mLl + mLlkd))*mPsifd + mLmd*mLl) / detLd;
+	double Ikd = (mLmd*mLlfd*mPsid + mLmd*mLl*mPsifd - (mLmd*(mLlfd + mLl) + mLl*mLlfd)*mPsikd) / detLd;
+	double Iq = ((mLlkq1*mLlkq2 + mLmq*(mLlkq1 + mLlkq2))*mPsiq - mLmq*mLlkq2*mPsikq1 - mLmq*mLlkq1*mPsikq2) / detLq;
+	double Ikq1 = (mLmq*mLlkq2*mPsiq - (mLmq*(mLlkq2 + mLl) + mLl*mLlkq2)*mPsikq1 + mLmq*mLl*mPsikq2) / detLq;
+	double Ikq2 = (mLmq*mLlkq1*mPsiq + mLmq*mLl*mPsikq1 - (mLmq*(mLlkq1 + mLl) + mLl*mLlkq1)*mPsikq2) / detLq;
+	double I0 = -mPsi0 / mLl;
 
-	double dtPsid = mVd + mRs*mId + mPsiq*mOmMech;
-	double dtPsiq = mVq + mRs*mIq - mPsid*mOmMech;
-	double dtPsi0 = mV0 + mRs*mI0;
-	double dtPsifd = mVfd - mRfd*mIfd;
-	double dtPsikd = -mRkd*mIkd;
-	double dtPsikq1 = -mRkq1*mIkq1;
-	double dtPsikq2 = -mRkq2*mIkq2;
+
+
+	//DPSMatrix dtFluxes = mVoltages - mResistanceMat * currents - mOmMech * mOmegaFluxMat * mFluxes;
+	
+	double dtPsid = mVd - mRs*Id + mPsiq*mOmMech;
+	double dtPsiq = mVq - mRs*Iq - mPsid*mOmMech;
+	double dtPsi0 = mV0 - mRs*I0;
+	double dtPsifd = mVfd - mRfd*Ifd;
+	double dtPsikd = -mRkd*Ikd;
+	double dtPsikq1 = -mRkq1*Ikq1;
+	double dtPsikq2 = -mRkq2*Ikq2;
+	
+	//mFluxes = mFluxes + dt * mBase_OmElec * dtFluxes;
 
 	mPsid = mPsid + dt*mBase_OmElec*dtPsid;
 	mPsiq = mPsiq + dt*mBase_OmElec*dtPsiq;
@@ -330,6 +341,8 @@ void SynchronGenerator::stepInPerUnit(Real om, Real dt, Real fieldVoltage, Real 
 	mPsikd = mPsikd + dt*mBase_OmElec*dtPsikd;
 	mPsikq1 = mPsikq1 + dt*mBase_OmElec*dtPsikq1;
 	mPsikq2 = mPsikq2 + dt*mBase_OmElec*dtPsikq2;
+
+	//mCurrents = mReverseCurrents * mReactanceMat * mFluxes;
 
 	//Calculation of currents based on inverse of inductance matrix
 	mId = ((mLlfd*mLlkd + mLmd*(mLlfd + mLlkd))*mPsid - mLmd*mLlkd*mPsifd - mLlfd*mLmd*mPsikd) / detLd;
@@ -342,11 +355,11 @@ void SynchronGenerator::stepInPerUnit(Real om, Real dt, Real fieldVoltage, Real 
 
 
 	// inverse dq-transform
-	mDq0Currents(0, 0) = mCurrents(0, 0);
-	mDq0Currents(1, 0) = mCurrents(1, 0);
-	mDq0Currents(2, 0) = mCurrents(2, 0);
-	mAbcsCurrents = dq0ToAbcTransform(mThetaMech, mDq0Currents);
-	mAbcsCurrents = mBase_i * mAbcsCurrents;
+	//mDq0Currents(0, 0) = mCurrents(0, 0);
+	//mDq0Currents(1, 0) = mCurrents(1, 0);
+	//mDq0Currents(2, 0) = mCurrents(2, 0);
+	//mAbcsCurrents = dq0ToAbcTransform(mThetaMech, mDq0Currents);
+	//mAbcsCurrents = mBase_i * mAbcsCurrents;
 
 	mIaRe = mBase_i * dq0ToAbcTransform2(mThetaMech, mId, mIq, mI0)(0);
 	mIbRe = mBase_i * dq0ToAbcTransform2(mThetaMech, mId, mIq, mI0)(1);
@@ -439,65 +452,65 @@ void SynchronGenerator::postStep(SystemModel& system) {
 
 }
 
-DPSMatrix SynchronGenerator::abcToDq0Transform(Real theta, DPSMatrix& in) {
-	// Balanced case
-	Complex alpha(cos(2. / 3. * PI), sin(2. / 3. * PI));	
-	Complex thetaCompInv(cos(-theta), sin(-theta));
-	MatrixComp AbcToPnz(3, 3);
-	AbcToPnz <<
-		1, 1, 1,
-		1, alpha, pow(alpha, 2),
-		1, pow(alpha, 2), alpha;
-	AbcToPnz = (1. / 3.) * AbcToPnz;
-
-	MatrixComp abcVector(3, 1);
-	abcVector <<
-		Complex(in(0, 0), in(3, 0)),
-		Complex(in(1, 0), in(4, 0)),
-		Complex(in(2, 0), in(5, 0));
-
-	MatrixComp pnzVector(3, 1);
-	pnzVector = AbcToPnz * abcVector * thetaCompInv;
-
-	DPSMatrix dq0Vector(3, 1);
-	dq0Vector <<
-		pnzVector(1, 0).imag(),
-		pnzVector(1, 0).real(),
-		0;
-	
-	return dq0Vector;
-}
-
-DPSMatrix SynchronGenerator::dq0ToAbcTransform(Real theta, DPSMatrix& in) {
-	// Balanced case
-	Complex alpha(cos(2. / 3. * PI), sin(2. / 3. * PI));
-	Complex thetaComp(cos(theta), sin(theta));
-	MatrixComp PnzToAbc(3, 3);
-	PnzToAbc <<
-		1, 1, 1,
-		1, pow(alpha, 2), alpha,
-		1, alpha, pow(alpha, 2);
-
-	MatrixComp pnzVector(3, 1);
-	pnzVector <<
-		0,
-		Complex(in(1, 0), in(0, 0)),
-		Complex(0, 0);
-
-	MatrixComp abcCompVector(3, 1);
-	abcCompVector = PnzToAbc * pnzVector * thetaComp;
-	
-	Matrix abcVector(6, 1);
-	abcVector <<
-		abcCompVector(0, 0).real(),
-		abcCompVector(1, 0).real(),
-		abcCompVector(2, 0).real(),
-		abcCompVector(0, 0).imag(),
-		abcCompVector(1, 0).imag(),
-		abcCompVector(2, 0).imag();
-
-	return abcVector;
-}
+//DPSMatrix SynchronGenerator::abcToDq0Transform(Real theta, DPSMatrix& in) {
+//	// Balanced case
+//	Complex alpha(cos(2. / 3. * PI), sin(2. / 3. * PI));	
+//	Complex thetaCompInv(cos(-theta), sin(-theta));
+//	MatrixComp AbcToPnz(3, 3);
+//	AbcToPnz <<
+//		1, 1, 1,
+//		1, alpha, pow(alpha, 2),
+//		1, pow(alpha, 2), alpha;
+//	AbcToPnz = (1. / 3.) * AbcToPnz;
+//
+//	MatrixComp abcVector(3, 1);
+//	abcVector <<
+//		Complex(in(0, 0), in(3, 0)),
+//		Complex(in(1, 0), in(4, 0)),
+//		Complex(in(2, 0), in(5, 0));
+//
+//	MatrixComp pnzVector(3, 1);
+//	pnzVector = AbcToPnz * abcVector * thetaCompInv;
+//
+//	DPSMatrix dq0Vector(3, 1);
+//	dq0Vector <<
+//		pnzVector(1, 0).imag(),
+//		pnzVector(1, 0).real(),
+//		0;
+//	
+//	return dq0Vector;
+//}
+//
+//DPSMatrix SynchronGenerator::dq0ToAbcTransform(Real theta, DPSMatrix& in) {
+//	// Balanced case
+//	Complex alpha(cos(2. / 3. * PI), sin(2. / 3. * PI));
+//	Complex thetaComp(cos(theta), sin(theta));
+//	MatrixComp PnzToAbc(3, 3);
+//	PnzToAbc <<
+//		1, 1, 1,
+//		1, pow(alpha, 2), alpha,
+//		1, alpha, pow(alpha, 2);
+//
+//	MatrixComp pnzVector(3, 1);
+//	pnzVector <<
+//		0,
+//		Complex(in(1, 0), in(0, 0)),
+//		Complex(0, 0);
+//
+//	MatrixComp abcCompVector(3, 1);
+//	abcCompVector = PnzToAbc * pnzVector * thetaComp;
+//	
+//	Matrix abcVector(6, 1);
+//	abcVector <<
+//		abcCompVector(0, 0).real(),
+//		abcCompVector(1, 0).real(),
+//		abcCompVector(2, 0).real(),
+//		abcCompVector(0, 0).imag(),
+//		abcCompVector(1, 0).imag(),
+//		abcCompVector(2, 0).imag();
+//
+//	return abcVector;
+//}
 
 DPSMatrix SynchronGenerator::abcToDq0Transform2(Real theta, Real aRe, Real bRe, Real cRe, Real aIm, Real bIm, Real cIm) {
 	// Balanced case

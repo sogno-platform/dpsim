@@ -239,11 +239,11 @@ namespace DPsim {
 		void postStep(SystemModel& system);
 
 		/// Park transform as described in Krause
-		DPSMatrix abcToDq0Transform(Real theta, DPSMatrix& in);
+		//DPSMatrix abcToDq0Transform(Real theta, DPSMatrix& in);
 		DPSMatrix abcToDq0Transform2(Real theta, Real aRe, Real bRe, Real cRe, Real aIm, Real bIm, Real cIm);
 
 		/// Inverse Park transform as described in Krause
-		DPSMatrix dq0ToAbcTransform(Real theta, DPSMatrix& in);
+		//DPSMatrix dq0ToAbcTransform(Real theta, DPSMatrix& in);
 		DPSMatrix dq0ToAbcTransform2(Real theta, Real d, Real q, Real zero);
 
 		DPSMatrix& getVoltages() { return mVoltages2; }
