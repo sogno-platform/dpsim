@@ -80,7 +80,8 @@ namespace DPsim {
 
 		void addSystemTopology(std::vector<BaseComponent*> newElements);
 
-		void runRT(Logger& logger);
+		void runRTSignal(Logger& logger, bool do_sigwait = false);
+		void runRTTimerfd(Logger& logger);
 		static void alarmHandler(int, siginfo_t*, void*);
 	};
 

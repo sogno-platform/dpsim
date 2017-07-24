@@ -1,7 +1,9 @@
 #include "Simulation.h"
 
 #include <signal.h>
+#include <sys/timerfd.h>
 #include <time.h>
+#include <unistd.h>
 
 using namespace DPsim;
 
@@ -147,7 +149,7 @@ void Simulation::alarmHandler(int sig, siginfo_t* si, void* ctx) {
 		throw TimerExpiredException();
 }
 
-void Simulation::runRT(Logger& logger) {
+void Simulation::runRTSignal(Logger& logger, bool do_sigwait) {
 	int ret, sig;
 	sigset_t alrmset;
 	struct sigaction sa;
@@ -171,13 +173,15 @@ void Simulation::runRT(Logger& logger) {
 		std::exit(1);
 	}
 
-	sigemptyset(&alrmset);
-	sigaddset(&alrmset, SIGALRM);
+	if (do_sigwait) {
+		sigemptyset(&alrmset);
+		sigaddset(&alrmset, SIGALRM);
+	}
 
 	ts.it_value.tv_sec = (time_t) mSystemModel.getTimeStep();
 	ts.it_value.tv_nsec = (long) (mSystemModel.getTimeStep() * 1e9);
 	ts.it_interval = ts.it_value;
-	if (timer_settime(&timer, 0, &ts, NULL)) {
+	if (timer_settime(timer, 0, &ts, NULL)) {
 		std::perror("Failed to arm timer");
 		std::exit(1);
 	}
@@ -189,15 +193,50 @@ void Simulation::runRT(Logger& logger) {
 			std::cerr << "timestep expired at " << mTime << std::endl;
 			std::abort();
 		}
-		/* XXX explicit synchronization?
+		/* explicit synchronization?
 		 * best way for real cases is probably implicit synchronization by
 		 * blocking reads from the shmem interface */
-		//sigwait(&alrmset, &sig);
+		if (do_sigwait)
+			sigwait(&alrmset, &sig);
 		increaseByTimeStep();
 		if (!ret)
 			break;
 	}
 	timer_delete(timer);
+}
+
+void Simulation::runRTTimerfd(Logger& logger) {
+	int timerfd;
+	struct itimerspec ts;
+	char timebuf[8];
+	uint64_t overrun;
+
+	timerfd = timerfd_create(CLOCK_MONOTONIC, 0);
+	if (timerfd < 0) {
+		std::perror("Failed to create timerfd");
+		std::exit(1);
+	}
+
+	ts.it_value.tv_sec = (time_t) mSystemModel.getTimeStep();
+	ts.it_value.tv_nsec = (long) (mSystemModel.getTimeStep() * 1e9);
+	ts.it_interval = ts.it_value;
+
+	if (timerfd_settime(timerfd, 0, &ts, 0) < 0) {
+		std::perror("Failed to arm timerfd");
+		std::exit(1);
+	}
+	while (step(logger)) {
+		if (read(timerfd, timebuf, 8) < 0) {
+			std::perror("Read from timerfd failed");
+			std::exit(1);
+		}
+		overrun = *((uint64_t*) timebuf);
+		if (overrun > 1) {
+			std::cerr << "timerfd overrun of " << overrun-1 << " at " << mTime << std::endl;
+			std::abort();
+		}
+	}
+	close(timerfd);
 }
 
 int Simulation::step(Logger& logger, Logger& leftSideVectorLog, Logger& rightSideVectorLog)  {

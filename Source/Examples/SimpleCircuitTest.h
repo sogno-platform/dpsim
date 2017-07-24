@@ -11,6 +11,7 @@ namespace DPsim {
 	void VarFreqRXLineResLoadEMT(Real timeStep, Real finalTime, Real freqStep, Real loadStep, Real rampTime);
 	void runDpEmtVarFreqStudy();
 	void RXLineResLoadStatic();
+	void RTExample();
 }
 
 #endif

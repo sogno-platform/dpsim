@@ -41,7 +41,8 @@ void DPsim::shmemExample()
 	delete villas;
 }
 
-void DPsim::shmemRTExample() {
+void DPsim::shmemRTExample()
+{
 	// Same circuit as above, but now with realtime support.
 	std::vector<BaseComponent*> comps;
 	struct shmem_conf conf;
@@ -67,7 +68,7 @@ void DPsim::shmemRTExample() {
 
 	// Main Simulation Loop
 	std::cout << "Start simulation." << std::endl;
-	newSim.runRT(log);
+	newSim.runRTSignal(log);
 	std::cout << "Simulation finished." << std::endl;
 	for (auto comp : comps) {
 		delete comp;
@@ -84,9 +85,13 @@ void DPsim::shmemDistributedExample(int argc, char *argv[])
 	// supply side, whose values are received from the respective other circuit.
 	// Here, the two instances directly communicate with each other without using
 	// VILLASnode in between.
-	Logger log("output.log"), llog("lvector.log"), rlog("rvector.log");
+	Logger log;
 	std::vector<BaseComponent*> comps;
 	ShmemInterface *shmem;
+	struct shmem_conf conf;
+	conf.samplelen = 4;
+	conf.queuelen = 1024;
+	conf.polling = false;
 
 	if (argc < 2) {
 		std::cerr << "not enough arguments (either 0 or 1 for the test number)" << std::endl;
@@ -98,14 +103,14 @@ void DPsim::shmemDistributedExample(int argc, char *argv[])
 		comps.push_back(new Inductor("l_1", 1, 2, 1e-3));
 		ExternalVoltageSource *evs = new ExternalVoltageSource("v_t", 2, 0, 0, 0, 1);
 		comps.push_back(evs);
-		shmem = new ShmemInterface("/dpsim01", "/dpsim10");
+		shmem = new ShmemInterface("/dpsim01", "/dpsim10", &conf);
 		shmem->registerVoltageSource(evs, 0, 1);
 		shmem->registerExportedCurrent(evs, 0, 1);
 	} else if (!strcmp(argv[1], "1")) {
 		ExternalCurrentSource *ecs = new ExternalCurrentSource("v_s", 1, 0, 0, 0);
 		comps.push_back(ecs);
 		comps.push_back(new LinearResistor("r_2", 1, 0, 1));
-		shmem = new ShmemInterface("/dpsim10", "/dpsim01");
+		shmem = new ShmemInterface("/dpsim10", "/dpsim01", &conf);
 		shmem->registerCurrentSource(ecs, 0, 1);
 		shmem->registerExportedVoltage(1, 0, 0, 1);
 	} else {
@@ -114,17 +119,13 @@ void DPsim::shmemDistributedExample(int argc, char *argv[])
 	}
 
 	// Set up simulation
-	Real timeStep = 0.001;
-	Simulation newSim(comps, 2.0*M_PI*50.0, timeStep, 0.3, log);
+	Real timeStep = 0.000150;
+	Simulation newSim(comps, 2.0*M_PI*50.0, timeStep, 1, log);
 	newSim.addExternalInterface(shmem);
 
 	// Main Simulation Loop
 	std::cout << "Start simulation." << std::endl;
-	while (newSim.step(log, llog, rlog))
-	{
-		newSim.increaseByTimeStep();
-		updateProgressBar(newSim.getTime(), newSim.getFinalTime());
-	}
+	newSim.runRTTimerfd(log);
 	std::cout << "Simulation finished." << std::endl;
 
 	for (auto comp : comps) {
