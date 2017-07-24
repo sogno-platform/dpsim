@@ -103,12 +103,12 @@ void Simulation::addSystemTopology(std::vector<BaseComponent*> newElements) {
 }
 
 
-int Simulation::step(Logger& logger)
+int Simulation::step(Logger& logger, bool blocking)
 {
 	mSystemModel.setRightSideVectorToZero();
 	
 	for (auto it = mExternalInterfaces.begin(); it != mExternalInterfaces.end(); ++it) {
-		(*it)->readValues();
+		(*it)->readValues(blocking);
 	}
 
 	for (std::vector<BaseComponent*>::iterator it = mElements.begin(); it != mElements.end(); ++it) {
@@ -221,11 +221,13 @@ void Simulation::runRTTimerfd(Logger& logger) {
 	ts.it_value.tv_nsec = (long) (mSystemModel.getTimeStep() * 1e9);
 	ts.it_interval = ts.it_value;
 
+	step(logger, false); // first nonblocking step using initial values
+	step(logger, true); // blocking step for synchronization
 	if (timerfd_settime(timerfd, 0, &ts, 0) < 0) {
 		std::perror("Failed to arm timerfd");
 		std::exit(1);
 	}
-	while (step(logger)) {
+	while (step(logger, false)) {
 		if (read(timerfd, timebuf, 8) < 0) {
 			std::perror("Read from timerfd failed");
 			std::exit(1);
@@ -233,14 +235,13 @@ void Simulation::runRTTimerfd(Logger& logger) {
 		overrun = *((uint64_t*) timebuf);
 		if (overrun > 1) {
 			std::cerr << "timerfd overrun of " << overrun-1 << " at " << mTime << std::endl;
-			std::abort();
 		}
 	}
 	close(timerfd);
 }
 
-int Simulation::step(Logger& logger, Logger& leftSideVectorLog, Logger& rightSideVectorLog)  {
-	int retValue = step(logger);
+int Simulation::step(Logger& logger, Logger& leftSideVectorLog, Logger& rightSideVectorLog, bool blocking) {
+	int retValue = step(logger, blocking);
 
 	leftSideVectorLog.LogDataLine(getTime(), getLeftSideVector());
 	rightSideVectorLog.LogDataLine(getTime(), getRightSideVector());

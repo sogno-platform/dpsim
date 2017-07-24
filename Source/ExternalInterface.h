@@ -69,7 +69,7 @@ namespace DPsim {
 		/** Read data for a timestep from the interface and passes the values
 		 * to all registered current / voltage sources.
 		 */
-		virtual void readValues() = 0;
+		virtual void readValues(bool blocking = true) = 0;
 		/** Write all exported values to the interface. Called after every timestep.
 		 * @param model Reference to the system model which should be used to
 		 * calculate needed voltages.

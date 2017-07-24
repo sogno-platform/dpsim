@@ -31,12 +31,10 @@ ShmemInterface::ShmemInterface(const char* wname, const char* rname) {
 	conf.queuelen = 512;
 	conf.samplelen = 64;
 	conf.polling = 0;
-	mBlocking = true;
 	init(wname, rname, &conf);
 }
 
-ShmemInterface::ShmemInterface(const char* wname, const char *rname, struct shmem_conf* conf, bool blocking) {
-	mBlocking = blocking;
+ShmemInterface::ShmemInterface(const char* wname, const char *rname, struct shmem_conf* conf) {
 	init(wname, rname, conf);
 }
 
@@ -44,7 +42,7 @@ ShmemInterface::~ShmemInterface() {
 	shmem_int_close(&mShmem);
 }
 
-void ShmemInterface::readValues() {
+void ShmemInterface::readValues(bool blocking) {
 	if (!mInit) {
 		mInit = 1;
 		return;
@@ -52,7 +50,7 @@ void ShmemInterface::readValues() {
 	struct sample *sample = nullptr;
 	int ret = 0;
 	try {
-		if (mBlocking) {
+		if (blocking) {
 			ret = shmem_int_read(&mShmem, &sample, 1);
 			if (ret == 0)
 				return;

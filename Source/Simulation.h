@@ -59,9 +59,9 @@ namespace DPsim {
 
 		
 		/// Solve system A * x = z for x and current time
-		int step(Logger& logger);
+		int step(Logger& logger, bool blocking = true);
 		/// Solve system A * x = z for x and current time. Log current values of both vectors.
-		int step(Logger& logger, Logger& leftSideVectorLog, Logger& rightSideVectorLog);
+		int step(Logger& logger, Logger& leftSideVectorLog, Logger& rightSideVectorLog, bool blocking = false);
 		void switchSystemMatrix(int systemMatrixIndex);
 		void setSwitchTime(Real switchTime, Int systemIndex);
 		void increaseByTimeStep();
