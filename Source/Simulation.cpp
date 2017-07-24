@@ -236,6 +236,7 @@ void Simulation::runRTTimerfd(Logger& logger) {
 		if (overrun > 1) {
 			std::cerr << "timerfd overrun of " << overrun-1 << " at " << mTime << std::endl;
 		}
+		increaseByTimeStep();
 	}
 	close(timerfd);
 }
