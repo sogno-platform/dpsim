@@ -175,6 +175,18 @@ namespace DPsim {
 		double mIb;
 		double mIc;
 
+		// ### Useful Matrices ###
+		/// inductance matrix
+		DPSMatrix mInductanceMat = DPSMatrix::Zero(7, 7);
+		/// resistance matrix
+		DPSMatrix mResistanceMat = DPSMatrix::Zero(7, 7);
+		/// reactance matrix
+		DPSMatrix mReactanceMat = DPSMatrix::Zero(7, 7);
+		/// omega - flux matrix
+		DPSMatrix mOmegaFluxMat = DPSMatrix::Zero(7, 7);
+		/// matrix for reversing stator current directions in calculations with respect to other currents
+		DPSMatrix mReverseCurrents = DPSMatrix::Zero(7, 7);
+
 
 	public:
 		SynchronGeneratorEMT() { };
