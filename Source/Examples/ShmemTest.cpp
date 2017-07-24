@@ -76,7 +76,7 @@ void DPsim::shmemRTExample()
 	delete villas;
 }
 
-void DPsim::shmemDistributedExample(int argc, char *argv[])
+void DPsim::shmemDistributedDirect(int argc, char *argv[])
 {
 	// Testing the interface with a simple circuit,
 	// but the load is simulated in a different instance.
@@ -111,6 +111,58 @@ void DPsim::shmemDistributedExample(int argc, char *argv[])
 		comps.push_back(ecs);
 		comps.push_back(new LinearResistor("r_2", 1, 0, 1));
 		shmem = new ShmemInterface("/dpsim10", "/dpsim01", &conf);
+		shmem->registerCurrentSource(ecs, 0, 1);
+		shmem->registerExportedVoltage(1, 0, 0, 1);
+	} else {
+		std::cerr << "invalid test number" << std::endl;
+		std::exit(1);
+	}
+
+	// Set up simulation
+	Real timeStep = 0.000150;
+	Simulation newSim(comps, 2.0*M_PI*50.0, timeStep, 1, log);
+	newSim.addExternalInterface(shmem);
+
+	// Main Simulation Loop
+	std::cout << "Start simulation." << std::endl;
+	newSim.runRTTimerfd(log);
+	std::cout << "Simulation finished." << std::endl;
+
+	for (auto comp : comps) {
+		delete comp;
+	}
+	delete shmem;
+}
+
+void DPsim::shmemDistributed(int argc, char *argv[])
+{
+	Logger log;
+	std::vector<BaseComponent*> comps;
+	ShmemInterface *shmem;
+	struct shmem_conf conf;
+	conf.samplelen = 4;
+	conf.queuelen = 1024;
+	conf.polling = false;
+
+	if (argc < 2) {
+		std::cerr << "not enough arguments (either 0 or 1 for the test number)" << std::endl;
+		std::exit(1);
+	}
+
+	if (!strcmp(argv[1], "0")) {
+		comps.push_back(new VoltSourceRes("v_s", 1, 0, 10000, 0, 1));
+		comps.push_back(new Inductor("l_1", 1, 2, 1e-3));
+		comps.push_back(new LinearResistor("r_1", 2, 3, 1));
+		ExternalVoltageSource *evs = new ExternalVoltageSource("v_t", 3, 0, 0, 0, 1);
+		comps.push_back(evs);
+		shmem = new ShmemInterface("/villas1-in", "/villas1-out", &conf);
+		shmem->registerVoltageSource(evs, 0, 1);
+		shmem->registerExportedCurrent(evs, 0, 1);
+	} else if (!strcmp(argv[1], "1")) {
+		ExternalCurrentSource *ecs = new ExternalCurrentSource("v_s", 1, 0, 0, 0);
+		comps.push_back(ecs);
+		comps.push_back(new LinearResistor("r_2", 1, 0, 10));
+		shmem = new ShmemInterface("/villas2-in", "/villas2-out", &conf);
 		shmem->registerCurrentSource(ecs, 0, 1);
 		shmem->registerExportedVoltage(1, 0, 0, 1);
 	} else {

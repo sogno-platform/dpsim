@@ -13,8 +13,8 @@ int main(int argc, char* argv[]) {
 
 
 
-	shmemRTExample();
-	//shmemDistributedExample(argc, argv);
+	//shmemRTExample();
+	shmemDistributed(argc, argv);
 	//shmemDistributedRef();
 	/*simulationExample1();
 	simulationExample2();
