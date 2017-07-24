@@ -20,6 +20,7 @@ namespace DPsim {
 		struct shmem_int mShmem;
 		struct sample *mLastSample;
 		int mSeq;
+		bool mBlocking;
 
 		void init(const char *wname, const char *rname, struct shmem_conf *conf);
 
@@ -33,8 +34,9 @@ namespace DPsim {
 		/** Create a ShmemInterface with a specific configuration for the output queue.
 		 *
 		 * @param conf The configuration object for the output queue (see VILLASnode's documentation).
+		 * @param blocking If true, reading from this interface will block until a value is received. If false, reading will return immediately and not change any values if no value is currently enqueued.
 		 */
-		ShmemInterface(const char* wname, const char* rname, struct shmem_conf* conf);
+		ShmemInterface(const char* wname, const char* rname, struct shmem_conf* conf, bool blocking = true);
 		~ShmemInterface();
 		/** Read a single struct sample from the shared input queue and pass the contained
 		 * values to all registered current/voltage sources.

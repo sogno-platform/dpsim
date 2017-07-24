@@ -31,10 +31,12 @@ ShmemInterface::ShmemInterface(const char* wname, const char* rname) {
 	conf.queuelen = 512;
 	conf.samplelen = 64;
 	conf.polling = 0;
+	mBlocking = true;
 	init(wname, rname, &conf);
 }
 
-ShmemInterface::ShmemInterface(const char* wname, const char *rname, struct shmem_conf* conf) {
+ShmemInterface::ShmemInterface(const char* wname, const char *rname, struct shmem_conf* conf, bool blocking) {
+	mBlocking = blocking;
 	init(wname, rname, conf);
 }
 
@@ -50,8 +52,14 @@ void ShmemInterface::readValues() {
 	struct sample *sample = nullptr;
 	int ret = 0;
 	try {
-		while (ret == 0)
+		if (mBlocking) {
 			ret = shmem_int_read(&mShmem, &sample, 1);
+			if (ret == 0)
+				return;
+		} else {
+			while (ret == 0)
+				ret = shmem_int_read(&mShmem, &sample, 1);
+		}
 		if (ret < 0) {
 			std::cerr << "Fatal error: failed to read sample from shmem interface" << std::endl;
 			std::exit(1);
