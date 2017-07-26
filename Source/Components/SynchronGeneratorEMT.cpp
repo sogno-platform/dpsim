@@ -88,13 +88,13 @@ void SynchronGeneratorEMT::init(Real om, Real dt,
 		0, -mLmd, 0, 0, 0, mLmd, mLlkd + mLmd;
 
 	mResistanceMat <<
-		-mRs, 0, 0, 0, 0, 0, 0,
-		0, -mRs, 0, 0, 0, 0, 0,
-		0, 0, -mRs, 0, 0, 0, 0,
-		0, 0, 0, mRkq1, 0, 0, 0,
-		0, 0, 0, 0, mRkq2, 0, 0,
-		0, 0, 0, 0, 0, mRfd, 0,
-		0, 0, 0, 0, 0, 0, mRkd;
+		mRs, 0, 0, 0, 0, 0, 0,
+		0, mRs, 0, 0, 0, 0, 0,
+		0, 0, mRs, 0, 0, 0, 0,
+		0, 0, 0, -mRkq1, 0, 0, 0,
+		0, 0, 0, 0, -mRkq2, 0, 0,
+		0, 0, 0, 0, 0, -mRfd, 0,
+		0, 0, 0, 0, 0, 0, -mRkd;
 
 	mOmegaFluxMat <<
 		0, 1, 0, 0, 0, 0, 0,
@@ -358,9 +358,10 @@ void SynchronGeneratorEMT::stepInPerUnit(Real om, Real dt, Real fieldVoltage, Re
 
 	else if (numMethod == NumericalMethod::Trapezoidal_flux){
 
+
 		Real mElecTorque_hist = (mPsid*mIq - mPsiq*mId);
 
-		DPSMatrix A = -mResistanceMat*mReactanceMat - mOmMech*mOmegaFluxMat;
+		DPSMatrix A = mBase_OmElec*(mResistanceMat*mReactanceMat - mOmMech*mOmegaFluxMat);
 		DPSMatrix I(7, 7);
 		I <<
 			1, 0, 0, 0, 0, 0, 0,
@@ -393,7 +394,7 @@ void SynchronGeneratorEMT::stepInPerUnit(Real om, Real dt, Real fieldVoltage, Re
 		dqVoltages(5, 0) = mVfd;
 		dqVoltages(6, 0) = mVkd;
 
-		Fluxes = InvAux*Aux*Fluxes + InvAux*dt*dqVoltages;
+		Fluxes = InvAux*Aux*Fluxes + InvAux*dt*mBase_OmElec*I*dqVoltages;
 
 		mPsiq = Fluxes(0, 0);
 		mPsid = Fluxes(1, 0);
@@ -420,16 +421,87 @@ void SynchronGeneratorEMT::stepInPerUnit(Real om, Real dt, Real fieldVoltage, Re
 		Real mOmMech_hist = mOmMech;
 		mOmMech = mOmMech + dt / (4 * mH) * (mMechTorque - mElecTorque_hist + mMechTorque - mElecTorque);
 
-
-
 		// Update mechanical rotor angle with respect to electrical angle
-		mThetaMech = mThetaMech + (dt/2) * (mOmMech_hist * mBase_OmMech + mOmMech * mBase_OmMech);
+		mThetaMech = mThetaMech + dt / 2 * (mOmMech * mBase_OmMech + mOmMech_hist * mBase_OmMech);
 
 	}
 
 	else if (numMethod == NumericalMethod::Trapezoidal_current) {
 
+		Real mElecTorque_hist = (mPsid*mIq - mPsiq*mId);
 
+		DPSMatrix A = mBase_OmElec*(mReactanceMat*mResistanceMat);
+		DPSMatrix B = mBase_OmElec*mReactanceMat;
+		DPSMatrix C = DPSMatrix::Zero(7, 1);
+		C(0, 0) = -mOmMech*mPsid;
+		C(1, 0) = mOmMech*mPsiq;
+		C = mBase_OmElec*mReactanceMat*C;
+
+		DPSMatrix I = DPSMatrix::Identity(7, 7);
+
+		//DPSMatrix I(7, 7);
+		//I <<
+		//	1, 0, 0, 0, 0, 0, 0,
+		//	0, 1, 0, 0, 0, 0, 0,
+		//	0, 0, 1, 0, 0, 0, 0,
+		//	0, 0, 0, 1, 0, 0, 0,
+		//	0, 0, 0, 0, 1, 0, 0,
+		//	0, 0, 0, 0, 0, 1, 0,
+		//	0, 0, 0, 0, 0, 0, 1;
+
+		DPSMatrix Aux = I + (dt / 2) * A;
+		DPSMatrix Aux2 = I - (dt / 2) * A;
+		DPSMatrix InvAux = Aux2.inverse();
+
+		DPSMatrix dqCurrents(7, 1);
+		dqCurrents(0, 0) = mIq;
+		dqCurrents(1, 0) = mId;
+		dqCurrents(2, 0) = mI0;
+		dqCurrents(3, 0) = mIkq1;
+		dqCurrents(4, 0) = mIkq2;
+		dqCurrents(5, 0) = mIfd;
+		dqCurrents(6, 0) = mIkd;
+
+		DPSMatrix dqVoltages(7, 1);
+		dqVoltages(0, 0) = mVq;
+		dqVoltages(1, 0) = mVd;
+		dqVoltages(2, 0) = mV0;
+		dqVoltages(3, 0) = mVkq1;
+		dqVoltages(4, 0) = mVkq2;
+		dqVoltages(5, 0) = mVfd;
+		dqVoltages(6, 0) = mVkd;
+
+		dqCurrents = InvAux*Aux*dqCurrents + InvAux*dt*B*dqVoltages + InvAux*dt*C;
+
+		mIq = dqCurrents(0, 0);
+		mId = dqCurrents(1, 0);
+		mI0 = dqCurrents(2, 0);
+		mIkq1 = dqCurrents(3, 0);
+		mIkq2 = dqCurrents(4, 0);
+		mIfd = dqCurrents(5, 0);
+		mIkd = dqCurrents(6, 0);
+
+		//Calculation of currents based on inverse of inductance matrix
+		mPsiq = -(mLl + mLmq)*mIq + mLmq*mIkq1 + mLmq*mIkq2;
+		mPsid = -(mLl + mLmd)*mId + mLmd*mIfd + mLmd*mIkd;
+		mPsi0 = -mLl*mI0;
+		mPsikq1 = -mLmq*mId + (mLlkq1 + mLmq)*mIkq1 + mLmq*mIkq2;
+		mPsikq2 = -mLmq*mId + mLmq*mIkq1 + (mLlkq2 + mLmq)*mIkq2;
+		mPsifd = -mLmd*mId + (mLlfd + mLmd)*mIfd + mLmd*mIkd;
+		mPsikd = -mLmd*mId + mLmd*mIfd + (mLlkd + mLmd)*mIkd;
+
+
+		mMechPower = mechPower / mNomPower;
+		mMechTorque = mMechPower / mOmMech;
+
+		mElecTorque = (mPsid*mIq - mPsiq*mId);
+
+		// Trapezoidal rule	
+		Real mOmMech_hist = mOmMech;
+		mOmMech = mOmMech + dt / (4 * mH) * (mMechTorque - mElecTorque_hist + mMechTorque - mElecTorque);
+
+		// Update mechanical rotor angle with respect to electrical angle
+		mThetaMech = mThetaMech + dt / 2 * (mOmMech * mBase_OmMech + mOmMech_hist * mBase_OmMech);
 
 	}
 	
