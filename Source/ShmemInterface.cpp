@@ -50,7 +50,7 @@ void ShmemInterface::readValues(bool blocking) {
 	struct sample *sample = nullptr;
 	int ret = 0;
 	try {
-		if (blocking) {
+		if (!blocking) {
 			ret = shmem_int_read(&mShmem, &sample, 1);
 			if (ret == 0)
 				return;
