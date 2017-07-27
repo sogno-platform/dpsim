@@ -205,7 +205,7 @@ void Simulation::runRTSignal(Logger& logger, bool do_sigwait) {
 	timer_delete(timer);
 }
 
-void Simulation::runRTTimerfd(Logger& logger) {
+void Simulation::runRTTimerfd(Logger& logger, Logger& llogger, Logger& rlogger ) {
 	int timerfd;
 	struct itimerspec ts;
 	char timebuf[8];
@@ -221,13 +221,13 @@ void Simulation::runRTTimerfd(Logger& logger) {
 	ts.it_value.tv_nsec = (long) (mSystemModel.getTimeStep() * 1e9);
 	ts.it_interval = ts.it_value;
 
-	step(logger, false); // first nonblocking step using initial values
-	step(logger, true); // blocking step for synchronization
+	step(logger, llogger, rlogger, false); // first nonblocking step using initial values
+	step(logger, llogger, rlogger, true); // blocking step for synchronization
 	if (timerfd_settime(timerfd, 0, &ts, 0) < 0) {
 		std::perror("Failed to arm timerfd");
 		std::exit(1);
 	}
-	while (step(logger, false)) {
+	while (step(logger, llogger, rlogger, false)) {
 		if (read(timerfd, timebuf, 8) < 0) {
 			std::perror("Read from timerfd failed");
 			std::exit(1);

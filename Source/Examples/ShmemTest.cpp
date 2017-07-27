@@ -125,7 +125,7 @@ void DPsim::shmemDistributedDirect(int argc, char *argv[])
 
 	// Main Simulation Loop
 	std::cout << "Start simulation." << std::endl;
-	newSim.runRTTimerfd(log);
+	newSim.runRTTimerfd(log, log, log);
 	std::cout << "Simulation finished." << std::endl;
 
 	for (auto comp : comps) {
@@ -140,9 +140,10 @@ void DPsim::shmemDistributed(int argc, char *argv[])
 	std::vector<BaseComponent*> comps;
 	ShmemInterface *shmem;
 	struct shmem_conf conf;
+	std::string logname;
 	conf.samplelen = 4;
 	conf.queuelen = 1024;
-	conf.polling = false;
+	conf.polling = true;
 
 	if (argc < 2) {
 		std::cerr << "not enough arguments (either 0 or 1 for the test number)" << std::endl;
@@ -150,8 +151,9 @@ void DPsim::shmemDistributed(int argc, char *argv[])
 	}
 
 	if (!strcmp(argv[1], "0")) {
+		logname = "lvector0.log";
 		comps.push_back(new VoltSourceRes("v_s", 1, 0, 10000, 0, 1));
-		comps.push_back(new Inductor("l_1", 1, 2, 1e-3));
+		comps.push_back(new Inductor("l_1", 1, 2, 0.1));
 		comps.push_back(new LinearResistor("r_1", 2, 3, 1));
 		ExternalVoltageSource *evs = new ExternalVoltageSource("v_t", 3, 0, 0, 0, 1);
 		comps.push_back(evs);
@@ -159,6 +161,7 @@ void DPsim::shmemDistributed(int argc, char *argv[])
 		shmem->registerVoltageSource(evs, 0, 1);
 		shmem->registerExportedCurrent(evs, 0, 1);
 	} else if (!strcmp(argv[1], "1")) {
+		logname = "lvector1.log";
 		ExternalCurrentSource *ecs = new ExternalCurrentSource("v_s", 1, 0, 0, 0);
 		comps.push_back(ecs);
 		comps.push_back(new LinearResistor("r_2", 1, 0, 10));
@@ -171,13 +174,14 @@ void DPsim::shmemDistributed(int argc, char *argv[])
 	}
 
 	// Set up simulation
-	Real timeStep = 0.000150;
+	Real timeStep = 0.001000;
+	Logger llog(logname);
 	Simulation newSim(comps, 2.0*M_PI*50.0, timeStep, 1, log);
 	newSim.addExternalInterface(shmem);
 
 	// Main Simulation Loop
 	std::cout << "Start simulation." << std::endl;
-	newSim.runRTTimerfd(log);
+	newSim.runRTTimerfd(log, llog, log);
 	std::cout << "Simulation finished." << std::endl;
 
 	for (auto comp : comps) {
@@ -193,12 +197,13 @@ void DPsim::shmemDistributedRef()
 	std::vector<BaseComponent*> comps;
 
 	comps.push_back(new VoltSourceRes("v_s", 1, 0, 10000, 0, 1));
-	comps.push_back(new Inductor("l_1", 1, 2, 1e-3));
-	comps.push_back(new LinearResistor("r_2", 2, 0, 1));
+	comps.push_back(new Inductor("l_1", 1, 2, 0.1));
+	comps.push_back(new LinearResistor("r_1", 2, 3, 1));
+	comps.push_back(new LinearResistor("r_2", 3, 0, 10));
 
 	// Set up simulation
 	Real timeStep = 0.001;
-	Simulation newSim(comps, 2.0*M_PI*50.0, timeStep, 0.3, log);
+	Simulation newSim(comps, 2.0*M_PI*50.0, timeStep, 1, log);
 
 	// Main Simulation Loop
 	std::cout << "Start simulation." << std::endl;
