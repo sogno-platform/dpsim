@@ -135,7 +135,7 @@ void ShmemInterface::writeValues(SystemModel& model) {
 		}
 		sample->length = len+1;
 		sample->sequence = mSeq++;
-		clock_gettime(CLOCK_MONOTONIC, &sample->ts.origin);
+		clock_gettime(CLOCK_REALTIME, &sample->ts.origin);
 		done = true;
 		while (ret == 0)
 			ret = shmem_int_write(&mShmem, &sample, 1);
