@@ -221,8 +221,9 @@ void Simulation::runRTTimerfd(Logger& logger, Logger& llogger, Logger& rlogger )
 	ts.it_value.tv_nsec = (long) (mSystemModel.getTimeStep() * 1e9);
 	ts.it_interval = ts.it_value;
 
-	step(logger, llogger, rlogger, false); // first nonblocking step using initial values
-	step(logger, llogger, rlogger, true); // blocking step for synchronization
+	step(logger, llogger, rlogger, false); // first step, sending the initial values
+	step(logger, llogger, rlogger, true); // blocking step for synchronization + receiving the initial state of the other network
+	increaseByTimeStep();
 	if (timerfd_settime(timerfd, 0, &ts, 0) < 0) {
 		std::perror("Failed to arm timerfd");
 		std::exit(1);
