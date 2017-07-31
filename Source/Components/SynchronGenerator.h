@@ -121,12 +121,12 @@ namespace DPsim {
 		DPSMatrix mVoltages = DPSMatrix::Zero(7, 1);
 
 
-		/// voltage vector q d 0 kq1 kq2 df kd
+		/*/// voltage vector q d 0 kq1 kq2 df kd
 		DPSMatrix mVoltages2 = DPSMatrix::Zero(7, 1);
 		/// flux linkage vector
 		DPSMatrix mFluxes2 = DPSMatrix::Zero(7, 1);
 		/// current vector
-		DPSMatrix mCurrents2 = DPSMatrix::Zero(7, 1);
+		DPSMatrix mCurrents2 = DPSMatrix::Zero(7, 1);*/
 		
 		/// voltage vector q d 0 fd kd kq1 kq2
 		Real mVd;
@@ -158,7 +158,7 @@ namespace DPsim {
 		Real mIkq2;
 
 		/// interface voltage vector abcs
-		DPSMatrix mAbcsVoltages = DPSMatrix::Zero(6, 1);
+		//DPSMatrix mAbcsVoltages = DPSMatrix::Zero(6, 1);
 
 		Real mVaRe;
 		Real mVaIm;
@@ -169,7 +169,7 @@ namespace DPsim {
 
 
 		/// interface current vector abcs
-		DPSMatrix mAbcsCurrents = DPSMatrix::Zero(6, 1);
+		//DPSMatrix mAbcsCurrents = DPSMatrix::Zero(6, 1);
 
 		Real mIaRe;
 		Real mIaIm;
@@ -180,21 +180,21 @@ namespace DPsim {
 
 
 		/// interface voltage vector dq0
-		DPSMatrix mDq0Voltages = DPSMatrix::Zero(3, 1);
+		//DPSMatrix mDq0Voltages = DPSMatrix::Zero(3, 1);
 		/// interface current vector dq0
-		DPSMatrix mDq0Currents = DPSMatrix::Zero(3, 1);
+		//DPSMatrix mDq0Currents = DPSMatrix::Zero(3, 1);
 
-		// ### Useful Matrices ###
-		/// inductance matrix
-		DPSMatrix mInductanceMat = DPSMatrix::Zero(7, 7);
-		/// resistance matrix
-		DPSMatrix mResistanceMat = DPSMatrix::Zero(7, 7);
-		/// reactance matrix
-		DPSMatrix mReactanceMat = DPSMatrix::Zero(7, 7);
-		/// omega - flux matrix
-		DPSMatrix mOmegaFluxMat = DPSMatrix::Zero(7, 7);
-		/// matrix for reversing stator current directions in calculations with respect to other currents
-		DPSMatrix mReverseCurrents = DPSMatrix::Zero(7, 7);
+		//// ### Useful Matrices ###
+		///// inductance matrix
+		//DPSMatrix mInductanceMat = DPSMatrix::Zero(7, 7);
+		///// resistance matrix
+		//DPSMatrix mResistanceMat = DPSMatrix::Zero(7, 7);
+		///// reactance matrix
+		//DPSMatrix mReactanceMat = DPSMatrix::Zero(7, 7);
+		///// omega - flux matrix
+		//DPSMatrix mOmegaFluxMat = DPSMatrix::Zero(7, 7);
+		///// matrix for reversing stator current directions in calculations with respect to other currents
+		//DPSMatrix mReverseCurrents = DPSMatrix::Zero(7, 7);
 
 	public:
 		SynchronGenerator() { };
@@ -246,9 +246,9 @@ namespace DPsim {
 		//DPSMatrix dq0ToAbcTransform(Real theta, DPSMatrix& in);
 		DPSMatrix dq0ToAbcTransform2(Real theta, Real d, Real q, Real zero);
 
-		DPSMatrix& getVoltages() { return mVoltages2; }
-		DPSMatrix& getCurrents() { return mCurrents2; }
-		DPSMatrix& getFluxes() { return mFluxes2; }
+		DPSMatrix& getVoltages() { return mVoltages; }
+		DPSMatrix& getCurrents() { return mCurrents; }
+		DPSMatrix& getFluxes() { return mFluxes; }
 
 		void init(Real om, Real dt) { }
 		void applySystemMatrixStamp(SystemModel& system) { }

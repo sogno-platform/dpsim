@@ -70,8 +70,7 @@ void SynchronGenerator::initWithPerUnitParam(
 	detLd = (mLmd + mLl)*(-mLlfd*mLlkd - mLlfd*mLmd - mLmd*mLlkd) + mLmd*mLmd*(mLlfd + mLlkd);
 	// Determinant of Lq (inductance matrix of q axis)
 	detLq = -mLmq*mLlkq2*(mLlkq1 + mLl) - mLl*mLlkq1*(mLlkq2 + mLmq);
-
-	
+		
 }
 
 void SynchronGenerator::init(Real om, Real dt,
@@ -269,7 +268,7 @@ void SynchronGenerator::step(SystemModel& system, Real fieldVoltage, Real mechPo
 }
 
 void SynchronGenerator::stepInPerUnit(Real om, Real dt, Real fieldVoltage, Real mechPower) {
-	//// retrieve voltages
+	// retrieve voltages
 	//mAbcsVoltages = (1 / mBase_v) * mAbcsVoltages;
  //   mAbcsCurrents = (1 / mBase_i) * mAbcsCurrents;
 
@@ -287,8 +286,10 @@ void SynchronGenerator::stepInPerUnit(Real om, Real dt, Real fieldVoltage, Real 
 	mIcRe = (1 / mBase_i) * mIcRe;
 	mIcIm = (1 / mBase_i) * mIcIm;
 
-	// mVoltages(5, 0) = fieldVoltage / mBase_v;
-	// TODO calculate effect of changed field voltage
+	 //mVoltages(5, 0) = fieldVoltage / mBase_v;
+
+	 mVfd = fieldVoltage / mBase_v;
+	 //TODO calculate effect of changed field voltage
 
 	//// dq-transform of interface voltage
 	//mDq0Voltages = abcToDq0Transform(mThetaMech, mAbcsVoltages);
@@ -313,7 +314,7 @@ void SynchronGenerator::stepInPerUnit(Real om, Real dt, Real fieldVoltage, Real 
 
 	////Calculation of currents based on inverse of inductance matrix
 	double Id = ((mLlfd*mLlkd + mLmd*(mLlfd + mLlkd))*mPsid - mLmd*mLlkd*mPsifd - mLlfd*mLmd*mPsikd) / detLd;
-	double Ifd = (mLlkd*mLmd*mPsid - (mLl*mLlkd + mLmd*(mLl + mLlkd))*mPsifd + mLmd*mLl) / detLd;
+	double Ifd = (mLlkd*mLmd*mPsid - (mLl*mLlkd + mLmd*(mLl + mLlkd))*mPsifd + mLmd*mLl*mPsikd) / detLd;
 	double Ikd = (mLmd*mLlfd*mPsid + mLmd*mLl*mPsifd - (mLmd*(mLlfd + mLl) + mLl*mLlfd)*mPsikd) / detLd;
 	double Iq = ((mLlkq1*mLlkq2 + mLmq*(mLlkq1 + mLlkq2))*mPsiq - mLmq*mLlkq2*mPsikq1 - mLmq*mLlkq1*mPsikq2) / detLq;
 	double Ikq1 = (mLmq*mLlkq2*mPsiq - (mLmq*(mLlkq2 + mLl) + mLl*mLlkq2)*mPsikq1 + mLmq*mLl*mPsikq2) / detLq;
@@ -346,7 +347,7 @@ void SynchronGenerator::stepInPerUnit(Real om, Real dt, Real fieldVoltage, Real 
 
 	//Calculation of currents based on inverse of inductance matrix
 	mId = ((mLlfd*mLlkd + mLmd*(mLlfd + mLlkd))*mPsid - mLmd*mLlkd*mPsifd - mLlfd*mLmd*mPsikd) / detLd;
-	mIfd = (mLlkd*mLmd*mPsid - (mLl*mLlkd + mLmd*(mLl + mLlkd))*mPsifd + mLmd*mLl) / detLd;
+	mIfd = (mLlkd*mLmd*mPsid - (mLl*mLlkd + mLmd*(mLl + mLlkd))*mPsifd + mLmd*mLl*mPsikd) / detLd;
 	mIkd = (mLmd*mLlfd*mPsid + mLmd*mLl*mPsifd - (mLmd*(mLlfd + mLl) + mLl*mLlfd)*mPsikd) / detLd;
 	mIq = ((mLlkq1*mLlkq2 + mLmq*(mLlkq1 + mLlkq2))*mPsiq - mLmq*mLlkq2*mPsikq1 - mLmq*mLlkq1*mPsikq2) / detLq;
 	mIkq1 = (mLmq*mLlkq2*mPsiq - (mLmq*(mLlkq2 + mLl) + mLl*mLlkq2)*mPsikq1 + mLmq*mLl*mPsikq2) / detLq;
@@ -354,7 +355,7 @@ void SynchronGenerator::stepInPerUnit(Real om, Real dt, Real fieldVoltage, Real 
 	mI0 = -mPsi0 / mLl;
 
 
-	// inverse dq-transform
+	//// inverse dq-transform
 	//mDq0Currents(0, 0) = mCurrents(0, 0);
 	//mDq0Currents(1, 0) = mCurrents(1, 0);
 	//mDq0Currents(2, 0) = mCurrents(2, 0);
@@ -373,7 +374,7 @@ void SynchronGenerator::stepInPerUnit(Real om, Real dt, Real fieldVoltage, Real 
 	mThetaMech = mThetaMech + dt * ((mOmMech - 1) * mBase_OmMech);
 
 
-	mCurrents2 << mIq,
+	mCurrents << mIq,
 		mId,
 		mI0,
 		mIkq1,
@@ -381,7 +382,7 @@ void SynchronGenerator::stepInPerUnit(Real om, Real dt, Real fieldVoltage, Real 
 		mIfd,
 		mIkd;
 
-	mVoltages2 << mVq,
+	mVoltages << mVq,
 		mVd,
 		mV0,
 		mVkq1,
@@ -389,7 +390,7 @@ void SynchronGenerator::stepInPerUnit(Real om, Real dt, Real fieldVoltage, Real 
 		mVfd,
 		mVkd;
 
-	mFluxes2 << mVq,
+	mFluxes << mVq,
 		mPsid,
 		mPsi0,
 		mPsikq1,
@@ -400,31 +401,31 @@ void SynchronGenerator::stepInPerUnit(Real om, Real dt, Real fieldVoltage, Real 
 }
 
 void SynchronGenerator::postStep(SystemModel& system) {
-	/*if (mNode1 >= 0) {
-		mAbcsVoltages(0, 0) = system.getRealFromLeftSideVector(mNode1);
-		mAbcsVoltages(3, 0) = system.getImagFromLeftSideVector(mNode1);
-	}
-	else {
-		mAbcsVoltages(0, 0) = 0;
-		mAbcsVoltages(3, 0) = 0;
-	}
-	if (mNode2 >= 0) {
-		mAbcsVoltages(1, 0) = system.getRealFromLeftSideVector(mNode2);
-		mAbcsVoltages(4, 0) = system.getImagFromLeftSideVector(mNode2);
-	}
-	else {
-		mAbcsVoltages(1, 0) = 0;
-		mAbcsVoltages(4, 0) = 0;
-	}
-	if (mNode3 >= 0) {
-		mAbcsVoltages(2, 0) = system.getRealFromLeftSideVector(mNode3);
-		mAbcsVoltages(5, 0) = system.getImagFromLeftSideVector(mNode3);
-	}
-	else {
-		mAbcsVoltages(2, 0) = 0;
-		mAbcsVoltages(5, 0) = 0;
-	}
-*/
+	//if (mNode1 >= 0) {
+	//	mAbcsVoltages(0, 0) = system.getRealFromLeftSideVector(mNode1);
+	//	mAbcsVoltages(3, 0) = system.getImagFromLeftSideVector(mNode1);
+	//}
+	//else {
+	//	mAbcsVoltages(0, 0) = 0;
+	//	mAbcsVoltages(3, 0) = 0;
+	//}
+	//if (mNode2 >= 0) {
+	//	mAbcsVoltages(1, 0) = system.getRealFromLeftSideVector(mNode2);
+	//	mAbcsVoltages(4, 0) = system.getImagFromLeftSideVector(mNode2);
+	//}
+	//else {
+	//	mAbcsVoltages(1, 0) = 0;
+	//	mAbcsVoltages(4, 0) = 0;
+	//}
+	//if (mNode3 >= 0) {
+	//	mAbcsVoltages(2, 0) = system.getRealFromLeftSideVector(mNode3);
+	//	mAbcsVoltages(5, 0) = system.getImagFromLeftSideVector(mNode3);
+	//}
+	//else {
+	//	mAbcsVoltages(2, 0) = 0;
+	//	mAbcsVoltages(5, 0) = 0;
+	//}
+
 	if (mNode1 >= 0) {
 		mVaRe = system.getRealFromLeftSideVector(mNode1);
 		mVaIm = system.getImagFromLeftSideVector(mNode1);
