@@ -10,22 +10,19 @@ enum class LogLevel { NONE, ERROR, WARN, INFO };
 
 class Logger {
 	private:
-		std::string mLogFileName;
 		std::ofstream mLogFile;
-		std::ostringstream mLogStream;
-		std::ostringstream mNullStream;
 		LogLevel mLogLevel;
+
+		static std::ostringstream nullStream;
+		static std::ostream& getNullStream();
 
 	public:
 		Logger();
-		Logger(LogLevel level);
+		Logger(std::string filename, LogLevel level = LogLevel::INFO);
 		~Logger();
 	
-		int AddDataLine(double time, DPSMatrix data);
-		std::ostringstream& Log();
-		std::ostringstream& Log(LogLevel level);
-		void WriteLogToFile(std::string fileName);
-		static std::ostringstream VectorToDataLine(double time, DPSMatrix vector);
+		std::ostream& Log(LogLevel level = LogLevel::INFO);
+		void LogDataLine(double time, DPSMatrix& data);
 };
 #endif
 

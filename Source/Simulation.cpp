@@ -5,12 +5,12 @@ using namespace DPsim;
 Simulation::Simulation() {
 	mTime = 0;
 	mCurrentSwitchTimeIndex = 0;
-	mSystemModel.setSimType(SimulationType::EMT);
 }
 
-Simulation::Simulation(std::vector<BaseComponent*> elements, Real om, Real dt, Real tf) 
+Simulation::Simulation(std::vector<BaseComponent*> elements, Real om, Real dt, Real tf, SimulationType simType)
 	: Simulation() {
 
+	mSystemModel.setSimType(simType);
 	mSystemModel.setTimeStep(dt);
 	mSystemModel.setOmega(om);
 	mFinalTime = tf;
@@ -18,8 +18,8 @@ Simulation::Simulation(std::vector<BaseComponent*> elements, Real om, Real dt, R
 	initialize(elements);
 }
 
-Simulation::Simulation(std::vector<BaseComponent*> elements, Real om, Real dt, Real tf, Logger& logger) 
-	: Simulation(elements, om, dt, tf) {
+Simulation::Simulation(std::vector<BaseComponent*> elements, Real om, Real dt, Real tf, Logger& logger, SimulationType simType)
+	: Simulation(elements, om, dt, tf, simType) {
 
 	for (std::vector<BaseComponent*>::iterator it = elements.begin(); it != elements.end(); ++it) {
 		logger.Log(LogLevel::INFO) << "Added " << (*it)->getName() << " of type " << typeid(*(*it)).name() << " to simulation." << std::endl;
@@ -30,12 +30,6 @@ Simulation::Simulation(std::vector<BaseComponent*> elements, Real om, Real dt, R
 	logger.Log() << mSystemModel.getLUdecomp() << std::endl;
 	logger.Log(LogLevel::INFO) << "Known variables matrix j:" << std::endl;
 	logger.Log() << mSystemModel.getRightSideVector() << std::endl;
-}
-
-Simulation::Simulation(std::vector<BaseComponent*> elements, Real om, Real dt, Real tf, Logger& logger, SimulationType simType) {
-	mSystemModel.setSimType(simType);
-
-	Simulation(elements, om, dt, tf, logger);
 }
 
 
@@ -62,10 +56,10 @@ void Simulation::initialize(std::vector<BaseComponent*> newElements) {
 		}
 		std::string type = typeid(*(*it)).name();
 
-		if (type == "class DPsim::IdealVoltageSource") {
+		if (dynamic_cast<IdealVoltageSource*>(*it)) {
 			numIdealVS = numIdealVS + 1;
 		}
-		if (type == "class DPsim::RxLine" || type == "class DPsim::PiLine") {
+		if (dynamic_cast<RxLine*>(*it) || dynamic_cast<PiLine*>(*it)) {
 			if ((*it)->getNode3() != -1) {
 				numLines = numLines + 1;
 			}
@@ -106,8 +100,12 @@ void Simulation::addSystemTopology(std::vector<BaseComponent*> newElements) {
 
 int Simulation::step(Logger& logger)
 {
-	mSystemModel.setRightSideVectorToZero(getRightSideVector());
+	mSystemModel.setRightSideVectorToZero();
 	
+	for (auto it = mExternalInterfaces.begin(); it != mExternalInterfaces.end(); ++it) {
+		(*it)->readValues();
+	}
+
 	for (std::vector<BaseComponent*>::iterator it = mElements.begin(); it != mElements.end(); ++it) {
 		(*it)->step(mSystemModel, mTime);
 	}
@@ -116,6 +114,10 @@ int Simulation::step(Logger& logger)
  
 	for (std::vector<BaseComponent*>::iterator it = mElements.begin(); it != mElements.end(); ++it) {
 		(*it)->postStep(mSystemModel);
+	}
+
+	for (auto it = mExternalInterfaces.begin(); it != mExternalInterfaces.end(); ++it) {
+		(*it)->writeValues(mSystemModel);
 	}
 
 	if (mCurrentSwitchTimeIndex < mSwitchEventVector.size()) {
@@ -138,14 +140,14 @@ int Simulation::step(Logger& logger)
 int Simulation::step(Logger& logger, Logger& leftSideVectorLog, Logger& rightSideVectorLog)  {
 	int retValue = step(logger);
 
-	leftSideVectorLog.Log() << Logger::VectorToDataLine(getTime(), getLeftSideVector()).str();
-	rightSideVectorLog.Log() << Logger::VectorToDataLine(getTime(), getRightSideVector()).str();
+	leftSideVectorLog.LogDataLine(getTime(), getLeftSideVector());
+	rightSideVectorLog.LogDataLine(getTime(), getRightSideVector());
 
 	return retValue;
 }
 
 int Simulation::stepGeneratorTest(Logger& logger, Logger& leftSideVectorLog, Logger& rightSideVectorLog, BaseComponent* generator,
-	Logger& synGenLogFlux, Logger& synGenLogVolt, Logger& synGenLogCurr, Real fieldVoltage, Real mechPower, Real logTimeStep, Real& lastLogTime)
+	Logger& synGenLogFlux, Logger& synGenLogVolt, Logger& synGenLogCurr, Real fieldVoltage, Real mechPower, Real logTimeStep, Real& lastLogTime, Real time)
 {
 	// Set to zero because all components will add their contribution for the current time step to the current value
 	mSystemModel.getRightSideVector().setZero();
@@ -160,7 +162,7 @@ int Simulation::stepGeneratorTest(Logger& logger, Logger& leftSideVectorLog, Log
 		((SynchronGenerator*)generator)->step(mSystemModel, fieldVoltage, mechPower);
 	} 
 	else {
-		((SynchronGeneratorEMT*)generator)->step(mSystemModel, fieldVoltage, mechPower);
+		((SynchronGeneratorEMT*)generator)->step(mSystemModel, fieldVoltage, mechPower, time);
 	}
 	
 	// Solve circuit for vector j with generator output current
@@ -185,18 +187,18 @@ int Simulation::stepGeneratorTest(Logger& logger, Logger& leftSideVectorLog, Log
 		lastLogTime = mTime;
 		std::cout << mTime << std::endl;
 
-		leftSideVectorLog.Log() << Logger::VectorToDataLine(getTime(), getLeftSideVector()).str();
-		rightSideVectorLog.Log() << Logger::VectorToDataLine(getTime(), getRightSideVector()).str();
+		leftSideVectorLog.LogDataLine(getTime(), getLeftSideVector());
+		rightSideVectorLog.LogDataLine(getTime(), getRightSideVector());
 
 		if (mSystemModel.getSimType() == SimulationType::DynPhasor) {
-			synGenLogFlux.Log() << Logger::VectorToDataLine(mTime, ((SynchronGenerator*)generator)->getFluxes()).str();
-			synGenLogVolt.Log() << Logger::VectorToDataLine(mTime, ((SynchronGenerator*)generator)->getVoltages()).str();
-			synGenLogCurr.Log() << Logger::VectorToDataLine(mTime, ((SynchronGenerator*)generator)->getCurrents()).str();
+			synGenLogFlux.LogDataLine(mTime, ((SynchronGenerator*)generator)->getFluxes());
+			synGenLogVolt.LogDataLine(mTime, ((SynchronGenerator*)generator)->getVoltages());
+			synGenLogCurr.LogDataLine(mTime, ((SynchronGenerator*)generator)->getCurrents());
 		}
 		else {
-			synGenLogFlux.Log() << Logger::VectorToDataLine(mTime, ((SynchronGeneratorEMT*)generator)->getFluxes()).str();
-			synGenLogVolt.Log() << Logger::VectorToDataLine(mTime, ((SynchronGeneratorEMT*)generator)->getVoltages()).str();
-			synGenLogCurr.Log() << Logger::VectorToDataLine(mTime, ((SynchronGeneratorEMT*)generator)->getCurrents()).str();
+			synGenLogFlux.LogDataLine(mTime, ((SynchronGeneratorEMT*)generator)->getFluxes());
+			synGenLogVolt.LogDataLine(mTime, ((SynchronGeneratorEMT*)generator)->getVoltages());
+			synGenLogCurr.LogDataLine(mTime, ((SynchronGeneratorEMT*)generator)->getCurrents());
 		}
 	}
 
@@ -221,4 +223,12 @@ void Simulation::setSwitchTime(Real switchTime, Int systemIndex) {
 
 void Simulation::increaseByTimeStep() {
 	mTime = mTime + mSystemModel.getTimeStep();
+}
+
+void Simulation::addExternalInterface(ExternalInterface *eint) {
+	this->mExternalInterfaces.push_back(eint);
+}
+
+void Simulation::setNumericalMethod(NumericalMethod numMethod) {
+	mSystemModel.setNumMethod(numMethod);
 }

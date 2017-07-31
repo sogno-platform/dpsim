@@ -211,3 +211,7 @@ void RxLine::postStep(SystemModel& system) {
 	}
 }
 
+Complex RxLine::getCurrent(SystemModel& system) {
+	return Complex(mCurrRe, mCurrIm);
+}
+

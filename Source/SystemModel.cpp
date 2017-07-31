@@ -11,19 +11,18 @@ void SystemModel::initialize(Int numNodes, Int numIdealVS) {
 		mRightSideVector = Matrix::Zero(mNumNodes, 1);
 		mLeftSideVector = DPSMatrix::Zero(mNumNodes, 1);
 		mSystemMatrix = DPSMatrix::Zero(mNumNodes, mNumNodes);
-
 	}
 	else {
 		mRightSideVector = DPSMatrix::Zero(2 * mNumNodes, 1);
 		mLeftSideVector = DPSMatrix::Zero(2 * mNumNodes, 1);
 		mSystemMatrix = DPSMatrix::Zero(2 * mNumNodes, 2 * mNumNodes);
-
+		mCurrentMatrix.resize(mNumNodes, mNumNodes);
 	}
 
 	switchSystemMatrix(0);	
 }
 
-void SystemModel::addSystemMatrix(Matrix systemMatrix) {	
+void SystemModel::addSystemMatrix(Matrix& systemMatrix) {	
 	mSystemMatrixVector.push_back(systemMatrix);
 	//mSystemMatrix = systemMatrix;
 
@@ -65,6 +64,6 @@ void SystemModel::switchSystemMatrix(Int systemMatrixIndex) {
 	}
 }
 
-void SystemModel::setRightSideVectorToZero(DPsim::Matrix& rightSideVector) {
+void SystemModel::setRightSideVectorToZero() {
 	mRightSideVector.setZero();
 }

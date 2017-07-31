@@ -59,6 +59,11 @@ namespace DPsim {
 		/// d winding inductance
 		double mLad;
 
+		/// Determinant of Ld (inductance matrix of d axis)
+		double detLd;
+		/// Determinant of Lq (inductance matrix of q axis)
+		double detLq;
+
 		/// inertia J [kg*m^2]
 		double mJ;
 		/// number of poles
@@ -105,26 +110,70 @@ namespace DPsim {
 		double mOmMech;
 		/// theta
 		double mThetaMech;
+		double mThetaMech2;
 		/// mechanical Power Pm [W]
 		double mMechPower;
 		/// mechanical torque
 		double mMechTorque;
 		/// electrical torque
 		double mElecTorque;
+
+		/// mechanical torque
+		double mMechTorque_past;
+		/// electrical torque
+		double mElecTorque_past;
+		/// rotor speed omega_r
+		double mOmMech_past;
+
 		/// voltage vector q d 0 kq1 kq2 df kd
-		DPSMatrix mVoltages = DPSMatrix::Zero(7, 1);
+		DPSMatrix mVoltages2 = DPSMatrix::Zero(7, 1);
 		/// flux linkage vector
-		DPSMatrix mFluxes = DPSMatrix::Zero(7, 1);
+		DPSMatrix mFluxes2 = DPSMatrix::Zero(7, 1);
 		/// current vector
-		DPSMatrix mCurrents = DPSMatrix::Zero(7, 1);
-		/// interface voltage vector abcs
-		DPSMatrix mAbcsVoltages = DPSMatrix::Zero(3, 1);
-		/// interface current vector abcs
-		DPSMatrix mAbcsCurrents = DPSMatrix::Zero(3, 1);
-		/// interface voltage vector dq0
-		DPSMatrix mDq0Voltages = DPSMatrix::Zero(3, 1);
-		/// interface current vector dq0
-		DPSMatrix mDq0Currents = DPSMatrix::Zero(3, 1);
+		DPSMatrix mCurrents2 = DPSMatrix::Zero(7, 1);
+
+		/// voltage vector q d 0 fd kd kq1 kq2
+		double mVd;
+		double mVq;
+		double mV0;
+		double mVfd;
+		double mVkd;
+		double mVkq1;
+		double mVkq2;
+
+		/// current vector q d 0 fd kd kq1 kq2
+		double mId;
+		double mIq;
+		double mI0;
+		double mIfd;
+		double mIkd;
+		double mIkq1;
+		double mIkq2;
+
+		double mId_past;
+		double mIq_past;
+
+		/// flux linkage vector q d 0 fd kd kq1 kq2
+		double mPsid;
+		double mPsiq;
+		double mPsi0;
+		double mPsifd;
+		double mPsikd;
+		double mPsikq1;
+		double mPsikq2;
+
+		double mPsid_past;
+		double mPsiq_past;
+
+		/// Interface voltage vector
+		double mVa;
+		double mVb;
+		double mVc;
+
+		/// Interface voltage vector
+		double mIa;
+		double mIb;
+		double mIc;
 
 		// ### Useful Matrices ###
 		/// inductance matrix
@@ -137,6 +186,7 @@ namespace DPsim {
 		DPSMatrix mOmegaFluxMat = DPSMatrix::Zero(7, 7);
 		/// matrix for reversing stator current directions in calculations with respect to other currents
 		DPSMatrix mReverseCurrents = DPSMatrix::Zero(7, 7);
+
 
 	public:
 		SynchronGeneratorEMT() { };
@@ -171,24 +221,27 @@ namespace DPsim {
 
 		/// Performs an Euler forward step with the state space model of a synchronous generator 
 		/// to calculate the flux and current from the voltage vector.
-		void step(SystemModel& system, Real fieldVoltage, Real mechPower);
+		void step(SystemModel& system, Real fieldVoltage, Real mechPower, Real time);
 
 		/// Performs an Euler forward step with the state space model of a synchronous generator 
 		/// to calculate the flux and current from the voltage vector in per unit.
-		void stepInPerUnit(Real om, Real dt, Real fieldVoltage, Real mechPower);
+		void stepInPerUnit(Real om, Real dt, Real fieldVoltage, Real mechPower, Real time, NumericalMethod numMethod);
 
 		/// Retrieves calculated voltage from simulation for next step
 		void postStep(SystemModel& system);
 
 		/// Park transform as described in Krause
-		DPSMatrix parkTransform(Real theta, DPSMatrix& in);
+		//DPSMatrix parkTransform(Real theta, DPSMatrix& in);
+		DPSMatrix parkTransform2(Real theta, double a, double b, double c);
 
 		/// Inverse Park transform as described in Krause
-		DPSMatrix inverseParkTransform(Real theta, DPSMatrix& in);
+		//DPSMatrix inverseParkTransform(Real theta, DPSMatrix& in);
+		DPSMatrix inverseParkTransform2(Real theta, double d, double q, double zero);
 
-		DPSMatrix getVoltages() { return mVoltages; }
-		DPSMatrix getCurrents() { return mCurrents; }
-		DPSMatrix getFluxes() { return mFluxes; }
+		DPSMatrix& getVoltages() { return mVoltages2; }
+		DPSMatrix& getCurrents() { return mCurrents2; }
+		DPSMatrix& getFluxes() { return mFluxes2; }
+
 
 		void init(Real om, Real dt) { }
 		void applySystemMatrixStamp(SystemModel& system) { }

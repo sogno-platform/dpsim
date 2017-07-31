@@ -9,12 +9,15 @@
 namespace DPsim {
 
 	enum class SimulationType { DynPhasor, EMT };
+	enum class NumericalMethod { Euler, AdamBashforth, Trapezoidal_flux, Trapezoidal_current };
 
 	class SystemModel {
 
 	private:
 		/// Simulation type
 		SimulationType mSimType;
+		///Numerical method
+		NumericalMethod mNumMethod;
 		/// Number of nodes
 		int mNumNodes;
 		/// Index offset for imaginary part
@@ -40,10 +43,13 @@ namespace DPsim {
 		/// Vector of unknown quantities
 		DPSMatrix mLeftSideVector;
 
+		/** Matrix of all edge currents; diagonal is used for currents to ground. */
+		SparseMatrixComp mCurrentMatrix;
+
 	public:
 		SystemModel() { }
 		void initialize(Int numNodes, Int numIdealVS);
-		void addSystemMatrix(Matrix systemMatrix);
+		void addSystemMatrix(Matrix& systemMatrix);
 
 		Matrix & getCurrentSystemMatrix() { return mSystemMatrix; }
 		const Matrix & getLUdecomp() { return mLuFactored.matrixLU(); }
@@ -57,11 +63,14 @@ namespace DPsim {
 		SimulationType getSimType() { return mSimType; }
 		Int getNumNodes() { return mNumNodes; }		
 		Int getNumIdealVS() { return mNumIdealVS; }
+		NumericalMethod getNumMethod() { return mNumMethod; }
+		
 		
 		void setSimType(SimulationType simType) { mSimType = simType; }
 		void setTimeStep(Real timeStep) { mTimeStep = timeStep; }
 		void setOmega(Real omega) { mSystemOmega = omega; }
 		void setSystemMatrixElement(Int row, Int column, Real value) { mSystemMatrix(row, column) = value; }
+		void setNumMethod(NumericalMethod numMethod) { mNumMethod = numMethod; }
 
 		void InitializeRightSideVector(DPsim::Matrix& rightSideVector) { mRightSideVector = rightSideVector; }
 		void InitializeLeftSideVector(DPsim::Matrix& leftSideVector) { mLeftSideVector = leftSideVector; }		
@@ -70,7 +79,7 @@ namespace DPsim {
 		void addCompToSystemMatrix(Int row, Int column, Real reValue, Real imValue);
 		void addCompToRightSideVector(Int row, Real reValue, Real imValue);
 		void addRealToRightSideVector(Int row, Real value);
-		void setRightSideVectorToZero(DPsim::Matrix& rightSideVector);
+		void setRightSideVectorToZero();
 
 		void solve();
 	};
