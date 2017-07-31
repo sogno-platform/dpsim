@@ -189,7 +189,6 @@
     <ClCompile Include="..\..\Source\Components\VoltSourceResFreqEMT.cpp" />
     <ClCompile Include="..\..\Source\DPsimMain.cpp" />
     <ClCompile Include="..\..\Source\Examples\ReferenceCircuits.cpp" />
-    <ClCompile Include="..\..\Source\Examples\SimpleCircuitTest.cpp" />
     <ClCompile Include="..\..\Source\Examples\SynchronGenUnitTest.cpp" />
     <ClCompile Include="..\..\Source\Logger.cpp" />
     <ClCompile Include="..\..\Source\NetlistSim.cpp" />

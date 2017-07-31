@@ -1,11 +1,9 @@
-
-
 #include "../Simulation.h"
 #include "../Utilities.h"
 
 using namespace DPsim;
 
-void DPsim::RXLineResLoad() {
+void RXLineResLoad() {
 	Real timeStep = 0.001;
 
 	// Define Object for saving data on a file
@@ -45,7 +43,7 @@ void DPsim::RXLineResLoad() {
 	delete circElements2[3];
 }
 
-void DPsim::VarFreqRXLineResLoad(Real timeStep, Real finalTime, Real freqStep, Real loadStep, Real rampTime) {
+void VarFreqRXLineResLoad(Real timeStep, Real finalTime, Real freqStep, Real loadStep, Real rampTime) {
 	// Define Object for saving data on a file
 	std::ostringstream fileName;
 	fileName << "VarFreqRXLineResLoad_" << timeStep;
@@ -83,7 +81,7 @@ void DPsim::VarFreqRXLineResLoad(Real timeStep, Real finalTime, Real freqStep, R
 	delete circElements2[3];
 }
 
-void DPsim::RXLineResLoadEMT() {
+void RXLineResLoadEMT() {
 	Real timeStep = 0.001;
 
 	// Define Object for saving data on a file
@@ -123,7 +121,7 @@ void DPsim::RXLineResLoadEMT() {
 	delete circElements2[3];
 }
 
-void DPsim::VarFreqRXLineResLoadEMT(Real timeStep, Real finalTime, Real freqStep, Real loadStep, Real rampTime) {
+void VarFreqRXLineResLoadEMT(Real timeStep, Real finalTime, Real freqStep, Real loadStep, Real rampTime) {
 	// Define Object for saving data on a file
 	std::ostringstream fileName;
 	fileName << "VarFreqRXLineResLoadEMT_" << timeStep;
@@ -161,7 +159,7 @@ void DPsim::VarFreqRXLineResLoadEMT(Real timeStep, Real finalTime, Real freqStep
 	delete circElements2[3];
 }
 
-void DPsim::runDpEmtVarFreqStudy() {
+void runDpEmtVarFreqStudy() {
 	Real timeStep = 0.0;
 	Real finalTime = 0.6;
 	Real freqStep = 0.4;

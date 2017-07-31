@@ -39,9 +39,9 @@ namespace DPsim {
 		// Write simulation data to file
 		std::ostringstream fileName;
 		fileName << "RXLineResLoad_" << timeStep;
-		log.WriteLogToFile("Logs/Log_" + fileName.str() + ".log");
-		leftVectorLog.WriteLogToFile("Logs/LeftVectorLog_" + fileName.str() + ".csv");
-		rightVectorLog.WriteLogToFile("Logs/RightVectorLog_" + fileName.str() + ".csv");
+		//log.WriteLogToFile("Logs/Log_" + fileName.str() + ".log");
+		//leftVectorLog.WriteLogToFile("Logs/LeftVectorLog_" + fileName.str() + ".csv");
+		//rightVectorLog.WriteLogToFile("Logs/RightVectorLog_" + fileName.str() + ".csv");
 	}
 
 	void VarFreqRXLineResLoad(Real timeStep, Real finalTime, Real freqStep, Real loadStep, Real rampTime) {
@@ -75,9 +75,9 @@ namespace DPsim {
 		// Write simulation data to file
 		std::ostringstream fileName;
 		fileName << "VarFreqRXLineResLoad_" << timeStep << "_" << finalTime;
-		log.WriteLogToFile("Logs/Log_" + fileName.str() + ".log");
-		leftVectorLog.WriteLogToFile("Logs/LeftVectorLog_" + fileName.str() + ".csv");
-		rightVectorLog.WriteLogToFile("Logs/RightVectorLog_" + fileName.str() + ".csv");
+		//log.WriteLogToFile("Logs/Log_" + fileName.str() + ".log");
+		//leftVectorLog.WriteLogToFile("Logs/LeftVectorLog_" + fileName.str() + ".csv");
+		//rightVectorLog.WriteLogToFile("Logs/RightVectorLog_" + fileName.str() + ".csv");
 	}
 
 	void RXLineResLoadEMT() {
@@ -112,9 +112,9 @@ namespace DPsim {
 		// Write simulation data to file
 		std::ostringstream fileName;
 		fileName << "RXLineResLoadEMT_" << timeStep;
-		log.WriteLogToFile("Logs/Log_" + fileName.str() + ".log");
-		leftVectorLog.WriteLogToFile("Logs/LeftVectorLog_" + fileName.str() + ".csv");
-		rightVectorLog.WriteLogToFile("Logs/RightVectorLog_" + fileName.str() + ".csv");
+		//log.WriteLogToFile("Logs/Log_" + fileName.str() + ".log");
+		//leftVectorLog.WriteLogToFile("Logs/LeftVectorLog_" + fileName.str() + ".csv");
+		//rightVectorLog.WriteLogToFile("Logs/RightVectorLog_" + fileName.str() + ".csv");
 	}
 
 	void VarFreqRXLineResLoadEMT(Real timeStep, Real finalTime, Real freqStep, Real loadStep, Real rampTime) {
@@ -148,9 +148,9 @@ namespace DPsim {
 		// Write simulation data to file
 		std::ostringstream fileName;
 		fileName << "VarFreqRXLineResLoadEMT_" << timeStep << "_" << finalTime;
-		log.WriteLogToFile("Logs/Log_" + fileName.str() + ".log");
-		leftVectorLog.WriteLogToFile("Logs/LeftVectorLog_" + fileName.str() + ".csv");
-		rightVectorLog.WriteLogToFile("Logs/RightVectorLog_" + fileName.str() + ".csv");
+		//log.WriteLogToFile("Logs/Log_" + fileName.str() + ".log");
+		//leftVectorLog.WriteLogToFile("Logs/LeftVectorLog_" + fileName.str() + ".csv");
+		//rightVectorLog.WriteLogToFile("Logs/RightVectorLog_" + fileName.str() + ".csv");
 	}
 
 	void runDpEmtVarFreqStudy() {
@@ -203,7 +203,7 @@ namespace DPsim {
 
 	void RXLineResLoadStatic() {
 		// Define Object for saving data on a file
-		Logger log(LogLevel::NONE), leftVectorLog(LogLevel::NONE), rightVectorLog(LogLevel::NONE);
+		//Logger log(LogLevel::NONE), leftVectorLog(LogLevel::NONE), rightVectorLog(LogLevel::NONE);
 
 		// Declare circuit components
 		std::vector<BaseComponent*> circElements0;
@@ -214,8 +214,8 @@ namespace DPsim {
 
 		// Set up simulation
 		Real timeStep = 0.001;
-		Simulation newSim(circElements0, 2.0*M_PI*50.0, timeStep, 0.3, log);
-
+		//Simulation newSim(circElements0, 2.0*M_PI*50.0, timeStep, 0.3, log);
+		/*
 		// Main Simulation Loop
 		std::cout << "Start simulation." << std::endl;
 		while (newSim.step(log, leftVectorLog, rightVectorLog))
@@ -226,7 +226,7 @@ namespace DPsim {
 		std::cout << "Simulation finished." << std::endl;
 
 		// Write simulation data to file
-		/*
+		
 		std::ostringstream fileName;
 		fileName << "RXLineResLoad_" << timeStep;
 		log.WriteLogToFile("Logs/Log_" + fileName.str() + ".log");

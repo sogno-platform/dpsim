@@ -182,9 +182,6 @@
     <ClCompile Include="..\..\Source\Examples\ReferenceCircuits.cpp">
       <Filter>Quelldateien\Examples</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\Source\Examples\SimpleCircuitTest.cpp">
-      <Filter>Quelldateien\Examples</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\Source\Examples\SynchronGenUnitTest.cpp">
       <Filter>Quelldateien\Examples</Filter>
     </ClCompile>
