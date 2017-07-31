@@ -2,7 +2,7 @@
 #include <string>
 #include "NetlistSim.h"
 #include "Examples/SynchronGenUnitTest.h"
-#include "Examples/SimpleCircuitTest.h"
+#include "Examples/TestSequenceICCEP.h"
 #include "Examples/ReferenceCircuits.h"
 #include <complex>
 
