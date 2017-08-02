@@ -70,6 +70,9 @@ namespace DPsim {
 		int stepGeneratorTest(Logger& logger, Logger& leftSideVectorLog, Logger& rightSideVectorLog, 
 			BaseComponent* generator, Logger& synGenLogFlux, Logger& synGenLogVolt, Logger& synGenLogCurr, Real fieldVoltage, Real mechPower, 
 			Real logTimeStep, Real& lastLogTime, Real time);
+		int stepGeneratordq(Logger& logger, Logger& leftSideVectorLog, Logger& rightSideVectorLog,
+			BaseComponent* generator, Logger& synGenLogFlux, Logger& synGenLogVolt, Logger& synGenLogCurr, Real fieldVoltage, Real mechPower,
+			Real logTimeStep, Real& lastLogTime, Real time);
 
 		void addSystemTopology(std::vector<BaseComponent*> newElements);
 	};

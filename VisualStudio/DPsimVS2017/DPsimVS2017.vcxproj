@@ -155,6 +155,7 @@
     <ClInclude Include="..\..\Source\Components\RxLine.h" />
     <ClInclude Include="..\..\Source\Components\SynchronGenerator.h" />
     <ClInclude Include="..\..\Source\Components\SynchronGeneratorEMT.h" />
+    <ClInclude Include="..\..\Source\Components\SynchronGeneratorEMTdq.h" />
     <ClInclude Include="..\..\Source\Components\VoltSourceRes.h" />
     <ClInclude Include="..\..\Source\Components\VoltSourceResEMT.h" />
     <ClInclude Include="..\..\Source\Components\VoltSourceResFreq.h" />
@@ -183,6 +184,7 @@
     <ClCompile Include="..\..\Source\Components\RxLine.cpp" />
     <ClCompile Include="..\..\Source\Components\SynchronGenerator.cpp" />
     <ClCompile Include="..\..\Source\Components\SynchronGeneratorEMT.cpp" />
+    <ClCompile Include="..\..\Source\Components\SynchronGeneratorEMTdq.cpp" />
     <ClCompile Include="..\..\Source\Components\VoltSourceRes.cpp" />
     <ClCompile Include="..\..\Source\Components\VoltSourceResEMT.cpp" />
     <ClCompile Include="..\..\Source\Components\VoltSourceResFreq.cpp" />
