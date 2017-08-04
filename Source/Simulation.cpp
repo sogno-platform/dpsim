@@ -48,11 +48,10 @@ void Simulation::initialize(std::vector<BaseComponent*> newElements) {
 	Int numIdealVS = 0;
 	int numLines = 0;
 
-	mElementsVector.push_back(newElements);
-	mElements = mElementsVector[0];
-
 	// Calculate the number of nodes by going through the list of elements
-	for (std::vector<BaseComponent*>::iterator it = mElements.begin(); it != mElements.end(); ++it) {
+	// TODO we use the values from the first element vector right now and assume that
+	// these values don't change on switches
+	for (std::vector<BaseComponent*>::iterator it = newElements.begin(); it != newElements.end(); ++it) {
 		if ((*it)->getNode1() > maxNode) {
 			maxNode = (*it)->getNode1();
 		}		
@@ -74,7 +73,9 @@ void Simulation::initialize(std::vector<BaseComponent*> newElements) {
 
 	Int numNodes = maxNode + 1 + numIdealVS + numLines;
 	mSystemModel.initialize(numNodes,numIdealVS);
-	addSystemTopology(mElements);
+	addSystemTopology(newElements);
+	switchSystemMatrix(0);
+	mElements = mElementsVector[0];
 	
 	// Initialize right side vector and components
 	for (std::vector<BaseComponent*>::iterator it = mElements.begin(); it != mElements.end(); ++it) {
@@ -84,7 +85,12 @@ void Simulation::initialize(std::vector<BaseComponent*> newElements) {
 }
 
 void Simulation::addSystemTopology(std::vector<BaseComponent*> newElements) {
-	Matrix systemMatrix;
+	mElementsVector.push_back(newElements);
+	// TODO: it would be cleaner to pass the matrix reference to all the stamp methods
+	// and not have an implicit "current" matrix for those in SystemModel
+	Matrix& systemMatrix = mSystemModel.getCurrentSystemMatrix();
+	// save old matrix in case we already defined one
+	Matrix systemMatrixCopy = systemMatrix;
 
 	if (mSystemModel.getSimType() == SimulationType::EMT) {
 		systemMatrix = Matrix::Zero(mSystemModel.getNumNodes(), mSystemModel.getNumNodes());
@@ -97,9 +103,9 @@ void Simulation::addSystemTopology(std::vector<BaseComponent*> newElements) {
 		(*it)->applySystemMatrixStamp(mSystemModel);
 	}
 
-	systemMatrix = getSystemMatrix();
-
 	mSystemModel.addSystemMatrix(systemMatrix);
+	// restore saved copy
+	systemMatrix = systemMatrixCopy;
 }
 
 
@@ -128,8 +134,10 @@ int Simulation::step(Logger& logger, bool blocking)
 	if (mCurrentSwitchTimeIndex < mSwitchEventVector.size()) {
 		if (mTime >= mSwitchEventVector[mCurrentSwitchTimeIndex].switchTime) {
 			switchSystemMatrix(mSwitchEventVector[mCurrentSwitchTimeIndex].systemIndex);			
-			mCurrentSwitchTimeIndex++;	
+			mElements = mElementsVector[++mCurrentSwitchTimeIndex];	
 			logger.Log(LogLevel::INFO) << "Switched to system " << mCurrentSwitchTimeIndex << " at " << mTime << std::endl;
+			logger.Log(LogLevel::INFO) << "New matrix:" << std::endl << mSystemModel.getCurrentSystemMatrix() << std::endl;
+			logger.Log(LogLevel::INFO) << "New decomp:" << std::endl << mSystemModel.getLUdecomp() << std::endl;
 		}
 	}
 
