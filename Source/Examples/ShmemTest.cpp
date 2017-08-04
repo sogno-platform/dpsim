@@ -137,7 +137,7 @@ void DPsim::shmemDistributedDirect(int argc, char *argv[])
 void DPsim::shmemDistributed(int argc, char *argv[])
 {
 	Logger log;
-	std::vector<BaseComponent*> comps;
+	std::vector<BaseComponent*> comps, comps2;
 	ShmemInterface *shmem;
 	struct shmem_conf conf;
 	std::string logname;
@@ -176,14 +176,23 @@ void DPsim::shmemDistributed(int argc, char *argv[])
 	// Set up simulation
 	Real timeStep = 0.001000;
 	Logger llog(logname);
-	Simulation newSim(comps, 2.0*M_PI*50.0, timeStep, 1, log);
+	Simulation newSim(comps, 2.0*M_PI*50.0, timeStep, 20, log);
 	newSim.addExternalInterface(shmem);
+	if (!strcmp(argv[1], "1")) {
+		comps2 = comps;
+		comps2.pop_back();
+		comps2.push_back(new LinearResistor("r_2", 1, 0, 8));
+		newSim.addSystemTopology(comps2);
+		newSim.setSwitchTime(10, 1);
+	}
 
 	// Main Simulation Loop
 	std::cout << "Start simulation." << std::endl;
 	newSim.runRTTimerfd(log, llog, log);
 	std::cout << "Simulation finished." << std::endl;
 
+	if (!strcmp(argv[1], "1"))
+		delete comps2.back();
 	for (auto comp : comps) {
 		delete comp;
 	}
@@ -194,16 +203,20 @@ void DPsim::shmemDistributedRef()
 {
 	// Same circuit as above, but the simulation is done normally in one instance.
 	Logger log("output.log"), llog("lvector.log"), rlog("rvector.log");
-	std::vector<BaseComponent*> comps;
+	std::vector<BaseComponent*> comps, comps2;
 
 	comps.push_back(new VoltSourceRes("v_s", 1, 0, 10000, 0, 1));
 	comps.push_back(new Inductor("l_1", 1, 2, 0.1));
 	comps.push_back(new LinearResistor("r_1", 2, 3, 1));
+	comps2 = comps;
 	comps.push_back(new LinearResistor("r_2", 3, 0, 10));
+	comps2.push_back(new LinearResistor("r_2", 3, 0, 8));
 
 	// Set up simulation
 	Real timeStep = 0.001;
-	Simulation newSim(comps, 2.0*M_PI*50.0, timeStep, 1, log);
+	Simulation newSim(comps, 2.0*M_PI*50.0, timeStep, 20, log);
+	newSim.addSystemTopology(comps2);
+	newSim.setSwitchTime(10, 1);
 
 	// Main Simulation Loop
 	std::cout << "Start simulation." << std::endl;
