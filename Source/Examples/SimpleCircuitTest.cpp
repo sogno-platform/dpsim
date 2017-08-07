@@ -224,7 +224,7 @@ void DPsim::RTExample() {
 
 	// Main Simulation Loop
 	std::cout << "Start simulation." << std::endl;
-	newSim.runRTSignal(log);
+	newSim.runRT(RTExceptions, false, log, log, log);
 	std::cout << "Simulation finished." << std::endl;
 	for (auto comp : comps) {
 		delete comp;

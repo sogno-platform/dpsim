@@ -17,6 +17,12 @@ namespace DPsim {
 		UInt systemIndex;
 	};
 
+	/* Possible methods to achieve execution in real time. */
+	enum RTMethod {
+		RTExceptions, // use a normal timer and throw an exception in the signal handler if the timestep wasn't completed yet
+		RTTimerFD,    // read on a timerfd after every step
+	};
+
 	class TimerExpiredException {
 	};
 
@@ -61,7 +67,7 @@ namespace DPsim {
 		/// Solve system A * x = z for x and current time
 		int step(Logger& logger, bool blocking = true);
 		/// Solve system A * x = z for x and current time. Log current values of both vectors.
-		int step(Logger& logger, Logger& leftSideVectorLog, Logger& rightSideVectorLog, bool blocking = false);
+		int step(Logger& logger, Logger& leftSideVectorLog, Logger& rightSideVectorLog, bool blocking = true);
 		void switchSystemMatrix(int systemMatrixIndex);
 		void setSwitchTime(Real switchTime, Int systemIndex);
 		void increaseByTimeStep();
@@ -80,8 +86,15 @@ namespace DPsim {
 
 		void addSystemTopology(std::vector<BaseComponent*> newElements);
 
-		void runRTSignal(Logger& logger, bool do_sigwait = false);
-		void runRTTimerfd(Logger& logger, Logger& llogger, Logger& rlogger);
+		/* Perform the main simulation loop in real time.
+		 *
+		 * @param rtMethod The method with which the realtime execution is achieved.
+		 * @param startSynch If true, the simulation waits for the first external value before starting the timing.
+		 * @param logger Logger which is used to log general information.
+		 * @param llogger Logger which is used to log the left-side (solution).
+		 * @param rlogger Logger which is used to log the right-side vector.
+		 */
+		void runRT(RTMethod rtMethod, bool startSynch, Logger& logger, Logger& llogger, Logger &rlogger);
 		static void alarmHandler(int, siginfo_t*, void*);
 	};
 

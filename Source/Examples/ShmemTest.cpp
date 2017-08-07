@@ -68,7 +68,7 @@ void DPsim::shmemRTExample()
 
 	// Main Simulation Loop
 	std::cout << "Start simulation." << std::endl;
-	newSim.runRTSignal(log);
+	newSim.runRT(RTExceptions, false, log, log, log);
 	std::cout << "Simulation finished." << std::endl;
 	for (auto comp : comps) {
 		delete comp;
@@ -125,7 +125,7 @@ void DPsim::shmemDistributedDirect(int argc, char *argv[])
 
 	// Main Simulation Loop
 	std::cout << "Start simulation." << std::endl;
-	newSim.runRTTimerfd(log, log, log);
+	newSim.runRT(RTTimerFD, false, log, log, log);
 	std::cout << "Simulation finished." << std::endl;
 
 	for (auto comp : comps) {
@@ -188,7 +188,7 @@ void DPsim::shmemDistributed(int argc, char *argv[])
 
 	// Main Simulation Loop
 	std::cout << "Start simulation." << std::endl;
-	newSim.runRTTimerfd(log, llog, log);
+	newSim.runRT(RTTimerFD, true, log, llog, log);
 	std::cout << "Simulation finished." << std::endl;
 
 	if (!strcmp(argv[1], "1"))
