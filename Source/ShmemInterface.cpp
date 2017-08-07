@@ -42,7 +42,7 @@ ShmemInterface::~ShmemInterface() {
 	shmem_int_close(&mShmem);
 }
 
-void ShmemInterface::readValues() {
+void ShmemInterface::readValues(bool blocking) {
 	if (!mInit) {
 		mInit = 1;
 		return;
@@ -50,8 +50,14 @@ void ShmemInterface::readValues() {
 	struct sample *sample = nullptr;
 	int ret = 0;
 	try {
-		while (ret == 0)
+		if (!blocking) {
 			ret = shmem_int_read(&mShmem, &sample, 1);
+			if (ret == 0)
+				return;
+		} else {
+			while (ret == 0)
+				ret = shmem_int_read(&mShmem, &sample, 1);
+		}
 		if (ret < 0) {
 			std::cerr << "Fatal error: failed to read sample from shmem interface" << std::endl;
 			std::exit(1);
@@ -90,6 +96,7 @@ void ShmemInterface::writeValues(SystemModel& model) {
 	try {
 		if (shmem_int_alloc(&mShmem, &sample, 1) < 1) {
 			std::cerr << "fatal error: shmem pool underrun" << std::endl;
+			std::cerr << "at seq" << mSeq << std::endl;
 			std::exit(1);
 		}
 		for (auto vd : mExportedVoltages) {
@@ -128,7 +135,7 @@ void ShmemInterface::writeValues(SystemModel& model) {
 		}
 		sample->length = len+1;
 		sample->sequence = mSeq++;
-		clock_gettime(CLOCK_MONOTONIC, &sample->ts.origin);
+		clock_gettime(CLOCK_REALTIME, &sample->ts.origin);
 		done = true;
 		while (ret == 0)
 			ret = shmem_int_write(&mShmem, &sample, 1);

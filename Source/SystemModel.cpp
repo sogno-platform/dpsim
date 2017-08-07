@@ -18,17 +18,12 @@ void SystemModel::initialize(Int numNodes, Int numIdealVS) {
 		mSystemMatrix = DPSMatrix::Zero(2 * mNumNodes, 2 * mNumNodes);
 		mCurrentMatrix.resize(mNumNodes, mNumNodes);
 	}
-
-	switchSystemMatrix(0);	
 }
 
 void SystemModel::addSystemMatrix(Matrix& systemMatrix) {	
 	mSystemMatrixVector.push_back(systemMatrix);
-	//mSystemMatrix = systemMatrix;
-
 	Eigen::PartialPivLU<DPSMatrix> luFactored = Eigen::PartialPivLU<DPSMatrix>(systemMatrix);
 	mLuFactoredVector.push_back(luFactored);
-	mLuFactored = luFactored;
 }
 
 void SystemModel::addRealToSystemMatrix(Int row, Int column, Real value) {

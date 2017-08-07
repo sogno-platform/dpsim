@@ -39,7 +39,7 @@ namespace DPsim {
 		/** Read a single struct sample from the shared input queue and pass the contained
 		 * values to all registered current/voltage sources.
 		 */
-		virtual void readValues();
+		virtual void readValues(bool blocking = true);
 		/** Collect all exported currents and voltages in a struct sample and
 		 * write it to the shared output queue.
 		 */
