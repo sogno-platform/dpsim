@@ -39,12 +39,12 @@ int main(int argc, char* argv[]) {
 
 	//NetlistSim(argc, argv);
 	
-	SynGenUnitTestBalancedResLoad();
+	//SynGenUnitTestBalancedResLoad();
 	//SynGenUnitTestdqBalancedResLoad();
 
 	//SynGenUnitTestPhaseToPhaseFault();
 	//SynGenUnitTestThreePhaseFault();	
-	//SynGenDPUnitTestBalancedResLoad();
+	SynGenDPUnitTestBalancedResLoad();
 
 	//RXLineResLoad();
 	//VarFreqRXLineResLoad();
