@@ -120,6 +120,12 @@
     <ClInclude Include="..\..\Source\Components\SynchronGeneratorEMTdq.h">
       <Filter>Headerdateien\Components</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\Source\Components\VoltageBehindReactanceEMT.h">
+      <Filter>Headerdateien\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\Examples\SyncGenUnitTestVBR.h">
+      <Filter>Headerdateien\Examples</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\Source\DPsimMain.cpp">
@@ -199,6 +205,12 @@
     </ClCompile>
     <ClCompile Include="..\..\Source\Components\SynchronGeneratorEMTdq.cpp">
       <Filter>Quelldateien\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\Components\VoltageBehindReactanceEMT.cpp">
+      <Filter>Quelldateien\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\Examples\SyncGenUnitTestVBR.cpp">
+      <Filter>Quelldateien\Examples</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

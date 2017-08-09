@@ -391,7 +391,7 @@ void DPsim::SynGenDPUnitTestBalancedResLoad() {
 	double om = 2.0*M_PI*60.0;
 	tf = 0.01; dt = 0.000001; t = 0;
 	Simulation newSim(circElements, om, dt, tf, log);
-	newSim.setNumericalMethod(NumericalMethod::Trapezoidal_current);
+	newSim.setNumericalMethod(NumericalMethod::Euler);
 
 	// Initialize generator
 	double initActivePower = 555e3;

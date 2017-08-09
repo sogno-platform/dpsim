@@ -2,6 +2,7 @@
 #include <string>
 #include "NetlistSim.h"
 #include "Examples/SynchronGenUnitTest.h"
+#include "Examples/SyncGenUnitTestVBR.h"
 #include "Examples/ReferenceCircuits.h"
 #include "Examples/ShmemTest.h"
 #include <complex>
@@ -44,7 +45,8 @@ int main(int argc, char* argv[]) {
 
 	//SynGenUnitTestPhaseToPhaseFault();
 	//SynGenUnitTestThreePhaseFault();	
-	SynGenDPUnitTestBalancedResLoad();
+	//SynGenDPUnitTestBalancedResLoad();
+	SynGenUnitTestVBR();
 
 	//RXLineResLoad();
 	//VarFreqRXLineResLoad();

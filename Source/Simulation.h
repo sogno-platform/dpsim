@@ -86,6 +86,9 @@ namespace DPsim {
 		int stepGeneratordq(Logger& logger, Logger& leftSideVectorLog, Logger& rightSideVectorLog,
 			BaseComponent* generator, Logger& synGenLogFlux, Logger& synGenLogVolt, Logger& synGenLogCurr, Real fieldVoltage, Real mechPower,
 			Real logTimeStep, Real& lastLogTime, Real time);
+		int stepGeneratorVBR(Logger& logger,
+			BaseComponent* generator, Logger& synGenLogVolt, Logger& synGenLogCurr, Real fieldVoltage, Real mechPower,
+			Real logTimeStep, Real& lastLogTime, Real time);
 
 		void addSystemTopology(std::vector<BaseComponent*> newElements);
 
@@ -97,8 +100,8 @@ namespace DPsim {
 		 * @param llogger Logger which is used to log the left-side (solution).
 		 * @param rlogger Logger which is used to log the right-side vector.
 		 */
-		void runRT(RTMethod rtMethod, bool startSynch, Logger& logger, Logger& llogger, Logger &rlogger);
-		static void alarmHandler(int, siginfo_t*, void*);
+		//void runRT(RTMethod rtMethod, bool startSynch, Logger& logger, Logger& llogger, Logger &rlogger);
+		//static void alarmHandler(int, siginfo_t*, void*);
 	};
 
 }
