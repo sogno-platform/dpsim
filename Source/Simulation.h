@@ -1,6 +1,7 @@
 #ifndef Simulation_H
 #define Simulation_H
 
+#include <signal.h>
 #include <iostream>
 #include <vector>
 #include "MathLibrary.h"
@@ -14,6 +15,15 @@ namespace DPsim {
 	struct switchConfiguration {
 		Real switchTime;
 		UInt systemIndex;
+	};
+
+	/* Possible methods to achieve execution in real time. */
+	enum RTMethod {
+		RTExceptions, // use a normal timer and throw an exception in the signal handler if the timestep wasn't completed yet
+		RTTimerFD,    // read on a timerfd after every step
+	};
+
+	class TimerExpiredException {
 	};
 
 	class Simulation {
@@ -36,8 +46,11 @@ namespace DPsim {
 		/// Vector of ExternalInterfaces
 		std::vector<ExternalInterface*> mExternalInterfaces;
 
+		uint64_t mRtTimerCount = 0;
+
 		/// TODO: check that every system matrix has the same dimensions		
 		void initialize(std::vector<BaseComponent*> elements);
+
 
 	public:				
 		/// Stores a list of circuit elements that are used to generate the system matrix
@@ -52,9 +65,9 @@ namespace DPsim {
 
 		
 		/// Solve system A * x = z for x and current time
-		int step(Logger& logger);
+		int step(Logger& logger, bool blocking = true);
 		/// Solve system A * x = z for x and current time. Log current values of both vectors.
-		int step(Logger& logger, Logger& leftSideVectorLog, Logger& rightSideVectorLog);
+		int step(Logger& logger, Logger& leftSideVectorLog, Logger& rightSideVectorLog, bool blocking = true);
 		void switchSystemMatrix(int systemMatrixIndex);
 		void setSwitchTime(Real switchTime, Int systemIndex);
 		void increaseByTimeStep();
@@ -70,8 +83,25 @@ namespace DPsim {
 		int stepGeneratorTest(Logger& logger, Logger& leftSideVectorLog, Logger& rightSideVectorLog, 
 			BaseComponent* generator, Logger& synGenLogFlux, Logger& synGenLogVolt, Logger& synGenLogCurr, Real fieldVoltage, Real mechPower, 
 			Real logTimeStep, Real& lastLogTime, Real time);
+		int stepGeneratordq(Logger& logger, Logger& leftSideVectorLog, Logger& rightSideVectorLog,
+			BaseComponent* generator, Logger& synGenLogFlux, Logger& synGenLogVolt, Logger& synGenLogCurr, Real fieldVoltage, Real mechPower,
+			Real logTimeStep, Real& lastLogTime, Real time);
+		int stepGeneratorVBR(Logger& logger,
+			BaseComponent* generator, Logger& synGenLogVolt, Logger& synGenLogCurr, Real fieldVoltage, Real mechPower,
+			Real logTimeStep, Real& lastLogTime, Real time);
 
 		void addSystemTopology(std::vector<BaseComponent*> newElements);
+
+		/* Perform the main simulation loop in real time.
+		 *
+		 * @param rtMethod The method with which the realtime execution is achieved.
+		 * @param startSynch If true, the simulation waits for the first external value before starting the timing.
+		 * @param logger Logger which is used to log general information.
+		 * @param llogger Logger which is used to log the left-side (solution).
+		 * @param rlogger Logger which is used to log the right-side vector.
+		 */
+		//void runRT(RTMethod rtMethod, bool startSynch, Logger& logger, Logger& llogger, Logger &rlogger);
+		//static void alarmHandler(int, siginfo_t*, void*);
 	};
 
 }

@@ -1,7 +1,7 @@
 # Declaration of variables
 CC = g++
-CC_FLAGS = -ggdb -w -std=c++11 $(INCLUDES)
-LD_FLAGS = -lvillas-ext
+CC_FLAGS = -O3 -w -std=c++11 $(INCLUDES)
+LD_FLAGS = -lvillas-ext -lrt
 
 # File names
 EXEC = DPSolver

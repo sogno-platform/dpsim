@@ -1,5 +1,6 @@
 
 
+#include "SimpleCircuitTest.h"
 #include "../Simulation.h"
 #include "../Utilities.h"
 
@@ -209,3 +210,24 @@ void DPsim::runDpEmtVarFreqStudy() {
 	VarFreqRXLineResLoad(timeStep, finalTime, freqStep, loadStep, rampTime);
 }
 
+void DPsim::RTExample() {
+	std::vector<BaseComponent*> comps;
+	Logger log;
+
+	comps.push_back(new VoltSourceRes("v_s", 1, 0, 10000, 0, 1));
+	comps.push_back(new LinearResistor("r_line", 1, 2, 1));
+	comps.push_back(new Inductor("l_line", 2, 3, 1));
+	comps.push_back(new LinearResistor("r_load", 3, 0, 1000));
+
+	// Set up simulation
+	Real timeStep = 0.00005;
+	Simulation newSim(comps, 2.0*M_PI*50.0, timeStep, 1.0, log);
+
+	// Main Simulation Loop
+	std::cout << "Start simulation." << std::endl;
+	newSim.runRT(RTExceptions, false, log, log, log);
+	std::cout << "Simulation finished." << std::endl;
+	for (auto comp : comps) {
+		delete comp;
+	}
+}
