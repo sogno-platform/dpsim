@@ -166,3 +166,8 @@ InvParkTransformKrause = np.array([[ np.cos(thetaTr), np.sin(thetaTr), 1],
 
 vdq0 = np.dot(ParkTransformKrause, sysVabcs)
 idq0 = np.dot(ParkTransformKrause, sysIabcs)
+
+Rd = init_vd / init_id;
+Rq = init_vq / init_iq;
+
+print('done.')
