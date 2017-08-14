@@ -233,10 +233,18 @@ namespace DPsim {
 		/// The initialization mode depends on the setting of state type.
 		VoltageBehindReactanceEMT(std::string name, int node1, int node2, int node3,
 			Real nomPower, Real nomVolt, Real nomFreq, int poleNumber, Real nomFieldCur,
-			Real Rs, Real Ll, Real Lmd, Real Lmq,
+			Real Rs, Real Ll, Real Lmd, Real Lmd0, Real Lmq, Real Lmq0,
 			Real Rfd, Real Llfd, Real Rkd, Real Llkd,
 			Real Rkq1, Real Llkq1, Real Rkq2, Real Llkq2,
 			Real inertia);
+
+		/// Initializes the per unit or stator referred machine parameters with the machine parameters given in per unit.
+		/// The initialization mode depends on the setting of state type.
+		void initWithPerUnitParam(
+			Real Rs, Real Ll, Real Lmd, Real Lmd0, Real Lmq, Real Lmq0,
+			Real Rfd, Real Llfd, Real Rkd, Real Llkd, Real Rkq1, Real Llkq1,
+			Real Rkq2, Real Llkq2,
+			Real H);
 
 		/// Initializes states in per unit or stator referred variables depending on the setting of the state type. 
 		/// Function parameters have to be given in real units.
@@ -245,7 +253,7 @@ namespace DPsim {
 
 		/// Initializes states in per unit. All machine parameters are assumed to be in per unit.
 		/// Function parameters have to be given in real units.
-		void initStates(Real initActivePower, Real initReactivePower,
+		void initStatesInPerUnit(Real initActivePower, Real initReactivePower,
 			Real initTerminalVolt, Real initVoltAngle);
 
 		/// Performs an Euler forward step with the state space model of a synchronous generator 
