@@ -8,8 +8,10 @@ RUN dnf -y update
 RUN dnf -y install \
 	gcc-c++ \
 	make \
+	cmake \
 	eigen3-devel \
 	doxygen \
+	expat \
 	python3-pandas \
     python3-numpy
 
