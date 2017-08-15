@@ -1,6 +1,6 @@
 #include <iostream>
 #include <string>
-#include "NetlistSim.h"
+#include "CIMReader.h"
 #include "Examples/SynchronGenUnitTest.h"
 #include "Examples/SyncGenUnitTestVBR.h"
 #include "Examples/ReferenceCircuits.h"
@@ -10,11 +10,16 @@
 using namespace DPsim;
 
 int main(int argc, char* argv[]) {
-
-
-
+	CIMReader reader;
+	for (int i = 1; i < argc; i++) {
+		if (!reader.addFile(argv[i]))
+			std::cerr << "Failed to read file " << argv[i] << std::endl;
+	}
+	std::vector<BaseComponent*> components = reader.mapComponents();
 	//shmemRTExample();
 	//shmemDistributed(argc, argv);
+	//shmemRTExample();
+	//shmemDistributedExample(argc, argv);
 	//shmemDistributedRef();
 	/*simulationExample1();
 	simulationExample2();
@@ -46,7 +51,7 @@ int main(int argc, char* argv[]) {
 	//SynGenUnitTestPhaseToPhaseFault();
 	//SynGenUnitTestThreePhaseFault();	
 	//SynGenDPUnitTestBalancedResLoad();
-	SynGenUnitTestVBR();
+	//SynGenUnitTestVBR();
 
 	//RXLineResLoad();
 	//VarFreqRXLineResLoad();
