@@ -3,6 +3,7 @@ variables:
 
 stages:
   - prepare
+  - build-cim
   - build
   - test
 
@@ -12,6 +13,18 @@ docker:
     - docker build -t ${DOCKER_IMAGE} .
   tags:
     - shell
+
+build-cim:
+  stage: build-cim
+  script:
+    - mkdir -p Source/CIM-XML-Parser/build
+    - cd Source/CIM-XML-Parser/build
+    - cmake -DBUILD_SHARED_LIBS=ON ..
+    - make
+    - cp libCIMParser.so thirdparty/arabica/libarabica.so /usr/local/lib
+  image: ${DOCKER_IMAGE}
+  tags:
+    - docker
 
 build:
   stage: build
