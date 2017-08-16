@@ -1,9 +1,9 @@
 #include "Simulation.h"
 
 #include <signal.h>
-//#include <sys/timerfd.h>
+#include <sys/timerfd.h>
 #include <time.h>
-//#include <unistd.h>
+#include <unistd.h>
 
 using namespace DPsim;
 
@@ -150,110 +150,110 @@ int Simulation::step(Logger& logger, bool blocking)
 
 }
 
-//void Simulation::alarmHandler(int sig, siginfo_t* si, void* ctx) {
-//	Simulation *sim = static_cast<Simulation*>(si->si_value.sival_ptr);
-//	/* only throw an exception if we're actually behind */
-//	if (++sim->mRtTimerCount * sim->mSystemModel.getTimeStep() > sim->mTime)
-//		throw TimerExpiredException();
-//}
-//
-//void Simulation::runRT(RTMethod rtMethod, bool startSynch, Logger& logger, Logger& llogger, Logger& rlogger ) {
-//	char timebuf[8];
-//	int ret, sig, timerfd;
-//	sigset_t alrmset;
-//	struct sigaction sa;
-//	struct sigevent evp;
-//	struct itimerspec ts;
-//	timer_t timer;
-//	uint64_t overrun;
-//
-//	// initialize timer / timerfd
-//	if (rtMethod == RTTimerFD) {
-//		timerfd = timerfd_create(CLOCK_MONOTONIC, 0);
-//		if (timerfd < 0) {
-//			std::perror("Failed to create timerfd");
-//			std::exit(1);
-//		}
-//	} else if (rtMethod == RTExceptions) {
-//		sa.sa_sigaction = Simulation::alarmHandler;
-//		sa.sa_flags = SA_SIGINFO;
-//		sigemptyset(&sa.sa_mask);
-//		if (sigaction(SIGALRM, &sa, NULL)) {
-//			std::perror("Failed to establish SIGALRM handler");
-//			std::exit(1);
-//		}
-//
-//		evp.sigev_notify = SIGEV_SIGNAL;
-//		evp.sigev_signo = SIGALRM;
-//		evp.sigev_value.sival_ptr = this;
-//		if (timer_create(CLOCK_MONOTONIC, &evp, &timer)) {
-//			std::perror("Failed to create timer");
-//			std::exit(1);
-//		}
-//
-//		sigemptyset(&alrmset);
-//		sigaddset(&alrmset, SIGALRM);
-//	} else {
-//		std::cerr << "invalid rt method, exiting" << std::endl;
-//		std::exit(1);
-//	}
-//
-//	ts.it_value.tv_sec = (time_t) mSystemModel.getTimeStep();
-//	ts.it_value.tv_nsec = (long) (mSystemModel.getTimeStep() * 1e9);
-//	ts.it_interval = ts.it_value;
-//
-//	// optional start synchronization
-//	if (startSynch) {
-//		step(logger, llogger, rlogger, false); // first step, sending the initial values
-//		step(logger, llogger, rlogger, true); // blocking step for synchronization + receiving the initial state of the other network
-//		increaseByTimeStep();
-//	}
-//
-//	// arm timer
-//	if (rtMethod == RTTimerFD) {
-//		if (timerfd_settime(timerfd, 0, &ts, 0) < 0) {
-//			std::perror("Failed to arm timerfd");
-//			std::exit(1);
-//		}
-//	} else if (rtMethod == RTExceptions) {
-//		if (timer_settime(timer, 0, &ts, NULL)) {
-//			std::perror("Failed to arm timer");
-//			std::exit(1);
-//		}
-//	}
-//	
-//	// main loop
-//	do {
-//		if (rtMethod == RTExceptions) {
-//			try {
-//				ret = step(logger, llogger, rlogger, false);
-//				sigwait(&alrmset, &sig);
-//			} catch (TimerExpiredException& e) {
-//				std::cerr << "timestep expired at " << mTime << std::endl;
-//			}
-//		} else if (rtMethod == RTTimerFD) {
-//			ret = step(logger, llogger, rlogger, false);
-//			if (read(timerfd, timebuf, 8) < 0) {
-//				std::perror("Read from timerfd failed");
-//				std::exit(1);
-//			}
-//			overrun = *((uint64_t*) timebuf);
-//			if (overrun > 1) {
-//				std::cerr << "timerfd overrun of " << overrun-1 << " at " << mTime << std::endl;
-//			}
-//		}
-//		increaseByTimeStep();
-//		if (!ret)
-//			break;
-//	} while (ret);
-//
-//	// cleanup
-//	if (rtMethod == RTTimerFD) {
-//		close(timerfd);
-//	} else if (rtMethod == RTExceptions) {
-//		timer_delete(timer);
-//	}
-//}
+void Simulation::alarmHandler(int sig, siginfo_t* si, void* ctx) {
+	Simulation *sim = static_cast<Simulation*>(si->si_value.sival_ptr);
+	/* only throw an exception if we're actually behind */
+	if (++sim->mRtTimerCount * sim->mSystemModel.getTimeStep() > sim->mTime)
+		throw TimerExpiredException();
+}
+
+void Simulation::runRT(RTMethod rtMethod, bool startSynch, Logger& logger, Logger& llogger, Logger& rlogger ) {
+	char timebuf[8];
+	int ret, sig, timerfd;
+	sigset_t alrmset;
+	struct sigaction sa;
+	struct sigevent evp;
+	struct itimerspec ts;
+	timer_t timer;
+	uint64_t overrun;
+
+	// initialize timer / timerfd
+	if (rtMethod == RTTimerFD) {
+		timerfd = timerfd_create(CLOCK_MONOTONIC, 0);
+		if (timerfd < 0) {
+			std::perror("Failed to create timerfd");
+			std::exit(1);
+		}
+	} else if (rtMethod == RTExceptions) {
+		sa.sa_sigaction = Simulation::alarmHandler;
+		sa.sa_flags = SA_SIGINFO;
+		sigemptyset(&sa.sa_mask);
+		if (sigaction(SIGALRM, &sa, NULL)) {
+			std::perror("Failed to establish SIGALRM handler");
+			std::exit(1);
+		}
+
+		evp.sigev_notify = SIGEV_SIGNAL;
+		evp.sigev_signo = SIGALRM;
+		evp.sigev_value.sival_ptr = this;
+		if (timer_create(CLOCK_MONOTONIC, &evp, &timer)) {
+			std::perror("Failed to create timer");
+			std::exit(1);
+		}
+
+		sigemptyset(&alrmset);
+		sigaddset(&alrmset, SIGALRM);
+	} else {
+		std::cerr << "invalid rt method, exiting" << std::endl;
+		std::exit(1);
+	}
+
+	ts.it_value.tv_sec = (time_t) mSystemModel.getTimeStep();
+	ts.it_value.tv_nsec = (long) (mSystemModel.getTimeStep() * 1e9);
+	ts.it_interval = ts.it_value;
+
+	// optional start synchronization
+	if (startSynch) {
+		step(logger, llogger, rlogger, false); // first step, sending the initial values
+		step(logger, llogger, rlogger, true); // blocking step for synchronization + receiving the initial state of the other network
+		increaseByTimeStep();
+	}
+
+	// arm timer
+	if (rtMethod == RTTimerFD) {
+		if (timerfd_settime(timerfd, 0, &ts, 0) < 0) {
+			std::perror("Failed to arm timerfd");
+			std::exit(1);
+		}
+	} else if (rtMethod == RTExceptions) {
+		if (timer_settime(timer, 0, &ts, NULL)) {
+			std::perror("Failed to arm timer");
+			std::exit(1);
+		}
+	}
+	
+	// main loop
+	do {
+		if (rtMethod == RTExceptions) {
+			try {
+				ret = step(logger, llogger, rlogger, false);
+				sigwait(&alrmset, &sig);
+			} catch (TimerExpiredException& e) {
+				std::cerr << "timestep expired at " << mTime << std::endl;
+			}
+		} else if (rtMethod == RTTimerFD) {
+			ret = step(logger, llogger, rlogger, false);
+			if (read(timerfd, timebuf, 8) < 0) {
+				std::perror("Read from timerfd failed");
+				std::exit(1);
+			}
+			overrun = *((uint64_t*) timebuf);
+			if (overrun > 1) {
+				std::cerr << "timerfd overrun of " << overrun-1 << " at " << mTime << std::endl;
+			}
+		}
+		increaseByTimeStep();
+		if (!ret)
+			break;
+	} while (ret);
+
+	// cleanup
+	if (rtMethod == RTTimerFD) {
+		close(timerfd);
+	} else if (rtMethod == RTExceptions) {
+		timer_delete(timer);
+	}
+}
 
 int Simulation::step(Logger& logger, Logger& leftSideVectorLog, Logger& rightSideVectorLog, bool blocking) {
 	int retValue = step(logger, blocking);
