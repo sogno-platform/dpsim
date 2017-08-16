@@ -19,6 +19,7 @@ build-cim:
   stage: build-cim
   script:
     - mkdir -p Source/CIM-XML-Parser/build
+    - sed -i '/^add_library/ s/STATIC/SHARED/' Source/CIM-XML-Parser/thirdparty/arabica/CMakeLists.txt
     - cd Source/CIM-XML-Parser/build
     - cmake -DBUILD_SHARED_LIBS=ON ..
     - make
