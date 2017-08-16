@@ -23,14 +23,17 @@ build-cim:
     - cd Source/CIM-XML-Parser/build
     - cmake -DBUILD_SHARED_LIBS=ON ..
     - make
-    - cp libCIMParser.so thirdparty/arabica/libarabica.so /usr/local/lib
   image: ${DOCKER_IMAGE}
+  artifacts:
+    paths:
+    - Source/CIM-XML-Parser/build
   tags:
     - docker
 
 build:
   stage: build
   script:
+    - cp libCIMParser.so thirdparty/arabica/libarabica.so /usr/local/lib
     - make -C Source
   image: ${DOCKER_IMAGE}
   tags:
