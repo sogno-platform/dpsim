@@ -9,7 +9,8 @@ stages:
   - test
 
 before_script:
-  - git submodule foreach git checkout .
+  - git submodule sync --recursive
+  - git submodule update --init --recursive
 
 docker:
   stage: prepare
