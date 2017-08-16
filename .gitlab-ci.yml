@@ -8,10 +8,6 @@ stages:
   - build
   - test
 
-before_script:
-  - git submodule sync --recursive
-  - git submodule update --init --recursive
-
 docker:
   stage: prepare
   script:
