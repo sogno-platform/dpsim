@@ -33,7 +33,7 @@ build-cim:
 build:
   stage: build
   script:
-    - cp libCIMParser.so thirdparty/arabica/libarabica.so /usr/local/lib
+    - cp Source/CIM-XML-Parser/build/{libCIMParser.so,thirdparty/arabica/libarabica.so} /usr/local/lib
     - make -C Source
   image: ${DOCKER_IMAGE}
   tags:
@@ -42,6 +42,7 @@ build:
 test:
   stage: test
   script:
+    - cp Source/CIM-XML-Parser/build/{libCIMParser.so,thirdparty/arabica/libarabica.so} /usr/local/lib
     - make -C Source tests
     - cd Source/Tests
     - python3 run_tests.py
