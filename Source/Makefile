@@ -1,6 +1,6 @@
 # Declaration of variables
 CC = g++
-CC_FLAGS = -03 -w -std=c++11 $(INCLUDES)
+CC_FLAGS = -O3 -w -std=c++11 $(INCLUDES)
 LD_FLAGS = -lvillas-ext -lrt -LCIM-XML-Parser/build/thirdparty/arabica -larabica -LCIM-XML-Parser/build -lCIMParser
 
 # File names
