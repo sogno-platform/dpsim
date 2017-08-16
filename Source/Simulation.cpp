@@ -393,8 +393,8 @@ int Simulation::stepGeneratorVBR(Logger& logger, BaseComponent* generator,
 	if (mTime >= lastLogTime + logTimeStep) {
 		lastLogTime = mTime;
 		std::cout << mTime << std::endl;
-			synGenLogVolt.LogDataLine(mTime, ((SynchronGeneratorEMT*)generator)->getVoltages());
-			synGenLogCurr.LogDataLine(mTime, ((SynchronGeneratorEMT*)generator)->getCurrents());
+			synGenLogVolt.LogDataLine(mTime, ((VoltageBehindReactanceEMT*)generator)->getVoltages());
+			synGenLogCurr.LogDataLine(mTime, ((VoltageBehindReactanceEMT*)generator)->getCurrents());
 	
 	}
 
