@@ -12,7 +12,7 @@ RUN dnf -y install \
 	cmake \
 	eigen3-devel \
 	doxygen \
-	expat \
+	libxml2 \
 	python3-pandas \
     python3-numpy
 
