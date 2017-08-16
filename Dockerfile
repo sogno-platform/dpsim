@@ -6,6 +6,7 @@ ADD https://villas.fein-aachen.org/packages/villas.repo /etc/yum.repos.d/
 RUN dnf -y update
 
 RUN dnf -y install \
+	git \
 	gcc-c++ \
 	make \
 	cmake \
