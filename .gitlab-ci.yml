@@ -1,6 +1,7 @@
 variables:
   DOCKER_IMAGE: dpsim-dev-${CI_COMMIT_REF_NAME}
   GIT_SUBMODULE_STRATEGY: recursive
+  LD_LIBRARY_PATH: /usr/local/lib
 
 stages:
   - prepare
