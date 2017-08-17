@@ -1,6 +1,7 @@
 #ifndef CIMREADER_H
 #define CIMREADER_H
 
+#include <map>
 #include <vector>
 
 #include "Components/BaseComponent.h"
@@ -10,6 +11,7 @@
 
 using namespace DPsim;
 using namespace IEC61970::Base::Domain;
+using namespace IEC61970::Base::StateVariables;
 using namespace IEC61970::Base::Topology;
 using namespace IEC61970::Base::Wires;
 
@@ -17,15 +19,14 @@ namespace DPsim {
 	class CIMReader {
 		private:
 			CIMModel mModel;
-			// List of topological nodes. Offset by 1 to the index used for the
-			// component constructors (first entry in this vector should correspond
-			// to giving a 1 in the component constructor).
-			//
-			// TODO do we even need this?
-			std::vector<TopologicalNode*> mTopNodes;
+			// Maps the RID of a topological node to its simulation matrix index
+			// as given in the component constructors (1 for the first node).
+			std::map<std::string, int> mTopNodes;
 			// Maps the RID of a ConductingEquipment to a list of nodes as given in
 			// the component constructors.
 			std::map<std::string, std::vector<int>> mEqNodeMap;
+			// SvVoltage, if present, for each node (indexed starting with 0!)
+			SvVoltage **mVoltages;
 
 			BaseComponent* mapComponent(BaseClass* obj);
 			BaseComponent* mapACLineSegment(ACLineSegment* line);

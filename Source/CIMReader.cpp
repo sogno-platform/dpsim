@@ -54,6 +54,7 @@ CIMReader::CIMReader() {
 }
 
 CIMReader::~CIMReader() {
+	delete[] mVoltages;
 }
 
 BaseComponent* CIMReader::mapACLineSegment(ACLineSegment* line) {
@@ -93,7 +94,7 @@ std::vector<BaseComponent*> CIMReader::mapComponents() {
 		TopologicalNode* topNode = dynamic_cast<TopologicalNode*>(obj);
 		if (topNode) {
 			std::cerr << "TopologicalNode " << mTopNodes.size()+1 << " rid=" << topNode->mRID << " Terminals:" << std::endl;
-			mTopNodes.push_back(topNode);
+			mTopNodes[topNode->mRID] = mTopNodes.size()+1;
 			for (Terminal* term : topNode->Terminal) {
 				std::cerr << "    " << term->mRID << std::endl;
 				ConductingEquipment *eq = term->ConductingEquipment;
@@ -107,6 +108,27 @@ std::vector<BaseComponent*> CIMReader::mapComponents() {
 					nodesVec[term->sequenceNumber-1] = mTopNodes.size();
 				}
 			}
+		}
+	}
+	// Collect voltage state variables associated to nodes that are used
+	// for various components.
+	mVoltages = new SvVoltage*[mTopNodes.size()];
+	std::cerr << "Voltages" << std::endl;
+	for (BaseClass* obj : mModel.Objects) {
+		SvVoltage* volt = dynamic_cast<SvVoltage*>(obj);
+		if (volt) {
+			TopologicalNode* node = volt->TopologicalNode;
+			if (!node) {
+				std::cerr << "SvVoltage references missing Topological Node, ignoring" << std::endl;
+				continue;
+			}
+			auto search = mTopNodes.find(node->mRID);
+			if (search == mTopNodes.end()) {
+				std::cerr << "SvVoltage references Topological Node " << node->mRID << " missing from mTopNodes, ignoring" << std::endl;
+				continue;
+			}
+			mVoltages[search->second-1] = volt;
+			std::cerr << volt->v.value << "<" << volt->angle.value << " at " << search->second << std::endl;
 		}
 	}
 	for (BaseClass* obj : mModel.Objects) {
