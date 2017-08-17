@@ -71,11 +71,31 @@ BaseComponent* CIMReader::mapACLineSegment(ACLineSegment* line) {
 	return new RxLine(line->name, nodes[0], nodes[1], r, x);
 }
 
+BaseComponent* CIMReader::mapSynchronousMachine(SynchronousMachine* machine) {
+	// TODO: don't use SvVoltage, but map to a SynchronGenerator instead?
+	std::vector<int> &nodes = mEqNodeMap.at(machine->mRID);
+	if (nodes.size() != 1) {
+		// TODO check with the model if this assumption (only 1 terminal) is always true
+		std::cerr << "SynchronousMachine " << machine->mRID << " has " << nodes.size() << " terminals, ignoring" << std::endl;
+		return nullptr;
+	}
+	int node = nodes[0];
+	SvVoltage *volt = mVoltages[node-1];
+	if (!volt) {
+		std::cerr << "SynchronousMachine " << machine->mRID << " has no associated SvVoltage, ignoring" << std::endl;
+		return nullptr;
+	}
+	std::cerr << "VoltSourceRes " << machine->name << " rid=" << machine->mRID << " node1=" << node << " node2=0 ";
+	std::cerr << " V=" << volt->v.value << "<" << volt->angle.value << " R=" << machine->r.value << std::endl;
+	// TODO is it appropiate to use this resistance here
+	return new VoltSourceRes(machine->name, node, 0, volt->v.value, volt->angle.value, machine->r.value);
+}
+
 BaseComponent* CIMReader::mapComponent(BaseClass* obj) {
-	// TODO can we do this nicer than with a giant dynamic switch?
-	ACLineSegment* line;
-	if ((line = dynamic_cast<ACLineSegment*>(obj)))
+	if (ACLineSegment *line = dynamic_cast<ACLineSegment*>(obj))
 		return mapACLineSegment(line);
+	if (SynchronousMachine *syncMachine = dynamic_cast<SynchronousMachine*>(obj))
+		return mapSynchronousMachine(syncMachine);
 	return nullptr;
 }
 

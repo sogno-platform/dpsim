@@ -30,6 +30,7 @@ namespace DPsim {
 
 			BaseComponent* mapComponent(BaseClass* obj);
 			BaseComponent* mapACLineSegment(ACLineSegment* line);
+			BaseComponent* mapSynchronousMachine(SynchronousMachine* machine);
 		public:
 			CIMReader();
 			virtual ~CIMReader();
