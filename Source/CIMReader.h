@@ -11,6 +11,7 @@
 
 using namespace DPsim;
 using namespace IEC61970::Base::Domain;
+using namespace IEC61970::Base::Equivalents;
 using namespace IEC61970::Base::StateVariables;
 using namespace IEC61970::Base::Topology;
 using namespace IEC61970::Base::Wires;
@@ -27,9 +28,11 @@ namespace DPsim {
 			std::map<std::string, std::vector<int>> mEqNodeMap;
 			// SvVoltage, if present, for each node (indexed starting with 0!)
 			SvVoltage **mVoltages;
+			std::map<std::string, SvPowerFlow*> mPowerFlows;
 
 			BaseComponent* mapComponent(BaseClass* obj);
 			BaseComponent* mapACLineSegment(ACLineSegment* line);
+			BaseComponent* mapEquivalentInjection(EquivalentInjection* inj);
 			BaseComponent* mapSynchronousMachine(SynchronousMachine* machine);
 		public:
 			CIMReader();

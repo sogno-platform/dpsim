@@ -2,11 +2,13 @@
 #include "CIMModel.hpp"
 #include "IEC61970.hpp"
 
+#include "Components/PQLoad.h"
 #include "Components/RxLine.h"
 
 using namespace DPsim;
-using namespace IEC61970::Base::Domain;
 using namespace IEC61970::Base::Core;
+using namespace IEC61970::Base::Domain;
+using namespace IEC61970::Base::Equivalents;
 using namespace IEC61970::Base::Topology;
 using namespace IEC61970::Base::Wires;
 
@@ -71,6 +73,23 @@ BaseComponent* CIMReader::mapACLineSegment(ACLineSegment* line) {
 	return new RxLine(line->name, nodes[0], nodes[1], r, x);
 }
 
+BaseComponent* CIMReader::mapEquivalentInjection(EquivalentInjection* inj) {
+	std::vector<int> &nodes = mEqNodeMap.at(inj->mRID);
+	if (nodes.size() != 1) {
+		std::cerr << "EquivalentInjection " << inj->mRID << " has " << nodes.size() << " terminals; ignoring" << std::endl;
+		return nullptr;
+	}
+	auto search = mPowerFlows.find(inj->mRID);
+	if (search == mPowerFlows.end()) {
+		std::cerr << "EquivalentInjection " << inj->mRID << " has no associated SvPowerFlow, ignoring" << std::endl;
+		return nullptr;
+	}
+	SvPowerFlow* flow = search->second;
+	int node = nodes[0];
+	std::cerr << "PQLoad " << inj->name << " rid=" << inj->mRID << " node1=" << node << " node2=0 P=" << flow->p.value << " Q=" << flow->q.value << std::endl;
+	return new PQLoad(inj->name, node, 0, flow->p.value, flow->q.value);
+}
+
 BaseComponent* CIMReader::mapSynchronousMachine(SynchronousMachine* machine) {
 	// TODO: don't use SvVoltage, but map to a SynchronGenerator instead?
 	std::vector<int> &nodes = mEqNodeMap.at(machine->mRID);
@@ -94,6 +113,8 @@ BaseComponent* CIMReader::mapSynchronousMachine(SynchronousMachine* machine) {
 BaseComponent* CIMReader::mapComponent(BaseClass* obj) {
 	if (ACLineSegment *line = dynamic_cast<ACLineSegment*>(obj))
 		return mapACLineSegment(line);
+	if (EquivalentInjection *inj = dynamic_cast<EquivalentInjection*>(obj))
+		return mapEquivalentInjection(inj);
 	if (SynchronousMachine *syncMachine = dynamic_cast<SynchronousMachine*>(obj))
 		return mapSynchronousMachine(syncMachine);
 	return nullptr;
@@ -135,8 +156,7 @@ std::vector<BaseComponent*> CIMReader::mapComponents() {
 	mVoltages = new SvVoltage*[mTopNodes.size()];
 	std::cerr << "Voltages" << std::endl;
 	for (BaseClass* obj : mModel.Objects) {
-		SvVoltage* volt = dynamic_cast<SvVoltage*>(obj);
-		if (volt) {
+		if (SvVoltage* volt = dynamic_cast<SvVoltage*>(obj)) {
 			TopologicalNode* node = volt->TopologicalNode;
 			if (!node) {
 				std::cerr << "SvVoltage references missing Topological Node, ignoring" << std::endl;
@@ -149,6 +169,10 @@ std::vector<BaseComponent*> CIMReader::mapComponents() {
 			}
 			mVoltages[search->second-1] = volt;
 			std::cerr << volt->v.value << "<" << volt->angle.value << " at " << search->second << std::endl;
+		} else if (SvPowerFlow* flow = dynamic_cast<SvPowerFlow*>(obj)) {
+			// TODO could there be more than one power flow per equipment?
+			Terminal* term = flow->Terminal;
+			mPowerFlows[term->ConductingEquipment->mRID] = flow;
 		}
 	}
 	for (BaseClass* obj : mModel.Objects) {
