@@ -35,6 +35,7 @@ namespace DPsim {
 			BaseComponent* mapACLineSegment(ACLineSegment* line);
 			BaseComponent* mapAsynchronousMachine(AsynchronousMachine* machine);
 			BaseComponent* mapEquivalentInjection(EquivalentInjection* inj);
+			BaseComponent* mapPowerTransformer(PowerTransformer *trans);
 			BaseComponent* mapSynchronousMachine(SynchronousMachine* machine);
 		public:
 			CIMReader();

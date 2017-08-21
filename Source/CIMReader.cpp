@@ -4,6 +4,7 @@
 
 #include "Components/PQLoad.h"
 #include "Components/RxLine.h"
+#include "Components/TwoWindingTransformer.h"
 
 using namespace DPsim;
 using namespace IEC61970::Base::Core;
@@ -107,6 +108,27 @@ BaseComponent* CIMReader::mapEquivalentInjection(EquivalentInjection* inj) {
 	return new PQLoad(inj->name, node, 0, flow->p.value, flow->q.value);
 }
 
+BaseComponent* CIMReader::mapPowerTransformer(PowerTransformer* trans) {
+	std::vector<int> &nodes = mEqNodeMap.at(trans->mRID);
+	if (nodes.size() != trans->PowerTransformerEnd.size()) {
+		std::cerr << "PowerTransformer " << trans->mRID << " has differing number of terminals and windings, ignoring" << std::endl;
+		return nullptr;
+	}
+	if (nodes.size() != 2) {
+		// TODO three windings also possible
+		std::cerr << "PowerTransformer " << trans->mRID << " has " << nodes.size() << "terminals; ignoring" << std::endl;
+		return nullptr;
+	}
+	for (PowerTransformerEnd *end : trans->PowerTransformerEnd) {
+		if (end->endNumber == 1) {
+			std::cerr << "PowerTransformer " << trans->name << " rid=" << trans->mRID << " node1=" << nodes[0] << "node2=" << nodes[1] << " R=" << end->r.value << " X=" << end->x.value << std::endl;
+			return new TwoWindingTransformer(trans->name, nodes[0], nodes[1], end->r.value, end->x.value);
+		}
+	}
+	std::cerr << "PowerTransformer " << trans->mRID << " has no primary End; ignoring" << std::endl;
+	return nullptr;
+}
+
 BaseComponent* CIMReader::mapSynchronousMachine(SynchronousMachine* machine) {
 	// TODO: don't use SvVoltage, but map to a SynchronGenerator instead?
 	std::vector<int> &nodes = mEqNodeMap.at(machine->mRID);
@@ -134,6 +156,8 @@ BaseComponent* CIMReader::mapComponent(BaseClass* obj) {
 		return mapAsynchronousMachine(machine);
 	if (EquivalentInjection *inj = dynamic_cast<EquivalentInjection*>(obj))
 		return mapEquivalentInjection(inj);
+	if (PowerTransformer *trans = dynamic_cast<PowerTransformer*>(obj))
+		return mapPowerTransformer(trans);
 	if (SynchronousMachine *syncMachine = dynamic_cast<SynchronousMachine*>(obj))
 		return mapSynchronousMachine(syncMachine);
 	return nullptr;
