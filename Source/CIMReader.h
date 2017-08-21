@@ -31,7 +31,9 @@ namespace DPsim {
 			std::map<std::string, SvPowerFlow*> mPowerFlows;
 
 			BaseComponent* mapComponent(BaseClass* obj);
+
 			BaseComponent* mapACLineSegment(ACLineSegment* line);
+			BaseComponent* mapAsynchronousMachine(AsynchronousMachine* machine);
 			BaseComponent* mapEquivalentInjection(EquivalentInjection* inj);
 			BaseComponent* mapSynchronousMachine(SynchronousMachine* machine);
 		public:

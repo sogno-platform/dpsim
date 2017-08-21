@@ -73,6 +73,23 @@ BaseComponent* CIMReader::mapACLineSegment(ACLineSegment* line) {
 	return new RxLine(line->name, nodes[0], nodes[1], r, x);
 }
 
+BaseComponent* CIMReader::mapAsynchronousMachine(AsynchronousMachine* machine) {
+	std::vector<int> &nodes = mEqNodeMap.at(machine->mRID);
+	if (nodes.size() != 1) {
+		std::cerr << "AsynchronousMachine " << machine->mRID << " has " << nodes.size() << " terminals, ignoring" << std::endl;
+		return nullptr;
+	}
+	auto search = mPowerFlows.find(machine->mRID);
+	if (search == mPowerFlows.end()) {
+		std::cerr << "AsynchronousMachine " << machine->mRID << " has no associated SvPowerFlow, ignoring" << std::endl;
+		return nullptr;
+	}
+	SvPowerFlow* flow = search->second;
+	int node = nodes[0];
+	std::cerr << "PQLoad " << machine->name << " rid=" << machine->mRID << " node1=" <<  node << " node2=0 P=" << flow->p.value << " Q=" << flow->q.value << std::endl;
+	return new PQLoad(machine->name, node, 0, flow->p.value, flow->q.value);
+}
+
 BaseComponent* CIMReader::mapEquivalentInjection(EquivalentInjection* inj) {
 	std::vector<int> &nodes = mEqNodeMap.at(inj->mRID);
 	if (nodes.size() != 1) {
@@ -113,6 +130,8 @@ BaseComponent* CIMReader::mapSynchronousMachine(SynchronousMachine* machine) {
 BaseComponent* CIMReader::mapComponent(BaseClass* obj) {
 	if (ACLineSegment *line = dynamic_cast<ACLineSegment*>(obj))
 		return mapACLineSegment(line);
+	if (AsynchronousMachine *machine = dynamic_cast<AsynchronousMachine*>(obj))
+		return mapAsynchronousMachine(machine);
 	if (EquivalentInjection *inj = dynamic_cast<EquivalentInjection*>(obj))
 		return mapEquivalentInjection(inj);
 	if (SynchronousMachine *syncMachine = dynamic_cast<SynchronousMachine*>(obj))
