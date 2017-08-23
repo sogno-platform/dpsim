@@ -54,6 +54,7 @@ double CIMReader::unitValue(double value, UnitMultiplier mult) {
 
 CIMReader::CIMReader() {
 	mModel.setDependencyCheckOff();
+	mNumVoltageSources = 0;
 }
 
 CIMReader::~CIMReader() {
@@ -108,6 +109,23 @@ BaseComponent* CIMReader::mapEquivalentInjection(EquivalentInjection* inj) {
 	return new PQLoad(inj->name, node, 0, flow->p.value, flow->q.value);
 }
 
+BaseComponent* CIMReader::mapExternalNetworkInjection(ExternalNetworkInjection* inj) {
+	std::vector<int> &nodes = mEqNodeMap.at(inj->mRID);
+	if (nodes.size() != 1) {
+		std::cerr << "ExternalNetworkInjection " << inj->mRID << " has " << nodes.size() << " terminals, ignoring" << std::endl;
+		return nullptr;
+	}
+	int node = nodes[0];
+	SvVoltage *volt = mVoltages[node-1];
+	if (!volt) {
+		std::cerr << "ExternalNetworkInjection " << inj->mRID << " has no associated SvVoltage, ignoring" << std::endl;
+		return nullptr;
+	}
+	std::cerr << "IdealVoltageSource " << inj->name << " rid=" << inj->mRID << " node1=" << node << " node2=0 ";
+	std::cerr << " V=" << volt->v.value << "<" << volt->angle.value << std::endl;
+	return new IdealVoltageSource(inj->name, node, 0, volt->v.value, volt->angle.value*PI/180, ++mNumVoltageSources);
+}
+
 BaseComponent* CIMReader::mapPowerTransformer(PowerTransformer* trans) {
 	std::vector<int> &nodes = mEqNodeMap.at(trans->mRID);
 	if (nodes.size() != trans->PowerTransformerEnd.size()) {
@@ -146,7 +164,7 @@ BaseComponent* CIMReader::mapSynchronousMachine(SynchronousMachine* machine) {
 	std::cerr << "VoltSourceRes " << machine->name << " rid=" << machine->mRID << " node1=" << node << " node2=0 ";
 	std::cerr << " V=" << volt->v.value << "<" << volt->angle.value << " R=" << machine->r.value << std::endl;
 	// TODO is it appropiate to use this resistance here
-	return new VoltSourceRes(machine->name, node, 0, volt->v.value, volt->angle.value, machine->r.value);
+	return new VoltSourceRes(machine->name, node, 0, volt->v.value, volt->angle.value*PI/180, machine->r.value);
 }
 
 BaseComponent* CIMReader::mapComponent(BaseClass* obj) {
@@ -156,6 +174,8 @@ BaseComponent* CIMReader::mapComponent(BaseClass* obj) {
 		return mapAsynchronousMachine(machine);
 	if (EquivalentInjection *inj = dynamic_cast<EquivalentInjection*>(obj))
 		return mapEquivalentInjection(inj);
+	if (ExternalNetworkInjection *inj = dynamic_cast<ExternalNetworkInjection*>(obj))
+		return mapExternalNetworkInjection(inj);
 	if (PowerTransformer *trans = dynamic_cast<PowerTransformer*>(obj))
 		return mapPowerTransformer(trans);
 	if (SynchronousMachine *syncMachine = dynamic_cast<SynchronousMachine*>(obj))

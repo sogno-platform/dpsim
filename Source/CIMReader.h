@@ -28,13 +28,17 @@ namespace DPsim {
 			std::map<std::string, std::vector<int>> mEqNodeMap;
 			// SvVoltage, if present, for each node (indexed starting with 0!)
 			SvVoltage **mVoltages;
+			// Maps the RID of a Terminal to its associated power flow
 			std::map<std::string, SvPowerFlow*> mPowerFlows;
+			// Number of ideal voltage sources
+			int mNumVoltageSources;
 
 			BaseComponent* mapComponent(BaseClass* obj);
 
 			BaseComponent* mapACLineSegment(ACLineSegment* line);
 			BaseComponent* mapAsynchronousMachine(AsynchronousMachine* machine);
 			BaseComponent* mapEquivalentInjection(EquivalentInjection* inj);
+			BaseComponent* mapExternalNetworkInjection(ExternalNetworkInjection* inj);
 			BaseComponent* mapPowerTransformer(PowerTransformer *trans);
 			BaseComponent* mapSynchronousMachine(SynchronousMachine* machine);
 		public:
