@@ -3,11 +3,15 @@
 - connect with CIM parser
 - include boost library for additional math functions and general tasks
 
-## Libraries
+## Setup
 ### Windows
+Install Visual Studio 2017 C++ Desktop development package plus Windows 8.1 SDK
+### Libraries
+
+#### Windows
 Create a folder called Libraries in DPsim and copy the Eigen library in there.
 
-### Linux
+#### Linux
 Copy the Eigen folder to /usr/local/include/eigen using `sudo cp -rf eigen /usr/local/include/eigen`
 
 ## Basic git commands
