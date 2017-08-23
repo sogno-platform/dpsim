@@ -37,10 +37,13 @@ namespace DPsim {
 
 			BaseComponent* mapACLineSegment(ACLineSegment* line);
 			BaseComponent* mapAsynchronousMachine(AsynchronousMachine* machine);
+			BaseComponent* mapEnergyConsumer(EnergyConsumer* con);
 			BaseComponent* mapEquivalentInjection(EquivalentInjection* inj);
 			BaseComponent* mapExternalNetworkInjection(ExternalNetworkInjection* inj);
 			BaseComponent* mapPowerTransformer(PowerTransformer *trans);
 			BaseComponent* mapSynchronousMachine(SynchronousMachine* machine);
+
+			BaseComponent* newFlowPQLoad(std::string rid, std::string name);
 		public:
 			CIMReader();
 			virtual ~CIMReader();
