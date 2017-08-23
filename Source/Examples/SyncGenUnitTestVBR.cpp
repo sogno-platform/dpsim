@@ -48,7 +48,7 @@ void DPsim::SynGenUnitTestVBR() {
 	// Set up simulation
 	double tf, dt, t;
 	double om = 2.0*M_PI*60.0;
-	tf = 0.1; dt = 0.0001; t = 0;
+	tf = 0.3; dt = 0.0000001; t = 0;
 	Simulation newSim(circElements, om, dt, tf, log, SimulationType::EMT);
  
 	// Initialize generator

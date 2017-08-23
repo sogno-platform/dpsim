@@ -1,3 +1,5 @@
+#ifdef __linux__
+
 #pragma once
 
 #include <atomic>
@@ -46,3 +48,5 @@ namespace DPsim {
 		virtual void writeValues(SystemModel &model);
 	};
 };
+
+#endif

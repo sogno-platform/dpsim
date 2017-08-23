@@ -1,3 +1,5 @@
+#ifdef __linux__
+
 #include "ShmemTest.h"
 #include "../Simulation.h"
 #include "../ShmemInterface.h"
@@ -231,3 +233,5 @@ void DPsim::shmemDistributedRef()
 		delete comp;
 	}
 }
+
+#endif

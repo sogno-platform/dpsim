@@ -92,6 +92,7 @@ namespace DPsim {
 
 		void addSystemTopology(std::vector<BaseComponent*> newElements);
 
+#ifdef __linux__
 		/* Perform the main simulation loop in real time.
 		 *
 		 * @param rtMethod The method with which the realtime execution is achieved.
@@ -100,8 +101,9 @@ namespace DPsim {
 		 * @param llogger Logger which is used to log the left-side (solution).
 		 * @param rlogger Logger which is used to log the right-side vector.
 		 */
-		//void runRT(RTMethod rtMethod, bool startSynch, Logger& logger, Logger& llogger, Logger &rlogger);
-		//static void alarmHandler(int, siginfo_t*, void*);
+		void runRT(RTMethod rtMethod, bool startSynch, Logger& logger, Logger& llogger, Logger &rlogger);
+		static void alarmHandler(int, siginfo_t*, void*);
+#endif
 	};
 
 }
