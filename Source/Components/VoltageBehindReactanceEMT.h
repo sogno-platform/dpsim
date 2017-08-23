@@ -150,7 +150,7 @@ namespace DPsim {
 		/// voltage vector q d 0 kq1 kq2 df kd
 		DPSMatrix mVoltages2 = DPSMatrix::Zero(7, 1);
 		/// flux linkage vector
-		DPSMatrix mFluxes2 = DPSMatrix::Zero(7, 1);
+		DPSMatrix mFluxes = DPSMatrix::Zero(7, 1);
 		/// current vector
 		DPSMatrix mCurrents2 = DPSMatrix::Zero(7, 1);
 
@@ -277,7 +277,7 @@ namespace DPsim {
 		//Historical term of voltage
 		DPSMatrix mV_hist = DPSMatrix::Zero(3, 1);
 
-		//Historical term of voltage
+		//Phase Voltages in pu
 		DPSMatrix mVabc = DPSMatrix::Zero(3, 1);
 
 		//Historical term of current
@@ -285,6 +285,12 @@ namespace DPsim {
 
 		//Historical term of voltage
 		DPSMatrix mDVabc = DPSMatrix::Zero(3, 1);
+
+		//Phase Voltages
+		DPSMatrix mVoltageVector = DPSMatrix::Zero(3, 1);
+
+		//Phase Currents
+		DPSMatrix mCurrentVector = DPSMatrix::Zero(3, 1);
 
 
 	public:
@@ -339,10 +345,12 @@ namespace DPsim {
 		DPSMatrix inverseParkTransform(Real theta, double q, double d, double zero);
 		//DPSMatrix inverseParkTransform(Real theta, DPSMatrix& in);
 
-		DPSMatrix& getVoltages() { return mVabc; }
-		DPSMatrix& getCurrents() { return mIabc; }
-		//DPSMatrix& getFluxes() { return mFluxes2; }
-
+		DPSMatrix& getVoltages() { return mVoltageVector; }
+		DPSMatrix& getCurrents() { return mCurrentVector; }
+		//DPSMatrix& getFluxes() { return mFluxes; }
+		double getElectricalTorque() { return mElecTorque; }
+		double getRotationalSpeed() { return mOmMech; }
+		double getRotorPosition() { return mThetaMech; }
 
 		void init(Real om, Real dt) { }
 		void applySystemMatrixStamp(SystemModel& system) { }

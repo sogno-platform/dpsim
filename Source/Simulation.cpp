@@ -265,7 +265,7 @@ int Simulation::stepGeneratordq(Logger& logger, Logger& leftSideVectorLog, Logge
 
 
 int Simulation::stepGeneratorVBR(Logger& logger, BaseComponent* generator,
- Logger& synGenLogVolt, Logger& synGenLogCurr, Real fieldVoltage, Real mechPower, Real logTimeStep, Real& lastLogTime, Real time)
+ Logger& synGenLogVolt, Logger& synGenLogCurr, Logger& synGenLogElecTorque, Logger& synGenLogOmega, Logger& synGenLogTheta, Real fieldVoltage, Real mechPower, Real logTimeStep, Real& lastLogTime, Real time)
 {
 
 	// Individual step function for generator

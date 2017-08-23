@@ -212,27 +212,15 @@ void VoltageBehindReactanceEMT::step(SystemModel& system, Real fieldVoltage, Rea
 
 	stepInPerUnit(system.getOmega(), system.getTimeStep(), fieldVoltage, mechPower, time, system.getNumMethod());
 
+	mVoltageVector = mVabc*mBase_v;
+	mCurrentVector = mIabc*mBase_i;
 
 
-	//if (time < 0.1 || time > 0.2)
-	//{ 
-		//mIa = -(mVa / 1037.8378)*mBase_Z;
-		//mIb = -(mVb / 1037.8378)*mBase_Z;
-		//mIc = -(mVc / 1037.8378)*mBase_Z;
-	//}
-
-	//else {
-	//	mIa = (mVa / 10.3)*mBase_Z;
-	//	mIb = (mVb / 10.3)*mBase_Z;
-	//	mIc = (mVc / 10.3)*mBase_Z;
-	//}
 
 }
 
 void VoltageBehindReactanceEMT::stepInPerUnit(Real om, Real dt, Real fieldVoltage, Real mechPower, Real time, NumericalMethod numMethod) {
 	
-
-
 	mVabc <<
 		mVa,
 		mVb,
@@ -269,8 +257,8 @@ void VoltageBehindReactanceEMT::stepInPerUnit(Real om, Real dt, Real fieldVoltag
 	mMechPower = mechPower / mNomPower;
 	mMechTorque = mMechPower / mOmMech;
 
-	mElecTorque = (mPsimd*mIq - mPsimq*mId);
-	//mElecTorque = (mDPsid*mIq - mDPsiq*mId);
+	//mElecTorque = (mPsimd*mIq - mPsimq*mId);
+	mElecTorque = (mDPsid*mIq - mDPsiq*mId);
 
 
 	// Euler step forward	
@@ -278,6 +266,7 @@ void VoltageBehindReactanceEMT::stepInPerUnit(Real om, Real dt, Real fieldVoltag
 
 	mThetaMech = mThetaMech + dt * (mOmMech* mBase_OmMech);
 	
+	DPSMatrix mDInductanceMat_hist = mDInductanceMat;
 
 	mDInductanceMat <<
 		mLl + mLa - mLb*cos(2 * mThetaMech), -mLa / 2 - mLb*cos(2 * mThetaMech - 2 * PI / 3), -mLa / 2 - mLb*cos(2 * mThetaMech + 2 * PI / 3),
@@ -302,8 +291,10 @@ void VoltageBehindReactanceEMT::stepInPerUnit(Real om, Real dt, Real fieldVoltag
 	}
 
 	
-	mIabc = mIabc - dt*mBase_OmElec*mDInductanceMat.inverse()*(mDVabc+(mResistanceMat + R_load)*mIabc);
+	mIabc = mDInductanceMat.inverse()*mDInductanceMat_hist*mIabc - dt*mBase_OmElec*mDInductanceMat.inverse()*(mDVabc+(mResistanceMat + R_load)*mIabc);
 	mVabc = -R_load*mIabc;
+
+
 
 	mIa = mIabc(0);
 	mIb = mIabc(1);

@@ -1,42 +1,42 @@
 % Compare voltage and current of c++ simulation with voltage and currents
 % from PLECS simulation
 
-%% run simulink example and save variables
- a = sim('../../ReferenceExamples/PLECS/synchronousGeneratorPLECS.slx','SimulationMode','normal');
- va = a.get('VoltageA');
- vb = a.get('VoltageB');
- vc = a.get('VoltageC');
- ia = a.get('CurrentA');
- ib = a.get('CurrentB');
- ic = a.get('CurrentC');
- time = a.get('tout');
- 
+%% read PLECS results
+
+%Results_PLECS = csvread('../../ReferenceExamples/PLECS/Symmetrical_fault.csv');  
+Results_PLECS = csvread('../../vsa/Results/SynGenDqEmt_ABCFault_PLECS/Voltages_and_currents.csv'); 
+%Fluxes_PLECS = csvread('../../vsa/Results/SynGenDqEmt_ABCFault_PLECS/Fluxes.csv'); 
+%Te_PLECS = csvread('../../vsa/Results/SynGenDqEmt_ABCFault_PLECS/electrical_torque.csv'); 
+
 %% read results from c++ simulation
- VoltageVector = csvread('../VisualStudio/DPsimVS2017/data_vt.csv');
- CurrentVector=csvread('../VisualStudio/DPsimVS2017/data_j.csv');
+VoltageVector = csvread('../../vsa/Results/SynGenDqEmt_ABCFault_DPSim/data_vt.csv');
+CurrentVector = csvread('../../vsa/Results/SynGenDqEmt_ABCFault_DPSim/data_j.csv');
  
- %% Plot
-figure(1)
+ %% Plotfigure(1)
 hold off
 plot(VoltageVector(:,1),VoltageVector(:,2));
 hold on
 plot(VoltageVector(:,1),VoltageVector(:,3));
 plot(VoltageVector(:,1),VoltageVector(:,4));
-plot(time,va,'--');
-plot(time,vb,'--');
-plot(time,vc,'--');
+
+plot(Results_PLECS(:,1),Results_PLECS(:,2),'--');
+plot(Results_PLECS(:,1),Results_PLECS(:,3),'--');
+plot(Results_PLECS(:,1),Results_PLECS(:,4),'--');
+
 title('Phase Voltages');
-legend('va c++','vb c++', 'vc c++','va PLECS','vb PLECS','vc PLECS');
+legend('va DPSim','vb DPSim', 'vc DPSim','va PLECS','vb PLECS','vc PLECS');
 
 figure(2)
 hold off
-plot(CurrentVector(:,1),CurrentVector(:,2))
+plot(CurrentVector(:,1),-CurrentVector(:,2));
 hold on
-plot(CurrentVector(:,1),CurrentVector(:,3))
-plot(CurrentVector(:,1),CurrentVector(:,4))
-plot(time,-ia,'--');
-plot(time,-ib,'--');
-plot(time,-ic,'--');
-title('Currents');
-legend('ia c++','ib c++','ic c++','ia PLECS','ib PLECS','ic PLECS');
+plot(CurrentVector(:,1),-CurrentVector(:,3));
+plot(CurrentVector(:,1),-CurrentVector(:,4));
+
+plot(Results_PLECS(:,1),Results_PLECS(:,5),'--');
+plot(Results_PLECS(:,1),Results_PLECS(:,6),'--');
+plot(Results_PLECS(:,1),Results_PLECS(:,7),'--');
+
+title('Phase Currents');
+legend('ia DPSim','ib DPSim','ic DPSim','ia PLECS','ib PLECS','ic PLECS');
 

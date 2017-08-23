@@ -9,8 +9,11 @@ void DPsim::SynGenUnitTestVBR() {
 
 	// Define Object for saving data on a file
 	Logger log("Logs/logVBR.txt"),
-		synGenLogVolt("Logs/data_synGenVBR_volt.csv"),
-		synGenLogCurr("Logs/data_synGenVBR_curr.csv");
+		synGenLogVolt("Logs/data_synGenVBR_v.csv"),
+		synGenLogCurr("Logs/data_synGenVBR_i.csv"),
+		synGenLogElecTorque("Logs/data_synGenVBR_Te.csv"),
+		synGenLogOmega("Logs/data_synGenVBR_omega.csv"),
+		synGenLogTheta("Logs/data_synGenVBR_theta.csv");
 
 	// Define machine parameters in per unit
 	double nomPower = 555e6;
@@ -48,7 +51,7 @@ void DPsim::SynGenUnitTestVBR() {
 	// Set up simulation
 	double tf, dt, t;
 	double om = 2.0*M_PI*60.0;
-	tf = 0.3; dt = 0.0000001; t = 0;
+	tf = 0.1; dt = 0.0000001; t = 0;
 	Simulation newSim(circElements, om, dt, tf, log, SimulationType::EMT);
  
 	// Initialize generator
@@ -74,7 +77,7 @@ void DPsim::SynGenUnitTestVBR() {
 	while (newSim.getTime() < tf)
 	{
 		std::cout << newSim.getTime() << std::endl;
-		newSim.stepGeneratorVBR(log, gen, synGenLogVolt, synGenLogCurr, fieldVoltage, mechPower, logTimeStep, lastLogTime, newSim.getTime());
+		newSim.stepGeneratorVBR(log, gen, synGenLogVolt, synGenLogCurr, synGenLogElecTorque, synGenLogOmega, synGenLogTheta, fieldVoltage, mechPower, logTimeStep, lastLogTime, newSim.getTime());
 		newSim.increaseByTimeStep();
 	}
 
