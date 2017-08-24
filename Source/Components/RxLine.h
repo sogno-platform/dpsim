@@ -41,7 +41,7 @@ namespace DPsim {
 		RxLine(std::string name, int node1, int node2, Real resistance, Real inductance);
 		RxLine(std::string name, int node1, int node2, int node3, Real resistance, Real inductance);
 
-		void init(Real om, Real dt);
+		virtual void init(Real om, Real dt);
 		void applySystemMatrixStamp(SystemModel& system);
 		void applyRightSideVectorStamp(SystemModel& system) { }
 		void step(SystemModel& system, Real time);

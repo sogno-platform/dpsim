@@ -177,8 +177,14 @@ BaseComponent* CIMReader::newFlowPQLoad(std::string rid, std::string name) {
 	}
 	SvPowerFlow* flow = search->second;
 	int node = nodes[0];
-	std::cerr << "PQLoad " << name << " rid=" << rid << " node1=" << node << " node2=0 P=" << flow->p.value << " Q=" << flow->q.value << std::endl;
-	return new PQLoad(name, node, 0, flow->p.value, flow->q.value);
+	SvVoltage *volt = mVoltages[node-1];
+	if (!volt) {
+		std::cerr << rid << " has no associated SvVoltage, ignoring" << std::endl;
+		return nullptr;
+	}
+	std::cerr << "PQLoad " << name << " rid=" << rid << " node1=" << node << " node2=0 P=" << flow->p.value << " Q=" << flow->q.value;
+	std::cerr << " V=" << volt->v.value << "<" << volt->angle.value << std::endl;
+	return new PQLoad(name, node, 0, flow->p.value, flow->q.value, volt->v.value, volt->angle.value*PI/180);
 }
 
 bool CIMReader::addFile(std::string filename) {

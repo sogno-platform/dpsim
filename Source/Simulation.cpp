@@ -73,15 +73,14 @@ void Simulation::initialize(std::vector<BaseComponent*> newElements) {
 
 	Int numNodes = maxNode + 1 + numIdealVS + numLines;
 	mSystemModel.initialize(numNodes,numIdealVS);
-	addSystemTopology(newElements);
-	switchSystemMatrix(0);
-	mElements = mElementsVector[0];
-	
 	// Initialize right side vector and components
 	for (std::vector<BaseComponent*>::iterator it = mElements.begin(); it != mElements.end(); ++it) {
 		(*it)->init(mSystemModel.getOmega(), mSystemModel.getTimeStep());
 		(*it)->applyRightSideVectorStamp(mSystemModel);
 	}
+	addSystemTopology(newElements);
+	switchSystemMatrix(0);
+	mElements = mElementsVector[0];
 }
 
 void Simulation::addSystemTopology(std::vector<BaseComponent*> newElements) {
