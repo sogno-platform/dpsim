@@ -1,66 +1,24 @@
 #include <iostream>
 #include <string>
 #include "CIMReader.h"
-#include "Examples/SynchronGenUnitTest.h"
-#include "Examples/SyncGenUnitTestVBR.h"
-#include "Examples/ReferenceCircuits.h"
-#include "Examples/ShmemTest.h"
-#include <complex>
+#include "Simulation.h"
 
 using namespace DPsim;
 
 int main(int argc, char* argv[]) {
+	// TODO: parse frequency, timestep etc. as command-line flags
 	CIMReader reader(50);
+	Logger log("cim.log"), llog("lvector-cim.csv"), rlog("rvector-cim.csv");
 	for (int i = 1; i < argc; i++) {
 		if (!reader.addFile(argv[i]))
 			std::cerr << "Failed to read file " << argv[i] << std::endl;
 	}
 	std::vector<BaseComponent*> components = reader.mapComponents();
-	//shmemRTExample();
-	//shmemDistributed(argc, argv);
-	//shmemRTExample();
-	//shmemDistributedExample(argc, argv);
-	//shmemDistributedRef();
-	/*simulationExample1();
-	simulationExample2();
-	simulationExample3();
-	simulationExampleIdealVS();
-	simulationExampleIdealVS2();
-	simulationExampleIdealVS3();
-	simulationExampleRXLine3();
-	simulationExampleRXLine();
-	simulationExampleRXLine2();
-	simulationExamplePiLine();
-	simulationExamplePiLine2();*/
-
-	//simulationExample1();
-	//simulationExample2();
-	//simulationExample3();
-	//simulationExampleIdealVS();
-	//simulationExampleIdealVS2();
-	//simulationExampleIdealVS3();
-	//simulationExampleRXLine3();
-	//simulationExampleRXLine();
-	//simulationExampleRXLine2();
-
-	//NetlistSim(argc, argv);
-	
-	//SynGenUnitTestBalancedResLoad();
-	//SynGenUnitTestdqBalancedResLoad();
-
-	//SynGenUnitTestPhaseToPhaseFault();
-	//SynGenUnitTestThreePhaseFault();	
-	//SynGenDPUnitTestBalancedResLoad();
-	//SynGenUnitTestVBR();
-
-	//RXLineResLoad();
-	//VarFreqRXLineResLoad();
-	//RXLineResLoadEMT();
-	//VarFreqRXLineResLoadEMT();
-	
-	//runDpEmtVarFreqStudy();
-
-	//std::cin.get();
+	Simulation sim(components, 2*PI*50, 0.001, 0.3, log);
+	std::cout << "Start simulation." << std::endl;
+	while (sim.step(log, llog, rlog))
+		sim.increaseByTimeStep();
+	std::cout << "Simulation finished." << std::endl;
 	return 0;	
 }
 
