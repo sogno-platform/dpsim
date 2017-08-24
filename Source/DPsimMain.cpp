@@ -10,7 +10,7 @@
 using namespace DPsim;
 
 int main(int argc, char* argv[]) {
-	CIMReader reader;
+	CIMReader reader(50);
 	for (int i = 1; i < argc; i++) {
 		if (!reader.addFile(argv[i]))
 			std::cerr << "Failed to read file " << argv[i] << std::endl;

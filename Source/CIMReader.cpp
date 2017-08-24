@@ -52,9 +52,10 @@ double CIMReader::unitValue(double value, UnitMultiplier mult) {
 	return value;
 }
 
-CIMReader::CIMReader() {
+CIMReader::CIMReader(Real om) {
 	mModel.setDependencyCheckOff();
 	mNumVoltageSources = 0;
+	mFrequency = om;
 }
 
 CIMReader::~CIMReader() {
@@ -72,7 +73,7 @@ BaseComponent* CIMReader::mapACLineSegment(ACLineSegment* line) {
 	Real x = line->x.value;
 	std::cerr << "RxLine " << line->name << " rid=" << line->mRID << " node1=" << nodes[0] << " node2=" << nodes[1];
 	std::cerr << " R=" << r << " X=" << x << std::endl;
-	return new RxLine(line->name, nodes[0], nodes[1], r, x);
+	return new RxLine(line->name, nodes[0], nodes[1], r, x/mFrequency);
 }
 
 BaseComponent* CIMReader::mapAsynchronousMachine(AsynchronousMachine* machine) {
@@ -118,7 +119,7 @@ BaseComponent* CIMReader::mapPowerTransformer(PowerTransformer* trans) {
 	for (PowerTransformerEnd *end : trans->PowerTransformerEnd) {
 		if (end->endNumber == 1) {
 			std::cerr << "PowerTransformer " << trans->name << " rid=" << trans->mRID << " node1=" << nodes[0] << "node2=" << nodes[1] << " R=" << end->r.value << " X=" << end->x.value << std::endl;
-			return new TwoWindingTransformer(trans->name, nodes[0], nodes[1], end->r.value, end->x.value);
+			return new TwoWindingTransformer(trans->name, nodes[0], nodes[1], end->r.value, end->x.value/mFrequency);
 		}
 	}
 	std::cerr << "PowerTransformer " << trans->mRID << " has no primary End; ignoring" << std::endl;

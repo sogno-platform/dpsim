@@ -20,6 +20,9 @@ namespace DPsim {
 	class CIMReader {
 		private:
 			CIMModel mModel;
+			// System frequency (has to be given to convert between reactances
+			// in CIM and inductances used inside the simulation)
+			Real mFrequency;
 			// Maps the RID of a topological node to its simulation matrix index
 			// as given in the component constructors (1 for the first node).
 			std::map<std::string, int> mTopNodes;
@@ -45,7 +48,7 @@ namespace DPsim {
 
 			BaseComponent* newFlowPQLoad(std::string rid, std::string name);
 		public:
-			CIMReader();
+			CIMReader(Real om);
 			virtual ~CIMReader();
 
 			bool addFile(std::string filename);
