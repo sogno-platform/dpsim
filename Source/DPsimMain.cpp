@@ -7,7 +7,7 @@ using namespace DPsim;
 
 int main(int argc, char* argv[]) {
 	// TODO: parse frequency, timestep etc. as command-line flags
-	CIMReader reader(50);
+	CIMReader reader(2*PI*50);
 	Logger log("cim.log"), llog("lvector-cim.csv"), rlog("rvector-cim.csv");
 	for (int i = 1; i < argc; i++) {
 		if (!reader.addFile(argv[i]))
