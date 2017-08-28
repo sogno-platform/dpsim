@@ -255,15 +255,15 @@ void VoltageBehindReactanceEMT::stepInPerUnit(Real om, Real dt, Real fieldVoltag
 	//mVabc=R_vbr_eq
 
 	mMechPower = mechPower / mNomPower;
-	mMechTorque = mMechPower / mOmMech;
+	mMechTorque = mMechPower / (2*PI*60);
 
-	//mElecTorque = (mPsimd*mIq - mPsimq*mId);
-	mElecTorque = (mDPsid*mIq - mDPsiq*mId);
+	mElecTorque = (mPsimd*mIq - mPsimq*mId);
+	//mElecTorque = (mDPsid*mIq - mDPsiq*mId);
 
 
 	// Euler step forward	
-	mOmMech = mOmMech + dt * (1. / (2 * mH) * (mMechTorque - mElecTorque));
-
+	//mOmMech = mOmMech + dt * (1. / (2 * mH) * (mMechTorque - mElecTorque));
+	mOmMech = mOmMech + dt * (1. / (2. * mH) * (mElecTorque - mMechTorque));
 	mThetaMech = mThetaMech + dt * (mOmMech* mBase_OmMech);
 	
 	DPSMatrix mDInductanceMat_hist = mDInductanceMat;

@@ -292,7 +292,9 @@ int Simulation::stepGeneratorVBR(Logger& logger, BaseComponent* generator,
 		std::cout << mTime << std::endl;
 			synGenLogVolt.LogDataLine(mTime, ((VoltageBehindReactanceEMT*)generator)->getVoltages());
 			synGenLogCurr.LogDataLine(mTime, ((VoltageBehindReactanceEMT*)generator)->getCurrents());
-	
+			synGenLogElecTorque.LogDataLine(mTime, ((VoltageBehindReactanceEMT*)generator)->getElectricalTorque());
+			synGenLogOmega.LogDataLine(mTime, ((VoltageBehindReactanceEMT*)generator)->getRotationalSpeed());
+			synGenLogTheta.LogDataLine(mTime, ((VoltageBehindReactanceEMT*)generator)->getRotorPosition());
 	}
 
 	if (mTime >= mFinalTime) {
