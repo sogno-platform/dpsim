@@ -191,9 +191,7 @@ bool CIMReader::addFile(std::string filename) {
 	return mModel.addCIMFile(filename);
 }
 
-std::vector<BaseComponent*> CIMReader::mapComponents() {
-	std::vector<BaseComponent*> compVector;
-
+void CIMReader::parseFiles() {
 	mModel.parseFiles();
 	// First, go through all topological nodes and collect them in a list.
 	// Since all nodes have references to the equipment connected to them (via Terminals), but not
@@ -245,7 +243,21 @@ std::vector<BaseComponent*> CIMReader::mapComponents() {
 	for (BaseClass* obj : mModel.Objects) {
 		BaseComponent* comp = mapComponent(obj);
 		if (comp)
-			compVector.push_back(comp);
+			mComponents.push_back(comp);
 	}
-	return compVector;
+}
+
+std::vector<BaseComponent*>& CIMReader::getComponents() {
+	return mComponents;
+}
+
+int CIMReader::mapTopologicalNode(std::string mrid) {
+	auto search = mTopNodes.find(mrid);
+	if (search == mTopNodes.end())
+		return -1;
+	return search->second;
+}
+
+int CIMReader::getNumVoltageSources() {
+	return mNumVoltageSources;
 }

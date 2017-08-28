@@ -20,6 +20,8 @@ namespace DPsim {
 	class CIMReader {
 		private:
 			CIMModel mModel;
+			// All components after mapping
+			std::vector<BaseComponent*> mComponents;
 			// System frequency (has to be given to convert between reactances
 			// in CIM and inductances used inside the simulation)
 			Real mFrequency;
@@ -52,7 +54,10 @@ namespace DPsim {
 			virtual ~CIMReader();
 
 			bool addFile(std::string filename);
-			std::vector<BaseComponent*> mapComponents();
+			void parseFiles();
+			std::vector<BaseComponent*>& getComponents();
+			int mapTopologicalNode(std::string mrid);
+			int getNumVoltageSources();
 
 			static double unitValue(double value, UnitMultiplier mult);
 	};

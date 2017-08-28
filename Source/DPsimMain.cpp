@@ -2,6 +2,7 @@
 #include <string>
 #include "CIMReader.h"
 #include "Simulation.h"
+#include "ShmemInterface.h"
 
 using namespace DPsim;
 
@@ -20,9 +21,18 @@ bool parseFloat(const char *s, double *d) {
 	return (end != s && !*end);
 }
 
+bool parseInt(const char *s, int *i) {
+	char *end;
+	*i = strtol(s, &end, 0);
+	return (end != s && !*end);
+}
+
 int main(int argc, const char* argv[]) {
+	int i, split = -1;
 	Real frequency = 2*PI*50, timestep = 0.001, duration = 0.3;
-	int i;
+	std::string interfaceBase = "/dpsim";
+	std::string splitNode = "";
+	ShmemInterface *intf = nullptr;
 
 	// Parse arguments
 	for (i = 1; i < argc; i++) {
@@ -54,6 +64,31 @@ int main(int argc, const char* argv[]) {
 				std::cerr << "Invalid setting " << argv[i] << " for the duration" << std::endl;
 				return 1;
 			}
+		} else if (!strcmp(argv[i], "-i") || !strcmp(argv[i], "--interface")) {
+			if (i == argc-1) {
+				std::cerr << "Missing argument for -i/--interface; see 'DPsim --help' for usage" << std::endl;
+				return 1;
+			}
+			if (argv[++i][0] != '/') {
+				std::cerr << "Shmem interface object name must start with a '/'" << std::endl;
+				return 1;
+			}
+			interfaceBase = std::string(argv[i]);
+		} else if (!strcmp(argv[i], "-s") || !strcmp(argv[i], "--split")) {
+			if (i == argc-1) {
+				std::cerr << "Missing argument for -s/--split; see 'DPsim --help' for usage" << std::endl;
+				return 1;
+			}
+			if (!parseInt(argv[++i], &split) || split < 0 || split > 1) {
+				std::cerr << "Invalid setting " << argv[i] << " for the split index" << std::endl;
+				return 1;
+			}
+		} else if (!strcmp(argv[i], "-n") || !strcmp(argv[i], "--node")) {
+			if (i == argc-1) {
+				std::cerr << "Missing argument for -n/--node; see 'DPsim --help' for usage" << std::endl;
+				return 1;
+			}
+			splitNode = std::string(argv[++i]);
 		} else if (!strcmp(argv[i], "-h") || !strcmp(argv[i], "--help")) {
 			usage();
 			return 0;
@@ -78,11 +113,39 @@ int main(int argc, const char* argv[]) {
 			return 1;
 		}
 	}
-	std::vector<BaseComponent*> components = reader.mapComponents();
+	std::vector<BaseComponent*> components = reader.getComponents();
+
+	// TODO: this is a simple, pretty much fixed setup. Make this more flexible / configurable
+	if (split >= 0) {
+		int node = reader.mapTopologicalNode(splitNode);
+		if (node < 0) {
+			std::cerr << "Invalid / missing split node" << std::endl;
+			return 1;
+		}
+		if (split == 0) {
+			std::string outName = interfaceBase + ".0.out";
+			std::string inName = interfaceBase + ".0.in";
+			intf = new ShmemInterface(outName.c_str(), inName.c_str());
+			ExternalVoltageSource *evs = new ExternalVoltageSource("v_int", node, 0, 0, 0, reader.getNumVoltageSources()+1);
+			intf->registerVoltageSource(evs, 0, 1);
+			intf->registerExportedCurrent(evs, 0, 1);
+			components.push_back(evs);
+		} else {
+			std::string outName = interfaceBase + ".1.out";
+			std::string inName = interfaceBase + ".1.in";
+			intf = new ShmemInterface(outName.c_str(), inName.c_str());
+			ExternalCurrentSource *ecs = new ExternalCurrentSource("i_int", node, 0, 0, 0);
+			intf->registerCurrentSource(ecs, 0, 1);
+			intf->registerExportedVoltage(node, 0, 0, 1);
+			components.push_back(ecs);
+		}
+	}
 
 	// Do the actual simulation
 	Logger log("cim.log"), llog("lvector-cim.csv"), rlog("rvector-cim.csv");
 	Simulation sim(components, frequency, timestep, duration, log);
+	if (intf)
+		sim.addExternalInterface(intf);
 	while (sim.step(log, llog, rlog))
 		sim.increaseByTimeStep();
 	return 0;
