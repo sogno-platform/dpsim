@@ -10,8 +10,11 @@ void usage() {
 	std::cerr << "usage: DPsim [OPTIONS] CIM_FILE..." << std::endl
 	  << "Possible options:" << std::endl
 	  << "  -d/--duration DURATION:   simulation duration in seconds (default: 0.3)" << std::endl
-	  << "  -h/--help:                show this help and exit" << std::endl
 	  << "  -f/--frequency FREQUENCY: system frequency in Hz (default: 50)" << std::endl
+	  << "  -h/--help:                show this help and exit" << std::endl
+	  << "  -i/--interface OBJ_NAME:  prefix for the names of the shmem objects used for communication (default: /dpsim)" << std::endl
+	  << "  -n/--node NODE_ID:        RDF id of the node where the interfacing voltage/current source should be placed" << std::endl
+	  << "  -s/--split INDEX:         index of this instance for distributed simulation (0 or 1)" << std::endl
 	  << "  -t/--timestep TIMESTEP:   simulation timestep in seconds (default: 1e-3)" << std::endl;
 }
 
