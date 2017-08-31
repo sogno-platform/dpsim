@@ -1,13 +1,10 @@
 variables:
   DOCKER_IMAGE: dpsim-dev-${CI_COMMIT_REF_NAME}
   GIT_SUBMODULE_STRATEGY: recursive
-  LD_LIBRARY_PATH: /usr/local/lib
 
 stages:
   - prepare
-  - build-cim
   - build
-  - test
 
 docker:
   stage: prepare
@@ -16,37 +13,15 @@ docker:
   tags:
     - shell
 
-build-cim:
-  stage: build-cim
-  script:
-    - mkdir -p Source/CIM-XML-Parser/build
-    - sed -i '/^add_library/ s/STATIC/SHARED/' Source/CIM-XML-Parser/thirdparty/arabica/CMakeLists.txt
-    - cd Source/CIM-XML-Parser/build
-    - cmake -DBUILD_SHARED_LIBS=ON ..
-    - make
-  image: ${DOCKER_IMAGE}
-  artifacts:
-    paths:
-    - Source/CIM-XML-Parser/build
-  tags:
-    - docker
-
 build:
   stage: build
   script:
-    - cp Source/CIM-XML-Parser/build/{libCIMParser.so,thirdparty/arabica/libarabica.so} /usr/local/lib
-    - make -C Source
+    - mkdir Source/build
+    - cd Source/build
+    - cmake ..
+    - make
   image: ${DOCKER_IMAGE}
   tags:
     - docker
 
-test:
-  stage: test
-  script:
-    - cp Source/CIM-XML-Parser/build/{libCIMParser.so,thirdparty/arabica/libarabica.so} /usr/local/lib
-    - make -C Source tests
-    - cd Source/Tests
-    - python3 run_tests.py
-  image: ${DOCKER_IMAGE}
-  tags:
-    - docker
+# no testing for now
