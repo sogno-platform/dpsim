@@ -55,11 +55,13 @@ double CIMReader::unitValue(double value, UnitMultiplier mult) {
 CIMReader::CIMReader(Real om) {
 	mModel.setDependencyCheckOff();
 	mNumVoltageSources = 0;
+	mVoltages = nullptr;
 	mFrequency = om;
 }
 
 CIMReader::~CIMReader() {
-	delete[] mVoltages;
+	if (mVoltages)
+		delete[] mVoltages;
 }
 
 BaseComponent* CIMReader::mapACLineSegment(ACLineSegment* line) {
