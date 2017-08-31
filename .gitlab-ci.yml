@@ -18,7 +18,7 @@ build:
   script:
     - mkdir Source/build
     - cd Source/build
-    - cmake ..
+    - cmake .. -DEigen3_DIR=/usr/share/eigen3
     - make
   image: ${DOCKER_IMAGE}
   tags:
