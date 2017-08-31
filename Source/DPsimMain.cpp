@@ -35,6 +35,7 @@ int main(int argc, const char* argv[]) {
 	Real frequency = 2*PI*50, timestep = 0.001, duration = 0.3;
 	std::string interfaceBase = "/dpsim";
 	std::string splitNode = "";
+	std::string outName, inName, logName, llogName, rlogName;
 	ShmemInterface *intf = nullptr;
 
 	// Parse arguments
@@ -127,31 +128,38 @@ int main(int argc, const char* argv[]) {
 			return 1;
 		}
 		if (split == 0) {
-			std::string outName = interfaceBase + ".0.out";
-			std::string inName = interfaceBase + ".0.in";
+			outName = interfaceBase + ".0.out";
+			inName = interfaceBase + ".0.in";
 			intf = new ShmemInterface(outName.c_str(), inName.c_str());
 			ExternalVoltageSource *evs = new ExternalVoltageSource("v_int", node, 0, 0, 0, reader.getNumVoltageSources()+1);
 			intf->registerVoltageSource(evs, 0, 1);
 			intf->registerExportedCurrent(evs, 0, 1);
 			components.push_back(evs);
+			// TODO make log names configurable
+			logName = "cim0.log";
+			llogName = "lvector-cim0.csv";
+			rlogName = "rvector-cim0.csv";
 		} else {
-			std::string outName = interfaceBase + ".1.out";
-			std::string inName = interfaceBase + ".1.in";
+			outName = interfaceBase + ".1.out";
+			inName = interfaceBase + ".1.in";
 			intf = new ShmemInterface(outName.c_str(), inName.c_str());
 			ExternalCurrentSource *ecs = new ExternalCurrentSource("i_int", node, 0, 0, 0);
 			intf->registerCurrentSource(ecs, 0, 1);
 			intf->registerExportedVoltage(node, 0, 0, 1);
 			components.push_back(ecs);
+			logName = "cim1.log";
+			llogName = "lvector-cim1.csv";
+			rlogName = "rvector-cim1.csv";
 		}
 	}
 
 	// Do the actual simulation
-	Logger log("cim.log"), llog("lvector-cim.csv"), rlog("rvector-cim.csv");
+	Logger log(logName), llog(llogName), rlog(rlogName);
 	Simulation sim(components, frequency, timestep, duration, log);
 	if (intf)
 		sim.addExternalInterface(intf);
-	while (sim.step(log, llog, rlog))
-		sim.increaseByTimeStep();
+	sim.runRT(RTTimerFD, true, log, llog, rlog);
+	if (intf)
+		delete intf;
 	return 0;
 }
-
