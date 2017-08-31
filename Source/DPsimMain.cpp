@@ -113,6 +113,7 @@ int main(int argc, const char* argv[]) {
 			return 1;
 		}
 	}
+	reader.parseFiles();
 	std::vector<BaseComponent*> components = reader.getComponents();
 
 	// TODO: this is a simple, pretty much fixed setup. Make this more flexible / configurable
