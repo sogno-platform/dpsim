@@ -7,13 +7,14 @@
 using namespace DPsim;
 
 void usage() {
-	std::cerr << "usage: DPsim [OPTIONS] CIM_FILE..." << std::endl
+	std::cerr << "usage: DPsolver [OPTIONS] CIM_FILE..." << std::endl
 	  << "Possible options:" << std::endl
 	  << "  -d/--duration DURATION:   simulation duration in seconds (default: 0.3)" << std::endl
 	  << "  -f/--frequency FREQUENCY: system frequency in Hz (default: 50)" << std::endl
 	  << "  -h/--help:                show this help and exit" << std::endl
 	  << "  -i/--interface OBJ_NAME:  prefix for the names of the shmem objects used for communication (default: /dpsim)" << std::endl
 	  << "  -n/--node NODE_ID:        RDF id of the node where the interfacing voltage/current source should be placed" << std::endl
+	  << "  -r/--realtime:            enable realtime simulation " << std::endl
 	  << "  -s/--split INDEX:         index of this instance for distributed simulation (0 or 1)" << std::endl
 	  << "  -t/--timestep TIMESTEP:   simulation timestep in seconds (default: 1e-3)" << std::endl;
 }
@@ -30,13 +31,17 @@ bool parseInt(const char *s, int *i) {
 	return (end != s && !*end);
 }
 
-int main(int argc, const char* argv[]) {
+// TODO: that many platform-dependent ifdefs inside main are kind of ugly
+int cimMain(int argc, const char* argv[]) {
+	bool rt = false;
 	int i, split = -1;
 	Real frequency = 2*PI*50, timestep = 0.001, duration = 0.3;
 	std::string interfaceBase = "/dpsim";
 	std::string splitNode = "";
-	std::string outName, inName, logName, llogName, rlogName;
+	std::string outName, inName, logName("log.txt"), llogName("lvector.csv"), rlogName("rvector.csv");
+#ifdef __linux__
 	ShmemInterface *intf = nullptr;
+#endif
 
 	// Parse arguments
 	for (i = 1; i < argc; i++) {
@@ -93,6 +98,8 @@ int main(int argc, const char* argv[]) {
 				return 1;
 			}
 			splitNode = std::string(argv[++i]);
+		} else if (!strcmp(argv[i], "-r") || !strcmp(argv[i], "--realtime")) {
+			rt = true;
 		} else if (!strcmp(argv[i], "-h") || !strcmp(argv[i], "--help")) {
 			usage();
 			return 0;
@@ -108,6 +115,15 @@ int main(int argc, const char* argv[]) {
 		std::cerr << "No input files given (see DPsim --help for usage)" << std::endl;
 		return 1;
 	}
+#ifndef __linux__
+	if (split >= 0 || splitNode.length() != 0) {
+		std::cerr << "Distributed simulation not supported on this platform" << std::endl;
+		return 1;
+	} else if (rt) {
+		std::cerr << "Realtime simulation not supported on this platform" << std::endl;
+		return 1;
+	}
+#endif
 
 	// Parse CIM files
 	CIMReader reader(frequency);
@@ -120,6 +136,7 @@ int main(int argc, const char* argv[]) {
 	reader.parseFiles();
 	std::vector<BaseComponent*> components = reader.getComponents();
 
+#ifdef __linux__
 	// TODO: this is a simple, pretty much fixed setup. Make this more flexible / configurable
 	if (split >= 0) {
 		int node = reader.mapTopologicalNode(splitNode);
@@ -152,14 +169,31 @@ int main(int argc, const char* argv[]) {
 			rlogName = "rvector-cim1.csv";
 		}
 	}
+#endif
 
 	// Do the actual simulation
 	Logger log(logName), llog(llogName), rlog(rlogName);
 	Simulation sim(components, frequency, timestep, duration, log);
+#ifdef __linux__
 	if (intf)
 		sim.addExternalInterface(intf);
-	sim.runRT(RTTimerFD, true, log, llog, rlog);
+
+	if (rt) {
+		sim.runRT(RTTimerFD, true, log, llog, rlog);
+	} else {
+		while (sim.step(log, llog, rlog))
+			sim.increaseByTimeStep();
+	}
+
 	if (intf)
 		delete intf;
+#else
+	while (sim.step(log, llog, rlog))
+		sim.increaseByTimeStep();
+#endif
 	return 0;
+}
+
+int main(int argc, const char* argv[]) {
+	return cimMain(argc, argv);
 }
