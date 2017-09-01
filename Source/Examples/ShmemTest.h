@@ -1,3 +1,4 @@
+#ifdef __linux__
 #ifndef SHMEMTEST_H
 #define SHMEMTEST_H
 
@@ -10,4 +11,5 @@ namespace DPsim {
 	void shmemDistributedRef();
 }
 
+#endif
 #endif

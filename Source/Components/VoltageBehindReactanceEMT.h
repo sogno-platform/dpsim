@@ -69,13 +69,16 @@ namespace DPsim {
 		/// q dynamic flux
 		double mDPsiq;
 
-		/// Dynamic dq voltages
+		/// Dynamic d voltage
 		double mDVq;
+		/// Dynamic q voltage
 		double mDVd;
 
-		/// Dynamic abc voltages
+		/// Dynamic voltage phase a
 		double mDVa;
+		/// Dynamic voltage phase b
 		double mDVb;
+		/// Dynamic voltage phase c
 		double mDVc;
 
 		//Theta mech hist
@@ -83,6 +86,7 @@ namespace DPsim {
 		double mThetaMech_hist2;
 
 		//Theta omega hist
+		double mOmMech_hist;
 		double mOmMech_hist1;
 		double mOmMech_hist2;
 
@@ -139,18 +143,14 @@ namespace DPsim {
 		double mMechTorque;
 		/// electrical torque
 		double mElecTorque;
+		double mElecTorque_hist;
 
-		/// mechanical torque
-		double mMechTorque_past;
-		/// electrical torque
-		double mElecTorque_past;
-		/// rotor speed omega_r
-		double mOmMech_past;
+
 
 		/// voltage vector q d 0 kq1 kq2 df kd
 		DPSMatrix mVoltages2 = DPSMatrix::Zero(7, 1);
 		/// flux linkage vector
-		DPSMatrix mFluxes2 = DPSMatrix::Zero(7, 1);
+		DPSMatrix mFluxes = DPSMatrix::Zero(7, 1);
 		/// current vector
 		DPSMatrix mCurrents2 = DPSMatrix::Zero(7, 1);
 
@@ -172,9 +172,6 @@ namespace DPsim {
 		double mIkq1;
 		double mIkq2;
 
-		double mId_past;
-		double mIq_past;
-
 		/// flux linkage vector q d 0 fd kd kq1 kq2
 		double mPsid;
 		double mPsiq;
@@ -183,9 +180,6 @@ namespace DPsim {
 		double mPsikd;
 		double mPsikq1;
 		double mPsikq2;
-
-		double mPsid_past;
-		double mPsiq_past;
 
 		/// Interface voltage vector
 		double mVa;
@@ -196,6 +190,74 @@ namespace DPsim {
 		double mIa;
 		double mIb;
 		double mIc;
+
+		/// Magnetizing flux linkage in qd axes
+		Real mPsimq;
+		Real mPsimd;
+
+		/// Auxiliar variables
+		Real b11;
+		Real b12;
+		Real b13;
+		Real b21;
+		Real b22;
+		Real b23;
+		Real b31;
+		Real b32;
+		Real b33;
+		Real b41;
+		Real b42;
+		Real b43;
+		Real c11;
+		Real c12;
+		Real c23;
+		Real c24;
+		Real c15;
+		Real c25;
+		Real c26;
+		Real c21_omega;
+		Real c22_omega;
+		Real c13_omega;
+		Real c14_omega;
+
+		/// Auxiliar matrix
+		DPSMatrix E1 = DPSMatrix::Zero(2, 2);
+		DPSMatrix Ea = DPSMatrix::Zero(2, 2);
+		DPSMatrix E1b = DPSMatrix::Zero(2, 1);
+		DPSMatrix E2 = DPSMatrix::Zero(2, 2);
+		DPSMatrix E2b = DPSMatrix::Zero(2, 2);
+		DPSMatrix F1 = DPSMatrix::Zero(2, 2);
+		DPSMatrix Fa = DPSMatrix::Zero(2, 2);
+		DPSMatrix F1b = DPSMatrix::Zero(2, 1);
+		DPSMatrix F2 = DPSMatrix::Zero(2, 2);
+		DPSMatrix F2b = DPSMatrix::Zero(2, 2);
+		DPSMatrix F3 = DPSMatrix::Zero(2, 2);
+		DPSMatrix F3b = DPSMatrix::Zero(2, 1);
+		DPSMatrix K1a = DPSMatrix::Zero(2, 2);
+		DPSMatrix K1b = DPSMatrix::Zero(2, 1);
+		DPSMatrix K1;
+		DPSMatrix K2a = DPSMatrix::Zero(2, 2);
+		DPSMatrix K2b = DPSMatrix::Zero(2, 1);
+		DPSMatrix K2;
+		DPSMatrix ParkMat = DPSMatrix::Zero(3, 3);
+		DPSMatrix InverseParkMat = DPSMatrix::Zero(3, 3);
+		DPSMatrix K = DPSMatrix::Zero(3, 3);
+		DPSMatrix C26 = DPSMatrix::Zero(2, 1);
+		DPSMatrix H_qdr;
+
+		/// Equivalent voltage behind reactance resistance matrix
+		DPSMatrix R_vbr_eq = DPSMatrix::Zero(3, 3);
+
+		/// Equivalent voltage behind reactance rotor voltage vector
+		DPSMatrix e_r_vbr = DPSMatrix::Zero(3, 1);
+
+		/// Equivalent voltage behind reactance voltage vector
+		DPSMatrix e_h_vbr;
+
+		/// Flux vector
+		DPSMatrix mPsikq1kq2 = DPSMatrix::Zero(2, 1);
+		DPSMatrix mPsifdkd = DPSMatrix::Zero(2, 1);
+
 
 		// ### Useful Matrices ###
 		/// inductance matrix
@@ -215,7 +277,7 @@ namespace DPsim {
 		//Historical term of voltage
 		DPSMatrix mV_hist = DPSMatrix::Zero(3, 1);
 
-		//Historical term of voltage
+		//Phase Voltages in pu
 		DPSMatrix mVabc = DPSMatrix::Zero(3, 1);
 
 		//Historical term of current
@@ -223,6 +285,12 @@ namespace DPsim {
 
 		//Historical term of voltage
 		DPSMatrix mDVabc = DPSMatrix::Zero(3, 1);
+
+		//Phase Voltages
+		DPSMatrix mVoltageVector = DPSMatrix::Zero(3, 1);
+
+		//Phase Currents
+		DPSMatrix mCurrentVector = DPSMatrix::Zero(3, 1);
 
 
 	public:
@@ -264,19 +332,25 @@ namespace DPsim {
 		/// to calculate the flux and current from the voltage vector in per unit.
 		void stepInPerUnit(Real om, Real dt, Real fieldVoltage, Real mechPower, Real time, NumericalMethod numMethod);
 
+		void FormTheveninEquivalent(Real dt);
+
 		/// Retrieves calculated voltage from simulation for next step
 		void postStep(SystemModel& system);
 
 		/// Park transform as described in Krause
 		DPSMatrix parkTransform(Real theta, double a, double b, double c);
+		//DPSMatrix parkTransform(Real theta, DPSMatrix& in);
 
 		/// Inverse Park transform as described in Krause
 		DPSMatrix inverseParkTransform(Real theta, double q, double d, double zero);
+		//DPSMatrix inverseParkTransform(Real theta, DPSMatrix& in);
 
-		DPSMatrix& getVoltages() { return mVabc; }
-		DPSMatrix& getCurrents() { return mIabc; }
-		//DPSMatrix& getFluxes() { return mFluxes2; }
-
+		DPSMatrix& getVoltages() { return mVoltageVector; }
+		DPSMatrix& getCurrents() { return mCurrentVector; }
+		//DPSMatrix& getFluxes() { return mFluxes; }
+		double getElectricalTorque() { return mElecTorque; }
+		double getRotationalSpeed() { return mOmMech; }
+		double getRotorPosition() { return mThetaMech; }
 
 		void init(Real om, Real dt) { }
 		void applySystemMatrixStamp(SystemModel& system) { }

@@ -1,3 +1,5 @@
+#ifdef __linux__
+
 #include <cstdio>
 #include <cstdlib>
 
@@ -156,3 +158,5 @@ void ShmemInterface::writeValues(SystemModel& model) {
 		/* Don't throw here, because we managed to send something */
 	}
 }
+
+#endif

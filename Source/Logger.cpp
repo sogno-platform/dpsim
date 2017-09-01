@@ -49,6 +49,11 @@ void Logger::LogDataLine(double time, DPSMatrix& data) {
 	mLogFile << std::endl;
 }
 
+void Logger::LogDataLine(double time, double data) {
+	mLogFile << std::scientific << time;
+	mLogFile << ", " << data;
+	mLogFile << std::endl;
+}
 std::ostream& Logger::getNullStream() {
 	if (nullStream.good())
 		nullStream.setstate(std::ios_base::badbit);

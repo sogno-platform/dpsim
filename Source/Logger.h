@@ -23,6 +23,7 @@ class Logger {
 	
 		std::ostream& Log(LogLevel level = LogLevel::INFO);
 		void LogDataLine(double time, DPSMatrix& data);
+		void LogDataLine(double time, double data);
 };
 #endif
 

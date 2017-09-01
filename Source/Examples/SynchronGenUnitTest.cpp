@@ -79,7 +79,7 @@ void DPsim::SynGenUnitTestBalancedResLoad() {
 	double om = 2.0*M_PI*60.0;
 	tf = 0.1; dt = 0.000001; t = 0;
 	Simulation newSim(circElements, om, dt, tf, log, SimulationType::EMT);
-	newSim.setNumericalMethod(NumericalMethod::Euler);
+	newSim.setNumericalMethod(NumericalMethod::Trapezoidal_flux);
 
 	// Initialize generator
 	double initActivePower = 555e3;
@@ -293,7 +293,7 @@ void DPsim::SynGenUnitTestThreePhaseFault() {
 	double om = 2.0*M_PI*60.0;
 	tf = 0.3; dt = 0.000001; t = 0;
 	Simulation newSim(circElements, om, dt, tf, log, SimulationType::EMT);
-	newSim.setNumericalMethod(NumericalMethod::Trapezoidal_current);
+	newSim.setNumericalMethod(NumericalMethod::Trapezoidal_flux);
 	newSim.addSystemTopology(circElementsBreakerOn);
 	newSim.switchSystemMatrix(0);
 
@@ -391,7 +391,7 @@ void DPsim::SynGenDPUnitTestBalancedResLoad() {
 	double om = 2.0*M_PI*60.0;
 	tf = 0.01; dt = 0.000001; t = 0;
 	Simulation newSim(circElements, om, dt, tf, log);
-	newSim.setNumericalMethod(NumericalMethod::Euler);
+	newSim.setNumericalMethod(NumericalMethod::Trapezoidal_flux);
 
 	// Initialize generator
 	double initActivePower = 555e3;

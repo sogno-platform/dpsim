@@ -210,6 +210,7 @@ void DPsim::runDpEmtVarFreqStudy() {
 	VarFreqRXLineResLoad(timeStep, finalTime, freqStep, loadStep, rampTime);
 }
 
+#ifdef __linux__
 void DPsim::RTExample() {
 	std::vector<BaseComponent*> comps;
 	Logger log;
@@ -231,3 +232,4 @@ void DPsim::RTExample() {
 		delete comp;
 	}
 }
+#endif // __linux__
