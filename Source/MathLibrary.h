@@ -1,7 +1,6 @@
 #ifndef MATHLIBRARY_H
 #define MATHLIBRARY_H
 
-#define _USE_MATH_DEFINES
 #include <cmath>
 #include <complex>
 #include <Eigen/Dense>
@@ -9,12 +8,20 @@
 
 // ### deprecated math section ###
 typedef Eigen::MatrixXd DPSMatrix;
-#define DPS_PI M_PI
+
+// VS2017 doesn't define M_PI unless _USE_MATH_DEFINES is included before cmath
+// which is hard to guarantee, so we make sure it is defined here
+#define DPS_PI PI
+#ifndef PI
+#ifndef M_PI
+#define M_PI 3.14159265358979323846
+#endif
+#define PI M_PI
+#endif
 
 namespace DPsim
 {
 	// ### Constants ###
-	#define PI M_PI
 
 	// ### Types ###
 	typedef unsigned int UInt;
