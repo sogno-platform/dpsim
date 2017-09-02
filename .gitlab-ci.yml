@@ -5,6 +5,7 @@ variables:
 stages:
   - prepare
   - build
+  - docker
 
 docker:
   stage: prepare
@@ -21,7 +22,15 @@ build:
     - cmake ..
     - make
   image: ${DOCKER_IMAGE}
+  artifacts:
+    paths:
+      - Source/build
   tags:
     - docker
 
-# no testing for now
+test:
+  stage: test
+  script:
+    - python3 Source/Tests/run_tests.py
+  tags:
+    - docker
