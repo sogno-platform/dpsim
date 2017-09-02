@@ -5,7 +5,7 @@ variables:
 stages:
   - prepare
   - build
-  - docker
+  - test
 
 docker:
   stage: prepare
