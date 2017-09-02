@@ -31,7 +31,8 @@ build:
 test:
   stage: test
   script:
-    - python3 Source/Tests/run_tests.py
+    - cd Source/Tests
+    - python3 run_tests.py
   tags:
     - docker
   image: ${DOCKER_IMAGE}
