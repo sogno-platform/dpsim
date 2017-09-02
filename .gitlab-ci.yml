@@ -34,3 +34,4 @@ test:
     - python3 Source/Tests/run_tests.py
   tags:
     - docker
+  image: ${DOCKER_IMAGE}
