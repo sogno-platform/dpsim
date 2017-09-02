@@ -54,7 +54,7 @@ def run_test(binary, dpCsv, expectedCsv):
 if __name__ == "__main__":
     sources = glob.glob("Test*.cpp")
     bins = ["../build/" + s.replace(".cpp", "") for s in sources]
-    dpCsvs = ["../build/" + s.replace(".cpp", ".csv") for s in sources]
+    dpCsvs = [s.replace(".cpp", ".csv") for s in sources]
     expectedCsvs = [s.replace(".cpp", ".expected.csv") for s in sources]
     ret = 0
     for i in range(0, len(sources)):
