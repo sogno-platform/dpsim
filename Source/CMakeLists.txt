@@ -8,13 +8,15 @@ else()
 	find_package(Eigen3 REQUIRED)
 endif()
 
+find_package(PythonLibs)
+
 if(WIN32)
 	set(ARABICA_XML_BACKEND USE_MSXML)
 else()
 	set(LIBS "-lrt -lvillas-ext")
 endif()
 
-include_directories(${EIGEN3_INCLUDE_DIR})
+include_directories(${EIGEN3_INCLUDE_DIR} ${PYTHON_INCLUDE_DIRS})
 add_subdirectory(CIM-XML-Parser)
 
 # static library target for everything but main (otherwise, CMake compiles all
@@ -28,7 +30,7 @@ target_link_libraries(DPsim CIMParser)
 
 # actual executable
 add_executable(DPSolver ${MAIN_FULLPATH})
-target_link_libraries(DPSolver DPsim CIMParser ${LIBS})
+target_link_libraries(DPSolver DPsim CIMParser pthread ${PYTHON_LIBRARIES} ${LIBS})
 
 # tests
 file(GLOB TESTS Tests/*.cpp)

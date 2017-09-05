@@ -1,5 +1,7 @@
+#include <Python.h>
 #include <iostream>
 #include <string>
+#include <pthread.h>
 #include "CIMReader.h"
 #include "Simulation.h"
 #include "ShmemInterface.h"
@@ -29,6 +31,73 @@ bool parseInt(const char *s, int *i) {
 	char *end;
 	*i = strtol(s, &end, 0);
 	return (end != s && !*end);
+}
+
+std::vector<BaseComponent*> components;
+//
+
+static pthread_t simThread;
+
+struct SimContext {
+	Simulation *sim;
+	Logger *log;
+	pthread_mutex_t S, M;
+	std::atomic_int stop;
+};
+
+static SimContext globalCtx;
+
+static void* simThreadFunction(void* arg) {
+	bool running = true;
+	SimContext* ctx = (SimContext*) arg;
+
+	pthread_mutex_lock(&ctx->S);
+	while (running) {
+		running = ctx->sim->step(*ctx->log);
+		ctx->sim->increaseByTimeStep();
+		if (ctx->stop) {
+			pthread_mutex_unlock(&ctx->S);
+			pthread_mutex_lock(&ctx->M);
+			pthread_mutex_unlock(&ctx->M);
+			pthread_mutex_lock(&ctx->S);
+		}
+	}
+	pthread_mutex_unlock(&ctx->S);
+	return nullptr;
+}
+
+static PyObject*
+pythonStart(PyObject *self, PyObject *args) {
+	globalCtx.log = new Logger();
+	globalCtx.sim = new Simulation(components, 2*PI*50, 1e-3, 1000, *globalCtx.log);
+	globalCtx.stop = 0;
+	pthread_mutex_init(&globalCtx.M, nullptr);
+	pthread_mutex_init(&globalCtx.S, nullptr);
+	pthread_create(&simThread, nullptr, simThreadFunction, &globalCtx);
+	//pthread_join(simThread, nullptr);
+	return Py_None;
+}
+
+static PyObject*
+pythonWait(PyObject *self, PyObject *args) {
+	pthread_join(simThread, nullptr);
+	return Py_None;
+}
+
+static PyMethodDef pythonMethods[] = {
+	{"start", pythonStart, METH_VARARGS, "Start the simulation."},
+	{"wait", pythonWait, METH_VARARGS, "Wait for the simulation to finish."},
+	{NULL, NULL, 0, NULL}
+};
+
+static PyModuleDef dpsimModule = {
+	PyModuleDef_HEAD_INIT, "dpsim", NULL, -1, pythonMethods,
+	NULL, NULL, NULL, NULL
+};
+
+static PyObject*
+PyInit_dpsim(void) {
+	return PyModule_Create(&dpsimModule);
 }
 
 // TODO: that many platform-dependent ifdefs inside main are kind of ugly
@@ -134,7 +203,7 @@ int cimMain(int argc, const char* argv[]) {
 		}
 	}
 	reader.parseFiles();
-	std::vector<BaseComponent*> components = reader.getComponents();
+	components = reader.getComponents();
 
 #ifdef __linux__
 	// TODO: this is a simple, pretty much fixed setup. Make this more flexible / configurable
@@ -194,6 +263,21 @@ int cimMain(int argc, const char* argv[]) {
 	return 0;
 }
 
+int pythonMain(int argc, const char* argv[]) {
+	PyImport_AppendInittab("dpsim", &PyInit_dpsim);
+	Py_Initialize();
+
+	components.push_back(new VoltSourceRes("V_in", 1, 0, 10, 1, 1));
+	components.push_back(new LinearResistor("R_load", 1, 0, 100));
+
+	while (std::cin.good() && Py_IsInitialized()) {
+		std::cout << "> ";
+		std::string line;
+		std::getline(std::cin, line);
+		PyRun_SimpleString(line.c_str());
+	}
+}
+
 int main(int argc, const char* argv[]) {
-	return cimMain(argc, argv);
+	return pythonMain(argc, argv);
 }
