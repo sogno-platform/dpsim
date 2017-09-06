@@ -1,8 +1,8 @@
-#include "VoltageBehindReactanceEMT.h"
+#include "VoltageBehindReactanceDP.h"
 
 using namespace DPsim;
 
-VoltageBehindReactanceEMT::VoltageBehindReactanceEMT(std::string name, int node1, int node2, int node3,
+VoltageBehindReactanceDP::VoltageBehindReactanceDP(std::string name, int node1, int node2, int node3,
 	Real nomPower, Real nomVolt, Real nomFreq, int poleNumber, Real nomFieldCur,
 	Real Rs, Real Ll, Real Lmd, Real Lmd0, Real Lmq, Real Lmq0,
 	Real Rfd, Real Llfd, Real Rkd, Real Llkd,
@@ -33,9 +33,9 @@ VoltageBehindReactanceEMT::VoltageBehindReactanceEMT(std::string name, int node1
 
 	// steady state per unit initial value
 	initWithPerUnitParam(Rs, Ll, Lmd, Lmd0, Lmq, Lmq0, Rfd, Llfd, Rkd, Llkd, Rkq1, Llkq1, Rkq2, Llkq2, inertia);
-	
+
 }
-void VoltageBehindReactanceEMT::initWithPerUnitParam(
+void VoltageBehindReactanceDP::initWithPerUnitParam(
 	Real Rs, Real Ll, Real Lmd, Real Lmd0, Real Lmq, Real Lmq0,
 	Real Rfd, Real Llfd, Real Rkd, Real Llkd,
 	Real Rkq1, Real Llkq1, Real Rkq2, Real Llkq2,
@@ -62,7 +62,7 @@ void VoltageBehindReactanceEMT::initWithPerUnitParam(
 	mRkq2 = Rkq2;
 	mLlkq2 = Llkq2;
 	mH = H;
-		
+
 
 	//Dynamic mutual inductances
 	mDLmd = 1. / (1. / mLmd + 1. / mLlfd + 1. / mLlkd);
@@ -94,7 +94,7 @@ void VoltageBehindReactanceEMT::initWithPerUnitParam(
 }
 
 
-void VoltageBehindReactanceEMT::init(Real om, Real dt,
+void VoltageBehindReactanceDP::init(Real om, Real dt,
 	Real initActivePower, Real initReactivePower, Real initTerminalVolt, Real initVoltAngle) {
 
 	mResistanceMat <<
@@ -105,16 +105,23 @@ void VoltageBehindReactanceEMT::init(Real om, Real dt,
 	// steady state per unit initial value
 	initStatesInPerUnit(initActivePower, initReactivePower, initTerminalVolt, initVoltAngle);
 
-	mVa = inverseParkTransform(mThetaMech, mVq, mVd, mV0)(0);
-	mVb = inverseParkTransform(mThetaMech, mVq, mVd, mV0)(1);
-	mVc = inverseParkTransform(mThetaMech, mVq, mVd, mV0)(2);
+	mVaRe = dq0ToAbcTransform(mThetaMech, mVq, mVd, mV0)(0);
+	mVbRe = dq0ToAbcTransform(mThetaMech, mVq, mVd, mV0)(1);
+	mVcRe = dq0ToAbcTransform(mThetaMech, mVq, mVd, mV0)(2);
+	mVaIm = dq0ToAbcTransform(mThetaMech, mVq, mVd, mV0)(3);
+	mVbIm = dq0ToAbcTransform(mThetaMech, mVq, mVd, mV0)(4);
+	mVcIm = dq0ToAbcTransform(mThetaMech, mVq, mVd, mV0)(5);
 
-	mIa = inverseParkTransform(mThetaMech, mIq, mId, mI0)(0);
-	mIb = inverseParkTransform(mThetaMech, mIq, mId, mI0)(1);
-	mIc = inverseParkTransform(mThetaMech, mIq, mId, mI0)(2);
+
+	mIaRe = dq0ToAbcTransform(mThetaMech, mIq, mId, mI0)(0);
+	mIbRe = dq0ToAbcTransform(mThetaMech, mIq, mId, mI0)(1);
+	mIcRe = dq0ToAbcTransform(mThetaMech, mIq, mId, mI0)(2);
+	mIaIm = dq0ToAbcTransform(mThetaMech, mIq, mId, mI0)(3);
+	mIbIm = dq0ToAbcTransform(mThetaMech, mIq, mId, mI0)(4);
+	mIcIm = dq0ToAbcTransform(mThetaMech, mIq, mId, mI0)(5);
 }
 
-void VoltageBehindReactanceEMT::initStatesInPerUnit(Real initActivePower, Real initReactivePower,
+void VoltageBehindReactanceDP::initStatesInPerUnit(Real initActivePower, Real initReactivePower,
 	Real initTerminalVolt, Real initVoltAngle) {
 
 	double init_P = initActivePower / mNomPower;
@@ -189,18 +196,20 @@ void VoltageBehindReactanceEMT::initStatesInPerUnit(Real initActivePower, Real i
 
 	// Initialize mechanical angle
 	mThetaMech = initVoltAngle + init_delta;
-	//mThetaMech = initVoltAngle + init_delta - M_PI / 2;
-	mThetaMech_hist1 = mThetaMech;
+	//mThetaMech_hist1 = mThetaMech;
 
-	mDVa = inverseParkTransform(mThetaMech, mDVq, mDVd, 0)(0);
-	mDVb = inverseParkTransform(mThetaMech, mDVq, mDVd, 0)(1);
-	mDVc = inverseParkTransform(mThetaMech, mDVq, mDVd, 0)(2);
+	mDVaRe = dq0ToAbcTransform(mThetaMech, mDVq, mDVd, 0)(0);
+	mDVbRe = dq0ToAbcTransform(mThetaMech, mDVq, mDVd, 0)(1);
+	mDVcRe = dq0ToAbcTransform(mThetaMech, mDVq, mDVd, 0)(2);
+	mDVaIm = dq0ToAbcTransform(mThetaMech, mDVq, mDVd, 0)(3);
+	mDVbIm = dq0ToAbcTransform(mThetaMech, mDVq, mDVd, 0)(4);
+	mDVcIm = dq0ToAbcTransform(mThetaMech, mDVq, mDVd, 0)(5);
 
 	//Initial inductance matrix
 	mDInductanceMat <<
-	mLl + mLa - mLb*cos(2 * mThetaMech), -mLa / 2 - mLb*cos(2 * mThetaMech - 2 * PI / 3), -mLa / 2 - mLb*cos(2 * mThetaMech + 2 * PI / 3),
-	-mLa / 2 - mLb*cos(2 * mThetaMech - 2 * PI / 3), mLl + mLa - mLb*cos(2 * mThetaMech - 4 * PI / 3), -mLa / 2 - mLb*cos(2 * mThetaMech),
-	-mLa / 2 - mLb*cos(2 * mThetaMech + 2 * PI / 3), -mLa / 2 - mLb*cos(2 * mThetaMech), mLl + mLa - mLb*cos(2 * mThetaMech + 4 * PI / 3);
+		mLl + mLa - mLb*cos(2 * mThetaMech), -mLa / 2 - mLb*cos(2 * mThetaMech - 2 * PI / 3), -mLa / 2 - mLb*cos(2 * mThetaMech + 2 * PI / 3),
+		-mLa / 2 - mLb*cos(2 * mThetaMech - 2 * PI / 3), mLl + mLa - mLb*cos(2 * mThetaMech - 4 * PI / 3), -mLa / 2 - mLb*cos(2 * mThetaMech),
+		-mLa / 2 - mLb*cos(2 * mThetaMech + 2 * PI / 3), -mLa / 2 - mLb*cos(2 * mThetaMech), mLl + mLa - mLb*cos(2 * mThetaMech + 4 * PI / 3);
 
 	mPsimq = mDLmq*(mPsikq1 / mLlkq1 + mPsikq2 / mLlkq2 + mIq);
 	mPsimd = mDLmd*(mPsifd / mLlfd + mPsikd / mLlkd + mId);
@@ -208,33 +217,49 @@ void VoltageBehindReactanceEMT::initStatesInPerUnit(Real initActivePower, Real i
 }
 
 
-void VoltageBehindReactanceEMT::step(SystemModel& system, Real fieldVoltage, Real mechPower, Real time) {
+void VoltageBehindReactanceDP::step(SystemModel& system, Real fieldVoltage, Real mechPower, Real time) {
 
 	stepInPerUnit(system.getOmega(), system.getTimeStep(), fieldVoltage, mechPower, time, system.getNumMethod());
 
-	mVoltageVector = mVabc*mBase_v;
-	mCurrentVector = mIabc*mBase_i;
+	mVoltageVector << 
+		mVabcRe*mBase_v,
+		mDVabcIm*mBase_v;
+	mCurrentVector <<
+		mIabcRe*mBase_i,
+		mIabcIm*mBase_i;
 
 
 
 }
 
-void VoltageBehindReactanceEMT::stepInPerUnit(Real om, Real dt, Real fieldVoltage, Real mechPower, Real time, NumericalMethod numMethod) {
-	
-	mVabc <<
-		mVa,
-		mVb,
-		mVc;
+void VoltageBehindReactanceDP::stepInPerUnit(Real om, Real dt, Real fieldVoltage, Real mechPower, Real time, NumericalMethod numMethod) {
 
-	mIabc <<
-		mIa,
-		mIb,
-		mIc;
+	mVabcRe <<
+		mVaRe,
+		mVbRe,
+		mVcRe;
+	mVabcIm <<
+		mVaIm,
+		mVbIm,
+		mVcIm;
 
-	mDVabc <<
-		mDVa,
-		mDVb,
-		mDVc;
+	mIabcRe <<
+		mIaRe,
+		mIbRe,
+		mIcRe;
+	mIabcIm <<
+		mIaIm,
+		mIbIm,
+		mIcIm;
+
+	mDVabcRe <<
+		mDVaRe,
+		mDVbRe,
+		mDVcRe;
+	mDVabcIm <<
+		mDVaIm,
+		mDVbIm,
+		mDVcIm;
 
 
 	//mV_hist = (mResistanceMat - (2. / dt)*mDInductanceMat)*mIabc + mDVabc - mVabc;
@@ -269,7 +294,7 @@ void VoltageBehindReactanceEMT::stepInPerUnit(Real om, Real dt, Real fieldVoltag
 	//mOmMech = mOmMech + dt * (1. / (2 * mH) * (mMechTorque - mElecTorque));
 	mOmMech = mOmMech + dt * (1. / (2. * mH) * (mElecTorque - mMechTorque));
 	mThetaMech = mThetaMech + dt * (mOmMech* mBase_OmMech);
-	
+
 	DPSMatrix mDInductanceMat_hist = mDInductanceMat;
 
 	mDInductanceMat <<
@@ -280,7 +305,7 @@ void VoltageBehindReactanceEMT::stepInPerUnit(Real om, Real dt, Real fieldVoltag
 	DPSMatrix R_load(3, 3);
 
 	if (time < 0.1 || time > 0.2)
-	{ 
+	{
 		R_load <<
 			1037.8378 / mBase_Z, 0, 0,
 			0, 1037.8378 / mBase_Z, 0,
@@ -294,21 +319,32 @@ void VoltageBehindReactanceEMT::stepInPerUnit(Real om, Real dt, Real fieldVoltag
 			0, 0, 0.001 / mBase_Z;
 	}
 
-	
-	mIabc = mDInductanceMat.inverse()*mDInductanceMat_hist*mIabc - dt*mBase_OmElec*mDInductanceMat.inverse()*(mDVabc+(mResistanceMat + R_load)*mIabc);
-	mVabc = -R_load*mIabc;
 
-	mIa = mIabc(0);
-	mIb = mIabc(1);
-	mIc = mIabc(2);
+	mIabcRe = mDInductanceMat.inverse()*mDInductanceMat_hist*mIabcRe - dt*mBase_OmElec*mDInductanceMat.inverse()*
+		(mDVabcRe + (mResistanceMat + R_load)*mIabcRe - mDInductanceMat_hist*mIabcIm);
+	mIabcIm = mDInductanceMat.inverse()*mDInductanceMat_hist*mIabcIm - dt*mBase_OmElec*mDInductanceMat.inverse()*
+		(mDVabcIm + (mResistanceMat + R_load)*mIabcIm + mDInductanceMat_hist*mIabcRe);
+	mVabcRe = -R_load*mIabcRe;
+	mVabcIm = -R_load*mIabcIm;
 
-	mVa = mVabc(0);
-	mVb = mVabc(1);
-	mVc = mVabc(2);
+	mIaRe = mIabcRe(0);
+	mIbRe = mIabcRe(1);
+	mIcRe = mIabcRe(2);
 
-	mIq = parkTransform(mThetaMech, mIa, mIb, mIc)(0);
-	mId = parkTransform(mThetaMech, mIa, mIb, mIc)(1);
-	mI0 = parkTransform(mThetaMech, mIa, mIb, mIc)(2);	
+	mIaIm = mIabcIm(0);
+	mIbIm = mIabcIm(1);
+	mIcIm = mIabcIm(2);
+
+	mVaRe = mVabcRe(0);
+	mVbRe = mVabcRe(1);
+	mVcRe = mVabcRe(2);
+	mVaIm = mVabcIm(0);
+	mVbIm = mVabcIm(1);
+	mVcIm = mVabcIm(2);
+
+	mIq = abcToDq0Transform(mThetaMech, mIaRe, mIbRe, mIcRe, mIaIm, mIbIm, mIcIm)(0);
+	mId = abcToDq0Transform(mThetaMech, mIaRe, mIbRe, mIcRe, mIaIm, mIbIm, mIcIm)(1);
+	mI0 = abcToDq0Transform(mThetaMech, mIaRe, mIbRe, mIcRe, mIaIm, mIbIm, mIcIm)(2);
 
 	mPsimq = mDLmq*(mPsikq1 / mLlkq1 + mPsikq2 / mLlkq2 + mIq);
 	mPsimd = mDLmd*(mPsifd / mLlfd + mPsikd / mLlkd + mId);
@@ -317,25 +353,28 @@ void VoltageBehindReactanceEMT::stepInPerUnit(Real om, Real dt, Real fieldVoltag
 	mPsikq2 = mPsikq2 - dt*mBase_OmElec*(mRkq2 / mLlkq2)*(mPsikq2 - mPsimq);
 	mPsifd = mPsifd - dt*mBase_OmElec*((mRfd / mLlfd)*(mPsifd - mPsimd) - mVfd);
 	mPsikd = mPsikd - dt*mBase_OmElec*(mRkd / mLlkd)*(mPsikd - mPsimd);
-	
+
 	// Calculate dynamic flux likages
 	mDPsiq = mDLmq*(mPsikq1 / mLlkq1) + mDLmq*(mPsikq2 / mLlkq2);
 	mDPsid = mDLmd*(mPsifd / mLlfd) + mDLmd*(mPsikd / mLlkd);
-		
+
 	mDVq = mOmMech*mDPsid + mDLmq*mRkq1*(mDPsiq - mPsikq1) / (mLlkq1*mLlkq1) +
 		mDLmq*mRkq2*(mDPsiq - mPsikq2) / (mLlkq2*mLlkq2) + (mRkq1 / (mLlkq1*mLlkq1) + mRkq2 / (mLlkq2*mLlkq2))*mDLmq*mDLmq*mIq;
 	mDVd = -mOmMech*mDPsiq + mDLmd*mRkd*(mDPsid - mPsikd) / (mLlkd*mLlkd) + (mDLmd / mLlfd)*mVfd +
 		mDLmd*mRfd*(mDPsid - mPsifd) / (mLlfd*mLlfd) + (mRfd / (mLlfd*mLlfd) + mRkd / (mLlkd*mLlkd))*mDLmd*mDLmd*mId;
 
-	mDVa = inverseParkTransform(mThetaMech, mDVq, mDVd, 0)(0);
-	mDVb = inverseParkTransform(mThetaMech, mDVq, mDVd, 0)(1);
-	mDVc = inverseParkTransform(mThetaMech, mDVq, mDVd, 0)(2);
+	mDVaRe = dq0ToAbcTransform(mThetaMech, mDVq, mDVd, 0)(0);
+	mDVbRe = dq0ToAbcTransform(mThetaMech, mDVq, mDVd, 0)(1);
+	mDVcRe = dq0ToAbcTransform(mThetaMech, mDVq, mDVd, 0)(2);
+	mDVaIm = dq0ToAbcTransform(mThetaMech, mDVq, mDVd, 0)(3);
+	mDVbIm = dq0ToAbcTransform(mThetaMech, mDVq, mDVd, 0)(4);
+	mDVcIm = dq0ToAbcTransform(mThetaMech, mDVq, mDVd, 0)(5);
 
 }
 
 
 
-void VoltageBehindReactanceEMT::FormTheveninEquivalent(Real dt) {
+void VoltageBehindReactanceDP::FormTheveninEquivalent(Real dt) {
 
 	mPsikq1kq2 <<
 		mPsikq1,
@@ -389,7 +428,7 @@ void VoltageBehindReactanceEMT::FormTheveninEquivalent(Real dt) {
 	K1b <<
 		c15,
 		0;
-	
+
 	K1 = K1a*E1 + K1b;
 
 	K2a <<
@@ -425,7 +464,7 @@ void VoltageBehindReactanceEMT::FormTheveninEquivalent(Real dt) {
 
 	H_qdr = K1a*E2*mPsikq1kq2 + K1a*E1*mIq + K2a*F2*mPsifdkd + K2a*F1*mId + (K2a*F3 + C26)*mVfd;
 
-	
+
 	e_r_vbr <<
 		H_qdr,
 		0;
@@ -434,47 +473,70 @@ void VoltageBehindReactanceEMT::FormTheveninEquivalent(Real dt) {
 	e_h_vbr = e_r_vbr + mV_hist;
 }
 
-void VoltageBehindReactanceEMT::postStep(SystemModel& system) {
-	
+void VoltageBehindReactanceDP::postStep(SystemModel& system) {
+
 
 }
 
 
-DPSMatrix VoltageBehindReactanceEMT::parkTransform(Real theta, double a, double b, double c) {
 
-	DPSMatrix dq0vector(3, 1);
+DPSMatrix VoltageBehindReactanceDP::abcToDq0Transform(Real theta, Real aRe, Real bRe, Real cRe, Real aIm, Real bIm, Real cIm) {
+	// Balanced case
+	Complex alpha(cos(2. / 3. * PI), sin(2. / 3. * PI));
+	Complex thetaCompInv(cos(-theta), sin(-theta));
+	MatrixComp AbcToPnz(3, 3);
+	AbcToPnz <<
+		1, 1, 1,
+		1, alpha, pow(alpha, 2),
+		1, pow(alpha, 2), alpha;
+	AbcToPnz = (1. / 3.) * AbcToPnz;
 
-	double q, d, zero;
+	MatrixComp abcVector(3, 1);
+	abcVector <<
+		Complex(aRe, aIm),
+		Complex(bRe, bIm),
+		Complex(cRe, cIm);
 
-	q = 2. / 3. * cos(theta) * a + 2. / 3. * cos(theta - 2. * M_PI / 3.)*b + 2. / 3. * cos(theta + 2. * M_PI / 3.)*c;
-	d = 2. / 3. * sin(theta)*a + 2. / 3. * sin(theta - 2. * M_PI / 3.)*b + 2. / 3. * sin(theta + 2. * M_PI / 3.)*c;
-	zero = 1. / 3. * a, 1. / 3. * b, 1. / 3. * c;
+	MatrixComp pnzVector(3, 1);
+	pnzVector = AbcToPnz * abcVector * thetaCompInv;
 
-	dq0vector << q,
-		d,
+	DPSMatrix dq0Vector(3, 1);
+	dq0Vector <<
+		pnzVector(1, 0).imag(),
+		pnzVector(1, 0).real(),
 		0;
 
-	return dq0vector;
+	return dq0Vector;
 }
 
 
+DPSMatrix VoltageBehindReactanceDP::dq0ToAbcTransform(Real theta, Real d, Real q, Real zero) {
+	// Balanced case
+	Complex alpha(cos(2. / 3. * PI), sin(2. / 3. * PI));
+	Complex thetaComp(cos(theta), sin(theta));
+	MatrixComp PnzToAbc(3, 3);
+	PnzToAbc <<
+		1, 1, 1,
+		1, pow(alpha, 2), alpha,
+		1, alpha, pow(alpha, 2);
 
+	MatrixComp pnzVector(3, 1);
+	pnzVector <<
+		0,
+		Complex(d, q),
+		Complex(0, 0);
 
+	MatrixComp abcCompVector(3, 1);
+	abcCompVector = PnzToAbc * pnzVector * thetaComp;
 
-DPSMatrix VoltageBehindReactanceEMT::inverseParkTransform(Real theta, double q, double d, double zero) {
-
-	DPSMatrix abcVector(3, 1);
-
-	double a, b, c;
-
-	a = cos(theta)*q + sin(theta)*d + 1.*zero;
-	b = cos(theta - 2. * M_PI / 3.)*q + sin(theta - 2. * M_PI / 3.)*d + 1.*zero;
-	c = cos(theta + 2. * M_PI / 3.)*q + sin(theta + 2. * M_PI / 3.)*d + 1.*zero;
-
-	abcVector << a,
-		b,
-		c;
+	Matrix abcVector(6, 1);
+	abcVector <<
+		abcCompVector(0, 0).real(),
+		abcCompVector(1, 0).real(),
+		abcCompVector(2, 0).real(),
+		abcCompVector(0, 0).imag(),
+		abcCompVector(1, 0).imag(),
+		abcCompVector(2, 0).imag();
 
 	return abcVector;
 }
-

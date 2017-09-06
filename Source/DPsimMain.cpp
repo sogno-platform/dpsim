@@ -46,7 +46,7 @@ int main(int argc, char* argv[]) {
 	//SynGenUnitTestPhaseToPhaseFault();
 	//SynGenUnitTestThreePhaseFault();	
 	//SynGenDPUnitTestBalancedResLoad();
-	SynGenUnitTestVBR();
+	SynGenUnitTestVBRDP();
 
 	//RXLineResLoad();
 	//VarFreqRXLineResLoad();

@@ -6,6 +6,7 @@
 namespace DPsim {
 	// EMT generator tests
 	void SynGenUnitTestVBR();
+	void SynGenUnitTestVBRDP();
 }
 
 #endif

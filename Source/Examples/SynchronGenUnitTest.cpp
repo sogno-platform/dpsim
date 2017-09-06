@@ -389,7 +389,7 @@ void DPsim::SynGenDPUnitTestBalancedResLoad() {
 	// Set up simulation
 	double tf, dt, t;
 	double om = 2.0*M_PI*60.0;
-	tf = 0.01; dt = 0.000001; t = 0;
+	tf = 0.1; dt = 0.000001; t = 0;
 	Simulation newSim(circElements, om, dt, tf, log);
 	newSim.setNumericalMethod(NumericalMethod::Trapezoidal_flux);
 

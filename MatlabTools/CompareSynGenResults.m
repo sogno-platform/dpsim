@@ -3,16 +3,16 @@
 
 %% read PLECS results
 
-Results_PLECS = csvread('../../vsa/Results/SynGenVBREmt_Steady_PLECS/Voltages_and_currents.csv'); 
-Te_PLECS = csvread('../../vsa/Results/SynGenVBREmt_Steady_PLECS/electrical_torque.csv'); 
-omega_PLECS = csvread('../../vsa/Results/SynGenVBREmt_Steady_PLECS/omega.csv'); 
-theta_PLECS = csvread('../../vsa/Results/SynGenVBREmt_Steady_PLECS/theta.csv'); 
+Results_PLECS = csvread('../../vsa/Results/SynGenVBREmt_ABCFault_PLECS/Voltages_and_currents.csv'); 
+Te_PLECS = csvread('../../vsa/Results/SynGenDqEmt_ABCFault_PLECS/electrical_torque.csv'); 
+omega_PLECS = csvread('../../vsa/Results/SynGenDqEmt_ABCFault_PLECS/omega.csv'); 
+theta_PLECS = csvread('../../vsa/Results/SynGenDqEmt_ABCFault_PLECS/theta.csv'); 
 %% read results from c++ simulation
-VoltageVector = csvread('../../vsa/Results/SynGenVBREmt_Steady_DPSim/data_synGenVBR_v.csv');
-CurrentVector = csvread('../../vsa/Results/SynGenVBREmt_Steady_DPSim/data_synGenVBR_i.csv');
-omega = csvread('../../vsa/Results/SynGenVBREmt_Steady_DPSim/data_synGenVBR_omega.csv');
-Te = csvread('../../vsa/Results/SynGenVBREmt_Steady_DPSim/data_synGenVBR_Te.csv');
-theta = csvread('../../vsa/Results/SynGenVBREmt_Steady_DPSim/data_synGenVBR_theta.csv');
+VoltageVector = csvread('../../vsa/Results/SynGenVbrEmt_ABCFault_DPsim_1_Damping/data_synGenVBR_v.csv');
+CurrentVector = csvread('../../vsa/Results/SynGenVbrEmt_ABCFault_DPsim_1_Damping/data_synGenVBR_i.csv');
+omega = csvread('../../vsa/Results/SynGenVbrEmt_ABCFault_DPsim_1_Damping/data_synGenVBR_omega.csv');
+Te = csvread('../../vsa/Results/SynGenVbrEmt_ABCFault_DPsim_1_Damping/data_synGenVBR_Te.csv');
+theta = csvread('../../vsa/Results/SynGenVbrEmt_ABCFault_DPsim_1_Damping/data_synGenVBR_theta.csv');
  %% Plot
 figure(1)
 hold off
