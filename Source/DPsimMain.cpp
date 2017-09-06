@@ -17,6 +17,7 @@ void usage() {
 	  << "  -i/--interface OBJ_NAME:  prefix for the names of the shmem objects used for communication (default: /dpsim)" << std::endl
 	  << "  -n/--node NODE_ID:        RDF id of the node where the interfacing voltage/current source should be placed" << std::endl
 	  << "  -r/--realtime:            enable realtime simulation " << std::endl
+	  << "  -p/--python:              provide an interactive python shell for simulation control" << std::endl
 	  << "  -s/--split INDEX:         index of this instance for distributed simulation (0 or 1)" << std::endl
 	  << "  -t/--timestep TIMESTEP:   simulation timestep in seconds (default: 1e-3)" << std::endl;
 }
@@ -44,15 +45,26 @@ enum SimState {
 static pthread_t simThread;
 
 struct SimContext {
-	Simulation *sim;
-	Logger *log, *llog, *rlog;
+	Simulation &sim;
+	Logger &log, &llog, &rlog;
 	pthread_cond_t cond;
 	pthread_mutex_t mut;
 	std::atomic_int stop, numStep;
 	SimState state;
+
+	SimContext(Simulation&, Logger&, Logger&, Logger&);
 };
 
-static SimContext globalCtx;
+SimContext::SimContext(Simulation &sim, Logger &log, Logger &llog, Logger &rlog) :
+	sim(sim), log(log), llog(llog), rlog(rlog) {
+	pthread_mutex_init(&this->mut, nullptr);
+	pthread_cond_init(&this->cond, nullptr);
+	this->stop = 0;
+	this->numStep = 0;
+	this->state = StateStopped;
+}
+
+static SimContext *globalCtx;
 
 static void* simThreadFunction(void* arg) {
 	bool running = true;
@@ -60,9 +72,9 @@ static void* simThreadFunction(void* arg) {
 
 	ctx->numStep = 0;
 	while (running) {
-		running = ctx->sim->step(*ctx->log, *ctx->llog, *ctx->rlog);
+		running = ctx->sim.step(ctx->log, ctx->llog, ctx->rlog);
 		ctx->numStep++;
-		ctx->sim->increaseByTimeStep();
+		ctx->sim.increaseByTimeStep();
 		if (ctx->stop) {
 			pthread_mutex_lock(&ctx->mut);
 			ctx->state = StatePaused;
@@ -79,83 +91,73 @@ static void* simThreadFunction(void* arg) {
 	return nullptr;
 }
 
-void initContext(SimContext* ctx) {
-	// TODO: pass parameters like frequency, timestep to this function, or read them from the command line
-	ctx->log = new Logger();
-	ctx->llog = new Logger("lvector-python.log");
-	ctx->rlog = new Logger("rvector-python.log");
-	ctx->sim = new Simulation(components, 2*PI*50, 1e-3, 100, *globalCtx.log);
-	pthread_mutex_init(&ctx->mut, nullptr);
-	pthread_cond_init(&ctx->cond, nullptr);
-}
-
 static PyObject* pythonStart(PyObject *self, PyObject *args) {
-	pthread_mutex_lock(&globalCtx.mut);
-	if (globalCtx.state != StateStopped) {
+	pthread_mutex_lock(&globalCtx->mut);
+	if (globalCtx->state != StateStopped) {
 		PyErr_SetString(PyExc_SystemError, "Simulation already started");
-		pthread_mutex_unlock(&globalCtx.mut);
+		pthread_mutex_unlock(&globalCtx->mut);
 		return nullptr;
 	}
-	globalCtx.stop = 0;
-	globalCtx.state = StateRunning;
-	pthread_create(&simThread, nullptr, simThreadFunction, &globalCtx);
-	pthread_mutex_unlock(&globalCtx.mut);
+	globalCtx->stop = 0;
+	globalCtx->state = StateRunning;
+	pthread_create(&simThread, nullptr, simThreadFunction, globalCtx);
+	pthread_mutex_unlock(&globalCtx->mut);
 	Py_INCREF(Py_None);
 	return Py_None;
 }
 
 static PyObject* pythonStep(PyObject *self, PyObject *args) {
-	pthread_mutex_lock(&globalCtx.mut);
-	int oldStep = globalCtx.numStep;
-	if (globalCtx.state == StateStopped) {
-		globalCtx.state = StateRunning;
-		globalCtx.stop = 1;
-		pthread_create(&simThread, nullptr, simThreadFunction, &globalCtx);
-	} else if (globalCtx.state == StatePaused) {
-		globalCtx.stop = 1;
-		pthread_cond_signal(&globalCtx.cond);
+	pthread_mutex_lock(&globalCtx->mut);
+	int oldStep = globalCtx->numStep;
+	if (globalCtx->state == StateStopped) {
+		globalCtx->state = StateRunning;
+		globalCtx->stop = 1;
+		pthread_create(&simThread, nullptr, simThreadFunction, globalCtx);
+	} else if (globalCtx->state == StatePaused) {
+		globalCtx->stop = 1;
+		pthread_cond_signal(&globalCtx->cond);
 	} else {
 		PyErr_SetString(PyExc_SystemError, "Simulation currently running");
-		pthread_mutex_unlock(&globalCtx.mut);
+		pthread_mutex_unlock(&globalCtx->mut);
 		return nullptr;
 	}
-	while (globalCtx.numStep == oldStep)
-		pthread_cond_wait(&globalCtx.cond, &globalCtx.mut);
-	pthread_mutex_unlock(&globalCtx.mut);
+	while (globalCtx->numStep == oldStep)
+		pthread_cond_wait(&globalCtx->cond, &globalCtx->mut);
+	pthread_mutex_unlock(&globalCtx->mut);
 	Py_INCREF(Py_None);
 	return Py_None;
 }
 
 static PyObject* pythonPause(PyObject *self, PyObject *args) {
-	pthread_mutex_lock(&globalCtx.mut);
-	if (globalCtx.state != StateRunning) {
+	pthread_mutex_lock(&globalCtx->mut);
+	if (globalCtx->state != StateRunning) {
 		PyErr_SetString(PyExc_SystemError, "Simulation not currently running");
-		pthread_mutex_unlock(&globalCtx.mut);
+		pthread_mutex_unlock(&globalCtx->mut);
 		return nullptr;
 	}
-	globalCtx.stop = 1;
-	pthread_cond_signal(&globalCtx.cond);
-	while (globalCtx.state == StateRunning)
-		pthread_cond_wait(&globalCtx.cond, &globalCtx.mut);
-	pthread_mutex_unlock(&globalCtx.mut);
+	globalCtx->stop = 1;
+	pthread_cond_signal(&globalCtx->cond);
+	while (globalCtx->state == StateRunning)
+		pthread_cond_wait(&globalCtx->cond, &globalCtx->mut);
+	pthread_mutex_unlock(&globalCtx->mut);
 	Py_INCREF(Py_None);
 	return Py_None;
 }
 
 static PyObject* pythonWait(PyObject *self, PyObject *args) {
-	pthread_mutex_lock(&globalCtx.mut);
-	if (globalCtx.state == StateStopped) {
-		pthread_mutex_unlock(&globalCtx.mut);
+	pthread_mutex_lock(&globalCtx->mut);
+	if (globalCtx->state == StateStopped) {
+		pthread_mutex_unlock(&globalCtx->mut);
 		Py_INCREF(Py_None);
 		return Py_None;
-	} else if (globalCtx.state == StatePaused) {
-		pthread_mutex_unlock(&globalCtx.mut);
+	} else if (globalCtx->state == StatePaused) {
+		pthread_mutex_unlock(&globalCtx->mut);
 		PyErr_SetString(PyExc_SystemError, "Simulation currently paused");
 		return nullptr;
 	}
-	while (globalCtx.state == StateRunning)
-		pthread_cond_wait(&globalCtx.cond, &globalCtx.mut);
-	pthread_mutex_unlock(&globalCtx.mut);
+	while (globalCtx->state == StateRunning)
+		pthread_cond_wait(&globalCtx->cond, &globalCtx->mut);
+	pthread_mutex_unlock(&globalCtx->mut);
 	Py_INCREF(Py_None);
 	return Py_None;
 }
@@ -177,9 +179,21 @@ static PyObject* PyInit_dpsim(void) {
 	return PyModule_Create(&dpsimModule);
 }
 
+int doPythonLoop(SimContext* sim) {
+	PyImport_AppendInittab("dpsim", &PyInit_dpsim);
+	Py_Initialize();
+
+	while (std::cin.good() && Py_IsInitialized()) {
+		std::cout << "> ";
+		std::string line;
+		std::getline(std::cin, line);
+		PyRun_SimpleString(line.c_str());
+	}
+}
+
 // TODO: that many platform-dependent ifdefs inside main are kind of ugly
 int cimMain(int argc, const char* argv[]) {
-	bool rt = false;
+	bool rt = false, python = false;
 	int i, split = -1;
 	Real frequency = 2*PI*50, timestep = 0.001, duration = 0.3;
 	std::string interfaceBase = "/dpsim";
@@ -191,7 +205,16 @@ int cimMain(int argc, const char* argv[]) {
 
 	// Parse arguments
 	for (i = 1; i < argc; i++) {
-		if (!strcmp(argv[i], "-f") || !strcmp(argv[i], "--frequency")) {
+		if (!strcmp(argv[i], "-d") || !strcmp(argv[i], "--duration")) {
+			if (i == argc-1) {
+				std::cerr << "Missing argument for -d/--duration; see 'DPsim --help' for usage" << std::endl;
+				return 1;
+			}
+			if (!parseFloat(argv[++i], &duration) || duration <= 0) {
+				std::cerr << "Invalid setting " << argv[i] << " for the duration" << std::endl;
+				return 1;
+			}
+		} else if (!strcmp(argv[i], "-f") || !strcmp(argv[i], "--frequency")) {
 			if (i == argc-1) {
 				std::cerr << "Missing argument for -f/--frequency; see 'DPsim --help' for usage" << std::endl;
 				return 1;
@@ -201,24 +224,9 @@ int cimMain(int argc, const char* argv[]) {
 				return 1;
 			}
 			frequency *= 2*PI;
-		} else if (!strcmp(argv[i], "-t") || !strcmp(argv[i], "--timestep")) {
-			if (i == argc-1) {
-				std::cerr << "Missing argument for -t/--timestep; see 'DPsim --help' for usage" << std::endl;
-				return 1;
-			}
-			if (!parseFloat(argv[++i], &timestep) || timestep <= 0) {
-				std::cerr << "Invalied setting " << argv[i] << " for the timestep" << std::endl;
-				return 1;
-			}
-		} else if (!strcmp(argv[i], "-d") || !strcmp(argv[i], "--duration")) {
-			if (i == argc-1) {
-				std::cerr << "Missing argument for -d/--duration; see 'DPsim --help' for usage" << std::endl;
-				return 1;
-			}
-			if (!parseFloat(argv[++i], &duration) || duration <= 0) {
-				std::cerr << "Invalid setting " << argv[i] << " for the duration" << std::endl;
-				return 1;
-			}
+		} else if (!strcmp(argv[i], "-h") || !strcmp(argv[i], "--help")) {
+			usage();
+			return 0;
 		} else if (!strcmp(argv[i], "-i") || !strcmp(argv[i], "--interface")) {
 			if (i == argc-1) {
 				std::cerr << "Missing argument for -i/--interface; see 'DPsim --help' for usage" << std::endl;
@@ -229,6 +237,16 @@ int cimMain(int argc, const char* argv[]) {
 				return 1;
 			}
 			interfaceBase = std::string(argv[i]);
+		} else if (!strcmp(argv[i], "-n") || !strcmp(argv[i], "--node")) {
+			if (i == argc-1) {
+				std::cerr << "Missing argument for -n/--node; see 'DPsim --help' for usage" << std::endl;
+				return 1;
+			}
+			splitNode = std::string(argv[++i]);
+		} else if (!strcmp(argv[i], "-p") || !strcmp(argv[i], "--python")) {
+			python = true;
+		} else if (!strcmp(argv[i], "-r") || !strcmp(argv[i], "--realtime")) {
+			rt = true;
 		} else if (!strcmp(argv[i], "-s") || !strcmp(argv[i], "--split")) {
 			if (i == argc-1) {
 				std::cerr << "Missing argument for -s/--split; see 'DPsim --help' for usage" << std::endl;
@@ -238,17 +256,15 @@ int cimMain(int argc, const char* argv[]) {
 				std::cerr << "Invalid setting " << argv[i] << " for the split index" << std::endl;
 				return 1;
 			}
-		} else if (!strcmp(argv[i], "-n") || !strcmp(argv[i], "--node")) {
+		} else if (!strcmp(argv[i], "-t") || !strcmp(argv[i], "--timestep")) {
 			if (i == argc-1) {
-				std::cerr << "Missing argument for -n/--node; see 'DPsim --help' for usage" << std::endl;
+				std::cerr << "Missing argument for -t/--timestep; see 'DPsim --help' for usage" << std::endl;
 				return 1;
 			}
-			splitNode = std::string(argv[++i]);
-		} else if (!strcmp(argv[i], "-r") || !strcmp(argv[i], "--realtime")) {
-			rt = true;
-		} else if (!strcmp(argv[i], "-h") || !strcmp(argv[i], "--help")) {
-			usage();
-			return 0;
+			if (!parseFloat(argv[++i], &timestep) || timestep <= 0) {
+				std::cerr << "Invalied setting " << argv[i] << " for the timestep" << std::endl;
+				return 1;
+			}
 		} else if (argv[i][0] == '-') {
 			std::cerr << "Unknown option " << argv[i] << " ; see 'DPsim --help' for usage" << std::endl;
 			return 1;
@@ -270,6 +286,10 @@ int cimMain(int argc, const char* argv[]) {
 		return 1;
 	}
 #endif
+	if (python && (split >= 0 || splitNode.length() != 0 || rt)) {
+		std::cerr << "Realtime and distributed simulation currently not supported in combination with Python" << std::endl;
+		return 1;
+	}
 
 	// Parse CIM files
 	CIMReader reader(frequency);
@@ -320,42 +340,32 @@ int cimMain(int argc, const char* argv[]) {
 	// Do the actual simulation
 	Logger log(logName), llog(llogName), rlog(rlogName);
 	Simulation sim(components, frequency, timestep, duration, log);
-#ifdef __linux__
-	if (intf)
-		sim.addExternalInterface(intf);
-
-	if (rt) {
-		sim.runRT(RTTimerFD, true, log, llog, rlog);
+	
+	if (python) {
+		globalCtx = new SimContext(sim, log, llog, rlog);
+		doPythonLoop(globalCtx);
 	} else {
+#ifdef __linux__
+		if (intf)
+			sim.addExternalInterface(intf);
+
+		if (rt) {
+			sim.runRT(RTTimerFD, true, log, llog, rlog);
+		} else {
+			while (sim.step(log, llog, rlog))
+				sim.increaseByTimeStep();
+		}
+
+		if (intf)
+			delete intf;
+#else
 		while (sim.step(log, llog, rlog))
 			sim.increaseByTimeStep();
-	}
-
-	if (intf)
-		delete intf;
-#else
-	while (sim.step(log, llog, rlog))
-		sim.increaseByTimeStep();
 #endif
+	}
 	return 0;
 }
 
-int pythonMain(int argc, const char* argv[]) {
-	PyImport_AppendInittab("dpsim", &PyInit_dpsim);
-	Py_Initialize();
-
-	components.push_back(new VoltSourceRes("V_in", 1, 0, 10, 1, 1));
-	components.push_back(new LinearResistor("R_load", 1, 0, 100));
-	initContext(&globalCtx);
-
-	while (std::cin.good() && Py_IsInitialized()) {
-		std::cout << "> ";
-		std::string line;
-		std::getline(std::cin, line);
-		PyRun_SimpleString(line.c_str());
-	}
-}
-
 int main(int argc, const char* argv[]) {
-	return pythonMain(argc, argv);
+	return cimMain(argc, argv);
 }
