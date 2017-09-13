@@ -7,6 +7,7 @@
 #include <thread>
 
 #include "CIMReader.h"
+#include "PySimulation.h"
 #include "Simulation.h"
 #include "ShmemInterface.h"
 
@@ -38,153 +39,27 @@ bool parseInt(const char *s, int *i) {
 	return (end != s && !*end);
 }
 
-std::vector<BaseComponent*> components;
-
-enum SimState {
-	StateStopped = 0,
-	StateRunning,
-	StatePaused,
-	StateDone
-};
-
-static std::thread *simThread;
-
-struct SimContext {
-	Simulation &sim;
-	Logger &log, &llog, &rlog;
-	std::condition_variable cond;
-	std::mutex mut;
-	std::atomic_int stop, numStep;
-	SimState state;
-
-	SimContext(Simulation&, Logger&, Logger&, Logger&);
-};
-
-SimContext::SimContext(Simulation &sim, Logger &log, Logger &llog, Logger &rlog) :
-	sim(sim), log(log), llog(llog), rlog(rlog), mut(), cond() {
-	this->stop = 0;
-	this->numStep = 0;
-	this->state = StateStopped;
-}
-
-static SimContext *globalCtx;
-
-static void simThreadFunction(SimContext* ctx) {
-	bool running = true;
-
-	std::unique_lock<std::mutex> lk(ctx->mut, std::defer_lock);
-	ctx->numStep = 0;
-	while (running) {
-		running = ctx->sim.step(ctx->log, ctx->llog, ctx->rlog);
-		ctx->numStep++;
-		ctx->sim.increaseByTimeStep();
-		if (ctx->stop) {
-			lk.lock();
-			ctx->state = StatePaused;
-			ctx->cond.notify_one();
-			ctx->cond.wait(lk);
-			ctx->state = StateRunning;
-			lk.unlock();
-		}
-	}
-	lk.lock();
-	ctx->state = StateDone;
-	ctx->cond.notify_one();
-}
-
-static PyObject* pythonStart(PyObject *self, PyObject *args) {
-	std::unique_lock<std::mutex> lk(globalCtx->mut);
-	if (globalCtx->state == StateRunning) {
-		PyErr_SetString(PyExc_SystemError, "Simulation already started");
-		return nullptr;
-	} else if (globalCtx->state == StateDone) {
-		PyErr_SetString(PyExc_SystemError, "Simulation already finished");
-		return nullptr;
-	} else if (globalCtx->state == StatePaused) {
-		globalCtx->stop = 0;
-		globalCtx->cond.notify_one();
-	} else {
-		globalCtx->stop = 0;
-		globalCtx->state = StateRunning;
-		simThread = new std::thread(simThreadFunction, globalCtx);
-	}
-	Py_INCREF(Py_None);
-	return Py_None;
-}
-
-static PyObject* pythonStep(PyObject *self, PyObject *args) {
-	std::unique_lock<std::mutex> lk(globalCtx->mut);
-	int oldStep = globalCtx->numStep;
-	if (globalCtx->state == StateStopped) {
-		globalCtx->state = StateRunning;
-		globalCtx->stop = 1;
-		simThread = new std::thread(simThreadFunction, globalCtx);
-	} else if (globalCtx->state == StatePaused) {
-		globalCtx->stop = 1;
-		globalCtx->cond.notify_one();
-	} else if (globalCtx->state == StateDone) {
-		PyErr_SetString(PyExc_SystemError, "Simulation already finished");
-		return nullptr;
-	} else {
-		PyErr_SetString(PyExc_SystemError, "Simulation currently running");
-		return nullptr;
-	}
-	while (globalCtx->numStep == oldStep)
-		globalCtx->cond.wait(lk);
-	Py_INCREF(Py_None);
-	return Py_None;
-}
-
-static PyObject* pythonPause(PyObject *self, PyObject *args) {
-	std::unique_lock<std::mutex> lk(globalCtx->mut);
-	if (globalCtx->state != StateRunning) {
-		PyErr_SetString(PyExc_SystemError, "Simulation not currently running");
-		return nullptr;
-	}
-	globalCtx->stop = 1;
-	globalCtx->cond.notify_one();
-	while (globalCtx->state == StateRunning)
-		globalCtx->cond.wait(lk);
-	Py_INCREF(Py_None);
-	return Py_None;
-}
-
-static PyObject* pythonWait(PyObject *self, PyObject *args) {
-	std::unique_lock<std::mutex> lk(globalCtx->mut);
-	if (globalCtx->state == StateDone) {
-		Py_INCREF(Py_None);
-		return Py_None;
-	} else if (globalCtx->state == StateStopped) {
-		PyErr_SetString(PyExc_SystemError, "Simulation not currently running");
-		return nullptr;
-	} else if (globalCtx->state == StatePaused) {
-		PyErr_SetString(PyExc_SystemError, "Simulation currently paused");
-		return nullptr;
-	}
-	while (globalCtx->state == StateRunning)
-		globalCtx->cond.wait(lk);
-	Py_INCREF(Py_None);
-	return Py_None;
-}
-
-static PyMethodDef pythonMethods[] = {
-	{"start", pythonStart, METH_VARARGS, "Start the simulation, or resume if it is paused."},
-	{"step", pythonStep, METH_VARARGS, "Perform a single simulation step."},
-	{"pause", pythonPause, METH_VARARGS, "Pause the already running simulation."},
-	{"wait", pythonWait, METH_VARARGS, "Wait for the simulation to finish."},
-	{NULL, NULL, 0, NULL}
-};
-
 static PyModuleDef dpsimModule = {
-	PyModuleDef_HEAD_INIT, "dpsim", NULL, -1, pythonMethods,
+	PyModuleDef_HEAD_INIT, "dpsim", NULL, -1, NULL,
 	NULL, NULL, NULL, NULL
 };
 
 static PyObject* PyInit_dpsim(void) {
-	return PyModule_Create(&dpsimModule);
+	PyObject* m;
+
+	if (PyType_Ready(&PySimulationType) < 0)
+		return nullptr;
+
+	m = PyModule_Create(&dpsimModule);
+	if (!m)
+		return nullptr;
+
+	Py_INCREF(&PySimulationType);
+	PyModule_AddObject(m, "Simulation", (PyObject*) &PySimulationType);
+	return m;
 }
 
-int doPythonLoop(SimContext* sim) {
+void doPythonLoop() {
 	PyImport_AppendInittab("dpsim", &PyInit_dpsim);
 	Py_Initialize();
 
@@ -347,8 +222,7 @@ int cimMain(int argc, const char* argv[]) {
 	Simulation sim(components, frequency, timestep, duration, log);
 	
 	if (python) {
-		globalCtx = new SimContext(sim, log, llog, rlog);
-		doPythonLoop(globalCtx);
+		doPythonLoop();
 	} else {
 #ifdef __linux__
 		if (intf)
