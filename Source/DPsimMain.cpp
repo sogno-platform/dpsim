@@ -43,7 +43,8 @@ std::vector<BaseComponent*> components;
 enum SimState {
 	StateStopped = 0,
 	StateRunning,
-	StatePaused
+	StatePaused,
+	StateDone
 };
 
 static std::thread *simThread;
@@ -87,7 +88,7 @@ static void simThreadFunction(SimContext* ctx) {
 		}
 	}
 	lk.lock();
-	ctx->state = StateStopped;
+	ctx->state = StateDone;
 	ctx->cond.notify_one();
 }
 
@@ -95,6 +96,9 @@ static PyObject* pythonStart(PyObject *self, PyObject *args) {
 	std::unique_lock<std::mutex> lk(globalCtx->mut);
 	if (globalCtx->state == StateRunning) {
 		PyErr_SetString(PyExc_SystemError, "Simulation already started");
+		return nullptr;
+	} else if (globalCtx->state == StateDone) {
+		PyErr_SetString(PyExc_SystemError, "Simulation already finished");
 		return nullptr;
 	} else if (globalCtx->state == StatePaused) {
 		globalCtx->stop = 0;
@@ -118,6 +122,9 @@ static PyObject* pythonStep(PyObject *self, PyObject *args) {
 	} else if (globalCtx->state == StatePaused) {
 		globalCtx->stop = 1;
 		globalCtx->cond.notify_one();
+	} else if (globalCtx->state == StateDone) {
+		PyErr_SetString(PyExc_SystemError, "Simulation already finished");
+		return nullptr;
 	} else {
 		PyErr_SetString(PyExc_SystemError, "Simulation currently running");
 		return nullptr;
@@ -144,9 +151,12 @@ static PyObject* pythonPause(PyObject *self, PyObject *args) {
 
 static PyObject* pythonWait(PyObject *self, PyObject *args) {
 	std::unique_lock<std::mutex> lk(globalCtx->mut);
-	if (globalCtx->state == StateStopped) {
+	if (globalCtx->state == StateDone) {
 		Py_INCREF(Py_None);
 		return Py_None;
+	} else if (globalCtx->state == StateStopped) {
+		PyErr_SetString(PyExc_SystemError, "Simulation not currently running");
+		return nullptr;
 	} else if (globalCtx->state == StatePaused) {
 		PyErr_SetString(PyExc_SystemError, "Simulation currently paused");
 		return nullptr;
