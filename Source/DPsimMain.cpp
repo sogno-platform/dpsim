@@ -93,13 +93,17 @@ static void simThreadFunction(SimContext* ctx) {
 
 static PyObject* pythonStart(PyObject *self, PyObject *args) {
 	std::unique_lock<std::mutex> lk(globalCtx->mut);
-	if (globalCtx->state != StateStopped) {
+	if (globalCtx->state == StateRunning) {
 		PyErr_SetString(PyExc_SystemError, "Simulation already started");
 		return nullptr;
+	} else if (globalCtx->state == StatePaused) {
+		globalCtx->stop = 0;
+		globalCtx->cond.notify_one();
+	} else {
+		globalCtx->stop = 0;
+		globalCtx->state = StateRunning;
+		simThread = new std::thread(simThreadFunction, globalCtx);
 	}
-	globalCtx->stop = 0;
-	globalCtx->state = StateRunning;
-	simThread = new std::thread(simThreadFunction, globalCtx);
 	Py_INCREF(Py_None);
 	return Py_None;
 }
@@ -154,7 +158,7 @@ static PyObject* pythonWait(PyObject *self, PyObject *args) {
 }
 
 static PyMethodDef pythonMethods[] = {
-	{"start", pythonStart, METH_VARARGS, "Start the simulation."},
+	{"start", pythonStart, METH_VARARGS, "Start the simulation, or resume if it is paused."},
 	{"step", pythonStep, METH_VARARGS, "Perform a single simulation step."},
 	{"pause", pythonPause, METH_VARARGS, "Pause the already running simulation."},
 	{"wait", pythonWait, METH_VARARGS, "Wait for the simulation to finish."},
