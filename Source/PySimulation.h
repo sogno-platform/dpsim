@@ -103,7 +103,6 @@ namespace DPsim {
 		PySimulation::newfunc,             /* tp_new */
 	};
 
-	static std::vector<BaseComponent*> components;
-
+	extern std::vector<BaseComponent*> components;
 };
 #endif

@@ -1,14 +1,19 @@
 #include "PySimulation.h"
 
+#include <iostream>
+
 using namespace DPsim;
+
+std::vector<BaseComponent*> DPsim::components;
 
 void PySimulation::simThreadFunction(PySimulation* pySim) {
 	bool notDone = true;
+	Logger rlog("rvector.csv"), llog("lvector.csv");
 
 	std::unique_lock<std::mutex> lk(*pySim->mut, std::defer_lock);
 	pySim->numStep = 0;
 	while (pySim->running && notDone) {
-		notDone = pySim->sim->step(*pySim->log);
+		notDone = pySim->sim->step(*pySim->log, llog, rlog);
 		pySim->numStep++;
 		pySim->sim->increaseByTimeStep();
 		if (pySim->sigPause) {
@@ -41,8 +46,14 @@ PyObject* PySimulation::newfunc(PyTypeObject* type, PyObject *args, PyObject *kw
 
 int PySimulation::init(PySimulation* self, PyObject *args, PyObject *kwds) {
 	// TODO: actually parse arguments (frequency, timestep etc.)
+	static char *kwlist[] = {"frequency", "timestep", "duration", NULL};
+	double frequency, timestep, duration;
+
+	if (!PyArg_ParseTupleAndKeywords(args, kwds, "|ddd", kwlist,
+		&frequency, &timestep, &duration))
+		return -1;
 	self->log = new Logger("log.txt");
-	self->sim = new Simulation(components, 2*PI*50, 1e-3, 0.3, *self->log);
+	self->sim = new Simulation(components, 2*PI*frequency, timestep, duration, *self->log);
 	return 0;
 };
 
@@ -51,6 +62,7 @@ void PySimulation::dealloc(PySimulation* self) {
 		// We have to cancel the running thread here, because otherwise self can't
 		// be freed.
 		PySimulation::stop((PyObject*)self, NULL);
+		self->simThread->join();
 		delete self->simThread;
 	}
 	if (self->sim)
