@@ -1,5 +1,6 @@
 #include "PySimulation.h"
 
+#include <cfloat>
 #include <iostream>
 
 using namespace DPsim;
@@ -45,14 +46,17 @@ PyObject* PySimulation::newfunc(PyTypeObject* type, PyObject *args, PyObject *kw
 }
 
 int PySimulation::init(PySimulation* self, PyObject *args, PyObject *kwds) {
-	// TODO: actually parse arguments (frequency, timestep etc.)
-	static char *kwlist[] = {"frequency", "timestep", "duration", NULL};
-	double frequency, timestep, duration;
+	static char *kwlist[] = {"frequency", "timestep", "duration", "log", NULL};
+	double frequency = 50, timestep = 1e-3, duration = DBL_MAX;
+	const char *log = nullptr;
 
-	if (!PyArg_ParseTupleAndKeywords(args, kwds, "|ddd", kwlist,
-		&frequency, &timestep, &duration))
+	if (!PyArg_ParseTupleAndKeywords(args, kwds, "|ddds", kwlist,
+		&frequency, &timestep, &duration, &log))
 		return -1;
-	self->log = new Logger("log.txt");
+	if (log)
+		self->log = new Logger(log);
+	else
+		self->log = new Logger();
 	self->sim = new Simulation(components, 2*PI*frequency, timestep, duration, *self->log);
 	return 0;
 };
@@ -67,6 +71,8 @@ void PySimulation::dealloc(PySimulation* self) {
 	}
 	if (self->sim)
 		delete self->sim;
+	if (self->log)
+		delete self->log;
 	delete self->mut;
 	delete self->cond;
 	Py_TYPE(self)->tp_free((PyObject*)self);

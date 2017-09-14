@@ -53,11 +53,11 @@ namespace DPsim {
 	};
 
 	static PyMethodDef PySimulation_methods[] = {
-		{"start", PySimulation::start, METH_VARARGS, "Start the simulation, or resume if it is paused."},
-		{"step", PySimulation::step, METH_VARARGS, "Perform a single simulation step."},
-		{"stop", PySimulation::stop, METH_VARARGS, "Cancel the running simulation."},
-		{"pause", PySimulation::pause, METH_VARARGS, "Pause the already running simulation."},
-		{"wait", PySimulation::wait, METH_VARARGS, "Wait for the simulation to finish."},
+		{"start", PySimulation::start, METH_NOARGS, "Start the simulation, or resume if it is paused."},
+		{"step", PySimulation::step, METH_NOARGS, "Perform a single simulation step."},
+		{"stop", PySimulation::stop, METH_NOARGS, "Cancel the running simulation."},
+		{"pause", PySimulation::pause, METH_NOARGS, "Pause the already running simulation."},
+		{"wait", PySimulation::wait, METH_NOARGS, "Wait for the simulation to finish."},
 		{NULL, NULL, 0, NULL}
 	};
 
