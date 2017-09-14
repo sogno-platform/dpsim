@@ -78,6 +78,19 @@ void PySimulation::dealloc(PySimulation* self) {
 	Py_TYPE(self)->tp_free((PyObject*)self);
 }
 
+PyObject* PySimulation::lvector(PyObject *self, PyObject *args) {
+	PySimulation *pySim = (PySimulation*) self;
+	if (pySim->state == StateRunning) {
+		PyErr_SetString(PyExc_SystemError, "Simulation currently running");
+		return nullptr;
+	}
+	Matrix& lvector = pySim->sim->getLeftSideVector();
+	PyObject* list = PyList_New(lvector.rows());
+	for (int i = 0; i < lvector.rows(); i++)
+		PyList_SetItem(list, i, PyFloat_FromDouble(lvector(i, 0)));
+	return list;
+}
+
 PyObject* PySimulation::start(PyObject *self, PyObject *args) {
 	PySimulation *pySim = (PySimulation*) self;
 	std::unique_lock<std::mutex> lk(*pySim->mut);

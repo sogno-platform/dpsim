@@ -45,6 +45,7 @@ namespace DPsim {
 		static void dealloc(PySimulation*);
 
 		// Methods that are actually available from Python
+		static PyObject* lvector(PyObject *self, PyObject *args);
 		static PyObject* start(PyObject *self, PyObject *args);
 		static PyObject* step(PyObject *self, PyObject *args);
 		static PyObject* stop(PyObject *self, PyObject *args);
@@ -53,6 +54,7 @@ namespace DPsim {
 	};
 
 	static PyMethodDef PySimulation_methods[] = {
+		{"lvector", PySimulation::lvector, METH_NOARGS, "Returns the left-side vector from the last step."},
 		{"start", PySimulation::start, METH_NOARGS, "Start the simulation, or resume if it is paused."},
 		{"step", PySimulation::step, METH_NOARGS, "Perform a single simulation step."},
 		{"stop", PySimulation::stop, METH_NOARGS, "Cancel the running simulation."},
