@@ -15,13 +15,15 @@
 using namespace DPsim;
 
 void usage() {
-	std::cerr << "usage: DPsolver [OPTIONS] CIM_FILE..." << std::endl
+	std::cerr << "usage: DPsolver [OPTIONS] [PYTHON_FILE...]" << std::endl
 	  << "Possible options:" << std::endl
+	  << "  -b/--batch:               don't show an interactive prompt after reading files" << std::endl
 	  << "  -h/--help:                show this help and exit" << std::endl
 	  << "  -i/--interface OBJ_NAME:  prefix for the names of the shmem objects used for communication (default: /dpsim)" << std::endl
 	  << "  -n/--node NODE_ID:        RDF id of the node where the interfacing voltage/current source should be placed" << std::endl
 	  << "  -r/--realtime:            enable realtime simulation " << std::endl
-	  << "  -s/--split INDEX:         index of this instance for distributed simulation (0 or 1)" << std::endl;
+	  << "  -s/--split INDEX:         index of this instance for distributed simulation (0 or 1)" << std::endl
+	  << "Remaining arguments are treated as Python files and executed in order." << std::endl;
 }
 
 bool parseFloat(const char *s, double *d) {
@@ -65,21 +67,9 @@ static PyObject* PyInit_dpsim(void) {
 	return m;
 }
 
-void doPythonLoop() {
-	PyImport_AppendInittab("dpsim", &PyInit_dpsim);
-	Py_Initialize();
-
-	while (std::cin.good() && Py_IsInitialized()) {
-		std::cout << "> ";
-		std::string line;
-		std::getline(std::cin, line);
-		PyRun_SimpleString(line.c_str());
-	}
-}
-
 // TODO: that many platform-dependent ifdefs inside main are kind of ugly
 int cimMain(int argc, const char* argv[]) {
-	bool rt = false;
+	bool rt = false, batch = false;
 	int i, split = -1;
 	std::string interfaceBase = "/dpsim";
 	std::string splitNode = "";
@@ -90,7 +80,9 @@ int cimMain(int argc, const char* argv[]) {
 
 	// Parse arguments
 	for (i = 1; i < argc; i++) {
-		if (!strcmp(argv[i], "-h") || !strcmp(argv[i], "--help")) {
+		if (!strcmp(argv[i], "-b") || !strcmp(argv[i], "--batch")) {
+			batch = true;
+		} else if (!strcmp(argv[i], "-h") || !strcmp(argv[i], "--help")) {
 			usage();
 			return 0;
 		} else if (!strcmp(argv[i], "-i") || !strcmp(argv[i], "--interface")) {
@@ -128,7 +120,6 @@ int cimMain(int argc, const char* argv[]) {
 			break;
 		}
 	}
-	// TODO: treat remaining arguments as initial python scripts
 #ifndef __linux__
 	if (split >= 0 || splitNode.length() != 0) {
 		std::cerr << "Distributed simulation not supported on this platform" << std::endl;
@@ -181,7 +172,27 @@ int cimMain(int argc, const char* argv[]) {
 #endif
 	*/
 	
-	doPythonLoop();
+	PyImport_AppendInittab("dpsim", &PyInit_dpsim);
+	Py_Initialize();
+	for (; i < argc; i++) {
+		FILE* f = fopen(argv[i], "r");
+		if (!f) {
+			std::cerr << "Failed to open ";
+			std::perror(argv[i]);
+			return 1;
+		}
+		PyRun_SimpleFile(f, argv[i]);
+		fclose(f);
+	}
+
+	if (!batch) {
+		while (std::cin.good() && Py_IsInitialized()) {
+			std::cout << "> ";
+			std::string line;
+			std::getline(std::cin, line);
+			PyRun_SimpleString(line.c_str());
+		}
+	}
 
 	/*
 #ifdef __linux__
