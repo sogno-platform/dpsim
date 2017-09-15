@@ -7,6 +7,7 @@
 #include <thread>
 
 #include "CIMReader.h"
+#include "PyComponent.h"
 #include "PySimulation.h"
 #include "Simulation.h"
 #include "ShmemInterface.h"
@@ -16,15 +17,11 @@ using namespace DPsim;
 void usage() {
 	std::cerr << "usage: DPsolver [OPTIONS] CIM_FILE..." << std::endl
 	  << "Possible options:" << std::endl
-	  << "  -d/--duration DURATION:   simulation duration in seconds (default: 0.3)" << std::endl
-	  << "  -f/--frequency FREQUENCY: system frequency in Hz (default: 50)" << std::endl
 	  << "  -h/--help:                show this help and exit" << std::endl
 	  << "  -i/--interface OBJ_NAME:  prefix for the names of the shmem objects used for communication (default: /dpsim)" << std::endl
 	  << "  -n/--node NODE_ID:        RDF id of the node where the interfacing voltage/current source should be placed" << std::endl
 	  << "  -r/--realtime:            enable realtime simulation " << std::endl
-	  << "  -p/--python:              provide an interactive python shell for simulation control" << std::endl
-	  << "  -s/--split INDEX:         index of this instance for distributed simulation (0 or 1)" << std::endl
-	  << "  -t/--timestep TIMESTEP:   simulation timestep in seconds (default: 1e-3)" << std::endl;
+	  << "  -s/--split INDEX:         index of this instance for distributed simulation (0 or 1)" << std::endl;
 }
 
 bool parseFloat(const char *s, double *d) {
@@ -39,14 +36,21 @@ bool parseInt(const char *s, int *i) {
 	return (end != s && !*end);
 }
 
+static PyMethodDef pyModuleMethods[] = {
+	{"load_cim", pyLoadCim, METH_VARARGS, "Load a network from CIM file(s)."},
+	{0}
+};
+
 static PyModuleDef dpsimModule = {
-	PyModuleDef_HEAD_INIT, "dpsim", NULL, -1, NULL,
+	PyModuleDef_HEAD_INIT, "dpsim", NULL, -1, pyModuleMethods,
 	NULL, NULL, NULL, NULL
 };
 
 static PyObject* PyInit_dpsim(void) {
 	PyObject* m;
 
+	if (PyType_Ready(&PyComponentType) < 0)
+		return nullptr;
 	if (PyType_Ready(&PySimulationType) < 0)
 		return nullptr;
 
@@ -56,6 +60,8 @@ static PyObject* PyInit_dpsim(void) {
 
 	Py_INCREF(&PySimulationType);
 	PyModule_AddObject(m, "Simulation", (PyObject*) &PySimulationType);
+	Py_INCREF(&PyComponentType);
+	PyModule_AddObject(m, "Component", (PyObject*) &PyComponentType);
 	return m;
 }
 
@@ -73,9 +79,8 @@ void doPythonLoop() {
 
 // TODO: that many platform-dependent ifdefs inside main are kind of ugly
 int cimMain(int argc, const char* argv[]) {
-	bool rt = false, python = false;
+	bool rt = false;
 	int i, split = -1;
-	Real frequency = 2*PI*50, timestep = 0.001, duration = 0.3;
 	std::string interfaceBase = "/dpsim";
 	std::string splitNode = "";
 	std::string outName, inName, logName("log.txt"), llogName("lvector.csv"), rlogName("rvector.csv");
@@ -85,26 +90,7 @@ int cimMain(int argc, const char* argv[]) {
 
 	// Parse arguments
 	for (i = 1; i < argc; i++) {
-		if (!strcmp(argv[i], "-d") || !strcmp(argv[i], "--duration")) {
-			if (i == argc-1) {
-				std::cerr << "Missing argument for -d/--duration; see 'DPsim --help' for usage" << std::endl;
-				return 1;
-			}
-			if (!parseFloat(argv[++i], &duration) || duration <= 0) {
-				std::cerr << "Invalid setting " << argv[i] << " for the duration" << std::endl;
-				return 1;
-			}
-		} else if (!strcmp(argv[i], "-f") || !strcmp(argv[i], "--frequency")) {
-			if (i == argc-1) {
-				std::cerr << "Missing argument for -f/--frequency; see 'DPsim --help' for usage" << std::endl;
-				return 1;
-			}
-			if (!parseFloat(argv[++i], &frequency) || frequency <= 0) {
-				std::cerr << "Invalid setting " << argv[i] << " for system frequency" << std::endl;
-				return 1;
-			}
-			frequency *= 2*PI;
-		} else if (!strcmp(argv[i], "-h") || !strcmp(argv[i], "--help")) {
+		if (!strcmp(argv[i], "-h") || !strcmp(argv[i], "--help")) {
 			usage();
 			return 0;
 		} else if (!strcmp(argv[i], "-i") || !strcmp(argv[i], "--interface")) {
@@ -123,8 +109,6 @@ int cimMain(int argc, const char* argv[]) {
 				return 1;
 			}
 			splitNode = std::string(argv[++i]);
-		} else if (!strcmp(argv[i], "-p") || !strcmp(argv[i], "--python")) {
-			python = true;
 		} else if (!strcmp(argv[i], "-r") || !strcmp(argv[i], "--realtime")) {
 			rt = true;
 		} else if (!strcmp(argv[i], "-s") || !strcmp(argv[i], "--split")) {
@@ -136,15 +120,6 @@ int cimMain(int argc, const char* argv[]) {
 				std::cerr << "Invalid setting " << argv[i] << " for the split index" << std::endl;
 				return 1;
 			}
-		} else if (!strcmp(argv[i], "-t") || !strcmp(argv[i], "--timestep")) {
-			if (i == argc-1) {
-				std::cerr << "Missing argument for -t/--timestep; see 'DPsim --help' for usage" << std::endl;
-				return 1;
-			}
-			if (!parseFloat(argv[++i], &timestep) || timestep <= 0) {
-				std::cerr << "Invalied setting " << argv[i] << " for the timestep" << std::endl;
-				return 1;
-			}
 		} else if (argv[i][0] == '-') {
 			std::cerr << "Unknown option " << argv[i] << " ; see 'DPsim --help' for usage" << std::endl;
 			return 1;
@@ -153,10 +128,7 @@ int cimMain(int argc, const char* argv[]) {
 			break;
 		}
 	}
-	if (i == argc) {
-		std::cerr << "No input files given (see DPsim --help for usage)" << std::endl;
-		return 1;
-	}
+	// TODO: treat remaining arguments as initial python scripts
 #ifndef __linux__
 	if (split >= 0 || splitNode.length() != 0) {
 		std::cerr << "Distributed simulation not supported on this platform" << std::endl;
@@ -166,22 +138,13 @@ int cimMain(int argc, const char* argv[]) {
 		return 1;
 	}
 #endif
-	if (python && (split >= 0 || splitNode.length() != 0 || rt)) {
+	if (split >= 0 || splitNode.length() != 0 || rt) {
 		std::cerr << "Realtime and distributed simulation currently not supported in combination with Python" << std::endl;
 		return 1;
 	}
 
-	// Parse CIM files
-	CIMReader reader(frequency);
-	for (; i < argc; i++) {
-		if (!reader.addFile(argv[i])) {
-			std::cerr << "Failed to read file " << argv[i] << std::endl;
-			return 1;
-		}
-	}
-	reader.parseFiles();
-	components = reader.getComponents();
-
+	// TODO: RT / shmem interface with python
+	/*
 #ifdef __linux__
 	// TODO: this is a simple, pretty much fixed setup. Make this more flexible / configurable
 	if (split >= 0) {
@@ -216,14 +179,11 @@ int cimMain(int argc, const char* argv[]) {
 		}
 	}
 #endif
-
-	// Do the actual simulation
-	Logger log(logName), llog(llogName), rlog(rlogName);
-	Simulation sim(components, frequency, timestep, duration, log);
+	*/
 	
-	if (python) {
-		doPythonLoop();
-	} else {
+	doPythonLoop();
+
+	/*
 #ifdef __linux__
 		if (intf)
 			sim.addExternalInterface(intf);
@@ -237,11 +197,8 @@ int cimMain(int argc, const char* argv[]) {
 
 		if (intf)
 			delete intf;
-#else
-		while (sim.step(log, llog, rlog))
-			sim.increaseByTimeStep();
 #endif
-	}
+	*/
 	return 0;
 }
 

@@ -1,11 +1,62 @@
 #include "PySimulation.h"
+#include "PyComponent.h"
 
 #include <cfloat>
 #include <iostream>
 
 using namespace DPsim;
 
-std::vector<BaseComponent*> DPsim::components;
+	static PyMethodDef PySimulation_methods[] = {
+		{"lvector", PySimulation::lvector, METH_NOARGS, "Returns the left-side vector from the last step."},
+		{"start", PySimulation::start, METH_NOARGS, "Start the simulation, or resume if it is paused."},
+		{"step", PySimulation::step, METH_NOARGS, "Perform a single simulation step."},
+		{"stop", PySimulation::stop, METH_NOARGS, "Cancel the running simulation."},
+		{"pause", PySimulation::pause, METH_NOARGS, "Pause the already running simulation."},
+		{"wait", PySimulation::wait, METH_NOARGS, "Wait for the simulation to finish."},
+		{NULL, NULL, 0, NULL}
+	};
+
+PyTypeObject DPsim::PySimulationType = {
+	PyVarObject_HEAD_INIT(NULL, 0)
+	"dpsim.Simulation",                /* tp_name */
+	sizeof(PySimulation),              /* tp_basicsize */
+	0,                                 /* tp_itemsize */
+	(destructor)PySimulation::dealloc, /* tp_dealloc */
+	0,                                 /* tp_print */
+	0,                                 /* tp_getattr */
+	0,                                 /* tp_setattr */
+	0,                                 /* tp_reserved */
+	0,                                 /* tp_repr */
+	0,                                 /* tp_as_number */
+	0,                                 /* tp_as_sequence */
+	0,                                 /* tp_as_mapping */
+	0,                                 /* tp_hash  */
+	0,                                 /* tp_call */
+	0,                                 /* tp_str */
+	0,                                 /* tp_getattro */
+	0,                                 /* tp_setattro */
+	0,                                 /* tp_as_buffer */
+	Py_TPFLAGS_DEFAULT |
+		Py_TPFLAGS_BASETYPE,           /* tp_flags */
+	"A single simulation.",            /* tp_doc */
+	0,                                 /* tp_traverse */
+	0,                                 /* tp_clear */
+	0,                                 /* tp_richcompare */
+	0,                                 /* tp_weaklistoffset */
+	0,                                 /* tp_iter */
+	0,                                 /* tp_iternext */
+	PySimulation_methods,              /* tp_methods */
+	0,                                 /* tp_members */
+	0,                                 /* tp_getset */
+	0,                                 /* tp_base */
+	0,                                 /* tp_dict */
+	0,                                 /* tp_descr_get */
+	0,                                 /* tp_descr_set */
+	0,                                 /* tp_dictoffset */
+	(initproc)PySimulation::init,      /* tp_init */
+	0,                                 /* tp_alloc */
+	PySimulation::newfunc,             /* tp_new */
+};
 
 void PySimulation::simThreadFunction(PySimulation* pySim) {
 	bool notDone = true;
@@ -46,18 +97,23 @@ PyObject* PySimulation::newfunc(PyTypeObject* type, PyObject *args, PyObject *kw
 }
 
 int PySimulation::init(PySimulation* self, PyObject *args, PyObject *kwds) {
-	static char *kwlist[] = {"frequency", "timestep", "duration", "log", NULL};
+	static char *kwlist[] = {"components", "frequency", "timestep", "duration", "log", NULL};
 	double frequency = 50, timestep = 1e-3, duration = DBL_MAX;
 	const char *log = nullptr;
 
-	if (!PyArg_ParseTupleAndKeywords(args, kwds, "|ddds", kwlist,
-		&frequency, &timestep, &duration, &log))
+	if (!PyArg_ParseTupleAndKeywords(args, kwds, "O|ddds", kwlist,
+		&self->pyComps, &frequency, &timestep, &duration, &log))
 		return -1;
+	if (!compsFromPython(self->pyComps, self->comps)) {
+		PyErr_SetString(PyExc_TypeError, "Invalid components argument (must by list of dpsim.Component)");
+		return -1;
+	}
+	Py_INCREF(self->pyComps);
 	if (log)
 		self->log = new Logger(log);
 	else
 		self->log = new Logger();
-	self->sim = new Simulation(components, 2*PI*frequency, timestep, duration, *self->log);
+	self->sim = new Simulation(self->comps, 2*PI*frequency, timestep, duration, *self->log);
 	return 0;
 };
 
@@ -69,12 +125,20 @@ void PySimulation::dealloc(PySimulation* self) {
 		self->simThread->join();
 		delete self->simThread;
 	}
+
 	if (self->sim)
 		delete self->sim;
 	if (self->log)
 		delete self->log;
 	delete self->mut;
 	delete self->cond;
+
+	// Since this is not a C++ destructor which would automatically call the
+	// destructor of its members, we have to manually call the destructor of
+	// the component vector here to free the associated memory.
+	self->comps.~vector<BaseComponent*>();
+
+	Py_XDECREF(self->pyComps);
 	Py_TYPE(self)->tp_free((PyObject*)self);
 }
 
