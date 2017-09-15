@@ -6,15 +6,15 @@
 
 using namespace DPsim;
 
-	static PyMethodDef PySimulation_methods[] = {
-		{"lvector", PySimulation::lvector, METH_NOARGS, "Returns the left-side vector from the last step."},
-		{"start", PySimulation::start, METH_NOARGS, "Start the simulation, or resume if it is paused."},
-		{"step", PySimulation::step, METH_NOARGS, "Perform a single simulation step."},
-		{"stop", PySimulation::stop, METH_NOARGS, "Cancel the running simulation."},
-		{"pause", PySimulation::pause, METH_NOARGS, "Pause the already running simulation."},
-		{"wait", PySimulation::wait, METH_NOARGS, "Wait for the simulation to finish."},
-		{NULL, NULL, 0, NULL}
-	};
+static PyMethodDef PySimulation_methods[] = {
+	{"lvector", PySimulation::lvector, METH_NOARGS, "Returns the left-side vector from the last step."},
+	{"start", PySimulation::start, METH_NOARGS, "Start the simulation, or resume if it is paused."},
+	{"step", PySimulation::step, METH_NOARGS, "Perform a single simulation step."},
+	{"stop", PySimulation::stop, METH_NOARGS, "Cancel the running simulation."},
+	{"pause", PySimulation::pause, METH_NOARGS, "Pause the already running simulation."},
+	{"wait", PySimulation::wait, METH_NOARGS, "Wait for the simulation to finish."},
+	{NULL, NULL, 0, NULL}
+};
 
 PyTypeObject DPsim::PySimulationType = {
 	PyVarObject_HEAD_INIT(NULL, 0)
