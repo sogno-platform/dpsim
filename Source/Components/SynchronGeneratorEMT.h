@@ -175,6 +175,9 @@ namespace DPsim {
 		double mIb;
 		double mIc;
 
+		/// Number of damping windings in q 
+		int DampingWindings;
+
 		// ### Useful Matrices ###
 		/// inductance matrix
 		DPSMatrix mInductanceMat = DPSMatrix::Zero(7, 7);

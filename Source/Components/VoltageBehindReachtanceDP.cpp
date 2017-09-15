@@ -105,20 +105,38 @@ void VoltageBehindReactanceDP::init(Real om, Real dt,
 	// steady state per unit initial value
 	initStatesInPerUnit(initActivePower, initReactivePower, initTerminalVolt, initVoltAngle);
 
-	mVaRe = dq0ToAbcTransform(mThetaMech, mVq, mVd, mV0)(0);
-	mVbRe = dq0ToAbcTransform(mThetaMech, mVq, mVd, mV0)(1);
-	mVcRe = dq0ToAbcTransform(mThetaMech, mVq, mVd, mV0)(2);
-	mVaIm = dq0ToAbcTransform(mThetaMech, mVq, mVd, mV0)(3);
-	mVbIm = dq0ToAbcTransform(mThetaMech, mVq, mVd, mV0)(4);
-	mVcIm = dq0ToAbcTransform(mThetaMech, mVq, mVd, mV0)(5);
+	mVaRe = dq0ToAbcTransform(mThetaMech, mVd, mVq, mV0)(0);
+	mVbRe = dq0ToAbcTransform(mThetaMech, mVd, mVq, mV0)(1);
+	mVcRe = dq0ToAbcTransform(mThetaMech, mVd, mVq, mV0)(2);
+	mVaIm = dq0ToAbcTransform(mThetaMech, mVd, mVq, mV0)(3);
+	mVbIm = dq0ToAbcTransform(mThetaMech, mVd, mVq, mV0)(4);
+	mVcIm = dq0ToAbcTransform(mThetaMech, mVd, mVq, mV0)(5);
 
 
-	mIaRe = dq0ToAbcTransform(mThetaMech, mIq, mId, mI0)(0);
-	mIbRe = dq0ToAbcTransform(mThetaMech, mIq, mId, mI0)(1);
-	mIcRe = dq0ToAbcTransform(mThetaMech, mIq, mId, mI0)(2);
-	mIaIm = dq0ToAbcTransform(mThetaMech, mIq, mId, mI0)(3);
-	mIbIm = dq0ToAbcTransform(mThetaMech, mIq, mId, mI0)(4);
-	mIcIm = dq0ToAbcTransform(mThetaMech, mIq, mId, mI0)(5);
+	mIaRe = dq0ToAbcTransform(mThetaMech, mId, mIq, mI0)(0);
+	mIbRe = dq0ToAbcTransform(mThetaMech, mId, mIq, mI0)(1);
+	mIcRe = dq0ToAbcTransform(mThetaMech, mId, mIq, mI0)(2);
+	mIaIm = dq0ToAbcTransform(mThetaMech, mId, mIq, mI0)(3);
+	mIbIm = dq0ToAbcTransform(mThetaMech, mId, mIq, mI0)(4);
+	mIcIm = dq0ToAbcTransform(mThetaMech, mId, mIq, mI0)(5);
+
+	mVabcRe <<
+		mVaRe,
+		mVbRe,
+		mVcRe;
+	mVabcIm <<
+		mVaIm,
+		mVbIm,
+		mVcIm;
+
+	mIabcRe <<
+		mIaRe,
+		mIbRe,
+		mIcRe;
+	mIabcIm <<
+		mIaIm,
+		mIbIm,
+		mIcIm;
 }
 
 void VoltageBehindReactanceDP::initStatesInPerUnit(Real initActivePower, Real initReactivePower,
@@ -198,12 +216,12 @@ void VoltageBehindReactanceDP::initStatesInPerUnit(Real initActivePower, Real in
 	mThetaMech = initVoltAngle + init_delta;
 	//mThetaMech_hist1 = mThetaMech;
 
-	mDVaRe = dq0ToAbcTransform(mThetaMech, mDVq, mDVd, 0)(0);
-	mDVbRe = dq0ToAbcTransform(mThetaMech, mDVq, mDVd, 0)(1);
-	mDVcRe = dq0ToAbcTransform(mThetaMech, mDVq, mDVd, 0)(2);
-	mDVaIm = dq0ToAbcTransform(mThetaMech, mDVq, mDVd, 0)(3);
-	mDVbIm = dq0ToAbcTransform(mThetaMech, mDVq, mDVd, 0)(4);
-	mDVcIm = dq0ToAbcTransform(mThetaMech, mDVq, mDVd, 0)(5);
+	mDVaRe = dq0ToAbcTransform(mThetaMech, mDVd, mDVq, 0)(0);
+	mDVbRe = dq0ToAbcTransform(mThetaMech, mDVd, mDVq, 0)(1);
+	mDVcRe = dq0ToAbcTransform(mThetaMech, mDVd, mDVq, 0)(2);
+	mDVaIm = dq0ToAbcTransform(mThetaMech, mDVd, mDVq, 0)(3);
+	mDVbIm = dq0ToAbcTransform(mThetaMech, mDVd, mDVq, 0)(4);
+	mDVcIm = dq0ToAbcTransform(mThetaMech, mDVd, mDVq, 0)(5);
 
 	//Initial inductance matrix
 	mDInductanceMat <<
@@ -222,35 +240,24 @@ void VoltageBehindReactanceDP::step(SystemModel& system, Real fieldVoltage, Real
 	stepInPerUnit(system.getOmega(), system.getTimeStep(), fieldVoltage, mechPower, time, system.getNumMethod());
 
 	mVoltageVector << 
-		mVabcRe*mBase_v,
-		mDVabcIm*mBase_v;
+		mVaRe*mBase_v,
+		mVbRe*mBase_v,
+		mVcRe*mBase_v,
+		mVaIm*mBase_v,
+		mVbIm*mBase_v,
+		mVcIm*mBase_v;
 	mCurrentVector <<
-		mIabcRe*mBase_i,
-		mIabcIm*mBase_i;
-
-
-
+		mIaRe*mBase_i,
+		mIbRe*mBase_i,
+		mIcRe*mBase_i,
+		mIaIm*mBase_i,
+		mIbIm*mBase_i,
+		mIcIm*mBase_i;
 }
 
 void VoltageBehindReactanceDP::stepInPerUnit(Real om, Real dt, Real fieldVoltage, Real mechPower, Real time, NumericalMethod numMethod) {
 
-	mVabcRe <<
-		mVaRe,
-		mVbRe,
-		mVcRe;
-	mVabcIm <<
-		mVaIm,
-		mVbIm,
-		mVcIm;
 
-	mIabcRe <<
-		mIaRe,
-		mIbRe,
-		mIcRe;
-	mIabcIm <<
-		mIaIm,
-		mIbIm,
-		mIcIm;
 
 	mDVabcRe <<
 		mDVaRe,
@@ -261,23 +268,6 @@ void VoltageBehindReactanceDP::stepInPerUnit(Real om, Real dt, Real fieldVoltage
 		mDVbIm,
 		mDVcIm;
 
-
-	//mV_hist = (mResistanceMat - (2. / dt)*mDInductanceMat)*mIabc + mDVabc - mVabc;
-
-	/*mThetaMech_hist2 = mThetaMech_hist1;
-	mThetaMech_hist1 = mThetaMech;
-	mThetaMech = 2 * mThetaMech - mThetaMech_hist2;
-
-	mOmMech_hist2 = mOmMech_hist1;
-	mOmMech_hist1 = mOmMech;
-	mOmMech = 2 * mOmMech - mOmMech_hist2;*/
-
-
-	//Form the Thevinin Equivalent circuit
-	//FormTheveninEquivalent(dt);
-
-	//Solve circuit
-	//mVabc=R_vbr_eq
 
 	mMechPower = mechPower / mNomPower;
 	mMechTorque = -(mMechPower / 1);
@@ -321,9 +311,10 @@ void VoltageBehindReactanceDP::stepInPerUnit(Real om, Real dt, Real fieldVoltage
 
 
 	mIabcRe = mDInductanceMat.inverse()*mDInductanceMat_hist*mIabcRe - dt*mBase_OmElec*mDInductanceMat.inverse()*
-		(mDVabcRe + (mResistanceMat + R_load)*mIabcRe - mDInductanceMat_hist*mIabcIm);
+		(mDVabcRe + (mResistanceMat + R_load)*mIabcRe - mOmMech*mDInductanceMat_hist*mIabcIm);
 	mIabcIm = mDInductanceMat.inverse()*mDInductanceMat_hist*mIabcIm - dt*mBase_OmElec*mDInductanceMat.inverse()*
-		(mDVabcIm + (mResistanceMat + R_load)*mIabcIm + mDInductanceMat_hist*mIabcRe);
+		(mDVabcIm + (mResistanceMat + R_load)*mIabcIm + mOmMech*mDInductanceMat_hist*mIabcRe);
+
 	mVabcRe = -R_load*mIabcRe;
 	mVabcIm = -R_load*mIabcIm;
 
@@ -338,6 +329,7 @@ void VoltageBehindReactanceDP::stepInPerUnit(Real om, Real dt, Real fieldVoltage
 	mVaRe = mVabcRe(0);
 	mVbRe = mVabcRe(1);
 	mVcRe = mVabcRe(2);
+
 	mVaIm = mVabcIm(0);
 	mVbIm = mVabcIm(1);
 	mVcIm = mVabcIm(2);
@@ -363,12 +355,12 @@ void VoltageBehindReactanceDP::stepInPerUnit(Real om, Real dt, Real fieldVoltage
 	mDVd = -mOmMech*mDPsiq + mDLmd*mRkd*(mDPsid - mPsikd) / (mLlkd*mLlkd) + (mDLmd / mLlfd)*mVfd +
 		mDLmd*mRfd*(mDPsid - mPsifd) / (mLlfd*mLlfd) + (mRfd / (mLlfd*mLlfd) + mRkd / (mLlkd*mLlkd))*mDLmd*mDLmd*mId;
 
-	mDVaRe = dq0ToAbcTransform(mThetaMech, mDVq, mDVd, 0)(0);
-	mDVbRe = dq0ToAbcTransform(mThetaMech, mDVq, mDVd, 0)(1);
-	mDVcRe = dq0ToAbcTransform(mThetaMech, mDVq, mDVd, 0)(2);
-	mDVaIm = dq0ToAbcTransform(mThetaMech, mDVq, mDVd, 0)(3);
-	mDVbIm = dq0ToAbcTransform(mThetaMech, mDVq, mDVd, 0)(4);
-	mDVcIm = dq0ToAbcTransform(mThetaMech, mDVq, mDVd, 0)(5);
+	mDVaRe = dq0ToAbcTransform(mThetaMech, mDVd, mDVq, 0)(0);
+	mDVbRe = dq0ToAbcTransform(mThetaMech, mDVd, mDVq, 0)(1);
+	mDVcRe = dq0ToAbcTransform(mThetaMech, mDVd, mDVq, 0)(2);
+	mDVaIm = dq0ToAbcTransform(mThetaMech, mDVd, mDVq, 0)(3);
+	mDVbIm = dq0ToAbcTransform(mThetaMech, mDVd, mDVq, 0)(4);
+	mDVcIm = dq0ToAbcTransform(mThetaMech, mDVd, mDVq, 0)(5);
 
 }
 

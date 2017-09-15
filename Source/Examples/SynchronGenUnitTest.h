@@ -14,6 +14,7 @@ namespace DPsim {
 
 	// Dynamic Phasor generator tests
 	void SynGenDPUnitTestBalancedResLoad();
+	void SynGenDPUnitTestThreePhaseFault();
 }
 
 #endif

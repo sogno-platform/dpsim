@@ -207,6 +207,9 @@ namespace DPsim {
 		Real mIfd_hist;
 		Real mIkd_hist;
 
+		/// Number of damping windings in q 
+		int DampingWindings;
+
 
 		/// interface voltage vector dq0
 		DPSMatrix mDq0Voltages = DPSMatrix::Zero(3, 1);
@@ -275,9 +278,9 @@ namespace DPsim {
 		//DPSMatrix dq0ToAbcTransform(Real theta, DPSMatrix& in);
 		DPSMatrix dq0ToAbcTransform(Real theta, Real d, Real q, Real zero);
 
-		DPSMatrix& getVoltages() { return mVoltages; }
-		DPSMatrix& getCurrents() { return mCurrents; }
-		DPSMatrix& getFluxes() { return mFluxes; }
+		DPSMatrix& getVoltages() { return mVoltages2; }
+		DPSMatrix& getCurrents() { return mCurrents2; }
+		DPSMatrix& getFluxes() { return mFluxes2; }
 
 		void init(Real om, Real dt) { }
 		void applySystemMatrixStamp(SystemModel& system) { }
