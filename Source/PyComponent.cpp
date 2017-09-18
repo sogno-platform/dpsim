@@ -11,8 +11,8 @@ PyTypeObject DPsim::PyComponentType = {
 	0,                                 /* tp_itemsize */
 	(destructor)PyComponent::dealloc,  /* tp_dealloc */
 	0,                                 /* tp_print */
-	0,                                 /* tp_getattr */
-	0,                                 /* tp_setattr */
+	(getattrfunc)PyComponent::getattr, /* tp_getattr */
+	(setattrfunc)PyComponent::setattr, /* tp_setattr */
 	0,                                 /* tp_reserved */
 	0,                                 /* tp_repr */
 	0,                                 /* tp_as_number */
@@ -115,4 +115,61 @@ PyObject* DPsim::pyLoadCim(PyObject* self, PyObject* args) {
 	}
 	delete reader;
 	return list;
+}
+
+PyObject* PyComponent::getattr(PyComponent* self, char* name) {
+	if (!self->comp) {
+		PyErr_SetString(PyExc_ValueError, "getattr on unitialized Component");
+		return nullptr;
+	}
+	std::map<std::string, CompAttr>& attrMap = self->comp->getAttrMap();
+	auto search = attrMap.find(name);
+	if (search == attrMap.end()) {
+		PyErr_Format(PyExc_AttributeError, "Component has no attribute '%s'", name);
+		return nullptr;
+	}
+	CompAttr attr = search->second;
+	switch (attr.type) {
+	case AttrReal:
+		return PyFloat_FromDouble(*((Real*) attr.value));
+	case AttrInt:
+		return PyLong_FromLong(*((Integer*) attr.value));
+	}
+	PyErr_Format(PyExc_SystemError, "invalid type in internal attribute map");
+	return nullptr;
+}
+
+int PyComponent::setattr(PyComponent* self, char* name, PyObject *v) {
+	Integer i;
+	Real r;
+
+	if (!self->comp) {
+		PyErr_SetString(PyExc_ValueError, "setattr on unitialized Component");
+		return -1;
+	}
+	std::map<std::string, CompAttr>& attrMap = self->comp->getAttrMap();
+	auto search = attrMap.find(name);
+	if (search == attrMap.end()) {
+		PyErr_Format(PyExc_AttributeError, "Component has no attribute '%s'", name);
+		return -1;
+	}
+	CompAttr attr = search->second;
+	switch (attr.type) {
+	case AttrReal:
+		r = PyFloat_AsDouble(v);
+		if (PyErr_Occurred())
+			return -1;
+		*((Real*) attr.value) = r;
+		break;
+	case AttrInt:
+		i = PyLong_AsLong(v);
+		if (PyErr_Occurred())
+			return -1;
+		*((Integer*) attr.value) = i;
+		break;
+	default:
+		PyErr_Format(PyExc_SystemError, "invalid type in internal attribute map");
+		return -1;
+	}
+	return 0;
 }

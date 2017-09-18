@@ -10,6 +10,16 @@
 
 namespace DPsim {
 
+	enum AttrType {
+		AttrReal,
+		AttrInt,
+	};
+
+	struct CompAttr {
+		AttrType type;
+		void* value;
+	};
+
 	/// Base class for all elements that might be added to the matrix.
 	class BaseComponent {
 	protected:
@@ -26,6 +36,9 @@ namespace DPsim {
 		/// Component node 3
 		int mNode3;
 
+		/// Map of all attributes that should be exported to the Python interface
+		std::map<std::string, CompAttr> attrMap;
+
 	public:
 		BaseComponent() { }
 		BaseComponent(std::string name) { this->mName = name; }
@@ -40,6 +53,8 @@ namespace DPsim {
 		int getNode2() { return mNode2; }
 		/// get value of node3
 		int getNode3() { return mNode3; }
+
+		std::map<std::string, CompAttr>& getAttrMap() { return attrMap; }
 
 		std::string getName() { return mName; }
 
@@ -64,6 +79,7 @@ namespace DPsim {
 			std::exit(1);
 			return Complex(0, 0);
 		}
+
 	};
 }
 
