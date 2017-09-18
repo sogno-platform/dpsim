@@ -20,7 +20,7 @@ PyTypeObject DPsim::PyComponentType = {
 	0,                                 /* tp_as_mapping */
 	0,                                 /* tp_hash  */
 	0,                                 /* tp_call */
-	0,                                 /* tp_str */
+	(reprfunc)PyComponent::str,        /* tp_str */
 	0,                                 /* tp_getattro */
 	0,                                 /* tp_setattro */
 	0,                                 /* tp_as_buffer */
@@ -59,62 +59,10 @@ void PyComponent::dealloc(PyComponent* self) {
 	Py_TYPE(self)->tp_free((PyObject*)self);
 }
 
-bool DPsim::compsFromPython(PyObject* list, std::vector<BaseComponent*>& comps) {
-	if (!PyList_Check(list))
-		return false;
-	for (int i = 0; i < PyList_Size(list); i++) {
-		PyObject* obj = PyList_GetItem(list, i);
-		if (!PyObject_TypeCheck(obj, &PyComponentType)) {
-			comps.clear();
-			return false;
-		}
-		PyComponent* pyComp = (PyComponent*) obj;
-		comps.push_back(pyComp->comp);
-	}
-	return true;
-}
-
-PyObject* DPsim::pyLoadCim(PyObject* self, PyObject* args) {
-	double frequency = 50;
-	PyObject *list;
-	PyBytesObject *filename;
-	CIMReader *reader;
-
-	if (PyArg_ParseTuple(args, "O&|d", PyUnicode_FSConverter, &filename, &frequency)) {
-		reader = new CIMReader(2*PI*frequency);
-		reader->addFile(PyBytes_AsString((PyObject*) filename));
-		Py_DECREF(filename);
-	} else if (PyArg_ParseTuple(args, "O|d", &list, &frequency)) {
-		PyErr_Clear();
-		if (!PyList_Check(list)) {
-			PyErr_SetString(PyExc_TypeError, "First argument must be filename or list of filenames");
-			return nullptr;
-		}
-		reader = new CIMReader(2*PI*frequency);
-		for (int i = 0; i < PyList_Size(list); i++) {
-			if (!PyUnicode_FSConverter(PyList_GetItem(list, i), &filename)) {
-				delete reader;
-				PyErr_SetString(PyExc_TypeError, "First argument must be filename or list of filenames");
-				return nullptr;
-			}	
-			reader->addFile(PyBytes_AsString((PyObject*) filename));
-			Py_DECREF(filename);
-		}
-	} else {
-		PyErr_SetString(PyExc_TypeError, "First argument must be filename or list of filenames");
-		return nullptr;
-	}
-	reader->parseFiles();
-	std::vector<BaseComponent*> comps = reader->getComponents();
-	list = PyList_New(comps.size());
-	for (int i = 0; i < comps.size(); i++) {
-		PyComponent* pyComp = PyObject_New(PyComponent, &PyComponentType);
-		PyObject_Init((PyObject*) pyComp, &PyComponentType);
-		pyComp->comp = comps[i];
-		PyList_SET_ITEM(list, i, (PyObject*) pyComp);
-	}
-	delete reader;
-	return list;
+PyObject* PyComponent::str(PyComponent* self) {
+	if (!self->comp)
+		return PyUnicode_FromString("<unitialized Component>");
+	return PyUnicode_FromString(self->comp->getName().c_str());
 }
 
 PyObject* PyComponent::getattr(PyComponent* self, char* name) {
@@ -172,4 +120,62 @@ int PyComponent::setattr(PyComponent* self, char* name, PyObject *v) {
 		return -1;
 	}
 	return 0;
+}
+
+bool DPsim::compsFromPython(PyObject* list, std::vector<BaseComponent*>& comps) {
+	if (!PyList_Check(list))
+		return false;
+	for (int i = 0; i < PyList_Size(list); i++) {
+		PyObject* obj = PyList_GetItem(list, i);
+		if (!PyObject_TypeCheck(obj, &PyComponentType)) {
+			comps.clear();
+			return false;
+		}
+		PyComponent* pyComp = (PyComponent*) obj;
+		comps.push_back(pyComp->comp);
+	}
+	return true;
+}
+
+PyObject* DPsim::pyLoadCim(PyObject* self, PyObject* args) {
+	double frequency = 50;
+	PyObject *list;
+	PyBytesObject *filename;
+	CIMReader *reader;
+
+	if (PyArg_ParseTuple(args, "O&|d", PyUnicode_FSConverter, &filename, &frequency)) {
+		reader = new CIMReader(2*PI*frequency);
+		reader->addFile(PyBytes_AsString((PyObject*) filename));
+		Py_DECREF(filename);
+	} else if (PyArg_ParseTuple(args, "O|d", &list, &frequency)) {
+		PyErr_Clear();
+		if (!PyList_Check(list)) {
+			PyErr_SetString(PyExc_TypeError, "First argument must be filename or list of filenames");
+			return nullptr;
+		}
+		reader = new CIMReader(2*PI*frequency);
+		for (int i = 0; i < PyList_Size(list); i++) {
+			if (!PyUnicode_FSConverter(PyList_GetItem(list, i), &filename)) {
+				delete reader;
+				PyErr_SetString(PyExc_TypeError, "First argument must be filename or list of filenames");
+				return nullptr;
+			}
+			reader->addFile(PyBytes_AsString((PyObject*) filename));
+			Py_DECREF(filename);
+		}
+	} else {
+		PyErr_SetString(PyExc_TypeError, "First argument must be filename or list of filenames");
+		return nullptr;
+	}
+	reader->parseFiles();
+	std::vector<BaseComponent*> comps = reader->getComponents();
+	list = PyList_New(comps.size());
+	for (int i = 0; i < comps.size(); i++) {
+		PyComponent* pyComp = PyObject_New(PyComponent, &PyComponentType);
+		PyObject_Init((PyObject*) pyComp, &PyComponentType);
+		pyComp->comp = comps[i];
+		PyList_SET_ITEM(list, i, (PyObject*) pyComp);
+	}
+	delete reader;
+	return list;
 }
