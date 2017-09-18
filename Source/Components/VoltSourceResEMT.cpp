@@ -2,16 +2,13 @@
 
 using namespace DPsim;
 
-VoltSourceResEMT::VoltSourceResEMT(std::string name, int src, int dest, Real voltage, Real phase, Real resistance) : BaseComponent(name, src, dest) {
-	mVoltageAmp = voltage;
-	mVoltagePhase = phase;
+VoltSourceResEMT::VoltSourceResEMT(std::string name, int src, int dest, Complex voltage, Real resistance) : BaseComponent(name, src, dest) {
+	mVoltage = voltage;
 	mResistance = resistance;
-	mVoltageDiff = mVoltageAmp*cos(mVoltagePhase);
-	mConductance = 1. / mResistance;
-	mCurrent = mVoltageDiff / mResistance;
 }
 
 void VoltSourceResEMT::applySystemMatrixStamp(SystemModel& system) {
+	mConductance = 1. / mResistance;
 	// Apply matrix stamp for equivalent resistance
 	if (mNode1 >= 0) {
 		system.addRealToSystemMatrix(mNode1, mNode1, mConductance);
@@ -26,6 +23,7 @@ void VoltSourceResEMT::applySystemMatrixStamp(SystemModel& system) {
 }
 
 void VoltSourceResEMT::applyRightSideVectorStamp(SystemModel& system) {
+	mCurrent = mVoltage.real() / mResistance;
 	// Apply matrix stamp for equivalent current source
 	if (mNode1 >= 0) {
 		system.addRealToRightSideVector(mNode1, mCurrent);
@@ -37,7 +35,7 @@ void VoltSourceResEMT::applyRightSideVectorStamp(SystemModel& system) {
 
 
 void VoltSourceResEMT::step(SystemModel& system, Real time) {
-	mVoltageDiff = mVoltageAmp * cos(mVoltagePhase + system.getOmega() * time);
+	mVoltageDiff = std::abs(mVoltage) * cos(std::arg(mVoltage) + system.getOmega() * time);
 	mCurrent = mVoltageDiff / mResistance;
 
 	if (mNode1 >= 0) {

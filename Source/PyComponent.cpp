@@ -82,6 +82,11 @@ PyObject* PyComponent::getattr(PyComponent* self, char* name) {
 		return PyFloat_FromDouble(*((Real*) attr.value));
 	case AttrInt:
 		return PyLong_FromLong(*((Integer*) attr.value));
+	case AttrString:
+		return PyUnicode_FromString(((std::string*) attr.value)->c_str());
+	case AttrComplex:
+		Complex c = *((Complex*) attr.value);
+		return PyComplex_FromDoubles(c.real(), c.imag());
 	}
 	PyErr_Format(PyExc_SystemError, "invalid type in internal attribute map");
 	return nullptr;
@@ -114,6 +119,16 @@ int PyComponent::setattr(PyComponent* self, char* name, PyObject *v) {
 		if (PyErr_Occurred())
 			return -1;
 		*((Integer*) attr.value) = i;
+		break;
+	case AttrString:
+		if (!PyUnicode_Check(v))
+			return -1;
+		*((std::string*) attr.value) = std::string(PyUnicode_AsUTF8(v));
+		break;
+	case AttrComplex:
+		if (!PyComplex_Check(v))
+			return -1;
+		*((Complex*) attr.value) = Complex(PyComplex_RealAsDouble(v), PyComplex_ImagAsDouble(v));
 		break;
 	default:
 		PyErr_Format(PyExc_SystemError, "invalid type in internal attribute map");

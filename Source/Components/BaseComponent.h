@@ -14,6 +14,7 @@ namespace DPsim {
 		AttrReal,
 		AttrInt,
 		AttrString, // value should be *std::string, not *char!
+		AttrComplex
 	};
 
 	struct CompAttr {

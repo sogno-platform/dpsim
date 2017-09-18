@@ -2,16 +2,17 @@
 
 using namespace DPsim;
 
-VoltSourceRes::VoltSourceRes(std::string name, int src, int dest, Real voltage, Real phase, Real resistance) : BaseComponent(name, src, dest) {
-	this->mVoltageDiffr = voltage*cos(phase);
-	this->mVoltageDiffi = voltage*sin(phase);
+VoltSourceRes::VoltSourceRes(std::string name, int src, int dest, Complex voltage, Real resistance) : BaseComponent(name, src, dest) {
+	this->mVoltage = voltage;
 	this->mResistance = resistance;		
-	this->mConductance = 1. / resistance;
-	this->mCurrentr = mVoltageDiffr / resistance;
-	this->mCurrenti = mVoltageDiffi / resistance;
+	attrMap["voltage"] = {AttrComplex, &this->mVoltage};
+	attrMap["resistance"] = {AttrReal, &this->mResistance};
 }
 
 void VoltSourceRes::applySystemMatrixStamp(SystemModel& system) {
+	mConductance = 1. / mResistance;
+	mCurrentr = mVoltage.real() / mResistance;
+	mCurrenti = mVoltage.imag() / mResistance;
 	// Apply matrix stamp for equivalent resistance
 	if (mNode1 >= 0) {
 		system.addCompToSystemMatrix(mNode1, mNode1, mConductance, 0);

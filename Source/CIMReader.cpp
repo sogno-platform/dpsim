@@ -104,7 +104,7 @@ BaseComponent* CIMReader::mapExternalNetworkInjection(ExternalNetworkInjection* 
 	}
 	std::cerr << "IdealVoltageSource " << inj->name << " rid=" << inj->mRID << " node1=" << node << " node2=0 ";
 	std::cerr << " V=" << volt->v.value << "<" << volt->angle.value << std::endl;
-	return new IdealVoltageSource(inj->name, node, 0, volt->v.value, volt->angle.value*PI/180, ++mNumVoltageSources);
+	return new IdealVoltageSource(inj->name, node, 0, Complex(volt->v.value, volt->angle.value*PI/180), ++mNumVoltageSources);
 }
 
 BaseComponent* CIMReader::mapPowerTransformer(PowerTransformer* trans) {
@@ -145,7 +145,7 @@ BaseComponent* CIMReader::mapSynchronousMachine(SynchronousMachine* machine) {
 	std::cerr << "VoltSourceRes " << machine->name << " rid=" << machine->mRID << " node1=" << node << " node2=0 ";
 	std::cerr << " V=" << volt->v.value << "<" << volt->angle.value << " R=" << machine->r.value << std::endl;
 	// TODO is it appropiate to use this resistance here
-	return new VoltSourceRes(machine->name, node, 0, volt->v.value, volt->angle.value*PI/180, machine->r.value);
+	return new VoltSourceRes(machine->name, node, 0, Complex(volt->v.value, volt->angle.value*PI/180), machine->r.value);
 }
 
 BaseComponent* CIMReader::mapComponent(BaseClass* obj) {
