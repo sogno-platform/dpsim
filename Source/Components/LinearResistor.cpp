@@ -4,11 +4,11 @@ using namespace DPsim;
 
 LinearResistor::LinearResistor(std::string name, int src, int dest, Real resistance) : BaseComponent(name, src, dest) {
 	this->mResistance = resistance;
-	this->mConductance = 1.0 / resistance;
+	attrMap["resistance"] = {AttrReal, &this->mResistance};
 }	
 		
 void LinearResistor::applySystemMatrixStamp(SystemModel& system) {
-
+	this->mConductance = 1.0 / mResistance;
 	// Set diagonal entries
 	if (mNode1 >= 0) {
 		system.addCompToSystemMatrix(mNode1, mNode1, mConductance, 0);

@@ -4,13 +4,15 @@ using namespace DPsim;
 
 PiLine::PiLine(std::string name, int node1, int node2, int node3, Real resistance, Real inductance, Real capacitance) : BaseComponent(name, node1, node2, node3) {
 	mResistance = resistance;
-	mConductance = 1.0 / resistance;
 	mInductance = inductance;
-	mCapacitance = capacitance / 2;
+	mCapacitance = capacitance;
+	attrMap["resistance"] = {AttrReal, &this->mResistance};
+	attrMap["inductance"] = {AttrReal, &this->mInductance};
+	attrMap["capacitance"] = {AttrReal, &this->mCapacitance};
 }
 
 void PiLine::applySystemMatrixStamp(SystemModel& system) {
-
+	mConductance = 1.0 / mResistance;
 	Real a = system.getTimeStep() / (2. * mInductance);
 	Real b = system.getTimeStep() * system.getOmega() / 2.;
 	mGlr = a / (1 + b*b);
@@ -43,9 +45,9 @@ void PiLine::applySystemMatrixStamp(SystemModel& system) {
 		system.addCompToSystemMatrix(mNode2, mNode3, -mGlr, -mGli);
 	}
 
-	//capacitive part
-	mGcr = 2.0 * mCapacitance / system.getTimeStep();
-	mGci = system.getOmega() * mCapacitance;
+	//capacitive part (only using half of nominal capaticance)
+	mGcr = mCapacitance / system.getTimeStep();
+	mGci = system.getOmega() * mCapacitance / 2;
 
 	if (mNode1 >= 0) {
 		system.addCompToSystemMatrix(mNode1, mNode1, mGcr, mGci);

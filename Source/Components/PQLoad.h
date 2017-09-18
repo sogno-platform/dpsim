@@ -13,6 +13,7 @@ namespace DPsim {
 	public:
 		PQLoad(std::string name, int src, int dest, Real p, Real q, Real volt, Real angle);
 		void init(Real om, Real dt);
+		void applySystemMatrixStamp(SystemModel&);
 	};
 };
 
