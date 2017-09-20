@@ -1,6 +1,7 @@
 #include <Python.h>
 
 #include "PyComponent.h"
+#include "PyInterface.h"
 #include "PyModule.h"
 #include "PySimulation.h"
 
@@ -8,6 +9,7 @@ using namespace DPsim;
 
 PyMethodDef DPsim::pyModuleMethods[] = {
 	{"load_cim", pyLoadCim, METH_VARARGS, "Load a network from CIM file(s)."},
+	{"ShmemInterface", (PyCFunction)pyShmemInterface, METH_VARARGS|METH_KEYWORDS, "Construct an Interface that communicates via POSIX shared memory."},
 	{0}
 };
 
@@ -23,6 +25,9 @@ extern "C" {
 		if (PyType_Ready(&PyComponentType) < 0)
 			return nullptr;
 		if (PyType_Ready(&PySimulationType) < 0)
+			return nullptr;
+		PyInterfaceType.tp_new = PyType_GenericNew;
+		if (PyType_Ready(&PyInterfaceType) < 0)
 			return nullptr;
 
 		m = PyModule_Create(&dpsimModule);

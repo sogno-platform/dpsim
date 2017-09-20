@@ -1,5 +1,6 @@
-#include "PySimulation.h"
 #include "PyComponent.h"
+#include "PyInterface.h"
+#include "PySimulation.h"
 
 #include <cfloat>
 #include <iostream>
@@ -7,6 +8,7 @@
 using namespace DPsim;
 
 static PyMethodDef PySimulation_methods[] = {
+	{"add_interface", PySimulation::addInterface, METH_VARARGS, "Registers an external interface with the simulation."},
 	{"lvector", PySimulation::lvector, METH_NOARGS, "Returns the left-side vector from the last step."},
 	{"pause", PySimulation::pause, METH_NOARGS, "Pause the already running simulation."},
 	{"start", PySimulation::start, METH_NOARGS, "Start the simulation, or resume if it is paused."},
@@ -146,13 +148,37 @@ void PySimulation::dealloc(PySimulation* self) {
 	delete self->mut;
 	delete self->cond;
 
+	for (auto it : self->refs) {
+		Py_DECREF(it);
+	}
 	// Since this is not a C++ destructor which would automatically call the
 	// destructor of its members, we have to manually call the destructor of
-	// the component vector here to free the associated memory.
+	// the vectors here to free the associated memory.
 	self->comps.~vector<BaseComponent*>();
+	self->refs.~vector<PyObject*>();
 
 	Py_XDECREF(self->pyComps);
 	Py_TYPE(self)->tp_free((PyObject*)self);
+}
+
+
+PyObject* PySimulation::addInterface(PyObject* self, PyObject* args) {
+	PySimulation *pySim = (PySimulation*) self;
+	PyObject* pyObj;
+	PyInterface* pyIntf;
+
+	if (!PyArg_ParseTuple(args, "O", &pyObj))
+		return nullptr;
+	if (!PyObject_TypeCheck(pyObj, &PyInterfaceType)) {
+		PyErr_SetString(PyExc_TypeError, "Argument must be dpsim.Interface");
+		return nullptr;
+	}
+	pyIntf = (PyInterface*) pyObj;
+	pySim->sim->addExternalInterface(pyIntf->intf);
+	Py_INCREF(pyObj);
+	pySim->refs.push_back(pyObj);
+	Py_INCREF(Py_None);
+	return Py_None;
 }
 
 PyObject* PySimulation::lvector(PyObject *self, PyObject *args) {

@@ -36,6 +36,11 @@ namespace DPsim {
 		PyObject* pyComps; // Components as a (Python) list of PyComponents
 		std::vector<BaseComponent*> comps;
 		int numSwitch;
+
+		// List of additional objects that aren't directly used from PySimulation
+		// methods, but that a reference has be kept to to avoid them from being
+		// freed (e.g. ExternalInterfaces).
+		std::vector<PyObject*> refs;
 		
 		// Function executed by the simulation thread
 		static void simThreadFunction(PySimulation* pySim);
@@ -49,6 +54,7 @@ namespace DPsim {
 		static void dealloc(PySimulation*);
 
 		// Methods that are actually available from Python
+		static PyObject* addInterface(PyObject *self, PyObject *args);
 		static PyObject* lvector(PyObject *self, PyObject *args);
 		static PyObject* pause(PyObject *self, PyObject *args);
 		static PyObject* start(PyObject *self, PyObject *args);
