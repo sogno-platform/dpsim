@@ -24,7 +24,7 @@ namespace DPsim {
 		PyObject_HEAD
 
 		Simulation *sim;
-		Logger *log; // TODO other loggers
+		Logger *log, *llog, *rlog;
 
 		std::condition_variable *cond;
 		std::mutex *mut;
@@ -35,6 +35,7 @@ namespace DPsim {
 
 		PyObject* pyComps; // Components as a (Python) list of PyComponents
 		std::vector<BaseComponent*> comps;
+		int numSwitch;
 		
 		// Function executed by the simulation thread
 		static void simThreadFunction(PySimulation* pySim);
@@ -49,10 +50,11 @@ namespace DPsim {
 
 		// Methods that are actually available from Python
 		static PyObject* lvector(PyObject *self, PyObject *args);
+		static PyObject* pause(PyObject *self, PyObject *args);
 		static PyObject* start(PyObject *self, PyObject *args);
 		static PyObject* step(PyObject *self, PyObject *args);
 		static PyObject* stop(PyObject *self, PyObject *args);
-		static PyObject* pause(PyObject *self, PyObject *args);
+		static PyObject* updateMatrix(PyObject *self, PyObject *args);
 		static PyObject* wait(PyObject *self, PyObject *args);
 	};
 

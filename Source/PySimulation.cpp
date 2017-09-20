@@ -8,10 +8,11 @@ using namespace DPsim;
 
 static PyMethodDef PySimulation_methods[] = {
 	{"lvector", PySimulation::lvector, METH_NOARGS, "Returns the left-side vector from the last step."},
+	{"pause", PySimulation::pause, METH_NOARGS, "Pause the already running simulation."},
 	{"start", PySimulation::start, METH_NOARGS, "Start the simulation, or resume if it is paused."},
 	{"step", PySimulation::step, METH_NOARGS, "Perform a single simulation step."},
 	{"stop", PySimulation::stop, METH_NOARGS, "Cancel the running simulation."},
-	{"pause", PySimulation::pause, METH_NOARGS, "Pause the already running simulation."},
+	{"update_matrix", PySimulation::updateMatrix, METH_NOARGS, "Update the system matrix to reflect changes to components."},
 	{"wait", PySimulation::wait, METH_NOARGS, "Wait for the simulation to finish."},
 	{NULL, NULL, 0, NULL}
 };
@@ -60,12 +61,11 @@ PyTypeObject DPsim::PySimulationType = {
 
 void PySimulation::simThreadFunction(PySimulation* pySim) {
 	bool notDone = true;
-	Logger rlog("rvector.csv"), llog("lvector.csv");
 
 	std::unique_lock<std::mutex> lk(*pySim->mut, std::defer_lock);
 	pySim->numStep = 0;
 	while (pySim->running && notDone) {
-		notDone = pySim->sim->step(*pySim->log, llog, rlog);
+		notDone = pySim->sim->step(*pySim->log, *pySim->llog, *pySim->rlog);
 		pySim->numStep++;
 		pySim->sim->increaseByTimeStep();
 		if (pySim->sigPause) {
@@ -92,17 +92,18 @@ PyObject* PySimulation::newfunc(PyTypeObject* type, PyObject *args, PyObject *kw
 		// implement them as pointers
 		self->cond = new std::condition_variable();
 		self->mut = new std::mutex();
+		self->numSwitch = 0;
 	}
 	return (PyObject*) self;
 }
 
 int PySimulation::init(PySimulation* self, PyObject *args, PyObject *kwds) {
-	static char *kwlist[] = {"components", "frequency", "timestep", "duration", "log", NULL};
+	static char *kwlist[] = {"components", "frequency", "timestep", "duration", "log", "llog", "rlog", NULL};
 	double frequency = 50, timestep = 1e-3, duration = DBL_MAX;
-	const char *log = nullptr;
+	const char *log = nullptr, *llog = nullptr, *rlog = nullptr;
 
-	if (!PyArg_ParseTupleAndKeywords(args, kwds, "O|ddds", kwlist,
-		&self->pyComps, &frequency, &timestep, &duration, &log))
+	if (!PyArg_ParseTupleAndKeywords(args, kwds, "O|dddsss", kwlist,
+		&self->pyComps, &frequency, &timestep, &duration, &log, &llog, &rlog))
 		return -1;
 	if (!compsFromPython(self->pyComps, self->comps)) {
 		PyErr_SetString(PyExc_TypeError, "Invalid components argument (must by list of dpsim.Component)");
@@ -113,6 +114,14 @@ int PySimulation::init(PySimulation* self, PyObject *args, PyObject *kwds) {
 		self->log = new Logger(log);
 	else
 		self->log = new Logger();
+	if (rlog)
+		self->rlog = new Logger(rlog);
+	else
+		self->rlog = new Logger();
+	if (llog)
+		self->llog = new Logger(llog);
+	else
+		self->llog = new Logger();
 	self->sim = new Simulation(self->comps, 2*PI*frequency, timestep, duration, *self->log);
 	return 0;
 };
@@ -130,6 +139,10 @@ void PySimulation::dealloc(PySimulation* self) {
 		delete self->sim;
 	if (self->log)
 		delete self->log;
+	if (self->llog)
+		delete self->llog;
+	if (self->rlog)
+		delete self->rlog;
 	delete self->mut;
 	delete self->cond;
 
@@ -153,6 +166,21 @@ PyObject* PySimulation::lvector(PyObject *self, PyObject *args) {
 	for (int i = 0; i < lvector.rows(); i++)
 		PyList_SetItem(list, i, PyFloat_FromDouble(lvector(i, 0)));
 	return list;
+}
+
+PyObject* PySimulation::pause(PyObject *self, PyObject *args) {
+	PySimulation *pySim = (PySimulation*) self;
+	std::unique_lock<std::mutex> lk(*pySim->mut);
+	if (pySim->state != StateRunning) {
+		PyErr_SetString(PyExc_SystemError, "Simulation not currently running");
+		return nullptr;
+	}
+	pySim->sigPause = 1;
+	pySim->cond->notify_one();
+	while (pySim->state == StateRunning)
+		pySim->cond->wait(lk);
+	Py_INCREF(Py_None);
+	return Py_None;
 }
 
 PyObject* PySimulation::start(PyObject *self, PyObject *args) {
@@ -212,17 +240,12 @@ PyObject* PySimulation::stop(PyObject *self, PyObject *args) {
 	return Py_None;
 }
 
-PyObject* PySimulation::pause(PyObject *self, PyObject *args) {
+PyObject* PySimulation::updateMatrix(PyObject *self, PyObject *args) {
 	PySimulation *pySim = (PySimulation*) self;
-	std::unique_lock<std::mutex> lk(*pySim->mut);
-	if (pySim->state != StateRunning) {
-		PyErr_SetString(PyExc_SystemError, "Simulation not currently running");
-		return nullptr;
-	}
-	pySim->sigPause = 1;
-	pySim->cond->notify_one();
-	while (pySim->state == StateRunning)
-		pySim->cond->wait(lk);
+	// TODO: this is a quick-and-dirty method that keeps the old matrix in
+	// memory
+	pySim->sim->addSystemTopology(pySim->comps);
+	pySim->sim->switchSystemMatrix(++pySim->numSwitch);
 	Py_INCREF(Py_None);
 	return Py_None;
 }
