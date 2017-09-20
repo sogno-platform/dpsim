@@ -28,6 +28,5 @@ add_subdirectory(CIM-XML-Parser)
 file(GLOB SOURCES *.cpp Components/*.cpp)
 add_library(dpsim SHARED ${SOURCES})
 target_link_libraries(dpsim CIMParser pthread ${PYTHON_LIBRARIES} ${LIBS})
-execute_process(COMMAND python -c "import sysconfig; print(sysconfig.get_path('platlib'), end='')" OUTPUT_VARIABLE PYTHON_PKGPATH)
+execute_process(COMMAND python3 -c "import sysconfig; print(sysconfig.get_path('platlib'), end='')" OUTPUT_VARIABLE PYTHON_PKGPATH)
 install(FILES build/libdpsim.so DESTINATION ${PYTHON_PKGPATH} RENAME ${MODNAME})
-

@@ -19,7 +19,6 @@ build:
   script:
     - mkdir Source/build
     - cd Source/build
-    - python3 -c "import sysconfig; print(sysconfig.get_paths())"
     - cmake ..
     - make
   image: ${DOCKER_IMAGE}
@@ -29,11 +28,5 @@ build:
   tags:
     - docker
 
-test:
-  stage: test
-  script:
-    - cd Source/Tests
-    - python3 run_tests.py
-  tags:
-    - docker
-  image: ${DOCKER_IMAGE}
+# remove tests again for now; they will be added back later when they can be
+# done purely with python scripts using the new module
