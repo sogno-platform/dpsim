@@ -1,8 +1,14 @@
+#include "PyComponent.h"
 #include "PyInterface.h"
 
 #include "ShmemInterface.h"
 
 using namespace DPsim;
+
+static PyMethodDef PyInterface_methods[] = {
+	{"register_source", PyInterface::registerSource, METH_VARARGS, "Registers an external source to use this interface."},
+	{0},
+};
 
 PyTypeObject DPsim::PyInterfaceType = {
 	PyVarObject_HEAD_INIT(NULL, 0)
@@ -27,6 +33,13 @@ PyTypeObject DPsim::PyInterfaceType = {
 	Py_TPFLAGS_DEFAULT |
 		Py_TPFLAGS_BASETYPE,           /* tp_flags */
 	"An interface to an external source/sink of data.", /* tp_doc */
+	0,                                 /* tp_traverse */
+	0,                                 /* tp_clear */
+	0,                                 /* tp_richcompare */
+	0,                                 /* tp_weaklistoffset */
+	0,                                 /* tp_iter */
+	0,                                 /* tp_iternext */
+	PyInterface_methods,               /* tp_methods */
 };
 
 void PyInterface::dealloc(PyInterface* self) {
@@ -35,7 +48,32 @@ void PyInterface::dealloc(PyInterface* self) {
 	Py_TYPE(self)->tp_free((PyObject*) self);
 }
 
-PyObject* pyShmemInterface(PyObject *self, PyObject *args, PyObject *kwds) {
+PyObject* PyInterface::registerSource(PyObject* self, PyObject* args) {
+	PyObject *obj;
+	int realIdx, imagIdx;
+
+	PyInterface* pyIntf = (PyInterface*) self;
+	if (!PyArg_ParseTuple(args, "Oii", &obj, &realIdx, &imagIdx))
+		return nullptr;
+
+	if (!PyObject_TypeCheck(obj, &PyComponentType)) {
+		PyErr_SetString(PyExc_TypeError, "First argument must be a Component");
+		return nullptr;
+	}
+	PyComponent *pyComp = (PyComponent*) obj;
+	if (ExternalCurrentSource *ecs = dynamic_cast<ExternalCurrentSource*>(pyComp->comp)) {
+		pyIntf->intf->registerCurrentSource(ecs, realIdx, imagIdx);
+	} else if (ExternalVoltageSource *evs = dynamic_cast<ExternalVoltageSource*>(pyComp->comp)) {
+		pyIntf->intf->registerVoltageSource(evs, realIdx, imagIdx);
+	} else {
+		PyErr_SetString(PyExc_TypeError, "First argument must be an external source");
+		return nullptr;
+	}
+	Py_INCREF(Py_None);
+	return Py_None;
+}
+
+PyObject* DPsim::pyShmemInterface(PyObject *self, PyObject *args, PyObject *kwds) {
 	static char *kwlist[] = {"queuelen", "samplelen", "polling", nullptr};
 	struct shmem_conf conf;
 	const char *wname, *rname;

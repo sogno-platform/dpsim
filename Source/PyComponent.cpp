@@ -1,6 +1,8 @@
 #include "PyComponent.h"
 
 #include "CIMReader.h"
+#include "Components/ExternalCurrentSource.h"
+#include "Components/ExternalVoltageSource.h"
 
 using namespace DPsim;
 
@@ -150,6 +152,32 @@ bool DPsim::compsFromPython(PyObject* list, std::vector<BaseComponent*>& comps) 
 		comps.push_back(pyComp->comp);
 	}
 	return true;
+}
+
+PyObject* DPsim::pyExternalCurrentSource(PyObject* self, PyObject* args) {
+	const char *name;
+	int src, dest;
+	Py_complex initCurrent;
+
+	if (!PyArg_ParseTuple(args, "siiD", &name, &src, &dest, &initCurrent))
+		return nullptr;
+
+	PyComponent *pyComp = PyObject_New(PyComponent, &PyComponentType);
+	pyComp->comp = new ExternalCurrentSource(name, src, dest, Complex(initCurrent.real, initCurrent.imag));
+	return (PyObject*) pyComp;
+}
+
+PyObject* DPsim::pyExternalVoltageSource(PyObject* self, PyObject* args) {
+	const char *name;
+	int src, dest, num;
+	Py_complex initVoltage;
+
+	if (!PyArg_ParseTuple(args, "siiDi", &name, &src, &dest, &initVoltage, &num))
+		return nullptr;
+
+	PyComponent *pyComp = PyObject_New(PyComponent, &PyComponentType);
+	pyComp->comp = new ExternalVoltageSource(name, src, dest, Complex(initVoltage.real, initVoltage.imag), num);
+	return (PyObject*) pyComp;
 }
 
 PyObject* DPsim::pyLoadCim(PyObject* self, PyObject* args) {

@@ -9,6 +9,8 @@ using namespace DPsim;
 
 PyMethodDef DPsim::pyModuleMethods[] = {
 	{"load_cim", pyLoadCim, METH_VARARGS, "Load a network from CIM file(s)."},
+	{"ExternalCurrentSource", pyExternalCurrentSource, METH_VARARGS, "Construct a new external current source."},
+	{"ExternalVoltageSource", pyExternalVoltageSource, METH_VARARGS, "Construct a new external voltage source."},
 	{"ShmemInterface", (PyCFunction)pyShmemInterface, METH_VARARGS|METH_KEYWORDS, "Construct an Interface that communicates via POSIX shared memory."},
 	{0}
 };

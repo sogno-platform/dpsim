@@ -13,12 +13,14 @@ namespace DPsim {
 		ExternalInterface *intf;
 
 		static void dealloc(PyInterface*);
+
+		static PyObject* registerSource(PyObject* self, PyObject* args);
 	};
 
 	extern PyTypeObject PyInterfaceType;
 
 #ifdef __linux__
-	PyObject* pyShmemInterface(PyObject *self, PyObject *args);
+	PyObject* pyShmemInterface(PyObject *self, PyObject *args, PyObject *kwds);
 #endif
 };
 
