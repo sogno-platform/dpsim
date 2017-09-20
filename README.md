@@ -1,13 +1,10 @@
-## Tasks
-- Sychronous generator model interfaced through current source
-- connect with CIM parser
-- include boost library for additional math functions and general tasks
-
-## Setup
+## Build
 
 Make sure that all subrepos (CIM-XML-Parser and arabica) are checked out.
 
 ### Windows
+
+TODO: build with Python under Windows?
 
 1. Install Visual Studio 2017 C++ Desktop development package plus Windows 8.1 SDK
 2. Create a new folder name `Libraries` in the repository root, download [Eigen](http://eigen.tuxfamily.org) and copy it to `Libraries/eigen`.
@@ -29,6 +26,12 @@ $ cd Source/build
 $ cmake ..
 $ make
 ```
+4. Install the generated module:
+```
+# make install
+```
+Another option is to manually rename the generated module (from Source/build/libdpsim.so
+to dpsim.so) and ensure that dpsim.so is in somewhere in your PYTHONPATH.
 
 ## Basic git commands
 * initial download: git clone [url]
@@ -37,9 +40,3 @@ $ make
 * add modification or new file to commit: git add --all OR git add [filename]
 * create commit: git commit -m 'your comment'
 * push commits from local repo to server: git push
-
-## Netlist structure
-* **separate items with comma and end line with comma**
-* see examples and store new netlist files in DPSolver/netlists
-* first line: time step, final time e.g. 0.001,0.1,
-* following lines: class name, component name, node1, node2, paramter1, parameter2... e.g. Resistor,R1,0,1,10
