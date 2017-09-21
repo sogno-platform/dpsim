@@ -13,7 +13,12 @@ using namespace DPsim;
 void ShmemInterface::init(const char* wname, const char* rname, struct shmem_conf* conf) {
 	/* using a static shmem_conf as a default argument for the constructor
 	 * doesn't seem to work, so use this as a workaround */
-	if (shmem_int_open(wname, rname, &this->mShmem, conf) < 0) {
+
+	// make local copies of the filenames, because shmem_int doesn't make copies
+	// and needs them for the close function
+	this->wname = std::string(wname);
+	this->rname = std::string(rname);
+	if (shmem_int_open(this->wname.c_str(), this->rname.c_str(), &this->mShmem, conf) < 0) {
 		std::perror("Failed to open/map shared memory object");
 		std::exit(1);
 	}

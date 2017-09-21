@@ -22,6 +22,7 @@ namespace DPsim {
 		struct shmem_int mShmem;
 		struct sample *mLastSample;
 		int mSeq;
+		std::string rname, wname;
 
 		void init(const char *wname, const char *rname, struct shmem_conf *conf);
 
