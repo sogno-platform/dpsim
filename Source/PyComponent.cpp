@@ -1,6 +1,7 @@
 #include "PyComponent.h"
 
 #include "CIMReader.h"
+#include "Components.h"
 #include "Components/ExternalCurrentSource.h"
 #include "Components/ExternalVoltageSource.h"
 
@@ -177,6 +178,46 @@ PyObject* DPsim::pyExternalVoltageSource(PyObject* self, PyObject* args) {
 
 	PyComponent *pyComp = PyObject_New(PyComponent, &PyComponentType);
 	pyComp->comp = new ExternalVoltageSource(name, src, dest, Complex(initVoltage.real, initVoltage.imag), num);
+	return (PyObject*) pyComp;
+}
+
+PyObject* DPsim::pyInductor(PyObject* self, PyObject* args) {
+	const char *name;
+	double inductance;
+	int src, dest;
+
+	if (!PyArg_ParseTuple(args, "siid", &name, &src, &dest, &inductance))
+		return nullptr;
+
+	PyComponent *pyComp = PyObject_New(PyComponent, &PyComponentType);
+	pyComp->comp = new Inductor(name, src, dest, inductance);
+	return (PyObject*) pyComp;
+}
+
+PyObject* DPsim::pyLinearResistor(PyObject* self, PyObject* args) {
+	const char *name;
+	double resistance;
+	int src, dest;
+
+	if (!PyArg_ParseTuple(args, "siid", &name, &src, &dest, &resistance))
+		return nullptr;
+
+	PyComponent *pyComp = PyObject_New(PyComponent, &PyComponentType);
+	pyComp->comp = new LinearResistor(name, src, dest, resistance);
+	return (PyObject*) pyComp;
+}
+
+PyObject* DPsim::pyVoltSourceRes(PyObject* self, PyObject* args) {
+	const char *name;
+	double resistance;
+	int src, dest;
+	Py_complex voltage;
+
+	if (!PyArg_ParseTuple(args, "siiDd", &name, &src, &dest, &voltage, &resistance))
+		return nullptr;
+
+	PyComponent *pyComp = PyObject_New(PyComponent, &PyComponentType);
+	pyComp->comp = new VoltSourceRes(name, src, dest, Complex(voltage.real, voltage.imag), resistance);
 	return (PyObject*) pyComp;
 }
 
