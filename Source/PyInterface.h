@@ -14,6 +14,8 @@ namespace DPsim {
 
 		static void dealloc(PyInterface*);
 
+		static PyObject* exportCurrent(PyObject* self, PyObject* args);
+		static PyObject* exportVoltage(PyObject* self, PyObject* args);
 		static PyObject* registerSource(PyObject* self, PyObject* args);
 	};
 

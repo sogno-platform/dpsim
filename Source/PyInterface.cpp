@@ -6,6 +6,8 @@
 using namespace DPsim;
 
 static PyMethodDef PyInterface_methods[] = {
+	{"export_current", PyInterface::exportCurrent, METH_VARARGS, "Registers a current to be exported on this interface."},
+	{"export_voltage", PyInterface::exportVoltage, METH_VARARGS, "Registers a voltage to be exported on this interface."},
 	{"register_source", PyInterface::registerSource, METH_VARARGS, "Registers an external source to use this interface."},
 	{0},
 };
@@ -73,8 +75,36 @@ PyObject* PyInterface::registerSource(PyObject* self, PyObject* args) {
 	return Py_None;
 }
 
+PyObject* PyInterface::exportCurrent(PyObject* self, PyObject* args) {
+	int realIdx, imagIdx;
+	PyObject* obj;
+	PyInterface* pyIntf = (PyInterface*) self;
+
+	if (!PyArg_ParseTuple(args, "Oii", &obj, &realIdx, &imagIdx))
+		return nullptr;
+	if (!PyObject_TypeCheck(obj, &PyComponentType)) {
+		PyErr_SetString(PyExc_TypeError, "First argument must be a Component");
+		return nullptr;
+	}
+	PyComponent *pyComp = (PyComponent*) obj;
+	pyIntf->intf->registerExportedCurrent(pyComp->comp, realIdx, imagIdx);
+	Py_INCREF(Py_None);
+	return Py_None;
+}
+
+PyObject* PyInterface::exportVoltage(PyObject* self, PyObject* args) {
+	int from, to, realIdx, imagIdx;
+	PyInterface* pyIntf = (PyInterface*) self;
+
+	if (!PyArg_ParseTuple(args, "iiii", &from, &to, &realIdx, &imagIdx))
+		return nullptr;
+	pyIntf->intf->registerExportedVoltage(from, to, realIdx, imagIdx);
+	Py_INCREF(Py_None);
+	return Py_None;
+}
+
 PyObject* DPsim::pyShmemInterface(PyObject *self, PyObject *args, PyObject *kwds) {
-	static char *kwlist[] = {"queuelen", "samplelen", "polling", nullptr};
+	static char *kwlist[] = {"wname", "rname", "queuelen", "samplelen", "polling", nullptr};
 	struct shmem_conf conf;
 	const char *wname, *rname;
 
