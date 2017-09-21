@@ -33,6 +33,9 @@ namespace DPsim {
 		std::thread *simThread;
 		SimState state;
 
+		bool rt;
+		bool startSync;
+
 		PyObject* pyComps; // Components as a (Python) list of PyComponents
 		std::vector<BaseComponent*> comps;
 		int numSwitch;
@@ -44,6 +47,9 @@ namespace DPsim {
 		
 		// Function executed by the simulation thread
 		static void simThreadFunction(PySimulation* pySim);
+#ifdef __linux__
+		static void simThreadFunctionRT(PySimulation* pySim);
+#endif
 
 		// The Python API has no notion of C++ classes and methods, so the methods
 		// that can be called from Python are static.

@@ -5,6 +5,12 @@
 #include <cfloat>
 #include <iostream>
 
+#ifdef __linux__
+#include <sys/timerfd.h>
+#include <time.h>
+#include <unistd.h>
+#endif
+
 using namespace DPsim;
 
 static PyMethodDef PySimulation_methods[] = {
@@ -64,6 +70,12 @@ PyTypeObject DPsim::PySimulationType = {
 void PySimulation::simThreadFunction(PySimulation* pySim) {
 	bool notDone = true;
 
+#ifdef __linux__
+	if (pySim->rt) {
+		simThreadFunctionRT(pySim);
+		return;
+	}
+#endif
 	std::unique_lock<std::mutex> lk(*pySim->mut, std::defer_lock);
 	pySim->numStep = 0;
 	while (pySim->running && notDone) {
@@ -84,6 +96,67 @@ void PySimulation::simThreadFunction(PySimulation* pySim) {
 	pySim->cond->notify_one();
 }
 
+#ifdef __linux__
+void PySimulation::simThreadFunctionRT(PySimulation *pySim) {
+	bool notDone = true;
+	char timebuf[8];
+	int timerfd;
+	struct itimerspec ts;
+	uint64_t overrun;
+	std::unique_lock<std::mutex> lk(*pySim->mut, std::defer_lock);
+
+	pySim->numStep = 0;
+	// RT method is limited to timerfd right now; to implement it with Exceptions,
+	// look at Simulation::runRT
+	timerfd = timerfd_create(CLOCK_REALTIME, 0);
+	// TODO: better error mechanism (somehow pass an Exception to the Python thread?)
+	if (timerfd < 0) {
+		std::perror("Failed to create timerfd");
+		std::exit(1);
+	}
+	ts.it_value.tv_sec = (time_t) pySim->sim->getTimeStep();
+	ts.it_value.tv_nsec = (long) (pySim->sim->getTimeStep() *1e9);
+	ts.it_interval = ts.it_value;
+	// optional start synchronization
+	if (pySim->startSync) {
+		pySim->sim->step(*pySim->log, *pySim->llog, *pySim->rlog, false); // first step, sending the initial values
+		pySim->sim->step(*pySim->log, *pySim->llog, *pySim->rlog, true); // blocking step for synchronization + receiving the initial state of the other network
+		pySim->sim->increaseByTimeStep();
+	}
+	if (timerfd_settime(timerfd, 0, &ts, 0) < 0) {
+		std::perror("Failed to arm timerfd");
+		std::exit(1);
+	}
+	while (pySim->running && notDone) {
+		notDone = pySim->sim->step(*pySim->log, *pySim->llog, *pySim->rlog);
+		if (read(timerfd, timebuf, 8) < 0) {
+			std::perror("Read from timerfd failed");
+			std::exit(1);
+		}
+		overrun = *((uint64_t*) timebuf);
+		if (overrun > 1) {
+			std::cerr << "timerfd overrun of " << overrun-1 << " at " << pySim->sim->getTime() << std::endl;
+		}
+		pySim->numStep++;
+		pySim->sim->increaseByTimeStep();
+		// in case it wasn't obvious, pausing a RT simulation is a bad idea
+		// as it will most likely lead to overruns, but it's possible nonetheless
+		if (pySim->sigPause) {
+			lk.lock();
+			pySim->state = StatePaused;
+			pySim->cond->notify_one();
+			pySim->cond->wait(lk);
+			pySim->state = StateRunning;
+			lk.unlock();
+		}
+	}
+	close(timerfd);
+	lk.lock();
+	pySim->state = StateDone;
+	pySim->cond->notify_one();
+}
+#endif
+
 PyObject* PySimulation::newfunc(PyTypeObject* type, PyObject *args, PyObject *kwds) {
 	PySimulation *self;
 
@@ -100,15 +173,25 @@ PyObject* PySimulation::newfunc(PyTypeObject* type, PyObject *args, PyObject *kw
 }
 
 int PySimulation::init(PySimulation* self, PyObject *args, PyObject *kwds) {
-	static char *kwlist[] = {"components", "frequency", "timestep", "duration", "log", "llog", "rlog", NULL};
+	static char *kwlist[] = {"components", "frequency", "timestep", "duration", "log", "llog", "rlog", "rt", "start_sync", NULL};
 	double frequency = 50, timestep = 1e-3, duration = DBL_MAX;
 	const char *log = nullptr, *llog = nullptr, *rlog = nullptr;
 
-	if (!PyArg_ParseTupleAndKeywords(args, kwds, "O|dddsss", kwlist,
-		&self->pyComps, &frequency, &timestep, &duration, &log, &llog, &rlog))
+	if (!PyArg_ParseTupleAndKeywords(args, kwds, "O|dddsssbb", kwlist,
+		&self->pyComps, &frequency, &timestep, &duration, &log, &llog, &rlog, &self->rt, &self->startSync))
 		return -1;
 	if (!compsFromPython(self->pyComps, self->comps)) {
 		PyErr_SetString(PyExc_TypeError, "Invalid components argument (must by list of dpsim.Component)");
+		return -1;
+	}
+#ifndef __linux__
+	if (self->rt) {
+		PyErr_SetString(PyExc_SystemError, "RT mode not available on this platform");
+		return -1;
+	}
+#endif
+	if (self->startSync && !self->rt) {
+		PyErr_Format(PyExc_ValueError, "start_sync only valid in rt mode");
 		return -1;
 	}
 	Py_INCREF(self->pyComps);
