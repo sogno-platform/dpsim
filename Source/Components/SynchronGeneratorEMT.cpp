@@ -7,11 +7,8 @@ SynchronGeneratorEMT::SynchronGeneratorEMT(std::string name, int node1, int node
 	Real Rs, Real Ll, Real Lmd, Real Lmd0, Real Lmq, Real Lmq0,
 	Real Rfd, Real Llfd, Real Rkd, Real Llkd,
 	Real Rkq1, Real Llkq1, Real Rkq2, Real Llkq2,
-	Real inertia) {
-
-	this->mNode1 = node1 - 1;
-	this->mNode2 = node2 - 1;
-	this->mNode3 = node3 - 1;
+	Real inertia, bool logActive)
+	: BaseComponent(name, node1, node2, node3, logActive) {
 
 	mNomPower = nomPower;
 	mNomVolt = nomVolt;
@@ -31,9 +28,22 @@ SynchronGeneratorEMT::SynchronGeneratorEMT(std::string name, int node1, int node
 	mBase_Psi = mBase_L * mBase_i;
 	mBase_T = mNomPower / mBase_OmMech;
 
+	// Create logging file
+	if (mLogActive) {
+		std::string filename = "SynGen_" + mName + ".csv";
+		mLog = new Logger(filename);
+	}
+
 	// steady state per unit initial value
 	initWithPerUnitParam(Rs, Ll, Lmd, Lmd0, Lmq, Lmq0, Rfd, Llfd, Rkd, Llkd, Rkq1, Llkq1, Rkq2, Llkq2, inertia);
 	
+}
+
+
+SynchronGeneratorEMT::~SynchronGeneratorEMT() {
+	if (mLogActive) {
+		delete mLog;
+	}
 }
 
 void SynchronGeneratorEMT::initWithPerUnitParam(
@@ -90,7 +100,8 @@ void SynchronGeneratorEMT::initWithPerUnitParam(
 }
 
 void SynchronGeneratorEMT::init(Real om, Real dt,
-	Real initActivePower, Real initReactivePower, Real initTerminalVolt, Real initVoltAngle) {
+	Real initActivePower, Real initReactivePower, Real initTerminalVolt,
+	Real initVoltAngle, Real initFieldVoltage, Real initMechPower) {
 
 	// Create matrices for state space representation 
 	if (DampingWindings == 2)
@@ -157,7 +168,7 @@ void SynchronGeneratorEMT::init(Real om, Real dt,
 
 	
 	// steady state per unit initial value
-	initStatesInPerUnit(initActivePower, initReactivePower, initTerminalVolt, initVoltAngle);
+	initStatesInPerUnit(initActivePower, initReactivePower, initTerminalVolt, initVoltAngle, initFieldVoltage, initMechPower);
 
 	mVa = inverseParkTransform2(mThetaMech, mVd* mBase_v, mVq* mBase_v, mV0* mBase_v)(0);
 	mVb = inverseParkTransform2(mThetaMech, mVd* mBase_v, mVq* mBase_v, mV0* mBase_v)(1);
@@ -168,9 +179,10 @@ void SynchronGeneratorEMT::init(Real om, Real dt,
 	mIc = inverseParkTransform2(mThetaMech, mId* mBase_i, mIq* mBase_i, mI0* mBase_i)(2);
 }
 
-void SynchronGeneratorEMT::initStatesInPerUnit(Real initActivePower, Real initReactivePower,
-	Real initTerminalVolt, Real initVoltAngle) {
+void SynchronGeneratorEMT::initStatesInPerUnit(Real initActivePower, Real initReactivePower, 
+	Real initTerminalVolt, Real initVoltAngle, Real initFieldVoltage, Real initMechPower) {
 
+	// #### Electrical variables ##############################################
 	double init_P = initActivePower / mNomPower;
 	double init_Q = initReactivePower / mNomPower;
 	double init_S = sqrt(pow(init_P, 2.) + pow(init_Q, 2.));
@@ -231,14 +243,16 @@ void SynchronGeneratorEMT::initStatesInPerUnit(Real initActivePower, Real initRe
 	mPsikq1 = init_psiq1;
 	mPsikq2 = init_psiq2;
 
-	// Initialize mechanical angle
-	//mThetaMech = initVoltAngle + init_delta;
+	// #### mechanical variables ##############################################
+	mMechPower = initMechPower / mNomPower;
+	mMechTorque = mMechPower / 1;
 	mThetaMech = initVoltAngle + init_delta - M_PI/2;
+	//mThetaMech = initVoltAngle + init_delta;
 }
 
-void SynchronGeneratorEMT::step(SystemModel& system, Real fieldVoltage, Real mechPower, Real time) {
+void SynchronGeneratorEMT::step(SystemModel& system, Real time) {
 
-	stepInPerUnit(system.getOmega(), system.getTimeStep(), fieldVoltage, mechPower, time, system.getNumMethod());
+	stepInPerUnit(system.getOmega(), system.getTimeStep(), time, system.getNumMethod());
 	
 	// Update current source accordingly
 	if (mNode1 >= 0) {
@@ -251,9 +265,15 @@ void SynchronGeneratorEMT::step(SystemModel& system, Real fieldVoltage, Real mec
 		system.addRealToRightSideVector(mNode3, mIc);
 	}
 
+	if (mLogActive) {
+		DPSMatrix logValues(getFluxes().rows() + getVoltages().rows() + getCurrents().rows(), 1);
+		logValues << getFluxes(), getVoltages(), getCurrents();
+		mLog->LogDataLine(time, logValues);
+	}
+
 }
 
-void SynchronGeneratorEMT::stepInPerUnit(Real om, Real dt, Real fieldVoltage, Real mechPower, Real time, NumericalMethod numMethod) {
+void SynchronGeneratorEMT::stepInPerUnit(Real om, Real dt, Real time, NumericalMethod numMethod) {
 		
 	mVa = (1 / mBase_v) * mVa;
 	mVb = (1 / mBase_v) * mVb;
@@ -263,19 +283,13 @@ void SynchronGeneratorEMT::stepInPerUnit(Real om, Real dt, Real fieldVoltage, Re
 	mIb = (1 / mBase_i) * mIb;
 	mIc = (1 / mBase_i) * mIc;
 
-	mVfd = fieldVoltage / mBase_v;
-	// TODO calculate effect of changed field voltage
-
 	// dq-transform of interface voltage
 	mVd = parkTransform2(mThetaMech, mVa, mVb, mVc)(0);
 	mVq = parkTransform2(mThetaMech, mVa, mVb, mVc)(1);
 	mV0 = parkTransform2(mThetaMech, mVa, mVb, mVc)(2);
 
 	if (numMethod == NumericalMethod::Euler) {
-
-		mMechPower = mechPower / mNomPower;
-		mMechTorque = mMechPower / 1;
-	
+			
 		mElecTorque = (mPsid*mIq - mPsiq*mId);
 
 		// Euler step forward	
@@ -328,9 +342,6 @@ void SynchronGeneratorEMT::stepInPerUnit(Real om, Real dt, Real fieldVoltage, Re
 
 		//Two steps Adams-Bashforth
 		if (time < dt) {
-			// calculate mechanical states
-			mMechPower = mechPower / mNomPower;
-			mMechTorque = mMechPower / mOmMech;
 			mElecTorque = (mPsid*mIq - mPsiq*mId);
 
 			mOmMech_past = mOmMech;
@@ -386,9 +397,6 @@ void SynchronGeneratorEMT::stepInPerUnit(Real om, Real dt, Real fieldVoltage, Re
 
 		}
 		else {
-			// calculate mechanical states
-			mMechPower = mechPower / mNomPower;
-			mMechTorque = mMechPower / mOmMech;
 			mMechTorque_past = mMechPower / mOmMech_past;
 
 			mElecTorque = (mPsid*mIq - mPsiq*mId);
@@ -447,15 +455,10 @@ void SynchronGeneratorEMT::stepInPerUnit(Real om, Real dt, Real fieldVoltage, Re
 
 	else if (numMethod == NumericalMethod::Trapezoidal_flux){
 
-		mMechPower = mechPower / mNomPower;
-		mMechTorque = mMechPower / 1;
-
 		mElecTorque = (mPsid*mIq - mPsiq*mId);
 
 		// Euler step forward	
 		mOmMech = mOmMech + dt * (1 / (2 * mH) * (mMechTorque - mElecTorque));
-
-
 
 		if (DampingWindings == 2)
 		{
@@ -528,7 +531,6 @@ void SynchronGeneratorEMT::stepInPerUnit(Real om, Real dt, Real fieldVoltage, Re
 			mPsikq1 = Fluxes(3, 0);
 			mPsifd = Fluxes(4, 0);
 			mPsikd = Fluxes(5, 0);
-
 		}
 
 
@@ -689,7 +691,7 @@ void SynchronGeneratorEMT::stepInPerUnit(Real om, Real dt, Real fieldVoltage, Re
 			mVfd,
 			mVkd;
 
-		mFluxes2 << mVq,
+		mFluxes2 << mPsiq,
 			mPsid,
 			mPsi0,
 			mPsikq1,
@@ -713,7 +715,7 @@ void SynchronGeneratorEMT::stepInPerUnit(Real om, Real dt, Real fieldVoltage, Re
 			mVfd,
 			mVkd;
 
-		mFluxes2 << mVq,
+		mFluxes2 << mPsiq,
 			mPsid,
 			mPsi0,
 			mPsikq1,

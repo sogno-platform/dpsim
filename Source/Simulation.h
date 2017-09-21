@@ -33,6 +33,10 @@ namespace DPsim {
 		Real mFinalTime;
 		/// Time variable that is incremented at every step
 		Real mTime;
+		/// Last simulation time step when log was updated
+		Int mLastLogTimeStep;
+		/// Down sampling rate
+		Int mDownSampleRate;
 		/// Index of the next switching
 		UInt mCurrentSwitchTimeIndex;
 		/// Vector of switch times
@@ -61,6 +65,7 @@ namespace DPsim {
 		/// Creates system matrix according to 
 		Simulation(std::vector<BaseComponent*> elements, Real om, Real dt, Real tf, SimulationType simType = SimulationType::DynPhasor);
 		Simulation(std::vector<BaseComponent*> elements, Real om, Real dt, Real tf, Logger& logger, SimulationType simType = SimulationType::DynPhasor);
+		Simulation(std::vector<BaseComponent*> elements, Real om, Real dt, Real tf, Logger& logger, Int downSampleRate, SimulationType simType = SimulationType::DynPhasor);
 		~Simulation();
 
 		
@@ -81,14 +86,10 @@ namespace DPsim {
 		Matrix & getRightSideVector() { return mSystemModel.getRightSideVector(); }
 		Matrix & getSystemMatrix() { return mSystemModel.getCurrentSystemMatrix(); }
 		int stepGeneratorTest(Logger& logger, Logger& leftSideVectorLog, Logger& rightSideVectorLog, 
-			BaseComponent* generator, Logger& synGenLogFlux, Logger& synGenLogVolt, Logger& synGenLogCurr, Real fieldVoltage, Real mechPower, 
-			Real logTimeStep, Real& lastLogTime, Real time);
-		int stepGeneratordq(Logger& logger, Logger& leftSideVectorLog, Logger& rightSideVectorLog,
-			BaseComponent* generator, Logger& synGenLogFlux, Logger& synGenLogVolt, Logger& synGenLogCurr, Real fieldVoltage, Real mechPower,
-			Real logTimeStep, Real& lastLogTime, Real time);
+			BaseComponent* generator, Real time);		
 		int stepGeneratorVBR(Logger& logger, BaseComponent* generator,
 			Logger& synGenLogVolt, Logger& synGenLogCurr, Logger& synGenLogElecTorque, Logger& synGenLogOmega, Logger& synGenLogTheta,
-			Real fieldVoltage, Real mechPower, Real logTimeStep, Real& lastLogTime, Real time);
+			Real fieldVoltage, Real mechPower, Real time);
 
 		void addSystemTopology(std::vector<BaseComponent*> newElements);
 

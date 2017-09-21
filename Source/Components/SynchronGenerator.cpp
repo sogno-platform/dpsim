@@ -88,7 +88,8 @@ void SynchronGenerator::initWithPerUnitParam(
 }
 
 void SynchronGenerator::init(Real om, Real dt,
-	Real initActivePower, Real initReactivePower, Real initTerminalVolt, Real initVoltAngle) {
+	Real initActivePower, Real initReactivePower, Real initTerminalVolt, 
+	Real initVoltAngle, Real initFieldVoltage, Real initMechPower) {
 
 	// Create matrices for state space representation 
 	if (DampingWindings == 2)
@@ -154,7 +155,7 @@ void SynchronGenerator::init(Real om, Real dt,
 	mReactanceMat = mInductanceMat.inverse();
 
 	// steady state per unit initial value
-	initStatesInPerUnit(initActivePower, initReactivePower, initTerminalVolt, initVoltAngle);
+	initStatesInPerUnit(initActivePower, initReactivePower, initTerminalVolt, initVoltAngle, initFieldVoltage, initMechPower);
 
 	mVaRe = dq0ToAbcTransform(mThetaMech, mVd* mBase_v, mVq* mBase_v, mV0* mBase_v)(0);
 	mVbRe = dq0ToAbcTransform(mThetaMech, mVd* mBase_v, mVq* mBase_v, mV0* mBase_v)(1);
@@ -172,7 +173,7 @@ void SynchronGenerator::init(Real om, Real dt,
 }
 
 void SynchronGenerator::initStatesInPerUnit(Real initActivePower, Real initReactivePower,
-	Real initTerminalVolt, Real initVoltAngle) {
+	Real initTerminalVolt, Real initVoltAngle, Real initFieldVoltage, Real initMechPower) {
 
 	double init_P = initActivePower / mNomPower;
 	double init_Q = initReactivePower / mNomPower;
@@ -258,13 +259,15 @@ void SynchronGenerator::initStatesInPerUnit(Real initActivePower, Real initReact
 	mPsikq1 = init_psiq1;
 	mPsikq2 = init_psiq2;
 
-	// Initialize mechanical angle
+	// Initialize mechanical variables
+	mMechPower = initMechPower / mNomPower;
+	mMechTorque = mMechPower / 1;
 	mThetaMech = initVoltAngle + init_delta - PI / 2.;
 }
 
 void SynchronGenerator::step(SystemModel& system, Real fieldVoltage, Real mechPower) {
 
-	stepInPerUnit(system.getOmega(), system.getTimeStep(), fieldVoltage, mechPower, system.getNumMethod());
+	stepInPerUnit(system.getOmega(), system.getTimeStep(), system.getNumMethod());
 
 	if (mNode1 >= 0) {
 		system.addCompToRightSideVector(mNode1, mIaRe, mIaIm);
@@ -277,7 +280,7 @@ void SynchronGenerator::step(SystemModel& system, Real fieldVoltage, Real mechPo
 	}
 }
 
-void SynchronGenerator::stepInPerUnit(Real om, Real dt, Real fieldVoltage, Real mechPower, NumericalMethod numMethod) {
+void SynchronGenerator::stepInPerUnit(Real om, Real dt, NumericalMethod numMethod) {
 
 	// mVoltages(5, 0) = fieldVoltage / mBase_v;
 	// TODO calculate effect of changed field voltage
@@ -305,10 +308,7 @@ void SynchronGenerator::stepInPerUnit(Real om, Real dt, Real fieldVoltage, Real 
 	//mVoltages(2, 0) = mV0;
 
 	if (numMethod == NumericalMethod::Euler) {
-
-		mMechPower = mechPower / mNomPower;
-		mMechTorque = mMechPower / 1;
-
+		
 		mElecTorque = (mPsid*mIq - mPsiq*mId);
 
 		// Euler step forward	
@@ -374,8 +374,6 @@ void SynchronGenerator::stepInPerUnit(Real om, Real dt, Real fieldVoltage, Real 
 	else if (numMethod == NumericalMethod::Trapezoidal_flux)
 	{
 		
-		mMechPower = mechPower / mNomPower;
-		mMechTorque = mMechPower / 1;
 
 		mElecTorque = (mPsid*mIq - mPsiq*mId);
 
@@ -486,11 +484,7 @@ void SynchronGenerator::stepInPerUnit(Real om, Real dt, Real fieldVoltage, Real 
 
 	}
 
-	else if (numMethod == NumericalMethod::Trapezoidal_current)
-	{
-		// calculate mechanical states
-		mMechPower = mechPower / mNomPower;
-		mMechTorque = mMechPower / 1;
+	else if (numMethod == NumericalMethod::Trapezoidal_current) {
 		mElecTorque = (mPsid*mIq - mPsiq*mId);
 
 		// Euler step forward  for angular speed 	
@@ -509,8 +503,7 @@ void SynchronGenerator::stepInPerUnit(Real om, Real dt, Real fieldVoltage, Real 
 		DPSMatrix Aux2 = I - (dt / 2) * A;
 		DPSMatrix InvAux = Aux2.inverse();
 
-		if (DampingWindings == 2)
-		{
+		if (DampingWindings == 2) {
 			DPSMatrix dqCurrents(7, 1);
 			dqCurrents(0, 0) = mIq;
 			dqCurrents(1, 0) = mId;
@@ -548,9 +541,7 @@ void SynchronGenerator::stepInPerUnit(Real om, Real dt, Real fieldVoltage, Real 
 			mPsifd = -mLmd*mId + (mLlfd + mLmd)*mIfd + mLmd*mIkd;
 			mPsikd = -mLmd*mId + mLmd*mIfd + (mLlkd + mLmd)*mIkd;
 		}
-
-		else
-		{
+		else {
 			DPSMatrix dqCurrents(7, 1);
 			dqCurrents(0, 0) = mIq;
 			dqCurrents(1, 0) = mId;
@@ -623,7 +614,7 @@ void SynchronGenerator::stepInPerUnit(Real om, Real dt, Real fieldVoltage, Real 
 			mVfd,
 			mVkd;
 
-		mFluxes2 << mVq,
+		mFluxes2 << mPsiq,
 			mPsid,
 			mPsi0,
 			mPsikq1,
@@ -647,7 +638,7 @@ void SynchronGenerator::stepInPerUnit(Real om, Real dt, Real fieldVoltage, Real 
 			mVfd,
 			mVkd;
 
-		mFluxes2 << mVq,
+		mFluxes2 << mPsiq,
 			mPsid,
 			mPsi0,
 			mPsikq1,

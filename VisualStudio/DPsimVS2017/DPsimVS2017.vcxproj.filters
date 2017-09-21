@@ -117,9 +117,6 @@
     <ClInclude Include="..\..\Source\Components\SynchronGenerator.h">
       <Filter>Headerdateien\Components</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\Source\Components\SynchronGeneratorEMTdq.h">
-      <Filter>Headerdateien\Components</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\Source\Components\VoltageBehindReactanceEMT.h">
       <Filter>Headerdateien\Components</Filter>
     </ClInclude>
@@ -131,6 +128,9 @@
     </ClInclude>
     <ClInclude Include="..\..\Source\Components\VoltageBehindReactanceDP.h">
       <Filter>Headerdateien\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\Examples\Testing.h">
+      <Filter>Headerdateien\Examples</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -207,9 +207,6 @@
       <Filter>Quelldateien</Filter>
     </ClCompile>
     <ClCompile Include="..\..\Source\Components\SynchronGenerator.cpp">
-      <Filter>Quelldateien\Components</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\Source\Components\SynchronGeneratorEMTdq.cpp">
       <Filter>Quelldateien\Components</Filter>
     </ClCompile>
     <ClCompile Include="..\..\Source\Components\VoltageBehindReactanceEMT.cpp">

@@ -2,8 +2,8 @@
 
 using namespace DPsim;
 
-VoltSourceRes::VoltSourceRes(std::string name, int src, int dest, Real voltage, Real phase, Real resistance) : BaseComponent(src, dest) {
-	this->mName = name;
+VoltSourceRes::VoltSourceRes(std::string name, int src, int dest, 
+	Real voltage, Real phase, Real resistance) : BaseComponent(name, src, dest) {
 	this->mVoltageDiffr = voltage*cos(phase);
 	this->mVoltageDiffi = voltage*sin(phase);
 	this->mResistance = resistance;		

@@ -9,7 +9,6 @@
 #include "Components/VoltSourceRes.h"
 #include "Components/InterfacedInductor.h"
 #include "Components/SynchronGeneratorEMT.h"
-#include "Components/SynchronGeneratorEMTdq.h"
 #include "Components/SynchronGenerator.h"
 #include "Components/ComponentCommons.h"
 #include "Components/VoltSourceResFreq.h"

@@ -54,7 +54,7 @@ void DPsim::SynGenUnitTestVBR() {
 	double tf, dt, t;
 	double om = 2.0*M_PI*60.0;
 	tf = 0.1; dt = 0.0000007; t = 0;
-	Simulation newSim(circElements, om, dt, tf, log, SimulationType::EMT);
+	Simulation newSim(circElements, om, dt, tf, log, 50, SimulationType::EMT);
  
 	// Initialize generator
 	double initActivePower = 555e3;
@@ -79,7 +79,7 @@ void DPsim::SynGenUnitTestVBR() {
 	while (newSim.getTime() < tf)
 	{
 		std::cout << newSim.getTime() << std::endl;
-		newSim.stepGeneratorVBR(log, gen, synGenLogVolt, synGenLogCurr, synGenLogElecTorque, synGenLogOmega, synGenLogTheta, fieldVoltage, mechPower, logTimeStep, lastLogTime, newSim.getTime());
+		newSim.stepGeneratorVBR(log, gen, synGenLogVolt, synGenLogCurr, synGenLogElecTorque, synGenLogOmega, synGenLogTheta, fieldVoltage, mechPower, newSim.getTime());
 		newSim.increaseByTimeStep();
 	}
 
@@ -137,7 +137,7 @@ void DPsim::SynGenUnitTestVBRDP() {
 	double tf, dt, t;
 	double om = 2.0*M_PI*60.0;
 	tf = 0.1; dt = 0.0000007; t = 0;
-	Simulation newSim(circElements, om, dt, tf, log, SimulationType::DynPhasor);
+	Simulation newSim(circElements, om, dt, tf, log, 50, SimulationType::DynPhasor);
 
 	// Initialize generator
 	double initActivePower = 555e3;
@@ -162,7 +162,7 @@ void DPsim::SynGenUnitTestVBRDP() {
 	while (newSim.getTime() < tf)
 	{
 		std::cout << newSim.getTime() << std::endl;
-		newSim.stepGeneratorVBR(log, gen, synGenLogVolt, synGenLogCurr, synGenLogElecTorque, synGenLogOmega, synGenLogTheta, fieldVoltage, mechPower, logTimeStep, lastLogTime, newSim.getTime());
+		newSim.stepGeneratorVBR(log, gen, synGenLogVolt, synGenLogCurr, synGenLogElecTorque, synGenLogOmega, synGenLogTheta, fieldVoltage, mechPower, newSim.getTime());
 		newSim.increaseByTimeStep();
 	}
 

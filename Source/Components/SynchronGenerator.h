@@ -252,12 +252,13 @@ namespace DPsim {
 		/// Initializes states in per unit or stator referred variables depending on the setting of the state type. 
 		/// Function parameters have to be given in Real units.
 		void init(Real om, Real dt,
-			Real initActivePower, Real initReactivePower, Real initTerminalVolt, Real initVoltAngle);
+			Real initActivePower, Real initReactivePower, Real initTerminalVolt, 
+			Real initVoltAngle, Real initFieldVoltage, Real initMechPower);
 
 		/// Initializes states in per unit. All machine parameters are assumed to be in per unit.
 		/// Function parameters have to be given in Real units.
 		void initStatesInPerUnit(Real initActivePower, Real initReactivePower,
-			Real initTerminalVolt, Real initVoltAngle);
+			Real initTerminalVolt, Real initVoltAngle, Real initFieldVoltage, Real initMechPower);
 
 		/// Performs an Euler forward step with the state space model of a synchronous generator 
 		/// to calculate the flux and current from the voltage vector.
@@ -265,7 +266,7 @@ namespace DPsim {
 
 		/// Performs an Euler forward step with the state space model of a synchronous generator 
 		/// to calculate the flux and current from the voltage vector in per unit.
-		void stepInPerUnit(Real om, Real dt, Real fieldVoltage, Real mechPower, NumericalMethod numMethod);
+		void stepInPerUnit(Real om, Real dt, NumericalMethod numMethod);
 
 		/// Retrieves calculated voltage from simulation for next step
 		void postStep(SystemModel& system);
