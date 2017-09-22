@@ -5,19 +5,18 @@
 # TODO: supporting different timesteps (interpolating), phasor/EMT conversion,
 # more advanced error criterions...
 
-import glob
+import dpsim
 import numpy as np
 import pandas
-import subprocess
 import sys
 
 EPSILON = 1e-6
 
-def run_test(binary, dpCsv, expectedCsv):
-    ret = subprocess.call("./" + binary)
-    if ret:
-        print(binary + " binary returned code " + str(ret), file=sys.stderr)
-        return ret
+def run_test(name, sim):
+    sim.start()
+    sim.wait()
+    dpCsv = name + ".csv"
+    expectedCsv = name + ".expected.csv"
     dpData = pandas.read_csv(dpCsv, header=None)
     expectedData = pandas.read_csv(expectedCsv, header=None)
     if dpData.shape[1] != expectedData.shape[1]:
@@ -29,7 +28,7 @@ def run_test(binary, dpCsv, expectedCsv):
     expectedTime = np.array(expectedData.ix[:,0])
     diffTime = dpTime - expectedTime
     if np.any(diffTime):
-        print(binary + ": time mismatch (wrong timestep?)")
+        print(binary + ": time mismatch (wrong timestep?)", file=sys.stderr)
         return 1
 
     ret = 0
@@ -50,19 +49,21 @@ def run_test(binary, dpCsv, expectedCsv):
             ret = 1
     return ret
 
-
 if __name__ == "__main__":
-    sources = glob.glob("Test*.cpp")
-    bins = ["../build/" + s.replace(".cpp", "") for s in sources]
-    dpCsvs = [s.replace(".cpp", ".csv") for s in sources]
-    expectedCsvs = [s.replace(".cpp", ".expected.csv") for s in sources]
+    sims = {
+        'TestSimple': dpsim.Simulation([
+            dpsim.VoltSourceRes("v_s", 1, 0, 10000+0j, 1),
+            dpsim.LinearResistor("r_line", 1, 2, 1),
+            dpsim.Inductor("l_line", 2, 3, 1),
+            dpsim.LinearResistor("r_load", 3, 0, 1000)],
+            duration=0.3, llog="TestSimple.csv")
+    }
     ret = 0
-    for i in range(0, len(sources)):
-        if run_test(bins[i], dpCsvs[i], expectedCsvs[i]):
-            print(bins[i] + " failed!", file=sys.stderr)
+    for name, sim in sims.items():
+        if run_test(name, sim):
+            print("{} failed".format(name), file=sys.stderr)
             ret = 1
         else:
-            print(bins[i] + " successfull.")
-    if not ret:
-        print("All tests successfull.")
+            print("{} successfull".format(name), file=sys.stderr)
+    print("All tests successfull.", file=sys.stderr)
     sys.exit(ret)

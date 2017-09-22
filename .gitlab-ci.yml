@@ -28,5 +28,11 @@ build:
   tags:
     - docker
 
-# remove tests again for now; they will be added back later when they can be
-# done purely with python scripts using the new module
+test:
+  stage: test
+  script:
+    - cd Source/Tests
+    - python3 run_tests.py
+  image: ${DOCKER_IMAGE}
+  tags:
+    - docker
