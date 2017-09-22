@@ -31,6 +31,7 @@ build:
 test:
   stage: test
   script:
+    - mv Source/build/libdpsim.so Source/Tests/dpsim.so
     - cd Source/Tests
     - python3 run_tests.py
   image: ${DOCKER_IMAGE}
