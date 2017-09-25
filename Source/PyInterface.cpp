@@ -69,7 +69,7 @@ PyObject* PyInterface::exportCurrent(PyObject* self, PyObject* args) {
 }
 
 const char* pyDocInterfaceExportVoltage =
-"export_voltage(from, to, real_idx, imag_idx)"
+"export_voltage(from, to, real_idx, imag_idx)\n"
 "Register a voltage between two nodes to be written to this interface after every timestep.\n"
 "\n"
 ":param from: Number of the positive node of the voltage to be exported. The same "
