@@ -11,13 +11,19 @@ TODO: build with Python under Windows?
 3. Install [CMake](https://cmake.org/download/), use its GUI (with `Source` as the source path) to create project files for Visual Studio.
 4. Use Visual Studio to build the project.
 
-#### Linux
+### Linux
 
 1. Make sure that Eigen, libxml2 (including development headers) and cmake are installed, e.g. using your distro's package manager.
 2. Build and install libvillas-ext from [VILLASnode](https://git.rwth-aachen.de/VILLASframework/VILLASnode):
 ```
 $ make
-# make install
+# make install-libvillas-ext
+```
+There are also RPMs available for Fedora:
+```
+$ wget https://villas.fein-aachen.org/packages/villas.repo
+# mv villas.repo /etc/yum.repos.d
+# dnf -y install villas-node-devel
 ```
 3. Generate a makefile with CMake and use it to build the project:
 ```
@@ -33,10 +39,10 @@ $ make
 Another option is to manually rename the generated module (from Source/build/libdpsim.so
 to dpsim.so) and ensure that dpsim.so is in somewhere in your PYTHONPATH.
 
-## Basic git commands
-* initial download: git clone [url]
-* download newest version: git pull
-* see changed files: git status
-* add modification or new file to commit: git add --all OR git add [filename]
-* create commit: git commit -m 'your comment'
-* push commits from local repo to server: git push
+## Documentation
+
+Install [sphinx](http://www.sphinx-doc.org/en/stable/index.html), either from your
+Linux distribution's repo or [manually](http://www.sphinx-doc.org/en/stable/install.html#windows-install-python-and-sphinx)
+on Windows. Then, execute `make html` in the Documentation folder to generate
+the Python API documentation. Since sphinx generates the documentation by importing
+the `dpsim` module, make sure it is properly installed or adjust your `PYTHONPATH` accordingly.
