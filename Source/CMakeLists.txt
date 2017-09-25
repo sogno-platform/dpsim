@@ -4,6 +4,9 @@ project(DPsim)
 # needed so CIMParser and arabica (which are first compiled into static libs)
 # can be included in the .so
 set(CMAKE_CXX_FLAGS "-fPIC")
+# we use PyArg_ParseTupleAndKeywords several times, which erroneously accepts
+# a char* array instead of a const char* array
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-write-strings")
 
 # library configuration etc.
 if(IS_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/../Libraries/eigen)
@@ -29,4 +32,4 @@ file(GLOB SOURCES *.cpp Components/*.cpp)
 add_library(dpsim SHARED ${SOURCES})
 target_link_libraries(dpsim CIMParser pthread ${PYTHON_LIBRARIES} ${LIBS})
 execute_process(COMMAND python3 -c "import sysconfig; print(sysconfig.get_path('platlib'), end='')" OUTPUT_VARIABLE PYTHON_PKGPATH)
-install(FILES build/libdpsim.so DESTINATION ${PYTHON_PKGPATH} RENAME ${MODNAME})
+install(FILES ${CMAKE_CURRENT_BINARY_DIR}/libdpsim.so DESTINATION ${PYTHON_PKGPATH} RENAME ${MODNAME})
