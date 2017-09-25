@@ -19,5 +19,7 @@
 #include "Components/IdealVoltageSource.h"
 #include "Components/RxLine.h"
 #include "Components/PiLine.h"
+#include "Components/VoltageBehindReactanceEMT.h"
+#include "Components/VoltageBehindReactanceDP.h"
 
 #endif // !COMPONENTS_H

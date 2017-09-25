@@ -178,6 +178,38 @@ namespace DPsim {
 		Real mIcRe;
 		Real mIcIm;
 
+		Int first_time = 1;
+		Real mOmMech_hist;
+		Real mMechTorque_hist;
+		Real mElecTorque_hist;
+
+		Real mPsid_hist;
+		Real mPsiq_hist;
+		Real mPsi0_hist;
+		Real mPsikq1_hist;
+		Real mPsikq2_hist;
+		Real mPsifd_hist;
+		Real mPsikd_hist;
+
+		Real mVd_hist;
+		Real mVq_hist;
+		Real mV0_hist;
+		Real mVkq1_hist;
+		Real mVkq2_hist;
+		Real mVfd_hist;
+		Real mVkd_hist;
+
+		Real mId_hist;
+		Real mIq_hist;
+		Real mI0_hist;
+		Real mIkq1_hist;
+		Real mIkq2_hist;
+		Real mIfd_hist;
+		Real mIkd_hist;
+
+		/// Number of damping windings in q 
+		int DampingWindings;
+
 
 		/// interface voltage vector dq0
 		DPSMatrix mDq0Voltages = DPSMatrix::Zero(3, 1);
@@ -220,12 +252,13 @@ namespace DPsim {
 		/// Initializes states in per unit or stator referred variables depending on the setting of the state type. 
 		/// Function parameters have to be given in Real units.
 		void init(Real om, Real dt,
-			Real initActivePower, Real initReactivePower, Real initTerminalVolt, Real initVoltAngle);
+			Real initActivePower, Real initReactivePower, Real initTerminalVolt, 
+			Real initVoltAngle, Real initFieldVoltage, Real initMechPower);
 
 		/// Initializes states in per unit. All machine parameters are assumed to be in per unit.
 		/// Function parameters have to be given in Real units.
 		void initStatesInPerUnit(Real initActivePower, Real initReactivePower,
-			Real initTerminalVolt, Real initVoltAngle);
+			Real initTerminalVolt, Real initVoltAngle, Real initFieldVoltage, Real initMechPower);
 
 		/// Performs an Euler forward step with the state space model of a synchronous generator 
 		/// to calculate the flux and current from the voltage vector.
@@ -233,18 +266,18 @@ namespace DPsim {
 
 		/// Performs an Euler forward step with the state space model of a synchronous generator 
 		/// to calculate the flux and current from the voltage vector in per unit.
-		void stepInPerUnit(Real om, Real dt, Real fieldVoltage, Real mechPower);
+		void stepInPerUnit(Real om, Real dt, NumericalMethod numMethod);
 
 		/// Retrieves calculated voltage from simulation for next step
 		void postStep(SystemModel& system);
 
 		/// Park transform as described in Krause
-		DPSMatrix abcToDq0Transform(Real theta, DPSMatrix& in);
-		DPSMatrix abcToDq0Transform2(Real theta, Real aRe, Real bRe, Real cRe, Real aIm, Real bIm, Real cIm);
+		//DPSMatrix abcToDq0Transform(Real theta, DPSMatrix& in);
+		DPSMatrix abcToDq0Transform(Real theta, Real aRe, Real bRe, Real cRe, Real aIm, Real bIm, Real cIm);
 
 		/// Inverse Park transform as described in Krause
-		DPSMatrix dq0ToAbcTransform(Real theta, DPSMatrix& in);
-		DPSMatrix dq0ToAbcTransform2(Real theta, Real d, Real q, Real zero);
+		//DPSMatrix dq0ToAbcTransform(Real theta, DPSMatrix& in);
+		DPSMatrix dq0ToAbcTransform(Real theta, Real d, Real q, Real zero);
 
 		DPSMatrix& getVoltages() { return mVoltages2; }
 		DPSMatrix& getCurrents() { return mCurrents2; }

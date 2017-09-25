@@ -22,7 +22,6 @@
     <ProjectGuid>{2E20637A-B198-46C9-8D43-1DA50E8D1709}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
     <RootNamespace>DPsimVS2017</RootNamespace>
-    <WindowsTargetPlatformVersion>8.1</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
@@ -155,13 +154,18 @@
     <ClInclude Include="..\..\Source\Components\RxLine.h" />
     <ClInclude Include="..\..\Source\Components\SynchronGenerator.h" />
     <ClInclude Include="..\..\Source\Components\SynchronGeneratorEMT.h" />
+    <ClInclude Include="..\..\Source\Components\VoltageBehindReactanceDP.h" />
+    <ClInclude Include="..\..\Source\Components\VoltageBehindReactanceEMT.h" />
     <ClInclude Include="..\..\Source\Components\VoltSourceRes.h" />
     <ClInclude Include="..\..\Source\Components\VoltSourceResEMT.h" />
     <ClInclude Include="..\..\Source\Components\VoltSourceResFreq.h" />
     <ClInclude Include="..\..\Source\Components\VoltSourceResFreqEMT.h" />
     <ClInclude Include="..\..\Source\Examples\ReferenceCircuits.h" />
+    <ClInclude Include="..\..\Source\Examples\ShmemTest.h" />
     <ClInclude Include="..\..\Source\Examples\SimpleCircuitTest.h" />
+    <ClInclude Include="..\..\Source\Examples\SyncGenUnitTestVBR.h" />
     <ClInclude Include="..\..\Source\Examples\SynchronGenUnitTest.h" />
+    <ClInclude Include="..\..\Source\Examples\Testing.h" />
     <ClInclude Include="..\..\Source\Logger.h" />
     <ClInclude Include="..\..\Source\MathLibrary.h" />
     <ClInclude Include="..\..\Source\NetlistSim.h" />
@@ -183,13 +187,17 @@
     <ClCompile Include="..\..\Source\Components\RxLine.cpp" />
     <ClCompile Include="..\..\Source\Components\SynchronGenerator.cpp" />
     <ClCompile Include="..\..\Source\Components\SynchronGeneratorEMT.cpp" />
+    <ClCompile Include="..\..\Source\Components\VoltageBehindReachtanceDP.cpp" />
+    <ClCompile Include="..\..\Source\Components\VoltageBehindReactanceEMT.cpp" />
     <ClCompile Include="..\..\Source\Components\VoltSourceRes.cpp" />
     <ClCompile Include="..\..\Source\Components\VoltSourceResEMT.cpp" />
     <ClCompile Include="..\..\Source\Components\VoltSourceResFreq.cpp" />
     <ClCompile Include="..\..\Source\Components\VoltSourceResFreqEMT.cpp" />
     <ClCompile Include="..\..\Source\DPsimMain.cpp" />
     <ClCompile Include="..\..\Source\Examples\ReferenceCircuits.cpp" />
+    <ClCompile Include="..\..\Source\Examples\ShmemTest.cpp" />
     <ClCompile Include="..\..\Source\Examples\SimpleCircuitTest.cpp" />
+    <ClCompile Include="..\..\Source\Examples\SyncGenUnitTestVBR.cpp" />
     <ClCompile Include="..\..\Source\Examples\SynchronGenUnitTest.cpp" />
     <ClCompile Include="..\..\Source\Logger.cpp" />
     <ClCompile Include="..\..\Source\NetlistSim.cpp" />

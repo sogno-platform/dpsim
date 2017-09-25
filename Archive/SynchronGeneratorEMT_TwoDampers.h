@@ -1,5 +1,5 @@
-#ifndef SYNCHRONGENERATOREMT_H
-#define SYNCHRONGENERATOREMT_H
+#ifndef SYNCHRONGENERATOREMTDQ_H
+#define SYNCHRONGENERATOREMTDQ_H
 
 #include "BaseComponent.h"
 #include "ComponentCommons.h"
@@ -13,10 +13,8 @@ namespace DPsim {
 	/// parameter names include underscores and typical variables names found in literature instead of
 	/// descriptive names in order to shorten formulas and increase the readability
 
-	class SynchronGeneratorEMT : public BaseComponent {
+	class SynchronGeneratorEMTdq : public BaseComponent {
 	protected:
-
-		Logger* mLog;
 
 		// ### Machine parameters ###
 		/// nominal power Pn [VA]
@@ -177,9 +175,6 @@ namespace DPsim {
 		double mIb;
 		double mIc;
 
-		/// Number of damping windings in q 
-		int DampingWindings;
-
 		// ### Useful Matrices ###
 		/// inductance matrix
 		DPSMatrix mInductanceMat = DPSMatrix::Zero(7, 7);
@@ -194,18 +189,17 @@ namespace DPsim {
 
 
 	public:
-		SynchronGeneratorEMT() { };
-		~SynchronGeneratorEMT();
+		SynchronGeneratorEMTdq() { };
 
 		/// Initializes the per unit or stator referred machine parameters with the machine parameters given in per unit or 
 		/// stator referred parameters depending on the setting of parameter type.
 		/// The initialization mode depends on the setting of state type.
-		SynchronGeneratorEMT(std::string name, int node1, int node2, int node3,
+		SynchronGeneratorEMTdq(std::string name, int node1, int node2, int node3,
 			Real nomPower, Real nomVolt, Real nomFreq, int poleNumber, Real nomFieldCur,
 			Real Rs, Real Ll, Real Lmd, Real Lmd0, Real Lmq, Real Lmq0,
 			Real Rfd, Real Llfd, Real Rkd, Real Llkd,
 			Real Rkq1, Real Llkq1, Real Rkq2, Real Llkq2,
-			Real inertia, bool logActive = false);
+			Real inertia);
 
 		/// Initializes the per unit or stator referred machine parameters with the machine parameters given in per unit.
 		/// The initialization mode depends on the setting of state type.
@@ -214,28 +208,27 @@ namespace DPsim {
 			Real Rfd, Real Llfd, Real Rkd, Real Llkd, Real Rkq1, Real Llkq1,
 			Real Rkq2, Real Llkq2,
 			Real H);
-				
+
 		/// Initializes states in per unit or stator referred variables depending on the setting of the state type. 
 		/// Function parameters have to be given in real units.
 		void init(Real om, Real dt,
-			Real initActivePower, Real initReactivePower, Real initTerminalVolt, 
-			Real initVoltAngle, Real initFieldVoltage, Real initMechPower);
+			Real initActivePower, Real initReactivePower, Real initTerminalVolt, Real initVoltAngle);
 
 		/// Initializes states in per unit. All machine parameters are assumed to be in per unit.
 		/// Function parameters have to be given in real units.
-		void initStatesInPerUnit(Real initActivePower, Real initReactivePower, Real initTerminalVolt,
-			Real initVoltAngle, Real initFieldVoltage, Real initMechPower);
+		void initStatesInPerUnit(Real initActivePower, Real initReactivePower,
+			Real initTerminalVolt, Real initVoltAngle);
 
 		/// Performs an Euler forward step with the state space model of a synchronous generator 
 		/// to calculate the flux and current from the voltage vector.
-		void step(SystemModel& system, Real time);
+		void step(SystemModel& system, Real fieldVoltage, Real mechPower, Real time);
 
 		/// Performs an Euler forward step with the state space model of a synchronous generator 
 		/// to calculate the flux and current from the voltage vector in per unit.
-		void stepInPerUnit(Real om, Real dt, Real time, NumericalMethod numMethod);
+		void stepInPerUnit(Real om, Real dt, Real fieldVoltage, Real mechPower, Real time, NumericalMethod numMethod);
 
 		/// Retrieves calculated voltage from simulation for next step
-		void postStep(SystemModel& system);
+		//void postStep(SystemModel& system);
 
 		/// Park transform as described in Krause
 		//DPSMatrix parkTransform(Real theta, DPSMatrix& in);
@@ -249,10 +242,11 @@ namespace DPsim {
 		DPSMatrix& getCurrents() { return mCurrents2; }
 		DPSMatrix& getFluxes() { return mFluxes2; }
 
-		// Methods for network integrated components
+
 		void init(Real om, Real dt) { }
 		void applySystemMatrixStamp(SystemModel& system) { }
 		void applyRightSideVectorStamp(SystemModel& system) { }
+		void step(SystemModel& system, Real time) { }
 	};
 }
 #endif

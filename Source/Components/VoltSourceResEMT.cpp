@@ -2,7 +2,8 @@
 
 using namespace DPsim;
 
-VoltSourceResEMT::VoltSourceResEMT(std::string name, int src, int dest, Real voltage, Real phase, Real resistance) : BaseComponent(name, src, dest) {
+VoltSourceResEMT::VoltSourceResEMT(std::string name, int src, int dest, 
+	Real voltage, Real phase, Real resistance) : BaseComponent(name, src, dest) {
 	mVoltageAmp = voltage;
 	mVoltagePhase = phase;
 	mResistance = resistance;

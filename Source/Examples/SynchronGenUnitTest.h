@@ -9,8 +9,12 @@ namespace DPsim {
 	void SynGenUnitTestPhaseToPhaseFault();
 	void SynGenUnitTestThreePhaseFault();
 
+	// Test generator with load also in dq. 
+	void SynGenUnitTestdqBalancedResLoad();
+
 	// Dynamic Phasor generator tests
 	void SynGenDPUnitTestBalancedResLoad();
+	void SynGenDPUnitTestThreePhaseFault();
 }
 
 #endif
