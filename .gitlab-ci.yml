@@ -5,6 +5,7 @@ variables:
 stages:
   - prepare
   - build
+  - docs
   - test
 
 docker:
@@ -25,6 +26,19 @@ build:
   artifacts:
     paths:
       - Source/build
+  tags:
+    - docker
+
+docs:
+  stage: docs
+  script:
+    - mv Source/build/libdpsim.so Documentation/dpsim.so
+    - cd Documentation
+    - make html
+  image: ${DOCKER_IMAGE}
+  artifacts:
+    paths:
+      - Documentation/_build
   tags:
     - docker
 
