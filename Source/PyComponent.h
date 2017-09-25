@@ -34,6 +34,7 @@ namespace DPsim {
 	PyObject* pyLinearResistor(PyObject* self, PyObject *args);
 	PyObject* pyVoltSourceRes(PyObject* self, PyObject *args);
 
+	extern const char* pyDocLoadCim;
 	PyObject* pyLoadCim(PyObject* self, PyObject* args);
 };
 

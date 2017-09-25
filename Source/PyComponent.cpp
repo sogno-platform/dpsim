@@ -221,6 +221,17 @@ PyObject* DPsim::pyVoltSourceRes(PyObject* self, PyObject* args) {
 	return (PyObject*) pyComp;
 }
 
+const char* DPsim::pyDocLoadCim =
+"load_cim(filenames, frequency=50.0)\n"
+"Load a network from CIM file(s).\n"
+"\n"
+":param filenames: Either a filename or a list of filenames of CIM files to be loaded.\n"
+":param frequency: Nominal system frequency in Hz.\n"
+":returns: A list of `dpsim.Component`.\n"
+"\n"
+"Note that in order for the CIM parser to function properly, the CSV "
+"files containing the alias configuration have to be in the working directory "
+"of the program.\n";
 PyObject* DPsim::pyLoadCim(PyObject* self, PyObject* args) {
 	double frequency = 50;
 	PyObject *list;

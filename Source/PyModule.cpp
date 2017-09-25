@@ -8,7 +8,7 @@
 using namespace DPsim;
 
 PyMethodDef DPsim::pyModuleMethods[] = {
-	{"load_cim", pyLoadCim, METH_VARARGS, "Load a network from CIM file(s)."},
+	{"load_cim", pyLoadCim, METH_VARARGS, pyDocLoadCim},
 	{"ExternalCurrentSource", pyExternalCurrentSource, METH_VARARGS, "Construct a new external current source."},
 	{"ExternalVoltageSource", pyExternalVoltageSource, METH_VARARGS, "Construct a new external voltage source."},
 	{"Inductor", pyInductor, METH_VARARGS, "Construct a new inductor."},
@@ -43,6 +43,8 @@ extern "C" {
 		PyModule_AddObject(m, "Simulation", (PyObject*) &PySimulationType);
 		Py_INCREF(&PyComponentType);
 		PyModule_AddObject(m, "Component", (PyObject*) &PyComponentType);
+		Py_INCREF(&PyInterfaceType);
+		PyModule_AddObject(m, "Interface", (PyObject*) &PyInterfaceType);
 		return m;
 	}
 };
