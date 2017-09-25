@@ -22,7 +22,8 @@ namespace DPsim {
 	extern PyTypeObject PyInterfaceType;
 
 #ifdef __linux__
-	PyObject* pyShmemInterface(PyObject *self, PyObject *args, PyObject *kwds);
+	extern const char* pyDocOpenShmemInterface;
+	PyObject* pyOpenShmemInterface(PyObject *self, PyObject *args, PyObject *kwds);
 #endif
 };
 
