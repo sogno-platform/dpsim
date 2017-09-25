@@ -109,6 +109,8 @@ const char* DPsim::pyDocOpenShmemInterface =
 "performance at the cost of wasted CPU time.\n"
 ":returns: A new `Interface` object.\n";
 PyObject* DPsim::pyOpenShmemInterface(PyObject *self, PyObject *args, PyObject *kwds) {
+	
+#ifdef __linux__
 	static char *kwlist[] = {"wname", "rname", "queuelen", "samplelen", "polling", nullptr};
 	struct shmem_conf conf;
 	const char *wname, *rname;
@@ -123,6 +125,10 @@ PyObject* DPsim::pyOpenShmemInterface(PyObject *self, PyObject *args, PyObject *
 	PyInterface *pyIntf = PyObject_New(PyInterface, &PyInterfaceType);
 	pyIntf->intf = new ShmemInterface(wname, rname, &conf);
 	return (PyObject*) pyIntf;
+#else
+	PyErr_SetString(PyExc_NotImplementedError, "not implemented on this platform");
+	return nullptr;
+#endif
 }
 
 static PyMethodDef PyInterface_methods[] = {

@@ -2,14 +2,13 @@
 
 Make sure that all subrepos (CIM-XML-Parser and arabica) are checked out.
 
-### Windows
-
-TODO: build with Python under Windows?
+### Windows (Visual Studio)
 
 1. Install Visual Studio 2017 C++ Desktop development package plus Windows 8.1 SDK
+2. Install [Python 3](https://www.python.org/downloads/) using the normal installer, and add Python to your PATH.
 2. Create a new folder name `Libraries` in the repository root, download [Eigen](http://eigen.tuxfamily.org) and copy it to `Libraries/eigen`.
-3. Install [CMake](https://cmake.org/download/), use its GUI (with `Source` as the source path) to create project files for Visual Studio.
-4. Use Visual Studio to build the project.
+3. Install [CMake](https://cmake.org/download/), use its GUI (with `Source` as the source path) to create project files for Visual Studio. If you installed the 64-bit version of Python, make sure to use the "Win64" version of the Visual Studio generator.
+4. Use Visual Studio and the Release configuration to build the dpsim Python module. To install it, build the INSTALL project.
 
 ### Linux
 
@@ -43,6 +42,10 @@ to dpsim.so) and ensure that dpsim.so is in somewhere in your PYTHONPATH.
 
 Install [sphinx](http://www.sphinx-doc.org/en/stable/index.html), either from your
 Linux distribution's repo or [manually](http://www.sphinx-doc.org/en/stable/install.html#windows-install-python-and-sphinx)
-on Windows. Then, execute `make html` in the Documentation folder to generate
-the Python API documentation. Since sphinx generates the documentation by importing
-the `dpsim` module, make sure it is properly installed or adjust your `PYTHONPATH` accordingly.
+on Windows (if you used the installer which already adds Python to your path and
+installs pip, you basically only need to run `pip install sphinx` at the
+command prompt). Then, execute `make html` in the Documentation folder to generate
+the Python API documentation. Since sphinx generates the documentation by
+importing the `dpsim` module, make sure it is properly installed or adjust your
+`PYTHONPATH` accordingly. The resulting documentation will be generated in
+`_build/html`.
