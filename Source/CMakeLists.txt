@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.0)
 project(DPsim)
 
-if (!WIN32)
+if (NOT WIN32)
 	# needed so CIMParser and arabica (which are first compiled into static libs)
 	# can be included in the .so
 	set(CMAKE_CXX_FLAGS "-fPIC")
