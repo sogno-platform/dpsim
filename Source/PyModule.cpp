@@ -10,11 +10,11 @@ using namespace DPsim;
 PyMethodDef DPsim::pyModuleMethods[] = {
 	{"load_cim", pyLoadCim, METH_VARARGS, pyDocLoadCim},
 	{"open_shmem_interface", (PyCFunction)pyOpenShmemInterface, METH_VARARGS|METH_KEYWORDS, pyDocOpenShmemInterface},
-	{"ExternalCurrentSource", pyExternalCurrentSource, METH_VARARGS, "Construct a new external current source."},
-	{"ExternalVoltageSource", pyExternalVoltageSource, METH_VARARGS, "Construct a new external voltage source."},
-	{"Inductor", pyInductor, METH_VARARGS, "Construct a new inductor."},
-	{"LinearResistor", pyLinearResistor, METH_VARARGS, "Construct a new resistor."},
-	{"VoltSourceRes", pyVoltSourceRes, METH_VARARGS, "Construct a new voltage source with a resistance."},
+	{"ExternalCurrentSource", pyExternalCurrentSource, METH_VARARGS, pyDocExternalCurrentSource},
+	{"ExternalVoltageSource", pyExternalVoltageSource, METH_VARARGS, pyDocExternalVoltageSource},
+	{"Inductor", pyInductor, METH_VARARGS, pyDocInductor},
+	{"LinearResistor", pyLinearResistor, METH_VARARGS, pyDocLinearResistor},
+	{"VoltSourceRes", pyVoltSourceRes, METH_VARARGS, pyDocVoltSourceRes},
 	{0}
 };
 

@@ -7,48 +7,6 @@
 
 using namespace DPsim;
 
-PyTypeObject DPsim::PyComponentType = {
-	PyVarObject_HEAD_INIT(NULL, 0)
-	"dpsim.Component",                 /* tp_name */
-	sizeof(PyComponent),               /* tp_basicsize */
-	0,                                 /* tp_itemsize */
-	(destructor)PyComponent::dealloc,  /* tp_dealloc */
-	0,                                 /* tp_print */
-	(getattrfunc)PyComponent::getattr, /* tp_getattr */
-	(setattrfunc)PyComponent::setattr, /* tp_setattr */
-	0,                                 /* tp_reserved */
-	0,                                 /* tp_repr */
-	0,                                 /* tp_as_number */
-	0,                                 /* tp_as_sequence */
-	0,                                 /* tp_as_mapping */
-	0,                                 /* tp_hash  */
-	0,                                 /* tp_call */
-	(reprfunc)PyComponent::str,        /* tp_str */
-	0,                                 /* tp_getattro */
-	0,                                 /* tp_setattro */
-	0,                                 /* tp_as_buffer */
-	Py_TPFLAGS_DEFAULT |
-		Py_TPFLAGS_BASETYPE,           /* tp_flags */
-	"A component in a simulation.",    /* tp_doc */
-	0,                                 /* tp_traverse */
-	0,                                 /* tp_clear */
-	0,                                 /* tp_richcompare */
-	0,                                 /* tp_weaklistoffset */
-	0,                                 /* tp_iter */
-	0,                                 /* tp_iternext */
-	0,                                 /* tp_methods */
-	0,                                 /* tp_members */
-	0,                                 /* tp_getset */
-	0,                                 /* tp_base */
-	0,                                 /* tp_dict */
-	0,                                 /* tp_descr_get */
-	0,                                 /* tp_descr_set */
-	0,                                 /* tp_dictoffset */
-	0,                                 /* tp_init */
-	0,                                 /* tp_alloc */
-	PyComponent::newfunc,              /* tp_new */
-};
-
 PyObject* PyComponent::newfunc(PyTypeObject* type, PyObject *args, PyObject *kwds) {
 	PyComponent* self = (PyComponent*) type->tp_alloc(type, 0);
 	if (self)
@@ -155,6 +113,16 @@ bool DPsim::compsFromPython(PyObject* list, std::vector<BaseComponent*>& comps) 
 	return true;
 }
 
+const char *DPsim::pyDocExternalCurrentSource =
+"ExternalCurrentSource(name, node1, node2, initial_current)\n"
+"Construct a new external current source.\n"
+"\n"
+"An external current source is pretty much the same as a normal ideal current "
+"source, but its current value can be controlled from external programs by "
+"registering it with an `Interface`.\n"
+"\n"
+":param initial_current: The current of this source in the first timestep (as a complex value).\n"
+":returns: A new `Component` representing this current source.\n";
 PyObject* DPsim::pyExternalCurrentSource(PyObject* self, PyObject* args) {
 	const char *name;
 	int src, dest;
@@ -168,6 +136,18 @@ PyObject* DPsim::pyExternalCurrentSource(PyObject* self, PyObject* args) {
 	return (PyObject*) pyComp;
 }
 
+const char *DPsim::pyDocExternalVoltageSource =
+"ExternalVoltageSource(name, node1, node2, initial_voltage, num)\n"
+"Construct a new external voltage source.\n"
+"\n"
+"An external voltage source is pretty much the same as a normal ideal voltage "
+"source, but its voltage value can be controlled from external programs by "
+"registering it with an `Interface`.\n"
+"\n"
+":param initial_current: The voltage of this source in the first timestep (as a complex value).\n"
+":param num: The number of this voltage source. All ideal voltage sources must "
+"be identified by sequential indices, starting with 1.\n"
+":returns: A new `Component` representing this voltage source.\n";
 PyObject* DPsim::pyExternalVoltageSource(PyObject* self, PyObject* args) {
 	const char *name;
 	int src, dest, num;
@@ -181,6 +161,14 @@ PyObject* DPsim::pyExternalVoltageSource(PyObject* self, PyObject* args) {
 	return (PyObject*) pyComp;
 }
 
+const char *DPsim::pyDocInductor = 
+"Inductor(name, node1, node2, inductance)\n"
+"Construct a new inductor.\n"
+"\n"
+"Attributes: ``inductance``.\n"
+"\n"
+":param inductance: Inductance in Henry.\n"
+":returns: A new `Component` representing this inductor.\n";
 PyObject* DPsim::pyInductor(PyObject* self, PyObject* args) {
 	const char *name;
 	double inductance;
@@ -194,6 +182,14 @@ PyObject* DPsim::pyInductor(PyObject* self, PyObject* args) {
 	return (PyObject*) pyComp;
 }
 
+const char *DPsim::pyDocLinearResistor =
+"LinearResistor(name, node1, node2, resistance)\n"
+"Construct a new linear resistor.\n"
+"\n"
+"Attributes: ``resistance``.\n"
+"\n"
+":param resistance: Resistance in Ohm.\n"
+":returns: A new `Component` representing this resistor.\n";
 PyObject* DPsim::pyLinearResistor(PyObject* self, PyObject* args) {
 	const char *name;
 	double resistance;
@@ -207,6 +203,18 @@ PyObject* DPsim::pyLinearResistor(PyObject* self, PyObject* args) {
 	return (PyObject*) pyComp;
 }
 
+const char *DPsim::pyDocVoltSourceRes =
+"VoltSourceRes(name, node1, node2, voltage, resistance)\n"
+"Construct a new voltage source with an internal resistance.\n"
+"\n"
+"Because this is actually internally represented as an equivalent current "
+"source, it does **not** count towards the numbering of ideal voltage sources.\n"
+"\n"
+"Attributes: ``resistance``, ``voltage``.\n"
+"\n"
+":param voltage: Complex voltage in Volt.\n"
+":param resistance: Internal resistance in Ohm.\n"
+":returns: A new `Component` representing this voltage source.\n";
 PyObject* DPsim::pyVoltSourceRes(PyObject* self, PyObject* args) {
 	const char *name;
 	double resistance;
@@ -274,3 +282,60 @@ PyObject* DPsim::pyLoadCim(PyObject* self, PyObject* args) {
 	delete reader;
 	return list;
 }
+
+const char* pyDocComponent =
+"A component of a network that is to be simulated.\n"
+"\n"
+"Instances of this class should either be created with the module-level "
+"pseudo-constructors (like `LinearResistor`) or via `load_cim`. The "
+"constructors all accept the same first three arguments: ``name``, a simple "
+"string used for logging purposes, and ``node1`` / ``node2``. These arguments "
+"are integers identifying the topological nodes that the component is connected "
+"to. Normal indices start with 1 and must be sequential; the special index 0 "
+"is used for the (always present) reference node with a fixed voltage of 0V.\n"
+"\n"
+"Most components have other parameters that are also accessible as attributes "
+"after creation. These values must only be changed if the simulation is paused, "
+"and `update_matrix` has to be called after changes are made.\n";
+PyTypeObject DPsim::PyComponentType = {
+	PyVarObject_HEAD_INIT(NULL, 0)
+	"dpsim.Component",                 /* tp_name */
+	sizeof(PyComponent),               /* tp_basicsize */
+	0,                                 /* tp_itemsize */
+	(destructor)PyComponent::dealloc,  /* tp_dealloc */
+	0,                                 /* tp_print */
+	(getattrfunc)PyComponent::getattr, /* tp_getattr */
+	(setattrfunc)PyComponent::setattr, /* tp_setattr */
+	0,                                 /* tp_reserved */
+	0,                                 /* tp_repr */
+	0,                                 /* tp_as_number */
+	0,                                 /* tp_as_sequence */
+	0,                                 /* tp_as_mapping */
+	0,                                 /* tp_hash  */
+	0,                                 /* tp_call */
+	(reprfunc)PyComponent::str,        /* tp_str */
+	0,                                 /* tp_getattro */
+	0,                                 /* tp_setattro */
+	0,                                 /* tp_as_buffer */
+	Py_TPFLAGS_DEFAULT |
+		Py_TPFLAGS_BASETYPE,           /* tp_flags */
+	pyDocComponent,                    /* tp_doc */
+	0,                                 /* tp_traverse */
+	0,                                 /* tp_clear */
+	0,                                 /* tp_richcompare */
+	0,                                 /* tp_weaklistoffset */
+	0,                                 /* tp_iter */
+	0,                                 /* tp_iternext */
+	0,                                 /* tp_methods */
+	0,                                 /* tp_members */
+	0,                                 /* tp_getset */
+	0,                                 /* tp_base */
+	0,                                 /* tp_dict */
+	0,                                 /* tp_descr_get */
+	0,                                 /* tp_descr_set */
+	0,                                 /* tp_dictoffset */
+	0,                                 /* tp_init */
+	0,                                 /* tp_alloc */
+	PyComponent::newfunc,              /* tp_new */
+};
+

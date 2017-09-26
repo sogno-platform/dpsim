@@ -28,10 +28,15 @@ namespace DPsim {
 	bool compsFromPython(PyObject* list, std::vector<BaseComponent*>& comps);
 
 	// "Constructors" for the component types
+	extern const char* pyDocExternalCurrentSource;
 	PyObject* pyExternalCurrentSource(PyObject* self, PyObject *args);
+	extern const char* pyDocExternalVoltageSource;
 	PyObject* pyExternalVoltageSource(PyObject* self, PyObject *args);
+	extern const char* pyDocInductor;
 	PyObject* pyInductor(PyObject* self, PyObject *args);
+	extern const char* pyDocLinearResistor;
 	PyObject* pyLinearResistor(PyObject* self, PyObject *args);
+	extern const char* pyDocVoltSourceRes;
 	PyObject* pyVoltSourceRes(PyObject* self, PyObject *args);
 
 	extern const char* pyDocLoadCim;
