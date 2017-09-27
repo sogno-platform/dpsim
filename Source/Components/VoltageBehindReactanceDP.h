@@ -64,6 +64,10 @@ namespace DPsim {
 		/// q dynamic inductance
 		double mDLmq;
 
+		double mLS;
+		double mLM;
+	
+
 		/// d dynamic flux
 		double mDPsid;
 		/// q dynamic flux
@@ -84,14 +88,9 @@ namespace DPsim {
 		double mDVcRe;
 		double mDVcIm;
 
-		//Theta mech hist
-		double mThetaMech_hist1;
-		double mThetaMech_hist2;
+		//omega 2
+		double mOmMech2;
 
-		//Theta omega hist
-		double mOmMech_hist;
-		double mOmMech_hist1;
-		double mOmMech_hist2;
 
 		/// inertia J [kg*m^2]
 		double mJ;
@@ -149,6 +148,11 @@ namespace DPsim {
 		double mElecTorque_hist;
 
 
+		DPSMatrix R_load = DPSMatrix::Zero(6, 6);
+
+		DPSMatrix L_constant = DPSMatrix::Zero(3, 3);
+		DPSMatrix L_cp = DPSMatrix::Zero(6, 6);
+		DPSMatrix R_cp = DPSMatrix::Zero(6, 6);
 
 		/// voltage vector q d 0 kq1 kq2 df kd
 		DPSMatrix mVoltages2 = DPSMatrix::Zero(7, 1);
@@ -254,6 +258,18 @@ namespace DPsim {
 		DPSMatrix C26 = DPSMatrix::Zero(2, 1);
 		DPSMatrix H_qdr;
 
+		// Auxiliar Matrix for DP
+		MatrixComp LD0 = MatrixComp::Zero(3, 3);
+		MatrixComp LD1 = MatrixComp::Zero(3, 3);
+		MatrixComp A1 = MatrixComp::Zero(3, 3);
+		MatrixComp B1 = MatrixComp::Zero(3, 3);
+		MatrixComp A2 = MatrixComp::Zero(3, 3);
+		MatrixComp B2 = MatrixComp::Zero(3, 3);
+		DPSMatrix L_VP_SFA = DPSMatrix::Zero(6, 6);
+		DPSMatrix R_VP_SFA = DPSMatrix::Zero(6, 6);
+		Complex alpha;
+	
+
 		/// Equivalent voltage behind reactance resistance matrix
 		DPSMatrix R_vbr_eq = DPSMatrix::Zero(3, 3);
 
@@ -289,14 +305,18 @@ namespace DPsim {
 		//Phase Voltages in pu
 		DPSMatrix mVabcRe = DPSMatrix::Zero(3, 1);
 		DPSMatrix mVabcIm = DPSMatrix::Zero(3, 1);
+		DPSMatrix mVabc = DPSMatrix::Zero(6, 1);
+
 
 		//Historical term of current
 		DPSMatrix mIabcRe = DPSMatrix::Zero(3, 1);
 		DPSMatrix mIabcIm = DPSMatrix::Zero(3, 1);
+		DPSMatrix mIabc = DPSMatrix::Zero(6, 1);
 
 		//Historical term of voltage
 		DPSMatrix mDVabcRe = DPSMatrix::Zero(3, 1);
 		DPSMatrix mDVabcIm = DPSMatrix::Zero(3, 1);
+		DPSMatrix mDVabc = DPSMatrix::Zero(6, 1);
 
 		//Phase Voltages
 		DPSMatrix mVoltageVector = DPSMatrix::Zero(6, 1);
@@ -344,7 +364,8 @@ namespace DPsim {
 		/// to calculate the flux and current from the voltage vector in per unit.
 		void stepInPerUnit(Real om, Real dt, Real fieldVoltage, Real mechPower, Real time, NumericalMethod numMethod);
 
-		void FormTheveninEquivalent(Real dt);
+		//void FormTheveninEquivalent(Real dt);
+		void CalculateLandR(Real theta, Real omega_s, Real omega, Real time);
 
 		/// Retrieves calculated voltage from simulation for next step
 		void postStep(SystemModel& system);

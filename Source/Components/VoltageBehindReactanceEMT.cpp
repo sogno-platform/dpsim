@@ -237,23 +237,6 @@ void VoltageBehindReactanceEMT::stepInPerUnit(Real om, Real dt, Real fieldVoltag
 		mDVc;
 
 
-	//mV_hist = (mResistanceMat - (2. / dt)*mDInductanceMat)*mIabc + mDVabc - mVabc;
-
-	/*mThetaMech_hist2 = mThetaMech_hist1;
-	mThetaMech_hist1 = mThetaMech;
-	mThetaMech = 2 * mThetaMech - mThetaMech_hist2;
-
-	mOmMech_hist2 = mOmMech_hist1;
-	mOmMech_hist1 = mOmMech;
-	mOmMech = 2 * mOmMech - mOmMech_hist2;*/
-
-
-	//Form the Thevinin Equivalent circuit
-	//FormTheveninEquivalent(dt);
-
-	//Solve circuit
-	//mVabc=R_vbr_eq
-
 	mMechPower = mechPower / mNomPower;
 	mMechTorque = -(mMechPower / 1);
 

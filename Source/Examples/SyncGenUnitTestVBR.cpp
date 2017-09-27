@@ -36,10 +36,9 @@ void DPsim::SynGenUnitTestVBR() {
 	double Llkd = 0.1713;
 	double Rkq1 = 0.0062;
 	double Llkq1 = 0.7252;
-	//double Rkq2 = 0.0237;
-	//double Llkq2 = 0.125;
-	double Rkq2 = Rkq1;
-	double Llkq2 = Llkq1;
+	double Rkq2 = 0.0237;
+	double Llkq2 = 0.125;
+
 
 
 	// Declare circuit components
@@ -53,8 +52,8 @@ void DPsim::SynGenUnitTestVBR() {
 	// Set up simulation
 	double tf, dt, t;
 	double om = 2.0*M_PI*60.0;
-	tf = 0.1; dt = 0.0000007; t = 0;
-	Simulation newSim(circElements, om, dt, tf, log, 50, SimulationType::EMT);
+	tf = 0.3; dt = 0.0000007; t = 0;
+	Simulation newSim(circElements, om, dt, tf, log, SimulationType::EMT);
  
 	// Initialize generator
 	double initActivePower = 555e3;
@@ -119,10 +118,9 @@ void DPsim::SynGenUnitTestVBRDP() {
 	double Llkd = 0.1713;
 	double Rkq1 = 0.0062;
 	double Llkq1 = 0.7252;
-	//double Rkq2 = 0.0237;
-	//double Llkq2 = 0.125;
-	double Rkq2 = Rkq1;
-	double Llkq2 = Llkq1;
+	double Rkq2 = 0.0237;
+	double Llkq2 = 0.125;
+
 
 
 	// Declare circuit components
@@ -136,8 +134,8 @@ void DPsim::SynGenUnitTestVBRDP() {
 	// Set up simulation
 	double tf, dt, t;
 	double om = 2.0*M_PI*60.0;
-	tf = 0.1; dt = 0.0000007; t = 0;
-	Simulation newSim(circElements, om, dt, tf, log, 50, SimulationType::DynPhasor);
+	tf = 0.3; dt = 0.0000007; t = 0;
+	Simulation newSim(circElements, om, dt, tf, log, SimulationType::DynPhasor);
 
 	// Initialize generator
 	double initActivePower = 555e3;
