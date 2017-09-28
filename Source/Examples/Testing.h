@@ -5,6 +5,7 @@
 #include "SyncGenUnitTestVBR.h"
 #include "ReferenceCircuits.h"
 #include "ShmemTest.h"
+#include "SimpleCircuitTest.h"
 
 namespace DPsim {
 
@@ -39,7 +40,7 @@ namespace DPsim {
 
 		// #### Synchronous generator unit tests ################
 		// EMT classic dq model
-		SynGenUnitTestBalancedResLoad();
+		//SynGenUnitTestBalancedResLoad();
 		//SynGenUnitTestPhaseToPhaseFault();
 		//SynGenUnitTestThreePhaseFault();	
 		
@@ -55,6 +56,7 @@ namespace DPsim {
 		//RXLineResLoadEMT();
 		//VarFreqRXLineResLoadEMT();				
 		//runDpEmtVarFreqStudy();
+		runDpEmtVarFreqStudy_NZ_Paper();
 	}
 }
 
