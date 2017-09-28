@@ -14,7 +14,7 @@ void DPsim::shmemExample()
 	Logger log("output.log"), llog("lvector.log"), rlog("rvector.log");
 	std::vector<BaseComponent*> comps;
 
-	ExternalVoltageSource *evs = new ExternalVoltageSource("v_s", 1, 0, 0, 0, 1);
+	ExternalVoltageSource *evs = new ExternalVoltageSource("v_s", 1, 0, Complex(0, 0), 1);
 	comps.push_back(evs);
 	comps.push_back(new LinearResistor("r_s", 1, 2, 1));
 	comps.push_back(new LinearResistor("r_line", 2, 3, 1));
@@ -53,7 +53,7 @@ void DPsim::shmemRTExample()
 	conf.polling = false;
 	Logger log;
 
-	ExternalVoltageSource *evs = new ExternalVoltageSource("v_s", 1, 0, 0, 0, 1);
+	ExternalVoltageSource *evs = new ExternalVoltageSource("v_s", 1, 0, Complex(0, 0), 1);
 	comps.push_back(evs);
 	comps.push_back(new LinearResistor("r_s", 1, 2, 1));
 	comps.push_back(new LinearResistor("r_line", 2, 3, 1));
@@ -101,15 +101,15 @@ void DPsim::shmemDistributedDirect(int argc, char *argv[])
 	}
 
 	if (!strcmp(argv[1], "0")) {
-		comps.push_back(new VoltSourceRes("v_s", 1, 0, 10000, 0, 1));
+		comps.push_back(new VoltSourceRes("v_s", 1, 0, Complex(10000, 0), 1));
 		comps.push_back(new Inductor("l_1", 1, 2, 1e-3));
-		ExternalVoltageSource *evs = new ExternalVoltageSource("v_t", 2, 0, 0, 0, 1);
+		ExternalVoltageSource *evs = new ExternalVoltageSource("v_t", 2, 0, Complex(0, 0), 1);
 		comps.push_back(evs);
 		shmem = new ShmemInterface("/dpsim01", "/dpsim10", &conf);
 		shmem->registerVoltageSource(evs, 0, 1);
 		shmem->registerExportedCurrent(evs, 0, 1);
 	} else if (!strcmp(argv[1], "1")) {
-		ExternalCurrentSource *ecs = new ExternalCurrentSource("v_s", 1, 0, 0, 0);
+		ExternalCurrentSource *ecs = new ExternalCurrentSource("v_s", 1, 0, Complex(0, 0));
 		comps.push_back(ecs);
 		comps.push_back(new LinearResistor("r_2", 1, 0, 1));
 		shmem = new ShmemInterface("/dpsim10", "/dpsim01", &conf);
@@ -154,17 +154,17 @@ void DPsim::shmemDistributed(int argc, char *argv[])
 
 	if (!strcmp(argv[1], "0")) {
 		logname = "lvector0.log";
-		comps.push_back(new VoltSourceRes("v_s", 1, 0, 10000, 0, 1));
+		comps.push_back(new VoltSourceRes("v_s", 1, 0, Complex(10000, 0), 1));
 		comps.push_back(new Inductor("l_1", 1, 2, 0.1));
 		comps.push_back(new LinearResistor("r_1", 2, 3, 1));
-		ExternalVoltageSource *evs = new ExternalVoltageSource("v_t", 3, 0, 0, 0, 1);
+		ExternalVoltageSource *evs = new ExternalVoltageSource("v_t", 3, 0, Complex(0, 0), 1);
 		comps.push_back(evs);
 		shmem = new ShmemInterface("/villas1-in", "/villas1-out", &conf);
 		shmem->registerVoltageSource(evs, 0, 1);
 		shmem->registerExportedCurrent(evs, 0, 1);
 	} else if (!strcmp(argv[1], "1")) {
 		logname = "lvector1.log";
-		ExternalCurrentSource *ecs = new ExternalCurrentSource("v_s", 1, 0, 0, 0);
+		ExternalCurrentSource *ecs = new ExternalCurrentSource("v_s", 1, 0, Complex(0, 0));
 		comps.push_back(ecs);
 		comps.push_back(new LinearResistor("r_2", 1, 0, 10));
 		shmem = new ShmemInterface("/villas2-in", "/villas2-out", &conf);
@@ -207,7 +207,7 @@ void DPsim::shmemDistributedRef()
 	Logger log("output.log"), llog("lvector.log"), rlog("rvector.log");
 	std::vector<BaseComponent*> comps, comps2;
 
-	comps.push_back(new VoltSourceRes("v_s", 1, 0, 10000, 0, 1));
+	comps.push_back(new VoltSourceRes("v_s", 1, 0, Complex(10000, 0), 1));
 	comps.push_back(new Inductor("l_1", 1, 2, 0.1));
 	comps.push_back(new LinearResistor("r_1", 2, 3, 1));
 	comps2 = comps;

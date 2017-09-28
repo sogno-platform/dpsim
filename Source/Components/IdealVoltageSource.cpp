@@ -2,10 +2,10 @@
 
 using namespace DPsim;
 
-IdealVoltageSource::IdealVoltageSource(std::string name, int src, int dest, Real voltage, Real phase, int num) : BaseComponent(name, src, dest) {
+IdealVoltageSource::IdealVoltageSource(std::string name, int src, int dest, Complex voltage, int num) : BaseComponent(name, src, dest) {
 	this->number = num;
-	this->mVoltageDiffr = voltage*cos(phase);
-	this->mVoltageDiffi = voltage*sin(phase);
+	this->mVoltage = voltage;
+	attrMap["voltage"] = {AttrComplex, &this->mVoltage};
 }
 
 void IdealVoltageSource::applySystemMatrixStamp(SystemModel& system) {
@@ -27,14 +27,14 @@ void IdealVoltageSource::applySystemMatrixStamp(SystemModel& system) {
 
 void IdealVoltageSource::applyRightSideVectorStamp(SystemModel& system) {
 	// Apply matrix stamp for equivalent current source
-	system.addRealToRightSideVector(system.getCompOffset() - number, mVoltageDiffr);
-	system.addRealToRightSideVector(2 * system.getCompOffset() - number, mVoltageDiffi);
+	system.addRealToRightSideVector(system.getCompOffset() - number, mVoltage.real());
+	system.addRealToRightSideVector(2 * system.getCompOffset() - number, mVoltage.imag());
 }
 
 void IdealVoltageSource::step(SystemModel& system, Real time) {
 	// Apply matrix stamp for equivalent current source
-	system.addRealToRightSideVector(system.getCompOffset() - number, mVoltageDiffr);
-	system.addRealToRightSideVector(2 * system.getCompOffset() - number, mVoltageDiffi);
+	system.addRealToRightSideVector(system.getCompOffset() - number, mVoltage.real());
+	system.addRealToRightSideVector(2 * system.getCompOffset() - number, mVoltage.imag());
 }
 
 Complex IdealVoltageSource::getCurrent(SystemModel& system) {

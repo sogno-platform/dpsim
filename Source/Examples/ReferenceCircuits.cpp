@@ -18,7 +18,7 @@ void DPsim::simulationExample1()
 		rightVectorLog("Logs/RightVectorLog_" + fileName.str() + ".csv");
 
 	std::vector<BaseComponent*> circElements0;
-	circElements0.push_back(new VoltSourceRes("v_in", 1, 0, 10, 0, 1));
+	circElements0.push_back(new VoltSourceRes("v_in", 1, 0, Complex(10, 0), 1));
 	circElements0.push_back(new Inductor("l_1", 1, 2, 0.02));
 	circElements0.push_back(new Inductor("l_2", 2, 0, 0.1));
 	circElements0.push_back(new Inductor("l_3", 2, 3, 0.05));
@@ -58,7 +58,7 @@ void DPsim::simulationExample1L2()
 		rightVectorLog("Logs/RightVectorLog_" + fileName.str() + ".csv");
 
 	std::vector<BaseComponent*> circElements0;
-	circElements0.push_back(new VoltSourceRes("v_in", 1, 0, 10, 0, 1));
+	circElements0.push_back(new VoltSourceRes("v_in", 1, 0, Complex(10, 0), 1));
 	circElements0.push_back(new Inductor("l_1", 1, 2, 0.02));
 	circElements0.push_back(new Inductor("l_2", 2, 0, 0.1));
 	circElements0.push_back(new Inductor("l_3", 2, 3, 0.05));
@@ -98,7 +98,7 @@ void DPsim::simulationExample2()
 		rightVectorLog("Logs/RightVectorLog_" + fileName.str() + ".csv");
 
 	std::vector<BaseComponent*> circElements0;
-	circElements0.push_back(new VoltSourceRes("v_in", 1, 0, 10, 0, 1));
+	circElements0.push_back(new VoltSourceRes("v_in", 1, 0, Complex(10, 0), 1));
 	circElements0.push_back(new Inductor("l_1", 1, 2, 0.02));
 	circElements0.push_back(new Inductor("l_2", 2, 0, 0.1));
 	
@@ -136,7 +136,7 @@ void DPsim::simulationExample3()
 		rightVectorLog("Logs/RightVectorLog_" + fileName.str() + ".csv");
 
 	std::vector<BaseComponent*> circElements0;
-	circElements0.push_back(new VoltSourceRes("v_in", 1, 0, 10, 0, 1));
+	circElements0.push_back(new VoltSourceRes("v_in", 1, 0, Complex(10, 0), 1));
 	circElements0.push_back(new Capacitor("c_1", 1, 2, 0.001));
 	circElements0.push_back(new Inductor("l_1", 2, 0, 0.001));
 	circElements0.push_back(new LinearResistor("r_2", 2, 0, 1));
@@ -175,7 +175,7 @@ void DPsim::simulationExampleIdealVS()
 		rightVectorLog("Logs/RightVectorLog_" + fileName.str() + ".csv");
 
 	std::vector<BaseComponent*> circElements0;
-	circElements0.push_back(new IdealVoltageSource("v_in", 1, 2, 10, 0, 1));
+	circElements0.push_back(new IdealVoltageSource("v_in", 1, 2, Complex(10, 0), 1));
 	circElements0.push_back(new LinearResistor("r_1", 1, 0, 1));
 	circElements0.push_back(new LinearResistor("r_2", 2, 0, 1));
 	circElements0.push_back(new LinearResistor("r_3", 2, 0, 1));
@@ -214,7 +214,7 @@ void DPsim::simulationExampleIdealVS2()
 		rightVectorLog("Logs/RightVectorLog_" + fileName.str() + ".csv");
 
 	std::vector<BaseComponent*> circElements0;
-	circElements0.push_back(new IdealVoltageSource("v_in", 1, 0, 10, 0, 1));
+	circElements0.push_back(new IdealVoltageSource("v_in", 1, 0, Complex(10, 0), 1));
 	circElements0.push_back(new LinearResistor("r_1", 1, 2, 1));
 	circElements0.push_back(new Capacitor("c_1", 2, 3, 0.001));
 	circElements0.push_back(new Inductor("l_1", 3, 0, 0.001));
@@ -255,13 +255,13 @@ void DPsim::simulationExampleIdealVS3()
 		rightVectorLog("Logs/RightVectorLog_" + fileName.str() + ".csv");
 
 	std::vector<BaseComponent*> circElements0;
-	circElements0.push_back(new IdealVoltageSource("v_1", 1, 0, 10, 0, 1));
+	circElements0.push_back(new IdealVoltageSource("v_1", 1, 0, Complex(10, 0), 1));
 	circElements0.push_back(new LinearResistor("r_1", 1, 2, 1));
 	circElements0.push_back(new LinearResistor("r_2", 2, 0, 1));
 	circElements0.push_back(new LinearResistor("r_3", 2, 3, 1));
 	circElements0.push_back(new LinearResistor("r_4", 3, 0, 1));
 	circElements0.push_back(new LinearResistor("r_5", 3, 4, 1));
-	circElements0.push_back(new IdealVoltageSource("v_2", 4, 0, 20, 0, 2));
+	circElements0.push_back(new IdealVoltageSource("v_2", 4, 0, Complex(20, 0), 2));
 
 
 
@@ -300,7 +300,7 @@ void DPsim::simulationExampleRXLine()
 		rightVectorLog("Logs/RightVectorLog_" + fileName.str() + ".csv");
 
 	std::vector<BaseComponent*> circElements0;
-	circElements0.push_back(new IdealVoltageSource("v_1", 1, 0, 10, 0, 1));
+	circElements0.push_back(new IdealVoltageSource("v_1", 1, 0, Complex(10, 0), 1));
 	circElements0.push_back(new RxLine("Line_1", 1, 2, 3, 0.1, 0.001));
 	circElements0.push_back(new LinearResistor("r_1", 2, 0, 20));
 
@@ -339,7 +339,7 @@ void DPsim::simulationExampleRXLine2()
 		rightVectorLog("Logs/RightVectorLog_" + fileName.str() + ".csv");
 
 	std::vector<BaseComponent*> circElements0;
-	circElements0.push_back(new IdealVoltageSource("v_1", 1, 0, 10, 0, 1));
+	circElements0.push_back(new IdealVoltageSource("v_1", 1, 0, Complex(10, 0), 1));
 
 	circElements0.push_back(new Inductor("l_L", 2, 3, 0.001));
 	circElements0.push_back(new LinearResistor("r_L", 1, 2, 0.1));
@@ -380,7 +380,7 @@ void DPsim::simulationExampleRXLine3()
 		rightVectorLog("Logs/RightVectorLog_" + fileName.str() + ".csv");
 
 	std::vector<BaseComponent*> circElements0;
-	circElements0.push_back(new IdealVoltageSource("v_1", 1, 0, 10, 0, 1));
+	circElements0.push_back(new IdealVoltageSource("v_1", 1, 0, Complex(10, 0), 1));
 	circElements0.push_back(new RxLine("Line_1", 1, 2, 0.1, 0.001));
 	circElements0.push_back(new LinearResistor("r_1", 2, 0, 20));
 
@@ -419,7 +419,7 @@ void DPsim::simulationExamplePiLine()
 		rightVectorLog("Logs/RightVectorLog_" + fileName.str() + ".csv");
 
 	std::vector<BaseComponent*> circElements0;
-	circElements0.push_back(new IdealVoltageSource("v_1", 1, 0, 345, 0, 1));
+	circElements0.push_back(new IdealVoltageSource("v_1", 1, 0, Complex(345, 0), 1));
 	circElements0.push_back(new LinearResistor("r1", 1, 2, 5));
 	circElements0.push_back(new PiLine("PiLine1", 2, 3, 4, 6.4, 0.186, 0.004));
 	circElements0.push_back(new LinearResistor("r_load", 3, 0, 150));
@@ -460,7 +460,7 @@ void DPsim::simulationExamplePiLine2()
 		rightVectorLog("Logs/RightVectorLog_" + fileName.str() + ".csv");
 
 	std::vector<BaseComponent*> circElements0;
-	circElements0.push_back(new IdealVoltageSource("v_1", 1, 0, 345, 0, 1));
+	circElements0.push_back(new IdealVoltageSource("v_1", 1, 0, Complex(345, 0), 1));
 	circElements0.push_back(new LinearResistor("r1", 1, 2, 5));
 	circElements0.push_back(new Capacitor("c_1", 2, 0, 0.002));
 	circElements0.push_back(new LinearResistor("r_load", 2, 4, 6.4));

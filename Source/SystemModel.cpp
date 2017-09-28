@@ -37,6 +37,10 @@ void SystemModel::addCompToSystemMatrix(Int row, Int column, Real reValue, Real 
 	mSystemMatrix(row + mCompOffset, column) = mSystemMatrix(row + mCompOffset, column) + imValue;
 }
 
+void SystemModel::addCompToSystemMatrix(Int row, Int column, Complex value) {
+	addCompToSystemMatrix(row, column, value.real(), value.imag());
+}
+
 void SystemModel::addCompToRightSideVector(Int row, Real reValue, Real imValue) {
 	mRightSideVector(row, 0) = mRightSideVector(row, 0) + reValue;
 	mRightSideVector(row + mCompOffset, 0) = mRightSideVector(row + mCompOffset, 0) + imValue;

@@ -8,6 +8,8 @@ RxLine::RxLine(std::string name, int node1, int node2, Real resistance, Real ind
 	mInductance = inductance;
 	type = LineTypes::RxLine2Node;
 	mNode3 = -1;
+	attrMap["resistance"] = {AttrReal, &mResistance};
+	attrMap["inductance"] = {AttrReal, &mInductance};
 }
 
 RxLine::RxLine(std::string name, int node1, int node2, int node3, Real resistance, Real inductance) : BaseComponent(name, node1, node2, node3) {
@@ -214,4 +216,3 @@ void RxLine::postStep(SystemModel& system) {
 Complex RxLine::getCurrent(SystemModel& system) {
 	return Complex(mCurrRe, mCurrIm);
 }
-

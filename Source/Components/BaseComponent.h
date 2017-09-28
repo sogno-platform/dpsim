@@ -9,6 +9,18 @@
 
 namespace DPsim {
 
+	enum AttrType {
+		AttrReal,
+		AttrInt,
+		AttrString, // value should be *std::string, not *char!
+		AttrComplex
+	};
+
+	struct CompAttr {
+		AttrType type;
+		void* value;
+	};
+
 	/// Base class for all elements that might be added to the matrix.
 	class BaseComponent {
 	protected:
@@ -23,19 +35,27 @@ namespace DPsim {
 		/// Component logger control for internal variables
 		bool mLogActive;
 
+		/// Map of all attributes that should be exported to the Python interface
+		std::map<std::string, CompAttr> attrMap;
+
 	public:
 		BaseComponent() { }
-		BaseComponent(std::string name, int node1, int node2, bool logActive = false) {
-			this->mName = name; 
-			this->mNode1 = node1 - 1; 
-			this->mNode2 = node2 - 1; 
+
+		BaseComponent(std::string name, int src, int dest, bool logActive = false) {
+			this->mName = name;
+			this->mNode1 = src - 1;
+			this->mNode2 = dest - 1;
 			this->mLogActive = logActive;
-		}
-		BaseComponent(std::string name, int node1, int node2, int node3, bool logActive = false) 
-			: BaseComponent(name, node1, node2, logActive) {
-			this->mNode3 = node3 - 1; 
+			attrMap["name"] = {AttrString, &this->mName};
+			attrMap["node1"] = {AttrInt, &this->mNode1};
+			attrMap["node2"] = {AttrInt, &this->mNode2};
 		}
 
+		BaseComponent(std::string name, int node1, int node2, int node3, bool logActive = false) :
+			BaseComponent(name, node1, node2, logActive) {
+			this->mNode3 = node3 - 1;
+			attrMap["node3"] = {AttrInt, &this->mNode3};
+		}
 		virtual ~BaseComponent() { }
 
 		/// get value of node1
@@ -44,6 +64,8 @@ namespace DPsim {
 		int getNode2() { return mNode2; }
 		/// get value of node3
 		int getNode3() { return mNode3; }
+
+		std::map<std::string, CompAttr>& getAttrMap() { return attrMap; }
 
 		std::string getName() { return mName; }
 
@@ -68,6 +90,7 @@ namespace DPsim {
 			std::exit(1);
 			return Complex(0, 0);
 		}
+
 	};
 }
 

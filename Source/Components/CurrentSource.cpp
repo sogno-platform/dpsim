@@ -2,17 +2,17 @@
 
 using namespace DPsim;
 
-CurrentSource::CurrentSource(std::string name, int src, int dest, double current, double phase) : BaseComponent(name, src, dest) {
-	this->currentr = current*cos(phase);
-	this->currenti = current*sin(phase);
+CurrentSource::CurrentSource(std::string name, int src, int dest, Complex current) : BaseComponent(name, src, dest) {
+	this->mCurrent = current;
+	attrMap["current"] = {AttrComplex, &this->mCurrent};
 };
 	
 void CurrentSource::applyRightSideVectorStamp(SystemModel& system) {
 	if (mNode1 >= 0) {
-		system.addCompToRightSideVector(mNode1, currentr, currenti);		
+		system.addCompToRightSideVector(mNode1, mCurrent.real(), mCurrent.imag());
 	}
 	if (mNode2 >= 0) {
-		system.addCompToRightSideVector(mNode2, -currentr, -currenti);
+		system.addCompToRightSideVector(mNode2, -mCurrent.real(), mCurrent.imag());
 	}
 }
 
@@ -21,5 +21,5 @@ void CurrentSource::step(SystemModel& system, Real time) {
 }
 
 Complex CurrentSource::getCurrent(SystemModel &system) {
-	return Complex(currentr, currenti);
+	return mCurrent;
 }

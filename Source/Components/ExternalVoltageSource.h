@@ -9,7 +9,7 @@ namespace DPsim {
 	public:
 		ExternalVoltageSource() {};
 
-		ExternalVoltageSource(std::string name, int src, int dest, Real initVoltage, Real initPhase, int num);
+		ExternalVoltageSource(std::string name, int src, int dest, Complex voltage, int num);
 
 		void setVoltage(Real real, Real imag);
 	};

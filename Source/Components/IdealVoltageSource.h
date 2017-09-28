@@ -15,9 +15,8 @@ namespace DPsim {
 	protected:
 
 		//  ### Ideal Voltage source parameters ###
-		/// Real and imaginary part of the voltage [V]
-		Real mVoltageDiffr;
-		Real mVoltageDiffi;
+		/// Complex voltage [V]
+		Complex mVoltage;
 
 		Real mVoltageAtSourcer;
 		Real mVoltageAtSourcei;
@@ -33,7 +32,7 @@ namespace DPsim {
 		IdealVoltageSource() { ; };
 
 		/// define paramenters of the voltage source
-		IdealVoltageSource(std::string name, int src, int dest, Real voltage, Real phase, int num);
+		IdealVoltageSource(std::string name, int src, int dest, Complex voltage, int num);
 
 		void init(Real om, Real dt) { }
 		
