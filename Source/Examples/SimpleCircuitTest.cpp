@@ -210,6 +210,93 @@ void DPsim::runDpEmtVarFreqStudy() {
 	VarFreqRXLineResLoad(timeStep, finalTime, freqStep, loadStep, rampTime);
 }
 
+void DPsim::VarFreqRXLineResLoad_NZ_Paper(Real timeStep, Real finalTime, Real freqStep, Real loadStep, Real rampTime) {
+	// Define Object for saving data on a file
+	std::ostringstream fileName;
+	fileName << "VarFreqRXLineResLoad_" << timeStep;
+	Logger log("Logs/Log_" + fileName.str() + ".log"),
+		leftVectorLog("Logs/LeftVectorLog_" + fileName.str() + ".csv"),
+		rightVectorLog("Logs/RightVectorLog_" + fileName.str() + ".csv");
+
+	// Declare circuit components
+	std::vector<BaseComponent*> circElements0, circElements1, circElements2;
+	circElements0.push_back(new VoltSourceResFreq("v_s", 1, 0, 10000, 0, 1, 2 * PI*-1, freqStep, rampTime));
+	circElements0.push_back(new LinearResistor("r_line", 1, 2, 1));
+	circElements0.push_back(new Inductor("l_line", 2, 3, 1));
+	circElements1 = circElements0;
+	circElements2 = circElements0;
+	circElements1.push_back(new LinearResistor("r_load", 3, 0, 10));
+	circElements2.push_back(new LinearResistor("r_load", 3, 0, 5));
+
+	// Set up simulation
+	Simulation newSim(circElements1, 2.0*PI*50.0, timeStep, finalTime, log);
+	newSim.addSystemTopology(circElements2);
+	newSim.setSwitchTime(loadStep, 1);
+
+	// Main Simulation Loop
+	std::cout << "Start simulation." << std::endl;
+	while (newSim.step(log, leftVectorLog, rightVectorLog))
+	{
+		newSim.increaseByTimeStep();
+		updateProgressBar(newSim.getTime(), newSim.getFinalTime());
+	}
+	std::cout << "Simulation finished." << std::endl;
+
+	for (auto elem : circElements0)
+		delete elem;
+	delete circElements1[3];
+	delete circElements2[3];
+}
+
+void DPsim::VarFreqRXLineResLoadEMT_NZ_Paper(Real timeStep, Real finalTime, Real freqStep, Real loadStep, Real rampTime) {
+	// Define Object for saving data on a file
+	std::ostringstream fileName;
+	fileName << "VarFreqRXLineResLoadEMT_" << timeStep;
+	Logger log("Logs/Log_" + fileName.str() + ".log"),
+		leftVectorLog("Logs/LeftVectorLog_" + fileName.str() + ".csv"),
+		rightVectorLog("Logs/RightVectorLog_" + fileName.str() + ".csv");
+
+	// Declare circuit components
+	std::vector<BaseComponent*> circElements0, circElements1, circElements2;
+	circElements0.push_back(new VoltSourceResFreqEMT("v_s", 1, 0, 10000, 0, 1, 2 * PI*-1, freqStep, rampTime));
+	circElements0.push_back(new LinearResistorEMT("r_line", 1, 2, 1));
+	circElements0.push_back(new InductorEMT("l_line", 2, 3, 1));
+	circElements1 = circElements0;
+	circElements2 = circElements0;
+	circElements1.push_back(new LinearResistorEMT("r_load", 3, 0, 10));
+	circElements2.push_back(new LinearResistorEMT("r_load", 3, 0, 8));
+
+	// Set up simulation
+	Simulation newSim(circElements1, 2.0*PI*50.0, timeStep, finalTime, log, SimulationType::EMT);
+
+	// Main Simulation Loop
+	std::cout << "Start simulation." << std::endl;
+	while (newSim.step(log, leftVectorLog, rightVectorLog))
+	{
+		newSim.increaseByTimeStep();
+		updateProgressBar(newSim.getTime(), newSim.getFinalTime());
+	}
+	std::cout << "Simulation finished." << std::endl;
+
+	for (auto elem : circElements0)
+		delete elem;
+	delete circElements1[3];
+	delete circElements2[3];
+}
+
+void DPsim::runDpEmtVarFreqStudy_NZ_Paper() {
+	Real timeStep = 0.0;
+	Real finalTime = 2;
+	Real freqStep = 1;
+	Real loadStep = 10;
+	Real rampTime = 0.2;
+
+	timeStep = 0.00005;
+	VarFreqRXLineResLoadEMT_NZ_Paper(timeStep, finalTime, freqStep, loadStep, rampTime);
+	timeStep = 0.001;
+	VarFreqRXLineResLoad_NZ_Paper(timeStep, finalTime, freqStep, loadStep, rampTime);
+}
+
 #ifdef __linux__
 void DPsim::RTExample() {
 	std::vector<BaseComponent*> comps;
