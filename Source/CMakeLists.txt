@@ -32,6 +32,8 @@ else()
 endif()
 
 include_directories(${EIGEN3_INCLUDE_DIR} ${PYTHON_INCLUDE_DIRS})
+
+set(USE_CIM_VERSION "IEC61970_16v29a")
 add_subdirectory(CIM-XML-Parser)
 
 file(GLOB SOURCES *.cpp Components/*.cpp)
