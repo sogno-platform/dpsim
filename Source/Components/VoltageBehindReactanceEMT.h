@@ -1,5 +1,5 @@
 #ifndef VOLTAGEBEHINDREACTANCEEMT_H
-#define VOLTAGEBEHINDREACTANCE_H
+#define VOLTAGEBEHINDREACTANCEEMT_H
 
 #include "BaseComponent.h"
 #include "ComponentCommons.h"
