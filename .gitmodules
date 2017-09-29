@@ -1,0 +1,3 @@
+[submodule "Source/CIM-XML-Parser"]
+	path = Source/CIM-XML-Parser
+	url = ../../CIM-XML-Interface/CIM-XML-Parser.git

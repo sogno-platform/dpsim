@@ -7,6 +7,7 @@ namespace DPsim {
 
 	class VoltSourceResEMT : public BaseComponent {
 	protected:
+		Complex mVoltage;
 		Real mVoltageAmp;
 		Real mVoltagePhase;
 		Real mVoltageDiff;			
@@ -16,7 +17,7 @@ namespace DPsim {
 		
 	public:
 		VoltSourceResEMT() { ; };
-		VoltSourceResEMT(std::string name, int src, int dest, Real voltage, Real phase, Real resistance);
+		VoltSourceResEMT(std::string name, int src, int dest, Complex voltage, Real resistance);
 
 		void init(Real om, Real dt) { }
 		void applySystemMatrixStamp(SystemModel& system);

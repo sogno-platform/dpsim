@@ -4,6 +4,7 @@ using namespace DPsim;
 
 InductorEMT::InductorEMT(std::string name, int src, int dest, double inductance) : BaseComponent(name, src, dest) {
 	mInductance = inductance;
+	attrMap["inductance"] = {AttrReal, &mInductance};
 }
 
 void InductorEMT::applySystemMatrixStamp(SystemModel& system) {

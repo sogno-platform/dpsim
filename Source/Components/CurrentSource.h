@@ -7,12 +7,11 @@ namespace DPsim {
 
 	class CurrentSource : public BaseComponent {
 	protected:
-		double currentr;
-		double currenti;
+		Complex mCurrent;
 
 	public:
 		CurrentSource() { ; };
-		CurrentSource(std::string name, int src, int dest, double current, double phase);
+		CurrentSource(std::string name, int src, int dest, Complex current);
 
 		void init(Real om, Real dt) { }
 		void applySystemMatrixStamp(SystemModel& system) { }

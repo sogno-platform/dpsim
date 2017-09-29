@@ -4,6 +4,7 @@ using namespace DPsim;
 
 InterfacedInductor::InterfacedInductor(std::string name, int src, int dest, Real inductance) : BaseComponent(name, src, dest) {
 	this->mInductance = inductance;
+	attrMap["inductance"] = {AttrReal, &mInductance};
 }
 
 

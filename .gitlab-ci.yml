@@ -1,9 +1,11 @@
 variables:
   DOCKER_IMAGE: dpsim-dev-${CI_COMMIT_REF_NAME}
+  GIT_SUBMODULE_STRATEGY: recursive
 
 stages:
   - prepare
   - build
+  - docs
   - test
 
 docker:
@@ -16,15 +18,34 @@ docker:
 build:
   stage: build
   script:
-    - make -C Source
+    - mkdir Source/build
+    - cd Source/build
+    - cmake ..
+    - make
   image: ${DOCKER_IMAGE}
+  artifacts:
+    paths:
+      - Source/build
+  tags:
+    - docker
+
+docs:
+  stage: docs
+  script:
+    - mv Source/build/libdpsim.so Documentation/dpsim.so
+    - cd Documentation
+    - make html
+  image: ${DOCKER_IMAGE}
+  artifacts:
+    paths:
+      - Documentation/_build
   tags:
     - docker
 
 test:
   stage: test
   script:
-    - make -C Source tests
+    - mv Source/build/libdpsim.so Source/Tests/dpsim.so
     - cd Source/Tests
     - python3 run_tests.py
   image: ${DOCKER_IMAGE}

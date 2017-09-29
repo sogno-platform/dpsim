@@ -82,6 +82,7 @@ namespace DPsim {
 
 		double getTime() { return mTime; }
 		double getFinalTime() { return mFinalTime; }
+		double getTimeStep() { return mSystemModel.getTimeStep(); }
 		Matrix & getLeftSideVector() { return mSystemModel.getLeftSideVector(); }
 		Matrix & getRightSideVector() { return mSystemModel.getRightSideVector(); }
 		Matrix & getSystemMatrix() { return mSystemModel.getCurrentSystemMatrix(); }

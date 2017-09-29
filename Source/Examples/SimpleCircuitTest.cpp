@@ -18,7 +18,7 @@ void DPsim::RXLineResLoad() {
 
 	// Declare circuit components
 	std::vector<BaseComponent*> circElements0, circElements1, circElements2;
-	circElements0.push_back(new VoltSourceRes("v_s", 1, 0, 10000, 0, 1));
+	circElements0.push_back(new VoltSourceRes("v_s", 1, 0, Complex(10000, 0), 1));
 	circElements0.push_back(new LinearResistor("r_line", 1, 2, 1));
 	circElements0.push_back(new Inductor("l_line", 2, 3, 1));	
 	circElements1 = circElements0;
@@ -96,7 +96,7 @@ void DPsim::RXLineResLoadEMT() {
 
 	// Declare circuit components
 	std::vector<BaseComponent*> circElements0, circElements1, circElements2;
-	circElements0.push_back(new VoltSourceResEMT("v_s", 1, 0, 10000, 0, 1));
+	circElements0.push_back(new VoltSourceResEMT("v_s", 1, 0, Complex(10000, 0), 1));
 	circElements0.push_back(new LinearResistorEMT("r_line", 1, 2, 1));
 	circElements0.push_back(new InductorEMT("l_line", 2, 3, 1));
 	circElements1 = circElements0;
@@ -302,7 +302,7 @@ void DPsim::RTExample() {
 	std::vector<BaseComponent*> comps;
 	Logger log;
 
-	comps.push_back(new VoltSourceRes("v_s", 1, 0, 10000, 0, 1));
+	comps.push_back(new VoltSourceRes("v_s", 1, 0, Complex(10000, 0), 1));
 	comps.push_back(new LinearResistor("r_line", 1, 2, 1));
 	comps.push_back(new Inductor("l_line", 2, 3, 1));
 	comps.push_back(new LinearResistor("r_load", 3, 0, 1000));

@@ -14,10 +14,8 @@ namespace DPsim {
 	protected:
 
 		//  ### Real Voltage source parameters ###
-		/// Real part of the voltage [V]
-		Real mVoltageDiffr;
-		/// Imaginary part of the voltage [V]
-		Real mVoltageDiffi;
+		/// Complex voltage [V]
+		Complex mVoltage;
 
 		/// Resistance [ohm]
 		Real mResistance;
@@ -34,7 +32,7 @@ namespace DPsim {
 		VoltSourceRes() { ; };
 
 		/// define voltage source paramenters
-		VoltSourceRes(std::string name, int src, int dest, Real voltage, Real phase, Real resistance);
+		VoltSourceRes(std::string name, int src, int dest, Complex voltage, Real resistance);
 
 		void init(Real om, Real dt) { }
 		

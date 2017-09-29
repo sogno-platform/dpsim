@@ -77,6 +77,7 @@ namespace DPsim {
 		void switchSystemMatrix(Int systemMatrixIndex);
 		void addRealToSystemMatrix(Int row, Int column, Real value);
 		void addCompToSystemMatrix(Int row, Int column, Real reValue, Real imValue);
+		void addCompToSystemMatrix(Int row, Int column, Complex value);
 		void addCompToRightSideVector(Int row, Real reValue, Real imValue);
 		void addRealToRightSideVector(Int row, Real value);
 		void setRightSideVectorToZero();
