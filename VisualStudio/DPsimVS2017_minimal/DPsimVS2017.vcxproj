@@ -159,6 +159,7 @@
     <ClInclude Include="..\..\Source\Components\RxLine.h" />
     <ClInclude Include="..\..\Source\Components\SynchronGenerator.h" />
     <ClInclude Include="..\..\Source\Components\SynchronGeneratorEMT.h" />
+    <ClInclude Include="..\..\Source\Components\SynchronGeneratorEMTFnP.h" />
     <ClInclude Include="..\..\Source\Components\TwoWindingTransformer.h" />
     <ClInclude Include="..\..\Source\Components\VoltageBehindReactanceDP.h" />
     <ClInclude Include="..\..\Source\Components\VoltageBehindReactanceEMT.h" />
@@ -172,6 +173,7 @@
     <ClInclude Include="..\..\Source\Examples\SyncGenUnitTestVBR.h" />
     <ClInclude Include="..\..\Source\Examples\SynchronGenUnitTest.h" />
     <ClInclude Include="..\..\Source\Examples\Testing.h" />
+    <ClInclude Include="..\..\Source\IntegrationMethod.h" />
     <ClInclude Include="..\..\Source\Logger.h" />
     <ClInclude Include="..\..\Source\MathLibrary.h" />
     <ClInclude Include="..\..\Source\Simulation.h" />
@@ -192,6 +194,7 @@
     <ClCompile Include="..\..\Source\Components\RxLine.cpp" />
     <ClCompile Include="..\..\Source\Components\SynchronGenerator.cpp" />
     <ClCompile Include="..\..\Source\Components\SynchronGeneratorEMT.cpp" />
+    <ClCompile Include="..\..\Source\Components\SynchronGeneratorEMTFnP.cpp" />
     <ClCompile Include="..\..\Source\Components\TwoWindingTransformer.cpp" />
     <ClCompile Include="..\..\Source\Components\VoltageBehindReachtanceDP.cpp" />
     <ClCompile Include="..\..\Source\Components\VoltageBehindReactanceEMT.cpp" />
@@ -205,6 +208,7 @@
     <ClCompile Include="..\..\Source\Examples\SimpleCircuitTest.cpp" />
     <ClCompile Include="..\..\Source\Examples\SyncGenUnitTestVBR.cpp" />
     <ClCompile Include="..\..\Source\Examples\SynchronGenUnitTest.cpp" />
+    <ClCompile Include="..\..\Source\IntegrationMethod.cpp" />
     <ClCompile Include="..\..\Source\Logger.cpp" />
     <ClCompile Include="..\..\Source\Simulation.cpp" />
     <ClCompile Include="..\..\Source\SystemModel.cpp" />

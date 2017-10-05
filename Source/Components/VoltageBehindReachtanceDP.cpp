@@ -238,7 +238,7 @@ void VoltageBehindReactanceDP::initStatesInPerUnit(Real initActivePower, Real in
 		0, 0, 0, 0, 0, 1037.8378 / mBase_Z;
 
 	CalculateLandR(mThetaMech2, 1, mOmMech);
-
+	//CalculateLandR(mThetaMech2, 1, mOmMech, 0);
 	if (DampingWinding == 2) {
 		mPsimq = mDLmq*(mPsikq1 / mLlkq1 + mPsikq2 / mLlkq2 + mIq);
 	}
@@ -303,6 +303,7 @@ void VoltageBehindReactanceDP::stepInPerUnit(Real om, Real dt, Real fieldVoltage
 
 
 	CalculateLandR(mThetaMech2, 1, mOmMech);
+	//CalculateLandR(mThetaMech2, 1, mOmMech, time);
 
 	if (time < 0.1 || time > 0.2)
 	{

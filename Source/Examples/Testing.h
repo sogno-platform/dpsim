@@ -42,14 +42,16 @@ namespace DPsim {
 		// EMT classic dq model
 		//SynGenUnitTestBalancedResLoad();
 		//SynGenUnitTestPhaseToPhaseFault();
-		//SynGenUnitTestThreePhaseFault();	
+		//SynGenUnitTestThreePhaseFault();
+		SynGenUnitTestBalancedResLoadFnP();
 		
 		// DP classic dq model
 		//SynGenDPUnitTestBalancedResLoad();
 
 		// EMT VBR model
 		//SynGenUnitTestVBR();
-		SynGenUnitTestVBRDP();
+		// DP VBR model
+		//SynGenUnitTestVBRDP();
 
 		// #### Variable frequency tests ################
 		//RXLineResLoad();

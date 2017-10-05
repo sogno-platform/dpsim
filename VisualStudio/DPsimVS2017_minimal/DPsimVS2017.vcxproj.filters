@@ -132,6 +132,12 @@
     <ClInclude Include="..\..\Source\Components\TwoWindingTransformer.h">
       <Filter>Headerdateien\Components</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\Source\Components\SynchronGeneratorEMTFnP.h">
+      <Filter>Headerdateien\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\IntegrationMethod.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\Source\DPsimMain.cpp">
@@ -223,6 +229,12 @@
     </ClCompile>
     <ClCompile Include="..\..\Source\Components\TwoWindingTransformer.cpp">
       <Filter>Quelldateien\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\Components\SynchronGeneratorEMTFnP.cpp">
+      <Filter>Quelldateien\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\IntegrationMethod.cpp">
+      <Filter>Quelldateien</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
