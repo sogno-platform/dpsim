@@ -2,13 +2,21 @@ clc
 clear
 %% read PLECS results
 
-Results_PLECS = csvread('../../vsa/Results/SynGenVBREmt_ABCFault_PLECS/Voltages_and_currents.csv'); 
+Results_PLECS = csvread('../../vsa/Results/SynGenDqEmt_ABCFault_PLECS/Voltages_and_currents.csv'); 
+Te_PLECS = csvread('../../vsa/Results/SynGenVBREmt_ABCFault_PLECS/electrical_torque.csv'); 
+omega_PLECS = csvread('../../vsa/Results/SynGenVBREmt_ABCFault_PLECS/omega.csv'); 
+theta_PLECS = csvread('../../vsa/Results/SynGenVBREmt_ABCFault_PLECS/theta.csv'); 
 
 %% Read data from DP simulation and calculate absolute value and phase
 
 % Read values from CSV files
-voltageDP = csvread('../../vsa/Results/SynGenVBRDynPh_ABCFault_DPsim/data_synGenVBR_DP_v.csv');
-currentDP = csvread('../../vsa/Results/SynGenVBRDynPh_ABCFault_DPsim/data_synGenVBR_DP_i.csv');
+voltageDP = csvread('../../vsa/Results/SynGenVbrDynPh_ABCFault_DPsim_1_Damping/data_synGenVBR_DP_v.csv');
+currentDP = csvread('../../vsa/Results/SynGenVbrDynPh_ABCFault_DPsim_1_Damping/data_synGenVBR_DP_i.csv');
+%voltageDP = csvread('../../vsa/Results/SynGenDqDynPh_ABCFault_DPsim/data_vt.csv');
+%currentDP = csvread('../../vsa/Results/SynGenDqDynPh_ABCFault_DPsim/data_j.csv');
+omega = csvread('../../vsa/Results/SynGenVBREmt_ABCFault_DPsim_1_Damping/data_synGenVBR_omega.csv');
+Te = csvread('../../vsa/Results/SynGenVBREmt_ABCFault_DPsim_1_Damping/data_synGenVBR_Te.csv');
+theta = csvread('../../vsa/Results/SynGenVBREmt_ABCFault_DPsim_1_Damping/data_synGenVBR_theta.csv');
 compOffsetDP = (size(voltageDP,2) - 1) / 2;
 
 
@@ -124,4 +132,31 @@ title('Currents phase C');
 legend('Current Phase c PLECS', 'DP shift c', 'DP abs c')
 xlabel('time [s]')
 ylabel('current [A]')
+
+figure(7)
+hold off
+plot(omega(:,1),omega(:,2)*2*pi*60);
+hold on
+plot(Results_PLECS(:,1),omega_PLECS);
+
+title('Rotor speed');
+legend('\omega DPSim','\omega PLECS');
+
+figure(8)
+hold off
+plot(Te(:,1),Te(:,2)*18881.483433953665*51.979786748911749*3/2);
+hold on
+plot(Results_PLECS(:,1),Te_PLECS);
+
+title('Electrical Torque');
+legend('Te DPSim','Te PLECS');
+
+figure(9)
+hold off
+plot(theta(:,1),theta(:,2));
+hold on
+plot(Results_PLECS(:,1),theta_PLECS);
+
+title('Rotor position');
+legend('\theta DPSim','\theta PLECS');
 

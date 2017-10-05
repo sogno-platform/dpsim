@@ -147,6 +147,9 @@ namespace DPsim {
 		double mElecTorque;
 		double mElecTorque_hist;
 
+		///Number of damping windings in q
+		double DampingWinding = 2;
+
 
 		DPSMatrix R_load = DPSMatrix::Zero(6, 6);
 
@@ -259,7 +262,8 @@ namespace DPsim {
 		DPSMatrix H_qdr;
 
 		// Auxiliar Matrix for DP
-		MatrixComp LD0 = MatrixComp::Zero(3, 3);
+		//MatrixComp LD0 = MatrixComp::Zero(3, 3);
+		DPSMatrix LD0 = DPSMatrix::Zero(3, 3);
 		MatrixComp LD1 = MatrixComp::Zero(3, 3);
 		MatrixComp A1 = MatrixComp::Zero(3, 3);
 		MatrixComp B1 = MatrixComp::Zero(3, 3);
@@ -365,7 +369,7 @@ namespace DPsim {
 		void stepInPerUnit(Real om, Real dt, Real fieldVoltage, Real mechPower, Real time, NumericalMethod numMethod);
 
 		//void FormTheveninEquivalent(Real dt);
-		void CalculateLandR(Real theta, Real omega_s, Real omega, Real time);
+		void CalculateLandR(Real theta, Real omega_s, Real omega);
 
 		/// Retrieves calculated voltage from simulation for next step
 		void postStep(SystemModel& system);

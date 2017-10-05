@@ -40,7 +40,7 @@ namespace DPsim {
 
 		// #### Synchronous generator unit tests ################
 		// EMT classic dq model
-		SynGenUnitTestBalancedResLoad();
+		//SynGenUnitTestBalancedResLoad();
 		//SynGenUnitTestPhaseToPhaseFault();
 		//SynGenUnitTestThreePhaseFault();	
 		
@@ -49,6 +49,7 @@ namespace DPsim {
 
 		// EMT VBR model
 		//SynGenUnitTestVBR();
+		SynGenUnitTestVBRDP();
 
 		// #### Variable frequency tests ################
 		//RXLineResLoad();

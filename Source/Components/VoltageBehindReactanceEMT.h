@@ -145,7 +145,8 @@ namespace DPsim {
 		double mElecTorque;
 		double mElecTorque_hist;
 
-
+		///Number of damping windings in q
+		double DampingWinding = 2;
 
 		/// voltage vector q d 0 kq1 kq2 df kd
 		DPSMatrix mVoltages2 = DPSMatrix::Zero(7, 1);
