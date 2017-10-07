@@ -1,11 +1,33 @@
+/** Synchron Generator Unit Test
+ *
+ * @author Markus Mirz <mmirz@eonerc.rwth-aachen.de>
+ * @copyright 2017, Institute for Automation of Complex Power Systems, EONERC
+ * @license GNU General Public License (version 3)
+ *
+ * DPsim
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *********************************************************************************/
+
 #include "SynchronGenUnitTest.h"
 
-#include "../Simulation.h"
-#include "../Utilities.h"
+#include "Simulation.h"
+#include "Utilities.h"
 
 using namespace DPsim;
 
-/** 
+#if 0
 // Machine parameters - stator referred
 double nomPower = 555e6;
 double nomPhPhVoltRMS = 24e3;
@@ -48,10 +70,10 @@ double Rkq1 = 0.0062;
 double Llkq1 = 0.7252;
 double Rkq2 = 0.0237;
 double Llkq2 = 0.125;
-**/
+#endif
 
 void DPsim::SynGenUnitTestBalancedResLoad() {
-	
+
 	// Define Object for saving data on a file
 	Logger log("log.txt"),
 		vtLog("data_vt.csv"),
@@ -103,7 +125,7 @@ void DPsim::SynGenUnitTestBalancedResLoad() {
 
 	// Set up simulation
 	double om = 2.0*M_PI*60.0;
-	double tf = 0.1; 
+	double tf = 0.1;
 	double dt = 0.000001;
 	double t = 0;
 	Int downSampling = 25;
@@ -121,7 +143,7 @@ void DPsim::SynGenUnitTestBalancedResLoad() {
 
 	// Calculate initial values for circuit at generator connection point
 	//double initApparentPower = sqrt(pow(initActivePower, 2) + pow(initReactivePower, 2));
-	//double initTerminalCurr = initApparentPower / (3 * initTerminalVolt)* sqrt(2);	
+	//double initTerminalCurr = initApparentPower / (3 * initTerminalVolt)* sqrt(2);
 	//double initPowerFactor = acos(initActivePower / initApparentPower);
 	//double initVolt1 = initTerminalVolt * cos(initVoltAngle);
 	//double initVolt2 = initTerminalVolt * cos(initVoltAngle - 2 * M_PI / 3);
@@ -136,13 +158,13 @@ void DPsim::SynGenUnitTestBalancedResLoad() {
 	std::cout << newSim.getLeftSideVector() << std::endl;
 	std::cout << "j vector:" << std::endl;
 	std::cout << newSim.getRightSideVector() << std::endl;
-		
+
 	// Main Simulation Loop
-	while (newSim.getTime() < tf) {		
+	while (newSim.getTime() < tf) {
 		newSim.stepGeneratorTest(log, vtLog, jLog, gen, newSim.getTime());
 		newSim.increaseByTimeStep();
 	}
-	
+
 	std::cout << "Simulation finished." << std::endl;
 
 	// Clean up
@@ -229,14 +251,14 @@ void DPsim::SynGenUnitTestPhaseToPhaseFault() {
 	double initApparentPower = sqrt(pow(initActivePower, 2) + pow(initReactivePower, 2));
 	double initTerminalCurr = initApparentPower / (3 * initTerminalVolt)* sqrt(2);
 	double initPowerFactor = acos(initActivePower / initApparentPower);
-	
+
 	std::cout << "A matrix:" << std::endl;
 	std::cout << newSim.getSystemMatrix() << std::endl;
 	std::cout << "vt vector:" << std::endl;
 	std::cout << newSim.getLeftSideVector() << std::endl;
 	std::cout << "j vector:" << std::endl;
 	std::cout << newSim.getRightSideVector() << std::endl;
-		
+
 	newSim.setSwitchTime(0.1, 1);
 
 	// Main Simulation Loop
@@ -345,7 +367,7 @@ void DPsim::SynGenUnitTestThreePhaseFault() {
 	std::cout << newSim.getLeftSideVector() << std::endl;
 	std::cout << "j vector:" << std::endl;
 	std::cout << newSim.getRightSideVector() << std::endl;
-		
+
 	Real lastLogTime = 0;
 	Real logTimeStep = 0.00005;
 	newSim.setSwitchTime(0.1, 1);
@@ -355,7 +377,7 @@ void DPsim::SynGenUnitTestThreePhaseFault() {
 	while (newSim.getTime() < tf) {
 		std::cout << newSim.getTime() << std::endl;
 		newSim.stepGeneratorTest(log, vtLog, jLog, gen, newSim.getTime());
-		newSim.increaseByTimeStep();		
+		newSim.increaseByTimeStep();
 	}
 
 	std::cout << "Simulation finished." << std::endl;
@@ -442,12 +464,12 @@ void DPsim::SynGenDPUnitTestBalancedResLoad() {
 	std::cout << newSim.getLeftSideVector() << std::endl;
 	std::cout << "j vector:" << std::endl;
 	std::cout << newSim.getRightSideVector() << std::endl;
-		
+
 	// Main Simulation Loop
 	while (newSim.getTime() < tf) {
 		std::cout << newSim.getTime() << std::endl;
 		newSim.stepGeneratorTest(log, vtLog, jLog, gen, newSim.getTime());
-		newSim.increaseByTimeStep();		
+		newSim.increaseByTimeStep();
 	}
 
 	std::cout << "Simulation finished." << std::endl;
@@ -549,7 +571,7 @@ void DPsim::SynGenDPUnitTestThreePhaseFault() {
 	std::cout << "j vector:" << std::endl;
 	std::cout << newSim.getRightSideVector() << std::endl;
 
-	
+
 	Real lastLogTime = 0;
 	Real logTimeStep = 0.00005;
 	newSim.setSwitchTime(0.1, 1);
