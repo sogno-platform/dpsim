@@ -90,6 +90,7 @@ namespace DPsim {
 		std::map<std::string, CompAttr>& getAttrMap() { return attrMap; }
 
 		std::string getName() { return mName; }
+		std::string getType();
 
 		/// Initializes variables of components
 		virtual void init(Real om, Real dt) { }

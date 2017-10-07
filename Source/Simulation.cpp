@@ -51,9 +51,9 @@ Simulation::Simulation(std::vector<BaseComponent*> elements, Real om, Real dt, R
 Simulation::Simulation(std::vector<BaseComponent*> elements, Real om, Real dt, Real tf, Logger& logger, SimulationType simType)
 	: Simulation(elements, om, dt, tf, simType) {
 
-	for (std::vector<BaseComponent*>::iterator it = elements.begin(); it != elements.end(); ++it) {
-		logger.Log(LogLevel::INFO) << "Added " << (*it)->getName() << " of type " << typeid(*(*it)).name() << " to simulation." << std::endl;
-	}
+	for (BaseComponent* c : elements)
+		logger.Log(LogLevel::INFO) << "Added " << c->getType() << " '" << c->getName() << "' to simulation." << std::endl;
+
 	logger.Log(LogLevel::INFO) << "System matrix A:" << std::endl;
 	logger.Log() << mSystemModel.getCurrentSystemMatrix() << std::endl;
 	logger.Log(LogLevel::INFO) << "LU decomposition:" << std::endl;
@@ -90,7 +90,6 @@ void Simulation::initialize(std::vector<BaseComponent*> newElements) {
 		if ((*it)->getNode2() > maxNode) {
 			maxNode = (*it)->getNode2();
 		}
-		std::string type = typeid(*(*it)).name();
 
 		if (dynamic_cast<IdealVoltageSource*>(*it)) {
 			numIdealVS = numIdealVS + 1;
