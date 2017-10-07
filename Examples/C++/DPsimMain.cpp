@@ -1,19 +1,18 @@
 #include <iostream>
-#include <string>
-#include "Examples/Testing.h"
-#include <complex>
+
+#include "Testing.h"
 
 using namespace DPsim;
 
-int main(int argc, char* argv[]) {	
+int main(int argc, char* argv[]) {
 
 	// Netlist interpreter - deprecated
 	//NetlistSim(argc, argv);
 
 	// Testing area
-	runTest();	
+	runTest();
 
 	//std::cin.get();
-	return 0;	
+	return 0;
 }
 
