@@ -46,16 +46,16 @@ source_suffix = '.rst'
 master_doc = 'index'
 
 # General information about the project.
-project = 'DPsim'
-copyright = '2017, Institute for Automation of Complex Power Systems, RWTH Aachen'
-author = 'Institute for Automation of Complex Power Systems, RWTH Aachen'
+project = '@PROJECT_NAME@'
+copyright = '@PROJECT_COPYRIGHT@'
+author = '@PROJECT_AUTHOR@'
 
 # The version info for the project you're documenting, acts as replacement for
 # |version| and |release|, also used in various other places throughout the
 # built documents.
 #
 # The short X.Y version.
-version = ''
+version = '@DPSIM_VERSION@'
 # The full version, including alpha/beta/rc tags.
 release = ''
 
@@ -83,7 +83,7 @@ todo_include_todos = False
 # The theme to use for HTML and HTML Help pages.  See the documentation for
 # a list of builtin themes.
 #
-html_theme = 'alabaster'
+html_theme = '@SPHINX_THEME@'
 
 # Theme options are theme-specific and customize the look and feel of a theme
 # further.  For a list of options available for each theme, see the
@@ -142,8 +142,8 @@ latex_elements = {
 # (source start file, target name, title,
 #  author, documentclass [howto, manual, or own class]).
 latex_documents = [
-    (master_doc, 'DPsim.tex', 'DPsim Documentation',
-     'Institute for Automation of Complex Power Systems, RWTH Aachen', 'manual'),
+    (master_doc, 'DPsim.tex', '@SPHINX_TITLE@',
+     '@PROJECT_AUTHOR@', 'manual'),
 ]
 
 
@@ -152,7 +152,7 @@ latex_documents = [
 # One entry per manual page. List of tuples
 # (source start file, name, description, authors, manual section).
 man_pages = [
-    (master_doc, 'dpsim', 'DPsim Documentation',
+    (master_doc, 'dpsim', '@SPHINX_TITLE@',
      [author], 1)
 ]
 
@@ -163,10 +163,14 @@ man_pages = [
 # (source start file, target name, title, author,
 #  dir menu entry, description, category)
 texinfo_documents = [
-    (master_doc, 'DPsim', 'DPsim Documentation',
+    (master_doc, 'DPsim', '@SPHINX_TITLE@',
      author, 'DPsim', 'One line description of project.',
      'Miscellaneous'),
 ]
 
 
 default_role = 'any'
+
+# Add the CMake build directory to the path
+import sys
+sys.path.insert(0, '@CMAKE_BINARY_DIR@/Source')

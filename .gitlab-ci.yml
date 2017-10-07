@@ -32,13 +32,11 @@ build:
 docs:
   stage: docs
   script:
-    - mv Source/build/libdpsim.so Documentation/dpsim.so
-    - cd Documentation
-    - make html
+    - make docs
   image: ${DOCKER_IMAGE}
   artifacts:
     paths:
-      - Documentation/_build
+      - Documentation/html
   tags:
     - docker
 

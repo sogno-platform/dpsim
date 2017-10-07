@@ -1,5 +1,4 @@
 cmake_minimum_required(VERSION 3.5)
-project(DPsim)
 
 if (NOT WIN32)
 	# needed so CIMParser and arabica (which are first compiled into static libs)
@@ -11,7 +10,7 @@ if (NOT WIN32)
 endif()
 
 # enable C++11 support
-set (CMAKE_CXX_STANDARD 11)
+set(CMAKE_CXX_STANDARD 11)
 
 # library configuration etc.
 if(IS_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/../Libraries/eigen)
@@ -43,5 +42,7 @@ file(GLOB SOURCES *.cpp Components/*.cpp)
 add_library(dpsim SHARED ${SOURCES})
 target_link_libraries(dpsim CIMParser ${PYTHON_LIBRARIES} ${LIBS})
 execute_process(COMMAND ${PYTHON_EXECUTABLE} -c "import sysconfig; print(sysconfig.get_path('platlib'), end='')" OUTPUT_VARIABLE PYTHON_PKGPATH)
+
+ADD_CUSTOM_TARGET(link_dpsim ALL DEPENDS dpsim COMMAND ${CMAKE_COMMAND} -E create_symlink $<TARGET_FILE_NAME:dpsim> dpsim.${PYTHON_MODULE_SUFFIX})
 
 install(FILES $<TARGET_FILE:dpsim> DESTINATION ${PYTHON_PKGPATH} RENAME dpsim.${PYTHON_MODULE_SUFFIX})
