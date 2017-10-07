@@ -6,6 +6,18 @@ Build
 Results
 Logs
 
+# CMake
+CMakeFiles/
+CMakeCache.txt
+cmake_install.cmake
+install_manifest.txt
+Makefile
+
+# Outputs
+Examples/C++/DPsimExample
+Source/libdpsim.dylib
+Source/libdpsim.so*
+Source/libdpsim.dll
 
 # Mac
 __MACOSX
