@@ -1,3 +1,25 @@
+/** Synchron generator
+ *
+ * @author Markus Mirz <mmirz@eonerc.rwth-aachen.de>
+ * @copyright 2017, Institute for Automation of Complex Power Systems, EONERC
+ * @license GNU General Public License (version 3)
+ *
+ * DPsim
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *********************************************************************************/
+
 #include "SynchronGenerator.h"
 
 using namespace DPsim;
@@ -88,10 +110,10 @@ void SynchronGenerator::initWithPerUnitParam(
 }
 
 void SynchronGenerator::init(Real om, Real dt,
-	Real initActivePower, Real initReactivePower, Real initTerminalVolt, 
+	Real initActivePower, Real initReactivePower, Real initTerminalVolt,
 	Real initVoltAngle, Real initFieldVoltage, Real initMechPower) {
 
-	// Create matrices for state space representation 
+	// Create matrices for state space representation
 	if (DampingWindings == 2)
 	{
 		mInductanceMat <<
@@ -308,10 +330,10 @@ void SynchronGenerator::stepInPerUnit(Real om, Real dt, NumericalMethod numMetho
 	//mVoltages(2, 0) = mV0;
 
 	if (numMethod == NumericalMethod::Euler) {
-		
+
 		mElecTorque = (mPsid*mIq - mPsiq*mId);
 
-		// Euler step forward	
+		// Euler step forward
 		mOmMech = mOmMech + dt * (1 / (2 * mH) * (mMechTorque - mElecTorque));
 
 		double dtPsid = mVd + mRs*mId + mPsiq*mOmMech;
@@ -373,14 +395,14 @@ void SynchronGenerator::stepInPerUnit(Real om, Real dt, NumericalMethod numMetho
 
 	else if (numMethod == NumericalMethod::Trapezoidal_flux)
 	{
-		
+
 
 		mElecTorque = (mPsid*mIq - mPsiq*mId);
 
-		// Euler step forward	
+		// Euler step forward
 		mOmMech = mOmMech + dt * (1 / (2 * mH) * (mMechTorque - mElecTorque));
 
-		
+
 		// Trapezoidal rule to solve flux
 		if (DampingWindings == 2)
 		{
@@ -487,7 +509,7 @@ void SynchronGenerator::stepInPerUnit(Real om, Real dt, NumericalMethod numMetho
 	else if (numMethod == NumericalMethod::Trapezoidal_current) {
 		mElecTorque = (mPsid*mIq - mPsiq*mId);
 
-		// Euler step forward  for angular speed 	
+		// Euler step forward  for angular speed
 		mOmMech = mOmMech + dt * (1 / (2 * mH) * (mMechTorque - mElecTorque));
 
 		DPSMatrix A = mBase_OmElec*(mReactanceMat*mResistanceMat);
@@ -576,7 +598,7 @@ void SynchronGenerator::stepInPerUnit(Real om, Real dt, NumericalMethod numMetho
 			mPsikd = -mLmd*mId + mLmd*mIfd + (mLlkd + mLmd)*mIkd;
 		}
 
-		
+
 		//mFluxes(0, 0) = mPsiq;
 		//mFluxes(1, 0) = mPsid;
 		//mFluxes(2, 0) = mPsi0;

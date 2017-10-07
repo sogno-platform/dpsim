@@ -1,3 +1,25 @@
+/** Synchron Generator (EMTnP)
+ *
+ * @author Markus Mirz <mmirz@eonerc.rwth-aachen.de>
+ * @copyright 2017, Institute for Automation of Complex Power Systems, EONERC
+ * @license GNU General Public License (version 3)
+ *
+ * DPsim
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *********************************************************************************/
+
 #include "SynchronGeneratorEMTFnP.h"
 #include "..\IntegrationMethod.h"
 
@@ -104,7 +126,7 @@ void SynchronGeneratorEMTFnP::init(Real om, Real dt,
 	Real initActivePower, Real initReactivePower, Real initTerminalVolt,
 	Real initVoltAngle, Real initFieldVoltage, Real initMechPower) {
 
-	// Create matrices for state space representation 
+	// Create matrices for state space representation
 	if (DampingWindings == 2)
 	{
 		mInductanceMat <<
@@ -293,7 +315,7 @@ void SynchronGeneratorEMTFnP::stepInPerUnit(Real om, Real dt, Real time, Numeric
 
 		mElecTorque = (mPsid*mIq - mPsiq*mId);
 
-		// Euler step forward	
+		// Euler step forward
 		mOmMech = mOmMech + dt * (1 / (2 * mH) * (mMechTorque - mElecTorque));
 
 		double dtPsid = mVd + mRs*mId + mPsiq*mOmMech;
@@ -345,7 +367,7 @@ void SynchronGeneratorEMTFnP::stepInPerUnit(Real om, Real dt, Real time, Numeric
 
 		mElecTorque = (mPsid*mIq - mPsiq*mId);
 
-		// Euler step forward	
+		// Euler step forward
 		mOmMech = mOmMech + dt * (1 / (2 * mH) * (mMechTorque - mElecTorque));
 
 		if (DampingWindings == 2)

@@ -1,5 +1,28 @@
+/** Voltage behind reactance (EMT)
+ *
+ * @file
+ * @author Markus Mirz <mmirz@eonerc.rwth-aachen.de>
+ * @copyright 2017, Institute for Automation of Complex Power Systems, EONERC
+ * @license GNU General Public License (version 3)
+ *
+ * DPsim
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *********************************************************************************/
+
 #ifndef VOLTAGEBEHINDREACTANCEEMT_H
-#define VOLTAGEBEHINDREACTANCE_H
+#define VOLTAGEBEHINDREACTANCEEMT_H
 
 #include "BaseComponent.h"
 #include "ComponentCommons.h"
@@ -7,7 +30,7 @@
 namespace DPsim {
 
 	/// Synchronous generator model
-	/// If parInPerUnit is not set, the parameters have to be given with their respective stator or rotor 
+	/// If parInPerUnit is not set, the parameters have to be given with their respective stator or rotor
 	/// referred values. The calculation to per unit is performed in the initialization.
 	/// The case where parInPerUnit is not set will be implemented later.
 	/// parameter names include underscores and typical variables names found in literature instead of
@@ -297,7 +320,7 @@ namespace DPsim {
 	public:
 		VoltageBehindReactanceEMT() { };
 
-		/// Initializes the per unit or stator referred machine parameters with the machine parameters given in per unit or 
+		/// Initializes the per unit or stator referred machine parameters with the machine parameters given in per unit or
 		/// stator referred parameters depending on the setting of parameter type.
 		/// The initialization mode depends on the setting of state type.
 		VoltageBehindReactanceEMT(std::string name, int node1, int node2, int node3,
@@ -315,7 +338,7 @@ namespace DPsim {
 			Real Rkq2, Real Llkq2,
 			Real H);
 
-		/// Initializes states in per unit or stator referred variables depending on the setting of the state type. 
+		/// Initializes states in per unit or stator referred variables depending on the setting of the state type.
 		/// Function parameters have to be given in real units.
 		void init(Real om, Real dt,
 			Real initActivePower, Real initReactivePower, Real initTerminalVolt, Real initVoltAngle);
@@ -325,11 +348,11 @@ namespace DPsim {
 		void initStatesInPerUnit(Real initActivePower, Real initReactivePower,
 			Real initTerminalVolt, Real initVoltAngle);
 
-		/// Performs an Euler forward step with the state space model of a synchronous generator 
+		/// Performs an Euler forward step with the state space model of a synchronous generator
 		/// to calculate the flux and current from the voltage vector.
 		void step(SystemModel& system, Real fieldVoltage, Real mechPower, Real time);
 
-		/// Performs an Euler forward step with the state space model of a synchronous generator 
+		/// Performs an Euler forward step with the state space model of a synchronous generator
 		/// to calculate the flux and current from the voltage vector in per unit.
 		void stepInPerUnit(Real om, Real dt, Real fieldVoltage, Real mechPower, Real time, NumericalMethod numMethod);
 

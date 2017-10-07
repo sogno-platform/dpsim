@@ -1,8 +1,30 @@
+/** Real voltage source freq (EMT)
+ *
+ * @author Markus Mirz <mmirz@eonerc.rwth-aachen.de>
+ * @copyright 2017, Institute for Automation of Complex Power Systems, EONERC
+ * @license GNU General Public License (version 3)
+ *
+ * DPsim
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *********************************************************************************/
+
 #include "VoltSourceResFreqEMT.h"
 
 using namespace DPsim;
 
-VoltSourceResFreqEMT::VoltSourceResFreqEMT(std::string name, int src, int dest, 
+VoltSourceResFreqEMT::VoltSourceResFreqEMT(std::string name, int src, int dest,
 	Real voltage, Real phase, Real resistance, Real omegaSource, Real switchTime, Real rampTime) : BaseComponent(name, src, dest) {
 	mResistance = resistance;
 	mConductance = 1. / resistance;
@@ -11,7 +33,7 @@ VoltSourceResFreqEMT::VoltSourceResFreqEMT(std::string name, int src, int dest,
 	mSwitchTime = switchTime;
 	mOmegaSource = omegaSource;
 	mRampTime = rampTime;
-	mVoltageDiff = mVoltageAmp*cos(mVoltagePhase);	
+	mVoltageDiff = mVoltageAmp*cos(mVoltagePhase);
 	mCurrent = mVoltageDiff / mResistance;
 }
 
@@ -54,7 +76,7 @@ void VoltSourceResFreqEMT::step(SystemModel& system, Real time) {
 		mVoltageDiff = mVoltageAmp*cos(mVoltagePhase + system.getOmega() * time);
 		mCurrent = mVoltageDiff / mResistance;
 	}
-		
+
 	if (mNode1 >= 0) {
 		system.addRealToRightSideVector(mNode1, mCurrent);
 	}

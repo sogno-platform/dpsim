@@ -1,3 +1,25 @@
+/** Voltage behind reactance (DP)
+ *
+ * @author Markus Mirz <mmirz@eonerc.rwth-aachen.de>
+ * @copyright 2017, Institute for Automation of Complex Power Systems, EONERC
+ * @license GNU General Public License (version 3)
+ *
+ * DPsim
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *********************************************************************************/
+
 #include "VoltageBehindReactanceDP.h"
 
 using namespace DPsim;
@@ -295,12 +317,11 @@ void VoltageBehindReactanceDP::stepInPerUnit(Real om, Real dt, Real fieldVoltage
 	//mElecTorque = (mPsimd*mIq - mPsimq*mId);
 	mElecTorque = (mPsid*mIq - mPsiq*mId);
 
-	// Euler step forward	
+	// Euler step forward
 	mOmMech = mOmMech + dt * (1. / (2. * mH) * (mElecTorque - mMechTorque));
-	
+
 	mThetaMech = mThetaMech + dt * ((mOmMech - 1) * mBase_OmMech);
 	mThetaMech2 = mThetaMech2 + dt * (mOmMech* mBase_OmMech);
-
 
 	CalculateLandR(mThetaMech2, 1, mOmMech);
 	//CalculateLandR(mThetaMech2, 1, mOmMech, time);

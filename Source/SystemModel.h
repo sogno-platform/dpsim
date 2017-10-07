@@ -1,3 +1,26 @@
+/** A simulation model
+ *
+ * @file
+ * @author Markus Mirz <mmirz@eonerc.rwth-aachen.de>
+ * @copyright 2017, Institute for Automation of Complex Power Systems, EONERC
+ * @license GNU General Public License (version 3)
+ *
+ * DPsim
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *********************************************************************************/
+
 #ifndef SYSTEMMODEL_H
 #define SYSTEMMODEL_H
 
@@ -29,12 +52,12 @@ namespace DPsim {
 		/// Number of ideal Voltage Sources
 		Int mNumIdealVS;
 
-		
+
 		/// LU decomposition of system matrix A
 		Eigen::PartialPivLU<DPSMatrix> mLuFactored;
 		/// LU decomposition of system matrix A
 		std::vector<Eigen::PartialPivLU<DPSMatrix> > mLuFactoredVector;
-		/// System matrix A that is modified by matrix stamps 
+		/// System matrix A that is modified by matrix stamps
 		DPSMatrix mSystemMatrix;
 		/// System matrices list for swtiching events
 		std::vector<DPSMatrix> mSystemMatrixVector;
@@ -61,11 +84,11 @@ namespace DPsim {
 		Real getRealFromLeftSideVector(Int row) { return mLeftSideVector(row, 0); }
 		Real getImagFromLeftSideVector(Int row) { return mLeftSideVector(row + mCompOffset, 0); }
 		SimulationType getSimType() { return mSimType; }
-		Int getNumNodes() { return mNumNodes; }		
+		Int getNumNodes() { return mNumNodes; }
 		Int getNumIdealVS() { return mNumIdealVS; }
 		NumericalMethod getNumMethod() { return mNumMethod; }
-		
-		
+
+
 		void setSimType(SimulationType simType) { mSimType = simType; }
 		void setTimeStep(Real timeStep) { mTimeStep = timeStep; }
 		void setOmega(Real omega) { mSystemOmega = omega; }
@@ -73,7 +96,7 @@ namespace DPsim {
 		void setNumMethod(NumericalMethod numMethod) { mNumMethod = numMethod; }
 
 		void InitializeRightSideVector(DPsim::Matrix& rightSideVector) { mRightSideVector = rightSideVector; }
-		void InitializeLeftSideVector(DPsim::Matrix& leftSideVector) { mLeftSideVector = leftSideVector; }		
+		void InitializeLeftSideVector(DPsim::Matrix& leftSideVector) { mLeftSideVector = leftSideVector; }
 		void switchSystemMatrix(Int systemMatrixIndex);
 		void addRealToSystemMatrix(Int row, Int column, Real value);
 		void addCompToSystemMatrix(Int row, Int column, Real reValue, Real imValue);

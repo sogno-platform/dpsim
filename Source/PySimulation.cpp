@@ -1,3 +1,26 @@
+/** Python simulation
+ *
+ * @file
+ * @author Georg Reinke <georg.reinke@rwth-aachen.de>
+ * @copyright 2017, Institute for Automation of Complex Power Systems, EONERC
+ * @license GNU General Public License (version 3)
+ *
+ * DPsim
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *********************************************************************************/
+
 #include "PyComponent.h"
 #include "PyInterface.h"
 #include "PySimulation.h"
@@ -312,7 +335,7 @@ PyObject* PySimulation::step(PyObject *self, PyObject *args) {
 	return Py_None;
 }
 
-const char* pyDocSimulationStop = 
+const char* pyDocSimulationStop =
 "stop()\n"
 "Stop the simulation at the next possible time. The simulation thread is canceled "
 "and the simulation can not be restarted. No-op if the simulation is not running.";
@@ -340,7 +363,7 @@ PyObject* PySimulation::updateMatrix(PyObject *self, PyObject *args) {
 	return Py_None;
 }
 
-const char* pyDocSimulationWait = 
+const char* pyDocSimulationWait =
 "wait()\n"
 "Block until the simulation is finished, returning immediately if this is already the case.\n"
 "\n"
