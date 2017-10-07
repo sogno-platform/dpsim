@@ -20,7 +20,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *********************************************************************************/
 
-#include "PyComponent.h"
+#include "Python/Component.h"
 
 #include "CIMReader.h"
 #include "Components.h"
@@ -29,26 +29,26 @@
 
 using namespace DPsim;
 
-PyObject* PyComponent::newfunc(PyTypeObject* type, PyObject *args, PyObject *kwds) {
-	PyComponent* self = (PyComponent*) type->tp_alloc(type, 0);
+PyObject* Python::Component::newfunc(PyTypeObject* type, PyObject *args, PyObject *kwds) {
+	Component* self = (Component*) type->tp_alloc(type, 0);
 	if (self)
 		self->comp = nullptr;
 	return (PyObject*) self;
 }
 
-void PyComponent::dealloc(PyComponent* self) {
+void Python::Component::dealloc(Python::Component* self) {
 	if (self->comp)
 		delete self->comp;
 	Py_TYPE(self)->tp_free((PyObject*)self);
 }
 
-PyObject* PyComponent::str(PyComponent* self) {
+PyObject* Python::Component::str(Python::Component* self) {
 	if (!self->comp)
 		return PyUnicode_FromString("<unitialized Component>");
 	return PyUnicode_FromString(self->comp->getName().c_str());
 }
 
-PyObject* PyComponent::getattr(PyComponent* self, char* name) {
+PyObject* Python::Component::getattr(Python::Component* self, char* name) {
 	if (!self->comp) {
 		PyErr_SetString(PyExc_ValueError, "getattr on unitialized Component");
 		return nullptr;
@@ -75,7 +75,7 @@ PyObject* PyComponent::getattr(PyComponent* self, char* name) {
 	return nullptr;
 }
 
-int PyComponent::setattr(PyComponent* self, char* name, PyObject *v) {
+int Python::Component::setattr(Python::Component* self, char* name, PyObject *v) {
 	Integer i;
 	Real r;
 
@@ -120,22 +120,22 @@ int PyComponent::setattr(PyComponent* self, char* name, PyObject *v) {
 	return 0;
 }
 
-bool DPsim::compsFromPython(PyObject* list, std::vector<BaseComponent*>& comps) {
+bool Python::compsFromPython(PyObject* list, std::vector<BaseComponent*>& comps) {
 	if (!PyList_Check(list))
 		return false;
 	for (int i = 0; i < PyList_Size(list); i++) {
 		PyObject* obj = PyList_GetItem(list, i);
-		if (!PyObject_TypeCheck(obj, &PyComponentType)) {
+		if (!PyObject_TypeCheck(obj, &Python::ComponentType)) {
 			comps.clear();
 			return false;
 		}
-		PyComponent* pyComp = (PyComponent*) obj;
+		Component* pyComp = (Component*) obj;
 		comps.push_back(pyComp->comp);
 	}
 	return true;
 }
 
-const char *DPsim::pyDocExternalCurrentSource =
+const char *Python::DocExternalCurrentSource =
 "ExternalCurrentSource(name, node1, node2, initial_current)\n"
 "Construct a new external current source.\n"
 "\n"
@@ -145,7 +145,7 @@ const char *DPsim::pyDocExternalCurrentSource =
 "\n"
 ":param initial_current: The current of this source in the first timestep (as a complex value).\n"
 ":returns: A new `Component` representing this current source.\n";
-PyObject* DPsim::pyExternalCurrentSource(PyObject* self, PyObject* args) {
+PyObject* Python::ExternalCurrentSource(PyObject* self, PyObject* args) {
 	const char *name;
 	int src, dest;
 	Py_complex initCurrent;
@@ -153,12 +153,12 @@ PyObject* DPsim::pyExternalCurrentSource(PyObject* self, PyObject* args) {
 	if (!PyArg_ParseTuple(args, "siiD", &name, &src, &dest, &initCurrent))
 		return nullptr;
 
-	PyComponent *pyComp = PyObject_New(PyComponent, &PyComponentType);
-	pyComp->comp = new ExternalCurrentSource(name, src, dest, Complex(initCurrent.real, initCurrent.imag));
+	Component *pyComp = PyObject_New(Component, &Python::ComponentType);
+	pyComp->comp = new DPsim::ExternalCurrentSource(name, src, dest, Complex(initCurrent.real, initCurrent.imag));
 	return (PyObject*) pyComp;
 }
 
-const char *DPsim::pyDocExternalVoltageSource =
+const char *Python::DocExternalVoltageSource =
 "ExternalVoltageSource(name, node1, node2, initial_voltage, num)\n"
 "Construct a new external voltage source.\n"
 "\n"
@@ -170,7 +170,7 @@ const char *DPsim::pyDocExternalVoltageSource =
 ":param num: The number of this voltage source. All ideal voltage sources must "
 "be identified by sequential indices, starting with 1.\n"
 ":returns: A new `Component` representing this voltage source.\n";
-PyObject* DPsim::pyExternalVoltageSource(PyObject* self, PyObject* args) {
+PyObject* Python::ExternalVoltageSource(PyObject* self, PyObject* args) {
 	const char *name;
 	int src, dest, num;
 	Py_complex initVoltage;
@@ -178,12 +178,12 @@ PyObject* DPsim::pyExternalVoltageSource(PyObject* self, PyObject* args) {
 	if (!PyArg_ParseTuple(args, "siiDi", &name, &src, &dest, &initVoltage, &num))
 		return nullptr;
 
-	PyComponent *pyComp = PyObject_New(PyComponent, &PyComponentType);
-	pyComp->comp = new ExternalVoltageSource(name, src, dest, Complex(initVoltage.real, initVoltage.imag), num);
+	Component *pyComp = PyObject_New(Component, &Python::ComponentType);
+	pyComp->comp = new DPsim::ExternalVoltageSource(name, src, dest, Complex(initVoltage.real, initVoltage.imag), num);
 	return (PyObject*) pyComp;
 }
 
-const char *DPsim::pyDocInductor =
+const char *Python::DocInductor =
 "Inductor(name, node1, node2, inductance)\n"
 "Construct a new inductor.\n"
 "\n"
@@ -191,7 +191,7 @@ const char *DPsim::pyDocInductor =
 "\n"
 ":param inductance: Inductance in Henry.\n"
 ":returns: A new `Component` representing this inductor.\n";
-PyObject* DPsim::pyInductor(PyObject* self, PyObject* args) {
+PyObject* Python::Inductor(PyObject* self, PyObject* args) {
 	const char *name;
 	double inductance;
 	int src, dest;
@@ -199,12 +199,12 @@ PyObject* DPsim::pyInductor(PyObject* self, PyObject* args) {
 	if (!PyArg_ParseTuple(args, "siid", &name, &src, &dest, &inductance))
 		return nullptr;
 
-	PyComponent *pyComp = PyObject_New(PyComponent, &PyComponentType);
-	pyComp->comp = new Inductor(name, src, dest, inductance);
+	Component *pyComp = PyObject_New(Component, &Python::ComponentType);
+	pyComp->comp = new DPsim::Inductor(name, src, dest, inductance);
 	return (PyObject*) pyComp;
 }
 
-const char *DPsim::pyDocLinearResistor =
+const char *Python::DocLinearResistor =
 "LinearResistor(name, node1, node2, resistance)\n"
 "Construct a new linear resistor.\n"
 "\n"
@@ -212,7 +212,7 @@ const char *DPsim::pyDocLinearResistor =
 "\n"
 ":param resistance: Resistance in Ohm.\n"
 ":returns: A new `Component` representing this resistor.\n";
-PyObject* DPsim::pyLinearResistor(PyObject* self, PyObject* args) {
+PyObject* Python::LinearResistor(PyObject* self, PyObject* args) {
 	const char *name;
 	double resistance;
 	int src, dest;
@@ -220,12 +220,12 @@ PyObject* DPsim::pyLinearResistor(PyObject* self, PyObject* args) {
 	if (!PyArg_ParseTuple(args, "siid", &name, &src, &dest, &resistance))
 		return nullptr;
 
-	PyComponent *pyComp = PyObject_New(PyComponent, &PyComponentType);
-	pyComp->comp = new LinearResistor(name, src, dest, resistance);
+	Component *pyComp = PyObject_New(Component, &Python::ComponentType);
+	pyComp->comp = new DPsim::LinearResistor(name, src, dest, resistance);
 	return (PyObject*) pyComp;
 }
 
-const char *DPsim::pyDocVoltSourceRes =
+const char *Python::DocVoltSourceRes =
 "VoltSourceRes(name, node1, node2, voltage, resistance)\n"
 "Construct a new voltage source with an internal resistance.\n"
 "\n"
@@ -237,7 +237,7 @@ const char *DPsim::pyDocVoltSourceRes =
 ":param voltage: Complex voltage in Volt.\n"
 ":param resistance: Internal resistance in Ohm.\n"
 ":returns: A new `Component` representing this voltage source.\n";
-PyObject* DPsim::pyVoltSourceRes(PyObject* self, PyObject* args) {
+PyObject* Python::VoltSourceRes(PyObject* self, PyObject* args) {
 	const char *name;
 	double resistance;
 	int src, dest;
@@ -246,12 +246,12 @@ PyObject* DPsim::pyVoltSourceRes(PyObject* self, PyObject* args) {
 	if (!PyArg_ParseTuple(args, "siiDd", &name, &src, &dest, &voltage, &resistance))
 		return nullptr;
 
-	PyComponent *pyComp = PyObject_New(PyComponent, &PyComponentType);
-	pyComp->comp = new VoltSourceRes(name, src, dest, Complex(voltage.real, voltage.imag), resistance);
+	Component *pyComp = PyObject_New(Component, &Python::ComponentType);
+	pyComp->comp = new DPsim::VoltSourceRes(name, src, dest, Complex(voltage.real, voltage.imag), resistance);
 	return (PyObject*) pyComp;
 }
 
-const char* DPsim::pyDocLoadCim =
+const char* Python::DocLoadCim =
 "load_cim(filenames, frequency=50.0)\n"
 "Load a network from CIM file(s).\n"
 "\n"
@@ -262,7 +262,7 @@ const char* DPsim::pyDocLoadCim =
 "Note that in order for the CIM parser to function properly, the CSV "
 "files containing the alias configuration have to be in the working directory "
 "of the program.\n";
-PyObject* DPsim::pyLoadCim(PyObject* self, PyObject* args) {
+PyObject* Python::LoadCim(PyObject* self, PyObject* args) {
 	double frequency = 50;
 	PyObject *list;
 	PyBytesObject *filename;
@@ -296,8 +296,8 @@ PyObject* DPsim::pyLoadCim(PyObject* self, PyObject* args) {
 	std::vector<BaseComponent*> comps = reader->getComponents();
 	list = PyList_New(comps.size());
 	for (int i = 0; i < comps.size(); i++) {
-		PyComponent* pyComp = PyObject_New(PyComponent, &PyComponentType);
-		PyObject_Init((PyObject*) pyComp, &PyComponentType);
+		Component* pyComp = PyObject_New(Component, &Python::ComponentType);
+		PyObject_Init((PyObject*) pyComp, &Python::ComponentType);
 		pyComp->comp = comps[i];
 		PyList_SET_ITEM(list, i, (PyObject*) pyComp);
 	}
@@ -305,7 +305,7 @@ PyObject* DPsim::pyLoadCim(PyObject* self, PyObject* args) {
 	return list;
 }
 
-const char* pyDocComponent =
+static const char* DocComponent =
 "A component of a network that is to be simulated.\n"
 "\n"
 "Instances of this class should either be created with the module-level "
@@ -319,45 +319,45 @@ const char* pyDocComponent =
 "Most components have other parameters that are also accessible as attributes "
 "after creation. These values must only be changed if the simulation is paused, "
 "and `update_matrix` has to be called after changes are made.\n";
-PyTypeObject DPsim::PyComponentType = {
+PyTypeObject Python::ComponentType = {
 	PyVarObject_HEAD_INIT(NULL, 0)
-	"dpsim.Component",                 /* tp_name */
-	sizeof(PyComponent),               /* tp_basicsize */
-	0,                                 /* tp_itemsize */
-	(destructor)PyComponent::dealloc,  /* tp_dealloc */
-	0,                                 /* tp_print */
-	(getattrfunc)PyComponent::getattr, /* tp_getattr */
-	(setattrfunc)PyComponent::setattr, /* tp_setattr */
-	0,                                 /* tp_reserved */
-	0,                                 /* tp_repr */
-	0,                                 /* tp_as_number */
-	0,                                 /* tp_as_sequence */
-	0,                                 /* tp_as_mapping */
-	0,                                 /* tp_hash  */
-	0,                                 /* tp_call */
-	(reprfunc)PyComponent::str,        /* tp_str */
-	0,                                 /* tp_getattro */
-	0,                                 /* tp_setattro */
-	0,                                 /* tp_as_buffer */
+	"dpsim.Component",                         /* tp_name */
+	sizeof(Python::Component),                 /* tp_basicsize */
+	0,                                         /* tp_itemsize */
+	(destructor)Python::Component::dealloc,    /* tp_dealloc */
+	0,                                         /* tp_print */
+	(getattrfunc)Python::Component::getattr,   /* tp_getattr */
+	(setattrfunc)Python::Component::setattr,   /* tp_setattr */
+	0,                                         /* tp_reserved */
+	0,                                         /* tp_repr */
+	0,                                         /* tp_as_number */
+	0,                                         /* tp_as_sequence */
+	0,                                         /* tp_as_mapping */
+	0,                                         /* tp_hash  */
+	0,                                         /* tp_call */
+	(reprfunc)Python::Component::str,          /* tp_str */
+	0,                                         /* tp_getattro */
+	0,                                         /* tp_setattro */
+	0,                                         /* tp_as_buffer */
 	Py_TPFLAGS_DEFAULT |
-		Py_TPFLAGS_BASETYPE,           /* tp_flags */
-	pyDocComponent,                    /* tp_doc */
-	0,                                 /* tp_traverse */
-	0,                                 /* tp_clear */
-	0,                                 /* tp_richcompare */
-	0,                                 /* tp_weaklistoffset */
-	0,                                 /* tp_iter */
-	0,                                 /* tp_iternext */
-	0,                                 /* tp_methods */
-	0,                                 /* tp_members */
-	0,                                 /* tp_getset */
-	0,                                 /* tp_base */
-	0,                                 /* tp_dict */
-	0,                                 /* tp_descr_get */
-	0,                                 /* tp_descr_set */
-	0,                                 /* tp_dictoffset */
-	0,                                 /* tp_init */
-	0,                                 /* tp_alloc */
-	PyComponent::newfunc,              /* tp_new */
+		Py_TPFLAGS_BASETYPE,               /* tp_flags */
+	DocComponent,                              /* tp_doc */
+	0,                                         /* tp_traverse */
+	0,                                         /* tp_clear */
+	0,                                         /* tp_richcompare */
+	0,                                         /* tp_weaklistoffset */
+	0,                                         /* tp_iter */
+	0,                                         /* tp_iternext */
+	0,                                         /* tp_methods */
+	0,                                         /* tp_members */
+	0,                                         /* tp_getset */
+	0,                                         /* tp_base */
+	0,                                         /* tp_dict */
+	0,                                         /* tp_descr_get */
+	0,                                         /* tp_descr_set */
+	0,                                         /* tp_dictoffset */
+	0,                                         /* tp_init */
+	0,                                         /* tp_alloc */
+	Python::Component::newfunc,                /* tp_new */
 };
 

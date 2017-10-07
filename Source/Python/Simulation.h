@@ -32,7 +32,7 @@
 #include <vector>
 
 #include "Components/BaseComponent.h"
-#include "Simulation.h"
+#include "../Simulation.h"
 
 namespace DPsim {
 	enum SimState {
@@ -42,10 +42,11 @@ namespace DPsim {
 		StateDone
 	};
 
-	struct PySimulation {
+namespace Python {
+	struct Simulation {
 		PyObject_HEAD
 
-		Simulation *sim;
+		DPsim::Simulation *sim;
 		Logger *log, *llog, *rlog;
 
 		std::condition_variable *cond;
@@ -62,15 +63,15 @@ namespace DPsim {
 		std::vector<BaseComponent*> comps;
 		int numSwitch;
 
-		// List of additional objects that aren't directly used from PySimulation
+		// List of additional objects that aren't directly used from Simulation
 		// methods, but that a reference has be kept to to avoid them from being
 		// freed (e.g. ExternalInterfaces).
 		std::vector<PyObject*> refs;
 
 		// Function executed by the simulation thread
-		static void simThreadFunction(PySimulation* pySim);
+		static void simThreadFunction(Simulation* pySim);
 #ifdef __linux__
-		static void simThreadFunctionRT(PySimulation* pySim);
+		static void simThreadFunctionRT(Simulation* pySim);
 #endif
 
 		// The Python API has no notion of C++ classes and methods, so the methods
@@ -78,8 +79,8 @@ namespace DPsim {
 		//
 		// Helper methods for memory management / initialization etc.
 		static PyObject* newfunc(PyTypeObject* type, PyObject *args, PyObject *kwds);
-		static int init(PySimulation* self, PyObject *args, PyObject *kwds);
-		static void dealloc(PySimulation*);
+		static int init(Simulation* self, PyObject *args, PyObject *kwds);
+		static void dealloc(Simulation*);
 
 		// Methods that are actually available from Python
 		static PyObject* addInterface(PyObject *self, PyObject *args);
@@ -92,5 +93,6 @@ namespace DPsim {
 		static PyObject* wait(PyObject *self, PyObject *args);
 	};
 
-	extern PyTypeObject PySimulationType;
+	extern PyTypeObject SimulationType;
+};
 };

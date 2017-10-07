@@ -30,37 +30,39 @@
 #include "Components/BaseComponent.h"
 
 namespace DPsim {
+namespace Python {
 
-	struct PyComponent {
+	struct Component {
 		PyObject_HEAD
 
 		BaseComponent* comp;
 
 		static PyObject* newfunc(PyTypeObject* type, PyObject *args, PyObject *kwds);
-		static void dealloc(PyComponent*);
+		static void dealloc(Component*);
 
-		static PyObject* str(PyComponent* self);
+		static PyObject* str(Component* self);
 
-		static PyObject* getattr(PyComponent* self, char* name);
-		static int setattr(PyComponent *self, char* name, PyObject *v);
+		static PyObject* getattr(Component* self, char* name);
+		static int setattr(Component *self, char* name, PyObject *v);
 	};
 
-	extern PyTypeObject PyComponentType;
+	extern PyTypeObject ComponentType;
 
 	bool compsFromPython(PyObject* list, std::vector<BaseComponent*>& comps);
 
 	// "Constructors" for the component types
-	extern const char* pyDocExternalCurrentSource;
-	PyObject* pyExternalCurrentSource(PyObject* self, PyObject *args);
-	extern const char* pyDocExternalVoltageSource;
-	PyObject* pyExternalVoltageSource(PyObject* self, PyObject *args);
-	extern const char* pyDocInductor;
-	PyObject* pyInductor(PyObject* self, PyObject *args);
-	extern const char* pyDocLinearResistor;
-	PyObject* pyLinearResistor(PyObject* self, PyObject *args);
-	extern const char* pyDocVoltSourceRes;
-	PyObject* pyVoltSourceRes(PyObject* self, PyObject *args);
+	extern const char* DocExternalCurrentSource;
+	PyObject* ExternalCurrentSource(PyObject* self, PyObject *args);
+	extern const char* DocExternalVoltageSource;
+	PyObject* ExternalVoltageSource(PyObject* self, PyObject *args);
+	extern const char* DocInductor;
+	PyObject* Inductor(PyObject* self, PyObject *args);
+	extern const char* DocLinearResistor;
+	PyObject* LinearResistor(PyObject* self, PyObject *args);
+	extern const char* DocVoltSourceRes;
+	PyObject* VoltSourceRes(PyObject* self, PyObject *args);
 
-	extern const char* pyDocLoadCim;
-	PyObject* pyLoadCim(PyObject* self, PyObject* args);
+	extern const char* DocLoadCim;
+	PyObject* LoadCim(PyObject* self, PyObject* args);
+};
 };

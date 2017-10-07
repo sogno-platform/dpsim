@@ -1,4 +1,4 @@
-/** Python module
+/** Python Interface
  *
  * @file
  * @author Georg Reinke <georg.reinke@rwth-aachen.de>
@@ -25,20 +25,27 @@
 
 #include <Python.h>
 
+#include "ExternalInterface.h"
+
 namespace DPsim {
-	extern PyMethodDef pyModuleMethods[];
+namespace Python {
 
-	extern PyModuleDef dpsimModule;
+	// Thin Python wrapper around ExternalInterface
+	struct Interface {
+		PyObject_HEAD
 
+		ExternalInterface *intf;
+
+		static void dealloc(Interface*);
+
+		static PyObject* exportCurrent(PyObject* self, PyObject* args);
+		static PyObject* exportVoltage(PyObject* self, PyObject* args);
+		static PyObject* registerSource(PyObject* self, PyObject* args);
+	};
+
+	extern PyTypeObject InterfaceType;
+
+	extern const char* DocOpenShmemInterface;
+	PyObject* OpenShmemInterface(PyObject *self, PyObject *args, PyObject *kwds);
 };
-
-// Has to be declared as extern C and without a namespace, because  the linker
-// otherwise mangles the name so the Python interpreter can't find this function.
-extern "C" {
-
-#if(_WIN32 || _WIN64)
-	extern __declspec(dllexport) PyObject* PyInit_dpsim(void);
-#else
-	extern PyObject* PyInit_dpsim(void);
-#endif
 };
