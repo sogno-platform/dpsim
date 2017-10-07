@@ -755,11 +755,13 @@ DPSMatrix SynchronGeneratorEMT::parkTransform2(Real theta, double a, double b, d
 	DPSMatrix dq0vector(3, 1);
 
 	// Park transform according to Kundur
-	double d, q, zero;
+	double d, q;
 
 	d = 2. / 3. * cos(theta) * a + 2. / 3. * cos(theta - 2. * M_PI / 3.)*b + 2. / 3. * cos(theta + 2. * M_PI / 3.)*c;
 	q = -2. / 3. * sin(theta)*a - 2. / 3. * sin(theta - 2. * M_PI / 3.)*b - 2. / 3. * sin(theta + 2. * M_PI / 3.)*c;
-	zero = 1. / 3. * a, 1. / 3. * b, 1. / 3. * c;
+
+	//double zero;
+	//zero = 1. / 3. * a, 1. / 3. * b, 1. / 3. * c;
 
 	dq0vector << d,
 		q,

@@ -462,11 +462,13 @@ DPSMatrix VoltageBehindReactanceEMT::parkTransform(Real theta, double a, double 
 
 	DPSMatrix dq0vector(3, 1);
 
-	double q, d, zero;
+	double q, d;
 
 	q = 2. / 3. * cos(theta) * a + 2. / 3. * cos(theta - 2. * M_PI / 3.)*b + 2. / 3. * cos(theta + 2. * M_PI / 3.)*c;
 	d = 2. / 3. * sin(theta)*a + 2. / 3. * sin(theta - 2. * M_PI / 3.)*b + 2. / 3. * sin(theta + 2. * M_PI / 3.)*c;
-	zero = 1. / 3. * a, 1. / 3. * b, 1. / 3. * c;
+
+	//double zero;
+	//zero = 1. / 3. * a, 1. / 3. * b, 1. / 3. * c;
 
 	dq0vector << q,
 		d,
