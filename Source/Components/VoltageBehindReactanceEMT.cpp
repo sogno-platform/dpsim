@@ -33,7 +33,7 @@ VoltageBehindReactanceEMT::VoltageBehindReactanceEMT(std::string name, int node1
 
 	// steady state per unit initial value
 	initWithPerUnitParam(Rs, Ll, Lmd, Lmd0, Lmq, Lmq0, Rfd, Llfd, Rkd, Llkd, Rkq1, Llkq1, Rkq2, Llkq2, inertia);
-	
+
 }
 void VoltageBehindReactanceEMT::initWithPerUnitParam(
 	Real Rs, Real Ll, Real Lmd, Real Lmd0, Real Lmq, Real Lmq0,
@@ -67,7 +67,6 @@ void VoltageBehindReactanceEMT::initWithPerUnitParam(
 	{
 		DampingWinding = 1;
 	}
-		
 
 	//Dynamic mutual inductances
 	mDLmd = 1. / (1. / mLmd + 1. / mLlfd + 1. / mLlkd);
@@ -240,7 +239,7 @@ void VoltageBehindReactanceEMT::step(SystemModel& system, Real fieldVoltage, Rea
 }
 
 void VoltageBehindReactanceEMT::stepInPerUnit(Real om, Real dt, Real fieldVoltage, Real mechPower, Real time, NumericalMethod numMethod) {
-	
+
 	mVabc <<
 		mVa,
 		mVb,
@@ -268,11 +267,11 @@ void VoltageBehindReactanceEMT::stepInPerUnit(Real om, Real dt, Real fieldVoltag
 
 
 
-	// Euler step forward	
+	// Euler step forward
 	//mOmMech = mOmMech + dt * (1. / (2 * mH) * (mMechTorque - mElecTorque));
 	mOmMech = mOmMech + dt * (1. / (2. * mH) * (mElecTorque - mMechTorque));
 	mThetaMech = mThetaMech + dt * (mOmMech* mBase_OmMech);
-	
+
 	DPSMatrix mDInductanceMat_hist = mDInductanceMat;
 
 	mDInductanceMat <<
@@ -283,7 +282,7 @@ void VoltageBehindReactanceEMT::stepInPerUnit(Real om, Real dt, Real fieldVoltag
 	DPSMatrix R_load(3, 3);
 
 	if (time < 0.1 || time > 0.2)
-	{ 
+	{
 		R_load <<
 			1037.8378 / mBase_Z, 0, 0,
 			0, 1037.8378 / mBase_Z, 0,
@@ -297,7 +296,7 @@ void VoltageBehindReactanceEMT::stepInPerUnit(Real om, Real dt, Real fieldVoltag
 			0, 0, 0.001 / mBase_Z;
 	}
 
-	
+
 	mIabc = mDInductanceMat.inverse()*mDInductanceMat_hist*mIabc - dt*mBase_OmElec*mDInductanceMat.inverse()*(mDVabc+(mResistanceMat + R_load)*mIabc);
 	mVabc = -R_load*mIabc;
 
@@ -311,7 +310,7 @@ void VoltageBehindReactanceEMT::stepInPerUnit(Real om, Real dt, Real fieldVoltag
 
 	mIq = parkTransform(mThetaMech, mIa, mIb, mIc)(0);
 	mId = parkTransform(mThetaMech, mIa, mIb, mIc)(1);
-	mI0 = parkTransform(mThetaMech, mIa, mIb, mIc)(2);	
+	mI0 = parkTransform(mThetaMech, mIa, mIb, mIc)(2);
 
 	if (DampingWinding == 2) {
 		mPsimq = mDLmq*(mPsikq1 / mLlkq1 + mPsikq2 / mLlkq2 + mIq);
@@ -325,7 +324,7 @@ void VoltageBehindReactanceEMT::stepInPerUnit(Real om, Real dt, Real fieldVoltag
 	mPsikq2 = mPsikq2 - dt*mBase_OmElec*(mRkq2 / mLlkq2)*(mPsikq2 - mPsimq);
 	mPsifd = mPsifd - dt*mBase_OmElec*((mRfd / mLlfd)*(mPsifd - mPsimd) - mVfd);
 	mPsikd = mPsikd - dt*mBase_OmElec*(mRkd / mLlkd)*(mPsikd - mPsimd);
-	
+
 	// Calculate dynamic flux likages
 	if (DampingWinding == 2) {
 		mDPsiq = mDLmq*(mPsikq1 / mLlkq1) + mDLmq*(mPsikq2 / mLlkq2);
@@ -334,7 +333,7 @@ void VoltageBehindReactanceEMT::stepInPerUnit(Real om, Real dt, Real fieldVoltag
 		mDPsiq = mDLmq*(mPsikq1 / mLlkq1);
 	}
 	mDPsid = mDLmd*(mPsifd / mLlfd) + mDLmd*(mPsikd / mLlkd);
-		
+
 	if (DampingWinding == 2) {
 		mDVq = mOmMech*mDPsid + mDLmq*mRkq1*(mDPsiq - mPsikq1) / (mLlkq1*mLlkq1) +
 			mDLmq*mRkq2*(mDPsiq - mPsikq2) / (mLlkq2*mLlkq2) + (mRkq1 / (mLlkq1*mLlkq1) + mRkq2 / (mLlkq2*mLlkq2))*mDLmq*mDLmq*mIq;
@@ -407,7 +406,7 @@ void VoltageBehindReactanceEMT::stepInPerUnit(Real om, Real dt, Real fieldVoltag
 //	K1b <<
 //		c15,
 //		0;
-//	
+//
 //	K1 = K1a*E1 + K1b;
 //
 //	K2a <<
@@ -443,7 +442,7 @@ void VoltageBehindReactanceEMT::stepInPerUnit(Real om, Real dt, Real fieldVoltag
 //
 //	H_qdr = K1a*E2*mPsikq1kq2 + K1a*E1*mIq + K2a*F2*mPsifdkd + K2a*F1*mId + (K2a*F3 + C26)*mVfd;
 //
-//	
+//
 //	e_r_vbr <<
 //		H_qdr,
 //		0;
@@ -453,7 +452,7 @@ void VoltageBehindReactanceEMT::stepInPerUnit(Real om, Real dt, Real fieldVoltag
 //}
 
 void VoltageBehindReactanceEMT::postStep(SystemModel& system) {
-	
+
 
 }
 
@@ -464,7 +463,7 @@ DPSMatrix VoltageBehindReactanceEMT::parkTransform(Real theta, double a, double 
 
 	double q, d;
 
-	q = 2. / 3. * cos(theta) * a + 2. / 3. * cos(theta - 2. * M_PI / 3.)*b + 2. / 3. * cos(theta + 2. * M_PI / 3.)*c;
+	q = 2. / 3. * cos(theta)*a + 2. / 3. * cos(theta - 2. * M_PI / 3.)*b + 2. / 3. * cos(theta + 2. * M_PI / 3.)*c;
 	d = 2. / 3. * sin(theta)*a + 2. / 3. * sin(theta - 2. * M_PI / 3.)*b + 2. / 3. * sin(theta + 2. * M_PI / 3.)*c;
 
 	//double zero;

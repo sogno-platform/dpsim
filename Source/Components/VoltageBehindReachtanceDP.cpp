@@ -295,12 +295,11 @@ void VoltageBehindReactanceDP::stepInPerUnit(Real om, Real dt, Real fieldVoltage
 	//mElecTorque = (mPsimd*mIq - mPsimq*mId);
 	mElecTorque = (mPsid*mIq - mPsiq*mId);
 
-	// Euler step forward	
+	// Euler step forward
 	mOmMech = mOmMech + dt * (1. / (2. * mH) * (mElecTorque - mMechTorque));
-	
+
 	mThetaMech = mThetaMech + dt * ((mOmMech - 1) * mBase_OmMech);
 	mThetaMech2 = mThetaMech2 + dt * (mOmMech* mBase_OmMech);
-
 
 	CalculateLandR(mThetaMech2, 1, mOmMech);
 	//CalculateLandR(mThetaMech2, 1, mOmMech, time);
