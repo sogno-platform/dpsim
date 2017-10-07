@@ -24,7 +24,7 @@
 
 using namespace DPsim;
 
-VoltSourceResFreqEMT::VoltSourceResFreqEMT(std::string name, int src, int dest, 
+VoltSourceResFreqEMT::VoltSourceResFreqEMT(std::string name, int src, int dest,
 	Real voltage, Real phase, Real resistance, Real omegaSource, Real switchTime, Real rampTime) : BaseComponent(name, src, dest) {
 	mResistance = resistance;
 	mConductance = 1. / resistance;
@@ -33,7 +33,7 @@ VoltSourceResFreqEMT::VoltSourceResFreqEMT(std::string name, int src, int dest,
 	mSwitchTime = switchTime;
 	mOmegaSource = omegaSource;
 	mRampTime = rampTime;
-	mVoltageDiff = mVoltageAmp*cos(mVoltagePhase);	
+	mVoltageDiff = mVoltageAmp*cos(mVoltagePhase);
 	mCurrent = mVoltageDiff / mResistance;
 }
 
@@ -76,7 +76,7 @@ void VoltSourceResFreqEMT::step(SystemModel& system, Real time) {
 		mVoltageDiff = mVoltageAmp*cos(mVoltagePhase + system.getOmega() * time);
 		mCurrent = mVoltageDiff / mResistance;
 	}
-		
+
 	if (mNode1 >= 0) {
 		system.addRealToRightSideVector(mNode1, mCurrent);
 	}

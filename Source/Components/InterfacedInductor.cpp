@@ -50,7 +50,7 @@ void InterfacedInductor::step(SystemModel& system, Real time) {
 	}
 	if (mNode2 >= 0) {
 		system.addCompToRightSideVector(mNode2, mCurrentStepRe, mCurrentStepIm);
-	}	
+	}
 	mCurrentRe = mCurrentStepRe;
 	mCurrentIm = mCurrentStepIm;
 }

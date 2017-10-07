@@ -33,11 +33,11 @@ namespace DPsim {
 		Complex mVoltage;
 		Real mVoltageAmp;
 		Real mVoltagePhase;
-		Real mVoltageDiff;			
+		Real mVoltageDiff;
 		Real mResistance;
 		Real mConductance;
 		Real mCurrent;
-		
+
 	public:
 		VoltSourceResEMT() { ; };
 		VoltSourceResEMT(std::string name, int src, int dest, Complex voltage, Real resistance);

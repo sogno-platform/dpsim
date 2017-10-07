@@ -66,7 +66,7 @@ namespace DPsim {
 		std::vector<switchConfiguration> mSwitchEventVector;
 		/// Structure that holds all system information.
 		SystemModel mSystemModel;
-		
+
 		/// Circuit list vector
 		std::vector<std::vector<BaseComponent*> > mElementsVector;
 
@@ -75,23 +75,23 @@ namespace DPsim {
 
 		uint64_t mRtTimerCount = 0;
 
-		/// TODO: check that every system matrix has the same dimensions		
+		/// TODO: check that every system matrix has the same dimensions
 		void initialize(std::vector<BaseComponent*> elements);
 
 
-	public:				
+	public:
 		/// Stores a list of circuit elements that are used to generate the system matrix
 		std::vector<BaseComponent*> mElements;
 
 		/// Sets parameters to default values.
 		Simulation();
-		/// Creates system matrix according to 
+		/// Creates system matrix according to
 		Simulation(std::vector<BaseComponent*> elements, Real om, Real dt, Real tf, SimulationType simType = SimulationType::DynPhasor);
 		Simulation(std::vector<BaseComponent*> elements, Real om, Real dt, Real tf, Logger& logger, SimulationType simType = SimulationType::DynPhasor);
 		Simulation(std::vector<BaseComponent*> elements, Real om, Real dt, Real tf, Logger& logger, Int downSampleRate, SimulationType simType = SimulationType::DynPhasor);
 		~Simulation();
 
-		
+
 		/// Solve system A * x = z for x and current time
 		int step(Logger& logger, bool blocking = true);
 		/// Solve system A * x = z for x and current time. Log current values of both vectors.
@@ -109,8 +109,8 @@ namespace DPsim {
 		Matrix & getLeftSideVector() { return mSystemModel.getLeftSideVector(); }
 		Matrix & getRightSideVector() { return mSystemModel.getRightSideVector(); }
 		Matrix & getSystemMatrix() { return mSystemModel.getCurrentSystemMatrix(); }
-		int stepGeneratorTest(Logger& logger, Logger& leftSideVectorLog, Logger& rightSideVectorLog, 
-			BaseComponent* generator, Real time);		
+		int stepGeneratorTest(Logger& logger, Logger& leftSideVectorLog, Logger& rightSideVectorLog,
+			BaseComponent* generator, Real time);
 		int stepGeneratorVBR(Logger& logger, BaseComponent* generator,
 			Logger& synGenLogVolt, Logger& synGenLogCurr, Logger& synGenLogElecTorque, Logger& synGenLogOmega, Logger& synGenLogTheta,
 			Real fieldVoltage, Real mechPower, Real time);

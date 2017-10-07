@@ -183,7 +183,7 @@ PyObject* DPsim::pyExternalVoltageSource(PyObject* self, PyObject* args) {
 	return (PyObject*) pyComp;
 }
 
-const char *DPsim::pyDocInductor = 
+const char *DPsim::pyDocInductor =
 "Inductor(name, node1, node2, inductance)\n"
 "Construct a new inductor.\n"
 "\n"

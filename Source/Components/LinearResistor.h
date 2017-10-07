@@ -34,7 +34,7 @@ namespace DPsim {
 
 		///Resistance [ohm]
 		Real mResistance;
-		
+
 		///Conductance [S]
 		Real mConductance;
 

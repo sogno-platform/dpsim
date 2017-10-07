@@ -65,7 +65,7 @@ Simulation::Simulation(std::vector<BaseComponent*> elements, Real om, Real dt, R
 
 Simulation::Simulation(std::vector<BaseComponent*> elements, Real om, Real dt, Real tf, Logger& logger, Int downSampleRate, SimulationType simType)
 	: Simulation(elements, om, dt, tf, logger, simType) {
-	
+
 	mDownSampleRate = downSampleRate;
 }
 
@@ -75,7 +75,7 @@ Simulation::~Simulation() {
 }
 
 
-void Simulation::initialize(std::vector<BaseComponent*> newElements) {	
+void Simulation::initialize(std::vector<BaseComponent*> newElements) {
 	int maxNode = 0;
 	Int numIdealVS = 0;
 	int numLines = 0;
@@ -86,7 +86,7 @@ void Simulation::initialize(std::vector<BaseComponent*> newElements) {
 	for (std::vector<BaseComponent*>::iterator it = newElements.begin(); it != newElements.end(); ++it) {
 		if ((*it)->getNode1() > maxNode) {
 			maxNode = (*it)->getNode1();
-		}		
+		}
 		if ((*it)->getNode2() > maxNode) {
 			maxNode = (*it)->getNode2();
 		}
@@ -99,7 +99,7 @@ void Simulation::initialize(std::vector<BaseComponent*> newElements) {
 			if ((*it)->getNode3() != -1) {
 				numLines = numLines + 1;
 			}
-			
+
 		}
 	}
 
@@ -143,7 +143,7 @@ void Simulation::addSystemTopology(std::vector<BaseComponent*> newElements) {
 int Simulation::step(Logger& logger, bool blocking)
 {
 	mSystemModel.setRightSideVectorToZero();
-	
+
 	for (auto it = mExternalInterfaces.begin(); it != mExternalInterfaces.end(); ++it) {
 		(*it)->readValues(blocking);
 	}
@@ -151,9 +151,9 @@ int Simulation::step(Logger& logger, bool blocking)
 	for (std::vector<BaseComponent*>::iterator it = mElements.begin(); it != mElements.end(); ++it) {
 		(*it)->step(mSystemModel, mTime);
 	}
-	
+
 	mSystemModel.solve();
- 
+
 	for (std::vector<BaseComponent*>::iterator it = mElements.begin(); it != mElements.end(); ++it) {
 		(*it)->postStep(mSystemModel);
 	}
@@ -164,8 +164,8 @@ int Simulation::step(Logger& logger, bool blocking)
 
 	if (mCurrentSwitchTimeIndex < mSwitchEventVector.size()) {
 		if (mTime >= mSwitchEventVector[mCurrentSwitchTimeIndex].switchTime) {
-			switchSystemMatrix(mSwitchEventVector[mCurrentSwitchTimeIndex].systemIndex);			
-			mElements = mElementsVector[++mCurrentSwitchTimeIndex];	
+			switchSystemMatrix(mSwitchEventVector[mCurrentSwitchTimeIndex].systemIndex);
+			mElements = mElementsVector[++mCurrentSwitchTimeIndex];
 			logger.Log(LogLevel::INFO) << "Switched to system " << mCurrentSwitchTimeIndex << " at " << mTime << std::endl;
 			logger.Log(LogLevel::INFO) << "New matrix:" << std::endl << mSystemModel.getCurrentSystemMatrix() << std::endl;
 			logger.Log(LogLevel::INFO) << "New decomp:" << std::endl << mSystemModel.getLUdecomp() << std::endl;
@@ -190,7 +190,7 @@ int Simulation::step(Logger& logger, Logger& leftSideVectorLog, Logger& rightSid
 	return retValue;
 }
 
-int Simulation::stepGeneratorTest(Logger& logger, Logger& leftSideVectorLog, Logger& rightSideVectorLog, 
+int Simulation::stepGeneratorTest(Logger& logger, Logger& leftSideVectorLog, Logger& rightSideVectorLog,
 	BaseComponent* generator, Real time) {
 	// Set to zero because all components will add their contribution for the current time step to the current value
 	mSystemModel.getRightSideVector().setZero();
@@ -199,11 +199,11 @@ int Simulation::stepGeneratorTest(Logger& logger, Logger& leftSideVectorLog, Log
 	for (std::vector<BaseComponent*>::iterator it = mElements.begin(); it != mElements.end(); ++it) {
 		(*it)->step(mSystemModel, mTime);
 	}
-			
+
 	// Solve circuit for vector j with generator output current
 	mSystemModel.solve();
 
-	// Execute PostStep for all components, generator states are recalculated based on new terminal voltage	
+	// Execute PostStep for all components, generator states are recalculated based on new terminal voltage
 	for (std::vector<BaseComponent*>::iterator it = mElements.begin(); it != mElements.end(); ++it) {
 		(*it)->postStep(mSystemModel);
 	}
@@ -239,7 +239,7 @@ int Simulation::stepGeneratorTest(Logger& logger, Logger& leftSideVectorLog, Log
 
 int Simulation::stepGeneratorVBR(Logger& logger, BaseComponent* generator,
  Logger& synGenLogVolt, Logger& synGenLogCurr, Logger& synGenLogElecTorque,
-	Logger& synGenLogOmega, Logger& synGenLogTheta, Real fieldVoltage, 
+	Logger& synGenLogOmega, Logger& synGenLogTheta, Real fieldVoltage,
 	Real mechPower, Real time) {
 
 	// Individual step function for generator
@@ -251,7 +251,7 @@ int Simulation::stepGeneratorVBR(Logger& logger, BaseComponent* generator,
 		((VoltageBehindReactanceEMT*)generator)->step(mSystemModel, fieldVoltage, mechPower, time);
 	}
 
-	// Execute PostStep for all components, generator states are recalculated based on new terminal voltage	
+	// Execute PostStep for all components, generator states are recalculated based on new terminal voltage
 	for (std::vector<BaseComponent*>::iterator it = mElements.begin(); it != mElements.end(); ++it) {
 		(*it)->postStep(mSystemModel);
 	}
@@ -286,11 +286,11 @@ int Simulation::stepGeneratorVBR(Logger& logger, BaseComponent* generator,
 			synGenLogTheta.LogDataLine(mTime, ((VoltageBehindReactanceEMT*)generator)->getRotorPosition());
 		}
 	}
-		
+
 	mLastLogTimeStep++;
 	if (mLastLogTimeStep == mDownSampleRate) {
 		mLastLogTimeStep = 0;
-	}	
+	}
 
 	if (mTime >= mFinalTime) {
 		return 0;
@@ -395,7 +395,7 @@ void Simulation::runRT(RTMethod rtMethod, bool startSynch, Logger& logger, Logge
 			std::exit(1);
 		}
 	}
-	
+
 	// main loop
 	do {
 		if (rtMethod == RTExceptions) {

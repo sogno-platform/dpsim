@@ -47,7 +47,7 @@ std::ostream& Logger::Log(LogLevel level) {
 	}
 
 	switch (level) {
-		case LogLevel::INFO:		
+		case LogLevel::INFO:
 			mLogFile << "INFO: ";
 			break;
 		case LogLevel::WARN:

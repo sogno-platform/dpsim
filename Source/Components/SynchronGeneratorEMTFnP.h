@@ -30,7 +30,7 @@
 namespace DPsim {
 
 	/// Synchronous generator model
-	/// If parInPerUnit is not set, the parameters have to be given with their respective stator or rotor 
+	/// If parInPerUnit is not set, the parameters have to be given with their respective stator or rotor
 	/// referred values. The calculation to per unit is performed in the initialization.
 	/// The case where parInPerUnit is not set will be implemented later.
 	/// parameter names include underscores and typical variables names found in literature instead of
@@ -200,7 +200,7 @@ namespace DPsim {
 		double mIb;
 		double mIc;
 
-		/// Number of damping windings in q 
+		/// Number of damping windings in q
 		int DampingWindings;
 
 		// ### Useful Matrices ###
@@ -220,7 +220,7 @@ namespace DPsim {
 		SynchronGeneratorEMTFnP() { };
 		~SynchronGeneratorEMTFnP();
 
-		/// Initializes the per unit or stator referred machine parameters with the machine parameters given in per unit or 
+		/// Initializes the per unit or stator referred machine parameters with the machine parameters given in per unit or
 		/// stator referred parameters depending on the setting of parameter type.
 		/// The initialization mode depends on the setting of state type.
 		SynchronGeneratorEMTFnP(std::string name, int node1, int node2, int node3,
@@ -238,7 +238,7 @@ namespace DPsim {
 			Real Rkq2, Real Llkq2,
 			Real H);
 
-		/// Initializes states in per unit or stator referred variables depending on the setting of the state type. 
+		/// Initializes states in per unit or stator referred variables depending on the setting of the state type.
 		/// Function parameters have to be given in real units.
 		void init(Real om, Real dt,
 			Real initActivePower, Real initReactivePower, Real initTerminalVolt,
@@ -249,11 +249,11 @@ namespace DPsim {
 		void initStatesInPerUnit(Real initActivePower, Real initReactivePower, Real initTerminalVolt,
 			Real initVoltAngle, Real initFieldVoltage, Real initMechPower);
 
-		/// Performs an Euler forward step with the state space model of a synchronous generator 
+		/// Performs an Euler forward step with the state space model of a synchronous generator
 		/// to calculate the flux and current from the voltage vector.
 		void step(SystemModel& system, Real time);
 
-		/// Performs an Euler forward step with the state space model of a synchronous generator 
+		/// Performs an Euler forward step with the state space model of a synchronous generator
 		/// to calculate the flux and current from the voltage vector in per unit.
 		void stepInPerUnit(Real om, Real dt, Real time, NumericalMethod numMethod);
 

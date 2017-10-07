@@ -167,7 +167,7 @@ void RxLine::step(SystemModel& system, Real time) {
 }
 
 void RxLine::postStep(SystemModel& system) {
-	
+
 	if (type == LineTypes::RxLine2Node) {
 
 		Real vposr, vnegr;

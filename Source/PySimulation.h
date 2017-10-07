@@ -67,7 +67,7 @@ namespace DPsim {
 		// methods, but that a reference has be kept to to avoid them from being
 		// freed (e.g. ExternalInterfaces).
 		std::vector<PyObject*> refs;
-		
+
 		// Function executed by the simulation thread
 		static void simThreadFunction(PySimulation* pySim);
 #ifdef __linux__

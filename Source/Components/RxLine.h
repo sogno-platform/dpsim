@@ -50,7 +50,7 @@ namespace DPsim {
 		Real mPrevCurFacIm;
 
 		LineTypes type;
-		
+
 		double correctr, correcti;
 		double cureqr_ind, cureqi_ind;
 		double deltavr_ind;

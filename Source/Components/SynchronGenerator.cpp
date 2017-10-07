@@ -110,10 +110,10 @@ void SynchronGenerator::initWithPerUnitParam(
 }
 
 void SynchronGenerator::init(Real om, Real dt,
-	Real initActivePower, Real initReactivePower, Real initTerminalVolt, 
+	Real initActivePower, Real initReactivePower, Real initTerminalVolt,
 	Real initVoltAngle, Real initFieldVoltage, Real initMechPower) {
 
-	// Create matrices for state space representation 
+	// Create matrices for state space representation
 	if (DampingWindings == 2)
 	{
 		mInductanceMat <<
@@ -330,10 +330,10 @@ void SynchronGenerator::stepInPerUnit(Real om, Real dt, NumericalMethod numMetho
 	//mVoltages(2, 0) = mV0;
 
 	if (numMethod == NumericalMethod::Euler) {
-		
+
 		mElecTorque = (mPsid*mIq - mPsiq*mId);
 
-		// Euler step forward	
+		// Euler step forward
 		mOmMech = mOmMech + dt * (1 / (2 * mH) * (mMechTorque - mElecTorque));
 
 		double dtPsid = mVd + mRs*mId + mPsiq*mOmMech;
@@ -395,14 +395,14 @@ void SynchronGenerator::stepInPerUnit(Real om, Real dt, NumericalMethod numMetho
 
 	else if (numMethod == NumericalMethod::Trapezoidal_flux)
 	{
-		
+
 
 		mElecTorque = (mPsid*mIq - mPsiq*mId);
 
-		// Euler step forward	
+		// Euler step forward
 		mOmMech = mOmMech + dt * (1 / (2 * mH) * (mMechTorque - mElecTorque));
 
-		
+
 		// Trapezoidal rule to solve flux
 		if (DampingWindings == 2)
 		{
@@ -509,7 +509,7 @@ void SynchronGenerator::stepInPerUnit(Real om, Real dt, NumericalMethod numMetho
 	else if (numMethod == NumericalMethod::Trapezoidal_current) {
 		mElecTorque = (mPsid*mIq - mPsiq*mId);
 
-		// Euler step forward  for angular speed 	
+		// Euler step forward  for angular speed
 		mOmMech = mOmMech + dt * (1 / (2 * mH) * (mMechTorque - mElecTorque));
 
 		DPSMatrix A = mBase_OmElec*(mReactanceMat*mResistanceMat);
@@ -598,7 +598,7 @@ void SynchronGenerator::stepInPerUnit(Real om, Real dt, NumericalMethod numMetho
 			mPsikd = -mLmd*mId + mLmd*mIfd + (mLlkd + mLmd)*mIkd;
 		}
 
-		
+
 		//mFluxes(0, 0) = mPsiq;
 		//mFluxes(1, 0) = mPsid;
 		//mFluxes(2, 0) = mPsi0;

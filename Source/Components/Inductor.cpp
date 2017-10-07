@@ -27,8 +27,8 @@ using namespace DPsim;
 Inductor::Inductor(std::string name, int src, int dest, double inductance) : BaseComponent(name, src, dest) {
 	mInductance = inductance;
 	attrMap["inductance"] = {AttrReal, &mInductance};
-}	
-		
+}
+
 void Inductor::applySystemMatrixStamp(SystemModel& system) {
 	double a = system.getTimeStep() / (2. * mInductance);
 	double b = system.getTimeStep() * system.getOmega() / 2.;
@@ -36,7 +36,7 @@ void Inductor::applySystemMatrixStamp(SystemModel& system) {
 	mGli = -a*b / (1 + b*b);
 	mPrevCurFacRe = (1 - b*b) / (1 + b*b);
 	mPrevCurFacIm = - 2. * b / (1 + b*b);
-			 
+
 	if (mNode1 >= 0) {
 		system.addCompToSystemMatrix(mNode1, mNode1, mGlr, mGli);
 	}
@@ -65,7 +65,7 @@ void Inductor::step(SystemModel& system, Real time) {
 	// Initialize internal state
 	mCurEqRe = mGlr * mDeltaVre - mGli * mDeltaVim + mPrevCurFacRe * mCurrRe - mPrevCurFacIm * mCurrIm;
 	mCurEqIm = mGli * mDeltaVre + mGlr * mDeltaVim + mPrevCurFacIm * mCurrRe + mPrevCurFacRe * mCurrIm;
-		
+
 	if (mNode1 >= 0) {
 		system.addCompToRightSideVector(mNode1, -mCurEqRe, -mCurEqIm);
 	}
@@ -88,7 +88,7 @@ void Inductor::postStep(SystemModel& system) {
 		vposr = 0;
 		vposi = 0;
 	}
-	
+
 	if (mNode2 >= 0) {
 		system.getRealFromLeftSideVector(mNode2);
 		vnegr = system.getRealFromLeftSideVector(mNode2);

@@ -27,11 +27,11 @@ using namespace DPsim;
 Capacitor::Capacitor(std::string name, Int src, Int dest, Real capacitance) : BaseComponent(name, src, dest) {
 	this->capacitance = capacitance;
 	attrMap["capacitance"] = {AttrReal, &this->capacitance};
-};	
-		
+};
+
 void Capacitor::applySystemMatrixStamp(SystemModel& system) {
 	mGcr = 2.0 * capacitance / system.getTimeStep();
-	mGci = system.getOmega() * capacitance;	
+	mGci = system.getOmega() * capacitance;
 
 	if (mNode1 >= 0) {
 		system.addCompToSystemMatrix(mNode1, mNode1, mGcr, mGci);
@@ -70,7 +70,7 @@ void Capacitor::step(SystemModel& system, Real time) {
 
 
 void Capacitor::postStep(SystemModel& system) {
-	double vposr, vnegr, vposi, vnegi;	
+	double vposr, vnegr, vposi, vnegi;
 
 	// extract solution
 	if (mNode1 >= 0) {
@@ -81,7 +81,7 @@ void Capacitor::postStep(SystemModel& system) {
 		vposr = 0;
 		vposi = 0;
 	}
-	if (mNode2 >= 0) {		
+	if (mNode2 >= 0) {
 		vnegr = system.getRealFromLeftSideVector(mNode2);
 		vnegi = system.getImagFromLeftSideVector(mNode2);
 	}

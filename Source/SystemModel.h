@@ -52,12 +52,12 @@ namespace DPsim {
 		/// Number of ideal Voltage Sources
 		Int mNumIdealVS;
 
-		
+
 		/// LU decomposition of system matrix A
 		Eigen::PartialPivLU<DPSMatrix> mLuFactored;
 		/// LU decomposition of system matrix A
 		std::vector<Eigen::PartialPivLU<DPSMatrix> > mLuFactoredVector;
-		/// System matrix A that is modified by matrix stamps 
+		/// System matrix A that is modified by matrix stamps
 		DPSMatrix mSystemMatrix;
 		/// System matrices list for swtiching events
 		std::vector<DPSMatrix> mSystemMatrixVector;
@@ -84,11 +84,11 @@ namespace DPsim {
 		Real getRealFromLeftSideVector(Int row) { return mLeftSideVector(row, 0); }
 		Real getImagFromLeftSideVector(Int row) { return mLeftSideVector(row + mCompOffset, 0); }
 		SimulationType getSimType() { return mSimType; }
-		Int getNumNodes() { return mNumNodes; }		
+		Int getNumNodes() { return mNumNodes; }
 		Int getNumIdealVS() { return mNumIdealVS; }
 		NumericalMethod getNumMethod() { return mNumMethod; }
-		
-		
+
+
 		void setSimType(SimulationType simType) { mSimType = simType; }
 		void setTimeStep(Real timeStep) { mTimeStep = timeStep; }
 		void setOmega(Real omega) { mSystemOmega = omega; }
@@ -96,7 +96,7 @@ namespace DPsim {
 		void setNumMethod(NumericalMethod numMethod) { mNumMethod = numMethod; }
 
 		void InitializeRightSideVector(DPsim::Matrix& rightSideVector) { mRightSideVector = rightSideVector; }
-		void InitializeLeftSideVector(DPsim::Matrix& leftSideVector) { mLeftSideVector = leftSideVector; }		
+		void InitializeLeftSideVector(DPsim::Matrix& leftSideVector) { mLeftSideVector = leftSideVector; }
 		void switchSystemMatrix(Int systemMatrixIndex);
 		void addRealToSystemMatrix(Int row, Int column, Real value);
 		void addCompToSystemMatrix(Int row, Int column, Real reValue, Real imValue);

@@ -335,7 +335,7 @@ PyObject* PySimulation::step(PyObject *self, PyObject *args) {
 	return Py_None;
 }
 
-const char* pyDocSimulationStop = 
+const char* pyDocSimulationStop =
 "stop()\n"
 "Stop the simulation at the next possible time. The simulation thread is canceled "
 "and the simulation can not be restarted. No-op if the simulation is not running.";
@@ -363,7 +363,7 @@ PyObject* PySimulation::updateMatrix(PyObject *self, PyObject *args) {
 	return Py_None;
 }
 
-const char* pyDocSimulationWait = 
+const char* pyDocSimulationWait =
 "wait()\n"
 "Block until the simulation is finished, returning immediately if this is already the case.\n"
 "\n"

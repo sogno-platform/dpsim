@@ -42,7 +42,7 @@ void SystemModel::initialize(Int numNodes, Int numIdealVS) {
 	}
 }
 
-void SystemModel::addSystemMatrix(Matrix& systemMatrix) {	
+void SystemModel::addSystemMatrix(Matrix& systemMatrix) {
 	mSystemMatrixVector.push_back(systemMatrix);
 	Eigen::PartialPivLU<DPSMatrix> luFactored = Eigen::PartialPivLU<DPSMatrix>(systemMatrix);
 	mLuFactoredVector.push_back(luFactored);

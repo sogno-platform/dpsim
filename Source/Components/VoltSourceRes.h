@@ -58,16 +58,16 @@ namespace DPsim {
 		VoltSourceRes(std::string name, int src, int dest, Complex voltage, Real resistance);
 
 		void init(Real om, Real dt) { }
-		
+
 		/// Stamps voltage source resistance to the conductance matrix
 		void applySystemMatrixStamp(SystemModel& system);
-		
-		/// Stamps equivalent current source to the current vector 
+
+		/// Stamps equivalent current source to the current vector
 		void applyRightSideVectorStamp(SystemModel& system);
-		
+
 		/// Stamps equivalent current source to the current vector
 		void step(SystemModel& system, Real time);
-		
+
 		void postStep(SystemModel& system) { }
 
 		Complex getCurrent(SystemModel& system);

@@ -31,8 +31,8 @@ namespace DPsim {
 	class InductorEMT : public BaseComponent {
 	protected:
 		double mInductance;
-		double mDeltav;		
-		double mCurr;		
+		double mDeltav;
+		double mCurr;
 		double mCureq;
 		double mGl;
 		double mP;

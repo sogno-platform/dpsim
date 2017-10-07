@@ -28,7 +28,7 @@ CurrentSource::CurrentSource(std::string name, int src, int dest, Complex curren
 	this->mCurrent = current;
 	attrMap["current"] = {AttrComplex, &this->mCurrent};
 };
-	
+
 void CurrentSource::applyRightSideVectorStamp(SystemModel& system) {
 	if (mNode1 >= 0) {
 		system.addCompToRightSideVector(mNode1, mCurrent.real(), mCurrent.imag());

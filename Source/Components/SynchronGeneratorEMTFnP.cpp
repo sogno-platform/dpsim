@@ -126,7 +126,7 @@ void SynchronGeneratorEMTFnP::init(Real om, Real dt,
 	Real initActivePower, Real initReactivePower, Real initTerminalVolt,
 	Real initVoltAngle, Real initFieldVoltage, Real initMechPower) {
 
-	// Create matrices for state space representation 
+	// Create matrices for state space representation
 	if (DampingWindings == 2)
 	{
 		mInductanceMat <<
@@ -315,7 +315,7 @@ void SynchronGeneratorEMTFnP::stepInPerUnit(Real om, Real dt, Real time, Numeric
 
 		mElecTorque = (mPsid*mIq - mPsiq*mId);
 
-		// Euler step forward	
+		// Euler step forward
 		mOmMech = mOmMech + dt * (1 / (2 * mH) * (mMechTorque - mElecTorque));
 
 		double dtPsid = mVd + mRs*mId + mPsiq*mOmMech;
@@ -367,7 +367,7 @@ void SynchronGeneratorEMTFnP::stepInPerUnit(Real om, Real dt, Real time, Numeric
 
 		mElecTorque = (mPsid*mIq - mPsiq*mId);
 
-		// Euler step forward	
+		// Euler step forward
 		mOmMech = mOmMech + dt * (1 / (2 * mH) * (mMechTorque - mElecTorque));
 
 		if (DampingWindings == 2)

@@ -43,7 +43,7 @@ class Logger {
 		Logger();
 		Logger(std::string filename, LogLevel level = LogLevel::INFO);
 		~Logger();
-	
+
 		std::ostream& Log(LogLevel level = LogLevel::INFO);
 		void LogDataLine(double time, DPSMatrix& data);
 		void LogDataLine(double time, double data);

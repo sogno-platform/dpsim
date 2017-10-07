@@ -98,7 +98,7 @@ namespace DPsim {
 	public:
 		PiLine() { };
 
-		/// Define line name, conected nodes, resistance, inductance and capacitance 
+		/// Define line name, conected nodes, resistance, inductance and capacitance
 		PiLine(std::string name, int node1, int node2, int node3, Real resistance, Real inductance, Real capacitance);
 
 		/// Initialize voltages and currents values
