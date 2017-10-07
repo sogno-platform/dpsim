@@ -21,8 +21,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *********************************************************************************/
 
-#ifndef PYINTERFACE_H
-#define PYINTERFACE_H
+#pragma once
 
 #include <Python.h>
 
@@ -48,5 +47,3 @@ namespace DPsim {
 	PyObject* pyOpenShmemInterface(PyObject *self, PyObject *args, PyObject *kwds);
 
 };
-
-#endif

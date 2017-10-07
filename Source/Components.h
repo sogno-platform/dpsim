@@ -21,8 +21,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *********************************************************************************/
 
-#ifndef COMPONENTS_H
-#define COMPONENTS_H
+#pragma once
 
 #include "Components/BaseComponent.h"
 #include "Components/LinearResistor.h"
@@ -45,5 +44,3 @@
 #include "Components/PiLine.h"
 #include "Components/VoltageBehindReactanceEMT.h"
 #include "Components/VoltageBehindReactanceDP.h"
-
-#endif // !COMPONENTS_H

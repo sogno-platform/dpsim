@@ -21,8 +21,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *********************************************************************************/
 
-#ifndef RXLINE_H
-#define RXLINE_H
+#pragma once
 
 #include "../Components.h"
 
@@ -72,5 +71,3 @@ namespace DPsim {
 		Complex getCurrent(SystemModel& system);
 	};
 }
-
-#endif

@@ -21,8 +21,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *********************************************************************************/
 
-#ifndef IDEALVOLTAGESOURCE_H
-#define IDEALVOLTAGESOURCE_H
+#pragma once
 
 #include "BaseComponent.h"
 
@@ -73,4 +72,3 @@ namespace DPsim {
 		virtual Complex getCurrent(SystemModel& system);
 	};
 }
-#endif

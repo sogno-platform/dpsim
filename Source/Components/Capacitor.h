@@ -21,8 +21,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *********************************************************************************/
 
-#ifndef CAPACITOR_H
-#define CAPACITOR_H
+#pragma once
 
 #include <iostream>
 
@@ -83,4 +82,3 @@ namespace DPsim {
 		Complex getCurrent(SystemModel& system);
 	};
 }
-#endif

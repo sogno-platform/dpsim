@@ -21,8 +21,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *********************************************************************************/
 
-#ifndef VOLTSOURCERESEMT_H
-#define VOLTSOURCERESEMT_H
+#pragma once
 
 #include "BaseComponent.h"
 
@@ -49,5 +48,3 @@ namespace DPsim {
 		void postStep(SystemModel& system) { }
 	};
 }
-#endif
-#pragma once

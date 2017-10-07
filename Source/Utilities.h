@@ -21,9 +21,6 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *********************************************************************************/
 
-#ifndef UTILITIES_H
-#define UTILITIES_H
+#pragma once
 
 void updateProgressBar(double time, double finalTime);
-
-#endif

@@ -21,8 +21,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *********************************************************************************/
 
-#ifndef CURRENTSOURCE_H
-#define CURRENTSOURCE_H
+#pragma once
 
 #include "BaseComponent.h"
 
@@ -44,4 +43,3 @@ namespace DPsim {
 		Complex getCurrent(SystemModel& system);
 	};
 }
-#endif

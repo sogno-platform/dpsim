@@ -21,8 +21,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *********************************************************************************/
 
-#ifndef MATHLIBRARY_H
-#define MATHLIBRARY_H
+#pragma once
 
 #include <cmath>
 #include <complex>
@@ -83,5 +82,3 @@ namespace DPsim
 	*/
 	typedef Eigen::Matrix<Complex, Eigen::Dynamic, Eigen::Dynamic, Eigen::ColMajor> MatrixComp;
 }
-
-#endif // !MATHLIBRARY_H

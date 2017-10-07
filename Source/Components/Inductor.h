@@ -21,8 +21,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *********************************************************************************/
 
-#ifndef INDUCTOR_H
-#define INDUCTOR_H
+#pragma once
 
 #include "BaseComponent.h"
 
@@ -88,4 +87,3 @@ namespace DPsim {
 		Complex getCurrent(SystemModel& system);
 	};
 }
-#endif

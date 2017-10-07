@@ -21,8 +21,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *********************************************************************************/
 
-#ifndef INDUCTOREMT_H
-#define INDUCTOREMT_H
+#pragma once
 
 #include "BaseComponent.h"
 
@@ -48,4 +47,3 @@ namespace DPsim {
 		void postStep(SystemModel& system);
 	};
 }
-#endif

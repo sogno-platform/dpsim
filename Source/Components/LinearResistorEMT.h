@@ -21,8 +21,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *********************************************************************************/
 
-#ifndef LINEARRESISTOREMT_H
-#define LINEARRESISTOREMT_H
+#pragma once
 
 #include <iostream>
 #include "BaseComponent.h"
@@ -47,4 +46,3 @@ namespace DPsim {
 		void postStep(SystemModel& system) { }
 	};
 }
-#endif

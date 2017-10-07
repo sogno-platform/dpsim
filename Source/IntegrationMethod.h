@@ -21,12 +21,9 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *********************************************************************************/
 
-#ifndef INTEGRATIONMETHOD_H
-#define INTEGRATIONMETHOD_H
+#pragma once
 
 #include "MathLibrary.h"
 
 DPSMatrix Trapezoidal(DPSMatrix states, DPSMatrix A, DPSMatrix B, double dt, DPSMatrix u_new, DPSMatrix u_old);
 DPSMatrix Trapezoidal(DPSMatrix states, DPSMatrix A, DPSMatrix B, double dt, DPSMatrix u);
-
-#endif

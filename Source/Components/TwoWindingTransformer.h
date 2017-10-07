@@ -21,8 +21,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *********************************************************************************/
 
-#ifndef TWOWINDINGTRANSFORMER_H
-#define TWOWINDINGTRANSFORMER_H
+#pragma once
 
 #include "RxLine.h"
 
@@ -33,5 +32,3 @@ namespace DPsim {
 		TwoWindingTransformer(std::string name, int node1, int node2, Real resistance, Real inductance);
 	};
 };
-
-#endif

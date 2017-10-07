@@ -21,8 +21,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *********************************************************************************/
 
-#ifndef PYCOMPONENT_H
-#define PYCOMPONENT_H
+#pragma once
 
 #include <Python.h>
 
@@ -65,5 +64,3 @@ namespace DPsim {
 	extern const char* pyDocLoadCim;
 	PyObject* pyLoadCim(PyObject* self, PyObject* args);
 };
-
-#endif

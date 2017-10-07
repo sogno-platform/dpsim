@@ -21,8 +21,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *********************************************************************************/
 
-#ifndef SYSTEMMODEL_H
-#define SYSTEMMODEL_H
+#pragma once
 
 #include <iostream>
 #include <vector>
@@ -108,4 +107,3 @@ namespace DPsim {
 		void solve();
 	};
 }
-#endif

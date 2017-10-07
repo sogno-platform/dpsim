@@ -21,8 +21,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *********************************************************************************/
 
-#ifndef PYSIMULATION_H
-#define PYSIMULATION_H
+#pragma once
 
 #include <Python.h>
 
@@ -95,4 +94,3 @@ namespace DPsim {
 
 	extern PyTypeObject PySimulationType;
 };
-#endif

@@ -21,8 +21,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *********************************************************************************/
 
-#ifndef PYMODULE_H
-#define PYMODULE_H
+#pragma once
 
 #include <Python.h>
 
@@ -43,4 +42,3 @@ extern "C" {
 	extern PyObject* PyInit_dpsim(void);
 #endif
 };
-#endif

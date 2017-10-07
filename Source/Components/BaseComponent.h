@@ -21,8 +21,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *********************************************************************************/
 
-#ifndef BASECOMPONENT_H
-#define BASECOMPONENT_H
+#pragma once
 
 #include <string>
 #include <iostream>
@@ -116,5 +115,3 @@ namespace DPsim {
 
 	};
 }
-
-#endif

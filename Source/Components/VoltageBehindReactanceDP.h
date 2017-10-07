@@ -21,8 +21,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *********************************************************************************/
 
-#ifndef VOLTAGEBEHINDREACTANCEDP_H
-#define VOLTAGEBEHINDREACTANCEDP_H
+#pragma once
 
 #include "BaseComponent.h"
 #include "ComponentCommons.h"
@@ -418,4 +417,3 @@ namespace DPsim {
 		void step(SystemModel& system, Real time) { }
 	};
 }
-#endif

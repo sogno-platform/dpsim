@@ -21,8 +21,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *********************************************************************************/
 
-#ifndef PILINE_H
-#define PILINE_H
+#pragma once
 
 #include "../Components.h"
 
@@ -117,5 +116,3 @@ namespace DPsim {
 		void postStep(SystemModel& system);
 	};
 }
-
-#endif

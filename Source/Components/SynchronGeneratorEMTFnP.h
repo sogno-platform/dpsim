@@ -21,8 +21,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *********************************************************************************/
 
-#ifndef SYNCHRONGENERATOREMTFNP_H
-#define SYNCHRONGENERATOREMTFNP_H
+#pragma once
 
 #include "BaseComponent.h"
 #include "ComponentCommons.h"
@@ -278,4 +277,3 @@ namespace DPsim {
 		void applyRightSideVectorStamp(SystemModel& system) { }
 	};
 }
-#endif

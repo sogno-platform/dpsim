@@ -21,8 +21,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *********************************************************************************/
 
-#ifndef Simulation_H
-#define Simulation_H
+#pragma once
 
 #include <signal.h>
 #include <iostream>
@@ -132,11 +131,4 @@ namespace DPsim {
 	};
 
 }
-
-#endif
-
-
-
-
-
 

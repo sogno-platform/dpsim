@@ -21,8 +21,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *********************************************************************************/
 
-#ifndef LINEARRESISTOR_H
-#define LINEARRESISTOR_H
+#pragma once
 
 #include <iostream>
 #include "BaseComponent.h"
@@ -62,4 +61,3 @@ namespace DPsim {
 		Complex getCurrent(SystemModel& model);
 	};
 }
-#endif

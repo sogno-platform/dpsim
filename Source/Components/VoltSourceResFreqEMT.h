@@ -21,8 +21,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *********************************************************************************/
 
-#ifndef VOLTSOURCERESFREQEMT_H
-#define VOLTSOURCERESFREQEMT_H
+#pragma once
 
 #include "BaseComponent.h"
 
@@ -52,4 +51,3 @@ namespace DPsim {
 	};
 
 }
-#endif

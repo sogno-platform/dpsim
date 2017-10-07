@@ -21,8 +21,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *********************************************************************************/
 
-#ifndef PQLOAD_H
-#define PQLOAD_H
+#pragma once
 
 #include "RxLine.h"
 
@@ -39,5 +38,3 @@ namespace DPsim {
 		void applySystemMatrixStamp(SystemModel&);
 	};
 };
-
-#endif
