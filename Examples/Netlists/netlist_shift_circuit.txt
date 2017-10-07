@@ -1,9 +1,0 @@
-# shift circuit
-0.001,0.1,
-VoltageSourceWithResistance,V1,1,0,10,0,2,
-LinearResistor,R1,1,2,10,
-Capacitor,C1,1,0,0.001,
-Inductor,L1,2,0,0.001,
-LinearResistor,R2,2,3,1,
-LinearResistor,R3,3,0,1,
-Capacitor,C3,3,0,0.01,

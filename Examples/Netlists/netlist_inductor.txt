@@ -1,6 +1,0 @@
-# Inductor test
-0.0001,0.05,
-VoltageSourceWithResistance,V1,1,0,10,0,2,
-LinearResistor,R1,1,0,10,
-Inductor,L1,1,0,0.01,
-
