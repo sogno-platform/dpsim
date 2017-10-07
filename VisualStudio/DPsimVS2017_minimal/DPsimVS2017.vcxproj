@@ -74,8 +74,8 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
-    <IncludePath>..\..\Libraries\CIM-Parser\include\16v29a_12v08;..\..\Libraries\CIM-Parser\include\src;..\..\Libraries\Arabica\include;$(IncludePath)</IncludePath>
-    <LibraryPath>..\..\Libraries\CIM-Parser\Debug;..\..\Libraries\Arabica\Debug;$(LibraryPath)</LibraryPath>
+    <IncludePath>$(IncludePath)</IncludePath>
+    <LibraryPath>$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
@@ -106,7 +106,7 @@
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
-      <AdditionalDependencies>CIMParser.lib;arabica.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -142,7 +142,6 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\Source\CIMReader.h" />
     <ClInclude Include="..\..\Source\Components.h" />
     <ClInclude Include="..\..\Source\Components\BaseComponent.h" />
     <ClInclude Include="..\..\Source\Components\Capacitor.h" />
@@ -160,6 +159,7 @@
     <ClInclude Include="..\..\Source\Components\RxLine.h" />
     <ClInclude Include="..\..\Source\Components\SynchronGenerator.h" />
     <ClInclude Include="..\..\Source\Components\SynchronGeneratorEMT.h" />
+    <ClInclude Include="..\..\Source\Components\SynchronGeneratorEMTFnP.h" />
     <ClInclude Include="..\..\Source\Components\TwoWindingTransformer.h" />
     <ClInclude Include="..\..\Source\Components\VoltageBehindReactanceDP.h" />
     <ClInclude Include="..\..\Source\Components\VoltageBehindReactanceEMT.h" />
@@ -173,6 +173,7 @@
     <ClInclude Include="..\..\Source\Examples\SyncGenUnitTestVBR.h" />
     <ClInclude Include="..\..\Source\Examples\SynchronGenUnitTest.h" />
     <ClInclude Include="..\..\Source\Examples\Testing.h" />
+    <ClInclude Include="..\..\Source\IntegrationMethod.h" />
     <ClInclude Include="..\..\Source\Logger.h" />
     <ClInclude Include="..\..\Source\MathLibrary.h" />
     <ClInclude Include="..\..\Source\Simulation.h" />
@@ -180,7 +181,6 @@
     <ClInclude Include="..\..\Source\Utilities.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\Source\CIMReader.cpp" />
     <ClCompile Include="..\..\Source\Components\Capacitor.cpp" />
     <ClCompile Include="..\..\Source\Components\CurrentSource.cpp" />
     <ClCompile Include="..\..\Source\Components\IdealVoltageSource.cpp" />
@@ -194,6 +194,7 @@
     <ClCompile Include="..\..\Source\Components\RxLine.cpp" />
     <ClCompile Include="..\..\Source\Components\SynchronGenerator.cpp" />
     <ClCompile Include="..\..\Source\Components\SynchronGeneratorEMT.cpp" />
+    <ClCompile Include="..\..\Source\Components\SynchronGeneratorEMTFnP.cpp" />
     <ClCompile Include="..\..\Source\Components\TwoWindingTransformer.cpp" />
     <ClCompile Include="..\..\Source\Components\VoltageBehindReachtanceDP.cpp" />
     <ClCompile Include="..\..\Source\Components\VoltageBehindReactanceEMT.cpp" />
@@ -207,6 +208,7 @@
     <ClCompile Include="..\..\Source\Examples\SimpleCircuitTest.cpp" />
     <ClCompile Include="..\..\Source\Examples\SyncGenUnitTestVBR.cpp" />
     <ClCompile Include="..\..\Source\Examples\SynchronGenUnitTest.cpp" />
+    <ClCompile Include="..\..\Source\IntegrationMethod.cpp" />
     <ClCompile Include="..\..\Source\Logger.cpp" />
     <ClCompile Include="..\..\Source\Simulation.cpp" />
     <ClCompile Include="..\..\Source\SystemModel.cpp" />
