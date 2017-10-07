@@ -10,6 +10,13 @@ if (NOT WIN32)
 	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-write-strings")
 endif()
 
+# enable C++11 support
+if (CMAKE_VERSION VERSION_LESS "3.1")
+	set (CMAKE_CXX_FLAGS "-std=gnu++11 ${CMAKE_CXX_FLAGS}")
+else ()
+	set (CMAKE_CXX_STANDARD 11)
+endif ()
+
 # library configuration etc.
 if(IS_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/../Libraries/eigen)
 	set(EIGEN3_INCLUDE_DIR ../Libraries/eigen)
