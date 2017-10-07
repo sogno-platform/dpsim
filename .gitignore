@@ -13,14 +13,6 @@ cmake_install.cmake
 install_manifest.txt
 Makefile
 
-# Outputs
-Examples/C++/DPsimExample
-Source/libdpsim.dylib
-Source/libdpsim.so*
-Source/libdpsim.dll
-Source/dpsim.so
-Source/dpsim.pyd
-
 # Mac
 __MACOSX
 .DS_Store

@@ -2,4 +2,9 @@
 *.csv
 *.log
 *.o
-DPSolver
+
+libdpsim.dylib
+libdpsim.so*
+libdpsim.dll
+dpsim.so
+dpsim.pyd
