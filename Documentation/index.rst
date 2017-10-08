@@ -11,6 +11,7 @@ Welcome to dpsim's documentation!
    :caption: Contents:
 
    module
+   build
    todo
 
 Indices and tables
