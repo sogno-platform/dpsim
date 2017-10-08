@@ -42,10 +42,10 @@ docs:
 
 test:
   stage: test
+  variables:
+    PYTHONPATH: Source/build
   script:
-    - mv Source/build/libdpsim.so Source/Tests/dpsim.so
-    - cd Source/Tests
-    - python3 run_tests.py
+    - python3 Examples/Python/ci.py
   image: ${DOCKER_IMAGE}
   tags:
     - docker
