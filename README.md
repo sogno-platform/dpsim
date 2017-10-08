@@ -3,11 +3,25 @@
 [![build status](https://git.rwth-aachen.de/PowerSystemSimulation/DPsim/badges/development/build.svg)](https://git.rwth-aachen.de/PowerSystemSimulation/DPsim/commits/development)
 [![coverage report](https://git.rwth-aachen.de/PowerSystemSimulation/DPsim/badges/development/coverage.svg)](https://git.rwth-aachen.de/PowerSystemSimulation/DPsim/commits/development)
 
-Dynamic Phasor simulation library in C++.
+DPsim is a solver library for power system simulation.
+
+- It supports both the electro-magnetic transient (EMT) and dynamic phasor (DP) domains.
+- It provides a Python module which can be embedded in any Python 3 application / scripts.
+- It is implemented in highly-efficient C++ code.
+- It supports real-time execution with time-steps up to 50 uS.
+- It can load models in the [Common Information Model (CIM)](https://en.wikipedia.org/wiki/Common_Information_Model_(electricity)) XML format.
+- It can be interfaced to a variety of protocols and interfaces via [VILLASnode](http://www.fein-aachen.org/projects/villas-framework/).
 
 ## Installation
 
 Take a look at the [build instructions](Documentation/build.rst).
+
+## Usage
+
+DPsim is a Python extension module which is implemented in optimized native C++ code.
+
+Users can control and script the simulation with Python scripts.
+Please check out the existing [Python examples](Examples/Python/).
 
 ## Documentation
 
@@ -15,7 +29,7 @@ Take a look at the [build instructions](Documentation/build.rst).
   - either from your Linux distribution's repo
   - or [manually](http://www.sphinx-doc.org/en/stable/install.html#windows-install-python-and-sphinx) on Windows
   - if you used the installer which already adds Python to your path and installs pip, you basically only need to run `pip install sphinx`
-2. Generate the documentation by running Sphinx via CMake:
+2. Generate the Python documentation by running Sphinx via CMake:
 ```
 $ mkdir -p build
 $ cd build
