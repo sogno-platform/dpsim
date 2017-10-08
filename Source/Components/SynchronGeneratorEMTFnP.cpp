@@ -21,7 +21,7 @@
  *********************************************************************************/
 
 #include "SynchronGeneratorEMTFnP.h"
-#include "..\IntegrationMethod.h"
+#include "IntegrationMethod.h"
 
 using namespace DPsim;
 
