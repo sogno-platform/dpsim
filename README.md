@@ -1,6 +1,9 @@
-# DPsim
+# <img src="Documentation/dpsim.png" width=40 /> DPsim
 
-Dynamic Phasor simulation library in C++
+[![build status](https://git.rwth-aachen.de/PowerSystemSimulation/DPsim/badges/development/build.svg)](https://git.rwth-aachen.de/PowerSystemSimulation/DPsim/commits/development)
+[![coverage report](https://git.rwth-aachen.de/PowerSystemSimulation/DPsim/badges/development/coverage.svg)](https://git.rwth-aachen.de/PowerSystemSimulation/DPsim/commits/development)
+
+Dynamic Phasor simulation library in C++.
 
 ## Installation
 
