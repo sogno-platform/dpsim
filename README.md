@@ -1,4 +1,4 @@
-# <img src="Documentation/dpsim.png" width=40 /> DPsim
+# <img src="Figures/dpsim.png" width=40 /> DPsim
 
 [![build status](https://git.rwth-aachen.de/PowerSystemSimulation/DPsim/badges/development/build.svg)](https://git.rwth-aachen.de/PowerSystemSimulation/DPsim/commits/development)
 [![coverage report](https://git.rwth-aachen.de/PowerSystemSimulation/DPsim/badges/development/coverage.svg)](https://git.rwth-aachen.de/PowerSystemSimulation/DPsim/commits/development)
@@ -65,7 +65,7 @@ For other licensing options please consult [Prof. Antonello Monti](mailto:amonti
 
 ## Contact
 
-[![EONERC ACS Logo](Documentation/eonerc_logo.png)](http://www.acs.eonerc.rwth-aachen.de)
+[![EONERC ACS Logo](Figures/eonerc_logo.png)](http://www.acs.eonerc.rwth-aachen.de)
 
 - Markus Mirz <mmirz@eonerc.rwth-aachen.de>
 
