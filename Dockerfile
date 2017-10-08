@@ -14,7 +14,7 @@ RUN dnf -y install \
 	doxygen \
 	libxml2-devel \
 	python3-pandas \
-    python3-numpy \
+	python3-numpy \
 	python3-sphinx
 
 RUN dnf -y install villas-node-devel
