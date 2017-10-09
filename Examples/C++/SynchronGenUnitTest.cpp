@@ -664,7 +664,7 @@ void DPsim::SynGenUnitTestBalancedResLoadFnP() {
 	tf = 0.3; dt = 0.000001; t = 0;
 	Int downSampling = 50;
 	Simulation newSim(circElements, om, dt, tf, log, downSampling, SimulationType::EMT);
-	newSim.setNumericalMethod(NumericalMethod::Trapezoidal_flux);
+	newSim.setNumericalMethod(NumericalMethod::Euler);
 	newSim.addSystemTopology(circElementsBreakerOn);
 	newSim.switchSystemMatrix(0);
 

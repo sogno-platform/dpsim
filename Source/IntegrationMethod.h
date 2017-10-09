@@ -25,5 +25,10 @@
 
 #include "MathLibrary.h"
 
+
+typedef double(*DeriveFnPtr) (DPSMatrix inputs);
+
 DPSMatrix Trapezoidal(DPSMatrix states, DPSMatrix A, DPSMatrix B, double dt, DPSMatrix u_new, DPSMatrix u_old);
 DPSMatrix Trapezoidal(DPSMatrix states, DPSMatrix A, DPSMatrix B, double dt, DPSMatrix u);
+DPSMatrix Euler(DPSMatrix states, DPSMatrix A, DPSMatrix B, double dt, DPSMatrix u);
+double Euler(double states, DPSMatrix inputs, DeriveFnPtr fnPtr, double dt);

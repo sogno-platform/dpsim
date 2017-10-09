@@ -45,3 +45,14 @@ DPSMatrix Trapezoidal(DPSMatrix states, DPSMatrix A, DPSMatrix B, double dt, DPS
 
 	return InvAux*Aux*states + InvAux*dt*B*u;
 }
+
+DPSMatrix Euler(DPSMatrix states, DPSMatrix A, DPSMatrix B, double dt, DPSMatrix u)
+{
+	return states + dt*(A*states + B*u);
+}
+
+double Euler(double state, DPSMatrix inputs, DeriveFnPtr fnPtr, double dt) {
+	return state + dt*fnPtr(inputs);
+}
+
+

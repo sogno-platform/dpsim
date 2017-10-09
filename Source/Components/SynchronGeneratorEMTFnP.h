@@ -267,6 +267,11 @@ namespace DPsim {
 		//DPSMatrix inverseParkTransform(Real theta, DPSMatrix& in);
 		DPSMatrix inverseParkTransform2(Real theta, double d, double q, double zero);
 
+		static double dtOmMech(DPSMatrix inputs);
+		DPSMatrix mOmMechInputs = DPSMatrix::Zero(3, 1);
+		static double dtThetaMech(DPSMatrix inputs);
+		DPSMatrix mOmMech_Matrix = DPSMatrix::Zero(1, 1);
+
 		DPSMatrix& getVoltages() { return mVoltages2; }
 		DPSMatrix& getCurrents() { return mCurrents2; }
 		DPSMatrix& getFluxes() { return mFluxes2; }
