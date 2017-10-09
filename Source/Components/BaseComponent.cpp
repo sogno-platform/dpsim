@@ -20,7 +20,10 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *********************************************************************************/
 
-#include <cxxabi.h>
+#ifndef _MSC_VER
+  #include <cxxabi.h>
+#endif
+
 #include <typeinfo>
 
 #include "BaseComponent.h"
@@ -30,9 +33,17 @@ using namespace DPsim;
 std::string BaseComponent::getType()
 {
 	int status = 1;
-	const char *unmangled, *mangled;
+	const char *mangled;
 
 	mangled = typeid(*this).name();
+
+#ifdef _MSC_VER
+	std::string ret(mangled);
+
+	return ret;
+#else
+	const char *unmangled
+
 	unmangled = abi::__cxa_demangle(mangled, NULL, NULL, &status);
 
 	if (status)
@@ -47,4 +58,5 @@ std::string BaseComponent::getType()
 		else
 			return ret;
 	}
+#endif
 }
