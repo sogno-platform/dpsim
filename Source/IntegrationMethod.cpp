@@ -34,6 +34,18 @@ DPSMatrix Trapezoidal(DPSMatrix states, DPSMatrix A, DPSMatrix B, double dt, DPS
 	return newstates;
 }
 
+DPSMatrix Trapezoidal(DPSMatrix states, DPSMatrix A, DPSMatrix B, DPSMatrix C, double dt, DPSMatrix u_new, DPSMatrix u_old)
+{
+	int n = states.rows();
+	DPSMatrix I = DPSMatrix::Identity(n, n);
+
+	DPSMatrix Aux = I + (dt / 2) * A;
+	DPSMatrix Aux2 = I - (dt / 2) * A;
+
+	DPSMatrix newstates = Aux2.inverse()*Aux*states + Aux2.inverse()*(dt / 2) * B*(u_new + u_old) + Aux2.inverse()*dt*C;
+	return newstates;
+}
+
 DPSMatrix Trapezoidal(DPSMatrix states, DPSMatrix A, DPSMatrix B, double dt, DPSMatrix u)
 {
 	int n = states.rows();

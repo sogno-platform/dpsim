@@ -65,13 +65,13 @@ int main(int argc, char* argv[]) {
 	//SynGenUnitTestBalancedResLoad();
 	//SynGenUnitTestPhaseToPhaseFault();
 	//SynGenUnitTestThreePhaseFault();
-	SynGenUnitTestBalancedResLoadFnP();
+	//SynGenUnitTestBalancedResLoadFnP();
 
 	// DP classic dq model
 	//SynGenDPUnitTestBalancedResLoad();
 
 	// EMT VBR model
-	//SynGenUnitTestVBR();
+	SynGenUnitTestVBR();
 	// DP VBR model
 	//SynGenUnitTestVBRDP();
 

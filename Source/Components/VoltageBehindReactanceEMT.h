@@ -103,15 +103,6 @@ namespace DPsim {
 		/// Dynamic voltage phase c
 		double mDVc;
 
-		//Theta mech hist
-		double mThetaMech_hist1;
-		double mThetaMech_hist2;
-
-		//Theta omega hist
-		double mOmMech_hist;
-		double mOmMech_hist1;
-		double mOmMech_hist2;
-
 		/// inertia J [kg*m^2]
 		double mJ;
 		/// number of poles
@@ -158,17 +149,26 @@ namespace DPsim {
 		double mOmMech;
 		/// theta
 		double mThetaMech;
-		double mThetaMech2;
 		/// mechanical Power Pm [W]
 		double mMechPower;
 		/// mechanical torque
 		double mMechTorque;
 		/// electrical torque
 		double mElecTorque;
-		double mElecTorque_hist;
 
 		///Number of damping windings in q
 		double DampingWinding = 2;
+
+		/// Load Resistance 
+		DPSMatrix R_load = DPSMatrix::Zero(3, 3);
+
+		/// Matrix paremeters for integration of rotor flux linkages - A
+		DPSMatrix A_flux = DPSMatrix::Zero(4, 4);
+		/// Variables for integration of rotor flux linkages - B
+		DPSMatrix B_flux = DPSMatrix::Zero(4, 2);
+		/// Variables for integration of rotor flux linkages - C
+		DPSMatrix C_flux = DPSMatrix::Zero(4, 1);
+
 
 		/// voltage vector q d 0 kq1 kq2 df kd
 		DPSMatrix mVoltages2 = DPSMatrix::Zero(7, 1);

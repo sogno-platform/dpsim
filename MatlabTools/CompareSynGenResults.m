@@ -3,13 +3,13 @@
 
 %% read PLECS results
 
-Results_PLECS = csvread('../../vsa/Results/SynGenDqEmt_ABCFault_PLECS/Voltages_and_currents.csv'); 
+Results_PLECS = csvread('../../vsa/Results/SynGenVBREmt_ABCFault_PLECS/Voltages_and_currents.csv'); 
 %Te_PLECS = csvread('../../vsa/Results/SynGenVBREmt_Steady_PLECS/electrical_torque.csv'); 
 %omega_PLECS = csvread('../../vsa/Results/SynGenVBREmt_Steady_PLECS/omega.csv'); 
 %theta_PLECS = csvread('../../vsa/Results/SynGenVBREmt_Steady_PLECS/theta.csv'); 
 %% read results from c++ simulation
-VoltageVector = csvread('../../vsa/Results/TestingFunctionPointer/data_vt.csv');
-CurrentVector = csvread('../../vsa/Results/TestingFunctionPointer/data_j.csv');
+VoltageVector = csvread('../../vsa/Results/TestingFunctionPointer/data_synGenVBR_v.csv');
+CurrentVector = csvread('../../vsa/Results/TestingFunctionPointer/data_synGenVBR_i.csv');
 %omega = csvread('../../vsa/Results/SynGenVBREmt_Steady_DPsim/data_synGenVBR_omega.csv');
 %Te = csvread('../../vsa/Results/SynGenVBREmt_Steady_DPsim/data_synGenVBR_Te.csv');
 %theta = csvread('../../vsa/Results/SynGenVBREmt_Steady_DPsim/data_synGenVBR_theta.csv');
@@ -30,10 +30,10 @@ legend('va DPSim','vb DPSim', 'vc DPSim','va PLECS','vb PLECS','vc PLECS');
 
 figure(2)
 hold off
-plot(CurrentVector(:,1),-CurrentVector(:,2));
+plot(CurrentVector(:,1),CurrentVector(:,2));
 hold on
-plot(CurrentVector(:,1),-CurrentVector(:,3));
-plot(CurrentVector(:,1),-CurrentVector(:,4));
+plot(CurrentVector(:,1),CurrentVector(:,3));
+plot(CurrentVector(:,1),CurrentVector(:,4));
 
 plot(Results_PLECS(:,1),Results_PLECS(:,5),'--');
 plot(Results_PLECS(:,1),Results_PLECS(:,6),'--');
