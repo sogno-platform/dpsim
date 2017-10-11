@@ -409,11 +409,14 @@ void VoltageBehindReactanceEMT::stepInPerUnit(Real om, Real dt, Real fieldVoltag
 	// Calculate dynamic flux likages
 	if (DampingWinding == 2) {
 		mDPsiq = mDLmq*(mPsikq1 / mLlkq1) + mDLmq*(mPsikq2 / mLlkq2);
+		mPsimq = mDLmq*(mPsikq1 / mLlkq1 + mPsikq2 / mLlkq2 + mIq);
 	}
 	else {
 		mDPsiq = mDLmq*(mPsikq1 / mLlkq1);
+		mPsimq = mDLmq*(mPsikq1 / mLlkq1 + mIq);
 	}
 	mDPsid = mDLmd*(mPsifd / mLlfd) + mDLmd*(mPsikd / mLlkd);
+	mPsimd = mDLmd*(mPsifd / mLlfd + mPsikd / mLlkd + mId);
 
 
 	// Calculate dynamic voltages
