@@ -233,58 +233,9 @@ namespace DPsim {
 		Real mPsimq;
 		Real mPsimd;
 
-		/// Auxiliar variables
-		Real b11;
-		Real b12;
-		Real b13;
-		Real b21;
-		Real b22;
-		Real b23;
-		Real b31;
-		Real b32;
-		Real b33;
-		Real b41;
-		Real b42;
-		Real b43;
-		Real c11;
-		Real c12;
-		Real c23;
-		Real c24;
-		Real c15;
-		Real c25;
-		Real c26;
-		Real c21_omega;
-		Real c22_omega;
-		Real c13_omega;
-		Real c14_omega;
-
-		/// Auxiliar matrix
-		DPSMatrix E1 = DPSMatrix::Zero(2, 2);
-		DPSMatrix Ea = DPSMatrix::Zero(2, 2);
-		DPSMatrix E1b = DPSMatrix::Zero(2, 1);
-		DPSMatrix E2 = DPSMatrix::Zero(2, 2);
-		DPSMatrix E2b = DPSMatrix::Zero(2, 2);
-		DPSMatrix F1 = DPSMatrix::Zero(2, 2);
-		DPSMatrix Fa = DPSMatrix::Zero(2, 2);
-		DPSMatrix F1b = DPSMatrix::Zero(2, 1);
-		DPSMatrix F2 = DPSMatrix::Zero(2, 2);
-		DPSMatrix F2b = DPSMatrix::Zero(2, 2);
-		DPSMatrix F3 = DPSMatrix::Zero(2, 2);
-		DPSMatrix F3b = DPSMatrix::Zero(2, 1);
-		DPSMatrix K1a = DPSMatrix::Zero(2, 2);
-		DPSMatrix K1b = DPSMatrix::Zero(2, 1);
-		DPSMatrix K1;
-		DPSMatrix K2a = DPSMatrix::Zero(2, 2);
-		DPSMatrix K2b = DPSMatrix::Zero(2, 1);
-		DPSMatrix K2;
-		DPSMatrix ParkMat = DPSMatrix::Zero(3, 3);
-		DPSMatrix InverseParkMat = DPSMatrix::Zero(3, 3);
-		DPSMatrix K = DPSMatrix::Zero(3, 3);
-		DPSMatrix C26 = DPSMatrix::Zero(2, 1);
-		DPSMatrix H_qdr;
 
 		// Auxiliar Matrix for DP
-		//MatrixComp LD0 = MatrixComp::Zero(3, 3);
+		MatrixComp LD02 = MatrixComp::Zero(3, 3);
 		DPSMatrix LD0 = DPSMatrix::Zero(3, 3);
 		MatrixComp LD1 = MatrixComp::Zero(3, 3);
 		MatrixComp A1 = MatrixComp::Zero(3, 3);
@@ -294,21 +245,6 @@ namespace DPsim {
 		DPSMatrix L_VP_SFA = DPSMatrix::Zero(6, 6);
 		DPSMatrix R_VP_SFA = DPSMatrix::Zero(6, 6);
 		Complex alpha;
-
-
-		/// Equivalent voltage behind reactance resistance matrix
-		DPSMatrix R_vbr_eq = DPSMatrix::Zero(3, 3);
-
-		/// Equivalent voltage behind reactance rotor voltage vector
-		DPSMatrix e_r_vbr = DPSMatrix::Zero(3, 1);
-
-		/// Equivalent voltage behind reactance voltage vector
-		DPSMatrix e_h_vbr;
-
-		/// Flux vector
-		DPSMatrix mPsikq1kq2 = DPSMatrix::Zero(2, 1);
-		DPSMatrix mPsifdkd = DPSMatrix::Zero(2, 1);
-
 
 		// ### Useful Matrices ###
 		/// inductance matrix
@@ -349,6 +285,18 @@ namespace DPsim {
 
 		//Phase Currents
 		DPSMatrix mCurrentVector = DPSMatrix::Zero(6, 1);
+
+
+		/// Matrix paremeters for integration of rotor flux linkages - A
+		DPSMatrix A_flux = DPSMatrix::Zero(4, 4);
+		/// Variables for integration of rotor flux linkages - B
+		DPSMatrix B_flux = DPSMatrix::Zero(4, 2);
+		/// Variables for integration of rotor flux linkages - C
+		DPSMatrix C_flux = DPSMatrix::Zero(4, 1);
+
+		DPSMatrix mRotorFlux = DPSMatrix::Zero(4, 1);
+		DPSMatrix mDqStatorCurrents = DPSMatrix::Zero(2, 1);
+		DPSMatrix mDqStatorCurrents_hist = DPSMatrix::Zero(2, 1);
 
 
 	public:
@@ -409,7 +357,7 @@ namespace DPsim {
 		//DPSMatrix& getFluxes() { return mFluxes; }
 		double getElectricalTorque() { return mElecTorque; }
 		double getRotationalSpeed() { return mOmMech; }
-		double getRotorPosition() { return mThetaMech; }
+		double getRotorPosition() { return mThetaMech2; }
 
 		void init(Real om, Real dt) { }
 		void applySystemMatrixStamp(SystemModel& system) { }

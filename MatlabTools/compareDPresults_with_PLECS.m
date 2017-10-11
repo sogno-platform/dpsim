@@ -14,9 +14,9 @@ voltageDP = csvread('../../vsa/Results/SynGenVbrDynPh_ABCFault_DPsim_1_Damping/d
 currentDP = csvread('../../vsa/Results/SynGenVbrDynPh_ABCFault_DPsim_1_Damping/data_synGenVBR_DP_i.csv');
 %voltageDP = csvread('../../vsa/Results/SynGenDqDynPh_ABCFault_DPsim/data_vt.csv');
 %currentDP = csvread('../../vsa/Results/SynGenDqDynPh_ABCFault_DPsim/data_j.csv');
-omega = csvread('../../vsa/Results/SynGenVBREmt_ABCFault_DPsim_1_Damping/data_synGenVBR_omega.csv');
-Te = csvread('../../vsa/Results/SynGenVBREmt_ABCFault_DPsim_1_Damping/data_synGenVBR_Te.csv');
-theta = csvread('../../vsa/Results/SynGenVBREmt_ABCFault_DPsim_1_Damping/data_synGenVBR_theta.csv');
+omega = csvread('../../vsa/Results/SynGenVbrDynPh_ABCFault_DPsim_1_Damping/data_synGenVBR_DP_omega.csv');
+Te = csvread('../../vsa/Results/SynGenVbrDynPh_ABCFault_DPsim_1_Damping/data_synGenVBR_DP_Te.csv');
+theta = csvread('../../vsa/Results/SynGenVbrDynPh_ABCFault_DPsim_1_Damping/data_synGenVBR_DP_theta.csv');
 compOffsetDP = (size(voltageDP,2) - 1) / 2;
 
 

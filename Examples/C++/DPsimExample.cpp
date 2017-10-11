@@ -71,9 +71,9 @@ int main(int argc, char* argv[]) {
 	//SynGenDPUnitTestBalancedResLoad();
 
 	// EMT VBR model
-	SynGenUnitTestVBR();
+	//SynGenUnitTestVBR();
 	// DP VBR model
-	//SynGenUnitTestVBRDP();
+	SynGenUnitTestVBRDP();
 
 	// #### Variable frequency tests ################
 	//RXLineResLoad();
