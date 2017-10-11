@@ -75,9 +75,10 @@ void DPsim::SynGenUnitTestVBR() {
 	// Set up simulation
 	double tf, dt, t;
 	double om = 2.0*M_PI*60.0;
-	tf = 0.3; dt = 0.000005; t = 0;
+	tf = 0.3; dt = 0.0000008; t = 0;
 	Int downSampling = 25;
 	Simulation newSim(circElements, om, dt, tf, log, downSampling, SimulationType::EMT);
+	newSim.setNumericalMethod(NumericalMethod::Trapezoidal_flux);
 
 	// Initialize generator
 	double initActivePower = 555e3;

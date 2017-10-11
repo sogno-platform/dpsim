@@ -67,4 +67,11 @@ double Euler(double state, DPSMatrix inputs, DeriveFnPtr fnPtr, double dt) {
 	return state + dt*fnPtr(inputs);
 }
 
+DPSMatrix Euler(DPSMatrix states, DPSMatrix A, DPSMatrix B, DPSMatrix C, double dt, DPSMatrix u)
+{
+
+	DPSMatrix newstates = states + dt*(A*states + B*u + C);
+	return newstates;
+}
+
 

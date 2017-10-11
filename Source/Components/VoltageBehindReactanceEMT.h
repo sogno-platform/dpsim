@@ -76,32 +76,9 @@ namespace DPsim {
 		double mRkq2;
 		/// q-axis damper leakage inductance 2 Llkq2 [H]
 		double mLlkq2;
-		/// q winding inductance
-		double mLaq;
-		/// d winding inductance
-		double mLad;
 
-		/// d dynamic inductance
-		double mDLmd;
-		/// q dynamic inductance
-		double mDLmq;
-
-		/// d dynamic flux
-		double mDPsid;
-		/// q dynamic flux
-		double mDPsiq;
-
-		/// Dynamic d voltage
-		double mDVq;
-		/// Dynamic q voltage
-		double mDVd;
-
-		/// Dynamic voltage phase a
-		double mDVa;
-		/// Dynamic voltage phase b
-		double mDVb;
-		/// Dynamic voltage phase c
-		double mDVc;
+		///Number of damping windings in q
+		double DampingWinding = 2;
 
 		/// inertia J [kg*m^2]
 		double mJ;
@@ -109,6 +86,16 @@ namespace DPsim {
 		int mPoleNumber;
 		/// inertia coefficient H
 		double mH;
+
+		/// d dynamic inductance
+		double mDLmd;
+		/// q dynamic inductance
+		double mDLmq;
+		/// Auxiliar inductance term La
+		double mLa;
+		/// Auxiliar inductance term Lb
+		double mLb;
+
 
 		// ### Stator base values ###
 		/// specifies if the machine parameters are transformed to per unit
@@ -156,11 +143,111 @@ namespace DPsim {
 		/// electrical torque
 		double mElecTorque;
 
-		///Number of damping windings in q
-		double DampingWinding = 2;
+		/// d dynamic flux
+		double mDPsid;
+		/// q dynamic flux
+		double mDPsiq;
+		/// Dynamic d voltage
+		double mDVq;
+		/// Dynamic q voltage
+		double mDVd;
+		/// Dynamic voltage phase a
+		double mDVa;
+		/// Dynamic voltage phase b
+		double mDVb;
+		/// Dynamic voltage phase c
+		double mDVc;
+
+
+		/// stator voltage in d axis
+		double mVd;
+		/// stator voltage in q axis
+		double mVq;
+		/// stator voltage 0 component
+		double mV0;
+		/// Rotor voltage field winding
+		double mVfd;
+		/// Rotor voltage damping winding in d axis
+		double mVkd;
+		/// Rotor voltage damping winding 1 in q axis
+		double mVkq1;
+		/// Rotor voltage damping winding 2 in q axis
+		double mVkq2;
+
+		/// stator current in d axis
+		double mId;
+		/// stator current in q axis
+		double mIq;
+		/// stator current 0 component
+		double mI0;
+		/// Rotor current field winding
+		double mIfd;
+		/// Rotor current damping winding in d axis
+		double mIkd;
+		/// Rotor current damping winding 1 in q axis
+		double mIkq1;
+		/// Rotor current damping winding 2 in q axis
+		double mIkq2;
+
+		/// stator flux linkage in d axis
+		double mPsid;
+		/// stator flux linkage in q axis
+		double mPsiq;
+		/// stator flux linkage 0 component
+		double mPsi0;
+		/// rotor flux linkage in field winding
+		double mPsifd;
+		/// rotor flux linkage in damping winding from d axis
+		double mPsikd;
+		/// rotor flux linkage in damping winding 1 from q axis
+		double mPsikq1;
+		/// rotor flux linkage in damping winding 2 from q axis
+		double mPsikq2;
+
+		/// Interface voltage phase a
+		double mVa;
+		/// Interface voltage phase b
+		double mVb;
+		/// Interface voltage phase c
+		double mVc;
+
+		/// Interface curent phase a
+		double mIa;
+		/// Interface curent phase b
+		double mIb;
+		/// Interface curent phase c
+		double mIc;
+
+		/// Magnetizing flux linkage in q axis
+		Real mPsimq;
+		/// Magnetizing flux linkage in d axis
+		Real mPsimd;
+
+		DPSMatrix mRotorFlux = DPSMatrix::Zero(4, 1);
+		DPSMatrix mDqStatorCurrents = DPSMatrix::Zero(2, 1);
+		DPSMatrix mDqStatorCurrents_hist = DPSMatrix::Zero(2, 1);
+
+		// ### Useful Matrices ###
+		/// inductance matrix
+		DPSMatrix mDInductanceMat = DPSMatrix::Zero(3, 3);
+		/// Derivative of inductance matrix
+		DPSMatrix pmDInductanceMat = DPSMatrix::Zero(3, 3);
+		/// resistance matrix
+		DPSMatrix mResistanceMat = DPSMatrix::Zero(3, 3);
 
 		/// Load Resistance 
 		DPSMatrix R_load = DPSMatrix::Zero(3, 3);
+
+		/// Phase Voltages in pu
+		DPSMatrix mVabc = DPSMatrix::Zero(3, 1);
+		/// Phase currents in pu
+		DPSMatrix mIabc = DPSMatrix::Zero(3, 1);
+		/// Subtransient voltage in pu
+		DPSMatrix mDVabc = DPSMatrix::Zero(3, 1);
+		/// Phase Voltages [V]
+		DPSMatrix mVoltageVector = DPSMatrix::Zero(3, 1);
+		/// Phase Currents [A]
+		DPSMatrix mCurrentVector = DPSMatrix::Zero(3, 1);
 
 		/// Matrix paremeters for integration of rotor flux linkages - A
 		DPSMatrix A_flux = DPSMatrix::Zero(4, 4);
@@ -168,152 +255,6 @@ namespace DPsim {
 		DPSMatrix B_flux = DPSMatrix::Zero(4, 2);
 		/// Variables for integration of rotor flux linkages - C
 		DPSMatrix C_flux = DPSMatrix::Zero(4, 1);
-
-
-		/// voltage vector q d 0 kq1 kq2 df kd
-		DPSMatrix mVoltages2 = DPSMatrix::Zero(7, 1);
-		/// flux linkage vector
-		DPSMatrix mFluxes = DPSMatrix::Zero(7, 1);
-		/// current vector
-		DPSMatrix mCurrents2 = DPSMatrix::Zero(7, 1);
-
-		/// voltage vector q d 0 fd kd kq1 kq2
-		double mVd;
-		double mVq;
-		double mV0;
-		double mVfd;
-		double mVkd;
-		double mVkq1;
-		double mVkq2;
-
-		/// current vector q d 0 fd kd kq1 kq2
-		double mId;
-		double mIq;
-		double mI0;
-		double mIfd;
-		double mIkd;
-		double mIkq1;
-		double mIkq2;
-
-		/// flux linkage vector q d 0 fd kd kq1 kq2
-		double mPsid;
-		double mPsiq;
-		double mPsi0;
-		double mPsifd;
-		double mPsikd;
-		double mPsikq1;
-		double mPsikq2;
-
-		/// Interface voltage vector
-		double mVa;
-		double mVb;
-		double mVc;
-
-		/// Interface voltage vector
-		double mIa;
-		double mIb;
-		double mIc;
-
-		/// Magnetizing flux linkage in qd axes
-		Real mPsimq;
-		Real mPsimd;
-
-		/// Auxiliar variables
-		Real b11;
-		Real b12;
-		Real b13;
-		Real b21;
-		Real b22;
-		Real b23;
-		Real b31;
-		Real b32;
-		Real b33;
-		Real b41;
-		Real b42;
-		Real b43;
-		Real c11;
-		Real c12;
-		Real c23;
-		Real c24;
-		Real c15;
-		Real c25;
-		Real c26;
-		Real c21_omega;
-		Real c22_omega;
-		Real c13_omega;
-		Real c14_omega;
-
-		/// Auxiliar matrix
-		DPSMatrix E1 = DPSMatrix::Zero(2, 2);
-		DPSMatrix Ea = DPSMatrix::Zero(2, 2);
-		DPSMatrix E1b = DPSMatrix::Zero(2, 1);
-		DPSMatrix E2 = DPSMatrix::Zero(2, 2);
-		DPSMatrix E2b = DPSMatrix::Zero(2, 2);
-		DPSMatrix F1 = DPSMatrix::Zero(2, 2);
-		DPSMatrix Fa = DPSMatrix::Zero(2, 2);
-		DPSMatrix F1b = DPSMatrix::Zero(2, 1);
-		DPSMatrix F2 = DPSMatrix::Zero(2, 2);
-		DPSMatrix F2b = DPSMatrix::Zero(2, 2);
-		DPSMatrix F3 = DPSMatrix::Zero(2, 2);
-		DPSMatrix F3b = DPSMatrix::Zero(2, 1);
-		DPSMatrix K1a = DPSMatrix::Zero(2, 2);
-		DPSMatrix K1b = DPSMatrix::Zero(2, 1);
-		DPSMatrix K1;
-		DPSMatrix K2a = DPSMatrix::Zero(2, 2);
-		DPSMatrix K2b = DPSMatrix::Zero(2, 1);
-		DPSMatrix K2;
-		DPSMatrix ParkMat = DPSMatrix::Zero(3, 3);
-		DPSMatrix InverseParkMat = DPSMatrix::Zero(3, 3);
-		DPSMatrix K = DPSMatrix::Zero(3, 3);
-		DPSMatrix C26 = DPSMatrix::Zero(2, 1);
-		DPSMatrix H_qdr;
-
-		/// Equivalent voltage behind reactance resistance matrix
-		DPSMatrix R_vbr_eq = DPSMatrix::Zero(3, 3);
-
-		/// Equivalent voltage behind reactance rotor voltage vector
-		DPSMatrix e_r_vbr = DPSMatrix::Zero(3, 1);
-
-		/// Equivalent voltage behind reactance voltage vector
-		DPSMatrix e_h_vbr;
-
-		/// Flux vector
-		DPSMatrix mPsikq1kq2 = DPSMatrix::Zero(2, 1);
-		DPSMatrix mPsifdkd = DPSMatrix::Zero(2, 1);
-
-
-		// ### Useful Matrices ###
-		/// inductance matrix
-		DPSMatrix mDInductanceMat = DPSMatrix::Zero(3, 3);
-		/// resistance matrix
-		DPSMatrix mResistanceMat = DPSMatrix::Zero(3, 3);
-		/// reactance matrix
-		//DPSMatrix mReactanceMat = DPSMatrix::Zero(7, 7);
-		/// omega - flux matrix
-		//DPSMatrix mOmegaFluxMat = DPSMatrix::Zero(7, 7);
-		/// matrix for reversing stator current directions in calculations with respect to other currents
-		//DPSMatrix mReverseCurrents = DPSMatrix::Zero(7, 7);
-
-		double mLa;
-		double mLb;
-
-		//Historical term of voltage
-		DPSMatrix mV_hist = DPSMatrix::Zero(3, 1);
-
-		//Phase Voltages in pu
-		DPSMatrix mVabc = DPSMatrix::Zero(3, 1);
-
-		//Historical term of current
-		DPSMatrix mIabc = DPSMatrix::Zero(3, 1);
-
-		//Historical term of voltage
-		DPSMatrix mDVabc = DPSMatrix::Zero(3, 1);
-
-		//Phase Voltages
-		DPSMatrix mVoltageVector = DPSMatrix::Zero(3, 1);
-
-		//Phase Currents
-		DPSMatrix mCurrentVector = DPSMatrix::Zero(3, 1);
 
 
 	public:
@@ -354,8 +295,6 @@ namespace DPsim {
 		/// Performs an Euler forward step with the state space model of a synchronous generator
 		/// to calculate the flux and current from the voltage vector in per unit.
 		void stepInPerUnit(Real om, Real dt, Real fieldVoltage, Real mechPower, Real time, NumericalMethod numMethod);
-
-		void FormTheveninEquivalent(Real dt);
 
 		/// Retrieves calculated voltage from simulation for next step
 		void postStep(SystemModel& system);

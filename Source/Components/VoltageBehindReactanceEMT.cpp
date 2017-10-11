@@ -116,6 +116,9 @@ void VoltageBehindReactanceEMT::initWithPerUnitParam(
 		A_flux = DPSMatrix::Zero(3, 3);
 		B_flux = DPSMatrix::Zero(3, 2);
 		C_flux = DPSMatrix::Zero(3, 1);
+		mRotorFlux = DPSMatrix::Zero(3, 1);
+		mDqStatorCurrents = DPSMatrix::Zero(2, 1);
+		mDqStatorCurrents_hist = DPSMatrix::Zero(2, 1);
 
 		A_flux <<
 			-mRkq1 / mLlkq1*(1 - mDLmq / mLlkq1), 0, 0,
@@ -268,6 +271,7 @@ void VoltageBehindReactanceEMT::step(SystemModel& system, Real fieldVoltage, Rea
 
 }
 
+
 void VoltageBehindReactanceEMT::stepInPerUnit(Real om, Real dt, Real fieldVoltage, Real mechPower, Real time, NumericalMethod numMethod) {
 
 	mVabc <<
@@ -285,43 +289,25 @@ void VoltageBehindReactanceEMT::stepInPerUnit(Real om, Real dt, Real fieldVoltag
 		mDVb,
 		mDVc;
 
-
+	// Calculate mechanical variables with euler
 	mMechPower = mechPower / mNomPower;
 	mMechTorque = -(mMechPower / 1);
-
-	mPsid = mLl*mId + mPsimd;
-	mPsiq = mLl*mIq + mPsimq;
-
-	//mElecTorque = (mPsimd*mIq - mPsimq*mId);
-	mElecTorque = (mPsid*mIq - mPsiq*mId);
-
-
-
-	// Euler step forward
-	//mOmMech = mOmMech + dt * (1. / (2 * mH) * (mMechTorque - mElecTorque));
+	mElecTorque = (mPsimd*mIq - mPsimq*mId);
 	mOmMech = mOmMech + dt * (1. / (2. * mH) * (mElecTorque - mMechTorque));
 	mThetaMech = mThetaMech + dt * (mOmMech* mBase_OmMech);
 
-
-	//HERE CALCULATE Req and EEQ
-	DPSMatrix mDInductanceMat_hist = mDInductanceMat;
-
-	
-
+	// Calculate Inductance matrix and its derivative
 	mDInductanceMat <<
 		mLl + mLa - mLb*cos(2 * mThetaMech), -mLa / 2 - mLb*cos(2 * mThetaMech - 2 * PI / 3), -mLa / 2 - mLb*cos(2 * mThetaMech + 2 * PI / 3),
 		-mLa / 2 - mLb*cos(2 * mThetaMech - 2 * PI / 3), mLl + mLa - mLb*cos(2 * mThetaMech - 4 * PI / 3), -mLa / 2 - mLb*cos(2 * mThetaMech),
 		-mLa / 2 - mLb*cos(2 * mThetaMech + 2 * PI / 3), -mLa / 2 - mLb*cos(2 * mThetaMech), mLl + mLa - mLb*cos(2 * mThetaMech + 4 * PI / 3);
-
-	DPSMatrix pmDInductanceMat(3, 3);
-
 	pmDInductanceMat <<
 		mLb*sin(2 * mThetaMech),  mLb*sin(2 * mThetaMech - 2 * PI / 3), mLb*sin(2 * mThetaMech + 2 * PI / 3),
 		mLb*sin(2 * mThetaMech - 2 * PI / 3), mLb*sin(2 * mThetaMech - 4 * PI / 3), mLb*sin(2 * mThetaMech),
 		mLb*sin(2 * mThetaMech + 2 * PI / 3), mLb*sin(2 * mThetaMech), mLb*sin(2 * mThetaMech + 4 * PI / 3);
 	pmDInductanceMat = pmDInductanceMat * 2 * mOmMech;
 
-
+	// Load resistance
 	if (time < 0.1 || time > 0.2)
 	{
 		R_load <<
@@ -337,29 +323,23 @@ void VoltageBehindReactanceEMT::stepInPerUnit(Real om, Real dt, Real fieldVoltag
 			0, 0, 0.001 / mBase_Z;
 	}
 
-
-	// SOLVE CIRCUIT AND CALCULATE STATOR VARIABLES
-
-	mIabc = Trapezoidal(mIabc, -mDInductanceMat.inverse()*(mResistanceMat + R_load + pmDInductanceMat), mDInductanceMat.inverse(), dt*mBase_OmElec, -mDVabc);
-	//mIabc = mDInductanceMat.inverse()*mDInductanceMat_hist*mIabc - dt*mBase_OmElec*mDInductanceMat.inverse()*(mDVabc+(mResistanceMat + R_load)*mIabc);
+	// Solve circuit - calculate stator currents and voltages
+	if (numMethod == NumericalMethod::Trapezoidal_flux) 
+		mIabc = Trapezoidal(mIabc, -mDInductanceMat.inverse()*(mResistanceMat + R_load + pmDInductanceMat), mDInductanceMat.inverse(), dt*mBase_OmElec, -mDVabc);
+	else if (numMethod == NumericalMethod::Euler) 
+		mIabc = Euler(mIabc, -mDInductanceMat.inverse()*(mResistanceMat + R_load + pmDInductanceMat), mDInductanceMat.inverse(), dt*mBase_OmElec, -mDVabc);
 	mVabc = -R_load*mIabc;
-
 	mIa = mIabc(0);
 	mIb = mIabc(1);
 	mIc = mIabc(2);
-
 	mVa = mVabc(0);
 	mVb = mVabc(1);
 	mVc = mVabc(2);
-
 	Real mIq_hist = mIq;
 	Real mId_hist = mId;
-
 	mIq = parkTransform(mThetaMech, mIa, mIb, mIc)(0);
 	mId = parkTransform(mThetaMech, mIa, mIb, mIc)(1);
 	mI0 = parkTransform(mThetaMech, mIa, mIb, mIc)(2);
-
-	//hist_term =  (mResistanceMat + R_load - 2/)
 
 	// Calculate rotor flux likanges
 	if (DampingWinding == 2)
@@ -370,75 +350,61 @@ void VoltageBehindReactanceEMT::stepInPerUnit(Real om, Real dt, Real fieldVoltag
 			mVfd,
 			0;
 
-		DPSMatrix Flux(4, 1);
-		DPSMatrix Current(2, 1);
-		DPSMatrix Current_hist(2, 1);
-
-		Current <<
+		mDqStatorCurrents <<
 			mIq,
 			mId;
-		Current_hist <<
+
+		mDqStatorCurrents_hist <<
 			mIq_hist,
 			mId_hist;
 
-		Flux <<
+		mRotorFlux <<
 			mPsikq1,
 			mPsikq2,
 			mPsifd,
 			mPsikd;
 
-		Flux = Trapezoidal(Flux, A_flux, B_flux, C_flux, dt*mBase_OmElec, Current, Current_hist);
+		if (numMethod == NumericalMethod::Trapezoidal_flux)
+			mRotorFlux = Trapezoidal(mRotorFlux, A_flux, B_flux, C_flux, dt*mBase_OmElec, mDqStatorCurrents, mDqStatorCurrents_hist);
+		else if (numMethod == NumericalMethod::Euler)
+			mRotorFlux = Euler(mRotorFlux, A_flux, B_flux, C_flux, dt*mBase_OmElec, mDqStatorCurrents);
 
-		mPsikq1 = Flux(0);
-		mPsikq2 = Flux(1);
-		mPsifd = Flux(2);
-		mPsikd = Flux(3);
+		mPsikq1 = mRotorFlux(0);
+		mPsikq2 = mRotorFlux(1);
+		mPsifd = mRotorFlux(2);
+		mPsikd = mRotorFlux(3);
 
 	}
 
 	else
 	{
-
-
 		C_flux <<
 			0,
 			mVfd,
 			0;
-		DPSMatrix Flux(3, 1);
-		DPSMatrix Current(2, 1);
-		DPSMatrix Current_hist(2, 1);
 
-		Current <<
+		mDqStatorCurrents <<
 			mIq,
 			mId;
-		Current_hist <<
+		mDqStatorCurrents_hist <<
 			mIq_hist,
 			mId_hist;
 
-		Flux <<
+		mRotorFlux <<
 			mPsikq1,
 			mPsifd,
 			mPsikd;
 
-		Flux = Trapezoidal(Flux, A_flux, B_flux, C_flux, dt*mBase_OmElec, Current, Current_hist);
+		if (numMethod == NumericalMethod::Trapezoidal_flux)
+			mRotorFlux = Trapezoidal(mRotorFlux, A_flux, B_flux, C_flux, dt*mBase_OmElec, mDqStatorCurrents, mDqStatorCurrents_hist);
+		else if (numMethod == NumericalMethod::Euler)
+			mRotorFlux = Euler(mRotorFlux, A_flux, B_flux, C_flux, dt*mBase_OmElec, mDqStatorCurrents);
 
-		mPsikq1 = Flux(0);
-		mPsifd = Flux(1);
-		mPsikd = Flux(2);
+		mPsikq1 = mRotorFlux(0);
+		mPsifd = mRotorFlux(1);
+		mPsikd = mRotorFlux(2);
 	}
 
-	//if (DampingWinding == 2) {
-	//	mPsimq = mDLmq*(mPsikq1 / mLlkq1 + mPsikq2 / mLlkq2 + mIq);
-	//}
-	//else {
-	//	mPsimq = mDLmq*(mPsikq1 / mLlkq1 + mIq);
-	//}
-	//mPsimd = mDLmd*(mPsifd / mLlfd + mPsikd / mLlkd + mId);
-
-	//mPsikq1 = mPsikq1 - dt*mBase_OmElec*(mRkq1 / mLlkq1)*(mPsikq1 - mPsimq);
-	//mPsikq2 = mPsikq2 - dt*mBase_OmElec*(mRkq2 / mLlkq2)*(mPsikq2 - mPsimq);
-	//mPsifd = mPsifd - dt*mBase_OmElec*((mRfd / mLlfd)*(mPsifd - mPsimd) - mVfd);
-	//mPsikd = mPsikd - dt*mBase_OmElec*(mRkd / mLlkd)*(mPsikd - mPsimd);
 
 	// Calculate dynamic flux likages
 	if (DampingWinding == 2) {
@@ -449,6 +415,8 @@ void VoltageBehindReactanceEMT::stepInPerUnit(Real om, Real dt, Real fieldVoltag
 	}
 	mDPsid = mDLmd*(mPsifd / mLlfd) + mDLmd*(mPsikd / mLlkd);
 
+
+	// Calculate dynamic voltages
 	if (DampingWinding == 2) {
 		mDVq = mOmMech*mDPsid + mDLmq*mRkq1*(mDPsiq - mPsikq1) / (mLlkq1*mLlkq1) +
 			mDLmq*mRkq2*(mDPsiq - mPsikq2) / (mLlkq2*mLlkq2) + (mRkq1 / (mLlkq1*mLlkq1) + mRkq2 / (mLlkq2*mLlkq2))*mDLmq*mDLmq*mIq;
@@ -464,9 +432,6 @@ void VoltageBehindReactanceEMT::stepInPerUnit(Real om, Real dt, Real fieldVoltag
 	mDVc = inverseParkTransform(mThetaMech, mDVq, mDVd, 0)(2);
 
 }
-
-
-
 
 
 void VoltageBehindReactanceEMT::postStep(SystemModel& system) {
@@ -493,8 +458,6 @@ DPSMatrix VoltageBehindReactanceEMT::parkTransform(Real theta, double a, double 
 
 	return dq0vector;
 }
-
-
 
 
 
