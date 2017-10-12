@@ -86,7 +86,7 @@ void VoltageBehindReactanceDP::initWithPerUnitParam(
 	mLlkq2 = Llkq2;
 	mH = H;
 
-	if (mRkq2 == 0 & mLlkq2 == 0)
+	if (mRkq2 == 0 && mLlkq2 == 0)
 	{
 		DampingWinding = 1;
 	}

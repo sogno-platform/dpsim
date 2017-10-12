@@ -102,7 +102,7 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>..\..\Libraries\eigen;</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\..\Libraries\eigen;..\..\Examples\C++;..\..\Source</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -142,6 +142,11 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="..\..\Examples\C++\ReferenceCircuits.h" />
+    <ClInclude Include="..\..\Examples\C++\ShmemTest.h" />
+    <ClInclude Include="..\..\Examples\C++\SimpleCircuitTest.h" />
+    <ClInclude Include="..\..\Examples\C++\SyncGenUnitTestVBR.h" />
+    <ClInclude Include="..\..\Examples\C++\SynchronGenUnitTest.h" />
     <ClInclude Include="..\..\Source\CIMReader.h" />
     <ClInclude Include="..\..\Source\Components.h" />
     <ClInclude Include="..\..\Source\Components\BaseComponent.h" />
@@ -160,6 +165,7 @@
     <ClInclude Include="..\..\Source\Components\RxLine.h" />
     <ClInclude Include="..\..\Source\Components\SynchronGenerator.h" />
     <ClInclude Include="..\..\Source\Components\SynchronGeneratorEMT.h" />
+    <ClInclude Include="..\..\Source\Components\SynchronGeneratorEMTFnP.h" />
     <ClInclude Include="..\..\Source\Components\TwoWindingTransformer.h" />
     <ClInclude Include="..\..\Source\Components\VoltageBehindReactanceDP.h" />
     <ClInclude Include="..\..\Source\Components\VoltageBehindReactanceEMT.h" />
@@ -167,12 +173,7 @@
     <ClInclude Include="..\..\Source\Components\VoltSourceResEMT.h" />
     <ClInclude Include="..\..\Source\Components\VoltSourceResFreq.h" />
     <ClInclude Include="..\..\Source\Components\VoltSourceResFreqEMT.h" />
-    <ClInclude Include="..\..\Source\Examples\ReferenceCircuits.h" />
-    <ClInclude Include="..\..\Source\Examples\ShmemTest.h" />
-    <ClInclude Include="..\..\Source\Examples\SimpleCircuitTest.h" />
-    <ClInclude Include="..\..\Source\Examples\SyncGenUnitTestVBR.h" />
-    <ClInclude Include="..\..\Source\Examples\SynchronGenUnitTest.h" />
-    <ClInclude Include="..\..\Source\Examples\Testing.h" />
+    <ClInclude Include="..\..\Source\IntegrationMethod.h" />
     <ClInclude Include="..\..\Source\Logger.h" />
     <ClInclude Include="..\..\Source\MathLibrary.h" />
     <ClInclude Include="..\..\Source\Simulation.h" />
@@ -180,7 +181,14 @@
     <ClInclude Include="..\..\Source\Utilities.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\..\Examples\C++\DPsimExample.cpp" />
+    <ClCompile Include="..\..\Examples\C++\ReferenceCircuits.cpp" />
+    <ClCompile Include="..\..\Examples\C++\ShmemTest.cpp" />
+    <ClCompile Include="..\..\Examples\C++\SimpleCircuitTest.cpp" />
+    <ClCompile Include="..\..\Examples\C++\SyncGenUnitTestVBR.cpp" />
+    <ClCompile Include="..\..\Examples\C++\SynchronGenUnitTest.cpp" />
     <ClCompile Include="..\..\Source\CIMReader.cpp" />
+    <ClCompile Include="..\..\Source\Components\BaseComponent.cpp" />
     <ClCompile Include="..\..\Source\Components\Capacitor.cpp" />
     <ClCompile Include="..\..\Source\Components\CurrentSource.cpp" />
     <ClCompile Include="..\..\Source\Components\IdealVoltageSource.cpp" />
@@ -194,6 +202,7 @@
     <ClCompile Include="..\..\Source\Components\RxLine.cpp" />
     <ClCompile Include="..\..\Source\Components\SynchronGenerator.cpp" />
     <ClCompile Include="..\..\Source\Components\SynchronGeneratorEMT.cpp" />
+    <ClCompile Include="..\..\Source\Components\SynchronGeneratorEMTFnP.cpp" />
     <ClCompile Include="..\..\Source\Components\TwoWindingTransformer.cpp" />
     <ClCompile Include="..\..\Source\Components\VoltageBehindReachtanceDP.cpp" />
     <ClCompile Include="..\..\Source\Components\VoltageBehindReactanceEMT.cpp" />
@@ -201,12 +210,7 @@
     <ClCompile Include="..\..\Source\Components\VoltSourceResEMT.cpp" />
     <ClCompile Include="..\..\Source\Components\VoltSourceResFreq.cpp" />
     <ClCompile Include="..\..\Source\Components\VoltSourceResFreqEMT.cpp" />
-    <ClCompile Include="..\..\Source\DPsimMain.cpp" />
-    <ClCompile Include="..\..\Source\Examples\ReferenceCircuits.cpp" />
-    <ClCompile Include="..\..\Source\Examples\ShmemTest.cpp" />
-    <ClCompile Include="..\..\Source\Examples\SimpleCircuitTest.cpp" />
-    <ClCompile Include="..\..\Source\Examples\SyncGenUnitTestVBR.cpp" />
-    <ClCompile Include="..\..\Source\Examples\SynchronGenUnitTest.cpp" />
+    <ClCompile Include="..\..\Source\IntegrationMethod.cpp" />
     <ClCompile Include="..\..\Source\Logger.cpp" />
     <ClCompile Include="..\..\Source\Simulation.cpp" />
     <ClCompile Include="..\..\Source\SystemModel.cpp" />

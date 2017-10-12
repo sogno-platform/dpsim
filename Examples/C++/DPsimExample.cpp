@@ -73,7 +73,7 @@ int main(int argc, char* argv[]) {
 	// EMT VBR model
 	//SynGenUnitTestVBR();
 	// DP VBR model
-	SynGenUnitTestVBRDP();
+	//SynGenUnitTestVBRDP();
 
 	// #### Variable frequency tests ################
 	//RXLineResLoad();

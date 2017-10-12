@@ -93,15 +93,6 @@
     <ClInclude Include="..\..\Source\Components\VoltSourceResFreqEMT.h">
       <Filter>Headerdateien\Components</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\Source\Examples\ReferenceCircuits.h">
-      <Filter>Headerdateien\Examples</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\Source\Examples\SimpleCircuitTest.h">
-      <Filter>Headerdateien\Examples</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\Source\Examples\SynchronGenUnitTest.h">
-      <Filter>Headerdateien\Examples</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\Source\SystemModel.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
@@ -114,17 +105,8 @@
     <ClInclude Include="..\..\Source\Components\VoltageBehindReactanceEMT.h">
       <Filter>Headerdateien\Components</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\Source\Examples\SyncGenUnitTestVBR.h">
-      <Filter>Headerdateien\Examples</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\Source\Examples\ShmemTest.h">
-      <Filter>Headerdateien\Examples</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\Source\Components\VoltageBehindReactanceDP.h">
       <Filter>Headerdateien\Components</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\Source\Examples\Testing.h">
-      <Filter>Headerdateien\Examples</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Source\CIMReader.h">
       <Filter>Headerdateien</Filter>
@@ -135,11 +117,29 @@
     <ClInclude Include="..\..\Source\Components\TwoWindingTransformer.h">
       <Filter>Headerdateien\Components</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\Examples\C++\ReferenceCircuits.h">
+      <Filter>Headerdateien\Examples</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Examples\C++\ShmemTest.h">
+      <Filter>Headerdateien\Examples</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Examples\C++\SimpleCircuitTest.h">
+      <Filter>Headerdateien\Examples</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Examples\C++\SyncGenUnitTestVBR.h">
+      <Filter>Headerdateien\Examples</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Examples\C++\SynchronGenUnitTest.h">
+      <Filter>Headerdateien\Examples</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\IntegrationMethod.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\Components\SynchronGeneratorEMTFnP.h">
+      <Filter>Headerdateien\Components</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\Source\DPsimMain.cpp">
-      <Filter>Quelldateien</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\Source\Logger.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
@@ -191,12 +191,6 @@
     <ClCompile Include="..\..\Source\Components\InductorEMT.cpp">
       <Filter>Quelldateien\Components</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\Source\Examples\ReferenceCircuits.cpp">
-      <Filter>Quelldateien\Examples</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\Source\Examples\SynchronGenUnitTest.cpp">
-      <Filter>Quelldateien\Examples</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\Source\SystemModel.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
@@ -209,15 +203,6 @@
     <ClCompile Include="..\..\Source\Components\VoltageBehindReactanceEMT.cpp">
       <Filter>Quelldateien\Components</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\Source\Examples\SyncGenUnitTestVBR.cpp">
-      <Filter>Quelldateien\Examples</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\Source\Examples\SimpleCircuitTest.cpp">
-      <Filter>Quelldateien\Examples</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\Source\Examples\ShmemTest.cpp">
-      <Filter>Quelldateien\Examples</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\Source\Components\VoltageBehindReachtanceDP.cpp">
       <Filter>Quelldateien\Components</Filter>
     </ClCompile>
@@ -228,6 +213,33 @@
       <Filter>Quelldateien\Components</Filter>
     </ClCompile>
     <ClCompile Include="..\..\Source\Components\TwoWindingTransformer.cpp">
+      <Filter>Quelldateien\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Examples\C++\DPsimExample.cpp">
+      <Filter>Quelldateien\Examples</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Examples\C++\ReferenceCircuits.cpp">
+      <Filter>Quelldateien\Examples</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Examples\C++\ShmemTest.cpp">
+      <Filter>Quelldateien\Examples</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Examples\C++\SimpleCircuitTest.cpp">
+      <Filter>Quelldateien\Examples</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Examples\C++\SyncGenUnitTestVBR.cpp">
+      <Filter>Quelldateien\Examples</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Examples\C++\SynchronGenUnitTest.cpp">
+      <Filter>Quelldateien\Examples</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\IntegrationMethod.cpp">
+      <Filter>Quelldateien</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\Components\SynchronGeneratorEMTFnP.cpp">
+      <Filter>Quelldateien\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\Components\BaseComponent.cpp">
       <Filter>Quelldateien\Components</Filter>
     </ClCompile>
   </ItemGroup>
