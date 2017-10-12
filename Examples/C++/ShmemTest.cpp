@@ -256,4 +256,61 @@ void DPsim::shmemDistributedRef()
 	}
 }
 
+void DPsim::exampleMainShmem() {
+	// TODO: RT / shmem interface with python
+
+	ShmemInterface *intf = nullptr;
+	// TODO: this is a simple, pretty much fixed setup. Make this more flexible / configurable
+	if (split >= 0) {
+		int node = reader.mapTopologicalNode(splitNode);
+		if (node < 0) {
+			std::cerr << "Invalid / missing split node" << std::endl;
+			return 1;
+		}
+
+		if (split == 0) {
+			outName = interfaceBase + ".0.out";
+			inName = interfaceBase + ".0.in";
+			intf = new ShmemInterface(outName.c_str(), inName.c_str());
+			ExternalVoltageSource *evs = new ExternalVoltageSource("v_int", node, 0, 0, 0, reader.getNumVoltageSources() + 1);
+			intf->registerVoltageSource(evs, 0, 1);
+			intf->registerExportedCurrent(evs, 0, 1);
+			components.push_back(evs);
+			// TODO make log names configurable
+			logName = "cim0.log";
+			llogName = "lvector-cim0.csv";
+			rlogName = "rvector-cim0.csv";
+		}
+		else {
+			outName = interfaceBase + ".1.out";
+			inName = interfaceBase + ".1.in";
+			intf = new ShmemInterface(outName.c_str(), inName.c_str());
+			ExternalCurrentSource *ecs = new ExternalCurrentSource("i_int", node, 0, 0, 0);
+			intf->registerCurrentSource(ecs, 0, 1);
+			intf->registerExportedVoltage(node, 0, 0, 1);
+			components.push_back(ecs);
+			logName = "cim1.log";
+			llogName = "lvector-cim1.csv";
+			rlogName = "rvector-cim1.csv";
+		}
+	}
+
+	if (intf) {
+		sim.addExternalInterface(intf);
+	}
+
+	if (rt) {
+		sim.runRT(RTTimerFD, true, log, llog, rlog);
+	} 
+	else {
+		while (sim.step(log, llog, rlog)) {
+			sim.increaseByTimeStep();
+		}
+	}
+
+	if (intf) {
+		delete intf;
+	}
+}
+
 #endif

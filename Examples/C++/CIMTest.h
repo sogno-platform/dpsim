@@ -1,4 +1,4 @@
-/** Utilities
+/** CIM Test
  *
  * @file
  * @author Markus Mirz <mmirz@eonerc.rwth-aachen.de>
@@ -21,19 +21,16 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *********************************************************************************/
 
-#ifndef UTILITIES_H
-#define UTILITIES_H
+#ifdef __cim__
 
-#include <string>
+#ifndef CIMTEST_H
+#define CIMTEST_H
 
-namespace DPsim {
-	void updateProgressBar(double time, double finalTime);
-	void usage();
-	bool parseFloat(const char *s, double *d);
-	bool parseInt(const char *s, int *i);
-	int parseArguments(int argc, const char* argv[], bool &rt, bool &batch, int &split, std::string &interfaceBase, std::string &splitNode);
-	int checkArguments(bool rt, int split, std::string splitNode);
-	int consoleMain(int argc, const char* argv[]);
-}
+#include "../CIMReader.h"
+
+void readFixedCIMFiles();
+int testCIMReader(std::list<std::string> filenames);
+
+#endif
 
 #endif

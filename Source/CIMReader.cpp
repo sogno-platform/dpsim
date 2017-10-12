@@ -74,11 +74,12 @@ double CIMReader::unitValue(double value, UnitMultiplier mult) {
 	return value;
 }
 
-CIMReader::CIMReader(Real om) {
+// TODO: fix error with frequency and angular frequency
+CIMReader::CIMReader(Real systemFrequency) {
 	mModel.setDependencyCheckOff();
 	mNumVoltageSources = 0;
 	mVoltages = nullptr;
-	mFrequency = om;
+	mFrequency = systemFrequency;
 }
 
 CIMReader::~CIMReader() {

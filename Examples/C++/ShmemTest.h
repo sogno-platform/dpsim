@@ -22,8 +22,11 @@
  *********************************************************************************/
 
 #ifdef __linux__
+
 #ifndef SHMEMTEST_H
 #define SHMEMTEST_H
+
+#include "ShmemInterface.h"
 
 namespace DPsim {
 
@@ -32,7 +35,10 @@ namespace DPsim {
 	void shmemDistributed(int argc, char *argv[]);
 	void shmemDistributedDirect(int argc, char *argv[]);
 	void shmemDistributedRef();
+
+	void exampleMainShmem();
 }
 
 #endif
+
 #endif
