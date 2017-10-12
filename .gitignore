@@ -17,9 +17,3 @@ Makefile
 # Mac
 __MACOSX
 .DS_Store
-
-# DP solver logs
-data.csv
-log.txt
-*.csv
-*.asv
