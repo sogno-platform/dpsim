@@ -110,10 +110,6 @@ namespace DPsim {
 		double mDVcRe;
 		double mDVcIm;
 
-		//omega 2
-		double mOmMech2;
-
-
 		/// inertia J [kg*m^2]
 		double mJ;
 		/// number of poles
@@ -158,9 +154,12 @@ namespace DPsim {
 		// ### State variables ###
 		/// rotor speed omega_r
 		double mOmMech;
+		double mOmMech_hist;
 		/// theta
 		double mThetaMech;
 		double mThetaMech2;
+		double mThetaMech2_hist;
+		double mTheta0;
 		/// mechanical Power Pm [W]
 		double mMechPower;
 		/// mechanical torque
@@ -239,11 +238,15 @@ namespace DPsim {
 		DPSMatrix LD0 = DPSMatrix::Zero(3, 3);
 		MatrixComp LD1 = MatrixComp::Zero(3, 3);
 		MatrixComp A1 = MatrixComp::Zero(3, 3);
+		MatrixComp A3 = MatrixComp::Zero(3, 3);
+		MatrixComp A4 = MatrixComp::Zero(3, 3);
 		MatrixComp B1 = MatrixComp::Zero(3, 3);
 		MatrixComp A2 = MatrixComp::Zero(3, 3);
 		MatrixComp B2 = MatrixComp::Zero(3, 3);
 		DPSMatrix L_VP_SFA = DPSMatrix::Zero(6, 6);
 		DPSMatrix R_VP_SFA = DPSMatrix::Zero(6, 6);
+		DPSMatrix K1 = DPSMatrix::Zero(6, 6);
+		DPSMatrix K2 = DPSMatrix::Zero(6, 6);
 		Complex alpha;
 
 		// ### Useful Matrices ###
@@ -341,6 +344,7 @@ namespace DPsim {
 		//void FormTheveninEquivalent(Real dt);
 		void CalculateLandR(Real theta, Real omega_s, Real omega);
 		void CalculateLandR(Real theta, Real omega_s, Real omega, Real time);
+		void CalculateLandR(Real dt, Real time);
 
 		/// Retrieves calculated voltage from simulation for next step
 		void postStep(SystemModel& system);
