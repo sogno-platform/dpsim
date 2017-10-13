@@ -160,40 +160,40 @@ void VoltageBehindReactanceEMT::init(Real om, Real dt,
 void VoltageBehindReactanceEMT::initStatesInPerUnit(Real initActivePower, Real initReactivePower,
 	Real initTerminalVolt, Real initVoltAngle) {
 
-	double init_P = initActivePower / mNomPower;
-	double init_Q = initReactivePower / mNomPower;
-	double init_S = sqrt(pow(init_P, 2.) + pow(init_Q, 2.));
-	double init_vt = initTerminalVolt / mBase_v;
-	double init_it = init_S / init_vt;
+	Real init_P = initActivePower / mNomPower;
+	Real init_Q = initReactivePower / mNomPower;
+	Real init_S = sqrt(pow(init_P, 2.) + pow(init_Q, 2.));
+	Real init_vt = initTerminalVolt / mBase_v;
+	Real init_it = init_S / init_vt;
 
 	// power factor
-	double init_pf = acos(init_P / init_S);
+	Real init_pf = acos(init_P / init_S);
 
 	// load angle
-	double init_delta = atan(((mLmq + mLl) * init_it * cos(init_pf) - mRs * init_it * sin(init_pf)) /
+	Real init_delta = atan(((mLmq + mLl) * init_it * cos(init_pf) - mRs * init_it * sin(init_pf)) /
 		(init_vt + mRs * init_it * cos(init_pf) + (mLmq + mLl) * init_it * sin(init_pf)));
-	double init_delta_deg = init_delta / DPS_PI * 180;
+	Real init_delta_deg = init_delta / DPS_PI * 180;
 
 	// dq stator voltages and currents
-	double init_vd = init_vt * sin(init_delta);
-	double init_vq = init_vt * cos(init_delta);
-	double init_id = -init_it * sin(init_delta + init_pf);
-	double init_iq = -init_it * cos(init_delta + init_pf);
+	Real init_vd = init_vt * sin(init_delta);
+	Real init_vq = init_vt * cos(init_delta);
+	Real init_id = -init_it * sin(init_delta + init_pf);
+	Real init_iq = -init_it * cos(init_delta + init_pf);
 
 	// rotor voltage and current
-	double init_ifd = (init_vq + mRs * init_iq + (mLmd + mLl) * init_id) / mLmd;
-	double init_vfd = mRfd * init_ifd;
+	Real init_ifd = (init_vq + mRs * init_iq + (mLmd + mLl) * init_id) / mLmd;
+	Real init_vfd = mRfd * init_ifd;
 
 	// flux linkages
-	double init_psid = init_vq + mRs * init_iq;
-	double init_psiq = -init_vd - mRs * init_id;
-	double init_psifd = (mLmd + mLlfd) * init_ifd - mLmd * init_id;
-	double init_psid1 = mLmd * (init_ifd - init_id);
-	double init_psiq1 = -mLmq * init_iq;
-	double init_psiq2 = -mLmq * init_iq;
+	Real init_psid = init_vq + mRs * init_iq;
+	Real init_psiq = -init_vd - mRs * init_id;
+	Real init_psifd = (mLmd + mLlfd) * init_ifd - mLmd * init_id;
+	Real init_psid1 = mLmd * (init_ifd - init_id);
+	Real init_psiq1 = -mLmq * init_iq;
+	Real init_psiq2 = -mLmq * init_iq;
 
 	// rotor mechanical variables
-	double init_Te = init_P + mRs * pow(init_it, 2.);
+	Real init_Te = init_P + mRs * pow(init_it, 2.);
 	mOmMech = 1;
 
 	mIq = init_iq;
@@ -443,16 +443,16 @@ void VoltageBehindReactanceEMT::postStep(SystemModel& system) {
 }
 
 
-Matrix VoltageBehindReactanceEMT::parkTransform(Real theta, double a, double b, double c) {
+Matrix VoltageBehindReactanceEMT::parkTransform(Real theta, Real a, Real b, Real c) {
 
 	Matrix dq0vector(3, 1);
 
-	double q, d;
+	Real q, d;
 
 	q = 2. / 3. * cos(theta)*a + 2. / 3. * cos(theta - 2. * M_PI / 3.)*b + 2. / 3. * cos(theta + 2. * M_PI / 3.)*c;
 	d = 2. / 3. * sin(theta)*a + 2. / 3. * sin(theta - 2. * M_PI / 3.)*b + 2. / 3. * sin(theta + 2. * M_PI / 3.)*c;
 
-	//double zero;
+	//Real zero;
 	//zero = 1. / 3. * a, 1. / 3. * b, 1. / 3. * c;
 
 	dq0vector << q,
@@ -464,11 +464,11 @@ Matrix VoltageBehindReactanceEMT::parkTransform(Real theta, double a, double b, 
 
 
 
-Matrix VoltageBehindReactanceEMT::inverseParkTransform(Real theta, double q, double d, double zero) {
+Matrix VoltageBehindReactanceEMT::inverseParkTransform(Real theta, Real q, Real d, Real zero) {
 
 	Matrix abcVector(3, 1);
 
-	double a, b, c;
+	Real a, b, c;
 
 	a = cos(theta)*q + sin(theta)*d + 1.*zero;
 	b = cos(theta - 2. * M_PI / 3.)*q + sin(theta - 2. * M_PI / 3.)*d + 1.*zero;

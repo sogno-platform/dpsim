@@ -24,7 +24,7 @@
 
 using namespace DPsim;
 
-Matrix DPsim::Trapezoidal(Matrix states, Matrix A, Matrix B, double dt, Matrix u_new, Matrix u_old)
+Matrix DPsim::Trapezoidal(Matrix states, Matrix A, Matrix B, Real dt, Matrix u_new, Matrix u_old)
 {
 	Int n = states.rows();
 	Matrix I = Matrix::Identity(n, n);
@@ -36,7 +36,7 @@ Matrix DPsim::Trapezoidal(Matrix states, Matrix A, Matrix B, double dt, Matrix u
 	return newstates;
 }
 
-Matrix DPsim::Trapezoidal(Matrix states, Matrix A, Matrix B, Matrix C, double dt, Matrix u_new, Matrix u_old)
+Matrix DPsim::Trapezoidal(Matrix states, Matrix A, Matrix B, Matrix C, Real dt, Matrix u_new, Matrix u_old)
 {
 	Int n = states.rows();
 	Matrix I = Matrix::Identity(n, n);
@@ -48,7 +48,7 @@ Matrix DPsim::Trapezoidal(Matrix states, Matrix A, Matrix B, Matrix C, double dt
 	return newstates;
 }
 
-Matrix DPsim::Trapezoidal(Matrix states, Matrix A, Matrix B, double dt, Matrix u)
+Matrix DPsim::Trapezoidal(Matrix states, Matrix A, Matrix B, Real dt, Matrix u)
 {
 	Int n = states.rows();
 
@@ -60,16 +60,16 @@ Matrix DPsim::Trapezoidal(Matrix states, Matrix A, Matrix B, double dt, Matrix u
 	return InvAux*Aux*states + InvAux*dt*B*u;
 }
 
-Matrix DPsim::Euler(Matrix states, Matrix A, Matrix B, double dt, Matrix u)
+Matrix DPsim::Euler(Matrix states, Matrix A, Matrix B, Real dt, Matrix u)
 {
 	return states + dt*(A*states + B*u);
 }
 
-double DPsim::Euler(double state, Matrix inputs, DeriveFnPtr fnPtr, double dt) {
+Real DPsim::Euler(Real state, Matrix inputs, DeriveFnPtr fnPtr, Real dt) {
 	return state + dt*fnPtr(inputs);
 }
 
-Matrix DPsim::Euler(Matrix states, Matrix A, Matrix B, Matrix C, double dt, Matrix u)
+Matrix DPsim::Euler(Matrix states, Matrix A, Matrix B, Matrix C, Real dt, Matrix u)
 {
 
 	Matrix newstates = states + dt*(A*states + B*u + C);

@@ -76,9 +76,9 @@ Simulation::~Simulation() {
 
 
 void Simulation::initialize(std::vector<BaseComponent*> newElements) {
-	int maxNode = 0;
+	Int maxNode = 0;
 	Int numIdealVS = 0;
-	int numLines = 0;
+	Int numLines = 0;
 
 	// Calculate the number of nodes by going through the list of elements
 	// TODO we use the values from the first element vector right now and assume that
@@ -139,7 +139,7 @@ void Simulation::addSystemTopology(std::vector<BaseComponent*> newElements) {
 }
 
 
-int Simulation::step(Logger& logger, bool blocking)
+Int Simulation::step(Logger& logger, bool blocking)
 {
 	mSystemModel.setRightSideVectorToZero();
 
@@ -180,8 +180,8 @@ int Simulation::step(Logger& logger, bool blocking)
 
 }
 
-int Simulation::step(Logger& logger, Logger& leftSideVectorLog, Logger& rightSideVectorLog, bool blocking) {
-	int retValue = step(logger, blocking);
+Int Simulation::step(Logger& logger, Logger& leftSideVectorLog, Logger& rightSideVectorLog, bool blocking) {
+	Int retValue = step(logger, blocking);
 
 	leftSideVectorLog.LogDataLine(getTime(), getLeftSideVector());
 	rightSideVectorLog.LogDataLine(getTime(), getRightSideVector());
@@ -189,7 +189,7 @@ int Simulation::step(Logger& logger, Logger& leftSideVectorLog, Logger& rightSid
 	return retValue;
 }
 
-int Simulation::stepGeneratorTest(Logger& logger, Logger& leftSideVectorLog, Logger& rightSideVectorLog,
+Int Simulation::stepGeneratorTest(Logger& logger, Logger& leftSideVectorLog, Logger& rightSideVectorLog,
 	BaseComponent* generator, Real time) {
 	// Set to zero because all components will add their contribution for the current time step to the current value
 	mSystemModel.getRightSideVector().setZero();

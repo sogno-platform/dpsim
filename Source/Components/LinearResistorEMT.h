@@ -30,10 +30,10 @@ namespace DPsim {
 
 	class LinearResistorEMT : public BaseComponent {
 	protected:
-		double mResistance;
-		double mConductance;
-		double mVoltageAtNode1;
-		double mVoltageAtNode2;
+		Real mResistance;
+		Real mConductance;
+		Real mVoltageAtNode1;
+		Real mVoltageAtNode2;
 
 	public:
 		LinearResistorEMT() { ; };

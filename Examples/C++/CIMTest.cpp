@@ -42,7 +42,7 @@ void readFixedCIMFiles_IEEE9bus() {
 	testCIMReader(filenames);
 }
 
-int testCIMReader(std::list<std::string> filenames) {
+Int testCIMReader(std::list<std::string> filenames) {
 	
 	// Read CIM data
 	CIMReader reader(50);

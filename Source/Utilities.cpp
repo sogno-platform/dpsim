@@ -26,7 +26,7 @@
 
 using namespace DPsim;
 
-void DPsim::updateProgressBar(double time, double finalTime) {
+void DPsim::updateProgressBar(Real time, Real finalTime) {
 
 	if (time / finalTime <= 0.1) {
 		std::cout << "                      (0%)\r";
@@ -90,9 +90,9 @@ bool DPsim::parseInt(const char *s, int *i) {
 
 
 int DPsim::parseArguments(int argc, const char* argv[],
-	bool &rt, bool &batch, int &split, std::string &interfaceBase, std::string &splitNode) {
+	bool &rt, bool &batch, Int &split, std::string &interfaceBase, std::string &splitNode) {
 
-	int i;
+	Int i;
 
 	for (i = 1; i < argc; i++) {
 		if (!strcmp(argv[i], "-b") || !strcmp(argv[i], "--batch")) {
@@ -144,7 +144,7 @@ int DPsim::parseArguments(int argc, const char* argv[],
 	}
 }
 
-int DPsim::checkArguments(bool rt, int split, std::string splitNode) {
+int DPsim::checkArguments(bool rt, Int split, std::string splitNode) {
 #ifndef __linux__
 	if (split >= 0 || splitNode.length() != 0) {
 		std::cerr << "Distributed simulation not supported on this platform" << std::endl;

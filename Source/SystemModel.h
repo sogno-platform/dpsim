@@ -41,9 +41,9 @@ namespace DPsim {
 		///Numerical method
 		NumericalMethod mNumMethod;
 		/// Number of nodes
-		int mNumNodes;
+		Int mNumNodes;
 		/// Index offset for imaginary part
-		int mCompOffset;
+		Int mCompOffset;
 		/// Angular frequency of the phasor
 		Real mSystemOmega;
 		/// Simulation time step

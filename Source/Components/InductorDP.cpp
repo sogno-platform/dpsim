@@ -24,14 +24,14 @@
 
 using namespace DPsim;
 
-Inductor::Inductor(std::string name, Int src, Int dest, double inductance) : BaseComponent(name, src, dest) {
+Inductor::Inductor(std::string name, Int src, Int dest, Real inductance) : BaseComponent(name, src, dest) {
 	mInductance = inductance;
 	attrMap["inductance"] = {AttrReal, &mInductance};
 }
 
 void Inductor::applySystemMatrixStamp(SystemModel& system) {
-	double a = system.getTimeStep() / (2. * mInductance);
-	double b = system.getTimeStep() * system.getOmega() / 2.;
+	Real a = system.getTimeStep() / (2. * mInductance);
+	Real b = system.getTimeStep() * system.getOmega() / 2.;
 	mGlr = a / (1 + b*b);
 	mGli = -a*b / (1 + b*b);
 	mPrevCurFacRe = (1 - b*b) / (1 + b*b);
@@ -76,7 +76,7 @@ void Inductor::step(SystemModel& system, Real time) {
 
 
 void Inductor::postStep(SystemModel& system) {
-	double vposr, vnegr, vposi, vnegi;
+	Real vposr, vnegr, vposi, vnegi;
 
 	// extract solution
 	if (mNode1 >= 0)	{

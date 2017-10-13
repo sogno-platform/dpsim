@@ -90,7 +90,7 @@ namespace DPsim {
 		/// inertia J [kg*m^2]
 		Real mJ;
 		/// number of poles
-		int mPoleNumber;
+		Int mPoleNumber;
 		/// inertia coefficient H
 		Real mH;
 
@@ -230,7 +230,7 @@ namespace DPsim {
 		Real mIkd_hist;
 
 		/// Number of damping windings in q
-		int DampingWindings;
+		Int DampingWindings;
 
 
 		/// interface voltage vector dq0

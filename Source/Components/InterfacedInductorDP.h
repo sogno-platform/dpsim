@@ -29,13 +29,13 @@ namespace DPsim {
 
 	class InterfacedInductor : public BaseComponent {
 	protected:
-		double mInductance;
-		double mVoltageRe;
-		double mVoltageIm;
-		double mCurrentRe;
-		double mCurrentIm;
-		double mCurrentStepRe;
-		double mCurrentStepIm;
+		Real mInductance;
+		Real mVoltageRe;
+		Real mVoltageIm;
+		Real mCurrentRe;
+		Real mCurrentIm;
+		Real mCurrentStepRe;
+		Real mCurrentStepIm;
 
 	public:
 		InterfacedInductor() { };

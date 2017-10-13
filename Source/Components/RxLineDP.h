@@ -50,13 +50,13 @@ namespace DPsim {
 
 		LineTypes type;
 
-		double correctr, correcti;
-		double cureqr_ind, cureqi_ind;
-		double deltavr_ind;
-		double deltavi_ind;
-		double glr_ind, gli_ind;
-		double currr_ind;
-		double curri_ind;
+		Real correctr, correcti;
+		Real cureqr_ind, cureqi_ind;
+		Real deltavr_ind;
+		Real deltavi_ind;
+		Real glr_ind, gli_ind;
+		Real currr_ind;
+		Real curri_ind;
 
 	public:
 		RxLine() { };

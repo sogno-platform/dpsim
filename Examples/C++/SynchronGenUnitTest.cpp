@@ -29,47 +29,47 @@ using namespace DPsim;
 
 #if 0
 // Machine parameters - stator referred
-double nomPower = 555e6;
-double nomPhPhVoltRMS = 24e3;
-double nomFreq = 60;
-double nomFieldCurr = 1300;
-int P = 2;
-double J = 28897.6459179918;
-double Rs = 0.0031;
-double Ll = 0.0004129;
-double Lmd = 0.0046;
-double Lmq = 0.0044;
-double Rf = 0.0006226;
-double Llfd = 0.0004538;
-double Rkd = 0.0295;
-double Llkd = 0.0005;
-double Rkq1 = 0.0064;
-double Llkq1 = 0.002;
-double Rkq2 = 0.0246;
-double Llkq2 = 0.0003;
+Real nomPower = 555e6;
+Real nomPhPhVoltRMS = 24e3;
+Real nomFreq = 60;
+Real nomFieldCurr = 1300;
+Int P = 2;
+Real J = 28897.6459179918;
+Real Rs = 0.0031;
+Real Ll = 0.0004129;
+Real Lmd = 0.0046;
+Real Lmq = 0.0044;
+Real Rf = 0.0006226;
+Real Llfd = 0.0004538;
+Real Rkd = 0.0295;
+Real Llkd = 0.0005;
+Real Rkq1 = 0.0064;
+Real Llkq1 = 0.002;
+Real Rkq2 = 0.0246;
+Real Llkq2 = 0.0003;
 
 // Define machine parameters in per unit
-double nomPower = 555e6;
-double nomPhPhVoltRMS = 24e3;
-double nomFreq = 60;
-double nomFieldCurr = 1300;
-int poleNum = 2;
-double J = 2.8898e+04;
-double H = 3.7;
-double Rs = 0.003;
-double Ll = 0.15;
-double Lmd = 1.6599;
-double Lmd0 = 1.6599;
-double Lmq = 1.61;
-double Lmq0 = 1.61;
-double Rfd = 0.0006;
-double Llfd = 0.1648;
-double Rkd = 0.0284;
-double Llkd = 0.1713;
-double Rkq1 = 0.0062;
-double Llkq1 = 0.7252;
-double Rkq2 = 0.0237;
-double Llkq2 = 0.125;
+Real nomPower = 555e6;
+Real nomPhPhVoltRMS = 24e3;
+Real nomFreq = 60;
+Real nomFieldCurr = 1300;
+Int poleNum = 2;
+Real J = 2.8898e+04;
+Real H = 3.7;
+Real Rs = 0.003;
+Real Ll = 0.15;
+Real Lmd = 1.6599;
+Real Lmd0 = 1.6599;
+Real Lmq = 1.61;
+Real Lmq0 = 1.61;
+Real Rfd = 0.0006;
+Real Llfd = 0.1648;
+Real Rkd = 0.0284;
+Real Llkd = 0.1713;
+Real Rkq1 = 0.0062;
+Real Llkq1 = 0.7252;
+Real Rkq2 = 0.0237;
+Real Llkq2 = 0.125;
 #endif
 
 void DPsim::SynGenUnitTestBalancedResLoad() {
@@ -83,36 +83,36 @@ void DPsim::SynGenUnitTestBalancedResLoad() {
 		synGenLogFlux("data_synGen_curr.csv");
 
 	// Define machine parameters in per unit
-	double nomPower = 555e6;
-	double nomPhPhVoltRMS = 24e3;
-	double nomFreq = 60;
-	double nomFieldCurr = 1300;
-	int poleNum = 2;
-	double J = 2.8898e+04;
-	double H = 3.7;
+	Real nomPower = 555e6;
+	Real nomPhPhVoltRMS = 24e3;
+	Real nomFreq = 60;
+	Real nomFieldCurr = 1300;
+	Int poleNum = 2;
+	Real J = 2.8898e+04;
+	Real H = 3.7;
 
-	double Rs = 0.003;
-	double Ll = 0.15;
-	double Lmd = 1.6599;
-	double Lmd0 = 1.6599;
-	double Lmq = 1.61;
-	double Lmq0 = 1.61;
-	double Rfd = 0.0006;
-	double Llfd = 0.1648;
-	double Rkd = 0.0284;
-	double Llkd = 0.1713;
-	double Rkq1 = 0.0062;
-	double Llkq1 = 0.7252;
-	//double Rkq2 = 0.0237;
-	//double Llkq2 = 0.125;
-	double Llkq2 = 0;
-	double Rkq2 = 0;
+	Real Rs = 0.003;
+	Real Ll = 0.15;
+	Real Lmd = 1.6599;
+	Real Lmd0 = 1.6599;
+	Real Lmq = 1.61;
+	Real Lmq0 = 1.61;
+	Real Rfd = 0.0006;
+	Real Llfd = 0.1648;
+	Real Rkd = 0.0284;
+	Real Llkd = 0.1713;
+	Real Rkq1 = 0.0062;
+	Real Llkq1 = 0.7252;
+	//Real Rkq2 = 0.0237;
+	//Real Llkq2 = 0.125;
+	Real Llkq2 = 0;
+	Real Rkq2 = 0;
 
 	// Declare circuit components
 	BaseComponent* gen = new SynchronGeneratorEMT("gen", 1, 2, 3,
 		nomPower, nomPhPhVoltRMS, nomFreq, poleNum, nomFieldCurr,
 		Rs, Ll, Lmd, Lmd0, Lmq, Lmq0, Rfd, Llfd, Rkd, Llkd, Rkq1, Llkq1, Rkq2, Llkq2, H, true);
-	double loadRes = 1037.8378;
+	Real loadRes = 1037.8378;
 	BaseComponent* r1 = new LinearResistorEMT("r1", 0, 1, loadRes);
 	BaseComponent* r2 = new LinearResistorEMT("r2", 0, 2, loadRes);
 	BaseComponent* r3 = new LinearResistorEMT("r3", 0, 3, loadRes);
@@ -124,33 +124,33 @@ void DPsim::SynGenUnitTestBalancedResLoad() {
 	circElements.push_back(r3);
 
 	// Set up simulation
-	double om = 2.0*M_PI*60.0;
-	double tf = 0.1;
-	double dt = 0.000001;
-	double t = 0;
+	Real om = 2.0*M_PI*60.0;
+	Real tf = 0.1;
+	Real dt = 0.000001;
+	Real t = 0;
 	Int downSampling = 25;
 	Simulation newSim(circElements, om, dt, tf, log, downSampling, SimulationType::EMT);
 	newSim.setNumericalMethod(NumericalMethod::Trapezoidal_flux);
 
 	// Initialize generator
-	double initActivePower = 555e3;
-	double initReactivePower = 0;
-	double initTerminalVolt = 24000 / sqrt(3) * sqrt(2);
-	double initVoltAngle = -DPS_PI / 2;
+	Real initActivePower = 555e3;
+	Real initReactivePower = 0;
+	Real initTerminalVolt = 24000 / sqrt(3) * sqrt(2);
+	Real initVoltAngle = -DPS_PI / 2;
 	Real fieldVoltage = 7.0821;
 	Real mechPower = 5.5558e5;
 	((SynchronGeneratorEMT*)gen)->init(om, dt, initActivePower, initReactivePower, initTerminalVolt, initVoltAngle, fieldVoltage, mechPower);
 
 	// Calculate initial values for circuit at generator connection point
-	//double initApparentPower = sqrt(pow(initActivePower, 2) + pow(initReactivePower, 2));
-	//double initTerminalCurr = initApparentPower / (3 * initTerminalVolt)* sqrt(2);
-	//double initPowerFactor = acos(initActivePower / initApparentPower);
-	//double initVolt1 = initTerminalVolt * cos(initVoltAngle);
-	//double initVolt2 = initTerminalVolt * cos(initVoltAngle - 2 * M_PI / 3);
-	//double initVolt3 = initTerminalVolt * cos(initVoltAngle + 2 * M_PI / 3);
-	//double initCurrent1 = initTerminalCurr * cos(initVoltAngle + initPowerFactor);
-	//double initCurrent2 = initTerminalCurr * cos(initVoltAngle + initPowerFactor - 2 * M_PI / 3);
-	//double initCurrent3 = initTerminalCurr * cos(initVoltAngle + initPowerFactor + 2 * M_PI / 3);
+	//Real initApparentPower = sqrt(pow(initActivePower, 2) + pow(initReactivePower, 2));
+	//Real initTerminalCurr = initApparentPower / (3 * initTerminalVolt)* sqrt(2);
+	//Real initPowerFactor = acos(initActivePower / initApparentPower);
+	//Real initVolt1 = initTerminalVolt * cos(initVoltAngle);
+	//Real initVolt2 = initTerminalVolt * cos(initVoltAngle - 2 * M_PI / 3);
+	//Real initVolt3 = initTerminalVolt * cos(initVoltAngle + 2 * M_PI / 3);
+	//Real initCurrent1 = initTerminalCurr * cos(initVoltAngle + initPowerFactor);
+	//Real initCurrent2 = initTerminalCurr * cos(initVoltAngle + initPowerFactor - 2 * M_PI / 3);
+	//Real initCurrent3 = initTerminalCurr * cos(initVoltAngle + initPowerFactor + 2 * M_PI / 3);
 
 	std::cout << "A matrix:" << std::endl;
 	std::cout << newSim.getSystemMatrix() << std::endl;
@@ -182,34 +182,34 @@ void DPsim::SynGenUnitTestPhaseToPhaseFault() {
 		synGenLogFlux("data_synGen_curr.csv");
 
 	// Define machine parameters in per unit
-	double nomPower = 555e6;
-	double nomPhPhVoltRMS = 24e3;
-	double nomFreq = 60;
-	double nomFieldCurr = 1300;
-	int poleNum = 2;
-	double J = 2.8898e+04;
-	double H = 3.7;
+	Real nomPower = 555e6;
+	Real nomPhPhVoltRMS = 24e3;
+	Real nomFreq = 60;
+	Real nomFieldCurr = 1300;
+	Int poleNum = 2;
+	Real J = 2.8898e+04;
+	Real H = 3.7;
 
-	double Rs = 0.003;
-	double Ll = 0.15;
-	double Lmd = 1.6599;
-	double Lmd0 = 1.6599;
-	double Lmq = 1.61;
-	double Lmq0 = 1.61;
-	double Rfd = 0.0006;
-	double Llfd = 0.1648;
-	double Rkd = 0.0284;
-	double Llkd = 0.1713;
-	double Rkq1 = 0.0062;
-	double Llkq1 = 0.7252;
-	double Rkq2 = 0.0237;
-	double Llkq2 = 0.125;
+	Real Rs = 0.003;
+	Real Ll = 0.15;
+	Real Lmd = 1.6599;
+	Real Lmd0 = 1.6599;
+	Real Lmq = 1.61;
+	Real Lmq0 = 1.61;
+	Real Rfd = 0.0006;
+	Real Llfd = 0.1648;
+	Real Rkd = 0.0284;
+	Real Llkd = 0.1713;
+	Real Rkq1 = 0.0062;
+	Real Llkq1 = 0.7252;
+	Real Rkq2 = 0.0237;
+	Real Llkq2 = 0.125;
 
 	// Declare circuit components
 	BaseComponent* gen = new SynchronGeneratorEMT("gen", 1, 2, 3,
 		nomPower, nomPhPhVoltRMS, nomFreq, poleNum, nomFieldCurr,
 		Rs, Ll, Lmd, Lmd0, Lmq, Lmq0, Rfd, Llfd, Rkd, Llkd, Rkq1, Llkq1, Rkq2, Llkq2, H);
-	double loadRes = 1037.8378;
+	Real loadRes = 1037.8378;
 	BaseComponent* r1 = new LinearResistorEMT("r1", 0, 1, loadRes);
 	BaseComponent* r2 = new LinearResistorEMT("r2", 0, 2, loadRes);
 	BaseComponent* r3 = new LinearResistorEMT("r3", 0, 3, loadRes);
@@ -221,7 +221,7 @@ void DPsim::SynGenUnitTestPhaseToPhaseFault() {
 	circElements.push_back(r3);
 
 	// Declare circuit components for resistance change
-	double breakerRes = 0.01;
+	Real breakerRes = 0.01;
 	BaseComponent* rBreaker = new LinearResistorEMT("rbreak", 1, 2, breakerRes);
 
 	std::vector<BaseComponent*> circElementsBreakerOn;
@@ -231,26 +231,26 @@ void DPsim::SynGenUnitTestPhaseToPhaseFault() {
 	circElementsBreakerOn.push_back(r3);
 
 	// Set up simulation
-	double tf, dt, t;
-	double om = 2.0*M_PI*60.0;
+	Real tf, dt, t;
+	Real om = 2.0*M_PI*60.0;
 	tf = 0.2; dt = 0.00005; t = 0;
 	Int downSampling = 50;
 	Simulation newSim(circElements, om, dt, tf, log, downSampling, SimulationType::EMT);
 	newSim.addSystemTopology(circElementsBreakerOn);
 
 	// Initialize generator
-	double initActivePower = 555e3;
-	double initReactivePower = 0;
-	double initTerminalVolt = 24000 / sqrt(3) * sqrt(2);
-	double initVoltAngle = -DPS_PI / 2;
+	Real initActivePower = 555e3;
+	Real initReactivePower = 0;
+	Real initTerminalVolt = 24000 / sqrt(3) * sqrt(2);
+	Real initVoltAngle = -DPS_PI / 2;
 	Real fieldVoltage = 7.0821;
 	Real mechPower = 5.5558e5;
 	((SynchronGeneratorEMT*)gen)->init(om, dt, initActivePower, initReactivePower, initTerminalVolt, initVoltAngle, fieldVoltage, mechPower);
 
 	// Calculate initial values for circuit at generator connection point
-	double initApparentPower = sqrt(pow(initActivePower, 2) + pow(initReactivePower, 2));
-	double initTerminalCurr = initApparentPower / (3 * initTerminalVolt)* sqrt(2);
-	double initPowerFactor = acos(initActivePower / initApparentPower);
+	Real initApparentPower = sqrt(pow(initActivePower, 2) + pow(initReactivePower, 2));
+	Real initTerminalCurr = initApparentPower / (3 * initTerminalVolt)* sqrt(2);
+	Real initPowerFactor = acos(initActivePower / initApparentPower);
 
 	std::cout << "A matrix:" << std::endl;
 	std::cout << newSim.getSystemMatrix() << std::endl;
@@ -284,36 +284,36 @@ void DPsim::SynGenUnitTestThreePhaseFault() {
 		synGenLogFlux("data_synGen_curr.csv");
 
 	// Define machine parameters in per unit
-	double nomPower = 555e6;
-	double nomPhPhVoltRMS = 24e3;
-	double nomFreq = 60;
-	double nomFieldCurr = 1300;
-	int poleNum = 2;
-	double J = 2.8898e+04;
-	double H = 3.7;
+	Real nomPower = 555e6;
+	Real nomPhPhVoltRMS = 24e3;
+	Real nomFreq = 60;
+	Real nomFieldCurr = 1300;
+	Int poleNum = 2;
+	Real J = 2.8898e+04;
+	Real H = 3.7;
 
-	double Rs = 0.003;
-	double Ll = 0.15;
-	double Lmd = 1.6599;
-	double Lmd0 = 1.6599;
-	double Lmq = 1.61;
-	double Lmq0 = 1.61;
-	double Rfd = 0.0006;
-	double Llfd = 0.1648;
-	double Rkd = 0.0284;
-	double Llkd = 0.1713;
-	double Rkq1 = 0.0062;
-	double Llkq1 = 0.7252;
-	double Rkq2 = 0.0237;
-	double Llkq2 = 0.125;
-	//double Rkq2 = 0;
-	//double Llkq2 = 0;
+	Real Rs = 0.003;
+	Real Ll = 0.15;
+	Real Lmd = 1.6599;
+	Real Lmd0 = 1.6599;
+	Real Lmq = 1.61;
+	Real Lmq0 = 1.61;
+	Real Rfd = 0.0006;
+	Real Llfd = 0.1648;
+	Real Rkd = 0.0284;
+	Real Llkd = 0.1713;
+	Real Rkq1 = 0.0062;
+	Real Llkq1 = 0.7252;
+	Real Rkq2 = 0.0237;
+	Real Llkq2 = 0.125;
+	//Real Rkq2 = 0;
+	//Real Llkq2 = 0;
 
 	// Declare circuit components
 	BaseComponent* gen = new SynchronGeneratorEMT("gen", 1, 2, 3,
 		nomPower, nomPhPhVoltRMS, nomFreq, poleNum, nomFieldCurr,
 		Rs, Ll, Lmd, Lmd0, Lmq, Lmq0, Rfd, Llfd, Rkd, Llkd, Rkq1, Llkq1, Rkq2, Llkq2, H);
-	double loadRes = 1037.8378;
+	Real loadRes = 1037.8378;
 	BaseComponent* r1 = new LinearResistorEMT("r1", 1, 0, loadRes);
 	BaseComponent* r2 = new LinearResistorEMT("r2", 2, 0, loadRes);
 	BaseComponent* r3 = new LinearResistorEMT("r3", 3, 0, loadRes);
@@ -325,7 +325,7 @@ void DPsim::SynGenUnitTestThreePhaseFault() {
 	circElements.push_back(r3);
 
 	// Declare circuit components for resistance change
-	double breakerRes = 0.001;
+	Real breakerRes = 0.001;
 	BaseComponent* rBreaker1 = new LinearResistorEMT("rbreak1", 1, 0, breakerRes);
 	BaseComponent* rBreaker2 = new LinearResistorEMT("rbreak2", 2, 0, breakerRes);
 	BaseComponent* rBreaker3 = new LinearResistorEMT("rbreak3", 3, 0, breakerRes);
@@ -338,8 +338,8 @@ void DPsim::SynGenUnitTestThreePhaseFault() {
 	circElementsBreakerOn.push_back(r3);
 
 	// Set up simulation
-	double tf, dt, t;
-	double om = 2.0*M_PI*60.0;
+	Real tf, dt, t;
+	Real om = 2.0*M_PI*60.0;
 	tf = 0.3; dt = 0.000001; t = 0;
 	Int downSampling = 50;
 	Simulation newSim(circElements, om, dt, tf, log, downSampling, SimulationType::EMT);
@@ -348,18 +348,18 @@ void DPsim::SynGenUnitTestThreePhaseFault() {
 	newSim.switchSystemMatrix(0);
 
 	// Initialize generator
-	double initActivePower = 555e3;
-	double initReactivePower = 0;
-	double initTerminalVolt = 24000 / sqrt(3) * sqrt(2);
-	double initVoltAngle = -DPS_PI / 2;
+	Real initActivePower = 555e3;
+	Real initReactivePower = 0;
+	Real initTerminalVolt = 24000 / sqrt(3) * sqrt(2);
+	Real initVoltAngle = -DPS_PI / 2;
 	Real fieldVoltage = 7.0821;
 	Real mechPower = 5.5558e5;
 	((SynchronGeneratorEMT*)gen)->init(om, dt, initActivePower, initReactivePower, initTerminalVolt, initVoltAngle, fieldVoltage, mechPower);
 
 	// Calculate initial values for circuit at generator connection point
-	double initApparentPower = sqrt(pow(initActivePower, 2) + pow(initReactivePower, 2));
-	double initTerminalCurr = initApparentPower / (3 * initTerminalVolt)* sqrt(2);
-	double initPowerFactor = acos(initActivePower / initApparentPower);
+	Real initApparentPower = sqrt(pow(initActivePower, 2) + pow(initReactivePower, 2));
+	Real initTerminalCurr = initApparentPower / (3 * initTerminalVolt)* sqrt(2);
+	Real initPowerFactor = acos(initActivePower / initApparentPower);
 
 	std::cout << "A matrix:" << std::endl;
 	std::cout << newSim.getSystemMatrix() << std::endl;
@@ -398,34 +398,34 @@ void DPsim::SynGenDPUnitTestBalancedResLoad() {
 		synGenLogFlux("data_synGen_curr.csv");
 
 	// Define machine parameters in per unit
-	double nomPower = 555e6;
-	double nomPhPhVoltRMS = 24e3;
-	double nomFreq = 60;
-	double nomFieldCurr = 1300;
-	int poleNum = 2;
-	double J = 2.8898e+04;
-	double H = 3.7;
+	Real nomPower = 555e6;
+	Real nomPhPhVoltRMS = 24e3;
+	Real nomFreq = 60;
+	Real nomFieldCurr = 1300;
+	Int poleNum = 2;
+	Real J = 2.8898e+04;
+	Real H = 3.7;
 
-	double Rs = 0.003;
-	double Ll = 0.15;
-	double Lmd = 1.6599;
-	double Lmd0 = 1.6599;
-	double Lmq = 1.61;
-	double Lmq0 = 1.61;
-	double Rfd = 0.0006;
-	double Llfd = 0.1648;
-	double Rkd = 0.0284;
-	double Llkd = 0.1713;
-	double Rkq1 = 0.0062;
-	double Llkq1 = 0.7252;
-	double Rkq2 = 0.0237;
-	double Llkq2 = 0.125;
+	Real Rs = 0.003;
+	Real Ll = 0.15;
+	Real Lmd = 1.6599;
+	Real Lmd0 = 1.6599;
+	Real Lmq = 1.61;
+	Real Lmq0 = 1.61;
+	Real Rfd = 0.0006;
+	Real Llfd = 0.1648;
+	Real Rkd = 0.0284;
+	Real Llkd = 0.1713;
+	Real Rkq1 = 0.0062;
+	Real Llkq1 = 0.7252;
+	Real Rkq2 = 0.0237;
+	Real Llkq2 = 0.125;
 
 	// Declare circuit components
 	BaseComponent* gen = new SynchronGenerator("gen", 1, 2, 3,
 		nomPower, nomPhPhVoltRMS, nomFreq, poleNum, nomFieldCurr,
 		Rs, Ll, Lmd, Lmd0, Lmq, Lmq0, Rfd, Llfd, Rkd, Llkd, Rkq1, Llkq1, Rkq2, Llkq2, H);
-	double loadRes = 1037.8378;
+	Real loadRes = 1037.8378;
 	BaseComponent* r1 = new LinearResistor("r1", 0, 1, loadRes);
 	BaseComponent* r2 = new LinearResistor("r2", 0, 2, loadRes);
 	BaseComponent* r3 = new LinearResistor("r3", 0, 3, loadRes);
@@ -437,26 +437,26 @@ void DPsim::SynGenDPUnitTestBalancedResLoad() {
 	circElements.push_back(r3);
 
 	// Set up simulation
-	double tf, dt, t;
-	double om = 2.0*M_PI*60.0;
+	Real tf, dt, t;
+	Real om = 2.0*M_PI*60.0;
 	tf = 0.1; dt = 0.000001; t = 0;
 	Int downSampling = 50;
 	Simulation newSim(circElements, om, dt, tf, log, downSampling);
 	newSim.setNumericalMethod(NumericalMethod::Trapezoidal_flux);
 
 	// Initialize generator
-	double initActivePower = 555e3;
-	double initReactivePower = 0;
-	double initTerminalVolt = 24000 / sqrt(3) * sqrt(2);
-	double initVoltAngle = -DPS_PI / 2;
+	Real initActivePower = 555e3;
+	Real initReactivePower = 0;
+	Real initTerminalVolt = 24000 / sqrt(3) * sqrt(2);
+	Real initVoltAngle = -DPS_PI / 2;
 	Real fieldVoltage = 7.0821;
 	Real mechPower = 5.5558e5;
 	((SynchronGenerator*)gen)->init(om, dt, initActivePower, initReactivePower, initTerminalVolt, initVoltAngle, fieldVoltage, mechPower);
 
 	// Calculate initial values for circuit at generator connection point
-	double initApparentPower = sqrt(pow(initActivePower, 2) + pow(initReactivePower, 2));
-	double initTerminalCurr = initApparentPower / (3 * initTerminalVolt)* sqrt(2);
-	double initPowerFactor = acos(initActivePower / initApparentPower);
+	Real initApparentPower = sqrt(pow(initActivePower, 2) + pow(initReactivePower, 2));
+	Real initTerminalCurr = initApparentPower / (3 * initTerminalVolt)* sqrt(2);
+	Real initPowerFactor = acos(initActivePower / initApparentPower);
 
 	std::cout << "A matrix:" << std::endl;
 	std::cout << newSim.getSystemMatrix() << std::endl;
@@ -487,36 +487,36 @@ void DPsim::SynGenDPUnitTestThreePhaseFault() {
 		synGenLogFlux("data_synGen_curr.csv");
 
 	// Define machine parameters in per unit
-	double nomPower = 555e6;
-	double nomPhPhVoltRMS = 24e3;
-	double nomFreq = 60;
-	double nomFieldCurr = 1300;
-	int poleNum = 2;
-	double J = 2.8898e+04;
-	double H = 3.7;
+	Real nomPower = 555e6;
+	Real nomPhPhVoltRMS = 24e3;
+	Real nomFreq = 60;
+	Real nomFieldCurr = 1300;
+	Int poleNum = 2;
+	Real J = 2.8898e+04;
+	Real H = 3.7;
 
-	double Rs = 0.003;
-	double Ll = 0.15;
-	double Lmd = 1.6599;
-	double Lmd0 = 1.6599;
-	double Lmq = 1.61;
-	double Lmq0 = 1.61;
-	double Rfd = 0.0006;
-	double Llfd = 0.1648;
-	double Rkd = 0.0284;
-	double Llkd = 0.1713;
-	double Rkq1 = 0.0062;
-	double Llkq1 = 0.7252;
-	//double Rkq2 = 0.0237;
-	//double Llkq2 = 0.125;
-	double Rkq2 = 0;
-	double Llkq2 = 0;
+	Real Rs = 0.003;
+	Real Ll = 0.15;
+	Real Lmd = 1.6599;
+	Real Lmd0 = 1.6599;
+	Real Lmq = 1.61;
+	Real Lmq0 = 1.61;
+	Real Rfd = 0.0006;
+	Real Llfd = 0.1648;
+	Real Rkd = 0.0284;
+	Real Llkd = 0.1713;
+	Real Rkq1 = 0.0062;
+	Real Llkq1 = 0.7252;
+	//Real Rkq2 = 0.0237;
+	//Real Llkq2 = 0.125;
+	Real Rkq2 = 0;
+	Real Llkq2 = 0;
 
 	// Declare circuit components
 	BaseComponent* gen = new SynchronGenerator("gen", 1, 2, 3,
 		nomPower, nomPhPhVoltRMS, nomFreq, poleNum, nomFieldCurr,
 		Rs, Ll, Lmd, Lmd0, Lmq, Lmq0, Rfd, Llfd, Rkd, Llkd, Rkq1, Llkq1, Rkq2, Llkq2, H);
-	double loadRes = 1037.8378;
+	Real loadRes = 1037.8378;
 	BaseComponent* r1 = new LinearResistor("r1", 1, 0, loadRes);
 	BaseComponent* r2 = new LinearResistor("r2", 2, 0, loadRes);
 	BaseComponent* r3 = new LinearResistor("r3", 3, 0, loadRes);
@@ -528,7 +528,7 @@ void DPsim::SynGenDPUnitTestThreePhaseFault() {
 	circElements.push_back(r3);
 
 	// Declare circuit components for resistance change
-	double breakerRes = 0.001;
+	Real breakerRes = 0.001;
 	BaseComponent* rBreaker1 = new LinearResistor("rbreak1", 1, 0, breakerRes);
 	BaseComponent* rBreaker2 = new LinearResistor("rbreak2", 2, 0, breakerRes);
 	BaseComponent* rBreaker3 = new LinearResistor("rbreak3", 3, 0, breakerRes);
@@ -541,8 +541,8 @@ void DPsim::SynGenDPUnitTestThreePhaseFault() {
 	circElementsBreakerOn.push_back(r3);
 
 	// Set up simulation
-	double tf, dt, t;
-	double om = 2.0*M_PI*60.0;
+	Real tf, dt, t;
+	Real om = 2.0*M_PI*60.0;
 	tf = 0.3; dt = 0.000001; t = 0;
 	Int downSampling = 50;
 	Simulation newSim(circElements, om, dt, tf, log, downSampling, SimulationType::DynPhasor);
@@ -551,18 +551,18 @@ void DPsim::SynGenDPUnitTestThreePhaseFault() {
 	newSim.switchSystemMatrix(0);
 
 	// Initialize generator
-	double initActivePower = 555e3;
-	double initReactivePower = 0;
-	double initTerminalVolt = 24000 / sqrt(3) * sqrt(2);
-	double initVoltAngle = -DPS_PI / 2;
+	Real initActivePower = 555e3;
+	Real initReactivePower = 0;
+	Real initTerminalVolt = 24000 / sqrt(3) * sqrt(2);
+	Real initVoltAngle = -DPS_PI / 2;
 	Real fieldVoltage = 7.0821;
 	Real mechPower = 5.5558e5;
 	((SynchronGenerator*)gen)->init(om, dt, initActivePower, initReactivePower, initTerminalVolt, initVoltAngle, fieldVoltage, mechPower);
 
 	// Calculate initial values for circuit at generator connection point
-	double initApparentPower = sqrt(pow(initActivePower, 2) + pow(initReactivePower, 2));
-	double initTerminalCurr = initApparentPower / (3 * initTerminalVolt)* sqrt(2);
-	double initPowerFactor = acos(initActivePower / initApparentPower);
+	Real initApparentPower = sqrt(pow(initActivePower, 2) + pow(initReactivePower, 2));
+	Real initTerminalCurr = initApparentPower / (3 * initTerminalVolt)* sqrt(2);
+	Real initPowerFactor = acos(initActivePower / initApparentPower);
 
 	std::cout << "A matrix:" << std::endl;
 	std::cout << newSim.getSystemMatrix() << std::endl;
@@ -605,36 +605,36 @@ void DPsim::SynGenUnitTestBalancedResLoadFnP() {
 		synGenLogFlux("data_synGen_curr.csv");
 
 	// Define machine parameters in per unit
-	double nomPower = 555e6;
-	double nomPhPhVoltRMS = 24e3;
-	double nomFreq = 60;
-	double nomFieldCurr = 1300;
-	int poleNum = 2;
-	double J = 2.8898e+04;
-	double H = 3.7;
+	Real nomPower = 555e6;
+	Real nomPhPhVoltRMS = 24e3;
+	Real nomFreq = 60;
+	Real nomFieldCurr = 1300;
+	Int poleNum = 2;
+	Real J = 2.8898e+04;
+	Real H = 3.7;
 
-	double Rs = 0.003;
-	double Ll = 0.15;
-	double Lmd = 1.6599;
-	double Lmd0 = 1.6599;
-	double Lmq = 1.61;
-	double Lmq0 = 1.61;
-	double Rfd = 0.0006;
-	double Llfd = 0.1648;
-	double Rkd = 0.0284;
-	double Llkd = 0.1713;
-	double Rkq1 = 0.0062;
-	double Llkq1 = 0.7252;
-	//double Rkq2 = 0.0237;
-	//double Llkq2 = 0.125;
-	double Rkq2 = 0;
-	double Llkq2 = 0;
+	Real Rs = 0.003;
+	Real Ll = 0.15;
+	Real Lmd = 1.6599;
+	Real Lmd0 = 1.6599;
+	Real Lmq = 1.61;
+	Real Lmq0 = 1.61;
+	Real Rfd = 0.0006;
+	Real Llfd = 0.1648;
+	Real Rkd = 0.0284;
+	Real Llkd = 0.1713;
+	Real Rkq1 = 0.0062;
+	Real Llkq1 = 0.7252;
+	//Real Rkq2 = 0.0237;
+	//Real Llkq2 = 0.125;
+	Real Rkq2 = 0;
+	Real Llkq2 = 0;
 
 	// Declare circuit components
 	BaseComponent* gen = new SynchronGeneratorEMTFnP("gen", 1, 2, 3,
 		nomPower, nomPhPhVoltRMS, nomFreq, poleNum, nomFieldCurr,
 		Rs, Ll, Lmd, Lmd0, Lmq, Lmq0, Rfd, Llfd, Rkd, Llkd, Rkq1, Llkq1, Rkq2, Llkq2, H);
-	double loadRes = 1037.8378;
+	Real loadRes = 1037.8378;
 	BaseComponent* r1 = new LinearResistorEMT("r1", 1, 0, loadRes);
 	BaseComponent* r2 = new LinearResistorEMT("r2", 2, 0, loadRes);
 	BaseComponent* r3 = new LinearResistorEMT("r3", 3, 0, loadRes);
@@ -646,7 +646,7 @@ void DPsim::SynGenUnitTestBalancedResLoadFnP() {
 	circElements.push_back(r3);
 
 	// Declare circuit components for resistance change
-	double breakerRes = 0.001;
+	Real breakerRes = 0.001;
 	BaseComponent* rBreaker1 = new LinearResistorEMT("rbreak1", 1, 0, breakerRes);
 	BaseComponent* rBreaker2 = new LinearResistorEMT("rbreak2", 2, 0, breakerRes);
 	BaseComponent* rBreaker3 = new LinearResistorEMT("rbreak3", 3, 0, breakerRes);
@@ -659,8 +659,8 @@ void DPsim::SynGenUnitTestBalancedResLoadFnP() {
 	circElementsBreakerOn.push_back(r3);
 
 	// Set up simulation
-	double tf, dt, t;
-	double om = 2.0*M_PI*60.0;
+	Real tf, dt, t;
+	Real om = 2.0*M_PI*60.0;
 	tf = 0.3; dt = 0.000001; t = 0;
 	Int downSampling = 50;
 	Simulation newSim(circElements, om, dt, tf, log, downSampling, SimulationType::EMT);
@@ -669,18 +669,18 @@ void DPsim::SynGenUnitTestBalancedResLoadFnP() {
 	newSim.switchSystemMatrix(0);
 
 	// Initialize generator
-	double initActivePower = 555e3;
-	double initReactivePower = 0;
-	double initTerminalVolt = 24000 / sqrt(3) * sqrt(2);
-	double initVoltAngle = -DPS_PI / 2;
+	Real initActivePower = 555e3;
+	Real initReactivePower = 0;
+	Real initTerminalVolt = 24000 / sqrt(3) * sqrt(2);
+	Real initVoltAngle = -DPS_PI / 2;
 	Real fieldVoltage = 7.0821;
 	Real mechPower = 5.5558e5;
 	((SynchronGeneratorEMTFnP*)gen)->init(om, dt, initActivePower, initReactivePower, initTerminalVolt, initVoltAngle, fieldVoltage, mechPower);
 
 	// Calculate initial values for circuit at generator connection point
-	double initApparentPower = sqrt(pow(initActivePower, 2) + pow(initReactivePower, 2));
-	double initTerminalCurr = initApparentPower / (3 * initTerminalVolt)* sqrt(2);
-	double initPowerFactor = acos(initActivePower / initApparentPower);
+	Real initApparentPower = sqrt(pow(initActivePower, 2) + pow(initReactivePower, 2));
+	Real initTerminalCurr = initApparentPower / (3 * initTerminalVolt)* sqrt(2);
+	Real initPowerFactor = acos(initActivePower / initApparentPower);
 
 	std::cout << "A matrix:" << std::endl;
 	std::cout << newSim.getSystemMatrix() << std::endl;

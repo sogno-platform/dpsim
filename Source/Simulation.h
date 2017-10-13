@@ -92,25 +92,25 @@ namespace DPsim {
 
 
 		/// Solve system A * x = z for x and current time
-		int step(Logger& logger, bool blocking = true);
+		Int step(Logger& logger, bool blocking = true);
 		/// Solve system A * x = z for x and current time. Log current values of both vectors.
-		int step(Logger& logger, Logger& leftSideVectorLog, Logger& rightSideVectorLog, bool blocking = true);
-		void switchSystemMatrix(int systemMatrixIndex);
+		Int step(Logger& logger, Logger& leftSideVectorLog, Logger& rightSideVectorLog, bool blocking = true);
+		void switchSystemMatrix(Int systemMatrixIndex);
 		void setSwitchTime(Real switchTime, Int systemIndex);
 		void increaseByTimeStep();
 		void addExternalInterface(ExternalInterface*);
 
 		void setNumericalMethod(NumericalMethod numMethod);
 
-		double getTime() { return mTime; }
-		double getFinalTime() { return mFinalTime; }
-		double getTimeStep() { return mSystemModel.getTimeStep(); }
+		Real getTime() { return mTime; }
+		Real getFinalTime() { return mFinalTime; }
+		Real getTimeStep() { return mSystemModel.getTimeStep(); }
 		Matrix & getLeftSideVector() { return mSystemModel.getLeftSideVector(); }
 		Matrix & getRightSideVector() { return mSystemModel.getRightSideVector(); }
 		Matrix & getSystemMatrix() { return mSystemModel.getCurrentSystemMatrix(); }
-		int stepGeneratorTest(Logger& logger, Logger& leftSideVectorLog, Logger& rightSideVectorLog,
+		Int stepGeneratorTest(Logger& logger, Logger& leftSideVectorLog, Logger& rightSideVectorLog,
 			BaseComponent* generator, Real time);
-		int stepGeneratorVBR(Logger& logger, BaseComponent* generator,
+		Int stepGeneratorVBR(Logger& logger, BaseComponent* generator,
 			Logger& synGenLogVolt, Logger& synGenLogCurr, Logger& synGenLogElecTorque, Logger& synGenLogOmega, Logger& synGenLogTheta,
 			Real fieldVoltage, Real mechPower, Real time);
 

@@ -46,8 +46,8 @@ namespace DPsim {
 		~Logger();
 
 		std::ostream& Log(LogLevel level = LogLevel::INFO);
-		void LogDataLine(double time, Matrix& data);
-		void LogDataLine(double time, double data);
+		void LogDataLine(Real time, Matrix& data);
+		void LogDataLine(Real time, Real data);
 	};
 }
 

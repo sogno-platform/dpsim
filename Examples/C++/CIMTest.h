@@ -28,7 +28,7 @@
 
 void readFixedCIMFiles_LineLoad();
 void readFixedCIMFiles_IEEE9bus();
-int testCIMReader(std::list<std::string> filenames);
+Int testCIMReader(std::list<std::string> filenames);
 
 #endif
 

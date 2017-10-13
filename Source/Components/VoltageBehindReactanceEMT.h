@@ -40,183 +40,183 @@ namespace DPsim {
 
 		// ### Machine parameters ###
 		/// nominal power Pn [VA]
-		double mNomPower;
+		Real mNomPower;
 		/// nominal voltage Vn [V] (RMS)
-		double mNomVolt;
+		Real mNomVolt;
 		/// nominal frequency fn [Hz]
-		double mNomFreq;
+		Real mNomFreq;
 		/// nominal field current Ifn [A]
-		double mNomFieldCur;
+		Real mNomFieldCur;
 
 		/// stator resistance Rs[Ohm]
-		double mRs;
+		Real mRs;
 		/// leakage inductance Ll [H]
-		double mLl;
+		Real mLl;
 		/// d-axis mutual inductance Lmd [H]
-		double mLmd;
+		Real mLmd;
 		/// unsaturated d-axis mutual inductance Lmd [H]
-		double mLmd0;
+		Real mLmd0;
 		/// q-axis mutual inductance Lmq [H]
-		double mLmq;
+		Real mLmq;
 		/// unsaturated q-axis mutual inductance Lmq [H]
-		double mLmq0;
+		Real mLmq0;
 		/// field resistance Rfd [Ohm]
-		double mRfd;
+		Real mRfd;
 		/// field leakage inductance Llfd [H]
-		double mLlfd;
+		Real mLlfd;
 		/// d-axis damper resistance Rkd [Ohm]
-		double mRkd;
+		Real mRkd;
 		/// d-axis damper leakage inductance Llkd [H]
-		double mLlkd;
+		Real mLlkd;
 		/// q-axis damper resistance 1 Rkq1 [Ohm]
-		double mRkq1;
+		Real mRkq1;
 		/// q-axis damper leakage inductance 1 Llkq1 [H]
-		double mLlkq1;
+		Real mLlkq1;
 		/// q-axis damper resistance 2 Rkq2 [Ohm]
-		double mRkq2;
+		Real mRkq2;
 		/// q-axis damper leakage inductance 2 Llkq2 [H]
-		double mLlkq2;
+		Real mLlkq2;
 
 		///Number of damping windings in q
-		double DampingWinding = 2;
+		Real DampingWinding = 2;
 
 		/// inertia J [kg*m^2]
-		double mJ;
+		Real mJ;
 		/// number of poles
-		int mPoleNumber;
+		Int mPoleNumber;
 		/// inertia coefficient H
-		double mH;
+		Real mH;
 
 		/// d dynamic inductance
-		double mDLmd;
+		Real mDLmd;
 		/// q dynamic inductance
-		double mDLmq;
+		Real mDLmq;
 		/// Auxiliar inductance term La
-		double mLa;
+		Real mLa;
 		/// Auxiliar inductance term Lb
-		double mLb;
+		Real mLb;
 
 
 		// ### Stator base values ###
 		/// specifies if the machine parameters are transformed to per unit
 		SynchGenStateType mStateType;
 		/// base stator voltage
-		double mBase_v;
+		Real mBase_v;
 		/// base stator voltage RMS
-		double mBase_V_RMS;
+		Real mBase_V_RMS;
 		/// base stator current
-		double mBase_i;
+		Real mBase_i;
 		/// base stator current RMS
-		double mBase_I_RMS;
+		Real mBase_I_RMS;
 		/// base stator impedance
-		double mBase_Z;
+		Real mBase_Z;
 		/// base electrical angular frequency
-		double mBase_OmElec;
+		Real mBase_OmElec;
 		/// base mechanical angular frequency
-		double mBase_OmMech;
+		Real mBase_OmMech;
 		/// base stator inductance
-		double mBase_L;
+		Real mBase_L;
 		/// base torque
-		double mBase_T;
+		Real mBase_T;
 		/// base flux linkage
-		double mBase_Psi;
+		Real mBase_Psi;
 
 		/// base field current
-		double mBase_ifd;
+		Real mBase_ifd;
 		/// base field voltage
-		double mBase_vfd;
+		Real mBase_vfd;
 		/// base field impedance
-		double mBase_Zfd;
+		Real mBase_Zfd;
 		/// base field inductance
-		double mBase_Lfd;
+		Real mBase_Lfd;
 
 
 		// ### State variables ###
 		/// rotor speed omega_r
-		double mOmMech;
+		Real mOmMech;
 		/// theta
-		double mThetaMech;
+		Real mThetaMech;
 		/// mechanical Power Pm [W]
-		double mMechPower;
+		Real mMechPower;
 		/// mechanical torque
-		double mMechTorque;
+		Real mMechTorque;
 		/// electrical torque
-		double mElecTorque;
+		Real mElecTorque;
 
 		/// d dynamic flux
-		double mDPsid;
+		Real mDPsid;
 		/// q dynamic flux
-		double mDPsiq;
+		Real mDPsiq;
 		/// Dynamic d voltage
-		double mDVq;
+		Real mDVq;
 		/// Dynamic q voltage
-		double mDVd;
+		Real mDVd;
 		/// Dynamic voltage phase a
-		double mDVa;
+		Real mDVa;
 		/// Dynamic voltage phase b
-		double mDVb;
+		Real mDVb;
 		/// Dynamic voltage phase c
-		double mDVc;
+		Real mDVc;
 
 
 		/// stator voltage in d axis
-		double mVd;
+		Real mVd;
 		/// stator voltage in q axis
-		double mVq;
+		Real mVq;
 		/// stator voltage 0 component
-		double mV0;
+		Real mV0;
 		/// Rotor voltage field winding
-		double mVfd;
+		Real mVfd;
 		/// Rotor voltage damping winding in d axis
-		double mVkd;
+		Real mVkd;
 		/// Rotor voltage damping winding 1 in q axis
-		double mVkq1;
+		Real mVkq1;
 		/// Rotor voltage damping winding 2 in q axis
-		double mVkq2;
+		Real mVkq2;
 
 		/// stator current in d axis
-		double mId;
+		Real mId;
 		/// stator current in q axis
-		double mIq;
+		Real mIq;
 		/// stator current 0 component
-		double mI0;
+		Real mI0;
 		/// Rotor current field winding
-		double mIfd;
+		Real mIfd;
 		/// Rotor current damping winding in d axis
-		double mIkd;
+		Real mIkd;
 		/// Rotor current damping winding 1 in q axis
-		double mIkq1;
+		Real mIkq1;
 		/// Rotor current damping winding 2 in q axis
-		double mIkq2;
+		Real mIkq2;
 
 		/// stator flux linkage in d axis
-		double mPsid;
+		Real mPsid;
 		/// stator flux linkage in q axis
-		double mPsiq;
+		Real mPsiq;
 		/// stator flux linkage 0 component
-		double mPsi0;
+		Real mPsi0;
 		/// rotor flux linkage in field winding
-		double mPsifd;
+		Real mPsifd;
 		/// rotor flux linkage in damping winding from d axis
-		double mPsikd;
+		Real mPsikd;
 		/// rotor flux linkage in damping winding 1 from q axis
-		double mPsikq1;
+		Real mPsikq1;
 		/// rotor flux linkage in damping winding 2 from q axis
-		double mPsikq2;
+		Real mPsikq2;
 
 		/// Interface voltage phase a
-		double mVa;
+		Real mVa;
 		/// Interface voltage phase b
-		double mVb;
+		Real mVb;
 		/// Interface voltage phase c
-		double mVc;
+		Real mVc;
 
 		/// Interface curent phase a
-		double mIa;
+		Real mIa;
 		/// Interface curent phase b
-		double mIb;
+		Real mIb;
 		/// Interface curent phase c
-		double mIc;
+		Real mIc;
 
 		/// Magnetizing flux linkage in q axis
 		Real mPsimq;
@@ -300,19 +300,19 @@ namespace DPsim {
 		void postStep(SystemModel& system);
 
 		/// Park transform as described in Krause
-		Matrix parkTransform(Real theta, double a, double b, double c);
+		Matrix parkTransform(Real theta, Real a, Real b, Real c);
 		//Matrix parkTransform(Real theta, Matrix& in);
 
 		/// Inverse Park transform as described in Krause
-		Matrix inverseParkTransform(Real theta, double q, double d, double zero);
+		Matrix inverseParkTransform(Real theta, Real q, Real d, Real zero);
 		//Matrix inverseParkTransform(Real theta, Matrix& in);
 
 		Matrix& getVoltages() { return mVoltageVector; }
 		Matrix& getCurrents() { return mCurrentVector; }
 		//Matrix& getFluxes() { return mFluxes; }
-		double getElectricalTorque() { return mElecTorque; }
-		double getRotationalSpeed() { return mOmMech; }
-		double getRotorPosition() { return mThetaMech; }
+		Real getElectricalTorque() { return mElecTorque; }
+		Real getRotationalSpeed() { return mOmMech; }
+		Real getRotorPosition() { return mThetaMech; }
 
 		void init(Real om, Real dt) { }
 		void applySystemMatrixStamp(SystemModel& system) { }

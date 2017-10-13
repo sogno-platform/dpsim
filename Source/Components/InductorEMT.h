@@ -29,16 +29,16 @@ namespace DPsim {
 
 	class InductorEMT : public BaseComponent {
 	protected:
-		double mInductance;
-		double mDeltav;
-		double mCurr;
-		double mCureq;
-		double mGl;
-		double mP;
+		Real mInductance;
+		Real mDeltav;
+		Real mCurr;
+		Real mCureq;
+		Real mGl;
+		Real mP;
 
 	public:
 		InductorEMT() { };
-		InductorEMT(std::string name, Int src, Int dest, double inductance);
+		InductorEMT(std::string name, Int src, Int dest, Real inductance);
 
 		void init(Real om, Real dt);
 		void applySystemMatrixStamp(SystemModel& system);

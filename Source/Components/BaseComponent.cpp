@@ -32,7 +32,7 @@ using namespace DPsim;
 
 std::string BaseComponent::getType()
 {
-	int status = 1;
+	Int status = 1;
 	const char *mangled;
 
 	mangled = typeid(*this).name();

@@ -38,30 +38,30 @@ void DPsim::SynGenUnitTestVBR() {
 		synGenLogTheta("Logs/data_synGenVBR_theta.csv");
 
 	// Define machine parameters in per unit
-	double nomPower = 555e6;
-	double nomPhPhVoltRMS = 24e3;
-	double nomFreq = 60;
-	double nomFieldCurr = 1300;
-	int poleNum = 2;
-	double J = 2.8898e+04;
-	double H = 3.7;
+	Real nomPower = 555e6;
+	Real nomPhPhVoltRMS = 24e3;
+	Real nomFreq = 60;
+	Real nomFieldCurr = 1300;
+	Int poleNum = 2;
+	Real J = 2.8898e+04;
+	Real H = 3.7;
 
-	double Rs = 0.003;
-	double Ll = 0.15;
-	double Lmd = 1.6599;
-	double Lmd0 = 1.6599;
-	double Lmq = 1.61;
-	double Lmq0 = 1.61;
-	double Rfd = 0.0006;
-	double Llfd = 0.1648;
-	double Rkd = 0.0284;
-	double Llkd = 0.1713;
-	double Rkq1 = 0.0062;
-	double Llkq1 = 0.7252;
-	//double Rkq2 = 0.0237;
-	//double Llkq2 = 0.125;
-	double Rkq2 = 0;
-	double Llkq2 = 0;
+	Real Rs = 0.003;
+	Real Ll = 0.15;
+	Real Lmd = 1.6599;
+	Real Lmd0 = 1.6599;
+	Real Lmq = 1.61;
+	Real Lmq0 = 1.61;
+	Real Rfd = 0.0006;
+	Real Llfd = 0.1648;
+	Real Rkd = 0.0284;
+	Real Llkd = 0.1713;
+	Real Rkq1 = 0.0062;
+	Real Llkq1 = 0.7252;
+	//Real Rkq2 = 0.0237;
+	//Real Llkq2 = 0.125;
+	Real Rkq2 = 0;
+	Real Llkq2 = 0;
 
 
 	// Declare circuit components
@@ -73,18 +73,18 @@ void DPsim::SynGenUnitTestVBR() {
 	circElements.push_back(gen);
 
 	// Set up simulation
-	double tf, dt, t;
-	double om = 2.0*M_PI*60.0;
+	Real tf, dt, t;
+	Real om = 2.0*M_PI*60.0;
 	tf = 0.3; dt = 0.001; t = 0;
 	Int downSampling = 1;
 	Simulation newSim(circElements, om, dt, tf, log, downSampling, SimulationType::EMT);
 	newSim.setNumericalMethod(NumericalMethod::Trapezoidal_flux);
 
 	// Initialize generator
-	double initActivePower = 555e3;
-	double initReactivePower = 0;
-	double initTerminalVolt = 24000 / sqrt(3) * sqrt(2);
-	double initVoltAngle = -DPS_PI / 2;
+	Real initActivePower = 555e3;
+	Real initReactivePower = 0;
+	Real initTerminalVolt = 24000 / sqrt(3) * sqrt(2);
+	Real initVoltAngle = -DPS_PI / 2;
 	((VoltageBehindReactanceEMT*)gen)->init(om, dt, initActivePower, initReactivePower, initTerminalVolt, initVoltAngle);
 
 	//std::cout << "A matrix:" << std::endl;
@@ -123,30 +123,30 @@ void DPsim::SynGenUnitTestVBRDP() {
 		synGenLogTheta("Logs/data_synGenVBR_DP_theta.csv");
 
 	// Define machine parameters in per unit
-	double nomPower = 555e6;
-	double nomPhPhVoltRMS = 24e3;
-	double nomFreq = 60;
-	double nomFieldCurr = 1300;
-	int poleNum = 2;
-	double J = 2.8898e+04;
-	double H = 3.7;
+	Real nomPower = 555e6;
+	Real nomPhPhVoltRMS = 24e3;
+	Real nomFreq = 60;
+	Real nomFieldCurr = 1300;
+	Int poleNum = 2;
+	Real J = 2.8898e+04;
+	Real H = 3.7;
 
-	double Rs = 0.003;
-	double Ll = 0.15;
-	double Lmd = 1.6599;
-	double Lmd0 = 1.6599;
-	double Lmq = 1.61;
-	double Lmq0 = 1.61;
-	double Rfd = 0.0006;
-	double Llfd = 0.1648;
-	double Rkd = 0.0284;
-	double Llkd = 0.1713;
-	double Rkq1 = 0.0062;
-	double Llkq1 = 0.7252;
-	//double Rkq2 = 0.0237;
-	//double Llkq2 = 0.125;
-	double Rkq2 = 0;
-	double Llkq2 = 0;
+	Real Rs = 0.003;
+	Real Ll = 0.15;
+	Real Lmd = 1.6599;
+	Real Lmd0 = 1.6599;
+	Real Lmq = 1.61;
+	Real Lmq0 = 1.61;
+	Real Rfd = 0.0006;
+	Real Llfd = 0.1648;
+	Real Rkd = 0.0284;
+	Real Llkd = 0.1713;
+	Real Rkq1 = 0.0062;
+	Real Llkq1 = 0.7252;
+	//Real Rkq2 = 0.0237;
+	//Real Llkq2 = 0.125;
+	Real Rkq2 = 0;
+	Real Llkq2 = 0;
 
 
 
@@ -159,18 +159,18 @@ void DPsim::SynGenUnitTestVBRDP() {
 	circElements.push_back(gen);
 
 	// Set up simulation
-	double tf, dt, t;
-	double om = 2.0*M_PI*60.0;
+	Real tf, dt, t;
+	Real om = 2.0*M_PI*60.0;
 	tf = 0.3; dt = 0.00005; t = 0;
 	Int downSampling = 1;
 	Simulation newSim(circElements, om, dt, tf, log, downSampling, SimulationType::DynPhasor);
 	newSim.setNumericalMethod(NumericalMethod::Trapezoidal_flux);
 
 	// Initialize generator
-	double initActivePower = 555e3;
-	double initReactivePower = 0;
-	double initTerminalVolt = 24000 / sqrt(3) * sqrt(2);
-	double initVoltAngle = -DPS_PI / 2;
+	Real initActivePower = 555e3;
+	Real initReactivePower = 0;
+	Real initTerminalVolt = 24000 / sqrt(3) * sqrt(2);
+	Real initVoltAngle = -DPS_PI / 2;
 	((VoltageBehindReactanceDP*)gen)->init(om, dt, initActivePower, initReactivePower, initTerminalVolt, initVoltAngle);
 
 	//std::cout << "A matrix:" << std::endl;

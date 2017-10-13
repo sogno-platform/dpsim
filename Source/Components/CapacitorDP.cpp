@@ -70,7 +70,7 @@ void Capacitor::step(SystemModel& system, Real time) {
 
 
 void Capacitor::postStep(SystemModel& system) {
-	double vposr, vnegr, vposi, vnegi;
+	Real vposr, vnegr, vposi, vnegi;
 
 	// extract solution
 	if (mNode1 >= 0) {

@@ -49,16 +49,16 @@ namespace DPsim {
 			Real mFrequency;
 			// Maps the RID of a topological node to its simulation matrix index
 			// as given in the component constructors (1 for the first node).
-			std::map<std::string, int> mTopNodes;
+			std::map<std::string, Int> mTopNodes;
 			// Maps the RID of a ConductingEquipment to a list of nodes as given in
 			// the component constructors.
-			std::map<std::string, std::vector<int>> mEqNodeMap;
+			std::map<std::string, std::vector<Int>> mEqNodeMap;
 			// SvVoltage, if present, for each node (indexed starting with 0!)
 			SvVoltage **mVoltages;
 			// Maps the RID of a Terminal to its associated power flow
 			std::map<std::string, SvPowerFlow*> mPowerFlows;
 			// Number of ideal voltage sources
-			int mNumVoltageSources;
+			Int mNumVoltageSources;
 
 			BaseComponent* mapComponent(BaseClass* obj);
 
@@ -78,9 +78,9 @@ namespace DPsim {
 			bool addFile(std::string filename);
 			void parseFiles();
 			std::vector<BaseComponent*>& getComponents();
-			int mapTopologicalNode(std::string mrid);
-			int getNumVoltageSources();
+			Int mapTopologicalNode(std::string mrid);
+			Int getNumVoltageSources();
 
-			static double unitValue(double value, UnitMultiplier mult);
+			static Real unitValue(Real value, UnitMultiplier mult);
 	};
 };

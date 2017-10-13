@@ -65,15 +65,15 @@ std::ostream& Logger::Log(LogLevel level) {
 	return mLogFile;
 }
 
-void Logger::LogDataLine(double time, Matrix& data) {
+void Logger::LogDataLine(Real time, Matrix& data) {
 	mLogFile << std::scientific << time;
-	for (int i = 0; i < data.rows(); i++) {
+	for (Int i = 0; i < data.rows(); i++) {
 		mLogFile << ", " << data(i, 0);
 	}
 	mLogFile << std::endl;
 }
 
-void Logger::LogDataLine(double time, double data) {
+void Logger::LogDataLine(Real time, Real data) {
 	mLogFile << std::scientific << time;
 	mLogFile << ", " << data;
 	mLogFile << std::endl;
