@@ -20,7 +20,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *********************************************************************************/
 
-#include "Inductor.h"
+#include "InductorDP.h"
 
 using namespace DPsim;
 

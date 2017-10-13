@@ -20,7 +20,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *********************************************************************************/
 
-#include "Capacitor.h"
+#include "CapacitorDP.h"
 
 using namespace DPsim;
 

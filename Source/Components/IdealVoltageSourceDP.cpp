@@ -20,7 +20,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *********************************************************************************/
 
-#include "IdealVoltageSource.h"
+#include "IdealVoltageSourceDP.h"
 
 using namespace DPsim;
 

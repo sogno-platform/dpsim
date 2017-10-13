@@ -1,5 +1,6 @@
 /** Two winding transformer
  *
+ * @file
  * @author Markus Mirz <mmirz@eonerc.rwth-aachen.de>
  * @copyright 2017, Institute for Automation of Complex Power Systems, EONERC
  * @license GNU General Public License (version 3)
@@ -20,9 +21,14 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *********************************************************************************/
 
-#include "TwoWindingTransformer.h"
+#pragma once
 
-using namespace DPsim;
+#include "RxLineDP.h"
 
-TwoWindingTransformer::TwoWindingTransformer(std::string name, int node1, int node2, Real resistance, Real inductance) : RxLine(name, node1, node2, resistance, inductance) {
-}
+namespace DPsim {
+	// TODO: currently just modeled as an RxLine, possibly use more complex model?
+	class TwoWindingTransformer : public RxLine {
+	public:
+		TwoWindingTransformer(std::string name, int node1, int node2, Real resistance, Real inductance);
+	};
+};

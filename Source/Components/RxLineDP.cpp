@@ -20,7 +20,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *********************************************************************************/
 
-#include "RxLine.h"
+#include "RxLineDP.h"
 
 using namespace DPsim;
 

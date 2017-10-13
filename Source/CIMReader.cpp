@@ -24,9 +24,9 @@
 #include "CIMModel.hpp"
 #include "IEC61970.hpp"
 
-#include "Components/PQLoad.h"
-#include "Components/RxLine.h"
-#include "Components/TwoWindingTransformer.h"
+#include "Components/PQLoadDP.h"
+#include "Components/RxLineDP.h"
+#include "Components/TwoWindingTransformerDP.h"
 
 using namespace DPsim;
 using namespace IEC61970::Base::Core;

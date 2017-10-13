@@ -20,7 +20,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *********************************************************************************/
 
-#include "VoltSourceRes.h"
+#include "VoltSourceResDP.h"
 
 using namespace DPsim;
 

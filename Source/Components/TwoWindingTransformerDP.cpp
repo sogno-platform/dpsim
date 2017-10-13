@@ -1,6 +1,5 @@
-/** PQ Load
+/** Two winding transformer
  *
- * @file
  * @author Markus Mirz <mmirz@eonerc.rwth-aachen.de>
  * @copyright 2017, Institute for Automation of Complex Power Systems, EONERC
  * @license GNU General Public License (version 3)
@@ -21,20 +20,9 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *********************************************************************************/
 
-#pragma once
+#include "TwoWindingTransformerDP.h"
 
-#include "RxLine.h"
+using namespace DPsim;
 
-namespace DPsim {
-	// TODO currently modeled as an impedance, which obviously doesn't have a constant power characteristic
-	class PQLoad : public RxLine {
-	protected:
-		Real mActivePower;
-		Real mReactivePower;
-		Real mSvVoltage;
-	public:
-		PQLoad(std::string name, int src, int dest, Real p, Real q, Real volt, Real angle);
-		void init(Real om, Real dt);
-		void applySystemMatrixStamp(SystemModel&);
-	};
-};
+TwoWindingTransformer::TwoWindingTransformer(std::string name, int node1, int node2, Real resistance, Real inductance) : RxLine(name, node1, node2, resistance, inductance) {
+}

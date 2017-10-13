@@ -28,10 +28,14 @@
 #include "ReferenceCircuits.h"
 #include "ShmemTest.h"
 #include "SimpleCircuitTest.h"
+#include "CIMTest.h"
 
 using namespace DPsim;
 
 int main(int argc, char* argv[]) {
+
+	// #### CIM Parser test ################
+	readFixedCIMFiles_LineLoad();
 
 	// #### Shared memory interface tests ################
 	//shmemRTExample();

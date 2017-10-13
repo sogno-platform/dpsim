@@ -24,12 +24,21 @@
 #include <string>
 
 #include "CIMTest.h"
-#include "../CIMReader.h"
-#include "../Simulation.h"
+#include "CIMReader.h"
+#include "Simulation.h"
 
-void readFixedCIMFiles() {
+void readFixedCIMFiles_LineLoad() {
 	std::list<std::string> filenames;
 	filenames.push_back("..\\..\\Examples\\CIM\\Line_Load\\Line_Load.xml");
+	testCIMReader(filenames);
+}
+
+void readFixedCIMFiles_IEEE9bus() {
+	std::list<std::string> filenames;
+	filenames.push_back("..\\..\\Examples\\CIM\\IEEE-09_Neplan_RX\\IEEE-09_Neplan_RX_DI.xml");
+	filenames.push_back("..\\..\\Examples\\CIM\\IEEE-09_Neplan_RX\\IEEE-09_Neplan_RX_EQ.xml");
+	filenames.push_back("..\\..\\Examples\\CIM\\IEEE-09_Neplan_RX\\IEEE-09_Neplan_RX_SV.xml");
+	filenames.push_back("..\\..\\Examples\\CIM\\IEEE-09_Neplan_RX\\IEEE-09_Neplan_RX_TP.xml");
 	testCIMReader(filenames);
 }
 

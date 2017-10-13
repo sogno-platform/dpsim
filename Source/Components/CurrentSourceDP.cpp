@@ -1,6 +1,5 @@
-/** Two winding transformer
+/** Current source
  *
- * @file
  * @author Markus Mirz <mmirz@eonerc.rwth-aachen.de>
  * @copyright 2017, Institute for Automation of Complex Power Systems, EONERC
  * @license GNU General Public License (version 3)
@@ -21,14 +20,28 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *********************************************************************************/
 
-#pragma once
+#include "CurrentSourceDP.h"
 
-#include "RxLine.h"
+using namespace DPsim;
 
-namespace DPsim {
-	// TODO: currently just modeled as an RxLine, possibly use more complex model?
-	class TwoWindingTransformer : public RxLine {
-	public:
-		TwoWindingTransformer(std::string name, int node1, int node2, Real resistance, Real inductance);
-	};
+CurrentSource::CurrentSource(std::string name, int src, int dest, Complex current) : BaseComponent(name, src, dest) {
+	this->mCurrent = current;
+	attrMap["current"] = {AttrComplex, &this->mCurrent};
 };
+
+void CurrentSource::applyRightSideVectorStamp(SystemModel& system) {
+	if (mNode1 >= 0) {
+		system.addCompToRightSideVector(mNode1, mCurrent.real(), mCurrent.imag());
+	}
+	if (mNode2 >= 0) {
+		system.addCompToRightSideVector(mNode2, -mCurrent.real(), mCurrent.imag());
+	}
+}
+
+void CurrentSource::step(SystemModel& system, Real time) {
+	this->applyRightSideVectorStamp(system);
+}
+
+Complex CurrentSource::getCurrent(SystemModel &system) {
+	return mCurrent;
+}

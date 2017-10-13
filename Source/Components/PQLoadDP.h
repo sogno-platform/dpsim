@@ -1,5 +1,6 @@
-/** Current source
+/** PQ Load
  *
+ * @file
  * @author Markus Mirz <mmirz@eonerc.rwth-aachen.de>
  * @copyright 2017, Institute for Automation of Complex Power Systems, EONERC
  * @license GNU General Public License (version 3)
@@ -20,28 +21,20 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *********************************************************************************/
 
-#include "CurrentSource.h"
+#pragma once
 
-using namespace DPsim;
+#include "RxLineDP.h"
 
-CurrentSource::CurrentSource(std::string name, int src, int dest, Complex current) : BaseComponent(name, src, dest) {
-	this->mCurrent = current;
-	attrMap["current"] = {AttrComplex, &this->mCurrent};
+namespace DPsim {
+	// TODO currently modeled as an impedance, which obviously doesn't have a constant power characteristic
+	class PQLoad : public RxLine {
+	protected:
+		Real mActivePower;
+		Real mReactivePower;
+		Real mSvVoltage;
+	public:
+		PQLoad(std::string name, int src, int dest, Real p, Real q, Real volt, Real angle);
+		void init(Real om, Real dt);
+		void applySystemMatrixStamp(SystemModel&);
+	};
 };
-
-void CurrentSource::applyRightSideVectorStamp(SystemModel& system) {
-	if (mNode1 >= 0) {
-		system.addCompToRightSideVector(mNode1, mCurrent.real(), mCurrent.imag());
-	}
-	if (mNode2 >= 0) {
-		system.addCompToRightSideVector(mNode2, -mCurrent.real(), mCurrent.imag());
-	}
-}
-
-void CurrentSource::step(SystemModel& system, Real time) {
-	this->applyRightSideVectorStamp(system);
-}
-
-Complex CurrentSource::getCurrent(SystemModel &system) {
-	return mCurrent;
-}

@@ -23,7 +23,7 @@
 
 #pragma once
 
-#include "IdealVoltageSource.h"
+#include "IdealVoltageSourceDP.h"
 
 namespace DPsim {
 	/** Ideal voltage source, but the voltage value can be changed between simulation
