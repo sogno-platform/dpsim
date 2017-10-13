@@ -22,7 +22,7 @@
 
 #include "Python/Component.h"
 
-#include "CIMReader.h"
+#include "CIM/Reader.h"
 #include "Components.h"
 #include "Components/ExternalCurrentSource.h"
 #include "Components/ExternalVoltageSource.h"
