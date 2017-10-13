@@ -53,17 +53,17 @@ namespace DPsim {
 
 
 		/// LU decomposition of system matrix A
-		Eigen::PartialPivLU<DPSMatrix> mLuFactored;
+		Eigen::PartialPivLU<Matrix> mLuFactored;
 		/// LU decomposition of system matrix A
-		std::vector<Eigen::PartialPivLU<DPSMatrix> > mLuFactoredVector;
+		std::vector<Eigen::PartialPivLU<Matrix> > mLuFactoredVector;
 		/// System matrix A that is modified by matrix stamps
-		DPSMatrix mSystemMatrix;
+		Matrix mSystemMatrix;
 		/// System matrices list for swtiching events
-		std::vector<DPSMatrix> mSystemMatrixVector;
+		std::vector<Matrix> mSystemMatrixVector;
 		/// Vector of known quantities
-		DPSMatrix mRightSideVector;
+		Matrix mRightSideVector;
 		/// Vector of unknown quantities
-		DPSMatrix mLeftSideVector;
+		Matrix mLeftSideVector;
 
 		/** Matrix of all edge currents; diagonal is used for currents to ground. */
 		SparseMatrixComp mCurrentMatrix;

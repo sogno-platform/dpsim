@@ -27,6 +27,7 @@
 #include <string>
 
 namespace DPsim {
+
 	void updateProgressBar(double time, double finalTime);
 	void usage();
 	bool parseFloat(const char *s, double *d);

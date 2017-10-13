@@ -39,7 +39,7 @@ namespace DPsim {
 
 	public:
 		InterfacedInductor() { };
-		InterfacedInductor(std::string name, int src, int dest, Real inductance);
+		InterfacedInductor(std::string name, Int src, Int dest, Real inductance);
 
 		void init(Real om, Real dt);
 		void applySystemMatrixStamp(SystemModel& system) { }

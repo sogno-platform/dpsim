@@ -37,7 +37,7 @@ namespace DPsim {
 
 	public:
 		LinearResistorEMT() { ; };
-		LinearResistorEMT(std::string name, int src, int dest, Real resistance);
+		LinearResistorEMT(std::string name, Int src, Int dest, Real resistance);
 
 		void init(Real om, Real dt) { }
 		void applySystemMatrixStamp(SystemModel& system);

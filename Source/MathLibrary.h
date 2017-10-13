@@ -28,9 +28,6 @@
 #include <Eigen/Dense>
 #include <Eigen/SparseCore>
 
-// ### deprecated math section ###
-typedef Eigen::MatrixXd DPSMatrix;
-
 // VS2017 doesn't define M_PI unless _USE_MATH_DEFINES is included before cmath
 // which is hard to guarantee, so we make sure it is defined here
 #define DPS_PI PI
@@ -43,6 +40,9 @@ typedef Eigen::MatrixXd DPSMatrix;
 
 namespace DPsim
 {
+	// ### deprecated math section ###
+	//typedef Eigen::MatrixXd Matrix;
+
 	// ### Constants ###
 
 	// ### Types ###

@@ -150,11 +150,11 @@ namespace DPsim {
 		double mOmMech_past;
 
 		/// voltage vector q d 0 kq1 kq2 df kd
-		DPSMatrix mVoltages2 = DPSMatrix::Zero(7, 1);
+		Matrix mVoltages2 = Matrix::Zero(7, 1);
 		/// flux linkage vector
-		DPSMatrix mFluxes2 = DPSMatrix::Zero(7, 1);
+		Matrix mFluxes2 = Matrix::Zero(7, 1);
 		/// current vector
-		DPSMatrix mCurrents2 = DPSMatrix::Zero(7, 1);
+		Matrix mCurrents2 = Matrix::Zero(7, 1);
 
 		/// voltage vector q d 0 fd kd kq1 kq2
 		double mVd;
@@ -204,15 +204,15 @@ namespace DPsim {
 
 		// ### Useful Matrices ###
 		/// inductance matrix
-		DPSMatrix mInductanceMat = DPSMatrix::Zero(7, 7);
+		Matrix mInductanceMat = Matrix::Zero(7, 7);
 		/// resistance matrix
-		DPSMatrix mResistanceMat = DPSMatrix::Zero(7, 7);
+		Matrix mResistanceMat = Matrix::Zero(7, 7);
 		/// reactance matrix
-		DPSMatrix mReactanceMat = DPSMatrix::Zero(7, 7);
+		Matrix mReactanceMat = Matrix::Zero(7, 7);
 		/// omega - flux matrix
-		DPSMatrix mOmegaFluxMat = DPSMatrix::Zero(7, 7);
+		Matrix mOmegaFluxMat = Matrix::Zero(7, 7);
 		/// matrix for reversing stator current directions in calculations with respect to other currents
-		DPSMatrix mReverseCurrents = DPSMatrix::Zero(7, 7);
+		Matrix mReverseCurrents = Matrix::Zero(7, 7);
 
 
 	public:
@@ -222,8 +222,8 @@ namespace DPsim {
 		/// Initializes the per unit or stator referred machine parameters with the machine parameters given in per unit or
 		/// stator referred parameters depending on the setting of parameter type.
 		/// The initialization mode depends on the setting of state type.
-		SynchronGeneratorEMTFnP(std::string name, int node1, int node2, int node3,
-			Real nomPower, Real nomVolt, Real nomFreq, int poleNumber, Real nomFieldCur,
+		SynchronGeneratorEMTFnP(std::string name, Int node1, Int node2, Int node3,
+			Real nomPower, Real nomVolt, Real nomFreq, Int poleNumber, Real nomFieldCur,
 			Real Rs, Real Ll, Real Lmd, Real Lmd0, Real Lmq, Real Lmq0,
 			Real Rfd, Real Llfd, Real Rkd, Real Llkd,
 			Real Rkq1, Real Llkq1, Real Rkq2, Real Llkq2,
@@ -260,21 +260,21 @@ namespace DPsim {
 		void postStep(SystemModel& system);
 
 		/// Park transform as described in Krause
-		//DPSMatrix parkTransform(Real theta, DPSMatrix& in);
-		DPSMatrix parkTransform2(Real theta, double a, double b, double c);
+		//Matrix parkTransform(Real theta, Matrix& in);
+		Matrix parkTransform2(Real theta, double a, double b, double c);
 
 		/// Inverse Park transform as described in Krause
-		//DPSMatrix inverseParkTransform(Real theta, DPSMatrix& in);
-		DPSMatrix inverseParkTransform2(Real theta, double d, double q, double zero);
+		//Matrix inverseParkTransform(Real theta, Matrix& in);
+		Matrix inverseParkTransform2(Real theta, double d, double q, double zero);
 
-		static double dtOmMech(DPSMatrix inputs);
-		DPSMatrix mOmMechInputs = DPSMatrix::Zero(3, 1);
-		static double dtThetaMech(DPSMatrix inputs);
-		DPSMatrix mOmMech_Matrix = DPSMatrix::Zero(1, 1);
+		static double dtOmMech(Matrix inputs);
+		Matrix mOmMechInputs = Matrix::Zero(3, 1);
+		static double dtThetaMech(Matrix inputs);
+		Matrix mOmMech_Matrix = Matrix::Zero(1, 1);
 
-		DPSMatrix& getVoltages() { return mVoltages2; }
-		DPSMatrix& getCurrents() { return mCurrents2; }
-		DPSMatrix& getFluxes() { return mFluxes2; }
+		Matrix& getVoltages() { return mVoltages2; }
+		Matrix& getCurrents() { return mCurrents2; }
+		Matrix& getFluxes() { return mFluxes2; }
 
 		// Methods for network integrated components
 		void init(Real om, Real dt) { }

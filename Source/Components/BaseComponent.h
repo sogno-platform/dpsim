@@ -49,11 +49,11 @@ namespace DPsim {
 		/// Component name
 		std::string mName;
 		/// Component node 1
-		int mNode1;
+		Int mNode1;
 		/// Component node 2
-		int mNode2;
+		Int mNode2;
 		/// Component node 3
-		int mNode3;
+		Int mNode3;
 		/// Component logger control for internal variables
 		bool mLogActive;
 
@@ -63,7 +63,7 @@ namespace DPsim {
 	public:
 		BaseComponent() { }
 
-		BaseComponent(std::string name, int node1, int node2, bool logActive = false) {
+		BaseComponent(std::string name, Int node1, Int node2, bool logActive = false) {
 			this->mName = name;
 			this->mNode1 = node1 - 1;
 			this->mNode2 = node2 - 1;
@@ -73,7 +73,7 @@ namespace DPsim {
 			attrMap["node2"] = {AttrInt, &this->mNode2};
 		}
 
-		BaseComponent(std::string name, int node1, int node2, int node3, bool logActive = false) :
+		BaseComponent(std::string name, Int node1, Int node2, Int node3, bool logActive = false) :
 			BaseComponent(name, node1, node2, logActive) {
 			this->mNode3 = node3 - 1;
 			attrMap["node3"] = {AttrInt, &this->mNode3};
@@ -82,11 +82,11 @@ namespace DPsim {
 		virtual ~BaseComponent() { }
 
 		/// get value of node1
-		int getNode1() { return mNode1; }
+		Int getNode1() { return mNode1; }
 		/// get value of node2
-		int getNode2() { return mNode2; }
+		Int getNode2() { return mNode2; }
 		/// get value of node3
-		int getNode3() { return mNode3; }
+		Int getNode3() { return mNode3; }
 
 		std::map<std::string, CompAttr>& getAttrMap() { return attrMap; }
 

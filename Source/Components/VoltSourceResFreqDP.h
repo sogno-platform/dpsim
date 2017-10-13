@@ -47,7 +47,7 @@ namespace DPsim {
 
 	public:
 		VoltSourceResFreq() { ; };
-		VoltSourceResFreq(std::string name, int src, int dest, Real voltage, Real phase, Real resistance, Real omegaSource, Real switchTime, Real rampTime);
+		VoltSourceResFreq(std::string name, Int src, Int dest, Real voltage, Real phase, Real resistance, Real omegaSource, Real switchTime, Real rampTime);
 
 		void init(Real om, Real dt) { }
 		void applySystemMatrixStamp(SystemModel& system);

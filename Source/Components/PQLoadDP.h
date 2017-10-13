@@ -33,7 +33,7 @@ namespace DPsim {
 		Real mReactivePower;
 		Real mSvVoltage;
 	public:
-		PQLoad(std::string name, int src, int dest, Real p, Real q, Real volt, Real angle);
+		PQLoad(std::string name, Int src, Int dest, Real p, Real q, Real volt, Real angle);
 		void init(Real om, Real dt);
 		void applySystemMatrixStamp(SystemModel&);
 	};

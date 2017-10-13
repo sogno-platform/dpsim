@@ -54,7 +54,7 @@ namespace DPsim {
 		VoltSourceRes() { ; };
 
 		/// define voltage source paramenters
-		VoltSourceRes(std::string name, int src, int dest, Complex voltage, Real resistance);
+		VoltSourceRes(std::string name, Int src, Int dest, Complex voltage, Real resistance);
 
 		void init(Real om, Real dt) { }
 

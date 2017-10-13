@@ -223,38 +223,38 @@ namespace DPsim {
 		/// Magnetizing flux linkage in d axis
 		Real mPsimd;
 
-		DPSMatrix mRotorFlux = DPSMatrix::Zero(4, 1);
-		DPSMatrix mDqStatorCurrents = DPSMatrix::Zero(2, 1);
-		DPSMatrix mDqStatorCurrents_hist = DPSMatrix::Zero(2, 1);
+		Matrix mRotorFlux = Matrix::Zero(4, 1);
+		Matrix mDqStatorCurrents = Matrix::Zero(2, 1);
+		Matrix mDqStatorCurrents_hist = Matrix::Zero(2, 1);
 
 		// ### Useful Matrices ###
 		/// inductance matrix
-		DPSMatrix mDInductanceMat = DPSMatrix::Zero(3, 3);
+		Matrix mDInductanceMat = Matrix::Zero(3, 3);
 		/// Derivative of inductance matrix
-		DPSMatrix pmDInductanceMat = DPSMatrix::Zero(3, 3);
+		Matrix pmDInductanceMat = Matrix::Zero(3, 3);
 		/// resistance matrix
-		DPSMatrix mResistanceMat = DPSMatrix::Zero(3, 3);
+		Matrix mResistanceMat = Matrix::Zero(3, 3);
 
 		/// Load Resistance 
-		DPSMatrix R_load = DPSMatrix::Zero(3, 3);
+		Matrix R_load = Matrix::Zero(3, 3);
 
 		/// Phase Voltages in pu
-		DPSMatrix mVabc = DPSMatrix::Zero(3, 1);
+		Matrix mVabc = Matrix::Zero(3, 1);
 		/// Phase currents in pu
-		DPSMatrix mIabc = DPSMatrix::Zero(3, 1);
+		Matrix mIabc = Matrix::Zero(3, 1);
 		/// Subtransient voltage in pu
-		DPSMatrix mDVabc = DPSMatrix::Zero(3, 1);
+		Matrix mDVabc = Matrix::Zero(3, 1);
 		/// Phase Voltages [V]
-		DPSMatrix mVoltageVector = DPSMatrix::Zero(3, 1);
+		Matrix mVoltageVector = Matrix::Zero(3, 1);
 		/// Phase Currents [A]
-		DPSMatrix mCurrentVector = DPSMatrix::Zero(3, 1);
+		Matrix mCurrentVector = Matrix::Zero(3, 1);
 
 		/// Matrix paremeters for integration of rotor flux linkages - A
-		DPSMatrix A_flux = DPSMatrix::Zero(4, 4);
+		Matrix A_flux = Matrix::Zero(4, 4);
 		/// Variables for integration of rotor flux linkages - B
-		DPSMatrix B_flux = DPSMatrix::Zero(4, 2);
+		Matrix B_flux = Matrix::Zero(4, 2);
 		/// Variables for integration of rotor flux linkages - C
-		DPSMatrix C_flux = DPSMatrix::Zero(4, 1);
+		Matrix C_flux = Matrix::Zero(4, 1);
 
 
 	public:
@@ -263,8 +263,8 @@ namespace DPsim {
 		/// Initializes the per unit or stator referred machine parameters with the machine parameters given in per unit or
 		/// stator referred parameters depending on the setting of parameter type.
 		/// The initialization mode depends on the setting of state type.
-		VoltageBehindReactanceEMT(std::string name, int node1, int node2, int node3,
-			Real nomPower, Real nomVolt, Real nomFreq, int poleNumber, Real nomFieldCur,
+		VoltageBehindReactanceEMT(std::string name, Int node1, Int node2, Int node3,
+			Real nomPower, Real nomVolt, Real nomFreq, Int poleNumber, Real nomFieldCur,
 			Real Rs, Real Ll, Real Lmd, Real Lmd0, Real Lmq, Real Lmq0,
 			Real Rfd, Real Llfd, Real Rkd, Real Llkd,
 			Real Rkq1, Real Llkq1, Real Rkq2, Real Llkq2,
@@ -300,16 +300,16 @@ namespace DPsim {
 		void postStep(SystemModel& system);
 
 		/// Park transform as described in Krause
-		DPSMatrix parkTransform(Real theta, double a, double b, double c);
-		//DPSMatrix parkTransform(Real theta, DPSMatrix& in);
+		Matrix parkTransform(Real theta, double a, double b, double c);
+		//Matrix parkTransform(Real theta, Matrix& in);
 
 		/// Inverse Park transform as described in Krause
-		DPSMatrix inverseParkTransform(Real theta, double q, double d, double zero);
-		//DPSMatrix inverseParkTransform(Real theta, DPSMatrix& in);
+		Matrix inverseParkTransform(Real theta, double q, double d, double zero);
+		//Matrix inverseParkTransform(Real theta, Matrix& in);
 
-		DPSMatrix& getVoltages() { return mVoltageVector; }
-		DPSMatrix& getCurrents() { return mCurrentVector; }
-		//DPSMatrix& getFluxes() { return mFluxes; }
+		Matrix& getVoltages() { return mVoltageVector; }
+		Matrix& getCurrents() { return mCurrentVector; }
+		//Matrix& getFluxes() { return mFluxes; }
 		double getElectricalTorque() { return mElecTorque; }
 		double getRotationalSpeed() { return mOmMech; }
 		double getRotorPosition() { return mThetaMech; }

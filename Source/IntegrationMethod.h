@@ -25,13 +25,16 @@
 
 #include "MathLibrary.h"
 
+namespace DPsim {
 
-typedef double(*DeriveFnPtr) (DPSMatrix inputs);
+	typedef double(*DeriveFnPtr) (Matrix inputs);
 
-DPSMatrix Trapezoidal(DPSMatrix states, DPSMatrix A, DPSMatrix B, double dt, DPSMatrix u_new, DPSMatrix u_old);
-DPSMatrix Trapezoidal(DPSMatrix states, DPSMatrix A, DPSMatrix B, DPSMatrix C, double dt, DPSMatrix u_new, DPSMatrix u_old);
-DPSMatrix Trapezoidal(DPSMatrix states, DPSMatrix A, DPSMatrix B, double dt, DPSMatrix u);
-DPSMatrix Euler(DPSMatrix states, DPSMatrix A, DPSMatrix B, double dt, DPSMatrix u);
-DPSMatrix Euler(DPSMatrix states, DPSMatrix A, DPSMatrix B, DPSMatrix C, double dt, DPSMatrix u);
-double Euler(double states, DPSMatrix inputs, DeriveFnPtr fnPtr, double dt);
+	Matrix Trapezoidal(Matrix states, Matrix A, Matrix B, double dt, Matrix u_new, Matrix u_old);
+	Matrix Trapezoidal(Matrix states, Matrix A, Matrix B, Matrix C, double dt, Matrix u_new, Matrix u_old);
+	Matrix Trapezoidal(Matrix states, Matrix A, Matrix B, double dt, Matrix u);
+	Matrix Euler(Matrix states, Matrix A, Matrix B, double dt, Matrix u);
+	Matrix Euler(Matrix states, Matrix A, Matrix B, Matrix C, double dt, Matrix u);
+	double Euler(double states, Matrix inputs, DeriveFnPtr fnPtr, double dt);
+
+}
 

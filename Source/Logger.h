@@ -28,9 +28,11 @@
 
 #include "MathLibrary.h"
 
-enum class LogLevel { NONE, ERROR, WARN, INFO };
+namespace DPsim {
 
-class Logger {
+	enum class LogLevel { NONE, ERROR, WARN, INFO };
+
+	class Logger {
 	private:
 		std::ofstream mLogFile;
 		LogLevel mLogLevel;
@@ -44,7 +46,8 @@ class Logger {
 		~Logger();
 
 		std::ostream& Log(LogLevel level = LogLevel::INFO);
-		void LogDataLine(double time, DPSMatrix& data);
+		void LogDataLine(double time, Matrix& data);
 		void LogDataLine(double time, double data);
-};
+	};
+}
 

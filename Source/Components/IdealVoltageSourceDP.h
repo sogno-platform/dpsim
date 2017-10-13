@@ -48,13 +48,13 @@ namespace DPsim {
 		Real mCurrenti;
 
 		/// Number of voltage source (first, second...)
-		int number;
+		Int number;
 
 	public:
 		IdealVoltageSource() { ; };
 
 		/// define paramenters of the voltage source
-		IdealVoltageSource(std::string name, int src, int dest, Complex voltage, int num);
+		IdealVoltageSource(std::string name, Int src, Int dest, Complex voltage, Int num);
 
 		void init(Real om, Real dt) { }
 

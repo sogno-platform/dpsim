@@ -172,18 +172,18 @@ namespace DPsim {
 		double DampingWinding = 2;
 
 
-		DPSMatrix R_load = DPSMatrix::Zero(6, 6);
+		Matrix R_load = Matrix::Zero(6, 6);
 
-		DPSMatrix L_constant = DPSMatrix::Zero(3, 3);
-		DPSMatrix L_cp = DPSMatrix::Zero(6, 6);
-		DPSMatrix R_cp = DPSMatrix::Zero(6, 6);
+		Matrix L_constant = Matrix::Zero(3, 3);
+		Matrix L_cp = Matrix::Zero(6, 6);
+		Matrix R_cp = Matrix::Zero(6, 6);
 
 		/// voltage vector q d 0 kq1 kq2 df kd
-		DPSMatrix mVoltages2 = DPSMatrix::Zero(7, 1);
+		Matrix mVoltages2 = Matrix::Zero(7, 1);
 		/// flux linkage vector
-		DPSMatrix mFluxes = DPSMatrix::Zero(7, 1);
+		Matrix mFluxes = Matrix::Zero(7, 1);
 		/// current vector
-		DPSMatrix mCurrents2 = DPSMatrix::Zero(7, 1);
+		Matrix mCurrents2 = Matrix::Zero(7, 1);
 
 		/// voltage vector q d 0 fd kd kq1 kq2
 		double mVd;
@@ -235,7 +235,7 @@ namespace DPsim {
 
 		// Auxiliar Matrix for DP
 		MatrixComp LD02 = MatrixComp::Zero(3, 3);
-		DPSMatrix LD0 = DPSMatrix::Zero(3, 3);
+		Matrix LD0 = Matrix::Zero(3, 3);
 		MatrixComp LD1 = MatrixComp::Zero(3, 3);
 		MatrixComp A1 = MatrixComp::Zero(3, 3);
 		MatrixComp A3 = MatrixComp::Zero(3, 3);
@@ -243,63 +243,63 @@ namespace DPsim {
 		MatrixComp B1 = MatrixComp::Zero(3, 3);
 		MatrixComp A2 = MatrixComp::Zero(3, 3);
 		MatrixComp B2 = MatrixComp::Zero(3, 3);
-		DPSMatrix L_VP_SFA = DPSMatrix::Zero(6, 6);
-		DPSMatrix R_VP_SFA = DPSMatrix::Zero(6, 6);
-		DPSMatrix K1 = DPSMatrix::Zero(6, 6);
-		DPSMatrix K2 = DPSMatrix::Zero(6, 6);
+		Matrix L_VP_SFA = Matrix::Zero(6, 6);
+		Matrix R_VP_SFA = Matrix::Zero(6, 6);
+		Matrix K1 = Matrix::Zero(6, 6);
+		Matrix K2 = Matrix::Zero(6, 6);
 		Complex alpha;
 
 		// ### Useful Matrices ###
 		/// inductance matrix
-		DPSMatrix mDInductanceMat = DPSMatrix::Zero(3, 3);
+		Matrix mDInductanceMat = Matrix::Zero(3, 3);
 		/// resistance matrix
-		DPSMatrix mResistanceMat = DPSMatrix::Zero(3, 3);
+		Matrix mResistanceMat = Matrix::Zero(3, 3);
 		/// reactance matrix
-		//DPSMatrix mReactanceMat = DPSMatrix::Zero(7, 7);
+		//Matrix mReactanceMat = Matrix::Zero(7, 7);
 		/// omega - flux matrix
-		//DPSMatrix mOmegaFluxMat = DPSMatrix::Zero(7, 7);
+		//Matrix mOmegaFluxMat = Matrix::Zero(7, 7);
 		/// matrix for reversing stator current directions in calculations with respect to other currents
-		//DPSMatrix mReverseCurrents = DPSMatrix::Zero(7, 7);
+		//Matrix mReverseCurrents = Matrix::Zero(7, 7);
 
 		double mLa;
 		double mLb;
 
 		//Historical term of voltage
-		DPSMatrix mV_hist = DPSMatrix::Zero(3, 1);
+		Matrix mV_hist = Matrix::Zero(3, 1);
 
 		//Phase Voltages in pu
-		DPSMatrix mVabcRe = DPSMatrix::Zero(3, 1);
-		DPSMatrix mVabcIm = DPSMatrix::Zero(3, 1);
-		DPSMatrix mVabc = DPSMatrix::Zero(6, 1);
+		Matrix mVabcRe = Matrix::Zero(3, 1);
+		Matrix mVabcIm = Matrix::Zero(3, 1);
+		Matrix mVabc = Matrix::Zero(6, 1);
 
 
 		//Historical term of current
-		DPSMatrix mIabcRe = DPSMatrix::Zero(3, 1);
-		DPSMatrix mIabcIm = DPSMatrix::Zero(3, 1);
-		DPSMatrix mIabc = DPSMatrix::Zero(6, 1);
+		Matrix mIabcRe = Matrix::Zero(3, 1);
+		Matrix mIabcIm = Matrix::Zero(3, 1);
+		Matrix mIabc = Matrix::Zero(6, 1);
 
 		//Historical term of voltage
-		DPSMatrix mDVabcRe = DPSMatrix::Zero(3, 1);
-		DPSMatrix mDVabcIm = DPSMatrix::Zero(3, 1);
-		DPSMatrix mDVabc = DPSMatrix::Zero(6, 1);
+		Matrix mDVabcRe = Matrix::Zero(3, 1);
+		Matrix mDVabcIm = Matrix::Zero(3, 1);
+		Matrix mDVabc = Matrix::Zero(6, 1);
 
 		//Phase Voltages
-		DPSMatrix mVoltageVector = DPSMatrix::Zero(6, 1);
+		Matrix mVoltageVector = Matrix::Zero(6, 1);
 
 		//Phase Currents
-		DPSMatrix mCurrentVector = DPSMatrix::Zero(6, 1);
+		Matrix mCurrentVector = Matrix::Zero(6, 1);
 
 
 		/// Matrix paremeters for integration of rotor flux linkages - A
-		DPSMatrix A_flux = DPSMatrix::Zero(4, 4);
+		Matrix A_flux = Matrix::Zero(4, 4);
 		/// Variables for integration of rotor flux linkages - B
-		DPSMatrix B_flux = DPSMatrix::Zero(4, 2);
+		Matrix B_flux = Matrix::Zero(4, 2);
 		/// Variables for integration of rotor flux linkages - C
-		DPSMatrix C_flux = DPSMatrix::Zero(4, 1);
+		Matrix C_flux = Matrix::Zero(4, 1);
 
-		DPSMatrix mRotorFlux = DPSMatrix::Zero(4, 1);
-		DPSMatrix mDqStatorCurrents = DPSMatrix::Zero(2, 1);
-		DPSMatrix mDqStatorCurrents_hist = DPSMatrix::Zero(2, 1);
+		Matrix mRotorFlux = Matrix::Zero(4, 1);
+		Matrix mDqStatorCurrents = Matrix::Zero(2, 1);
+		Matrix mDqStatorCurrents_hist = Matrix::Zero(2, 1);
 
 
 	public:
@@ -308,8 +308,8 @@ namespace DPsim {
 		/// Initializes the per unit or stator referred machine parameters with the machine parameters given in per unit or
 		/// stator referred parameters depending on the setting of parameter type.
 		/// The initialization mode depends on the setting of state type.
-		VoltageBehindReactanceDP(std::string name, int node1, int node2, int node3,
-			Real nomPower, Real nomVolt, Real nomFreq, int poleNumber, Real nomFieldCur,
+		VoltageBehindReactanceDP(std::string name, Int node1, Int node2, Int node3,
+			Real nomPower, Real nomVolt, Real nomFreq, Int poleNumber, Real nomFieldCur,
 			Real Rs, Real Ll, Real Lmd, Real Lmd0, Real Lmq, Real Lmq0,
 			Real Rfd, Real Llfd, Real Rkd, Real Llkd,
 			Real Rkq1, Real Llkq1, Real Rkq2, Real Llkq2,
@@ -350,15 +350,15 @@ namespace DPsim {
 		void postStep(SystemModel& system);
 
 		/// abc to dq
-		DPSMatrix abcToDq0Transform(Real theta, Real aRe, Real bRe, Real cRe, Real aIm, Real bIm, Real cIm);
+		Matrix abcToDq0Transform(Real theta, Real aRe, Real bRe, Real cRe, Real aIm, Real bIm, Real cIm);
 
 		/// dq to abc
-		DPSMatrix dq0ToAbcTransform(Real theta, Real d, Real q, Real zero);
+		Matrix dq0ToAbcTransform(Real theta, Real d, Real q, Real zero);
 
 
-		DPSMatrix& getVoltages() { return mVoltageVector; }
-		DPSMatrix& getCurrents() { return mCurrentVector; }
-		//DPSMatrix& getFluxes() { return mFluxes; }
+		Matrix& getVoltages() { return mVoltageVector; }
+		Matrix& getCurrents() { return mCurrentVector; }
+		//Matrix& getFluxes() { return mFluxes; }
 		double getElectricalTorque() { return mElecTorque; }
 		double getRotationalSpeed() { return mOmMech; }
 		double getRotorPosition() { return mThetaMech2; }

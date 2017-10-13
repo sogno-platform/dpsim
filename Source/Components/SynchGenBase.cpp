@@ -24,8 +24,8 @@
 
 using namespace DPsim;
 
-SynchGenBase::SynchGenBase(std::string name, int node1, int node2, int node3,
-	Real nomPower, Real nomVolt, Real nomFreq, int poleNumber, Real nomFieldCur,
+SynchGenBase::SynchGenBase(std::string name, Int node1, Int node2, Int node3,
+	Real nomPower, Real nomVolt, Real nomFreq, Int poleNumber, Real nomFieldCur,
 	Real Rs, Real Ll, Real Lmd, Real Lmd0, Real Lmq, Real Lmq0,
 	Real Rfd, Real Llfd, Real Rkd, Real Llkd,
 	Real Rkq1, Real Llkq1, Real Rkq2, Real Llkq2,
@@ -109,10 +109,10 @@ void SynchGenBase::init(Real om, Real dt,
 
 	// Create matrices for state space representation
 	if (mNumDampingWindings == 2) {
-		mInductanceMat = DPSMatrix::Zero(7, 7);
-		mResistanceMat = DPSMatrix::Zero(7, 7);
-		mReactanceMat = DPSMatrix::Zero(7, 7);
-		mOmegaFluxMat = DPSMatrix::Zero(7, 7);
+		mInductanceMat = Matrix::Zero(7, 7);
+		mResistanceMat = Matrix::Zero(7, 7);
+		mReactanceMat = Matrix::Zero(7, 7);
+		mOmegaFluxMat = Matrix::Zero(7, 7);
 
 		mInductanceMat <<
 			-(mLl + mLmq), 0, 0, mLmq, mLmq, 0, 0,
@@ -142,10 +142,10 @@ void SynchGenBase::init(Real om, Real dt,
 			0, 0, 0, 0, 0, 0, 0;
 	}
 	else {
-		mInductanceMat = DPSMatrix::Zero(6, 6);
-		mResistanceMat = DPSMatrix::Zero(6, 6);
-		mReactanceMat = DPSMatrix::Zero(6, 6);
-		mOmegaFluxMat = DPSMatrix::Zero(6, 6);
+		mInductanceMat = Matrix::Zero(6, 6);
+		mResistanceMat = Matrix::Zero(6, 6);
+		mReactanceMat = Matrix::Zero(6, 6);
+		mOmegaFluxMat = Matrix::Zero(6, 6);
 
 		mInductanceMat <<
 			-(mLl + mLmq), 0, 0, mLmq, 0, 0,

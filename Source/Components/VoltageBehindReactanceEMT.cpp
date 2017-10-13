@@ -25,8 +25,8 @@
 
 using namespace DPsim;
 
-VoltageBehindReactanceEMT::VoltageBehindReactanceEMT(std::string name, int node1, int node2, int node3,
-	Real nomPower, Real nomVolt, Real nomFreq, int poleNumber, Real nomFieldCur,
+VoltageBehindReactanceEMT::VoltageBehindReactanceEMT(std::string name, Int node1, Int node2, Int node3,
+	Real nomPower, Real nomVolt, Real nomFreq, Int poleNumber, Real nomFieldCur,
 	Real Rs, Real Ll, Real Lmd, Real Lmd0, Real Lmq, Real Lmq0,
 	Real Rfd, Real Llfd, Real Rkd, Real Llkd,
 	Real Rkq1, Real Llkq1, Real Rkq2, Real Llkq2,
@@ -113,12 +113,12 @@ void VoltageBehindReactanceEMT::initWithPerUnitParam(
 	{	
 		mDLmq = 1. / (1. / mLmq + 1. / mLlkq1);
 
-		A_flux = DPSMatrix::Zero(3, 3);
-		B_flux = DPSMatrix::Zero(3, 2);
-		C_flux = DPSMatrix::Zero(3, 1);
-		mRotorFlux = DPSMatrix::Zero(3, 1);
-		mDqStatorCurrents = DPSMatrix::Zero(2, 1);
-		mDqStatorCurrents_hist = DPSMatrix::Zero(2, 1);
+		A_flux = Matrix::Zero(3, 3);
+		B_flux = Matrix::Zero(3, 2);
+		C_flux = Matrix::Zero(3, 1);
+		mRotorFlux = Matrix::Zero(3, 1);
+		mDqStatorCurrents = Matrix::Zero(2, 1);
+		mDqStatorCurrents_hist = Matrix::Zero(2, 1);
 
 		A_flux <<
 			-mRkq1 / mLlkq1*(1 - mDLmq / mLlkq1), 0, 0,
@@ -443,9 +443,9 @@ void VoltageBehindReactanceEMT::postStep(SystemModel& system) {
 }
 
 
-DPSMatrix VoltageBehindReactanceEMT::parkTransform(Real theta, double a, double b, double c) {
+Matrix VoltageBehindReactanceEMT::parkTransform(Real theta, double a, double b, double c) {
 
-	DPSMatrix dq0vector(3, 1);
+	Matrix dq0vector(3, 1);
 
 	double q, d;
 
@@ -464,9 +464,9 @@ DPSMatrix VoltageBehindReactanceEMT::parkTransform(Real theta, double a, double 
 
 
 
-DPSMatrix VoltageBehindReactanceEMT::inverseParkTransform(Real theta, double q, double d, double zero) {
+Matrix VoltageBehindReactanceEMT::inverseParkTransform(Real theta, double q, double d, double zero) {
 
-	DPSMatrix abcVector(3, 1);
+	Matrix abcVector(3, 1);
 
 	double a, b, c;
 

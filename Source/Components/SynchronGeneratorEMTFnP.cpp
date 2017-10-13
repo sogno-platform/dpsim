@@ -25,8 +25,8 @@
 
 using namespace DPsim;
 
-SynchronGeneratorEMTFnP::SynchronGeneratorEMTFnP(std::string name, int node1, int node2, int node3,
-	Real nomPower, Real nomVolt, Real nomFreq, int poleNumber, Real nomFieldCur,
+SynchronGeneratorEMTFnP::SynchronGeneratorEMTFnP(std::string name, Int node1, Int node2, Int node3,
+	Real nomPower, Real nomVolt, Real nomFreq, Int poleNumber, Real nomFieldCur,
 	Real Rs, Real Ll, Real Lmd, Real Lmd0, Real Lmq, Real Lmq0,
 	Real Rfd, Real Llfd, Real Rkd, Real Llkd,
 	Real Rkq1, Real Llkq1, Real Rkq2, Real Llkq2,
@@ -78,9 +78,9 @@ void SynchronGeneratorEMTFnP::initWithPerUnitParam(
 	if (Rkq2 == 0 && Llkq2 == 0)
 	{
 		DampingWindings = 1;
-		mVoltages2 = DPSMatrix::Zero(6, 1);
-		mFluxes2 = DPSMatrix::Zero(6, 1);
-		mCurrents2 = DPSMatrix::Zero(6, 1);
+		mVoltages2 = Matrix::Zero(6, 1);
+		mFluxes2 = Matrix::Zero(6, 1);
+		mCurrents2 = Matrix::Zero(6, 1);
 	}
 	else
 	{
@@ -158,10 +158,10 @@ void SynchronGeneratorEMTFnP::init(Real om, Real dt,
 	}
 	else
 	{
-		mInductanceMat = DPSMatrix::Zero(6, 6);
-		mResistanceMat = DPSMatrix::Zero(6, 6);
-		mReactanceMat = DPSMatrix::Zero(6, 6);
-		mOmegaFluxMat = DPSMatrix::Zero(6, 6);
+		mInductanceMat = Matrix::Zero(6, 6);
+		mResistanceMat = Matrix::Zero(6, 6);
+		mReactanceMat = Matrix::Zero(6, 6);
+		mOmegaFluxMat = Matrix::Zero(6, 6);
 
 		mInductanceMat <<
 			-(mLl + mLmq), 0, 0, mLmq, 0, 0,
@@ -289,19 +289,19 @@ void SynchronGeneratorEMTFnP::step(SystemModel& system, Real time) {
 	}
 
 	if (mLogActive) {
-		DPSMatrix logValues(getFluxes().rows() + getVoltages().rows() + getCurrents().rows(), 1);
+		Matrix logValues(getFluxes().rows() + getVoltages().rows() + getCurrents().rows(), 1);
 		logValues << getFluxes(), getVoltages(), getCurrents();
 		mLog->LogDataLine(time, logValues);
 	}
 
 }
 
-double SynchronGeneratorEMTFnP::dtOmMech(DPSMatrix inputs) {
+double SynchronGeneratorEMTFnP::dtOmMech(Matrix inputs) {
 
 	return  1 / (2 * inputs(2)) * (inputs(1) - inputs(0));
 }
 
-double SynchronGeneratorEMTFnP::dtThetaMech(DPSMatrix inputs) {
+double SynchronGeneratorEMTFnP::dtThetaMech(Matrix inputs) {
 
 	return  inputs(0);
 }
@@ -334,7 +334,7 @@ void SynchronGeneratorEMTFnP::stepInPerUnit(Real om, Real dt, Real time, Numeric
 		if (DampingWindings == 2)
 		{
 
-			DPSMatrix Fluxes(7, 1);
+			Matrix Fluxes(7, 1);
 			Fluxes(0, 0) = mPsiq;
 			Fluxes(1, 0) = mPsid;
 			Fluxes(2, 0) = mPsi0;
@@ -343,7 +343,7 @@ void SynchronGeneratorEMTFnP::stepInPerUnit(Real om, Real dt, Real time, Numeric
 			Fluxes(5, 0) = mPsifd;
 			Fluxes(6, 0) = mPsikd;
 
-			DPSMatrix dqVoltages(7, 1);
+			Matrix dqVoltages(7, 1);
 			dqVoltages(0, 0) = mVq;
 			dqVoltages(1, 0) = mVd;
 			dqVoltages(2, 0) = mV0;
@@ -352,8 +352,8 @@ void SynchronGeneratorEMTFnP::stepInPerUnit(Real om, Real dt, Real time, Numeric
 			dqVoltages(5, 0) = mVfd;
 			dqVoltages(6, 0) = mVkd;
 
-			DPSMatrix A = (mResistanceMat*mReactanceMat - mOmMech*mOmegaFluxMat);
-			DPSMatrix B = DPSMatrix::Identity(7, 7);
+			Matrix A = (mResistanceMat*mReactanceMat - mOmMech*mOmegaFluxMat);
+			Matrix B = Matrix::Identity(7, 7);
 
 			if (numMethod == NumericalMethod::Trapezoidal_flux)
 			{
@@ -377,10 +377,10 @@ void SynchronGeneratorEMTFnP::stepInPerUnit(Real om, Real dt, Real time, Numeric
 		else
 
 		{
-			DPSMatrix A = (mResistanceMat*mReactanceMat - mOmMech*mOmegaFluxMat);
-			DPSMatrix B = DPSMatrix::Identity(6, 6);
+			Matrix A = (mResistanceMat*mReactanceMat - mOmMech*mOmegaFluxMat);
+			Matrix B = Matrix::Identity(6, 6);
 
-			DPSMatrix Fluxes(6, 1);
+			Matrix Fluxes(6, 1);
 			Fluxes(0, 0) = mPsiq;
 			Fluxes(1, 0) = mPsid;
 			Fluxes(2, 0) = mPsi0;
@@ -388,7 +388,7 @@ void SynchronGeneratorEMTFnP::stepInPerUnit(Real om, Real dt, Real time, Numeric
 			Fluxes(4, 0) = mPsifd;
 			Fluxes(5, 0) = mPsikd;
 
-			DPSMatrix dqVoltages(6, 1);
+			Matrix dqVoltages(6, 1);
 			dqVoltages(0, 0) = mVq;
 			dqVoltages(1, 0) = mVd;
 			dqVoltages(2, 0) = mV0;
@@ -512,9 +512,9 @@ void SynchronGeneratorEMTFnP::postStep(SystemModel& system) {
 }
 
 
-DPSMatrix SynchronGeneratorEMTFnP::parkTransform2(Real theta, double a, double b, double c) {
+Matrix SynchronGeneratorEMTFnP::parkTransform2(Real theta, double a, double b, double c) {
 
-	DPSMatrix dq0vector(3, 1);
+	Matrix dq0vector(3, 1);
 
 	// Park transform according to Kundur
 	double d, q;
@@ -533,9 +533,9 @@ DPSMatrix SynchronGeneratorEMTFnP::parkTransform2(Real theta, double a, double b
 }
 
 
-DPSMatrix SynchronGeneratorEMTFnP::inverseParkTransform2(Real theta, double d, double q, double zero) {
+Matrix SynchronGeneratorEMTFnP::inverseParkTransform2(Real theta, double d, double q, double zero) {
 
-	DPSMatrix abcVector(3, 1);
+	Matrix abcVector(3, 1);
 
 	double a, b, c;
 

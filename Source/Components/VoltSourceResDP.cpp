@@ -24,7 +24,7 @@
 
 using namespace DPsim;
 
-VoltSourceRes::VoltSourceRes(std::string name, int src, int dest, Complex voltage, Real resistance) : BaseComponent(name, src, dest) {
+VoltSourceRes::VoltSourceRes(std::string name, Int src, Int dest, Complex voltage, Real resistance) : BaseComponent(name, src, dest) {
 	this->mVoltage = voltage;
 	this->mResistance = resistance;
 	attrMap["voltage"] = {AttrComplex, &this->mVoltage};

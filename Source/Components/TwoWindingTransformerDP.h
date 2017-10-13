@@ -29,6 +29,6 @@ namespace DPsim {
 	// TODO: currently just modeled as an RxLine, possibly use more complex model?
 	class TwoWindingTransformer : public RxLine {
 	public:
-		TwoWindingTransformer(std::string name, int node1, int node2, Real resistance, Real inductance);
+		TwoWindingTransformer(std::string name, Int node1, Int node2, Real resistance, Real inductance);
 	};
 };

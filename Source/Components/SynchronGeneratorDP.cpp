@@ -24,8 +24,8 @@
 
 using namespace DPsim;
 
-SynchronGenerator::SynchronGenerator(std::string name, int node1, int node2, int node3,
-	Real nomPower, Real nomVolt, Real nomFreq, int poleNumber, Real nomFieldCur,
+SynchronGenerator::SynchronGenerator(std::string name, Int node1, Int node2, Int node3,
+	Real nomPower, Real nomVolt, Real nomFreq, Int poleNumber, Real nomFieldCur,
 	Real Rs, Real Ll, Real Lmd, Real Lmd0, Real Lmq, Real Lmq0,
 	Real Rfd, Real Llfd, Real Rkd, Real Llkd,
 	Real Rkq1, Real Llkq1, Real Rkq2, Real Llkq2,
@@ -66,9 +66,9 @@ void SynchronGenerator::initWithPerUnitParam(
 	if (Rkq2 == 0 && Llkq2 == 0)
 	{
 		DampingWindings = 1;
-		mVoltages2 = DPSMatrix::Zero(6, 1);
-		mFluxes2 = DPSMatrix::Zero(6, 1);
-		mCurrents2 = DPSMatrix::Zero(6, 1);
+		mVoltages2 = Matrix::Zero(6, 1);
+		mFluxes2 = Matrix::Zero(6, 1);
+		mCurrents2 = Matrix::Zero(6, 1);
 	}
 	else
 	{
@@ -145,10 +145,10 @@ void SynchronGenerator::init(Real om, Real dt,
 	}
 	else
 	{
-		mInductanceMat = DPSMatrix::Zero(6, 6);
-		mResistanceMat = DPSMatrix::Zero(6, 6);
-		mReactanceMat = DPSMatrix::Zero(6, 6);
-		mOmegaFluxMat = DPSMatrix::Zero(6, 6);
+		mInductanceMat = Matrix::Zero(6, 6);
+		mResistanceMat = Matrix::Zero(6, 6);
+		mReactanceMat = Matrix::Zero(6, 6);
+		mOmegaFluxMat = Matrix::Zero(6, 6);
 
 		mInductanceMat <<
 			-(mLl + mLmq), 0, 0, mLmq, 0, 0,
@@ -406,14 +406,14 @@ void SynchronGenerator::stepInPerUnit(Real om, Real dt, NumericalMethod numMetho
 		// Trapezoidal rule to solve flux
 		if (DampingWindings == 2)
 		{
-			DPSMatrix A = mBase_OmElec*(mResistanceMat*mReactanceMat - mOmMech*mOmegaFluxMat);
-			DPSMatrix I = DPSMatrix::Identity(7, 7);
+			Matrix A = mBase_OmElec*(mResistanceMat*mReactanceMat - mOmMech*mOmegaFluxMat);
+			Matrix I = Matrix::Identity(7, 7);
 
-			DPSMatrix Aux = I + (dt / 2) * A;
-			DPSMatrix Aux2 = I - (dt / 2) * A;
-			DPSMatrix InvAux = Aux2.inverse();
+			Matrix Aux = I + (dt / 2) * A;
+			Matrix Aux2 = I - (dt / 2) * A;
+			Matrix InvAux = Aux2.inverse();
 
-			DPSMatrix Fluxes(7, 1);
+			Matrix Fluxes(7, 1);
 			Fluxes(0, 0) = mPsiq;
 			Fluxes(1, 0) = mPsid;
 			Fluxes(2, 0) = mPsi0;
@@ -422,7 +422,7 @@ void SynchronGenerator::stepInPerUnit(Real om, Real dt, NumericalMethod numMetho
 			Fluxes(5, 0) = mPsifd;
 			Fluxes(6, 0) = mPsikd;
 
-			DPSMatrix dqVoltages(7, 1);
+			Matrix dqVoltages(7, 1);
 			dqVoltages(0, 0) = mVq;
 			dqVoltages(1, 0) = mVd;
 			dqVoltages(2, 0) = mV0;
@@ -444,14 +444,14 @@ void SynchronGenerator::stepInPerUnit(Real om, Real dt, NumericalMethod numMetho
 		}
 		else
 		{
-			DPSMatrix A = mBase_OmElec*(mResistanceMat*mReactanceMat - mOmMech*mOmegaFluxMat);
-			DPSMatrix I = DPSMatrix::Identity(6, 6);
+			Matrix A = mBase_OmElec*(mResistanceMat*mReactanceMat - mOmMech*mOmegaFluxMat);
+			Matrix I = Matrix::Identity(6, 6);
 
-			DPSMatrix Aux = I + (dt / 2) * A;
-			DPSMatrix Aux2 = I - (dt / 2) * A;
-			DPSMatrix InvAux = Aux2.inverse();
+			Matrix Aux = I + (dt / 2) * A;
+			Matrix Aux2 = I - (dt / 2) * A;
+			Matrix InvAux = Aux2.inverse();
 
-			DPSMatrix Fluxes(6, 1);
+			Matrix Fluxes(6, 1);
 			Fluxes(0, 0) = mPsiq;
 			Fluxes(1, 0) = mPsid;
 			Fluxes(2, 0) = mPsi0;
@@ -459,7 +459,7 @@ void SynchronGenerator::stepInPerUnit(Real om, Real dt, NumericalMethod numMetho
 			Fluxes(4, 0) = mPsifd;
 			Fluxes(5, 0) = mPsikd;
 
-			DPSMatrix dqVoltages(6, 1);
+			Matrix dqVoltages(6, 1);
 			dqVoltages(0, 0) = mVq;
 			dqVoltages(1, 0) = mVd;
 			dqVoltages(2, 0) = mV0;
@@ -512,21 +512,21 @@ void SynchronGenerator::stepInPerUnit(Real om, Real dt, NumericalMethod numMetho
 		// Euler step forward  for angular speed
 		mOmMech = mOmMech + dt * (1 / (2 * mH) * (mMechTorque - mElecTorque));
 
-		DPSMatrix A = mBase_OmElec*(mReactanceMat*mResistanceMat);
-		DPSMatrix B = mBase_OmElec*mReactanceMat;
-		DPSMatrix C = DPSMatrix::Zero(7, 1);
+		Matrix A = mBase_OmElec*(mReactanceMat*mResistanceMat);
+		Matrix B = mBase_OmElec*mReactanceMat;
+		Matrix C = Matrix::Zero(7, 1);
 		C(0, 0) = -mOmMech*mPsid;
 		C(1, 0) = mOmMech*mPsiq;
 		C = mBase_OmElec*mReactanceMat*C;
 
-		DPSMatrix I = DPSMatrix::Identity(7, 7);
+		Matrix I = Matrix::Identity(7, 7);
 
-		DPSMatrix Aux = I + (dt / 2) * A;
-		DPSMatrix Aux2 = I - (dt / 2) * A;
-		DPSMatrix InvAux = Aux2.inverse();
+		Matrix Aux = I + (dt / 2) * A;
+		Matrix Aux2 = I - (dt / 2) * A;
+		Matrix InvAux = Aux2.inverse();
 
 		if (DampingWindings == 2) {
-			DPSMatrix dqCurrents(7, 1);
+			Matrix dqCurrents(7, 1);
 			dqCurrents(0, 0) = mIq;
 			dqCurrents(1, 0) = mId;
 			dqCurrents(2, 0) = mI0;
@@ -535,7 +535,7 @@ void SynchronGenerator::stepInPerUnit(Real om, Real dt, NumericalMethod numMetho
 			dqCurrents(5, 0) = mIfd;
 			dqCurrents(6, 0) = mIkd;
 
-			DPSMatrix dqVoltages(7, 1);
+			Matrix dqVoltages(7, 1);
 			dqVoltages(0, 0) = mVq;
 			dqVoltages(1, 0) = mVd;
 			dqVoltages(2, 0) = mV0;
@@ -564,7 +564,7 @@ void SynchronGenerator::stepInPerUnit(Real om, Real dt, NumericalMethod numMetho
 			mPsikd = -mLmd*mId + mLmd*mIfd + (mLlkd + mLmd)*mIkd;
 		}
 		else {
-			DPSMatrix dqCurrents(7, 1);
+			Matrix dqCurrents(7, 1);
 			dqCurrents(0, 0) = mIq;
 			dqCurrents(1, 0) = mId;
 			dqCurrents(2, 0) = mI0;
@@ -572,7 +572,7 @@ void SynchronGenerator::stepInPerUnit(Real om, Real dt, NumericalMethod numMetho
 			dqCurrents(5, 0) = mIfd;
 			dqCurrents(6, 0) = mIkd;
 
-			DPSMatrix dqVoltages(7, 1);
+			Matrix dqVoltages(7, 1);
 			dqVoltages(0, 0) = mVq;
 			dqVoltages(1, 0) = mVd;
 			dqVoltages(2, 0) = mV0;
@@ -699,7 +699,7 @@ void SynchronGenerator::postStep(SystemModel& system) {
 }
 
 
-DPSMatrix SynchronGenerator::abcToDq0Transform(Real theta, Real aRe, Real bRe, Real cRe, Real aIm, Real bIm, Real cIm) {
+Matrix SynchronGenerator::abcToDq0Transform(Real theta, Real aRe, Real bRe, Real cRe, Real aIm, Real bIm, Real cIm) {
 	// Balanced case
 	Complex alpha(cos(2. / 3. * PI), sin(2. / 3. * PI));
 	Complex thetaCompInv(cos(-theta), sin(-theta));
@@ -719,7 +719,7 @@ DPSMatrix SynchronGenerator::abcToDq0Transform(Real theta, Real aRe, Real bRe, R
 	MatrixComp pnzVector(3, 1);
 	pnzVector = AbcToPnz * abcVector * thetaCompInv;
 
-	DPSMatrix dq0Vector(3, 1);
+	Matrix dq0Vector(3, 1);
 	dq0Vector <<
 		pnzVector(1, 0).imag(),
 		pnzVector(1, 0).real(),
@@ -728,7 +728,7 @@ DPSMatrix SynchronGenerator::abcToDq0Transform(Real theta, Real aRe, Real bRe, R
 	return dq0Vector;
 }
 
-DPSMatrix SynchronGenerator::dq0ToAbcTransform(Real theta, Real d, Real q, Real zero) {
+Matrix SynchronGenerator::dq0ToAbcTransform(Real theta, Real d, Real q, Real zero) {
 	// Balanced case
 	Complex alpha(cos(2. / 3. * PI), sin(2. / 3. * PI));
 	Complex thetaComp(cos(theta), sin(theta));

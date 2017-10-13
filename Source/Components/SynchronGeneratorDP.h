@@ -140,15 +140,15 @@ namespace DPsim {
 		/// electrical torque
 		Real mElecTorque;
 		/// voltage vector q d 0 kq1 kq2 df kd
-		DPSMatrix mVoltages = DPSMatrix::Zero(7, 1);
+		Matrix mVoltages = Matrix::Zero(7, 1);
 
 
 		/// voltage vector q d 0 kq1 kq2 df kd
-		DPSMatrix mVoltages2 = DPSMatrix::Zero(7, 1);
+		Matrix mVoltages2 = Matrix::Zero(7, 1);
 		/// flux linkage vector
-		DPSMatrix mFluxes2 = DPSMatrix::Zero(7, 1);
+		Matrix mFluxes2 = Matrix::Zero(7, 1);
 		/// current vector
-		DPSMatrix mCurrents2 = DPSMatrix::Zero(7, 1);
+		Matrix mCurrents2 = Matrix::Zero(7, 1);
 
 		/// voltage vector q d 0 fd kd kq1 kq2
 		Real mVd;
@@ -160,7 +160,7 @@ namespace DPsim {
 		Real mVkq2;
 
 		/// flux linkage vector
-		DPSMatrix mFluxes = DPSMatrix::Zero(7, 1);
+		Matrix mFluxes = Matrix::Zero(7, 1);
 		Real mPsid;
 		Real mPsiq;
 		Real mPsi0;
@@ -170,7 +170,7 @@ namespace DPsim {
 		Real mPsikq2;
 
 		/// current vector
-		DPSMatrix mCurrents = DPSMatrix::Zero(7, 1);
+		Matrix mCurrents = Matrix::Zero(7, 1);
 		Real mId;
 		Real mIq;
 		Real mI0;
@@ -180,7 +180,7 @@ namespace DPsim {
 		Real mIkq2;
 
 		/// interface voltage vector abcs
-		DPSMatrix mAbcsVoltages = DPSMatrix::Zero(6, 1);
+		Matrix mAbcsVoltages = Matrix::Zero(6, 1);
 
 		Real mVaRe;
 		Real mVaIm;
@@ -191,7 +191,7 @@ namespace DPsim {
 
 
 		/// interface current vector abcs
-		DPSMatrix mAbcsCurrents = DPSMatrix::Zero(6, 1);
+		Matrix mAbcsCurrents = Matrix::Zero(6, 1);
 
 		Real mIaRe;
 		Real mIaIm;
@@ -234,21 +234,21 @@ namespace DPsim {
 
 
 		/// interface voltage vector dq0
-		DPSMatrix mDq0Voltages = DPSMatrix::Zero(3, 1);
+		Matrix mDq0Voltages = Matrix::Zero(3, 1);
 		/// interface current vector dq0
-		DPSMatrix mDq0Currents = DPSMatrix::Zero(3, 1);
+		Matrix mDq0Currents = Matrix::Zero(3, 1);
 
 		// ### Useful Matrices ###
 		/// inductance matrix
-		DPSMatrix mInductanceMat = DPSMatrix::Zero(7, 7);
+		Matrix mInductanceMat = Matrix::Zero(7, 7);
 		/// resistance matrix
-		DPSMatrix mResistanceMat = DPSMatrix::Zero(7, 7);
+		Matrix mResistanceMat = Matrix::Zero(7, 7);
 		/// reactance matrix
-		DPSMatrix mReactanceMat = DPSMatrix::Zero(7, 7);
+		Matrix mReactanceMat = Matrix::Zero(7, 7);
 		/// omega - flux matrix
-		DPSMatrix mOmegaFluxMat = DPSMatrix::Zero(7, 7);
+		Matrix mOmegaFluxMat = Matrix::Zero(7, 7);
 		/// matrix for reversing stator current directions in calculations with respect to other currents
-		DPSMatrix mReverseCurrents = DPSMatrix::Zero(7, 7);
+		Matrix mReverseCurrents = Matrix::Zero(7, 7);
 
 	public:
 		SynchronGenerator() { };
@@ -256,8 +256,8 @@ namespace DPsim {
 		/// Initializes the per unit or stator referred machine parameters with the machine parameters given in per unit or
 		/// stator referred parameters depending on the setting of parameter type.
 		/// The initialization mode depends on the setting of state type.
-		SynchronGenerator(std::string name, int node1, int node2, int node3,
-			Real nomPower, Real nomVolt, Real nomFreq, int poleNumber, Real nomFieldCur,
+		SynchronGenerator(std::string name, Int node1, Int node2, Int node3,
+			Real nomPower, Real nomVolt, Real nomFreq, Int poleNumber, Real nomFieldCur,
 			Real Rs, Real Ll, Real Lmd, Real Lmd0, Real Lmq, Real Lmq0,
 			Real Rfd, Real Llfd, Real Rkd, Real Llkd,
 			Real Rkq1, Real Llkq1, Real Rkq2, Real Llkq2,
@@ -294,16 +294,16 @@ namespace DPsim {
 		void postStep(SystemModel& system);
 
 		/// Park transform as described in Krause
-		//DPSMatrix abcToDq0Transform(Real theta, DPSMatrix& in);
-		DPSMatrix abcToDq0Transform(Real theta, Real aRe, Real bRe, Real cRe, Real aIm, Real bIm, Real cIm);
+		//Matrix abcToDq0Transform(Real theta, Matrix& in);
+		Matrix abcToDq0Transform(Real theta, Real aRe, Real bRe, Real cRe, Real aIm, Real bIm, Real cIm);
 
 		/// Inverse Park transform as described in Krause
-		//DPSMatrix dq0ToAbcTransform(Real theta, DPSMatrix& in);
-		DPSMatrix dq0ToAbcTransform(Real theta, Real d, Real q, Real zero);
+		//Matrix dq0ToAbcTransform(Real theta, Matrix& in);
+		Matrix dq0ToAbcTransform(Real theta, Real d, Real q, Real zero);
 
-		DPSMatrix& getVoltages() { return mVoltages2; }
-		DPSMatrix& getCurrents() { return mCurrents2; }
-		DPSMatrix& getFluxes() { return mFluxes2; }
+		Matrix& getVoltages() { return mVoltages2; }
+		Matrix& getCurrents() { return mCurrents2; }
+		Matrix& getFluxes() { return mFluxes2; }
 
 		void init(Real om, Real dt) { }
 		void applySystemMatrixStamp(SystemModel& system) { }

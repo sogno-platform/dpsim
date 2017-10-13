@@ -22,6 +22,8 @@
 
 #include "Logger.h"
 
+using namespace DPsim;
+
 std::ostringstream Logger::nullStream;
 
 Logger::Logger() : mLogFile() {
@@ -63,7 +65,7 @@ std::ostream& Logger::Log(LogLevel level) {
 	return mLogFile;
 }
 
-void Logger::LogDataLine(double time, DPSMatrix& data) {
+void Logger::LogDataLine(double time, Matrix& data) {
 	mLogFile << std::scientific << time;
 	for (int i = 0; i < data.rows(); i++) {
 		mLogFile << ", " << data(i, 0);

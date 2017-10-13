@@ -66,7 +66,7 @@ namespace DPsim {
 		Inductor() { };
 
 		/// Define inductor name, conected nodes and inductance
-		Inductor(std::string name, int src, int dest, double inductance);
+		Inductor(std::string name, Int src, Int dest, double inductance);
 
 		/// Initializes variables detalvr, deltavi, currr, curri, cureqr and curreqi
 		void init(Real om, Real dt);

@@ -24,7 +24,7 @@
 
 using namespace DPsim;
 
-CurrentSource::CurrentSource(std::string name, int src, int dest, Complex current) : BaseComponent(name, src, dest) {
+CurrentSource::CurrentSource(std::string name, Int src, Int dest, Complex current) : BaseComponent(name, src, dest) {
 	this->mCurrent = current;
 	attrMap["current"] = {AttrComplex, &this->mCurrent};
 };
