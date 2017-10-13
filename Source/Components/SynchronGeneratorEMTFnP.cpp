@@ -75,7 +75,7 @@ void SynchronGeneratorEMTFnP::initWithPerUnitParam(
 	Real Rkq1, Real Llkq1, Real Rkq2, Real Llkq2,
 	Real H) {
 
-	if (Rkq2 == 0 & Llkq2 == 0)
+	if (Rkq2 == 0 && Llkq2 == 0)
 	{
 		DampingWindings = 1;
 		mVoltages2 = DPSMatrix::Zero(6, 1);

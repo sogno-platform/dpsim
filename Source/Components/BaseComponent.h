@@ -63,10 +63,10 @@ namespace DPsim {
 	public:
 		BaseComponent() { }
 
-		BaseComponent(std::string name, int src, int dest, bool logActive = false) {
+		BaseComponent(std::string name, int node1, int node2, bool logActive = false) {
 			this->mName = name;
-			this->mNode1 = src - 1;
-			this->mNode2 = dest - 1;
+			this->mNode1 = node1 - 1;
+			this->mNode2 = node2 - 1;
 			this->mLogActive = logActive;
 			attrMap["name"] = {AttrString, &this->mName};
 			attrMap["node1"] = {AttrInt, &this->mNode1};
@@ -78,6 +78,7 @@ namespace DPsim {
 			this->mNode3 = node3 - 1;
 			attrMap["node3"] = {AttrInt, &this->mNode3};
 		}
+
 		virtual ~BaseComponent() { }
 
 		/// get value of node1

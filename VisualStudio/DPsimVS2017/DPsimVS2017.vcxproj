@@ -163,6 +163,7 @@
     <ClInclude Include="..\..\Source\Components\PiLine.h" />
     <ClInclude Include="..\..\Source\Components\PQLoad.h" />
     <ClInclude Include="..\..\Source\Components\RxLine.h" />
+    <ClInclude Include="..\..\Source\Components\SynchGenBase.h" />
     <ClInclude Include="..\..\Source\Components\SynchronGenerator.h" />
     <ClInclude Include="..\..\Source\Components\SynchronGeneratorEMT.h" />
     <ClInclude Include="..\..\Source\Components\SynchronGeneratorEMTFnP.h" />
@@ -200,6 +201,7 @@
     <ClCompile Include="..\..\Source\Components\PiLine.cpp" />
     <ClCompile Include="..\..\Source\Components\PQLoad.cpp" />
     <ClCompile Include="..\..\Source\Components\RxLine.cpp" />
+    <ClCompile Include="..\..\Source\Components\SynchGenBase.cpp" />
     <ClCompile Include="..\..\Source\Components\SynchronGenerator.cpp" />
     <ClCompile Include="..\..\Source\Components\SynchronGeneratorEMT.cpp" />
     <ClCompile Include="..\..\Source\Components\SynchronGeneratorEMTFnP.cpp" />
