@@ -1,11 +1,12 @@
 # Folders
-Libraries
-lib
-build
-Build
-Results
-Logs
-.idea
+Libraries/
+lib/
+build/
+cmake-build-debug/
+Build/
+Results/
+Logs/
+.idea/
 
 # CMake
 CMakeFiles/

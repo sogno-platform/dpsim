@@ -21,10 +21,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *********************************************************************************/
 
-#ifdef __linux__
-
-#ifndef SHMEMTEST_H
-#define SHMEMTEST_H
+#pragma once
 
 #include "ShmemInterface.h"
 
@@ -38,7 +35,3 @@ namespace DPsim {
 
 	void exampleMainShmem();
 }
-
-#endif
-
-#endif

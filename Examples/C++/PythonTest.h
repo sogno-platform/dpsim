@@ -21,19 +21,13 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *********************************************************************************/
 
-#ifdef __python__
-
-#ifndef PYTHONTEST
-#define PYTHONTEST
+#pragma once
 
 #include <Python.h>
-#include "PyComponent.h"
-#include "PySimulation.h"
+#include "Python/Component.h"
+#include "Python/Simulation.h"
 
 namespace DPsim {
-	void pythonExampleMain()
+	void pythonExampleMain();
 }
 
-#endif
-
-#endif

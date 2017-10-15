@@ -21,11 +21,11 @@
  *********************************************************************************/
 
 #include <iostream>
-#include <string>
+#include <cstring>
 
 #include "CIMTest.h"
-#include "../CIMReader.h"
-#include "../Simulation.h"
+#include "CIM/CIMReader.h"
+#include "Simulation.h"
 
 void readFixedCIMFiles() {
 	std::list<std::string> filenames;

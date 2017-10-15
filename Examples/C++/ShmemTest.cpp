@@ -20,12 +20,10 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *********************************************************************************/
 
-#ifdef __linux__
-
 #include "ShmemTest.h"
-#include "../Simulation.h"
-#include "../ShmemInterface.h"
-#include "../Utilities.h"
+#include "Simulation.h"
+#include "ShmemInterface.h"
+#include "Utilities.h"
 
 using namespace DPsim;
 
@@ -312,5 +310,3 @@ void DPsim::exampleMainShmem() {
 		delete intf;
 	}
 }
-
-#endif

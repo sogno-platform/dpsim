@@ -22,6 +22,7 @@
 
 #include "Utilities.h"
 
+#include <cstring>
 #include <iostream>
 
 using namespace DPsim;
@@ -87,7 +88,6 @@ bool DPsim::parseInt(const char *s, int *i) {
 	*i = strtol(s, &end, 0);
 	return (end != s && !*end);
 }
-
 
 int DPsim::parseArguments(int argc, const char* argv[],
 	bool &rt, bool &batch, int &split, std::string &interfaceBase, std::string &splitNode) {

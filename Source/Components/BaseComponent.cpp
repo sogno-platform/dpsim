@@ -42,7 +42,7 @@ std::string BaseComponent::getType()
 
 	return ret;
 #else
-	const char *unmangled
+	const char *unmangled;
 
 	unmangled = abi::__cxa_demangle(mangled, NULL, NULL, &status);
 

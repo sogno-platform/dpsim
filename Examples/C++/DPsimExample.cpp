@@ -39,7 +39,7 @@ int main(int argc, char* argv[]) {
 	//shmemDistributedRef();
 
 	// #### Reference circuits test ################
-	//simulationExample1();
+	simulationExample1();
 	//simulationExample2();
 	//simulationExample3();
 	//simulationExampleIdealVS();

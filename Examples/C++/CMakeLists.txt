@@ -1,13 +1,6 @@
 cmake_minimum_required(VERSION 3.5)
 project(DPsimExample)
 
-# library configuration etc.
-if(IS_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/../Libraries/eigen)
-	set(EIGEN3_INCLUDE_DIR ../Libraries/eigen)
-else()
-	find_package(Eigen3 REQUIRED)
-endif()
-
 include_directories(${EIGEN3_INCLUDE_DIR} "../../Source")
 
 if (NOT WIN32)
@@ -25,7 +18,19 @@ set(CMAKE_CXX_STANDARD 11)
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 
 # add files
-file(GLOB SOURCES *.cpp)
+set(SOURCES
+		DPsimExample.cpp
+		ReferenceCircuits.cpp
+		SimpleCircuitTest.cpp
+		SyncGenUnitTestVBR.cpp
+		SynchronGenUnitTest.cpp
+)
+
+if(LINUX)
+	list(APPEND SOURCES
+		ShmemTest.cpp
+	)
+endif()
 
 # targets
 add_executable(${PROJECT_NAME} ${SOURCES})
