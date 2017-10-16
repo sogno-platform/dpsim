@@ -110,9 +110,8 @@ namespace DPsim {
 		Matrix & getSystemMatrix() { return mSystemModel.getCurrentSystemMatrix(); }
 		Int stepGeneratorTest(Logger& logger, Logger& leftSideVectorLog, Logger& rightSideVectorLog,
 			BaseComponent* generator, Real time);
-		Int stepGeneratorVBR(Logger& logger, BaseComponent* generator,
-			Logger& synGenLogVolt, Logger& synGenLogCurr, Logger& synGenLogElecTorque, Logger& synGenLogOmega, Logger& synGenLogTheta,
-			Real fieldVoltage, Real mechPower, Real time);
+		Int stepGeneratorVBR(Logger& logger, Logger& leftSideVectorLog, Logger& rightSideVectorLog,
+			BaseComponent* generator, Real time);
 
 		void addSystemTopology(std::vector<BaseComponent*> newElements);
 

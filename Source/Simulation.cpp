@@ -236,19 +236,19 @@ Int Simulation::stepGeneratorTest(Logger& logger, Logger& leftSideVectorLog, Log
 	}
 }
 
-int Simulation::stepGeneratorVBR(Logger& logger, BaseComponent* generator,
- Logger& synGenLogVolt, Logger& synGenLogCurr, Logger& synGenLogElecTorque,
-	Logger& synGenLogOmega, Logger& synGenLogTheta, Real fieldVoltage,
-	Real mechPower, Real time) {
+int Simulation::stepGeneratorVBR(Logger& logger, Logger& leftSideVectorLog, Logger& rightSideVectorLog,
+	BaseComponent* generator, Real time) {
 
-	// Individual step function for generator
-	if (mSystemModel.getSimType() == SimulationType::DynPhasor) {
-		((VoltageBehindReactanceDP*)generator)->step(mSystemModel, fieldVoltage, mechPower, time);
+	// Set to zero because all components will add their contribution for the current time step to the current value
+	mSystemModel.getRightSideVector().setZero();
+
+	// Execute step for all circuit components
+	for (std::vector<BaseComponent*>::iterator it = mElements.begin(); it != mElements.end(); ++it) {
+		(*it)->step(mSystemModel, mTime);
 	}
 
-	else {
-		((VoltageBehindReactanceEMT*)generator)->step(mSystemModel, fieldVoltage, mechPower, time);
-	}
+	// Solve circuit for vector j with generator output current
+	mSystemModel.solve();
 
 	// Execute PostStep for all components, generator states are recalculated based on new terminal voltage
 	for (std::vector<BaseComponent*>::iterator it = mElements.begin(); it != mElements.end(); ++it) {
@@ -264,26 +264,11 @@ int Simulation::stepGeneratorVBR(Logger& logger, BaseComponent* generator,
 		}
 	}
 
-
 	// Save simulation step data
 	if (mLastLogTimeStep == 0) {
-
 		std::cout << mTime << std::endl;
-
-		if (mSystemModel.getSimType() == SimulationType::DynPhasor) {
-			synGenLogVolt.LogDataLine(mTime, ((VoltageBehindReactanceDP*)generator)->getVoltages());
-			synGenLogCurr.LogDataLine(mTime, ((VoltageBehindReactanceDP*)generator)->getCurrents());
-			synGenLogElecTorque.LogDataLine(mTime, ((VoltageBehindReactanceDP*)generator)->getElectricalTorque());
-			synGenLogOmega.LogDataLine(mTime, ((VoltageBehindReactanceDP*)generator)->getRotationalSpeed());
-			synGenLogTheta.LogDataLine(mTime, ((VoltageBehindReactanceDP*)generator)->getRotorPosition());
-		}
-		else {
-			synGenLogVolt.LogDataLine(mTime, ((VoltageBehindReactanceEMT*)generator)->getVoltages());
-			synGenLogCurr.LogDataLine(mTime, ((VoltageBehindReactanceEMT*)generator)->getCurrents());
-			synGenLogElecTorque.LogDataLine(mTime, ((VoltageBehindReactanceEMT*)generator)->getElectricalTorque());
-			synGenLogOmega.LogDataLine(mTime, ((VoltageBehindReactanceEMT*)generator)->getRotationalSpeed());
-			synGenLogTheta.LogDataLine(mTime, ((VoltageBehindReactanceEMT*)generator)->getRotorPosition());
-		}
+		leftSideVectorLog.LogDataLine(getTime(), getLeftSideVector());
+		rightSideVectorLog.LogDataLine(getTime(), getRightSideVector());
 	}
 
 	mLastLogTimeStep++;

@@ -38,6 +38,8 @@ namespace DPsim {
 	class VoltageBehindReactanceEMT : public BaseComponent {
 	protected:
 
+		Logger* mLog;
+
 		// ### Machine parameters ###
 		/// nominal power Pn [VA]
 		Real mNomPower;
@@ -47,6 +49,14 @@ namespace DPsim {
 		Real mNomFreq;
 		/// nominal field current Ifn [A]
 		Real mNomFieldCur;
+		/// Number of damping windings in q
+		Int mNumDampingWindings;
+		/// number of poles
+		Int mPoleNumber;
+		/// inertia coefficient H
+		Real mH;
+		/// inertia J [kg*m^2]
+		Real mJ;
 
 		/// stator resistance Rs[Ohm]
 		Real mRs;
@@ -77,23 +87,14 @@ namespace DPsim {
 		/// q-axis damper leakage inductance 2 Llkq2 [H]
 		Real mLlkq2;
 
-		///Number of damping windings in q
-		Real DampingWinding = 2;
-
-		/// inertia J [kg*m^2]
-		Real mJ;
-		/// number of poles
-		Int mPoleNumber;
-		/// inertia coefficient H
-		Real mH;
-
 		/// d dynamic inductance
 		Real mDLmd;
 		/// q dynamic inductance
 		Real mDLmq;
-		/// Auxiliar inductance term La
+
+		/// Auxiliar inductance
 		Real mLa;
-		/// Auxiliar inductance term Lb
+		/// Auxiliar inductance
 		Real mLb;
 
 
@@ -157,7 +158,6 @@ namespace DPsim {
 		Real mDVb;
 		/// Dynamic voltage phase c
 		Real mDVc;
-
 
 		/// stator voltage in d axis
 		Real mVd;
@@ -223,8 +223,11 @@ namespace DPsim {
 		/// Magnetizing flux linkage in d axis
 		Real mPsimd;
 
+		/// Rotor flux vector
 		Matrix mRotorFlux = Matrix::Zero(4, 1);
+		/// Dq stator current vector
 		Matrix mDqStatorCurrents = Matrix::Zero(2, 1);
+		/// Dq stator current vector - from previous time step
 		Matrix mDqStatorCurrents_hist = Matrix::Zero(2, 1);
 
 		// ### Useful Matrices ###
@@ -238,16 +241,11 @@ namespace DPsim {
 		/// Load Resistance 
 		Matrix R_load = Matrix::Zero(3, 3);
 
-		/// Phase Voltages in pu
-		Matrix mVabc = Matrix::Zero(3, 1);
 		/// Phase currents in pu
 		Matrix mIabc = Matrix::Zero(3, 1);
 		/// Subtransient voltage in pu
 		Matrix mDVabc = Matrix::Zero(3, 1);
-		/// Phase Voltages [V]
-		Matrix mVoltageVector = Matrix::Zero(3, 1);
-		/// Phase Currents [A]
-		Matrix mCurrentVector = Matrix::Zero(3, 1);
+		Matrix mDVabc_hist = Matrix::Zero(3, 1);
 
 		/// Matrix paremeters for integration of rotor flux linkages - A
 		Matrix A_flux = Matrix::Zero(4, 4);
@@ -259,6 +257,7 @@ namespace DPsim {
 
 	public:
 		VoltageBehindReactanceEMT() { };
+		~VoltageBehindReactanceEMT();
 
 		/// Initializes the per unit or stator referred machine parameters with the machine parameters given in per unit or
 		/// stator referred parameters depending on the setting of parameter type.
@@ -268,7 +267,7 @@ namespace DPsim {
 			Real Rs, Real Ll, Real Lmd, Real Lmd0, Real Lmq, Real Lmq0,
 			Real Rfd, Real Llfd, Real Rkd, Real Llkd,
 			Real Rkq1, Real Llkq1, Real Rkq2, Real Llkq2,
-			Real inertia);
+			Real inertia, bool logActive = false);
 
 		/// Initializes the per unit or stator referred machine parameters with the machine parameters given in per unit.
 		/// The initialization mode depends on the setting of state type.
@@ -281,42 +280,42 @@ namespace DPsim {
 		/// Initializes states in per unit or stator referred variables depending on the setting of the state type.
 		/// Function parameters have to be given in real units.
 		void init(Real om, Real dt,
-			Real initActivePower, Real initReactivePower, Real initTerminalVolt, Real initVoltAngle);
+			Real initActivePower, Real initReactivePower, Real initTerminalVolt, Real initVoltAngle, Real initFieldVoltage, Real initMechPower);
 
 		/// Initializes states in per unit. All machine parameters are assumed to be in per unit.
 		/// Function parameters have to be given in real units.
 		void initStatesInPerUnit(Real initActivePower, Real initReactivePower,
-			Real initTerminalVolt, Real initVoltAngle);
+			Real initTerminalVolt, Real initVoltAngle, Real initFieldVoltage, Real initMechPower);
 
 		/// Performs an Euler forward step with the state space model of a synchronous generator
 		/// to calculate the flux and current from the voltage vector.
-		void step(SystemModel& system, Real fieldVoltage, Real mechPower, Real time);
+		void step(SystemModel& system, Real time);
 
 		/// Performs an Euler forward step with the state space model of a synchronous generator
 		/// to calculate the flux and current from the voltage vector in per unit.
-		void stepInPerUnit(Real om, Real dt, Real fieldVoltage, Real mechPower, Real time, NumericalMethod numMethod);
+		void stepInPerUnit(Real om, Real dt, Real time, NumericalMethod numMethod);
 
 		/// Retrieves calculated voltage from simulation for next step
 		void postStep(SystemModel& system);
 
 		/// Park transform as described in Krause
 		Matrix parkTransform(Real theta, Real a, Real b, Real c);
-		//Matrix parkTransform(Real theta, Matrix& in);
 
 		/// Inverse Park transform as described in Krause
 		Matrix inverseParkTransform(Real theta, Real q, Real d, Real zero);
-		//Matrix inverseParkTransform(Real theta, Matrix& in);
 
-		Matrix& getVoltages() { return mVoltageVector; }
-		Matrix& getCurrents() { return mCurrentVector; }
-		//Matrix& getFluxes() { return mFluxes; }
-		Real getElectricalTorque() { return mElecTorque; }
-		Real getRotationalSpeed() { return mOmMech; }
+		/// Calculate inductance Matrix L and its derivative
+		void CalculateLandpL();
+
+		Matrix& getRotorFluxes() { return mRotorFlux; }
+		Matrix& getDqStatorCurrents() { return mDqStatorCurrents; }
+		Real getElectricalTorque() { return mElecTorque*mBase_T; }
+		Real getRotationalSpeed() { return mOmMech*mBase_OmMech; }
 		Real getRotorPosition() { return mThetaMech; }
 
 		void init(Real om, Real dt) { }
 		void applySystemMatrixStamp(SystemModel& system) { }
 		void applyRightSideVectorStamp(SystemModel& system) { }
-		void step(SystemModel& system, Real time) { }
+
 	};
 }

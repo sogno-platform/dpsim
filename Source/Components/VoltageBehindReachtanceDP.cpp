@@ -30,7 +30,8 @@ VoltageBehindReactanceDP::VoltageBehindReactanceDP(std::string name, Int node1, 
 	Real Rs, Real Ll, Real Lmd, Real Lmd0, Real Lmq, Real Lmq0,
 	Real Rfd, Real Llfd, Real Rkd, Real Llkd,
 	Real Rkq1, Real Llkq1, Real Rkq2, Real Llkq2,
-	Real inertia) {
+	Real inertia, bool logActive)
+	: BaseComponent(name, node1, node2, node3, logActive) {
 
 	this->mNode1 = node1 - 1;
 	this->mNode2 = node2 - 1;
@@ -54,10 +55,23 @@ VoltageBehindReactanceDP::VoltageBehindReactanceDP(std::string name, Int node1, 
 	mBase_Psi = mBase_L * mBase_i;
 	mBase_T = mNomPower / mBase_OmMech;
 
+	// Create logging file
+	if (mLogActive) {
+		std::string filename = "SynGen_" + mName + ".csv";
+		mLog = new Logger(filename);
+	}
+
 	// steady state per unit initial value
 	initWithPerUnitParam(Rs, Ll, Lmd, Lmd0, Lmq, Lmq0, Rfd, Llfd, Rkd, Llkd, Rkq1, Llkq1, Rkq2, Llkq2, inertia);
 
 }
+
+VoltageBehindReactanceDP::~VoltageBehindReactanceDP() {
+	if (mLogActive) {
+		delete mLog;
+	}
+}
+
 void VoltageBehindReactanceDP::initWithPerUnitParam(
 	Real Rs, Real Ll, Real Lmd, Real Lmd0, Real Lmq, Real Lmq0,
 	Real Rfd, Real Llfd, Real Rkd, Real Llkd,
@@ -88,12 +102,12 @@ void VoltageBehindReactanceDP::initWithPerUnitParam(
 
 	if (mRkq2 == 0 && mLlkq2 == 0)
 	{
-		DampingWinding = 1;
+		mNumDampingWindings = 1;
 	}
 
 	//Dynamic mutual inductances
 	mDLmd = 1. / (1. / mLmd + 1. / mLlfd + 1. / mLlkd);
-	if (DampingWinding == 2)
+	if (mNumDampingWindings == 2)
 	{
 		mDLmq = 1. / (1. / mLmq + 1. / mLlkq1 + 1. / mLlkq2);
 
@@ -137,31 +151,27 @@ void VoltageBehindReactanceDP::initWithPerUnitParam(
 		(mLl + mLa), -mLa / 2, - mLa / 2,
 		-mLa / 2, mLl + mLa, -mLa / 2,
 		-mLa / 2, -mLa / 2, mLl + mLa;
-	LD02 <<
-		(mLl + mLa), -mLa / 2, -mLa / 2,
-		-mLa / 2, mLl + mLa, -mLa / 2,
-		-mLa / 2, -mLa / 2, mLl + mLa;
-
-	alpha = (cos((2. * PI) / 3.), sin((2. * PI) / 3.));
-	LD1 <<
-		1, pow(alpha, 2), alpha,
-		pow(alpha, 2), alpha, 1,
-		alpha, 1, pow(alpha, 2);
-	LD1 = (-mLb/2.)* LD1;
-
 }
 
 
 void VoltageBehindReactanceDP::init(Real om, Real dt,
-	Real initActivePower, Real initReactivePower, Real initTerminalVolt, Real initVoltAngle) {
+	Real initActivePower, Real initReactivePower, Real initTerminalVolt, Real initVoltAngle, Real initFieldVoltage, Real initMechPower) {
 
 	mResistanceMat <<
 		mRs, 0, 0,
 		0, mRs, 0,
 		0, 0, mRs;
 
+	R_load <<
+		1037.8378 / mBase_Z, 0, 0, 0, 0, 0,
+		0, 1037.8378 / mBase_Z, 0, 0, 0, 0,
+		0, 0, 1037.8378 / mBase_Z, 0, 0, 0,
+		0, 0, 0, 1037.8378 / mBase_Z, 0, 0,
+		0, 0, 0, 0, 1037.8378 / mBase_Z, 0,
+		0, 0, 0, 0, 0, 1037.8378 / mBase_Z;
+
 	// steady state per unit initial value
-	initStatesInPerUnit(initActivePower, initReactivePower, initTerminalVolt, initVoltAngle);
+	initStatesInPerUnit(initActivePower, initReactivePower, initTerminalVolt, initVoltAngle, initFieldVoltage, initMechPower);
 
 	mVaRe = dq0ToAbcTransform(mThetaMech, mVd, mVq, mV0)(0);
 	mVbRe = dq0ToAbcTransform(mThetaMech, mVd, mVq, mV0)(1);
@@ -178,26 +188,10 @@ void VoltageBehindReactanceDP::init(Real om, Real dt,
 	mIbIm = dq0ToAbcTransform(mThetaMech, mId, mIq, mI0)(4);
 	mIcIm = dq0ToAbcTransform(mThetaMech, mId, mIq, mI0)(5);
 
-
-	mVabc <<
-		mVaRe,
-		mVbRe,
-		mVcRe,
-		mVaIm,
-		mVbIm,
-		mVcIm;
-
-	mIabc <<
-		mIaRe,
-		mIbRe,
-		mIcRe,
-		mIaIm,
-		mIbIm,
-		mIcIm;
 }
 
 void VoltageBehindReactanceDP::initStatesInPerUnit(Real initActivePower, Real initReactivePower,
-	Real initTerminalVolt, Real initVoltAngle) {
+	Real initTerminalVolt, Real initVoltAngle, Real initFieldVoltage, Real initMechPower) {
 
 	Real init_P = initActivePower / mNomPower;
 	Real init_Q = initReactivePower / mNomPower;
@@ -259,7 +253,15 @@ void VoltageBehindReactanceDP::initStatesInPerUnit(Real initActivePower, Real in
 	mPsikq1 = init_psiq1;
 	mPsikq2 = init_psiq2;
 
-	if (DampingWinding == 2) {
+	// #### mechanical variables ##############################################
+	mMechPower = initMechPower / mNomPower;
+	mMechTorque = -mMechPower / 1;
+	mThetaMech = initVoltAngle + init_delta - PI / 2.;
+	mThetaMech2 = initVoltAngle + init_delta;
+	mTheta0 = mThetaMech2;
+
+	// #### VBR Model Dynamic variables #######################################
+	if (mNumDampingWindings == 2) {
 		mDPsiq = mDLmq*(mPsikq1 / mLlkq1) + mDLmq*(mPsikq2 / mLlkq2);
 	}
 	else {
@@ -267,7 +269,7 @@ void VoltageBehindReactanceDP::initStatesInPerUnit(Real initActivePower, Real in
 	}
 	mDPsid = mDLmd*(mPsifd / mLlfd) + mDLmd*(mPsikd / mLlkd);
 
-	if (DampingWinding == 2) {
+	if (mNumDampingWindings == 2) {
 		mDVq = mOmMech*mDPsid + mDLmq*mRkq1*(mDPsiq - mPsikq1) / (mLlkq1*mLlkq1) +
 			mDLmq*mRkq2*(mDPsiq - mPsikq2) / (mLlkq2*mLlkq2) + (mRkq1 / (mLlkq1*mLlkq1) + mRkq2 / (mLlkq2*mLlkq2))*mDLmq*mDLmq*mIq;
 	}
@@ -277,10 +279,6 @@ void VoltageBehindReactanceDP::initStatesInPerUnit(Real initActivePower, Real in
 	mDVd = -mOmMech*mDPsiq + mDLmd*mRkd*(mDPsid - mPsikd) / (mLlkd*mLlkd) + (mDLmd / mLlfd)*mVfd +
 		mDLmd*mRfd*(mDPsid - mPsifd) / (mLlfd*mLlfd) + (mRfd / (mLlfd*mLlfd) + mRkd / (mLlkd*mLlkd))*mDLmd*mDLmd*mId;
 
-	// Initialize mechanical angle
-	mThetaMech = initVoltAngle + init_delta - PI / 2.;
-	mThetaMech2 = initVoltAngle + init_delta;
-	mTheta0 = mThetaMech2;
 
 	mDVaRe = dq0ToAbcTransform(mThetaMech, mDVd, mDVq, 0)(0);
 	mDVbRe = dq0ToAbcTransform(mThetaMech, mDVd, mDVq, 0)(1);
@@ -288,7 +286,6 @@ void VoltageBehindReactanceDP::initStatesInPerUnit(Real initActivePower, Real in
 	mDVaIm = dq0ToAbcTransform(mThetaMech, mDVd, mDVq, 0)(3);
 	mDVbIm = dq0ToAbcTransform(mThetaMech, mDVd, mDVq, 0)(4);
 	mDVcIm = dq0ToAbcTransform(mThetaMech, mDVd, mDVq, 0)(5);
-
 	mDVabc <<
 		mDVaRe,
 		mDVbRe,
@@ -296,18 +293,9 @@ void VoltageBehindReactanceDP::initStatesInPerUnit(Real initActivePower, Real in
 		mDVaIm,
 		mDVbIm,
 		mDVcIm;
+	mDVabc_hist = mDVabc;
 
-	R_load <<
-		1037.8378 / mBase_Z, 0, 0, 0, 0, 0,
-		0, 1037.8378 / mBase_Z, 0, 0, 0, 0,
-		0, 0, 1037.8378 / mBase_Z, 0, 0, 0,
-		0, 0, 0, 1037.8378 / mBase_Z, 0, 0,
-		0, 0, 0, 0, 1037.8378 / mBase_Z, 0,
-		0, 0, 0, 0, 0, 1037.8378 / mBase_Z;
-
-	CalculateLandR(mThetaMech2, 1, mOmMech,0);
-	//CalculateLandR(dt*mBase_OmMech, 0);
-	if (DampingWinding == 2) {
+	if (mNumDampingWindings == 2) {
 		mPsimq = mDLmq*(mPsikq1 / mLlkq1 + mPsikq2 / mLlkq2 + mIq);
 	}
 	else {
@@ -318,24 +306,30 @@ void VoltageBehindReactanceDP::initStatesInPerUnit(Real initActivePower, Real in
 }
 
 
-void VoltageBehindReactanceDP::step(SystemModel& system, Real fieldVoltage, Real mechPower, Real time) {
+void VoltageBehindReactanceDP::step(SystemModel& system, Real time) {
 
-	stepInPerUnit(system.getOmega(), system.getTimeStep(), fieldVoltage, mechPower, time, system.getNumMethod());
+	stepInPerUnit(system.getOmega(), system.getTimeStep(), time, system.getNumMethod());
 
-	mVoltageVector = mVabc*mBase_v;
-	mCurrentVector = mIabc*mBase_i;
+	// Update current source accordingly
+	if (mNode1 >= 0) {
+		system.addCompToRightSideVector(mNode1, -mIaRe*mBase_i, -mIaIm*mBase_i);
+	}
+	if (mNode2 >= 0) {
+		system.addCompToRightSideVector(mNode2, -mIbRe*mBase_i, -mIbIm*mBase_i);
+	}
+	if (mNode3 >= 0) {
+		system.addCompToRightSideVector(mNode3, -mIcRe*mBase_i, -mIcIm*mBase_i);
+	}
+
+	if (mLogActive) {
+		Matrix logValues(3, 1);
+		logValues << getElectricalTorque(), getRotationalSpeed(), getRotorPosition();
+		mLog->LogDataLine(time, logValues);
+	}
 
 }
 
-void VoltageBehindReactanceDP::stepInPerUnit(Real om, Real dt, Real fieldVoltage, Real mechPower, Real time, NumericalMethod numMethod) {
-
-	mVabc <<
-		mVaRe,
-		mVbRe,
-		mVcRe,
-		mVaIm,
-		mVbIm,
-		mVcIm;
+void VoltageBehindReactanceDP::stepInPerUnit(Real om, Real dt, Real time, NumericalMethod numMethod) {
 
 	mIabc <<
 		mIaRe,
@@ -344,74 +338,28 @@ void VoltageBehindReactanceDP::stepInPerUnit(Real om, Real dt, Real fieldVoltage
 		mIaIm,
 		mIbIm,
 		mIcIm;
-	Matrix mDVabc_hist = mDVabc;
-	mDVabc <<
-		mDVaRe,
-		mDVbRe,
-		mDVcRe,
-		mDVaIm,
-		mDVbIm,
-		mDVcIm;
-
 
 	// Calculate mechanical variables with euler
-	mMechPower = mechPower / mNomPower;
-	mMechTorque = -(mMechPower / 1);
 	mElecTorque = (mPsimd*mIq - mPsimq*mId);
-	mOmMech_hist = mOmMech;
 	mOmMech = mOmMech + dt * (1. / (2. * mH) * (mElecTorque - mMechTorque));
 	mThetaMech = mThetaMech + dt * ((mOmMech - 1) * mBase_OmMech);
-	mThetaMech2_hist = mThetaMech2;
 	mThetaMech2 = mThetaMech2 + dt * (mOmMech* mBase_OmMech);
 
-	CalculateLandR(mThetaMech2, 1, mOmMech, time);
+	// Calculate equivalent Resistance and inductance
+	CalculateLandR(time);
 
-
-	if (time < 0.1 || time > 0.2)
-	{
-		R_load <<
-			1037.8378 / mBase_Z, 0, 0, 0, 0, 0,
-			0, 1037.8378 / mBase_Z, 0, 0, 0, 0,
-			0, 0, 1037.8378 / mBase_Z, 0, 0, 0,
-			0, 0, 0, 1037.8378 / mBase_Z, 0, 0,
-			0, 0, 0, 0, 1037.8378 / mBase_Z, 0,
-			0, 0, 0, 0, 0, 1037.8378 / mBase_Z;
-	}
-	else
-	{
-		R_load <<
-			0.001 / mBase_Z, 0, 0, 0, 0, 0,
-			0, 0.001 / mBase_Z, 0, 0, 0, 0,
-			0, 0, 0.001 / mBase_Z, 0, 0, 0,
-			0, 0, 0, 0.001 / mBase_Z, 0, 0,
-			0, 0, 0, 0, 0.001 / mBase_Z, 0,
-			0, 0, 0, 0, 0, 0.001 / mBase_Z;
-	}
-
-	//CalculateLandR(dt*mBase_OmElec, time);
-
+	// Solve circuit - calculate stator currents
 	if (numMethod == NumericalMethod::Trapezoidal_flux)
-		mIabc = Trapezoidal(mIabc, -L_VP_SFA.inverse()*(R_VP_SFA + R_load), L_VP_SFA.inverse(), dt*mBase_OmElec, -mDVabc);
-		//mIabc = -K1.inverse()*K2*mIabc - K1.inverse()*(mDVabc + mDVabc_hist);
+		mIabc = Trapezoidal(mIabc, -L_EQ.inverse()*(R_EQ + R_load), L_EQ.inverse(), dt*mBase_OmElec, -mDVabc, -mDVabc_hist);
 	else
-		mIabc = Euler(mIabc, -L_VP_SFA.inverse()*(R_VP_SFA + R_load), L_VP_SFA.inverse(), dt*mBase_OmElec, -mDVabc);
-	mVabc = -R_load*mIabc;
-
+		mIabc = Euler(mIabc, -L_EQ.inverse()*(R_EQ + R_load), L_EQ.inverse(), dt*mBase_OmElec, -mDVabc);
+	
 	mIaRe = mIabc(0);
 	mIbRe = mIabc(1);
 	mIcRe = mIabc(2);
 	mIaIm = mIabc(3);
 	mIbIm = mIabc(4);
 	mIcIm = mIabc(5);
-
-	mVaRe = mVabc(0);
-	mVbRe = mVabc(1);
-	mVcRe = mVabc(2);
-	mVaIm = mVabc(3);
-	mVbIm = mVabc(4);
-	mVcIm = mVabc(5);
-
-
 	Real mIq_hist = mIq;
 	Real mId_hist = mId;
 	mIq = abcToDq0Transform(mThetaMech, mIaRe, mIbRe, mIcRe, mIaIm, mIbIm, mIcIm)(0);
@@ -419,7 +367,7 @@ void VoltageBehindReactanceDP::stepInPerUnit(Real om, Real dt, Real fieldVoltage
 	mI0 = abcToDq0Transform(mThetaMech, mIaRe, mIbRe, mIcRe, mIaIm, mIbIm, mIcIm)(2);
 
 	// Calculate rotor flux likanges
-	if (DampingWinding == 2)
+	if (mNumDampingWindings == 2)
 	{
 		C_flux <<
 			0,
@@ -483,7 +431,7 @@ void VoltageBehindReactanceDP::stepInPerUnit(Real om, Real dt, Real fieldVoltage
 	}
 
 	// Calculate dynamic flux likages
-	if (DampingWinding == 2) {
+	if (mNumDampingWindings == 2) {
 		mDPsiq = mDLmq*(mPsikq1 / mLlkq1) + mDLmq*(mPsikq2 / mLlkq2);
 		mPsimq = mDLmq*(mPsikq1 / mLlkq1 + mPsikq2 / mLlkq2 + mIq);
 	}
@@ -494,8 +442,8 @@ void VoltageBehindReactanceDP::stepInPerUnit(Real om, Real dt, Real fieldVoltage
 	mDPsid = mDLmd*(mPsifd / mLlfd) + mDLmd*(mPsikd / mLlkd);
 	mPsimd = mDLmd*(mPsifd / mLlfd + mPsikd / mLlkd + mId);
 
-
-	if (DampingWinding == 2) {
+	// Calculate dynamic voltages
+	if (mNumDampingWindings == 2) {
 		mDVq = mOmMech*mDPsid + mDLmq*mRkq1*(mDPsiq - mPsikq1) / (mLlkq1*mLlkq1) +
 			mDLmq*mRkq2*(mDPsiq - mPsikq2) / (mLlkq2*mLlkq2) + (mRkq1 / (mLlkq1*mLlkq1) + mRkq2 / (mLlkq2*mLlkq2))*mDLmq*mDLmq*mIq;
 	}
@@ -511,50 +459,41 @@ void VoltageBehindReactanceDP::stepInPerUnit(Real om, Real dt, Real fieldVoltage
 	mDVaIm = dq0ToAbcTransform(mThetaMech, mDVd, mDVq, 0)(3);
 	mDVbIm = dq0ToAbcTransform(mThetaMech, mDVd, mDVq, 0)(4);
 	mDVcIm = dq0ToAbcTransform(mThetaMech, mDVd, mDVq, 0)(5);
+	mDVabc_hist = mDVabc;
+	mDVabc <<
+		mDVaRe,
+		mDVbRe,
+		mDVcRe,
+		mDVaIm,
+		mDVbIm,
+		mDVcIm;
+
+	// Load resistance
+	if (time < 0.1 || time > 0.2)
+	{
+		R_load <<
+			1037.8378 / mBase_Z, 0, 0, 0, 0, 0,
+			0, 1037.8378 / mBase_Z, 0, 0, 0, 0,
+			0, 0, 1037.8378 / mBase_Z, 0, 0, 0,
+			0, 0, 0, 1037.8378 / mBase_Z, 0, 0,
+			0, 0, 0, 0, 1037.8378 / mBase_Z, 0,
+			0, 0, 0, 0, 0, 1037.8378 / mBase_Z;
+	}
+	else
+	{
+		R_load <<
+			0.001 / mBase_Z, 0, 0, 0, 0, 0,
+			0, 0.001 / mBase_Z, 0, 0, 0, 0,
+			0, 0, 0.001 / mBase_Z, 0, 0, 0,
+			0, 0, 0, 0.001 / mBase_Z, 0, 0,
+			0, 0, 0, 0, 0.001 / mBase_Z, 0,
+			0, 0, 0, 0, 0, 0.001 / mBase_Z;
+	}
 
 }
 
 
-
-
-
-
-
-//void VoltageBehindReactanceDP::CalculateLandR(Real theta, Real omega_s, Real omega)
-//{
-//
-//	Matrix A(3, 3);
-//	Matrix dA(3, 3);
-//	Matrix Re_R(3, 3);
-//	Matrix Im_R(3, 3);
-//	Matrix L(3, 3);
-//
-//	A <<
-//		cos(2 * theta), cos(2 * theta - 2.*PI / 3), cos(2 * theta + 2.*PI / 3),
-//		cos(2 * theta - 2 * PI / 3), cos(2 * theta - 4 * PI / 3), cos(2 * theta),
-//		cos(2 * theta + 2 * PI / 3), cos(2 * theta), cos(2 * theta + 4 * PI / 3);
-//
-//	dA <<
-//		sin(2 * theta), sin(2 * theta - 2.*PI / 3), sin(2 * theta + 2.*PI / 3),
-//		sin(2 * theta - 2 * PI / 3), sin(2 * theta - 4 * PI / 3), sin(2 * theta),
-//		sin(2 * theta + 2 * PI / 3), sin(2 * theta), sin(2 * theta + 4 * PI / 3);
-//	dA = -2 * omega*dA;
-//
-//	Re_R = mResistanceMat - mLb*dA;
-//	Im_R = omega_s*(LD0 - mLb*A);
-//	L = LD0 - mLb*A;
-//
-//
-//MatrixA <<
-//Matrix-Im_R,
-//MatrixRe_R;
-//MatrixA <<
-//MatrixMatrix::Zero(3, 3),
-//		Matrix::Zero(3, 3), L;
-//
-//}
-
-void VoltageBehindReactanceDP::CalculateLandR(Real theta, Real omega_s, Real omega, Real time)
+void VoltageBehindReactanceDP::CalculateLandR(Real time)
 {
 	Matrix L1_Re(3, 3);
 	Matrix L1_Im(3, 3);
@@ -569,8 +508,8 @@ void VoltageBehindReactanceDP::CalculateLandR(Real theta, Real omega_s, Real ome
 
 	Real b_Re = cos(2*mThetaMech2);
 	Real b_Im = sin(2*mThetaMech2);
-	Real c_Re = cos(2 * mThetaMech2 - 2 * omega_s*mBase_OmMech*time - 2 * mTheta0);
-	Real c_Im = sin(2 * mThetaMech2 - 2 * omega_s*mBase_OmMech*time - 2 * mTheta0);
+	Real c_Re = cos(2 * mThetaMech2 - 2 * 1*mBase_OmMech*time - 2 * mTheta0);
+	Real c_Im = sin(2 * mThetaMech2 - 2 * 1*mBase_OmMech*time - 2 * mTheta0);
 
 	Real a = 2 * (mTheta0);
 
@@ -585,19 +524,19 @@ void VoltageBehindReactanceDP::CalculateLandR(Real theta, Real omega_s, Real ome
 		sin(2 * PI / 3 + a), sin(a), sin(4 * PI / 3 + a);
 	L1_Im = mLb*L1_Im;
 
-	Re_R = mResistanceMat + (2 * mOmMech + omega_s) / 2. * (L1_Re*b_Im + L1_Im*b_Re);
-	Im_R = LD0 - (2 * mOmMech + omega_s) / 2. *(L1_Re*b_Re - L1_Im*b_Im);
+	Re_R = mResistanceMat + (2 * mOmMech + 1) / 2. * (L1_Re*b_Im + L1_Im*b_Re);
+	Im_R = LD0 - (2 * mOmMech + 1) / 2. *(L1_Re*b_Re - L1_Im*b_Im);
 	Re_L = LD0 - 1. / 2.*(L1_Re*b_Re - L1_Im*b_Im);
 	Im_L = -1. / 2.*(L1_Re*b_Im + L1_Im*b_Re);
-	Re_R2 = 1. / 2.*(2 * mOmMech - omega_s)*(L1_Im*c_Re + L1_Re*c_Im);
-	Im_R2 = -1. / 2.*(2 * mOmMech - omega_s)*(L1_Re*c_Re - L1_Im*c_Im);
+	Re_R2 = 1. / 2.*(2 * mOmMech - 1)*(L1_Im*c_Re + L1_Re*c_Im);
+	Im_R2 = -1. / 2.*(2 * mOmMech - 1)*(L1_Re*c_Re - L1_Im*c_Im);
 	Re_L2 = -1. / 2.*(L1_Re*c_Re - L1_Im*c_Im);
 	Im_L2 = -1. / 2.*(L1_Im*c_Re + L1_Re*c_Im);
 
-	R_VP_SFA <<
+	R_EQ <<
 		Re_R + Re_R2, -Im_R + Im_R2,
 		Im_R + Im_R2, Re_R - Re_R2;
-	L_VP_SFA <<
+	L_EQ <<
 		Re_L + Re_L2, -Im_L + Im_L2,
 		Im_L + Im_L2, Re_L - Re_L2;
 
@@ -605,7 +544,6 @@ void VoltageBehindReactanceDP::CalculateLandR(Real theta, Real omega_s, Real ome
 
 
 void VoltageBehindReactanceDP::postStep(SystemModel& system) {
-
 
 }
 

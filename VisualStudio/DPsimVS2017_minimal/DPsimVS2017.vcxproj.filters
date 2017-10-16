@@ -39,80 +39,11 @@
     <ClInclude Include="..\..\Source\Simulation.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\Source\Components\Capacitor.h">
-      <Filter>Headerdateien\Components</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\Source\Components\CurrentSource.h">
-      <Filter>Headerdateien\Components</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\Source\Components\Inductor.h">
-      <Filter>Headerdateien\Components</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\Source\Components\InterfaceCurrentSource.h">
-      <Filter>Headerdateien\Components</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\Source\Components\InterfacedInductor.h">
-      <Filter>Headerdateien\Components</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\Source\Components\LinearResistor.h">
-      <Filter>Headerdateien\Components</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\Source\Components\ComponentCommons.h">
-      <Filter>Headerdateien\Components</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\Source\Components\IdealVoltageSource.h">
-      <Filter>Headerdateien\Components</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\Source\Components\InductorEMT.h">
-      <Filter>Headerdateien\Components</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\Source\Components\LinearResistorEMT.h">
-      <Filter>Headerdateien\Components</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\Source\Components\PiLine.h">
-      <Filter>Headerdateien\Components</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\Source\Components\RxLine.h">
-      <Filter>Headerdateien\Components</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\Source\Components\SynchronGeneratorEMT.h">
-      <Filter>Headerdateien\Components</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\Source\Components\VoltSourceRes.h">
-      <Filter>Headerdateien\Components</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\Source\Components\VoltSourceResEMT.h">
-      <Filter>Headerdateien\Components</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\Source\Components\VoltSourceResFreq.h">
-      <Filter>Headerdateien\Components</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\Source\Components\VoltSourceResFreqEMT.h">
-      <Filter>Headerdateien\Components</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\Source\SystemModel.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Source\Utilities.h">
       <Filter>Headerdateien</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\Source\Components\SynchronGenerator.h">
-      <Filter>Headerdateien\Components</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\Source\Components\VoltageBehindReactanceEMT.h">
-      <Filter>Headerdateien\Components</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\Source\Components\VoltageBehindReactanceDP.h">
-      <Filter>Headerdateien\Components</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\Source\Components\PQLoad.h">
-      <Filter>Headerdateien\Components</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\Source\Components\TwoWindingTransformer.h">
-      <Filter>Headerdateien\Components</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\Source\Components\SynchronGeneratorEMTFnP.h">
-      <Filter>Headerdateien\Components</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Source\IntegrationMethod.h">
       <Filter>Headerdateien</Filter>
@@ -132,7 +63,85 @@
     <ClInclude Include="..\..\Examples\C++\SynchronGenUnitTest.h">
       <Filter>Headerdateien\Examples</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\Source\Components\VoltSourceResFreqDP.h">
+      <Filter>Headerdateien\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\Components\VoltSourceResFreqEMT.h">
+      <Filter>Headerdateien\Components</Filter>
+    </ClInclude>
     <ClInclude Include="..\..\Source\Components\BaseComponent.h">
+      <Filter>Headerdateien\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\Components\CapacitorDP.h">
+      <Filter>Headerdateien\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\Components\ComponentCommons.h">
+      <Filter>Headerdateien\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\Components\CurrentSourceDP.h">
+      <Filter>Headerdateien\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\Components\ExternalCurrentSource.h">
+      <Filter>Headerdateien\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\Components\ExternalVoltageSource.h">
+      <Filter>Headerdateien\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\Components\IdealTransformerDP.h">
+      <Filter>Headerdateien\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\Components\IdealVoltageSourceDP.h">
+      <Filter>Headerdateien\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\Components\InductorDP.h">
+      <Filter>Headerdateien\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\Components\InductorEMT.h">
+      <Filter>Headerdateien\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\Components\InterfacedInductorDP.h">
+      <Filter>Headerdateien\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\Components\LinearResistorDP.h">
+      <Filter>Headerdateien\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\Components\LinearResistorEMT.h">
+      <Filter>Headerdateien\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\Components\PiLineDP.h">
+      <Filter>Headerdateien\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\Components\PQLoadDP.h">
+      <Filter>Headerdateien\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\Components\RxLineDP.h">
+      <Filter>Headerdateien\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\Components\SynchGenBase.h">
+      <Filter>Headerdateien\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\Components\SynchronGeneratorDP.h">
+      <Filter>Headerdateien\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\Components\SynchronGeneratorEMT.h">
+      <Filter>Headerdateien\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\Components\SynchronGeneratorEMTFnP.h">
+      <Filter>Headerdateien\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\Components\TwoWindingTransformerDP.h">
+      <Filter>Headerdateien\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\Components\VoltageBehindReactanceDP.h">
+      <Filter>Headerdateien\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\Components\VoltSourceResDP.h">
+      <Filter>Headerdateien\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\Components\VoltSourceResEMT.h">
+      <Filter>Headerdateien\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\Components\VoltageBehindReactanceEMT.h">
       <Filter>Headerdateien\Components</Filter>
     </ClInclude>
   </ItemGroup>
@@ -143,74 +152,11 @@
     <ClCompile Include="..\..\Source\Simulation.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\Source\Components\Capacitor.cpp">
-      <Filter>Quelldateien\Components</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\Source\Components\CurrentSource.cpp">
-      <Filter>Quelldateien\Components</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\Source\Components\Inductor.cpp">
-      <Filter>Quelldateien\Components</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\Source\Components\InterfacedInductor.cpp">
-      <Filter>Quelldateien\Components</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\Source\Components\LinearResistor.cpp">
-      <Filter>Quelldateien\Components</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\Source\Components\LinearResistorEMT.cpp">
-      <Filter>Quelldateien\Components</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\Source\Components\PiLine.cpp">
-      <Filter>Quelldateien\Components</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\Source\Components\RxLine.cpp">
-      <Filter>Quelldateien\Components</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\Source\Components\SynchronGeneratorEMT.cpp">
-      <Filter>Quelldateien\Components</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\Source\Components\VoltSourceRes.cpp">
-      <Filter>Quelldateien\Components</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\Source\Components\VoltSourceResEMT.cpp">
-      <Filter>Quelldateien\Components</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\Source\Components\VoltSourceResFreq.cpp">
-      <Filter>Quelldateien\Components</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\Source\Components\VoltSourceResFreqEMT.cpp">
-      <Filter>Quelldateien\Components</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\Source\Components\IdealVoltageSource.cpp">
-      <Filter>Quelldateien\Components</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\Source\Components\InductorEMT.cpp">
-      <Filter>Quelldateien\Components</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\Source\SystemModel.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
     <ClCompile Include="..\..\Source\Utilities.cpp">
       <Filter>Quelldateien</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\Source\Components\SynchronGenerator.cpp">
-      <Filter>Quelldateien\Components</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\Source\Components\VoltageBehindReactanceEMT.cpp">
-      <Filter>Quelldateien\Components</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\Source\Components\VoltageBehindReachtanceDP.cpp">
-      <Filter>Quelldateien\Components</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\Source\Components\PQLoad.cpp">
-      <Filter>Quelldateien\Components</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\Source\Components\TwoWindingTransformer.cpp">
-      <Filter>Quelldateien\Components</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\Source\Components\SynchronGeneratorEMTFnP.cpp">
-      <Filter>Quelldateien\Components</Filter>
     </ClCompile>
     <ClCompile Include="..\..\Source\IntegrationMethod.cpp">
       <Filter>Quelldateien</Filter>
@@ -233,7 +179,82 @@
     <ClCompile Include="..\..\Examples\C++\SynchronGenUnitTest.cpp">
       <Filter>Quelldateien\Examples</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\Source\Components\VoltSourceResFreqEMT.cpp">
+      <Filter>Quelldateien\Components</Filter>
+    </ClCompile>
     <ClCompile Include="..\..\Source\Components\BaseComponent.cpp">
+      <Filter>Quelldateien\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\Components\CapacitorDP.cpp">
+      <Filter>Quelldateien\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\Components\CurrentSourceDP.cpp">
+      <Filter>Quelldateien\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\Components\ExternalCurrentSource.cpp">
+      <Filter>Quelldateien\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\Components\ExternalVoltageSource.cpp">
+      <Filter>Quelldateien\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\Components\IdealTransformerDP.cpp">
+      <Filter>Quelldateien\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\Components\IdealVoltageSourceDP.cpp">
+      <Filter>Quelldateien\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\Components\InductorDP.cpp">
+      <Filter>Quelldateien\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\Components\InductorEMT.cpp">
+      <Filter>Quelldateien\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\Components\InterfacedInductorDP.cpp">
+      <Filter>Quelldateien\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\Components\LinearResistorDP.cpp">
+      <Filter>Quelldateien\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\Components\LinearResistorEMT.cpp">
+      <Filter>Quelldateien\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\Components\PiLineDP.cpp">
+      <Filter>Quelldateien\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\Components\PQLoadDP.cpp">
+      <Filter>Quelldateien\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\Components\RxLineDP.cpp">
+      <Filter>Quelldateien\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\Components\SynchGenBase.cpp">
+      <Filter>Quelldateien\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\Components\SynchronGeneratorDP.cpp">
+      <Filter>Quelldateien\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\Components\SynchronGeneratorEMT.cpp">
+      <Filter>Quelldateien\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\Components\SynchronGeneratorEMTFnP.cpp">
+      <Filter>Quelldateien\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\Components\TwoWindingTransformerDP.cpp">
+      <Filter>Quelldateien\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\Components\VoltageBehindReachtanceDP.cpp">
+      <Filter>Quelldateien\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\Components\VoltageBehindReactanceEMT.cpp">
+      <Filter>Quelldateien\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\Components\VoltSourceResDP.cpp">
+      <Filter>Quelldateien\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\Components\VoltSourceResEMT.cpp">
+      <Filter>Quelldateien\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\Components\VoltSourceResFreqDP.cpp">
       <Filter>Quelldateien\Components</Filter>
     </ClCompile>
   </ItemGroup>
