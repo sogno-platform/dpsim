@@ -21,6 +21,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *********************************************************************************/
 
+#ifdef __linux__
+
 #ifndef CIMTEST_H
 #define CIMTEST_H
 
@@ -29,6 +31,8 @@
 void readFixedCIMFiles_LineLoad();
 void readFixedCIMFiles_IEEE9bus();
 Int testCIMReader(std::list<std::string> filenames);
+
+#endif
 
 #endif
 

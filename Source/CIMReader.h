@@ -23,6 +23,8 @@
 
 #pragma once
 
+#ifdef __linux__
+
 #include <map>
 #include <vector>
 
@@ -84,3 +86,5 @@ namespace DPsim {
 			static Real unitValue(Real value, UnitMultiplier mult);
 	};
 };
+
+#endif

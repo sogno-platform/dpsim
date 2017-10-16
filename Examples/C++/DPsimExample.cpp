@@ -35,7 +35,9 @@ using namespace DPsim;
 int main(int argc, char* argv[]) {
 
 	// #### CIM Parser test ################
+#ifdef __Linux__
 	readFixedCIMFiles_LineLoad();
+#endif
 
 	// #### Shared memory interface tests ################
 	//shmemRTExample();
@@ -75,9 +77,9 @@ int main(int argc, char* argv[]) {
 	//SynGenDPUnitTestBalancedResLoad();
 
 	// EMT VBR model
-	//SynGenUnitTestVBR();
+	SynGenUnitTestVBR();
 	// DP VBR model
-	SynGenUnitTestVBRDP();
+	//SynGenUnitTestVBRDP();
 
 	// #### Variable frequency tests ################
 	//RXLineResLoad();
