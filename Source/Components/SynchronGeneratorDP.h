@@ -38,6 +38,8 @@ namespace DPsim {
 	class SynchronGenerator : public BaseComponent {
 	protected:
 
+		Logger* mLog;
+
 		// ### Machine parameters ###
 		/// nominal power Pn [VA]
 		Real mNomPower;
@@ -252,7 +254,8 @@ namespace DPsim {
 
 	public:
 		SynchronGenerator() { };
-
+		~SynchronGenerator();
+	
 		/// Initializes the per unit or stator referred machine parameters with the machine parameters given in per unit or
 		/// stator referred parameters depending on the setting of parameter type.
 		/// The initialization mode depends on the setting of state type.
@@ -261,7 +264,7 @@ namespace DPsim {
 			Real Rs, Real Ll, Real Lmd, Real Lmd0, Real Lmq, Real Lmq0,
 			Real Rfd, Real Llfd, Real Rkd, Real Llkd,
 			Real Rkq1, Real Llkq1, Real Rkq2, Real Llkq2,
-			Real inertia);
+			Real inertia, bool logActive = false);
 
 		/// Initializes the per unit or stator referred machine parameters with the machine parameters given in per unit.
 		/// The initialization mode depends on the setting of state type.
@@ -284,11 +287,11 @@ namespace DPsim {
 
 		/// Performs an Euler forward step with the state space model of a synchronous generator
 		/// to calculate the flux and current from the voltage vector.
-		void step(SystemModel& system, Real fieldVoltage, Real mechPower);
+		void step(SystemModel& system, Real time);
 
 		/// Performs an Euler forward step with the state space model of a synchronous generator
 		/// to calculate the flux and current from the voltage vector in per unit.
-		void stepInPerUnit(Real om, Real dt, NumericalMethod numMethod);
+		void stepInPerUnit(Real om, Real dt, Real time, NumericalMethod numMethod);
 
 		/// Retrieves calculated voltage from simulation for next step
 		void postStep(SystemModel& system);
@@ -304,6 +307,10 @@ namespace DPsim {
 		Matrix& getVoltages() { return mVoltages2; }
 		Matrix& getCurrents() { return mCurrents2; }
 		Matrix& getFluxes() { return mFluxes2; }
+		Real getElectricalTorque() { return mElecTorque*mBase_T; }
+		Real getRotationalSpeed() { return mOmMech*mBase_OmMech; }
+		Real getRotorPosition() { return mThetaMech; }
+
 
 		void init(Real om, Real dt) { }
 		void applySystemMatrixStamp(SystemModel& system) { }

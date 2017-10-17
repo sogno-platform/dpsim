@@ -126,9 +126,6 @@
     <ClInclude Include="..\..\Source\Components\SynchronGeneratorEMT.h">
       <Filter>Headerdateien\Components</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\Source\Components\SynchronGeneratorEMTFnP.h">
-      <Filter>Headerdateien\Components</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\Source\Components\TwoWindingTransformerDP.h">
       <Filter>Headerdateien\Components</Filter>
     </ClInclude>
@@ -234,9 +231,6 @@
       <Filter>Quelldateien\Components</Filter>
     </ClCompile>
     <ClCompile Include="..\..\Source\Components\SynchronGeneratorEMT.cpp">
-      <Filter>Quelldateien\Components</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\Source\Components\SynchronGeneratorEMTFnP.cpp">
       <Filter>Quelldateien\Components</Filter>
     </ClCompile>
     <ClCompile Include="..\..\Source\Components\TwoWindingTransformerDP.cpp">

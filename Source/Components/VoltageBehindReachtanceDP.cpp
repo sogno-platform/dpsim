@@ -322,8 +322,8 @@ void VoltageBehindReactanceDP::step(SystemModel& system, Real time) {
 	}
 
 	if (mLogActive) {
-		Matrix logValues(3, 1);
-		logValues << getElectricalTorque(), getRotationalSpeed(), getRotorPosition();
+		Matrix logValues(getRotorFluxes().rows() + getDqStatorCurrents().rows() + 3, 1);
+		logValues << getRotorFluxes(), getDqStatorCurrents(), getElectricalTorque(), getRotationalSpeed(), getRotorPosition();
 		mLog->LogDataLine(time, logValues);
 	}
 

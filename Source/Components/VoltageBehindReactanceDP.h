@@ -337,10 +337,11 @@ namespace DPsim {
 
 		void CalculateLandR(Real time);
 
-		//Matrix& getFluxes() { return mFluxes; }
+		Matrix& getRotorFluxes() { return mRotorFlux; }
+		Matrix& getDqStatorCurrents() { return mDqStatorCurrents; }
 		Real getElectricalTorque() { return mElecTorque*mBase_T; }
 		Real getRotationalSpeed() { return mOmMech*mBase_OmMech; }
-		Real getRotorPosition() { return mThetaMech2; }
+		Real getRotorPosition() { return mThetaMech; }
 
 		void init(Real om, Real dt) { }
 		void applySystemMatrixStamp(SystemModel& system) { }

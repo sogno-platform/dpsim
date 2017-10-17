@@ -270,7 +270,7 @@ void SynchronGeneratorEMT::initStatesInPerUnit(Real initActivePower, Real initRe
 	mMechPower = initMechPower / mNomPower;
 	mMechTorque = mMechPower / 1;
 	mThetaMech = initVoltAngle + init_delta - M_PI/2;
-	//mThetaMech = initVoltAngle + init_delta;
+
 }
 
 void SynchronGeneratorEMT::step(SystemModel& system, Real time) {
@@ -289,8 +289,8 @@ void SynchronGeneratorEMT::step(SystemModel& system, Real time) {
 	}
 
 	if (mLogActive) {
-		Matrix logValues(getFluxes().rows() + getVoltages().rows() + getCurrents().rows(), 1);
-		logValues << getFluxes(), getVoltages(), getCurrents();
+		Matrix logValues(getFluxes().rows() + getVoltages().rows() + getCurrents().rows() + 3, 1);
+		logValues << getFluxes(), getVoltages(), getCurrents(), getElectricalTorque(), getRotationalSpeed(), getRotorPosition();
 		mLog->LogDataLine(time, logValues);
 	}
 }
@@ -310,112 +310,98 @@ void SynchronGeneratorEMT::stepInPerUnit(Real om, Real dt, Real time, NumericalM
 	mVq = parkTransform2(mThetaMech, mVa, mVb, mVc)(1);
 	mV0 = parkTransform2(mThetaMech, mVa, mVb, mVc)(2);
 
-		if (numMethod == NumericalMethod::Trapezoidal_current) {
+	if (numMethod == NumericalMethod::Trapezoidal_current) {
 
-			if (DampingWindings == 2)
-			{
+		if (DampingWindings == 2)
+		{
+			Matrix A = (mReactanceMat*mResistanceMat);
+			Matrix B = mReactanceMat;
+			Matrix C = Matrix::Zero(7, 1);
+			C(0, 0) = -mOmMech*mPsid;
+			C(1, 0) = mOmMech*mPsiq;
+			C = mReactanceMat*C;
 
-			}
-			else
-			{
+			Matrix dqCurrents(7, 1);
+			dqCurrents(0, 0) = mIq;
+			dqCurrents(1, 0) = mId;
+			dqCurrents(2, 0) = mI0;
+			dqCurrents(3, 0) = mIkq1;
+			dqCurrents(4, 0) = mIkq2;
+			dqCurrents(5, 0) = mIfd;
+			dqCurrents(6, 0) = mIkd;
 
-			}
+			Matrix dqVoltages(7, 1);
+			dqVoltages(0, 0) = mVq;
+			dqVoltages(1, 0) = mVd;
+			dqVoltages(2, 0) = mV0;
+			dqVoltages(3, 0) = mVkq1;
+			dqVoltages(4, 0) = mVkq2;
+			dqVoltages(5, 0) = mVfd;
+			dqVoltages(6, 0) = mVkd;
+			dqCurrents = Trapezoidal(dqCurrents, A, B, C, dt*mOmMech, dqVoltages);
 
+			mIq = dqCurrents(0, 0);
+			mId = dqCurrents(1, 0);
+			mI0 = dqCurrents(2, 0);
+			mIkq1 = dqCurrents(3, 0);
+			mIkq2 = dqCurrents(4, 0);
+			mIfd = dqCurrents(5, 0);
+			mIkd = dqCurrents(6, 0);
 
-			if (DampingWindings == 2)
-			{
-
-
-				Matrix A = (mReactanceMat*mResistanceMat);
-				Matrix B = mReactanceMat;
-				Matrix C = Matrix::Zero(7, 1);
-				C(0, 0) = -mOmMech*mPsid;
-				C(1, 0) = mOmMech*mPsiq;
-				C = mReactanceMat*C;
-
-				Matrix dqCurrents(7, 1);
-				dqCurrents(0, 0) = mIq;
-				dqCurrents(1, 0) = mId;
-				dqCurrents(2, 0) = mI0;
-				dqCurrents(3, 0) = mIkq1;
-				dqCurrents(4, 0) = mIkq2;
-				dqCurrents(5, 0) = mIfd;
-				dqCurrents(6, 0) = mIkd;
-
-				Matrix dqVoltages(7, 1);
-				dqVoltages(0, 0) = mVq;
-				dqVoltages(1, 0) = mVd;
-				dqVoltages(2, 0) = mV0;
-				dqVoltages(3, 0) = mVkq1;
-				dqVoltages(4, 0) = mVkq2;
-				dqVoltages(5, 0) = mVfd;
-				dqVoltages(6, 0) = mVkd;
-
-				dqCurrents = Trapezoidal(dqCurrents, A, B, C, dt*mOmMech, dqVoltages);
-
-				mIq = dqCurrents(0, 0);
-				mId = dqCurrents(1, 0);
-				mI0 = dqCurrents(2, 0);
-				mIkq1 = dqCurrents(3, 0);
-				mIkq2 = dqCurrents(4, 0);
-				mIfd = dqCurrents(5, 0);
-				mIkd = dqCurrents(6, 0);
-
-				//Calculation of currents based on inverse of inductance matrix
-				mPsiq = -(mLl + mLmq)*mIq + mLmq*mIkq1 + mLmq*mIkq2;
-				mPsid = -(mLl + mLmd)*mId + mLmd*mIfd + mLmd*mIkd;
-				mPsi0 = -mLl*mI0;
-				mPsikq1 = -mLmq*mIq + (mLlkq1 + mLmq)*mIkq1 + mLmq*mIkq2;
-				mPsikq2 = -mLmq*mIq + mLmq*mIkq1 + (mLlkq2 + mLmq)*mIkq2;
-				mPsifd = -mLmd*mId + (mLlfd + mLmd)*mIfd + mLmd*mIkd;
-				mPsikd = -mLmd*mId + mLmd*mIfd + (mLlkd + mLmd)*mIkd;
-			}
-
-			else
-			{
-
-				Matrix A = (mReactanceMat*mResistanceMat);
-				Matrix B = mReactanceMat;
-				Matrix C = Matrix::Zero(6, 1);
-				C(0, 0) = -mOmMech*mPsid;
-				C(1, 0) = mOmMech*mPsiq;
-				C = mReactanceMat*C;
-
-				Matrix dqCurrents(6, 1);
-				dqCurrents(0, 0) = mIq;
-				dqCurrents(1, 0) = mId;
-				dqCurrents(2, 0) = mI0;
-				dqCurrents(3, 0) = mIkq1;
-				dqCurrents(4, 0) = mIfd;
-				dqCurrents(5, 0) = mIkd;
-
-				Matrix dqVoltages(6, 1);
-				dqVoltages(0, 0) = mVq;
-				dqVoltages(1, 0) = mVd;
-				dqVoltages(2, 0) = mV0;
-				dqVoltages(3, 0) = mVkq1;
-				dqVoltages(4, 0) = mVfd;
-				dqVoltages(5, 0) = mVkd;
-
-				dqCurrents = Trapezoidal(dqCurrents, A, B, C, dt*mBase_OmElec, dqVoltages);
-
-				mIq = dqCurrents(0, 0);
-				mId = dqCurrents(1, 0);
-				mI0 = dqCurrents(2, 0);
-				mIkq1 = dqCurrents(3, 0);
-				mIfd = dqCurrents(4, 0);
-				mIkd = dqCurrents(5, 0);
-
-				//Calculation of currents based on inverse of inductance matrix
-				mPsiq = -(mLl + mLmq)*mIq + mLmq*mIkq1;
-				mPsid = -(mLl + mLmd)*mId + mLmd*mIfd + mLmd*mIkd;
-				mPsi0 = -mLl*mI0;
-				mPsikq1 = -mLmq*mIq + (mLlkq1 + mLmq)*mIkq1;
-				mPsifd = -mLmd*mId + (mLlfd + mLmd)*mIfd + mLmd*mIkd;
-				mPsikd = -mLmd*mId + mLmd*mIfd + (mLlkd + mLmd)*mIkd;
-			}
-
+			//Calculation of currents based on inverse of inductance matrix
+			mPsiq = -(mLl + mLmq)*mIq + mLmq*mIkq1 + mLmq*mIkq2;
+			mPsid = -(mLl + mLmd)*mId + mLmd*mIfd + mLmd*mIkd;
+			mPsi0 = -mLl*mI0;
+			mPsikq1 = -mLmq*mIq + (mLlkq1 + mLmq)*mIkq1 + mLmq*mIkq2;
+			mPsikq2 = -mLmq*mIq + mLmq*mIkq1 + (mLlkq2 + mLmq)*mIkq2;
+			mPsifd = -mLmd*mId + (mLlfd + mLmd)*mIfd + mLmd*mIkd;
+			mPsikd = -mLmd*mId + mLmd*mIfd + (mLlkd + mLmd)*mIkd;
 		}
+
+		else
+		{
+			Matrix A = (mReactanceMat*mResistanceMat);
+			Matrix B = mReactanceMat;
+			Matrix C = Matrix::Zero(6, 1);
+			C(0, 0) = -mOmMech*mPsid;
+			C(1, 0) = mOmMech*mPsiq;
+			C = mReactanceMat*C;
+
+			Matrix dqCurrents(6, 1);
+			dqCurrents(0, 0) = mIq;
+			dqCurrents(1, 0) = mId;
+			dqCurrents(2, 0) = mI0;
+			dqCurrents(3, 0) = mIkq1;
+			dqCurrents(4, 0) = mIfd;
+			dqCurrents(5, 0) = mIkd;
+
+			Matrix dqVoltages(6, 1);
+			dqVoltages(0, 0) = mVq;
+			dqVoltages(1, 0) = mVd;
+			dqVoltages(2, 0) = mV0;
+			dqVoltages(3, 0) = mVkq1;
+			dqVoltages(4, 0) = mVfd;
+			dqVoltages(5, 0) = mVkd;
+
+			dqCurrents = Trapezoidal(dqCurrents, A, B, C, dt*mBase_OmElec, dqVoltages);
+
+			mIq = dqCurrents(0, 0);
+			mId = dqCurrents(1, 0);
+			mI0 = dqCurrents(2, 0);
+			mIkq1 = dqCurrents(3, 0);
+			mIfd = dqCurrents(4, 0);
+			mIkd = dqCurrents(5, 0);
+
+			//Calculation of currents based on inverse of inductance matrix
+			mPsiq = -(mLl + mLmq)*mIq + mLmq*mIkq1;
+			mPsid = -(mLl + mLmd)*mId + mLmd*mIfd + mLmd*mIkd;
+			mPsi0 = -mLl*mI0;
+			mPsikq1 = -mLmq*mIq + (mLlkq1 + mLmq)*mIkq1;
+			mPsifd = -mLmd*mId + (mLlfd + mLmd)*mIfd + mLmd*mIkd;
+			mPsikd = -mLmd*mId + mLmd*mIfd + (mLlkd + mLmd)*mIkd;
+		}
+
+	}
 
 	else {
 

@@ -31,7 +31,6 @@
 #include "Components/VoltSourceResDP.h"
 #include "Components/InterfacedInductorDP.h"
 #include "Components/SynchronGeneratorEMT.h"
-#include "Components/SynchronGeneratorEMTFnP.h"
 #include "Components/SynchronGeneratorDP.h"
 #include "Components/ComponentCommons.h"
 #include "Components/VoltSourceResFreqDP.h"

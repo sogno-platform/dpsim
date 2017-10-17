@@ -270,6 +270,10 @@ namespace DPsim {
 		Matrix& getVoltages() { return mVoltages2; }
 		Matrix& getCurrents() { return mCurrents2; }
 		Matrix& getFluxes() { return mFluxes2; }
+		Real getElectricalTorque() { return mElecTorque*mBase_T; }
+		Real getRotationalSpeed() { return mOmMech*mBase_OmMech; }
+		Real getRotorPosition() { return mThetaMech; }
+
 
 		// Methods for network integrated components
 		void init(Real om, Real dt) { }

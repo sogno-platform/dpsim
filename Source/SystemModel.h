@@ -31,7 +31,7 @@
 namespace DPsim {
 
 	enum class SimulationType { DynPhasor, EMT };
-	enum class NumericalMethod { Euler, AdamBashforth, Trapezoidal_flux, Trapezoidal_current };
+	enum class NumericalMethod { Euler, Trapezoidal_flux, Trapezoidal_current };
 
 	class SystemModel {
 
