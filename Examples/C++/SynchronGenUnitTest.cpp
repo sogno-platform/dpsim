@@ -304,10 +304,10 @@ void DPsim::SynGenUnitTestThreePhaseFault() {
 	Real Llkd = 0.1713;
 	Real Rkq1 = 0.0062;
 	Real Llkq1 = 0.7252;
-	Real Rkq2 = 0.0237;
-	Real Llkq2 = 0.125;
-	//Real Rkq2 = 0;
-	//Real Llkq2 = 0;
+	//Real Rkq2 = 0.0237;
+	//Real Llkq2 = 0.125;
+	Real Rkq2 = 0;
+	Real Llkq2 = 0;
 
 	// Declare circuit components
 	BaseComponent* gen = new SynchronGeneratorEMT("gen", 1, 2, 3,
@@ -343,7 +343,7 @@ void DPsim::SynGenUnitTestThreePhaseFault() {
 	tf = 0.3; dt = 0.000001; t = 0;
 	Int downSampling = 50;
 	Simulation newSim(circElements, om, dt, tf, log, downSampling, SimulationType::EMT);
-	newSim.setNumericalMethod(NumericalMethod::Trapezoidal_flux);
+	newSim.setNumericalMethod(NumericalMethod::Trapezoidal_current);
 	newSim.addSystemTopology(circElementsBreakerOn);
 	newSim.switchSystemMatrix(0);
 

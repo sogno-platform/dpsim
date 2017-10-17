@@ -32,9 +32,9 @@ namespace DPsim {
 	Matrix Trapezoidal(Matrix states, Matrix A, Matrix B, Real dt, Matrix u_new, Matrix u_old);
 	Matrix Trapezoidal(Matrix states, Matrix A, Matrix B, Matrix C, Real dt, Matrix u_new, Matrix u_old);
 	Matrix Trapezoidal(Matrix states, Matrix A, Matrix B, Real dt, Matrix u);
+	Matrix Trapezoidal(Matrix states, Matrix A, Matrix B, Matrix C, Real dt, Matrix u);
 	Matrix Euler(Matrix states, Matrix A, Matrix B, Real dt, Matrix u);
 	Matrix Euler(Matrix states, Matrix A, Matrix B, Matrix C, Real dt, Matrix u);
-	Real Euler(Real states, Matrix inputs, DeriveFnPtr fnPtr, Real dt);
 
 }
 

@@ -48,6 +48,18 @@ Matrix DPsim::Trapezoidal(Matrix states, Matrix A, Matrix B, Matrix C, Real dt, 
 	return newstates;
 }
 
+Matrix DPsim::Trapezoidal(Matrix states, Matrix A, Matrix B, Matrix C, Real dt, Matrix u)
+{
+	Int n = states.rows();
+	Matrix I = Matrix::Identity(n, n);
+
+	Matrix Aux = I + (dt / 2) * A;
+	Matrix Aux2 = I - (dt / 2) * A;
+
+	Matrix newstates = Aux2.inverse()*Aux*states + Aux2.inverse()*dt*B*u + Aux2.inverse()*dt*C;
+	return newstates;
+}
+
 Matrix DPsim::Trapezoidal(Matrix states, Matrix A, Matrix B, Real dt, Matrix u)
 {
 	Int n = states.rows();
@@ -65,9 +77,6 @@ Matrix DPsim::Euler(Matrix states, Matrix A, Matrix B, Real dt, Matrix u)
 	return states + dt*(A*states + B*u);
 }
 
-Real DPsim::Euler(Real state, Matrix inputs, DeriveFnPtr fnPtr, Real dt) {
-	return state + dt*fnPtr(inputs);
-}
 
 Matrix DPsim::Euler(Matrix states, Matrix A, Matrix B, Matrix C, Real dt, Matrix u)
 {

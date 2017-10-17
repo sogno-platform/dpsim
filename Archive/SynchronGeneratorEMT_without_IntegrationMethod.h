@@ -1,4 +1,4 @@
-/** Synchron Generator (EMTnP)
+/** Synchron generator (EMT)
  *
  * @file
  * @author Markus Mirz <mmirz@eonerc.rwth-aachen.de>
@@ -35,7 +35,7 @@ namespace DPsim {
 	/// parameter names include underscores and typical variables names found in literature instead of
 	/// descriptive names in order to shorten formulas and increase the readability
 
-	class SynchronGeneratorEMTFnP : public BaseComponent {
+	class SynchronGeneratorEMT : public BaseComponent {
 	protected:
 
 		Logger* mLog;
@@ -216,13 +216,13 @@ namespace DPsim {
 
 
 	public:
-		SynchronGeneratorEMTFnP() { };
-		~SynchronGeneratorEMTFnP();
+		SynchronGeneratorEMT() { };
+		~SynchronGeneratorEMT();
 
 		/// Initializes the per unit or stator referred machine parameters with the machine parameters given in per unit or
 		/// stator referred parameters depending on the setting of parameter type.
 		/// The initialization mode depends on the setting of state type.
-		SynchronGeneratorEMTFnP(std::string name, Int node1, Int node2, Int node3,
+		SynchronGeneratorEMT(std::string name, Int node1, Int node2, Int node3,
 			Real nomPower, Real nomVolt, Real nomFreq, Int poleNumber, Real nomFieldCur,
 			Real Rs, Real Ll, Real Lmd, Real Lmd0, Real Lmq, Real Lmq0,
 			Real Rfd, Real Llfd, Real Rkd, Real Llkd,
@@ -266,11 +266,6 @@ namespace DPsim {
 		/// Inverse Park transform as described in Krause
 		//Matrix inverseParkTransform(Real theta, Matrix& in);
 		Matrix inverseParkTransform2(Real theta, Real d, Real q, Real zero);
-
-		static Real dtOmMech(Matrix inputs);
-		Matrix mOmMechInputs = Matrix::Zero(3, 1);
-		static Real dtThetaMech(Matrix inputs);
-		Matrix mOmMech_Matrix = Matrix::Zero(1, 1);
 
 		Matrix& getVoltages() { return mVoltages2; }
 		Matrix& getCurrents() { return mCurrents2; }

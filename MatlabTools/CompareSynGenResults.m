@@ -3,14 +3,14 @@
 
 %% read PLECS results
 
-Results_PLECS = csvread('../../vsa/Results/SynGenVBREmt_ABCFault_PLECS/Voltages_and_currents.csv'); 
-Te_PLECS = csvread('../../vsa/Results/SynGenVBREmt_ABCFault_PLECS/electrical_torque.csv'); 
-omega_PLECS = csvread('../../vsa/Results/SynGenVBREmt_ABCFault_PLECS/omega.csv'); 
-theta_PLECS = csvread('../../vsa/Results/SynGenVBREmt_ABCFault_PLECS/theta.csv'); 
+Results_PLECS = csvread('../../vsa/Results/SynGenDqEmt_ABCFault_PLECS/Voltages_and_currents.csv'); 
+%Te_PLECS = csvread('../../vsa/Results/SynGenVBREmt_ABCFault_PLECS/electrical_torque.csv'); 
+%omega_PLECS = csvread('../../vsa/Results/SynGenVBREmt_ABCFault_PLECS/omega.csv'); 
+%theta_PLECS = csvread('../../vsa/Results/SynGenVBREmt_ABCFault_PLECS/theta.csv'); 
 %% read results from c++ simulation
-VoltageVector = csvread('../../vsa/Results/SynGenVbrEmt_ABCFault_DPsim_1_Damping/data_vt.csv');
-CurrentVector = csvread('../../vsa/Results/SynGenVbrEmt_ABCFault_DPsim_1_Damping/data_j.csv');
-Log_SynGen = csvread('../../vsa/Results/SynGenVbrEmt_ABCFault_DPsim_1_Damping/SynGen_gen.csv');
+VoltageVector = csvread('../../vsa/Results/TestingFunctionPointer/data_vt.csv');
+CurrentVector = csvread('../../vsa/Results/TestingFunctionPointer/data_j.csv');
+%Log_SynGen = csvread('../../vsa/Results/SynGenVbrEmt_ABCFault_DPsim_1_Damping/SynGen_gen.csv');
  %% Plot
 figure(1)
 hold off
@@ -40,29 +40,29 @@ plot(Results_PLECS(:,1),Results_PLECS(:,7),'--');
 title('Phase Currents');
 legend('ia DPSim','ib DPSim','ic DPSim','ia PLECS','ib PLECS','ic PLECS');
 
-figure(3)
-hold off
-plot(Log_SynGen(:,1),Log_SynGen(:,3));
-hold on
-plot(Results_PLECS(:,1),omega_PLECS);
-
-title('Rotor speed');
-legend('\omega DPSim','\omega PLECS');
-
-figure(4)
-hold off
-plot(Log_SynGen(:,1),Log_SynGen(:,2));
-hold on
-plot(Results_PLECS(:,1),Te_PLECS);
-
-title('Electrical Torque');
-legend('Te DPSim','Te PLECS');
-
-figure(5)
-hold off
-plot(Log_SynGen(:,1),Log_SynGen(:,4));
-hold on
-plot(Results_PLECS(:,1),theta_PLECS);
-
-title('Rotor position');
-legend('\theta DPSim','\theta PLECS');
+% figure(3)
+% hold off
+% plot(Log_SynGen(:,1),Log_SynGen(:,3));
+% hold on
+% plot(Results_PLECS(:,1),omega_PLECS);
+% 
+% title('Rotor speed');
+% legend('\omega DPSim','\omega PLECS');
+% 
+% figure(4)
+% hold off
+% plot(Log_SynGen(:,1),Log_SynGen(:,2));
+% hold on
+% plot(Results_PLECS(:,1),Te_PLECS);
+% 
+% title('Electrical Torque');
+% legend('Te DPSim','Te PLECS');
+% 
+% figure(5)
+% hold off
+% plot(Log_SynGen(:,1),Log_SynGen(:,4));
+% hold on
+% plot(Results_PLECS(:,1),theta_PLECS);
+% 
+% title('Rotor position');
+% legend('\theta DPSim','\theta PLECS');

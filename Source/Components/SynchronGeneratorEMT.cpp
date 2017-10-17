@@ -21,6 +21,7 @@
  *********************************************************************************/
 
 #include "SynchronGeneratorEMT.h"
+#include "IntegrationMethod.h"
 
 using namespace DPsim;
 
@@ -309,186 +310,124 @@ void SynchronGeneratorEMT::stepInPerUnit(Real om, Real dt, Real time, NumericalM
 	mVq = parkTransform2(mThetaMech, mVa, mVb, mVc)(1);
 	mV0 = parkTransform2(mThetaMech, mVa, mVb, mVc)(2);
 
-	if (numMethod == NumericalMethod::Euler) {
-
-		mElecTorque = (mPsid*mIq - mPsiq*mId);
-
-		// Euler step forward
-		mOmMech = mOmMech + dt * (1 / (2 * mH) * (mMechTorque - mElecTorque));
-
-		Real dtPsid = mVd + mRs*mId + mPsiq*mOmMech;
-		Real dtPsiq = mVq + mRs*mIq - mPsid*mOmMech;
-		Real dtPsi0 = mV0 + mRs*mI0;
-		Real dtPsifd = mVfd - mRfd*mIfd;
-		Real dtPsikd = -mRkd*mIkd;
-		Real dtPsikq1 = -mRkq1*mIkq1;
-
-		mPsid = mPsid + dt*mBase_OmElec*dtPsid;
-		mPsiq = mPsiq + dt*mBase_OmElec*dtPsiq;
-		mPsi0 = mPsi0 + dt*mBase_OmElec*dtPsi0;
-		mPsifd = mPsifd + dt*mBase_OmElec*dtPsifd;
-		mPsikd = mPsikd + dt*mBase_OmElec*dtPsikd;
-		mPsikq1 = mPsikq1 + dt*mBase_OmElec*dtPsikq1;
-
-		if (DampingWindings == 2)
-		{
-			Real dtPsikq2 = -mRkq2*mIkq2;
-			mPsikq2 = mPsikq2 + dt*mBase_OmElec*dtPsikq2;
-		}
-
-
-		//Calculation of currents based on inverse of inductance matrix
-		mId = ((mLlfd*mLlkd + mLmd*(mLlfd + mLlkd))*mPsid - mLmd*mLlkd*mPsifd - mLlfd*mLmd*mPsikd) / detLd;
-		mIfd = (mLlkd*mLmd*mPsid - (mLl*mLlkd + mLmd*(mLl + mLlkd))*mPsifd + mLmd*mLl*mPsikd) / detLd;
-		mIkd = (mLmd*mLlfd*mPsid + mLmd*mLl*mPsifd - (mLmd*(mLlfd + mLl) + mLl*mLlfd)*mPsikd) / detLd;
-		if (DampingWindings == 2)
-		{
-			mIq = ((mLlkq1*mLlkq2 + mLmq*(mLlkq1 + mLlkq2))*mPsiq - mLmq*mLlkq2*mPsikq1 - mLmq*mLlkq1*mPsikq2) / detLq;
-			mIkq1 = (mLmq*mLlkq2*mPsiq - (mLmq*(mLlkq2 + mLl) + mLl*mLlkq2)*mPsikq1 + mLmq*mLl*mPsikq2) / detLq;
-			mIkq2 = (mLmq*mLlkq1*mPsiq + mLmq*mLl*mPsikq1 - (mLmq*(mLlkq1 + mLl) + mLl*mLlkq1)*mPsikq2) / detLq;
-		}
-		else
-		{
-			mIq = ((mLlkq1 + mLmq)*mPsiq - mLmq*mPsikq1) / detLq;
-			mIkq1 = (mLmq*mPsiq - (mLl+mLmq)*mPsikq1) / detLq;
-		}
-
-		mI0 = -mPsi0 / mLl;
-
-		// Update mechanical rotor angle with respect to electrical angle
-		mThetaMech = mThetaMech + dt * (mOmMech * mBase_OmMech);
-
-	}
-	else if (numMethod == NumericalMethod::AdamBashforth) {
-
-		//Two steps Adams-Bashforth
-		if (time < dt) {
-			mElecTorque = (mPsid*mIq - mPsiq*mId);
-
-			mOmMech_past = mOmMech;
-			mOmMech = mOmMech + dt * (1 / (2 * mH) * (mMechTorque - mElecTorque));
-
-			Real dtPsid = mVd + mRs*mId + mPsiq*mOmMech;
-			Real dtPsiq = mVq + mRs*mIq - mPsid*mOmMech;
-			Real dtPsi0 = mV0 + mRs*mI0;
-			Real dtPsifd = mVfd - mRfd*mIfd;
-			Real dtPsikd = -mRkd*mIkd;
-			Real dtPsikq1 = -mRkq1*mIkq1;
-
-
-			mPsid_past = mPsid;
-			mPsiq_past = mPsiq;
-
-			mPsid = mPsid + dt*mBase_OmElec*dtPsid;
-			mPsiq = mPsiq + dt*mBase_OmElec*dtPsiq;
-			mPsi0 = mPsi0 + dt*mBase_OmElec*dtPsi0;
-			mPsifd = mPsifd + dt*mBase_OmElec*dtPsifd;
-			mPsikd = mPsikd + dt*mBase_OmElec*dtPsikd;
-			mPsikq1 = mPsikq1 + dt*mBase_OmElec*dtPsikq1;
+		if (numMethod == NumericalMethod::Trapezoidal_current) {
 
 			if (DampingWindings == 2)
 			{
-				Real dtPsikq2 = -mRkq2*mIkq2;
-				mPsikq2 = mPsikq2 + dt*mBase_OmElec*dtPsikq2;
 
-			}
-
-			//Calculation of currents based on inverse of inductance matrix
-			mId_past = mId;
-			mIq_past = mIq;
-
-			mId = ((mLlfd*mLlkd + mLmd*(mLlfd + mLlkd))*mPsid - mLmd*mLlkd*mPsifd - mLlfd*mLmd*mPsikd) / detLd;
-			mIfd = (mLlkd*mLmd*mPsid - (mLl*mLlkd + mLmd*(mLl + mLlkd))*mPsifd + mLmd*mLl*mPsikd) / detLd;
-			mIkd = (mLmd*mLlfd*mPsid + mLmd*mLl*mPsifd - (mLmd*(mLlfd + mLl) + mLl*mLlfd)*mPsikd) / detLd;
-			if (DampingWindings == 2)
-			{
-				mIq = ((mLlkq1*mLlkq2 + mLmq*(mLlkq1 + mLlkq2))*mPsiq - mLmq*mLlkq2*mPsikq1 - mLmq*mLlkq1*mPsikq2) / detLq;
-				mIkq1 = (mLmq*mLlkq2*mPsiq - (mLmq*(mLlkq2 + mLl) + mLl*mLlkq2)*mPsikq1 + mLmq*mLl*mPsikq2) / detLq;
-				mIkq2 = (mLmq*mLlkq1*mPsiq + mLmq*mLl*mPsikq1 - (mLmq*(mLlkq1 + mLl) + mLl*mLlkq1)*mPsikq2) / detLq;
 			}
 			else
 			{
-				mIq = ((mLlkq1 + mLmq)*mPsiq - mLmq*mPsikq1) / detLq;
-				mIkq1 = (mLmq*mPsiq - (mLl + mLmq)*mPsikq1) / detLq;
+
 			}
-			mI0 = -mPsi0 / mLl;
-
-			// Update mechanical rotor angle with respect to electrical angle
-			mThetaMech = mThetaMech + dt * (mOmMech * mBase_OmMech);
-
-		}
-		else {
-			mMechTorque_past = mMechPower / mOmMech_past;
-
-			mElecTorque = (mPsid*mIq - mPsiq*mId);
-			mElecTorque_past = (mPsid_past*mIq - mPsiq_past*mId);
-			mOmMech_past = mOmMech;
-			mOmMech = mOmMech + (3. / 2.)*dt* (1 / (2 * mH) * (mMechTorque - mElecTorque)) - (1. / 2.)*dt* (1 / (2 * mH) * (mMechTorque_past - mElecTorque_past));
-
-			Real dtPsid = mVd + mRs*mId + mPsiq*mOmMech;
-			Real dtPsiq = mVq + mRs*mIq - mPsid*mOmMech;
-			Real dtPsi0 = mV0 + mRs*mI0;
-			Real dtPsifd = mVfd - mRfd*mIfd;
-			Real dtPsikd = -mRkd*mIkd;
-			Real dtPsikq1 = -mRkq1*mIkq1;
 
 
-			mPsid_past = mPsid;
-			mPsiq_past = mPsiq;
-
-			mPsid = mPsid + dt*mBase_OmElec*dtPsid;
-			mPsiq = mPsiq + dt*mBase_OmElec*dtPsiq;
-			mPsi0 = mPsi0 + dt*mBase_OmElec*dtPsi0;
-			mPsifd = mPsifd + dt*mBase_OmElec*dtPsifd;
-			mPsikd = mPsikd + dt*mBase_OmElec*dtPsikd;
-			mPsikq1 = mPsikq1 + dt*mBase_OmElec*dtPsikq1;
 			if (DampingWindings == 2)
 			{
-				Real dtPsikq2 = -mRkq2*mIkq2;
-				mPsikq2 = mPsikq2 + dt*mBase_OmElec*dtPsikq2;
 
+
+				Matrix A = (mReactanceMat*mResistanceMat);
+				Matrix B = mReactanceMat;
+				Matrix C = Matrix::Zero(7, 1);
+				C(0, 0) = -mOmMech*mPsid;
+				C(1, 0) = mOmMech*mPsiq;
+				C = mReactanceMat*C;
+
+				Matrix dqCurrents(7, 1);
+				dqCurrents(0, 0) = mIq;
+				dqCurrents(1, 0) = mId;
+				dqCurrents(2, 0) = mI0;
+				dqCurrents(3, 0) = mIkq1;
+				dqCurrents(4, 0) = mIkq2;
+				dqCurrents(5, 0) = mIfd;
+				dqCurrents(6, 0) = mIkd;
+
+				Matrix dqVoltages(7, 1);
+				dqVoltages(0, 0) = mVq;
+				dqVoltages(1, 0) = mVd;
+				dqVoltages(2, 0) = mV0;
+				dqVoltages(3, 0) = mVkq1;
+				dqVoltages(4, 0) = mVkq2;
+				dqVoltages(5, 0) = mVfd;
+				dqVoltages(6, 0) = mVkd;
+
+				dqCurrents = Trapezoidal(dqCurrents, A, B, C, dt*mOmMech, dqVoltages);
+
+				mIq = dqCurrents(0, 0);
+				mId = dqCurrents(1, 0);
+				mI0 = dqCurrents(2, 0);
+				mIkq1 = dqCurrents(3, 0);
+				mIkq2 = dqCurrents(4, 0);
+				mIfd = dqCurrents(5, 0);
+				mIkd = dqCurrents(6, 0);
+
+				//Calculation of currents based on inverse of inductance matrix
+				mPsiq = -(mLl + mLmq)*mIq + mLmq*mIkq1 + mLmq*mIkq2;
+				mPsid = -(mLl + mLmd)*mId + mLmd*mIfd + mLmd*mIkd;
+				mPsi0 = -mLl*mI0;
+				mPsikq1 = -mLmq*mIq + (mLlkq1 + mLmq)*mIkq1 + mLmq*mIkq2;
+				mPsikq2 = -mLmq*mIq + mLmq*mIkq1 + (mLlkq2 + mLmq)*mIkq2;
+				mPsifd = -mLmd*mId + (mLlfd + mLmd)*mIfd + mLmd*mIkd;
+				mPsikd = -mLmd*mId + mLmd*mIfd + (mLlkd + mLmd)*mIkd;
 			}
 
-			//Calculation of currents based on inverse of inductance matrix
-			mId_past = mId;
-			mIq_past = mIq;
-
-			mId = ((mLlfd*mLlkd + mLmd*(mLlfd + mLlkd))*mPsid - mLmd*mLlkd*mPsifd - mLlfd*mLmd*mPsikd) / detLd;
-			mIfd = (mLlkd*mLmd*mPsid - (mLl*mLlkd + mLmd*(mLl + mLlkd))*mPsifd + mLmd*mLl*mPsikd) / detLd;
-			mIkd = (mLmd*mLlfd*mPsid + mLmd*mLl*mPsifd - (mLmd*(mLlfd + mLl) + mLl*mLlfd)*mPsikd) / detLd;
-			if (DampingWindings == 2)
-			{
-				mIq = ((mLlkq1*mLlkq2 + mLmq*(mLlkq1 + mLlkq2))*mPsiq - mLmq*mLlkq2*mPsikq1 - mLmq*mLlkq1*mPsikq2) / detLq;
-				mIkq1 = (mLmq*mLlkq2*mPsiq - (mLmq*(mLlkq2 + mLl) + mLl*mLlkq2)*mPsikq1 + mLmq*mLl*mPsikq2) / detLq;
-				mIkq2 = (mLmq*mLlkq1*mPsiq + mLmq*mLl*mPsikq1 - (mLmq*(mLlkq1 + mLl) + mLl*mLlkq1)*mPsikq2) / detLq;
-			}
 			else
 			{
-				mIq = ((mLlkq1 + mLmq)*mPsiq - mLmq*mPsikq1) / detLq;
-				mIkq1 = (mLmq*mPsiq - (mLl + mLmq)*mPsikq1) / detLq;
+
+				Matrix A = (mReactanceMat*mResistanceMat);
+				Matrix B = mReactanceMat;
+				Matrix C = Matrix::Zero(6, 1);
+				C(0, 0) = -mOmMech*mPsid;
+				C(1, 0) = mOmMech*mPsiq;
+				C = mReactanceMat*C;
+
+				Matrix dqCurrents(6, 1);
+				dqCurrents(0, 0) = mIq;
+				dqCurrents(1, 0) = mId;
+				dqCurrents(2, 0) = mI0;
+				dqCurrents(3, 0) = mIkq1;
+				dqCurrents(4, 0) = mIfd;
+				dqCurrents(5, 0) = mIkd;
+
+				Matrix dqVoltages(6, 1);
+				dqVoltages(0, 0) = mVq;
+				dqVoltages(1, 0) = mVd;
+				dqVoltages(2, 0) = mV0;
+				dqVoltages(3, 0) = mVkq1;
+				dqVoltages(4, 0) = mVfd;
+				dqVoltages(5, 0) = mVkd;
+
+				dqCurrents = Trapezoidal(dqCurrents, A, B, C, dt*mBase_OmElec, dqVoltages);
+
+				mIq = dqCurrents(0, 0);
+				mId = dqCurrents(1, 0);
+				mI0 = dqCurrents(2, 0);
+				mIkq1 = dqCurrents(3, 0);
+				mIfd = dqCurrents(4, 0);
+				mIkd = dqCurrents(5, 0);
+
+				//Calculation of currents based on inverse of inductance matrix
+				mPsiq = -(mLl + mLmq)*mIq + mLmq*mIkq1;
+				mPsid = -(mLl + mLmd)*mId + mLmd*mIfd + mLmd*mIkd;
+				mPsi0 = -mLl*mI0;
+				mPsikq1 = -mLmq*mIq + (mLlkq1 + mLmq)*mIkq1;
+				mPsifd = -mLmd*mId + (mLlfd + mLmd)*mIfd + mLmd*mIkd;
+				mPsikd = -mLmd*mId + mLmd*mIfd + (mLlkd + mLmd)*mIkd;
 			}
-			mI0 = -mPsi0 / mLl;
 
-			// Update mechanical rotor angle with respect to electrical angle
-			mThetaMech = mThetaMech + dt * (mOmMech * mBase_OmMech);
 		}
-	}
 
-	else if (numMethod == NumericalMethod::Trapezoidal_flux){
+	else {
 
+		// Calculation of rotational speed with euler
 		mElecTorque = (mPsid*mIq - mPsiq*mId);
-
-		// Euler step forward
 		mOmMech = mOmMech + dt * (1 / (2 * mH) * (mMechTorque - mElecTorque));
 
+		//Calculation of flux
 		if (DampingWindings == 2)
 		{
-			Matrix A = mBase_OmElec*(mResistanceMat*mReactanceMat - mOmMech*mOmegaFluxMat);
-			Matrix I = Matrix::Identity(7, 7);
-
-			Matrix Aux = I + (dt / 2) * A;
-			Matrix Aux2 = I - (dt / 2) * A;
-			Matrix InvAux = Aux2.inverse();
+			Matrix A = (mResistanceMat*mReactanceMat - mOmMech*mOmegaFluxMat);
+			Matrix B = Matrix::Identity(7, 7);
 
 			Matrix Fluxes(7, 1);
 			Fluxes(0, 0) = mPsiq;
@@ -508,7 +447,10 @@ void SynchronGeneratorEMT::stepInPerUnit(Real om, Real dt, Real time, NumericalM
 			dqVoltages(5, 0) = mVfd;
 			dqVoltages(6, 0) = mVkd;
 
-			Fluxes = InvAux*Aux*Fluxes + InvAux*dt*mBase_OmElec*I*dqVoltages;
+			if (numMethod == NumericalMethod::Trapezoidal_flux)
+				Fluxes = Trapezoidal(Fluxes, A, B, dt*mBase_OmElec, dqVoltages);
+			else
+				Fluxes = Euler(Fluxes, A, B, dt*mBase_OmElec, dqVoltages);
 
 			mPsiq = Fluxes(0, 0);
 			mPsid = Fluxes(1, 0);
@@ -521,12 +463,8 @@ void SynchronGeneratorEMT::stepInPerUnit(Real om, Real dt, Real time, NumericalM
 		}
 		else
 		{
-			Matrix A = mBase_OmElec*(mResistanceMat*mReactanceMat - mOmMech*mOmegaFluxMat);
-			Matrix I = Matrix::Identity(6, 6);
-
-			Matrix Aux = I + (dt / 2) * A;
-			Matrix Aux2 = I - (dt / 2) * A;
-			Matrix InvAux = Aux2.inverse();
+			Matrix A = (mResistanceMat*mReactanceMat - mOmMech*mOmegaFluxMat);
+			Matrix B = Matrix::Identity(6, 6);
 
 			Matrix Fluxes(6, 1);
 			Fluxes(0, 0) = mPsiq;
@@ -544,7 +482,10 @@ void SynchronGeneratorEMT::stepInPerUnit(Real om, Real dt, Real time, NumericalM
 			dqVoltages(4, 0) = mVfd;
 			dqVoltages(5, 0) = mVkd;
 
-			Fluxes = InvAux*Aux*Fluxes + InvAux*dt*mBase_OmElec*I*dqVoltages;
+			if (numMethod == NumericalMethod::Trapezoidal_flux)
+				Fluxes = Trapezoidal(Fluxes, A, B, dt*mBase_OmElec, dqVoltages);
+			else
+				Fluxes = Euler(Fluxes, A, B, dt*mBase_OmElec, dqVoltages);
 
 			mPsiq = Fluxes(0, 0);
 			mPsid = Fluxes(1, 0);
@@ -555,7 +496,7 @@ void SynchronGeneratorEMT::stepInPerUnit(Real om, Real dt, Real time, NumericalM
 		}
 
 
-		//Calculation of currents based on inverse of inductance matrix
+		// Calculation of currents based on inverse of inductance matrix
 		mId = ((mLlfd*mLlkd + mLmd*(mLlfd + mLlkd))*mPsid - mLmd*mLlkd*mPsifd - mLlfd*mLmd*mPsikd) / detLd;
 		mIfd = (mLlkd*mLmd*mPsid - (mLl*mLlkd + mLmd*(mLl + mLlkd))*mPsifd + mLmd*mLl*mPsikd) / detLd;
 		mIkd = (mLmd*mLlfd*mPsid + mLmd*mLl*mPsifd - (mLmd*(mLlfd + mLl) + mLl*mLlfd)*mPsikd) / detLd;
@@ -571,124 +512,10 @@ void SynchronGeneratorEMT::stepInPerUnit(Real om, Real dt, Real time, NumericalM
 			mIkq1 = (mLmq*mPsiq - (mLl + mLmq)*mPsikq1) / detLq;
 		}
 		mI0 = -mPsi0 / mLl;
-
-		//mMechTorque =  mMechPower / mOmMech;
-		//mElecTorque = (mPsid*mIq - mPsiq*mId);
-		//Real Hist_term = (dt / (4 * mH))*(mMechTorque_hist - mElecTorque_hist) + mOmMech_hist;
-		//Real a = 1;
-		//Real b = -(Hist_term - (dt / (4 * mH))*mElecTorque);
-		//Real c = -(dt / (4 * mH))*mMechPower;
-
-		//mOmMech = (-b + sqrt(b*b - 4 * a*c)) / (2.*a);
-
-
-		// Trapezoidal rule
-		//mOmMech = mOmMech + dt / (4 * mH) * (mMechTorque - mElecTorque_hist + mMechTorque - mElecTorque);
-
-		// Update mechanical rotor angle with respect to electrical angle
-		//mThetaMech = mThetaMech + (dt / 2.) * (mOmMech * mBase_OmMech + mOmMech_hist * mBase_OmMech)
-
-		mThetaMech = mThetaMech + dt * (mOmMech * mBase_OmMech);
-
 	}
 
-	else if (numMethod == NumericalMethod::Trapezoidal_current) {
-
-		//Real mElecTorque_hist = (mPsid*mIq - mPsiq*mId);
-
-		Matrix A = mBase_OmElec*(mReactanceMat*mResistanceMat);
-		Matrix B = mBase_OmElec*mReactanceMat;
-		Matrix C = Matrix::Zero(7, 1);
-		C(0, 0) = -mOmMech*mPsid;
-		C(1, 0) = mOmMech*mPsiq;
-		C = mBase_OmElec*mReactanceMat*C;
-
-		Matrix I = Matrix::Identity(7, 7);
-
-		Matrix Aux = I + (dt / 2) * A;
-		Matrix Aux2 = I - (dt / 2) * A;
-		Matrix InvAux = Aux2.inverse();
-
-		if (DampingWindings == 2)
-		{
-			Matrix dqCurrents(7, 1);
-			dqCurrents(0, 0) = mIq;
-			dqCurrents(1, 0) = mId;
-			dqCurrents(2, 0) = mI0;
-			dqCurrents(3, 0) = mIkq1;
-			dqCurrents(4, 0) = mIkq2;
-			dqCurrents(5, 0) = mIfd;
-			dqCurrents(6, 0) = mIkd;
-
-			Matrix dqVoltages(7, 1);
-			dqVoltages(0, 0) = mVq;
-			dqVoltages(1, 0) = mVd;
-			dqVoltages(2, 0) = mV0;
-			dqVoltages(3, 0) = mVkq1;
-			dqVoltages(4, 0) = mVkq2;
-			dqVoltages(5, 0) = mVfd;
-			dqVoltages(6, 0) = mVkd;
-
-			dqCurrents = InvAux*Aux*dqCurrents + InvAux*dt*B*dqVoltages + InvAux*dt*C;
-
-			mIq = dqCurrents(0, 0);
-			mId = dqCurrents(1, 0);
-			mI0 = dqCurrents(2, 0);
-			mIkq1 = dqCurrents(3, 0);
-			mIkq2 = dqCurrents(4, 0);
-			mIfd = dqCurrents(5, 0);
-			mIkd = dqCurrents(6, 0);
-
-			//Calculation of currents based on inverse of inductance matrix
-			mPsiq = -(mLl + mLmq)*mIq + mLmq*mIkq1 + mLmq*mIkq2;
-			mPsid = -(mLl + mLmd)*mId + mLmd*mIfd + mLmd*mIkd;
-			mPsi0 = -mLl*mI0;
-			mPsikq1 = -mLmq*mIq + (mLlkq1 + mLmq)*mIkq1 + mLmq*mIkq2;
-			mPsikq2 = -mLmq*mIq + mLmq*mIkq1 + (mLlkq2 + mLmq)*mIkq2;
-			mPsifd = -mLmd*mId + (mLlfd + mLmd)*mIfd + mLmd*mIkd;
-			mPsikd = -mLmd*mId + mLmd*mIfd + (mLlkd + mLmd)*mIkd;
-		}
-
-		else
-		{
-			Matrix dqCurrents(7, 1);
-			dqCurrents(0, 0) = mIq;
-			dqCurrents(1, 0) = mId;
-			dqCurrents(2, 0) = mI0;
-			dqCurrents(3, 0) = mIkq1;
-			dqCurrents(5, 0) = mIfd;
-			dqCurrents(6, 0) = mIkd;
-
-			Matrix dqVoltages(7, 1);
-			dqVoltages(0, 0) = mVq;
-			dqVoltages(1, 0) = mVd;
-			dqVoltages(2, 0) = mV0;
-			dqVoltages(3, 0) = mVkq1;
-			dqVoltages(5, 0) = mVfd;
-			dqVoltages(6, 0) = mVkd;
-
-			dqCurrents = InvAux*Aux*dqCurrents + InvAux*dt*B*dqVoltages + InvAux*dt*C;
-
-			mIq = dqCurrents(0, 0);
-			mId = dqCurrents(1, 0);
-			mI0 = dqCurrents(2, 0);
-			mIkq1 = dqCurrents(3, 0);
-			mIfd = dqCurrents(5, 0);
-			mIkd = dqCurrents(6, 0);
-
-			//Calculation of currents based on inverse of inductance matrix
-			mPsiq = -(mLl + mLmq)*mIq + mLmq*mIkq1;
-			mPsid = -(mLl + mLmd)*mId + mLmd*mIfd + mLmd*mIkd;
-			mPsi0 = -mLl*mI0;
-			mPsikq1 = -mLmq*mIq + (mLlkq1 + mLmq)*mIkq1;
-			mPsifd = -mLmd*mId + (mLlfd + mLmd)*mIfd + mLmd*mIkd;
-			mPsikd = -mLmd*mId + mLmd*mIfd + (mLlkd + mLmd)*mIkd;
-		}
-
-
-		mThetaMech = mThetaMech + dt * (mOmMech * mBase_OmMech);
-
-	}
+	// Calculation of rotor angular position
+	mThetaMech = mThetaMech + dt * (mOmMech * mBase_OmMech);
 
 	mIa = mBase_i * inverseParkTransform2(mThetaMech, mId, mIq, mI0)(0);
 	mIb = mBase_i * inverseParkTransform2(mThetaMech, mId, mIq, mI0)(1);
