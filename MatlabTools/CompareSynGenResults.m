@@ -3,13 +3,13 @@
 
 %% read PLECS results
 
-Results_PLECS = csvread('../../vsa/Results/SynGenDqEmt_ABCFault_PLECS/Voltages_and_currents.csv'); 
+Results_PLECS = csvread('../../vsa/Results/SynGenVBREmt_ABCFault_PLECS/Voltages_and_currents.csv'); 
 %Te_PLECS = csvread('../../vsa/Results/SynGenVBREmt_ABCFault_PLECS/electrical_torque.csv'); 
 %omega_PLECS = csvread('../../vsa/Results/SynGenVBREmt_ABCFault_PLECS/omega.csv'); 
 %theta_PLECS = csvread('../../vsa/Results/SynGenVBREmt_ABCFault_PLECS/theta.csv'); 
 %% read results from c++ simulation
-VoltageVector = csvread('../../vsa/Results/TestingFunctionPointer/data_vt.csv');
-CurrentVector = csvread('../../vsa/Results/TestingFunctionPointer/data_j.csv');
+VoltageVector = csvread('../../vsa/Results/SynGenVBREmt_ABCFault_DPsim/data_vt.csv');
+CurrentVector = csvread('../../vsa/Results/SynGenVBREmt_ABCFault_DPsim/data_j.csv');
 %Log_SynGen = csvread('../../vsa/Results/SynGenVbrEmt_ABCFault_DPsim_1_Damping/SynGen_gen.csv');
  %% Plot
 figure(1)

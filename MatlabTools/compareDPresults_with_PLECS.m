@@ -2,7 +2,7 @@ clc
 clear
 %% read PLECS results
 
-Results_PLECS = csvread('../../vsa/Results/SynGenDqEmt_ABCFault_PLECS/Voltages_and_currents.csv'); 
+Results_PLECS = csvread('../../vsa/Results/SynGenVBREmt_ABCFault_PLECS/Voltages_and_currents.csv'); 
 %Te_PLECS = csvread('../../vsa/Results/SynGenVBREmt_ABCFault_PLECS/electrical_torque.csv'); 
 %omega_PLECS = csvread('../../vsa/Results/SynGenVBREmt_ABCFault_PLECS/omega.csv'); 
 %theta_PLECS = csvread('../../vsa/Results/SynGenVBREmt_ABCFault_PLECS/theta.csv'); 
@@ -10,9 +10,9 @@ Results_PLECS = csvread('../../vsa/Results/SynGenDqEmt_ABCFault_PLECS/Voltages_a
 %% Read data from DP simulation and calculate absolute value and phase
 
 % Read values from CSV files
-voltageDP = csvread('../../vsa/Results/TestingFunctionPointer/data_vt.csv');
-currentDP = csvread('../../vsa/Results/TestingFunctionPointer/data_j.csv');
-%Log_SynGen = csvread('../../vsa/Results/SynGenVbrDynPh_ABCFault_DPsim_1_Damping/SynGen_gen.csv');
+voltageDP = csvread('../../vsa/Results/SynGenVBRDynPh_ABCFault_DPsim/data_vt.csv');
+currentDP = csvread('../../vsa/Results/SynGenVBRDynPh_ABCFault_DPsim/data_j.csv');
+%Log_SynGen = csvread('../../vsa/Results//SynGenDqDynPh_ABCFault_DPsim/Euler/SynGen_gen.csv');
 compOffsetDP = (size(voltageDP,2) - 1) / 2;
 
 % Calculate Voltage DP absolute value
@@ -130,7 +130,7 @@ ylabel('current [A]')
 
 % figure(7)
 % hold off
-% plot(Log_SynGen(:,1),Log_SynGen(:,3));
+% plot(Log_SynGen(:,1),Log_SynGen(:,21));
 % hold on
 % plot(Results_PLECS(:,1),omega_PLECS);
 % 
@@ -139,7 +139,7 @@ ylabel('current [A]')
 % 
 % figure(8)
 % hold off
-% plot(Log_SynGen(:,1),Log_SynGen(:,2));
+% plot(Log_SynGen(:,1),Log_SynGen(:,20));
 % hold on
 % plot(Results_PLECS(:,1),Te_PLECS);
 % 
@@ -148,7 +148,7 @@ ylabel('current [A]')
 % 
 % figure(9)
 % hold off
-% plot(Log_SynGen(:,1),Log_SynGen(:,4));
+% plot(Log_SynGen(:,1),Log_SynGen(:,22));
 % hold on
 % plot(Results_PLECS(:,1),theta_PLECS);
 % 
