@@ -80,9 +80,9 @@ void VoltageBehindReactanceEMT::initWithPerUnitParam(
 
 
 	if (Rkq2 == 0 && Llkq2 == 0)
-	{
 		mNumDampingWindings = 1;
-	}
+	else
+		mNumDampingWindings = 2;
 
 	// base rotor values
 	mBase_ifd = Lmd * mNomFieldCur;

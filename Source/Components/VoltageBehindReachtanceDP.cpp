@@ -101,9 +101,9 @@ void VoltageBehindReactanceDP::initWithPerUnitParam(
 	mH = H;
 
 	if (mRkq2 == 0 && mLlkq2 == 0)
-	{
 		mNumDampingWindings = 1;
-	}
+	else
+		mNumDampingWindings = 2;
 
 	//Dynamic mutual inductances
 	mDLmd = 1. / (1. / mLmd + 1. / mLlfd + 1. / mLlkd);
