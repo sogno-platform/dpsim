@@ -203,9 +203,6 @@
     <ClCompile Include="..\..\Source\IntegrationMethod.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\Source\Components\SynchronGeneratorEMTFnP.cpp">
-      <Filter>Quelldateien\Components</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\Source\Components\BaseComponent.cpp">
       <Filter>Quelldateien\Components</Filter>
     </ClCompile>

@@ -21,8 +21,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *********************************************************************************/
 
-#ifndef UTILITIES_H
-#define UTILITIES_H
+#pragma once
 
 #include <string>
 #include "MathLibrary.h"
@@ -38,4 +37,3 @@ namespace DPsim {
 	Int consoleMain(int argc, const char* argv[]);
 }
 
-#endif

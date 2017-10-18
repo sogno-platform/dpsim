@@ -207,7 +207,6 @@
     <ClCompile Include="..\..\Source\Components\SynchGenBase.cpp" />
     <ClCompile Include="..\..\Source\Components\SynchronGeneratorDP.cpp" />
     <ClCompile Include="..\..\Source\Components\SynchronGeneratorEMT.cpp" />
-    <ClCompile Include="..\..\Source\Components\SynchronGeneratorEMTFnP.cpp" />
     <ClCompile Include="..\..\Source\Components\TwoWindingTransformerDP.cpp" />
     <ClCompile Include="..\..\Source\Components\VoltageBehindReachtanceDP.cpp" />
     <ClCompile Include="..\..\Source\Components\VoltageBehindReactanceEMT.cpp" />

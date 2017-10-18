@@ -23,8 +23,7 @@
 
 #ifdef __linux__
 
-#ifndef SHMEMTEST_H
-#define SHMEMTEST_H
+#pramga once
 
 #include "ShmemInterface.h"
 
@@ -38,7 +37,5 @@ namespace DPsim {
 
 	void exampleMainShmem();
 }
-
-#endif
 
 #endif
