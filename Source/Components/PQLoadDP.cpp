@@ -24,7 +24,7 @@
 
 using namespace DPsim;
 
-PQLoad::PQLoad(std::string name, Int src, Int dest, Real p, Real q, Real volt, Real angle) : RxLine(name, src, dest, 1, 1) {
+PQLoad::PQLoad(String name, Int src, Int dest, Real p, Real q, Real volt, Real angle) : RxLine(name, src, dest, 1, 1) {
 	// we need the system frequency to calculate the impedance, so we initialize
 	// it with the dummy value of 1+j1 here for now
 	mActivePower = p;

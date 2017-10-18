@@ -28,13 +28,13 @@
 #include "Simulation.h"
 
 void readFixedCIMFiles_LineLoad() {
-	std::list<std::string> filenames;
+	std::list<String> filenames;
 	filenames.push_back("..\\..\\Examples\\CIM\\Line_Load\\Line_Load.xml");
 	testCIMReader(filenames);
 }
 
 void readFixedCIMFiles_IEEE9bus() {
-	std::list<std::string> filenames;
+	std::list<String> filenames;
 	filenames.push_back("..\\..\\Examples\\CIM\\IEEE-09_Neplan_RX\\IEEE-09_Neplan_RX_DI.xml");
 	filenames.push_back("..\\..\\Examples\\CIM\\IEEE-09_Neplan_RX\\IEEE-09_Neplan_RX_EQ.xml");
 	filenames.push_back("..\\..\\Examples\\CIM\\IEEE-09_Neplan_RX\\IEEE-09_Neplan_RX_SV.xml");
@@ -42,13 +42,13 @@ void readFixedCIMFiles_IEEE9bus() {
 	testCIMReader(filenames);
 }
 
-Int testCIMReader(std::list<std::string> filenames) {
+Int testCIMReader(std::list<String> filenames) {
 	
 	// Read CIM data
 	CIMReader reader(50);
 	Logger log("cim.log"), llog("lvector-cim.csv"), rlog("rvector-cim.csv");
 
-	for (std::string & filename : filenames) {
+	for (String & filename : filenames) {
 		if (!reader.addFile(filename))
 			std::cerr << "Failed to read file " << filename << std::endl;
 	}

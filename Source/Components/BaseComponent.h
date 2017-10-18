@@ -27,14 +27,14 @@
 #include <iostream>
 
 #include "../SystemModel.h"
-#include "../MathLibrary.h"
+#include "../Definitions.h"
 
 namespace DPsim {
 
 	enum AttrType {
 		AttrReal,
 		AttrInt,
-		AttrString, // value should be *std::string, not *char!
+		AttrString, // value should be *String, not *char!
 		AttrComplex
 	};
 
@@ -47,7 +47,7 @@ namespace DPsim {
 	class BaseComponent {
 	protected:
 		/// Component name
-		std::string mName;
+		String mName;
 		/// Component node 1
 		Int mNode1;
 		/// Component node 2
@@ -58,12 +58,12 @@ namespace DPsim {
 		bool mLogActive;
 
 		/// Map of all attributes that should be exported to the Python interface
-		std::map<std::string, CompAttr> attrMap;
+		std::map<String, CompAttr> attrMap;
 
 	public:
 		BaseComponent() { }
 
-		BaseComponent(std::string name, Int node1, Int node2, bool logActive = false) {
+		BaseComponent(String name, Int node1, Int node2, bool logActive = false) {
 			this->mName = name;
 			this->mNode1 = node1 - 1;
 			this->mNode2 = node2 - 1;
@@ -73,7 +73,7 @@ namespace DPsim {
 			attrMap["node2"] = {AttrInt, &this->mNode2};
 		}
 
-		BaseComponent(std::string name, Int node1, Int node2, Int node3, bool logActive = false) :
+		BaseComponent(String name, Int node1, Int node2, Int node3, bool logActive = false) :
 			BaseComponent(name, node1, node2, logActive) {
 			this->mNode3 = node3 - 1;
 			attrMap["node3"] = {AttrInt, &this->mNode3};
@@ -88,10 +88,10 @@ namespace DPsim {
 		/// get value of node3
 		Int getNode3() { return mNode3; }
 
-		std::map<std::string, CompAttr>& getAttrMap() { return attrMap; }
+		std::map<String, CompAttr>& getAttrMap() { return attrMap; }
 
-		std::string getName() { return mName; }
-		std::string getType();
+		String getName() { return mName; }
+		String getType();
 
 		/// Initializes variables of components
 		virtual void init(Real om, Real dt) { }

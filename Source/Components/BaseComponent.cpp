@@ -32,7 +32,7 @@
 
 using namespace DPsim;
 
-std::string BaseComponent::getType()
+String BaseComponent::getType()
 {
 	Int status = 1;
 	const char *mangled;
@@ -40,7 +40,7 @@ std::string BaseComponent::getType()
 	mangled = typeid(*this).name();
 
 #ifdef _MSC_VER
-	std::string ret(mangled);
+	String ret(mangled);
 
 	return ret;
 #else
@@ -51,7 +51,7 @@ std::string BaseComponent::getType()
 	if (status)
 		return mangled;
 	else {
-		std::string ret(unmangled);
+		String ret(unmangled);
 
 		free((void *) unmangled);
 

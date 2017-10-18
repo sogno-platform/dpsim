@@ -177,7 +177,7 @@
     <ClInclude Include="..\..\Source\Components\VoltSourceResFreqEMT.h" />
     <ClInclude Include="..\..\Source\IntegrationMethod.h" />
     <ClInclude Include="..\..\Source\Logger.h" />
-    <ClInclude Include="..\..\Source\MathLibrary.h" />
+    <ClInclude Include="..\..\Source\Definitions.h" />
     <ClInclude Include="..\..\Source\Simulation.h" />
     <ClInclude Include="..\..\Source\SystemModel.h" />
     <ClInclude Include="..\..\Source\Utilities.h" />

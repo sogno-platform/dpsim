@@ -25,7 +25,7 @@
 
 #include <iostream>
 #include <vector>
-#include "MathLibrary.h"
+#include "Definitions.h"
 #include "Logger.h"
 
 namespace DPsim {

@@ -25,7 +25,7 @@
 
 using namespace DPsim;
 
-SynchronGeneratorEMT::SynchronGeneratorEMT(std::string name, Int node1, Int node2, Int node3,
+SynchronGeneratorEMT::SynchronGeneratorEMT(String name, Int node1, Int node2, Int node3,
 	Real nomPower, Real nomVolt, Real nomFreq, Int poleNumber, Real nomFieldCur,
 	Real Rs, Real Ll, Real Lmd, Real Lmd0, Real Lmq, Real Lmq0,
 	Real Rfd, Real Llfd, Real Rkd, Real Llkd,
@@ -53,7 +53,7 @@ SynchronGeneratorEMT::SynchronGeneratorEMT(std::string name, Int node1, Int node
 
 	// Create logging file
 	if (mLogActive) {
-		std::string filename = "SynGen_" + mName + ".csv";
+		String filename = "SynGen_" + mName + ".csv";
 		mLog = new Logger(filename);
 	}
 

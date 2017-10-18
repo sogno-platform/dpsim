@@ -54,7 +54,7 @@ namespace DPsim {
 		IdealVoltageSource() { ; };
 
 		/// define paramenters of the voltage source
-		IdealVoltageSource(std::string name, Int src, Int dest, Complex voltage, Int num);
+		IdealVoltageSource(String name, Int src, Int dest, Complex voltage, Int num);
 
 		void init(Real om, Real dt) { }
 

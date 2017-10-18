@@ -24,7 +24,7 @@
 #pragma once
 
 #include <string>
-#include "MathLibrary.h"
+#include "Definitions.h"
 
 namespace DPsim {
 
@@ -32,8 +32,8 @@ namespace DPsim {
 	void usage();
 	bool parseFloat(const char *s, double *d);
 	bool parseInt(const char *s, int *i);
-	Int parseArguments(int argc, const char* argv[], bool &rt, bool &batch, Int &split, std::string &interfaceBase, std::string &splitNode);
-	Int checkArguments(bool rt, Int split, std::string splitNode);
+	Int parseArguments(int argc, const char* argv[], bool &rt, bool &batch, Int &split, String &interfaceBase, String &splitNode);
+	Int checkArguments(bool rt, Int split, String splitNode);
 	Int consoleMain(int argc, const char* argv[]);
 }
 

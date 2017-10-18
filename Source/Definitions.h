@@ -27,6 +27,7 @@
 #include <complex>
 #include <Eigen/Dense>
 #include <Eigen/SparseCore>
+#include <string>
 
 // VS2017 doesn't define M_PI unless _USE_MATH_DEFINES is included before cmath
 // which is hard to guarantee, so we make sure it is defined here
@@ -43,13 +44,14 @@ namespace DPsim
 	// ### deprecated math section ###
 	//typedef Eigen::MatrixXd Matrix;
 
-	// ### Constants ###
-
 	// ### Types ###
 	typedef unsigned int UInt;
 	typedef int Int;
 	typedef double Real;
 	typedef std::complex<Real> Complex;
+	typedef std::string String;
+	
+	// ### Constants ###
 	static const Complex jComp(0.0, 1.0);
 
 	/**

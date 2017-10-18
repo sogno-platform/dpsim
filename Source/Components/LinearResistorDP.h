@@ -51,7 +51,7 @@ namespace DPsim {
 
 	public:
 		LinearResistor() { ; };
-		LinearResistor(std::string name, Int src, Int dest, Real resistance);
+		LinearResistor(String name, Int src, Int dest, Real resistance);
 
 		void init(Real om, Real dt) { }
 		void applySystemMatrixStamp(SystemModel& system);

@@ -24,7 +24,7 @@
 
 using namespace DPsim;
 
-InterfacedInductor::InterfacedInductor(std::string name, Int src, Int dest, Real inductance) : BaseComponent(name, src, dest) {
+InterfacedInductor::InterfacedInductor(String name, Int src, Int dest, Real inductance) : BaseComponent(name, src, dest) {
 	this->mInductance = inductance;
 	attrMap["inductance"] = {AttrReal, &mInductance};
 }

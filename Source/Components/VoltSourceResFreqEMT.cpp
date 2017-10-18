@@ -24,7 +24,7 @@
 
 using namespace DPsim;
 
-VoltSourceResFreqEMT::VoltSourceResFreqEMT(std::string name, Int src, Int dest,
+VoltSourceResFreqEMT::VoltSourceResFreqEMT(String name, Int src, Int dest,
 	Real voltage, Real phase, Real resistance, Real omegaSource, Real switchTime, Real rampTime) : BaseComponent(name, src, dest) {
 	mResistance = resistance;
 	mConductance = 1. / resistance;

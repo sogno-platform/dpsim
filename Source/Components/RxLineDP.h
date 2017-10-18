@@ -60,8 +60,8 @@ namespace DPsim {
 
 	public:
 		RxLine() { };
-		RxLine(std::string name, Int node1, Int node2, Real resistance, Real inductance);
-		RxLine(std::string name, Int node1, Int node2, Int node3, Real resistance, Real inductance);
+		RxLine(String name, Int node1, Int node2, Real resistance, Real inductance);
+		RxLine(String name, Int node1, Int node2, Int node3, Real resistance, Real inductance);
 
 		virtual void init(Real om, Real dt);
 		void applySystemMatrixStamp(SystemModel& system);

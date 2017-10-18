@@ -26,7 +26,7 @@
 #include <signal.h>
 #include <iostream>
 #include <vector>
-#include "MathLibrary.h"
+#include "Definitions.h"
 #include "Components.h"
 #include "Logger.h"
 #include "SystemModel.h"

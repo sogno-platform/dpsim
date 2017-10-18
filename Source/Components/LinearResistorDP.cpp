@@ -24,7 +24,7 @@
 
 using namespace DPsim;
 
-LinearResistor::LinearResistor(std::string name, Int src, Int dest, Real resistance) : BaseComponent(name, src, dest) {
+LinearResistor::LinearResistor(String name, Int src, Int dest, Real resistance) : BaseComponent(name, src, dest) {
 	this->mResistance = resistance;
 	attrMap["resistance"] = {AttrReal, &this->mResistance};
 }

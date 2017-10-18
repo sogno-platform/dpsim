@@ -24,7 +24,7 @@
 
 using namespace DPsim;
 
-Capacitor::Capacitor(std::string name, Int src, Int dest, Real capacitance) : BaseComponent(name, src, dest) {
+Capacitor::Capacitor(String name, Int src, Int dest, Real capacitance) : BaseComponent(name, src, dest) {
 	this->capacitance = capacitance;
 	attrMap["capacitance"] = {AttrReal, &this->capacitance};
 };

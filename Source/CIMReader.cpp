@@ -189,7 +189,7 @@ BaseComponent* CIMReader::mapComponent(BaseClass* obj) {
 	return nullptr;
 }
 
-BaseComponent* CIMReader::newFlowPQLoad(std::string rid, std::string name) {
+BaseComponent* CIMReader::newFlowPQLoad(String rid, String name) {
 	std::vector<int> &nodes = mEqNodeMap.at(rid);
 	if (nodes.size() != 1) {
 		std::cerr << rid << " has " << nodes.size() << " terminals; ignoring" << std::endl;
@@ -212,7 +212,7 @@ BaseComponent* CIMReader::newFlowPQLoad(std::string rid, std::string name) {
 	return new PQLoad(name, node, 0, flow->p.value, flow->q.value, volt->v.value, volt->angle.value*PI/180);
 }
 
-bool CIMReader::addFile(std::string filename) {
+bool CIMReader::addFile(String filename) {
 	return mModel.addCIMFile(filename);
 }
 
@@ -276,7 +276,7 @@ std::vector<BaseComponent*>& CIMReader::getComponents() {
 	return mComponents;
 }
 
-int CIMReader::mapTopologicalNode(std::string mrid) {
+int CIMReader::mapTopologicalNode(String mrid) {
 	auto search = mTopNodes.find(mrid);
 	if (search == mTopNodes.end())
 		return -1;

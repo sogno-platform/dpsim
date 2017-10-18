@@ -24,5 +24,5 @@
 
 using namespace DPsim;
 
-TwoWindingTransformer::TwoWindingTransformer(std::string name, Int node1, Int node2, Real resistance, Real inductance) : RxLine(name, node1, node2, resistance, inductance) {
+TwoWindingTransformer::TwoWindingTransformer(String name, Int node1, Int node2, Real resistance, Real inductance) : RxLine(name, node1, node2, resistance, inductance) {
 }

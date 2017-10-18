@@ -26,7 +26,7 @@
 #include <iostream>
 #include <fstream>
 
-#include "MathLibrary.h"
+#include "Definitions.h"
 
 namespace DPsim {
 
@@ -42,7 +42,7 @@ namespace DPsim {
 
 	public:
 		Logger();
-		Logger(std::string filename, LogLevel level = LogLevel::INFO);
+		Logger(String filename, LogLevel level = LogLevel::INFO);
 		~Logger();
 
 		std::ostream& Log(LogLevel level = LogLevel::INFO);

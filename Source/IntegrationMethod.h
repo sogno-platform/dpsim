@@ -23,7 +23,7 @@
 
 #pragma once
 
-#include "MathLibrary.h"
+#include "Definitions.h"
 
 namespace DPsim {
 

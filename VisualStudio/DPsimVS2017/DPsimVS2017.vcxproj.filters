@@ -33,9 +33,6 @@
     <ClInclude Include="..\..\Source\Logger.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\Source\MathLibrary.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\Source\Simulation.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
@@ -143,6 +140,9 @@
     </ClInclude>
     <ClInclude Include="..\..\Source\Components\VoltSourceResFreqDP.h">
       <Filter>Headerdateien\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\Definitions.h">
+      <Filter>Headerdateien</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

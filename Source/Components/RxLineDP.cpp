@@ -24,7 +24,7 @@
 
 using namespace DPsim;
 
-RxLine::RxLine(std::string name, Int node1, Int node2, Real resistance, Real inductance) : BaseComponent(name, node1, node2) {
+RxLine::RxLine(String name, Int node1, Int node2, Real resistance, Real inductance) : BaseComponent(name, node1, node2) {
 	mResistance = resistance;
 	mConductance = 1.0 / resistance;
 	mInductance = inductance;
@@ -34,7 +34,7 @@ RxLine::RxLine(std::string name, Int node1, Int node2, Real resistance, Real ind
 	attrMap["inductance"] = {AttrReal, &mInductance};
 }
 
-RxLine::RxLine(std::string name, Int node1, Int node2, Int node3, Real resistance, Real inductance) : BaseComponent(name, node1, node2, node3) {
+RxLine::RxLine(String name, Int node1, Int node2, Int node3, Real resistance, Real inductance) : BaseComponent(name, node1, node2, node3) {
 	mResistance = resistance;
 	mConductance = 1.0 / resistance;
 	mInductance = inductance;

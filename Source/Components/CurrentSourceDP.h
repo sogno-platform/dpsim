@@ -33,7 +33,7 @@ namespace DPsim {
 
 	public:
 		CurrentSource() { ; };
-		CurrentSource(std::string name, Int src, Int dest, Complex current);
+		CurrentSource(String name, Int src, Int dest, Complex current);
 
 		void init(Real om, Real dt) { }
 		void applySystemMatrixStamp(SystemModel& system) { }

@@ -31,7 +31,7 @@ Logger::Logger() : mLogFile() {
 	mLogFile.setstate(std::ios_base::badbit);
 }
 
-Logger::Logger(std::string filename, LogLevel level) : mLogFile(filename), mLogLevel(level) {
+Logger::Logger(String filename, LogLevel level) : mLogFile(filename), mLogLevel(level) {
 	if (!mLogFile.is_open()) {
 		std::cerr << "Cannot open log file " << filename << std::endl;
 		mLogLevel = LogLevel::NONE;

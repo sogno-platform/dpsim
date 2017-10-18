@@ -90,7 +90,7 @@ bool DPsim::parseInt(const char *s, int *i) {
 
 
 int DPsim::parseArguments(int argc, const char* argv[],
-	bool &rt, bool &batch, Int &split, std::string &interfaceBase, std::string &splitNode) {
+	bool &rt, bool &batch, Int &split, String &interfaceBase, String &splitNode) {
 
 	Int i;
 
@@ -111,14 +111,14 @@ int DPsim::parseArguments(int argc, const char* argv[],
 				std::cerr << "Shmem interface object name must start with a '/'" << std::endl;
 				return 1;
 			}
-			interfaceBase = std::string(argv[i]);
+			interfaceBase = String(argv[i]);
 		}
 		else if (!strcmp(argv[i], "-n") || !strcmp(argv[i], "--node")) {
 			if (i == argc - 1) {
 				std::cerr << "Missing argument for -n/--node; see 'DPsim --help' for usage" << std::endl;
 				return 1;
 			}
-			splitNode = std::string(argv[++i]);
+			splitNode = String(argv[++i]);
 		}
 		else if (!strcmp(argv[i], "-r") || !strcmp(argv[i], "--realtime")) {
 			rt = true;
@@ -144,7 +144,7 @@ int DPsim::parseArguments(int argc, const char* argv[],
 	}
 }
 
-int DPsim::checkArguments(bool rt, Int split, std::string splitNode) {
+int DPsim::checkArguments(bool rt, Int split, String splitNode) {
 #ifndef __linux__
 	if (split >= 0 || splitNode.length() != 0) {
 		std::cerr << "Distributed simulation not supported on this platform" << std::endl;
@@ -166,9 +166,9 @@ int DPsim::consoleMain(int argc, const char* argv[]) {
 	bool rt = false;
 	bool batch = false;
 	int split = -1;
-	std::string interfaceBase = "/dpsim";
-	std::string splitNode = "";
-	std::string outName, inName, logName("log.txt"), llogName("lvector.csv"), rlogName("rvector.csv");
+	String interfaceBase = "/dpsim";
+	String splitNode = "";
+	String outName, inName, logName("log.txt"), llogName("lvector.csv"), rlogName("rvector.csv");
 
 	if (parseArguments(argc, argv, rt, batch, split, interfaceBase, splitNode) == 1) {
 		return 1;
