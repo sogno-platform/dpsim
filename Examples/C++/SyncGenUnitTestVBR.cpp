@@ -203,7 +203,7 @@ void DPsim::SynGenUnitTestVBRDP() {
 	// Set up simulation
 	Real tf, dt, t;
 	Real om = 2.0*M_PI*60.0;
-	tf = 0.3; dt = 0.00005; t = 0;
+	tf = 0.3; dt = 0.0001; t = 0;
 	Int downSampling = 1;
 	Simulation newSim(circElements, om, dt, tf, log, downSampling, SimulationType::DynPhasor);
 	newSim.setNumericalMethod(NumericalMethod::Trapezoidal_flux);

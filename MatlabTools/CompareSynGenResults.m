@@ -8,8 +8,8 @@ Results_PLECS = csvread('../../vsa/Results/SynGenVBREmt_ABCFault_PLECS/Voltages_
 %omega_PLECS = csvread('../../vsa/Results/SynGenVBREmt_ABCFault_PLECS/omega.csv'); 
 %theta_PLECS = csvread('../../vsa/Results/SynGenVBREmt_ABCFault_PLECS/theta.csv'); 
 %% read results from c++ simulation
-VoltageVector = csvread('../../vsa/Results/SynGenVBREmt_ABCFault_DPsim/data_vt.csv');
-CurrentVector = csvread('../../vsa/Results/SynGenVBREmt_ABCFault_DPsim/data_j.csv');
+VoltageVector = csvread('../../vsa/Results/Testing/data_vt.csv');
+CurrentVector = csvread('../../vsa/Results/Testing/data_j.csv');
 %Log_SynGen = csvread('../../vsa/Results/SynGenVbrEmt_ABCFault_DPsim_1_Damping/SynGen_gen.csv');
  %% Plot
 figure(1)

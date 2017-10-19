@@ -10,8 +10,8 @@ Results_PLECS = csvread('../../vsa/Results/SynGenVBREmt_ABCFault_PLECS/Voltages_
 %% Read data from DP simulation and calculate absolute value and phase
 
 % Read values from CSV files
-voltageDP = csvread('../../vsa/Results/SynGenVBRDynPh_ABCFault_DPsim/data_vt.csv');
-currentDP = csvread('../../vsa/Results/SynGenVBRDynPh_ABCFault_DPsim/data_j.csv');
+voltageDP = csvread('../../vsa/Results/SynGenVBRDynPh_ABCFault_DPsim_1_Damping/Test/data_vt.csv');
+currentDP = csvread('../../vsa/Results/SynGenVBRDynPh_ABCFault_DPsim_1_Damping/Test/data_j.csv');
 %Log_SynGen = csvread('../../vsa/Results//SynGenDqDynPh_ABCFault_DPsim/Euler/SynGen_gen.csv');
 compOffsetDP = (size(voltageDP,2) - 1) / 2;
 

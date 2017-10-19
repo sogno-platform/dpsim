@@ -134,12 +134,7 @@ namespace DPsim {
 		Matrix mInductanceMat;
 		/// resistance matrix
 		Matrix mResistanceMat;
-		/// reactance matrix
-		Matrix mReactanceMat;
-		/// omega - flux matrix
-		Matrix mOmegaFluxMat;
-		/// matrix for reversing stator current directions in calculations with respect to other currents
-		Matrix mReverseCurrents;
+
 
 		// ### State variables ###
 		/// rotor speed omega_r
@@ -152,6 +147,34 @@ namespace DPsim {
 		Real mMechTorque;
 		/// electrical torque
 		Real mElecTorque;
+
+		/// voltage vector q d 0 fd kd kq1 kq2
+		Real mVd;
+		Real mVq;
+		Real mV0;
+		Real mVfd;
+		Real mVkd;
+		Real mVkq1;
+		Real mVkq2;
+
+		/// current vector q d 0 fd kd kq1 kq2
+		Real mId;
+		Real mIq;
+		Real mI0;
+		Real mIfd;
+		Real mIkd;
+		Real mIkq1;
+		Real mIkq2;
+
+		/// flux linkage vector q d 0 fd kd kq1 kq2
+		Real mPsid;
+		Real mPsiq;
+		Real mPsi0;
+		Real mPsifd;
+		Real mPsikd;
+		Real mPsikq1;
+		Real mPsikq2;
+
 
 	public:
 		SynchGenBase() { };
@@ -180,7 +203,7 @@ namespace DPsim {
 		/// Function parameters have to be given in real units.
 		void init(Real om, Real dt,
 			Real initActivePower, Real initReactivePower, Real initTerminalVolt,
-			Real initVoltAngle, Real initFieldVoltage, Real initMechPower);
+			Real initVoltAngle, Real initFieldVoltage, Real initMechPower) { };
 
 		/// Initializes states in per unit. All machine parameters are assumed to be in per unit.
 		/// Function parameters have to be given in real units.
