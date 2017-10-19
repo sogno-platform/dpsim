@@ -506,10 +506,13 @@ void VoltageBehindReactanceDP::CalculateLandR(Real time)
 	Matrix Re_L2(3, 3);
 	Matrix Im_L2(3, 3);
 
-	Real b_Re = cos(2*mThetaMech2);
-	Real b_Im = sin(2*mThetaMech2);
+	//Real b_Re2 = cos(2*mThetaMech2);
+	//Real b_Im2 = sin(2*mThetaMech2);
+	Real b_Re = cos(2 * mOmMech* mBase_OmMech*time);
+	Real b_Im = sin(2 * mOmMech* mBase_OmMech*time);
 	Real c_Re = cos(2 * mThetaMech2 - 2 * 1*mBase_OmMech*time - 2 * mTheta0);
 	Real c_Im = sin(2 * mThetaMech2 - 2 * 1*mBase_OmMech*time - 2 * mTheta0);
+
 
 	Real a = 2 * (mTheta0);
 
