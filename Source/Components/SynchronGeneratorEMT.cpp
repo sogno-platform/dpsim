@@ -34,15 +34,7 @@ SynchronGeneratorEMT::SynchronGeneratorEMT(String name, Int node1, Int node2, In
 	Real inertia, bool logActive)
 	: SynchGenBase(name, node1, node2, node3, nomPower, nomVolt, nomFreq, poleNumber, nomFieldCur,
 		Rs, Ll, Lmd, Lmd0, Lmq, Lmq0, Rfd, Llfd, Rkd, Llkd, Rkq1, Llkq1, Rkq2, Llkq2,
-		inertia, logActive) {
-
-	if (mNumDampingWindings == 1)
-	{
-		mVoltages = Matrix::Zero(6, 1);
-		mFluxes = Matrix::Zero(6, 1);
-		mCurrents = Matrix::Zero(6, 1);
-	}
-}
+		inertia, logActive) { }
 
 
 
@@ -61,6 +53,16 @@ void SynchronGeneratorEMT::init(Real om, Real dt,
 	// Create matrices for state space representation
 	if (mNumDampingWindings == 2)
 	{
+		mVoltages = Matrix::Zero(7, 1);
+		mFluxes = Matrix::Zero(7, 1);
+		mCurrents = Matrix::Zero(7, 1);
+		mInductanceMat = Matrix::Zero(7, 7);
+		mResistanceMat = Matrix::Zero(7, 7);
+		mReactanceMat = Matrix::Zero(7, 7);
+		mOmegaFluxMat = Matrix::Zero(7, 7);
+
+		//Determinant of Lq(inductance matrix of q axis)
+		detLq = -mLmq*mLlkq2*(mLlkq1 + mLl) - mLl*mLlkq1*(mLlkq2 + mLmq);
 		mInductanceMat <<
 			-(mLl + mLmq), 0, 0, mLmq, mLmq, 0, 0,
 			0, -(mLl + mLmd), 0, 0, 0, mLmd, mLmd,
@@ -90,10 +92,16 @@ void SynchronGeneratorEMT::init(Real om, Real dt,
 	}
 	else
 	{
+		mVoltages = Matrix::Zero(6, 1);
+		mFluxes = Matrix::Zero(6, 1);
+		mCurrents = Matrix::Zero(6, 1);
 		mInductanceMat = Matrix::Zero(6, 6);
 		mResistanceMat = Matrix::Zero(6, 6);
 		mReactanceMat = Matrix::Zero(6, 6);
 		mOmegaFluxMat = Matrix::Zero(6, 6);
+
+		//Determinant of Lq(inductance matrix of q axis)
+		detLq = -(mLl + mLmq)*(mLlkq1 + mLmq) + mLmq*mLmq;
 
 		mInductanceMat <<
 			-(mLl + mLmq), 0, 0, mLmq, 0, 0,
@@ -118,14 +126,13 @@ void SynchronGeneratorEMT::init(Real om, Real dt,
 			0, 0, 0, 0, 0, 0,
 			0, 0, 0, 0, 0, 0;
 	}
+	// Determinant of Ld (inductance matrix of d axis)
+	detLd = (mLmd + mLl)*(-mLlfd*mLlkd - mLlfd*mLmd - mLmd*mLlkd) + mLmd*mLmd*(mLlfd + mLlkd);
 
 	mReactanceMat = mInductanceMat.inverse();
 
-
-	// steady state per unit initial value
+		// steady state per unit initial value
 	initStatesInPerUnit(initActivePower, initReactivePower, initTerminalVolt, initVoltAngle, initFieldVoltage, initMechPower);
-
-
 
 	mVa = inverseParkTransform2(mThetaMech, mVd* mBase_v, mVq* mBase_v, mV0* mBase_v)(0);
 	mVb = inverseParkTransform2(mThetaMech, mVd* mBase_v, mVq* mBase_v, mV0* mBase_v)(1);

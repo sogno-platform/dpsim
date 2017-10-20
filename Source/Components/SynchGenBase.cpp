@@ -49,6 +49,12 @@ SynchGenBase::SynchGenBase(String name, Int node1, Int node2, Int node3,
 	mBase_L = mBase_Z / mBase_OmElec;
 	mBase_Psi = mBase_L * mBase_i;
 	mBase_T = mNomPower / mBase_OmMech;
+
+	// Create logging file
+	if (mLogActive) {
+		String filename = "SynGen_" + mName + ".csv";
+		mLog = new Logger(filename);
+	}
 	
 	if (Rkq2 == 0 && Llkq2 == 0) {
 		mNumDampingWindings = 1;
@@ -89,22 +95,13 @@ void SynchGenBase::initWithPerUnitParam(
 	mLlkq2 = Llkq2;
 	mH = H;
 
-	// Determinant of Ld (inductance matrix of d axis)
-	detLd = (mLmd + mLl)*(-mLlfd*mLlkd - mLlfd*mLmd - mLmd*mLlkd) + mLmd*mLmd*(mLlfd + mLlkd);
-	
-	// Determinant of Lq (inductance matrix of q axis)
-	if (mNumDampingWindings == 2) {
-		detLq = -mLmq*mLlkq2*(mLlkq1 + mLl) - mLl*mLlkq1*(mLlkq2 + mLmq);
-	}
-	else {
-		detLq = -(mLl + mLmq)*(mLlkq1 + mLmq) + mLmq*mLmq;
-	}
 }
 
 
 void SynchGenBase::initStatesInPerUnit(Real initActivePower, Real initReactivePower,
 	Real initTerminalVolt, Real initVoltAngle, Real initFieldVoltage, Real initMechPower) {
 
+	// #### Electrical variables ##############################################
 	Real init_P = initActivePower / mNomPower;
 	Real init_Q = initReactivePower / mNomPower;
 	Real init_S = sqrt(pow(init_P, 2.) + pow(init_Q, 2.));

@@ -23,8 +23,7 @@
 
 #pragma once
 
-#include "BaseComponent.h"
-#include "ComponentCommons.h"
+#include "SynchGenBase.h"
 
 namespace DPsim {
 
@@ -35,57 +34,8 @@ namespace DPsim {
 	/// parameter names include underscores and typical variables names found in literature instead of
 	/// descriptive names in order to shorten formulas and increase the readability
 
-	class VoltageBehindReactanceDP : public BaseComponent {
+	class VoltageBehindReactanceDP : public SynchGenBase {
 	protected:
-
-		Logger* mLog;
-
-		// ### Machine parameters ###
-		/// nominal power Pn [VA]
-		Real mNomPower;
-		/// nominal voltage Vn [V] (RMS)
-		Real mNomVolt;
-		/// nominal frequency fn [Hz]
-		Real mNomFreq;
-		/// nominal field current Ifn [A]
-		Real mNomFieldCur;
-		/// Number of damping windings in q
-		Int mNumDampingWindings;
-		/// number of poles
-		Int mPoleNumber;
-		/// inertia coefficient H
-		Real mH;
-		/// inertia J [kg*m^2]
-		Real mJ;
-
-		/// stator resistance Rs[Ohm]
-		Real mRs;
-		/// leakage inductance Ll [H]
-		Real mLl;
-		/// d-axis mutual inductance Lmd [H]
-		Real mLmd;
-		/// unsaturated d-axis mutual inductance Lmd [H]
-		Real mLmd0;
-		/// q-axis mutual inductance Lmq [H]
-		Real mLmq;
-		/// unsaturated q-axis mutual inductance Lmq [H]
-		Real mLmq0;
-		/// field resistance Rfd [Ohm]
-		Real mRfd;
-		/// field leakage inductance Llfd [H]
-		Real mLlfd;
-		/// d-axis damper resistance Rkd [Ohm]
-		Real mRkd;
-		/// d-axis damper leakage inductance Llkd [H]
-		Real mLlkd;
-		/// q-axis damper resistance 1 Rkq1 [Ohm]
-		Real mRkq1;
-		/// q-axis damper leakage inductance 1 Llkq1 [H]
-		Real mLlkq1;
-		/// q-axis damper resistance 2 Rkq2 [Ohm]
-		Real mRkq2;
-		/// q-axis damper leakage inductance 2 Llkq2 [H]
-		Real mLlkq2;
 
 		/// d dynamic inductance
 		Real mDLmd;
@@ -97,54 +47,10 @@ namespace DPsim {
 		/// Auxiliar inductance
 		Real mLb;
 
-
-		// ### Stator base values ###
-		/// specifies if the machine parameters are transformed to per unit
-		SynchGenStateType mStateType;
-		/// base stator voltage
-		Real mBase_v;
-		/// base stator voltage RMS
-		Real mBase_V_RMS;
-		/// base stator current
-		Real mBase_i;
-		/// base stator current RMS
-		Real mBase_I_RMS;
-		/// base stator impedance
-		Real mBase_Z;
-		/// base electrical angular frequency
-		Real mBase_OmElec;
-		/// base mechanical angular frequency
-		Real mBase_OmMech;
-		/// base stator inductance
-		Real mBase_L;
-		/// base torque
-		Real mBase_T;
-		/// base flux linkage
-		Real mBase_Psi;
-
-		/// base field current
-		Real mBase_ifd;
-		/// base field voltage
-		Real mBase_vfd;
-		/// base field impedance
-		Real mBase_Zfd;
-		/// base field inductance
-		Real mBase_Lfd;
-
-		// ### State variables ###
-		/// rotor speed omega_r
-		Real mOmMech;
-		/// theta
-		Real mThetaMech;
+		//Real mThetaMech;
 		Real mThetaMech2;
 		/// initial theta
 		Real mTheta0;
-		/// mechanical Power Pm [W]
-		Real mMechPower;
-		/// mechanical torque
-		Real mMechTorque;
-		/// electrical torque
-		Real mElecTorque;
 
 		/// d dynamic flux
 		Real mDPsid;
@@ -166,52 +72,6 @@ namespace DPsim {
 		Real mDVcRe;
 		/// Dynamic voltage phase c _ Imaginary part
 		Real mDVcIm;
-
-		/// stator voltage in d axis
-		Real mVd;
-		/// stator voltage in q axis
-		Real mVq;
-		/// stator voltage 0 component
-		Real mV0;
-		/// Rotor voltage field winding
-		Real mVfd;
-		/// Rotor voltage damping winding in d axis
-		Real mVkd;
-		/// Rotor voltage damping winding 1 in q axis
-		Real mVkq1;
-		/// Rotor voltage damping winding 2 in q axis
-		Real mVkq2;
-
-		/// stator current in d axis
-		Real mId;
-		/// stator current in q axis
-		Real mIq;
-		/// stator current 0 component
-		Real mI0;
-		/// Rotor current field winding
-		Real mIfd;
-		/// Rotor current damping winding in d axis
-		Real mIkd;
-		/// Rotor current damping winding 1 in q axis
-		Real mIkq1;
-		/// Rotor current damping winding 2 in q axis
-		Real mIkq2;
-
-		/// stator flux linkage in d axis
-		Real mPsid;
-		/// stator flux linkage in q axis
-		Real mPsiq;
-		/// stator flux linkage 0 component
-		Real mPsi0;
-		/// rotor flux linkage in field winding
-		Real mPsifd;
-		/// rotor flux linkage in damping winding from d axis
-		Real mPsikd;
-		/// rotor flux linkage in damping winding 1 from q axis
-		Real mPsikq1;
-		/// rotor flux linkage in damping winding 2 from q axis
-		Real mPsikq2;
-
 
 		/// Interface voltage phase a _ Real part
 		Real mVaRe;
@@ -252,14 +112,10 @@ namespace DPsim {
 		Matrix mDqStatorCurrents_hist = Matrix::Zero(2, 1);
 
 
-
-
 		// ### Useful Matrices ###
 		/// inductance matrix
 		Matrix mDInductanceMat = Matrix::Zero(3, 3);
-		/// resistance matrix
-		Matrix mResistanceMat = Matrix::Zero(3, 3);
-		/// Load Resistance
+		/// load resistance matrix
 		Matrix R_load = Matrix::Zero(6, 6);
 		/// Constant part of equivalent stator inductance
 		Matrix LD0 = Matrix::Zero(3, 3);
@@ -284,8 +140,6 @@ namespace DPsim {
 		Matrix C_flux = Matrix::Zero(4, 1);
 
 
-
-
 	public:
 		VoltageBehindReactanceDP() { };
 		~VoltageBehindReactanceDP();
@@ -300,23 +154,10 @@ namespace DPsim {
 			Real Rkq1, Real Llkq1, Real Rkq2, Real Llkq2,
 			Real inertia, bool logActive = false);
 
-		/// Initializes the per unit or stator referred machine parameters with the machine parameters given in per unit.
-		/// The initialization mode depends on the setting of state type.
-		void initWithPerUnitParam(
-			Real Rs, Real Ll, Real Lmd, Real Lmd0, Real Lmq, Real Lmq0,
-			Real Rfd, Real Llfd, Real Rkd, Real Llkd, Real Rkq1, Real Llkq1,
-			Real Rkq2, Real Llkq2,
-			Real H);
-
 		/// Initializes states in per unit or stator referred variables depending on the setting of the state type.
 		/// Function parameters have to be given in real units.
 		void init(Real om, Real dt,
 			Real initActivePower, Real initReactivePower, Real initTerminalVolt, Real initVoltAngle, Real initFieldVoltage, Real initMechPower);
-
-		/// Initializes states in per unit. All machine parameters are assumed to be in per unit.
-		/// Function parameters have to be given in real units.
-		void initStatesInPerUnit(Real initActivePower, Real initReactivePower,
-			Real initTerminalVolt, Real initVoltAngle, Real initFieldVoltage, Real initMechPower);
 
 		/// Performs an Euler forward step with the state space model of a synchronous generator
 		/// to calculate the flux and current from the voltage vector.

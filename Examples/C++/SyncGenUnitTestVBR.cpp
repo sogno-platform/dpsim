@@ -93,8 +93,8 @@ void DPsim::SynGenUnitTestVBR() {
 	// Set up simulation
 	Real tf, dt, t;
 	Real om = 2.0*M_PI*60.0;
-	tf = 0.3; dt = 0.0001; t = 0;
-	Int downSampling = 1;
+	tf = 0.3; dt = 0.000001; t = 0;
+	Int downSampling = 50;
 	Simulation newSim(circElements, om, dt, tf, log, downSampling, SimulationType::EMT);
 	newSim.setNumericalMethod(NumericalMethod::Trapezoidal_flux);
 	newSim.addSystemTopology(circElementsBreakerOn);
@@ -166,17 +166,17 @@ void DPsim::SynGenUnitTestVBRDP() {
 	Real Llkd = 0.1713;
 	Real Rkq1 = 0.0062;
 	Real Llkq1 = 0.7252;
-	//Real Rkq2 = 0.0237;
-	//Real Llkq2 = 0.125;
-	Real Rkq2 = 0;
-	Real Llkq2 = 0;
+	Real Rkq2 = 0.0237;
+	Real Llkq2 = 0.125;
+	//Real Rkq2 = 0;
+	//Real Llkq2 = 0;
 
 
 
 	// Declare circuit components
 	BaseComponent* gen = new VoltageBehindReactanceDP("gen", 1, 2, 3,
 		nomPower, nomPhPhVoltRMS, nomFreq, poleNum, nomFieldCurr,
-		Rs, Ll, Lmd, Lmd0, Lmq, Lmq0, Rfd, Llfd, Rkd, Llkd, Rkq1, Llkq1, Rkq2, Llkq2, H, true);
+		Rs, Ll, Lmd, Lmd0, Lmq, Lmq0, Rfd, Llfd, Rkd, Llkd, Rkq1, Llkq1, Rkq2, Llkq2, H);
 	Real loadRes = 1037.8378;
 	BaseComponent* r1 = new LinearResistor("r1", 1, 0, loadRes);
 	BaseComponent* r2 = new LinearResistor("r2", 2, 0, loadRes);

@@ -58,7 +58,7 @@ int main(int argc, char* argv[]) {
 	// EMT classic dq model
 	//SynGenUnitTestBalancedResLoad();
 	//SynGenUnitTestPhaseToPhaseFault();
-	SynGenUnitTestThreePhaseFault();
+	//SynGenUnitTestThreePhaseFault();
 	//SynGenUnitTestBalancedResLoadFnP();
 
 	// DP classic dq model
@@ -68,7 +68,7 @@ int main(int argc, char* argv[]) {
 	// EMT VBR model
 	//SynGenUnitTestVBR();
 	// DP VBR model
-	//SynGenUnitTestVBRDP();
+	SynGenUnitTestVBRDP();
 
 	// #### Variable frequency tests ################
 	//RXLineResLoad();

@@ -295,10 +295,10 @@ void DPsim::SynGenUnitTestThreePhaseFault() {
 	Real Llkd = 0.1713;
 	Real Rkq1 = 0.0062;
 	Real Llkq1 = 0.7252;
-	//Real Rkq2 = 0.0237;
-	//Real Llkq2 = 0.125;
-	Real Rkq2 = 0;
-	Real Llkq2 = 0;
+	Real Rkq2 = 0.0237;
+	Real Llkq2 = 0.125;
+	//Real Rkq2 = 0;
+	//Real Llkq2 = 0;
 
 	// Declare circuit components
 	BaseComponent* gen = new SynchronGeneratorEMT("gen", 1, 2, 3,
@@ -492,10 +492,10 @@ void DPsim::SynGenDPUnitTestThreePhaseFault() {
 	Real Llkd = 0.1713;
 	Real Rkq1 = 0.0062;
 	Real Llkq1 = 0.7252;
-	//Real Rkq2 = 0.0237;
-	//Real Llkq2 = 0.125;
-	Real Rkq2 = 0;
-	Real Llkq2 = 0;
+	Real Rkq2 = 0.0237;
+	Real Llkq2 = 0.125;
+	//Real Rkq2 = 0;
+	//Real Llkq2 = 0;
 
 	// Declare circuit components
 	BaseComponent* gen = new SynchronGenerator("gen", 1, 2, 3,

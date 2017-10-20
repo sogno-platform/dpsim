@@ -40,30 +40,40 @@ namespace DPsim {
 	class SynchronGeneratorEMT : public SynchGenBase {
 	protected:
 
-		/// voltage vector q d 0 kq1 kq2 df kd
-		Matrix mVoltages = Matrix::Zero(7, 1);
-		/// flux linkage vector
-		Matrix mFluxes = Matrix::Zero(7, 1);
-		/// current vector
-		Matrix mCurrents = Matrix::Zero(7, 1);
 
-		/// Interface voltage vector
+		/// Determinant of Ld (inductance matrix of d axis)
+		Real detLd;
+		/// Determinant of Lq (inductance matrix of q axis)
+		Real detLq;
+
+		/// voltage vector q d 0 kq1 kq2 df kd
+		Matrix mVoltages;
+		/// flux linkage vector
+		Matrix mFluxes;
+		/// current vector
+		Matrix mCurrents;
+
+		/// Interface voltage phase a
 		Real mVa;
+		/// Interface voltage phase b
 		Real mVb;
+		/// Interface voltage phase c
 		Real mVc;
 
-		/// Interface voltage vector
+		/// Interface curent phase a
 		Real mIa;
+		/// Interface curent phase b
 		Real mIb;
+		/// Interface curent phase c
 		Real mIc;
 
 		// ### Useful Matrices ###
 		/// reactance matrix
-		Matrix mReactanceMat = Matrix::Zero(7, 7);
+		Matrix mReactanceMat;
 		/// omega - flux matrix
-		Matrix mOmegaFluxMat = Matrix::Zero(7, 7);
+		Matrix mOmegaFluxMat;
 		/// matrix for reversing stator current directions in calculations with respect to other currents
-		Matrix mReverseCurrents = Matrix::Zero(7, 7);
+		Matrix mReverseCurrents;
 
 
 	public:
