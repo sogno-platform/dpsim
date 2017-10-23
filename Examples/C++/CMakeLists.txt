@@ -26,6 +26,17 @@ set(SOURCES
 		SynchronGenUnitTest.cpp
 )
 
+# CIMpp
+find_package(CIMpp)
+if(CIMpp_FOUND)
+	include_directories(${CIMPP_INCLUDE_DIRS})
+	link_libraries(${CIMPP_LIBRARIES})
+
+	list(APPEND SOURCES
+		CIMTest.cpp
+	)
+endif()
+
 if(LINUX)
 	list(APPEND SOURCES
 		ShmemTest.cpp

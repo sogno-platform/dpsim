@@ -40,15 +40,11 @@ if(PythonInterp_FOUND AND PythonLibs_FOUND)
 	install(FILES $<TARGET_FILE:dpsim> DESTINATION ${PYTHON_PKGPATH} RENAME dpsim.${PYTHON_MODULE_SUFFIX})
 endif()
 
-# CIM Parser
-if(IS_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/../CIM-XML-Parser)
-	set(USE_CIM_VERSION "IEC61970_16v29a")
-	add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/../CIM-XML-Parser)
-
-	file(GLOB CIM_SOURCES CIM/*.cpp)
-
-	link_libraries(${PYTHON_LIBRARIES})
-	target_sources(dpsim ${CIM_SOURCES})
+# CIMpp
+find_package(CIMpp)
+if(CIMpp_FOUND)
+	include_directories(${CIMPP_INCLUDE_DIRS})
+	link_libraries(${CIMPP_LIBRARIES})
 endif()
 
 #install(TARGETS dpsim
