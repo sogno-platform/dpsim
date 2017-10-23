@@ -27,18 +27,11 @@ add_subdirectory(Documentation)
 add_subdirectory(Source)
 add_subdirectory(Examples/C++)
 
-# CPack configuration
-SET(CPACK_PACKAGE_DESCRIPTION_SUMMARY "My funky project")
-SET(CPACK_PACKAGE_VENDOR ${PROJECT_AUTHOR})
-SET(CPACK_PACKAGE_DESCRIPTION_FILE "${CMAKE_CURRENT_SOURCE_DIR}/ReadMe.txt")
-SET(CPACK_RESOURCE_FILE_LICENSE "${CMAKE_CURRENT_SOURCE_DIR}/Copyright.txt")
-SET(CPACK_PACKAGE_VERSION_MAJOR "1")
-SET(CPACK_PACKAGE_VERSION_MINOR "3")
-SET(CPACK_PACKAGE_VERSION_PATCH "2")
-
-
 # Show feature summary
 include(FeatureSummary)
 feature_summary(WHAT ALL
     VAR enabledFeaturesText)
 message(STATUS "${enabledFeaturesText}")
+
+# CPack configuration
+include(DPsimPackaging)
