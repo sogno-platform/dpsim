@@ -23,7 +23,7 @@
 
 #pragma once
 
-#include "CurrentSource.h"
+#include "CurrentSourceDP.h"
 
 namespace DPsim {
 	/** Ideal current source, but the current value can be changed between simulation

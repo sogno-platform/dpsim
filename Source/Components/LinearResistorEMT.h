@@ -30,14 +30,14 @@ namespace DPsim {
 
 	class LinearResistorEMT : public BaseComponent {
 	protected:
-		double mResistance;
-		double mConductance;
-		double mVoltageAtNode1;
-		double mVoltageAtNode2;
+		Real mResistance;
+		Real mConductance;
+		Real mVoltageAtNode1;
+		Real mVoltageAtNode2;
 
 	public:
 		LinearResistorEMT() { ; };
-		LinearResistorEMT(std::string name, int src, int dest, Real resistance);
+		LinearResistorEMT(String name, Int src, Int dest, Real resistance);
 
 		void init(Real om, Real dt) { }
 		void applySystemMatrixStamp(SystemModel& system);

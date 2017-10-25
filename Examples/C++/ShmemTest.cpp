@@ -162,7 +162,7 @@ void DPsim::shmemDistributed(int argc, char *argv[])
 	std::vector<BaseComponent*> comps, comps2;
 	ShmemInterface *shmem;
 	struct shmem_conf conf;
-	std::string logname;
+	String logname;
 	conf.samplelen = 4;
 	conf.queuelen = 1024;
 	conf.polling = true;

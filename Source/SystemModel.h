@@ -25,13 +25,13 @@
 
 #include <iostream>
 #include <vector>
-#include "MathLibrary.h"
+#include "Definitions.h"
 #include "Logger.h"
 
 namespace DPsim {
 
 	enum class SimulationType { DynPhasor, EMT };
-	enum class NumericalMethod { Euler, AdamBashforth, Trapezoidal_flux, Trapezoidal_current };
+	enum class NumericalMethod { Euler, Trapezoidal_flux, Trapezoidal_current };
 
 	class SystemModel {
 
@@ -41,9 +41,9 @@ namespace DPsim {
 		///Numerical method
 		NumericalMethod mNumMethod;
 		/// Number of nodes
-		int mNumNodes;
+		Int mNumNodes;
 		/// Index offset for imaginary part
-		int mCompOffset;
+		Int mCompOffset;
 		/// Angular frequency of the phasor
 		Real mSystemOmega;
 		/// Simulation time step
@@ -53,17 +53,17 @@ namespace DPsim {
 
 
 		/// LU decomposition of system matrix A
-		Eigen::PartialPivLU<DPSMatrix> mLuFactored;
+		Eigen::PartialPivLU<Matrix> mLuFactored;
 		/// LU decomposition of system matrix A
-		std::vector<Eigen::PartialPivLU<DPSMatrix> > mLuFactoredVector;
+		std::vector<Eigen::PartialPivLU<Matrix> > mLuFactoredVector;
 		/// System matrix A that is modified by matrix stamps
-		DPSMatrix mSystemMatrix;
+		Matrix mSystemMatrix;
 		/// System matrices list for swtiching events
-		std::vector<DPSMatrix> mSystemMatrixVector;
+		std::vector<Matrix> mSystemMatrixVector;
 		/// Vector of known quantities
-		DPSMatrix mRightSideVector;
+		Matrix mRightSideVector;
 		/// Vector of unknown quantities
-		DPSMatrix mLeftSideVector;
+		Matrix mLeftSideVector;
 
 		/** Matrix of all edge currents; diagonal is used for currents to ground. */
 		SparseMatrixComp mCurrentMatrix;
@@ -96,7 +96,7 @@ namespace DPsim {
 
 		void InitializeRightSideVector(DPsim::Matrix& rightSideVector) { mRightSideVector = rightSideVector; }
 		void InitializeLeftSideVector(DPsim::Matrix& leftSideVector) { mLeftSideVector = leftSideVector; }
-		void switchSystemMatrix(Int systemMatrixIndex);
+		void switchSystemMatrix(UInt systemMatrixIndex);
 		void addRealToSystemMatrix(Int row, Int column, Real value);
 		void addCompToSystemMatrix(Int row, Int column, Real reValue, Real imValue);
 		void addCompToSystemMatrix(Int row, Int column, Complex value);

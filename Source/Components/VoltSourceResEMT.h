@@ -39,7 +39,7 @@ namespace DPsim {
 
 	public:
 		VoltSourceResEMT() { ; };
-		VoltSourceResEMT(std::string name, int src, int dest, Complex voltage, Real resistance);
+		VoltSourceResEMT(String name, Int src, Int dest, Complex voltage, Real resistance);
 
 		void init(Real om, Real dt) { }
 		void applySystemMatrixStamp(SystemModel& system);

@@ -22,55 +22,66 @@
 
 #include "IntegrationMethod.h"
 
-DPSMatrix Trapezoidal(DPSMatrix states, DPSMatrix A, DPSMatrix B, double dt, DPSMatrix u_new, DPSMatrix u_old)
+using namespace DPsim;
+
+Matrix DPsim::Trapezoidal(Matrix states, Matrix A, Matrix B, Real dt, Matrix u_new, Matrix u_old)
 {
 	int n = states.rows();
-	DPSMatrix I = DPSMatrix::Identity(n, n);
+	Matrix I = Matrix::Identity(n, n);
 
-	DPSMatrix Aux = I + (dt / 2) * A;
-	DPSMatrix Aux2 = I - (dt / 2) * A;
+	Matrix Aux = I + (dt / 2) * A;
+	Matrix Aux2 = I - (dt / 2) * A;
 
-	DPSMatrix newstates = Aux2.inverse()*Aux*states + Aux2.inverse()*(dt / 2) * B*(u_new + u_old);
+	Matrix newstates = Aux2.inverse()*Aux*states + Aux2.inverse()*(dt / 2) * B*(u_new + u_old);
 	return newstates;
 }
 
-DPSMatrix Trapezoidal(DPSMatrix states, DPSMatrix A, DPSMatrix B, DPSMatrix C, double dt, DPSMatrix u_new, DPSMatrix u_old)
+Matrix DPsim::Trapezoidal(Matrix states, Matrix A, Matrix B, Matrix C, Real dt, Matrix u_new, Matrix u_old)
 {
 	int n = states.rows();
-	DPSMatrix I = DPSMatrix::Identity(n, n);
+	Matrix I = Matrix::Identity(n, n);
 
-	DPSMatrix Aux = I + (dt / 2) * A;
-	DPSMatrix Aux2 = I - (dt / 2) * A;
+	Matrix Aux = I + (dt / 2) * A;
+	Matrix Aux2 = I - (dt / 2) * A;
 
-	DPSMatrix newstates = Aux2.inverse()*Aux*states + Aux2.inverse()*(dt / 2) * B*(u_new + u_old) + Aux2.inverse()*dt*C;
+	Matrix newstates = Aux2.inverse()*Aux*states + Aux2.inverse()*(dt / 2) * B*(u_new + u_old) + Aux2.inverse()*dt*C;
 	return newstates;
 }
 
-DPSMatrix Trapezoidal(DPSMatrix states, DPSMatrix A, DPSMatrix B, double dt, DPSMatrix u)
+Matrix DPsim::Trapezoidal(Matrix states, Matrix A, Matrix B, Matrix C, Real dt, Matrix u)
+{
+	int n = states.rows();
+	Matrix I = Matrix::Identity(n, n);
+
+	Matrix Aux = I + (dt / 2) * A;
+	Matrix Aux2 = I - (dt / 2) * A;
+
+	Matrix newstates = Aux2.inverse()*Aux*states + Aux2.inverse()*dt*B*u + Aux2.inverse()*dt*C;
+	return newstates;
+}
+
+Matrix DPsim::Trapezoidal(Matrix states, Matrix A, Matrix B, Real dt, Matrix u)
 {
 	int n = states.rows();
 
-	DPSMatrix I = DPSMatrix::Identity(n, n);
-	DPSMatrix Aux = I + (dt / 2) * A;
-	DPSMatrix Aux2 = I - (dt / 2) * A;
-	DPSMatrix InvAux = Aux2.inverse();
+	Matrix I = Matrix::Identity(n, n);
+	Matrix Aux = I + (dt / 2) * A;
+	Matrix Aux2 = I - (dt / 2) * A;
+	Matrix InvAux = Aux2.inverse();
 
 	return InvAux*Aux*states + InvAux*dt*B*u;
 }
 
-DPSMatrix Euler(DPSMatrix states, DPSMatrix A, DPSMatrix B, double dt, DPSMatrix u)
+Matrix DPsim::Euler(Matrix states, Matrix A, Matrix B, Real dt, Matrix u)
 {
 	return states + dt*(A*states + B*u);
 }
 
-double Euler(double state, DPSMatrix inputs, DeriveFnPtr fnPtr, double dt) {
-	return state + dt*fnPtr(inputs);
-}
 
-DPSMatrix Euler(DPSMatrix states, DPSMatrix A, DPSMatrix B, DPSMatrix C, double dt, DPSMatrix u)
+Matrix DPsim::Euler(Matrix states, Matrix A, Matrix B, Matrix C, Real dt, Matrix u)
 {
 
-	DPSMatrix newstates = states + dt*(A*states + B*u + C);
+	Matrix newstates = states + dt*(A*states + B*u + C);
 	return newstates;
 }
 

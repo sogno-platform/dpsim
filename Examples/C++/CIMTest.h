@@ -25,6 +25,8 @@
 
 #include "CIM/CIMReader.h"
 
-void readFixedCIMFiles();
-int testCIMReader(std::list<std::string> filenames);
+void readFixedCIMFiles_LineLoad();
+void readFixedCIMFiles_IEEE9bus();
+Int testCIMReader(std::list<String> filenames);
+
 

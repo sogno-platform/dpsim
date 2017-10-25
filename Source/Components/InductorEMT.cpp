@@ -24,7 +24,7 @@
 
 using namespace DPsim;
 
-InductorEMT::InductorEMT(std::string name, int src, int dest, double inductance) : BaseComponent(name, src, dest) {
+InductorEMT::InductorEMT(String name, Int src, Int dest, Real inductance) : BaseComponent(name, src, dest) {
 	mInductance = inductance;
 	attrMap["inductance"] = {AttrReal, &mInductance};
 }

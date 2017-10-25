@@ -20,6 +20,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *********************************************************************************/
 
+#pragma once
+
 #ifndef _MSC_VER
   #include <cxxabi.h>
 #endif
@@ -30,15 +32,15 @@
 
 using namespace DPsim;
 
-std::string BaseComponent::getType()
+String BaseComponent::getType()
 {
-	int status = 1;
+	Int status = 1;
 	const char *mangled;
 
 	mangled = typeid(*this).name();
 
 #ifdef _MSC_VER
-	std::string ret(mangled);
+	String ret(mangled);
 
 	return ret;
 #else
@@ -49,7 +51,7 @@ std::string BaseComponent::getType()
 	if (status)
 		return mangled;
 	else {
-		std::string ret(unmangled);
+		String ret(unmangled);
 
 		free((void *) unmangled);
 

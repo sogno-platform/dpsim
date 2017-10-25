@@ -24,9 +24,9 @@
 #include "CIMModel.hpp"
 #include "IEC61970.hpp"
 
-#include "Components/PQLoad.h"
-#include "Components/RxLine.h"
-#include "Components/TwoWindingTransformer.h"
+#include "Components/PQLoadDP.h"
+#include "Components/RxLineDP.h"
+#include "Components/TwoWindingTransformerDP.h"
 
 using namespace DPsim;
 using namespace IEC61970::Base::Core;
@@ -36,7 +36,7 @@ using namespace IEC61970::Base::Topology;
 using namespace IEC61970::Base::Wires;
 
 // TODO is UnitMulitplier actually used/set anywhere?
-double CIMReader::unitValue(double value, UnitMultiplier mult) {
+Real CIMReader::unitValue(Real value, UnitMultiplier mult) {
 	switch (mult) {
 	case UnitMultiplier::p:
 		value *= 1e-12;
@@ -88,7 +88,7 @@ CIMReader::~CIMReader() {
 }
 
 BaseComponent* CIMReader::mapACLineSegment(ACLineSegment* line) {
-	std::vector<int> &nodes = mEqNodeMap.at(line->mRID); // TODO can fail
+	std::vector<Int> &nodes = mEqNodeMap.at(line->mRID); // TODO can fail
 	if (nodes.size() != 2) {
 		std::cerr << "ACLineSegment " << line->mRID << " has " << nodes.size() << " terminals, ignoring" << std::endl;
 		// TODO better error handling (throw exception?)
@@ -114,12 +114,12 @@ BaseComponent* CIMReader::mapEquivalentInjection(EquivalentInjection* inj) {
 }
 
 BaseComponent* CIMReader::mapExternalNetworkInjection(ExternalNetworkInjection* inj) {
-	std::vector<int> &nodes = mEqNodeMap.at(inj->mRID);
+	std::vector<Int> &nodes = mEqNodeMap.at(inj->mRID);
 	if (nodes.size() != 1) {
 		std::cerr << "ExternalNetworkInjection " << inj->mRID << " has " << nodes.size() << " terminals, ignoring" << std::endl;
 		return nullptr;
 	}
-	int node = nodes[0];
+	Int node = nodes[0];
 	SvVoltage *volt = mVoltages[node-1];
 	if (!volt) {
 		std::cerr << "ExternalNetworkInjection " << inj->mRID << " has no associated SvVoltage, ignoring" << std::endl;
@@ -131,7 +131,7 @@ BaseComponent* CIMReader::mapExternalNetworkInjection(ExternalNetworkInjection* 
 }
 
 BaseComponent* CIMReader::mapPowerTransformer(PowerTransformer* trans) {
-	std::vector<int> &nodes = mEqNodeMap.at(trans->mRID);
+	std::vector<Int> &nodes = mEqNodeMap.at(trans->mRID);
 	if (nodes.size() != trans->PowerTransformerEnd.size()) {
 		std::cerr << "PowerTransformer " << trans->mRID << " has differing number of terminals and windings, ignoring" << std::endl;
 		return nullptr;
@@ -159,7 +159,7 @@ BaseComponent* CIMReader::mapSynchronousMachine(SynchronousMachine* machine) {
 		std::cerr << "SynchronousMachine " << machine->mRID << " has " << nodes.size() << " terminals, ignoring" << std::endl;
 		return nullptr;
 	}
-	int node = nodes[0];
+	Int node = nodes[0];
 	SvVoltage *volt = mVoltages[node-1];
 	if (!volt) {
 		std::cerr << "SynchronousMachine " << machine->mRID << " has no associated SvVoltage, ignoring" << std::endl;
@@ -189,7 +189,7 @@ BaseComponent* CIMReader::mapComponent(BaseClass* obj) {
 	return nullptr;
 }
 
-BaseComponent* CIMReader::newFlowPQLoad(std::string rid, std::string name) {
+BaseComponent* CIMReader::newFlowPQLoad(String rid, String name) {
 	std::vector<int> &nodes = mEqNodeMap.at(rid);
 	if (nodes.size() != 1) {
 		std::cerr << rid << " has " << nodes.size() << " terminals; ignoring" << std::endl;
@@ -201,7 +201,7 @@ BaseComponent* CIMReader::newFlowPQLoad(std::string rid, std::string name) {
 		return nullptr;
 	}
 	SvPowerFlow* flow = search->second;
-	int node = nodes[0];
+	Int node = nodes[0];
 	SvVoltage *volt = mVoltages[node-1];
 	if (!volt) {
 		std::cerr << rid << " has no associated SvVoltage, ignoring" << std::endl;
@@ -212,7 +212,7 @@ BaseComponent* CIMReader::newFlowPQLoad(std::string rid, std::string name) {
 	return new PQLoad(name, node, 0, flow->p.value, flow->q.value, volt->v.value, volt->angle.value*PI/180);
 }
 
-bool CIMReader::addFile(std::string filename) {
+bool CIMReader::addFile(String filename) {
 	return mModel.addCIMFile(filename);
 }
 
@@ -276,7 +276,7 @@ std::vector<BaseComponent*>& CIMReader::getComponents() {
 	return mComponents;
 }
 
-int CIMReader::mapTopologicalNode(std::string mrid) {
+int CIMReader::mapTopologicalNode(String mrid) {
 	auto search = mTopNodes.find(mrid);
 	if (search == mTopNodes.end())
 		return -1;

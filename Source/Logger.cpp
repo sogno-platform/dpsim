@@ -22,6 +22,8 @@
 
 #include "Logger.h"
 
+using namespace DPsim;
+
 std::ostringstream Logger::nullStream;
 
 Logger::Logger() : mLogFile() {
@@ -29,7 +31,7 @@ Logger::Logger() : mLogFile() {
 	mLogFile.setstate(std::ios_base::badbit);
 }
 
-Logger::Logger(std::string filename, LogLevel level) : mLogFile(filename), mLogLevel(level) {
+Logger::Logger(String filename, LogLevel level) : mLogFile(filename), mLogLevel(level) {
 	if (!mLogFile.is_open()) {
 		std::cerr << "Cannot open log file " << filename << std::endl;
 		mLogLevel = LogLevel::NONE;
@@ -63,15 +65,15 @@ std::ostream& Logger::Log(LogLevel level) {
 	return mLogFile;
 }
 
-void Logger::LogDataLine(double time, DPSMatrix& data) {
+void Logger::LogDataLine(Real time, Matrix& data) {
 	mLogFile << std::scientific << time;
-	for (int i = 0; i < data.rows(); i++) {
+	for (Int i = 0; i < data.rows(); i++) {
 		mLogFile << ", " << data(i, 0);
 	}
 	mLogFile << std::endl;
 }
 
-void Logger::LogDataLine(double time, double data) {
+void Logger::LogDataLine(Real time, Real data) {
 	mLogFile << std::scientific << time;
 	mLogFile << ", " << data;
 	mLogFile << std::endl;

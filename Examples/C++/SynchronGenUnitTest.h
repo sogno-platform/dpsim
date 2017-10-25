@@ -36,6 +36,7 @@ namespace DPsim {
 	void SynGenDPUnitTestBalancedResLoad();
 	void SynGenDPUnitTestThreePhaseFault();
 
-	// EMT generator test using Function Pointer
-	void SynGenUnitTestBalancedResLoadFnP();
+	// Simplified generator tests
+	void SimpSynGenUnitTestThreePhaseFault();
+
 }

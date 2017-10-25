@@ -23,8 +23,7 @@
 
 #pragma once
 
-#include "BaseComponent.h"
-#include "ComponentCommons.h"
+#include "SynchGenBase.h"
 
 namespace DPsim {
 
@@ -35,333 +34,159 @@ namespace DPsim {
 	/// parameter names include underscores and typical variables names found in literature instead of
 	/// descriptive names in order to shorten formulas and increase the readability
 
-	class VoltageBehindReactanceDP : public BaseComponent {
+	class VoltageBehindReactanceDP : public SynchGenBase {
 	protected:
 
-		// ### Machine parameters ###
-		/// nominal power Pn [VA]
-		double mNomPower;
-		/// nominal voltage Vn [V] (RMS)
-		double mNomVolt;
-		/// nominal frequency fn [Hz]
-		double mNomFreq;
-		/// nominal field current Ifn [A]
-		double mNomFieldCur;
-
-		/// stator resistance Rs[Ohm]
-		double mRs;
-		/// leakage inductance Ll [H]
-		double mLl;
-		/// d-axis mutual inductance Lmd [H]
-		double mLmd;
-		/// unsaturated d-axis mutual inductance Lmd [H]
-		double mLmd0;
-		/// q-axis mutual inductance Lmq [H]
-		double mLmq;
-		/// unsaturated q-axis mutual inductance Lmq [H]
-		double mLmq0;
-		/// field resistance Rfd [Ohm]
-		double mRfd;
-		/// field leakage inductance Llfd [H]
-		double mLlfd;
-		/// d-axis damper resistance Rkd [Ohm]
-		double mRkd;
-		/// d-axis damper leakage inductance Llkd [H]
-		double mLlkd;
-		/// q-axis damper resistance 1 Rkq1 [Ohm]
-		double mRkq1;
-		/// q-axis damper leakage inductance 1 Llkq1 [H]
-		double mLlkq1;
-		/// q-axis damper resistance 2 Rkq2 [Ohm]
-		double mRkq2;
-		/// q-axis damper leakage inductance 2 Llkq2 [H]
-		double mLlkq2;
-		/// q winding inductance
-		double mLaq;
-		/// d winding inductance
-		double mLad;
-
 		/// d dynamic inductance
-		double mDLmd;
+		Real mDLmd;
 		/// q dynamic inductance
-		double mDLmq;
+		Real mDLmq;
 
-		double mLS;
-		double mLM;
+		/// Auxiliar inductance
+		Real mLa;
+		/// Auxiliar inductance
+		Real mLb;
 
+		//Real mThetaMech;
+		Real mThetaMech2;
+		/// initial theta
+		Real mTheta0;
 
 		/// d dynamic flux
-		double mDPsid;
+		Real mDPsid;
 		/// q dynamic flux
-		double mDPsiq;
-
+		Real mDPsiq;
 		/// Dynamic d voltage
-		double mDVq;
+		Real mDVq;
 		/// Dynamic q voltage
-		double mDVd;
+		Real mDVd;
+		/// Dynamic voltage phase a _ Real part
+		Real mDVaRe;
+		/// Dynamic voltage phase a _ Imaginary part
+		Real mDVaIm;
+		/// Dynamic voltage phase b _ Real part
+		Real mDVbRe;
+		/// Dynamic voltage phase b _ Imaginary part
+		Real mDVbIm;
+		/// Dynamic voltage phase c _ Real part
+		Real mDVcRe;
+		/// Dynamic voltage phase c _ Imaginary part
+		Real mDVcIm;
 
-		/// Dynamic voltage phase a
-		double mDVaRe;
-		double mDVaIm;
-		/// Dynamic voltage phase b
-		double mDVbRe;
-		double mDVbIm;
-		/// Dynamic voltage phase c
-		double mDVcRe;
-		double mDVcIm;
+		/// Interface voltage phase a _ Real part
+		Real mVaRe;
+		/// Interface voltage phase a _ Imaginary part
+		Real mVaIm;
+		/// Interface voltage phase b _ Real part
+		Real mVbRe;
+		/// Interface voltage phase b _ Imaginary part
+		Real mVbIm;
+		/// Interface voltage phase c _ Real part
+		Real mVcRe;
+		/// Interface voltage phase c _ Imaginary part
+		Real mVcIm;
 
-		//omega 2
-		double mOmMech2;
+		/// Interface current phase a _ Real part
+		Real mIaRe;
+		/// Interface current phase a _ Imaginary part
+		Real mIaIm;
+		/// Interface current phase b _ Real part
+		Real mIbRe;
+		/// Interface current phase b _ Imaginary part
+		Real mIbIm;
+		/// Interface current phase c _ Real part
+		Real mIcRe;
+		/// Interface current phase c _ Imaginary part
+		Real mIcIm;
 
-
-		/// inertia J [kg*m^2]
-		double mJ;
-		/// number of poles
-		int mPoleNumber;
-		/// inertia coefficient H
-		double mH;
-
-		// ### Stator base values ###
-		/// specifies if the machine parameters are transformed to per unit
-		SynchGenStateType mStateType;
-		/// base stator voltage
-		double mBase_v;
-		/// base stator voltage RMS
-		double mBase_V_RMS;
-		/// base stator current
-		double mBase_i;
-		/// base stator current RMS
-		double mBase_I_RMS;
-		/// base stator impedance
-		double mBase_Z;
-		/// base electrical angular frequency
-		double mBase_OmElec;
-		/// base mechanical angular frequency
-		double mBase_OmMech;
-		/// base stator inductance
-		double mBase_L;
-		/// base torque
-		double mBase_T;
-		/// base flux linkage
-		double mBase_Psi;
-
-		/// base field current
-		double mBase_ifd;
-		/// base field voltage
-		double mBase_vfd;
-		/// base field impedance
-		double mBase_Zfd;
-		/// base field inductance
-		double mBase_Lfd;
-
-
-		// ### State variables ###
-		/// rotor speed omega_r
-		double mOmMech;
-		/// theta
-		double mThetaMech;
-		double mThetaMech2;
-		/// mechanical Power Pm [W]
-		double mMechPower;
-		/// mechanical torque
-		double mMechTorque;
-		/// electrical torque
-		double mElecTorque;
-		double mElecTorque_hist;
-
-		///Number of damping windings in q
-		double DampingWinding = 2;
-
-
-		DPSMatrix R_load = DPSMatrix::Zero(6, 6);
-
-		DPSMatrix L_constant = DPSMatrix::Zero(3, 3);
-		DPSMatrix L_cp = DPSMatrix::Zero(6, 6);
-		DPSMatrix R_cp = DPSMatrix::Zero(6, 6);
-
-		/// voltage vector q d 0 kq1 kq2 df kd
-		DPSMatrix mVoltages2 = DPSMatrix::Zero(7, 1);
-		/// flux linkage vector
-		DPSMatrix mFluxes = DPSMatrix::Zero(7, 1);
-		/// current vector
-		DPSMatrix mCurrents2 = DPSMatrix::Zero(7, 1);
-
-		/// voltage vector q d 0 fd kd kq1 kq2
-		double mVd;
-		double mVq;
-		double mV0;
-		double mVfd;
-		double mVkd;
-		double mVkq1;
-		double mVkq2;
-
-		/// current vector q d 0 fd kd kq1 kq2
-		double mId;
-		double mIq;
-		double mI0;
-		double mIfd;
-		double mIkd;
-		double mIkq1;
-		double mIkq2;
-
-		/// flux linkage vector q d 0 fd kd kq1 kq2
-		double mPsid;
-		double mPsiq;
-		double mPsi0;
-		double mPsifd;
-		double mPsikd;
-		double mPsikq1;
-		double mPsikq2;
-
-		/// Interface voltage vector
-		double mVaRe;
-		double mVbRe;
-		double mVcRe;
-		double mVaIm;
-		double mVbIm;
-		double mVcIm;
-
-		/// Interface voltage vector
-		double mIaRe;
-		double mIbRe;
-		double mIcRe;
-		double mIaIm;
-		double mIbIm;
-		double mIcIm;
-
-		/// Magnetizing flux linkage in qd axes
+		/// Magnetizing flux linkage in q axis
 		Real mPsimq;
+		/// Magnetizing flux linkage in d axis
 		Real mPsimd;
 
+		/// Rotor flux vector
+		Matrix mRotorFlux = Matrix::Zero(4, 1);
+		/// Dq stator current vector
+		Matrix mDqStatorCurrents = Matrix::Zero(2, 1);
+		/// Dq stator current vector - from previous time step
+		Matrix mDqStatorCurrents_hist = Matrix::Zero(2, 1);
 
-		// Auxiliar Matrix for DP
-		MatrixComp LD02 = MatrixComp::Zero(3, 3);
-		DPSMatrix LD0 = DPSMatrix::Zero(3, 3);
-		MatrixComp LD1 = MatrixComp::Zero(3, 3);
-		MatrixComp A1 = MatrixComp::Zero(3, 3);
-		MatrixComp B1 = MatrixComp::Zero(3, 3);
-		MatrixComp A2 = MatrixComp::Zero(3, 3);
-		MatrixComp B2 = MatrixComp::Zero(3, 3);
-		DPSMatrix L_VP_SFA = DPSMatrix::Zero(6, 6);
-		DPSMatrix R_VP_SFA = DPSMatrix::Zero(6, 6);
-		Complex alpha;
 
 		// ### Useful Matrices ###
 		/// inductance matrix
-		DPSMatrix mDInductanceMat = DPSMatrix::Zero(3, 3);
-		/// resistance matrix
-		DPSMatrix mResistanceMat = DPSMatrix::Zero(3, 3);
-		/// reactance matrix
-		//DPSMatrix mReactanceMat = DPSMatrix::Zero(7, 7);
-		/// omega - flux matrix
-		//DPSMatrix mOmegaFluxMat = DPSMatrix::Zero(7, 7);
-		/// matrix for reversing stator current directions in calculations with respect to other currents
-		//DPSMatrix mReverseCurrents = DPSMatrix::Zero(7, 7);
+		Matrix mDInductanceMat = Matrix::Zero(3, 3);
+		/// load resistance matrix
+		Matrix R_load = Matrix::Zero(6, 6);
+		/// Constant part of equivalent stator inductance
+		Matrix LD0 = Matrix::Zero(3, 3);
+		/// Equivalent stator inductance matrix
+		Matrix L_EQ = Matrix::Zero(6, 6);
+		/// Equivalent stator resistance matrix
+		Matrix R_EQ = Matrix::Zero(6, 6);
 
-		double mLa;
-		double mLb;
-
-		//Historical term of voltage
-		DPSMatrix mV_hist = DPSMatrix::Zero(3, 1);
-
-		//Phase Voltages in pu
-		DPSMatrix mVabcRe = DPSMatrix::Zero(3, 1);
-		DPSMatrix mVabcIm = DPSMatrix::Zero(3, 1);
-		DPSMatrix mVabc = DPSMatrix::Zero(6, 1);
-
-
-		//Historical term of current
-		DPSMatrix mIabcRe = DPSMatrix::Zero(3, 1);
-		DPSMatrix mIabcIm = DPSMatrix::Zero(3, 1);
-		DPSMatrix mIabc = DPSMatrix::Zero(6, 1);
-
-		//Historical term of voltage
-		DPSMatrix mDVabcRe = DPSMatrix::Zero(3, 1);
-		DPSMatrix mDVabcIm = DPSMatrix::Zero(3, 1);
-		DPSMatrix mDVabc = DPSMatrix::Zero(6, 1);
-
-		//Phase Voltages
-		DPSMatrix mVoltageVector = DPSMatrix::Zero(6, 1);
-
-		//Phase Currents
-		DPSMatrix mCurrentVector = DPSMatrix::Zero(6, 1);
+		/// Interfase phase current vector
+		Matrix mIabc = Matrix::Zero(6, 1);
+		/// Dynamic Voltage vector
+		Matrix mDVabc = Matrix::Zero(6, 1);
+		/// Dynamic Voltage vector
+		Matrix mDVabc_hist = Matrix::Zero(6, 1);
 
 
 		/// Matrix paremeters for integration of rotor flux linkages - A
-		DPSMatrix A_flux = DPSMatrix::Zero(4, 4);
+		Matrix A_flux = Matrix::Zero(4, 4);
 		/// Variables for integration of rotor flux linkages - B
-		DPSMatrix B_flux = DPSMatrix::Zero(4, 2);
+		Matrix B_flux = Matrix::Zero(4, 2);
 		/// Variables for integration of rotor flux linkages - C
-		DPSMatrix C_flux = DPSMatrix::Zero(4, 1);
-
-		DPSMatrix mRotorFlux = DPSMatrix::Zero(4, 1);
-		DPSMatrix mDqStatorCurrents = DPSMatrix::Zero(2, 1);
-		DPSMatrix mDqStatorCurrents_hist = DPSMatrix::Zero(2, 1);
+		Matrix C_flux = Matrix::Zero(4, 1);
 
 
 	public:
 		VoltageBehindReactanceDP() { };
+		~VoltageBehindReactanceDP();
 
 		/// Initializes the per unit or stator referred machine parameters with the machine parameters given in per unit or
 		/// stator referred parameters depending on the setting of parameter type.
 		/// The initialization mode depends on the setting of state type.
-		VoltageBehindReactanceDP(std::string name, int node1, int node2, int node3,
-			Real nomPower, Real nomVolt, Real nomFreq, int poleNumber, Real nomFieldCur,
+		VoltageBehindReactanceDP(String name, Int node1, Int node2, Int node3,
+			Real nomPower, Real nomVolt, Real nomFreq, Int poleNumber, Real nomFieldCur,
 			Real Rs, Real Ll, Real Lmd, Real Lmd0, Real Lmq, Real Lmq0,
 			Real Rfd, Real Llfd, Real Rkd, Real Llkd,
 			Real Rkq1, Real Llkq1, Real Rkq2, Real Llkq2,
-			Real inertia);
-
-		/// Initializes the per unit or stator referred machine parameters with the machine parameters given in per unit.
-		/// The initialization mode depends on the setting of state type.
-		void initWithPerUnitParam(
-			Real Rs, Real Ll, Real Lmd, Real Lmd0, Real Lmq, Real Lmq0,
-			Real Rfd, Real Llfd, Real Rkd, Real Llkd, Real Rkq1, Real Llkq1,
-			Real Rkq2, Real Llkq2,
-			Real H);
+			Real inertia, bool logActive = false);
 
 		/// Initializes states in per unit or stator referred variables depending on the setting of the state type.
 		/// Function parameters have to be given in real units.
 		void init(Real om, Real dt,
-			Real initActivePower, Real initReactivePower, Real initTerminalVolt, Real initVoltAngle);
-
-		/// Initializes states in per unit. All machine parameters are assumed to be in per unit.
-		/// Function parameters have to be given in real units.
-		void initStatesInPerUnit(Real initActivePower, Real initReactivePower,
-			Real initTerminalVolt, Real initVoltAngle);
+			Real initActivePower, Real initReactivePower, Real initTerminalVolt, Real initVoltAngle, Real initFieldVoltage, Real initMechPower);
 
 		/// Performs an Euler forward step with the state space model of a synchronous generator
 		/// to calculate the flux and current from the voltage vector.
-		void step(SystemModel& system, Real fieldVoltage, Real mechPower, Real time);
+		void step(SystemModel& system, Real time);
 
 		/// Performs an Euler forward step with the state space model of a synchronous generator
 		/// to calculate the flux and current from the voltage vector in per unit.
-		void stepInPerUnit(Real om, Real dt, Real fieldVoltage, Real mechPower, Real time, NumericalMethod numMethod);
-
-		//void FormTheveninEquivalent(Real dt);
-		void CalculateLandR(Real theta, Real omega_s, Real omega);
-		void CalculateLandR(Real theta, Real omega_s, Real omega, Real time);
+		void stepInPerUnit(Real om, Real dt, Real time, NumericalMethod numMethod);
 
 		/// Retrieves calculated voltage from simulation for next step
 		void postStep(SystemModel& system);
 
 		/// abc to dq
-		DPSMatrix abcToDq0Transform(Real theta, Real aRe, Real bRe, Real cRe, Real aIm, Real bIm, Real cIm);
+		Matrix abcToDq0Transform(Real theta, Real aRe, Real bRe, Real cRe, Real aIm, Real bIm, Real cIm);
 
 		/// dq to abc
-		DPSMatrix dq0ToAbcTransform(Real theta, Real d, Real q, Real zero);
+		Matrix dq0ToAbcTransform(Real theta, Real d, Real q, Real zero);
 
+		void CalculateLandR(Real time);
 
-		DPSMatrix& getVoltages() { return mVoltageVector; }
-		DPSMatrix& getCurrents() { return mCurrentVector; }
-		//DPSMatrix& getFluxes() { return mFluxes; }
-		double getElectricalTorque() { return mElecTorque; }
-		double getRotationalSpeed() { return mOmMech; }
-		double getRotorPosition() { return mThetaMech2; }
+		Matrix& getRotorFluxes() { return mRotorFlux; }
+		Matrix& getDqStatorCurrents() { return mDqStatorCurrents; }
+		Real getElectricalTorque() { return mElecTorque*mBase_T; }
+		Real getRotationalSpeed() { return mOmMech*mBase_OmMech; }
+		Real getRotorPosition() { return mThetaMech; }
 
 		void init(Real om, Real dt) { }
 		void applySystemMatrixStamp(SystemModel& system) { }
 		void applyRightSideVectorStamp(SystemModel& system) { }
-		void step(SystemModel& system, Real time) { }
+
 	};
 }

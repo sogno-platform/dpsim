@@ -26,17 +26,11 @@
 #include "SynchronGenUnitTest.h"
 #include "SyncGenUnitTestVBR.h"
 #include "ReferenceCircuits.h"
-#include "ShmemTest.h"
 #include "SimpleCircuitTest.h"
 
 using namespace DPsim;
 
 int main(int argc, char* argv[]) {
-
-	// #### Shared memory interface tests ################
-	//shmemRTExample();
-	//shmemDistributed(argc, argv);
-	//shmemDistributedRef();
 
 	// #### Reference circuits test ################
 	simulationExample1();
@@ -69,6 +63,10 @@ int main(int argc, char* argv[]) {
 
 	// DP classic dq model
 	//SynGenDPUnitTestBalancedResLoad();
+	//SynGenDPUnitTestThreePhaseFault();
+
+	//EMT Simplified Model
+	SimpSynGenUnitTestThreePhaseFault();
 
 	// EMT VBR model
 	//SynGenUnitTestVBR();

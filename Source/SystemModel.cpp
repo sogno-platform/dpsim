@@ -31,20 +31,20 @@ void SystemModel::initialize(Int numNodes, Int numIdealVS) {
 
 	if (mSimType == SimulationType::EMT) {
 		mRightSideVector = Matrix::Zero(mNumNodes, 1);
-		mLeftSideVector = DPSMatrix::Zero(mNumNodes, 1);
-		mSystemMatrix = DPSMatrix::Zero(mNumNodes, mNumNodes);
+		mLeftSideVector = Matrix::Zero(mNumNodes, 1);
+		mSystemMatrix = Matrix::Zero(mNumNodes, mNumNodes);
 	}
 	else {
-		mRightSideVector = DPSMatrix::Zero(2 * mNumNodes, 1);
-		mLeftSideVector = DPSMatrix::Zero(2 * mNumNodes, 1);
-		mSystemMatrix = DPSMatrix::Zero(2 * mNumNodes, 2 * mNumNodes);
+		mRightSideVector = Matrix::Zero(2 * mNumNodes, 1);
+		mLeftSideVector = Matrix::Zero(2 * mNumNodes, 1);
+		mSystemMatrix = Matrix::Zero(2 * mNumNodes, 2 * mNumNodes);
 		mCurrentMatrix.resize(mNumNodes, mNumNodes);
 	}
 }
 
 void SystemModel::addSystemMatrix(Matrix& systemMatrix) {
 	mSystemMatrixVector.push_back(systemMatrix);
-	Eigen::PartialPivLU<DPSMatrix> luFactored = Eigen::PartialPivLU<DPSMatrix>(systemMatrix);
+	Eigen::PartialPivLU<Matrix> luFactored = Eigen::PartialPivLU<Matrix>(systemMatrix);
 	mLuFactoredVector.push_back(luFactored);
 }
 
@@ -78,7 +78,7 @@ void SystemModel::solve() {
 }
 
 
-void SystemModel::switchSystemMatrix(Int systemMatrixIndex) {
+void SystemModel::switchSystemMatrix(UInt systemMatrixIndex) {
 	if (systemMatrixIndex < mSystemMatrixVector.size()) {
 		mSystemMatrix = mSystemMatrixVector[systemMatrixIndex];
 		mLuFactored = mLuFactoredVector[systemMatrixIndex];
