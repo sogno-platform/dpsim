@@ -65,10 +65,13 @@ int main(int argc, char* argv[]) {
 	//SynGenDPUnitTestBalancedResLoad();
 	//SynGenDPUnitTestThreePhaseFault();
 
+	//EMT Simplified Model
+	SimpSynGenUnitTestThreePhaseFault();
+
 	// EMT VBR model
 	//SynGenUnitTestVBR();
 	// DP VBR model
-	SynGenUnitTestVBRDP();
+	//SynGenUnitTestVBRDP();
 
 	// #### Variable frequency tests ################
 	//RXLineResLoad();

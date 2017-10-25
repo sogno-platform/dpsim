@@ -36,4 +36,7 @@ namespace DPsim {
 	void SynGenDPUnitTestBalancedResLoad();
 	void SynGenDPUnitTestThreePhaseFault();
 
+	// Simplified generator tests
+	void SimpSynGenUnitTestThreePhaseFault();
+
 }

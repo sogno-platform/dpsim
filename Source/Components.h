@@ -43,3 +43,4 @@
 #include "Components/PiLineDP.h"
 #include "Components/VoltageBehindReactanceEMT.h"
 #include "Components/VoltageBehindReactanceDP.h"
+#include "Components/SimplifiedSynchronGeneratorEMT.h"

@@ -141,6 +141,9 @@
     <ClInclude Include="..\..\Source\Components\VoltageBehindReactanceEMT.h">
       <Filter>Headerdateien\Components</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\Source\Components\SimplifiedSynchronGeneratorEMT.h">
+      <Filter>Headerdateien\Components</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\Source\Logger.cpp">
@@ -249,6 +252,9 @@
       <Filter>Quelldateien\Components</Filter>
     </ClCompile>
     <ClCompile Include="..\..\Source\Components\VoltSourceResFreqDP.cpp">
+      <Filter>Quelldateien\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\Components\SimplifiedSynchronGeneratorEMT.cpp">
       <Filter>Quelldateien\Components</Filter>
     </ClCompile>
   </ItemGroup>
