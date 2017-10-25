@@ -78,7 +78,7 @@ void SystemModel::solve() {
 }
 
 
-void SystemModel::switchSystemMatrix(Int systemMatrixIndex) {
+void SystemModel::switchSystemMatrix(UInt systemMatrixIndex) {
 	if (systemMatrixIndex < mSystemMatrixVector.size()) {
 		mSystemMatrix = mSystemMatrixVector[systemMatrixIndex];
 		mLuFactored = mLuFactoredVector[systemMatrixIndex];
