@@ -83,7 +83,7 @@ void SystemModel::solve() {
 	mLeftSideVector = mLuFactored.solve(mRightSideVector);
 }
 
-void SystemModel::switchSystemMatrix(Int systemMatrixIndex) {
+void SystemModel::switchSystemMatrix(UInt systemMatrixIndex) {
 	if (systemMatrixIndex < mSystemMatrixVector.size()) {
 		mSystemMatrix = mSystemMatrixVector[systemMatrixIndex];
 		mLuFactored = mLuFactoredVector[systemMatrixIndex];

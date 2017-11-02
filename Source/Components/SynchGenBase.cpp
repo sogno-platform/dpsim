@@ -49,6 +49,12 @@ SynchGenBase::SynchGenBase(String name, Int node1, Int node2, Int node3,
 	mBase_L = mBase_Z / mBase_OmElec;
 	mBase_Psi = mBase_L * mBase_i;
 	mBase_T = mNomPower / mBase_OmMech;
+
+	// Create logging file
+	if (mLogActive) {
+		String filename = "SynGen_" + mName + ".csv";
+		mLog = new Logger(filename);
+	}
 	
 	if (Rkq2 == 0 && Llkq2 == 0) {
 		mNumDampingWindings = 1;
@@ -65,6 +71,7 @@ void SynchGenBase::initWithPerUnitParam(
 	Real Rfd, Real Llfd, Real Rkd, Real Llkd,
 	Real Rkq1, Real Llkq1, Real Rkq2, Real Llkq2,
 	Real H) {	
+
 
 	// base rotor values
 	mBase_ifd = Lmd * mNomFieldCur;
@@ -87,99 +94,14 @@ void SynchGenBase::initWithPerUnitParam(
 	mRkq2 = Rkq2;
 	mLlkq2 = Llkq2;
 	mH = H;
-	// Additional inductances according to Krause
-	mLaq = 1 / (1 / mLmq + 1 / mLl + 1 / mLlkq1 + 1 / mLlkq2);
-	mLad = 1 / (1 / mLmd + 1 / mLl + 1 / mLlkd + 1 / mLlfd);
 
-	// Determinant of Ld (inductance matrix of d axis)
-	detLd = (mLmd + mLl)*(-mLlfd*mLlkd - mLlfd*mLmd - mLmd*mLlkd) + mLmd*mLmd*(mLlfd + mLlkd);
-	
-	// Determinant of Lq (inductance matrix of q axis)
-	if (mNumDampingWindings == 2) {
-		detLq = -mLmq*mLlkq2*(mLlkq1 + mLl) - mLl*mLlkq1*(mLlkq2 + mLmq);
-	}
-	else {
-		detLq = -(mLl + mLmq)*(mLlkq1 + mLmq) + mLmq*mLmq;
-	}
 }
 
-void SynchGenBase::init(Real om, Real dt,
-	Real initActivePower, Real initReactivePower, Real initTerminalVolt,
-	Real initVoltAngle, Real initFieldVoltage, Real initMechPower) {
-
-	// Create matrices for state space representation
-	if (mNumDampingWindings == 2) {
-		mInductanceMat = Matrix::Zero(7, 7);
-		mResistanceMat = Matrix::Zero(7, 7);
-		mReactanceMat = Matrix::Zero(7, 7);
-		mOmegaFluxMat = Matrix::Zero(7, 7);
-
-		mInductanceMat <<
-			-(mLl + mLmq), 0, 0, mLmq, mLmq, 0, 0,
-			0, -(mLl + mLmd), 0, 0, 0, mLmd, mLmd,
-			0, 0, -mLl, 0, 0, 0, 0,
-			-mLmq, 0, 0, mLlkq1 + mLmq, mLmq, 0, 0,
-			-mLmq, 0, 0, mLmq, mLlkq2 + mLmq, 0, 0,
-			0, -mLmd, 0, 0, 0, mLlfd + mLmd, mLmd,
-			0, -mLmd, 0, 0, 0, mLmd, mLlkd + mLmd;
-
-		mResistanceMat <<
-			mRs, 0, 0, 0, 0, 0, 0,
-			0, mRs, 0, 0, 0, 0, 0,
-			0, 0, mRs, 0, 0, 0, 0,
-			0, 0, 0, -mRkq1, 0, 0, 0,
-			0, 0, 0, 0, -mRkq2, 0, 0,
-			0, 0, 0, 0, 0, -mRfd, 0,
-			0, 0, 0, 0, 0, 0, -mRkd;
-
-		mOmegaFluxMat <<
-			0, 1, 0, 0, 0, 0, 0,
-			-1, 0, 0, 0, 0, 0, 0,
-			0, 0, 0, 0, 0, 0, 0,
-			0, 0, 0, 0, 0, 0, 0,
-			0, 0, 0, 0, 0, 0, 0,
-			0, 0, 0, 0, 0, 0, 0,
-			0, 0, 0, 0, 0, 0, 0;
-	}
-	else {
-		mInductanceMat = Matrix::Zero(6, 6);
-		mResistanceMat = Matrix::Zero(6, 6);
-		mReactanceMat = Matrix::Zero(6, 6);
-		mOmegaFluxMat = Matrix::Zero(6, 6);
-
-		mInductanceMat <<
-			-(mLl + mLmq), 0, 0, mLmq, 0, 0,
-			0, -(mLl + mLmd), 0, 0, mLmd, mLmd,
-			0, 0, -mLl, 0, 0, 0,
-			-mLmq, 0, 0, mLlkq1 + mLmq, 0, 0,
-			0, -mLmd, 0, 0, mLlfd + mLmd, mLmd,
-			0, -mLmd, 0, 0, mLmd, mLlkd + mLmd;
-		mResistanceMat <<
-			mRs, 0, 0, 0, 0, 0,
-			0, mRs, 0, 0, 0, 0,
-			0, 0, mRs, 0, 0, 0,
-			0, 0, 0, -mRkq1, 0, 0,
-			0, 0, 0, 0, -mRfd, 0,
-			0, 0, 0, 0, 0, -mRkd;
-
-		mOmegaFluxMat <<
-			0, 1, 0, 0, 0, 0,
-			-1, 0, 0, 0, 0, 0,
-			0, 0, 0, 0, 0, 0,
-			0, 0, 0, 0, 0, 0,
-			0, 0, 0, 0, 0, 0,
-			0, 0, 0, 0, 0, 0;
-	}
-
-	mReactanceMat = mInductanceMat.inverse();
-
-	// steady state per unit initial value
-	initStatesInPerUnit(initActivePower, initReactivePower, initTerminalVolt, initVoltAngle, initFieldVoltage, initMechPower);
-}
 
 void SynchGenBase::initStatesInPerUnit(Real initActivePower, Real initReactivePower,
 	Real initTerminalVolt, Real initVoltAngle, Real initFieldVoltage, Real initMechPower) {
 
+	// #### Electrical variables ##############################################
 	Real init_P = initActivePower / mNomPower;
 	Real init_Q = initReactivePower / mNomPower;
 	Real init_S = sqrt(pow(init_P, 2.) + pow(init_Q, 2.));
@@ -220,5 +142,29 @@ void SynchGenBase::initStatesInPerUnit(Real initActivePower, Real initReactivePo
 	mMechPower = initMechPower / mNomPower;
 	mMechTorque = mMechPower / 1;
 	mThetaMech = initVoltAngle + init_delta - PI / 2.;
+
+	mVd = init_vd;
+	mVq = init_vq;
+	mV0 = 0;
+	mVfd = init_vfd;
+	mVkd = 0;
+	mVkq1 = 0;
+	mVkq2 = 0;
+
+	mIq = init_iq;
+	mId = init_id;
+	mI0 = 0;
+	mIfd = init_ifd;
+	mIkd = 0;
+	mIkq1 = 0;
+	mIkq2 = 0;
+
+	mPsiq = init_psiq;
+	mPsid = init_psid;
+	mPsi0 = 0;
+	mPsifd = init_psifd;
+	mPsikd = init_psid1;
+	mPsikq1 = init_psiq1;
+	mPsikq2 = init_psiq2;
 }
 

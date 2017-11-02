@@ -86,15 +86,6 @@ namespace DPsim {
 		Real mRkq2;
 		/// q-axis damper leakage inductance 2 Llkq2 [H]
 		Real mLlkq2;
-		/// q winding inductance
-		Real mLaq;
-		/// d winding inductance
-		Real mLad;
-
-		/// Determinant of Ld (inductance matrix of d axis)
-		Real detLd;
-		/// Determinant of Lq (inductance matrix of q axis)
-		Real detLq;
 		
 		// ### Stator base values ###
 		/// specifies if the machine parameters are transformed to per unit
@@ -134,12 +125,7 @@ namespace DPsim {
 		Matrix mInductanceMat;
 		/// resistance matrix
 		Matrix mResistanceMat;
-		/// reactance matrix
-		Matrix mReactanceMat;
-		/// omega - flux matrix
-		Matrix mOmegaFluxMat;
-		/// matrix for reversing stator current directions in calculations with respect to other currents
-		Matrix mReverseCurrents;
+
 
 		// ### State variables ###
 		/// rotor speed omega_r
@@ -152,6 +138,52 @@ namespace DPsim {
 		Real mMechTorque;
 		/// electrical torque
 		Real mElecTorque;
+
+		/// stator voltage in d axis
+		Real mVd;
+		/// stator voltage in q axis
+		Real mVq;
+		/// stator voltage 0 component
+		Real mV0;
+		/// Rotor voltage field winding
+		Real mVfd;
+		/// Rotor voltage damping winding in d axis
+		Real mVkd;
+		/// Rotor voltage damping winding 1 in q axis
+		Real mVkq1;
+		/// Rotor voltage damping winding 2 in q axis
+		Real mVkq2;
+
+		/// stator current in d axis
+		Real mId;
+		/// stator current in q axis
+		Real mIq;
+		/// stator current 0 component
+		Real mI0;
+		/// Rotor current field winding
+		Real mIfd;
+		/// Rotor current damping winding in d axis
+		Real mIkd;
+		/// Rotor current damping winding 1 in q axis
+		Real mIkq1;
+		/// Rotor current damping winding 2 in q axis
+		Real mIkq2;
+
+		/// stator flux linkage in d axis
+		Real mPsid;
+		/// stator flux linkage in q axis
+		Real mPsiq;
+		/// stator flux linkage 0 component
+		Real mPsi0;
+		/// rotor flux linkage in field winding
+		Real mPsifd;
+		/// rotor flux linkage in damping winding from d axis
+		Real mPsikd;
+		/// rotor flux linkage in damping winding 1 from q axis
+		Real mPsikq1;
+		/// rotor flux linkage in damping winding 2 from q axis
+		Real mPsikq2;
+
 
 	public:
 		SynchGenBase() { };
@@ -180,7 +212,7 @@ namespace DPsim {
 		/// Function parameters have to be given in real units.
 		void init(Real om, Real dt,
 			Real initActivePower, Real initReactivePower, Real initTerminalVolt,
-			Real initVoltAngle, Real initFieldVoltage, Real initMechPower);
+			Real initVoltAngle, Real initFieldVoltage, Real initMechPower) { };
 
 		/// Initializes states in per unit. All machine parameters are assumed to be in per unit.
 		/// Function parameters have to be given in real units.

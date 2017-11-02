@@ -142,6 +142,8 @@ int DPsim::parseArguments(int argc, const char* argv[],
 			break;
 		}
 	}
+
+	return 0;
 }
 
 int DPsim::checkArguments(bool rt, Int split, String splitNode) {
@@ -159,6 +161,8 @@ int DPsim::checkArguments(bool rt, Int split, String splitNode) {
 		std::cerr << "Realtime and distributed simulation currently not supported in combination with Python" << std::endl;
 		return 1;
 	}
+
+	return 0;
 }
 
 // Console main that supports command line arguments

@@ -31,37 +31,9 @@ SynchronGenerator::SynchronGenerator(String name, Int node1, Int node2, Int node
 	Real Rfd, Real Llfd, Real Rkd, Real Llkd,
 	Real Rkq1, Real Llkq1, Real Rkq2, Real Llkq2,
 	Real inertia, bool logActive)
-	: BaseComponent(name, node1, node2, node3, logActive) {
-
-	this->mNode1 = node1 - 1;
-	this->mNode2 = node2 - 1;
-	this->mNode3 = node3 - 1;
-
-	mNomPower = nomPower;
-	mNomVolt = nomVolt;
-	mNomFreq = nomFreq;
-	mPoleNumber = poleNumber;
-	mNomFieldCur = nomFieldCur;
-
-	// base stator values
-	mBase_V_RMS = mNomVolt / sqrt(3);
-	mBase_v = mBase_V_RMS * sqrt(2);
-	mBase_I_RMS = mNomPower / (3 * mBase_V_RMS);
-	mBase_i = mBase_I_RMS * sqrt(2);
-	mBase_Z = mBase_v / mBase_i;
-	mBase_OmElec = 2 * DPS_PI * mNomFreq;
-	mBase_OmMech = mBase_OmElec / (mPoleNumber / 2);
-	mBase_L = mBase_Z / mBase_OmElec;
-	mBase_Psi = mBase_L * mBase_i;
-	mBase_T = mNomPower / mBase_OmMech;
-
-	// Create logging file
-	if (mLogActive) {
-		String filename = "SynGen_" + mName + ".csv";
-		mLog = new Logger(filename);
-	}
-
-	initWithPerUnitParam(Rs, Ll, Lmd, Lmd0, Lmq, Lmq0, Rfd, Llfd, Rkd, Llkd, Rkq1, Llkq1, Rkq2, Llkq2, inertia);
+	: SynchGenBase(name, node1, node2, node3, nomPower, nomVolt, nomFreq, poleNumber, nomFieldCur,
+		Rs, Ll, Lmd, Lmd0, Lmq, Lmq0, Rfd, Llfd, Rkd, Llkd, Rkq1, Llkq1, Rkq2, Llkq2,
+		inertia, logActive) {
 
 }
 
@@ -71,65 +43,24 @@ SynchronGenerator::~SynchronGenerator() {
 	}
 }
 
-void SynchronGenerator::initWithPerUnitParam(
-	Real Rs, Real Ll, Real Lmd, Real Lmd0, Real Lmq, Real Lmq0,
-	Real Rfd, Real Llfd, Real Rkd, Real Llkd,
-	Real Rkq1, Real Llkq1, Real Rkq2, Real Llkq2,
-	Real H) {
-
-	if (Rkq2 == 0 && Llkq2 == 0)
-	{
-		DampingWindings = 1;
-		mVoltages2 = Matrix::Zero(6, 1);
-		mFluxes2 = Matrix::Zero(6, 1);
-		mCurrents2 = Matrix::Zero(6, 1);
-	}
-	else
-	{
-		DampingWindings = 2;
-	}
-
-	// base rotor values
-	mBase_ifd = Lmd * mNomFieldCur;
-	mBase_vfd = mNomPower / mBase_ifd;
-	mBase_Zfd = mBase_vfd / mBase_ifd;
-	mBase_Lfd = mBase_Zfd / mBase_OmElec;
-
-	mRs = Rs;
-	mLl = Ll;
-	mLmd = Lmd;
-	mLmd0 = Lmd0;
-	mLmq = Lmq;
-	mLmq0 = Lmq0;
-	mRfd = Rfd;
-	mLlfd = Llfd;
-	mRkd = Rkd;
-	mLlkd = Llkd;
-	mRkq1 = Rkq1;
-	mLlkq1 = Llkq1;
-	mRkq2 = Rkq2;
-	mLlkq2 = Llkq2;
-	mH = H;
-	// Additional inductances according to Krause
-	mLaq = 1 / (1 / mLmq + 1 / mLl + 1 / mLlkq1 + 1 / mLlkq2);
-	mLad = 1 / (1 / mLmd + 1 / mLl + 1 / mLlkd + 1 / mLlfd);
-
-	// Determinant of Ld (inductance matrix of d axis)
-	detLd = (mLmd + mLl)*(-mLlfd*mLlkd - mLlfd*mLmd - mLmd*mLlkd) + mLmd*mLmd*(mLlfd + mLlkd);
-	// Determinant of Lq (inductance matrix of q axis)
-	if (DampingWindings == 2)
-		detLq = -mLmq*mLlkq2*(mLlkq1 + mLl) - mLl*mLlkq1*(mLlkq2 + mLmq);
-	else
-		detLq = -(mLl + mLmq)*(mLlkq1 + mLmq) + mLmq*mLmq;
-}
 
 void SynchronGenerator::init(Real om, Real dt,
 	Real initActivePower, Real initReactivePower, Real initTerminalVolt,
 	Real initVoltAngle, Real initFieldVoltage, Real initMechPower) {
 
 	// Create matrices for state space representation
-	if (DampingWindings == 2)
+	if (mNumDampingWindings == 2)
 	{
+		mVoltages = Matrix::Zero(7, 1);
+		mFluxes = Matrix::Zero(7, 1);
+		mCurrents = Matrix::Zero(7, 1);
+		mInductanceMat = Matrix::Zero(7, 7);
+		mResistanceMat = Matrix::Zero(7, 7);
+		mReactanceMat = Matrix::Zero(7, 7);
+		mOmegaFluxMat = Matrix::Zero(7, 7);
+
+		//Determinant of Lq(inductance matrix of q axis)
+		detLq = -mLmq*mLlkq2*(mLlkq1 + mLl) - mLl*mLlkq1*(mLlkq2 + mLmq);
 		mInductanceMat <<
 			-(mLl + mLmq), 0, 0, mLmq, mLmq, 0, 0,
 			0, -(mLl + mLmd), 0, 0, 0, mLmd, mLmd,
@@ -159,10 +90,16 @@ void SynchronGenerator::init(Real om, Real dt,
 	}
 	else
 	{
+		mVoltages = Matrix::Zero(6, 1);
+		mFluxes = Matrix::Zero(6, 1);
+		mCurrents = Matrix::Zero(6, 1);
 		mInductanceMat = Matrix::Zero(6, 6);
 		mResistanceMat = Matrix::Zero(6, 6);
 		mReactanceMat = Matrix::Zero(6, 6);
 		mOmegaFluxMat = Matrix::Zero(6, 6);
+
+		//Determinant of Lq(inductance matrix of q axis)
+		detLq = -(mLl + mLmq)*(mLlkq1 + mLmq) + mLmq*mLmq;
 
 		mInductanceMat <<
 			-(mLl + mLmq), 0, 0, mLmq, 0, 0,
@@ -187,6 +124,8 @@ void SynchronGenerator::init(Real om, Real dt,
 			0, 0, 0, 0, 0, 0,
 			0, 0, 0, 0, 0, 0;
 	}
+	// Determinant of Ld (inductance matrix of d axis)
+	detLd = (mLmd + mLl)*(-mLlfd*mLlkd - mLlfd*mLmd - mLmd*mLlkd) + mLmd*mLmd*(mLlfd + mLlkd);
 
 	mReactanceMat = mInductanceMat.inverse();
 
@@ -208,99 +147,6 @@ void SynchronGenerator::init(Real om, Real dt,
 	mIcIm = dq0ToAbcTransform(mThetaMech, mId * mBase_i, mIq * mBase_i, mI0 * mBase_i)(5);
 }
 
-void SynchronGenerator::initStatesInPerUnit(Real initActivePower, Real initReactivePower,
-	Real initTerminalVolt, Real initVoltAngle, Real initFieldVoltage, Real initMechPower) {
-
-	// #### Electrical variables ##############################################
-	Real init_P = initActivePower / mNomPower;
-	Real init_Q = initReactivePower / mNomPower;
-	Real init_S = sqrt(pow(init_P, 2.) + pow(init_Q, 2.));
-	Real init_vt = initTerminalVolt / mBase_v;
-	Real init_it = init_S / init_vt;
-
-	// power factor
-	Real init_pf = acos(init_P / init_S);
-
-	// load angle
-	Real init_delta = atan(((mLmq + mLl) * init_it * cos(init_pf) - mRs * init_it * sin(init_pf)) /
-		(init_vt + mRs * init_it * cos(init_pf) + (mLmq + mLl) * init_it * sin(init_pf)));
-	Real init_delta_deg = init_delta / DPS_PI * 180;
-
-	// dq stator voltages and currents
-	Real init_vd = init_vt * sin(init_delta);
-	Real init_vq = init_vt * cos(init_delta);
-	Real init_id = init_it * sin(init_delta + init_pf);
-	Real init_iq = init_it * cos(init_delta + init_pf);
-
-	// rotor voltage and current
-	Real init_ifd = (init_vq + mRs * init_iq + (mLmd + mLl) * init_id) / mLmd;
-	Real init_vfd = mRfd * init_ifd;
-
-	// flux linkages
-	Real init_psid = init_vq + mRs * init_iq;
-	Real init_psiq = -init_vd - mRs * init_id;
-	Real init_psifd = (mLmd + mLlfd) * init_ifd - mLmd * init_id;
-	Real init_psid1 = mLmd * (init_ifd - init_id);
-	Real init_psiq1 = -mLmq * init_iq;
-	Real init_psiq2 = -mLmq * init_iq;
-
-	// rotor mechanical variables
-	Real init_Te = init_P + mRs * pow(init_it, 2.);
-	mOmMech = 1;
-
-	mVoltages(0, 0) = init_vq;
-	mVoltages(1, 0) = init_vd;
-	mVoltages(2, 0) = 0;
-	mVoltages(3, 0) = 0;
-	mVoltages(4, 0) = 0;
-	mVoltages(5, 0) = init_vfd;
-	mVoltages(6, 0) = 0;
-
-	mVd = init_vd;
-	mVq = init_vq;
-	mV0 = 0;
-	mVfd = init_vfd;
-	mVkd = 0;
-	mVkq1 = 0;
-	mVkq2 = 0;
-
-	mCurrents(0, 0) = init_iq;
-	mCurrents(1, 0) = init_id;
-	mCurrents(2, 0) = 0;
-	mCurrents(3, 0) = 0;
-	mCurrents(4, 0) = 0;
-	mCurrents(5, 0) = init_ifd;
-	mCurrents(6, 0) = 0;
-
-	mId = init_id;
-	mIq = init_iq;
-	mI0 = 0;
-	mIfd = init_ifd;
-	mIkd = 0;
-	mIkq1 = 0;
-	mIkq2 = 0;
-
-	mFluxes(0, 0) = init_psiq;
-	mFluxes(1, 0) = init_psid;
-	mFluxes(2, 0) = 0;
-	mFluxes(3, 0) = init_psiq1;
-	mFluxes(4, 0) = init_psiq2;
-	mFluxes(5, 0) = init_psifd;
-	mFluxes(6, 0) = init_psid1;
-
-	mPsid = init_psid;
-	mPsiq = init_psiq;
-	mPsi0 = 0;
-	mPsifd = init_psifd;
-	mPsikd = init_psid1;
-	mPsikq1 = init_psiq1;
-	mPsikq2 = init_psiq2;
-
-	// #### mechanical variables ##############################################
-	mMechPower = initMechPower / mNomPower;
-	mMechTorque = mMechPower / 1;
-	mThetaMech = initVoltAngle + init_delta - PI / 2.;
-}
 
 void SynchronGenerator::step(SystemModel& system, Real time) {
 
@@ -345,7 +191,7 @@ void SynchronGenerator::stepInPerUnit(Real om, Real dt, Real time, NumericalMeth
 
 	if (numMethod == NumericalMethod::Trapezoidal_current) {
 
-		if (DampingWindings == 2)
+		if (mNumDampingWindings == 2)
 		{
 			Matrix A = (mReactanceMat*mResistanceMat);
 			Matrix B = mReactanceMat;
@@ -443,7 +289,7 @@ void SynchronGenerator::stepInPerUnit(Real om, Real dt, Real time, NumericalMeth
 		mOmMech = mOmMech + dt * (1 / (2 * mH) * (mMechTorque - mElecTorque));
 
 		//Calculation of flux
-		if (DampingWindings == 2)
+		if (mNumDampingWindings == 2)
 		{
 			Matrix A = (mResistanceMat*mReactanceMat - mOmMech*mOmegaFluxMat);
 			Matrix B = Matrix::Identity(7, 7);
@@ -519,7 +365,7 @@ void SynchronGenerator::stepInPerUnit(Real om, Real dt, Real time, NumericalMeth
 		mId = ((mLlfd*mLlkd + mLmd*(mLlfd + mLlkd))*mPsid - mLmd*mLlkd*mPsifd - mLlfd*mLmd*mPsikd) / detLd;
 		mIfd = (mLlkd*mLmd*mPsid - (mLl*mLlkd + mLmd*(mLl + mLlkd))*mPsifd + mLmd*mLl*mPsikd) / detLd;
 		mIkd = (mLmd*mLlfd*mPsid + mLmd*mLl*mPsifd - (mLmd*(mLlfd + mLl) + mLl*mLlfd)*mPsikd) / detLd;
-		if (DampingWindings == 2)
+		if (mNumDampingWindings == 2)
 		{
 			mIq = ((mLlkq1*mLlkq2 + mLmq*(mLlkq1 + mLlkq2))*mPsiq - mLmq*mLlkq2*mPsikq1 - mLmq*mLlkq1*mPsikq2) / detLq;
 			mIkq1 = (mLmq*mLlkq2*mPsiq - (mLmq*(mLlkq2 + mLl) + mLl*mLlkq2)*mPsikq1 + mLmq*mLl*mPsikq2) / detLq;
@@ -542,9 +388,9 @@ void SynchronGenerator::stepInPerUnit(Real om, Real dt, Real time, NumericalMeth
 	mIbIm = mBase_i * dq0ToAbcTransform(mThetaMech, mId, mIq, mI0)(4);
 	mIcIm = mBase_i * dq0ToAbcTransform(mThetaMech, mId, mIq, mI0)(5);
 
-	if (DampingWindings == 2)
+	if (mNumDampingWindings == 2)
 	{
-		mCurrents2 << mIq,
+		mCurrents << mIq,
 			mId,
 			mI0,
 			mIkq1,
@@ -552,7 +398,7 @@ void SynchronGenerator::stepInPerUnit(Real om, Real dt, Real time, NumericalMeth
 			mIfd,
 			mIkd;
 
-		mVoltages2 << mVq,
+		mVoltages << mVq,
 			mVd,
 			mV0,
 			mVkq1,
@@ -560,7 +406,7 @@ void SynchronGenerator::stepInPerUnit(Real om, Real dt, Real time, NumericalMeth
 			mVfd,
 			mVkd;
 
-		mFluxes2 << mPsiq,
+		mFluxes << mPsiq,
 			mPsid,
 			mPsi0,
 			mPsikq1,
@@ -570,21 +416,21 @@ void SynchronGenerator::stepInPerUnit(Real om, Real dt, Real time, NumericalMeth
 	}
 	else
 	{
-		mCurrents2 << mIq,
+		mCurrents << mIq,
 			mId,
 			mI0,
 			mIkq1,
 			mIfd,
 			mIkd;
 
-		mVoltages2 << mVq,
+		mVoltages << mVq,
 			mVd,
 			mV0,
 			mVkq1,
 			mVfd,
 			mVkd;
 
-		mFluxes2 << mPsiq,
+		mFluxes << mPsiq,
 			mPsid,
 			mPsi0,
 			mPsikq1,

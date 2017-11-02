@@ -45,3 +45,4 @@
 #include "Components/VoltageBehindReactanceDP.h"
 #include "Components/IdealTransformerDP.h"
 #include "Components/PQLoadDP.h"
+#include "Components/SimplifiedSynchronGeneratorEMT.h"

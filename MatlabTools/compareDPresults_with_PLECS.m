@@ -2,7 +2,7 @@ clc
 clear
 %% read PLECS results
 
-Results_PLECS = csvread('../../vsa/Results/SynGenDqEmt_ABCFault_PLECS/Voltages_and_currents.csv'); 
+Results_PLECS = csvread('../../vsa/Results/SynGenDqEmt_ABCFault_Simulink/Voltages_and_currents.csv'); 
 %Te_PLECS = csvread('../../vsa/Results/SynGenVBREmt_ABCFault_PLECS/electrical_torque.csv'); 
 %omega_PLECS = csvread('../../vsa/Results/SynGenVBREmt_ABCFault_PLECS/omega.csv'); 
 %theta_PLECS = csvread('../../vsa/Results/SynGenVBREmt_ABCFault_PLECS/theta.csv'); 
@@ -10,9 +10,9 @@ Results_PLECS = csvread('../../vsa/Results/SynGenDqEmt_ABCFault_PLECS/Voltages_a
 %% Read data from DP simulation and calculate absolute value and phase
 
 % Read values from CSV files
-voltageDP = csvread('../../vsa/Results/TestingFunctionPointer/data_vt.csv');
-currentDP = csvread('../../vsa/Results/TestingFunctionPointer/data_j.csv');
-%Log_SynGen = csvread('../../vsa/Results/SynGenVbrDynPh_ABCFault_DPsim_1_Damping/SynGen_gen.csv');
+voltageDP = csvread('../../vsa/Results/SynGenVBRDynPh_ABCFault_DPsim/data_vt.csv');
+currentDP = csvread('../../vsa/Results/SynGenVBRDynPh_ABCFault_DPsim/data_j.csv');
+%Log_SynGen = csvread('../../vsa/Results//SynGenDqDynPh_ABCFault_DPsim/Euler/SynGen_gen.csv');
 compOffsetDP = (size(voltageDP,2) - 1) / 2;
 
 % Calculate Voltage DP absolute value
@@ -62,7 +62,7 @@ hold on
 DPplot = plot(voltageShiftDP(:,1),voltageShiftDP(:,2));
 DPabsPlot = plot(voltageAbsDP(:,1),voltageAbsDP(:,2));
 title('Voltage A');
-legend('Voltage Phase a PLECS', 'DP shift a', 'DP abs a')
+legend('Voltage Phase a Simulink', 'DP shift a', 'DP abs a')
 xlabel('time [s]')
 ylabel('voltage [V]')
 
@@ -74,7 +74,7 @@ hold on
 DPplot2 = plot(voltageShiftDP(:,1),voltageShiftDP(:,3));
 DPabsPlot2 = plot(voltageAbsDP(:,1),voltageAbsDP(:,3));
 title('Voltage B');
-legend('Voltage Phase b PLECS', 'DP shift b', 'DP abs b')
+legend('Voltage Phase b Simulink', 'DP shift b', 'DP abs b')
 xlabel('time [s]')
 ylabel('voltage [V]')
 
@@ -86,7 +86,7 @@ hold on
 DPplot3 = plot(voltageShiftDP(:,1),voltageShiftDP(:,4));
 DPabsPlot3 = plot(voltageAbsDP(:,1),voltageAbsDP(:,4));
 title('Voltage C');
-legend('Voltage Phase c PLECS', 'DP shift c', 'DP abs c')
+legend('Voltage Phase c Simulink', 'DP shift c', 'DP abs c')
 xlabel('time [s]')
 ylabel('voltage [V]')
 
@@ -97,10 +97,10 @@ figure(4)
 hold off
 PLECSplotc = plot(Results_PLECS(:,1), Results_PLECS(:,5), '--');
 hold on
-DPplotc = plot(currentShiftDP(:,1),-currentShiftDP(:,2));
+DPplotc = plot(currentShiftDP(:,1),currentShiftDP(:,2));
 DPabsPlotc = plot(currentAbsDP(:,1),currentAbsDP(:,2));
 title('Current phase A');
-legend('Current Phase a PLECS', 'DP shift a', 'DP abs a')
+legend('Current Phase a Simulink', 'DP shift a', 'DP abs a')
 xlabel('time [s]')
 ylabel('current [A]')
 
@@ -109,10 +109,10 @@ figure(5)
 hold off
 PLECSplot2c = plot(Results_PLECS(:,1), Results_PLECS(:,6), '--');
 hold on
-DPplot2c = plot(currentShiftDP(:,1),-currentShiftDP(:,3));
+DPplot2c = plot(currentShiftDP(:,1),currentShiftDP(:,3));
 DPabsPlot2c = plot(currentAbsDP(:,1),currentAbsDP(:,3));
 title('Current phase B');
-legend('Current Phase b PLECS', 'DP shift b', 'DP abs b')
+legend('Current Phase b Simulink', 'DP shift b', 'DP abs b')
 xlabel('time [s]')
 ylabel('current [A]')
 
@@ -121,16 +121,16 @@ figure(6)
 hold off
 PLECSplot3c = plot(Results_PLECS(:,1), Results_PLECS(:,7), '--');
 hold on
-DPplot3c = plot(currentShiftDP(:,1),-currentShiftDP(:,4));
+DPplot3c = plot(currentShiftDP(:,1),currentShiftDP(:,4));
 DPabsPlot3c = plot(currentAbsDP(:,1),currentAbsDP(:,4));
 title('Currents phase C');
-legend('Current Phase c PLECS', 'DP shift c', 'DP abs c')
+legend('Current Phase c Simulink', 'DP shift c', 'DP abs c')
 xlabel('time [s]')
 ylabel('current [A]')
 
 % figure(7)
 % hold off
-% plot(Log_SynGen(:,1),Log_SynGen(:,3));
+% plot(Log_SynGen(:,1),Log_SynGen(:,21));
 % hold on
 % plot(Results_PLECS(:,1),omega_PLECS);
 % 
@@ -139,7 +139,7 @@ ylabel('current [A]')
 % 
 % figure(8)
 % hold off
-% plot(Log_SynGen(:,1),Log_SynGen(:,2));
+% plot(Log_SynGen(:,1),Log_SynGen(:,20));
 % hold on
 % plot(Results_PLECS(:,1),Te_PLECS);
 % 
@@ -148,7 +148,7 @@ ylabel('current [A]')
 % 
 % figure(9)
 % hold off
-% plot(Log_SynGen(:,1),Log_SynGen(:,4));
+% plot(Log_SynGen(:,1),Log_SynGen(:,22));
 % hold on
 % plot(Results_PLECS(:,1),theta_PLECS);
 % 
