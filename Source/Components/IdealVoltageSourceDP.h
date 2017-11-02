@@ -35,7 +35,6 @@ namespace DPsim {
 	class IdealVoltageSource : public BaseComponent {
 
 	protected:
-
 		//  ### Ideal Voltage source parameters ###
 		/// Complex voltage [V]
 		Complex mVoltage;
@@ -48,13 +47,13 @@ namespace DPsim {
 		Real mCurrenti;
 
 		/// Number of voltage source (first, second...)
-		Int number;
+		Int mNumber;
 
 	public:
 		IdealVoltageSource() { ; };
 
 		/// define paramenters of the voltage source
-		IdealVoltageSource(String name, Int src, Int dest, Complex voltage, Int num);
+		IdealVoltageSource(String name, Int src, Int dest, Complex voltage);
 
 		void init(Real om, Real dt) { }
 

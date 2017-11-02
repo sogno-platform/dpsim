@@ -27,8 +27,20 @@
 
 namespace DPsim {
 	// TODO: currently just modeled as an RxLine, possibly use more complex model?
-	class TwoWindingTransformer : public RxLine {
+	class TwoWindingTransformer : public BaseComponent {
 	public:
+		TwoWindingTransformer() { };
 		TwoWindingTransformer(String name, Int node1, Int node2, Real resistance, Real inductance);
+
+		TwoWindingTransformer(String name, Int node1, Int node2, Real resistance, Real inductance);
+
+		
+
+		virtual void init(Real om, Real dt);
+		void applySystemMatrixStamp(SystemModel& system);
+		void applyRightSideVectorStamp(SystemModel& system) { }
+		void step(SystemModel& system, Real time);
+		void postStep(SystemModel& system);
+		Complex getCurrent(SystemModel& system);
 	};
 };

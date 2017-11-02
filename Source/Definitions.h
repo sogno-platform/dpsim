@@ -1,4 +1,4 @@
-/** Mathematics library
+/** Definitions
  *
  * @file
  * @author Markus Mirz <mmirz@eonerc.rwth-aachen.de>
@@ -39,8 +39,7 @@
 #define PI M_PI
 #endif
 
-namespace DPsim
-{
+namespace DPsim {
 	// ### deprecated math section ###
 	//typedef Eigen::MatrixXd Matrix;
 
@@ -49,6 +48,7 @@ namespace DPsim
 	typedef int Int;
 	typedef double Real;
 	typedef std::complex<Real> Complex;
+	typedef bool Bool;
 	typedef std::string String;
 	
 	// ### Constants ###

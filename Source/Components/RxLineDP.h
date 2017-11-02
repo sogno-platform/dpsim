@@ -23,7 +23,7 @@
 
 #pragma once
 
-#include "../Components.h"
+#include "BaseComponent.h"
 
 namespace DPsim {
 
@@ -63,7 +63,7 @@ namespace DPsim {
 		RxLine(String name, Int node1, Int node2, Real resistance, Real inductance);
 		RxLine(String name, Int node1, Int node2, Int node3, Real resistance, Real inductance);
 
-		virtual void init(Real om, Real dt);
+		void init(Real om, Real dt);
 		void applySystemMatrixStamp(SystemModel& system);
 		void applyRightSideVectorStamp(SystemModel& system) { }
 		void step(SystemModel& system, Real time);

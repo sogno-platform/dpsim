@@ -77,65 +77,60 @@ Simulation::~Simulation() {
 
 void Simulation::initialize(std::vector<BaseComponent*> newElements) {
 	Int maxNode = 0;
-	Int numIdealVS = 0;
-	Int numLines = 0;
+	Int currentVirtualNode = 0;
 
-	// Calculate the number of nodes by going through the list of elements
+	// Calculate the mNumber of nodes by going through the list of elements
 	// TODO we use the values from the first element vector right now and assume that
 	// these values don't change on switches
-	for (std::vector<BaseComponent*>::iterator it = newElements.begin(); it != newElements.end(); ++it) {
-		if ((*it)->getNode1() > maxNode) {
-			maxNode = (*it)->getNode1();
-		}
-		if ((*it)->getNode2() > maxNode) {
-			maxNode = (*it)->getNode2();
-		}
+	for (BaseComponent* element : newElements) {
 
-		if (dynamic_cast<IdealVoltageSource*>(*it)) {
-			numIdealVS = numIdealVS + 1;
+		// determine maximum node in component list
+		if (element->getNode1() > maxNode) {
+			maxNode = element->getNode1();
 		}
-		if (dynamic_cast<RxLine*>(*it) || dynamic_cast<PiLine*>(*it)) {
-			if ((*it)->getNode3() != -1) {
-				numLines = numLines + 1;
-			}
+		if (element->getNode2() > maxNode) {
+			maxNode = element->getNode2();
+		}		
+	}
 
+	// Check if element requires virtual node and if so set one
+	for (BaseComponent* element : newElements) {
+		if (element->getHasVirtualNode()) {
+			currentVirtualNode++;
+			element->setVirtualNode(currentVirtualNode);
 		}
 	}
 
-	Int numNodes = maxNode + 1 + numIdealVS + numLines;
-	mSystemModel.initialize(numNodes,numIdealVS);
+	// Calculate size of system matrix
+	Int numNodes = maxNode + currentVirtualNode + 1;
+
+	// Create right and left vector
+	mSystemModel.initialize(numNodes);
+	
 	// Initialize right side vector and components
-	for (std::vector<BaseComponent*>::iterator it = newElements.begin(); it != newElements.end(); ++it) {
-		(*it)->init(mSystemModel.getOmega(), mSystemModel.getTimeStep());
-		(*it)->applyRightSideVectorStamp(mSystemModel);
+	for (BaseComponent* element : newElements) {
+		element->init(mSystemModel.getOmega(), mSystemModel.getTimeStep());
+		element->applyRightSideVectorStamp(mSystemModel);
 	}
+
+	// Create new system matrix and apply matrix stamps
 	addSystemTopology(newElements);
+
 	switchSystemMatrix(0);
 	mElements = mElementsVector[0];
 }
 
 void Simulation::addSystemTopology(std::vector<BaseComponent*> newElements) {
 	mElementsVector.push_back(newElements);
-	// TODO: it would be cleaner to pass the matrix reference to all the stamp methods
-	// and not have an implicit "current" matrix for those in SystemModel
-	Matrix& systemMatrix = mSystemModel.getCurrentSystemMatrix();
-	// save old matrix in case we already defined one
-	Matrix systemMatrixCopy = systemMatrix;
+	
+	// It is assumed that the system size does not change
+	mSystemModel.createEmptySystemMatrix();
 
-	if (mSystemModel.getSimType() == SimulationType::EMT) {
-		systemMatrix = Matrix::Zero(mSystemModel.getNumNodes(), mSystemModel.getNumNodes());
-	}
-	else {
-		systemMatrix = Matrix::Zero(2 * mSystemModel.getNumNodes(), 2 * mSystemModel.getNumNodes());
+	for (BaseComponent* element : newElements) {
+		element->applySystemMatrixStamp(mSystemModel);
 	}
 
-	for (std::vector<BaseComponent*>::iterator it = newElements.begin(); it != newElements.end(); ++it) {
-		(*it)->applySystemMatrixStamp(mSystemModel);
-	}
-
-	mSystemModel.addSystemMatrix(systemMatrix);
-	// restore saved copy
-	systemMatrix = systemMatrixCopy;
+	mSystemModel.computeLUFromSystemMatrix();
 }
 
 

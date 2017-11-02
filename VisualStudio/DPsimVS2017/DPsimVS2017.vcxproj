@@ -168,7 +168,6 @@
     <ClInclude Include="..\..\Source\Components\SynchronGeneratorDP.h" />
     <ClInclude Include="..\..\Source\Components\SynchronGeneratorEMT.h" />
     <ClInclude Include="..\..\Source\Components\SynchronGeneratorEMTFnP.h" />
-    <ClInclude Include="..\..\Source\Components\TwoWindingTransformerDP.h" />
     <ClInclude Include="..\..\Source\Components\VoltageBehindReactanceDP.h" />
     <ClInclude Include="..\..\Source\Components\VoltageBehindReactanceEMT.h" />
     <ClInclude Include="..\..\Source\Components\VoltSourceResDP.h" />
@@ -178,13 +177,15 @@
     <ClInclude Include="..\..\Source\IntegrationMethod.h" />
     <ClInclude Include="..\..\Source\Logger.h" />
     <ClInclude Include="..\..\Source\Definitions.h" />
+    <ClInclude Include="..\..\Source\LoggerFactory.h" />
+    <ClInclude Include="..\..\Source\MathLibrary.h" />
     <ClInclude Include="..\..\Source\Simulation.h" />
     <ClInclude Include="..\..\Source\SystemModel.h" />
     <ClInclude Include="..\..\Source\Utilities.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\Examples\C++\CIMTest.cpp" />
-    <ClCompile Include="..\..\Examples\C++\DPsimExample.cpp" />
+    <ClCompile Include="..\..\Examples\C++\DPsimExampleCIM.cpp" />
     <ClCompile Include="..\..\Examples\C++\ReferenceCircuits.cpp" />
     <ClCompile Include="..\..\Examples\C++\ShmemTest.cpp" />
     <ClCompile Include="..\..\Examples\C++\SimpleCircuitTest.cpp" />
@@ -207,7 +208,6 @@
     <ClCompile Include="..\..\Source\Components\SynchGenBase.cpp" />
     <ClCompile Include="..\..\Source\Components\SynchronGeneratorDP.cpp" />
     <ClCompile Include="..\..\Source\Components\SynchronGeneratorEMT.cpp" />
-    <ClCompile Include="..\..\Source\Components\TwoWindingTransformerDP.cpp" />
     <ClCompile Include="..\..\Source\Components\VoltageBehindReachtanceDP.cpp" />
     <ClCompile Include="..\..\Source\Components\VoltageBehindReactanceEMT.cpp" />
     <ClCompile Include="..\..\Source\Components\VoltSourceResDP.cpp" />
@@ -216,6 +216,7 @@
     <ClCompile Include="..\..\Source\Components\VoltSourceResFreqEMT.cpp" />
     <ClCompile Include="..\..\Source\IntegrationMethod.cpp" />
     <ClCompile Include="..\..\Source\Logger.cpp" />
+    <ClCompile Include="..\..\Source\MathLibrary.cpp" />
     <ClCompile Include="..\..\Source\Simulation.cpp" />
     <ClCompile Include="..\..\Source\SystemModel.cpp" />
     <ClCompile Include="..\..\Source\Utilities.cpp" />

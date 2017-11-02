@@ -21,7 +21,6 @@
  *********************************************************************************/
 
 #include <iostream>
-#include <string>
 
 #include "CIMTest.h"
 #include "CIMReader.h"
@@ -43,14 +42,13 @@ void readFixedCIMFiles_IEEE9bus() {
 }
 
 Int testCIMReader(std::list<String> filenames) {
-	
-	// Read CIM data
-	CIMReader reader(50);
 	Logger log("cim.log"), llog("lvector-cim.csv"), rlog("rvector-cim.csv");
+	// Read CIM data
+	CIMReader reader(50, log);	
 
 	for (String & filename : filenames) {
 		if (!reader.addFile(filename))
-			std::cerr << "Failed to read file " << filename << std::endl;
+			log.Log(LogLevel::INFO) << "Failed to read file " << filename << std::endl;
 	}
 
 	reader.parseFiles();

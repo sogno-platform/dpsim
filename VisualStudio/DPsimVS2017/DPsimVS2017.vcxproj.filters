@@ -132,9 +132,6 @@
     <ClInclude Include="..\..\Source\Components\SynchronGeneratorDP.h">
       <Filter>Headerdateien\Components</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\Source\Components\TwoWindingTransformerDP.h">
-      <Filter>Headerdateien\Components</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\Source\Components\VoltSourceResDP.h">
       <Filter>Headerdateien\Components</Filter>
     </ClInclude>
@@ -142,6 +139,12 @@
       <Filter>Headerdateien\Components</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Source\Definitions.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\MathLibrary.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\LoggerFactory.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
   </ItemGroup>
@@ -181,9 +184,6 @@
     </ClCompile>
     <ClCompile Include="..\..\Source\CIMReader.cpp">
       <Filter>Quelldateien</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\Examples\C++\DPsimExample.cpp">
-      <Filter>Quelldateien\Examples</Filter>
     </ClCompile>
     <ClCompile Include="..\..\Examples\C++\ReferenceCircuits.cpp">
       <Filter>Quelldateien\Examples</Filter>
@@ -245,14 +245,17 @@
     <ClCompile Include="..\..\Source\Components\SynchronGeneratorDP.cpp">
       <Filter>Quelldateien\Components</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\Source\Components\TwoWindingTransformerDP.cpp">
-      <Filter>Quelldateien\Components</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\Source\Components\VoltSourceResDP.cpp">
       <Filter>Quelldateien\Components</Filter>
     </ClCompile>
     <ClCompile Include="..\..\Source\Components\VoltSourceResFreqDP.cpp">
       <Filter>Quelldateien\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\MathLibrary.cpp">
+      <Filter>Quelldateien</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Examples\C++\DPsimExampleCIM.cpp">
+      <Filter>Quelldateien\Examples</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

@@ -23,10 +23,7 @@
 #include "CIMReader.h"
 #include "CIMModel.hpp"
 #include "IEC61970.hpp"
-
-#include "Components/PQLoadDP.h"
-#include "Components/RxLineDP.h"
-#include "Components/TwoWindingTransformerDP.h"
+#include "Components.h"
 
 using namespace DPsim;
 using namespace IEC61970::Base::Core;
@@ -75,11 +72,12 @@ Real CIMReader::unitValue(Real value, UnitMultiplier mult) {
 }
 
 // TODO: fix error with frequency and angular frequency
-CIMReader::CIMReader(Real systemFrequency) {
+CIMReader::CIMReader(Real systemFrequency, Logger& logger) {
 	mModel.setDependencyCheckOff();
 	mNumVoltageSources = 0;
 	mVoltages = nullptr;
 	mFrequency = systemFrequency;
+	mLogger = &logger;
 }
 
 CIMReader::~CIMReader() {
@@ -90,85 +88,106 @@ CIMReader::~CIMReader() {
 BaseComponent* CIMReader::mapACLineSegment(ACLineSegment* line) {
 	std::vector<Int> &nodes = mEqNodeMap.at(line->mRID); // TODO can fail
 	if (nodes.size() != 2) {
-		std::cerr << "ACLineSegment " << line->mRID << " has " << nodes.size() << " terminals, ignoring" << std::endl;
+		mLogger->Log(LogLevel::WARN) << "ACLineSegment " << line->mRID << " has " << nodes.size() << " terminals, ignoring" << std::endl;
 		// TODO better error handling (throw exception?)
 		return nullptr;
 	}
 	Real r = line->r.value;
 	Real x = line->x.value;
-	std::cerr << "RxLine " << line->name << " rid=" << line->mRID << " node1=" << nodes[0] << " node2=" << nodes[1];
-	std::cerr << " R=" << r << " X=" << x << std::endl;
+	mLogger->Log(LogLevel::INFO) << "RxLine " << line->name << " rid=" << line->mRID << " node1=" << nodes[0] << " node2=" << nodes[1] 
+		<< " R=" << r << " X=" << x << std::endl;
 	return new RxLine(line->name, nodes[0], nodes[1], r, x/mFrequency);
 }
 
 BaseComponent* CIMReader::mapAsynchronousMachine(AsynchronousMachine* machine) {
-	return newFlowPQLoad(machine->mRID, machine->name);
+	return newPQLoad(machine->mRID, machine->name);
 }
 
 BaseComponent* CIMReader::mapEnergyConsumer(EnergyConsumer* con) {
-	return newFlowPQLoad(con->mRID, con->name);
+	return newPQLoad(con->mRID, con->name);
 }
 
 BaseComponent* CIMReader::mapEquivalentInjection(EquivalentInjection* inj) {
-	return newFlowPQLoad(inj->mRID, inj->name);
+	return newPQLoad(inj->mRID, inj->name);
 }
 
 BaseComponent* CIMReader::mapExternalNetworkInjection(ExternalNetworkInjection* inj) {
 	std::vector<Int> &nodes = mEqNodeMap.at(inj->mRID);
 	if (nodes.size() != 1) {
-		std::cerr << "ExternalNetworkInjection " << inj->mRID << " has " << nodes.size() << " terminals, ignoring" << std::endl;
+		mLogger->Log(LogLevel::ERROR) << "ExternalNetworkInjection " << inj->mRID << " has " << nodes.size() << " terminals, ignoring" << std::endl;
 		return nullptr;
 	}
 	Int node = nodes[0];
 	SvVoltage *volt = mVoltages[node-1];
 	if (!volt) {
-		std::cerr << "ExternalNetworkInjection " << inj->mRID << " has no associated SvVoltage, ignoring" << std::endl;
+		mLogger->Log(LogLevel::ERROR) << "ExternalNetworkInjection " << inj->mRID << " has no associated SvVoltage, ignoring" << std::endl;
 		return nullptr;
 	}
-	std::cerr << "IdealVoltageSource " << inj->name << " rid=" << inj->mRID << " node1=" << node << " node2=0 ";
-	std::cerr << " V=" << volt->v.value << "<" << volt->angle.value << std::endl;
-	return new IdealVoltageSource(inj->name, node, 0, Complex(volt->v.value, volt->angle.value*PI/180), ++mNumVoltageSources);
+	mLogger->Log(LogLevel::INFO) << "IdealVoltageSource " << inj->name << " rid=" << inj->mRID << " node1=" << node 
+		<< " V=" << volt->v.value << "<" << volt->angle.value << std::endl;
+	return new IdealVoltageSource(inj->name, node, 0, Complex(volt->v.value, volt->angle.value*PI/180));
 }
 
 BaseComponent* CIMReader::mapPowerTransformer(PowerTransformer* trans) {
 	std::vector<Int> &nodes = mEqNodeMap.at(trans->mRID);
 	if (nodes.size() != trans->PowerTransformerEnd.size()) {
-		std::cerr << "PowerTransformer " << trans->mRID << " has differing number of terminals and windings, ignoring" << std::endl;
+		mLogger->Log(LogLevel::WARN) << "PowerTransformer " << trans->mRID << " has differing number of terminals and windings, ignoring" << std::endl;
 		return nullptr;
 	}
 	if (nodes.size() != 2) {
 		// TODO three windings also possible
-		std::cerr << "PowerTransformer " << trans->mRID << " has " << nodes.size() << "terminals; ignoring" << std::endl;
+		mLogger->Log(LogLevel::WARN) << "PowerTransformer " << trans->mRID << " has " << nodes.size() << "terminals; ignoring" << std::endl;
 		return nullptr;
 	}
+
+	mLogger->Log(LogLevel::INFO) << "PowerTransformer " << trans->name << " rid=" << trans->mRID
+		<< " node1=" << nodes[0] << " node2=" << nodes[1] << std::endl;
+
+	Real ratio = 1;
+	Real voltageNode1;
+	Real voltageNode2;
 	for (PowerTransformerEnd *end : trans->PowerTransformerEnd) {
 		if (end->endNumber == 1) {
-			std::cerr << "PowerTransformer " << trans->name << " rid=" << trans->mRID << " node1=" << nodes[0] << "node2=" << nodes[1] << " R=" << end->r.value << " X=" << end->x.value << std::endl;
-			return new TwoWindingTransformer(trans->name, nodes[0], nodes[1], end->r.value, end->x.value/mFrequency);
+			mLogger->Log(LogLevel::INFO) << "    PowerTransformerEnd_1 " << end->name 
+				<< " Vrated=" << end->ratedU.value << " R=" << end->r.value << " X=" << end->x.value << std::endl;
+			voltageNode1 = end->ratedU.value;
 		}
+		if (end->endNumber == 2) {
+			mLogger->Log(LogLevel::INFO) << "    PowerTransformerEnd_2 " << end->name
+				<< " Vrated=" << end->ratedU.value << " R=" << end->r.value << " X=" << end->x.value << std::endl;
+			voltageNode2 = end->ratedU.value;
+		}
+
+		
+		return new IdealTransformerDP(trans->name, nodes[0], nodes[1], 1, 0);
+
 	}
-	std::cerr << "PowerTransformer " << trans->mRID << " has no primary End; ignoring" << std::endl;
+	mLogger->Log(LogLevel::WARN) << "PowerTransformer " << trans->mRID << " has no primary End; ignoring" << std::endl;
 	return nullptr;
 }
 
-BaseComponent* CIMReader::mapSynchronousMachine(SynchronousMachine* machine) {
-	// TODO: don't use SvVoltage, but map to a SynchronGenerator instead?
+// TODO: don't use SvVoltage, but map to a SynchronGenerator instead
+BaseComponent* CIMReader::mapSynchronousMachine(SynchronousMachine* machine) {	
 	std::vector<int> &nodes = mEqNodeMap.at(machine->mRID);
 	if (nodes.size() != 1) {
-		// TODO check with the model if this assumption (only 1 terminal) is always true
-		std::cerr << "SynchronousMachine " << machine->mRID << " has " << nodes.size() << " terminals, ignoring" << std::endl;
+		// TODO: check with the model if this assumption (only 1 terminal) is always true
+		mLogger->Log(LogLevel::WARN) << "SynchronousMachine " << machine->mRID << " has " << nodes.size() << " terminals, ignoring" << std::endl;
 		return nullptr;
 	}
 	Int node = nodes[0];
 	SvVoltage *volt = mVoltages[node-1];
 	if (!volt) {
-		std::cerr << "SynchronousMachine " << machine->mRID << " has no associated SvVoltage, ignoring" << std::endl;
+		mLogger->Log(LogLevel::WARN) << "SynchronousMachine " << machine->mRID << " has no associated SvVoltage, ignoring" << std::endl;
 		return nullptr;
 	}
-	std::cerr << "VoltSourceRes " << machine->name << " rid=" << machine->mRID << " node1=" << node << " node2=0 ";
-	std::cerr << " V=" << volt->v.value << "<" << volt->angle.value << " R=" << machine->r.value << std::endl;
+	mLogger->Log(LogLevel::INFO) << "VoltSourceRes " << machine->name << " rid=" << machine->mRID << " node=" << node
+	<< " V=" << volt->v.value << "<" << volt->angle.value << std::endl;
+
+	// Apply unit multipliers according to CGMES convetions.
+	volt->v.value = CIMReader::unitValue(volt->v.value, UnitMultiplier::k);
+
 	// TODO is it appropiate to use this resistance here
-	return new VoltSourceRes(machine->name, node, 0, Complex(volt->v.value, volt->angle.value*PI/180), machine->r.value);
+	return new IdealVoltageSource(machine->name, node, 0, Complex(volt->v.value, volt->angle.value*PI/180));
 }
 
 BaseComponent* CIMReader::mapComponent(BaseClass* obj) {
@@ -189,26 +208,34 @@ BaseComponent* CIMReader::mapComponent(BaseClass* obj) {
 	return nullptr;
 }
 
-BaseComponent* CIMReader::newFlowPQLoad(String rid, String name) {
+BaseComponent* CIMReader::newPQLoad(String rid, String name) {
 	std::vector<int> &nodes = mEqNodeMap.at(rid);
 	if (nodes.size() != 1) {
-		std::cerr << rid << " has " << nodes.size() << " terminals; ignoring" << std::endl;
+		mLogger->Log(LogLevel::WARN) << rid << " has " << nodes.size() << " terminals; ignoring" << std::endl;
 		return nullptr;
 	}
 	auto search = mPowerFlows.find(rid);
 	if (search == mPowerFlows.end()) {
-		std::cerr << rid << " has no associated SvPowerFlow, ignoring" << std::endl;
+		mLogger->Log(LogLevel::WARN) << rid << " has no associated SvPowerFlow, ignoring" << std::endl;
 		return nullptr;
 	}
 	SvPowerFlow* flow = search->second;
 	Int node = nodes[0];
 	SvVoltage *volt = mVoltages[node-1];
 	if (!volt) {
-		std::cerr << rid << " has no associated SvVoltage, ignoring" << std::endl;
+		mLogger->Log(LogLevel::WARN) << rid << " has no associated SvVoltage, ignoring" << std::endl;
 		return nullptr;
 	}
-	std::cerr << "PQLoad " << name << " rid=" << rid << " node1=" << node << " node2=0 P=" << flow->p.value << " Q=" << flow->q.value;
-	std::cerr << " V=" << volt->v.value << "<" << volt->angle.value << std::endl;
+
+	mLogger->Log(LogLevel::INFO) << "PQLoad " << name << " rid=" << rid << " node1=" 
+		<< node << " P=" << flow->p.value << " Q=" << flow->q.value 
+		<< " V=" << volt->v.value << "<" << volt->angle.value << std::endl;
+
+	// Apply unit multipliers according to CGMES convetions.
+	flow->p.value = CIMReader::unitValue(flow->p.value, UnitMultiplier::M);
+	flow->q.value = CIMReader::unitValue(flow->q.value, UnitMultiplier::M);
+	volt->v.value = CIMReader::unitValue(volt->v.value, UnitMultiplier::k);
+
 	return new PQLoad(name, node, 0, flow->p.value, flow->q.value, volt->v.value, volt->angle.value*PI/180);
 }
 
@@ -221,21 +248,23 @@ void CIMReader::parseFiles() {
 	// First, go through all topological nodes and collect them in a list.
 	// Since all nodes have references to the equipment connected to them (via Terminals), but not
 	// the other way around (which we need for instantiating the components), we collect that information here as well.
+	mLogger->Log(LogLevel::INFO) << "#### List of topological nodes and associated terminals ####" << std::endl;
 	for (BaseClass* obj : mModel.Objects) {
 		TopologicalNode* topNode = dynamic_cast<TopologicalNode*>(obj);
 		if (topNode) {
-			std::cerr << "TopologicalNode " << mTopNodes.size()+1 << " rid=" << topNode->mRID << " Terminals:" << std::endl;
+			mLogger->Log(LogLevel::INFO) << "TopologicalNode " << mTopNodes.size()+1 << " rid=" << topNode->mRID << " Terminals:" << std::endl;
 			mTopNodes[topNode->mRID] = mTopNodes.size()+1;
 			for (Terminal* term : topNode->Terminal) {
-				std::cerr << "    " << term->mRID << std::endl;
+				mLogger->Log(LogLevel::INFO) << "    " << term->mRID << std::endl;
 				ConductingEquipment *eq = term->ConductingEquipment;
 				if (!eq) {
-					std::cerr << "Terminal " << term->mRID << " has no Conducting Equipment, ignoring!" << std::endl;
+					mLogger->Log(LogLevel::WARN) << "Terminal " << term->mRID << " has no Conducting Equipment, ignoring!" << std::endl;
 				} else {
-					std::cerr << "    eq " << eq->mRID << " sequenceNumber " << term->sequenceNumber << std::endl;
+					mLogger->Log(LogLevel::INFO) << "    eq " << eq->mRID << " sequenceNumber " << term->sequenceNumber << std::endl;
 					std::vector<int> &nodesVec = mEqNodeMap[eq->mRID];
-					if (nodesVec.size() < term->sequenceNumber)
+					if (nodesVec.size() < term->sequenceNumber) {
 						nodesVec.resize(term->sequenceNumber);
+					}
 					nodesVec[term->sequenceNumber-1] = mTopNodes.size();
 				}
 			}
@@ -244,27 +273,28 @@ void CIMReader::parseFiles() {
 	// Collect voltage state variables associated to nodes that are used
 	// for various components.
 	mVoltages = new SvVoltage*[mTopNodes.size()];
-	std::cerr << "Voltages" << std::endl;
+	mLogger->Log(LogLevel::INFO) << "#### List of node voltages from power flow calculation ####" << std::endl;
 	for (BaseClass* obj : mModel.Objects) {
 		if (SvVoltage* volt = dynamic_cast<SvVoltage*>(obj)) {
 			TopologicalNode* node = volt->TopologicalNode;
 			if (!node) {
-				std::cerr << "SvVoltage references missing Topological Node, ignoring" << std::endl;
+				mLogger->Log(LogLevel::WARN) << "SvVoltage references missing Topological Node, ignoring" << std::endl;
 				continue;
 			}
 			auto search = mTopNodes.find(node->mRID);
 			if (search == mTopNodes.end()) {
-				std::cerr << "SvVoltage references Topological Node " << node->mRID << " missing from mTopNodes, ignoring" << std::endl;
+				mLogger->Log(LogLevel::WARN) << "SvVoltage references Topological Node " << node->mRID << " missing from mTopNodes, ignoring" << std::endl;
 				continue;
 			}
 			mVoltages[search->second-1] = volt;
-			std::cerr << volt->v.value << "<" << volt->angle.value << " at " << search->second << std::endl;
+			mLogger->Log(LogLevel::INFO) << "Node " << search->second << ": " << volt->v.value << "<" << volt->angle.value << std::endl;
 		} else if (SvPowerFlow* flow = dynamic_cast<SvPowerFlow*>(obj)) {
 			// TODO could there be more than one power flow per equipment?
 			Terminal* term = flow->Terminal;
 			mPowerFlows[term->ConductingEquipment->mRID] = flow;
 		}
 	}
+	mLogger->Log(LogLevel::INFO) << "#### Create new components ####" << std::endl;
 	for (BaseClass* obj : mModel.Objects) {
 		BaseComponent* comp = mapComponent(obj);
 		if (comp)

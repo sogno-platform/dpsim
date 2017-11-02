@@ -65,18 +65,26 @@ namespace DPsim {
 		/// Vector of unknown quantities
 		Matrix mLeftSideVector;
 
-		/** Matrix of all edge currents; diagonal is used for currents to ground. */
-		SparseMatrixComp mCurrentMatrix;
-
 	public:
 		SystemModel() { }
-		void initialize(Int numNodes, Int numIdealVS);
-		void addSystemMatrix(Matrix& systemMatrix);
+		void initialize(Int numNodes);
+		void computeLUFromSystemMatrix();
+		void createEmptySystemMatrix();
+		void InitializeRightSideVector(Matrix& rightSideVector) { mRightSideVector = rightSideVector; }
+		void InitializeLeftSideVector(Matrix& leftSideVector) { mLeftSideVector = leftSideVector; }
+		void switchSystemMatrix(Int systemMatrixIndex);
+		void addRealToSystemMatrix(Int row, Int column, Real value);
+		void addCompToSystemMatrix(Int row, Int column, Real reValue, Real imValue);
+		void addCompToSystemMatrix(Int row, Int column, Complex value);
+		void addCompToRightSideVector(Int row, Real reValue, Real imValue);
+		void addRealToRightSideVector(Int row, Real value);
+		void setRightSideVectorToZero();
+		void solve();
 
-		Matrix & getCurrentSystemMatrix() { return mSystemMatrix; }
-		const Matrix & getLUdecomp() { return mLuFactored.matrixLU(); }
-		Matrix & getRightSideVector() { return mRightSideVector; }
-		Matrix & getLeftSideVector() { return mLeftSideVector; }
+		Matrix& getCurrentSystemMatrix() { return mSystemMatrix; }
+		const Matrix& getLUdecomp() { return mLuFactored.matrixLU(); }
+		Matrix& getRightSideVector() { return mRightSideVector; }
+		Matrix& getLeftSideVector() { return mLeftSideVector; }
 		Real getTimeStep() { return mTimeStep; }
 		Real getOmega() { return mSystemOmega; }
 		Int getCompOffset() { return mCompOffset; }
@@ -86,24 +94,12 @@ namespace DPsim {
 		Int getNumNodes() { return mNumNodes; }
 		Int getNumIdealVS() { return mNumIdealVS; }
 		NumericalMethod getNumMethod() { return mNumMethod; }
-
-
+		
 		void setSimType(SimulationType simType) { mSimType = simType; }
 		void setTimeStep(Real timeStep) { mTimeStep = timeStep; }
 		void setOmega(Real omega) { mSystemOmega = omega; }
 		void setSystemMatrixElement(Int row, Int column, Real value) { mSystemMatrix(row, column) = value; }
+		void setCompSystemMatrixElement(Int row, Int column, Real reValue, Real imValue);
 		void setNumMethod(NumericalMethod numMethod) { mNumMethod = numMethod; }
-
-		void InitializeRightSideVector(DPsim::Matrix& rightSideVector) { mRightSideVector = rightSideVector; }
-		void InitializeLeftSideVector(DPsim::Matrix& leftSideVector) { mLeftSideVector = leftSideVector; }
-		void switchSystemMatrix(Int systemMatrixIndex);
-		void addRealToSystemMatrix(Int row, Int column, Real value);
-		void addCompToSystemMatrix(Int row, Int column, Real reValue, Real imValue);
-		void addCompToSystemMatrix(Int row, Int column, Complex value);
-		void addCompToRightSideVector(Int row, Real reValue, Real imValue);
-		void addRealToRightSideVector(Int row, Real value);
-		void setRightSideVectorToZero();
-
-		void solve();
 	};
 }

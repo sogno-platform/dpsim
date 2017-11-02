@@ -1,4 +1,4 @@
-/** Ideal Transformer DP
+/** MathLibrary
 *
 * @file
 * @author Markus Mirz <mmirz@eonerc.rwth-aachen.de>
@@ -23,24 +23,19 @@
 
 #pragma once
 
-#include "Components.h"
+#include "Definitions.h"
 
 namespace DPsim {
 
-	/// Ideal transformer that is connected to ground
-	class IdealTransformerDP : public BaseComponent {
-	private:
-		Real mRatioRe;
-		Real mRatioIm;
+	class MathLibrary {
 	public:
-		IdealTransformerDP() { };
-		IdealTransformerDP(String name, Int node1, Int node2, Real ratioRe, Real ratioIm);
-
-		void init(Real om, Real dt) { };
-		void applySystemMatrixStamp(SystemModel& system);
-		void applyRightSideVectorStamp(SystemModel& system) { };
-		void step(SystemModel& system, Real time) { };
-		void postStep(SystemModel& system) { };
+		static void setCompMatrixElement(Matrix& mat, Int compOffset, Int row, Int column, Real reValue, Real imValue);
+		static void setCompVectorElement(Matrix& mat, Int compOffset, Int row, Real reValue, Real imValue);
+		static void addCompToMatrixElement(Matrix& mat, Int compOffset, Int row, Int column, Real reValue, Real imValue);
+		static void addCompToVectorElement(Matrix& mat, Int compOffset, Int row, Real reValue, Real imValue);
+		static void addRealToVectorElement(Matrix& mat, Int row, Real reValue);
+		static void addRealToMatrixElement(Matrix& mat, Int row, Int column, Real reValue);
 	};
+
 }
 

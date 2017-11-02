@@ -23,11 +23,11 @@
 
 #pragma once
 
-#include <string>
 #include <iostream>
 
 #include "../SystemModel.h"
 #include "../Definitions.h"
+#include "ComponentCommons.h"
 
 namespace DPsim {
 
@@ -55,8 +55,11 @@ namespace DPsim {
 		/// Component node 3
 		Int mNode3;
 		/// Component logger control for internal variables
-		bool mLogActive;
-
+		Bool mLogActive;
+		/// Determines if the component has a virtual node
+		Bool mHasVirtualNode = false;
+		/// Index of virtual node
+		Int mVirtualNode;
 		/// Map of all attributes that should be exported to the Python interface
 		std::map<String, CompAttr> attrMap;
 
@@ -87,6 +90,12 @@ namespace DPsim {
 		Int getNode2() { return mNode2; }
 		/// get value of node3
 		Int getNode3() { return mNode3; }
+		/// has virtual node?
+		Bool getHasVirtualNode() { return mHasVirtualNode; }
+		/// get virtual node
+		Int getVirtualNode() { return mVirtualNode; }
+		/// set virtual node
+		void setVirtualNode(Int virtualNode) { mVirtualNode = virtualNode; }
 
 		std::map<String, CompAttr>& getAttrMap() { return attrMap; }
 

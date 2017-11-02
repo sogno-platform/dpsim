@@ -36,7 +36,8 @@ using namespace DPsim;
 int main(int argc, char* argv[]) {
 
 	// #### CIM Parser test ################
-	readFixedCIMFiles_LineLoad();
+	//readFixedCIMFiles_LineLoad();
+	readFixedCIMFiles_IEEE9bus();
 
 
 	// #### Shared memory interface tests ################
@@ -75,7 +76,7 @@ int main(int argc, char* argv[]) {
 
 	// DP classic dq model
 	//SynGenDPUnitTestBalancedResLoad();
-	SynGenDPUnitTestThreePhaseFault();
+	//SynGenDPUnitTestThreePhaseFault();
 
 	// EMT VBR model
 	//SynGenUnitTestVBR();

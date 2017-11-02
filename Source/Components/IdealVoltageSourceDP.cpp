@@ -24,41 +24,32 @@
 
 using namespace DPsim;
 
-IdealVoltageSource::IdealVoltageSource(String name, Int src, Int dest, Complex voltage, Int num) : BaseComponent(name, src, dest) {
-	this->number = num;
+IdealVoltageSource::IdealVoltageSource(String name, Int src, Int dest, Complex voltage) : BaseComponent(name, src, dest) {
 	this->mVoltage = voltage;
+	this->mHasVirtualNode = true;
 	attrMap["voltage"] = {AttrComplex, &this->mVoltage};
 }
 
 void IdealVoltageSource::applySystemMatrixStamp(SystemModel& system) {
-	number = system.getNumIdealVS() - number + 1;
 	if (mNode1 >= 0) {
-		system.setSystemMatrixElement(system.getCompOffset() - number, mNode1, 1);
-		system.setSystemMatrixElement(mNode1, system.getCompOffset() - number, 1);
-		system.setSystemMatrixElement(2* system.getCompOffset() - number, mNode1 + system.getCompOffset(), 1);
-		system.setSystemMatrixElement(mNode1 + system.getCompOffset(), 2 * system.getCompOffset() - number, 1);
+		system.setCompSystemMatrixElement(mVirtualNode, mNode1, 1, 0);
+		system.setCompSystemMatrixElement(mNode1, mVirtualNode, 1, 0);
 	}
 
 	if (mNode2 >= 0) {
-		system.setSystemMatrixElement(system.getCompOffset() - number, mNode2, -1);
-		system.setSystemMatrixElement(mNode2, system.getCompOffset() - number, -1);
-		system.setSystemMatrixElement(2 * system.getCompOffset() - number, mNode2 + system.getCompOffset(), -1);
-		system.setSystemMatrixElement(mNode2 + system.getCompOffset(), 2 * system.getCompOffset() - number, -1);
+		system.setCompSystemMatrixElement(mVirtualNode, mNode2, -1, 0);
+		system.setCompSystemMatrixElement(mNode2, mVirtualNode, -1, 0);
 	}
 }
 
 void IdealVoltageSource::applyRightSideVectorStamp(SystemModel& system) {
-	// Apply matrix stamp for equivalent current source
-	system.addRealToRightSideVector(system.getCompOffset() - number, mVoltage.real());
-	system.addRealToRightSideVector(2 * system.getCompOffset() - number, mVoltage.imag());
+	system.addCompToRightSideVector(mVirtualNode, mVoltage.real(), mVoltage.imag());
 }
 
 void IdealVoltageSource::step(SystemModel& system, Real time) {
-	// Apply matrix stamp for equivalent current source
-	system.addRealToRightSideVector(system.getCompOffset() - number, mVoltage.real());
-	system.addRealToRightSideVector(2 * system.getCompOffset() - number, mVoltage.imag());
+	system.addCompToRightSideVector(mVirtualNode, mVoltage.real(), mVoltage.imag());
 }
 
 Complex IdealVoltageSource::getCurrent(SystemModel& system) {
-	return Complex(system.getRealFromLeftSideVector(system.getCompOffset()-number), system.getRealFromLeftSideVector(2*system.getCompOffset()-number));
+	return Complex(system.getRealFromLeftSideVector(mVirtualNode), system.getRealFromLeftSideVector(mVirtualNode + system.getCompOffset()));
 }

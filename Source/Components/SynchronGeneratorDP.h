@@ -91,7 +91,7 @@ namespace DPsim {
 
 		/// inertia J [kg*m^2]
 		Real mJ;
-		/// number of poles
+		/// mNumber of poles
 		Int mPoleNumber;
 		/// inertia coefficient H
 		Real mH;

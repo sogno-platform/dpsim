@@ -37,4 +37,4 @@ namespace DPsim {
 		void init(Real om, Real dt);
 		void applySystemMatrixStamp(SystemModel&);
 	};
-};
+}

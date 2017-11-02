@@ -30,6 +30,7 @@
 
 #include "CIMModel.hpp"
 #include "IEC61970.hpp"
+#include "Logger.h"
 
 using namespace DPsim;
 using namespace IEC61970::Base::Domain;
@@ -41,6 +42,9 @@ using namespace IEC61970::Base::Wires;
 namespace DPsim {
 	class CIMReader {
 		private:
+			// CIM logger
+			Logger* mLogger;
+			// Model from CIM++
 			CIMModel mModel;
 			// All components after mapping
 			std::vector<BaseComponent*> mComponents;
@@ -70,9 +74,9 @@ namespace DPsim {
 			BaseComponent* mapPowerTransformer(PowerTransformer *trans);
 			BaseComponent* mapSynchronousMachine(SynchronousMachine* machine);
 
-			BaseComponent* newFlowPQLoad(String rid, String name);
+			BaseComponent* newPQLoad(String rid, String name);
 		public:
-			CIMReader(Real om);
+			CIMReader(Real om, Logger& logger);
 			virtual ~CIMReader();
 
 			bool addFile(String filename);

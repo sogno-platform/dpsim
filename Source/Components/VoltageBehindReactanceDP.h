@@ -51,7 +51,7 @@ namespace DPsim {
 		Real mNomFieldCur;
 		/// Number of damping windings in q
 		Int mNumDampingWindings;
-		/// number of poles
+		/// mNumber of poles
 		Int mPoleNumber;
 		/// inertia coefficient H
 		Real mH;
