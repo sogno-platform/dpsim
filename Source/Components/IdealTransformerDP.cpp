@@ -25,6 +25,7 @@
 using namespace DPsim;
 
 IdealTransformerDP::IdealTransformerDP(String name, Int node1, Int node2, Real ratioRe, Real ratioIm) : BaseComponent(name, node1, node2) {
+	mHasVirtualNode = true;
 	mRatioRe = ratioRe;
 	mRatioIm = ratioIm;
 }

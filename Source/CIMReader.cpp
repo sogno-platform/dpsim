@@ -94,7 +94,10 @@ BaseComponent* CIMReader::mapACLineSegment(ACLineSegment* line) {
 	}
 	Real r = line->r.value;
 	Real x = line->x.value;
-	mLogger->Log(LogLevel::INFO) << "RxLine " << line->name << " rid=" << line->mRID << " node1=" << nodes[0] << " node2=" << nodes[1] 
+	mLogger->Log(LogLevel::INFO) << "Found ACLineSegment " << line->name << " rid=" << line->mRID << " node1=" << nodes[0] << " node2=" << nodes[1] 
+		<< " R=" << r << " X=" << x << std::endl;
+
+	mLogger->Log(LogLevel::INFO) << "Create RxLine " << line->name << " node1=" << nodes[0] << " node2=" << nodes[1]
 		<< " R=" << r << " X=" << x << std::endl;
 	return new RxLine(line->name, nodes[0], nodes[1], r, x/mFrequency);
 }
@@ -140,12 +143,11 @@ BaseComponent* CIMReader::mapPowerTransformer(PowerTransformer* trans) {
 		return nullptr;
 	}
 
-	mLogger->Log(LogLevel::INFO) << "PowerTransformer " << trans->name << " rid=" << trans->mRID
+	mLogger->Log(LogLevel::INFO) << "Found PowerTransformer " << trans->name << " rid=" << trans->mRID
 		<< " node1=" << nodes[0] << " node2=" << nodes[1] << std::endl;
-
-	Real ratio = 1;
-	Real voltageNode1;
-	Real voltageNode2;
+	
+	Real voltageNode1 = 0;
+	Real voltageNode2 = 0;
 	for (PowerTransformerEnd *end : trans->PowerTransformerEnd) {
 		if (end->endNumber == 1) {
 			mLogger->Log(LogLevel::INFO) << "    PowerTransformerEnd_1 " << end->name 
@@ -157,10 +159,16 @@ BaseComponent* CIMReader::mapPowerTransformer(PowerTransformer* trans) {
 				<< " Vrated=" << end->ratedU.value << " R=" << end->r.value << " X=" << end->x.value << std::endl;
 			voltageNode2 = end->ratedU.value;
 		}
+	}
 
+	if (voltageNode1 != 0 && voltageNode2 != 0) {
+		Real ratio = voltageNode1 / voltageNode2;
+		mLogger->Log(LogLevel::INFO) << "    Calculated ratio=" << ratio << std::endl;
+		mLogger->Log(LogLevel::INFO) << "Create PowerTransformer " << trans->name
+			<< " node1=" << nodes[0] << " node2=" << nodes[1]
+			<< " ratio=" << ratio << "<0" << std::endl;
+		return new IdealTransformerDP(trans->name, nodes[0], nodes[1], ratio, 0);
 		
-		return new IdealTransformerDP(trans->name, nodes[0], nodes[1], 1, 0);
-
 	}
 	mLogger->Log(LogLevel::WARN) << "PowerTransformer " << trans->mRID << " has no primary End; ignoring" << std::endl;
 	return nullptr;
@@ -187,6 +195,8 @@ BaseComponent* CIMReader::mapSynchronousMachine(SynchronousMachine* machine) {
 	volt->v.value = CIMReader::unitValue(volt->v.value, UnitMultiplier::k);
 
 	// TODO is it appropiate to use this resistance here
+	mLogger->Log(LogLevel::INFO) << "Create IdealVoltageSource " << machine->name << " node=" << node
+		<< " V=" << volt->v.value << "<" << volt->angle.value << std::endl;
 	return new IdealVoltageSource(machine->name, node, 0, Complex(volt->v.value, volt->angle.value*PI/180));
 }
 
@@ -227,7 +237,7 @@ BaseComponent* CIMReader::newPQLoad(String rid, String name) {
 		return nullptr;
 	}
 
-	mLogger->Log(LogLevel::INFO) << "PQLoad " << name << " rid=" << rid << " node1=" 
+	mLogger->Log(LogLevel::INFO) << "Found EnergyConsumer " << name << " rid=" << rid << " node=" 
 		<< node << " P=" << flow->p.value << " Q=" << flow->q.value 
 		<< " V=" << volt->v.value << "<" << volt->angle.value << std::endl;
 
@@ -235,7 +245,10 @@ BaseComponent* CIMReader::newPQLoad(String rid, String name) {
 	flow->p.value = CIMReader::unitValue(flow->p.value, UnitMultiplier::M);
 	flow->q.value = CIMReader::unitValue(flow->q.value, UnitMultiplier::M);
 	volt->v.value = CIMReader::unitValue(volt->v.value, UnitMultiplier::k);
-
+	
+	mLogger->Log(LogLevel::INFO) << "Create PQLoad " << name << " node="
+		<< node << " P=" << flow->p.value << " Q=" << flow->q.value
+		<< " V=" << volt->v.value << "<" << volt->angle.value << std::endl;
 	return new PQLoad(name, node, 0, flow->p.value, flow->q.value, volt->v.value, volt->angle.value*PI/180);
 }
 

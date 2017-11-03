@@ -65,6 +65,43 @@ std::ostream& Logger::Log(LogLevel level) {
 	return mLogFile;
 }
 
+void Logger::Log(LogLevel level, String str) {
+	if (level > mLogLevel) {
+		return;
+	}
+
+	switch (level) {
+	case LogLevel::INFO:
+		mLogFile << "INFO: " << str << std::endl;
+		break;
+	case LogLevel::WARN:
+		mLogFile << "WARN: " << str << std::endl;
+		break;
+	case LogLevel::ERROR:
+		mLogFile << "ERROR: " << str << std::endl;
+		break;
+	case LogLevel::NONE:
+		return;
+		break;
+	}
+}
+
+void Logger::LogMatrix(LogLevel level, Matrix& data) {
+	if (level > mLogLevel) {
+		return;
+	}
+
+	mLogFile << data << std::endl;
+}
+
+void Logger::LogMatrix(LogLevel level, const Matrix& data) {
+	if (level > mLogLevel) {
+		return;
+	}
+
+	mLogFile << data << std::endl;
+}
+
 void Logger::LogDataLine(Real time, Matrix& data) {
 	mLogFile << std::scientific << time;
 	for (Int i = 0; i < data.rows(); i++) {

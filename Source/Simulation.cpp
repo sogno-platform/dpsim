@@ -38,29 +38,25 @@ Simulation::Simulation() {
 	mCurrentSwitchTimeIndex = 0;
 }
 
-Simulation::Simulation(std::vector<BaseComponent*> elements, Real om, Real dt, Real tf, SimulationType simType)
+Simulation::Simulation(std::vector<BaseComponent*> elements, Real om, Real dt, Real tf, Logger& logger, SimulationType simType)
 	: Simulation() {
 
+	mLogger = &logger;
 	mSystemModel.setSimType(simType);
 	mSystemModel.setTimeStep(dt);
 	mSystemModel.setOmega(om);
 	mFinalTime = tf;
 	initialize(elements);
-}
-
-Simulation::Simulation(std::vector<BaseComponent*> elements, Real om, Real dt, Real tf, Logger& logger, SimulationType simType)
-	: Simulation(elements, om, dt, tf, simType) {
 
 	for (BaseComponent* c : elements)
-		logger.Log(LogLevel::INFO) << "Added " << c->getType() << " '" << c->getName() << "' to simulation." << std::endl;
+		mLogger->Log(LogLevel::INFO) << "Added " << c->getType() << " '" << c->getName() << "' to simulation." << std::endl;
 
-	logger.Log(LogLevel::INFO) << "System matrix A:" << std::endl;
-	logger.Log() << mSystemModel.getCurrentSystemMatrix() << std::endl;
-	logger.Log(LogLevel::INFO) << "LU decomposition:" << std::endl;
-	logger.Log() << mSystemModel.getLUdecomp() << std::endl;
-	logger.Log(LogLevel::INFO) << "Known variables matrix j:" << std::endl;
-	logger.Log() << mSystemModel.getRightSideVector() << std::endl;
-
+	mLogger->Log(LogLevel::INFO) << "System matrix A:" << std::endl;
+	mLogger->LogMatrix(LogLevel::INFO, mSystemModel.getCurrentSystemMatrix());
+	mLogger->Log(LogLevel::INFO) << "LU decomposition:" << std::endl;
+	mLogger->LogMatrix(LogLevel::INFO, mSystemModel.getLUdecomp());
+	mLogger->Log(LogLevel::INFO) << "Known variables matrix j:" << std::endl;
+	mLogger->LogMatrix(LogLevel::INFO, mSystemModel.getRightSideVector());
 }
 
 Simulation::Simulation(std::vector<BaseComponent*> elements, Real om, Real dt, Real tf, Logger& logger, Int downSampleRate, SimulationType simType)
@@ -79,6 +75,7 @@ void Simulation::initialize(std::vector<BaseComponent*> newElements) {
 	Int maxNode = 0;
 	Int currentVirtualNode = 0;
 
+	mLogger->Log(LogLevel::INFO) << "#### Start Initialization ####" << std::endl;
 	// Calculate the mNumber of nodes by going through the list of elements
 	// TODO we use the values from the first element vector right now and assume that
 	// these values don't change on switches
@@ -92,12 +89,14 @@ void Simulation::initialize(std::vector<BaseComponent*> newElements) {
 			maxNode = element->getNode2();
 		}		
 	}
+	mLogger->Log(LogLevel::INFO) << "Maximum node number: " << maxNode << std::endl;
 
 	// Check if element requires virtual node and if so set one
 	for (BaseComponent* element : newElements) {
 		if (element->getHasVirtualNode()) {
 			currentVirtualNode++;
 			element->setVirtualNode(currentVirtualNode);
+			mLogger->Log(LogLevel::INFO) << "Created virtual node for " << element->getName() << std::endl;
 		}
 	}
 
@@ -129,8 +128,7 @@ void Simulation::addSystemTopology(std::vector<BaseComponent*> newElements) {
 	for (BaseComponent* element : newElements) {
 		element->applySystemMatrixStamp(mSystemModel);
 	}
-
-	mSystemModel.computeLUFromSystemMatrix();
+	mSystemModel.addSystemMatrix();
 }
 
 

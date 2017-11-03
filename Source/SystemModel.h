@@ -68,8 +68,8 @@ namespace DPsim {
 	public:
 		SystemModel() { }
 		void initialize(Int numNodes);
-		void computeLUFromSystemMatrix();
 		void createEmptySystemMatrix();
+		void addSystemMatrix();
 		void InitializeRightSideVector(Matrix& rightSideVector) { mRightSideVector = rightSideVector; }
 		void InitializeLeftSideVector(Matrix& leftSideVector) { mLeftSideVector = leftSideVector; }
 		void switchSystemMatrix(Int systemMatrixIndex);

@@ -147,6 +147,9 @@
     <ClInclude Include="..\..\Source\LoggerFactory.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\Source\Components\SimplifiedSynchronGeneratorEMT.h">
+      <Filter>Headerdateien\Components</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\Source\Logger.cpp">
@@ -256,6 +259,9 @@
     </ClCompile>
     <ClCompile Include="..\..\Examples\C++\DPsimExampleCIM.cpp">
       <Filter>Quelldateien\Examples</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\Components\SimplifiedSynchronGeneratorEMT.cpp">
+      <Filter>Quelldateien\Components</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

@@ -47,12 +47,12 @@ void SystemModel::createEmptySystemMatrix() {
 	else {
 		mSystemMatrix = Matrix::Zero(2 * mNumNodes, 2 * mNumNodes);
 	}
-	mSystemMatrixVector.push_back(mSystemMatrix);
 }
 
-void SystemModel::computeLUFromSystemMatrix() {
-	Eigen::PartialPivLU<Matrix> luFactored = Eigen::PartialPivLU<Matrix>(mSystemMatrix);
-	mLuFactoredVector.push_back(luFactored);
+void SystemModel::addSystemMatrix() {	
+	mSystemMatrixVector.push_back(mSystemMatrix);
+	mLuFactored = Eigen::PartialPivLU<Matrix>(mSystemMatrix);
+	mLuFactoredVector.push_back(mLuFactored);
 }
 
 void SystemModel::addRealToSystemMatrix(Int row, Int column, Real value) {
@@ -83,7 +83,7 @@ void SystemModel::solve() {
 	mLeftSideVector = mLuFactored.solve(mRightSideVector);
 }
 
-void SystemModel::switchSystemMatrix(UInt systemMatrixIndex) {
+void SystemModel::switchSystemMatrix(Int systemMatrixIndex) {
 	if (systemMatrixIndex < mSystemMatrixVector.size()) {
 		mSystemMatrix = mSystemMatrixVector[systemMatrixIndex];
 		mLuFactored = mLuFactoredVector[systemMatrixIndex];

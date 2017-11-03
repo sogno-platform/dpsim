@@ -25,6 +25,7 @@
 using namespace DPsim;
 
 RxLine::RxLine(String name, Int node1, Int node2, Real resistance, Real inductance) : BaseComponent(name, node1, node2) {
+	mHasVirtualNode = true;
 	mResistance = resistance;
 	mConductance = 1.0 / resistance;
 	mInductance = inductance;

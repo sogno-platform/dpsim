@@ -51,6 +51,7 @@ namespace DPsim {
 	class Simulation {
 
 	private:
+		Logger* mLogger;
 		/// Final time of the simulation
 		Real mFinalTime;
 		/// Time variable that is incremented at every step
@@ -85,7 +86,6 @@ namespace DPsim {
 		/// Sets parameters to default values.
 		Simulation();
 		/// Creates system matrix according to
-		Simulation(std::vector<BaseComponent*> elements, Real om, Real dt, Real tf, SimulationType simType = SimulationType::DynPhasor);
 		Simulation(std::vector<BaseComponent*> elements, Real om, Real dt, Real tf, Logger& logger, SimulationType simType = SimulationType::DynPhasor);
 		Simulation(std::vector<BaseComponent*> elements, Real om, Real dt, Real tf, Logger& logger, Int downSampleRate, SimulationType simType = SimulationType::DynPhasor);
 		~Simulation();
