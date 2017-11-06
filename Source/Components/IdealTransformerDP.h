@@ -23,7 +23,7 @@
 
 #pragma once
 
-#include "Components.h"
+#include "BaseComponent.h"
 
 namespace DPsim {
 

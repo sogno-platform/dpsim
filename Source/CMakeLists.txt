@@ -19,6 +19,13 @@ else()
 	find_package(Eigen3 REQUIRED)
 endif()
 
+if(IS_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/../Libraries/CIMpp)
+	set(CIMPP_INCLUDE_DIR ../Libraries/CIMpp/include/src)
+	set(CIM_INCLUDE_DIR ../Libraries/CIMpp/include/16v29a_12v08)
+else()
+	find_package(CIMpp REQUIRED)
+endif()
+
 set(Python_ADDITIONAL_VERSIONS 3.5 3.6 3.7)
 find_package(PythonInterp 3.5)
 find_package(PythonLibs 3.5)
@@ -33,10 +40,9 @@ else(APPLE)
 	set(PYTHON_MODULE_SUFFIX "so")
 endif()
 
-include_directories(${EIGEN3_INCLUDE_DIR} ${PYTHON_INCLUDE_DIRS})
+set(COMPONENTS_INCLUDE_DIR Components/)
 
-set(USE_CIM_VERSION "IEC61970_16v29a")
-add_subdirectory(CIM-XML-Parser)
+include_directories(${EIGEN3_INCLUDE_DIR} ${PYTHON_INCLUDE_DIRS} ${CIMPP_INCLUDE_DIR} ${COMPONENTS_INCLUDE_DIR} ${CIM_INCLUDE_DIR})
 
 file(GLOB SOURCES *.cpp Components/*.cpp)
 add_library(dpsim SHARED ${SOURCES})
