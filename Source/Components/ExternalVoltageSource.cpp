@@ -25,7 +25,7 @@
 using namespace DPsim;
 
 ExternalVoltageSource::ExternalVoltageSource(std::string name, int src, int dest, Complex voltage, int num) :
-	IdealVoltageSource(name, src, dest, voltage, num) {
+	IdealVoltageSource(name, src, dest, voltage) {
 }
 
 void ExternalVoltageSource::setVoltage(Real real, Real imag) {
