@@ -24,26 +24,19 @@
 
 using namespace DPsim;
 
-RxLine::RxLine(String name, Int node1, Int node2, Real resistance, Real inductance) : BaseComponent(name, node1, node2) {
-	mHasVirtualNode = true;
+RxLine::RxLine(String name, Int node1, Int node2, Real resistance, Real inductance, LineTypes type) : BaseComponent(name, node1, node2) {
+	mNumVirtualNodes = 1;
+	mVirtualNodes = { 0 };
 	mResistance = resistance;
 	mConductance = 1.0 / resistance;
 	mInductance = inductance;
-	type = LineTypes::RxLine2Node;
-	mNode3 = -1;
-	attrMap["resistance"] = {AttrReal, &mResistance};
-	attrMap["inductance"] = {AttrReal, &mInductance};
-}
-
-RxLine::RxLine(String name, Int node1, Int node2, Int node3, Real resistance, Real inductance) : BaseComponent(name, node1, node2, node3) {
-	mResistance = resistance;
-	mConductance = 1.0 / resistance;
-	mInductance = inductance;
-	type = LineTypes::RxLine3Node;
+	mType = type;
+	attrMap["resistance"] = { AttrReal, &mResistance };
+	attrMap["inductance"] = { AttrReal, &mInductance };
 }
 
 void RxLine::applySystemMatrixStamp(SystemModel& system) {
-	if (type == LineTypes::RxLine2Node) {
+	if (mType == LineTypes::RxLine2Node) {
 		Real a = system.getTimeStep() / (2 * mInductance);
 		Real b = system.getTimeStep()*system.getOmega() / 2;
 		Real R = mResistance;
@@ -87,27 +80,27 @@ void RxLine::applySystemMatrixStamp(SystemModel& system) {
 		if (mNode1 >= 0) {
 			system.addCompToSystemMatrix(mNode1, mNode1, mConductance, 0);
 		}
-		if (mNode3 >= 0) {
-			system.addCompToSystemMatrix(mNode3, mNode3, mConductance, 0);
+		if (mVirtualNodes[0] >= 0) {
+			system.addCompToSystemMatrix(mVirtualNodes[0], mVirtualNodes[0], mConductance, 0);
 		}
 		// Set off diagonal entries
-		if (mNode1 >= 0 && mNode3 >= 0) {
-			system.addCompToSystemMatrix(mNode1, mNode3, -mConductance, 0);
-			system.addCompToSystemMatrix(mNode3, mNode1, -mConductance, 0);
+		if (mNode1 >= 0 && mVirtualNodes[0] >= 0) {
+			system.addCompToSystemMatrix(mNode1, mVirtualNodes[0], -mConductance, 0);
+			system.addCompToSystemMatrix(mVirtualNodes[0], mNode1, -mConductance, 0);
 		}
 
 		// Inductance part
 		// Set diagonal entries
-		if (mNode3 >= 0) {
-			system.addCompToSystemMatrix(mNode3, mNode3, mGlr, mGli);
+		if (mVirtualNodes[0] >= 0) {
+			system.addCompToSystemMatrix(mVirtualNodes[0], mVirtualNodes[0], mGlr, mGli);
 		}
 		if (mNode2 >= 0) {
 			system.addCompToSystemMatrix(mNode2, mNode2, mGlr, mGli);
 		}
 
-		if (mNode3 >= 0 && mNode2 >= 0) {
-			system.addCompToSystemMatrix(mNode3, mNode2, -mGlr, -mGli);
-			system.addCompToSystemMatrix(mNode2, mNode3, -mGlr, -mGli);
+		if (mVirtualNodes[0] >= 0 && mNode2 >= 0) {
+			system.addCompToSystemMatrix(mVirtualNodes[0], mNode2, -mGlr, -mGli);
+			system.addCompToSystemMatrix(mNode2, mVirtualNodes[0], -mGlr, -mGli);
 		}
 	}
 }
@@ -131,7 +124,7 @@ void RxLine::init(Real om, Real dt) {
 
 void RxLine::step(SystemModel& system, Real time) {
 
-	if (type == LineTypes::RxLine2Node) {
+	if (mType == LineTypes::RxLine2Node) {
 
 		// Initialize internal state
 		cureqr_ind = mPrevCurFacRe*currr_ind - mPrevCurFacIm*mCurrIm + mGlr*deltavr_ind - mGli*deltavi_ind;
@@ -158,8 +151,8 @@ void RxLine::step(SystemModel& system, Real time) {
 		mCurEqRe = mGlr * mDeltaVre - mGli * mDeltaVim + mPrevCurFacRe * mCurrRe - mPrevCurFacIm * mCurrIm;
 		mCurEqIm = mGli * mDeltaVre + mGlr * mDeltaVim + mPrevCurFacIm * mCurrRe + mPrevCurFacRe * mCurrIm;
 
-		if (mNode3 >= 0) {
-			system.addCompToRightSideVector(mNode3, -mCurEqRe, -mCurEqIm);
+		if (mVirtualNodes[0] >= 0) {
+			system.addCompToRightSideVector(mVirtualNodes[0], -mCurEqRe, -mCurEqIm);
 		}
 		if (mNode2 >= 0) {
 			system.addCompToRightSideVector(mNode2, mCurEqRe, mCurEqIm);
@@ -169,7 +162,7 @@ void RxLine::step(SystemModel& system, Real time) {
 
 void RxLine::postStep(SystemModel& system) {
 
-	if (type == LineTypes::RxLine2Node) {
+	if (mType == LineTypes::RxLine2Node) {
 
 		Real vposr, vnegr;
 		Real vposi, vnegi;
@@ -210,10 +203,10 @@ void RxLine::postStep(SystemModel& system) {
 	Real vposr, vnegr, vposi, vnegi;
 
 	// extract solution
-	if (mNode3 >= 0) {
-		system.getRealFromLeftSideVector(mNode3);
-		vposr = system.getRealFromLeftSideVector(mNode3);
-		vposi = system.getImagFromLeftSideVector(mNode3);
+	if (mVirtualNodes[0] >= 0) {
+		system.getRealFromLeftSideVector(mVirtualNodes[0]);
+		vposr = system.getRealFromLeftSideVector(mVirtualNodes[0]);
+		vposi = system.getImagFromLeftSideVector(mVirtualNodes[0]);
 	}
 	else {
 		vposr = 0;

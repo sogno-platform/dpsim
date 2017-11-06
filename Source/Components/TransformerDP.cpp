@@ -20,18 +20,38 @@
 * along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *********************************************************************************/
 
-#include "IdealTransformerDP.h"
+#include "TransformerDP.h"
 
 using namespace DPsim;
 
-IdealTransformerDP::IdealTransformerDP(String name, Int node1, Int node2, Real ratioAbs, Real ratioPhase) : BaseComponent(name, node1, node2) {
-	mNumVirtualNodes = 1;
-	mVirtualNodes = { 0 };
+TransformerDP::TransformerDP(String name, Int node1, Int node2, Real ratioAbs, Real ratioPhase, Real resistance, Real reactance) : BaseComponent(name, node1, node2) {
 	mRatioRe = ratioAbs*cos(ratioPhase);
 	mRatioIm = ratioAbs*sin(ratioPhase);
+	mResistance = resistance;
+	mReactance = reactance;
+	if (resistance == 0) {
+		mNumVirtualNodes = 2;
+	}
+	else {
+		mNumVirtualNodes = 3;
+	}
+	mVirtualNodes = { 0 };
+	
 }
 
-void IdealTransformerDP::applySystemMatrixStamp(SystemModel& system) {
+void TransformerDP::init(Real om, Real dt) {
+	/*
+	mResistance = mSvVoltage*mSvVoltage*mActivePower / abs;
+	mConductance = 1.0 / mResistance;
+	mReactance = mSvVoltage*mSvVoltage*mReactivePower / abs;
+	mInductance = mReactance / om;
+
+	inductor = std::make_shared<InductorDP>(mName + "_ind", mNode1, mNode2, mInductance);
+	resistor = std::make_shared<ResistorDP>(mName + "_res", mNode1, mNode2, mResistance);
+	*/
+}
+
+void TransformerDP::applySystemMatrixStamp(SystemModel& system) {
 	if (mNode1 >= 0) {
 		system.setCompSystemMatrixElement(mNode1, mVirtualNodes[0], -1.0, 0);
 		system.setCompSystemMatrixElement(mVirtualNodes[0], mNode1, 1.0, 0);
@@ -39,5 +59,10 @@ void IdealTransformerDP::applySystemMatrixStamp(SystemModel& system) {
 	if (mNode2 >= 0) {
 		system.setCompSystemMatrixElement(mNode2, mVirtualNodes[0], mRatioRe, mRatioIm);
 		system.setCompSystemMatrixElement(mVirtualNodes[0], mNode2, -mRatioRe, -mRatioIm);
+	}
+
+	if (mNumVirtualNodes == 2) {
+		// Add inductive part to system matrix
+		inductor->applySystemMatrixStamp(system);
 	}
 }

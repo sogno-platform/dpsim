@@ -93,10 +93,13 @@ void Simulation::initialize(std::vector<BaseComponent*> newElements) {
 
 	// Check if element requires virtual node and if so set one
 	for (BaseComponent* element : newElements) {
-		if (element->getHasVirtualNode()) {
-			currentVirtualNode++;
-			element->setVirtualNode(currentVirtualNode);
-			mLogger->Log(LogLevel::INFO) << "Created virtual node for " << element->getName() << std::endl;
+		if (element->hasVirtualNodes()) {
+			for (Int node = 0; node < element->getVirtualNodesNum(); node++) {
+				currentVirtualNode++;
+				element->setVirtualNode(node, currentVirtualNode);
+				mLogger->Log(LogLevel::INFO) << "Created virtual node "<< node << "=" << currentVirtualNode 
+					<< " for " << element->getName() << std::endl;
+			}
 		}
 	}
 

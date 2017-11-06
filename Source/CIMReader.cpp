@@ -249,7 +249,7 @@ BaseComponent* CIMReader::newPQLoad(String rid, String name) {
 	mLogger->Log(LogLevel::INFO) << "Create PQLoad " << name << " node="
 		<< node << " P=" << flow->p.value << " Q=" << flow->q.value
 		<< " V=" << volt->v.value << "<" << volt->angle.value << std::endl;
-	return new PQLoad(name, node, 0, flow->p.value, flow->q.value, volt->v.value, volt->angle.value*PI/180);
+	return new PQLoadDP(name, node, flow->p.value, flow->q.value, volt->v.value, volt->angle.value*PI/180);
 }
 
 bool CIMReader::addFile(String filename) {

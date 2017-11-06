@@ -36,7 +36,7 @@ namespace DPsim {
 	class SystemModel {
 
 	private:
-		/// Simulation type
+		/// Simulation mType
 		SimulationType mSimType;
 		///Numerical method
 		NumericalMethod mNumMethod;

@@ -1,5 +1,6 @@
 /** Ideal Transformer DP
 *
+* @file
 * @author Markus Mirz <mmirz@eonerc.rwth-aachen.de>
 * @copyright 2017, Institute for Automation of Complex Power Systems, EONERC
 * @license GNU General Public License (version 3)
@@ -20,24 +21,34 @@
 * along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *********************************************************************************/
 
-#include "IdealTransformerDP.h"
+#pragma once
 
-using namespace DPsim;
+#include "Components.h"
 
-IdealTransformerDP::IdealTransformerDP(String name, Int node1, Int node2, Real ratioAbs, Real ratioPhase) : BaseComponent(name, node1, node2) {
-	mNumVirtualNodes = 1;
-	mVirtualNodes = { 0 };
-	mRatioRe = ratioAbs*cos(ratioPhase);
-	mRatioIm = ratioAbs*sin(ratioPhase);
+namespace DPsim {
+
+	/// Transformer that includes an inductance and resistance
+	class TransformerDP : public BaseComponent {
+	private:
+		Real mRatioRe;
+		Real mRatioIm;
+		Real mResistance;
+		Real mConductance;
+		Real mReactance;
+
+		/// Inductance [H]
+		Real mInductance;
+
+		shared_ptr<InductorDP> inductor;
+	public:
+		TransformerDP() { };
+		TransformerDP(String name, Int node1, Int node2, Real ratioAbs, Real ratioPhase, Real resistance, Real inductance);
+
+		void init(Real om, Real dt);
+		void applySystemMatrixStamp(SystemModel& system);
+		void applyRightSideVectorStamp(SystemModel& system) { };
+		void step(SystemModel& system, Real time) { };
+		void postStep(SystemModel& system) { };
+	};
 }
 
-void IdealTransformerDP::applySystemMatrixStamp(SystemModel& system) {
-	if (mNode1 >= 0) {
-		system.setCompSystemMatrixElement(mNode1, mVirtualNodes[0], -1.0, 0);
-		system.setCompSystemMatrixElement(mVirtualNodes[0], mNode1, 1.0, 0);
-	}
-	if (mNode2 >= 0) {
-		system.setCompSystemMatrixElement(mNode2, mVirtualNodes[0], mRatioRe, mRatioIm);
-		system.setCompSystemMatrixElement(mVirtualNodes[0], mNode2, -mRatioRe, -mRatioIm);
-	}
-}

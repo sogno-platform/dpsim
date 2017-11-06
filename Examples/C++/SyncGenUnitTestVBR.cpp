@@ -178,9 +178,9 @@ void DPsim::SynGenUnitTestVBRDP() {
 		nomPower, nomPhPhVoltRMS, nomFreq, poleNum, nomFieldCurr,
 		Rs, Ll, Lmd, Lmd0, Lmq, Lmq0, Rfd, Llfd, Rkd, Llkd, Rkq1, Llkq1, Rkq2, Llkq2, H);
 	Real loadRes = 1037.8378;
-	BaseComponent* r1 = new LinearResistor("r1", 1, 0, loadRes);
-	BaseComponent* r2 = new LinearResistor("r2", 2, 0, loadRes);
-	BaseComponent* r3 = new LinearResistor("r3", 3, 0, loadRes);
+	BaseComponent* r1 = new ResistorDP("r1", 1, 0, loadRes);
+	BaseComponent* r2 = new ResistorDP("r2", 2, 0, loadRes);
+	BaseComponent* r3 = new ResistorDP("r3", 3, 0, loadRes);
 	std::vector<BaseComponent*> circElements;
 	circElements.push_back(gen);
 	circElements.push_back(r1);
@@ -189,9 +189,9 @@ void DPsim::SynGenUnitTestVBRDP() {
 
 	// Declare circuit components for resistance change
 	Real breakerRes = 0.001;
-	BaseComponent* rBreaker1 = new LinearResistor("rbreak1", 1, 0, breakerRes);
-	BaseComponent* rBreaker2 = new LinearResistor("rbreak2", 2, 0, breakerRes);
-	BaseComponent* rBreaker3 = new LinearResistor("rbreak3", 3, 0, breakerRes);
+	BaseComponent* rBreaker1 = new ResistorDP("rbreak1", 1, 0, breakerRes);
+	BaseComponent* rBreaker2 = new ResistorDP("rbreak2", 2, 0, breakerRes);
+	BaseComponent* rBreaker3 = new ResistorDP("rbreak3", 3, 0, breakerRes);
 	std::vector<BaseComponent*> circElementsBreakerOn;
 	circElementsBreakerOn.push_back(rBreaker1);
 	circElementsBreakerOn.push_back(rBreaker2);

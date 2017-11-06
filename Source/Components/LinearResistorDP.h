@@ -28,7 +28,7 @@
 
 namespace DPsim {
 
-	class LinearResistor : public BaseComponent {
+	class ResistorDP : public BaseComponent {
 	protected:
 
 		///Resistance [ohm]
@@ -50,8 +50,8 @@ namespace DPsim {
 		Real mVoltageAtNode2Im;
 
 	public:
-		LinearResistor() { ; };
-		LinearResistor(String name, Int src, Int dest, Real resistance);
+		ResistorDP() { ; };
+		ResistorDP(String name, Int src, Int dest, Real resistance);
 
 		void init(Real om, Real dt) { }
 		void applySystemMatrixStamp(SystemModel& system);

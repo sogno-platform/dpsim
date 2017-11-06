@@ -39,12 +39,12 @@ void DPsim::RXLineResLoad() {
 	// Declare circuit components
 	std::vector<BaseComponent*> circElements0, circElements1, circElements2;
 	circElements0.push_back(new VoltSourceRes("v_s", 1, 0, Complex(10000, 0), 1));
-	circElements0.push_back(new LinearResistor("r_line", 1, 2, 1));
-	circElements0.push_back(new Inductor("l_line", 2, 3, 1));
+	circElements0.push_back(new ResistorDP("r_line", 1, 2, 1));
+	circElements0.push_back(new InductorDP("l_line", 2, 3, 1));
 	circElements1 = circElements0;
 	circElements2 = circElements0;
-	circElements1.push_back(new LinearResistor("r_load", 3, 0, 1000));
-	circElements2.push_back(new LinearResistor("r_load", 3, 0, 800));
+	circElements1.push_back(new ResistorDP("r_load", 3, 0, 1000));
+	circElements2.push_back(new ResistorDP("r_load", 3, 0, 800));
 
 	// Set up simulation
 	Simulation newSim(circElements1, 2.0*M_PI*50.0, timeStep, 0.3, log);
@@ -77,12 +77,12 @@ void DPsim::VarFreqRXLineResLoad(Real timeStep, Real finalTime, Real freqStep, R
 	// Declare circuit components
 	std::vector<BaseComponent*> circElements0, circElements1, circElements2;
 	circElements0.push_back(new VoltSourceResFreq("v_s", 1, 0, 1000, 0, 1, 2*PI*-5, freqStep, rampTime));
-	circElements0.push_back(new LinearResistor("r_line", 1, 2, 1));
-	circElements0.push_back(new Inductor("l_line", 2, 3, 0.2));
+	circElements0.push_back(new ResistorDP("r_line", 1, 2, 1));
+	circElements0.push_back(new InductorDP("l_line", 2, 3, 0.2));
 	circElements1 = circElements0;
 	circElements2 = circElements0;
-	circElements1.push_back(new LinearResistor("r_load", 3, 0, 100));
-	circElements2.push_back(new LinearResistor("r_load", 3, 0, 50));
+	circElements1.push_back(new ResistorDP("r_load", 3, 0, 100));
+	circElements2.push_back(new ResistorDP("r_load", 3, 0, 50));
 
 	// Set up simulation
 	Simulation newSim(circElements1, 2.0*PI*50.0, timeStep, finalTime, log);
@@ -241,12 +241,12 @@ void DPsim::VarFreqRXLineResLoad_NZ_Paper(Real timeStep, Real finalTime, Real fr
 	// Declare circuit components
 	std::vector<BaseComponent*> circElements0, circElements1, circElements2;
 	circElements0.push_back(new VoltSourceResFreq("v_s", 1, 0, 10000, 0, 1, 2 * PI*-1, freqStep, rampTime));
-	circElements0.push_back(new LinearResistor("r_line", 1, 2, 1));
-	circElements0.push_back(new Inductor("l_line", 2, 3, 1));
+	circElements0.push_back(new ResistorDP("r_line", 1, 2, 1));
+	circElements0.push_back(new InductorDP("l_line", 2, 3, 1));
 	circElements1 = circElements0;
 	circElements2 = circElements0;
-	circElements1.push_back(new LinearResistor("r_load", 3, 0, 10));
-	circElements2.push_back(new LinearResistor("r_load", 3, 0, 5));
+	circElements1.push_back(new ResistorDP("r_load", 3, 0, 10));
+	circElements2.push_back(new ResistorDP("r_load", 3, 0, 5));
 
 	// Set up simulation
 	Simulation newSim(circElements1, 2.0*PI*50.0, timeStep, finalTime, log);

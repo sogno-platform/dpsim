@@ -168,7 +168,7 @@
     <ClInclude Include="..\..\Source\Components\SynchGenBase.h" />
     <ClInclude Include="..\..\Source\Components\SynchronGeneratorDP.h" />
     <ClInclude Include="..\..\Source\Components\SynchronGeneratorEMT.h" />
-    <ClInclude Include="..\..\Source\Components\SynchronGeneratorEMTFnP.h" />
+    <ClInclude Include="..\..\Source\Components\TransformerDP.h" />
     <ClInclude Include="..\..\Source\Components\VoltageBehindReactanceDP.h" />
     <ClInclude Include="..\..\Source\Components\VoltageBehindReactanceEMT.h" />
     <ClInclude Include="..\..\Source\Components\VoltSourceResDP.h" />
@@ -210,6 +210,7 @@
     <ClCompile Include="..\..\Source\Components\SynchGenBase.cpp" />
     <ClCompile Include="..\..\Source\Components\SynchronGeneratorDP.cpp" />
     <ClCompile Include="..\..\Source\Components\SynchronGeneratorEMT.cpp" />
+    <ClCompile Include="..\..\Source\Components\TransformerDP.cpp" />
     <ClCompile Include="..\..\Source\Components\VoltageBehindReachtanceDP.cpp" />
     <ClCompile Include="..\..\Source\Components\VoltageBehindReactanceEMT.cpp" />
     <ClCompile Include="..\..\Source\Components\VoltSourceResDP.cpp" />

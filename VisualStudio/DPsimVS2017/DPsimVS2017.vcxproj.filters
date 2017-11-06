@@ -90,9 +90,6 @@
     <ClInclude Include="..\..\Source\IntegrationMethod.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\Source\Components\SynchronGeneratorEMTFnP.h">
-      <Filter>Headerdateien\Components</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\Source\Components\SynchGenBase.h">
       <Filter>Headerdateien\Components</Filter>
     </ClInclude>
@@ -148,6 +145,9 @@
       <Filter>Headerdateien</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Source\Components\SimplifiedSynchronGeneratorEMT.h">
+      <Filter>Headerdateien\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\Components\TransformerDP.h">
       <Filter>Headerdateien\Components</Filter>
     </ClInclude>
   </ItemGroup>
@@ -261,6 +261,9 @@
       <Filter>Quelldateien\Examples</Filter>
     </ClCompile>
     <ClCompile Include="..\..\Source\Components\SimplifiedSynchronGeneratorEMT.cpp">
+      <Filter>Quelldateien\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\Components\TransformerDP.cpp">
       <Filter>Quelldateien\Components</Filter>
     </ClCompile>
   </ItemGroup>
