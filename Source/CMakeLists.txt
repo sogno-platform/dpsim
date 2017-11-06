@@ -43,10 +43,10 @@ endif()
 set(COMPONENTS_INCLUDE_DIR Components/)
 
 include_directories(${EIGEN3_INCLUDE_DIR} ${PYTHON_INCLUDE_DIRS} ${CIMPP_INCLUDE_DIR} ${COMPONENTS_INCLUDE_DIR} ${CIM_INCLUDE_DIR})
-
+link_directories(../Libraries/CIMpp/Debug/)
 file(GLOB SOURCES *.cpp Components/*.cpp)
 add_library(dpsim SHARED ${SOURCES})
-target_link_libraries(dpsim CIM-Parser ${PYTHON_LIBRARIES} ${LIBS})
+target_link_libraries(dpsim CIMParser ${PYTHON_LIBRARIES} ${LIBS})
 execute_process(COMMAND ${PYTHON_EXECUTABLE} -c "import sysconfig; print(sysconfig.get_path('platlib'), end='')" OUTPUT_VARIABLE PYTHON_PKGPATH)
 
 ADD_CUSTOM_TARGET(link_dpsim ALL DEPENDS dpsim COMMAND ${CMAKE_COMMAND} -E create_symlink $<TARGET_FILE_NAME:dpsim> dpsim.${PYTHON_MODULE_SUFFIX})
