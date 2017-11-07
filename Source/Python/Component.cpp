@@ -266,10 +266,10 @@ PyObject* Python::LoadCim(PyObject* self, PyObject* args) {
 	double frequency = 50;
 	PyObject *list;
 	PyBytesObject *filename;
-	CIMReader *reader;
+	CIM::Reader *reader;
 
 	if (PyArg_ParseTuple(args, "O&|d", PyUnicode_FSConverter, &filename, &frequency)) {
-		reader = new CIMReader(2*PI*frequency);
+		reader = new CIM::Reader(2*PI*frequency);
 		reader->addFile(PyBytes_AsString((PyObject*) filename));
 		Py_DECREF(filename);
 	} else if (PyArg_ParseTuple(args, "O|d", &list, &frequency)) {
@@ -278,7 +278,7 @@ PyObject* Python::LoadCim(PyObject* self, PyObject* args) {
 			PyErr_SetString(PyExc_TypeError, "First argument must be filename or list of filenames");
 			return nullptr;
 		}
-		reader = new CIMReader(2*PI*frequency);
+		reader = new CIM::Reader(2*PI*frequency);
 		for (int i = 0; i < PyList_Size(list); i++) {
 			if (!PyUnicode_FSConverter(PyList_GetItem(list, i), &filename)) {
 				delete reader;

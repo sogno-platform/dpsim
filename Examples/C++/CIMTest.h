@@ -23,7 +23,7 @@
 
 #pragma once
 
-#include "CIM/CIMReader.h"
+#include "CIM/Reader.h"
 
 void readFixedCIMFiles_LineLoad();
 void readFixedCIMFiles_IEEE9bus();

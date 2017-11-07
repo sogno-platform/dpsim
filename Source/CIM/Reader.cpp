@@ -20,15 +20,17 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *********************************************************************************/
 
-#include "CIMReader.h"
-#include "CIMModel.hpp"
-#include "IEC61970.hpp"
+#include <CIMModel.hpp>
+#include <IEC61970.hpp>
+
+#include "CIM/Reader.h"
 
 #include "Components/PQLoadDP.h"
 #include "Components/RxLineDP.h"
 #include "Components/TwoWindingTransformerDP.h"
 
 using namespace DPsim;
+using namespace DPsim::CIM;
 using namespace IEC61970::Base::Core;
 using namespace IEC61970::Base::Domain;
 using namespace IEC61970::Base::Equivalents;
@@ -36,7 +38,7 @@ using namespace IEC61970::Base::Topology;
 using namespace IEC61970::Base::Wires;
 
 // TODO is UnitMulitplier actually used/set anywhere?
-Real CIMReader::unitValue(Real value, UnitMultiplier mult) {
+Real Reader::unitValue(Real value, UnitMultiplier mult) {
 	switch (mult) {
 	case UnitMultiplier::p:
 		value *= 1e-12;
@@ -75,19 +77,19 @@ Real CIMReader::unitValue(Real value, UnitMultiplier mult) {
 }
 
 // TODO: fix error with frequency and angular frequency
-CIMReader::CIMReader(Real systemFrequency) {
+Reader::Reader(Real systemFrequency) {
 	mModel.setDependencyCheckOff();
 	mNumVoltageSources = 0;
 	mVoltages = nullptr;
 	mFrequency = systemFrequency;
 }
 
-CIMReader::~CIMReader() {
+Reader::~Reader() {
 	if (mVoltages)
 		delete[] mVoltages;
 }
 
-BaseComponent* CIMReader::mapACLineSegment(ACLineSegment* line) {
+BaseComponent* Reader::mapACLineSegment(ACLineSegment* line) {
 	std::vector<Int> &nodes = mEqNodeMap.at(line->mRID); // TODO can fail
 	if (nodes.size() != 2) {
 		std::cerr << "ACLineSegment " << line->mRID << " has " << nodes.size() << " terminals, ignoring" << std::endl;
@@ -101,19 +103,19 @@ BaseComponent* CIMReader::mapACLineSegment(ACLineSegment* line) {
 	return new RxLine(line->name, nodes[0], nodes[1], r, x/mFrequency);
 }
 
-BaseComponent* CIMReader::mapAsynchronousMachine(AsynchronousMachine* machine) {
+BaseComponent* Reader::mapAsynchronousMachine(AsynchronousMachine* machine) {
 	return newFlowPQLoad(machine->mRID, machine->name);
 }
 
-BaseComponent* CIMReader::mapEnergyConsumer(EnergyConsumer* con) {
+BaseComponent* Reader::mapEnergyConsumer(EnergyConsumer* con) {
 	return newFlowPQLoad(con->mRID, con->name);
 }
 
-BaseComponent* CIMReader::mapEquivalentInjection(EquivalentInjection* inj) {
+BaseComponent* Reader::mapEquivalentInjection(EquivalentInjection* inj) {
 	return newFlowPQLoad(inj->mRID, inj->name);
 }
 
-BaseComponent* CIMReader::mapExternalNetworkInjection(ExternalNetworkInjection* inj) {
+BaseComponent* Reader::mapExternalNetworkInjection(ExternalNetworkInjection* inj) {
 	std::vector<Int> &nodes = mEqNodeMap.at(inj->mRID);
 	if (nodes.size() != 1) {
 		std::cerr << "ExternalNetworkInjection " << inj->mRID << " has " << nodes.size() << " terminals, ignoring" << std::endl;
@@ -130,7 +132,7 @@ BaseComponent* CIMReader::mapExternalNetworkInjection(ExternalNetworkInjection* 
 	return new IdealVoltageSource(inj->name, node, 0, Complex(volt->v.value, volt->angle.value*PI/180), ++mNumVoltageSources);
 }
 
-BaseComponent* CIMReader::mapPowerTransformer(PowerTransformer* trans) {
+BaseComponent* Reader::mapPowerTransformer(PowerTransformer* trans) {
 	std::vector<Int> &nodes = mEqNodeMap.at(trans->mRID);
 	if (nodes.size() != trans->PowerTransformerEnd.size()) {
 		std::cerr << "PowerTransformer " << trans->mRID << " has differing number of terminals and windings, ignoring" << std::endl;
@@ -151,7 +153,7 @@ BaseComponent* CIMReader::mapPowerTransformer(PowerTransformer* trans) {
 	return nullptr;
 }
 
-BaseComponent* CIMReader::mapSynchronousMachine(SynchronousMachine* machine) {
+BaseComponent* Reader::mapSynchronousMachine(SynchronousMachine* machine) {
 	// TODO: don't use SvVoltage, but map to a SynchronGenerator instead?
 	std::vector<int> &nodes = mEqNodeMap.at(machine->mRID);
 	if (nodes.size() != 1) {
@@ -171,7 +173,7 @@ BaseComponent* CIMReader::mapSynchronousMachine(SynchronousMachine* machine) {
 	return new VoltSourceRes(machine->name, node, 0, Complex(volt->v.value, volt->angle.value*PI/180), machine->r.value);
 }
 
-BaseComponent* CIMReader::mapComponent(BaseClass* obj) {
+BaseComponent* Reader::mapComponent(BaseClass* obj) {
 	if (ACLineSegment *line = dynamic_cast<ACLineSegment*>(obj))
 		return mapACLineSegment(line);
 	if (AsynchronousMachine *machine = dynamic_cast<AsynchronousMachine*>(obj))
@@ -189,7 +191,7 @@ BaseComponent* CIMReader::mapComponent(BaseClass* obj) {
 	return nullptr;
 }
 
-BaseComponent* CIMReader::newFlowPQLoad(String rid, String name) {
+BaseComponent* Reader::newFlowPQLoad(String rid, String name) {
 	std::vector<int> &nodes = mEqNodeMap.at(rid);
 	if (nodes.size() != 1) {
 		std::cerr << rid << " has " << nodes.size() << " terminals; ignoring" << std::endl;
@@ -212,11 +214,11 @@ BaseComponent* CIMReader::newFlowPQLoad(String rid, String name) {
 	return new PQLoad(name, node, 0, flow->p.value, flow->q.value, volt->v.value, volt->angle.value*PI/180);
 }
 
-bool CIMReader::addFile(String filename) {
+bool Reader::addFile(String filename) {
 	return mModel.addCIMFile(filename);
 }
 
-void CIMReader::parseFiles() {
+void Reader::parseFiles() {
 	mModel.parseFiles();
 	// First, go through all topological nodes and collect them in a list.
 	// Since all nodes have references to the equipment connected to them (via Terminals), but not
@@ -272,17 +274,17 @@ void CIMReader::parseFiles() {
 	}
 }
 
-std::vector<BaseComponent*>& CIMReader::getComponents() {
+std::vector<BaseComponent*>& Reader::getComponents() {
 	return mComponents;
 }
 
-int CIMReader::mapTopologicalNode(String mrid) {
+int Reader::mapTopologicalNode(String mrid) {
 	auto search = mTopNodes.find(mrid);
 	if (search == mTopNodes.end())
 		return -1;
 	return search->second;
 }
 
-int CIMReader::getNumVoltageSources() {
+int Reader::getNumVoltageSources() {
 	return mNumVoltageSources;
 }

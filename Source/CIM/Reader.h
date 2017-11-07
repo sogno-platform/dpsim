@@ -32,6 +32,7 @@
 #include "IEC61970.hpp"
 
 using namespace DPsim;
+
 using namespace IEC61970::Base::Domain;
 using namespace IEC61970::Base::Equivalents;
 using namespace IEC61970::Base::StateVariables;
@@ -39,7 +40,9 @@ using namespace IEC61970::Base::Topology;
 using namespace IEC61970::Base::Wires;
 
 namespace DPsim {
-	class CIMReader {
+namespace CIM {
+
+	class Reader {
 		private:
 			CIMModel mModel;
 			// All components after mapping
@@ -72,8 +75,8 @@ namespace DPsim {
 
 			BaseComponent* newFlowPQLoad(String rid, String name);
 		public:
-			CIMReader(Real om);
-			virtual ~CIMReader();
+			Reader(Real om);
+			virtual ~Reader();
 
 			bool addFile(String filename);
 			void parseFiles();
@@ -83,4 +86,5 @@ namespace DPsim {
 
 			static Real unitValue(Real value, UnitMultiplier mult);
 	};
+};
 };
