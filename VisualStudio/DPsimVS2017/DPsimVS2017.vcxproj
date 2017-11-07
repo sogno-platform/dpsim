@@ -145,8 +145,6 @@
     <ClInclude Include="..\..\Examples\C++\CIMTest.h" />
     <ClInclude Include="..\..\Examples\C++\ReferenceCircuits.h" />
     <ClInclude Include="..\..\Examples\C++\ShmemTest.h" />
-    <ClInclude Include="..\..\Examples\C++\SimpleCircuitTest.h" />
-    <ClInclude Include="..\..\Examples\C++\SyncGenUnitTestVBR.h" />
     <ClInclude Include="..\..\Examples\C++\SynchronGenUnitTest.h" />
     <ClInclude Include="..\..\Source\CIMReader.h" />
     <ClInclude Include="..\..\Source\Components.h" />
@@ -189,8 +187,6 @@
     <ClCompile Include="..\..\Examples\C++\DPsimExampleCIM.cpp" />
     <ClCompile Include="..\..\Examples\C++\ReferenceCircuits.cpp" />
     <ClCompile Include="..\..\Examples\C++\ShmemTest.cpp" />
-    <ClCompile Include="..\..\Examples\C++\SimpleCircuitTest.cpp" />
-    <ClCompile Include="..\..\Examples\C++\SyncGenUnitTestVBR.cpp" />
     <ClCompile Include="..\..\Examples\C++\SynchronGenUnitTest.cpp" />
     <ClCompile Include="..\..\Source\CIMReader.cpp" />
     <ClCompile Include="..\..\Source\Components\BaseComponent.cpp" />

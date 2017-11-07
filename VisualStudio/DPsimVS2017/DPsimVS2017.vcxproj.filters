@@ -78,12 +78,6 @@
     <ClInclude Include="..\..\Examples\C++\ShmemTest.h">
       <Filter>Headerdateien\Examples</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\Examples\C++\SimpleCircuitTest.h">
-      <Filter>Headerdateien\Examples</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\Examples\C++\SyncGenUnitTestVBR.h">
-      <Filter>Headerdateien\Examples</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\Examples\C++\SynchronGenUnitTest.h">
       <Filter>Headerdateien\Examples</Filter>
     </ClInclude>
@@ -192,12 +186,6 @@
       <Filter>Quelldateien\Examples</Filter>
     </ClCompile>
     <ClCompile Include="..\..\Examples\C++\ShmemTest.cpp">
-      <Filter>Quelldateien\Examples</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\Examples\C++\SimpleCircuitTest.cpp">
-      <Filter>Quelldateien\Examples</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\Examples\C++\SyncGenUnitTestVBR.cpp">
       <Filter>Quelldateien\Examples</Filter>
     </ClCompile>
     <ClCompile Include="..\..\Examples\C++\SynchronGenUnitTest.cpp">

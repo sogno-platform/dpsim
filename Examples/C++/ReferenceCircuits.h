@@ -23,8 +23,10 @@
 
 #pragma once
 
-namespace DPsim {
+#include "Definitions.h"
 
+namespace DPsim {
+	// Simulink models can be found in the ReferenceExamples repository
 	void simulationExample1();
 	void simulationExample1L2();
 	void simulationExample2();
@@ -37,4 +39,19 @@ namespace DPsim {
 	void simulationExampleRXLine3();
 	void simulationExamplePiLine();
 	void simulationExamplePiLine2();
+	
+	// Circuits used for ICCEP2017 paper
+	void RXLineResLoad();
+	void VarFreqRXLineResLoad(Real timeStep, Real finalTime, Real freqStep, Real loadStep, Real rampTime);
+	void RXLineResLoadEMT();
+	void VarFreqRXLineResLoadEMT(Real timeStep, Real finalTime, Real freqStep, Real loadStep, Real rampTime);
+	void runDpEmtVarFreqStudy();
+	
+	// Circuits used for IESES18 paper
+	void VarFreqRXLineResLoad_NZ_Paper(Real timeStep, Real finalTime, Real freqStep, Real loadStep, Real rampTime);
+	void VarFreqRXLineResLoadEMT_NZ_Paper(Real timeStep, Real finalTime, Real freqStep, Real loadStep, Real rampTime);
+	void runDpEmtVarFreqStudy_NZ_Paper();
+
+	// Real-Time example
+	void RTExample();
 }

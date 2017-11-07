@@ -39,4 +39,8 @@ namespace DPsim {
 	// Simplified generator tests
 	void SimpSynGenUnitTestThreePhaseFault();
 
+	// EMT generator tests
+	void SynGenUnitTestVBR();
+	void SynGenUnitTestVBRDP();
+
 }
