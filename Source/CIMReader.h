@@ -73,7 +73,6 @@ namespace DPsim {
 			ElementPtr mapExternalNetworkInjection(ExternalNetworkInjection* inj);
 			ElementPtr mapPowerTransformer(PowerTransformer *trans);
 			ElementPtr mapSynchronousMachine(SynchronousMachine* machine);
-
 			ElementPtr newPQLoad(String rid, String name);
 		public:
 			CIMReader(Real om, Logger& logger);

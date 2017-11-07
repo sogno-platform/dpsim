@@ -135,7 +135,7 @@ void Simulation::addSystemTopology(ElementList newElements) {
 }
 
 
-Int Simulation::step(Logger& logger, bool blocking)
+Int Simulation::step(bool blocking)
 {
 	mSystemModel.setRightSideVectorToZero();
 
@@ -161,9 +161,9 @@ Int Simulation::step(Logger& logger, bool blocking)
 		if (mTime >= mSwitchEventVector[mCurrentSwitchTimeIndex].switchTime) {
 			switchSystemMatrix(mSwitchEventVector[mCurrentSwitchTimeIndex].systemIndex);
 			mElements = mElementsVector[++mCurrentSwitchTimeIndex];
-			logger.Log(LogLevel::INFO) << "Switched to system " << mCurrentSwitchTimeIndex << " at " << mTime << std::endl;
-			logger.Log(LogLevel::INFO) << "New matrix:" << std::endl << mSystemModel.getCurrentSystemMatrix() << std::endl;
-			logger.Log(LogLevel::INFO) << "New decomp:" << std::endl << mSystemModel.getLUdecomp() << std::endl;
+			mLogger->Log(LogLevel::INFO) << "Switched to system " << mCurrentSwitchTimeIndex << " at " << mTime << std::endl;
+			mLogger->Log(LogLevel::INFO) << "New matrix:" << std::endl << mSystemModel.getCurrentSystemMatrix() << std::endl;
+			mLogger->Log(LogLevel::INFO) << "New decomp:" << std::endl << mSystemModel.getLUdecomp() << std::endl;
 		}
 	}
 
@@ -173,11 +173,10 @@ Int Simulation::step(Logger& logger, bool blocking)
 	else {
 		return 1;
 	}
-
 }
 
-Int Simulation::step(Logger& logger, Logger& leftSideVectorLog, Logger& rightSideVectorLog, bool blocking) {
-	Int retValue = step(logger, blocking);
+Int Simulation::step(Logger& leftSideVectorLog, Logger& rightSideVectorLog, bool blocking) {
+	Int retValue = step(blocking);
 
 	leftSideVectorLog.LogDataLine(getTime(), getLeftSideVector());
 	rightSideVectorLog.LogDataLine(getTime(), getRightSideVector());
@@ -185,7 +184,7 @@ Int Simulation::step(Logger& logger, Logger& leftSideVectorLog, Logger& rightSid
 	return retValue;
 }
 
-Int Simulation::stepGeneratorTest(Logger& logger, Logger& leftSideVectorLog, Logger& rightSideVectorLog,
+Int Simulation::stepGeneratorTest(Logger& leftSideVectorLog, Logger& rightSideVectorLog,
 	ElementPtr generator, Real time) {
 	// Set to zero because all components will add their contribution for the current time step to the current value
 	mSystemModel.getRightSideVector().setZero();
@@ -208,7 +207,7 @@ Int Simulation::stepGeneratorTest(Logger& logger, Logger& leftSideVectorLog, Log
 			switchSystemMatrix(mSwitchEventVector[mCurrentSwitchTimeIndex].systemIndex);
 
 			mCurrentSwitchTimeIndex++;
-			logger.Log(LogLevel::INFO) << "Switched to system " << mCurrentSwitchTimeIndex << " at " << mTime << std::endl;
+			mLogger->Log(LogLevel::INFO) << "Switched to system " << mCurrentSwitchTimeIndex << " at " << mTime << std::endl;
 		}
 	}
 
@@ -232,7 +231,7 @@ Int Simulation::stepGeneratorTest(Logger& logger, Logger& leftSideVectorLog, Log
 	}
 }
 
-int Simulation::stepGeneratorVBR(Logger& logger, Logger& leftSideVectorLog, Logger& rightSideVectorLog,
+int Simulation::stepGeneratorVBR(Logger& leftSideVectorLog, Logger& rightSideVectorLog,
 	ElementPtr generator, Real time) {
 
 	// Set to zero because all components will add their contribution for the current time step to the current value
@@ -256,7 +255,7 @@ int Simulation::stepGeneratorVBR(Logger& logger, Logger& leftSideVectorLog, Logg
 			switchSystemMatrix(mSwitchEventVector[mCurrentSwitchTimeIndex].systemIndex);
 
 			mCurrentSwitchTimeIndex++;
-			logger.Log(LogLevel::INFO) << "Switched to system " << mCurrentSwitchTimeIndex << " at " << mTime << std::endl;
+			mLogger->Log(LogLevel::INFO) << "Switched to system " << mCurrentSwitchTimeIndex << " at " << mTime << std::endl;
 		}
 	}
 

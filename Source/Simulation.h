@@ -88,9 +88,9 @@ namespace DPsim {
 		/// TODO: check that every system matrix has the same dimensions
 		void initialize(ElementList elements);
 		/// Solve system A * x = z for x and current time
-		Int step(Logger& logger, bool blocking = true);
+		Int step(bool blocking = true);
 		/// Solve system A * x = z for x and current time. Log current values of both vectors.
-		Int step(Logger& logger, Logger& leftSideVectorLog, Logger& rightSideVectorLog, bool blocking = true);
+		Int step(Logger& leftSideVectorLog, Logger& rightSideVectorLog, bool blocking = true);
 		void switchSystemMatrix(Int systemMatrixIndex);
 		void setSwitchTime(Real switchTime, Int systemIndex);
 		void increaseByTimeStep();
@@ -104,9 +104,9 @@ namespace DPsim {
 		Matrix & getLeftSideVector() { return mSystemModel.getLeftSideVector(); }
 		Matrix & getRightSideVector() { return mSystemModel.getRightSideVector(); }
 		Matrix & getSystemMatrix() { return mSystemModel.getCurrentSystemMatrix(); }
-		Int stepGeneratorTest(Logger& logger, Logger& leftSideVectorLog, Logger& rightSideVectorLog,
+		Int stepGeneratorTest(Logger& leftSideVectorLog, Logger& rightSideVectorLog,
 			ElementPtr generator, Real time);
-		Int stepGeneratorVBR(Logger& logger, Logger& leftSideVectorLog, Logger& rightSideVectorLog,
+		Int stepGeneratorVBR(Logger& leftSideVectorLog, Logger& rightSideVectorLog,
 			ElementPtr generator, Real time);
 
 		void addSystemTopology(ElementList newElements);

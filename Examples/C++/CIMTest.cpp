@@ -60,7 +60,7 @@ Int DPsim::testCIMReader(std::list<String> filenames) {
 	// Run simulation as usually
 	Simulation sim(components, 2 * PI * 50, 0.001, 0.3, log);
 	std::cout << "Start simulation." << std::endl;
-	while (sim.step(log, llog, rlog))
+	while (sim.step(llog, rlog))
 		sim.increaseByTimeStep();
 	std::cout << "Simulation finished." << std::endl;
 	

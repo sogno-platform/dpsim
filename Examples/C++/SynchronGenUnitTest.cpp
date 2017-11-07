@@ -159,7 +159,7 @@ void DPsim::SynGenUnitTestBalancedResLoad() {
 
 	// Main Simulation Loop
 	while (newSim.getTime() < tf) {
-		newSim.stepGeneratorTest(log, vtLog, jLog, gen, newSim.getTime());
+		newSim.stepGeneratorTest(vtLog, jLog, gen, newSim.getTime());
 		newSim.increaseByTimeStep();
 	}
 
@@ -256,7 +256,7 @@ void DPsim::SynGenUnitTestPhaseToPhaseFault() {
 	// Main Simulation Loop
 	while (newSim.getTime() < tf) {
 		std::cout << newSim.getTime() << std::endl;
-		newSim.stepGeneratorTest(log, vtLog, jLog, gen, newSim.getTime());
+		newSim.stepGeneratorTest(vtLog, jLog, gen, newSim.getTime());
 		newSim.increaseByTimeStep();
 	}
 }
@@ -361,7 +361,7 @@ void DPsim::SynGenUnitTestThreePhaseFault() {
 	// Main Simulation Loop
 	while (newSim.getTime() < tf) {
 		std::cout << newSim.getTime() << std::endl;
-		newSim.stepGeneratorTest(log, vtLog, jLog, gen, newSim.getTime());
+		newSim.stepGeneratorTest(vtLog, jLog, gen, newSim.getTime());
 		newSim.increaseByTimeStep();
 	}
 }
@@ -444,7 +444,7 @@ void DPsim::SynGenDPUnitTestBalancedResLoad() {
 	// Main Simulation Loop
 	while (newSim.getTime() < tf) {
 		std::cout << newSim.getTime() << std::endl;
-		newSim.stepGeneratorTest(log, vtLog, jLog, gen, newSim.getTime());
+		newSim.stepGeneratorTest(vtLog, jLog, gen, newSim.getTime());
 		newSim.increaseByTimeStep();
 	}
 	std::cout << "Simulation finished." << std::endl;
@@ -550,7 +550,7 @@ void DPsim::SynGenDPUnitTestThreePhaseFault() {
 
 	while (newSim.getTime() < tf) {
 		std::cout << newSim.getTime() << std::endl;
-		newSim.stepGeneratorTest(log, vtLog, jLog, gen, newSim.getTime());
+		newSim.stepGeneratorTest(vtLog, jLog, gen, newSim.getTime());
 		newSim.increaseByTimeStep();
 	}
 	std::cout << "Simulation finished." << std::endl;
@@ -656,7 +656,7 @@ void DPsim::SimpSynGenUnitTestThreePhaseFault() {
 	// Main Simulation Loop
 	while (newSim.getTime() < tf) {
 		std::cout << newSim.getTime() << std::endl;
-		newSim.stepGeneratorTest(log, vtLog, jLog, gen, newSim.getTime());
+		newSim.stepGeneratorTest(vtLog, jLog, gen, newSim.getTime());
 		newSim.increaseByTimeStep();
 	}
 
@@ -764,7 +764,7 @@ void DPsim::SynGenUnitTestVBR() {
 	while (newSim.getTime() < tf)
 	{
 		std::cout << newSim.getTime() << std::endl;
-		newSim.stepGeneratorVBR(log, vtLog, jLog, gen, newSim.getTime());
+		newSim.stepGeneratorVBR(vtLog, jLog, gen, newSim.getTime());
 		newSim.increaseByTimeStep();
 	}
 
@@ -869,7 +869,7 @@ void DPsim::SynGenUnitTestVBRDP() {
 	
 	while (newSim.getTime() < tf) {
 		std::cout << newSim.getTime() << std::endl;
-		newSim.stepGeneratorVBR(log, vtLog, jLog, gen, newSim.getTime());
+		newSim.stepGeneratorVBR(vtLog, jLog, gen, newSim.getTime());
 		newSim.increaseByTimeStep();
 	}
 

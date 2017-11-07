@@ -28,105 +28,89 @@
 
 using namespace DPsim;
 
-void DPsim::simulationExample1() {
+void DPsim::simulationExample1() {	
+	// Define simulation scenario
 	Real timeStep = 0.001;
-	// Define Object for saving data on a file
-	std::ostringstream fileName;
-	fileName << "SimulationExample1_" << timeStep;
-	Logger log("Logs/" + fileName.str() + ".log");
-	Logger leftVectorLog("Logs/LeftVector_" + fileName.str() + ".csv");
-	Logger rightVectorLog("Logs/RightVector_" + fileName.str() + ".csv");
-
+	Real omega = 2.0*M_PI*50.0;
+	Real finalTime = 0.3;
 	ElementList circElements;
 	circElements.push_back(make_shared<VoltSourceRes>("v_in", 1, 0, Complex(10, 0), 1));
 	circElements.push_back(make_shared<InductorDP>("l_1", 1, 2, 0.02));
 	circElements.push_back(make_shared<InductorDP>("l_2", 2, 0, 0.1));
 	circElements.push_back(make_shared<InductorDP>("l_3", 2, 3, 0.05));
 	circElements.push_back(make_shared<ResistorDP>("r_2", 3, 0, 2));
-	
-	// Set up simulation
-	Simulation newSim(circElements, 2.0*M_PI*50.0, timeStep, 0.3, log);
 
-	// Main Simulation Loop
+	// Define log names
+	std::ostringstream fileName;
+	fileName << "SimulationExample1_" << timeStep;
+	Logger log("Logs/" + fileName.str() + ".log");
+	Logger leftVectorLog("Logs/LeftVector_" + fileName.str() + ".csv");
+	Logger rightVectorLog("Logs/RightVector_" + fileName.str() + ".csv");
+		
+	// Set up simulation and start main simulation loop
+	Simulation newSim(circElements, omega, timeStep, finalTime, log);
 	std::cout << "Start simulation." << std::endl;
-	while (newSim.step(log, leftVectorLog, rightVectorLog))
-	{
+	while (newSim.step(leftVectorLog, rightVectorLog)) {
 		newSim.increaseByTimeStep();
 		updateProgressBar(newSim.getTime(), newSim.getFinalTime());
 	}
 	std::cout << "Simulation finished." << std::endl;
 }
 
-void DPsim::simulationExample1L2()
-{
+void DPsim::simulationExample1L2() {
+	// Define simulation scenario
 	Real timeStep = 0.001;
+	Real omega = 2.0*M_PI*50.0;
+	Real finalTime = 0.3;
+	ElementList circElements;
+	circElements.push_back(make_shared<VoltSourceRes>("v_in", 1, 0, Complex(10, 0), 1));
+	circElements.push_back(make_shared<InductorDP>("l_1", 1, 2, 0.02));
+	circElements.push_back(make_shared<InductorDP>("l_2", 2, 0, 0.1));
+	circElements.push_back(make_shared<InductorDP>("l_3", 2, 3, 0.05));
+	circElements.push_back(make_shared<ResistorDP>("r_2", 3, 0, 2));
 
-	// Define Object for saving data on a file
+	// Define log names
 	std::ostringstream fileName;
 	fileName << "SimulationExample1L2_" << timeStep;
-	Logger log("Logs/Log_" + fileName.str() + ".log"),
-		leftVectorLog("Logs/LeftVectorLog_" + fileName.str() + ".csv"),
-		rightVectorLog("Logs/RightVectorLog_" + fileName.str() + ".csv");
+	Logger log("Logs/" + fileName.str() + ".log");
+	Logger leftVectorLog("Logs/LeftVector_" + fileName.str() + ".csv");
+	Logger rightVectorLog("Logs/RightVector_" + fileName.str() + ".csv");
 
-	ElementList circElements0;
-	circElements0.push_back(make_shared<VoltSourceRes>("v_in", 1, 0, Complex(10, 0), 1));
-	circElements0.push_back(make_shared<InductorDP>("l_1", 1, 2, 0.02));
-	circElements0.push_back(make_shared<InductorDP>("l_2", 2, 0, 0.1));
-	circElements0.push_back(make_shared<InductorDP>("l_3", 2, 3, 0.05));
-	circElements0.push_back(make_shared<ResistorDP>("r_2", 3, 0, 2));
-
-	std::cout << "The contents of circElements0 are:";
-	for (ElementList::iterator it = circElements0.begin(); it != circElements0.end(); ++it) {
-		std::cout << "Added " << (*it)->getName() << std::endl;
-	}
-	std::cout << '\n';
-
-	// Set up simulation
-	Simulation newSim(circElements0, 2.0*M_PI*50.0, timeStep, 0.3, log);
-
-	// Main Simulation Loop
+	// Set up simulation and start main simulation loop
+	Simulation newSim(circElements, omega, timeStep, finalTime, log);
 	std::cout << "Start simulation." << std::endl;
-	while (newSim.step(log, leftVectorLog, rightVectorLog))
-	{
+	while (newSim.step(leftVectorLog, rightVectorLog)) {
 		newSim.increaseByTimeStep();
 		updateProgressBar(newSim.getTime(), newSim.getFinalTime());
 	}
-	std::cout << "Simulation finished." << std::endl;
+	std::cout << "Simulation finished." << std::endl;	
 }
 
-void DPsim::simulationExample2()
-{
+void DPsim::simulationExample2() {
+	// Define simulation scenario
 	Real timeStep = 0.001;
+	Real omega = 2.0*M_PI*50.0;
+	Real finalTime = 0.3;
+	ElementList circElements;
+	circElements.push_back(make_shared<VoltSourceRes>("v_in", 1, 0, Complex(10, 0), 1));
+	circElements.push_back(make_shared<InductorDP>("l_1", 1, 2, 0.02));
+	circElements.push_back(make_shared<InductorDP>("l_2", 2, 0, 0.1));
 
-	// Define Object for saving data on a file
+	// Define log names
 	std::ostringstream fileName;
 	fileName << "SimulationExample2_" << timeStep;
-	Logger log("Logs/Log_" + fileName.str() + ".log"),
-		leftVectorLog("Logs/LeftVectorLog_" + fileName.str() + ".csv"),
-		rightVectorLog("Logs/RightVectorLog_" + fileName.str() + ".csv");
+	Logger log("Logs/" + fileName.str() + ".log");
+	Logger leftVectorLog("Logs/LeftVector_" + fileName.str() + ".csv");
+	Logger rightVectorLog("Logs/RightVector_" + fileName.str() + ".csv");
 
-	ElementList circElements0;
-	circElements0.push_back(make_shared<VoltSourceRes>("v_in", 1, 0, Complex(10, 0), 1));
-	circElements0.push_back(make_shared<InductorDP>("l_1", 1, 2, 0.02));
-	circElements0.push_back(make_shared<InductorDP>("l_2", 2, 0, 0.1));
-
-	std::cout << "The contents of circElements0 are:";
-	for (ElementList::iterator it = circElements0.begin(); it != circElements0.end(); ++it) {
-		std::cout << "Added " << (*it)->getName() << std::endl;
-	}
-	std::cout << '\n';
-
-	// Set up simulation
-	Simulation newSim(circElements0, 2.0*M_PI*50.0, timeStep, 0.3, log);
-
-	// Main Simulation Loop
+	// Set up simulation and start main simulation loop
+	Simulation newSim(circElements, omega, timeStep, finalTime, log);
 	std::cout << "Start simulation." << std::endl;
-	while (newSim.step(log, leftVectorLog, rightVectorLog))
-	{
+	while (newSim.step(leftVectorLog, rightVectorLog)) {
 		newSim.increaseByTimeStep();
 		updateProgressBar(newSim.getTime(), newSim.getFinalTime());
 	}
-	std::cout << "Simulation finished." << std::endl;
+	std::cout << "Simulation finished." << std::endl;	
 }
 
 void DPsim::simulationExample3()
@@ -157,7 +141,7 @@ void DPsim::simulationExample3()
 
 	// Main Simulation Loop
 	std::cout << "Start simulation." << std::endl;
-	while (newSim.step(log, leftVectorLog, rightVectorLog))
+	while (newSim.step(leftVectorLog, rightVectorLog))
 	{
 		newSim.increaseByTimeStep();
 		updateProgressBar(newSim.getTime(), newSim.getFinalTime());
@@ -193,7 +177,7 @@ void DPsim::simulationExampleIdealVS()
 
 	// Main Simulation Loop
 	std::cout << "Start simulation." << std::endl;
-	while (newSim.step(log, leftVectorLog, rightVectorLog))
+	while (newSim.step(leftVectorLog, rightVectorLog))
 	{
 		newSim.increaseByTimeStep();
 		updateProgressBar(newSim.getTime(), newSim.getFinalTime());
@@ -230,7 +214,7 @@ void DPsim::simulationExampleIdealVS2()
 
 	// Main Simulation Loop
 	std::cout << "Start simulation." << std::endl;
-	while (newSim.step(log, leftVectorLog, rightVectorLog))
+	while (newSim.step(leftVectorLog, rightVectorLog))
 	{
 		newSim.increaseByTimeStep();
 		updateProgressBar(newSim.getTime(), newSim.getFinalTime());
@@ -270,7 +254,7 @@ void DPsim::simulationExampleIdealVS3()
 
 	// Main Simulation Loop
 	std::cout << "Start simulation." << std::endl;
-	while (newSim.step(log, leftVectorLog, rightVectorLog))
+	while (newSim.step(leftVectorLog, rightVectorLog))
 	{
 		newSim.increaseByTimeStep();
 		updateProgressBar(newSim.getTime(), newSim.getFinalTime());
@@ -306,7 +290,7 @@ void DPsim::simulationExampleRXLine()
 
 	// Main Simulation Loop
 	std::cout << "Start simulation." << std::endl;
-	while (newSim.step(log, leftVectorLog, rightVectorLog))
+	while (newSim.step(leftVectorLog, rightVectorLog))
 	{
 		newSim.increaseByTimeStep();
 		updateProgressBar(newSim.getTime(), newSim.getFinalTime());
@@ -344,7 +328,7 @@ void DPsim::simulationExampleRXLine2()
 
 	// Main Simulation Loop
 	std::cout << "Start simulation." << std::endl;
-	while (newSim.step(log, leftVectorLog, rightVectorLog))
+	while (newSim.step(leftVectorLog, rightVectorLog))
 	{
 		newSim.increaseByTimeStep();
 		updateProgressBar(newSim.getTime(), newSim.getFinalTime());
@@ -380,7 +364,7 @@ void DPsim::simulationExampleRXLine3()
 
 	// Main Simulation Loop
 	std::cout << "Start simulation." << std::endl;
-	while (newSim.step(log, leftVectorLog, rightVectorLog))
+	while (newSim.step(leftVectorLog, rightVectorLog))
 	{
 		newSim.increaseByTimeStep();
 		updateProgressBar(newSim.getTime(), newSim.getFinalTime());
@@ -416,7 +400,7 @@ void DPsim::simulationExamplePiLine()
 
 	// Main Simulation Loop
 	std::cout << "Start simulation." << std::endl;
-	while (newSim.step(log, leftVectorLog, rightVectorLog))
+	while (newSim.step(leftVectorLog, rightVectorLog))
 	{
 		newSim.increaseByTimeStep();
 		updateProgressBar(newSim.getTime(), newSim.getFinalTime());
@@ -455,7 +439,7 @@ void DPsim::simulationExamplePiLine2()
 
 	// Main Simulation Loop
 	std::cout << "Start simulation." << std::endl;
-	while (newSim.step(log, leftVectorLog, rightVectorLog))
+	while (newSim.step(leftVectorLog, rightVectorLog))
 	{
 		newSim.increaseByTimeStep();
 		updateProgressBar(newSim.getTime(), newSim.getFinalTime());
@@ -490,7 +474,7 @@ void DPsim::RXLineResLoad() {
 
 	// Main Simulation Loop
 	std::cout << "Start simulation." << std::endl;
-	while (newSim.step(log, leftVectorLog, rightVectorLog))
+	while (newSim.step(leftVectorLog, rightVectorLog))
 	{
 		newSim.increaseByTimeStep();
 		updateProgressBar(newSim.getTime(), newSim.getFinalTime());
@@ -523,7 +507,7 @@ void DPsim::VarFreqRXLineResLoad(Real timeStep, Real finalTime, Real freqStep, R
 
 	// Main Simulation Loop
 	std::cout << "Start simulation." << std::endl;
-	while (newSim.step(log, leftVectorLog, rightVectorLog))
+	while (newSim.step(leftVectorLog, rightVectorLog))
 	{
 		newSim.increaseByTimeStep();
 		updateProgressBar(newSim.getTime(), newSim.getFinalTime());
@@ -558,7 +542,7 @@ void DPsim::RXLineResLoadEMT() {
 
 	// Main Simulation Loop
 	std::cout << "Start simulation." << std::endl;
-	while (newSim.step(log, leftVectorLog, rightVectorLog))
+	while (newSim.step(leftVectorLog, rightVectorLog))
 	{
 		newSim.increaseByTimeStep();
 		updateProgressBar(newSim.getTime(), newSim.getFinalTime());
@@ -591,7 +575,7 @@ void DPsim::VarFreqRXLineResLoadEMT(Real timeStep, Real finalTime, Real freqStep
 
 	// Main Simulation Loop
 	std::cout << "Start simulation." << std::endl;
-	while (newSim.step(log, leftVectorLog, rightVectorLog))
+	while (newSim.step(leftVectorLog, rightVectorLog))
 	{
 		newSim.increaseByTimeStep();
 		updateProgressBar(newSim.getTime(), newSim.getFinalTime());
@@ -672,7 +656,7 @@ void DPsim::VarFreqRXLineResLoad_NZ_Paper(Real timeStep, Real finalTime, Real fr
 
 	// Main Simulation Loop
 	std::cout << "Start simulation." << std::endl;
-	while (newSim.step(log, leftVectorLog, rightVectorLog))
+	while (newSim.step(leftVectorLog, rightVectorLog))
 	{
 		newSim.increaseByTimeStep();
 		updateProgressBar(newSim.getTime(), newSim.getFinalTime());
@@ -703,7 +687,7 @@ void DPsim::VarFreqRXLineResLoadEMT_NZ_Paper(Real timeStep, Real finalTime, Real
 
 	// Main Simulation Loop
 	std::cout << "Start simulation." << std::endl;
-	while (newSim.step(log, leftVectorLog, rightVectorLog))
+	while (newSim.step(leftVectorLog, rightVectorLog))
 	{
 		newSim.increaseByTimeStep();
 		updateProgressBar(newSim.getTime(), newSim.getFinalTime());
