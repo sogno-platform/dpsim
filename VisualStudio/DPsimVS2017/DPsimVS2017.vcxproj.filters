@@ -45,9 +45,6 @@
     <ClInclude Include="..\..\Source\Components\InductorEMT.h">
       <Filter>Headerdateien\Components</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\Source\Components\LinearResistorEMT.h">
-      <Filter>Headerdateien\Components</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\Source\Components\SynchronGeneratorEMT.h">
       <Filter>Headerdateien\Components</Filter>
     </ClInclude>
@@ -108,9 +105,6 @@
     <ClInclude Include="..\..\Source\Components\InterfacedInductorDP.h">
       <Filter>Headerdateien\Components</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\Source\Components\LinearResistorDP.h">
-      <Filter>Headerdateien\Components</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\Source\Components\PiLineDP.h">
       <Filter>Headerdateien\Components</Filter>
     </ClInclude>
@@ -144,6 +138,12 @@
     <ClInclude Include="..\..\Source\Components\TransformerDP.h">
       <Filter>Headerdateien\Components</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\Source\Components\ResistorEMT.h">
+      <Filter>Headerdateien\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\Components\ResistorDP.h">
+      <Filter>Headerdateien\Components</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\Source\Logger.cpp">
@@ -151,9 +151,6 @@
     </ClCompile>
     <ClCompile Include="..\..\Source\Simulation.cpp">
       <Filter>Quelldateien</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\Source\Components\LinearResistorEMT.cpp">
-      <Filter>Quelldateien\Components</Filter>
     </ClCompile>
     <ClCompile Include="..\..\Source\Components\SynchronGeneratorEMT.cpp">
       <Filter>Quelldateien\Components</Filter>
@@ -221,9 +218,6 @@
     <ClCompile Include="..\..\Source\Components\InterfacedInductorDP.cpp">
       <Filter>Quelldateien\Components</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\Source\Components\LinearResistorDP.cpp">
-      <Filter>Quelldateien\Components</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\Source\Components\PiLineDP.cpp">
       <Filter>Quelldateien\Components</Filter>
     </ClCompile>
@@ -252,6 +246,12 @@
       <Filter>Quelldateien\Components</Filter>
     </ClCompile>
     <ClCompile Include="..\..\Source\Components\TransformerDP.cpp">
+      <Filter>Quelldateien\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\Components\ResistorDP.cpp">
+      <Filter>Quelldateien\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\Components\ResistorEMT.cpp">
       <Filter>Quelldateien\Components</Filter>
     </ClCompile>
   </ItemGroup>

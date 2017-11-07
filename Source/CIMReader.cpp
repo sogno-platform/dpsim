@@ -85,7 +85,7 @@ CIMReader::~CIMReader() {
 		delete[] mVoltages;
 }
 
-BaseComponent* CIMReader::mapACLineSegment(ACLineSegment* line) {
+ElementPtr CIMReader::mapACLineSegment(ACLineSegment* line) {
 	std::vector<Int> &nodes = mEqNodeMap.at(line->mRID); // TODO can fail
 	if (nodes.size() != 2) {
 		mLogger->Log(LogLevel::WARN) << "ACLineSegment " << line->mRID << " has " << nodes.size() << " terminals, ignoring" << std::endl;
@@ -99,22 +99,22 @@ BaseComponent* CIMReader::mapACLineSegment(ACLineSegment* line) {
 
 	mLogger->Log(LogLevel::INFO) << "Create RxLine " << line->name << " node1=" << nodes[0] << " node2=" << nodes[1]
 		<< " R=" << r << " X=" << x << std::endl;
-	return new RxLine(line->name, nodes[0], nodes[1], r, x/mFrequency);
+	return make_shared<RxLine>(line->name, nodes[0], nodes[1], r, x/mFrequency);
 }
 
-BaseComponent* CIMReader::mapAsynchronousMachine(AsynchronousMachine* machine) {
-	return newPQLoad(machine->mRID, machine->name);
+void CIMReader::mapAsynchronousMachine(AsynchronousMachine* machine) {
+	
 }
 
-BaseComponent* CIMReader::mapEnergyConsumer(EnergyConsumer* con) {
-	return newPQLoad(con->mRID, con->name);
+void CIMReader::mapEnergyConsumer(EnergyConsumer* con) {
+	
 }
 
-BaseComponent* CIMReader::mapEquivalentInjection(EquivalentInjection* inj) {
-	return newPQLoad(inj->mRID, inj->name);
+void CIMReader::mapEquivalentInjection(EquivalentInjection* inj) {
+	
 }
 
-BaseComponent* CIMReader::mapExternalNetworkInjection(ExternalNetworkInjection* inj) {
+ElementPtr CIMReader::mapExternalNetworkInjection(ExternalNetworkInjection* inj) {
 	std::vector<Int> &nodes = mEqNodeMap.at(inj->mRID);
 	if (nodes.size() != 1) {
 		mLogger->Log(LogLevel::ERROR) << "ExternalNetworkInjection " << inj->mRID << " has " << nodes.size() << " terminals, ignoring" << std::endl;
@@ -128,10 +128,10 @@ BaseComponent* CIMReader::mapExternalNetworkInjection(ExternalNetworkInjection* 
 	}
 	mLogger->Log(LogLevel::INFO) << "IdealVoltageSource " << inj->name << " rid=" << inj->mRID << " node1=" << node 
 		<< " V=" << volt->v.value << "<" << volt->angle.value << std::endl;
-	return new IdealVoltageSource(inj->name, node, 0, Complex(volt->v.value, volt->angle.value*PI/180));
+	return make_shared<IdealVoltageSource>(inj->name, node, 0, Complex(volt->v.value, volt->angle.value*PI/180));
 }
 
-BaseComponent* CIMReader::mapPowerTransformer(PowerTransformer* trans) {
+ElementPtr CIMReader::mapPowerTransformer(PowerTransformer* trans) {
 	std::vector<Int> &nodes = mEqNodeMap.at(trans->mRID);
 	if (nodes.size() != trans->PowerTransformerEnd.size()) {
 		mLogger->Log(LogLevel::WARN) << "PowerTransformer " << trans->mRID << " has differing number of terminals and windings, ignoring" << std::endl;
@@ -162,20 +162,21 @@ BaseComponent* CIMReader::mapPowerTransformer(PowerTransformer* trans) {
 	}
 
 	if (voltageNode1 != 0 && voltageNode2 != 0) {
-		Real ratio = voltageNode1 / voltageNode2;
-		mLogger->Log(LogLevel::INFO) << "    Calculated ratio=" << ratio << std::endl;
+		Real ratioAbs = voltageNode1 / voltageNode2;
+		mLogger->Log(LogLevel::INFO) << "    Calculated ratio=" << ratioAbs << std::endl;
 		mLogger->Log(LogLevel::INFO) << "Create PowerTransformer " << trans->name
 			<< " node1=" << nodes[0] << " node2=" << nodes[1]
-			<< " ratio=" << ratio << "<0" << std::endl;
-		return new IdealTransformerDP(trans->name, nodes[0], nodes[1], ratio, 0);
+			<< " ratio=" << ratioAbs << "<0" << std::endl;
+		Real ratioPhase = 0;
+		return make_shared<IdealTransformerDP>(trans->name, nodes[0], nodes[1], ratioAbs, ratioPhase);
 		
 	}
 	mLogger->Log(LogLevel::WARN) << "PowerTransformer " << trans->mRID << " has no primary End; ignoring" << std::endl;
 	return nullptr;
 }
 
-// TODO: don't use SvVoltage, but map to a SynchronGenerator instead
-BaseComponent* CIMReader::mapSynchronousMachine(SynchronousMachine* machine) {	
+// TODO: don't use SvVoltage, but map to a SynchronGeneratorDP instead
+ElementPtr CIMReader::mapSynchronousMachine(SynchronousMachine* machine) {	
 	std::vector<int> &nodes = mEqNodeMap.at(machine->mRID);
 	if (nodes.size() != 1) {
 		// TODO: check with the model if this assumption (only 1 terminal) is always true
@@ -197,18 +198,12 @@ BaseComponent* CIMReader::mapSynchronousMachine(SynchronousMachine* machine) {
 	// TODO is it appropiate to use this resistance here
 	mLogger->Log(LogLevel::INFO) << "Create IdealVoltageSource " << machine->name << " node=" << node
 		<< " V=" << volt->v.value << "<" << volt->angle.value << std::endl;
-	return new IdealVoltageSource(machine->name, node, 0, Complex(volt->v.value, volt->angle.value*PI/180));
+	return make_shared<IdealVoltageSource>(machine->name, node, 0, Complex(volt->v.value, volt->angle.value*PI/180));
 }
 
-BaseComponent* CIMReader::mapComponent(BaseClass* obj) {
+ElementPtr CIMReader::mapComponent(BaseClass* obj) {
 	if (ACLineSegment *line = dynamic_cast<ACLineSegment*>(obj))
 		return mapACLineSegment(line);
-	if (AsynchronousMachine *machine = dynamic_cast<AsynchronousMachine*>(obj))
-		return mapAsynchronousMachine(machine);
-	if (EnergyConsumer *con = dynamic_cast<EnergyConsumer*>(obj))
-		return mapEnergyConsumer(con);
-	if (EquivalentInjection *inj = dynamic_cast<EquivalentInjection*>(obj))
-		return mapEquivalentInjection(inj);
 	if (ExternalNetworkInjection *inj = dynamic_cast<ExternalNetworkInjection*>(obj))
 		return mapExternalNetworkInjection(inj);
 	if (PowerTransformer *trans = dynamic_cast<PowerTransformer*>(obj))
@@ -218,7 +213,7 @@ BaseComponent* CIMReader::mapComponent(BaseClass* obj) {
 	return nullptr;
 }
 
-BaseComponent* CIMReader::newPQLoad(String rid, String name) {
+ElementPtr CIMReader::newPQLoad(String rid, String name) {
 	std::vector<int> &nodes = mEqNodeMap.at(rid);
 	if (nodes.size() != 1) {
 		mLogger->Log(LogLevel::WARN) << rid << " has " << nodes.size() << " terminals; ignoring" << std::endl;
@@ -249,7 +244,7 @@ BaseComponent* CIMReader::newPQLoad(String rid, String name) {
 	mLogger->Log(LogLevel::INFO) << "Create PQLoad " << name << " node="
 		<< node << " P=" << flow->p.value << " Q=" << flow->q.value
 		<< " V=" << volt->v.value << "<" << volt->angle.value << std::endl;
-	return new PQLoadDP(name, node, flow->p.value, flow->q.value, volt->v.value, volt->angle.value*PI/180);
+	return make_shared<PQLoadDP>(name, node, flow->p.value, flow->q.value, volt->v.value, volt->angle.value*PI/180);
 }
 
 bool CIMReader::addFile(String filename) {
@@ -309,13 +304,13 @@ void CIMReader::parseFiles() {
 	}
 	mLogger->Log(LogLevel::INFO) << "#### Create new components ####" << std::endl;
 	for (BaseClass* obj : mModel.Objects) {
-		BaseComponent* comp = mapComponent(obj);
+		ElementPtr comp = mapComponent(obj);
 		if (comp)
 			mComponents.push_back(comp);
 	}
 }
 
-std::vector<BaseComponent*>& CIMReader::getComponents() {
+ElementList& CIMReader::getComponents() {
 	return mComponents;
 }
 

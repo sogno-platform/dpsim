@@ -24,10 +24,8 @@
 #include <iostream>
 
 #include "SynchronGenUnitTest.h"
-#include "SyncGenUnitTestVBR.h"
 #include "ReferenceCircuits.h"
 #include "ShmemTest.h"
-#include "SimpleCircuitTest.h"
 
 #include "CIMTest.h"
 
@@ -37,7 +35,7 @@ int main(int argc, char* argv[]) {
 
 	// #### CIM Parser test ################
 	//readFixedCIMFiles_LineLoad();
-	readFixedCIMFiles_IEEE9bus();
+	//readFixedCIMFiles_IEEE9bus();
 
 
 	// #### Shared memory interface tests ################
@@ -46,7 +44,7 @@ int main(int argc, char* argv[]) {
 	//shmemDistributedRef();
 
 	// #### Reference circuits test ################
-	//simulationExample1();
+	simulationExample1();
 	//simulationExample2();
 	//simulationExample3();
 	//simulationExampleIdealVS();

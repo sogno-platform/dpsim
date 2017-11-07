@@ -27,7 +27,7 @@
 
 
 namespace DPsim {
-
+	
 	/// InductorDP model:
 	/// The inductor is represented by a DC equivalent circuit which corresponds to one iteration of the trapezoidal integration method.
 	/// The equivalent DC circuit is a resistance in paralel with a current source. The resistance is constant for a defined time step and system

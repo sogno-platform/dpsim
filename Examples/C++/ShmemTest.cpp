@@ -34,7 +34,7 @@ void DPsim::shmemExample()
 	// Very simple test circuit. Just a few resistors and an inductance.
 	// Voltage is read from VILLASnode and current through everything is written back.
 	Logger log("output.log"), llog("lvector.log"), rlog("rvector.log");
-	std::vector<BaseComponent*> comps;
+	ElementList comps;
 
 	ExternalVoltageSource *evs = new ExternalVoltageSource("v_s", 1, 0, Complex(0, 0), 1);
 	comps.push_back(evs);
@@ -68,7 +68,7 @@ void DPsim::shmemExample()
 void DPsim::shmemRTExample()
 {
 	// Same circuit as above, but now with realtime support.
-	std::vector<BaseComponent*> comps;
+	ElementList comps;
 	struct shmem_conf conf;
 	conf.samplelen = 4;
 	conf.queuelen = 1024;
@@ -110,7 +110,7 @@ void DPsim::shmemDistributedDirect(int argc, char *argv[])
 	// Here, the two instances directly communicate with each other without using
 	// VILLASnode in between.
 	Logger log;
-	std::vector<BaseComponent*> comps;
+	ElementList comps;
 	ShmemInterface *shmem;
 	struct shmem_conf conf;
 	conf.samplelen = 4;
@@ -123,7 +123,7 @@ void DPsim::shmemDistributedDirect(int argc, char *argv[])
 	}
 
 	if (!strcmp(argv[1], "0")) {
-		comps.push_back(new VoltSourceRes("v_s", 1, 0, Complex(10000, 0), 1));
+		comps.push_back(make_shared<VoltSourceRes>("v_s", 1, 0, Complex(10000, 0), 1));
 		comps.push_back(new Inductor("l_1", 1, 2, 1e-3));
 		ExternalVoltageSource *evs = new ExternalVoltageSource("v_t", 2, 0, Complex(0, 0), 1);
 		comps.push_back(evs);
@@ -161,7 +161,7 @@ void DPsim::shmemDistributedDirect(int argc, char *argv[])
 void DPsim::shmemDistributed(int argc, char *argv[])
 {
 	Logger log;
-	std::vector<BaseComponent*> comps, comps2;
+	ElementList comps, comps2;
 	ShmemInterface *shmem;
 	struct shmem_conf conf;
 	String logname;
@@ -176,7 +176,7 @@ void DPsim::shmemDistributed(int argc, char *argv[])
 
 	if (!strcmp(argv[1], "0")) {
 		logname = "lvector0.log";
-		comps.push_back(new VoltSourceRes("v_s", 1, 0, Complex(10000, 0), 1));
+		comps.push_back(make_shared<VoltSourceRes>("v_s", 1, 0, Complex(10000, 0), 1));
 		comps.push_back(new Inductor("l_1", 1, 2, 0.1));
 		comps.push_back(new LinearResistor("r_1", 2, 3, 1));
 		ExternalVoltageSource *evs = new ExternalVoltageSource("v_t", 3, 0, Complex(0, 0), 1);
@@ -227,9 +227,9 @@ void DPsim::shmemDistributedRef()
 {
 	// Same circuit as above, but the simulation is done normally in one instance.
 	Logger log("output.log"), llog("lvector.log"), rlog("rvector.log");
-	std::vector<BaseComponent*> comps, comps2;
+	ElementList comps, comps2;
 
-	comps.push_back(new VoltSourceRes("v_s", 1, 0, Complex(10000, 0), 1));
+	comps.push_back(make_shared<VoltSourceRes>("v_s", 1, 0, Complex(10000, 0), 1));
 	comps.push_back(new Inductor("l_1", 1, 2, 0.1));
 	comps.push_back(new LinearResistor("r_1", 2, 3, 1));
 	comps2 = comps;

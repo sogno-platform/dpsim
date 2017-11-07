@@ -24,36 +24,28 @@
 
 #include "Simulation.h"
 #include "Utilities.h"
-
+#include "Definitions.h"
 
 using namespace DPsim;
 
-void DPsim::simulationExample1()
-{
+void DPsim::simulationExample1() {
 	Real timeStep = 0.001;
-
 	// Define Object for saving data on a file
 	std::ostringstream fileName;
 	fileName << "SimulationExample1_" << timeStep;
-	Logger log("Logs/Log_" + fileName.str() + ".log"),
-		leftVectorLog("Logs/LeftVectorLog_" + fileName.str() + ".csv"),
-		rightVectorLog("Logs/RightVectorLog_" + fileName.str() + ".csv");
+	Logger log("Logs/" + fileName.str() + ".log");
+	Logger leftVectorLog("Logs/LeftVector_" + fileName.str() + ".csv");
+	Logger rightVectorLog("Logs/RightVector_" + fileName.str() + ".csv");
 
-	std::vector<BaseComponent*> circElements0;
-	circElements0.push_back(new VoltSourceRes("v_in", 1, 0, Complex(10, 0), 1));
-	circElements0.push_back(new InductorDP("l_1", 1, 2, 0.02));
-	circElements0.push_back(new InductorDP("l_2", 2, 0, 0.1));
-	circElements0.push_back(new InductorDP("l_3", 2, 3, 0.05));
-	circElements0.push_back(new ResistorDP("r_2", 3, 0, 2));
-
-	std::cout << "The contents of circElements0 are:";
-	for (std::vector<BaseComponent*>::iterator it = circElements0.begin(); it != circElements0.end(); ++it) {
-		std::cout << "Added " << (*it)->getName() <<  std::endl;
-	}
-	std::cout << '\n';
-
+	ElementList circElements;
+	circElements.push_back(make_shared<VoltSourceRes>("v_in", 1, 0, Complex(10, 0), 1));
+	circElements.push_back(make_shared<InductorDP>("l_1", 1, 2, 0.02));
+	circElements.push_back(make_shared<InductorDP>("l_2", 2, 0, 0.1));
+	circElements.push_back(make_shared<InductorDP>("l_3", 2, 3, 0.05));
+	circElements.push_back(make_shared<ResistorDP>("r_2", 3, 0, 2));
+	
 	// Set up simulation
-	Simulation newSim(circElements0, 2.0*M_PI*50.0, timeStep, 0.3, log);
+	Simulation newSim(circElements, 2.0*M_PI*50.0, timeStep, 0.3, log);
 
 	// Main Simulation Loop
 	std::cout << "Start simulation." << std::endl;
@@ -63,9 +55,6 @@ void DPsim::simulationExample1()
 		updateProgressBar(newSim.getTime(), newSim.getFinalTime());
 	}
 	std::cout << "Simulation finished." << std::endl;
-
-	for (auto elem : circElements0)
-		delete elem;
 }
 
 void DPsim::simulationExample1L2()
@@ -79,15 +68,15 @@ void DPsim::simulationExample1L2()
 		leftVectorLog("Logs/LeftVectorLog_" + fileName.str() + ".csv"),
 		rightVectorLog("Logs/RightVectorLog_" + fileName.str() + ".csv");
 
-	std::vector<BaseComponent*> circElements0;
-	circElements0.push_back(new VoltSourceRes("v_in", 1, 0, Complex(10, 0), 1));
-	circElements0.push_back(new InductorDP("l_1", 1, 2, 0.02));
-	circElements0.push_back(new InductorDP("l_2", 2, 0, 0.1));
-	circElements0.push_back(new InductorDP("l_3", 2, 3, 0.05));
-	circElements0.push_back(new ResistorDP("r_2", 3, 0, 2));
+	ElementList circElements0;
+	circElements0.push_back(make_shared<VoltSourceRes>("v_in", 1, 0, Complex(10, 0), 1));
+	circElements0.push_back(make_shared<InductorDP>("l_1", 1, 2, 0.02));
+	circElements0.push_back(make_shared<InductorDP>("l_2", 2, 0, 0.1));
+	circElements0.push_back(make_shared<InductorDP>("l_3", 2, 3, 0.05));
+	circElements0.push_back(make_shared<ResistorDP>("r_2", 3, 0, 2));
 
 	std::cout << "The contents of circElements0 are:";
-	for (std::vector<BaseComponent*>::iterator it = circElements0.begin(); it != circElements0.end(); ++it) {
+	for (ElementList::iterator it = circElements0.begin(); it != circElements0.end(); ++it) {
 		std::cout << "Added " << (*it)->getName() << std::endl;
 	}
 	std::cout << '\n';
@@ -103,9 +92,6 @@ void DPsim::simulationExample1L2()
 		updateProgressBar(newSim.getTime(), newSim.getFinalTime());
 	}
 	std::cout << "Simulation finished." << std::endl;
-
-	for (auto elem : circElements0)
-		delete elem;
 }
 
 void DPsim::simulationExample2()
@@ -119,13 +105,13 @@ void DPsim::simulationExample2()
 		leftVectorLog("Logs/LeftVectorLog_" + fileName.str() + ".csv"),
 		rightVectorLog("Logs/RightVectorLog_" + fileName.str() + ".csv");
 
-	std::vector<BaseComponent*> circElements0;
-	circElements0.push_back(new VoltSourceRes("v_in", 1, 0, Complex(10, 0), 1));
-	circElements0.push_back(new InductorDP("l_1", 1, 2, 0.02));
-	circElements0.push_back(new InductorDP("l_2", 2, 0, 0.1));
+	ElementList circElements0;
+	circElements0.push_back(make_shared<VoltSourceRes>("v_in", 1, 0, Complex(10, 0), 1));
+	circElements0.push_back(make_shared<InductorDP>("l_1", 1, 2, 0.02));
+	circElements0.push_back(make_shared<InductorDP>("l_2", 2, 0, 0.1));
 
 	std::cout << "The contents of circElements0 are:";
-	for (std::vector<BaseComponent*>::iterator it = circElements0.begin(); it != circElements0.end(); ++it) {
+	for (ElementList::iterator it = circElements0.begin(); it != circElements0.end(); ++it) {
 		std::cout << "Added " << (*it)->getName() << std::endl;
 	}
 	std::cout << '\n';
@@ -141,9 +127,6 @@ void DPsim::simulationExample2()
 		updateProgressBar(newSim.getTime(), newSim.getFinalTime());
 	}
 	std::cout << "Simulation finished." << std::endl;
-
-	for (auto elem : circElements0)
-		delete elem;
 }
 
 void DPsim::simulationExample3()
@@ -157,14 +140,14 @@ void DPsim::simulationExample3()
 		leftVectorLog("Logs/LeftVectorLog_" + fileName.str() + ".csv"),
 		rightVectorLog("Logs/RightVectorLog_" + fileName.str() + ".csv");
 
-	std::vector<BaseComponent*> circElements0;
-	circElements0.push_back(new VoltSourceRes("v_in", 1, 0, Complex(10, 0), 1));
-	circElements0.push_back(new Capacitor("c_1", 1, 2, 0.001));
-	circElements0.push_back(new InductorDP("l_1", 2, 0, 0.001));
-	circElements0.push_back(new ResistorDP("r_2", 2, 0, 1));
+	ElementList circElements0;
+	circElements0.push_back(make_shared<VoltSourceRes>("v_in", 1, 0, Complex(10, 0), 1));
+	circElements0.push_back(make_shared<Capacitor>("c_1", 1, 2, 0.001));
+	circElements0.push_back(make_shared<InductorDP>("l_1", 2, 0, 0.001));
+	circElements0.push_back(make_shared<ResistorDP>("r_2", 2, 0, 1));
 
 	std::cout << "The contents of circElements0 are:";
-	for (std::vector<BaseComponent*>::iterator it = circElements0.begin(); it != circElements0.end(); ++it) {
+	for (ElementList::iterator it = circElements0.begin(); it != circElements0.end(); ++it) {
 		std::cout << "Added " << (*it)->getName() << std::endl;
 	}
 	std::cout << '\n';
@@ -180,9 +163,6 @@ void DPsim::simulationExample3()
 		updateProgressBar(newSim.getTime(), newSim.getFinalTime());
 	}
 	std::cout << "Simulation finished." << std::endl;
-
-	for (auto elem : circElements0)
-		delete elem;
 }
 
 void DPsim::simulationExampleIdealVS()
@@ -196,14 +176,14 @@ void DPsim::simulationExampleIdealVS()
 		leftVectorLog("Logs/LeftVectorLog_" + fileName.str() + ".csv"),
 		rightVectorLog("Logs/RightVectorLog_" + fileName.str() + ".csv");
 
-	std::vector<BaseComponent*> circElements0;
-	circElements0.push_back(new IdealVoltageSource("v_in", 1, 2, Complex(10, 0)));
-	circElements0.push_back(new ResistorDP("r_1", 1, 0, 1));
-	circElements0.push_back(new ResistorDP("r_2", 2, 0, 1));
-	circElements0.push_back(new ResistorDP("r_3", 2, 0, 1));
+	ElementList circElements0;
+	circElements0.push_back(make_shared<IdealVoltageSource>("v_in", 1, 2, Complex(10, 0)));
+	circElements0.push_back(make_shared<ResistorDP>("r_1", 1, 0, 1));
+	circElements0.push_back(make_shared<ResistorDP>("r_2", 2, 0, 1));
+	circElements0.push_back(make_shared<ResistorDP>("r_3", 2, 0, 1));
 
 	std::cout << "The contents of circElements0 are:";
-	for (std::vector<BaseComponent*>::iterator it = circElements0.begin(); it != circElements0.end(); ++it) {
+	for (ElementList::iterator it = circElements0.begin(); it != circElements0.end(); ++it) {
 		std::cout << "Added " << (*it)->getName() << std::endl;
 	}
 	std::cout << '\n';
@@ -219,9 +199,6 @@ void DPsim::simulationExampleIdealVS()
 		updateProgressBar(newSim.getTime(), newSim.getFinalTime());
 	}
 	std::cout << "Simulation finished." << std::endl;
-
-	for (auto elem : circElements0)
-		delete elem;
 }
 
 void DPsim::simulationExampleIdealVS2()
@@ -235,15 +212,15 @@ void DPsim::simulationExampleIdealVS2()
 		leftVectorLog("Logs/LeftVectorLog_" + fileName.str() + ".csv"),
 		rightVectorLog("Logs/RightVectorLog_" + fileName.str() + ".csv");
 
-	std::vector<BaseComponent*> circElements0;
-	circElements0.push_back(new IdealVoltageSource("v_in", 1, 0, Complex(10, 0)));
-	circElements0.push_back(new ResistorDP("r_1", 1, 2, 1));
-	circElements0.push_back(new Capacitor("c_1", 2, 3, 0.001));
-	circElements0.push_back(new InductorDP("l_1", 3, 0, 0.001));
-	circElements0.push_back(new ResistorDP("r_2", 3, 0, 1));
+	ElementList circElements0;
+	circElements0.push_back(make_shared<IdealVoltageSource>("v_in", 1, 0, Complex(10, 0)));
+	circElements0.push_back(make_shared<ResistorDP>("r_1", 1, 2, 1));
+	circElements0.push_back(make_shared<Capacitor>("c_1", 2, 3, 0.001));
+	circElements0.push_back(make_shared<InductorDP>("l_1", 3, 0, 0.001));
+	circElements0.push_back(make_shared<ResistorDP>("r_2", 3, 0, 1));
 
 	std::cout << "The contents of circElements0 are:";
-	for (std::vector<BaseComponent*>::iterator it = circElements0.begin(); it != circElements0.end(); ++it) {
+	for (ElementList::iterator it = circElements0.begin(); it != circElements0.end(); ++it) {
 		std::cout << "Added " << (*it)->getName() << std::endl;
 	}
 	std::cout << '\n';
@@ -259,9 +236,6 @@ void DPsim::simulationExampleIdealVS2()
 		updateProgressBar(newSim.getTime(), newSim.getFinalTime());
 	}
 	std::cout << "Simulation finished." << std::endl;
-
-	for (auto elem : circElements0)
-		delete elem;
 }
 
 
@@ -276,20 +250,17 @@ void DPsim::simulationExampleIdealVS3()
 		leftVectorLog("Logs/LeftVectorLog_" + fileName.str() + ".csv"),
 		rightVectorLog("Logs/RightVectorLog_" + fileName.str() + ".csv");
 
-	std::vector<BaseComponent*> circElements0;
-	circElements0.push_back(new IdealVoltageSource("v_1", 1, 0, Complex(10, 0)));
-	circElements0.push_back(new ResistorDP("r_1", 1, 2, 1));
-	circElements0.push_back(new ResistorDP("r_2", 2, 0, 1));
-	circElements0.push_back(new ResistorDP("r_3", 2, 3, 1));
-	circElements0.push_back(new ResistorDP("r_4", 3, 0, 1));
-	circElements0.push_back(new ResistorDP("r_5", 3, 4, 1));
-	circElements0.push_back(new IdealVoltageSource("v_2", 4, 0, Complex(20, 0)));
-
-
-
+	ElementList circElements0;
+	circElements0.push_back(make_shared<IdealVoltageSource>("v_1", 1, 0, Complex(10, 0)));
+	circElements0.push_back(make_shared<ResistorDP>("r_1", 1, 2, 1));
+	circElements0.push_back(make_shared<ResistorDP>("r_2", 2, 0, 1));
+	circElements0.push_back(make_shared<ResistorDP>("r_3", 2, 3, 1));
+	circElements0.push_back(make_shared<ResistorDP>("r_4", 3, 0, 1));
+	circElements0.push_back(make_shared<ResistorDP>("r_5", 3, 4, 1));
+	circElements0.push_back(make_shared<IdealVoltageSource>("v_2", 4, 0, Complex(20, 0)));
 
 	std::cout << "The contents of circElements0 are:";
-	for (std::vector<BaseComponent*>::iterator it = circElements0.begin(); it != circElements0.end(); ++it) {
+	for (ElementList::iterator it = circElements0.begin(); it != circElements0.end(); ++it) {
 		std::cout << "Added " << (*it)->getName() << std::endl;
 	}
 	std::cout << '\n';
@@ -305,9 +276,6 @@ void DPsim::simulationExampleIdealVS3()
 		updateProgressBar(newSim.getTime(), newSim.getFinalTime());
 	}
 	std::cout << "Simulation finished." << std::endl;
-
-	for (auto elem : circElements0)
-		delete elem;
 }
 
 void DPsim::simulationExampleRXLine()
@@ -321,14 +289,14 @@ void DPsim::simulationExampleRXLine()
 		leftVectorLog("Logs/LeftVectorLog_" + fileName.str() + ".csv"),
 		rightVectorLog("Logs/RightVectorLog_" + fileName.str() + ".csv");
 
-	std::vector<BaseComponent*> circElements0;
-	circElements0.push_back(new IdealVoltageSource("v_1", 1, 0, Complex(10, 0)));
-	circElements0.push_back(new RxLine("Line_1", 1, 2, 0.1, 0.001));
-	circElements0.push_back(new ResistorDP("r_1", 2, 0, 20));
+	ElementList circElements0;
+	circElements0.push_back(make_shared<IdealVoltageSource>("v_1", 1, 0, Complex(10, 0)));
+	circElements0.push_back(make_shared<RxLine>("Line_1", 1, 2, 0.1, 0.001));
+	circElements0.push_back(make_shared<ResistorDP>("r_1", 2, 0, 20));
 
 
 	std::cout << "The contents of circElements0 are:";
-	for (std::vector<BaseComponent*>::iterator it = circElements0.begin(); it != circElements0.end(); ++it) {
+	for (ElementList::iterator it = circElements0.begin(); it != circElements0.end(); ++it) {
 		std::cout << "Added " << (*it)->getName() << std::endl;
 	}
 	std::cout << '\n';
@@ -344,9 +312,6 @@ void DPsim::simulationExampleRXLine()
 		updateProgressBar(newSim.getTime(), newSim.getFinalTime());
 	}
 	std::cout << "Simulation finished." << std::endl;
-
-	for (auto elem : circElements0)
-		delete elem;
 }
 
 void DPsim::simulationExampleRXLine2()
@@ -360,16 +325,16 @@ void DPsim::simulationExampleRXLine2()
 		leftVectorLog("Logs/LeftVectorLog_" + fileName.str() + ".csv"),
 		rightVectorLog("Logs/RightVectorLog_" + fileName.str() + ".csv");
 
-	std::vector<BaseComponent*> circElements0;
-	circElements0.push_back(new IdealVoltageSource("v_1", 1, 0, Complex(10, 0)));
+	ElementList circElements0;
+	circElements0.push_back(make_shared<IdealVoltageSource>("v_1", 1, 0, Complex(10, 0)));
 
-	circElements0.push_back(new InductorDP("l_L", 2, 3, 0.001));
-	circElements0.push_back(new ResistorDP("r_L", 1, 2, 0.1));
-	circElements0.push_back(new ResistorDP("r_1", 3, 0, 20));
+	circElements0.push_back(make_shared<InductorDP>("l_L", 2, 3, 0.001));
+	circElements0.push_back(make_shared<ResistorDP>("r_L", 1, 2, 0.1));
+	circElements0.push_back(make_shared<ResistorDP>("r_1", 3, 0, 20));
 
 
 	std::cout << "The contents of circElements0 are:";
-	for (std::vector<BaseComponent*>::iterator it = circElements0.begin(); it != circElements0.end(); ++it) {
+	for (ElementList::iterator it = circElements0.begin(); it != circElements0.end(); ++it) {
 		std::cout << "Added " << (*it)->getName() << std::endl;
 	}
 	std::cout << '\n';
@@ -385,9 +350,6 @@ void DPsim::simulationExampleRXLine2()
 		updateProgressBar(newSim.getTime(), newSim.getFinalTime());
 	}
 	std::cout << "Simulation finished." << std::endl;
-
-	for (auto elem : circElements0)
-		delete elem;
 }
 
 void DPsim::simulationExampleRXLine3()
@@ -401,14 +363,14 @@ void DPsim::simulationExampleRXLine3()
 		leftVectorLog("Logs/LeftVectorLog_" + fileName.str() + ".csv"),
 		rightVectorLog("Logs/RightVectorLog_" + fileName.str() + ".csv");
 
-	std::vector<BaseComponent*> circElements0;
-	circElements0.push_back(new IdealVoltageSource("v_1", 1, 0, Complex(10, 0)));
-	circElements0.push_back(new RxLine("Line_1", 1, 2, 0.1, 0.001));
-	circElements0.push_back(new ResistorDP("r_1", 2, 0, 20));
+	ElementList circElements0;
+	circElements0.push_back(make_shared<IdealVoltageSource>("v_1", 1, 0, Complex(10, 0)));
+	circElements0.push_back(make_shared<RxLine>("Line_1", 1, 2, 0.1, 0.001));
+	circElements0.push_back(make_shared<ResistorDP>("r_1", 2, 0, 20));
 
 
 	std::cout << "The contents of circElements0 are:";
-	for (std::vector<BaseComponent*>::iterator it = circElements0.begin(); it != circElements0.end(); ++it) {
+	for (ElementList::iterator it = circElements0.begin(); it != circElements0.end(); ++it) {
 		std::cout << "Added " << (*it)->getName() << std::endl;
 	}
 	std::cout << '\n';
@@ -424,9 +386,6 @@ void DPsim::simulationExampleRXLine3()
 		updateProgressBar(newSim.getTime(), newSim.getFinalTime());
 	}
 	std::cout << "Simulation finished." << std::endl;
-
-	for (auto elem : circElements0)
-		delete elem;
 }
 
 void DPsim::simulationExamplePiLine()
@@ -440,16 +399,14 @@ void DPsim::simulationExamplePiLine()
 		leftVectorLog("Logs/LeftVectorLog_" + fileName.str() + ".csv"),
 		rightVectorLog("Logs/RightVectorLog_" + fileName.str() + ".csv");
 
-	std::vector<BaseComponent*> circElements0;
-	circElements0.push_back(new IdealVoltageSource("v_1", 1, 0, Complex(345, 0)));
-	circElements0.push_back(new ResistorDP("r1", 1, 2, 5));
-	circElements0.push_back(new PiLine("PiLine1", 2, 3, 4, 6.4, 0.186, 0.004));
-	circElements0.push_back(new ResistorDP("r_load", 3, 0, 150));
-
-
+	ElementList circElements0;
+	circElements0.push_back(make_shared<IdealVoltageSource>("v_1", 1, 0, Complex(345, 0)));
+	circElements0.push_back(make_shared<ResistorDP>("r1", 1, 2, 5));
+	circElements0.push_back(make_shared<PiLine>("PiLine1", 2, 3, 4, 6.4, 0.186, 0.004));
+	circElements0.push_back(make_shared<ResistorDP>("r_load", 3, 0, 150));
 
 	std::cout << "The contents of circElements0 are:";
-	for (std::vector<BaseComponent*>::iterator it = circElements0.begin(); it != circElements0.end(); ++it) {
+	for (ElementList::iterator it = circElements0.begin(); it != circElements0.end(); ++it) {
 		std::cout << "Added " << (*it)->getName() << std::endl;
 	}
 	std::cout << '\n';
@@ -465,9 +422,6 @@ void DPsim::simulationExamplePiLine()
 		updateProgressBar(newSim.getTime(), newSim.getFinalTime());
 	}
 	std::cout << "Simulation finished." << std::endl;
-
-	for (auto elem : circElements0)
-		delete elem;
 }
 
 void DPsim::simulationExamplePiLine2()
@@ -481,19 +435,17 @@ void DPsim::simulationExamplePiLine2()
 		leftVectorLog("Logs/LeftVectorLog_" + fileName.str() + ".csv"),
 		rightVectorLog("Logs/RightVectorLog_" + fileName.str() + ".csv");
 
-	std::vector<BaseComponent*> circElements0;
-	circElements0.push_back(new IdealVoltageSource("v_1", 1, 0, Complex(345, 0)));
-	circElements0.push_back(new ResistorDP("r1", 1, 2, 5));
-	circElements0.push_back(new Capacitor("c_1", 2, 0, 0.002));
-	circElements0.push_back(new ResistorDP("r_load", 2, 4, 6.4));
-	circElements0.push_back(new InductorDP("l_1", 4, 3, 0.186));
-	circElements0.push_back(new Capacitor("c_2", 3, 0, 0.002));
-	circElements0.push_back(new ResistorDP("r_load", 3, 0, 150));
-
-
-
+	ElementList circElements0;
+	circElements0.push_back(make_shared<IdealVoltageSource>("v_1", 1, 0, Complex(345, 0)));
+	circElements0.push_back(make_shared<ResistorDP>("r1", 1, 2, 5));
+	circElements0.push_back(make_shared<Capacitor>("c_1", 2, 0, 0.002));
+	circElements0.push_back(make_shared<ResistorDP>("r_load", 2, 4, 6.4));
+	circElements0.push_back(make_shared<InductorDP>("l_1", 4, 3, 0.186));
+	circElements0.push_back(make_shared<Capacitor>("c_2", 3, 0, 0.002));
+	circElements0.push_back(make_shared<ResistorDP>("r_load", 3, 0, 150));
+	
 	std::cout << "The contents of circElements0 are:";
-	for (std::vector<BaseComponent*>::iterator it = circElements0.begin(); it != circElements0.end(); ++it) {
+	for (ElementList::iterator it = circElements0.begin(); it != circElements0.end(); ++it) {
 		std::cout << "Added " << (*it)->getName() << std::endl;
 	}
 	std::cout << '\n';
@@ -509,9 +461,6 @@ void DPsim::simulationExamplePiLine2()
 		updateProgressBar(newSim.getTime(), newSim.getFinalTime());
 	}
 	std::cout << "Simulation finished." << std::endl;
-
-	for (auto elem : circElements0)
-		delete elem;
 }
 
 void DPsim::RXLineResLoad() {
@@ -525,14 +474,14 @@ void DPsim::RXLineResLoad() {
 		rightVectorLog("Logs/RightVectorLog_" + fileName.str() + ".csv");
 
 	// Declare circuit components
-	std::vector<BaseComponent*> circElements0, circElements1, circElements2;
-	circElements0.push_back(new VoltSourceRes("v_s", 1, 0, Complex(10000, 0), 1));
-	circElements0.push_back(new ResistorDP("r_line", 1, 2, 1));
-	circElements0.push_back(new InductorDP("l_line", 2, 3, 1));
+	ElementList circElements0, circElements1, circElements2;
+	circElements0.push_back(make_shared<VoltSourceRes>("v_s", 1, 0, Complex(10000, 0), 1));
+	circElements0.push_back(make_shared<ResistorDP>("r_line", 1, 2, 1));
+	circElements0.push_back(make_shared<InductorDP>("l_line", 2, 3, 1));
 	circElements1 = circElements0;
 	circElements2 = circElements0;
-	circElements1.push_back(new ResistorDP("r_load", 3, 0, 1000));
-	circElements2.push_back(new ResistorDP("r_load", 3, 0, 800));
+	circElements1.push_back(make_shared<ResistorDP>("r_load", 3, 0, 1000));
+	circElements2.push_back(make_shared<ResistorDP>("r_load", 3, 0, 800));
 
 	// Set up simulation
 	Simulation newSim(circElements1, 2.0*M_PI*50.0, timeStep, 0.3, log);
@@ -547,11 +496,6 @@ void DPsim::RXLineResLoad() {
 		updateProgressBar(newSim.getTime(), newSim.getFinalTime());
 	}
 	std::cout << "Simulation finished." << std::endl;
-
-	for (auto elem : circElements0)
-		delete elem;
-	delete circElements1[3];
-	delete circElements2[3];
 }
 
 void DPsim::VarFreqRXLineResLoad(Real timeStep, Real finalTime, Real freqStep, Real loadStep, Real rampTime) {
@@ -563,14 +507,14 @@ void DPsim::VarFreqRXLineResLoad(Real timeStep, Real finalTime, Real freqStep, R
 		rightVectorLog("Logs/RightVectorLog_" + fileName.str() + ".csv");
 
 	// Declare circuit components
-	std::vector<BaseComponent*> circElements0, circElements1, circElements2;
-	circElements0.push_back(new VoltSourceResFreq("v_s", 1, 0, 1000, 0, 1, 2 * PI*-5, freqStep, rampTime));
-	circElements0.push_back(new ResistorDP("r_line", 1, 2, 1));
-	circElements0.push_back(new InductorDP("l_line", 2, 3, 0.2));
+	ElementList circElements0, circElements1, circElements2;
+	circElements0.push_back(make_shared<VoltSourceResFreq>("v_s", 1, 0, 1000, 0, 1, 2 * PI*-5, freqStep, rampTime));
+	circElements0.push_back(make_shared<ResistorDP>("r_line", 1, 2, 1));
+	circElements0.push_back(make_shared<InductorDP>("l_line", 2, 3, 0.2));
 	circElements1 = circElements0;
 	circElements2 = circElements0;
-	circElements1.push_back(new ResistorDP("r_load", 3, 0, 100));
-	circElements2.push_back(new ResistorDP("r_load", 3, 0, 50));
+	circElements1.push_back(make_shared<ResistorDP>("r_load", 3, 0, 100));
+	circElements2.push_back(make_shared<ResistorDP>("r_load", 3, 0, 50));
 
 	// Set up simulation
 	Simulation newSim(circElements1, 2.0*PI*50.0, timeStep, finalTime, log);
@@ -585,11 +529,6 @@ void DPsim::VarFreqRXLineResLoad(Real timeStep, Real finalTime, Real freqStep, R
 		updateProgressBar(newSim.getTime(), newSim.getFinalTime());
 	}
 	std::cout << "Simulation finished." << std::endl;
-
-	for (auto elem : circElements0)
-		delete elem;
-	delete circElements1[3];
-	delete circElements2[3];
 }
 
 void DPsim::RXLineResLoadEMT() {
@@ -603,14 +542,14 @@ void DPsim::RXLineResLoadEMT() {
 		rightVectorLog("Logs/RightVectorLog_" + fileName.str() + ".csv");
 
 	// Declare circuit components
-	std::vector<BaseComponent*> circElements0, circElements1, circElements2;
-	circElements0.push_back(new VoltSourceResEMT("v_s", 1, 0, Complex(10000, 0), 1));
-	circElements0.push_back(new LinearResistorEMT("r_line", 1, 2, 1));
-	circElements0.push_back(new InductorEMT("l_line", 2, 3, 1));
+	ElementList circElements0, circElements1, circElements2;
+	circElements0.push_back(make_shared<VoltSourceResEMT>("v_s", 1, 0, Complex(10000, 0), 1));
+	circElements0.push_back(make_shared<ResistorEMT>("r_line", 1, 2, 1));
+	circElements0.push_back(make_shared<InductorEMT>("l_line", 2, 3, 1));
 	circElements1 = circElements0;
 	circElements2 = circElements0;
-	circElements1.push_back(new LinearResistorEMT("r_load", 3, 0, 1000));
-	circElements2.push_back(new LinearResistorEMT("r_load", 3, 0, 800));
+	circElements1.push_back(make_shared<ResistorEMT>("r_load", 3, 0, 1000));
+	circElements2.push_back(make_shared<ResistorEMT>("r_load", 3, 0, 800));
 
 	// Set up simulation
 	Simulation newSim(circElements1, 2.0*PI*50.0, timeStep, 0.3, log, SimulationType::EMT);
@@ -625,11 +564,6 @@ void DPsim::RXLineResLoadEMT() {
 		updateProgressBar(newSim.getTime(), newSim.getFinalTime());
 	}
 	std::cout << "Simulation finished." << std::endl;
-
-	for (auto elem : circElements0)
-		delete elem;
-	delete circElements1[3];
-	delete circElements2[3];
 }
 
 void DPsim::VarFreqRXLineResLoadEMT(Real timeStep, Real finalTime, Real freqStep, Real loadStep, Real rampTime) {
@@ -641,14 +575,14 @@ void DPsim::VarFreqRXLineResLoadEMT(Real timeStep, Real finalTime, Real freqStep
 		rightVectorLog("Logs/RightVectorLog_" + fileName.str() + ".csv");
 
 	// Declare circuit components
-	std::vector<BaseComponent*> circElements0, circElements1, circElements2;
-	circElements0.push_back(new VoltSourceResFreqEMT("v_s", 1, 0, 1000, 0, 1, 2 * PI*-5, freqStep, rampTime));
-	circElements0.push_back(new LinearResistorEMT("r_line", 1, 2, 1));
-	circElements0.push_back(new InductorEMT("l_line", 2, 3, 0.2));
+	ElementList circElements0, circElements1, circElements2;
+	circElements0.push_back(make_shared<VoltSourceResFreqEMT>("v_s", 1, 0, 1000, 0, 1, 2 * PI*-5, freqStep, rampTime));
+	circElements0.push_back(make_shared<ResistorEMT>("r_line", 1, 2, 1));
+	circElements0.push_back(make_shared<InductorEMT>("l_line", 2, 3, 0.2));
 	circElements1 = circElements0;
 	circElements2 = circElements0;
-	circElements1.push_back(new LinearResistorEMT("r_load", 3, 0, 100));
-	circElements2.push_back(new LinearResistorEMT("r_load", 3, 0, 50));
+	circElements1.push_back(make_shared<ResistorEMT>("r_load", 3, 0, 100));
+	circElements2.push_back(make_shared<ResistorEMT>("r_load", 3, 0, 50));
 
 	// Set up simulation
 	Simulation newSim(circElements1, 2.0*PI*50.0, timeStep, finalTime, log, SimulationType::EMT);
@@ -663,11 +597,6 @@ void DPsim::VarFreqRXLineResLoadEMT(Real timeStep, Real finalTime, Real freqStep
 		updateProgressBar(newSim.getTime(), newSim.getFinalTime());
 	}
 	std::cout << "Simulation finished." << std::endl;
-
-	for (auto elem : circElements0)
-		delete elem;
-	delete circElements1[3];
-	delete circElements2[3];
 }
 
 void DPsim::runDpEmtVarFreqStudy() {
@@ -727,14 +656,14 @@ void DPsim::VarFreqRXLineResLoad_NZ_Paper(Real timeStep, Real finalTime, Real fr
 		rightVectorLog("Logs/RightVectorLog_" + fileName.str() + ".csv");
 
 	// Declare circuit components
-	std::vector<BaseComponent*> circElements0, circElements1, circElements2;
-	circElements0.push_back(new VoltSourceResFreq("v_s", 1, 0, 10000, 0, 1, 2 * PI*-1, freqStep, rampTime));
-	circElements0.push_back(new ResistorDP("r_line", 1, 2, 1));
-	circElements0.push_back(new InductorDP("l_line", 2, 3, 1));
+	ElementList circElements0, circElements1, circElements2;
+	circElements0.push_back(make_shared<VoltSourceResFreq>("v_s", 1, 0, 10000, 0, 1, 2 * PI*-1, freqStep, rampTime));
+	circElements0.push_back(make_shared<ResistorDP>("r_line", 1, 2, 1));
+	circElements0.push_back(make_shared<InductorDP>("l_line", 2, 3, 1));
 	circElements1 = circElements0;
 	circElements2 = circElements0;
-	circElements1.push_back(new ResistorDP("r_load", 3, 0, 10));
-	circElements2.push_back(new ResistorDP("r_load", 3, 0, 5));
+	circElements1.push_back(make_shared<ResistorDP>("r_load", 3, 0, 10));
+	circElements2.push_back(make_shared<ResistorDP>("r_load", 3, 0, 5));
 
 	// Set up simulation
 	Simulation newSim(circElements1, 2.0*PI*50.0, timeStep, finalTime, log);
@@ -749,11 +678,6 @@ void DPsim::VarFreqRXLineResLoad_NZ_Paper(Real timeStep, Real finalTime, Real fr
 		updateProgressBar(newSim.getTime(), newSim.getFinalTime());
 	}
 	std::cout << "Simulation finished." << std::endl;
-
-	for (auto elem : circElements0)
-		delete elem;
-	delete circElements1[3];
-	delete circElements2[3];
 }
 
 void DPsim::VarFreqRXLineResLoadEMT_NZ_Paper(Real timeStep, Real finalTime, Real freqStep, Real loadStep, Real rampTime) {
@@ -765,14 +689,14 @@ void DPsim::VarFreqRXLineResLoadEMT_NZ_Paper(Real timeStep, Real finalTime, Real
 		rightVectorLog("Logs/RightVectorLog_" + fileName.str() + ".csv");
 
 	// Declare circuit components
-	std::vector<BaseComponent*> circElements0, circElements1, circElements2;
-	circElements0.push_back(new VoltSourceResFreqEMT("v_s", 1, 0, 10000, 0, 1, 2 * PI*-1, freqStep, rampTime));
-	circElements0.push_back(new LinearResistorEMT("r_line", 1, 2, 1));
-	circElements0.push_back(new InductorEMT("l_line", 2, 3, 1));
+	ElementList circElements0, circElements1, circElements2;
+	circElements0.push_back(make_shared<VoltSourceResFreqEMT>("v_s", 1, 0, 10000, 0, 1, 2 * PI*-1, freqStep, rampTime));
+	circElements0.push_back(make_shared<ResistorEMT>("r_line", 1, 2, 1));
+	circElements0.push_back(make_shared<InductorEMT>("l_line", 2, 3, 1));
 	circElements1 = circElements0;
 	circElements2 = circElements0;
-	circElements1.push_back(new LinearResistorEMT("r_load", 3, 0, 10));
-	circElements2.push_back(new LinearResistorEMT("r_load", 3, 0, 8));
+	circElements1.push_back(make_shared<ResistorEMT>("r_load", 3, 0, 10));
+	circElements2.push_back(make_shared<ResistorEMT>("r_load", 3, 0, 8));
 
 	// Set up simulation
 	Simulation newSim(circElements1, 2.0*PI*50.0, timeStep, finalTime, log, SimulationType::EMT);
@@ -785,11 +709,6 @@ void DPsim::VarFreqRXLineResLoadEMT_NZ_Paper(Real timeStep, Real finalTime, Real
 		updateProgressBar(newSim.getTime(), newSim.getFinalTime());
 	}
 	std::cout << "Simulation finished." << std::endl;
-
-	for (auto elem : circElements0)
-		delete elem;
-	delete circElements1[3];
-	delete circElements2[3];
 }
 
 void DPsim::runDpEmtVarFreqStudy_NZ_Paper() {
@@ -807,10 +726,10 @@ void DPsim::runDpEmtVarFreqStudy_NZ_Paper() {
 
 #ifdef __linux__
 void DPsim::RTExample() {
-	std::vector<BaseComponent*> comps;
+	ElementList comps;
 	Logger log;
 
-	comps.push_back(new VoltSourceRes("v_s", 1, 0, Complex(10000, 0), 1));
+	comps.push_back(make_shared<VoltSourceRes>("v_s", 1, 0, Complex(10000, 0), 1));
 	comps.push_back(new LinearResistor("r_line", 1, 2, 1));
 	comps.push_back(new Inductor("l_line", 2, 3, 1));
 	comps.push_back(new LinearResistor("r_load", 3, 0, 1000));

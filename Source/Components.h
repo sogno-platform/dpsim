@@ -24,7 +24,7 @@
 #pragma once
 
 #include "Components/BaseComponent.h"
-#include "Components/LinearResistorDP.h"
+#include "Components/ResistorDP.h"
 #include "Components/CapacitorDP.h"
 #include "Components/InductorDP.h"
 #include "Components/CurrentSourceDP.h"
@@ -35,7 +35,7 @@
 #include "Components/ComponentCommons.h"
 #include "Components/VoltSourceResFreqDP.h"
 #include "Components/VoltSourceResFreqEMT.h"
-#include "Components/LinearResistorEMT.h"
+#include "Components/ResistorEMT.h"
 #include "Components/InductorEMT.h"
 #include "Components/VoltSourceResEMT.h"
 #include "Components/IdealVoltageSourceDP.h"

@@ -31,8 +31,8 @@
 #include "CIMModel.hpp"
 #include "IEC61970.hpp"
 #include "Logger.h"
+#include "Simulation.h"
 
-using namespace DPsim;
 using namespace IEC61970::Base::Domain;
 using namespace IEC61970::Base::Equivalents;
 using namespace IEC61970::Base::StateVariables;
@@ -47,7 +47,7 @@ namespace DPsim {
 			// Model from CIM++
 			CIMModel mModel;
 			// All components after mapping
-			std::vector<BaseComponent*> mComponents;
+			ElementList mComponents;
 			// System frequency (has to be given to convert between reactances
 			// in CIM and inductances used inside the simulation)
 			Real mFrequency;
@@ -64,24 +64,24 @@ namespace DPsim {
 			// Number of ideal voltage sources
 			Int mNumVoltageSources;
 
-			BaseComponent* mapComponent(BaseClass* obj);
+			ElementPtr mapComponent(BaseClass* obj);
 
-			BaseComponent* mapACLineSegment(ACLineSegment* line);
-			BaseComponent* mapAsynchronousMachine(AsynchronousMachine* machine);
-			BaseComponent* mapEnergyConsumer(EnergyConsumer* con);
-			BaseComponent* mapEquivalentInjection(EquivalentInjection* inj);
-			BaseComponent* mapExternalNetworkInjection(ExternalNetworkInjection* inj);
-			BaseComponent* mapPowerTransformer(PowerTransformer *trans);
-			BaseComponent* mapSynchronousMachine(SynchronousMachine* machine);
+			ElementPtr mapACLineSegment(ACLineSegment* line);
+			void mapAsynchronousMachine(AsynchronousMachine* machine);
+			void mapEnergyConsumer(EnergyConsumer* con);
+			void mapEquivalentInjection(EquivalentInjection* inj);
+			ElementPtr mapExternalNetworkInjection(ExternalNetworkInjection* inj);
+			ElementPtr mapPowerTransformer(PowerTransformer *trans);
+			ElementPtr mapSynchronousMachine(SynchronousMachine* machine);
 
-			BaseComponent* newPQLoad(String rid, String name);
+			ElementPtr newPQLoad(String rid, String name);
 		public:
 			CIMReader(Real om, Logger& logger);
 			virtual ~CIMReader();
 
 			bool addFile(String filename);
 			void parseFiles();
-			std::vector<BaseComponent*>& getComponents();
+			ElementList& getComponents();
 			Int mapTopologicalNode(String mrid);
 			Int getNumVoltageSources();
 

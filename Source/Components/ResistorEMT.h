@@ -1,5 +1,6 @@
 /** Linear Resistor (EMT)
  *
+ * @file
  * @author Markus Mirz <mmirz@eonerc.rwth-aachen.de>
  * @copyright 2017, Institute for Automation of Complex Power Systems, EONERC
  * @license GNU General Public License (version 3)
@@ -20,29 +21,28 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *********************************************************************************/
 
-#include "LinearResistorEMT.h"
+#pragma once
 
-using namespace DPsim;
+#include <iostream>
+#include "BaseComponent.h"
 
-LinearResistorEMT::LinearResistorEMT(String name, Int src, Int dest, Real resistance) : BaseComponent(name, src, dest) {
-	this->mResistance = resistance;
-	attrMap["resistance"] = {AttrReal, &this->mResistance};
+namespace DPsim {
+
+	class ResistorEMT : public BaseComponent {
+	protected:
+		Real mResistance;
+		Real mConductance;
+		Real mVoltageAtNode1;
+		Real mVoltageAtNode2;
+
+	public:
+		ResistorEMT() { ; };
+		ResistorEMT(String name, Int src, Int dest, Real resistance);
+
+		void init(Real om, Real dt) { }
+		void applySystemMatrixStamp(SystemModel& system);
+		void applyRightSideVectorStamp(SystemModel& system) { }
+		void step(SystemModel& system, Real time) { }
+		void postStep(SystemModel& system) { }
+	};
 }
-
-void LinearResistorEMT::applySystemMatrixStamp(SystemModel& system) {
-	this->mConductance = 1.0 / mResistance;
-	// Set diagonal entries
-	if (mNode1 >= 0) {
-		system.addRealToSystemMatrix(mNode1, mNode1, mConductance);
-	}
-	if (mNode2 >= 0) {
-		system.addRealToSystemMatrix(mNode2, mNode2, mConductance);
-	}
-	// Set off diagonal entries
-	if (mNode1 >= 0 && mNode2 >= 0) {
-		system.addRealToSystemMatrix(mNode1, mNode2, -mConductance);
-		system.addRealToSystemMatrix(mNode2, mNode1, -mConductance);
-	}
-}
-
-

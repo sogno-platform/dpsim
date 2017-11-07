@@ -25,7 +25,7 @@
 
 using namespace DPsim;
 
-SynchronGenerator::SynchronGenerator(String name, Int node1, Int node2, Int node3,
+SynchronGeneratorDP::SynchronGeneratorDP(String name, Int node1, Int node2, Int node3,
 	Real nomPower, Real nomVolt, Real nomFreq, Int poleNumber, Real nomFieldCur,
 	Real Rs, Real Ll, Real Lmd, Real Lmd0, Real Lmq, Real Lmq0,
 	Real Rfd, Real Llfd, Real Rkd, Real Llkd,
@@ -37,14 +37,14 @@ SynchronGenerator::SynchronGenerator(String name, Int node1, Int node2, Int node
 
 }
 
-SynchronGenerator::~SynchronGenerator() {
+SynchronGeneratorDP::~SynchronGeneratorDP() {
 	if (mLogActive) {
 		delete mLog;
 	}
 }
 
 
-void SynchronGenerator::init(Real om, Real dt,
+void SynchronGeneratorDP::init(Real om, Real dt,
 	Real initActivePower, Real initReactivePower, Real initTerminalVolt,
 	Real initVoltAngle, Real initFieldVoltage, Real initMechPower) {
 
@@ -148,7 +148,7 @@ void SynchronGenerator::init(Real om, Real dt,
 }
 
 
-void SynchronGenerator::step(SystemModel& system, Real time) {
+void SynchronGeneratorDP::step(SystemModel& system, Real time) {
 
 	stepInPerUnit(system.getOmega(), system.getTimeStep(), time, system.getNumMethod());
 
@@ -169,7 +169,7 @@ void SynchronGenerator::step(SystemModel& system, Real time) {
 	}
 }
 
-void SynchronGenerator::stepInPerUnit(Real om, Real dt, Real time, NumericalMethod numMethod) {
+void SynchronGeneratorDP::stepInPerUnit(Real om, Real dt, Real time, NumericalMethod numMethod) {
 
 	mVaRe = (1 / mBase_v) * mVaRe;
 	mVaIm = (1 / mBase_v) * mVaIm;
@@ -441,7 +441,7 @@ void SynchronGenerator::stepInPerUnit(Real om, Real dt, Real time, NumericalMeth
 }
 
 
-void SynchronGenerator::postStep(SystemModel& system) {
+void SynchronGeneratorDP::postStep(SystemModel& system) {
 	if (mNode1 >= 0) {
 		mVaRe = system.getRealFromLeftSideVector(mNode1);
 		mVaIm = system.getImagFromLeftSideVector(mNode1);
@@ -469,7 +469,7 @@ void SynchronGenerator::postStep(SystemModel& system) {
 }
 
 
-Matrix SynchronGenerator::abcToDq0Transform(Real theta, Real aRe, Real bRe, Real cRe, Real aIm, Real bIm, Real cIm) {
+Matrix SynchronGeneratorDP::abcToDq0Transform(Real theta, Real aRe, Real bRe, Real cRe, Real aIm, Real bIm, Real cIm) {
 	// Balanced case
 	Complex alpha(cos(2. / 3. * PI), sin(2. / 3. * PI));
 	Complex thetaCompInv(cos(-theta), sin(-theta));
@@ -498,7 +498,7 @@ Matrix SynchronGenerator::abcToDq0Transform(Real theta, Real aRe, Real bRe, Real
 	return dq0Vector;
 }
 
-Matrix SynchronGenerator::dq0ToAbcTransform(Real theta, Real d, Real q, Real zero) {
+Matrix SynchronGeneratorDP::dq0ToAbcTransform(Real theta, Real d, Real q, Real zero) {
 	// Balanced case
 	Complex alpha(cos(2. / 3. * PI), sin(2. / 3. * PI));
 	Complex thetaComp(cos(theta), sin(theta));

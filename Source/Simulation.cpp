@@ -38,7 +38,7 @@ Simulation::Simulation() {
 	mCurrentSwitchTimeIndex = 0;
 }
 
-Simulation::Simulation(std::vector<BaseComponent*> elements, Real om, Real dt, Real tf, Logger& logger, SimulationType simType)
+Simulation::Simulation(ElementList elements, Real om, Real dt, Real tf, Logger& logger, SimulationType simType)
 	: Simulation() {
 
 	mLogger = &logger;
@@ -48,7 +48,7 @@ Simulation::Simulation(std::vector<BaseComponent*> elements, Real om, Real dt, R
 	mFinalTime = tf;
 	initialize(elements);
 
-	for (BaseComponent* c : elements)
+	for (ElementPtr c : elements)
 		mLogger->Log(LogLevel::INFO) << "Added " << c->getType() << " '" << c->getName() << "' to simulation." << std::endl;
 
 	mLogger->Log(LogLevel::INFO) << "System matrix A:" << std::endl;
@@ -59,7 +59,7 @@ Simulation::Simulation(std::vector<BaseComponent*> elements, Real om, Real dt, R
 	mLogger->LogMatrix(LogLevel::INFO, mSystemModel.getRightSideVector());
 }
 
-Simulation::Simulation(std::vector<BaseComponent*> elements, Real om, Real dt, Real tf, Logger& logger, Int downSampleRate, SimulationType simType)
+Simulation::Simulation(ElementList elements, Real om, Real dt, Real tf, Logger& logger, Int downSampleRate, SimulationType simType)
 	: Simulation(elements, om, dt, tf, logger, simType) {
 
 	mDownSampleRate = downSampleRate;
@@ -71,7 +71,7 @@ Simulation::~Simulation() {
 }
 
 
-void Simulation::initialize(std::vector<BaseComponent*> newElements) {
+void Simulation::initialize(ElementList newElements) {
 	Int maxNode = 0;
 	Int currentVirtualNode = 0;
 
@@ -79,7 +79,7 @@ void Simulation::initialize(std::vector<BaseComponent*> newElements) {
 	// Calculate the mNumber of nodes by going through the list of elements
 	// TODO we use the values from the first element vector right now and assume that
 	// these values don't change on switches
-	for (BaseComponent* element : newElements) {
+	for (ElementPtr element : newElements) {
 
 		// determine maximum node in component list
 		if (element->getNode1() > maxNode) {
@@ -92,7 +92,7 @@ void Simulation::initialize(std::vector<BaseComponent*> newElements) {
 	mLogger->Log(LogLevel::INFO) << "Maximum node number: " << maxNode << std::endl;
 
 	// Check if element requires virtual node and if so set one
-	for (BaseComponent* element : newElements) {
+	for (ElementPtr element : newElements) {
 		if (element->hasVirtualNodes()) {
 			for (Int node = 0; node < element->getVirtualNodesNum(); node++) {
 				currentVirtualNode++;
@@ -110,7 +110,7 @@ void Simulation::initialize(std::vector<BaseComponent*> newElements) {
 	mSystemModel.initialize(numNodes);
 	
 	// Initialize right side vector and components
-	for (BaseComponent* element : newElements) {
+	for (ElementPtr element : newElements) {
 		element->init(mSystemModel.getOmega(), mSystemModel.getTimeStep());
 		element->applyRightSideVectorStamp(mSystemModel);
 	}
@@ -122,13 +122,13 @@ void Simulation::initialize(std::vector<BaseComponent*> newElements) {
 	mElements = mElementsVector[0];
 }
 
-void Simulation::addSystemTopology(std::vector<BaseComponent*> newElements) {
+void Simulation::addSystemTopology(ElementList newElements) {
 	mElementsVector.push_back(newElements);
 	
 	// It is assumed that the system size does not change
 	mSystemModel.createEmptySystemMatrix();
 
-	for (BaseComponent* element : newElements) {
+	for (ElementPtr element : newElements) {
 		element->applySystemMatrixStamp(mSystemModel);
 	}
 	mSystemModel.addSystemMatrix();
@@ -143,13 +143,13 @@ Int Simulation::step(Logger& logger, bool blocking)
 		(*it)->readValues(blocking);
 	}
 
-	for (std::vector<BaseComponent*>::iterator it = mElements.begin(); it != mElements.end(); ++it) {
+	for (ElementList::iterator it = mElements.begin(); it != mElements.end(); ++it) {
 		(*it)->step(mSystemModel, mTime);
 	}
 
 	mSystemModel.solve();
 
-	for (std::vector<BaseComponent*>::iterator it = mElements.begin(); it != mElements.end(); ++it) {
+	for (ElementList::iterator it = mElements.begin(); it != mElements.end(); ++it) {
 		(*it)->postStep(mSystemModel);
 	}
 
@@ -186,12 +186,12 @@ Int Simulation::step(Logger& logger, Logger& leftSideVectorLog, Logger& rightSid
 }
 
 Int Simulation::stepGeneratorTest(Logger& logger, Logger& leftSideVectorLog, Logger& rightSideVectorLog,
-	BaseComponent* generator, Real time) {
+	ElementPtr generator, Real time) {
 	// Set to zero because all components will add their contribution for the current time step to the current value
 	mSystemModel.getRightSideVector().setZero();
 
 	// Execute step for all circuit components
-	for (std::vector<BaseComponent*>::iterator it = mElements.begin(); it != mElements.end(); ++it) {
+	for (ElementList::iterator it = mElements.begin(); it != mElements.end(); ++it) {
 		(*it)->step(mSystemModel, mTime);
 	}
 
@@ -199,7 +199,7 @@ Int Simulation::stepGeneratorTest(Logger& logger, Logger& leftSideVectorLog, Log
 	mSystemModel.solve();
 
 	// Execute PostStep for all components, generator states are recalculated based on new terminal voltage
-	for (std::vector<BaseComponent*>::iterator it = mElements.begin(); it != mElements.end(); ++it) {
+	for (ElementList::iterator it = mElements.begin(); it != mElements.end(); ++it) {
 		(*it)->postStep(mSystemModel);
 	}
 
@@ -233,13 +233,13 @@ Int Simulation::stepGeneratorTest(Logger& logger, Logger& leftSideVectorLog, Log
 }
 
 int Simulation::stepGeneratorVBR(Logger& logger, Logger& leftSideVectorLog, Logger& rightSideVectorLog,
-	BaseComponent* generator, Real time) {
+	ElementPtr generator, Real time) {
 
 	// Set to zero because all components will add their contribution for the current time step to the current value
 	mSystemModel.getRightSideVector().setZero();
 
 	// Execute step for all circuit components
-	for (std::vector<BaseComponent*>::iterator it = mElements.begin(); it != mElements.end(); ++it) {
+	for (ElementList::iterator it = mElements.begin(); it != mElements.end(); ++it) {
 		(*it)->step(mSystemModel, mTime);
 	}
 
@@ -247,7 +247,7 @@ int Simulation::stepGeneratorVBR(Logger& logger, Logger& leftSideVectorLog, Logg
 	mSystemModel.solve();
 
 	// Execute PostStep for all components, generator states are recalculated based on new terminal voltage
-	for (std::vector<BaseComponent*>::iterator it = mElements.begin(); it != mElements.end(); ++it) {
+	for (ElementList::iterator it = mElements.begin(); it != mElements.end(); ++it) {
 		(*it)->postStep(mSystemModel);
 	}
 
@@ -280,7 +280,7 @@ int Simulation::stepGeneratorVBR(Logger& logger, Logger& leftSideVectorLog, Logg
 	}
 }
 
-void Simulation::switchSystemMatrix(int systemMatrixIndex) {
+void Simulation::switchSystemMatrix(Int systemMatrixIndex) {
 	mSystemModel.switchSystemMatrix(systemMatrixIndex);
 }
 

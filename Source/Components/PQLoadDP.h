@@ -25,7 +25,7 @@
 
 #include "BaseComponent.h"
 #include "InductorDP.h"
-#include "LinearResistorDP.h"
+#include "ResistorDP.h"
 
 namespace DPsim {
 	// TODO currently modeled as an impedance, which obviously doesn't have a constant power characteristic
