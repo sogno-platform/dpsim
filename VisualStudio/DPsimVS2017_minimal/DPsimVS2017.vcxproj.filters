@@ -81,12 +81,6 @@
     <ClInclude Include="..\..\Source\Components\CurrentSourceDP.h">
       <Filter>Headerdateien\Components</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\Source\Components\ExternalCurrentSource.h">
-      <Filter>Headerdateien\Components</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\Source\Components\ExternalVoltageSource.h">
-      <Filter>Headerdateien\Components</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\Source\Components\IdealTransformerDP.h">
       <Filter>Headerdateien\Components</Filter>
     </ClInclude>
@@ -124,9 +118,6 @@
       <Filter>Headerdateien\Components</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Source\Components\SynchronGeneratorEMT.h">
-      <Filter>Headerdateien\Components</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\Source\Components\TwoWindingTransformerDP.h">
       <Filter>Headerdateien\Components</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Source\Components\VoltageBehindReactanceDP.h">
@@ -191,12 +182,6 @@
     <ClCompile Include="..\..\Source\Components\CurrentSourceDP.cpp">
       <Filter>Quelldateien\Components</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\Source\Components\ExternalCurrentSource.cpp">
-      <Filter>Quelldateien\Components</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\Source\Components\ExternalVoltageSource.cpp">
-      <Filter>Quelldateien\Components</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\Source\Components\IdealTransformerDP.cpp">
       <Filter>Quelldateien\Components</Filter>
     </ClCompile>
@@ -236,9 +221,6 @@
     <ClCompile Include="..\..\Source\Components\SynchronGeneratorEMT.cpp">
       <Filter>Quelldateien\Components</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\Source\Components\TwoWindingTransformerDP.cpp">
-      <Filter>Quelldateien\Components</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\Source\Components\VoltageBehindReachtanceDP.cpp">
       <Filter>Quelldateien\Components</Filter>
     </ClCompile>
@@ -256,6 +238,9 @@
     </ClCompile>
     <ClCompile Include="..\..\Source\Components\SimplifiedSynchronGeneratorEMT.cpp">
       <Filter>Quelldateien\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\MathLibrary.cpp">
+      <Filter>Quelldateien</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

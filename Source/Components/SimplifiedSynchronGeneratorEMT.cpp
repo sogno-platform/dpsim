@@ -61,8 +61,9 @@ void SimplifiedSynchronGeneratorEMT::init(Real om, Real dt,
 		mReactanceMat = Matrix::Zero(3, 3);
 		mOmegaFluxMat = Matrix::Zero(3, 3);
 
-		//Determinant of Lq(inductance matrix of q axis)
-		//detLq = -mLmq*mLlkq2*(mLlkq1 + mLl) - mLl*mLlkq1*(mLlkq2 + mLmq);
+
+
+
 		mInductanceMat <<
 			-(mLl + mLmq), 0, 0,
 			0, -(mLl + mLmd), mLmd,
@@ -94,6 +95,17 @@ void SimplifiedSynchronGeneratorEMT::init(Real om, Real dt,
 
 	// steady state per unit initial value
 	initStatesInPerUnit(initActivePower, initReactivePower, initTerminalVolt, initVoltAngle, initFieldVoltage, initMechPower);
+	
+	mXd = mOmMech*(mLl + mLmd);
+	mXq = mOmMech*(mLl + mLmq);
+	mTd0_t = (mLlfd + mLmd) / (mRfd*mBase_OmMech);
+	mXd_t = mOmMech*(mLl + mLmd - mLmd*mLmd / (mLlfd + mLmd));
+	mEq_t = mVq + mXd_t*mId;
+	mEf = mOmMech*(mLmd / mRfd) * mVfd;
+
+	//mXq_t = mOmMech*(mLmq + mLl - mLmq*mLmq / (mLlkq1 + mLmq));
+	//mTq0_t = (mLlkq1 + mLmq) / (mRkq1*mBase_OmMech);
+	//mEd_t = mVd - mXq_t*mIq;
 
 	mVa = inverseParkTransform2(mThetaMech, mVd* mBase_v, mVq* mBase_v, mV0* mBase_v)(0);
 	mVb = inverseParkTransform2(mThetaMech, mVd* mBase_v, mVq* mBase_v, mV0* mBase_v)(1);
@@ -102,6 +114,8 @@ void SimplifiedSynchronGeneratorEMT::init(Real om, Real dt,
 	mIa = inverseParkTransform2(mThetaMech, mId* mBase_i, mIq* mBase_i, mI0* mBase_i)(0);
 	mIb = inverseParkTransform2(mThetaMech, mId* mBase_i, mIq* mBase_i, mI0* mBase_i)(1);
 	mIc = inverseParkTransform2(mThetaMech, mId* mBase_i, mIq* mBase_i, mI0* mBase_i)(2);
+
+
 }
 
 
@@ -133,54 +147,23 @@ void SimplifiedSynchronGeneratorEMT::stepInPerUnit(Real om, Real dt, Real time, 
 	mVb = (1 / mBase_v) * mVb;
 	mVc = (1 / mBase_v) * mVc;
 
-	mIa = (1 / mBase_i) * mIa;
-	mIb = (1 / mBase_i) * mIb;
-	mIc = (1 / mBase_i) * mIc;
-
 	// dq-transform of interface voltage
 	mVd = parkTransform2(mThetaMech, mVa, mVb, mVc)(0);
 	mVq = parkTransform2(mThetaMech, mVa, mVb, mVc)(1);
 	mV0 = parkTransform2(mThetaMech, mVa, mVb, mVc)(2);
 
-
-	Matrix A = (mResistanceMat*mReactanceMat - mOmMech*mOmegaFluxMat);
-	Matrix B = Matrix::Identity(3, 3);
-
-	Matrix Fluxes(3, 1);
-	Fluxes(0, 0) = mPsiq;
-	Fluxes(1, 0) = mPsid;
-	Fluxes(2, 0) = mPsifd;
-
-	Matrix dqVoltages(3, 1);
-	dqVoltages(0, 0) = mVq;
-	dqVoltages(1, 0) = mVd;
-	dqVoltages(2, 0) = mVfd;
-
-	Fluxes = Trapezoidal(Fluxes, A, B, dt*mBase_OmElec, dqVoltages);
-
-
-	mPsiq = Fluxes(0, 0);
-	mPsid = Fluxes(1, 0);
-	mPsifd = Fluxes(2, 0);
-
-
-	////mOmMech = 1;
-
-	//mPsid = mVq;
-	//mPsiq = -mVd;
-	//mPsifd = mPsifd + dt*mBase_OmMech*(mVfd - mRfd*mIfd);
-
+	mEq_t = mEq_t + dt*((1 / mTd0_t) * (-mEq_t + mEf - (mXd - mXd_t)*mId));
 	
-	mId = ((mLlfd + mLmd) *mPsid - mLmd*mPsifd) / detLd;
-	mIfd = (mLmd*mPsid - (mLl + mLmd)*mPsifd) / detLd;
-	mIq = -mPsiq / (mLl + mLmq);
+	mId = (mEq_t - mVq) / mXd_t;
+	//mIq = mVd / mXq;
 
-	mI0 = 0;
-
-
+	mPsid = -mXd*mId + mEq_t + (mXd - mXd_t)*mId;
+	mPsiq = -mXq*mIq;
+	
 
 	// Calculation of rotational speed with euler
 	mElecTorque = (mPsid*mIq - mPsiq*mId);
+
 	mOmMech = mOmMech + dt * (1 / (2 * mH) * (mMechTorque - mElecTorque));
 	// Calculation of rotor angular position
 	mThetaMech = mThetaMech + dt * (mOmMech * mBase_OmMech);
@@ -189,17 +172,17 @@ void SimplifiedSynchronGeneratorEMT::stepInPerUnit(Real om, Real dt, Real time, 
 	mIb = mBase_i * inverseParkTransform2(mThetaMech, mId, mIq, mI0)(1);
 	mIc = mBase_i * inverseParkTransform2(mThetaMech, mId, mIq, mI0)(2);
 
-	mCurrents << mIq,
-		mId,
-		mIfd;
+	//mCurrents << mIq,
+	//	mId,
+	//	mIfd;
 
-	mVoltages << mVq,
-		mVd,
-		mVfd;
+	//mVoltages << mVq,
+	//	mVd,
+	//	mVfd;
 
-	mFluxes << mPsiq,
-		mPsid,
-		mPsifd;
+	//mFluxes << mPsiq,
+	//	mPsid,
+	//	mPsifd;
 
 }
 
@@ -229,13 +212,13 @@ Matrix SimplifiedSynchronGeneratorEMT::parkTransform2(Real theta, Real a, Real b
 	Matrix dq0vector(3, 1);
 
 	// Park transform according to Kundur
-	Real d, q;
+	Real d, q, zero;
 
 	d = 2. / 3. * cos(theta)*a + 2. / 3. * cos(theta - 2. * M_PI / 3.)*b + 2. / 3. * cos(theta + 2. * M_PI / 3.)*c;
 	q = -2. / 3. * sin(theta)*a - 2. / 3. * sin(theta - 2. * M_PI / 3.)*b - 2. / 3. * sin(theta + 2. * M_PI / 3.)*c;
 
 	//Real zero;
-	//zero = 1. / 3. * a, 1. / 3. * b, 1. / 3. * c;
+	zero = 1. / 3. * a, 1. / 3. * b, 1. / 3. * c;
 
 	dq0vector << d,
 		q,
