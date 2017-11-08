@@ -39,6 +39,7 @@ namespace DPsim {
 	void simulationExampleRXLine3();
 	void simulationExamplePiLine();
 	void simulationExamplePiLine2();
+	void simulationExampleTestIdealVoltageSourceEMT();
 	
 	// Circuits used for ICCEP2017 paper
 	void RXLineResLoad();

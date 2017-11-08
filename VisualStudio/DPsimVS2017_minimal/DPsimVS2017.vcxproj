@@ -153,8 +153,10 @@
     <ClInclude Include="..\..\Source\Components\CapacitorDP.h" />
     <ClInclude Include="..\..\Source\Components\ComponentCommons.h" />
     <ClInclude Include="..\..\Source\Components\CurrentSourceDP.h" />
+    <ClInclude Include="..\..\Source\Components\ExternalVoltageSource.h" />
     <ClInclude Include="..\..\Source\Components\IdealTransformerDP.h" />
     <ClInclude Include="..\..\Source\Components\IdealVoltageSourceDP.h" />
+    <ClInclude Include="..\..\Source\Components\IdealVoltageSourceEMT.h" />
     <ClInclude Include="..\..\Source\Components\InductorDP.h" />
     <ClInclude Include="..\..\Source\Components\InductorEMT.h" />
     <ClInclude Include="..\..\Source\Components\InterfacedInductorDP.h" />
@@ -164,6 +166,7 @@
     <ClInclude Include="..\..\Source\Components\ResistorEMT.h" />
     <ClInclude Include="..\..\Source\Components\RxLineDP.h" />
     <ClInclude Include="..\..\Source\Components\SimplifiedSynchronGeneratorEMT.h" />
+    <ClInclude Include="..\..\Source\Components\SimplifiedSynGenEMT.h" />
     <ClInclude Include="..\..\Source\Components\SynchGenBase.h" />
     <ClInclude Include="..\..\Source\Components\SynchronGeneratorDP.h" />
     <ClInclude Include="..\..\Source\Components\SynchronGeneratorEMT.h" />
@@ -188,8 +191,10 @@
     <ClCompile Include="..\..\Source\Components\BaseComponent.cpp" />
     <ClCompile Include="..\..\Source\Components\CapacitorDP.cpp" />
     <ClCompile Include="..\..\Source\Components\CurrentSourceDP.cpp" />
+    <ClCompile Include="..\..\Source\Components\ExternalVoltageSource.cpp" />
     <ClCompile Include="..\..\Source\Components\IdealTransformerDP.cpp" />
     <ClCompile Include="..\..\Source\Components\IdealVoltageSourceDP.cpp" />
+    <ClCompile Include="..\..\Source\Components\IdealVoltageSourceEMT.cpp" />
     <ClCompile Include="..\..\Source\Components\InductorDP.cpp" />
     <ClCompile Include="..\..\Source\Components\InductorEMT.cpp" />
     <ClCompile Include="..\..\Source\Components\InterfacedInductorDP.cpp" />
@@ -199,6 +204,7 @@
     <ClCompile Include="..\..\Source\Components\ResistorEMT.cpp" />
     <ClCompile Include="..\..\Source\Components\RxLineDP.cpp" />
     <ClCompile Include="..\..\Source\Components\SimplifiedSynchronGeneratorEMT.cpp" />
+    <ClCompile Include="..\..\Source\Components\SimplifiedSynGenEMT.cpp" />
     <ClCompile Include="..\..\Source\Components\SynchGenBase.cpp" />
     <ClCompile Include="..\..\Source\Components\SynchronGeneratorDP.cpp" />
     <ClCompile Include="..\..\Source\Components\SynchronGeneratorEMT.cpp" />

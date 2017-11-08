@@ -51,6 +51,7 @@ int main(int argc, char* argv[]) {
 	//simulationExampleRXLine3();
 	//simulationExampleRXLine();
 	//simulationExampleRXLine2();
+	simulationExampleTestIdealVoltageSourceEMT();
 
 	// #### Synchronous generator unit tests ################
 	// EMT classic dq model
@@ -64,7 +65,7 @@ int main(int argc, char* argv[]) {
 	//SynGenDPUnitTestThreePhaseFault();
 
 	//EMT Simplified Model
-	SimpSynGenUnitTestThreePhaseFault();
+	//SimpSynGenUnitTestThreePhaseFault();
 
 	// EMT VBR model
 	//SynGenUnitTestVBR();

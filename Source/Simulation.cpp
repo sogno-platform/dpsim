@@ -90,7 +90,7 @@ void Simulation::initialize(ElementList newElements) {
 		}		
 	}
 	mLogger->Log(LogLevel::INFO) << "Maximum node number: " << maxNode << std::endl;
-
+	currentVirtualNode = maxNode;
 	// Check if element requires virtual node and if so set one
 	for (ElementPtr element : newElements) {
 		if (element->hasVirtualNodes()) {
@@ -104,7 +104,8 @@ void Simulation::initialize(ElementList newElements) {
 	}
 
 	// Calculate size of system matrix
-	Int numNodes = maxNode + currentVirtualNode + 1;
+	//Int numNodes = maxNode + currentVirtualNode + 1;
+	Int numNodes = currentVirtualNode + 1;
 
 	// Create right and left vector
 	mSystemModel.initialize(numNodes);

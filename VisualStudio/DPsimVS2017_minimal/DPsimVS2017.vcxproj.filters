@@ -132,6 +132,15 @@
     <ClInclude Include="..\..\Source\Components\ResistorDP.h">
       <Filter>Headerdateien\Components</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\Source\Components\SimplifiedSynGenEMT.h">
+      <Filter>Headerdateien\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\Components\ExternalVoltageSource.h">
+      <Filter>Headerdateien\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\Components\IdealVoltageSourceEMT.h">
+      <Filter>Headerdateien\Components</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\Source\Logger.cpp">
@@ -231,6 +240,15 @@
       <Filter>Quelldateien\Components</Filter>
     </ClCompile>
     <ClCompile Include="..\..\Source\Components\ResistorEMT.cpp">
+      <Filter>Quelldateien\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\Components\SimplifiedSynGenEMT.cpp">
+      <Filter>Quelldateien\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\Components\ExternalVoltageSource.cpp">
+      <Filter>Quelldateien\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\Components\IdealVoltageSourceEMT.cpp">
       <Filter>Quelldateien\Components</Filter>
     </ClCompile>
   </ItemGroup>
