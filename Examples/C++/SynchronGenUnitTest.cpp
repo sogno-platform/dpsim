@@ -619,7 +619,7 @@ void DPsim::SimpSynGenUnitTestThreePhaseFault() {
 	// Set up simulation
 	Real tf, dt, t;
 	Real om = 2.0*M_PI*60.0;
-	tf = 0.3; dt = 0.00001; t = 0;
+	tf = 0.3; dt = 0.000001; t = 0;
 	Int downSampling = 50;
 	Simulation newSim(circElements, om, dt, tf, log, downSampling, SimulationType::EMT);
 	newSim.setNumericalMethod(NumericalMethod::Trapezoidal_flux);
