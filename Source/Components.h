@@ -46,5 +46,4 @@
 #include "Components/IdealTransformerDP.h"
 #include "Components/PQLoadDP.h"
 #include "Components/SimplifiedSynchronGeneratorEMT.h"
-#include "Components/SimplifiedSynGenEMT.h"
 #include "Components/IdealVoltageSourceEMT.h"

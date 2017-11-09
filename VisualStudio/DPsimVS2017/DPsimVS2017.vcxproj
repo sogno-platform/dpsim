@@ -154,6 +154,7 @@
     <ClInclude Include="..\..\Source\Components\CurrentSourceDP.h" />
     <ClInclude Include="..\..\Source\Components\IdealTransformerDP.h" />
     <ClInclude Include="..\..\Source\Components\IdealVoltageSourceDP.h" />
+    <ClInclude Include="..\..\Source\Components\IdealVoltageSourceEMT.h" />
     <ClInclude Include="..\..\Source\Components\InductorDP.h" />
     <ClInclude Include="..\..\Source\Components\InductorEMT.h" />
     <ClInclude Include="..\..\Source\Components\InterfacedInductorDP.h" />
@@ -185,7 +186,6 @@
   <ItemGroup>
     <ClCompile Include="..\..\Examples\C++\CIMTest.cpp" />
     <ClCompile Include="..\..\Examples\C++\DPsimExampleCIM.cpp" />
-    <ClCompile Include="..\..\Examples\C++\ReferenceCircuits.cpp" />
     <ClCompile Include="..\..\Examples\C++\ShmemTest.cpp" />
     <ClCompile Include="..\..\Examples\C++\SynchronGenUnitTest.cpp" />
     <ClCompile Include="..\..\Source\CIMReader.cpp" />
@@ -194,6 +194,7 @@
     <ClCompile Include="..\..\Source\Components\CurrentSourceDP.cpp" />
     <ClCompile Include="..\..\Source\Components\IdealTransformerDP.cpp" />
     <ClCompile Include="..\..\Source\Components\IdealVoltageSourceDP.cpp" />
+    <ClCompile Include="..\..\Source\Components\IdealVoltageSourceEMT.cpp" />
     <ClCompile Include="..\..\Source\Components\InductorDP.cpp" />
     <ClCompile Include="..\..\Source\Components\InductorEMT.cpp" />
     <ClCompile Include="..\..\Source\Components\InterfacedInductorDP.cpp" />
