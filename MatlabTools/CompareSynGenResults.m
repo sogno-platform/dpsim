@@ -32,10 +32,10 @@ legend('va DPSim','vb DPSim', 'vc DPSim','va PLECS','vb PLECS','vc PLECS');
 
 figure(2)
 hold off
-plot(CurrentVector(:,1),-CurrentVector(:,2));
+plot(VoltageVector(:,1),VoltageVector(:,5));
 hold on
-plot(CurrentVector(:,1),-CurrentVector(:,3));
-plot(CurrentVector(:,1),-CurrentVector(:,4));
+plot(VoltageVector(:,1),VoltageVector(:,6));
+plot(VoltageVector(:,1),VoltageVector(:,7));
 
 % plot(tout,currents(:,1),'--')
 % plot(tout,currents(:,2),'--')

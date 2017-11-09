@@ -589,7 +589,7 @@ void DPsim::SimpSynGenUnitTestThreePhaseFault() {
 	//Real Llkq2 = 0;
 
 	// Declare circuit components
-	ElementPtr gen = make_shared<SimplifiedSynchronGeneratorEMT>("gen", 1, 2, 3,
+	ElementPtr gen = make_shared<SimplifiedSynGenEMT>("gen", 1, 2, 3,
 		nomPower, nomPhPhVoltRMS, nomFreq, poleNum, nomFieldCurr,
 		Rs, Ll, Lmd, Lmd0, Lmq, Lmq0, Rfd, Llfd, Rkd, Llkd, Rkq1, Llkq1, Rkq2, Llkq2, H);
 	Real loadRes = 1037.8378;
@@ -609,6 +609,7 @@ void DPsim::SimpSynGenUnitTestThreePhaseFault() {
 	ElementPtr rBreaker2 = make_shared<ResistorEMT>("rbreak2", 2, 0, breakerRes);
 	ElementPtr rBreaker3 = make_shared<ResistorEMT>("rbreak3", 3, 0, breakerRes);
 	ElementList circElementsBreakerOn;
+	circElementsBreakerOn.push_back(gen);
 	circElementsBreakerOn.push_back(rBreaker1);
 	circElementsBreakerOn.push_back(rBreaker2);
 	circElementsBreakerOn.push_back(rBreaker3);
@@ -619,7 +620,7 @@ void DPsim::SimpSynGenUnitTestThreePhaseFault() {
 	// Set up simulation
 	Real tf, dt, t;
 	Real om = 2.0*M_PI*60.0;
-	tf = 0.3; dt = 0.000001; t = 0;
+	tf = 0.3; dt = 0.0000001; t = 0;
 	Int downSampling = 50;
 	Simulation newSim(circElements, om, dt, tf, log, downSampling, SimulationType::EMT);
 	newSim.setNumericalMethod(NumericalMethod::Trapezoidal_flux);
@@ -633,7 +634,7 @@ void DPsim::SimpSynGenUnitTestThreePhaseFault() {
 	Real initVoltAngle = -DPS_PI / 2;
 	Real fieldVoltage = 7.0821;
 	Real mechPower = 5.5558e5;
-	shared_ptr<SimplifiedSynchronGeneratorEMT> genPtr = std::dynamic_pointer_cast<SimplifiedSynchronGeneratorEMT>(gen);
+	shared_ptr<SimplifiedSynGenEMT> genPtr = std::dynamic_pointer_cast<SimplifiedSynGenEMT>(gen);
 	genPtr->init(om, dt, initActivePower, initReactivePower, initTerminalVolt, initVoltAngle, fieldVoltage, mechPower);
 
 	// Calculate initial values for circuit at generator connection point

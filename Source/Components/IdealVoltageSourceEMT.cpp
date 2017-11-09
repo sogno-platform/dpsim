@@ -52,5 +52,6 @@ void IdealVoltageSourceEMT::step(SystemModel& system, Real time) {
 }
 
 Complex IdealVoltageSourceEMT::getCurrent(SystemModel& system) {
+	Complex actualcurrent = Complex(system.getRealFromLeftSideVector(mVirtualNodes[0]), 0);
 	return Complex(system.getRealFromLeftSideVector(mVirtualNodes[0]),0);
 }
