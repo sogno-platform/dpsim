@@ -57,9 +57,6 @@
     <ClInclude Include="..\..\Examples\C++\SimpleCircuitTest.h">
       <Filter>Headerdateien\Examples</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\Examples\C++\SyncGenUnitTestVBR.h">
-      <Filter>Headerdateien\Examples</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\Examples\C++\SynchronGenUnitTest.h">
       <Filter>Headerdateien\Examples</Filter>
     </ClInclude>
@@ -96,12 +93,6 @@
     <ClInclude Include="..\..\Source\Components\InterfacedInductorDP.h">
       <Filter>Headerdateien\Components</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\Source\Components\LinearResistorDP.h">
-      <Filter>Headerdateien\Components</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\Source\Components\LinearResistorEMT.h">
-      <Filter>Headerdateien\Components</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\Source\Components\PiLineDP.h">
       <Filter>Headerdateien\Components</Filter>
     </ClInclude>
@@ -135,6 +126,21 @@
     <ClInclude Include="..\..\Source\Components\SimplifiedSynchronGeneratorEMT.h">
       <Filter>Headerdateien\Components</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\Source\Components\ResistorEMT.h">
+      <Filter>Headerdateien\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\Components\ResistorDP.h">
+      <Filter>Headerdateien\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\Components\SimplifiedSynGenEMT.h">
+      <Filter>Headerdateien\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\Components\ExternalVoltageSource.h">
+      <Filter>Headerdateien\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\Components\IdealVoltageSourceEMT.h">
+      <Filter>Headerdateien\Components</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\Source\Logger.cpp">
@@ -159,12 +165,6 @@
       <Filter>Quelldateien\Examples</Filter>
     </ClCompile>
     <ClCompile Include="..\..\Examples\C++\ShmemTest.cpp">
-      <Filter>Quelldateien\Examples</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\Examples\C++\SimpleCircuitTest.cpp">
-      <Filter>Quelldateien\Examples</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\Examples\C++\SyncGenUnitTestVBR.cpp">
       <Filter>Quelldateien\Examples</Filter>
     </ClCompile>
     <ClCompile Include="..\..\Examples\C++\SynchronGenUnitTest.cpp">
@@ -195,12 +195,6 @@
       <Filter>Quelldateien\Components</Filter>
     </ClCompile>
     <ClCompile Include="..\..\Source\Components\InterfacedInductorDP.cpp">
-      <Filter>Quelldateien\Components</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\Source\Components\LinearResistorDP.cpp">
-      <Filter>Quelldateien\Components</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\Source\Components\LinearResistorEMT.cpp">
       <Filter>Quelldateien\Components</Filter>
     </ClCompile>
     <ClCompile Include="..\..\Source\Components\PiLineDP.cpp">
@@ -241,6 +235,21 @@
     </ClCompile>
     <ClCompile Include="..\..\Source\MathLibrary.cpp">
       <Filter>Quelldateien</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\Components\ResistorDP.cpp">
+      <Filter>Quelldateien\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\Components\ResistorEMT.cpp">
+      <Filter>Quelldateien\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\Components\SimplifiedSynGenEMT.cpp">
+      <Filter>Quelldateien\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\Components\ExternalVoltageSource.cpp">
+      <Filter>Quelldateien\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\Components\IdealVoltageSourceEMT.cpp">
+      <Filter>Quelldateien\Components</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
