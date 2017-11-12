@@ -50,7 +50,7 @@ void Python::Simulation::simThreadFunction(Python::Simulation* pySim) {
 
 	pySim->numStep = 0;
 	while (pySim->running && notDone) {
-		notDone = pySim->sim->step(*pySim->log, *pySim->llog, *pySim->rlog);
+		notDone = pySim->sim->step(*pySim->llog, *pySim->rlog);
 
 		pySim->numStep++;
 		pySim->sim->increaseByTimeStep();
@@ -93,8 +93,8 @@ void Python::Simulation::simThreadFunctionRT(Python::Simulation *pySim) {
 	ts.it_interval = ts.it_value;
 	// optional start synchronization
 	if (pySim->startSync) {
-		pySim->sim->step(*pySim->log, *pySim->llog, *pySim->rlog, false); // first step, sending the initial values
-		pySim->sim->step(*pySim->log, *pySim->llog, *pySim->rlog, true); // blocking step for synchronization + receiving the initial state of the other network
+		pySim->sim->step(*pySim->llog, *pySim->rlog, false); // first step, sending the initial values
+		pySim->sim->step(*pySim->llog, *pySim->rlog, true); // blocking step for synchronization + receiving the initial state of the other network
 		pySim->sim->increaseByTimeStep();
 	}
 	if (timerfd_settime(timerfd, 0, &ts, 0) < 0) {
@@ -102,7 +102,7 @@ void Python::Simulation::simThreadFunctionRT(Python::Simulation *pySim) {
 		std::exit(1);
 	}
 	while (pySim->running && notDone) {
-		notDone = pySim->sim->step(*pySim->log, *pySim->llog, *pySim->rlog);
+		notDone = pySim->sim->step(*pySim->llog, *pySim->rlog);
 		if (read(timerfd, timebuf, 8) < 0) {
 			std::perror("Read from timerfd failed");
 			std::exit(1);
@@ -212,7 +212,7 @@ void Python::Simulation::dealloc(Python::Simulation* self) {
 	// Since this is not a C++ destructor which would automatically call the
 	// destructor of its members, we have to manually call the destructor of
 	// the vectors here to free the associated memory.
-	self->comps.~vector<BaseComponent*>();
+	self->comps.~ElementList();
 	self->refs.~vector<PyObject*>();
 
 	Py_XDECREF(self->pyComps);
