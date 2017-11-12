@@ -25,11 +25,11 @@
 
 #include <cmath>
 #include <complex>
-#include <Eigen/Dense>
-#include <Eigen/SparseCore>
 #include <string>
 #include <memory>
 
+#include <Eigen/Dense>
+#include <Eigen/SparseCore>
 
 // VS2017 doesn't define M_PI unless _USE_MATH_DEFINES is included before cmath
 // which is hard to guarantee, so we make sure it is defined here
