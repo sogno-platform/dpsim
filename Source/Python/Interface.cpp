@@ -63,7 +63,9 @@ PyObject* Python::Interface::registerSource(PyObject* self, PyObject* args) {
 		PyErr_SetString(PyExc_TypeError, "First argument must be an external source");
 		return nullptr;
 	}
+
 	Py_INCREF(Py_None);
+
 	return Py_None;
 }
 
@@ -85,9 +87,12 @@ PyObject* Python::Interface::exportCurrent(PyObject* self, PyObject* args) {
 		PyErr_SetString(PyExc_TypeError, "First argument must be a Component");
 		return nullptr;
 	}
+
 	Component *pyComp = (Component*) obj;
 	pyIntf->intf->registerExportedCurrent(pyComp->comp, realIdx, imagIdx);
+
 	Py_INCREF(Py_None);
+
 	return Py_None;
 }
 
@@ -107,8 +112,11 @@ PyObject* Python::Interface::exportVoltage(PyObject* self, PyObject* args) {
 
 	if (!PyArg_ParseTuple(args, "iiii", &from, &to, &realIdx, &imagIdx))
 		return nullptr;
+
 	pyIntf->intf->registerExportedVoltage(from, to, realIdx, imagIdx);
+
 	Py_INCREF(Py_None);
+
 	return Py_None;
 }
 

@@ -31,18 +31,21 @@ PyObject* Python::Component::newfunc(PyTypeObject* type, PyObject *args, PyObjec
 	Component* self = (Component*) type->tp_alloc(type, 0);
 	if (self)
 		self->comp = nullptr;
+
 	return (PyObject*) self;
 }
 
 void Python::Component::dealloc(Python::Component* self) {
 	if (self->comp)
 		delete self->comp;
+
 	Py_TYPE(self)->tp_free((PyObject*)self);
 }
 
 PyObject* Python::Component::str(Python::Component* self) {
 	if (!self->comp)
 		return PyUnicode_FromString("<unitialized Component>");
+
 	return PyUnicode_FromString(self->comp->getName().c_str());
 }
 
@@ -51,12 +54,15 @@ PyObject* Python::Component::getattr(Python::Component* self, char* name) {
 		PyErr_SetString(PyExc_ValueError, "getattr on unitialized Component");
 		return nullptr;
 	}
+
 	std::map<std::string, CompAttr>& attrMap = self->comp->getAttrMap();
+
 	auto search = attrMap.find(name);
 	if (search == attrMap.end()) {
 		PyErr_Format(PyExc_AttributeError, "Component has no attribute '%s'", name);
 		return nullptr;
 	}
+
 	CompAttr attr = search->second;
 	switch (attr.type) {
 	case AttrReal:
@@ -69,7 +75,9 @@ PyObject* Python::Component::getattr(Python::Component* self, char* name) {
 		Complex c = *((Complex*) attr.value);
 		return PyComplex_FromDoubles(c.real(), c.imag());
 	}
+
 	PyErr_Format(PyExc_SystemError, "invalid type in internal attribute map");
+
 	return nullptr;
 }
 
@@ -81,12 +89,14 @@ int Python::Component::setattr(Python::Component* self, char* name, PyObject *v)
 		PyErr_SetString(PyExc_ValueError, "setattr on unitialized Component");
 		return -1;
 	}
+
 	std::map<std::string, CompAttr>& attrMap = self->comp->getAttrMap();
 	auto search = attrMap.find(name);
 	if (search == attrMap.end()) {
 		PyErr_Format(PyExc_AttributeError, "Component has no attribute '%s'", name);
 		return -1;
 	}
+
 	CompAttr attr = search->second;
 	switch (attr.type) {
 	case AttrReal:
@@ -115,21 +125,25 @@ int Python::Component::setattr(Python::Component* self, char* name, PyObject *v)
 		PyErr_Format(PyExc_SystemError, "invalid type in internal attribute map");
 		return -1;
 	}
+
 	return 0;
 }
 
 bool Python::compsFromPython(PyObject* list, std::vector<BaseComponent*>& comps) {
 	if (!PyList_Check(list))
 		return false;
+
 	for (int i = 0; i < PyList_Size(list); i++) {
 		PyObject* obj = PyList_GetItem(list, i);
 		if (!PyObject_TypeCheck(obj, &Python::ComponentType)) {
 			comps.clear();
 			return false;
 		}
+
 		Component* pyComp = (Component*) obj;
 		comps.push_back(pyComp->comp);
 	}
+
 	return true;
 }
 
@@ -153,6 +167,7 @@ PyObject* Python::ExternalCurrentSource(PyObject* self, PyObject* args) {
 
 	Component *pyComp = PyObject_New(Component, &Python::ComponentType);
 	pyComp->comp = new DPsim::ExternalCurrentSource(name, src, dest, Complex(initCurrent.real, initCurrent.imag));
+
 	return (PyObject*) pyComp;
 }
 
@@ -178,6 +193,7 @@ PyObject* Python::ExternalVoltageSource(PyObject* self, PyObject* args) {
 
 	Component *pyComp = PyObject_New(Component, &Python::ComponentType);
 	pyComp->comp = new DPsim::ExternalVoltageSource(name, src, dest, Complex(initVoltage.real, initVoltage.imag), num);
+
 	return (PyObject*) pyComp;
 }
 
@@ -199,6 +215,7 @@ PyObject* Python::Inductor(PyObject* self, PyObject* args) {
 
 	Component *pyComp = PyObject_New(Component, &Python::ComponentType);
 	pyComp->comp = new DPsim::Inductor(name, src, dest, inductance);
+
 	return (PyObject*) pyComp;
 }
 
@@ -220,6 +237,7 @@ PyObject* Python::LinearResistor(PyObject* self, PyObject* args) {
 
 	Component *pyComp = PyObject_New(Component, &Python::ComponentType);
 	pyComp->comp = new DPsim::LinearResistor(name, src, dest, resistance);
+
 	return (PyObject*) pyComp;
 }
 

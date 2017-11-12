@@ -26,6 +26,7 @@
 #include <signal.h>
 #include <iostream>
 #include <vector>
+
 #include "Definitions.h"
 #include "Components.h"
 #include "Logger.h"
@@ -76,7 +77,7 @@ namespace DPsim {
 		std::vector<ExternalInterface*> mExternalInterfaces;
 
 		uint64_t mRtTimerCount = 0;
-		
+
 	public:
 		/// Sets parameters to default values.
 		Simulation();

@@ -45,12 +45,16 @@ void Python::Simulation::simThreadFunction(Python::Simulation* pySim) {
 		return;
 	}
 #endif
+
 	std::unique_lock<std::mutex> lk(*pySim->mut, std::defer_lock);
+
 	pySim->numStep = 0;
 	while (pySim->running && notDone) {
 		notDone = pySim->sim->step(*pySim->log, *pySim->llog, *pySim->rlog);
+
 		pySim->numStep++;
 		pySim->sim->increaseByTimeStep();
+
 		if (pySim->sigPause) {
 			lk.lock();
 			pySim->state = StatePaused;
@@ -61,6 +65,7 @@ void Python::Simulation::simThreadFunction(Python::Simulation* pySim) {
 		}
 	}
 	lk.lock();
+
 	pySim->state = StateDone;
 	pySim->cond->notify_one();
 }
@@ -149,33 +154,30 @@ int Python::Simulation::init(Python::Simulation* self, PyObject *args, PyObject 
 	if (!PyArg_ParseTupleAndKeywords(args, kwds, "O|dddsssbb", kwlist,
 		&self->pyComps, &frequency, &timestep, &duration, &log, &llog, &rlog, &self->rt, &self->startSync))
 		return -1;
+
 	if (!compsFromPython(self->pyComps, self->comps)) {
 		PyErr_SetString(PyExc_TypeError, "Invalid components argument (must by list of dpsim.Component)");
 		return -1;
 	}
 #ifndef __linux__
+
 	if (self->rt) {
 		PyErr_SetString(PyExc_SystemError, "RT mode not available on this platform");
 		return -1;
 	}
 #endif
+
 	if (self->startSync && !self->rt) {
 		PyErr_Format(PyExc_ValueError, "start_sync only valid in rt mode");
 		return -1;
 	}
+
 	Py_INCREF(self->pyComps);
-	if (log)
-		self->log = new Logger(log);
-	else
-		self->log = new Logger();
-	if (rlog)
-		self->rlog = new Logger(rlog);
-	else
-		self->rlog = new Logger();
-	if (llog)
-		self->llog = new Logger(llog);
-	else
-		self->llog = new Logger();
+
+	self->log  =  log ? new Logger( log) : new Logger();
+	self->rlog = rlog ? new Logger(rlog) : new Logger();
+	self->llog = llog ? new Logger(llog) : new Logger();
+
 	self->sim = new DPsim::Simulation(self->comps, 2*PI*frequency, timestep, duration, *self->log);
 	return 0;
 };
@@ -191,12 +193,16 @@ void Python::Simulation::dealloc(Python::Simulation* self) {
 
 	if (self->sim)
 		delete self->sim;
+
 	if (self->log)
 		delete self->log;
+
 	if (self->llog)
 		delete self->llog;
+
 	if (self->rlog)
 		delete self->rlog;
+
 	delete self->mut;
 	delete self->cond;
 
@@ -227,15 +233,19 @@ PyObject* Python::Simulation::addInterface(PyObject* self, PyObject* args) {
 
 	if (!PyArg_ParseTuple(args, "O", &pyObj))
 		return nullptr;
+
 	if (!PyObject_TypeCheck(pyObj, &Python::InterfaceType)) {
 		PyErr_SetString(PyExc_TypeError, "Argument must be dpsim.Interface");
 		return nullptr;
 	}
+
 	pyIntf = (Interface*) pyObj;
 	pySim->sim->addExternalInterface(pyIntf->intf);
 	Py_INCREF(pyObj);
+
 	pySim->refs.push_back(pyObj);
 	Py_INCREF(Py_None);
+
 	return Py_None;
 }
 
@@ -244,14 +254,18 @@ static const char* DocSimulationLvector =
 "Return the left-side vector of the last step as a list of floats.";
 PyObject* Python::Simulation::lvector(PyObject *self, PyObject *args) {
 	Python::Simulation *pySim = (Python::Simulation*) self;
+
 	if (pySim->state == StateRunning) {
 		PyErr_SetString(PyExc_SystemError, "Simulation currently running");
 		return nullptr;
 	}
+
 	Matrix& lvector = pySim->sim->getLeftSideVector();
 	PyObject* list = PyList_New(lvector.rows());
+
 	for (int i = 0; i < lvector.rows(); i++)
 		PyList_SetItem(list, i, PyFloat_FromDouble(lvector(i, 0)));
+
 	return list;
 }
 
@@ -263,15 +277,20 @@ static const char* DocSimulationPause =
 PyObject* Python::Simulation::pause(PyObject *self, PyObject *args) {
 	Python::Simulation *pySim = (Python::Simulation*) self;
 	std::unique_lock<std::mutex> lk(*pySim->mut);
+
 	if (pySim->state != StateRunning) {
 		PyErr_SetString(PyExc_SystemError, "Simulation not currently running");
 		return nullptr;
 	}
+
 	pySim->sigPause = 1;
 	pySim->cond->notify_one();
+
 	while (pySim->state == StateRunning)
 		pySim->cond->wait(lk);
+
 	Py_INCREF(Py_None);
+
 	return Py_None;
 }
 
@@ -285,22 +304,28 @@ static const char* DocSimulationStart =
 PyObject* Python::Simulation::start(PyObject *self, PyObject *args) {
 	Python::Simulation *pySim = (Python::Simulation*) self;
 	std::unique_lock<std::mutex> lk(*pySim->mut);
+
 	if (pySim->state == StateRunning) {
 		PyErr_SetString(PyExc_SystemError, "Simulation already started");
 		return nullptr;
-	} else if (pySim->state == StateDone) {
+	}
+	else if (pySim->state == StateDone) {
 		PyErr_SetString(PyExc_SystemError, "Simulation already finished");
 		return nullptr;
-	} else if (pySim->state == StatePaused) {
+	}
+	else if (pySim->state == StatePaused) {
 		pySim->sigPause = 0;
 		pySim->cond->notify_one();
-	} else {
+	}
+	else {
 		pySim->sigPause = 0;
 		pySim->state = StateRunning;
 		pySim->running = true;
 		pySim->simThread = new std::thread(simThreadFunction, pySim);
 	}
+
 	Py_INCREF(Py_None);
+
 	return Py_None;
 }
 
@@ -312,25 +337,32 @@ static const char* DocSimulationStep =
 PyObject* Python::Simulation::step(PyObject *self, PyObject *args) {
 	Python::Simulation *pySim = (Python::Simulation*) self;
 	std::unique_lock<std::mutex> lk(*pySim->mut);
+
 	int oldStep = pySim->numStep;
 	if (pySim->state == StateStopped) {
 		pySim->state = StateRunning;
 		pySim->sigPause = 1;
 		pySim->running = true;
 		pySim->simThread = new std::thread(simThreadFunction, pySim);
-	} else if (pySim->state == StatePaused) {
+	}
+	else if (pySim->state == StatePaused) {
 		pySim->sigPause = 1;
 		pySim->cond->notify_one();
-	} else if (pySim->state == StateDone) {
+	}
+	else if (pySim->state == StateDone) {
 		PyErr_SetString(PyExc_SystemError, "Simulation already finished");
 		return nullptr;
-	} else {
+	}
+	else {
 		PyErr_SetString(PyExc_SystemError, "Simulation currently running");
 		return nullptr;
 	}
+
 	while (pySim->numStep == oldStep)
 		pySim->cond->wait(lk);
+
 	Py_INCREF(Py_None);
+
 	return Py_None;
 }
 
@@ -342,9 +374,12 @@ PyObject* Python::Simulation::stop(PyObject *self, PyObject *args) {
 	Python::Simulation* pySim = (Python::Simulation*) self;
 	std::unique_lock<std::mutex> lk(*pySim->mut);
 	pySim->running = false;
+
 	while (pySim->state == StateRunning)
 		pySim->cond->wait(lk);
+
 	Py_INCREF(Py_None);
+
 	return Py_None;
 }
 
@@ -354,11 +389,13 @@ static const char* DocSimulationUpdateMatrix =
 "have been changed during a simulation.";
 PyObject* Python::Simulation::updateMatrix(PyObject *self, PyObject *args) {
 	Python::Simulation *pySim = (Python::Simulation*) self;
-	// TODO: this is a quick-and-dirty method that keeps the old matrix in
-	// memory
+
+	// TODO: this is a quick-and-dirty method that keeps the old matrix in memory
 	pySim->sim->addSystemTopology(pySim->comps);
 	pySim->sim->switchSystemMatrix(++pySim->numSwitch);
+
 	Py_INCREF(Py_None);
+
 	return Py_None;
 }
 
@@ -370,19 +407,25 @@ static const char* DocSimulationWait =
 PyObject* Python::Simulation::wait(PyObject *self, PyObject *args) {
 	Python::Simulation *pySim = (Python::Simulation*) self;
 	std::unique_lock<std::mutex> lk(*pySim->mut);
+
 	if (pySim->state == StateDone) {
 		Py_INCREF(Py_None);
 		return Py_None;
-	} else if (pySim->state == StateStopped) {
+	}
+	else if (pySim->state == StateStopped) {
 		PyErr_SetString(PyExc_SystemError, "Simulation not currently running");
 		return nullptr;
-	} else if (pySim->state == StatePaused) {
+	}
+	else if (pySim->state == StatePaused) {
 		PyErr_SetString(PyExc_SystemError, "Simulation currently paused");
 		return nullptr;
 	}
+
 	while (pySim->state == StateRunning)
 		pySim->cond->wait(lk);
+
 	Py_INCREF(Py_None);
+
 	return Py_None;
 }
 

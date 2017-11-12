@@ -52,7 +52,7 @@ namespace DPsim {
 	typedef std::complex<Real> Complex;
 	typedef bool Bool;
 	typedef std::string String;
-	
+
 	// ### Constants ###
 	static const Complex jComp(0.0, 1.0);
 

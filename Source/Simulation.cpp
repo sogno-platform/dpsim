@@ -70,7 +70,6 @@ Simulation::~Simulation() {
 
 }
 
-
 void Simulation::initialize(ElementList newElements) {
 	Int maxNode = 0;
 	Int currentVirtualNode = 0;
@@ -87,7 +86,7 @@ void Simulation::initialize(ElementList newElements) {
 		}
 		if (element->getNode2() > maxNode) {
 			maxNode = element->getNode2();
-		}		
+		}
 	}
 	mLogger->Log(LogLevel::INFO) << "Maximum node number: " << maxNode << std::endl;
 	currentVirtualNode = maxNode;
@@ -109,7 +108,7 @@ void Simulation::initialize(ElementList newElements) {
 
 	// Create right and left vector
 	mSystemModel.initialize(numNodes);
-	
+
 	// Initialize right side vector and components
 	for (ElementPtr element : newElements) {
 		element->init(mSystemModel.getOmega(), mSystemModel.getTimeStep());
@@ -125,7 +124,7 @@ void Simulation::initialize(ElementList newElements) {
 
 void Simulation::addSystemTopology(ElementList newElements) {
 	mElementsVector.push_back(newElements);
-	
+
 	// It is assumed that the system size does not change
 	mSystemModel.createEmptySystemMatrix();
 
