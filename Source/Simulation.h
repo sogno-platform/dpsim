@@ -33,7 +33,7 @@
 #include "ExternalInterface.h"
 
 namespace DPsim {
-	typedef shared_ptr<BaseComponent> ElementPtr;
+	typedef std::shared_ptr<BaseComponent> ElementPtr;
 	typedef std::vector<ElementPtr> ElementList;
 
 	struct switchConfiguration {

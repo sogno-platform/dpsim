@@ -30,9 +30,6 @@
 #include <string>
 #include <memory>
 
-// This project is using shared pointers
-using std::shared_ptr;
-using std::make_shared;
 
 // VS2017 doesn't define M_PI unless _USE_MATH_DEFINES is included before cmath
 // which is hard to guarantee, so we make sure it is defined here

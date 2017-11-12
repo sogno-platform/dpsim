@@ -101,7 +101,7 @@ ElementPtr Reader::mapACLineSegment(ACLineSegment* line) {
 
 	mLogger->Log(LogLevel::INFO) << "Create RxLine " << line->name << " node1=" << nodes[0] << " node2=" << nodes[1]
 		<< " R=" << r << " X=" << x << std::endl;
-	return make_shared<RxLine>(line->name, nodes[0], nodes[1], r, x/mFrequency);
+	return std::make_shared<RxLine>(line->name, nodes[0], nodes[1], r, x/mFrequency);
 }
 
 void Reader::mapAsynchronousMachine(AsynchronousMachine* machine) {
@@ -130,7 +130,7 @@ ElementPtr Reader::mapExternalNetworkInjection(ExternalNetworkInjection* inj) {
 	}
 	mLogger->Log(LogLevel::INFO) << "IdealVoltageSource " << inj->name << " rid=" << inj->mRID << " node1=" << node
 		<< " V=" << volt->v.value << "<" << volt->angle.value << std::endl;
-	return make_shared<IdealVoltageSource>(inj->name, node, 0, Complex(volt->v.value, volt->angle.value*PI/180));
+	return std::make_shared<IdealVoltageSource>(inj->name, node, 0, Complex(volt->v.value, volt->angle.value*PI/180));
 }
 
 ElementPtr Reader::mapPowerTransformer(PowerTransformer* trans) {
@@ -170,7 +170,7 @@ ElementPtr Reader::mapPowerTransformer(PowerTransformer* trans) {
 			<< " node1=" << nodes[0] << " node2=" << nodes[1]
 			<< " ratio=" << ratioAbs << "<0" << std::endl;
 		Real ratioPhase = 0;
-		return make_shared<IdealTransformerDP>(trans->name, nodes[0], nodes[1], ratioAbs, ratioPhase);
+		return std::make_shared<IdealTransformerDP>(trans->name, nodes[0], nodes[1], ratioAbs, ratioPhase);
 
 	}
 	mLogger->Log(LogLevel::WARN) << "PowerTransformer " << trans->mRID << " has no primary End; ignoring" << std::endl;
@@ -200,7 +200,7 @@ ElementPtr Reader::mapSynchronousMachine(SynchronousMachine* machine) {
 	// TODO is it appropiate to use this resistance here
 	mLogger->Log(LogLevel::INFO) << "Create IdealVoltageSource " << machine->name << " node=" << node
 		<< " V=" << volt->v.value << "<" << volt->angle.value << std::endl;
-	return make_shared<IdealVoltageSource>(machine->name, node, 0, Complex(volt->v.value, volt->angle.value*PI/180));
+	return std::make_shared<IdealVoltageSource>(machine->name, node, 0, Complex(volt->v.value, volt->angle.value*PI/180));
 }
 
 ElementPtr Reader::mapComponent(BaseClass* obj) {
@@ -246,7 +246,7 @@ ElementPtr Reader::newPQLoad(String rid, String name) {
 	mLogger->Log(LogLevel::INFO) << "Create PQLoad " << name << " node="
 		<< node << " P=" << flow->p.value << " Q=" << flow->q.value
 		<< " V=" << volt->v.value << "<" << volt->angle.value << std::endl;
-	return make_shared<PQLoadDP>(name, node, flow->p.value, flow->q.value, volt->v.value, volt->angle.value*PI/180);
+	return std::make_shared<PQLoadDP>(name, node, flow->p.value, flow->q.value, volt->v.value, volt->angle.value*PI/180);
 }
 
 bool Reader::addFile(String filename) {
