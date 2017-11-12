@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.5)
 project(DPsim CXX)
 
-# enable C++11 support
+# Enable C++11 support
 set(CMAKE_CXX_STANDARD 11)
 
 set(PROJECT_AUTHOR "Institute for Automation of Complex Power Systems, RWTH Aachen Univerity")

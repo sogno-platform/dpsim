@@ -26,24 +26,20 @@ set(SOURCES
 		SynchronGenUnitTest.cpp
 )
 
-# CIMpp
-find_package(CIMpp)
-if(CIMpp_FOUND)
-	include_directories(${CIMPP_INCLUDE_DIRS})
-	link_libraries(${CIMPP_LIBRARIES})
-
-	list(APPEND SOURCES
-		CIMTest.cpp
-	)
-endif()
-
-if(LINUX)
-	list(APPEND SOURCES
-		ShmemTest.cpp
-	)
-endif()
-
 # targets
 add_executable(${PROJECT_NAME} ${SOURCES})
 
 target_link_libraries(DPsimExample dpsim)
+
+# CIMpp
+find_package(CIMpp)
+if(CIMpp_FOUND)
+	target_include_directories(DPsimExample PUBLIC ${CIMPP_INCLUDE_DIRS})
+	target_link_libraries(DPsimExample ${CIMPP_LIBRARIES})
+
+	target_sources(DPsimExample PUBLIC CIMTest.cpp)
+endif()
+
+if(LINUX)
+	target_sources(DPsimExample PUBLIC ShmemTest.cpp)
+endif()

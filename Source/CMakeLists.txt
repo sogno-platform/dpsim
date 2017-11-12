@@ -1,3 +1,5 @@
+option(BUILD_SHARED_LIBS "Build shared library" OFF)
+
 if (NOT WIN32)
 	# needed so CIMParser and arabica (which are first compiled into static libs)
 	# can be included in the .so
@@ -18,36 +20,41 @@ else(APPLE)
 endif()
 
 file(GLOB SOURCES *.cpp Components/*.cpp)
-add_library(dpsim STATIC ${SOURCES})
+add_library(dpsim ${SOURCES})
 
-target_include_directories(dpsim PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
+set(CMAKE_INCLUDE_CURRENT_DIR ON)
 
 # Python module
 set(Python_ADDITIONAL_VERSIONS 3.5 3.6 3.7)
 find_package(PythonInterp 3.5)
 find_package(PythonLibs 3.5)
 
+
 if(PythonInterp_FOUND AND PythonLibs_FOUND)
 	file(GLOB PYTHON_SOURCES Python/*.cpp)
+	target_sources(dpsim PUBLIC ${PYTHON_SOURCES})
 
-	include_directories(${PYTHON_INCLUDE_DIRS})
-	link_libraries(${PYTHON_LIBRARIES})
+	target_include_directories(dpsim PUBLIC ${PYTHON_INCLUDE_DIRS})
+	target_link_libraries(dpsim ${PYTHON_LIBRARIES})
 
-	ADD_CUSTOM_TARGET(link_dpsim ALL DEPENDS dpsim COMMAND ${CMAKE_COMMAND} -E create_symlink $<TARGET_FILE_NAME:dpsim> dpsim.${PYTHON_MODULE_SUFFIX})
+	get_target_property(DPSIM_TYPE dpsim TYPE)
+	if(${DPSIM_TYPE} STREQUAL SHARED_LIBRARY)
+		add_custom_target(link_dpsim ALL DEPENDS dpsim COMMAND ${CMAKE_COMMAND} -E create_symlink $<TARGET_FILE_NAME:dpsim> dpsim.${PYTHON_MODULE_SUFFIX})
 
-	execute_process(COMMAND ${PYTHON_EXECUTABLE} -c "import sysconfig; print(sysconfig.get_path('platlib'), end='')" OUTPUT_VARIABLE PYTHON_PKGPATH)
+		execute_process(COMMAND ${PYTHON_EXECUTABLE} -c "import sysconfig; print(sysconfig.get_path('platlib'), end='')" OUTPUT_VARIABLE PYTHON_PKGPATH)
 
-	install(FILES $<TARGET_FILE:dpsim> DESTINATION ${PYTHON_PKGPATH} RENAME dpsim.${PYTHON_MODULE_SUFFIX})
+		install(FILES $<TARGET_FILE:dpsim> DESTINATION ${PYTHON_PKGPATH} RENAME dpsim.${PYTHON_MODULE_SUFFIX})
+	else()
+		message(WARNING "In order to build DPsim as a Python module you must build it as a shared library: cmake -DBUILD_SHARED_LIBS=ON")
+	endif()
 endif()
 
 # CIMpp
 find_package(CIMpp)
 if(CIMpp_FOUND)
-	include_directories(${CIMPP_INCLUDE_DIRS})
-	link_libraries(${CIMPP_LIBRARIES})
-endif()
+	file(GLOB CIM_SOURCES CIM/*.cpp)
+	target_sources(dpsim PUBLIC ${CIM_SOURCES})
 
-#install(TARGETS dpsim
-#	RUNTIME DESTINATION bin
-#	LIBRARY DESTINATION lib
-#)
+	target_include_directories(dpsim PUBLIC ${CIMPP_INCLUDE_DIRS})
+	target_link_libraries(dpsim ${CIMPP_LIBRARIES})
+endif()

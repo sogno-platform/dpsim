@@ -2,10 +2,17 @@ option(CIMPP_DIR "Location of CIMpp library" ${CMAKE_CURRENT_SOURCE_DIR}/../cimp
 
 if(IS_DIRECTORY ${CIMPP_DIR})
     set(CIMPP_INCLUDE_DIR ${CIMPP_DIR})
+else()
+    find_path(CIMPP_INCLUDE_DIR
+        NAMES CIMModel.hpp
+        PATH_SUFFIXES
+            cimpp/16v29a_12v08
+            cimpp/16v29a
+            cimpp/17v07
+    )
 endif()
 
-find_library(CIMPP_LIBRARY NAMES cimpp libcimpp
-        HINTS ${CIMPP_DIR}/cmake-build-debug)
+find_library(CIMPP_LIBRARY NAMES cimpp libcimpp)
 
 include(FindPackageHandleStandardArgs)
 # handle the QUIETLY and REQUIRED arguments and set CIMPP_FOUND to TRUE
