@@ -1,4 +1,4 @@
-/** Reference Circuits
+/** Linear Resistor
  *
  * @file
  * @author Markus Mirz <mmirz@eonerc.rwth-aachen.de>
@@ -23,18 +23,41 @@
 
 #pragma once
 
+#include <iostream>
+#include "BaseComponent.h"
+
 namespace DPsim {
 
-	void simulationExample1();
-	void simulationExample1L2();
-	void simulationExample2();
-	void simulationExample3();
-	void simulationExampleIdealVS();
-	void simulationExampleIdealVS2();
-	void simulationExampleIdealVS3();
-	void simulationExampleRXLine();
-	void simulationExampleRXLine2();
-	void simulationExampleRXLine3();
-	void simulationExamplePiLine();
-	void simulationExamplePiLine2();
+	class ResistorDP : public BaseComponent {
+	protected:
+
+		///Resistance [ohm]
+		Real mResistance;
+
+		///Conductance [S]
+		Real mConductance;
+
+		///Real Part of the voltage at node 1 [V]
+		Real mVoltageAtNode1Re;
+
+		///Imaginary Part of the voltage at node 1 [V]
+		Real mVoltageAtNode1Im;
+
+		///Real Part of the voltage at node 2 [V]
+		Real mVoltageAtNode2Re;
+
+		///Imaginary Part of the voltage at node 2 [V]
+		Real mVoltageAtNode2Im;
+
+	public:
+		ResistorDP() { ; };
+		ResistorDP(String name, Int src, Int dest, Real resistance);
+
+		void init(Real om, Real dt) { }
+		void applySystemMatrixStamp(SystemModel& system);
+		void applyRightSideVectorStamp(SystemModel& system) { }
+		void step(SystemModel& system, Real time) { }
+		void postStep(SystemModel& system) { }
+		Complex getCurrent(SystemModel& model);
+	};
 }

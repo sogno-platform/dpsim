@@ -23,7 +23,7 @@
 
 #pragma once
 
-#include "../Components.h"
+#include "BaseComponent.h"
 
 namespace DPsim {
 
@@ -48,7 +48,7 @@ namespace DPsim {
 		Real mPrevCurFacRe;
 		Real mPrevCurFacIm;
 
-		LineTypes type;
+		LineTypes mType;
 
 		Real correctr, correcti;
 		Real cureqr_ind, cureqi_ind;
@@ -60,10 +60,9 @@ namespace DPsim {
 
 	public:
 		RxLine() { };
-		RxLine(String name, Int node1, Int node2, Real resistance, Real inductance);
-		RxLine(String name, Int node1, Int node2, Int node3, Real resistance, Real inductance);
+		RxLine(String name, Int node1, Int node2, Real resistance, Real inductance, LineTypes type = LineTypes::RxLine3Node);
 
-		virtual void init(Real om, Real dt);
+		void init(Real om, Real dt);
 		void applySystemMatrixStamp(SystemModel& system);
 		void applyRightSideVectorStamp(SystemModel& system) { }
 		void step(SystemModel& system, Real time);

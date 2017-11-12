@@ -1,4 +1,4 @@
-/** Inductor (EMT)
+/** InductorDP (EMT)
  *
  * @file
  * @author Markus Mirz <mmirz@eonerc.rwth-aachen.de>

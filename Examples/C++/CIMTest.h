@@ -23,10 +23,12 @@
 
 #pragma once
 
-#include "CIM/Reader.h"
+#include "CIMReader.h"
+#include "Definitions.h"
 
-void readFixedCIMFiles_LineLoad();
-void readFixedCIMFiles_IEEE9bus();
-Int testCIMReader(std::list<String> filenames);
-
+namespace DPsim {
+	void readFixedCIMFiles_LineLoad();
+	void readFixedCIMFiles_IEEE9bus();
+	Int testCIMReader(std::list<String> filenames);
+}
 

@@ -21,7 +21,7 @@
 *********************************************************************************/
 
 #include "SimplifiedSynchronGeneratorEMT.h"
-#include "IntegrationMethod.h"
+#include "../IntegrationMethod.h"
 
 using namespace DPsim;
 
@@ -51,8 +51,7 @@ void SimplifiedSynchronGeneratorEMT::init(Real om, Real dt,
 {
 
 	// Create matrices for state space representation
-	if (mNumDampingWindings == 2)
-	{
+
 		mVoltages = Matrix::Zero(3, 1);
 		mFluxes = Matrix::Zero(3, 1);
 		mCurrents = Matrix::Zero(3, 1);
@@ -61,39 +60,40 @@ void SimplifiedSynchronGeneratorEMT::init(Real om, Real dt,
 		mReactanceMat = Matrix::Zero(3, 3);
 		mOmegaFluxMat = Matrix::Zero(3, 3);
 
-		//Determinant of Lq(inductance matrix of q axis)
-		//detLq = -mLmq*mLlkq2*(mLlkq1 + mLl) - mLl*mLlkq1*(mLlkq2 + mLmq);
+
 		mInductanceMat <<
 			-(mLl + mLmq), 0, 0,
 			0, -(mLl + mLmd), mLmd,
 			0, -mLmd, mLlfd + mLmd;
-	
-
-		//mResistanceMat <<
-		//	mRs, 0, 0,
-		//	0, mRs, 0,
-		//	0, 0, -mRfd;
 
 		mResistanceMat <<
-			0, 0, 0,
-			0, 0, 0,
+			mRs, 0, 0,
+			0, mRs, 0,
 			0, 0, -mRfd;
-
 
 		mOmegaFluxMat <<
 			0, 1, 0,
 			-1, 0, 0,
 			0, 0, 0;
 
-	}
+
 
 	// Determinant of Ld (inductance matrix of d axis)
-	detLd = -(mLmd + mLl)*(mLlfd + mLmd) + mLmd*mLmd;
+	//detLd = -(mLmd + mLl)*(mLlfd + mLmd) + mLmd*mLmd;
 
 	mReactanceMat = mInductanceMat.inverse();
 
 	// steady state per unit initial value
 	initStatesInPerUnit(initActivePower, initReactivePower, initTerminalVolt, initVoltAngle, initFieldVoltage, initMechPower);
+	
+	// Calculation of operational parameters
+	mXd = mOmMech*(mLl + mLmd);
+	mXq = mOmMech*(mLl + mLmq);
+	mTd0_t = (mLlfd + mLmd) / (mRfd*mBase_OmMech);
+	mXd_t = mOmMech*(mLl + mLmd - mLmd*mLmd / (mLlfd + mLmd));
+	mEq_t = mVq + mXd_t*mId;
+	mEf = mOmMech*(mLmd / mRfd) * mVfd;
+
 
 	mVa = inverseParkTransform2(mThetaMech, mVd* mBase_v, mVq* mBase_v, mV0* mBase_v)(0);
 	mVb = inverseParkTransform2(mThetaMech, mVd* mBase_v, mVq* mBase_v, mV0* mBase_v)(1);
@@ -102,6 +102,8 @@ void SimplifiedSynchronGeneratorEMT::init(Real om, Real dt,
 	mIa = inverseParkTransform2(mThetaMech, mId* mBase_i, mIq* mBase_i, mI0* mBase_i)(0);
 	mIb = inverseParkTransform2(mThetaMech, mId* mBase_i, mIq* mBase_i, mI0* mBase_i)(1);
 	mIc = inverseParkTransform2(mThetaMech, mId* mBase_i, mIq* mBase_i, mI0* mBase_i)(2);
+
+
 }
 
 
@@ -129,6 +131,7 @@ void SimplifiedSynchronGeneratorEMT::step(SystemModel& system, Real time) {
 
 void SimplifiedSynchronGeneratorEMT::stepInPerUnit(Real om, Real dt, Real time, NumericalMethod numMethod) {
 
+
 	mVa = (1 / mBase_v) * mVa;
 	mVb = (1 / mBase_v) * mVb;
 	mVc = (1 / mBase_v) * mVc;
@@ -142,52 +145,63 @@ void SimplifiedSynchronGeneratorEMT::stepInPerUnit(Real om, Real dt, Real time, 
 	mVq = parkTransform2(mThetaMech, mVa, mVb, mVc)(1);
 	mV0 = parkTransform2(mThetaMech, mVa, mVb, mVc)(2);
 
+	// Calculation of rotational speed with euler
+	mElecTorque = (mPsid*mIq - mPsiq*mId);
+	mOmMech = mOmMech + dt * (1 / (2 * mH) * (mMechTorque - mElecTorque));
 
-	Matrix A = (mResistanceMat*mReactanceMat - mOmMech*mOmegaFluxMat);
-	Matrix B = Matrix::Identity(3, 3);
+	// ############## Using fundamental parameters ###################
 
+	//mPsiq = -mVd;
+	//mPsid = mVq;
+	//mPsifd = mPsifd + dt*mBase_OmMech*(mVfd - mRfd*mIfd);
+
+	//Matrix Fluxes(3, 1);
+	//Fluxes(0, 0) = mPsiq;
+	//Fluxes(1, 0) = mPsid;
+	//Fluxes(2, 0) = mPsifd;
+
+	//Matrix Currents(3, 1);
+
+	//Currents = mInductanceMat.inverse()*Fluxes;
+
+	//mIq = Currents(0, 0);
+	//mId = Currents(1, 0);
+	//mIfd = Currents(2, 0);
+
+	// ################################################################
+
+	
+	// ############## Using operational parameters ###################
+	mEq_t = mEq_t + dt*((1 / mTd0_t) * (-mEq_t + mEf - (mXd - mXd_t)*mId));
+
+	mId = (mEq_t - mVq) / mXd_t;
+	//mIq = mVd / mXq;
+
+	//mIfd = (mVfd - ((1 / mTd0_t) * (-mEq_t + mEf - (mXd - mXd_t)*mId))) / mRfd;
+
+	Matrix Currents(3, 1);
+	Currents << mIq,
+		mId,
+		mIfd;
 	Matrix Fluxes(3, 1);
-	Fluxes(0, 0) = mPsiq;
-	Fluxes(1, 0) = mPsid;
-	Fluxes(2, 0) = mPsifd;
 
-	Matrix dqVoltages(3, 1);
-	dqVoltages(0, 0) = mVq;
-	dqVoltages(1, 0) = mVd;
-	dqVoltages(2, 0) = mVfd;
-
-	Fluxes = Trapezoidal(Fluxes, A, B, dt*mBase_OmElec, dqVoltages);
-
+	Fluxes = mInductanceMat*Currents;
 
 	mPsiq = Fluxes(0, 0);
 	mPsid = Fluxes(1, 0);
 	mPsifd = Fluxes(2, 0);
 
-
-	////mOmMech = 1;
-
-	//mPsid = mVq;
-	//mPsiq = -mVd;
-	//mPsifd = mPsifd + dt*mBase_OmMech*(mVfd - mRfd*mIfd);
-
 	
-	mId = ((mLlfd + mLmd) *mPsid - mLmd*mPsifd) / detLd;
-	mIfd = (mLmd*mPsid - (mLl + mLmd)*mPsifd) / detLd;
-	mIq = -mPsiq / (mLl + mLmq);
-
-	mI0 = 0;
+	// #################################################################
 
 
-
-	// Calculation of rotational speed with euler
-	mElecTorque = (mPsid*mIq - mPsiq*mId);
-	mOmMech = mOmMech + dt * (1 / (2 * mH) * (mMechTorque - mElecTorque));
 	// Calculation of rotor angular position
 	mThetaMech = mThetaMech + dt * (mOmMech * mBase_OmMech);
 
 	mIa = mBase_i * inverseParkTransform2(mThetaMech, mId, mIq, mI0)(0);
 	mIb = mBase_i * inverseParkTransform2(mThetaMech, mId, mIq, mI0)(1);
 	mIc = mBase_i * inverseParkTransform2(mThetaMech, mId, mIq, mI0)(2);
+
 
 	mCurrents << mIq,
 		mId,
@@ -229,13 +243,13 @@ Matrix SimplifiedSynchronGeneratorEMT::parkTransform2(Real theta, Real a, Real b
 	Matrix dq0vector(3, 1);
 
 	// Park transform according to Kundur
-	Real d, q;
+	Real d, q, zero;
 
 	d = 2. / 3. * cos(theta)*a + 2. / 3. * cos(theta - 2. * M_PI / 3.)*b + 2. / 3. * cos(theta + 2. * M_PI / 3.)*c;
 	q = -2. / 3. * sin(theta)*a - 2. / 3. * sin(theta - 2. * M_PI / 3.)*b - 2. / 3. * sin(theta + 2. * M_PI / 3.)*c;
 
 	//Real zero;
-	//zero = 1. / 3. * a, 1. / 3. * b, 1. / 3. * c;
+	zero = 1. / 3. * a, 1. / 3. * b, 1. / 3. * c;
 
 	dq0vector << d,
 		q,

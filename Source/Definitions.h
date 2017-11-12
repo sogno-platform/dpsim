@@ -1,4 +1,4 @@
-/** Mathematics library
+/** Definitions
  *
  * @file
  * @author Markus Mirz <mmirz@eonerc.rwth-aachen.de>
@@ -28,6 +28,11 @@
 #include <Eigen/Dense>
 #include <Eigen/SparseCore>
 #include <string>
+#include <memory>
+
+// This project is using shared pointers
+using std::shared_ptr;
+using std::make_shared;
 
 // VS2017 doesn't define M_PI unless _USE_MATH_DEFINES is included before cmath
 // which is hard to guarantee, so we make sure it is defined here
@@ -39,8 +44,7 @@
 #define PI M_PI
 #endif
 
-namespace DPsim
-{
+namespace DPsim {
 	// ### deprecated math section ###
 	//typedef Eigen::MatrixXd Matrix;
 
@@ -49,6 +53,7 @@ namespace DPsim
 	typedef int Int;
 	typedef double Real;
 	typedef std::complex<Real> Complex;
+	typedef bool Bool;
 	typedef std::string String;
 	
 	// ### Constants ###

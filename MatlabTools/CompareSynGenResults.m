@@ -5,7 +5,7 @@
 
 Results_PLECS = csvread('../../vsa/Results/SynGenDqEmt_ABCFault_PLECS/Voltages_and_currents.csv'); 
 Te_PLECS = csvread('../../vsa/Results/SynGenVBREmt_ABCFault_PLECS/electrical_torque.csv'); 
-omega_PLECS = csvread('../../vsa/Results/SynGenVBREmt_ABCFault_PLECS/omega.csv'); 
+% omega_PLECS = csvread('../../vsa/Results/SynGenVBREmt_ABCFault_PLECS/omega.csv'); 
 %theta_PLECS = csvread('../../vsa/Results/SynGenVBREmt_ABCFault_PLECS/theta.csv'); 
 %% read results from c++ simulation
 VoltageVector = csvread('../../vsa/Results/Testing/data_vt.csv');
@@ -19,6 +19,9 @@ hold on
 plot(VoltageVector(:,1),VoltageVector(:,3));
 plot(VoltageVector(:,1),VoltageVector(:,4));
 
+% plot(tout,voltages(:,1),'--')
+% plot(tout,voltages(:,2),'--')
+% plot(tout,voltages(:,3),'--')
 plot(Results_PLECS(:,1),Results_PLECS(:,2),'--');
 plot(Results_PLECS(:,1),Results_PLECS(:,3),'--');
 plot(Results_PLECS(:,1),Results_PLECS(:,4),'--');
@@ -29,10 +32,15 @@ legend('va DPSim','vb DPSim', 'vc DPSim','va PLECS','vb PLECS','vc PLECS');
 
 figure(2)
 hold off
-plot(CurrentVector(:,1),-CurrentVector(:,2));
+plot(VoltageVector(:,1),VoltageVector(:,5));
 hold on
-plot(CurrentVector(:,1),-CurrentVector(:,3));
-plot(CurrentVector(:,1),-CurrentVector(:,4));
+plot(VoltageVector(:,1),VoltageVector(:,6));
+plot(VoltageVector(:,1),VoltageVector(:,7));
+
+% plot(tout,currents(:,1),'--')
+% plot(tout,currents(:,2),'--')
+% plot(tout,currents(:,3),'--')
+
 
 plot(Results_PLECS(:,1),Results_PLECS(:,5),'--');
 plot(Results_PLECS(:,1),Results_PLECS(:,6),'--');

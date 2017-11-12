@@ -41,6 +41,17 @@ namespace DPsim {
 	protected:
 
 
+		//##### Standard parameters #######
+		Real mXd;
+		Real mXq;
+		Real mXd_t;
+		Real mXq_t;
+		Real mTd0_t;
+		Real mTq0_t;
+		Real mEq_t;
+		Real mEd_t;
+		Real mEf;
+
 		/// Determinant of Ld (inductance matrix of d axis)
 		Real detLd;
 		/// Determinant of Lq (inductance matrix of q axis)

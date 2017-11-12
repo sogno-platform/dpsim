@@ -21,19 +21,20 @@
  *********************************************************************************/
 
 #include <iostream>
-#include <cstring>
 
 #include "CIMTest.h"
-#include "CIM/Reader.h"
+#include "CIMReader.h"
 #include "Simulation.h"
 
-void readFixedCIMFiles_LineLoad() {
+using namespace DPsim;
+
+void DPsim::readFixedCIMFiles_LineLoad() {
 	std::list<String> filenames;
 	filenames.push_back("..\\..\\Examples\\CIM\\Line_Load\\Line_Load.xml");
 	testCIMReader(filenames);
 }
 
-void readFixedCIMFiles_IEEE9bus() {
+void DPsim::readFixedCIMFiles_IEEE9bus() {
 	std::list<String> filenames;
 	filenames.push_back("..\\..\\Examples\\CIM\\IEEE-09_Neplan_RX\\IEEE-09_Neplan_RX_DI.xml");
 	filenames.push_back("..\\..\\Examples\\CIM\\IEEE-09_Neplan_RX\\IEEE-09_Neplan_RX_EQ.xml");
@@ -42,27 +43,26 @@ void readFixedCIMFiles_IEEE9bus() {
 	testCIMReader(filenames);
 }
 
-Int testCIMReader(std::list<String> filenames) {
-
-	// Read CIM data
-	CIM::Reader reader(50);
+Int DPsim::testCIMReader(std::list<String> filenames) {
 	Logger log("cim.log"), llog("lvector-cim.csv"), rlog("rvector-cim.csv");
+	// Read CIM data
+	CIMReader reader(50, log);	
 
 	for (String & filename : filenames) {
 		if (!reader.addFile(filename))
-			std::cerr << "Failed to read file " << filename << std::endl;
+			log.Log(LogLevel::INFO) << "Failed to read file " << filename << std::endl;
 	}
 
 	reader.parseFiles();
 
-	std::vector<BaseComponent*> components = reader.getComponents();
-
+	ElementList components = reader.getComponents();
+	
 	// Run simulation as usually
 	Simulation sim(components, 2 * PI * 50, 0.001, 0.3, log);
 	std::cout << "Start simulation." << std::endl;
-	while (sim.step(log, llog, rlog))
+	while (sim.step(llog, rlog))
 		sim.increaseByTimeStep();
 	std::cout << "Simulation finished." << std::endl;
-
+	
 	return 0;
 }

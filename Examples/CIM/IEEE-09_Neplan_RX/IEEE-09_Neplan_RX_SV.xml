@@ -86,7 +86,4 @@
     <cim:SvPowerFlow.q>32.459015</cim:SvPowerFlow.q>
     <cim:SvPowerFlow.Terminal rdf:resource="#E-1076922220"/>
   </cim:SvPowerFlow>
-  <cim:TopologicalIsland rdf:ID="BUS1-SLACK">
-    <cim:TopologicalIsland.AngleRef_TopologicalNode rdf:resource="#BUS1"/>
-  </cim:TopologicalIsland>
 </rdf:RDF>

@@ -1,4 +1,4 @@
-/** Inductor
+/** InductorDP
  *
  * @author Markus Mirz <mmirz@eonerc.rwth-aachen.de>
  * @copyright 2017, Institute for Automation of Complex Power Systems, EONERC
@@ -24,12 +24,12 @@
 
 using namespace DPsim;
 
-Inductor::Inductor(String name, Int src, Int dest, Real inductance) : BaseComponent(name, src, dest) {
+InductorDP::InductorDP(String name, Int src, Int dest, Real inductance) : BaseComponent(name, src, dest) {
 	mInductance = inductance;
 	attrMap["inductance"] = {AttrReal, &mInductance};
 }
 
-void Inductor::applySystemMatrixStamp(SystemModel& system) {
+void InductorDP::applySystemMatrixStamp(SystemModel& system) {
 	Real a = system.getTimeStep() / (2. * mInductance);
 	Real b = system.getTimeStep() * system.getOmega() / 2.;
 	mGlr = a / (1 + b*b);
@@ -51,7 +51,7 @@ void Inductor::applySystemMatrixStamp(SystemModel& system) {
 }
 
 
-void Inductor::init(Real om, Real dt) {
+void InductorDP::init(Real om, Real dt) {
 	mCurrRe = 0;
 	mCurrIm = 0;
 	mCurEqRe = 0;
@@ -61,7 +61,7 @@ void Inductor::init(Real om, Real dt) {
 }
 
 
-void Inductor::step(SystemModel& system, Real time) {
+void InductorDP::step(SystemModel& system, Real time) {
 	// Initialize internal state
 	mCurEqRe = mGlr * mDeltaVre - mGli * mDeltaVim + mPrevCurFacRe * mCurrRe - mPrevCurFacIm * mCurrIm;
 	mCurEqIm = mGli * mDeltaVre + mGlr * mDeltaVim + mPrevCurFacIm * mCurrRe + mPrevCurFacRe * mCurrIm;
@@ -75,7 +75,7 @@ void Inductor::step(SystemModel& system, Real time) {
 }
 
 
-void Inductor::postStep(SystemModel& system) {
+void InductorDP::postStep(SystemModel& system) {
 	Real vposr, vnegr, vposi, vnegi;
 
 	// extract solution
@@ -104,6 +104,6 @@ void Inductor::postStep(SystemModel& system) {
 	mCurrIm = mGli * mDeltaVre + mGlr * mDeltaVim + mCurEqIm;
 }
 
-Complex Inductor::getCurrent(SystemModel& system) {
+Complex InductorDP::getCurrent(SystemModel& system) {
 	return Complex(mCurrRe, mCurrIm);
 }

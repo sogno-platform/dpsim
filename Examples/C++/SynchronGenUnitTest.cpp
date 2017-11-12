@@ -106,15 +106,15 @@ void DPsim::SynGenUnitTestBalancedResLoad() {
 	Real Rkq2 = 0;
 
 	// Declare circuit components
-	BaseComponent* gen = new SynchronGeneratorEMT("gen", 1, 2, 3,
+	ElementPtr gen = make_shared<SynchronGeneratorEMT>("gen", 1, 2, 3,
 		nomPower, nomPhPhVoltRMS, nomFreq, poleNum, nomFieldCurr,
 		Rs, Ll, Lmd, Lmd0, Lmq, Lmq0, Rfd, Llfd, Rkd, Llkd, Rkq1, Llkq1, Rkq2, Llkq2, H, true);
 	Real loadRes = 1037.8378;
-	BaseComponent* r1 = new LinearResistorEMT("r1", 0, 1, loadRes);
-	BaseComponent* r2 = new LinearResistorEMT("r2", 0, 2, loadRes);
-	BaseComponent* r3 = new LinearResistorEMT("r3", 0, 3, loadRes);
+	ElementPtr r1 = make_shared<ResistorEMT>("r1", 0, 1, loadRes);
+	ElementPtr r2 = make_shared<ResistorEMT>("r2", 0, 2, loadRes);
+	ElementPtr r3 = make_shared<ResistorEMT>("r3", 0, 3, loadRes);
 
-	std::vector<BaseComponent*> circElements;
+	ElementList circElements;
 	circElements.push_back(gen);
 	circElements.push_back(r1);
 	circElements.push_back(r2);
@@ -136,7 +136,8 @@ void DPsim::SynGenUnitTestBalancedResLoad() {
 	Real initVoltAngle = -DPS_PI / 2;
 	Real fieldVoltage = 7.0821;
 	Real mechPower = 5.5558e5;
-	((SynchronGeneratorEMT*)gen)->init(om, dt, initActivePower, initReactivePower, initTerminalVolt, initVoltAngle, fieldVoltage, mechPower);
+	shared_ptr<SynchronGeneratorEMT> genPtr = std::dynamic_pointer_cast<SynchronGeneratorEMT>(gen);
+	genPtr->init(om, dt, initActivePower, initReactivePower, initTerminalVolt, initVoltAngle, fieldVoltage, mechPower);
 
 	// Calculate initial values for circuit at generator connection point
 	//Real initApparentPower = sqrt(pow(initActivePower, 2) + pow(initReactivePower, 2));
@@ -158,15 +159,11 @@ void DPsim::SynGenUnitTestBalancedResLoad() {
 
 	// Main Simulation Loop
 	while (newSim.getTime() < tf) {
-		newSim.stepGeneratorTest(log, vtLog, jLog, gen, newSim.getTime());
+		newSim.stepGeneratorTest(vtLog, jLog, gen, newSim.getTime());
 		newSim.increaseByTimeStep();
 	}
 
 	std::cout << "Simulation finished." << std::endl;
-
-	// Clean up
-	for (auto elem : circElements)
-		delete elem;
 }
 
 void DPsim::SynGenUnitTestPhaseToPhaseFault() {
@@ -200,15 +197,15 @@ void DPsim::SynGenUnitTestPhaseToPhaseFault() {
 	Real Llkq2 = 0.125;
 
 	// Declare circuit components
-	BaseComponent* gen = new SynchronGeneratorEMT("gen", 1, 2, 3,
+	ElementPtr gen = make_shared<SynchronGeneratorEMT>("gen", 1, 2, 3,
 		nomPower, nomPhPhVoltRMS, nomFreq, poleNum, nomFieldCurr,
 		Rs, Ll, Lmd, Lmd0, Lmq, Lmq0, Rfd, Llfd, Rkd, Llkd, Rkq1, Llkq1, Rkq2, Llkq2, H);
 	Real loadRes = 1037.8378;
-	BaseComponent* r1 = new LinearResistorEMT("r1", 0, 1, loadRes);
-	BaseComponent* r2 = new LinearResistorEMT("r2", 0, 2, loadRes);
-	BaseComponent* r3 = new LinearResistorEMT("r3", 0, 3, loadRes);
+	ElementPtr r1 = make_shared<ResistorEMT>("r1", 0, 1, loadRes);
+	ElementPtr r2 = make_shared<ResistorEMT>("r2", 0, 2, loadRes);
+	ElementPtr r3 = make_shared<ResistorEMT>("r3", 0, 3, loadRes);
 
-	std::vector<BaseComponent*> circElements;
+	ElementList circElements;
 	circElements.push_back(gen);
 	circElements.push_back(r1);
 	circElements.push_back(r2);
@@ -216,9 +213,9 @@ void DPsim::SynGenUnitTestPhaseToPhaseFault() {
 
 	// Declare circuit components for resistance change
 	Real breakerRes = 0.01;
-	BaseComponent* rBreaker = new LinearResistorEMT("rbreak", 1, 2, breakerRes);
+	ElementPtr rBreaker = make_shared<ResistorEMT>("rbreak", 1, 2, breakerRes);
 
-	std::vector<BaseComponent*> circElementsBreakerOn;
+	ElementList circElementsBreakerOn;
 	circElementsBreakerOn.push_back(rBreaker);
 	circElementsBreakerOn.push_back(r1);
 	circElementsBreakerOn.push_back(r2);
@@ -239,7 +236,8 @@ void DPsim::SynGenUnitTestPhaseToPhaseFault() {
 	Real initVoltAngle = -DPS_PI / 2;
 	Real fieldVoltage = 7.0821;
 	Real mechPower = 5.5558e5;
-	((SynchronGeneratorEMT*)gen)->init(om, dt, initActivePower, initReactivePower, initTerminalVolt, initVoltAngle, fieldVoltage, mechPower);
+	shared_ptr<SynchronGeneratorEMT> genPtr = std::dynamic_pointer_cast<SynchronGeneratorEMT>(gen);
+	genPtr->init(om, dt, initActivePower, initReactivePower, initTerminalVolt, initVoltAngle, fieldVoltage, mechPower);
 
 	// Calculate initial values for circuit at generator connection point
 	Real initApparentPower = sqrt(pow(initActivePower, 2) + pow(initReactivePower, 2));
@@ -258,14 +256,9 @@ void DPsim::SynGenUnitTestPhaseToPhaseFault() {
 	// Main Simulation Loop
 	while (newSim.getTime() < tf) {
 		std::cout << newSim.getTime() << std::endl;
-		newSim.stepGeneratorTest(log, vtLog, jLog, gen, newSim.getTime());
+		newSim.stepGeneratorTest(vtLog, jLog, gen, newSim.getTime());
 		newSim.increaseByTimeStep();
 	}
-
-	std::cout << "Simulation finished." << std::endl;
-	for (auto elem : circElements)
-		delete elem;
-	delete rBreaker;
 }
 
 void DPsim::SynGenUnitTestThreePhaseFault() {
@@ -301,15 +294,15 @@ void DPsim::SynGenUnitTestThreePhaseFault() {
 	//Real Llkq2 = 0;
 
 	// Declare circuit components
-	BaseComponent* gen = new SynchronGeneratorEMT("gen", 1, 2, 3,
+	ElementPtr gen = make_shared<SynchronGeneratorEMT>("gen", 1, 2, 3,
 		nomPower, nomPhPhVoltRMS, nomFreq, poleNum, nomFieldCurr,
 		Rs, Ll, Lmd, Lmd0, Lmq, Lmq0, Rfd, Llfd, Rkd, Llkd, Rkq1, Llkq1, Rkq2, Llkq2, H);
 	Real loadRes = 1037.8378;
-	BaseComponent* r1 = new LinearResistorEMT("r1", 1, 0, loadRes);
-	BaseComponent* r2 = new LinearResistorEMT("r2", 2, 0, loadRes);
-	BaseComponent* r3 = new LinearResistorEMT("r3", 3, 0, loadRes);
+	ElementPtr r1 = make_shared<ResistorEMT>("r1", 1, 0, loadRes);
+	ElementPtr r2 = make_shared<ResistorEMT>("r2", 2, 0, loadRes);
+	ElementPtr r3 = make_shared<ResistorEMT>("r3", 3, 0, loadRes);
 
-	std::vector<BaseComponent*> circElements;
+	ElementList circElements;
 	circElements.push_back(gen);
 	circElements.push_back(r1);
 	circElements.push_back(r2);
@@ -317,10 +310,10 @@ void DPsim::SynGenUnitTestThreePhaseFault() {
 
 	// Declare circuit components for resistance change
 	Real breakerRes = 0.001;
-	BaseComponent* rBreaker1 = new LinearResistorEMT("rbreak1", 1, 0, breakerRes);
-	BaseComponent* rBreaker2 = new LinearResistorEMT("rbreak2", 2, 0, breakerRes);
-	BaseComponent* rBreaker3 = new LinearResistorEMT("rbreak3", 3, 0, breakerRes);
-	std::vector<BaseComponent*> circElementsBreakerOn;
+	ElementPtr rBreaker1 = make_shared<ResistorEMT>("rbreak1", 1, 0, breakerRes);
+	ElementPtr rBreaker2 = make_shared<ResistorEMT>("rbreak2", 2, 0, breakerRes);
+	ElementPtr rBreaker3 = make_shared<ResistorEMT>("rbreak3", 3, 0, breakerRes);
+	ElementList circElementsBreakerOn;
 	circElementsBreakerOn.push_back(rBreaker1);
 	circElementsBreakerOn.push_back(rBreaker2);
 	circElementsBreakerOn.push_back(rBreaker3);
@@ -345,7 +338,8 @@ void DPsim::SynGenUnitTestThreePhaseFault() {
 	Real initVoltAngle = -DPS_PI / 2;
 	Real fieldVoltage = 7.0821;
 	Real mechPower = 5.5558e5;
-	((SynchronGeneratorEMT*)gen)->init(om, dt, initActivePower, initReactivePower, initTerminalVolt, initVoltAngle, fieldVoltage, mechPower);
+	shared_ptr<SynchronGeneratorEMT> genPtr = std::dynamic_pointer_cast<SynchronGeneratorEMT>(gen);
+	genPtr->init(om, dt, initActivePower, initReactivePower, initTerminalVolt, initVoltAngle, fieldVoltage, mechPower);
 
 	// Calculate initial values for circuit at generator connection point
 	Real initApparentPower = sqrt(pow(initActivePower, 2) + pow(initReactivePower, 2));
@@ -367,16 +361,9 @@ void DPsim::SynGenUnitTestThreePhaseFault() {
 	// Main Simulation Loop
 	while (newSim.getTime() < tf) {
 		std::cout << newSim.getTime() << std::endl;
-		newSim.stepGeneratorTest(log, vtLog, jLog, gen, newSim.getTime());
+		newSim.stepGeneratorTest(vtLog, jLog, gen, newSim.getTime());
 		newSim.increaseByTimeStep();
 	}
-
-	std::cout << "Simulation finished." << std::endl;
-	for (auto elem : circElements)
-		delete elem;
-	delete rBreaker1;
-	delete rBreaker2;
-	delete rBreaker3;
 }
 
 void DPsim::SynGenDPUnitTestBalancedResLoad() {
@@ -410,15 +397,15 @@ void DPsim::SynGenDPUnitTestBalancedResLoad() {
 	Real Llkq2 = 0.125;
 
 	// Declare circuit components
-	BaseComponent* gen = new SynchronGenerator("gen", 1, 2, 3,
+	ElementPtr gen = make_shared<SynchronGeneratorDP>("gen", 1, 2, 3,
 		nomPower, nomPhPhVoltRMS, nomFreq, poleNum, nomFieldCurr,
 		Rs, Ll, Lmd, Lmd0, Lmq, Lmq0, Rfd, Llfd, Rkd, Llkd, Rkq1, Llkq1, Rkq2, Llkq2, H);
 	Real loadRes = 1037.8378;
-	BaseComponent* r1 = new LinearResistor("r1", 0, 1, loadRes);
-	BaseComponent* r2 = new LinearResistor("r2", 0, 2, loadRes);
-	BaseComponent* r3 = new LinearResistor("r3", 0, 3, loadRes);
+	ElementPtr r1 = make_shared<ResistorDP>("r1", 0, 1, loadRes);
+	ElementPtr r2 = make_shared<ResistorDP>("r2", 0, 2, loadRes);
+	ElementPtr r3 = make_shared<ResistorDP>("r3", 0, 3, loadRes);
 
-	std::vector<BaseComponent*> circElements;
+	ElementList circElements;
 	circElements.push_back(gen);
 	circElements.push_back(r1);
 	circElements.push_back(r2);
@@ -439,7 +426,8 @@ void DPsim::SynGenDPUnitTestBalancedResLoad() {
 	Real initVoltAngle = -DPS_PI / 2;
 	Real fieldVoltage = 7.0821;
 	Real mechPower = 5.5558e5;
-	((SynchronGenerator*)gen)->init(om, dt, initActivePower, initReactivePower, initTerminalVolt, initVoltAngle, fieldVoltage, mechPower);
+	shared_ptr<SynchronGeneratorEMT> genPtr = std::dynamic_pointer_cast<SynchronGeneratorEMT>(gen);
+	genPtr->init(om, dt, initActivePower, initReactivePower, initTerminalVolt, initVoltAngle, fieldVoltage, mechPower);
 
 	// Calculate initial values for circuit at generator connection point
 	Real initApparentPower = sqrt(pow(initActivePower, 2) + pow(initReactivePower, 2));
@@ -456,13 +444,10 @@ void DPsim::SynGenDPUnitTestBalancedResLoad() {
 	// Main Simulation Loop
 	while (newSim.getTime() < tf) {
 		std::cout << newSim.getTime() << std::endl;
-		newSim.stepGeneratorTest(log, vtLog, jLog, gen, newSim.getTime());
+		newSim.stepGeneratorTest(vtLog, jLog, gen, newSim.getTime());
 		newSim.increaseByTimeStep();
 	}
-
 	std::cout << "Simulation finished." << std::endl;
-	for (auto elem : circElements)
-		delete elem;
 }
 
 void DPsim::SynGenDPUnitTestThreePhaseFault() {
@@ -498,15 +483,15 @@ void DPsim::SynGenDPUnitTestThreePhaseFault() {
 	//Real Llkq2 = 0;
 
 	// Declare circuit components
-	BaseComponent* gen = new SynchronGenerator("gen", 1, 2, 3,
+	ElementPtr gen = make_shared<SynchronGeneratorDP>("gen", 1, 2, 3,
 		nomPower, nomPhPhVoltRMS, nomFreq, poleNum, nomFieldCurr,
 		Rs, Ll, Lmd, Lmd0, Lmq, Lmq0, Rfd, Llfd, Rkd, Llkd, Rkq1, Llkq1, Rkq2, Llkq2, H);
 	Real loadRes = 1037.8378;
-	BaseComponent* r1 = new LinearResistor("r1", 1, 0, loadRes);
-	BaseComponent* r2 = new LinearResistor("r2", 2, 0, loadRes);
-	BaseComponent* r3 = new LinearResistor("r3", 3, 0, loadRes);
+	ElementPtr r1 = make_shared<ResistorDP>("r1", 1, 0, loadRes);
+	ElementPtr r2 = make_shared<ResistorDP>("r2", 2, 0, loadRes);
+	ElementPtr r3 = make_shared<ResistorDP>("r3", 3, 0, loadRes);
 
-	std::vector<BaseComponent*> circElements;
+	ElementList circElements;
 	circElements.push_back(gen);
 	circElements.push_back(r1);
 	circElements.push_back(r2);
@@ -514,10 +499,10 @@ void DPsim::SynGenDPUnitTestThreePhaseFault() {
 
 	// Declare circuit components for resistance change
 	Real breakerRes = 0.001;
-	BaseComponent* rBreaker1 = new LinearResistor("rbreak1", 1, 0, breakerRes);
-	BaseComponent* rBreaker2 = new LinearResistor("rbreak2", 2, 0, breakerRes);
-	BaseComponent* rBreaker3 = new LinearResistor("rbreak3", 3, 0, breakerRes);
-	std::vector<BaseComponent*> circElementsBreakerOn;
+	ElementPtr rBreaker1 = make_shared<ResistorDP>("rbreak1", 1, 0, breakerRes);
+	ElementPtr rBreaker2 = make_shared<ResistorDP>("rbreak2", 2, 0, breakerRes);
+	ElementPtr rBreaker3 = make_shared<ResistorDP>("rbreak3", 3, 0, breakerRes);
+	ElementList circElementsBreakerOn;
 	circElementsBreakerOn.push_back(rBreaker1);
 	circElementsBreakerOn.push_back(rBreaker2);
 	circElementsBreakerOn.push_back(rBreaker3);
@@ -542,7 +527,8 @@ void DPsim::SynGenDPUnitTestThreePhaseFault() {
 	Real initVoltAngle = -DPS_PI / 2;
 	Real fieldVoltage = 7.0821;
 	Real mechPower = 5.5558e5;
-	((SynchronGenerator*)gen)->init(om, dt, initActivePower, initReactivePower, initTerminalVolt, initVoltAngle, fieldVoltage, mechPower);
+	shared_ptr<SynchronGeneratorDP> genPtr = std::dynamic_pointer_cast<SynchronGeneratorDP>(gen);
+	genPtr->init(om, dt, initActivePower, initReactivePower, initTerminalVolt, initVoltAngle, fieldVoltage, mechPower);
 
 	// Calculate initial values for circuit at generator connection point
 	Real initApparentPower = sqrt(pow(initActivePower, 2) + pow(initReactivePower, 2));
@@ -562,21 +548,12 @@ void DPsim::SynGenDPUnitTestThreePhaseFault() {
 	newSim.setSwitchTime(0.1, 1);
 	newSim.setSwitchTime(0.2, 0);
 
-	// Main Simulation Loop
 	while (newSim.getTime() < tf) {
 		std::cout << newSim.getTime() << std::endl;
-		newSim.stepGeneratorTest(log, vtLog, jLog, gen, newSim.getTime());
+		newSim.stepGeneratorTest(vtLog, jLog, gen, newSim.getTime());
 		newSim.increaseByTimeStep();
 	}
-
 	std::cout << "Simulation finished." << std::endl;
-
-	// Clean up
-	for (auto elem : circElements)
-		delete elem;
-	delete rBreaker1;
-	delete rBreaker2;
-	delete rBreaker3;
 }
 
 void DPsim::SimpSynGenUnitTestThreePhaseFault() {
@@ -612,15 +589,15 @@ void DPsim::SimpSynGenUnitTestThreePhaseFault() {
 	//Real Llkq2 = 0;
 
 	// Declare circuit components
-	BaseComponent* gen = new SimplifiedSynchronGeneratorEMT("gen", 1, 2, 3,
+	ElementPtr gen = make_shared<SimplifiedSynGenEMT>("gen", 1, 2, 3,
 		nomPower, nomPhPhVoltRMS, nomFreq, poleNum, nomFieldCurr,
 		Rs, Ll, Lmd, Lmd0, Lmq, Lmq0, Rfd, Llfd, Rkd, Llkd, Rkq1, Llkq1, Rkq2, Llkq2, H);
 	Real loadRes = 1037.8378;
-	BaseComponent* r1 = new LinearResistorEMT("r1", 1, 0, loadRes);
-	BaseComponent* r2 = new LinearResistorEMT("r2", 2, 0, loadRes);
-	BaseComponent* r3 = new LinearResistorEMT("r3", 3, 0, loadRes);
+	ElementPtr r1 = make_shared<ResistorEMT>("r1", 1, 0, loadRes);
+	ElementPtr r2 = make_shared<ResistorEMT>("r2", 2, 0, loadRes);
+	ElementPtr r3 = make_shared<ResistorEMT>("r3", 3, 0, loadRes);
 
-	std::vector<BaseComponent*> circElements;
+	ElementList circElements;
 	circElements.push_back(gen);
 	circElements.push_back(r1);
 	circElements.push_back(r2);
@@ -628,10 +605,123 @@ void DPsim::SimpSynGenUnitTestThreePhaseFault() {
 
 	// Declare circuit components for resistance change
 	Real breakerRes = 0.001;
-	BaseComponent* rBreaker1 = new LinearResistorEMT("rbreak1", 1, 0, breakerRes);
-	BaseComponent* rBreaker2 = new LinearResistorEMT("rbreak2", 2, 0, breakerRes);
-	BaseComponent* rBreaker3 = new LinearResistorEMT("rbreak3", 3, 0, breakerRes);
-	std::vector<BaseComponent*> circElementsBreakerOn;
+	ElementPtr rBreaker1 = make_shared<ResistorEMT>("rbreak1", 1, 0, breakerRes);
+	ElementPtr rBreaker2 = make_shared<ResistorEMT>("rbreak2", 2, 0, breakerRes);
+	ElementPtr rBreaker3 = make_shared<ResistorEMT>("rbreak3", 3, 0, breakerRes);
+	ElementList circElementsBreakerOn;
+	circElementsBreakerOn.push_back(gen);
+	circElementsBreakerOn.push_back(rBreaker1);
+	circElementsBreakerOn.push_back(rBreaker2);
+	circElementsBreakerOn.push_back(rBreaker3);
+	circElementsBreakerOn.push_back(r1);
+	circElementsBreakerOn.push_back(r2);
+	circElementsBreakerOn.push_back(r3);
+
+	// Set up simulation
+	Real tf, dt, t;
+	Real om = 2.0*M_PI*60.0;
+	tf = 0.3; dt = 0.0000001; t = 0;
+	Int downSampling = 50;
+	Simulation newSim(circElements, om, dt, tf, log, downSampling, SimulationType::EMT);
+	newSim.setNumericalMethod(NumericalMethod::Trapezoidal_flux);
+	newSim.addSystemTopology(circElementsBreakerOn);
+	newSim.switchSystemMatrix(0);
+
+	// Initialize generator
+	Real initActivePower = 555e3;
+	Real initReactivePower = 0;
+	Real initTerminalVolt = 24000 / sqrt(3) * sqrt(2);
+	Real initVoltAngle = -DPS_PI / 2;
+	Real fieldVoltage = 7.0821;
+	Real mechPower = 5.5558e5;
+	shared_ptr<SimplifiedSynGenEMT> genPtr = std::dynamic_pointer_cast<SimplifiedSynGenEMT>(gen);
+	genPtr->init(om, dt, initActivePower, initReactivePower, initTerminalVolt, initVoltAngle, fieldVoltage, mechPower);
+
+	// Calculate initial values for circuit at generator connection point
+	Real initApparentPower = sqrt(pow(initActivePower, 2) + pow(initReactivePower, 2));
+	Real initTerminalCurr = initApparentPower / (3 * initTerminalVolt)* sqrt(2);
+	Real initPowerFactor = acos(initActivePower / initApparentPower);
+
+	std::cout << "A matrix:" << std::endl;
+	std::cout << newSim.getSystemMatrix() << std::endl;
+	std::cout << "vt vector:" << std::endl;
+	std::cout << newSim.getLeftSideVector() << std::endl;
+	std::cout << "j vector:" << std::endl;
+	std::cout << newSim.getRightSideVector() << std::endl;
+
+	Real lastLogTime = 0;
+	Real logTimeStep = 0.00005;
+	newSim.setSwitchTime(0.1, 1);
+	newSim.setSwitchTime(0.2, 0);
+
+	// Main Simulation Loop
+	while (newSim.getTime() < tf) {
+		std::cout << newSim.getTime() << std::endl;
+		newSim.stepGeneratorTest(vtLog, jLog, gen, newSim.getTime());
+		newSim.increaseByTimeStep();
+	}
+
+	std::cout << "Simulation finished." << std::endl;
+}
+
+
+void DPsim::SynGenUnitTestVBR() {
+
+	// Define Object for saving data on a file
+	Logger log("log.txt"),
+		vtLog("data_vt.csv"),
+		jLog("data_j.csv");
+
+	// Define machine parameters in per unit
+	Real nomPower = 555e6;
+	Real nomPhPhVoltRMS = 24e3;
+	Real nomFreq = 60;
+	Real nomFieldCurr = 1300;
+	Int poleNum = 2;
+	Real J = 2.8898e+04;
+	Real H = 3.7;
+
+	Real Rs = 0.003;
+	Real Ll = 0.15;
+	Real Lmd = 1.6599;
+	Real Lmd0 = 1.6599;
+	Real Lmq = 1.61;
+	Real Lmq0 = 1.61;
+	Real Rfd = 0.0006;
+	Real Llfd = 0.1648;
+	Real Rkd = 0.0284;
+	Real Llkd = 0.1713;
+	Real Rkq1 = 0.0062;
+	Real Llkq1 = 0.7252;
+	//Real Rkq2 = 0.0237;
+	//Real Llkq2 = 0.125;
+	Real Rkq2 = 0;
+	Real Llkq2 = 0;
+
+
+	// Declare circuit components
+
+	ElementPtr gen = make_shared<VoltageBehindReactanceEMT>("gen", 1, 2, 3,
+		nomPower, nomPhPhVoltRMS, nomFreq, poleNum, nomFieldCurr,
+		Rs, Ll, Lmd, Lmd0, Lmq, Lmq0, Rfd, Llfd, Rkd, Llkd, Rkq1, Llkq1, Rkq2, Llkq2, H, true);
+
+	Real loadRes = 1037.8378;
+	ElementPtr r1 = make_shared<ResistorEMT>("r1", 1, 0, loadRes);
+	ElementPtr r2 = make_shared<ResistorEMT>("r2", 2, 0, loadRes);
+	ElementPtr r3 = make_shared<ResistorEMT>("r3", 3, 0, loadRes);
+
+	ElementList circElements;
+	circElements.push_back(gen);
+	circElements.push_back(r1);
+	circElements.push_back(r2);
+	circElements.push_back(r3);
+
+	// Declare circuit components for resistance change
+	Real breakerRes = 0.001;
+	ElementPtr rBreaker1 = make_shared<ResistorEMT>("rbreak1", 1, 0, breakerRes);
+	ElementPtr rBreaker2 = make_shared<ResistorEMT>("rbreak2", 2, 0, breakerRes);
+	ElementPtr rBreaker3 = make_shared<ResistorEMT>("rbreak3", 3, 0, breakerRes);
+	ElementList circElementsBreakerOn;
 	circElementsBreakerOn.push_back(rBreaker1);
 	circElementsBreakerOn.push_back(rBreaker2);
 	circElementsBreakerOn.push_back(rBreaker3);
@@ -656,12 +746,8 @@ void DPsim::SimpSynGenUnitTestThreePhaseFault() {
 	Real initVoltAngle = -DPS_PI / 2;
 	Real fieldVoltage = 7.0821;
 	Real mechPower = 5.5558e5;
-	((SimplifiedSynchronGeneratorEMT*)gen)->init(om, dt, initActivePower, initReactivePower, initTerminalVolt, initVoltAngle, fieldVoltage, mechPower);
-
-	// Calculate initial values for circuit at generator connection point
-	Real initApparentPower = sqrt(pow(initActivePower, 2) + pow(initReactivePower, 2));
-	Real initTerminalCurr = initApparentPower / (3 * initTerminalVolt)* sqrt(2);
-	Real initPowerFactor = acos(initActivePower / initApparentPower);
+	shared_ptr<VoltageBehindReactanceEMT> genPtr = std::dynamic_pointer_cast<VoltageBehindReactanceEMT>(gen);
+	genPtr->init(om, dt, initActivePower, initReactivePower, initTerminalVolt, initVoltAngle, fieldVoltage, mechPower);
 
 	std::cout << "A matrix:" << std::endl;
 	std::cout << newSim.getSystemMatrix() << std::endl;
@@ -676,17 +762,116 @@ void DPsim::SimpSynGenUnitTestThreePhaseFault() {
 	newSim.setSwitchTime(0.2, 0);
 
 	// Main Simulation Loop
-	while (newSim.getTime() < tf) {
+	while (newSim.getTime() < tf)
+	{
 		std::cout << newSim.getTime() << std::endl;
-		newSim.stepGeneratorTest(log, vtLog, jLog, gen, newSim.getTime());
+		newSim.stepGeneratorVBR(vtLog, jLog, gen, newSim.getTime());
 		newSim.increaseByTimeStep();
 	}
 
 	std::cout << "Simulation finished." << std::endl;
-	for (auto elem : circElements)
-		delete elem;
-	delete rBreaker1;
-	delete rBreaker2;
-	delete rBreaker3;
 }
 
+void DPsim::SynGenUnitTestVBRDP() {
+
+	// Define Object for saving data on a file
+	Logger log("log.txt"),
+		vtLog("data_vt.csv"),
+		jLog("data_j.csv");
+
+
+	// Define machine parameters in per unit
+	Real nomPower = 555e6;
+	Real nomPhPhVoltRMS = 24e3;
+	Real nomFreq = 60;
+	Real nomFieldCurr = 1300;
+	Int poleNum = 2;
+	Real J = 2.8898e+04;
+	Real H = 3.7;
+
+	Real Rs = 0.003;
+	Real Ll = 0.15;
+	Real Lmd = 1.6599;
+	Real Lmd0 = 1.6599;
+	Real Lmq = 1.61;
+	Real Lmq0 = 1.61;
+	Real Rfd = 0.0006;
+	Real Llfd = 0.1648;
+	Real Rkd = 0.0284;
+	Real Llkd = 0.1713;
+	Real Rkq1 = 0.0062;
+	Real Llkq1 = 0.7252;
+	Real Rkq2 = 0.0237;
+	Real Llkq2 = 0.125;
+	//Real Rkq2 = 0;
+	//Real Llkq2 = 0;
+
+
+
+	// Declare circuit components
+	ElementPtr gen = make_shared<VoltageBehindReactanceDP>("gen", 1, 2, 3,
+		nomPower, nomPhPhVoltRMS, nomFreq, poleNum, nomFieldCurr,
+		Rs, Ll, Lmd, Lmd0, Lmq, Lmq0, Rfd, Llfd, Rkd, Llkd, Rkq1, Llkq1, Rkq2, Llkq2, H);
+	Real loadRes = 1037.8378;
+	ElementPtr r1 = make_shared<ResistorDP>("r1", 1, 0, loadRes);
+	ElementPtr r2 = make_shared<ResistorDP>("r2", 2, 0, loadRes);
+	ElementPtr r3 = make_shared<ResistorDP>("r3", 3, 0, loadRes);
+	ElementList circElements;
+	circElements.push_back(gen);
+	circElements.push_back(r1);
+	circElements.push_back(r2);
+	circElements.push_back(r3);
+
+	// Declare circuit components for resistance change
+	Real breakerRes = 0.001;
+	ElementPtr rBreaker1 = make_shared<ResistorDP>("rbreak1", 1, 0, breakerRes);
+	ElementPtr rBreaker2 = make_shared<ResistorDP>("rbreak2", 2, 0, breakerRes);
+	ElementPtr rBreaker3 = make_shared<ResistorDP>("rbreak3", 3, 0, breakerRes);
+	ElementList circElementsBreakerOn;
+	circElementsBreakerOn.push_back(rBreaker1);
+	circElementsBreakerOn.push_back(rBreaker2);
+	circElementsBreakerOn.push_back(rBreaker3);
+	circElementsBreakerOn.push_back(r1);
+	circElementsBreakerOn.push_back(r2);
+	circElementsBreakerOn.push_back(r3);
+
+	// Set up simulation
+	Real tf, dt, t;
+	Real om = 2.0*M_PI*60.0;
+	tf = 0.3; dt = 0.0001; t = 0;
+	Int downSampling = 1;
+	Simulation newSim(circElements, om, dt, tf, log, downSampling, SimulationType::DynPhasor);
+	newSim.setNumericalMethod(NumericalMethod::Trapezoidal_flux);
+	newSim.addSystemTopology(circElementsBreakerOn);
+	newSim.switchSystemMatrix(0);
+
+	// Initialize generator
+	Real initActivePower = 555e3;
+	Real initReactivePower = 0;
+	Real initTerminalVolt = 24000 / sqrt(3) * sqrt(2);
+	Real initVoltAngle = -DPS_PI / 2;
+	Real fieldVoltage = 7.0821;
+	Real mechPower = 5.5558e5;
+	shared_ptr<VoltageBehindReactanceDP> genPtr = std::dynamic_pointer_cast<VoltageBehindReactanceDP>(gen);
+	genPtr->init(om, dt, initActivePower, initReactivePower, initTerminalVolt, initVoltAngle, fieldVoltage, mechPower);
+
+	std::cout << "A matrix:" << std::endl;
+	std::cout << newSim.getSystemMatrix() << std::endl;
+	std::cout << "vt vector:" << std::endl;
+	std::cout << newSim.getLeftSideVector() << std::endl;
+	std::cout << "j vector:" << std::endl;
+	std::cout << newSim.getRightSideVector() << std::endl;
+
+
+	Real lastLogTime = 0;
+	Real logTimeStep = 0.00005;
+	newSim.setSwitchTime(0.1, 1);
+	newSim.setSwitchTime(0.2, 0);
+	
+	while (newSim.getTime() < tf) {
+		std::cout << newSim.getTime() << std::endl;
+		newSim.stepGeneratorVBR(vtLog, jLog, gen, newSim.getTime());
+		newSim.increaseByTimeStep();
+	}
+
+}

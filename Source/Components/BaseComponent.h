@@ -23,11 +23,15 @@
 
 #pragma once
 
-#include <string>
 #include <iostream>
+#include <vector>
+#include <memory>
+
+using std::shared_ptr;
 
 #include "../SystemModel.h"
 #include "../Definitions.h"
+#include "ComponentCommons.h"
 
 namespace DPsim {
 
@@ -39,7 +43,7 @@ namespace DPsim {
 	};
 
 	struct CompAttr {
-		AttrType type;
+		AttrType mType;
 		void* value;
 	};
 
@@ -55,8 +59,11 @@ namespace DPsim {
 		/// Component node 3
 		Int mNode3;
 		/// Component logger control for internal variables
-		bool mLogActive;
-
+		Bool mLogActive;
+		/// Determines if the component has a virtual node
+		Int mNumVirtualNodes = 0;
+		/// Index of virtual node
+		std::vector<Int> mVirtualNodes;
 		/// Map of all attributes that should be exported to the Python interface
 		std::map<String, CompAttr> attrMap;
 
@@ -87,6 +94,14 @@ namespace DPsim {
 		Int getNode2() { return mNode2; }
 		/// get value of node3
 		Int getNode3() { return mNode3; }
+		/// Returns true if virtual node number is greater than zero.
+		Bool hasVirtualNodes() { return mNumVirtualNodes > 0; }
+		/// Returns true if virtual node number is greater than zero.
+		Int getVirtualNodesNum() { return mNumVirtualNodes; }
+		/// get virtual node
+		Int getVirtualNode(Int nodeNum) { return mVirtualNodes[nodeNum]; }
+		/// set virtual node
+		void setVirtualNode(Int nodeNum, Int virtualNode) { mVirtualNodes[nodeNum] = virtualNode; }
 
 		std::map<String, CompAttr>& getAttrMap() { return attrMap; }
 

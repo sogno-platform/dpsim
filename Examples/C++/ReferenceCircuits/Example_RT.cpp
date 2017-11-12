@@ -1,6 +1,5 @@
-/** Two winding transformer
+/** Reference Circuits
  *
- * @file
  * @author Markus Mirz <mmirz@eonerc.rwth-aachen.de>
  * @copyright 2017, Institute for Automation of Complex Power Systems, EONERC
  * @license GNU General Public License (version 3)
@@ -21,14 +20,30 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *********************************************************************************/
 
-#pragma once
+#include "Simulation.h"
+#include "Utilities.h"
 
-#include "RxLineDP.h"
+using namespace DPsim;
 
-namespace DPsim {
-	// TODO: currently just modeled as an RxLine, possibly use more complex model?
-	class TwoWindingTransformer : public RxLine {
-	public:
-		TwoWindingTransformer(String name, Int node1, Int node2, Real resistance, Real inductance);
-	};
-};
+void main() {	
+	Real timeStep = 0.00005;	
+	Logger log;
+	ElementList comps;
+	comps.push_back(make_shared<VoltSourceRes>("v_s", 1, 0, Complex(10000, 0), 1));
+	comps.push_back(new LinearResistor("r_line", 1, 2, 1));
+	comps.push_back(new Inductor("l_line", 2, 3, 1));
+	comps.push_back(new LinearResistor("r_load", 3, 0, 1000));
+
+	// Set up simulation	
+	Simulation newSim(comps, 2.0*M_PI*50.0, timeStep, 1.0, log);
+
+	// Main Simulation Loop
+	std::cout << "Start simulation." << std::endl;
+	newSim.runRT(RTExceptions, false, log, log, log);
+	std::cout << "Simulation finished." << std::endl;
+	for (auto comp : comps) {
+		delete comp;
+	}
+}
+
+

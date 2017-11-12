@@ -1,12 +1,14 @@
 # Folders
 Libraries/
-lib/
-build/
-cmake-build-debug/
 Build/
 Results/
 Logs/
+build/
+
+# IDEs
+cmake-build-debug/
 .idea/
+.vs/
 
 # CMake
 CMakeFiles/

@@ -1,4 +1,4 @@
-/** Inductor
+/** InductorDP
  *
  * @file
  * @author Markus Mirz <mmirz@eonerc.rwth-aachen.de>
@@ -27,12 +27,12 @@
 
 
 namespace DPsim {
-
-	/// Inductor model:
+	
+	/// InductorDP model:
 	/// The inductor is represented by a DC equivalent circuit which corresponds to one iteration of the trapezoidal integration method.
 	/// The equivalent DC circuit is a resistance in paralel with a current source. The resistance is constant for a defined time step and system
 	///frequency and the current source changes for each iteration.
-	class Inductor : public BaseComponent {
+	class InductorDP : public BaseComponent {
 	protected:
 
 		/// Inductance [H]
@@ -63,10 +63,10 @@ namespace DPsim {
 		Real mPrevCurFacIm;
 
 	public:
-		Inductor() { };
+		InductorDP() { };
 
 		/// Define inductor name, conected nodes and inductance
-		Inductor(String name, Int src, Int dest, Real inductance);
+		InductorDP(String name, Int src, Int dest, Real inductance);
 
 		/// Initializes variables detalvr, deltavi, currr, curri, cureqr and curreqi
 		void init(Real om, Real dt);

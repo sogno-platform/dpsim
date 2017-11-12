@@ -24,37 +24,53 @@
 
 using namespace DPsim;
 
-PQLoad::PQLoad(String name, Int src, Int dest, Real p, Real q, Real volt, Real angle) : RxLine(name, src, dest, 1, 1) {
+PQLoadDP::PQLoadDP(String name, Int node, Real activePower, Real reactivePower, Real volt, Real angle) : BaseComponent(name, node, 0) {
 	// we need the system frequency to calculate the impedance, so we initialize
 	// it with the dummy value of 1+j1 here for now
-	mActivePower = p;
-	mReactivePower = q;
+	mActivePower = activePower;
+	mReactivePower = reactivePower;
 	mSvVoltage = volt;
-	// the parameters of the RxLine shouldn't be modified directly; the face that
-	// this component inherits from RxLine is just an implementation details that
-	// may change
-	attrMap.erase(attrMap.find("resistance"));
-	attrMap.erase(attrMap.find("inductance"));
-	attrMap["activePower"] = {AttrReal, &this->mActivePower};
-	attrMap["reactivePower"] = {AttrReal, &this->mReactivePower};
-	attrMap["svVoltage"] = {AttrReal, &this->mSvVoltage};
+	attrMap["activePower"] = {AttrReal, &mActivePower};
+	attrMap["reactivePower"] = {AttrReal, &mReactivePower};
+	attrMap["svVoltage"] = {AttrReal, &mSvVoltage};
 }
 
-void PQLoad::init(Real om, Real dt) {
-	Real abs = mActivePower*mActivePower+mReactivePower*mReactivePower;
+void PQLoadDP::init(Real om, Real dt) {
+	Real abs = mActivePower*mActivePower + mReactivePower*mReactivePower;
 	mResistance = mSvVoltage*mSvVoltage*mActivePower/abs;
 	mConductance = 1.0 / mResistance;
-	Real reactance = mSvVoltage*mSvVoltage*mReactivePower/abs;
-	mInductance = reactance/om;
-	RxLine::init(om, dt);
+	mReactance = mSvVoltage*mSvVoltage*mReactivePower/abs;
+	mInductance = mReactance /om;
+
+	inductor = std::make_shared<InductorDP>(mName + "_ind", mNode1, mNode2, mInductance);
+	resistor = std::make_shared<ResistorDP>(mName + "_res", mNode1, mNode2, mResistance);
 }
 
-void PQLoad::applySystemMatrixStamp(SystemModel& system) {
+void PQLoadDP::applySystemMatrixStamp(SystemModel& system) {
 	// powers / svvoltage might have changed, so update them
-	Real abs = mActivePower*mActivePower+mReactivePower*mReactivePower;
+	Real abs = mActivePower*mActivePower + mReactivePower*mReactivePower;
 	mResistance = mSvVoltage*mSvVoltage*mActivePower/abs;
 	mConductance = 1.0 / mResistance;
-	Real reactance = mSvVoltage*mSvVoltage*mReactivePower/abs;
-	mInductance = reactance/system.getOmega();
-	RxLine::applySystemMatrixStamp(system);
+	mReactance = mSvVoltage*mSvVoltage*mReactivePower/abs;
+	mInductance = mReactance /system.getOmega();
+	
+	// Add resistive part to system matrix
+	resistor->applySystemMatrixStamp(system);
+
+	// Add inductive part to system matrix
+	inductor->applySystemMatrixStamp(system);
+	
+}
+
+void PQLoadDP::step(SystemModel& system, Real time) {
+	inductor->step(system, time);
+}
+
+
+void PQLoadDP::postStep(SystemModel& system) {
+	inductor->postStep(system);
+}
+
+Complex PQLoadDP::getCurrent(SystemModel& system) {
+	return inductor->getCurrent(system);
 }

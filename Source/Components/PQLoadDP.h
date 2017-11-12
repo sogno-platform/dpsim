@@ -23,18 +23,45 @@
 
 #pragma once
 
-#include "RxLineDP.h"
+#include "BaseComponent.h"
+#include "InductorDP.h"
+#include "ResistorDP.h"
 
 namespace DPsim {
 	// TODO currently modeled as an impedance, which obviously doesn't have a constant power characteristic
-	class PQLoad : public RxLine {
+	class PQLoadDP : public BaseComponent {
 	protected:
 		Real mActivePower;
 		Real mReactivePower;
 		Real mSvVoltage;
+		Real mResistance;
+		Real mConductance;
+		Real mReactance;
+
+		/// Inductance [H]
+		Real mInductance;
+		
+		shared_ptr<InductorDP> inductor;
+		shared_ptr<ResistorDP> resistor;
 	public:
-		PQLoad(String name, Int src, Int dest, Real p, Real q, Real volt, Real angle);
+		PQLoadDP(String name, Int node, Real activePower, Real reactivePower, Real volt, Real angle);
+
+		/// Initializes variables detalvr, deltavi, currr, curri, cureqr and curreqi
 		void init(Real om, Real dt);
-		void applySystemMatrixStamp(SystemModel&);
+
+		/// Stamps DC equivalent resistance to the conductance matrix
+		void applySystemMatrixStamp(SystemModel& system);
+
+		/// Does nothing
+		void applyRightSideVectorStamp(SystemModel& system) { }
+
+		/// calculates the value of the DC equivalent current source for one time step and apply matrix stamp to the current vector
+		void step(SystemModel& system, Real time);
+
+		/// Recalculates variables detalvr, deltavi, currr and curri based on the simulation results of one time step
+		void postStep(SystemModel& system);
+
+		/// Return current from the previous step
+		Complex getCurrent(SystemModel& system);
 	};
-};
+}

@@ -1,4 +1,4 @@
-/** Linear Resistor
+/** Linear Resistor (EMT)
  *
  * @file
  * @author Markus Mirz <mmirz@eonerc.rwth-aachen.de>
@@ -28,36 +28,21 @@
 
 namespace DPsim {
 
-	class LinearResistor : public BaseComponent {
+	class ResistorEMT : public BaseComponent {
 	protected:
-
-		///Resistance [ohm]
 		Real mResistance;
-
-		///Conductance [S]
 		Real mConductance;
-
-		///Real Part of the voltage at node 1 [V]
-		Real mVoltageAtNode1Re;
-
-		///Imaginary Part of the voltage at node 1 [V]
-		Real mVoltageAtNode1Im;
-
-		///Real Part of the voltage at node 2 [V]
-		Real mVoltageAtNode2Re;
-
-		///Imaginary Part of the voltage at node 2 [V]
-		Real mVoltageAtNode2Im;
+		Real mVoltageAtNode1;
+		Real mVoltageAtNode2;
 
 	public:
-		LinearResistor() { ; };
-		LinearResistor(String name, Int src, Int dest, Real resistance);
+		ResistorEMT() { ; };
+		ResistorEMT(String name, Int src, Int dest, Real resistance);
 
 		void init(Real om, Real dt) { }
 		void applySystemMatrixStamp(SystemModel& system);
 		void applyRightSideVectorStamp(SystemModel& system) { }
 		void step(SystemModel& system, Real time) { }
 		void postStep(SystemModel& system) { }
-		Complex getCurrent(SystemModel& model);
 	};
 }

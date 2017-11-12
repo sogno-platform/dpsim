@@ -33,6 +33,8 @@
 #include "ExternalInterface.h"
 
 namespace DPsim {
+	typedef shared_ptr<BaseComponent> ElementPtr;
+	typedef std::vector<ElementPtr> ElementList;
 
 	struct switchConfiguration {
 		Real switchTime;
@@ -51,6 +53,7 @@ namespace DPsim {
 	class Simulation {
 
 	private:
+		Logger* mLogger;
 		/// Final time of the simulation
 		Real mFinalTime;
 		/// Time variable that is incremented at every step
@@ -65,36 +68,29 @@ namespace DPsim {
 		std::vector<switchConfiguration> mSwitchEventVector;
 		/// Structure that holds all system information.
 		SystemModel mSystemModel;
-
+		/// Stores a list of circuit elements that are used to generate the system matrix
+		ElementList mElements;
 		/// Circuit list vector
-		std::vector<std::vector<BaseComponent*> > mElementsVector;
-
+		std::vector<ElementList> mElementsVector;
 		/// Vector of ExternalInterfaces
 		std::vector<ExternalInterface*> mExternalInterfaces;
 
 		uint64_t mRtTimerCount = 0;
-
-		/// TODO: check that every system matrix has the same dimensions
-		void initialize(std::vector<BaseComponent*> elements);
-
-
+		
 	public:
-		/// Stores a list of circuit elements that are used to generate the system matrix
-		std::vector<BaseComponent*> mElements;
-
 		/// Sets parameters to default values.
 		Simulation();
 		/// Creates system matrix according to
-		Simulation(std::vector<BaseComponent*> elements, Real om, Real dt, Real tf, SimulationType simType = SimulationType::DynPhasor);
-		Simulation(std::vector<BaseComponent*> elements, Real om, Real dt, Real tf, Logger& logger, SimulationType simType = SimulationType::DynPhasor);
-		Simulation(std::vector<BaseComponent*> elements, Real om, Real dt, Real tf, Logger& logger, Int downSampleRate, SimulationType simType = SimulationType::DynPhasor);
+		Simulation(ElementList elements, Real om, Real dt, Real tf, Logger& logger, SimulationType simType = SimulationType::DynPhasor);
+		Simulation(ElementList elements, Real om, Real dt, Real tf, Logger& logger, Int downSampleRate, SimulationType simType = SimulationType::DynPhasor);
 		~Simulation();
 
-
+		/// TODO: check that every system matrix has the same dimensions
+		void initialize(ElementList elements);
 		/// Solve system A * x = z for x and current time
-		Int step(Logger& logger, bool blocking = true);
+		Int step(bool blocking = true);
 		/// Solve system A * x = z for x and current time. Log current values of both vectors.
-		Int step(Logger& logger, Logger& leftSideVectorLog, Logger& rightSideVectorLog, bool blocking = true);
+		Int step(Logger& leftSideVectorLog, Logger& rightSideVectorLog, bool blocking = true);
 		void switchSystemMatrix(Int systemMatrixIndex);
 		void setSwitchTime(Real switchTime, Int systemIndex);
 		void increaseByTimeStep();
@@ -108,12 +104,12 @@ namespace DPsim {
 		Matrix & getLeftSideVector() { return mSystemModel.getLeftSideVector(); }
 		Matrix & getRightSideVector() { return mSystemModel.getRightSideVector(); }
 		Matrix & getSystemMatrix() { return mSystemModel.getCurrentSystemMatrix(); }
-		Int stepGeneratorTest(Logger& logger, Logger& leftSideVectorLog, Logger& rightSideVectorLog,
-			BaseComponent* generator, Real time);
-		Int stepGeneratorVBR(Logger& logger, Logger& leftSideVectorLog, Logger& rightSideVectorLog,
-			BaseComponent* generator, Real time);
+		Int stepGeneratorTest(Logger& leftSideVectorLog, Logger& rightSideVectorLog,
+			ElementPtr generator, Real time);
+		Int stepGeneratorVBR(Logger& leftSideVectorLog, Logger& rightSideVectorLog,
+			ElementPtr generator, Real time);
 
-		void addSystemTopology(std::vector<BaseComponent*> newElements);
+		void addSystemTopology(ElementList newElements);
 
 #ifdef __linux__
 		/* Perform the main simulation loop in real time.
