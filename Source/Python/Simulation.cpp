@@ -28,18 +28,18 @@
 #include <cfloat>
 #include <iostream>
 
-#ifdef __linux__
-#include <sys/timerfd.h>
-#include <time.h>
-#include <unistd.h>
-#endif
+#ifdef WITH_RT
+  #include <sys/timerfd.h>
+  #include <time.h>
+  #include <unistd.h>
+#endif /* WITH_RT */
 
 using namespace DPsim;
 
 void Python::Simulation::simThreadFunction(Python::Simulation* pySim) {
 	bool notDone = true;
 
-#ifdef __linux__
+#ifdef WITH_RT
 	if (pySim->rt) {
 		simThreadFunctionRT(pySim);
 		return;
@@ -70,7 +70,7 @@ void Python::Simulation::simThreadFunction(Python::Simulation* pySim) {
 	pySim->cond->notify_one();
 }
 
-#ifdef __linux__
+#ifdef WITH_RT
 void Python::Simulation::simThreadFunctionRT(Python::Simulation *pySim) {
 	bool notDone = true;
 	char timebuf[8];
@@ -129,7 +129,7 @@ void Python::Simulation::simThreadFunctionRT(Python::Simulation *pySim) {
 	pySim->state = StateDone;
 	pySim->cond->notify_one();
 }
-#endif
+#endif /* WITH_RT */
 
 PyObject* Python::Simulation::newfunc(PyTypeObject* type, PyObject *args, PyObject *kwds) {
 	Python::Simulation *self;
@@ -159,13 +159,13 @@ int Python::Simulation::init(Python::Simulation* self, PyObject *args, PyObject 
 		PyErr_SetString(PyExc_TypeError, "Invalid components argument (must by list of dpsim.Component)");
 		return -1;
 	}
-#ifndef __linux__
 
+#ifndef WITH_RT
 	if (self->rt) {
 		PyErr_SetString(PyExc_SystemError, "RT mode not available on this platform");
 		return -1;
 	}
-#endif
+#endif /* WITH_RT */
 
 	if (self->startSync && !self->rt) {
 		PyErr_Format(PyExc_ValueError, "start_sync only valid in rt mode");

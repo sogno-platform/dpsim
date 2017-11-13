@@ -23,9 +23,14 @@
 
 #pragma once
 
-#include <signal.h>
 #include <iostream>
 #include <vector>
+
+#include "Config.h"
+
+#ifdef WITH_RT
+  #include <signal.h>
+#endif
 
 #include "Definitions.h"
 #include "Components.h"
@@ -112,7 +117,7 @@ namespace DPsim {
 
 		void addSystemTopology(ElementList newElements);
 
-#ifdef __linux__
+#ifdef WITH_RT
 		/* Perform the main simulation loop in real time.
 		 *
 		 * @param rtMethod The method with which the realtime execution is achieved.
@@ -123,7 +128,7 @@ namespace DPsim {
 		 */
 		void runRT(RTMethod rtMethod, bool startSynch, Logger& logger, Logger& llogger, Logger &rlogger);
 		static void alarmHandler(int, siginfo_t*, void*);
-#endif
+#endif /* WITH_RT */
 	};
 
 }

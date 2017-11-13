@@ -23,12 +23,12 @@
 
 #include "Simulation.h"
 
-#ifdef __linux__
-#include <signal.h>
-#include <sys/timerfd.h>
-#include <time.h>
-#include <unistd.h>
-#endif
+#ifdef WITH_RT
+  #include <signal.h>
+  #include <sys/timerfd.h>
+  #include <time.h>
+  #include <unistd.h>
+#endif /* WITH_RT */
 
 using namespace DPsim;
 
@@ -302,7 +302,7 @@ void Simulation::setNumericalMethod(NumericalMethod numMethod) {
 	mSystemModel.setNumMethod(numMethod);
 }
 
-#ifdef __linux__
+#ifdef WITH_RT
 void Simulation::alarmHandler(int sig, siginfo_t* si, void* ctx) {
 	Simulation *sim = static_cast<Simulation*>(si->si_value.sival_ptr);
 	/* only throw an exception if we're actually behind */
@@ -407,4 +407,4 @@ void Simulation::runRT(RTMethod rtMethod, bool startSynch, Logger& logger, Logge
 	timer_delete(timer);
 	}
 }
-#endif
+#endif /* WITH_RT */
