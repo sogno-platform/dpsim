@@ -22,31 +22,16 @@
 
 #include <iostream>
 
-#include "CIMTest.h"
-#include "CIMReader.h"
+#include "CIM/Reader.h"
 #include "Simulation.h"
 
 using namespace DPsim;
 
-void DPsim::readFixedCIMFiles_LineLoad() {
-	std::list<String> filenames;
-	filenames.push_back("..\\..\\Examples\\CIM\\Line_Load\\Line_Load.xml");
-	testCIMReader(filenames);
-}
-
-void DPsim::readFixedCIMFiles_IEEE9bus() {
-	std::list<String> filenames;
-	filenames.push_back("..\\..\\Examples\\CIM\\IEEE-09_Neplan_RX\\IEEE-09_Neplan_RX_DI.xml");
-	filenames.push_back("..\\..\\Examples\\CIM\\IEEE-09_Neplan_RX\\IEEE-09_Neplan_RX_EQ.xml");
-	filenames.push_back("..\\..\\Examples\\CIM\\IEEE-09_Neplan_RX\\IEEE-09_Neplan_RX_SV.xml");
-	filenames.push_back("..\\..\\Examples\\CIM\\IEEE-09_Neplan_RX\\IEEE-09_Neplan_RX_TP.xml");
-	testCIMReader(filenames);
-}
-
-Int DPsim::testCIMReader(std::list<String> filenames) {
+static int testCIMReader(std::list<String> filenames) {
 	Logger log("cim.log"), llog("lvector-cim.csv"), rlog("rvector-cim.csv");
+
 	// Read CIM data
-	CIMReader reader(50, log);	
+	CIM::Reader reader(50, log);
 
 	for (String & filename : filenames) {
 		if (!reader.addFile(filename))
@@ -56,13 +41,39 @@ Int DPsim::testCIMReader(std::list<String> filenames) {
 	reader.parseFiles();
 
 	ElementList components = reader.getComponents();
-	
+
 	// Run simulation as usually
 	Simulation sim(components, 2 * PI * 50, 0.001, 0.3, log);
 	std::cout << "Start simulation." << std::endl;
+
 	while (sim.step(llog, rlog))
 		sim.increaseByTimeStep();
+
 	std::cout << "Simulation finished." << std::endl;
-	
+
+	return 0;
+}
+
+static void readFixedCIMFiles_LineLoad() {
+	std::list<String> filenames;
+	filenames.push_back("..\\..\\Examples\\CIM\\Line_Load\\Line_Load.xml");
+
+	testCIMReader(filenames);
+}
+
+static void readFixedCIMFiles_IEEE9bus() {
+	std::list<String> filenames;
+	filenames.push_back("..\\..\\Examples\\CIM\\IEEE-09_Neplan_RX\\IEEE-09_Neplan_RX_DI.xml");
+	filenames.push_back("..\\..\\Examples\\CIM\\IEEE-09_Neplan_RX\\IEEE-09_Neplan_RX_EQ.xml");
+	filenames.push_back("..\\..\\Examples\\CIM\\IEEE-09_Neplan_RX\\IEEE-09_Neplan_RX_SV.xml");
+	filenames.push_back("..\\..\\Examples\\CIM\\IEEE-09_Neplan_RX\\IEEE-09_Neplan_RX_TP.xml");
+
+	testCIMReader(filenames);
+}
+
+int main() {
+	readFixedCIMFiles_LineLoad();
+	readFixedCIMFiles_IEEE9bus();
+
 	return 0;
 }
