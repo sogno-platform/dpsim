@@ -47,3 +47,5 @@
 #include "Components/PQLoadDP.h"
 #include "Components/SimplifiedSynchronGeneratorEMT.h"
 #include "Components/IdealVoltageSourceEMT.h"
+#include "Components/SimplifiedSynGenEMT.h"
+#include "Components/SimplifiedVBR.h"

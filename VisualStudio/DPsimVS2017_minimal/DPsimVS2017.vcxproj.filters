@@ -48,9 +48,6 @@
     <ClInclude Include="..\..\Source\IntegrationMethod.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\Examples\C++\ReferenceCircuits.h">
-      <Filter>Headerdateien\Examples</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\Examples\C++\ShmemTest.h">
       <Filter>Headerdateien\Examples</Filter>
     </ClInclude>
@@ -141,6 +138,9 @@
     <ClInclude Include="..\..\Source\Components\IdealVoltageSourceEMT.h">
       <Filter>Headerdateien\Components</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\Source\Components\SimplifiedVBR.h">
+      <Filter>Headerdateien\Components</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\Source\Logger.cpp">
@@ -159,9 +159,6 @@
       <Filter>Quelldateien</Filter>
     </ClCompile>
     <ClCompile Include="..\..\Examples\C++\DPsimExample.cpp">
-      <Filter>Quelldateien\Examples</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\Examples\C++\ReferenceCircuits.cpp">
       <Filter>Quelldateien\Examples</Filter>
     </ClCompile>
     <ClCompile Include="..\..\Examples\C++\ShmemTest.cpp">
@@ -249,6 +246,9 @@
       <Filter>Quelldateien\Components</Filter>
     </ClCompile>
     <ClCompile Include="..\..\Source\Components\IdealVoltageSourceEMT.cpp">
+      <Filter>Quelldateien\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\Components\SimplifiedVBR.cpp">
       <Filter>Quelldateien\Components</Filter>
     </ClCompile>
   </ItemGroup>

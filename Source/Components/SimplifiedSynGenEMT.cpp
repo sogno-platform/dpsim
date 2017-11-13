@@ -91,7 +91,15 @@ void SimplifiedSynGenEMT::init(Real om, Real dt,
 
 	// steady state per unit initial value
 	initStatesInPerUnit(initActivePower, initReactivePower, initTerminalVolt, initVoltAngle, initFieldVoltage, initMechPower);
-	mMechTorque = -mMechTorque;
+	//mMechTorque = -mMechTorque;
+
+	// Calculation of operational parameters
+	mXd = mOmMech*(mLl + mLmd);
+	mXq = mOmMech*(mLl + mLmq);
+	mTd0_t = (mLlfd + mLmd) / (mRfd*mBase_OmMech);
+	mXd_t = mOmMech*(mLl + mLmd - mLmd*mLmd / (mLlfd + mLmd));
+	mEq_t = mVq + mXd_t*mId;
+	mEf = mOmMech*(mLmd / mRfd) * mVfd;
 
 	mVa = inverseParkTransform2(mThetaMech, mVd* mBase_v, mVq* mBase_v, mV0* mBase_v)(0);
 	mVb = inverseParkTransform2(mThetaMech, mVd* mBase_v, mVq* mBase_v, mV0* mBase_v)(1);
@@ -134,6 +142,10 @@ void SimplifiedSynGenEMT::applyRightSideVectorStamp(SystemModel& system) {
 void SimplifiedSynGenEMT::step(SystemModel& system, Real time) {
 
 	stepInPerUnit(system.getOmega(), system.getTimeStep(), time, system.getNumMethod());
+	
+	va.mVirtualNodes[0] = mVirtualNodes[0];
+	vb.mVirtualNodes[0] = mVirtualNodes[1];
+	vc.mVirtualNodes[0] = mVirtualNodes[2];
 
 	va.step(system, time);
 	vb.step(system, time);
@@ -156,22 +168,21 @@ void SimplifiedSynGenEMT::stepInPerUnit(Real om, Real dt, Real time, NumericalMe
 	mId = parkTransform2(mThetaMech, mIa, mIb, mIc)(0);
 	mIq = parkTransform2(mThetaMech, mIa, mIb, mIc)(1);
 	mI0 = parkTransform2(mThetaMech, mIa, mIb, mIc)(2);
-
-	mPsifd = mPsifd + dt*mBase_OmMech*(mVfd - mRfd*(mPsifd + mLmd*mId) / (mLlfd + mLmd));
+	
+	//Real A = -mRfd / (mLlfd + mLmd);
+	//Real B = -mRfd*mLmd / (mLlfd + mLmd);
+	//Real C = mVfd;
+	//mPsifd = Trapezoidal(mPsifd, A, B, C, dt*mBase_OmMech, mId);
+	
+	mPsifd = mPsifd + dt*mBase_OmMech*(mVfd - mRfd*mIfd);
 	mIfd = (mPsifd + mLmd*mId) / (mLlfd + mLmd);
 
-	mCurrents << mIq,
-		mId,
-		mIfd;
-
-	mFluxes = mInductanceMat*mCurrents;
-
-	mPsiq = mFluxes(0, 0);
-	mPsid = mFluxes(1, 0);
-	mPsifd = mFluxes(2, 0);
+	mPsid = -(mLmd + mLl)*mId + mLmd*mIfd;
+	mPsiq = -(mLmq + mLl)*mIq;
 
 	mVd = -mPsiq;
 	mVq = mPsid;
+
 
 	// Calculation of rotational speed with euler
 	mElecTorque = (mPsid*mIq - mPsiq*mId);
@@ -191,6 +202,14 @@ void SimplifiedSynGenEMT::stepInPerUnit(Real om, Real dt, Real time, NumericalMe
 	mVoltages << mVq,
 		mVd,
 		mVfd;
+
+	mCurrents << mIq,
+		mId,
+		mIfd;
+
+	mFluxes << mPsiq,
+		mPsid,
+		mPsifd;
 }
 
 

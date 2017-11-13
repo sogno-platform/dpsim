@@ -144,7 +144,6 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\Examples\C++\ReferenceCircuits.h" />
     <ClInclude Include="..\..\Examples\C++\ShmemTest.h" />
     <ClInclude Include="..\..\Examples\C++\SimpleCircuitTest.h" />
     <ClInclude Include="..\..\Examples\C++\SynchronGenUnitTest.h" />
@@ -167,6 +166,7 @@
     <ClInclude Include="..\..\Source\Components\RxLineDP.h" />
     <ClInclude Include="..\..\Source\Components\SimplifiedSynchronGeneratorEMT.h" />
     <ClInclude Include="..\..\Source\Components\SimplifiedSynGenEMT.h" />
+    <ClInclude Include="..\..\Source\Components\SimplifiedVBR.h" />
     <ClInclude Include="..\..\Source\Components\SynchGenBase.h" />
     <ClInclude Include="..\..\Source\Components\SynchronGeneratorDP.h" />
     <ClInclude Include="..\..\Source\Components\SynchronGeneratorEMT.h" />
@@ -185,7 +185,6 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\Examples\C++\DPsimExample.cpp" />
-    <ClCompile Include="..\..\Examples\C++\ReferenceCircuits.cpp" />
     <ClCompile Include="..\..\Examples\C++\ShmemTest.cpp" />
     <ClCompile Include="..\..\Examples\C++\SynchronGenUnitTest.cpp" />
     <ClCompile Include="..\..\Source\Components\BaseComponent.cpp" />
@@ -205,6 +204,7 @@
     <ClCompile Include="..\..\Source\Components\RxLineDP.cpp" />
     <ClCompile Include="..\..\Source\Components\SimplifiedSynchronGeneratorEMT.cpp" />
     <ClCompile Include="..\..\Source\Components\SimplifiedSynGenEMT.cpp" />
+    <ClCompile Include="..\..\Source\Components\SimplifiedVBR.cpp" />
     <ClCompile Include="..\..\Source\Components\SynchGenBase.cpp" />
     <ClCompile Include="..\..\Source\Components\SynchronGeneratorDP.cpp" />
     <ClCompile Include="..\..\Source\Components\SynchronGeneratorEMT.cpp" />

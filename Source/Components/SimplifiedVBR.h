@@ -1,4 +1,4 @@
-/** Synchron generator (EMT)
+/** Simplified Voltage behind reactance (EMT)
 *
 * @file
 * @author Markus Mirz <mmirz@eonerc.rwth-aachen.de>
@@ -24,8 +24,6 @@
 #pragma once
 
 #include "SynchGenBase.h"
-#include "IdealVoltageSourceEMT.h"
-
 
 namespace DPsim {
 
@@ -36,31 +34,37 @@ namespace DPsim {
 	/// parameter names include underscores and typical variables names found in literature instead of
 	/// descriptive names in order to shorten formulas and increase the readability
 
-	class SimplifiedSynGenEMT : public SynchGenBase {
+	class SimplifiedVBR : public SynchGenBase {
 	protected:
 
-		//##### Standard parameters #######
-		Real mXd;
-		Real mXq;
-		Real mXd_t;
-		Real mXq_t;
-		Real mTd0_t;
-		Real mTq0_t;
-		Real mEq_t;
-		Real mEd_t;
-		Real mEf;
+		/// d dynamic inductance
+		Real mDLmd;
+		/// q dynamic inductance
+		Real mDLmq;
 
-		/// Determinant of Ld (inductance matrix of d axis)
-		Real detLd;
-		/// Determinant of Lq (inductance matrix of q axis)
-		Real detLq;
+		Real mDLd;
+		Real mDLq;
 
-		/// voltage vector q d 0 kq1 kq2 df kd
-		Matrix mVoltages;
-		/// flux linkage vector
-		Matrix mFluxes;
-		/// current vector
-		Matrix mCurrents;
+		/// Auxiliar inductance
+		Real mLa;
+		/// Auxiliar inductance
+		Real mLb;
+
+
+		/// d dynamic flux
+		Real mDPsid;
+		/// q dynamic flux
+		Real mDPsiq;
+		/// Dynamic d voltage
+		Real mDVq;
+		/// Dynamic q voltage
+		Real mDVd;
+		/// Dynamic voltage phase a
+		Real mDVa;
+		/// Dynamic voltage phase b
+		Real mDVb;
+		/// Dynamic voltage phase c
+		Real mDVc;
 
 		/// Interface voltage phase a
 		Real mVa;
@@ -76,40 +80,61 @@ namespace DPsim {
 		/// Interface curent phase c
 		Real mIc;
 
-		// ### Useful Matrices ###
-		/// reactance matrix
-		Matrix mReactanceMat;
-		/// omega - flux matrix
-		Matrix mOmegaFluxMat;
-		/// matrix for reversing stator current directions in calculations with respect to other currents
-		Matrix mReverseCurrents;
+		/// Magnetizing flux linkage in q axis
+		Real mPsimq;
+		/// Magnetizing flux linkage in d axis
+		Real mPsimd;
 
-		IdealVoltageSourceEMT va;
-		IdealVoltageSourceEMT vb;
-		IdealVoltageSourceEMT vc;
+		/// Rotor flux vector
+		Matrix mRotorFlux = Matrix::Zero(4, 1);
+		/// Dq stator current vector
+		Matrix mDqStatorCurrents = Matrix::Zero(2, 1);
+		/// Dq stator current vector - from previous time step
+		Matrix mDqStatorCurrents_hist = Matrix::Zero(2, 1);
+
+		Matrix mDVqd = Matrix::Zero(2, 1);
+
+		// ### Useful Matrices ###
+		/// inductance matrix
+		Matrix mDInductanceMat = Matrix::Zero(3, 3);
+		/// Derivative of inductance matrix
+		Matrix pmDInductanceMat = Matrix::Zero(3, 3);
+
+		/// Load Resistance 
+		Matrix R_load = Matrix::Zero(3, 3);
+
+		/// Phase currents in pu
+		Matrix mIabc = Matrix::Zero(3, 1);
+		/// Subtransient voltage in pu
+		Matrix mDVabc = Matrix::Zero(3, 1);
+		Matrix mDVabc_hist = Matrix::Zero(3, 1);
+
+		/// Matrix paremeters for integration of rotor flux linkages - A
+		Matrix A_flux = Matrix::Zero(4, 4);
+		/// Variables for integration of rotor flux linkages - B
+		Matrix B_flux = Matrix::Zero(4, 2);
+		/// Variables for integration of rotor flux linkages - C
+		Matrix C_flux = Matrix::Zero(4, 1);
 
 
 	public:
-		SimplifiedSynGenEMT() { };
-		~SimplifiedSynGenEMT();
+		SimplifiedVBR() { };
+		~SimplifiedVBR();
 
 		/// Initializes the per unit or stator referred machine parameters with the machine parameters given in per unit or
 		/// stator referred parameters depending on the setting of parameter type.
 		/// The initialization mode depends on the setting of state type.
-		SimplifiedSynGenEMT(String name, Int node1, Int node2, Int node3,
+		SimplifiedVBR(String name, Int node1, Int node2, Int node3,
 			Real nomPower, Real nomVolt, Real nomFreq, Int poleNumber, Real nomFieldCur,
 			Real Rs, Real Ll, Real Lmd, Real Lmd0, Real Lmq, Real Lmq0,
 			Real Rfd, Real Llfd, Real Rkd, Real Llkd,
 			Real Rkq1, Real Llkq1, Real Rkq2, Real Llkq2,
 			Real inertia, bool logActive = false);
 
-
 		/// Initializes states in per unit or stator referred variables depending on the setting of the state type.
 		/// Function parameters have to be given in real units.
 		void init(Real om, Real dt,
-			Real initActivePower, Real initReactivePower, Real initTerminalVolt,
-			Real initVoltAngle, Real initFieldVoltage, Real initMechPower);
-
+			Real initActivePower, Real initReactivePower, Real initTerminalVolt, Real initVoltAngle, Real initFieldVoltage, Real initMechPower);
 
 		/// Performs an Euler forward step with the state space model of a synchronous generator
 		/// to calculate the flux and current from the voltage vector.
@@ -123,24 +148,23 @@ namespace DPsim {
 		void postStep(SystemModel& system);
 
 		/// Park transform as described in Krause
-		//Matrix parkTransform(Real theta, Matrix& in);
-		Matrix parkTransform2(Real theta, Real a, Real b, Real c);
+		Matrix parkTransform(Real theta, Real a, Real b, Real c);
 
 		/// Inverse Park transform as described in Krause
-		//Matrix inverseParkTransform(Real theta, Matrix& in);
-		Matrix inverseParkTransform2(Real theta, Real d, Real q, Real zero);
+		Matrix inverseParkTransform(Real theta, Real q, Real d, Real zero);
 
-		Matrix& getVoltages() { return mVoltages; }
-		Matrix& getCurrents() { return mCurrents; }
-		Matrix& getFluxes() { return mFluxes; }
+		/// Calculate inductance Matrix L and its derivative
+		void CalculateLandpL();
+
+		Matrix& getRotorFluxes() { return mRotorFlux; }
+		Matrix& getDqStatorCurrents() { return mDqStatorCurrents; }
 		Real getElectricalTorque() { return mElecTorque*mBase_T; }
 		Real getRotationalSpeed() { return mOmMech*mBase_OmMech; }
 		Real getRotorPosition() { return mThetaMech; }
 
-
-		// Methods for network integrated components
 		void init(Real om, Real dt) { }
-		void applySystemMatrixStamp(SystemModel& system);
-		void applyRightSideVectorStamp(SystemModel& system);
+		void applySystemMatrixStamp(SystemModel& system) { }
+		void applyRightSideVectorStamp(SystemModel& system) { }
+
 	};
 }

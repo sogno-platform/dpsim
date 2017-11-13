@@ -60,6 +60,16 @@ Matrix DPsim::Trapezoidal(Matrix states, Matrix A, Matrix B, Matrix C, Real dt, 
 	return newstates;
 }
 
+Real DPsim::Trapezoidal(Real states, Real A, Real B, Real C, Real dt, Real u)
+{
+
+	Real Aux = 1 + (dt / 2) * A;
+	Real Aux2 = 1 - (dt / 2) * A;
+
+	Real newstates = (1/Aux2)*Aux*states + (1 / Aux2)*dt*B*u + (1 / Aux2)*dt*C;
+	return newstates;
+}
+
 Matrix DPsim::Trapezoidal(Matrix states, Matrix A, Matrix B, Real dt, Matrix u)
 {
 	int n = states.rows();

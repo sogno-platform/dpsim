@@ -589,9 +589,9 @@ void DPsim::SimpSynGenUnitTestThreePhaseFault() {
 	//Real Llkq2 = 0;
 
 	// Declare circuit components
-	ElementPtr gen = make_shared<SimplifiedSynGenEMT>("gen", 1, 2, 3,
+	ElementPtr gen = make_shared<SimplifiedVBR>("gen", 1, 2, 3,
 		nomPower, nomPhPhVoltRMS, nomFreq, poleNum, nomFieldCurr,
-		Rs, Ll, Lmd, Lmd0, Lmq, Lmq0, Rfd, Llfd, Rkd, Llkd, Rkq1, Llkq1, Rkq2, Llkq2, H);
+		Rs, Ll, Lmd, Lmd0, Lmq, Lmq0, Rfd, Llfd, Rkd, Llkd, Rkq1, Llkq1, Rkq2, Llkq2, H, true);
 	Real loadRes = 1037.8378;
 	ElementPtr r1 = make_shared<ResistorEMT>("r1", 1, 0, loadRes);
 	ElementPtr r2 = make_shared<ResistorEMT>("r2", 2, 0, loadRes);
@@ -605,6 +605,7 @@ void DPsim::SimpSynGenUnitTestThreePhaseFault() {
 
 	// Declare circuit components for resistance change
 	Real breakerRes = 0.001;
+	//Real breakerRes = 10.378378;
 	ElementPtr rBreaker1 = make_shared<ResistorEMT>("rbreak1", 1, 0, breakerRes);
 	ElementPtr rBreaker2 = make_shared<ResistorEMT>("rbreak2", 2, 0, breakerRes);
 	ElementPtr rBreaker3 = make_shared<ResistorEMT>("rbreak3", 3, 0, breakerRes);
@@ -620,8 +621,8 @@ void DPsim::SimpSynGenUnitTestThreePhaseFault() {
 	// Set up simulation
 	Real tf, dt, t;
 	Real om = 2.0*M_PI*60.0;
-	tf = 0.3; dt = 0.0000001; t = 0;
-	Int downSampling = 50;
+	tf = 3; dt = 0.0001; t = 0;
+	Int downSampling = 1;
 	Simulation newSim(circElements, om, dt, tf, log, downSampling, SimulationType::EMT);
 	newSim.setNumericalMethod(NumericalMethod::Trapezoidal_flux);
 	newSim.addSystemTopology(circElementsBreakerOn);
@@ -634,7 +635,7 @@ void DPsim::SimpSynGenUnitTestThreePhaseFault() {
 	Real initVoltAngle = -DPS_PI / 2;
 	Real fieldVoltage = 7.0821;
 	Real mechPower = 5.5558e5;
-	shared_ptr<SimplifiedSynGenEMT> genPtr = std::dynamic_pointer_cast<SimplifiedSynGenEMT>(gen);
+	shared_ptr<SimplifiedVBR> genPtr = std::dynamic_pointer_cast<SimplifiedVBR>(gen);
 	genPtr->init(om, dt, initActivePower, initReactivePower, initTerminalVolt, initVoltAngle, fieldVoltage, mechPower);
 
 	// Calculate initial values for circuit at generator connection point
@@ -652,7 +653,7 @@ void DPsim::SimpSynGenUnitTestThreePhaseFault() {
 	Real lastLogTime = 0;
 	Real logTimeStep = 0.00005;
 	newSim.setSwitchTime(0.1, 1);
-	newSim.setSwitchTime(0.2, 0);
+	newSim.setSwitchTime(2.1, 0);
 
 	// Main Simulation Loop
 	while (newSim.getTime() < tf) {
@@ -693,10 +694,10 @@ void DPsim::SynGenUnitTestVBR() {
 	Real Llkd = 0.1713;
 	Real Rkq1 = 0.0062;
 	Real Llkq1 = 0.7252;
-	//Real Rkq2 = 0.0237;
-	//Real Llkq2 = 0.125;
-	Real Rkq2 = 0;
-	Real Llkq2 = 0;
+	Real Rkq2 = 0.0237;
+	Real Llkq2 = 0.125;
+	//Real Rkq2 = 0;
+	//Real Llkq2 = 0;
 
 
 	// Declare circuit components

@@ -24,7 +24,7 @@
 #include <iostream>
 
 #include "SynchronGenUnitTest.h"
-#include "ReferenceCircuits.h"
+//#include "ReferenceCircuits.h"
 
 using namespace DPsim;
 
