@@ -24,8 +24,6 @@
 
 #include "CIM/Reader.h"
 #include "Components.h"
-#include "Components/ExternalCurrentSource.h"
-#include "Components/ExternalVoltageSource.h"
 
 using namespace DPsim;
 
