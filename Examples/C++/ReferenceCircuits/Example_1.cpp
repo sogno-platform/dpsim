@@ -25,7 +25,7 @@
 
 using namespace DPsim;
 
-void main() {	
+int main() {
 	// Define simulation scenario
 	Real timeStep = 0.001;
 	Real omega = 2.0*M_PI*50.0;
@@ -33,25 +33,28 @@ void main() {
 	std::ostringstream fileName;
 	fileName << "SimulationExample1_" << timeStep;
 	ElementList circElements;
-	circElements.push_back(make_shared<VoltSourceRes>("v_in", 1, 0, Complex(10, 0), 1));
-	circElements.push_back(make_shared<InductorDP>("l_1", 1, 2, 0.02));
-	circElements.push_back(make_shared<InductorDP>("l_2", 2, 0, 0.1));
-	circElements.push_back(make_shared<InductorDP>("l_3", 2, 3, 0.05));
-	circElements.push_back(make_shared<ResistorDP>("r_2", 3, 0, 2));
+	circElements.push_back(std::make_shared<VoltSourceRes>("v_in", 1, 0, Complex(10, 0), 1));
+	circElements.push_back(std::make_shared<InductorDP>("l_1", 1, 2, 0.02));
+	circElements.push_back(std::make_shared<InductorDP>("l_2", 2, 0, 0.1));
+	circElements.push_back(std::make_shared<InductorDP>("l_3", 2, 3, 0.05));
+	circElements.push_back(std::make_shared<ResistorDP>("r_2", 3, 0, 2));
 
-	// Define log names	
+	// Define log names
 	Logger log("Logs/" + fileName.str() + ".log");
 	Logger leftVectorLog("Logs/LeftVector_" + fileName.str() + ".csv");
 	Logger rightVectorLog("Logs/RightVector_" + fileName.str() + ".csv");
-		
+
 	// Set up simulation and start main simulation loop
 	Simulation newSim(circElements, omega, timeStep, finalTime, log);
+
 	std::cout << "Start simulation." << std::endl;
+
 	while (newSim.step(leftVectorLog, rightVectorLog)) {
 		newSim.increaseByTimeStep();
 		updateProgressBar(newSim.getTime(), newSim.getFinalTime());
 	}
+
 	std::cout << "Simulation finished." << std::endl;
+
+	return 0;
 }
-
-

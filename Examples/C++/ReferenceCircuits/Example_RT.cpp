@@ -25,25 +25,24 @@
 
 using namespace DPsim;
 
-void main() {	
-	Real timeStep = 0.00005;	
+int main() {
+	Real timeStep = 0.00005;
 	Logger log;
 	ElementList comps;
-	comps.push_back(make_shared<VoltSourceRes>("v_s", 1, 0, Complex(10000, 0), 1));
-	comps.push_back(new LinearResistor("r_line", 1, 2, 1));
-	comps.push_back(new Inductor("l_line", 2, 3, 1));
-	comps.push_back(new LinearResistor("r_load", 3, 0, 1000));
+	comps.push_back(std::make_shared<VoltSourceRes>("v_s", 1, 0, Complex(10000, 0), 1));
+	comps.push_back(std::make_shared<ResistorDP>("r_line", 1, 2, 1));
+	comps.push_back(std::make_shared<InductorDP>("l_line", 2, 3, 1));
+	comps.push_back(std::make_shared<ResistorDP>("r_load", 3, 0, 1000));
 
-	// Set up simulation	
+	// Set up simulation
 	Simulation newSim(comps, 2.0*M_PI*50.0, timeStep, 1.0, log);
 
 	// Main Simulation Loop
 	std::cout << "Start simulation." << std::endl;
+
 	newSim.runRT(RTExceptions, false, log, log, log);
+
 	std::cout << "Simulation finished." << std::endl;
-	for (auto comp : comps) {
-		delete comp;
-	}
+
+	return 0;
 }
-
-

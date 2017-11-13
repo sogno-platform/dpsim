@@ -25,7 +25,7 @@
 
 using namespace DPsim;
 
-void main() {	
+int main() {
 	// Define simulation scenario
 	Real timeStep = 0.001;
 	Real omega = 2.0*M_PI*50.0;
@@ -33,23 +33,26 @@ void main() {
 	std::ostringstream fileName;
 	fileName << "SimulationExampleRXLine2_" << timeStep;
 	ElementList circElements;
-	circElements.push_back(make_shared<InductorDP>("l_L", 2, 3, 0.001));
-	circElements.push_back(make_shared<ResistorDP>("r_L", 1, 2, 0.1));
-	circElements.push_back(make_shared<ResistorDP>("r_1", 3, 0, 20));
+	circElements.push_back(std::make_shared<InductorDP>("l_L", 2, 3, 0.001));
+	circElements.push_back(std::make_shared<ResistorDP>("r_L", 1, 2, 0.1));
+	circElements.push_back(std::make_shared<ResistorDP>("r_1", 3, 0, 20));
 
-	// Define log names	
+	// Define log names
 	Logger log("Logs/" + fileName.str() + ".log");
 	Logger leftVectorLog("Logs/LeftVector_" + fileName.str() + ".csv");
 	Logger rightVectorLog("Logs/RightVector_" + fileName.str() + ".csv");
 
 	// Set up simulation and start main simulation loop
 	Simulation newSim(circElements, omega, timeStep, finalTime, log);
+
 	std::cout << "Start simulation." << std::endl;
+
 	while (newSim.step(leftVectorLog, rightVectorLog)) {
 		newSim.increaseByTimeStep();
 		updateProgressBar(newSim.getTime(), newSim.getFinalTime());
 	}
+
 	std::cout << "Simulation finished." << std::endl;
+
+	return 0;
 }
-
-

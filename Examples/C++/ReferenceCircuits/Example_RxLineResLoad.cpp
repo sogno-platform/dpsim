@@ -25,7 +25,7 @@
 
 using namespace DPsim;
 
-void main() {	
+int main() {
 	// Define simulation scenario
 	Real timeStep = 0.001;
 	Real omega = 2.0*M_PI*50.0;
@@ -33,15 +33,15 @@ void main() {
 	std::ostringstream fileName;
 	fileName << "RXLineResLoad_" << timeStep;
 	ElementList circElements0, circElements1, circElements2;
-	circElements0.push_back(make_shared<VoltSourceRes>("v_s", 1, 0, Complex(10000, 0), 1));
-	circElements0.push_back(make_shared<ResistorDP>("r_line", 1, 2, 1));
-	circElements0.push_back(make_shared<InductorDP>("l_line", 2, 3, 1));
+	circElements0.push_back(std::make_shared<VoltSourceRes>("v_s", 1, 0, Complex(10000, 0), 1));
+	circElements0.push_back(std::make_shared<ResistorDP>("r_line", 1, 2, 1));
+	circElements0.push_back(std::make_shared<InductorDP>("l_line", 2, 3, 1));
 	circElements1 = circElements0;
 	circElements2 = circElements0;
-	circElements1.push_back(make_shared<ResistorDP>("r_load", 3, 0, 1000));
-	circElements2.push_back(make_shared<ResistorDP>("r_load", 3, 0, 800));
+	circElements1.push_back(std::make_shared<ResistorDP>("r_load", 3, 0, 1000));
+	circElements2.push_back(std::make_shared<ResistorDP>("r_load", 3, 0, 800));
 
-	// Define log names	
+	// Define log names
 	Logger log("Logs/" + fileName.str() + ".log");
 	Logger leftVectorLog("Logs/LeftVector_" + fileName.str() + ".csv");
 	Logger rightVectorLog("Logs/RightVector_" + fileName.str() + ".csv");
@@ -50,12 +50,15 @@ void main() {
 	Simulation newSim(circElements1, omega, timeStep, finalTime, log);
 	newSim.addSystemTopology(circElements2);
 	newSim.setSwitchTime(0.1, 1);
+
 	std::cout << "Start simulation." << std::endl;
+
 	while (newSim.step(leftVectorLog, rightVectorLog)) {
 		newSim.increaseByTimeStep();
 		updateProgressBar(newSim.getTime(), newSim.getFinalTime());
 	}
+
 	std::cout << "Simulation finished." << std::endl;
+
+	return 0;
 }
-
-

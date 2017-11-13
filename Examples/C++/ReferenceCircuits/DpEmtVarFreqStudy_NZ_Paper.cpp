@@ -25,20 +25,21 @@
 
 using namespace DPsim;
 
-void DPsim::VarFreqRXLineResLoad_NZ_Paper(Real timeStep, Real finalTime, Real freqStep, Real loadStep, Real rampTime) {
+static
+void VarFreqRXLineResLoad_NZ_Paper(Real timeStep, Real finalTime, Real freqStep, Real loadStep, Real rampTime) {
 	// Define simulation scenario
 	std::ostringstream fileName;
 	fileName << "VarFreqRXLineResLoad_" << timeStep;
 	ElementList circElements0, circElements1, circElements2;
-	circElements0.push_back(make_shared<VoltSourceResFreq>("v_s", 1, 0, 10000, 0, 1, 2 * PI*-1, freqStep, rampTime));
-	circElements0.push_back(make_shared<ResistorDP>("r_line", 1, 2, 1));
-	circElements0.push_back(make_shared<InductorDP>("l_line", 2, 3, 1));
+	circElements0.push_back(std::make_shared<VoltSourceResFreq>("v_s", 1, 0, 10000, 0, 1, 2 * PI*-1, freqStep, rampTime));
+	circElements0.push_back(std::make_shared<ResistorDP>("r_line", 1, 2, 1));
+	circElements0.push_back(std::make_shared<InductorDP>("l_line", 2, 3, 1));
 	circElements1 = circElements0;
 	circElements2 = circElements0;
-	circElements1.push_back(make_shared<ResistorDP>("r_load", 3, 0, 10));
-	circElements2.push_back(make_shared<ResistorDP>("r_load", 3, 0, 5));
+	circElements1.push_back(std::make_shared<ResistorDP>("r_load", 3, 0, 10));
+	circElements2.push_back(std::make_shared<ResistorDP>("r_load", 3, 0, 5));
 
-	// Define log names	
+	// Define log names
 	Logger log("Logs/" + fileName.str() + ".log");
 	Logger leftVectorLog("Logs/LeftVector_" + fileName.str() + ".csv");
 	Logger rightVectorLog("Logs/RightVector_" + fileName.str() + ".csv");
@@ -58,20 +59,21 @@ void DPsim::VarFreqRXLineResLoad_NZ_Paper(Real timeStep, Real finalTime, Real fr
 	std::cout << "Simulation finished." << std::endl;
 }
 
-void DPsim::VarFreqRXLineResLoadEMT_NZ_Paper(Real timeStep, Real finalTime, Real freqStep, Real loadStep, Real rampTime) {
+static
+void VarFreqRXLineResLoadEMT_NZ_Paper(Real timeStep, Real finalTime, Real freqStep, Real loadStep, Real rampTime) {
 	// Define simulation scenario
 	std::ostringstream fileName;
 	fileName << "VarFreqRXLineResLoadEMT_" << timeStep;
 	ElementList circElements0, circElements1, circElements2;
-	circElements0.push_back(make_shared<VoltSourceResFreqEMT>("v_s", 1, 0, 10000, 0, 1, 2 * PI*-1, freqStep, rampTime));
-	circElements0.push_back(make_shared<ResistorEMT>("r_line", 1, 2, 1));
-	circElements0.push_back(make_shared<InductorEMT>("l_line", 2, 3, 1));
+	circElements0.push_back(std::make_shared<VoltSourceResFreqEMT>("v_s", 1, 0, 10000, 0, 1, 2 * PI*-1, freqStep, rampTime));
+	circElements0.push_back(std::make_shared<ResistorEMT>("r_line", 1, 2, 1));
+	circElements0.push_back(std::make_shared<InductorEMT>("l_line", 2, 3, 1));
 	circElements1 = circElements0;
 	circElements2 = circElements0;
-	circElements1.push_back(make_shared<ResistorEMT>("r_load", 3, 0, 10));
-	circElements2.push_back(make_shared<ResistorEMT>("r_load", 3, 0, 8));
+	circElements1.push_back(std::make_shared<ResistorEMT>("r_load", 3, 0, 10));
+	circElements2.push_back(std::make_shared<ResistorEMT>("r_load", 3, 0, 8));
 
-	// Define log names	
+	// Define log names
 	Logger log("Logs/" + fileName.str() + ".log");
 	Logger leftVectorLog("Logs/LeftVector_" + fileName.str() + ".csv");
 	Logger rightVectorLog("Logs/RightVector_" + fileName.str() + ".csv");
@@ -89,7 +91,7 @@ void DPsim::VarFreqRXLineResLoadEMT_NZ_Paper(Real timeStep, Real finalTime, Real
 	std::cout << "Simulation finished." << std::endl;
 }
 
-void main() {	
+int main() {
 	Real timeStep = 0.0;
 	Real finalTime = 2;
 	Real freqStep = 1;
@@ -100,6 +102,6 @@ void main() {
 	VarFreqRXLineResLoadEMT_NZ_Paper(timeStep, finalTime, freqStep, loadStep, rampTime);
 	timeStep = 0.001;
 	VarFreqRXLineResLoad_NZ_Paper(timeStep, finalTime, freqStep, loadStep, rampTime);
+
+	return 0;
 }
-
-
