@@ -25,7 +25,7 @@ include_directories(${EIGEN3_INCLUDE_DIR})
 
 add_subdirectory(Documentation)
 add_subdirectory(Source)
-add_subdirectory(Examples/C++)
+add_subdirectory(Examples/Cxx)
 
 # Show feature summary
 include(FeatureSummary)
