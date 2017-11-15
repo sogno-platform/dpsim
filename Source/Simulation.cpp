@@ -38,7 +38,7 @@ Simulation::Simulation() {
 	mCurrentSwitchTimeIndex = 0;
 }
 
-Simulation::Simulation(ElementList elements, Real om, Real dt, Real tf, Logger& logger, SimulationType simType)
+Simulation::Simulation(ElementList elements, Real om, Real dt, Real tf, Logger& logger, SimulationType simType, Int downSampleRate)
 	: Simulation() {
 
 	mLogger = &logger;
@@ -46,6 +46,7 @@ Simulation::Simulation(ElementList elements, Real om, Real dt, Real tf, Logger& 
 	mSystemModel.setTimeStep(dt);
 	mSystemModel.setOmega(om);
 	mFinalTime = tf;
+	mDownSampleRate = downSampleRate;
 	initialize(elements);
 
 	for (ElementPtr c : elements)
@@ -57,12 +58,6 @@ Simulation::Simulation(ElementList elements, Real om, Real dt, Real tf, Logger& 
 	mLogger->LogMatrix(LogLevel::INFO, mSystemModel.getLUdecomp());
 	mLogger->Log(LogLevel::INFO) << "Known variables matrix j:" << std::endl;
 	mLogger->LogMatrix(LogLevel::INFO, mSystemModel.getRightSideVector());
-}
-
-Simulation::Simulation(ElementList elements, Real om, Real dt, Real tf, Logger& logger, Int downSampleRate, SimulationType simType)
-	: Simulation(elements, om, dt, tf, logger, simType) {
-
-	mDownSampleRate = downSampleRate;
 }
 
 
@@ -357,8 +352,8 @@ void Simulation::runRT(RTMethod rtMethod, bool startSynch, Logger& logger, Logge
 
 	// optional start synchronization
 	if (startSynch) {
-		step(logger, llogger, rlogger, false); // first step, sending the initial values
-		step(logger, llogger, rlogger, true); // blocking step for synchronization + receiving the initial state of the other network
+		step(llogger, rlogger, false); // first step, sending the initial values
+		step(llogger, rlogger, true); // blocking step for synchronization + receiving the initial state of the other network
 		increaseByTimeStep();
 	}
 
@@ -379,13 +374,13 @@ void Simulation::runRT(RTMethod rtMethod, bool startSynch, Logger& logger, Logge
 	do {
 		if (rtMethod == RTExceptions) {
 			try {
-				ret = step(logger, llogger, rlogger, false);
+				ret = step(llogger, rlogger, false);
 				sigwait(&alrmset, &sig);
 			} catch (TimerExpiredException& e) {
 				std::cerr << "timestep expired at " << mTime << std::endl;
 			}
 		} else if (rtMethod == RTTimerFD) {
-			ret = step(logger, llogger, rlogger, false);
+			ret = step(llogger, rlogger, false);
 			if (read(timerfd, timebuf, 8) < 0) {
 				std::perror("Read from timerfd failed");
 				std::exit(1);

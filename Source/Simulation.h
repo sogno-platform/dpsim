@@ -87,8 +87,7 @@ namespace DPsim {
 		/// Sets parameters to default values.
 		Simulation();
 		/// Creates system matrix according to
-		Simulation(ElementList elements, Real om, Real dt, Real tf, Logger& logger, SimulationType simType = SimulationType::DynPhasor);
-		Simulation(ElementList elements, Real om, Real dt, Real tf, Logger& logger, Int downSampleRate, SimulationType simType = SimulationType::DynPhasor);
+		Simulation(ElementList elements, Real om, Real dt, Real tf, Logger& logger, SimulationType simType = SimulationType::DynPhasor, Int downSampleRate = 1);
 		~Simulation();
 
 		/// TODO: check that every system matrix has the same dimensions
