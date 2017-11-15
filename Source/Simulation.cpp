@@ -91,7 +91,7 @@ void Simulation::initialize(ElementList newElements) {
 			for (Int node = 0; node < element->getVirtualNodesNum(); node++) {
 				currentVirtualNode++;
 				element->setVirtualNode(node, currentVirtualNode);
-				mLogger->Log(LogLevel::INFO) << "Created virtual node "<< node << "=" << currentVirtualNode 
+				mLogger->Log(LogLevel::INFO) << "Created virtual node "<< node << "=" << currentVirtualNode
 					<< " for " << element->getName() << std::endl;
 			}
 		}
@@ -398,8 +398,9 @@ void Simulation::runRT(RTMethod rtMethod, bool startSynch, Logger& logger, Logge
 	// cleanup
 	if (rtMethod == RTTimerFD) {
 		close(timerfd);
-	} else if (rtMethod == RTExceptions) {
-	timer_delete(timer);
+	}
+	else if (rtMethod == RTExceptions) {
+		timer_delete(timer);
 	}
 }
 #endif /* WITH_RT */

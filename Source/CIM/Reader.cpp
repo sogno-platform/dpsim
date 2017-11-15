@@ -94,13 +94,16 @@ ElementPtr Reader::mapACLineSegment(ACLineSegment* line) {
 		// TODO better error handling (throw exception?)
 		return nullptr;
 	}
+
 	Real r = line->r.value;
 	Real x = line->x.value;
+
 	mLogger->Log(LogLevel::INFO) << "Found ACLineSegment " << line->name << " rid=" << line->mRID << " node1=" << nodes[0] << " node2=" << nodes[1]
 		<< " R=" << r << " X=" << x << std::endl;
 
 	mLogger->Log(LogLevel::INFO) << "Create RxLine " << line->name << " node1=" << nodes[0] << " node2=" << nodes[1]
 		<< " R=" << r << " X=" << x << std::endl;
+
 	return std::make_shared<RxLine>(line->name, nodes[0], nodes[1], r, x/mFrequency);
 }
 
@@ -320,6 +323,7 @@ Matrix::Index Reader::mapTopologicalNode(String mrid) {
 	auto search = mTopNodes.find(mrid);
 	if (search == mTopNodes.end())
 		return -1;
+
 	return search->second;
 }
 
