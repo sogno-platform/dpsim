@@ -588,10 +588,19 @@ void DPsim::SimpSynGenUnitTestThreePhaseFault() {
 	//Real Rkq2 = 0;
 	//Real Llkq2 = 0;
 
+	Real Ka = 20;
+	Real Ta = 0.2;
+	Real Ke = 1;
+	Real Te = 0.314;
+	Real Kf = 0.063;
+	Real Tf = 0.35;
+	Real Tr = 1;
+	Real mVref = 1;
+
 	// Declare circuit components
 	ElementPtr gen = make_shared<SimplifiedVBR>("gen", 1, 2, 3,
 		nomPower, nomPhPhVoltRMS, nomFreq, poleNum, nomFieldCurr,
-		Rs, Ll, Lmd, Lmd0, Lmq, Lmq0, Rfd, Llfd, Rkd, Llkd, Rkq1, Llkq1, Rkq2, Llkq2, H, true);
+		Rs, Ll, Lmd, Lmd0, Lmq, Lmq0, Rfd, Llfd, Rkd, Llkd, Rkq1, Llkq1, Rkq2, Llkq2, H, false);
 	Real loadRes = 1037.8378;
 	ElementPtr r1 = make_shared<ResistorEMT>("r1", 1, 0, loadRes);
 	ElementPtr r2 = make_shared<ResistorEMT>("r2", 2, 0, loadRes);
@@ -604,8 +613,8 @@ void DPsim::SimpSynGenUnitTestThreePhaseFault() {
 	circElements.push_back(r3);
 
 	// Declare circuit components for resistance change
-	Real breakerRes = 0.001;
-	//Real breakerRes = 10.378378;
+	//Real breakerRes = 0.001;
+	Real breakerRes = 103.78378;
 	ElementPtr rBreaker1 = make_shared<ResistorEMT>("rbreak1", 1, 0, breakerRes);
 	ElementPtr rBreaker2 = make_shared<ResistorEMT>("rbreak2", 2, 0, breakerRes);
 	ElementPtr rBreaker3 = make_shared<ResistorEMT>("rbreak3", 3, 0, breakerRes);
@@ -621,7 +630,7 @@ void DPsim::SimpSynGenUnitTestThreePhaseFault() {
 	// Set up simulation
 	Real tf, dt, t;
 	Real om = 2.0*M_PI*60.0;
-	tf = 3; dt = 0.0001; t = 0;
+	tf = 15; dt = 0.0001; t = 0;
 	Int downSampling = 1;
 	Simulation newSim(circElements, om, dt, tf, log, downSampling, SimulationType::EMT);
 	newSim.setNumericalMethod(NumericalMethod::Trapezoidal_flux);
@@ -637,6 +646,7 @@ void DPsim::SimpSynGenUnitTestThreePhaseFault() {
 	Real mechPower = 5.5558e5;
 	shared_ptr<SimplifiedVBR> genPtr = std::dynamic_pointer_cast<SimplifiedVBR>(gen);
 	genPtr->init(om, dt, initActivePower, initReactivePower, initTerminalVolt, initVoltAngle, fieldVoltage, mechPower);
+	genPtr->AddExciter(Ta, Ka, Te, Ke, Tf, Kf, Tr, Lmd, Rfd);
 
 	// Calculate initial values for circuit at generator connection point
 	Real initApparentPower = sqrt(pow(initActivePower, 2) + pow(initReactivePower, 2));
@@ -653,7 +663,7 @@ void DPsim::SimpSynGenUnitTestThreePhaseFault() {
 	Real lastLogTime = 0;
 	Real logTimeStep = 0.00005;
 	newSim.setSwitchTime(0.1, 1);
-	newSim.setSwitchTime(2.1, 0);
+	//newSim.setSwitchTime(2.1, 0);
 
 	// Main Simulation Loop
 	while (newSim.getTime() < tf) {
@@ -876,3 +886,59 @@ void DPsim::SynGenUnitTestVBRDP() {
 	}
 
 }
+
+//void DPsim::ExciterFirstTest() {
+//
+//	// Define Object for saving data on a file
+//	Logger log("log.txt"),
+//		vtLog("data_vt.csv"),
+//		jLog("data_j.csv");
+//
+//
+//	// Define machine parameters in per unit
+//	Real Ka = 20;
+//	Real Ta = 0.2;
+//	Real Ke = 1;
+//	Real Te = 0.314;
+//	Real Kf = 0.063;
+//	Real Tf = 0.35;
+//	Real Tr = 1;
+//	Real mVref = 1;
+//
+//	// Declare circuit components
+//	ElementPtr exc = make_shared<Exciter>(Ta, Ka, Te, Ke, Tf, Kf, Tr, true);
+//	ElementList circElements;
+//	circElements.push_back(exc);
+//
+//	// Set up simulation
+//	Real tf, dt, t;
+//	Real om = 2.0*M_PI*60.0;
+//	tf = 10; dt = 0.001; t = 0;
+//	Int downSampling = 1;
+//	Simulation newSim(circElements, om, dt, tf, log, downSampling, SimulationType::DynPhasor);
+//	newSim.setNumericalMethod(NumericalMethod::Trapezoidal_flux);
+//	newSim.switchSystemMatrix(0);
+//
+//	// Initialize generator
+//
+//	shared_ptr<Exciter> genPtr = std::dynamic_pointer_cast<Exciter>(exc);
+//	genPtr->init(mVref);
+//
+//	std::cout << "A matrix:" << std::endl;
+//	std::cout << newSim.getSystemMatrix() << std::endl;
+//	std::cout << "vt vector:" << std::endl;
+//	std::cout << newSim.getLeftSideVector() << std::endl;
+//	std::cout << "j vector:" << std::endl;
+//	std::cout << newSim.getRightSideVector() << std::endl;
+//
+//
+//	Real lastLogTime = 0;
+//	Real logTimeStep = 0.001;
+//
+//	while (newSim.getTime() < tf) {
+//		std::cout << newSim.getTime() << std::endl;
+//		newSim.stepGeneratorVBR(vtLog, jLog, exc, newSim.getTime());
+//		newSim.increaseByTimeStep();
+//	}
+//
+//}

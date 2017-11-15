@@ -152,6 +152,7 @@
     <ClInclude Include="..\..\Source\Components\CapacitorDP.h" />
     <ClInclude Include="..\..\Source\Components\ComponentCommons.h" />
     <ClInclude Include="..\..\Source\Components\CurrentSourceDP.h" />
+    <ClInclude Include="..\..\Source\Components\Exciter.h" />
     <ClInclude Include="..\..\Source\Components\ExternalVoltageSource.h" />
     <ClInclude Include="..\..\Source\Components\IdealTransformerDP.h" />
     <ClInclude Include="..\..\Source\Components\IdealVoltageSourceDP.h" />
@@ -190,6 +191,7 @@
     <ClCompile Include="..\..\Source\Components\BaseComponent.cpp" />
     <ClCompile Include="..\..\Source\Components\CapacitorDP.cpp" />
     <ClCompile Include="..\..\Source\Components\CurrentSourceDP.cpp" />
+    <ClCompile Include="..\..\Source\Components\Exciter.cpp" />
     <ClCompile Include="..\..\Source\Components\ExternalVoltageSource.cpp" />
     <ClCompile Include="..\..\Source\Components\IdealTransformerDP.cpp" />
     <ClCompile Include="..\..\Source\Components\IdealVoltageSourceDP.cpp" />

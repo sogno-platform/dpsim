@@ -82,11 +82,25 @@ Matrix DPsim::Trapezoidal(Matrix states, Matrix A, Matrix B, Real dt, Matrix u)
 	return InvAux*Aux*states + InvAux*dt*B*u;
 }
 
+Real DPsim::Trapezoidal(Real states, Real A, Real B, Real dt, Real u)
+{
+
+	Real Aux = 1 + (dt / 2) * A;
+	Real Aux2 = 1 - (dt / 2) * A;
+	Real InvAux = 1 / Aux2;
+
+	return InvAux*Aux*states + InvAux*dt*B*u;
+}
+
 Matrix DPsim::Euler(Matrix states, Matrix A, Matrix B, Real dt, Matrix u)
 {
 	return states + dt*(A*states + B*u);
 }
 
+Real DPsim::Euler(Real states, Real A, Real B, Real dt, Real u)
+{
+	return states + dt*(A*states + B*u);
+}
 
 Matrix DPsim::Euler(Matrix states, Matrix A, Matrix B, Matrix C, Real dt, Matrix u)
 {

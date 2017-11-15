@@ -43,4 +43,7 @@ namespace DPsim {
 	void SynGenUnitTestVBR();
 	void SynGenUnitTestVBRDP();
 
+	// Exciter
+	void ExciterFirstTest();
+
 }

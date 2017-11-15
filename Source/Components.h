@@ -49,3 +49,4 @@
 #include "Components/IdealVoltageSourceEMT.h"
 #include "Components/SimplifiedSynGenEMT.h"
 #include "Components/SimplifiedVBR.h"
+#include "Components/Exciter.h"

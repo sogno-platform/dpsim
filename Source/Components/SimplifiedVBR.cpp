@@ -35,6 +35,8 @@ SimplifiedVBR::SimplifiedVBR(String name, Int node1, Int node2, Int node3,
 		Rs, Ll, Lmd, Lmd0, Lmq, Lmq0, Rfd, Llfd, Rkd, Llkd, Rkq1, Llkq1, Rkq2, Llkq2,
 		inertia, logActive) {
 
+	
+
 }
 
 SimplifiedVBR::~SimplifiedVBR() {
@@ -43,7 +45,9 @@ SimplifiedVBR::~SimplifiedVBR() {
 	}
 }
 
-
+void SimplifiedVBR::AddExciter(Real Ta, Real Ka, Real Te, Real Ke, Real Tf, Real Kf, Real Tr, Real Lad, Real Rfd) {
+	mExciter = Exciter(Ta, Ka, Te, Ke, Tf, Kf, Tr, Lad, Rfd, mVfd);
+}
 
 void SimplifiedVBR::init(Real om, Real dt,
 	Real initActivePower, Real initReactivePower, Real initTerminalVolt, Real initVoltAngle, Real initFieldVoltage, Real initMechPower) {
@@ -107,15 +111,7 @@ void SimplifiedVBR::init(Real om, Real dt,
 		mDVq,
 		mDVd;
 
-	//mDVa = inverseParkTransform(mThetaMech, mDVq, mDVd, 0)(0);
-	//mDVb = inverseParkTransform(mThetaMech, mDVq, mDVd, 0)(1);
-	//mDVc = inverseParkTransform(mThetaMech, mDVq, mDVd, 0)(2);
-
-	//mDVabc <<
-	//	mDVa,
-	//	mDVb,
-	//	mDVc;
-	//mDVabc_hist = mDVabc;
+	
 
 	mVa = inverseParkTransform(mThetaMech, mVq, mVd, mV0)(0);
 	mVb = inverseParkTransform(mThetaMech, mVq, mVd, mV0)(1);
@@ -154,15 +150,6 @@ void SimplifiedVBR::step(SystemModel& system, Real time) {
 
 void SimplifiedVBR::stepInPerUnit(Real om, Real dt, Real time, NumericalMethod numMethod) {
 
-	//mIabc <<
-	//	mIa,
-	//	mIb,
-	//	mIc;
-
-	//mIq = parkTransform(mThetaMech, mIa, mIb, mIc)(0);
-	//mId = parkTransform(mThetaMech, mIa, mIb, mIc)(1);
-	//mI0 = parkTransform(mThetaMech, mIa, mIb, mIc)(2);
-
 
 	// Calculate mechanical variables with euler
 	mElecTorque = (mPsimd*mIq - mPsimq*mId);
@@ -184,6 +171,9 @@ void SimplifiedVBR::stepInPerUnit(Real om, Real dt, Real time, NumericalMethod n
 	mIc = inverseParkTransform(mThetaMech, mIq, mId, 0)(2);
 	
 	// Calculate rotor flux likanges
+	mExciter.step(mVd, mVq, 1, dt, time);
+	Real vfsaved = mVfd;
+	mVfd = mExciter.UpdateFieldVoltage();
 
 		C_flux <<
 			0,
@@ -230,7 +220,7 @@ void SimplifiedVBR::stepInPerUnit(Real om, Real dt, Real time, NumericalMethod n
 
 
 	// Load resistance
-	if (time < 0.1 || time > 2.1)
+	if (time < 0.1 )
 	{
 		R_load <<
 			1037.8378 / mBase_Z, 0, 0,
@@ -240,9 +230,9 @@ void SimplifiedVBR::stepInPerUnit(Real om, Real dt, Real time, NumericalMethod n
 	else
 	{
 		R_load <<
-			0.001 / mBase_Z, 0, 0,
-			0, 0.001 / mBase_Z, 0,
-			0, 0, 0.001 / mBase_Z;
+			103.78378 / mBase_Z, 0, 0,
+			0, 103.78378 / mBase_Z, 0,
+			0, 0, 103.78378 / mBase_Z;
 	}
 
 }
