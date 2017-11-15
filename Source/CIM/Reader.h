@@ -26,6 +26,7 @@
 #include <map>
 #include <vector>
 
+#include "Definitions.h"
 #include "Components/BaseComponent.h"
 
 #include "CIMModel.hpp"
@@ -55,10 +56,10 @@ namespace CIM {
 			Real mFrequency;
 			// Maps the RID of a topological node to its simulation matrix index
 			// as given in the component constructors (1 for the first node).
-			std::map<String, Int> mTopNodes;
+			std::map<String, Matrix::Index> mTopNodes;
 			// Maps the RID of a ConductingEquipment to a list of nodes as given in
 			// the component constructors.
-			std::map<String, std::vector<Int>> mEqNodeMap;
+			std::map<String, std::vector<Matrix::Index>> mEqNodeMap;
 			// SvVoltage, if present, for each node (indexed starting with 0!)
 			SvVoltage **mVoltages;
 			// Maps the RID of a Terminal to its associated power flow
@@ -83,7 +84,7 @@ namespace CIM {
 			bool addFile(String filename);
 			void parseFiles();
 			ElementList& getComponents();
-			Int mapTopologicalNode(String mrid);
+			Matrix::Index mapTopologicalNode(String mrid);
 			Int getNumVoltageSources();
 
 			static Real unitValue(Real value, UnitMultiplier mult);

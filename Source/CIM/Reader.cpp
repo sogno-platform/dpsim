@@ -88,7 +88,7 @@ Reader::~Reader() {
 }
 
 ElementPtr Reader::mapACLineSegment(ACLineSegment* line) {
-	std::vector<Int> &nodes = mEqNodeMap.at(line->mRID); // TODO can fail
+	std::vector<Matrix::Index> &nodes = mEqNodeMap.at(line->mRID); // TODO can fail
 	if (nodes.size() != 2) {
 		mLogger->Log(LogLevel::WARN) << "ACLineSegment " << line->mRID << " has " << nodes.size() << " terminals, ignoring" << std::endl;
 		// TODO better error handling (throw exception?)
@@ -117,12 +117,12 @@ void Reader::mapEquivalentInjection(EquivalentInjection* inj) {
 }
 
 ElementPtr Reader::mapExternalNetworkInjection(ExternalNetworkInjection* inj) {
-	std::vector<Int> &nodes = mEqNodeMap.at(inj->mRID);
+	std::vector<Matrix::Index> &nodes = mEqNodeMap.at(inj->mRID);
 	if (nodes.size() != 1) {
 		mLogger->Log(LogLevel::ERROR) << "ExternalNetworkInjection " << inj->mRID << " has " << nodes.size() << " terminals, ignoring" << std::endl;
 		return nullptr;
 	}
-	Int node = nodes[0];
+	Matrix::Index node = nodes[0];
 	SvVoltage *volt = mVoltages[node-1];
 	if (!volt) {
 		mLogger->Log(LogLevel::ERROR) << "ExternalNetworkInjection " << inj->mRID << " has no associated SvVoltage, ignoring" << std::endl;
@@ -134,7 +134,7 @@ ElementPtr Reader::mapExternalNetworkInjection(ExternalNetworkInjection* inj) {
 }
 
 ElementPtr Reader::mapPowerTransformer(PowerTransformer* trans) {
-	std::vector<Int> &nodes = mEqNodeMap.at(trans->mRID);
+	std::vector<Matrix::Index> &nodes = mEqNodeMap.at(trans->mRID);
 	if (nodes.size() != trans->PowerTransformerEnd.size()) {
 		mLogger->Log(LogLevel::WARN) << "PowerTransformer " << trans->mRID << " has differing number of terminals and windings, ignoring" << std::endl;
 		return nullptr;
@@ -179,13 +179,13 @@ ElementPtr Reader::mapPowerTransformer(PowerTransformer* trans) {
 
 // TODO: don't use SvVoltage, but map to a SynchronGeneratorDP instead
 ElementPtr Reader::mapSynchronousMachine(SynchronousMachine* machine) {
-	std::vector<int> &nodes = mEqNodeMap.at(machine->mRID);
+	std::vector<Matrix::Index> &nodes = mEqNodeMap.at(machine->mRID);
 	if (nodes.size() != 1) {
 		// TODO: check with the model if this assumption (only 1 terminal) is always true
 		mLogger->Log(LogLevel::WARN) << "SynchronousMachine " << machine->mRID << " has " << nodes.size() << " terminals, ignoring" << std::endl;
 		return nullptr;
 	}
-	Int node = nodes[0];
+	Matrix::Index node = nodes[0];
 	SvVoltage *volt = mVoltages[node-1];
 	if (!volt) {
 		mLogger->Log(LogLevel::WARN) << "SynchronousMachine " << machine->mRID << " has no associated SvVoltage, ignoring" << std::endl;
@@ -216,7 +216,7 @@ ElementPtr Reader::mapComponent(BaseClass* obj) {
 }
 
 ElementPtr Reader::newPQLoad(String rid, String name) {
-	std::vector<int> &nodes = mEqNodeMap.at(rid);
+	std::vector<Matrix::Index> &nodes = mEqNodeMap.at(rid);
 	if (nodes.size() != 1) {
 		mLogger->Log(LogLevel::WARN) << rid << " has " << nodes.size() << " terminals; ignoring" << std::endl;
 		return nullptr;
@@ -227,7 +227,7 @@ ElementPtr Reader::newPQLoad(String rid, String name) {
 		return nullptr;
 	}
 	SvPowerFlow* flow = search->second;
-	Int node = nodes[0];
+	Matrix::Index node = nodes[0];
 	SvVoltage *volt = mVoltages[node-1];
 	if (!volt) {
 		mLogger->Log(LogLevel::WARN) << rid << " has no associated SvVoltage, ignoring" << std::endl;
@@ -263,7 +263,7 @@ void Reader::parseFiles() {
 		TopologicalNode* topNode = dynamic_cast<TopologicalNode*>(obj);
 		if (topNode) {
 			mLogger->Log(LogLevel::INFO) << "TopologicalNode " << mTopNodes.size()+1 << " rid=" << topNode->mRID << " Terminals:" << std::endl;
-			mTopNodes[topNode->mRID] = mTopNodes.size()+1;
+			mTopNodes[topNode->mRID] = (Matrix::Index) mTopNodes.size()+1;
 			for (Terminal* term : topNode->Terminal) {
 				mLogger->Log(LogLevel::INFO) << "    " << term->mRID << std::endl;
 				ConductingEquipment *eq = term->ConductingEquipment;
@@ -271,11 +271,11 @@ void Reader::parseFiles() {
 					mLogger->Log(LogLevel::WARN) << "Terminal " << term->mRID << " has no Conducting Equipment, ignoring!" << std::endl;
 				} else {
 					mLogger->Log(LogLevel::INFO) << "    eq " << eq->mRID << " sequenceNumber " << term->sequenceNumber << std::endl;
-					std::vector<int> &nodesVec = mEqNodeMap[eq->mRID];
-					if (nodesVec.size() < term->sequenceNumber) {
+					std::vector<Matrix::Index> &nodesVec = mEqNodeMap[eq->mRID];
+					if (nodesVec.size() < (unsigned) term->sequenceNumber) {
 						nodesVec.resize(term->sequenceNumber);
 					}
-					nodesVec[term->sequenceNumber-1] = mTopNodes.size();
+					nodesVec[term->sequenceNumber-1] = (Matrix::Index) mTopNodes.size();
 				}
 			}
 		}
@@ -316,7 +316,7 @@ ElementList& Reader::getComponents() {
 	return mComponents;
 }
 
-int Reader::mapTopologicalNode(String mrid) {
+Matrix::Index Reader::mapTopologicalNode(String mrid) {
 	auto search = mTopNodes.find(mrid);
 	if (search == mTopNodes.end())
 		return -1;

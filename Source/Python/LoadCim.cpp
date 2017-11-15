@@ -81,7 +81,7 @@ PyObject* Python::LoadCim(PyObject* self, PyObject* args) {
 	ElementList comps = reader->getComponents();
 	list = PyList_New(comps.size());
 
-	for (int i = 0; i < comps.size(); i++) {
+	for (unsigned i = 0; i < comps.size(); i++) {
 		Python::Component* pyComp = PyObject_New(Component, &Python::ComponentType);
 		PyObject_Init((PyObject*) pyComp, &Python::ComponentType);
 
