@@ -23,12 +23,12 @@
 
 #include "Simulation.h"
 
-#ifdef __linux__
-#include <signal.h>
-#include <sys/timerfd.h>
-#include <time.h>
-#include <unistd.h>
-#endif
+#ifdef WITH_RT
+  #include <signal.h>
+  #include <sys/timerfd.h>
+  #include <time.h>
+  #include <unistd.h>
+#endif /* WITH_RT */
 
 using namespace DPsim;
 
@@ -38,7 +38,7 @@ Simulation::Simulation() {
 	mCurrentSwitchTimeIndex = 0;
 }
 
-Simulation::Simulation(ElementList elements, Real om, Real dt, Real tf, Logger& logger, SimulationType simType)
+Simulation::Simulation(ElementList elements, Real om, Real dt, Real tf, Logger& logger, SimulationType simType, Int downSampleRate)
 	: Simulation() {
 
 	mLogger = &logger;
@@ -46,6 +46,7 @@ Simulation::Simulation(ElementList elements, Real om, Real dt, Real tf, Logger& 
 	mSystemModel.setTimeStep(dt);
 	mSystemModel.setOmega(om);
 	mFinalTime = tf;
+	mDownSampleRate = downSampleRate;
 	initialize(elements);
 
 	for (ElementPtr c : elements)
@@ -59,17 +60,10 @@ Simulation::Simulation(ElementList elements, Real om, Real dt, Real tf, Logger& 
 	mLogger->LogMatrix(LogLevel::INFO, mSystemModel.getRightSideVector());
 }
 
-Simulation::Simulation(ElementList elements, Real om, Real dt, Real tf, Logger& logger, Int downSampleRate, SimulationType simType)
-	: Simulation(elements, om, dt, tf, logger, simType) {
-
-	mDownSampleRate = downSampleRate;
-}
-
 
 Simulation::~Simulation() {
 
 }
-
 
 void Simulation::initialize(ElementList newElements) {
 	Int maxNode = 0;
@@ -87,7 +81,7 @@ void Simulation::initialize(ElementList newElements) {
 		}
 		if (element->getNode2() > maxNode) {
 			maxNode = element->getNode2();
-		}		
+		}
 	}
 	mLogger->Log(LogLevel::INFO) << "Maximum node number: " << maxNode << std::endl;
 	currentVirtualNode = maxNode;
@@ -97,7 +91,7 @@ void Simulation::initialize(ElementList newElements) {
 			for (Int node = 0; node < element->getVirtualNodesNum(); node++) {
 				currentVirtualNode++;
 				element->setVirtualNode(node, currentVirtualNode);
-				mLogger->Log(LogLevel::INFO) << "Created virtual node "<< node << "=" << currentVirtualNode 
+				mLogger->Log(LogLevel::INFO) << "Created virtual node "<< node << "=" << currentVirtualNode
 					<< " for " << element->getName() << std::endl;
 			}
 		}
@@ -109,7 +103,7 @@ void Simulation::initialize(ElementList newElements) {
 
 	// Create right and left vector
 	mSystemModel.initialize(numNodes);
-	
+
 	// Initialize right side vector and components
 	for (ElementPtr element : newElements) {
 		element->init(mSystemModel.getOmega(), mSystemModel.getTimeStep());
@@ -125,7 +119,7 @@ void Simulation::initialize(ElementList newElements) {
 
 void Simulation::addSystemTopology(ElementList newElements) {
 	mElementsVector.push_back(newElements);
-	
+
 	// It is assumed that the system size does not change
 	mSystemModel.createEmptySystemMatrix();
 
@@ -303,7 +297,7 @@ void Simulation::setNumericalMethod(NumericalMethod numMethod) {
 	mSystemModel.setNumMethod(numMethod);
 }
 
-#ifdef __linux__
+#ifdef WITH_RT
 void Simulation::alarmHandler(int sig, siginfo_t* si, void* ctx) {
 	Simulation *sim = static_cast<Simulation*>(si->si_value.sival_ptr);
 	/* only throw an exception if we're actually behind */
@@ -358,8 +352,8 @@ void Simulation::runRT(RTMethod rtMethod, bool startSynch, Logger& logger, Logge
 
 	// optional start synchronization
 	if (startSynch) {
-		step(logger, llogger, rlogger, false); // first step, sending the initial values
-		step(logger, llogger, rlogger, true); // blocking step for synchronization + receiving the initial state of the other network
+		step(llogger, rlogger, false); // first step, sending the initial values
+		step(llogger, rlogger, true); // blocking step for synchronization + receiving the initial state of the other network
 		increaseByTimeStep();
 	}
 
@@ -380,13 +374,13 @@ void Simulation::runRT(RTMethod rtMethod, bool startSynch, Logger& logger, Logge
 	do {
 		if (rtMethod == RTExceptions) {
 			try {
-				ret = step(logger, llogger, rlogger, false);
+				ret = step(llogger, rlogger, false);
 				sigwait(&alrmset, &sig);
 			} catch (TimerExpiredException& e) {
 				std::cerr << "timestep expired at " << mTime << std::endl;
 			}
 		} else if (rtMethod == RTTimerFD) {
-			ret = step(logger, llogger, rlogger, false);
+			ret = step(llogger, rlogger, false);
 			if (read(timerfd, timebuf, 8) < 0) {
 				std::perror("Read from timerfd failed");
 				std::exit(1);
@@ -404,8 +398,9 @@ void Simulation::runRT(RTMethod rtMethod, bool startSynch, Logger& logger, Logge
 	// cleanup
 	if (rtMethod == RTTimerFD) {
 		close(timerfd);
-	} else if (rtMethod == RTExceptions) {
-	timer_delete(timer);
+	}
+	else if (rtMethod == RTExceptions) {
+		timer_delete(timer);
 	}
 }
-#endif
+#endif /* WITH_RT */

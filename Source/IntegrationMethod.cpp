@@ -26,7 +26,7 @@ using namespace DPsim;
 
 Matrix DPsim::Trapezoidal(Matrix states, Matrix A, Matrix B, Real dt, Matrix u_new, Matrix u_old)
 {
-	int n = states.rows();
+	Matrix::Index n = states.rows();
 	Matrix I = Matrix::Identity(n, n);
 
 	Matrix Aux = I + (dt / 2) * A;
@@ -38,7 +38,7 @@ Matrix DPsim::Trapezoidal(Matrix states, Matrix A, Matrix B, Real dt, Matrix u_n
 
 Matrix DPsim::Trapezoidal(Matrix states, Matrix A, Matrix B, Matrix C, Real dt, Matrix u_new, Matrix u_old)
 {
-	int n = states.rows();
+	Matrix::Index n = states.rows();
 	Matrix I = Matrix::Identity(n, n);
 
 	Matrix Aux = I + (dt / 2) * A;
@@ -50,7 +50,7 @@ Matrix DPsim::Trapezoidal(Matrix states, Matrix A, Matrix B, Matrix C, Real dt, 
 
 Matrix DPsim::Trapezoidal(Matrix states, Matrix A, Matrix B, Matrix C, Real dt, Matrix u)
 {
-	int n = states.rows();
+	Matrix::Index n = states.rows();
 	Matrix I = Matrix::Identity(n, n);
 
 	Matrix Aux = I + (dt / 2) * A;
@@ -72,7 +72,7 @@ Real DPsim::Trapezoidal(Real states, Real A, Real B, Real C, Real dt, Real u)
 
 Matrix DPsim::Trapezoidal(Matrix states, Matrix A, Matrix B, Real dt, Matrix u)
 {
-	int n = states.rows();
+	Matrix::Index n = states.rows();
 
 	Matrix I = Matrix::Identity(n, n);
 	Matrix Aux = I + (dt / 2) * A;

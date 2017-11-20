@@ -22,29 +22,28 @@
 
 #include "Python/Component.h"
 
-#include "CIM/Reader.h"
 #include "Components.h"
-#include "Components/ExternalCurrentSource.h"
-#include "Components/ExternalVoltageSource.h"
 
 using namespace DPsim;
 
 PyObject* Python::Component::newfunc(PyTypeObject* type, PyObject *args, PyObject *kwds) {
 	Component* self = (Component*) type->tp_alloc(type, 0);
 	if (self)
-		self->comp = nullptr;
+		self->comp = ElementPtr(nullptr);
+
 	return (PyObject*) self;
 }
 
 void Python::Component::dealloc(Python::Component* self) {
-	if (self->comp)
-		delete self->comp;
+	self->comp.~ElementPtr();
+
 	Py_TYPE(self)->tp_free((PyObject*)self);
 }
 
 PyObject* Python::Component::str(Python::Component* self) {
 	if (!self->comp)
 		return PyUnicode_FromString("<unitialized Component>");
+
 	return PyUnicode_FromString(self->comp->getName().c_str());
 }
 
@@ -53,44 +52,51 @@ PyObject* Python::Component::getattr(Python::Component* self, char* name) {
 		PyErr_SetString(PyExc_ValueError, "getattr on unitialized Component");
 		return nullptr;
 	}
+
 	std::map<std::string, CompAttr>& attrMap = self->comp->getAttrMap();
+
 	auto search = attrMap.find(name);
 	if (search == attrMap.end()) {
 		PyErr_Format(PyExc_AttributeError, "Component has no attribute '%s'", name);
 		return nullptr;
 	}
+
 	CompAttr attr = search->second;
-	switch (attr.type) {
+	switch (attr.mType) {
 	case AttrReal:
 		return PyFloat_FromDouble(*((Real*) attr.value));
 	case AttrInt:
-		return PyLong_FromLong(*((Integer*) attr.value));
+		return PyLong_FromLong(*((Int*) attr.value));
 	case AttrString:
 		return PyUnicode_FromString(((std::string*) attr.value)->c_str());
 	case AttrComplex:
 		Complex c = *((Complex*) attr.value);
 		return PyComplex_FromDoubles(c.real(), c.imag());
 	}
+
 	PyErr_Format(PyExc_SystemError, "invalid type in internal attribute map");
+
 	return nullptr;
 }
 
 int Python::Component::setattr(Python::Component* self, char* name, PyObject *v) {
-	Integer i;
+	Int i;
 	Real r;
 
 	if (!self->comp) {
 		PyErr_SetString(PyExc_ValueError, "setattr on unitialized Component");
 		return -1;
 	}
+
 	std::map<std::string, CompAttr>& attrMap = self->comp->getAttrMap();
 	auto search = attrMap.find(name);
 	if (search == attrMap.end()) {
 		PyErr_Format(PyExc_AttributeError, "Component has no attribute '%s'", name);
 		return -1;
 	}
+
 	CompAttr attr = search->second;
-	switch (attr.type) {
+	switch (attr.mType) {
 	case AttrReal:
 		r = PyFloat_AsDouble(v);
 		if (PyErr_Occurred())
@@ -101,7 +107,7 @@ int Python::Component::setattr(Python::Component* self, char* name, PyObject *v)
 		i = PyLong_AsLong(v);
 		if (PyErr_Occurred())
 			return -1;
-		*((Integer*) attr.value) = i;
+		*((Int*) attr.value) = i;
 		break;
 	case AttrString:
 		if (!PyUnicode_Check(v))
@@ -117,21 +123,25 @@ int Python::Component::setattr(Python::Component* self, char* name, PyObject *v)
 		PyErr_Format(PyExc_SystemError, "invalid type in internal attribute map");
 		return -1;
 	}
+
 	return 0;
 }
 
-bool Python::compsFromPython(PyObject* list, std::vector<BaseComponent*>& comps) {
+bool Python::compsFromPython(PyObject* list, ElementList& comps) {
 	if (!PyList_Check(list))
 		return false;
+
 	for (int i = 0; i < PyList_Size(list); i++) {
 		PyObject* obj = PyList_GetItem(list, i);
 		if (!PyObject_TypeCheck(obj, &Python::ComponentType)) {
 			comps.clear();
 			return false;
 		}
+
 		Component* pyComp = (Component*) obj;
 		comps.push_back(pyComp->comp);
 	}
+
 	return true;
 }
 
@@ -154,7 +164,8 @@ PyObject* Python::ExternalCurrentSource(PyObject* self, PyObject* args) {
 		return nullptr;
 
 	Component *pyComp = PyObject_New(Component, &Python::ComponentType);
-	pyComp->comp = new DPsim::ExternalCurrentSource(name, src, dest, Complex(initCurrent.real, initCurrent.imag));
+	pyComp->comp = std::make_shared<DPsim::ExternalCurrentSource>(name, src, dest, Complex(initCurrent.real, initCurrent.imag));
+
 	return (PyObject*) pyComp;
 }
 
@@ -179,7 +190,8 @@ PyObject* Python::ExternalVoltageSource(PyObject* self, PyObject* args) {
 		return nullptr;
 
 	Component *pyComp = PyObject_New(Component, &Python::ComponentType);
-	pyComp->comp = new DPsim::ExternalVoltageSource(name, src, dest, Complex(initVoltage.real, initVoltage.imag), num);
+	pyComp->comp = std::make_shared<DPsim::ExternalVoltageSource>(name, src, dest, Complex(initVoltage.real, initVoltage.imag), num);
+
 	return (PyObject*) pyComp;
 }
 
@@ -200,19 +212,20 @@ PyObject* Python::Inductor(PyObject* self, PyObject* args) {
 		return nullptr;
 
 	Component *pyComp = PyObject_New(Component, &Python::ComponentType);
-	pyComp->comp = new DPsim::Inductor(name, src, dest, inductance);
+	pyComp->comp = std::make_shared<DPsim::InductorDP>(name, src, dest, inductance);
+
 	return (PyObject*) pyComp;
 }
 
-const char *Python::DocLinearResistor =
-"LinearResistor(name, node1, node2, resistance)\n"
-"Construct a new linear resistor.\n"
+const char *Python::DocResistor =
+"Resistor(name, node1, node2, resistance)\n"
+"Construct a new resistor.\n"
 "\n"
 "Attributes: ``resistance``.\n"
 "\n"
 ":param resistance: Resistance in Ohm.\n"
 ":returns: A new `Component` representing this resistor.\n";
-PyObject* Python::LinearResistor(PyObject* self, PyObject* args) {
+PyObject* Python::Resistor(PyObject* self, PyObject* args) {
 	const char *name;
 	double resistance;
 	int src, dest;
@@ -221,7 +234,8 @@ PyObject* Python::LinearResistor(PyObject* self, PyObject* args) {
 		return nullptr;
 
 	Component *pyComp = PyObject_New(Component, &Python::ComponentType);
-	pyComp->comp = new DPsim::LinearResistor(name, src, dest, resistance);
+	pyComp->comp = std::make_shared<DPsim::ResistorDP>(name, src, dest, resistance);
+
 	return (PyObject*) pyComp;
 }
 
@@ -247,69 +261,16 @@ PyObject* Python::VoltSourceRes(PyObject* self, PyObject* args) {
 		return nullptr;
 
 	Component *pyComp = PyObject_New(Component, &Python::ComponentType);
-	pyComp->comp = new DPsim::VoltSourceRes(name, src, dest, Complex(voltage.real, voltage.imag), resistance);
+	pyComp->comp = std::make_shared<DPsim::VoltSourceRes>(name, src, dest, Complex(voltage.real, voltage.imag), resistance);
+
 	return (PyObject*) pyComp;
-}
-
-const char* Python::DocLoadCim =
-"load_cim(filenames, frequency=50.0)\n"
-"Load a network from CIM file(s).\n"
-"\n"
-":param filenames: Either a filename or a list of filenames of CIM files to be loaded.\n"
-":param frequency: Nominal system frequency in Hz.\n"
-":returns: A list of `dpsim.Component`.\n"
-"\n"
-"Note that in order for the CIM parser to function properly, the CSV "
-"files containing the alias configuration have to be in the working directory "
-"of the program.\n";
-PyObject* Python::LoadCim(PyObject* self, PyObject* args) {
-	double frequency = 50;
-	PyObject *list;
-	PyBytesObject *filename;
-	CIMReader *reader;
-
-	if (PyArg_ParseTuple(args, "O&|d", PyUnicode_FSConverter, &filename, &frequency)) {
-		reader = new CIMReader(2*PI*frequency);
-		reader->addFile(PyBytes_AsString((PyObject*) filename));
-		Py_DECREF(filename);
-	} else if (PyArg_ParseTuple(args, "O|d", &list, &frequency)) {
-		PyErr_Clear();
-		if (!PyList_Check(list)) {
-			PyErr_SetString(PyExc_TypeError, "First argument must be filename or list of filenames");
-			return nullptr;
-		}
-		reader = new CIMReader(2*PI*frequency);
-		for (int i = 0; i < PyList_Size(list); i++) {
-			if (!PyUnicode_FSConverter(PyList_GetItem(list, i), &filename)) {
-				delete reader;
-				PyErr_SetString(PyExc_TypeError, "First argument must be filename or list of filenames");
-				return nullptr;
-			}
-			reader->addFile(PyBytes_AsString((PyObject*) filename));
-			Py_DECREF(filename);
-		}
-	} else {
-		PyErr_SetString(PyExc_TypeError, "First argument must be filename or list of filenames");
-		return nullptr;
-	}
-	reader->parseFiles();
-	std::vector<BaseComponent*> comps = reader->getComponents();
-	list = PyList_New(comps.size());
-	for (int i = 0; i < comps.size(); i++) {
-		Component* pyComp = PyObject_New(Component, &Python::ComponentType);
-		PyObject_Init((PyObject*) pyComp, &Python::ComponentType);
-		pyComp->comp = comps[i];
-		PyList_SET_ITEM(list, i, (PyObject*) pyComp);
-	}
-	delete reader;
-	return list;
 }
 
 static const char* DocComponent =
 "A component of a network that is to be simulated.\n"
 "\n"
 "Instances of this class should either be created with the module-level "
-"pseudo-constructors (like `LinearResistor`) or via `load_cim`. The "
+"pseudo-constructors (like `Resistor`) or via `load_cim`. The "
 "constructors all accept the same first three arguments: ``name``, a simple "
 "string used for logging purposes, and ``node1`` / ``node2``. These arguments "
 "are integers identifying the topological nodes that the component is connected "

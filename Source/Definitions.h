@@ -25,14 +25,11 @@
 
 #include <cmath>
 #include <complex>
-#include <Eigen/Dense>
-#include <Eigen/SparseCore>
 #include <string>
 #include <memory>
 
-// This project is using shared pointers
-using std::shared_ptr;
-using std::make_shared;
+#include <Eigen/Dense>
+#include <Eigen/SparseCore>
 
 // VS2017 doesn't define M_PI unless _USE_MATH_DEFINES is included before cmath
 // which is hard to guarantee, so we make sure it is defined here
@@ -55,7 +52,7 @@ namespace DPsim {
 	typedef std::complex<Real> Complex;
 	typedef bool Bool;
 	typedef std::string String;
-	
+
 	// ### Constants ###
 	static const Complex jComp(0.0, 1.0);
 
