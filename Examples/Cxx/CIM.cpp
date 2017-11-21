@@ -71,9 +71,15 @@ static void readFixedCIMFiles_IEEE9bus() {
 	testCIMReader(filenames);
 }
 
-int main() {
-	readFixedCIMFiles_LineLoad();
-	readFixedCIMFiles_IEEE9bus();
+int main(int argc, char *argv[]) {
+	std::list<String> filenames;
+	
+	for (int i = 1; i < argc; i++) {
+                std::cout << "Adding file: " << argv[i] << std::endl;
+                filenames.push_back(String(argv[i]));
+        }
 
+        testCIMReader(filenames);
+	
 	return 0;
 }

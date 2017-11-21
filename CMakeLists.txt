@@ -16,6 +16,8 @@ set(CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/CMake")
 
 set(Python_ADDITIONAL_VERSIONS 3.5 3.6 3.7)
 
+set(CIM_DIR 16v29a)
+
 find_package(Eigen3 3.0 REQUIRED)
 find_package(CIMpp)
 find_package(VILLASnode)

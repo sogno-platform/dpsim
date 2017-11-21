@@ -1,6 +1,8 @@
 option(CIMPP_DIR "CIM++ installation directory" ../CIMpp)
 
-file(TO_CMAKE_PATH $ENV{APPDATA} APPDATA)
+if(WIN32)
+	file(TO_CMAKE_PATH $ENV{APPDATA} APPDATA)
+endif()
 
 find_path(CIMPP_INCLUDE_DIR
 	NAMES CIMModel.hpp
@@ -15,7 +17,7 @@ find_path(CIMPP_INCLUDE_DIR
 )
 
 find_library(CIMPP_LIBRARY
-	NAMES cimpp
+	NAMES cimpp${CIM_DIR}
 	PATH_SUFFIXES
 		lib/static
 	PATHS
