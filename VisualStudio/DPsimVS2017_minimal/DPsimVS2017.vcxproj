@@ -185,9 +185,7 @@
     <ClInclude Include="..\..\Source\Utilities.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\Examples\C++\DPsimExample.cpp" />
-    <ClCompile Include="..\..\Examples\C++\ShmemTest.cpp" />
-    <ClCompile Include="..\..\Examples\C++\SynchronGenUnitTest.cpp" />
+    <ClCompile Include="..\..\Examples\Cxx\SynchronGenerators\SimpSynGenThreePhaseFault.cpp" />
     <ClCompile Include="..\..\Source\Components\BaseComponent.cpp" />
     <ClCompile Include="..\..\Source\Components\CapacitorDP.cpp" />
     <ClCompile Include="..\..\Source\Components\CurrentSourceDP.cpp" />

@@ -67,7 +67,7 @@ void Exciter::step(Real mVd, Real mVq, Real Vref, Real dt, Real time) {
 	Real dUf = (mVr - mVse - mKe*mVf) / mTe;
 	mVis = Euler(mVis, -1, mKf, dt / mTf, dUf);
 	// Amplifier equation
-	mVr = Euler(mVr, -1, mKa, dt / mTa, mVref - mVm - mVis);
+	mVr = Euler(mVr, -1, mKa, dt / mTa, Vref - mVm - mVis);
 	// Exciter
 	mVse = 0.0039*exp(mVf*1.555);
 	mVf = Euler(mVf, -mKe, 1, dt / mTe, mVr - mVse);

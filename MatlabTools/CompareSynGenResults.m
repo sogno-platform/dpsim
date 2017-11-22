@@ -16,10 +16,10 @@ figure(1)
 hold off
 plot(VoltageVector(:,1),VoltageVector(:,2));
 hold on
-plot(VoltageVector(:,1),VoltageVector(:,3));
-plot(VoltageVector(:,1),VoltageVector(:,4));
+% plot(VoltageVector(:,1),VoltageVector(:,3));
+% plot(VoltageVector(:,1),VoltageVector(:,4));
 
-% plot(tout,voltages(:,1),'--')
+plot(tout,voltages(:,1),'--')
 % plot(tout,voltages(:,2),'--')
 % plot(tout,voltages(:,3),'--')
 % plot(Results_PLECS(:,1),Results_PLECS(:,2),'--');
@@ -34,10 +34,10 @@ figure(2)
 hold off
 plot(CurrentVector(:,1),CurrentVector(:,2));
 hold on
-plot(CurrentVector(:,1),CurrentVector(:,3));
-plot(CurrentVector(:,1),CurrentVector(:,4));
+% plot(CurrentVector(:,1),CurrentVector(:,3));
+% plot(CurrentVector(:,1),CurrentVector(:,4));
 
-% plot(tout,currents(:,1),'--')
+plot(tout,currents(:,1),'--')
 % plot(tout,currents(:,2),'--')
 % plot(tout,currents(:,3),'--')
 

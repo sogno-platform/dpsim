@@ -40,6 +40,14 @@ int main() {
 	Real J = 2.8898e+04;
 	Real H = 3.7;
 
+	Real Ka = 20;
+	Real Ta = 0.2;
+	Real Ke = 1;
+	Real Te = 0.314;
+	Real Kf = 0.063;
+	Real Tf = 0.35;
+	Real Tr = 1;
+
 	Real Rs = 0.003;
 	Real Ll = 0.15;
 	Real Lmd = 1.6599;
@@ -58,7 +66,7 @@ int main() {
 	//Real Llkq2 = 0;
 
 	// Declare circuit components
-	ElementPtr gen = std::make_shared<SimplifiedSynchronGeneratorEMT>("gen", 1, 2, 3,
+	ElementPtr gen = std::make_shared<SimplifiedVBR>("gen", 1, 2, 3,
 		nomPower, nomPhPhVoltRMS, nomFreq, poleNum, nomFieldCurr,
 		Rs, Ll, Lmd, Lmd0, Lmq, Lmq0, Rfd, Llfd, Rkd, Llkd, Rkq1, Llkq1, Rkq2, Llkq2, H);
 	Real loadRes = 1037.8378;
@@ -73,27 +81,27 @@ int main() {
 	circElements.push_back(r3);
 
 	// Declare circuit components for resistance change
-	Real breakerRes = 0.001;
-	ElementPtr rBreaker1 = std::make_shared<ResistorEMT>("rbreak1", 1, 0, breakerRes);
-	ElementPtr rBreaker2 = std::make_shared<ResistorEMT>("rbreak2", 2, 0, breakerRes);
-	ElementPtr rBreaker3 = std::make_shared<ResistorEMT>("rbreak3", 3, 0, breakerRes);
-	ElementList circElementsBreakerOn;
-	circElementsBreakerOn.push_back(gen);
-	circElementsBreakerOn.push_back(rBreaker1);
-	circElementsBreakerOn.push_back(rBreaker2);
-	circElementsBreakerOn.push_back(rBreaker3);
-	circElementsBreakerOn.push_back(r1);
-	circElementsBreakerOn.push_back(r2);
-	circElementsBreakerOn.push_back(r3);
+	//Real breakerRes = 0.001;
+	//ElementPtr rBreaker1 = std::make_shared<ResistorEMT>("rbreak1", 1, 0, breakerRes);
+	//ElementPtr rBreaker2 = std::make_shared<ResistorEMT>("rbreak2", 2, 0, breakerRes);
+	//ElementPtr rBreaker3 = std::make_shared<ResistorEMT>("rbreak3", 3, 0, breakerRes);
+	//ElementList circElementsBreakerOn;
+	//circElementsBreakerOn.push_back(gen);
+	//circElementsBreakerOn.push_back(rBreaker1);
+	//circElementsBreakerOn.push_back(rBreaker2);
+	//circElementsBreakerOn.push_back(rBreaker3);
+	//circElementsBreakerOn.push_back(r1);
+	//circElementsBreakerOn.push_back(r2);
+	//circElementsBreakerOn.push_back(r3);
 
 	// Set up simulation
 	Real tf, dt, t;
 	Real om = 2.0*M_PI*60.0;
-	tf = 0.3; dt = 0.0000001; t = 0;
-	Int downSampling = 50;
+	tf = 10; dt = 0.0001; t = 0;
+	Int downSampling = 1;
 	Simulation newSim(circElements, om, dt, tf, log, SimulationType::EMT, downSampling);
 	newSim.setNumericalMethod(NumericalMethod::Trapezoidal_flux);
-	newSim.addSystemTopology(circElementsBreakerOn);
+	//newSim.addSystemTopology(circElementsBreakerOn);
 	newSim.switchSystemMatrix(0);
 
 	// Initialize generator
@@ -103,8 +111,9 @@ int main() {
 	Real initVoltAngle = -DPS_PI / 2;
 	Real fieldVoltage = 7.0821;
 	Real mechPower = 5.5558e5;
-	shared_ptr<SimplifiedSynchronGeneratorEMT> genPtr = std::dynamic_pointer_cast<SimplifiedSynchronGeneratorEMT>(gen);
+	shared_ptr<SimplifiedVBR> genPtr = std::dynamic_pointer_cast<SimplifiedVBR>(gen);
 	genPtr->init(om, dt, initActivePower, initReactivePower, initTerminalVolt, initVoltAngle, fieldVoltage, mechPower);
+	genPtr->AddExciter(Ta, Ka, Te, Ke, Tf, Kf, Tr, Lmd, Rfd);
 
 	// Calculate initial values for circuit at generator connection point
 	Real initApparentPower = sqrt(pow(initActivePower, 2) + pow(initReactivePower, 2));
@@ -120,8 +129,8 @@ int main() {
 
 	Real lastLogTime = 0;
 	Real logTimeStep = 0.00005;
-	newSim.setSwitchTime(0.1, 1);
-	newSim.setSwitchTime(0.2, 0);
+	//newSim.setSwitchTime(0.1, 1);
+	//newSim.setSwitchTime(0.2, 0);
 
 	// Main Simulation Loop
 	while (newSim.getTime() < tf) {

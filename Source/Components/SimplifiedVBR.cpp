@@ -92,8 +92,8 @@ void SimplifiedVBR::init(Real om, Real dt,
 	// Correcting variables
 	mThetaMech = mThetaMech + PI / 2;
 	mMechTorque = -mMechTorque;
-	mIq = -mIq;
-	mId = -mId;
+	//mIq = -mIq;
+	//mId = -mId;
 
 	// #### VBR Model Dynamic variables #######################################
 
@@ -153,7 +153,8 @@ void SimplifiedVBR::stepInPerUnit(Real om, Real dt, Real time, NumericalMethod n
 
 	// Calculate mechanical variables with euler
 	mElecTorque = (mPsimd*mIq - mPsimq*mId);
-	mOmMech = mOmMech + dt * (1. / (2. * mH) * (mElecTorque - mMechTorque));
+	mOmMech = mOmMech + dt * (1. / (2. * mH) * (mMechTorque - mElecTorque)); 
+	//mOmMech = 1;
 	mThetaMech = mThetaMech + dt * (mOmMech* mBase_OmMech);
 
 	Matrix R(2, 2);
@@ -165,6 +166,9 @@ void SimplifiedVBR::stepInPerUnit(Real om, Real dt, Real time, NumericalMethod n
 
 	mIq = mDqStatorCurrents(0, 0);
 	mId = mDqStatorCurrents(1, 0);
+
+	mVq = -mRs*mIq - mOmMech*mDLd*mId + mDVq;
+	mVd = -mRs*mId + mOmMech*mDLq*mIq + mDVd;
 
 	mIa = inverseParkTransform(mThetaMech, mIq, mId, 0)(0);
 	mIb = inverseParkTransform(mThetaMech, mIq, mId, 0)(1);
@@ -220,20 +224,20 @@ void SimplifiedVBR::stepInPerUnit(Real om, Real dt, Real time, NumericalMethod n
 
 
 	// Load resistance
-	if (time < 0.1 )
-	{
+	//if (time < 0.1 )
+	//{
 		R_load <<
 			1037.8378 / mBase_Z, 0, 0,
 			0, 1037.8378 / mBase_Z, 0,
 			0, 0, 1037.8378 / mBase_Z;
-	}
-	else
-	{
-		R_load <<
-			103.78378 / mBase_Z, 0, 0,
-			0, 103.78378 / mBase_Z, 0,
-			0, 0, 103.78378 / mBase_Z;
-	}
+	//}
+	//else
+	//{
+	//	R_load <<
+	//		103.78378 / mBase_Z, 0, 0,
+	//		0, 103.78378 / mBase_Z, 0,
+	//		0, 0, 103.78378 / mBase_Z;
+	//}
 
 }
 

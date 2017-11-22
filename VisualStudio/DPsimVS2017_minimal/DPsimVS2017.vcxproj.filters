@@ -161,15 +161,6 @@
     <ClCompile Include="..\..\Source\IntegrationMethod.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\Examples\C++\DPsimExample.cpp">
-      <Filter>Quelldateien\Examples</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\Examples\C++\ShmemTest.cpp">
-      <Filter>Quelldateien\Examples</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\Examples\C++\SynchronGenUnitTest.cpp">
-      <Filter>Quelldateien\Examples</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\Source\Components\VoltSourceResFreqEMT.cpp">
       <Filter>Quelldateien\Components</Filter>
     </ClCompile>
@@ -256,6 +247,9 @@
     </ClCompile>
     <ClCompile Include="..\..\Source\Components\Exciter.cpp">
       <Filter>Quelldateien\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Examples\Cxx\SynchronGenerators\SimpSynGenThreePhaseFault.cpp">
+      <Filter>Quelldateien\Examples</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
