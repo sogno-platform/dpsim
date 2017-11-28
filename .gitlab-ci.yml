@@ -9,7 +9,7 @@ stages:
   - docs
   - test
 
-before-script:
+before_script:
   - docker images
 
 docker:
