@@ -1,15 +1,7 @@
-image: docker:latest
-
 variables:
   DOCKER_TAG_DEV: ${CI_COMMIT_REF_NAME}
   DOCKER_IMAGE_DEV: dpsim-dev
   GIT_SUBMODULE_STRATEGY: recursive
-  DOCKER_DRIVER: overlay2
-# When using dind, it's wise to use the overlayfs driver for
-# improved performance.
-
-services:
-- docker:dind
 
 stages:
   - prepare
@@ -19,12 +11,10 @@ stages:
 
 docker:
   stage: prepare
-  before_script:
-    - docker info
   script:
     - docker build -t ${DOCKER_IMAGE_DEV}:${DOCKER_TAG_DEV} .
   tags:
-    - docker
+    - shell
 
 build:
   stage: build
