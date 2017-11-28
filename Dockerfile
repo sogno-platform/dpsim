@@ -19,7 +19,8 @@ RUN dnf -y install \
 	git \
 	gcc-c++ \
 	make cmake \
-	doxygen
+	doxygen \
+	python-pip
 
 # Dependencies
 RUN dnf -y install \
