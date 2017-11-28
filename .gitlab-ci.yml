@@ -9,6 +9,9 @@ stages:
   - docs
   - test
 
+before-script:
+  - docker images
+
 docker:
   stage: prepare
   script:
