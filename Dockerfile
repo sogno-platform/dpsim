@@ -25,6 +25,7 @@ RUN dnf -y install \
 
 # Dependencies
 RUN dnf -y install \
+	python-devel \
 	eigen3-devel \
 	villas-node-devel
 
