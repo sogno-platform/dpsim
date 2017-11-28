@@ -1,4 +1,4 @@
-FROM registry.fedoraproject.org/fedora:27
+FROM fedora:27
 
 LABEL \
 	org.label-schema.schema-version = "1.0" \
