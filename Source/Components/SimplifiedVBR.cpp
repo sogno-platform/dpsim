@@ -47,6 +47,7 @@ SimplifiedVBR::~SimplifiedVBR() {
 
 void SimplifiedVBR::AddExciter(Real Ta, Real Ka, Real Te, Real Ke, Real Tf, Real Kf, Real Tr, Real Lad, Real Rfd) {
 	mExciter = Exciter(Ta, Ka, Te, Ke, Tf, Kf, Tr, Lad, Rfd, mVfd);
+	WithExciter = true;
 }
 
 void SimplifiedVBR::init(Real om, Real dt,
@@ -92,8 +93,8 @@ void SimplifiedVBR::init(Real om, Real dt,
 	// Correcting variables
 	mThetaMech = mThetaMech + PI / 2;
 	mMechTorque = -mMechTorque;
-	//mIq = -mIq;
-	//mId = -mId;
+	mIq = -mIq;
+	mId = -mId;
 
 	// #### VBR Model Dynamic variables #######################################
 
@@ -110,8 +111,6 @@ void SimplifiedVBR::init(Real om, Real dt,
 	mDVqd <<
 		mDVq,
 		mDVd;
-
-	
 
 	mVa = inverseParkTransform(mThetaMech, mVq, mVd, mV0)(0);
 	mVb = inverseParkTransform(mThetaMech, mVq, mVd, mV0)(1);
@@ -150,11 +149,9 @@ void SimplifiedVBR::step(SystemModel& system, Real time) {
 
 void SimplifiedVBR::stepInPerUnit(Real om, Real dt, Real time, NumericalMethod numMethod) {
 
-
 	// Calculate mechanical variables with euler
 	mElecTorque = (mPsimd*mIq - mPsimq*mId);
-	mOmMech = mOmMech + dt * (1. / (2. * mH) * (mMechTorque - mElecTorque)); 
-	//mOmMech = 1;
+	mOmMech = mOmMech + dt * (1. / (2. * mH) * (mElecTorque - mMechTorque));
 	mThetaMech = mThetaMech + dt * (mOmMech* mBase_OmMech);
 
 	Matrix R(2, 2);
@@ -167,52 +164,43 @@ void SimplifiedVBR::stepInPerUnit(Real om, Real dt, Real time, NumericalMethod n
 	mIq = mDqStatorCurrents(0, 0);
 	mId = mDqStatorCurrents(1, 0);
 
-	mVq = -mRs*mIq - mOmMech*mDLd*mId + mDVq;
-	mVd = -mRs*mId + mOmMech*mDLq*mIq + mDVd;
-
 	mIa = inverseParkTransform(mThetaMech, mIq, mId, 0)(0);
 	mIb = inverseParkTransform(mThetaMech, mIq, mId, 0)(1);
 	mIc = inverseParkTransform(mThetaMech, mIq, mId, 0)(2);
-	
-	// Calculate rotor flux likanges
-	mExciter.step(mVd, mVq, 1, dt, time);
-	Real vfsaved = mVfd;
-	mVfd = mExciter.UpdateFieldVoltage();
 
-		C_flux <<
-			0,
-			0,
-			mVfd,
-			0;
+	if (WithExciter == true) {
+		mVq = -mRs*mIq - mOmMech*mDLd*mId + mDVq;
+		mVd = -mRs*mId + mOmMech*mDLq*mIq + mDVd;
 
-		mRotorFlux <<
-			mPsikq1,
-			mPsikq2,
-			mPsifd,
-			mPsikd;
-
-		if (numMethod == NumericalMethod::Trapezoidal_flux)
-			mRotorFlux = Trapezoidal(mRotorFlux, A_flux, B_flux, C_flux, dt*mBase_OmElec, mDqStatorCurrents);
-		else if (numMethod == NumericalMethod::Euler)
-			mRotorFlux = Euler(mRotorFlux, A_flux, B_flux, C_flux, dt*mBase_OmElec, mDqStatorCurrents);
-
-		mPsikq1 = mRotorFlux(0);
-		mPsikq2 = mRotorFlux(1);
-		mPsifd = mRotorFlux(2);
-		mPsikd = mRotorFlux(3);
+		mVfd = mExciter.step(mVd, mVq, 1, dt);
+	}
 
 
+	C_flux <<
+		0,
+		0,
+		mVfd,
+		0;
+
+	mRotorFlux <<
+		mPsikq1,
+		mPsikq2,
+		mPsifd,
+		mPsikd;
+
+	mRotorFlux = Trapezoidal(mRotorFlux, A_flux, B_flux, C_flux, dt*mBase_OmElec, mDqStatorCurrents);
+
+	mPsikq1 = mRotorFlux(0);
+	mPsikq2 = mRotorFlux(1);
+	mPsifd = mRotorFlux(2);
+	mPsikd = mRotorFlux(3);
 
 
 	// Calculate dynamic flux likages
-
 	mDPsiq = mDLmq*(mPsikq1 / mLlkq1) + mDLmq*(mPsikq2 / mLlkq2);
 	mPsimq = mDLmq*(mPsikq1 / mLlkq1 + mPsikq2 / mLlkq2 + mIq);
-	
-
 	mDPsid = mDLmd*(mPsifd / mLlfd) + mDLmd*(mPsikd / mLlkd);
 	mPsimd = mDLmd*(mPsifd / mLlfd + mPsikd / mLlkd + mId);
-
 
 	// Calculate dynamic voltages
 	mDVq = mOmMech*mDPsid;
@@ -224,20 +212,20 @@ void SimplifiedVBR::stepInPerUnit(Real om, Real dt, Real time, NumericalMethod n
 
 
 	// Load resistance
-	//if (time < 0.1 )
-	//{
+	if (time < 0.1 ||time > 2.1 )
+	{
 		R_load <<
 			1037.8378 / mBase_Z, 0, 0,
 			0, 1037.8378 / mBase_Z, 0,
 			0, 0, 1037.8378 / mBase_Z;
-	//}
-	//else
-	//{
-	//	R_load <<
-	//		103.78378 / mBase_Z, 0, 0,
-	//		0, 103.78378 / mBase_Z, 0,
-	//		0, 0, 103.78378 / mBase_Z;
-	//}
+	}
+	else
+	{
+		R_load <<
+			0.001 / mBase_Z, 0, 0,
+			0, 0.001 / mBase_Z, 0,
+			0, 0, 0.001 / mBase_Z;
+	}
 
 }
 

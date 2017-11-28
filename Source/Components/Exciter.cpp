@@ -47,17 +47,7 @@ Exciter::~Exciter() {
 
 
 
-//void Exciter::init(Real mVd, Real mVq, Real Vfd, Real Vref, Real Lad, Real Rfd) {
-//
-//
-//	mVh = sqrt(pow(mVd, 2.) + pow(mVq, 2.));
-//	mVf = (Lad / Rfd)*Vfd;
-//	mVref = Vref;
-//	
-//}
-
-
-void Exciter::step(Real mVd, Real mVq, Real Vref, Real dt, Real time) {
+Real Exciter::step(Real mVd, Real mVq, Real Vref, Real dt) {
 
 
 	mVh = sqrt(pow(mVd, 2.) + pow(mVq, 2.));
@@ -72,21 +62,9 @@ void Exciter::step(Real mVd, Real mVq, Real Vref, Real dt, Real time) {
 	mVse = 0.0039*exp(mVf*1.555);
 	mVf = Euler(mVf, -mKe, 1, dt / mTe, mVr - mVse);
 
-	mVfd = (mRfd / mLad)*mVf;
+	return (mRfd / mLad)*mVf;
 
 }
-
-
-//void Exciter::stepInPerUnit(Real mVd, Real mVq, Real Vref, Real dt) {
-//
-//
-//
-//}
-
-
-//void Exciter::postStep(SystemModel& system) {
-//
-//}
 
 
 

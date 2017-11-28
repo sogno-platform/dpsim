@@ -72,30 +72,12 @@ namespace DPsim {
 		Exciter() { };
 		~Exciter();
 
-		/// Initializes the per unit or stator referred machine parameters with the machine parameters given in per unit or
-		/// stator referred parameters depending on the setting of parameter type.
-		/// The initialization mode depends on the setting of state type.
+		/// Initializes exciter parameters
 		Exciter(Real Ta, Real Ka, Real Te, Real Ke, Real Tf, Real Kf, Real Tr, Real Lad, Real Rfd, Real Vf_init);
 
-		/// Initializes states in per unit or stator referred variables depending on the setting of the state type.
-		/// Function parameters have to be given in real units.
-		//void init();
-		//void init(Real mVd, Real mVq, Real Vfd, Real Vref, Real mLad, Real mRfd);
+		/// Performs an step to update field voltage value
+		Real step(Real mVd, Real mVq, Real Vref, Real dt);
 
-		/// Performs an Euler forward step with the state space model of a synchronous generator
-		/// to calculate the flux and current from the voltage vector.
-		void step(Real mVd, Real mVq, Real Vref, Real dt, Real time);
-
-		/// Performs an Euler forward step with the state space model of a synchronous generator
-		/// to calculate the flux and current from the voltage vector in per unit.
-		//void stepInPerUnit(Real mVd, Real mVq, Real Vref, Real dt);
-
-		/// Retrieves calculated voltage from simulation for next step
-		//void postStep(SystemModel& system);
-
-		//void init(Real om, Real dt) { }
-		//void applySystemMatrixStamp(SystemModel& system) { }
-		//void applyRightSideVectorStamp(SystemModel& system) { }
 
 		Real UpdateFieldVoltage() { return mVfd; }
 	

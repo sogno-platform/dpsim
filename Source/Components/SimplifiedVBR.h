@@ -38,7 +38,9 @@ namespace DPsim {
 	class SimplifiedVBR : public SynchGenBase {
 	protected:
 
+		/// Exciter Model
 		Exciter mExciter;
+		bool WithExciter = false;
 
 		/// d dynamic inductance
 		Real mDLmd;
