@@ -18,6 +18,7 @@ RUN dnf -y update
 RUN dnf -y install \
 	git \
 	gcc-c++ \
+	redhat-rpm-config \
 	make cmake \
 	doxygen \
 	python-pip
