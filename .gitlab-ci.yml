@@ -24,7 +24,7 @@ build:
     - cd Source/build
     - cmake ..
     - make
-  image: {DOCKER_IMAGE_DEV}:${DOCKER_TAG_DEV}
+  image: ${DOCKER_IMAGE_DEV}:${DOCKER_TAG_DEV}
   artifacts:
     paths:
       - Source/build
