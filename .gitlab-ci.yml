@@ -23,7 +23,7 @@ build:
     - cd Source/build
     - cmake ..
     - make
-  image: ${DOCKER_IMAGE_DEV}:${DOCKER_TAG_DEV}
+  image: ea115841e858
   artifacts:
     paths:
       - Source/build
