@@ -1,20 +1,37 @@
-FROM fedora:latest
-MAINTAINER Steffen Vogel <stvogel@eonerc.rwth-aachen.de>
+FROM fedora:27
+
+LABEL \
+	org.label-schema.schema-version = "1.0" \
+	org.label-schema.name = "DPsim" \
+	org.label-schema.license = "GPL-3.0" \
+	org.label-schema.vendor = "Institute for Automation of Complex Power Systems, RWTH Aachen University" \
+	org.label-schema.author.name = "Steffen Vogel" \
+	org.label-schema.author.email = "stvogel@eonerc.rwth-aachen.de" \
+	org.label-schema.url = "http://fein-aachen.org/projects/dpsim/" \
+	org.label-schema.vcs-url = "https://git.rwth-aachen.de/acs/core/simulation/DPsim"
 
 ADD https://villas.fein-aachen.org/packages/villas.repo /etc/yum.repos.d/
 
 RUN dnf -y update
 
+# Toolchain
 RUN dnf -y install \
 	git \
 	gcc-c++ \
-	make \
-	cmake \
-	eigen3-devel \
+	redhat-rpm-config \
+	make cmake \
 	doxygen \
-	libxml2-devel \
-	python3-pandas \
-	python3-numpy \
-	python3-sphinx
+	python-pip
 
-RUN dnf -y install villas-node-devel
+# Dependencies
+RUN dnf -y install \
+	python-devel \
+	eigen3-devel \
+	villas-node-devel
+
+# Python Packages
+RUN pip install \
+	pandas \
+	numpy \
+	matplotlib \
+	sphinx
