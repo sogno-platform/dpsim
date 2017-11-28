@@ -24,8 +24,7 @@ RUN dnf -y install \
 # Dependencies
 RUN dnf -y install \
 	eigen3-devel \
-	villas-node-devel \
-	libcimpp-devel
+	villas-node-devel
 
 # Python Packages
 RUN pip install \
