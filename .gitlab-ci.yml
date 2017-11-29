@@ -44,13 +44,3 @@ docs:
       - build/Documentation/Cxx/html
   tags:
     - docker
-
-test:
-  stage: test
-  variables:
-    PYTHONPATH: Source/build
-  script:
-    - python3 Examples/Python/ci.py
-  image: ${DOCKER_IMAGE_DEV}:${DOCKER_TAG_DEV}
-  tags:
-    - docker
