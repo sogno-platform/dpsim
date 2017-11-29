@@ -23,11 +23,10 @@ build:
     - mkdir build
     - cd build
     - cmake ..
-    - make
   image: ${DOCKER_IMAGE_DEV}:${DOCKER_TAG_DEV}
   artifacts:
     paths:
-      - Source/build
+      - build
   tags:
     - docker
 
