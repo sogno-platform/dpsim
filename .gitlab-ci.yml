@@ -34,6 +34,7 @@ build:
 docs:
   stage: docs
   script:
+    - cmake ..
     - make docs
   image: ${DOCKER_IMAGE_DEV}:${DOCKER_TAG_DEV}
   artifacts:
