@@ -20,8 +20,8 @@ docker:
 build:
   stage: build
   script:
-    - mkdir Source/build
-    - cd Source/build
+    - mkdir build
+    - cd build
     - cmake ..
     - make
   image: ${DOCKER_IMAGE_DEV}:${DOCKER_TAG_DEV}
@@ -34,6 +34,8 @@ build:
 docs:
   stage: docs
   script:
+    - ls
+    - cd build
     - cmake ..
     - make docs
   image: ${DOCKER_IMAGE_DEV}:${DOCKER_TAG_DEV}
