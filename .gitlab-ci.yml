@@ -7,7 +7,6 @@ stages:
   - prepare
   - build
   - docs
-  - test
 
 docker:
   stage: prepare
