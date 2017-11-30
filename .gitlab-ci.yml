@@ -1,12 +1,14 @@
 variables:
   DOCKER_TAG_DEV: ${CI_COMMIT_REF_NAME}
   DOCKER_IMAGE_DEV: dpsim-dev
+  DOCKER_IMAGE_WEB: dpsim-web
   GIT_SUBMODULE_STRATEGY: recursive
 
 stages:
   - prepare
   - build
   - docs
+  - deploy
 
 docker:
   stage: prepare
@@ -44,3 +46,12 @@ docs:
       - build/Documentation/Cxx/html
   tags:
     - docker
+    
+deploy:
+  stage: deploy
+  script:
+    - docker build -f Dockerfile.webdoc -t ${DOCKER_IMAGE_WEB}:${DOCKER_TAG_DEV} .
+    - docker images
+    - docker run --name dpsim-webdoc -d -p 8080:80 ${DOCKER_IMAGE_WEB}:${DOCKER_TAG_DEV}
+  tags:
+    - shell

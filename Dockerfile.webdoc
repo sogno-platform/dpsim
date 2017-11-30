@@ -1,0 +1,3 @@
+FROM nginx
+COPY build/Documentation/html /usr/share/nginx/html
+COPY build/Documentation/Cxx/html /usr/share/nginx/html/cxx
