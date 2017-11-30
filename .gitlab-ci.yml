@@ -52,7 +52,7 @@ deploy:
   script:
     - docker build -f Dockerfile.webdoc -t ${DOCKER_IMAGE_WEB}:${DOCKER_TAG_DEV} .
     - docker images
-    - dokcer container stop dpsim-webdoc
+    - docker container stop dpsim-webdoc
     - docker container rm dpsim-webdoc
     - docker run --name dpsim-webdoc -d -p 8080:80 ${DOCKER_IMAGE_WEB}:${DOCKER_TAG_DEV}
   tags:
