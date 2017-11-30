@@ -38,6 +38,9 @@ $ make docs
 ```
 4. The resulting documentation will be generated in `Documentation/html/`
 
+[Online documentation for Python](http://134.130.169.10:8080/)
+[Online documentation for C++](http://134.130.169.10:8080/cxx)
+
 ## Copyright
 
 2017, Institute for Automation of Complex Power Systems, EONERC
