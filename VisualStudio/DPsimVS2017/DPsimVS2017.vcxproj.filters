@@ -69,9 +69,6 @@
     <ClInclude Include="..\..\Source\CIMReader.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\Examples\C++\ReferenceCircuits.h">
-      <Filter>Headerdateien\Examples</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\Examples\C++\ShmemTest.h">
       <Filter>Headerdateien\Examples</Filter>
     </ClInclude>

@@ -27,7 +27,7 @@
 
 namespace DPsim {
 
-	class RxLine : public BaseComponent {
+	class RxLineDP : public BaseComponent {
 	protected:
 		Real mResistance;
 		Real mConductance;
@@ -59,8 +59,8 @@ namespace DPsim {
 		Real curri_ind;
 
 	public:
-		RxLine() { };
-		RxLine(String name, Int node1, Int node2, Real resistance, Real inductance, LineTypes type = LineTypes::RxLine3Node);
+		RxLineDP() { };
+		RxLineDP(String name, Int node1, Int node2, Real resistance, Real inductance, LineTypes type = LineTypes::RxLine3Node);
 
 		void init(Real om, Real dt);
 		void applySystemMatrixStamp(SystemModel& system);

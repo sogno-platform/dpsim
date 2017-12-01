@@ -30,8 +30,8 @@ namespace DPsim {
 	/// Ideal transformer that is connected to ground
 	class IdealTransformerDP : public BaseComponent {
 	private:
-		Real mRatioRe;
-		Real mRatioIm;
+		/// Transformer ratio
+		Complex mRatio;
 	public:
 		IdealTransformerDP() { };
 		IdealTransformerDP(String name, Int node1, Int node2, Real ratioRe, Real ratioIm);

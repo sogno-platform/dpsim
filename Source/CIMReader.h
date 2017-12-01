@@ -42,37 +42,51 @@ using namespace IEC61970::Base::Wires;
 namespace DPsim {
 	class CIMReader {
 		private:
-			// CIM logger
+			/// CIM logger
 			Logger* mLogger;
-			// Model from CIM++
+			/// Model from CIM++
 			CIMModel mModel;
-			// All components after mapping
+			/// All components after mapping
 			ElementList mComponents;
-			// System frequency (has to be given to convert between reactances
-			// in CIM and inductances used inside the simulation)
+			/// System frequency (has to be given to convert between reactances
+			/// in CIM and inductances used inside the simulation)
 			Real mFrequency;
-			// Maps the RID of a topological node to its simulation matrix index
-			// as given in the component constructors (1 for the first node).
+			/// Maps the RID of a topological node to its simulation matrix index
+			/// as given in the component constructors (1 for the first node).
 			std::map<String, Int> mTopNodes;
-			// Maps the RID of a ConductingEquipment to a list of nodes as given in
-			// the component constructors.
+			/// Maps the RID of a ConductingEquipment to a list of nodes as given in
+			/// the component constructors.
 			std::map<String, std::vector<Int>> mEqNodeMap;
-			// SvVoltage, if present, for each node (indexed starting with 0!)
+			/// SvVoltage, if present, for each node (indexed starting with 0!)
 			SvVoltage **mVoltages;
-			// Maps the RID of a Terminal to its associated power flow
+			/// Maps the RID of a Terminal to its associated power flow
 			std::map<String, SvPowerFlow*> mPowerFlows;
-			// Number of ideal voltage sources
+			/// Number of ideal voltage sources
 			Int mNumVoltageSources;
 
 			ElementPtr mapComponent(BaseClass* obj);
 
+			/// Returns an RX-Line.
+			/// The voltage should be given in kV and the angle in degree.
+			/// TODO: Introduce different models such as PI and wave model.
 			ElementPtr mapACLineSegment(ACLineSegment* line);
 			void mapAsynchronousMachine(AsynchronousMachine* machine);
+			/// Returns an PQload with voltage setting according to load flow data.
+			/// Currently the only option is to create an RL-load.
+			/// The voltage should be given in kV and the angle in degree.
+			/// TODO: Introduce different load models here.
 			void mapEnergyConsumer(EnergyConsumer* con);
 			void mapEquivalentInjection(EquivalentInjection* inj);
 			ElementPtr mapExternalNetworkInjection(ExternalNetworkInjection* inj);
 			ElementPtr mapPowerTransformer(PowerTransformer *trans);
+			/// Returns an IdealVoltageSource with voltage setting according to load flow data
+			/// at machine terminals. The voltage should be given in kV and the angle in degree.
+			/// TODO: Introduce real synchronous generator models here.
 			ElementPtr mapSynchronousMachine(SynchronousMachine* machine);
+			/// Returns an PQload with voltage setting according to load flow data.
+			/// Currently the only option is to create an RL-load.
+			/// The voltage should be given in kV and the angle in degree.
+			/// TODO: Introduce real PQload model here.
 			ElementPtr newPQLoad(String rid, String name);
 		public:
 			CIMReader(Real om, Logger& logger);

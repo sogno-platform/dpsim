@@ -31,13 +31,18 @@ namespace DPsim {
 	// TODO currently modeled as an impedance, which obviously doesn't have a constant power characteristic
 	class PQLoadDP : public BaseComponent {
 	protected:
+		/// Active power [Watt]
 		Real mActivePower;
+		/// Reactive power [VAr]
 		Real mReactivePower;
+		/// Voltage [V]
 		Real mSvVoltage;
+		/// Resistance [Ohm]
 		Real mResistance;
+		/// Conductance [S]
 		Real mConductance;
+		/// Reactance [Ohm]
 		Real mReactance;
-
 		/// Inductance [H]
 		Real mInductance;
 		

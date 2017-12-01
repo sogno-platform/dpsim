@@ -99,7 +99,7 @@ ElementPtr CIMReader::mapACLineSegment(ACLineSegment* line) {
 
 	mLogger->Log(LogLevel::INFO) << "Create RxLine " << line->name << " node1=" << nodes[0] << " node2=" << nodes[1]
 		<< " R=" << r << " X=" << x << std::endl;
-	return make_shared<RxLine>(line->name, nodes[0], nodes[1], r, x/mFrequency);
+	return make_shared<RxLineDP>(line->name, nodes[0], nodes[1], r, x/mFrequency);
 }
 
 void CIMReader::mapAsynchronousMachine(AsynchronousMachine* machine) {
@@ -126,9 +126,13 @@ ElementPtr CIMReader::mapExternalNetworkInjection(ExternalNetworkInjection* inj)
 		mLogger->Log(LogLevel::ERROR) << "ExternalNetworkInjection " << inj->mRID << " has no associated SvVoltage, ignoring" << std::endl;
 		return nullptr;
 	}
+	Real voltAbs = volt->v.value;
+	Real voltPhase = volt->angle.value;
+	Complex initVoltage = std::polar(voltAbs, voltPhase * PI / 180);
 	mLogger->Log(LogLevel::INFO) << "IdealVoltageSource " << inj->name << " rid=" << inj->mRID << " node1=" << node 
-		<< " V=" << volt->v.value << "<" << volt->angle.value << std::endl;
-	return make_shared<IdealVoltageSource>(inj->name, node, 0, Complex(volt->v.value, volt->angle.value*PI/180));
+		<< " V=" << voltAbs << "<" << voltPhase << std::endl;
+	
+	return make_shared<IdealVoltageSource>(inj->name, node, 0, initVoltage);
 }
 
 ElementPtr CIMReader::mapPowerTransformer(PowerTransformer* trans) {
@@ -189,16 +193,18 @@ ElementPtr CIMReader::mapSynchronousMachine(SynchronousMachine* machine) {
 		mLogger->Log(LogLevel::WARN) << "SynchronousMachine " << machine->mRID << " has no associated SvVoltage, ignoring" << std::endl;
 		return nullptr;
 	}
-	mLogger->Log(LogLevel::INFO) << "VoltSourceRes " << machine->name << " rid=" << machine->mRID << " node=" << node
-	<< " V=" << volt->v.value << "<" << volt->angle.value << std::endl;
 
+	Real voltAbs = volt->v.value;
+	Real voltPhase = volt->angle.value;
+	Complex initVoltage = std::polar(voltAbs, voltPhase * PI / 180);
+	
 	// Apply unit multipliers according to CGMES convetions.
 	volt->v.value = CIMReader::unitValue(volt->v.value, UnitMultiplier::k);
 
 	// TODO is it appropiate to use this resistance here
 	mLogger->Log(LogLevel::INFO) << "Create IdealVoltageSource " << machine->name << " node=" << node
-		<< " V=" << volt->v.value << "<" << volt->angle.value << std::endl;
-	return make_shared<IdealVoltageSource>(machine->name, node, 0, Complex(volt->v.value, volt->angle.value*PI/180));
+		<< " V=" << voltAbs << "<" << voltPhase << std::endl;
+	return make_shared<IdealVoltageSource>(machine->name, node, 0, initVoltage);
 }
 
 ElementPtr CIMReader::mapComponent(BaseClass* obj) {

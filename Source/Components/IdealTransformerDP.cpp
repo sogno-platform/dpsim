@@ -26,9 +26,8 @@ using namespace DPsim;
 
 IdealTransformerDP::IdealTransformerDP(String name, Int node1, Int node2, Real ratioAbs, Real ratioPhase) : BaseComponent(name, node1, node2) {
 	mNumVirtualNodes = 1;
-	mVirtualNodes = { 0 };
-	mRatioRe = ratioAbs*cos(ratioPhase);
-	mRatioIm = ratioAbs*sin(ratioPhase);
+	mVirtualNodes = { 0 };	
+	mRatio = std::polar(ratioAbs, ratioPhase);
 }
 
 void IdealTransformerDP::applySystemMatrixStamp(SystemModel& system) {
@@ -37,7 +36,7 @@ void IdealTransformerDP::applySystemMatrixStamp(SystemModel& system) {
 		system.setCompSystemMatrixElement(mVirtualNodes[0], mNode1, 1.0, 0);
 	}
 	if (mNode2 >= 0) {
-		system.setCompSystemMatrixElement(mNode2, mVirtualNodes[0], mRatioRe, mRatioIm);
-		system.setCompSystemMatrixElement(mVirtualNodes[0], mNode2, -mRatioRe, -mRatioIm);
+		system.setCompSystemMatrixElement(mNode2, mVirtualNodes[0], mRatio.real, mRatio.imag);
+		system.setCompSystemMatrixElement(mVirtualNodes[0], mNode2, -mRatio.real, -mRatio.imag);
 	}
 }

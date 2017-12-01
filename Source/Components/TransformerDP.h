@@ -24,23 +24,36 @@
 #pragma once
 
 #include "BaseComponent.h"
+#include "RxLineDP.h"
+#include "IdealTransformerDP.h"
 #include "InductorDP.h"
 
 namespace DPsim {
 
 	/// Transformer that includes an inductance and resistance
 	class TransformerDP : public BaseComponent {
-	private:
-		Real mRatioRe;
-		Real mRatioIm;
+	private:	
+		/// Transformer ratio
+		Complex mRatio;
+		Real mRatioAbs;
+		Real mRatioPhase;
+		/// Voltage [V]
+		Real mSvVoltage;
+		/// Resistance [Ohm]
 		Real mResistance;
+		/// Conductance [S]
 		Real mConductance;
+		/// Reactance [Ohm]
 		Real mReactance;
-
 		/// Inductance [H]
 		Real mInductance;
+		/// Internal ideal transformer
+		shared_ptr<IdealTransformerDP> mIdealTransformer;
+		/// Internal RX-line to model losses
+		shared_ptr<RxLineDP> mLine;
+		/// Internal inductor to model losses
+		shared_ptr<InductorDP> mInductor;
 
-		shared_ptr<InductorDP> inductor;
 	public:
 		TransformerDP() { };
 		TransformerDP(String name, Int node1, Int node2, Real ratioAbs, Real ratioPhase, Real resistance, Real inductance);

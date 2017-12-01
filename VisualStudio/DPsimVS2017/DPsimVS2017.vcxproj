@@ -143,7 +143,6 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="..\..\Examples\C++\CIMTest.h" />
-    <ClInclude Include="..\..\Examples\C++\ReferenceCircuits.h" />
     <ClInclude Include="..\..\Examples\C++\ShmemTest.h" />
     <ClInclude Include="..\..\Examples\C++\SynchronGenUnitTest.h" />
     <ClInclude Include="..\..\Source\CIMReader.h" />

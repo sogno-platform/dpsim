@@ -25,22 +25,21 @@
 using namespace DPsim;
 
 TransformerDP::TransformerDP(String name, Int node1, Int node2, Real ratioAbs, Real ratioPhase, Real resistance, Real reactance) : BaseComponent(name, node1, node2) {
-	mRatioRe = ratioAbs*cos(ratioPhase);
-	mRatioIm = ratioAbs*sin(ratioPhase);
+	mRatioAbs = ratioAbs;
+	mRatioPhase = ratioPhase;
+	mRatio = std::polar(ratioAbs, ratioPhase);
 	mResistance = resistance;
 	mReactance = reactance;
-	if (resistance == 0) {
-		mNumVirtualNodes = 2;
-	}
-	else {
-		mNumVirtualNodes = 3;
-	}
-	mVirtualNodes = { 0 };
+	mNumVirtualNodes = 2;
 	
+	if (resistance > 0.000001) {
+		mNumVirtualNodes = 3;
+		mVirtualNodes = { 0, 0, 0 };
+	}	
 }
 
 void TransformerDP::init(Real om, Real dt) {
-	/*
+	Real abs = mActivePower*mActivePower + mReactivePower*mReactivePower;
 	mResistance = mSvVoltage*mSvVoltage*mActivePower / abs;
 	mConductance = 1.0 / mResistance;
 	mReactance = mSvVoltage*mSvVoltage*mReactivePower / abs;
@@ -48,7 +47,8 @@ void TransformerDP::init(Real om, Real dt) {
 
 	inductor = std::make_shared<InductorDP>(mName + "_ind", mNode1, mNode2, mInductance);
 	resistor = std::make_shared<ResistorDP>(mName + "_res", mNode1, mNode2, mResistance);
-	*/
+	inductor->init(om, dt);
+	resistor->init(om, dt);
 }
 
 void TransformerDP::applySystemMatrixStamp(SystemModel& system) {

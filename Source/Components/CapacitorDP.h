@@ -38,17 +38,13 @@ namespace DPsim {
 	protected:
 		/// Capacitance [F]
 		Real capacitance;
-
 		/// Real part of the voltage across the capacitor [V]
 		Real deltavr;
-
 		/// Imaginary part of the voltage across the capacitor [V]
 		Real deltavi;
-
-		/// Real and imaginary part of the current trough the capacitor [A]
+		/// Real and imaginary part of the current through the capacitor [A]
 		Real currr;
 		Real curri;
-
 		///Real and imaginary part of the DC equivalent current source [A]
 		Real cureqr;
 		Real cureqi;

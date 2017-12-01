@@ -23,8 +23,6 @@
 
 #include <iostream>
 
-#include "SynchronGenUnitTest.h"
-#include "ReferenceCircuits.h"
 #include "ShmemTest.h"
 
 #include "CIMTest.h"

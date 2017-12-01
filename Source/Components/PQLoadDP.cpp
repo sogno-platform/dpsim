@@ -40,26 +40,20 @@ void PQLoadDP::init(Real om, Real dt) {
 	mResistance = mSvVoltage*mSvVoltage*mActivePower/abs;
 	mConductance = 1.0 / mResistance;
 	mReactance = mSvVoltage*mSvVoltage*mReactivePower/abs;
-	mInductance = mReactance /om;
+	mInductance = mReactance / om;
 
 	inductor = std::make_shared<InductorDP>(mName + "_ind", mNode1, mNode2, mInductance);
 	resistor = std::make_shared<ResistorDP>(mName + "_res", mNode1, mNode2, mResistance);
+	inductor->init(om, dt);
+	resistor->init(om, dt);
 }
 
-void PQLoadDP::applySystemMatrixStamp(SystemModel& system) {
-	// powers / svvoltage might have changed, so update them
-	Real abs = mActivePower*mActivePower + mReactivePower*mReactivePower;
-	mResistance = mSvVoltage*mSvVoltage*mActivePower/abs;
-	mConductance = 1.0 / mResistance;
-	mReactance = mSvVoltage*mSvVoltage*mReactivePower/abs;
-	mInductance = mReactance /system.getOmega();
-	
+void PQLoadDP::applySystemMatrixStamp(SystemModel& system) {		
 	// Add resistive part to system matrix
 	resistor->applySystemMatrixStamp(system);
 
 	// Add inductive part to system matrix
-	inductor->applySystemMatrixStamp(system);
-	
+	inductor->applySystemMatrixStamp(system);	
 }
 
 void PQLoadDP::step(SystemModel& system, Real time) {

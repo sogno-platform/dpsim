@@ -24,7 +24,7 @@
 
 using namespace DPsim;
 
-RxLine::RxLine(String name, Int node1, Int node2, Real resistance, Real inductance, LineTypes type) : BaseComponent(name, node1, node2) {
+RxLineDP::RxLineDP(String name, Int node1, Int node2, Real resistance, Real inductance, LineTypes type) : BaseComponent(name, node1, node2) {
 	mNumVirtualNodes = 1;
 	mVirtualNodes = { 0 };
 	mResistance = resistance;
@@ -35,7 +35,7 @@ RxLine::RxLine(String name, Int node1, Int node2, Real resistance, Real inductan
 	attrMap["inductance"] = { AttrReal, &mInductance };
 }
 
-void RxLine::applySystemMatrixStamp(SystemModel& system) {
+void RxLineDP::applySystemMatrixStamp(SystemModel& system) {
 	if (mType == LineTypes::RxLine2Node) {
 		Real a = system.getTimeStep() / (2 * mInductance);
 		Real b = system.getTimeStep()*system.getOmega() / 2;
@@ -105,7 +105,7 @@ void RxLine::applySystemMatrixStamp(SystemModel& system) {
 	}
 }
 
-void RxLine::init(Real om, Real dt) {
+void RxLineDP::init(Real om, Real dt) {
 	// Initialize internal state
 	mCurrRe = 0;
 	mCurrIm = 0;
@@ -122,7 +122,7 @@ void RxLine::init(Real om, Real dt) {
 	cureqi_ind = 0;
 }
 
-void RxLine::step(SystemModel& system, Real time) {
+void RxLineDP::step(SystemModel& system, Real time) {
 
 	if (mType == LineTypes::RxLine2Node) {
 
@@ -160,7 +160,7 @@ void RxLine::step(SystemModel& system, Real time) {
 	}
 }
 
-void RxLine::postStep(SystemModel& system) {
+void RxLineDP::postStep(SystemModel& system) {
 
 	if (mType == LineTypes::RxLine2Node) {
 
@@ -229,6 +229,6 @@ void RxLine::postStep(SystemModel& system) {
 	}
 }
 
-Complex RxLine::getCurrent(SystemModel& system) {
+Complex RxLineDP::getCurrent(SystemModel& system) {
 	return Complex(mCurrRe, mCurrIm);
 }
