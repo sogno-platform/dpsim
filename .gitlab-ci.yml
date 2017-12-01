@@ -1,51 +1,59 @@
 variables:
-  DOCKER_IMAGE: dpsim-dev-${CI_COMMIT_REF_NAME}
+  DOCKER_TAG_DEV: ${CI_COMMIT_REF_NAME}
+  DOCKER_IMAGE_DEV: dpsim-dev
+  DOCKER_IMAGE_WEB: dpsim-web
   GIT_SUBMODULE_STRATEGY: recursive
 
 stages:
   - prepare
   - build
   - docs
-  - test
+  - deploy
 
 docker:
   stage: prepare
   script:
-    - docker build -t ${DOCKER_IMAGE} .
+    - docker build -t ${DOCKER_IMAGE_DEV}:${DOCKER_TAG_DEV} .
+    - docker images
   tags:
     - shell
 
 build:
   stage: build
   script:
-    - mkdir Source/build
-    - cd Source/build
+    - mkdir build
+    - cd build
     - cmake ..
-    - make
-  image: ${DOCKER_IMAGE}
+    - make -j 8
+  image: ${DOCKER_IMAGE_DEV}:${DOCKER_TAG_DEV}
   artifacts:
     paths:
-      - Source/build
+      - build
   tags:
     - docker
 
 docs:
   stage: docs
   script:
+    - cd build
+    - cmake ..
     - make docs
-  image: ${DOCKER_IMAGE}
+    - make docs_cxx
+  image: ${DOCKER_IMAGE_DEV}:${DOCKER_TAG_DEV}
   artifacts:
     paths:
-      - Documentation/html
+      - build/Documentation/html
+      - build/Documentation/Cxx/html
   tags:
     - docker
-
-test:
-  stage: test
-  variables:
-    PYTHONPATH: Source/build
+    
+deploy:
+  stage: deploy
   script:
-    - python3 Examples/Python/ci.py
-  image: ${DOCKER_IMAGE}
+    - docker build -f Dockerfile.webdoc -t ${DOCKER_IMAGE_WEB}:${DOCKER_TAG_DEV} .
+    - docker images
+    - docker container stop dpsim-webdoc
+    - docker container rm dpsim-webdoc
+    - docker run --name dpsim-webdoc -d -p 8080:80 ${DOCKER_IMAGE_WEB}:${DOCKER_TAG_DEV}
   tags:
-    - docker
+    - shell

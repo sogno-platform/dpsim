@@ -35,7 +35,7 @@ static PyMethodDef dpsimModuleMethods[] = {
 	{"ExternalCurrentSource", Python::ExternalCurrentSource, METH_VARARGS, Python::DocExternalCurrentSource},
 	{"ExternalVoltageSource", Python::ExternalVoltageSource, METH_VARARGS, Python::DocExternalVoltageSource},
 	{"Inductor", Python::Inductor, METH_VARARGS, Python::DocInductor},
-	{"LinearResistor", Python::LinearResistor, METH_VARARGS, Python::DocLinearResistor},
+	{"Resistor", Python::Resistor, METH_VARARGS, Python::DocResistor},
 	{"VoltSourceRes", Python::VoltSourceRes, METH_VARARGS, Python::DocVoltSourceRes},
 	{0}
 };

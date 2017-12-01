@@ -23,9 +23,15 @@
 
 #pragma once
 
-#include <signal.h>
 #include <iostream>
 #include <vector>
+
+//#include "Config.h"
+
+#ifdef WITH_RT
+  #include <signal.h>
+#endif
+
 #include "Definitions.h"
 #include "Components.h"
 #include "Logger.h"
@@ -33,7 +39,7 @@
 #include "ExternalInterface.h"
 
 namespace DPsim {
-	typedef shared_ptr<BaseComponent> ElementPtr;
+	typedef std::shared_ptr<BaseComponent> ElementPtr;
 	typedef std::vector<ElementPtr> ElementList;
 
 	struct switchConfiguration {
@@ -76,13 +82,12 @@ namespace DPsim {
 		std::vector<ExternalInterface*> mExternalInterfaces;
 
 		uint64_t mRtTimerCount = 0;
-		
+
 	public:
 		/// Sets parameters to default values.
 		Simulation();
 		/// Creates system matrix according to
-		Simulation(ElementList elements, Real om, Real dt, Real tf, Logger& logger, SimulationType simType = SimulationType::DynPhasor);
-		Simulation(ElementList elements, Real om, Real dt, Real tf, Logger& logger, Int downSampleRate, SimulationType simType = SimulationType::DynPhasor);
+		Simulation(ElementList elements, Real om, Real dt, Real tf, Logger& logger, SimulationType simType = SimulationType::DynPhasor, Int downSampleRate = 1);
 		~Simulation();
 
 		/// TODO: check that every system matrix has the same dimensions
@@ -111,7 +116,7 @@ namespace DPsim {
 
 		void addSystemTopology(ElementList newElements);
 
-#ifdef __linux__
+#ifdef WITH_RT
 		/* Perform the main simulation loop in real time.
 		 *
 		 * @param rtMethod The method with which the realtime execution is achieved.
@@ -122,7 +127,7 @@ namespace DPsim {
 		 */
 		void runRT(RTMethod rtMethod, bool startSynch, Logger& logger, Logger& llogger, Logger &rlogger);
 		static void alarmHandler(int, siginfo_t*, void*);
-#endif
+#endif /* WITH_RT */
 	};
 
 }

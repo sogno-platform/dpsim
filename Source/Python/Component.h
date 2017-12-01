@@ -26,7 +26,9 @@
 #include <Python.h>
 
 #include <vector>
+#include <memory>
 
+#include "Simulation.h"
 #include "Components/BaseComponent.h"
 
 namespace DPsim {
@@ -35,7 +37,7 @@ namespace Python {
 	struct Component {
 		PyObject_HEAD
 
-		BaseComponent* comp;
+		ElementPtr comp;
 
 		static PyObject* newfunc(PyTypeObject* type, PyObject *args, PyObject *kwds);
 		static void dealloc(Component*);
@@ -48,7 +50,7 @@ namespace Python {
 
 	extern PyTypeObject ComponentType;
 
-	bool compsFromPython(PyObject* list, std::vector<BaseComponent*>& comps);
+	bool compsFromPython(PyObject* list, ElementList& comps);
 
 	// "Constructors" for the component types
 	extern const char* DocExternalCurrentSource;
@@ -57,8 +59,8 @@ namespace Python {
 	PyObject* ExternalVoltageSource(PyObject* self, PyObject *args);
 	extern const char* DocInductor;
 	PyObject* Inductor(PyObject* self, PyObject *args);
-	extern const char* DocLinearResistor;
-	PyObject* LinearResistor(PyObject* self, PyObject *args);
+	extern const char* DocResistor;
+	PyObject* Resistor(PyObject* self, PyObject *args);
 	extern const char* DocVoltSourceRes;
 	PyObject* VoltSourceRes(PyObject* self, PyObject *args);
 

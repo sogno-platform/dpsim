@@ -23,16 +23,17 @@
 
 #pragma once
 
-#include <Python.h>
-
 #include <atomic>
 #include <condition_variable>
 #include <mutex>
 #include <thread>
 #include <vector>
 
-#include "Components/BaseComponent.h"
+#include <Python.h>
+
+#include "Config.h"
 #include "../Simulation.h"
+#include "Components/BaseComponent.h"
 
 namespace DPsim {
 	enum SimState {
@@ -60,7 +61,7 @@ namespace Python {
 		bool startSync;
 
 		PyObject* pyComps; // Components as a (Python) list of PyComponents
-		std::vector<BaseComponent*> comps;
+		ElementList comps;
 		int numSwitch;
 
 		// List of additional objects that aren't directly used from Simulation
@@ -70,7 +71,7 @@ namespace Python {
 
 		// Function executed by the simulation thread
 		static void simThreadFunction(Simulation* pySim);
-#ifdef __linux__
+#ifdef WITH_RT
 		static void simThreadFunctionRT(Simulation* pySim);
 #endif
 

@@ -26,7 +26,7 @@ using namespace DPsim;
 
 Matrix DPsim::Trapezoidal(Matrix states, Matrix A, Matrix B, Real dt, Matrix u_new, Matrix u_old)
 {
-	int n = states.rows();
+	Matrix::Index n = states.rows();
 	Matrix I = Matrix::Identity(n, n);
 
 	Matrix Aux = I + (dt / 2) * A;
@@ -38,7 +38,7 @@ Matrix DPsim::Trapezoidal(Matrix states, Matrix A, Matrix B, Real dt, Matrix u_n
 
 Matrix DPsim::Trapezoidal(Matrix states, Matrix A, Matrix B, Matrix C, Real dt, Matrix u_new, Matrix u_old)
 {
-	int n = states.rows();
+	Matrix::Index n = states.rows();
 	Matrix I = Matrix::Identity(n, n);
 
 	Matrix Aux = I + (dt / 2) * A;
@@ -50,7 +50,7 @@ Matrix DPsim::Trapezoidal(Matrix states, Matrix A, Matrix B, Matrix C, Real dt, 
 
 Matrix DPsim::Trapezoidal(Matrix states, Matrix A, Matrix B, Matrix C, Real dt, Matrix u)
 {
-	int n = states.rows();
+	Matrix::Index n = states.rows();
 	Matrix I = Matrix::Identity(n, n);
 
 	Matrix Aux = I + (dt / 2) * A;
@@ -60,9 +60,19 @@ Matrix DPsim::Trapezoidal(Matrix states, Matrix A, Matrix B, Matrix C, Real dt, 
 	return newstates;
 }
 
+Real DPsim::Trapezoidal(Real states, Real A, Real B, Real C, Real dt, Real u)
+{
+
+	Real Aux = 1 + (dt / 2) * A;
+	Real Aux2 = 1 - (dt / 2) * A;
+
+	Real newstates = (1/Aux2)*Aux*states + (1 / Aux2)*dt*B*u + (1 / Aux2)*dt*C;
+	return newstates;
+}
+
 Matrix DPsim::Trapezoidal(Matrix states, Matrix A, Matrix B, Real dt, Matrix u)
 {
-	int n = states.rows();
+	Matrix::Index n = states.rows();
 
 	Matrix I = Matrix::Identity(n, n);
 	Matrix Aux = I + (dt / 2) * A;
@@ -72,11 +82,25 @@ Matrix DPsim::Trapezoidal(Matrix states, Matrix A, Matrix B, Real dt, Matrix u)
 	return InvAux*Aux*states + InvAux*dt*B*u;
 }
 
+Real DPsim::Trapezoidal(Real states, Real A, Real B, Real dt, Real u)
+{
+
+	Real Aux = 1 + (dt / 2) * A;
+	Real Aux2 = 1 - (dt / 2) * A;
+	Real InvAux = 1 / Aux2;
+
+	return InvAux*Aux*states + InvAux*dt*B*u;
+}
+
 Matrix DPsim::Euler(Matrix states, Matrix A, Matrix B, Real dt, Matrix u)
 {
 	return states + dt*(A*states + B*u);
 }
 
+Real DPsim::Euler(Real states, Real A, Real B, Real dt, Real u)
+{
+	return states + dt*(A*states + B*u);
+}
 
 Matrix DPsim::Euler(Matrix states, Matrix A, Matrix B, Matrix C, Real dt, Matrix u)
 {

@@ -51,8 +51,7 @@ void SimplifiedSynchronGeneratorEMT::init(Real om, Real dt,
 {
 
 	// Create matrices for state space representation
-	if (mNumDampingWindings == 2)
-	{
+
 		mVoltages = Matrix::Zero(3, 1);
 		mFluxes = Matrix::Zero(3, 1);
 		mCurrents = Matrix::Zero(3, 1);
@@ -77,7 +76,7 @@ void SimplifiedSynchronGeneratorEMT::init(Real om, Real dt,
 			-1, 0, 0,
 			0, 0, 0;
 
-	}
+
 
 	// Determinant of Ld (inductance matrix of d axis)
 	//detLd = -(mLmd + mLl)*(mLlfd + mLmd) + mLmd*mLmd;

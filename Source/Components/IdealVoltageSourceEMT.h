@@ -33,10 +33,12 @@ namespace DPsim {
 	/// as unkown and it is taken into account for the equation of node j as positve and for the equation of node k as negative. Moreover
 	/// a new equation ej - ek = V is added to the problem.
 	class IdealVoltageSourceEMT : public BaseComponent {
+		
+	friend class SimplifiedSynGenEMT;
 
 	protected:
 		//  ### Ideal Voltage source parameters ###
-		/// Complex voltage [V]
+		/// voltage [V]
 		Real mVoltage;
 
 		Real mVoltageAtSourcer;
@@ -48,6 +50,9 @@ namespace DPsim {
 
 		/// Number of voltage source (first, second...)
 		Int mNumber;
+
+		/// Modified voltage
+		void setVoltage(Real newVoltage) { mVoltage = newVoltage; }
 
 	public:
 		IdealVoltageSourceEMT() { ; };
@@ -69,5 +74,7 @@ namespace DPsim {
 		void postStep(SystemModel& system) { }
 
 		virtual Complex getCurrent(SystemModel& system);
+
+
 	};
 }

@@ -21,10 +21,13 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *********************************************************************************/
 
+#include "Config.h"
 #include "Python/Component.h"
 #include "Python/Interface.h"
 
-#include "ShmemInterface.h"
+#ifdef WITH_SHMEM
+  #include "ShmemInterface.h"
+#endif
 
 using namespace DPsim;
 
@@ -43,6 +46,7 @@ static const char* DocInterfaceRegisterSource =
 ":param real_idx: Index of the real part of the current or voltage.\n"
 ":param imag_idx: Index of the imaginary part of the current or voltage.\n";
 PyObject* Python::Interface::registerSource(PyObject* self, PyObject* args) {
+#ifdef WITH_SHMEM
 	PyObject *obj;
 	int realIdx, imagIdx;
 
@@ -55,16 +59,22 @@ PyObject* Python::Interface::registerSource(PyObject* self, PyObject* args) {
 		return nullptr;
 	}
 	Python::Component *pyComp = (Python::Component*) obj;
-	if (DPsim::ExternalCurrentSource *ecs = dynamic_cast<DPsim::ExternalCurrentSource*>(pyComp->comp)) {
+	if (DPsim::ExternalCurrentSource *ecs = dynamic_cast<DPsim::ExternalCurrentSource*>(pyComp->comp.get())) {
 		pyIntf->intf->registerCurrentSource(ecs, realIdx, imagIdx);
-	} else if (DPsim::ExternalVoltageSource *evs = dynamic_cast<DPsim::ExternalVoltageSource*>(pyComp->comp)) {
+	} else if (DPsim::ExternalVoltageSource *evs = dynamic_cast<DPsim::ExternalVoltageSource*>(pyComp->comp.get())) {
 		pyIntf->intf->registerVoltageSource(evs, realIdx, imagIdx);
 	} else {
 		PyErr_SetString(PyExc_TypeError, "First argument must be an external source");
 		return nullptr;
 	}
+
 	Py_INCREF(Py_None);
+
 	return Py_None;
+#else
+	PyErr_SetString(PyExc_NotImplementedError, "not implemented on this platform");
+	return nullptr;
+#endif
 }
 
 static const char* DocInterfaceExportCurrent =
@@ -75,6 +85,7 @@ static const char* DocInterfaceExportCurrent =
 ":param real_idx: Index where the real part of the current is written.\n"
 ":param imag_idx: Index where the imaginary part of the current is written.\n";
 PyObject* Python::Interface::exportCurrent(PyObject* self, PyObject* args) {
+#ifdef WITH_SHMEM
 	int realIdx, imagIdx;
 	PyObject* obj;
 	Python::Interface* pyIntf = (Python::Interface*) self;
@@ -85,10 +96,17 @@ PyObject* Python::Interface::exportCurrent(PyObject* self, PyObject* args) {
 		PyErr_SetString(PyExc_TypeError, "First argument must be a Component");
 		return nullptr;
 	}
+
 	Component *pyComp = (Component*) obj;
-	pyIntf->intf->registerExportedCurrent(pyComp->comp, realIdx, imagIdx);
+	pyIntf->intf->registerExportedCurrent(pyComp->comp.get(), realIdx, imagIdx);
+
 	Py_INCREF(Py_None);
+
 	return Py_None;
+#else
+	PyErr_SetString(PyExc_NotImplementedError, "not implemented on this platform");
+	return nullptr;
+#endif
 }
 
 static const char* DocInterfaceExportVoltage =
@@ -102,14 +120,22 @@ static const char* DocInterfaceExportVoltage =
 ":param real_idx: Index where the real part of the voltage is written.\n"
 ":param imag_idx: Index where the imaginary part of the voltage is written.\n";
 PyObject* Python::Interface::exportVoltage(PyObject* self, PyObject* args) {
+#ifdef WITH_SHMEM
 	int from, to, realIdx, imagIdx;
 	Python::Interface* pyIntf = (Python::Interface*) self;
 
 	if (!PyArg_ParseTuple(args, "iiii", &from, &to, &realIdx, &imagIdx))
 		return nullptr;
+
 	pyIntf->intf->registerExportedVoltage(from, to, realIdx, imagIdx);
+
 	Py_INCREF(Py_None);
+
 	return Py_None;
+#else
+	PyErr_SetString(PyExc_NotImplementedError, "not implemented on this platform");
+	return nullptr;
+#endif
 }
 
 const char* Python::DocOpenShmemInterface =
@@ -132,8 +158,7 @@ const char* Python::DocOpenShmemInterface =
 "performance at the cost of wasted CPU time.\n"
 ":returns: A new `Interface` object.\n";
 PyObject* Python::OpenShmemInterface(PyObject *self, PyObject *args, PyObject *kwds) {
-
-#ifdef __linux__
+#ifdef WITH_SHMEM
 	static char *kwlist[] = {"wname", "rname", "queuelen", "samplelen", "polling", nullptr};
 	struct shmem_conf conf;
 	const char *wname, *rname;

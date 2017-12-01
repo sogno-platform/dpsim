@@ -21,8 +21,6 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *********************************************************************************/
 
-#ifdef __linux__
-
 #pragma once
 
 #include <atomic>
@@ -73,4 +71,3 @@ namespace DPsim {
 	};
 };
 
-#endif
