@@ -36,7 +36,7 @@ void IdealTransformerDP::applySystemMatrixStamp(SystemModel& system) {
 		system.setCompSystemMatrixElement(mVirtualNodes[0], mNode1, 1.0, 0);
 	}
 	if (mNode2 >= 0) {
-		system.setCompSystemMatrixElement(mNode2, mVirtualNodes[0], mRatio.real, mRatio.imag);
-		system.setCompSystemMatrixElement(mVirtualNodes[0], mNode2, -mRatio.real, -mRatio.imag);
+		system.setCompSystemMatrixElement(mNode2, mVirtualNodes[0], mRatio.real(), mRatio.imag());
+		system.setCompSystemMatrixElement(mVirtualNodes[0], mNode2, -mRatio.real(), -mRatio.imag());
 	}
 }

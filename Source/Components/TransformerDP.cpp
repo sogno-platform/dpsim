@@ -38,17 +38,11 @@ TransformerDP::TransformerDP(String name, Int node1, Int node2, Real ratioAbs, R
 	}	
 }
 
+// TODO: implement RX losses
 void TransformerDP::init(Real om, Real dt) {
-	Real abs = mActivePower*mActivePower + mReactivePower*mReactivePower;
-	mResistance = mSvVoltage*mSvVoltage*mActivePower / abs;
-	mConductance = 1.0 / mResistance;
-	mReactance = mSvVoltage*mSvVoltage*mReactivePower / abs;
-	mInductance = mReactance / om;
+	mInductor = std::make_shared<InductorDP>(mName + "_ind", mNode1, mNode2, mInductance);
+	mInductor->init(om, dt);
 
-	inductor = std::make_shared<InductorDP>(mName + "_ind", mNode1, mNode2, mInductance);
-	resistor = std::make_shared<ResistorDP>(mName + "_res", mNode1, mNode2, mResistance);
-	inductor->init(om, dt);
-	resistor->init(om, dt);
 }
 
 void TransformerDP::applySystemMatrixStamp(SystemModel& system) {
@@ -57,12 +51,12 @@ void TransformerDP::applySystemMatrixStamp(SystemModel& system) {
 		system.setCompSystemMatrixElement(mVirtualNodes[0], mNode1, 1.0, 0);
 	}
 	if (mNode2 >= 0) {
-		system.setCompSystemMatrixElement(mNode2, mVirtualNodes[0], mRatioRe, mRatioIm);
-		system.setCompSystemMatrixElement(mVirtualNodes[0], mNode2, -mRatioRe, -mRatioIm);
+		system.setCompSystemMatrixElement(mNode2, mVirtualNodes[0], mRatio.real(), mRatio.imag());
+		system.setCompSystemMatrixElement(mVirtualNodes[0], mNode2, -mRatio.real(), -mRatio.imag());
 	}
 
 	if (mNumVirtualNodes == 2) {
 		// Add inductive part to system matrix
-		inductor->applySystemMatrixStamp(system);
+		mInductor->applySystemMatrixStamp(system);
 	}
 }

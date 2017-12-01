@@ -22,8 +22,8 @@
 
 #include <CIMModel.hpp>
 #include <IEC61970.hpp>
-
-#include "CIM/Reader.h"
+#include "../Definitions.h"
+#include "Reader.h"
 #include "Components.h"
 
 using namespace DPsim;
@@ -103,7 +103,7 @@ ElementPtr Reader::mapACLineSegment(ACLineSegment* line) {
 
 	mLogger->Log(LogLevel::INFO) << "Create RxLine " << line->name << " node1=" << nodes[0] << " node2=" << nodes[1]
 		<< " R=" << r << " X=" << x << std::endl;
-	return make_shared<RxLineDP>(line->name, nodes[0], nodes[1], r, x/mFrequency);
+	return std::make_shared<RxLineDP>(line->name, nodes[0], nodes[1], r, x/mFrequency);
 }
 
 void Reader::mapAsynchronousMachine(AsynchronousMachine* machine) {
@@ -136,7 +136,7 @@ ElementPtr Reader::mapExternalNetworkInjection(ExternalNetworkInjection* inj) {
 	mLogger->Log(LogLevel::INFO) << "IdealVoltageSource " << inj->name << " rid=" << inj->mRID << " node1=" << node 
 		<< " V=" << voltAbs << "<" << voltPhase << std::endl;
 	
-	return make_shared<IdealVoltageSource>(inj->name, node, 0, initVoltage);
+	return std::make_shared<IdealVoltageSource>(inj->name, node, 0, initVoltage);
 }
 
 ElementPtr Reader::mapPowerTransformer(PowerTransformer* trans) {
@@ -208,7 +208,7 @@ ElementPtr Reader::mapSynchronousMachine(SynchronousMachine* machine) {
 	// TODO is it appropiate to use this resistance here
 	mLogger->Log(LogLevel::INFO) << "Create IdealVoltageSource " << machine->name << " node=" << node
 		<< " V=" << voltAbs << "<" << voltPhase << std::endl;
-	return make_shared<IdealVoltageSource>(machine->name, node, 0, initVoltage);
+	return std::make_shared<IdealVoltageSource>(machine->name, node, 0, initVoltage);
 }
 
 ElementPtr Reader::mapComponent(BaseClass* obj) {
