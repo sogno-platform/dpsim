@@ -34,7 +34,7 @@ int main() {
 	fileName << "SimulationExampleRXLine3_" << timeStep;
 	ElementList circElements;
 	circElements.push_back(std::make_shared<IdealVoltageSource>("v_1", 1, 0, Complex(10, 0)));
-	circElements.push_back(std::make_shared<RxLine>("Line_1", 1, 2, 0.1, 0.001));
+	circElements.push_back(std::make_shared<RxLineDP>("Line_1", 1, 2, 0.1, 0.001));
 	circElements.push_back(std::make_shared<ResistorDP>("r_1", 2, 0, 20));
 
 	// Define log names
