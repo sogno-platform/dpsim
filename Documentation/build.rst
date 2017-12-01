@@ -1,4 +1,4 @@
-Build
+Build DPsim
 =====
 
 Windows (Visual Studio)
@@ -46,3 +46,33 @@ Linux (CMake)
 .. _Eigen: http://eigen.tuxfamily.org
 .. _CMake: https://cmake.org/download/
 .. _VILLASnode: https://git.rwth-aachen.de/VILLASframework/VILLASnode
+
+Build Documentation
+=====
+
+Python
+-----------------------
+1. Install [Sphinx](http://www.sphinx-doc.org/en/stable/index.html)
+  - either from your Linux distribution's repo
+  - or [manually](http://www.sphinx-doc.org/en/stable/install.html#windows-install-python-and-sphinx) on Windows
+  - if you used the installer which already adds Python to your path and installs pip, you basically only need to run `pip install sphinx`
+2. Generate the Python documentation by running Sphinx via CMake:
+```
+$ mkdir -p build
+$ cd build
+$ cmake ..
+$ make docs
+```
+4. The resulting documentation will be generated in `Documentation/html/`
+
+C++
+-----------------------
+1. Install Doxygen
+2. Generate the C++ documentation by running Doxygen via CMake:
+```
+$ mkdir -p build
+$ cd build
+$ cmake ..
+$ make docs_cxx
+```
+4. The resulting documentation will be generated in `Documentation/html/Cxx`

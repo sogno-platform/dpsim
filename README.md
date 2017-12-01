@@ -25,26 +25,13 @@ Please check out the existing [Python examples](Examples/Python/).
 
 ## Documentation
 
-1. Install [Sphinx](http://www.sphinx-doc.org/en/stable/index.html)
-  - either from your Linux distribution's repo
-  - or [manually](http://www.sphinx-doc.org/en/stable/install.html#windows-install-python-and-sphinx) on Windows
-  - if you used the installer which already adds Python to your path and installs pip, you basically only need to run `pip install sphinx`
-2. Generate the Python documentation by running Sphinx via CMake:
-```
-$ mkdir -p build
-$ cd build
-$ cmake ..
-$ make docs
-```
-4. The resulting documentation will be generated in `Documentation/html/`
-
 [Online documentation for Python](http://134.130.169.10:8080/)
 
 [Online documentation for C++](http://134.130.169.10:8080/cxx/)
 
 ## Copyright
 
-2017, Institute for Automation of Complex Power Systems, EONERC
+2017, Institute for Automation of Complex Power Systems, EONERC, RWTH Aachen University
 
 ## License
 
