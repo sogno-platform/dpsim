@@ -1,14 +1,15 @@
 # Folders
 Libraries/
-Build/
 Results/
 Logs/
 build/
+VisualStudio/
 
 # IDEs
 cmake-build-debug/
 .idea/
 .vs/
+*.json
 
 # CMake
 CMakeFiles/
