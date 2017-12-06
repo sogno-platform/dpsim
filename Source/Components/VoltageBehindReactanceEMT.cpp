@@ -153,7 +153,12 @@ void VoltageBehindReactanceEMT::init(Real om, Real dt,
 
 void VoltageBehindReactanceEMT::step(SystemModel& system, Real time) {
 
+	
+
+
 	stepInPerUnit(system.getOmega(), system.getTimeStep(), time, system.getNumMethod());
+
+	R_load = system.getCurrentSystemMatrix().inverse() / mBase_Z;
 
 	// Update current source accordingly
 	if (mNode1 >= 0) {
@@ -172,6 +177,7 @@ void VoltageBehindReactanceEMT::step(SystemModel& system, Real time) {
 		mLog->LogDataLine(time, logValues);
 	}
 
+
 }
 
 
@@ -187,15 +193,24 @@ void VoltageBehindReactanceEMT::stepInPerUnit(Real om, Real dt, Real time, Numer
 	mOmMech = mOmMech + dt * (1. / (2. * mH) * (mElecTorque - mMechTorque));
 	mThetaMech = mThetaMech + dt * (mOmMech* mBase_OmMech);
 
+
 	// Calculate Inductance matrix and its derivative
 	CalculateLandpL();
 
-
 	// Solve circuit - calculate stator currents
-	if (numMethod == NumericalMethod::Trapezoidal_flux) 
+	if (numMethod == NumericalMethod::Trapezoidal_flux) {
 		mIabc = Trapezoidal(mIabc, -mDInductanceMat.inverse()*(mResistanceMat + R_load + pmDInductanceMat), mDInductanceMat.inverse(), dt*mBase_OmElec, -mDVabc, -mDVabc_hist);
+		
+	}
+		
 	else if (numMethod == NumericalMethod::Euler) 
 		mIabc = Euler(mIabc, -mDInductanceMat.inverse()*(mResistanceMat + R_load + pmDInductanceMat), mDInductanceMat.inverse(), dt*mBase_OmElec, -mDVabc);
+	
+
+
+	mIa_hist = mIa;
+	mIb_hist = mIb;
+	mIc_hist = mIc;
 
 	mIa = mIabc(0);
 	mIb = mIabc(1);
@@ -303,21 +318,9 @@ void VoltageBehindReactanceEMT::stepInPerUnit(Real om, Real dt, Real time, Numer
 		mDVb,
 		mDVc;
 
-	// Load resistance
-	if (time < 0.1 || time > 0.2)
-	{
-		R_load <<
-			1037.8378 / mBase_Z, 0, 0,
-			0, 1037.8378 / mBase_Z, 0,
-			0, 0, 1037.8378 / mBase_Z;
-	}
-	else
-	{
-		R_load <<
-			0.001 / mBase_Z, 0, 0,
-			0, 0.001 / mBase_Z, 0,
-			0, 0, 0.001 / mBase_Z;
-	}
+
+
+
 
 }
 

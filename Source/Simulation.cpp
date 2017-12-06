@@ -197,12 +197,26 @@ Int Simulation::stepGeneratorTest(Logger& leftSideVectorLog, Logger& rightSideVe
 		(*it)->postStep(mSystemModel);
 	}
 
+	if (ClearingFault)
+		clearFault(1, 2, 3);
+
 	if (mCurrentSwitchTimeIndex < mSwitchEventVector.size()) {
 		if (mTime >= mSwitchEventVector[mCurrentSwitchTimeIndex].switchTime) {
-			switchSystemMatrix(mSwitchEventVector[mCurrentSwitchTimeIndex].systemIndex);
-
-			mCurrentSwitchTimeIndex++;
+			
+			if (mCurrentSwitchTimeIndex == 1) {
+				clearFault(1, 2, 3);
+				mCurrentSwitchTimeIndex++;
+			}
+			else {
+				switchSystemMatrix(mSwitchEventVector[mCurrentSwitchTimeIndex].systemIndex);
+				mElements = mElementsVector[mSwitchEventVector[mCurrentSwitchTimeIndex++].systemIndex];
+			}
+			//mCurrentSwitchTimeIndex++;
 			mLogger->Log(LogLevel::INFO) << "Switched to system " << mCurrentSwitchTimeIndex << " at " << mTime << std::endl;
+			mLogger->Log(LogLevel::INFO) << "New matrix:" << std::endl << mSystemModel.getCurrentSystemMatrix() << std::endl;
+			mLogger->Log(LogLevel::INFO) << "New decomp:" << std::endl << mSystemModel.getLUdecomp() << std::endl;
+
+
 		}
 	}
 
@@ -226,52 +240,59 @@ Int Simulation::stepGeneratorTest(Logger& leftSideVectorLog, Logger& rightSideVe
 	}
 }
 
-int Simulation::stepGeneratorVBR(Logger& leftSideVectorLog, Logger& rightSideVectorLog,
-	ElementPtr generator, Real time) {
 
-	// Set to zero because all components will add their contribution for the current time step to the current value
-	mSystemModel.getRightSideVector().setZero();
 
-	// Execute step for all circuit components
-	for (ElementList::iterator it = mElements.begin(); it != mElements.end(); ++it) {
-		(*it)->step(mSystemModel, mTime);
+void Simulation::clearFault(Real Node1, Real Node2, Real Node3) {
+
+	ClearingFault = true;
+
+	mIfa = getRightSideVector()(Node1 - 1);
+	mIfb = getRightSideVector()(Node2 - 1);
+	mIfc = getRightSideVector()(Node3 - 1);
+
+
+	if (FirstTime == true)
+	{
+		mIfa_hist = mIfa;
+		mIfb_hist = mIfb;
+		mIfc_hist = mIfc;
+
+		FirstTime = false;
 	}
 
-	// Solve circuit for vector j with generator output current
-	mSystemModel.solve();
 
-	// Execute PostStep for all components, generator states are recalculated based on new terminal voltage
-	for (ElementList::iterator it = mElements.begin(); it != mElements.end(); ++it) {
-		(*it)->postStep(mSystemModel);
+
+	if (signbit(mIfa) != signbit(mIfa_hist) && !aCleared) {
+		mElements.erase(mElements.begin() + 1);
+		addSystemTopology(mElements);
+		switchSystemMatrix(mSwitchEventVector.size() + NumClearedPhases);
+		NumClearedPhases++;
+		aCleared = true;
+	}
+		
+	if (signbit(mIfb) != signbit(mIfb_hist) && !bCleared) {
+		mElements.erase(mElements.begin() + 2);
+		addSystemTopology(mElements);
+		switchSystemMatrix(mSwitchEventVector.size() + NumClearedPhases);
+		NumClearedPhases++;
+		bCleared = true;
 	}
 
-	if (mCurrentSwitchTimeIndex < mSwitchEventVector.size()) {
-		if (mTime >= mSwitchEventVector[mCurrentSwitchTimeIndex].switchTime) {
-			switchSystemMatrix(mSwitchEventVector[mCurrentSwitchTimeIndex].systemIndex);
-
-			mCurrentSwitchTimeIndex++;
-			mLogger->Log(LogLevel::INFO) << "Switched to system " << mCurrentSwitchTimeIndex << " at " << mTime << std::endl;
-		}
+	if (signbit(mIfc) != signbit(mIfc_hist) && !cCleared) {
+		mElements.erase(mElements.begin() + 1);
+		addSystemTopology(mElements);
+		switchSystemMatrix(mSwitchEventVector.size() + NumClearedPhases);
+		NumClearedPhases++;
+		cCleared = true;
 	}
 
-	// Save simulation step data
-	if (mLastLogTimeStep == 0) {
-		std::cout << mTime << std::endl;
-		leftSideVectorLog.LogDataLine(getTime(), getLeftSideVector());
-		rightSideVectorLog.LogDataLine(getTime(), getRightSideVector());
-	}
+	mIfa_hist = mIfa;
+	mIfb_hist = mIfb;
+	mIfc_hist = mIfc;
 
-	mLastLogTimeStep++;
-	if (mLastLogTimeStep == mDownSampleRate) {
-		mLastLogTimeStep = 0;
-	}
+	if (NumClearedPhases == 3)
+		ClearingFault = false;
 
-	if (mTime >= mFinalTime) {
-		return 0;
-	}
-	else {
-		return 1;
-	}
 }
 
 void Simulation::switchSystemMatrix(Int systemMatrixIndex) {
@@ -404,3 +425,53 @@ void Simulation::runRT(RTMethod rtMethod, bool startSynch, Logger& logger, Logge
 	}
 }
 #endif /* WITH_RT */
+
+
+int Simulation::stepGeneratorVBR(Logger& leftSideVectorLog, Logger& rightSideVectorLog,
+	ElementPtr generator, Real time) {
+
+	// Set to zero because all components will add their contribution for the current time step to the current value
+	mSystemModel.getRightSideVector().setZero();
+
+	// Execute step for all circuit components
+	for (ElementList::iterator it = mElements.begin(); it != mElements.end(); ++it) {
+		(*it)->step(mSystemModel, mTime);
+	}
+
+	// Solve circuit for vector j with generator output current
+	mSystemModel.solve();
+
+	// Execute PostStep for all components, generator states are recalculated based on new terminal voltage
+	for (ElementList::iterator it = mElements.begin(); it != mElements.end(); ++it) {
+		(*it)->postStep(mSystemModel);
+	}
+
+	if (mCurrentSwitchTimeIndex < mSwitchEventVector.size()) {
+		if (mTime >= mSwitchEventVector[mCurrentSwitchTimeIndex].switchTime) {
+			
+			switchSystemMatrix(mSwitchEventVector[mCurrentSwitchTimeIndex].systemIndex);
+
+			mCurrentSwitchTimeIndex++;
+			mLogger->Log(LogLevel::INFO) << "Switched to system " << mCurrentSwitchTimeIndex << " at " << mTime << std::endl;
+		}
+	}
+
+	// Save simulation step data
+	if (mLastLogTimeStep == 0) {
+		std::cout << mTime << std::endl;
+		leftSideVectorLog.LogDataLine(getTime(), getLeftSideVector());
+		rightSideVectorLog.LogDataLine(getTime(), getRightSideVector());
+	}
+
+	mLastLogTimeStep++;
+	if (mLastLogTimeStep == mDownSampleRate) {
+		mLastLogTimeStep = 0;
+	}
+
+	if (mTime >= mFinalTime) {
+		return 0;
+	}
+	else {
+		return 1;
+	}
+}

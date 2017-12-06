@@ -77,6 +77,22 @@ namespace DPsim {
 		/// Interface curent phase c
 		Real mIc;
 
+
+		/// Interface curent phase a last time step
+		Real mIa_hist;
+		/// Interface curent phase b last time step
+		Real mIb_hist;
+		/// Interface curent phase c last time step
+		Real mIc_hist;
+
+		///Load Resistance phase a
+		Real Ra;
+		///Load Resistance phase b
+		Real Rb;
+		///Load Resistance phase c
+		Real Rc;
+
+
 		/// Magnetizing flux linkage in q axis
 		Real mPsimq;
 		/// Magnetizing flux linkage in d axis

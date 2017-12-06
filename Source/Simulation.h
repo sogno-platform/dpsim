@@ -83,6 +83,27 @@ namespace DPsim {
 
 		uint64_t mRtTimerCount = 0;
 
+		bool FirstTime = true;
+		bool ClearingFault = false;
+		bool aCleared = false;
+		bool bCleared = false;
+		bool cCleared = false;
+		Int NumClearedPhases = 0;
+
+		/// Fault Current phase a
+		Real mIfa;
+		/// Fault Current phase b
+		Real mIfb;
+		/// Fault Current phase c
+		Real mIfc;
+
+		/// Fault Current phase a last time step
+		Real mIfa_hist;
+		/// Fault Current phase b
+		Real mIfb_hist;
+		/// Fault Current phase c
+		Real mIfc_hist;
+
 	public:
 		/// Sets parameters to default values.
 		Simulation();
@@ -100,6 +121,7 @@ namespace DPsim {
 		void setSwitchTime(Real switchTime, Int systemIndex);
 		void increaseByTimeStep();
 		void addExternalInterface(ExternalInterface*);
+		void clearFault(Real Node1, Real Node2, Real Node3);
 
 		void setNumericalMethod(NumericalMethod numMethod);
 

@@ -60,10 +60,10 @@ int main() {
 	Real Llkd = 0.1713;
 	Real Rkq1 = 0.0062;
 	Real Llkq1 = 0.7252;
-	Real Rkq2 = 0.0237;
-	Real Llkq2 = 0.125;
-	//Real Rkq2 = 0;
-	//Real Llkq2 = 0;
+	//Real Rkq2 = 0.0237;
+	//Real Llkq2 = 0.125;
+	Real Rkq2 = 0;
+	Real Llkq2 = 0;
 
 	// Declare circuit components
 	ElementPtr gen = std::make_shared<VoltageBehindReactanceEMT>("gen", 1, 2, 3,
@@ -97,7 +97,7 @@ int main() {
 	// Set up simulation
 	Real tf, dt, t;
 	Real om = 2.0*M_PI*60.0;
-	tf = 3; dt = 0.0001; t = 0;
+	tf = 0.3; dt = 0.0001; t = 0;
 	Int downSampling = 1;
 	Simulation newSim(circElements, om, dt, tf, log, SimulationType::EMT, downSampling);
 	newSim.setNumericalMethod(NumericalMethod::Trapezoidal_flux);
@@ -128,9 +128,9 @@ int main() {
 	std::cout << newSim.getRightSideVector() << std::endl;
 
 	Real lastLogTime = 0;
-	Real logTimeStep = 0.00005;
+	Real logTimeStep = 0.0001;
 	newSim.setSwitchTime(0.1, 1);
-	newSim.setSwitchTime(2.1, 0);
+	newSim.setSwitchTime(0.2, 0);
 
 	// Main Simulation Loop
 	while (newSim.getTime() < tf) {

@@ -55,6 +55,15 @@ namespace DPsim {
 		/// Auxiliar inductance
 		Real mLb;
 
+		///Load Resistance
+		Real Ra;
+		Real Rb;
+		Real Rc;
+
+		Real mIa_hist;
+		Real mIb_hist;
+		Real mIc_hist;
+
 
 		/// d dynamic flux
 		Real mDPsid;

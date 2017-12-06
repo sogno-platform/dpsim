@@ -164,6 +164,10 @@ void SimplifiedVBR::stepInPerUnit(Real om, Real dt, Real time, NumericalMethod n
 	mIq = mDqStatorCurrents(0, 0);
 	mId = mDqStatorCurrents(1, 0);
 
+	mIa_hist = mIa;
+	mIb_hist = mIb;
+	mIc_hist = mIc;
+
 	mIa = inverseParkTransform(mThetaMech, mIq, mId, 0)(0);
 	mIb = inverseParkTransform(mThetaMech, mIq, mId, 0)(1);
 	mIc = inverseParkTransform(mThetaMech, mIq, mId, 0)(2);
@@ -212,19 +216,42 @@ void SimplifiedVBR::stepInPerUnit(Real om, Real dt, Real time, NumericalMethod n
 
 
 	// Load resistance
-	if (time < 0.1 ||time > 2.1 )
+	if (time < 0.1)
 	{
+		Ra = 1037.8378 / mBase_Z;
+		Rb = 1037.8378 / mBase_Z;
+		Rc = 1037.8378 / mBase_Z;
+
 		R_load <<
-			1037.8378 / mBase_Z, 0, 0,
-			0, 1037.8378 / mBase_Z, 0,
-			0, 0, 1037.8378 / mBase_Z;
+			Ra, 0, 0,
+			0, Rb, 0,
+			0, 0, Rc;
+	}
+	else if (time > 0.2)
+	{
+		
+		if (signbit(mIa) != signbit(mIa_hist)) 
+			Ra = 1037.8378 / mBase_Z;
+		if (signbit(mIb) != signbit(mIb_hist))
+			Rb = 1037.8378 / mBase_Z;
+		if (signbit(mIc) != signbit(mIc_hist))
+			Rc = 1037.8378 / mBase_Z;
+
+		R_load <<
+			Ra, 0, 0,
+			0, Rb, 0,
+			0, 0, Rc;
 	}
 	else
 	{
+		Ra = 0.001 / mBase_Z;
+		Rb = 0.001 / mBase_Z;
+		Rc = 0.001 / mBase_Z;
+
 		R_load <<
-			0.001 / mBase_Z, 0, 0,
-			0, 0.001 / mBase_Z, 0,
-			0, 0, 0.001 / mBase_Z;
+			Ra, 0, 0,
+			0, Rb, 0,
+			0, 0, Rc;
 	}
 
 }
