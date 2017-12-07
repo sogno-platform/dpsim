@@ -81,7 +81,7 @@ int main() {
 	circElements.push_back(r3);
 
 	// Declare circuit components for resistance change
-	Real breakerRes = 0.001;
+	Real breakerRes = 103.78378;
 	ElementPtr rBreaker1 = std::make_shared<ResistorEMT>("rbreak1", 1, 0, breakerRes);
 	ElementPtr rBreaker2 = std::make_shared<ResistorEMT>("rbreak2", 2, 0, breakerRes);
 	ElementPtr rBreaker3 = std::make_shared<ResistorEMT>("rbreak3", 3, 0, breakerRes);
@@ -90,14 +90,14 @@ int main() {
 	circElementsBreakerOn.push_back(rBreaker1);
 	circElementsBreakerOn.push_back(rBreaker2);
 	circElementsBreakerOn.push_back(rBreaker3);
-	circElementsBreakerOn.push_back(r1);
-	circElementsBreakerOn.push_back(r2);
-	circElementsBreakerOn.push_back(r3);
+	//circElementsBreakerOn.push_back(r1);
+	//circElementsBreakerOn.push_back(r2);
+	//circElementsBreakerOn.push_back(r3);
 
 	// Set up simulation
 	Real tf, dt, t;
 	Real om = 2.0*M_PI*60.0;
-	tf = 0.3; dt = 0.0001; t = 0;
+	tf = 10; dt = 0.0001; t = 0;
 	Int downSampling = 1;
 	Simulation newSim(circElements, om, dt, tf, log, SimulationType::EMT, downSampling);
 	newSim.setNumericalMethod(NumericalMethod::Trapezoidal_flux);
@@ -113,7 +113,7 @@ int main() {
 	Real mechPower = 5.5558e5;
 	shared_ptr<VoltageBehindReactanceEMT> genPtr = std::dynamic_pointer_cast<VoltageBehindReactanceEMT>(gen);
 	genPtr->init(om, dt, initActivePower, initReactivePower, initTerminalVolt, initVoltAngle, fieldVoltage, mechPower);
-	//genPtr->AddExciter(Ta, Ka, Te, Ke, Tf, Kf, Tr, Lmd, Rfd);
+	genPtr->AddExciter(Ta, Ka, Te, Ke, Tf, Kf, Tr, Lmd, Rfd);
 
 	// Calculate initial values for circuit at generator connection point
 	Real initApparentPower = sqrt(pow(initActivePower, 2) + pow(initReactivePower, 2));
@@ -129,8 +129,8 @@ int main() {
 
 	Real lastLogTime = 0;
 	Real logTimeStep = 0.0001;
-	newSim.setSwitchTime(0.1, 1);
-	newSim.setSwitchTime(0.2, 0);
+	newSim.setSwitchTime(2, 1);
+	newSim.setSwitchTime(6, 0);
 
 	// Main Simulation Loop
 	while (newSim.getTime() < tf) {

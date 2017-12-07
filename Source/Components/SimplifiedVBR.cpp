@@ -125,6 +125,8 @@ void SimplifiedVBR::init(Real om, Real dt,
 
 void SimplifiedVBR::step(SystemModel& system, Real time) {
 
+	R_load = system.getCurrentSystemMatrix().inverse() / mBase_Z;
+
 	stepInPerUnit(system.getOmega(), system.getTimeStep(), time, system.getNumMethod());
 
 	// Update current source accordingly
@@ -150,7 +152,8 @@ void SimplifiedVBR::step(SystemModel& system, Real time) {
 void SimplifiedVBR::stepInPerUnit(Real om, Real dt, Real time, NumericalMethod numMethod) {
 
 	// Calculate mechanical variables with euler
-	mElecTorque = (mPsimd*mIq - mPsimq*mId);
+	//mElecTorque = (mPsimd*mIq - mPsimq*mId);
+	mElecTorque = mVd*mId + mVq*mIq + mRs*(mId*mId + mIq*mIq);
 	mOmMech = mOmMech + dt * (1. / (2. * mH) * (mElecTorque - mMechTorque));
 	mThetaMech = mThetaMech + dt * (mOmMech* mBase_OmMech);
 
@@ -172,9 +175,10 @@ void SimplifiedVBR::stepInPerUnit(Real om, Real dt, Real time, NumericalMethod n
 	mIb = inverseParkTransform(mThetaMech, mIq, mId, 0)(1);
 	mIc = inverseParkTransform(mThetaMech, mIq, mId, 0)(2);
 
+	mVq = -mRs*mIq - mOmMech*mDLd*mId + mDVq;
+	mVd = -mRs*mId + mOmMech*mDLq*mIq + mDVd;
+
 	if (WithExciter == true) {
-		mVq = -mRs*mIq - mOmMech*mDLd*mId + mDVq;
-		mVd = -mRs*mId + mOmMech*mDLq*mIq + mDVd;
 
 		mVfd = mExciter.step(mVd, mVq, 1, dt);
 	}
@@ -215,44 +219,6 @@ void SimplifiedVBR::stepInPerUnit(Real om, Real dt, Real time, NumericalMethod n
 		mDVd;
 
 
-	// Load resistance
-	if (time < 0.1)
-	{
-		Ra = 1037.8378 / mBase_Z;
-		Rb = 1037.8378 / mBase_Z;
-		Rc = 1037.8378 / mBase_Z;
-
-		R_load <<
-			Ra, 0, 0,
-			0, Rb, 0,
-			0, 0, Rc;
-	}
-	else if (time > 0.2)
-	{
-		
-		if (signbit(mIa) != signbit(mIa_hist)) 
-			Ra = 1037.8378 / mBase_Z;
-		if (signbit(mIb) != signbit(mIb_hist))
-			Rb = 1037.8378 / mBase_Z;
-		if (signbit(mIc) != signbit(mIc_hist))
-			Rc = 1037.8378 / mBase_Z;
-
-		R_load <<
-			Ra, 0, 0,
-			0, Rb, 0,
-			0, 0, Rc;
-	}
-	else
-	{
-		Ra = 0.001 / mBase_Z;
-		Rb = 0.001 / mBase_Z;
-		Rc = 0.001 / mBase_Z;
-
-		R_load <<
-			Ra, 0, 0,
-			0, Rb, 0,
-			0, 0, Rc;
-	}
 
 }
 

@@ -48,21 +48,22 @@ namespace DPsim {
 		Real mLad;
 		Real mRfd;
 
-		// Reference voltage
+		/// Reference voltage
 		Real mVref = 0;
-		// Output of voltage transducer
+		/// Output of voltage transducer
 		Real mVm = 0;
-		// Input of voltage transducer
+		/// Input of voltage transducer
 		Real mVh = 0;
-		// Output of stablizing feedback
+		/// Output of stablizing feedback
 		Real mVis = 0;
-		// Output of se function
+		/// Output of se function
 		Real mVse = 0;
-		// Regulator output
+		/// Regulator output
 		Real mVr = 0;
-		// Exciter output
+		/// Exciter output
 		Real mVf = 0;
-		Real mVfd;
+		/// Auxiliar variable
+		Real mVfl = 0;
 
 		bool mLogActive;
 		Logger* mLog;
@@ -70,7 +71,7 @@ namespace DPsim {
 
 	public:
 		Exciter() { };
-		~Exciter();
+		~Exciter() {};
 
 		/// Initializes exciter parameters
 		Exciter(Real Ta, Real Ka, Real Te, Real Ke, Real Tf, Real Kf, Real Tr, Real Lad, Real Rfd, Real Vf_init);
@@ -79,7 +80,7 @@ namespace DPsim {
 		Real step(Real mVd, Real mVq, Real Vref, Real dt);
 
 
-		Real UpdateFieldVoltage() { return mVfd; }
+	
 	
 	};
 }

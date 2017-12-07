@@ -202,15 +202,16 @@ Int Simulation::stepGeneratorTest(Logger& leftSideVectorLog, Logger& rightSideVe
 
 	if (mCurrentSwitchTimeIndex < mSwitchEventVector.size()) {
 		if (mTime >= mSwitchEventVector[mCurrentSwitchTimeIndex].switchTime) {
-			
-			if (mCurrentSwitchTimeIndex == 1) {
-				clearFault(1, 2, 3);
-				mCurrentSwitchTimeIndex++;
-			}
-			else {
-				switchSystemMatrix(mSwitchEventVector[mCurrentSwitchTimeIndex].systemIndex);
-				mElements = mElementsVector[mSwitchEventVector[mCurrentSwitchTimeIndex++].systemIndex];
-			}
+			switchSystemMatrix(mSwitchEventVector[mCurrentSwitchTimeIndex].systemIndex);
+			mElements = mElementsVector[mSwitchEventVector[mCurrentSwitchTimeIndex++].systemIndex];
+			//if (mCurrentSwitchTimeIndex == 1) {
+			//	clearFault(1, 2, 3);
+			//	mCurrentSwitchTimeIndex++;
+			//}
+			//else {
+			//	switchSystemMatrix(mSwitchEventVector[mCurrentSwitchTimeIndex].systemIndex);
+			//	mElements = mElementsVector[mSwitchEventVector[mCurrentSwitchTimeIndex++].systemIndex];
+			//}
 			//mCurrentSwitchTimeIndex++;
 			mLogger->Log(LogLevel::INFO) << "Switched to system " << mCurrentSwitchTimeIndex << " at " << mTime << std::endl;
 			mLogger->Log(LogLevel::INFO) << "New matrix:" << std::endl << mSystemModel.getCurrentSystemMatrix() << std::endl;

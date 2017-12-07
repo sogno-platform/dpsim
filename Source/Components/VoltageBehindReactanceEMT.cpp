@@ -43,6 +43,11 @@ VoltageBehindReactanceEMT::~VoltageBehindReactanceEMT() {
 	}
 }
 
+void VoltageBehindReactanceEMT::AddExciter(Real Ta, Real Ka, Real Te, Real Ke, Real Tf, Real Kf, Real Tr, Real Lad, Real Rfd) {
+	mExciter = Exciter(Ta, Ka, Te, Ke, Tf, Kf, Tr, Lad, Rfd, mVfd);
+	WithExciter = true;
+}
+
 
 
 void VoltageBehindReactanceEMT::init(Real om, Real dt,
@@ -153,9 +158,6 @@ void VoltageBehindReactanceEMT::init(Real om, Real dt,
 
 void VoltageBehindReactanceEMT::step(SystemModel& system, Real time) {
 
-	
-
-
 	stepInPerUnit(system.getOmega(), system.getTimeStep(), time, system.getNumMethod());
 
 	R_load = system.getCurrentSystemMatrix().inverse() / mBase_Z;
@@ -220,6 +222,15 @@ void VoltageBehindReactanceEMT::stepInPerUnit(Real om, Real dt, Real time, Numer
 	mIq = parkTransform(mThetaMech, mIa, mIb, mIc)(0);
 	mId = parkTransform(mThetaMech, mIa, mIb, mIc)(1);
 	mI0 = parkTransform(mThetaMech, mIa, mIb, mIc)(2);
+
+	if (WithExciter == true) {
+
+		// dq-transform of interface voltage
+		mVd = parkTransform(mThetaMech, mVa / mBase_v, mVb / mBase_v, mVc / mBase_v)(0);
+		mVq = parkTransform(mThetaMech, mVa / mBase_v, mVb / mBase_v, mVc / mBase_v)(1);
+		mV0 = parkTransform(mThetaMech, mVa / mBase_v, mVb / mBase_v, mVc / mBase_v)(2);
+		mVfd = mExciter.step(mVd, mVq, 1, dt);
+	}
 
 	// Calculate rotor flux likanges
 	if (mNumDampingWindings == 2)
@@ -326,7 +337,24 @@ void VoltageBehindReactanceEMT::stepInPerUnit(Real om, Real dt, Real time, Numer
 
 
 void VoltageBehindReactanceEMT::postStep(SystemModel& system) {
-
+	if (mNode1 >= 0) {
+		mVa = system.getRealFromLeftSideVector(mNode1);
+	}
+	else {
+		mVa = 0;
+	}
+	if (mNode2 >= 0) {
+		mVb = system.getRealFromLeftSideVector(mNode2);
+	}
+	else {
+		mVb = 0;
+	}
+	if (mNode3 >= 0) {
+		mVc = system.getRealFromLeftSideVector(mNode3);
+	}
+	else {
+		mVc = 0;
+	}
 }
 
 void VoltageBehindReactanceEMT::CalculateLandpL() {
@@ -346,14 +374,15 @@ Matrix VoltageBehindReactanceEMT::parkTransform(Real theta, Real a, Real b, Real
 
 	Matrix dq0vector(3, 1);
 
-	Real q, d;
+	Real q, d, zero;
 
 	q = 2. / 3. * cos(theta)*a + 2. / 3. * cos(theta - 2. * M_PI / 3.)*b + 2. / 3. * cos(theta + 2. * M_PI / 3.)*c;
 	d = 2. / 3. * sin(theta)*a + 2. / 3. * sin(theta - 2. * M_PI / 3.)*b + 2. / 3. * sin(theta + 2. * M_PI / 3.)*c;
+	zero = 1. / 3.*a + 1. / 3.*b + 1. / 3.*c;
 
 	dq0vector << q,
 		d,
-		0;
+		zero;
 
 	return dq0vector;
 }

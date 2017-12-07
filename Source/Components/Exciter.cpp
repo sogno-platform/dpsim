@@ -37,14 +37,9 @@ Exciter::Exciter(Real Ta, Real Ka, Real Te, Real Ke, Real Tf, Real Kf, Real Tr, 
 	mTr = Tr;
 	mLad = Lad;
 	mRfd = Rfd;
-	mVf = Vf_init*(Lad / Rfd);
+	mVf = Vf_init*(mLad / mRfd);
 
 }
-
-Exciter::~Exciter() {
-
-}
-
 
 
 Real Exciter::step(Real mVd, Real mVq, Real Vref, Real dt) {
@@ -52,15 +47,15 @@ Real Exciter::step(Real mVd, Real mVq, Real Vref, Real dt) {
 
 	mVh = sqrt(pow(mVd, 2.) + pow(mVq, 2.));
 	// Voltage Transducer equation
-	mVm = Euler(mVm, -1, 1, dt / mTr, mVh);
+	mVm = Trapezoidal(mVm, -1, 1, dt / mTr, mVh);
 	// Stabilizing feedback equation
-	Real dUf = (mVr - mVse - mKe*mVf) / mTe;
-	mVis = Euler(mVis, -1, mKf, dt / mTf, dUf);
+	mVfl = mVfl + dt*mVis / mTf;
+	mVis = (mKf / mTf)*mVf - mVfl;
 	// Amplifier equation
-	mVr = Euler(mVr, -1, mKa, dt / mTa, Vref - mVm - mVis);
+	mVr = Trapezoidal(mVr, -1, mKa, dt / mTa, Vref - mVm - mVis);
 	// Exciter
 	mVse = 0.0039*exp(mVf*1.555);
-	mVf = Euler(mVf, -mKe, 1, dt / mTe, mVr - mVse);
+	mVf = Trapezoidal(mVf, -mKe, 1, dt / mTe, mVr - mVse);
 
 	return (mRfd / mLad)*mVf;
 
