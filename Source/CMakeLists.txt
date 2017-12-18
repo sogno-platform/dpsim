@@ -11,6 +11,7 @@ list(APPEND SOURCES
 	Components/BaseComponent.cpp
 	Components/CapacitorDP.cpp
 	Components/CurrentSourceDP.cpp
+	Components/Exciter.cpp
 	Components/ExternalCurrentSource.cpp
 	Components/ExternalVoltageSource.cpp
 	Components/IdealTransformerDP.cpp
