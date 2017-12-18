@@ -243,7 +243,7 @@ Int Simulation::stepGeneratorTest(Logger& leftSideVectorLog, Logger& rightSideVe
 
 
 
-void Simulation::clearFault(Real Node1, Real Node2, Real Node3) {
+void Simulation::clearFault(Int Node1, Int Node2, Int Node3) {
 
 	ClearingFault = true;
 

@@ -94,16 +94,17 @@ ElementPtr Reader::mapACLineSegment(ACLineSegment* line) {
 		// TODO better error handling (throw exception?)
 		return nullptr;
 	}
+	Int node1 = nodes[0];
+	Int node2 = nodes[1];
+	Real resistance = line->r.value;
+	Real inductance = line->x.value/mFrequency;
 
-	Real r = line->r.value;
-	Real x = line->x.value;
+	mLogger->Log(LogLevel::INFO) << "Found ACLineSegment " << line->name << " rid=" << line->mRID << " node1=" << node1 << " node2=" << node2
+		<< " R=" << line->r.value << " X=" << line->x.value << std::endl;
 
-	mLogger->Log(LogLevel::INFO) << "Found ACLineSegment " << line->name << " rid=" << line->mRID << " node1=" << nodes[0] << " node2=" << nodes[1]
-		<< " R=" << r << " X=" << x << std::endl;
-
-	mLogger->Log(LogLevel::INFO) << "Create RxLine " << line->name << " node1=" << nodes[0] << " node2=" << nodes[1]
-		<< " R=" << r << " X=" << x << std::endl;
-	return std::make_shared<RxLineDP>(line->name, nodes[0], nodes[1], r, x/mFrequency);
+	mLogger->Log(LogLevel::INFO) << "Create RxLine " << line->name << " node1=" << node1 << " node2=" << node2
+		<< " R=" << resistance << " L=" << inductance << std::endl;
+	return std::make_shared<RxLineDP>(line->name, node1, node2, resistance, inductance);
 }
 
 void Reader::mapAsynchronousMachine(AsynchronousMachine* machine) {
@@ -124,21 +125,22 @@ ElementPtr Reader::mapExternalNetworkInjection(ExternalNetworkInjection* inj) {
 		mLogger->Log(LogLevel::ERROR) << "ExternalNetworkInjection " << inj->mRID << " has " << nodes.size() << " terminals, ignoring" << std::endl;
 		return nullptr;
 	}
-	Matrix::Index node = nodes[0];
+	Int node = nodes[0];
 	SvVoltage *volt = mVoltages[node-1];
 	if (!volt) {
 		mLogger->Log(LogLevel::ERROR) << "ExternalNetworkInjection " << inj->mRID << " has no associated SvVoltage, ignoring" << std::endl;
 		return nullptr;
-	}
+	}	
 	Real voltAbs = volt->v.value;
 	Real voltPhase = volt->angle.value;
 	Complex initVoltage = std::polar(voltAbs, voltPhase * PI / 180);
-	mLogger->Log(LogLevel::INFO) << "IdealVoltageSource " << inj->name << " rid=" << inj->mRID << " node1=" << node 
+	mLogger->Log(LogLevel::INFO) << "IdealVoltageSource " << inj->name << " rid=" << inj->mRID << " node1=" << node
 		<< " V=" << voltAbs << "<" << voltPhase << std::endl;
 	
 	return std::make_shared<IdealVoltageSource>(inj->name, node, 0, initVoltage);
 }
 
+// TODO: support phase shift
 ElementPtr Reader::mapPowerTransformer(PowerTransformer* trans) {
 	std::vector<Matrix::Index> &nodes = mEqNodeMap.at(trans->mRID);
 	if (nodes.size() != trans->PowerTransformerEnd.size()) {
@@ -154,13 +156,21 @@ ElementPtr Reader::mapPowerTransformer(PowerTransformer* trans) {
 	mLogger->Log(LogLevel::INFO) << "Found PowerTransformer " << trans->name << " rid=" << trans->mRID
 		<< " node1=" << nodes[0] << " node2=" << nodes[1] << std::endl;
 
+	Int node1 = nodes[0];
+	Int node2 = nodes[1];
 	Real voltageNode1 = 0;
+	Real inductanceNode1 = 0;
+	Real resistanceNode1 = 0;
 	Real voltageNode2 = 0;
+	Real inductanceNode2 = 0;
+	Real resistanceNode2 = 0;
 	for (PowerTransformerEnd *end : trans->PowerTransformerEnd) {
 		if (end->endNumber == 1) {
 			mLogger->Log(LogLevel::INFO) << "    PowerTransformerEnd_1 " << end->name
 				<< " Vrated=" << end->ratedU.value << " R=" << end->r.value << " X=" << end->x.value << std::endl;
 			voltageNode1 = end->ratedU.value;
+			inductanceNode1 = end->x.value / mFrequency;
+			resistanceNode1 = end->r.value;
 		}
 		if (end->endNumber == 2) {
 			mLogger->Log(LogLevel::INFO) << "    PowerTransformerEnd_2 " << end->name
@@ -171,12 +181,13 @@ ElementPtr Reader::mapPowerTransformer(PowerTransformer* trans) {
 
 	if (voltageNode1 != 0 && voltageNode2 != 0) {
 		Real ratioAbs = voltageNode1 / voltageNode2;
-		mLogger->Log(LogLevel::INFO) << "    Calculated ratio=" << ratioAbs << std::endl;
-		mLogger->Log(LogLevel::INFO) << "Create PowerTransformer " << trans->name
-			<< " node1=" << nodes[0] << " node2=" << nodes[1]
-			<< " ratio=" << ratioAbs << "<0" << std::endl;
 		Real ratioPhase = 0;
-		return std::make_shared<IdealTransformerDP>(trans->name, nodes[0], nodes[1], ratioAbs, ratioPhase);
+		mLogger->Log(LogLevel::INFO) << "Create PowerTransformer " << trans->name
+			<< " node1=" << node1 << " node2=" << node2
+			<< " ratio=" << ratioAbs << "<" << ratioPhase 
+			<< " inductance=" << inductanceNode1 << std::endl;
+
+		return std::make_shared<TransformerDP>(trans->name, node1, node2, ratioAbs, ratioPhase, 0, inductanceNode1);
 
 	}
 	mLogger->Log(LogLevel::WARN) << "PowerTransformer " << trans->mRID << " has no primary End; ignoring" << std::endl;
@@ -191,7 +202,7 @@ ElementPtr Reader::mapSynchronousMachine(SynchronousMachine* machine) {
 		mLogger->Log(LogLevel::WARN) << "SynchronousMachine " << machine->mRID << " has " << nodes.size() << " terminals, ignoring" << std::endl;
 		return nullptr;
 	}
-	Matrix::Index node = nodes[0];
+	Int node = nodes[0];
 	SvVoltage *volt = mVoltages[node-1];
 	if (!volt) {
 		mLogger->Log(LogLevel::WARN) << "SynchronousMachine " << machine->mRID << " has no associated SvVoltage, ignoring" << std::endl;
@@ -235,7 +246,7 @@ ElementPtr Reader::newPQLoad(String rid, String name) {
 		return nullptr;
 	}
 	SvPowerFlow* flow = search->second;
-	Matrix::Index node = nodes[0];
+	Int node = nodes[0];
 	SvVoltage *volt = mVoltages[node-1];
 	if (!volt) {
 		mLogger->Log(LogLevel::WARN) << rid << " has no associated SvVoltage, ignoring" << std::endl;

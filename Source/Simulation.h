@@ -121,7 +121,7 @@ namespace DPsim {
 		void setSwitchTime(Real switchTime, Int systemIndex);
 		void increaseByTimeStep();
 		void addExternalInterface(ExternalInterface*);
-		void clearFault(Real Node1, Real Node2, Real Node3);
+		void clearFault(Int Node1, Int Node2, Int Node3);
 
 		void setNumericalMethod(NumericalMethod numMethod);
 
@@ -153,4 +153,3 @@ namespace DPsim {
 	};
 
 }
-
