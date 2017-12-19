@@ -295,33 +295,6 @@ void Simulation::clearFault(Int Node1, Int Node2, Int Node3) {
 		if (NumClearedPhases == 3)
 			ClearingFault = false;
 	}
-	else
-	{
-		ClearingFault = true;
-
-		mIShifta = getRightSideVector()(Node1 - 1)*cos(2. * PI * 60. * mTime) + 
-			getRightSideVector()(Node1 - 1 + mSystemModel.getCompOffset())*sin(2. * PI * 60. * mTime);
-		mIShiftb = getRightSideVector()(Node2 - 1)*cos(2. * PI * 60. * mTime) + 
-			getRightSideVector()(Node2 - 1 + mSystemModel.getCompOffset())*sin(2. * PI * 60. * mTime);
-		mIShiftc = getRightSideVector()(Node3 - 1)*cos(2. * PI * 60. * mTime) + 
-			getRightSideVector()(Node3 - 1 + mSystemModel.getCompOffset())*sin(2. * PI * 60. * mTime);
-
-		if (FirstTime == true)
-		{
-			mIShifta_hist = mIShifta;
-			mIShiftb_hist = mIShiftb;
-			mIShiftc_hist = mIShiftc;
-
-			FirstTime = false;
-		}
-
-		if (signbit(mIShifta) != signbit(mIShifta_hist) && !aCleared) {
-			mElements.erase(mElements.begin() + 1);
-			addSystemTopology(mElements);
-			switchSystemMatrix(mSwitchEventVector.size() + NumClearedPhases);
-			NumClearedPhases++;
-			aCleared = true;
-		}
 
 }
 
