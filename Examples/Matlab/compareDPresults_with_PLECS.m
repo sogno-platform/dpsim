@@ -2,7 +2,7 @@ clc
 clear
 %% read PLECS results
 
-Results_PLECS = csvread('../../vsa/Results/SynGenDqEmt_ABCFault_Simulink/Voltages_and_currents.csv'); 
+Results_PLECS = csvread('../../../vsa/Results/SynGenDqEmt_ABCFault_PLECS/Voltages_and_currents.csv'); 
 %Te_PLECS = csvread('../../vsa/Results/SynGenVBREmt_ABCFault_PLECS/electrical_torque.csv'); 
 %omega_PLECS = csvread('../../vsa/Results/SynGenVBREmt_ABCFault_PLECS/omega.csv'); 
 %theta_PLECS = csvread('../../vsa/Results/SynGenVBREmt_ABCFault_PLECS/theta.csv'); 
@@ -10,8 +10,8 @@ Results_PLECS = csvread('../../vsa/Results/SynGenDqEmt_ABCFault_Simulink/Voltage
 %% Read data from DP simulation and calculate absolute value and phase
 
 % Read values from CSV files
-voltageDP = csvread('../../vsa/Results/SynGenVBRDynPh_ABCFault_DPsim/data_vt.csv');
-currentDP = csvread('../../vsa/Results/SynGenVBRDynPh_ABCFault_DPsim/data_j.csv');
+voltageDP = csvread('../../../vsa/Results/Testing/data_vt.csv');
+currentDP = csvread('../../../vsa/Results/Testing/data_j.csv');
 %Log_SynGen = csvread('../../vsa/Results//SynGenDqDynPh_ABCFault_DPsim/Euler/SynGen_gen.csv');
 compOffsetDP = (size(voltageDP,2) - 1) / 2;
 
@@ -97,7 +97,7 @@ figure(4)
 hold off
 PLECSplotc = plot(Results_PLECS(:,1), Results_PLECS(:,5), '--');
 hold on
-DPplotc = plot(currentShiftDP(:,1),currentShiftDP(:,2));
+DPplotc = plot(currentShiftDP(:,1),-currentShiftDP(:,2));
 DPabsPlotc = plot(currentAbsDP(:,1),currentAbsDP(:,2));
 title('Current phase A');
 legend('Current Phase a Simulink', 'DP shift a', 'DP abs a')
@@ -109,7 +109,7 @@ figure(5)
 hold off
 PLECSplot2c = plot(Results_PLECS(:,1), Results_PLECS(:,6), '--');
 hold on
-DPplot2c = plot(currentShiftDP(:,1),currentShiftDP(:,3));
+DPplot2c = plot(currentShiftDP(:,1),-currentShiftDP(:,3));
 DPabsPlot2c = plot(currentAbsDP(:,1),currentAbsDP(:,3));
 title('Current phase B');
 legend('Current Phase b Simulink', 'DP shift b', 'DP abs b')
@@ -121,7 +121,7 @@ figure(6)
 hold off
 PLECSplot3c = plot(Results_PLECS(:,1), Results_PLECS(:,7), '--');
 hold on
-DPplot3c = plot(currentShiftDP(:,1),currentShiftDP(:,4));
+DPplot3c = plot(currentShiftDP(:,1),-currentShiftDP(:,4));
 DPabsPlot3c = plot(currentAbsDP(:,1),currentAbsDP(:,4));
 title('Currents phase C');
 legend('Current Phase c Simulink', 'DP shift c', 'DP abs c')

@@ -103,6 +103,20 @@ namespace DPsim {
 		/// Fault Current phase c
 		Real mIfc_hist;
 
+		/// Fault Current phase a
+		Real mIShifta;
+		/// Fault Current phase b
+		Real mIShiftb;
+		/// Fault Current phase c
+		Real mIShiftc;
+
+		/// Fault Current phase a last time step
+		Real mIShifta_hist;
+		/// Fault Current phase b
+		Real mIShiftb_hist;
+		/// Fault Current phase c
+		Real mIShiftc_hist;
+
 	public:
 		/// Sets parameters to default values.
 		Simulation();

@@ -3,14 +3,14 @@
 
 %% read PLECS results
 
-Results_PLECS = csvread('../../../vsa/Results/SimpSynGenDqEmtExciter_LoadChange_Simulink/Voltages_and_currents.csv'); 
-Te_PLECS = csvread('../../../vsa/Results/SimpSynGenDqEmtExciter_LoadChange_Simulink/electrical_torque.csv'); 
-omega_PLECS = csvread('../../../vsa/Results/SimpSynGenDqEmtExciter_LoadChange_Simulink/omega.csv'); 
+Results_PLECS = csvread('../../../vsa/Results/TestExciterAndTurbine/SynGenDqEMTExciter_loadChange_Simulink/Voltages_and_currents.csv'); 
+%Te_PLECS = csvread('../../../vsa/Results/SynGenDqEmt_ABCFault_PLECS/electrical_torque.csv'); 
+omega_PLECS = csvread('../../../vsa/Results/TestExciterAndTurbine/SynGenDqEMTExciter_loadChange_Simulink/omega.csv'); 
 %theta_PLECS = csvread('../../vsa/Results/SynGenVBREmt_ABCFault_PLECS/theta.csv'); 
 %% read results from c++ simulation
-VoltageVector = csvread('../../../vsa/Results/Testing/data_vt.csv');
-CurrentVector = csvread('../../../vsa/Results/Testing/data_j.csv');
-Log_SynGen = csvread('../../../vsa/Results/Testing/SynGen_gen.csv');
+VoltageVector = csvread('../../../vsa/Results/TestExciterAndTurbine/SynGenVBREmtExciter_LoadChange_DPsim/data_vt.csv');
+CurrentVector = csvread('../../../vsa/Results/TestExciterAndTurbine/SynGenVBREmtExciter_LoadChange_DPsim/data_j.csv');
+Log_SynGen = csvread('../../../vsa/Results/TestExciterAndTurbine/SynGenVBREmtExciter_LoadChange_DPsim/SynGen_gen.csv');
  %% Plot
 figure(1)
 hold off
@@ -71,21 +71,21 @@ legend('ia DPSim','ia Simulink');
 
 figure(3)
 hold off
-plot(Log_SynGen(:,1),Log_SynGen(:,8));
+plot(Log_SynGen(:,1),Log_SynGen(:,9));
 hold on
 plot(Results_PLECS(:,1),omega_PLECS);
 
 title('Rotor speed');
-legend('\omega DPSim','\omega PLECS');
+legend('\omega DPSim','\omega Simulink');
+% % 
+% figure(4)
+% hold off
+% plot(Log_SynGen(:,1),Log_SynGen(:,20));
+% hold on
+% plot(Results_PLECS(:,1),-Te_PLECS);
 % 
-figure(4)
-hold off
-plot(Log_SynGen(:,1),Log_SynGen(:,7));
-hold on
-plot(Results_PLECS(:,1),-Te_PLECS);
-
-title('Electrical Torque');
-legend('Te DPSim','Te PLECS');
+% title('Electrical Torque');
+% legend('Te DPSim','Te PLECS');
 % 
 % figure(5)
 % hold off

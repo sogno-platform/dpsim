@@ -48,6 +48,11 @@ void VoltageBehindReactanceEMT::AddExciter(Real Ta, Real Ka, Real Te, Real Ke, R
 	WithExciter = true;
 }
 
+void VoltageBehindReactanceEMT::AddGovernor(Real Ta, Real Tb, Real Tc, Real Fa, Real Fb, Real Fc, Real K, Real Tsr, Real Tsm, Real Tm_init){
+	mTurbineGovernor = TurbineGovernor(Ta, Tb, Tc, Fa, Fb, Fc, K, Tsr, Tsm, Tm_init);
+	WithTurbineGovernor = true;
+}
+
 
 
 void VoltageBehindReactanceEMT::init(Real om, Real dt,
@@ -109,6 +114,7 @@ void VoltageBehindReactanceEMT::init(Real om, Real dt,
 
 	// steady state per unit initial value
 	initStatesInPerUnit(initActivePower, initReactivePower, initTerminalVolt, initVoltAngle, initFieldVoltage, initMechPower);
+
 
 	// Correcting variables
 	mThetaMech = mThetaMech + PI/2;
@@ -191,6 +197,11 @@ void VoltageBehindReactanceEMT::stepInPerUnit(Real om, Real dt, Real time, Numer
 		mIc;
 
 	// Calculate mechanical variables with euler
+	if (WithTurbineGovernor == true)
+	{
+		mMechTorque = -mTurbineGovernor.step(mOmMech, 1, 0.001, dt);
+
+	}
 	mElecTorque = (mPsimd*mIq - mPsimq*mId);
 	mOmMech = mOmMech + dt * (1. / (2. * mH) * (mElecTorque - mMechTorque));
 	mThetaMech = mThetaMech + dt * (mOmMech* mBase_OmMech);

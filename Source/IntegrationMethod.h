@@ -38,6 +38,7 @@ namespace DPsim {
 	Matrix Euler(Matrix states, Matrix A, Matrix B, Real dt, Matrix u);
 	Matrix Euler(Matrix states, Matrix A, Matrix B, Matrix C, Real dt, Matrix u);
 	Real Euler(Real states, Real A, Real B, Real dt, Real u);
+	Real Euler(Real states, Real A, Real B, Real C, Real dt, Real u);
 
 }
 
