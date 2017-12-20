@@ -43,6 +43,17 @@ VoltageBehindReactanceDP::~VoltageBehindReactanceDP() {
 }
 
 
+void VoltageBehindReactanceDP::AddExciter(Real Ta, Real Ka, Real Te, Real Ke, Real Tf, Real Kf, Real Tr, Real Lad, Real Rfd) {
+	mExciter = Exciter(Ta, Ka, Te, Ke, Tf, Kf, Tr, Lad, Rfd, mVfd);
+	WithExciter = true;
+}
+
+void VoltageBehindReactanceDP::AddGovernor(Real Ta, Real Tb, Real Tc, Real Fa, Real Fb, Real Fc, Real K, Real Tsr, Real Tsm, Real Tm_init) {
+	mTurbineGovernor = TurbineGovernor(Ta, Tb, Tc, Fa, Fb, Fc, K, Tsr, Tsm, Tm_init);
+	WithTurbineGovernor = true;
+}
+
+
 void VoltageBehindReactanceDP::init(Real om, Real dt,
 	Real initActivePower, Real initReactivePower, Real initTerminalVolt, Real initVoltAngle, Real initFieldVoltage, Real initMechPower) {
 
@@ -169,6 +180,8 @@ void VoltageBehindReactanceDP::step(SystemModel& system, Real time) {
 
 	stepInPerUnit(system.getOmega(), system.getTimeStep(), time, system.getNumMethod());
 
+	R_load = system.getCurrentSystemMatrix().inverse() / mBase_Z;
+
 	// Update current source accordingly
 	if (mNode1 >= 0) {
 		system.addCompToRightSideVector(mNode1, -mIaRe*mBase_i, -mIaIm*mBase_i);
@@ -199,6 +212,11 @@ void VoltageBehindReactanceDP::stepInPerUnit(Real om, Real dt, Real time, Numeri
 		mIcIm;
 
 	// Calculate mechanical variables with euler
+	if (WithTurbineGovernor == true)
+	{
+		mMechTorque = -mTurbineGovernor.step(mOmMech, 1, 0.001, dt);
+
+	}
 	mElecTorque = (mPsimd*mIq - mPsimq*mId);
 	mOmMech = mOmMech + dt * (1. / (2. * mH) * (mElecTorque - mMechTorque));
 	mThetaMech = mThetaMech + dt * ((mOmMech - 1) * mBase_OmMech);
@@ -224,6 +242,14 @@ void VoltageBehindReactanceDP::stepInPerUnit(Real om, Real dt, Real time, Numeri
 	mIq = abcToDq0Transform(mThetaMech, mIaRe, mIbRe, mIcRe, mIaIm, mIbIm, mIcIm)(0);
 	mId = abcToDq0Transform(mThetaMech, mIaRe, mIbRe, mIcRe, mIaIm, mIbIm, mIcIm)(1);
 	mI0 = abcToDq0Transform(mThetaMech, mIaRe, mIbRe, mIcRe, mIaIm, mIbIm, mIcIm)(2);
+
+	if (WithExciter == true) {
+
+		// dq-transform of interface voltage
+		mVd = R_load(0, 0)*mId;
+		mVq = R_load(0, 0)*mIq;
+		mVfd = mExciter.step(mVd, mVq, 1, dt);
+	}
 
 	// Calculate rotor flux likanges
 	if (mNumDampingWindings == 2)
@@ -327,27 +353,27 @@ void VoltageBehindReactanceDP::stepInPerUnit(Real om, Real dt, Real time, Numeri
 		mDVbIm,
 		mDVcIm;
 
-	// Load resistance
-	if (time < 0.1 || time > 0.2)
-	{
-		R_load <<
-			1037.8378 / mBase_Z, 0, 0, 0, 0, 0,
-			0, 1037.8378 / mBase_Z, 0, 0, 0, 0,
-			0, 0, 1037.8378 / mBase_Z, 0, 0, 0,
-			0, 0, 0, 1037.8378 / mBase_Z, 0, 0,
-			0, 0, 0, 0, 1037.8378 / mBase_Z, 0,
-			0, 0, 0, 0, 0, 1037.8378 / mBase_Z;
-	}
-	else
-	{
-		R_load <<
-			0.001 / mBase_Z, 0, 0, 0, 0, 0,
-			0, 0.001 / mBase_Z, 0, 0, 0, 0,
-			0, 0, 0.001 / mBase_Z, 0, 0, 0,
-			0, 0, 0, 0.001 / mBase_Z, 0, 0,
-			0, 0, 0, 0, 0.001 / mBase_Z, 0,
-			0, 0, 0, 0, 0, 0.001 / mBase_Z;
-	}
+	//// Load resistance
+	//if (time < 0.1 || time > 0.2)
+	//{
+	//	R_load <<
+	//		1037.8378 / mBase_Z, 0, 0, 0, 0, 0,
+	//		0, 1037.8378 / mBase_Z, 0, 0, 0, 0,
+	//		0, 0, 1037.8378 / mBase_Z, 0, 0, 0,
+	//		0, 0, 0, 1037.8378 / mBase_Z, 0, 0,
+	//		0, 0, 0, 0, 1037.8378 / mBase_Z, 0,
+	//		0, 0, 0, 0, 0, 1037.8378 / mBase_Z;
+	//}
+	//else
+	//{
+	//	R_load <<
+	//		0.001 / mBase_Z, 0, 0, 0, 0, 0,
+	//		0, 0.001 / mBase_Z, 0, 0, 0, 0,
+	//		0, 0, 0.001 / mBase_Z, 0, 0, 0,
+	//		0, 0, 0, 0.001 / mBase_Z, 0, 0,
+	//		0, 0, 0, 0, 0.001 / mBase_Z, 0,
+	//		0, 0, 0, 0, 0, 0.001 / mBase_Z;
+	//}
 
 }
 
