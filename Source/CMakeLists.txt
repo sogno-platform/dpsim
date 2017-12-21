@@ -37,6 +37,7 @@ list(APPEND SOURCES
 	Components/VoltSourceResFreqEMT.cpp
 	Components/VoltageBehindReachtanceDP.cpp
 	Components/VoltageBehindReactanceEMT.cpp
+	Components/TurbineGovernor.cpp
 )
 
 find_package(Eigen3 REQUIRED)
