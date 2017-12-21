@@ -4,11 +4,17 @@ Build DPsim
 Windows (Visual Studio)
 -----------------------
 
+Simple Installation
+~~~~~~~~~~~~~~~~~~~~~~
 1. Install Visual Studio 2017 C++ Desktop development package
-2. Create a new folder name ``Libraries`` in the repository root (usually dpsim), download Eigen_ and copy it to ``Libraries/eigen``.
-3. Install CMake_, use its GUI (with `Source` as the source path) to create project files for Visual Studio. If you installed the 64-bit version of Python, make sure to use the "Win64" version of the Visual Studio generator.
+2. Clone the repositories DPsim_ and `DPsim Libraries`_ to the same directory.
+3. Open the Visual Studio solution in dpsim-libraries/VisualStudio/DPsimVS2017 to get started.
 
-Python support
+Installation with CMake
+~~~~~~~~~~~~~~~~~~~~~~
+After step two of the previous instructions you need to install CMake_, use its GUI (with `Source` as the source path) to create project files for Visual Studio. If you installed the 64-bit version of Python, make sure to use the "Win64" version of the Visual Studio generator.
+
+Python support for Windows
 ~~~~~~~~~~~~~~~~~~~~~~
 1. Install `Python 3`_ using the normal installer, and add Python to your PATH.
 2. Use Visual Studio and the Release configuration to build the dpsim Python module. To install it, build the INSTALL project.
@@ -49,6 +55,8 @@ Linux (CMake)
 .. _Eigen: http://eigen.tuxfamily.org
 .. _CMake: https://cmake.org/download/
 .. _VILLASnode: https://git.rwth-aachen.de/VILLASframework/VILLASnode
+.. _DPsim: https://git.rwth-aachen.de/acs/core/simulation/dpsim
+.. _`DPsim Libraries`: https://git.rwth-aachen.de/acs/core/simulation/dpsim-libraries
 
 Build Documentation
 =====
