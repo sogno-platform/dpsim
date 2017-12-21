@@ -1,16 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:cim="http://iec.ch/TC57/2012/CIM-schema-cim16#" xmlns:md="http://iec.ch/TC57/61970-552/ModelDescription/1#" xmlns:entsoe="http://entsoe.eu/Secretariat/ProfileExtension/2#" xmlns:neplan="http://www.neplan.ch#">
-  <md:FullModel rdf:about="urn:uuid:6c10bb6c-4e16-427b-bfc1-6e637b932665">
-    <md:Model.created>2017-10-13T11:54:16</md:Model.created>
+  <md:FullModel rdf:about="urn:uuid:ba90b9e5-c56d-4f88-8776-b014619eca1a">
+    <md:Model.created>2017-12-20T10:09:13</md:Model.created>
     <neplan:Model.createdBy>NEPLAN by Busarello + Cott + Partner AG, Switzerland</neplan:Model.createdBy>
-    <md:Model.scenarioTime>2017-10-13T11:54:14</md:Model.scenarioTime>
+    <md:Model.scenarioTime>2017-12-20T10:09:11</md:Model.scenarioTime>
     <md:Model.version>7</md:Model.version>
-    <md:Model.DependentOn rdf:resource="urn:uuid:6e4fa8e6-87ad-48c6-88c0-34b0ba6994ec"/>
+    <md:Model.DependentOn rdf:resource="urn:uuid:62f3c818-3856-406c-80a1-2ae73e557d21"/>
     <md:Model.description>NEPLAN</md:Model.description>
     <md:Model.modelingAuthoritySet>FULL</md:Model.modelingAuthoritySet>
     <md:Model.profile>http://iec.ch/TC57/61970-456/Topology/3</md:Model.profile>
   </md:FullModel>
-  <cim:NameType rdf:ID="_25311f08-b32e-4ed9-abe4-3371d40aa9bc">
+  <cim:NameType rdf:ID="_7f185634-0bbc-44c5-ad87-9ea4d7e8b8b7">
     <cim:NameType.name>description</cim:NameType.name>
   </cim:NameType>
   <cim:TopologicalNode rdf:ID="BUS2">
@@ -106,13 +106,13 @@
     <cim:Terminal.connected>true</cim:Terminal.connected>
     <cim:Terminal.TopologicalNode rdf:resource="#BUS4"/>
   </cim:Terminal>
-  <cim:Terminal rdf:about="#E-1076922042">
-    <cim:Terminal.connected>true</cim:Terminal.connected>
-    <cim:Terminal.TopologicalNode rdf:resource="#BUS2"/>
-  </cim:Terminal>
-  <cim:Terminal rdf:about="#E-1076922039">
+  <cim:Terminal rdf:about="#E-1230796492">
     <cim:Terminal.connected>true</cim:Terminal.connected>
     <cim:Terminal.TopologicalNode rdf:resource="#BUS7"/>
+  </cim:Terminal>
+  <cim:Terminal rdf:about="#E-1230796495">
+    <cim:Terminal.connected>true</cim:Terminal.connected>
+    <cim:Terminal.TopologicalNode rdf:resource="#BUS2"/>
   </cim:Terminal>
   <cim:Terminal rdf:about="#E-1230796430">
     <cim:Terminal.connected>true</cim:Terminal.connected>
