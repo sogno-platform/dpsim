@@ -1,4 +1,4 @@
-/** Exciter
+/** Turbine Governor
 *
 * @author Markus Mirz <mmirz@eonerc.rwth-aachen.de>
 * @copyright 2017, Institute for Automation of Complex Power Systems, EONERC
@@ -20,45 +20,51 @@
 * along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *********************************************************************************/
 
-#include "Exciter.h"
+#include "TurbineGovernor.h"
 #include "../IntegrationMethod.h"
 
 using namespace DPsim;
 
-Exciter::Exciter(Real Ta, Real Ka, Real Te, Real Ke, Real Tf, Real Kf, Real Tr, Real Lad, Real Rfd, Real Vf_init)
-{
-
+TurbineGovernor::TurbineGovernor(Real Ta, Real Tb, Real Tc, Real Fa, Real Fb, Real Fc, Real K, Real Tsr, Real Tsm, Real Tm_init)
+{	
 	mTa = Ta;
-	mKa = Ka;
-	mTe = Te;
-	mKe = Ke;
-	mTf = Tf;
-	mKf = Kf;
-	mTr = Tr;
-	mLad = Lad;
-	mRfd = Rfd;
-	mVf = Vf_init*(mLad / mRfd);
-	mVf = 0;
+	mTb = Tb;
+	mTc = Tc;
+	mFa = Fa;
+	mFb = Fb;
+	mFc = Fc;
+	mK = K;
+	mTsr = Tsr;
+	mTsm = Tsm;
+	mTm = Tm_init;
 
 }
 
 
-Real Exciter::step(Real mVd, Real mVq, Real Vref, Real dt) {
+Real TurbineGovernor::step(Real Om, Real OmRef, Real PmRef, Real dt) {
 
-
-	mVh = sqrt(pow(mVd, 2.) + pow(mVq, 2.));
-	// Voltage Transducer equation
-	mVm = Euler(mVm, -1, 1, dt / mTr, mVh);
-	// Stabilizing feedback equation
-	mVfl = mVfl + dt*mVis / mTf;
-	mVis = (mKf / mTf)*mVf - mVfl;
-	// Amplifier equation
-	mVr = Euler(mVr, -1, mKa, dt / mTa, Vref - mVm - mVis);
-	// Exciter
-	mVse = 0.0039*exp(mVf*1.555);
-	mVf = Euler(mVf, -mKe, 1, dt / mTe, mVr - mVse);
-
-	return (mRfd / mLad)*mVf;
+	// ### Governing ###
+	// Input of speed relay
+	Psr_in = PmRef + (OmRef - Om)*mK;
+	// Input of servor motor
+	Psm_in = Euler(Psm_in, -1, 1, dt / mTsr, Psr_in);
+	// rate of change of valve
+	mpVcv = (Psm_in - mVcv) / mTsm;
+	if (mpVcv >= 0.1)
+		mpVcv = 0.1;
+	else if (mpVcv <= -1)
+		mpVcv = -1;
+	//Valve position
+	mVcv = mVcv + dt*mpVcv;
+	if (mVcv >= 1)
+		mVcv = 1;
+	else if (mVcv <= 0)
+		mVcv = 0;
+	//### Turbine ###
+	// Simplified equation
+	mTm = Euler(mTm, -1 / mTb, 1 / mTb, mpVcv*mFa, dt, mVcv);
+	
+	return mTm;
 
 }
 

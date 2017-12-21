@@ -25,6 +25,7 @@
 
 #include "SynchGenBase.h"
 #include "Exciter.h"
+#include "TurbineGovernor.h"
 
 namespace DPsim {
 
@@ -40,7 +41,13 @@ namespace DPsim {
 
 		/// Exciter Model
 		Exciter mExciter;
+		/// Determine if Exciter is activated
 		bool WithExciter = false;
+
+		/// Governor Model
+		TurbineGovernor mTurbineGovernor;
+		/// Determine if Turbine and Governor are activated
+		bool WithTurbineGovernor = false;
 
 		/// d dynamic inductance
 		Real mDLmd;
@@ -147,7 +154,10 @@ namespace DPsim {
 			Real Rkq1, Real Llkq1, Real Rkq2, Real Llkq2,
 			Real inertia, bool logActive = false);
 
+		/// Function to initialize Exciter
 		void AddExciter(Real Ta, Real Ka, Real Te, Real Ke, Real Tf, Real Kf, Real Tr, Real Lad, Real Rfd);
+		/// Function to initialize Governor and Turbine
+		void AddGovernor(Real Ta, Real Tb, Real Tc, Real Fa, Real Fb, Real Fc, Real K, Real Tsr, Real Tsm, Real Tm_init);
 
 		/// Initializes states in per unit or stator referred variables depending on the setting of the state type.
 		/// Function parameters have to be given in real units.

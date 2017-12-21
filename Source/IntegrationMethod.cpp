@@ -109,4 +109,9 @@ Matrix DPsim::Euler(Matrix states, Matrix A, Matrix B, Matrix C, Real dt, Matrix
 	return newstates;
 }
 
+Real DPsim::Euler(Real states, Real A, Real B, Real C, Real dt, Real u)
+{
+	return states + dt*(A*states + B*u + C);
+}
+
 

@@ -2,17 +2,17 @@ clc
 clear
 %% read PLECS results
 
-Results_PLECS = csvread('../../vsa/Results/SynGenDqEmt_ABCFault_Simulink/Voltages_and_currents.csv'); 
+Results_PLECS = csvread('../../../vsa/Results/TestExciterAndTurbine/SynGenDqEMTExciter_loadChange_Simulink/Voltages_and_currents.csv'); 
 %Te_PLECS = csvread('../../vsa/Results/SynGenVBREmt_ABCFault_PLECS/electrical_torque.csv'); 
-%omega_PLECS = csvread('../../vsa/Results/SynGenVBREmt_ABCFault_PLECS/omega.csv'); 
+omega_PLECS = csvread('../../../vsa/Results/TestExciterAndTurbine/SynGenDqEMTExciter_loadChange_Simulink/omega.csv'); 
 %theta_PLECS = csvread('../../vsa/Results/SynGenVBREmt_ABCFault_PLECS/theta.csv'); 
 
 %% Read data from DP simulation and calculate absolute value and phase
 
 % Read values from CSV files
-voltageDP = csvread('../../vsa/Results/SynGenVBRDynPh_ABCFault_DPsim/data_vt.csv');
-currentDP = csvread('../../vsa/Results/SynGenVBRDynPh_ABCFault_DPsim/data_j.csv');
-%Log_SynGen = csvread('../../vsa/Results//SynGenDqDynPh_ABCFault_DPsim/Euler/SynGen_gen.csv');
+voltageDP = csvread('../../../vsa/Results/TestExciterAndTurbine/SynGenVBRDPExciter_LoadChange_DPsim/data_vt.csv');
+currentDP = csvread('../../../vsa/Results/TestExciterAndTurbine/SynGenVBRDPExciter_LoadChange_DPsim/data_j.csv');
+Log_SynGen = csvread('../../../vsa/Results/TestExciterAndTurbine/SynGenVBRDPExciter_LoadChange_DPsim/SynGen_gen.csv');
 compOffsetDP = (size(voltageDP,2) - 1) / 2;
 
 % Calculate Voltage DP absolute value
@@ -128,14 +128,14 @@ legend('Current Phase c Simulink', 'DP shift c', 'DP abs c')
 xlabel('time [s]')
 ylabel('current [A]')
 
-% figure(7)
-% hold off
-% plot(Log_SynGen(:,1),Log_SynGen(:,21));
-% hold on
-% plot(Results_PLECS(:,1),omega_PLECS);
-% 
-% title('Rotor speed');
-% legend('\omega DPSim','\omega PLECS');
+ figure(7)
+hold off
+plot(Log_SynGen(:,1),Log_SynGen(:,9));
+hold on
+plot(Results_PLECS(:,1),omega_PLECS);
+
+title('Rotor speed');
+legend('\omega DPSim','\omega PLECS');
 % 
 % figure(8)
 % hold off

@@ -201,16 +201,16 @@ Int Simulation::stepGeneratorTest(Logger& leftSideVectorLog, Logger& rightSideVe
 
 	if (mCurrentSwitchTimeIndex < mSwitchEventVector.size()) {
 		if (mTime >= mSwitchEventVector[mCurrentSwitchTimeIndex].switchTime) {
-			switchSystemMatrix(mSwitchEventVector[mCurrentSwitchTimeIndex].systemIndex);
-			mElements = mElementsVector[mSwitchEventVector[mCurrentSwitchTimeIndex++].systemIndex];
-			//if (mCurrentSwitchTimeIndex == 1) {
-			//	clearFault(1, 2, 3);
-			//	mCurrentSwitchTimeIndex++;
-			//}
-			//else {
-			//	switchSystemMatrix(mSwitchEventVector[mCurrentSwitchTimeIndex].systemIndex);
-			//	mElements = mElementsVector[mSwitchEventVector[mCurrentSwitchTimeIndex++].systemIndex];
-			//}
+			/*switchSystemMatrix(mSwitchEventVector[mCurrentSwitchTimeIndex].systemIndex);
+			mElements = mElementsVector[mSwitchEventVector[mCurrentSwitchTimeIndex++].systemIndex];*/
+			if (mCurrentSwitchTimeIndex == 1) {
+				clearFault(1, 2, 3);
+				mCurrentSwitchTimeIndex++;
+			}
+			else {
+				switchSystemMatrix(mSwitchEventVector[mCurrentSwitchTimeIndex].systemIndex);
+				mElements = mElementsVector[mSwitchEventVector[mCurrentSwitchTimeIndex++].systemIndex];
+			}
 			//mCurrentSwitchTimeIndex++;
 			mLogger->Log(LogLevel::INFO) << "Switched to system " << mCurrentSwitchTimeIndex << " at " << mTime << std::endl;
 			mLogger->Log(LogLevel::INFO) << "New matrix:" << std::endl << mSystemModel.getCurrentSystemMatrix() << std::endl;
@@ -244,54 +244,57 @@ Int Simulation::stepGeneratorTest(Logger& leftSideVectorLog, Logger& rightSideVe
 
 void Simulation::clearFault(Int Node1, Int Node2, Int Node3) {
 
-	ClearingFault = true;
-
-	mIfa = getRightSideVector()(Node1 - 1);
-	mIfb = getRightSideVector()(Node2 - 1);
-	mIfc = getRightSideVector()(Node3 - 1);
-
-
-	if (FirstTime == true)
+	if (mSystemModel.getSimType() == SimulationType::EMT)
 	{
+		ClearingFault = true;
+
+		mIfa = getRightSideVector()(Node1 - 1);
+		mIfb = getRightSideVector()(Node2 - 1);
+		mIfc = getRightSideVector()(Node3 - 1);
+
+
+		if (FirstTime == true)
+		{
+			mIfa_hist = mIfa;
+			mIfb_hist = mIfb;
+			mIfc_hist = mIfc;
+
+			FirstTime = false;
+		}
+
+
+
+		if (signbit(mIfa) != signbit(mIfa_hist) && !aCleared) {
+			mElements.erase(mElements.begin() + 1);
+			addSystemTopology(mElements);
+			switchSystemMatrix(mSwitchEventVector.size() + NumClearedPhases);
+			NumClearedPhases++;
+			aCleared = true;
+		}
+
+		if (signbit(mIfb) != signbit(mIfb_hist) && !bCleared) {
+			mElements.erase(mElements.begin() + 2);
+			addSystemTopology(mElements);
+			switchSystemMatrix(mSwitchEventVector.size() + NumClearedPhases);
+			NumClearedPhases++;
+			bCleared = true;
+		}
+
+		if (signbit(mIfc) != signbit(mIfc_hist) && !cCleared) {
+			mElements.erase(mElements.begin() + 1);
+			addSystemTopology(mElements);
+			switchSystemMatrix(mSwitchEventVector.size() + NumClearedPhases);
+			NumClearedPhases++;
+			cCleared = true;
+		}
+
 		mIfa_hist = mIfa;
 		mIfb_hist = mIfb;
 		mIfc_hist = mIfc;
 
-		FirstTime = false;
+		if (NumClearedPhases == 3)
+			ClearingFault = false;
 	}
-
-
-
-	if (std::signbit(mIfa) != std::signbit(mIfa_hist) && !aCleared) {
-		mElements.erase(mElements.begin() + 1);
-		addSystemTopology(mElements);
-		switchSystemMatrix(mSwitchEventVector.size() + NumClearedPhases);
-		NumClearedPhases++;
-		aCleared = true;
-	}
-		
-	if (std::signbit(mIfb) != std::signbit(mIfb_hist) && !bCleared) {
-		mElements.erase(mElements.begin() + 2);
-		addSystemTopology(mElements);
-		switchSystemMatrix(mSwitchEventVector.size() + NumClearedPhases);
-		NumClearedPhases++;
-		bCleared = true;
-	}
-
-	if (std::signbit(mIfc) != std::signbit(mIfc_hist) && !cCleared) {
-		mElements.erase(mElements.begin() + 1);
-		addSystemTopology(mElements);
-		switchSystemMatrix(mSwitchEventVector.size() + NumClearedPhases);
-		NumClearedPhases++;
-		cCleared = true;
-	}
-
-	mIfa_hist = mIfa;
-	mIfb_hist = mIfb;
-	mIfc_hist = mIfc;
-
-	if (NumClearedPhases == 3)
-		ClearingFault = false;
 
 }
 
