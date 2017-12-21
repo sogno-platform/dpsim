@@ -5,10 +5,13 @@ Windows (Visual Studio)
 -----------------------
 
 1. Install Visual Studio 2017 C++ Desktop development package
-2. Install `Python 3`_ using the normal installer, and add Python to your PATH.
-3. Create a new folder name ``Libraries`` in the repository root, download Eigen_ and copy it to ``Libraries/eigen``.
-4. Install CMake_, use its GUI (with `Source` as the source path) to create project files for Visual Studio. If you installed the 64-bit version of Python, make sure to use the "Win64" version of the Visual Studio generator.
-5. Use Visual Studio and the Release configuration to build the dpsim Python module. To install it, build the INSTALL project.
+2. Create a new folder name ``Libraries`` in the repository root, download Eigen_ and copy it to ``Libraries/eigen``.
+3. Install CMake_, use its GUI (with `Source` as the source path) to create project files for Visual Studio. If you installed the 64-bit version of Python, make sure to use the "Win64" version of the Visual Studio generator.
+4. Use Visual Studio and the Release configuration to build the dpsim Python module. To install it, build the INSTALL project.
+
+Python support
+~~~~~~~~~~~~~~~~~~~~~~
+1. Install `Python 3`_ using the normal installer, and add Python to your PATH.
 
 Linux (CMake)
 -------------
