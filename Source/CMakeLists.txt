@@ -1,4 +1,4 @@
-add_library(dpsim
+add_library(dpsim SHARED
 	IntegrationMethod.cpp
 	Logger.cpp
 	MathLibrary.cpp
@@ -90,10 +90,17 @@ if (WITH_PYTHON)
 		list(APPEND INCLUDE_DIRS ${PYTHON_INCLUDE_DIRS})
 		list(APPEND LIBRARIES ${PYTHON_LIBRARIES})
 
-		add_custom_target(link_dpsim ALL DEPENDS dpsim COMMAND ${CMAKE_COMMAND} -E create_symlink $<TARGET_FILE_NAME:dpsim> dpsim.${PYTHON_MODULE_SUFFIX})
+		add_custom_target(link_dpsim ALL
+			DEPENDS dpsim
+			COMMAND ${CMAKE_COMMAND} -E create_symlink $<TARGET_FILE_NAME:dpsim> dpsim.${PYTHON_MODULE_SUFFIX}
+		)
+
 		execute_process(COMMAND ${PYTHON_EXECUTABLE} -c "import sysconfig; print(sysconfig.get_path('platlib'), end='')" OUTPUT_VARIABLE PYTHON_PKGPATH)
 
-		install(FILES $<TARGET_FILE:dpsim> DESTINATION ${PYTHON_PKGPATH} RENAME dpsim.${PYTHON_MODULE_SUFFIX})
+		install(FILES $<TARGET_FILE:dpsim>
+			DESTINATION ${PYTHON_PKGPATH}
+			RENAME dpsim.${PYTHON_MODULE_SUFFIX}
+		)
 	else()
 		message(WARNING "In order to build DPsim as a Python module you must build it as a shared library: cmake -DBUILD_SHARED_LIBS=ON")
 	endif()
