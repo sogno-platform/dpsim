@@ -21,16 +21,16 @@ RUN dnf -y install \
 	redhat-rpm-config \
 	make cmake \
 	doxygen \
-	python-pip
+	python3-pip
 
 # Dependencies
 RUN dnf -y install \
-	python-devel \
+	python3-devel \
 	eigen3-devel \
 	villas-node-devel
 
 # Python Packages
-RUN pip install \
+RUN pip3 install \
 	pandas \
 	numpy \
 	matplotlib \
