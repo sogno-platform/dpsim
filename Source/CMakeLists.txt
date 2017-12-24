@@ -78,9 +78,14 @@ if (WITH_PYTHON)
 			Python/Component.cpp
 			Python/Module.cpp
 			Python/Simulation.cpp
-			Python/LoadCim.cpp
 			Python/Interface.cpp
 		)
+
+		if(WITH_CIM)
+			list(APPEND SOURCES
+				Python/LoadCim.cpp
+			)
+		endif()
 
 		list(APPEND INCLUDE_DIRS ${PYTHON_INCLUDE_DIRS})
 		list(APPEND LIBRARIES ${PYTHON_LIBRARIES})
