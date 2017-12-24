@@ -1,13 +1,12 @@
 variables:
   DOCKER_TAG_DEV: ${CI_COMMIT_REF_NAME}
+  RSYNC_OPTS: --recursive --ignore-missing-args --chown ${DEPLOY_USER}:${DEPLOY_USER}
   DOCKER_IMAGE_DEV: dpsim-dev
-  DOCKER_IMAGE_WEB: dpsim-web
   GIT_SUBMODULE_STRATEGY: recursive
 
 stages:
   - prepare
   - build
-  - docs
   - deploy
 
 docker:
@@ -18,7 +17,7 @@ docker:
   tags:
     - shell
 
-build:
+build:code:
   stage: build
   script:
     - mkdir build
@@ -32,8 +31,8 @@ build:
   tags:
     - docker
 
-docs:
-  stage: docs
+build:docs:
+  stage: build
   script:
     - cd build
     - cmake ..
@@ -46,14 +45,20 @@ docs:
       - build/Documentation/Cxx/html
   tags:
     - docker
-    
-deploy:
+
+deploy:docs:
   stage: deploy
   script:
-    - docker build -f Dockerfile.webdoc -t ${DOCKER_IMAGE_WEB}:${DOCKER_TAG_DEV} .
-    - docker images
-    - docker container stop dpsim-webdoc
-    - docker container rm dpsim-webdoc
-    - docker run --name dpsim-webdoc -d -p 8080:80 ${DOCKER_IMAGE_WEB}:${DOCKER_TAG_DEV}
+    - ssh ${DEPLOY_USER}@${DEPLOY_HOST} mkdir -p ${DEPLOY_PATH}/doc/${CI_BUILD_REF_NAME}/{sphinx,doxygen}
+    - rsync ${RSYNC_OPTS} build/Documentation/html ${DEPLOY_USER}@${DEPLOY_HOST}:${DEPLOY_PATH}/doc/$CI_BUILD_REF_NAME/sphinx
+    - rsync ${RSYNC_OPTS} build/Documentation/Cxx/html ${DEPLOY_USER}@${DEPLOY_HOST}:${DEPLOY_PATH}/doc/$CI_BUILD_REF_NAME/doxygen
+  dependencies:
+    - build:docs
+  only:
+    - tags
+    - master
+    - development
+  tags:
+    - fein-deploy
   tags:
     - shell
