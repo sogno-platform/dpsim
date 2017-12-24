@@ -270,10 +270,14 @@ static const char* DocComponent =
 "A component of a network that is to be simulated.\n"
 "\n"
 "Instances of this class should either be created with the module-level "
-"pseudo-constructors (like `Resistor`) or via `load_cim`. The "
-"constructors all accept the same first three arguments: ``name``, a simple "
-"string used for logging purposes, and ``node1`` / ``node2``. These arguments "
-"are integers identifying the topological nodes that the component is connected "
+"pseudo-constructors (like `Resistor`). The constructors all accept the same "
+"first three arguments: ``name``, a simple string used for logging purposes, "
+"and ``node1`` / ``node2``. "
+#ifdef WITH_CIM
+"Alternatively, the `load_cim` function can be used to construct components from "
+"a Common Information Model (CIM) XML file. "
+#endif
+"These arguments are integers identifying the topological nodes that the component is connected "
 "to. Normal indices start with 1 and must be sequential; the special index 0 "
 "is used for the (always present) reference node with a fixed voltage of 0V.\n"
 "\n"
