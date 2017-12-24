@@ -21,6 +21,7 @@ RUN dnf -y install \
 	redhat-rpm-config \
 	make cmake \
 	doxygen \
+	graphviz \
 	python3-pip
 
 # Dependencies
