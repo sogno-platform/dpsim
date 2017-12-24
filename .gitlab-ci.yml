@@ -34,6 +34,7 @@ build:code:
 build:docs:
   stage: build
   script:
+    - mkdir build
     - cd build
     - cmake ..
     - make docs
