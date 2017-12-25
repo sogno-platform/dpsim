@@ -19,6 +19,7 @@ RUN dnf -y install \
 	git \
 	gcc-c++ \
 	redhat-rpm-config \
+	rpmdevtools \
 	make cmake \
 	doxygen \
 	graphviz \

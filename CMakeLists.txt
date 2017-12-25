@@ -7,22 +7,33 @@ set(CMAKE_CXX_STANDARD 11)
 set(PROJECT_AUTHOR "Institute for Automation of Complex Power Systems, RWTH Aachen Univerity")
 set(PROJECT_COPYRIGHT "2017, Institute for Automation of Complex Power Systems, RWTH Aachen Univerity")
 
-set(DPSIM_MAJOR_VERSION 0)
-set(DPSIM_MINOR_VERSION 1)
-set(DPSIM_PATCH_VERSION 0)
-set(DPSIM_VERSION ${DPSIM_MAJOR_VERSION}.${DPSIM_MINOR_VERSION}.${DPSIM_PATCH_VERSION})
-
 set(CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/CMake")
 
+include(GetGitRevisionDescription)
+git_describe(DPSIM_VERSION --tags --dirty=-dirty)
+git_rev_parse(GIT_BRANCH --abbrev-ref HEAD)
+get_git_head_revision(GIT_REFSPEC GIT_HASH)
+
+string(SUBSTRING ${GIT_HASH} 0 7 GIT_HASH_SHORT)
+string(TIMESTAMP YMD "%Y%m%d")
+
+set(DPSIM_RELEASE ${YMD}git${GIT_HASH_SHORT})
+
+# {arse the version information into pieces.
+string(REGEX REPLACE "^v([0-9]+)\\..*" "\\1" DPSIM_MAJOR_VERSION "${DPSIM_VERSION}")
+string(REGEX REPLACE "^v[0-9]+\\.([0-9]+).*" "\\1" DPSIM_MINOR_VERSION "${DPSIM_VERSION}")
+string(REGEX REPLACE "^v[0-9]+\\.[0-9]+\\.([0-9]+).*" "\\1" DPSIM_PATCH_VERSION "${DPSIM_VERSION}")
+set(DPSIM_SHORT_VERSION "${DPSIM_MAJOR_VERSION}.${DPSIM_MINOR_VERSION}.${DPSIM_PATCH_VERSION}")
+
 set(Python_ADDITIONAL_VERSIONS 3.5 3.6 3.7)
-
-set(CIM_DIR 16v29a)
-
-find_package(Eigen3 3.0 REQUIRED)
-find_package(CIMpp)
-find_package(VILLASnode)
 find_package(PythonInterp 3.5)
 find_package(PythonLibs 3.5)
+
+set(CIM_DIR 16v29a)
+find_package(CIMpp)
+
+find_package(Eigen3 3.0 REQUIRED)
+find_package(VILLASnode)
 
 if(PythonInterp_FOUND AND PythonLibs_FOUND)
 	set(Python_FOUND ON)
