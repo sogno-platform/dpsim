@@ -53,7 +53,7 @@ build:packages:
     - mkdir build
     - cd build
     - cmake ..
-    - make packages
+    - make package
   only:
     - development
     - master
