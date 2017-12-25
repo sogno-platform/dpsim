@@ -47,6 +47,25 @@ build:docs:
   tags:
     - docker
 
+build:packages:
+  stage: build
+  script:
+    - mkdir build
+    - cd build
+    - cmake ..
+    - make packages
+  only:
+    - development
+    - master
+    - tags
+  tags:
+    - docker
+  image: ${DOCKER_IMAGE_DEV}:${DOCKER_TAG_DEV}
+  artifacts:
+    paths:
+      - build/*.rpm
+      - build/*.tar.gz
+
 deploy:docs:
   stage: deploy
   script:
@@ -63,3 +82,21 @@ deploy:docs:
     - fein-deploy
   tags:
     - shell
+
+deploy:packages:
+  stage: deploy
+  script:
+    - rsync ${RSYNC_OPTS} build/*.rpm ${DEPLOY_USER}@${DEPLOY_HOST}:/var/www/packages/redhat/x86_64
+    - rsync ${RSYNC_OPTS} build/*.tar.gz ${DEPLOY_USER}@${DEPLOY_HOST}:/var/www/dpsim/src
+    - ssh ${DEPLOY_USER}@${DEPLOY_HOST} createrepo /var/www/packages/redhat
+  dependencies:
+    - build:packages
+  only:
+    - tags
+    - master
+    - development
+  tags:
+    - fein-deploy
+  tags:
+    - shell
+
