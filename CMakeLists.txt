@@ -46,10 +46,10 @@ endif()
 # Options
 option(BUILD_SHARED_LIBS "Build shared library" OFF)
 
-option(WITH_RT     "Enable real-time features"            ${Linux_FOUND})
-option(WITH_SHMEM  "Enable shared memory interface"       ${VILLASnode_FOUND})
-option(WITH_PYTHON "Enable Python support"                ${Python_FOUND})
-option(WITH_CIM    "Enable support for parsing CIM files" ${CIMpp_FOUND})
+option(WITH_RT	 "Enable real-time features"			${Linux_FOUND})
+option(WITH_SHMEM  "Enable shared memory interface"	   ${VILLASnode_FOUND})
+option(WITH_PYTHON "Enable Python support"				${Python_FOUND})
+option(WITH_CIM	"Enable support for parsing CIM files" ${CIMpp_FOUND})
 
 add_subdirectory(Documentation)
 add_subdirectory(Source)
@@ -58,10 +58,10 @@ add_subdirectory(Examples/Cxx)
 # Show feature summary
 include(FeatureSummary)
 
-add_feature_info(CIM    WITH_CIM    "Loading Common Information Model Files")
+add_feature_info(CIM	WITH_CIM	"Loading Common Information Model Files")
 add_feature_info(Python WITH_PYTHON "Use DPsim as a Python module")
 add_feature_info(Shmem  WITH_SHMEM  "Interface DPsim solvers via shared-memory interfaces")
-add_feature_info(RT     WITH_RT     "Execute simulation in real time")
+add_feature_info(RT	 WITH_RT	 "Execute simulation in real time")
 feature_summary(WHAT ALL VAR enabledFeaturesText)
 
 message(STATUS "${enabledFeaturesText}")
