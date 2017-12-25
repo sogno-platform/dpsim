@@ -11,19 +11,27 @@ set(CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/CMake")
 
 include(GetGitRevisionDescription)
 git_describe(DPSIM_VERSION --tags --dirty=-dirty)
-git_rev_parse(GIT_BRANCH --abbrev-ref HEAD)
-get_git_head_revision(GIT_REFSPEC GIT_HASH)
+
+# Parse the version information into pieces.
+string(REGEX REPLACE "^v([0-9]+)\\..*" "\\1" DPSIM_MAJOR_VERSION "${DPSIM_VERSION}")
+string(REGEX REPLACE "^v[0-9]+\\.([0-9]+).*" "\\1" DPSIM_MINOR_VERSION "${DPSIM_VERSION}")
+string(REGEX REPLACE "^v[0-9]+\\.[0-9]+\\.([0-9]+).*" "\\1" DPSIM_PATCH_VERSION "${DPSIM_VERSION}")
+set(DPSIM_SHORT_VERSION "${DPSIM_MAJOR_VERSION}.${DPSIM_MINOR_VERSION}.${DPSIM_PATCH_VERSION}")
+
+if(DEFINED ENV{CI})
+	set(GIT_HASH $ENV{CI_COMMIT_SHA})
+	set(GIT_BRANCH $ENV{CI_COMMIT_REF_NAME})
+	set(GIT_REF_SPEC $ENV{CI_COMMIT_REF_NAME})
+
+else()
+	git_rev_parse(GIT_BRANCH --abbrev-ref HEAD)
+	get_git_head_revision(GIT_REFSPEC GIT_HASH)
+endif()
 
 string(SUBSTRING ${GIT_HASH} 0 7 GIT_HASH_SHORT)
 string(TIMESTAMP YMD "%Y%m%d")
 
 set(DPSIM_RELEASE ${YMD}git${GIT_HASH_SHORT})
-
-# {arse the version information into pieces.
-string(REGEX REPLACE "^v([0-9]+)\\..*" "\\1" DPSIM_MAJOR_VERSION "${DPSIM_VERSION}")
-string(REGEX REPLACE "^v[0-9]+\\.([0-9]+).*" "\\1" DPSIM_MINOR_VERSION "${DPSIM_VERSION}")
-string(REGEX REPLACE "^v[0-9]+\\.[0-9]+\\.([0-9]+).*" "\\1" DPSIM_PATCH_VERSION "${DPSIM_VERSION}")
-set(DPSIM_SHORT_VERSION "${DPSIM_MAJOR_VERSION}.${DPSIM_MINOR_VERSION}.${DPSIM_PATCH_VERSION}")
 
 set(Python_ADDITIONAL_VERSIONS 3.5 3.6 3.7)
 find_package(PythonInterp 3.5)
