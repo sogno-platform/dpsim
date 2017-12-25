@@ -32,7 +32,7 @@ int main() {
 	Real finalTime = 0.3;
 	std::ostringstream fileName;
 	fileName << "SimulationExampleIdealVS3_" << timeStep;
-	ElementList circElements;
+	BaseComponent::List circElements;
 	circElements.push_back(std::make_shared<IdealVoltageSource>("v_1", 1, 0, Complex(10, 0)));
 	circElements.push_back(std::make_shared<ResistorDP>("r_1", 1, 2, 1));
 	circElements.push_back(std::make_shared<ResistorDP>("r_2", 2, 0, 1));

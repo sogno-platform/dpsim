@@ -37,7 +37,7 @@ namespace Python {
 	struct Component {
 		PyObject_HEAD
 
-		ElementPtr comp;
+		BaseComponent::Ptr comp;
 
 		static PyObject* newfunc(PyTypeObject* type, PyObject *args, PyObject *kwds);
 		static void dealloc(Component*);
@@ -50,7 +50,7 @@ namespace Python {
 
 	extern PyTypeObject ComponentType;
 
-	bool compsFromPython(PyObject* list, ElementList& comps);
+	bool compsFromPython(PyObject* list, BaseComponent::List& comps);
 
 	// "Constructors" for the component types
 	extern const char* DocExternalCurrentSource;

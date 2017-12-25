@@ -23,7 +23,7 @@
 int main() {
 	// Same circuit as above, but the simulation is done normally in one instance.
 	Logger log("output.log"), llog("lvector.log"), rlog("rvector.log");
-	ElementList comps, comps2;
+	BaseComponent::List comps, comps2;
 
 	comps.push_back(std::make_shared<VoltSourceRes>("v_s", 1, 0, Complex(10000, 0), 1));
 	comps.push_back(new Inductor("l_1", 1, 2, 0.1));

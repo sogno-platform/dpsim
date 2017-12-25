@@ -32,7 +32,7 @@ int main() {
 	Real finalTime = 0.3;
 	std::ostringstream fileName;
 	fileName << "RXLineResLoadEMT_" << timeStep;
-	ElementList circElements0, circElements1, circElements2;
+	BaseComponent::List circElements0, circElements1, circElements2;
 	circElements0.push_back(std::make_shared<VoltSourceResEMT>("v_s", 1, 0, Complex(10000, 0), 1));
 	circElements0.push_back(std::make_shared<ResistorEMT>("r_line", 1, 2, 1));
 	circElements0.push_back(std::make_shared<InductorEMT>("l_line", 2, 3, 1));

@@ -24,7 +24,7 @@ void main() {
 	// Very simple test circuit. Just a few resistors and an inductance.
 	// Voltage is read from VILLASnode and current through everything is written back.
 	Logger log("output.log"), llog("lvector.log"), rlog("rvector.log");
-	ElementList comps;
+	BaseComponent::List comps;
 
 	ExternalVoltageSource *evs = new ExternalVoltageSource("v_s", 1, 0, Complex(0, 0), 1);
 	comps.push_back(evs);

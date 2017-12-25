@@ -61,7 +61,7 @@ namespace Python {
 		bool startSync;
 
 		PyObject* pyComps; // Components as a (Python) list of PyComponents
-		ElementList comps;
+		BaseComponent::List comps;
 		int numSwitch;
 
 		// List of additional objects that aren't directly used from Simulation

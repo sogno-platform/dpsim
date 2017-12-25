@@ -29,13 +29,16 @@ using namespace DPsim;
 PyObject* Python::Component::newfunc(PyTypeObject* type, PyObject *args, PyObject *kwds) {
 	Component* self = (Component*) type->tp_alloc(type, 0);
 	if (self)
-		self->comp = ElementPtr(nullptr);
+		self->comp = BaseComponent::Ptr(nullptr);
 
 	return (PyObject*) self;
 }
 
 void Python::Component::dealloc(Python::Component* self) {
-	self->comp.~ElementPtr();
+	// This is a workaround for a compiler bug: https://stackoverflow.com/a/42647153/8178705
+	using Ptr = BaseComponent::Ptr;
+
+	self->comp.~Ptr();
 
 	Py_TYPE(self)->tp_free((PyObject*)self);
 }
@@ -127,7 +130,7 @@ int Python::Component::setattr(Python::Component* self, char* name, PyObject *v)
 	return 0;
 }
 
-bool Python::compsFromPython(PyObject* list, ElementList& comps) {
+bool Python::compsFromPython(PyObject* list, BaseComponent::List& comps) {
 	if (!PyList_Check(list))
 		return false;
 

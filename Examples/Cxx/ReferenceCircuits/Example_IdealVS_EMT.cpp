@@ -30,7 +30,7 @@ int main() {
 	Real timeStep = 0.001;
 	Real omega = 2.0*M_PI*50.0;
 	Real finalTime = 0.3;
-	ElementList circElements;
+	BaseComponent::List circElements;
 	circElements.push_back(std::make_shared<IdealVoltageSourceEMT>("v_in", 1, 2, 10));
 	circElements.push_back(std::make_shared<ResistorEMT>("r_1", 1, 0, 5));
 	circElements.push_back(std::make_shared<ResistorEMT>("r_2", 2, 0, 10));

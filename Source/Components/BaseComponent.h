@@ -68,6 +68,9 @@ namespace DPsim {
 		std::map<String, CompAttr> attrMap;
 
 	public:
+		typedef std::shared_ptr<BaseComponent> Ptr;
+		typedef std::vector<Ptr> List;
+
 		BaseComponent() { }
 
 		BaseComponent(String name, Int node1, Int node2, bool logActive = false) {

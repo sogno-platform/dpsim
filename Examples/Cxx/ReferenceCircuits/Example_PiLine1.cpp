@@ -32,7 +32,7 @@ int main() {
 	Real finalTime = 0.3;
 	std::ostringstream fileName;
 	fileName << "SimulationExamplePiLine2_" << timeStep;
-	ElementList circElements;
+	BaseComponent::List circElements;
 	circElements.push_back(std::make_shared<IdealVoltageSource>("v_1", 1, 0, Complex(345, 0)));
 	circElements.push_back(std::make_shared<ResistorDP>("r1", 1, 2, 5));
 	circElements.push_back(std::make_shared<Capacitor>("c_1", 2, 0, 0.002));
