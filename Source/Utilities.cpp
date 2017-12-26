@@ -92,9 +92,7 @@ bool DPsim::parseInt(const char *s, int *i) {
 int DPsim::parseArguments(int argc, const char* argv[],
 	bool &rt, bool &batch, Int &split, String &interfaceBase, String &splitNode) {
 
-	Int i;
-
-	for (i = 1; i < argc; i++) {
+	for (Int i = 1; i < argc; i++) {
 		if (!strcmp(argv[i], "-b") || !strcmp(argv[i], "--batch")) {
 			batch = true;
 		}

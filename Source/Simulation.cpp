@@ -48,7 +48,7 @@ Simulation::Simulation(BaseComponent::List elements, Real om, Real dt, Real tf, 
 	mDownSampleRate = downSampleRate;
 	initialize(elements);
 
-	for (BaseComponent::Ptr c : elements)
+	for (auto c : elements)
 		mLogger->Log(LogLevel::INFO) << "Added " << c->getType() << " '" << c->getName() << "' to simulation." << std::endl;
 
 	mLogger->Log(LogLevel::INFO) << "System matrix A:" << std::endl;
@@ -72,7 +72,7 @@ void Simulation::initialize(BaseComponent::List newElements) {
 	// Calculate the mNumber of nodes by going through the list of elements
 	// TODO we use the values from the first element vector right now and assume that
 	// these values don't change on switches
-	for (BaseComponent::Ptr element : newElements) {
+	for (auto element : newElements) {
 
 		// determine maximum node in component list
 		if (element->getNode1() > maxNode) {
@@ -85,7 +85,7 @@ void Simulation::initialize(BaseComponent::List newElements) {
 	mLogger->Log(LogLevel::INFO) << "Maximum node number: " << maxNode << std::endl;
 	currentVirtualNode = maxNode;
 	// Check if element requires virtual node and if so set one
-	for (BaseComponent::Ptr element : newElements) {
+	for (auto element : newElements) {
 		if (element->hasVirtualNodes()) {
 			for (Int node = 0; node < element->getVirtualNodesNum(); node++) {
 				currentVirtualNode++;
@@ -104,7 +104,7 @@ void Simulation::initialize(BaseComponent::List newElements) {
 	mSystemModel.initialize(numNodes);
 
 	// Initialize right side vector and components
-	for (BaseComponent::Ptr element : newElements) {
+	for (auto element : newElements) {
 		element->init(mSystemModel.getOmega(), mSystemModel.getTimeStep());
 		element->applyRightSideVectorStamp(mSystemModel);
 	}
@@ -122,9 +122,9 @@ void Simulation::addSystemTopology(BaseComponent::List newElements) {
 	// It is assumed that the system size does not change
 	mSystemModel.createEmptySystemMatrix();
 
-	for (BaseComponent::Ptr element : newElements) {
+	for (auto element : newElements)
 		element->applySystemMatrixStamp(mSystemModel);
-	}
+
 	mSystemModel.addSystemMatrix();
 }
 
@@ -133,23 +133,19 @@ Int Simulation::step(bool blocking)
 {
 	mSystemModel.setRightSideVectorToZero();
 
-	for (auto it = mExternalInterfaces.begin(); it != mExternalInterfaces.end(); ++it) {
-		(*it)->readValues(blocking);
-	}
+	for (auto eif : mExternalInterfaces)
+		eif->readValues(blocking);
 
-	for (BaseComponent::List::iterator it = mElements.begin(); it != mElements.end(); ++it) {
-		(*it)->step(mSystemModel, mTime);
-	}
+	for (auto elm : mElements)
+		elm->step(mSystemModel, mTime);
 
 	mSystemModel.solve();
 
-	for (BaseComponent::List::iterator it = mElements.begin(); it != mElements.end(); ++it) {
-		(*it)->postStep(mSystemModel);
-	}
+	for (auto elm : mElements)
+		elm->postStep(mSystemModel);
 
-	for (auto it = mExternalInterfaces.begin(); it != mExternalInterfaces.end(); ++it) {
-		(*it)->writeValues(mSystemModel);
-	}
+	for (auto eif : mExternalInterfaces)
+		eif->writeValues(mSystemModel);
 
 	if (mCurrentSwitchTimeIndex < mSwitchEventVector.size()) {
 		if (mTime >= mSwitchEventVector[mCurrentSwitchTimeIndex].switchTime) {
@@ -184,17 +180,15 @@ Int Simulation::stepGeneratorTest(Logger& leftSideVectorLog, Logger& rightSideVe
 	mSystemModel.getRightSideVector().setZero();
 
 	// Execute step for all circuit components
-	for (BaseComponent::List::iterator it = mElements.begin(); it != mElements.end(); ++it) {
-		(*it)->step(mSystemModel, mTime);
-	}
+	for (auto elm : mElements)
+		elm->step(mSystemModel, mTime);
 
 	// Solve circuit for vector j with generator output current
 	mSystemModel.solve();
 
 	// Execute PostStep for all components, generator states are recalculated based on new terminal voltage
-	for (BaseComponent::List::iterator it = mElements.begin(); it != mElements.end(); ++it) {
-		(*it)->postStep(mSystemModel);
-	}
+	for (auto elm : mElements)
+		elm->postStep(mSystemModel);
 
 	if (ClearingFault)
 		clearFault(1, 2, 3);
@@ -437,21 +431,19 @@ int Simulation::stepGeneratorVBR(Logger& leftSideVectorLog, Logger& rightSideVec
 	mSystemModel.getRightSideVector().setZero();
 
 	// Execute step for all circuit components
-	for (BaseComponent::List::iterator it = mElements.begin(); it != mElements.end(); ++it) {
-		(*it)->step(mSystemModel, mTime);
-	}
+	for (auto elm : mElements)
+		elm->step(mSystemModel, mTime);
 
 	// Solve circuit for vector j with generator output current
 	mSystemModel.solve();
 
 	// Execute PostStep for all components, generator states are recalculated based on new terminal voltage
-	for (BaseComponent::List::iterator it = mElements.begin(); it != mElements.end(); ++it) {
-		(*it)->postStep(mSystemModel);
-	}
+	for (auto elm : mElements)
+		elm->postStep(mSystemModel);
 
 	if (mCurrentSwitchTimeIndex < mSwitchEventVector.size()) {
 		if (mTime >= mSwitchEventVector[mCurrentSwitchTimeIndex].switchTime) {
-			
+
 			switchSystemMatrix(mSwitchEventVector[mCurrentSwitchTimeIndex].systemIndex);
 
 			mCurrentSwitchTimeIndex++;

@@ -114,9 +114,10 @@ void Logger::LogMatrix(LogLevel level, const Matrix& data) {
 
 void Logger::LogDataLine(Real time, Matrix& data) {
 	mLogFile << std::scientific << time;
-	for (Int i = 0; i < data.rows(); i++) {
+
+	for (Int i = 0; i < data.rows(); i++)
 		mLogFile << ", " << data(i, 0);
-	}
+
 	mLogFile << std::endl;
 }
 

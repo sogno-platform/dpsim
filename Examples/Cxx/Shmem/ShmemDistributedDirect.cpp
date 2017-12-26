@@ -72,8 +72,8 @@ int main(int argc, char *argv[])
 	newSim.runRT(RTTimerFD, false, log, log, log);
 	std::cout << "Simulation finished." << std::endl;
 
-	for (auto comp : comps) {
+	for (auto comp : comps)
 		delete comp;
-	}
+
 	delete shmem;
 }
