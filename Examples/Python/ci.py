@@ -9,14 +9,19 @@ import dpsim
 import numpy as np
 import pandas
 import sys
+import os
 
 EPSILON = 1e-6
 
 def run_test(name, sim):
     sim.start()
     sim.wait()
+
+    path = os.path.dirname(__file__)
+
     dpCsv = name + ".csv"
-    expectedCsv = name + ".expected.csv"
+    expectedCsv = path + '/' + name + ".expected.csv"
+
     dpData = pandas.read_csv(dpCsv, header=None)
     expectedData = pandas.read_csv(expectedCsv, header=None)
     if dpData.shape[1] != expectedData.shape[1]:
@@ -35,18 +40,23 @@ def run_test(name, sim):
     for i in range(1, int((dpData.shape[1] - 1) / 2)):
         realIdx = i
         imagIdx = i + int((dpData.shape[1] - 1) / 2)
+
         dpReal = np.array(dpData.ix[:,realIdx])
         dpImag = np.array(dpData.ix[:,imagIdx])
+
         expectedReal = np.array(expectedData.ix[:,realIdx])
         expectedImag = np.array(expectedData.ix[:,imagIdx])
+
         diff = np.sqrt((dpReal-expectedReal)**2+(dpImag-expectedImag)**2)
         diffIdx = np.nonzero(diff > EPSILON)
+
         if len(diffIdx[0]) != 0:
             print("{}: node {} has {} values above diff threshold".format(binary,
                 i, len(diffIdx[0])), file=sys.stderr)
             print("(first at {} with diff of {})".format(diffIdx[0][0],
                 diff[diffIdx[0][0]]), file=sys.stderr)
             ret = 1
+
     return ret
 
 if __name__ == "__main__":
@@ -58,6 +68,7 @@ if __name__ == "__main__":
             dpsim.Resistor("r_load", 3, 0, 1000)],
             duration=0.3, llog="TestSimple.csv")
     }
+
     ret = 0
     for name, sim in sims.items():
         if run_test(name, sim):
@@ -65,5 +76,7 @@ if __name__ == "__main__":
             ret = 1
         else:
             print("{} successfull".format(name), file=sys.stderr)
+
     print("All tests successfull.", file=sys.stderr)
+
     sys.exit(ret)
