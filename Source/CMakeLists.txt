@@ -45,6 +45,8 @@ set(INCLUDE_DIRS
 	${EIGEN3_INCLUDE_DIR}
 )
 
+set(LIBRARIES "-lstdc++fs")
+
 if (NOT WIN32)
 	# we use PyArg_ParseTupleAndKeywords several times, which erroneously accepts
 	# a char* array instead of a const char* array
