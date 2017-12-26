@@ -53,9 +53,9 @@ if __name__ == "__main__":
     sims = {
         'TestSimple': dpsim.Simulation([
             dpsim.VoltSourceRes("v_s", 1, 0, 10000+0j, 1),
-            dpsim.LinearResistor("r_line", 1, 2, 1),
+            dpsim.Resistor("r_line", 1, 2, 1),
             dpsim.Inductor("l_line", 2, 3, 1),
-            dpsim.LinearResistor("r_load", 3, 0, 1000)],
+            dpsim.Resistor("r_load", 3, 0, 1000)],
             duration=0.3, llog="TestSimple.csv")
     }
     ret = 0
