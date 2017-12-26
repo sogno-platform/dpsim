@@ -29,9 +29,13 @@ using namespace DPsim;
 PyObject* Python::Component::newfunc(PyTypeObject* type, PyObject *args, PyObject *kwds) {
 	Component* self = (Component*) type->tp_alloc(type, 0);
 	if (self)
-		self->comp = BaseComponent::Ptr(nullptr);
+		Component::init(self);
 
 	return (PyObject*) self;
+}
+
+void Python::Component::init(Component* self) {
+	new (&self->comp) BaseComponent::Ptr(nullptr);
 }
 
 void Python::Component::dealloc(Python::Component* self) {
@@ -167,6 +171,7 @@ PyObject* Python::ExternalCurrentSource(PyObject* self, PyObject* args) {
 		return nullptr;
 
 	Component *pyComp = PyObject_New(Component, &Python::ComponentType);
+	Component::init(pyComp);
 	pyComp->comp = std::make_shared<DPsim::ExternalCurrentSource>(name, src, dest, Complex(initCurrent.real, initCurrent.imag));
 
 	return (PyObject*) pyComp;
@@ -193,6 +198,7 @@ PyObject* Python::ExternalVoltageSource(PyObject* self, PyObject* args) {
 		return nullptr;
 
 	Component *pyComp = PyObject_New(Component, &Python::ComponentType);
+	Component::init(pyComp);
 	pyComp->comp = std::make_shared<DPsim::ExternalVoltageSource>(name, src, dest, Complex(initVoltage.real, initVoltage.imag), num);
 
 	return (PyObject*) pyComp;
@@ -215,6 +221,7 @@ PyObject* Python::Inductor(PyObject* self, PyObject* args) {
 		return nullptr;
 
 	Component *pyComp = PyObject_New(Component, &Python::ComponentType);
+	Component::init(pyComp);
 	pyComp->comp = std::make_shared<DPsim::InductorDP>(name, src, dest, inductance);
 
 	return (PyObject*) pyComp;
@@ -237,6 +244,7 @@ PyObject* Python::Resistor(PyObject* self, PyObject* args) {
 		return nullptr;
 
 	Component *pyComp = PyObject_New(Component, &Python::ComponentType);
+	Component::init(pyComp);
 	pyComp->comp = std::make_shared<DPsim::ResistorDP>(name, src, dest, resistance);
 
 	return (PyObject*) pyComp;
@@ -264,6 +272,7 @@ PyObject* Python::VoltSourceRes(PyObject* self, PyObject* args) {
 		return nullptr;
 
 	Component *pyComp = PyObject_New(Component, &Python::ComponentType);
+	Component::init(pyComp);
 	pyComp->comp = std::make_shared<DPsim::VoltSourceRes>(name, src, dest, Complex(voltage.real, voltage.imag), resistance);
 
 	return (PyObject*) pyComp;

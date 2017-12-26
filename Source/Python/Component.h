@@ -38,6 +38,7 @@ namespace Python {
 		PyObject_HEAD
 
 		BaseComponent::Ptr comp;
+		static void init(Component* self);
 
 		static PyObject* newfunc(PyTypeObject* type, PyObject *args, PyObject *kwds);
 		static void dealloc(Component*);
