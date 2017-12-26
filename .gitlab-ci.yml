@@ -6,6 +6,7 @@ variables:
 
 stages:
   - prepare
+  - pre-build
   - build
   - test
   - deploy
@@ -19,7 +20,7 @@ docker:
     - shell
 
 build:code:
-  stage: build
+  stage: pre-build
   script:
     - mkdir build
     - cd build
@@ -35,12 +36,11 @@ build:code:
 build:docs:
   stage: build
   script:
-    - mkdir build
-    - cd build
-    - cmake ..
-    - make docs
-    - make docs_cxx
+    - make -C build docs
+    - make -C build docs_cxx
   image: ${DOCKER_IMAGE_DEV}:${DOCKER_TAG_DEV}
+  dependencies:
+    - build:code
   artifacts:
     paths:
       - build/Documentation/html
@@ -51,10 +51,7 @@ build:docs:
 build:packages:
   stage: build
   script:
-    - mkdir build
-    - cd build
-    - cmake ..
-    - make package
+    - make -C build package
   only:
     - development
     - master
@@ -62,6 +59,8 @@ build:packages:
   tags:
     - docker
   image: ${DOCKER_IMAGE_DEV}:${DOCKER_TAG_DEV}
+  dependencies:
+    - build:code
   artifacts:
     paths:
       - build/*.rpm
