@@ -12,15 +12,14 @@ import sys
 import os
 
 EPSILON = 1e-6
+PATH = os.path.dirname(__file__)
 
 def run_test(name, sim):
     sim.start()
     sim.wait()
 
-    path = os.path.dirname(__file__)
-
-    dpCsv = name + ".csv"
-    expectedCsv = path + '/' + name + ".expected.csv"
+    dpCsv       = PATH + '/' + name + ".csv"
+    expectedCsv = PATH + '/' + name + ".expected.csv"
 
     dpData = pandas.read_csv(dpCsv, header=None)
     expectedData = pandas.read_csv(expectedCsv, header=None)
@@ -66,7 +65,7 @@ if __name__ == "__main__":
             dpsim.Resistor("r_line", 1, 2, 1),
             dpsim.Inductor("l_line", 2, 3, 1),
             dpsim.Resistor("r_load", 3, 0, 1000)],
-            duration=0.3, llog="TestSimple.csv")
+            duration=0.3, llog=PATH + "/TestSimple.csv")
     }
 
     ret = 0

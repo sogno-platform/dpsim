@@ -38,7 +38,7 @@ Logger::Logger() : mLogFile() {
 Logger::Logger(String filename, LogLevel level) : mLogLevel(level) {
 	fs::path p = filename;
 
-	if (!fs::exists(p.parent_path()))
+	if (p.has_parent_path() && !fs::exists(p.parent_path()))
 		fs::create_directory(p.parent_path());
 
 	mLogFile = std::ofstream(filename);
