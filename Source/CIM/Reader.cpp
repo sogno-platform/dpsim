@@ -131,7 +131,7 @@ ElementPtr Reader::mapExternalNetworkInjection(ExternalNetworkInjection* inj) {
 		mLogger->Log(LogLevel::ERROR) << "ExternalNetworkInjection " << inj->mRID << " has no associated SvVoltage, ignoring" << std::endl;
 		return nullptr;
 	}	
-	Real voltAbs = volt->v.value;
+	Real voltAbs = unitValue(volt->v.value, UnitMultiplier::k);
 	Real voltPhase = volt->angle.value;
 	Complex initVoltage = std::polar(voltAbs, voltPhase * PI / 180);
 	mLogger->Log(LogLevel::INFO) << "IdealVoltageSource " << inj->name << " rid=" << inj->mRID << " node1=" << node
@@ -168,14 +168,14 @@ ElementPtr Reader::mapPowerTransformer(PowerTransformer* trans) {
 		if (end->endNumber == 1) {
 			mLogger->Log(LogLevel::INFO) << "    PowerTransformerEnd_1 " << end->name
 				<< " Vrated=" << end->ratedU.value << " R=" << end->r.value << " X=" << end->x.value << std::endl;
-			voltageNode1 = end->ratedU.value;
+			voltageNode1 = unitValue(end->ratedU.value, UnitMultiplier::k);
 			inductanceNode1 = end->x.value / mFrequency;
 			resistanceNode1 = end->r.value;
 		}
 		if (end->endNumber == 2) {
 			mLogger->Log(LogLevel::INFO) << "    PowerTransformerEnd_2 " << end->name
 				<< " Vrated=" << end->ratedU.value << " R=" << end->r.value << " X=" << end->x.value << std::endl;
-			voltageNode2 = end->ratedU.value;
+			voltageNode2 = unitValue(end->ratedU.value, UnitMultiplier::k);
 		}
 	}
 
@@ -187,7 +187,8 @@ ElementPtr Reader::mapPowerTransformer(PowerTransformer* trans) {
 			<< " ratio=" << ratioAbs << "<" << ratioPhase 
 			<< " inductance=" << inductanceNode1 << std::endl;
 
-		return std::make_shared<TransformerDP>(trans->name, node1, node2, ratioAbs, ratioPhase, 0, inductanceNode1);
+		//return std::make_shared<TransformerDP>(trans->name, node1, node2, ratioAbs, ratioPhase, 0, inductanceNode1);
+		return std::make_shared<IdealTransformerDP>(trans->name, node1, node2, ratioAbs, ratioPhase);
 
 	}
 	mLogger->Log(LogLevel::WARN) << "PowerTransformer " << trans->mRID << " has no primary End; ignoring" << std::endl;
@@ -209,13 +210,11 @@ ElementPtr Reader::mapSynchronousMachine(SynchronousMachine* machine) {
 		return nullptr;
 	}
 
-	Real voltAbs = volt->v.value;
-	Real voltPhase = volt->angle.value;
-	Complex initVoltage = std::polar(voltAbs, voltPhase * PI / 180);
-	
 	// Apply unit multipliers according to CGMES convetions.
-	volt->v.value = Reader::unitValue(volt->v.value, UnitMultiplier::k);
-
+	Real voltAbs = unitValue(volt->v.value, UnitMultiplier::k);
+	Real voltPhase = volt->angle.value * PI / 180;
+	Complex initVoltage = std::polar(voltAbs, voltPhase);
+	
 	// TODO is it appropiate to use this resistance here
 	mLogger->Log(LogLevel::INFO) << "Create IdealVoltageSource " << machine->name << " node=" << node
 		<< " V=" << voltAbs << "<" << voltPhase << std::endl;

@@ -63,10 +63,10 @@ static void readFixedCIMFiles_LineLoad() {
 
 static void readFixedCIMFiles_IEEE9bus() {
 	std::list<String> filenames;
-	filenames.push_back("..\\..\\Examples\\CIM\\IEEE-09_Neplan_RX\\IEEE-09_Neplan_RX_DI.xml");
-	filenames.push_back("..\\..\\Examples\\CIM\\IEEE-09_Neplan_RX\\IEEE-09_Neplan_RX_EQ.xml");
-	filenames.push_back("..\\..\\Examples\\CIM\\IEEE-09_Neplan_RX\\IEEE-09_Neplan_RX_SV.xml");
-	filenames.push_back("..\\..\\Examples\\CIM\\IEEE-09_Neplan_RX\\IEEE-09_Neplan_RX_TP.xml");
+	filenames.push_back("..\\..\\..\\dpsim\\Examples\\CIM\\IEEE-09_Neplan_RX\\IEEE-09_Neplan_RX_DI.xml");
+	filenames.push_back("..\\..\\..\\dpsim\\Examples\\CIM\\IEEE-09_Neplan_RX\\IEEE-09_Neplan_RX_EQ.xml");
+	filenames.push_back("..\\..\\..\\dpsim\\Examples\\CIM\\IEEE-09_Neplan_RX\\IEEE-09_Neplan_RX_SV.xml");
+	filenames.push_back("..\\..\\..\\dpsim\\Examples\\CIM\\IEEE-09_Neplan_RX\\IEEE-09_Neplan_RX_TP.xml");
 
 	testCIMReader(filenames);
 }
