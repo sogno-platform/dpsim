@@ -28,7 +28,7 @@ using namespace DPsim;
 int main() {
 	Real timeStep = 0.00005;
 	Logger log;
-	ElementList comps;
+	BaseComponent::List comps;
 	comps.push_back(std::make_shared<VoltSourceRes>("v_s", 1, 0, Complex(10000, 0), 1));
 	comps.push_back(std::make_shared<ResistorDP>("r_line", 1, 2, 1));
 	comps.push_back(std::make_shared<InductorDP>("l_line", 2, 3, 1));

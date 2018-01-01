@@ -30,7 +30,7 @@ void VarFreqRXLineResLoad_NZ_Paper(Real timeStep, Real finalTime, Real freqStep,
 	// Define simulation scenario
 	std::ostringstream fileName;
 	fileName << "VarFreqRXLineResLoad_" << timeStep;
-	ElementList circElements0, circElements1, circElements2;
+	BaseComponent::List circElements0, circElements1, circElements2;
 	circElements0.push_back(std::make_shared<VoltSourceResFreq>("v_s", 1, 0, 10000, 0, 1, 2 * PI*-1, freqStep, rampTime));
 	circElements0.push_back(std::make_shared<ResistorDP>("r_line", 1, 2, 1));
 	circElements0.push_back(std::make_shared<InductorDP>("l_line", 2, 3, 1));
@@ -64,7 +64,7 @@ void VarFreqRXLineResLoadEMT_NZ_Paper(Real timeStep, Real finalTime, Real freqSt
 	// Define simulation scenario
 	std::ostringstream fileName;
 	fileName << "VarFreqRXLineResLoadEMT_" << timeStep;
-	ElementList circElements0, circElements1, circElements2;
+	BaseComponent::List circElements0, circElements1, circElements2;
 	circElements0.push_back(std::make_shared<VoltSourceResFreqEMT>("v_s", 1, 0, 10000, 0, 1, 2 * PI*-1, freqStep, rampTime));
 	circElements0.push_back(std::make_shared<ResistorEMT>("r_line", 1, 2, 1));
 	circElements0.push_back(std::make_shared<InductorEMT>("l_line", 2, 3, 1));

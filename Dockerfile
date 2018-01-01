@@ -19,18 +19,20 @@ RUN dnf -y install \
 	git \
 	gcc-c++ \
 	redhat-rpm-config \
+	rpmdevtools \
 	make cmake \
 	doxygen \
-	python-pip
+	graphviz \
+	python3-pip
 
 # Dependencies
 RUN dnf -y install \
-	python-devel \
+	python3-devel \
 	eigen3-devel \
 	villas-node-devel
 
 # Python Packages
-RUN pip install \
+RUN pip3 install \
 	pandas \
 	numpy \
 	matplotlib \

@@ -30,7 +30,7 @@ static void VarFreqRXLineResLoad(Real timeStep, Real finalTime, Real freqStep, R
 	Real omega = 2.0*M_PI*50.0;
 	std::ostringstream fileName;
 	fileName << "VarFreqRXLineResLoad_" << timeStep;
-	ElementList circElements0, circElements1, circElements2;
+	BaseComponent::List circElements0, circElements1, circElements2;
 	circElements0.push_back(std::make_shared<VoltSourceResFreq>("v_s", 1, 0, 1000, 0, 1, 2 * PI*-5, freqStep, rampTime));
 	circElements0.push_back(std::make_shared<ResistorDP>("r_line", 1, 2, 1));
 	circElements0.push_back(std::make_shared<InductorDP>("l_line", 2, 3, 0.2));
@@ -61,7 +61,7 @@ static void VarFreqRXLineResLoadEMT(Real timeStep, Real finalTime, Real freqStep
 	Real omega = 2.0*M_PI*50.0;
 	std::ostringstream fileName;
 	fileName << "RXLineResLoadEMT_" << timeStep;
-	ElementList circElements0, circElements1, circElements2;
+	BaseComponent::List circElements0, circElements1, circElements2;
 	circElements0.push_back(std::make_shared<VoltSourceResFreqEMT>("v_s", 1, 0, 1000, 0, 1, 2 * PI*-5, freqStep, rampTime));
 	circElements0.push_back(std::make_shared<ResistorEMT>("r_line", 1, 2, 1));
 	circElements0.push_back(std::make_shared<InductorEMT>("l_line", 2, 3, 0.2));

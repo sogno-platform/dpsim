@@ -25,9 +25,8 @@ Please check out the existing [Python examples](Examples/Python/).
 
 ## Documentation
 
-[Online documentation for Python](http://134.130.169.10:8080/)
-
-[Online documentation for C++](http://134.130.169.10:8080/cxx/)
+- [Online documentation for Python](http://dpsim.fein-aachen.org/doc/development/sphinx/)
+- [Online documentation for C++](http://dpsim.fein-aachen.org/doc/development/doxygen/)
 
 ## Copyright
 

@@ -89,7 +89,8 @@ void ShmemInterface::readValues(bool blocking) {
 			std::cerr << "Fatal error: failed to read sample from shmem interface" << std::endl;
 			std::exit(1);
 		}
-		for (ExtComponent extComp : mExtComponents) {
+
+		for (auto extComp : mExtComponents) {
 			if (extComp.realIdx >= sample->length || extComp.imagIdx >= sample->length) {
 				std::cerr << "Fatal error: incomplete data received from shmem interface" << std::endl;
 				std::exit(1);
@@ -105,6 +106,7 @@ void ShmemInterface::readValues(bool blocking) {
 			if (evs)
 				evs->setVoltage(real, imag);
 		}
+
 		sample_put(sample);
 	} catch (std::exception& exc) {
 		/* probably won't happen (if the timer expires while we're still reading data,
@@ -126,16 +128,20 @@ void ShmemInterface::writeValues(SystemModel& model) {
 			std::cerr << "at seq" << mSeq << std::endl;
 			std::exit(1);
 		}
+
 		for (auto vd : mExportedVoltages) {
 			Real real = 0, imag = 0;
+
 			if (vd.from > 0) {
 				real += model.getRealFromLeftSideVector(vd.from-1);
 				imag += model.getImagFromLeftSideVector(vd.from-1);
 			}
+
 			if (vd.to > 0) {
 				real -= model.getRealFromLeftSideVector(vd.to-1);
 				imag -= model.getImagFromLeftSideVector(vd.to-1);
 			}
+
 			if (vd.realIdx >= sample->capacity || vd.imagIdx >= sample->capacity) {
 				std::cerr << "fatal error: not enough space in allocated struct sample" << std::endl;
 				std::exit(1);
@@ -147,6 +153,7 @@ void ShmemInterface::writeValues(SystemModel& model) {
 			if (vd.imagIdx > len)
 				len = vd.imagIdx;
 		}
+
 		for (auto cd : mExportedCurrents) {
 			Complex current = cd.comp->getCurrent(model);
 			if (cd.realIdx >= sample->capacity || cd.imagIdx >= sample->capacity) {

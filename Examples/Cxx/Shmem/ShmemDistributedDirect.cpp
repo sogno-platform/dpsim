@@ -30,7 +30,7 @@ int main(int argc, char *argv[])
 	// Here, the two instances directly communicate with each other without using
 	// VILLASnode in between.
 	Logger log;
-	ElementList comps;
+	BaseComponent::List comps;
 	ShmemInterface *shmem;
 	struct shmem_conf conf;
 	conf.samplelen = 4;
@@ -72,8 +72,8 @@ int main(int argc, char *argv[])
 	newSim.runRT(RTTimerFD, false, log, log, log);
 	std::cout << "Simulation finished." << std::endl;
 
-	for (auto comp : comps) {
+	for (auto comp : comps)
 		delete comp;
-	}
+
 	delete shmem;
 }

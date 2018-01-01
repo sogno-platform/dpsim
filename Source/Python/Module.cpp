@@ -22,6 +22,7 @@
 
 #include <Python.h>
 
+#include "Config.h"
 #include "Python/Component.h"
 #include "Python/Interface.h"
 #include "Python/Module.h"
@@ -30,7 +31,9 @@
 using namespace DPsim;
 
 static PyMethodDef dpsimModuleMethods[] = {
+#ifdef WITH_CIM
 	{"load_cim", Python::LoadCim, METH_VARARGS, Python::DocLoadCim},
+#endif
 	{"open_shmem_interface", (PyCFunction) Python::OpenShmemInterface, METH_VARARGS|METH_KEYWORDS, Python::DocOpenShmemInterface},
 	{"ExternalCurrentSource", Python::ExternalCurrentSource, METH_VARARGS, Python::DocExternalCurrentSource},
 	{"ExternalVoltageSource", Python::ExternalVoltageSource, METH_VARARGS, Python::DocExternalVoltageSource},

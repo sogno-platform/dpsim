@@ -33,15 +33,15 @@ int main() {
 	Real Llkq2 = 0.125;
 
 	// Declare circuit components
-	ElementPtr gen = std::make_shared<SynchronGeneratorDP>("gen", 1, 2, 3,
+	BaseComponent::Ptr gen = std::make_shared<SynchronGeneratorDP>("gen", 1, 2, 3,
 		nomPower, nomPhPhVoltRMS, nomFreq, poleNum, nomFieldCurr,
 		Rs, Ll, Lmd, Lmd0, Lmq, Lmq0, Rfd, Llfd, Rkd, Llkd, Rkq1, Llkq1, Rkq2, Llkq2, H);
 	Real loadRes = 1037.8378;
-	ElementPtr r1 = std::make_shared<ResistorDP>("r1", 0, 1, loadRes);
-	ElementPtr r2 = std::make_shared<ResistorDP>("r2", 0, 2, loadRes);
-	ElementPtr r3 = std::make_shared<ResistorDP>("r3", 0, 3, loadRes);
+	BaseComponent::Ptr r1 = std::make_shared<ResistorDP>("r1", 0, 1, loadRes);
+	BaseComponent::Ptr r2 = std::make_shared<ResistorDP>("r2", 0, 2, loadRes);
+	BaseComponent::Ptr r3 = std::make_shared<ResistorDP>("r3", 0, 3, loadRes);
 
-	ElementList circElements;
+	BaseComponent::List circElements;
 	circElements.push_back(gen);
 	circElements.push_back(r1);
 	circElements.push_back(r2);

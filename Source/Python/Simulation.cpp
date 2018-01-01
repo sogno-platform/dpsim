@@ -209,14 +209,20 @@ void Python::Simulation::dealloc(Python::Simulation* self) {
 	for (auto it : self->refs) {
 		Py_DECREF(it);
 	}
+
 	// Since this is not a C++ destructor which would automatically call the
 	// destructor of its members, we have to manually call the destructor of
 	// the vectors here to free the associated memory.
-	self->comps.~ElementList();
-	self->refs.~vector<PyObject*>();
+
+	// This is a workaround for a compiler bug: https://stackoverflow.com/a/42647153/8178705
+	using ComponentList = BaseComponent::List;
+	using PyObjectsList = std::vector<PyObject *>;
+
+	self->comps.~ComponentList();
+	self->refs.~PyObjectsList();
 
 	Py_XDECREF(self->pyComps);
-	Py_TYPE(self)->tp_free((PyObject*)self);
+	Py_TYPE(self)->tp_free((PyObject*) self);
 }
 
 static const char* DocSimulationAddInterface =

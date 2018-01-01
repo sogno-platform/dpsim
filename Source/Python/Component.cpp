@@ -29,13 +29,20 @@ using namespace DPsim;
 PyObject* Python::Component::newfunc(PyTypeObject* type, PyObject *args, PyObject *kwds) {
 	Component* self = (Component*) type->tp_alloc(type, 0);
 	if (self)
-		self->comp = ElementPtr(nullptr);
+		Component::init(self);
 
 	return (PyObject*) self;
 }
 
+void Python::Component::init(Component* self) {
+	new (&self->comp) BaseComponent::Ptr(nullptr);
+}
+
 void Python::Component::dealloc(Python::Component* self) {
-	self->comp.~ElementPtr();
+	// This is a workaround for a compiler bug: https://stackoverflow.com/a/42647153/8178705
+	using Ptr = BaseComponent::Ptr;
+
+	self->comp.~Ptr();
 
 	Py_TYPE(self)->tp_free((PyObject*)self);
 }
@@ -127,7 +134,7 @@ int Python::Component::setattr(Python::Component* self, char* name, PyObject *v)
 	return 0;
 }
 
-bool Python::compsFromPython(PyObject* list, ElementList& comps) {
+bool Python::compsFromPython(PyObject* list, BaseComponent::List& comps) {
 	if (!PyList_Check(list))
 		return false;
 
@@ -164,6 +171,7 @@ PyObject* Python::ExternalCurrentSource(PyObject* self, PyObject* args) {
 		return nullptr;
 
 	Component *pyComp = PyObject_New(Component, &Python::ComponentType);
+	Component::init(pyComp);
 	pyComp->comp = std::make_shared<DPsim::ExternalCurrentSource>(name, src, dest, Complex(initCurrent.real, initCurrent.imag));
 
 	return (PyObject*) pyComp;
@@ -190,6 +198,7 @@ PyObject* Python::ExternalVoltageSource(PyObject* self, PyObject* args) {
 		return nullptr;
 
 	Component *pyComp = PyObject_New(Component, &Python::ComponentType);
+	Component::init(pyComp);
 	pyComp->comp = std::make_shared<DPsim::ExternalVoltageSource>(name, src, dest, Complex(initVoltage.real, initVoltage.imag), num);
 
 	return (PyObject*) pyComp;
@@ -212,6 +221,7 @@ PyObject* Python::Inductor(PyObject* self, PyObject* args) {
 		return nullptr;
 
 	Component *pyComp = PyObject_New(Component, &Python::ComponentType);
+	Component::init(pyComp);
 	pyComp->comp = std::make_shared<DPsim::InductorDP>(name, src, dest, inductance);
 
 	return (PyObject*) pyComp;
@@ -234,6 +244,7 @@ PyObject* Python::Resistor(PyObject* self, PyObject* args) {
 		return nullptr;
 
 	Component *pyComp = PyObject_New(Component, &Python::ComponentType);
+	Component::init(pyComp);
 	pyComp->comp = std::make_shared<DPsim::ResistorDP>(name, src, dest, resistance);
 
 	return (PyObject*) pyComp;
@@ -261,6 +272,7 @@ PyObject* Python::VoltSourceRes(PyObject* self, PyObject* args) {
 		return nullptr;
 
 	Component *pyComp = PyObject_New(Component, &Python::ComponentType);
+	Component::init(pyComp);
 	pyComp->comp = std::make_shared<DPsim::VoltSourceRes>(name, src, dest, Complex(voltage.real, voltage.imag), resistance);
 
 	return (PyObject*) pyComp;
@@ -270,10 +282,14 @@ static const char* DocComponent =
 "A component of a network that is to be simulated.\n"
 "\n"
 "Instances of this class should either be created with the module-level "
-"pseudo-constructors (like `Resistor`) or via `load_cim`. The "
-"constructors all accept the same first three arguments: ``name``, a simple "
-"string used for logging purposes, and ``node1`` / ``node2``. These arguments "
-"are integers identifying the topological nodes that the component is connected "
+"pseudo-constructors (like `Resistor`). The constructors all accept the same "
+"first three arguments: ``name``, a simple string used for logging purposes, "
+"and ``node1`` / ``node2``. "
+#ifdef WITH_CIM
+"Alternatively, the `load_cim` function can be used to construct components from "
+"a Common Information Model (CIM) XML file. "
+#endif
+"These arguments are integers identifying the topological nodes that the component is connected "
 "to. Normal indices start with 1 and must be sequential; the special index 0 "
 "is used for the (always present) reference node with a fixed voltage of 0V.\n"
 "\n"

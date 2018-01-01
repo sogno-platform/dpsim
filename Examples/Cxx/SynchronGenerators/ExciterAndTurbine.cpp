@@ -79,15 +79,15 @@ using namespace DPsim;
 //	//Real Llkq2 = 0;
 //
 //	// Declare circuit components
-//	ElementPtr gen = std::make_shared<VoltageBehindReactanceEMT>("gen", 1, 2, 3,
+//	BaseComponent::Ptr gen = std::make_shared<VoltageBehindReactanceEMT>("gen", 1, 2, 3,
 //		nomPower, nomPhPhVoltRMS, nomFreq, poleNum, nomFieldCurr,
 //		Rs, Ll, Lmd, Lmd0, Lmq, Lmq0, Rfd, Llfd, Rkd, Llkd, Rkq1, Llkq1, Rkq2, Llkq2, H, true);
 //	Real loadRes = 1037.8378;
-//	ElementPtr r1 = std::make_shared<ResistorEMT>("r1", 1, 0, loadRes);
-//	ElementPtr r2 = std::make_shared<ResistorEMT>("r2", 2, 0, loadRes);
-//	ElementPtr r3 = std::make_shared<ResistorEMT>("r3", 3, 0, loadRes);
+//	BaseComponent::Ptr r1 = std::make_shared<ResistorEMT>("r1", 1, 0, loadRes);
+//	BaseComponent::Ptr r2 = std::make_shared<ResistorEMT>("r2", 2, 0, loadRes);
+//	BaseComponent::Ptr r3 = std::make_shared<ResistorEMT>("r3", 3, 0, loadRes);
 //
-//	ElementList circElements;
+//	BaseComponent::List circElements;
 //	circElements.push_back(gen);
 //	circElements.push_back(r1);
 //	circElements.push_back(r2);
@@ -95,10 +95,10 @@ using namespace DPsim;
 //
 //	// Declare circuit components for resistance change
 //	Real breakerRes = 1037.8378;
-//	ElementPtr rBreaker1 = std::make_shared<ResistorEMT>("rbreak1", 1, 0, breakerRes);
-//	ElementPtr rBreaker2 = std::make_shared<ResistorEMT>("rbreak2", 2, 0, breakerRes);
-//	ElementPtr rBreaker3 = std::make_shared<ResistorEMT>("rbreak3", 3, 0, breakerRes);
-//	ElementList circElementsBreakerOn;
+//	BaseComponent::Ptr rBreaker1 = std::make_shared<ResistorEMT>("rbreak1", 1, 0, breakerRes);
+//	BaseComponent::Ptr rBreaker2 = std::make_shared<ResistorEMT>("rbreak2", 2, 0, breakerRes);
+//	BaseComponent::Ptr rBreaker3 = std::make_shared<ResistorEMT>("rbreak3", 3, 0, breakerRes);
+//	BaseComponent::List circElementsBreakerOn;
 //	circElementsBreakerOn.push_back(gen);
 //	circElementsBreakerOn.push_back(rBreaker1);
 //	circElementsBreakerOn.push_back(rBreaker2);
@@ -212,15 +212,15 @@ int main() {
 	//Real Llkq2 = 0;
 
 	// Declare circuit components
-	ElementPtr gen = std::make_shared<VoltageBehindReactanceDP>("gen", 1, 2, 3,
+	BaseComponent::Ptr gen = std::make_shared<VoltageBehindReactanceDP>("gen", 1, 2, 3,
 		nomPower, nomPhPhVoltRMS, nomFreq, poleNum, nomFieldCurr,
 		Rs, Ll, Lmd, Lmd0, Lmq, Lmq0, Rfd, Llfd, Rkd, Llkd, Rkq1, Llkq1, Rkq2, Llkq2, H, true);
 	Real loadRes = 1037.8378;
-	ElementPtr r1 = std::make_shared<ResistorDP>("r1", 1, 0, loadRes);
-	ElementPtr r2 = std::make_shared<ResistorDP>("r2", 2, 0, loadRes);
-	ElementPtr r3 = std::make_shared<ResistorDP>("r3", 3, 0, loadRes);
+	BaseComponent::Ptr r1 = std::make_shared<ResistorDP>("r1", 1, 0, loadRes);
+	BaseComponent::Ptr r2 = std::make_shared<ResistorDP>("r2", 2, 0, loadRes);
+	BaseComponent::Ptr r3 = std::make_shared<ResistorDP>("r3", 3, 0, loadRes);
 
-	ElementList circElements;
+	BaseComponent::List circElements;
 	circElements.push_back(gen);
 	circElements.push_back(r1);
 	circElements.push_back(r2);
@@ -228,10 +228,10 @@ int main() {
 
 	// Declare circuit components for resistance change
 	Real breakerRes = 1037.8378;
-	ElementPtr rBreaker1 = std::make_shared<ResistorDP>("rbreak1", 1, 0, breakerRes);
-	ElementPtr rBreaker2 = std::make_shared<ResistorDP>("rbreak2", 2, 0, breakerRes);
-	ElementPtr rBreaker3 = std::make_shared<ResistorDP>("rbreak3", 3, 0, breakerRes);
-	ElementList circElementsBreakerOn;
+	BaseComponent::Ptr rBreaker1 = std::make_shared<ResistorDP>("rbreak1", 1, 0, breakerRes);
+	BaseComponent::Ptr rBreaker2 = std::make_shared<ResistorDP>("rbreak2", 2, 0, breakerRes);
+	BaseComponent::Ptr rBreaker3 = std::make_shared<ResistorDP>("rbreak3", 3, 0, breakerRes);
+	BaseComponent::List circElementsBreakerOn;
 	circElementsBreakerOn.push_back(gen);
 	circElementsBreakerOn.push_back(rBreaker1);
 	circElementsBreakerOn.push_back(rBreaker2);

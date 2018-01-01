@@ -87,7 +87,7 @@ Reader::~Reader() {
 		delete[] mVoltages;
 }
 
-ElementPtr Reader::mapACLineSegment(ACLineSegment* line) {
+BaseComponent::Ptr Reader::mapACLineSegment(ACLineSegment* line) {
 	std::vector<Matrix::Index> &nodes = mEqNodeMap.at(line->mRID); // TODO can fail
 	if (nodes.size() != 2) {
 		mLogger->Log(LogLevel::WARN) << "ACLineSegment " << line->mRID << " has " << nodes.size() << " terminals, ignoring" << std::endl;
@@ -119,7 +119,7 @@ void Reader::mapEquivalentInjection(EquivalentInjection* inj) {
 
 }
 
-ElementPtr Reader::mapExternalNetworkInjection(ExternalNetworkInjection* inj) {
+BaseComponent::Ptr Reader::mapExternalNetworkInjection(ExternalNetworkInjection* inj) {
 	std::vector<Matrix::Index> &nodes = mEqNodeMap.at(inj->mRID);
 	if (nodes.size() != 1) {
 		mLogger->Log(LogLevel::ERROR) << "ExternalNetworkInjection " << inj->mRID << " has " << nodes.size() << " terminals, ignoring" << std::endl;
@@ -136,12 +136,12 @@ ElementPtr Reader::mapExternalNetworkInjection(ExternalNetworkInjection* inj) {
 	Complex initVoltage = std::polar(voltAbs, voltPhase * PI / 180);
 	mLogger->Log(LogLevel::INFO) << "IdealVoltageSource " << inj->name << " rid=" << inj->mRID << " node1=" << node
 		<< " V=" << voltAbs << "<" << voltPhase << std::endl;
-	
+
 	return std::make_shared<IdealVoltageSource>(inj->name, node, 0, initVoltage);
 }
 
 // TODO: support phase shift
-ElementPtr Reader::mapPowerTransformer(PowerTransformer* trans) {
+BaseComponent::Ptr Reader::mapPowerTransformer(PowerTransformer* trans) {
 	std::vector<Matrix::Index> &nodes = mEqNodeMap.at(trans->mRID);
 	if (nodes.size() != trans->PowerTransformerEnd.size()) {
 		mLogger->Log(LogLevel::WARN) << "PowerTransformer " << trans->mRID << " has differing number of terminals and windings, ignoring" << std::endl;
@@ -164,7 +164,7 @@ ElementPtr Reader::mapPowerTransformer(PowerTransformer* trans) {
 	Real voltageNode2 = 0;
 	Real inductanceNode2 = 0;
 	Real resistanceNode2 = 0;
-	for (PowerTransformerEnd *end : trans->PowerTransformerEnd) {
+	for (auto end : trans->PowerTransformerEnd) {
 		if (end->endNumber == 1) {
 			mLogger->Log(LogLevel::INFO) << "    PowerTransformerEnd_1 " << end->name
 				<< " Vrated=" << end->ratedU.value << " R=" << end->r.value << " X=" << end->x.value << std::endl;
@@ -184,7 +184,7 @@ ElementPtr Reader::mapPowerTransformer(PowerTransformer* trans) {
 		Real ratioPhase = 0;
 		mLogger->Log(LogLevel::INFO) << "Create PowerTransformer " << trans->name
 			<< " node1=" << node1 << " node2=" << node2
-			<< " ratio=" << ratioAbs << "<" << ratioPhase 
+			<< " ratio=" << ratioAbs << "<" << ratioPhase
 			<< " inductance=" << inductanceNode1 << std::endl;
 
 		//return std::make_shared<TransformerDP>(trans->name, node1, node2, ratioAbs, ratioPhase, 0, inductanceNode1);
@@ -196,7 +196,7 @@ ElementPtr Reader::mapPowerTransformer(PowerTransformer* trans) {
 }
 
 // TODO: don't use SvVoltage, but map to a SynchronGeneratorDP instead
-ElementPtr Reader::mapSynchronousMachine(SynchronousMachine* machine) {
+BaseComponent::Ptr Reader::mapSynchronousMachine(SynchronousMachine* machine) {
 	std::vector<Matrix::Index> &nodes = mEqNodeMap.at(machine->mRID);
 	if (nodes.size() != 1) {
 		// TODO: check with the model if this assumption (only 1 terminal) is always true
@@ -221,7 +221,7 @@ ElementPtr Reader::mapSynchronousMachine(SynchronousMachine* machine) {
 	return std::make_shared<IdealVoltageSource>(machine->name, node, 0, initVoltage);
 }
 
-ElementPtr Reader::mapComponent(BaseClass* obj) {
+BaseComponent::Ptr Reader::mapComponent(BaseClass* obj) {
 	if (ACLineSegment *line = dynamic_cast<ACLineSegment*>(obj))
 		return mapACLineSegment(line);
 	if (ExternalNetworkInjection *inj = dynamic_cast<ExternalNetworkInjection*>(obj))
@@ -233,7 +233,7 @@ ElementPtr Reader::mapComponent(BaseClass* obj) {
 	return nullptr;
 }
 
-ElementPtr Reader::newPQLoad(String rid, String name) {
+BaseComponent::Ptr Reader::newPQLoad(String rid, String name) {
 	std::vector<Matrix::Index> &nodes = mEqNodeMap.at(rid);
 	if (nodes.size() != 1) {
 		mLogger->Log(LogLevel::WARN) << rid << " has " << nodes.size() << " terminals; ignoring" << std::endl;
@@ -277,12 +277,12 @@ void Reader::parseFiles() {
 	// Since all nodes have references to the equipment connected to them (via Terminals), but not
 	// the other way around (which we need for instantiating the components), we collect that information here as well.
 	mLogger->Log(LogLevel::INFO) << "#### List of topological nodes and associated terminals ####" << std::endl;
-	for (BaseClass* obj : mModel.Objects) {
+	for (auto obj : mModel.Objects) {
 		TopologicalNode* topNode = dynamic_cast<TopologicalNode*>(obj);
 		if (topNode) {
 			mLogger->Log(LogLevel::INFO) << "TopologicalNode " << mTopNodes.size()+1 << " rid=" << topNode->mRID << " Terminals:" << std::endl;
 			mTopNodes[topNode->mRID] = (Matrix::Index) mTopNodes.size()+1;
-			for (Terminal* term : topNode->Terminal) {
+			for (auto term : topNode->Terminal) {
 				mLogger->Log(LogLevel::INFO) << "    " << term->mRID << std::endl;
 				ConductingEquipment *eq = term->ConductingEquipment;
 				if (!eq) {
@@ -302,7 +302,7 @@ void Reader::parseFiles() {
 	// for various components.
 	mVoltages = new SvVoltage*[mTopNodes.size()];
 	mLogger->Log(LogLevel::INFO) << "#### List of node voltages from power flow calculation ####" << std::endl;
-	for (BaseClass* obj : mModel.Objects) {
+	for (auto obj : mModel.Objects) {
 		if (SvVoltage* volt = dynamic_cast<SvVoltage*>(obj)) {
 			TopologicalNode* node = volt->TopologicalNode;
 			if (!node) {
@@ -323,14 +323,14 @@ void Reader::parseFiles() {
 		}
 	}
 	mLogger->Log(LogLevel::INFO) << "#### Create new components ####" << std::endl;
-	for (BaseClass* obj : mModel.Objects) {
-		ElementPtr comp = mapComponent(obj);
+	for (auto obj : mModel.Objects) {
+		BaseComponent::Ptr comp = mapComponent(obj);
 		if (comp)
 			mComponents.push_back(comp);
 	}
 }
 
-ElementList& Reader::getComponents() {
+BaseComponent::List& Reader::getComponents() {
 	return mComponents;
 }
 

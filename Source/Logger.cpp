@@ -20,6 +20,10 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *********************************************************************************/
 
+#include <experimental/filesystem>
+namespace fs = std::experimental::filesystem;
+
+
 #include "Logger.h"
 #include <iomanip>
 
@@ -32,7 +36,13 @@ Logger::Logger() : mLogFile() {
 	mLogFile.setstate(std::ios_base::badbit);
 }
 
-Logger::Logger(String filename, LogLevel level) : mLogFile(filename), mLogLevel(level) {
+Logger::Logger(String filename, LogLevel level) : mLogLevel(level) {
+	fs::path p = filename;
+
+	if (p.has_parent_path() && !fs::exists(p.parent_path()))
+		fs::create_directory(p.parent_path());
+
+	mLogFile = std::ofstream(filename);
 	if (!mLogFile.is_open()) {
 		std::cerr << "Cannot open log file " << filename << std::endl;
 		mLogLevel = LogLevel::NONE;

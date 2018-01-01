@@ -32,7 +32,7 @@ int main() {
 	Real finalTime = 0.3;
 	std::ostringstream fileName;
 	fileName << "SimulationExampleRXLine2_" << timeStep;
-	ElementList circElements;
+	BaseComponent::List circElements;
 	circElements.push_back(std::make_shared<InductorDP>("l_L", 2, 3, 0.001));
 	circElements.push_back(std::make_shared<ResistorDP>("r_L", 1, 2, 0.1));
 	circElements.push_back(std::make_shared<ResistorDP>("r_1", 3, 0, 20));
