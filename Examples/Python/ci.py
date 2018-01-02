@@ -13,6 +13,7 @@ import os
 
 EPSILON = 1e-6
 PATH = os.path.dirname(__file__)
+BINARY = os.path.basename(__file__)
 
 def run_test(name, sim):
     sim.start()
@@ -24,7 +25,7 @@ def run_test(name, sim):
     dpData = pandas.read_csv(dpCsv, header=None)
     expectedData = pandas.read_csv(expectedCsv, header=None)
     if dpData.shape[1] != expectedData.shape[1]:
-        print("{}: result vector dimension mismatch (DP: {}, expected: {}".format(binary,
+        print("{}: result vector dimension mismatch (DP: {}, expected: {})".format(BINARY,
             dpData.shape[1], expectedData.shape[1]), file=sys.stderr)
         return 1
 
@@ -32,7 +33,7 @@ def run_test(name, sim):
     expectedTime = np.array(expectedData.ix[:,0])
     diffTime = dpTime - expectedTime
     if np.any(diffTime):
-        print(binary + ": time mismatch (wrong timestep?)", file=sys.stderr)
+        print("{}: time mismatch (wrong timestep?)".format(BINARY), file=sys.stderr)
         return 1
 
     ret = 0
@@ -50,7 +51,7 @@ def run_test(name, sim):
         diffIdx = np.nonzero(diff > EPSILON)
 
         if len(diffIdx[0]) != 0:
-            print("{}: node {} has {} values above diff threshold".format(binary,
+            print("{}: node {} has {} values above diff threshold".format(BINARY,
                 i, len(diffIdx[0])), file=sys.stderr)
             print("(first at {} with diff of {})".format(diffIdx[0][0],
                 diff[diffIdx[0][0]]), file=sys.stderr)
