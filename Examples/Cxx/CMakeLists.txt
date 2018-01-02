@@ -18,9 +18,9 @@ set(CMAKE_CXX_STANDARD 11)
 
 # targets
 set(REFERENCE_SOURCES
-	ReferenceCircuits/Example_1.cpp
-	ReferenceCircuits/Example_2.cpp
-	ReferenceCircuits/Example_3.cpp
+	ReferenceCircuits/Example1.cpp
+	ReferenceCircuits/Example2.cpp
+	ReferenceCircuits/Example3.cpp
 	ReferenceCircuits/IdealVS1.cpp
 	ReferenceCircuits/IdealVS2.cpp
 	ReferenceCircuits/IdealVS3.cpp
