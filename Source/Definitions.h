@@ -50,7 +50,9 @@ namespace DPsim {
 	typedef std::string String;
 
 	// ### Constants ###
+	/// @cond WORKAROUND (Otherwise this code breaks Breathe / Doxygen)
 	static const Complex jComp(0.0, 1.0);
+	/// @endcond
 
 	/**
 	* @brief Dense vector for complex numbers.

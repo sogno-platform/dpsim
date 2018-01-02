@@ -32,8 +32,10 @@ namespace DPsim {
 	/// as unkown and it is taken into account for the equation of node j as positve and for the equation of node k as negative. Moreover
 	/// a new equation ej - ek = V is added to the problem.
 	class IdealVoltageSourceEMT : public BaseComponent {
-		
+
+	/// @cond WORKAROUND (Otherwise this code breaks Breathe / Doxygen)
 	friend class SimplifiedSynGenEMT;
+	/// @endcond
 
 	protected:
 		//  ### Ideal Voltage source parameters ###
