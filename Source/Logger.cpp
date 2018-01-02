@@ -130,7 +130,7 @@ void Logger::LogHeader(Int rows) {
 }
 
 void Logger::LogDataLine(Real time, Matrix& data) {
-	if (time < 1e-9) {
+	if (mLogFile.tellp() == 0) {
 		LogHeader(data.rows());
 	}
 	mLogFile << std::scientific << time;
