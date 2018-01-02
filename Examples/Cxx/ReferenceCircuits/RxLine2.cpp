@@ -31,7 +31,7 @@ int main() {
 	Real omega = 2.0*M_PI*50.0;
 	Real finalTime = 0.3;
 	std::ostringstream fileName;
-	fileName << "SimulationExampleRXLine2_" << timeStep;
+	fileName << "RxLine2_" << timeStep;
 	BaseComponent::List circElements;
 	circElements.push_back(std::make_shared<InductorDP>("l_L", 2, 3, 0.001));
 	circElements.push_back(std::make_shared<ResistorDP>("r_L", 1, 2, 0.1));

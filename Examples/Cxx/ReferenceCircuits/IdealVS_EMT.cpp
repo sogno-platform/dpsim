@@ -38,7 +38,7 @@ int main() {
 
 	// Define log names
 	std::ostringstream fileName;
-	fileName << "simulationExampleTestIdealVoltageSourceEMT" << timeStep;
+	fileName << "IdealVS_EMT" << timeStep;
 	Logger log("Logs/" + fileName.str() + ".log");
 	Logger leftVectorLog("Logs/LeftVector_" + fileName.str() + ".csv");
 	Logger rightVectorLog("Logs/RightVector_" + fileName.str() + ".csv");
