@@ -21,20 +21,19 @@ set(REFERENCE_SOURCES
 	ReferenceCircuits/DpEmtVarFreqStudy.cpp
 	ReferenceCircuits/DpEmtVarFreqStudy_NZ_Paper.cpp
 	ReferenceCircuits/Example_1.cpp
-	ReferenceCircuits/Example_1L2.cpp
 	ReferenceCircuits/Example_2.cpp
 	ReferenceCircuits/Example_3.cpp
-	ReferenceCircuits/Example_IdealVS1.cpp
-	ReferenceCircuits/Example_IdealVS2.cpp
-	ReferenceCircuits/Example_IdealVS3.cpp
-	ReferenceCircuits/Example_IdealVS_EMT.cpp
-	ReferenceCircuits/Example_PiLine1.cpp
-	ReferenceCircuits/Example_PiLine2.cpp
-	ReferenceCircuits/Example_RxLine1.cpp
-	ReferenceCircuits/Example_RxLine2.cpp
-	ReferenceCircuits/Example_RxLine3.cpp
-	ReferenceCircuits/Example_RxLineResLoad.cpp
-	ReferenceCircuits/Example_RxLineResLoad_EMT.cpp
+	ReferenceCircuits/IdealVS1.cpp
+	ReferenceCircuits/IdealVS2.cpp
+	ReferenceCircuits/IdealVS3.cpp
+	ReferenceCircuits/IdealVS_EMT.cpp
+	ReferenceCircuits/PiLine1.cpp
+	ReferenceCircuits/PiLine2.cpp
+	ReferenceCircuits/RxLine1.cpp
+	ReferenceCircuits/RxLine2.cpp
+	ReferenceCircuits/RxLine3.cpp
+	ReferenceCircuits/RxLineResLoad.cpp
+	ReferenceCircuits/RxLineResLoad_EMT.cpp
 )
 
 set(SYNCGEN_SOURCES
