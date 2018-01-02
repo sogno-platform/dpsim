@@ -85,6 +85,7 @@ namespace DPsim {
 		/// Input of servor motor
 		Real Psm_in = 0;
 
+		Real AuxVar = 0;
 		
 		
 

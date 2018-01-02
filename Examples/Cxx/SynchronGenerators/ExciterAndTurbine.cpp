@@ -24,6 +24,8 @@
 
 using namespace DPsim;
 
+
+// ##################################### Test VBR EMT ##################################
 //int main() {
 //	// Define Object for saving data on a file
 //	Logger log("log.txt"),
@@ -157,6 +159,7 @@ using namespace DPsim;
 //	return 0;
 //}
 
+// ##################################### Test VBR DP ##################################
 int main() {
 	// Define Object for saving data on a file
 	Logger log("log.txt"),
