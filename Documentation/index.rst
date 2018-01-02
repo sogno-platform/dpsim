@@ -14,6 +14,8 @@
    main-doc-cpp
    build
    todo
+   License <Copying>
+   Changelog
 
 Indices and tables
 ==================
