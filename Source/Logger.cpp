@@ -82,18 +82,18 @@ void Logger::Log(LogLevel level, String str) {
 	}
 
 	switch (level) {
-	case LogLevel::INFO:
-		mLogFile << "INFO: " << str << std::endl;
-		break;
-	case LogLevel::WARN:
-		mLogFile << "WARN: " << str << std::endl;
-		break;
-	case LogLevel::ERROR:
-		mLogFile << "ERROR: " << str << std::endl;
-		break;
-	case LogLevel::NONE:
-		return;
-		break;
+		case LogLevel::INFO:
+			mLogFile << "INFO: " << str << std::endl;
+			break;
+		case LogLevel::WARN:
+			mLogFile << "WARN: " << str << std::endl;
+			break;
+		case LogLevel::ERROR:
+			mLogFile << "ERROR: " << str << std::endl;
+			break;
+		case LogLevel::NONE:
+			return;
+			break;
 	}
 }
 
@@ -133,10 +133,13 @@ void Logger::LogDataLine(Real time, Matrix& data) {
 	if (mLogFile.tellp() == 0) {
 		LogHeader(data.rows());
 	}
+
 	mLogFile << std::scientific << time;
+
 	for (Int i = 0; i < data.rows(); i++) {
 		mLogFile << ", " << std::right << std::setw(13) << data(i, 0);
 	}
+
 	mLogFile << std::endl;
 }
 
@@ -145,8 +148,11 @@ void Logger::LogDataLine(Real time, Real data) {
 	mLogFile << ", " << data;
 	mLogFile << std::endl;
 }
+
 std::ostream& Logger::getNullStream() {
-	if (nullStream.good())
+	if (nullStream.good()) {
 		nullStream.setstate(std::ios_base::badbit);
+	}
+
 	return nullStream;
 }
