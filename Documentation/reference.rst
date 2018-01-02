@@ -5,8 +5,8 @@ Reference
    :maxdepth: 2
    :caption: Contents:
 
-   python
-   cxx
+   Python
+   Cpp
 
 
 The core simulation kernel of DPsim is implemented in C++.

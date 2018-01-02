@@ -9,11 +9,11 @@
    :maxdepth: 2
    :caption: Contents:
 
-   guide
-   reference
-   main-doc-cpp
-   build
-   todo
+   Guide
+   Build
+   Structure
+   Reference
+   ToDo
    License <Copying>
    Changelog
 
