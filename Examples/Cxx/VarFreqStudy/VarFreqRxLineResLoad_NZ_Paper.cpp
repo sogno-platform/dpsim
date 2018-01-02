@@ -25,11 +25,10 @@
 
 using namespace DPsim;
 
-static
-void VarFreqRXLineResLoad_NZ_Paper(Real timeStep, Real finalTime, Real freqStep, Real loadStep, Real rampTime) {
+static void VarFreqRxLineResLoad_NZ_Paper_DP(Real timeStep, Real finalTime, Real freqStep, Real loadStep, Real rampTime) {
 	// Define simulation scenario
 	std::ostringstream fileName;
-	fileName << "VarFreqRXLineResLoad_" << timeStep;
+	fileName << "DpEmtVarFreqStudy_NZ_Paper_" << timeStep;
 	BaseComponent::List circElements0, circElements1, circElements2;
 	circElements0.push_back(std::make_shared<VoltSourceResFreq>("v_s", 1, 0, 10000, 0, 1, 2 * PI*-1, freqStep, rampTime));
 	circElements0.push_back(std::make_shared<ResistorDP>("r_line", 1, 2, 1));
@@ -51,19 +50,19 @@ void VarFreqRXLineResLoad_NZ_Paper(Real timeStep, Real finalTime, Real freqStep,
 
 	// Main Simulation Loop
 	std::cout << "Start simulation." << std::endl;
-	while (newSim.step(leftVectorLog, rightVectorLog))
-	{
+
+	while (newSim.step(leftVectorLog, rightVectorLog)) {
 		newSim.increaseByTimeStep();
 		updateProgressBar(newSim.getTime(), newSim.getFinalTime());
 	}
+
 	std::cout << "Simulation finished." << std::endl;
 }
 
-static
-void VarFreqRXLineResLoadEMT_NZ_Paper(Real timeStep, Real finalTime, Real freqStep, Real loadStep, Real rampTime) {
+static void VarFreqRxLineResLoad_NZ_Paper_EMT(Real timeStep, Real finalTime, Real freqStep, Real loadStep, Real rampTime) {
 	// Define simulation scenario
 	std::ostringstream fileName;
-	fileName << "VarFreqRXLineResLoadEMT_" << timeStep;
+	fileName << "DpEmtVarFreqStudy_NZ_Paper_EMT" << timeStep;
 	BaseComponent::List circElements0, circElements1, circElements2;
 	circElements0.push_back(std::make_shared<VoltSourceResFreqEMT>("v_s", 1, 0, 10000, 0, 1, 2 * PI*-1, freqStep, rampTime));
 	circElements0.push_back(std::make_shared<ResistorEMT>("r_line", 1, 2, 1));
@@ -83,11 +82,12 @@ void VarFreqRXLineResLoadEMT_NZ_Paper(Real timeStep, Real finalTime, Real freqSt
 
 	// Main Simulation Loop
 	std::cout << "Start simulation." << std::endl;
-	while (newSim.step(leftVectorLog, rightVectorLog))
-	{
+
+	while (newSim.step(leftVectorLog, rightVectorLog)) {
 		newSim.increaseByTimeStep();
 		updateProgressBar(newSim.getTime(), newSim.getFinalTime());
 	}
+
 	std::cout << "Simulation finished." << std::endl;
 }
 
@@ -99,9 +99,10 @@ int main() {
 	Real rampTime = 0.2;
 
 	timeStep = 0.00005;
-	VarFreqRXLineResLoadEMT_NZ_Paper(timeStep, finalTime, freqStep, loadStep, rampTime);
+	VarFreqRxLineResLoad_NZ_Paper_EMT(timeStep, finalTime, freqStep, loadStep, rampTime);
+
 	timeStep = 0.001;
-	VarFreqRXLineResLoad_NZ_Paper(timeStep, finalTime, freqStep, loadStep, rampTime);
+	VarFreqRxLineResLoad_NZ_Paper_DP(timeStep, finalTime, freqStep, loadStep, rampTime);
 
 	return 0;
 }

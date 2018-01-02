@@ -18,8 +18,6 @@ set(CMAKE_CXX_STANDARD 11)
 
 # targets
 set(REFERENCE_SOURCES
-	ReferenceCircuits/DpEmtVarFreqStudy.cpp
-	ReferenceCircuits/DpEmtVarFreqStudy_NZ_Paper.cpp
 	ReferenceCircuits/Example_1.cpp
 	ReferenceCircuits/Example_2.cpp
 	ReferenceCircuits/Example_3.cpp
@@ -47,6 +45,11 @@ set(SYNCGEN_SOURCES
 	SynchronGenerators/SynGenVBRDP.cpp
 )
 
+set(VARFREQ_SOURCES
+	VarFreqStudy/VarFreqRxLineResLoad.cpp
+	VarFreqStudy/VarFreqRxLineResLoad_NZ_Paper.cpp
+)
+
 set(RT_SOURCES
 	ReferenceCircuits/Example_RT.cpp
 )
@@ -60,7 +63,7 @@ set(SHMEM_SOURCES
 	Shmem/ShmemRTExample.cpp
 )
 
-foreach(SOURCE ${REFERENCE_SOURCES} ${SYNCGEN_SOURCES})
+foreach(SOURCE ${REFERENCE_SOURCES} ${SYNCGEN_SOURCES} ${VARFREQ_SOURCES})
 	get_filename_component(TARGET ${SOURCE} NAME_WE)
 
 	add_executable(${TARGET} ${SOURCE})
