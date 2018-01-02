@@ -2,7 +2,6 @@
  *
  * @author Markus Mirz <mmirz@eonerc.rwth-aachen.de>
  * @copyright 2017, Institute for Automation of Complex Power Systems, EONERC
- * @license GNU General Public License (version 3)
  *
  * DPsim
  *
@@ -85,6 +84,6 @@ static void readCIMFilesFromInput(int argc, char *argv[]) {
 int main(int argc, char *argv[]) {
 	//readCIMFilesFromInput(argc, argv);
 	readFixedCIMFiles_IEEE9bus();
-	
+
 	return 0;
 }

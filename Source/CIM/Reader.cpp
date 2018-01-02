@@ -2,7 +2,6 @@
  *
  * @author Georg Reinke <georg.reinke@rwth-aachen.de>
  * @copyright 2017, Institute for Automation of Complex Power Systems, EONERC
- * @license GNU General Public License (version 3)
  *
  * DPsim
  *

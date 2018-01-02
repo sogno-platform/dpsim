@@ -3,7 +3,6 @@
  * @file
  * @author Markus Mirz <mmirz@eonerc.rwth-aachen.de>
  * @copyright 2017, Institute for Automation of Complex Power Systems, EONERC
- * @license GNU General Public License (version 3)
  *
  * DPsim
  *
@@ -42,9 +41,6 @@
 #endif
 
 namespace DPsim {
-	// ### deprecated math section ###
-	//typedef Eigen::MatrixXd Matrix;
-
 	// ### Types ###
 	typedef unsigned int UInt;
 	typedef int Int;
