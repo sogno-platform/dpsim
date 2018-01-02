@@ -114,15 +114,14 @@ void Logger::LogMatrix(LogLevel level, const Matrix& data) {
 }
 
 void Logger::LogHeader(Int rows) {
-	mLogFile << std::left << std::setw(14) << "time,";
+	mLogFile << std::right << std::setw(14) << "time";
 
 	for (Int i = 0; i < rows; i++) {
 		if (i < rows / 2) {
-			mLogFile << "NodeRe" << std::right << std::setfill('0') << std::setw(4) << i << std::left << std::setfill(' ') << std::setw(5) << ",";
+			mLogFile << ", " << std::right << std::setfill(' ') << std::setw(13-4) << "NodeRe" << std::setfill('0') << std::setw(4) << i;
 		}
 		else {
-			int index = i - rows / 2;
-			mLogFile << "NodeIm" << std::right << std::setfill('0') << std::setw(4) << index << std::left << std::setfill(' ') << std::setw(5) << ",";
+			mLogFile << ", " << std::right << std::setfill(' ') << std::setw(13-4) << "NodeIm" << std::setfill('0') << std::setw(4) << (i - rows / 2);
 		}
 	}
 
@@ -134,7 +133,7 @@ void Logger::LogDataLine(Real time, Matrix& data) {
 		LogHeader(data.rows());
 	}
 
-	mLogFile << std::scientific << time;
+	mLogFile << std::scientific << std::right << std::setw(14) << time;
 
 	for (Int i = 0; i < data.rows(); i++) {
 		mLogFile << ", " << std::right << std::setw(13) << data(i, 0);
@@ -144,8 +143,8 @@ void Logger::LogDataLine(Real time, Matrix& data) {
 }
 
 void Logger::LogDataLine(Real time, Real data) {
-	mLogFile << std::scientific << time;
-	mLogFile << ", " << data;
+	mLogFile << std::scientific << std::right << std::setw(14) << time;
+	mLogFile << ", " << std::right << std::setw(13) << data;
 	mLogFile << std::endl;
 }
 
