@@ -14,7 +14,7 @@ DPsim is a solver library for power system simulation.
 
 ## Installation
 
-Take a look at the [build instructions](Documentation/build.rst).
+Take a look at the [build instructions](Documentation/Build.rst).
 
 ## Usage
 
