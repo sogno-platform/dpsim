@@ -49,6 +49,7 @@ namespace DPsim {
 		void Log(LogLevel level, String str);
 		void LogMatrix(LogLevel level, Matrix& data);
 		void LogMatrix(LogLevel level, const Matrix& data);
+		void LogHeader(Int rows);
 		void LogDataLine(Real time, Matrix& data);
 		void LogDataLine(Real time, Real data);
 	};
