@@ -22,8 +22,8 @@ def run_test(name, sim):
     dpCsv       = PATH + '/' + name + ".csv"
     expectedCsv = PATH + '/' + name + ".expected.csv"
 
-    dpData = pandas.read_csv(dpCsv, header=None)
-    expectedData = pandas.read_csv(expectedCsv, header=None)
+    dpData = pandas.read_csv(dpCsv)
+    expectedData = pandas.read_csv(expectedCsv)
     if dpData.shape[1] != expectedData.shape[1]:
         print("{}: result vector dimension mismatch (DP: {}, expected: {})".format(BINARY,
             dpData.shape[1], expectedData.shape[1]), file=sys.stderr)
