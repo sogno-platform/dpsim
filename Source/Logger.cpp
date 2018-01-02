@@ -129,8 +129,8 @@ void Logger::LogHeader(Int rows) {
 }
 
 void Logger::LogDataLine(Real time, Matrix& data) {
-	if (mLogFile.tellp() == 0) {
-		LogHeader(data.rows());
+	if (mLogFile.tellp() == std::ofstream::pos_type(0)) {
+		LogHeader((Int) data.rows());
 	}
 
 	mLogFile << std::scientific << std::right << std::setw(14) << time;
