@@ -16,7 +16,7 @@ def simExample1(timestep=1e-3):
         dpsim.Inductor("l_1", 1, 2, 0.02),
         dpsim.Inductor("l_2", 2, 0, 0.1),
         dpsim.Inductor("l_3", 2, 3, 0.05),
-        dpsim.Inductor("r_2", 3, 0, 2)
+        dpsim.Resistor("r_2", 3, 0, 2)
     ]
 
     basename = "SimulationExample1_" + str(timestep)
