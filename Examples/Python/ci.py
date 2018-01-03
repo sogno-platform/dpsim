@@ -16,40 +16,40 @@ EPSILON = 1e-6
 PATH = os.path.dirname(__file__)
 BINARY = os.path.basename(__file__)
 
-def compare_results(dpCsv, expectedCsv):
-    dpData = pandas.read_csv(dpCsv)
-    expectedData = pandas.read_csv(expectedCsv)
-    if dpData.shape[1] != expectedData.shape[1]:
+def compare_results(dp_csv, expected_csv):
+    dp_data = pandas.read_csv(dp_csv)
+    expected_data = pandas.read_csv(expected_csv)
+    if dp_data.shape[1] != expected_data.shape[1]:
         print("{}: result vector dimension mismatch (DP: {}, expected: {})".format(BINARY,
-            dpData.shape[1], expectedData.shape[1]), file=sys.stderr)
+            dp_data.shape[1], expected_data.shape[1]), file=sys.stderr)
         return 1
 
-    dpTime = np.array(dpData.ix[:,0])
-    expectedTime = np.array(expectedData.ix[:,0])
-    diffTime = dpTime - expectedTime
-    if np.any(diffTime):
+    dp_time = np.array(dp_data.ix[:,0])
+    expected_time = np.array(expected_data.ix[:,0])
+    diff_time = dp_time - expected_time
+    if np.any(diff_time):
         print("{}: time mismatch (wrong timestep?)".format(BINARY), file=sys.stderr)
         return 1
 
     ret = 0
-    for i in range(1, int((dpData.shape[1] - 1) / 2)):
-        realIdx = i
-        imagIdx = i + int((dpData.shape[1] - 1) / 2)
+    for i in range(1, int((dp_data.shape[1] - 1) / 2)):
+        real_idx = i
+        imag_idx = i + int((dp_data.shape[1] - 1) / 2)
 
-        dpReal = np.array(dpData.ix[:,realIdx])
-        dpImag = np.array(dpData.ix[:,imagIdx])
+        dp_real = np.array(dp_data.ix[:,real_idx])
+        dp_imag = np.array(dp_data.ix[:,imag_idx])
 
-        expectedReal = np.array(expectedData.ix[:,realIdx])
-        expectedImag = np.array(expectedData.ix[:,imagIdx])
+        expected_real = np.array(expected_data.ix[:,real_idx])
+        expected_imag = np.array(expected_data.ix[:,imag_idx])
 
-        diff = np.sqrt((dpReal-expectedReal)**2+(dpImag-expectedImag)**2)
-        diffIdx = np.nonzero(diff > EPSILON)
+        diff = np.sqrt((dp_real-expected_real)**2+(dp_imag-expected_imag)**2)
+        diff_idx = np.nonzero(diff > EPSILON)
 
-        if len(diffIdx[0]) != 0:
+        if len(diff_idx[0]) != 0:
             print("{}: node {} has {} values above diff threshold".format(BINARY,
-                i, len(diffIdx[0])), file=sys.stderr)
-            print("(first at {} with diff of {})".format(diffIdx[0][0],
-                diff[diffIdx[0][0]]), file=sys.stderr)
+                i, len(diff_idx[0])), file=sys.stderr)
+            print("(first at {} with diff of {})".format(diff_idx[0][0],
+                diff[diff_idx[0][0]]), file=sys.stderr)
             ret = 1
 
     return ret
@@ -58,10 +58,10 @@ def run_python_test(name, sim):
     sim.start()
     sim.wait()
 
-    dpCsv       = PATH + '/' + name + ".csv"
-    expectedCsv = PATH + '/' + name + ".expected.csv"
+    dp_csv       = PATH + '/' + name + ".csv"
+    expected_csv = PATH + '/' + name + ".expected.csv"
 
-    return compare_results(dpCsv, expectedCsv)
+    return compare_results(dp_csv, expected_csv)
 
 def run_cpp_test(name):
     args = PATH + '/../../build/Examples/Cxx/' + name
@@ -69,8 +69,8 @@ def run_cpp_test(name):
     popen.wait()
     output = popen.stdout.read()
 
-    #dpCsv       = PATH + '/' + name + ".csv"
-    #expectedCsv = PATH + '/' + name + ".expected.csv"
+    #dp_csv       = PATH + '/' + name + ".csv"
+    #expected_csv = PATH + '/' + name + ".expected.csv"
 
     return 0
 

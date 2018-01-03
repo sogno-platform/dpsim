@@ -10,6 +10,7 @@ cmake-build-debug/
 .idea/
 .vs/
 *.json
+.vscode/
 
 # CMake
 CMakeFiles/
