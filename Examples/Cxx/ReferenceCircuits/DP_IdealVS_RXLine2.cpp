@@ -30,11 +30,12 @@ int main() {
 	Real omega = 2.0*M_PI*50.0;
 	Real finalTime = 0.3;
 	std::ostringstream fileName;
-	fileName << "RxLine3_" << timeStep;
+	fileName << "RxLine2_" << timeStep;
 	BaseComponent::List circElements;
 	circElements.push_back(std::make_shared<IdealVoltageSource>("v_1", 1, 0, Complex(10, 0)));
-	circElements.push_back(std::make_shared<RxLineDP>("Line_1", 1, 2, 0.1, 0.001));
-	circElements.push_back(std::make_shared<ResistorDP>("r_1", 2, 0, 20));
+	circElements.push_back(std::make_shared<InductorDP>("l_L", 2, 3, 0.001));
+	circElements.push_back(std::make_shared<ResistorDP>("r_L", 1, 2, 0.1));
+	circElements.push_back(std::make_shared<ResistorDP>("r_1", 3, 0, 20));
 
 	// Define log names
 	Logger log("Logs/" + fileName.str() + ".log");
