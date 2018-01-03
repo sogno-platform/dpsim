@@ -113,7 +113,21 @@ void Logger::LogMatrix(LogLevel level, const Matrix& data) {
 	mLogFile << data << std::endl;
 }
 
-void Logger::LogDataLine(Real time, Matrix& data) {
+void Logger::LogDataLine(Real time, Matrix& data) {	
+	mLogFile << std::scientific << time;
+	for (Int i = 0; i < data.rows(); i++) {
+		mLogFile << ", " << std::right << std::setw(13) << data(i, 0);
+	}
+	mLogFile << std::endl;
+}
+
+void Logger::LogDataLine(Real time, Real data) {
+	mLogFile << std::scientific << time;
+	mLogFile << ", " << data;
+	mLogFile << std::endl;
+}
+
+void Logger::LogNodeValues(Real time, Matrix& data) {
 	if (time < 1e-9) {
 		mLogFile << std::left << std::setw(14) << "time,";
 		for (Int i = 0; i < data.rows(); i++) {
@@ -127,18 +141,9 @@ void Logger::LogDataLine(Real time, Matrix& data) {
 		}
 		mLogFile << std::endl;
 	}
-	mLogFile << std::scientific << time;
-	for (Int i = 0; i < data.rows(); i++) {
-		mLogFile << ", " << std::right << std::setw(13) << data(i, 0);
-	}
-	mLogFile << std::endl;
+	LogDataLine(time, data);
 }
 
-void Logger::LogDataLine(Real time, Real data) {
-	mLogFile << std::scientific << time;
-	mLogFile << ", " << data;
-	mLogFile << std::endl;
-}
 std::ostream& Logger::getNullStream() {
 	if (nullStream.good())
 		nullStream.setstate(std::ios_base::badbit);

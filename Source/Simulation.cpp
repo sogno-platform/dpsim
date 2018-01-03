@@ -168,8 +168,8 @@ Int Simulation::step(bool blocking)
 Int Simulation::step(Logger& leftSideVectorLog, Logger& rightSideVectorLog, bool blocking) {
 	Int retValue = step(blocking);
 
-	leftSideVectorLog.LogDataLine(getTime(), getLeftSideVector());
-	rightSideVectorLog.LogDataLine(getTime(), getRightSideVector());
+	leftSideVectorLog.LogNodeValues(getTime(), getLeftSideVector());
+	rightSideVectorLog.LogNodeValues(getTime(), getRightSideVector());
 
 	return retValue;
 }
@@ -217,8 +217,8 @@ Int Simulation::stepGeneratorTest(Logger& leftSideVectorLog, Logger& rightSideVe
 	// Save simulation step data
 	if (mLastLogTimeStep == 0) {
 		std::cout << mTime << std::endl;
-		leftSideVectorLog.LogDataLine(getTime(), getLeftSideVector());
-		rightSideVectorLog.LogDataLine(getTime(), getRightSideVector());
+		leftSideVectorLog.LogNodeValues(getTime(), getLeftSideVector());
+		rightSideVectorLog.LogNodeValues(getTime(), getRightSideVector());
 	}
 
 	mLastLogTimeStep++;
@@ -454,8 +454,8 @@ int Simulation::stepGeneratorVBR(Logger& leftSideVectorLog, Logger& rightSideVec
 	// Save simulation step data
 	if (mLastLogTimeStep == 0) {
 		std::cout << mTime << std::endl;
-		leftSideVectorLog.LogDataLine(getTime(), getLeftSideVector());
-		rightSideVectorLog.LogDataLine(getTime(), getRightSideVector());
+		leftSideVectorLog.LogNodeValues(getTime(), getLeftSideVector());
+		rightSideVectorLog.LogNodeValues(getTime(), getRightSideVector());
 	}
 
 	mLastLogTimeStep++;
