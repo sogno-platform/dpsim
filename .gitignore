@@ -22,3 +22,6 @@ Makefile
 # Mac
 __MACOSX
 .DS_Store
+
+# Files
+*.csv

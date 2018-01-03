@@ -215,7 +215,6 @@ Int Simulation::stepGeneratorTest(Logger& leftSideVectorLog, Logger& rightSideVe
 
 	// Save simulation step data
 	if (mLastLogTimeStep == 0) {
-		std::cout << mTime << std::endl;
 		leftSideVectorLog.LogNodeValues(getTime(), getLeftSideVector());
 		rightSideVectorLog.LogNodeValues(getTime(), getRightSideVector());
 	}
@@ -452,7 +451,6 @@ int Simulation::stepGeneratorVBR(Logger& leftSideVectorLog, Logger& rightSideVec
 
 	// Save simulation step data
 	if (mLastLogTimeStep == 0) {
-		std::cout << mTime << std::endl;
 		leftSideVectorLog.LogNodeValues(getTime(), getLeftSideVector());
 		rightSideVectorLog.LogNodeValues(getTime(), getRightSideVector());
 	}

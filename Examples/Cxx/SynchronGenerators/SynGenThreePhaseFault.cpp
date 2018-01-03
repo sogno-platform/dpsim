@@ -102,7 +102,7 @@ int main() {
 
 	// Main Simulation Loop
 	while (newSim.getTime() < tf) {
-		std::cout << newSim.getTime() << std::endl;
+		//std::cout << newSim.getTime() << std::endl;
 		newSim.stepGeneratorTest(vtLog, jLog, gen, newSim.getTime());
 		newSim.increaseByTimeStep();
 	}

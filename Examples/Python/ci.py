@@ -65,9 +65,7 @@ def run_python_test(name, sim):
 
 def run_cpp_test(name):
     args = PATH + '/../../build/Examples/Cxx/' + name
-    popen = subprocess.Popen(args, stdout=subprocess.PIPE)
-    popen.wait()
-    output = popen.stdout.read()
+    popen = subprocess.call(args)
 
     #dp_csv       = PATH + '/' + name + ".csv"
     #expected_csv = PATH + '/' + name + ".expected.csv"
@@ -95,7 +93,7 @@ if __name__ == "__main__":
             print("{} failed".format(name), file=sys.stderr)
             ret = 1
         else:
-            print("{} successfull".format(name), file=sys.stderr)
+            print("{} successful".format(name), file=sys.stderr)
 
     # test cpp examples
     for name in cpp_sims:
@@ -103,8 +101,8 @@ if __name__ == "__main__":
             print("{} failed".format(name), file=sys.stderr)
             ret = 1
         else:
-            print("{} successfull".format(name), file=sys.stderr)
+            print("{} successful".format(name), file=sys.stderr)
 
-    print("All tests successfull.", file=sys.stderr)
+    print("All tests successful.", file=sys.stderr)
 
     sys.exit(ret)
