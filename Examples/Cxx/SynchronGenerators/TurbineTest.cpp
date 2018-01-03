@@ -1,4 +1,4 @@
-/** Synchron Generator Tests
+﻿/** Synchron Generator Tests
 *
 * @file
 * @author Markus Mirz <mmirz@eonerc.rwth-aachen.de>
@@ -56,7 +56,7 @@ int main() {
 
 	TurbineGovernor mTurbineGovernor;
 
-	mTurbineGovernor = TurbineGovernor(Ta_t, Tb, Tc, Fa, Fb, Fc, Kg, Tsr, Tsm, initActivePower / nomPower);
+	mTurbineGovernor = TurbineGovernor(Ta_t, Tb, Tc, Fa, Fb, Fc, Kg, Tsr, Tsm);
 
 	Real OmRef = 1;
 	Real PmRef = 0.001;
@@ -67,6 +67,8 @@ int main() {
 	Real dt = 0.00001;
 	Real t = 0;
 	Real Pm = 0;
+
+	mTurbineGovernor.init(PmRef, initActivePower / nomPower);
 
 	while (getline(omega, line))
 	{	
