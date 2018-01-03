@@ -64,7 +64,7 @@ def run_python_test(name, sim):
     return compare_results(dpCsv, expectedCsv)
 
 def run_cpp_test(name):
-    args = PATH + '/' + name
+    args = PATH + '/../../build/' + name
     popen = subprocess.Popen(args, stdout=subprocess.PIPE)
     popen.wait()
     output = popen.stdout.read()
