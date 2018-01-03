@@ -1,5 +1,8 @@
-Build DPsim
-===========
+Building
+========
+
+DPsim
+^^^^^
 
 Windows (Visual Studio)
 -----------------------
@@ -58,8 +61,8 @@ Linux (CMake)
 .. _DPsim: https://git.rwth-aachen.de/acs/core/simulation/dpsim
 .. _`DPsim Libraries`: https://git.rwth-aachen.de/acs/core/simulation/dpsim-libraries
 
-Build Documentation
-===================
+Documentation
+^^^^^^^^^^^^^
 
 Python
 ------

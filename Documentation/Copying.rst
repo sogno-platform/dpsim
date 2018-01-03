@@ -1,0 +1,1 @@
+.. mdinclude:: ../COPYING.md

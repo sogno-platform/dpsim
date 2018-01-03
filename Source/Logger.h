@@ -3,7 +3,6 @@
  * @file
  * @author Markus Mirz <mmirz@eonerc.rwth-aachen.de>
  * @copyright 2017, Institute for Automation of Complex Power Systems, EONERC
- * @license GNU General Public License (version 3)
  *
  * DPsim
  *
@@ -51,7 +50,7 @@ namespace DPsim {
 		void LogMatrix(LogLevel level, const Matrix& data);
 		void LogDataLine(Real time, Matrix& data);
 		void LogDataLine(Real time, Real data);
-		void LogNodeValues(Real time, Matrix& data)
+		void LogNodeValues(Real time, Matrix& data);
 	};
 }
 

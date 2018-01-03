@@ -2,7 +2,6 @@
  *
  * @author Markus Mirz <mmirz@eonerc.rwth-aachen.de>
  * @copyright 2017, Institute for Automation of Complex Power Systems, EONERC
- * @license GNU General Public License (version 3)
  *
  * DPsim
  *
@@ -82,18 +81,18 @@ void Logger::Log(LogLevel level, String str) {
 	}
 
 	switch (level) {
-	case LogLevel::INFO:
-		mLogFile << "INFO: " << str << std::endl;
-		break;
-	case LogLevel::WARN:
-		mLogFile << "WARN: " << str << std::endl;
-		break;
-	case LogLevel::ERROR:
-		mLogFile << "ERROR: " << str << std::endl;
-		break;
-	case LogLevel::NONE:
-		return;
-		break;
+		case LogLevel::INFO:
+			mLogFile << "INFO: " << str << std::endl;
+			break;
+		case LogLevel::WARN:
+			mLogFile << "WARN: " << str << std::endl;
+			break;
+		case LogLevel::ERROR:
+			mLogFile << "ERROR: " << str << std::endl;
+			break;
+		case LogLevel::NONE:
+			return;
+			break;
 	}
 }
 
@@ -113,8 +112,9 @@ void Logger::LogMatrix(LogLevel level, const Matrix& data) {
 	mLogFile << data << std::endl;
 }
 
-void Logger::LogDataLine(Real time, Matrix& data) {	
-	mLogFile << std::scientific << time;
+
+void Logger::LogDataLine(Real time, Matrix& data) {
+	mLogFile << std::scientific << std::right << std::setw(14) << time;
 	for (Int i = 0; i < data.rows(); i++) {
 		mLogFile << ", " << std::right << std::setw(13) << data(i, 0);
 	}
@@ -122,30 +122,31 @@ void Logger::LogDataLine(Real time, Matrix& data) {
 }
 
 void Logger::LogDataLine(Real time, Real data) {
-	mLogFile << std::scientific << time;
-	mLogFile << ", " << data;
+	mLogFile << std::scientific << std::right << std::setw(14) << time;
+	mLogFile << ", " << std::right << std::setw(13) << data;
 	mLogFile << std::endl;
 }
 
 void Logger::LogNodeValues(Real time, Matrix& data) {
-	if (time < 1e-9) {
-		mLogFile << std::left << std::setw(14) << "time,";
+	if (mLogFile.tellp() == std::ofstream::pos_type(0)) {
+		mLogFile << std::right << std::setw(14) << "time";
 		for (Int i = 0; i < data.rows(); i++) {
 			if (i < data.rows() / 2) {
-				mLogFile << "NodeRe" << std::right << std::setfill('0') << std::setw(4) << i << std::left << std::setfill(' ') << std::setw(5) << ",";
+				mLogFile << ", " << std::right << std::setfill(' ') << std::setw(13 - 4) << "NodeRe" << std::setfill('0') << std::setw(4) << i;
 			}
 			else {
-				int index = i - data.rows() / 2;
-				mLogFile << "NodeIm" << std::right << std::setfill('0') << std::setw(4) << index << std::left << std::setfill(' ') << std::setw(5) << ",";
+				mLogFile << ", " << std::right << std::setfill(' ') << std::setw(13 - 4) << "NodeIm" << std::setfill('0') << std::setw(4) << (i - data.rows() / 2);
 			}
 		}
-		mLogFile << std::endl;
+		mLogFile << std::endl;		
 	}
 	LogDataLine(time, data);
 }
 
 std::ostream& Logger::getNullStream() {
-	if (nullStream.good())
+	if (nullStream.good()) {
 		nullStream.setstate(std::ios_base::badbit);
+	}
+
 	return nullStream;
 }

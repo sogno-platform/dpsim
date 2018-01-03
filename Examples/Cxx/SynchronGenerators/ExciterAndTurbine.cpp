@@ -3,7 +3,6 @@
 * @file
 * @author Markus Mirz <mmirz@eonerc.rwth-aachen.de>
 * @copyright 2017, Institute for Automation of Complex Power Systems, EONERC
-* @license GNU General Public License (version 3)
 *
 * DPsim
 *
@@ -25,6 +24,8 @@
 
 using namespace DPsim;
 
+
+// ##################################### Test VBR EMT ##################################
 //int main() {
 //	// Define Object for saving data on a file
 //	Logger log("log.txt"),
@@ -158,6 +159,7 @@ using namespace DPsim;
 //	return 0;
 //}
 
+// ##################################### Test VBR DP ##################################
 int main() {
 	// Define Object for saving data on a file
 	Logger log("log.txt"),

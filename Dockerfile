@@ -36,4 +36,6 @@ RUN pip3 install \
 	pandas \
 	numpy \
 	matplotlib \
-	sphinx
+	sphinx \
+	m2r \
+	breathe

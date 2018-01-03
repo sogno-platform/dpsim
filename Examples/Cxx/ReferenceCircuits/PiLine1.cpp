@@ -2,7 +2,6 @@
  *
  * @author Markus Mirz <mmirz@eonerc.rwth-aachen.de>
  * @copyright 2017, Institute for Automation of Complex Power Systems, EONERC
- * @license GNU General Public License (version 3)
  *
  * DPsim
  *
@@ -31,15 +30,15 @@ int main() {
 	Real omega = 2.0*M_PI*50.0;
 	Real finalTime = 0.3;
 	std::ostringstream fileName;
-	fileName << "SimulationExampleIdealVS3_" << timeStep;
+	fileName << "PiLine1_" << timeStep;
 	BaseComponent::List circElements;
-	circElements.push_back(std::make_shared<IdealVoltageSource>("v_1", 1, 0, Complex(10, 0)));
-	circElements.push_back(std::make_shared<ResistorDP>("r_1", 1, 2, 1));
-	circElements.push_back(std::make_shared<ResistorDP>("r_2", 2, 0, 1));
-	circElements.push_back(std::make_shared<ResistorDP>("r_3", 2, 3, 1));
-	circElements.push_back(std::make_shared<ResistorDP>("r_4", 3, 0, 1));
-	circElements.push_back(std::make_shared<ResistorDP>("r_5", 3, 4, 1));
-	circElements.push_back(std::make_shared<IdealVoltageSource>("v_2", 4, 0, Complex(20, 0)));
+	circElements.push_back(std::make_shared<IdealVoltageSource>("v_1", 1, 0, Complex(345, 0)));
+	circElements.push_back(std::make_shared<ResistorDP>("r1", 1, 2, 5));
+	circElements.push_back(std::make_shared<Capacitor>("c_1", 2, 0, 0.002));
+	circElements.push_back(std::make_shared<ResistorDP>("r_load", 2, 4, 6.4));
+	circElements.push_back(std::make_shared<InductorDP>("l_1", 4, 3, 0.186));
+	circElements.push_back(std::make_shared<Capacitor>("c_2", 3, 0, 0.002));
+	circElements.push_back(std::make_shared<ResistorDP>("r_load", 3, 0, 150));
 
 	// Define log names
 	Logger log("Logs/" + fileName.str() + ".log");

@@ -3,7 +3,6 @@
  * @file
  * @author Markus Mirz <mmirz@eonerc.rwth-aachen.de>
  * @copyright 2017, Institute for Automation of Complex Power Systems, EONERC
- * @license GNU General Public License (version 3)
  *
  * DPsim
  *
@@ -42,9 +41,6 @@
 #endif
 
 namespace DPsim {
-	// ### deprecated math section ###
-	//typedef Eigen::MatrixXd Matrix;
-
 	// ### Types ###
 	typedef unsigned int UInt;
 	typedef int Int;
@@ -54,7 +50,9 @@ namespace DPsim {
 	typedef std::string String;
 
 	// ### Constants ###
+	/// @cond WORKAROUND (Otherwise this code breaks Breathe / Doxygen)
 	static const Complex jComp(0.0, 1.0);
+	/// @endcond
 
 	/**
 	* @brief Dense vector for complex numbers.

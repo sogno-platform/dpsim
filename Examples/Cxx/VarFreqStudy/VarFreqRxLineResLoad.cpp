@@ -2,7 +2,6 @@
  *
  * @author Markus Mirz <mmirz@eonerc.rwth-aachen.de>
  * @copyright 2017, Institute for Automation of Complex Power Systems, EONERC
- * @license GNU General Public License (version 3)
  *
  * DPsim
  *
@@ -25,11 +24,11 @@
 
 using namespace DPsim;
 
-static void VarFreqRXLineResLoad(Real timeStep, Real finalTime, Real freqStep, Real loadStep, Real rampTime) {
+static void VarFreqRxLineResLoad_DP(Real timeStep, Real finalTime, Real freqStep, Real loadStep, Real rampTime) {
 	// Define simulation scenario
 	Real omega = 2.0*M_PI*50.0;
 	std::ostringstream fileName;
-	fileName << "VarFreqRXLineResLoad_" << timeStep;
+	fileName << "DpEmtVarFreqStudy_" << timeStep;
 	BaseComponent::List circElements0, circElements1, circElements2;
 	circElements0.push_back(std::make_shared<VoltSourceResFreq>("v_s", 1, 0, 1000, 0, 1, 2 * PI*-5, freqStep, rampTime));
 	circElements0.push_back(std::make_shared<ResistorDP>("r_line", 1, 2, 1));
@@ -49,14 +48,16 @@ static void VarFreqRXLineResLoad(Real timeStep, Real finalTime, Real freqStep, R
 	newSim.addSystemTopology(circElements2);
 	newSim.setSwitchTime(loadStep, 1);
 	std::cout << "Start simulation." << std::endl;
+
 	while (newSim.step(leftVectorLog, rightVectorLog)) {
 		newSim.increaseByTimeStep();
 		updateProgressBar(newSim.getTime(), newSim.getFinalTime());
 	}
+
 	std::cout << "Simulation finished." << std::endl;
 }
 
-static void VarFreqRXLineResLoadEMT(Real timeStep, Real finalTime, Real freqStep, Real loadStep, Real rampTime) {
+static void VarFreqRxLineResLoad_EMT(Real timeStep, Real finalTime, Real freqStep, Real loadStep, Real rampTime) {
 	// Define simulation scenario
 	Real omega = 2.0*M_PI*50.0;
 	std::ostringstream fileName;
@@ -80,10 +81,12 @@ static void VarFreqRXLineResLoadEMT(Real timeStep, Real finalTime, Real freqStep
 	newSim.addSystemTopology(circElements2);
 	newSim.setSwitchTime(loadStep, 1);
 	std::cout << "Start simulation." << std::endl;
+
 	while (newSim.step(leftVectorLog, rightVectorLog)) {
 		newSim.increaseByTimeStep();
 		updateProgressBar(newSim.getTime(), newSim.getFinalTime());
 	}
+
 	std::cout << "Simulation finished." << std::endl;
 }
 
@@ -95,44 +98,44 @@ int main() {
 	Real rampTime = 0;
 
 	timeStep = 0.00005;
-	VarFreqRXLineResLoadEMT(timeStep, finalTime, freqStep, loadStep, rampTime);
-	VarFreqRXLineResLoad(timeStep, finalTime, freqStep, loadStep, rampTime);
+	VarFreqRxLineResLoad_EMT(timeStep, finalTime, freqStep, loadStep, rampTime);
+	VarFreqRxLineResLoad_DP(timeStep, finalTime, freqStep, loadStep, rampTime);
 
 	timeStep = 0.001;
-	VarFreqRXLineResLoadEMT(timeStep, finalTime, freqStep, loadStep, rampTime);
-	VarFreqRXLineResLoad(timeStep, finalTime, freqStep, loadStep, rampTime);
+	VarFreqRxLineResLoad_EMT(timeStep, finalTime, freqStep, loadStep, rampTime);
+	VarFreqRxLineResLoad_DP(timeStep, finalTime, freqStep, loadStep, rampTime);
 
 	timeStep = 0.005;
-	VarFreqRXLineResLoadEMT(timeStep, finalTime, freqStep, loadStep, rampTime);
-	VarFreqRXLineResLoad(timeStep, finalTime, freqStep, loadStep, rampTime);
+	VarFreqRxLineResLoad_EMT(timeStep, finalTime, freqStep, loadStep, rampTime);
+	VarFreqRxLineResLoad_DP(timeStep, finalTime, freqStep, loadStep, rampTime);
 
 	timeStep = 0.01;
-	VarFreqRXLineResLoadEMT(timeStep, finalTime, freqStep, loadStep, rampTime);
-	VarFreqRXLineResLoad(timeStep, finalTime, freqStep, loadStep, rampTime);
+	VarFreqRxLineResLoad_EMT(timeStep, finalTime, freqStep, loadStep, rampTime);
+	VarFreqRxLineResLoad_DP(timeStep, finalTime, freqStep, loadStep, rampTime);
 
 	timeStep = 0.015;
-	VarFreqRXLineResLoadEMT(timeStep, finalTime, freqStep, loadStep, rampTime);
-	VarFreqRXLineResLoad(timeStep, finalTime, freqStep, loadStep, rampTime);
+	VarFreqRxLineResLoad_EMT(timeStep, finalTime, freqStep, loadStep, rampTime);
+	VarFreqRxLineResLoad_DP(timeStep, finalTime, freqStep, loadStep, rampTime);
 
 	timeStep = 0.02;
-	VarFreqRXLineResLoadEMT(timeStep, finalTime, freqStep, loadStep, rampTime);
-	VarFreqRXLineResLoad(timeStep, finalTime, freqStep, loadStep, rampTime);
+	VarFreqRxLineResLoad_EMT(timeStep, finalTime, freqStep, loadStep, rampTime);
+	VarFreqRxLineResLoad_DP(timeStep, finalTime, freqStep, loadStep, rampTime);
 
 	timeStep = 0.025;
-	VarFreqRXLineResLoadEMT(timeStep, finalTime, freqStep, loadStep, rampTime);
-	VarFreqRXLineResLoad(timeStep, finalTime, freqStep, loadStep, rampTime);
+	VarFreqRxLineResLoad_EMT(timeStep, finalTime, freqStep, loadStep, rampTime);
+	VarFreqRxLineResLoad_DP(timeStep, finalTime, freqStep, loadStep, rampTime);
 
 	timeStep = 0.03;
-	VarFreqRXLineResLoadEMT(timeStep, finalTime, freqStep, loadStep, rampTime);
-	VarFreqRXLineResLoad(timeStep, finalTime, freqStep, loadStep, rampTime);
+	VarFreqRxLineResLoad_EMT(timeStep, finalTime, freqStep, loadStep, rampTime);
+	VarFreqRxLineResLoad_DP(timeStep, finalTime, freqStep, loadStep, rampTime);
 
 	timeStep = 0.035;
-	VarFreqRXLineResLoadEMT(timeStep, finalTime, freqStep, loadStep, rampTime);
-	VarFreqRXLineResLoad(timeStep, finalTime, freqStep, loadStep, rampTime);
+	VarFreqRxLineResLoad_EMT(timeStep, finalTime, freqStep, loadStep, rampTime);
+	VarFreqRxLineResLoad_DP(timeStep, finalTime, freqStep, loadStep, rampTime);
 
 	timeStep = 0.04;
-	VarFreqRXLineResLoadEMT(timeStep, finalTime, freqStep, loadStep, rampTime);
-	VarFreqRXLineResLoad(timeStep, finalTime, freqStep, loadStep, rampTime);
+	VarFreqRxLineResLoad_EMT(timeStep, finalTime, freqStep, loadStep, rampTime);
+	VarFreqRxLineResLoad_DP(timeStep, finalTime, freqStep, loadStep, rampTime);
 
 	return 0;
 }

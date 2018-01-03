@@ -2,7 +2,6 @@
 *
 * @author Markus Mirz <mmirz@eonerc.rwth-aachen.de>
 * @copyright 2017, Institute for Automation of Complex Power Systems, EONERC
-* @license GNU General Public License (version 3)
 *
 * DPsim
 *
@@ -37,7 +36,8 @@ TurbineGovernor::TurbineGovernor(Real Ta, Real Tb, Real Tc, Real Fa, Real Fb, Re
 	mTsr = Tsr;
 	mTsm = Tsm;
 	mTm = Tm_init;
-
+	AuxVar = mTm;
+	mVcv = 0.001;
 }
 
 
@@ -62,8 +62,9 @@ Real TurbineGovernor::step(Real Om, Real OmRef, Real PmRef, Real dt) {
 		mVcv = 0;
 	//### Turbine ###
 	// Simplified equation
-	mTm = Euler(mTm, -1 / mTb, 1 / mTb, mpVcv*mFa, dt, mVcv);
-	
+	//mTm = Euler(mTm, -1 / mTb, 1 / mTb, mpVcv*mFa, dt, mVcv);
+	//mTm = mTm + dt*(mVcv / mTb + mpVcv*mFa - mTm / mTb);
+	mTm = mTm + dt*(mVcv / mTb + ((Psm_in - mVcv) / mTsm)*mFa - mTm / mTb);
 	return mTm;
 
 }
