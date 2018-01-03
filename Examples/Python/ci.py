@@ -98,7 +98,7 @@ if __name__ == "__main__":
             print("{} successfull".format(name), file=sys.stderr)
 
     # test cpp examples
-    for name in cpp_sims.items():
+    for name in cpp_sims:
         if run_cpp_test(name):
             print("{} failed".format(name), file=sys.stderr)
             ret = 1
