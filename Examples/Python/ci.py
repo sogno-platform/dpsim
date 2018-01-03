@@ -10,18 +10,13 @@ import numpy as np
 import pandas
 import sys
 import os
+import subprocess
 
 EPSILON = 1e-6
 PATH = os.path.dirname(__file__)
 BINARY = os.path.basename(__file__)
 
-def run_test(name, sim):
-    sim.start()
-    sim.wait()
-
-    dpCsv       = PATH + '/' + name + ".csv"
-    expectedCsv = PATH + '/' + name + ".expected.csv"
-
+def compare_results(dpCsv, expectedCsv):
     dpData = pandas.read_csv(dpCsv)
     expectedData = pandas.read_csv(expectedCsv)
     if dpData.shape[1] != expectedData.shape[1]:
@@ -59,8 +54,28 @@ def run_test(name, sim):
 
     return ret
 
+def run_python_test(name, sim):
+    sim.start()
+    sim.wait()
+
+    dpCsv       = PATH + '/' + name + ".csv"
+    expectedCsv = PATH + '/' + name + ".expected.csv"
+
+    return compare_results(dpCsv, expectedCsv)
+
+def run_cpp_test(name):
+    args = PATH + '/' + name
+    popen = subprocess.Popen(args, stdout=subprocess.PIPE)
+    popen.wait()
+    output = popen.stdout.read()
+
+    #dpCsv       = PATH + '/' + name + ".csv"
+    #expectedCsv = PATH + '/' + name + ".expected.csv"
+
+    return 0
+
 if __name__ == "__main__":
-    sims = {
+    python_sims = {
         'TestSimple': dpsim.Simulation([
             dpsim.VoltSourceRes("v_s", 1, 0, 10000+0j, 1),
             dpsim.Resistor("r_line", 1, 2, 1),
@@ -69,9 +84,22 @@ if __name__ == "__main__":
             duration=0.3, llog=PATH + "/TestSimple.csv")
     }
 
+    cpp_sims = {
+        'SynGenThreePhaseFault'
+    }
+
     ret = 0
-    for name, sim in sims.items():
-        if run_test(name, sim):
+    # test python examples
+    for name, sim in python_sims.items():
+        if run_python_test(name, sim):
+            print("{} failed".format(name), file=sys.stderr)
+            ret = 1
+        else:
+            print("{} successfull".format(name), file=sys.stderr)
+
+    # test cpp examples
+    for name in cpp_sims.items():
+        if run_cpp_test(name):
             print("{} failed".format(name), file=sys.stderr)
             ret = 1
         else:
