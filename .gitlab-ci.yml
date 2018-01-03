@@ -68,7 +68,7 @@ test:python:
   stage: test
   script:
     - make -C build install
-    - ls build
+    - ls build/Examples
     - python3 Examples/Python/ci.py
   image: ${DOCKER_IMAGE_DEV}:${DOCKER_TAG_DEV}
   dependencies:
