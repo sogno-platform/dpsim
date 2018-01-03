@@ -18,31 +18,28 @@ set(CMAKE_CXX_STANDARD 11)
 
 # targets
 set(REFERENCE_SOURCES
-	ReferenceCircuits/Example1.cpp
-	ReferenceCircuits/Example2.cpp
-	ReferenceCircuits/Example3.cpp
-	ReferenceCircuits/IdealVS1.cpp
-	ReferenceCircuits/IdealVS2.cpp
-	ReferenceCircuits/IdealVS3.cpp
-	ReferenceCircuits/IdealVS_EMT.cpp
-	ReferenceCircuits/PiLine1.cpp
-	ReferenceCircuits/PiLine2.cpp
-	ReferenceCircuits/RxLine1.cpp
-	ReferenceCircuits/RxLine2.cpp
-	ReferenceCircuits/RxLine3.cpp
-	ReferenceCircuits/RxLineResLoad.cpp
-	ReferenceCircuits/RxLineResLoad_EMT.cpp
+	Circuits/DP_IdealVS_PILine1.cpp
+	Circuits/DP_IdealVS_R1.cpp
+	Circuits/DP_IdealVS_RLC1.cpp
+	Circuits/DP_IdealVS_RXLine1.cpp
+	Circuits/DP_IdealVS_RXLine2.cpp
+	Circuits/DP_ResVS_PILine1.cpp
+	Circuits/DP_ResVS_RL1.cpp
+	Circuits/DP_ResVS_RLC1.cpp
+	Circuits/DP_ResVS_RXLine1.cpp
+	Circuits/EMT_IdealVS_R1.cpp
+	Circuits/EMT_ResVS_RXLine_Switch1.cpp
 )
 
 set(SYNCGEN_SOURCES
-	SynchronGenerators/SimpSynGenThreePhaseFault.cpp
-	SynchronGenerators/SynGenDPBalancedResLoad.cpp
-	SynchronGenerators/SynGenDPThreePhaseFault.cpp
-	SynchronGenerators/SynGenBalancedResLoad.cpp
-	SynchronGenerators/SynGenPhaseToPhaseFault.cpp
-	SynchronGenerators/SynGenThreePhaseFault.cpp
-	SynchronGenerators/SynGenVBR.cpp
-	SynchronGenerators/SynGenVBRDP.cpp
+	SynchronGenerator/SimpSynGenThreePhaseFault.cpp
+	SynchronGenerator/SynGenDPBalancedResLoad.cpp
+	SynchronGenerator/SynGenDPThreePhaseFault.cpp
+	SynchronGenerator/SynGenBalancedResLoad.cpp
+	SynchronGenerator/SynGenPhaseToPhaseFault.cpp
+	SynchronGenerator/SynGenThreePhaseFault.cpp
+	SynchronGenerator/SynGenVBR.cpp
+	SynchronGenerator/SynGenVBRDP.cpp
 )
 
 set(VARFREQ_SOURCES
@@ -51,7 +48,7 @@ set(VARFREQ_SOURCES
 )
 
 set(RT_SOURCES
-	ReferenceCircuits/Example_RT.cpp
+	Circuits/RT_DP_ResVS_RL1.cpp
 )
 
 set(SHMEM_SOURCES
