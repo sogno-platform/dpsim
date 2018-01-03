@@ -1,4 +1,4 @@
-/** Voltage behind reactance (DP)
+﻿/** Voltage behind reactance (DP)
  *
  * @author Markus Mirz <mmirz@eonerc.rwth-aachen.de>
  * @copyright 2017, Institute for Automation of Complex Power Systems, EONERC
@@ -47,11 +47,12 @@ void VoltageBehindReactanceDP::AddExciter(Real Ta, Real Ka, Real Te, Real Ke, Re
 	WithExciter = true;
 }
 
-void VoltageBehindReactanceDP::AddGovernor(Real Ta, Real Tb, Real Tc, Real Fa, Real Fb, Real Fc, Real K, Real Tsr, Real Tsm, Real Tm_init) {
-	mTurbineGovernor = TurbineGovernor(Ta, Tb, Tc, Fa, Fb, Fc, K, Tsr, Tsm, Tm_init);
-	WithTurbineGovernor = true;
-}
 
+void VoltageBehindReactanceDP::AddGovernor(Real Ta, Real Tb, Real Tc, Real Fa, Real Fb, Real Fc, Real K, Real Tsr, Real Tsm, Real Tm_init, Real PmRef) {
+		mTurbineGovernor = TurbineGovernor(Ta, Tb, Tc, Fa, Fb, Fc, K, Tsr, Tsm);
+		mTurbineGovernor.init(PmRef, Tm_init);
+		WithTurbineGovernor = true;
+}
 
 void VoltageBehindReactanceDP::init(Real om, Real dt,
 	Real initActivePower, Real initReactivePower, Real initTerminalVolt, Real initVoltAngle, Real initFieldVoltage, Real initMechPower) {

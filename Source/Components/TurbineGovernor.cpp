@@ -1,4 +1,4 @@
-/** Turbine Governor
+﻿/** Turbine Governor
 *
 * @author Markus Mirz <mmirz@eonerc.rwth-aachen.de>
 * @copyright 2017, Institute for Automation of Complex Power Systems, EONERC
@@ -24,7 +24,7 @@
 
 using namespace DPsim;
 
-TurbineGovernor::TurbineGovernor(Real Ta, Real Tb, Real Tc, Real Fa, Real Fb, Real Fc, Real K, Real Tsr, Real Tsm, Real Tm_init)
+TurbineGovernor::TurbineGovernor(Real Ta, Real Tb, Real Tc, Real Fa, Real Fb, Real Fc, Real K, Real Tsr, Real Tsm)
 {	
 	mTa = Ta;
 	mTb = Tb;
@@ -35,11 +35,18 @@ TurbineGovernor::TurbineGovernor(Real Ta, Real Tb, Real Tc, Real Fa, Real Fb, Re
 	mK = K;
 	mTsr = Tsr;
 	mTsm = Tsm;
-	mTm = Tm_init;
-	AuxVar = mTm;
-	mVcv = 0.001;
+
 }
 
+void TurbineGovernor::init(Real PmRef, Real Tm_init) {
+	
+	mTm = Tm_init;
+	mVcv = PmRef;
+	mpVcv = 0;
+	Psm_in = PmRef;
+
+
+}
 
 Real TurbineGovernor::step(Real Om, Real OmRef, Real PmRef, Real dt) {
 
@@ -60,11 +67,11 @@ Real TurbineGovernor::step(Real Om, Real OmRef, Real PmRef, Real dt) {
 		mVcv = 1;
 	else if (mVcv <= 0)
 		mVcv = 0;
+
 	//### Turbine ###
 	// Simplified equation
-	//mTm = Euler(mTm, -1 / mTb, 1 / mTb, mpVcv*mFa, dt, mVcv);
-	//mTm = mTm + dt*(mVcv / mTb + mpVcv*mFa - mTm / mTb);
 	mTm = mTm + dt*(mVcv / mTb + ((Psm_in - mVcv) / mTsm)*mFa - mTm / mTb);
+
 	return mTm;
 
 }

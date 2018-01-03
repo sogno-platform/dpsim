@@ -1,4 +1,4 @@
-/** Voltage behind reactance (EMT)
+﻿/** Voltage behind reactance (EMT)
  *
  * @author Markus Mirz <mmirz@eonerc.rwth-aachen.de>
  * @copyright 2017, Institute for Automation of Complex Power Systems, EONERC
@@ -47,8 +47,9 @@ void VoltageBehindReactanceEMT::AddExciter(Real Ta, Real Ka, Real Te, Real Ke, R
 	WithExciter = true;
 }
 
-void VoltageBehindReactanceEMT::AddGovernor(Real Ta, Real Tb, Real Tc, Real Fa, Real Fb, Real Fc, Real K, Real Tsr, Real Tsm, Real Tm_init){
-	mTurbineGovernor = TurbineGovernor(Ta, Tb, Tc, Fa, Fb, Fc, K, Tsr, Tsm, Tm_init);
+void VoltageBehindReactanceEMT::AddGovernor(Real Ta, Real Tb, Real Tc, Real Fa, Real Fb, Real Fc, Real K, Real Tsr, Real Tsm, Real Tm_init, Real PmRef){
+	mTurbineGovernor = TurbineGovernor(Ta, Tb, Tc, Fa, Fb, Fc, K, Tsr, Tsm);
+	mTurbineGovernor.init(PmRef, Tm_init);
 	WithTurbineGovernor = true;
 }
 
