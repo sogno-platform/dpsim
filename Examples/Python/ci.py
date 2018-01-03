@@ -83,13 +83,17 @@ if __name__ == "__main__":
     }
 
     cpp_sims = {
-        'Example1',
-        'IdealVS1',
-        'RxLine1',
-        'PiLine1',
-        'SynGenThreePhaseFault',
-        'IdealVS_EMT',
-
+        'DP_IdealVS_R1',
+        'DP_IdealVS_RLC1',
+        'DP_IdealVS_RXLine1',
+        'DP_ResVS_PILine1',
+        'DP_ResVS_RL1',
+        'DP_ResVS_RLC1',
+        'DP_ResVS_RXLine1',
+        'EMT_IdealVS_R1',
+        'EMT_ResVS_RXLine_Switch1',
+        'RT_DP_ResVS_RL1',
+        'SynGenThreePhaseFault'   
     }
 
     ret = 0
