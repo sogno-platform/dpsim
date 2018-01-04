@@ -9,6 +9,15 @@ add_library(dpsim_python SHARED
 	Simulation.cpp
 	Interface.cpp
 	LoadCim.cpp
+	
+	Components/VoltSourceRes.cpp
+	
+	Components/ExternalCurrentSource.cpp
+	Components/ExternalVoltageSource.cpp
+	
+	Components/Resistor.cpp
+	Components/Inductor.cpp
+	Components/Capacitor.cpp
 )
 
 if(APPLE)

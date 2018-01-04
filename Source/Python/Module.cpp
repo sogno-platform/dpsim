@@ -31,14 +31,17 @@
 using namespace DPsim;
 
 static PyMethodDef dpsimModuleMethods[] = {
-	{"open_shmem_interface", (PyCFunction) Python::OpenShmemInterface, METH_VARARGS|METH_KEYWORDS, Python::DocOpenShmemInterface},
-	{"ExternalCurrentSource", Python::ExternalCurrentSource, METH_VARARGS, Python::DocExternalCurrentSource},
-	{"ExternalVoltageSource", Python::ExternalVoltageSource, METH_VARARGS, Python::DocExternalVoltageSource},
-	{"Inductor", Python::Inductor, METH_VARARGS, Python::DocInductor},
-	{"Resistor", Python::Resistor, METH_VARARGS, Python::DocResistor},
-	{"VoltSourceRes", Python::VoltSourceRes, METH_VARARGS, Python::DocVoltSourceRes},
-	{0}
 	{ "load_cim", Python::LoadCim, METH_VARARGS, Python::DocLoadCim },
+	{ "open_shmem_interface", (PyCFunction) Python::OpenShmemInterface, METH_VARARGS|METH_KEYWORDS, Python::DocOpenShmemInterface },
+	{ "ExternalCurrentSource", Python::ExternalCurrentSource, METH_VARARGS, Python::DocExternalCurrentSource },
+	{ "ExternalVoltageSource", Python::ExternalVoltageSource, METH_VARARGS, Python::DocExternalVoltageSource },
+	{ "VoltSourceRes", Python::VoltSourceRes, METH_VARARGS, Python::DocVoltSourceRes },
+	{ "InductorDP", Python::InductorDP, METH_VARARGS, Python::DocInductor },
+	{ "InductorEMT", Python::InductorEMT, METH_VARARGS, Python::DocInductor },
+	{ "ResistorDP", Python::ResistorDP, METH_VARARGS, Python::DocResistor },
+	{ "ResistorEMT", Python::ResistorEMT, METH_VARARGS, Python::DocResistor },
+	{ "CapacitorDP", Python::CapacitorDP, METH_VARARGS, Python::DocCapacitor },
+	{ 0 }
 };
 
 static PyModuleDef dpsimModule = {
