@@ -39,3 +39,5 @@ RUN pip3 install \
 	sphinx \
 	m2r \
 	breathe
+
+ENV LD_LIBRARY_PATH /usr/local/lib64
