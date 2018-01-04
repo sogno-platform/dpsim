@@ -53,6 +53,7 @@ endif()
 
 # Options
 option(BUILD_SHARED_LIBS "Build shared library" OFF)
+option(BUILD_EXAMPLES "Build C++ examples" ON)
 
 option(WITH_RT	 "Enable real-time features"			${Linux_FOUND})
 option(WITH_SHMEM  "Enable shared memory interface"		${VILLASnode_FOUND})
@@ -61,7 +62,10 @@ option(WITH_CIM	"Enable support for parsing CIM files"	${CIMpp_FOUND})
 
 add_subdirectory(Documentation)
 add_subdirectory(Source)
-add_subdirectory(Examples/Cxx)
+
+if(BUILD_EXAMPLES)
+	add_subdirectory(Examples/Cxx)
+endif(BUILD_EXAMPLES)
 
 # Show feature summary
 include(FeatureSummary)
