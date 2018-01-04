@@ -34,7 +34,7 @@ if(SPHINX_EXECUTABLE)
 	# We add the path of the freshly build dpsim.so module to Python path here
 	add_custom_target(docs
 		COMMAND
-			${CMAKE_COMMAND} -E env PYTHONPATH=$<TARGET_FILE_DIR:dpsim>:$ENV{PYTHONPATH}
+			${CMAKE_COMMAND} -E env PYTHONPATH=$<TARGET_FILE_DIR:dpsim_python>:${CMAKE_CURRENT_SOURCE_DIR}/../Source/Python/:$ENV{PYTHONPATH}
 			${SPHINX_EXECUTABLE}
 				-q -b html
 				-c "${BINARY_BUILD_DIR}"
@@ -43,7 +43,7 @@ if(SPHINX_EXECUTABLE)
 				"${SPHINX_HTML_DIR}"
 		COMMENT "Building HTML documentation with Sphinx"
 		DEPENDS
-			link_dpsim
+			dpsim_python
 			copy_imgs
 			docs_cxx
 	)
