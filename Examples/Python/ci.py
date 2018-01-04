@@ -66,7 +66,7 @@ def run_python_test(name, sim):
     return compare_results(dp_csv, expected_csv)
 
 def run_cpp_test(name):
-    args = PATH + '/../../build_osx/Examples/Cxx/' + name
+    args = PATH + '/../../build/Examples/Cxx/' + name
     popen = subprocess.call(args)
 
     #dp_csv       = PATH + '/' + name + ".csv"
