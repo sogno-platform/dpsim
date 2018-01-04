@@ -55,8 +55,7 @@ def compare_results(dp_csv, expected_csv):
     return ret
 
 def run_python_test(name, sim):
-    sim.start()
-    sim.wait()
+    sim.run()
 
     dp_csv       = PATH + '/' + name + ".csv"
     expected_csv = PATH + '/' + name + ".expected.csv"
@@ -93,7 +92,7 @@ if __name__ == "__main__":
         'DP_ResVS_RLC1',
         'DP_ResVS_RXLine1',
         'EMT_IdealVS_R1',
-        'EMT_ResVS_RXLine_Switch1'   
+        'EMT_ResVS_RXLine_Switch1'
     }
 
     ret = 0

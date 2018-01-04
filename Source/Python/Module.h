@@ -24,4 +24,4 @@
 
 #include <Python.h>
 
-PyMODINIT_FUNC PyInit_dpsim(void);
+PyMODINIT_FUNC PyInit__dpsim(void);
