@@ -47,16 +47,10 @@ set(INCLUDE_DIRS
 
 set(LIBRARIES "-lstdc++fs")
 
-if (NOT WIN32)
+if(NOT WIN32)
 	# we use PyArg_ParseTupleAndKeywords several times, which erroneously accepts
 	# a char* array instead of a const char* array
 	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-write-strings")
-endif()
-
-if(UNIX OR APPLE)
-	set(PYTHON_MODULE_SUFFIX "so")
-elseif(WIN32)
-	set(PYTHON_MODULE_SUFFIX "pyd")
 endif()
 
 if(WITH_RT)
@@ -73,39 +67,8 @@ if(WITH_SHMEM)
 	)
 endif()
 
-if (WITH_PYTHON)
-	get_target_property(DPSIM_TYPE dpsim TYPE)
-	if(${DPSIM_TYPE} STREQUAL SHARED_LIBRARY)
-		list(APPEND SOURCES
-			Python/Component.cpp
-			Python/Module.cpp
-			Python/Simulation.cpp
-			Python/Interface.cpp
-		)
-
-		if(WITH_CIM)
-			list(APPEND SOURCES
-				Python/LoadCim.cpp
-			)
-		endif()
-
-		list(APPEND INCLUDE_DIRS ${PYTHON_INCLUDE_DIRS})
-		list(APPEND LIBRARIES ${PYTHON_LIBRARIES})
-
-		add_custom_target(link_dpsim ALL
-			DEPENDS dpsim
-			COMMAND ${CMAKE_COMMAND} -E create_symlink $<TARGET_FILE_NAME:dpsim> dpsim.${PYTHON_MODULE_SUFFIX}
-		)
-
-		execute_process(COMMAND ${PYTHON_EXECUTABLE} -c "import sysconfig; print(sysconfig.get_path('platlib'), end='')" OUTPUT_VARIABLE PYTHON_PKGPATH)
-
-		install(FILES $<TARGET_FILE:dpsim>
-			DESTINATION ${PYTHON_PKGPATH}
-			RENAME dpsim.${PYTHON_MODULE_SUFFIX}
-		)
-	else()
-		message(WARNING "In order to build DPsim as a Python module you must build it as a shared library: cmake -DBUILD_SHARED_LIBS=ON")
-	endif()
+if(WITH_PYTHON)
+	add_subdirectory(Python)
 endif()
 
 if(WITH_CIM)
@@ -120,3 +83,9 @@ target_include_directories(dpsim PRIVATE ${INCLUDE_DIRS})
 
 include_directories(${CMAKE_CURRENT_SOURCE_DIR} ${CMAKE_CURRENT_BINARY_DIR})
 configure_file(Config.h.in ${CMAKE_CURRENT_BINARY_DIR}/Config.h)
+
+install(TARGETS dpsim
+	RUNTIME DESTINATION bin
+	LIBRARY DESTINATION lib
+	ARCHIVE DESTINATION lib/static
+)
