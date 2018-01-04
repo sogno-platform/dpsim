@@ -8,13 +8,9 @@ add_library(dpsim_python SHARED
 	Module.cpp
 	Simulation.cpp
 	Interface.cpp
+	LoadCim.cpp
 )
 
-if(WITH_CIM)
-	list(APPEND PYTHON_SOURCES
-		Python/LoadCim.cpp
-	)
-endif(WITH_CIM)
 if(APPLE)
 	set(INSTALL_RPATH "@loader_path")
 else(UNIX)

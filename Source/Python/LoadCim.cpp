@@ -24,7 +24,10 @@
 #include "Python/Component.h"
 
 #include "Components.h"
-#include "CIM/Reader.h"
+
+#ifdef WITH_CIM
+  #include "CIM/Reader.h"
+#endif
 
 using namespace DPsim;
 

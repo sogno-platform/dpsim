@@ -23,6 +23,7 @@
 
 #include "Config.h"
 #include "Python/Component.h"
+#include "Python/LoadCim.h"
 #include "Python/Interface.h"
 #include "Python/Module.h"
 #include "Python/Simulation.h"
@@ -30,9 +31,6 @@
 using namespace DPsim;
 
 static PyMethodDef dpsimModuleMethods[] = {
-#ifdef WITH_CIM
-	{"load_cim", Python::LoadCim, METH_VARARGS, Python::DocLoadCim},
-#endif
 	{"open_shmem_interface", (PyCFunction) Python::OpenShmemInterface, METH_VARARGS|METH_KEYWORDS, Python::DocOpenShmemInterface},
 	{"ExternalCurrentSource", Python::ExternalCurrentSource, METH_VARARGS, Python::DocExternalCurrentSource},
 	{"ExternalVoltageSource", Python::ExternalVoltageSource, METH_VARARGS, Python::DocExternalVoltageSource},
@@ -40,6 +38,7 @@ static PyMethodDef dpsimModuleMethods[] = {
 	{"Resistor", Python::Resistor, METH_VARARGS, Python::DocResistor},
 	{"VoltSourceRes", Python::VoltSourceRes, METH_VARARGS, Python::DocVoltSourceRes},
 	{0}
+	{ "load_cim", Python::LoadCim, METH_VARARGS, Python::DocLoadCim },
 };
 
 static PyModuleDef dpsimModule = {
