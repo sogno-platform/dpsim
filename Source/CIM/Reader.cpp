@@ -129,7 +129,7 @@ Component::Base::Ptr Reader::mapExternalNetworkInjection(ExternalNetworkInjectio
 	if (!volt) {
 		mLogger->Log(LogLevel::ERROR) << "ExternalNetworkInjection " << inj->mRID << " has no associated SvVoltage, ignoring" << std::endl;
 		return nullptr;
-	}	
+	}
 	Real voltAbs = unitValue(volt->v.value, UnitMultiplier::k);
 	Real voltPhase = volt->angle.value;
 	Complex initVoltage = std::polar(voltAbs, voltPhase * PI / 180);
@@ -213,7 +213,7 @@ Component::Base::Ptr Reader::mapSynchronousMachine(SynchronousMachine* machine) 
 	Real voltAbs = unitValue(volt->v.value, UnitMultiplier::k);
 	Real voltPhase = volt->angle.value * PI / 180;
 	Complex initVoltage = std::polar(voltAbs, voltPhase);
-	
+
 	// TODO is it appropiate to use this resistance here
 	mLogger->Log(LogLevel::INFO) << "Create IdealVoltageSource " << machine->name << " node=" << node
 		<< " V=" << voltAbs << "<" << voltPhase << std::endl;
@@ -286,7 +286,8 @@ void Reader::parseFiles() {
 				ConductingEquipment *eq = term->ConductingEquipment;
 				if (!eq) {
 					mLogger->Log(LogLevel::WARN) << "Terminal " << term->mRID << " has no Conducting Equipment, ignoring!" << std::endl;
-				} else {
+				}
+				else {
 					mLogger->Log(LogLevel::INFO) << "    eq " << eq->mRID << " sequenceNumber " << term->sequenceNumber << std::endl;
 					std::vector<Matrix::Index> &nodesVec = mEqNodeMap[eq->mRID];
 					if (nodesVec.size() < (unsigned) term->sequenceNumber) {
@@ -315,7 +316,8 @@ void Reader::parseFiles() {
 			}
 			mVoltages[search->second-1] = volt;
 			mLogger->Log(LogLevel::INFO) << "Node " << search->second << ": " << volt->v.value << "<" << volt->angle.value << std::endl;
-		} else if (SvPowerFlow* flow = dynamic_cast<SvPowerFlow*>(obj)) {
+		}
+		else if (SvPowerFlow* flow = dynamic_cast<SvPowerFlow*>(obj)) {
 			// TODO could there be more than one power flow per equipment?
 			Terminal* term = flow->Terminal;
 			mPowerFlows[term->ConductingEquipment->mRID] = flow;

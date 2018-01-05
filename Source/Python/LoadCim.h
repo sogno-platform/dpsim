@@ -29,5 +29,5 @@ namespace Python {
 
 	extern const char* DocLoadCim;
 	PyObject* LoadCim(PyObject* self, PyObject* args);
-};
-};
+}
+}

@@ -60,9 +60,11 @@ PyObject* Python::Interface::registerSource(PyObject* self, PyObject* args) {
 	Python::Component *pyComp = (Python::Component*) obj;
 	if (DPsim::ExternalCurrentSource *ecs = dynamic_cast<DPsim::ExternalCurrentSource*>(pyComp->comp.get())) {
 		pyIntf->intf->registerCurrentSource(ecs, realIdx, imagIdx);
-	} else if (DPsim::ExternalVoltageSource *evs = dynamic_cast<DPsim::ExternalVoltageSource*>(pyComp->comp.get())) {
+	}
+	else if (DPsim::ExternalVoltageSource *evs = dynamic_cast<DPsim::ExternalVoltageSource*>(pyComp->comp.get())) {
 		pyIntf->intf->registerVoltageSource(evs, realIdx, imagIdx);
-	} else {
+	}
+	else {
 		PyErr_SetString(PyExc_TypeError, "First argument must be an external source");
 		return nullptr;
 	}

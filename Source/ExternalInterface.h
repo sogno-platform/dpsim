@@ -81,6 +81,7 @@ namespace DPsim {
 		 * @param realIdx Interface-specific index identifying the real part.
 		 * @param imagIdx Interface-specific index identifying the imaginary part.
 		 */
+
 		void registerExportedVoltage(Int from, Int to, Int realIdx, Int imagIdx);
 		/** Register a current through a component to be sent through this
 		 * interface after every step.
@@ -94,12 +95,14 @@ namespace DPsim {
 		/** Read data for a timestep from the interface and passes the values
 		 * to all registered current / voltage sources.
 		 */
+
 		virtual void readValues(bool blocking = true) = 0;
 		/** Write all exported values to the interface. Called after every timestep.
 		 * @param model Reference to the system model which should be used to
 		 * calculate needed voltages.
 		 */
+
 		virtual void writeValues(SystemModel &model) = 0;
-		virtual ~ExternalInterface() {};
+		virtual ~ExternalInterface() { };
 	};
 }

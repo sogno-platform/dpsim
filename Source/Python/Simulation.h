@@ -94,5 +94,5 @@ namespace Python {
 	};
 
 	extern PyTypeObject SimulationType;
-};
-};
+}
+}
