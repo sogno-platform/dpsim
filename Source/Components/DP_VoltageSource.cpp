@@ -86,7 +86,7 @@ Complex Component::DP::VoltageSource::getCurrent(SystemModel& system)
 	return Complex(real, imag);
 }
 
-	this->mVoltage = Complex(real, imag);
 void Component::DP::VoltageSource::setVoltage(Complex voltage)
 {
+	mVoltage = voltage;
 }

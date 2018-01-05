@@ -70,6 +70,8 @@ namespace DP {
 		void postStep(SystemModel& system) { }
 
 		virtual Complex getCurrent(SystemModel& system);
+
+		void setVoltage(Complex voltage);
 	};
 }
 }

@@ -59,3 +59,8 @@ Complex Component::DP::VoltageSourceIdeal::getCurrent(SystemModel& system)
 {
 	return Complex(system.getRealFromLeftSideVector(mVirtualNodes[0]), system.getRealFromLeftSideVector(mVirtualNodes[0] + system.getCompOffset()));
 }
+
+void Component::DP::VoltageSourceIdeal::setVoltage(Complex voltage)
+{
+	mVoltage = voltage;
+}

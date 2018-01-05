@@ -72,7 +72,7 @@ namespace DP {
 
 		Complex getCurrent(SystemModel& system);
 
-		void setVoltage(Real real, Real imag);
+		void setVoltage(Complex Voltage);
 	};
 }
 }

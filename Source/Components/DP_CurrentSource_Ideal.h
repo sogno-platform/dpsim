@@ -43,7 +43,7 @@ namespace DP {
 		void step(SystemModel& system, Real time);
 		void postStep(SystemModel& system) { }
 		Complex getCurrent(SystemModel& system);
-		void setCurrent(Real real, Real imag);
+		void setCurrent(Complex current);
 	};
 }
 }
