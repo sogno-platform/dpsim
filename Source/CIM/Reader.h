@@ -43,64 +43,64 @@ namespace DPsim {
 namespace CIM {
 
 	class Reader {
-		private:
-			/// CIM logger
-			Logger* mLogger;
-			/// Model from CIM++
-			CIMModel mModel;
-			/// All components after mapping
-			Component::Base::List mComponents;
-			/// System frequency (has to be given to convert between reactances
-			/// in CIM and inductances used inside the simulation)
-			Real mFrequency;
-			// Maps the RID of a topological node to its simulation matrix index
-			// as given in the component constructors (1 for the first node).
-			std::map<String, Matrix::Index> mTopNodes;
-			// Maps the RID of a ConductingEquipment to a list of nodes as given in
-			// the component constructors.
-			std::map<String, std::vector<Matrix::Index>> mEqNodeMap;
-			// SvVoltage, if present, for each node (indexed starting with 0!)
-			SvVoltage **mVoltages;
-			/// Maps the RID of a Terminal to its associated power flow
-			std::map<String, SvPowerFlow*> mPowerFlows;
-			/// Number of ideal voltage sources
-			Int mNumVoltageSources;
+	private:
+		/// CIM logger
+		Logger* mLogger;
+		/// Model from CIM++
+		CIMModel mModel;
+		/// All components after mapping
+		Component::Base::List mComponents;
+		/// System frequency (has to be given to convert between reactances
+		/// in CIM and inductances used inside the simulation)
+		Real mFrequency;
+		// Maps the RID of a topological node to its simulation matrix index
+		// as given in the component constructors (1 for the first node).
+		std::map<String, Matrix::Index> mTopNodes;
+		// Maps the RID of a ConductingEquipment to a list of nodes as given in
+		// the component constructors.
+		std::map<String, std::vector<Matrix::Index>> mEqNodeMap;
+		// SvVoltage, if present, for each node (indexed starting with 0!)
+		SvVoltage **mVoltages;
+		/// Maps the RID of a Terminal to its associated power flow
+		std::map<String, SvPowerFlow*> mPowerFlows;
+		/// Number of ideal voltage sources
+		Int mNumVoltageSources;
 
-			Component::Base::Ptr mapComponent(BaseClass* obj);
+		Component::Base::Ptr mapComponent(BaseClass* obj);
 
-			/// Returns an RX-Line.
-			/// The voltage should be given in kV and the angle in degree.
-			/// TODO: Introduce different models such as PI and wave model.
-			Component::Base::Ptr mapACLineSegment(ACLineSegment* line);
-			void mapAsynchronousMachine(AsynchronousMachine* machine);
-			/// Returns an PQload with voltage setting according to load flow data.
-			/// Currently the only option is to create an RL-load.
-			/// The voltage should be given in kV and the angle in degree.
-			/// TODO: Introduce different load models here.
-			void mapEnergyConsumer(EnergyConsumer* con);
-			void mapEquivalentInjection(EquivalentInjection* inj);
-			Component::Base::Ptr mapExternalNetworkInjection(ExternalNetworkInjection* inj);
-			Component::Base::Ptr mapPowerTransformer(PowerTransformer *trans);
-			/// Returns an IdealVoltageSource with voltage setting according to load flow data
-			/// at machine terminals. The voltage should be given in kV and the angle in degree.
-			/// TODO: Introduce real synchronous generator models here.
-			Component::Base::Ptr mapSynchronousMachine(SynchronousMachine* machine);
-			/// Returns an PQload with voltage setting according to load flow data.
-			/// Currently the only option is to create an RL-load.
-			/// The voltage should be given in kV and the angle in degree.
-			/// TODO: Introduce real PQload model here.
-			Component::Base::Ptr newPQLoad(String rid, String name);
-		public:
-			Reader(Real om, Logger& logger);
-			virtual ~Reader();
+		/// Returns an RX-Line.
+		/// The voltage should be given in kV and the angle in degree.
+		/// TODO: Introduce different models such as PI and wave model.
+		Component::Base::Ptr mapACLineSegment(ACLineSegment* line);
+		void mapAsynchronousMachine(AsynchronousMachine* machine);
+		/// Returns an PQload with voltage setting according to load flow data.
+		/// Currently the only option is to create an RL-load.
+		/// The voltage should be given in kV and the angle in degree.
+		/// TODO: Introduce different load models here.
+		void mapEnergyConsumer(EnergyConsumer* con);
+		void mapEquivalentInjection(EquivalentInjection* inj);
+		Component::Base::Ptr mapExternalNetworkInjection(ExternalNetworkInjection* inj);
+		Component::Base::Ptr mapPowerTransformer(PowerTransformer *trans);
+		/// Returns an IdealVoltageSource with voltage setting according to load flow data
+		/// at machine terminals. The voltage should be given in kV and the angle in degree.
+		/// TODO: Introduce real synchronous generator models here.
+		Component::Base::Ptr mapSynchronousMachine(SynchronousMachine* machine);
+		/// Returns an PQload with voltage setting according to load flow data.
+		/// Currently the only option is to create an RL-load.
+		/// The voltage should be given in kV and the angle in degree.
+		/// TODO: Introduce real PQload model here.
+		Component::Base::Ptr newPQLoad(String rid, String name);
+	public:
+		Reader(Real om, Logger& logger);
+		virtual ~Reader();
 
-			bool addFile(String filename);
-			void parseFiles();
-			Component::Base::List& getComponents();
-			Matrix::Index mapTopologicalNode(String mrid);
-			Int getNumVoltageSources();
+		bool addFile(String filename);
+		void parseFiles();
+		Component::Base::List& getComponents();
+		Matrix::Index mapTopologicalNode(String mrid);
+		Int getNumVoltageSources();
 
-			static Real unitValue(Real value, UnitMultiplier mult);
+		static Real unitValue(Real value, UnitMultiplier mult);
 	};
-};
-};
+}
+}
