@@ -86,7 +86,7 @@ Reader::~Reader() {
 		delete[] mVoltages;
 }
 
-BaseComponent::Ptr Reader::mapACLineSegment(ACLineSegment* line) {
+Component::Base::Ptr Reader::mapACLineSegment(ACLineSegment* line) {
 	std::vector<Matrix::Index> &nodes = mEqNodeMap.at(line->mRID); // TODO can fail
 	if (nodes.size() != 2) {
 		mLogger->Log(LogLevel::WARN) << "ACLineSegment " << line->mRID << " has " << nodes.size() << " terminals, ignoring" << std::endl;
@@ -118,7 +118,7 @@ void Reader::mapEquivalentInjection(EquivalentInjection* inj) {
 
 }
 
-BaseComponent::Ptr Reader::mapExternalNetworkInjection(ExternalNetworkInjection* inj) {
+Component::Base::Ptr Reader::mapExternalNetworkInjection(ExternalNetworkInjection* inj) {
 	std::vector<Matrix::Index> &nodes = mEqNodeMap.at(inj->mRID);
 	if (nodes.size() != 1) {
 		mLogger->Log(LogLevel::ERROR) << "ExternalNetworkInjection " << inj->mRID << " has " << nodes.size() << " terminals, ignoring" << std::endl;
@@ -140,7 +140,7 @@ BaseComponent::Ptr Reader::mapExternalNetworkInjection(ExternalNetworkInjection*
 }
 
 // TODO: support phase shift
-BaseComponent::Ptr Reader::mapPowerTransformer(PowerTransformer* trans) {
+Component::Base::Ptr Reader::mapPowerTransformer(PowerTransformer* trans) {
 	std::vector<Matrix::Index> &nodes = mEqNodeMap.at(trans->mRID);
 	if (nodes.size() != trans->PowerTransformerEnd.size()) {
 		mLogger->Log(LogLevel::WARN) << "PowerTransformer " << trans->mRID << " has differing number of terminals and windings, ignoring" << std::endl;
@@ -195,7 +195,7 @@ BaseComponent::Ptr Reader::mapPowerTransformer(PowerTransformer* trans) {
 }
 
 // TODO: don't use SvVoltage, but map to a SynchronGeneratorDP instead
-BaseComponent::Ptr Reader::mapSynchronousMachine(SynchronousMachine* machine) {
+Component::Base::Ptr Reader::mapSynchronousMachine(SynchronousMachine* machine) {
 	std::vector<Matrix::Index> &nodes = mEqNodeMap.at(machine->mRID);
 	if (nodes.size() != 1) {
 		// TODO: check with the model if this assumption (only 1 terminal) is always true
@@ -220,7 +220,7 @@ BaseComponent::Ptr Reader::mapSynchronousMachine(SynchronousMachine* machine) {
 	return std::make_shared<IdealVoltageSource>(machine->name, node, 0, initVoltage);
 }
 
-BaseComponent::Ptr Reader::mapComponent(BaseClass* obj) {
+Component::Base::Ptr Reader::mapComponent(BaseClass* obj) {
 	if (ACLineSegment *line = dynamic_cast<ACLineSegment*>(obj))
 		return mapACLineSegment(line);
 	if (ExternalNetworkInjection *inj = dynamic_cast<ExternalNetworkInjection*>(obj))
@@ -232,7 +232,7 @@ BaseComponent::Ptr Reader::mapComponent(BaseClass* obj) {
 	return nullptr;
 }
 
-BaseComponent::Ptr Reader::newPQLoad(String rid, String name) {
+Component::Base::Ptr Reader::newPQLoad(String rid, String name) {
 	std::vector<Matrix::Index> &nodes = mEqNodeMap.at(rid);
 	if (nodes.size() != 1) {
 		mLogger->Log(LogLevel::WARN) << rid << " has " << nodes.size() << " terminals; ignoring" << std::endl;
@@ -323,13 +323,13 @@ void Reader::parseFiles() {
 	}
 	mLogger->Log(LogLevel::INFO) << "#### Create new components ####" << std::endl;
 	for (auto obj : mModel.Objects) {
-		BaseComponent::Ptr comp = mapComponent(obj);
+		Component::Base::Ptr comp = mapComponent(obj);
 		if (comp)
 			mComponents.push_back(comp);
 	}
 }
 
-BaseComponent::List& Reader::getComponents() {
+Component::Base::List& Reader::getComponents() {
 	return mComponents;
 }
 

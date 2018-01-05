@@ -1,4 +1,4 @@
-﻿/** Turbine Governor
+/** Turbine Governor
 *
 * @author Markus Mirz <mmirz@eonerc.rwth-aachen.de>
 * @copyright 2017, Institute for Automation of Complex Power Systems, EONERC
@@ -24,8 +24,8 @@
 
 using namespace DPsim;
 
-TurbineGovernor::TurbineGovernor(Real Ta, Real Tb, Real Tc, Real Fa, Real Fb, Real Fc, Real K, Real Tsr, Real Tsm)
-{	
+Component::TurbineGovernor::TurbineGovernor(Real Ta, Real Tb, Real Tc, Real Fa, Real Fb, Real Fc, Real K, Real Tsr, Real Tsm)
+{
 	mTa = Ta;
 	mTb = Tb;
 	mTc = Tc;
@@ -38,18 +38,16 @@ TurbineGovernor::TurbineGovernor(Real Ta, Real Tb, Real Tc, Real Fa, Real Fb, Re
 
 }
 
-void TurbineGovernor::init(Real PmRef, Real Tm_init) {
-	
+void Component::TurbineGovernor::init(Real PmRef, Real Tm_init)
+{
 	mTm = Tm_init;
 	mVcv = PmRef;
 	mpVcv = 0;
 	Psm_in = PmRef;
-
-
 }
 
-Real TurbineGovernor::step(Real Om, Real OmRef, Real PmRef, Real dt) {
-
+Real Component::TurbineGovernor::step(Real Om, Real OmRef, Real PmRef, Real dt)
+{
 	// ### Governing ###
 	// Input of speed relay
 	Psr_in = PmRef + (OmRef - Om)*mK;
@@ -73,8 +71,4 @@ Real TurbineGovernor::step(Real Om, Real OmRef, Real PmRef, Real dt) {
 	mTm = mTm + dt*(mVcv / mTb + ((Psm_in - mVcv) / mTsm)*mFa - mTm / mTb);
 
 	return mTm;
-
 }
-
-
-

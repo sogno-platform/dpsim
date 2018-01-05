@@ -80,7 +80,8 @@ void ShmemInterface::readValues(bool blocking) {
 			ret = shmem_int_read(&mShmem, &sample, 1);
 			if (ret == 0)
 				return;
-		} else {
+		}
+		else {
 			while (ret == 0)
 				ret = shmem_int_read(&mShmem, &sample, 1);
 		}

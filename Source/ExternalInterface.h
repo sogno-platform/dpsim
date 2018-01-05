@@ -24,8 +24,8 @@
 
 #include <vector>
 
-#include "Components/ExternalCurrentSource.h"
-#include "Components/ExternalVoltageSource.h"
+#include "Components/DP_CurrentSource_Ideal.h"
+#include "Components/DP_VoltageSource_Ideal.h"
 
 namespace DPsim {
 
@@ -49,7 +49,7 @@ namespace DPsim {
 		};
 		/// Internal struct for storing references to external components.
 		struct ExtComponent {
-			BaseComponent *comp;
+			Component::Base *comp;
 			Int realIdx;
 			Int imagIdx;
 		};
@@ -63,13 +63,15 @@ namespace DPsim {
 		 * @param realIdx Interface-specific index identifying the real part.
 		 * @param imagIdx Interface-specific index identifying the imaginary part.
 		 */
-		void registerVoltageSource(ExternalVoltageSource* evs, Int realIdx, Int imagIdx);
+		void registerVoltageSource(Component::DP::VoltageSourceIdeal* evs, Int realIdx, Int imagIdx);
+
 		/** Register an external current source to use values from this interface.
 		 * @param evs The external current source to register.
 		 * @param realIdx Interface-specific index identifying the real part.
 		 * @param imagIdx Interface-specific index identifying the imaginary part.
 		 */
-		void registerCurrentSource(ExternalCurrentSource* ecs, Int realIdx, Int imagIdx);
+
+		void registerCurrentSource(Component::DP::CurrentSourceIdeal* ecs, Int realIdx, Int imagIdx);
 		/** Register a voltage between two nodes to be sent through this
 		 * interface after every step.
 		 * @param from Number of the node used as the positive potential.
@@ -87,7 +89,8 @@ namespace DPsim {
 		 * @param realIdx Interface-specific index identifying the real part.
 		 * @param imagIdx Interface-specific index identifying the imaginary part.
 		 */
-		void registerExportedCurrent(BaseComponent *comp, Int realIdx, Int imagIdx);
+
+		void registerExportedCurrent(Component::Base *comp, Int realIdx, Int imagIdx);
 		/** Read data for a timestep from the interface and passes the values
 		 * to all registered current / voltage sources.
 		 */

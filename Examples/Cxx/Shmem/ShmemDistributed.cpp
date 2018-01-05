@@ -21,7 +21,7 @@
 
 int main(int argc, char *argv[]) {
 	Logger log;
-	BaseComponent::List comps, comps2;
+	Component::Base::List comps, comps2;
 	ShmemInterface *shmem;
 	struct shmem_conf conf;
 	String logname;

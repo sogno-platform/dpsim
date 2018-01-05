@@ -31,10 +31,10 @@ int main() {
 	Real finalTime = 0.3;
 	std::ostringstream fileName;
 	fileName << "RxLine1_" << timeStep;
-	BaseComponent::List circElements;
-	circElements.push_back(std::make_shared<IdealVoltageSource>("v_1", 1, 0, Complex(10, 0)));
-	circElements.push_back(std::make_shared<RxLineDP>("Line_1", 1, 2, 0.1, 0.001));
-	circElements.push_back(std::make_shared<ResistorDP>("r_1", 2, 0, 20));
+	Component::Base::List circElements;
+	circElements.push_back(std::make_shared<Component::DP::VoltageSourceIdeal>("v_1", 1, 0, Complex(10, 0)));
+	circElements.push_back(std::make_shared<Component::DP::RxLine>("Line_1", 1, 2, 0.1, 0.001));
+	circElements.push_back(std::make_shared<Component::DP::Resistor>("r_1", 2, 0, 20));
 
 	// Define log names
 	Logger log("Logs/" + fileName.str() + ".log");

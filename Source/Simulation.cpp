@@ -1,4 +1,4 @@
-﻿/** Simulation
+/** Simulation
  *
  * @author Markus Mirz <mmirz@eonerc.rwth-aachen.de>
  * @copyright 2017, Institute for Automation of Complex Power Systems, EONERC
@@ -30,14 +30,16 @@
 
 using namespace DPsim;
 
-Simulation::Simulation() {
+Simulation::Simulation()
+{
 	mTime = 0;
 	mLastLogTimeStep = 0;
 	mCurrentSwitchTimeIndex = 0;
 }
 
-Simulation::Simulation(BaseComponent::List elements, Real om, Real dt, Real tf, Logger& logger, SimulationType simType, Int downSampleRate)
-	: Simulation() {
+Simulation::Simulation(Component::Base::List elements, Real om, Real dt, Real tf, Logger& logger, SimulationType simType, Int downSampleRate)
+	: Simulation()
+{
 
 	mLogger = &logger;
 	mSystemModel.setSimType(simType);
@@ -45,10 +47,12 @@ Simulation::Simulation(BaseComponent::List elements, Real om, Real dt, Real tf, 
 	mSystemModel.setOmega(om);
 	mFinalTime = tf;
 	mDownSampleRate = downSampleRate;
+
 	initialize(elements);
 
-	for (auto c : elements)
+	for (auto c : elements) {
 		mLogger->Log(LogLevel::INFO) << "Added " << c->getType() << " '" << c->getName() << "' to simulation." << std::endl;
+	}
 
 	mLogger->Log(LogLevel::INFO) << "System matrix A:" << std::endl;
 	mLogger->LogMatrix(LogLevel::INFO, mSystemModel.getCurrentSystemMatrix());
@@ -63,7 +67,8 @@ Simulation::~Simulation() {
 
 }
 
-void Simulation::initialize(BaseComponent::List newElements) {
+void Simulation::initialize(Component::Base::List newElements)
+{
 	Int maxNode = 0;
 	Int currentVirtualNode = 0;
 
@@ -115,7 +120,8 @@ void Simulation::initialize(BaseComponent::List newElements) {
 	mElements = mElementsVector[0];
 }
 
-void Simulation::addSystemTopology(BaseComponent::List newElements) {
+void Simulation::addSystemTopology(Component::Base::List newElements)
+{
 	mElementsVector.push_back(newElements);
 
 	// It is assumed that the system size does not change
@@ -164,7 +170,8 @@ Int Simulation::step(bool blocking)
 	}
 }
 
-Int Simulation::step(Logger& leftSideVectorLog, Logger& rightSideVectorLog, bool blocking) {
+Int Simulation::step(Logger& leftSideVectorLog, Logger& rightSideVectorLog, bool blocking)
+{
 	Int retValue = step(blocking);
 
 	leftSideVectorLog.LogNodeValues(getTime(), getLeftSideVector());
@@ -174,7 +181,8 @@ Int Simulation::step(Logger& leftSideVectorLog, Logger& rightSideVectorLog, bool
 }
 
 Int Simulation::stepGeneratorTest(Logger& leftSideVectorLog, Logger& rightSideVectorLog,
-	BaseComponent::Ptr generator, Real time) {
+	Component::Base::Ptr generator, Real time)
+{
 	// Set to zero because all components will add their contribution for the current time step to the current value
 	mSystemModel.getRightSideVector().setZero();
 
@@ -208,8 +216,6 @@ Int Simulation::stepGeneratorTest(Logger& leftSideVectorLog, Logger& rightSideVe
 			mLogger->Log(LogLevel::INFO) << "Switched to system " << mCurrentSwitchTimeIndex << " at " << mTime << std::endl;
 			mLogger->Log(LogLevel::INFO) << "New matrix:" << std::endl << mSystemModel.getCurrentSystemMatrix() << std::endl;
 			mLogger->Log(LogLevel::INFO) << "New decomp:" << std::endl << mSystemModel.getLUdecomp() << std::endl;
-
-
 		}
 	}
 
@@ -232,29 +238,22 @@ Int Simulation::stepGeneratorTest(Logger& leftSideVectorLog, Logger& rightSideVe
 	}
 }
 
-
-
-void Simulation::clearFault(Int Node1, Int Node2, Int Node3) {
-
-	if (mSystemModel.getSimType() == SimulationType::EMT)
-	{
+void Simulation::clearFault(Int Node1, Int Node2, Int Node3)
+{
+	if (mSystemModel.getSimType() == SimulationType::EMT) {
 		ClearingFault = true;
 
 		mIfa = getRightSideVector()(Node1 - 1);
 		mIfb = getRightSideVector()(Node2 - 1);
 		mIfc = getRightSideVector()(Node3 - 1);
 
-
-		if (FirstTime == true)
-		{
+		if (FirstTime == true) {
 			mIfa_hist = mIfa;
 			mIfb_hist = mIfb;
 			mIfc_hist = mIfc;
 
 			FirstTime = false;
 		}
-
-
 
 		if (std::signbit(mIfa) != std::signbit(mIfa_hist) && !aCleared) {
 			mElements.erase(mElements.begin() + 1);
@@ -287,41 +286,47 @@ void Simulation::clearFault(Int Node1, Int Node2, Int Node3) {
 		if (NumClearedPhases == 3)
 			ClearingFault = false;
 	}
-
 }
 
-void Simulation::switchSystemMatrix(Int systemMatrixIndex) {
+void Simulation::switchSystemMatrix(Int systemMatrixIndex)
+{
 	mSystemModel.switchSystemMatrix(systemMatrixIndex);
 }
 
-void Simulation::setSwitchTime(Real switchTime, Int systemIndex) {
+void Simulation::setSwitchTime(Real switchTime, Int systemIndex)
+{
 	switchConfiguration newSwitchConf;
 	newSwitchConf.switchTime = switchTime;
 	newSwitchConf.systemIndex = systemIndex;
 	mSwitchEventVector.push_back(newSwitchConf);
 }
 
-void Simulation::increaseByTimeStep() {
+void Simulation::increaseByTimeStep()
+{
 	mTime = mTime + mSystemModel.getTimeStep();
 }
 
-void Simulation::addExternalInterface(ExternalInterface *eint) {
+void Simulation::addExternalInterface(ExternalInterface *eint)
+{
 	this->mExternalInterfaces.push_back(eint);
 }
 
-void Simulation::setNumericalMethod(NumericalMethod numMethod) {
+void Simulation::setNumericalMethod(NumericalMethod numMethod)
+{
 	mSystemModel.setNumMethod(numMethod);
 }
 
 #ifdef WITH_RT
-void Simulation::alarmHandler(int sig, siginfo_t* si, void* ctx) {
+void Simulation::alarmHandler(int sig, siginfo_t* si, void* ctx)
+{
 	Simulation *sim = static_cast<Simulation*>(si->si_value.sival_ptr);
 	/* only throw an exception if we're actually behind */
 	if (++sim->mRtTimerCount * sim->mSystemModel.getTimeStep() > sim->mTime)
 		throw TimerExpiredException();
 }
 
-void Simulation::runRT(RTMethod rtMethod, bool startSynch, Logger& logger, Logger& llogger, Logger& rlogger ) {
+void Simulation::runRT(RTMethod rtMethod, bool startSynch, Logger& logger, Logger& llogger, Logger& rlogger)
+{
 	char timebuf[8];
 	int ret, sig, timerfd;
 	sigset_t alrmset;
@@ -338,7 +343,8 @@ void Simulation::runRT(RTMethod rtMethod, bool startSynch, Logger& logger, Logge
 			std::perror("Failed to create timerfd");
 			std::exit(1);
 		}
-	} else if (rtMethod == RTExceptions) {
+	}
+	else if (rtMethod == RTExceptions) {
 		sa.sa_sigaction = Simulation::alarmHandler;
 		sa.sa_flags = SA_SIGINFO;
 		sigemptyset(&sa.sa_mask);
@@ -357,7 +363,8 @@ void Simulation::runRT(RTMethod rtMethod, bool startSynch, Logger& logger, Logge
 
 		sigemptyset(&alrmset);
 		sigaddset(&alrmset, SIGALRM);
-	} else {
+	}
+	else {
 		std::cerr << "invalid rt method, exiting" << std::endl;
 		std::exit(1);
 	}
@@ -379,7 +386,8 @@ void Simulation::runRT(RTMethod rtMethod, bool startSynch, Logger& logger, Logge
 			std::perror("Failed to arm timerfd");
 			std::exit(1);
 		}
-	} else if (rtMethod == RTExceptions) {
+	}
+	else if (rtMethod == RTExceptions) {
 		if (timer_settime(timer, 0, &ts, NULL)) {
 			std::perror("Failed to arm timer");
 			std::exit(1);
@@ -392,10 +400,12 @@ void Simulation::runRT(RTMethod rtMethod, bool startSynch, Logger& logger, Logge
 			try {
 				ret = step(llogger, rlogger, false);
 				sigwait(&alrmset, &sig);
-			} catch (TimerExpiredException& e) {
+			}
+			catch (TimerExpiredException& e) {
 				std::cerr << "timestep expired at " << mTime << std::endl;
 			}
-		} else if (rtMethod == RTTimerFD) {
+		}
+		else if (rtMethod == RTTimerFD) {
 			ret = step(llogger, rlogger, false);
 			if (read(timerfd, timebuf, 8) < 0) {
 				std::perror("Read from timerfd failed");
@@ -423,7 +433,8 @@ void Simulation::runRT(RTMethod rtMethod, bool startSynch, Logger& logger, Logge
 
 
 int Simulation::stepGeneratorVBR(Logger& leftSideVectorLog, Logger& rightSideVectorLog,
-	BaseComponent::Ptr generator, Real time) {
+	Component::Base::Ptr generator, Real time)
+{
 
 	// Set to zero because all components will add their contribution for the current time step to the current value
 	mSystemModel.getRightSideVector().setZero();

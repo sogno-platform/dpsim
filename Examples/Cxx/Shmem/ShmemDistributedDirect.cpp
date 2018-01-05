@@ -29,7 +29,7 @@ int main(int argc, char *argv[])
 	// Here, the two instances directly communicate with each other without using
 	// VILLASnode in between.
 	Logger log;
-	BaseComponent::List comps;
+	Component::Base::List comps;
 	ShmemInterface *shmem;
 	struct shmem_conf conf;
 	conf.samplelen = 4;

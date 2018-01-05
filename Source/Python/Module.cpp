@@ -33,14 +33,14 @@ using namespace DPsim;
 static PyMethodDef dpsimModuleMethods[] = {
 	{ "load_cim", Python::LoadCim, METH_VARARGS, Python::DocLoadCim },
 	{ "open_shmem_interface", (PyCFunction) Python::OpenShmemInterface, METH_VARARGS|METH_KEYWORDS, Python::DocOpenShmemInterface },
-	{ "ExternalCurrentSource", Python::ExternalCurrentSource, METH_VARARGS, Python::DocExternalCurrentSource },
-	{ "ExternalVoltageSource", Python::ExternalVoltageSource, METH_VARARGS, Python::DocExternalVoltageSource },
-	{ "VoltSourceRes", Python::VoltSourceRes, METH_VARARGS, Python::DocVoltSourceRes },
-	{ "InductorDP", Python::InductorDP, METH_VARARGS, Python::DocInductor },
-	{ "InductorEMT", Python::InductorEMT, METH_VARARGS, Python::DocInductor },
-	{ "ResistorDP", Python::ResistorDP, METH_VARARGS, Python::DocResistor },
-	{ "ResistorEMT", Python::ResistorEMT, METH_VARARGS, Python::DocResistor },
-	{ "CapacitorDP", Python::CapacitorDP, METH_VARARGS, Python::DocCapacitor },
+	{ "CurrentSourceIdealDP", Python::Components::DP::CurrentSourceIdeal, METH_VARARGS, Python::Components::DocCurrentSourceIdeal },
+	{ "VoltageSourceIdealDP", Python::Components::DP::VoltageSourceIdeal, METH_VARARGS, Python::Components::DocVoltageSourceIdeal },
+	{ "VoltageSourceDP", Python::Components::DP::VoltageSource, METH_VARARGS, Python::Components::DocVoltageSource },
+	{ "ResistorDP",  Python::Components::DP::Resistor,  METH_VARARGS, Python::Components::DocResistor },
+	{ "CapacitorDP", Python::Components::DP::Capacitor, METH_VARARGS, Python::Components::DocCapacitor },
+	{ "InductorDP",  Python::Components::DP::Inductor,  METH_VARARGS, Python::Components::DocInductor },
+	{ "InductorEMT", Python::Components::EMT::Inductor, METH_VARARGS, Python::Components::DocInductor },
+	{ "ResistorEMT", Python::Components::EMT::Resistor, METH_VARARGS, Python::Components::DocResistor },
 	{ 0 }
 };
 

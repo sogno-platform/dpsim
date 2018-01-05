@@ -31,12 +31,12 @@ int main() {
 	Real finalTime = 0.3;
 	std::ostringstream fileName;
 	fileName << "PiLine2_" << timeStep;
-	BaseComponent::List circElements;
-	circElements.push_back(std::make_shared<VoltSourceRes>("v_in", 1, 0, Complex(10, 0), 1));
-	circElements.push_back(std::make_shared<InductorDP>("l_1", 1, 2, 0.02));
-	circElements.push_back(std::make_shared<InductorDP>("l_2", 2, 0, 0.1));
-	circElements.push_back(std::make_shared<InductorDP>("l_3", 2, 3, 0.05));
-	circElements.push_back(std::make_shared<ResistorDP>("r_2", 3, 0, 2));
+	Component::Base::List circElements;
+	circElements.push_back(std::make_shared<Component::DP::VoltageSource>("v_in", 1, 0, Complex(10, 0), 1));
+	circElements.push_back(std::make_shared<Component::DP::Inductor>("l_1", 1, 2, 0.02));
+	circElements.push_back(std::make_shared<Component::DP::Inductor>("l_2", 2, 0, 0.1));
+	circElements.push_back(std::make_shared<Component::DP::Inductor>("l_3", 2, 3, 0.05));
+	circElements.push_back(std::make_shared<Component::DP::Resistor>("r_2", 3, 0, 2));
 
 	// Define log names
 	Logger log("Logs/" + fileName.str() + ".log");

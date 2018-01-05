@@ -23,7 +23,7 @@
 
 using namespace DPsim;
 
-const char *Python::DocResistor =
+const char *Python::Components::DocResistor =
 "Resistor(name, node1, node2, resistance)\n"
 "Construct a new resistor.\n"
 "\n"
@@ -32,7 +32,7 @@ const char *Python::DocResistor =
 ":param resistance: Resistance in Ohm.\n"
 ":returns: A new `Component` representing this resistor.\n";
 
-PyObject* Python::ResistorDP(PyObject* self, PyObject* args) {
+PyObject* Python::Components::DP::Resistor(PyObject* self, PyObject* args) {
 	const char *name;
 	double resistance;
 	int src, dest;
@@ -42,12 +42,12 @@ PyObject* Python::ResistorDP(PyObject* self, PyObject* args) {
 
 	Component *pyComp = PyObject_New(Component, &ComponentType);
 	Component::init(pyComp);
-	pyComp->comp = std::make_shared<DPsim::ResistorDP>(name, src, dest, resistance);
+	pyComp->comp = std::make_shared<DPsim::Component::DP::Resistor>(name, src, dest, resistance);
 
 	return (PyObject*) pyComp;
 }
 
-PyObject* Python::ResistorEMT(PyObject* self, PyObject* args) {
+PyObject* Python::Components::EMT::Resistor(PyObject* self, PyObject* args) {
 	const char *name;
 	double resistance;
 	int src, dest;
@@ -57,7 +57,7 @@ PyObject* Python::ResistorEMT(PyObject* self, PyObject* args) {
 
 	Component *pyComp = PyObject_New(Component, &ComponentType);
 	Component::init(pyComp);
-	pyComp->comp = std::make_shared<DPsim::ResistorEMT>(name, src, dest, resistance);
+	pyComp->comp = std::make_shared<DPsim::Component::EMT::Resistor>(name, src, dest, resistance);
 
 	return (PyObject*) pyComp;
 }

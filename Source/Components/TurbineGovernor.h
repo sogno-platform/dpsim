@@ -1,4 +1,4 @@
-﻿/** Turbine Governor
+/** Turbine Governor
 *
 * @file
 * @author Markus Mirz <mmirz@eonerc.rwth-aachen.de>
@@ -22,9 +22,10 @@
 
 #pragma once
 
-#include "BaseComponent.h"
+#include "Base.h"
 
 namespace DPsim {
+namespace Component {
 
 	/// Synchronous generator model
 	/// If parInPerUnit is not set, the parameters have to be given with their respective stator or rotor
@@ -86,12 +87,10 @@ namespace DPsim {
 		Real Psm_in = 0;
 
 		Real AuxVar = 0;
-		
-		
+
 
 		bool mLogActive;
 		Logger* mLog;
-
 
 	public:
 		TurbineGovernor() { };
@@ -103,9 +102,6 @@ namespace DPsim {
 		void init(Real PmRef, Real Tm_init);
 		/// Performs an step to update field voltage value
 		Real step(Real mOm, Real mOmRef, Real PmRef, Real dt);
-
-
-
-
 	};
+}
 }

@@ -22,7 +22,7 @@
 int main()
 {
 	// Same circuit as above, but now with realtime support.
-	BaseComponent::List comps;
+	Component::Base::List comps;
 	struct shmem_conf conf;
 	conf.samplelen = 4;
 	conf.queuelen = 1024;

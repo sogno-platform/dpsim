@@ -28,7 +28,7 @@
 #include <memory>
 
 #include "Simulation.h"
-#include "Components/BaseComponent.h"
+#include "Components/Base.h"
 
 namespace DPsim {
 namespace Python {
@@ -36,7 +36,7 @@ namespace Python {
 	struct Component {
 		PyObject_HEAD
 
-		BaseComponent::Ptr comp;
+		DPsim::Component::Base::Ptr comp;
 		static void init(Component* self);
 
 		static PyObject* newfunc(PyTypeObject* type, PyObject *args, PyObject *kwds);
@@ -50,27 +50,29 @@ namespace Python {
 
 	extern PyTypeObject ComponentType;
 
-	bool compsFromPython(PyObject* list, BaseComponent::List& comps);
+	bool compsFromPython(PyObject* list, DPsim::Component::Base::List& comps);
 
-	// "Constructors" for the component types
-	extern const char* DocExternalCurrentSource;
-	PyObject* ExternalCurrentSource(PyObject* self, PyObject *args);
-
-	extern const char* DocExternalVoltageSource;
-	PyObject* ExternalVoltageSource(PyObject* self, PyObject *args);
-
-	extern const char* DocInductor;
-	PyObject* InductorDP(PyObject* self, PyObject *args);
-	PyObject* InductorEMT(PyObject* self, PyObject *args);
-
+namespace Components {
+	extern const char* DocCurrentSourceIdeal;
+	extern const char* DocVoltageSourceIdeal;
 	extern const char* DocResistor;
-	PyObject* ResistorDP(PyObject* self, PyObject *args);
-	PyObject* ResistorEMT(PyObject* self, PyObject *args);
-
+	extern const char* DocInductor;
 	extern const char* DocCapacitor;
-	PyObject* CapacitorDP(PyObject* self, PyObject *args);
+	extern const char* DocVoltageSource;
 
-	extern const char* DocVoltSourceRes;
-	PyObject* VoltSourceRes(PyObject* self, PyObject *args);
-};
-};
+namespace DP {
+	PyObject* CurrentSourceIdeal(PyObject* self, PyObject *args);
+	PyObject* VoltageSourceIdeal(PyObject* self, PyObject *args);
+	PyObject* VoltageSource(PyObject* self, PyObject *args);
+	PyObject* Resistor(PyObject* self, PyObject *args);
+	PyObject* Inductor(PyObject* self, PyObject *args);
+	PyObject* Capacitor(PyObject* self, PyObject *args);
+}
+
+namespace EMT {
+	PyObject* Resistor(PyObject* self, PyObject *args);
+	PyObject* Inductor(PyObject* self, PyObject *args);
+} /// EMT
+} /// Components
+} /// Python
+} /// DPsim

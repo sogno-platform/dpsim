@@ -214,7 +214,7 @@ void Python::Simulation::dealloc(Python::Simulation* self) {
 	// the vectors here to free the associated memory.
 
 	// This is a workaround for a compiler bug: https://stackoverflow.com/a/42647153/8178705
-	using ComponentList = BaseComponent::List;
+	using ComponentList = DPsim::Component::Base::List;
 	using PyObjectsList = std::vector<PyObject *>;
 
 	self->comps.~ComponentList();

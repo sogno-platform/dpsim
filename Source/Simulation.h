@@ -70,9 +70,9 @@ namespace DPsim {
 		/// Structure that holds all system information.
 		SystemModel mSystemModel;
 		/// Stores a list of circuit elements that are used to generate the system matrix
-		BaseComponent::List mElements;
+		Component::Base::List mElements;
 		/// Circuit list vector
-		std::vector<BaseComponent::List> mElementsVector;
+		std::vector<Component::Base::List> mElementsVector;
 		/// Vector of ExternalInterfaces
 		std::vector<ExternalInterface*> mExternalInterfaces;
 
@@ -117,11 +117,11 @@ namespace DPsim {
 		/// Sets parameters to default values.
 		Simulation();
 		/// Creates system matrix according to
-		Simulation(BaseComponent::List elements, Real om, Real dt, Real tf, Logger& logger, SimulationType simType = SimulationType::DynPhasor, Int downSampleRate = 1);
+		Simulation(Component::Base::List elements, Real om, Real dt, Real tf, Logger& logger, SimulationType simType = SimulationType::DynPhasor, Int downSampleRate = 1);
 		~Simulation();
 
 		/// TODO: check that every system matrix has the same dimensions
-		void initialize(BaseComponent::List elements);
+		void initialize(Component::Base::List elements);
 		/// Solve system A * x = z for x and current time
 		Int step(bool blocking = true);
 		/// Solve system A * x = z for x and current time. Log current values of both vectors.
@@ -141,11 +141,11 @@ namespace DPsim {
 		Matrix & getRightSideVector() { return mSystemModel.getRightSideVector(); }
 		Matrix & getSystemMatrix() { return mSystemModel.getCurrentSystemMatrix(); }
 		Int stepGeneratorTest(Logger& leftSideVectorLog, Logger& rightSideVectorLog,
-			BaseComponent::Ptr generator, Real time);
+			Component::Base::Ptr generator, Real time);
 		Int stepGeneratorVBR(Logger& leftSideVectorLog, Logger& rightSideVectorLog,
-			BaseComponent::Ptr generator, Real time);
+			Component::Base::Ptr generator, Real time);
 
-		void addSystemTopology(BaseComponent::List newElements);
+		void addSystemTopology(Component::Base::List newElements);
 
 #ifdef WITH_RT
 		/* Perform the main simulation loop in real time.

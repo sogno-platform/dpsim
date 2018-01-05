@@ -17,14 +17,16 @@ endif()
 set(CMAKE_CXX_STANDARD 11)
 
 # targets
-set(REFERENCE_SOURCES
+set(CIRCUIT_SOURCES
 	Circuits/DP_IdealVS_PILine1.cpp
 	Circuits/DP_IdealVS_R1.cpp
+	Circuits/DP_IdealVS_R2.cpp
 	Circuits/DP_IdealVS_RLC1.cpp
 	Circuits/DP_IdealVS_RXLine1.cpp
 	Circuits/DP_IdealVS_RXLine2.cpp
 	Circuits/DP_ResVS_PILine1.cpp
 	Circuits/DP_ResVS_RL1.cpp
+	Circuits/DP_ResVS_RL2.cpp
 	Circuits/DP_ResVS_RLC1.cpp
 	Circuits/DP_ResVS_RXLine1.cpp
 	Circuits/EMT_IdealVS_R1.cpp
@@ -32,14 +34,16 @@ set(REFERENCE_SOURCES
 )
 
 set(SYNCGEN_SOURCES
-	SynchronGenerator/SimpSynGenThreePhaseFault.cpp
-	SynchronGenerator/SynGenDPBalancedResLoad.cpp
-	SynchronGenerator/SynGenDPThreePhaseFault.cpp
-	SynchronGenerator/SynGenBalancedResLoad.cpp
-	SynchronGenerator/SynGenPhaseToPhaseFault.cpp
-	SynchronGenerator/SynGenThreePhaseFault.cpp
-	SynchronGenerator/SynGenVBR.cpp
-	SynchronGenerator/SynGenVBRDP.cpp
+	SynchronGenerator/DP_SynchronGenerator_BalancedResLoad.cpp
+	SynchronGenerator/DP_SynchronGenerator_ExciterAndTurbine.cpp
+	SynchronGenerator/DP_SynchronGenerator_SimpThreePhaseFault.cpp
+	SynchronGenerator/DP_SynchronGenerator_ThreePhaseFault.cpp
+	SynchronGenerator/DP_SynchronGenerator_VBR.cpp
+	SynchronGenerator/EMT_SynchronGenerator_BalancedResLoad.cpp
+	SynchronGenerator/EMT_SynchronGenerator_ExciterAndTurbine.cpp
+	SynchronGenerator/EMT_SynchronGenerator_PhaseToPhaseFault.cpp
+	SynchronGenerator/EMT_SynchronGenerator_ThreePhaseFault.cpp
+	SynchronGenerator/EMT_SynchronGenerator_VBR.cpp
 )
 
 set(VARFREQ_SOURCES
@@ -48,7 +52,7 @@ set(VARFREQ_SOURCES
 )
 
 set(RT_SOURCES
-	Circuits/RT_DP_ResVS_RL1.cpp
+	RT/RT_DP_ResVS_RL1.cpp
 )
 
 set(SHMEM_SOURCES
@@ -60,7 +64,7 @@ set(SHMEM_SOURCES
 	Shmem/ShmemRTExample.cpp
 )
 
-foreach(SOURCE ${REFERENCE_SOURCES} ${SYNCGEN_SOURCES} ${VARFREQ_SOURCES})
+foreach(SOURCE ${CIRCUIT_SOURCES} ${SYNCGEN_SOURCES} ${VARFREQ_SOURCES})
 	get_filename_component(TARGET ${SOURCE} NAME_WE)
 
 	add_executable(${TARGET} ${SOURCE})

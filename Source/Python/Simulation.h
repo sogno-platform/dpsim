@@ -32,7 +32,7 @@
 
 #include "Config.h"
 #include "../Simulation.h"
-#include "Components/BaseComponent.h"
+#include "Components/Base.h"
 
 namespace DPsim {
 	enum SimState {
@@ -60,7 +60,7 @@ namespace Python {
 		bool startSync;
 
 		PyObject* pyComps; // Components as a (Python) list of PyComponents
-		BaseComponent::List comps;
+		Component::Base::List comps;
 		int numSwitch;
 
 		// List of additional objects that aren't directly used from Simulation

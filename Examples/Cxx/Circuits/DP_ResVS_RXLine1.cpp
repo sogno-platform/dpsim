@@ -31,14 +31,14 @@ int main() {
 	Real finalTime = 0.3;
 	std::ostringstream fileName;
 	fileName << "RxLineResLoad_" << timeStep;
-	BaseComponent::List circElements0, circElements1, circElements2;
-	circElements0.push_back(std::make_shared<VoltSourceRes>("v_s", 1, 0, Complex(10000, 0), 1));
-	circElements0.push_back(std::make_shared<ResistorDP>("r_line", 1, 2, 1));
-	circElements0.push_back(std::make_shared<InductorDP>("l_line", 2, 3, 1));
+	Component::Base::List circElements0, circElements1, circElements2;
+	circElements0.push_back(std::make_shared<Component::DP::VoltageSource>("v_s", 1, 0, Complex(10000, 0), 1));
+	circElements0.push_back(std::make_shared<Component::DP::Resistor>("r_line", 1, 2, 1));
+	circElements0.push_back(std::make_shared<Component::DP::Inductor>("l_line", 2, 3, 1));
 	circElements1 = circElements0;
 	circElements2 = circElements0;
-	circElements1.push_back(std::make_shared<ResistorDP>("r_load", 3, 0, 1000));
-	circElements2.push_back(std::make_shared<ResistorDP>("r_load", 3, 0, 800));
+	circElements1.push_back(std::make_shared<Component::DP::Resistor>("r_load", 3, 0, 1000));
+	circElements2.push_back(std::make_shared<Component::DP::Resistor>("r_load", 3, 0, 800));
 
 	// Define log names
 	Logger log("Logs/" + fileName.str() + ".log");

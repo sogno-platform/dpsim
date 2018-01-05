@@ -10,10 +10,10 @@ add_library(dpsim_python SHARED
 	Interface.cpp
 	LoadCim.cpp
 	
-	Components/VoltSourceRes.cpp
+	Components/VoltageSource.cpp
 	
-	Components/ExternalCurrentSource.cpp
-	Components/ExternalVoltageSource.cpp
+	Components/CurrentSource_Ideal.cpp
+	Components/VoltageSource_Ideal.cpp
 	
 	Components/Resistor.cpp
 	Components/Inductor.cpp

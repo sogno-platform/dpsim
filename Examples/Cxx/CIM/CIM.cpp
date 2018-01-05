@@ -39,7 +39,7 @@ static int testCIMReader(std::list<String> filenames) {
 
 	reader.parseFiles();
 
-	BaseComponent::List components = reader.getComponents();
+	Component::Base::List components = reader.getComponents();
 
 	// Run simulation as usually
 	Simulation sim(components, 2 * PI * 50, 0.001, 0.3, log);
