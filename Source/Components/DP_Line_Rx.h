@@ -23,7 +23,6 @@
 #pragma once
 
 #include "Base.h"
-#include "Common_Line.h"
 
 namespace DPsim {
 namespace Component {
@@ -50,7 +49,10 @@ namespace DP {
 		Real mPrevCurFacRe;
 		Real mPrevCurFacIm;
 
-		LineTypes mType;
+		enum LineTypes {
+			RxLine2Node,
+			RxLine3Node
+		} mType;
 
 		Real correctr, correcti;
 		Real cureqr_ind, cureqi_ind;

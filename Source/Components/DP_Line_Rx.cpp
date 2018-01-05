@@ -163,7 +163,7 @@ void Component::DP::RxLine::step(SystemModel& system, Real time)
 
 void Component::DP::RxLine::postStep(SystemModel& system)
 {
-	if (mType == Component::LineTypes::RxLine2Node) {
+	if (mType == LineTypes::RxLine2Node) {
 		Real vposr, vnegr;
 		Real vposi, vnegi;
 

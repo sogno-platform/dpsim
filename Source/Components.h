@@ -22,8 +22,6 @@
 
 #pragma once
 
-#include "Components/Common_Line.h"
-#include "Components/Common_SynchronGenerator.h"
 #include "Components/DP_Capacitor.h"
 #include "Components/DP_CurrentSource_Ideal.h"
 #include "Components/DP_Inductor.h"
