@@ -27,8 +27,6 @@
 #include <villas/shmem.h>
 
 #include "ExternalInterface.h"
-#include "Components/ExternalCurrentSource.h"
-#include "Components/ExternalVoltageSource.h"
 
 namespace DPsim {
 
