@@ -10,9 +10,9 @@ omega_PLECS = csvread('../../../vsa/Results/TestExciterAndTurbine/SynGenDqEMTExc
 %% Read data from DP simulation and calculate absolute value and phase
 
 % Read values from CSV files
-voltageDP = csvread('../../../vsa/Results/TestExciterAndTurbine/SynGenVBRDPExciter_LoadChange_DPsim/data_vt.csv');
-currentDP = csvread('../../../vsa/Results/TestExciterAndTurbine/SynGenVBRDPExciter_LoadChange_DPsim/data_j.csv');
-Log_SynGen = csvread('../../../vsa/Results/TestExciterAndTurbine/SynGenVBRDPExciter_LoadChange_DPsim/SynGen_gen.csv');
+voltageDP = csvread('../../../vsa/Results/TestExciterAndTurbine/SynGenVBRDPExciter_LoadChange_DPsim/data_vt.csv',1);
+currentDP = csvread('../../../vsa/Results/TestExciterAndTurbine/SynGenVBRDPExciter_LoadChange_DPsim/data_j.csv',1);
+Log_SynGen = csvread('../../../vsa/Results/TestExciterAndTurbine/SynGenVBRDPExciter_LoadChange_DPsim/SynGen_gen.csv',1);
 compOffsetDP = (size(voltageDP,2) - 1) / 2;
 
 % Calculate Voltage DP absolute value
@@ -132,7 +132,7 @@ ylabel('current [A]')
 hold off
 plot(Log_SynGen(:,1),Log_SynGen(:,9));
 hold on
-plot(Results_PLECS(:,1),omega_PLECS);
+plot(Results_PLECS(:,1),omega_PLECS*2*pi*60);
 
 title('Rotor speed');
 legend('\omega DPSim','\omega PLECS');

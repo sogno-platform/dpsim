@@ -1,4 +1,4 @@
-/** Synchron Generator Tests
+﻿/** Synchron Generator Tests
 *
 * @file
 * @author Markus Mirz <mmirz@eonerc.rwth-aachen.de>
@@ -25,7 +25,7 @@
 using namespace DPsim;
 
 
-// ##################################### Test VBR EMT ##################################
+//// ##################################### Test VBR EMT ##################################
 //int main() {
 //	// Define Object for saving data on a file
 //	Logger log("log.txt"),
@@ -42,12 +42,12 @@ using namespace DPsim;
 //	Real H = 3.7;
 //
 //	//Exciter
-//	Real Ka = 20;
-//	Real Ta = 0.2;
-//	Real Ke = 1;
-//	Real Te = 0.314;
-//	Real Kf = 0.063;
-//	Real Tf = 0.35;
+//	Real Ka = 46;
+//	Real Ta = 0.06;
+//	Real Ke = -0.043478260869565223;
+//	Real Te = 0.46;
+//	Real Kf = 0.1;
+//	Real Tf = 1;
 //	Real Tr = 0.02;
 //
 //	// Turbine
@@ -111,7 +111,7 @@ using namespace DPsim;
 //	// Set up simulation
 //	Real tf, dt, t;
 //	Real om = 2.0*M_PI*60.0;
-//	tf = 10; dt = 0.0001; t = 0;
+//	tf = 10; dt = 0.00001; t = 0;
 //	Int downSampling = 1;
 //	Simulation newSim(circElements, om, dt, tf, log, SimulationType::EMT, downSampling);
 //	newSim.setNumericalMethod(NumericalMethod::Trapezoidal_flux);
@@ -128,7 +128,7 @@ using namespace DPsim;
 //	shared_ptr<VoltageBehindReactanceEMT> genPtr = std::dynamic_pointer_cast<VoltageBehindReactanceEMT>(gen);
 //	genPtr->init(om, dt, initActivePower, initReactivePower, initTerminalVolt, initVoltAngle, fieldVoltage, mechPower);
 //	genPtr->AddExciter(Ta, Ka, Te, Ke, Tf, Kf, Tr, Lmd, Rfd);
-//	genPtr->AddGovernor(Ta_t, Tb, Tc, Fa, Fb, Fc, Kg, Tsr, Tsm, initActivePower/ nomPower);
+//	genPtr->AddGovernor(Ta_t, Tb, Tc, Fa, Fb, Fc, Kg, Tsr, Tsm, initActivePower / nomPower,  initActivePower/ nomPower);
 //
 //	// Calculate initial values for circuit at generator connection point
 //	Real initApparentPower = sqrt(pow(initActivePower, 2) + pow(initReactivePower, 2));
@@ -176,12 +176,12 @@ int main() {
 	Real H = 3.7;
 
 	//Exciter
-	Real Ka = 20;
-	Real Ta = 0.2;
-	Real Ke = 1;
-	Real Te = 0.314;
-	Real Kf = 0.063;
-	Real Tf = 0.35;
+	Real Ka = 46;
+	Real Ta = 0.06;
+	Real Ke = -0.043478260869565223;
+	Real Te = 0.46;
+	Real Kf = 0.1;
+	Real Tf = 1;
 	Real Tr = 0.02;
 
 	// Turbine
@@ -262,7 +262,7 @@ int main() {
 	shared_ptr<VoltageBehindReactanceDP> genPtr = std::dynamic_pointer_cast<VoltageBehindReactanceDP>(gen);
 	genPtr->init(om, dt, initActivePower, initReactivePower, initTerminalVolt, initVoltAngle, fieldVoltage, mechPower);
 	genPtr->AddExciter(Ta, Ka, Te, Ke, Tf, Kf, Tr, Lmd, Rfd);
-	genPtr->AddGovernor(Ta_t, Tb, Tc, Fa, Fb, Fc, Kg, Tsr, Tsm, initActivePower / nomPower);
+	genPtr->AddGovernor(Ta_t, Tb, Tc, Fa, Fb, Fc, Kg, Tsr, Tsm, initActivePower / nomPower, initActivePower / nomPower);
 
 	// Calculate initial values for circuit at generator connection point
 	Real initApparentPower = sqrt(pow(initActivePower, 2) + pow(initReactivePower, 2));

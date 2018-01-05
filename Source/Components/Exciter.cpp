@@ -41,8 +41,6 @@ Exciter::Exciter(Real Ta, Real Ka, Real Te, Real Ke, Real Tf, Real Kf, Real Tr, 
 
 void Exciter::init(Real Vh_init, Real Vf_init) {
 
-		//Field voltage
-		//mVf = Vf_init*(mLad / mRfd);
 		mVf = 1;
 		if (mVf <= 2.3)
 				mVse = (0.1 / 2.3)*mVf;
@@ -77,7 +75,6 @@ Real Exciter::step(Real mVd, Real mVq, Real Vref, Real dt) {
 	else
 			mVse = (0.33 / 3.1)*mVf;
 	mVse = mVse*mVf;
-	//mVse = 0.0039*exp(mVf*1.555)*mVf;
 	mVf = Euler(mVf, -mKe, 1, dt / mTe, mVr - mVse);
 
 	return (mRfd / mLad)*mVf;
