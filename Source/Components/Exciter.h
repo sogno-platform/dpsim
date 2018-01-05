@@ -78,7 +78,7 @@ namespace DPsim {
 		Exciter(Real Ta, Real Ka, Real Te, Real Ke, Real Tf, Real Kf, Real Tr, Real Lad, Real Rfd);
 		
 		/// Initializes exciter variables
-		void init(Real mVd, Real mVq, Real Vref, Real Vf_init);
+		void init(Real Vh_init, Real Vf_init);
 		
 		/// Performs an step to update field voltage value
 		Real step(Real mVd, Real mVq, Real Vref, Real dt);

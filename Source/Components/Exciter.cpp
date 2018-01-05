@@ -39,15 +39,19 @@ Exciter::Exciter(Real Ta, Real Ka, Real Te, Real Ke, Real Tf, Real Kf, Real Tr, 
 
 }
 
-void Exciter::init(Real mVd, Real mVq, Real Vref, Real Vf_init) {
+void Exciter::init(Real Vh_init, Real Vf_init) {
 
 		//Field voltage
-		mVf = Vf_init*(mLad / mRfd);
-		//mVf = 1;
-		mVse = 0.0039*exp(mVf*1.555)*mVf;
+		//mVf = Vf_init*(mLad / mRfd);
+		mVf = 1;
+		if (mVf <= 2.3)
+				mVse = (0.1 / 2.3)*mVf;
+		else
+				mVse = (0.33 / 3.1)*mVf;
+		mVse = mVse*mVf;
+
 		mVr = mVse + mKe*mVf;
 		mVf_init = mVr/mKa;
-		//mVh = sqrt(pow(mVd, 2.) + pow(mVq, 2.));
 		mVh = 1;
 		mVm = mVh;
 		mVis = 0;
@@ -60,13 +64,20 @@ Real Exciter::step(Real mVd, Real mVq, Real Vref, Real dt) {
 	// Voltage Transducer equation
 	mVm = Euler(mVm, -1, 1, dt / mTr, mVh);
 	// Stabilizing feedback equation
-	//mVis = (mKf / mTf)*mVf - mVfl;
-	//mVfl = mVfl + dt*mVis / mTf;
 	mVis = Euler(mVis, -1, mKf, dt / mTf, ((mVr - mVse) - mVf*mKe)/mTe);
 	// Amplifier equation
 	mVr = Euler(mVr, -1, mKa, dt / mTa, Vref - mVm - mVis + mVf_init);
+	if (mVr > 1)
+			mVr = 1;
+	else if (mVr < -0.9)
+			mVr = -0.9;
 	// Exciter
-	mVse = 0.0039*exp(mVf*1.555)*mVf;
+	if (mVf <= 2.3)
+			mVse = (0.1 / 2.3)*mVf;
+	else
+			mVse = (0.33 / 3.1)*mVf;
+	mVse = mVse*mVf;
+	//mVse = 0.0039*exp(mVf*1.555)*mVf;
 	mVf = Euler(mVf, -mKe, 1, dt / mTe, mVr - mVse);
 
 	return (mRfd / mLad)*mVf;

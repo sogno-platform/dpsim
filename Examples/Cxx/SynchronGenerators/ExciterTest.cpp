@@ -34,21 +34,19 @@ int main() {
 
 		//Generator parameters
 		Real Lmd = 1.6599;
-		Real Rfd = 0.0006;
+		Real Rfd = 0.00059987;
 
 		// initialize generator
-		Real initActivePower = 555e3;
-		Real fieldVoltage = 0.00036146923427354219;
-
-		Real nomPower = 555e6;
+		Real Vf_init = 1;
+		Real Vh_init = 1;
 
 		//Exciter
-		Real Ka = 20;
-		Real Ta = 0.2;
-		Real Ke = 1;
-		Real Te = 0.314;
-		Real Kf = 0.063;
-		Real Tf = 0.35;
+		Real Ka = 46;
+		Real Ta = 0.06;
+		Real Ke = -0.043478260869565223;
+		Real Te = 0.46;
+		Real Kf = 0.1;
+		Real Tf = 1;
 		Real Tr = 0.02;
 		Exciter mExciter;
 		mExciter = Exciter(Ta, Ka, Te, Ke, Tf, Kf, Tr, Lmd, Rfd);
@@ -59,8 +57,8 @@ int main() {
 		std::string line_vq;
 		Real mVd;
 		Real mVq;
-		std::ifstream vd("vd_input.csv");
-		std::ifstream vq("vq_input.csv");
+		std::ifstream vd("vd_pu.csv");
+		std::ifstream vq("vq_pu.csv");
 
 		// Time step and time
 		Real dt = 0.00001;
@@ -68,8 +66,6 @@ int main() {
 
 		// Exciter output
 		Real vt = 0;
-
-		//mTurbineGovernor.init(PmRef, initActivePower / nomPower);
 
 		while (getline(vd, line_vd) && getline(vq, line_vq))
 		{
@@ -79,7 +75,7 @@ int main() {
 				std::cout << t << '\n';
 				if (t == dt)
 				{
-						mExciter.init(mVd, mVq, Vref, fieldVoltage);
+						mExciter.init(Vh_init, Vf_init);
 				}
 				vt = mExciter.step(mVd, mVq, Vref, dt);
 				ExciterOut.LogDataLine(t, vt*257198.07031934269);
