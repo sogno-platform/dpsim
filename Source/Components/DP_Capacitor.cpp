@@ -26,14 +26,15 @@ using namespace DPsim;
 Component::DP::Capacitor::Capacitor(String name, Int src, Int dest, Real capacitance)
 	: Base(name, src, dest)
 {
-	this->capacitance = capacitance;
-	attrMap["capacitance"] = { Attribute::Real, &this->capacitance };
+	mCapacitance = capacitance;
+
+	attrMap["capacitance"] = { Attribute::Real, &mCapacitance };
 }
 
 void Component::DP::Capacitor::applySystemMatrixStamp(SystemModel& system)
 {
-	mGcr = 2.0 * capacitance / system.getTimeStep();
-	mGci = system.getOmega() * capacitance;
+	mGcr = 2.0 * mCapacitance / system.getTimeStep();
+	mGci = system.getOmega() * mCapacitance;
 
 	if (mNode1 >= 0) {
 		system.addCompToSystemMatrix(mNode1, mNode1, mGcr, mGci);
@@ -50,25 +51,25 @@ void Component::DP::Capacitor::applySystemMatrixStamp(SystemModel& system)
 /// Initialize internal state
 void Component::DP::Capacitor::init(Real om, Real dt)
 {
-	currr = 0;
-	curri = 0;
-	cureqr = 0;
-	cureqi = 0;
-	deltavr = 0;
-	deltavi = 0;
+	mCurrr = 0;
+	mCurri = 0;
+	mCureqr = 0;
+	mCureqi = 0;
+	mDeltavr = 0;
+	mDeltavi = 0;
 }
 
 void Component::DP::Capacitor::step(SystemModel& system, Real time)
 {
 	// Initialize internal state
-	cureqr =  currr + mGcr * deltavr + mGci * deltavi;
-	cureqi =  curri + mGcr * deltavi - mGci * deltavr;
+	mCureqr = mCurrr + mGcr * mDeltavr + mGci * mDeltavi;
+	mCureqi = mCurri + mGcr * mDeltavi - mGci * mDeltavr;
 
 	if (mNode1 >= 0)	{
-		system.addCompToRightSideVector(mNode1, cureqr, cureqi);
+		system.addCompToRightSideVector(mNode1, mCureqr, mCureqi);
 	}
 	if (mNode2 >= 0)	{
-		system.addCompToRightSideVector(mNode2, -cureqr, -cureqi);
+		system.addCompToRightSideVector(mNode2, -mCureqr, -mCureqi);
 	}
 }
 
@@ -94,13 +95,14 @@ void Component::DP::Capacitor::postStep(SystemModel& system)
 		vnegi = 0;
 	}
 
-	deltavr = vposr - vnegr;
-	deltavi = vposi - vnegi;
-	currr = mGcr * deltavr - mGci * deltavi - cureqr;
-	curri = mGci * deltavr + mGcr * deltavi - cureqi;
+	mDeltavr = vposr - vnegr;
+	mDeltavi = vposi - vnegi;
+
+	mCurrr = mGcr * mDeltavr - mGci * mDeltavi - mCureqr;
+	mCurri = mGci * mDeltavr + mGcr * mDeltavi - mCureqi;
 }
 
 Complex Component::DP::Capacitor::getCurrent(SystemModel& system)
 {
-	return Complex(currr, curri);
+	return Complex(mCurrr, mCurri);
 }

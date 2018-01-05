@@ -36,17 +36,17 @@ namespace DP {
 
 	protected:
 		/// Capacitance [F]
-		Real capacitance;
+		Real mCapacitance;
 		/// Real part of the voltage across the capacitor [V]
-		Real deltavr;
+		Real mDeltavr;
 		/// Imaginary part of the voltage across the capacitor [V]
-		Real deltavi;
+		Real mDeltavi;
 		/// Real and imaginary part of the current through the capacitor [A]
-		Real currr;
-		Real curri;
+		Real mCurrr;
+		Real mCurri;
 		///Real and imaginary part of the DC equivalent current source [A]
-		Real cureqr;
-		Real cureqi;
+		Real mCureqr;
+		Real mCureqi;
 
 		Real mGcr;
 		Real mGci;
