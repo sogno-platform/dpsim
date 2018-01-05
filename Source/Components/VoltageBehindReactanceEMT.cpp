@@ -43,7 +43,8 @@ VoltageBehindReactanceEMT::~VoltageBehindReactanceEMT() {
 }
 
 void VoltageBehindReactanceEMT::AddExciter(Real Ta, Real Ka, Real Te, Real Ke, Real Tf, Real Kf, Real Tr, Real Lad, Real Rfd) {
-	mExciter = Exciter(Ta, Ka, Te, Ke, Tf, Kf, Tr, Lad, Rfd, mVfd);
+	mExciter = Exciter(Ta, Ka, Te, Ke, Tf, Kf, Tr, Lad, Rfd);
+	// put here function to init exciter
 	WithExciter = true;
 }
 

@@ -1,4 +1,4 @@
-/** Exciter
+﻿/** Exciter
 *
 * @file
 * @author Markus Mirz <mmirz@eonerc.rwth-aachen.de>
@@ -63,6 +63,8 @@ namespace DPsim {
 		Real mVf = 0;
 		/// Auxiliar variable
 		Real mVfl = 0;
+		/// Initial field votlage
+		Real mVf_init;
 
 		bool mLogActive;
 		Logger* mLog;
@@ -73,8 +75,11 @@ namespace DPsim {
 		~Exciter() {};
 
 		/// Initializes exciter parameters
-		Exciter(Real Ta, Real Ka, Real Te, Real Ke, Real Tf, Real Kf, Real Tr, Real Lad, Real Rfd, Real Vf_init);
-
+		Exciter(Real Ta, Real Ka, Real Te, Real Ke, Real Tf, Real Kf, Real Tr, Real Lad, Real Rfd);
+		
+		/// Initializes exciter variables
+		void init(Real mVd, Real mVq, Real Vref, Real Vf_init);
+		
 		/// Performs an step to update field voltage value
 		Real step(Real mVd, Real mVq, Real Vref, Real dt);
 

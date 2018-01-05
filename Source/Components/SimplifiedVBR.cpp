@@ -1,4 +1,4 @@
-/** Simplified Voltage behind reactance (EMT)
+﻿/** Simplified Voltage behind reactance (EMT)
 *
 * @author Markus Mirz <mmirz@eonerc.rwth-aachen.de>
 * @copyright 2017, Institute for Automation of Complex Power Systems, EONERC
@@ -45,7 +45,8 @@ SimplifiedVBR::~SimplifiedVBR() {
 }
 
 void SimplifiedVBR::AddExciter(Real Ta, Real Ka, Real Te, Real Ke, Real Tf, Real Kf, Real Tr, Real Lad, Real Rfd) {
-	mExciter = Exciter(Ta, Ka, Te, Ke, Tf, Kf, Tr, Lad, Rfd, mVfd);
+	mExciter = Exciter(Ta, Ka, Te, Ke, Tf, Kf, Tr, Lad, Rfd);
+	//init exciter
 	WithExciter = true;
 }
 

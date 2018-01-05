@@ -1,4 +1,4 @@
-/** Exciter
+﻿/** Exciter
 *
 * @author Markus Mirz <mmirz@eonerc.rwth-aachen.de>
 * @copyright 2017, Institute for Automation of Complex Power Systems, EONERC
@@ -24,7 +24,7 @@
 
 using namespace DPsim;
 
-Exciter::Exciter(Real Ta, Real Ka, Real Te, Real Ke, Real Tf, Real Kf, Real Tr, Real Lad, Real Rfd, Real Vf_init)
+Exciter::Exciter(Real Ta, Real Ka, Real Te, Real Ke, Real Tf, Real Kf, Real Tr, Real Lad, Real Rfd)
 {
 
 	mTa = Ta;
@@ -36,25 +36,37 @@ Exciter::Exciter(Real Ta, Real Ka, Real Te, Real Ke, Real Tf, Real Kf, Real Tr, 
 	mTr = Tr;
 	mLad = Lad;
 	mRfd = Rfd;
-	mVf = Vf_init*(mLad / mRfd);
-	mVf = 0;
 
 }
 
+void Exciter::init(Real mVd, Real mVq, Real Vref, Real Vf_init) {
+
+		//Field voltage
+		mVf = Vf_init*(mLad / mRfd);
+		//mVf = 1;
+		mVse = 0.0039*exp(mVf*1.555)*mVf;
+		mVr = mVse + mKe*mVf;
+		mVf_init = mVr/mKa;
+		//mVh = sqrt(pow(mVd, 2.) + pow(mVq, 2.));
+		mVh = 1;
+		mVm = mVh;
+		mVis = 0;
+
+}
 
 Real Exciter::step(Real mVd, Real mVq, Real Vref, Real dt) {
-
 
 	mVh = sqrt(pow(mVd, 2.) + pow(mVq, 2.));
 	// Voltage Transducer equation
 	mVm = Euler(mVm, -1, 1, dt / mTr, mVh);
 	// Stabilizing feedback equation
-	mVfl = mVfl + dt*mVis / mTf;
-	mVis = (mKf / mTf)*mVf - mVfl;
+	//mVis = (mKf / mTf)*mVf - mVfl;
+	//mVfl = mVfl + dt*mVis / mTf;
+	mVis = Euler(mVis, -1, mKf, dt / mTf, ((mVr - mVse) - mVf*mKe)/mTe);
 	// Amplifier equation
-	mVr = Euler(mVr, -1, mKa, dt / mTa, Vref - mVm - mVis);
+	mVr = Euler(mVr, -1, mKa, dt / mTa, Vref - mVm - mVis + mVf_init);
 	// Exciter
-	mVse = 0.0039*exp(mVf*1.555);
+	mVse = 0.0039*exp(mVf*1.555)*mVf;
 	mVf = Euler(mVf, -mKe, 1, dt / mTe, mVr - mVse);
 
 	return (mRfd / mLad)*mVf;

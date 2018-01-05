@@ -34,12 +34,6 @@ int main() {
 
 	// Define machine parameters in per unit
 	Real nomPower = 555e6;
-	Real nomPhPhVoltRMS = 24e3;
-	Real nomFreq = 60;
-	Real nomFieldCurr = 1300;
-	Int poleNum = 2;
-	Real J = 2.8898e+04;
-	Real H = 3.7;
 
 	// Turbine
 	Real Ta_t = 0.3;
@@ -78,41 +72,6 @@ int main() {
 		Pm = mTurbineGovernor.step(Om, OmRef, PmRef, dt);
 		TurbineOut.LogDataLine(t,Pm);
 	}
-
-
-	
-
-
-
-	//// Set up simulation
-	//Real tf, dt, t;
-	//Real om = 2.0*M_PI*60.0;
-	//tf = 10; dt = 0.0001; t = 0;
-	//Int downSampling = 1;
-
-	//BaseComponent::List circElements;
-	//Simulation newSim(circElements, om, dt, tf, log, SimulationType::DynPhasor, downSampling);
-
-
-	//std::cout << "A matrix:" << std::endl;
-	//std::cout << newSim.getSystemMatrix() << std::endl;
-	//std::cout << "vt vector:" << std::endl;
-	//std::cout << newSim.getLeftSideVector() << std::endl;
-	//std::cout << "j vector:" << std::endl;
-	//std::cout << newSim.getRightSideVector() << std::endl;
-
-	//Real lastLogTime = 0;
-	//Real logTimeStep = 0.0001;
-
-	// Main Simulation Loop
-	//while (newSim.getTime() < tf) {
-	//	std::cout << newSim.getTime() << std::endl;
-
-	//	mTurbineGovernor.step(Om, OmRef, PmRef, dt);
-	//	newSim.increaseByTimeStep();
-	//}
-
-	//std::cout << "Simulation finished." << std::endl;
 
 	return 0;
 }
