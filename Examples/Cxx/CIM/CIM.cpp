@@ -81,7 +81,8 @@ static void readCIMFilesFromInput(int argc, char *argv[]) {
 	testCIMReader(filenames);
 }
 
-int main(int argc, char *argv[]) {
+int main(int argc, char *argv[])
+{
 	//readCIMFilesFromInput(argc, argv);
 	readFixedCIMFiles_IEEE9bus();
 

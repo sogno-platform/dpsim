@@ -19,7 +19,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *********************************************************************************/
 
-int main() {
+int main(int argc, char* argv[])
+{
 	// Same circuit as above, but the simulation is done normally in one instance.
 	Logger log("output.log"), llog("lvector.log"), rlog("rvector.log");
 	Component::Base::List comps, comps2;

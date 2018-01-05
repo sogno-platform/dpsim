@@ -19,7 +19,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *********************************************************************************/
 
-int main() {
+int main(int argc, char* argv[])
+{
 	// TODO: RT / shmem interface with python
 
 	ShmemInterface *intf = nullptr;

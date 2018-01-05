@@ -24,7 +24,8 @@
 
 using namespace DPsim;
 
-int main() {
+int main(int argc, char* argv[])
+{
 	Real timeStep = 0.00005;
 	Logger log;
 	Component::Base::List comps;

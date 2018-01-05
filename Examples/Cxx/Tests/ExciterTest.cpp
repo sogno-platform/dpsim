@@ -28,7 +28,8 @@ using namespace DPsim;
 
 
 // ##################################### Test only Turbine ##################################
-int main() {
+int main(int argc, char* argv[])
+{
 		// Define Object for saving data on a file
 		Logger ExciterOut("ExciterOutput_DPsim.csv");
 

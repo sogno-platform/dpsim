@@ -19,7 +19,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *********************************************************************************/
 
-int main()
+int main(int argc, char* argv[])
 {
 	// Same circuit as above, but now with realtime support.
 	Component::Base::List comps;

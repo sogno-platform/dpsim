@@ -19,7 +19,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *********************************************************************************/
 
-void main() {
+void main(int argc, char* argv[])
+{
 	// Very simple test circuit. Just a few resistors and an inductance.
 	// Voltage is read from VILLASnode and current through everything is written back.
 	Logger log("output.log"), llog("lvector.log"), rlog("rvector.log");

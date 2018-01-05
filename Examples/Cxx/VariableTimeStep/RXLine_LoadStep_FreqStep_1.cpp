@@ -90,7 +90,8 @@ static void VarFreqRxLineResLoad_EMT(Real timeStep, Real finalTime, Real freqSte
 	std::cout << "Simulation finished." << std::endl;
 }
 
-int main() {
+int main(int argc, char* argv[])
+{
 	Real timeStep = 0.0;
 	Real finalTime = 0.6;
 	Real freqStep = 0.4;

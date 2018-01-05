@@ -24,7 +24,8 @@
 
 using namespace DPsim;
 
-int main() {
+int main(int argc, char* argv[])
+{
 	// Define simulation scenario
 	Real timeStep = 0.001;
 	Real omega = 2.0*M_PI*50.0;

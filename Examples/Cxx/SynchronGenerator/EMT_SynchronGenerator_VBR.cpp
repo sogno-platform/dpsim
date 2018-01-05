@@ -23,8 +23,8 @@
 
 using namespace DPsim;
 
-int main() {
-
+int main(int argc, char* argv[])
+{
 	// Define Object for saving data on a file
 	Logger log("log.txt"),
 		vtLog("data_vt.csv"),

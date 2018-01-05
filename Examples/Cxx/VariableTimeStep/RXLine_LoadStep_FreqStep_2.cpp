@@ -90,7 +90,8 @@ static void VarFreqRxLineResLoad_NZ_Paper_EMT(Real timeStep, Real finalTime, Rea
 	std::cout << "Simulation finished." << std::endl;
 }
 
-int main() {
+int main(int argc, char* argv[])
+{
 	Real timeStep = 0.0;
 	Real finalTime = 2;
 	Real freqStep = 1;
