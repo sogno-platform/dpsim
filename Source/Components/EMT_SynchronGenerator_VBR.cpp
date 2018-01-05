@@ -43,18 +43,19 @@ Component::EMT::SynchronGeneratorVBR::~SynchronGeneratorVBR()
 	}
 }
 
-void Component::EMT::SynchronGeneratorVBR::AddExciter(Real Ta, Real Ka, Real Te, Real Ke, Real Tf, Real Kf, Real Tr, Real Lad, Real Rfd)
+void Component::EMT::SynchronGeneratorVBR::addExciter(Real Ta, Real Ka, Real Te, Real Ke, Real Tf, Real Kf, Real Tr, Real Lad, Real Rfd)
 {
 	mExciter = Exciter(Ta, Ka, Te, Ke, Tf, Kf, Tr, Lad, Rfd);
 	mExciter.init(1,1);
-	WithExciter = true;
+
+	mHasExciter = true;
 }
 
-void Component::EMT::SynchronGeneratorVBR::AddGovernor(Real Ta, Real Tb, Real Tc, Real Fa, Real Fb, Real Fc, Real K, Real Tsr, Real Tsm, Real Tm_init, Real PmRef)
+void Component::EMT::SynchronGeneratorVBR::addGovernor(Real Ta, Real Tb, Real Tc, Real Fa, Real Fb, Real Fc, Real K, Real Tsr, Real Tsm, Real Tm_init, Real PmRef)
 {
 	mTurbineGovernor = TurbineGovernor(Ta, Tb, Tc, Fa, Fb, Fc, K, Tsr, Tsm);
 	mTurbineGovernor.init(PmRef, Tm_init);
-	WithTurbineGovernor = true;
+	mHasTurbineGovernor = true;
 }
 
 void Component::EMT::SynchronGeneratorVBR::init(Real om, Real dt,
@@ -191,7 +192,7 @@ void Component::EMT::SynchronGeneratorVBR::stepInPerUnit(Real om, Real dt, Real 
 		mIc;
 
 	// Calculate mechanical variables with euler
-	if (WithTurbineGovernor == true) {
+	if (mHasTurbineGovernor == true) {
 		mMechTorque = -mTurbineGovernor.step(mOmMech, 1, 0.001, dt);
 	}
 
@@ -225,7 +226,7 @@ void Component::EMT::SynchronGeneratorVBR::stepInPerUnit(Real om, Real dt, Real 
 	mId = parkTransform(mThetaMech, mIa, mIb, mIc)(1);
 	mI0 = parkTransform(mThetaMech, mIa, mIb, mIc)(2);
 
-	if (WithExciter == true) {
+	if (mHasExciter == true) {
 
 		// dq-transform of interface voltage
 		mVd = parkTransform(mThetaMech, mVa / mBase_v, mVb / mBase_v, mVc / mBase_v)(0);

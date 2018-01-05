@@ -41,7 +41,7 @@ namespace DP {
 
 		/// Exciter Model
 		Exciter mExciter;
-		bool WithExciter = false;
+		bool mHasExciter = false;
 
 		/// d dynamic inductance
 		Real mDLmd;
@@ -146,7 +146,7 @@ namespace DP {
 			Real Rkq1, Real Llkq1, Real Rkq2, Real Llkq2,
 			Real inertia, bool logActive = false);
 
-		void AddExciter(Real Ta, Real Ka, Real Te, Real Ke, Real Tf, Real Kf, Real Tr, Real Lad, Real Rfd);
+		void addExciter(Real Ta, Real Ka, Real Te, Real Ke, Real Tf, Real Kf, Real Tr, Real Lad, Real Rfd);
 
 		/// Initializes states in per unit or stator referred variables depending on the setting of the state type.
 		/// Function parameters have to be given in real units.

@@ -43,20 +43,19 @@ Component::DP::SynchronGeneratorVBR::~SynchronGeneratorVBR()
 	}
 }
 
-
-void Component::DP::SynchronGeneratorVBR::AddExciter(Real Ta, Real Ka, Real Te, Real Ke, Real Tf, Real Kf, Real Tr, Real Lad, Real Rfd)
+void Component::DP::SynchronGeneratorVBR::addExciter(Real Ta, Real Ka, Real Te, Real Ke, Real Tf, Real Kf, Real Tr, Real Lad, Real Rfd)
 {
 	mExciter = Exciter(Ta, Ka, Te, Ke, Tf, Kf, Tr, Lad, Rfd);
 	mExciter.init(1, 1);
-	WithExciter = true;
+
+	mHasExciter = true;
 }
 
-
-void Component::DP::SynchronGeneratorVBR::AddGovernor(Real Ta, Real Tb, Real Tc, Real Fa, Real Fb, Real Fc, Real K, Real Tsr, Real Tsm, Real Tm_init, Real PmRef)
+void Component::DP::SynchronGeneratorVBR::addGovernor(Real Ta, Real Tb, Real Tc, Real Fa, Real Fb, Real Fc, Real K, Real Tsr, Real Tsm, Real Tm_init, Real PmRef)
 {
-		mTurbineGovernor = TurbineGovernor(Ta, Tb, Tc, Fa, Fb, Fc, K, Tsr, Tsm);
-		mTurbineGovernor.init(PmRef, Tm_init);
-		WithTurbineGovernor = true;
+	mTurbineGovernor = TurbineGovernor(Ta, Tb, Tc, Fa, Fb, Fc, K, Tsr, Tsm);
+	mTurbineGovernor.init(PmRef, Tm_init);
+	mHasTurbineGovernor = true;
 }
 
 void Component::DP::SynchronGeneratorVBR::init(Real om, Real dt,
@@ -178,7 +177,6 @@ void Component::DP::SynchronGeneratorVBR::init(Real om, Real dt,
 
 }
 
-
 void Component::DP::SynchronGeneratorVBR::step(SystemModel& system, Real time)
 {
 	stepInPerUnit(system.getOmega(), system.getTimeStep(), time, system.getNumMethod());
@@ -215,11 +213,10 @@ void Component::DP::SynchronGeneratorVBR::stepInPerUnit(Real om, Real dt, Real t
 		mIcIm;
 
 	// Calculate mechanical variables with euler
-	if (WithTurbineGovernor == true)
-	{
+	if (mHasTurbineGovernor == true) {
 		mMechTorque = -mTurbineGovernor.step(mOmMech, 1, 0.001, dt);
-
 	}
+
 	mElecTorque = (mPsimd*mIq - mPsimq*mId);
 	mOmMech = mOmMech + dt * (1. / (2. * mH) * (mElecTorque - mMechTorque));
 	mThetaMech = mThetaMech + dt * ((mOmMech - 1) * mBase_OmMech);
@@ -246,7 +243,7 @@ void Component::DP::SynchronGeneratorVBR::stepInPerUnit(Real om, Real dt, Real t
 	mId = abcToDq0Transform(mThetaMech, mIaRe, mIbRe, mIcRe, mIaIm, mIbIm, mIcIm)(1);
 	mI0 = abcToDq0Transform(mThetaMech, mIaRe, mIbRe, mIcRe, mIaIm, mIbIm, mIcIm)(2);
 
-	if (WithExciter == true) {
+	if (mHasExciter == true) {
 		// dq-transform of interface voltage
 		mVd = R_load(0, 0)*mId;
 		mVq = R_load(0, 0)*mIq;
@@ -352,28 +349,27 @@ void Component::DP::SynchronGeneratorVBR::stepInPerUnit(Real om, Real dt, Real t
 		mDVbIm,
 		mDVcIm;
 
-	//// Load resistance
-	//if (time < 0.1 || time > 0.2)
-	//{
-	//	R_load <<
-	//		1037.8378 / mBase_Z, 0, 0, 0, 0, 0,
-	//		0, 1037.8378 / mBase_Z, 0, 0, 0, 0,
-	//		0, 0, 1037.8378 / mBase_Z, 0, 0, 0,
-	//		0, 0, 0, 1037.8378 / mBase_Z, 0, 0,
-	//		0, 0, 0, 0, 1037.8378 / mBase_Z, 0,
-	//		0, 0, 0, 0, 0, 1037.8378 / mBase_Z;
-	//}
-	//else
-	//{
-	//	R_load <<
-	//		0.001 / mBase_Z, 0, 0, 0, 0, 0,
-	//		0, 0.001 / mBase_Z, 0, 0, 0, 0,
-	//		0, 0, 0.001 / mBase_Z, 0, 0, 0,
-	//		0, 0, 0, 0.001 / mBase_Z, 0, 0,
-	//		0, 0, 0, 0, 0.001 / mBase_Z, 0,
-	//		0, 0, 0, 0, 0, 0.001 / mBase_Z;
-	//}
-
+#if 0
+	// Load resistance
+	if (time < 0.1 || time > 0.2) {
+		R_load <<
+			1037.8378 / mBase_Z, 0, 0, 0, 0, 0,
+			0, 1037.8378 / mBase_Z, 0, 0, 0, 0,
+			0, 0, 1037.8378 / mBase_Z, 0, 0, 0,
+			0, 0, 0, 1037.8378 / mBase_Z, 0, 0,
+			0, 0, 0, 0, 1037.8378 / mBase_Z, 0,
+			0, 0, 0, 0, 0, 1037.8378 / mBase_Z;
+	}
+	else {
+		R_load <<
+			0.001 / mBase_Z, 0, 0, 0, 0, 0,
+			0, 0.001 / mBase_Z, 0, 0, 0, 0,
+			0, 0, 0.001 / mBase_Z, 0, 0, 0,
+			0, 0, 0, 0.001 / mBase_Z, 0, 0,
+			0, 0, 0, 0, 0.001 / mBase_Z, 0,
+			0, 0, 0, 0, 0, 0.001 / mBase_Z;
+	}
+#endif
 }
 
 void Component::DP::SynchronGeneratorVBR::CalculateLandR(Real time)

@@ -43,11 +43,11 @@ Component::DP::SynchronGeneratorVBRSimplified::~SynchronGeneratorVBRSimplified()
 	}
 }
 
-void Component::DP::SynchronGeneratorVBRSimplified::AddExciter(Real Ta, Real Ka, Real Te, Real Ke, Real Tf, Real Kf, Real Tr, Real Lad, Real Rfd)
+void Component::DP::SynchronGeneratorVBRSimplified::addExciter(Real Ta, Real Ka, Real Te, Real Ke, Real Tf, Real Kf, Real Tr, Real Lad, Real Rfd)
 {
 	mExciter = Exciter(Ta, Ka, Te, Ke, Tf, Kf, Tr, Lad, Rfd);
 	//init exciter
-	WithExciter = true;
+	mHasExciter = true;
 }
 
 void Component::DP::SynchronGeneratorVBRSimplified::init(Real om, Real dt,
@@ -177,7 +177,7 @@ void Component::DP::SynchronGeneratorVBRSimplified::stepInPerUnit(Real om, Real 
 	mVq = -mRs*mIq - mOmMech*mDLd*mId + mDVq;
 	mVd = -mRs*mId + mOmMech*mDLq*mIq + mDVd;
 
-	if (WithExciter == true) {
+	if (mHasExciter == true) {
 
 		mVfd = mExciter.step(mVd, mVq, 1, dt);
 	}
