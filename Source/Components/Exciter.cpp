@@ -41,11 +41,8 @@ Component::Exciter::Exciter(Real Ta, Real Ka, Real Te, Real Ke, Real Tf, Real Kf
 void Component::Exciter::init(Real Vh_init, Real Vf_init)
 {
 	mVf = 1;
-	mVse = mVf <= 2.3 ?
-		(0.1 / 2.3) * mVf;
-		(0.33 / 3.1) * mVf;
-
-	mVse = mVse*mVf;
+	mVse = mVf <= 2.3 ? 0.1 / 2.3 : 0.33 / 3.1;
+	mVse *= mVf;
 
 	mVr = mVse + mKe*mVf;
 	mVf_init = mVr/mKa;
