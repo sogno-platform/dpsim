@@ -129,7 +129,7 @@ void Component::DP::SynchronGeneratorVBR::init(Real om, Real dt,
 	mIq = -mIq;
 	mId = -mId;
 
-	// #### VBR Model Dynamic variables #######################################
+	// VBR Model Dynamic variables
 	mDPsid = mDLmd*(mPsifd / mLlfd) + mDLmd*(mPsikd / mLlkd);
 	if (mNumDampingWindings == 2) {
 		mDPsiq = mDLmq*(mPsikq1 / mLlkq1) + mDLmq*(mPsikq2 / mLlkq2);

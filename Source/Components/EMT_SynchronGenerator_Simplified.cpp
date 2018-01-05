@@ -137,29 +137,27 @@ void Component::EMT::SynchronGeneratorSimplified::stepInPerUnit(Real om, Real dt
 	mElecTorque = (mPsid*mIq - mPsiq*mId);
 	mOmMech = mOmMech + dt * (1 / (2 * mH) * (mMechTorque - mElecTorque));
 
-	// ############## Using fundamental parameters ###################
+#if 0
+	// Using fundamental parameters
+	mPsiq = -mVd;
+	mPsid = mVq;
+	mPsifd = mPsifd + dt*mBase_OmMech*(mVfd - mRfd*mIfd);
 
-	//mPsiq = -mVd;
-	//mPsid = mVq;
-	//mPsifd = mPsifd + dt*mBase_OmMech*(mVfd - mRfd*mIfd);
+	Matrix Fluxes(3, 1);
+	Fluxes(0, 0) = mPsiq;
+	Fluxes(1, 0) = mPsid;
+	Fluxes(2, 0) = mPsifd;
 
-	//Matrix Fluxes(3, 1);
-	//Fluxes(0, 0) = mPsiq;
-	//Fluxes(1, 0) = mPsid;
-	//Fluxes(2, 0) = mPsifd;
+	Matrix Currents(3, 1);
 
-	//Matrix Currents(3, 1);
+	Currents = mInductanceMat.inverse()*Fluxes;
 
-	//Currents = mInductanceMat.inverse()*Fluxes;
+	mIq = Currents(0, 0);
+	mId = Currents(1, 0);
+	mIfd = Currents(2, 0);
+#endif
 
-	//mIq = Currents(0, 0);
-	//mId = Currents(1, 0);
-	//mIfd = Currents(2, 0);
-
-	// ################################################################
-
-
-	// ############## Using operational parameters ###################
+	// Using operational parameters
 	mEq_t = mEq_t + dt*((1 / mTd0_t) * (-mEq_t + mEf - (mXd - mXd_t)*mId));
 
 	mId = (mEq_t - mVq) / mXd_t;
@@ -178,8 +176,6 @@ void Component::EMT::SynchronGeneratorSimplified::stepInPerUnit(Real om, Real dt
 	mPsiq = Fluxes(0, 0);
 	mPsid = Fluxes(1, 0);
 	mPsifd = Fluxes(2, 0);
-
-	// #################################################################
 
 	// Calculation of rotor angular position
 	mThetaMech = mThetaMech + dt * (mOmMech * mBase_OmMech);

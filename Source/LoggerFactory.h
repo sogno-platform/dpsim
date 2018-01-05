@@ -36,7 +36,7 @@ namespace DPsim {
 		typedef std::map<std::string, std::unique_ptr<Logger>>  Container;
 		typedef Container::iterator                             iterator;
 		typedef Container::const_iterator                       const_iterator;
-		typedef Container::value_type                           value_type;		
+		typedef Container::value_type                           value_type;
 		//typedef std::list<std::reference_wrapper<LoggingSink>>  SinkHolder;
 
 	private:
@@ -48,7 +48,7 @@ namespace DPsim {
 		{
 			iterator find = cont.find(loggerName);
 			if (find == cont.end()) {
-				cont[loggerName] = std::make_unique<Logger>();				
+				cont[loggerName] = std::make_unique<Logger>();
 				find = cont.find(loggerName);
 
 				// Alternative way to do the same but no overwrite
@@ -57,11 +57,5 @@ namespace DPsim {
 			}
 			return *(find->second);
 		}
-		/*	
-		void addStandardSink(LoggingSink& ls) {
-			standardAssignedSinks.emplace_back(ls);
-		}
-		*/
-			
 	};
 }

@@ -120,8 +120,7 @@ void Component::EMT::SynchronGeneratorVBR::init(Real om, Real dt,
 	mIq = -mIq;
 	mId = -mId;
 
-	// #### VBR Model Dynamic variables #######################################
-
+	// VBR Model Dynamic variables
 	mDPsid = mDLmd*(mPsifd / mLlfd) + mDLmd*(mPsikd / mLlkd);
 
 	if (mNumDampingWindings == 2) {

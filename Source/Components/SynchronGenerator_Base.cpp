@@ -98,7 +98,7 @@ void Component::SynchronGeneratorBase::initWithPerUnitParam(
 void Component::SynchronGeneratorBase::initStatesInPerUnit(Real initActivePower, Real initReactivePower,
 	Real initTerminalVolt, Real initVoltAngle, Real initFieldVoltage, Real initMechPower)
 {
-	// #### Electrical variables ##############################################
+	// Electrical variables
 	Real init_P = initActivePower / mNomPower;
 	Real init_Q = initReactivePower / mNomPower;
 	Real init_S = sqrt(pow(init_P, 2.) + pow(init_Q, 2.));
