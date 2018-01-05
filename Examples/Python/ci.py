@@ -1,9 +1,18 @@
 #!/usr/bin/env python3
-#
-# Script for automatically running the tests and comparing the results against
-# given CSV files (from some other simulator).
-# TODO: supporting different timesteps (interpolating), phasor/EMT conversion,
-# more advanced error criterions...
+
+"""Script for running the CI tests.
+
+Comparing the results against given CSV files (from some other simulator).
+
+TODO:
+- supporting different timesteps (interpolating)
+- phasor/EMT conversion,
+- more advanced error criterions...
+"""
+
+__author__ = "Markus Mirz, Steffen Vogel"
+__copyright__ = "Copyright 2017, Institute for Automation of Complex Power Systems, EONERC"
+__license__ = "GPL-3.0"
 
 import dpsim
 import dpsim.components

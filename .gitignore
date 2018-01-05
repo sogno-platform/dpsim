@@ -25,3 +25,8 @@ __MACOSX
 
 # Files
 *.csv
+
+# Python
+*.pyc
+.cache/
+__pycache__/
