@@ -26,30 +26,30 @@ Linux (CMake)
 -------------
 
 1. Make sure that Eigen, libxml2 (including development headers) and CMake are installed, e.g. using your distro's package manager.
-2. Build and install libvillas-ext from VILLASnode_:
-   ::
+2. Build and install libvillas-ext from VILLASnode_:::
+
       $ make
       # make install-libvillas-ext
 
-   There are also RPMs available for Fedora:
-   ::
+   There are also RPMs available for Fedora:::
+
       $ wget https://villas.fein-aachen.org/packages/villas.repo
       # mv villas.repo /etc/yum.repos.d
       # dnf -y install villas-node-devel
 
-3. Generate a makefile with CMake and use it to build the project:
-   ::
+3. Generate a makefile with CMake and use it to build the project::
+
       $ mkdir build
       $ cd build
       $ cmake ..
       $ make
 
-4. Install the generated module:
-   ::
+4. Install the generated module:::
+
       # make install
 
-   Another option is to manually rename the generated module:
-   ::
+   Another option is to manually rename the generated module:::
+
       # cp build/Source/libdpsim.so your_python_path/dpsim.so
 
    and ensure that ``your_python_path`` is in somewhere in your ``PYTHONPATH``.
@@ -70,10 +70,10 @@ Python
 1. Install Sphinx_
    - either from your Linux distribution's repo
    - or manually_ on Windows
-   - if you used the installer which already adds Python to your path and installs pip, you basically only need to run ``pip install sphinx```
+   - if you used the installer which already adds Python to your path and installs pip, you basically only need to run ``pip install sphinx``
 
-2. Generate the Python documentation by running Sphinx via CMake:
-   ::
+2. Generate the Python documentation by running Sphinx via CMake:::
+
       $ mkdir -p build
       $ cd build
       $ cmake ..
@@ -85,8 +85,8 @@ C++
 ---
 
 1. Install Doxygen
-2. Generate the C++ documentation by running Doxygen via CMake:
-   ::
+2. Generate the C++ documentation by running Doxygen via CMake:::
+
       $ mkdir -p build
       $ cd build
       $ cmake ..
@@ -94,5 +94,5 @@ C++
 
 4. The resulting documentation will be generated in ``Documentation/html/Cxx``
 
-:: _Sphinx: http://www.sphinx-doc.org/en/stable/index.html
+:: _sphinx: http://www.sphinx-doc.org/en/stable/index.html
 :: _manually: http://www.sphinx-doc.org/en/stable/install.html#windows-install-python-and-sphinx

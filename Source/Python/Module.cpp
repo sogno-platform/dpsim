@@ -23,6 +23,7 @@
 
 #include "Config.h"
 #include "Python/Component.h"
+#include "Python/LoadCim.h"
 #include "Python/Interface.h"
 #include "Python/Module.h"
 #include "Python/Simulation.h"
@@ -30,23 +31,24 @@
 using namespace DPsim;
 
 static PyMethodDef dpsimModuleMethods[] = {
-#ifdef WITH_CIM
-	{"load_cim", Python::LoadCim, METH_VARARGS, Python::DocLoadCim},
-#endif
-	{"open_shmem_interface", (PyCFunction) Python::OpenShmemInterface, METH_VARARGS|METH_KEYWORDS, Python::DocOpenShmemInterface},
-	{"ExternalCurrentSource", Python::ExternalCurrentSource, METH_VARARGS, Python::DocExternalCurrentSource},
-	{"ExternalVoltageSource", Python::ExternalVoltageSource, METH_VARARGS, Python::DocExternalVoltageSource},
-	{"Inductor", Python::Inductor, METH_VARARGS, Python::DocInductor},
-	{"Resistor", Python::Resistor, METH_VARARGS, Python::DocResistor},
-	{"VoltSourceRes", Python::VoltSourceRes, METH_VARARGS, Python::DocVoltSourceRes},
-	{0}
+	{ "load_cim", Python::LoadCim, METH_VARARGS, Python::DocLoadCim },
+	{ "open_shmem_interface", (PyCFunction) Python::OpenShmemInterface, METH_VARARGS|METH_KEYWORDS, Python::DocOpenShmemInterface },
+	{ "ExternalCurrentSource", Python::ExternalCurrentSource, METH_VARARGS, Python::DocExternalCurrentSource },
+	{ "ExternalVoltageSource", Python::ExternalVoltageSource, METH_VARARGS, Python::DocExternalVoltageSource },
+	{ "VoltSourceRes", Python::VoltSourceRes, METH_VARARGS, Python::DocVoltSourceRes },
+	{ "InductorDP", Python::InductorDP, METH_VARARGS, Python::DocInductor },
+	{ "InductorEMT", Python::InductorEMT, METH_VARARGS, Python::DocInductor },
+	{ "ResistorDP", Python::ResistorDP, METH_VARARGS, Python::DocResistor },
+	{ "ResistorEMT", Python::ResistorEMT, METH_VARARGS, Python::DocResistor },
+	{ "CapacitorDP", Python::CapacitorDP, METH_VARARGS, Python::DocCapacitor },
+	{ 0 }
 };
 
 static PyModuleDef dpsimModule = {
-	PyModuleDef_HEAD_INIT, "dpsim", NULL, -1, dpsimModuleMethods, NULL, NULL, NULL, NULL
+	PyModuleDef_HEAD_INIT, "_dpsim", NULL, -1, dpsimModuleMethods, NULL, NULL, NULL, NULL
 };
 
-PyMODINIT_FUNC PyInit_dpsim(void) {
+PyMODINIT_FUNC PyInit__dpsim(void) {
 	PyObject* m;
 
 	if (PyType_Ready(&Python::ComponentType) < 0)

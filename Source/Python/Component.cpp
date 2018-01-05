@@ -19,8 +19,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *********************************************************************************/
 
-#include "Python/Component.h"
-
+#include "Component.h"
 #include "Components.h"
 
 using namespace DPsim;
@@ -149,132 +148,6 @@ bool Python::compsFromPython(PyObject* list, BaseComponent::List& comps) {
 	}
 
 	return true;
-}
-
-const char *Python::DocExternalCurrentSource =
-"ExternalCurrentSource(name, node1, node2, initial_current)\n"
-"Construct a new external current source.\n"
-"\n"
-"An external current source is pretty much the same as a normal ideal current "
-"source, but its current value can be controlled from external programs by "
-"registering it with an `Interface`.\n"
-"\n"
-":param initial_current: The current of this source in the first timestep (as a complex value).\n"
-":returns: A new `Component` representing this current source.\n";
-PyObject* Python::ExternalCurrentSource(PyObject* self, PyObject* args) {
-	const char *name;
-	int src, dest;
-	Py_complex initCurrent;
-
-	if (!PyArg_ParseTuple(args, "siiD", &name, &src, &dest, &initCurrent))
-		return nullptr;
-
-	Component *pyComp = PyObject_New(Component, &Python::ComponentType);
-	Component::init(pyComp);
-	pyComp->comp = std::make_shared<DPsim::ExternalCurrentSource>(name, src, dest, Complex(initCurrent.real, initCurrent.imag));
-
-	return (PyObject*) pyComp;
-}
-
-const char *Python::DocExternalVoltageSource =
-"ExternalVoltageSource(name, node1, node2, initial_voltage, num)\n"
-"Construct a new external voltage source.\n"
-"\n"
-"An external voltage source is pretty much the same as a normal ideal voltage "
-"source, but its voltage value can be controlled from external programs by "
-"registering it with an `Interface`.\n"
-"\n"
-":param initial_current: The voltage of this source in the first timestep (as a complex value).\n"
-":param num: The number of this voltage source. All ideal voltage sources must "
-"be identified by sequential indices, starting with 1.\n"
-":returns: A new `Component` representing this voltage source.\n";
-PyObject* Python::ExternalVoltageSource(PyObject* self, PyObject* args) {
-	const char *name;
-	int src, dest, num;
-	Py_complex initVoltage;
-
-	if (!PyArg_ParseTuple(args, "siiDi", &name, &src, &dest, &initVoltage, &num))
-		return nullptr;
-
-	Component *pyComp = PyObject_New(Component, &Python::ComponentType);
-	Component::init(pyComp);
-	pyComp->comp = std::make_shared<DPsim::ExternalVoltageSource>(name, src, dest, Complex(initVoltage.real, initVoltage.imag), num);
-
-	return (PyObject*) pyComp;
-}
-
-const char *Python::DocInductor =
-"Inductor(name, node1, node2, inductance)\n"
-"Construct a new inductor.\n"
-"\n"
-"Attributes: ``inductance``.\n"
-"\n"
-":param inductance: Inductance in Henry.\n"
-":returns: A new `Component` representing this inductor.\n";
-PyObject* Python::Inductor(PyObject* self, PyObject* args) {
-	const char *name;
-	double inductance;
-	int src, dest;
-
-	if (!PyArg_ParseTuple(args, "siid", &name, &src, &dest, &inductance))
-		return nullptr;
-
-	Component *pyComp = PyObject_New(Component, &Python::ComponentType);
-	Component::init(pyComp);
-	pyComp->comp = std::make_shared<DPsim::InductorDP>(name, src, dest, inductance);
-
-	return (PyObject*) pyComp;
-}
-
-const char *Python::DocResistor =
-"Resistor(name, node1, node2, resistance)\n"
-"Construct a new resistor.\n"
-"\n"
-"Attributes: ``resistance``.\n"
-"\n"
-":param resistance: Resistance in Ohm.\n"
-":returns: A new `Component` representing this resistor.\n";
-PyObject* Python::Resistor(PyObject* self, PyObject* args) {
-	const char *name;
-	double resistance;
-	int src, dest;
-
-	if (!PyArg_ParseTuple(args, "siid", &name, &src, &dest, &resistance))
-		return nullptr;
-
-	Component *pyComp = PyObject_New(Component, &Python::ComponentType);
-	Component::init(pyComp);
-	pyComp->comp = std::make_shared<DPsim::ResistorDP>(name, src, dest, resistance);
-
-	return (PyObject*) pyComp;
-}
-
-const char *Python::DocVoltSourceRes =
-"VoltSourceRes(name, node1, node2, voltage, resistance)\n"
-"Construct a new voltage source with an internal resistance.\n"
-"\n"
-"Because this is actually internally represented as an equivalent current "
-"source, it does **not** count towards the numbering of ideal voltage sources.\n"
-"\n"
-"Attributes: ``resistance``, ``voltage``.\n"
-"\n"
-":param voltage: Complex voltage in Volt.\n"
-":param resistance: Internal resistance in Ohm.\n"
-":returns: A new `Component` representing this voltage source.\n";
-PyObject* Python::VoltSourceRes(PyObject* self, PyObject* args) {
-	const char *name;
-	double resistance;
-	int src, dest;
-	Py_complex voltage;
-
-	if (!PyArg_ParseTuple(args, "siiDd", &name, &src, &dest, &voltage, &resistance))
-		return nullptr;
-
-	Component *pyComp = PyObject_New(Component, &Python::ComponentType);
-	Component::init(pyComp);
-	pyComp->comp = std::make_shared<DPsim::VoltSourceRes>(name, src, dest, Complex(voltage.real, voltage.imag), resistance);
-
-	return (PyObject*) pyComp;
 }
 
 static const char* DocComponent =

@@ -55,16 +55,22 @@ namespace Python {
 	// "Constructors" for the component types
 	extern const char* DocExternalCurrentSource;
 	PyObject* ExternalCurrentSource(PyObject* self, PyObject *args);
+
 	extern const char* DocExternalVoltageSource;
 	PyObject* ExternalVoltageSource(PyObject* self, PyObject *args);
+
 	extern const char* DocInductor;
-	PyObject* Inductor(PyObject* self, PyObject *args);
+	PyObject* InductorDP(PyObject* self, PyObject *args);
+	PyObject* InductorEMT(PyObject* self, PyObject *args);
+
 	extern const char* DocResistor;
-	PyObject* Resistor(PyObject* self, PyObject *args);
+	PyObject* ResistorDP(PyObject* self, PyObject *args);
+	PyObject* ResistorEMT(PyObject* self, PyObject *args);
+
+	extern const char* DocCapacitor;
+	PyObject* CapacitorDP(PyObject* self, PyObject *args);
+
 	extern const char* DocVoltSourceRes;
 	PyObject* VoltSourceRes(PyObject* self, PyObject *args);
-
-	extern const char* DocLoadCim;
-	PyObject* LoadCim(PyObject* self, PyObject* args);
 };
 };

@@ -6,6 +6,9 @@
 # more advanced error criterions...
 
 import dpsim
+import dpsim.components
+import dpsim.components.dp
+
 import numpy as np
 import pandas
 import sys
@@ -55,8 +58,7 @@ def compare_results(dp_csv, expected_csv):
     return ret
 
 def run_python_test(name, sim):
-    sim.start()
-    sim.wait()
+    sim.run()
 
     dp_csv       = PATH + '/' + name + ".csv"
     expected_csv = PATH + '/' + name + ".expected.csv"
@@ -75,10 +77,10 @@ def run_cpp_test(name):
 if __name__ == "__main__":
     python_sims = {
         'TestSimple': dpsim.Simulation([
-            dpsim.VoltSourceRes("v_s", 1, 0, 10000+0j, 1),
-            dpsim.Resistor("r_line", 1, 2, 1),
-            dpsim.Inductor("l_line", 2, 3, 1),
-            dpsim.Resistor("r_load", 3, 0, 1000)],
+            dpsim.components.VoltSourceRes("v_s", 1, 0, 10000+0j, 1),
+            dpsim.components.dp.Resistor("r_line", 1, 2, 1),
+            dpsim.components.dp.Inductor("l_line", 2, 3, 1),
+            dpsim.components.dp.Resistor("r_load", 3, 0, 1000)],
             duration=0.3, llog=PATH + "/TestSimple.csv")
     }
 
@@ -93,7 +95,7 @@ if __name__ == "__main__":
         'DP_ResVS_RLC1',
         'DP_ResVS_RXLine1',
         'EMT_IdealVS_R1',
-        'EMT_ResVS_RXLine_Switch1'   
+        'EMT_ResVS_RXLine_Switch1'
     }
 
     ret = 0
