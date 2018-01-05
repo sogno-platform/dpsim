@@ -61,19 +61,19 @@ namespace DPsim {
 
 	public:
 		/** Register an external voltage source to use values from this interface.
-		 * @param evs The external voltage source to register.
+		 * @param vs The external voltage source to register.
 		 * @param realIdx Interface-specific index identifying the real part.
 		 * @param imagIdx Interface-specific index identifying the imaginary part.
 		 */
-		void registerVoltageSource(Component::DP::VoltageSourceIdeal* evs, Int realIdx, Int imagIdx);
+		void registerVoltageSource(Component::DP::VoltageSourceIdeal* vs, Int realIdx, Int imagIdx);
 
 		/** Register an external current source to use values from this interface.
-		 * @param evs The external current source to register.
+		 * @param cs The external current source to register.
 		 * @param realIdx Interface-specific index identifying the real part.
 		 * @param imagIdx Interface-specific index identifying the imaginary part.
 		 */
+		void registerCurrentSource(Component::DP::CurrentSourceIdeal* cs, Int realIdx, Int imagIdx);
 
-		void registerCurrentSource(Component::DP::CurrentSourceIdeal* ecs, Int realIdx, Int imagIdx);
 		/** Register a voltage between two nodes to be sent through this
 		 * interface after every step.
 		 * @param from Number of the node used as the positive potential.

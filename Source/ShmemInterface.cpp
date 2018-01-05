@@ -26,6 +26,8 @@
 #include <villas/shmem.h>
 
 #include "ShmemInterface.h"
+#include "Components/DP_CurrentSource_Ideal.h"
+#include "Components/DP_VoltageSource_Ideal.h"
 
 using namespace DPsim;
 
@@ -36,9 +38,10 @@ void ShmemInterface::init(const char* wn, const char* rn, struct shmem_conf* con
 
 	// make local copies of the filenames, because shmem_int doesn't make copies
 	// and needs them for the close function
-	this->wname = std::string(wname);
-	this->rname = std::string(rname);
-	if (shmem_int_open(this->wname.c_str(), this->rname.c_str(), &this->mShmem, conf) < 0) {
+	wname = std::string(wn);
+	rname = std::string(rn);
+
+	if (shmem_int_open(wname.c_str(), rname.c_str(), &mShmem, conf) < 0) {
 		std::perror("Failed to open/map shared memory object");
 		std::exit(1);
 	}
@@ -107,15 +110,14 @@ void ShmemInterface::readValues(bool blocking)
 				std::exit(1);
 			}
 			// TODO integer format?
-			Real real = sample->data[extComp.realIdx].f;
-			Real imag = sample->data[extComp.imagIdx].f;
+			Complex v = Complex(sample->data[extComp.realIdx].f, sample->data[extComp.imagIdx].f);
 
-			ExternalCurrentSource *ecs = dynamic_cast<ExternalCurrentSource*>(extComp.comp);
+			auto *ecs = dynamic_cast<Component::DP::CurrentSourceIdeal*>(extComp.comp);
 			if (ecs)
-				ecs->setCurrent(real, imag);
-			ExternalVoltageSource *evs = dynamic_cast<ExternalVoltageSource*>(extComp.comp);
+				ecs->setCurrent(v);
+			auto *evs = dynamic_cast<Component::DP::VoltageSourceIdeal*>(extComp.comp);
 			if (evs)
-				evs->setVoltage(real, imag);
+				evs->setVoltage(v);
 		}
 
 		sample_put(sample);
