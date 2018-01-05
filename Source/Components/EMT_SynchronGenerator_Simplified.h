@@ -36,6 +36,7 @@ namespace EMT {
 	/// descriptive names in order to shorten formulas and increase the readability
 
 	class SynchronGeneratorSimplified : public SynchronGeneratorBase {
+
 	protected:
 
 		//##### Standard parameters #######
@@ -97,13 +98,11 @@ namespace EMT {
 			Real Rkq1, Real Llkq1, Real Rkq2, Real Llkq2,
 			Real inertia, bool logActive = false);
 
-
 		/// Initializes states in per unit or stator referred variables depending on the setting of the state type.
 		/// Function parameters have to be given in real units.
 		void init(Real om, Real dt,
 			Real initActivePower, Real initReactivePower, Real initTerminalVolt,
 			Real initVoltAngle, Real initFieldVoltage, Real initMechPower);
-
 
 		/// Performs an Euler forward step with the state space model of a synchronous generator
 		/// to calculate the flux and current from the voltage vector.
@@ -130,7 +129,6 @@ namespace EMT {
 		Real getElectricalTorque() { return mElecTorque*mBase_T; }
 		Real getRotationalSpeed() { return mOmMech*mBase_OmMech; }
 		Real getRotorPosition() { return mThetaMech; }
-
 
 		// Methods for network integrated components
 		void init(Real om, Real dt) { }

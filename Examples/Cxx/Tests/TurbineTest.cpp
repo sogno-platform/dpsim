@@ -26,7 +26,6 @@
 
 using namespace DPsim;
 
-
 // ##################################### Test only Turbine ##################################
 int main(int argc, char* argv[])
 {

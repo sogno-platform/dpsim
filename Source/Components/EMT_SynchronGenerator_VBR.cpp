@@ -61,7 +61,6 @@ void Component::EMT::SynchronGeneratorVBR::addGovernor(Real Ta, Real Tb, Real Tc
 void Component::EMT::SynchronGeneratorVBR::init(Real om, Real dt,
 	Real initActivePower, Real initReactivePower, Real initTerminalVolt, Real initVoltAngle, Real initFieldVoltage, Real initMechPower)
 {
-
 	mResistanceMat = Matrix::Zero(3, 3);
 	mResistanceMat <<
 		mRs, 0, 0,
@@ -227,7 +226,6 @@ void Component::EMT::SynchronGeneratorVBR::stepInPerUnit(Real om, Real dt, Real 
 	mI0 = parkTransform(mThetaMech, mIa, mIb, mIc)(2);
 
 	if (mHasExciter == true) {
-
 		// dq-transform of interface voltage
 		mVd = parkTransform(mThetaMech, mVa / mBase_v, mVb / mBase_v, mVc / mBase_v)(0);
 		mVq = parkTransform(mThetaMech, mVa / mBase_v, mVb / mBase_v, mVc / mBase_v)(1);
@@ -306,7 +304,6 @@ void Component::EMT::SynchronGeneratorVBR::stepInPerUnit(Real om, Real dt, Real 
 	}
 	mDPsid = mDLmd*(mPsifd / mLlfd) + mDLmd*(mPsikd / mLlkd);
 	mPsimd = mDLmd*(mPsifd / mLlfd + mPsikd / mLlkd + mId);
-
 
 	// Calculate dynamic voltages
 	if (mNumDampingWindings == 2) {

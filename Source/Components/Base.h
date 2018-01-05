@@ -46,6 +46,7 @@ namespace Component {
 
 	/// Base class for all elements that might be added to the matrix.
 	class Base {
+
 	protected:
 		/// Component name
 		String mName;

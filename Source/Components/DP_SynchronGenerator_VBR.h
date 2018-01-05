@@ -38,6 +38,7 @@ namespace DP {
 	/// descriptive names in order to shorten formulas and increase the readability
 
 	class SynchronGeneratorVBR : public SynchronGeneratorBase {
+
 	protected:
 
 		/// Exciter Model
@@ -124,7 +125,6 @@ namespace DP {
 		/// Dq stator current vector - from previous time step
 		Matrix mDqStatorCurrents_hist = Matrix::Zero(2, 1);
 
-
 		// ### Useful Matrices ###
 		/// inductance matrix
 		Matrix mDInductanceMat = Matrix::Zero(3, 3);
@@ -144,14 +144,12 @@ namespace DP {
 		/// Dynamic Voltage vector
 		Matrix mDVabc_hist = Matrix::Zero(6, 1);
 
-
 		/// Matrix paremeters for integration of rotor flux linkages - A
 		Matrix A_flux = Matrix::Zero(4, 4);
 		/// Variables for integration of rotor flux linkages - B
 		Matrix B_flux = Matrix::Zero(4, 2);
 		/// Variables for integration of rotor flux linkages - C
 		Matrix C_flux = Matrix::Zero(4, 1);
-
 
 	public:
 		SynchronGeneratorVBR() { };

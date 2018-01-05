@@ -66,8 +66,7 @@ int main(int argc, char* argv[])
 	// Exciter output
 	Real vt = 0;
 
-	while (getline(vd, line_vd) && getline(vq, line_vq))
-	{
+	while (getline(vd, line_vd) && getline(vq, line_vq)) {
 			t = t + dt;
 			mVd = std::stod(line_vd);
 			mVq = std::stod(line_vq);

@@ -29,6 +29,7 @@ namespace Component {
 namespace EMT {
 
 	class VoltageSourceFreq : public Component::Base {
+
 	protected:
 		Real mVoltageAmp;
 		Real mVoltagePhase;

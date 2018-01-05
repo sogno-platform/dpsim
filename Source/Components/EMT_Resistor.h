@@ -30,6 +30,7 @@ namespace Component {
 namespace EMT {
 
 	class Resistor : public Component::Base {
+
 	protected:
 		Real mResistance;
 		Real mConductance;

@@ -42,23 +42,28 @@ void ShmemInterface::init(const char* wn, const char* rn, struct shmem_conf* con
 		std::perror("Failed to open/map shared memory object");
 		std::exit(1);
 	}
+
 	mSeq = 0;
 	if (shmem_int_alloc(&mShmem, &mLastSample, 1) < 0) {
 		std::cerr << "Failed to allocate single sample from shmem pool" << std::endl;
 		std::exit(1);
 	}
+
 	mLastSample->sequence = 0;
 	mLastSample->ts.origin.tv_sec = 0;
 	mLastSample->ts.origin.tv_nsec = 0;
+
 	std::memset(&mLastSample->data, 0, mLastSample->capacity * sizeof(float));
 }
 
 ShmemInterface::ShmemInterface(const char* wname, const char* rname)
 {
 	struct shmem_conf conf;
+
 	conf.queuelen = 512;
 	conf.samplelen = 64;
 	conf.polling = 0;
+
 	init(wname, rname, &conf);
 }
 
@@ -78,6 +83,7 @@ void ShmemInterface::readValues(bool blocking)
 		mInit = 1;
 		return;
 	}
+
 	struct sample *sample = nullptr;
 	int ret = 0;
 	try {
@@ -174,6 +180,7 @@ void ShmemInterface::writeValues(SystemModel& model)
 			if (cd.imagIdx > len)
 				len = cd.imagIdx;
 		}
+
 		sample->length = len+1;
 		sample->sequence = mSeq++;
 		clock_gettime(CLOCK_REALTIME, &sample->ts.origin);

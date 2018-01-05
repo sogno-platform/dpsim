@@ -116,7 +116,6 @@ int main(int argc, char* argv[])
 	std::cout << "j vector:" << std::endl;
 	std::cout << newSim.getRightSideVector() << std::endl;
 
-
 	Real lastLogTime = 0;
 	Real logTimeStep = 0.00005;
 	newSim.setSwitchTime(0.1, 1);

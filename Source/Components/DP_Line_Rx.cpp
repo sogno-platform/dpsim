@@ -54,7 +54,6 @@ void Component::DP::RxLine::applySystemMatrixStamp(SystemModel& system)
 		correctr = (1 + 2 * b*b + R*a + b*b*b*b + R*a*b*b) / ((1 + b*b + R*a)*(1 + b*b + R*a) + R*R*a*a*b*b);
 		correcti = R*a*b*(1 + b*b) / ((1 + b*b + R*a)*(1 + b*b + R*a) + R*R*a*a*b*b);
 
-
 		if (mNode1 >= 0) {
 			system.addCompToSystemMatrix(mNode1, mNode1, mGlr, mGli);
 		}
@@ -69,7 +68,6 @@ void Component::DP::RxLine::applySystemMatrixStamp(SystemModel& system)
 		}
 	}
 	else {
-
 		Real a = system.getTimeStep() / (2. * mInductance);
 		Real b = system.getTimeStep() * system.getOmega() / 2.;
 		mGlr = a / (1 + b*b);
@@ -128,7 +126,6 @@ void Component::DP::RxLine::init(Real om, Real dt)
 void Component::DP::RxLine::step(SystemModel& system, Real time)
 {
 	if (mType == LineTypes::RxLine2Node) {
-
 		// Initialize internal state
 		cureqr_ind = mPrevCurFacRe*currr_ind - mPrevCurFacIm*mCurrIm + mGlr*deltavr_ind - mGli*deltavi_ind;
 		cureqi_ind = mPrevCurFacIm*currr_ind + mPrevCurFacRe*mCurrIm + mGli*deltavr_ind + mGlr*deltavi_ind;
@@ -145,10 +142,8 @@ void Component::DP::RxLine::step(SystemModel& system, Real time)
 		if (mNode2 >= 0) {
 			system.addCompToRightSideVector(mNode2, mCurEqRe, mCurEqIm);
 		}
-
 	}
 	else {
-
 		// Initialize internal state
 		mCurEqRe = mGlr * mDeltaVre - mGli * mDeltaVim + mPrevCurFacRe * mCurrRe - mPrevCurFacIm * mCurrIm;
 		mCurEqIm = mGli * mDeltaVre + mGlr * mDeltaVim + mPrevCurFacIm * mCurrRe + mPrevCurFacRe * mCurrIm;

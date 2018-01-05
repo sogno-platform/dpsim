@@ -49,14 +49,11 @@ Component::EMT::SynchronGeneratorSimplifiedCurrentSource::~SynchronGeneratorSimp
 	}
 }
 
-
 void Component::EMT::SynchronGeneratorSimplifiedCurrentSource::init(Real om, Real dt,
 	Real initActivePower, Real initReactivePower, Real initTerminalVolt,
 	Real initVoltAngle, Real initFieldVoltage, Real initMechPower)
 {
-
 	// Create matrices for state space representation
-
 	mVoltages = Matrix::Zero(3, 1);
 	mFluxes = Matrix::Zero(3, 1);
 	mCurrents = Matrix::Zero(3, 1);
@@ -64,7 +61,6 @@ void Component::EMT::SynchronGeneratorSimplifiedCurrentSource::init(Real om, Rea
 	mResistanceMat = Matrix::Zero(3, 3);
 	mReactanceMat = Matrix::Zero(3, 3);
 	mOmegaFluxMat = Matrix::Zero(3, 3);
-
 
 	mInductanceMat <<
 		-(mLl + mLmq), 0, 0,
@@ -132,7 +128,6 @@ void Component::EMT::SynchronGeneratorSimplifiedCurrentSource::applyRightSideVec
 
 void Component::EMT::SynchronGeneratorSimplifiedCurrentSource::step(SystemModel& system, Real time)
 {
-
 	stepInPerUnit(system.getOmega(), system.getTimeStep(), time, system.getNumMethod());
 
 	va.setVirtualNode(0, mVirtualNodes[0]);

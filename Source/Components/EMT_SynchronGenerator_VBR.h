@@ -38,6 +38,7 @@ namespace EMT {
 	/// descriptive names in order to shorten formulas and increase the readability
 
 	class SynchronGeneratorVBR : public SynchronGeneratorBase {
+
 	protected:
 
 		/// Exciter Model
@@ -59,7 +60,6 @@ namespace EMT {
 		Real mLa;
 		/// Auxiliar inductance
 		Real mLb;
-
 
 		/// d dynamic flux
 		Real mDPsid;
@@ -90,7 +90,6 @@ namespace EMT {
 		/// Interface curent phase c
 		Real mIc;
 
-
 		/// Interface curent phase a last time step
 		Real mIa_hist;
 		/// Interface curent phase b last time step
@@ -104,7 +103,6 @@ namespace EMT {
 		Real Rb;
 		///Load Resistance phase c
 		Real Rc;
-
 
 		/// Magnetizing flux linkage in q axis
 		Real mPsimq;
@@ -139,7 +137,6 @@ namespace EMT {
 		Matrix B_flux = Matrix::Zero(4, 2);
 		/// Variables for integration of rotor flux linkages - C
 		Matrix C_flux = Matrix::Zero(4, 1);
-
 
 	public:
 		SynchronGeneratorVBR() { };

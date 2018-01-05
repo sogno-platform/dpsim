@@ -38,8 +38,8 @@ namespace Component {
 	/// descriptive names in order to shorten formulas and increase the readability
 
 	class SynchronGeneratorBase : public Component::Base {
-	protected:
 
+	protected:
 		Logger* mLog;
 
 		// ### Machine parameters ###
@@ -127,7 +127,6 @@ namespace Component {
 		Matrix mInductanceMat;
 		/// resistance matrix
 		Matrix mResistanceMat;
-
 
 		// ### State variables ###
 		/// rotor speed omega_r

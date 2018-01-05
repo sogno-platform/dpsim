@@ -27,5 +27,5 @@
 namespace DPsim {
 
 	void updateProgressBar(Real time, Real finalTime);
-}
 
+}

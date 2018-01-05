@@ -168,6 +168,7 @@ Component::Base::Ptr Reader::mapPowerTransformer(PowerTransformer* trans) {
 	Real voltageNode2 = 0;
 	Real inductanceNode2 = 0;
 	Real resistanceNode2 = 0;
+
 	for (auto end : trans->PowerTransformerEnd) {
 		if (end->endNumber == 1) {
 			mLogger->Log(LogLevel::INFO) << "    PowerTransformerEnd_1 " << end->name
@@ -286,11 +287,13 @@ void Reader::parseFiles()
 	// Since all nodes have references to the equipment connected to them (via Terminals), but not
 	// the other way around (which we need for instantiating the components), we collect that information here as well.
 	mLogger->Log(LogLevel::INFO) << "#### List of topological nodes and associated terminals ####" << std::endl;
+
 	for (auto obj : mModel.Objects) {
 		TopologicalNode* topNode = dynamic_cast<TopologicalNode*>(obj);
 		if (topNode) {
 			mLogger->Log(LogLevel::INFO) << "TopologicalNode " << mTopNodes.size()+1 << " rid=" << topNode->mRID << " Terminals:" << std::endl;
 			mTopNodes[topNode->mRID] = (Matrix::Index) mTopNodes.size()+1;
+
 			for (auto term : topNode->Terminal) {
 				mLogger->Log(LogLevel::INFO) << "    " << term->mRID << std::endl;
 				ConductingEquipment *eq = term->ConductingEquipment;
@@ -312,6 +315,7 @@ void Reader::parseFiles()
 	// for various components.
 	mVoltages = new SvVoltage*[mTopNodes.size()];
 	mLogger->Log(LogLevel::INFO) << "#### List of node voltages from power flow calculation ####" << std::endl;
+
 	for (auto obj : mModel.Objects) {
 		if (SvVoltage* volt = dynamic_cast<SvVoltage*>(obj)) {
 			TopologicalNode* node = volt->TopologicalNode;
@@ -333,6 +337,7 @@ void Reader::parseFiles()
 			mPowerFlows[term->ConductingEquipment->mRID] = flow;
 		}
 	}
+
 	mLogger->Log(LogLevel::INFO) << "#### Create new components ####" << std::endl;
 	for (auto obj : mModel.Objects) {
 		Component::Base::Ptr comp = mapComponent(obj);

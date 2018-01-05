@@ -60,7 +60,6 @@ int main(int argc, char* argv[])
 	Real Tsm = 0.3;
 	Real Kg = 20;
 
-
 	Real Rs = 0.003;
 	Real Ll = 0.15;
 	Real Lmd = 1.6599;

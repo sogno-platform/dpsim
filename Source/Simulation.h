@@ -37,6 +37,7 @@
 #include "ExternalInterface.h"
 
 namespace DPsim {
+
 	struct switchConfiguration {
 		Real switchTime;
 		UInt systemIndex;

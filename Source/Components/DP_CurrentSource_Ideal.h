@@ -29,6 +29,7 @@ namespace Component {
 namespace DP {
 
 	class CurrentSourceIdeal : public Component::Base {
+
 	protected:
 		Complex mCurrent;
 

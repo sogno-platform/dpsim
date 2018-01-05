@@ -79,7 +79,6 @@ void Component::DP::PiLine::applySystemMatrixStamp(SystemModel& system)
 	if (mNode2 >= 0) {
 		system.addCompToSystemMatrix(mNode2, mNode2, mGcr, mGci);
 	}
-
 }
 
 void Component::DP::PiLine::init(Real om, Real dt)
@@ -164,7 +163,6 @@ void Component::DP::PiLine::postStep(SystemModel& system)
 	mCurrIndRe = mGlr * mDeltaVre - mGli * mDeltaVim + mCurEqIndRe;
 	mCurrIndIm = mGli * mDeltaVre + mGlr * mDeltaVim + mCurEqIndIm;
 
-
 	// extract solution
 	if (mNode1 >= 0) {
 		mVoltageAtNode1Re = system.getRealFromLeftSideVector(mNode1);
@@ -175,7 +173,6 @@ void Component::DP::PiLine::postStep(SystemModel& system)
 		mVoltageAtNode2Re = system.getRealFromLeftSideVector(mNode2);
 		mVoltageAtNode2Im = system.getImagFromLeftSideVector(mNode2);
 	}
-
 
 	mCurrCapRe1 = mGcr * mVoltageAtNode1Re - mGci * mVoltageAtNode1Im - mCurEqCapRe1;
 	mCurrCapIm1 = mGci * mVoltageAtNode1Re + mGcr * mVoltageAtNode1Im - mCurEqCapIm1;

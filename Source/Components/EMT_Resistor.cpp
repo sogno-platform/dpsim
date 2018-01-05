@@ -48,5 +48,3 @@ void Component::EMT::Resistor::applySystemMatrixStamp(SystemModel& system)
 		system.addRealToSystemMatrix(mNode2, mNode1, -mConductance);
 	}
 }
-
-

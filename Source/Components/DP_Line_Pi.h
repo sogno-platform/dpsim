@@ -29,6 +29,7 @@ namespace Component {
 namespace DP {
 
 	class PiLine : public Component::Base {
+
 	protected:
 		///resistance in [ohms]
 		Real mResistance;

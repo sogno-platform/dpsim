@@ -30,6 +30,7 @@ namespace DP {
 
 	/// Ideal transformer that is connected to ground
 	class TransformerIdeal : public Component::Base {
+
 	private:
 		/// Transformer ratio
 		Complex mRatio;

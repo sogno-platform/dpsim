@@ -52,7 +52,6 @@ void Component::DP::Inductor::applySystemMatrixStamp(SystemModel& system)
 	}
 }
 
-
 void Component::DP::Inductor::init(Real om, Real dt)
 {
 	mCurrRe = 0;
@@ -62,7 +61,6 @@ void Component::DP::Inductor::init(Real om, Real dt)
 	mDeltaVre = 0;
 	mDeltaVim = 0;
 }
-
 
 void Component::DP::Inductor::step(SystemModel& system, Real time)
 {
@@ -77,7 +75,6 @@ void Component::DP::Inductor::step(SystemModel& system, Real time)
 		system.addCompToRightSideVector(mNode2, mCurEqRe, mCurEqIm);
 	}
 }
-
 
 void Component::DP::Inductor::postStep(SystemModel& system)
 {

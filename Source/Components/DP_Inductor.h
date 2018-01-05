@@ -33,6 +33,7 @@ namespace DP {
 	/// The equivalent DC circuit is a resistance in paralel with a current source. The resistance is constant for a defined time step and system
 	///frequency and the current source changes for each iteration.
 	class Inductor : public Component::Base {
+
 	protected:
 
 		/// Inductance [H]

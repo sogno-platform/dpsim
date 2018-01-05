@@ -245,7 +245,6 @@ Matrix Component::EMT::SynchronGeneratorSimplified::parkTransform2(Real theta, R
 	return dq0vector;
 }
 
-
 Matrix Component::EMT::SynchronGeneratorSimplified::inverseParkTransform2(Real theta, Real d, Real q, Real zero)
 {
 	Matrix abcVector(3, 1);

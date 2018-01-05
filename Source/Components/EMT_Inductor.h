@@ -29,6 +29,7 @@ namespace Component {
 namespace EMT {
 
 	class Inductor : public Component::Base {
+
 	protected:
 		Real mInductance;
 		Real mDeltav;

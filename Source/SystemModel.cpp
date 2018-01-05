@@ -103,5 +103,3 @@ void SystemModel::setRightSideVectorToZero()
 {
 	mRightSideVector.setZero();
 }
-
-

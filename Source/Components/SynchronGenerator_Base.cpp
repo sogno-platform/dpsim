@@ -31,7 +31,6 @@ Component::SynchronGeneratorBase::SynchronGeneratorBase(String name, Int node1, 
 	Real inertia, bool logActive)
 	: Base(name, node1, node2, node3, logActive)
 {
-
 	mNomPower = nomPower;
 	mNomVolt = nomVolt;
 	mNomFreq = nomFreq;
@@ -99,7 +98,6 @@ void Component::SynchronGeneratorBase::initWithPerUnitParam(
 void Component::SynchronGeneratorBase::initStatesInPerUnit(Real initActivePower, Real initReactivePower,
 	Real initTerminalVolt, Real initVoltAngle, Real initFieldVoltage, Real initMechPower)
 {
-
 	// #### Electrical variables ##############################################
 	Real init_P = initActivePower / mNomPower;
 	Real init_Q = initReactivePower / mNomPower;

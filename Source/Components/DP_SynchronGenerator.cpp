@@ -43,7 +43,6 @@ Component::DP::SynchronGenerator::~SynchronGenerator()
 	}
 }
 
-
 void Component::DP::SynchronGenerator::init(Real om, Real dt,
 	Real initActivePower, Real initReactivePower, Real initTerminalVolt,
 	Real initVoltAngle, Real initFieldVoltage, Real initMechPower)
@@ -187,7 +186,6 @@ void Component::DP::SynchronGenerator::stepInPerUnit(Real om, Real dt, Real time
 	mV0 = abcToDq0Transform(mThetaMech, mVaRe, mVbRe, mVcRe, mVaIm, mVbIm, mVcIm)(2);
 
 	if (numMethod == NumericalMethod::Trapezoidal_current) {
-
 		if (mNumDampingWindings == 2) {
 			Matrix A = (mReactanceMat*mResistanceMat);
 			Matrix B = mReactanceMat;
@@ -275,9 +273,7 @@ void Component::DP::SynchronGenerator::stepInPerUnit(Real om, Real dt, Real time
 		}
 
 	}
-
 	else {
-
 		// Calculation of rotational speed with euler
 		mElecTorque = (mPsid*mIq - mPsiq*mId);
 		mOmMech = mOmMech + dt * (1 / (2 * mH) * (mMechTorque - mElecTorque));
@@ -351,7 +347,6 @@ void Component::DP::SynchronGenerator::stepInPerUnit(Real om, Real dt, Real time
 			mPsifd = Fluxes(4, 0);
 			mPsikd = Fluxes(5, 0);
 		}
-
 
 		// Calculation of currents based on inverse of inductance matrix
 		mId = ((mLlfd*mLlkd + mLmd*(mLlfd + mLlkd))*mPsid - mLmd*mLlkd*mPsifd - mLlfd*mLmd*mPsikd) / detLd;
@@ -428,7 +423,6 @@ void Component::DP::SynchronGenerator::stepInPerUnit(Real om, Real dt, Real time
 
 }
 
-
 void Component::DP::SynchronGenerator::postStep(SystemModel& system)
 {
 	if (mNode1 >= 0) {
@@ -456,7 +450,6 @@ void Component::DP::SynchronGenerator::postStep(SystemModel& system)
 		mVcIm = 0;
 	}
 }
-
 
 Matrix Component::DP::SynchronGenerator::abcToDq0Transform(Real theta, Real aRe, Real bRe, Real cRe, Real aIm, Real bIm, Real cIm)
 {

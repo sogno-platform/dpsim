@@ -32,6 +32,7 @@ namespace DP {
 
 	// TODO currently modeled as an impedance, which obviously doesn't have a constant power characteristic
 	class PQLoad : public Component::Base {
+
 	protected:
 		/// Active power [Watt]
 		Real mActivePower;

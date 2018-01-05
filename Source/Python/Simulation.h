@@ -35,6 +35,7 @@
 #include "Components/Base.h"
 
 namespace DPsim {
+
 	enum SimState {
 		StateStopped = 0,
 		StateRunning,
@@ -43,6 +44,7 @@ namespace DPsim {
 	};
 
 namespace Python {
+
 	struct Simulation {
 		PyObject_HEAD
 

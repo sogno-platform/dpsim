@@ -32,9 +32,9 @@ Component::EMT::SynchronGenerator::SynchronGenerator(String name, Int node1, Int
 	Real inertia, bool logActive)
 	: SynchronGeneratorBase(name, node1, node2, node3, nomPower, nomVolt, nomFreq, poleNumber, nomFieldCur,
 		Rs, Ll, Lmd, Lmd0, Lmq, Lmq0, Rfd, Llfd, Rkd, Llkd, Rkq1, Llkq1, Rkq2, Llkq2,
-		inertia, logActive) { }
-
-
+		inertia, logActive)
+{
+}
 
 Component::EMT::SynchronGenerator::~SynchronGenerator()
 {
@@ -43,12 +43,10 @@ Component::EMT::SynchronGenerator::~SynchronGenerator()
 	}
 }
 
-
 void Component::EMT::SynchronGenerator::init(Real om, Real dt,
 	Real initActivePower, Real initReactivePower, Real initTerminalVolt,
 	Real initVoltAngle, Real initFieldVoltage, Real initMechPower)
 {
-
 	// Create matrices for state space representation
 	if (mNumDampingWindings == 2) {
 		mVoltages = Matrix::Zero(7, 1);
@@ -139,7 +137,6 @@ void Component::EMT::SynchronGenerator::init(Real om, Real dt,
 	mIb = inverseParkTransform2(mThetaMech, mId* mBase_i, mIq* mBase_i, mI0* mBase_i)(1);
 	mIc = inverseParkTransform2(mThetaMech, mId* mBase_i, mIq* mBase_i, mI0* mBase_i)(2);
 }
-
 
 void Component::EMT::SynchronGenerator::step(SystemModel& system, Real time)
 {
@@ -266,7 +263,6 @@ void Component::EMT::SynchronGenerator::stepInPerUnit(Real om, Real dt, Real tim
 		}
 	}
 	else {
-
 		// Calculation of rotational speed with euler
 		mElecTorque = (mPsid*mIq - mPsiq*mId);
 		mOmMech = mOmMech + dt * (1 / (2 * mH) * (mMechTorque - mElecTorque));
@@ -340,7 +336,6 @@ void Component::EMT::SynchronGenerator::stepInPerUnit(Real om, Real dt, Real tim
 			mPsifd = Fluxes(4, 0);
 			mPsikd = Fluxes(5, 0);
 		}
-
 
 		// Calculation of currents based on inverse of inductance matrix
 		mId = ((mLlfd*mLlkd + mLmd*(mLlfd + mLlkd))*mPsid - mLmd*mLlkd*mPsifd - mLlfd*mLmd*mPsikd) / detLd;

@@ -40,7 +40,6 @@ Simulation::Simulation()
 Simulation::Simulation(Component::Base::List elements, Real om, Real dt, Real tf, Logger& logger, SimulationType simType, Int downSampleRate)
 	: Simulation()
 {
-
 	mLogger = &logger;
 	mSystemModel.setSimType(simType);
 	mSystemModel.setTimeStep(dt);
@@ -62,9 +61,7 @@ Simulation::Simulation(Component::Base::List elements, Real om, Real dt, Real tf
 	mLogger->LogMatrix(LogLevel::INFO, mSystemModel.getRightSideVector());
 }
 
-
 Simulation::~Simulation() {
-
 }
 
 void Simulation::initialize(Component::Base::List newElements)
@@ -77,7 +74,6 @@ void Simulation::initialize(Component::Base::List newElements)
 	// TODO we use the values from the first element vector right now and assume that
 	// these values don't change on switches
 	for (auto element : newElements) {
-
 		// determine maximum node in component list
 		if (element->getNode1() > maxNode) {
 			maxNode = element->getNode1();
@@ -132,7 +128,6 @@ void Simulation::addSystemTopology(Component::Base::List newElements)
 
 	mSystemModel.addSystemMatrix();
 }
-
 
 Int Simulation::step(bool blocking)
 {
@@ -431,11 +426,9 @@ void Simulation::runRT(RTMethod rtMethod, bool startSynch, Logger& logger, Logge
 }
 #endif /* WITH_RT */
 
-
 int Simulation::stepGeneratorVBR(Logger& leftSideVectorLog, Logger& rightSideVectorLog,
 	Component::Base::Ptr generator, Real time)
 {
-
 	// Set to zero because all components will add their contribution for the current time step to the current value
 	mSystemModel.getRightSideVector().setZero();
 
@@ -452,7 +445,6 @@ int Simulation::stepGeneratorVBR(Logger& leftSideVectorLog, Logger& rightSideVec
 
 	if (mCurrentSwitchTimeIndex < mSwitchEventVector.size()) {
 		if (mTime >= mSwitchEventVector[mCurrentSwitchTimeIndex].switchTime) {
-
 			switchSystemMatrix(mSwitchEventVector[mCurrentSwitchTimeIndex].systemIndex);
 
 			mCurrentSwitchTimeIndex++;

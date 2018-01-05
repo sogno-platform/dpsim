@@ -41,6 +41,7 @@
 #endif
 
 namespace DPsim {
+
 	// ### Types ###
 	typedef unsigned int UInt;
 	typedef int Int;

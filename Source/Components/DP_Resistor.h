@@ -30,6 +30,7 @@ namespace Component {
 namespace DP {
 
 	class Resistor : public Component::Base {
+
 	protected:
 
 		///Resistance [ohm]

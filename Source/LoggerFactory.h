@@ -30,6 +30,7 @@
 #include "Logger.h"
 
 namespace DPsim {
+
 	class LoggerFactory {
 
 		typedef std::map<std::string, std::unique_ptr<Logger>>  Container;

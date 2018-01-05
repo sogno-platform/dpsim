@@ -36,6 +36,7 @@ namespace DP {
 	/// descriptive names in order to shorten formulas and increase the readability
 
 	class SynchronGenerator : public SynchronGeneratorBase {
+
 	protected:
 
 		/// Determinant of Ld (inductance matrix of d axis)
@@ -102,7 +103,6 @@ namespace DP {
 			Real initActivePower, Real initReactivePower, Real initTerminalVolt,
 			Real initVoltAngle, Real initFieldVoltage, Real initMechPower);
 
-
 		/// Performs an Euler forward step with the state space model of a synchronous generator
 		/// to calculate the flux and current from the voltage vector.
 		void step(SystemModel& system, Real time);
@@ -128,7 +128,6 @@ namespace DP {
 		Real getElectricalTorque() { return mElecTorque*mBase_T; }
 		Real getRotationalSpeed() { return mOmMech*mBase_OmMech; }
 		Real getRotorPosition() { return mThetaMech; }
-
 
 		void init(Real om, Real dt) { }
 		void applySystemMatrixStamp(SystemModel& system) { }

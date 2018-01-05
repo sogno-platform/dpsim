@@ -29,6 +29,7 @@ namespace Component {
 namespace DP {
 
 	class InterfacedInductor : public Component::Base {
+
 	protected:
 		Real mInductance;
 		Real mVoltageRe;

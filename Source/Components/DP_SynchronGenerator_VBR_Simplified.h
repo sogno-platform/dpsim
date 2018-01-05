@@ -37,6 +37,7 @@ namespace DP {
 	/// descriptive names in order to shorten formulas and increase the readability
 
 	class SynchronGeneratorVBRSimplified : public SynchronGeneratorBase {
+
 	protected:
 
 		/// Exciter Model
@@ -64,7 +65,6 @@ namespace DP {
 		Real mIa_hist;
 		Real mIb_hist;
 		Real mIc_hist;
-
 
 		/// d dynamic flux
 		Real mDPsid;
@@ -130,7 +130,6 @@ namespace DP {
 		Matrix B_flux = Matrix::Zero(4, 2);
 		/// Variables for integration of rotor flux linkages - C
 		Matrix C_flux = Matrix::Zero(4, 1);
-
 
 	public:
 		SynchronGeneratorVBRSimplified() { };

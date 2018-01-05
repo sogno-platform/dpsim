@@ -33,6 +33,7 @@ Component::DP::Resistor::Resistor(String name, Int src, Int dest, Real resistanc
 void Component::DP::Resistor::applySystemMatrixStamp(SystemModel& system)
 {
 	mConductance = 1.0 / mResistance;
+
 	// Set diagonal entries
 	if (mNode1 >= 0) {
 		system.addCompToSystemMatrix(mNode1, mNode1, mConductance, 0);

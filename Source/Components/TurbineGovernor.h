@@ -35,8 +35,8 @@ namespace Component {
 	/// descriptive names in order to shorten formulas and increase the readability
 
 	class TurbineGovernor {
-	protected:
 
+	protected:
 		// ### Steam Turbine Parameters ####
 
 		/// Time constant of main inlet volume and steam chest
@@ -87,7 +87,6 @@ namespace Component {
 		Real Psm_in = 0;
 
 		Real AuxVar = 0;
-
 
 		bool mLogActive;
 		Logger* mLog;

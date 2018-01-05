@@ -33,6 +33,7 @@ namespace DP {
 
 	/// Transformer that includes an inductance and resistance
 	class Transformer : public Component::Base {
+
 	private:
 		/// Transformer ratio
 		Complex mRatio;

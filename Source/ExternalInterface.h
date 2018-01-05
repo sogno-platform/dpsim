@@ -39,6 +39,7 @@ namespace DPsim {
 	 * sink.
 	 */
 	class ExternalInterface {
+
 	protected:
 		/// Internal struct for storing an exported voltage.
 		struct VoltDiff {
@@ -57,6 +58,7 @@ namespace DPsim {
 		std::vector<VoltDiff> mExportedVoltages;
 		std::vector<ExtComponent> mExportedCurrents;
 		bool mInit = 0;
+
 	public:
 		/** Register an external voltage source to use values from this interface.
 		 * @param evs The external voltage source to register.

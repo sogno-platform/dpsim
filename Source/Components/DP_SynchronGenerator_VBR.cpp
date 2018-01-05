@@ -392,7 +392,6 @@ void Component::DP::SynchronGeneratorVBR::CalculateLandR(Real time)
 	Real c_Re = cos(2 * mThetaMech2 - 2 * 1*mBase_OmMech*time - 2 * mTheta0);
 	Real c_Im = sin(2 * mThetaMech2 - 2 * 1*mBase_OmMech*time - 2 * mTheta0);
 
-
 	Real a = 2 * (mTheta0);
 
 	L1_Re <<
@@ -426,7 +425,6 @@ void Component::DP::SynchronGeneratorVBR::CalculateLandR(Real time)
 
 void Component::DP::SynchronGeneratorVBR::postStep(SystemModel& system)
 {
-
 }
 
 Matrix Component::DP::SynchronGeneratorVBR::abcToDq0Transform(Real theta, Real aRe, Real bRe, Real cRe, Real aIm, Real bIm, Real cIm)

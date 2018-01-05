@@ -22,7 +22,6 @@
 #include <experimental/filesystem>
 namespace fs = std::experimental::filesystem;
 
-
 #include "Logger.h"
 #include <iomanip>
 
@@ -118,7 +117,6 @@ void Logger::LogMatrix(LogLevel level, const Matrix& data)
 
 	mLogFile << data << std::endl;
 }
-
 
 void Logger::LogDataLine(Real time, Matrix& data)
 {

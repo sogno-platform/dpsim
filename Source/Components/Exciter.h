@@ -71,7 +71,6 @@ namespace Component {
 		bool mLogActive;
 		Logger* mLog;
 
-
 	public:
 		Exciter() { };
 		~Exciter() { };

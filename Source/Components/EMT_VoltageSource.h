@@ -29,6 +29,7 @@ namespace Component {
 namespace EMT {
 
 	class VoltageSource : public Component::Base {
+
 	protected:
 		Complex mVoltage;
 		Real mVoltageAmp;

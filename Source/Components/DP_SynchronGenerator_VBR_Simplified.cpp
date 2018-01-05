@@ -105,7 +105,6 @@ void Component::DP::SynchronGeneratorVBRSimplified::init(Real om, Real dt,
 	mDVq = mOmMech*mDPsid;
 	mPsimq = mDLmq*(mPsikq1 / mLlkq1 + mPsikq2 / mLlkq2 + mIq);
 
-
 	mDVd = -mOmMech*mDPsiq;
 	mPsimd = mDLmd*(mPsifd / mLlfd + mPsikd / mLlkd + mId);
 
@@ -122,7 +121,6 @@ void Component::DP::SynchronGeneratorVBRSimplified::init(Real om, Real dt,
 	mIc = inverseParkTransform(mThetaMech, mIq, mId, mI0)(2);
 
 }
-
 
 void Component::DP::SynchronGeneratorVBRSimplified::step(SystemModel& system, Real time)
 {
@@ -178,10 +176,8 @@ void Component::DP::SynchronGeneratorVBRSimplified::stepInPerUnit(Real om, Real 
 	mVd = -mRs*mId + mOmMech*mDLq*mIq + mDVd;
 
 	if (mHasExciter == true) {
-
 		mVfd = mExciter.step(mVd, mVq, 1, dt);
 	}
-
 
 	C_flux <<
 		0,
@@ -202,7 +198,6 @@ void Component::DP::SynchronGeneratorVBRSimplified::stepInPerUnit(Real om, Real 
 	mPsifd = mRotorFlux(2);
 	mPsikd = mRotorFlux(3);
 
-
 	// Calculate dynamic flux likages
 	mDPsiq = mDLmq*(mPsikq1 / mLlkq1) + mDLmq*(mPsikq2 / mLlkq2);
 	mPsimq = mDLmq*(mPsikq1 / mLlkq1 + mPsikq2 / mLlkq2 + mIq);
@@ -220,7 +215,6 @@ void Component::DP::SynchronGeneratorVBRSimplified::stepInPerUnit(Real om, Real 
 
 void Component::DP::SynchronGeneratorVBRSimplified::postStep(SystemModel& system)
 {
-
 }
 
 void Component::DP::SynchronGeneratorVBRSimplified::CalculateLandpL()

@@ -29,6 +29,7 @@ namespace Component {
 namespace DP {
 
 	class VoltageSourceFreq : public Component::Base {
+
 	protected:
 		Real mVoltageAmp;
 		Real mVoltagePhase;
@@ -57,7 +58,6 @@ namespace DP {
 		void postStep(SystemModel& system) { }
 		Complex getCurrent(SystemModel& system);
 	};
-
 }
 }
 }

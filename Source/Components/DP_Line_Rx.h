@@ -29,6 +29,7 @@ namespace Component {
 namespace DP {
 
 	class RxLine : public Component::Base {
+
 	protected:
 		Real mResistance;
 		Real mConductance;
