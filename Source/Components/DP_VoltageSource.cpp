@@ -26,10 +26,10 @@ using namespace DPsim;
 Component::DP::VoltageSource::VoltageSource(String name, Int src, Int dest, Complex voltage, Real resistance)
 	: Base(name, src, dest)
 {
-	this->mVoltage = voltage;
-	this->mResistance = resistance;
-	attrMap["voltage"]    = { Attribute::Complex, &this->mVoltage };
-	attrMap["resistance"] = { Attribute::Real, &this->mResistance };
+	mVoltage = voltage;
+	mResistance = resistance;
+	attrMap["voltage"]    = { Attribute::Complex, &mVoltage };
+	attrMap["resistance"] = { Attribute::Real, &mResistance };
 }
 
 void Component::DP::VoltageSource::applySystemMatrixStamp(SystemModel& system)

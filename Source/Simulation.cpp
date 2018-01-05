@@ -303,7 +303,7 @@ void Simulation::increaseByTimeStep()
 
 void Simulation::addExternalInterface(ExternalInterface *eint)
 {
-	this->mExternalInterfaces.push_back(eint);
+	mExternalInterfaces.push_back(eint);
 }
 
 void Simulation::setNumericalMethod(NumericalMethod numMethod)

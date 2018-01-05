@@ -29,7 +29,7 @@ Component::EMT::VoltageSourceIdeal::VoltageSourceIdeal(String name, Int src, Int
 	mVoltage = voltage;
 	mNumVirtualNodes = 1;
 	mVirtualNodes = { 0 };
-	attrMap["voltage"] = { Attribute::Real, &this->mVoltage };
+	attrMap["voltage"] = { Attribute::Real, &mVoltage };
 }
 
 void Component::EMT::VoltageSourceIdeal::applySystemMatrixStamp(SystemModel& system)

@@ -29,9 +29,9 @@ Component::DP::PiLine::PiLine(String name, Int node1, Int node2, Int node3, Real
 	mResistance = resistance;
 	mInductance = inductance;
 	mCapacitance = capacitance;
-	attrMap["resistance"]  = { Attribute::Real, &this->mResistance };
-	attrMap["inductance"]  = { Attribute::Real, &this->mInductance };
-	attrMap["capacitance"] = { Attribute::Real, &this->mCapacitance };
+	attrMap["resistance"]  = { Attribute::Real, &mResistance };
+	attrMap["inductance"]  = { Attribute::Real, &mInductance };
+	attrMap["capacitance"] = { Attribute::Real, &mCapacitance };
 }
 
 void Component::DP::PiLine::applySystemMatrixStamp(SystemModel& system)

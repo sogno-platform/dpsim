@@ -73,21 +73,21 @@ namespace Component {
 
 		Base(String name, Int node1, Int node2, bool logActive = false)
 		{
-			this->mName = name;
-			this->mNode1 = node1 - 1;
-			this->mNode2 = node2 - 1;
-			this->mLogActive = logActive;
+			mName = name;
+			mNode1 = node1 - 1;
+			mNode2 = node2 - 1;
+			mLogActive = logActive;
 
-			attrMap["name"]  = { Attribute::String,  &this->mName };
-			attrMap["node1"] = { Attribute::Integer, &this->mNode1 };
-			attrMap["node2"] = { Attribute::Integer, &this->mNode2 };
+			attrMap["name"]  = { Attribute::String,  &mName };
+			attrMap["node1"] = { Attribute::Integer, &mNode1 };
+			attrMap["node2"] = { Attribute::Integer, &mNode2 };
 		}
 
 		Base(String name, Int node1, Int node2, Int node3, bool logActive = false)
 			: Base(name, node1, node2, logActive)
 		{
-			this->mNode3 = node3 - 1;
-			attrMap["node3"] = { Attribute::Integer, &this->mNode3 };
+			mNode3 = node3 - 1;
+			attrMap["node3"] = { Attribute::Integer, &mNode3 };
 		}
 
 		virtual ~Base() { }

@@ -26,13 +26,13 @@ using namespace DPsim;
 Component::EMT::Resistor::Resistor(String name, Int src, Int dest, Real resistance)
 	: Base(name, src, dest)
 {
-	this->mResistance = resistance;
-	attrMap["resistance"] = { Attribute::Real, &this->mResistance };
+	mResistance = resistance;
+	attrMap["resistance"] = { Attribute::Real, &mResistance };
 }
 
 void Component::EMT::Resistor::applySystemMatrixStamp(SystemModel& system)
 {
-	this->mConductance = 1.0 / mResistance;
+	mConductance = 1.0 / mResistance;
 
 	// Set diagonal entries
 	if (mNode1 >= 0) {
