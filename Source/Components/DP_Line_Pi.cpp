@@ -23,7 +23,9 @@
 
 using namespace DPsim;
 
-Component::DP::PiLine::PiLine(String name, Int node1, Int node2, Int node3, Real resistance, Real inductance, Real capacitance) : Base(name, node1, node2, node3) {
+Component::DP::PiLine::PiLine(String name, Int node1, Int node2, Int node3, Real resistance, Real inductance, Real capacitance)
+	: Base(name, node1, node2, node3)
+{
 	mResistance = resistance;
 	mInductance = inductance;
 	mCapacitance = capacitance;
@@ -32,7 +34,8 @@ Component::DP::PiLine::PiLine(String name, Int node1, Int node2, Int node3, Real
 	attrMap["capacitance"] = { Attribute::Real, &this->mCapacitance };
 }
 
-void Component::DP::PiLine::applySystemMatrixStamp(SystemModel& system) {
+void Component::DP::PiLine::applySystemMatrixStamp(SystemModel& system)
+{
 	mConductance = 1.0 / mResistance;
 	Real a = system.getTimeStep() / (2. * mInductance);
 	Real b = system.getTimeStep() * system.getOmega() / 2.;
@@ -79,7 +82,8 @@ void Component::DP::PiLine::applySystemMatrixStamp(SystemModel& system) {
 
 }
 
-void Component::DP::PiLine::init(Real om, Real dt) {
+void Component::DP::PiLine::init(Real om, Real dt)
+{
 	// Initialize internal state
 	mCurrIndRe = 0;
 	mCurrIndIm = 0;
@@ -109,8 +113,8 @@ void Component::DP::PiLine::init(Real om, Real dt) {
 	mVoltageAtNode2Im = 0;
 }
 
-void Component::DP::PiLine::step(SystemModel& system, Real time) {
-
+void Component::DP::PiLine::step(SystemModel& system, Real time)
+{
 	// Calculate current source of inductor
 	mCurEqIndRe = mGlr * mDeltaVre - mGli * mDeltaVim + mPrevCurFacRe * mCurrIndRe - mPrevCurFacIm * mCurrIndIm;
 	mCurEqIndIm = mGli * mDeltaVre + mGlr * mDeltaVim + mPrevCurFacIm * mCurrIndRe + mPrevCurFacRe * mCurrIndIm;
@@ -138,7 +142,8 @@ void Component::DP::PiLine::step(SystemModel& system, Real time) {
 	}
 }
 
-void Component::DP::PiLine::postStep(SystemModel& system) {
+void Component::DP::PiLine::postStep(SystemModel& system)
+{
 	Real vposr, vnegr, vposi, vnegi;
 
 	// extract solution

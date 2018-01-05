@@ -23,7 +23,8 @@
 
 using namespace DPsim;
 
-Component::EMT::VoltageSourceIdeal::VoltageSourceIdeal(String name, Int src, Int dest, Real voltage) : Base(name, src, dest)
+Component::EMT::VoltageSourceIdeal::VoltageSourceIdeal(String name, Int src, Int dest, Real voltage)
+	: Base(name, src, dest)
 {
 	mVoltage = voltage;
 	mNumVirtualNodes = 1;

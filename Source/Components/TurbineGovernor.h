@@ -94,7 +94,7 @@ namespace Component {
 
 	public:
 		TurbineGovernor() { };
-		~TurbineGovernor() {};
+		~TurbineGovernor() { };
 
 		/// Initializes exciter parameters
 		TurbineGovernor(Real Ta, Real Tb, Real Tc, Real Fa, Real Fb, Real Fc, Real K, Real Tsr, Real Tsm);

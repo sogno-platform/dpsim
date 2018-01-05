@@ -23,12 +23,15 @@
 
 using namespace DPsim;
 
-Component::DP::Inductor::Inductor(String name, Int src, Int dest, Real inductance) : Base(name, src, dest) {
+Component::DP::Inductor::Inductor(String name, Int src, Int dest, Real inductance)
+	: Base(name, src, dest)
+{
 	mInductance = inductance;
 	attrMap["inductance"] = { Attribute::Real, &mInductance };
 }
 
-void Component::DP::Inductor::applySystemMatrixStamp(SystemModel& system) {
+void Component::DP::Inductor::applySystemMatrixStamp(SystemModel& system)
+{
 	Real a = system.getTimeStep() / (2. * mInductance);
 	Real b = system.getTimeStep() * system.getOmega() / 2.;
 	mGlr = a / (1 + b*b);
@@ -50,7 +53,8 @@ void Component::DP::Inductor::applySystemMatrixStamp(SystemModel& system) {
 }
 
 
-void Component::DP::Inductor::init(Real om, Real dt) {
+void Component::DP::Inductor::init(Real om, Real dt)
+{
 	mCurrRe = 0;
 	mCurrIm = 0;
 	mCurEqRe = 0;
@@ -60,7 +64,8 @@ void Component::DP::Inductor::init(Real om, Real dt) {
 }
 
 
-void Component::DP::Inductor::step(SystemModel& system, Real time) {
+void Component::DP::Inductor::step(SystemModel& system, Real time)
+{
 	// Initialize internal state
 	mCurEqRe = mGlr * mDeltaVre - mGli * mDeltaVim + mPrevCurFacRe * mCurrRe - mPrevCurFacIm * mCurrIm;
 	mCurEqIm = mGli * mDeltaVre + mGlr * mDeltaVim + mPrevCurFacIm * mCurrRe + mPrevCurFacRe * mCurrIm;
@@ -68,17 +73,18 @@ void Component::DP::Inductor::step(SystemModel& system, Real time) {
 	if (mNode1 >= 0) {
 		system.addCompToRightSideVector(mNode1, -mCurEqRe, -mCurEqIm);
 	}
-	if (mNode2 >= 0)	{
+	if (mNode2 >= 0) {
 		system.addCompToRightSideVector(mNode2, mCurEqRe, mCurEqIm);
 	}
 }
 
 
-void Component::DP::Inductor::postStep(SystemModel& system) {
+void Component::DP::Inductor::postStep(SystemModel& system)
+{
 	Real vposr, vnegr, vposi, vnegi;
 
 	// extract solution
-	if (mNode1 >= 0)	{
+	if (mNode1 >= 0) {
 		system.getRealFromLeftSideVector(mNode1);
 		vposr = system.getRealFromLeftSideVector(mNode1);
 		vposi = system.getImagFromLeftSideVector(mNode1);
@@ -103,6 +109,7 @@ void Component::DP::Inductor::postStep(SystemModel& system) {
 	mCurrIm = mGli * mDeltaVre + mGlr * mDeltaVim + mCurEqIm;
 }
 
-Complex Component::DP::Inductor::getCurrent(SystemModel& system) {
+Complex Component::DP::Inductor::getCurrent(SystemModel& system)
+{
 	return Complex(mCurrRe, mCurrIm);
 }

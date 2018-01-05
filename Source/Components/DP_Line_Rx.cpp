@@ -23,7 +23,8 @@
 
 using namespace DPsim;
 
-Component::DP::RxLine::RxLine(String name, Int node1, Int node2, Real resistance, Real inductance, LineTypes type) : Base(name, node1, node2)
+Component::DP::RxLine::RxLine(String name, Int node1, Int node2, Real resistance, Real inductance, LineTypes type)
+	: Base(name, node1, node2)
 {
 	mNumVirtualNodes = 1;
 	mVirtualNodes = { 0 };

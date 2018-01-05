@@ -23,7 +23,8 @@
 
 using namespace DPsim;
 
-Component::DP::VoltageSource::VoltageSource(String name, Int src, Int dest, Complex voltage, Real resistance) : Base(name, src, dest)
+Component::DP::VoltageSource::VoltageSource(String name, Int src, Int dest, Complex voltage, Real resistance)
+	: Base(name, src, dest)
 {
 	this->mVoltage = voltage;
 	this->mResistance = resistance;
@@ -85,6 +86,7 @@ Complex Component::DP::VoltageSource::getCurrent(SystemModel& system)
 	return Complex(real, imag);
 }
 
-void Component::DP::VoltageSource::setVoltage(Real real, Real imag) {
 	this->mVoltage = Complex(real, imag);
+void Component::DP::VoltageSource::setVoltage(Complex voltage)
+{
 }

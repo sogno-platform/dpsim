@@ -40,8 +40,7 @@ int main(int argc, char* argv[])
 
 	// Main Simulation Loop
 	std::cout << "Start simulation." << std::endl;
-	while (newSim.step(log, llog, rlog))
-	{
+	while (newSim.step(log, llog, rlog)) {
 		newSim.increaseByTimeStep();
 		updateProgressBar(newSim.getTime(), newSim.getFinalTime());
 	}

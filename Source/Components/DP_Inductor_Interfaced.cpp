@@ -31,14 +31,16 @@ Component::DP::InterfacedInductor::InterfacedInductor(String name, Int src, Int 
 }
 
 /// Initialize internal state
-void Component::DP::InterfacedInductor::init(Real om, Real dt) {
+void Component::DP::InterfacedInductor::init(Real om, Real dt)
+{
 	mCurrentRe = 0;
 	mCurrentIm = 0;
 	mVoltageRe = 0;
 	mVoltageIm = 0;
 }
 
-void Component::DP::InterfacedInductor::step(SystemModel& system, Real time) {
+void Component::DP::InterfacedInductor::step(SystemModel& system, Real time)
+{
 	// Calculate current for this step
 	mCurrentStepRe = mCurrentRe + system.getTimeStep() * (1. / mInductance * mVoltageRe + system.getOmega() * mCurrentIm);
 	mCurrentStepIm = mCurrentIm + system.getTimeStep() * (1. / mInductance * mVoltageIm - system.getOmega() * mCurrentRe);
@@ -54,7 +56,8 @@ void Component::DP::InterfacedInductor::step(SystemModel& system, Real time) {
 	mCurrentIm = mCurrentStepIm;
 }
 
-void Component::DP::InterfacedInductor::postStep(SystemModel& system) {
+void Component::DP::InterfacedInductor::postStep(SystemModel& system)
+{
 	Real vposr, vnegr, vposi, vnegi;
 
 	// extract solution
@@ -79,6 +82,7 @@ void Component::DP::InterfacedInductor::postStep(SystemModel& system) {
 	mVoltageIm = vposi - vnegi;
 }
 
-Complex Component::DP::InterfacedInductor::getCurrent(SystemModel& system) {
+Complex Component::DP::InterfacedInductor::getCurrent(SystemModel& system)
+{
 	return Complex(mCurrentRe, mCurrentIm);
 }

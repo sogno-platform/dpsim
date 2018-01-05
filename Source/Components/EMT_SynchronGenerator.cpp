@@ -179,9 +179,7 @@ void Component::EMT::SynchronGenerator::stepInPerUnit(Real om, Real dt, Real tim
 	mV0 = parkTransform2(mThetaMech, mVa, mVb, mVc)(2);
 
 	if (numMethod == NumericalMethod::Trapezoidal_current) {
-
-		if (mNumDampingWindings == 2)
-		{
+		if (mNumDampingWindings == 2) {
 			Matrix A = (mReactanceMat*mResistanceMat);
 			Matrix B = mReactanceMat;
 			Matrix C = Matrix::Zero(7, 1);
@@ -416,7 +414,8 @@ void Component::EMT::SynchronGenerator::stepInPerUnit(Real om, Real dt, Real tim
 	}
 }
 
-void Component::EMT::SynchronGenerator::postStep(SystemModel& system) {
+void Component::EMT::SynchronGenerator::postStep(SystemModel& system)
+{
 	if (mNode1 >= 0) {
 		mVa = system.getRealFromLeftSideVector(mNode1);
 	}
@@ -437,8 +436,8 @@ void Component::EMT::SynchronGenerator::postStep(SystemModel& system) {
 	}
 }
 
-Matrix Component::EMT::SynchronGenerator::parkTransform2(Real theta, Real a, Real b, Real c) {
-
+Matrix Component::EMT::SynchronGenerator::parkTransform2(Real theta, Real a, Real b, Real c)
+{
 	Matrix dq0vector(3, 1);
 
 	// Park transform according to Kundur
@@ -457,9 +456,8 @@ Matrix Component::EMT::SynchronGenerator::parkTransform2(Real theta, Real a, Rea
 	return dq0vector;
 }
 
-
-Matrix Component::EMT::SynchronGenerator::inverseParkTransform2(Real theta, Real d, Real q, Real zero) {
-
+Matrix Component::EMT::SynchronGenerator::inverseParkTransform2(Real theta, Real d, Real q, Real zero)
+{
 	Matrix abcVector(3, 1);
 
 	// Park transform according to Kundur

@@ -23,7 +23,9 @@
 
 using namespace DPsim;
 
-Component::DP::PQLoad::PQLoad(String name, Int node, Real activePower, Real reactivePower, Real volt, Real angle) : Base(name, node, 0) {
+Component::DP::PQLoad::PQLoad(String name, Int node, Real activePower, Real reactivePower, Real volt, Real angle)
+	: Base(name, node, 0)
+{
 	// we need the system frequency to calculate the impedance, so we initialize
 	// it with the dummy value of 1+j1 here for now
 	mActivePower = activePower;
@@ -34,7 +36,8 @@ Component::DP::PQLoad::PQLoad(String name, Int node, Real activePower, Real reac
 	attrMap["svVoltage"]     = { Attribute::Real, &mSvVoltage };
 }
 
-void Component::DP::PQLoad::init(Real om, Real dt) {
+void Component::DP::PQLoad::init(Real om, Real dt)
+{
 	Real abs = mActivePower*mActivePower + mReactivePower*mReactivePower;
 	mResistance = mSvVoltage*mSvVoltage*mActivePower/abs;
 	mConductance = 1.0 / mResistance;
@@ -47,7 +50,8 @@ void Component::DP::PQLoad::init(Real om, Real dt) {
 	resistor->init(om, dt);
 }
 
-void Component::DP::PQLoad::applySystemMatrixStamp(SystemModel& system) {
+void Component::DP::PQLoad::applySystemMatrixStamp(SystemModel& system)
+{
 	// Add resistive part to system matrix
 	resistor->applySystemMatrixStamp(system);
 
@@ -55,15 +59,17 @@ void Component::DP::PQLoad::applySystemMatrixStamp(SystemModel& system) {
 	inductor->applySystemMatrixStamp(system);
 }
 
-void Component::DP::PQLoad::step(SystemModel& system, Real time) {
+void Component::DP::PQLoad::step(SystemModel& system, Real time)
+{
 	inductor->step(system, time);
 }
 
-
-void Component::DP::PQLoad::postStep(SystemModel& system) {
+void Component::DP::PQLoad::postStep(SystemModel& system)
+{
 	inductor->postStep(system);
 }
 
-Complex Component::DP::PQLoad::getCurrent(SystemModel& system) {
+Complex Component::DP::PQLoad::getCurrent(SystemModel& system)
+{
 	return inductor->getCurrent(system);
 }

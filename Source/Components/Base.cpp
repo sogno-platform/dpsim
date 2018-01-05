@@ -45,8 +45,9 @@ String Component::Base::getType()
 
 	unmangled = abi::__cxa_demangle(mangled, NULL, NULL, &status);
 
-	if (status)
+	if (status) {
 		return mangled;
+	}
 	else {
 		String ret(unmangled);
 

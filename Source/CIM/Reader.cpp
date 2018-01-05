@@ -34,7 +34,8 @@ using namespace IEC61970::Base::Topology;
 using namespace IEC61970::Base::Wires;
 
 // TODO is UnitMulitplier actually used/set anywhere?
-Real Reader::unitValue(Real value, UnitMultiplier mult) {
+Real Reader::unitValue(Real value, UnitMultiplier mult)
+{
 	switch (mult) {
 	case UnitMultiplier::p:
 		value *= 1e-12;
@@ -73,7 +74,8 @@ Real Reader::unitValue(Real value, UnitMultiplier mult) {
 }
 
 // TODO: fix error with frequency and angular frequency
-Reader::Reader(Real systemFrequency, Logger& logger) {
+Reader::Reader(Real systemFrequency, Logger& logger)
+{
 	mModel.setDependencyCheckOff();
 	mNumVoltageSources = 0;
 	mVoltages = nullptr;
@@ -81,12 +83,14 @@ Reader::Reader(Real systemFrequency, Logger& logger) {
 	mLogger = &logger;
 }
 
-Reader::~Reader() {
+Reader::~Reader()
+{
 	if (mVoltages)
 		delete[] mVoltages;
 }
 
-Component::Base::Ptr Reader::mapACLineSegment(ACLineSegment* line) {
+Component::Base::Ptr Reader::mapACLineSegment(ACLineSegment* line)
+{
 	std::vector<Matrix::Index> &nodes = mEqNodeMap.at(line->mRID); // TODO can fail
 	if (nodes.size() != 2) {
 		mLogger->Log(LogLevel::WARN) << "ACLineSegment " << line->mRID << " has " << nodes.size() << " terminals, ignoring" << std::endl;
@@ -106,19 +110,20 @@ Component::Base::Ptr Reader::mapACLineSegment(ACLineSegment* line) {
 	return std::make_shared<RxLineDP>(line->name, node1, node2, resistance, inductance);
 }
 
-void Reader::mapAsynchronousMachine(AsynchronousMachine* machine) {
-
+void Reader::mapAsynchronousMachine(AsynchronousMachine* machine)
+{
 }
 
-void Reader::mapEnergyConsumer(EnergyConsumer* con) {
-
+void Reader::mapEnergyConsumer(EnergyConsumer* con)
+{
 }
 
-void Reader::mapEquivalentInjection(EquivalentInjection* inj) {
-
+void Reader::mapEquivalentInjection(EquivalentInjection* inj)
+{
 }
 
-Component::Base::Ptr Reader::mapExternalNetworkInjection(ExternalNetworkInjection* inj) {
+Component::Base::Ptr Reader::mapExternalNetworkInjection(ExternalNetworkInjection* inj)
+{
 	std::vector<Matrix::Index> &nodes = mEqNodeMap.at(inj->mRID);
 	if (nodes.size() != 1) {
 		mLogger->Log(LogLevel::ERROR) << "ExternalNetworkInjection " << inj->mRID << " has " << nodes.size() << " terminals, ignoring" << std::endl;
@@ -195,7 +200,8 @@ Component::Base::Ptr Reader::mapPowerTransformer(PowerTransformer* trans) {
 }
 
 // TODO: don't use SvVoltage, but map to a SynchronGeneratorDP instead
-Component::Base::Ptr Reader::mapSynchronousMachine(SynchronousMachine* machine) {
+Component::Base::Ptr Reader::mapSynchronousMachine(SynchronousMachine* machine)
+{
 	std::vector<Matrix::Index> &nodes = mEqNodeMap.at(machine->mRID);
 	if (nodes.size() != 1) {
 		// TODO: check with the model if this assumption (only 1 terminal) is always true
@@ -220,7 +226,8 @@ Component::Base::Ptr Reader::mapSynchronousMachine(SynchronousMachine* machine) 
 	return std::make_shared<IdealVoltageSource>(machine->name, node, 0, initVoltage);
 }
 
-Component::Base::Ptr Reader::mapComponent(BaseClass* obj) {
+Component::Base::Ptr Reader::mapComponent(BaseClass* obj)
+{
 	if (ACLineSegment *line = dynamic_cast<ACLineSegment*>(obj))
 		return mapACLineSegment(line);
 	if (ExternalNetworkInjection *inj = dynamic_cast<ExternalNetworkInjection*>(obj))
@@ -232,7 +239,8 @@ Component::Base::Ptr Reader::mapComponent(BaseClass* obj) {
 	return nullptr;
 }
 
-Component::Base::Ptr Reader::newPQLoad(String rid, String name) {
+Component::Base::Ptr Reader::newPQLoad(String rid, String name)
+{
 	std::vector<Matrix::Index> &nodes = mEqNodeMap.at(rid);
 	if (nodes.size() != 1) {
 		mLogger->Log(LogLevel::WARN) << rid << " has " << nodes.size() << " terminals; ignoring" << std::endl;
@@ -266,11 +274,13 @@ Component::Base::Ptr Reader::newPQLoad(String rid, String name) {
 	return std::make_shared<PQLoadDP>(name, node, flow->p.value, flow->q.value, volt->v.value, volt->angle.value*PI/180);
 }
 
-bool Reader::addFile(String filename) {
+bool Reader::addFile(String filename)
+{
 	return mModel.addCIMFile(filename);
 }
 
-void Reader::parseFiles() {
+void Reader::parseFiles()
+{
 	mModel.parseFiles();
 	// First, go through all topological nodes and collect them in a list.
 	// Since all nodes have references to the equipment connected to them (via Terminals), but not
@@ -331,11 +341,13 @@ void Reader::parseFiles() {
 	}
 }
 
-Component::Base::List& Reader::getComponents() {
+Component::Base::List& Reader::getComponents()
+{
 	return mComponents;
 }
 
-Matrix::Index Reader::mapTopologicalNode(String mrid) {
+Matrix::Index Reader::mapTopologicalNode(String mrid)
+{
 	auto search = mTopNodes.find(mrid);
 	if (search == mTopNodes.end())
 		return -1;
@@ -343,6 +355,7 @@ Matrix::Index Reader::mapTopologicalNode(String mrid) {
 	return search->second;
 }
 
-int Reader::getNumVoltageSources() {
+int Reader::getNumVoltageSources()
+{
 	return mNumVoltageSources;
 }

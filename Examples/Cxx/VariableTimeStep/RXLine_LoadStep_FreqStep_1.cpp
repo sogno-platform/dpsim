@@ -24,7 +24,8 @@
 
 using namespace DPsim;
 
-static void VarFreqRxLineResLoad_DP(Real timeStep, Real finalTime, Real freqStep, Real loadStep, Real rampTime) {
+static void VarFreqRxLineResLoad_DP(Real timeStep, Real finalTime, Real freqStep, Real loadStep, Real rampTime)
+{
 	// Define simulation scenario
 	Real omega = 2.0*M_PI*50.0;
 	std::ostringstream fileName;
@@ -57,7 +58,8 @@ static void VarFreqRxLineResLoad_DP(Real timeStep, Real finalTime, Real freqStep
 	std::cout << "Simulation finished." << std::endl;
 }
 
-static void VarFreqRxLineResLoad_EMT(Real timeStep, Real finalTime, Real freqStep, Real loadStep, Real rampTime) {
+static void VarFreqRxLineResLoad_EMT(Real timeStep, Real finalTime, Real freqStep, Real loadStep, Real rampTime)
+{
 	// Define simulation scenario
 	Real omega = 2.0*M_PI*50.0;
 	std::ostringstream fileName;

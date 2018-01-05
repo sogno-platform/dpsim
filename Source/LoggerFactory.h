@@ -43,7 +43,8 @@ namespace DPsim {
 		static Container cont;
 
 	public:
-		Logger& get(std::string const& loggerName = "default") {
+		Logger& get(std::string const& loggerName = "default")
+		{
 			iterator find = cont.find(loggerName);
 			if (find == cont.end()) {
 				cont[loggerName] = std::make_unique<Logger>();				

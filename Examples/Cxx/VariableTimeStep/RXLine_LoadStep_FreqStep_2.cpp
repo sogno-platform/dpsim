@@ -24,7 +24,8 @@
 
 using namespace DPsim;
 
-static void VarFreqRxLineResLoad_NZ_Paper_DP(Real timeStep, Real finalTime, Real freqStep, Real loadStep, Real rampTime) {
+static void VarFreqRxLineResLoad_NZ_Paper_DP(Real timeStep, Real finalTime, Real freqStep, Real loadStep, Real rampTime)
+{
 	// Define simulation scenario
 	std::ostringstream fileName;
 	fileName << "DpEmtVarFreqStudy_NZ_Paper_" << timeStep;

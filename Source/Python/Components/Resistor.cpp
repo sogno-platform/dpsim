@@ -32,7 +32,8 @@ const char *Python::Components::DocResistor =
 ":param resistance: Resistance in Ohm.\n"
 ":returns: A new `Component` representing this resistor.\n";
 
-PyObject* Python::Components::DP::Resistor(PyObject* self, PyObject* args) {
+PyObject* Python::Components::DP::Resistor(PyObject* self, PyObject* args)
+{
 	const char *name;
 	double resistance;
 	int src, dest;
@@ -47,7 +48,8 @@ PyObject* Python::Components::DP::Resistor(PyObject* self, PyObject* args) {
 	return (PyObject*) pyComp;
 }
 
-PyObject* Python::Components::EMT::Resistor(PyObject* self, PyObject* args) {
+PyObject* Python::Components::EMT::Resistor(PyObject* self, PyObject* args)
+{
 	const char *name;
 	double resistance;
 	int src, dest;

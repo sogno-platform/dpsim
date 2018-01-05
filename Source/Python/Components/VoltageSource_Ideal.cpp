@@ -33,7 +33,8 @@ const char *Python::Components::DocVoltageSourceIdeal =
 "\n"
 ":param initial_current: The voltage of this source in the first timestep (as a complex value).\n"
 ":returns: A new `Component` representing this voltage source.\n";
-PyObject* Python::Components::DP::VoltageSourceIdeal(PyObject* self, PyObject* args) {
+PyObject* Python::Components::DP::VoltageSourceIdeal(PyObject* self, PyObject* args)
+{
 	const char *name;
 	int src, dest;
 	Py_complex initVoltage;

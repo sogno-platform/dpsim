@@ -35,7 +35,8 @@ const char *Python::Components::DocVoltageSource =
 ":param voltage: Complex voltage in Volt.\n"
 ":param resistance: Internal resistance in Ohm.\n"
 ":returns: A new `Component` representing this voltage source.\n";
-PyObject* Python::Components::DP::VoltageSource(PyObject* self, PyObject* args) {
+PyObject* Python::Components::DP::VoltageSource(PyObject* self, PyObject* args)
+{
 	const char *name;
 	double resistance;
 	int src, dest;

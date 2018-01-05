@@ -66,7 +66,7 @@ int main(int argc, char* argv[])
 	mTurbineGovernor.init(PmRef, initActivePower / nomPower);
 
 	while (getline(omega, line))
-	{	
+	{
 		t = t + dt;
 		Om = std::stod(line);
 		std::cout << Om << '\n';

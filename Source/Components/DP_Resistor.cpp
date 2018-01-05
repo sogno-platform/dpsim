@@ -23,12 +23,15 @@
 
 using namespace DPsim;
 
-Component::DP::Resistor::Resistor(String name, Int src, Int dest, Real resistance) : Base(name, src, dest) {
+Component::DP::Resistor::Resistor(String name, Int src, Int dest, Real resistance)
+	: Base(name, src, dest)
+{
 	mResistance = resistance;
 	attrMap["resistance"] = { Attribute::Real, &mResistance };
 }
 
-void Component::DP::Resistor::applySystemMatrixStamp(SystemModel& system) {
+void Component::DP::Resistor::applySystemMatrixStamp(SystemModel& system)
+{
 	mConductance = 1.0 / mResistance;
 	// Set diagonal entries
 	if (mNode1 >= 0) {
@@ -46,11 +49,13 @@ void Component::DP::Resistor::applySystemMatrixStamp(SystemModel& system) {
 
 Complex Component::DP::Resistor::getCurrent(SystemModel& model) {
 	Real realVolt = 0, imagVolt = 0;
-	if (mNode1 >= 0) {
+	if (mNode1 >= 0)
+	{
 		realVolt += model.getRealFromLeftSideVector(mNode1);
 		imagVolt += model.getImagFromLeftSideVector(mNode2);
 	}
-	if (mNode2 >= 0) {
+	if (mNode2 >= 0)
+	{
 		realVolt -= model.getRealFromLeftSideVector(mNode1);
 		imagVolt -= model.getImagFromLeftSideVector(mNode2);
 	}

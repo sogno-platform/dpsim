@@ -23,12 +23,13 @@
 
 using namespace DPsim;
 
-Component::DP::VoltageSourceIdeal::VoltageSourceIdeal(String name, Int src, Int dest, Complex voltage) : Base(name, src, dest)
+Component::DP::VoltageSourceIdeal::VoltageSourceIdeal(String name, Int src, Int dest, Complex voltage)
+	: Base(name, src, dest)
 {
 	mVoltage = voltage;
 	mNumVirtualNodes = 1;
 	mVirtualNodes = { 0 };
-	attrMap["voltage"] = { Attribute::Complex, &this->mVoltage };
+	attrMap["voltage"] = { Attribute::Complex, &mVoltage };
 }
 
 void Component::DP::VoltageSourceIdeal::applySystemMatrixStamp(SystemModel& system)

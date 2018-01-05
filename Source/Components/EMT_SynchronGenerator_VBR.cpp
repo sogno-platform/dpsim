@@ -363,8 +363,8 @@ void Component::EMT::SynchronGeneratorVBR::CalculateLandpL() {
 	pmDInductanceMat = pmDInductanceMat * 2 * mOmMech;
 }
 
-Matrix Component::EMT::SynchronGeneratorVBR::parkTransform(Real theta, Real a, Real b, Real c) {
-
+Matrix Component::EMT::SynchronGeneratorVBR::parkTransform(Real theta, Real a, Real b, Real c)
+{
 	Matrix dq0vector(3, 1);
 
 	Real q, d, zero;
@@ -380,8 +380,8 @@ Matrix Component::EMT::SynchronGeneratorVBR::parkTransform(Real theta, Real a, R
 	return dq0vector;
 }
 
-Matrix Component::EMT::SynchronGeneratorVBR::inverseParkTransform(Real theta, Real q, Real d, Real zero) {
-
+Matrix Component::EMT::SynchronGeneratorVBR::inverseParkTransform(Real theta, Real q, Real d, Real zero)
+{
 	Matrix abcVector(3, 1);
 
 	Real a, b, c;

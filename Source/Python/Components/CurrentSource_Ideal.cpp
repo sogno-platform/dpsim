@@ -34,7 +34,8 @@ const char *Python::Components::DocCurrentSourceIdeal =
 ":param initial_current: The current of this source in the first timestep (as a complex value).\n"
 ":returns: A new `Component` representing this current source.\n";
 
-PyObject* Python::Components::DP::CurrentSourceIdeal(PyObject* self, PyObject* args) {
+PyObject* Python::Components::DP::CurrentSourceIdeal(PyObject* self, PyObject* args)
+{
 	const char *name;
 	int src, dest;
 	Py_complex initCurrent;

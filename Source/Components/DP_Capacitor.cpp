@@ -23,7 +23,8 @@
 
 using namespace DPsim;
 
-Component::DP::Capacitor::Capacitor(String name, Int src, Int dest, Real capacitance) : Base(name, src, dest)
+Component::DP::Capacitor::Capacitor(String name, Int src, Int dest, Real capacitance)
+	: Base(name, src, dest)
 {
 	this->capacitance = capacitance;
 	attrMap["capacitance"] = { Attribute::Real, &this->capacitance };

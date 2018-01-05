@@ -32,11 +32,12 @@ Component::DP::SynchronGenerator::SynchronGenerator(String name, Int node1, Int 
 	Real inertia, bool logActive)
 	: SynchronGeneratorBase(name, node1, node2, node3, nomPower, nomVolt, nomFreq, poleNumber, nomFieldCur,
 		Rs, Ll, Lmd, Lmd0, Lmq, Lmq0, Rfd, Llfd, Rkd, Llkd, Rkq1, Llkq1, Rkq2, Llkq2,
-		inertia, logActive) {
-
+		inertia, logActive)
+{
 }
 
-Component::DP::SynchronGenerator::~SynchronGenerator() {
+Component::DP::SynchronGenerator::~SynchronGenerator()
+{
 	if (mLogActive) {
 		delete mLog;
 	}
@@ -45,11 +46,10 @@ Component::DP::SynchronGenerator::~SynchronGenerator() {
 
 void Component::DP::SynchronGenerator::init(Real om, Real dt,
 	Real initActivePower, Real initReactivePower, Real initTerminalVolt,
-	Real initVoltAngle, Real initFieldVoltage, Real initMechPower) {
-
+	Real initVoltAngle, Real initFieldVoltage, Real initMechPower)
+{
 	// Create matrices for state space representation
-	if (mNumDampingWindings == 2)
-	{
+	if (mNumDampingWindings == 2) {
 		mVoltages = Matrix::Zero(7, 1);
 		mFluxes = Matrix::Zero(7, 1);
 		mCurrents = Matrix::Zero(7, 1);
@@ -87,8 +87,7 @@ void Component::DP::SynchronGenerator::init(Real om, Real dt,
 			0, 0, 0, 0, 0, 0, 0,
 			0, 0, 0, 0, 0, 0, 0;
 	}
-	else
-	{
+	else {
 		mVoltages = Matrix::Zero(6, 1);
 		mFluxes = Matrix::Zero(6, 1);
 		mCurrents = Matrix::Zero(6, 1);
@@ -146,9 +145,8 @@ void Component::DP::SynchronGenerator::init(Real om, Real dt,
 	mIcIm = dq0ToAbcTransform(mThetaMech, mId * mBase_i, mIq * mBase_i, mI0 * mBase_i)(5);
 }
 
-
-void Component::DP::SynchronGenerator::step(SystemModel& system, Real time) {
-
+void Component::DP::SynchronGenerator::step(SystemModel& system, Real time)
+{
 	stepInPerUnit(system.getOmega(), system.getTimeStep(), time, system.getNumMethod());
 
 	if (mNode1 >= 0) {
@@ -168,8 +166,8 @@ void Component::DP::SynchronGenerator::step(SystemModel& system, Real time) {
 	}
 }
 
-void Component::DP::SynchronGenerator::stepInPerUnit(Real om, Real dt, Real time, NumericalMethod numMethod) {
-
+void Component::DP::SynchronGenerator::stepInPerUnit(Real om, Real dt, Real time, NumericalMethod numMethod)
+{
 	mVaRe = (1 / mBase_v) * mVaRe;
 	mVaIm = (1 / mBase_v) * mVaIm;
 	mVbRe = (1 / mBase_v) * mVbRe;
@@ -190,8 +188,7 @@ void Component::DP::SynchronGenerator::stepInPerUnit(Real om, Real dt, Real time
 
 	if (numMethod == NumericalMethod::Trapezoidal_current) {
 
-		if (mNumDampingWindings == 2)
-		{
+		if (mNumDampingWindings == 2) {
 			Matrix A = (mReactanceMat*mResistanceMat);
 			Matrix B = mReactanceMat;
 			Matrix C = Matrix::Zero(7, 1);
@@ -235,9 +232,7 @@ void Component::DP::SynchronGenerator::stepInPerUnit(Real om, Real dt, Real time
 			mPsifd = -mLmd*mId + (mLlfd + mLmd)*mIfd + mLmd*mIkd;
 			mPsikd = -mLmd*mId + mLmd*mIfd + (mLlkd + mLmd)*mIkd;
 		}
-
-		else
-		{
+		else {
 			Matrix A = (mReactanceMat*mResistanceMat);
 			Matrix B = mReactanceMat;
 			Matrix C = Matrix::Zero(6, 1);
@@ -288,8 +283,7 @@ void Component::DP::SynchronGenerator::stepInPerUnit(Real om, Real dt, Real time
 		mOmMech = mOmMech + dt * (1 / (2 * mH) * (mMechTorque - mElecTorque));
 
 		//Calculation of flux
-		if (mNumDampingWindings == 2)
-		{
+		if (mNumDampingWindings == 2) {
 			Matrix A = (mResistanceMat*mReactanceMat - mOmMech*mOmegaFluxMat);
 			Matrix B = Matrix::Identity(7, 7);
 
@@ -325,8 +319,7 @@ void Component::DP::SynchronGenerator::stepInPerUnit(Real om, Real dt, Real time
 			mPsikd = Fluxes(6, 0);
 
 		}
-		else
-		{
+		else {
 			Matrix A = (mResistanceMat*mReactanceMat - mOmMech*mOmegaFluxMat);
 			Matrix B = Matrix::Identity(6, 6);
 
@@ -364,14 +357,12 @@ void Component::DP::SynchronGenerator::stepInPerUnit(Real om, Real dt, Real time
 		mId = ((mLlfd*mLlkd + mLmd*(mLlfd + mLlkd))*mPsid - mLmd*mLlkd*mPsifd - mLlfd*mLmd*mPsikd) / detLd;
 		mIfd = (mLlkd*mLmd*mPsid - (mLl*mLlkd + mLmd*(mLl + mLlkd))*mPsifd + mLmd*mLl*mPsikd) / detLd;
 		mIkd = (mLmd*mLlfd*mPsid + mLmd*mLl*mPsifd - (mLmd*(mLlfd + mLl) + mLl*mLlfd)*mPsikd) / detLd;
-		if (mNumDampingWindings == 2)
-		{
+		if (mNumDampingWindings == 2) {
 			mIq = ((mLlkq1*mLlkq2 + mLmq*(mLlkq1 + mLlkq2))*mPsiq - mLmq*mLlkq2*mPsikq1 - mLmq*mLlkq1*mPsikq2) / detLq;
 			mIkq1 = (mLmq*mLlkq2*mPsiq - (mLmq*(mLlkq2 + mLl) + mLl*mLlkq2)*mPsikq1 + mLmq*mLl*mPsikq2) / detLq;
 			mIkq2 = (mLmq*mLlkq1*mPsiq + mLmq*mLl*mPsikq1 - (mLmq*(mLlkq1 + mLl) + mLl*mLlkq1)*mPsikq2) / detLq;
 		}
-		else
-		{
+		else {
 			mIq = ((mLlkq1 + mLmq)*mPsiq - mLmq*mPsikq1) / detLq;
 			mIkq1 = (mLmq*mPsiq - (mLl + mLmq)*mPsikq1) / detLq;
 		}
@@ -387,8 +378,7 @@ void Component::DP::SynchronGenerator::stepInPerUnit(Real om, Real dt, Real time
 	mIbIm = mBase_i * dq0ToAbcTransform(mThetaMech, mId, mIq, mI0)(4);
 	mIcIm = mBase_i * dq0ToAbcTransform(mThetaMech, mId, mIq, mI0)(5);
 
-	if (mNumDampingWindings == 2)
-	{
+	if (mNumDampingWindings == 2) {
 		mCurrents << mIq,
 			mId,
 			mI0,
@@ -413,8 +403,7 @@ void Component::DP::SynchronGenerator::stepInPerUnit(Real om, Real dt, Real time
 			mPsifd,
 			mPsikd;
 	}
-	else
-	{
+	else {
 		mCurrents << mIq,
 			mId,
 			mI0,
@@ -440,7 +429,8 @@ void Component::DP::SynchronGenerator::stepInPerUnit(Real om, Real dt, Real time
 }
 
 
-void Component::DP::SynchronGenerator::postStep(SystemModel& system) {
+void Component::DP::SynchronGenerator::postStep(SystemModel& system)
+{
 	if (mNode1 >= 0) {
 		mVaRe = system.getRealFromLeftSideVector(mNode1);
 		mVaIm = system.getImagFromLeftSideVector(mNode1);
@@ -468,7 +458,8 @@ void Component::DP::SynchronGenerator::postStep(SystemModel& system) {
 }
 
 
-Matrix Component::DP::SynchronGenerator::abcToDq0Transform(Real theta, Real aRe, Real bRe, Real cRe, Real aIm, Real bIm, Real cIm) {
+Matrix Component::DP::SynchronGenerator::abcToDq0Transform(Real theta, Real aRe, Real bRe, Real cRe, Real aIm, Real bIm, Real cIm)
+{
 	// Balanced case
 	Complex alpha(cos(2. / 3. * PI), sin(2. / 3. * PI));
 	Complex thetaCompInv(cos(-theta), sin(-theta));
@@ -497,7 +488,8 @@ Matrix Component::DP::SynchronGenerator::abcToDq0Transform(Real theta, Real aRe,
 	return dq0Vector;
 }
 
-Matrix Component::DP::SynchronGenerator::dq0ToAbcTransform(Real theta, Real d, Real q, Real zero) {
+Matrix Component::DP::SynchronGenerator::dq0ToAbcTransform(Real theta, Real d, Real q, Real zero)
+{
 	// Balanced case
 	Complex alpha(cos(2. / 3. * PI), sin(2. / 3. * PI));
 	Complex thetaComp(cos(theta), sin(theta));

@@ -32,7 +32,8 @@ const char *Python::Components::DocCapacitor =
 ":param inductance: Inductance in Henry.\n"
 ":returns: A new `Component` representing this Capacitor.\n";
 
-PyObject* Python::Components::DP::Capacitor(PyObject* self, PyObject* args) {
+PyObject* Python::Components::DP::Capacitor(PyObject* self, PyObject* args)
+{
 	const char *name;
 	double capacitance;
 	int src, dest;

@@ -26,7 +26,8 @@
 
 using namespace DPsim;
 
-static int testCIMReader(std::list<String> filenames) {
+static int testCIMReader(std::list<String> filenames)
+{
 	Logger log("cim.log"), llog("lvector-cim.csv"), rlog("rvector-cim.csv");
 
 	// Read CIM data
@@ -53,14 +54,16 @@ static int testCIMReader(std::list<String> filenames) {
 	return 0;
 }
 
-static void readFixedCIMFiles_LineLoad() {
+static void readFixedCIMFiles_LineLoad()
+{
 	std::list<String> filenames;
 	filenames.push_back("..\\..\\Examples\\CIM\\Line_Load\\Line_Load.xml");
 
 	testCIMReader(filenames);
 }
 
-static void readFixedCIMFiles_IEEE9bus() {
+static void readFixedCIMFiles_IEEE9bus()
+{
 	std::list<String> filenames;
 	filenames.push_back("..\\..\\..\\dpsim\\Examples\\CIM\\IEEE-09_Neplan_RX\\IEEE-09_Neplan_RX_DI.xml");
 	filenames.push_back("..\\..\\..\\dpsim\\Examples\\CIM\\IEEE-09_Neplan_RX\\IEEE-09_Neplan_RX_EQ.xml");
@@ -70,7 +73,8 @@ static void readFixedCIMFiles_IEEE9bus() {
 	testCIMReader(filenames);
 }
 
-static void readCIMFilesFromInput(int argc, char *argv[]) {
+static void readCIMFilesFromInput(int argc, char *argv[])
+{
 	std::list<String> filenames;
 
 	for (int i = 1; i < argc; i++) {

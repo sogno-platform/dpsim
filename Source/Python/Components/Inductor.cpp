@@ -32,7 +32,8 @@ const char *Python::Components::DocInductor =
 ":param inductance: Inductance in Henry.\n"
 ":returns: A new `Component` representing this inductor.\n";
 
-PyObject* Python::Components::DP::Inductor(PyObject* self, PyObject* args) {
+PyObject* Python::Components::DP::Inductor(PyObject* self, PyObject* args)
+{
 	const char *name;
 	double inductance;
 	int src, dest;
@@ -47,7 +48,8 @@ PyObject* Python::Components::DP::Inductor(PyObject* self, PyObject* args) {
 	return (PyObject*) pyComp;
 }
 
-PyObject* Python::Components::EMT::Inductor(PyObject* self, PyObject* args) {
+PyObject* Python::Components::EMT::Inductor(PyObject* self, PyObject* args)
+{
 	const char *name;
 	double inductance;
 	int src, dest;

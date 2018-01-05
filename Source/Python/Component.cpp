@@ -24,19 +24,23 @@
 
 using namespace DPsim;
 
-PyObject* Python::Component::newfunc(PyTypeObject* type, PyObject *args, PyObject *kwds) {
+PyObject* Python::Component::newfunc(PyTypeObject* type, PyObject *args, PyObject *kwds)
+{
 	Component* self = (Component*) type->tp_alloc(type, 0);
-	if (self)
+	if (self) {
 		Component::init(self);
+	}
 
 	return (PyObject*) self;
 }
 
-void Python::Component::init(Component* self) {
+void Python::Component::init(Component* self)
+{
 	new (&self->comp) DPsim::Component::Base::Ptr(nullptr);
 }
 
-void Python::Component::dealloc(Python::Component* self) {
+void Python::Component::dealloc(Python::Component* self)
+{
 	// This is a workaround for a compiler bug: https://stackoverflow.com/a/42647153/8178705
 	using Ptr = DPsim::Component::Base::Ptr;
 
@@ -45,14 +49,16 @@ void Python::Component::dealloc(Python::Component* self) {
 	Py_TYPE(self)->tp_free((PyObject*)self);
 }
 
-PyObject* Python::Component::str(Python::Component* self) {
+PyObject* Python::Component::str(Python::Component* self)
+{
 	if (!self->comp)
 		return PyUnicode_FromString("<unitialized Component>");
 
 	return PyUnicode_FromString(self->comp->getName().c_str());
 }
 
-PyObject* Python::Component::getattr(Python::Component* self, char* name) {
+PyObject* Python::Component::getattr(Python::Component* self, char* name)
+{
 	if (!self->comp) {
 		PyErr_SetString(PyExc_ValueError, "getattr on unitialized Component");
 		return nullptr;
@@ -84,7 +90,8 @@ PyObject* Python::Component::getattr(Python::Component* self, char* name) {
 	return nullptr;
 }
 
-int Python::Component::setattr(Python::Component* self, char* name, PyObject *v) {
+int Python::Component::setattr(Python::Component* self, char* name, PyObject *v)
+{
 	Int i;
 	Real r;
 
@@ -132,7 +139,8 @@ int Python::Component::setattr(Python::Component* self, char* name, PyObject *v)
 	return 0;
 }
 
-bool Python::compsFromPython(PyObject* list, DPsim::Component::Base::List& comps) {
+bool Python::compsFromPython(PyObject* list, DPsim::Component::Base::List& comps)
+{
 	if (!PyList_Check(list))
 		return false;
 

@@ -23,7 +23,8 @@
 
 using namespace DPsim;
 
-Component::DP::Transformer::Transformer(String name, Int node1, Int node2, Real ratioAbs, Real ratioPhase, Real resistance, Real inductance) : Base(name, node1, node2)
+Component::DP::Transformer::Transformer(String name, Int node1, Int node2, Real ratioAbs, Real ratioPhase, Real resistance, Real inductance)
+	: Base(name, node1, node2)
 {
 	mRatioAbs = ratioAbs;
 	mRatioPhase = ratioPhase;

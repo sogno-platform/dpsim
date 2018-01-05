@@ -74,7 +74,7 @@ namespace Component {
 
 	public:
 		Exciter() { };
-		~Exciter() {};
+		~Exciter() { };
 
 		/// Initializes exciter parameters
 		Exciter(Real Ta, Real Ka, Real Te, Real Ke, Real Tf, Real Kf, Real Tr, Real Lad, Real Rfd);

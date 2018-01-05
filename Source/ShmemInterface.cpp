@@ -29,7 +29,8 @@
 
 using namespace DPsim;
 
-void ShmemInterface::init(const char* wname, const char* rname, struct shmem_conf* conf) {
+void ShmemInterface::init(const char* wn, const char* rn, struct shmem_conf* conf)
+{
 	/* using a static shmem_conf as a default argument for the constructor
 	 * doesn't seem to work, so use this as a workaround */
 
@@ -52,7 +53,8 @@ void ShmemInterface::init(const char* wname, const char* rname, struct shmem_con
 	std::memset(&mLastSample->data, 0, mLastSample->capacity * sizeof(float));
 }
 
-ShmemInterface::ShmemInterface(const char* wname, const char* rname) {
+ShmemInterface::ShmemInterface(const char* wname, const char* rname)
+{
 	struct shmem_conf conf;
 	conf.queuelen = 512;
 	conf.samplelen = 64;
@@ -60,15 +62,18 @@ ShmemInterface::ShmemInterface(const char* wname, const char* rname) {
 	init(wname, rname, &conf);
 }
 
-ShmemInterface::ShmemInterface(const char* wname, const char *rname, struct shmem_conf* conf) {
+ShmemInterface::ShmemInterface(const char* wname, const char *rname, struct shmem_conf* conf)
+{
 	init(wname, rname, conf);
 }
 
-ShmemInterface::~ShmemInterface() {
+ShmemInterface::~ShmemInterface()
+{
 	shmem_int_close(&mShmem);
 }
 
-void ShmemInterface::readValues(bool blocking) {
+void ShmemInterface::readValues(bool blocking)
+{
 	if (!mInit) {
 		mInit = 1;
 		return;
@@ -108,7 +113,8 @@ void ShmemInterface::readValues(bool blocking) {
 		}
 
 		sample_put(sample);
-	} catch (std::exception& exc) {
+	}
+	catch (std::exception& exc) {
 		/* probably won't happen (if the timer expires while we're still reading data,
 		 * we have a bigger problem somewhere else), but nevertheless, make sure that
 		 * we're not leaking memory from the queue pool */
@@ -118,7 +124,8 @@ void ShmemInterface::readValues(bool blocking) {
 	}
 }
 
-void ShmemInterface::writeValues(SystemModel& model) {
+void ShmemInterface::writeValues(SystemModel& model)
+{
 	struct sample *sample = nullptr;
 	Int len = 0, ret = 0;
 	bool done = false;
@@ -176,7 +183,8 @@ void ShmemInterface::writeValues(SystemModel& model) {
 		if (ret < 0)
 			std::cerr << "Failed to write samples to shmem interface" << std::endl;
 		sample_copy(mLastSample, sample);
-	} catch (std::exception& exc) {
+	}
+	catch (std::exception& exc) {
 		/* We need to at least send something, so determine where exactly the
 		 * timer expired and either resend the last successfully sent sample or
 		 * just try to send this one again.

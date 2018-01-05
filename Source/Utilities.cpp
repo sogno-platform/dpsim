@@ -26,8 +26,8 @@
 
 using namespace DPsim;
 
-void DPsim::updateProgressBar(Real time, Real finalTime) {
-
+void DPsim::updateProgressBar(Real time, Real finalTime)
+{
 	if (time / finalTime <= 0.1) {
 		std::cout << "                      (0%)\r";
 	}

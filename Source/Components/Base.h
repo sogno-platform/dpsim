@@ -127,7 +127,8 @@ namespace Component {
 		virtual void postStep(SystemModel& system) { }
 
 		/// Return the current flowing through this component in the previous timestep
-		virtual Complex getCurrent(SystemModel& system) {
+		virtual Complex getCurrent(SystemModel& system)
+		{
 			std::cerr << "getCurrent implementation missing" << std::endl;
 			std::exit(1);
 			return Complex(0, 0);

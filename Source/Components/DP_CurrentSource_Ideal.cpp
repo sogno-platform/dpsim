@@ -23,12 +23,15 @@
 
 using namespace DPsim;
 
-Component::DP::CurrentSourceIdeal::CurrentSourceIdeal(String name, Int src, Int dest, Complex current) : Base(name, src, dest) {
 	this->mCurrent = current;
 	attrMap["current"] = { Attribute::Complex, &this->mCurrent };
+Component::DP::CurrentSourceIdeal::CurrentSourceIdeal(String name, Int src, Int dest, Complex current)
+	: Base(name, src, dest)
+{
 };
 
-void Component::DP::CurrentSourceIdeal::applyRightSideVectorStamp(SystemModel& system) {
+void Component::DP::CurrentSourceIdeal::applyRightSideVectorStamp(SystemModel& system)
+{
 	if (mNode1 >= 0) {
 		system.addCompToRightSideVector(mNode1, mCurrent.real(), mCurrent.imag());
 	}
@@ -37,15 +40,18 @@ void Component::DP::CurrentSourceIdeal::applyRightSideVectorStamp(SystemModel& s
 	}
 }
 
-void Component::DP::CurrentSourceIdeal::step(SystemModel& system, Real time) {
 	this->applyRightSideVectorStamp(system);
+void Component::DP::CurrentSourceIdeal::step(SystemModel& system, Real time)
+{
 }
 
-Complex Component::DP::CurrentSourceIdeal::getCurrent(SystemModel &system) {
+Complex Component::DP::CurrentSourceIdeal::getCurrent(SystemModel &system)
+{
 	return mCurrent;
 }
 
-void Component::DP::CurrentSourceIdeal::setCurrent(Real real, Real imag) {
 	this->mCurrent = Complex(real, imag);
+void Component::DP::CurrentSourceIdeal::setCurrent(Complex current)
+{
 }
 
