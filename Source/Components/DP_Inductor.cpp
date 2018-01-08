@@ -22,8 +22,6 @@
 #include "DP_Inductor.h"
 
 using namespace DPsim;
-using namespace std::literals;
-
 
 Components::DP::Inductor::Inductor(String name, Int node1, Int node2, Real inductance) : Base(name, node1, node2) {
 	mInductance = inductance;
