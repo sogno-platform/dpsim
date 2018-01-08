@@ -22,8 +22,6 @@
 
 #pragma once
 
-#include "EMT_SynchronGenerator_Simplified.h"
-
 #include "Base.h"
 
 namespace DPsim {
@@ -36,8 +34,6 @@ namespace Component {
 		T mVoltage;
 
 	public:
-		VoltageSourceBase() { };
-
 		/// Define paramenters of the voltage source
 		VoltageSourceBase(String name, Int src, Int dest, T voltage)
 			: Base(name, src, dest)

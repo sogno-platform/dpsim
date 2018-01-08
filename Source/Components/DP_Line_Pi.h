@@ -97,8 +97,6 @@ namespace DP {
 		Real mPrevCurFacIm;
 
 	public:
-		PiLine() { };
-
 		/// Define line name, conected nodes, resistance, inductance and capacitance
 		PiLine(String name, Int node1, Int node2, Int node3, Real resistance, Real inductance, Real capacitance);
 

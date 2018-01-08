@@ -85,7 +85,6 @@ namespace EMT {
 		Matrix mReverseCurrents;
 
 	public:
-		SynchronGeneratorSimplified() { };
 		~SynchronGeneratorSimplified();
 
 		/// Initializes the per unit or stator referred machine parameters with the machine parameters given in per unit or

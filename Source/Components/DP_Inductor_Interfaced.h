@@ -40,7 +40,6 @@ namespace DP {
 		Real mCurrentStepIm;
 
 	public:
-		InterfacedInductor() { };
 		InterfacedInductor(String name, Int src, Int dest, Real inductance);
 
 		void init(Real om, Real dt);

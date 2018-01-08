@@ -36,8 +36,6 @@ namespace EMT {
 	class VoltageSourceIdeal : public Component::VoltageSourceBase<Real> {
 
 	public:
-		VoltageSourceIdeal() { };
-
 		/// define paramenters of the voltage source
 		VoltageSourceIdeal(String name, Int src, Int dest, Real voltage);
 

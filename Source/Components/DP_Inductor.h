@@ -64,8 +64,6 @@ namespace DP {
 		Real mPrevCurFacIm;
 
 	public:
-		Inductor() { };
-
 		/// Define inductor name, conected nodes and inductance
 		Inductor(String name, Int src, Int dest, Real inductance);
 

@@ -31,7 +31,6 @@ namespace DP {
 	class CurrentSourceIdeal : public CurrentSourceBase<Complex> {
 
 	public:
-		CurrentSourceIdeal() { };
 		CurrentSourceIdeal(String name, Int src, Int dest, Complex current);
 
 		void init(Real om, Real dt) { }

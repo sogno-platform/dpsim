@@ -48,7 +48,6 @@ namespace DP {
 		Real mRampTime;
 
 	public:
-		VoltageSourceFreq() { };
 		VoltageSourceFreq(String name, Int src, Int dest, Real voltage, Real phase, Real resistance, Real omegaSource, Real switchTime, Real rampTime);
 
 		void init(Real om, Real dt) { }

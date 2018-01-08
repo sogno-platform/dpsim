@@ -39,7 +39,6 @@ namespace EMT {
 		Real mP;
 
 	public:
-		Inductor() { };
 		Inductor(String name, Int src, Int dest, Real inductance);
 
 		void init(Real om, Real dt);

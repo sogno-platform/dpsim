@@ -38,7 +38,6 @@ namespace EMT {
 		Real mVoltageAtNode2;
 
 	public:
-		Resistor() { };
 		Resistor(String name, Int src, Int dest, Real resistance);
 
 		void init(Real om, Real dt) { }

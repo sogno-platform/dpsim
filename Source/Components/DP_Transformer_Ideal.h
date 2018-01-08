@@ -35,7 +35,6 @@ namespace DP {
 		/// Transformer ratio
 		Complex mRatio;
 	public:
-		TransformerIdeal() { };
 		TransformerIdeal(String name, Int node1, Int node2, Real ratioRe, Real ratioIm);
 
 		void init(Real om, Real dt) { };

@@ -186,8 +186,6 @@ namespace Component {
 		Real mPsikq2;
 
 	public:
-		SynchronGeneratorBase() { };
-
 		/// Initializes the per unit or stator referred machine parameters with the machine parameters given in per unit or
 		/// stator referred parameters depending on the setting of parameter type.
 		/// The initialization mode depends on the setting of state type.

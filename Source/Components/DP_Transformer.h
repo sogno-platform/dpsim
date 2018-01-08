@@ -57,7 +57,6 @@ namespace DP {
 		std::shared_ptr<Component::DP::Inductor> mInductor;
 
 	public:
-		Transformer() { };
 		Transformer(String name, Int node1, Int node2, Real ratioAbs, Real ratioPhase, Real resistance, Real inductance);
 
 		void init(Real om, Real dt);

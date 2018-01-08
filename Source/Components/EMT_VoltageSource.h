@@ -40,7 +40,6 @@ namespace EMT {
 		Real mCurrent;
 
 	public:
-		VoltageSource() { };
 		VoltageSource(String name, Int src, Int dest, Complex voltage, Real resistance);
 
 		void init(Real om, Real dt) { }

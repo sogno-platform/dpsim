@@ -152,7 +152,6 @@ namespace DP {
 		Matrix C_flux = Matrix::Zero(4, 1);
 
 	public:
-		SynchronGeneratorVBR() { };
 		~SynchronGeneratorVBR();
 
 		/// Initializes the per unit or stator referred machine parameters with the machine parameters given in per unit or

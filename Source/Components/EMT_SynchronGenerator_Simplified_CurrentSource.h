@@ -90,7 +90,6 @@ namespace EMT {
 		Component::EMT::VoltageSourceIdeal vc;
 
 	public:
-		SynchronGeneratorSimplifiedCurrentSource() { };
 		~SynchronGeneratorSimplifiedCurrentSource();
 
 		/// Initializes the per unit or stator referred machine parameters with the machine parameters given in per unit or

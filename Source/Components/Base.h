@@ -69,8 +69,6 @@ namespace Component {
 		typedef std::shared_ptr<Base> Ptr;
 		typedef std::vector<Ptr> List;
 
-		Base() { }
-
 		Base(String name, Int node1, Int node2, bool logActive = false)
 		{
 			mName = name;

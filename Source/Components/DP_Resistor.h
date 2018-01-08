@@ -32,7 +32,6 @@ namespace DP {
 	class Resistor : public Component::Base {
 
 	protected:
-
 		///Resistance [ohm]
 		Real mResistance;
 
@@ -52,7 +51,6 @@ namespace DP {
 		Real mVoltageAtNode2Im;
 
 	public:
-		Resistor() { };
 		Resistor(String name, Int src, Int dest, Real resistance);
 
 		void init(Real om, Real dt) { }

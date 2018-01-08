@@ -52,8 +52,6 @@ namespace DP {
 		Real mGci;
 
 	public:
-		Capacitor() { };
-
 		/// define capacitor name, conected nodes and capacitance
 		Capacitor(String name, Int src, Int dest, Real capacitance);
 

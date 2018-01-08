@@ -64,7 +64,6 @@ namespace DP {
 		Real curri_ind;
 
 	public:
-		RxLine() { };
 		RxLine(String name, Int node1, Int node2, Real resistance, Real inductance, LineTypes type = LineTypes::RxLine3Node);
 
 		void init(Real om, Real dt);

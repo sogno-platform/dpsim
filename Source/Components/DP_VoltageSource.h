@@ -49,8 +49,6 @@ namespace DP {
 		Real mCurrenti;
 
 	public:
-		VoltageSource() { };
-
 		/// define voltage source paramenters
 		VoltageSource(String name, Int src, Int dest, Complex voltage, Real resistance);
 

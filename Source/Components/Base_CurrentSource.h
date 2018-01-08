@@ -26,7 +26,6 @@
 
 namespace DPsim {
 namespace Component {
-namespace DP {
 
 	template <class T>
 	class CurrentSourceBase : public Component::Base {
@@ -35,8 +34,6 @@ namespace DP {
 		T mCurrent;
 
 	public:
-		CurrentSourceBase() { };
-
 		CurrentSourceBase(String name, Int src, Int dest, T current)
 			: Base(name, src, dest)
 		{
@@ -48,6 +45,5 @@ namespace DP {
 			mCurrent = current;
 		}
 	};
-}
 }
 }

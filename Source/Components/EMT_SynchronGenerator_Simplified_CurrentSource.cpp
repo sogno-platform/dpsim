@@ -32,12 +32,11 @@ Component::EMT::SynchronGeneratorSimplifiedCurrentSource::SynchronGeneratorSimpl
 	Real inertia, bool logActive)
 	: SynchronGeneratorBase(name, node1, node2, node3, nomPower, nomVolt, nomFreq, poleNumber, nomFieldCur,
 		Rs, Ll, Lmd, Lmd0, Lmq, Lmq0, Rfd, Llfd, Rkd, Llkd, Rkq1, Llkq1, Rkq2, Llkq2,
-		inertia, logActive)
+		inertia, logActive),
+		va("va", 0, 1, mVa),
+		vb("vb", 0, 2, mVb),
+		vc("vc", 0, 3, mVc)
 {
-	va = Component::EMT::VoltageSourceIdeal("va", 0, 1, mVa);
-	vb = Component::EMT::VoltageSourceIdeal("vb", 0, 2, mVb);
-	vc = Component::EMT::VoltageSourceIdeal("vc", 0, 3, mVc);
-
 	mNumVirtualNodes = 3;
 	mVirtualNodes = { 0, 0, 0 };
 }

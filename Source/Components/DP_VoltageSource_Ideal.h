@@ -36,8 +36,6 @@ namespace DP {
 	class VoltageSourceIdeal : public VoltageSourceBase<Complex> {
 
 	public:
-		VoltageSourceIdeal() { };
-
 		/// define paramenters of the voltage source
 		VoltageSourceIdeal(String name, Int src, Int dest, Complex voltage);
 
