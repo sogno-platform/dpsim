@@ -9,6 +9,7 @@ add_library(dpsim SHARED
 
 list(APPEND SOURCES
 	Components/Base.cpp
+	Components/Base_SynchronGenerator.cpp
 	Components/DP_Capacitor.cpp
 	Components/DP_CurrentSource_Ideal.cpp
 	Components/DP_Inductor.cpp
@@ -35,7 +36,6 @@ list(APPEND SOURCES
 	Components/EMT_VoltageSource_Freq.cpp
 	Components/EMT_VoltageSource_Ideal.cpp
 	Components/Exciter.cpp
-	Components/SynchronGenerator_Base.cpp
 	Components/TurbineGovernor.cpp
 )
 

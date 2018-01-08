@@ -22,7 +22,7 @@
 
 #pragma once
 
-#include "VoltageSource_Base.h"
+#include "Base_VoltageSource.h"
 
 namespace DPsim {
 namespace Component {

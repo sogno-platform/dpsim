@@ -22,7 +22,7 @@
 
 #pragma once
 
-#include "SynchronGenerator_Base.h"
+#include "Base_SynchronGenerator.h"
 #include "EMT_VoltageSource_Ideal.h"
 
 namespace DPsim {

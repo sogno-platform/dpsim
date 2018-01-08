@@ -19,7 +19,7 @@
 * along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *********************************************************************************/
 
-#include "SynchronGenerator_Base.h"
+#include "Base_SynchronGenerator.h"
 
 using namespace DPsim;
 

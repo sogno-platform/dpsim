@@ -48,5 +48,4 @@
 #include "Components/EMT_VoltageSource_Freq.h"
 #include "Components/EMT_VoltageSource_Ideal.h"
 #include "Components/Exciter.h"
-#include "Components/SynchronGenerator_Base.h"
 #include "Components/TurbineGovernor.h"

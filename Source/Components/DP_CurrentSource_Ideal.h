@@ -22,7 +22,7 @@
 
 #pragma once
 
-#include "CurrentSource_Base.h"
+#include "Base_CurrentSource.h"
 
 namespace DPsim {
 namespace Component {
