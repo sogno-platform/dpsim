@@ -23,16 +23,15 @@
 
 using namespace DPsim;
 
-Components::DP::VoltageSourceIdeal::VoltageSourceIdeal(String name, Int src, Int dest, Complex voltage)
-	: VoltageSourceBase(name, src, dest, voltage)
-{
+Components::DP::VoltageSourceIdeal::VoltageSourceIdeal(String name, Int node1, Int node2, Complex voltage)
+	: Base(name, node1, node2) {
+	mVoltage = voltage;
 	mNumVirtualNodes = 1;
 	mVirtualNodes = { 0 };
 	attrMap["voltage"] = { Attribute::Complex, &mVoltage };
 }
 
-void Components::DP::VoltageSourceIdeal::applySystemMatrixStamp(SystemModel& system)
-{
+void Components::DP::VoltageSourceIdeal::applySystemMatrixStamp(SystemModel& system) {
 	if (mNode1 >= 0) {
 		system.setCompSystemMatrixElement(mVirtualNodes[0], mNode1, Complex(1, 0));
 		system.setCompSystemMatrixElement(mNode1, mVirtualNodes[0], Complex(1, 0));
@@ -52,7 +51,10 @@ void Components::DP::VoltageSourceIdeal::step(SystemModel& system, Real time) {
 	system.addCompToRightSideVector(mVirtualNodes[0], mVoltage);
 }
 
-Complex Components::DP::VoltageSourceIdeal::getCurrent(SystemModel& system)
-{
+Complex Components::DP::VoltageSourceIdeal::getCurrent(SystemModel& system) {
 	return Complex(system.getRealFromLeftSideVector(mVirtualNodes[0]), system.getRealFromLeftSideVector(mVirtualNodes[0] + system.getCompOffset()));
+}
+
+void Components::DP::VoltageSourceIdeal::setVoltage(Complex voltage) {
+	mVoltage = voltage;
 }

@@ -33,7 +33,9 @@ namespace DP {
 	/// For a voltage source between nodes j and k, a new variable (current across the voltage source) is added to the left side vector
 	/// as unkown and it is taken into account for the equation of node j as positve and for the equation of node k as negative. Moreover
 	/// a new equation ej - ek = V is added to the problem.
-	class VoltageSourceIdeal : public VoltageSourceBase<Complex> {
+	class VoltageSourceIdeal : public Components::Base {
+	private:
+		Complex mVoltage;
 
 	public:
 		/// define paramenters of the voltage source
@@ -53,6 +55,9 @@ namespace DP {
 		void postStep(SystemModel& system) { }
 
 		virtual Complex getCurrent(SystemModel& system);
+
+		void setVoltage(Complex voltage);
+		
 	};
 }
 }

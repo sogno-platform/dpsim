@@ -29,14 +29,13 @@ int main(int argc, char* argv[])
 	// Define simulation scenario
 	Real timeStep = 0.001;
 	Real omega = 2.0*M_PI*50.0;
-	Real finalTime = 0.3;
+	Real finalTime = 0.2;
 	std::ostringstream fileName;
-	fileName << "IdealVS1_" << timeStep;
+	fileName << "IdealVS_TrafoIdeal" << timeStep;
 	Components::Base::List circElements;
-	circElements.push_back(std::make_shared<Components::DP::VoltageSourceIdeal>("v_in", 1, 2, Complex(10, 0)));
-	circElements.push_back(std::make_shared<Components::DP::Resistor>("r_1", 1, 0, 1));
-	circElements.push_back(std::make_shared<Components::DP::Resistor>("r_2", 2, 0, 1));
-	circElements.push_back(std::make_shared<Components::DP::Resistor>("r_3", 2, 0, 1));
+	circElements.push_back(std::make_shared<Components::DP::VoltageSourceIdeal>("v_1", 0, 1, Complex(10, 0)));
+	circElements.push_back(std::make_shared<Components::DP::TransformerIdeal>("trafo_1", 1, 2, 10, 0));
+	circElements.push_back(std::make_shared<Components::DP::Resistor>("r_1", 2, 0, 1));
 
 	// Define log names
 	Logger log("Logs/" + fileName.str() + ".log");

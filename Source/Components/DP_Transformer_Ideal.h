@@ -35,7 +35,7 @@ namespace DP {
 		/// Transformer ratio
 		Complex mRatio;
 	public:
-		TransformerIdeal(String name, Int node1, Int node2, Real ratioRe, Real ratioIm);
+		TransformerIdeal(String name, Int node1, Int node2, Real ratioAbs, Real ratioPhase);
 
 		void init(SystemModel& system) { };
 		void applySystemMatrixStamp(SystemModel& system);

@@ -23,8 +23,8 @@
 
 using namespace DPsim;
 
-Components::DP::VoltageSource::VoltageSource(String name, Int src, Int dest, Complex voltage, Real resistance)
-	: VoltageSourceBase(name, src, dest, voltage)
+Components::DP::VoltageSource::VoltageSource(String name, Int node1, Int node2, Complex voltage, Real resistance)
+	: VoltageSourceBase(name, node1, node2, voltage)
 {
 	mResistance = resistance;
 	attrMap["voltage"]    = { Attribute::Complex, &mVoltage };

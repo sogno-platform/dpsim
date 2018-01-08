@@ -25,7 +25,7 @@ using namespace DPsim;
 
 void MathLibrary::setCompMatrixElement(Matrix& mat, Int compOffset, Int row, Int column, Complex value) {
 	mat(row, column) = value.real();
-	mat(row + compOffset, column + compOffset) = value.imag();
+	mat(row + compOffset, column + compOffset) = value.real();
 	mat(row, column + compOffset) = - value.imag();
 	mat(row + compOffset, column) = value.imag();
 }
