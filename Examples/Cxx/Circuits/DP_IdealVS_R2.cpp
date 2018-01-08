@@ -24,21 +24,22 @@
 
 using namespace DPsim;
 
-int main() {
+int main(int argc, char* argv[])
+{
 	// Define simulation scenario
 	Real timeStep = 0.001;
 	Real omega = 2.0*M_PI*50.0;
 	Real finalTime = 0.3;
 	std::ostringstream fileName;
 	fileName << "IdealVS3_" << timeStep;
-	BaseComponent::List circElements;
-	circElements.push_back(std::make_shared<IdealVoltageSource>("v_1", 1, 0, Complex(10, 0)));
-	circElements.push_back(std::make_shared<ResistorDP>("r_1", 1, 2, 1));
-	circElements.push_back(std::make_shared<ResistorDP>("r_2", 2, 0, 1));
-	circElements.push_back(std::make_shared<ResistorDP>("r_3", 2, 3, 1));
-	circElements.push_back(std::make_shared<ResistorDP>("r_4", 3, 0, 1));
-	circElements.push_back(std::make_shared<ResistorDP>("r_5", 3, 4, 1));
-	circElements.push_back(std::make_shared<IdealVoltageSource>("v_2", 4, 0, Complex(20, 0)));
+	Components::Base::List circElements;
+	circElements.push_back(std::make_shared<Components::DP::VoltageSourceIdeal>("v_1", 1, 0, Complex(10, 0)));
+	circElements.push_back(std::make_shared<Components::DP::Resistor>("r_1", 1, 2, 1));
+	circElements.push_back(std::make_shared<Components::DP::Resistor>("r_2", 2, 0, 1));
+	circElements.push_back(std::make_shared<Components::DP::Resistor>("r_3", 2, 3, 1));
+	circElements.push_back(std::make_shared<Components::DP::Resistor>("r_4", 3, 0, 1));
+	circElements.push_back(std::make_shared<Components::DP::Resistor>("r_5", 3, 4, 1));
+	circElements.push_back(std::make_shared<Components::DP::VoltageSourceIdeal>("v_2", 4, 0, Complex(20, 0)));
 
 	// Define log names
 	Logger log("Logs/" + fileName.str() + ".log");

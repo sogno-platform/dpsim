@@ -26,8 +26,8 @@
 
 using namespace DPsim;
 
-void DPsim::updateProgressBar(Real time, Real finalTime) {
-
+void DPsim::updateProgressBar(Real time, Real finalTime)
+{
 	if (time / finalTime <= 0.1) {
 		std::cout << "                      (0%)\r";
 	}
@@ -62,121 +62,4 @@ void DPsim::updateProgressBar(Real time, Real finalTime) {
 		std::cout << "####################  (100%)";
 		std::cout << std::endl;
 	}
-}
-
-void DPsim::usage() {
-	std::cerr << "usage: DPsolver [OPTIONS] [PYTHON_FILE...]" << std::endl
-		<< "Possible options:" << std::endl
-		<< "  -b/--batch:               don't show an interactive prompt after reading files" << std::endl
-		<< "  -h/--help:                show this help and exit" << std::endl
-		<< "  -i/--interface OBJ_NAME:  prefix for the names of the shmem objects used for communication (default: /dpsim)" << std::endl
-		<< "  -n/--node NODE_ID:        RDF id of the node where the interfacing voltage/current source should be placed" << std::endl
-		<< "  -r/--realtime:            enable realtime simulation " << std::endl
-		<< "  -s/--split INDEX:         index of this instance for distributed simulation (0 or 1)" << std::endl
-		<< "Remaining arguments are treated as Python files and executed in order." << std::endl;
-}
-
-bool DPsim::parseFloat(const char *s, double *d) {
-	char *end;
-	*d = std::strtod(s, &end);
-	return (end != s && !*end);
-}
-
-bool DPsim::parseInt(const char *s, int *i) {
-	char *end;
-	*i = strtol(s, &end, 0);
-	return (end != s && !*end);
-}
-
-int DPsim::parseArguments(int argc, const char* argv[],
-	bool &rt, bool &batch, Int &split, String &interfaceBase, String &splitNode) {
-
-	for (Int i = 1; i < argc; i++) {
-		if (!strcmp(argv[i], "-b") || !strcmp(argv[i], "--batch")) {
-			batch = true;
-		}
-		else if (!strcmp(argv[i], "-h") || !strcmp(argv[i], "--help")) {
-			usage();
-			return 0;
-		}
-		else if (!strcmp(argv[i], "-i") || !strcmp(argv[i], "--interface")) {
-			if (i == argc - 1) {
-				std::cerr << "Missing argument for -i/--interface; see 'DPsim --help' for usage" << std::endl;
-				return 1;
-			}
-			if (argv[++i][0] != '/') {
-				std::cerr << "Shmem interface object name must start with a '/'" << std::endl;
-				return 1;
-			}
-			interfaceBase = String(argv[i]);
-		}
-		else if (!strcmp(argv[i], "-n") || !strcmp(argv[i], "--node")) {
-			if (i == argc - 1) {
-				std::cerr << "Missing argument for -n/--node; see 'DPsim --help' for usage" << std::endl;
-				return 1;
-			}
-			splitNode = String(argv[++i]);
-		}
-		else if (!strcmp(argv[i], "-r") || !strcmp(argv[i], "--realtime")) {
-			rt = true;
-		}
-		else if (!strcmp(argv[i], "-s") || !strcmp(argv[i], "--split")) {
-			if (i == argc - 1) {
-				std::cerr << "Missing argument for -s/--split; see 'DPsim --help' for usage" << std::endl;
-				return 1;
-			}
-			if (!parseInt(argv[++i], &split) || split < 0 || split > 1) {
-				std::cerr << "Invalid setting " << argv[i] << " for the split index" << std::endl;
-				return 1;
-			}
-		}
-		else if (argv[i][0] == '-') {
-			std::cerr << "Unknown option " << argv[i] << " ; see 'DPsim --help' for usage" << std::endl;
-			return 1;
-		}
-		else {
-			// remaining arguments treated as input files
-			break;
-		}
-	}
-
-	return 0;
-}
-
-int DPsim::checkArguments(bool rt, Int split, String splitNode) {
-#ifndef __linux__
-	if (split >= 0 || splitNode.length() != 0) {
-		std::cerr << "Distributed simulation not supported on this platform" << std::endl;
-		return 1;
-	}
-	else if (rt) {
-		std::cerr << "Realtime simulation not supported on this platform" << std::endl;
-		return 1;
-	}
-#endif
-	if (split >= 0 || splitNode.length() != 0 || rt) {
-		std::cerr << "Realtime and distributed simulation currently not supported in combination with Python" << std::endl;
-		return 1;
-	}
-
-	return 0;
-}
-
-// Console main that supports command line arguments
-int DPsim::consoleMain(int argc, const char* argv[]) {
-	bool rt = false;
-	bool batch = false;
-	int split = -1;
-	String interfaceBase = "/dpsim";
-	String splitNode = "";
-	String outName, inName, logName("log.txt"), llogName("lvector.csv"), rlogName("rvector.csv");
-
-	if (parseArguments(argc, argv, rt, batch, split, interfaceBase, splitNode) == 1) {
-		return 1;
-	}
-
-	if (checkArguments(rt, split, splitNode) == 1) {
-		return 1;
-	}
-	return 0;
 }

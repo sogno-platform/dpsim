@@ -24,7 +24,8 @@
 
 using namespace DPsim;
 
-void SystemModel::initialize(Int numNodes) {
+void SystemModel::initialize(Int numNodes)
+{
 	mNumNodes = numNodes;
 	mCompOffset = mNumNodes;
 
@@ -38,8 +39,8 @@ void SystemModel::initialize(Int numNodes) {
 	}
 }
 
-void SystemModel::createEmptySystemMatrix() {
-
+void SystemModel::createEmptySystemMatrix()
+{
 	if (mSimType == SimulationType::EMT) {
 		mSystemMatrix = Matrix::Zero(mNumNodes, mNumNodes);
 	}
@@ -48,49 +49,57 @@ void SystemModel::createEmptySystemMatrix() {
 	}
 }
 
-void SystemModel::addSystemMatrix() {	
+void SystemModel::addSystemMatrix()
+{
 	mSystemMatrixVector.push_back(mSystemMatrix);
 	mLuFactored = Eigen::PartialPivLU<Matrix>(mSystemMatrix);
 	mLuFactoredVector.push_back(mLuFactored);
 }
 
-void SystemModel::addRealToSystemMatrix(Int row, Int column, Real value) {
+void SystemModel::addRealToSystemMatrix(Int row, Int column, Real value)
+{
 	MathLibrary::addRealToMatrixElement(mSystemMatrix, row, column, value);
 }
 
-void SystemModel::addCompToSystemMatrix(Int row, Int column, Real reValue, Real imValue) {
+void SystemModel::addCompToSystemMatrix(Int row, Int column, Real reValue, Real imValue)
+{
 	MathLibrary::addCompToMatrixElement(mSystemMatrix, mCompOffset, row, column, reValue, imValue);
 }
 
-void SystemModel::addCompToSystemMatrix(Int row, Int column, Complex value) {
+void SystemModel::addCompToSystemMatrix(Int row, Int column, Complex value)
+{
 	addCompToSystemMatrix(row, column, value.real(), value.imag());
 }
 
-void SystemModel::setCompSystemMatrixElement(Int row, Int column, Real reValue, Real imValue) {
+void SystemModel::setCompSystemMatrixElement(Int row, Int column, Real reValue, Real imValue)
+{
 	MathLibrary::setCompMatrixElement(mSystemMatrix, mCompOffset, row, column, reValue, imValue);
 }
 
-void SystemModel::addCompToRightSideVector(Int row, Real reValue, Real imValue) {
+void SystemModel::addCompToRightSideVector(Int row, Real reValue, Real imValue)
+{
 	MathLibrary::addCompToVectorElement(mRightSideVector, mCompOffset, row, reValue, imValue);
 }
 
-void SystemModel::addRealToRightSideVector(Int row, Real value) {
+void SystemModel::addRealToRightSideVector(Int row, Real value)
+{
 	MathLibrary::addRealToVectorElement(mRightSideVector, row, value);
 }
 
-void SystemModel::solve() {
+void SystemModel::solve()
+{
 	mLeftSideVector = mLuFactored.solve(mRightSideVector);
 }
 
-void SystemModel::switchSystemMatrix(UInt systemMatrixIndex) {
+void SystemModel::switchSystemMatrix(UInt systemMatrixIndex)
+{
 	if (systemMatrixIndex < mSystemMatrixVector.size()) {
 		mSystemMatrix = mSystemMatrixVector[systemMatrixIndex];
 		mLuFactored = mLuFactoredVector[systemMatrixIndex];
 	}
 }
 
-void SystemModel::setRightSideVectorToZero() {
+void SystemModel::setRightSideVectorToZero()
+{
 	mRightSideVector.setZero();
 }
-
-

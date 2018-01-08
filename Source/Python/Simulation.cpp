@@ -35,7 +35,8 @@
 
 using namespace DPsim;
 
-void Python::Simulation::simThreadFunction(Python::Simulation* pySim) {
+void Python::Simulation::simThreadFunction(Python::Simulation* pySim)
+{
 	bool notDone = true;
 
 #ifdef WITH_RT
@@ -70,7 +71,8 @@ void Python::Simulation::simThreadFunction(Python::Simulation* pySim) {
 }
 
 #ifdef WITH_RT
-void Python::Simulation::simThreadFunctionRT(Python::Simulation *pySim) {
+void Python::Simulation::simThreadFunctionRT(Python::Simulation *pySim)
+{
 	bool notDone = true;
 	char timebuf[8];
 	int timerfd;
@@ -130,7 +132,8 @@ void Python::Simulation::simThreadFunctionRT(Python::Simulation *pySim) {
 }
 #endif /* WITH_RT */
 
-PyObject* Python::Simulation::newfunc(PyTypeObject* type, PyObject *args, PyObject *kwds) {
+PyObject* Python::Simulation::newfunc(PyTypeObject* type, PyObject *args, PyObject *kwds)
+{
 	Python::Simulation *self;
 
 	self = (Python::Simulation*) type->tp_alloc(type, 0);
@@ -145,7 +148,8 @@ PyObject* Python::Simulation::newfunc(PyTypeObject* type, PyObject *args, PyObje
 	return (PyObject*) self;
 }
 
-int Python::Simulation::init(Python::Simulation* self, PyObject *args, PyObject *kwds) {
+int Python::Simulation::init(Python::Simulation* self, PyObject *args, PyObject *kwds)
+{
 	static char *kwlist[] = {"components", "frequency", "timestep", "duration", "log", "llog", "rlog", "rt", "start_sync", NULL};
 	double frequency = 50, timestep = 1e-3, duration = DBL_MAX;
 	const char *log = nullptr, *llog = nullptr, *rlog = nullptr;
@@ -181,7 +185,8 @@ int Python::Simulation::init(Python::Simulation* self, PyObject *args, PyObject 
 	return 0;
 };
 
-void Python::Simulation::dealloc(Python::Simulation* self) {
+void Python::Simulation::dealloc(Python::Simulation* self)
+{
 	if (self->simThread) {
 		// We have to cancel the running thread here, because otherwise self can't
 		// be freed.
@@ -214,7 +219,7 @@ void Python::Simulation::dealloc(Python::Simulation* self) {
 	// the vectors here to free the associated memory.
 
 	// This is a workaround for a compiler bug: https://stackoverflow.com/a/42647153/8178705
-	using ComponentList = BaseComponent::List;
+	using ComponentList = DPsim::Components::Base::List;
 	using PyObjectsList = std::vector<PyObject *>;
 
 	self->comps.~ComponentList();
@@ -231,7 +236,8 @@ static const char* DocSimulationAddInterface =
 "See the documentation of `Interface` for more details.\n"
 "\n"
 ":param intf: The `Interface` to be added.";
-PyObject* Python::Simulation::addInterface(PyObject* self, PyObject* args) {
+PyObject* Python::Simulation::addInterface(PyObject* self, PyObject* args)
+{
 	Python::Simulation *pySim = (Python::Simulation*) self;
 	PyObject* pyObj;
 	Python::Interface* pyIntf;
@@ -257,7 +263,8 @@ PyObject* Python::Simulation::addInterface(PyObject* self, PyObject* args) {
 static const char* DocSimulationLvector =
 "lvector()\n"
 "Return the left-side vector of the last step as a list of floats.";
-PyObject* Python::Simulation::lvector(PyObject *self, PyObject *args) {
+PyObject* Python::Simulation::lvector(PyObject *self, PyObject *args)
+{
 	Python::Simulation *pySim = (Python::Simulation*) self;
 
 	if (pySim->state == StateRunning) {
@@ -279,7 +286,8 @@ static const char* DocSimulationPause =
 "Pause the simulation at the next possible time (usually, after finishing the current timestep).\n"
 "\n"
 ":raises: ``SystemError`` if the simulation is not running.\n";
-PyObject* Python::Simulation::pause(PyObject *self, PyObject *args) {
+PyObject* Python::Simulation::pause(PyObject *self, PyObject *args)
+{
 	Python::Simulation *pySim = (Python::Simulation*) self;
 	std::unique_lock<std::mutex> lk(*pySim->mut);
 
@@ -306,7 +314,8 @@ static const char* DocSimulationStart =
 "simulation to finish, but returns immediately.\n"
 "\n"
 ":raises: ``SystemError`` if the simulation is already running or finished.";
-PyObject* Python::Simulation::start(PyObject *self, PyObject *args) {
+PyObject* Python::Simulation::start(PyObject *self, PyObject *args)
+{
 	Python::Simulation *pySim = (Python::Simulation*) self;
 	std::unique_lock<std::mutex> lk(*pySim->mut);
 
@@ -339,7 +348,8 @@ static const char* DocSimulationStep =
 "Perform a single step of the simulation (possibly the first).\n"
 "\n"
 ":raises: ``SystemError`` if the simulation is already running or finished.";
-PyObject* Python::Simulation::step(PyObject *self, PyObject *args) {
+PyObject* Python::Simulation::step(PyObject *self, PyObject *args)
+{
 	Python::Simulation *pySim = (Python::Simulation*) self;
 	std::unique_lock<std::mutex> lk(*pySim->mut);
 
@@ -375,7 +385,8 @@ static const char* DocSimulationStop =
 "stop()\n"
 "Stop the simulation at the next possible time. The simulation thread is canceled "
 "and the simulation can not be restarted. No-op if the simulation is not running.";
-PyObject* Python::Simulation::stop(PyObject *self, PyObject *args) {
+PyObject* Python::Simulation::stop(PyObject *self, PyObject *args)
+{
 	Python::Simulation* pySim = (Python::Simulation*) self;
 	std::unique_lock<std::mutex> lk(*pySim->mut);
 	pySim->running = false;
@@ -392,7 +403,8 @@ static const char* DocSimulationUpdateMatrix =
 "update_matrix()\n"
 "Recompute the internal system matrix. Must be called after component parameters "
 "have been changed during a simulation.";
-PyObject* Python::Simulation::updateMatrix(PyObject *self, PyObject *args) {
+PyObject* Python::Simulation::updateMatrix(PyObject *self, PyObject *args)
+{
 	Python::Simulation *pySim = (Python::Simulation*) self;
 
 	// TODO: this is a quick-and-dirty method that keeps the old matrix in memory
@@ -409,7 +421,8 @@ static const char* DocSimulationWait =
 "Block until the simulation is finished, returning immediately if this is already the case.\n"
 "\n"
 ":raises: ``SystemError`` if the simulation is paused or was not started yet.";
-PyObject* Python::Simulation::wait(PyObject *self, PyObject *args) {
+PyObject* Python::Simulation::wait(PyObject *self, PyObject *args)
+{
 	Python::Simulation *pySim = (Python::Simulation*) self;
 	std::unique_lock<std::mutex> lk(*pySim->mut);
 

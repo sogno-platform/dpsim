@@ -1,4 +1,4 @@
-﻿/** Exciter
+/** Exciter
 *
 * @file
 * @author Markus Mirz <mmirz@eonerc.rwth-aachen.de>
@@ -22,9 +22,10 @@
 
 #pragma once
 
-#include "BaseComponent.h"
+#include "Base.h"
 
 namespace DPsim {
+namespace Components {
 
 	/// Synchronous generator model
 	/// If parInPerUnit is not set, the parameters have to be given with their respective stator or rotor
@@ -34,6 +35,7 @@ namespace DPsim {
 	/// descriptive names in order to shorten formulas and increase the readability
 
 	class Exciter {
+
 	protected:
 
 		Real mTa;
@@ -69,22 +71,18 @@ namespace DPsim {
 		bool mLogActive;
 		Logger* mLog;
 
-
 	public:
 		Exciter() { };
-		~Exciter() {};
+		~Exciter() { };
 
 		/// Initializes exciter parameters
 		Exciter(Real Ta, Real Ka, Real Te, Real Ke, Real Tf, Real Kf, Real Tr, Real Lad, Real Rfd);
-		
+
 		/// Initializes exciter variables
 		void init(Real Vh_init, Real Vf_init);
-		
+
 		/// Performs an step to update field voltage value
 		Real step(Real mVd, Real mVq, Real Vref, Real dt);
-
-
-	
-	
 	};
+}
 }

@@ -19,10 +19,10 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *********************************************************************************/
 
-int main()
+int main(int argc, char* argv[])
 {
 	// Same circuit as above, but now with realtime support.
-	BaseComponent::List comps;
+	Components::Base::List comps;
 	struct shmem_conf conf;
 	conf.samplelen = 4;
 	conf.queuelen = 1024;

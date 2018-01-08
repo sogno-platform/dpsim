@@ -1,4 +1,4 @@
-﻿/** Exciter
+/** Exciter
 *
 * @author Markus Mirz <mmirz@eonerc.rwth-aachen.de>
 * @copyright 2017, Institute for Automation of Complex Power Systems, EONERC
@@ -24,9 +24,8 @@
 
 using namespace DPsim;
 
-Exciter::Exciter(Real Ta, Real Ka, Real Te, Real Ke, Real Tf, Real Kf, Real Tr, Real Lad, Real Rfd)
+Components::Exciter::Exciter(Real Ta, Real Ka, Real Te, Real Ke, Real Tf, Real Kf, Real Tr, Real Lad, Real Rfd)
 {
-
 	mTa = Ta;
 	mKa = Ka;
 	mTe = Te;
@@ -36,28 +35,24 @@ Exciter::Exciter(Real Ta, Real Ka, Real Te, Real Ke, Real Tf, Real Kf, Real Tr, 
 	mTr = Tr;
 	mLad = Lad;
 	mRfd = Rfd;
-
 }
 
-void Exciter::init(Real Vh_init, Real Vf_init) {
 
-		mVf = 1;
-		if (mVf <= 2.3)
-				mVse = (0.1 / 2.3)*mVf;
-		else
-				mVse = (0.33 / 3.1)*mVf;
-		mVse = mVse*mVf;
+void Components::Exciter::init(Real Vh_init, Real Vf_init)
+{
+	mVf = 1;
+	mVse = mVf <= 2.3 ? 0.1 / 2.3 : 0.33 / 3.1;
+	mVse *= mVf;
 
-		mVr = mVse + mKe*mVf;
-		mVf_init = mVr/mKa;
-		mVh = 1;
-		mVm = mVh;
-		mVis = 0;
-
+	mVr = mVse + mKe*mVf;
+	mVf_init = mVr/mKa;
+	mVh = 1;
+	mVm = mVh;
+	mVis = 0;
 }
 
-Real Exciter::step(Real mVd, Real mVq, Real Vref, Real dt) {
-
+Real Components::Exciter::step(Real mVd, Real mVq, Real Vref, Real dt)
+{
 	mVh = sqrt(pow(mVd, 2.) + pow(mVq, 2.));
 	// Voltage Transducer equation
 	mVm = Euler(mVm, -1, 1, dt / mTr, mVh);
@@ -78,8 +73,4 @@ Real Exciter::step(Real mVd, Real mVq, Real Vref, Real dt) {
 	mVf = Euler(mVf, -mKe, 1, dt / mTe, mVr - mVse);
 
 	return (mRfd / mLad)*mVf;
-
 }
-
-
-

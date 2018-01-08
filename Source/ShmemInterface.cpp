@@ -26,53 +26,67 @@
 #include <villas/shmem.h>
 
 #include "ShmemInterface.h"
+#include "Components/DP_CurrentSource_Ideal.h"
+#include "Components/DP_VoltageSource_Ideal.h"
 
 using namespace DPsim;
 
-void ShmemInterface::init(const char* wname, const char* rname, struct shmem_conf* conf) {
+void ShmemInterface::init(const char* wn, const char* rn, struct shmem_conf* conf)
+{
 	/* using a static shmem_conf as a default argument for the constructor
 	 * doesn't seem to work, so use this as a workaround */
 
 	// make local copies of the filenames, because shmem_int doesn't make copies
 	// and needs them for the close function
-	this->wname = std::string(wname);
-	this->rname = std::string(rname);
-	if (shmem_int_open(this->wname.c_str(), this->rname.c_str(), &this->mShmem, conf) < 0) {
+	wname = std::string(wn);
+	rname = std::string(rn);
+
+	if (shmem_int_open(wname.c_str(), rname.c_str(), &mShmem, conf) < 0) {
 		std::perror("Failed to open/map shared memory object");
 		std::exit(1);
 	}
+
 	mSeq = 0;
 	if (shmem_int_alloc(&mShmem, &mLastSample, 1) < 0) {
 		std::cerr << "Failed to allocate single sample from shmem pool" << std::endl;
 		std::exit(1);
 	}
+
 	mLastSample->sequence = 0;
 	mLastSample->ts.origin.tv_sec = 0;
 	mLastSample->ts.origin.tv_nsec = 0;
+
 	std::memset(&mLastSample->data, 0, mLastSample->capacity * sizeof(float));
 }
 
-ShmemInterface::ShmemInterface(const char* wname, const char* rname) {
+ShmemInterface::ShmemInterface(const char* wname, const char* rname)
+{
 	struct shmem_conf conf;
+
 	conf.queuelen = 512;
 	conf.samplelen = 64;
 	conf.polling = 0;
+
 	init(wname, rname, &conf);
 }
 
-ShmemInterface::ShmemInterface(const char* wname, const char *rname, struct shmem_conf* conf) {
+ShmemInterface::ShmemInterface(const char* wname, const char *rname, struct shmem_conf* conf)
+{
 	init(wname, rname, conf);
 }
 
-ShmemInterface::~ShmemInterface() {
+ShmemInterface::~ShmemInterface()
+{
 	shmem_int_close(&mShmem);
 }
 
-void ShmemInterface::readValues(bool blocking) {
+void ShmemInterface::readValues(bool blocking)
+{
 	if (!mInit) {
 		mInit = 1;
 		return;
 	}
+
 	struct sample *sample = nullptr;
 	int ret = 0;
 	try {
@@ -80,7 +94,8 @@ void ShmemInterface::readValues(bool blocking) {
 			ret = shmem_int_read(&mShmem, &sample, 1);
 			if (ret == 0)
 				return;
-		} else {
+		}
+		else {
 			while (ret == 0)
 				ret = shmem_int_read(&mShmem, &sample, 1);
 		}
@@ -95,19 +110,19 @@ void ShmemInterface::readValues(bool blocking) {
 				std::exit(1);
 			}
 			// TODO integer format?
-			Real real = sample->data[extComp.realIdx].f;
-			Real imag = sample->data[extComp.imagIdx].f;
+			Complex v = Complex(sample->data[extComp.realIdx].f, sample->data[extComp.imagIdx].f);
 
-			ExternalCurrentSource *ecs = dynamic_cast<ExternalCurrentSource*>(extComp.comp);
+			auto *ecs = dynamic_cast<Components::DP::CurrentSourceIdeal*>(extComp.comp);
 			if (ecs)
-				ecs->setCurrent(real, imag);
-			ExternalVoltageSource *evs = dynamic_cast<ExternalVoltageSource*>(extComp.comp);
+				ecs->setCurrent(v);
+			auto *evs = dynamic_cast<Components::DP::VoltageSourceIdeal*>(extComp.comp);
 			if (evs)
-				evs->setVoltage(real, imag);
+				evs->setVoltage(v);
 		}
 
 		sample_put(sample);
-	} catch (std::exception& exc) {
+	}
+	catch (std::exception& exc) {
 		/* probably won't happen (if the timer expires while we're still reading data,
 		 * we have a bigger problem somewhere else), but nevertheless, make sure that
 		 * we're not leaking memory from the queue pool */
@@ -117,7 +132,8 @@ void ShmemInterface::readValues(bool blocking) {
 	}
 }
 
-void ShmemInterface::writeValues(SystemModel& model) {
+void ShmemInterface::writeValues(SystemModel& model)
+{
 	struct sample *sample = nullptr;
 	Int len = 0, ret = 0;
 	bool done = false;
@@ -166,6 +182,7 @@ void ShmemInterface::writeValues(SystemModel& model) {
 			if (cd.imagIdx > len)
 				len = cd.imagIdx;
 		}
+
 		sample->length = len+1;
 		sample->sequence = mSeq++;
 		clock_gettime(CLOCK_REALTIME, &sample->ts.origin);
@@ -175,7 +192,8 @@ void ShmemInterface::writeValues(SystemModel& model) {
 		if (ret < 0)
 			std::cerr << "Failed to write samples to shmem interface" << std::endl;
 		sample_copy(mLastSample, sample);
-	} catch (std::exception& exc) {
+	}
+	catch (std::exception& exc) {
 		/* We need to at least send something, so determine where exactly the
 		 * timer expired and either resend the last successfully sent sample or
 		 * just try to send this one again.

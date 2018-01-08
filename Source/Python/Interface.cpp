@@ -30,7 +30,8 @@
 
 using namespace DPsim;
 
-void Python::Interface::dealloc(Python::Interface* self) {
+void Python::Interface::dealloc(Python::Interface* self)
+{
 	if (self->intf)
 		delete self->intf;
 	Py_TYPE(self)->tp_free((PyObject*) self);
@@ -44,7 +45,8 @@ static const char* DocInterfaceRegisterSource =
 ":param source: The ``ExternalCurrentSource`` or ``ExternalVoltageSource`` to be registered.\n"
 ":param real_idx: Index of the real part of the current or voltage.\n"
 ":param imag_idx: Index of the imaginary part of the current or voltage.\n";
-PyObject* Python::Interface::registerSource(PyObject* self, PyObject* args) {
+PyObject* Python::Interface::registerSource(PyObject* self, PyObject* args)
+{
 #ifdef WITH_SHMEM
 	PyObject *obj;
 	int realIdx, imagIdx;
@@ -58,11 +60,13 @@ PyObject* Python::Interface::registerSource(PyObject* self, PyObject* args) {
 		return nullptr;
 	}
 	Python::Component *pyComp = (Python::Component*) obj;
-	if (DPsim::ExternalCurrentSource *ecs = dynamic_cast<DPsim::ExternalCurrentSource*>(pyComp->comp.get())) {
-		pyIntf->intf->registerCurrentSource(ecs, realIdx, imagIdx);
-	} else if (DPsim::ExternalVoltageSource *evs = dynamic_cast<DPsim::ExternalVoltageSource*>(pyComp->comp.get())) {
-		pyIntf->intf->registerVoltageSource(evs, realIdx, imagIdx);
-	} else {
+	if (auto *cs = dynamic_cast<DPsim::Components::DP::CurrentSourceIdeal*>(pyComp->comp.get())) {
+		pyIntf->intf->registerCurrentSource(cs, realIdx, imagIdx);
+	}
+	else if (auto *vs = dynamic_cast<DPsim::Components::DP::VoltageSourceIdeal*>(pyComp->comp.get())) {
+		pyIntf->intf->registerVoltageSource(vs, realIdx, imagIdx);
+	}
+	else {
 		PyErr_SetString(PyExc_TypeError, "First argument must be an external source");
 		return nullptr;
 	}
@@ -83,14 +87,17 @@ static const char* DocInterfaceExportCurrent =
 ":param comp: The current flowing through this `Component` is exported. Note that only component types for which this curcent can easily be determined may be passed here.\n"
 ":param real_idx: Index where the real part of the current is written.\n"
 ":param imag_idx: Index where the imaginary part of the current is written.\n";
-PyObject* Python::Interface::exportCurrent(PyObject* self, PyObject* args) {
+PyObject* Python::Interface::exportCurrent(PyObject* self, PyObject* args)
+{
 #ifdef WITH_SHMEM
 	int realIdx, imagIdx;
 	PyObject* obj;
 	Python::Interface* pyIntf = (Python::Interface*) self;
 
-	if (!PyArg_ParseTuple(args, "Oii", &obj, &realIdx, &imagIdx))
+	if (!PyArg_ParseTuple(args, "Oii", &obj, &realIdx, &imagIdx)) {
 		return nullptr;
+	}
+
 	if (!PyObject_TypeCheck(obj, &Python::ComponentType)) {
 		PyErr_SetString(PyExc_TypeError, "First argument must be a Component");
 		return nullptr;
@@ -118,13 +125,15 @@ static const char* DocInterfaceExportVoltage =
 ":param to: Number of the negative node of the voltage to be exported.\n"
 ":param real_idx: Index where the real part of the voltage is written.\n"
 ":param imag_idx: Index where the imaginary part of the voltage is written.\n";
-PyObject* Python::Interface::exportVoltage(PyObject* self, PyObject* args) {
+PyObject* Python::Interface::exportVoltage(PyObject* self, PyObject* args)
+{
 #ifdef WITH_SHMEM
 	int from, to, realIdx, imagIdx;
 	Python::Interface* pyIntf = (Python::Interface*) self;
 
-	if (!PyArg_ParseTuple(args, "iiii", &from, &to, &realIdx, &imagIdx))
+	if (!PyArg_ParseTuple(args, "iiii", &from, &to, &realIdx, &imagIdx)) {
 		return nullptr;
+	}
 
 	pyIntf->intf->registerExportedVoltage(from, to, realIdx, imagIdx);
 
@@ -156,7 +165,8 @@ const char* Python::DocOpenShmemInterface =
 "interface, meaning that polling will have to be used. This may increase "
 "performance at the cost of wasted CPU time.\n"
 ":returns: A new `Interface` object.\n";
-PyObject* Python::OpenShmemInterface(PyObject *self, PyObject *args, PyObject *kwds) {
+PyObject* Python::OpenShmemInterface(PyObject *self, PyObject *args, PyObject *kwds)
+{
 #ifdef WITH_SHMEM
 	static char *kwlist[] = {"wname", "rname", "queuelen", "samplelen", "polling", nullptr};
 	struct shmem_conf conf;
@@ -166,8 +176,9 @@ PyObject* Python::OpenShmemInterface(PyObject *self, PyObject *args, PyObject *k
 	conf.samplelen = 64;
 	conf.polling = 0;
 	if (!PyArg_ParseTupleAndKeywords(args, kwds, "ss|iib", kwlist,
-		&wname, &rname, &conf.queuelen, &conf.samplelen, &conf.polling))
+		&wname, &rname, &conf.queuelen, &conf.samplelen, &conf.polling)) {
 		return nullptr;
+	}
 
 	Python::Interface *pyIntf = PyObject_New(Python::Interface, &Python::InterfaceType);
 	pyIntf->intf = new ShmemInterface(wname, rname, &conf);

@@ -29,7 +29,7 @@ int main(int argc, char *argv[])
 	// Here, the two instances directly communicate with each other without using
 	// VILLASnode in between.
 	Logger log;
-	BaseComponent::List comps;
+	Components::Base::List comps;
 	ShmemInterface *shmem;
 	struct shmem_conf conf;
 	conf.samplelen = 4;
@@ -49,14 +49,16 @@ int main(int argc, char *argv[])
 		shmem = new ShmemInterface("/dpsim01", "/dpsim10", &conf);
 		shmem->registerVoltageSource(evs, 0, 1);
 		shmem->registerExportedCurrent(evs, 0, 1);
-	} else if (!strcmp(argv[1], "1")) {
+	}
+	else if (!strcmp(argv[1], "1")) {
 		ExternalCurrentSource *ecs = new ExternalCurrentSource("v_s", 1, 0, Complex(0, 0));
 		comps.push_back(ecs);
 		comps.push_back(new LinearResistor("r_2", 1, 0, 1));
 		shmem = new ShmemInterface("/dpsim10", "/dpsim01", &conf);
 		shmem->registerCurrentSource(ecs, 0, 1);
 		shmem->registerExportedVoltage(1, 0, 0, 1);
-	} else {
+	}
+	else {
 		std::cerr << "invalid test number" << std::endl;
 		std::exit(1);
 	}

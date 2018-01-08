@@ -32,6 +32,7 @@ namespace DPsim {
 	enum class LogLevel { NONE, ERROR, WARN, INFO };
 
 	class Logger {
+
 	private:
 		std::ofstream mLogFile;
 		LogLevel mLogLevel;

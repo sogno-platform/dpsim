@@ -50,7 +50,6 @@ namespace DPsim {
 		/// Number of ideal Voltage Sources
 		Int mNumIdealVS;
 
-
 		/// LU decomposition of system matrix A
 		Eigen::PartialPivLU<Matrix> mLuFactored;
 		/// LU decomposition of system matrix A

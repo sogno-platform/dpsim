@@ -16,7 +16,7 @@ __license__ = "GPL-3.0"
 
 import dpsim
 import dpsim.components
-import dpsim.components.dp
+import dpsim.components.dp as dp
 
 import numpy as np
 import pandas
@@ -85,11 +85,13 @@ def run_cpp_test(name):
 
 if __name__ == "__main__":
     python_sims = {
-        'TestSimple': dpsim.Simulation([
-            dpsim.components.VoltSourceRes("v_s", 1, 0, 10000+0j, 1),
-            dpsim.components.dp.Resistor("r_line", 1, 2, 1),
-            dpsim.components.dp.Inductor("l_line", 2, 3, 1),
-            dpsim.components.dp.Resistor("r_load", 3, 0, 1000)],
+        'TestSimple': dpsim.Simulation(
+            [
+                dp.VoltageSource("v_s", 1, 0, 10000+0j, 1),
+                dp.Resistor("r_line", 1, 2, 1),
+                dp.Inductor("l_line", 2, 3, 1),
+                dp.Resistor("r_load", 3, 0, 1000)
+            ],
             duration=0.3, llog=PATH + "/TestSimple.csv")
     }
 

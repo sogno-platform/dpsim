@@ -8,35 +8,34 @@ add_library(dpsim SHARED
 )
 
 list(APPEND SOURCES
-	Components/BaseComponent.cpp
-	Components/CapacitorDP.cpp
-	Components/CurrentSourceDP.cpp
+	Components/Base.cpp
+	Components/Base_SynchronGenerator.cpp
+	Components/DP_Capacitor.cpp
+	Components/DP_CurrentSource_Ideal.cpp
+	Components/DP_Inductor.cpp
+	Components/DP_Inductor_Interfaced.cpp
+	Components/DP_Line_Pi.cpp
+	Components/DP_Line_Rx.cpp
+	Components/DP_Load_PQ.cpp
+	Components/DP_Resistor.cpp
+	Components/DP_SynchronGenerator.cpp
+	Components/DP_SynchronGenerator_VBR.cpp
+	Components/DP_SynchronGenerator_VBR_Simplified.cpp
+	Components/DP_Transformer.cpp
+	Components/DP_Transformer_Ideal.cpp
+	Components/DP_VoltageSource.cpp
+	Components/DP_VoltageSource_Freq.cpp
+	Components/DP_VoltageSource_Ideal.cpp
+	Components/EMT_Inductor.cpp
+	Components/EMT_Resistor.cpp
+	Components/EMT_SynchronGenerator.cpp
+	Components/EMT_SynchronGenerator_Simplified.cpp
+	Components/EMT_SynchronGenerator_Simplified_CurrentSource.cpp
+	Components/EMT_SynchronGenerator_VBR.cpp
+	Components/EMT_VoltageSource.cpp
+	Components/EMT_VoltageSource_Freq.cpp
+	Components/EMT_VoltageSource_Ideal.cpp
 	Components/Exciter.cpp
-	Components/ExternalCurrentSource.cpp
-	Components/ExternalVoltageSource.cpp
-	Components/IdealTransformerDP.cpp
-	Components/IdealVoltageSourceDP.cpp
-	Components/IdealVoltageSourceEMT.cpp
-	Components/InductorDP.cpp
-	Components/InductorEMT.cpp
-	Components/InterfacedInductorDP.cpp
-	Components/PQLoadDP.cpp
-	Components/PiLineDP.cpp
-	Components/ResistorDP.cpp
-	Components/ResistorEMT.cpp
-	Components/RxLineDP.cpp
-	Components/SimplifiedSynGenEMT.cpp
-	Components/SimplifiedSynchronGeneratorEMT.cpp
-	Components/SynchGenBase.cpp
-	Components/SynchronGeneratorDP.cpp
-	Components/SynchronGeneratorEMT.cpp
-	Components/TransformerDP.cpp
-	Components/VoltSourceResDP.cpp
-	Components/VoltSourceResEMT.cpp
-	Components/VoltSourceResFreqDP.cpp
-	Components/VoltSourceResFreqEMT.cpp
-	Components/VoltageBehindReachtanceDP.cpp
-	Components/VoltageBehindReactanceEMT.cpp
 	Components/TurbineGovernor.cpp
 )
 

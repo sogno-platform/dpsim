@@ -32,9 +32,10 @@
 
 #include "Config.h"
 #include "../Simulation.h"
-#include "Components/BaseComponent.h"
+#include "Components/Base.h"
 
 namespace DPsim {
+
 	enum SimState {
 		StateStopped = 0,
 		StateRunning,
@@ -43,6 +44,7 @@ namespace DPsim {
 	};
 
 namespace Python {
+
 	struct Simulation {
 		PyObject_HEAD
 
@@ -60,7 +62,7 @@ namespace Python {
 		bool startSync;
 
 		PyObject* pyComps; // Components as a (Python) list of PyComponents
-		BaseComponent::List comps;
+		Components::Base::List comps;
 		int numSwitch;
 
 		// List of additional objects that aren't directly used from Simulation
@@ -94,5 +96,5 @@ namespace Python {
 	};
 
 	extern PyTypeObject SimulationType;
-};
-};
+}
+}

@@ -46,5 +46,5 @@ namespace Python {
 
 	extern const char* DocOpenShmemInterface;
 	PyObject* OpenShmemInterface(PyObject *self, PyObject *args, PyObject *kwds);
-};
-};
+}
+}

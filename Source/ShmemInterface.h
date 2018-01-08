@@ -27,8 +27,6 @@
 #include <villas/shmem.h>
 
 #include "ExternalInterface.h"
-#include "Components/ExternalCurrentSource.h"
-#include "Components/ExternalVoltageSource.h"
 
 namespace DPsim {
 
@@ -38,6 +36,7 @@ namespace DPsim {
 	 * struct sample. Make sure that VILLASnode is configured accordingly.
 	 */
 	class ShmemInterface : public ExternalInterface {
+
 	private:
 		struct shmem_int mShmem;
 		struct sample *mLastSample;

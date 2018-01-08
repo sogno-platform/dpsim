@@ -27,11 +27,5 @@
 namespace DPsim {
 
 	void updateProgressBar(Real time, Real finalTime);
-	void usage();
-	bool parseFloat(const char *s, double *d);
-	bool parseInt(const char *s, int *i);
-	Int parseArguments(int argc, const char* argv[], bool &rt, bool &batch, Int &split, String &interfaceBase, String &splitNode);
-	Int checkArguments(bool rt, Int split, String splitNode);
-	Int consoleMain(int argc, const char* argv[]);
-}
 
+}

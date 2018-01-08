@@ -27,6 +27,7 @@
 namespace DPsim {
 
 	class MathLibrary {
+
 	public:
 		static void setCompMatrixElement(Matrix& mat, Int compOffset, Int row, Int column, Real reValue, Real imValue);
 		static void setCompVectorElement(Matrix& mat, Int compOffset, Int row, Real reValue, Real imValue);

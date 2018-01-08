@@ -19,9 +19,10 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *********************************************************************************/
 
-int main(int argc, char *argv[]) {
+int main(int argc, char *argv[])
+{
 	Logger log;
-	BaseComponent::List comps, comps2;
+	Components::Base::List comps, comps2;
 	ShmemInterface *shmem;
 	struct shmem_conf conf;
 	String logname;

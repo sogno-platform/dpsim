@@ -1,4 +1,4 @@
-﻿/** Turbine Governor
+/** Turbine Governor
 *
 * @file
 * @author Markus Mirz <mmirz@eonerc.rwth-aachen.de>
@@ -22,9 +22,10 @@
 
 #pragma once
 
-#include "BaseComponent.h"
+#include "Base.h"
 
 namespace DPsim {
+namespace Components {
 
 	/// Synchronous generator model
 	/// If parInPerUnit is not set, the parameters have to be given with their respective stator or rotor
@@ -34,8 +35,8 @@ namespace DPsim {
 	/// descriptive names in order to shorten formulas and increase the readability
 
 	class TurbineGovernor {
-	protected:
 
+	protected:
 		// ### Steam Turbine Parameters ####
 
 		/// Time constant of main inlet volume and steam chest
@@ -86,16 +87,13 @@ namespace DPsim {
 		Real Psm_in = 0;
 
 		Real AuxVar = 0;
-		
-		
 
 		bool mLogActive;
 		Logger* mLog;
 
-
 	public:
 		TurbineGovernor() { };
-		~TurbineGovernor() {};
+		~TurbineGovernor() { };
 
 		/// Initializes exciter parameters
 		TurbineGovernor(Real Ta, Real Tb, Real Tc, Real Fa, Real Fb, Real Fc, Real K, Real Tsr, Real Tsm);
@@ -103,9 +101,6 @@ namespace DPsim {
 		void init(Real PmRef, Real Tm_init);
 		/// Performs an step to update field voltage value
 		Real step(Real mOm, Real mOmRef, Real PmRef, Real dt);
-
-
-
-
 	};
+}
 }

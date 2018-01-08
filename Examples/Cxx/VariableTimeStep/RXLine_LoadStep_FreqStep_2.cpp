@@ -24,18 +24,19 @@
 
 using namespace DPsim;
 
-static void VarFreqRxLineResLoad_NZ_Paper_DP(Real timeStep, Real finalTime, Real freqStep, Real loadStep, Real rampTime) {
+static void VarFreqRxLineResLoad_NZ_Paper_DP(Real timeStep, Real finalTime, Real freqStep, Real loadStep, Real rampTime)
+{
 	// Define simulation scenario
 	std::ostringstream fileName;
 	fileName << "DpEmtVarFreqStudy_NZ_Paper_" << timeStep;
-	BaseComponent::List circElements0, circElements1, circElements2;
-	circElements0.push_back(std::make_shared<VoltSourceResFreq>("v_s", 1, 0, 10000, 0, 1, 2 * PI*-1, freqStep, rampTime));
-	circElements0.push_back(std::make_shared<ResistorDP>("r_line", 1, 2, 1));
-	circElements0.push_back(std::make_shared<InductorDP>("l_line", 2, 3, 1));
+	Components::Base::List circElements0, circElements1, circElements2;
+	circElements0.push_back(std::make_shared<Components::DP::VoltageSourceFreq>("v_s", 1, 0, 10000, 0, 1, 2 * PI*-1, freqStep, rampTime));
+	circElements0.push_back(std::make_shared<Components::DP::Resistor>("r_line", 1, 2, 1));
+	circElements0.push_back(std::make_shared<Components::DP::Inductor>("l_line", 2, 3, 1));
 	circElements1 = circElements0;
 	circElements2 = circElements0;
-	circElements1.push_back(std::make_shared<ResistorDP>("r_load", 3, 0, 10));
-	circElements2.push_back(std::make_shared<ResistorDP>("r_load", 3, 0, 5));
+	circElements1.push_back(std::make_shared<Components::DP::Resistor>("r_load", 3, 0, 10));
+	circElements2.push_back(std::make_shared<Components::DP::Resistor>("r_load", 3, 0, 5));
 
 	// Define log names
 	Logger log("Logs/" + fileName.str() + ".log");
@@ -62,14 +63,14 @@ static void VarFreqRxLineResLoad_NZ_Paper_EMT(Real timeStep, Real finalTime, Rea
 	// Define simulation scenario
 	std::ostringstream fileName;
 	fileName << "DpEmtVarFreqStudy_NZ_Paper_EMT" << timeStep;
-	BaseComponent::List circElements0, circElements1, circElements2;
-	circElements0.push_back(std::make_shared<VoltSourceResFreqEMT>("v_s", 1, 0, 10000, 0, 1, 2 * PI*-1, freqStep, rampTime));
-	circElements0.push_back(std::make_shared<ResistorEMT>("r_line", 1, 2, 1));
-	circElements0.push_back(std::make_shared<InductorEMT>("l_line", 2, 3, 1));
+	Components::Base::List circElements0, circElements1, circElements2;
+	circElements0.push_back(std::make_shared<Components::EMT::VoltageSourceFreq>("v_s", 1, 0, 10000, 0, 1, 2 * PI*-1, freqStep, rampTime));
+	circElements0.push_back(std::make_shared<Components::EMT::Resistor>("r_line", 1, 2, 1));
+	circElements0.push_back(std::make_shared<Components::EMT::Inductor>("l_line", 2, 3, 1));
 	circElements1 = circElements0;
 	circElements2 = circElements0;
-	circElements1.push_back(std::make_shared<ResistorEMT>("r_load", 3, 0, 10));
-	circElements2.push_back(std::make_shared<ResistorEMT>("r_load", 3, 0, 8));
+	circElements1.push_back(std::make_shared<Components::EMT::Resistor>("r_load", 3, 0, 10));
+	circElements2.push_back(std::make_shared<Components::EMT::Resistor>("r_load", 3, 0, 8));
 
 	// Define log names
 	Logger log("Logs/" + fileName.str() + ".log");
@@ -90,7 +91,8 @@ static void VarFreqRxLineResLoad_NZ_Paper_EMT(Real timeStep, Real finalTime, Rea
 	std::cout << "Simulation finished." << std::endl;
 }
 
-int main() {
+int main(int argc, char* argv[])
+{
 	Real timeStep = 0.0;
 	Real finalTime = 2;
 	Real freqStep = 1;

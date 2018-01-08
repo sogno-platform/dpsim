@@ -22,7 +22,6 @@
 #include <experimental/filesystem>
 namespace fs = std::experimental::filesystem;
 
-
 #include "Logger.h"
 #include <iomanip>
 
@@ -30,12 +29,15 @@ using namespace DPsim;
 
 std::ostringstream Logger::nullStream;
 
-Logger::Logger() : mLogFile() {
+Logger::Logger()
+	: mLogFile()
+{
 	mLogLevel = LogLevel::NONE;
 	mLogFile.setstate(std::ios_base::badbit);
 }
 
-Logger::Logger(String filename, LogLevel level) : mLogLevel(level) {
+Logger::Logger(String filename, LogLevel level) : mLogLevel(level)
+{
 	fs::path p = filename;
 
 	if (p.has_parent_path() && !fs::exists(p.parent_path()))
@@ -48,12 +50,14 @@ Logger::Logger(String filename, LogLevel level) : mLogLevel(level) {
 	}
 }
 
-Logger::~Logger() {
+Logger::~Logger()
+{
 	if (mLogFile.is_open())
 		mLogFile.close();
 }
 
-std::ostream& Logger::Log(LogLevel level) {
+std::ostream& Logger::Log(LogLevel level)
+{
 	if (level > mLogLevel) {
 		return getNullStream();
 	}
@@ -96,7 +100,8 @@ void Logger::Log(LogLevel level, String str) {
 	}
 }
 
-void Logger::LogMatrix(LogLevel level, Matrix& data) {
+void Logger::LogMatrix(LogLevel level, Matrix& data)
+{
 	if (level > mLogLevel) {
 		return;
 	}
@@ -104,7 +109,8 @@ void Logger::LogMatrix(LogLevel level, Matrix& data) {
 	mLogFile << data << std::endl;
 }
 
-void Logger::LogMatrix(LogLevel level, const Matrix& data) {
+void Logger::LogMatrix(LogLevel level, const Matrix& data)
+{
 	if (level > mLogLevel) {
 		return;
 	}
@@ -112,8 +118,8 @@ void Logger::LogMatrix(LogLevel level, const Matrix& data) {
 	mLogFile << data << std::endl;
 }
 
-
-void Logger::LogDataLine(Real time, Matrix& data) {
+void Logger::LogDataLine(Real time, Matrix& data)
+{
 	mLogFile << std::scientific << std::right << std::setw(14) << time;
 	for (Int i = 0; i < data.rows(); i++) {
 		mLogFile << ", " << std::right << std::setw(13) << data(i, 0);
@@ -121,13 +127,15 @@ void Logger::LogDataLine(Real time, Matrix& data) {
 	mLogFile << std::endl;
 }
 
-void Logger::LogDataLine(Real time, Real data) {
+void Logger::LogDataLine(Real time, Real data)
+{
 	mLogFile << std::scientific << std::right << std::setw(14) << time;
 	mLogFile << ", " << std::right << std::setw(13) << data;
 	mLogFile << std::endl;
 }
 
-void Logger::LogNodeValues(Real time, Matrix& data) {
+void Logger::LogNodeValues(Real time, Matrix& data)
+{
 	if (mLogFile.tellp() == std::ofstream::pos_type(0)) {
 		mLogFile << std::right << std::setw(14) << "time";
 		for (Int i = 0; i < data.rows(); i++) {
@@ -143,7 +151,8 @@ void Logger::LogNodeValues(Real time, Matrix& data) {
 	LogDataLine(time, data);
 }
 
-std::ostream& Logger::getNullStream() {
+std::ostream& Logger::getNullStream()
+{
 	if (nullStream.good()) {
 		nullStream.setstate(std::ios_base::badbit);
 	}

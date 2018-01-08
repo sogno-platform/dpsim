@@ -42,7 +42,8 @@ const char* Python::DocLoadCim =
 "Note that in order for the CIM parser to function properly, the CSV "
 "files containing the alias configuration have to be in the working directory "
 "of the program.\n";
-PyObject* Python::LoadCim(PyObject* self, PyObject* args) {
+PyObject* Python::LoadCim(PyObject* self, PyObject* args)
+{
 #ifdef WITH_CIM
 	double frequency = 50;
 	PyObject *list;
@@ -80,7 +81,7 @@ PyObject* Python::LoadCim(PyObject* self, PyObject* args) {
 	}
 
 	reader->parseFiles();
-	BaseComponent::List comps = reader->getComponents();
+	Components::Base::List comps = reader->getComponents();
 	list = PyList_New(comps.size());
 
 	for (unsigned i = 0; i < comps.size(); i++) {
