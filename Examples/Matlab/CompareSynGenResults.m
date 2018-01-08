@@ -133,6 +133,6 @@ disp(['Mean-squared error ia: ', num2str(err2), ' A']);
 % Omega
 MaxDif2 = max(abs(Log_SynGen(:,9)) - omega_PLECS(1:1000000,1)*2*pi*60);
 err2 = immse(Log_SynGen(:,9),omega_PLECS(1:1000000,1)*2*pi*60);
-disp(['Maximum Error omega: ', num2str(MaxDif2), ' rpm']);
-disp(['Mean-squared error omega: ', num2str(err2), ' rpm']);
+disp(['Maximum Error omega: ', num2str(MaxDif2), ' rad/s']);
+disp(['Mean-squared error omega: ', num2str(err2), ' rad/s']);
 
