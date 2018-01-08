@@ -199,7 +199,7 @@ namespace DP {
 		Real getRotationalSpeed() { return mOmMech*mBase_OmMech; }
 		Real getRotorPosition() { return mThetaMech; }
 
-		void init(Real om, Real dt) { }
+		void init(SystemModel& system) { }
 		void applySystemMatrixStamp(SystemModel& system) { }
 		void applyRightSideVectorStamp(SystemModel& system) { }
 

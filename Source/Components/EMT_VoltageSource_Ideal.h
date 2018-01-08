@@ -39,7 +39,7 @@ namespace EMT {
 		/// define paramenters of the voltage source
 		VoltageSourceIdeal(String name, Int src, Int dest, Real voltage);
 
-		void init(Real om, Real dt) { }
+		void init(SystemModel& system) { }
 
 		/// Inserts the current across the voltage source in the equations of node j and k and add the equantion ej - ek = V to the problem
 		void applySystemMatrixStamp(SystemModel& system);

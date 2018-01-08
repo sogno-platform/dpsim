@@ -111,7 +111,7 @@ namespace Components {
 		String getType();
 
 		/// Initializes variables of components
-		virtual void init(Real om, Real dt) { }
+		virtual void init(SystemModel& system) { }
 
 		/// Stamps conductance matrix
 		virtual void applySystemMatrixStamp(SystemModel& system) = 0;

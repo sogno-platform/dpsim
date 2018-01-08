@@ -41,22 +41,21 @@ Components::DP::Transformer::Transformer(String name, Int node1, Int node2, Real
 }
 
 // TODO: implement RX losses
-void Components::DP::Transformer::init(Real om, Real dt)
-{
+void Components::DP::Transformer::init(SystemModel& system) {
 	mInductor = std::make_shared<Components::DP::Inductor>(mName + "_ind", mNode1, mVirtualNodes[0], mInductance);
-	mInductor->init(om, dt);
+	mInductor->init(system);
 
 }
 
 void Components::DP::Transformer::applySystemMatrixStamp(SystemModel& system)
 {
 	if (mNode1 >= 0) {
-		system.setCompSystemMatrixElement(mVirtualNodes[0], mVirtualNodes[1], -1.0, 0);
-		system.setCompSystemMatrixElement(mVirtualNodes[1], mVirtualNodes[0], 1.0, 0);
+		system.setCompSystemMatrixElement(mVirtualNodes[0], mVirtualNodes[1], Complex(-1.0, 0));
+		system.setCompSystemMatrixElement(mVirtualNodes[1], mVirtualNodes[0], Complex(1.0, 0));
 	}
 	if (mNode2 >= 0) {
-		system.setCompSystemMatrixElement(mNode2, mVirtualNodes[1], mRatio.real(), mRatio.imag());
-		system.setCompSystemMatrixElement(mVirtualNodes[1], mNode2, -mRatio.real(), -mRatio.imag());
+		system.setCompSystemMatrixElement(mNode2, mVirtualNodes[1], mRatio);
+		system.setCompSystemMatrixElement(mVirtualNodes[1], mNode2, -mRatio);
 	}
 
 	if (mNumVirtualNodes == 2) {

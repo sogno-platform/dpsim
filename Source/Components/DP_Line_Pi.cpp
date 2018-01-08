@@ -46,27 +46,27 @@ void Components::DP::PiLine::applySystemMatrixStamp(SystemModel& system)
 
 	// Resistive part
 	if (mNode1 >= 0) {
-		system.addCompToSystemMatrix(mNode1, mNode1, mConductance, 0);
+		system.addCompToSystemMatrix(mNode1, mNode1, Complex(mConductance, 0));
 	}
 	if (mNode3 >= 0) {
-		system.addCompToSystemMatrix(mNode3, mNode3, mConductance, 0);
+		system.addCompToSystemMatrix(mNode3, mNode3, Complex(mConductance, 0));
 	}
 	if (mNode1 >= 0 && mNode3 >= 0) {
-		system.addCompToSystemMatrix(mNode1, mNode3, -mConductance, 0);
-		system.addCompToSystemMatrix(mNode3, mNode1, -mConductance, 0);
+		system.addCompToSystemMatrix(mNode1, mNode3, Complex(-mConductance, 0));
+		system.addCompToSystemMatrix(mNode3, mNode1, Complex(-mConductance, 0));
 	}
 
 	// Inductive part
 	if (mNode3 >= 0) {
-		system.addCompToSystemMatrix(mNode3, mNode3, mGlr, mGli);
+		system.addCompToSystemMatrix(mNode3, mNode3, Complex(mGlr, mGli));
 	}
 	if (mNode2 >= 0) {
-		system.addCompToSystemMatrix(mNode2, mNode2, mGlr, mGli);
+		system.addCompToSystemMatrix(mNode2, mNode2, Complex(mGlr, mGli));
 	}
 
 	if (mNode3 >= 0 && mNode2 >= 0) {
-		system.addCompToSystemMatrix(mNode3, mNode2, -mGlr, -mGli);
-		system.addCompToSystemMatrix(mNode2, mNode3, -mGlr, -mGli);
+		system.addCompToSystemMatrix(mNode3, mNode2, Complex(-mGlr, -mGli));
+		system.addCompToSystemMatrix(mNode2, mNode3, Complex(-mGlr, -mGli));
 	}
 
 	//capacitive part (only using half of nominal capaticance)
@@ -74,15 +74,14 @@ void Components::DP::PiLine::applySystemMatrixStamp(SystemModel& system)
 	mGci = system.getOmega() * mCapacitance / 2;
 
 	if (mNode1 >= 0) {
-		system.addCompToSystemMatrix(mNode1, mNode1, mGcr, mGci);
+		system.addCompToSystemMatrix(mNode1, mNode1, Complex(mGcr, mGci));
 	}
 	if (mNode2 >= 0) {
-		system.addCompToSystemMatrix(mNode2, mNode2, mGcr, mGci);
+		system.addCompToSystemMatrix(mNode2, mNode2, Complex(mGcr, mGci));
 	}
 }
 
-void Components::DP::PiLine::init(Real om, Real dt)
-{
+void Components::DP::PiLine::init(SystemModel& system) {
 	// Initialize internal state
 	mCurrIndRe = 0;
 	mCurrIndIm = 0;
@@ -119,10 +118,10 @@ void Components::DP::PiLine::step(SystemModel& system, Real time)
 	mCurEqIndIm = mGli * mDeltaVre + mGlr * mDeltaVim + mPrevCurFacIm * mCurrIndRe + mPrevCurFacRe * mCurrIndIm;
 
 	if (mNode3 >= 0) {
-		system.addCompToRightSideVector(mNode3, -mCurEqIndRe, -mCurEqIndIm);
+		system.addCompToRightSideVector(mNode3, Complex(-mCurEqIndRe, -mCurEqIndIm));
 	}
 	if (mNode2 >= 0) {
-		system.addCompToRightSideVector(mNode2, mCurEqIndRe, mCurEqIndIm);
+		system.addCompToRightSideVector(mNode2, Complex(mCurEqIndRe, mCurEqIndIm));
 	}
 
 	// Calculate current source of capacitor 1
@@ -130,14 +129,14 @@ void Components::DP::PiLine::step(SystemModel& system, Real time)
 	mCurEqCapIm1 = mCurrCapIm1 + mGcr * mVoltageAtNode1Im - mGci * mVoltageAtNode1Re;
 
 	if (mNode1 >= 0) {
-		system.addCompToRightSideVector(mNode1, mCurEqCapRe1, mCurEqCapIm1);
+		system.addCompToRightSideVector(mNode1, Complex(mCurEqCapRe1, mCurEqCapIm1));
 	}
 
 	// calculate curret source of capacitor 2
 	mCurEqCapRe2 = mCurrCapRe2 + mGcr * mVoltageAtNode2Re + mGci * mVoltageAtNode2Im;
 	mCurEqCapIm2 = mCurrCapIm2 + mGcr * mVoltageAtNode2Im - mGci * mVoltageAtNode2Re;
 	if (mNode2 >= 0) {
-		system.addCompToRightSideVector(mNode2, mCurEqCapRe2, mCurEqCapIm2);
+		system.addCompToRightSideVector(mNode2, Complex(mCurEqCapRe2, mCurEqCapIm2));
 	}
 }
 

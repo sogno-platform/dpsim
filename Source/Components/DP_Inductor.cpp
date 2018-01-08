@@ -22,91 +22,95 @@
 #include "DP_Inductor.h"
 
 using namespace DPsim;
+using namespace std::literals;
 
-Components::DP::Inductor::Inductor(String name, Int src, Int dest, Real inductance)
-	: Base(name, src, dest)
-{
+
+Components::DP::Inductor::Inductor(String name, Int node1, Int node2, Real inductance) : Base(name, node1, node2) {
 	mInductance = inductance;
-	attrMap["inductance"] = { Attribute::Real, &mInductance };
+	attrMap["inductance"] = {Attribute::Real, &mInductance};
+	mEquivCurrent = { 0, 0 };
+	mCurrent = { 0, 0 };
+	mVoltage = { 0, 0 };
 }
 
-void Components::DP::Inductor::applySystemMatrixStamp(SystemModel& system)
-{
-	Real a = system.getTimeStep() / (2. * mInductance);
-	Real b = system.getTimeStep() * system.getOmega() / 2.;
-	mGlr = a / (1 + b*b);
-	mGli = -a*b / (1 + b*b);
-	mPrevCurFacRe = (1 - b*b) / (1 + b*b);
-	mPrevCurFacIm = - 2. * b / (1 + b*b);
+Components::DP::Inductor::Inductor(String name, Int node1, Int node2, Real inductance, Complex voltageNode1, Complex voltageNode2) : Inductor(name, node1, node2, inductance) {
+	mVoltage = voltageNode1 - voltageNode2;
+}
+
+void Components::DP::Inductor::applySystemMatrixStamp(SystemModel& system) {	
+	//mGlr = a / (1 + b*b);
+	//mGli = -a*b / (1 + b*b);
+	//mPrevCurFacRe = (1 - b*b) / (1 + b*b);
+	//mPrevCurFacIm = - 2. * b / (1 + b*b);	
 
 	if (mNode1 >= 0) {
-		system.addCompToSystemMatrix(mNode1, mNode1, mGlr, mGli);
+		system.addCompToSystemMatrix(mNode1, mNode1, mEquivCond);
 	}
 	if (mNode2 >= 0) {
-		system.addCompToSystemMatrix(mNode2, mNode2, mGlr, mGli);
+		system.addCompToSystemMatrix(mNode2, mNode2, mEquivCond);
 	}
 
 	if (mNode1 >= 0 && mNode2 >= 0) {
-		system.addCompToSystemMatrix(mNode1, mNode2, -mGlr, -mGli);
-		system.addCompToSystemMatrix(mNode2, mNode1, -mGlr, -mGli);
+		system.addCompToSystemMatrix(mNode1, mNode2, -mEquivCond);
+		system.addCompToSystemMatrix(mNode2, mNode1, -mEquivCond);
 	}
 }
 
-void Components::DP::Inductor::init(Real om, Real dt)
-{
-	mCurrRe = 0;
-	mCurrIm = 0;
-	mCurEqRe = 0;
-	mCurEqIm = 0;
-	mDeltaVre = 0;
-	mDeltaVim = 0;
+
+void Components::DP::Inductor::init(SystemModel& system) {
+	Real a = system.getTimeStep() / (2. * mInductance);
+	Real b = system.getTimeStep() * system.getOmega() / 2.;
+	Complex impedance = { 0, system.getOmega() * mInductance };
+
+	mEquivCond = { a / (1 + b*b), -a*b / (1 + b*b) };
+	mPrevCurrFac = { (1 - b*b) / (1 + b*b), -2. * b / (1 + b*b) };
+	mCurrent = mVoltage / impedance;
 }
 
-void Components::DP::Inductor::step(SystemModel& system, Real time)
-{
-	// Initialize internal state
-	mCurEqRe = mGlr * mDeltaVre - mGli * mDeltaVim + mPrevCurFacRe * mCurrRe - mPrevCurFacIm * mCurrIm;
-	mCurEqIm = mGli * mDeltaVre + mGlr * mDeltaVim + mPrevCurFacIm * mCurrRe + mPrevCurFacRe * mCurrIm;
+
+void Components::DP::Inductor::step(SystemModel& system, Real time) {
+	// Calculate equivalent current source for this time step
+	//mCurEqRe = mGlr * mDeltaVre - mGli * mDeltaVim + mPrevCurFacRe * mCurrRe - mPrevCurFacIm * mCurrIm;
+	//mCurEqIm = mGli * mDeltaVre + mGlr * mDeltaVim + mPrevCurFacIm * mCurrRe + mPrevCurFacRe * mCurrIm;
+	mEquivCurrent = mEquivCond * mVoltage + mPrevCurrFac * mCurrent;
 
 	if (mNode1 >= 0) {
-		system.addCompToRightSideVector(mNode1, -mCurEqRe, -mCurEqIm);
+		system.addCompToRightSideVector(mNode1, -mEquivCurrent);
 	}
-	if (mNode2 >= 0) {
-		system.addCompToRightSideVector(mNode2, mCurEqRe, mCurEqIm);
+	if (mNode2 >= 0)	{
+		system.addCompToRightSideVector(mNode2, mEquivCurrent);
 	}
 }
 
-void Components::DP::Inductor::postStep(SystemModel& system)
-{
-	Real vposr, vnegr, vposi, vnegi;
+
+void Components::DP::Inductor::postStep(SystemModel& system) {	
+	Complex voltNode1;
+	Complex voltNode2;
 
 	// extract solution
 	if (mNode1 >= 0) {
 		system.getRealFromLeftSideVector(mNode1);
-		vposr = system.getRealFromLeftSideVector(mNode1);
-		vposi = system.getImagFromLeftSideVector(mNode1);
+		voltNode1 = { system.getRealFromLeftSideVector(mNode1), system.getImagFromLeftSideVector(mNode1) };
 	}
 	else {
-		vposr = 0;
-		vposi = 0;
+		voltNode1 = { 0, 0};
 	}
 
 	if (mNode2 >= 0) {
 		system.getRealFromLeftSideVector(mNode2);
-		vnegr = system.getRealFromLeftSideVector(mNode2);
-		vnegi = system.getImagFromLeftSideVector(mNode2);
+		voltNode2 = { system.getRealFromLeftSideVector(mNode2), system.getImagFromLeftSideVector(mNode2) };
 	}
 	else {
-		vnegr = 0;
-		vnegi = 0;
+		voltNode2 = { 0, 0 };
 	}
-	mDeltaVre = vposr - vnegr;
-	mDeltaVim = vposi - vnegi;
-	mCurrRe = mGlr * mDeltaVre - mGli * mDeltaVim + mCurEqRe;
-	mCurrIm = mGli * mDeltaVre + mGlr * mDeltaVim + mCurEqIm;
+	//mDeltaVre = vposr - vnegr;
+	//mDeltaVim = vposi - vnegi;
+	//mCurrRe = mGlr * mDeltaVre - mGli * mDeltaVim + mCurEqRe;
+	//mCurrIm = mGli * mDeltaVre + mGlr * mDeltaVim + mCurEqIm;
+	mVoltage = voltNode1 - voltNode2;
+	mCurrent = mEquivCond * mVoltage + mEquivCurrent;
 }
 
-Complex Components::DP::Inductor::getCurrent(SystemModel& system)
-{
-	return Complex(mCurrRe, mCurrIm);
+Complex Components::DP::Inductor::getCurrent(SystemModel& system) {
+	return mCurrent;
 }

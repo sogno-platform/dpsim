@@ -107,7 +107,7 @@ Components::Base::Ptr Reader::mapACLineSegment(ACLineSegment* line)
 
 	mLogger->Log(LogLevel::INFO) << "Create RxLine " << line->name << " node1=" << node1 << " node2=" << node2
 		<< " R=" << resistance << " L=" << inductance << std::endl;
-	return std::make_shared<RxLineDP>(line->name, node1, node2, resistance, inductance);
+	return std::make_shared<Components::DP::RxLine>(line->name, node1, node2, resistance, inductance);
 }
 
 void Reader::mapAsynchronousMachine(AsynchronousMachine* machine)
@@ -141,7 +141,7 @@ Components::Base::Ptr Reader::mapExternalNetworkInjection(ExternalNetworkInjecti
 	mLogger->Log(LogLevel::INFO) << "IdealVoltageSource " << inj->name << " rid=" << inj->mRID << " node1=" << node
 		<< " V=" << voltAbs << "<" << voltPhase << std::endl;
 
-	return std::make_shared<IdealVoltageSource>(inj->name, node, 0, initVoltage);
+	return std::make_shared<Components::DP::VoltageSourceIdeal>(inj->name, node, 0, initVoltage);
 }
 
 // TODO: support phase shift
@@ -193,7 +193,7 @@ Components::Base::Ptr Reader::mapPowerTransformer(PowerTransformer* trans) {
 			<< " inductance=" << inductanceNode1 << std::endl;
 
 		//return std::make_shared<TransformerDP>(trans->name, node1, node2, ratioAbs, ratioPhase, 0, inductanceNode1);
-		return std::make_shared<IdealTransformerDP>(trans->name, node1, node2, ratioAbs, ratioPhase);
+		return std::make_shared<Components::DP::TransformerIdeal>(trans->name, node1, node2, ratioAbs, ratioPhase);
 
 	}
 	mLogger->Log(LogLevel::WARN) << "PowerTransformer " << trans->mRID << " has no primary End; ignoring" << std::endl;
@@ -224,7 +224,7 @@ Components::Base::Ptr Reader::mapSynchronousMachine(SynchronousMachine* machine)
 	// TODO is it appropiate to use this resistance here
 	mLogger->Log(LogLevel::INFO) << "Create IdealVoltageSource " << machine->name << " node=" << node
 		<< " V=" << voltAbs << "<" << voltPhase << std::endl;
-	return std::make_shared<IdealVoltageSource>(machine->name, node, 0, initVoltage);
+	return std::make_shared<Components::DP::VoltageSourceIdeal>(machine->name, node, 0, initVoltage);
 }
 
 Components::Base::Ptr Reader::mapComponent(BaseClass* obj)
@@ -272,7 +272,7 @@ Components::Base::Ptr Reader::newPQLoad(String rid, String name)
 	mLogger->Log(LogLevel::INFO) << "Create PQLoad " << name << " node="
 		<< node << " P=" << flow->p.value << " Q=" << flow->q.value
 		<< " V=" << volt->v.value << "<" << volt->angle.value << std::endl;
-	return std::make_shared<PQLoadDP>(name, node, flow->p.value, flow->q.value, volt->v.value, volt->angle.value*PI/180);
+	return std::make_shared<Components::DP::PQLoad>(name, node, flow->p.value, flow->q.value, volt->v.value, volt->angle.value*PI/180);
 }
 
 bool Reader::addFile(String filename)

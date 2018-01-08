@@ -37,20 +37,19 @@ void Components::DP::Capacitor::applySystemMatrixStamp(SystemModel& system)
 	mGci = system.getOmega() * mCapacitance;
 
 	if (mNode1 >= 0) {
-		system.addCompToSystemMatrix(mNode1, mNode1, mGcr, mGci);
+		system.addCompToSystemMatrix(mNode1, mNode1, Complex(mGcr, mGci));
 	}
 	if (mNode2 >= 0) {
-		system.addCompToSystemMatrix(mNode2, mNode2, mGcr, mGci);
+		system.addCompToSystemMatrix(mNode2, mNode2, Complex(mGcr, mGci));
 	}
 	if (mNode1 >= 0 && mNode2 >= 0) {
-		system.addCompToSystemMatrix(mNode1, mNode2, -mGcr, -mGci);
-		system.addCompToSystemMatrix(mNode2, mNode1, -mGcr, -mGci);
+		system.addCompToSystemMatrix(mNode1, mNode2, Complex(-mGcr, -mGci));
+		system.addCompToSystemMatrix(mNode2, mNode1, Complex(-mGcr, -mGci));
 	}
 }
 
 /// Initialize internal state
-void Components::DP::Capacitor::init(Real om, Real dt)
-{
+void Components::DP::Capacitor::init(SystemModel& system) {
 	mCurrr = 0;
 	mCurri = 0;
 	mCureqr = 0;
@@ -66,10 +65,10 @@ void Components::DP::Capacitor::step(SystemModel& system, Real time)
 	mCureqi = mCurri + mGcr * mDeltavi - mGci * mDeltavr;
 
 	if (mNode1 >= 0)	{
-		system.addCompToRightSideVector(mNode1, mCureqr, mCureqi);
+		system.addCompToRightSideVector(mNode1, Complex(mCureqr, mCureqi));
 	}
 	if (mNode2 >= 0)	{
-		system.addCompToRightSideVector(mNode2, -mCureqr, -mCureqi);
+		system.addCompToRightSideVector(mNode2, Complex(-mCureqr, -mCureqi));
 	}
 }
 

@@ -34,24 +34,22 @@ Components::DP::VoltageSourceIdeal::VoltageSourceIdeal(String name, Int src, Int
 void Components::DP::VoltageSourceIdeal::applySystemMatrixStamp(SystemModel& system)
 {
 	if (mNode1 >= 0) {
-		system.setCompSystemMatrixElement(mVirtualNodes[0], mNode1, 1, 0);
-		system.setCompSystemMatrixElement(mNode1, mVirtualNodes[0], 1, 0);
+		system.setCompSystemMatrixElement(mVirtualNodes[0], mNode1, Complex(1, 0));
+		system.setCompSystemMatrixElement(mNode1, mVirtualNodes[0], Complex(1, 0));
 	}
 
 	if (mNode2 >= 0) {
-		system.setCompSystemMatrixElement(mVirtualNodes[0], mNode2, -1, 0);
-		system.setCompSystemMatrixElement(mNode2, mVirtualNodes[0], -1, 0);
+		system.setCompSystemMatrixElement(mVirtualNodes[0], mNode2, Complex(-1, 0));
+		system.setCompSystemMatrixElement(mNode2, mVirtualNodes[0], Complex(-1, 0));
 	}
 }
 
-void Components::DP::VoltageSourceIdeal::applyRightSideVectorStamp(SystemModel& system)
-{
-	system.addCompToRightSideVector(mVirtualNodes[0], mVoltage.real(), mVoltage.imag());
+void Components::DP::VoltageSourceIdeal::applyRightSideVectorStamp(SystemModel& system) {
+	system.addCompToRightSideVector(mVirtualNodes[0], mVoltage);
 }
 
-void Components::DP::VoltageSourceIdeal::step(SystemModel& system, Real time)
-{
-	system.addCompToRightSideVector(mVirtualNodes[0], mVoltage.real(), mVoltage.imag());
+void Components::DP::VoltageSourceIdeal::step(SystemModel& system, Real time) {
+	system.addCompToRightSideVector(mVirtualNodes[0], mVoltage);
 }
 
 Complex Components::DP::VoltageSourceIdeal::getCurrent(SystemModel& system)

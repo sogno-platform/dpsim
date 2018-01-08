@@ -135,7 +135,7 @@ namespace EMT {
 		Real getRotorPosition() { return mThetaMech; }
 
 		// Methods for network integrated components
-		void init(Real om, Real dt) { }
+		void init(SystemModel& system) { }
 		void applySystemMatrixStamp(SystemModel& system);
 		void applyRightSideVectorStamp(SystemModel& system);
 	};

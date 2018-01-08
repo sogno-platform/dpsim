@@ -23,32 +23,28 @@
 
 using namespace DPsim;
 
-void MathLibrary::setCompMatrixElement(Matrix& mat, Int compOffset, Int row, Int column, Real reValue, Real imValue)
-{
-	mat(row, column) = reValue;
-	mat(row + compOffset, column + compOffset) = reValue;
-	mat(row, column + compOffset) = - imValue;
-	mat(row + compOffset, column) = imValue;
+void MathLibrary::setCompMatrixElement(Matrix& mat, Int compOffset, Int row, Int column, Complex value) {
+	mat(row, column) = value.real();
+	mat(row + compOffset, column + compOffset) = value.imag();
+	mat(row, column + compOffset) = - value.imag();
+	mat(row + compOffset, column) = value.imag();
 }
 
-void MathLibrary::setCompVectorElement(Matrix& mat, Int compOffset, Int row, Real reValue, Real imValue)
-{
-	mat(row, 0) = reValue;
-	mat(row + compOffset, 0) = imValue;
+void MathLibrary::setCompVectorElement(Matrix& mat, Int compOffset, Int row, Complex value) {
+	mat(row, 0) = value.real();
+	mat(row + compOffset, 0) = value.imag();
 }
 
-void MathLibrary::addCompToMatrixElement(Matrix& mat, Int compOffset, Int row, Int column, Real reValue, Real imValue)
-{
-	mat(row, column) = mat(row, column) + reValue;
-	mat(row + compOffset, column + compOffset) = mat(row + compOffset, column + compOffset) + reValue;
-	mat(row, column + compOffset) = mat(row, column + compOffset) - imValue;
-	mat(row + compOffset, column) = mat(row + compOffset, column) + imValue;
+void MathLibrary::addCompToMatrixElement(Matrix& mat, Int compOffset, Int row, Int column, Complex value) {
+	mat(row, column) = mat(row, column) + value.real();
+	mat(row + compOffset, column + compOffset) = mat(row + compOffset, column + compOffset) + value.real();
+	mat(row, column + compOffset) = mat(row, column + compOffset) - value.imag();
+	mat(row + compOffset, column) = mat(row + compOffset, column) + value.imag();
 }
 
-void MathLibrary::addCompToVectorElement(Matrix& mat, Int compOffset, Int row, Real reValue, Real imValue)
-{
-	mat(row, 0) = mat(row, 0) + reValue;
-	mat(row + compOffset, 0) = mat(row + compOffset, 0) + imValue;
+void MathLibrary::addCompToVectorElement(Matrix& mat, Int compOffset, Int row, Complex value) {
+	mat(row, 0) = mat(row, 0) + value.real();
+	mat(row + compOffset, 0) = mat(row + compOffset, 0) + value.imag();
 }
 
 void MathLibrary::addRealToVectorElement(Matrix& mat, Int row, Real reValue)

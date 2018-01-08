@@ -185,13 +185,13 @@ void Components::DP::SynchronGeneratorVBR::step(SystemModel& system, Real time)
 
 	// Update current source accordingly
 	if (mNode1 >= 0) {
-		system.addCompToRightSideVector(mNode1, -mIaRe*mBase_i, -mIaIm*mBase_i);
+		system.addCompToRightSideVector(mNode1, Complex(-mIaRe*mBase_i, -mIaIm*mBase_i));
 	}
 	if (mNode2 >= 0) {
-		system.addCompToRightSideVector(mNode2, -mIbRe*mBase_i, -mIbIm*mBase_i);
+		system.addCompToRightSideVector(mNode2, Complex(-mIbRe*mBase_i, -mIbIm*mBase_i));
 	}
 	if (mNode3 >= 0) {
-		system.addCompToRightSideVector(mNode3, -mIcRe*mBase_i, -mIcIm*mBase_i);
+		system.addCompToRightSideVector(mNode3, Complex(-mIcRe*mBase_i, -mIcIm*mBase_i));
 	}
 
 	if (mLogActive) {

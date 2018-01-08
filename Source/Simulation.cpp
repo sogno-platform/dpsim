@@ -105,7 +105,7 @@ void Simulation::initialize(Components::Base::List newElements)
 
 	// Initialize right side vector and components
 	for (auto element : newElements) {
-		element->init(mSystemModel.getOmega(), mSystemModel.getTimeStep());
+		element->init(mSystemModel);
 		element->applyRightSideVectorStamp(mSystemModel);
 	}
 

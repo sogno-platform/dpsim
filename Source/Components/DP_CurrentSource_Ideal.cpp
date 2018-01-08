@@ -32,10 +32,10 @@ Components::DP::CurrentSourceIdeal::CurrentSourceIdeal(String name, Int src, Int
 void Components::DP::CurrentSourceIdeal::applyRightSideVectorStamp(SystemModel& system)
 {
 	if (mNode1 >= 0) {
-		system.addCompToRightSideVector(mNode1, mCurrent.real(), mCurrent.imag());
+		system.addCompToRightSideVector(mNode1, mCurrent);
 	}
 	if (mNode2 >= 0) {
-		system.addCompToRightSideVector(mNode2, -mCurrent.real(), mCurrent.imag());
+		system.addCompToRightSideVector(mNode2, Complex(-mCurrent.real(), mCurrent.imag()));
 	}
 }
 

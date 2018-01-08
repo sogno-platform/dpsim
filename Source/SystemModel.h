@@ -71,10 +71,10 @@ namespace DPsim {
 		void InitializeRightSideVector(Matrix& rightSideVector) { mRightSideVector = rightSideVector; }
 		void InitializeLeftSideVector(Matrix& leftSideVector) { mLeftSideVector = leftSideVector; }
 		void switchSystemMatrix(UInt systemMatrixIndex);
-		void addRealToSystemMatrix(Int row, Int column, Real value);
-		void addCompToSystemMatrix(Int row, Int column, Real reValue, Real imValue);
-		void addCompToSystemMatrix(Int row, Int column, Complex value);
-		void addCompToRightSideVector(Int row, Real reValue, Real imValue);
+		void addRealToSystemMatrix(Int row, Int column, Real value);	
+		void addCompToSystemMatrix(Int row, Int column, Complex value);		
+		void setCompSystemMatrixElement(Int row, Int column, Complex value);
+		void addCompToRightSideVector(Int row, Complex value);
 		void addRealToRightSideVector(Int row, Real value);
 		void setRightSideVectorToZero();
 		void solve();

@@ -34,11 +34,11 @@ Components::DP::TransformerIdeal::TransformerIdeal(String name, Int node1, Int n
 void Components::DP::TransformerIdeal::applySystemMatrixStamp(SystemModel& system)
 {
 	if (mNode1 >= 0) {
-		system.setCompSystemMatrixElement(mNode1, mVirtualNodes[0], -1.0, 0);
-		system.setCompSystemMatrixElement(mVirtualNodes[0], mNode1, 1.0, 0);
+		system.setCompSystemMatrixElement(mNode1, mVirtualNodes[0], Complex(-1.0, 0));
+		system.setCompSystemMatrixElement(mVirtualNodes[0], mNode1, Complex(1.0, 0));
 	}
 	if (mNode2 >= 0) {
-		system.setCompSystemMatrixElement(mNode2, mVirtualNodes[0], mRatio.real(), mRatio.imag());
-		system.setCompSystemMatrixElement(mVirtualNodes[0], mNode2, -mRatio.real(), -mRatio.imag());
+		system.setCompSystemMatrixElement(mNode2, mVirtualNodes[0], mRatio);
+		system.setCompSystemMatrixElement(mVirtualNodes[0], mNode2, -mRatio);
 	}
 }

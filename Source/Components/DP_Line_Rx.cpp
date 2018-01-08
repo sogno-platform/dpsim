@@ -55,16 +55,16 @@ void Components::DP::RxLine::applySystemMatrixStamp(SystemModel& system)
 		correcti = R*a*b*(1 + b*b) / ((1 + b*b + R*a)*(1 + b*b + R*a) + R*R*a*a*b*b);
 
 		if (mNode1 >= 0) {
-			system.addCompToSystemMatrix(mNode1, mNode1, mGlr, mGli);
+			system.addCompToSystemMatrix(mNode1, mNode1, Complex(mGlr, mGli));
 		}
 
 		if (mNode2 >= 0) {
-			system.addCompToSystemMatrix(mNode2, mNode2, mGlr, mGli);
+			system.addCompToSystemMatrix(mNode2, mNode2, Complex(mGlr, mGli));
 		}
 
 		if (mNode1 >= 0 && mNode2 >= 0) {
-			system.addCompToSystemMatrix(mNode1, mNode2, -mGlr, -mGli);
-			system.addCompToSystemMatrix(mNode2, mNode1, -mGlr, -mGli);
+			system.addCompToSystemMatrix(mNode1, mNode2, Complex(-mGlr, -mGli));
+			system.addCompToSystemMatrix(mNode2, mNode1, Complex(-mGlr, -mGli));
 		}
 	}
 	else {
@@ -78,35 +78,34 @@ void Components::DP::RxLine::applySystemMatrixStamp(SystemModel& system)
 		// Resistive part
 		// Set diagonal entries
 		if (mNode1 >= 0) {
-			system.addCompToSystemMatrix(mNode1, mNode1, mConductance, 0);
+			system.addCompToSystemMatrix(mNode1, mNode1, Complex(mConductance, 0));
 		}
 		if (mVirtualNodes[0] >= 0) {
-			system.addCompToSystemMatrix(mVirtualNodes[0], mVirtualNodes[0], mConductance, 0);
+			system.addCompToSystemMatrix(mVirtualNodes[0], mVirtualNodes[0], Complex(mConductance, 0));
 		}
 		// Set off diagonal entries
 		if (mNode1 >= 0 && mVirtualNodes[0] >= 0) {
-			system.addCompToSystemMatrix(mNode1, mVirtualNodes[0], -mConductance, 0);
-			system.addCompToSystemMatrix(mVirtualNodes[0], mNode1, -mConductance, 0);
+			system.addCompToSystemMatrix(mNode1, mVirtualNodes[0], Complex(-mConductance, 0));
+			system.addCompToSystemMatrix(mVirtualNodes[0], mNode1, Complex(-mConductance, 0));
 		}
 
 		// Inductance part
 		// Set diagonal entries
 		if (mVirtualNodes[0] >= 0) {
-			system.addCompToSystemMatrix(mVirtualNodes[0], mVirtualNodes[0], mGlr, mGli);
+			system.addCompToSystemMatrix(mVirtualNodes[0], mVirtualNodes[0], Complex(mGlr, mGli));
 		}
 		if (mNode2 >= 0) {
-			system.addCompToSystemMatrix(mNode2, mNode2, mGlr, mGli);
+			system.addCompToSystemMatrix(mNode2, mNode2, Complex(mGlr, mGli));
 		}
 
 		if (mVirtualNodes[0] >= 0 && mNode2 >= 0) {
-			system.addCompToSystemMatrix(mVirtualNodes[0], mNode2, -mGlr, -mGli);
-			system.addCompToSystemMatrix(mNode2, mVirtualNodes[0], -mGlr, -mGli);
+			system.addCompToSystemMatrix(mVirtualNodes[0], mNode2, Complex(-mGlr, -mGli));
+			system.addCompToSystemMatrix(mNode2, mVirtualNodes[0], Complex(-mGlr, -mGli));
 		}
 	}
 }
 
-void Components::DP::RxLine::init(Real om, Real dt)
-{
+void Components::DP::RxLine::init(SystemModel& system) {
 	// Initialize internal state
 	mCurrRe = 0;
 	mCurrIm = 0;
@@ -136,11 +135,11 @@ void Components::DP::RxLine::step(SystemModel& system, Real time)
 		//cout << "cureq = " << cureq << endl;
 
 		if (mNode1 >= 0) {
-			system.addCompToRightSideVector(mNode1, -mCurEqRe, -mCurEqIm);
+			system.addCompToRightSideVector(mNode1, Complex(-mCurEqRe, -mCurEqIm));
 		}
 
 		if (mNode2 >= 0) {
-			system.addCompToRightSideVector(mNode2, mCurEqRe, mCurEqIm);
+			system.addCompToRightSideVector(mNode2, Complex(mCurEqRe, mCurEqIm));
 		}
 	}
 	else {
@@ -149,10 +148,10 @@ void Components::DP::RxLine::step(SystemModel& system, Real time)
 		mCurEqIm = mGli * mDeltaVre + mGlr * mDeltaVim + mPrevCurFacIm * mCurrRe + mPrevCurFacRe * mCurrIm;
 
 		if (mVirtualNodes[0] >= 0) {
-			system.addCompToRightSideVector(mVirtualNodes[0], -mCurEqRe, -mCurEqIm);
+			system.addCompToRightSideVector(mVirtualNodes[0], Complex(-mCurEqRe, -mCurEqIm));
 		}
 		if (mNode2 >= 0) {
-			system.addCompToRightSideVector(mNode2, mCurEqRe, mCurEqIm);
+			system.addCompToRightSideVector(mNode2, Complex(mCurEqRe, mCurEqIm));
 		}
 	}
 }

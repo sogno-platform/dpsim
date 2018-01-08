@@ -55,7 +55,7 @@ namespace DP {
 		PQLoad(String name, Int node, Real activePower, Real reactivePower, Real volt, Real angle);
 
 		/// Initializes variables detalvr, deltavi, currr, curri, cureqr and curreqi
-		void init(Real om, Real dt);
+		void init(SystemModel& system);
 
 		/// Stamps DC equivalent resistance to the conductance matrix
 		void applySystemMatrixStamp(SystemModel& system);

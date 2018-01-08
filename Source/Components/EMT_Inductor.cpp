@@ -46,8 +46,8 @@ void Components::EMT::Inductor::applySystemMatrixStamp(SystemModel& system)
 	}
 }
 
-void Components::EMT::Inductor::init(Real om, Real dt)
-{
+
+void Components::EMT::Inductor::init(SystemModel& system) {
 	mCurr = 0;
 	mCureq = 0;
 	mDeltav = 0;

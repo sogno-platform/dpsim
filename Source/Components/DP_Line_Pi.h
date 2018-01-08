@@ -101,7 +101,7 @@ namespace DP {
 		PiLine(String name, Int node1, Int node2, Int node3, Real resistance, Real inductance, Real capacitance);
 
 		/// Initialize voltages and currents values
-		void init(Real om, Real dt);
+		void init(SystemModel& system);
 
 		/// Stamps resistances to the conductance matrix
 		void applySystemMatrixStamp(SystemModel& system);

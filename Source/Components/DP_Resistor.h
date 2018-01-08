@@ -53,7 +53,7 @@ namespace DP {
 	public:
 		Resistor(String name, Int src, Int dest, Real resistance);
 
-		void init(Real om, Real dt) { }
+		void init(SystemModel& system) { }
 		void applySystemMatrixStamp(SystemModel& system);
 		void applyRightSideVectorStamp(SystemModel& system) { }
 		void step(SystemModel& system, Real time) { }

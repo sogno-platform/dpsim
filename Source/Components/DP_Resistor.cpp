@@ -36,15 +36,15 @@ void Components::DP::Resistor::applySystemMatrixStamp(SystemModel& system)
 
 	// Set diagonal entries
 	if (mNode1 >= 0) {
-		system.addCompToSystemMatrix(mNode1, mNode1, mConductance, 0);
+		system.addCompToSystemMatrix(mNode1, mNode1, Complex(mConductance, 0));
 	}
 	if (mNode2 >= 0) {
-		system.addCompToSystemMatrix(mNode2, mNode2, mConductance, 0);
+		system.addCompToSystemMatrix(mNode2, mNode2, Complex(mConductance, 0));
 	}
 	// Set off diagonal entries
 	if (mNode1 >= 0 && mNode2 >= 0) {
-		system.addCompToSystemMatrix(mNode1, mNode2, -mConductance, 0);
-		system.addCompToSystemMatrix(mNode2, mNode1, -mConductance, 0);
+		system.addCompToSystemMatrix(mNode1, mNode2, Complex(-mConductance, 0));
+		system.addCompToSystemMatrix(mNode2, mNode1, Complex(-mConductance, 0));
 	}
 }
 

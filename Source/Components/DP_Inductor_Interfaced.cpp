@@ -31,8 +31,7 @@ Components::DP::InterfacedInductor::InterfacedInductor(String name, Int src, Int
 }
 
 /// Initialize internal state
-void Components::DP::InterfacedInductor::init(Real om, Real dt)
-{
+void Components::DP::InterfacedInductor::init(SystemModel& system) {
 	mCurrentRe = 0;
 	mCurrentIm = 0;
 	mVoltageRe = 0;
@@ -47,10 +46,10 @@ void Components::DP::InterfacedInductor::step(SystemModel& system, Real time)
 
 	// Update current source accordingly
 	if (mNode1 >= 0) {
-		system.addCompToRightSideVector(mNode1, -mCurrentStepRe, -mCurrentStepIm);
+		system.addCompToRightSideVector(mNode1, Complex(-mCurrentStepRe, -mCurrentStepIm));
 	}
 	if (mNode2 >= 0) {
-		system.addCompToRightSideVector(mNode2, mCurrentStepRe, mCurrentStepIm);
+		system.addCompToRightSideVector(mNode2, Complex(mCurrentStepRe, mCurrentStepIm));
 	}
 	mCurrentRe = mCurrentStepRe;
 	mCurrentIm = mCurrentStepIm;

@@ -61,24 +61,12 @@ void SystemModel::addRealToSystemMatrix(Int row, Int column, Real value)
 	MathLibrary::addRealToMatrixElement(mSystemMatrix, row, column, value);
 }
 
-void SystemModel::addCompToSystemMatrix(Int row, Int column, Real reValue, Real imValue)
-{
-	MathLibrary::addCompToMatrixElement(mSystemMatrix, mCompOffset, row, column, reValue, imValue);
+void SystemModel::addCompToSystemMatrix(Int row, Int column, Complex value) {
+	MathLibrary::addCompToMatrixElement(mSystemMatrix, mCompOffset, row, column, value);
 }
 
-void SystemModel::addCompToSystemMatrix(Int row, Int column, Complex value)
-{
-	addCompToSystemMatrix(row, column, value.real(), value.imag());
-}
-
-void SystemModel::setCompSystemMatrixElement(Int row, Int column, Real reValue, Real imValue)
-{
-	MathLibrary::setCompMatrixElement(mSystemMatrix, mCompOffset, row, column, reValue, imValue);
-}
-
-void SystemModel::addCompToRightSideVector(Int row, Real reValue, Real imValue)
-{
-	MathLibrary::addCompToVectorElement(mRightSideVector, mCompOffset, row, reValue, imValue);
+void SystemModel::setCompSystemMatrixElement(Int row, Int column, Complex value) {
+	MathLibrary::setCompMatrixElement(mSystemMatrix, mCompOffset, row, column, value);
 }
 
 void SystemModel::addRealToRightSideVector(Int row, Real value)
@@ -86,8 +74,11 @@ void SystemModel::addRealToRightSideVector(Int row, Real value)
 	MathLibrary::addRealToVectorElement(mRightSideVector, row, value);
 }
 
-void SystemModel::solve()
-{
+void SystemModel::addCompToRightSideVector(Int row, Complex value) {
+	MathLibrary::addCompToVectorElement(mRightSideVector, mCompOffset, row, value);
+}
+
+void SystemModel::solve() {
 	mLeftSideVector = mLuFactored.solve(mRightSideVector);
 }
 

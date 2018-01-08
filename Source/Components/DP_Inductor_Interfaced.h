@@ -42,7 +42,7 @@ namespace DP {
 	public:
 		InterfacedInductor(String name, Int src, Int dest, Real inductance);
 
-		void init(Real om, Real dt);
+		void init(SystemModel& system);
 		void applySystemMatrixStamp(SystemModel& system) { }
 		void applyRightSideVectorStamp(SystemModel& system) { }
 		void step(SystemModel& system, Real time);

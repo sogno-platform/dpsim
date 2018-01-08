@@ -29,10 +29,10 @@ namespace DPsim {
 	class MathLibrary {
 
 	public:
-		static void setCompMatrixElement(Matrix& mat, Int compOffset, Int row, Int column, Real reValue, Real imValue);
-		static void setCompVectorElement(Matrix& mat, Int compOffset, Int row, Real reValue, Real imValue);
-		static void addCompToMatrixElement(Matrix& mat, Int compOffset, Int row, Int column, Real reValue, Real imValue);
-		static void addCompToVectorElement(Matrix& mat, Int compOffset, Int row, Real reValue, Real imValue);
+		static void setCompMatrixElement(Matrix& mat, Int compOffset, Int row, Int column, Complex value);
+		static void setCompVectorElement(Matrix& mat, Int compOffset, Int row, Complex value);
+		static void addCompToMatrixElement(Matrix& mat, Int compOffset, Int row, Int column, Complex value);
+		static void addCompToVectorElement(Matrix& mat, Int compOffset, Int row, Complex value);
 		static void addRealToVectorElement(Matrix& mat, Int row, Real reValue);
 		static void addRealToMatrixElement(Matrix& mat, Int row, Int column, Real reValue);
 	};

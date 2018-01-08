@@ -149,13 +149,13 @@ void Components::DP::SynchronGenerator::step(SystemModel& system, Real time)
 	stepInPerUnit(system.getOmega(), system.getTimeStep(), time, system.getNumMethod());
 
 	if (mNode1 >= 0) {
-		system.addCompToRightSideVector(mNode1, mIaRe, mIaIm);
+		system.addCompToRightSideVector(mNode1, Complex(mIaRe, mIaIm));
 	}
 	if (mNode2 >= 0) {
-		system.addCompToRightSideVector(mNode2, mIbRe, mIbIm);
+		system.addCompToRightSideVector(mNode2, Complex(mIbRe, mIbIm));
 	}
 	if (mNode3 >= 0) {
-		system.addCompToRightSideVector(mNode3, mIcRe, mIcIm);
+		system.addCompToRightSideVector(mNode3, Complex(mIcRe, mIcIm));
 	}
 
 	if (mLogActive) {

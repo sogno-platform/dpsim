@@ -227,7 +227,7 @@ namespace Components {
 		void postStep(SystemModel& system) { };
 
 		// Methods for network integrated components
-		virtual void init(Real om, Real dt) { }
+		virtual void init(SystemModel& system) { }
 		virtual void applySystemMatrixStamp(SystemModel& system) { }
 		virtual void applyRightSideVectorStamp(SystemModel& system) { }
 	};

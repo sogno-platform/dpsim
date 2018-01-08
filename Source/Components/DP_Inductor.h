@@ -38,37 +38,26 @@ namespace DP {
 
 		/// Inductance [H]
 		Real mInductance;
-
-		/// Real part of the voltage across the inductor [V]
-		Real mDeltaVre;
-		/// Imaginary part of the voltage across the inductor [V]
-		Real mDeltaVim;
-
-		/// Real part of the current trough the inductor [A]
-		Real mCurrRe;
-		/// Imaginary part of the current trough the inductor [A]
-		Real mCurrIm;
-
-		/// Real part of the DC equivalent current source [A]
-		Real mCurEqRe;
-		/// Imaginary part of the DC equivalent current source [A]
-		Real mCurEqIm;
-
-		/// Real part of the DC equivalent conductance [S]
-		Real mGlr;
-		/// Imaginary part of the DC equivalent conductance [S]
-		Real mGli;
-
-		/// Auxiliar variables
-		Real mPrevCurFacRe;
-		Real mPrevCurFacIm;
+		/// Voltage across the inductor [V]
+		Complex mVoltage;
+		/// Current through the inductor [A]
+		Complex mCurrent;
+		/// DC equivalent current source [A]
+		Complex mEquivCurrent;
+		/// DC equivalent conductance [S]
+		Complex mEquivCond;
+		/// Coefficient in front of previous current value
+		Complex mPrevCurrFac;
 
 	public:
 		/// Define inductor name, conected nodes and inductance
 		Inductor(String name, Int src, Int dest, Real inductance);
 
+		/// Define inductor name, conected nodes and inductance and initial terminal voltages
+		Inductor(String name, Int node1, Int node2, Real inductance, Complex voltageNode1, Complex voltageNode2);
+
 		/// Initializes variables detalvr, deltavi, currr, curri, cureqr and curreqi
-		void init(Real om, Real dt);
+		void init(SystemModel& system);
 
 		/// Stamps DC equivalent resistance to the conductance matrix
 		void applySystemMatrixStamp(SystemModel& system);
