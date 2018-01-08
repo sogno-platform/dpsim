@@ -25,10 +25,10 @@
 #include "Base.h"
 
 namespace DPsim {
-namespace Component {
+namespace Components {
 namespace DP {
 
-	class RxLine : public Component::Base {
+	class RxLine : public Components::Base {
 
 	protected:
 		Real mResistance;

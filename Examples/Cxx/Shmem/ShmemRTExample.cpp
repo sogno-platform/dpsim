@@ -22,7 +22,7 @@
 int main(int argc, char* argv[])
 {
 	// Same circuit as above, but now with realtime support.
-	Component::Base::List comps;
+	Components::Base::List comps;
 	struct shmem_conf conf;
 	conf.samplelen = 4;
 	conf.queuelen = 1024;

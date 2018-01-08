@@ -25,10 +25,10 @@
 #include "Base_VoltageSource.h"
 
 namespace DPsim {
-namespace Component {
+namespace Components {
 namespace EMT {
 
-	class VoltageSource : public Component::VoltageSourceBase<Complex> {
+	class VoltageSource : public Components::VoltageSourceBase<Complex> {
 
 	protected:
 		Complex mVoltage;

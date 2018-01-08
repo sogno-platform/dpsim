@@ -23,14 +23,14 @@
 
 using namespace DPsim;
 
-Component::DP::Inductor::Inductor(String name, Int src, Int dest, Real inductance)
+Components::DP::Inductor::Inductor(String name, Int src, Int dest, Real inductance)
 	: Base(name, src, dest)
 {
 	mInductance = inductance;
 	attrMap["inductance"] = { Attribute::Real, &mInductance };
 }
 
-void Component::DP::Inductor::applySystemMatrixStamp(SystemModel& system)
+void Components::DP::Inductor::applySystemMatrixStamp(SystemModel& system)
 {
 	Real a = system.getTimeStep() / (2. * mInductance);
 	Real b = system.getTimeStep() * system.getOmega() / 2.;
@@ -52,7 +52,7 @@ void Component::DP::Inductor::applySystemMatrixStamp(SystemModel& system)
 	}
 }
 
-void Component::DP::Inductor::init(Real om, Real dt)
+void Components::DP::Inductor::init(Real om, Real dt)
 {
 	mCurrRe = 0;
 	mCurrIm = 0;
@@ -62,7 +62,7 @@ void Component::DP::Inductor::init(Real om, Real dt)
 	mDeltaVim = 0;
 }
 
-void Component::DP::Inductor::step(SystemModel& system, Real time)
+void Components::DP::Inductor::step(SystemModel& system, Real time)
 {
 	// Initialize internal state
 	mCurEqRe = mGlr * mDeltaVre - mGli * mDeltaVim + mPrevCurFacRe * mCurrRe - mPrevCurFacIm * mCurrIm;
@@ -76,7 +76,7 @@ void Component::DP::Inductor::step(SystemModel& system, Real time)
 	}
 }
 
-void Component::DP::Inductor::postStep(SystemModel& system)
+void Components::DP::Inductor::postStep(SystemModel& system)
 {
 	Real vposr, vnegr, vposi, vnegi;
 
@@ -106,7 +106,7 @@ void Component::DP::Inductor::postStep(SystemModel& system)
 	mCurrIm = mGli * mDeltaVre + mGlr * mDeltaVim + mCurEqIm;
 }
 
-Complex Component::DP::Inductor::getCurrent(SystemModel& system)
+Complex Components::DP::Inductor::getCurrent(SystemModel& system)
 {
 	return Complex(mCurrRe, mCurrIm);
 }

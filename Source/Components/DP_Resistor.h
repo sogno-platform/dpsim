@@ -26,10 +26,10 @@
 #include "Base.h"
 
 namespace DPsim {
-namespace Component {
+namespace Components {
 namespace DP {
 
-	class Resistor : public Component::Base {
+	class Resistor : public Components::Base {
 
 	protected:
 		///Resistance [ohm]

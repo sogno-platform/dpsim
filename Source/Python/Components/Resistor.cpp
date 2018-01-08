@@ -43,7 +43,7 @@ PyObject* Python::Components::DP::Resistor(PyObject* self, PyObject* args)
 
 	Component *pyComp = PyObject_New(Component, &ComponentType);
 	Component::init(pyComp);
-	pyComp->comp = std::make_shared<DPsim::Component::DP::Resistor>(name, src, dest, resistance);
+	pyComp->comp = std::make_shared<DPsim::Components::DP::Resistor>(name, src, dest, resistance);
 
 	return (PyObject*) pyComp;
 }
@@ -59,7 +59,7 @@ PyObject* Python::Components::EMT::Resistor(PyObject* self, PyObject* args)
 
 	Component *pyComp = PyObject_New(Component, &ComponentType);
 	Component::init(pyComp);
-	pyComp->comp = std::make_shared<DPsim::Component::EMT::Resistor>(name, src, dest, resistance);
+	pyComp->comp = std::make_shared<DPsim::Components::EMT::Resistor>(name, src, dest, resistance);
 
 	return (PyObject*) pyComp;
 }

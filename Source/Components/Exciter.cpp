@@ -24,7 +24,7 @@
 
 using namespace DPsim;
 
-Component::Exciter::Exciter(Real Ta, Real Ka, Real Te, Real Ke, Real Tf, Real Kf, Real Tr, Real Lad, Real Rfd)
+Components::Exciter::Exciter(Real Ta, Real Ka, Real Te, Real Ke, Real Tf, Real Kf, Real Tr, Real Lad, Real Rfd)
 {
 	mTa = Ta;
 	mKa = Ka;
@@ -38,7 +38,7 @@ Component::Exciter::Exciter(Real Ta, Real Ka, Real Te, Real Ke, Real Tf, Real Kf
 }
 
 
-void Component::Exciter::init(Real Vh_init, Real Vf_init)
+void Components::Exciter::init(Real Vh_init, Real Vf_init)
 {
 	mVf = 1;
 	mVse = mVf <= 2.3 ? 0.1 / 2.3 : 0.33 / 3.1;
@@ -51,7 +51,7 @@ void Component::Exciter::init(Real Vh_init, Real Vf_init)
 	mVis = 0;
 }
 
-Real Component::Exciter::step(Real mVd, Real mVq, Real Vref, Real dt)
+Real Components::Exciter::step(Real mVd, Real mVq, Real Vref, Real dt)
 {
 	mVh = sqrt(pow(mVd, 2.) + pow(mVq, 2.));
 	// Voltage Transducer equation

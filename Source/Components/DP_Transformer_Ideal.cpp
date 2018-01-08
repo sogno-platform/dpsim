@@ -23,7 +23,7 @@
 
 using namespace DPsim;
 
-Component::DP::TransformerIdeal::TransformerIdeal(String name, Int node1, Int node2, Real ratioAbs, Real ratioPhase)
+Components::DP::TransformerIdeal::TransformerIdeal(String name, Int node1, Int node2, Real ratioAbs, Real ratioPhase)
 	: Base(name, node1, node2)
 {
 	mNumVirtualNodes = 1;
@@ -31,7 +31,7 @@ Component::DP::TransformerIdeal::TransformerIdeal(String name, Int node1, Int no
 	mRatio = std::polar(ratioAbs, ratioPhase);
 }
 
-void Component::DP::TransformerIdeal::applySystemMatrixStamp(SystemModel& system)
+void Components::DP::TransformerIdeal::applySystemMatrixStamp(SystemModel& system)
 {
 	if (mNode1 >= 0) {
 		system.setCompSystemMatrixElement(mNode1, mVirtualNodes[0], -1.0, 0);

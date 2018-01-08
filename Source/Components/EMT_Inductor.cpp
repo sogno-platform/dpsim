@@ -23,14 +23,14 @@
 
 using namespace DPsim;
 
-Component::EMT::Inductor::Inductor(String name, Int src, Int dest, Real inductance)
+Components::EMT::Inductor::Inductor(String name, Int src, Int dest, Real inductance)
 	: Base(name, src, dest)
 {
 	mInductance = inductance;
 	attrMap["inductance"] = { Attribute::Real, &mInductance };
 }
 
-void Component::EMT::Inductor::applySystemMatrixStamp(SystemModel& system)
+void Components::EMT::Inductor::applySystemMatrixStamp(SystemModel& system)
 {
 	mGl = system.getTimeStep() / (2.0 * mInductance);
 
@@ -46,14 +46,14 @@ void Component::EMT::Inductor::applySystemMatrixStamp(SystemModel& system)
 	}
 }
 
-void Component::EMT::Inductor::init(Real om, Real dt)
+void Components::EMT::Inductor::init(Real om, Real dt)
 {
 	mCurr = 0;
 	mCureq = 0;
 	mDeltav = 0;
 }
 
-void Component::EMT::Inductor::step(SystemModel& system, Real time)
+void Components::EMT::Inductor::step(SystemModel& system, Real time)
 {
 	// Initialize internal state
 	mCureq = mGl * mDeltav + mCurr;
@@ -66,7 +66,7 @@ void Component::EMT::Inductor::step(SystemModel& system, Real time)
 	}
 }
 
-void Component::EMT::Inductor::postStep(SystemModel& system)
+void Components::EMT::Inductor::postStep(SystemModel& system)
 {
 	Real vpos, vneg;
 

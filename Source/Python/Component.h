@@ -36,7 +36,7 @@ namespace Python {
 	struct Component {
 		PyObject_HEAD
 
-		DPsim::Component::Base::Ptr comp;
+		DPsim::Components::Base::Ptr comp;
 		static void init(Component* self);
 
 		static PyObject* newfunc(PyTypeObject* type, PyObject *args, PyObject *kwds);
@@ -50,7 +50,7 @@ namespace Python {
 
 	extern PyTypeObject ComponentType;
 
-	bool compsFromPython(PyObject* list, DPsim::Component::Base::List& comps);
+	bool compsFromPython(PyObject* list, DPsim::Components::Base::List& comps);
 
 namespace Components {
 	extern const char* DocCurrentSourceIdeal;

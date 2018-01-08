@@ -28,11 +28,11 @@
 #include "DP_Inductor.h"
 
 namespace DPsim {
-namespace Component {
+namespace Components {
 namespace DP {
 
 	/// Transformer that includes an inductance and resistance
-	class Transformer : public Component::Base {
+	class Transformer : public Components::Base {
 
 	private:
 		/// Transformer ratio
@@ -50,11 +50,11 @@ namespace DP {
 		/// Inductance [H]
 		Real mInductance;
 		/// Internal ideal transformer
-		std::shared_ptr<Component::DP::TransformerIdeal> mIdealTransformer;
+		std::shared_ptr<Components::DP::TransformerIdeal> mIdealTransformer;
 		/// Internal RX-line to model losses
-		std::shared_ptr<Component::DP::RxLine> mLine;
+		std::shared_ptr<Components::DP::RxLine> mLine;
 		/// Internal inductor to model losses
-		std::shared_ptr<Component::DP::Inductor> mInductor;
+		std::shared_ptr<Components::DP::Inductor> mInductor;
 
 	public:
 		Transformer(String name, Int node1, Int node2, Real ratioAbs, Real ratioPhase, Real resistance, Real inductance);

@@ -26,7 +26,7 @@
 #include "Exciter.h"
 
 namespace DPsim {
-namespace Component {
+namespace Components {
 namespace DP {
 
 	/// Synchronous generator model

@@ -25,7 +25,7 @@
 #include "Base_SynchronGenerator.h"
 
 namespace DPsim {
-namespace Component {
+namespace Components {
 namespace EMT {
 
 	/// Synchronous generator model

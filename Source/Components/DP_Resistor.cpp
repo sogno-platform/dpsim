@@ -23,14 +23,14 @@
 
 using namespace DPsim;
 
-Component::DP::Resistor::Resistor(String name, Int src, Int dest, Real resistance)
+Components::DP::Resistor::Resistor(String name, Int src, Int dest, Real resistance)
 	: Base(name, src, dest)
 {
 	mResistance = resistance;
 	attrMap["resistance"] = { Attribute::Real, &mResistance };
 }
 
-void Component::DP::Resistor::applySystemMatrixStamp(SystemModel& system)
+void Components::DP::Resistor::applySystemMatrixStamp(SystemModel& system)
 {
 	mConductance = 1.0 / mResistance;
 
@@ -48,7 +48,7 @@ void Component::DP::Resistor::applySystemMatrixStamp(SystemModel& system)
 	}
 }
 
-Complex Component::DP::Resistor::getCurrent(SystemModel& model) {
+Complex Components::DP::Resistor::getCurrent(SystemModel& model) {
 	Real realVolt = 0, imagVolt = 0;
 	if (mNode1 >= 0)
 	{

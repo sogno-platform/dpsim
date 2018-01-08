@@ -26,7 +26,7 @@
 #include "EMT_VoltageSource_Ideal.h"
 
 namespace DPsim {
-namespace Component {
+namespace Components {
 namespace EMT {
 
 	/// Synchronous generator model
@@ -85,9 +85,9 @@ namespace EMT {
 		/// matrix for reversing stator current directions in calculations with respect to other currents
 		Matrix mReverseCurrents;
 
-		Component::EMT::VoltageSourceIdeal va;
-		Component::EMT::VoltageSourceIdeal vb;
-		Component::EMT::VoltageSourceIdeal vc;
+		Components::EMT::VoltageSourceIdeal va;
+		Components::EMT::VoltageSourceIdeal vb;
+		Components::EMT::VoltageSourceIdeal vc;
 
 	public:
 		~SynchronGeneratorSimplifiedCurrentSource();

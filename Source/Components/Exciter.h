@@ -25,7 +25,7 @@
 #include "Base.h"
 
 namespace DPsim {
-namespace Component {
+namespace Components {
 
 	/// Synchronous generator model
 	/// If parInPerUnit is not set, the parameters have to be given with their respective stator or rotor

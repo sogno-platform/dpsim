@@ -23,7 +23,7 @@
 
 using namespace DPsim;
 
-Component::DP::VoltageSource::VoltageSource(String name, Int src, Int dest, Complex voltage, Real resistance)
+Components::DP::VoltageSource::VoltageSource(String name, Int src, Int dest, Complex voltage, Real resistance)
 	: VoltageSourceBase(name, src, dest, voltage)
 {
 	mResistance = resistance;
@@ -31,7 +31,7 @@ Component::DP::VoltageSource::VoltageSource(String name, Int src, Int dest, Comp
 	attrMap["resistance"] = { Attribute::Real, &mResistance };
 }
 
-void Component::DP::VoltageSource::applySystemMatrixStamp(SystemModel& system)
+void Components::DP::VoltageSource::applySystemMatrixStamp(SystemModel& system)
 {
 	mConductance = 1. / mResistance;
 	mCurrentr = mVoltage.real() / mResistance;
@@ -49,7 +49,7 @@ void Component::DP::VoltageSource::applySystemMatrixStamp(SystemModel& system)
 	}
 }
 
-void Component::DP::VoltageSource::applyRightSideVectorStamp(SystemModel& system)
+void Components::DP::VoltageSource::applyRightSideVectorStamp(SystemModel& system)
 {
 	// Apply matrix stamp for equivalent current source
 	if (mNode1 >= 0) {
@@ -60,7 +60,7 @@ void Component::DP::VoltageSource::applyRightSideVectorStamp(SystemModel& system
 	}
 }
 
-void Component::DP::VoltageSource::step(SystemModel& system, Real time)
+void Components::DP::VoltageSource::step(SystemModel& system, Real time)
 {
 	if (mNode1 >= 0) {
 		system.addCompToRightSideVector(mNode1, mCurrentr, mCurrenti);
@@ -70,7 +70,7 @@ void Component::DP::VoltageSource::step(SystemModel& system, Real time)
 	}
 }
 
-Complex Component::DP::VoltageSource::getCurrent(SystemModel& system)
+Complex Components::DP::VoltageSource::getCurrent(SystemModel& system)
 {
 	Real real = mCurrentr;
 	Real imag = mCurrenti;

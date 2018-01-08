@@ -25,10 +25,10 @@
 #include "Base.h"
 
 namespace DPsim {
-namespace Component {
+namespace Components {
 
 	template <class T>
-	class CurrentSourceBase : public Component::Base {
+	class CurrentSourceBase : public Components::Base {
 
 	protected:
 		T mCurrent;

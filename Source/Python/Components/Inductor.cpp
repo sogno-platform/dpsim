@@ -43,7 +43,7 @@ PyObject* Python::Components::DP::Inductor(PyObject* self, PyObject* args)
 
 	Component *pyComp = PyObject_New(Component, &ComponentType);
 	Component::init(pyComp);
-	pyComp->comp = std::make_shared<DPsim::Component::DP::Inductor>(name, src, dest, inductance);
+	pyComp->comp = std::make_shared<DPsim::Components::DP::Inductor>(name, src, dest, inductance);
 
 	return (PyObject*) pyComp;
 }
@@ -59,7 +59,7 @@ PyObject* Python::Components::EMT::Inductor(PyObject* self, PyObject* args)
 
 	Component *pyComp = PyObject_New(Component, &ComponentType);
 	Component::init(pyComp);
-	pyComp->comp = std::make_shared<DPsim::Component::EMT::Inductor>(name, src, dest, inductance);
+	pyComp->comp = std::make_shared<DPsim::Components::EMT::Inductor>(name, src, dest, inductance);
 
 	return (PyObject*) pyComp;
 }

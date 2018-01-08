@@ -25,7 +25,7 @@
 #include "Base_CurrentSource.h"
 
 namespace DPsim {
-namespace Component {
+namespace Components {
 namespace DP {
 
 	class CurrentSourceIdeal : public CurrentSourceBase<Complex> {

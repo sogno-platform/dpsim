@@ -81,7 +81,7 @@ PyObject* Python::LoadCim(PyObject* self, PyObject* args)
 	}
 
 	reader->parseFiles();
-	Component::Base::List comps = reader->getComponents();
+	Components::Base::List comps = reader->getComponents();
 	list = PyList_New(comps.size());
 
 	for (unsigned i = 0; i < comps.size(); i++) {

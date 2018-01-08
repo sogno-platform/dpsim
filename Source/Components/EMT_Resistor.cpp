@@ -23,14 +23,14 @@
 
 using namespace DPsim;
 
-Component::EMT::Resistor::Resistor(String name, Int src, Int dest, Real resistance)
+Components::EMT::Resistor::Resistor(String name, Int src, Int dest, Real resistance)
 	: Base(name, src, dest)
 {
 	mResistance = resistance;
 	attrMap["resistance"] = { Attribute::Real, &mResistance };
 }
 
-void Component::EMT::Resistor::applySystemMatrixStamp(SystemModel& system)
+void Components::EMT::Resistor::applySystemMatrixStamp(SystemModel& system)
 {
 	mConductance = 1.0 / mResistance;
 

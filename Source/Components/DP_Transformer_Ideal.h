@@ -25,11 +25,11 @@
 #include "Base.h"
 
 namespace DPsim {
-namespace Component {
+namespace Components {
 namespace DP {
 
 	/// Ideal transformer that is connected to ground
-	class TransformerIdeal : public Component::Base {
+	class TransformerIdeal : public Components::Base {
 
 	private:
 		/// Transformer ratio

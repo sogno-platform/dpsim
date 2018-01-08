@@ -26,10 +26,10 @@
 #include "Base.h"
 
 namespace DPsim {
-namespace Component {
+namespace Components {
 namespace EMT {
 
-	class Resistor : public Component::Base {
+	class Resistor : public Components::Base {
 
 	protected:
 		Real mResistance;

@@ -47,7 +47,7 @@ PyObject* Python::Components::DP::VoltageSource(PyObject* self, PyObject* args)
 
 	Component *pyComp = PyObject_New(Component, &ComponentType);
 	Component::init(pyComp);
-	pyComp->comp = std::make_shared<DPsim::Component::DP::VoltageSource>(name, src, dest, Complex(voltage.real, voltage.imag), resistance);
+	pyComp->comp = std::make_shared<DPsim::Components::DP::VoltageSource>(name, src, dest, Complex(voltage.real, voltage.imag), resistance);
 
 	return (PyObject*) pyComp;
 }

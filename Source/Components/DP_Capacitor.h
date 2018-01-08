@@ -25,14 +25,14 @@
 #include "Base.h"
 
 namespace DPsim {
-namespace Component {
+namespace Components {
 namespace DP {
 
 	/// Capacitor model:
 	/// The capacitor is represented by a DC equivalent circuit which corresponds to one iteration of the trapezoidal integration method.
 	/// The equivalent DC circuit is a resistance in paralel with a current source. The resistance is constant for a defined time step and system
 	///frequency and the current source changes for each iteration.
-	class Capacitor : public Component::Base {
+	class Capacitor : public Components::Base {
 
 	protected:
 		/// Capacitance [F]

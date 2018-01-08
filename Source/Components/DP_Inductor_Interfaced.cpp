@@ -23,7 +23,7 @@
 
 using namespace DPsim;
 
-Component::DP::InterfacedInductor::InterfacedInductor(String name, Int src, Int dest, Real inductance)
+Components::DP::InterfacedInductor::InterfacedInductor(String name, Int src, Int dest, Real inductance)
 	: Base(name, src, dest)
 {
 	mInductance = inductance;
@@ -31,7 +31,7 @@ Component::DP::InterfacedInductor::InterfacedInductor(String name, Int src, Int 
 }
 
 /// Initialize internal state
-void Component::DP::InterfacedInductor::init(Real om, Real dt)
+void Components::DP::InterfacedInductor::init(Real om, Real dt)
 {
 	mCurrentRe = 0;
 	mCurrentIm = 0;
@@ -39,7 +39,7 @@ void Component::DP::InterfacedInductor::init(Real om, Real dt)
 	mVoltageIm = 0;
 }
 
-void Component::DP::InterfacedInductor::step(SystemModel& system, Real time)
+void Components::DP::InterfacedInductor::step(SystemModel& system, Real time)
 {
 	// Calculate current for this step
 	mCurrentStepRe = mCurrentRe + system.getTimeStep() * (1. / mInductance * mVoltageRe + system.getOmega() * mCurrentIm);
@@ -56,7 +56,7 @@ void Component::DP::InterfacedInductor::step(SystemModel& system, Real time)
 	mCurrentIm = mCurrentStepIm;
 }
 
-void Component::DP::InterfacedInductor::postStep(SystemModel& system)
+void Components::DP::InterfacedInductor::postStep(SystemModel& system)
 {
 	Real vposr, vnegr, vposi, vnegi;
 
@@ -82,7 +82,7 @@ void Component::DP::InterfacedInductor::postStep(SystemModel& system)
 	mVoltageIm = vposi - vnegi;
 }
 
-Complex Component::DP::InterfacedInductor::getCurrent(SystemModel& system)
+Complex Components::DP::InterfacedInductor::getCurrent(SystemModel& system)
 {
 	return Complex(mCurrentRe, mCurrentIm);
 }

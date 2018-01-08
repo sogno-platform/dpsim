@@ -23,13 +23,13 @@
 
 using namespace DPsim;
 
-Component::EMT::VoltageSource::VoltageSource(String name, Int src, Int dest, Complex voltage, Real resistance)
+Components::EMT::VoltageSource::VoltageSource(String name, Int src, Int dest, Complex voltage, Real resistance)
 	: VoltageSourceBase(name, src, dest, voltage)
 {
 	mResistance = resistance;
 }
 
-void Component::EMT::VoltageSource::applySystemMatrixStamp(SystemModel& system)
+void Components::EMT::VoltageSource::applySystemMatrixStamp(SystemModel& system)
 {
 	mConductance = 1. / mResistance;
 	// Apply matrix stamp for equivalent resistance
@@ -45,7 +45,7 @@ void Component::EMT::VoltageSource::applySystemMatrixStamp(SystemModel& system)
 	}
 }
 
-void Component::EMT::VoltageSource::applyRightSideVectorStamp(SystemModel& system)
+void Components::EMT::VoltageSource::applyRightSideVectorStamp(SystemModel& system)
 {
 	mCurrent = mVoltage.real() / mResistance;
 	// Apply matrix stamp for equivalent current source
@@ -57,7 +57,7 @@ void Component::EMT::VoltageSource::applyRightSideVectorStamp(SystemModel& syste
 	}
 }
 
-void Component::EMT::VoltageSource::step(SystemModel& system, Real time)
+void Components::EMT::VoltageSource::step(SystemModel& system, Real time)
 {
 	mVoltageDiff = std::abs(mVoltage) * cos(std::arg(mVoltage) + system.getOmega() * time);
 	mCurrent = mVoltageDiff / mResistance;

@@ -25,10 +25,10 @@
 #include "Base.h"
 
 namespace DPsim {
-namespace Component {
+namespace Components {
 namespace EMT {
 
-	class VoltageSourceFreq : public Component::Base {
+	class VoltageSourceFreq : public Components::Base {
 
 	protected:
 		Real mVoltageAmp;

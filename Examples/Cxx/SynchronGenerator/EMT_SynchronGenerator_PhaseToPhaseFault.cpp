@@ -55,15 +55,15 @@ int main(int argc, char* argv[])
 	Real Llkq2 = 0.125;
 
 	// Declare circuit components
-	Component::Base::Ptr gen = std::make_shared<Component::EMT::SynchronGenerator>("gen", 1, 2, 3,
+	Components::Base::Ptr gen = std::make_shared<Components::EMT::SynchronGenerator>("gen", 1, 2, 3,
 		nomPower, nomPhPhVoltRMS, nomFreq, poleNum, nomFieldCurr,
 		Rs, Ll, Lmd, Lmd0, Lmq, Lmq0, Rfd, Llfd, Rkd, Llkd, Rkq1, Llkq1, Rkq2, Llkq2, H);
 	Real loadRes = 1037.8378;
-	Component::Base::Ptr r1 = std::make_shared<Component::EMT::Resistor>("r1", 0, 1, loadRes);
-	Component::Base::Ptr r2 = std::make_shared<Component::EMT::Resistor>("r2", 0, 2, loadRes);
-	Component::Base::Ptr r3 = std::make_shared<Component::EMT::Resistor>("r3", 0, 3, loadRes);
+	Components::Base::Ptr r1 = std::make_shared<Components::EMT::Resistor>("r1", 0, 1, loadRes);
+	Components::Base::Ptr r2 = std::make_shared<Components::EMT::Resistor>("r2", 0, 2, loadRes);
+	Components::Base::Ptr r3 = std::make_shared<Components::EMT::Resistor>("r3", 0, 3, loadRes);
 
-	Component::Base::List circElements;
+	Components::Base::List circElements;
 	circElements.push_back(gen);
 	circElements.push_back(r1);
 	circElements.push_back(r2);
@@ -71,9 +71,9 @@ int main(int argc, char* argv[])
 
 	// Declare circuit components for resistance change
 	Real breakerRes = 0.01;
-	Component::Base::Ptr rBreaker = std::make_shared<Component::EMT::Resistor>("rbreak", 1, 2, breakerRes);
+	Components::Base::Ptr rBreaker = std::make_shared<Components::EMT::Resistor>("rbreak", 1, 2, breakerRes);
 
-	Component::Base::List circElementsBreakerOn;
+	Components::Base::List circElementsBreakerOn;
 	circElementsBreakerOn.push_back(rBreaker);
 	circElementsBreakerOn.push_back(r1);
 	circElementsBreakerOn.push_back(r2);
@@ -94,7 +94,7 @@ int main(int argc, char* argv[])
 	Real initVoltAngle = -DPS_PI / 2;
 	Real fieldVoltage = 7.0821;
 	Real mechPower = 5.5558e5;
-	auto genPtr = std::dynamic_pointer_cast<Component::EMT::SynchronGenerator>(gen);
+	auto genPtr = std::dynamic_pointer_cast<Components::EMT::SynchronGenerator>(gen);
 	genPtr->init(om, dt, initActivePower, initReactivePower, initTerminalVolt, initVoltAngle, fieldVoltage, mechPower);
 
 	// Calculate initial values for circuit at generator connection point

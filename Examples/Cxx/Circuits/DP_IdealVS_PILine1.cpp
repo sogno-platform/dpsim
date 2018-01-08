@@ -32,14 +32,14 @@ int main(int argc, char* argv[])
 	Real finalTime = 0.3;
 	std::ostringstream fileName;
 	fileName << "PiLine1_" << timeStep;
-	Component::Base::List circElements;
-	circElements.push_back(std::make_shared<Component::DP::VoltageSourceIdeal>("v_1", 1, 0, Complex(345, 0)));
-	circElements.push_back(std::make_shared<Component::DP::Resistor>("r1", 1, 2, 5));
-	circElements.push_back(std::make_shared<Component::DP::Capacitor>("c_1", 2, 0, 0.002));
-	circElements.push_back(std::make_shared<Component::DP::Resistor>("r_load", 2, 4, 6.4));
-	circElements.push_back(std::make_shared<Component::DP::Inductor>("l_1", 4, 3, 0.186));
-	circElements.push_back(std::make_shared<Component::DP::Capacitor>("c_2", 3, 0, 0.002));
-	circElements.push_back(std::make_shared<Component::DP::Resistor>("r_load", 3, 0, 150));
+	Components::Base::List circElements;
+	circElements.push_back(std::make_shared<Components::DP::VoltageSourceIdeal>("v_1", 1, 0, Complex(345, 0)));
+	circElements.push_back(std::make_shared<Components::DP::Resistor>("r1", 1, 2, 5));
+	circElements.push_back(std::make_shared<Components::DP::Capacitor>("c_1", 2, 0, 0.002));
+	circElements.push_back(std::make_shared<Components::DP::Resistor>("r_load", 2, 4, 6.4));
+	circElements.push_back(std::make_shared<Components::DP::Inductor>("l_1", 4, 3, 0.186));
+	circElements.push_back(std::make_shared<Components::DP::Capacitor>("c_2", 3, 0, 0.002));
+	circElements.push_back(std::make_shared<Components::DP::Resistor>("r_load", 3, 0, 150));
 
 	// Define log names
 	Logger log("Logs/" + fileName.str() + ".log");

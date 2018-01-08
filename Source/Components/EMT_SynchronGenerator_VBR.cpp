@@ -24,7 +24,7 @@
 
 using namespace DPsim;
 
-Component::EMT::SynchronGeneratorVBR::SynchronGeneratorVBR(String name, Int node1, Int node2, Int node3,
+Components::EMT::SynchronGeneratorVBR::SynchronGeneratorVBR(String name, Int node1, Int node2, Int node3,
 	Real nomPower, Real nomVolt, Real nomFreq, Int poleNumber, Real nomFieldCur,
 	Real Rs, Real Ll, Real Lmd, Real Lmd0, Real Lmq, Real Lmq0,
 	Real Rfd, Real Llfd, Real Rkd, Real Llkd,
@@ -36,14 +36,14 @@ Component::EMT::SynchronGeneratorVBR::SynchronGeneratorVBR(String name, Int node
 {
 }
 
-Component::EMT::SynchronGeneratorVBR::~SynchronGeneratorVBR()
+Components::EMT::SynchronGeneratorVBR::~SynchronGeneratorVBR()
 {
 	if (mLogActive) {
 		delete mLog;
 	}
 }
 
-void Component::EMT::SynchronGeneratorVBR::addExciter(Real Ta, Real Ka, Real Te, Real Ke, Real Tf, Real Kf, Real Tr, Real Lad, Real Rfd)
+void Components::EMT::SynchronGeneratorVBR::addExciter(Real Ta, Real Ka, Real Te, Real Ke, Real Tf, Real Kf, Real Tr, Real Lad, Real Rfd)
 {
 	mExciter = Exciter(Ta, Ka, Te, Ke, Tf, Kf, Tr, Lad, Rfd);
 	mExciter.init(1,1);
@@ -51,14 +51,14 @@ void Component::EMT::SynchronGeneratorVBR::addExciter(Real Ta, Real Ka, Real Te,
 	mHasExciter = true;
 }
 
-void Component::EMT::SynchronGeneratorVBR::addGovernor(Real Ta, Real Tb, Real Tc, Real Fa, Real Fb, Real Fc, Real K, Real Tsr, Real Tsm, Real Tm_init, Real PmRef)
+void Components::EMT::SynchronGeneratorVBR::addGovernor(Real Ta, Real Tb, Real Tc, Real Fa, Real Fb, Real Fc, Real K, Real Tsr, Real Tsm, Real Tm_init, Real PmRef)
 {
 	mTurbineGovernor = TurbineGovernor(Ta, Tb, Tc, Fa, Fb, Fc, K, Tsr, Tsm);
 	mTurbineGovernor.init(PmRef, Tm_init);
 	mHasTurbineGovernor = true;
 }
 
-void Component::EMT::SynchronGeneratorVBR::init(Real om, Real dt,
+void Components::EMT::SynchronGeneratorVBR::init(Real om, Real dt,
 	Real initActivePower, Real initReactivePower, Real initTerminalVolt, Real initVoltAngle, Real initFieldVoltage, Real initMechPower)
 {
 	mResistanceMat = Matrix::Zero(3, 3);
@@ -158,7 +158,7 @@ void Component::EMT::SynchronGeneratorVBR::init(Real om, Real dt,
 	mIc = inverseParkTransform(mThetaMech, mIq, mId, mI0)(2);
 }
 
-void Component::EMT::SynchronGeneratorVBR::step(SystemModel& system, Real time)
+void Components::EMT::SynchronGeneratorVBR::step(SystemModel& system, Real time)
 {
 	stepInPerUnit(system.getOmega(), system.getTimeStep(), time, system.getNumMethod());
 
@@ -182,7 +182,7 @@ void Component::EMT::SynchronGeneratorVBR::step(SystemModel& system, Real time)
 	}
 }
 
-void Component::EMT::SynchronGeneratorVBR::stepInPerUnit(Real om, Real dt, Real time, NumericalMethod numMethod)
+void Components::EMT::SynchronGeneratorVBR::stepInPerUnit(Real om, Real dt, Real time, NumericalMethod numMethod)
 {
 	mIabc <<
 		mIa,
@@ -325,7 +325,7 @@ void Component::EMT::SynchronGeneratorVBR::stepInPerUnit(Real om, Real dt, Real 
 		mDVc;
 }
 
-void Component::EMT::SynchronGeneratorVBR::postStep(SystemModel& system)
+void Components::EMT::SynchronGeneratorVBR::postStep(SystemModel& system)
 {
 	if (mNode1 >= 0) {
 		mVa = system.getRealFromLeftSideVector(mNode1);
@@ -347,7 +347,7 @@ void Component::EMT::SynchronGeneratorVBR::postStep(SystemModel& system)
 	}
 }
 
-void Component::EMT::SynchronGeneratorVBR::CalculateLandpL() {
+void Components::EMT::SynchronGeneratorVBR::CalculateLandpL() {
 	mDInductanceMat <<
 		mLl + mLa - mLb*cos(2 * mThetaMech), -mLa / 2 - mLb*cos(2 * mThetaMech - 2 * PI / 3), -mLa / 2 - mLb*cos(2 * mThetaMech + 2 * PI / 3),
 		-mLa / 2 - mLb*cos(2 * mThetaMech - 2 * PI / 3), mLl + mLa - mLb*cos(2 * mThetaMech - 4 * PI / 3), -mLa / 2 - mLb*cos(2 * mThetaMech),
@@ -359,7 +359,7 @@ void Component::EMT::SynchronGeneratorVBR::CalculateLandpL() {
 	pmDInductanceMat = pmDInductanceMat * 2 * mOmMech;
 }
 
-Matrix Component::EMT::SynchronGeneratorVBR::parkTransform(Real theta, Real a, Real b, Real c)
+Matrix Components::EMT::SynchronGeneratorVBR::parkTransform(Real theta, Real a, Real b, Real c)
 {
 	Matrix dq0vector(3, 1);
 
@@ -376,7 +376,7 @@ Matrix Component::EMT::SynchronGeneratorVBR::parkTransform(Real theta, Real a, R
 	return dq0vector;
 }
 
-Matrix Component::EMT::SynchronGeneratorVBR::inverseParkTransform(Real theta, Real q, Real d, Real zero)
+Matrix Components::EMT::SynchronGeneratorVBR::inverseParkTransform(Real theta, Real q, Real d, Real zero)
 {
 	Matrix abcVector(3, 1);
 

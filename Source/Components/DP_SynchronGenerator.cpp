@@ -24,7 +24,7 @@
 
 using namespace DPsim;
 
-Component::DP::SynchronGenerator::SynchronGenerator(String name, Int node1, Int node2, Int node3,
+Components::DP::SynchronGenerator::SynchronGenerator(String name, Int node1, Int node2, Int node3,
 	Real nomPower, Real nomVolt, Real nomFreq, Int poleNumber, Real nomFieldCur,
 	Real Rs, Real Ll, Real Lmd, Real Lmd0, Real Lmq, Real Lmq0,
 	Real Rfd, Real Llfd, Real Rkd, Real Llkd,
@@ -36,14 +36,14 @@ Component::DP::SynchronGenerator::SynchronGenerator(String name, Int node1, Int 
 {
 }
 
-Component::DP::SynchronGenerator::~SynchronGenerator()
+Components::DP::SynchronGenerator::~SynchronGenerator()
 {
 	if (mLogActive) {
 		delete mLog;
 	}
 }
 
-void Component::DP::SynchronGenerator::init(Real om, Real dt,
+void Components::DP::SynchronGenerator::init(Real om, Real dt,
 	Real initActivePower, Real initReactivePower, Real initTerminalVolt,
 	Real initVoltAngle, Real initFieldVoltage, Real initMechPower)
 {
@@ -144,7 +144,7 @@ void Component::DP::SynchronGenerator::init(Real om, Real dt,
 	mIcIm = dq0ToAbcTransform(mThetaMech, mId * mBase_i, mIq * mBase_i, mI0 * mBase_i)(5);
 }
 
-void Component::DP::SynchronGenerator::step(SystemModel& system, Real time)
+void Components::DP::SynchronGenerator::step(SystemModel& system, Real time)
 {
 	stepInPerUnit(system.getOmega(), system.getTimeStep(), time, system.getNumMethod());
 
@@ -165,7 +165,7 @@ void Component::DP::SynchronGenerator::step(SystemModel& system, Real time)
 	}
 }
 
-void Component::DP::SynchronGenerator::stepInPerUnit(Real om, Real dt, Real time, NumericalMethod numMethod)
+void Components::DP::SynchronGenerator::stepInPerUnit(Real om, Real dt, Real time, NumericalMethod numMethod)
 {
 	mVaRe = (1 / mBase_v) * mVaRe;
 	mVaIm = (1 / mBase_v) * mVaIm;
@@ -423,7 +423,7 @@ void Component::DP::SynchronGenerator::stepInPerUnit(Real om, Real dt, Real time
 
 }
 
-void Component::DP::SynchronGenerator::postStep(SystemModel& system)
+void Components::DP::SynchronGenerator::postStep(SystemModel& system)
 {
 	if (mNode1 >= 0) {
 		mVaRe = system.getRealFromLeftSideVector(mNode1);
@@ -451,7 +451,7 @@ void Component::DP::SynchronGenerator::postStep(SystemModel& system)
 	}
 }
 
-Matrix Component::DP::SynchronGenerator::abcToDq0Transform(Real theta, Real aRe, Real bRe, Real cRe, Real aIm, Real bIm, Real cIm)
+Matrix Components::DP::SynchronGenerator::abcToDq0Transform(Real theta, Real aRe, Real bRe, Real cRe, Real aIm, Real bIm, Real cIm)
 {
 	// Balanced case
 	Complex alpha(cos(2. / 3. * PI), sin(2. / 3. * PI));
@@ -481,7 +481,7 @@ Matrix Component::DP::SynchronGenerator::abcToDq0Transform(Real theta, Real aRe,
 	return dq0Vector;
 }
 
-Matrix Component::DP::SynchronGenerator::dq0ToAbcTransform(Real theta, Real d, Real q, Real zero)
+Matrix Components::DP::SynchronGenerator::dq0ToAbcTransform(Real theta, Real d, Real q, Real zero)
 {
 	// Balanced case
 	Complex alpha(cos(2. / 3. * PI), sin(2. / 3. * PI));

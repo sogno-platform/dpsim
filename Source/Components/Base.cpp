@@ -29,7 +29,7 @@
 
 using namespace DPsim;
 
-String Component::Base::getType()
+String Components::Base::getType()
 {
 	Int status = 1;
 	const char *mangled;

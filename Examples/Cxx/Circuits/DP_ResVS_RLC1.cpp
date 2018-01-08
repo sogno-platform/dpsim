@@ -32,11 +32,11 @@ int main(int argc, char* argv[])
 	Real finalTime = 0.3;
 	std::ostringstream fileName;
 	fileName << "Example3_" << timeStep;
-	Component::Base::List circElements;
-	circElements.push_back(std::make_shared<Component::DP::VoltageSource>("v_in", 1, 0, Complex(10, 0), 1));
-	circElements.push_back(std::make_shared<Component::DP::Capacitor>("c_1", 1, 2, 0.001));
-	circElements.push_back(std::make_shared<Component::DP::Inductor>("l_1", 2, 0, 0.001));
-	circElements.push_back(std::make_shared<Component::DP::Resistor>("r_2", 2, 0, 1));
+	Components::Base::List circElements;
+	circElements.push_back(std::make_shared<Components::DP::VoltageSource>("v_in", 1, 0, Complex(10, 0), 1));
+	circElements.push_back(std::make_shared<Components::DP::Capacitor>("c_1", 1, 2, 0.001));
+	circElements.push_back(std::make_shared<Components::DP::Inductor>("l_1", 2, 0, 0.001));
+	circElements.push_back(std::make_shared<Components::DP::Resistor>("r_2", 2, 0, 1));
 
 	// Define log names
 	Logger log("Logs/" + fileName.str() + ".log");

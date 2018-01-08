@@ -23,7 +23,7 @@
 
 using namespace DPsim;
 
-Component::DP::PQLoad::PQLoad(String name, Int node, Real activePower, Real reactivePower, Real volt, Real angle)
+Components::DP::PQLoad::PQLoad(String name, Int node, Real activePower, Real reactivePower, Real volt, Real angle)
 	: Base(name, node, 0)
 {
 	// we need the system frequency to calculate the impedance, so we initialize
@@ -36,7 +36,7 @@ Component::DP::PQLoad::PQLoad(String name, Int node, Real activePower, Real reac
 	attrMap["svVoltage"]     = { Attribute::Real, &mSvVoltage };
 }
 
-void Component::DP::PQLoad::init(Real om, Real dt)
+void Components::DP::PQLoad::init(Real om, Real dt)
 {
 	Real abs = mActivePower*mActivePower + mReactivePower*mReactivePower;
 	mResistance = mSvVoltage*mSvVoltage*mActivePower/abs;
@@ -44,13 +44,13 @@ void Component::DP::PQLoad::init(Real om, Real dt)
 	mReactance = mSvVoltage*mSvVoltage*mReactivePower/abs;
 	mInductance = mReactance / om;
 
-	inductor = std::make_shared<Component::DP::Inductor>(mName + "_ind", mNode1, mNode2, mInductance);
-	resistor = std::make_shared<Component::DP::Resistor>(mName + "_res", mNode1, mNode2, mResistance);
+	inductor = std::make_shared<Components::DP::Inductor>(mName + "_ind", mNode1, mNode2, mInductance);
+	resistor = std::make_shared<Components::DP::Resistor>(mName + "_res", mNode1, mNode2, mResistance);
 	inductor->init(om, dt);
 	resistor->init(om, dt);
 }
 
-void Component::DP::PQLoad::applySystemMatrixStamp(SystemModel& system)
+void Components::DP::PQLoad::applySystemMatrixStamp(SystemModel& system)
 {
 	// Add resistive part to system matrix
 	resistor->applySystemMatrixStamp(system);
@@ -59,17 +59,17 @@ void Component::DP::PQLoad::applySystemMatrixStamp(SystemModel& system)
 	inductor->applySystemMatrixStamp(system);
 }
 
-void Component::DP::PQLoad::step(SystemModel& system, Real time)
+void Components::DP::PQLoad::step(SystemModel& system, Real time)
 {
 	inductor->step(system, time);
 }
 
-void Component::DP::PQLoad::postStep(SystemModel& system)
+void Components::DP::PQLoad::postStep(SystemModel& system)
 {
 	inductor->postStep(system);
 }
 
-Complex Component::DP::PQLoad::getCurrent(SystemModel& system)
+Complex Components::DP::PQLoad::getCurrent(SystemModel& system)
 {
 	return inductor->getCurrent(system);
 }

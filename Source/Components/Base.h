@@ -30,7 +30,7 @@
 #include "../Definitions.h"
 
 namespace DPsim {
-namespace Component {
+namespace Components {
 
 	struct Attribute {
 		enum Type {
@@ -41,7 +41,7 @@ namespace Component {
 		} mType;
 		void* mValue;
 
-		typedef std::map<DPsim::String, Component::Attribute> Map;
+		typedef std::map<DPsim::String, Components::Attribute> Map;
 	};
 
 	/// Base class for all elements that might be added to the matrix.
@@ -63,7 +63,7 @@ namespace Component {
 		/// Index of virtual node
 		std::vector<Int> mVirtualNodes;
 		/// Map of all attributes that should be exported to the Python interface
-		Component::Attribute::Map attrMap;
+		Components::Attribute::Map attrMap;
 
 	public:
 		typedef std::shared_ptr<Base> Ptr;
@@ -105,7 +105,7 @@ namespace Component {
 		/// set virtual node
 		void setVirtualNode(Int nodeNum, Int virtualNode) { mVirtualNodes[nodeNum] = virtualNode; }
 
-		std::map<String, Component::Attribute>& getAttrMap() { return attrMap; }
+		std::map<String, Components::Attribute>& getAttrMap() { return attrMap; }
 
 		String getName() { return mName; }
 		String getType();

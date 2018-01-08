@@ -25,7 +25,7 @@
 #include "Base_VoltageSource.h"
 
 namespace DPsim {
-namespace Component {
+namespace Components {
 namespace EMT {
 
 	/// Ideal Voltage source model:
@@ -33,7 +33,7 @@ namespace EMT {
 	/// For a voltage source between nodes j and k, a new variable (current across the voltage source) is added to the left side vector
 	/// as unkown and it is taken into account for the equation of node j as positve and for the equation of node k as negative. Moreover
 	/// a new equation ej - ek = V is added to the problem.
-	class VoltageSourceIdeal : public Component::VoltageSourceBase<Real> {
+	class VoltageSourceIdeal : public Components::VoltageSourceBase<Real> {
 
 	public:
 		/// define paramenters of the voltage source

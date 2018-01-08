@@ -43,7 +43,7 @@ PyObject* Python::Components::DP::Capacitor(PyObject* self, PyObject* args)
 
 	Component *pyComp = PyObject_New(Component, &ComponentType);
 	Component::init(pyComp);
-	pyComp->comp = std::make_shared<DPsim::Component::DP::Capacitor>(name, src, dest, capacitance);
+	pyComp->comp = std::make_shared<DPsim::Components::DP::Capacitor>(name, src, dest, capacitance);
 
 	return (PyObject*) pyComp;
 }

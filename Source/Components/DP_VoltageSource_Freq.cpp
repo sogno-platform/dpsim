@@ -23,7 +23,7 @@
 
 using namespace DPsim;
 
-Component::DP::VoltageSourceFreq::VoltageSourceFreq(String name, Int src, Int dest, Real voltage, Real phase, Real resistance, Real omegaSource, Real switchTime, Real rampTime)
+Components::DP::VoltageSourceFreq::VoltageSourceFreq(String name, Int src, Int dest, Real voltage, Real phase, Real resistance, Real omegaSource, Real switchTime, Real rampTime)
 	: Base(name, src, dest)
 {
 	mResistance = resistance;
@@ -39,7 +39,7 @@ Component::DP::VoltageSourceFreq::VoltageSourceFreq(String name, Int src, Int de
 	mCurrenti = mVoltageDiffi / mResistance;
 }
 
-void Component::DP::VoltageSourceFreq::applySystemMatrixStamp(SystemModel& system)
+void Components::DP::VoltageSourceFreq::applySystemMatrixStamp(SystemModel& system)
 {
 	// Apply matrix stamp for equivalent resistance
 	if (mNode1 >= 0) {
@@ -55,7 +55,7 @@ void Component::DP::VoltageSourceFreq::applySystemMatrixStamp(SystemModel& syste
 	}
 }
 
-void Component::DP::VoltageSourceFreq::applyRightSideVectorStamp(SystemModel& system)
+void Components::DP::VoltageSourceFreq::applyRightSideVectorStamp(SystemModel& system)
 {
 	// Apply matrix stamp for equivalent current source
 	if (mNode1 >= 0) {
@@ -66,7 +66,7 @@ void Component::DP::VoltageSourceFreq::applyRightSideVectorStamp(SystemModel& sy
 	}
 }
 
-void Component::DP::VoltageSourceFreq::step(SystemModel& system, Real time)
+void Components::DP::VoltageSourceFreq::step(SystemModel& system, Real time)
 {
 	if (time >= mSwitchTime && time < mSwitchTime + mRampTime) {
 		Real fadeInOut = 0.5 + 0.5 * sin((time - mSwitchTime) / mRampTime * PI + -PI / 2);
@@ -98,7 +98,7 @@ void Component::DP::VoltageSourceFreq::step(SystemModel& system, Real time)
 	}
 }
 
-Complex Component::DP::VoltageSourceFreq::getCurrent(SystemModel& system)
+Complex Components::DP::VoltageSourceFreq::getCurrent(SystemModel& system)
 {
 	Real real = mCurrentr;
 	Real imag = mCurrenti;

@@ -25,7 +25,7 @@
 #include "Base.h"
 
 namespace DPsim {
-namespace Component {
+namespace Components {
 
 	enum class SynchronGeneratorStateType { perUnit, statorReferred };
 	enum class SynchronGeneratorParamType { perUnit, statorReferred };
@@ -37,7 +37,7 @@ namespace Component {
 	/// parameter names include underscores and typical variables names found in literature instead of
 	/// descriptive names in order to shorten formulas and increase the readability
 
-	class SynchronGeneratorBase : public Component::Base {
+	class SynchronGeneratorBase : public Components::Base {
 
 	protected:
 		Logger* mLog;

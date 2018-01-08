@@ -37,7 +37,7 @@ Simulation::Simulation()
 	mCurrentSwitchTimeIndex = 0;
 }
 
-Simulation::Simulation(Component::Base::List elements, Real om, Real dt, Real tf, Logger& logger, SimulationType simType, Int downSampleRate)
+Simulation::Simulation(Components::Base::List elements, Real om, Real dt, Real tf, Logger& logger, SimulationType simType, Int downSampleRate)
 	: Simulation()
 {
 	mLogger = &logger;
@@ -64,7 +64,7 @@ Simulation::Simulation(Component::Base::List elements, Real om, Real dt, Real tf
 Simulation::~Simulation() {
 }
 
-void Simulation::initialize(Component::Base::List newElements)
+void Simulation::initialize(Components::Base::List newElements)
 {
 	Int maxNode = 0;
 	Int currentVirtualNode = 0;
@@ -116,7 +116,7 @@ void Simulation::initialize(Component::Base::List newElements)
 	mElements = mElementsVector[0];
 }
 
-void Simulation::addSystemTopology(Component::Base::List newElements)
+void Simulation::addSystemTopology(Components::Base::List newElements)
 {
 	mElementsVector.push_back(newElements);
 
@@ -176,7 +176,7 @@ Int Simulation::step(Logger& leftSideVectorLog, Logger& rightSideVectorLog, bool
 }
 
 Int Simulation::stepGeneratorTest(Logger& leftSideVectorLog, Logger& rightSideVectorLog,
-	Component::Base::Ptr generator, Real time)
+	Components::Base::Ptr generator, Real time)
 {
 	// Set to zero because all components will add their contribution for the current time step to the current value
 	mSystemModel.getRightSideVector().setZero();
@@ -427,7 +427,7 @@ void Simulation::runRT(RTMethod rtMethod, bool startSynch, Logger& logger, Logge
 #endif /* WITH_RT */
 
 int Simulation::stepGeneratorVBR(Logger& leftSideVectorLog, Logger& rightSideVectorLog,
-	Component::Base::Ptr generator, Real time)
+	Components::Base::Ptr generator, Real time)
 {
 	// Set to zero because all components will add their contribution for the current time step to the current value
 	mSystemModel.getRightSideVector().setZero();

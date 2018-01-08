@@ -24,7 +24,7 @@
 
 using namespace DPsim;
 
-Component::TurbineGovernor::TurbineGovernor(Real Ta, Real Tb, Real Tc, Real Fa, Real Fb, Real Fc, Real K, Real Tsr, Real Tsm)
+Components::TurbineGovernor::TurbineGovernor(Real Ta, Real Tb, Real Tc, Real Fa, Real Fb, Real Fc, Real K, Real Tsr, Real Tsm)
 {
 	mTa = Ta;
 	mTb = Tb;
@@ -37,7 +37,7 @@ Component::TurbineGovernor::TurbineGovernor(Real Ta, Real Tb, Real Tc, Real Fa, 
 	mTsm = Tsm;
 }
 
-void Component::TurbineGovernor::init(Real PmRef, Real Tm_init)
+void Components::TurbineGovernor::init(Real PmRef, Real Tm_init)
 {
 	mTm = Tm_init;
 	mVcv = PmRef;
@@ -45,7 +45,7 @@ void Component::TurbineGovernor::init(Real PmRef, Real Tm_init)
 	Psm_in = PmRef;
 }
 
-Real Component::TurbineGovernor::step(Real Om, Real OmRef, Real PmRef, Real dt)
+Real Components::TurbineGovernor::step(Real Om, Real OmRef, Real PmRef, Real dt)
 {
 	// ### Governing ###
 	// Input of speed relay

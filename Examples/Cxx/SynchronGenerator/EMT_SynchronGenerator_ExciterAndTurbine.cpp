@@ -78,15 +78,15 @@ int main(int argc, char* argv[])
 	//Real Llkq2 = 0;
 
 	// Declare circuit components
-	Component::Base::Ptr gen = std::make_shared<Component::EMT::SynchronGeneratorVBR>("gen", 1, 2, 3,
+	Components::Base::Ptr gen = std::make_shared<Components::EMT::SynchronGeneratorVBR>("gen", 1, 2, 3,
 		nomPower, nomPhPhVoltRMS, nomFreq, poleNum, nomFieldCurr,
 		Rs, Ll, Lmd, Lmd0, Lmq, Lmq0, Rfd, Llfd, Rkd, Llkd, Rkq1, Llkq1, Rkq2, Llkq2, H, true);
 	Real loadRes = 1037.8378;
-	Component::Base::Ptr r1 = std::make_shared<Component::EMT::Resistor>("r1", 1, 0, loadRes);
-	Component::Base::Ptr r2 = std::make_shared<Component::EMT::Resistor>("r2", 2, 0, loadRes);
-	Component::Base::Ptr r3 = std::make_shared<Component::EMT::Resistor>("r3", 3, 0, loadRes);
+	Components::Base::Ptr r1 = std::make_shared<Components::EMT::Resistor>("r1", 1, 0, loadRes);
+	Components::Base::Ptr r2 = std::make_shared<Components::EMT::Resistor>("r2", 2, 0, loadRes);
+	Components::Base::Ptr r3 = std::make_shared<Components::EMT::Resistor>("r3", 3, 0, loadRes);
 
-	Component::Base::List circElements;
+	Components::Base::List circElements;
 	circElements.push_back(gen);
 	circElements.push_back(r1);
 	circElements.push_back(r2);
@@ -94,10 +94,10 @@ int main(int argc, char* argv[])
 
 	// Declare circuit components for resistance change
 	Real breakerRes = 1037.8378;
-	Component::Base::Ptr rBreaker1 = std::make_shared<Component::EMT::Resistor>("rbreak1", 1, 0, breakerRes);
-	Component::Base::Ptr rBreaker2 = std::make_shared<Component::EMT::Resistor>("rbreak2", 2, 0, breakerRes);
-	Component::Base::Ptr rBreaker3 = std::make_shared<Component::EMT::Resistor>("rbreak3", 3, 0, breakerRes);
-	Component::Base::List circElementsBreakerOn;
+	Components::Base::Ptr rBreaker1 = std::make_shared<Components::EMT::Resistor>("rbreak1", 1, 0, breakerRes);
+	Components::Base::Ptr rBreaker2 = std::make_shared<Components::EMT::Resistor>("rbreak2", 2, 0, breakerRes);
+	Components::Base::Ptr rBreaker3 = std::make_shared<Components::EMT::Resistor>("rbreak3", 3, 0, breakerRes);
+	Components::Base::List circElementsBreakerOn;
 	circElementsBreakerOn.push_back(gen);
 	circElementsBreakerOn.push_back(rBreaker1);
 	circElementsBreakerOn.push_back(rBreaker2);
@@ -123,7 +123,7 @@ int main(int argc, char* argv[])
 	Real initVoltAngle = -DPS_PI / 2;
 	Real fieldVoltage = 7.0821;
 	Real mechPower = 5.5558e5;
-	auto genPtr = std::dynamic_pointer_cast<Component::EMT::SynchronGeneratorVBR>(gen);
+	auto genPtr = std::dynamic_pointer_cast<Components::EMT::SynchronGeneratorVBR>(gen);
 	genPtr->init(om, dt, initActivePower, initReactivePower, initTerminalVolt, initVoltAngle, fieldVoltage, mechPower);
 	genPtr->addExciter(Ta, Ka, Te, Ke, Tf, Kf, Tr, Lmd, Rfd);
 	genPtr->addGovernor(Ta_t, Tb, Tc, Fa, Fb, Fc, Kg, Tsr, Tsm, initActivePower / nomPower, 0);

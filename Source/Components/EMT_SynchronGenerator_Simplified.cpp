@@ -24,7 +24,7 @@
 
 using namespace DPsim;
 
-Component::EMT::SynchronGeneratorSimplified::SynchronGeneratorSimplified(String name, Int node1, Int node2, Int node3,
+Components::EMT::SynchronGeneratorSimplified::SynchronGeneratorSimplified(String name, Int node1, Int node2, Int node3,
 	Real nomPower, Real nomVolt, Real nomFreq, Int poleNumber, Real nomFieldCur,
 	Real Rs, Real Ll, Real Lmd, Real Lmd0, Real Lmq, Real Lmq0,
 	Real Rfd, Real Llfd, Real Rkd, Real Llkd,
@@ -36,14 +36,14 @@ Component::EMT::SynchronGeneratorSimplified::SynchronGeneratorSimplified(String 
 {
 }
 
-Component::EMT::SynchronGeneratorSimplified::~SynchronGeneratorSimplified()
+Components::EMT::SynchronGeneratorSimplified::~SynchronGeneratorSimplified()
 {
 	if (mLogActive) {
 		delete mLog;
 	}
 }
 
-void Component::EMT::SynchronGeneratorSimplified::init(Real om, Real dt,
+void Components::EMT::SynchronGeneratorSimplified::init(Real om, Real dt,
 	Real initActivePower, Real initReactivePower, Real initTerminalVolt,
 	Real initVoltAngle, Real initFieldVoltage, Real initMechPower)
 {
@@ -96,7 +96,7 @@ void Component::EMT::SynchronGeneratorSimplified::init(Real om, Real dt,
 	mIc = inverseParkTransform2(mThetaMech, mId* mBase_i, mIq* mBase_i, mI0* mBase_i)(2);
 }
 
-void Component::EMT::SynchronGeneratorSimplified::step(SystemModel& system, Real time)
+void Components::EMT::SynchronGeneratorSimplified::step(SystemModel& system, Real time)
 {
 	stepInPerUnit(system.getOmega(), system.getTimeStep(), time, system.getNumMethod());
 
@@ -118,7 +118,7 @@ void Component::EMT::SynchronGeneratorSimplified::step(SystemModel& system, Real
 	}
 }
 
-void Component::EMT::SynchronGeneratorSimplified::stepInPerUnit(Real om, Real dt, Real time, NumericalMethod numMethod)
+void Components::EMT::SynchronGeneratorSimplified::stepInPerUnit(Real om, Real dt, Real time, NumericalMethod numMethod)
 {
 	mVa = (1 / mBase_v) * mVa;
 	mVb = (1 / mBase_v) * mVb;
@@ -197,7 +197,7 @@ void Component::EMT::SynchronGeneratorSimplified::stepInPerUnit(Real om, Real dt
 		mPsifd;
 }
 
-void Component::EMT::SynchronGeneratorSimplified::postStep(SystemModel& system)
+void Components::EMT::SynchronGeneratorSimplified::postStep(SystemModel& system)
 {
 	if (mNode1 >= 0) {
 		mVa = system.getRealFromLeftSideVector(mNode1);
@@ -221,7 +221,7 @@ void Component::EMT::SynchronGeneratorSimplified::postStep(SystemModel& system)
 	}
 }
 
-Matrix Component::EMT::SynchronGeneratorSimplified::parkTransform2(Real theta, Real a, Real b, Real c)
+Matrix Components::EMT::SynchronGeneratorSimplified::parkTransform2(Real theta, Real a, Real b, Real c)
 {
 	Matrix dq0vector(3, 1);
 
@@ -241,7 +241,7 @@ Matrix Component::EMT::SynchronGeneratorSimplified::parkTransform2(Real theta, R
 	return dq0vector;
 }
 
-Matrix Component::EMT::SynchronGeneratorSimplified::inverseParkTransform2(Real theta, Real d, Real q, Real zero)
+Matrix Components::EMT::SynchronGeneratorSimplified::inverseParkTransform2(Real theta, Real d, Real q, Real zero)
 {
 	Matrix abcVector(3, 1);
 

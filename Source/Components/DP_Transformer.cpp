@@ -23,7 +23,7 @@
 
 using namespace DPsim;
 
-Component::DP::Transformer::Transformer(String name, Int node1, Int node2, Real ratioAbs, Real ratioPhase, Real resistance, Real inductance)
+Components::DP::Transformer::Transformer(String name, Int node1, Int node2, Real ratioAbs, Real ratioPhase, Real resistance, Real inductance)
 	: Base(name, node1, node2)
 {
 	mRatioAbs = ratioAbs;
@@ -41,14 +41,14 @@ Component::DP::Transformer::Transformer(String name, Int node1, Int node2, Real 
 }
 
 // TODO: implement RX losses
-void Component::DP::Transformer::init(Real om, Real dt)
+void Components::DP::Transformer::init(Real om, Real dt)
 {
-	mInductor = std::make_shared<Component::DP::Inductor>(mName + "_ind", mNode1, mVirtualNodes[0], mInductance);
+	mInductor = std::make_shared<Components::DP::Inductor>(mName + "_ind", mNode1, mVirtualNodes[0], mInductance);
 	mInductor->init(om, dt);
 
 }
 
-void Component::DP::Transformer::applySystemMatrixStamp(SystemModel& system)
+void Components::DP::Transformer::applySystemMatrixStamp(SystemModel& system)
 {
 	if (mNode1 >= 0) {
 		system.setCompSystemMatrixElement(mVirtualNodes[0], mVirtualNodes[1], -1.0, 0);
@@ -65,12 +65,12 @@ void Component::DP::Transformer::applySystemMatrixStamp(SystemModel& system)
 	}
 }
 
-void Component::DP::Transformer::step(SystemModel& system, Real time)
+void Components::DP::Transformer::step(SystemModel& system, Real time)
 {
 	mInductor->step(system, time);
 }
 
-void Component::DP::Transformer::postStep(SystemModel& system)
+void Components::DP::Transformer::postStep(SystemModel& system)
 {
 	mInductor->postStep(system);
 }

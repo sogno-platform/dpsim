@@ -23,7 +23,7 @@
 
 using namespace DPsim;
 
-Component::EMT::VoltageSourceIdeal::VoltageSourceIdeal(String name, Int src, Int dest, Real voltage)
+Components::EMT::VoltageSourceIdeal::VoltageSourceIdeal(String name, Int src, Int dest, Real voltage)
 	: VoltageSourceBase(name, src, dest, voltage)
 {
 	mNumVirtualNodes = 1;
@@ -31,7 +31,7 @@ Component::EMT::VoltageSourceIdeal::VoltageSourceIdeal(String name, Int src, Int
 	attrMap["voltage"] = { Attribute::Real, &mVoltage };
 }
 
-void Component::EMT::VoltageSourceIdeal::applySystemMatrixStamp(SystemModel& system)
+void Components::EMT::VoltageSourceIdeal::applySystemMatrixStamp(SystemModel& system)
 {
 	if (mNode1 >= 0) {
 		system.addRealToSystemMatrix(mNode1, mVirtualNodes[0], -1);
@@ -44,17 +44,17 @@ void Component::EMT::VoltageSourceIdeal::applySystemMatrixStamp(SystemModel& sys
 	}
 }
 
-void Component::EMT::VoltageSourceIdeal::applyRightSideVectorStamp(SystemModel& system)
+void Components::EMT::VoltageSourceIdeal::applyRightSideVectorStamp(SystemModel& system)
 {
 	system.addRealToRightSideVector(mVirtualNodes[0], mVoltage);
 }
 
-void Component::EMT::VoltageSourceIdeal::step(SystemModel& system, Real time)
+void Components::EMT::VoltageSourceIdeal::step(SystemModel& system, Real time)
 {
 	system.addRealToRightSideVector(mVirtualNodes[0], mVoltage);
 }
 
-Complex Component::EMT::VoltageSourceIdeal::getCurrent(SystemModel& system)
+Complex Components::EMT::VoltageSourceIdeal::getCurrent(SystemModel& system)
 {
 	Complex actualcurrent = Complex(system.getRealFromLeftSideVector(mVirtualNodes[0]), 0);
 	return Complex(system.getRealFromLeftSideVector(mVirtualNodes[0]),0);

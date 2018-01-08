@@ -45,7 +45,7 @@ PyObject* Python::Components::DP::CurrentSourceIdeal(PyObject* self, PyObject* a
 
 	Component *pyComp = PyObject_New(Component, &ComponentType);
 	Component::init(pyComp);
-	pyComp->comp = std::make_shared<DPsim::Component::DP::CurrentSourceIdeal>(name, src, dest, DPsim::Complex(initCurrent.real, initCurrent.imag));
+	pyComp->comp = std::make_shared<DPsim::Components::DP::CurrentSourceIdeal>(name, src, dest, DPsim::Complex(initCurrent.real, initCurrent.imag));
 
 	return (PyObject*) pyComp;
 }

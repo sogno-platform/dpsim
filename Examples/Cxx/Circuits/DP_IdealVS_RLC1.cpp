@@ -32,12 +32,12 @@ int main(int argc, char* argv[])
 	Real finalTime = 0.3;
 	std::ostringstream fileName;
 	fileName << "IdealVS2_" << timeStep;
-	Component::Base::List circElements;
-	circElements.push_back(std::make_shared<Component::DP::VoltageSourceIdeal>("v_in", 1, 0, Complex(10, 0)));
-	circElements.push_back(std::make_shared<Component::DP::Resistor>("r_1", 1, 2, 1));
-	circElements.push_back(std::make_shared<Component::DP::Capacitor>("c_1", 2, 3, 0.001));
-	circElements.push_back(std::make_shared<Component::DP::Inductor>("l_1", 3, 0, 0.001));
-	circElements.push_back(std::make_shared<Component::DP::Resistor>("r_2", 3, 0, 1));
+	Components::Base::List circElements;
+	circElements.push_back(std::make_shared<Components::DP::VoltageSourceIdeal>("v_in", 1, 0, Complex(10, 0)));
+	circElements.push_back(std::make_shared<Components::DP::Resistor>("r_1", 1, 2, 1));
+	circElements.push_back(std::make_shared<Components::DP::Capacitor>("c_1", 2, 3, 0.001));
+	circElements.push_back(std::make_shared<Components::DP::Inductor>("l_1", 3, 0, 0.001));
+	circElements.push_back(std::make_shared<Components::DP::Resistor>("r_2", 3, 0, 1));
 
 	// Define log names
 	Logger log("Logs/" + fileName.str() + ".log");

@@ -25,10 +25,10 @@
 #include "../Components.h"
 
 namespace DPsim {
-namespace Component {
+namespace Components {
 namespace DP {
 
-	class PiLine : public Component::Base {
+	class PiLine : public Components::Base {
 
 	protected:
 		///resistance in [ohms]

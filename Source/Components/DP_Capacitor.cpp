@@ -23,7 +23,7 @@
 
 using namespace DPsim;
 
-Component::DP::Capacitor::Capacitor(String name, Int src, Int dest, Real capacitance)
+Components::DP::Capacitor::Capacitor(String name, Int src, Int dest, Real capacitance)
 	: Base(name, src, dest)
 {
 	mCapacitance = capacitance;
@@ -31,7 +31,7 @@ Component::DP::Capacitor::Capacitor(String name, Int src, Int dest, Real capacit
 	attrMap["capacitance"] = { Attribute::Real, &mCapacitance };
 }
 
-void Component::DP::Capacitor::applySystemMatrixStamp(SystemModel& system)
+void Components::DP::Capacitor::applySystemMatrixStamp(SystemModel& system)
 {
 	mGcr = 2.0 * mCapacitance / system.getTimeStep();
 	mGci = system.getOmega() * mCapacitance;
@@ -49,7 +49,7 @@ void Component::DP::Capacitor::applySystemMatrixStamp(SystemModel& system)
 }
 
 /// Initialize internal state
-void Component::DP::Capacitor::init(Real om, Real dt)
+void Components::DP::Capacitor::init(Real om, Real dt)
 {
 	mCurrr = 0;
 	mCurri = 0;
@@ -59,7 +59,7 @@ void Component::DP::Capacitor::init(Real om, Real dt)
 	mDeltavi = 0;
 }
 
-void Component::DP::Capacitor::step(SystemModel& system, Real time)
+void Components::DP::Capacitor::step(SystemModel& system, Real time)
 {
 	// Initialize internal state
 	mCureqr = mCurrr + mGcr * mDeltavr + mGci * mDeltavi;
@@ -73,7 +73,7 @@ void Component::DP::Capacitor::step(SystemModel& system, Real time)
 	}
 }
 
-void Component::DP::Capacitor::postStep(SystemModel& system)
+void Components::DP::Capacitor::postStep(SystemModel& system)
 {
 	Real vposr, vnegr, vposi, vnegi;
 
@@ -102,7 +102,7 @@ void Component::DP::Capacitor::postStep(SystemModel& system)
 	mCurri = mGci * mDeltavr + mGcr * mDeltavi - mCureqi;
 }
 
-Complex Component::DP::Capacitor::getCurrent(SystemModel& system)
+Complex Components::DP::Capacitor::getCurrent(SystemModel& system)
 {
 	return Complex(mCurrr, mCurri);
 }

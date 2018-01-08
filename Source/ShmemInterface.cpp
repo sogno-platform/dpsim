@@ -112,10 +112,10 @@ void ShmemInterface::readValues(bool blocking)
 			// TODO integer format?
 			Complex v = Complex(sample->data[extComp.realIdx].f, sample->data[extComp.imagIdx].f);
 
-			auto *ecs = dynamic_cast<Component::DP::CurrentSourceIdeal*>(extComp.comp);
+			auto *ecs = dynamic_cast<Components::DP::CurrentSourceIdeal*>(extComp.comp);
 			if (ecs)
 				ecs->setCurrent(v);
-			auto *evs = dynamic_cast<Component::DP::VoltageSourceIdeal*>(extComp.comp);
+			auto *evs = dynamic_cast<Components::DP::VoltageSourceIdeal*>(extComp.comp);
 			if (evs)
 				evs->setVoltage(v);
 		}

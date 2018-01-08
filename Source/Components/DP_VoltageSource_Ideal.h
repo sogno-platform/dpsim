@@ -25,7 +25,7 @@
 #include "Base_VoltageSource.h"
 
 namespace DPsim {
-namespace Component {
+namespace Components {
 namespace DP {
 
 	/// Ideal Voltage source model:

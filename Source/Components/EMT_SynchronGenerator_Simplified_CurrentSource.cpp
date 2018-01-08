@@ -24,7 +24,7 @@
 
 using namespace DPsim;
 
-Component::EMT::SynchronGeneratorSimplifiedCurrentSource::SynchronGeneratorSimplifiedCurrentSource(String name, Int node1, Int node2, Int node3,
+Components::EMT::SynchronGeneratorSimplifiedCurrentSource::SynchronGeneratorSimplifiedCurrentSource(String name, Int node1, Int node2, Int node3,
 	Real nomPower, Real nomVolt, Real nomFreq, Int poleNumber, Real nomFieldCur,
 	Real Rs, Real Ll, Real Lmd, Real Lmd0, Real Lmq, Real Lmq0,
 	Real Rfd, Real Llfd, Real Rkd, Real Llkd,
@@ -41,14 +41,14 @@ Component::EMT::SynchronGeneratorSimplifiedCurrentSource::SynchronGeneratorSimpl
 	mVirtualNodes = { 0, 0, 0 };
 }
 
-Component::EMT::SynchronGeneratorSimplifiedCurrentSource::~SynchronGeneratorSimplifiedCurrentSource()
+Components::EMT::SynchronGeneratorSimplifiedCurrentSource::~SynchronGeneratorSimplifiedCurrentSource()
 {
 	if (mLogActive) {
 		delete mLog;
 	}
 }
 
-void Component::EMT::SynchronGeneratorSimplifiedCurrentSource::init(Real om, Real dt,
+void Components::EMT::SynchronGeneratorSimplifiedCurrentSource::init(Real om, Real dt,
 	Real initActivePower, Real initReactivePower, Real initTerminalVolt,
 	Real initVoltAngle, Real initFieldVoltage, Real initMechPower)
 {
@@ -103,7 +103,7 @@ void Component::EMT::SynchronGeneratorSimplifiedCurrentSource::init(Real om, Rea
 	vc.setVoltage(mVc);
 }
 
-void Component::EMT::SynchronGeneratorSimplifiedCurrentSource::applySystemMatrixStamp(SystemModel& system)
+void Components::EMT::SynchronGeneratorSimplifiedCurrentSource::applySystemMatrixStamp(SystemModel& system)
 {
 	va.setVirtualNode(0, mVirtualNodes[0]);
 	vb.setVirtualNode(0, mVirtualNodes[1]);
@@ -114,7 +114,7 @@ void Component::EMT::SynchronGeneratorSimplifiedCurrentSource::applySystemMatrix
 	vc.applySystemMatrixStamp(system);
 }
 
-void Component::EMT::SynchronGeneratorSimplifiedCurrentSource::applyRightSideVectorStamp(SystemModel& system)
+void Components::EMT::SynchronGeneratorSimplifiedCurrentSource::applyRightSideVectorStamp(SystemModel& system)
 {
 	va.setVirtualNode(0, mVirtualNodes[0]);
 	vb.setVirtualNode(0, mVirtualNodes[1]);
@@ -125,7 +125,7 @@ void Component::EMT::SynchronGeneratorSimplifiedCurrentSource::applyRightSideVec
 	vc.applyRightSideVectorStamp(system);
 }
 
-void Component::EMT::SynchronGeneratorSimplifiedCurrentSource::step(SystemModel& system, Real time)
+void Components::EMT::SynchronGeneratorSimplifiedCurrentSource::step(SystemModel& system, Real time)
 {
 	stepInPerUnit(system.getOmega(), system.getTimeStep(), time, system.getNumMethod());
 
@@ -144,7 +144,7 @@ void Component::EMT::SynchronGeneratorSimplifiedCurrentSource::step(SystemModel&
 	}
 }
 
-void Component::EMT::SynchronGeneratorSimplifiedCurrentSource::stepInPerUnit(Real om, Real dt, Real time, NumericalMethod numMethod)
+void Components::EMT::SynchronGeneratorSimplifiedCurrentSource::stepInPerUnit(Real om, Real dt, Real time, NumericalMethod numMethod)
 {
 	mIa = (1 / mBase_i) * mIa;
 	mIb = (1 / mBase_i) * mIb;
@@ -196,7 +196,7 @@ void Component::EMT::SynchronGeneratorSimplifiedCurrentSource::stepInPerUnit(Rea
 		mPsifd;
 }
 
-void Component::EMT::SynchronGeneratorSimplifiedCurrentSource::postStep(SystemModel& system)
+void Components::EMT::SynchronGeneratorSimplifiedCurrentSource::postStep(SystemModel& system)
 {
 	if (mNode1 >= 0) {
 		mIa = va.getCurrent(system).real();
@@ -218,7 +218,7 @@ void Component::EMT::SynchronGeneratorSimplifiedCurrentSource::postStep(SystemMo
 	}
 }
 
-Matrix Component::EMT::SynchronGeneratorSimplifiedCurrentSource::parkTransform2(Real theta, Real a, Real b, Real c)
+Matrix Components::EMT::SynchronGeneratorSimplifiedCurrentSource::parkTransform2(Real theta, Real a, Real b, Real c)
 {
 	Matrix dq0vector(3, 1);
 
@@ -238,7 +238,7 @@ Matrix Component::EMT::SynchronGeneratorSimplifiedCurrentSource::parkTransform2(
 	return dq0vector;
 }
 
-Matrix Component::EMT::SynchronGeneratorSimplifiedCurrentSource::inverseParkTransform2(Real theta, Real d, Real q, Real zero)
+Matrix Components::EMT::SynchronGeneratorSimplifiedCurrentSource::inverseParkTransform2(Real theta, Real d, Real q, Real zero)
 {
 	Matrix abcVector(3, 1);
 

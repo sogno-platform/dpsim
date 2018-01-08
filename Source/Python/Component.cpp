@@ -19,7 +19,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *********************************************************************************/
 
-#include "Component.h"
+#include "Python/Component.h"
 #include "Components.h"
 
 using namespace DPsim;
@@ -28,7 +28,7 @@ PyObject* Python::Component::newfunc(PyTypeObject* type, PyObject *args, PyObjec
 {
 	Component* self = (Component*) type->tp_alloc(type, 0);
 	if (self) {
-		Component::init(self);
+		init(self);
 	}
 
 	return (PyObject*) self;
@@ -36,13 +36,13 @@ PyObject* Python::Component::newfunc(PyTypeObject* type, PyObject *args, PyObjec
 
 void Python::Component::init(Component* self)
 {
-	new (&self->comp) DPsim::Component::Base::Ptr(nullptr);
+	new (&self->comp) DPsim::Components::Base::Ptr(nullptr);
 }
 
 void Python::Component::dealloc(Python::Component* self)
 {
 	// This is a workaround for a compiler bug: https://stackoverflow.com/a/42647153/8178705
-	using Ptr = DPsim::Component::Base::Ptr;
+	using Ptr = DPsim::Components::Base::Ptr;
 
 	self->comp.~Ptr();
 
@@ -64,7 +64,7 @@ PyObject* Python::Component::getattr(Python::Component* self, char* name)
 		return nullptr;
 	}
 
-	DPsim::Component::Attribute::Map& attrMap = self->comp->getAttrMap();
+	DPsim::Components::Attribute::Map& attrMap = self->comp->getAttrMap();
 
 	auto search = attrMap.find(name);
 	if (search == attrMap.end()) {
@@ -72,15 +72,15 @@ PyObject* Python::Component::getattr(Python::Component* self, char* name)
 		return nullptr;
 	}
 
-	DPsim::Component::Attribute attr = search->second;
+	DPsim::Components::Attribute attr = search->second;
 	switch (attr.mType) {
-	case DPsim::Component::Attribute::Real:
+	case DPsim::Components::Attribute::Real:
 		return PyFloat_FromDouble(*((Real*) attr.mValue));
-	case DPsim::Component::Attribute::Integer:
+	case DPsim::Components::Attribute::Integer:
 		return PyLong_FromLong(*((Int*) attr.mValue));
-	case DPsim::Component::Attribute::String:
+	case DPsim::Components::Attribute::String:
 		return PyUnicode_FromString(((std::string*) attr.mValue)->c_str());
-	case DPsim::Component::Attribute::Complex:
+	case DPsim::Components::Attribute::Complex:
 		Complex c = *((Complex*) attr.mValue);
 		return PyComplex_FromDoubles(c.real(), c.imag());
 	}
@@ -100,33 +100,33 @@ int Python::Component::setattr(Python::Component* self, char* name, PyObject *v)
 		return -1;
 	}
 
-	DPsim::Component::Attribute::Map& attrMap = self->comp->getAttrMap();
+	DPsim::Components::Attribute::Map& attrMap = self->comp->getAttrMap();
 	auto search = attrMap.find(name);
 	if (search == attrMap.end()) {
 		PyErr_Format(PyExc_AttributeError, "Component has no attribute '%s'", name);
 		return -1;
 	}
 
-	DPsim::Component::Attribute attr = search->second;
+	DPsim::Components::Attribute attr = search->second;
 	switch (attr.mType) {
-	case DPsim::Component::Attribute::Real:
+	case DPsim::Components::Attribute::Real:
 		r = PyFloat_AsDouble(v);
 		if (PyErr_Occurred())
 			return -1;
 		*((Real*) attr.mValue) = r;
 		break;
-	case DPsim::Component::Attribute::Integer:
+	case DPsim::Components::Attribute::Integer:
 		i = PyLong_AsLong(v);
 		if (PyErr_Occurred())
 			return -1;
 		*((Int*) attr.mValue) = i;
 		break;
-	case DPsim::Component::Attribute::String:
+	case DPsim::Components::Attribute::String:
 		if (!PyUnicode_Check(v))
 			return -1;
 		*((std::string*) attr.mValue) = std::string(PyUnicode_AsUTF8(v));
 		break;
-	case DPsim::Component::Attribute::Complex:
+	case DPsim::Components::Attribute::Complex:
 		if (!PyComplex_Check(v))
 			return -1;
 		*((Complex*) attr.mValue) = Complex(PyComplex_RealAsDouble(v), PyComplex_ImagAsDouble(v));
@@ -139,7 +139,7 @@ int Python::Component::setattr(Python::Component* self, char* name, PyObject *v)
 	return 0;
 }
 
-bool Python::compsFromPython(PyObject* list, DPsim::Component::Base::List& comps)
+bool Python::compsFromPython(PyObject* list, DPsim::Components::Base::List& comps)
 {
 	if (!PyList_Check(list))
 		return false;

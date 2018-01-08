@@ -25,10 +25,10 @@
 #include "Base.h"
 
 namespace DPsim {
-namespace Component {
+namespace Components {
 namespace EMT {
 
-	class Inductor : public Component::Base {
+	class Inductor : public Components::Base {
 
 	protected:
 		Real mInductance;

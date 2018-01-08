@@ -27,11 +27,11 @@
 #include "DP_Resistor.h"
 
 namespace DPsim {
-namespace Component {
+namespace Components {
 namespace DP {
 
 	// TODO currently modeled as an impedance, which obviously doesn't have a constant power characteristic
-	class PQLoad : public Component::Base {
+	class PQLoad : public Components::Base {
 
 	protected:
 		/// Active power [Watt]
@@ -49,8 +49,8 @@ namespace DP {
 		/// Inductance [H]
 		Real mInductance;
 
-		std::shared_ptr<Component::DP::Inductor> inductor;
-		std::shared_ptr<Component::DP::Resistor> resistor;
+		std::shared_ptr<Components::DP::Inductor> inductor;
+		std::shared_ptr<Components::DP::Resistor> resistor;
 	public:
 		PQLoad(String name, Int node, Real activePower, Real reactivePower, Real volt, Real angle);
 

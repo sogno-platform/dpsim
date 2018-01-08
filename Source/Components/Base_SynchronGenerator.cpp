@@ -23,7 +23,7 @@
 
 using namespace DPsim;
 
-Component::SynchronGeneratorBase::SynchronGeneratorBase(String name, Int node1, Int node2, Int node3,
+Components::SynchronGeneratorBase::SynchronGeneratorBase(String name, Int node1, Int node2, Int node3,
 	Real nomPower, Real nomVolt, Real nomFreq, Int poleNumber, Real nomFieldCur,
 	Real Rs, Real Ll, Real Lmd, Real Lmd0, Real Lmq, Real Lmq0,
 	Real Rfd, Real Llfd, Real Rkd, Real Llkd,
@@ -65,7 +65,7 @@ Component::SynchronGeneratorBase::SynchronGeneratorBase(String name, Int node1, 
 	initWithPerUnitParam(Rs, Ll, Lmd, Lmd0, Lmq, Lmq0, Rfd, Llfd, Rkd, Llkd, Rkq1, Llkq1, Rkq2, Llkq2, inertia);
 }
 
-void Component::SynchronGeneratorBase::initWithPerUnitParam(
+void Components::SynchronGeneratorBase::initWithPerUnitParam(
 	Real Rs, Real Ll, Real Lmd, Real Lmd0, Real Lmq, Real Lmq0,
 	Real Rfd, Real Llfd, Real Rkd, Real Llkd,
 	Real Rkq1, Real Llkq1, Real Rkq2, Real Llkq2,
@@ -95,7 +95,7 @@ void Component::SynchronGeneratorBase::initWithPerUnitParam(
 
 }
 
-void Component::SynchronGeneratorBase::initStatesInPerUnit(Real initActivePower, Real initReactivePower,
+void Components::SynchronGeneratorBase::initStatesInPerUnit(Real initActivePower, Real initReactivePower,
 	Real initTerminalVolt, Real initVoltAngle, Real initFieldVoltage, Real initMechPower)
 {
 	// Electrical variables

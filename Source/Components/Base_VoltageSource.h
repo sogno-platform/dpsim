@@ -25,10 +25,10 @@
 #include "Base.h"
 
 namespace DPsim {
-namespace Component {
+namespace Components {
 
 	template <class T>
-	class VoltageSourceBase : public Component::Base {
+	class VoltageSourceBase : public Components::Base {
 
 	protected:
 		T mVoltage;

@@ -28,11 +28,11 @@ int main(int argc, char* argv[])
 {
 	Real timeStep = 0.00005;
 	Logger log;
-	Component::Base::List comps;
-	comps.push_back(std::make_shared<Component::DP::VoltageSource>("v_s", 1, 0, Complex(10000, 0), 1));
-	comps.push_back(std::make_shared<Component::DP::Resistor>("r_line", 1, 2, 1));
-	comps.push_back(std::make_shared<Component::DP::Inductor>("l_line", 2, 3, 1));
-	comps.push_back(std::make_shared<Component::DP::Resistor>("r_load", 3, 0, 1000));
+	Components::Base::List comps;
+	comps.push_back(std::make_shared<Components::DP::VoltageSource>("v_s", 1, 0, Complex(10000, 0), 1));
+	comps.push_back(std::make_shared<Components::DP::Resistor>("r_line", 1, 2, 1));
+	comps.push_back(std::make_shared<Components::DP::Inductor>("l_line", 2, 3, 1));
+	comps.push_back(std::make_shared<Components::DP::Resistor>("r_load", 3, 0, 1000));
 
 	// Set up simulation
 	Simulation newSim(comps, 2.0*M_PI*50.0, timeStep, 1.0, log);

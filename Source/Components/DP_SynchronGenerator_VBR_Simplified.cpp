@@ -24,7 +24,7 @@
 
 using namespace DPsim;
 
-Component::DP::SynchronGeneratorVBRSimplified::SynchronGeneratorVBRSimplified(String name, Int node1, Int node2, Int node3,
+Components::DP::SynchronGeneratorVBRSimplified::SynchronGeneratorVBRSimplified(String name, Int node1, Int node2, Int node3,
 	Real nomPower, Real nomVolt, Real nomFreq, Int poleNumber, Real nomFieldCur,
 	Real Rs, Real Ll, Real Lmd, Real Lmd0, Real Lmq, Real Lmq0,
 	Real Rfd, Real Llfd, Real Rkd, Real Llkd,
@@ -36,21 +36,21 @@ Component::DP::SynchronGeneratorVBRSimplified::SynchronGeneratorVBRSimplified(St
 {
 }
 
-Component::DP::SynchronGeneratorVBRSimplified::~SynchronGeneratorVBRSimplified()
+Components::DP::SynchronGeneratorVBRSimplified::~SynchronGeneratorVBRSimplified()
 {
 	if (mLogActive) {
 		delete mLog;
 	}
 }
 
-void Component::DP::SynchronGeneratorVBRSimplified::addExciter(Real Ta, Real Ka, Real Te, Real Ke, Real Tf, Real Kf, Real Tr, Real Lad, Real Rfd)
+void Components::DP::SynchronGeneratorVBRSimplified::addExciter(Real Ta, Real Ka, Real Te, Real Ke, Real Tf, Real Kf, Real Tr, Real Lad, Real Rfd)
 {
 	mExciter = Exciter(Ta, Ka, Te, Ke, Tf, Kf, Tr, Lad, Rfd);
 	//init exciter
 	mHasExciter = true;
 }
 
-void Component::DP::SynchronGeneratorVBRSimplified::init(Real om, Real dt,
+void Components::DP::SynchronGeneratorVBRSimplified::init(Real om, Real dt,
 	Real initActivePower, Real initReactivePower,
 	Real initTerminalVolt, Real initVoltAngle, Real initFieldVoltage, Real initMechPower)
 {
@@ -122,7 +122,7 @@ void Component::DP::SynchronGeneratorVBRSimplified::init(Real om, Real dt,
 
 }
 
-void Component::DP::SynchronGeneratorVBRSimplified::step(SystemModel& system, Real time)
+void Components::DP::SynchronGeneratorVBRSimplified::step(SystemModel& system, Real time)
 {
 	R_load = system.getCurrentSystemMatrix().inverse() / mBase_Z;
 
@@ -146,7 +146,7 @@ void Component::DP::SynchronGeneratorVBRSimplified::step(SystemModel& system, Re
 	}
 }
 
-void Component::DP::SynchronGeneratorVBRSimplified::stepInPerUnit(Real om, Real dt, Real time, NumericalMethod numMethod)
+void Components::DP::SynchronGeneratorVBRSimplified::stepInPerUnit(Real om, Real dt, Real time, NumericalMethod numMethod)
 {
 	// Calculate mechanical variables with euler
 	//mElecTorque = (mPsimd*mIq - mPsimq*mId);
@@ -213,11 +213,11 @@ void Component::DP::SynchronGeneratorVBRSimplified::stepInPerUnit(Real om, Real 
 		mDVd;
 }
 
-void Component::DP::SynchronGeneratorVBRSimplified::postStep(SystemModel& system)
+void Components::DP::SynchronGeneratorVBRSimplified::postStep(SystemModel& system)
 {
 }
 
-void Component::DP::SynchronGeneratorVBRSimplified::CalculateLandpL()
+void Components::DP::SynchronGeneratorVBRSimplified::CalculateLandpL()
 {
 	mDInductanceMat <<
 		mLl + mLa - mLb*cos(2 * mThetaMech), -mLa / 2 - mLb*cos(2 * mThetaMech - 2 * PI / 3), -mLa / 2 - mLb*cos(2 * mThetaMech + 2 * PI / 3),
@@ -230,7 +230,7 @@ void Component::DP::SynchronGeneratorVBRSimplified::CalculateLandpL()
 	pmDInductanceMat = pmDInductanceMat * 2 * mOmMech;
 }
 
-Matrix Component::DP::SynchronGeneratorVBRSimplified::parkTransform(Real theta, Real a, Real b, Real c)
+Matrix Components::DP::SynchronGeneratorVBRSimplified::parkTransform(Real theta, Real a, Real b, Real c)
 {
 	Matrix dq0vector(3, 1);
 
@@ -246,7 +246,7 @@ Matrix Component::DP::SynchronGeneratorVBRSimplified::parkTransform(Real theta, 
 	return dq0vector;
 }
 
-Matrix Component::DP::SynchronGeneratorVBRSimplified::inverseParkTransform(Real theta, Real q, Real d, Real zero)
+Matrix Components::DP::SynchronGeneratorVBRSimplified::inverseParkTransform(Real theta, Real q, Real d, Real zero)
 {
 	Matrix abcVector(3, 1);
 

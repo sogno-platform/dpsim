@@ -24,7 +24,7 @@
 
 using namespace DPsim;
 
-Component::DP::SynchronGeneratorVBR::SynchronGeneratorVBR(String name, Int node1, Int node2, Int node3,
+Components::DP::SynchronGeneratorVBR::SynchronGeneratorVBR(String name, Int node1, Int node2, Int node3,
 	Real nomPower, Real nomVolt, Real nomFreq, Int poleNumber, Real nomFieldCur,
 	Real Rs, Real Ll, Real Lmd, Real Lmd0, Real Lmq, Real Lmq0,
 	Real Rfd, Real Llfd, Real Rkd, Real Llkd,
@@ -36,14 +36,14 @@ Component::DP::SynchronGeneratorVBR::SynchronGeneratorVBR(String name, Int node1
 {
 }
 
-Component::DP::SynchronGeneratorVBR::~SynchronGeneratorVBR()
+Components::DP::SynchronGeneratorVBR::~SynchronGeneratorVBR()
 {
 	if (mLogActive) {
 		delete mLog;
 	}
 }
 
-void Component::DP::SynchronGeneratorVBR::addExciter(Real Ta, Real Ka, Real Te, Real Ke, Real Tf, Real Kf, Real Tr, Real Lad, Real Rfd)
+void Components::DP::SynchronGeneratorVBR::addExciter(Real Ta, Real Ka, Real Te, Real Ke, Real Tf, Real Kf, Real Tr, Real Lad, Real Rfd)
 {
 	mExciter = Exciter(Ta, Ka, Te, Ke, Tf, Kf, Tr, Lad, Rfd);
 	mExciter.init(1, 1);
@@ -51,14 +51,14 @@ void Component::DP::SynchronGeneratorVBR::addExciter(Real Ta, Real Ka, Real Te, 
 	mHasExciter = true;
 }
 
-void Component::DP::SynchronGeneratorVBR::addGovernor(Real Ta, Real Tb, Real Tc, Real Fa, Real Fb, Real Fc, Real K, Real Tsr, Real Tsm, Real Tm_init, Real PmRef)
+void Components::DP::SynchronGeneratorVBR::addGovernor(Real Ta, Real Tb, Real Tc, Real Fa, Real Fb, Real Fc, Real K, Real Tsr, Real Tsm, Real Tm_init, Real PmRef)
 {
 	mTurbineGovernor = TurbineGovernor(Ta, Tb, Tc, Fa, Fb, Fc, K, Tsr, Tsm);
 	mTurbineGovernor.init(PmRef, Tm_init);
 	mHasTurbineGovernor = true;
 }
 
-void Component::DP::SynchronGeneratorVBR::init(Real om, Real dt,
+void Components::DP::SynchronGeneratorVBR::init(Real om, Real dt,
 	Real initActivePower, Real initReactivePower,
 	Real initTerminalVolt, Real initVoltAngle, Real initFieldVoltage, Real initMechPower)
 {
@@ -177,7 +177,7 @@ void Component::DP::SynchronGeneratorVBR::init(Real om, Real dt,
 
 }
 
-void Component::DP::SynchronGeneratorVBR::step(SystemModel& system, Real time)
+void Components::DP::SynchronGeneratorVBR::step(SystemModel& system, Real time)
 {
 	stepInPerUnit(system.getOmega(), system.getTimeStep(), time, system.getNumMethod());
 
@@ -202,7 +202,7 @@ void Component::DP::SynchronGeneratorVBR::step(SystemModel& system, Real time)
 
 }
 
-void Component::DP::SynchronGeneratorVBR::stepInPerUnit(Real om, Real dt, Real time, NumericalMethod numMethod)
+void Components::DP::SynchronGeneratorVBR::stepInPerUnit(Real om, Real dt, Real time, NumericalMethod numMethod)
 {
 	mIabc <<
 		mIaRe,
@@ -372,7 +372,7 @@ void Component::DP::SynchronGeneratorVBR::stepInPerUnit(Real om, Real dt, Real t
 #endif
 }
 
-void Component::DP::SynchronGeneratorVBR::CalculateLandR(Real time)
+void Components::DP::SynchronGeneratorVBR::CalculateLandR(Real time)
 {
 	Matrix L1_Re(3, 3);
 	Matrix L1_Im(3, 3);
@@ -423,11 +423,11 @@ void Component::DP::SynchronGeneratorVBR::CalculateLandR(Real time)
 
 }
 
-void Component::DP::SynchronGeneratorVBR::postStep(SystemModel& system)
+void Components::DP::SynchronGeneratorVBR::postStep(SystemModel& system)
 {
 }
 
-Matrix Component::DP::SynchronGeneratorVBR::abcToDq0Transform(Real theta, Real aRe, Real bRe, Real cRe, Real aIm, Real bIm, Real cIm)
+Matrix Components::DP::SynchronGeneratorVBR::abcToDq0Transform(Real theta, Real aRe, Real bRe, Real cRe, Real aIm, Real bIm, Real cIm)
 {
 	// Balanced case
 	Complex alpha(cos(2. / 3. * PI), sin(2. / 3. * PI));
@@ -457,7 +457,7 @@ Matrix Component::DP::SynchronGeneratorVBR::abcToDq0Transform(Real theta, Real a
 	return dq0Vector;
 }
 
-Matrix Component::DP::SynchronGeneratorVBR::dq0ToAbcTransform(Real theta, Real d, Real q, Real zero)
+Matrix Components::DP::SynchronGeneratorVBR::dq0ToAbcTransform(Real theta, Real d, Real q, Real zero)
 {
 	// Balanced case
 	Complex alpha(cos(2. / 3. * PI), sin(2. / 3. * PI));
