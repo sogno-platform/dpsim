@@ -22,7 +22,7 @@
 
 #pragma once
 
-#include "Base.h"
+#include "VoltageSource_Base.h"
 
 namespace DPsim {
 namespace Component {
@@ -33,22 +33,7 @@ namespace DP {
 	/// For a voltage source between nodes j and k, a new variable (current across the voltage source) is added to the left side vector
 	/// as unkown and it is taken into account for the equation of node j as positve and for the equation of node k as negative. Moreover
 	/// a new equation ej - ek = V is added to the problem.
-	class VoltageSourceIdeal : public Component::Base {
-
-	protected:
-		//  ### Ideal Voltage source parameters ###
-		/// Complex voltage [V]
-		Complex mVoltage;
-
-		Real mVoltageAtSourcer;
-		Real mVoltageAtSourcei;
-		Real mVoltageAtDestr;
-		Real mVoltageAtDesti;
-		Real mCurrentr;
-		Real mCurrenti;
-
-		/// Number of voltage source (first, second...)
-		Int mNumber;
+	class VoltageSourceIdeal : public VoltageSourceBase<Complex> {
 
 	public:
 		VoltageSourceIdeal() { };
@@ -70,8 +55,6 @@ namespace DP {
 		void postStep(SystemModel& system) { }
 
 		virtual Complex getCurrent(SystemModel& system);
-
-		void setVoltage(Complex voltage);
 	};
 }
 }

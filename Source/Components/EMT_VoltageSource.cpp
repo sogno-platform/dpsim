@@ -24,9 +24,8 @@
 using namespace DPsim;
 
 Component::EMT::VoltageSource::VoltageSource(String name, Int src, Int dest, Complex voltage, Real resistance)
-	: Base(name, src, dest)
+	: VoltageSourceBase(name, src, dest, voltage)
 {
-	mVoltage = voltage;
 	mResistance = resistance;
 }
 

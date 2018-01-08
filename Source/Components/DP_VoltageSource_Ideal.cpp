@@ -24,9 +24,8 @@
 using namespace DPsim;
 
 Component::DP::VoltageSourceIdeal::VoltageSourceIdeal(String name, Int src, Int dest, Complex voltage)
-	: Base(name, src, dest)
+	: VoltageSourceBase(name, src, dest, voltage)
 {
-	mVoltage = voltage;
 	mNumVirtualNodes = 1;
 	mVirtualNodes = { 0 };
 	attrMap["voltage"] = { Attribute::Complex, &mVoltage };
@@ -58,9 +57,4 @@ void Component::DP::VoltageSourceIdeal::step(SystemModel& system, Real time)
 Complex Component::DP::VoltageSourceIdeal::getCurrent(SystemModel& system)
 {
 	return Complex(system.getRealFromLeftSideVector(mVirtualNodes[0]), system.getRealFromLeftSideVector(mVirtualNodes[0] + system.getCompOffset()));
-}
-
-void Component::DP::VoltageSourceIdeal::setVoltage(Complex voltage)
-{
-	mVoltage = voltage;
 }

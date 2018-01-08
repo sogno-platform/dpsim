@@ -24,9 +24,8 @@
 using namespace DPsim;
 
 Component::EMT::VoltageSourceIdeal::VoltageSourceIdeal(String name, Int src, Int dest, Real voltage)
-	: Base(name, src, dest)
+	: VoltageSourceBase(name, src, dest, voltage)
 {
-	mVoltage = voltage;
 	mNumVirtualNodes = 1;
 	mVirtualNodes = { 0 };
 	attrMap["voltage"] = { Attribute::Real, &mVoltage };

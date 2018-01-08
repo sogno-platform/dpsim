@@ -22,13 +22,13 @@
 
 #pragma once
 
-#include "Base.h"
+#include "VoltageSource_Base.h"
 
 namespace DPsim {
 namespace Component {
 namespace DP {
 
-	class VoltageSource : public Component::Base {
+	class VoltageSource : public VoltageSourceBase<Complex> {
 
 		/// Real Voltage source:
 		/// The real voltage source is a voltage source in series with a resistance, which is transformed to a current source with
@@ -37,9 +37,6 @@ namespace DP {
 	protected:
 
 		//  ### Real Voltage source parameters ###
-		/// Complex voltage [V]
-		Complex mVoltage;
-
 		/// Resistance [ohm]
 		Real mResistance;
 
@@ -71,8 +68,6 @@ namespace DP {
 		void postStep(SystemModel& system) { }
 
 		Complex getCurrent(SystemModel& system);
-
-		void setVoltage(Complex Voltage);
 	};
 }
 }

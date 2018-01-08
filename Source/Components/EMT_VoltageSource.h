@@ -22,13 +22,13 @@
 
 #pragma once
 
-#include "Base.h"
+#include "VoltageSource_Base.h"
 
 namespace DPsim {
 namespace Component {
 namespace EMT {
 
-	class VoltageSource : public Component::Base {
+	class VoltageSource : public Component::VoltageSourceBase<Complex> {
 
 	protected:
 		Complex mVoltage;

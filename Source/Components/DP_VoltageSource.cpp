@@ -24,9 +24,8 @@
 using namespace DPsim;
 
 Component::DP::VoltageSource::VoltageSource(String name, Int src, Int dest, Complex voltage, Real resistance)
-	: Base(name, src, dest)
+	: VoltageSourceBase(name, src, dest, voltage)
 {
-	mVoltage = voltage;
 	mResistance = resistance;
 	attrMap["voltage"]    = { Attribute::Complex, &mVoltage };
 	attrMap["resistance"] = { Attribute::Real, &mResistance };
@@ -84,9 +83,4 @@ Complex Component::DP::VoltageSource::getCurrent(SystemModel& system)
 		imag -= system.getImagFromLeftSideVector(mNode2)*mConductance;
 	}
 	return Complex(real, imag);
-}
-
-void Component::DP::VoltageSource::setVoltage(Complex voltage)
-{
-	mVoltage = voltage;
 }
