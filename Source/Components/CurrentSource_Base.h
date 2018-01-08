@@ -1,4 +1,4 @@
-/** Current source
+/** Current source base class
  *
  * @file
  * @author Markus Mirz <mmirz@eonerc.rwth-aachen.de>
@@ -22,24 +22,31 @@
 
 #pragma once
 
-#include "CurrentSource_Base.h"
+#include "Base.h"
 
 namespace DPsim {
 namespace Component {
 namespace DP {
 
-	class CurrentSourceIdeal : public CurrentSourceBase<Complex> {
+	template <class T>
+	class CurrentSourceBase : public Component::Base {
+
+	protected:
+		T mCurrent;
 
 	public:
-		CurrentSourceIdeal() { };
-		CurrentSourceIdeal(String name, Int src, Int dest, Complex current);
+		CurrentSourceBase() { };
 
-		void init(Real om, Real dt) { }
-		void applySystemMatrixStamp(SystemModel& system) { }
-		void applyRightSideVectorStamp(SystemModel& system);
-		void step(SystemModel& system, Real time);
-		void postStep(SystemModel& system) { }
-		Complex getCurrent(SystemModel& system);
+		CurrentSourceBase(String name, Int src, Int dest, T current)
+			: Base(name, src, dest)
+		{
+			mCurrent = current;
+		}
+
+		void setCurrent(T current)
+		{
+			mCurrent = current;
+		}
 	};
 }
 }

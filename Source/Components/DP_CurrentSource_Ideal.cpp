@@ -24,10 +24,8 @@
 using namespace DPsim;
 
 Component::DP::CurrentSourceIdeal::CurrentSourceIdeal(String name, Int src, Int dest, Complex current)
-	: Base(name, src, dest)
+	: CurrentSourceBase(name, src, dest, current)
 {
-	mCurrent = current;
-
 	attrMap["current"] = { Attribute::Complex, &mCurrent };
 };
 
@@ -50,9 +48,3 @@ Complex Component::DP::CurrentSourceIdeal::getCurrent(SystemModel &system)
 {
 	return mCurrent;
 }
-
-void Component::DP::CurrentSourceIdeal::setCurrent(Complex current)
-{
-	mCurrent = current;
-}
-
