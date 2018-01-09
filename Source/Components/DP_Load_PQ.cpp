@@ -23,7 +23,8 @@
 
 using namespace DPsim;
 
-Components::DP::PQLoad::PQLoad(String name, Int node, Real activePower, Real reactivePower, Real volt, Real angle)
+Components::DP::PQLoad::PQLoad(String name, Int node, Real activePower, Real reactivePower,
+	Real volt, Real angle, LogLevel loglevel, Bool decrementNodes)
 	: Base(name, node, 0)
 {
 	// we need the system frequency to calculate the impedance, so we initialize
@@ -43,8 +44,8 @@ void Components::DP::PQLoad::init(SystemModel& system) {
 	mReactance = mSvVoltage*mSvVoltage*mReactivePower/abs;
 	mInductance = mReactance / system.getOmega();
 
-	inductor = std::make_shared<Components::DP::Inductor>(mName + "_ind", mNode1, mNode2, mInductance);
-	resistor = std::make_shared<Components::DP::Resistor>(mName + "_res", mNode1, mNode2, mResistance);
+	inductor = std::make_shared<Components::DP::Inductor>(mName + "_ind", mNode1, mNode2, mInductance, mLogLevel, false);
+	resistor = std::make_shared<Components::DP::Resistor>(mName + "_res", mNode1, mNode2, mResistance, mLogLevel, false);
 	inductor->init(system);
 	resistor->init(system);
 }

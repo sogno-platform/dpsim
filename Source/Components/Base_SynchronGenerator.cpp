@@ -28,9 +28,8 @@ Components::SynchronGeneratorBase::SynchronGeneratorBase(String name, Int node1,
 	Real Rs, Real Ll, Real Lmd, Real Lmd0, Real Lmq, Real Lmq0,
 	Real Rfd, Real Llfd, Real Rkd, Real Llkd,
 	Real Rkq1, Real Llkq1, Real Rkq2, Real Llkq2,
-	Real inertia, bool logActive)
-	: Base(name, node1, node2, node3, logActive)
-{
+	Real inertia, LogLevel logLevel)
+	: Base(name, node1, node2, node3, logLevel) {
 	mNomPower = nomPower;
 	mNomVolt = nomVolt;
 	mNomFreq = nomFreq;
@@ -50,7 +49,7 @@ Components::SynchronGeneratorBase::SynchronGeneratorBase(String name, Int node1,
 	mBase_T = mNomPower / mBase_OmMech;
 
 	// Create logging file
-	if (mLogActive) {
+	if (mLogLevel != LogLevel::NONE) {
 		String filename = "SynGen_" + mName + ".csv";
 		mLog = new Logger(filename);
 	}

@@ -48,6 +48,10 @@ namespace Components {
 	class Base {
 
 	protected:
+		/// Component logger
+		std::shared_ptr<Logger> mLog;
+		/// Component logger control for internal variables
+		LogLevel mLogLevel;
 		/// Component name
 		String mName;
 		/// Component node 1
@@ -56,8 +60,7 @@ namespace Components {
 		Int mNode2;
 		/// Component node 3
 		Int mNode3;
-		/// Component logger control for internal variables
-		Bool mLogActive;
+
 		/// Determines if the component has a virtual node
 		Int mNumVirtualNodes = 0;
 		/// Index of virtual node
@@ -69,22 +72,34 @@ namespace Components {
 		typedef std::shared_ptr<Base> Ptr;
 		typedef std::vector<Ptr> List;
 
-		Base(String name, Int node1, Int node2, bool logActive = false)
-		{
+		/// Creates a new component with basic features: name and nodes
+		/// Decrementing the node number is default so that the user can use zero for the ground node. It needs to be
+		/// deactivated for subcomponents that are created inside other components since otherwise the node number
+		/// would be decremented twice.
+		Base(String name, Int node1, Int node2, LogLevel loglevel = LogLevel::NONE, Bool decrementNodes = true) {
 			mName = name;
-			mNode1 = node1 - 1;
-			mNode2 = node2 - 1;
-			mLogActive = logActive;
+			mNode1 = node1;
+			mNode2 = node2;
+			mLogLevel = loglevel;
+			if (decrementNodes) {
+				mNode1--;
+				mNode2--;
+			}
 
 			attrMap["name"]  = { Attribute::String,  &mName };
 			attrMap["node1"] = { Attribute::Integer, &mNode1 };
 			attrMap["node2"] = { Attribute::Integer, &mNode2 };
+
+			mLog = std::make_shared<Logger>("Logs/" + name + ".log", mLogLevel);
 		}
 
-		Base(String name, Int node1, Int node2, Int node3, bool logActive = false)
-			: Base(name, node1, node2, logActive)
-		{
-			mNode3 = node3 - 1;
+
+		Base(String name, Int node1, Int node2, Int node3, LogLevel loglevel = LogLevel::NONE, Bool decrementNodes = true)
+			: Base(name, node1, node2, loglevel) {
+			mNode3 = node3;
+			if (decrementNodes) {
+				mNode3--;
+			}
 			attrMap["node3"] = { Attribute::Integer, &mNode3 };
 		}
 
@@ -104,7 +119,7 @@ namespace Components {
 		Int getVirtualNode(Int nodeNum) { return mVirtualNodes[nodeNum]; }
 		/// set virtual node
 		void setVirtualNode(Int nodeNum, Int virtualNode) { mVirtualNodes[nodeNum] = virtualNode; }
-
+	
 		std::map<String, Components::Attribute>& getAttrMap() { return attrMap; }
 
 		String getName() { return mName; }

@@ -51,7 +51,7 @@ namespace DP {
 		Real mVoltageAtNode2Im;
 
 	public:
-		Resistor(String name, Int src, Int dest, Real resistance);
+		Resistor(String name, Int src, Int dest, Real resistance, LogLevel loglevel = LogLevel::NONE, Bool decrementNodes = true);
 
 		void init(SystemModel& system) { }
 		void applySystemMatrixStamp(SystemModel& system);

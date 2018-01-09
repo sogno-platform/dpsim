@@ -29,18 +29,14 @@ Components::EMT::SynchronGenerator::SynchronGenerator(String name, Int node1, In
 	Real Rs, Real Ll, Real Lmd, Real Lmd0, Real Lmq, Real Lmq0,
 	Real Rfd, Real Llfd, Real Rkd, Real Llkd,
 	Real Rkq1, Real Llkq1, Real Rkq2, Real Llkq2,
-	Real inertia, bool logActive)
+	Real inertia, LogLevel logLevel)
 	: SynchronGeneratorBase(name, node1, node2, node3, nomPower, nomVolt, nomFreq, poleNumber, nomFieldCur,
 		Rs, Ll, Lmd, Lmd0, Lmq, Lmq0, Rfd, Llfd, Rkd, Llkd, Rkq1, Llkq1, Rkq2, Llkq2,
-		inertia, logActive)
-{
+		inertia, logLevel) {
 }
 
-Components::EMT::SynchronGenerator::~SynchronGenerator()
-{
-	if (mLogActive) {
-		delete mLog;
-	}
+Components::EMT::SynchronGenerator::~SynchronGenerator() {
+
 }
 
 void Components::EMT::SynchronGenerator::init(Real om, Real dt,
@@ -153,7 +149,7 @@ void Components::EMT::SynchronGenerator::step(SystemModel& system, Real time)
 		system.addRealToRightSideVector(mNode3, mIc);
 	}
 
-	if (mLogActive) {
+	if (mLogLevel != LogLevel::NONE) {
 		Matrix logValues(getFluxes().rows() + getVoltages().rows() + getCurrents().rows() + 3, 1);
 		logValues << getFluxes(), getVoltages(), getCurrents(), getElectricalTorque(), getRotationalSpeed(), getRotorPosition();
 		mLog->LogDataLine(time, logValues);

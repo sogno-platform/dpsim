@@ -23,15 +23,19 @@
 
 using namespace DPsim;
 
-Components::DP::Inductor::Inductor(String name, Int node1, Int node2, Real inductance) : Base(name, node1, node2) {
+Components::DP::Inductor::Inductor(String name, Int node1, Int node2, Real inductance, LogLevel logLevel, Bool decrementNodes)
+	: Base(name, node1, node2, logLevel, decrementNodes) {
 	mInductance = inductance;
 	attrMap["inductance"] = {Attribute::Real, &mInductance};
 	mEquivCurrent = { 0, 0 };
 	mCurrent = { 0, 0 };
-	mVoltage = { 0, 0 };
+	mVoltage = { 0, 0 };	
+	mLog->Log(LogLevel::DEBUG) << "Create Inductor " << name << " at " << mNode1 << "," << mNode2 << std::endl;
 }
 
-Components::DP::Inductor::Inductor(String name, Int node1, Int node2, Real inductance, Complex voltageNode1, Complex voltageNode2) : Inductor(name, node1, node2, inductance) {
+Components::DP::Inductor::Inductor(String name, Int node1, Int node2, Real inductance,
+	Complex voltageNode1, Complex voltageNode2, LogLevel logLevel, Bool decrementNodes)
+	: Inductor(name, node1, node2, inductance, logLevel, decrementNodes) {
 	mVoltage = voltageNode1 - voltageNode2;
 }
 
@@ -42,14 +46,18 @@ void Components::DP::Inductor::applySystemMatrixStamp(SystemModel& system) {
 	//mPrevCurFacIm = - 2. * b / (1 + b*b);	
 
 	if (mNode1 >= 0) {
+		mLog->Log(LogLevel::DEBUG) << "Add " << mEquivCond << " to " << mNode1 << "," << mNode1 << std::endl;
 		system.addCompToSystemMatrix(mNode1, mNode1, mEquivCond);
 	}
 	if (mNode2 >= 0) {
+		mLog->Log(LogLevel::DEBUG) << "Add " << mEquivCond << " to " << mNode2 << "," << mNode2 << std::endl;
 		system.addCompToSystemMatrix(mNode2, mNode2, mEquivCond);
 	}
 
 	if (mNode1 >= 0 && mNode2 >= 0) {
+		mLog->Log(LogLevel::DEBUG) << "Add " << -mEquivCond << " to " << mNode1 << "," << mNode2 << std::endl;
 		system.addCompToSystemMatrix(mNode1, mNode2, -mEquivCond);
+		mLog->Log(LogLevel::DEBUG) << "Add " << -mEquivCond << " to " << mNode2 << "," << mNode1 << std::endl;
 		system.addCompToSystemMatrix(mNode2, mNode1, -mEquivCond);
 	}
 }

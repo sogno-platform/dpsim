@@ -57,7 +57,8 @@ namespace DP {
 		std::shared_ptr<Components::DP::Inductor> mInductor;
 
 	public:
-		Transformer(String name, Int node1, Int node2, Real ratioAbs, Real ratioPhase, Real resistance, Real inductance);
+		Transformer(String name, Int node1, Int node2, Real ratioAbs, Real ratioPhase,
+			Real resistance, Real inductance, LogLevel logLevel = LogLevel::NONE, Bool decrementNodes = true);
 
 		void init(SystemModel& system);
 		void applySystemMatrixStamp(SystemModel& system);

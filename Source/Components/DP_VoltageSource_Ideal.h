@@ -22,7 +22,7 @@
 
 #pragma once
 
-#include "Base_VoltageSource.h"
+#include "Base.h"
 
 namespace DPsim {
 namespace Components {
@@ -39,7 +39,8 @@ namespace DP {
 
 	public:
 		/// define paramenters of the voltage source
-		VoltageSourceIdeal(String name, Int src, Int dest, Complex voltage);
+		VoltageSourceIdeal(String name, Int src, Int dest, Complex voltage,
+			LogLevel loglevel = LogLevel::NONE, Bool decrementNodes = true);
 
 		void init(SystemModel& system) { }
 

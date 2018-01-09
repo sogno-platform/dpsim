@@ -29,10 +29,10 @@ Components::EMT::SynchronGeneratorSimplifiedCurrentSource::SynchronGeneratorSimp
 	Real Rs, Real Ll, Real Lmd, Real Lmd0, Real Lmq, Real Lmq0,
 	Real Rfd, Real Llfd, Real Rkd, Real Llkd,
 	Real Rkq1, Real Llkq1, Real Rkq2, Real Llkq2,
-	Real inertia, bool logActive)
+	Real inertia, LogLevel logLevel)
 	: SynchronGeneratorBase(name, node1, node2, node3, nomPower, nomVolt, nomFreq, poleNumber, nomFieldCur,
 		Rs, Ll, Lmd, Lmd0, Lmq, Lmq0, Rfd, Llfd, Rkd, Llkd, Rkq1, Llkq1, Rkq2, Llkq2,
-		inertia, logActive),
+		inertia, logLevel),
 		va("va", 0, 1, mVa),
 		vb("vb", 0, 2, mVb),
 		vc("vc", 0, 3, mVc)
@@ -41,11 +41,8 @@ Components::EMT::SynchronGeneratorSimplifiedCurrentSource::SynchronGeneratorSimp
 	mVirtualNodes = { 0, 0, 0 };
 }
 
-Components::EMT::SynchronGeneratorSimplifiedCurrentSource::~SynchronGeneratorSimplifiedCurrentSource()
-{
-	if (mLogActive) {
-		delete mLog;
-	}
+Components::EMT::SynchronGeneratorSimplifiedCurrentSource::~SynchronGeneratorSimplifiedCurrentSource() {
+
 }
 
 void Components::EMT::SynchronGeneratorSimplifiedCurrentSource::init(Real om, Real dt,
@@ -137,7 +134,7 @@ void Components::EMT::SynchronGeneratorSimplifiedCurrentSource::step(SystemModel
 	vb.step(system, time);
 	vc.step(system, time);
 
-	if (mLogActive) {
+	if (mLogLevel != LogLevel::NONE) {
 		Matrix logValues(getFluxes().rows() + getVoltages().rows() + getCurrents().rows() + 3, 1);
 		logValues << getFluxes(), getVoltages(), getCurrents(), getElectricalTorque(), getRotationalSpeed(), getRotorPosition();
 		mLog->LogDataLine(time, logValues);

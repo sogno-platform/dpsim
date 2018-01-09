@@ -33,11 +33,12 @@ namespace EMT {
 	/// For a voltage source between nodes j and k, a new variable (current across the voltage source) is added to the left side vector
 	/// as unkown and it is taken into account for the equation of node j as positve and for the equation of node k as negative. Moreover
 	/// a new equation ej - ek = V is added to the problem.
-	class VoltageSourceIdeal : public Components::VoltageSourceBase<Real> {
-
+	class VoltageSourceIdeal : public Components::Base {
+	private:
+		Real mVoltage;
 	public:
 		/// define paramenters of the voltage source
-		VoltageSourceIdeal(String name, Int src, Int dest, Real voltage);
+		VoltageSourceIdeal(String name, Int src, Int dest, Real voltage, LogLevel loglevel = LogLevel::NONE, Bool decrementNodes = true);
 
 		void init(SystemModel& system) { }
 
@@ -53,6 +54,10 @@ namespace EMT {
 		void postStep(SystemModel& system) { }
 
 		virtual Complex getCurrent(SystemModel& system);
+		void setVoltage(Real voltage)
+		{
+			mVoltage = voltage;
+		}
 	};
 }
 }

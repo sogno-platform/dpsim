@@ -35,7 +35,7 @@ namespace DP {
 	class Inductor : public Components::Base {
 
 	protected:
-
+		
 		/// Inductance [H]
 		Real mInductance;
 		/// Voltage across the inductor [V]
@@ -51,10 +51,11 @@ namespace DP {
 
 	public:
 		/// Define inductor name, conected nodes and inductance
-		Inductor(String name, Int src, Int dest, Real inductance);
+		Inductor(String name, Int src, Int dest, Real inductance, LogLevel logLevel = LogLevel::NONE, Bool decrementNodes = true);
 
 		/// Define inductor name, conected nodes and inductance and initial terminal voltages
-		Inductor(String name, Int node1, Int node2, Real inductance, Complex voltageNode1, Complex voltageNode2);
+		Inductor(String name, Int node1, Int node2, Real inductance, Complex voltageNode1, Complex voltageNode2,
+			LogLevel logLevel = LogLevel::NONE, Bool decrementNodes = true);
 
 		/// Initializes variables detalvr, deltavi, currr, curri, cureqr and curreqi
 		void init(SystemModel& system);

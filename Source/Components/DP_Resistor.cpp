@@ -23,9 +23,9 @@
 
 using namespace DPsim;
 
-Components::DP::Resistor::Resistor(String name, Int src, Int dest, Real resistance)
-	: Base(name, src, dest)
-{
+Components::DP::Resistor::Resistor(String name, Int src, Int dest, Real resistance,
+	LogLevel loglevel, Bool decrementNodes)
+	: Base(name, src, dest) {
 	mResistance = resistance;
 	attrMap["resistance"] = { Attribute::Real, &mResistance };
 }
@@ -36,6 +36,7 @@ void Components::DP::Resistor::applySystemMatrixStamp(SystemModel& system)
 
 	// Set diagonal entries
 	if (mNode1 >= 0) {
+		
 		system.addCompToSystemMatrix(mNode1, mNode1, Complex(mConductance, 0));
 	}
 	if (mNode2 >= 0) {
