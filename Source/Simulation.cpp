@@ -90,7 +90,7 @@ void Simulation::initialize(Components::Base::List newElements)
 			for (Int node = 0; node < element->getVirtualNodesNum(); node++) {
 				currentVirtualNode++;
 				element->setVirtualNode(node, currentVirtualNode);
-				mLogger->Log(LogLevel::INFO) << "Created virtual node "<< node << "=" << currentVirtualNode
+				mLogger->Log(LogLevel::INFO) << "Created virtual node"<< node << "=" << currentVirtualNode
 					<< " for " << element->getName() << std::endl;
 			}
 		}
