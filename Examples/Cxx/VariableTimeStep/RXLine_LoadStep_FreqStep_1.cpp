@@ -67,13 +67,11 @@ static void VarFreqRxLineResLoad_EMT(Real timeStep, Real finalTime, Real freqSte
 	Simulation newSim(simName, circElements1, omega, timeStep, finalTime, LogLevel::INFO, SimulationType::EMT);
 	newSim.addSystemTopology(circElements2);
 	newSim.setSwitchTime(loadStep, 1);
+	
 	std::cout << "Start simulation." << std::endl;
-
-	while (newSim.step(leftVectorLog, rightVectorLog)) {
+	while (newSim.step()) {
 		newSim.increaseByTimeStep();
-		updateProgressBar(newSim.getTime(), newSim.getFinalTime());
 	}
-
 	std::cout << "Simulation finished." << std::endl;
 }
 
