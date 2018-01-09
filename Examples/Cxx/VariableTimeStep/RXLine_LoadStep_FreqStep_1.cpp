@@ -24,12 +24,10 @@
 
 using namespace DPsim;
 
-static void VarFreqRxLineResLoad_DP(Real timeStep, Real finalTime, Real freqStep, Real loadStep, Real rampTime)
-{
+static void VarFreqRxLineResLoad_DP(Real timeStep, Real finalTime, Real freqStep, Real loadStep, Real rampTime) {
 	// Define simulation scenario
 	Real omega = 2.0*M_PI*50.0;
-	std::ostringstream fileName;
-	fileName << "DpEmtVarFreqStudy_" << timeStep;
+	String simName = "DpEmtVarFreqStudy_" + std::to_string(timeStep);
 	Components::Base::List circElements0, circElements1, circElements2;
 	circElements0.push_back(std::make_shared<Components::DP::VoltageSourceFreq>("v_s", 1, 0, 1000, 0, 1, 2 * PI*-5, freqStep, rampTime));
 	circElements0.push_back(std::make_shared<Components::DP::Resistor>("r_line", 1, 2, 1));
@@ -39,22 +37,15 @@ static void VarFreqRxLineResLoad_DP(Real timeStep, Real finalTime, Real freqStep
 	circElements1.push_back(std::make_shared<Components::DP::Resistor>("r_load", 3, 0, 100));
 	circElements2.push_back(std::make_shared<Components::DP::Resistor>("r_load", 3, 0, 50));
 
-	// Define log names
-	Logger log("Logs/" + fileName.str() + ".log");
-	Logger leftVectorLog("Logs/LeftVector_" + fileName.str() + ".csv");
-	Logger rightVectorLog("Logs/RightVector_" + fileName.str() + ".csv");
-
 	// Set up simulation and start main simulation loop
-	Simulation newSim(circElements1, omega, timeStep, finalTime, log);
+	Simulation newSim(simName, circElements1, omega, timeStep, finalTime);
 	newSim.addSystemTopology(circElements2);
 	newSim.setSwitchTime(loadStep, 1);
+
 	std::cout << "Start simulation." << std::endl;
-
-	while (newSim.step(leftVectorLog, rightVectorLog)) {
+	while (newSim.step()) {
 		newSim.increaseByTimeStep();
-		updateProgressBar(newSim.getTime(), newSim.getFinalTime());
 	}
-
 	std::cout << "Simulation finished." << std::endl;
 }
 
@@ -62,8 +53,7 @@ static void VarFreqRxLineResLoad_EMT(Real timeStep, Real finalTime, Real freqSte
 {
 	// Define simulation scenario
 	Real omega = 2.0*M_PI*50.0;
-	std::ostringstream fileName;
-	fileName << "RXLineResLoadEMT_" << timeStep;
+	String simName = "RXLineResLoadEMT_" + std::to_string(timeStep);
 	Components::Base::List circElements0, circElements1, circElements2;
 	circElements0.push_back(std::make_shared<Components::DP::VoltageSourceFreq>("v_s", 1, 0, 1000, 0, 1, 2 * PI*-5, freqStep, rampTime));
 	circElements0.push_back(std::make_shared<Components::EMT::Resistor>("r_line", 1, 2, 1));
@@ -79,7 +69,7 @@ static void VarFreqRxLineResLoad_EMT(Real timeStep, Real finalTime, Real freqSte
 	Logger rightVectorLog("Logs/RightVector_" + fileName.str() + ".csv");
 
 	// Set up simulation and start main simulation loop
-	Simulation newSim(circElements1, omega, timeStep, finalTime, log, SimulationType::EMT);
+	Simulation newSim(simName, circElements1, omega, timeStep, finalTime, LogLevel::INFO, SimulationType::EMT);
 	newSim.addSystemTopology(circElements2);
 	newSim.setSwitchTime(loadStep, 1);
 	std::cout << "Start simulation." << std::endl;
