@@ -68,7 +68,7 @@ int main(int argc, char* argv[])
 	// Declare circuit components
 	Components::Base::Ptr gen = std::make_shared<Components::DP::SynchronGenerator>("gen", 1, 2, 3,
 		nomPower, nomPhPhVoltRMS, nomFreq, poleNum, nomFieldCurr,
-		Rs, Ll, Lmd, Lmd0, Lmq, Lmq0, Rfd, Llfd, Rkd, Llkd, Rkq1, Llkq1, Rkq2, Llkq2, H, true);
+		Rs, Ll, Lmd, Lmd0, Lmq, Lmq0, Rfd, Llfd, Rkd, Llkd, Rkq1, Llkq1, Rkq2, Llkq2, H);
 	Real loadRes = 1037.8378;
 	Components::Base::Ptr r1 = std::make_shared<Components::DP::Resistor>("r1", 1, 0, loadRes);
 	Components::Base::Ptr r2 = std::make_shared<Components::DP::Resistor>("r2", 2, 0, loadRes);
