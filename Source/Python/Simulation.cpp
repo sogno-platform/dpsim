@@ -50,7 +50,7 @@ void Python::Simulation::simThreadFunction(Python::Simulation* pySim)
 
 	pySim->numStep = 0;
 	while (pySim->running && notDone) {
-		notDone = pySim->sim->step(*pySim->llog, *pySim->rlog);
+		notDone = pySim->sim->step();
 
 		pySim->numStep++;
 		pySim->sim->increaseByTimeStep();
@@ -94,8 +94,8 @@ void Python::Simulation::simThreadFunctionRT(Python::Simulation *pySim)
 	ts.it_interval = ts.it_value;
 	// optional start synchronization
 	if (pySim->startSync) {
-		pySim->sim->step(*pySim->llog, *pySim->rlog, false); // first step, sending the initial values
-		pySim->sim->step(*pySim->llog, *pySim->rlog, true); // blocking step for synchronization + receiving the initial state of the other network
+		pySim->sim->step(false); // first step, sending the initial values
+		pySim->sim->step(true); // blocking step for synchronization + receiving the initial state of the other network
 		pySim->sim->increaseByTimeStep();
 	}
 	if (timerfd_settime(timerfd, 0, &ts, 0) < 0) {
@@ -103,7 +103,7 @@ void Python::Simulation::simThreadFunctionRT(Python::Simulation *pySim)
 		std::exit(1);
 	}
 	while (pySim->running && notDone) {
-		notDone = pySim->sim->step(*pySim->llog, *pySim->rlog);
+		notDone = pySim->sim->step();
 		if (read(timerfd, timebuf, 8) < 0) {
 			std::perror("Read from timerfd failed");
 			std::exit(1);
@@ -181,7 +181,7 @@ int Python::Simulation::init(Python::Simulation* self, PyObject *args, PyObject 
 	self->rlog = rlog ? new Logger(rlog) : new Logger();
 	self->llog = llog ? new Logger(llog) : new Logger();
 
-	self->sim = new DPsim::Simulation(self->comps, 2*PI*frequency, timestep, duration, *self->log);
+	self->sim = new DPsim::Simulation("PythonSim", self->comps, 2*PI*frequency, timestep, duration);
 	return 0;
 };
 
