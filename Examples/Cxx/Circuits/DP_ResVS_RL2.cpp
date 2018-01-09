@@ -30,28 +30,19 @@ int main(int argc, char* argv[])
 	Real timeStep = 0.001;
 	Real omega = 2.0*M_PI*50.0;
 	Real finalTime = 0.3;
-	std::ostringstream fileName;
-	fileName << "Example2_" << timeStep;
+	String simName = "Example2_" + std::to_string(timeStep);
 	Components::Base::List circElements;
 	circElements.push_back(std::make_shared<Components::DP::VoltageSource>("v_in", 1, 0, Complex(10, 0), 1));
 	circElements.push_back(std::make_shared<Components::DP::Inductor>("l_1", 1, 2, 0.02));
 	circElements.push_back(std::make_shared<Components::DP::Inductor>("l_2", 2, 0, 0.1));
 
-	// Define log names
-	Logger log("Logs/" + fileName.str() + ".log");
-	Logger leftVectorLog("Logs/LeftVector_" + fileName.str() + ".csv");
-	Logger rightVectorLog("Logs/RightVector_" + fileName.str() + ".csv");
-
 	// Set up simulation and start main simulation loop
-	Simulation newSim(circElements, omega, timeStep, finalTime, log);
+	Simulation newSim(simName, circElements, omega, timeStep, finalTime);
 
 	std::cout << "Start simulation." << std::endl;
-
-	while (newSim.step(leftVectorLog, rightVectorLog)) {
+	while (newSim.step()) {
 		newSim.increaseByTimeStep();
-		updateProgressBar(newSim.getTime(), newSim.getFinalTime());
 	}
-
 	std::cout << "Simulation finished." << std::endl;
 
 	return 0;

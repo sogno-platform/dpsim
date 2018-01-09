@@ -30,8 +30,7 @@ int main(int argc, char* argv[])
 	Real timeStep = 0.001;
 	Real omega = 2.0*M_PI*50.0;
 	Real finalTime = 0.3;
-	std::ostringstream fileName;
-	fileName << "RxLineResLoad_" << timeStep;
+	String simName = "RxLineResLoad_" + std::to_string(timeStep);
 	Components::Base::List circElements0, circElements1, circElements2;
 	circElements0.push_back(std::make_shared<Components::DP::VoltageSource>("v_s", 1, 0, Complex(10000, 0), 1));
 	circElements0.push_back(std::make_shared<Components::DP::Resistor>("r_line", 1, 2, 1));
@@ -41,21 +40,15 @@ int main(int argc, char* argv[])
 	circElements1.push_back(std::make_shared<Components::DP::Resistor>("r_load", 3, 0, 1000));
 	circElements2.push_back(std::make_shared<Components::DP::Resistor>("r_load", 3, 0, 800));
 
-	// Define log names
-	Logger log("Logs/" + fileName.str() + ".log");
-	Logger leftVectorLog("Logs/LeftVector_" + fileName.str() + ".csv");
-	Logger rightVectorLog("Logs/RightVector_" + fileName.str() + ".csv");
-
 	// Set up simulation and start main simulation loop
-	Simulation newSim(circElements1, omega, timeStep, finalTime, log);
+	Simulation newSim(simName, circElements1, omega, timeStep, finalTime);
 	newSim.addSystemTopology(circElements2);
 	newSim.setSwitchTime(0.1, 1);
 
 	std::cout << "Start simulation." << std::endl;
 
-	while (newSim.step(leftVectorLog, rightVectorLog)) {
+	while (newSim.step()) {
 		newSim.increaseByTimeStep();
-		updateProgressBar(newSim.getTime(), newSim.getFinalTime());
 	}
 
 	std::cout << "Simulation finished." << std::endl;

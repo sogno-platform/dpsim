@@ -55,7 +55,16 @@ namespace DPsim {
 	class Simulation {
 
 	private:
-		Logger* mLogger;
+		/// Simulation name
+		String mName;
+		/// Simulation log level
+		LogLevel mLogLevel;
+		/// Simulation logger
+		std::shared_ptr<Logger> mLog;
+		/// Left side vector logger
+		std::shared_ptr<Logger> mLeftVectorLog;
+		/// Right side vector logger
+		std::shared_ptr<Logger> mRightVectorLog;
 		/// Final time of the simulation
 		Real mFinalTime;
 		/// Time variable that is incremented at every step
@@ -118,7 +127,7 @@ namespace DPsim {
 		/// Sets parameters to default values.
 		Simulation();
 		/// Creates system matrix according to
-		Simulation(Components::Base::List elements, Real om, Real dt, Real tf, Logger& logger, SimulationType simType = SimulationType::DynPhasor, Int downSampleRate = 1);
+		Simulation(String name, Components::Base::List elements, Real om, Real dt, Real tf, LogLevel logLevel = LogLevel::INFO, SimulationType simType = SimulationType::DynPhasor, Int downSampleRate = 1);
 		~Simulation();
 
 		/// TODO: check that every system matrix has the same dimensions

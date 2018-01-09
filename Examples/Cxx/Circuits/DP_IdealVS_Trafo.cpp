@@ -30,24 +30,18 @@ int main(int argc, char* argv[])
 	Real timeStep = 0.001;
 	Real omega = 2.0*M_PI*50.0;
 	Real finalTime = 0.2;
-	std::ostringstream fileName;
-	fileName << "IdealVS_Trafo" << timeStep;
+	String simName = "IdealVS_Trafo_" + std::to_string(timeStep);
 	Components::Base::List circElements;
 	circElements.push_back(std::make_shared<Components::DP::VoltageSourceIdeal>("v_1", -1, 0, Complex(100, 0), LogLevel::DEBUG, false));
 	circElements.push_back(std::make_shared<Components::DP::Transformer>("trafo_1", 0, 1, 10, 0, 0, 0.001, LogLevel::DEBUG, false));
 	circElements.push_back(std::make_shared<Components::DP::Resistor>("r_1", 1, -1, 1, LogLevel::DEBUG, false));
-
-	// Define log names
-	Logger log("Logs/" + fileName.str() + ".log");
-	Logger leftVectorLog("Logs/LeftVector_" + fileName.str() + ".csv");
-	Logger rightVectorLog("Logs/RightVector_" + fileName.str() + ".csv");
-
+	
 	// Set up simulation and start main simulation loop
-	Simulation newSim(circElements, omega, timeStep, finalTime, log);
+	Simulation newSim(simName, circElements, omega, timeStep, finalTime);
 
 	std::cout << "Start simulation." << std::endl;
 
-	while (newSim.step(leftVectorLog, rightVectorLog)) {
+	while (newSim.step()) {
 		newSim.increaseByTimeStep();
 	}
 

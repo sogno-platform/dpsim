@@ -30,29 +30,20 @@ int main(int argc, char* argv[])
 	Real timeStep = 0.001;
 	Real omega = 2.0*M_PI*50.0;
 	Real finalTime = 0.3;
+	String simName = "IdealVS_EMT_" + std::to_string(timeStep);
 	Components::Base::List circElements;
 	circElements.push_back(std::make_shared<Components::EMT::VoltageSourceIdeal>("v_in", 1, 2, 10));
 	circElements.push_back(std::make_shared<Components::EMT::Resistor>("r_1", 1, 0, 5));
 	circElements.push_back(std::make_shared<Components::EMT::Resistor>("r_2", 2, 0, 10));
 	circElements.push_back(std::make_shared<Components::EMT::Resistor>("r_3", 2, 0, 2));
 
-	// Define log names
-	std::ostringstream fileName;
-	fileName << "IdealVS_EMT" << timeStep;
-	Logger log("Logs/" + fileName.str() + ".log");
-	Logger leftVectorLog("Logs/LeftVector_" + fileName.str() + ".csv");
-	Logger rightVectorLog("Logs/RightVector_" + fileName.str() + ".csv");
-
 	// Set up simulation and start main simulation loop
-	Simulation newSim(circElements, omega, timeStep, finalTime, log, SimulationType::EMT);
+	Simulation newSim(simName, circElements, omega, timeStep, finalTime, LogLevel::INFO, SimulationType::EMT);
 
 	std::cout << "Start simulation." << std::endl;
-
-	while (newSim.step(leftVectorLog, rightVectorLog)) {
+	while (newSim.step()) {
 		newSim.increaseByTimeStep();
-		updateProgressBar(newSim.getTime(), newSim.getFinalTime());
 	}
-
 	std::cout << "Simulation finished." << std::endl;
 
 	return 0;
