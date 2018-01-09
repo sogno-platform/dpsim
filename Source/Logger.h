@@ -29,7 +29,7 @@
 
 namespace DPsim {
 
-	enum class LogLevel { NONE, ERROR, WARN, INFO };
+	enum class LogLevel { NONE, ERROR, WARN, INFO, DEBUG };
 
 	class Logger {
 
