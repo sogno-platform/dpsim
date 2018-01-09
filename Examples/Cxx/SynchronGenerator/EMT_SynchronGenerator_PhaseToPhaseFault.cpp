@@ -84,7 +84,7 @@ int main(int argc, char* argv[])
 	Real om = 2.0*M_PI*60.0;
 	tf = 0.2; dt = 0.00005; t = 0;
 	Int downSampling = 50;
-	Simulation newSim(circElements, om, dt, tf, log, SimulationType::EMT, downSampling);
+	Simulation newSim("EMT_SynGen_PhaseToPhaseFault", circElements, om, dt, tf, LogLevel::INFO, SimulationType::EMT, downSampling);
 	newSim.addSystemTopology(circElementsBreakerOn);
 
 	// Initialize generator

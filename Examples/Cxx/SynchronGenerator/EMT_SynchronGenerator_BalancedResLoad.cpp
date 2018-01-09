@@ -77,7 +77,7 @@ int main(int argc, char* argv[])
 	Real dt = 0.000001;
 	Real t = 0;
 	Int downSampling = 25;
-	Simulation newSim(circElements, om, dt, tf, log, SimulationType::EMT, downSampling);
+	Simulation newSim("EMT_SynGen_BalanceResLoad", circElements, om, dt, tf, LogLevel::INFO, SimulationType::EMT, downSampling);
 	newSim.setNumericalMethod(NumericalMethod::Trapezoidal_flux);
 
 	// Initialize generator

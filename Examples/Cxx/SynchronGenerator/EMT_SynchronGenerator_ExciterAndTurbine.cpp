@@ -111,7 +111,7 @@ int main(int argc, char* argv[])
 	Real om = 2.0*M_PI*60.0;
 	tf = 10; dt = 0.0001; t = 0;
 	Int downSampling = 1;
-	Simulation newSim(circElements, om, dt, tf, log, SimulationType::EMT, downSampling);
+	Simulation newSim("EMT_SynGen_ExciterTurbine", circElements, om, dt, tf, LogLevel::INFO, SimulationType::EMT, downSampling);
 	newSim.setNumericalMethod(NumericalMethod::Trapezoidal_flux);
 	newSim.addSystemTopology(circElementsBreakerOn);
 	newSim.switchSystemMatrix(0);
