@@ -63,11 +63,6 @@ static void VarFreqRxLineResLoad_EMT(Real timeStep, Real finalTime, Real freqSte
 	circElements1.push_back(std::make_shared<Components::EMT::Resistor>("r_load", 3, 0, 100));
 	circElements2.push_back(std::make_shared<Components::EMT::Resistor>("r_load", 3, 0, 50));
 
-	// Define log names
-	Logger log("Logs/" + fileName.str() + ".log");
-	Logger leftVectorLog("Logs/LeftVector_" + fileName.str() + ".csv");
-	Logger rightVectorLog("Logs/RightVector_" + fileName.str() + ".csv");
-
 	// Set up simulation and start main simulation loop
 	Simulation newSim(simName, circElements1, omega, timeStep, finalTime, LogLevel::INFO, SimulationType::EMT);
 	newSim.addSystemTopology(circElements2);
