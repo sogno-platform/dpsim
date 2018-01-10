@@ -28,7 +28,7 @@ namespace DPsim {
 namespace Components {
 namespace DP {
 
-	class RxLine : public Components::Base {
+	class RxLine : public Components::Base, public SharedFactory<RxLine> {
 
 	protected:
 		Real mResistance;

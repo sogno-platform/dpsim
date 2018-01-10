@@ -36,7 +36,7 @@ namespace DP {
 	/// parameter names include underscores and typical variables names found in literature instead of
 	/// descriptive names in order to shorten formulas and increase the readability
 
-	class SynchronGeneratorVBRSimplified : public SynchronGeneratorBase {
+	class SynchronGeneratorVBRSimplified : public SynchronGeneratorBase, public SharedFactory<SynchronGeneratorVBRSimplified> {
 
 	protected:
 

@@ -29,7 +29,7 @@ namespace Components {
 namespace DP {
 
 	/// Ideal transformer that is connected to ground
-	class TransformerIdeal : public Components::Base {
+	class TransformerIdeal : public Components::Base, public SharedFactory<TransformerIdeal> {
 
 	private:
 		/// Transformer ratio

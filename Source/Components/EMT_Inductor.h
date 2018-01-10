@@ -28,7 +28,7 @@ namespace DPsim {
 namespace Components {
 namespace EMT {
 
-	class Inductor : public Components::Base {
+	class Inductor : public Components::Base, public SharedFactory<Inductor> {
 
 	protected:
 		Real mInductance;

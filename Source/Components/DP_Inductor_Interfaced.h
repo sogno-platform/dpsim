@@ -28,7 +28,7 @@ namespace DPsim {
 namespace Components {
 namespace DP {
 
-	class InterfacedInductor : public Components::Base {
+	class InterfacedInductor : public Components::Base, public SharedFactory<InterfacedInductor> {
 
 	protected:
 		Real mInductance;

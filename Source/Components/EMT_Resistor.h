@@ -29,7 +29,7 @@ namespace DPsim {
 namespace Components {
 namespace EMT {
 
-	class Resistor : public Components::Base {
+	class Resistor : public Components::Base, public SharedFactory<Resistor> {
 
 	protected:
 		Real mResistance;

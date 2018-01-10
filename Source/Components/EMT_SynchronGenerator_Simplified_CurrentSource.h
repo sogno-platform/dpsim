@@ -36,7 +36,7 @@ namespace EMT {
 	/// parameter names include underscores and typical variables names found in literature instead of
 	/// descriptive names in order to shorten formulas and increase the readability
 
-	class SynchronGeneratorSimplifiedCurrentSource : public SynchronGeneratorBase {
+	class SynchronGeneratorSimplifiedCurrentSource : public SynchronGeneratorBase, public SharedFactory<SynchronGeneratorSimplifiedCurrentSource> {
 
 	protected:
 

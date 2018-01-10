@@ -32,7 +32,7 @@ namespace Components {
 namespace DP {
 
 	/// Transformer that includes an inductance and resistance
-	class Transformer : public Components::Base {
+	class Transformer : public Components::Base, public SharedFactory<Transformer> {
 
 	private:
 		/// Transformer ratio

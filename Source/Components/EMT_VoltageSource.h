@@ -28,7 +28,7 @@ namespace DPsim {
 namespace Components {
 namespace EMT {
 
-	class VoltageSource : public Components::VoltageSourceBase<Complex> {
+	class VoltageSource : public Components::VoltageSourceBase<Complex>, public SharedFactory<VoltageSource> {
 
 	protected:
 		Complex mVoltage;
