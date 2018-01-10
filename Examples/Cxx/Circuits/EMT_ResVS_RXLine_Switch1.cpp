@@ -31,12 +31,15 @@ int main(int argc, char* argv[])
 	Real omega = 2.0*M_PI*50.0;
 	Real finalTime = 0.3;
 	String simName = "RxLineResLoad_EMT_" + std::to_string(timeStep);
-	Components::Base::List circElements0, circElements1, circElements2;
-	circElements0.push_back(std::make_shared<Components::EMT::VoltageSource>("v_s", 1, 0, Complex(10000, 0), 1));
-	circElements0.push_back(std::make_shared<Components::EMT::Resistor>("r_line", 1, 2, 1));
-	circElements0.push_back(std::make_shared<Components::EMT::Inductor>("l_line", 2, 3, 1));
-	circElements1 = circElements0;
-	circElements2 = circElements0;
+
+	Components::Base::List circElements0 = {
+		std::make_shared<Components::EMT::VoltageSource>("v_s", 1, 0, Complex(10000, 0), 1),
+		std::make_shared<Components::EMT::Resistor>("r_line", 1, 2, 1),
+		std::make_shared<Components::EMT::Inductor>("l_line", 2, 3, 1)
+	};
+
+	Components::Base::List circElements1 = circElements0;
+	Components::Base::List circElements2 = circElements0;
 	circElements1.push_back(std::make_shared<Components::EMT::Resistor>("r_load", 3, 0, 1000));
 	circElements2.push_back(std::make_shared<Components::EMT::Resistor>("r_load", 3, 0, 800));
 

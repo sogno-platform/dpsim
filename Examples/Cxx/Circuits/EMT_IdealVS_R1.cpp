@@ -31,11 +31,13 @@ int main(int argc, char* argv[])
 	Real omega = 2.0*M_PI*50.0;
 	Real finalTime = 0.3;
 	String simName = "IdealVS_EMT_" + std::to_string(timeStep);
-	Components::Base::List circElements;
-	circElements.push_back(std::make_shared<Components::EMT::VoltageSourceIdeal>("v_in", 1, 2, 10));
-	circElements.push_back(std::make_shared<Components::EMT::Resistor>("r_1", 1, 0, 5));
-	circElements.push_back(std::make_shared<Components::EMT::Resistor>("r_2", 2, 0, 10));
-	circElements.push_back(std::make_shared<Components::EMT::Resistor>("r_3", 2, 0, 2));
+
+	Components::Base::List circElements = {
+		std::make_shared<Components::EMT::VoltageSourceIdeal>("v_in", 1, 2, 10),
+		std::make_shared<Components::EMT::Resistor>("r_1", 1, 0, 5),
+		std::make_shared<Components::EMT::Resistor>("r_2", 2, 0, 10),
+		std::make_shared<Components::EMT::Resistor>("r_3", 2, 0, 2)
+	};
 
 	// Set up simulation and start main simulation loop
 	Simulation newSim(simName, circElements, omega, timeStep, finalTime, LogLevel::INFO, SimulationType::EMT);

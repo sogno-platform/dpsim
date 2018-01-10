@@ -63,21 +63,13 @@ int main(int argc, char* argv[])
 	Components::Base::Ptr r2 = std::make_shared<Components::EMT::Resistor>("r2", 0, 2, loadRes);
 	Components::Base::Ptr r3 = std::make_shared<Components::EMT::Resistor>("r3", 0, 3, loadRes);
 
-	Components::Base::List circElements;
-	circElements.push_back(gen);
-	circElements.push_back(r1);
-	circElements.push_back(r2);
-	circElements.push_back(r3);
+	Components::Base::List circElements = { gen, r1, r2, r3 };
 
 	// Declare circuit components for resistance change
 	Real breakerRes = 0.01;
 	Components::Base::Ptr rBreaker = std::make_shared<Components::EMT::Resistor>("rbreak", 1, 2, breakerRes);
 
-	Components::Base::List circElementsBreakerOn;
-	circElementsBreakerOn.push_back(rBreaker);
-	circElementsBreakerOn.push_back(r1);
-	circElementsBreakerOn.push_back(r2);
-	circElementsBreakerOn.push_back(r3);
+	Components::Base::List circElementsBreakerOn = { rBreaker, r1, r2, r3 };
 
 	// Set up simulation
 	Real tf, dt, t;

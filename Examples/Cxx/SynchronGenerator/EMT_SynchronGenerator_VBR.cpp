@@ -66,24 +66,15 @@ int main(int argc, char* argv[])
 	Components::Base::Ptr r2 = std::make_shared<Components::EMT::Resistor>("r2", 2, 0, loadRes);
 	Components::Base::Ptr r3 = std::make_shared<Components::EMT::Resistor>("r3", 3, 0, loadRes);
 
-	Components::Base::List circElements;
-	circElements.push_back(gen);
-	circElements.push_back(r1);
-	circElements.push_back(r2);
-	circElements.push_back(r3);
+	Components::Base::List circElements = { gen, r1, r2, r3 };
 
 	// Declare circuit components for resistance change
 	Real breakerRes = 0.001;
 	Components::Base::Ptr rBreaker1 = std::make_shared<Components::EMT::Resistor>("rbreak1", 1, 0, breakerRes);
 	Components::Base::Ptr rBreaker2 = std::make_shared<Components::EMT::Resistor>("rbreak2", 2, 0, breakerRes);
 	Components::Base::Ptr rBreaker3 = std::make_shared<Components::EMT::Resistor>("rbreak3", 3, 0, breakerRes);
-	Components::Base::List circElementsBreakerOn;
-	circElementsBreakerOn.push_back(rBreaker1);
-	circElementsBreakerOn.push_back(rBreaker2);
-	circElementsBreakerOn.push_back(rBreaker3);
-	circElementsBreakerOn.push_back(r1);
-	circElementsBreakerOn.push_back(r2);
-	circElementsBreakerOn.push_back(r3);
+
+	Components::Base::List circElementsBreakerOn = { rBreaker1, rBreaker2, rBreaker3, r1, r2, r3 };
 
 	// Set up simulation
 	Real tf, dt, t;

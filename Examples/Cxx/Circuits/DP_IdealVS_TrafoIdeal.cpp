@@ -31,11 +31,13 @@ int tmpmain(int argc, char* argv[])
 	Real omega = 2.0*M_PI*50.0;
 	Real finalTime = 0.2;
 	String simName = "IdealVS_TrafoIdeal_" + std::to_string(timeStep);
-	Components::Base::List circElements;
-	circElements.push_back(std::make_shared<Components::DP::VoltageSourceIdeal>("v_1", 0, 1, Complex(10, 0)));
-	circElements.push_back(std::make_shared<Components::DP::TransformerIdeal>("trafo_1", 1, 2, 10, 0));
-	circElements.push_back(std::make_shared<Components::DP::Resistor>("r_1", 2, 0, 1));
-	
+
+	Components::Base::List circElements = {
+		std::make_shared<Components::DP::VoltageSourceIdeal>("v_1", 0, 1, Complex(10, 0)),
+		std::make_shared<Components::DP::TransformerIdeal>("trafo_1", 1, 2, 10, 0),
+		std::make_shared<Components::DP::Resistor>("r_1", 2, 0, 1)
+	};
+
 	// Set up simulation and start main simulation loop
 	Simulation newSim(simName, circElements, omega, timeStep, finalTime);
 

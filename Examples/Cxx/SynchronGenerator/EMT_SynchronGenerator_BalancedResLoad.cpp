@@ -65,11 +65,7 @@ int main(int argc, char* argv[])
 	Components::Base::Ptr r2 = std::make_shared<Components::EMT::Resistor>("r2", 0, 2, loadRes);
 	Components::Base::Ptr r3 = std::make_shared<Components::EMT::Resistor>("r3", 0, 3, loadRes);
 
-	Components::Base::List circElements;
-	circElements.push_back(gen);
-	circElements.push_back(r1);
-	circElements.push_back(r2);
-	circElements.push_back(r3);
+	Components::Base::List circElements = { gen, r1, r2, r3 };
 
 	// Set up simulation
 	Real om = 2.0*M_PI*60.0;
