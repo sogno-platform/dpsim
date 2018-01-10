@@ -6,8 +6,6 @@ add_library(dpsim SHARED
 	Utilities.cpp
 	Simulation.cpp
 	FaultSimulation.cpp
-	GeneratorTestSimulation.cpp
-	GeneratorVBRSimulation.cpp
 )
 
 list(APPEND SOURCES

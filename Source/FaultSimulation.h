@@ -67,6 +67,8 @@ namespace DPsim {
 		// Explicity inheritance of parent constructor
 		using Simulation::Simulation;
 
+		Int step(bool blocking = false);
+
 		void clearFault(Int Node1, Int Node2, Int Node3);
 	};
 
