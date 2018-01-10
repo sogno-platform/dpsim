@@ -66,11 +66,11 @@ def compare_results(dp_csv, expected_csv):
 
     return ret
 
-def run_python_test(name, sim):
+def run_python_test(sim):
     sim.run()
 
-    dp_csv       = PATH + '/' + name + ".csv"
-    expected_csv = PATH + '/' + name + ".expected.csv"
+    dp_csv       = 'Logs/' + sim.name() + "_LeftVector.csv"
+    expected_csv = PATH + '/' + sim.name() + ".expected.csv"
 
     return compare_results(dp_csv, expected_csv)
 
@@ -84,16 +84,16 @@ def run_cpp_test(name):
     return 0
 
 if __name__ == "__main__":
-    python_sims = {
-        'TestSimple': dpsim.Simulation(
+    python_sims = [
+        dpsim.Simulation("TestSimple",
             [
                 dp.VoltageSource("v_s", 1, 0, 10000+0j, 1),
                 dp.Resistor("r_line", 1, 2, 1),
                 dp.Inductor("l_line", 2, 3, 1),
                 dp.Resistor("r_load", 3, 0, 1000)
             ],
-            duration=0.3, llog=PATH + "/TestSimple.csv")
-    }
+            duration=0.3)
+    ]
 
     cpp_sims = {
         'DP_IdealVS_PILine1',
@@ -111,12 +111,12 @@ if __name__ == "__main__":
 
     ret = 0
     # test python examples
-    for name, sim in python_sims.items():
-        if run_python_test(name, sim):
-            print("{} failed".format(name), file=sys.stderr)
+    for sim in python_sims:
+        if run_python_test(sim):
+            print("{} failed".format(sim.name()), file=sys.stderr)
             ret = 1
         else:
-            print("{} successful".format(name), file=sys.stderr)
+            print("{} successful".format(sim.name()), file=sys.stderr)
 
     # test cpp examples
     for name in cpp_sims:

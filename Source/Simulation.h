@@ -144,6 +144,7 @@ namespace DPsim {
 
 		void setNumericalMethod(NumericalMethod numMethod);
 
+		String getName() const { return mName; };
 		Real getTime() { return mTime; }
 		Real getFinalTime() { return mFinalTime; }
 		Real getTimeStep() { return mSystemModel.getTimeStep(); }
