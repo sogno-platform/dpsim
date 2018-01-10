@@ -105,9 +105,9 @@ Int FaultSimulation::step(bool blocking)
 		if (mTime >= mSwitchEventVector[mCurrentSwitchTimeIndex].switchTime) {
 			switchSystemMatrix(mSwitchEventVector[mCurrentSwitchTimeIndex].systemIndex);
 			mComponents = mComponentsVector[++mCurrentSwitchTimeIndex];
-			mLog->Log(Logger::Level::INFO) << "Switched to system " << mCurrentSwitchTimeIndex << " at " << mTime << std::endl;
-			mLog->Log(Logger::Level::INFO) << "New matrix:" << std::endl << mSystemModel.getCurrentSystemMatrix() << std::endl;
-			mLog->Log(Logger::Level::INFO) << "New decomp:" << std::endl << mSystemModel.getLUdecomp() << std::endl;
+			mLog.Log(Logger::Level::INFO) << "Switched to system " << mCurrentSwitchTimeIndex << " at " << mTime << std::endl;
+			mLog.Log(Logger::Level::INFO) << "New matrix:" << std::endl << mSystemModel.getCurrentSystemMatrix() << std::endl;
+			mLog.Log(Logger::Level::INFO) << "New decomp:" << std::endl << mSystemModel.getLUdecomp() << std::endl;
 		}
 	}
 
