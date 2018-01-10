@@ -43,24 +43,24 @@ void FaultSimulation::clearFault(Int Node1, Int Node2, Int Node3)
 	}
 
 	if (std::signbit(mIfa) != std::signbit(mIfa_hist) && !aCleared) {
-		mElements.erase(mElements.begin() + 1);
-		addSystemTopology(mElements);
+		mComponents.erase(mComponents.begin() + 1);
+		addSystemTopology(mComponents);
 		switchSystemMatrix(mSwitchEventVector.size() + NumClearedPhases);
 		NumClearedPhases++;
 		aCleared = true;
 	}
 
 	if (std::signbit(mIfb) != std::signbit(mIfb_hist) && !bCleared) {
-		mElements.erase(mElements.begin() + 2);
-		addSystemTopology(mElements);
+		mComponents.erase(mComponents.begin() + 2);
+		addSystemTopology(mComponents);
 		switchSystemMatrix(mSwitchEventVector.size() + NumClearedPhases);
 		NumClearedPhases++;
 		bCleared = true;
 	}
 
 	if (std::signbit(mIfc) != std::signbit(mIfc_hist) && !cCleared) {
-		mElements.erase(mElements.begin() + 1);
-		addSystemTopology(mElements);
+		mComponents.erase(mComponents.begin() + 1);
+		addSystemTopology(mComponents);
 		switchSystemMatrix(mSwitchEventVector.size() + NumClearedPhases);
 		NumClearedPhases++;
 		cCleared = true;
@@ -83,14 +83,14 @@ Int FaultSimulation::step(bool blocking)
 		eif->readValues(blocking);
 	}
 
-	for (auto elm : mElements) {
-		elm->step(mSystemModel, mTime);
+	for (auto comp : mComponents) {
+		comp->step(mSystemModel, mTime);
 	}
 
 	mSystemModel.solve();
 
-	for (auto elm : mElements) {
-		elm->postStep(mSystemModel);
+	for (auto comp : mComponents) {
+		comp->postStep(mSystemModel);
 	}
 
 	for (auto eif : mExternalInterfaces) {
@@ -104,7 +104,7 @@ Int FaultSimulation::step(bool blocking)
 	if (mCurrentSwitchTimeIndex < mSwitchEventVector.size()) {
 		if (mTime >= mSwitchEventVector[mCurrentSwitchTimeIndex].switchTime) {
 			switchSystemMatrix(mSwitchEventVector[mCurrentSwitchTimeIndex].systemIndex);
-			mElements = mElementsVector[++mCurrentSwitchTimeIndex];
+			mComponents = mComponentsVector[++mCurrentSwitchTimeIndex];
 			mLog.Log(Logger::Level::INFO) << "Switched to system " << mCurrentSwitchTimeIndex << " at " << mTime << std::endl;
 			mLog.Log(Logger::Level::INFO) << "New matrix:" << std::endl << mSystemModel.getCurrentSystemMatrix() << std::endl;
 			mLog.Log(Logger::Level::INFO) << "New decomp:" << std::endl << mSystemModel.getLUdecomp() << std::endl;

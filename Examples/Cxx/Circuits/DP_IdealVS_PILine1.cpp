@@ -32,7 +32,7 @@ int main(int argc, char* argv[])
 	Real finalTime = 0.3;
 	String simName = "PiLine1_" + std::to_string(timeStep);
 
-	Components::Base::List circElements = {
+	Components::Base::List comps = {
 		std::make_shared<Components::DP::VoltageSourceIdeal>("v_1", 1, 0, Complex(345, 0)),
 		std::make_shared<Components::DP::Resistor>("r1", 1, 2, 5),
 		std::make_shared<Components::DP::Capacitor>("c_1", 2, 0, 0.002),
@@ -43,7 +43,7 @@ int main(int argc, char* argv[])
 	};
 
 	// Set up simulation and start main simulation loop
-	Simulation newSim(simName, circElements, omega, timeStep, finalTime);
+	Simulation newSim(simName, comps, omega, timeStep, finalTime);
 
 	std::cout << "Start simulation." << std::endl;
 	newSim.run();

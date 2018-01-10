@@ -65,19 +65,19 @@ namespace DPsim {
 		/// Structure that holds all system information.
 		SystemModel mSystemModel;
 		/// Stores a list of circuit elements that are used to generate the system matrix
-		Components::Base::List mElements;
+		Components::Base::List mComponents;
 		/// Circuit list vector
-		std::vector<Components::Base::List> mElementsVector;
+		std::vector<Components::Base::List> mComponentsVector;
 		/// Vector of ExternalInterfaces
 		std::vector<ExternalInterface*> mExternalInterfaces;
 
 	public:
 		/// Creates system matrix according to
-		Simulation(String name, Components::Base::List elements, Real om, Real dt, Real tf, Logger::Level logLevel = Logger::Level::INFO, SimulationType simType = SimulationType::DynPhasor, Int downSampleRate = 1);
-		virtual ~Simulation() { }
+		Simulation(String name, Components::Base::List comps, Real om, Real dt, Real tf, Logger::Level logLevel = Logger::Level::INFO, SimulationType simType = SimulationType::DynPhasor, Int downSampleRate = 1);
+		virtual ~Simulation() { };
 
 		/// TODO: check that every system matrix has the same dimensions
-		void initialize(Components::Base::List elements);
+		void initialize(Components::Base::List comps);
 		/// Solve system A * x = z for x and current time
 		Int step(bool blocking = true);
 		void run();
@@ -96,7 +96,7 @@ namespace DPsim {
 		Matrix & getRightSideVector() { return mSystemModel.getRightSideVector(); }
 		Matrix & getSystemMatrix() { return mSystemModel.getCurrentSystemMatrix(); }
 
-		void addSystemTopology(Components::Base::List newElements);
+		void addSystemTopology(Components::Base::List newComps);
 	};
 
 }

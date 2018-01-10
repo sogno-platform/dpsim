@@ -63,21 +63,21 @@ int main(int argc, char* argv[])
 	Components::Base::Ptr r2 = std::make_shared<Components::EMT::Resistor>("r2", 0, 2, loadRes);
 	Components::Base::Ptr r3 = std::make_shared<Components::EMT::Resistor>("r3", 0, 3, loadRes);
 
-	Components::Base::List circElements = { gen, r1, r2, r3 };
+	Components::Base::List comps = { gen, r1, r2, r3 };
 
 	// Declare circuit components for resistance change
 	Real breakerRes = 0.01;
 	Components::Base::Ptr rBreaker = std::make_shared<Components::EMT::Resistor>("rbreak", 1, 2, breakerRes);
 
-	Components::Base::List circElementsBreakerOn = { rBreaker, r1, r2, r3 };
+	Components::Base::List compsBreakerOn = { rBreaker, r1, r2, r3 };
 
 	// Set up simulation
 	Real tf, dt, t;
 	Real om = 2.0*M_PI*60.0;
 	tf = 0.2; dt = 0.00005; t = 0;
 	Int downSampling = 50;
-	Simulation newSim("EMT_SynGen_PhaseToPhaseFault", circElements, om, dt, tf, Logger::Level::INFO, SimulationType::EMT, downSampling);
-	newSim.addSystemTopology(circElementsBreakerOn);
+	Simulation newSim("EMT_SynGen_PhaseToPhaseFault", comps, om, dt, tf, Logger::Level::INFO, SimulationType::EMT, downSampling);
+	newSim.addSystemTopology(compsBreakerOn);
 
 	// Initialize generator
 	Real initActivePower = 555e3;
