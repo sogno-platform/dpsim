@@ -127,8 +127,9 @@ void Simulation::addSystemTopology(Components::Base::List newElements)
 	// It is assumed that the system size does not change
 	mSystemModel.createEmptySystemMatrix();
 
-	for (auto element : newElements)
+	for (auto element : newElements) {
 		element->applySystemMatrixStamp(mSystemModel);
+	}
 
 	mSystemModel.addSystemMatrix();
 }
@@ -137,19 +138,23 @@ Int Simulation::step(bool blocking)
 {
 	mSystemModel.setRightSideVectorToZero();
 
-	for (auto eif : mExternalInterfaces)
+	for (auto eif : mExternalInterfaces) {
 		eif->readValues(blocking);
+	}
 
-	for (auto elm : mElements)
+	for (auto elm : mElements) {
 		elm->step(mSystemModel, mTime);
+	}
 
 	mSystemModel.solve();
 
-	for (auto elm : mElements)
+	for (auto elm : mElements) {
 		elm->postStep(mSystemModel);
+	}
 
-	for (auto eif : mExternalInterfaces)
+	for (auto eif : mExternalInterfaces) {
 		eif->writeValues(mSystemModel);
+	}
 
 	if (mCurrentSwitchTimeIndex < mSwitchEventVector.size()) {
 		if (mTime >= mSwitchEventVector[mCurrentSwitchTimeIndex].switchTime) {
@@ -179,18 +184,21 @@ Int Simulation::stepGeneratorTest(Logger& leftSideVectorLog, Logger& rightSideVe
 	mSystemModel.getRightSideVector().setZero();
 
 	// Execute step for all circuit components
-	for (auto elm : mElements)
+	for (auto elm : mElements) {
 		elm->step(mSystemModel, mTime);
+	}
 
 	// Solve circuit for vector j with generator output current
 	mSystemModel.solve();
 
 	// Execute PostStep for all components, generator states are recalculated based on new terminal voltage
-	for (auto elm : mElements)
+	for (auto elm : mElements) {
 		elm->postStep(mSystemModel);
+	}
 
-	if (ClearingFault)
+	if (ClearingFault) {
 		clearFault(1, 2, 3);
+	}
 
 	if (mCurrentSwitchTimeIndex < mSwitchEventVector.size()) {
 		if (mTime >= mSwitchEventVector[mCurrentSwitchTimeIndex].switchTime) {
@@ -430,15 +438,17 @@ int Simulation::stepGeneratorVBR(Logger& leftSideVectorLog, Logger& rightSideVec
 	mSystemModel.getRightSideVector().setZero();
 
 	// Execute step for all circuit components
-	for (auto elm : mElements)
+	for (auto elm : mElements) {
 		elm->step(mSystemModel, mTime);
+	}
 
 	// Solve circuit for vector j with generator output current
 	mSystemModel.solve();
 
 	// Execute PostStep for all components, generator states are recalculated based on new terminal voltage
-	for (auto elm : mElements)
+	for (auto elm : mElements) {
 		elm->postStep(mSystemModel);
+	}
 
 	if (mCurrentSwitchTimeIndex < mSwitchEventVector.size()) {
 		if (mTime >= mSwitchEventVector[mCurrentSwitchTimeIndex].switchTime) {
