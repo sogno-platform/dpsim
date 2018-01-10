@@ -150,12 +150,12 @@ PyObject* Python::Simulation::newfunc(PyTypeObject* type, PyObject *args, PyObje
 
 int Python::Simulation::init(Python::Simulation* self, PyObject *args, PyObject *kwds)
 {
-	static char *kwlist[] = {"components", "frequency", "timestep", "duration", "log", "llog", "rlog", "rt", "start_sync", NULL};
+	static char *kwlist[] = {"name", "components", "frequency", "timestep", "duration", "rt", "start_sync", NULL};
 	double frequency = 50, timestep = 1e-3, duration = DBL_MAX;
-	const char *log = nullptr, *llog = nullptr, *rlog = nullptr;
+	const char *name = nullptr;
 
-	if (!PyArg_ParseTupleAndKeywords(args, kwds, "O|dddsssbb", kwlist,
-		&self->pyComps, &frequency, &timestep, &duration, &log, &llog, &rlog, &self->rt, &self->startSync))
+	if (!PyArg_ParseTupleAndKeywords(args, kwds, "sO|dddbb", kwlist,
+		&name, &self->pyComps, &frequency, &timestep, &duration, &self->rt, &self->startSync))
 		return -1;
 
 	if (!compsFromPython(self->pyComps, self->comps)) {
@@ -177,11 +177,7 @@ int Python::Simulation::init(Python::Simulation* self, PyObject *args, PyObject 
 
 	Py_INCREF(self->pyComps);
 
-	self->log  =  log ? new Logger( log) : new Logger();
-	self->rlog = rlog ? new Logger(rlog) : new Logger();
-	self->llog = llog ? new Logger(llog) : new Logger();
-
-	self->sim = new DPsim::Simulation("PythonSim", self->comps, 2*PI*frequency, timestep, duration);
+	self->sim = new DPsim::Simulation(name, self->comps, 2*PI*frequency, timestep, duration);
 	return 0;
 };
 
@@ -279,6 +275,16 @@ PyObject* Python::Simulation::lvector(PyObject *self, PyObject *args)
 		PyList_SetItem(list, i, PyFloat_FromDouble(lvector(i, 0)));
 
 	return list;
+}
+
+static const char* DocSimulationName =
+"name()\n"
+"Return the of the simulation.";
+PyObject* Python::Simulation::name(PyObject *self, PyObject *args)
+{
+	Python::Simulation *pySim = (Python::Simulation*) self;
+
+	return PyUnicode_FromString(pySim->sim->getName().c_str());
 }
 
 static const char* DocSimulationPause =
@@ -450,6 +456,7 @@ PyObject* Python::Simulation::wait(PyObject *self, PyObject *args)
 static PyMethodDef Simulation_methods[] = {
 	{"add_interface", Python::Simulation::addInterface, METH_VARARGS, DocSimulationAddInterface},
 	{"lvector", Python::Simulation::lvector, METH_NOARGS, DocSimulationLvector},
+	{"name", Python::Simulation::name, METH_NOARGS, DocSimulationName},
 	{"pause", Python::Simulation::pause, METH_NOARGS, DocSimulationPause},
 	{"start", Python::Simulation::start, METH_NOARGS, DocSimulationStart},
 	{"step", Python::Simulation::step, METH_NOARGS, DocSimulationStep},
@@ -464,16 +471,14 @@ static const char* DocSimulation =
 "\n"
 "Proper ``__init__`` signature:\n"
 "\n"
-"``__init__(self, components, frequency=50.0, timestep=1e-3, duration=sys.float_info.max, "
-"log=None, llog=None, rlog=None, rt=false, start_sync=false)``.\n\n"
+"``__init__(self, name, components, frequency=50.0, timestep=1e-3, duration=sys.float_info.max, "
+"rt=false, start_sync=false)``.\n\n"
+"``name`` is the unique name of the simulation which is used to create the log files.\n\n"
 "``components`` must be a list of `Component` that are to be simulated.\n\n"
 "``frequency`` is the nominal system frequency in Hz.\n\n"
 "``timestep`` is the simulation timestep in seconds.\n\n"
 "``duration`` is the duration after which the simulation stops; the default value "
 "lets the simulation run indefinitely until being stopped manually by `stop`.\n\n"
-"``log``, ``llog`` and ``rlog`` are three filenames for log files where "
-"general simulation information, the left-side vector and the right-side vector "
-"for each timestep are logged, respectively.\n\n"
 "If ``rt`` is True, the simulation will run in realtime mode. The simulation will "
 "try to match simulation time with the wall clock time; violations will be logged.\n\n"
 "If ``start_sync`` is given as well, a specific method for synchronizing the "
@@ -501,8 +506,7 @@ PyTypeObject DPsim::Python::SimulationType = {
 	0,                                       /* tp_getattro */
 	0,                                       /* tp_setattro */
 	0,                                       /* tp_as_buffer */
-	Py_TPFLAGS_DEFAULT |
-		Py_TPFLAGS_BASETYPE,             /* tp_flags */
+	Py_TPFLAGS_DEFAULT | Py_TPFLAGS_BASETYPE,/* tp_flags */
 	DocSimulation,                           /* tp_doc */
 	0,                                       /* tp_traverse */
 	0,                                       /* tp_clear */
