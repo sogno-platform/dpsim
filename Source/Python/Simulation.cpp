@@ -20,6 +20,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *********************************************************************************/
 
+#include "Config.h"
+
 #include "Python/Component.h"
 #include "Python/Interface.h"
 #include "Python/Simulation.h"

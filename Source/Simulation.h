@@ -24,12 +24,6 @@
 #include <iostream>
 #include <vector>
 
-//#include "Config.h"
-
-#ifdef WITH_RT
-  #include <signal.h>
-#endif
-
 #include "Definitions.h"
 #include "Components.h"
 #include "Logger.h"
@@ -43,22 +37,13 @@ namespace DPsim {
 		UInt systemIndex;
 	};
 
-	/* Possible methods to achieve execution in real time. */
-	enum RTMethod {
-		RTExceptions, // use a normal timer and throw an exception in the signal handler if the timestep wasn't completed yet
-		RTTimerFD,    // read on a timerfd after every step
-	};
-
-	class TimerExpiredException {
-	};
-
 	class Simulation {
 
-	private:
+	protected:
 		/// Simulation name
 		String mName;
 		/// Simulation log level
-		LogLevel mLogLevel;
+		Logger::Level mLogLevel;
 		/// Simulation logger
 		std::shared_ptr<Logger> mLog;
 		/// Left side vector logger
@@ -86,61 +71,20 @@ namespace DPsim {
 		/// Vector of ExternalInterfaces
 		std::vector<ExternalInterface*> mExternalInterfaces;
 
-		uint64_t mRtTimerCount = 0;
-
-		bool FirstTime = true;
-		bool ClearingFault = false;
-		bool aCleared = false;
-		bool bCleared = false;
-		bool cCleared = false;
-		Int NumClearedPhases = 0;
-
-		/// Fault Current phase a
-		Real mIfa;
-		/// Fault Current phase b
-		Real mIfb;
-		/// Fault Current phase c
-		Real mIfc;
-
-		/// Fault Current phase a last time step
-		Real mIfa_hist;
-		/// Fault Current phase b
-		Real mIfb_hist;
-		/// Fault Current phase c
-		Real mIfc_hist;
-
-		/// Fault Current phase a
-		Real mIShifta;
-		/// Fault Current phase b
-		Real mIShiftb;
-		/// Fault Current phase c
-		Real mIShiftc;
-
-		/// Fault Current phase a last time step
-		Real mIShifta_hist;
-		/// Fault Current phase b
-		Real mIShiftb_hist;
-		/// Fault Current phase c
-		Real mIShiftc_hist;
-
 	public:
-		/// Sets parameters to default values.
-		Simulation();
 		/// Creates system matrix according to
-		Simulation(String name, Components::Base::List elements, Real om, Real dt, Real tf, LogLevel logLevel = LogLevel::INFO, SimulationType simType = SimulationType::DynPhasor, Int downSampleRate = 1);
+		Simulation(String name, Components::Base::List elements, Real om, Real dt, Real tf, Logger::Level logLevel = Logger::Level::INFO, SimulationType simType = SimulationType::DynPhasor, Int downSampleRate = 1);
 		~Simulation();
 
 		/// TODO: check that every system matrix has the same dimensions
 		void initialize(Components::Base::List elements);
 		/// Solve system A * x = z for x and current time
 		Int step(bool blocking = true);
-		/// Solve system A * x = z for x and current time. Log current values of both vectors.
-		Int step(Logger& leftSideVectorLog, Logger& rightSideVectorLog, bool blocking = true);
+		void run();
 		void switchSystemMatrix(Int systemMatrixIndex);
 		void setSwitchTime(Real switchTime, Int systemIndex);
 		void increaseByTimeStep();
 		void addExternalInterface(ExternalInterface*);
-		void clearFault(Int Node1, Int Node2, Int Node3);
 
 		void setNumericalMethod(NumericalMethod numMethod);
 
@@ -151,25 +95,8 @@ namespace DPsim {
 		Matrix & getLeftSideVector() { return mSystemModel.getLeftSideVector(); }
 		Matrix & getRightSideVector() { return mSystemModel.getRightSideVector(); }
 		Matrix & getSystemMatrix() { return mSystemModel.getCurrentSystemMatrix(); }
-		Int stepGeneratorTest(Logger& leftSideVectorLog, Logger& rightSideVectorLog,
-			Components::Base::Ptr generator, Real time);
-		Int stepGeneratorVBR(Logger& leftSideVectorLog, Logger& rightSideVectorLog,
-			Components::Base::Ptr generator, Real time);
 
 		void addSystemTopology(Components::Base::List newElements);
-
-#ifdef WITH_RT
-		/* Perform the main simulation loop in real time.
-		 *
-		 * @param rtMethod The method with which the realtime execution is achieved.
-		 * @param startSynch If true, the simulation waits for the first external value before starting the timing.
-		 * @param logger Logger which is used to log general information.
-		 * @param llogger Logger which is used to log the left-side (solution).
-		 * @param rlogger Logger which is used to log the right-side vector.
-		 */
-		void runRT(RTMethod rtMethod, bool startSynch, Logger& logger, Logger& llogger, Logger &rlogger);
-		static void alarmHandler(int, siginfo_t*, void*);
-#endif /* WITH_RT */
 	};
 
 }

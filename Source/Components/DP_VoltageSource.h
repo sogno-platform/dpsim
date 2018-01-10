@@ -52,7 +52,7 @@ namespace DP {
 		/// define voltage source paramenters
 		VoltageSource(String name, Int src, Int dest, Complex voltage, Real resistance);
 
-		void init(SystemModel& system) { }
+		void initialize(SystemModel& system) { }
 
 		/// Stamps voltage source resistance to the conductance matrix
 		void applySystemMatrixStamp(SystemModel& system);

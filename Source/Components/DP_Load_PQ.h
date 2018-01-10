@@ -53,10 +53,10 @@ namespace DP {
 		std::shared_ptr<Components::DP::Resistor> resistor;
 	public:
 		PQLoad(String name, Int node, Real activePower, Real reactivePower,
-			Real volt, Real angle, LogLevel loglevel = LogLevel::NONE, Bool decrementNodes = true);
+			Real volt, Real angle, Logger::Level loglevel = Logger::Level::NONE, Bool decrementNodes = true);
 
 		/// Initializes variables detalvr, deltavi, currr, curri, cureqr and curreqi
-		void init(SystemModel& system);
+		void initialize(SystemModel& system);
 
 		/// Stamps DC equivalent resistance to the conductance matrix
 		void applySystemMatrixStamp(SystemModel& system);

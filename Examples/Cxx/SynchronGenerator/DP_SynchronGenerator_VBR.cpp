@@ -80,7 +80,7 @@ int main(int argc, char* argv[])
 	Real om = 2.0*M_PI*60.0;
 	tf = 0.3; dt = 0.0001; t = 0;
 	Int downSampling = 1;
-	Simulation newSim("DP_SynGen_VBR", circElements, om, dt, tf, LogLevel::INFO, SimulationType::DynPhasor, downSampling);
+	Simulation newSim("DP_SynGen_VBR", circElements, om, dt, tf, Logger::Level::INFO, SimulationType::DynPhasor, downSampling);
 	newSim.setNumericalMethod(NumericalMethod::Trapezoidal_flux);
 	newSim.addSystemTopology(circElementsBreakerOn);
 	newSim.switchSystemMatrix(0);
@@ -93,7 +93,7 @@ int main(int argc, char* argv[])
 	Real fieldVoltage = 7.0821;
 	Real mechPower = 5.5558e5;
 	auto genPtr = std::dynamic_pointer_cast<Components::DP::SynchronGeneratorVBR>(gen);
-	genPtr->init(om, dt, initActivePower, initReactivePower, initTerminalVolt, initVoltAngle, fieldVoltage, mechPower);
+	genPtr->initialize(om, dt, initActivePower, initReactivePower, initTerminalVolt, initVoltAngle, fieldVoltage, mechPower);
 
 	std::cout << "A matrix:" << std::endl;
 	std::cout << newSim.getSystemMatrix() << std::endl;
@@ -107,12 +107,8 @@ int main(int argc, char* argv[])
 	newSim.setSwitchTime(0.1, 1);
 	newSim.setSwitchTime(0.2, 0);
 
-	while (newSim.getTime() < tf) {
-		std::cout << newSim.getTime() << std::endl;
-		newSim.stepGeneratorVBR(vtLog, jLog, gen, newSim.getTime());
-		newSim.increaseByTimeStep();
-	}
-
+	std::cout << "Start simulation." << std::endl;
+	newSim.run();
 	std::cout << "Simulation finished." << std::endl;
 
 	return 0;

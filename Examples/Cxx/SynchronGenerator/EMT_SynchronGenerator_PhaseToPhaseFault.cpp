@@ -76,7 +76,7 @@ int main(int argc, char* argv[])
 	Real om = 2.0*M_PI*60.0;
 	tf = 0.2; dt = 0.00005; t = 0;
 	Int downSampling = 50;
-	Simulation newSim("EMT_SynGen_PhaseToPhaseFault", circElements, om, dt, tf, LogLevel::INFO, SimulationType::EMT, downSampling);
+	Simulation newSim("EMT_SynGen_PhaseToPhaseFault", circElements, om, dt, tf, Logger::Level::INFO, SimulationType::EMT, downSampling);
 	newSim.addSystemTopology(circElementsBreakerOn);
 
 	// Initialize generator
@@ -87,7 +87,7 @@ int main(int argc, char* argv[])
 	Real fieldVoltage = 7.0821;
 	Real mechPower = 5.5558e5;
 	auto genPtr = std::dynamic_pointer_cast<Components::EMT::SynchronGenerator>(gen);
-	genPtr->init(om, dt, initActivePower, initReactivePower, initTerminalVolt, initVoltAngle, fieldVoltage, mechPower);
+	genPtr->initialize(om, dt, initActivePower, initReactivePower, initTerminalVolt, initVoltAngle, fieldVoltage, mechPower);
 
 	// Calculate initial values for circuit at generator connection point
 	Real initApparentPower = sqrt(pow(initActivePower, 2) + pow(initReactivePower, 2));
@@ -103,13 +103,8 @@ int main(int argc, char* argv[])
 
 	newSim.setSwitchTime(0.1, 1);
 
-	// Main Simulation Loop
-	while (newSim.getTime() < tf) {
-		std::cout << newSim.getTime() << std::endl;
-		newSim.stepGeneratorTest(vtLog, jLog, gen, newSim.getTime());
-		newSim.increaseByTimeStep();
-	}
-
+	std::cout << "Start simulation." << std::endl;
+	newSim.run();
 	std::cout << "Simulation finished." << std::endl;
 
 	return 0;

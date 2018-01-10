@@ -51,7 +51,7 @@ namespace Components {
 		/// Component logger
 		std::shared_ptr<Logger> mLog;
 		/// Component logger control for internal variables
-		LogLevel mLogLevel;
+		Logger::Level mLogLevel;
 		/// Component name
 		String mName;
 		/// Component node 1
@@ -76,7 +76,7 @@ namespace Components {
 		/// Decrementing the node number is default so that the user can use zero for the ground node. It needs to be
 		/// deactivated for subcomponents that are created inside other components since otherwise the node number
 		/// would be decremented twice.
-		Base(String name, Int node1, Int node2, LogLevel loglevel = LogLevel::NONE, Bool decrementNodes = true) {
+		Base(String name, Int node1, Int node2, Logger::Level loglevel = Logger::Level::NONE, Bool decrementNodes = true) {
 			mName = name;
 			mNode1 = node1;
 			mNode2 = node2;
@@ -94,7 +94,7 @@ namespace Components {
 		}
 
 
-		Base(String name, Int node1, Int node2, Int node3, LogLevel loglevel = LogLevel::NONE, Bool decrementNodes = true)
+		Base(String name, Int node1, Int node2, Int node3, Logger::Level loglevel = Logger::Level::NONE, Bool decrementNodes = true)
 			: Base(name, node1, node2, loglevel) {
 			mNode3 = node3;
 			if (decrementNodes) {
@@ -119,14 +119,14 @@ namespace Components {
 		Int getVirtualNode(Int nodeNum) { return mVirtualNodes[nodeNum]; }
 		/// set virtual node
 		void setVirtualNode(Int nodeNum, Int virtualNode) { mVirtualNodes[nodeNum] = virtualNode; }
-	
+
 		std::map<String, Components::Attribute>& getAttrMap() { return attrMap; }
 
 		String getName() { return mName; }
 		String getType();
 
 		/// Initializes variables of components
-		virtual void init(SystemModel& system) { }
+		virtual void initialize(SystemModel& system) { }
 
 		/// Stamps conductance matrix
 		virtual void applySystemMatrixStamp(SystemModel& system) = 0;

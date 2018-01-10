@@ -1,4 +1,4 @@
-/** Reference Circuits
+/** Simulation
  *
  * @author Markus Mirz <mmirz@eonerc.rwth-aachen.de>
  * @copyright 2017, Institute for Automation of Complex Power Systems, EONERC
@@ -19,32 +19,37 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *********************************************************************************/
 
+#pragma once
+
+#include <signal.h>
+
+#include "Config.h"
 #include "Simulation.h"
-#include "Utilities.h"
 
-using namespace DPsim;
+namespace DPsim {
 
-int main(int argc, char* argv[])
-{
-	// Define simulation scenario
-	Real timeStep = 0.001;
-	Real omega = 2.0*M_PI*50.0;
-	Real finalTime = 0.3;
-	String simName = "IdealVS_EMT_" + std::to_string(timeStep);
-
-	Components::Base::List circElements = {
-		std::make_shared<Components::EMT::VoltageSourceIdeal>("v_in", 1, 2, 10),
-		std::make_shared<Components::EMT::Resistor>("r_1", 1, 0, 5),
-		std::make_shared<Components::EMT::Resistor>("r_2", 2, 0, 10),
-		std::make_shared<Components::EMT::Resistor>("r_3", 2, 0, 2)
+	class TimerExpiredException {
 	};
 
-	// Set up simulation and start main simulation loop
-	Simulation newSim(simName, circElements, omega, timeStep, finalTime, Logger::Level::INFO, SimulationType::EMT);
+	class RealTimeSimulation : public Simulation {
 
-	std::cout << "Start simulation." << std::endl;
-	newSim.run();
-	std::cout << "Simulation finished." << std::endl;
+	protected:
+		uint64_t mTimerCount = 0;
 
-	return 0;
+	public:
+		/* Possible methods to achieve execution in real time. */
+		enum Method {
+			Exceptions, // use a normal timer and throw an exception in the signal handler if the timestep wasn't completed yet
+			TimerFD,    // read on a timerfd after every step
+		};
+
+		/* Perform the main simulation loop in real time.
+		 *
+		 * @param rtMethod The method with which the realtime execution is achieved.
+		 * @param startSynch If true, the simulation waits for the first external value before starting the timing.
+		 */
+		void run(Method method, bool startSynch);
+		static void alarmHandler(int, siginfo_t*, void*);
+	};
+
 }

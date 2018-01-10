@@ -73,7 +73,7 @@ int main(int argc, char* argv[])
 	Real dt = 0.000001;
 	Real t = 0;
 	Int downSampling = 25;
-	Simulation newSim("EMT_SynGen_BalanceResLoad", circElements, om, dt, tf, LogLevel::INFO, SimulationType::EMT, downSampling);
+	Simulation newSim("EMT_SynGen_BalanceResLoad", circElements, om, dt, tf, Logger::Level::INFO, SimulationType::EMT, downSampling);
 	newSim.setNumericalMethod(NumericalMethod::Trapezoidal_flux);
 
 	// Initialize generator
@@ -84,7 +84,7 @@ int main(int argc, char* argv[])
 	Real fieldVoltage = 7.0821;
 	Real mechPower = 5.5558e5;
 	auto genPtr = std::dynamic_pointer_cast<Components::EMT::SynchronGenerator>(gen);
-	genPtr->init(om, dt, initActivePower, initReactivePower, initTerminalVolt, initVoltAngle, fieldVoltage, mechPower);
+	genPtr->initialize(om, dt, initActivePower, initReactivePower, initTerminalVolt, initVoltAngle, fieldVoltage, mechPower);
 
 	// Calculate initial values for circuit at generator connection point
 	//Real initApparentPower = sqrt(pow(initActivePower, 2) + pow(initReactivePower, 2));
@@ -104,12 +104,8 @@ int main(int argc, char* argv[])
 	std::cout << "j vector:" << std::endl;
 	std::cout << newSim.getRightSideVector() << std::endl;
 
-	// Main Simulation Loop
-	while (newSim.getTime() < tf) {
-		newSim.stepGeneratorTest(vtLog, jLog, gen, newSim.getTime());
-		newSim.increaseByTimeStep();
-	}
-
+	std::cout << "Start simulation." << std::endl;
+	newSim.run();
 	std::cout << "Simulation finished." << std::endl;
 
 	return 0;

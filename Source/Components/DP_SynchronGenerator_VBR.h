@@ -162,7 +162,7 @@ namespace DP {
 			Real Rs, Real Ll, Real Lmd, Real Lmd0, Real Lmq, Real Lmq0,
 			Real Rfd, Real Llfd, Real Rkd, Real Llkd,
 			Real Rkq1, Real Llkq1, Real Rkq2, Real Llkq2,
-			Real inertia, LogLevel logLevel = LogLevel::NONE);
+			Real inertia, Logger::Level logLevel = Logger::Level::NONE);
 
 		/// Function to initialize Exciter
 		void addExciter(Real Ta, Real Ka, Real Te, Real Ke, Real Tf, Real Kf, Real Tr, Real Lad, Real Rfd);
@@ -171,7 +171,7 @@ namespace DP {
 
 		/// Initializes states in per unit or stator referred variables depending on the setting of the state type.
 		/// Function parameters have to be given in real units.
-		void init(Real om, Real dt,
+		void initialize(Real om, Real dt,
 			Real initActivePower, Real initReactivePower, Real initTerminalVolt, Real initVoltAngle, Real initFieldVoltage, Real initMechPower);
 
 		/// Performs an Euler forward step with the state space model of a synchronous generator
@@ -199,7 +199,7 @@ namespace DP {
 		Real getRotationalSpeed() { return mOmMech*mBase_OmMech; }
 		Real getRotorPosition() { return mThetaMech; }
 
-		void init(SystemModel& system) { }
+		void initialize(SystemModel& system) { }
 		void applySystemMatrixStamp(SystemModel& system) { }
 		void applyRightSideVectorStamp(SystemModel& system) { }
 

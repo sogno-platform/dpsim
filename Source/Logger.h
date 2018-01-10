@@ -29,26 +29,27 @@
 
 namespace DPsim {
 
-	enum class LogLevel { NONE, ERROR, WARN, INFO, DEBUG };
-
 	class Logger {
+
+	public:
+		enum class Level { NONE, ERROR, WARN, INFO, DEBUG };
 
 	private:
 		std::ofstream mLogFile;
-		LogLevel mLogLevel;
+		Level mLogLevel;
 
 		static std::ostringstream nullStream;
 		static std::ostream& getNullStream();
 
 	public:
 		Logger();
-		Logger(String filename, LogLevel level = LogLevel::INFO);
+		Logger(String filename, Level level = Level::INFO);
 		~Logger();
 
-		std::ostream& Log(LogLevel level = LogLevel::INFO);
-		void Log(LogLevel level, String str);
-		void LogMatrix(LogLevel level, Matrix& data);
-		void LogMatrix(LogLevel level, const Matrix& data);
+		std::ostream& Log(Level level = Level::INFO);
+		void Log(Level level, String str);
+		void LogMatrix(Level level, Matrix& data);
+		void LogMatrix(Level level, const Matrix& data);
 		void LogDataLine(Real time, Matrix& data);
 		void LogDataLine(Real time, Real data);
 		void LogNodeValues(Real time, Matrix& data);

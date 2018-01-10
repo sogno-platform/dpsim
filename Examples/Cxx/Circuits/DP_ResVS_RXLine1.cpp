@@ -49,11 +49,7 @@ int main(int argc, char* argv[])
 	newSim.setSwitchTime(0.1, 1);
 
 	std::cout << "Start simulation." << std::endl;
-
-	while (newSim.step()) {
-		newSim.increaseByTimeStep();
-	}
-
+	newSim.run();
 	std::cout << "Simulation finished." << std::endl;
 
 	return 0;

@@ -40,9 +40,9 @@ namespace DP {
 	public:
 		/// define paramenters of the voltage source
 		VoltageSourceIdeal(String name, Int src, Int dest, Complex voltage,
-			LogLevel loglevel = LogLevel::NONE, Bool decrementNodes = true);
+			Logger::Level loglevel = Logger::Level::NONE, Bool decrementNodes = true);
 
-		void init(SystemModel& system) { }
+		void initialize(SystemModel& system) { }
 
 		/// Inserts the current across the voltage source in the equations of node j and k and add the equantion ej - ek = V to the problem
 		void applySystemMatrixStamp(SystemModel& system);

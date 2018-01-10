@@ -37,7 +37,7 @@ namespace DP {
 	public:
 		TransformerIdeal(String name, Int node1, Int node2, Real ratioAbs, Real ratioPhase);
 
-		void init(SystemModel& system) { };
+		void initialize(SystemModel& system) { };
 		void applySystemMatrixStamp(SystemModel& system);
 		void applyRightSideVectorStamp(SystemModel& system) { };
 		void step(SystemModel& system, Real time) { };

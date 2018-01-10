@@ -194,7 +194,7 @@ namespace Components {
 			Real Rs, Real Ll, Real Lmd, Real Lmd0, Real Lmq, Real Lmq0,
 			Real Rfd, Real Llfd, Real Rkd, Real Llkd,
 			Real Rkq1, Real Llkq1, Real Rkq2, Real Llkq2,
-			Real inertia, LogLevel logLevel = LogLevel::NONE);
+			Real inertia, Logger::Level logLevel = Logger::Level::NONE);
 
 		virtual ~SynchronGeneratorBase() { };
 
@@ -208,7 +208,7 @@ namespace Components {
 
 		/// Initializes states in per unit or stator referred variables depending on the setting of the state type.
 		/// Function parameters have to be given in real units.
-		void init(Real om, Real dt,
+		void initialize(Real om, Real dt,
 			Real initActivePower, Real initReactivePower, Real initTerminalVolt,
 			Real initVoltAngle, Real initFieldVoltage, Real initMechPower) { };
 
@@ -227,7 +227,7 @@ namespace Components {
 		void postStep(SystemModel& system) { };
 
 		// Methods for network integrated components
-		virtual void init(SystemModel& system) { }
+		virtual void initialize(SystemModel& system) { }
 		virtual void applySystemMatrixStamp(SystemModel& system) { }
 		virtual void applyRightSideVectorStamp(SystemModel& system) { }
 	};

@@ -29,7 +29,7 @@ Components::EMT::SynchronGeneratorVBR::SynchronGeneratorVBR(String name, Int nod
 	Real Rs, Real Ll, Real Lmd, Real Lmd0, Real Lmq, Real Lmq0,
 	Real Rfd, Real Llfd, Real Rkd, Real Llkd,
 	Real Rkq1, Real Llkq1, Real Rkq2, Real Llkq2,
-	Real inertia, LogLevel logLevel)
+	Real inertia, Logger::Level logLevel)
 	: SynchronGeneratorBase(name, node1, node2, node3, nomPower, nomVolt, nomFreq, poleNumber, nomFieldCur,
 		Rs, Ll, Lmd, Lmd0, Lmq, Lmq0, Rfd, Llfd, Rkd, Llkd, Rkq1, Llkq1, Rkq2, Llkq2,
 		inertia, logLevel)
@@ -42,7 +42,7 @@ Components::EMT::SynchronGeneratorVBR::~SynchronGeneratorVBR() {
 void Components::EMT::SynchronGeneratorVBR::addExciter(Real Ta, Real Ka, Real Te, Real Ke, Real Tf, Real Kf, Real Tr, Real Lad, Real Rfd)
 {
 	mExciter = Exciter(Ta, Ka, Te, Ke, Tf, Kf, Tr, Lad, Rfd);
-	mExciter.init(1,1);
+	mExciter.initialize(1,1);
 
 	mHasExciter = true;
 }
@@ -50,11 +50,11 @@ void Components::EMT::SynchronGeneratorVBR::addExciter(Real Ta, Real Ka, Real Te
 void Components::EMT::SynchronGeneratorVBR::addGovernor(Real Ta, Real Tb, Real Tc, Real Fa, Real Fb, Real Fc, Real K, Real Tsr, Real Tsm, Real Tm_init, Real PmRef)
 {
 	mTurbineGovernor = TurbineGovernor(Ta, Tb, Tc, Fa, Fb, Fc, K, Tsr, Tsm);
-	mTurbineGovernor.init(PmRef, Tm_init);
+	mTurbineGovernor.initialize(PmRef, Tm_init);
 	mHasTurbineGovernor = true;
 }
 
-void Components::EMT::SynchronGeneratorVBR::init(Real om, Real dt,
+void Components::EMT::SynchronGeneratorVBR::initialize(Real om, Real dt,
 	Real initActivePower, Real initReactivePower, Real initTerminalVolt, Real initVoltAngle, Real initFieldVoltage, Real initMechPower)
 {
 	mResistanceMat = Matrix::Zero(3, 3);
@@ -171,7 +171,7 @@ void Components::EMT::SynchronGeneratorVBR::step(SystemModel& system, Real time)
 		system.addRealToRightSideVector(mNode3, -mIc*mBase_i);
 	}
 
-	if (mLogLevel != LogLevel::NONE) {
+	if (mLogLevel != Logger::Level::NONE) {
 		Matrix logValues(getRotorFluxes().rows() + getDqStatorCurrents().rows() + 3, 1);
 		logValues << getRotorFluxes(), getDqStatorCurrents(), getElectricalTorque(), getRotationalSpeed(), getRotorPosition();
 		mLog->LogDataLine(time, logValues);

@@ -105,7 +105,7 @@ void Components::DP::RxLine::applySystemMatrixStamp(SystemModel& system)
 	}
 }
 
-void Components::DP::RxLine::init(SystemModel& system) {
+void Components::DP::RxLine::initialize(SystemModel& system) {
 	// Initialize internal state
 	mCurrRe = 0;
 	mCurrIm = 0;

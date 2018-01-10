@@ -24,7 +24,7 @@
 using namespace DPsim;
 
 Components::DP::Resistor::Resistor(String name, Int src, Int dest, Real resistance,
-	LogLevel loglevel, Bool decrementNodes)
+	Logger::Level loglevel, Bool decrementNodes)
 	: Base(name, src, dest) {
 	mResistance = resistance;
 	attrMap["resistance"] = { Attribute::Real, &mResistance };

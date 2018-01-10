@@ -81,7 +81,7 @@ void Components::DP::PiLine::applySystemMatrixStamp(SystemModel& system)
 	}
 }
 
-void Components::DP::PiLine::init(SystemModel& system) {
+void Components::DP::PiLine::initialize(SystemModel& system) {
 	// Initialize internal state
 	mCurrIndRe = 0;
 	mCurrIndIm = 0;
