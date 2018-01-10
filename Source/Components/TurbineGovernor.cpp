@@ -37,7 +37,7 @@ Components::TurbineGovernor::TurbineGovernor(Real Ta, Real Tb, Real Tc, Real Fa,
 	mTsm = Tsm;
 }
 
-void Components::TurbineGovernor::init(Real PmRef, Real Tm_init)
+void Components::TurbineGovernor::initialize(Real PmRef, Real Tm_init)
 {
 	mTm = Tm_init;
 	mVcv = PmRef;

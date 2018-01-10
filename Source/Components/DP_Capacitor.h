@@ -56,7 +56,7 @@ namespace DP {
 		Capacitor(String name, Int src, Int dest, Real capacitance);
 
 		/// initializes variables detalvr, deltavi, currr, curri, cureqr and curreqi
-		void init(SystemModel& system);
+		void initialize(SystemModel& system);
 
 		/// Stamps DC equivalent resistance to the conductance matrix
 		void applySystemMatrixStamp(SystemModel& system);

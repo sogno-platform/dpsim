@@ -60,7 +60,7 @@ namespace DP {
 		Transformer(String name, Int node1, Int node2, Real ratioAbs, Real ratioPhase,
 			Real resistance, Real inductance, LogLevel logLevel = LogLevel::NONE, Bool decrementNodes = true);
 
-		void init(SystemModel& system);
+		void initialize(SystemModel& system);
 		void applySystemMatrixStamp(SystemModel& system);
 		void applyRightSideVectorStamp(SystemModel& system) { };
 		void step(SystemModel& system, Real time);

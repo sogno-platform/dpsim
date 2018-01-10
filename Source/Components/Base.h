@@ -126,7 +126,7 @@ namespace Components {
 		String getType();
 
 		/// Initializes variables of components
-		virtual void init(SystemModel& system) { }
+		virtual void initialize(SystemModel& system) { }
 
 		/// Stamps conductance matrix
 		virtual void applySystemMatrixStamp(SystemModel& system) = 0;

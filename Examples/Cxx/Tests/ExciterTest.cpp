@@ -73,7 +73,7 @@ int main(int argc, char* argv[])
 			std::cout << t << '\n';
 
 			if (t == dt) {
-				mExciter.init(Vh_init, Vf_init);
+				mExciter.initialize(Vh_init, Vf_init);
 			}
 
 			vt = mExciter.step(mVd, mVq, Vref, dt);

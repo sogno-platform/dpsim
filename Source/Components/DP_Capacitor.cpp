@@ -49,7 +49,7 @@ void Components::DP::Capacitor::applySystemMatrixStamp(SystemModel& system)
 }
 
 /// Initialize internal state
-void Components::DP::Capacitor::init(SystemModel& system) {
+void Components::DP::Capacitor::initialize(SystemModel& system) {
 	mCurrr = 0;
 	mCurri = 0;
 	mCureqr = 0;

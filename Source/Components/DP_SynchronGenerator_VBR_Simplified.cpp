@@ -47,7 +47,7 @@ void Components::DP::SynchronGeneratorVBRSimplified::addExciter(Real Ta, Real Ka
 	mHasExciter = true;
 }
 
-void Components::DP::SynchronGeneratorVBRSimplified::init(Real om, Real dt,
+void Components::DP::SynchronGeneratorVBRSimplified::initialize(Real om, Real dt,
 	Real initActivePower, Real initReactivePower,
 	Real initTerminalVolt, Real initVoltAngle, Real initFieldVoltage, Real initMechPower)
 {

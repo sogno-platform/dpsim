@@ -31,7 +31,7 @@ Components::DP::InterfacedInductor::InterfacedInductor(String name, Int src, Int
 }
 
 /// Initialize internal state
-void Components::DP::InterfacedInductor::init(SystemModel& system) {
+void Components::DP::InterfacedInductor::initialize(SystemModel& system) {
 	mCurrentRe = 0;
 	mCurrentIm = 0;
 	mVoltageRe = 0;

@@ -90,7 +90,7 @@ int main(int argc, char* argv[])
 	Real om = 2.0*M_PI*60.0;
 	tf = 0.3; dt = 0.000001; t = 0;
 	Int downSampling = 50;
-	Simulation newSim("EMT_SynGen_VBR", circElements, om, dt, tf, LogLevel::INFO, SimulationType::EMT, downSampling);
+	Simulation newSim(circElements, om, dt, tf, log, SimulationType::EMT, downSampling);
 	newSim.setNumericalMethod(NumericalMethod::Trapezoidal_flux);
 	newSim.addSystemTopology(circElementsBreakerOn);
 	newSim.switchSystemMatrix(0);
@@ -103,7 +103,7 @@ int main(int argc, char* argv[])
 	Real fieldVoltage = 7.0821;
 	Real mechPower = 5.5558e5;
 	auto genPtr = std::dynamic_pointer_cast<Components::EMT::SynchronGeneratorVBR>(gen);
-	genPtr->init(om, dt, initActivePower, initReactivePower, initTerminalVolt, initVoltAngle, fieldVoltage, mechPower);
+	genPtr->initialize(om, dt, initActivePower, initReactivePower, initTerminalVolt, initVoltAngle, fieldVoltage, mechPower);
 
 	std::cout << "A matrix:" << std::endl;
 	std::cout << newSim.getSystemMatrix() << std::endl;

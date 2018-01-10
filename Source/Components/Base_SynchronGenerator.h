@@ -208,7 +208,7 @@ namespace Components {
 
 		/// Initializes states in per unit or stator referred variables depending on the setting of the state type.
 		/// Function parameters have to be given in real units.
-		void init(Real om, Real dt,
+		void initialize(Real om, Real dt,
 			Real initActivePower, Real initReactivePower, Real initTerminalVolt,
 			Real initVoltAngle, Real initFieldVoltage, Real initMechPower) { };
 
@@ -227,7 +227,7 @@ namespace Components {
 		void postStep(SystemModel& system) { };
 
 		// Methods for network integrated components
-		virtual void init(SystemModel& system) { }
+		virtual void initialize(SystemModel& system) { }
 		virtual void applySystemMatrixStamp(SystemModel& system) { }
 		virtual void applyRightSideVectorStamp(SystemModel& system) { }
 	};

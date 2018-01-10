@@ -43,7 +43,7 @@ Components::DP::SynchronGeneratorVBR::~SynchronGeneratorVBR() {
 void Components::DP::SynchronGeneratorVBR::addExciter(Real Ta, Real Ka, Real Te, Real Ke, Real Tf, Real Kf, Real Tr, Real Lad, Real Rfd)
 {
 	mExciter = Exciter(Ta, Ka, Te, Ke, Tf, Kf, Tr, Lad, Rfd);
-	mExciter.init(1, 1);
+	mExciter.initialize(1, 1);
 
 	mHasExciter = true;
 }
@@ -51,11 +51,11 @@ void Components::DP::SynchronGeneratorVBR::addExciter(Real Ta, Real Ka, Real Te,
 void Components::DP::SynchronGeneratorVBR::addGovernor(Real Ta, Real Tb, Real Tc, Real Fa, Real Fb, Real Fc, Real K, Real Tsr, Real Tsm, Real Tm_init, Real PmRef)
 {
 	mTurbineGovernor = TurbineGovernor(Ta, Tb, Tc, Fa, Fb, Fc, K, Tsr, Tsm);
-	mTurbineGovernor.init(PmRef, Tm_init);
+	mTurbineGovernor.initialize(PmRef, Tm_init);
 	mHasTurbineGovernor = true;
 }
 
-void Components::DP::SynchronGeneratorVBR::init(Real om, Real dt,
+void Components::DP::SynchronGeneratorVBR::initialize(Real om, Real dt,
 	Real initActivePower, Real initReactivePower,
 	Real initTerminalVolt, Real initVoltAngle, Real initFieldVoltage, Real initMechPower)
 {

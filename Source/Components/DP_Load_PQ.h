@@ -56,7 +56,7 @@ namespace DP {
 			Real volt, Real angle, LogLevel loglevel = LogLevel::NONE, Bool decrementNodes = true);
 
 		/// Initializes variables detalvr, deltavi, currr, curri, cureqr and curreqi
-		void init(SystemModel& system);
+		void initialize(SystemModel& system);
 
 		/// Stamps DC equivalent resistance to the conductance matrix
 		void applySystemMatrixStamp(SystemModel& system);

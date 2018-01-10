@@ -37,7 +37,7 @@ Components::DP::PQLoad::PQLoad(String name, Int node, Real activePower, Real rea
 	attrMap["svVoltage"]     = { Attribute::Real, &mSvVoltage };
 }
 
-void Components::DP::PQLoad::init(SystemModel& system) {
+void Components::DP::PQLoad::initialize(SystemModel& system) {
 	Real abs = mActivePower*mActivePower + mReactivePower*mReactivePower;
 	mResistance = mSvVoltage*mSvVoltage*mActivePower/abs;
 	mConductance = 1.0 / mResistance;
@@ -46,8 +46,8 @@ void Components::DP::PQLoad::init(SystemModel& system) {
 
 	inductor = std::make_shared<Components::DP::Inductor>(mName + "_ind", mNode1, mNode2, mInductance, mLogLevel, false);
 	resistor = std::make_shared<Components::DP::Resistor>(mName + "_res", mNode1, mNode2, mResistance, mLogLevel, false);
-	inductor->init(system);
-	resistor->init(system);
+	inductor->initialize(system);
+	resistor->initialize(system);
 }
 
 void Components::DP::PQLoad::applySystemMatrixStamp(SystemModel& system)

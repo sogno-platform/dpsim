@@ -45,7 +45,7 @@ Components::EMT::SynchronGeneratorSimplifiedCurrentSource::~SynchronGeneratorSim
 
 }
 
-void Components::EMT::SynchronGeneratorSimplifiedCurrentSource::init(Real om, Real dt,
+void Components::EMT::SynchronGeneratorSimplifiedCurrentSource::initialize(Real om, Real dt,
 	Real initActivePower, Real initReactivePower, Real initTerminalVolt,
 	Real initVoltAngle, Real initFieldVoltage, Real initMechPower)
 {

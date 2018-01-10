@@ -40,7 +40,7 @@ Components::DP::SynchronGenerator::~SynchronGenerator() {
 
 }
 
-void Components::DP::SynchronGenerator::init(Real om, Real dt,
+void Components::DP::SynchronGenerator::initialize(Real om, Real dt,
 	Real initActivePower, Real initReactivePower, Real initTerminalVolt,
 	Real initVoltAngle, Real initFieldVoltage, Real initMechPower)
 {

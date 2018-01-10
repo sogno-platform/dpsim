@@ -33,7 +33,7 @@ namespace DP {
 	public:
 		CurrentSourceIdeal(String name, Int src, Int dest, Complex current);
 
-		void init(SystemModel& system) { }
+		void initialize(SystemModel& system) { }
 		void applySystemMatrixStamp(SystemModel& system) { }
 		void applyRightSideVectorStamp(SystemModel& system);
 		void step(SystemModel& system, Real time);

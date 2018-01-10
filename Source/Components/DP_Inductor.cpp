@@ -63,7 +63,7 @@ void Components::DP::Inductor::applySystemMatrixStamp(SystemModel& system) {
 }
 
 
-void Components::DP::Inductor::init(SystemModel& system) {
+void Components::DP::Inductor::initialize(SystemModel& system) {
 	Real a = system.getTimeStep() / (2. * mInductance);
 	Real b = system.getTimeStep() * system.getOmega() / 2.;
 	Complex impedance = { 0, system.getOmega() * mInductance };

@@ -39,7 +39,7 @@ Components::EMT::SynchronGenerator::~SynchronGenerator() {
 
 }
 
-void Components::EMT::SynchronGenerator::init(Real om, Real dt,
+void Components::EMT::SynchronGenerator::initialize(Real om, Real dt,
 	Real initActivePower, Real initReactivePower, Real initTerminalVolt,
 	Real initVoltAngle, Real initFieldVoltage, Real initMechPower)
 {

@@ -88,7 +88,7 @@ namespace EMT {
 
 		/// Initializes states in per unit or stator referred variables depending on the setting of the state type.
 		/// Function parameters have to be given in real units.
-		void init(Real om, Real dt,
+		void initialize(Real om, Real dt,
 			Real initActivePower, Real initReactivePower, Real initTerminalVolt,
 			Real initVoltAngle, Real initFieldVoltage, Real initMechPower);
 
@@ -119,7 +119,7 @@ namespace EMT {
 		Real getRotorPosition() { return mThetaMech; }
 
 		// Methods for network integrated components
-		void init(SystemModel& system) { }
+		void initialize(SystemModel& system) { }
 		void applySystemMatrixStamp(SystemModel& system) { }
 		void applyRightSideVectorStamp(SystemModel& system) { }
 	};

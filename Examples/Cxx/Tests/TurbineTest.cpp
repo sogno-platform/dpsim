@@ -61,7 +61,7 @@ int main(int argc, char* argv[])
 	Real t = 0;
 	Real Pm = 0;
 
-	mTurbineGovernor.init(PmRef, initActivePower / nomPower);
+	mTurbineGovernor.initialize(PmRef, initActivePower / nomPower);
 
 	while (getline(omega, line))
 	{
