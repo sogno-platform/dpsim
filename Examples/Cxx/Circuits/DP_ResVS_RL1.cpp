@@ -23,6 +23,7 @@
 #include "Utilities.h"
 
 using namespace DPsim;
+using namespace DPsim::Components::DP;
 
 int main(int argc, char* argv[])
 {
@@ -33,11 +34,11 @@ int main(int argc, char* argv[])
 	String simName = "Example1_" + std::to_string(timeStep);
 
 	Components::Base::List comps = {
-		std::make_shared<Components::DP::VoltageSource>("v_in", 1, 0, Complex(10, 0), 1),
-		std::make_shared<Components::DP::Inductor>("l_1", 1, 2, 0.02),
-		std::make_shared<Components::DP::Inductor>("l_2", 2, 0, 0.1),
-		std::make_shared<Components::DP::Inductor>("l_3", 2, 3, 0.05),
-		std::make_shared<Components::DP::Resistor>("r_2", 3, 0, 2)
+		VoltageSource::make("v_in", 1, 0, Complex(10, 0), 1),
+		Inductor::make("l_1", 1, 2, 0.02),
+		Inductor::make("l_2", 2, 0, 0.1),
+		Inductor::make("l_3", 2, 3, 0.05),
+		Resistor::make("r_2", 3, 0, 2)
 	};
 
 	// Set up simulation and start main simulation loop

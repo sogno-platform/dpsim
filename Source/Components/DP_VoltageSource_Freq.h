@@ -28,7 +28,7 @@ namespace DPsim {
 namespace Components {
 namespace DP {
 
-	class VoltageSourceFreq : public Components::Base {
+	class VoltageSourceFreq : public Components::Base, public SharedFactory<VoltageSourceFreq> {
 
 	protected:
 		Real mVoltageAmp;

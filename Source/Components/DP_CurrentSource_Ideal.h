@@ -28,7 +28,7 @@ namespace DPsim {
 namespace Components {
 namespace DP {
 
-	class CurrentSourceIdeal : public CurrentSourceBase<Complex> {
+	class CurrentSourceIdeal : public CurrentSourceBase<Complex>, public SharedFactory<CurrentSourceIdeal> {
 
 	public:
 		CurrentSourceIdeal(String name, Int src, Int dest, Complex current);

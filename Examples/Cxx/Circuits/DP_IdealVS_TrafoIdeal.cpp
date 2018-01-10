@@ -23,6 +23,7 @@
 #include "Utilities.h"
 
 using namespace DPsim;
+using namespace DPsim::Components::DP;
 
 int tmpmain(int argc, char* argv[])
 {
@@ -33,9 +34,9 @@ int tmpmain(int argc, char* argv[])
 	String simName = "IdealVS_TrafoIdeal_" + std::to_string(timeStep);
 
 	Components::Base::List comps = {
-		std::make_shared<Components::DP::VoltageSourceIdeal>("v_1", 0, 1, Complex(10, 0)),
-		std::make_shared<Components::DP::TransformerIdeal>("trafo_1", 1, 2, 10, 0),
-		std::make_shared<Components::DP::Resistor>("r_1", 2, 0, 1)
+		VoltageSourceIdeal::make("v_1", 0, 1, Complex(10, 0)),
+		TransformerIdeal::make("trafo_1", 1, 2, 10, 0),
+		Resistor::make("r_1", 2, 0, 1)
 	};
 
 	// Set up simulation and start main simulation loop

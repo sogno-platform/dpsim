@@ -23,6 +23,7 @@
 #include "Simulation.h"
 
 using namespace DPsim;
+using namespace DPsim::Components::DP;
 
 int main(int argc, char* argv[])
 {
@@ -66,21 +67,21 @@ int main(int argc, char* argv[])
 	Real Llkq2 = 0;
 
 	// Declare circuit components
-	Components::Base::Ptr gen = std::make_shared<Components::DP::SynchronGenerator>("gen", 1, 2, 3,
+	Components::Base::Ptr gen = SynchronGenerator::make("gen", 1, 2, 3,
 		nomPower, nomPhPhVoltRMS, nomFreq, poleNum, nomFieldCurr,
 		Rs, Ll, Lmd, Lmd0, Lmq, Lmq0, Rfd, Llfd, Rkd, Llkd, Rkq1, Llkq1, Rkq2, Llkq2, H);
 	Real loadRes = 1037.8378;
-	Components::Base::Ptr r1 = std::make_shared<Components::DP::Resistor>("r1", 1, 0, loadRes);
-	Components::Base::Ptr r2 = std::make_shared<Components::DP::Resistor>("r2", 2, 0, loadRes);
-	Components::Base::Ptr r3 = std::make_shared<Components::DP::Resistor>("r3", 3, 0, loadRes);
+	Components::Base::Ptr r1 = Resistor::make("r1", 1, 0, loadRes);
+	Components::Base::Ptr r2 = Resistor::make("r2", 2, 0, loadRes);
+	Components::Base::Ptr r3 = Resistor::make("r3", 3, 0, loadRes);
 
 	Components::Base::List comps = { gen, r1, r2, r3 };
 
 	// Declare circuit components for resistance change
 	Real breakerRes = 0.001;
-	Components::Base::Ptr rBreaker1 = std::make_shared<Components::DP::Resistor>("rbreak1", 1, 0, breakerRes);
-	Components::Base::Ptr rBreaker2 = std::make_shared<Components::DP::Resistor>("rbreak2", 2, 0, breakerRes);
-	Components::Base::Ptr rBreaker3 = std::make_shared<Components::DP::Resistor>("rbreak3", 3, 0, breakerRes);
+	Components::Base::Ptr rBreaker1 = Resistor::make("rbreak1", 1, 0, breakerRes);
+	Components::Base::Ptr rBreaker2 = Resistor::make("rbreak2", 2, 0, breakerRes);
+	Components::Base::Ptr rBreaker3 = Resistor::make("rbreak3", 3, 0, breakerRes);
 
 	Components::Base::List compsBreakerOn = { gen, rBreaker1, rBreaker2, rBreaker3, r1, r2, r3 };
 

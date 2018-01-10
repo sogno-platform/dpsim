@@ -22,14 +22,13 @@
 
 #pragma once
 
-#include <iostream>
 #include "Base.h"
 
 namespace DPsim {
 namespace Components {
 namespace DP {
 
-	class Resistor : public Components::Base {
+	class Resistor : public Components::Base, public SharedFactory<Resistor> {
 
 	protected:
 		///Resistance [ohm]

@@ -1,7 +1,7 @@
-/** Linear Resistor (EMT)
+/** Shared Factory
  *
  * @file
- * @author Markus Mirz <mmirz@eonerc.rwth-aachen.de>
+ * @author Steffen Vogel <stvogel@eonerc.rwth-aachen.de>
  * @copyright 2017, Institute for Automation of Complex Power Systems, EONERC
  *
  * DPsim
@@ -22,30 +22,17 @@
 
 #pragma once
 
-#include <iostream>
-#include "Base.h"
+#include <memory>
+#include <utility>
 
-namespace DPsim {
-namespace Components {
-namespace EMT {
-
-	class Resistor : public Components::Base, public SharedFactory<Resistor> {
-
-	protected:
-		Real mResistance;
-		Real mConductance;
-		Real mVoltageAtNode1;
-		Real mVoltageAtNode2;
-
-	public:
-		Resistor(String name, Int src, Int dest, Real resistance);
-
-		void initialize(SystemModel& system) { }
-		void applySystemMatrixStamp(SystemModel& system);
-		void applyRightSideVectorStamp(SystemModel& system) { }
-		void step(SystemModel& system, Real time) { }
-		void postStep(SystemModel& system) { }
-	};
-}
-}
-}
+/// Curiously recurring template pattern (CRTP) to create create new shared_ptr instances.
+/// See: https://en.wikipedia.org/wiki/Curiously_recurring_template_pattern
+template<typename T>
+class SharedFactory {
+public:
+	template<typename... Args>
+	static std::shared_ptr<T> make(Args&&... args)
+	{
+		return std::make_shared<T>(std::forward<Args>(args)...);
+	}
+};

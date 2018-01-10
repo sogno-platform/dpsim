@@ -23,19 +23,23 @@
 #include "Utilities.h"
 
 using namespace DPsim;
+using namespace DPsim::Components;
 
 static void VarFreqRxLineResLoad_DP(Real timeStep, Real finalTime, Real freqStep, Real loadStep, Real rampTime) {
 	// Define simulation scenario
 	Real omega = 2.0*M_PI*50.0;
 	String simName = "DpEmtVarFreqStudy_" + std::to_string(timeStep);
-	Components::Base::List comps0, comps1, comps2;
-	comps0.push_back(std::make_shared<Components::DP::VoltageSourceFreq>("v_s", 1, 0, 1000, 0, 1, 2 * PI*-5, freqStep, rampTime));
-	comps0.push_back(std::make_shared<Components::DP::Resistor>("r_line", 1, 2, 1));
-	comps0.push_back(std::make_shared<Components::DP::Inductor>("l_line", 2, 3, 0.2));
-	comps1 = comps0;
-	comps2 = comps0;
-	comps1.push_back(std::make_shared<Components::DP::Resistor>("r_load", 3, 0, 100));
-	comps2.push_back(std::make_shared<Components::DP::Resistor>("r_load", 3, 0, 50));
+	
+	Components::Base::List comps0 = {
+		DP::VoltageSourceFreq::make("v_s", 1, 0, 1000, 0, 1, 2 * PI*-5, freqStep, rampTime),
+		DP::Resistor::make("r_line", 1, 2, 1),
+		DP::Inductor::make("l_line", 2, 3, 0.2)
+	};
+
+	Components::Base::List comps1 = comps0;
+	Components::Base::List comps2 = comps0;
+	comps1.push_back(DP::Resistor::make("r_load", 3, 0, 100));
+	comps2.push_back(DP::Resistor::make("r_load", 3, 0, 50));
 
 	// Set up simulation and start main simulation loop
 	Simulation newSim(simName, comps1, omega, timeStep, finalTime);
@@ -54,20 +58,23 @@ static void VarFreqRxLineResLoad_EMT(Real timeStep, Real finalTime, Real freqSte
 	// Define simulation scenario
 	Real omega = 2.0*M_PI*50.0;
 	String simName = "RXLineResLoadEMT_" + std::to_string(timeStep);
-	Components::Base::List comps0, comps1, comps2;
-	comps0.push_back(std::make_shared<Components::DP::VoltageSourceFreq>("v_s", 1, 0, 1000, 0, 1, 2 * PI*-5, freqStep, rampTime));
-	comps0.push_back(std::make_shared<Components::EMT::Resistor>("r_line", 1, 2, 1));
-	comps0.push_back(std::make_shared<Components::EMT::Inductor>("l_line", 2, 3, 0.2));
-	comps1 = comps0;
-	comps2 = comps0;
-	comps1.push_back(std::make_shared<Components::EMT::Resistor>("r_load", 3, 0, 100));
-	comps2.push_back(std::make_shared<Components::EMT::Resistor>("r_load", 3, 0, 50));
+
+	Components::Base::List comps0 = {
+		DP::VoltageSourceFreq::make("v_s", 1, 0, 1000, 0, 1, 2 * PI*-5, freqStep, rampTime),
+		EMT::Resistor::make("r_line", 1, 2, 1),
+		EMT::Inductor::make("l_line", 2, 3, 0.2)
+	};
+
+	Components::Base::List comps1 = comps0;
+	Components::Base::List comps2 = comps0;
+	comps1.push_back(EMT::Resistor::make("r_load", 3, 0, 100));
+	comps2.push_back(EMT::Resistor::make("r_load", 3, 0, 50));
 
 	// Set up simulation and start main simulation loop
 	Simulation newSim(simName, comps1, omega, timeStep, finalTime, Logger::Level::INFO, SimulationType::EMT);
 	newSim.addSystemTopology(comps2);
 	newSim.setSwitchTime(loadStep, 1);
-	
+
 	std::cout << "Start simulation." << std::endl;
 	while (newSim.step()) {
 		newSim.increaseByTimeStep();

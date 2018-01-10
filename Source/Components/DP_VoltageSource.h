@@ -28,7 +28,7 @@ namespace DPsim {
 namespace Components {
 namespace DP {
 
-	class VoltageSource : public VoltageSourceBase<Complex> {
+	class VoltageSource : public VoltageSourceBase<Complex>, public SharedFactory<VoltageSource> {
 
 		/// Real Voltage source:
 		/// The real voltage source is a voltage source in series with a resistance, which is transformed to a current source with
