@@ -30,16 +30,13 @@
 
 using namespace DPsim;
 
-Simulation::Simulation()
+Simulation::Simulation(String name, Components::Base::List elements, Real om, Real dt, Real tf, Logger::Level logLevel,
+	SimulationType simType, Int downSampleRate)
 {
 	mTime = 0;
 	mLastLogTimeStep = 0;
 	mCurrentSwitchTimeIndex = 0;
-}
 
-Simulation::Simulation(String name, Components::Base::List elements, Real om, Real dt, Real tf, Logger::Level logLevel,
-	SimulationType simType, Int downSampleRate)
-	: Simulation() {
 	mName = name;
 	mLogLevel = logLevel;
 	mSystemModel.setSimType(simType);

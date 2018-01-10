@@ -124,8 +124,6 @@ namespace DPsim {
 		Real mIShiftc_hist;
 
 	public:
-		/// Sets parameters to default values.
-		Simulation();
 		/// Creates system matrix according to
 		Simulation(String name, Components::Base::List elements, Real om, Real dt, Real tf, Logger::Level logLevel = Logger::Level::INFO, SimulationType simType = SimulationType::DynPhasor, Int downSampleRate = 1);
 		~Simulation();
