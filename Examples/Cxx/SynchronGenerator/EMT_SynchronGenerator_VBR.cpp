@@ -19,7 +19,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *********************************************************************************/
 
-#include "Simulation.h"
+#include "GeneratorVBRSimulation.h"
 
 using namespace DPsim;
 
@@ -89,7 +89,7 @@ int main(int argc, char* argv[])
 	Real om = 2.0*M_PI*60.0;
 	tf = 0.3; dt = 0.000001; t = 0;
 	Int downSampling = 50;
-	Simulation newSim("EMT_SynchronGenerator_VBR", circElements, om, dt, tf, Logger::Level::INFO, SimulationType::EMT, downSampling);
+	GeneratorVBRSimulation newSim("EMT_SynchronGenerator_VBR", circElements, om, dt, tf, Logger::Level::INFO, SimulationType::EMT, downSampling);
 	newSim.setNumericalMethod(NumericalMethod::Trapezoidal_flux);
 	newSim.addSystemTopology(circElementsBreakerOn);
 	newSim.switchSystemMatrix(0);
