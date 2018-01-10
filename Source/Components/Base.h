@@ -45,7 +45,7 @@ namespace Components {
 		typedef std::map<DPsim::String, Components::Attribute> Map;
 	};
 
-	/// Base class for all elements that might be added to the matrix.
+	/// Base class for all components that might be added to the matrix.
 	class Base {
 
 	protected:

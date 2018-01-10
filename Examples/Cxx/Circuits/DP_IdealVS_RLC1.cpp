@@ -33,7 +33,7 @@ int main(int argc, char* argv[])
 	Real finalTime = 0.3;
 	String simName = "IdealVS2_" + std::to_string(timeStep);
 
-	Components::Base::List circElements = {
+	Components::Base::List comps = {
 		VoltageSourceIdeal::make("v_in", 1, 0, Complex(10, 0)),
 		Resistor::make("r_1", 1, 2, 1),
 		Capacitor::make("c_1", 2, 3, 0.001),
@@ -42,7 +42,7 @@ int main(int argc, char* argv[])
 	};
 
 	// Set up simulation and start main simulation loop
-	Simulation newSim(simName, circElements, omega, timeStep, finalTime);
+	Simulation newSim(simName, comps, omega, timeStep, finalTime);
 
 	std::cout << "Start simulation." << std::endl;
 	newSim.run();

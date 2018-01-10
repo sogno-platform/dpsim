@@ -33,7 +33,7 @@ int main(int argc, char* argv[])
 	Real finalTime = 0.3;
 	String simName = "RxLine2_" + std::to_string(timeStep);
 
-	Components::Base::List circElements = {
+	Components::Base::List comps = {
 		VoltageSourceIdeal::make("v_1", 1, 0, Complex(10, 0)),
 		Inductor::make("l_L", 2, 3, 0.001),
 		Resistor::make("r_L", 1, 2, 0.1),
@@ -41,7 +41,7 @@ int main(int argc, char* argv[])
 	};
 
 	// Set up simulation and start main simulation loop
-	Simulation newSim(simName, circElements, omega, timeStep, finalTime);
+	Simulation newSim(simName, comps, omega, timeStep, finalTime);
 
 	std::cout << "Start simulation." << std::endl;
 	newSim.run();

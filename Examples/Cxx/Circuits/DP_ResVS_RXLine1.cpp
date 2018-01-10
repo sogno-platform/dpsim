@@ -33,20 +33,20 @@ int main(int argc, char* argv[])
 	Real finalTime = 0.3;
 	String simName = "RxLineResLoad_" + std::to_string(timeStep);
 
-	Components::Base::List circElements0 = {
+	Components::Base::List comps = {
 		VoltageSource::make("v_s", 1, 0, Complex(10000, 0), 1),
 		Resistor::make("r_line", 1, 2, 1),
 		Inductor::make("l_line", 2, 3, 1)
 	};
 
-	Components::Base::List circElements1 = circElements0;
-	Components::Base::List circElements2 = circElements0;
-	circElements1.push_back(std::make_shared<Components::DP::Resistor>("r_load", 3, 0, 1000));
-	circElements2.push_back(std::make_shared<Components::DP::Resistor>("r_load", 3, 0, 800));
+	Components::Base::List comps1 = comps0;
+	Components::Base::List comps2 = comps0;
+	comps1.push_back(Resistor::make("r_load", 3, 0, 1000));
+	comps2.push_back(Resistor::make("r_load", 3, 0, 800));
 
 	// Set up simulation and start main simulation loop
-	Simulation newSim(simName, circElements1, omega, timeStep, finalTime);
-	newSim.addSystemTopology(circElements2);
+	Simulation newSim(simName, comps1, omega, timeStep, finalTime);
+	newSim.addSystemTopology(comps2);
 	newSim.setSwitchTime(0.1, 1);
 
 	std::cout << "Start simulation." << std::endl;

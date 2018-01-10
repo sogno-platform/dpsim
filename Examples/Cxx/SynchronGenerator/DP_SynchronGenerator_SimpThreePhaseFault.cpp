@@ -75,7 +75,7 @@ int main(int argc, char* argv[])
 	Components::Base::Ptr r2 = Resistor::make("r2", 2, 0, loadRes);
 	Components::Base::Ptr r3 = Resistor::make("r3", 3, 0, loadRes);
 
-	Components::Base::List circElements = { gen, r1, r2, r3 };
+	Components::Base::List comps = { gen, r1, r2, r3 };
 
 	// Declare circuit components for resistance change
 	Real breakerRes = 0.001;
@@ -83,16 +83,16 @@ int main(int argc, char* argv[])
 	Components::Base::Ptr rBreaker2 = Resistor::make("rbreak2", 2, 0, breakerRes);
 	Components::Base::Ptr rBreaker3 = Resistor::make("rbreak3", 3, 0, breakerRes);
 
-	Components::Base::List circElementsBreakerOn = { gen, rBreaker1, rBreaker2, rBreaker3, r1, r2, r3 };
+	Components::Base::List compsBreakerOn = { gen, rBreaker1, rBreaker2, rBreaker3, r1, r2, r3 };
 
 	// Set up simulation
 	Real tf, dt, t;
 	Real om = 2.0*M_PI*60.0;
 	tf = 0.3; dt = 0.000001; t = 0;
 	Int downSampling = 50;
-	Simulation newSim("DP_SynGen_SimpThreePhaseFault", circElements, om, dt, tf, Logger::Level::INFO, SimulationType::DynPhasor, downSampling);
+	Simulation newSim("DP_SynGen_SimpThreePhaseFault", comps, om, dt, tf, Logger::Level::INFO, SimulationType::DynPhasor, downSampling);
 	newSim.setNumericalMethod(NumericalMethod::Trapezoidal_flux);
-	newSim.addSystemTopology(circElementsBreakerOn);
+	newSim.addSystemTopology(compsBreakerOn);
 	newSim.switchSystemMatrix(0);
 
 	// Initialize generator

@@ -33,7 +33,7 @@ int main(int argc, char* argv[])
 	Real finalTime = 0.3;
 	String simName = "IdealVS_EMT_" + std::to_string(timeStep);
 
-	Components::Base::List circElements = {
+	Components::Base::List comps = {
 		VoltageSourceIdeal::make("v_in", 1, 2, 10),
 		Resistor::make("r_1", 1, 0, 5),
 		Resistor::make("r_2", 2, 0, 10),
@@ -41,7 +41,7 @@ int main(int argc, char* argv[])
 	};
 
 	// Set up simulation and start main simulation loop
-	Simulation newSim(simName, circElements, omega, timeStep, finalTime, Logger::Level::INFO, SimulationType::EMT);
+	Simulation newSim(simName, comps, omega, timeStep, finalTime, Logger::Level::INFO, SimulationType::EMT);
 
 	std::cout << "Start simulation." << std::endl;
 	newSim.run();

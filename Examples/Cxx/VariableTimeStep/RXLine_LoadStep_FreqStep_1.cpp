@@ -29,7 +29,7 @@ static void VarFreqRxLineResLoad_DP(Real timeStep, Real finalTime, Real freqStep
 	// Define simulation scenario
 	Real omega = 2.0*M_PI*50.0;
 	String simName = "DpEmtVarFreqStudy_" + std::to_string(timeStep);
-
+	
 	Components::Base::List comps0 = {
 		DP::VoltageSourceFreq::make("v_s", 1, 0, 1000, 0, 1, 2 * PI*-5, freqStep, rampTime),
 		DP::Resistor::make("r_line", 1, 2, 1),
