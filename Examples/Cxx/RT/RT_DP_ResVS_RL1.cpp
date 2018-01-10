@@ -23,16 +23,17 @@
 #include "Utilities.h"
 
 using namespace DPsim;
+using namespace DPsim::Components::DP;
 
 int main(int argc, char* argv[])
 {
 	Real timeStep = 0.00005;
 	Logger log;
 	Components::Base::List comps = {
-		std::make_shared<Components::DP::VoltageSource>("v_s", 1, 0, Complex(10000, 0), 1),
-		std::make_shared<Components::DP::Resistor>("r_line", 1, 2, 1),
-		std::make_shared<Components::DP::Inductor>("l_line", 2, 3, 1),
-		std::make_shared<Components::DP::Resistor>("r_load", 3, 0, 1000)
+		VoltageSource::make("v_s", 1, 0, Complex(10000, 0), 1),
+		Resistor::make("r_line", 1, 2, 1),
+		Inductor::make("l_line", 2, 3, 1),
+		Resistor::make("r_load", 3, 0, 1000)
 	};
 
 	// Set up simulation

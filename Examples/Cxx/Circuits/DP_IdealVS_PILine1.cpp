@@ -23,6 +23,7 @@
 #include "Utilities.h"
 
 using namespace DPsim;
+using namespace DPsim::Components::DP;
 
 int main(int argc, char* argv[])
 {
@@ -33,13 +34,13 @@ int main(int argc, char* argv[])
 	String simName = "PiLine1_" + std::to_string(timeStep);
 
 	Components::Base::List circElements = {
-		std::make_shared<Components::DP::VoltageSourceIdeal>("v_1", 1, 0, Complex(345, 0)),
-		std::make_shared<Components::DP::Resistor>("r1", 1, 2, 5),
-		std::make_shared<Components::DP::Capacitor>("c_1", 2, 0, 0.002),
-		std::make_shared<Components::DP::Resistor>("r_load", 2, 4, 6.4),
-		std::make_shared<Components::DP::Inductor>("l_1", 4, 3, 0.186),
-		std::make_shared<Components::DP::Capacitor>("c_2", 3, 0, 0.002),
-		std::make_shared<Components::DP::Resistor>("r_load", 3, 0, 150)
+		VoltageSourceIdeal::make("v_1", 1, 0, Complex(345, 0)),
+		Resistor::make("r1", 1, 2, 5),
+		Capacitor::make("c_1", 2, 0, 0.002),
+		Resistor::make("r_load", 2, 4, 6.4),
+		Inductor::make("l_1", 4, 3, 0.186),
+		Capacitor::make("c_2", 3, 0, 0.002),
+		Resistor::make("r_load", 3, 0, 150)
 	};
 
 	// Set up simulation and start main simulation loop

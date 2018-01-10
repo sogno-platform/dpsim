@@ -22,6 +22,7 @@
 #include "Simulation.h"
 
 using namespace DPsim;
+using namespace DPsim::Components::DP;
 
 int main(int argc, char* argv[])
 {
@@ -55,13 +56,13 @@ int main(int argc, char* argv[])
 	Real Llkq2 = 0.125;
 
 	// Declare circuit components
-	Components::Base::Ptr gen = std::make_shared<Components::DP::SynchronGenerator>("gen", 1, 2, 3,
+	Components::Base::Ptr gen = SynchronGenerator::make("gen", 1, 2, 3,
 		nomPower, nomPhPhVoltRMS, nomFreq, poleNum, nomFieldCurr,
 		Rs, Ll, Lmd, Lmd0, Lmq, Lmq0, Rfd, Llfd, Rkd, Llkd, Rkq1, Llkq1, Rkq2, Llkq2, H);
 	Real loadRes = 1037.8378;
-	Components::Base::Ptr r1 = std::make_shared<Components::DP::Resistor>("r1", 0, 1, loadRes);
-	Components::Base::Ptr r2 = std::make_shared<Components::DP::Resistor>("r2", 0, 2, loadRes);
-	Components::Base::Ptr r3 = std::make_shared<Components::DP::Resistor>("r3", 0, 3, loadRes);
+	Components::Base::Ptr r1 = Resistor::make("r1", 0, 1, loadRes);
+	Components::Base::Ptr r2 = Resistor::make("r2", 0, 2, loadRes);
+	Components::Base::Ptr r3 = Resistor::make("r3", 0, 3, loadRes);
 
 	Components::Base::List circElements = { gen, r1, r2, r3 };
 

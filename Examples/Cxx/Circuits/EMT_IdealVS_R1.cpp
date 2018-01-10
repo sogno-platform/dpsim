@@ -23,6 +23,7 @@
 #include "Utilities.h"
 
 using namespace DPsim;
+using namespace DPsim::Components::EMT;
 
 int main(int argc, char* argv[])
 {
@@ -33,10 +34,10 @@ int main(int argc, char* argv[])
 	String simName = "IdealVS_EMT_" + std::to_string(timeStep);
 
 	Components::Base::List circElements = {
-		std::make_shared<Components::EMT::VoltageSourceIdeal>("v_in", 1, 2, 10),
-		std::make_shared<Components::EMT::Resistor>("r_1", 1, 0, 5),
-		std::make_shared<Components::EMT::Resistor>("r_2", 2, 0, 10),
-		std::make_shared<Components::EMT::Resistor>("r_3", 2, 0, 2)
+		VoltageSourceIdeal::make("v_in", 1, 2, 10),
+		Resistor::make("r_1", 1, 0, 5),
+		Resistor::make("r_2", 2, 0, 10),
+		Resistor::make("r_3", 2, 0, 2)
 	};
 
 	// Set up simulation and start main simulation loop

@@ -23,6 +23,7 @@
 #include "Utilities.h"
 
 using namespace DPsim;
+using namespace DPsim::Components::DP;
 
 int main(int argc, char* argv[])
 {
@@ -33,9 +34,9 @@ int main(int argc, char* argv[])
 	String simName = "RxLine1_" + std::to_string(timeStep);
 
 	Components::Base::List circElements = {
-		std::make_shared<Components::DP::VoltageSourceIdeal>("v_1", 1, 0, Complex(10, 0)),
-		std::make_shared<Components::DP::RxLine>("Line_1", 1, 2, 0.1, 0.001),
-		std::make_shared<Components::DP::Resistor>("r_1", 2, 0, 20)
+		VoltageSourceIdeal::make("v_1", 1, 0, Complex(10, 0)),
+		RxLine::make("Line_1", 1, 2, 0.1, 0.001),
+		Resistor::make("r_1", 2, 0, 20)
 	};
 
 	// Set up simulation and start main simulation loop
