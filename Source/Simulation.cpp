@@ -21,13 +21,6 @@
 
 #include "Simulation.h"
 
-#ifdef WITH_RT
-  #include <signal.h>
-  #include <sys/timerfd.h>
-  #include <time.h>
-  #include <unistd.h>
-#endif /* WITH_RT */
-
 using namespace DPsim;
 
 Simulation::Simulation(String name, Components::Base::List comps, Real om, Real dt, Real tf, Logger::Level logLevel,
@@ -44,9 +37,6 @@ Simulation::Simulation(String name, Components::Base::List comps, Real om, Real 
 	mSystemModel.setOmega(om);
 	mFinalTime = tf;
 	mDownSampleRate = downSampleRate;
-	mLog = std::make_shared<Logger>("Logs/" + name + ".log", mLogLevel);
-	mLeftVectorLog = std::make_shared<Logger>("Logs/" + name + "_LeftVector.csv", mLogLevel);
-	mRightVectorLog = std::make_shared<Logger>("Logs/" + name + "_RightVector.csv", mLogLevel);
 
 	initialize(comps);
 
@@ -67,7 +57,7 @@ void Simulation::initialize(Components::Base::List newComponents)
 	Int maxNode = 0;
 	Int currentVirtualNode = 0;
 
-	mLog->Log(Logger::Level::INFO) << "#### Start Initialization ####" << std::endl;
+	mLog.Log(Logger::Level::INFO) << "#### Start Initialization ####" << std::endl;
 
 	// Calculate the mNumber of nodes by going through the list of components
 	// TODO we use the values from the first component vector right now and assume that
@@ -82,7 +72,7 @@ void Simulation::initialize(Components::Base::List newComponents)
 		}
 	}
 
-	mLog->Log(Logger::Level::INFO) << "Maximum node number: " << maxNode << std::endl;
+	mLog.Log(Logger::Level::INFO) << "Maximum node number: " << maxNode << std::endl;
 	currentVirtualNode = maxNode;
 
 	// Check if component requires virtual node and if so set one
@@ -163,8 +153,8 @@ Int Simulation::step(bool blocking)
 		}
 	}
 
-	mLeftVectorLog->LogNodeValues(getTime(), getLeftSideVector());
-	mRightVectorLog->LogNodeValues(getTime(), getRightSideVector());
+	mLeftVectorLog.LogNodeValues(getTime(), getLeftSideVector());
+	mRightVectorLog.LogNodeValues(getTime(), getRightSideVector());
 
 	return mTime < mFinalTime;
 }

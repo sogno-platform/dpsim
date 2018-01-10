@@ -45,11 +45,11 @@ namespace DPsim {
 		/// Simulation log level
 		Logger::Level mLogLevel;
 		/// Simulation logger
-		std::shared_ptr<Logger> mLog;
+		Logger mLog;
 		/// Left side vector logger
-		std::shared_ptr<Logger> mLeftVectorLog;
+		Logger mLeftVectorLog;
 		/// Right side vector logger
-		std::shared_ptr<Logger> mRightVectorLog;
+		Logger mRightVectorLog;
 		/// Final time of the simulation
 		Real mFinalTime;
 		/// Time variable that is incremented at every step
@@ -88,7 +88,7 @@ namespace DPsim {
 
 		void setNumericalMethod(NumericalMethod numMethod);
 
-		String getName() const { return mName; };
+		String getName() const { return mName; }
 		Real getTime() { return mTime; }
 		Real getFinalTime() { return mFinalTime; }
 		Real getTimeStep() { return mSystemModel.getTimeStep(); }

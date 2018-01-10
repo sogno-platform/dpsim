@@ -111,8 +111,8 @@ Int FaultSimulation::step(bool blocking)
 		}
 	}
 
-	mLeftVectorLog->LogNodeValues(getTime(), getLeftSideVector());
-	mRightVectorLog->LogNodeValues(getTime(), getRightSideVector());
+	mLeftVectorLog.LogNodeValues(getTime(), getLeftSideVector());
+	mRightVectorLog.LogNodeValues(getTime(), getRightSideVector());
 
 	return mTime < mFinalTime;
 }
