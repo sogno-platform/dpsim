@@ -29,18 +29,18 @@ static void VarFreqRxLineResLoad_NZ_Paper_DP(Real timeStep, Real finalTime, Real
 	// Define simulation scenario
 	std::ostringstream fileName;
 	String simName = "DpEmtVarFreqStudy_NZ_Paper_" + std::to_string(timeStep);
-	Components::Base::List circElements0, circElements1, circElements2;
-	circElements0.push_back(std::make_shared<Components::DP::VoltageSourceFreq>("v_s", 1, 0, 10000, 0, 1, 2 * PI*-1, freqStep, rampTime));
-	circElements0.push_back(std::make_shared<Components::DP::Resistor>("r_line", 1, 2, 1));
-	circElements0.push_back(std::make_shared<Components::DP::Inductor>("l_line", 2, 3, 1));
-	circElements1 = circElements0;
-	circElements2 = circElements0;
-	circElements1.push_back(std::make_shared<Components::DP::Resistor>("r_load", 3, 0, 10));
-	circElements2.push_back(std::make_shared<Components::DP::Resistor>("r_load", 3, 0, 5));
+	Components::Base::List comps0, comps1, comps2;
+	comps0.push_back(std::make_shared<Components::DP::VoltageSourceFreq>("v_s", 1, 0, 10000, 0, 1, 2 * PI*-1, freqStep, rampTime));
+	comps0.push_back(std::make_shared<Components::DP::Resistor>("r_line", 1, 2, 1));
+	comps0.push_back(std::make_shared<Components::DP::Inductor>("l_line", 2, 3, 1));
+	comps1 = comps0;
+	comps2 = comps0;
+	comps1.push_back(std::make_shared<Components::DP::Resistor>("r_load", 3, 0, 10));
+	comps2.push_back(std::make_shared<Components::DP::Resistor>("r_load", 3, 0, 5));
 
 	// Set up simulation
-	Simulation newSim(simName, circElements1, 2.0*PI*50.0, timeStep, finalTime);
-	newSim.addSystemTopology(circElements2);
+	Simulation newSim(simName, comps1, 2.0*PI*50.0, timeStep, finalTime);
+	newSim.addSystemTopology(comps2);
 	newSim.setSwitchTime(loadStep, 1);
 
 	// Main Simulation Loop
@@ -54,17 +54,17 @@ static void VarFreqRxLineResLoad_NZ_Paper_DP(Real timeStep, Real finalTime, Real
 static void VarFreqRxLineResLoad_NZ_Paper_EMT(Real timeStep, Real finalTime, Real freqStep, Real loadStep, Real rampTime) {
 	// Define simulation scenario
 	String simName = "DpEmtVarFreqStudy_NZ_Paper_EMT" + std::to_string(timeStep);
-	Components::Base::List circElements0, circElements1, circElements2;
-	circElements0.push_back(std::make_shared<Components::EMT::VoltageSourceFreq>("v_s", 1, 0, 10000, 0, 1, 2 * PI*-1, freqStep, rampTime));
-	circElements0.push_back(std::make_shared<Components::EMT::Resistor>("r_line", 1, 2, 1));
-	circElements0.push_back(std::make_shared<Components::EMT::Inductor>("l_line", 2, 3, 1));
-	circElements1 = circElements0;
-	circElements2 = circElements0;
-	circElements1.push_back(std::make_shared<Components::EMT::Resistor>("r_load", 3, 0, 10));
-	circElements2.push_back(std::make_shared<Components::EMT::Resistor>("r_load", 3, 0, 8));
+	Components::Base::List comps0, comps1, comps2;
+	comps0.push_back(std::make_shared<Components::EMT::VoltageSourceFreq>("v_s", 1, 0, 10000, 0, 1, 2 * PI*-1, freqStep, rampTime));
+	comps0.push_back(std::make_shared<Components::EMT::Resistor>("r_line", 1, 2, 1));
+	comps0.push_back(std::make_shared<Components::EMT::Inductor>("l_line", 2, 3, 1));
+	comps1 = comps0;
+	comps2 = comps0;
+	comps1.push_back(std::make_shared<Components::EMT::Resistor>("r_load", 3, 0, 10));
+	comps2.push_back(std::make_shared<Components::EMT::Resistor>("r_load", 3, 0, 8));
 
 	// Set up simulation
-	Simulation newSim(simName, circElements1, 2.0*PI*50.0, timeStep, finalTime, Logger::Level::INFO, SimulationType::EMT);
+	Simulation newSim(simName, comps1, 2.0*PI*50.0, timeStep, finalTime, Logger::Level::INFO, SimulationType::EMT);
 
 	// Main Simulation Loop
 	std::cout << "Start simulation." << std::endl;

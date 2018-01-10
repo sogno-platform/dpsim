@@ -65,7 +65,7 @@ int main(int argc, char* argv[])
 	Components::Base::Ptr r2 = std::make_shared<Components::EMT::Resistor>("r2", 0, 2, loadRes);
 	Components::Base::Ptr r3 = std::make_shared<Components::EMT::Resistor>("r3", 0, 3, loadRes);
 
-	Components::Base::List circElements = { gen, r1, r2, r3 };
+	Components::Base::List comps = { gen, r1, r2, r3 };
 
 	// Set up simulation
 	Real om = 2.0*M_PI*60.0;
@@ -73,7 +73,7 @@ int main(int argc, char* argv[])
 	Real dt = 0.000001;
 	Real t = 0;
 	Int downSampling = 25;
-	Simulation newSim("EMT_SynGen_BalanceResLoad", circElements, om, dt, tf, Logger::Level::INFO, SimulationType::EMT, downSampling);
+	Simulation newSim("EMT_SynGen_BalanceResLoad", comps, om, dt, tf, Logger::Level::INFO, SimulationType::EMT, downSampling);
 	newSim.setNumericalMethod(NumericalMethod::Trapezoidal_flux);
 
 	// Initialize generator
