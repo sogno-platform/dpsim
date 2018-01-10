@@ -281,6 +281,16 @@ PyObject* Python::Simulation::lvector(PyObject *self, PyObject *args)
 	return list;
 }
 
+static const char* DocSimulationName =
+"name()\n"
+"Return the of the simulation.";
+PyObject* Python::Simulation::name(PyObject *self, PyObject *args)
+{
+	Python::Simulation *pySim = (Python::Simulation*) self;
+
+	return PyUnicode_FromString(pySim->sim->getName().c_str());
+}
+
 static const char* DocSimulationPause =
 "pause()\n"
 "Pause the simulation at the next possible time (usually, after finishing the current timestep).\n"
@@ -450,6 +460,7 @@ PyObject* Python::Simulation::wait(PyObject *self, PyObject *args)
 static PyMethodDef Simulation_methods[] = {
 	{"add_interface", Python::Simulation::addInterface, METH_VARARGS, DocSimulationAddInterface},
 	{"lvector", Python::Simulation::lvector, METH_NOARGS, DocSimulationLvector},
+	{"name", Python::Simulation::name, METH_NOARGS, DocSimulationName},
 	{"pause", Python::Simulation::pause, METH_NOARGS, DocSimulationPause},
 	{"start", Python::Simulation::start, METH_NOARGS, DocSimulationStart},
 	{"step", Python::Simulation::step, METH_NOARGS, DocSimulationStep},
