@@ -21,13 +21,6 @@
 
 #include "Simulation.h"
 
-#ifdef WITH_RT
-  #include <signal.h>
-  #include <sys/timerfd.h>
-  #include <time.h>
-  #include <unistd.h>
-#endif /* WITH_RT */
-
 using namespace DPsim;
 
 Simulation::Simulation(String name, Components::Base::List elements, Real om, Real dt, Real tf, Logger::Level logLevel,
@@ -60,9 +53,6 @@ Simulation::Simulation(String name, Components::Base::List elements, Real om, Re
 	mLog->LogMatrix(Logger::Level::INFO, mSystemModel.getLUdecomp());
 	mLog->Log(Logger::Level::INFO) << "Known variables matrix j:" << std::endl;
 	mLog->LogMatrix(Logger::Level::INFO, mSystemModel.getRightSideVector());
-}
-
-Simulation::~Simulation() {
 }
 
 void Simulation::initialize(Components::Base::List newElements)

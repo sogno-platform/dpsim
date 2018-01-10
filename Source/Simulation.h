@@ -74,7 +74,7 @@ namespace DPsim {
 	public:
 		/// Creates system matrix according to
 		Simulation(String name, Components::Base::List elements, Real om, Real dt, Real tf, Logger::Level logLevel = Logger::Level::INFO, SimulationType simType = SimulationType::DynPhasor, Int downSampleRate = 1);
-		~Simulation();
+		virtual ~Simulation() { }
 
 		/// TODO: check that every system matrix has the same dimensions
 		void initialize(Components::Base::List elements);
@@ -88,7 +88,7 @@ namespace DPsim {
 
 		void setNumericalMethod(NumericalMethod numMethod);
 
-		String getName() const { return mName; };
+		String getName() const { return mName; }
 		Real getTime() { return mTime; }
 		Real getFinalTime() { return mFinalTime; }
 		Real getTimeStep() { return mSystemModel.getTimeStep(); }
