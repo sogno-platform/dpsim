@@ -33,7 +33,7 @@ int main(int argc, char* argv[])
 	Real finalTime = 0.3;
 	String simName = "RxLineResLoad_" + std::to_string(timeStep);
 
-	Components::Base::List comps = {
+	Components::Base::List comps0 = {
 		VoltageSource::make("v_s", 1, 0, Complex(10000, 0), 1),
 		Resistor::make("r_line", 1, 2, 1),
 		Inductor::make("l_line", 2, 3, 1)
