@@ -35,7 +35,7 @@ namespace DP {
 	class Inductor : public Components::Base, public SharedFactory<Inductor> {
 
 	protected:
-		
+
 		/// Inductance [H]
 		Real mInductance;
 		/// Voltage across the inductor [V]

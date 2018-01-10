@@ -58,7 +58,7 @@ namespace DP {
 		virtual Complex getCurrent(SystemModel& system);
 
 		void setVoltage(Complex voltage);
-		
+
 	};
 }
 }
