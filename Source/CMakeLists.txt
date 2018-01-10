@@ -2,9 +2,12 @@ add_library(dpsim SHARED
 	IntegrationMethod.cpp
 	Logger.cpp
 	MathLibrary.cpp
-	Simulation.cpp
 	SystemModel.cpp
 	Utilities.cpp
+	Simulation.cpp
+	FaultSimulation.cpp
+	GeneratorTestSimulation.cpp
+	GeneratorVBRSimulation.cpp
 )
 
 list(APPEND SOURCES
@@ -54,6 +57,7 @@ endif()
 
 if(WITH_RT)
 	list(APPEND LIBRARIES "-lrt")
+	list(APPEND SOURCES RealTimeSimulation.cpp)
 endif()
 
 if(WITH_SHMEM)

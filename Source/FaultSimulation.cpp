@@ -1,0 +1,74 @@
+/** Simulation with a configurable fault
+ *
+ * @author Markus Mirz <mmirz@eonerc.rwth-aachen.de>
+ * @copyright 2017, Institute for Automation of Complex Power Systems, EONERC
+ *
+ * DPsim
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *********************************************************************************/
+
+#include "FaultSimulation.h"
+
+using namespace DPsim;
+
+void FaultSimulation::clearFault(Int Node1, Int Node2, Int Node3)
+{
+	if (mSystemModel.getSimType() == SimulationType::EMT) {
+		ClearingFault = true;
+
+		mIfa = getRightSideVector()(Node1 - 1);
+		mIfb = getRightSideVector()(Node2 - 1);
+		mIfc = getRightSideVector()(Node3 - 1);
+
+		if (FirstTime == true) {
+			mIfa_hist = mIfa;
+			mIfb_hist = mIfb;
+			mIfc_hist = mIfc;
+
+			FirstTime = false;
+		}
+
+		if (std::signbit(mIfa) != std::signbit(mIfa_hist) && !aCleared) {
+			mElements.erase(mElements.begin() + 1);
+			addSystemTopology(mElements);
+			switchSystemMatrix(mSwitchEventVector.size() + NumClearedPhases);
+			NumClearedPhases++;
+			aCleared = true;
+		}
+
+		if (std::signbit(mIfb) != std::signbit(mIfb_hist) && !bCleared) {
+			mElements.erase(mElements.begin() + 2);
+			addSystemTopology(mElements);
+			switchSystemMatrix(mSwitchEventVector.size() + NumClearedPhases);
+			NumClearedPhases++;
+			bCleared = true;
+		}
+
+		if (std::signbit(mIfc) != std::signbit(mIfc_hist) && !cCleared) {
+			mElements.erase(mElements.begin() + 1);
+			addSystemTopology(mElements);
+			switchSystemMatrix(mSwitchEventVector.size() + NumClearedPhases);
+			NumClearedPhases++;
+			cCleared = true;
+		}
+
+		mIfa_hist = mIfa;
+		mIfb_hist = mIfb;
+		mIfc_hist = mIfc;
+
+		if (NumClearedPhases == 3)
+			ClearingFault = false;
+	}
+}
