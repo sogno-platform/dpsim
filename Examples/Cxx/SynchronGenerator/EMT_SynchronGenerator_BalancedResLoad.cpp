@@ -108,12 +108,8 @@ int main(int argc, char* argv[])
 	std::cout << "j vector:" << std::endl;
 	std::cout << newSim.getRightSideVector() << std::endl;
 
-	// Main Simulation Loop
-	while (newSim.getTime() < tf) {
-		newSim.stepGeneratorTest(vtLog, jLog, gen, newSim.getTime());
-		newSim.increaseByTimeStep();
-	}
-
+	std::cout << "Start simulation." << std::endl;
+	newSim.run();
 	std::cout << "Simulation finished." << std::endl;
 
 	return 0;

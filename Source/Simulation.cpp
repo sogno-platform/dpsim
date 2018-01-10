@@ -177,6 +177,13 @@ Int Simulation::step(bool blocking)
 	}
 }
 
+void Simulation::run()
+{
+	while (step()) {
+		increaseByTimeStep();
+	}
+}
+
 void Simulation::switchSystemMatrix(Int systemMatrixIndex)
 {
 	mSystemModel.switchSystemMatrix(systemMatrixIndex);

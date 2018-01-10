@@ -80,6 +80,7 @@ namespace DPsim {
 		void initialize(Components::Base::List elements);
 		/// Solve system A * x = z for x and current time
 		Int step(bool blocking = true);
+		void run();
 		void switchSystemMatrix(Int systemMatrixIndex);
 		void setSwitchTime(Real switchTime, Int systemIndex);
 		void increaseByTimeStep();

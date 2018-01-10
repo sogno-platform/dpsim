@@ -145,13 +145,8 @@ int main(int argc, char* argv[])
 	newSim.setSwitchTime(1, 1);
 	//newSim.setSwitchTime(6, 0);
 
-	// Main Simulation Loop
-	while (newSim.getTime() < tf) {
-		std::cout << newSim.getTime() << std::endl;
-		newSim.stepGeneratorTest(vtLog, jLog, gen, newSim.getTime());
-		newSim.increaseByTimeStep();
-	}
-
+	std::cout << "Start simulation." << std::endl;
+	newSim.run();
 	std::cout << "Simulation finished." << std::endl;
 
 	return 0;

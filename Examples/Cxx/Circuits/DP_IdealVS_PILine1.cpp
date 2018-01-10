@@ -44,9 +44,7 @@ int main(int argc, char* argv[])
 	Simulation newSim(simName, circElements, omega, timeStep, finalTime);
 
 	std::cout << "Start simulation." << std::endl;
-	while (newSim.step()) {
-		newSim.increaseByTimeStep();		
-	}
+	newSim.run();
 	std::cout << "Simulation finished." << std::endl;
 
 	return 0;

@@ -35,16 +35,13 @@ int main(int argc, char* argv[])
 	circElements.push_back(std::make_shared<Components::DP::VoltageSourceIdeal>("v_1", -1, 0, Complex(100, 0), Logger::Level::DEBUG, false));
 	circElements.push_back(std::make_shared<Components::DP::Transformer>("trafo_1", 0, 1, 10, 0, 0, 0.001, Logger::Level::DEBUG, false));
 	circElements.push_back(std::make_shared<Components::DP::Resistor>("r_1", 1, -1, 1, Logger::Level::DEBUG, false));
-	
+
 	// Set up simulation and start main simulation loop
 	Simulation newSim(simName, circElements, omega, timeStep, finalTime);
 
 	std::cout << "Start simulation." << std::endl;
-
-	while (newSim.step()) {
-		newSim.increaseByTimeStep();
-	}
-
+	newSim.run();
 	std::cout << "Simulation finished." << std::endl;
+
 	return 0;
 }
