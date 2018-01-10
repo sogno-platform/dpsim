@@ -61,10 +61,5 @@ int GeneratorVBRSimulation::step(bool blocking)
 		mLastLogTimeStep = 0;
 	}
 
-	if (mTime >= mFinalTime) {
-		return 0;
-	}
-	else {
-		return 1;
-	}
+	return mTime < mFinalTime;
 }

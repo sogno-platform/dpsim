@@ -169,12 +169,7 @@ Int Simulation::step(bool blocking)
 	mLeftVectorLog->LogNodeValues(getTime(), getLeftSideVector());
 	mRightVectorLog->LogNodeValues(getTime(), getRightSideVector());
 
-	if (mTime >= mFinalTime) {
-		return 0;
-	}
-	else {
-		return 1;
-	}
+	return mTime < mFinalTime;
 }
 
 void Simulation::run()
