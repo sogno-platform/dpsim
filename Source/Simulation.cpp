@@ -172,12 +172,7 @@ Int Simulation::step(bool blocking)
 	}
 	else {
 		return 1;
-	}	
-}
-
-Int Simulation::step(Logger& leftSideVectorLog, Logger& rightSideVectorLog, bool blocking) {
-	Int retValue = step(blocking);		
-	return retValue;
+	}
 }
 
 Int Simulation::stepGeneratorTest(Logger& leftSideVectorLog, Logger& rightSideVectorLog,
