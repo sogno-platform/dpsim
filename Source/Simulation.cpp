@@ -24,7 +24,10 @@
 using namespace DPsim;
 
 Simulation::Simulation(String name, Components::Base::List elements, Real om, Real dt, Real tf, Logger::Level logLevel,
-	SimulationType simType, Int downSampleRate)
+	SimulationType simType, Int downSampleRate) :
+	mLog("Logs/" + name + ".log", mLogLevel),
+	mLeftVectorLog("Logs/" + name + "_LeftVector.csv", mLogLevel),
+	mRightVectorLog("Logs/" + name + "_RightVector.csv", mLogLevel)
 {
 	mTime = 0;
 	mLastLogTimeStep = 0;
@@ -37,22 +40,19 @@ Simulation::Simulation(String name, Components::Base::List elements, Real om, Re
 	mSystemModel.setOmega(om);
 	mFinalTime = tf;
 	mDownSampleRate = downSampleRate;
-	mLog = std::make_shared<Logger>("Logs/" + name + ".log", mLogLevel);
-	mLeftVectorLog = std::make_shared<Logger>("Logs/" + name + "_LeftVector.csv", mLogLevel);
-	mRightVectorLog = std::make_shared<Logger>("Logs/" + name + "_RightVector.csv", mLogLevel);
 
 	initialize(elements);
 
 	for (auto c : elements) {
-		mLog->Log(Logger::Level::INFO) << "Added " << c->getType() << " '" << c->getName() << "' to simulation." << std::endl;
+		mLog.Log(Logger::Level::INFO) << "Added " << c->getType() << " '" << c->getName() << "' to simulation." << std::endl;
 	}
 
-	mLog->Log(Logger::Level::INFO) << "System matrix A:" << std::endl;
-	mLog->LogMatrix(Logger::Level::INFO, mSystemModel.getCurrentSystemMatrix());
-	mLog->Log(Logger::Level::INFO) << "LU decomposition:" << std::endl;
-	mLog->LogMatrix(Logger::Level::INFO, mSystemModel.getLUdecomp());
-	mLog->Log(Logger::Level::INFO) << "Known variables matrix j:" << std::endl;
-	mLog->LogMatrix(Logger::Level::INFO, mSystemModel.getRightSideVector());
+	mLog.Log(Logger::Level::INFO) << "System matrix A:" << std::endl;
+	mLog.LogMatrix(Logger::Level::INFO, mSystemModel.getCurrentSystemMatrix());
+	mLog.Log(Logger::Level::INFO) << "LU decomposition:" << std::endl;
+	mLog.LogMatrix(Logger::Level::INFO, mSystemModel.getLUdecomp());
+	mLog.Log(Logger::Level::INFO) << "Known variables matrix j:" << std::endl;
+	mLog.LogMatrix(Logger::Level::INFO, mSystemModel.getRightSideVector());
 }
 
 void Simulation::initialize(Components::Base::List newElements)
@@ -60,7 +60,7 @@ void Simulation::initialize(Components::Base::List newElements)
 	Int maxNode = 0;
 	Int currentVirtualNode = 0;
 
-	mLog->Log(Logger::Level::INFO) << "#### Start Initialization ####" << std::endl;
+	mLog.Log(Logger::Level::INFO) << "#### Start Initialization ####" << std::endl;
 
 	// Calculate the mNumber of nodes by going through the list of elements
 	// TODO we use the values from the first element vector right now and assume that
@@ -75,7 +75,7 @@ void Simulation::initialize(Components::Base::List newElements)
 		}
 	}
 
-	mLog->Log(Logger::Level::INFO) << "Maximum node number: " << maxNode << std::endl;
+	mLog.Log(Logger::Level::INFO) << "Maximum node number: " << maxNode << std::endl;
 	currentVirtualNode = maxNode;
 
 	// Check if element requires virtual node and if so set one
@@ -84,7 +84,7 @@ void Simulation::initialize(Components::Base::List newElements)
 			for (Int node = 0; node < element->getVirtualNodesNum(); node++) {
 				currentVirtualNode++;
 				element->setVirtualNode(node, currentVirtualNode);
-				mLog->Log(Logger::Level::INFO) << "Created virtual node"<< node << "=" << currentVirtualNode
+				mLog.Log(Logger::Level::INFO) << "Created virtual node"<< node << "=" << currentVirtualNode
 					<< " for " << element->getName() << std::endl;
 			}
 		}
@@ -150,14 +150,14 @@ Int Simulation::step(bool blocking)
 		if (mTime >= mSwitchEventVector[mCurrentSwitchTimeIndex].switchTime) {
 			switchSystemMatrix(mSwitchEventVector[mCurrentSwitchTimeIndex].systemIndex);
 			mElements = mElementsVector[++mCurrentSwitchTimeIndex];
-			mLog->Log(Logger::Level::INFO) << "Switched to system " << mCurrentSwitchTimeIndex << " at " << mTime << std::endl;
-			mLog->Log(Logger::Level::INFO) << "New matrix:" << std::endl << mSystemModel.getCurrentSystemMatrix() << std::endl;
-			mLog->Log(Logger::Level::INFO) << "New decomp:" << std::endl << mSystemModel.getLUdecomp() << std::endl;
+			mLog.Log(Logger::Level::INFO) << "Switched to system " << mCurrentSwitchTimeIndex << " at " << mTime << std::endl;
+			mLog.Log(Logger::Level::INFO) << "New matrix:" << std::endl << mSystemModel.getCurrentSystemMatrix() << std::endl;
+			mLog.Log(Logger::Level::INFO) << "New decomp:" << std::endl << mSystemModel.getLUdecomp() << std::endl;
 		}
 	}
 
-	mLeftVectorLog->LogNodeValues(getTime(), getLeftSideVector());
-	mRightVectorLog->LogNodeValues(getTime(), getRightSideVector());
+	mLeftVectorLog.LogNodeValues(getTime(), getLeftSideVector());
+	mRightVectorLog.LogNodeValues(getTime(), getRightSideVector());
 
 	return mTime < mFinalTime;
 }
