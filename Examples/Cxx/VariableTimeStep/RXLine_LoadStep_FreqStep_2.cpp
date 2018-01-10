@@ -64,7 +64,7 @@ static void VarFreqRxLineResLoad_NZ_Paper_EMT(Real timeStep, Real finalTime, Rea
 	circElements2.push_back(std::make_shared<Components::EMT::Resistor>("r_load", 3, 0, 8));
 
 	// Set up simulation
-	Simulation newSim(simName, circElements1, 2.0*PI*50.0, timeStep, finalTime, LogLevel::INFO, SimulationType::EMT);
+	Simulation newSim(simName, circElements1, 2.0*PI*50.0, timeStep, finalTime, Logger::Level::INFO, SimulationType::EMT);
 
 	// Main Simulation Loop
 	std::cout << "Start simulation." << std::endl;

@@ -30,12 +30,12 @@ using namespace DPsim;
 std::ostringstream Logger::nullStream;
 
 Logger::Logger() : mLogFile() {
-	mLogLevel = LogLevel::NONE;
+	mLogLevel = Level::NONE;
 	mLogFile.setstate(std::ios_base::badbit);
 }
 
-Logger::Logger(String filename, LogLevel level) : mLogLevel(level) {
-	if (mLogLevel == LogLevel::NONE) {
+Logger::Logger(String filename, Level level) : mLogLevel(level) {
+	if (mLogLevel == Level::NONE) {
 		return;
 	}
 
@@ -47,7 +47,7 @@ Logger::Logger(String filename, LogLevel level) : mLogLevel(level) {
 	mLogFile = std::ofstream(filename);
 	if (!mLogFile.is_open()) {
 		std::cerr << "Cannot open log file " << filename << std::endl;
-		mLogLevel = LogLevel::NONE;
+		mLogLevel = Level::NONE;
 	}
 }
 
@@ -56,56 +56,56 @@ Logger::~Logger() {
 		mLogFile.close();
 }
 
-std::ostream& Logger::Log(LogLevel level) {
+std::ostream& Logger::Log(Level level) {
 	if (level > mLogLevel) {
 		return getNullStream();
 	}
 
 	switch (level) {
-		case LogLevel::DEBUG:
+		case Level::DEBUG:
 			mLogFile << "DEBUG: ";
 			break;
-		case LogLevel::INFO:
+		case Level::INFO:
 			mLogFile << "INFO: ";
 			break;
-		case LogLevel::WARN:
+		case Level::WARN:
 			mLogFile << "WARN: ";
 			break;
-		case LogLevel::ERROR:
+		case Level::ERROR:
 			mLogFile << "ERROR: ";
 			break;
-		case LogLevel::NONE:
+		case Level::NONE:
 			return getNullStream();
 			break;
 	}
 	return mLogFile;
 }
 
-void Logger::Log(LogLevel level, String str) {
+void Logger::Log(Level level, String str) {
 	if (level > mLogLevel) {
 		return;
 	}
 
 	switch (level) {
-		case LogLevel::DEBUG:
+		case Level::DEBUG:
 			mLogFile << "DEBUG: " << str << std::endl;
 			break;
-		case LogLevel::INFO:
+		case Level::INFO:
 			mLogFile << "INFO: " << str << std::endl;
 			break;
-		case LogLevel::WARN:
+		case Level::WARN:
 			mLogFile << "WARN: " << str << std::endl;
 			break;
-		case LogLevel::ERROR:
+		case Level::ERROR:
 			mLogFile << "ERROR: " << str << std::endl;
 			break;
-		case LogLevel::NONE:
+		case Level::NONE:
 			return;
 			break;
 	}
 }
 
-void Logger::LogMatrix(LogLevel level, Matrix& data) {
+void Logger::LogMatrix(Level level, Matrix& data) {
 	if (level > mLogLevel) {
 		return;
 	}
@@ -113,7 +113,7 @@ void Logger::LogMatrix(LogLevel level, Matrix& data) {
 	mLogFile << data << std::endl;
 }
 
-void Logger::LogMatrix(LogLevel level, const Matrix& data) {
+void Logger::LogMatrix(Level level, const Matrix& data) {
 	if (level > mLogLevel) {
 		return;
 	}
@@ -146,7 +146,7 @@ void Logger::LogNodeValues(Real time, Matrix& data) {
 				mLogFile << ", " << std::right << std::setfill(' ') << std::setw(13 - 4) << "NodeIm" << std::setfill('0') << std::setw(4) << (i - data.rows() / 2);
 			}
 		}
-		mLogFile << std::endl;		
+		mLogFile << std::endl;
 	}
 	LogDataLine(time, data);
 }

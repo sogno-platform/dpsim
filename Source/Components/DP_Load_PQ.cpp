@@ -24,7 +24,7 @@
 using namespace DPsim;
 
 Components::DP::PQLoad::PQLoad(String name, Int node, Real activePower, Real reactivePower,
-	Real volt, Real angle, LogLevel loglevel, Bool decrementNodes)
+	Real volt, Real angle, Logger::Level loglevel, Bool decrementNodes)
 	: Base(name, node, 0)
 {
 	// we need the system frequency to calculate the impedance, so we initialize

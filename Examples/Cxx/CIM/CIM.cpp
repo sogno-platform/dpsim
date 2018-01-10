@@ -35,7 +35,7 @@ static int testCIMReader(std::list<String> filenames)
 
 	for (String & filename : filenames) {
 		if (!reader.addFile(filename))
-			log.Log(LogLevel::INFO) << "Failed to read file " << filename << std::endl;
+			log.Log(Logger::Level::INFO) << "Failed to read file " << filename << std::endl;
 	}
 
 	reader.parseFiles();

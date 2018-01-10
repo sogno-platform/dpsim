@@ -58,7 +58,7 @@ namespace DPsim {
 		/// Simulation name
 		String mName;
 		/// Simulation log level
-		LogLevel mLogLevel;
+		Logger::Level mLogLevel;
 		/// Simulation logger
 		std::shared_ptr<Logger> mLog;
 		/// Left side vector logger
@@ -127,7 +127,7 @@ namespace DPsim {
 		/// Sets parameters to default values.
 		Simulation();
 		/// Creates system matrix according to
-		Simulation(String name, Components::Base::List elements, Real om, Real dt, Real tf, LogLevel logLevel = LogLevel::INFO, SimulationType simType = SimulationType::DynPhasor, Int downSampleRate = 1);
+		Simulation(String name, Components::Base::List elements, Real om, Real dt, Real tf, Logger::Level logLevel = Logger::Level::INFO, SimulationType simType = SimulationType::DynPhasor, Int downSampleRate = 1);
 		~Simulation();
 
 		/// TODO: check that every system matrix has the same dimensions

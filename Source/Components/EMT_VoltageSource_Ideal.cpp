@@ -24,7 +24,7 @@
 using namespace DPsim;
 
 Components::EMT::VoltageSourceIdeal::VoltageSourceIdeal(String name, Int node1, Int node2, Real voltage,
-	LogLevel loglevel, Bool decrementNodes)	: Base(name, node1, node2, voltage) {
+	Logger::Level loglevel, Bool decrementNodes)	: Base(name, node1, node2, voltage) {
 	mVoltage = voltage;
 	mNumVirtualNodes = 1;
 	mVirtualNodes = { 0 };
@@ -33,22 +33,22 @@ Components::EMT::VoltageSourceIdeal::VoltageSourceIdeal(String name, Int node1, 
 
 void Components::EMT::VoltageSourceIdeal::applySystemMatrixStamp(SystemModel& system) {
 	if (mNode1 >= 0) {
-		mLog->Log(LogLevel::DEBUG) << "Add " << -1 << " to " << mNode1 << "," << mVirtualNodes[0] << std::endl;
+		mLog->Log(Logger::Level::DEBUG) << "Add " << -1 << " to " << mNode1 << "," << mVirtualNodes[0] << std::endl;
 		system.addRealToSystemMatrix(mNode1, mVirtualNodes[0], -1);
-		mLog->Log(LogLevel::DEBUG) << "Add " << -1 << " to " << mVirtualNodes[0] << "," << mNode1 << std::endl;
+		mLog->Log(Logger::Level::DEBUG) << "Add " << -1 << " to " << mVirtualNodes[0] << "," << mNode1 << std::endl;
 		system.addRealToSystemMatrix(mVirtualNodes[0], mNode1, -1);
 	}
 
 	if (mNode2 >= 0) {
-		mLog->Log(LogLevel::DEBUG) << "Add " << 1 << " to " << mNode2 << "," << mVirtualNodes[0] << std::endl;
+		mLog->Log(Logger::Level::DEBUG) << "Add " << 1 << " to " << mNode2 << "," << mVirtualNodes[0] << std::endl;
 		system.addRealToSystemMatrix(mNode2, mVirtualNodes[0], 1);
-		mLog->Log(LogLevel::DEBUG) << "Add " << 1 << " to " << mVirtualNodes[0] << "," << mNode2 << std::endl;
+		mLog->Log(Logger::Level::DEBUG) << "Add " << 1 << " to " << mVirtualNodes[0] << "," << mNode2 << std::endl;
 		system.addRealToSystemMatrix(mVirtualNodes[0], mNode2, 1);
 	}
 }
 
 void Components::EMT::VoltageSourceIdeal::applyRightSideVectorStamp(SystemModel& system) {
-	mLog->Log(LogLevel::DEBUG) << "Add " << mVoltage << " to right side " << mVirtualNodes[0] << std::endl;
+	mLog->Log(Logger::Level::DEBUG) << "Add " << mVoltage << " to right side " << mVirtualNodes[0] << std::endl;
 	system.addRealToRightSideVector(mVirtualNodes[0], mVoltage);
 }
 

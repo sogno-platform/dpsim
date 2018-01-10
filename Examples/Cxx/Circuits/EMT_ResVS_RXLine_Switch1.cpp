@@ -41,7 +41,7 @@ int main(int argc, char* argv[])
 	circElements2.push_back(std::make_shared<Components::EMT::Resistor>("r_load", 3, 0, 800));
 
 	// Set up simulation and start main simulation loop
-	Simulation newSim(simName, circElements1, omega, timeStep, finalTime, LogLevel::INFO, SimulationType::EMT);
+	Simulation newSim(simName, circElements1, omega, timeStep, finalTime, Logger::Level::INFO, SimulationType::EMT);
 	newSim.addSystemTopology(circElements2);
 	newSim.setSwitchTime(0.1, 1);
 

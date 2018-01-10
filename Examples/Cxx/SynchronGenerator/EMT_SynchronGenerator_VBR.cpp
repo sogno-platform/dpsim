@@ -26,8 +26,7 @@ using namespace DPsim;
 int main(int argc, char* argv[])
 {
 	// Define Object for saving data on a file
-	Logger log("log.txt"),
-		vtLog("data_vt.csv"),
+	Logger vtLog("data_vt.csv"),
 		jLog("data_j.csv");
 
 	// Define machine parameters in per unit
@@ -90,7 +89,7 @@ int main(int argc, char* argv[])
 	Real om = 2.0*M_PI*60.0;
 	tf = 0.3; dt = 0.000001; t = 0;
 	Int downSampling = 50;
-	Simulation newSim(circElements, om, dt, tf, log, SimulationType::EMT, downSampling);
+	Simulation newSim("EMT_SynchronGenerator_VBR", circElements, om, dt, tf, Logger::Level::INFO, SimulationType::EMT, downSampling);
 	newSim.setNumericalMethod(NumericalMethod::Trapezoidal_flux);
 	newSim.addSystemTopology(circElementsBreakerOn);
 	newSim.switchSystemMatrix(0);

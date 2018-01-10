@@ -38,7 +38,7 @@ int main(int argc, char* argv[])
 	circElements.push_back(std::make_shared<Components::EMT::Resistor>("r_3", 2, 0, 2));
 
 	// Set up simulation and start main simulation loop
-	Simulation newSim(simName, circElements, omega, timeStep, finalTime, LogLevel::INFO, SimulationType::EMT);
+	Simulation newSim(simName, circElements, omega, timeStep, finalTime, Logger::Level::INFO, SimulationType::EMT);
 
 	std::cout << "Start simulation." << std::endl;
 	while (newSim.step()) {

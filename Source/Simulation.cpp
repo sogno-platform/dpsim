@@ -37,7 +37,7 @@ Simulation::Simulation()
 	mCurrentSwitchTimeIndex = 0;
 }
 
-Simulation::Simulation(String name, Components::Base::List elements, Real om, Real dt, Real tf, LogLevel logLevel,
+Simulation::Simulation(String name, Components::Base::List elements, Real om, Real dt, Real tf, Logger::Level logLevel,
 	SimulationType simType, Int downSampleRate)
 	: Simulation() {
 	mName = name;
@@ -54,15 +54,15 @@ Simulation::Simulation(String name, Components::Base::List elements, Real om, Re
 	initialize(elements);
 
 	for (auto c : elements) {
-		mLog->Log(LogLevel::INFO) << "Added " << c->getType() << " '" << c->getName() << "' to simulation." << std::endl;
+		mLog->Log(Logger::Level::INFO) << "Added " << c->getType() << " '" << c->getName() << "' to simulation." << std::endl;
 	}
 
-	mLog->Log(LogLevel::INFO) << "System matrix A:" << std::endl;
-	mLog->LogMatrix(LogLevel::INFO, mSystemModel.getCurrentSystemMatrix());
-	mLog->Log(LogLevel::INFO) << "LU decomposition:" << std::endl;
-	mLog->LogMatrix(LogLevel::INFO, mSystemModel.getLUdecomp());
-	mLog->Log(LogLevel::INFO) << "Known variables matrix j:" << std::endl;
-	mLog->LogMatrix(LogLevel::INFO, mSystemModel.getRightSideVector());
+	mLog->Log(Logger::Level::INFO) << "System matrix A:" << std::endl;
+	mLog->LogMatrix(Logger::Level::INFO, mSystemModel.getCurrentSystemMatrix());
+	mLog->Log(Logger::Level::INFO) << "LU decomposition:" << std::endl;
+	mLog->LogMatrix(Logger::Level::INFO, mSystemModel.getLUdecomp());
+	mLog->Log(Logger::Level::INFO) << "Known variables matrix j:" << std::endl;
+	mLog->LogMatrix(Logger::Level::INFO, mSystemModel.getRightSideVector());
 }
 
 Simulation::~Simulation() {
@@ -73,7 +73,8 @@ void Simulation::initialize(Components::Base::List newElements)
 	Int maxNode = 0;
 	Int currentVirtualNode = 0;
 
-	mLog->Log(LogLevel::INFO) << "#### Start Initialization ####" << std::endl;
+	mLog->Log(Logger::Level::INFO) << "#### Start Initialization ####" << std::endl;
+
 	// Calculate the mNumber of nodes by going through the list of elements
 	// TODO we use the values from the first element vector right now and assume that
 	// these values don't change on switches
@@ -86,15 +87,17 @@ void Simulation::initialize(Components::Base::List newElements)
 			maxNode = element->getNode2();
 		}
 	}
-	mLog->Log(LogLevel::INFO) << "Maximum node number: " << maxNode << std::endl;
+
+	mLog->Log(Logger::Level::INFO) << "Maximum node number: " << maxNode << std::endl;
 	currentVirtualNode = maxNode;
+
 	// Check if element requires virtual node and if so set one
 	for (auto element : newElements) {
 		if (element->hasVirtualNodes()) {
 			for (Int node = 0; node < element->getVirtualNodesNum(); node++) {
 				currentVirtualNode++;
 				element->setVirtualNode(node, currentVirtualNode);
-				mLog->Log(LogLevel::INFO) << "Created virtual node"<< node << "=" << currentVirtualNode
+				mLog->Log(Logger::Level::INFO) << "Created virtual node"<< node << "=" << currentVirtualNode
 					<< " for " << element->getName() << std::endl;
 			}
 		}
@@ -109,7 +112,7 @@ void Simulation::initialize(Components::Base::List newElements)
 
 	// Initialize right side vector and components
 	for (auto element : newElements) {
-		element->init(mSystemModel);
+		element->initialize(mSystemModel);
 		element->applyRightSideVectorStamp(mSystemModel);
 	}
 
@@ -155,9 +158,9 @@ Int Simulation::step(bool blocking)
 		if (mTime >= mSwitchEventVector[mCurrentSwitchTimeIndex].switchTime) {
 			switchSystemMatrix(mSwitchEventVector[mCurrentSwitchTimeIndex].systemIndex);
 			mElements = mElementsVector[++mCurrentSwitchTimeIndex];
-			mLog->Log(LogLevel::INFO) << "Switched to system " << mCurrentSwitchTimeIndex << " at " << mTime << std::endl;
-			mLog->Log(LogLevel::INFO) << "New matrix:" << std::endl << mSystemModel.getCurrentSystemMatrix() << std::endl;
-			mLog->Log(LogLevel::INFO) << "New decomp:" << std::endl << mSystemModel.getLUdecomp() << std::endl;
+			mLog->Log(Logger::Level::INFO) << "Switched to system " << mCurrentSwitchTimeIndex << " at " << mTime << std::endl;
+			mLog->Log(Logger::Level::INFO) << "New matrix:" << std::endl << mSystemModel.getCurrentSystemMatrix() << std::endl;
+			mLog->Log(Logger::Level::INFO) << "New decomp:" << std::endl << mSystemModel.getLUdecomp() << std::endl;
 		}
 	}
 
@@ -210,9 +213,9 @@ Int Simulation::stepGeneratorTest(Logger& leftSideVectorLog, Logger& rightSideVe
 				mElements = mElementsVector[mSwitchEventVector[mCurrentSwitchTimeIndex++].systemIndex];
 			}
 			//mCurrentSwitchTimeIndex++;
-			mLog->Log(LogLevel::INFO) << "Switched to system " << mCurrentSwitchTimeIndex << " at " << mTime << std::endl;
-			mLog->Log(LogLevel::INFO) << "New matrix:" << std::endl << mSystemModel.getCurrentSystemMatrix() << std::endl;
-			mLog->Log(LogLevel::INFO) << "New decomp:" << std::endl << mSystemModel.getLUdecomp() << std::endl;
+			mLog->Log(Logger::Level::INFO) << "Switched to system " << mCurrentSwitchTimeIndex << " at " << mTime << std::endl;
+			mLog->Log(Logger::Level::INFO) << "New matrix:" << std::endl << mSystemModel.getCurrentSystemMatrix() << std::endl;
+			mLog->Log(Logger::Level::INFO) << "New decomp:" << std::endl << mSystemModel.getLUdecomp() << std::endl;
 		}
 	}
 
@@ -450,7 +453,7 @@ int Simulation::stepGeneratorVBR(Logger& leftSideVectorLog, Logger& rightSideVec
 			switchSystemMatrix(mSwitchEventVector[mCurrentSwitchTimeIndex].systemIndex);
 
 			mCurrentSwitchTimeIndex++;
-			mLog->Log(LogLevel::INFO) << "Switched to system " << mCurrentSwitchTimeIndex << " at " << mTime << std::endl;
+			mLog->Log(Logger::Level::INFO) << "Switched to system " << mCurrentSwitchTimeIndex << " at " << mTime << std::endl;
 		}
 	}
 
