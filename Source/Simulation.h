@@ -32,6 +32,9 @@
 
 namespace DPsim {
 
+	/// Ground node
+	const Int GND = -1;
+
 	struct switchConfiguration {
 		Real switchTime;
 		UInt systemIndex;
