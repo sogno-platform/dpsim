@@ -29,8 +29,8 @@ Components::DP::Inductor::Inductor(String name, Int node1, Int node2, Real induc
 	attrMap["inductance"] = {Attribute::Real, &mInductance};
 	mEquivCurrent = { 0, 0 };
 	mCurrent = { 0, 0 };
-	mVoltage = { 0, 0 };	
-	mLog->Log(Logger::Level::DEBUG) << "Create Inductor " << name << " at " << mNode1 << "," << mNode2 << std::endl;
+	mVoltage = { 0, 0 };
+	mLog.Log(Logger::Level::DEBUG) << "Create Inductor " << name << " at " << mNode1 << "," << mNode2 << std::endl;
 }
 
 Components::DP::Inductor::Inductor(String name, Int node1, Int node2, Real inductance,
@@ -46,18 +46,18 @@ void Components::DP::Inductor::applySystemMatrixStamp(SystemModel& system) {
 	//mPrevCurFacIm = - 2. * b / (1 + b*b);	
 
 	if (mNode1 >= 0) {
-		mLog->Log(Logger::Level::DEBUG) << "Add " << mEquivCond << " to " << mNode1 << "," << mNode1 << std::endl;
+		mLog.Log(Logger::Level::DEBUG) << "Add " << mEquivCond << " to " << mNode1 << "," << mNode1 << std::endl;
 		system.addCompToSystemMatrix(mNode1, mNode1, mEquivCond);
 	}
 	if (mNode2 >= 0) {
-		mLog->Log(Logger::Level::DEBUG) << "Add " << mEquivCond << " to " << mNode2 << "," << mNode2 << std::endl;
+		mLog.Log(Logger::Level::DEBUG) << "Add " << mEquivCond << " to " << mNode2 << "," << mNode2 << std::endl;
 		system.addCompToSystemMatrix(mNode2, mNode2, mEquivCond);
 	}
 
 	if (mNode1 >= 0 && mNode2 >= 0) {
-		mLog->Log(Logger::Level::DEBUG) << "Add " << -mEquivCond << " to " << mNode1 << "," << mNode2 << std::endl;
+		mLog.Log(Logger::Level::DEBUG) << "Add " << -mEquivCond << " to " << mNode1 << "," << mNode2 << std::endl;
 		system.addCompToSystemMatrix(mNode1, mNode2, -mEquivCond);
-		mLog->Log(Logger::Level::DEBUG) << "Add " << -mEquivCond << " to " << mNode2 << "," << mNode1 << std::endl;
+		mLog.Log(Logger::Level::DEBUG) << "Add " << -mEquivCond << " to " << mNode2 << "," << mNode1 << std::endl;
 		system.addCompToSystemMatrix(mNode2, mNode1, -mEquivCond);
 	}
 }

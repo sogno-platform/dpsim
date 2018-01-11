@@ -24,33 +24,33 @@
 using namespace DPsim;
 
 Components::DP::VoltageSourceIdeal::VoltageSourceIdeal(String name, Int node1, Int node2, Complex voltage,
-	Logger::Level loglevel, Bool decrementNodes)
-	: Base(name, node1, node2, loglevel, decrementNodes) {
+	Logger::Level loglevel)
+	: Base(name, node1, node2, loglevel) {
 	mVoltage = voltage;
 	mNumVirtualNodes = 1;
 	mVirtualNodes = { 0 };
 	attrMap["voltage"] = { Attribute::Complex, &mVoltage };
-	mLog->Log(Logger::Level::DEBUG) << "Create VoltageSource " << name << " at " << mNode1 << "," << mNode2 << std::endl;
+	mLog.Log(Logger::Level::DEBUG) << "Create VoltageSource " << name << " at " << mNode1 << "," << mNode2 << std::endl;
 }
 
 void Components::DP::VoltageSourceIdeal::applySystemMatrixStamp(SystemModel& system) {
 	if (mNode1 >= 0) {
-		mLog->Log(Logger::Level::DEBUG) << "Add " << Complex(-1, 0) << " to " << mNode1 << "," << mVirtualNodes[0] << std::endl;
+		mLog.Log(Logger::Level::DEBUG) << "Add " << Complex(-1, 0) << " to " << mNode1 << "," << mVirtualNodes[0] << std::endl;
 		system.setCompSystemMatrixElement(mVirtualNodes[0], mNode1, Complex(-1, 0));
-		mLog->Log(Logger::Level::DEBUG) << "Add " << Complex(-1, 0) << " to " << mVirtualNodes[0] << "," << mNode1 << std::endl;
+		mLog.Log(Logger::Level::DEBUG) << "Add " << Complex(-1, 0) << " to " << mVirtualNodes[0] << "," << mNode1 << std::endl;
 		system.setCompSystemMatrixElement(mNode1, mVirtualNodes[0], Complex(-1, 0));
 	}
 
 	if (mNode2 >= 0) {
-		mLog->Log(Logger::Level::DEBUG) << "Add " << Complex(1, 0) << " to " << mVirtualNodes[0] << "," << mNode2 << std::endl;
+		mLog.Log(Logger::Level::DEBUG) << "Add " << Complex(1, 0) << " to " << mVirtualNodes[0] << "," << mNode2 << std::endl;
 		system.setCompSystemMatrixElement(mVirtualNodes[0], mNode2, Complex(1, 0));
-		mLog->Log(Logger::Level::DEBUG) << "Add " << Complex(1, 0) << " to " << mNode2 << "," << mVirtualNodes[0] << std::endl;		
+		mLog.Log(Logger::Level::DEBUG) << "Add " << Complex(1, 0) << " to " << mNode2 << "," << mVirtualNodes[0] << std::endl;		
 		system.setCompSystemMatrixElement(mNode2, mVirtualNodes[0], Complex(1, 0));
 	}
 }
 
 void Components::DP::VoltageSourceIdeal::applyRightSideVectorStamp(SystemModel& system) {
-	mLog->Log(Logger::Level::DEBUG) << "Add " << mVoltage << " to right side " << mVirtualNodes[0] << std::endl;
+	mLog.Log(Logger::Level::DEBUG) << "Add " << mVoltage << " to right side " << mVirtualNodes[0] << std::endl;
 	system.addCompToRightSideVector(mVirtualNodes[0], mVoltage);
 }
 

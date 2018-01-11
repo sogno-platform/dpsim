@@ -38,7 +38,7 @@ namespace EMT {
 		Real mVoltage;
 	public:
 		/// define paramenters of the voltage source
-		VoltageSourceIdeal(String name, Int src, Int dest, Real voltage, Logger::Level loglevel = Logger::Level::NONE, Bool decrementNodes = true);
+		VoltageSourceIdeal(String name, Int src, Int dest, Real voltage, Logger::Level loglevel = Logger::Level::NONE);
 
 		void initialize(SystemModel& system) { }
 

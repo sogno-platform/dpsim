@@ -23,8 +23,9 @@
 
 using namespace DPsim;
 
-Components::DP::TransformerIdeal::TransformerIdeal(String name, Int node1, Int node2, Real ratioAbs, Real ratioPhase)
-	: Base(name, node1, node2)
+Components::DP::TransformerIdeal::TransformerIdeal(String name, Int node1, Int node2, Real ratioAbs, Real ratioPhase,
+	LogLevel logLevel, Bool decrementNodes)
+	: Base(name, node1, node2, logLevel, decrementNodes)
 {
 	mNumVirtualNodes = 1;
 	mVirtualNodes = { 0 };

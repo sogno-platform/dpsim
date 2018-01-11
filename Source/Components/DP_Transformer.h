@@ -58,7 +58,7 @@ namespace DP {
 
 	public:
 		Transformer(String name, Int node1, Int node2, Real ratioAbs, Real ratioPhase,
-			Real resistance, Real inductance, Logger::Level logLevel = Logger::Level::NONE, Bool decrementNodes = true);
+			Real resistance, Real inductance, Logger::Level logLevel = Logger::Level::NONE);
 
 		void initialize(SystemModel& system);
 		void applySystemMatrixStamp(SystemModel& system);

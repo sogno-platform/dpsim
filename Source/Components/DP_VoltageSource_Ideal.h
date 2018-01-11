@@ -40,7 +40,7 @@ namespace DP {
 	public:
 		/// define paramenters of the voltage source
 		VoltageSourceIdeal(String name, Int src, Int dest, Complex voltage,
-			Logger::Level loglevel = Logger::Level::NONE, Bool decrementNodes = true);
+			Logger::Level loglevel = Logger::Level::NONE);
 
 		void initialize(SystemModel& system) { }
 

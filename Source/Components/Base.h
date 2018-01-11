@@ -50,7 +50,7 @@ namespace Components {
 
 	protected:
 		/// Component logger
-		std::shared_ptr<Logger> mLog;
+		Logger mLog;
 		/// Component logger control for internal variables
 		Logger::Level mLogLevel;
 		/// Component name
@@ -77,30 +77,21 @@ namespace Components {
 		/// Decrementing the node number is default so that the user can use zero for the ground node. It needs to be
 		/// deactivated for subcomponents that are created inside other components since otherwise the node number
 		/// would be decremented twice.
-		Base(String name, Int node1, Int node2, Logger::Level loglevel = Logger::Level::NONE, Bool decrementNodes = true) {
+		Base(String name, Int node1, Int node2, Logger::Level logLevel = Logger::Level::NONE)
+			: mLog("Logs/" + name + ".log", logLevel) {
 			mName = name;
 			mNode1 = node1;
 			mNode2 = node2;
-			mLogLevel = loglevel;
-			if (decrementNodes) {
-				mNode1--;
-				mNode2--;
-			}
-
+			mLogLevel = logLevel;			
 			attrMap["name"]  = { Attribute::String,  &mName };
 			attrMap["node1"] = { Attribute::Integer, &mNode1 };
-			attrMap["node2"] = { Attribute::Integer, &mNode2 };
-
-			mLog = std::make_shared<Logger>("Logs/" + name + ".log", mLogLevel);
+			attrMap["node2"] = { Attribute::Integer, &mNode2 };			
 		}
 
 
-		Base(String name, Int node1, Int node2, Int node3, Logger::Level loglevel = Logger::Level::NONE, Bool decrementNodes = true)
+		Base(String name, Int node1, Int node2, Int node3, Logger::Level loglevel = Logger::Level::NONE)
 			: Base(name, node1, node2, loglevel) {
-			mNode3 = node3;
-			if (decrementNodes) {
-				mNode3--;
-			}
+			mNode3 = node3;			
 			attrMap["node3"] = { Attribute::Integer, &mNode3 };
 		}
 
