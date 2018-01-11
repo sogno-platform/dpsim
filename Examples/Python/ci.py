@@ -87,10 +87,10 @@ if __name__ == "__main__":
     python_sims = [
         dpsim.Simulation("TestSimple",
             [
-                dp.VoltageSource("v_s", 1, 0, 10000+0j, 1),
-                dp.Resistor("r_line", 1, 2, 1),
-                dp.Inductor("l_line", 2, 3, 1),
-                dp.Resistor("r_load", 3, 0, 1000)
+                dp.VoltageSource("v_s", 0, -1, 10000+0j, 1),
+                dp.Resistor("r_line", 0, 1, 1),
+                dp.Inductor("l_line", 1, 2, 1),
+                dp.Resistor("r_load", 2, -1, 1000)
             ],
             duration=0.3)
     ]
