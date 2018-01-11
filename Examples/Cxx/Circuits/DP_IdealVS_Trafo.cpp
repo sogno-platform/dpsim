@@ -28,15 +28,17 @@ using namespace DPsim::Components::DP;
 int main(int argc, char* argv[])
 {
 	// Define simulation scenario
-	Real timeStep = 0.001;
+	Real timeStep = 0.000005;
 	Real omega = 2.0*M_PI*50.0;
-	Real finalTime = 0.2;
+	Real finalTime = 0.1;
 	String simName = "IdealVS_Trafo_" + std::to_string(timeStep);
 
 	Components::Base::List comps = {
-		VoltageSourceIdeal::make("v_1", -1, 0, Complex(100, 0), Logger::Level::DEBUG, false),
-		Transformer::make("trafo_1", 0, 1, 10, 0, 0, 0.001, Logger::Level::DEBUG, false),
-		Resistor::make("r_1", 1, -1, 1, Logger::Level::DEBUG, false)
+		VoltageSourceIdeal::make("v_1", -1, 0, std::polar<double>(100., 0*-90./180.*PI), LogLevel::DEBUG),
+		Inductor::make("l_1", 0, 1, 0.001, LogLevel::DEBUG),
+		Resistor::make("r_2", 1, -1, 1, LogLevel::DEBUG),
+		TransformerIdeal::make(("trafo_1", 1, 2, 10, 0, LogLevel::DEBUG),
+		Resistor::make("r_1", 1, -1, 1, LogLevel::DEBUG)
 	};
 
 	// Set up simulation and start main simulation loop

@@ -33,10 +33,10 @@ int tmpmain(int argc, char* argv[])
 	Real finalTime = 0.2;
 	String simName = "IdealVS_TrafoIdeal_" + std::to_string(timeStep);
 
-	Components::Base::List comps = {
-		VoltageSourceIdeal::make("v_1", 0, 1, Complex(10, 0)),
-		TransformerIdeal::make("trafo_1", 1, 2, 10, 0),
-		Resistor::make("r_1", 2, 0, 1)
+	Components::Base::List circElements = {
+		VoltageSourceIdeal::make("v_1", -1, 0, Complex(10, 0), LogLevel::DEBUG),
+		TransformerIdeal::make("trafo_1", 0, 1, 10, 0, LogLevel::DEBUG),
+		Resistor::make("r_1", 2, 1, -1, LogLevel::DEBUG)
 	};
 
 	// Set up simulation and start main simulation loop
