@@ -73,6 +73,7 @@ foreach(SOURCE ${CIRCUIT_SOURCES} ${SYNCGEN_SOURCES} ${VARFREQ_SOURCES})
 endforeach()
 
 # CIMpp
+set(CIM_DIR 16v29a)
 find_package(CIMpp)
 if(CIMpp_FOUND)
 	add_executable(CIM CIM/CIM.cpp)
@@ -83,7 +84,7 @@ if(CIMpp_FOUND)
 endif()
 
 # Linux for shared memory and real-time
-if(LINUX)
+if(WITH_SHMEM)
 	foreach(SOURCE ${SHMEM_SOURCES} ${RT_SOURCES})
 		get_filename_component(TARGET ${SOURCE} NAME_WE)
 

@@ -34,13 +34,12 @@ string(TIMESTAMP YMD "%Y%m%d")
 set(DPSIM_RELEASE ${YMD}git${GIT_HASH_SHORT})
 
 set(Python_ADDITIONAL_VERSIONS 3.5 3.6 3.7)
+set(CIM_DIR 16v29a)
+
 find_package(PythonInterp 3.5)
 find_package(PythonLibs 3.5)
-
-set(CIM_DIR 16v29a)
-find_package(CIMpp)
-
 find_package(Eigen3 3.0 REQUIRED)
+find_package(CIMpp)
 find_package(VILLASnode)
 
 if(PythonInterp_FOUND AND PythonLibs_FOUND)

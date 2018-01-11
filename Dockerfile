@@ -29,7 +29,8 @@ RUN dnf -y install \
 RUN dnf -y install \
 	python3-devel \
 	eigen3-devel \
-	villas-node-devel
+	villas-node-devel \
+	libcimpp16v29a
 
 # Python Packages
 ADD requirements.txt .

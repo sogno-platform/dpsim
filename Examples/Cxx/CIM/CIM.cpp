@@ -28,7 +28,6 @@
 using namespace DPsim;
 
 static int testCIMReader(std::list<String> filenames) {
-
 	CIM::Reader reader(50, Logger::Level::INFO);
 
 	for (String & filename : filenames) {
@@ -38,9 +37,9 @@ static int testCIMReader(std::list<String> filenames) {
 
 	reader.parseFiles();
 
-	Components::Base::List components = reader.getComponents();
+	Components::Base::List comps = reader.getComponents();
 
-	Simulation sim("CIM_Test", components, 2 * PI * 50, 0.001, 0.3);
+	Simulation sim("CIM", comps, 2 * PI * 50, 0.001, 0.3);
 
 	sim.run();
 
@@ -48,18 +47,20 @@ static int testCIMReader(std::list<String> filenames) {
 }
 
 static void readFixedCIMFiles_LineLoad() {
-	std::list<String> filenames;
-	filenames.push_back("..\\..\\Examples\\CIM\\Line_Load\\Line_Load.xml");
+	std::list<String> filenames = {
+		"..\\..\\Examples\\CIM\\Line_Load\\Line_Load.xml"
+	};
 
 	testCIMReader(filenames);
 }
 
 static void readFixedCIMFiles_IEEE9bus() {
-	std::list<String> filenames;
-	filenames.push_back("..\\..\\..\\..\\dpsim\\Examples\\CIM\\IEEE-09_Neplan_RX\\IEEE-09_Neplan_RX_DI.xml");
-	filenames.push_back("..\\..\\..\\..\\dpsim\\Examples\\CIM\\IEEE-09_Neplan_RX\\IEEE-09_Neplan_RX_EQ.xml");
-	filenames.push_back("..\\..\\..\\..\\dpsim\\Examples\\CIM\\IEEE-09_Neplan_RX\\IEEE-09_Neplan_RX_SV.xml");
-	filenames.push_back("..\\..\\..\\..\\dpsim\\Examples\\CIM\\IEEE-09_Neplan_RX\\IEEE-09_Neplan_RX_TP.xml");
+	std::list<String> filenames = {
+		"..\\..\\..\\dpsim\\Examples\\CIM\\IEEE-09_Neplan_RX\\IEEE-09_Neplan_RX_DI.xml",
+		"..\\..\\..\\dpsim\\Examples\\CIM\\IEEE-09_Neplan_RX\\IEEE-09_Neplan_RX_EQ.xml",
+		"..\\..\\..\\dpsim\\Examples\\CIM\\IEEE-09_Neplan_RX\\IEEE-09_Neplan_RX_SV.xml",
+		"..\\..\\..\\dpsim\\Examples\\CIM\\IEEE-09_Neplan_RX\\IEEE-09_Neplan_RX_TP.xml"
+	};
 
 	testCIMReader(filenames);
 }
@@ -76,8 +77,12 @@ static void readCIMFilesFromInput(int argc, char *argv[]) {
 }
 
 int main(int argc, char *argv[]) {
-	//readCIMFilesFromInput(argc, argv);
-	readFixedCIMFiles_IEEE9bus();
+	if (argc < 2) {
+		readFixedCIMFiles_IEEE9bus();
+	}
+	else {
+		readCIMFilesFromInput(argc, argv);
+	}
 
 	return 0;
 }
