@@ -34,11 +34,11 @@ int main(int argc, char* argv[])
 	String simName = "IdealVS_Trafo_" + std::to_string(timeStep);
 
 	Components::Base::List comps = {
-		VoltageSourceIdeal::make("v_1", -1, 0, std::polar<double>(100., 0*-90./180.*PI), LogLevel::DEBUG),
-		Inductor::make("l_1", 0, 1, 0.001, LogLevel::DEBUG),
-		Resistor::make("r_2", 1, -1, 1, LogLevel::DEBUG),
-		TransformerIdeal::make(("trafo_1", 1, 2, 10, 0, LogLevel::DEBUG),
-		Resistor::make("r_1", 1, -1, 1, LogLevel::DEBUG)
+		VoltageSourceIdeal::make("v_1", -1, 0, std::polar<double>(100., 0*-90./180.*PI), Logger::Level::DEBUG),
+		Inductor::make("l_1", 0, 1, 0.001, Logger::Level::DEBUG),
+		Resistor::make("r_2", 1, -1, 1, Logger::Level::DEBUG),
+		TransformerIdeal::make("trafo_1", 1, 2, 10, 0, Logger::Level::DEBUG),
+		Resistor::make("r_1", 1, -1, 1, Logger::Level::DEBUG)
 	};
 
 	// Set up simulation and start main simulation loop

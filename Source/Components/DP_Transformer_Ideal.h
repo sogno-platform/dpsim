@@ -36,7 +36,7 @@ namespace DP {
 		Complex mRatio;
 	public:
 		TransformerIdeal(String name, Int node1, Int node2, Real ratioAbs, Real ratioPhase,
-			LogLevel logLevel = LogLevel::NONE, Bool decrementNodes = true);
+			Logger::Level logLevel = Logger::Level::NONE);
 
 		void initialize(SystemModel& system) { };
 		void applySystemMatrixStamp(SystemModel& system);

@@ -23,8 +23,8 @@
 
 using namespace DPsim;
 
-Components::DP::Inductor::Inductor(String name, Int node1, Int node2, Real inductance, Logger::Level logLevel, Bool decrementNodes)
-	: Base(name, node1, node2, logLevel, decrementNodes) {
+Components::DP::Inductor::Inductor(String name, Int node1, Int node2, Real inductance, Logger::Level logLevel)
+	: Base(name, node1, node2, logLevel) {
 	mInductance = inductance;
 	attrMap["inductance"] = {Attribute::Real, &mInductance};
 	mEquivCurrent = { 0, 0 };
@@ -33,11 +33,6 @@ Components::DP::Inductor::Inductor(String name, Int node1, Int node2, Real induc
 	mLog.Log(Logger::Level::DEBUG) << "Create Inductor " << name << " at " << mNode1 << "," << mNode2 << std::endl;
 }
 
-Components::DP::Inductor::Inductor(String name, Int node1, Int node2, Real inductance,
-	Complex voltageNode1, Complex voltageNode2, Logger::Level logLevel, Bool decrementNodes)
-	: Inductor(name, node1, node2, inductance, logLevel, decrementNodes) {
-	mVoltage = voltageNode1 - voltageNode2;
-}
 
 void Components::DP::Inductor::applySystemMatrixStamp(SystemModel& system) {	
 	//mGlr = a / (1 + b*b);

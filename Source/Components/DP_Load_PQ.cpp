@@ -44,8 +44,8 @@ void Components::DP::PQLoad::initialize(SystemModel& system) {
 	mReactance = mSvVoltage*mSvVoltage*mReactivePower/abs;
 	mInductance = mReactance / system.getOmega();
 
-	inductor = std::make_shared<Components::DP::Inductor>(mName + "_ind", mNode1, mNode2, mInductance, mLogLevel, false);
-	resistor = std::make_shared<Components::DP::Resistor>(mName + "_res", mNode1, mNode2, mResistance, mLogLevel, false);
+	inductor = std::make_shared<Components::DP::Inductor>(mName + "_ind", mNode1, mNode2, mInductance, mLogLevel);
+	resistor = std::make_shared<Components::DP::Resistor>(mName + "_res", mNode1, mNode2, mResistance, mLogLevel);
 	inductor->initialize(system);
 	resistor->initialize(system);
 }

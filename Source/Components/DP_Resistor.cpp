@@ -28,7 +28,7 @@ Components::DP::Resistor::Resistor(String name, Int node1, Int node2, Real resis
 	: Base(name, node1, node2, logLevel) {
 	mResistance = resistance;
 	attrMap["resistance"] = { Attribute::Real, &mResistance };
-	mLog.Log(LogLevel::DEBUG) << "Create Resistor " << name << " at " << mNode1 << "," << mNode2 << std::endl;
+	mLog.Log(Logger::Level::DEBUG) << "Create Resistor " << name << " at " << mNode1 << "," << mNode2 << std::endl;
 }
 
 void Components::DP::Resistor::applySystemMatrixStamp(SystemModel& system)
@@ -37,18 +37,18 @@ void Components::DP::Resistor::applySystemMatrixStamp(SystemModel& system)
 
 	// Set diagonal entries
 	if (mNode1 >= 0) {
-		mLog.Log(LogLevel::DEBUG) << "Add " << mConductance << " to " << mNode1 << "," << mNode1 << std::endl;
+		mLog.Log(Logger::Level::DEBUG) << "Add " << mConductance << " to " << mNode1 << "," << mNode1 << std::endl;
 		system.addCompToSystemMatrix(mNode1, mNode1, Complex(mConductance, 0));
 	}
 	if (mNode2 >= 0) {
-		mLog.Log(LogLevel::DEBUG) << "Add " << mConductance << " to " << mNode2 << "," << mNode2 << std::endl;
+		mLog.Log(Logger::Level::DEBUG) << "Add " << mConductance << " to " << mNode2 << "," << mNode2 << std::endl;
 		system.addCompToSystemMatrix(mNode2, mNode2, Complex(mConductance, 0));
 	}
 	// Set off diagonal entries
 	if (mNode1 >= 0 && mNode2 >= 0) {
-		mLog.Log(LogLevel::DEBUG) << "Add " << -mConductance << " to " << mNode1 << "," << mNode2 << std::endl;
+		mLog.Log(Logger::Level::DEBUG) << "Add " << -mConductance << " to " << mNode1 << "," << mNode2 << std::endl;
 		system.addCompToSystemMatrix(mNode1, mNode2, Complex(-mConductance, 0));
-		mLog.Log(LogLevel::DEBUG) << "Add " << -mConductance << " to " << mNode2 << "," << mNode1 << std::endl;
+		mLog.Log(Logger::Level::DEBUG) << "Add " << -mConductance << " to " << mNode2 << "," << mNode1 << std::endl;
 		system.addCompToSystemMatrix(mNode2, mNode1, Complex(-mConductance, 0));
 	}
 }

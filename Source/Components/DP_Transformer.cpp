@@ -44,7 +44,7 @@ Components::DP::Transformer::Transformer(String name, Int node1, Int node2, Real
 
 // TODO: implement RX losses
 void Components::DP::Transformer::initialize(SystemModel& system) {
-	mInductor = std::make_shared<Components::DP::Inductor>(mName + "_ind", mNode1, mVirtualNodes[0], mInductance, mLogLevel, false);
+	mInductor = std::make_shared<Components::DP::Inductor>(mName + "_ind", mNode1, mVirtualNodes[0], mInductance, mLogLevel);
 	mInductor->initialize(system);
 
 }
