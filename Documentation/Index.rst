@@ -10,7 +10,7 @@
    :caption: Contents:
 
    Guide
-   Installation
+   Install
    Build
    Structure
    Reference
