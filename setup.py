@@ -77,7 +77,9 @@ setup(
     keywords = "simulation power system real-time",
     url = "https://dpsim.fein-aachen.org",
     packages = find_packages('Source/Python'),
-    package_dir = { 'dpsim':'Source/Python/dpsim' },
+    package_dir = {
+        'dpsim': 'Source/Python/dpsim'
+    },
     long_description = read('README.md'),
     classifiers = [
         "Development Status :: 4 - Beta",
@@ -88,6 +90,9 @@ setup(
         "Operating System :: POSIX :: Linux",
         "Programming Language :: Python :: 3",
         "Programming Language :: Python :: Implementation :: CPython"
+    ],
+    install_requires = [
+        'acs-dataprocessing',
     ],
     setup_requires = [
         'pytest-runner',
@@ -101,6 +106,8 @@ setup(
     ext_modules = [
         CMakeExtension('_dpsim')
     ],
-    cmdclass = dict(build_ext = CMakeBuild),
-    zip_safe = False,
+    cmdclass = {
+        'build_ext': CMakeBuild
+    },
+    zip_safe = False
 )
