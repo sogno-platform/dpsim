@@ -13,8 +13,9 @@ DPsim is a solver library for power system simulation.
 - It can be interfaced to a variety of protocols and interfaces via [VILLASnode](http://www.fein-aachen.org/projects/villas-framework/).
 
 ## Installation
+If you just want to use DPsim for simulations, take a look at the [installation instructions](Documentation/Install.rst).
 
-Take a look at the [build instructions](Documentation/Build.rst).
+If you would like to modify / extend DPsim or build it for a specific platform, take a look at the [build instructions](Documentation/Build.rst).
 
 ## Usage
 
