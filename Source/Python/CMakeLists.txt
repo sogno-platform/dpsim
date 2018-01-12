@@ -31,7 +31,7 @@ target_link_libraries(dpsim_python dpsim ${PYTHON_LIBRARIES})
 target_include_directories(dpsim_python PRIVATE ${PYTHON_INCLUDE_DIRS} ${INCLUDE_DIRS})
 set_target_properties(dpsim_python
 	PROPERTIES
-		LIBRARY_OUTPUT_NAME "_dpsim"
+		OUTPUT_NAME "_dpsim"
 		SUFFIX ${PYTHON_EXT_SUFFIX}
 		PREFIX ""
 		INSTALL_RPATH ${INSTALL_RPATH}
