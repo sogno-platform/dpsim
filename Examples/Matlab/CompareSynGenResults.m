@@ -4,14 +4,14 @@ clc
 clear all
 %% read PLECS results
 
-Results_PLECS = csvread('../../../vsa/Results/TestExciterAndTurbine/SynGenDqEMTExciter_loadChange_Simulink/Voltages_and_currents.csv'); 
+Results_PLECS = csvread('../../../vsa/Results/SynGenDqEmt_ABCFault_Simulink/Voltages_and_currents.csv'); 
 %Te_PLECS = csvread('../../../vsa/Results/SynGenDqEmt_ABCFault_PLECS/electrical_torque.csv'); 
-omega_PLECS = csvread('../../../vsa/Results/TestExciterAndTurbine/SynGenDqEMTExciter_loadChange_Simulink/omega.csv'); 
+%omega_PLECS = csvread('../../../vsa/Results/SynGenDqEmt_ABCFault_Simulink/omega.csv'); 
 %theta_PLECS = csvread('../../vsa/Results/SynGenVBREmt_ABCFault_PLECS/theta.csv'); 
 %% read results from c++ simulation
-VoltageVector = csvread('../../../vsa/Results/TestExciterAndTurbine/SynGenVBREmtExciter_LoadChange_DPsim/1e-5/data_vt.csv',1);
-CurrentVector = csvread('../../../vsa/Results/TestExciterAndTurbine/SynGenVBREmtExciter_LoadChange_DPsim/1e-5/data_j.csv',1);
-Log_SynGen = csvread('../../../vsa/Results/TestExciterAndTurbine/SynGenVBREmtExciter_LoadChange_DPsim/1e-5/SynGen_gen.csv',1);
+VoltageVector = csvread('../../../vsa/Results/SynGenVbrEmt_ABCFault_DPsim/NewModel/data_vt.csv',1);
+CurrentVector = csvread('../../../vsa/Results/SynGenVbrEmt_ABCFault_DPsim/NewModel/data_j.csv',1);
+%Log_SynGen = csvread('../../../vsa/Results/SynGenVbrEmt_ABCFault_DPsim/NewModel/SynGen_gen.csv',1);
  %% Plot
 figure(1)
 hold off
@@ -91,13 +91,13 @@ legend('ic DPSim','ic Simulink');
 % title ('dq currents');
 % legend('q','d','fd');
 
-figure(7)
-hold off
-plot(Log_SynGen(:,1),Log_SynGen(:,9));
-hold on
-plot(Results_PLECS(:,1),omega_PLECS*2*pi*60);
-title('Rotor speed');
-legend('\omega DPSim','\omega Simulink');
+% figure(7)
+% hold off
+% plot(Log_SynGen(:,1),Log_SynGen(:,9));
+% hold on
+% plot(Results_PLECS(:,1),omega_PLECS*2*pi*60);
+% title('Rotor speed');
+% legend('\omega DPSim','\omega Simulink');
 % % 
 % figure(4)
 % hold off
@@ -130,9 +130,9 @@ MaxDif2 = max(abs(CurrentVector(:,2) - Results_PLECS(:,5)));
 err2 = immse(CurrentVector(:,2),Results_PLECS(:,5));
 disp(['Maximum Error ia: ', num2str(MaxDif2), ' A']);
 disp(['Mean-squared error ia: ', num2str(err2), ' A']);
-% Omega
-MaxDif2 = max(abs(Log_SynGen(:,9)) - omega_PLECS(1:1000000,1)*2*pi*60);
-err2 = immse(Log_SynGen(:,9),omega_PLECS(1:1000000,1)*2*pi*60);
-disp(['Maximum Error omega: ', num2str(MaxDif2), ' rad/s']);
-disp(['Mean-squared error omega: ', num2str(err2), ' rad/s']);
+% % Omega
+% MaxDif2 = max(abs(Log_SynGen(:,9)) - omega_PLECS(1:1000000,1)*2*pi*60);
+% err2 = immse(Log_SynGen(:,9),omega_PLECS(1:1000000,1)*2*pi*60);
+% disp(['Maximum Error omega: ', num2str(MaxDif2), ' rad/s']);
+% disp(['Mean-squared error omega: ', num2str(err2), ' rad/s']);
 
