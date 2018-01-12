@@ -46,7 +46,9 @@ set(INCLUDE_DIRS
 	${EIGEN3_INCLUDE_DIR}
 )
 
-set(LIBRARIES "-lstdc++fs")
+if(NOT MSVC)
+	set(LIBRARIES "-lstdc++fs")
+endif()
 
 if(NOT WIN32)
 	# we use PyArg_ParseTupleAndKeywords several times, which erroneously accepts
