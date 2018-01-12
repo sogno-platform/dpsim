@@ -1,4 +1,4 @@
-add_library(dpsim SHARED
+add_library(dpsim
 	IntegrationMethod.cpp
 	Logger.cpp
 	MathLibrary.cpp
