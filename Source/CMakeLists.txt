@@ -53,7 +53,7 @@ endif()
 if(NOT WIN32)
 	# we use PyArg_ParseTupleAndKeywords several times, which erroneously accepts
 	# a char* array instead of a const char* array
-	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-write-strings")
+	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-write-strings -fPIC")
 endif()
 
 if(WITH_RT)
