@@ -24,47 +24,37 @@
 
 using namespace DPsim;
 
-VoltageBehindReactanceEMTNew::VoltageBehindReactanceEMTNew(String name, Int node1, Int node2, Int node3,
+Components::EMT::VoltageBehindReactanceEMTNew::VoltageBehindReactanceEMTNew(String name, Int node1, Int node2, Int node3,
 		Real nomPower, Real nomVolt, Real nomFreq, Int poleNumber, Real nomFieldCur,
 		Real Rs, Real Ll, Real Lmd, Real Lmd0, Real Lmq, Real Lmq0,
 		Real Rfd, Real Llfd, Real Rkd, Real Llkd,
 		Real Rkq1, Real Llkq1, Real Rkq2, Real Llkq2,
-		Real inertia, bool logActive)
-		: SynchGenBase(name, node1, node2, node3, nomPower, nomVolt, nomFreq, poleNumber, nomFieldCur,
+		Real inertia, Logger::Level logLevel)
+		: SynchronGeneratorBase(name, node1, node2, node3, nomPower, nomVolt, nomFreq, poleNumber, nomFieldCur,
 				Rs, Ll, Lmd, Lmd0, Lmq, Lmq0, Rfd, Llfd, Rkd, Llkd, Rkq1, Llkq1, Rkq2, Llkq2,
-				inertia, logActive) {
+				inertia, logLevel)
+{
+}
 
-		//mNumVirtualNodes = 3;
-		//mVirtualNodes = { 0, 0, 0 };
-
-		//mEa = IdealVoltageSourceEMT("mEa", 0, mVirtualNodes[0], mDVa);
-		//mEb = IdealVoltageSourceEMT("mEb", 0, mVirtualNodes[2], mDVb);
-		//mEc = IdealVoltageSourceEMT("mEc", 0, mVirtualNodes[4], mDVc);
-
+Components::EMT::VoltageBehindReactanceEMTNew::~VoltageBehindReactanceEMTNew() {
 
 }
 
-VoltageBehindReactanceEMTNew::~VoltageBehindReactanceEMTNew() {
-		if (mLogActive) {
-				delete mLog;
-		}
-}
-
-void VoltageBehindReactanceEMTNew::AddExciter(Real Ta, Real Ka, Real Te, Real Ke, Real Tf, Real Kf, Real Tr, Real Lad, Real Rfd) {
+void Components::EMT::VoltageBehindReactanceEMTNew::AddExciter(Real Ta, Real Ka, Real Te, Real Ke, Real Tf, Real Kf, Real Tr, Real Lad, Real Rfd) {
 		mExciter = Exciter(Ta, Ka, Te, Ke, Tf, Kf, Tr, Lad, Rfd);
-		mExciter.init(1, 1);
+		mExciter.initialize(1, 1);
 		WithExciter = true;
 }
 
-void VoltageBehindReactanceEMTNew::AddGovernor(Real Ta, Real Tb, Real Tc, Real Fa, Real Fb, Real Fc, Real K, Real Tsr, Real Tsm, Real Tm_init, Real PmRef) {
+void Components::EMT::VoltageBehindReactanceEMTNew::AddGovernor(Real Ta, Real Tb, Real Tc, Real Fa, Real Fb, Real Fc, Real K, Real Tsr, Real Tsm, Real Tm_init, Real PmRef) {
 		mTurbineGovernor = TurbineGovernor(Ta, Tb, Tc, Fa, Fb, Fc, K, Tsr, Tsm);
-		mTurbineGovernor.init(PmRef, Tm_init);
+		mTurbineGovernor.initialize(PmRef, Tm_init);
 		WithTurbineGovernor = true;
 }
 
 
 
-void VoltageBehindReactanceEMTNew::init(Real om, Real dt,
+void Components::EMT::VoltageBehindReactanceEMTNew::init(Real om, Real dt,
 		Real initActivePower, Real initReactivePower, Real initTerminalVolt, Real initVoltAngle, Real initFieldVoltage, Real initMechPower) {
 
 		mResistanceMat = Matrix::Zero(3, 3);
@@ -173,7 +163,7 @@ void VoltageBehindReactanceEMTNew::init(Real om, Real dt,
 }
 
 
-void VoltageBehindReactanceEMTNew::step(SystemModel& system, Real time) {
+void Components::EMT::VoltageBehindReactanceEMTNew::step(SystemModel& system, Real time) {
 
 		stepInPerUnit(system.getOmega(), system.getTimeStep(), time, system.getNumMethod());
 
@@ -190,7 +180,8 @@ void VoltageBehindReactanceEMTNew::step(SystemModel& system, Real time) {
 				system.addRealToRightSideVector(mNode3, -mIc*mBase_i);
 		}
 
-		if (mLogActive) {
+
+		if (mLogLevel != Logger::Level::NONE) {
 				Matrix logValues(getRotorFluxes().rows() + getDqStatorCurrents().rows() + 3, 1);
 				logValues << getRotorFluxes(), getDqStatorCurrents(), getElectricalTorque(), getRotationalSpeed(), getRotorPosition();
 				mLog->LogDataLine(time, logValues);
@@ -200,7 +191,7 @@ void VoltageBehindReactanceEMTNew::step(SystemModel& system, Real time) {
 }
 
 
-void VoltageBehindReactanceEMTNew::stepInPerUnit(Real om, Real dt, Real time, NumericalMethod numMethod) {
+void Components::EMT::VoltageBehindReactanceEMTNew::stepInPerUnit(Real om, Real dt, Real time, NumericalMethod numMethod) {
 
 		mIabc <<
 				mIa,
@@ -351,7 +342,7 @@ void VoltageBehindReactanceEMTNew::stepInPerUnit(Real om, Real dt, Real time, Nu
 }
 
 
-void VoltageBehindReactanceEMTNew::postStep(SystemModel& system) {
+void Components::EMT::VoltageBehindReactanceEMTNew::postStep(SystemModel& system) {
 		if (mNode1 >= 0) {
 				mVa = system.getRealFromLeftSideVector(mNode1);
 		}
@@ -372,7 +363,7 @@ void VoltageBehindReactanceEMTNew::postStep(SystemModel& system) {
 		}
 }
 
-void VoltageBehindReactanceEMTNew::CalculateLandpL() {
+void Components::EMT::VoltageBehindReactanceEMTNew::CalculateLandpL() {
 		mDInductanceMat <<
 				mLl + mLa - mLb*cos(2 * mThetaMech), -mLa / 2 - mLb*cos(2 * mThetaMech - 2 * PI / 3), -mLa / 2 - mLb*cos(2 * mThetaMech + 2 * PI / 3),
 				-mLa / 2 - mLb*cos(2 * mThetaMech - 2 * PI / 3), mLl + mLa - mLb*cos(2 * mThetaMech - 4 * PI / 3), -mLa / 2 - mLb*cos(2 * mThetaMech),
@@ -384,7 +375,7 @@ void VoltageBehindReactanceEMTNew::CalculateLandpL() {
 		pmDInductanceMat = pmDInductanceMat * 2 * mOmMech;
 }
 
-void VoltageBehindReactanceEMTNew::CalculateAuxiliarConstants(Real dt) {
+void Components::EMT::VoltageBehindReactanceEMTNew::CalculateAuxiliarConstants(Real dt) {
 
 		b11 = (mRkq1 / mLlkq1)*(mDLmq / mLlkq1 - 1);
 		b12 = mRkq1*mDLmq / (mLlkq1*mLlkq2);
@@ -447,7 +438,7 @@ void VoltageBehindReactanceEMTNew::CalculateAuxiliarConstants(Real dt) {
 
 }
 
-void VoltageBehindReactanceEMTNew::CalculateK() {
+void Components::EMT::VoltageBehindReactanceEMTNew::CalculateK() {
 
 		c21_omega = -mOmMech*mDLmq / mLlkq1;
 		c22_omega = -mOmMech*mDLmq / mLlkq2;
@@ -481,7 +472,7 @@ void VoltageBehindReactanceEMTNew::CalculateK() {
 }
 
 
-Matrix VoltageBehindReactanceEMTNew::parkTransform(Real theta, Real a, Real b, Real c) {
+Matrix Components::EMT::VoltageBehindReactanceEMTNew::parkTransform(Real theta, Real a, Real b, Real c) {
 
 		Matrix dq0vector(3, 1);
 
@@ -500,7 +491,7 @@ Matrix VoltageBehindReactanceEMTNew::parkTransform(Real theta, Real a, Real b, R
 
 
 
-Matrix VoltageBehindReactanceEMTNew::inverseParkTransform(Real theta, Real q, Real d, Real zero) {
+Matrix Components::EMT::VoltageBehindReactanceEMTNew::inverseParkTransform(Real theta, Real q, Real d, Real zero) {
 
 		Matrix abcVector(3, 1);
 

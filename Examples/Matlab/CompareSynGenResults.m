@@ -9,8 +9,8 @@ Results_PLECS = csvread('../../../vsa/Results/SynGenDqEmt_ABCFault_Simulink/Volt
 %omega_PLECS = csvread('../../../vsa/Results/SynGenDqEmt_ABCFault_Simulink/omega.csv'); 
 %theta_PLECS = csvread('../../vsa/Results/SynGenVBREmt_ABCFault_PLECS/theta.csv'); 
 %% read results from c++ simulation
-VoltageVector = csvread('../../../vsa/Results/SynGenVbrEmt_ABCFault_DPsim/NewModel/data_vt.csv',1);
-CurrentVector = csvread('../../../vsa/Results/SynGenVbrEmt_ABCFault_DPsim/NewModel/data_j.csv',1);
+VoltageVector = csvread('../../../vsa/Results/SynGenVbrEmt_ABCFault_DPsim/NewModel/EMT_SynchronGenerator_VBR_LeftVector.csv',1);
+CurrentVector = csvread('../../../vsa/Results/SynGenVbrEmt_ABCFault_DPsim/NewModel/EMT_SynchronGenerator_VBR_RightVector.csv',1);
 %Log_SynGen = csvread('../../../vsa/Results/SynGenVbrEmt_ABCFault_DPsim/NewModel/SynGen_gen.csv',1);
  %% Plot
 figure(1)
