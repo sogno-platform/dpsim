@@ -83,7 +83,12 @@ setup(
     classifiers = [
         "Development Status :: 4 - Beta",
         "Topic :: Scientific/Engineering",
-        "License :: OSI Approved :: GNU General Public License v3 or later (GPLv3+)"
+        "License :: OSI Approved :: GNU General Public License v3 or later (GPLv3+)",
+        "Operating System :: MacOS :: MacOS X",
+        "Operating System :: Microsoft :: Windows",
+        "Operating System :: POSIX :: Linux",
+        "Programming Language :: Python :: 3",
+        "Programming Language :: Python :: Implementation :: CPython"
     ],
     setup_requires = [
         'pytest-runner',
