@@ -92,7 +92,8 @@ setup(
     setup_requires = [
         'pytest-runner',
         'm2r',
-        'breathe'
+        'breathe',
+        'wheel'
     ],
     tests_require = [
         'pytest'

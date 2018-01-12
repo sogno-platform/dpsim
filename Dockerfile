@@ -38,6 +38,7 @@ RUN pip3 install \
 	matplotlib \
 	sphinx \
 	m2r \
-	breathe
+	breathe \
+	wheel
 
 ENV LD_LIBRARY_PATH /usr/local/lib64
