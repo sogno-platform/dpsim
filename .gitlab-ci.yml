@@ -68,7 +68,7 @@ test:pytest:
   stage: test
   script:
     - make -C build install
-    - pytest
+    - pytest -v
   image: ${DOCKER_IMAGE_DEV}:${DOCKER_TAG_DEV}
   dependencies:
     - build:code
