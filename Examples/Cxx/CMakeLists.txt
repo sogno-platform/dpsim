@@ -51,20 +51,24 @@ set(VARFREQ_SOURCES
 	VariableTimeStep/RXLine_LoadStep_FreqStep_2.cpp
 )
 
-set(RT_SOURCES
-	RT/RT_DP_ResVS_RL1.cpp
-)
+if(WITH_RT)
+	set(RT_SOURCES
+		RT/RT_DP_ResVS_RL1.cpp
+	)
+endif()
 
-set(SHMEM_SOURCES
-	Shmem/ShmemDistributed.cpp
-	Shmem/ShmemDistributedDirect.cpp
-	Shmem/ShmemDistributedRef.cpp
-	Shmem/ShmemExample.cpp
-	Shmem/ShmemMain.cpp
-	Shmem/ShmemRTExample.cpp
-)
+if(WITH_SHMEM)
+	set(SHMEM_SOURCES
+		Shmem/ShmemDistributed.cpp
+		Shmem/ShmemDistributedDirect.cpp
+		Shmem/ShmemDistributedRef.cpp
+		Shmem/ShmemExample.cpp
+		Shmem/ShmemMain.cpp
+		Shmem/ShmemRTExample.cpp
+	)
+endif()
 
-foreach(SOURCE ${CIRCUIT_SOURCES} ${SYNCGEN_SOURCES} ${VARFREQ_SOURCES})
+foreach(SOURCE ${CIRCUIT_SOURCES} ${SYNCGEN_SOURCES} ${VARFREQ_SOURCES} ${SHMEM_SOURCES} ${RT_SOURCES})
 	get_filename_component(TARGET ${SOURCE} NAME_WE)
 
 	add_executable(${TARGET} ${SOURCE})
@@ -72,24 +76,14 @@ foreach(SOURCE ${CIRCUIT_SOURCES} ${SYNCGEN_SOURCES} ${VARFREQ_SOURCES})
 	target_link_libraries(${TARGET} dpsim)
 endforeach()
 
-# CIMpp
-set(CIM_DIR 16v29a)
-find_package(CIMpp)
-if(CIMpp_FOUND)
+# CIM examples are linked a bit differenctly
+if(WITH_CIM)
 	add_executable(CIM CIM/CIM.cpp)
+
+	set(CIM_DIR 16v29a)
+	find_package(CIMpp)
 
 	target_include_directories(CIM PUBLIC ${CIMPP_INCLUDE_DIRS})
 	target_link_libraries(CIM ${CIMPP_LIBRARIES})
 	target_link_libraries(CIM dpsim)
-endif()
-
-# Linux for shared memory and real-time
-if(WITH_SHMEM)
-	foreach(SOURCE ${SHMEM_SOURCES} ${RT_SOURCES})
-		get_filename_component(TARGET ${SOURCE} NAME_WE)
-
-		add_executable(${TARGET} ${SOURCE})
-
-		target_link_libraries(${TARGET} SHARED dpsim)
-	endforeach()
 endif()
