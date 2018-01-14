@@ -36,13 +36,9 @@ int main(int argc, char* argv[])
 		Resistor::make("r_load", 2, GND, 1000)
 	};
 
-	// Set up simulation
-	Simulation newSim(comps, 2.0*M_PI*50.0, timeStep, 1.0, log);
+	Simulation sim(comps, 2.0*M_PI*50.0, timeStep, 1.0, log);
 
-	// Main Simulation Loop
-	std::cout << "Start simulation." << std::endl;
-	newSim.runRT(RTExceptions, false, log, log, log);
-	std::cout << "Simulation finished." << std::endl;
+	sim.runRT(RTExceptions, false, log, log, log);
 
 	return 0;
 }

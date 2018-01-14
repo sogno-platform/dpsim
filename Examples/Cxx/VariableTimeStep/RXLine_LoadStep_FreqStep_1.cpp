@@ -41,16 +41,11 @@ static void VarFreqRxLineResLoad_DP(Real timeStep, Real finalTime, Real freqStep
 	comps1.push_back(DP::Resistor::make("r_load", 2, GND, 100));
 	comps2.push_back(DP::Resistor::make("r_load", 2, GND, 50));
 
-	// Set up simulation and start main simulation loop
-	Simulation newSim(simName, comps1, omega, timeStep, finalTime);
-	newSim.addSystemTopology(comps2);
-	newSim.setSwitchTime(loadStep, 1);
+	Simulation sim(simName, comps1, omega, timeStep, finalTime);
+	sim.addSystemTopology(comps2);
+	sim.setSwitchTime(loadStep, 1);
 
-	std::cout << "Start simulation." << std::endl;
-	while (newSim.step()) {
-		newSim.increaseByTimeStep();
-	}
-	std::cout << "Simulation finished." << std::endl;
+	sim.run();
 }
 
 static void VarFreqRxLineResLoad_EMT(Real timeStep, Real finalTime, Real freqStep, Real loadStep, Real rampTime)
@@ -70,16 +65,11 @@ static void VarFreqRxLineResLoad_EMT(Real timeStep, Real finalTime, Real freqSte
 	comps1.push_back(EMT::Resistor::make("r_load", 2, GND, 100));
 	comps2.push_back(EMT::Resistor::make("r_load", 2, GND, 50));
 
-	// Set up simulation and start main simulation loop
-	Simulation newSim(simName, comps1, omega, timeStep, finalTime, Logger::Level::INFO, SimulationType::EMT);
-	newSim.addSystemTopology(comps2);
-	newSim.setSwitchTime(loadStep, 1);
+	Simulation sim(simName, comps1, omega, timeStep, finalTime, Logger::Level::INFO, SimulationType::EMT);
+	sim.addSystemTopology(comps2);
+	sim.setSwitchTime(loadStep, 1);
 
-	std::cout << "Start simulation." << std::endl;
-	while (newSim.step()) {
-		newSim.increaseByTimeStep();
-	}
-	std::cout << "Simulation finished." << std::endl;
+	sim.run();
 }
 
 int main(int argc, char* argv[])

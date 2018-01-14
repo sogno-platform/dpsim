@@ -32,19 +32,12 @@ int main(int argc, char* argv[])
 	comps.push_back(new LinearResistor("r_2", 3, 0, 10));
 	comps2.push_back(new LinearResistor("r_2", 3, 0, 8));
 
-	// Set up simulation
 	Real timeStep = 0.001;
-	Simulation newSim(comps, 2.0*M_PI*50.0, timeStep, 20, log);
-	newSim.addSystemTopology(comps2);
-	newSim.setSwitchTime(10, 1);
+	Simulation sim(comps, 2.0*M_PI*50.0, timeStep, 20, log);
+	sim.addSystemTopology(comps2);
+	sim.setSwitchTime(10, 1);
 
-	// Main Simulation Loop
-	std::cout << "Start simulation." << std::endl;
-	while (newSim.step(log, llog, rlog)) {
-		newSim.increaseByTimeStep();
-		updateProgressBar(newSim.getTime(), newSim.getFinalTime());
-	}
-	std::cout << "Simulation finished." << std::endl;
+	sim.run();
 
 	for (auto comp : comps)
 		delete comp;

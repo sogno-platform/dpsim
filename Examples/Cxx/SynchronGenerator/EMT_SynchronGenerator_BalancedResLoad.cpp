@@ -74,8 +74,8 @@ int main(int argc, char* argv[])
 	Real dt = 0.000001;
 	Real t = 0;
 	Int downSampling = 25;
-	Simulation newSim("EMT_SynGen_BalanceResLoad", comps, om, dt, tf, Logger::Level::INFO, SimulationType::EMT, downSampling);
-	newSim.setNumericalMethod(NumericalMethod::Trapezoidal_flux);
+	Simulation sim("EMT_SynGen_BalanceResLoad", comps, om, dt, tf, Logger::Level::INFO, SimulationType::EMT, downSampling);
+	sim.setNumericalMethod(NumericalMethod::Trapezoidal_flux);
 
 	// Initialize generator
 	Real initActivePower = 555e3;
@@ -99,15 +99,13 @@ int main(int argc, char* argv[])
 	//Real initCurrent3 = initTerminalCurr * cos(initVoltAngle + initPowerFactor + 2 * M_PI / 3);
 
 	std::cout << "A matrix:" << std::endl;
-	std::cout << newSim.getSystemMatrix() << std::endl;
+	std::cout << sim.getSystemMatrix() << std::endl;
 	std::cout << "vt vector:" << std::endl;
-	std::cout << newSim.getLeftSideVector() << std::endl;
+	std::cout << sim.getLeftSideVector() << std::endl;
 	std::cout << "j vector:" << std::endl;
-	std::cout << newSim.getRightSideVector() << std::endl;
+	std::cout << sim.getRightSideVector() << std::endl;
 
-	std::cout << "Start simulation." << std::endl;
-	newSim.run();
-	std::cout << "Simulation finished." << std::endl;
+	sim.run();
 
 	return 0;
 }

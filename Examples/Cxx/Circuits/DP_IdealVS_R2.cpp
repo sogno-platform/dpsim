@@ -43,12 +43,9 @@ int main(int argc, char* argv[])
 		VoltageSourceIdeal::make("v_2", 3, GND, Complex(20, 0))
 	};
 
-	// Set up simulation and start main simulation loop
-	Simulation newSim(simName, comps, omega, timeStep, finalTime);
+	Simulation sim(simName, comps, omega, timeStep, finalTime);
 
-	std::cout << "Start simulation." << std::endl;
-	newSim.run();
-	std::cout << "Simulation finished." << std::endl;
+	sim.run();
 
 	return 0;
 }

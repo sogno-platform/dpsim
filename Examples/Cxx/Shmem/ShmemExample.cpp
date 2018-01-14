@@ -36,20 +36,11 @@ void main(int argc, char* argv[])
 	villas->registerVoltageSource(evs, 0, 1);
 	villas->registerExportedCurrent(evs, 0, 1);
 
-	// Set up simulation
 	Real timeStep = 0.001;
-	Simulation newSim(comps, 2.0*M_PI*50.0, timeStep, 0.3, log);
-	newSim.addExternalInterface(villas);
+	Simulation sim(comps, 2.0*M_PI*50.0, timeStep, 0.3, log);
+	sim.addExternalInterface(villas);
 
-	// Main Simulation Loop
-	std::cout << "Start simulation." << std::endl;
-
-	while (newSim.step(log, llog, rlog)) {
-		newSim.increaseByTimeStep();
-		updateProgressBar(newSim.getTime(), newSim.getFinalTime());
-	}
-
-	std::cout << "Simulation finished." << std::endl;
+	sim.run();
 
 	for (auto comp : comps)
 		delete comp;

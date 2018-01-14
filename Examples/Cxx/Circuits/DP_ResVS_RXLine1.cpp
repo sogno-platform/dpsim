@@ -44,14 +44,11 @@ int main(int argc, char* argv[])
 	comps1.push_back(Resistor::make("r_load", 3, 0, 1000));
 	comps2.push_back(Resistor::make("r_load", 3, 0, 800));
 
-	// Set up simulation and start main simulation loop
-	Simulation newSim(simName, comps1, omega, timeStep, finalTime);
-	newSim.addSystemTopology(comps2);
-	newSim.setSwitchTime(0.1, 1);
+	Simulation sim(simName, comps1, omega, timeStep, finalTime);
+	sim.addSystemTopology(comps2);
+	sim.setSwitchTime(0.1, 1);
 
-	std::cout << "Start simulation." << std::endl;
-	newSim.run();
-	std::cout << "Simulation finished." << std::endl;
+	sim.run();
 
 	return 0;
 }

@@ -40,12 +40,9 @@ int main(int argc, char* argv[])
 		Resistor::make("r_3", 1, GND, 1)
 	};
 
-	// Set up simulation and start main simulation loop
-	Simulation newSim(simName, comps, omega, timeStep, finalTime);
+	Simulation sim(simName, comps, omega, timeStep, finalTime);
 
-	std::cout << "Start simulation." << std::endl;
-	newSim.run();
-	std::cout << "Simulation finished." << std::endl;
+	sim.run();
 
 	return 0;
 }

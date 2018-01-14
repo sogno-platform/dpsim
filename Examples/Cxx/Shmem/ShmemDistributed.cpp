@@ -60,25 +60,19 @@ int main(int argc, char *argv[])
 		std::exit(1);
 	}
 
-	// Set up simulation
 	Real timeStep = 0.001000;
 	Logger llog(logname);
-	Simulation newSim(comps, 2.0*M_PI*50.0, timeStep, 20, log);
-	newSim.addExternalInterface(shmem);
+	Simulation sim(comps, 2.0*M_PI*50.0, timeStep, 20, log);
+	sim.addExternalInterface(shmem);
 	if (!strcmp(argv[1], "1")) {
 		comps2 = comps;
 		comps2.pop_back();
 		comps2.push_back(new LinearResistor("r_2", 1, 0, 8));
-		newSim.addSystemTopology(comps2);
-		newSim.setSwitchTime(10, 1);
+		sim.addSystemTopology(comps2);
+		sim.setSwitchTime(10, 1);
 	}
 
-	// Main Simulation Loop
-	std::cout << "Start simulation." << std::endl;
-
-	newSim.runRT(RTTimerFD, true, log, llog, log);
-
-	std::cout << "Simulation finished." << std::endl;
+	sim.runRT(RTTimerFD, true, log, llog, log);
 
 	if (!strcmp(argv[1], "1"))
 		delete comps2.back();

@@ -1,4 +1,4 @@
-﻿/** SynGenVBR Example
+/** SynGenVBR Example
  *
  * @author Markus Mirz <mmirz@eonerc.rwth-aachen.de>
  * @copyright 2017, Institute for Automation of Complex Power Systems, EONERC
@@ -78,10 +78,10 @@ int main(int argc, char* argv[])
 	Real om = 2.0*M_PI*60.0;
 	tf = 0.3; dt = 0.00001; t = 0;
 	Int downSampling = 50;
-	Simulation newSim("EMT_SynchronGenerator_VBR", comps, om, dt, tf, Logger::Level::INFO, SimulationType::EMT, downSampling);
-	newSim.setNumericalMethod(NumericalMethod::Trapezoidal_flux);
-	newSim.addSystemTopology(compsBreakerOn);
-	newSim.switchSystemMatrix(0);
+	Simulation sim("EMT_SynchronGenerator_VBR", comps, om, dt, tf, Logger::Level::INFO, SimulationType::EMT, downSampling);
+	sim.setNumericalMethod(NumericalMethod::Trapezoidal_flux);
+	sim.addSystemTopology(compsBreakerOn);
+	sim.switchSystemMatrix(0);
 
 	// Initialize generator
 	Real initActivePower = 555e3;
@@ -94,20 +94,18 @@ int main(int argc, char* argv[])
 	genPtr->initialize(om, dt, initActivePower, initReactivePower, initTerminalVolt, initVoltAngle, fieldVoltage, mechPower);
 
 	std::cout << "A matrix:" << std::endl;
-	std::cout << newSim.getSystemMatrix() << std::endl;
+	std::cout << sim.getSystemMatrix() << std::endl;
 	std::cout << "vt vector:" << std::endl;
-	std::cout << newSim.getLeftSideVector() << std::endl;
+	std::cout << sim.getLeftSideVector() << std::endl;
 	std::cout << "j vector:" << std::endl;
-	std::cout << newSim.getRightSideVector() << std::endl;
+	std::cout << sim.getRightSideVector() << std::endl;
 
 	Real lastLogTime = 0;
 	Real logTimeStep = 0.00005;
-	newSim.setSwitchTime(0.1, 1);
-	newSim.setSwitchTime(0.2, 0);
+	sim.setSwitchTime(0.1, 1);
+	sim.setSwitchTime(0.2, 0);
 
-	std::cout << "Start simulation." << std::endl;
-	newSim.run();
-	std::cout << "Simulation finished." << std::endl;
+	sim.run();
 
 	return 0;
 }

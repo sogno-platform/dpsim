@@ -39,12 +39,9 @@ int tmpmain(int argc, char* argv[])
 		Resistor::make("r_1", 2, 1, GND, Logger::Level::DEBUG)
 	};
 
-	// Set up simulation and start main simulation loop
-	Simulation newSim(simName, comps, omega, timeStep, finalTime);
+	Simulation sim(simName, comps, omega, timeStep, finalTime);
 
-	std::cout << "Start simulation." << std::endl;
-	newSim.run();
-	std::cout << "Simulation finished." << std::endl;
+	sim.run();
 
 	return 0;
 }

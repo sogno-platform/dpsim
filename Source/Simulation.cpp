@@ -1,4 +1,4 @@
-﻿/** Simulation
+/** Simulation
  *
  * @author Markus Mirz <mmirz@eonerc.rwth-aachen.de>
  * @copyright 2017, Institute for Automation of Complex Power Systems, EONERC
@@ -151,7 +151,7 @@ Int Simulation::step(bool blocking)
 		if (mTime >= mSwitchEventVector[mCurrentSwitchTimeIndex].switchTime) {
 			switchSystemMatrix(mSwitchEventVector[mCurrentSwitchTimeIndex].systemIndex);
 			//mComponents = mComponentsVector[++mCurrentSwitchTimeIndex];
-			
+
 			mComponents = mComponentsVector[mSwitchEventVector[mCurrentSwitchTimeIndex].systemIndex];
 			++mCurrentSwitchTimeIndex;
 			mLog.Log(Logger::Level::INFO) << "Switched to system " << mCurrentSwitchTimeIndex << " at " << mTime << std::endl;
@@ -168,9 +168,13 @@ Int Simulation::step(bool blocking)
 
 void Simulation::run()
 {
+	mLog.Log(Logger::Level::Info) << "Start simulation." << std::endl;
+
 	while (step()) {
 		increaseByTimeStep();
 	}
+
+	mLog.Log(Logger::Level::Info) << "Simulation finished." << std::endl;
 }
 
 void Simulation::switchSystemMatrix(Int systemMatrixIndex)

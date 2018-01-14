@@ -42,14 +42,9 @@ static int testCIMReader(std::list<String> filenames)
 
 	Components::Base::List components = reader.getComponents();
 
-	// Run simulation as usually
 	Simulation sim(components, 2 * PI * 50, 0.001, 0.3, log);
-	std::cout << "Start simulation." << std::endl;
 
-	while (sim.step(llog, rlog))
-		sim.increaseByTimeStep();
-
-	std::cout << "Simulation finished." << std::endl;
+	sim.run();
 
 	return 0;
 }

@@ -71,8 +71,8 @@ int main(int argc, char* argv[])
 	Real om = 2.0*M_PI*60.0;
 	tf = 0.1; dt = 0.000001; t = 0;
 	Int downSampling = 50;
-	Simulation newSim("SynGen_BalancedResLoad", comps, om, dt, tf, Logger::Level::INFO, SimulationType::DynPhasor, downSampling);
-	newSim.setNumericalMethod(NumericalMethod::Trapezoidal_flux);
+	Simulation sim("SynGen_BalancedResLoad", comps, om, dt, tf, Logger::Level::INFO, SimulationType::DynPhasor, downSampling);
+	sim.setNumericalMethod(NumericalMethod::Trapezoidal_flux);
 
 	// Initialize generator
 	Real initActivePower = 555e3;
@@ -90,15 +90,13 @@ int main(int argc, char* argv[])
 	Real initPowerFactor = acos(initActivePower / initApparentPower);
 
 	std::cout << "A matrix:" << std::endl;
-	std::cout << newSim.getSystemMatrix() << std::endl;
+	std::cout << sim.getSystemMatrix() << std::endl;
 	std::cout << "vt vector:" << std::endl;
-	std::cout << newSim.getLeftSideVector() << std::endl;
+	std::cout << sim.getLeftSideVector() << std::endl;
 	std::cout << "j vector:" << std::endl;
-	std::cout << newSim.getRightSideVector() << std::endl;
+	std::cout << sim.getRightSideVector() << std::endl;
 
-	std::cout << "Start simulation." << std::endl;
-	newSim.run();
-	std::cout << "Simulation finished." << std::endl;
+	sim.run();
 
 	return 0;
 }
