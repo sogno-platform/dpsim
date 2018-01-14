@@ -102,6 +102,7 @@ setup(
     ],
     tests_require=[
         'pytest',
+        'pyyaml'
     ],
     ext_modules = [
         CMakeExtension('_dpsim')

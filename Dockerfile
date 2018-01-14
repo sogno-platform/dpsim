@@ -40,6 +40,8 @@ RUN pip3 install \
 	m2r \
 	breathe \
 	wheel \
-	pytest
+	pytest \
+	pyyaml \
+	acs-dataprocessing
 
 ENV LD_LIBRARY_PATH /usr/local/lib64
