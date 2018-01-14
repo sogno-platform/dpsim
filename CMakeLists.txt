@@ -55,7 +55,7 @@ option(BUILD_SHARED_LIBS "Build shared library" OFF)
 option(BUILD_EXAMPLES "Build C++ examples" ON)
 
 option(WITH_RT	 "Enable real-time features"			${Linux_FOUND})
-option(WITH_SHMEM  "Enable shared memory interface"		${VILLASnode_FOUND})
+option(WITH_SHMEM  "Enable shared memory interface"		OFF) #${VILLASnode_FOUND})
 option(WITH_PYTHON "Enable Python support"				${Python_FOUND})
 option(WITH_CIM	"Enable support for parsing CIM files"	${CIMpp_FOUND})
 
