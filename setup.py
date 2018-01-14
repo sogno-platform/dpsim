@@ -92,7 +92,7 @@ setup(
         "Programming Language :: Python :: Implementation :: CPython"
     ],
     install_requires = [
-        'acs-dataprocessing',
+        'acs-dataprocessing>=0.1.2',
     ],
     setup_requires = [
         'm2r',
