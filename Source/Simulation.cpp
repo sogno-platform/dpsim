@@ -168,13 +168,27 @@ Int Simulation::step(bool blocking)
 
 void Simulation::run()
 {
-	mLog.Log(Logger::Level::Info) << "Start simulation." << std::endl;
+	mLog.Log(Logger::Level::INFO) << "Start simulation." << std::endl;
 
 	while (step()) {
 		increaseByTimeStep();
 	}
 
-	mLog.Log(Logger::Level::Info) << "Simulation finished." << std::endl;
+	mLog.Log(Logger::Level::INFO) << "Simulation finished." << std::endl;
+}
+
+void Simulation::run(double duration)
+{
+	mLog.Log(Logger::Level::INFO) << "Run simulation for " << duration << " seconds." << std::endl;
+
+	double started = mTime;
+
+	while (step()) {
+		increaseByTimeStep();
+
+		if (mTime - started > duration)
+			break;
+	}
 }
 
 void Simulation::switchSystemMatrix(Int systemMatrixIndex)
