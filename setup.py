@@ -92,16 +92,16 @@ setup(
         "Programming Language :: Python :: Implementation :: CPython"
     ],
     install_requires = [
-        'acs-dataprocessing',
+        'acs-dataprocessing>=0.1.2',
     ],
     setup_requires = [
-        'pytest-runner',
         'm2r',
-        'breathe',
+        'pytest-runner',
         'wheel'
     ],
-    tests_require = [
-        'pytest'
+    tests_require=[
+        'pytest',
+        'pyyaml'
     ],
     ext_modules = [
         CMakeExtension('_dpsim')
