@@ -96,7 +96,6 @@ setup(
     ],
     setup_requires = [
         'm2r',
-        'breathe',
         'pytest-runner',
         'wheel'
     ],

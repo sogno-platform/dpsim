@@ -1,0 +1,11 @@
+sphinx
+breathe
+
+m2r
+pytest-runner
+wheel
+
+pytest
+pyyaml
+
+acs-dataprocessing
