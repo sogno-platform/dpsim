@@ -1,0 +1,32 @@
+DP_IdealVS_PILine1:
+  cmd: build/Examples/Cxx/DP_IdealVS_PILine1
+
+DP_IdealVS_R1:
+  cmd: build/Examples/Cxx/DP_IdealVS_R1
+
+DP_IdealVS_RLC1:
+  cmd: build/Examples/Cxx/DP_IdealVS_RLC1
+
+DP_IdealVS_RXLine1:
+  cmd: build/Examples/Cxx/DP_IdealVS_RXLine1
+
+DP_IdealVS_RXLine2:
+  cmd: build/Examples/Cxx/DP_IdealVS_RXLine2
+
+DP_ResVS_PILine1:
+  cmd: build/Examples/Cxx/DP_ResVS_PILine1
+
+DP_ResVS_RL1:
+  cmd: build/Examples/Cxx/DP_ResVS_RL1
+
+DP_ResVS_RLC1:
+  cmd: build/Examples/Cxx/DP_ResVS_RLC1
+
+DP_ResVS_RXLine1:
+  cmd: build/Examples/Cxx/DP_ResVS_RXLine1
+
+EMT_IdealVS_R1:
+  cmd: build/Examples/Cxx/EMT_IdealVS_R1
+
+EMT_ResVS_RXLine_Switch1:
+  cmd: build/Examples/Cxx/EMT_ResVS_RXLine_Switch1
