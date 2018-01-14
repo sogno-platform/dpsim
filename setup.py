@@ -95,13 +95,13 @@ setup(
         'acs-dataprocessing',
     ],
     setup_requires = [
-        'pytest-runner',
         'm2r',
         'breathe',
+        'pytest-runner',
         'wheel'
     ],
-    tests_require = [
-        'pytest'
+    tests_require=[
+        'pytest',
     ],
     ext_modules = [
         CMakeExtension('_dpsim')
