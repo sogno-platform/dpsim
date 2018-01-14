@@ -34,11 +34,11 @@ int main(int argc, char* argv[])
 	String simName = "IdealVS2_" + std::to_string(timeStep);
 
 	Components::Base::List comps = {
-		VoltageSourceIdeal::make("v_in", 1, 0, Complex(10, 0)),
-		Resistor::make("r_1", 1, 2, 1),
-		Capacitor::make("c_1", 2, 3, 0.001),
-		Inductor::make("l_1", 3, 0, 0.001),
-		Resistor::make("r_2", 3, 0, 1)
+		VoltageSourceIdeal::make("v_in", 0, GND, Complex(10, 0)),
+		Resistor::make("r_1", 0, 1, 1),
+		Capacitor::make("c_1", 1, 2, 0.001),
+		Inductor::make("l_1", 2, GND, 0.001),
+		Resistor::make("r_2", 2, GND, 1)
 	};
 
 	// Set up simulation and start main simulation loop
