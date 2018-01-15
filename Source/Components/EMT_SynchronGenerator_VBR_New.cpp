@@ -19,7 +19,7 @@
 * along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *********************************************************************************/
 
-#include "VoltageBehindReactanceEMTNew.h"
+#include "EMT_SynchronGenerator_VBR_New.h"
 #include "../IntegrationMethod.h"
 
 using namespace DPsim;
