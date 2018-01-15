@@ -34,7 +34,7 @@ int main(int argc, char* argv[])
 	String simName = "IdealVS_TrafoIdeal_" + std::to_string(timeStep);
 
 	Components::Base::List comps = {
-		VoltageSourceIdeal::make("v_1", GND, 0, Complex(10, 0), Logger::Level::DEBUG),
+		VoltageSource::make("v_1", GND, 0, Complex(10, 0), Logger::Level::DEBUG),
 		TransformerIdeal::make("trafo_1", 0, 1, 10, 0, Logger::Level::DEBUG),
 		Resistor::make("r_1", 1, GND, 1, Logger::Level::DEBUG)
 	};

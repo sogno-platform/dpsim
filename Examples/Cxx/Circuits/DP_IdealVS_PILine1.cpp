@@ -34,7 +34,7 @@ int main(int argc, char* argv[])
 	String simName = "PiLine1_" + std::to_string(timeStep);
 
 	Components::Base::List comps = {
-		VoltageSourceIdeal::make("v_1", 0, GND, Complex(345, 0)),
+		VoltageSource::make("v_1", 0, GND, Complex(345, 0)),
 		Resistor::make("r1", 0, 1, 5),
 		Capacitor::make("c_1", 1, GND, 0.002),
 		Resistor::make("r_load", 1, 3, 6.4),

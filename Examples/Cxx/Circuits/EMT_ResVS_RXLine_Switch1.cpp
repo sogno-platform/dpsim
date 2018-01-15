@@ -34,7 +34,7 @@ int main(int argc, char* argv[])
 	String simName = "RxLineResLoad_EMT_" + std::to_string(timeStep);
 
 	Components::Base::List comps0 = {
-		VoltageSource::make("v_s", 0, GND, Complex(10000, 0), 1),
+		VoltageSourceNorton::make("v_s", 0, GND, Complex(10000, 0), 1),
 		Resistor::make("r_line", 0, 1, 1),
 		Inductor::make("l_line", 1, 2, 1)
 	};

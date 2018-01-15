@@ -34,7 +34,7 @@ int main(int argc, char* argv[])
 	String simName = "Example3_" + std::to_string(timeStep);
 
 	Components::Base::List comps = {
-		VoltageSource::make("v_in", 0, GND, Complex(10, 0), 1),
+		VoltageSourceNorton::make("v_in", 0, GND, Complex(10, 0), 1),
 		Capacitor::make("c_1", 0, 1, 0.001),
 		Inductor::make("l_1", 1, GND, 0.001),
 		Resistor::make("r_2", 1, GND, 1)

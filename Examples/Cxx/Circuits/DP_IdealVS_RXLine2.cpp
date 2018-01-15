@@ -34,7 +34,7 @@ int main(int argc, char* argv[])
 	String simName = "RxLine2_" + std::to_string(timeStep);
 
 	Components::Base::List comps = {
-		VoltageSourceIdeal::make("v_1", 0, GND, Complex(10, 0)),
+		VoltageSource::make("v_1", 0, GND, Complex(10, 0)),
 		Inductor::make("l_L", 1, 2, 0.001),
 		Resistor::make("r_L", 0, 1, 0.1),
 		Resistor::make("r_1", 2, GND, 20)
