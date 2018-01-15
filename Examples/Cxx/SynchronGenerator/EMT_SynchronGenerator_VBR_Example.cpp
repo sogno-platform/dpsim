@@ -54,7 +54,7 @@ int main(int argc, char* argv[])
 	//Real Llkq2 = 0;
 
 	// Declare circuit components
-	Components::Base::Ptr gen = SynchronGeneratorVBR::make("gen", 0, 1, 2,
+	Components::Base::Ptr gen = VoltageBehindReactanceEMTNew::make("gen", 0, 1, 2,
 		nomPower, nomPhPhVoltRMS, nomFreq, poleNum, nomFieldCurr,
 		Rs, Ll, Lmd, Lmd0, Lmq, Lmq0, Rfd, Llfd, Rkd, Llkd, Rkq1, Llkq1, Rkq2, Llkq2, H);
 
@@ -76,7 +76,7 @@ int main(int argc, char* argv[])
 	// Set up simulation
 	Real tf, dt, t;
 	Real om = 2.0*M_PI*60.0;
-	tf = 0.3; dt = 0.00001; t = 0;
+	tf = 0.3; dt = 0.0001; t = 0;
 	Int downSampling = 50;
 	Simulation sim("EMT_SynchronGenerator_VBR", comps, om, dt, tf, Logger::Level::INFO, SimulationType::EMT, downSampling);
 	sim.setNumericalMethod(NumericalMethod::Trapezoidal_flux);
@@ -90,7 +90,7 @@ int main(int argc, char* argv[])
 	Real initVoltAngle = -DPS_PI / 2;
 	Real fieldVoltage = 7.0821;
 	Real mechPower = 5.5558e5;
-	auto genPtr = std::dynamic_pointer_cast<Components::EMT::SynchronGeneratorVBR>(gen);
+	auto genPtr = std::dynamic_pointer_cast<Components::EMT::VoltageBehindReactanceEMTNew>(gen);
 	genPtr->initialize(om, dt, initActivePower, initReactivePower, initTerminalVolt, initVoltAngle, fieldVoltage, mechPower);
 
 	std::cout << "A matrix:" << std::endl;
