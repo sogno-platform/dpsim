@@ -64,7 +64,9 @@ namespace DP {
 
 		Complex getCurrent(SystemModel& system);
 
-		void setVoltage(Complex voltage);
+		void setSourceValue(Complex voltage) { mVoltage = voltage; }
+
+		void setSourceValue(Real voltage) { mVoltage = {voltage, 0}; }
 	};
 }
 }

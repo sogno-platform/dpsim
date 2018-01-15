@@ -85,8 +85,3 @@ Complex Components::DP::VoltageSourceNorton::getCurrent(SystemModel& system) {
 	}
 	return retCurrent;
 }
-
-void Components::DP::VoltageSourceNorton::setVoltage(Complex voltage) {
-	mVoltage = voltage;
-}
-
