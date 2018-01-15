@@ -60,10 +60,10 @@ PyObject* Python::Interface::registerSource(PyObject* self, PyObject* args)
 		return nullptr;
 	}
 	Python::Component *pyComp = (Python::Component*) obj;
-	if (auto *cs = dynamic_cast<DPsim::Components::DP::CurrentSourceIdeal*>(pyComp->comp.get())) {
+	if (auto *cs = dynamic_cast<DPsim::Components::DP::CurrentSource*>(pyComp->comp.get())) {
 		pyIntf->intf->registerCurrentSource(cs, realIdx, imagIdx);
 	}
-	else if (auto *vs = dynamic_cast<DPsim::Components::DP::VoltageSourceIdeal*>(pyComp->comp.get())) {
+	else if (auto *vs = dynamic_cast<DPsim::Components::DP::VoltageSource*>(pyComp->comp.get())) {
 		pyIntf->intf->registerVoltageSource(vs, realIdx, imagIdx);
 	}
 	else {

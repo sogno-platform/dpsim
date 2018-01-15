@@ -9,7 +9,7 @@ PATH = os.path.dirname(__file__)
 def test_IdealVS_R1():
     sim = dpsim.Simulation('IdealVS_R1',
             [
-                dp.VoltageSourceIdeal("v_in", 1, 0, 10),
+                dp.VoltageSource("v_in", 1, 0, 10),
                 dp.Resistor("r_1", 0, -1, 1),
                 dp.Resistor("r_2", 1, -1, 1),
                 dp.Resistor("r_3", 1, -1, 1)

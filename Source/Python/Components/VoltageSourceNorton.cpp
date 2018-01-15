@@ -1,6 +1,6 @@
-/** Python binding for ExternalVoltageSource
+/** Python binding for VoltSourceRes.
  *
- * @author Markus Mirz <mmirz@eonerc.rwth-aachen.de>
+ * @author Steffen Vogel <stvogel@eonerc.rwth-aachen.de>
  * @copyright 2017, Institute for Automation of Complex Power Systems, EONERC
  *
  * DPsim
@@ -23,28 +23,31 @@
 
 using namespace DPsim;
 
-const char *Python::Components::DocVoltageSourceIdeal =
-"VoltageSourceIdeal(name, node1, node2, initial_voltage, num)\n"
-"Construct a new external voltage source.\n"
+const char *Python::Components::DocVoltageSourceNorton =
+"VoltSourceRes(name, node1, node2, voltage, resistance)\n"
+"Construct a new voltage source with an internal resistance.\n"
 "\n"
-"An external voltage source is pretty much the same as a normal ideal voltage "
-"source, but its voltage value can be controlled from external programs by "
-"registering it with an `Interface`.\n"
+"Because this is actually internally represented as an equivalent current "
+"source, it does **not** count towards the numbering of ideal voltage sources.\n"
 "\n"
-":param initial_current: The voltage of this source in the first timestep (as a complex value).\n"
+"Attributes: ``resistance``, ``voltage``.\n"
+"\n"
+":param voltage: Complex voltage in Volt.\n"
+":param resistance: Internal resistance in Ohm.\n"
 ":returns: A new `Component` representing this voltage source.\n";
-PyObject* Python::Components::DP::VoltageSourceIdeal(PyObject* self, PyObject* args)
+PyObject* Python::Components::DP::VoltageSourceNorton(PyObject* self, PyObject* args)
 {
 	const char *name;
+	double resistance;
 	int src, dest;
-	Py_complex initVoltage;
+	Py_complex voltage;
 
-	if (!PyArg_ParseTuple(args, "siiD", &name, &src, &dest, &initVoltage))
+	if (!PyArg_ParseTuple(args, "siiDd", &name, &src, &dest, &voltage, &resistance))
 		return nullptr;
 
 	Component *pyComp = PyObject_New(Component, &ComponentType);
 	Component::init(pyComp);
-	pyComp->comp = std::make_shared<DPsim::Components::DP::VoltageSourceIdeal>(name, src, dest, DPsim::Complex(initVoltage.real, initVoltage.imag));
+	pyComp->comp = std::make_shared<DPsim::Components::DP::VoltageSourceNorton>(name, src, dest, Complex(voltage.real, voltage.imag), resistance);
 
 	return (PyObject*) pyComp;
 }

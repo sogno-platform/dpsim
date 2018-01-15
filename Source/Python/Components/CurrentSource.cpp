@@ -23,8 +23,8 @@
 
 using namespace DPsim;
 
-const char *Python::Components::DocCurrentSourceIdeal =
-"CurrentSourceIdeal(name, node1, node2, initial_current)\n"
+const char *Python::Components::DocCurrentSource =
+"CurrentSource(name, node1, node2, initial_current)\n"
 "Construct a new external current source.\n"
 "\n"
 "An external current source is pretty much the same as a normal ideal current "
@@ -34,7 +34,7 @@ const char *Python::Components::DocCurrentSourceIdeal =
 ":param initial_current: The current of this source in the first timestep (as a complex value).\n"
 ":returns: A new `Component` representing this current source.\n";
 
-PyObject* Python::Components::DP::CurrentSourceIdeal(PyObject* self, PyObject* args)
+PyObject* Python::Components::DP::CurrentSource(PyObject* self, PyObject* args)
 {
 	const char *name;
 	int src, dest;
@@ -45,7 +45,7 @@ PyObject* Python::Components::DP::CurrentSourceIdeal(PyObject* self, PyObject* a
 
 	Component *pyComp = PyObject_New(Component, &ComponentType);
 	Component::init(pyComp);
-	pyComp->comp = std::make_shared<DPsim::Components::DP::CurrentSourceIdeal>(name, src, dest, DPsim::Complex(initCurrent.real, initCurrent.imag));
+	pyComp->comp = std::make_shared<DPsim::Components::DP::CurrentSource>(name, src, dest, DPsim::Complex(initCurrent.real, initCurrent.imag));
 
 	return (PyObject*) pyComp;
 }

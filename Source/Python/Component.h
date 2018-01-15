@@ -53,17 +53,17 @@ namespace Python {
 	bool compsFromPython(PyObject* list, DPsim::Components::Base::List& comps);
 
 namespace Components {
-	extern const char* DocCurrentSourceIdeal;
-	extern const char* DocVoltageSourceIdeal;
+	extern const char* DocCurrentSource;
+	extern const char* DocVoltageSource;
 	extern const char* DocResistor;
 	extern const char* DocInductor;
 	extern const char* DocCapacitor;
-	extern const char* DocVoltageSource;
+	extern const char* DocVoltageSourceNorton;
 
 namespace DP {
-	PyObject* CurrentSourceIdeal(PyObject* self, PyObject *args);
-	PyObject* VoltageSourceIdeal(PyObject* self, PyObject *args);
+	PyObject* CurrentSource(PyObject* self, PyObject *args);
 	PyObject* VoltageSource(PyObject* self, PyObject *args);
+	PyObject* VoltageSourceNorton(PyObject* self, PyObject *args);
 	PyObject* Resistor(PyObject* self, PyObject *args);
 	PyObject* Inductor(PyObject* self, PyObject *args);
 	PyObject* Capacitor(PyObject* self, PyObject *args);
