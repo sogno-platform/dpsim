@@ -38,7 +38,7 @@ list(APPEND SOURCES
 	Components/EMT_VoltageSource_Ideal.cpp
 	Components/Exciter.cpp
 	Components/TurbineGovernor.cpp
-	Components/VoltageBehindReactanceEMTNew.cpp
+	Components/EMT_SynchronGenerator_VBR_New.cpp
 )
 
 find_package(Eigen3 REQUIRED)
