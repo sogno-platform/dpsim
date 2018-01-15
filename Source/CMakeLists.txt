@@ -12,7 +12,7 @@ list(APPEND SOURCES
 	Components/Base.cpp
 	Components/Base_SynchronGenerator.cpp
 	Components/DP_Capacitor.cpp
-	Components/DP_CurrentSource_Ideal.cpp
+	Components/DP_CurrentSource.cpp
 	Components/DP_Inductor.cpp
 	Components/DP_Inductor_Interfaced.cpp
 	Components/DP_Line_Pi.cpp
@@ -35,7 +35,7 @@ list(APPEND SOURCES
 	Components/EMT_SynchronGenerator_VBR.cpp
 	Components/EMT_VoltageSource.cpp
 	Components/EMT_VoltageSource_Freq.cpp
-	Components/EMT_VoltageSource_Ideal.cpp
+	Components/EMT_VoltageSourceNorton.cpp
 	Components/Exciter.cpp
 	Components/TurbineGovernor.cpp
 	Components/EMT_SynchronGenerator_VBR_New.cpp
