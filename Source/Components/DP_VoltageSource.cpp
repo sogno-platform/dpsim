@@ -1,4 +1,4 @@
-/** Real voltage source
+/** Ideal voltage source
  *
  * @author Markus Mirz <mmirz@eonerc.rwth-aachen.de>
  * @copyright 2017, Institute for Automation of Complex Power Systems, EONERC
@@ -23,64 +23,54 @@
 
 using namespace DPsim;
 
-Components::DP::VoltageSource::VoltageSource(String name, Int node1, Int node2, Complex voltage, Real resistance)
-	: VoltageSourceBase(name, node1, node2, voltage)
-{
-	mResistance = resistance;
-	attrMap["voltage"]    = { Attribute::Complex, &mVoltage };
-	attrMap["resistance"] = { Attribute::Real, &mResistance };
+Components::DP::VoltageSource::VoltageSource(String name, Int node1, Int node2, Complex voltage, Logger::Level loglevel)
+	: Base(name, node1, node2, loglevel) {
+	mVoltage = voltage;
+	mNumVirtualNodes = 1;
+	mVirtualNodes = { 0 };
+	attrMap["voltage"] = { Attribute::Complex, &mVoltage };
+	mLog.Log(Logger::Level::DEBUG) << "Create VoltageSource " << name << " at " << mNode1 << "," << mNode2 << std::endl;
 }
 
-void Components::DP::VoltageSource::applySystemMatrixStamp(SystemModel& system)
-{
-	mConductance = 1. / mResistance;
-	mCurrentr = mVoltage.real() / mResistance;
-	mCurrenti = mVoltage.imag() / mResistance;
-	// Apply matrix stamp for equivalent resistance
-	if (mNode1 >= 0) {
-		system.addCompToSystemMatrix(mNode1, mNode1, Complex(mConductance, 0));
-	}
-	if (mNode2 >= 0) {
-		system.addCompToSystemMatrix(mNode2, mNode2, Complex(mConductance, 0));
-	}
-	if (mNode1 >= 0 && mNode2 >= 0) {
-		system.addCompToSystemMatrix(mNode1, mNode2, Complex(-mConductance, 0));
-		system.addCompToSystemMatrix(mNode2, mNode1, Complex(-mConductance, 0));
-	}
+Components::DP::VoltageSource::VoltageSource(String name, Int node1, Int node2, Real voltageAbs, Real voltagePhase,
+	Logger::Level loglevel)
+	: Base(name, node1, node2, loglevel) {
+	mVoltage = MathLibrary::polar(voltageAbs, voltagePhase);
+	mNumVirtualNodes = 1;
+	mVirtualNodes = { 0 };
+	attrMap["voltage"] = { Attribute::Complex, &mVoltage };
+	mLog.Log(Logger::Level::DEBUG) << "Create VoltageSource " << name << " at " << mNode1 << "," << mNode2 << std::endl;
 }
 
-void Components::DP::VoltageSource::applyRightSideVectorStamp(SystemModel& system)
-{
-	// Apply matrix stamp for equivalent current source
+void Components::DP::VoltageSource::applySystemMatrixStamp(SystemModel& system) {
 	if (mNode1 >= 0) {
-		system.addCompToRightSideVector(mNode1, Complex(mCurrentr, mCurrenti));
+		mLog.Log(Logger::Level::DEBUG) << "Add " << Complex(-1, 0) << " to " << mNode1 << "," << mVirtualNodes[0] << std::endl;
+		system.setCompSystemMatrixElement(mVirtualNodes[0], mNode1, Complex(-1, 0));
+		mLog.Log(Logger::Level::DEBUG) << "Add " << Complex(-1, 0) << " to " << mVirtualNodes[0] << "," << mNode1 << std::endl;
+		system.setCompSystemMatrixElement(mNode1, mVirtualNodes[0], Complex(-1, 0));
 	}
-	if (mNode2 >= 0) {
-		system.addCompToRightSideVector(mNode2, Complex(-mCurrentr, -mCurrenti));
-	}
-}
 
-void Components::DP::VoltageSource::step(SystemModel& system, Real time)
-{
-	if (mNode1 >= 0) {
-		system.addCompToRightSideVector(mNode1, Complex(mCurrentr, mCurrenti));
-	}
 	if (mNode2 >= 0) {
-		system.addCompToRightSideVector(mNode2, Complex(-mCurrentr, -mCurrenti));
+		mLog.Log(Logger::Level::DEBUG) << "Add " << Complex(1, 0) << " to " << mVirtualNodes[0] << "," << mNode2 << std::endl;
+		system.setCompSystemMatrixElement(mVirtualNodes[0], mNode2, Complex(1, 0));
+		mLog.Log(Logger::Level::DEBUG) << "Add " << Complex(1, 0) << " to " << mNode2 << "," << mVirtualNodes[0] << std::endl;		
+		system.setCompSystemMatrixElement(mNode2, mVirtualNodes[0], Complex(1, 0));
 	}
 }
 
-Complex Components::DP::VoltageSource::getCurrent(SystemModel& system)
-{
-	Real real = mCurrentr;
-	Real imag = mCurrenti;
-	if (mNode1 >= 0) {
-		real += system.getRealFromLeftSideVector(mNode1)*mConductance;
-		imag += system.getImagFromLeftSideVector(mNode1)*mConductance;
-	}
-	if (mNode2 >= 0) {
-		real -= system.getRealFromLeftSideVector(mNode2)*mConductance;
-		imag -= system.getImagFromLeftSideVector(mNode2)*mConductance;
-	}
-	return Complex(real, imag);
+void Components::DP::VoltageSource::applyRightSideVectorStamp(SystemModel& system) {
+	mLog.Log(Logger::Level::DEBUG) << "Add " << mVoltage << " to right side " << mVirtualNodes[0] << std::endl;
+	system.addCompToRightSideVector(mVirtualNodes[0], mVoltage);
+}
+
+void Components::DP::VoltageSource::step(SystemModel& system, Real time) {
+	system.addCompToRightSideVector(mVirtualNodes[0], mVoltage);
+}
+
+Complex Components::DP::VoltageSource::getCurrent(SystemModel& system) {
+	return Complex(system.getRealFromLeftSideVector(mVirtualNodes[0]), system.getRealFromLeftSideVector(mVirtualNodes[0] + system.getCompOffset()));
+}
+
+void Components::DP::VoltageSource::setSourceValue(Complex voltage) {
+	mVoltage = voltage;
 }

@@ -42,7 +42,7 @@ namespace EMT {
 		Real mRampTime;
 
 	public:
-		VoltageSourceFreq(String name, Int src, Int dest, Real voltage, Real phase, Real resistance, Real omegaSource, Real switchTime, Real rampTime);
+		VoltageSourceFreq(String name, Int node1, Int node2, Real voltage, Real phase, Real resistance, Real omegaSource, Real switchTime, Real rampTime);
 
 		void initialize(SystemModel& system) { }
 		void applySystemMatrixStamp(SystemModel& system);

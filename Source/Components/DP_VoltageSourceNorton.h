@@ -1,4 +1,4 @@
-/** Ideal voltage source
+/** Real voltage source
  *
  * @file
  * @author Markus Mirz <mmirz@eonerc.rwth-aachen.de>
@@ -23,42 +23,48 @@
 #pragma once
 
 #include "Base.h"
+#include "Base_ControllableSource.h"
 
 namespace DPsim {
 namespace Components {
 namespace DP {
 
-	/// Ideal Voltage source model:
-	/// This model uses modified nodal analysis to represent an ideal voltage source.
-	/// For a voltage source between nodes j and k, a new variable (current across the voltage source) is added to the left side vector
-	/// as unkown and it is taken into account for the equation of node j as positve and for the equation of node k as negative. Moreover
-	/// a new equation ej - ek = V is added to the problem.
-	class VoltageSourceIdeal : public Components::Base, public SharedFactory<VoltageSourceIdeal> {
-	private:
+	/// Real Voltage source:
+	/// The real voltage source is a voltage source in series with a resistance, which is transformed to a current source with
+	/// a parallel resistance using the Norton equivalent
+	class VoltageSourceNorton : public Base, public ControllableSourceBase, public SharedFactory<VoltageSourceNorton> {		
+	protected:
+		/// Voltage [V]
 		Complex mVoltage;
-
+		//  ### Real Voltage source parameters ###
+		/// Resistance [ohm]
+		Real mResistance;
+		/// conductance [S]
+		Real mConductance;
+		/// Equivalent current source [A]
+		Complex mCurrent;
 	public:
-		/// define paramenters of the voltage source
-		VoltageSourceIdeal(String name, Int src, Int dest, Complex voltage,
-			Logger::Level loglevel = Logger::Level::NONE);
+		/// define voltage source paramenters
+		VoltageSourceNorton(String name, Int node1, Int node2, Complex voltage, Real resistance);
+
+		VoltageSourceNorton(String name, Int node1, Int node2, Real voltageAbs, Real volagePhase, Real resistance);
 
 		void initialize(SystemModel& system) { }
 
-		/// Inserts the current across the voltage source in the equations of node j and k and add the equantion ej - ek = V to the problem
+		/// Stamps voltage source resistance to the conductance matrix
 		void applySystemMatrixStamp(SystemModel& system);
 
-		/// Stamps voltage source to the current vector
+		/// Stamps equivalent current source to the current vector
 		void applyRightSideVectorStamp(SystemModel& system);
 
-		/// Stamps voltage source to the current vector
+		/// Stamps equivalent current source to the current vector
 		void step(SystemModel& system, Real time);
 
 		void postStep(SystemModel& system) { }
 
-		virtual Complex getCurrent(SystemModel& system);
+		Complex getCurrent(SystemModel& system);
 
 		void setVoltage(Complex voltage);
-
 	};
 }
 }

@@ -24,8 +24,8 @@
 
 #include <vector>
 
-#include "Components/DP_CurrentSource_Ideal.h"
-#include "Components/DP_VoltageSource_Ideal.h"
+#include "Components/DP_CurrentSource.h"
+#include "Components/DP_VoltageSource.h"
 
 namespace DPsim {
 
@@ -65,14 +65,14 @@ namespace DPsim {
 		 * @param realIdx Interface-specific index identifying the real part.
 		 * @param imagIdx Interface-specific index identifying the imaginary part.
 		 */
-		void registerVoltageSource(Components::DP::VoltageSourceIdeal* vs, Int realIdx, Int imagIdx);
+		void registerVoltageSource(Components::DP::VoltageSource* vs, Int realIdx, Int imagIdx);
 
 		/** Register an external current source to use values from this interface.
 		 * @param cs The external current source to register.
 		 * @param realIdx Interface-specific index identifying the real part.
 		 * @param imagIdx Interface-specific index identifying the imaginary part.
 		 */
-		void registerCurrentSource(Components::DP::CurrentSourceIdeal* cs, Int realIdx, Int imagIdx);
+		void registerCurrentSource(Components::DP::CurrentSource* cs, Int realIdx, Int imagIdx);
 
 		/** Register a voltage between two nodes to be sent through this
 		 * interface after every step.

@@ -23,7 +23,7 @@
 #pragma once
 
 #include "Base_SynchronGenerator.h"
-#include "EMT_VoltageSource_Ideal.h"
+#include "EMT_VoltageSource.h"
 
 namespace DPsim {
 namespace Components {
@@ -85,9 +85,9 @@ namespace EMT {
 		/// matrix for reversing stator current directions in calculations with respect to other currents
 		Matrix mReverseCurrents;
 
-		Components::EMT::VoltageSourceIdeal va;
-		Components::EMT::VoltageSourceIdeal vb;
-		Components::EMT::VoltageSourceIdeal vc;
+		Components::EMT::VoltageSource va;
+		Components::EMT::VoltageSource vb;
+		Components::EMT::VoltageSource vc;
 
 	public:
 		~SynchronGeneratorSimplifiedCurrentSource();

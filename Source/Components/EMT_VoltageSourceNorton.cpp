@@ -1,4 +1,4 @@
-/** Real voltage source freq (EMT)
+/** Real voltage source (EMT)
  *
  * @author Markus Mirz <mmirz@eonerc.rwth-aachen.de>
  * @copyright 2017, Institute for Automation of Complex Power Systems, EONERC
@@ -19,27 +19,21 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *********************************************************************************/
 
-#include "EMT_VoltageSource_Freq.h"
+#include "EMT_VoltageSourceNorton.h"
 
 using namespace DPsim;
 
-Components::EMT::VoltageSourceFreq::VoltageSourceFreq(String name, Int node1, Int node2,
-	Real voltage, Real phase, Real resistance, Real omegaSource, Real switchTime, Real rampTime)
-	: Base(name, node1, node2)
-{
+Components::EMT::VoltageSourceNorton::VoltageSourceNorton(String name, Int node1, Int node2, Real voltageAmp, Real voltagePhase, Real resistance)
+	: Base(name, node1, node2) {
+	mVoltageAmp = voltageAmp;
+	mVoltagePhase = voltagePhase;
 	mResistance = resistance;
-	mConductance = 1. / resistance;
-	mVoltageAmp = voltage;
-	mVoltagePhase = phase;
-	mSwitchTime = switchTime;
-	mOmegaSource = omegaSource;
-	mRampTime = rampTime;
-	mVoltageDiff = mVoltageAmp*cos(mVoltagePhase);
-	mCurrent = mVoltageDiff / mResistance;
+	mConductance = 1. / mResistance;
+	mVoltage = mVoltageAmp * cos(mVoltagePhase);
+	mCurrent = mVoltage / mResistance;
 }
 
-void Components::EMT::VoltageSourceFreq::applySystemMatrixStamp(SystemModel& system)
-{
+void Components::EMT::VoltageSourceNorton::applySystemMatrixStamp(SystemModel& system) {	
 	// Apply matrix stamp for equivalent resistance
 	if (mNode1 >= 0) {
 		system.addRealToSystemMatrix(mNode1, mNode1, mConductance);
@@ -53,8 +47,7 @@ void Components::EMT::VoltageSourceFreq::applySystemMatrixStamp(SystemModel& sys
 	}
 }
 
-void Components::EMT::VoltageSourceFreq::applyRightSideVectorStamp(SystemModel& system)
-{
+void Components::EMT::VoltageSourceNorton::applyRightSideVectorStamp(SystemModel& system) {	
 	// Apply matrix stamp for equivalent current source
 	if (mNode1 >= 0) {
 		system.addRealToRightSideVector(mNode1, mCurrent);
@@ -64,21 +57,9 @@ void Components::EMT::VoltageSourceFreq::applyRightSideVectorStamp(SystemModel& 
 	}
 }
 
-void Components::EMT::VoltageSourceFreq::step(SystemModel& system, Real time)
-{
-	if (time >= mSwitchTime && time < mSwitchTime + mRampTime) {
-		Real fadeInOut = 0.5 + 0.5 * sin( (time - mSwitchTime) / mRampTime * PI + - PI / 2);
-		mVoltageDiff = mVoltageAmp*cos(mVoltagePhase + (system.getOmega() + fadeInOut * mOmegaSource) * time);
-		mCurrent = mVoltageDiff / mResistance;
-	}
-	else if (time >= mSwitchTime + mRampTime) {
-		mVoltageDiff = mVoltageAmp*cos(mVoltagePhase + (system.getOmega() + mOmegaSource) * time);
-		mCurrent = mVoltageDiff / mResistance;
-	}
-	else {
-		mVoltageDiff = mVoltageAmp*cos(mVoltagePhase + system.getOmega() * time);
-		mCurrent = mVoltageDiff / mResistance;
-	}
+void Components::EMT::VoltageSourceNorton::step(SystemModel& system, Real time) {
+	mVoltage = mVoltageAmp * cos(mVoltagePhase + system.getOmega() * time);
+	mCurrent = mVoltage / mResistance;
 
 	if (mNode1 >= 0) {
 		system.addRealToRightSideVector(mNode1, mCurrent);

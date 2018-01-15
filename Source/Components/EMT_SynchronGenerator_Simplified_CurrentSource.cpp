@@ -33,9 +33,9 @@ Components::EMT::SynchronGeneratorSimplifiedCurrentSource::SynchronGeneratorSimp
 	: SynchronGeneratorBase(name, node1, node2, node3, nomPower, nomVolt, nomFreq, poleNumber, nomFieldCur,
 		Rs, Ll, Lmd, Lmd0, Lmq, Lmq0, Rfd, Llfd, Rkd, Llkd, Rkq1, Llkq1, Rkq2, Llkq2,
 		inertia, logLevel),
-		va("va", 0, 1, mVa),
-		vb("vb", 0, 2, mVb),
-		vc("vc", 0, 3, mVc)
+		va("va", 0, 1, mVa, 0),
+		vb("vb", 0, 2, mVb, 0),
+		vc("vc", 0, 3, mVc, 0)
 {
 	mNumVirtualNodes = 3;
 	mVirtualNodes = { 0, 0, 0 };
@@ -95,9 +95,9 @@ void Components::EMT::SynchronGeneratorSimplifiedCurrentSource::initialize(Real 
 	mIb = inverseParkTransform2(mThetaMech, mId* mBase_i, mIq* mBase_i, mI0* mBase_i)(1);
 	mIc = inverseParkTransform2(mThetaMech, mId* mBase_i, mIq* mBase_i, mI0* mBase_i)(2);
 
-	va.setVoltage(mVa);
-	vb.setVoltage(mVb);
-	vc.setVoltage(mVc);
+	va.setSourceValue(mVa);
+	vb.setSourceValue(mVb);
+	vc.setSourceValue(mVc);
 }
 
 void Components::EMT::SynchronGeneratorSimplifiedCurrentSource::applySystemMatrixStamp(SystemModel& system)
@@ -176,9 +176,9 @@ void Components::EMT::SynchronGeneratorSimplifiedCurrentSource::stepInPerUnit(Re
 	mVb = mBase_v * inverseParkTransform2(mThetaMech, mVd, mVq, 0)(1);
 	mVc = mBase_v * inverseParkTransform2(mThetaMech, mVd, mVq, 0)(2);
 
-	va.setVoltage(mVa);
-	vb.setVoltage(mVb);
-	vc.setVoltage(mVc);
+	va.setSourceValue(mVa);
+	vb.setSourceValue(mVb);
+	vc.setSourceValue(mVc);
 
 	mVoltages << mVq,
 		mVd,

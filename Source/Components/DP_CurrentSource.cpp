@@ -19,17 +19,23 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *********************************************************************************/
 
-#include "DP_CurrentSource_Ideal.h"
+#include "DP_CurrentSource.h"
 
 using namespace DPsim;
 
-Components::DP::CurrentSourceIdeal::CurrentSourceIdeal(String name, Int src, Int dest, Complex current)
-	: CurrentSourceBase(name, src, dest, current)
-{
+Components::DP::CurrentSource::CurrentSource(String name, Int node1, Int node2, Complex current)
+	: Base(name, node1, node2) {
+	mCurrent = current;
 	attrMap["current"] = { Attribute::Complex, &mCurrent };
-};
+}
 
-void Components::DP::CurrentSourceIdeal::applyRightSideVectorStamp(SystemModel& system)
+Components::DP::CurrentSource::CurrentSource(String name, Int node1, Int node2, Real currentAbs, Real currentPhase)
+	: Base(name, node1, node2) {
+	mCurrent = MathLibrary::polar(currentAbs, currentPhase);
+	attrMap["current"] = { Attribute::Complex, &mCurrent };
+}
+
+void Components::DP::CurrentSource::applyRightSideVectorStamp(SystemModel& system)
 {
 	if (mNode1 >= 0) {
 		system.addCompToRightSideVector(mNode1, mCurrent);
@@ -39,12 +45,12 @@ void Components::DP::CurrentSourceIdeal::applyRightSideVectorStamp(SystemModel& 
 	}
 }
 
-void Components::DP::CurrentSourceIdeal::step(SystemModel& system, Real time)
+void Components::DP::CurrentSource::step(SystemModel& system, Real time)
 {
 	applyRightSideVectorStamp(system);
 }
 
-Complex Components::DP::CurrentSourceIdeal::getCurrent(SystemModel &system)
+Complex Components::DP::CurrentSource::getCurrent(SystemModel &system)
 {
 	return mCurrent;
 }

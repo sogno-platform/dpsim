@@ -141,7 +141,7 @@ Components::Base::Ptr Reader::mapExternalNetworkInjection(ExternalNetworkInjecti
 	mLogger->Log(Logger::Level::INFO) << "IdealVoltageSource " << inj->name << " rid=" << inj->mRID << " node1=" << node
 		<< " V=" << voltAbs << "<" << voltPhase << std::endl;
 
-	return std::make_shared<Components::DP::VoltageSourceIdeal>(inj->name, node, 0, initVoltage);
+	return std::make_shared<Components::DP::VoltageSource>(inj->name, node, 0, initVoltage);
 }
 
 // TODO: support phase shift
@@ -224,7 +224,7 @@ Components::Base::Ptr Reader::mapSynchronousMachine(SynchronousMachine* machine)
 	// TODO is it appropiate to use this resistance here
 	mLogger->Log(Logger::Level::INFO) << "Create IdealVoltageSource " << machine->name << " node=" << node
 		<< " V=" << voltAbs << "<" << voltPhase << std::endl;
-	return std::make_shared<Components::DP::VoltageSourceIdeal>(machine->name, node, 0, initVoltage);
+	return std::make_shared<Components::DP::VoltageSource>(machine->name, node, 0, initVoltage);
 }
 
 Components::Base::Ptr Reader::mapComponent(BaseClass* obj)

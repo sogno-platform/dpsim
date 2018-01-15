@@ -1,4 +1,4 @@
-/** Current source
+/** Real voltage source (EMT)
  *
  * @file
  * @author Markus Mirz <mmirz@eonerc.rwth-aachen.de>
@@ -22,23 +22,30 @@
 
 #pragma once
 
-#include "Base_CurrentSource.h"
+#include "Base.h"
+#include "Base_ControllableSource.h"
 
 namespace DPsim {
 namespace Components {
-namespace DP {
+namespace EMT {
 
-	class CurrentSourceIdeal : public CurrentSourceBase<Complex>, public SharedFactory<CurrentSourceIdeal> {
-
+	class VoltageSourceNorton : public Base, public ControllableSourceBase, public SharedFactory<VoltageSourceNorton> {
+	protected:
+		Real mVoltage;
+		Real mVoltageAmp;
+		Real mVoltagePhase;		
+		Real mResistance;
+		Real mConductance;
+		Real mCurrent;
 	public:
-		CurrentSourceIdeal(String name, Int src, Int dest, Complex current);
-
+		VoltageSourceNorton(String name, Int node1, Int node2, Real voltageAmp, Real voltagePhase, Real resistance);
 		void initialize(SystemModel& system) { }
-		void applySystemMatrixStamp(SystemModel& system) { }
+		void applySystemMatrixStamp(SystemModel& system);
 		void applyRightSideVectorStamp(SystemModel& system);
 		void step(SystemModel& system, Real time);
 		void postStep(SystemModel& system) { }
-		Complex getCurrent(SystemModel& system);
+		void setSourceValue(Real voltage) { mVoltage = voltage; }
+		void setSourceValue(Complex voltage) { mVoltage = voltage.real(); }
 	};
 }
 }

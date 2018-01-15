@@ -1,4 +1,4 @@
-/** Real voltage source freq
+/** Current source
  *
  * @file
  * @author Markus Mirz <mmirz@eonerc.rwth-aachen.de>
@@ -23,31 +23,21 @@
 #pragma once
 
 #include "Base.h"
+#include "Base_ControllableSource.h"
 
 namespace DPsim {
 namespace Components {
 namespace DP {
 
-	class VoltageSourceFreq : public Components::Base, public SharedFactory<VoltageSourceFreq> {
-
-	protected:
-		Complex mVoltage;
-		Real mVoltageAmp;
-		Real mVoltagePhase;
-		Real mSwitchTime;
-		Complex mVoltageAtNode1;
-		Complex mVoltageAtnode2;
-		Real mResistance;
-		Real mConductance;
+	class CurrentSource : public Base, public ControllableSourceBase, public SharedFactory<CurrentSource> {
+	private:
 		Complex mCurrent;
-		Real mOmegaSource;
-		Real mRampTime;
-
 	public:
-		VoltageSourceFreq(String name, Int node1, Int node2, Real voltage, Real phase, Real resistance, Real omegaSource, Real switchTime, Real rampTime);
+		CurrentSource(String name, Int node1, Int node2, Complex current);
+		CurrentSource(String name, Int node1, Int node2, Real currentAbs, Real currentPhase);
 
 		void initialize(SystemModel& system) { }
-		void applySystemMatrixStamp(SystemModel& system);
+		void applySystemMatrixStamp(SystemModel& system) { }
 		void applyRightSideVectorStamp(SystemModel& system);
 		void step(SystemModel& system, Real time);
 		void postStep(SystemModel& system) { }

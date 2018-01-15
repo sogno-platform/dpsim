@@ -1,4 +1,4 @@
-﻿/** Voltage behind reactance (EMT)
+/** Voltage behind reactance (EMT)
 *
 * @file
 * @author Markus Mirz <mmirz@eonerc.rwth-aachen.de>
@@ -25,7 +25,7 @@
 #include "Base_SynchronGenerator.h"
 #include "Exciter.h"
 #include "TurbineGovernor.h"
-#include "EMT_VoltageSource_Ideal.h"
+#include "EMT_VoltageSource.h"
 #include "EMT_Resistor.h"
 
 

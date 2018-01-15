@@ -23,12 +23,12 @@
 
 using namespace DPsim;
 
-void ExternalInterface::registerVoltageSource(Components::DP::VoltageSourceIdeal *vs, Int realIdx, Int imagIdx)
+void ExternalInterface::registerVoltageSource(Components::DP::VoltageSource *vs, Int realIdx, Int imagIdx)
 {
 	mExtComponents.push_back({vs, realIdx, imagIdx});
 }
 
-void ExternalInterface::registerCurrentSource(Components::DP::CurrentSourceIdeal *cs, Int realIdx, Int imagIdx)
+void ExternalInterface::registerCurrentSource(Components::DP::CurrentSource *cs, Int realIdx, Int imagIdx)
 {
 	mExtComponents.push_back({cs, realIdx, imagIdx});
 }

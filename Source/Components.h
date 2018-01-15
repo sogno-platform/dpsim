@@ -1,4 +1,4 @@
-﻿/** All components
+/** All components
  *
  * @file
  * @author Markus Mirz <mmirz@eonerc.rwth-aachen.de>
@@ -23,7 +23,7 @@
 #pragma once
 
 #include "Components/DP_Capacitor.h"
-#include "Components/DP_CurrentSource_Ideal.h"
+#include "Components/DP_CurrentSource.h"
 #include "Components/DP_Inductor.h"
 #include "Components/DP_Inductor_Interfaced.h"
 #include "Components/DP_Line_Pi.h"
@@ -37,7 +37,7 @@
 #include "Components/DP_Transformer_Ideal.h"
 #include "Components/DP_VoltageSource.h"
 #include "Components/DP_VoltageSource_Freq.h"
-#include "Components/DP_VoltageSource_Ideal.h"
+#include "Components/DP_VoltageSourceNorton.h"
 #include "Components/EMT_Inductor.h"
 #include "Components/EMT_Resistor.h"
 #include "Components/EMT_SynchronGenerator.h"
@@ -46,7 +46,7 @@
 #include "Components/EMT_SynchronGenerator_VBR.h"
 #include "Components/EMT_VoltageSource.h"
 #include "Components/EMT_VoltageSource_Freq.h"
-#include "Components/EMT_VoltageSource_Ideal.h"
+#include "Components/EMT_VoltageSource.h"
 #include "Components/Exciter.h"
 #include "Components/TurbineGovernor.h"
 #include "Components/VoltageBehindReactanceEMTNew.h"

@@ -27,23 +27,11 @@
 namespace DPsim {
 namespace Components {
 
-	template <class T>
-	class CurrentSourceBase : public Components::Base {
+	class ControllableSourceBase {
+		
+		virtual void setSourceValue(Real value) { }
 
-	protected:
-		T mCurrent;
-
-	public:
-		CurrentSourceBase(String name, Int src, Int dest, T current)
-			: Base(name, src, dest)
-		{
-			mCurrent = current;
-		}
-
-		void setCurrent(T current)
-		{
-			mCurrent = current;
-		}
+		virtual void setSourceValue(Complex value) = 0;
 	};
 }
 }

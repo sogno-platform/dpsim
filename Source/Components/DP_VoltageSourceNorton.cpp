@@ -1,4 +1,4 @@
-/** Real voltage source freq
+/** Real voltage source
  *
  * @author Markus Mirz <mmirz@eonerc.rwth-aachen.de>
  * @copyright 2017, Institute for Automation of Complex Power Systems, EONERC
@@ -19,26 +19,30 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *********************************************************************************/
 
-#include "DP_VoltageSource_Freq.h"
+#include "DP_VoltageSourceNorton.h"
 
 using namespace DPsim;
 
-Components::DP::VoltageSourceFreq::VoltageSourceFreq(String name, Int node1, Int node2, Real voltage, Real phase,
-	Real resistance, Real omegaSource, Real switchTime, Real rampTime)
+Components::DP::VoltageSourceNorton::VoltageSourceNorton(String name, Int node1, Int node2, Complex voltage, Real resistance)
 	: Base(name, node1, node2) {
+	mVoltage = voltage;
 	mResistance = resistance;
-	mConductance = 1. / resistance;
-	mVoltageAmp = voltage;
-	mVoltagePhase = phase;
-	mSwitchTime = switchTime;
-	mOmegaSource = omegaSource;
-	mRampTime = rampTime;
-	mVoltage = MathLibrary::polar(mVoltageAmp, mVoltagePhase);
-	mCurrent = mVoltage / mResistance;	
+	attrMap["voltage"] = { Attribute::Complex, &mVoltage };
+	attrMap["resistance"] = { Attribute::Real, &mResistance };
 }
 
-void Components::DP::VoltageSourceFreq::applySystemMatrixStamp(SystemModel& system)
-{
+Components::DP::VoltageSourceNorton::VoltageSourceNorton(String name, Int node1, Int node2, Real voltageAbs, Real voltagePhase, Real resistance)
+	: Base(name, node1, node2) {
+	mVoltage = MathLibrary::polar(voltageAbs, voltagePhase);
+	mResistance = resistance;
+	attrMap["voltage"]    = { Attribute::Complex, &mVoltage };
+	attrMap["resistance"] = { Attribute::Real, &mResistance };
+}
+
+void Components::DP::VoltageSourceNorton::applySystemMatrixStamp(SystemModel& system) {
+	mConductance = 1. / mResistance;
+	mCurrent = mVoltage / mResistance;
+
 	// Apply matrix stamp for equivalent resistance
 	if (mNode1 >= 0) {
 		system.addCompToSystemMatrix(mNode1, mNode1, Complex(mConductance, 0));
@@ -46,15 +50,13 @@ void Components::DP::VoltageSourceFreq::applySystemMatrixStamp(SystemModel& syst
 	if (mNode2 >= 0) {
 		system.addCompToSystemMatrix(mNode2, mNode2, Complex(mConductance, 0));
 	}
-
 	if (mNode1 >= 0 && mNode2 >= 0) {
 		system.addCompToSystemMatrix(mNode1, mNode2, Complex(-mConductance, 0));
 		system.addCompToSystemMatrix(mNode2, mNode1, Complex(-mConductance, 0));
 	}
 }
 
-void Components::DP::VoltageSourceFreq::applyRightSideVectorStamp(SystemModel& system)
-{
+void Components::DP::VoltageSourceNorton::applyRightSideVectorStamp(SystemModel& system) {
 	// Apply matrix stamp for equivalent current source
 	if (mNode1 >= 0) {
 		system.addCompToRightSideVector(mNode1, mCurrent);
@@ -64,40 +66,27 @@ void Components::DP::VoltageSourceFreq::applyRightSideVectorStamp(SystemModel& s
 	}
 }
 
-void Components::DP::VoltageSourceFreq::step(SystemModel& system, Real time)
-{
-	if (time >= mSwitchTime && time < mSwitchTime + mRampTime) {
-		Real fadeInOut = 0.5 + 0.5 * sin((time - mSwitchTime) / mRampTime * PI + -PI / 2);
-		mVoltage = MathLibrary::polar(mVoltageAmp, mVoltagePhase + fadeInOut * mOmegaSource * time);
-		mCurrent = mVoltage / mResistance;
-	}
-	else if (time >= mSwitchTime + mRampTime) {
-		mVoltage = MathLibrary::polar(mVoltageAmp, mVoltagePhase + mOmegaSource * time);
-		mCurrent = mVoltage / mResistance;
-	}
-	else {
-		mVoltage = MathLibrary::polar(mVoltageAmp, mVoltagePhase);
-		mCurrent = mVoltage / mResistance;
-	}
-
-	// Apply matrix stamp for equivalent current source
+void Components::DP::VoltageSourceNorton::step(SystemModel& system, Real time) {
 	if (mNode1 >= 0) {
 		system.addCompToRightSideVector(mNode1, mCurrent);
 	}
-
 	if (mNode2 >= 0) {
 		system.addCompToRightSideVector(mNode2, -mCurrent);
 	}
 }
 
-Complex Components::DP::VoltageSourceFreq::getCurrent(SystemModel& system) {
-	Complex Current;
+Complex Components::DP::VoltageSourceNorton::getCurrent(SystemModel& system) {
+	Complex retCurrent;
 	if (mNode1 >= 0) {
-		Current += system.getCompFromLeftSideVector(mNode1) * mConductance;
+		retCurrent += system.getCompFromLeftSideVector(mNode1) * mConductance;
 	}
-
 	if (mNode2 >= 0) {
-		Current -= system.getCompFromLeftSideVector(mNode2) * mConductance;
+		retCurrent -= system.getCompFromLeftSideVector(mNode2) * mConductance;
 	}
-	return Current;
+	return retCurrent;
 }
+
+void Components::DP::VoltageSourceNorton::setVoltage(Complex voltage) {
+	mVoltage = voltage;
+}
+
