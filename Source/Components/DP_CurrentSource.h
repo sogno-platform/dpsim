@@ -42,6 +42,8 @@ namespace DP {
 		void step(SystemModel& system, Real time);
 		void postStep(SystemModel& system) { }
 		Complex getCurrent(SystemModel& system);
+		void setSourceValue(Complex value) { mCurrent = value; }
+		void setSourceValue(Real value) { mCurrent = {value, 0}; }
 	};
 }
 }
