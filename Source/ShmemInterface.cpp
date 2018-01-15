@@ -114,10 +114,10 @@ void ShmemInterface::readValues(bool blocking)
 
 			auto *ecs = dynamic_cast<Components::DP::CurrentSource*>(extComp.comp);
 			if (ecs)
-				ecs->setCurrent(v);
+				ecs->setSourceValue(v);
 			auto *evs = dynamic_cast<Components::DP::VoltageSource*>(extComp.comp);
 			if (evs)
-				evs->setVoltage(v);
+				evs->setSourceValue(v);
 		}
 
 		sample_put(sample);
