@@ -20,33 +20,29 @@
  *********************************************************************************/
 
 #include "Simulation.h"
-#include "Utilities.h"
 
 using namespace DPsim;
 using namespace DPsim::Components::DP;
 
-int main(int argc, char* argv[])
-{
+int main(int argc, char* argv[]) {
+
 	// Define simulation scenario
-	Real timeStep = 0.000005;
+	Real timeStep = 0.00005;
 	Real omega = 2.0*M_PI*50.0;
 	Real finalTime = 0.1;
 	String simName = "IdealVS_Trafo_" + std::to_string(timeStep);
 
 	Components::Base::List comps = {
-		VoltageSourceIdeal::make("v_1", -1, 0, std::polar<double>(100., 0*-90./180.*PI), Logger::Level::DEBUG),
+		VoltageSource::make("v_1", GND, 0, std::polar<double>(10., 0.), Logger::Level::DEBUG),
 		Inductor::make("l_1", 0, 1, 0.001, Logger::Level::DEBUG),
-		Resistor::make("r_2", 1, -1, 1, Logger::Level::DEBUG),
+		Resistor::make("r_2", 1, GND, 1, Logger::Level::DEBUG),
 		TransformerIdeal::make("trafo_1", 1, 2, 10, 0, Logger::Level::DEBUG),
-		Resistor::make("r_1", 1, -1, 1, Logger::Level::DEBUG)
+		Resistor::make("r_1", 1, GND, 1, Logger::Level::DEBUG)
 	};
 
 	// Set up simulation and start main simulation loop
 	Simulation newSim(simName, comps, omega, timeStep, finalTime);
-
-	std::cout << "Start simulation." << std::endl;
 	newSim.run();
-	std::cout << "Simulation finished." << std::endl;
 
 	return 0;
 }
