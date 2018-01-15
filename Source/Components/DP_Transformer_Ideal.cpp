@@ -25,8 +25,7 @@ using namespace DPsim;
 
 Components::DP::TransformerIdeal::TransformerIdeal(String name, Int node1, Int node2, Real ratioAbs, Real ratioPhase,
 	Logger::Level logLevel)
-	: Base(name, node1, node2, logLevel)
-{
+	: Base(name, node1, node2, logLevel) {
 	mNumVirtualNodes = 1;
 	mVirtualNodes = { 0 };
 	mRatio = std::polar(ratioAbs, ratioPhase);

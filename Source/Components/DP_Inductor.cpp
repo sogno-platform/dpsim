@@ -33,6 +33,15 @@ Components::DP::Inductor::Inductor(String name, Int node1, Int node2, Real induc
 	mLog.Log(Logger::Level::DEBUG) << "Create Inductor " << name << " at " << mNode1 << "," << mNode2 << std::endl;
 }
 
+void Components::DP::Inductor::initialize(SystemModel& system) {
+	Real a = system.getTimeStep() / (2. * mInductance);
+	Real b = system.getTimeStep() * system.getOmega() / 2.;
+	Complex impedance = { 0, system.getOmega() * mInductance };
+
+	mEquivCond = { a / (1 + b*b), -a*b / (1 + b*b) };
+	mPrevCurrFac = { (1 - b*b) / (1 + b*b), -2. * b / (1 + b*b) };
+	mCurrent = mVoltage / impedance;
+}
 
 void Components::DP::Inductor::applySystemMatrixStamp(SystemModel& system) {	
 	//mGlr = a / (1 + b*b);
@@ -57,18 +66,6 @@ void Components::DP::Inductor::applySystemMatrixStamp(SystemModel& system) {
 	}
 }
 
-
-void Components::DP::Inductor::initialize(SystemModel& system) {
-	Real a = system.getTimeStep() / (2. * mInductance);
-	Real b = system.getTimeStep() * system.getOmega() / 2.;
-	Complex impedance = { 0, system.getOmega() * mInductance };
-
-	mEquivCond = { a / (1 + b*b), -a*b / (1 + b*b) };
-	mPrevCurrFac = { (1 - b*b) / (1 + b*b), -2. * b / (1 + b*b) };
-	mCurrent = mVoltage / impedance;
-}
-
-
 void Components::DP::Inductor::step(SystemModel& system, Real time) {
 	// Calculate equivalent current source for this time step
 	//mCurEqRe = mGlr * mDeltaVre - mGli * mDeltaVim + mPrevCurFacRe * mCurrRe - mPrevCurFacIm * mCurrIm;
@@ -91,7 +88,7 @@ void Components::DP::Inductor::postStep(SystemModel& system) {
 	// extract solution
 	if (mNode1 >= 0) {
 		system.getRealFromLeftSideVector(mNode1);
-		voltNode1 = { system.getRealFromLeftSideVector(mNode1), system.getImagFromLeftSideVector(mNode1) };
+		voltNode1 = system.getCompFromLeftSideVector(mNode1);
 	}
 	else {
 		voltNode1 = { 0, 0};
@@ -99,7 +96,7 @@ void Components::DP::Inductor::postStep(SystemModel& system) {
 
 	if (mNode2 >= 0) {
 		system.getRealFromLeftSideVector(mNode2);
-		voltNode2 = { system.getRealFromLeftSideVector(mNode2), system.getImagFromLeftSideVector(mNode2) };
+		voltNode2 = system.getCompFromLeftSideVector(mNode2);
 	}
 	else {
 		voltNode2 = { 0, 0 };

@@ -164,8 +164,8 @@ void Components::DP::RxLine::postStep(SystemModel& system)
 
 		// extract solution
 		if (mNode1 >= 0) {
-			vposr = system.getRealFromLeftSideVector(mNode1);
-			vposi = system.getImagFromLeftSideVector(mNode1);
+			vposr = system.getCompFromLeftSideVector(mNode1).real();
+			vposi = system.getCompFromLeftSideVector(mNode1).imag();
 		}
 		else {
 			vposr = 0;
@@ -173,8 +173,8 @@ void Components::DP::RxLine::postStep(SystemModel& system)
 		}
 
 		if (mNode2 >= 0) {
-			vnegr = system.getRealFromLeftSideVector(mNode2);
-			vnegi = system.getImagFromLeftSideVector(mNode2);
+			vnegr = system.getCompFromLeftSideVector(mNode2).real();
+			vnegi = system.getCompFromLeftSideVector(mNode2).imag();
 		}
 		else {
 			vnegr = 0;
@@ -199,8 +199,8 @@ void Components::DP::RxLine::postStep(SystemModel& system)
 		// extract solution
 		if (mVirtualNodes[0] >= 0) {
 			system.getRealFromLeftSideVector(mVirtualNodes[0]);
-			vposr = system.getRealFromLeftSideVector(mVirtualNodes[0]);
-			vposi = system.getImagFromLeftSideVector(mVirtualNodes[0]);
+			vposr = system.getCompFromLeftSideVector(mVirtualNodes[0]).real();
+			vposi = system.getCompFromLeftSideVector(mVirtualNodes[0]).imag();
 		}
 		else {
 			vposr = 0;
@@ -208,9 +208,8 @@ void Components::DP::RxLine::postStep(SystemModel& system)
 		}
 
 		if (mNode2 >= 0) {
-			system.getRealFromLeftSideVector(mNode2);
-			vnegr = system.getRealFromLeftSideVector(mNode2);
-			vnegi = system.getImagFromLeftSideVector(mNode2);
+			vnegr = system.getCompFromLeftSideVector(mNode2).real();
+			vnegi = system.getCompFromLeftSideVector(mNode2).imag();
 		}
 		else {
 			vnegr = 0;

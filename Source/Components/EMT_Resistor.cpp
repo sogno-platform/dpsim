@@ -23,8 +23,8 @@
 
 using namespace DPsim;
 
-Components::EMT::Resistor::Resistor(String name, Int src, Int dest, Real resistance)
-	: Base(name, src, dest)
+Components::EMT::Resistor::Resistor(String name, Int node1, Int node2, Real resistance)
+	: Base(name, node1, node2)
 {
 	mResistance = resistance;
 	attrMap["resistance"] = { Attribute::Real, &mResistance };

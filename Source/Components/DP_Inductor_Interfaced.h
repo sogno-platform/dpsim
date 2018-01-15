@@ -40,7 +40,7 @@ namespace DP {
 		Real mCurrentStepIm;
 
 	public:
-		InterfacedInductor(String name, Int src, Int dest, Real inductance);
+		InterfacedInductor(String name, Int node1, Int node2, Real inductance);
 
 		void initialize(SystemModel& system);
 		void applySystemMatrixStamp(SystemModel& system) { }

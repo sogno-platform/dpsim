@@ -38,7 +38,7 @@ namespace EMT {
 		Real mVoltageAtNode2;
 
 	public:
-		Resistor(String name, Int src, Int dest, Real resistance);
+		Resistor(String name, Int node1, Int node2, Real resistance);
 
 		void initialize(SystemModel& system) { }
 		void applySystemMatrixStamp(SystemModel& system);

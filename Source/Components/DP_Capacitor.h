@@ -32,28 +32,23 @@ namespace DP {
 	/// The capacitor is represented by a DC equivalent circuit which corresponds to one iteration of the trapezoidal integration method.
 	/// The equivalent DC circuit is a resistance in paralel with a current source. The resistance is constant for a defined time step and system
 	///frequency and the current source changes for each iteration.
-	class Capacitor : public Components::Base, public SharedFactory<Capacitor> {
+	class Capacitor : public Base, public SharedFactory<Capacitor> {
 
 	protected:
 		/// Capacitance [F]
 		Real mCapacitance;
-		/// Real part of the voltage across the capacitor [V]
-		Real mDeltavr;
-		/// Imaginary part of the voltage across the capacitor [V]
-		Real mDeltavi;
-		/// Real and imaginary part of the current through the capacitor [A]
-		Real mCurrr;
-		Real mCurri;
-		///Real and imaginary part of the DC equivalent current source [A]
-		Real mCureqr;
-		Real mCureqi;
-
-		Real mGcr;
-		Real mGci;
+		/// Voltage across the capacitor [V]
+		Complex mVoltage;
+		/// Current through the capacitor [A]
+		Complex mCurrent;
+		/// DC equivalent current source [A]
+		Complex mEquivCurrent;
+		/// Equivalent conductance [S]
+		Complex mEquivCond;
 
 	public:
 		/// define capacitor name, conected nodes and capacitance
-		Capacitor(String name, Int src, Int dest, Real capacitance);
+		Capacitor(String name, Int node1, Int node2, Real capacitance);
 
 		/// initializes variables detalvr, deltavi, currr, curri, cureqr and curreqi
 		void initialize(SystemModel& system);

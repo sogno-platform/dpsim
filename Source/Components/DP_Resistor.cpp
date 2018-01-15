@@ -57,13 +57,13 @@ Complex Components::DP::Resistor::getCurrent(SystemModel& model) {
 	Real realVolt = 0, imagVolt = 0;
 	if (mNode1 >= 0)
 	{
-		realVolt += model.getRealFromLeftSideVector(mNode1);
-		imagVolt += model.getImagFromLeftSideVector(mNode2);
+		realVolt += model.getCompFromLeftSideVector(mNode1).real();
+		imagVolt += model.getCompFromLeftSideVector(mNode2).imag();
 	}
 	if (mNode2 >= 0)
 	{
-		realVolt -= model.getRealFromLeftSideVector(mNode1);
-		imagVolt -= model.getImagFromLeftSideVector(mNode2);
+		realVolt -= model.getCompFromLeftSideVector(mNode1).real();
+		imagVolt -= model.getCompFromLeftSideVector(mNode2).imag();
 	}
 	return Complex(realVolt*mConductance, imagVolt*mConductance);
 }

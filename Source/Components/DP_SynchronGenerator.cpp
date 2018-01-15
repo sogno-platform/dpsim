@@ -423,24 +423,24 @@ void Components::DP::SynchronGenerator::stepInPerUnit(Real om, Real dt, Real tim
 void Components::DP::SynchronGenerator::postStep(SystemModel& system)
 {
 	if (mNode1 >= 0) {
-		mVaRe = system.getRealFromLeftSideVector(mNode1);
-		mVaIm = system.getImagFromLeftSideVector(mNode1);
+		mVaRe = system.getCompFromLeftSideVector(mNode1).real();
+		mVaIm = system.getCompFromLeftSideVector(mNode1).imag();
 	}
 	else {
 		mVaRe = 0;
 		mVaIm = 0;
 	}
 	if (mNode2 >= 0) {
-		mVbRe = system.getRealFromLeftSideVector(mNode2);
-		mVbIm = system.getImagFromLeftSideVector(mNode2);
+		mVbRe = system.getCompFromLeftSideVector(mNode2).real();
+		mVbIm = system.getCompFromLeftSideVector(mNode2).imag();
 	}
 	else {
 		mVbRe = 0;
 		mVbIm = 0;
 	}
 	if (mNode3 >= 0) {
-		mVcRe = system.getRealFromLeftSideVector(mNode3);
-		mVcIm = system.getImagFromLeftSideVector(mNode3);
+		mVcRe = system.getCompFromLeftSideVector(mNode3).real();
+		mVcIm = system.getCompFromLeftSideVector(mNode3).imag();
 	}
 	else {
 		mVcRe = 0;

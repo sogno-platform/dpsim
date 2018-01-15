@@ -23,8 +23,8 @@
 
 using namespace DPsim;
 
-Components::DP::InterfacedInductor::InterfacedInductor(String name, Int src, Int dest, Real inductance)
-	: Base(name, src, dest)
+Components::DP::InterfacedInductor::InterfacedInductor(String name, Int node1, Int node2, Real inductance)
+	: Base(name, node1, node2)
 {
 	mInductance = inductance;
 	attrMap["inductance"] = { Attribute::Real, &mInductance };
@@ -61,8 +61,8 @@ void Components::DP::InterfacedInductor::postStep(SystemModel& system)
 
 	// extract solution
 	if (mNode1 >= 0) {
-		vposr = system.getRealFromLeftSideVector(mNode1);
-		vposi = system.getImagFromLeftSideVector(mNode1);
+		vposr = system.getCompFromLeftSideVector(mNode1).real();
+		vposi = system.getCompFromLeftSideVector(mNode1).imag();
 	}
 	else {
 		vposr = 0;
@@ -70,8 +70,8 @@ void Components::DP::InterfacedInductor::postStep(SystemModel& system)
 	}
 
 	if (mNode2 >= 0) {
-		vnegr = system.getRealFromLeftSideVector(mNode2);
-		vnegi = system.getImagFromLeftSideVector(mNode2);
+		vnegr = system.getCompFromLeftSideVector(mNode2).real();
+		vnegi = system.getCompFromLeftSideVector(mNode2).imag();
 	}
 	else {
 		vnegr = 0;

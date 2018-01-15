@@ -39,7 +39,7 @@ namespace EMT {
 		Real mP;
 
 	public:
-		Inductor(String name, Int src, Int dest, Real inductance);
+		Inductor(String name, Int node1, Int node2, Real inductance);
 
 		void initialize(SystemModel& system);
 		void applySystemMatrixStamp(SystemModel& system);

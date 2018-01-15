@@ -147,14 +147,14 @@ void Components::DP::PiLine::postStep(SystemModel& system)
 	// extract solution
 	if (mNode3 >= 0) {
 		system.getRealFromLeftSideVector(mNode3);
-		vposr = system.getRealFromLeftSideVector(mNode3);
-		vposi = system.getImagFromLeftSideVector(mNode3);
+		vposr = system.getCompFromLeftSideVector(mNode3).real();
+		vposi = system.getCompFromLeftSideVector(mNode3).imag();
 	}
 
 	if (mNode2 >= 0) {
 		system.getRealFromLeftSideVector(mNode2);
-		vnegr = system.getRealFromLeftSideVector(mNode2);
-		vnegi = system.getImagFromLeftSideVector(mNode2);
+		vnegr = system.getCompFromLeftSideVector(mNode2).real();
+		vnegi = system.getCompFromLeftSideVector(mNode2).imag();
 	}
 
 	mDeltaVre = vposr - vnegr;
@@ -164,13 +164,13 @@ void Components::DP::PiLine::postStep(SystemModel& system)
 
 	// extract solution
 	if (mNode1 >= 0) {
-		mVoltageAtNode1Re = system.getRealFromLeftSideVector(mNode1);
-		mVoltageAtNode1Im = system.getImagFromLeftSideVector(mNode1);
+		mVoltageAtNode1Re = system.getCompFromLeftSideVector(mNode1).real();
+		mVoltageAtNode1Im = system.getCompFromLeftSideVector(mNode1).imag();
 	}
 
 	if (mNode2 >= 0) {
-		mVoltageAtNode2Re = system.getRealFromLeftSideVector(mNode2);
-		mVoltageAtNode2Im = system.getImagFromLeftSideVector(mNode2);
+		mVoltageAtNode2Re = system.getCompFromLeftSideVector(mNode2).real();
+		mVoltageAtNode2Im = system.getCompFromLeftSideVector(mNode2).imag();
 	}
 
 	mCurrCapRe1 = mGcr * mVoltageAtNode1Re - mGci * mVoltageAtNode1Im - mCurEqCapRe1;

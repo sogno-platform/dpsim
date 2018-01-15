@@ -35,7 +35,6 @@ namespace DP {
 	class Inductor : public Components::Base, public SharedFactory<Inductor> {
 
 	protected:
-
 		/// Inductance [H]
 		Real mInductance;
 		/// Voltage across the inductor [V]
@@ -44,17 +43,17 @@ namespace DP {
 		Complex mCurrent;
 		/// DC equivalent current source [A]
 		Complex mEquivCurrent;
-		/// DC equivalent conductance [S]
+		/// Equivalent conductance [S]
 		Complex mEquivCond;
 		/// Coefficient in front of previous current value
 		Complex mPrevCurrFac;
 
 	public:
 		/// Define inductor name, conected nodes and inductance
-		Inductor(String name, Int src, Int dest, Real inductance, Logger::Level logLevel = Logger::Level::NONE);
+		Inductor(String name, Int node1, Int node2, Real inductance, Logger::Level logLevel = Logger::Level::NONE);
 
 		/// Define inductor name, conected nodes and inductance and initial terminal voltages
-		//Inductor(String name, Int node1, Int node2, Real inductance, Complex voltageNode1, Complex voltageNode2,
+		//Inductor(String name, node1, Int node2, Real inductance, Complex voltageNode1, Complex voltageNode2,
 		//	Logger::Level logLevel = Logger::Level::NONE);
 
 		/// Initializes variables detalvr, deltavi, currr, curri, cureqr and curreqi
