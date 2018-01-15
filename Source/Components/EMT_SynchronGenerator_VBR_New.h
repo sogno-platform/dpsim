@@ -168,6 +168,11 @@ namespace DPsim {
 								Matrix K = Matrix::Zero(3, 3);
 								Matrix mPsikq1kq2 = Matrix::Zero(2, 1);
 								Matrix mPsifdkd = Matrix::Zero(2, 1);
+								Matrix mPsikq1kq2_hist = Matrix::Zero(2, 1);
+								Matrix mPsifdkd_hist = Matrix::Zero(2, 1);
+
+								Real mIq_hist;
+								Real mId_hist;
 
 
 
@@ -229,7 +234,7 @@ namespace DPsim {
 
 								/// Initializes states in per unit or stator referred variables depending on the setting of the state type.
 								/// Function parameters have to be given in real units.
-								void init(Real om, Real dt,
+								void initialize(Real om, Real dt,
 										Real initActivePower, Real initReactivePower, Real initTerminalVolt, Real initVoltAngle, Real initFieldVoltage, Real initMechPower);
 
 								/// Performs an Euler forward step with the state space model of a synchronous generator
