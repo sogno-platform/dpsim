@@ -148,13 +148,13 @@ void ShmemInterface::writeValues(SystemModel& model)
 			Real real = 0, imag = 0;
 
 			if (vd.from > 0) {
-				real += model.getRealFromLeftSideVector(vd.from-1);
-				imag += model.getImagFromLeftSideVector(vd.from-1);
+				real += model.getCompFromLeftSideVector(vd.from-1).real();
+				imag += model.getCompFromLeftSideVector(vd.from-1).imag();
 			}
 
 			if (vd.to > 0) {
-				real -= model.getRealFromLeftSideVector(vd.to-1);
-				imag -= model.getImagFromLeftSideVector(vd.to-1);
+				real -= model.getCompFromLeftSideVector(vd.to-1).real();
+				imag -= model.getCompFromLeftSideVector(vd.to-1).imag();
 			}
 
 			if (vd.realIdx >= sample->capacity || vd.imagIdx >= sample->capacity) {
