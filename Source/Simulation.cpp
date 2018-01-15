@@ -1,4 +1,4 @@
-﻿/** Simulation
+/** Simulation
  *
  * @author Markus Mirz <mmirz@eonerc.rwth-aachen.de>
  * @copyright 2017, Institute for Automation of Complex Power Systems, EONERC
@@ -25,9 +25,9 @@ using namespace DPsim;
 
 Simulation::Simulation(String name, Components::Base::List comps, Real om, Real dt, Real tf, Logger::Level logLevel,
 	SimulationType simType, Int downSampleRate) :
-	mLog("Logs/" + name + ".log", mLogLevel),
-	mLeftVectorLog("Logs/" + name + "_LeftVector.csv", mLogLevel),
-	mRightVectorLog("Logs/" + name + "_RightVector.csv", mLogLevel)
+	mLog("Logs/" + name + ".log", logLevel),
+	mLeftVectorLog("Logs/" + name + "_LeftVector.csv", logLevel),
+	mRightVectorLog("Logs/" + name + "_RightVector.csv", logLevel)
 
 {
 	mTime = 0;
@@ -166,11 +166,12 @@ Int Simulation::step(bool blocking)
 	return mTime < mFinalTime;
 }
 
-void Simulation::run()
-{
+void Simulation::run() {
+	mLog.Log(Logger::Level::INFO) << "Start simulation." << std::endl;
 	while (step()) {
 		increaseByTimeStep();
 	}
+	mLog.Log(Logger::Level::INFO) << "Simulation finished." << std::endl;
 }
 
 void Simulation::switchSystemMatrix(Int systemMatrixIndex)
