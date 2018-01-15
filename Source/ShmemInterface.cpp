@@ -26,8 +26,8 @@
 #include <villas/shmem.h>
 
 #include "ShmemInterface.h"
-#include "Components/DP_CurrentSource_Ideal.h"
-#include "Components/DP_VoltageSource_Ideal.h"
+#include "Components/DP_CurrentSource.h"
+#include "Components/DP_VoltageSource.h"
 
 using namespace DPsim;
 
