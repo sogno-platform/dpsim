@@ -1,4 +1,4 @@
-add_library(dpsim SHARED
+add_library(dpsim
 	IntegrationMethod.cpp
 	Logger.cpp
 	MathLibrary.cpp
@@ -38,7 +38,7 @@ list(APPEND SOURCES
 	Components/EMT_VoltageSource_Ideal.cpp
 	Components/Exciter.cpp
 	Components/TurbineGovernor.cpp
-	Components/VoltageBehindReactanceEMTNew.cpp
+	Components/EMT_SynchronGenerator_VBR_New.cpp
 )
 
 find_package(Eigen3 REQUIRED)
@@ -46,12 +46,14 @@ set(INCLUDE_DIRS
 	${EIGEN3_INCLUDE_DIR}
 )
 
-set(LIBRARIES "-lstdc++fs")
+if(NOT MSVC)
+	set(LIBRARIES "-lstdc++fs")
+endif()
 
 if(NOT WIN32)
 	# we use PyArg_ParseTupleAndKeywords several times, which erroneously accepts
 	# a char* array instead of a const char* array
-	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-write-strings")
+	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-write-strings -fPIC")
 endif()
 
 if(WITH_RT)

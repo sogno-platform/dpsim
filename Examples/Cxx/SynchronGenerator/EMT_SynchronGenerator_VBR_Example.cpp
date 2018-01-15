@@ -1,4 +1,4 @@
-﻿/** SynGenVBR Example
+/** SynGenVBR Example
  *
  * @author Markus Mirz <mmirz@eonerc.rwth-aachen.de>
  * @copyright 2017, Institute for Automation of Complex Power Systems, EONERC
@@ -54,7 +54,7 @@ int main(int argc, char* argv[])
 	//Real Llkq2 = 0;
 
 	// Declare circuit components
-	Components::Base::Ptr gen = SynchronGeneratorVBR::make("gen", 0, 1, 2,
+	Components::Base::Ptr gen = VoltageBehindReactanceEMTNew::make("gen", 0, 1, 2,
 		nomPower, nomPhPhVoltRMS, nomFreq, poleNum, nomFieldCurr,
 		Rs, Ll, Lmd, Lmd0, Lmq, Lmq0, Rfd, Llfd, Rkd, Llkd, Rkq1, Llkq1, Rkq2, Llkq2, H);
 
@@ -76,12 +76,12 @@ int main(int argc, char* argv[])
 	// Set up simulation
 	Real tf, dt, t;
 	Real om = 2.0*M_PI*60.0;
-	tf = 0.3; dt = 0.00001; t = 0;
+	tf = 0.3; dt = 0.0001; t = 0;
 	Int downSampling = 50;
-	Simulation newSim("EMT_SynchronGenerator_VBR", comps, om, dt, tf, Logger::Level::INFO, SimulationType::EMT, downSampling);
-	newSim.setNumericalMethod(NumericalMethod::Trapezoidal_flux);
-	newSim.addSystemTopology(compsBreakerOn);
-	newSim.switchSystemMatrix(0);
+	Simulation sim("EMT_SynchronGenerator_VBR", comps, om, dt, tf, Logger::Level::INFO, SimulationType::EMT, downSampling);
+	sim.setNumericalMethod(NumericalMethod::Trapezoidal_flux);
+	sim.addSystemTopology(compsBreakerOn);
+	sim.switchSystemMatrix(0);
 
 	// Initialize generator
 	Real initActivePower = 555e3;
@@ -90,24 +90,22 @@ int main(int argc, char* argv[])
 	Real initVoltAngle = -DPS_PI / 2;
 	Real fieldVoltage = 7.0821;
 	Real mechPower = 5.5558e5;
-	auto genPtr = std::dynamic_pointer_cast<Components::EMT::SynchronGeneratorVBR>(gen);
+	auto genPtr = std::dynamic_pointer_cast<Components::EMT::VoltageBehindReactanceEMTNew>(gen);
 	genPtr->initialize(om, dt, initActivePower, initReactivePower, initTerminalVolt, initVoltAngle, fieldVoltage, mechPower);
 
 	std::cout << "A matrix:" << std::endl;
-	std::cout << newSim.getSystemMatrix() << std::endl;
+	std::cout << sim.getSystemMatrix() << std::endl;
 	std::cout << "vt vector:" << std::endl;
-	std::cout << newSim.getLeftSideVector() << std::endl;
+	std::cout << sim.getLeftSideVector() << std::endl;
 	std::cout << "j vector:" << std::endl;
-	std::cout << newSim.getRightSideVector() << std::endl;
+	std::cout << sim.getRightSideVector() << std::endl;
 
 	Real lastLogTime = 0;
 	Real logTimeStep = 0.00005;
-	newSim.setSwitchTime(0.1, 1);
-	newSim.setSwitchTime(0.2, 0);
+	sim.setSwitchTime(0.1, 1);
+	sim.setSwitchTime(0.2, 0);
 
-	std::cout << "Start simulation." << std::endl;
-	newSim.run();
-	std::cout << "Simulation finished." << std::endl;
+	sim.run();
 
 	return 0;
 }

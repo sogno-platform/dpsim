@@ -29,28 +29,23 @@ static void VarFreqRxLineResLoad_DP(Real timeStep, Real finalTime, Real freqStep
 	// Define simulation scenario
 	Real omega = 2.0*M_PI*50.0;
 	String simName = "DpEmtVarFreqStudy_" + std::to_string(timeStep);
-	
+
 	Components::Base::List comps0 = {
-		DP::VoltageSourceFreq::make("v_s", 1, 0, 1000, 0, 1, 2 * PI*-5, freqStep, rampTime),
-		DP::Resistor::make("r_line", 1, 2, 1),
-		DP::Inductor::make("l_line", 2, 3, 0.2)
+		DP::VoltageSourceFreq::make("v_s", 0, GND, 1000, 0, 1, 2 * PI*-5, freqStep, rampTime),
+		DP::Resistor::make("r_line", 0, 1, 1),
+		DP::Inductor::make("l_line", 1, 2, 0.2)
 	};
 
 	Components::Base::List comps1 = comps0;
 	Components::Base::List comps2 = comps0;
-	comps1.push_back(DP::Resistor::make("r_load", 3, 0, 100));
-	comps2.push_back(DP::Resistor::make("r_load", 3, 0, 50));
+	comps1.push_back(DP::Resistor::make("r_load", 2, GND, 100));
+	comps2.push_back(DP::Resistor::make("r_load", 2, GND, 50));
 
-	// Set up simulation and start main simulation loop
-	Simulation newSim(simName, comps1, omega, timeStep, finalTime);
-	newSim.addSystemTopology(comps2);
-	newSim.setSwitchTime(loadStep, 1);
+	Simulation sim(simName, comps1, omega, timeStep, finalTime);
+	sim.addSystemTopology(comps2);
+	sim.setSwitchTime(loadStep, 1);
 
-	std::cout << "Start simulation." << std::endl;
-	while (newSim.step()) {
-		newSim.increaseByTimeStep();
-	}
-	std::cout << "Simulation finished." << std::endl;
+	sim.run();
 }
 
 static void VarFreqRxLineResLoad_EMT(Real timeStep, Real finalTime, Real freqStep, Real loadStep, Real rampTime)
@@ -60,26 +55,21 @@ static void VarFreqRxLineResLoad_EMT(Real timeStep, Real finalTime, Real freqSte
 	String simName = "RXLineResLoadEMT_" + std::to_string(timeStep);
 
 	Components::Base::List comps0 = {
-		DP::VoltageSourceFreq::make("v_s", 1, 0, 1000, 0, 1, 2 * PI*-5, freqStep, rampTime),
-		EMT::Resistor::make("r_line", 1, 2, 1),
-		EMT::Inductor::make("l_line", 2, 3, 0.2)
+		DP::VoltageSourceFreq::make("v_s", 0, GND, 1000, 0, 1, 2 * PI*-5, freqStep, rampTime),
+		EMT::Resistor::make("r_line", 0, 1, 1),
+		EMT::Inductor::make("l_line", 1, 2, 0.2)
 	};
 
 	Components::Base::List comps1 = comps0;
 	Components::Base::List comps2 = comps0;
-	comps1.push_back(EMT::Resistor::make("r_load", 3, 0, 100));
-	comps2.push_back(EMT::Resistor::make("r_load", 3, 0, 50));
+	comps1.push_back(EMT::Resistor::make("r_load", 2, GND, 100));
+	comps2.push_back(EMT::Resistor::make("r_load", 2, GND, 50));
 
-	// Set up simulation and start main simulation loop
-	Simulation newSim(simName, comps1, omega, timeStep, finalTime, Logger::Level::INFO, SimulationType::EMT);
-	newSim.addSystemTopology(comps2);
-	newSim.setSwitchTime(loadStep, 1);
+	Simulation sim(simName, comps1, omega, timeStep, finalTime, Logger::Level::INFO, SimulationType::EMT);
+	sim.addSystemTopology(comps2);
+	sim.setSwitchTime(loadStep, 1);
 
-	std::cout << "Start simulation." << std::endl;
-	while (newSim.step()) {
-		newSim.increaseByTimeStep();
-	}
-	std::cout << "Simulation finished." << std::endl;
+	sim.run();
 }
 
 int main(int argc, char* argv[])

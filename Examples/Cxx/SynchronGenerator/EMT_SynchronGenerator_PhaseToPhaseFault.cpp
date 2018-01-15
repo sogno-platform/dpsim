@@ -77,8 +77,8 @@ int main(int argc, char* argv[])
 	Real om = 2.0*M_PI*60.0;
 	tf = 0.2; dt = 0.00005; t = 0;
 	Int downSampling = 50;
-	Simulation newSim("EMT_SynGen_PhaseToPhaseFault", comps, om, dt, tf, Logger::Level::INFO, SimulationType::EMT, downSampling);
-	newSim.addSystemTopology(compsBreakerOn);
+	Simulation sim("EMT_SynGen_PhaseToPhaseFault", comps, om, dt, tf, Logger::Level::INFO, SimulationType::EMT, downSampling);
+	sim.addSystemTopology(compsBreakerOn);
 
 	// Initialize generator
 	Real initActivePower = 555e3;
@@ -96,17 +96,15 @@ int main(int argc, char* argv[])
 	Real initPowerFactor = acos(initActivePower / initApparentPower);
 
 	std::cout << "A matrix:" << std::endl;
-	std::cout << newSim.getSystemMatrix() << std::endl;
+	std::cout << sim.getSystemMatrix() << std::endl;
 	std::cout << "vt vector:" << std::endl;
-	std::cout << newSim.getLeftSideVector() << std::endl;
+	std::cout << sim.getLeftSideVector() << std::endl;
 	std::cout << "j vector:" << std::endl;
-	std::cout << newSim.getRightSideVector() << std::endl;
+	std::cout << sim.getRightSideVector() << std::endl;
 
-	newSim.setSwitchTime(0.1, 1);
+	sim.setSwitchTime(0.1, 1);
 
-	std::cout << "Start simulation." << std::endl;
-	newSim.run();
-	std::cout << "Simulation finished." << std::endl;
+	sim.run();
 
 	return 0;
 }

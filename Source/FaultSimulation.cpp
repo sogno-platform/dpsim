@@ -45,7 +45,7 @@ void FaultSimulation::clearFault(Int Node1, Int Node2, Int Node3)
 	if (std::signbit(mIfa) != std::signbit(mIfa_hist) && !aCleared) {
 		mComponents.erase(mComponents.begin() + 1);
 		addSystemTopology(mComponents);
-		switchSystemMatrix(mSwitchEventVector.size() + NumClearedPhases);
+		switchSystemMatrix((Int) mSwitchEventVector.size() + NumClearedPhases);
 		NumClearedPhases++;
 		aCleared = true;
 	}
@@ -53,7 +53,7 @@ void FaultSimulation::clearFault(Int Node1, Int Node2, Int Node3)
 	if (std::signbit(mIfb) != std::signbit(mIfb_hist) && !bCleared) {
 		mComponents.erase(mComponents.begin() + 2);
 		addSystemTopology(mComponents);
-		switchSystemMatrix(mSwitchEventVector.size() + NumClearedPhases);
+		switchSystemMatrix((Int) mSwitchEventVector.size() + NumClearedPhases);
 		NumClearedPhases++;
 		bCleared = true;
 	}
@@ -61,7 +61,7 @@ void FaultSimulation::clearFault(Int Node1, Int Node2, Int Node3)
 	if (std::signbit(mIfc) != std::signbit(mIfc_hist) && !cCleared) {
 		mComponents.erase(mComponents.begin() + 1);
 		addSystemTopology(mComponents);
-		switchSystemMatrix(mSwitchEventVector.size() + NumClearedPhases);
+		switchSystemMatrix((Int) mSwitchEventVector.size() + NumClearedPhases);
 		NumClearedPhases++;
 		cCleared = true;
 	}

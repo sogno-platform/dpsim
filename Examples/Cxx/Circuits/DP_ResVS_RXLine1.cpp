@@ -34,9 +34,9 @@ int main(int argc, char* argv[])
 	String simName = "RxLineResLoad_" + std::to_string(timeStep);
 
 	Components::Base::List comps0 = {
-		VoltageSource::make("v_s", 1, 0, Complex(10000, 0), 1),
-		Resistor::make("r_line", 1, 2, 1),
-		Inductor::make("l_line", 2, 3, 1)
+		VoltageSource::make("v_s", 0, GND, Complex(10000, 0), 1),
+		Resistor::make("r_line", 0, 1, 1),
+		Inductor::make("l_line", 1, 2, 1)
 	};
 
 	Components::Base::List comps1 = comps0;
@@ -44,14 +44,11 @@ int main(int argc, char* argv[])
 	comps1.push_back(Resistor::make("r_load", 3, 0, 1000));
 	comps2.push_back(Resistor::make("r_load", 3, 0, 800));
 
-	// Set up simulation and start main simulation loop
-	Simulation newSim(simName, comps1, omega, timeStep, finalTime);
-	newSim.addSystemTopology(comps2);
-	newSim.setSwitchTime(0.1, 1);
+	Simulation sim(simName, comps1, omega, timeStep, finalTime);
+	sim.addSystemTopology(comps2);
+	sim.setSwitchTime(0.1, 1);
 
-	std::cout << "Start simulation." << std::endl;
-	newSim.run();
-	std::cout << "Simulation finished." << std::endl;
+	sim.run();
 
 	return 0;
 }

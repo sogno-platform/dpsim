@@ -151,7 +151,7 @@ Int Simulation::step(bool blocking)
 		if (mTime >= mSwitchEventVector[mCurrentSwitchTimeIndex].switchTime) {
 			switchSystemMatrix(mSwitchEventVector[mCurrentSwitchTimeIndex].systemIndex);
 			//mComponents = mComponentsVector[++mCurrentSwitchTimeIndex];
-			
+
 			mComponents = mComponentsVector[mSwitchEventVector[mCurrentSwitchTimeIndex].systemIndex];
 			++mCurrentSwitchTimeIndex;
 			mLog.Log(Logger::Level::INFO) << "Switched to system " << mCurrentSwitchTimeIndex << " at " << mTime << std::endl;
@@ -168,8 +168,24 @@ Int Simulation::step(bool blocking)
 
 void Simulation::run() {
 	mLog.Log(Logger::Level::INFO) << "Start simulation." << std::endl;
+
 	while (step()) {
 		increaseByTimeStep();
+	}
+
+	mLog.Log(Logger::Level::INFO) << "Simulation finished." << std::endl;
+}
+
+void Simulation::run(double duration) {
+	mLog.Log(Logger::Level::INFO) << "Run simulation for " << duration << " seconds." << std::endl;
+
+	double started = mTime;
+
+	while (step()) {
+		increaseByTimeStep();
+
+		if (mTime - started > duration)
+			break;
 	}
 	mLog.Log(Logger::Level::INFO) << "Simulation finished." << std::endl;
 }

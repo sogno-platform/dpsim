@@ -1,8 +1,11 @@
+# Outputs
+build/
+dist/
+
 # Folders
 Libraries/
 Results/
 Logs/
-build/
 VisualStudio/
 
 # IDEs
@@ -23,10 +26,9 @@ Makefile
 __MACOSX
 .DS_Store
 
-# Files
-*.csv
-
 # Python
 *.pyc
 .cache/
 __pycache__/
+.eggs/
+*.egg-info/

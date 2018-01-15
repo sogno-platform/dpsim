@@ -83,14 +83,21 @@ namespace DPsim {
 		void initialize(Components::Base::List comps);
 		/// Solve system A * x = z for x and current time
 		Int step(bool blocking = true);
+		/// Run simulation until total time is elapsed.
 		void run();
+		/// Run simulation for \p duration seconds.
+		void run(double duration);
+		/// Advance the simulation clock by 1 time-step.
+		void increaseByTimeStep();
+
 		void switchSystemMatrix(Int systemMatrixIndex);
 		void setSwitchTime(Real switchTime, Int systemIndex);
-		void increaseByTimeStep();
+
 		void addExternalInterface(ExternalInterface*);
 
 		void setNumericalMethod(NumericalMethod numMethod);
 
+		// Getter
 		String getName() const { return mName; }
 		Real getTime() { return mTime; }
 		Real getFinalTime() { return mFinalTime; }

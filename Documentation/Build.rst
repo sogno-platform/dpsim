@@ -7,20 +7,27 @@ DPsim
 Windows (Visual Studio)
 -----------------------
 
-Simple Installation
+Prerequisites
 ~~~~~~~~~~~~~~~~~~~~~~
-1. Install Visual Studio 2017 C++ Desktop development package
-2. Clone the repositories DPsim_ and `DPsim Libraries`_ to the same directory.
-3. Open the Visual Studio solution in dpsim-libraries/VisualStudio/DPsimVS2017 to get started.
+First, install Visual Studio 2017 and the C++ Desktop development package.
+Then, you can choose to either use the prepared Visual Studio project or generate the project files on your own using CMake.
+
+Installation with Prepared Visual Studio Project
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+- Clone the repositories DPsim_ and `DPsim Libraries`_ to the same directory.
+- Open the Visual Studio solution in dpsim-libraries/VisualStudio/DPsimVS2017 to get started.
 
 Installation with CMake
 ~~~~~~~~~~~~~~~~~~~~~~~
-After step two of the previous instructions you need to install CMake_, use its GUI (with ``Source`` as the source path) to create project files for Visual Studio. If you installed the 64-bit version of Python, make sure to use the "Win64" version of the Visual Studio generator.
+You need to install CMake_, use its GUI (with ``Source`` as the source path) to create project files for Visual Studio. 
+If you installed the 64-bit version of Python, make sure to use the "Win64" version of the Visual Studio generator.
 
 Python support for Windows
 ~~~~~~~~~~~~~~~~~~~~~~~~~~
-1. Install `Python 3`_ using the normal installer, and add Python to your PATH.
-2. Use Visual Studio and the Release configuration to build the dpsim Python module. To install it, build the INSTALL project.
+
+- Install `Python 3`_ using the normal installer or a distribution like Anaconda, and add Python to your PATH.
+- Use Visual Studio and the Release configuration to build the dpsim Python module. To install it, build the INSTALL project.
 
 Linux (CMake)
 -------------

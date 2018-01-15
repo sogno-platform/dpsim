@@ -34,18 +34,15 @@ int main(int argc, char* argv[])
 	String simName = "IdealVS1_" + std::to_string(timeStep);
 
 	Components::Base::List comps = {
-		VoltageSourceIdeal::make("v_in", 1, 2, Complex(10, 0)),
-		Resistor::make("r_1", 1, 0, 1),
-		Resistor::make("r_2", 2, 0, 1),
-		Resistor::make("r_3", 2, 0, 1)
+		VoltageSourceIdeal::make("v_in", 0, 1, Complex(10, 0)),
+		Resistor::make("r_1", 0, GND, 1),
+		Resistor::make("r_2", 1, GND, 1),
+		Resistor::make("r_3", 1, GND, 1)
 	};
 
-	// Set up simulation and start main simulation loop
-	Simulation newSim(simName, comps, omega, timeStep, finalTime);
+	Simulation sim(simName, comps, omega, timeStep, finalTime);
 
-	std::cout << "Start simulation." << std::endl;
-	newSim.run();
-	std::cout << "Simulation finished." << std::endl;
+	sim.run();
 
 	return 0;
 }

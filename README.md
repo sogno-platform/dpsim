@@ -13,20 +13,17 @@ DPsim is a solver library for power system simulation.
 - It can be interfaced to a variety of protocols and interfaces via [VILLASnode](http://www.fein-aachen.org/projects/villas-framework/).
 
 ## Installation
+If you just want to use DPsim for simulations, take a look at the [installation instructions](https://dpsim.fein-aachen.org/doc/development/sphinx/Install.html).
 
-Take a look at the [build instructions](Documentation/Build.rst).
+If you would like to modify / extend DPsim or build it for a specific platform, take a look at the [build instructions](https://dpsim.fein-aachen.org/doc/development/sphinx/Build.html).
 
 ## Usage
-
 DPsim is a Python extension module which is implemented in optimized native C++ code.
 
-Users can control and script the simulation with Python scripts.
-Please check out the existing [Python examples](Examples/Python/).
+Users can control and script the simulation with Python scripts. Checkout the [Quickstart Guide](https://dpsim.fein-aachen.org/doc/development/sphinx/Guide.html).
 
 ## Documentation
-
-- [Online documentation for Python](http://dpsim.fein-aachen.org/doc/development/sphinx/)
-- [Online documentation for C++](http://dpsim.fein-aachen.org/doc/development/doxygen/)
+[Latest development documentation](http://dpsim.fein-aachen.org/doc/development/sphinx/)
 
 ## Copyright
 
@@ -34,7 +31,7 @@ Please check out the existing [Python examples](Examples/Python/).
 
 ## License
 
-This project is released under the terms of the [GPL version 3](COPYING.md).
+This project is released under the terms of the [GPL version 3](https://dpsim.fein-aachen.org/doc/development/sphinx/Copying.html).
 
 ```
 This program is free software: you can redistribute it and/or modify

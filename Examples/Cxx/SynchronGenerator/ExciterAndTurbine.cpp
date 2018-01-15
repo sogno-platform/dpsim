@@ -1,4 +1,4 @@
-﻿/** Synchron Generator Tests
+/** Synchron Generator Tests
 *
 * @file
 * @author Markus Mirz <mmirz@eonerc.rwth-aachen.de>
@@ -113,10 +113,10 @@ int main() {
 	Real om = 2.0*M_PI*60.0;
 	tf = 10; dt = 0.0001; t = 0;
 	Int downSampling = 1;
-	Simulation newSim(circElements, om, dt, tf, log, SimulationType::EMT, downSampling);
-	newSim.setNumericalMethod(NumericalMethod::Trapezoidal_flux);
-	newSim.addSystemTopology(circElementsBreakerOn);
-	newSim.switchSystemMatrix(0);
+	Simulation sim(circElements, om, dt, tf, log, SimulationType::EMT, downSampling);
+	sim.setNumericalMethod(NumericalMethod::Trapezoidal_flux);
+	sim.addSystemTopology(circElementsBreakerOn);
+	sim.switchSystemMatrix(0);
 
 	// Initialize generator
 	Real initActivePower = 555e3;
@@ -136,22 +136,21 @@ int main() {
 	Real initPowerFactor = acos(initActivePower / initApparentPower);
 
 	std::cout << "A matrix:" << std::endl;
-	std::cout << newSim.getSystemMatrix() << std::endl;
+	std::cout << sim.getSystemMatrix() << std::endl;
 	std::cout << "vt vector:" << std::endl;
-	std::cout << newSim.getLeftSideVector() << std::endl;
+	std::cout << sim.getLeftSideVector() << std::endl;
 	std::cout << "j vector:" << std::endl;
-	std::cout << newSim.getRightSideVector() << std::endl;
+	std::cout << sim.getRightSideVector() << std::endl;
 
 	Real lastLogTime = 0;
 	Real logTimeStep = 0.0001;
-	newSim.setSwitchTime(1, 1);
-	//newSim.setSwitchTime(6, 0);
+	sim.setSwitchTime(1, 1);
+	//sim.setSwitchTime(6, 0);
 
-	// Main Simulation Loop
-	while (newSim.getTime() < tf) {
-		std::cout << newSim.getTime() << std::endl;
-		newSim.stepGeneratorTest(vtLog, jLog, gen, newSim.getTime());
-		newSim.increaseByTimeStep();
+	while (sim.getTime() < tf) {
+		std::cout << sim.getTime() << std::endl;
+		sim.stepGeneratorTest(vtLog, jLog, gen, sim.getTime());
+		sim.increaseByTimeStep();
 	}
 
 	std::cout << "Simulation finished." << std::endl;
@@ -247,10 +246,10 @@ int main() {
 //	Real om = 2.0*M_PI*60.0;
 //	tf = 10; dt = 0.0001; t = 0;
 //	Int downSampling = 1;
-//	Simulation newSim(circElements, om, dt, tf, log, SimulationType::DynPhasor, downSampling);
-//	newSim.setNumericalMethod(NumericalMethod::Trapezoidal_flux);
-//	newSim.addSystemTopology(circElementsBreakerOn);
-//	newSim.switchSystemMatrix(0);
+//	Simulation sim(circElements, om, dt, tf, log, SimulationType::DynPhasor, downSampling);
+//	sim.setNumericalMethod(NumericalMethod::Trapezoidal_flux);
+//	sim.addSystemTopology(circElementsBreakerOn);
+//	sim.switchSystemMatrix(0);
 //
 //	// Initialize generator
 //	Real initActivePower = 555e3;
@@ -270,22 +269,21 @@ int main() {
 //	Real initPowerFactor = acos(initActivePower / initApparentPower);
 //
 //	std::cout << "A matrix:" << std::endl;
-//	std::cout << newSim.getSystemMatrix() << std::endl;
+//	std::cout << sim.getSystemMatrix() << std::endl;
 //	std::cout << "vt vector:" << std::endl;
-//	std::cout << newSim.getLeftSideVector() << std::endl;
+//	std::cout << sim.getLeftSideVector() << std::endl;
 //	std::cout << "j vector:" << std::endl;
-//	std::cout << newSim.getRightSideVector() << std::endl;
+//	std::cout << sim.getRightSideVector() << std::endl;
 //
 //	Real lastLogTime = 0;
 //	Real logTimeStep = 0.0001;
-//	newSim.setSwitchTime(1, 1);
-//	//newSim.setSwitchTime(6, 0);
+//	sim.setSwitchTime(1, 1);
+//	//sim.setSwitchTime(6, 0);
 //
-//	// Main Simulation Loop
-//	while (newSim.getTime() < tf) {
-//		std::cout << newSim.getTime() << std::endl;
-//		newSim.stepGeneratorTest(vtLog, jLog, gen, newSim.getTime());
-//		newSim.increaseByTimeStep();
+//	while (sim.getTime() < tf) {
+//		std::cout << sim.getTime() << std::endl;
+//		sim.stepGeneratorTest(vtLog, jLog, gen, sim.getTime());
+//		sim.increaseByTimeStep();
 //	}
 //
 //	std::cout << "Simulation finished." << std::endl;

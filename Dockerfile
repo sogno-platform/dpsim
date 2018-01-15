@@ -32,12 +32,7 @@ RUN dnf -y install \
 	villas-node-devel
 
 # Python Packages
-RUN pip3 install \
-	pandas \
-	numpy \
-	matplotlib \
-	sphinx \
-	m2r \
-	breathe
+ADD requirements.txt .
+RUN pip3 install -r requirements.txt
 
 ENV LD_LIBRARY_PATH /usr/local/lib64

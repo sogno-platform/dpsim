@@ -63,15 +63,11 @@ int main(int argc, char *argv[])
 		std::exit(1);
 	}
 
-	// Set up simulation
 	Real timeStep = 0.000150;
-	Simulation newSim(comps, 2.0*M_PI*50.0, timeStep, 1, log);
-	newSim.addExternalInterface(shmem);
+	Simulation sim(comps, 2.0*M_PI*50.0, timeStep, 1, log);
+	sim.addExternalInterface(shmem);
 
-	// Main Simulation Loop
-	std::cout << "Start simulation." << std::endl;
-	newSim.runRT(RTTimerFD, false, log, log, log);
-	std::cout << "Simulation finished." << std::endl;
+	sim.runRT(RTTimerFD, false, log, log, log);
 
 	for (auto comp : comps)
 		delete comp;

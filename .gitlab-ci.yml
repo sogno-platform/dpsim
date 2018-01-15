@@ -64,18 +64,17 @@ build:packages:
       - build/*.rpm
       - build/*.tar.gz
 
-test:python:
+test:pytest:
   stage: test
   script:
     - make -C build install
-    - ls build/Examples/Cxx
-    - python3 Examples/Python/ci.py
+    - pytest -v
   image: ${DOCKER_IMAGE_DEV}:${DOCKER_TAG_DEV}
   dependencies:
     - build:code
   artifacts:
     paths:
-      - Examples/Python/*.csv
+      - Logs/
   tags:
     - docker
 

@@ -31,8 +31,7 @@ class CMakeBuild(build_ext):
 
     def build_extension(self, ext):
         extdir = os.path.abspath(os.path.dirname(self.get_ext_fullpath(ext.name)))
-        cmake_args = ['-DCMAKE_LIBRARY_OUTPUT_DIRECTORY=' + extdir,
-                      '-DCMAKE_BUILD_WITH_INSTALL_RPATH=TRUE',
+        cmake_args = ['-DCMAKE_BUILD_WITH_INSTALL_RPATH=TRUE',
                       '-DPYTHON_EXECUTABLE=' + sys.executable,
                       '-DBUILD_EXAMPLES=OFF']
 
@@ -40,12 +39,12 @@ class CMakeBuild(build_ext):
         build_args = ['--config', cfg]
 
         if platform.system() == "Windows":
-            cmake_args += ['-DCMAKE_LIBRARY_OUTPUT_DIRECTORY_{}={}'.format(cfg.upper(), extdir)]
+            cmake_args += ['-DCMAKE_RUNTIME_OUTPUT_DIRECTORY=' + extdir]
             if sys.maxsize > 2**32:
                 cmake_args += ['-A', 'x64']
             build_args += ['--', '/m']
         else:
-            cmake_args += ['-DCMAKE_BUILD_TYPE=' + cfg]
+            cmake_args += ['-DCMAKE_LIBRARY_OUTPUT_DIRECTORY=' + extdir]
             build_args += ['--', '-j4']
 
         env = os.environ.copy()
@@ -70,7 +69,7 @@ def read(fname):
 
 setup(
     name = "dpsim",
-    version = "0.1.0",
+    version = "0.1.1",
     author = "Steffen Vogel",
     author_email = "stvogel@eonerc.rwth-aachen.de",
     description = "DPsim is a real-time power system simulator that operates in the dynamic phasor as well as electromagentic transient domain.",
@@ -78,24 +77,37 @@ setup(
     keywords = "simulation power system real-time",
     url = "https://dpsim.fein-aachen.org",
     packages = find_packages('Source/Python'),
-    package_dir = { 'dpsim':'Source/Python/dpsim' },
+    package_dir = {
+        'dpsim': 'Source/Python/dpsim'
+    },
     long_description = read('README.md'),
     classifiers = [
         "Development Status :: 4 - Beta",
         "Topic :: Scientific/Engineering",
-        "License :: OSI Approved :: GNU General Public License v3 or later (GPLv3+)"
+        "License :: OSI Approved :: GNU General Public License v3 or later (GPLv3+)",
+        "Operating System :: MacOS :: MacOS X",
+        "Operating System :: Microsoft :: Windows",
+        "Operating System :: POSIX :: Linux",
+        "Programming Language :: Python :: 3",
+        "Programming Language :: Python :: Implementation :: CPython"
+    ],
+    install_requires = [
+        'acs-dataprocessing>=0.1.2',
     ],
     setup_requires = [
-        'pytest-runner',
         'm2r',
-        'breathe'
+        'pytest-runner',
+        'wheel'
     ],
-    tests_require = [
-        'pytest'
+    tests_require=[
+        'pytest',
+        'pyyaml'
     ],
     ext_modules = [
         CMakeExtension('_dpsim')
     ],
-    cmdclass = dict(build_ext = CMakeBuild),
-    zip_safe = False,
+    cmdclass = {
+        'build_ext': CMakeBuild
+    },
+    zip_safe = False
 )

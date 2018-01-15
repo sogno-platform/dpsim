@@ -49,4 +49,4 @@
 #include "Components/EMT_VoltageSource.h"
 #include "Components/Exciter.h"
 #include "Components/TurbineGovernor.h"
-#include "Components/VoltageBehindReactanceEMTNew.h"
+#include "Components/EMT_SynchronGenerator_VBR_New.h"

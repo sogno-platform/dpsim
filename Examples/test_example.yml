@@ -1,0 +1,17 @@
+example_test1:
+  description: Shows hello world and succeeds everytime
+  shell: True
+  cmd: echo \"hello world\"
+
+example_test2:
+  description: Runs into a timeout
+  cmd: "sleep 2"
+  shell: True
+  timeout: 1
+  xfail: True
+
+example_test3:
+  description: Returns non-zero return code
+  cmd: exit 1
+  shell: True
+  xfail: True
