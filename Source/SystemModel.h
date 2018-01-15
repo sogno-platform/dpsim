@@ -87,7 +87,7 @@ namespace DPsim {
 		Real getOmega() { return mSystemOmega; }
 		Int getCompOffset() { return mCompOffset; }
 		Real getRealFromLeftSideVector(Int row) { return mLeftSideVector(row, 0); }
-		Real getImagFromLeftSideVector(Int row) { return mLeftSideVector(row + mCompOffset, 0); }
+		Complex getCompFromLeftSideVector(Int row) { return Complex(mLeftSideVector(row, 0), mLeftSideVector(row + mCompOffset, 0)); }
 		SimulationType getSimType() { return mSimType; }
 		Int getNumNodes() { return mNumNodes; }
 		Int getNumIdealVS() { return mNumIdealVS; }

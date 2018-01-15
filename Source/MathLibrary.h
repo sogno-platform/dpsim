@@ -35,6 +35,7 @@ namespace DPsim {
 		static void addCompToVectorElement(Matrix& mat, Int compOffset, Int row, Complex value);
 		static void addRealToVectorElement(Matrix& mat, Int row, Real reValue);
 		static void addRealToMatrixElement(Matrix& mat, Int row, Int column, Real reValue);
+		static Complex polar(Real abs, Real phase) { return std::polar<Real>(abs, phase); }
 	};
 
 }

@@ -29,6 +29,7 @@
 #include "../SharedFactory.h"
 #include "../SystemModel.h"
 #include "../Definitions.h"
+#include "../MathLibrary.h"
 
 namespace DPsim {
 namespace Components {
