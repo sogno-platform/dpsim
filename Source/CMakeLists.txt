@@ -6,6 +6,7 @@ add_library(dpsim
 	Utilities.cpp
 	Simulation.cpp
 	FaultSimulation.cpp
+	SynGenSimulation.cpp
 )
 
 list(APPEND SOURCES
