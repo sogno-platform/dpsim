@@ -75,7 +75,7 @@ endforeach()
 # CIMpp
 find_package(CIMpp)
 if(CIMpp_FOUND)
-	add_executable(CIM CIM.cpp)
+	add_executable(CIM CIM/CIM.cpp)
 
 	target_include_directories(CIM PUBLIC ${CIMPP_INCLUDE_DIRS})
 	target_link_libraries(CIM ${CIMPP_LIBRARIES})
