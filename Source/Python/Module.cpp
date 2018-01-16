@@ -35,7 +35,7 @@ static PyMethodDef dpsimModuleMethods[] = {
 	{ "open_shmem_interface", (PyCFunction) Python::OpenShmemInterface, METH_VARARGS|METH_KEYWORDS, Python::DocOpenShmemInterface },
 	{ "CurrentSourceDP", Python::Components::DP::CurrentSource, METH_VARARGS, Python::Components::DocCurrentSource },
 	{ "VoltageSourceDP", Python::Components::DP::VoltageSource, METH_VARARGS, Python::Components::DocVoltageSource },
-	{ "VoltageSourceResDP", Python::Components::DP::VoltageSourceNorton, METH_VARARGS, Python::Components::DocVoltageSourceNorton },
+	{ "VoltageSourceNortonDP", Python::Components::DP::VoltageSourceNorton, METH_VARARGS, Python::Components::DocVoltageSourceNorton },
 	{ "ResistorDP",  Python::Components::DP::Resistor,  METH_VARARGS, Python::Components::DocResistor },
 	{ "CapacitorDP", Python::Components::DP::Capacitor, METH_VARARGS, Python::Components::DocCapacitor },
 	{ "InductorDP",  Python::Components::DP::Inductor,  METH_VARARGS, Python::Components::DocInductor },
