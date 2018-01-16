@@ -164,15 +164,26 @@ namespace DPsim {
 								Matrix K2a = Matrix::Zero(2, 2);
 								Matrix K2b = Matrix::Zero(2, 1);
 								Matrix K2 = Matrix::Zero(2, 1);
-								Matrix H_qdr;
+								Matrix H_qdr = Matrix::Zero(3, 1);
+								Matrix h_qdr;
 								Matrix K = Matrix::Zero(3, 3);
 								Matrix mPsikq1kq2 = Matrix::Zero(2, 1);
 								Matrix mPsifdkd = Matrix::Zero(2, 1);
 								Matrix mPsikq1kq2_hist = Matrix::Zero(2, 1);
 								Matrix mPsifdkd_hist = Matrix::Zero(2, 1);
-
+								Matrix mEsh_vbr = Matrix::Zero(3, 1);
+								Matrix mVabc = Matrix::Zero(3, 1);
+								Matrix mKrs_teta = Matrix::Zero(3, 3);
+								Matrix mKrs_teta_inv = Matrix::Zero(3, 3);
 								Real mIq_hist;
 								Real mId_hist;
+								Matrix R_eq_vbr = Matrix::Zero(3, 3);
+								Matrix E_eq_vbr = Matrix::Zero(3, 1);
+								Matrix E_r_vbr = Matrix::Zero(3, 1);
+								Matrix mConductanceMat = Matrix::Zero(3, 3);
+								Matrix mISourceEq = Matrix::Zero(3, 1);
+								Matrix G_load = Matrix::Zero(3, 3);
+
 
 
 

@@ -1,4 +1,4 @@
-/** A simulation model
+﻿/** A simulation model
  *
  * @author Markus Mirz <mmirz@eonerc.rwth-aachen.de>
  * @copyright 2017, Institute for Automation of Complex Power Systems, EONERC
@@ -54,6 +54,11 @@ void SystemModel::addSystemMatrix()
 	mSystemMatrixVector.push_back(mSystemMatrix);
 	mLuFactored = Eigen::PartialPivLU<Matrix>(mSystemMatrix);
 	mLuFactoredVector.push_back(mLuFactored);
+}
+
+void SystemModel::updateLuFactored()
+{		
+		mLuFactored = Eigen::PartialPivLU<Matrix>(mSystemMatrix);
 }
 
 void SystemModel::addRealToSystemMatrix(Int row, Int column, Real value)

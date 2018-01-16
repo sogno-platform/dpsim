@@ -1,4 +1,4 @@
-/** SynGenVBR Example
+﻿/** SynGenVBR Example
  *
  * @author Markus Mirz <mmirz@eonerc.rwth-aachen.de>
  * @copyright 2017, Institute for Automation of Complex Power Systems, EONERC
@@ -19,7 +19,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *********************************************************************************/
 
-#include "Simulation.h"
+#include "SynGenSimulation.h"
 
 using namespace DPsim;
 using namespace DPsim::Components::EMT;
@@ -76,9 +76,9 @@ int main(int argc, char* argv[])
 	// Set up simulation
 	Real tf, dt, t;
 	Real om = 2.0*M_PI*60.0;
-	tf = 0.3; dt = 0.0001; t = 0;
+	tf = 0.3; dt = 0.00001; t = 0;
 	Int downSampling = 50;
-	Simulation sim("EMT_SynchronGenerator_VBR", comps, om, dt, tf, Logger::Level::INFO, SimulationType::EMT, downSampling);
+	SynGenSimulation sim("EMT_SynchronGenerator_VBR", comps, om, dt, tf, Logger::Level::INFO, SimulationType::EMT, downSampling);
 	sim.setNumericalMethod(NumericalMethod::Trapezoidal_flux);
 	sim.addSystemTopology(compsBreakerOn);
 	sim.switchSystemMatrix(0);

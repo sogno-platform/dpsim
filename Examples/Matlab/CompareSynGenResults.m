@@ -120,16 +120,40 @@ legend('ic DPSim','ic Simulink');
 
 
 %% Calculate and display error
+NewLength = 5000;
+TimeVectorResampled = linspace(0,0.3,NewLength);
+VoltageVector_resampled = resample(VoltageVector(:,3),NewLength,length(VoltageVector(:,3)));
+Voltage_PLECS_resampled = resample(Results_PLECS(:,3),NewLength,length(Results_PLECS(:,3)));
 % Voltage phase a
-MaxDif = max(abs(VoltageVector(:,2) - Results_PLECS(:,2)));
-err = immse(VoltageVector(:,2),Results_PLECS(:,2));
-disp(['Maximum Error va: ', num2str(MaxDif), ' V']);
-disp(['Mean-squared error va: ', num2str(err), ' V']);
+Dif = abs(VoltageVector_resampled - Voltage_PLECS_resampled);
+MaxDif = max(Dif);
+err = sqrt(immse(VoltageVector_resampled,Voltage_PLECS_resampled));
+disp(['Maximum Error vb: ', num2str(MaxDif), ' V']);
+disp(['Root Mean-squared error vb: ', num2str(err), ' V']);
+% figure(7)
+% hold off
+% plot(TimeVectorResampled,VoltageVector_resampled);
+% hold on
+% plot(TimeVectorResampled,Voltage_PLECS_resampled);
+% plot(TimeVectorResampled,Dif);
+% title('Resampled Voltages phase a');
+% legend('DPsim','Simulink','Difference');
 % current phase a
-MaxDif2 = max(abs(CurrentVector(:,2) - Results_PLECS(:,5)));
-err2 = immse(CurrentVector(:,2),Results_PLECS(:,5));
-disp(['Maximum Error ia: ', num2str(MaxDif2), ' A']);
-disp(['Mean-squared error ia: ', num2str(err2), ' A']);
+Current_resampled = resample(CurrentVector(:,3),NewLength,length(CurrentVector(:,3)));
+Currents_PLECS_resampled = resample(Results_PLECS(:,6),NewLength,length(Results_PLECS(:,6)));
+Dif2 = abs(Current_resampled - Currents_PLECS_resampled);
+MaxDif2 = max(Dif2);
+err2 = sqrt(immse(Current_resampled,Currents_PLECS_resampled));
+disp(['Maximum Error ib: ', num2str(MaxDif2), ' A']);
+disp(['Root Mean-squared error ib: ', num2str(err2), ' A']);
+% figure(8)
+% hold off
+% plot(TimeVectorResampled,Current_resampled);
+% hold on
+% plot(TimeVectorResampled,Currents_PLECS_resampled);
+% plot(TimeVectorResampled,Dif2);
+% title('Resampled Currents phase a');
+% legend('DPsim','Simulink','Difference');
 % % Omega
 % MaxDif2 = max(abs(Log_SynGen(:,9)) - omega_PLECS(1:1000000,1)*2*pi*60);
 % err2 = immse(Log_SynGen(:,9),omega_PLECS(1:1000000,1)*2*pi*60);

@@ -160,6 +160,7 @@ void Components::EMT::VoltageBehindReactanceEMTNew::initialize(Real om, Real dt,
 		mIc = inverseParkTransform(mThetaMech, mIq, mId, mI0)(2);
 
 		CalculateAuxiliarConstants(dt*mBase_OmElec);
+		CalculateLandpL();
 }
 
 
@@ -167,19 +168,28 @@ void Components::EMT::VoltageBehindReactanceEMTNew::step(SystemModel& system, Re
 
 		stepInPerUnit(system.getOmega(), system.getTimeStep(), time, system.getNumMethod());
 
-		R_load = system.getCurrentSystemMatrix().inverse() / mBase_Z;
-
-		// Update current source accordingly
 		if (mNode1 >= 0) {
-				system.addRealToRightSideVector(mNode1, -mIa*mBase_i);
+				system.addRealToRightSideVector(mNode1, mISourceEq(0));
 		}
 		if (mNode2 >= 0) {
-				system.addRealToRightSideVector(mNode2, -mIb*mBase_i);
+				system.addRealToRightSideVector(mNode2, mISourceEq(1));
 		}
 		if (mNode3 >= 0) {
-				system.addRealToRightSideVector(mNode3, -mIc*mBase_i);
+				system.addRealToRightSideVector(mNode3, mISourceEq(2));
 		}
 
+		//Update Equivalent Resistance
+		system.addRealToSystemMatrix(mNode1, mNode1, mConductanceMat(0, 0));
+		system.addRealToSystemMatrix(mNode1, mNode2, mConductanceMat(0, 1));
+		system.addRealToSystemMatrix(mNode1, mNode3, mConductanceMat(0, 2));
+		system.addRealToSystemMatrix(mNode2, mNode1, mConductanceMat(1, 0));
+		system.addRealToSystemMatrix(mNode2, mNode2, mConductanceMat(1, 1));
+		system.addRealToSystemMatrix(mNode2, mNode3, mConductanceMat(1, 2));
+		system.addRealToSystemMatrix(mNode3, mNode1, mConductanceMat(2, 0));
+		system.addRealToSystemMatrix(mNode3, mNode2, mConductanceMat(2, 1));
+		system.addRealToSystemMatrix(mNode3, mNode3, mConductanceMat(2, 2));
+
+		system.updateLuFactored();
 
 		if (mLogLevel != Logger::Level::NONE) {
 				Matrix logValues(getRotorFluxes().rows() + getDqStatorCurrents().rows() + 3, 1);
@@ -193,10 +203,6 @@ void Components::EMT::VoltageBehindReactanceEMTNew::step(SystemModel& system, Re
 
 void Components::EMT::VoltageBehindReactanceEMTNew::stepInPerUnit(Real om, Real dt, Real time, NumericalMethod numMethod) {
 
-		mIabc <<
-				mIa,
-				mIb,
-				mIc;
 
 		// Calculate mechanical variables with euler
 		if (WithTurbineGovernor == true)
@@ -207,6 +213,19 @@ void Components::EMT::VoltageBehindReactanceEMTNew::stepInPerUnit(Real om, Real 
 		mElecTorque = (mPsimd*mIq - mPsimq*mId);
 		mOmMech = mOmMech + dt * (1. / (2. * mH) * (mElecTorque - mMechTorque));
 		mThetaMech = mThetaMech + dt * (mOmMech* mBase_OmMech);
+		
+		
+		mVabc <<
+				mVa,
+				mVb,
+				mVc;
+
+		mIabc <<
+				mIa,
+				mIb,
+				mIc;
+
+		mEsh_vbr = (mResistanceMat - (2 / (dt*mBase_OmElec))*mDInductanceMat)*mIabc + mDVabc - mVabc;
 
 		// Calculate Inductance matrix and its derivative
 		CalculateLandpL();
@@ -220,68 +239,82 @@ void Components::EMT::VoltageBehindReactanceEMTNew::stepInPerUnit(Real om, Real 
 				mPsifd,
 				mPsikd;
 
+
+
 		CalculateK();
 
-		// Solve circuit - calculate stator currents
-		mIabc = Trapezoidal(mIabc, -mDInductanceMat.inverse()*(mResistanceMat + R_load + pmDInductanceMat), mDInductanceMat.inverse(), dt*mBase_OmElec, -mDVabc, -mDVabc_hist);
+		R_eq_vbr = mResistanceMat + (2 / (dt*mBase_OmElec))*mDInductanceMat + K;
+		E_eq_vbr = mEsh_vbr + E_r_vbr;
 
-		mIa_hist = mIa;
-		mIb_hist = mIb;
-		mIc_hist = mIc;
+		mConductanceMat = (R_eq_vbr*mBase_Z).inverse();
+		mISourceEq = R_eq_vbr.inverse()*E_eq_vbr*mBase_i;
+
+		//Solve circuit - calculate stator currents and voltages
+		//mVabc = (G_load + mConductanceMat).inverse()*mISourceEq;
+		//mVabc = mVabc / mBase_v;
+		//mIabc = R_eq_vbr.inverse()*(mVabc - E_eq_vbr);
+
+	
+
+}
+
+
+void Components::EMT::VoltageBehindReactanceEMTNew::postStep(SystemModel& system) {
+
+		if (mNode1 >= 0) {
+				mVa = system.getRealFromLeftSideVector(mNode1) / mBase_v;
+		}
+		else {
+				mVa = 0;
+		}
+		if (mNode2 >= 0) {
+				mVb = system.getRealFromLeftSideVector(mNode2) / mBase_v;
+		}
+		else {
+				mVb = 0;
+		}
+		if (mNode3 >= 0) {
+				mVc = system.getRealFromLeftSideVector(mNode3) / mBase_v;
+		}
+		else {
+				mVc = 0;
+		}
+
+		mVabc <<
+				mVa,
+				mVb,
+				mVc;
+
+
+		mVq = parkTransform(mThetaMech, mVa, mVb, mVc)(0);
+		mVd = parkTransform(mThetaMech, mVa, mVb, mVc)(1);
+		mV0 = parkTransform(mThetaMech, mVa, mVb, mVc)(2);
+
+		if (WithExciter == true) {
+				mVfd = mExciter.step(mVd, mVq, 1, system.getTimeStep());
+		}
+
+		mIabc = R_eq_vbr.inverse()*(mVabc - E_eq_vbr);
 
 		mIa = mIabc(0);
 		mIb = mIabc(1);
 		mIc = mIabc(2);
+
 		mIq_hist = mIq;
 		mId_hist = mId;
+
 		mIq = parkTransform(mThetaMech, mIa, mIb, mIc)(0);
 		mId = parkTransform(mThetaMech, mIa, mIb, mIc)(1);
 		mI0 = parkTransform(mThetaMech, mIa, mIb, mIc)(2);
 
-		if (WithExciter == true) {
-		// dq-transform of interface voltage
-			mVd = parkTransform(mThetaMech, mVa / mBase_v, mVb / mBase_v, mVc / mBase_v)(0);
-			mVq = parkTransform(mThetaMech, mVa / mBase_v, mVb / mBase_v, mVc / mBase_v)(1);
-			mV0 = parkTransform(mThetaMech, mVa / mBase_v, mVb / mBase_v, mVc / mBase_v)(2);
-			mVfd = mExciter.step(mVd, mVq, 1, dt);
-		}
 
 		// Calculate rotor flux likanges
 		if (mNumDampingWindings == 2)
 		{
-				C_flux <<
-						0,
-						0,
-						mVfd,
-						0;
 
 				mDqStatorCurrents <<
 						mIq,
 						mId;
-
-				mDqStatorCurrents_hist <<
-						mIq_hist,
-						mId_hist;
-
-				mRotorFlux <<
-						mPsikq1,
-						mPsikq2,
-						mPsifd,
-						mPsikd;
-
-				mPsikq1kq2 <<
-						mPsikq1,
-						mPsikq2;
-
-
-				mPsifdkd <<
-						mPsifd,
-						mPsikd;
-
-				
-
-				mPsikq1kq2 = E1*mIq + E2*mPsikq1kq2 + E1*mIq_hist;
-				mPsifdkd = F1*mId + F2*mPsifdkd + F1*mId_hist + F3*mVfd;
 
 				mPsikq1kq2 = E1*mIq + E2*mPsikq1kq2 + E1*mIq_hist;
 				mPsifdkd = F1*mId + F2*mPsifdkd + F1*mId_hist + F3*mVfd;
@@ -291,33 +324,9 @@ void Components::EMT::VoltageBehindReactanceEMTNew::stepInPerUnit(Real om, Real 
 				mPsifd = mPsifdkd(0);
 				mPsikd = mPsifdkd(1);
 
-				
-
 		}
 		//else
 		//{
-		//		C_flux <<
-		//				0,
-		//				mVfd,
-		//				0;
-
-		//		mDqStatorCurrents <<
-		//				mIq,
-		//				mId;
-		//		mDqStatorCurrents_hist <<
-		//				mIq_hist,
-		//				mId_hist;
-
-		//		mRotorFlux <<
-		//				mPsikq1,
-		//				mPsifd,
-		//				mPsikd;
-
-		//		mRotorFlux = Trapezoidal(mRotorFlux, A_flux, B_flux, C_flux, dt*mBase_OmElec, mDqStatorCurrents, mDqStatorCurrents_hist);
-
-		//		mPsikq1 = mRotorFlux(0);
-		//		mPsifd = mRotorFlux(1);
-		//		mPsikd = mRotorFlux(2);
 		//}
 
 
@@ -334,23 +343,10 @@ void Components::EMT::VoltageBehindReactanceEMTNew::stepInPerUnit(Real om, Real 
 		mPsimd = mDLmd*(mPsifd / mLlfd + mPsikd / mLlkd + mId);
 
 
-		//// Calculate dynamic voltages
-		//if (mNumDampingWindings == 2) {
-		//		mDVq = mOmMech*mDPsid + mDLmq*mRkq1*(mDPsiq - mPsikq1) / (mLlkq1*mLlkq1) +
-		//				mDLmq*mRkq2*(mDPsiq - mPsikq2) / (mLlkq2*mLlkq2) + (mRkq1 / (mLlkq1*mLlkq1) + mRkq2 / (mLlkq2*mLlkq2))*mDLmq*mDLmq*mIq;
-		//}
-		//else {
-		//		mDVq = mOmMech*mDPsid + mDLmq*mRkq1*(mDPsiq - mPsikq1) / (mLlkq1*mLlkq1) + (mRkq1 / (mLlkq1*mLlkq1))*mDLmq*mDLmq*mIq;
-		//}
-		//mDVd = -mOmMech*mDPsiq + mDLmd*mRkd*(mDPsid - mPsikd) / (mLlkd*mLlkd) + (mDLmd / mLlfd)*mVfd +
-		//		mDLmd*mRfd*(mDPsid - mPsifd) / (mLlfd*mLlfd) + (mRfd / (mLlfd*mLlfd) + mRkd / (mLlkd*mLlkd))*mDLmd*mDLmd*mId;
-		
-		
-		
 		Matrix mDVqd = Matrix::Zero(2, 1);
 		Matrix K1K2 = Matrix::Zero(2, 2);
 		K1K2 << K1, K2;
-		mDVqd = K1K2*mDqStatorCurrents + H_qdr;
+		mDVqd = K1K2*mDqStatorCurrents + h_qdr;
 		mDVq = mDVqd(0);
 		mDVd = mDVqd(1);
 
@@ -358,34 +354,13 @@ void Components::EMT::VoltageBehindReactanceEMTNew::stepInPerUnit(Real om, Real 
 		mDVa = inverseParkTransform(mThetaMech, mDVq, mDVd, 0)(0);
 		mDVb = inverseParkTransform(mThetaMech, mDVq, mDVd, 0)(1);
 		mDVc = inverseParkTransform(mThetaMech, mDVq, mDVd, 0)(2);
-		mDVabc_hist = mDVabc;
 		mDVabc <<
 				mDVa,
 				mDVb,
 				mDVc;
 
-}
 
 
-void Components::EMT::VoltageBehindReactanceEMTNew::postStep(SystemModel& system) {
-		if (mNode1 >= 0) {
-				mVa = system.getRealFromLeftSideVector(mNode1);
-		}
-		else {
-				mVa = 0;
-		}
-		if (mNode2 >= 0) {
-				mVb = system.getRealFromLeftSideVector(mNode2);
-		}
-		else {
-				mVb = 0;
-		}
-		if (mNode3 >= 0) {
-				mVc = system.getRealFromLeftSideVector(mNode3);
-		}
-		else {
-				mVc = 0;
-		}
 }
 
 void Components::EMT::VoltageBehindReactanceEMTNew::CalculateLandpL() {
@@ -463,9 +438,9 @@ void Components::EMT::VoltageBehindReactanceEMTNew::CalculateAuxiliarConstants(R
 			0,
 			c26;
 
-		Matrix E1new = (2 * Matrix::Identity(4, 4) - dt*A_flux).inverse()*dt*B_flux;
-		Matrix E2new = (2 * Matrix::Identity(4, 4) - dt*A_flux).inverse()*(2 * Matrix::Identity(4, 4) + dt*A_flux);
-		Matrix F3new = (2 * Matrix::Identity(4, 4) - dt*A_flux).inverse() * 2 * dt;
+		//Matrix E1new = (2 * Matrix::Identity(4, 4) - dt*A_flux).inverse()*dt*B_flux;
+		//Matrix E2new = (2 * Matrix::Identity(4, 4) - dt*A_flux).inverse()*(2 * Matrix::Identity(4, 4) + dt*A_flux);
+		//Matrix F3new = (2 * Matrix::Identity(4, 4) - dt*A_flux).inverse() * 2 * dt;
 
 }
 
@@ -496,10 +471,22 @@ void Components::EMT::VoltageBehindReactanceEMTNew::CalculateK() {
 			K1, K2, Matrix::Zero(2, 1),
 			0, 0, 0;
 
+		mKrs_teta <<
+				2. / 3. * cos(mThetaMech), 2. / 3. * cos(mThetaMech - 2. * M_PI / 3.), 2. / 3. * cos(mThetaMech + 2. * M_PI / 3.),
+				2. / 3. * sin(mThetaMech), 2. / 3. * sin(mThetaMech - 2. * M_PI / 3.), 2. / 3. * sin(mThetaMech + 2. * M_PI / 3.),
+				1. / 3., 1. / 3., 1. / 3.;
 
+		mKrs_teta_inv <<
+				cos(mThetaMech), sin(mThetaMech), 1.,
+				cos(mThetaMech - 2. * M_PI / 3.), sin(mThetaMech - 2. * M_PI / 3.), 1,
+				cos(mThetaMech + 2. * M_PI / 3.), sin(mThetaMech + 2. * M_PI / 3.), 1.;
 
+		K = mKrs_teta_inv*K*mKrs_teta;
 
-		H_qdr = K1a*E2*mPsikq1kq2 + K1a*E1*mIq + K2a*F2*mPsifdkd + K2a*F1*mId + (K2a*F3 + C26)*mVfd;
+		h_qdr = K1a*E2*mPsikq1kq2 + K1a*E1*mIq + K2a*F2*mPsifdkd + K2a*F1*mId + (K2a*F3 + C26)*mVfd;
+		H_qdr << h_qdr,
+				0;
+		E_r_vbr = mKrs_teta_inv*H_qdr;
 }
 
 
