@@ -23,7 +23,8 @@
 
 using namespace DPsim;
 
-Components::EMT::VoltageSourceNorton::VoltageSourceNorton(String name, Int node1, Int node2, Real voltageAmp, Real voltagePhase, Real resistance)
+Components::EMT::VoltageSourceNorton::VoltageSourceNorton(String name, Int node1, Int node2, 
+	Real voltageAmp, Real voltagePhase, Real resistance)
 	: Base(name, node1, node2) {
 	mVoltageAmp = voltageAmp;
 	mVoltagePhase = voltagePhase;
