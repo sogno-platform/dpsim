@@ -34,7 +34,7 @@ int main(int argc, char* argv[])
 	String simName = "IdealVS_EMT_" + std::to_string(timeStep);
 
 	Components::Base::List comps = {
-		VoltageSource::make("v_in", 0, 1, 10),
+		VoltageSource::make("v_in", 0, 1, 10, 0),
 		Resistor::make("r_1", 0, GND, 5),
 		Resistor::make("r_2", 1, GND, 10),
 		Resistor::make("r_3", 1, GND, 2)
