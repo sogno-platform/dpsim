@@ -45,7 +45,7 @@ namespace CIM {
 	class Reader {
 	private:
 		/// CIM logger
-		Logger* mLogger;
+		Logger mLog;
 		/// Model from CIM++
 		CIMModel mModel;
 		/// All components after mapping
@@ -91,10 +91,14 @@ namespace CIM {
 		/// TODO: Introduce real PQload model here.
 		Components::Base::Ptr newPQLoad(String rid, String name);
 	public:
-		Reader(Real om, Logger& logger);
+		Reader(Real om, Logger::Level logLevel = Logger::Level::NONE);
 		virtual ~Reader();
 
 		bool addFile(String filename);
+
+		/// First, go through all topological nodes and collect them in a list.
+		/// Since all nodes have references to the equipment connected to them (via Terminals), but not
+		/// the other way around (which we need for instantiating the components), we collect that information here as well.
 		void parseFiles();
 		Components::Base::List& getComponents();
 		Matrix::Index mapTopologicalNode(String mrid);
