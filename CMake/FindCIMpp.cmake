@@ -10,20 +10,25 @@ find_path(CIMPP_INCLUDE_DIR
 		cimpp/16v29a_12v08
 		cimpp/16v29a
 		cimpp/17v07
+		16v29a_12v08
 	PATHS
 		../CIMpp/include
 		${APPDATA}/CIMpp/include
 		${CIMPP_DIR}
+		../Libraries/CIMpp/include
 )
 
 find_library(CIMPP_LIBRARY
-	NAMES cimpp${CIM_DIR}
+	NAMES cimpp cimpp.lib ${CIM_DIR}
 	PATH_SUFFIXES
 		lib/static
+		Debug
+		Release
 	PATHS
 		../CIMpp
 		${APPDATA}/CIMpp
 		${CIMPP_DIR}
+		../Libraries/CIMpp
 )
 
 include(FindPackageHandleStandardArgs)
