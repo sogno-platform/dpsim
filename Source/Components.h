@@ -1,4 +1,4 @@
-/** All components
+﻿/** All components
  *
  * @file
  * @author Markus Mirz <mmirz@eonerc.rwth-aachen.de>
@@ -50,3 +50,4 @@
 #include "Components/Exciter.h"
 #include "Components/TurbineGovernor.h"
 #include "Components/EMT_SynchronGenerator_VBR_New.h"
+#include "Components/DP_SynchronGenerator_VBR_New.h"

@@ -40,6 +40,7 @@ list(APPEND SOURCES
 	Components/Exciter.cpp
 	Components/TurbineGovernor.cpp
 	Components/EMT_SynchronGenerator_VBR_New.cpp
+	Components/DP_SynchronGenerator_VBR_New.cpp
 )
 
 find_package(Eigen3 REQUIRED)
