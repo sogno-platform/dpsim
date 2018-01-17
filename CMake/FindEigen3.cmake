@@ -2,8 +2,8 @@
 find_path(EIGEN3_INCLUDE_DIR
 	NAMES signature_of_eigen3_matrix_library
 	PATHS
-		Libraries/eigen
 		../Eigen
+		../Libraries/Eigen
 )
 
 if(NOT EIGEN3_INCLUDE_DIR)
