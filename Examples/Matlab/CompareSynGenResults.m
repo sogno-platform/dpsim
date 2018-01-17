@@ -128,9 +128,9 @@ Voltage_PLECS_resampled = resample(Results_PLECS(:,3),NewLength,length(Results_P
 % Voltage phase a
 Dif = abs(VoltageVector_resampled - Voltage_PLECS_resampled);
 MaxDif = max(Dif);
-err = sqrt(immse(VoltageVector_resampled,Voltage_PLECS_resampled));
+err = 100*sqrt(immse(VoltageVector_resampled,Voltage_PLECS_resampled))/mean(Voltage_PLECS_resampled);
 disp(['Maximum Error vb: ', num2str(MaxDif), ' V']);
-disp(['Root Mean-squared error vb: ', num2str(err), ' V']);
+disp(['Root Mean-squared error vb: ', num2str(err), ' %']);
 % figure(7)
 % hold off
 % plot(TimeVectorResampled,VoltageVector_resampled);
@@ -144,12 +144,12 @@ Current_resampled = resample(CurrentVector(:,3),NewLength,length(CurrentVector(:
 Currents_PLECS_resampled = resample(Results_PLECS(:,6),NewLength,length(Results_PLECS(:,6)));
 Dif2 = abs(-Current_resampled - Currents_PLECS_resampled);
 MaxDif2 = max(Dif2);
-err2 = sqrt(immse(-Current_resampled,Currents_PLECS_resampled));
+err2 = 100*sqrt(immse(-Current_resampled,Currents_PLECS_resampled))/mean(Currents_PLECS_resampled);
 disp(['Maximum Error ib: ', num2str(MaxDif2), ' A']);
-disp(['Root Mean-squared error ib: ', num2str(err2), ' A']);
+disp(['Root Mean-squared error ib: ', num2str(err2), ' %']);
 % figure(8)
 % hold off
-% plot(TimeVectorResampled,Current_resampled);
+% plot(TimeVectorResampled,-Current_resampled);
 % hold on
 % plot(TimeVectorResampled,Currents_PLECS_resampled);
 % plot(TimeVectorResampled,Dif2);
