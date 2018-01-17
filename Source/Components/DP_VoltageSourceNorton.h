@@ -45,9 +45,11 @@ namespace DP {
 		Complex mCurrent;
 	public:
 		/// define voltage source paramenters
-		VoltageSourceNorton(String name, Int node1, Int node2, Complex voltage, Real resistance);
+		VoltageSourceNorton(String name, Int node1, Int node2, Complex voltage, Real resistance,
+			Logger::Level loglevel = Logger::Level::NONE);
 
-		VoltageSourceNorton(String name, Int node1, Int node2, Real voltageAbs, Real volagePhase, Real resistance);
+		VoltageSourceNorton(String name, Int node1, Int node2, Real voltageAbs, Real volagePhase, Real resistance,
+			Logger::Level loglevel = Logger::Level::NONE);
 
 		void initialize(SystemModel& system) { }
 

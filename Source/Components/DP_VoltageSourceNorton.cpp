@@ -23,35 +23,37 @@
 
 using namespace DPsim;
 
-Components::DP::VoltageSourceNorton::VoltageSourceNorton(String name, Int node1, Int node2, Complex voltage, Real resistance)
-	: Base(name, node1, node2) {
+Components::DP::VoltageSourceNorton::VoltageSourceNorton(String name, Int node1, Int node2,
+	Complex voltage, Real resistance, Logger::Level logLevel)
+	: Base(name, node1, node2, logLevel) {
 	mVoltage = voltage;
 	mResistance = resistance;
+	mConductance = 1. / mResistance;
+	mCurrent = mVoltage / mResistance;
 	attrMap["voltage"] = { Attribute::Complex, &mVoltage };
 	attrMap["resistance"] = { Attribute::Real, &mResistance };
+	mLog.Log(Logger::Level::DEBUG) << "Create VoltageSourceNorton " << name << " at " << mNode1 << "," << mNode2 << std::endl;
 }
 
-Components::DP::VoltageSourceNorton::VoltageSourceNorton(String name, Int node1, Int node2, Real voltageAbs, Real voltagePhase, Real resistance)
-	: Base(name, node1, node2) {
-	mVoltage = MathLibrary::polar(voltageAbs, voltagePhase);
-	mResistance = resistance;
-	attrMap["voltage"]    = { Attribute::Complex, &mVoltage };
-	attrMap["resistance"] = { Attribute::Real, &mResistance };
+Components::DP::VoltageSourceNorton::VoltageSourceNorton(String name, Int node1, Int node2,
+	Real voltageAbs, Real voltagePhase, Real resistance, Logger::Level logLevel)
+	: VoltageSourceNorton(name, node1, node2, MathLibrary::polar(voltageAbs, voltagePhase), resistance, logLevel) {
 }
 
 void Components::DP::VoltageSourceNorton::applySystemMatrixStamp(SystemModel& system) {
-	mConductance = 1. / mResistance;
-	mCurrent = mVoltage / mResistance;
-
 	// Apply matrix stamp for equivalent resistance
 	if (mNode1 >= 0) {
+		mLog.Log(Logger::Level::DEBUG) << "Add " << Complex(mConductance, 0) << " to " << mNode1 << "," << mNode1 << std::endl;
 		system.addCompToSystemMatrix(mNode1, mNode1, Complex(mConductance, 0));
 	}
 	if (mNode2 >= 0) {
+		mLog.Log(Logger::Level::DEBUG) << "Add " << Complex(mConductance, 0) << " to " << mNode2 << "," << mNode2 << std::endl;
 		system.addCompToSystemMatrix(mNode2, mNode2, Complex(mConductance, 0));
 	}
 	if (mNode1 >= 0 && mNode2 >= 0) {
+		mLog.Log(Logger::Level::DEBUG) << "Add " << Complex(-mConductance, 0) << " to " << mNode1 << "," << mNode2 << std::endl;
 		system.addCompToSystemMatrix(mNode1, mNode2, Complex(-mConductance, 0));
+		mLog.Log(Logger::Level::DEBUG) << "Add " << Complex(-mConductance, 0) << " to " << mNode2 << "," << mNode1 << std::endl;
 		system.addCompToSystemMatrix(mNode2, mNode1, Complex(-mConductance, 0));
 	}
 }
@@ -59,18 +61,22 @@ void Components::DP::VoltageSourceNorton::applySystemMatrixStamp(SystemModel& sy
 void Components::DP::VoltageSourceNorton::applyRightSideVectorStamp(SystemModel& system) {
 	// Apply matrix stamp for equivalent current source
 	if (mNode1 >= 0) {
+		mLog.Log(Logger::Level::DEBUG) << "Add " << mCurrent << " to right side " << mNode1 << std::endl;
 		system.addCompToRightSideVector(mNode1, mCurrent);
 	}
 	if (mNode2 >= 0) {
+		mLog.Log(Logger::Level::DEBUG) << "Add " << -mCurrent << " to right side " << mNode2 << std::endl;
 		system.addCompToRightSideVector(mNode2, -mCurrent);
 	}
 }
 
 void Components::DP::VoltageSourceNorton::step(SystemModel& system, Real time) {
 	if (mNode1 >= 0) {
+		//mLog.Log(Logger::Level::DEBUG) << "Add " << mCurrent << " to right side " << mNode1 << std::endl;
 		system.addCompToRightSideVector(mNode1, mCurrent);
 	}
 	if (mNode2 >= 0) {
+		//mLog.Log(Logger::Level::DEBUG) << "Add " << -mCurrent << " to right side " << mNode2 << std::endl;
 		system.addCompToRightSideVector(mNode2, -mCurrent);
 	}
 }

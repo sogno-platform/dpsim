@@ -1,4 +1,4 @@
-﻿/** Simulation
+/** Simulation
  *
  * @author Markus Mirz <mmirz@eonerc.rwth-aachen.de>
  * @copyright 2017, Institute for Automation of Complex Power Systems, EONERC
@@ -48,11 +48,11 @@ Simulation::Simulation(String name, Components::Base::List comps, Real om, Real 
 		mLog.Log(Logger::Level::INFO) << "Added " << comp->getType() << " '" << comp->getName() << "' to simulation." << std::endl;
 	}
 
-	mLog.Log(Logger::Level::INFO) << "System matrix A:" << std::endl;
+	mLog.Log(Logger::Level::INFO) << "System matrix:" << std::endl;
 	mLog.LogMatrix(Logger::Level::INFO, mSystemModel.getCurrentSystemMatrix());
 	mLog.Log(Logger::Level::INFO) << "LU decomposition:" << std::endl;
 	mLog.LogMatrix(Logger::Level::INFO, mSystemModel.getLUdecomp());
-	mLog.Log(Logger::Level::INFO) << "Known variables matrix j:" << std::endl;
+	mLog.Log(Logger::Level::INFO) << "Right side vector:" << std::endl;
 	mLog.LogMatrix(Logger::Level::INFO, mSystemModel.getRightSideVector());
 }
 
