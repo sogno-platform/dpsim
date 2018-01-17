@@ -63,49 +63,16 @@ void Components::EMT::VoltageBehindReactanceEMTNew::initialize(Real om, Real dt,
 				0, mRs, 0,
 				0, 0, mRs;
 
-		R_load <<
-				1037.8378 / mBase_Z, 0, 0,
-				0, 1037.8378 / mBase_Z, 0,
-				0, 0, 1037.8378 / mBase_Z;
-
 		//Dynamic mutual inductances
-
 		mDLmd = 1. / (1. / mLmd + 1. / mLlfd + 1. / mLlkd);
+
 		if (mNumDampingWindings == 2)
-		{
 				mDLmq = 1. / (1. / mLmq + 1. / mLlkq1 + 1. / mLlkq2);
-
-				A_flux <<
-						-mRkq1 / mLlkq1*(1 - mDLmq / mLlkq1), mRkq1 / mLlkq1*(mDLmq / mLlkq2), 0, 0,
-						mRkq2 / mLlkq2*(mDLmq / mLlkq1), -mRkq2 / mLlkq2*(1 - mDLmq / mLlkq2), 0, 0,
-						0, 0, -mRfd / mLlfd*(1 - mDLmd / mLlfd), mRfd / mLlfd*(mDLmd / mLlkd),
-						0, 0, mRkd / mLlkd*(mDLmd / mLlfd), -mRkd / mLlkd*(1 - mDLmd / mLlkd);
-				B_flux <<
-						mRkq1*mDLmq / mLlkq1, 0,
-						mRkq2*mDLmq / mLlkq2, 0,
-						0, mRfd*mDLmd / mLlfd,
-						0, mRkd*mDLmd / mLlkd;
-		}
-
 		else
 		{
 				mDLmq = 1. / (1. / mLmq + 1. / mLlkq1);
-
-				A_flux = Matrix::Zero(3, 3);
-				B_flux = Matrix::Zero(3, 2);
-				C_flux = Matrix::Zero(3, 1);
-				mRotorFlux = Matrix::Zero(3, 1);
-				mDqStatorCurrents = Matrix::Zero(2, 1);
-				mDqStatorCurrents_hist = Matrix::Zero(2, 1);
-
-				A_flux <<
-						-mRkq1 / mLlkq1*(1 - mDLmq / mLlkq1), 0, 0,
-						0, -mRfd / mLlfd*(1 - mDLmd / mLlfd), mRfd / mLlfd*(mDLmd / mLlkd),
-						0, mRkd / mLlkd*(mDLmd / mLlfd), -mRkd / mLlkd*(1 - mDLmd / mLlkd);
-				B_flux <<
-						mRkq1*mDLmq / mLlkq1, 0,
-						0, mRfd*mDLmd / mLlfd,
-						0, mRkd*mDLmd / mLlkd;
+				K1a = Matrix::Zero(2, 1);
+				K1 = Matrix::Zero(2, 1);
 		}
 
 		mLa = (mDLmq + mDLmd) / 3.;
@@ -114,32 +81,40 @@ void Components::EMT::VoltageBehindReactanceEMTNew::initialize(Real om, Real dt,
 		// steady state per unit initial value
 		initStatesInPerUnit(initActivePower, initReactivePower, initTerminalVolt, initVoltAngle, initFieldVoltage, initMechPower);
 
-
+		
 		// Correcting variables
 		mThetaMech = mThetaMech + PI / 2;
 		mMechTorque = -mMechTorque;
 		mIq = -mIq;
 		mId = -mId;
 
+
 		// #### VBR Model Dynamic variables #######################################
+		CalculateAuxiliarConstants(dt*mBase_OmElec);
 
-		mDPsid = mDLmd*(mPsifd / mLlfd) + mDLmd*(mPsikd / mLlkd);
-
-		if (mNumDampingWindings == 2) {
-				mDPsiq = mDLmq*(mPsikq1 / mLlkq1) + mDLmq*(mPsikq2 / mLlkq2);
-				mDVq = mOmMech*mDPsid + mDLmq*mRkq1*(mDPsiq - mPsikq1) / (mLlkq1*mLlkq1) +
-						mDLmq*mRkq2*(mDPsiq - mPsikq2) / (mLlkq2*mLlkq2) + (mRkq1 / (mLlkq1*mLlkq1) + mRkq2 / (mLlkq2*mLlkq2))*mDLmq*mDLmq*mIq;
+		if (mNumDampingWindings == 2)
 				mPsimq = mDLmq*(mPsikq1 / mLlkq1 + mPsikq2 / mLlkq2 + mIq);
-		}
-		else {
-				mDPsiq = mDLmq*(mPsikq1 / mLlkq1);
-				mDVq = mOmMech*mDPsid + mDLmq*mRkq1*(mDPsiq - mPsikq1) / (mLlkq1*mLlkq1) + (mRkq1 / (mLlkq1*mLlkq1))*mDLmq*mDLmq*mIq;
+		else
 				mPsimq = mDLmq*(mPsikq1 / mLlkq1 + mIq);
-		}
 
-		mDVd = -mOmMech*mDPsiq + mDLmd*mRkd*(mDPsid - mPsikd) / (mLlkd*mLlkd) + (mDLmd / mLlfd)*mVfd +
-				mDLmd*mRfd*(mDPsid - mPsifd) / (mLlfd*mLlfd) + (mRfd / (mLlfd*mLlfd) + mRkd / (mLlkd*mLlkd))*mDLmd*mDLmd*mId;
 		mPsimd = mDLmd*(mPsifd / mLlfd + mPsikd / mLlkd + mId);
+
+		mDqStatorCurrents <<
+				mIq,
+				mId;
+
+		mPsikq1kq2 <<
+				mPsikq1,
+				mPsikq2;
+		mPsifdkd <<
+				mPsifd,
+				mPsikd;
+
+		CalculateAuxiliarVariables();
+		K1K2 << K1, K2;
+		mDVqd = K1K2*mDqStatorCurrents + h_qdr;
+		mDVq = mDVqd(0);
+		mDVd = mDVqd(1);
 
 		mDVa = inverseParkTransform(mThetaMech, mDVq, mDVd, 0)(0);
 		mDVb = inverseParkTransform(mThetaMech, mDVq, mDVd, 0)(1);
@@ -149,7 +124,6 @@ void Components::EMT::VoltageBehindReactanceEMTNew::initialize(Real om, Real dt,
 				mDVa,
 				mDVb,
 				mDVc;
-		mDVabc_hist = mDVabc;
 
 		mVa = inverseParkTransform(mThetaMech, mVq, mVd, mV0)(0);
 		mVb = inverseParkTransform(mThetaMech, mVq, mVd, mV0)(1);
@@ -159,8 +133,7 @@ void Components::EMT::VoltageBehindReactanceEMTNew::initialize(Real om, Real dt,
 		mIb = inverseParkTransform(mThetaMech, mIq, mId, mI0)(1);
 		mIc = inverseParkTransform(mThetaMech, mIq, mId, mI0)(2);
 
-		CalculateAuxiliarConstants(dt*mBase_OmElec);
-		CalculateLandpL();
+		CalculateL();
 }
 
 
@@ -192,8 +165,8 @@ void Components::EMT::VoltageBehindReactanceEMTNew::step(SystemModel& system, Re
 		system.updateLuFactored();
 
 		if (mLogLevel != Logger::Level::NONE) {
-				Matrix logValues(getRotorFluxes().rows() + getDqStatorCurrents().rows() + 3, 1);
-				logValues << getRotorFluxes(), getDqStatorCurrents(), getElectricalTorque(), getRotationalSpeed(), getRotorPosition();
+				Matrix logValues(getStatorCurrents().rows() + getDqStatorCurrents().rows() + 3, 1);
+				logValues << getStatorCurrents()*mBase_i, getDqStatorCurrents(), getElectricalTorque(), getRotationalSpeed(), getRotorPosition();
 				mLog->LogDataLine(time, logValues);
 		}
 
@@ -204,17 +177,19 @@ void Components::EMT::VoltageBehindReactanceEMTNew::step(SystemModel& system, Re
 void Components::EMT::VoltageBehindReactanceEMTNew::stepInPerUnit(Real om, Real dt, Real time, NumericalMethod numMethod) {
 
 
-		// Calculate mechanical variables with euler
+		// Estimate mechanical variables with euler
 		if (WithTurbineGovernor == true)
 		{
 				mMechTorque = -mTurbineGovernor.step(mOmMech, 1, 0.001, dt);
 
 		}
+
 		mElecTorque = (mPsimd*mIq - mPsimq*mId);
 		mOmMech = mOmMech + dt * (1. / (2. * mH) * (mElecTorque - mMechTorque));
 		mThetaMech = mThetaMech + dt * (mOmMech* mBase_OmMech);
 		
-		
+
+		// Calculate equivalent Resistance and current source
 		mVabc <<
 				mVa,
 				mVb,
@@ -227,21 +202,16 @@ void Components::EMT::VoltageBehindReactanceEMTNew::stepInPerUnit(Real om, Real 
 
 		mEsh_vbr = (mResistanceMat - (2 / (dt*mBase_OmElec))*mDInductanceMat)*mIabc + mDVabc - mVabc;
 
-		// Calculate Inductance matrix and its derivative
-		CalculateLandpL();
+		CalculateL();
 
 		mPsikq1kq2 <<
 				mPsikq1,
 				mPsikq2;
-
-
 		mPsifdkd <<
 				mPsifd,
 				mPsikd;
 
-
-
-		CalculateK();
+		CalculateAuxiliarVariables();
 
 		R_eq_vbr = mResistanceMat + (2 / (dt*mBase_OmElec))*mDInductanceMat + K;
 		E_eq_vbr = mEsh_vbr + E_r_vbr;
@@ -249,12 +219,6 @@ void Components::EMT::VoltageBehindReactanceEMTNew::stepInPerUnit(Real om, Real 
 		mConductanceMat = (R_eq_vbr*mBase_Z).inverse();
 		mISourceEq = R_eq_vbr.inverse()*E_eq_vbr*mBase_i;
 
-		//Solve circuit - calculate stator currents and voltages
-		//mVabc = (G_load + mConductanceMat).inverse()*mISourceEq;
-		//mVabc = mVabc / mBase_v;
-		//mIabc = R_eq_vbr.inverse()*(mVabc - E_eq_vbr);
-
-	
 
 }
 
@@ -280,6 +244,8 @@ void Components::EMT::VoltageBehindReactanceEMTNew::postStep(SystemModel& system
 				mVc = 0;
 		}
 
+
+		// ################     Update machine stator and rotor variables  ############################
 		mVabc <<
 				mVa,
 				mVb,
@@ -325,26 +291,33 @@ void Components::EMT::VoltageBehindReactanceEMTNew::postStep(SystemModel& system
 				mPsikd = mPsifdkd(1);
 
 		}
-		//else
-		//{
-		//}
+		else
+		{
+
+				mDqStatorCurrents <<
+						mIq,
+						mId;
+
+				mPsikq1 = E1_1d*mIq + E2_1d*mPsikq1 + E1_1d*mIq_hist;
+				mPsifdkd = F1*mId + F2*mPsifdkd + F1*mId_hist + F3*mVfd;
+
+				mPsifd = mPsifdkd(0);
+				mPsikd = mPsifdkd(1);
+		}
 
 
 		// Calculate dynamic flux likages
 		if (mNumDampingWindings == 2) {
-				mDPsiq = mDLmq*(mPsikq1 / mLlkq1) + mDLmq*(mPsikq2 / mLlkq2);
 				mPsimq = mDLmq*(mPsikq1 / mLlkq1 + mPsikq2 / mLlkq2 + mIq);
 		}
 		else {
-				mDPsiq = mDLmq*(mPsikq1 / mLlkq1);
 				mPsimq = mDLmq*(mPsikq1 / mLlkq1 + mIq);
 		}
-		mDPsid = mDLmd*(mPsifd / mLlfd) + mDLmd*(mPsikd / mLlkd);
+
 		mPsimd = mDLmd*(mPsifd / mLlfd + mPsikd / mLlkd + mId);
 
 
-		Matrix mDVqd = Matrix::Zero(2, 1);
-		Matrix K1K2 = Matrix::Zero(2, 2);
+
 		K1K2 << K1, K2;
 		mDVqd = K1K2*mDqStatorCurrents + h_qdr;
 		mDVq = mDVqd(0);
@@ -359,30 +332,19 @@ void Components::EMT::VoltageBehindReactanceEMTNew::postStep(SystemModel& system
 				mDVb,
 				mDVc;
 
-
-
 }
 
-void Components::EMT::VoltageBehindReactanceEMTNew::CalculateLandpL() {
+void Components::EMT::VoltageBehindReactanceEMTNew::CalculateL() {
 		mDInductanceMat <<
 				mLl + mLa - mLb*cos(2 * mThetaMech), -mLa / 2 - mLb*cos(2 * mThetaMech - 2 * PI / 3), -mLa / 2 - mLb*cos(2 * mThetaMech + 2 * PI / 3),
 				-mLa / 2 - mLb*cos(2 * mThetaMech - 2 * PI / 3), mLl + mLa - mLb*cos(2 * mThetaMech - 4 * PI / 3), -mLa / 2 - mLb*cos(2 * mThetaMech),
 				-mLa / 2 - mLb*cos(2 * mThetaMech + 2 * PI / 3), -mLa / 2 - mLb*cos(2 * mThetaMech), mLl + mLa - mLb*cos(2 * mThetaMech + 4 * PI / 3);
-		pmDInductanceMat <<
-				mLb*sin(2 * mThetaMech), mLb*sin(2 * mThetaMech - 2 * PI / 3), mLb*sin(2 * mThetaMech + 2 * PI / 3),
-				mLb*sin(2 * mThetaMech - 2 * PI / 3), mLb*sin(2 * mThetaMech - 4 * PI / 3), mLb*sin(2 * mThetaMech),
-				mLb*sin(2 * mThetaMech + 2 * PI / 3), mLb*sin(2 * mThetaMech), mLb*sin(2 * mThetaMech + 4 * PI / 3);
-		pmDInductanceMat = pmDInductanceMat * 2 * mOmMech;
 }
 
 void Components::EMT::VoltageBehindReactanceEMTNew::CalculateAuxiliarConstants(Real dt) {
 
 		b11 = (mRkq1 / mLlkq1)*(mDLmq / mLlkq1 - 1);
-		b12 = mRkq1*mDLmq / (mLlkq1*mLlkq2);
 		b13 = mRkq1*mDLmq / mLlkq1;
-		b21 = mRkq2*mDLmq / (mLlkq1*mLlkq2);
-		b22 = (mRkq2 / mLlkq2)*(mDLmq / mLlkq2 - 1);
-		b23 = mRkq2*mDLmq / mLlkq2;
 		b31 = (mRfd / mLlfd)*(mDLmd / mLlfd - 1);
 		b32 = mRfd*mDLmd / (mLlfd*mLlkd);
 		b33 = mRfd*mDLmd / mLlfd;
@@ -390,29 +352,47 @@ void Components::EMT::VoltageBehindReactanceEMTNew::CalculateAuxiliarConstants(R
 		b42 = (mRkd / mLlkd)*(mDLmd / mLlkd - 1);
 		b43 = mRkd*mDLmd / mLlkd;
 
-		c11 = mDLmq*mRkq1 / (mLlkq1*mLlkq1)*(mDLmq / mLlkq1 - 1) + mDLmq*mDLmq*mRkq2 / (mLlkq2*mLlkq2*mLlkq1);
-		c12 = mDLmq*mRkq2 / (mLlkq2*mLlkq2)*(mDLmq / mLlkq2 - 1) + mDLmq*mDLmq*mRkq1 / (mLlkq1*mLlkq1*mLlkq2);
-		
 		c23 = mDLmd*mRfd / (mLlfd*mLlfd)*(mDLmd / mLlfd - 1) + mDLmd*mDLmd*mRkd / (mLlkd*mLlkd*mLlfd);
 		c24 = mDLmd*mRkd / (mLlkd*mLlkd)*(mDLmd / mLlkd - 1) + mDLmd*mDLmd*mRfd / (mLlfd*mLlfd*mLlkd);
-
-		c15 = (mRkq1 / (mLlkq1*mLlkq1) + mRkq2 / (mLlkq2*mLlkq2))*mDLmq*mDLmq;
 		c25 = (mRfd / (mLlfd*mLlfd) + mRkd / (mLlkd*mLlkd))*mDLmd*mDLmd;
 		c26 = mDLmd / mLlfd;
 
+		if (mNumDampingWindings == 2)
+		{
+				
+				b12 = mRkq1*mDLmq / (mLlkq1*mLlkq2);
+				b21 = mRkq2*mDLmq / (mLlkq1*mLlkq2);
+				b22 = (mRkq2 / mLlkq2)*(mDLmq / mLlkq2 - 1);
+				b23 = mRkq2*mDLmq / mLlkq2;
+				c11 = mDLmq*mRkq1 / (mLlkq1*mLlkq1)*(mDLmq / mLlkq1 - 1) + mDLmq*mDLmq*mRkq2 / (mLlkq2*mLlkq2*mLlkq1);
+				c12 = mDLmq*mRkq2 / (mLlkq2*mLlkq2)*(mDLmq / mLlkq2 - 1) + mDLmq*mDLmq*mRkq1 / (mLlkq1*mLlkq1*mLlkq2);
+				c15 = (mRkq1 / (mLlkq1*mLlkq1) + mRkq2 / (mLlkq2*mLlkq2))*mDLmq*mDLmq;
 
-		Ea <<
-				2 - dt*b11, -dt*b12,
-				-dt*b21, 2 - dt*b22;
-		E1b <<
-				dt*b13,
-				dt*b23;
-		E1 = Ea.inverse() * E1b;
 
-		E2b <<
-			2 + dt*b11, dt*b12,
-			dt*b21, 2 + dt*b22;
-		E2 = Ea.inverse() * E2b;
+				Ea <<
+						2 - dt*b11, -dt*b12,
+						-dt*b21, 2 - dt*b22;
+				E1b <<
+						dt*b13,
+						dt*b23;
+				E1 = Ea.inverse() * E1b;
+
+				E2b <<
+						2 + dt*b11, dt*b12,
+						dt*b21, 2 + dt*b22;
+				E2 = Ea.inverse() * E2b;
+		}
+
+		else
+		{
+
+				c11 = mDLmq*mRkq1 / (mLlkq1*mLlkq1)*(mDLmq / mLlkq1 - 1);
+				c15 = (mRkq1 / (mLlkq1*mLlkq1))*mDLmq*mDLmq;
+
+				E1_1d = (1 / (2 - dt*b11))*dt*b13;
+				E2_1d = (1 / (2 - dt*b11))*(2 + dt*b11);
+
+		}
 
 
 		Fa <<
@@ -431,33 +411,47 @@ void Components::EMT::VoltageBehindReactanceEMTNew::CalculateAuxiliarConstants(R
 
 		F3b <<
 			2 * dt,
-			2 * dt;
+			0;
 		F3 = Fa.inverse()* F3b;
 
 		C26 <<
 			0,
 			c26;
 
-		//Matrix E1new = (2 * Matrix::Identity(4, 4) - dt*A_flux).inverse()*dt*B_flux;
-		//Matrix E2new = (2 * Matrix::Identity(4, 4) - dt*A_flux).inverse()*(2 * Matrix::Identity(4, 4) + dt*A_flux);
-		//Matrix F3new = (2 * Matrix::Identity(4, 4) - dt*A_flux).inverse() * 2 * dt;
-
 }
 
-void Components::EMT::VoltageBehindReactanceEMTNew::CalculateK() {
+void Components::EMT::VoltageBehindReactanceEMTNew::CalculateAuxiliarVariables() {
 
-		c21_omega = -mOmMech*mDLmq / mLlkq1;
-		c22_omega = -mOmMech*mDLmq / mLlkq2;
-		c13_omega = mOmMech*mDLmd / mLlfd;
-		c14_omega = mOmMech*mDLmd / mLlkd;
+		if (mNumDampingWindings == 2)
+		{
+				c21_omega = -mOmMech*mDLmq / mLlkq1;
+				c22_omega = -mOmMech*mDLmq / mLlkq2;
+				c13_omega = mOmMech*mDLmd / mLlfd;
+				c14_omega = mOmMech*mDLmd / mLlkd;
 
-		K1a <<
-			c11, c12,
-			c21_omega, c22_omega;
-		K1b <<
-			c15,
-			0;
-		K1 = K1a*E1 + K1b;
+				K1a <<
+						c11, c12,
+						c21_omega, c22_omega;
+				K1b <<
+						c15,
+						0;
+				K1 = K1a*E1 + K1b;
+		}
+
+		else
+		{
+				c21_omega = -mOmMech*mDLmq / mLlkq1;
+				c13_omega = mOmMech*mDLmd / mLlfd;
+				c14_omega = mOmMech*mDLmd / mLlkd;
+
+				K1a << 
+					c11,
+					c21_omega;
+				K1b <<
+						c15,
+						0;
+				K1 = K1a*E1_1d + K1b;
+		}
 
 		K2a <<
 			c13_omega, c14_omega,
@@ -483,9 +477,14 @@ void Components::EMT::VoltageBehindReactanceEMTNew::CalculateK() {
 
 		K = mKrs_teta_inv*K*mKrs_teta;
 
-		h_qdr = K1a*E2*mPsikq1kq2 + K1a*E1*mIq + K2a*F2*mPsifdkd + K2a*F1*mId + (K2a*F3 + C26)*mVfd;
+		if(mNumDampingWindings == 2)
+				h_qdr = K1a*E2*mPsikq1kq2 + K1a*E1*mIq + K2a*F2*mPsifdkd + K2a*F1*mId + (K2a*F3 + C26)*mVfd;
+		else
+				h_qdr = K1a*E2_1d*mPsikq1 + K1a*E1_1d*mIq + K2a*F2*mPsifdkd + K2a*F1*mId + (K2a*F3 + C26)*mVfd;
+
 		H_qdr << h_qdr,
 				0;
+
 		E_r_vbr = mKrs_teta_inv*H_qdr;
 }
 

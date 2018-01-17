@@ -1,4 +1,4 @@
-/** Voltage behind reactance (EMT)
+﻿/** Voltage behind reactance (EMT)
 *
 * @file
 * @author Markus Mirz <mmirz@eonerc.rwth-aachen.de>
@@ -52,17 +52,7 @@ namespace DPsim {
 								TurbineGovernor mTurbineGovernor;
 								/// Determine if Turbine and Governor are activated
 								bool WithTurbineGovernor = false;
-
-								///// Voltage Source phase a
-								//IdealVoltageSourceEMT mEa;
-								///// Voltage Source phase b
-								//IdealVoltageSourceEMT mEb;
-								///// Voltage Source phase c
-								//IdealVoltageSourceEMT mEc;
-
-
-
-
+							
 								/// d dynamic inductance
 								Real mDLmd;
 								/// q dynamic inductance
@@ -73,11 +63,6 @@ namespace DPsim {
 								/// Auxiliar inductance
 								Real mLb;
 
-
-								/// d dynamic flux
-								Real mDPsid;
-								/// q dynamic flux
-								Real mDPsiq;
 								/// Dynamic d voltage
 								Real mDVq;
 								/// Dynamic q voltage
@@ -103,55 +88,48 @@ namespace DPsim {
 								/// Interface curent phase c
 								Real mIc;
 
-
-								/// Interface curent phase a last time step
-								Real mIa_hist;
-								/// Interface curent phase b last time step
-								Real mIb_hist;
-								/// Interface curent phase c last time step
-								Real mIc_hist;
-
-								///Load Resistance phase a
-								Real Ra;
-								///Load Resistance phase b
-								Real Rb;
-								///Load Resistance phase c
-								Real Rc;
-
+								/// Phase currents in pu
+								Matrix mIabc = Matrix::Zero(3, 1);
+								///Phase Voltages in pu
+								Matrix mVabc = Matrix::Zero(3, 1);
+								/// Subtransient voltage in pu
+								Matrix mDVabc = Matrix::Zero(3, 1);
 
 								/// Magnetizing flux linkage in q axis
 								Real mPsimq;
 								/// Magnetizing flux linkage in d axis
 								Real mPsimd;
 
-								/// Rotor flux vector
-								Matrix mRotorFlux = Matrix::Zero(4, 1);
 								/// Dq stator current vector
 								Matrix mDqStatorCurrents = Matrix::Zero(2, 1);
-								/// Dq stator current vector - from previous time step
-								Matrix mDqStatorCurrents_hist = Matrix::Zero(2, 1);
+								/// Q axis stator current of  from last time step
+								Real mIq_hist;
+								/// D axis stator current of  from last time step
+								Real mId_hist;
 
 								// ### Useful Matrices ###
 								/// inductance matrix
 								Matrix mDInductanceMat = Matrix::Zero(3, 3);
-								/// Derivative of inductance matrix
-								Matrix pmDInductanceMat = Matrix::Zero(3, 3);
+	
+								/// Q axis Rotor flux 
+								Matrix mPsikq1kq2 = Matrix::Zero(2, 1);
+								/// D axis rotor flux
+								Matrix mPsifdkd = Matrix::Zero(2, 1);
+								/// Equivalent Stator Conductance Matrix
+								Matrix mConductanceMat = Matrix::Zero(3, 3);
+								/// Equivalent Stator Current Source
+								Matrix mISourceEq = Matrix::Zero(3, 1);
+								/// Dynamic Voltage Vector
+								Matrix mDVqd = Matrix::Zero(2, 1);
+								/// Equivalent VBR Stator Resistance
+								Matrix R_eq_vbr = Matrix::Zero(3, 3);
+								/// Equivalent VBR Stator Voltage Source
+								Matrix E_eq_vbr = Matrix::Zero(3, 1);
+								/// Park Transformation Matrix
+								Matrix mKrs_teta = Matrix::Zero(3, 3);
+								/// Inverse Park Transformation Matrix
+								Matrix mKrs_teta_inv = Matrix::Zero(3, 3);
 
-								/// Load Resistance 
-								Matrix R_load = Matrix::Zero(3, 3);
-
-								/// Phase currents in pu
-								Matrix mIabc = Matrix::Zero(3, 1);
-								/// Subtransient voltage in pu
-								Matrix mDVabc = Matrix::Zero(3, 1);
-								Matrix mDVabc_hist = Matrix::Zero(3, 1);
-
-								/// Matrix paremeters for integration of rotor flux linkages - A
-								Matrix A_flux = Matrix::Zero(4, 4);
-								/// Variables for integration of rotor flux linkages - B
-								Matrix B_flux = Matrix::Zero(4, 2);
-								/// Variables for integration of rotor flux linkages - C
-								Matrix C_flux = Matrix::Zero(4, 1);
 
 								/// Auxiliar variables
 								Real c21_omega;
@@ -167,25 +145,9 @@ namespace DPsim {
 								Matrix H_qdr = Matrix::Zero(3, 1);
 								Matrix h_qdr;
 								Matrix K = Matrix::Zero(3, 3);
-								Matrix mPsikq1kq2 = Matrix::Zero(2, 1);
-								Matrix mPsifdkd = Matrix::Zero(2, 1);
-								Matrix mPsikq1kq2_hist = Matrix::Zero(2, 1);
-								Matrix mPsifdkd_hist = Matrix::Zero(2, 1);
 								Matrix mEsh_vbr = Matrix::Zero(3, 1);
-								Matrix mVabc = Matrix::Zero(3, 1);
-								Matrix mKrs_teta = Matrix::Zero(3, 3);
-								Matrix mKrs_teta_inv = Matrix::Zero(3, 3);
-								Real mIq_hist;
-								Real mId_hist;
-								Matrix R_eq_vbr = Matrix::Zero(3, 3);
-								Matrix E_eq_vbr = Matrix::Zero(3, 1);
 								Matrix E_r_vbr = Matrix::Zero(3, 1);
-								Matrix mConductanceMat = Matrix::Zero(3, 3);
-								Matrix mISourceEq = Matrix::Zero(3, 1);
-								Matrix G_load = Matrix::Zero(3, 3);
-
-
-
+								Matrix K1K2 = Matrix::Zero(2, 2);
 
 								/// Auxiliar constants
 								Real c11;
@@ -209,6 +171,9 @@ namespace DPsim {
 								Real b42;
 								Real b43;
 
+								Real E1_1d;
+								Real E2_1d;
+		
 								Matrix Ea = Matrix::Zero(2, 2);
 								Matrix E1b = Matrix::Zero(2, 1);
 								Matrix E1 = Matrix::Zero(2, 2);
@@ -266,15 +231,16 @@ namespace DPsim {
 								Matrix inverseParkTransform(Real theta, Real q, Real d, Real zero);
 
 								/// Calculate inductance Matrix L and its derivative
-								void CalculateLandpL();
+								void CalculateL();
 								void CalculateAuxiliarConstants(Real dt);
-								void CalculateK();
+								void CalculateAuxiliarVariables();
 
-								Matrix& getRotorFluxes() { return mRotorFlux; }
+								//Matrix& getRotorFluxes() { return mRotorFlux; }
 								Matrix& getDqStatorCurrents() { return mDqStatorCurrents; }
 								Real getElectricalTorque() { return mElecTorque*mBase_T; }
 								Real getRotationalSpeed() { return mOmMech*mBase_OmMech; }
 								Real getRotorPosition() { return mThetaMech; }
+								Matrix& getStatorCurrents() { return mIabc; }
 
 								void init(Real om, Real dt) { }
 								void applySystemMatrixStamp(SystemModel& system) { }

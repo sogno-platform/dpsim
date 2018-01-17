@@ -10,8 +10,9 @@ Results_PLECS = csvread('../../../vsa/Results/SynGenDqEmt_ABCFault_Simulink/Volt
 %theta_PLECS = csvread('../../vsa/Results/SynGenVBREmt_ABCFault_PLECS/theta.csv'); 
 %% read results from c++ simulation
 VoltageVector = csvread('../../../vsa/Results/SynGenVbrEmt_ABCFault_DPsim/NewModel/EMT_SynchronGenerator_VBR_LeftVector.csv',1);
-CurrentVector = csvread('../../../vsa/Results/SynGenVbrEmt_ABCFault_DPsim/NewModel/EMT_SynchronGenerator_VBR_RightVector.csv',1);
-%Log_SynGen = csvread('../../../vsa/Results/SynGenVbrEmt_ABCFault_DPsim/NewModel/SynGen_gen.csv',1);
+%CurrentVector = csvread('../../../vsa/Results/SynGenVbrEmt_ABCFault_DPsim/NewModel/1damping/EMT_SynchronGenerator_VBR_RightVector.csv',1);
+Log_SynGen = csvread('../../../vsa/Results/SynGenVbrEmt_ABCFault_DPsim/NewModel/SynGen_gen.csv',1);
+CurrentVector = Log_SynGen(:,1:4);
  %% Plot
 figure(1)
 hold off
@@ -44,7 +45,7 @@ figure(4)
 hold off
 plot(CurrentVector(:,1),CurrentVector(:,2));
 hold on
-plot(Results_PLECS(:,1),Results_PLECS(:,5),'--');
+plot(Results_PLECS(:,1),-Results_PLECS(:,5),'--');
 title('Current phase a');
 legend('ia DPSim','ia Simulink');
 
@@ -52,7 +53,7 @@ figure(5)
 hold off
 plot(CurrentVector(:,1),CurrentVector(:,3));
 hold on
-plot(Results_PLECS(:,1),Results_PLECS(:,6),'--');
+plot(Results_PLECS(:,1),-Results_PLECS(:,6),'--');
 title('Current phase b');
 legend('ib DPSim','ib Simulink');
 
@@ -60,7 +61,7 @@ figure(6)
 hold off
 plot(CurrentVector(:,1),CurrentVector(:,4));
 hold on
-plot(Results_PLECS(:,1),Results_PLECS(:,7),'--');
+plot(Results_PLECS(:,1),-Results_PLECS(:,7),'--');
 title('Current phase c');
 legend('ic DPSim','ic Simulink');
 
@@ -141,9 +142,9 @@ disp(['Root Mean-squared error vb: ', num2str(err), ' V']);
 % current phase a
 Current_resampled = resample(CurrentVector(:,3),NewLength,length(CurrentVector(:,3)));
 Currents_PLECS_resampled = resample(Results_PLECS(:,6),NewLength,length(Results_PLECS(:,6)));
-Dif2 = abs(Current_resampled - Currents_PLECS_resampled);
+Dif2 = abs(-Current_resampled - Currents_PLECS_resampled);
 MaxDif2 = max(Dif2);
-err2 = sqrt(immse(Current_resampled,Currents_PLECS_resampled));
+err2 = sqrt(immse(-Current_resampled,Currents_PLECS_resampled));
 disp(['Maximum Error ib: ', num2str(MaxDif2), ' A']);
 disp(['Root Mean-squared error ib: ', num2str(err2), ' A']);
 % figure(8)
