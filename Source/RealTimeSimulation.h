@@ -37,6 +37,9 @@ namespace DPsim {
 		uint64_t mTimerCount = 0;
 
 	public:
+		// Explicity inheritance of parent constructor
+		using Simulation::Simulation;
+
 		/* Possible methods to achieve execution in real time. */
 		enum Method {
 			Exceptions, // use a normal timer and throw an exception in the signal handler if the timestep wasn't completed yet
