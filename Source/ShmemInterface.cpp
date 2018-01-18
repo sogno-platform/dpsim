@@ -31,15 +31,15 @@
 
 using namespace DPsim;
 
-void ShmemInterface::init(const char* wn, const char* rn, struct shmem_conf* conf)
+void ShmemInterface::init(const String &wn, const String &rn, struct shmem_conf* conf)
 {
 	/* using a static shmem_conf as a default argument for the constructor
 	 * doesn't seem to work, so use this as a workaround */
 
 	// make local copies of the filenames, because shmem_int doesn't make copies
 	// and needs them for the close function
-	wname = std::string(wn);
-	rname = std::string(rn);
+	wname = wn;
+	rname = rn;
 
 	if (shmem_int_open(wname.c_str(), rname.c_str(), &mShmem, conf) < 0) {
 		std::perror("Failed to open/map shared memory object");
@@ -59,7 +59,7 @@ void ShmemInterface::init(const char* wn, const char* rn, struct shmem_conf* con
 	std::memset(&mLastSample->data, 0, mLastSample->capacity * sizeof(float));
 }
 
-ShmemInterface::ShmemInterface(const char* wname, const char* rname)
+ShmemInterface::ShmemInterface(const String &wname, const String &rname)
 {
 	struct shmem_conf conf;
 
@@ -70,7 +70,7 @@ ShmemInterface::ShmemInterface(const char* wname, const char* rname)
 	init(wname, rname, &conf);
 }
 
-ShmemInterface::ShmemInterface(const char* wname, const char *rname, struct shmem_conf* conf)
+ShmemInterface::ShmemInterface(const String &wname, const String &rname, struct shmem_conf* conf)
 {
 	init(wname, rname, conf);
 }
