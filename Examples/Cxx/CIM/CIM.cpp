@@ -52,7 +52,7 @@ static int testCIMReader(std::list<String> filenames) {
 	return 0;
 }
 
-static void readFixedCIMFiles_LineLoad() {
+static int readFixedCIMFiles_LineLoad() {
 	std::list<String> filenames = {
 		"..\\..\\Examples\\CIM\\Line_Load\\Line_Load.xml"
 	};
@@ -60,7 +60,7 @@ static void readFixedCIMFiles_LineLoad() {
 	return testCIMReader(filenames);
 }
 
-static void readFixedCIMFiles_IEEE9bus() {
+static int readFixedCIMFiles_IEEE9bus() {
 	std::list<String> filenames = {
 		"..\\..\\..\\dpsim\\Examples\\CIM\\IEEE-09_Neplan_RX\\IEEE-09_Neplan_RX_DI.xml",
 		"..\\..\\..\\dpsim\\Examples\\CIM\\IEEE-09_Neplan_RX\\IEEE-09_Neplan_RX_EQ.xml",
@@ -71,7 +71,7 @@ static void readFixedCIMFiles_IEEE9bus() {
 	return testCIMReader(filenames);
 }
 
-static void readCIMFilesFromInput(int argc, char *argv[]) {
+static int readCIMFilesFromInput(int argc, char *argv[]) {
 	std::list<String> filenames;
 
 	for (int i = 1; i < argc; i++) {
