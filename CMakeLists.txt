@@ -22,7 +22,6 @@ if(DEFINED ENV{CI})
 	set(GIT_HASH $ENV{CI_COMMIT_SHA})
 	set(GIT_BRANCH $ENV{CI_COMMIT_REF_NAME})
 	set(GIT_REF_SPEC $ENV{CI_COMMIT_REF_NAME})
-
 else()
 	git_rev_parse(GIT_BRANCH --abbrev-ref HEAD)
 	get_git_head_revision(GIT_REFSPEC GIT_HASH)
@@ -34,7 +33,7 @@ string(TIMESTAMP YMD "%Y%m%d")
 set(DPSIM_RELEASE ${YMD}git${GIT_HASH_SHORT})
 
 set(Python_ADDITIONAL_VERSIONS 3.5 3.6 3.7)
-set(CIM_DIR 16v29a)
+set(CIM_VERSION 16v29a)
 
 find_package(PythonInterp 3.5)
 find_package(PythonLibs 3.5)
@@ -54,8 +53,8 @@ endif()
 option(BUILD_SHARED_LIBS "Build shared library" OFF)
 option(BUILD_EXAMPLES "Build C++ examples" ON)
 
-option(WITH_RT	 "Enable real-time features"			OFF) #${Linux_FOUND})
-option(WITH_SHMEM  "Enable shared memory interface"		OFF) #${VILLASnode_FOUND})
+option(WITH_RT	 "Enable real-time features"			${Linux_FOUND})
+option(WITH_SHMEM  "Enable shared memory interface"		${VILLASnode_FOUND})
 option(WITH_PYTHON "Enable Python support"				${Python_FOUND})
 option(WITH_CIM	"Enable support for parsing CIM files"	${CIMpp_FOUND})
 

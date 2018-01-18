@@ -1,4 +1,6 @@
-include_directories(
+set(LIBRARIES "dpsim")
+
+set(INCLUDE_DIRS
 	${EIGEN3_INCLUDE_DIR}
 	"${CMAKE_CURRENT_BINARY_DIR}/../../Source"
 	"${CMAKE_CURRENT_SOURCE_DIR}/../../Source"
@@ -12,9 +14,6 @@ if (NOT WIN32)
 	# a char* array instead of a const char* array
 	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-write-strings")
 endif()
-
-# enable C++11 support
-set(CMAKE_CXX_STANDARD 11)
 
 # targets
 set(CIRCUIT_SOURCES
@@ -52,38 +51,41 @@ set(VARFREQ_SOURCES
 )
 
 if(WITH_RT)
+	list(APPEND LIBRARIES "-lrt")
+
 	set(RT_SOURCES
-		RT/RT_DP_ResVS_RL1.cpp
+		RealTime/RT_DP_ResVS_RL1.cpp
 	)
 endif()
 
 if(WITH_SHMEM)
+	list(APPEND LIBRARIES ${VILLASNODE_LIBRARIES})
+	list(APPEND INCLUDE_DIRS ${VILLASNODE_INCLUDE_DIRS})
+
 	set(SHMEM_SOURCES
 		Shmem/ShmemDistributed.cpp
 		Shmem/ShmemDistributedDirect.cpp
 		Shmem/ShmemDistributedRef.cpp
 		Shmem/ShmemExample.cpp
-		Shmem/ShmemMain.cpp
-		Shmem/ShmemRTExample.cpp
+		Shmem/ShmemRealTime.cpp
 	)
 endif()
 
-foreach(SOURCE ${CIRCUIT_SOURCES} ${SYNCGEN_SOURCES} ${VARFREQ_SOURCES} ${SHMEM_SOURCES} ${RT_SOURCES})
+if(WITH_CIM)
+	list(APPEND LIBRARIES ${CIMPP_LIBRARIES})
+	list(APPEND INCLUDE_DIRS ${CIMPP_INCLUDE_DIRS})
+
+	set(CIM_SOURCES
+		CIM/CIM.cpp
+	)
+endif()
+
+foreach(SOURCE ${CIRCUIT_SOURCES} ${SYNCGEN_SOURCES} ${VARFREQ_SOURCES} ${SHMEM_SOURCES} ${RT_SOURCES} ${CIM_SOURCES})
 	get_filename_component(TARGET ${SOURCE} NAME_WE)
 
 	add_executable(${TARGET} ${SOURCE})
 
-	target_link_libraries(${TARGET} dpsim)
+	target_link_libraries(${TARGET} ${LIBRARIES})
+	target_include_directories(${TARGET} PRIVATE ${INCLUDE_DIRS})
 endforeach()
 
-# CIM examples are linked a bit differenctly
-if(WITH_CIM)
-	add_executable(CIM CIM/CIM.cpp)
-
-	set(CIM_DIR 16v29a)
-	find_package(CIMpp)
-
-	target_include_directories(CIM PUBLIC ${CIMPP_INCLUDE_DIRS})
-	target_link_libraries(CIM ${CIMPP_LIBRARIES})
-	target_link_libraries(CIM dpsim)
-endif()

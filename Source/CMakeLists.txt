@@ -43,7 +43,6 @@ list(APPEND SOURCES
 	Components/DP_SynchronGenerator_VBR_New.cpp
 )
 
-find_package(Eigen3 REQUIRED)
 set(INCLUDE_DIRS
 	${EIGEN3_INCLUDE_DIR}
 )
@@ -63,7 +62,6 @@ if(WITH_RT)
 	list(APPEND SOURCES RealTimeSimulation.cpp)
 endif()
 
-find_package(VILLASnode)
 if(WITH_SHMEM)
 	list(APPEND LIBRARIES ${VILLASNODE_LIBRARIES})
 	list(APPEND INCLUDE_DIRS ${VILLASNODE_INCLUDE_DIRS})
@@ -78,8 +76,6 @@ if(WITH_PYTHON)
 	add_subdirectory(Python)
 endif()
 
-set(CIM_DIR 16v29a)
-find_package(CIMpp)
 if(WITH_CIM)
 	list(APPEND SOURCES CIM/Reader.cpp)
 	list(APPEND INCLUDE_DIRS ${CIMPP_INCLUDE_DIRS})
