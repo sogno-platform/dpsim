@@ -50,7 +50,7 @@ void Components::DP::CurrentSource::step(SystemModel& system, Real time)
 	applyRightSideVectorStamp(system);
 }
 
-Complex Components::DP::CurrentSource::getCurrent(SystemModel &system)
+Complex Components::DP::CurrentSource::getCurrent(const SystemModel &system)
 {
 	return mCurrent;
 }

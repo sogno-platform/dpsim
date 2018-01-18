@@ -23,6 +23,7 @@
 #pragma once
 
 #include "Base.h"
+#include "Base_ExportableCurrent.h"
 #include "DP_Inductor.h"
 #include "DP_Resistor.h"
 
@@ -31,7 +32,7 @@ namespace Components {
 namespace DP {
 
 	// TODO currently modeled as an impedance, which obviously doesn't have a constant power characteristic
-	class PQLoad : public Components::Base, public SharedFactory<PQLoad> {
+	class PQLoad : public Base, public ExportableCurrentBase, public SharedFactory<PQLoad> {
 
 	protected:
 		/// Active power [Watt]
@@ -71,7 +72,7 @@ namespace DP {
 		void postStep(SystemModel& system);
 
 		/// Return current from the previous step
-		Complex getCurrent(SystemModel& system);
+		Complex getCurrent(const SystemModel& system);
 	};
 }
 }

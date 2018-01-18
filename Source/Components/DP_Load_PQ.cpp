@@ -69,7 +69,7 @@ void Components::DP::PQLoad::postStep(SystemModel& system)
 	inductor->postStep(system);
 }
 
-Complex Components::DP::PQLoad::getCurrent(SystemModel& system)
+Complex Components::DP::PQLoad::getCurrent(const SystemModel& system)
 {
 	return inductor->getCurrent(system);
 }

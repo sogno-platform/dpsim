@@ -53,17 +53,18 @@ void Components::DP::Resistor::applySystemMatrixStamp(SystemModel& system)
 	}
 }
 
-Complex Components::DP::Resistor::getCurrent(SystemModel& model) {
+Complex Components::DP::Resistor::getCurrent(const SystemModel& model) {
 	Real realVolt = 0, imagVolt = 0;
-	if (mNode1 >= 0)
-	{
+
+	if (mNode1 >= 0) {
 		realVolt += model.getCompFromLeftSideVector(mNode1).real();
 		imagVolt += model.getCompFromLeftSideVector(mNode2).imag();
 	}
-	if (mNode2 >= 0)
-	{
+
+	if (mNode2 >= 0) {
 		realVolt -= model.getCompFromLeftSideVector(mNode1).real();
 		imagVolt -= model.getCompFromLeftSideVector(mNode2).imag();
 	}
-	return Complex(realVolt*mConductance, imagVolt*mConductance);
+
+	return Complex(realVolt * mConductance, imagVolt * mConductance);
 }

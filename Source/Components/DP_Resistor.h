@@ -23,12 +23,13 @@
 #pragma once
 
 #include "Base.h"
+#include "Base_ExportableCurrent.h"
 
 namespace DPsim {
 namespace Components {
 namespace DP {
 
-	class Resistor : public Components::Base, public SharedFactory<Resistor> {
+	class Resistor : public Base, public ExportableCurrentBase, public SharedFactory<Resistor> {
 
 	protected:
 		///Resistance [ohm]
@@ -57,7 +58,7 @@ namespace DP {
 		void applyRightSideVectorStamp(SystemModel& system) { }
 		void step(SystemModel& system, Real time) { }
 		void postStep(SystemModel& system) { }
-		Complex getCurrent(SystemModel& model);
+		Complex getCurrent(const SystemModel& model);
 	};
 }
 }

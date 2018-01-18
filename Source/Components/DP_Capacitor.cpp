@@ -29,7 +29,7 @@ Components::DP::Capacitor::Capacitor(String name, Int node1, Int node2, Real cap
 	attrMap["capacitance"] = { Attribute::Real, &mCapacitance };
 	mEquivCurrent = { 0, 0 };
 	mCurrent = { 0, 0 };
-	mVoltage = { 0, 0 };	
+	mVoltage = { 0, 0 };
 }
 
 /// Initialize internal state
@@ -88,6 +88,6 @@ void Components::DP::Capacitor::postStep(SystemModel& system) {
 	mCurrent = mEquivCond * mVoltage - mEquivCurrent;
 }
 
-Complex Components::DP::Capacitor::getCurrent(SystemModel& system) {
+Complex Components::DP::Capacitor::getCurrent(const SystemModel& system) {
 	return mCurrent;
 }

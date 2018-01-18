@@ -81,7 +81,7 @@ void Components::DP::InterfacedInductor::postStep(SystemModel& system)
 	mVoltageIm = vposi - vnegi;
 }
 
-Complex Components::DP::InterfacedInductor::getCurrent(SystemModel& system)
+Complex Components::DP::InterfacedInductor::getCurrent(const SystemModel& system)
 {
 	return Complex(mCurrentRe, mCurrentIm);
 }

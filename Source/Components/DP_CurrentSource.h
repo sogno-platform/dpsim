@@ -24,12 +24,13 @@
 
 #include "Base.h"
 #include "Base_ControllableSource.h"
+#include "Base_ExportableCurrent.h"
 
 namespace DPsim {
 namespace Components {
 namespace DP {
 
-	class CurrentSource : public Base, public ControllableSourceBase, public SharedFactory<CurrentSource> {
+	class CurrentSource : public Base, public ControllableSourceBase, public ExportableCurrentBase, public SharedFactory<CurrentSource> {
 	private:
 		Complex mCurrent;
 	public:
@@ -41,9 +42,9 @@ namespace DP {
 		void applyRightSideVectorStamp(SystemModel& system);
 		void step(SystemModel& system, Real time);
 		void postStep(SystemModel& system) { }
-		Complex getCurrent(SystemModel& system);
 		void setSourceValue(Complex value) { mCurrent = value; }
-		void setSourceValue(Real value) { mCurrent = {value, 0}; }
+
+		Complex getCurrent(const SystemModel& system);
 	};
 }
 }

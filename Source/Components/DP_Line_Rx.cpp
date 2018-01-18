@@ -222,7 +222,7 @@ void Components::DP::RxLine::postStep(SystemModel& system)
 	}
 }
 
-Complex Components::DP::RxLine::getCurrent(SystemModel& system)
+Complex Components::DP::RxLine::getCurrent(const SystemModel& system)
 {
 	return Complex(mCurrRe, mCurrIm);
 }

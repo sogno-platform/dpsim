@@ -56,10 +56,9 @@ namespace EMT {
 
 		void postStep(SystemModel& system) { }
 
-		virtual Complex getCurrent(SystemModel& system);
-
 		void setSourceValue(Real voltage) { mVoltage = voltage; }
-		void setSourceValue(Complex voltage) { mVoltage = voltage.real(); }
+
+		Complex getCurrent(const SystemModel& system);
 	};
 }
 }

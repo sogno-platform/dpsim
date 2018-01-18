@@ -58,7 +58,7 @@ void Components::EMT::VoltageSource::step(SystemModel& system, Real time) {
 	system.addRealToRightSideVector(mVirtualNodes[0], mVoltage);
 }
 
-Complex Components::EMT::VoltageSource::getCurrent(SystemModel& system) {
+Complex Components::EMT::VoltageSource::getCurrent(const SystemModel& system) {
 	Complex actualcurrent = Complex(system.getRealFromLeftSideVector(mVirtualNodes[0]), 0);
 	return Complex(system.getRealFromLeftSideVector(mVirtualNodes[0]),0);
 }
