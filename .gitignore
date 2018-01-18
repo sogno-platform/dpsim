@@ -1,5 +1,6 @@
 # Outputs
 build/
+build_*/
 dist/
 
 # Folders
