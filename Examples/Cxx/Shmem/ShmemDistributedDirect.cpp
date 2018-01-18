@@ -19,6 +19,12 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *********************************************************************************/
 
+#include "RealTimeSimulation.h"
+#include "ShmemInterface.h"
+
+using namespace DPsim;
+using namespace DPsim::Components::DP;
+
 int main(int argc, char *argv[])
 {
 	// Testing the interface with a simple circuit,
@@ -28,9 +34,9 @@ int main(int argc, char *argv[])
 	// supply side, whose values are received from the respective other circuit.
 	// Here, the two instances directly communicate with each other without using
 	// VILLASnode in between.
-	Logger log;
+
 	Components::Base::List comps;
-	ShmemInterface *shmem;
+
 	struct shmem_conf conf;
 	conf.samplelen = 4;
 	conf.queuelen = 1024;
@@ -41,22 +47,41 @@ int main(int argc, char *argv[])
 		std::exit(1);
 	}
 
-	if (!strcmp(argv[1], "0")) {
-		comps.push_back(std::make_shared<VoltSourceRes>("v_s", 1, 0, Complex(10000, 0), 1));
-		comps.push_back(new Inductor("l_1", 1, 2, 1e-3));
-		ExternalVoltageSource *evs = new ExternalVoltageSource("v_t", 2, 0, Complex(0, 0), 1);
-		comps.push_back(evs);
-		shmem = new ShmemInterface("/dpsim01", "/dpsim10", &conf);
-		shmem->registerVoltageSource(evs, 0, 1);
-		shmem->registerExportedCurrent(evs, 0, 1);
+	String in, out;
+
+	if (String(argv[1]) == "0") {
+		in  = "/dpsim10";
+		out = "/dpsim01";
 	}
-	else if (!strcmp(argv[1], "1")) {
-		ExternalCurrentSource *ecs = new ExternalCurrentSource("v_s", 1, 0, Complex(0, 0));
-		comps.push_back(ecs);
-		comps.push_back(new LinearResistor("r_2", 1, 0, 1));
-		shmem = new ShmemInterface("/dpsim10", "/dpsim01", &conf);
-		shmem->registerCurrentSource(ecs, 0, 1);
-		shmem->registerExportedVoltage(1, 0, 0, 1);
+	else if (String(argv[1]) == "1") {
+		in  = "/dpsim01";
+		out = "/dpsim10";
+	}
+
+	ShmemInterface shmem(in, out, &conf);
+
+	if (String(argv[1]) == "0") {
+		auto evs = VoltageSource::make("v_t", 2, 0, Complex(0, 0));
+
+		comps = {
+			VoltageSourceNorton::make("v_s", 1, 0, Complex(10000, 0), 1),
+			Inductor::make("l_1", 1, 2, 1e-3),
+			evs
+		};
+
+		shmem.registerControllableSource(evs, 0, 1);
+		shmem.registerExportedCurrent(evs, 0, 1);
+	}
+	else if (String(argv[1]) == "1") {
+		auto ecs = CurrentSource::make("v_s", 1, 0, Complex(0, 0));
+
+		comps = {
+			ecs,
+			Resistor::make("r_2", 1, 0, 1)
+		};
+
+		shmem.registerControllableSource(ecs, 0, 1);
+		shmem.registerExportedVoltage(1, 0, 0, 1);
 	}
 	else {
 		std::cerr << "invalid test number" << std::endl;
@@ -64,13 +89,7 @@ int main(int argc, char *argv[])
 	}
 
 	Real timeStep = 0.000150;
-	Simulation sim(comps, 2.0*M_PI*50.0, timeStep, 1, log);
-	sim.addExternalInterface(shmem);
-
-	sim.runRT(RTTimerFD, false, log, log, log);
-
-	for (auto comp : comps)
-		delete comp;
-
-	delete shmem;
+	RealTimeSimulation sim("ShmemDistributedDirect", comps, 2.0*M_PI*50.0, timeStep, 1);
+	sim.addExternalInterface(&shmem);
+	sim.run(RealTimeSimulation::TimerFD, false);
 }

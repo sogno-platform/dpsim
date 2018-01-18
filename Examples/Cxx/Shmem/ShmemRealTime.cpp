@@ -19,36 +19,39 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *********************************************************************************/
 
+#include "RealTimeSimulation.h"
+#include "ShmemInterface.h"
+
+using namespace DPsim;
+using namespace DPsim::Components::DP;
+
 int main(int argc, char* argv[])
 {
 	// Same circuit as above, but now with realtime support.
 	Components::Base::List comps;
+
 	struct shmem_conf conf;
 	conf.samplelen = 4;
 	conf.queuelen = 1024;
 	conf.polling = false;
-	Logger log;
 
-	ExternalVoltageSource *evs = new ExternalVoltageSource("v_s", 1, 0, Complex(0, 0), 1);
-	comps.push_back(evs);
-	comps.push_back(new LinearResistor("r_s", 1, 2, 1));
-	comps.push_back(new LinearResistor("r_line", 2, 3, 1));
-	comps.push_back(new Inductor("l_line", 3, 4, 1));
-	comps.push_back(new LinearResistor("r_load", 4, 0, 1000));
-	ShmemInterface *villas = new ShmemInterface("/villas1-in", "/villas1-out", &conf);
-	villas->registerVoltageSource(evs, 0, 1);
-	villas->registerExportedCurrent(evs, 0, 1);
+	auto evs = VoltageSource::make("v_s", 1, 0, Complex(0, 0));
+	comps = {
+		evs,
+		Resistor::make("r_s", 1, 2, 1),
+		Resistor::make("r_line", 2, 3, 1),
+		Inductor::make("l_line", 3, 4, 1),
+		Resistor::make("r_load", 4, 0, 1000)
+	};
+
+	ShmemInterface villas("/villas1-in", "/villas1-out", &conf);
+	villas.registerControllableSource(evs, 0, 1);
+	villas.registerExportedCurrent(evs, 0, 1);
 
 	Real timeStep = 0.001;
-	Simulation sim(comps, 2.0*M_PI*50.0, timeStep, 5.0, log);
-	sim.addExternalInterface(villas);
-
-	sim.runRT(RTExceptions, false, log, log, log);
-
-	for (auto comp : comps)
-		delete comp;
-
-	delete villas;
+	RealTimeSimulation sim("ShmemRealTime", comps, 2.0*M_PI*50.0, timeStep, 5.0);
+	sim.addExternalInterface(&villas);
+	sim.run(RealTimeSimulation::Exceptions, false);
 
 	return 0;
 }
