@@ -1,4 +1,4 @@
-﻿/** A simulation model
+/** A simulation model
  *
  * @file
  * @author Markus Mirz <mmirz@eonerc.rwth-aachen.de>
@@ -24,6 +24,7 @@
 
 #include <iostream>
 #include <vector>
+
 #include "Definitions.h"
 #include "Logger.h"
 
@@ -71,8 +72,8 @@ namespace DPsim {
 		void InitializeRightSideVector(Matrix& rightSideVector) { mRightSideVector = rightSideVector; }
 		void InitializeLeftSideVector(Matrix& leftSideVector) { mLeftSideVector = leftSideVector; }
 		void switchSystemMatrix(UInt systemMatrixIndex);
-		void addRealToSystemMatrix(Int row, Int column, Real value);	
-		void addCompToSystemMatrix(Int row, Int column, Complex value);		
+		void addRealToSystemMatrix(Int row, Int column, Real value);
+		void addCompToSystemMatrix(Int row, Int column, Complex value);
 		void setCompSystemMatrixElement(Int row, Int column, Complex value);
 		void addCompToRightSideVector(Int row, Complex value);
 		void addRealToRightSideVector(Int row, Real value);
@@ -84,16 +85,16 @@ namespace DPsim {
 		const Matrix& getLUdecomp() { return mLuFactored.matrixLU(); }
 		Matrix& getRightSideVector() { return mRightSideVector; }
 		Matrix& getLeftSideVector() { return mLeftSideVector; }
-		Real getTimeStep() { return mTimeStep; }
-		Real getOmega() { return mSystemOmega; }
-		Int getCompOffset() { return mCompOffset; }
-		Real getRealFromLeftSideVector(Int row) { return mLeftSideVector(row, 0); }
-		Complex getCompFromLeftSideVector(Int row) { return Complex(mLeftSideVector(row, 0), mLeftSideVector(row + mCompOffset, 0)); }
-		SimulationType getSimType() { return mSimType; }
-		Int getNumNodes() { return mNumNodes; }
-		Int getNumIdealVS() { return mNumIdealVS; }
-		NumericalMethod getNumMethod() { return mNumMethod; }
-		
+		Real getTimeStep() const { return mTimeStep; }
+		Real getOmega() const { return mSystemOmega; }
+		Int getCompOffset() const { return mCompOffset; }
+		Real getRealFromLeftSideVector(Int row) const { return mLeftSideVector(row, 0); }
+		Complex getCompFromLeftSideVector(Int row) const { return Complex(mLeftSideVector(row, 0), mLeftSideVector(row + mCompOffset, 0)); }
+		SimulationType getSimType() const { return mSimType; }
+		Int getNumNodes() const { return mNumNodes; }
+		Int getNumIdealVS() const { return mNumIdealVS; }
+		NumericalMethod getNumMethod() const { return mNumMethod; }
+
 		void setSimType(SimulationType simType) { mSimType = simType; }
 		void setTimeStep(Real timeStep) { mTimeStep = timeStep; }
 		void setOmega(Real omega) { mSystemOmega = omega; }
