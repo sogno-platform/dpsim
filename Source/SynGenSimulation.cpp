@@ -65,14 +65,3 @@ Int SynGenSimulation::step(bool blocking)
 
 	return mTime < mFinalTime;
 }
-
-void SynGenSimulation::run()
-{
-	mLog.Log(Logger::Level::INFO) << "Start simulation." << std::endl;
-
-	while (step()) {
-		increaseByTimeStep();
-	}
-
-	mLog.Log(Logger::Level::INFO) << "Simulation finished." << std::endl;
-}

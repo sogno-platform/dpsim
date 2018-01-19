@@ -34,7 +34,6 @@ namespace DPsim {
 		Int mActualSystemMatrixIndex = 0;
 
 		Int step(bool blocking = false);
-		void run();
 	};
 
 }
