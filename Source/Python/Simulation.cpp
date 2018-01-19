@@ -88,8 +88,7 @@ void Python::Simulation::simThreadFunctionRT(Python::Simulation *pySim)
 	timerfd = timerfd_create(CLOCK_REALTIME, 0);
 	// TODO: better error mechanism (somehow pass an Exception to the Python thread?)
 	if (timerfd < 0) {
-		std::perror("Failed to create timerfd");
-		std::exit(1);
+		throw SystemError("Failed to create timerfd");
 	}
 	ts.it_value.tv_sec = (time_t) pySim->sim->getTimeStep();
 	ts.it_value.tv_nsec = (long) (pySim->sim->getTimeStep() *1e9);
@@ -101,14 +100,12 @@ void Python::Simulation::simThreadFunctionRT(Python::Simulation *pySim)
 		pySim->sim->increaseByTimeStep();
 	}
 	if (timerfd_settime(timerfd, 0, &ts, 0) < 0) {
-		std::perror("Failed to arm timerfd");
-		std::exit(1);
+		throw SystemError("Failed to arm timerfd");
 	}
 	while (pySim->running && notDone) {
 		notDone = pySim->sim->step();
 		if (read(timerfd, timebuf, 8) < 0) {
-			std::perror("Read from timerfd failed");
-			std::exit(1);
+			throw SystemError("Read from timerfd failed");
 		}
 		overrun = *((uint64_t*) timebuf);
 		if (overrun > 1) {
