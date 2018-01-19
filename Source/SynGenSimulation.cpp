@@ -1,4 +1,4 @@
-﻿/** Simulation with a configurable fault
+/** Simulation with a configurable fault
  *
  * @author Markus Mirz <mmirz@eonerc.rwth-aachen.de>
  * @copyright 2017, Institute for Automation of Complex Power Systems, EONERC
@@ -23,58 +23,56 @@
 
 using namespace DPsim;
 
-
 Int SynGenSimulation::step(bool blocking)
 {
-		mSystemModel.setRightSideVectorToZero();
-		switchSystemMatrix(mActualSystemMatrixIndex);
-		
+	mSystemModel.setRightSideVectorToZero();
+	switchSystemMatrix(mActualSystemMatrixIndex);
 
-		for (auto eif : mExternalInterfaces) {
-				eif->readValues(blocking);
-		}
 
-		for (auto comp : mComponents) {
-				comp->step(mSystemModel, mTime);
-		}
-
-		mSystemModel.solve();
-
-		for (auto comp : mComponents) {
-				comp->postStep(mSystemModel);
-		}
-
-		for (auto eif : mExternalInterfaces) {
-				eif->writeValues(mSystemModel);
-		}
-
-		if (mCurrentSwitchTimeIndex < mSwitchEventVector.size()) {
-				if (mTime >= mSwitchEventVector[mCurrentSwitchTimeIndex].switchTime) {
-						switchSystemMatrix(mSwitchEventVector[mCurrentSwitchTimeIndex].systemIndex);
-						//mComponents = mComponentsVector[++mCurrentSwitchTimeIndex];
-						mActualSystemMatrixIndex = mSwitchEventVector[mCurrentSwitchTimeIndex].systemIndex;
-						mComponents = mComponentsVector[mSwitchEventVector[mCurrentSwitchTimeIndex].systemIndex];
-						++mCurrentSwitchTimeIndex;
-						mLog.Log(Logger::Level::INFO) << "Switched to system " << mCurrentSwitchTimeIndex << " at " << mTime << std::endl;
-						mLog.Log(Logger::Level::INFO) << "New matrix:" << std::endl << mSystemModel.getCurrentSystemMatrix() << std::endl;
-						mLog.Log(Logger::Level::INFO) << "New decomp:" << std::endl << mSystemModel.getLUdecomp() << std::endl;
-				}
-		}
-
-		mLeftVectorLog.LogNodeValues(getTime(), getLeftSideVector());
-		mRightVectorLog.LogNodeValues(getTime(), getRightSideVector());
-
-		return mTime < mFinalTime;
+	for (auto eif : mExternalInterfaces) {
+		eif->readValues(blocking);
 	}
 
+	for (auto comp : mComponents) {
+		comp->step(mSystemModel, mTime);
+	}
+
+	mSystemModel.solve();
+
+	for (auto comp : mComponents) {
+		comp->postStep(mSystemModel);
+	}
+
+	for (auto eif : mExternalInterfaces) {
+		eif->writeValues(mSystemModel);
+	}
+
+	if (mCurrentSwitchTimeIndex < mSwitchEventVector.size()) {
+		if (mTime >= mSwitchEventVector[mCurrentSwitchTimeIndex].switchTime) {
+			switchSystemMatrix(mSwitchEventVector[mCurrentSwitchTimeIndex].systemIndex);
+			//mComponents = mComponentsVector[++mCurrentSwitchTimeIndex];
+			mActualSystemMatrixIndex = mSwitchEventVector[mCurrentSwitchTimeIndex].systemIndex;
+			mComponents = mComponentsVector[mSwitchEventVector[mCurrentSwitchTimeIndex].systemIndex];
+			++mCurrentSwitchTimeIndex;
+			mLog.Log(Logger::Level::INFO) << "Switched to system " << mCurrentSwitchTimeIndex << " at " << mTime << std::endl;
+			mLog.Log(Logger::Level::INFO) << "New matrix:" << std::endl << mSystemModel.getCurrentSystemMatrix() << std::endl;
+			mLog.Log(Logger::Level::INFO) << "New decomp:" << std::endl << mSystemModel.getLUdecomp() << std::endl;
+		}
+	}
+
+	mLeftVectorLog.LogNodeValues(getTime(), getLeftSideVector());
+	mRightVectorLog.LogNodeValues(getTime(), getRightSideVector());
+
+	return mTime < mFinalTime;
+}
 
 void SynGenSimulation::run()
 {
-		mLog.Log(Logger::Level::INFO) << "Start simulation." << std::endl;
+	mLog.Log(Logger::Level::INFO) << "Start simulation." << std::endl;
 
-		while (step()) {
-				increaseByTimeStep();
-		}
+	while (step()) {
+		increaseByTimeStep();
+	}
 
-		mLog.Log(Logger::Level::INFO) << "Simulation finished." << std::endl;
+	mLog.Log(Logger::Level::INFO) << "Simulation finished." << std::endl;
 }

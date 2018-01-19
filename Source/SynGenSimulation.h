@@ -1,4 +1,4 @@
-﻿/** Simulation with a configurable fault
+/** Simulation with a configurable fault
  *
  * @author Markus Mirz <mmirz@eonerc.rwth-aachen.de>
  * @copyright 2017, Institute for Automation of Complex Power Systems, EONERC
@@ -27,10 +27,6 @@ namespace DPsim {
 
 	class SynGenSimulation : public Simulation {
 
-	protected:
-
-
-
 	public:
 		// Explicity inheritance of parent constructor
 		using Simulation::Simulation;
@@ -39,8 +35,6 @@ namespace DPsim {
 
 		Int step(bool blocking = false);
 		void run();
-
-		
 	};
 
 }
