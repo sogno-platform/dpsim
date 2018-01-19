@@ -36,7 +36,7 @@ int main(int argc, char* argv[])
 	Real timeStep = 0.00005;
 	RealTimeSimulation sim("RT_DP_ResVS_RL1", comps, 2.0*M_PI*50.0, timeStep, 1.0);
 
-	sim.run(RealTimeSimulation::Exceptions, false);
+	sim.run();
 
 	return 0;
 }
