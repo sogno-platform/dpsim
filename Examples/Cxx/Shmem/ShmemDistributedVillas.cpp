@@ -97,7 +97,7 @@ int main(int argc, char *argv[])
 		sim.setSwitchTime(10, 1);
 	}
 
-	sim.run(RealTimeSimulation::TimerFD, true);
+	sim.run(true);
 
 	return 0;
 }

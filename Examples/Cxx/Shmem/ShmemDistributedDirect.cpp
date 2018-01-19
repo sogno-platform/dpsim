@@ -91,7 +91,7 @@ int main(int argc, char *argv[])
 	Real timeStep = 0.000150;
 	RealTimeSimulation sim("ShmemDistributedDirect", comps, 2.0*M_PI*50.0, timeStep, 1);
 	sim.addExternalInterface(&shmem);
-	sim.run(RealTimeSimulation::TimerFD, false);
+	sim.run(false);
 
 	return 0;
 }
