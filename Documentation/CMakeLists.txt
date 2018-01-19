@@ -1,3 +1,5 @@
+add_subdirectory(Notebooks)
+
 find_package(Sphinx)
 
 if(SPHINX_EXECUTABLE)
