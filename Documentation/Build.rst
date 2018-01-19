@@ -7,9 +7,8 @@ DPsim
 Docker
 ------
 
-There is a Docker image available with all required dependecies:
+There is a Docker image available with all required dependecies:::
 
-::
     $ cd DPsim
     $ docker build -t dpsim .
     $ docker run -tiv$(pwd):/dpsim dpsim bash
@@ -17,9 +16,8 @@ There is a Docker image available with all required dependecies:
 Setuptools
 ----------
 
-Using setuptools is most likely the easiest way to install DPsim on your system.
+Using setuptools is most likely the easiest way to install DPsim on your system.::
 
-::
     $ cd DPsim
     # python3 ./setup.py install
 
@@ -65,7 +63,7 @@ CMake
       $ cmake ..
       $ make
 
-3. Test your build by running the Jupyter notebooks:
+3. Test your build by running the Jupyter notebooks:::
 
       $ make jupyter
 
