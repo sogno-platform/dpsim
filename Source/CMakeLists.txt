@@ -27,7 +27,7 @@ list(APPEND SOURCES
 	Components/DP_Transformer_Ideal.cpp
 	Components/DP_VoltageSource.cpp
 	Components/DP_VoltageSource_Freq.cpp
-	Components/DP_VoltageSourceNorton.cpp
+	Components/DP_VoltageSource_Norton.cpp
 	Components/EMT_Inductor.cpp
 	Components/EMT_Resistor.cpp
 	Components/EMT_SynchronGenerator.cpp

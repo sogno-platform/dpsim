@@ -19,7 +19,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *********************************************************************************/
 
-#include "DP_VoltageSourceNorton.h"
+#include "DP_VoltageSource_Norton.h"
 
 using namespace DPsim;
 
