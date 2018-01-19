@@ -23,6 +23,7 @@ RUN dnf -y install \
 	make cmake \
 	doxygen \
 	graphviz \
+	pandoc \
 	python3-pip
 
 # Dependencies
