@@ -1,4 +1,5 @@
 IEEE-09_Neplan_RX:
+  xfail: true
   cmd: build/Examples/Cxx/CIM
   args:
     - Examples/CIM/IEEE-09_Neplan_RX/IEEE-09_Neplan_RX_DI.xml
