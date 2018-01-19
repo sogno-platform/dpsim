@@ -53,7 +53,7 @@ void Components::DP::VoltageSource::applySystemMatrixStamp(SystemModel& system) 
 	if (mNode2 >= 0) {
 		mLog.Log(Logger::Level::DEBUG) << "Add " << Complex(1, 0) << " to " << mVirtualNodes[0] << "," << mNode2 << std::endl;
 		system.setCompSystemMatrixElement(mVirtualNodes[0], mNode2, Complex(1, 0));
-		mLog.Log(Logger::Level::DEBUG) << "Add " << Complex(1, 0) << " to " << mNode2 << "," << mVirtualNodes[0] << std::endl;		
+		mLog.Log(Logger::Level::DEBUG) << "Add " << Complex(1, 0) << " to " << mNode2 << "," << mVirtualNodes[0] << std::endl;
 		system.setCompSystemMatrixElement(mNode2, mVirtualNodes[0], Complex(1, 0));
 	}
 }
@@ -67,7 +67,7 @@ void Components::DP::VoltageSource::step(SystemModel& system, Real time) {
 	system.addCompToRightSideVector(mVirtualNodes[0], mVoltage);
 }
 
-Complex Components::DP::VoltageSource::getCurrent(SystemModel& system) {
+Complex Components::DP::VoltageSource::getCurrent(const SystemModel& system) {
 	return Complex(system.getRealFromLeftSideVector(mVirtualNodes[0]), system.getRealFromLeftSideVector(mVirtualNodes[0] + system.getCompOffset()));
 }
 

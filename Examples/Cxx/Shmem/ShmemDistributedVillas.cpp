@@ -27,45 +27,38 @@ using namespace DPsim::Components::DP;
 
 int main(int argc, char *argv[])
 {
-	// Testing the interface with a simple circuit,
-	// but the load is simulated in a different instance.
-	// Values are exchanged using the ideal transformator model: an ideal
-	// current source on the supply side and an ideal voltage source on the
-	// supply side, whose values are received from the respective other circuit.
-	// Here, the two instances directly communicate with each other without using
-	// VILLASnode in between.
-
 	Components::Base::List comps;
 
 	struct shmem_conf conf;
 	conf.samplelen = 4;
 	conf.queuelen = 1024;
-	conf.polling = false;
+	conf.polling = true;
 
 	if (argc < 2) {
-		std::cerr << "not enough arguments (either 0 or 1 for the test number)" << std::endl;
+		std::cerr << "Not enough arguments (either 0 or 1 for the test number)" << std::endl;
 		std::exit(1);
 	}
 
 	String in, out;
 
 	if (String(argv[1]) == "0") {
-		in  = "/dpsim10";
-		out = "/dpsim01";
+		in  = "/villas0-in";
+		out = "/villas0-out";
 	}
 	else if (String(argv[1]) == "1") {
-		in  = "/dpsim01";
-		out = "/dpsim10";
+		in  = "/villas1-in";
+		out = "/villas1-out";
 	}
 
 	ShmemInterface shmem(in, out, &conf);
 
 	if (String(argv[1]) == "0") {
-		auto evs = VoltageSource::make("v_t", 2, 0, Complex(0, 0));
+		auto evs = VoltageSource::make("v_t", 3, 0, Complex(0, 0));
 
 		comps = {
 			VoltageSourceNorton::make("v_s", 1, 0, Complex(10000, 0), 1),
-			Inductor::make("l_1", 1, 2, 1e-3),
+			Inductor::make("l_1", 1, 2, 0.1),
+			Resistor::make("r_1", 2, 3, 1),
 			evs
 		};
 
@@ -76,7 +69,7 @@ int main(int argc, char *argv[])
 		auto ecs = CurrentSource::make("v_s", 1, 0, Complex(0, 0));
 
 		comps = {
-			Resistor::make("r_2", 1, 0, 1),
+			Resistor::make("r_2", 1, 0, 10),
 			ecs
 		};
 
@@ -88,10 +81,23 @@ int main(int argc, char *argv[])
 		std::exit(1);
 	}
 
-	Real timeStep = 0.000150;
-	RealTimeSimulation sim("ShmemDistributedDirect", comps, 2.0*M_PI*50.0, timeStep, 1);
+	String simName = "ShmemDistributed";
+	Real timeStep = 0.001000;
+
+	RealTimeSimulation sim(simName + argv[1], comps, 2.0*M_PI*50.0, timeStep, 20, Logger::Level::INFO);
 	sim.addExternalInterface(&shmem);
-	sim.run(RealTimeSimulation::TimerFD, false);
+
+	if (String(argv[1]) == "1") {
+		auto comps2 = comps;
+
+		comps2.pop_back();
+		comps2.push_back(Resistor::make("r_2", 1, 0, 8));
+
+		sim.addSystemTopology(comps2);
+		sim.setSwitchTime(10, 1);
+	}
+
+	sim.run(RealTimeSimulation::TimerFD, true);
 
 	return 0;
 }

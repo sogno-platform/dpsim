@@ -22,14 +22,22 @@
 
 #pragma once
 
-#include "Base.h"
+#include <memory>
+
+#include "SystemModel.h"
 
 namespace DPsim {
 namespace Components {
 
 	class ControllableSourceBase {
-		
-		virtual void setSourceValue(Real value) { }
+
+	public:
+
+		typedef std::shared_ptr<ControllableSourceBase> Ptr;
+
+		virtual void setSourceValue(Real value) {
+			setSourceValue(value);
+		}
 
 		virtual void setSourceValue(Complex value) = 0;
 	};

@@ -28,7 +28,6 @@
 using namespace DPsim;
 
 static int testCIMReader(std::list<String> filenames) {
-
 	CIM::Reader reader(50, Logger::Level::INFO);
 
 	for (String & filename : filenames) {
@@ -36,35 +35,43 @@ static int testCIMReader(std::list<String> filenames) {
 			std::cout << "Failed to read file " << filename << std::endl;
 	}
 
-	reader.parseFiles();
+	try {
+		reader.parseFiles();
+	}
+	catch (...) {
+		std::cerr << "Failed to parse CIM files" << std::endl;
+		return -1;
+	}
 
-	Components::Base::List components = reader.getComponents();
+	Components::Base::List comps = reader.getComponents();
 
-	Simulation sim("CIM_Test", components, 2 * PI * 50, 0.001, 0.3);
+	Simulation sim("CIM", comps, 2 * PI * 50, 0.001, 0.3);
 
 	sim.run();
 
 	return 0;
 }
 
-static void readFixedCIMFiles_LineLoad() {
-	std::list<String> filenames;
-	filenames.push_back("..\\..\\Examples\\CIM\\Line_Load\\Line_Load.xml");
+static int readFixedCIMFiles_LineLoad() {
+	std::list<String> filenames = {
+		"..\\..\\Examples\\CIM\\Line_Load\\Line_Load.xml"
+	};
 
-	testCIMReader(filenames);
+	return testCIMReader(filenames);
 }
 
-static void readFixedCIMFiles_IEEE9bus() {
-	std::list<String> filenames;
-	filenames.push_back("..\\..\\..\\..\\dpsim\\Examples\\CIM\\IEEE-09_Neplan_RX\\IEEE-09_Neplan_RX_DI.xml");
-	filenames.push_back("..\\..\\..\\..\\dpsim\\Examples\\CIM\\IEEE-09_Neplan_RX\\IEEE-09_Neplan_RX_EQ.xml");
-	filenames.push_back("..\\..\\..\\..\\dpsim\\Examples\\CIM\\IEEE-09_Neplan_RX\\IEEE-09_Neplan_RX_SV.xml");
-	filenames.push_back("..\\..\\..\\..\\dpsim\\Examples\\CIM\\IEEE-09_Neplan_RX\\IEEE-09_Neplan_RX_TP.xml");
+static int readFixedCIMFiles_IEEE9bus() {
+	std::list<String> filenames = {
+		"..\\..\\..\\dpsim\\Examples\\CIM\\IEEE-09_Neplan_RX\\IEEE-09_Neplan_RX_DI.xml",
+		"..\\..\\..\\dpsim\\Examples\\CIM\\IEEE-09_Neplan_RX\\IEEE-09_Neplan_RX_EQ.xml",
+		"..\\..\\..\\dpsim\\Examples\\CIM\\IEEE-09_Neplan_RX\\IEEE-09_Neplan_RX_SV.xml",
+		"..\\..\\..\\dpsim\\Examples\\CIM\\IEEE-09_Neplan_RX\\IEEE-09_Neplan_RX_TP.xml"
+	};
 
-	testCIMReader(filenames);
+	return testCIMReader(filenames);
 }
 
-static void readCIMFilesFromInput(int argc, char *argv[]) {
+static int readCIMFilesFromInput(int argc, char *argv[]) {
 	std::list<String> filenames;
 
 	for (int i = 1; i < argc; i++) {
@@ -72,12 +79,11 @@ static void readCIMFilesFromInput(int argc, char *argv[]) {
 		filenames.push_back(String(argv[i]));
 	}
 
-	testCIMReader(filenames);
+	return testCIMReader(filenames);
 }
 
 int main(int argc, char *argv[]) {
-	//readCIMFilesFromInput(argc, argv);
-	readFixedCIMFiles_IEEE9bus();
-
-	return 0;
+	return argc < 2
+		? readFixedCIMFiles_IEEE9bus()
+		: readCIMFilesFromInput(argc, argv);
 }

@@ -26,6 +26,8 @@
 #include <complex>
 #include <string>
 #include <memory>
+#include <cerrno>
+#include <system_error>
 
 #include <Eigen/Dense>
 #include <Eigen/SparseCore>
@@ -84,4 +86,33 @@ namespace DPsim {
 	* @brief Dense matrix for complex numbers.
 	*/
 	typedef Eigen::Matrix<Complex, Eigen::Dynamic, Eigen::Dynamic, Eigen::ColMajor> MatrixComp;
+
+	// ### Exceptions ###
+
+	class SystemError {
+
+	protected:
+		String mDescription;
+		std::error_code mErrorCode;
+
+	public:
+		SystemError(const String& desc, int e) :
+			mErrorCode(e, std::system_category()),
+			mDescription(desc) { };
+
+		SystemError(const String& desc) :
+			mErrorCode(errno, std::system_category()),
+			mDescription(desc) { };
+
+		SystemError() :
+			mErrorCode(errno, std::system_category()) { };
+
+		String descr() const {
+			std::ostringstream os;
+
+			os << "System Error: " << mDescription << ": " << mErrorCode.message() << "(" << mErrorCode.value() << ")";
+
+			return os.str();
+		};
+	};
 }

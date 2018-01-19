@@ -81,13 +81,16 @@ void Components::DP::VoltageSourceNorton::step(SystemModel& system, Real time) {
 	}
 }
 
-Complex Components::DP::VoltageSourceNorton::getCurrent(SystemModel& system) {
+Complex Components::DP::VoltageSourceNorton::getCurrent(const SystemModel& system) {
 	Complex retCurrent;
+
 	if (mNode1 >= 0) {
 		retCurrent += system.getCompFromLeftSideVector(mNode1) * mConductance;
 	}
+
 	if (mNode2 >= 0) {
 		retCurrent -= system.getCompFromLeftSideVector(mNode2) * mConductance;
 	}
+
 	return retCurrent;
 }

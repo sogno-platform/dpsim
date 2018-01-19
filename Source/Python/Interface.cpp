@@ -59,15 +59,13 @@ PyObject* Python::Interface::registerSource(PyObject* self, PyObject* args)
 		PyErr_SetString(PyExc_TypeError, "First argument must be a Component");
 		return nullptr;
 	}
+
 	Python::Component *pyComp = (Python::Component*) obj;
-	if (auto *cs = dynamic_cast<DPsim::Components::DP::CurrentSource*>(pyComp->comp.get())) {
-		pyIntf->intf->registerCurrentSource(cs, realIdx, imagIdx);
-	}
-	else if (auto *vs = dynamic_cast<DPsim::Components::DP::VoltageSource*>(pyComp->comp.get())) {
-		pyIntf->intf->registerVoltageSource(vs, realIdx, imagIdx);
+	if (auto src = std::dynamic_pointer_cast<DPsim::Components::ControllableSourceBase>(pyComp->comp)) {
+		pyIntf->intf->registerControllableSource(src, realIdx, imagIdx);
 	}
 	else {
-		PyErr_SetString(PyExc_TypeError, "First argument must be an external source");
+		PyErr_SetString(PyExc_TypeError, "First argument must be an controllable source");
 		return nullptr;
 	}
 
@@ -104,7 +102,13 @@ PyObject* Python::Interface::exportCurrent(PyObject* self, PyObject* args)
 	}
 
 	Component *pyComp = (Component*) obj;
-	pyIntf->intf->registerExportedCurrent(pyComp->comp.get(), realIdx, imagIdx);
+	if (auto ex = std::dynamic_pointer_cast<DPsim::Components::ExportableCurrentBase>(pyComp->comp)) {
+		pyIntf->intf->registerExportedCurrent(ex, realIdx, imagIdx);
+	}
+	else {
+		PyErr_SetString(PyExc_TypeError, "First argument must be a component from which current can be exported");
+		return nullptr;
+	}
 
 	Py_INCREF(Py_None);
 

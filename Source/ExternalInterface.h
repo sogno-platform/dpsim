@@ -24,8 +24,8 @@
 
 #include <vector>
 
-#include "Components/DP_CurrentSource.h"
-#include "Components/DP_VoltageSource.h"
+#include "Components/Base_ExportableCurrent.h"
+#include "Components/Base_ControllableSource.h"
 
 namespace DPsim {
 
@@ -41,23 +41,29 @@ namespace DPsim {
 	class ExternalInterface {
 
 	protected:
-		/// Internal struct for storing an exported voltage.
-		struct VoltDiff {
+		struct ControllableSourceMapping {
+			Components::ControllableSourceBase::Ptr comp;
+			Int realIdx;
+			Int imagIdx;
+		};
+
+		struct ExportableCurrentMapping {
+			Components::ExportableCurrentBase::Ptr comp;
+			Int realIdx;
+			Int imagIdx;
+		};
+
+		struct ExportableVoltageMapping {
 			Int from;
 			Int to;
 			Int realIdx;
 			Int imagIdx;
 		};
-		/// Internal struct for storing references to external components.
-		struct ExtComponent {
-			Components::Base *comp;
-			Int realIdx;
-			Int imagIdx;
-		};
-		std::vector<ExtComponent> mExtComponents;
-		std::vector<VoltDiff> mExportedVoltages;
-		std::vector<ExtComponent> mExportedCurrents;
-		bool mInit = 0;
+
+		std::vector<ControllableSourceMapping> mControllableSources;
+
+		std::vector<ExportableCurrentMapping> mExportedCurrents;
+		std::vector<ExportableVoltageMapping> mExportedVoltages;
 
 	public:
 		/** Register an external voltage source to use values from this interface.
@@ -65,14 +71,7 @@ namespace DPsim {
 		 * @param realIdx Interface-specific index identifying the real part.
 		 * @param imagIdx Interface-specific index identifying the imaginary part.
 		 */
-		void registerVoltageSource(Components::DP::VoltageSource* vs, Int realIdx, Int imagIdx);
-
-		/** Register an external current source to use values from this interface.
-		 * @param cs The external current source to register.
-		 * @param realIdx Interface-specific index identifying the real part.
-		 * @param imagIdx Interface-specific index identifying the imaginary part.
-		 */
-		void registerCurrentSource(Components::DP::CurrentSource* cs, Int realIdx, Int imagIdx);
+		void registerControllableSource(Components::ControllableSourceBase::Ptr src, Int realIdx, Int imagIdx);
 
 		/** Register a voltage between two nodes to be sent through this
 		 * interface after every step.
@@ -83,8 +82,8 @@ namespace DPsim {
 		 * @param realIdx Interface-specific index identifying the real part.
 		 * @param imagIdx Interface-specific index identifying the imaginary part.
 		 */
-
 		void registerExportedVoltage(Int from, Int to, Int realIdx, Int imagIdx);
+
 		/** Register a current through a component to be sent through this
 		 * interface after every step.
 		 * @param comp Component whose current is sent. Note that this component
@@ -92,13 +91,13 @@ namespace DPsim {
 		 * @param realIdx Interface-specific index identifying the real part.
 		 * @param imagIdx Interface-specific index identifying the imaginary part.
 		 */
+		void registerExportedCurrent(Components::ExportableCurrentBase::Ptr comp, Int realIdx, Int imagIdx);
 
-		void registerExportedCurrent(Components::Base *comp, Int realIdx, Int imagIdx);
 		/** Read data for a timestep from the interface and passes the values
 		 * to all registered current / voltage sources.
 		 */
-
 		virtual void readValues(bool blocking = true) = 0;
+
 		/** Write all exported values to the interface. Called after every timestep.
 		 * @param model Reference to the system model which should be used to
 		 * calculate needed voltages.

@@ -31,22 +31,24 @@
 
 using namespace DPsim;
 
-void ShmemInterface::init(const char* wn, const char* rn, struct shmem_conf* conf)
+void ShmemInterface::init(const String &wn, const String &rn, struct shmem_conf* conf)
 {
 	/* using a static shmem_conf as a default argument for the constructor
 	 * doesn't seem to work, so use this as a workaround */
 
 	// make local copies of the filenames, because shmem_int doesn't make copies
 	// and needs them for the close function
-	wname = std::string(wn);
-	rname = std::string(rn);
+	wname = wn;
+	rname = rn;
 
 	if (shmem_int_open(wname.c_str(), rname.c_str(), &mShmem, conf) < 0) {
 		std::perror("Failed to open/map shared memory object");
 		std::exit(1);
 	}
 
-	mSeq = 0;
+	mInit = 0;
+	mSequence = 0;
+
 	if (shmem_int_alloc(&mShmem, &mLastSample, 1) < 0) {
 		std::cerr << "Failed to allocate single sample from shmem pool" << std::endl;
 		std::exit(1);
@@ -59,7 +61,7 @@ void ShmemInterface::init(const char* wn, const char* rn, struct shmem_conf* con
 	std::memset(&mLastSample->data, 0, mLastSample->capacity * sizeof(float));
 }
 
-ShmemInterface::ShmemInterface(const char* wname, const char* rname)
+ShmemInterface::ShmemInterface(const String &wname, const String &rname)
 {
 	struct shmem_conf conf;
 
@@ -70,7 +72,7 @@ ShmemInterface::ShmemInterface(const char* wname, const char* rname)
 	init(wname, rname, &conf);
 }
 
-ShmemInterface::ShmemInterface(const char* wname, const char *rname, struct shmem_conf* conf)
+ShmemInterface::ShmemInterface(const String &wname, const String &rname, struct shmem_conf* conf)
 {
 	init(wname, rname, conf);
 }
@@ -104,7 +106,7 @@ void ShmemInterface::readValues(bool blocking)
 			std::exit(1);
 		}
 
-		for (auto extComp : mExtComponents) {
+		for (auto extComp : mControllableSources) {
 			if (extComp.realIdx >= sample->length || extComp.imagIdx >= sample->length) {
 				std::cerr << "Fatal error: incomplete data received from shmem interface" << std::endl;
 				std::exit(1);
@@ -112,12 +114,7 @@ void ShmemInterface::readValues(bool blocking)
 			// TODO integer format?
 			Complex v = Complex(sample->data[extComp.realIdx].f, sample->data[extComp.imagIdx].f);
 
-			auto *ecs = dynamic_cast<Components::DP::CurrentSource*>(extComp.comp);
-			if (ecs)
-				ecs->setSourceValue(v);
-			auto *evs = dynamic_cast<Components::DP::VoltageSource*>(extComp.comp);
-			if (evs)
-				evs->setSourceValue(v);
+			extComp.comp->setSourceValue(v);
 		}
 
 		sample_put(sample);
@@ -140,29 +137,28 @@ void ShmemInterface::writeValues(SystemModel& model)
 	try {
 		if (shmem_int_alloc(&mShmem, &sample, 1) < 1) {
 			std::cerr << "fatal error: shmem pool underrun" << std::endl;
-			std::cerr << "at seq" << mSeq << std::endl;
+			std::cerr << "at seq" << mSequence << std::endl;
 			std::exit(1);
 		}
 
 		for (auto vd : mExportedVoltages) {
-			Real real = 0, imag = 0;
+			Complex voltage(0, 0);
 
 			if (vd.from > 0) {
-				real += model.getCompFromLeftSideVector(vd.from-1).real();
-				imag += model.getCompFromLeftSideVector(vd.from-1).imag();
+				voltage += model.getCompFromLeftSideVector(vd.from-1);
 			}
-
 			if (vd.to > 0) {
-				real -= model.getCompFromLeftSideVector(vd.to-1).real();
-				imag -= model.getCompFromLeftSideVector(vd.to-1).imag();
+				voltage -= model.getCompFromLeftSideVector(vd.to-1);
 			}
 
 			if (vd.realIdx >= sample->capacity || vd.imagIdx >= sample->capacity) {
 				std::cerr << "fatal error: not enough space in allocated struct sample" << std::endl;
 				std::exit(1);
 			}
-			sample->data[vd.realIdx].f = real;
-			sample->data[vd.imagIdx].f = imag;
+
+			sample->data[vd.realIdx].f = voltage.real();
+			sample->data[vd.imagIdx].f = voltage.imag();
+
 			if (vd.realIdx > len)
 				len = vd.realIdx;
 			if (vd.imagIdx > len)
@@ -171,12 +167,15 @@ void ShmemInterface::writeValues(SystemModel& model)
 
 		for (auto cd : mExportedCurrents) {
 			Complex current = cd.comp->getCurrent(model);
+
 			if (cd.realIdx >= sample->capacity || cd.imagIdx >= sample->capacity) {
 				std::cerr << "fatal error: not enough space in allocated struct sample" << std::endl;
 				std::exit(1);
 			}
+
 			sample->data[cd.realIdx].f = current.real();
 			sample->data[cd.imagIdx].f = current.imag();
+
 			if (cd.realIdx > len)
 				len = cd.realIdx;
 			if (cd.imagIdx > len)
@@ -184,7 +183,7 @@ void ShmemInterface::writeValues(SystemModel& model)
 		}
 
 		sample->length = len+1;
-		sample->sequence = mSeq++;
+		sample->sequence = mSequence++;
 		clock_gettime(CLOCK_REALTIME, &sample->ts.origin);
 		done = true;
 		while (ret == 0)
@@ -200,8 +199,10 @@ void ShmemInterface::writeValues(SystemModel& model)
 		 * TODO: can this be handled better? */
 		if (!done)
 			sample = mLastSample;
+
 		while (ret == 0)
 			ret = shmem_int_write(&mShmem, &sample, 1);
+
 		if (ret < 0)
 			std::cerr << "Failed to write samples to shmem interface" << std::endl;
 		/* Don't throw here, because we managed to send something */

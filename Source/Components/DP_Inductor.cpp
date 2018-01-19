@@ -1,4 +1,4 @@
-﻿/**
+/**
  *
  * @author Markus Mirz <mmirz@eonerc.rwth-aachen.de>
  * @copyright 2017, Institute for Automation of Complex Power Systems, EONERC
@@ -43,11 +43,11 @@ void Components::DP::Inductor::initialize(SystemModel& system) {
 	mCurrent = mVoltage / impedance;
 }
 
-void Components::DP::Inductor::applySystemMatrixStamp(SystemModel& system) {	
+void Components::DP::Inductor::applySystemMatrixStamp(SystemModel& system) {
 	//mGlr = a / (1 + b*b);
 	//mGli = -a*b / (1 + b*b);
 	//mPrevCurFacRe = (1 - b*b) / (1 + b*b);
-	//mPrevCurFacIm = - 2. * b / (1 + b*b);	
+	//mPrevCurFacIm = - 2. * b / (1 + b*b);
 
 	if (mNode1 >= 0) {
 		mLog.Log(Logger::Level::DEBUG) << "Add " << mEquivCond << " to " << mNode1 << "," << mNode1 << std::endl;
@@ -81,7 +81,7 @@ void Components::DP::Inductor::step(SystemModel& system, Real time) {
 }
 
 
-void Components::DP::Inductor::postStep(SystemModel& system) {	
+void Components::DP::Inductor::postStep(SystemModel& system) {
 	Complex voltNode1;
 	Complex voltNode2;
 
@@ -109,6 +109,6 @@ void Components::DP::Inductor::postStep(SystemModel& system) {
 	mCurrent = mEquivCond * mVoltage + mEquivCurrent;
 }
 
-Complex Components::DP::Inductor::getCurrent(SystemModel& system) {
+Complex Components::DP::Inductor::getCurrent(const SystemModel& system) {
 	return mCurrent;
 }

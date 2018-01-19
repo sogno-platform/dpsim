@@ -40,10 +40,12 @@ namespace DPsim {
 	private:
 		struct shmem_int mShmem;
 		struct sample *mLastSample;
-		int mSeq;
-		std::string rname, wname;
 
-		void init(const char *wname, const char *rname, struct shmem_conf *conf);
+		int mSequence;
+		int mInit;
+		String rname, wname;
+
+		void init(const String &wname, const String &rname, struct shmem_conf *conf);
 
 	public:
 		/** Create a ShmemInterface using the given shmem object names.
@@ -51,17 +53,21 @@ namespace DPsim {
 		 * @param wname The name of the POSIX shmem object where samples will be written to.
 		 * @param rname The name of the POSIX shmem object where samples will be read from.
 		 */
-		ShmemInterface(const char* wname, const char* rname);
+		ShmemInterface(const String &wname, const String &rname);
+
 		/** Create a ShmemInterface with a specific configuration for the output queue.
 		 *
 		 * @param conf The configuration object for the output queue (see VILLASnode's documentation).
 		 */
-		ShmemInterface(const char* wname, const char* rname, struct shmem_conf* conf);
+		ShmemInterface(const String &wname, const String &rname, struct shmem_conf* conf);
+
 		~ShmemInterface();
+
 		/** Read a single struct sample from the shared input queue and pass the contained
 		 * values to all registered current/voltage sources.
 		 */
 		virtual void readValues(bool blocking = true);
+
 		/** Collect all exported currents and voltages in a struct sample and
 		 * write it to the shared output queue.
 		 */

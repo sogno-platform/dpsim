@@ -23,14 +23,9 @@
 
 using namespace DPsim;
 
-void ExternalInterface::registerVoltageSource(Components::DP::VoltageSource *vs, Int realIdx, Int imagIdx)
+void ExternalInterface::registerControllableSource(Components::ControllableSourceBase::Ptr src, Int realIdx, Int imagIdx)
 {
-	mExtComponents.push_back({vs, realIdx, imagIdx});
-}
-
-void ExternalInterface::registerCurrentSource(Components::DP::CurrentSource *cs, Int realIdx, Int imagIdx)
-{
-	mExtComponents.push_back({cs, realIdx, imagIdx});
+	mControllableSources.push_back({src, realIdx, imagIdx});
 }
 
 void ExternalInterface::registerExportedVoltage(Int from, Int to, Int realIdx, Int imagIdx)
@@ -38,7 +33,7 @@ void ExternalInterface::registerExportedVoltage(Int from, Int to, Int realIdx, I
 	mExportedVoltages.push_back({from, to, realIdx, imagIdx});
 }
 
-void ExternalInterface::registerExportedCurrent(Components::Base *comp, Int realIdx, Int imagIdx)
+void ExternalInterface::registerExportedCurrent(Components::ExportableCurrentBase::Ptr comp, Int realIdx, Int imagIdx)
 {
 	mExportedCurrents.push_back({comp, realIdx, imagIdx});
 }

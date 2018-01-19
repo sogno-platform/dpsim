@@ -1,34 +1,31 @@
 option(CIMPP_DIR "CIM++ installation directory" ../CIMpp)
 
-if(WIN32)
-	file(TO_CMAKE_PATH $ENV{APPDATA} APPDATA)
+if(NOT DEFINED CIM_VERSION)
+	set(CIM_VERSION 16v29a)
 endif()
+
 
 find_path(CIMPP_INCLUDE_DIR
 	NAMES CIMModel.hpp
 	PATH_SUFFIXES
-		cimpp/16v29a_12v08
-		cimpp/16v29a
-		cimpp/17v07
-		16v29a_12v08
+		cimpp/${CIM_VERSION}
+		${CIM_VERSION}
 	PATHS
-		../CIMpp/include
-		${APPDATA}/CIMpp/include
 		${CIMPP_DIR}
-		../Libraries/CIMpp/include
+		../CIMpp
+		../Libraries/CIMpp
 )
 
 find_library(CIMPP_LIBRARY
-	NAMES cimpp cimpp.lib ${CIM_DIR}
+	NAMES cimpp${CIM_VERSION}
 	PATH_SUFFIXES
 		lib/static
 		Debug
 		Release
 	PATHS
 		../CIMpp
-		${APPDATA}/CIMpp
-		${CIMPP_DIR}
 		../Libraries/CIMpp
+		${CIMPP_DIR}
 )
 
 include(FindPackageHandleStandardArgs)

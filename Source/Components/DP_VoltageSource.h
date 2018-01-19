@@ -24,6 +24,7 @@
 
 #include "Base.h"
 #include "Base_ControllableSource.h"
+#include "Base_ExportableCurrent.h"
 
 namespace DPsim {
 namespace Components {
@@ -34,10 +35,12 @@ namespace DP {
 	/// For a voltage source between nodes j and k, a new variable (current across the voltage source) is added to the left side vector
 	/// as unkown and it is taken into account for the equation of node j as positve and for the equation of node k as negative. Moreover
 	/// a new equation ej - ek = V is added to the problem.
-	class VoltageSource : public Base, public ControllableSourceBase, public SharedFactory<VoltageSource> {
+	class VoltageSource : public Base, public ControllableSourceBase, public ExportableCurrentBase, public SharedFactory<VoltageSource> {
+
 	private:
 		/// Voltage [V]
 		Complex mVoltage;
+
 	public:
 		/// Define parameters of the voltage source
 		VoltageSource(String name, Int node1, Int node2, Real voltageAbs, Real voltagePhase,
@@ -45,8 +48,6 @@ namespace DP {
 
 		VoltageSource(String name, Int node1, Int node2, Complex voltage,
 			Logger::Level loglevel = Logger::Level::NONE);
-
-		void initialize(SystemModel& system) { }
 
 		/// Inserts the current across the voltage source in the equations of node j and k and add the equantion ej - ek = V to the problem
 		void applySystemMatrixStamp(SystemModel& system);
@@ -57,14 +58,9 @@ namespace DP {
 		/// Stamps voltage source to the current vector
 		void step(SystemModel& system, Real time);
 
-		void postStep(SystemModel& system) { }
-
-		Complex getCurrent(SystemModel& system);
-
 		void setSourceValue(Complex voltage);
 
-		void setSourceValue(Real voltage) { }
-
+		Complex getCurrent(const SystemModel& system);
 	};
 }
 }

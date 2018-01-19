@@ -1,5 +1,3 @@
-include_directories(${CMAKE_CURRENT_SOURCE_DIR} ${CMAKE_CURRENT_SOURCE_DIR}/.. ${CMAKE_CURRENT_BINARY_DIR}/..)
-
 execute_process(COMMAND ${PYTHON_EXECUTABLE} -c "import sysconfig; print(sysconfig.get_path('platlib'), end='')" OUTPUT_VARIABLE PYTHON_PKGPATH)
 execute_process(COMMAND ${PYTHON_EXECUTABLE} -c "import sysconfig; print(sysconfig.get_config_var('EXT_SUFFIX'), end='')" OUTPUT_VARIABLE PYTHON_EXT_SUFFIX)
 
@@ -26,9 +24,23 @@ else(UNIX)
 	set(INSTALL_RPATH "\$ORIGIN")
 endif()
 
-target_sources(dpsim_python PRIVATE ${PYTHON_SOURCES})
-target_link_libraries(dpsim_python dpsim ${PYTHON_LIBRARIES})
-target_include_directories(dpsim_python PRIVATE ${PYTHON_INCLUDE_DIRS} ${INCLUDE_DIRS})
+list(APPEND INCLUDE_DIRS
+	${CMAKE_CURRENT_SOURCE_DIR}
+	${CMAKE_CURRENT_SOURCE_DIR}/..
+	${CMAKE_CURRENT_BINARY_DIR}/..
+	${PYTHON_INCLUDE_DIRS}
+)
+
+list(APPEND LIBRARIES ${PYTHON_LIBRARIES})
+
+if (WITH_CIM)
+	list(APPEND INCLUDE_DIRS ${CIMPP_INCLUDE_DIRS})
+	list(APPEND LIBRARIES ${CIMPP_LIBRARIES})
+endif()
+
+target_link_libraries(dpsim_python dpsim ${LIBRARIES})
+target_include_directories(dpsim_python PRIVATE ${INCLUDE_DIRS})
+
 set_target_properties(dpsim_python
 	PROPERTIES
 		OUTPUT_NAME "_dpsim"

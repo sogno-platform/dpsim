@@ -25,11 +25,13 @@
 #include <map>
 #include <vector>
 
+// CIMpp includes
+#include <CIMModel.hpp>
+#include <IEC61970.hpp>
+
 #include "Definitions.h"
 #include "Components/Base.h"
 
-#include "CIMModel.hpp"
-#include "IEC61970.hpp"
 #include "Logger.h"
 #include "Simulation.h"
 

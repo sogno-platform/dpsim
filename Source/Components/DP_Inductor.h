@@ -23,6 +23,7 @@
 #pragma once
 
 #include "Base.h"
+#include "Base_ExportableCurrent.h"
 
 namespace DPsim {
 namespace Components {
@@ -32,7 +33,7 @@ namespace DP {
 	/// The inductor is represented by a DC equivalent circuit which corresponds to one iteration of the trapezoidal integration method.
 	/// The equivalent DC circuit is a resistance in paralel with a current source. The resistance is constant for a defined time step and system
 	///frequency and the current source changes for each iteration.
-	class Inductor : public Components::Base, public SharedFactory<Inductor> {
+	class Inductor : public Base, public ExportableCurrentBase, public SharedFactory<Inductor> {
 
 	protected:
 		/// Inductance [H]
@@ -72,7 +73,7 @@ namespace DP {
 		void postStep(SystemModel& system);
 
 		/// Return current from the previous step
-		Complex getCurrent(SystemModel& system);
+		Complex getCurrent(const SystemModel& system);
 	};
 }
 }

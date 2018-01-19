@@ -24,6 +24,7 @@
 
 #include "Base.h"
 #include "Base_ControllableSource.h"
+#include "Base_ExportableCurrent.h"
 
 namespace DPsim {
 namespace Components {
@@ -32,7 +33,7 @@ namespace DP {
 	/// Real Voltage source:
 	/// The real voltage source is a voltage source in series with a resistance, which is transformed to a current source with
 	/// a parallel resistance using the Norton equivalent
-	class VoltageSourceNorton : public Base, public ControllableSourceBase, public SharedFactory<VoltageSourceNorton> {		
+	class VoltageSourceNorton : public Base, public ControllableSourceBase, public ExportableCurrentBase, public SharedFactory<VoltageSourceNorton> {
 	protected:
 		/// Voltage [V]
 		Complex mVoltage;
@@ -51,8 +52,6 @@ namespace DP {
 		VoltageSourceNorton(String name, Int node1, Int node2, Real voltageAbs, Real volagePhase, Real resistance,
 			Logger::Level loglevel = Logger::Level::NONE);
 
-		void initialize(SystemModel& system) { }
-
 		/// Stamps voltage source resistance to the conductance matrix
 		void applySystemMatrixStamp(SystemModel& system);
 
@@ -62,13 +61,9 @@ namespace DP {
 		/// Stamps equivalent current source to the current vector
 		void step(SystemModel& system, Real time);
 
-		void postStep(SystemModel& system) { }
-
-		Complex getCurrent(SystemModel& system);
-
 		void setSourceValue(Complex voltage) { mVoltage = voltage; }
 
-		void setSourceValue(Real voltage) { mVoltage = {voltage, 0}; }
+		Complex getCurrent(const SystemModel& system);
 	};
 }
 }

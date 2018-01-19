@@ -83,16 +83,16 @@ namespace Components {
 			mName = name;
 			mNode1 = node1;
 			mNode2 = node2;
-			mLogLevel = logLevel;			
+			mLogLevel = logLevel;
 			attrMap["name"]  = { Attribute::String,  &mName };
 			attrMap["node1"] = { Attribute::Integer, &mNode1 };
-			attrMap["node2"] = { Attribute::Integer, &mNode2 };			
+			attrMap["node2"] = { Attribute::Integer, &mNode2 };
 		}
 
 
 		Base(String name, Int node1, Int node2, Int node3, Logger::Level loglevel = Logger::Level::NONE)
 			: Base(name, node1, node2, loglevel) {
-			mNode3 = node3;			
+			mNode3 = node3;
 			attrMap["node3"] = { Attribute::Integer, &mNode3 };
 		}
 
@@ -132,14 +132,6 @@ namespace Components {
 
 		/// Upgrade variable values based on the solution of the step
 		virtual void postStep(SystemModel& system) { }
-
-		/// Return the current flowing through this component in the previous timestep
-		virtual Complex getCurrent(SystemModel& system)
-		{
-			std::cerr << "getCurrent implementation missing" << std::endl;
-			std::exit(1);
-			return Complex(0, 0);
-		}
 	};
 }
 }

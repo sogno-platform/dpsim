@@ -48,12 +48,10 @@ PyObject* Python::LoadCim(PyObject* self, PyObject* args)
 	double frequency = 50;
 	PyObject *list;
 	PyBytesObject *filename;
-	Logger log("cim.log");
-	CIM::Reader *reader;
+	CIM::Reader reader(2*PI*frequency, Logger::Level::INFO);
 
 	if (PyArg_ParseTuple(args, "O&|d", PyUnicode_FSConverter, &filename, &frequency)) {
-		reader = new CIM::Reader(2*PI*frequency, log);
-		reader->addFile(PyBytes_AsString((PyObject*) filename));
+		reader.addFile(PyBytes_AsString((PyObject*) filename));
 		Py_DECREF(filename);
 	}
 	else if (PyArg_ParseTuple(args, "O|d", &list, &frequency)) {
@@ -64,14 +62,12 @@ PyObject* Python::LoadCim(PyObject* self, PyObject* args)
 			return nullptr;
 		}
 
-		reader = new CIM::Reader(2*PI*frequency, log);
 		for (int i = 0; i < PyList_Size(list); i++) {
 			if (!PyUnicode_FSConverter(PyList_GetItem(list, i), &filename)) {
-				delete reader;
 				PyErr_SetString(PyExc_TypeError, "First argument must be filename or list of filenames");
 				return nullptr;
 			}
-			reader->addFile(PyBytes_AsString((PyObject*) filename));
+			reader.addFile(PyBytes_AsString((PyObject*) filename));
 			Py_DECREF(filename);
 		}
 	}
@@ -80,8 +76,9 @@ PyObject* Python::LoadCim(PyObject* self, PyObject* args)
 		return nullptr;
 	}
 
-	reader->parseFiles();
-	Components::Base::List comps = reader->getComponents();
+	reader.parseFiles();
+
+	DPsim::Components::Base::List comps = reader.getComponents();
 	list = PyList_New(comps.size());
 
 	for (unsigned i = 0; i < comps.size(); i++) {
@@ -91,8 +88,6 @@ PyObject* Python::LoadCim(PyObject* self, PyObject* args)
 		pyComp->comp = comps[i];
 		PyList_SET_ITEM(list, i, (PyObject*) pyComp);
 	}
-
-	delete reader;
 
 	return list;
 #else

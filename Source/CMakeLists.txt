@@ -43,7 +43,6 @@ list(APPEND SOURCES
 	Components/DP_SynchronGenerator_VBR_New.cpp
 )
 
-find_package(Eigen3 REQUIRED)
 set(INCLUDE_DIRS
 	${EIGEN3_INCLUDE_DIR}
 )

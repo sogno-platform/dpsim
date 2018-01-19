@@ -28,9 +28,9 @@ class YamlItem(pytest.Item):
             self.shell = False
 
         if 'check' in spec:
-            self.shell = spec['check']
+            self.check = spec['check']
         else:
-            self.shell = True
+            self.check = True
 
         if 'timeout' in spec:
             self.timeout = spec['timeout']

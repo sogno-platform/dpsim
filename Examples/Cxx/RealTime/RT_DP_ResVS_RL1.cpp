@@ -19,26 +19,24 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *********************************************************************************/
 
-#include "Simulation.h"
-#include "Utilities.h"
+#include "RealTimeSimulation.h"
 
 using namespace DPsim;
 using namespace DPsim::Components::DP;
 
 int main(int argc, char* argv[])
 {
-	Real timeStep = 0.00005;
-	Logger log;
 	Components::Base::List comps = {
-		VoltageSource::make("v_s", 0, GND, Complex(10000, 0), 1),
+		VoltageSource::make("v_s", 0, GND, Complex(10000, 0)),
 		Resistor::make("r_line", 0, 1, 1),
 		Inductor::make("l_line", 1, 2, 1),
 		Resistor::make("r_load", 2, GND, 1000)
 	};
 
-	Simulation sim(comps, 2.0*M_PI*50.0, timeStep, 1.0, log);
+	Real timeStep = 0.00005;
+	RealTimeSimulation sim("RT_DP_ResVS_RL1", comps, 2.0*M_PI*50.0, timeStep, 1.0);
 
-	sim.runRT(RTExceptions, false, log, log, log);
+	sim.run(RealTimeSimulation::Exceptions, false);
 
 	return 0;
 }

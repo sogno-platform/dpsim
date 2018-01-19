@@ -1,7 +1,7 @@
-/** Interfaced inductor
+/** A common base class for all components which can export a current
  *
  * @file
- * @author Markus Mirz <mmirz@eonerc.rwth-aachen.de>
+ * @author Steffen Vogel <stvogel@eonerc.rwth-aachen.de>
  * @copyright 2017, Institute for Automation of Complex Power Systems, EONERC
  *
  * DPsim
@@ -22,35 +22,21 @@
 
 #pragma once
 
-#include "Base.h"
-#include "Base_ExportableCurrent.h"
+#include <memory>
+
+#include "SystemModel.h"
 
 namespace DPsim {
 namespace Components {
-namespace DP {
 
-	class InterfacedInductor : public Base, public ExportableCurrentBase, public SharedFactory<InterfacedInductor> {
-
-	protected:
-		Real mInductance;
-		Real mVoltageRe;
-		Real mVoltageIm;
-		Real mCurrentRe;
-		Real mCurrentIm;
-		Real mCurrentStepRe;
-		Real mCurrentStepIm;
+	class ExportableCurrentBase {
 
 	public:
-		InterfacedInductor(String name, Int node1, Int node2, Real inductance);
 
-		void initialize(SystemModel& system);
-		void applySystemMatrixStamp(SystemModel& system) { }
-		void applyRightSideVectorStamp(SystemModel& system) { }
-		void step(SystemModel& system, Real time);
-		void postStep(SystemModel& system);
+		typedef std::shared_ptr<ExportableCurrentBase> Ptr;
 
-		Complex getCurrent(const SystemModel& system);
+		/// Returns the current through the branch of this component
+		virtual Complex getCurrent(const SystemModel& system) = 0;
 	};
-}
 }
 }
