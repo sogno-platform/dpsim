@@ -28,11 +28,33 @@ find_library(CIMPP_LIBRARY
 		${CIMPP_DIR}
 )
 
+if (NOT WIN32)
+	find_path(ARABICA_INCLUDE_DIR
+		NAMES convert
+		PATH_SUFFIXES
+			Arabica
+		PATHS
+			../Arabica/include
+			../Libraries/Arabica/include
+	)
+
+	find_library(ARABICA_LIBRARY
+		NAMES arabica
+		PATH_SUFFIXES
+			lib/static
+			Debug
+			Release
+		PATHS
+		../Arabica
+		../Libraries/Arabica
+	)
+endif ()
+
 include(FindPackageHandleStandardArgs)
 # handle the QUIETLY and REQUIRED arguments and set CIMPP_FOUND to TRUE
 # if all listed variables are TRUE
 find_package_handle_standard_args(CIMpp DEFAULT_MSG CIMPP_LIBRARY CIMPP_INCLUDE_DIR)
 mark_as_advanced(CIMPP_INCLUDE_DIR CIMPP_LIBRARY)
 
-set(CIMPP_LIBRARIES ${CIMPP_LIBRARY})
-set(CIMPP_INCLUDE_DIRS ${CIMPP_INCLUDE_DIR})
+set(CIMPP_LIBRARIES ${CIMPP_LIBRARY} ${ARABICA_LIBRARY})
+set(CIMPP_INCLUDE_DIRS ${CIMPP_INCLUDE_DIR} ${ARABICA_INCLUDE_DIR})
