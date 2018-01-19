@@ -53,19 +53,35 @@ static int testCIMReader(std::list<String> filenames) {
 }
 
 static int readFixedCIMFiles_LineLoad() {
+#ifdef _WIN32
+	String path("..\\..\\..\\dpsim\\Examples\\CIM\\Line_Load\\");
+#elif defined(__linux__)
+	String path("../../../dpsim/Examples/CIM/Line_Load/");
+#else
+  #error "Unkown platform"
+#endif
+
 	std::list<String> filenames = {
-		"..\\..\\Examples\\CIM\\Line_Load\\Line_Load.xml"
+		path + "Line_Load.xml"
 	};
 
 	return testCIMReader(filenames);
 }
 
 static int readFixedCIMFiles_IEEE9bus() {
+#ifdef _WIN32
+	String path("..\\..\\..\\dpsim\\Examples\\CIM\\IEEE-09_Neplan_RX\\");
+#elif defined(__linux__)
+	String path("../../../dpsim/Examples/CIM/IEEE-09_Neplan_RX/");
+#else
+  #error "Unkown platform"
+#endif
+
 	std::list<String> filenames = {
-		"..\\..\\..\\dpsim\\Examples\\CIM\\IEEE-09_Neplan_RX\\IEEE-09_Neplan_RX_DI.xml",
-		"..\\..\\..\\dpsim\\Examples\\CIM\\IEEE-09_Neplan_RX\\IEEE-09_Neplan_RX_EQ.xml",
-		"..\\..\\..\\dpsim\\Examples\\CIM\\IEEE-09_Neplan_RX\\IEEE-09_Neplan_RX_SV.xml",
-		"..\\..\\..\\dpsim\\Examples\\CIM\\IEEE-09_Neplan_RX\\IEEE-09_Neplan_RX_TP.xml"
+		path + "IEEE-09_Neplan_RX_DI.xml",
+		path + "IEEE-09_Neplan_RX_EQ.xml",
+		path + "IEEE-09_Neplan_RX_SV.xml",
+		path + "IEEE-09_Neplan_RX_TP.xml"
 	};
 
 	return testCIMReader(filenames);
