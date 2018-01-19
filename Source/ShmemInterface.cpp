@@ -46,7 +46,9 @@ void ShmemInterface::init(const String &wn, const String &rn, struct shmem_conf*
 		std::exit(1);
 	}
 
-	mSeq = 0;
+	mInit = 0;
+	mSequence = 0;
+
 	if (shmem_int_alloc(&mShmem, &mLastSample, 1) < 0) {
 		std::cerr << "Failed to allocate single sample from shmem pool" << std::endl;
 		std::exit(1);
@@ -135,7 +137,7 @@ void ShmemInterface::writeValues(SystemModel& model)
 	try {
 		if (shmem_int_alloc(&mShmem, &sample, 1) < 1) {
 			std::cerr << "fatal error: shmem pool underrun" << std::endl;
-			std::cerr << "at seq" << mSeq << std::endl;
+			std::cerr << "at seq" << mSequence << std::endl;
 			std::exit(1);
 		}
 
@@ -181,7 +183,7 @@ void ShmemInterface::writeValues(SystemModel& model)
 		}
 
 		sample->length = len+1;
-		sample->sequence = mSeq++;
+		sample->sequence = mSequence++;
 		clock_gettime(CLOCK_REALTIME, &sample->ts.origin);
 		done = true;
 		while (ret == 0)

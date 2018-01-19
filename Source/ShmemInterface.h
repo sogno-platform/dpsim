@@ -40,9 +40,10 @@ namespace DPsim {
 	private:
 		struct shmem_int mShmem;
 		struct sample *mLastSample;
-		int mSeq;
-		std::string rname, wname;
+
+		int mSequence;
 		int mInit;
+		String rname, wname;
 
 		void init(const String &wname, const String &rname, struct shmem_conf *conf);
 
