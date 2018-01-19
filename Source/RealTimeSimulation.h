@@ -26,33 +26,43 @@
 #include "Config.h"
 #include "Simulation.h"
 
+#define RTMETHOD_TIMERFD
+//#define RTMETHOD_EXCEPTIONS
+
 namespace DPsim {
 
+#ifdef RTMETHOD_EXCEPTIONS
 	class TimerExpiredException {
 	};
+#endif
 
 	class RealTimeSimulation : public Simulation {
 
 	protected:
+#ifdef RTMETHOD_EXCEPTIONS
+		static void alarmHandler(int, siginfo_t*, void*);
+		timer_t mTimer;
+		sigset_t alrmset;
 		uint64_t mTimerCount = 0;
+#elif defined(RTMETHOD_TIMERFD)
+		int mTimerFd;
+#else
+  #error Unkown real-time execution mode
+#endif
+
+		void startTimer();
+		void stopTimer();
 
 	public:
-		// Explicity inheritance of parent constructor
-		using Simulation::Simulation;
-
-		/* Possible methods to achieve execution in real time. */
-		enum Method {
-			Exceptions, // use a normal timer and throw an exception in the signal handler if the timestep wasn't completed yet
-			TimerFD,    // read on a timerfd after every step
-		};
+		RealTimeSimulation(String name, Components::Base::List comps, Real om, Real dt, Real tf, Logger::Level logLevel = Logger::Level::INFO, SimulationType simType = SimulationType::DynPhasor, Int downSampleRate = 1);
+		~RealTimeSimulation();
 
 		/* Perform the main simulation loop in real time.
 		 *
-		 * @param rtMethod The method with which the realtime execution is achieved.
 		 * @param startSynch If true, the simulation waits for the first external value before starting the timing.
 		 */
-		void run(Method method, bool startSynch);
-		static void alarmHandler(int, siginfo_t*, void*);
-	};
+		void run(double duration, bool startSynch = true);
 
+		void run(bool startSynch = true);
+	};
 }
