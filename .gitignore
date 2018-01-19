@@ -32,3 +32,4 @@ __MACOSX
 __pycache__/
 .eggs/
 *.egg-info/
+.ipynb_checkpoints/

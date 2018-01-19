@@ -9,7 +9,8 @@
    :maxdepth: 2
    :caption: Contents:
 
-   Guide
+   Quickstart Guide <Notebooks/Quickstart Guide.ipynb>
+   Examples
    Install
    Build
    Structure

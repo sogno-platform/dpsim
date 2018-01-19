@@ -1,4 +1,5 @@
 sphinx
+nbsphinx
 breathe
 
 m2r
