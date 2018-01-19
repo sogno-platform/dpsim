@@ -42,6 +42,7 @@ namespace DPsim {
 		struct sample *mLastSample;
 		int mSeq;
 		std::string rname, wname;
+		int mInit;
 
 		void init(const String &wname, const String &rname, struct shmem_conf *conf);
 

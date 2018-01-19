@@ -64,7 +64,6 @@ namespace DPsim {
 
 		std::vector<ExportableCurrentMapping> mExportedCurrents;
 		std::vector<ExportableVoltageMapping> mExportedVoltages;
-		bool mInit = 0;
 
 	public:
 		/** Register an external voltage source to use values from this interface.
