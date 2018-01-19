@@ -98,4 +98,6 @@ int main(int argc, char *argv[])
 	}
 
 	sim.run(RealTimeSimulation::TimerFD, true);
+
+	return 0;
 }

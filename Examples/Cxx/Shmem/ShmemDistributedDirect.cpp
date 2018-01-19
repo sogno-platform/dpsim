@@ -76,8 +76,8 @@ int main(int argc, char *argv[])
 		auto ecs = CurrentSource::make("v_s", 1, 0, Complex(0, 0));
 
 		comps = {
-			ecs,
-			Resistor::make("r_2", 1, 0, 1)
+			Resistor::make("r_2", 1, 0, 1),
+			ecs
 		};
 
 		shmem.registerControllableSource(ecs, 0, 1);
@@ -92,4 +92,6 @@ int main(int argc, char *argv[])
 	RealTimeSimulation sim("ShmemDistributedDirect", comps, 2.0*M_PI*50.0, timeStep, 1);
 	sim.addExternalInterface(&shmem);
 	sim.run(RealTimeSimulation::TimerFD, false);
+
+	return 0;
 }

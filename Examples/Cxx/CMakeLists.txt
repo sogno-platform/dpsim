@@ -63,10 +63,10 @@ if(WITH_SHMEM)
 	list(APPEND INCLUDE_DIRS ${VILLASNODE_INCLUDE_DIRS})
 
 	set(SHMEM_SOURCES
-		Shmem/ShmemDistributed.cpp
-		Shmem/ShmemDistributedDirect.cpp
-		Shmem/ShmemDistributedRef.cpp
 		Shmem/ShmemExample.cpp
+		Shmem/ShmemDistributedReference.cpp
+		Shmem/ShmemDistributedVillas.cpp
+		Shmem/ShmemDistributedDirect.cpp
 		Shmem/ShmemRealTime.cpp
 	)
 endif()
