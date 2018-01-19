@@ -28,7 +28,7 @@ find_library(CIMPP_LIBRARY
 		${CIMPP_DIR}
 )
 
-if (NOT WIN32)
+if (WIN32)
 	find_path(ARABICA_INCLUDE_DIR
 		NAMES convert
 		PATH_SUFFIXES
