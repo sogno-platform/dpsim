@@ -4,8 +4,79 @@ Building
 DPsim
 ^^^^^
 
-Windows (Visual Studio)
------------------------
+Docker
+------
+
+There is a Docker image available with all required dependecies:
+
+::
+    $ cd DPsim
+    $ docker build -t dpsim .
+    $ docker run -tiv$(pwd):/dpsim dpsim bash
+
+Setuptools
+----------
+
+Using setuptools is most likely the easiest way to install DPsim on your system.
+
+::
+    $ cd DPsim
+    # python3 ./setup.py install
+
+CMake
+-----
+
+1. Make sure that the required dependecies are installed.
+
+   Ubuntu/Debian:::
+   
+      $ apt-get install \
+          build-essentials \
+          make cmake \
+          doxygen \
+          graphviz \
+          python3-pip \
+          python3-dev \
+          libeigen3-dev
+
+   **Node:** There are currently no Debian packages for `villas-node` and `libcimpp16v29a`.
+   If you want to use these optional feature, you are required to build them by hand.
+
+   Redhat/Fedora/CentOS:::
+   
+      # wget https://villas.fein-aachen.org/packages/fein.repo -O /etc/yum.repos.d/fein.repo
+      # yum install \
+          gcc-c++ \
+          redhat-rpm-config \
+          rpmdevtools \
+          make cmake \
+          doxygen \
+          graphviz \
+          python3-pip \
+          python3-devel \
+          eigen3-devel \
+          villas-node-devel \
+          libcimpp16v29a
+
+2. Generate a makefile with CMake and use it to build the project::
+
+      $ mkdir build
+      $ cd build
+      $ cmake ..
+      $ make
+
+3. Test your build by running the Jupyter notebooks:
+
+      $ make jupyter
+
+4. Install the generated Python module to your system:::
+
+      # make install
+
+Visual Studio
+-------------
+
+**This method is not recommended. Please use CMake or Python setuptools instead.**
 
 Prerequisites
 ~~~~~~~~~~~~~~~~~~~~~~
@@ -28,38 +99,6 @@ Python support for Windows
 
 - Install `Python 3`_ using the normal installer or a distribution like Anaconda, and add Python to your PATH.
 - Use Visual Studio and the Release configuration to build the dpsim Python module. To install it, build the INSTALL project.
-
-Linux (CMake)
--------------
-
-1. Make sure that Eigen, libxml2 (including development headers) and CMake are installed, e.g. using your distro's package manager.
-2. Build and install libvillas-ext from VILLASnode_:::
-
-      $ make
-      # make install-libvillas-ext
-
-   There are also RPMs available for Fedora:::
-
-      $ wget https://villas.fein-aachen.org/packages/villas.repo
-      # mv villas.repo /etc/yum.repos.d
-      # dnf -y install villas-node-devel
-
-3. Generate a makefile with CMake and use it to build the project::
-
-      $ mkdir build
-      $ cd build
-      $ cmake ..
-      $ make
-
-4. Install the generated module:::
-
-      # make install
-
-   Another option is to manually rename the generated module:::
-
-      # cp build/Source/libdpsim.so your_python_path/dpsim.so
-
-   and ensure that ``your_python_path`` is in somewhere in your ``PYTHONPATH``.
 
 .. _`Python 3`: https://www.python.org/downloads/
 .. _Eigen: http://eigen.tuxfamily.org
