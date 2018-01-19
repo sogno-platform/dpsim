@@ -2,10 +2,10 @@ ShmemExample:
   xfail: true
   cmd: build/Examples/Cxx/ShmemExample
 
-ShmemdistributedReference:
+ShmemDistributedReference:
   cmd: build/Examples/Cxx/ShmemDistributedReference
 
-ShmemdistributedDirect:
+ShmemDistributedDirect:
   shell: True
   cmd: |
     build/Examples/Cxx/ShmemDistributedDirect 0 & P1=$!
