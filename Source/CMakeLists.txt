@@ -36,7 +36,7 @@ list(APPEND SOURCES
 	Components/EMT_SynchronGenerator_VBR.cpp
 	Components/EMT_VoltageSource.cpp
 	Components/EMT_VoltageSource_Freq.cpp
-	Components/EMT_VoltageSourceNorton.cpp
+	Components/EMT_VoltageSource_Norton.cpp
 	Components/Exciter.cpp
 	Components/TurbineGovernor.cpp
 	Components/EMT_SynchronGenerator_VBR_New.cpp

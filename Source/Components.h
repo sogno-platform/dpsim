@@ -46,7 +46,7 @@
 #include "Components/EMT_SynchronGenerator_VBR.h"
 #include "Components/EMT_VoltageSource.h"
 #include "Components/EMT_VoltageSource_Freq.h"
-#include "Components/EMT_VoltageSourceNorton.h"
+#include "Components/EMT_VoltageSource_Norton.h"
 #include "Components/Exciter.h"
 #include "Components/TurbineGovernor.h"
 #include "Components/EMT_SynchronGenerator_VBR_New.h"

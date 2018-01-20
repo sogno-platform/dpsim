@@ -19,11 +19,11 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *********************************************************************************/
 
-#include "EMT_VoltageSourceNorton.h"
+#include "EMT_VoltageSource_Norton.h"
 
 using namespace DPsim;
 
-Components::EMT::VoltageSourceNorton::VoltageSourceNorton(String name, Int node1, Int node2, 
+Components::EMT::VoltageSourceNorton::VoltageSourceNorton(String name, Int node1, Int node2,
 	Real voltageAmp, Real voltagePhase, Real resistance)
 	: Base(name, node1, node2) {
 	mVoltageAmp = voltageAmp;
@@ -34,7 +34,7 @@ Components::EMT::VoltageSourceNorton::VoltageSourceNorton(String name, Int node1
 	mCurrent = mVoltage / mResistance;
 }
 
-void Components::EMT::VoltageSourceNorton::applySystemMatrixStamp(SystemModel& system) {	
+void Components::EMT::VoltageSourceNorton::applySystemMatrixStamp(SystemModel& system) {
 	// Apply matrix stamp for equivalent resistance
 	if (mNode1 >= 0) {
 		system.addRealToSystemMatrix(mNode1, mNode1, mConductance);
@@ -48,7 +48,7 @@ void Components::EMT::VoltageSourceNorton::applySystemMatrixStamp(SystemModel& s
 	}
 }
 
-void Components::EMT::VoltageSourceNorton::applyRightSideVectorStamp(SystemModel& system) {	
+void Components::EMT::VoltageSourceNorton::applyRightSideVectorStamp(SystemModel& system) {
 	// Apply matrix stamp for equivalent current source
 	if (mNode1 >= 0) {
 		system.addRealToRightSideVector(mNode1, mCurrent);
