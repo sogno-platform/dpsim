@@ -21,6 +21,7 @@
 
 #include "Python/Component.h"
 #include "Components/DP_VoltageSource.h"
+#include "Components/EMT_VoltageSource.h"
 
 using namespace DPsim;
 
@@ -34,6 +35,7 @@ const char *Python::Components::DocVoltageSource =
 "\n"
 ":param initial_current: The voltage of this source in the first timestep (as a complex value).\n"
 ":returns: A new `Component` representing this voltage source.\n";
+
 PyObject* Python::Components::DP::VoltageSource(PyObject* self, PyObject* args)
 {
 	const char *name;
@@ -46,6 +48,22 @@ PyObject* Python::Components::DP::VoltageSource(PyObject* self, PyObject* args)
 	Component *pyComp = PyObject_New(Component, &ComponentType);
 	Component::init(pyComp);
 	pyComp->comp = std::make_shared<DPsim::Components::DP::VoltageSource>(name, src, dest, DPsim::Complex(initVoltage.real, initVoltage.imag));
+
+	return (PyObject*) pyComp;
+}
+
+PyObject* Python::Components::EMT::VoltageSource(PyObject* self, PyObject* args)
+{
+	const char *name;
+	int src, dest;
+	Py_complex initVoltage;
+
+	if (!PyArg_ParseTuple(args, "siiD", &name, &src, &dest, &initVoltage))
+		return nullptr;
+
+	Component *pyComp = PyObject_New(Component, &ComponentType);
+	Component::init(pyComp);
+	pyComp->comp = std::make_shared<DPsim::Components::EMT::VoltageSource>(name, src, dest, DPsim::Complex(initVoltage.real, initVoltage.imag));
 
 	return (PyObject*) pyComp;
 }
