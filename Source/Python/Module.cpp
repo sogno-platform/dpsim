@@ -37,6 +37,7 @@ static PyMethodDef dpsimModuleMethods[] = {
 	{ "VoltageSourceDP", Python::Components::DP::VoltageSource, METH_VARARGS, Python::Components::DocVoltageSource },
 	{ "VoltageSourceEMT", Python::Components::EMT::VoltageSource, METH_VARARGS, Python::Components::DocVoltageSource },
 	{ "VoltageSourceNortonDP", Python::Components::DP::VoltageSourceNorton, METH_VARARGS, Python::Components::DocVoltageSourceNorton },
+	{ "VoltageSourceNortonEMT", Python::Components::EMT::VoltageSourceNorton, METH_VARARGS, Python::Components::DocVoltageSourceNorton },
 	{ "ResistorDP",  Python::Components::DP::Resistor,  METH_VARARGS, Python::Components::DocResistor },
 	{ "CapacitorDP", Python::Components::DP::Capacitor, METH_VARARGS, Python::Components::DocCapacitor },
 	{ "InductorDP",  Python::Components::DP::Inductor,  METH_VARARGS, Python::Components::DocInductor },

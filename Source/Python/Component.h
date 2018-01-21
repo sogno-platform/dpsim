@@ -70,6 +70,7 @@ namespace DP {
 
 namespace EMT {
 	PyObject* VoltageSource(PyObject* self, PyObject *args);
+	PyObject* VoltageSourceNorton(PyObject* self, PyObject *args);
 	PyObject* Resistor(PyObject* self, PyObject *args);
 	PyObject* Inductor(PyObject* self, PyObject *args);
 } /// EMT
