@@ -39,6 +39,7 @@
 #include "Components/DP_VoltageSource_Freq.h"
 #include "Components/DP_VoltageSource_Norton.h"
 #include "Components/EMT_Capacitor.h"
+#include "Components/EMT_CurrentSource.h"
 #include "Components/EMT_Inductor.h"
 #include "Components/EMT_Resistor.h"
 #include "Components/EMT_SynchronGenerator.h"

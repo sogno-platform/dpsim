@@ -29,6 +29,7 @@ list(APPEND SOURCES
 	Components/DP_VoltageSource_Freq.cpp
 	Components/DP_VoltageSource_Norton.cpp
 	Components/EMT_Capacitor.cpp
+	Components/EMT_CurrentSource.cpp
 	Components/EMT_Inductor.cpp
 	Components/EMT_Resistor.cpp
 	Components/EMT_SynchronGenerator.cpp
