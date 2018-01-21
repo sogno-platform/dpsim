@@ -22,14 +22,14 @@
 
 #pragma once
 
-#include "Base.h"
+#include "Component.h"
 #include "Base_ExportableCurrent.h"
 
 namespace DPsim {
 namespace Components {
 namespace DP {
 
-	class Resistor : public Base, public ExportableCurrentBase, public SharedFactory<Resistor> {
+	class Resistor : public Component, public ExportableCurrentBase, public SharedFactory<Resistor> {
 
 	protected:
 		///Resistance [ohm]

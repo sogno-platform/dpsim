@@ -19,7 +19,9 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *********************************************************************************/
 
-#include "Component.h"
+#include "Python/Component.h"
+#include "Components/DP_Inductor.h"
+#include "Components/EMT_Inductor.h"
 
 using namespace DPsim;
 

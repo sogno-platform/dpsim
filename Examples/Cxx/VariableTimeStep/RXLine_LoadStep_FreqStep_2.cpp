@@ -20,7 +20,7 @@
  *********************************************************************************/
 
 #include "Simulation.h"
-#include "Utilities.h"
+#include "Components.h"
 
 using namespace DPsim;
 using namespace DPsim::Components;
@@ -31,14 +31,14 @@ static void VarFreqRxLineResLoad_NZ_Paper_DP(Real timeStep, Real finalTime, Real
 	std::ostringstream fileName;
 	String simName = "DpEmtVarFreqStudy_NZ_Paper_" + std::to_string(timeStep);
 
-	Components::Base::List comps0 = {
+	Component::List comps0 = {
 		DP::VoltageSourceFreq::make("v_s", 0, GND, 10000, 0, 1, 2 * PI*-1, freqStep, rampTime),
 		DP::Resistor::make("r_line", 0, 1, 1),
 		DP::Inductor::make("l_line", 1, 2, 1)
 	};
 
-	Components::Base::List comps1 = comps0;
-	Components::Base::List comps2 = comps0;
+	Component::List comps1 = comps0;
+	Component::List comps2 = comps0;
 	comps1.push_back(DP::Resistor::make("r_load", 2, GND, 10));
 	comps2.push_back(DP::Resistor::make("r_load", 2, GND, 5));
 
@@ -53,14 +53,14 @@ static void VarFreqRxLineResLoad_NZ_Paper_EMT(Real timeStep, Real finalTime, Rea
 	// Define simulation scenario
 	String simName = "DpEmtVarFreqStudy_NZ_Paper_EMT" + std::to_string(timeStep);
 
-	Components::Base::List comps0 = {
+	Component::List comps0 = {
 		EMT::VoltageSourceFreq::make("v_s", 0, GND, 10000, 0, 1, 2 * PI*-1, freqStep, rampTime),
 		EMT::Resistor::make("r_line", 0, 1, 1),
 		EMT::Inductor::make("l_line", 1, 2, 1)
 	};
 
-	Components::Base::List comps1 = comps0;
-	Components::Base::List comps2 = comps0;
+	Component::List comps1 = comps0;
+	Component::List comps2 = comps0;
 	comps1.push_back(EMT::Resistor::make("r_load", 2, GND, 10));
 	comps2.push_back(EMT::Resistor::make("r_load", 2, GND, 8));
 

@@ -26,28 +26,28 @@
 #include <vector>
 #include <memory>
 
-#include "../SharedFactory.h"
-#include "../SystemModel.h"
-#include "../Definitions.h"
-#include "../MathLibrary.h"
+#include "SharedFactory.h"
+#include "SystemModel.h"
+#include "Definitions.h"
+#include "MathLibrary.h"
 
 namespace DPsim {
-namespace Components {
-
-	struct Attribute {
-		enum Type {
-			Real,
-			Integer,
-			String, // value should be *String, not *char!
-			Complex
-		} mType;
-		void* mValue;
-
-		typedef std::map<DPsim::String, Components::Attribute> Map;
-	};
 
 	/// Base class for all components that might be added to the matrix.
-	class Base {
+	class Component {
+
+	public:
+		struct Attribute {
+			enum Type {
+				Real,
+				Integer,
+				String, // value should be *String, not *char!
+				Complex
+			} mType;
+			void* mValue;
+
+			typedef std::map<DPsim::String, Attribute> Map;
+		};
 
 	protected:
 		/// Component logger
@@ -68,17 +68,17 @@ namespace Components {
 		/// Index of virtual node
 		std::vector<Int> mVirtualNodes;
 		/// Map of all attributes that should be exported to the Python interface
-		Components::Attribute::Map attrMap;
+		Attribute::Map attrMap;
 
 	public:
-		typedef std::shared_ptr<Base> Ptr;
+		typedef std::shared_ptr<Component> Ptr;
 		typedef std::vector<Ptr> List;
 
 		/// Creates a new component with basic features: name and nodes
 		/// Decrementing the node number is default so that the user can use zero for the ground node. It needs to be
 		/// deactivated for subcomponents that are created inside other components since otherwise the node number
 		/// would be decremented twice.
-		Base(String name, Int node1, Int node2, Logger::Level logLevel = Logger::Level::NONE)
+		Component(String name, Int node1, Int node2, Logger::Level logLevel = Logger::Level::NONE)
 			: mLog("Logs/" + name + ".log", logLevel) {
 			mName = name;
 			mNode1 = node1;
@@ -90,13 +90,13 @@ namespace Components {
 		}
 
 
-		Base(String name, Int node1, Int node2, Int node3, Logger::Level loglevel = Logger::Level::NONE)
-			: Base(name, node1, node2, loglevel) {
+		Component(String name, Int node1, Int node2, Int node3, Logger::Level loglevel = Logger::Level::NONE)
+			: Component(name, node1, node2, loglevel) {
 			mNode3 = node3;
 			attrMap["node3"] = { Attribute::Integer, &mNode3 };
 		}
 
-		virtual ~Base() { }
+		virtual ~Component() { }
 
 		/// get value of node1
 		Int getNode1() { return mNode1; }
@@ -113,7 +113,7 @@ namespace Components {
 		/// set virtual node
 		void setVirtualNode(Int nodeNum, Int virtualNode) { mVirtualNodes[nodeNum] = virtualNode; }
 
-		std::map<String, Components::Attribute>& getAttrMap() { return attrMap; }
+		std::map<String, Attribute>& getAttrMap() { return attrMap; }
 
 		String getName() { return mName; }
 		String getType();
@@ -133,5 +133,4 @@ namespace Components {
 		/// Upgrade variable values based on the solution of the step
 		virtual void postStep(SystemModel& system) { }
 	};
-}
 }

@@ -22,7 +22,7 @@
 
 #pragma once
 
-#include "Base.h"
+#include "Component.h"
 #include "Base_ExportableCurrent.h"
 #include "DP_Inductor.h"
 #include "DP_Resistor.h"
@@ -32,7 +32,7 @@ namespace Components {
 namespace DP {
 
 	// TODO currently modeled as an impedance, which obviously doesn't have a constant power characteristic
-	class PQLoad : public Base, public ExportableCurrentBase, public SharedFactory<PQLoad> {
+	class PQLoad : public Component, public ExportableCurrentBase, public SharedFactory<PQLoad> {
 
 	protected:
 		/// Active power [Watt]

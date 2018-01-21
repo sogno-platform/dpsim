@@ -20,6 +20,7 @@
  *********************************************************************************/
 
 #include "Simulation.h"
+#include "Components.h"
 
 using namespace DPsim;
 using namespace DPsim::Components::DP;
@@ -27,7 +28,7 @@ using namespace DPsim::Components::DP;
 int main(int argc, char* argv[])
 {
 	// Same circuit as above, but the simulation is done normally in one instance.
-	Components::Base::List comps = {
+	Component::List comps = {
 		VoltageSourceNorton::make("v_s", 1, 0, Complex(10000, 0), 1),
 		Inductor::make("l_1", 1, 2, 0.1),
 		Resistor::make("r_1", 2, 3, 1)

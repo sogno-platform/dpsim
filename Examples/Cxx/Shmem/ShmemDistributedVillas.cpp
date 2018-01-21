@@ -21,13 +21,14 @@
 
 #include "RealTimeSimulation.h"
 #include "ShmemInterface.h"
+#include "Components.h"
 
 using namespace DPsim;
 using namespace DPsim::Components::DP;
 
 int main(int argc, char *argv[])
 {
-	Components::Base::List comps;
+	Component::List comps;
 
 	struct shmem_conf conf;
 	conf.samplelen = 4;

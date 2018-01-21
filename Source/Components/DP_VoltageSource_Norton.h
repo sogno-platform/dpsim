@@ -22,7 +22,7 @@
 
 #pragma once
 
-#include "Base.h"
+#include "Component.h"
 #include "Base_ControllableSource.h"
 #include "Base_ExportableCurrent.h"
 
@@ -33,7 +33,7 @@ namespace DP {
 	/// Real Voltage source:
 	/// The real voltage source is a voltage source in series with a resistance, which is transformed to a current source with
 	/// a parallel resistance using the Norton equivalent
-	class VoltageSourceNorton : public Base, public ControllableSourceBase, public ExportableCurrentBase, public SharedFactory<VoltageSourceNorton> {
+	class VoltageSourceNorton : public Component, public ControllableSourceBase, public ExportableCurrentBase, public SharedFactory<VoltageSourceNorton> {
 	protected:
 		/// Voltage [V]
 		Complex mVoltage;

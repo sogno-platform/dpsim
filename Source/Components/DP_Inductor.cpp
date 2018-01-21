@@ -24,7 +24,7 @@
 using namespace DPsim;
 
 Components::DP::Inductor::Inductor(String name, Int node1, Int node2, Real inductance, Logger::Level logLevel)
-	: Base(name, node1, node2, logLevel) {
+	: Component(name, node1, node2, logLevel) {
 	mInductance = inductance;
 	attrMap["inductance"] = {Attribute::Real, &mInductance};
 	mEquivCurrent = { 0, 0 };

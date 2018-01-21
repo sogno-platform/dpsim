@@ -19,7 +19,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *********************************************************************************/
 
-#include "Component.h"
+#include "Python/Component.h"
+#include "Components/DP_VoltageSource_Norton.h"
 
 using namespace DPsim;
 

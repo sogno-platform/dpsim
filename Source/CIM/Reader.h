@@ -30,7 +30,7 @@
 #include <IEC61970.hpp>
 
 #include "Definitions.h"
-#include "Components/Base.h"
+#include "Component.h"
 
 #include "Logger.h"
 #include "Simulation.h"
@@ -51,7 +51,7 @@ namespace CIM {
 		/// Model from CIM++
 		CIMModel mModel;
 		/// All components after mapping
-		Components::Base::List mComponents;
+		Component::List mComponents;
 		/// System frequency (has to be given to convert between reactances
 		/// in CIM and inductances used inside the simulation)
 		Real mFrequency;
@@ -68,12 +68,12 @@ namespace CIM {
 		/// Number of ideal voltage sources
 		Int mNumVoltageSources;
 
-		Components::Base::Ptr mapComponent(BaseClass* obj);
+		Component::Ptr mapComponent(BaseClass* obj);
 
 		/// Returns an RX-Line.
 		/// The voltage should be given in kV and the angle in degree.
 		/// TODO: Introduce different models such as PI and wave model.
-		Components::Base::Ptr mapACLineSegment(ACLineSegment* line);
+		Component::Ptr mapACLineSegment(ACLineSegment* line);
 		void mapAsynchronousMachine(AsynchronousMachine* machine);
 		/// Returns an PQload with voltage setting according to load flow data.
 		/// Currently the only option is to create an RL-load.
@@ -81,17 +81,17 @@ namespace CIM {
 		/// TODO: Introduce different load models here.
 		void mapEnergyConsumer(EnergyConsumer* con);
 		void mapEquivalentInjection(EquivalentInjection* inj);
-		Components::Base::Ptr mapExternalNetworkInjection(ExternalNetworkInjection* inj);
-		Components::Base::Ptr mapPowerTransformer(PowerTransformer *trans);
+		Component::Ptr mapExternalNetworkInjection(ExternalNetworkInjection* inj);
+		Component::Ptr mapPowerTransformer(PowerTransformer *trans);
 		/// Returns an IdealVoltageSource with voltage setting according to load flow data
 		/// at machine terminals. The voltage should be given in kV and the angle in degree.
 		/// TODO: Introduce real synchronous generator models here.
-		Components::Base::Ptr mapSynchronousMachine(SynchronousMachine* machine);
+		Component::Ptr mapSynchronousMachine(SynchronousMachine* machine);
 		/// Returns an PQload with voltage setting according to load flow data.
 		/// Currently the only option is to create an RL-load.
 		/// The voltage should be given in kV and the angle in degree.
 		/// TODO: Introduce real PQload model here.
-		Components::Base::Ptr newPQLoad(String rid, String name);
+		Component::Ptr newPQLoad(String rid, String name);
 	public:
 		Reader(Real om, Logger::Level logLevel = Logger::Level::NONE);
 		virtual ~Reader();
@@ -102,7 +102,7 @@ namespace CIM {
 		/// Since all nodes have references to the equipment connected to them (via Terminals), but not
 		/// the other way around (which we need for instantiating the components), we collect that information here as well.
 		void parseFiles();
-		Components::Base::List& getComponents();
+		Component::List& getComponents();
 		Matrix::Index mapTopologicalNode(String mrid);
 		Int getNumVoltageSources();
 

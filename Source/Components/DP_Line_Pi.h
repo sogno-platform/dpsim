@@ -28,7 +28,7 @@ namespace DPsim {
 namespace Components {
 namespace DP {
 
-	class PiLine : public Components::Base, public SharedFactory<PiLine> {
+	class PiLine : public Component, public SharedFactory<PiLine> {
 
 	protected:
 		///resistance in [ohms]

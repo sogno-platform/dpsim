@@ -22,13 +22,13 @@
 
 #pragma once
 
-#include "Base.h"
+#include "Component.h"
 
 namespace DPsim {
 namespace Components {
 namespace EMT {
 
-	class Inductor : public Components::Base, public SharedFactory<Inductor> {
+	class Inductor : public Component, public SharedFactory<Inductor> {
 
 	protected:
 		Real mInductance;

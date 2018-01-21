@@ -78,7 +78,7 @@ PyObject* Python::LoadCim(PyObject* self, PyObject* args)
 
 	reader.parseFiles();
 
-	DPsim::Components::Base::List comps = reader.getComponents();
+	DPsim::Component::List comps = reader.getComponents();
 	list = PyList_New(comps.size());
 
 	for (unsigned i = 0; i < comps.size(); i++) {

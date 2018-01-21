@@ -20,6 +20,7 @@
  *********************************************************************************/
 
 #include "Simulation.h"
+#include "Components.h"
 
 using namespace DPsim;
 using namespace DPsim::Components::EMT;
@@ -58,15 +59,15 @@ int main(int argc, char* argv[])
 	Real Rkq2 = 0;
 
 	// Declare circuit components
-	Components::Base::Ptr gen = SynchronGenerator::make("gen", 1, 2, 3,
+	Component::Ptr gen = SynchronGenerator::make("gen", 1, 2, 3,
 		nomPower, nomPhPhVoltRMS, nomFreq, poleNum, nomFieldCurr,
 		Rs, Ll, Lmd, Lmd0, Lmq, Lmq0, Rfd, Llfd, Rkd, Llkd, Rkq1, Llkq1, Rkq2, Llkq2, H);
 	Real loadRes = 1037.8378;
-	Components::Base::Ptr r1 = Resistor::make("r1", 0, 1, loadRes);
-	Components::Base::Ptr r2 = Resistor::make("r2", 0, 2, loadRes);
-	Components::Base::Ptr r3 = Resistor::make("r3", 0, 3, loadRes);
+	Component::Ptr r1 = Resistor::make("r1", 0, 1, loadRes);
+	Component::Ptr r2 = Resistor::make("r2", 0, 2, loadRes);
+	Component::Ptr r3 = Resistor::make("r3", 0, 3, loadRes);
 
-	Components::Base::List comps = { gen, r1, r2, r3 };
+	Component::List comps = { gen, r1, r2, r3 };
 
 	// Set up simulation
 	Real om = 2.0*M_PI*60.0;

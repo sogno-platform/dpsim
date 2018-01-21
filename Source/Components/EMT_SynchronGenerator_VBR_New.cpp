@@ -1,4 +1,4 @@
-﻿/** Voltage behind reactance (EMT)
+/** Voltage behind reactance (EMT)
 *
 * @author Markus Mirz <mmirz@eonerc.rwth-aachen.de>
 * @copyright 2017, Institute for Automation of Complex Power Systems, EONERC
@@ -25,14 +25,14 @@
 using namespace DPsim;
 
 Components::EMT::VoltageBehindReactanceEMTNew::VoltageBehindReactanceEMTNew(String name, Int node1, Int node2, Int node3,
-		Real nomPower, Real nomVolt, Real nomFreq, Int poleNumber, Real nomFieldCur,
-		Real Rs, Real Ll, Real Lmd, Real Lmd0, Real Lmq, Real Lmq0,
-		Real Rfd, Real Llfd, Real Rkd, Real Llkd,
-		Real Rkq1, Real Llkq1, Real Rkq2, Real Llkq2,
-		Real inertia, Logger::Level logLevel)
-		: SynchronGeneratorBase(name, node1, node2, node3, nomPower, nomVolt, nomFreq, poleNumber, nomFieldCur,
-				Rs, Ll, Lmd, Lmd0, Lmq, Lmq0, Rfd, Llfd, Rkd, Llkd, Rkq1, Llkq1, Rkq2, Llkq2,
-				inertia, logLevel)
+	Real nomPower, Real nomVolt, Real nomFreq, Int poleNumber, Real nomFieldCur,
+	Real Rs, Real Ll, Real Lmd, Real Lmd0, Real Lmq, Real Lmq0,
+	Real Rfd, Real Llfd, Real Rkd, Real Llkd,
+	Real Rkq1, Real Llkq1, Real Rkq2, Real Llkq2,
+	Real inertia, Logger::Level logLevel)
+	: SynchronGeneratorBase(name, node1, node2, node3, nomPower, nomVolt, nomFreq, poleNumber, nomFieldCur,
+			Rs, Ll, Lmd, Lmd0, Lmq, Lmq0, Rfd, Llfd, Rkd, Llkd, Rkq1, Llkq1, Rkq2, Llkq2,
+			inertia, logLevel)
 {
 }
 

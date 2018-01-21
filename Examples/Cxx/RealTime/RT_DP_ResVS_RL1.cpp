@@ -20,13 +20,14 @@
  *********************************************************************************/
 
 #include "RealTimeSimulation.h"
+#include "Components.h"
 
 using namespace DPsim;
 using namespace DPsim::Components::DP;
 
 int main(int argc, char* argv[])
 {
-	Components::Base::List comps = {
+	Component::List comps = {
 		VoltageSource::make("v_s", 0, GND, Complex(10000, 0)),
 		Resistor::make("r_line", 0, 1, 1),
 		Inductor::make("l_line", 1, 2, 1),

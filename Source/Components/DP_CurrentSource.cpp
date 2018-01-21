@@ -24,13 +24,13 @@
 using namespace DPsim;
 
 Components::DP::CurrentSource::CurrentSource(String name, Int node1, Int node2, Complex current)
-	: Base(name, node1, node2) {
+	: Component(name, node1, node2) {
 	mCurrent = current;
 	attrMap["current"] = { Attribute::Complex, &mCurrent };
 }
 
 Components::DP::CurrentSource::CurrentSource(String name, Int node1, Int node2, Real currentAbs, Real currentPhase)
-	: Base(name, node1, node2) {
+	: Component(name, node1, node2) {
 	mCurrent = MathLibrary::polar(currentAbs, currentPhase);
 	attrMap["current"] = { Attribute::Complex, &mCurrent };
 }

@@ -7,10 +7,10 @@ add_library(dpsim
 	Simulation.cpp
 	FaultSimulation.cpp
 	SynGenSimulation.cpp
+	Component.cpp
 )
 
 list(APPEND SOURCES
-	Components/Base.cpp
 	Components/Base_SynchronGenerator.cpp
 	Components/DP_Capacitor.cpp
 	Components/DP_CurrentSource.cpp

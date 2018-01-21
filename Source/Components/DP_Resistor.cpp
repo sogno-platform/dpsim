@@ -25,7 +25,7 @@ using namespace DPsim;
 
 Components::DP::Resistor::Resistor(String name, Int node1, Int node2, Real resistance,
 	Logger::Level logLevel)
-	: Base(name, node1, node2, logLevel) {
+	: Component(name, node1, node2, logLevel) {
 	mResistance = resistance;
 	attrMap["resistance"] = { Attribute::Real, &mResistance };
 	mLog.Log(Logger::Level::DEBUG) << "Create Resistor " << name << " at " << mNode1 << "," << mNode2 << std::endl;

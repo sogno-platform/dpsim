@@ -25,7 +25,7 @@ using namespace DPsim;
 
 Components::DP::VoltageSourceNorton::VoltageSourceNorton(String name, Int node1, Int node2,
 	Complex voltage, Real resistance, Logger::Level logLevel)
-	: Base(name, node1, node2, logLevel) {
+	: Component(name, node1, node2, logLevel) {
 	mVoltage = voltage;
 	mResistance = resistance;
 	mConductance = 1. / mResistance;

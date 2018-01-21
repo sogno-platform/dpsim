@@ -20,7 +20,7 @@
  *********************************************************************************/
 
 #include "Simulation.h"
-#include "Utilities.h"
+#include "Components.h"
 
 using namespace DPsim;
 using namespace DPsim::Components::DP;
@@ -33,7 +33,7 @@ int main(int argc, char* argv[])
 	Real finalTime = 0.3;
 	String simName = "RxLine2_" + std::to_string(timeStep);
 
-	Components::Base::List comps = {
+	Component::List comps = {
 		VoltageSource::make("v_1", 0, GND, Complex(10, 0)),
 		Inductor::make("l_L", 1, 2, 0.001),
 		Resistor::make("r_L", 0, 1, 0.1),

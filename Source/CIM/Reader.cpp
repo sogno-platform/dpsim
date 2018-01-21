@@ -85,7 +85,7 @@ Reader::~Reader() {
 		delete[] mVoltages;
 }
 
-Components::Base::Ptr Reader::mapACLineSegment(ACLineSegment* line)
+Component::Ptr Reader::mapACLineSegment(ACLineSegment* line)
 {
 	std::vector<Matrix::Index> &nodes = mEqNodeMap.at(line->mRID); // TODO can fail
 	if (nodes.size() != 2) {
@@ -118,7 +118,7 @@ void Reader::mapEquivalentInjection(EquivalentInjection* inj)
 {
 }
 
-Components::Base::Ptr Reader::mapExternalNetworkInjection(ExternalNetworkInjection* inj)
+Component::Ptr Reader::mapExternalNetworkInjection(ExternalNetworkInjection* inj)
 {
 	std::vector<Matrix::Index> &nodes = mEqNodeMap.at(inj->mRID);
 	if (nodes.size() != 1) {
@@ -141,7 +141,7 @@ Components::Base::Ptr Reader::mapExternalNetworkInjection(ExternalNetworkInjecti
 }
 
 // TODO: support phase shift
-Components::Base::Ptr Reader::mapPowerTransformer(PowerTransformer* trans) {
+Component::Ptr Reader::mapPowerTransformer(PowerTransformer* trans) {
 	std::vector<Matrix::Index> &nodes = mEqNodeMap.at(trans->mRID);
 	if (nodes.size() != trans->PowerTransformerEnd.size()) {
 		mLog.Log(Logger::Level::WARN) << "PowerTransformer " << trans->mRID << " has differing number of terminals and windings, ignoring" << std::endl;
@@ -197,7 +197,7 @@ Components::Base::Ptr Reader::mapPowerTransformer(PowerTransformer* trans) {
 }
 
 // TODO: don't use SvVoltage, but map to a SynchronGeneratorDP instead
-Components::Base::Ptr Reader::mapSynchronousMachine(SynchronousMachine* machine)
+Component::Ptr Reader::mapSynchronousMachine(SynchronousMachine* machine)
 {
 	std::vector<Matrix::Index> &nodes = mEqNodeMap.at(machine->mRID);
 	if (nodes.size() != 1) {
@@ -224,7 +224,7 @@ Components::Base::Ptr Reader::mapSynchronousMachine(SynchronousMachine* machine)
 	return std::make_shared<Components::DP::VoltageSource>(machine->name, GND, node, initVoltage);
 }
 
-Components::Base::Ptr Reader::mapComponent(BaseClass* obj)
+Component::Ptr Reader::mapComponent(BaseClass* obj)
 {
 	if (ACLineSegment *line = dynamic_cast<ACLineSegment*>(obj))
 		return mapACLineSegment(line);
@@ -237,7 +237,7 @@ Components::Base::Ptr Reader::mapComponent(BaseClass* obj)
 	return nullptr;
 }
 
-Components::Base::Ptr Reader::newPQLoad(String rid, String name)
+Component::Ptr Reader::newPQLoad(String rid, String name)
 {
 	std::vector<Matrix::Index> &nodes = mEqNodeMap.at(rid);
 	if (nodes.size() != 1) {
@@ -337,13 +337,13 @@ void Reader::parseFiles() {
 
 	mLog.Log(Logger::Level::INFO) << "#### Create new components ####" << std::endl;
 	for (auto obj : mModel.Objects) {
-		Components::Base::Ptr comp = mapComponent(obj);
+		Component::Ptr comp = mapComponent(obj);
 		if (comp)
 			mComponents.push_back(comp);
 	}
 }
 
-Components::Base::List& Reader::getComponents()
+Component::List& Reader::getComponents()
 {
 	return mComponents;
 }
