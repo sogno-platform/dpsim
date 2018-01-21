@@ -23,10 +23,14 @@
 
 using namespace DPsim;
 
-Components::EMT::CurrentSource::CurrentSource(String name, Int node1, Int node2, Real current)
+Components::EMT::CurrentSource::CurrentSource(String name, Int node1, Int node2, Real currentAmp, Real currentPhase)
 	: Component(name, node1, node2) {
-	mCurrent = current;
+	mCurrent = currentAmp * cos(currentPhase);
 	attrMap["current"] = { Attribute::Real, &mCurrent };
+}
+
+Components::EMT::CurrentSource::CurrentSource(String name, Int node1, Int node2, Complex current)
+	: CurrentSource(name, node1, node2, std::abs(current), std::arg(current)) {
 }
 
 void Components::EMT::CurrentSource::applyRightSideVectorStamp(SystemModel& system)

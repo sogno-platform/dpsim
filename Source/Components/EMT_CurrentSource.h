@@ -33,7 +33,8 @@ namespace EMT {
 	private:
 		Real mCurrent;
 	public:
-		CurrentSource(String name, Int node1, Int node2, Real current);
+		CurrentSource(String name, Int node1, Int node2, Complex current);
+		CurrentSource(String name, Int node1, Int node2, Real currentAmp, Real currentPhase);
 
 		void initialize(SystemModel& system) { }
 		void applySystemMatrixStamp(SystemModel& system) { }
