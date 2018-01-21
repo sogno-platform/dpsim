@@ -37,8 +37,6 @@ namespace EMT {
 	class VoltageSource : public Component, public SharedFactory<VoltageSource> {
 	protected:
 		Real mVoltage;
-		Real mVoltageAmp;
-		Real mVoltagePhase;
 	public:
 		/// define paramenters of the voltage source
 		VoltageSource(String name, Int node1, Int node2, Complex voltage,
