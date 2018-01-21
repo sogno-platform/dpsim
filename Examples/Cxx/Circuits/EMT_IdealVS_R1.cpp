@@ -20,7 +20,7 @@
  *********************************************************************************/
 
 #include "Simulation.h"
-#include "Utilities.h"
+#include "Components.h"
 
 using namespace DPsim;
 using namespace DPsim::Components::EMT;
@@ -33,7 +33,7 @@ int main(int argc, char* argv[])
 	Real finalTime = 0.3;
 	String simName = "IdealVS_EMT_" + std::to_string(timeStep);
 
-	Components::Base::List comps = {
+	Component::List comps = {
 		VoltageSource::make("v_in", 0, 1, 10, 0),
 		Resistor::make("r_1", 0, GND, 5),
 		Resistor::make("r_2", 1, GND, 10),

@@ -19,7 +19,9 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *********************************************************************************/
 
-#include "Component.h"
+#include "Python/Component.h"
+#include "Components/DP_Resistor.h"
+#include "Components/EMT_Resistor.h"
 
 using namespace DPsim;
 

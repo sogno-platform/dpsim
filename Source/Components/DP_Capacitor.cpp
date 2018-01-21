@@ -24,7 +24,7 @@
 using namespace DPsim;
 
 Components::DP::Capacitor::Capacitor(String name, Int node1, Int node2, Real capacitance)
-	: Base(name, node1, node2) {
+	: Component(name, node1, node2) {
 	mCapacitance = capacitance;
 	attrMap["capacitance"] = { Attribute::Real, &mCapacitance };
 	mEquivCurrent = { 0, 0 };

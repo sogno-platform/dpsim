@@ -27,8 +27,7 @@
 #include <vector>
 #include <memory>
 
-#include "Simulation.h"
-#include "Components/Base.h"
+#include "../Component.h"
 
 namespace DPsim {
 namespace Python {
@@ -36,7 +35,7 @@ namespace Python {
 	struct Component {
 		PyObject_HEAD
 
-		DPsim::Components::Base::Ptr comp;
+		DPsim::Component::Ptr comp;
 		static void init(Component* self);
 
 		static PyObject* newfunc(PyTypeObject* type, PyObject *args, PyObject *kwds);
@@ -50,7 +49,7 @@ namespace Python {
 
 	extern PyTypeObject ComponentType;
 
-	bool compsFromPython(PyObject* list, DPsim::Components::Base::List& comps);
+	bool compsFromPython(PyObject* list, DPsim::Component::List& comps);
 
 namespace Components {
 	extern const char* DocCurrentSource;

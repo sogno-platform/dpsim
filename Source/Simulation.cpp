@@ -23,7 +23,7 @@
 
 using namespace DPsim;
 
-Simulation::Simulation(String name, Components::Base::List comps, Real om, Real dt, Real tf, Logger::Level logLevel,
+Simulation::Simulation(String name, Component::List comps, Real om, Real dt, Real tf, Logger::Level logLevel,
 	SimulationType simType, Int downSampleRate) :
 	mLog("Logs/" + name + ".log", logLevel),
 	mLeftVectorLog("Logs/" + name + "_LeftVector.csv", logLevel),
@@ -56,7 +56,7 @@ Simulation::Simulation(String name, Components::Base::List comps, Real om, Real 
 	mLog.LogMatrix(Logger::Level::INFO, mSystemModel.getRightSideVector());
 }
 
-void Simulation::initialize(Components::Base::List newComponents)
+void Simulation::initialize(Component::List newComponents)
 {
 	Int maxNode = 0;
 	Int currentVirtualNode = 0;
@@ -111,7 +111,7 @@ void Simulation::initialize(Components::Base::List newComponents)
 	mComponents = mComponentsVector[0];
 }
 
-void Simulation::addSystemTopology(Components::Base::List newComponents)
+void Simulation::addSystemTopology(Component::List newComponents)
 {
 	mComponentsVector.push_back(newComponents);
 

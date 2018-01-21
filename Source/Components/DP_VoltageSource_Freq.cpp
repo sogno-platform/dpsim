@@ -25,7 +25,7 @@ using namespace DPsim;
 
 Components::DP::VoltageSourceFreq::VoltageSourceFreq(String name, Int node1, Int node2, Real voltage, Real phase,
 	Real resistance, Real omegaSource, Real switchTime, Real rampTime)
-	: Base(name, node1, node2) {
+	: Component(name, node1, node2) {
 	mResistance = resistance;
 	mConductance = 1. / resistance;
 	mVoltageAmp = voltage;

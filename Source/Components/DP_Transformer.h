@@ -22,7 +22,7 @@
 
 #pragma once
 
-#include "Base.h"
+#include "Component.h"
 #include "DP_Line_Rx.h"
 #include "DP_Transformer_Ideal.h"
 #include "DP_Inductor.h"
@@ -32,7 +32,7 @@ namespace Components {
 namespace DP {
 
 	/// Transformer that includes an inductance and resistance
-	class Transformer : public Components::Base, public SharedFactory<Transformer> {
+	class Transformer : public Component, public SharedFactory<Transformer> {
 
 	private:
 		/// Transformer ratio

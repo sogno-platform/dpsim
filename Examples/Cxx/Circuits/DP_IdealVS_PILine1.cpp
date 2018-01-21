@@ -20,7 +20,7 @@
  *********************************************************************************/
 
 #include "Simulation.h"
-#include "Utilities.h"
+#include "Components.h"
 
 using namespace DPsim;
 using namespace DPsim::Components::DP;
@@ -33,7 +33,7 @@ int main(int argc, char* argv[])
 	Real finalTime = 0.3;
 	String simName = "PiLine1_" + std::to_string(timeStep);
 
-	Components::Base::List comps = {
+	Component::List comps = {
 		VoltageSource::make("v_1", 0, GND, Complex(345, 0)),
 		Resistor::make("r1", 0, 1, 5),
 		Capacitor::make("c_1", 1, GND, 0.002),

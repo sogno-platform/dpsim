@@ -24,7 +24,7 @@
 using namespace DPsim;
 
 Components::DP::VoltageSource::VoltageSource(String name, Int node1, Int node2, Complex voltage, Logger::Level loglevel)
-	: Base(name, node1, node2, loglevel) {
+	: Component(name, node1, node2, loglevel) {
 	mVoltage = voltage;
 	mNumVirtualNodes = 1;
 	mVirtualNodes = { 0 };
@@ -34,7 +34,7 @@ Components::DP::VoltageSource::VoltageSource(String name, Int node1, Int node2, 
 
 Components::DP::VoltageSource::VoltageSource(String name, Int node1, Int node2, Real voltageAbs, Real voltagePhase,
 	Logger::Level loglevel)
-	: Base(name, node1, node2, loglevel) {
+	: Component(name, node1, node2, loglevel) {
 	mVoltage = MathLibrary::polar(voltageAbs, voltagePhase);
 	mNumVirtualNodes = 1;
 	mVirtualNodes = { 0 };

@@ -23,13 +23,13 @@
 #pragma once
 
 #include <iostream>
-#include "Base.h"
+#include "Component.h"
 
 namespace DPsim {
 namespace Components {
 namespace EMT {
 
-	class Resistor : public Components::Base, public SharedFactory<Resistor> {
+	class Resistor : public Component, public SharedFactory<Resistor> {
 
 	protected:
 		Real mResistance;

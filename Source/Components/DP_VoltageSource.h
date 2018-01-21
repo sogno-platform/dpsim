@@ -22,7 +22,7 @@
 
 #pragma once
 
-#include "Base.h"
+#include "Component.h"
 #include "Base_ControllableSource.h"
 #include "Base_ExportableCurrent.h"
 
@@ -35,7 +35,7 @@ namespace DP {
 	/// For a voltage source between nodes j and k, a new variable (current across the voltage source) is added to the left side vector
 	/// as unkown and it is taken into account for the equation of node j as positve and for the equation of node k as negative. Moreover
 	/// a new equation ej - ek = V is added to the problem.
-	class VoltageSource : public Base, public ControllableSourceBase, public ExportableCurrentBase, public SharedFactory<VoltageSource> {
+	class VoltageSource : public Component, public ControllableSourceBase, public ExportableCurrentBase, public SharedFactory<VoltageSource> {
 
 	private:
 		/// Voltage [V]

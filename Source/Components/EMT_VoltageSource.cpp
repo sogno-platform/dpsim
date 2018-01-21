@@ -24,7 +24,7 @@
 using namespace DPsim;
 
 Components::EMT::VoltageSource::VoltageSource(String name, Int node1, Int node2, Real voltageAmp, Real voltagePhase,
-	Logger::Level loglevel)	: Base(name, node1, node2, loglevel) {
+	Logger::Level loglevel)	: Component(name, node1, node2, loglevel) {
 	mVoltageAmp = voltageAmp;
 	mVoltagePhase = voltagePhase;
 	mNumVirtualNodes = 1;

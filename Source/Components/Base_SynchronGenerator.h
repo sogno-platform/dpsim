@@ -22,7 +22,7 @@
 
 #pragma once
 
-#include "Base.h"
+#include "Component.h"
 
 namespace DPsim {
 namespace Components {
@@ -37,7 +37,7 @@ namespace Components {
 	/// parameter names include underscores and typical variables names found in literature instead of
 	/// descriptive names in order to shorten formulas and increase the readability
 
-	class SynchronGeneratorBase : public Components::Base {
+	class SynchronGeneratorBase : public Component {
 
 	protected:
 		Logger* mLog;

@@ -1,4 +1,4 @@
-﻿/** Simulation
+/** Simulation
  *
  * @author Markus Mirz <mmirz@eonerc.rwth-aachen.de>
  * @copyright 2017, Institute for Automation of Complex Power Systems, EONERC
@@ -25,7 +25,7 @@
 #include <vector>
 
 #include "Definitions.h"
-#include "Components.h"
+#include "Component.h"
 #include "Logger.h"
 #include "SystemModel.h"
 #include "ExternalInterface.h"
@@ -68,19 +68,19 @@ namespace DPsim {
 		/// Structure that holds all system information.
 		SystemModel mSystemModel;
 		/// Stores a list of circuit elements that are used to generate the system matrix
-		Components::Base::List mComponents;
+		Component::List mComponents;
 		/// Circuit list vector
-		std::vector<Components::Base::List> mComponentsVector;
+		std::vector<Component::List> mComponentsVector;
 		/// Vector of ExternalInterfaces
 		std::vector<ExternalInterface*> mExternalInterfaces;
 
 	public:
 		/// Creates system matrix according to
-		Simulation(String name, Components::Base::List comps, Real om, Real dt, Real tf, Logger::Level logLevel = Logger::Level::INFO, SimulationType simType = SimulationType::DynPhasor, Int downSampleRate = 1);
+		Simulation(String name, Component::List comps, Real om, Real dt, Real tf, Logger::Level logLevel = Logger::Level::INFO, SimulationType simType = SimulationType::DynPhasor, Int downSampleRate = 1);
 		virtual ~Simulation() { };
 
 		/// TODO: check that every system matrix has the same dimensions
-		void initialize(Components::Base::List comps);
+		void initialize(Component::List comps);
 		/// Solve system A * x = z for x and current time
 		Int step(bool blocking = true);
 		/// Run simulation until total time is elapsed.
@@ -106,7 +106,7 @@ namespace DPsim {
 		Matrix & getRightSideVector() { return mSystemModel.getRightSideVector(); }
 		Matrix & getSystemMatrix() { return mSystemModel.getCurrentSystemMatrix(); }
 
-		void addSystemTopology(Components::Base::List newComps);
+		void addSystemTopology(Component::List newComps);
 	};
 
 }

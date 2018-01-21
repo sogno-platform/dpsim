@@ -20,6 +20,7 @@
  *********************************************************************************/
 
 #include "Simulation.h"
+#include "Components.h"
 
 using namespace DPsim;
 using namespace DPsim::Components::DP;
@@ -32,7 +33,7 @@ int tmpmain(int argc, char* argv[]) {
 	Real finalTime = 0.2;
 	String simName = "IdealVS_Trafo_" + std::to_string(timeStep);
 
-	Components::Base::List comps = {
+	Component::List comps = {
 		VoltageSource::make("v_1", GND, 0, 100., 0*-90./180.*PI, Logger::Level::DEBUG),
 		//Inductor::make("l_1", 0, 1, 0.1, Logger::Level::DEBUG),
 		//Resistor::make("r_2", 1, GND, 1, Logger::Level::DEBUG),

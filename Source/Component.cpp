@@ -25,11 +25,11 @@
 
 #include <typeinfo>
 
-#include "Base.h"
+#include "Component.h"
 
 using namespace DPsim;
 
-String Components::Base::getType()
+String Component::getType()
 {
 	Int status = 1;
 	const char *mangled;

@@ -22,13 +22,13 @@
 
 #pragma once
 
-#include "Base.h"
+#include "Component.h"
 
 namespace DPsim {
 namespace Components {
 namespace EMT {
 
-	class VoltageSourceFreq : public Components::Base, public SharedFactory<VoltageSourceFreq> {
+	class VoltageSourceFreq : public Component, public SharedFactory<VoltageSourceFreq> {
 
 	protected:
 		Real mVoltageAmp;

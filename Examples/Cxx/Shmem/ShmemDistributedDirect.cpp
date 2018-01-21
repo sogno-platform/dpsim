@@ -21,6 +21,7 @@
 
 #include "RealTimeSimulation.h"
 #include "ShmemInterface.h"
+#include "Components.h"
 
 using namespace DPsim;
 using namespace DPsim::Components::DP;
@@ -35,7 +36,7 @@ int main(int argc, char *argv[])
 	// Here, the two instances directly communicate with each other without using
 	// VILLASnode in between.
 
-	Components::Base::List comps;
+	Component::List comps;
 
 	struct shmem_conf conf;
 	conf.samplelen = 4;

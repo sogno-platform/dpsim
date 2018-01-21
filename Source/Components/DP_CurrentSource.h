@@ -22,7 +22,7 @@
 
 #pragma once
 
-#include "Base.h"
+#include "Component.h"
 #include "Base_ControllableSource.h"
 #include "Base_ExportableCurrent.h"
 
@@ -30,7 +30,7 @@ namespace DPsim {
 namespace Components {
 namespace DP {
 
-	class CurrentSource : public Base, public ControllableSourceBase, public ExportableCurrentBase, public SharedFactory<CurrentSource> {
+	class CurrentSource : public Component, public ControllableSourceBase, public ExportableCurrentBase, public SharedFactory<CurrentSource> {
 	private:
 		Complex mCurrent;
 	public:

@@ -24,7 +24,7 @@
 using namespace DPsim;
 
 Components::DP::PiLine::PiLine(String name, Int node1, Int node2, Int node3, Real resistance, Real inductance, Real capacitance)
-	: Base(name, node1, node2, node3)
+	: Component(name, node1, node2, node3)
 {
 	mResistance = resistance;
 	mInductance = inductance;

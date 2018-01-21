@@ -21,6 +21,7 @@
 
 #include "Simulation.h"
 #include "ShmemInterface.h"
+#include "Components.h"
 
 using namespace DPsim;
 using namespace DPsim::Components::DP;
@@ -32,7 +33,7 @@ int main(int argc, char* argv[])
 
 	auto evs = VoltageSource::make("v_s", 1, 0, Complex(0, 0));
 
-	Components::Base::List comps = {
+	Component::List comps = {
 		evs,
 		Resistor::make("r_s", 1, 2, 1),
 		Resistor::make("r_line", 2, 3, 1),

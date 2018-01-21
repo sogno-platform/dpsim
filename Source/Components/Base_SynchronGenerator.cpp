@@ -29,7 +29,7 @@ Components::SynchronGeneratorBase::SynchronGeneratorBase(String name, Int node1,
 	Real Rfd, Real Llfd, Real Rkd, Real Llkd,
 	Real Rkq1, Real Llkq1, Real Rkq2, Real Llkq2,
 	Real inertia, Logger::Level logLevel)
-	: Base(name, node1, node2, node3, logLevel) {
+	: Component(name, node1, node2, node3, logLevel) {
 	mNomPower = nomPower;
 	mNomVolt = nomVolt;
 	mNomFreq = nomFreq;

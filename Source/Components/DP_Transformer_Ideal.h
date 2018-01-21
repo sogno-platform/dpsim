@@ -22,14 +22,14 @@
 
 #pragma once
 
-#include "Base.h"
+#include "Component.h"
 
 namespace DPsim {
 namespace Components {
 namespace DP {
 
 	/// Ideal transformer that is connected to ground
-	class TransformerIdeal : public Components::Base, public SharedFactory<TransformerIdeal> {
+	class TransformerIdeal : public Component, public SharedFactory<TransformerIdeal> {
 
 	private:
 		/// Transformer ratio

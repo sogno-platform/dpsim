@@ -20,7 +20,7 @@
  *********************************************************************************/
 
 #include "Simulation.h"
-#include "Utilities.h"
+#include "Components.h"
 
 using namespace DPsim;
 using namespace DPsim::Components::DP;
@@ -33,7 +33,7 @@ int main(int argc, char* argv[])
 	Real finalTime = 0.3;
 	String simName = "Example1_" + std::to_string(timeStep);
 
-	Components::Base::List comps = {
+	Component::List comps = {
 		VoltageSourceNorton::make("v_in", 0, GND, Complex(10, 0), 1),
 		Inductor::make("l_1", 0, 1, 0.02),
 		Inductor::make("l_2", 1, GND, 0.1),

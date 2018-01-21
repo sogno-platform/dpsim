@@ -28,7 +28,7 @@
 
 using namespace DPsim;
 
-RealTimeSimulation::RealTimeSimulation(String name, Components::Base::List comps, Real om, Real dt, Real tf, Logger::Level logLevel, SimulationType simType, Int downSampleRate)
+RealTimeSimulation::RealTimeSimulation(String name, Component::List comps, Real om, Real dt, Real tf, Logger::Level logLevel, SimulationType simType, Int downSampleRate)
 	: Simulation(name, comps, om, dt, tf, logLevel, simType, downSampleRate)
 {
 #ifdef RTMETHOD_TIMERFD

@@ -21,6 +21,7 @@
 
 #include "RealTimeSimulation.h"
 #include "ShmemInterface.h"
+#include "Components.h"
 
 using namespace DPsim;
 using namespace DPsim::Components::DP;
@@ -28,7 +29,7 @@ using namespace DPsim::Components::DP;
 int main(int argc, char* argv[])
 {
 	// Same circuit as above, but now with realtime support.
-	Components::Base::List comps;
+	Component::List comps;
 
 	struct shmem_conf conf;
 	conf.samplelen = 4;
