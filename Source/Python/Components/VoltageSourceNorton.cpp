@@ -20,8 +20,6 @@
  *********************************************************************************/
 
 #include "Python/Component.h"
-#include "Components/DP_VoltageSource_Norton.h"
-#include "Components/EMT_VoltageSource_Norton.h"
 
 using namespace DPsim;
 
@@ -38,7 +36,8 @@ const char *Python::Components::DocVoltageSourceNorton =
 ":param resistance: Internal resistance in Ohm.\n"
 ":returns: A new `Component` representing this voltage source.\n";
 
-PyObject* Python::Components::DP::VoltageSourceNorton(PyObject* self, PyObject* args)
+template<class C>
+PyObject* Python::Components::VoltageSourceNorton(PyObject* self, PyObject* args)
 {
 	const char *name;
 	double resistance;
@@ -50,24 +49,7 @@ PyObject* Python::Components::DP::VoltageSourceNorton(PyObject* self, PyObject* 
 
 	Component *pyComp = PyObject_New(Component, &ComponentType);
 	Component::init(pyComp);
-	pyComp->comp = std::make_shared<DPsim::Components::DP::VoltageSourceNorton>(name, src, dest, Complex(voltage.real, voltage.imag), resistance);
-
-	return (PyObject*) pyComp;
-}
-
-PyObject* Python::Components::EMT::VoltageSourceNorton(PyObject* self, PyObject* args)
-{
-	const char *name;
-	double resistance;
-	int src, dest;
-	Py_complex voltage;
-
-	if (!PyArg_ParseTuple(args, "siiDd", &name, &src, &dest, &voltage, &resistance))
-		return nullptr;
-
-	Component *pyComp = PyObject_New(Component, &ComponentType);
-	Component::init(pyComp);
-	pyComp->comp = std::make_shared<DPsim::Components::EMT::VoltageSourceNorton>(name, src, dest, Complex(voltage.real, voltage.imag), resistance);
+	pyComp->comp = std::make_shared<C>(name, src, dest, Complex(voltage.real, voltage.imag), resistance);
 
 	return (PyObject*) pyComp;
 }

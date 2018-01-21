@@ -27,7 +27,7 @@
 #include <vector>
 #include <memory>
 
-#include "../Component.h"
+#include "../Components.h"
 
 namespace DPsim {
 namespace Python {
@@ -59,21 +59,12 @@ namespace Components {
 	extern const char* DocCapacitor;
 	extern const char* DocVoltageSourceNorton;
 
-namespace DP {
-	PyObject* CurrentSource(PyObject* self, PyObject *args);
-	PyObject* VoltageSource(PyObject* self, PyObject *args);
-	PyObject* VoltageSourceNorton(PyObject* self, PyObject *args);
-	PyObject* Resistor(PyObject* self, PyObject *args);
-	PyObject* Inductor(PyObject* self, PyObject *args);
-	PyObject* Capacitor(PyObject* self, PyObject *args);
-}
-
-namespace EMT {
-	PyObject* VoltageSource(PyObject* self, PyObject *args);
-	PyObject* VoltageSourceNorton(PyObject* self, PyObject *args);
-	PyObject* Resistor(PyObject* self, PyObject *args);
-	PyObject* Inductor(PyObject* self, PyObject *args);
-} /// EMT
+	template<class C> PyObject* CurrentSource(PyObject* self, PyObject *args);
+	template<class C> PyObject* VoltageSource(PyObject* self, PyObject *args);
+	template<class C> PyObject* VoltageSourceNorton(PyObject* self, PyObject *args);
+	template<class C> PyObject* Resistor(PyObject* self, PyObject *args);
+	template<class C> PyObject* Inductor(PyObject* self, PyObject *args);
+	template<class C> PyObject* Capacitor(PyObject* self, PyObject *args);
 } /// Components
 } /// Python
 } /// DPsim

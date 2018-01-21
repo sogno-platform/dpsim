@@ -33,16 +33,20 @@ using namespace DPsim;
 static PyMethodDef dpsimModuleMethods[] = {
 	{ "load_cim", Python::LoadCim, METH_VARARGS, Python::DocLoadCim },
 	{ "open_shmem_interface", (PyCFunction) Python::OpenShmemInterface, METH_VARARGS|METH_KEYWORDS, Python::DocOpenShmemInterface },
-	{ "CurrentSourceDP", Python::Components::DP::CurrentSource, METH_VARARGS, Python::Components::DocCurrentSource },
-	{ "VoltageSourceDP", Python::Components::DP::VoltageSource, METH_VARARGS, Python::Components::DocVoltageSource },
-	{ "VoltageSourceEMT", Python::Components::EMT::VoltageSource, METH_VARARGS, Python::Components::DocVoltageSource },
-	{ "VoltageSourceNortonDP", Python::Components::DP::VoltageSourceNorton, METH_VARARGS, Python::Components::DocVoltageSourceNorton },
-	{ "VoltageSourceNortonEMT", Python::Components::EMT::VoltageSourceNorton, METH_VARARGS, Python::Components::DocVoltageSourceNorton },
-	{ "ResistorDP",  Python::Components::DP::Resistor,  METH_VARARGS, Python::Components::DocResistor },
-	{ "CapacitorDP", Python::Components::DP::Capacitor, METH_VARARGS, Python::Components::DocCapacitor },
-	{ "InductorDP",  Python::Components::DP::Inductor,  METH_VARARGS, Python::Components::DocInductor },
-	{ "InductorEMT", Python::Components::EMT::Inductor, METH_VARARGS, Python::Components::DocInductor },
-	{ "ResistorEMT", Python::Components::EMT::Resistor, METH_VARARGS, Python::Components::DocResistor },
+
+	// Component constructors
+	{ "CurrentSourceDP",        Python::Components::CurrentSource<DPsim::Components::DP::CurrentSource>,              METH_VARARGS, Python::Components::DocCurrentSource },
+	{ "CurrentSourceEMT",       Python::Components::CurrentSource<DPsim::Components::EMT::CurrentSource>,             METH_VARARGS, Python::Components::DocCurrentSource },
+	{ "VoltageSourceDP",        Python::Components::VoltageSource<DPsim::Components::DP::VoltageSource>,              METH_VARARGS, Python::Components::DocVoltageSource },
+	{ "VoltageSourceEMT",       Python::Components::VoltageSource<DPsim::Components::EMT::VoltageSource>,             METH_VARARGS, Python::Components::DocVoltageSource },
+	{ "VoltageSourceNortonDP",  Python::Components::VoltageSourceNorton<DPsim::Components::DP::VoltageSourceNorton>,  METH_VARARGS, Python::Components::DocVoltageSourceNorton },
+	{ "VoltageSourceNortonEMT", Python::Components::VoltageSourceNorton<DPsim::Components::EMT::VoltageSourceNorton>, METH_VARARGS, Python::Components::DocVoltageSourceNorton },
+	{ "InductorDP",             Python::Components::Inductor<DPsim::Components::DP::Inductor>,                        METH_VARARGS, Python::Components::DocInductor },
+	{ "InductorEMT",            Python::Components::Inductor<DPsim::Components::EMT::Inductor>,                       METH_VARARGS, Python::Components::DocInductor },
+	{ "ResistorDP",	            Python::Components::Resistor<DPsim::Components::DP::Resistor>,                        METH_VARARGS, Python::Components::DocResistor },
+	{ "ResistorEMT",            Python::Components::Resistor<DPsim::Components::EMT::Resistor>,                       METH_VARARGS, Python::Components::DocResistor },
+	{ "CapacitorDP",            Python::Components::Capacitor<DPsim::Components::DP::Capacitor>,                      METH_VARARGS, Python::Components::DocCapacitor },
+	{ "CapacitorEMT",           Python::Components::Capacitor<DPsim::Components::EMT::Capacitor>,                     METH_VARARGS, Python::Components::DocCapacitor },
 	{ 0 }
 };
 

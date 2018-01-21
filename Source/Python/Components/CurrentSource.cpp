@@ -20,7 +20,6 @@
  *********************************************************************************/
 
 #include "Python/Component.h"
-#include "Components/DP_CurrentSource.h"
 
 using namespace DPsim;
 
@@ -35,7 +34,8 @@ const char *Python::Components::DocCurrentSource =
 ":param initial_current: The current of this source in the first timestep (as a complex value).\n"
 ":returns: A new `Component` representing this current source.\n";
 
-PyObject* Python::Components::DP::CurrentSource(PyObject* self, PyObject* args)
+template<class C>
+PyObject* Python::Components::CurrentSource(PyObject* self, PyObject* args)
 {
 	const char *name;
 	int src, dest;
@@ -46,7 +46,7 @@ PyObject* Python::Components::DP::CurrentSource(PyObject* self, PyObject* args)
 
 	Component *pyComp = PyObject_New(Component, &ComponentType);
 	Component::init(pyComp);
-	pyComp->comp = std::make_shared<DPsim::Components::DP::CurrentSource>(name, src, dest, DPsim::Complex(initCurrent.real, initCurrent.imag));
+	pyComp->comp = std::make_shared<C>(name, src, dest, DPsim::Complex(initCurrent.real, initCurrent.imag));
 
 	return (PyObject*) pyComp;
 }

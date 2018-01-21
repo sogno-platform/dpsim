@@ -20,8 +20,6 @@
  *********************************************************************************/
 
 #include "Python/Component.h"
-#include "Components/DP_Inductor.h"
-#include "Components/EMT_Inductor.h"
 
 using namespace DPsim;
 
@@ -34,7 +32,8 @@ const char *Python::Components::DocInductor =
 ":param inductance: Inductance in Henry.\n"
 ":returns: A new `Component` representing this inductor.\n";
 
-PyObject* Python::Components::DP::Inductor(PyObject* self, PyObject* args)
+template<class C>
+PyObject* Python::Components::Inductor(PyObject* self, PyObject* args)
 {
 	const char *name;
 	double inductance;
@@ -45,23 +44,7 @@ PyObject* Python::Components::DP::Inductor(PyObject* self, PyObject* args)
 
 	Component *pyComp = PyObject_New(Component, &ComponentType);
 	Component::init(pyComp);
-	pyComp->comp = std::make_shared<DPsim::Components::DP::Inductor>(name, src, dest, inductance);
-
-	return (PyObject*) pyComp;
-}
-
-PyObject* Python::Components::EMT::Inductor(PyObject* self, PyObject* args)
-{
-	const char *name;
-	double inductance;
-	int src, dest;
-
-	if (!PyArg_ParseTuple(args, "siid", &name, &src, &dest, &inductance))
-		return nullptr;
-
-	Component *pyComp = PyObject_New(Component, &ComponentType);
-	Component::init(pyComp);
-	pyComp->comp = std::make_shared<DPsim::Components::EMT::Inductor>(name, src, dest, inductance);
+	pyComp->comp = std::make_shared<C>(name, src, dest, inductance);
 
 	return (PyObject*) pyComp;
 }

@@ -20,7 +20,6 @@
  *********************************************************************************/
 
 #include "Python/Component.h"
-#include "Components/DP_Capacitor.h"
 
 using namespace DPsim;
 
@@ -33,7 +32,8 @@ const char *Python::Components::DocCapacitor =
 ":param inductance: Inductance in Henry.\n"
 ":returns: A new `Component` representing this Capacitor.\n";
 
-PyObject* Python::Components::DP::Capacitor(PyObject* self, PyObject* args)
+template<class C>
+PyObject* Python::Components::Capacitor(PyObject* self, PyObject* args)
 {
 	const char *name;
 	double capacitance;
@@ -44,7 +44,7 @@ PyObject* Python::Components::DP::Capacitor(PyObject* self, PyObject* args)
 
 	Component *pyComp = PyObject_New(Component, &ComponentType);
 	Component::init(pyComp);
-	pyComp->comp = std::make_shared<DPsim::Components::DP::Capacitor>(name, src, dest, capacitance);
+	pyComp->comp = std::make_shared<C>(name, src, dest, capacitance);
 
 	return (PyObject*) pyComp;
 }
