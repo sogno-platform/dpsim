@@ -19,11 +19,9 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *********************************************************************************/
 
-#include "Python/Component.h"
+#include "Python/Components/Capacitor.h"
 
-using namespace DPsim;
-
-const char *Python::Components::DocCapacitor =
+const char *DPsim::Python::Components::DocCapacitor =
 "Capacitor(name, node1, node2, inductance)\n"
 "Construct a new Capacitor.\n"
 "\n"
@@ -31,20 +29,3 @@ const char *Python::Components::DocCapacitor =
 "\n"
 ":param inductance: Inductance in Henry.\n"
 ":returns: A new `Component` representing this Capacitor.\n";
-
-template<class C>
-PyObject* Python::Components::Capacitor(PyObject* self, PyObject* args)
-{
-	const char *name;
-	double capacitance;
-	int src, dest;
-
-	if (!PyArg_ParseTuple(args, "siid", &name, &src, &dest, &capacitance))
-		return nullptr;
-
-	Component *pyComp = PyObject_New(Component, &ComponentType);
-	Component::init(pyComp);
-	pyComp->comp = std::make_shared<C>(name, src, dest, capacitance);
-
-	return (PyObject*) pyComp;
-}

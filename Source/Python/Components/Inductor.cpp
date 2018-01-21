@@ -19,11 +19,9 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *********************************************************************************/
 
-#include "Python/Component.h"
+#include "Python/Components/Inductor.h"
 
-using namespace DPsim;
-
-const char *Python::Components::DocInductor =
+const char *DPsim::Python::Components::DocInductor =
 "Inductor(name, node1, node2, inductance)\n"
 "Construct a new inductor.\n"
 "\n"
@@ -31,20 +29,3 @@ const char *Python::Components::DocInductor =
 "\n"
 ":param inductance: Inductance in Henry.\n"
 ":returns: A new `Component` representing this inductor.\n";
-
-template<class C>
-PyObject* Python::Components::Inductor(PyObject* self, PyObject* args)
-{
-	const char *name;
-	double inductance;
-	int src, dest;
-
-	if (!PyArg_ParseTuple(args, "siid", &name, &src, &dest, &inductance))
-		return nullptr;
-
-	Component *pyComp = PyObject_New(Component, &ComponentType);
-	Component::init(pyComp);
-	pyComp->comp = std::make_shared<C>(name, src, dest, inductance);
-
-	return (PyObject*) pyComp;
-}

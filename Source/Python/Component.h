@@ -27,7 +27,7 @@
 #include <vector>
 #include <memory>
 
-#include "../Components.h"
+#include "../Component.h"
 
 namespace DPsim {
 namespace Python {
@@ -50,21 +50,5 @@ namespace Python {
 	extern PyTypeObject ComponentType;
 
 	bool compsFromPython(PyObject* list, DPsim::Component::List& comps);
-
-namespace Components {
-	extern const char* DocCurrentSource;
-	extern const char* DocVoltageSource;
-	extern const char* DocResistor;
-	extern const char* DocInductor;
-	extern const char* DocCapacitor;
-	extern const char* DocVoltageSourceNorton;
-
-	template<class C> PyObject* CurrentSource(PyObject* self, PyObject *args);
-	template<class C> PyObject* VoltageSource(PyObject* self, PyObject *args);
-	template<class C> PyObject* VoltageSourceNorton(PyObject* self, PyObject *args);
-	template<class C> PyObject* Resistor(PyObject* self, PyObject *args);
-	template<class C> PyObject* Inductor(PyObject* self, PyObject *args);
-	template<class C> PyObject* Capacitor(PyObject* self, PyObject *args);
-} /// Components
-} /// Python
-} /// DPsim
+}
+}

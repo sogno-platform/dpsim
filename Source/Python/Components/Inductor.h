@@ -1,4 +1,4 @@
-/** Python binding for Resistors.
+/** Python binding for Inductors.
  *
  * @author Steffen Vogel <stvogel@eonerc.rwth-aachen.de>
  * @copyright 2017, Institute for Automation of Complex Power Systems, EONERC
@@ -19,13 +19,32 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *********************************************************************************/
 
-#include "Python/Components/Resistor.h"
+#pragma once
 
-const char *DPsim::Python::Components::DocResistor =
-"Resistor(name, node1, node2, resistance)\n"
-"Construct a new resistor.\n"
-"\n"
-"Attributes: ``resistance``.\n"
-"\n"
-":param resistance: Resistance in Ohm.\n"
-":returns: A new `Component` representing this resistor.\n";
+#include "Python/Component.h"
+
+namespace DPsim {
+namespace Python {
+namespace Components {
+
+	extern const char* DocInductor;
+
+	template<class C>
+	PyObject* Inductor(PyObject* self, PyObject* args)
+	{
+		const char *name;
+		double inductance;
+		int src, dest;
+
+		if (!PyArg_ParseTuple(args, "siid", &name, &src, &dest, &inductance))
+			return nullptr;
+
+		Component *pyComp = PyObject_New(Component, &DPsim::Python::ComponentType);
+		Component::init(pyComp);
+		pyComp->comp = std::make_shared<C>(name, src, dest, inductance);
+
+		return (PyObject*) pyComp;
+	}
+}
+}
+}

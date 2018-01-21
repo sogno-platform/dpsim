@@ -22,11 +22,20 @@
 #include <Python.h>
 
 #include "Config.h"
+#include "Components.h"
+
 #include "Python/Component.h"
 #include "Python/LoadCim.h"
 #include "Python/Interface.h"
 #include "Python/Module.h"
 #include "Python/Simulation.h"
+
+#include "Python/Components/Capacitor.h"
+#include "Python/Components/Resistor.h"
+#include "Python/Components/Inductor.h"
+#include "Python/Components/CurrentSource.h"
+#include "Python/Components/VoltageSource.h"
+#include "Python/Components/VoltageSourceNorton.h"
 
 using namespace DPsim;
 

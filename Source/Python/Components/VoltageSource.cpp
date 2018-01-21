@@ -19,11 +19,9 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *********************************************************************************/
 
-#include "Python/Component.h"
+#include "Python/Components/VoltageSource.h"
 
-using namespace DPsim;
-
-const char *Python::Components::DocVoltageSource =
+const char *DPsim::Python::Components::DocVoltageSource =
 "VoltageSource(name, node1, node2, initial_voltage, num)\n"
 "Construct a new external voltage source.\n"
 "\n"
@@ -33,20 +31,3 @@ const char *Python::Components::DocVoltageSource =
 "\n"
 ":param initial_current: The voltage of this source in the first timestep (as a complex value).\n"
 ":returns: A new `Component` representing this voltage source.\n";
-
-template<class C>
-PyObject* Python::Components::VoltageSource(PyObject* self, PyObject* args)
-{
-	const char *name;
-	int src, dest;
-	Py_complex initVoltage;
-
-	if (!PyArg_ParseTuple(args, "siiD", &name, &src, &dest, &initVoltage))
-		return nullptr;
-
-	Component *pyComp = PyObject_New(Component, &ComponentType);
-	Component::init(pyComp);
-	pyComp->comp = std::make_shared<C>(name, src, dest, DPsim::Complex(initVoltage.real, initVoltage.imag));
-
-	return (PyObject*) pyComp;
-}
