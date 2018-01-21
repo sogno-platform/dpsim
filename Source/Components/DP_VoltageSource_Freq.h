@@ -44,7 +44,8 @@ namespace DP {
 		Real mRampTime;
 
 	public:
-		VoltageSourceFreq(String name, Int node1, Int node2, Real voltage, Real phase, Real resistance, Real omegaSource, Real switchTime, Real rampTime);
+		VoltageSourceFreq(String name, Int node1, Int node2, Complex voltage, Real resistance, Real omegaSource, Real switchTime, Real rampTime);
+		VoltageSourceFreq(String name, Int node1, Int node2, Real voltageMag, Real voltagePhase, Real resistance, Real omegaSource, Real switchTime, Real rampTime);
 
 		void initialize(SystemModel& system) { }
 		void applySystemMatrixStamp(SystemModel& system);

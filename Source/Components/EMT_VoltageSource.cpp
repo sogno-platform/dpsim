@@ -33,6 +33,10 @@ Components::EMT::VoltageSource::VoltageSource(String name, Int node1, Int node2,
 	attrMap["voltage"] = { Attribute::Real, &mVoltage };
 }
 
+Components::EMT::VoltageSource::VoltageSource(String name, Int node1, Int node2, Complex voltage,
+	Logger::Level loglevel) : VoltageSource(name, node1, node2, std::abs(voltage), std::arg(voltage), loglevel) {
+}
+
 void Components::EMT::VoltageSource::applySystemMatrixStamp(SystemModel& system) {
 	if (mNode1 >= 0) {
 		mLog.Log(Logger::Level::DEBUG) << "Add " << -1 << " to " << mNode1 << "," << mVirtualNodes[0] << std::endl;

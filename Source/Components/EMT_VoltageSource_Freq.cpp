@@ -24,18 +24,23 @@
 using namespace DPsim;
 
 Components::EMT::VoltageSourceFreq::VoltageSourceFreq(String name, Int node1, Int node2,
-	Real voltage, Real phase, Real resistance, Real omegaSource, Real switchTime, Real rampTime)
+	Complex voltage, Real resistance, Real omegaSource, Real switchTime, Real rampTime)
 	: Component(name, node1, node2)
 {
 	mResistance = resistance;
 	mConductance = 1. / resistance;
-	mVoltageAmp = voltage;
-	mVoltagePhase = phase;
+	mVoltageAmp = std::abs(voltage);
+	mVoltagePhase = std::arg(voltage);
 	mSwitchTime = switchTime;
 	mOmegaSource = omegaSource;
 	mRampTime = rampTime;
 	mVoltageDiff = mVoltageAmp*cos(mVoltagePhase);
 	mCurrent = mVoltageDiff / mResistance;
+}
+
+Components::EMT::VoltageSourceFreq::VoltageSourceFreq(String name, Int node1, Int node2,
+	Real voltageMag, Real voltagePhase, Real resistance, Real omegaSource, Real switchTime, Real rampTime)
+	: VoltageSourceFreq(name, node1, node2, MathLibrary::polar(voltageMag, voltagePhase), resistance, omegaSource, switchTime, rampTime) {
 }
 
 void Components::EMT::VoltageSourceFreq::applySystemMatrixStamp(SystemModel& system)

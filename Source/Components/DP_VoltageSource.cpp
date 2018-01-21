@@ -34,12 +34,7 @@ Components::DP::VoltageSource::VoltageSource(String name, Int node1, Int node2, 
 
 Components::DP::VoltageSource::VoltageSource(String name, Int node1, Int node2, Real voltageAbs, Real voltagePhase,
 	Logger::Level loglevel)
-	: Component(name, node1, node2, loglevel) {
-	mVoltage = MathLibrary::polar(voltageAbs, voltagePhase);
-	mNumVirtualNodes = 1;
-	mVirtualNodes = { 0 };
-	attrMap["voltage"] = { Attribute::Complex, &mVoltage };
-	mLog.Log(Logger::Level::DEBUG) << "Create VoltageSource " << name << " at " << mNode1 << "," << mNode2 << std::endl;
+	: VoltageSource(name, node1, node2, MathLibrary::polar(voltageAbs, voltagePhase), loglevel) {
 }
 
 void Components::DP::VoltageSource::applySystemMatrixStamp(SystemModel& system) {

@@ -33,12 +33,16 @@ namespace EMT {
 	protected:
 		Real mVoltage;
 		Real mVoltageAmp;
-		Real mVoltagePhase;		
+		Real mVoltagePhase;
 		Real mResistance;
 		Real mConductance;
 		Real mCurrent;
 	public:
-		VoltageSourceNorton(String name, Int node1, Int node2, Real voltageAmp, Real voltagePhase, Real resistance);
+		VoltageSourceNorton(String name, Int node1, Int node2, Complex voltage, Real resistance,
+			Logger::Level loglevel = Logger::Level::NONE);
+		VoltageSourceNorton(String name, Int node1, Int node2, Real voltageAmp, Real voltagePhase, Real resistance,
+			Logger::Level loglevel = Logger::Level::NONE);
+
 		void initialize(SystemModel& system) { }
 		void applySystemMatrixStamp(SystemModel& system);
 		void applyRightSideVectorStamp(SystemModel& system);

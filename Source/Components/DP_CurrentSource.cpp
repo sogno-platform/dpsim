@@ -30,9 +30,7 @@ Components::DP::CurrentSource::CurrentSource(String name, Int node1, Int node2, 
 }
 
 Components::DP::CurrentSource::CurrentSource(String name, Int node1, Int node2, Real currentAbs, Real currentPhase)
-	: Component(name, node1, node2) {
-	mCurrent = MathLibrary::polar(currentAbs, currentPhase);
-	attrMap["current"] = { Attribute::Complex, &mCurrent };
+	: CurrentSource(name, node1, node2, MathLibrary::polar(currentAbs, currentPhase)) {
 }
 
 void Components::DP::CurrentSource::applyRightSideVectorStamp(SystemModel& system)
