@@ -30,6 +30,9 @@
 #include "Python/Module.h"
 #include "Python/Simulation.h"
 
+#include "Python/Components/LinePi.h"
+#include "Python/Components/LineRx.h"
+#include "Python/Components/LoadPQ.h"
 #include "Python/Components/Capacitor.h"
 #include "Python/Components/Resistor.h"
 #include "Python/Components/Inductor.h"
@@ -56,6 +59,9 @@ static PyMethodDef dpsimModuleMethods[] = {
 	{ "ResistorEMT",            Python::Components::Resistor<DPsim::Components::EMT::Resistor>,                       METH_VARARGS, Python::Components::DocResistor },
 	{ "CapacitorDP",            Python::Components::Capacitor<DPsim::Components::DP::Capacitor>,                      METH_VARARGS, Python::Components::DocCapacitor },
 	{ "CapacitorEMT",           Python::Components::Capacitor<DPsim::Components::EMT::Capacitor>,                     METH_VARARGS, Python::Components::DocCapacitor },
+	{ "LinePiDP",               Python::Components::LinePi<DPsim::Components::DP::PiLine>,                            METH_VARARGS, Python::Components::DocLinePi },
+	{ "LineRxDP",               Python::Components::LineRx<DPsim::Components::DP::RxLine>,                            METH_VARARGS, Python::Components::DocLineRx },
+	{ "LoadPQDP",               Python::Components::LoadPQ<DPsim::Components::DP::PQLoad>,                            METH_VARARGS, Python::Components::DocLoadPQ },
 	{ 0 }
 };
 
