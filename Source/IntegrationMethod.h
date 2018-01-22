@@ -1,4 +1,4 @@
-/** Integration methods
+﻿/** Integration methods
  *
  * @file
  * @author Markus Mirz <mmirz@eonerc.rwth-aachen.de>

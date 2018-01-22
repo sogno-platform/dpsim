@@ -70,22 +70,6 @@ namespace DPsim {
 								Real mDPsid;
 								/// q dynamic flux
 								Real mDPsiq;
-								/// Dynamic d voltage
-								Real mDVq;
-								/// Dynamic q voltage
-								Real mDVd;
-								/// Dynamic voltage phase a _ Real part
-								Real mDVaRe;
-								/// Dynamic voltage phase a _ Imaginary part
-								Real mDVaIm;
-								/// Dynamic voltage phase b _ Real part
-								Real mDVbRe;
-								/// Dynamic voltage phase b _ Imaginary part
-								Real mDVbIm;
-								/// Dynamic voltage phase c _ Real part
-								Real mDVcRe;
-								/// Dynamic voltage phase c _ Imaginary part
-								Real mDVcIm;
 
 								/// Interface voltage phase a _ Real part
 								Real mVaRe;
@@ -118,12 +102,8 @@ namespace DPsim {
 								/// Magnetizing flux linkage in d axis
 								Real mPsimd;
 
-								/// Rotor flux vector
-								Matrix mRotorFlux = Matrix::Zero(4, 1);
 								/// Dq stator current vector
 								Matrix mDqStatorCurrents = Matrix::Zero(2, 1);
-								/// Dq stator current vector - from previous time step
-								Matrix mDqStatorCurrents_hist = Matrix::Zero(2, 1);
 
 								// ### Useful Matrices ###
 								/// inductance matrix
@@ -136,20 +116,94 @@ namespace DPsim {
 								Matrix L_EQ = Matrix::Zero(6, 6);
 								/// Equivalent stator resistance matrix
 								Matrix R_EQ = Matrix::Zero(6, 6);
+								/// Equivalent VBR resistance matrix
+								Matrix R_eq_DP = Matrix::Zero(6, 6);
+								/// Equivalent VBR voltage source vector
+								Matrix E_eq_DP = Matrix::Zero(6, 1);
 
 								/// Interfase phase current vector
 								Matrix mIabc = Matrix::Zero(6, 1);
 								/// Dynamic Voltage vector
 								Matrix mDVabc = Matrix::Zero(6, 1);
-								/// Dynamic Voltage vector
-								Matrix mDVabc_hist = Matrix::Zero(6, 1);
+								/// Q axis Rotor flux 
+								Matrix mPsikq1kq2 = Matrix::Zero(2, 1);
+								/// D axis rotor flux
+								Matrix mPsifdkd = Matrix::Zero(2, 1);
+								/// stator current in q axis (last time step)
+								Real mIq_hist;
+								/// stator current in d axis (last time step)
+								Real mId_hist;
+								/// Park Transformation Matrix
+								Matrix mKrs_teta = Matrix::Zero(3, 3);
+								/// Inverse Park Transformation Matrix
+								Matrix mKrs_teta_inv = Matrix::Zero(3, 3);
 
-								/// Matrix paremeters for integration of rotor flux linkages - A
-								Matrix A_flux = Matrix::Zero(4, 4);
-								/// Variables for integration of rotor flux linkages - B
-								Matrix B_flux = Matrix::Zero(4, 2);
-								/// Variables for integration of rotor flux linkages - C
-								Matrix C_flux = Matrix::Zero(4, 1);
+								/// Equivalent Stator Conductance Matrix
+								Matrix mConductanceMat = Matrix::Zero(6, 6);
+								/// Equivalent Stator Current Source
+								Matrix mISourceEq = Matrix::Zero(6, 1);
+
+								/// Auxiliar variables
+								Real c21_omega;
+								Real c22_omega;
+								Real c13_omega;
+								Real c14_omega;
+								Matrix K1a = Matrix::Zero(2, 2);
+								Matrix K1b = Matrix::Zero(2, 1);
+								Matrix K1 = Matrix::Zero(2, 1);
+								Matrix K2a = Matrix::Zero(2, 2);
+								Matrix K2b = Matrix::Zero(2, 1);
+								Matrix K2 = Matrix::Zero(2, 1);
+								Matrix h_qdr;
+								Matrix K = Matrix::Zero(3, 3);
+								Matrix E_r_vbr = Matrix::Zero(3, 1);
+								Matrix K_DP = Matrix::Zero(6, 6);
+
+								/// Auxiliar constants
+								Real c11;
+								Real c12;
+								Real c23;
+								Real c24;
+								Real c15;
+								Real c25;
+								Real c26;
+								Real b11;
+								Real b12;
+								Real b13;
+								Real b21;
+								Real b22;
+								Real b23;
+								Real b31;
+								Real b32;
+								Real b33;
+								Real b41;
+								Real b42;
+								Real b43;
+
+								Real E1_1d;
+								Real E2_1d;
+
+								Matrix Ea = Matrix::Zero(2, 2);
+								Matrix E1b = Matrix::Zero(2, 1);
+								Matrix E1 = Matrix::Zero(2, 2);
+								Matrix Fa = Matrix::Zero(2, 2);
+								Matrix F1b = Matrix::Zero(2, 1);
+								Matrix F1 = Matrix::Zero(2, 2);
+								Matrix E2b = Matrix::Zero(2, 2);
+								Matrix E2 = Matrix::Zero(2, 2);
+								Matrix F2b = Matrix::Zero(2, 2);
+								Matrix F2 = Matrix::Zero(2, 2);
+								Matrix F3b = Matrix::Zero(2, 1);
+								Matrix F3 = Matrix::Zero(2, 2);
+								Matrix C26 = Matrix::Zero(2, 1);
+								Matrix A = Matrix::Zero(6, 6);
+								Matrix B = Matrix::Zero(6, 6);
+								Matrix Var1 = Matrix::Zero(6, 6);
+								Matrix Var2 = Matrix::Zero(6, 6);
+								Matrix mVabc = Matrix::Zero(6, 1);
+								Matrix E_r_vbr_DP = Matrix::Zero(6, 1);
+								
+
 
 						public:
 								~SynchronGeneratorVBRNew();
@@ -191,13 +245,15 @@ namespace DPsim {
 								/// dq to abc
 								Matrix dq0ToAbcTransform(Real theta, Real d, Real q, Real zero);
 
-								void CalculateLandR(Real time);
+								void CalculateLandR(Real time, Real dt);
+								void CalculateAuxiliarConstants(Real dt);
+								void CalculateAuxiliarVariables(Real time);
 
-								Matrix& getRotorFluxes() { return mRotorFlux; }
 								Matrix& getDqStatorCurrents() { return mDqStatorCurrents; }
 								Real getElectricalTorque() { return mElecTorque*mBase_T; }
 								Real getRotationalSpeed() { return mOmMech*mBase_OmMech; }
 								Real getRotorPosition() { return mThetaMech; }
+								Matrix& getStatorCurrents() { return mIabc; }
 
 								void initialize(SystemModel& system) { }
 								void applySystemMatrixStamp(SystemModel& system) { }

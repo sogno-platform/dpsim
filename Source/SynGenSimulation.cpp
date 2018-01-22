@@ -1,4 +1,4 @@
-/** Simulation with a configurable fault
+﻿/** Simulation with a configurable fault
  *
  * @author Markus Mirz <mmirz@eonerc.rwth-aachen.de>
  * @copyright 2017, Institute for Automation of Complex Power Systems, EONERC
@@ -64,4 +64,14 @@ Int SynGenSimulation::step(bool blocking)
 	mRightVectorLog.LogNodeValues(getTime(), getRightSideVector());
 
 	return mTime < mFinalTime;
+}
+
+void SynGenSimulation::run() {
+		mLog.Log(Logger::Level::INFO) << "Start simulation." << std::endl;
+
+		while (step()) {
+				increaseByTimeStep();
+		}
+
+		mLog.Log(Logger::Level::INFO) << "Simulation finished." << std::endl;
 }
