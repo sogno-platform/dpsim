@@ -35,9 +35,9 @@ namespace Components {
 	{
 		const char *name;
 		double resistance, inductance, capacitance;
-		int src, dest, type;
+		int src, dest, type = 3;
 
-		if (!PyArg_ParseTuple(args, "siidddi", &name, &src, &dest, &resistance, &inductance, &capacitance, &type))
+		if (!PyArg_ParseTuple(args, "siiddd|i", &name, &src, &dest, &resistance, &inductance, &capacitance, &type))
 			return nullptr;
 
 		DPsim::Components::DP::RxLine::Type ltype;
