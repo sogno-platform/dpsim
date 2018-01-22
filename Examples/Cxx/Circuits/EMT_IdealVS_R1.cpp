@@ -31,7 +31,7 @@ int main(int argc, char* argv[])
 	Real timeStep = 0.001;
 	Real omega = 2.0*M_PI*50.0;
 	Real finalTime = 0.3;
-	String simName = "IdealVS_EMT_" + std::to_string(timeStep);
+	String simName = "EMT_IdealVS_R1_" + std::to_string(timeStep);
 
 	Component::List comps = {
 		VoltageSource::make("v_in", 0, 1, 10, 0),

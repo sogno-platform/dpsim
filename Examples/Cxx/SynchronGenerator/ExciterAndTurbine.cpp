@@ -28,9 +28,9 @@ using namespace DPsim;
 // ##################################### Test VBR EMT ##################################
 int main() {
 	// Define Object for saving data on a file
-	Logger log("log.txt"),
-		vtLog("data_vt.csv"),
-		jLog("data_j.csv");
+	Logger log("ExciterAndTurbine.log"),
+		vtLog("ExciterAndTurbine_data_vt.csv"),
+		jLog("ExciterAndTurbine_data_j.csv");
 
 	// Define machine parameters in per unit
 	Real nomPower = 555e6;
@@ -161,9 +161,9 @@ int main() {
 //// ##################################### Test VBR DP ##################################
 //int main() {
 //	// Define Object for saving data on a file
-//	Logger log("log.txt"),
-//		vtLog("data_vt.csv"),
-//		jLog("data_j.csv");
+//	Logger log("ExciterAndTurbine.log"),
+//		vtLog("ExciterAndTurbine_data_vt.csv"),
+//		jLog("ExciterAndTurbine_data_j.csv");
 //
 //	// Define machine parameters in per unit
 //	Real nomPower = 555e6;

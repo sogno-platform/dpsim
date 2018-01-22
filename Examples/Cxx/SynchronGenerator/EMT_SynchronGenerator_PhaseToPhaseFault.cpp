@@ -78,7 +78,7 @@ int main(int argc, char* argv[])
 	Real om = 2.0*M_PI*60.0;
 	tf = 0.2; dt = 0.00005; t = 0;
 	Int downSampling = 50;
-	Simulation sim("EMT_SynGen_PhaseToPhaseFault", comps, om, dt, tf, Logger::Level::INFO, SimulationType::EMT, downSampling);
+	Simulation sim("EMT_SynchronGenerator_PhaseToPhaseFault", comps, om, dt, tf, Logger::Level::INFO, SimulationType::EMT, downSampling);
 	sim.addSystemTopology(compsBreakerOn);
 
 	// Initialize generator
