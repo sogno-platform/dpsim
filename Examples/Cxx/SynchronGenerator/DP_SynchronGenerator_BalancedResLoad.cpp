@@ -72,7 +72,7 @@ int main(int argc, char* argv[])
 	Real om = 2.0*M_PI*60.0;
 	tf = 0.1; dt = 0.000001; t = 0;
 	Int downSampling = 50;
-	Simulation sim("SynGen_BalancedResLoad", comps, om, dt, tf, Logger::Level::INFO, SimulationType::DynPhasor, downSampling);
+	Simulation sim("SynGen_BalancedResLoad", comps, om, dt, tf, Logger::Level::INFO, SimulationType::DP, downSampling);
 	sim.setNumericalMethod(NumericalMethod::Trapezoidal_flux);
 
 	// Initialize generator

@@ -246,7 +246,7 @@ int main() {
 //	Real om = 2.0*M_PI*60.0;
 //	tf = 10; dt = 0.0001; t = 0;
 //	Int downSampling = 1;
-//	Simulation sim(circElements, om, dt, tf, log, SimulationType::DynPhasor, downSampling);
+//	Simulation sim(circElements, om, dt, tf, log, SimulationType::DP, downSampling);
 //	sim.setNumericalMethod(NumericalMethod::Trapezoidal_flux);
 //	sim.addSystemTopology(circElementsBreakerOn);
 //	sim.switchSystemMatrix(0);

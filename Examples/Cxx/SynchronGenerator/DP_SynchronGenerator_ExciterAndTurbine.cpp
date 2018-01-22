@@ -104,7 +104,7 @@ int main(int argc, char* argv[])
 	tf = 10; dt = 0.0001; t = 0;
 	Int downSampling = 1;
 	Simulation sim("DP_SynchronGenerator_ExciterTurbine", comps, om, dt, tf,
-	Logger::Level::INFO, SimulationType::DynPhasor, downSampling);
+	Logger::Level::INFO, SimulationType::DP, downSampling);
 	sim.setNumericalMethod(NumericalMethod::Trapezoidal_flux);
 	sim.addSystemTopology(compsBreakerOn);
 	sim.switchSystemMatrix(0);
