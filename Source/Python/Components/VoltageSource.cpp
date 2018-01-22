@@ -22,7 +22,7 @@
 #include "Python/Components/VoltageSource.h"
 
 const char *DPsim::Python::Components::DocVoltageSource =
-"VoltageSource(name, node1, node2, initial_voltage, num)\n"
+"VoltageSource(name, node1, node2, initial_voltage)\n"
 "Construct a new external voltage source.\n"
 "\n"
 "An external voltage source is pretty much the same as a normal ideal voltage "

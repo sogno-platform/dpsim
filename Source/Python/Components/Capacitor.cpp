@@ -22,10 +22,10 @@
 #include "Python/Components/Capacitor.h"
 
 const char *DPsim::Python::Components::DocCapacitor =
-"Capacitor(name, node1, node2, inductance)\n"
+"Capacitor(name, node1, node2, capacitance)\n"
 "Construct a new Capacitor.\n"
 "\n"
 "Attributes: ``capacitance``.\n"
 "\n"
-":param inductance: Inductance in Henry.\n"
+":param capacitance: Capacitance in Farad.\n"
 ":returns: A new `Component` representing this Capacitor.\n";
