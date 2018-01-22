@@ -1,4 +1,4 @@
-/** SynGenVBRDP Example
+﻿/** SynGenVBRDP Example
  *
  * @author Markus Mirz <mmirz@eonerc.rwth-aachen.de>
  * @copyright 2017, Institute for Automation of Complex Power Systems, EONERC
@@ -19,7 +19,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *********************************************************************************/
 
-#include "Simulation.h"
+#include "SynGenSimulation.h"
 #include "Components.h"
 
 using namespace DPsim;
