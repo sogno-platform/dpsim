@@ -1,4 +1,4 @@
-/** Simulation with a configurable fault
+﻿/** Simulation with a configurable fault
  *
  * @author Markus Mirz <mmirz@eonerc.rwth-aachen.de>
  * @copyright 2017, Institute for Automation of Complex Power Systems, EONERC
@@ -34,6 +34,8 @@ namespace DPsim {
 		Int mActualSystemMatrixIndex = 0;
 
 		Int step(bool blocking = false);
+		/// Run simulation until total time is elapsed.
+		void run();
 	};
 
 }
