@@ -1,4 +1,4 @@
-/** Synchron generator (EMT)
+﻿/** Synchron generator (EMT)
  *
  * @author Markus Mirz <mmirz@eonerc.rwth-aachen.de>
  * @copyright 2017, Institute for Automation of Complex Power Systems, EONERC
@@ -29,10 +29,12 @@ Components::EMT::SynchronGenerator::SynchronGenerator(String name, Int node1, In
 	Real Rs, Real Ll, Real Lmd, Real Lmd0, Real Lmq, Real Lmq0,
 	Real Rfd, Real Llfd, Real Rkd, Real Llkd,
 	Real Rkq1, Real Llkq1, Real Rkq2, Real Llkq2,
-	Real inertia, Logger::Level logLevel)
+	Real inertia, Real Ra, Logger::Level logLevel)
 	: SynchronGeneratorBase(name, node1, node2, node3, nomPower, nomVolt, nomFreq, poleNumber, nomFieldCur,
 		Rs, Ll, Lmd, Lmd0, Lmq, Lmq0, Rfd, Llfd, Rkd, Llkd, Rkq1, Llkq1, Rkq2, Llkq2,
 		inertia, logLevel) {
+
+		mRa = Ra;
 }
 
 Components::EMT::SynchronGenerator::~SynchronGenerator() {
@@ -140,13 +142,13 @@ void Components::EMT::SynchronGenerator::step(SystemModel& system, Real time)
 
 	// Update current source accordingly
 	if (mNode1 >= 0) {
-		system.addRealToRightSideVector(mNode1, mIa);
+			system.addRealToRightSideVector(mNode1, mIa + mVa / mRa);
 	}
 	if (mNode2 >= 0) {
-		system.addRealToRightSideVector(mNode2, mIb);
+		system.addRealToRightSideVector(mNode2, mIb + mVb / mRa);
 	}
 	if (mNode3 >= 0) {
-		system.addRealToRightSideVector(mNode3, mIc);
+		system.addRealToRightSideVector(mNode3, mIc + mVc / mRa);
 	}
 
 	if (mLogLevel != Logger::Level::NONE) {
@@ -355,6 +357,10 @@ void Components::EMT::SynchronGenerator::stepInPerUnit(Real om, Real dt, Real ti
 	mIa = mBase_i * inverseParkTransform2(mThetaMech, mId, mIq, mI0)(0);
 	mIb = mBase_i * inverseParkTransform2(mThetaMech, mId, mIq, mI0)(1);
 	mIc = mBase_i * inverseParkTransform2(mThetaMech, mId, mIq, mI0)(2);
+
+	mVa = mBase_v * inverseParkTransform2(mThetaMech, mVd, mVq, mV0)(0);
+	mVb = mBase_v * inverseParkTransform2(mThetaMech, mVd, mVq, mV0)(1);
+	mVc = mBase_v * inverseParkTransform2(mThetaMech, mVd, mVq, mV0)(2);
 
 	if (mNumDampingWindings == 2) {
 		mCurrents << mIq,

@@ -1,4 +1,4 @@
-/** Simplified Synchron generator (EMT)
+﻿/** Simplified Synchron generator (EMT)
 *
 * @file
 * @author Markus Mirz <mmirz@eonerc.rwth-aachen.de>

@@ -4,15 +4,15 @@ clc
 clear all
 %% read PLECS results
 
-Results_PLECS = csvread('../../../vsa/Results/SynGenDqEmt_ABCFault_Simulink/Voltages_and_currents.csv'); 
+Results_PLECS = csvread('../../../vsa/Results/SynGenDq_ABCFault/Simulink_PLECS/SynGenDqEmt_ABCFault_Simulink/Voltages_and_currents.csv'); 
 %Te_PLECS = csvread('../../../vsa/Results/SynGenDqEmt_ABCFault_PLECS/electrical_torque.csv'); 
 %omega_PLECS = csvread('../../../vsa/Results/SynGenDqEmt_ABCFault_Simulink/omega.csv'); 
 %theta_PLECS = csvread('../../vsa/Results/SynGenVBREmt_ABCFault_PLECS/theta.csv'); 
 %% read results from c++ simulation
-VoltageVector = csvread('../../../vsa/Results/SynGenVbrEmt_ABCFault_DPsim/NewModel/EMT_SynchronGenerator_VBR_LeftVector.csv',1);
-%CurrentVector = csvread('../../../vsa/Results/SynGenVbrEmt_ABCFault_DPsim/NewModel/1damping/EMT_SynchronGenerator_VBR_RightVector.csv',1);
-Log_SynGen = csvread('../../../vsa/Results/SynGenVbrEmt_ABCFault_DPsim/NewModel/SynGen_gen.csv',1);
-CurrentVector = Log_SynGen(:,1:4);
+VoltageVector = csvread('../../../vsa/Results/SynGenDq_ABCFault/DPsim/WithCompensation/EMT_SynchronGenerator_ThreePhaseFault_LeftVector.csv',1);
+CurrentVector = csvread('../../../vsa/Results/SynGenDq_ABCFault/DPsim/WithCompensation/EMT_SynchronGenerator_ThreePhaseFault_RightVector.csv',1);
+%Log_SynGen = csvread('../../../vsa/Results/SynGenDq_ABCFault/DPsim/NewModel/SynGen_gen.csv',1);
+%CurrentVector = Log_SynGen(:,1:4);
  %% Plot
 figure(1)
 hold off
@@ -45,7 +45,7 @@ figure(4)
 hold off
 plot(CurrentVector(:,1),CurrentVector(:,2));
 hold on
-plot(Results_PLECS(:,1),-Results_PLECS(:,5),'--');
+plot(Results_PLECS(:,1),Results_PLECS(:,5),'--');
 title('Current phase a');
 legend('ia DPSim','ia Simulink');
 
@@ -53,7 +53,7 @@ figure(5)
 hold off
 plot(CurrentVector(:,1),CurrentVector(:,3));
 hold on
-plot(Results_PLECS(:,1),-Results_PLECS(:,6),'--');
+plot(Results_PLECS(:,1),Results_PLECS(:,6),'--');
 title('Current phase b');
 legend('ib DPSim','ib Simulink');
 
@@ -61,7 +61,7 @@ figure(6)
 hold off
 plot(CurrentVector(:,1),CurrentVector(:,4));
 hold on
-plot(Results_PLECS(:,1),-Results_PLECS(:,7),'--');
+plot(Results_PLECS(:,1),Results_PLECS(:,7),'--');
 title('Current phase c');
 legend('ic DPSim','ic Simulink');
 

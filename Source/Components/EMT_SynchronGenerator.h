@@ -1,4 +1,4 @@
-/** Synchron generator (EMT)
+﻿/** Synchron generator (EMT)
  *
  * @file
  * @author Markus Mirz <mmirz@eonerc.rwth-aachen.de>
@@ -73,6 +73,9 @@ namespace EMT {
 		/// matrix for reversing stator current directions in calculations with respect to other currents
 		Matrix mReverseCurrents;
 
+		/// Compensation Resistance
+		Real mRa;
+
 	public:
 		~SynchronGenerator();
 
@@ -84,7 +87,7 @@ namespace EMT {
 			Real Rs, Real Ll, Real Lmd, Real Lmd0, Real Lmq, Real Lmq0,
 			Real Rfd, Real Llfd, Real Rkd, Real Llkd,
 			Real Rkq1, Real Llkq1, Real Rkq2, Real Llkq2,
-			Real inertia, Logger::Level logLevel = Logger::Level::NONE);
+			Real inertia, Real Ra, Logger::Level logLevel = Logger::Level::NONE);
 
 		/// Initializes states in per unit or stator referred variables depending on the setting of the state type.
 		/// Function parameters have to be given in real units.

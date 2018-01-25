@@ -59,16 +59,32 @@ int main(int argc, char* argv[])
 	//Real Rkq2 = 0;
 	//Real Llkq2 = 0;
 
+	Real Ld_s = 0.23;
+	Real Lq_s = 0.25;
+
+	// Set up simulation
+	Real tf, dt, t;
+	Real om = 2.0*M_PI*60.0;
+	tf = 0.3; dt = 0.000002; t = 0;
+	Int downSampling = 50;
+
+	Real Ra = (Ld_s + Lq_s) / dt;
+	Ra = Ra*1.0378378378378379;
+
 	// Declare circuit components
 	Component::Ptr gen = SynchronGenerator::make("gen", 0, 1, 2,
 		nomPower, nomPhPhVoltRMS, nomFreq, poleNum, nomFieldCurr,
-		Rs, Ll, Lmd, Lmd0, Lmq, Lmq0, Rfd, Llfd, Rkd, Llkd, Rkq1, Llkq1, Rkq2, Llkq2, H);
+		Rs, Ll, Lmd, Lmd0, Lmq, Lmq0, Rfd, Llfd, Rkd, Llkd, Rkq1, Llkq1, Rkq2, Llkq2, H, Ra);
 	Real loadRes = 1037.8378;
 	Component::Ptr r1 = Resistor::make("r1", 0, GND, loadRes);
 	Component::Ptr r2 = Resistor::make("r2", 1, GND, loadRes);
 	Component::Ptr r3 = Resistor::make("r3", 2, GND, loadRes);
 
-	Component::List comps = { gen, r1, r2, r3 };
+	Component::Ptr ra1 = Resistor::make("Ra", 0, GND, loadRes);
+	Component::Ptr ra2 = Resistor::make("Ra", 1, GND, loadRes);
+	Component::Ptr ra3 = Resistor::make("Ra", 2, GND, loadRes);
+
+	Component::List comps = { gen, r1, r2, r3, ra1, ra2, ra3 };
 
 	// Declare circuit components for resistance change
 	Real breakerRes = 0.001;
@@ -76,13 +92,9 @@ int main(int argc, char* argv[])
 	Component::Ptr rBreaker2 = Resistor::make("rbreak2", 1, GND, breakerRes);
 	Component::Ptr rBreaker3 = Resistor::make("rbreak3", 2, GND, breakerRes);
 
-	Component::List compsBreakerOn = { gen, rBreaker1, rBreaker2, rBreaker3, r1, r2, r3 };
+	Component::List compsBreakerOn = { gen, rBreaker1, rBreaker2, rBreaker3, r1, r2, r3, ra1, ra2, ra3 };
 
-	// Set up simulation
-	Real tf, dt, t;
-	Real om = 2.0*M_PI*60.0;
-	tf = 0.3; dt = 0.000001; t = 0;
-	Int downSampling = 50;
+
 	Simulation sim("EMT_SynchronGenerator_ThreePhaseFault", comps, om, dt, tf, Logger::Level::INFO, SimulationType::EMT, downSampling);
 	sim.setNumericalMethod(NumericalMethod::Trapezoidal_flux);
 	sim.addSystemTopology(compsBreakerOn);
