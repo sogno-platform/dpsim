@@ -1,4 +1,4 @@
-/** Voltage behind reactance (DP)
+﻿/** Voltage behind reactance (DP)
 *
 * @author Markus Mirz <mmirz@eonerc.rwth-aachen.de>
 * @copyright 2017, Institute for Automation of Complex Power Systems, EONERC
@@ -214,10 +214,11 @@ void Components::DP::SynchronGeneratorVBRNew::stepInPerUnit(Real om, Real dt, Re
 				mPsifd,
 				mPsikd;
 
-		CalculateAuxiliarVariables(time);
-
 		CalculateLandR(time, dt*mBase_OmElec);
 
+		CalculateAuxiliarVariables(time);
+
+		
 		E_r_vbr_DP = dq0ToAbcTransform(mThetaMech, h_qdr(1), h_qdr(0), 0);
 		K_DP << K, Matrix::Zero(3, 3),
 				Matrix::Zero(3, 3), K;

@@ -1,4 +1,4 @@
-/** Voltage behind reactance (EMT)
+﻿/** Voltage behind reactance (EMT)
 *
 * @author Markus Mirz <mmirz@eonerc.rwth-aachen.de>
 * @copyright 2017, Institute for Automation of Complex Power Systems, EONERC
@@ -200,10 +200,6 @@ void Components::EMT::VoltageBehindReactanceEMTNew::stepInPerUnit(Real om, Real 
 				mIb,
 				mIc;
 
-		mEsh_vbr = (mResistanceMat - (2 / (dt*mBase_OmElec))*mDInductanceMat)*mIabc + mDVabc - mVabc;
-
-		CalculateL();
-
 		mPsikq1kq2 <<
 				mPsikq1,
 				mPsikq2;
@@ -211,7 +207,11 @@ void Components::EMT::VoltageBehindReactanceEMTNew::stepInPerUnit(Real om, Real 
 				mPsifd,
 				mPsikd;
 
+		CalculateL();
+
 		CalculateAuxiliarVariables();
+
+		mEsh_vbr = (mResistanceMat - (2 / (dt*mBase_OmElec))*mDInductanceMat)*mIabc + mDVabc - mVabc;
 
 		R_eq_vbr = mResistanceMat + (2 / (dt*mBase_OmElec))*mDInductanceMat + K;
 		E_eq_vbr = mEsh_vbr + E_r_vbr;
