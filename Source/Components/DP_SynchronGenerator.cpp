@@ -55,13 +55,11 @@ void Components::DP::SynchronGenerator::applySystemMatrixStamp(SystemModel& syst
 				//mLog.Log(Logger::Level::DEBUG) << "Add " << mConductance << " to " << mNode2 << "," << mNode2 << std::endl;
 				system.addCompToSystemMatrix(mNode2, mNode2, Complex(mConductance, 0));
 		}
-		// Set off diagonal entries
-		if (mNode1 >= 0 && mNode2 >= 0) {
-				//mLog.Log(Logger::Level::DEBUG) << "Add " << -mConductance << " to " << mNode1 << "," << mNode2 << std::endl;
-				system.addCompToSystemMatrix(mNode1, mNode2, Complex(-mConductance, 0));
-				//mLog.Log(Logger::Level::DEBUG) << "Add " << -mConductance << " to " << mNode2 << "," << mNode1 << std::endl;
-				system.addCompToSystemMatrix(mNode2, mNode1, Complex(-mConductance, 0));
+		if (mNode3 >= 0) {
+				//mLog.Log(Logger::Level::DEBUG) << "Add " << mConductance << " to " << mNode2 << "," << mNode2 << std::endl;
+				system.addCompToSystemMatrix(mNode3, mNode3, Complex(mConductance, 0));
 		}
+
 }
 
 
