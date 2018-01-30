@@ -41,6 +41,25 @@ Components::EMT::SynchronGenerator::~SynchronGenerator() {
 
 }
 
+void Components::EMT::SynchronGenerator::applySystemMatrixStamp(SystemModel& system)
+{
+		mRa = mRa*mBase_Z;
+		
+		// Set diagonal entries
+		if (mNode1 >= 0) {
+				system.addRealToSystemMatrix(mNode1, mNode1, 1 / mRa);
+		}
+		if (mNode2 >= 0) {
+				system.addRealToSystemMatrix(mNode2, mNode2, 1 / mRa);
+		}
+
+		// Set off diagonal entries
+		if (mNode1 >= 0 && mNode2 >= 0) {
+				system.addRealToSystemMatrix(mNode1, mNode2, -1 / mRa);
+				system.addRealToSystemMatrix(mNode2, mNode1, -1 / mRa);
+		}
+}
+
 void Components::EMT::SynchronGenerator::initialize(Real om, Real dt,
 	Real initActivePower, Real initReactivePower, Real initTerminalVolt,
 	Real initVoltAngle, Real initFieldVoltage, Real initMechPower)
@@ -134,6 +153,7 @@ void Components::EMT::SynchronGenerator::initialize(Real om, Real dt,
 	mIa = inverseParkTransform2(mThetaMech, mId* mBase_i, mIq* mBase_i, mI0* mBase_i)(0);
 	mIb = inverseParkTransform2(mThetaMech, mId* mBase_i, mIq* mBase_i, mI0* mBase_i)(1);
 	mIc = inverseParkTransform2(mThetaMech, mId* mBase_i, mIq* mBase_i, mI0* mBase_i)(2);
+
 }
 
 void Components::EMT::SynchronGenerator::step(SystemModel& system, Real time)
@@ -142,7 +162,7 @@ void Components::EMT::SynchronGenerator::step(SystemModel& system, Real time)
 
 	// Update current source accordingly
 	if (mNode1 >= 0) {
-			system.addRealToRightSideVector(mNode1, mIa + mVa / mRa);
+		system.addRealToRightSideVector(mNode1, mIa + mVa / mRa);
 	}
 	if (mNode2 >= 0) {
 		system.addRealToRightSideVector(mNode2, mIb + mVb / mRa);
@@ -152,8 +172,8 @@ void Components::EMT::SynchronGenerator::step(SystemModel& system, Real time)
 	}
 
 	if (mLogLevel != Logger::Level::NONE) {
-		Matrix logValues(getFluxes().rows() + getVoltages().rows() + getCurrents().rows() + 3, 1);
-		logValues << getFluxes(), getVoltages(), getCurrents(), getElectricalTorque(), getRotationalSpeed(), getRotorPosition();
+		Matrix logValues(getStatorCurrents().rows() + getFluxes().rows() + getVoltages().rows() + getCurrents().rows() + 3, 1);
+		logValues << getStatorCurrents(), getFluxes(), getVoltages(), getCurrents(), getElectricalTorque(), getRotationalSpeed(), getRotorPosition();
 		mLog->LogDataLine(time, logValues);
 	}
 }
@@ -357,6 +377,11 @@ void Components::EMT::SynchronGenerator::stepInPerUnit(Real om, Real dt, Real ti
 	mIa = mBase_i * inverseParkTransform2(mThetaMech, mId, mIq, mI0)(0);
 	mIb = mBase_i * inverseParkTransform2(mThetaMech, mId, mIq, mI0)(1);
 	mIc = mBase_i * inverseParkTransform2(mThetaMech, mId, mIq, mI0)(2);
+
+	mIabc <<
+			mIa,
+			mIb,
+			mIc;
 
 	mVa = mBase_v * inverseParkTransform2(mThetaMech, mVd, mVq, mV0)(0);
 	mVb = mBase_v * inverseParkTransform2(mThetaMech, mVd, mVq, mV0)(1);

@@ -58,12 +58,15 @@ namespace EMT {
 		/// Interface voltage phase c
 		Real mVc;
 
-		/// Interface curent phase a
+		/// Interface current phase a
 		Real mIa;
-		/// Interface curent phase b
+		/// Interface current phase b
 		Real mIb;
-		/// Interface curent phase c
+		/// Interface current phase c
 		Real mIc;
+
+		/// Interface current vector
+		Matrix mIabc = Matrix::Zero(3, 1);
 
 		// ### Useful Matrices ###
 		/// reactance matrix
@@ -117,13 +120,14 @@ namespace EMT {
 		Matrix& getVoltages() { return mVoltages; }
 		Matrix& getCurrents() { return mCurrents; }
 		Matrix& getFluxes() { return mFluxes; }
+		Matrix& getStatorCurrents() { return mIabc; }
 		Real getElectricalTorque() { return mElecTorque*mBase_T; }
 		Real getRotationalSpeed() { return mOmMech*mBase_OmMech; }
 		Real getRotorPosition() { return mThetaMech; }
 
 		// Methods for network integrated components
 		void initialize(SystemModel& system) { }
-		void applySystemMatrixStamp(SystemModel& system) { }
+		void applySystemMatrixStamp(SystemModel& system);
 		void applyRightSideVectorStamp(SystemModel& system) { }
 	};
 }
