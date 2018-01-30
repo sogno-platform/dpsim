@@ -1,4 +1,4 @@
-/** Synchron generator
+﻿/** Synchron generator
  *
  * @author Markus Mirz <mmirz@eonerc.rwth-aachen.de>
  * @copyright 2017, Institute for Automation of Complex Power Systems, EONERC
@@ -29,16 +29,41 @@ Components::DP::SynchronGenerator::SynchronGenerator(String name, Int node1, Int
 	Real Rs, Real Ll, Real Lmd, Real Lmd0, Real Lmq, Real Lmq0,
 	Real Rfd, Real Llfd, Real Rkd, Real Llkd,
 	Real Rkq1, Real Llkq1, Real Rkq2, Real Llkq2,
-	Real inertia, Logger::Level logLevel)
+	Real inertia, Real Ra, Logger::Level logLevel)
 	: SynchronGeneratorBase(name, node1, node2, node3, nomPower, nomVolt, nomFreq, poleNumber, nomFieldCur,
 		Rs, Ll, Lmd, Lmd0, Lmq, Lmq0, Rfd, Llfd, Rkd, Llkd, Rkq1, Llkq1, Rkq2, Llkq2,
 		inertia, logLevel)
 {
+		mRa = Ra;
 }
 
 Components::DP::SynchronGenerator::~SynchronGenerator() {
 
 }
+
+void Components::DP::SynchronGenerator::applySystemMatrixStamp(SystemModel& system)
+{
+		mRa = mRa*mBase_Z;
+
+		Real mConductance = 1 / mRa;
+
+		// Set diagonal entries
+		if (mNode1 >= 0) {
+				system.addCompToSystemMatrix(mNode1, mNode1, Complex(mConductance, 0));
+		}
+		if (mNode2 >= 0) {
+				//mLog.Log(Logger::Level::DEBUG) << "Add " << mConductance << " to " << mNode2 << "," << mNode2 << std::endl;
+				system.addCompToSystemMatrix(mNode2, mNode2, Complex(mConductance, 0));
+		}
+		// Set off diagonal entries
+		if (mNode1 >= 0 && mNode2 >= 0) {
+				//mLog.Log(Logger::Level::DEBUG) << "Add " << -mConductance << " to " << mNode1 << "," << mNode2 << std::endl;
+				system.addCompToSystemMatrix(mNode1, mNode2, Complex(-mConductance, 0));
+				//mLog.Log(Logger::Level::DEBUG) << "Add " << -mConductance << " to " << mNode2 << "," << mNode1 << std::endl;
+				system.addCompToSystemMatrix(mNode2, mNode1, Complex(-mConductance, 0));
+		}
+}
+
 
 void Components::DP::SynchronGenerator::initialize(Real om, Real dt,
 	Real initActivePower, Real initReactivePower, Real initTerminalVolt,
@@ -146,18 +171,18 @@ void Components::DP::SynchronGenerator::step(SystemModel& system, Real time)
 	stepInPerUnit(system.getOmega(), system.getTimeStep(), time, system.getNumMethod());
 
 	if (mNode1 >= 0) {
-		system.addCompToRightSideVector(mNode1, Complex(mIaRe, mIaIm));
+		system.addCompToRightSideVector(mNode1, Complex(mIaRe + mVaRe / mRa, mIaIm + mVaIm / mRa));
 	}
 	if (mNode2 >= 0) {
-		system.addCompToRightSideVector(mNode2, Complex(mIbRe, mIbIm));
+		system.addCompToRightSideVector(mNode2, Complex(mIbRe + mVbRe / mRa, mIbIm + mVbIm / mRa));
 	}
 	if (mNode3 >= 0) {
-		system.addCompToRightSideVector(mNode3, Complex(mIcRe, mIcIm));
+		system.addCompToRightSideVector(mNode3, Complex(mIcRe + mVcRe / mRa, mIcIm + mVcIm / mRa));
 	}
 
 	if (mLogLevel != Logger::Level::NONE) {
-		Matrix logValues(getFluxes().rows() + getVoltages().rows() + getCurrents().rows() + 3, 1);
-		logValues << getFluxes(), getVoltages(), getCurrents(), getElectricalTorque(), getRotationalSpeed(), getRotorPosition();
+		Matrix logValues(getStatorCurrents().rows() + getFluxes().rows() + getVoltages().rows() + getCurrents().rows() + 3, 1);
+		logValues << getStatorCurrents(), getFluxes(), getVoltages(), getCurrents(), getElectricalTorque(), getRotationalSpeed(), getRotorPosition();
 		mLog->LogDataLine(time, logValues);
 	}
 }
@@ -369,6 +394,14 @@ void Components::DP::SynchronGenerator::stepInPerUnit(Real om, Real dt, Real tim
 	mIaIm = mBase_i * dq0ToAbcTransform(mThetaMech, mId, mIq, mI0)(3);
 	mIbIm = mBase_i * dq0ToAbcTransform(mThetaMech, mId, mIq, mI0)(4);
 	mIcIm = mBase_i * dq0ToAbcTransform(mThetaMech, mId, mIq, mI0)(5);
+
+	mIabc <<
+			mIaRe,
+			mIbRe,
+			mIcRe,
+			mIaIm,
+			mIbIm,
+			mIcIm;
 
 	if (mNumDampingWindings == 2) {
 		mCurrents << mIq,

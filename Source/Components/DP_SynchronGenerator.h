@@ -1,4 +1,4 @@
-/** Synchron generator
+﻿/** Synchron generator
  *
  * @file
  * @author Markus Mirz <mmirz@eonerc.rwth-aachen.de>
@@ -82,6 +82,11 @@ namespace DP {
 		Matrix mFluxes;
 		/// current vector
 		Matrix mCurrents;
+		/// Stator Current vector
+		Matrix mIabc = Matrix::Zero(6, 1);
+
+		/// Compensation Resistance
+		Real mRa;
 
 	public:
 		~SynchronGenerator();
@@ -94,7 +99,7 @@ namespace DP {
 			Real Rs, Real Ll, Real Lmd, Real Lmd0, Real Lmq, Real Lmq0,
 			Real Rfd, Real Llfd, Real Rkd, Real Llkd,
 			Real Rkq1, Real Llkq1, Real Rkq2, Real Llkq2,
-			Real inertia, Logger::Level logLevel = Logger::Level::NONE);
+			Real inertia, Real Ra, Logger::Level logLevel = Logger::Level::NONE);
 
 		/// Initializes states in per unit or stator referred variables depending on the setting of the state type.
 		/// Function parameters have to be given in Real units.
@@ -124,13 +129,14 @@ namespace DP {
 		Matrix& getVoltages() { return mVoltages; }
 		Matrix& getCurrents() { return mCurrents; }
 		Matrix& getFluxes() { return mFluxes; }
+		Matrix& getStatorCurrents() { return mIabc; }
 		Real getElectricalTorque() { return mElecTorque*mBase_T; }
 		Real getRotationalSpeed() { return mOmMech*mBase_OmMech; }
 		Real getRotorPosition() { return mThetaMech; }
 
 
 		void initialize(SystemModel& system) { }
-		void applySystemMatrixStamp(SystemModel& system) { }
+		void applySystemMatrixStamp(SystemModel& system);
 		void applyRightSideVectorStamp(SystemModel& system) { }
 	};
 }
