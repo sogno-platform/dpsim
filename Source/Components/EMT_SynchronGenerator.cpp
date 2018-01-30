@@ -52,12 +52,10 @@ void Components::EMT::SynchronGenerator::applySystemMatrixStamp(SystemModel& sys
 		if (mNode2 >= 0) {
 				system.addRealToSystemMatrix(mNode2, mNode2, 1 / mRa);
 		}
-
-		// Set off diagonal entries
-		if (mNode1 >= 0 && mNode2 >= 0) {
-				system.addRealToSystemMatrix(mNode1, mNode2, -1 / mRa);
-				system.addRealToSystemMatrix(mNode2, mNode1, -1 / mRa);
+		if (mNode3 >= 0) {
+				system.addRealToSystemMatrix(mNode3, mNode3, 1 / mRa);
 		}
+
 }
 
 void Components::EMT::SynchronGenerator::initialize(Real om, Real dt,

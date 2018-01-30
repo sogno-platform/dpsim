@@ -4,14 +4,14 @@ clc
 clear all
 %% read PLECS results
 
-Results_PLECS = csvread('../../../vsa/Results/SynGenDq_ABCFault/Simulink_PLECS/SynGenDqEmt_ABCFault_300M_Simulink/Voltages_and_currents.csv'); 
+Results_PLECS = csvread('../../../vsa/Results/SynGenDq_ABCFault/Simulink_PLECS/SynGenDqEmt_ABCFault_PLECS/300MW/Voltages_and_currents.csv'); 
 %Te_PLECS = csvread('../../../vsa/Results/SynGenDqEmt_ABCFault_PLECS/electrical_torque.csv'); 
 %omega_PLECS = csvread('../../../vsa/Results/SynGenDqEmt_ABCFault_Simulink/omega.csv'); 
-theta_PLECS = csvread('../../../vsa/Results/SynGenDq_ABCFault/Simulink_PLECS/SynGenDqEmt_ABCFault_300M_Simulink/theta.csv'); 
+%theta_PLECS = csvread('../../../vsa/Results/SynGenDq_ABCFault/Simulink_PLECS/SynGenDqEmt_ABCFault_300M_Simulink/theta.csv'); 
 %% read results from c++ simulation
-VoltageVector = csvread('../../../vsa/Results/SynGenDq_ABCFault/DPsim/WithCompensation/300M/EMT_SynchronGenerator_ThreePhaseFault_LeftVector.csv',1);
+VoltageVector = csvread('../../../vsa/Results/SynGenDq_ABCFault/DPsim/SynGenDqEmt_ABCFault_DPsim_1_Damping/300MW/EMT_SynchronGenerator_ThreePhaseFault_LeftVector.csv',1);
 %CurrentVector = csvread('../../../vsa/Results/SynGenDq_ABCFault/DPsim/WithCompensation/300M/EMT_SynchronGenerator_ThreePhaseFault_RightVector.csv',1);
-Log_SynGen = csvread('../../../vsa/Results/SynGenDq_ABCFault/DPsim/WithCompensation/300M/SynGen_gen.csv',1);
+Log_SynGen = csvread('../../../vsa/Results/SynGenDq_ABCFault/DPsim/SynGenDqEmt_ABCFault_DPsim_1_Damping/300MW/SynGen_gen.csv',1);
 CurrentVector = Log_SynGen(:,1:4);
  %% Plot
 figure(1)
@@ -45,7 +45,7 @@ figure(4)
 hold off
 plot(CurrentVector(:,1),CurrentVector(:,2));
 hold on
-plot(Results_PLECS(:,1),Results_PLECS(:,5),'--');
+plot(Results_PLECS(:,1),-Results_PLECS(:,5),'--');
 title('Current phase a');
 legend('ia DPSim','ia Simulink');
 
@@ -53,7 +53,7 @@ figure(5)
 hold off
 plot(CurrentVector(:,1),CurrentVector(:,3));
 hold on
-plot(Results_PLECS(:,1),Results_PLECS(:,6),'--');
+plot(Results_PLECS(:,1),-Results_PLECS(:,6),'--');
 title('Current phase b');
 legend('ib DPSim','ib Simulink');
 
@@ -61,7 +61,7 @@ figure(6)
 hold off
 plot(CurrentVector(:,1),CurrentVector(:,4));
 hold on
-plot(Results_PLECS(:,1),Results_PLECS(:,7),'--');
+plot(Results_PLECS(:,1),-Results_PLECS(:,7),'--');
 title('Current phase c');
 legend('ic DPSim','ic Simulink');
 
@@ -138,9 +138,9 @@ Va_PLECS_resampled = resample(PLECS_resampled(:,2),l_new,length(PLECS_resampled(
 Vb_PLECS_resampled = resample(PLECS_resampled(:,3),l_new,length(PLECS_resampled(:,3)));
 Vc_PLECS_resampled = resample(PLECS_resampled(:,4),l_new,length(PLECS_resampled(:,4)));
 
-Ia_PLECS_resampled = resample(PLECS_resampled(:,5),l_new,length(PLECS_resampled(:,5)));
-Ib_PLECS_resampled = resample(PLECS_resampled(:,6),l_new,length(PLECS_resampled(:,6)));
-Ic_PLECS_resampled = resample(PLECS_resampled(:,7),l_new,length(PLECS_resampled(:,7)));
+Ia_PLECS_resampled = -resample(PLECS_resampled(:,5),l_new,length(PLECS_resampled(:,5)));
+Ib_PLECS_resampled = -resample(PLECS_resampled(:,6),l_new,length(PLECS_resampled(:,6)));
+Ic_PLECS_resampled = -resample(PLECS_resampled(:,7),l_new,length(PLECS_resampled(:,7)));
 
 % % Voltage phase a
 Dif = abs(VoltageVector_resampled(:,2) - Va_PLECS_resampled);
