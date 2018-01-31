@@ -7,6 +7,7 @@ import subprocess
 from setuptools import setup, find_packages, Extension
 from setuptools.command.build_ext import build_ext
 from distutils.version import LooseVersion
+from m2r import M2R
 
 class CMakeExtension(Extension):
     def __init__(self, name, sourcedir=''):
@@ -56,16 +57,23 @@ class CMakeBuild(build_ext):
         subprocess.check_call(['cmake', ext.sourcedir] + cmake_args, cwd = self.build_temp, env = env)
         subprocess.check_call(['cmake', '--build', '.'] + build_args, cwd = self.build_temp)
 
+def cleanhtml(raw_html):
+    cleanr = re.compile('<.*?>')
+    cleantext = re.sub(cleanr, '', raw_html)
+    return cleantext
+
 def read(fname):
     dname = os.path.dirname(__file__)
     fname = os.path.join(dname, fname)
 
-    try:
-        import m2r
-        return m2r.parse_from_file(fname)
-    except ImportError:
-        with open(fname) as f:
-            return f.read()
+    with open(fname) as f:
+        contents = f.read()
+        sanatized = cleanhtml(contents)
+
+        m2r = M2R()
+        rest = m2r(sanatized)
+
+    return rest
 
 setup(
     name = "dpsim",
