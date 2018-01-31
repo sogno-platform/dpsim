@@ -9,7 +9,7 @@ DPsim is a solver library for power system simulation.
 - It provides a Python module which can be embedded in any Python 3 application / scripts.
 - It is implemented in highly-efficient C++ code.
 - It supports real-time execution with time-steps up to 50 uS.
-- It can load models in the [Common Information Model (CIM)](https://en.wikipedia.org/wiki/Common_Information_Model_(electricity)) XML format.
+- It can load models in the [Common Information Model (CIM)](https://en.wikipedia.org/wiki/Common_Information_Model_%28electricity%29) XML format.
 - It can be interfaced to a variety of protocols and interfaces via [VILLASnode](http://www.fein-aachen.org/projects/villas-framework/).
 
 ## Installation
