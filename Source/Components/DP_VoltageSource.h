@@ -45,7 +45,6 @@ namespace DP {
 		/// Define parameters of the voltage source
 		VoltageSource(String name, Int node1, Int node2, Real voltageAbs, Real voltagePhase,
 			Logger::Level loglevel = Logger::Level::NONE);
-
 		VoltageSource(String name, Int node1, Int node2, Complex voltage,
 			Logger::Level loglevel = Logger::Level::NONE);
 

@@ -19,13 +19,9 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *********************************************************************************/
 
-#include "Python/Component.h"
-#include "Components/DP_Resistor.h"
-#include "Components/EMT_Resistor.h"
+#include "Python/Components/Resistor.h"
 
-using namespace DPsim;
-
-const char *Python::Components::DocResistor =
+const char *DPsim::Python::Components::DocResistor =
 "Resistor(name, node1, node2, resistance)\n"
 "Construct a new resistor.\n"
 "\n"
@@ -33,35 +29,3 @@ const char *Python::Components::DocResistor =
 "\n"
 ":param resistance: Resistance in Ohm.\n"
 ":returns: A new `Component` representing this resistor.\n";
-
-PyObject* Python::Components::DP::Resistor(PyObject* self, PyObject* args)
-{
-	const char *name;
-	double resistance;
-	int src, dest;
-
-	if (!PyArg_ParseTuple(args, "siid", &name, &src, &dest, &resistance))
-		return nullptr;
-
-	Component *pyComp = PyObject_New(Component, &ComponentType);
-	Component::init(pyComp);
-	pyComp->comp = std::make_shared<DPsim::Components::DP::Resistor>(name, src, dest, resistance);
-
-	return (PyObject*) pyComp;
-}
-
-PyObject* Python::Components::EMT::Resistor(PyObject* self, PyObject* args)
-{
-	const char *name;
-	double resistance;
-	int src, dest;
-
-	if (!PyArg_ParseTuple(args, "siid", &name, &src, &dest, &resistance))
-		return nullptr;
-
-	Component *pyComp = PyObject_New(Component, &ComponentType);
-	Component::init(pyComp);
-	pyComp->comp = std::make_shared<DPsim::Components::EMT::Resistor>(name, src, dest, resistance);
-
-	return (PyObject*) pyComp;
-}

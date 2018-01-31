@@ -1,4 +1,4 @@
-/** Real voltage source freq (EMT)
+/** Current source
  *
  * @file
  * @author Markus Mirz <mmirz@eonerc.rwth-aachen.de>
@@ -23,35 +23,28 @@
 #pragma once
 
 #include "Component.h"
+#include "Base_ControllableSource.h"
 
 namespace DPsim {
 namespace Components {
 namespace EMT {
 
-	class VoltageSourceFreq : public Component, public SharedFactory<VoltageSourceFreq> {
-
-	protected:
-		Real mVoltageAmp;
-		Real mVoltagePhase;
-		Real mSwitchTime;
-		Real mVoltageDiff;
-		Real mResistance;
-		Real mConductance;
+	class CurrentSource : public Component, public ControllableSourceBase, public SharedFactory<CurrentSource> {
+	private:
 		Real mCurrent;
-		Real mOmegaSource;
-		Real mRampTime;
-
 	public:
-		VoltageSourceFreq(String name, Int node1, Int node2, Complex voltage, Real resistance, Real omegaSource, Real switchTime, Real rampTime);
-		VoltageSourceFreq(String name, Int node1, Int node2, Real voltageMag, Real voltagePhase, Real resistance, Real omegaSource, Real switchTime, Real rampTime);
+		CurrentSource(String name, Int node1, Int node2, Complex current);
+		CurrentSource(String name, Int node1, Int node2, Real currentAmp, Real currentPhase);
 
 		void initialize(SystemModel& system) { }
-		void applySystemMatrixStamp(SystemModel& system);
+		void applySystemMatrixStamp(SystemModel& system) { }
 		void applyRightSideVectorStamp(SystemModel& system);
 		void step(SystemModel& system, Real time);
 		void postStep(SystemModel& system) { }
-	};
+		void setSourceValue(Complex value) { mCurrent = value.real(); }
 
+		Real getCurrent(const SystemModel& system);
+	};
 }
 }
 }

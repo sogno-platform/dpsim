@@ -19,12 +19,9 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *********************************************************************************/
 
-#include "Python/Component.h"
-#include "Components/DP_VoltageSource_Norton.h"
+#include "Python/Components/VoltageSourceNorton.h"
 
-using namespace DPsim;
-
-const char *Python::Components::DocVoltageSourceNorton =
+const char *DPsim::Python::Components::DocVoltageSourceNorton =
 "VoltSourceRes(name, node1, node2, voltage, resistance)\n"
 "Construct a new voltage source with an internal resistance.\n"
 "\n"
@@ -36,19 +33,3 @@ const char *Python::Components::DocVoltageSourceNorton =
 ":param voltage: Complex voltage in Volt.\n"
 ":param resistance: Internal resistance in Ohm.\n"
 ":returns: A new `Component` representing this voltage source.\n";
-PyObject* Python::Components::DP::VoltageSourceNorton(PyObject* self, PyObject* args)
-{
-	const char *name;
-	double resistance;
-	int src, dest;
-	Py_complex voltage;
-
-	if (!PyArg_ParseTuple(args, "siiDd", &name, &src, &dest, &voltage, &resistance))
-		return nullptr;
-
-	Component *pyComp = PyObject_New(Component, &ComponentType);
-	Component::init(pyComp);
-	pyComp->comp = std::make_shared<DPsim::Components::DP::VoltageSourceNorton>(name, src, dest, Complex(voltage.real, voltage.imag), resistance);
-
-	return (PyObject*) pyComp;
-}

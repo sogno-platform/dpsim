@@ -1,4 +1,4 @@
-﻿/** SynGenDPBalancedResLoad Example
+/** SynGenDPBalancedResLoad Example
  *
  * @author Markus Mirz <mmirz@eonerc.rwth-aachen.de>
  * @copyright 2017, Institute for Automation of Complex Power Systems, EONERC
@@ -79,8 +79,7 @@ int main(int argc, char* argv[])
 
 	Component::List comps = { gen, r1, r2, r3 };
 
-
-	Simulation sim("DP_SynchronGenerator_BalancedResLoad", comps, om, dt, tf, Logger::Level::INFO, SimulationType::DynPhasor, downSampling);
+	Simulation sim("DP_SynchronGenerator_BalancedResLoad", comps, om, dt, tf, Logger::Level::INFO, SimulationType::DP, downSampling);
 	sim.setNumericalMethod(NumericalMethod::Trapezoidal_flux);
 
 	// Initialize generator

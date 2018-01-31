@@ -19,12 +19,9 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *********************************************************************************/
 
-#include "Python/Component.h"
-#include "Components/DP_CurrentSource.h"
+#include "Python/Components/CurrentSource.h"
 
-using namespace DPsim;
-
-const char *Python::Components::DocCurrentSource =
+const char *DPsim::Python::Components::DocCurrentSource =
 "CurrentSource(name, node1, node2, initial_current)\n"
 "Construct a new external current source.\n"
 "\n"
@@ -34,19 +31,3 @@ const char *Python::Components::DocCurrentSource =
 "\n"
 ":param initial_current: The current of this source in the first timestep (as a complex value).\n"
 ":returns: A new `Component` representing this current source.\n";
-
-PyObject* Python::Components::DP::CurrentSource(PyObject* self, PyObject* args)
-{
-	const char *name;
-	int src, dest;
-	Py_complex initCurrent;
-
-	if (!PyArg_ParseTuple(args, "siiD", &name, &src, &dest, &initCurrent))
-		return nullptr;
-
-	Component *pyComp = PyObject_New(Component, &ComponentType);
-	Component::init(pyComp);
-	pyComp->comp = std::make_shared<DPsim::Components::DP::CurrentSource>(name, src, dest, DPsim::Complex(initCurrent.real, initCurrent.imag));
-
-	return (PyObject*) pyComp;
-}

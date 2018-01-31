@@ -51,11 +51,6 @@ namespace DP {
 		Real mPrevCurFacRe;
 		Real mPrevCurFacIm;
 
-		enum LineTypes {
-			RxLine2Node,
-			RxLine3Node
-		} mType;
-
 		Real correctr, correcti;
 		Real cureqr_ind, cureqi_ind;
 		Real deltavr_ind;
@@ -65,7 +60,12 @@ namespace DP {
 		Real curri_ind;
 
 	public:
-		RxLine(String name, Int node1, Int node2, Real resistance, Real inductance, LineTypes type = LineTypes::RxLine3Node);
+		enum Type {
+			Node2,
+			Node3
+		} mType;
+
+		RxLine(String name, Int node1, Int node2, Real resistance, Real inductance, Type type = Type::Node3);
 
 		void initialize(SystemModel& system);
 		void applySystemMatrixStamp(SystemModel& system);

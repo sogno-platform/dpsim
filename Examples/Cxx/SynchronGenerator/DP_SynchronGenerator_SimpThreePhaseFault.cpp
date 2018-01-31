@@ -1,4 +1,4 @@
-﻿/** Synchron Generator Tests
+/** Synchron Generator Tests
  *
  * @file
  * @author Markus Mirz <mmirz@eonerc.rwth-aachen.de>
@@ -96,7 +96,7 @@ int main(int argc, char* argv[])
 
 	Component::List compsBreakerOn = { gen, rBreaker1, rBreaker2, rBreaker3, r1, r2, r3 };
 
-	Simulation sim("DP_SynchronGenerator_SimpThreePhaseFault", comps, om, dt, tf, Logger::Level::INFO, SimulationType::DynPhasor, downSampling);
+	Simulation sim("DP_SynchronGenerator_SimpThreePhaseFault", comps, om, dt, tf, Logger::Level::INFO, SimulationType::DP, downSampling);
 	sim.setNumericalMethod(NumericalMethod::Trapezoidal_flux);
 	sim.addSystemTopology(compsBreakerOn);
 	sim.switchSystemMatrix(0);

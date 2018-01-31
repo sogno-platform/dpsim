@@ -19,36 +19,36 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *********************************************************************************/
 
-#include "DP_CurrentSource.h"
+#include "EMT_CurrentSource.h"
 
 using namespace DPsim;
 
-Components::DP::CurrentSource::CurrentSource(String name, Int node1, Int node2, Complex current)
+Components::EMT::CurrentSource::CurrentSource(String name, Int node1, Int node2, Real currentAmp, Real currentPhase)
 	: Component(name, node1, node2) {
-	mCurrent = current;
-	attrMap["current"] = { Attribute::Complex, &mCurrent };
+	mCurrent = currentAmp * cos(currentPhase);
+	attrMap["current"] = { Attribute::Real, &mCurrent };
 }
 
-Components::DP::CurrentSource::CurrentSource(String name, Int node1, Int node2, Real currentAbs, Real currentPhase)
-	: CurrentSource(name, node1, node2, MathLibrary::polar(currentAbs, currentPhase)) {
+Components::EMT::CurrentSource::CurrentSource(String name, Int node1, Int node2, Complex current)
+	: CurrentSource(name, node1, node2, std::abs(current), std::arg(current)) {
 }
 
-void Components::DP::CurrentSource::applyRightSideVectorStamp(SystemModel& system)
+void Components::EMT::CurrentSource::applyRightSideVectorStamp(SystemModel& system)
 {
 	if (mNode1 >= 0) {
-		system.addCompToRightSideVector(mNode1, mCurrent);
+		system.addRealToRightSideVector(mNode1, mCurrent);
 	}
 	if (mNode2 >= 0) {
-		system.addCompToRightSideVector(mNode2, Complex(-mCurrent.real(), mCurrent.imag()));
+		system.addRealToRightSideVector(mNode2, -mCurrent);
 	}
 }
 
-void Components::DP::CurrentSource::step(SystemModel& system, Real time)
+void Components::EMT::CurrentSource::step(SystemModel& system, Real time)
 {
 	applyRightSideVectorStamp(system);
 }
 
-Complex Components::DP::CurrentSource::getCurrent(const SystemModel &system)
+Real Components::EMT::CurrentSource::getCurrent(const SystemModel &system)
 {
 	return mCurrent;
 }

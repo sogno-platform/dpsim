@@ -1,6 +1,6 @@
-/** Python binding for ExternalVoltageSource
+/** Python binding for Resistors.
  *
- * @author Markus Mirz <mmirz@eonerc.rwth-aachen.de>
+ * @author Steffen Vogel <stvogel@eonerc.rwth-aachen.de>
  * @copyright 2017, Institute for Automation of Complex Power Systems, EONERC
  *
  * DPsim
@@ -19,15 +19,32 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *********************************************************************************/
 
-#include "Python/Components/VoltageSource.h"
+#pragma once
 
-const char *DPsim::Python::Components::DocVoltageSource =
-"VoltageSource(name, node1, node2, initial_voltage)\n"
-"Construct a new external voltage source.\n"
-"\n"
-"An external voltage source is pretty much the same as a normal ideal voltage "
-"source, but its voltage value can be controlled from external programs by "
-"registering it with an `Interface`.\n"
-"\n"
-":param initial_current: The voltage of this source in the first timestep (as a complex value).\n"
-":returns: A new `Component` representing this voltage source.\n";
+#include "Python/Component.h"
+
+namespace DPsim {
+namespace Python {
+namespace Components {
+
+	extern const char* DocResistor;
+
+	template<class C>
+	PyObject* Resistor(PyObject* self, PyObject* args)
+	{
+		const char *name;
+		double resistance;
+		int src, dest;
+
+		if (!PyArg_ParseTuple(args, "siid", &name, &src, &dest, &resistance))
+			return nullptr;
+
+		Component *pyComp = PyObject_New(Component, &DPsim::Python::ComponentType);
+		Component::init(pyComp);
+		pyComp->comp = std::make_shared<C>(name, src, dest, resistance);
+
+		return (PyObject*) pyComp;
+	}
+}
+}
+}

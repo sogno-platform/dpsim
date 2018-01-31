@@ -19,13 +19,39 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *********************************************************************************/
 
-#include "Python/Components/Capacitor.h"
+#pragma once
 
-const char *DPsim::Python::Components::DocCapacitor =
-"Capacitor(name, node1, node2, capacitance)\n"
-"Construct a new Capacitor.\n"
-"\n"
-"Attributes: ``capacitance``.\n"
-"\n"
-":param capacitance: Capacitance in Farad.\n"
-":returns: A new `Component` representing this Capacitor.\n";
+#include "Python/Component.h"
+#include "Components/DP_Line_Rx.h"
+
+namespace DPsim {
+namespace Python {
+namespace Components {
+
+	extern const char* DocLineRx;
+
+	template<class C>
+	PyObject* LineRx(PyObject* self, PyObject* args)
+	{
+		const char *name;
+		double resistance, inductance, capacitance;
+		int src, dest, type = 3;
+
+		if (!PyArg_ParseTuple(args, "siiddd|i", &name, &src, &dest, &resistance, &inductance, &capacitance, &type))
+			return nullptr;
+
+		DPsim::Components::DP::RxLine::Type ltype;
+		switch (type) {
+			case 2: ltype = DPsim::Components::DP::RxLine::Node2; break;
+			case 3: ltype = DPsim::Components::DP::RxLine::Node3; break;
+		}
+
+		Component *pyComp = PyObject_New(Component, &DPsim::Python::ComponentType);
+		Component::init(pyComp);
+		pyComp->comp = std::make_shared<C>(name, src, dest, resistance, inductance, ltype);
+
+		return (PyObject*) pyComp;
+	}
+}
+}
+}

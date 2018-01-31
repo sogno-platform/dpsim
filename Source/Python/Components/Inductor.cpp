@@ -19,13 +19,9 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *********************************************************************************/
 
-#include "Python/Component.h"
-#include "Components/DP_Inductor.h"
-#include "Components/EMT_Inductor.h"
+#include "Python/Components/Inductor.h"
 
-using namespace DPsim;
-
-const char *Python::Components::DocInductor =
+const char *DPsim::Python::Components::DocInductor =
 "Inductor(name, node1, node2, inductance)\n"
 "Construct a new inductor.\n"
 "\n"
@@ -33,35 +29,3 @@ const char *Python::Components::DocInductor =
 "\n"
 ":param inductance: Inductance in Henry.\n"
 ":returns: A new `Component` representing this inductor.\n";
-
-PyObject* Python::Components::DP::Inductor(PyObject* self, PyObject* args)
-{
-	const char *name;
-	double inductance;
-	int src, dest;
-
-	if (!PyArg_ParseTuple(args, "siid", &name, &src, &dest, &inductance))
-		return nullptr;
-
-	Component *pyComp = PyObject_New(Component, &ComponentType);
-	Component::init(pyComp);
-	pyComp->comp = std::make_shared<DPsim::Components::DP::Inductor>(name, src, dest, inductance);
-
-	return (PyObject*) pyComp;
-}
-
-PyObject* Python::Components::EMT::Inductor(PyObject* self, PyObject* args)
-{
-	const char *name;
-	double inductance;
-	int src, dest;
-
-	if (!PyArg_ParseTuple(args, "siid", &name, &src, &dest, &inductance))
-		return nullptr;
-
-	Component *pyComp = PyObject_New(Component, &ComponentType);
-	Component::init(pyComp);
-	pyComp->comp = std::make_shared<DPsim::Components::EMT::Inductor>(name, src, dest, inductance);
-
-	return (PyObject*) pyComp;
-}
