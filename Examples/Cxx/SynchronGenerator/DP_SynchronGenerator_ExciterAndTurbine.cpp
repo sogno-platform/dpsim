@@ -1,4 +1,4 @@
-/** Synchron Generator Tests
+﻿/** Synchron Generator Tests
 *
 * @file
 * @author Markus Mirz <mmirz@eonerc.rwth-aachen.de>

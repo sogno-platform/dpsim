@@ -1,4 +1,4 @@
-/** Synchron generator
+﻿/** Synchron generator
 *
 * @author Markus Mirz <mmirz@eonerc.rwth-aachen.de>
 * @copyright 2017, Institute for Automation of Complex Power Systems, EONERC
@@ -50,7 +50,7 @@ Components::SynchronGeneratorBase::SynchronGeneratorBase(String name, Int node1,
 
 	// Create logging file
 	if (mLogLevel != Logger::Level::NONE) {
-		String filename = "SynGen_" + mName + ".csv";
+		String filename = "Logs/SynGen_" + mName + ".csv";
 		mLog = new Logger(filename);
 	}
 

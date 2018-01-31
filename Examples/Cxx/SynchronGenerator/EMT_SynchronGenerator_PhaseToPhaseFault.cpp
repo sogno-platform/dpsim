@@ -1,4 +1,4 @@
-/** SynGenPhaseToPhaseFault Example
+﻿/** SynGenPhaseToPhaseFault Example
  *
  * @author Markus Mirz <mmirz@eonerc.rwth-aachen.de>
  * @copyright 2017, Institute for Automation of Complex Power Systems, EONERC
@@ -56,10 +56,21 @@ int main(int argc, char* argv[])
 	Real Rkq2 = 0.0237;
 	Real Llkq2 = 0.125;
 
+	Real Ld_s = 0.23;
+	Real Lq_s = 0.25;
+
+	// Set up simulation
+	Real tf, dt, t;
+	Real om = 2.0*M_PI*60.0;
+	tf = 0.2; dt = 0.00005; t = 0;
+	Int downSampling = 50;
+
+	Real Ra = (Ld_s + Lq_s) / dt;
+
 	// Declare circuit components
 	Component::Ptr gen = SynchronGenerator::make("gen", 1, 2, 3,
 		nomPower, nomPhPhVoltRMS, nomFreq, poleNum, nomFieldCurr,
-		Rs, Ll, Lmd, Lmd0, Lmq, Lmq0, Rfd, Llfd, Rkd, Llkd, Rkq1, Llkq1, Rkq2, Llkq2, H);
+		Rs, Ll, Lmd, Lmd0, Lmq, Lmq0, Rfd, Llfd, Rkd, Llkd, Rkq1, Llkq1, Rkq2, Llkq2, H, Ra);
 	Real loadRes = 1037.8378;
 	Component::Ptr r1 = Resistor::make("r1", 0, 1, loadRes);
 	Component::Ptr r2 = Resistor::make("r2", 0, 2, loadRes);
@@ -73,12 +84,8 @@ int main(int argc, char* argv[])
 
 	Component::List compsBreakerOn = { rBreaker, r1, r2, r3 };
 
-	// Set up simulation
-	Real tf, dt, t;
-	Real om = 2.0*M_PI*60.0;
-	tf = 0.2; dt = 0.00005; t = 0;
-	Int downSampling = 50;
-	Simulation sim("EMT_SynGen_PhaseToPhaseFault", comps, om, dt, tf, Logger::Level::INFO, SimulationType::EMT, downSampling);
+
+	Simulation sim("EMT_SynchronGenerator_PhaseToPhaseFault", comps, om, dt, tf, Logger::Level::INFO, SimulationType::EMT, downSampling);
 	sim.addSystemTopology(compsBreakerOn);
 
 	// Initialize generator

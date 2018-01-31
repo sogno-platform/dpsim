@@ -1,4 +1,4 @@
-/** SynGenBalancedResLoad Example
+﻿/** SynGenBalancedResLoad Example
  *
  * @author Markus Mirz <mmirz@eonerc.rwth-aachen.de>
  * @copyright 2017, Institute for Automation of Complex Power Systems, EONERC
@@ -58,10 +58,21 @@ int main(int argc, char* argv[])
 	Real Llkq2 = 0;
 	Real Rkq2 = 0;
 
+	// Set up simulation
+	Real om = 2.0*M_PI*60.0;
+	Real tf = 0.1;
+	Real dt = 0.000001;
+	Real t = 0;
+	Int downSampling = 25;
+
+	Real Ld_s = 0.23;
+	Real Lq_s = 0.25;
+	Real Ra = (Ld_s + Lq_s) / dt;
+
 	// Declare circuit components
 	Component::Ptr gen = SynchronGenerator::make("gen", 1, 2, 3,
 		nomPower, nomPhPhVoltRMS, nomFreq, poleNum, nomFieldCurr,
-		Rs, Ll, Lmd, Lmd0, Lmq, Lmq0, Rfd, Llfd, Rkd, Llkd, Rkq1, Llkq1, Rkq2, Llkq2, H);
+		Rs, Ll, Lmd, Lmd0, Lmq, Lmq0, Rfd, Llfd, Rkd, Llkd, Rkq1, Llkq1, Rkq2, Llkq2, H, Ra);
 	Real loadRes = 1037.8378;
 	Component::Ptr r1 = Resistor::make("r1", 0, 1, loadRes);
 	Component::Ptr r2 = Resistor::make("r2", 0, 2, loadRes);
@@ -69,13 +80,8 @@ int main(int argc, char* argv[])
 
 	Component::List comps = { gen, r1, r2, r3 };
 
-	// Set up simulation
-	Real om = 2.0*M_PI*60.0;
-	Real tf = 0.1;
-	Real dt = 0.000001;
-	Real t = 0;
-	Int downSampling = 25;
-	Simulation sim("EMT_SynGen_BalanceResLoad", comps, om, dt, tf, Logger::Level::INFO, SimulationType::EMT, downSampling);
+
+	Simulation sim("EMT_SynchronGenerator_BalanceResLoad", comps, om, dt, tf, Logger::Level::INFO, SimulationType::EMT, downSampling);
 	sim.setNumericalMethod(NumericalMethod::Trapezoidal_flux);
 
 	// Initialize generator

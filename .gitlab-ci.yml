@@ -82,8 +82,8 @@ deploy:docs:
   stage: deploy
   script:
     - ssh ${DEPLOY_USER}@${DEPLOY_HOST} mkdir -p ${DEPLOY_PATH}/doc/${CI_BUILD_REF_NAME}/{sphinx,doxygen}
-    - rsync ${RSYNC_OPTS} build/Documentation/html/ ${DEPLOY_USER}@${DEPLOY_HOST}:${DEPLOY_PATH}/doc/${CI_BUILD_REF_NAME}/sphinx
-    - rsync ${RSYNC_OPTS} build/Documentation/Cxx/html/ ${DEPLOY_USER}@${DEPLOY_HOST}:${DEPLOY_PATH}/doc/${CI_BUILD_REF_NAME}/doxygen
+    - rsync ${RSYNC_OPTS} --delete build/Documentation/html/ ${DEPLOY_USER}@${DEPLOY_HOST}:${DEPLOY_PATH}/doc/${CI_BUILD_REF_NAME}/sphinx
+    - rsync ${RSYNC_OPTS} --delete build/Documentation/Cxx/html/ ${DEPLOY_USER}@${DEPLOY_HOST}:${DEPLOY_PATH}/doc/${CI_BUILD_REF_NAME}/doxygen
   dependencies:
     - build:docs
   only:

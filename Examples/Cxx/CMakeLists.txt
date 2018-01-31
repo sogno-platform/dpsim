@@ -37,12 +37,12 @@ set(SYNCGEN_SOURCES
 	SynchronGenerator/DP_SynchronGenerator_ExciterAndTurbine.cpp
 	SynchronGenerator/DP_SynchronGenerator_SimpThreePhaseFault.cpp
 	SynchronGenerator/DP_SynchronGenerator_ThreePhaseFault.cpp
-	SynchronGenerator/DP_SynchronGenerator_VBR_Example.cpp
+	SynchronGenerator/DP_SynchronGenerator_VBR.cpp
 	SynchronGenerator/EMT_SynchronGenerator_BalancedResLoad.cpp
 	SynchronGenerator/EMT_SynchronGenerator_ExciterAndTurbine.cpp
 	SynchronGenerator/EMT_SynchronGenerator_PhaseToPhaseFault.cpp
 	SynchronGenerator/EMT_SynchronGenerator_ThreePhaseFault.cpp
-	SynchronGenerator/EMT_SynchronGenerator_VBR_Example.cpp
+	SynchronGenerator/EMT_SynchronGenerator_VBR.cpp
 )
 
 set(VARFREQ_SOURCES

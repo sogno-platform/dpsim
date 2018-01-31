@@ -26,6 +26,9 @@ DPsim module + notebooks
      $ sudo python3 setup.py install
      $ jupyter notebook --notebook-dir Documentation/Notebooks/
 
+List of Notebooks
+-----------------
+
 .. toctree::
    :glob:
 

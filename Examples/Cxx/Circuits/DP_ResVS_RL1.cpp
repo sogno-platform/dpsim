@@ -31,7 +31,7 @@ int main(int argc, char* argv[])
 	Real timeStep = 0.001;
 	Real omega = 2.0*M_PI*50.0;
 	Real finalTime = 0.3;
-	String simName = "Example1_" + std::to_string(timeStep);
+	String simName = "DP_ResVS_RL1_" + std::to_string(timeStep);
 
 	Component::List comps = {
 		VoltageSourceNorton::make("v_in", 0, GND, Complex(10, 0), 1),

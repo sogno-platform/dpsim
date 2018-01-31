@@ -29,7 +29,7 @@ static void VarFreqRxLineResLoad_NZ_Paper_DP(Real timeStep, Real finalTime, Real
 {
 	// Define simulation scenario
 	std::ostringstream fileName;
-	String simName = "DpEmtVarFreqStudy_NZ_Paper_" + std::to_string(timeStep);
+	String simName = "DP_RXLine_LoadStep_FreqStep_2_" + std::to_string(timeStep);
 
 	Component::List comps0 = {
 		DP::VoltageSourceFreq::make("v_s", 0, GND, 10000, 0, 1, 2 * PI*-1, freqStep, rampTime),
@@ -51,7 +51,7 @@ static void VarFreqRxLineResLoad_NZ_Paper_DP(Real timeStep, Real finalTime, Real
 
 static void VarFreqRxLineResLoad_NZ_Paper_EMT(Real timeStep, Real finalTime, Real freqStep, Real loadStep, Real rampTime) {
 	// Define simulation scenario
-	String simName = "DpEmtVarFreqStudy_NZ_Paper_EMT" + std::to_string(timeStep);
+	String simName = "EMT_RXLine_LoadStep_FreqStep_2_" + std::to_string(timeStep);
 
 	Component::List comps0 = {
 		EMT::VoltageSourceFreq::make("v_s", 0, GND, 10000, 0, 1, 2 * PI*-1, freqStep, rampTime),

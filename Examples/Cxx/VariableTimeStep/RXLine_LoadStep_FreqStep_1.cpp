@@ -28,7 +28,7 @@ using namespace DPsim::Components;
 static void VarFreqRxLineResLoad_DP(Real timeStep, Real finalTime, Real freqStep, Real loadStep, Real rampTime) {
 	// Define simulation scenario
 	Real omega = 2.0*M_PI*50.0;
-	String simName = "DpEmtVarFreqStudy_" + std::to_string(timeStep);
+	String simName = "DP_RXLine_LoadStep_FreqStep_1_" + std::to_string(timeStep);
 
 	Component::List comps0 = {
 		DP::VoltageSourceFreq::make("v_s", 0, GND, 1000, 0, 1, 2 * PI*-5, freqStep, rampTime),
@@ -52,7 +52,7 @@ static void VarFreqRxLineResLoad_EMT(Real timeStep, Real finalTime, Real freqSte
 {
 	// Define simulation scenario
 	Real omega = 2.0*M_PI*50.0;
-	String simName = "RXLineResLoadEMT_" + std::to_string(timeStep);
+	String simName = "EMT_RXLine_LoadStep_FreqStep_1_" + std::to_string(timeStep);
 
 	Component::List comps0 = {
 		DP::VoltageSourceFreq::make("v_s", 0, GND, 1000, 0, 1, 2 * PI*-5, freqStep, rampTime),

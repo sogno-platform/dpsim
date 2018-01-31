@@ -31,7 +31,7 @@ int tmpmain(int argc, char* argv[]) {
 	Real timeStep = 0.00005;
 	Real omega = 2.0*M_PI*50.0;
 	Real finalTime = 0.2;
-	String simName = "IdealVS_Trafo_" + std::to_string(timeStep);
+	String simName = "DP_IdealVS_Trafo_" + std::to_string(timeStep);
 
 	Component::List comps = {
 		VoltageSource::make("v_1", GND, 0, 100., 0*-90./180.*PI, Logger::Level::DEBUG),

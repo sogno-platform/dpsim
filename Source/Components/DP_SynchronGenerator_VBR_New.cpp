@@ -1,4 +1,4 @@
-/** Voltage behind reactance (DP)
+﻿/** Voltage behind reactance (DP)
 *
 * @author Markus Mirz <mmirz@eonerc.rwth-aachen.de>
 * @copyright 2017, Institute for Automation of Complex Power Systems, EONERC
@@ -65,48 +65,16 @@ void Components::DP::SynchronGeneratorVBRNew::initialize(Real om, Real dt,
 				0, mRs, 0,
 				0, 0, mRs;
 
-		R_load <<
-				1037.8378 / mBase_Z, 0, 0, 0, 0, 0,
-				0, 1037.8378 / mBase_Z, 0, 0, 0, 0,
-				0, 0, 1037.8378 / mBase_Z, 0, 0, 0,
-				0, 0, 0, 1037.8378 / mBase_Z, 0, 0,
-				0, 0, 0, 0, 1037.8378 / mBase_Z, 0,
-				0, 0, 0, 0, 0, 1037.8378 / mBase_Z;
-
 		//Dynamic mutual inductances
 		mDLmd = 1. / (1. / mLmd + 1. / mLlfd + 1. / mLlkd);
-		if (mNumDampingWindings == 2) {
+
+		if (mNumDampingWindings == 2)
 				mDLmq = 1. / (1. / mLmq + 1. / mLlkq1 + 1. / mLlkq2);
-
-				A_flux <<
-						-mRkq1 / mLlkq1*(1 - mDLmq / mLlkq1), mRkq1 / mLlkq1*(mDLmq / mLlkq2), 0, 0,
-						mRkq2 / mLlkq2*(mDLmq / mLlkq1), -mRkq2 / mLlkq2*(1 - mDLmq / mLlkq2), 0, 0,
-						0, 0, -mRfd / mLlfd*(1 - mDLmd / mLlfd), mRfd / mLlfd*(mDLmd / mLlkd),
-						0, 0, mRkd / mLlkd*(mDLmd / mLlfd), -mRkd / mLlkd*(1 - mDLmd / mLlkd);
-				B_flux <<
-						mRkq1*mDLmq / mLlkq1, 0,
-						mRkq2*mDLmq / mLlkq2, 0,
-						0, mRfd*mDLmd / mLlfd,
-						0, mRkd*mDLmd / mLlkd;
-		}
-		else {
+		else
+		{
 				mDLmq = 1. / (1. / mLmq + 1. / mLlkq1);
-
-				A_flux = Matrix::Zero(3, 3);
-				B_flux = Matrix::Zero(3, 2);
-				C_flux = Matrix::Zero(3, 1);
-				mRotorFlux = Matrix::Zero(3, 1);
-				mDqStatorCurrents = Matrix::Zero(2, 1);
-				mDqStatorCurrents_hist = Matrix::Zero(2, 1);
-
-				A_flux <<
-						-mRkq1 / mLlkq1*(1 - mDLmq / mLlkq1), 0, 0,
-						0, -mRfd / mLlfd*(1 - mDLmd / mLlfd), mRfd / mLlfd*(mDLmd / mLlkd),
-						0, mRkd / mLlkd*(mDLmd / mLlfd), -mRkd / mLlkd*(1 - mDLmd / mLlkd);
-				B_flux <<
-						mRkq1*mDLmq / mLlkq1, 0,
-						0, mRfd*mDLmd / mLlfd,
-						0, mRkd*mDLmd / mLlkd;
+				K1a = Matrix::Zero(2, 1);
+				K1 = Matrix::Zero(2, 1);
 		}
 
 		mLa = (mDLmq + mDLmd) / 3.;
@@ -126,74 +94,101 @@ void Components::DP::SynchronGeneratorVBRNew::initialize(Real om, Real dt,
 		mIq = -mIq;
 		mId = -mId;
 
-		// VBR Model Dynamic variables
-		mDPsid = mDLmd*(mPsifd / mLlfd) + mDLmd*(mPsikd / mLlkd);
-		if (mNumDampingWindings == 2) {
-				mDPsiq = mDLmq*(mPsikq1 / mLlkq1) + mDLmq*(mPsikq2 / mLlkq2);
-				mDVq = mOmMech*mDPsid + mDLmq*mRkq1*(mDPsiq - mPsikq1) / (mLlkq1*mLlkq1) +
-						mDLmq*mRkq2*(mDPsiq - mPsikq2) / (mLlkq2*mLlkq2) + (mRkq1 / (mLlkq1*mLlkq1) + mRkq2 / (mLlkq2*mLlkq2))*mDLmq*mDLmq*mIq;
+		CalculateAuxiliarConstants(dt*mBase_OmElec);
+
+		if (mNumDampingWindings == 2)
 				mPsimq = mDLmq*(mPsikq1 / mLlkq1 + mPsikq2 / mLlkq2 + mIq);
-		}
-		else {
-				mDPsiq = mDLmq*(mPsikq1 / mLlkq1);
-				mDVq = mOmMech*mDPsid + mDLmq*mRkq1*(mDPsiq - mPsikq1) / (mLlkq1*mLlkq1) + (mRkq1 / (mLlkq1*mLlkq1))*mDLmq*mDLmq*mIq;
+		else
 				mPsimq = mDLmq*(mPsikq1 / mLlkq1 + mIq);
-		}
+
 		mPsimd = mDLmd*(mPsifd / mLlfd + mPsikd / mLlkd + mId);
-		mDVd = -mOmMech*mDPsiq + mDLmd*mRkd*(mDPsid - mPsikd) / (mLlkd*mLlkd) + (mDLmd / mLlfd)*mVfd +
-				mDLmd*mRfd*(mDPsid - mPsifd) / (mLlfd*mLlfd) + (mRfd / (mLlfd*mLlfd) + mRkd / (mLlkd*mLlkd))*mDLmd*mDLmd*mId;
 
-		mDVaRe = dq0ToAbcTransform(mThetaMech, mDVd, mDVq, 0)(0);
-		mDVbRe = dq0ToAbcTransform(mThetaMech, mDVd, mDVq, 0)(1);
-		mDVcRe = dq0ToAbcTransform(mThetaMech, mDVd, mDVq, 0)(2);
-		mDVaIm = dq0ToAbcTransform(mThetaMech, mDVd, mDVq, 0)(3);
-		mDVbIm = dq0ToAbcTransform(mThetaMech, mDVd, mDVq, 0)(4);
-		mDVcIm = dq0ToAbcTransform(mThetaMech, mDVd, mDVq, 0)(5);
-		mDVabc <<
-				mDVaRe,
-				mDVbRe,
-				mDVcRe,
-				mDVaIm,
-				mDVbIm,
-				mDVcIm;
-		mDVabc_hist = mDVabc;
+		mDqStatorCurrents <<
+				mIq,
+				mId;
 
-		mVaRe = dq0ToAbcTransform(mThetaMech, mVd, mVq, mV0)(0);
-		mVbRe = dq0ToAbcTransform(mThetaMech, mVd, mVq, mV0)(1);
-		mVcRe = dq0ToAbcTransform(mThetaMech, mVd, mVq, mV0)(2);
-		mVaIm = dq0ToAbcTransform(mThetaMech, mVd, mVq, mV0)(3);
-		mVbIm = dq0ToAbcTransform(mThetaMech, mVd, mVq, mV0)(4);
-		mVcIm = dq0ToAbcTransform(mThetaMech, mVd, mVq, mV0)(5);
+		mPsikq1kq2 <<
+				mPsikq1,
+				mPsikq2;
+		mPsifdkd <<
+				mPsifd,
+				mPsikd;
 
-		mIaRe = dq0ToAbcTransform(mThetaMech, mId, mIq, mI0)(0);
-		mIbRe = dq0ToAbcTransform(mThetaMech, mId, mIq, mI0)(1);
-		mIcRe = dq0ToAbcTransform(mThetaMech, mId, mIq, mI0)(2);
-		mIaIm = dq0ToAbcTransform(mThetaMech, mId, mIq, mI0)(3);
-		mIbIm = dq0ToAbcTransform(mThetaMech, mId, mIq, mI0)(4);
-		mIcIm = dq0ToAbcTransform(mThetaMech, mId, mIq, mI0)(5);
+		CalculateAuxiliarVariables(0);
 
+		K_DP << K, Matrix::Zero(3, 3),
+				Matrix::Zero(3, 3), K;
+
+		mDVabc = K_DP*mIabc + E_r_vbr_DP;
+		mVabc = dq0ToAbcTransform(mThetaMech, mVd, mVq, mV0);
+		mIabc = dq0ToAbcTransform(mThetaMech, mId, mIq, mI0);
+
+		CalculateLandR(0, dt*mBase_OmElec);
 }
 
 void Components::DP::SynchronGeneratorVBRNew::step(SystemModel& system, Real time)
 {
 		stepInPerUnit(system.getOmega(), system.getTimeStep(), time, system.getNumMethod());
 
-		R_load = system.getCurrentSystemMatrix().inverse() / mBase_Z;
-
 		// Update current source accordingly
 		if (mNode1 >= 0) {
-				system.addCompToRightSideVector(mNode1, Complex(-mIaRe*mBase_i, -mIaIm*mBase_i));
+				system.addCompToRightSideVector(mNode1, Complex(mISourceEq(0), mISourceEq(3)));
 		}
 		if (mNode2 >= 0) {
-				system.addCompToRightSideVector(mNode2, Complex(-mIbRe*mBase_i, -mIbIm*mBase_i));
+				system.addCompToRightSideVector(mNode2, Complex(mISourceEq(1), mISourceEq(4)));
 		}
 		if (mNode3 >= 0) {
-				system.addCompToRightSideVector(mNode3, Complex(-mIcRe*mBase_i, -mIcIm*mBase_i));
+				system.addCompToRightSideVector(mNode3, Complex(mISourceEq(2), mISourceEq(5)));
 		}
 
+
+		//Update Equivalent Resistance
+		system.addRealToSystemMatrix(mNode1, mNode1, mConductanceMat(0, 0));
+		system.addRealToSystemMatrix(mNode1, mNode2, mConductanceMat(0, 1));
+		system.addRealToSystemMatrix(mNode1, mNode3, mConductanceMat(0, 2));
+		system.addRealToSystemMatrix(mNode2, mNode1, mConductanceMat(1, 0));
+		system.addRealToSystemMatrix(mNode2, mNode2, mConductanceMat(1, 1));
+		system.addRealToSystemMatrix(mNode2, mNode3, mConductanceMat(1, 2));
+		system.addRealToSystemMatrix(mNode3, mNode1, mConductanceMat(2, 0));
+		system.addRealToSystemMatrix(mNode3, mNode2, mConductanceMat(2, 1));
+		system.addRealToSystemMatrix(mNode3, mNode3, mConductanceMat(2, 2));
+
+		system.addRealToSystemMatrix(mNode1 + system.getCompOffset(), mNode1, mConductanceMat(3, 0));
+		system.addRealToSystemMatrix(mNode1 + system.getCompOffset(), mNode2, mConductanceMat(3, 1));
+		system.addRealToSystemMatrix(mNode1 + system.getCompOffset(), mNode3, mConductanceMat(3, 2));
+		system.addRealToSystemMatrix(mNode2 + system.getCompOffset(), mNode1, mConductanceMat(4, 0));
+		system.addRealToSystemMatrix(mNode2 + system.getCompOffset(), mNode2, mConductanceMat(4, 1));
+		system.addRealToSystemMatrix(mNode2 + system.getCompOffset(), mNode3, mConductanceMat(4, 2));
+		system.addRealToSystemMatrix(mNode3 + system.getCompOffset(), mNode1, mConductanceMat(5, 0));
+		system.addRealToSystemMatrix(mNode3 + system.getCompOffset(), mNode2, mConductanceMat(5, 1));
+		system.addRealToSystemMatrix(mNode3 + system.getCompOffset(), mNode3, mConductanceMat(5, 2));
+
+		system.addRealToSystemMatrix(mNode1, mNode1 + system.getCompOffset(), mConductanceMat(0, 3));
+		system.addRealToSystemMatrix(mNode1, mNode2 + system.getCompOffset(), mConductanceMat(0, 4));
+		system.addRealToSystemMatrix(mNode1, mNode3 + system.getCompOffset(), mConductanceMat(0, 5));
+		system.addRealToSystemMatrix(mNode2, mNode1 + system.getCompOffset(), mConductanceMat(1, 3));
+		system.addRealToSystemMatrix(mNode2, mNode2 + system.getCompOffset(), mConductanceMat(1, 4));
+		system.addRealToSystemMatrix(mNode2, mNode3 + system.getCompOffset(), mConductanceMat(1, 5));
+		system.addRealToSystemMatrix(mNode3, mNode1 + system.getCompOffset(), mConductanceMat(2, 3));
+		system.addRealToSystemMatrix(mNode3, mNode2 + system.getCompOffset(), mConductanceMat(2, 4));
+		system.addRealToSystemMatrix(mNode3, mNode3 + system.getCompOffset(), mConductanceMat(2, 5));
+
+		system.addRealToSystemMatrix(mNode1 + system.getCompOffset(), mNode1 + system.getCompOffset(), mConductanceMat(3, 3));
+		system.addRealToSystemMatrix(mNode1 + system.getCompOffset(), mNode2 + system.getCompOffset(), mConductanceMat(3, 4));
+		system.addRealToSystemMatrix(mNode1 + system.getCompOffset(), mNode3 + system.getCompOffset(), mConductanceMat(3, 5));
+		system.addRealToSystemMatrix(mNode2 + system.getCompOffset(), mNode1 + system.getCompOffset(), mConductanceMat(4, 3));
+		system.addRealToSystemMatrix(mNode2 + system.getCompOffset(), mNode2 + system.getCompOffset(), mConductanceMat(4, 4));
+		system.addRealToSystemMatrix(mNode2 + system.getCompOffset(), mNode3 + system.getCompOffset(), mConductanceMat(4, 5));
+		system.addRealToSystemMatrix(mNode3 + system.getCompOffset(), mNode1 + system.getCompOffset(), mConductanceMat(5, 3));
+		system.addRealToSystemMatrix(mNode3 + system.getCompOffset(), mNode2 + system.getCompOffset(), mConductanceMat(5, 4));
+		system.addRealToSystemMatrix(mNode3 + system.getCompOffset(), mNode3 + system.getCompOffset(), mConductanceMat(5, 5));
+		
+		system.updateLuFactored();
+
+
 		if (mLogLevel != Logger::Level::NONE) {
-				Matrix logValues(getRotorFluxes().rows() + getDqStatorCurrents().rows() + 3, 1);
-				logValues << getRotorFluxes(), getDqStatorCurrents(), getElectricalTorque(), getRotationalSpeed(), getRotorPosition();
+				Matrix logValues(getStatorCurrents().rows() + getDqStatorCurrents().rows() + 3, 1);
+				logValues << getStatorCurrents()*mBase_i, getDqStatorCurrents(), getElectricalTorque(), getRotationalSpeed(), getRotorPosition();
 				mLog->LogDataLine(time, logValues);
 		}
 
@@ -201,13 +196,6 @@ void Components::DP::SynchronGeneratorVBRNew::step(SystemModel& system, Real tim
 
 void Components::DP::SynchronGeneratorVBRNew::stepInPerUnit(Real om, Real dt, Real time, NumericalMethod numMethod)
 {
-		mIabc <<
-				mIaRe,
-				mIbRe,
-				mIcRe,
-				mIaIm,
-				mIbIm,
-				mIcIm;
 
 		// Calculate mechanical variables with euler
 		if (mHasTurbineGovernor == true) {
@@ -219,14 +207,79 @@ void Components::DP::SynchronGeneratorVBRNew::stepInPerUnit(Real om, Real dt, Re
 		mThetaMech = mThetaMech + dt * ((mOmMech - 1) * mBase_OmMech);
 		mThetaMech2 = mThetaMech2 + dt * (mOmMech* mBase_OmMech);
 
-		// Calculate equivalent Resistance and inductance
-		CalculateLandR(time);
+		mPsikq1kq2 <<
+				mPsikq1,
+				mPsikq2;
+		mPsifdkd <<
+				mPsifd,
+				mPsikd;
 
-		// Solve circuit - calculate stator currents
-		if (numMethod == NumericalMethod::Trapezoidal_flux)
-				mIabc = Trapezoidal(mIabc, -L_EQ.inverse()*(R_EQ + R_load), L_EQ.inverse(), dt*mBase_OmElec, -mDVabc, -mDVabc_hist);
-		else
-				mIabc = Euler(mIabc, -L_EQ.inverse()*(R_EQ + R_load), L_EQ.inverse(), dt*mBase_OmElec, -mDVabc);
+		CalculateLandR(time, dt*mBase_OmElec);
+
+		CalculateAuxiliarVariables(time);
+
+		
+		E_r_vbr_DP = dq0ToAbcTransform(mThetaMech, h_qdr(1), h_qdr(0), 0);
+		K_DP << K, Matrix::Zero(3, 3),
+				Matrix::Zero(3, 3), K;
+
+		R_eq_DP = Var1 + K_DP;
+		E_eq_DP = Var2*mIabc + mDVabc - mVabc + E_r_vbr_DP;
+
+		mConductanceMat = (R_eq_DP*mBase_Z).inverse();
+		mISourceEq = R_eq_DP.inverse()*E_eq_DP*mBase_i;
+
+
+}
+
+
+void Components::DP::SynchronGeneratorVBRNew::postStep(SystemModel& system)
+{
+		Real dt = system.getTimeStep();
+
+		if (mNode1 >= 0) {
+				mVaRe = system.getCompFromLeftSideVector(mNode1).real();
+				mVaIm = system.getCompFromLeftSideVector(mNode1).imag();
+		}
+		else {
+				mVaRe = 0;
+				mVaIm = 0;
+		}
+		if (mNode2 >= 0) {
+				mVbRe = system.getCompFromLeftSideVector(mNode2).real();
+				mVbIm = system.getCompFromLeftSideVector(mNode2).imag();
+		}
+		else {
+				mVbRe = 0;
+				mVbIm = 0;
+		}
+		if (mNode3 >= 0) {
+				mVcRe = system.getCompFromLeftSideVector(mNode3).real();
+				mVcIm = system.getCompFromLeftSideVector(mNode3).imag();
+		}
+		else {
+				mVcRe = 0;
+				mVcIm = 0;
+		}
+
+
+		mVabc <<
+				mVaRe / mBase_v,
+				mVbRe / mBase_v,
+				mVcRe / mBase_v,
+				mVaIm / mBase_v,
+				mVbIm / mBase_v,
+				mVcIm / mBase_v;
+
+		mVq = abcToDq0Transform(mThetaMech, mVaRe, mVbRe, mVcRe, mVaIm, mVbIm, mVcIm)(0);
+		mVd = abcToDq0Transform(mThetaMech, mVaRe, mVbRe, mVcRe, mVaIm, mVbIm, mVcIm)(1);
+		mV0 = abcToDq0Transform(mThetaMech, mVaRe, mVbRe, mVcRe, mVaIm, mVbIm, mVcIm)(2);
+
+		if (mHasExciter == true) {
+				mVfd = mExciter.step(mVd, mVq, 1, dt);
+		}
+
+		mIabc = R_eq_DP.inverse()*(mVabc - E_eq_DP);
 
 		mIaRe = mIabc(0);
 		mIbRe = mIabc(1);
@@ -234,142 +287,203 @@ void Components::DP::SynchronGeneratorVBRNew::stepInPerUnit(Real om, Real dt, Re
 		mIaIm = mIabc(3);
 		mIbIm = mIabc(4);
 		mIcIm = mIabc(5);
-		Real mIq_hist = mIq;
-		Real mId_hist = mId;
+		mIq_hist = mIq;
+		mId_hist = mId;
 		mIq = abcToDq0Transform(mThetaMech, mIaRe, mIbRe, mIcRe, mIaIm, mIbIm, mIcIm)(0);
 		mId = abcToDq0Transform(mThetaMech, mIaRe, mIbRe, mIcRe, mIaIm, mIbIm, mIcIm)(1);
 		mI0 = abcToDq0Transform(mThetaMech, mIaRe, mIbRe, mIcRe, mIaIm, mIbIm, mIcIm)(2);
 
-		if (mHasExciter == true) {
-				// dq-transform of interface voltage
-				mVd = R_load(0, 0)*mId;
-				mVq = R_load(0, 0)*mIq;
-				mVfd = mExciter.step(mVd, mVq, 1, dt);
-		}
-
 		// Calculate rotor flux likanges
-		if (mNumDampingWindings == 2) {
-				C_flux <<
-						0,
-						0,
-						mVfd,
-						0;
+		if (mNumDampingWindings == 2)
+		{
 
 				mDqStatorCurrents <<
 						mIq,
 						mId;
 
-				mDqStatorCurrents_hist <<
-						mIq_hist,
-						mId_hist;
+				mPsikq1kq2 = E1*mIq + E2*mPsikq1kq2 + E1*mIq_hist;
+				mPsifdkd = F1*mId + F2*mPsifdkd + F1*mId_hist + F3*mVfd;
 
-				mRotorFlux <<
-						mPsikq1,
-						mPsikq2,
-						mPsifd,
-						mPsikd;
-
-				if (numMethod == NumericalMethod::Trapezoidal_flux)
-						mRotorFlux = Trapezoidal(mRotorFlux, A_flux, B_flux, C_flux, dt*mBase_OmElec, mDqStatorCurrents, mDqStatorCurrents_hist);
-				else if (numMethod == NumericalMethod::Euler)
-						mRotorFlux = Euler(mRotorFlux, A_flux, B_flux, C_flux, dt*mBase_OmElec, mDqStatorCurrents);
-
-				mPsikq1 = mRotorFlux(0);
-				mPsikq2 = mRotorFlux(1);
-				mPsifd = mRotorFlux(2);
-				mPsikd = mRotorFlux(3);
+				mPsikq1 = mPsikq1kq2(0);
+				mPsikq2 = mPsikq1kq2(1);
+				mPsifd = mPsifdkd(0);
+				mPsikd = mPsifdkd(1);
 
 		}
-		else {
-				C_flux <<
-						0,
-						mVfd,
-						0;
+		else
+		{
 
 				mDqStatorCurrents <<
 						mIq,
 						mId;
-				mDqStatorCurrents_hist <<
-						mIq_hist,
-						mId_hist;
 
-				mRotorFlux <<
-						mPsikq1,
-						mPsifd,
-						mPsikd;
+				mPsikq1 = E1_1d*mIq + E2_1d*mPsikq1 + E1_1d*mIq_hist;
+				mPsifdkd = F1*mId + F2*mPsifdkd + F1*mId_hist + F3*mVfd;
 
-				if (numMethod == NumericalMethod::Trapezoidal_flux)
-						mRotorFlux = Trapezoidal(mRotorFlux, A_flux, B_flux, C_flux, dt*mBase_OmElec, mDqStatorCurrents, mDqStatorCurrents_hist);
-				else if (numMethod == NumericalMethod::Euler)
-						mRotorFlux = Euler(mRotorFlux, A_flux, B_flux, C_flux, dt*mBase_OmElec, mDqStatorCurrents);
-
-				mPsikq1 = mRotorFlux(0);
-				mPsifd = mRotorFlux(1);
-				mPsikd = mRotorFlux(2);
+				mPsifd = mPsifdkd(0);
+				mPsikd = mPsifdkd(1);
 		}
 
 		// Calculate dynamic flux likages
 		if (mNumDampingWindings == 2) {
-				mDPsiq = mDLmq*(mPsikq1 / mLlkq1) + mDLmq*(mPsikq2 / mLlkq2);
 				mPsimq = mDLmq*(mPsikq1 / mLlkq1 + mPsikq2 / mLlkq2 + mIq);
 		}
 		else {
-				mDPsiq = mDLmq*(mPsikq1 / mLlkq1);
 				mPsimq = mDLmq*(mPsikq1 / mLlkq1 + mIq);
 		}
-		mDPsid = mDLmd*(mPsifd / mLlfd) + mDLmd*(mPsikd / mLlkd);
+
 		mPsimd = mDLmd*(mPsifd / mLlfd + mPsikd / mLlkd + mId);
 
-		// Calculate dynamic voltages
-		if (mNumDampingWindings == 2) {
-				mDVq = mOmMech*mDPsid + mDLmq*mRkq1*(mDPsiq - mPsikq1) / (mLlkq1*mLlkq1) +
-						mDLmq*mRkq2*(mDPsiq - mPsikq2) / (mLlkq2*mLlkq2) + (mRkq1 / (mLlkq1*mLlkq1) + mRkq2 / (mLlkq2*mLlkq2))*mDLmq*mDLmq*mIq;
-		}
-		else {
-				mDVq = mOmMech*mDPsid + mDLmq*mRkq1*(mDPsiq - mPsikq1) / (mLlkq1*mLlkq1) + (mRkq1 / (mLlkq1*mLlkq1))*mDLmq*mDLmq*mIq;
-		}
-		mDVd = -mOmMech*mDPsiq + mDLmd*mRkd*(mDPsid - mPsikd) / (mLlkd*mLlkd) + (mDLmd / mLlfd)*mVfd +
-				mDLmd*mRfd*(mDPsid - mPsifd) / (mLlfd*mLlfd) + (mRfd / (mLlfd*mLlfd) + mRkd / (mLlkd*mLlkd))*mDLmd*mDLmd*mId;
-
-		mDVaRe = dq0ToAbcTransform(mThetaMech, mDVd, mDVq, 0)(0);
-		mDVbRe = dq0ToAbcTransform(mThetaMech, mDVd, mDVq, 0)(1);
-		mDVcRe = dq0ToAbcTransform(mThetaMech, mDVd, mDVq, 0)(2);
-		mDVaIm = dq0ToAbcTransform(mThetaMech, mDVd, mDVq, 0)(3);
-		mDVbIm = dq0ToAbcTransform(mThetaMech, mDVd, mDVq, 0)(4);
-		mDVcIm = dq0ToAbcTransform(mThetaMech, mDVd, mDVq, 0)(5);
-		mDVabc_hist = mDVabc;
-		mDVabc <<
-				mDVaRe,
-				mDVbRe,
-				mDVcRe,
-				mDVaIm,
-				mDVbIm,
-				mDVcIm;
-
-#if 0
-		// Load resistance
-		if (time < 0.1 || time > 0.2) {
-				R_load <<
-						1037.8378 / mBase_Z, 0, 0, 0, 0, 0,
-						0, 1037.8378 / mBase_Z, 0, 0, 0, 0,
-						0, 0, 1037.8378 / mBase_Z, 0, 0, 0,
-						0, 0, 0, 1037.8378 / mBase_Z, 0, 0,
-						0, 0, 0, 0, 1037.8378 / mBase_Z, 0,
-						0, 0, 0, 0, 0, 1037.8378 / mBase_Z;
-		}
-		else {
-				R_load <<
-						0.001 / mBase_Z, 0, 0, 0, 0, 0,
-						0, 0.001 / mBase_Z, 0, 0, 0, 0,
-						0, 0, 0.001 / mBase_Z, 0, 0, 0,
-						0, 0, 0, 0.001 / mBase_Z, 0, 0,
-						0, 0, 0, 0, 0.001 / mBase_Z, 0,
-						0, 0, 0, 0, 0, 0.001 / mBase_Z;
-		}
-#endif
+		mDVabc = K_DP*mIabc + E_r_vbr_DP;
 }
 
-void Components::DP::SynchronGeneratorVBRNew::CalculateLandR(Real time)
+
+void Components::DP::SynchronGeneratorVBRNew::CalculateAuxiliarVariables(Real time) {
+
+		if (mNumDampingWindings == 2)
+		{
+				c21_omega = -mOmMech*mDLmq / mLlkq1;
+				c22_omega = -mOmMech*mDLmq / mLlkq2;
+				c13_omega = mOmMech*mDLmd / mLlfd;
+				c14_omega = mOmMech*mDLmd / mLlkd;
+
+				K1a <<
+						c11, c12,
+						c21_omega, c22_omega;
+				K1b <<
+						c15,
+						0;
+				K1 = K1a*E1 + K1b;
+		}
+
+		else
+		{
+				c21_omega = -mOmMech*mDLmq / mLlkq1;
+				c13_omega = mOmMech*mDLmd / mLlfd;
+				c14_omega = mOmMech*mDLmd / mLlkd;
+
+				K1a <<
+						c11,
+						c21_omega;
+				K1b <<
+						c15,
+						0;
+				K1 = K1a*E1_1d + K1b;
+		}
+
+		K2a <<
+				c13_omega, c14_omega,
+				c23, c24;
+		K2b <<
+				0,
+				c25;
+		K2 = K2a*F1 + K2b;
+
+		K <<
+				K1, K2, Matrix::Zero(2, 1),
+				0, 0, 0;
+
+		mKrs_teta <<
+				2. / 3. * cos(mThetaMech2), 2. / 3. * cos(mThetaMech2 - 2. * M_PI / 3.), 2. / 3. * cos(mThetaMech2 + 2. * M_PI / 3.),
+				2. / 3. * sin(mThetaMech2), 2. / 3. * sin(mThetaMech2 - 2. * M_PI / 3.), 2. / 3. * sin(mThetaMech2 + 2. * M_PI / 3.),
+				1. / 3., 1. / 3., 1. / 3.;
+
+		mKrs_teta_inv <<
+				cos(mThetaMech2), sin(mThetaMech2), 1.,
+				cos(mThetaMech2 - 2. * M_PI / 3.), sin(mThetaMech2 - 2. * M_PI / 3.), 1,
+				cos(mThetaMech2 + 2. * M_PI / 3.), sin(mThetaMech2 + 2. * M_PI / 3.), 1.;
+
+		K = mKrs_teta_inv*K*mKrs_teta;
+
+		if (mNumDampingWindings == 2)
+				h_qdr = K1a*E2*mPsikq1kq2 + K1a*E1*mIq + K2a*F2*mPsifdkd + K2a*F1*mId + (K2a*F3 + C26)*mVfd;
+		else
+				h_qdr = K1a*E2_1d*mPsikq1 + K1a*E1_1d*mIq + K2a*F2*mPsifdkd + K2a*F1*mId + (K2a*F3 + C26)*mVfd;
+
+
+}
+
+
+void Components::DP::SynchronGeneratorVBRNew::CalculateAuxiliarConstants(Real dt) {
+
+		b11 = (mRkq1 / mLlkq1)*(mDLmq / mLlkq1 - 1);
+		b13 = mRkq1*mDLmq / mLlkq1;
+		b31 = (mRfd / mLlfd)*(mDLmd / mLlfd - 1);
+		b32 = mRfd*mDLmd / (mLlfd*mLlkd);
+		b33 = mRfd*mDLmd / mLlfd;
+		b41 = mRkd*mDLmd / (mLlfd*mLlkd);
+		b42 = (mRkd / mLlkd)*(mDLmd / mLlkd - 1);
+		b43 = mRkd*mDLmd / mLlkd;
+
+		c23 = mDLmd*mRfd / (mLlfd*mLlfd)*(mDLmd / mLlfd - 1) + mDLmd*mDLmd*mRkd / (mLlkd*mLlkd*mLlfd);
+		c24 = mDLmd*mRkd / (mLlkd*mLlkd)*(mDLmd / mLlkd - 1) + mDLmd*mDLmd*mRfd / (mLlfd*mLlfd*mLlkd);
+		c25 = (mRfd / (mLlfd*mLlfd) + mRkd / (mLlkd*mLlkd))*mDLmd*mDLmd;
+		c26 = mDLmd / mLlfd;
+
+		if (mNumDampingWindings == 2)
+		{
+
+				b12 = mRkq1*mDLmq / (mLlkq1*mLlkq2);
+				b21 = mRkq2*mDLmq / (mLlkq1*mLlkq2);
+				b22 = (mRkq2 / mLlkq2)*(mDLmq / mLlkq2 - 1);
+				b23 = mRkq2*mDLmq / mLlkq2;
+				c11 = mDLmq*mRkq1 / (mLlkq1*mLlkq1)*(mDLmq / mLlkq1 - 1) + mDLmq*mDLmq*mRkq2 / (mLlkq2*mLlkq2*mLlkq1);
+				c12 = mDLmq*mRkq2 / (mLlkq2*mLlkq2)*(mDLmq / mLlkq2 - 1) + mDLmq*mDLmq*mRkq1 / (mLlkq1*mLlkq1*mLlkq2);
+				c15 = (mRkq1 / (mLlkq1*mLlkq1) + mRkq2 / (mLlkq2*mLlkq2))*mDLmq*mDLmq;
+
+
+				Ea <<
+						2 - dt*b11, -dt*b12,
+						-dt*b21, 2 - dt*b22;
+				E1b <<
+						dt*b13,
+						dt*b23;
+				E1 = Ea.inverse() * E1b;
+
+				E2b <<
+						2 + dt*b11, dt*b12,
+						dt*b21, 2 + dt*b22;
+				E2 = Ea.inverse() * E2b;
+		}
+
+		else
+		{
+
+				c11 = mDLmq*mRkq1 / (mLlkq1*mLlkq1)*(mDLmq / mLlkq1 - 1);
+				c15 = (mRkq1 / (mLlkq1*mLlkq1))*mDLmq*mDLmq;
+
+				E1_1d = (1 / (2 - dt*b11))*dt*b13;
+				E2_1d = (1 / (2 - dt*b11))*(2 + dt*b11);
+
+		}
+
+
+		Fa <<
+				2 - dt*b31, -dt*b32,
+				-dt*b41, 2 - dt*b42;
+		F1b <<
+				dt*b33,
+				dt*b43;
+		F1 = Fa.inverse() * F1b;
+
+		F2b <<
+				2 + dt*b31, dt*b32,
+				dt*b41, 2 + dt*b42;
+
+		F2 = Fa.inverse() * F2b;
+
+		F3b <<
+				2 * dt,
+				0;
+		F3 = Fa.inverse()* F3b;
+
+		C26 <<
+				0,
+				c26;
+
+}
+
+void Components::DP::SynchronGeneratorVBRNew::CalculateLandR(Real time, Real dt)
 {
 		Matrix L1_Re(3, 3);
 		Matrix L1_Im(3, 3);
@@ -381,9 +495,7 @@ void Components::DP::SynchronGeneratorVBRNew::CalculateLandR(Real time)
 		Matrix Im_R2(3, 3);
 		Matrix Re_L2(3, 3);
 		Matrix Im_L2(3, 3);
-
-		//Real b_Re2 = cos(2*mThetaMech2);
-		//Real b_Im2 = sin(2*mThetaMech2);
+		
 		Real b_Re = cos(2 * mOmMech* mBase_OmMech*time);
 		Real b_Im = sin(2 * mOmMech* mBase_OmMech*time);
 		Real c_Re = cos(2 * mThetaMech2 - 2 * 1 * mBase_OmMech*time - 2 * mTheta0);
@@ -418,11 +530,13 @@ void Components::DP::SynchronGeneratorVBRNew::CalculateLandR(Real time)
 				Re_L + Re_L2, -Im_L + Im_L2,
 				Im_L + Im_L2, Re_L - Re_L2;
 
+		A = -L_EQ.inverse()*R_EQ;
+		B = L_EQ.inverse();
+		Var1 = B.inverse()*((2 / dt) * Matrix::Identity(6, 6) - A);
+		Var2 =  -B.inverse()*((2 / dt) * Matrix::Identity(6, 6) + A);
+
 }
 
-void Components::DP::SynchronGeneratorVBRNew::postStep(SystemModel& system)
-{
-}
 
 Matrix Components::DP::SynchronGeneratorVBRNew::abcToDq0Transform(Real theta, Real aRe, Real bRe, Real cRe, Real aIm, Real bIm, Real cIm)
 {
@@ -485,3 +599,5 @@ Matrix Components::DP::SynchronGeneratorVBRNew::dq0ToAbcTransform(Real theta, Re
 
 		return abcVector;
 }
+
+

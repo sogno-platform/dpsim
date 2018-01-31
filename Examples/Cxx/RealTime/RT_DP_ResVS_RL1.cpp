@@ -27,6 +27,8 @@ using namespace DPsim::Components::DP;
 
 int main(int argc, char* argv[])
 {
+	Real timeStep = 0.00005;
+	String simName = "RT_DP_ResVS_RL1_" + std::to_string(timeStep);
 	Component::List comps = {
 		VoltageSource::make("v_s", 0, GND, Complex(10000, 0)),
 		Resistor::make("r_line", 0, 1, 1),
@@ -34,8 +36,7 @@ int main(int argc, char* argv[])
 		Resistor::make("r_load", 2, GND, 1000)
 	};
 
-	Real timeStep = 0.00005;
-	RealTimeSimulation sim("RT_DP_ResVS_RL1", comps, 2.0*M_PI*50.0, timeStep, 1.0);
+	RealTimeSimulation sim(simName, comps, 2.0*M_PI*50.0, timeStep, 1.0);
 
 	sim.run();
 

@@ -19,7 +19,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *********************************************************************************/
 
-#include "Simulation.h"
+#include "SynGenSimulation.h"
 #include "Components.h"
 
 using namespace DPsim;
@@ -61,7 +61,7 @@ int main(int argc, char* argv[])
 	// Declare circuit components
 	Component::Ptr gen = SynchronGeneratorVBRNew::make("gen", 0, 1, 2,
 		nomPower, nomPhPhVoltRMS, nomFreq, poleNum, nomFieldCurr,
-		Rs, Ll, Lmd, Lmd0, Lmq, Lmq0, Rfd, Llfd, Rkd, Llkd, Rkq1, Llkq1, Rkq2, Llkq2, H);
+		Rs, Ll, Lmd, Lmd0, Lmq, Lmq0, Rfd, Llfd, Rkd, Llkd, Rkq1, Llkq1, Rkq2, Llkq2, H, Logger::Level::INFO);
 	Real loadRes = 1037.8378;
 	Component::Ptr r1 = Resistor::make("r1", 0, GND, loadRes);
 	Component::Ptr r2 = Resistor::make("r2", 1, GND, loadRes);
@@ -80,9 +80,9 @@ int main(int argc, char* argv[])
 	// Set up simulation
 	Real tf, dt, t;
 	Real om = 2.0*M_PI*60.0;
-	tf = 0.3; dt = 0.0001; t = 0;
+	tf = 0.3; dt = 0.00001; t = 0;
 	Int downSampling = 1;
-	Simulation sim("DP_SynGen_VBR", comps, om, dt, tf, Logger::Level::INFO, SimulationType::DP, downSampling);
+	SynGenSimulation sim("DP_SynchronGenerator_VBR", comps, om, dt, tf, Logger::Level::INFO, SimulationType::DP, downSampling);
 	sim.setNumericalMethod(NumericalMethod::Trapezoidal_flux);
 	sim.addSystemTopology(compsBreakerOn);
 	sim.switchSystemMatrix(0);

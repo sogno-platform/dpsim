@@ -56,10 +56,22 @@ int main(int argc, char* argv[])
 	Real Rkq2 = 0.0237;
 	Real Llkq2 = 0.125;
 
+	Real Ld_s = 0.23;
+	Real Lq_s = 0.25;
+
+	// Set up simulation
+	Real tf, dt, t;
+	Real om = 2.0*M_PI*60.0;
+	tf = 0.1; dt = 0.000001; t = 0;
+	Int downSampling = 50;
+
+	Real Ra = (Ld_s + Lq_s) / dt;
+
+
 	// Declare circuit components
 	Component::Ptr gen = SynchronGenerator::make("gen", 1, 2, 3,
 		nomPower, nomPhPhVoltRMS, nomFreq, poleNum, nomFieldCurr,
-		Rs, Ll, Lmd, Lmd0, Lmq, Lmq0, Rfd, Llfd, Rkd, Llkd, Rkq1, Llkq1, Rkq2, Llkq2, H);
+		Rs, Ll, Lmd, Lmd0, Lmq, Lmq0, Rfd, Llfd, Rkd, Llkd, Rkq1, Llkq1, Rkq2, Llkq2, H, Ra);
 	Real loadRes = 1037.8378;
 	Component::Ptr r1 = Resistor::make("r1", 0, 1, loadRes);
 	Component::Ptr r2 = Resistor::make("r2", 0, 2, loadRes);
@@ -67,12 +79,7 @@ int main(int argc, char* argv[])
 
 	Component::List comps = { gen, r1, r2, r3 };
 
-	// Set up simulation
-	Real tf, dt, t;
-	Real om = 2.0*M_PI*60.0;
-	tf = 0.1; dt = 0.000001; t = 0;
-	Int downSampling = 50;
-	Simulation sim("SynGen_BalancedResLoad", comps, om, dt, tf, Logger::Level::INFO, SimulationType::DP, downSampling);
+	Simulation sim("DP_SynchronGenerator_BalancedResLoad", comps, om, dt, tf, Logger::Level::INFO, SimulationType::DP, downSampling);
 	sim.setNumericalMethod(NumericalMethod::Trapezoidal_flux);
 
 	// Initialize generator

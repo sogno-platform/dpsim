@@ -1,4 +1,4 @@
-/** Synchron generator (EMT)
+﻿/** Synchron generator (EMT)
  *
  * @file
  * @author Markus Mirz <mmirz@eonerc.rwth-aachen.de>
@@ -58,12 +58,15 @@ namespace EMT {
 		/// Interface voltage phase c
 		Real mVc;
 
-		/// Interface curent phase a
+		/// Interface current phase a
 		Real mIa;
-		/// Interface curent phase b
+		/// Interface current phase b
 		Real mIb;
-		/// Interface curent phase c
+		/// Interface current phase c
 		Real mIc;
+
+		/// Interface current vector
+		Matrix mIabc = Matrix::Zero(3, 1);
 
 		// ### Useful Matrices ###
 		/// reactance matrix
@@ -72,6 +75,9 @@ namespace EMT {
 		Matrix mOmegaFluxMat;
 		/// matrix for reversing stator current directions in calculations with respect to other currents
 		Matrix mReverseCurrents;
+
+		/// Compensation Resistance
+		Real mRa;
 
 	public:
 		~SynchronGenerator();
@@ -84,7 +90,7 @@ namespace EMT {
 			Real Rs, Real Ll, Real Lmd, Real Lmd0, Real Lmq, Real Lmq0,
 			Real Rfd, Real Llfd, Real Rkd, Real Llkd,
 			Real Rkq1, Real Llkq1, Real Rkq2, Real Llkq2,
-			Real inertia, Logger::Level logLevel = Logger::Level::NONE);
+			Real inertia, Real Ra, Logger::Level logLevel = Logger::Level::NONE);
 
 		/// Initializes states in per unit or stator referred variables depending on the setting of the state type.
 		/// Function parameters have to be given in real units.
@@ -114,13 +120,14 @@ namespace EMT {
 		Matrix& getVoltages() { return mVoltages; }
 		Matrix& getCurrents() { return mCurrents; }
 		Matrix& getFluxes() { return mFluxes; }
+		Matrix& getStatorCurrents() { return mIabc; }
 		Real getElectricalTorque() { return mElecTorque*mBase_T; }
 		Real getRotationalSpeed() { return mOmMech*mBase_OmMech; }
 		Real getRotorPosition() { return mThetaMech; }
 
 		// Methods for network integrated components
 		void initialize(SystemModel& system) { }
-		void applySystemMatrixStamp(SystemModel& system) { }
+		void applySystemMatrixStamp(SystemModel& system);
 		void applyRightSideVectorStamp(SystemModel& system) { }
 	};
 }
