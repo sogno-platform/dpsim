@@ -77,7 +77,7 @@ def read(fname):
 
 setup(
     name = "dpsim",
-    version = "0.1.1",
+    version = "0.1.2.2",
     author = "Steffen Vogel",
     author_email = "stvogel@eonerc.rwth-aachen.de",
     description = "DPsim is a real-time power system simulator that operates in the dynamic phasor as well as electromagentic transient domain.",
