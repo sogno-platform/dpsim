@@ -284,24 +284,24 @@ void Reader::parseFiles() {
 		TopologicalNode* topNode = dynamic_cast<TopologicalNode*>(obj);
 		if (topNode) {
 			mLog.Log(Logger::Level::INFO) << "TopologicalNode " << mTopNodes.size() << " rid=" << topNode->mRID
-				<< " Terminals:" << std::endl;
+				<< " with terminals:" << std::endl;
 			mTopNodes[topNode->mRID] = (Matrix::Index) mTopNodes.size();
 
 			for (auto term : topNode->Terminal) {
-				mLog.Log(Logger::Level::INFO) << "    " << term->mRID << std::endl;
 				ConductingEquipment *eq = term->ConductingEquipment;
 				if (!eq) {
 					mLog.Log(Logger::Level::WARN) << "Terminal " << term->mRID
 						<< " has no Conducting Equipment, ignoring!" << std::endl;
 				}
 				else {
-					mLog.Log(Logger::Level::INFO) << "    eq " << eq->mRID << " sequenceNumber "
+					mLog.Log(Logger::Level::INFO) << "    " << term->mRID << ": equipment " << eq->mRID << ", sequenceNumber "
 						<< term->sequenceNumber << std::endl;
 					std::vector<Matrix::Index> &nodesVec = mEqNodeMap[eq->mRID];
 					if (nodesVec.size() < (unsigned) term->sequenceNumber) {
 						nodesVec.resize(term->sequenceNumber);
 					}
-					nodesVec[term->sequenceNumber-1] = (Matrix::Index) mTopNodes.size();
+					nodesVec[term->sequenceNumber-1] = (Matrix::Index) mTopNodes.size()-1;
+					mLog.Log(Logger::Level::DEBUG) << "    " << "Added node " << nodesVec[term->sequenceNumber - 1] << " to equipment" << std::endl;
 				}
 			}
 		}
@@ -343,21 +343,19 @@ void Reader::parseFiles() {
 	}
 }
 
-Component::List& Reader::getComponents()
-{
+Component::List& Reader::getComponents() {
 	return mComponents;
 }
 
-Matrix::Index Reader::mapTopologicalNode(String mrid)
-{
+Matrix::Index Reader::mapTopologicalNode(String mrid) {
 	auto search = mTopNodes.find(mrid);
-	if (search == mTopNodes.end())
+	if (search == mTopNodes.end()) {
 		return -1;
+	}
 
 	return search->second;
 }
 
-int Reader::getNumVoltageSources()
-{
+int Reader::getNumVoltageSources() {
 	return mNumVoltageSources;
 }
