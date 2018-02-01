@@ -54,7 +54,7 @@ static int testCIMReader(std::list<String> filenames) {
 
 static int readFixedCIMFiles_LineLoad() {
 #ifdef _WIN32
-	String path("..\\..\\..\\dpsim\\Examples\\CIM\\Line_Load\\");
+	String path("..\\..\\..\\..\\dpsim\\Examples\\CIM\\Line_Load\\");
 #elif defined(__linux__)
 	String path("../../../dpsim/Examples/CIM/Line_Load/");
 #else
@@ -70,7 +70,7 @@ static int readFixedCIMFiles_LineLoad() {
 
 static int readFixedCIMFiles_IEEE9bus() {
 #ifdef _WIN32
-	String path("..\\..\\..\\dpsim\\Examples\\CIM\\IEEE-09_Neplan_RX\\");
+	String path("..\\..\\..\\..\\dpsim\\Examples\\CIM\\IEEE-09_Neplan_RX\\");
 #elif defined(__linux__)
 	String path("../../../dpsim/Examples/CIM/IEEE-09_Neplan_RX/");
 #else
