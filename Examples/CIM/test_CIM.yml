@@ -1,5 +1,4 @@
 IEEE-09_Neplan_RX:
-  xfail: true
   cmd: build/Examples/Cxx/CIM
   args:
     - Examples/CIM/IEEE-09_Neplan_RX/IEEE-09_Neplan_RX_DI.xml
@@ -16,7 +15,6 @@ IEEE-14_Neplan:
     - Examples/CIM/IEEE-14_Neplan/Rootnet_FULL_NE_29J09h_TP.xml
 
 IEEE-39_Neplan:
-  xfail: true
   cmd: build/Examples/Cxx/CIM
   args:
     - Examples/CIM/IEEE-39_Neplan/Rootnet_FULL_NE_29J10h_DI.xml
