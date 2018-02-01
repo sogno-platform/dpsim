@@ -25,12 +25,14 @@ using namespace DPsim;
 
 Components::EMT::VoltageSource::VoltageSource(String name, Int node1, Int node2, Real voltageAmp, Real voltagePhase,
 	Logger::Level loglevel)	: Component(name, node1, node2, loglevel) {
-	mVoltageAmp = voltageAmp;
-	mVoltagePhase = voltagePhase;
 	mNumVirtualNodes = 1;
 	mVirtualNodes = { 0 };
-	mVoltage = mVoltageAmp * cos(mVoltagePhase);
+	mVoltage = voltageAmp * cos(voltagePhase);
 	attrMap["voltage"] = { Attribute::Real, &mVoltage };
+}
+
+Components::EMT::VoltageSource::VoltageSource(String name, Int node1, Int node2, Complex voltage,
+	Logger::Level loglevel) : VoltageSource(name, node1, node2, std::abs(voltage), std::arg(voltage), loglevel) {
 }
 
 void Components::EMT::VoltageSource::applySystemMatrixStamp(SystemModel& system) {

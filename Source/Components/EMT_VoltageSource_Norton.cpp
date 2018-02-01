@@ -24,14 +24,19 @@
 using namespace DPsim;
 
 Components::EMT::VoltageSourceNorton::VoltageSourceNorton(String name, Int node1, Int node2,
-	Real voltageAmp, Real voltagePhase, Real resistance)
-	: Component(name, node1, node2) {
+	Real voltageAmp, Real voltagePhase, Real resistance, Logger::Level loglevel)
+	: Component(name, node1, node2, loglevel) {
 	mVoltageAmp = voltageAmp;
 	mVoltagePhase = voltagePhase;
 	mResistance = resistance;
 	mConductance = 1. / mResistance;
 	mVoltage = mVoltageAmp * cos(mVoltagePhase);
 	mCurrent = mVoltage / mResistance;
+}
+
+Components::EMT::VoltageSourceNorton::VoltageSourceNorton(String name, Int node1, Int node2,
+	Complex voltage, Real resistance, Logger::Level loglevel)
+	: VoltageSourceNorton(name, node1, node2, std::abs(voltage), std::arg(voltage), resistance, loglevel) {
 }
 
 void Components::EMT::VoltageSourceNorton::applySystemMatrixStamp(SystemModel& system) {

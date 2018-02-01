@@ -26,6 +26,8 @@
 #include "Python/Interface.h"
 #include "Python/Simulation.h"
 
+#include "SystemModel.h"
+
 #include <cfloat>
 #include <iostream>
 
@@ -149,13 +151,24 @@ PyObject* Python::Simulation::newfunc(PyTypeObject* type, PyObject *args, PyObje
 
 int Python::Simulation::init(Python::Simulation* self, PyObject *args, PyObject *kwds)
 {
-	static char *kwlist[] = {"name", "components", "frequency", "timestep", "duration", "rt", "start_sync", NULL};
+	static char *kwlist[] = {"name", "components", "frequency", "timestep", "duration", "rt", "start_sync", "type", NULL};
 	double frequency = 50, timestep = 1e-3, duration = DBL_MAX;
 	const char *name = nullptr;
+	int type = 0;
+	enum SimulationType simType;
 
-	if (!PyArg_ParseTupleAndKeywords(args, kwds, "sO|dddbb", kwlist,
-		&name, &self->pyComps, &frequency, &timestep, &duration, &self->rt, &self->startSync))
+	if (!PyArg_ParseTupleAndKeywords(args, kwds, "sO|dddbbi", kwlist,
+		&name, &self->pyComps, &frequency, &timestep, &duration, &self->rt, &self->startSync, &type)) {
 		return -1;
+	}
+
+	switch (type) {
+		case 0: simType = DPsim::SimulationType::DP; break;
+		case 1: simType = DPsim::SimulationType::EMT; break;
+		default:
+			PyErr_SetString(PyExc_TypeError, "Invalid type argument (must be 0 or 1)");
+			return -1;
+	}
 
 	if (!compsFromPython(self->pyComps, self->comps)) {
 		PyErr_SetString(PyExc_TypeError, "Invalid components argument (must by list of dpsim.Component)");
@@ -176,7 +189,7 @@ int Python::Simulation::init(Python::Simulation* self, PyObject *args, PyObject 
 
 	Py_INCREF(self->pyComps);
 
-	self->sim = new DPsim::Simulation(name, self->comps, 2*PI*frequency, timestep, duration);
+	self->sim = new DPsim::Simulation(name, self->comps, 2*PI*frequency, timestep, duration, Logger::Level::INFO, simType);
 	return 0;
 };
 

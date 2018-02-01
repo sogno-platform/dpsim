@@ -8,6 +8,10 @@ add_library(dpsim_python SHARED
 	Interface.cpp
 	LoadCim.cpp
 	
+	Components/LinePi.cpp
+	Components/LineRx.cpp
+	Components/LoadPQ.cpp
+	
 	Components/VoltageSourceNorton.cpp
 	
 	Components/CurrentSource.cpp

@@ -50,28 +50,5 @@ namespace Python {
 	extern PyTypeObject ComponentType;
 
 	bool compsFromPython(PyObject* list, DPsim::Component::List& comps);
-
-namespace Components {
-	extern const char* DocCurrentSource;
-	extern const char* DocVoltageSource;
-	extern const char* DocResistor;
-	extern const char* DocInductor;
-	extern const char* DocCapacitor;
-	extern const char* DocVoltageSourceNorton;
-
-namespace DP {
-	PyObject* CurrentSource(PyObject* self, PyObject *args);
-	PyObject* VoltageSource(PyObject* self, PyObject *args);
-	PyObject* VoltageSourceNorton(PyObject* self, PyObject *args);
-	PyObject* Resistor(PyObject* self, PyObject *args);
-	PyObject* Inductor(PyObject* self, PyObject *args);
-	PyObject* Capacitor(PyObject* self, PyObject *args);
 }
-
-namespace EMT {
-	PyObject* Resistor(PyObject* self, PyObject *args);
-	PyObject* Inductor(PyObject* self, PyObject *args);
-} /// EMT
-} /// Components
-} /// Python
-} /// DPsim
+}

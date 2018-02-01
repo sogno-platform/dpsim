@@ -1,6 +1,6 @@
-/** Python binding for ExternalVoltageSource
+/** Python binding for Resistors.
  *
- * @author Markus Mirz <mmirz@eonerc.rwth-aachen.de>
+ * @author Steffen Vogel <stvogel@eonerc.rwth-aachen.de>
  * @copyright 2017, Institute for Automation of Complex Power Systems, EONERC
  *
  * DPsim
@@ -19,15 +19,12 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *********************************************************************************/
 
-#include "Python/Components/VoltageSource.h"
+#include "Python/Components/LoadPQ.h"
 
-const char *DPsim::Python::Components::DocVoltageSource =
-"VoltageSource(name, node1, node2, initial_voltage)\n"
-"Construct a new external voltage source.\n"
+const char *DPsim::Python::Components::DocLoadPQ =
+"LoadPQ(name, node, activePower, reactivePower, volt, angle)\n"
+"Construct a new PQ load.\n"
 "\n"
-"An external voltage source is pretty much the same as a normal ideal voltage "
-"source, but its voltage value can be controlled from external programs by "
-"registering it with an `Interface`.\n"
-"\n"
-":param initial_current: The voltage of this source in the first timestep (as a complex value).\n"
-":returns: A new `Component` representing this voltage source.\n";
+":param activePower: Active Power in VA.\n"
+":param reactivePower: Reactive Power in VAr.\n"
+":returns: A new `Component` representing this PQ load.\n";

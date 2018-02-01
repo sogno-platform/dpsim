@@ -1,7 +1,7 @@
 # <img src="Figures/dpsim.png" width=40 /> DPsim
 
-[![build status](https://git.rwth-aachen.de/PowerSystemSimulation/DPsim/badges/development/build.svg)](https://git.rwth-aachen.de/PowerSystemSimulation/DPsim/commits/development)
-[![coverage report](https://git.rwth-aachen.de/PowerSystemSimulation/DPsim/badges/development/coverage.svg)](https://git.rwth-aachen.de/PowerSystemSimulation/DPsim/commits/development)
+[![build status](https://git.rwth-aachen.de/acs/core/simulation/DPsim/badges/development/build.svg)](https://git.rwth-aachen.de/acs/core/simulation/DPsim/commits/development)
+[![coverage report](https://git.rwth-aachen.de/acs/core/simulation/DPsim/badges/development/coverage.svg)](https://git.rwth-aachen.de/acs/core/simulation/DPsim/commits/development)
 
 DPsim is a solver library for power system simulation.
 
@@ -9,7 +9,7 @@ DPsim is a solver library for power system simulation.
 - It provides a Python module which can be embedded in any Python 3 application / scripts.
 - It is implemented in highly-efficient C++ code.
 - It supports real-time execution with time-steps up to 50 uS.
-- It can load models in the [Common Information Model (CIM)](https://en.wikipedia.org/wiki/Common_Information_Model_(electricity)) XML format.
+- It can load models in the [Common Information Model (CIM)](https://en.wikipedia.org/wiki/Common_Information_Model_%28electricity%29) XML format.
 - It can be interfaced to a variety of protocols and interfaces via [VILLASnode](http://www.fein-aachen.org/projects/villas-framework/).
 
 ## Installation
@@ -52,7 +52,7 @@ For other licensing options please consult [Prof. Antonello Monti](mailto:amonti
 
 ## Contact
 
-[![EONERC ACS Logo](Figures/eonerc_logo.png)](http://www.acs.eonerc.rwth-aachen.de)
+[![EONERC ACS Logo](https://www.fein-aachen.org/img/logos/eonerc.png)](http://www.acs.eonerc.rwth-aachen.de)
 
 - Markus Mirz <mmirz@eonerc.rwth-aachen.de>
 

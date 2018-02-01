@@ -1,6 +1,5 @@
-/** Real voltage source freq (EMT)
+/** Python binding for ExternalVoltageSource
  *
- * @file
  * @author Markus Mirz <mmirz@eonerc.rwth-aachen.de>
  * @copyright 2017, Institute for Automation of Complex Power Systems, EONERC
  *
@@ -22,36 +21,30 @@
 
 #pragma once
 
-#include "Component.h"
+#include "Python/Component.h"
 
 namespace DPsim {
+namespace Python {
 namespace Components {
-namespace EMT {
 
-	class VoltageSourceFreq : public Component, public SharedFactory<VoltageSourceFreq> {
+	extern const char* DocVoltageSource;
 
-	protected:
-		Real mVoltageAmp;
-		Real mVoltagePhase;
-		Real mSwitchTime;
-		Real mVoltageDiff;
-		Real mResistance;
-		Real mConductance;
-		Real mCurrent;
-		Real mOmegaSource;
-		Real mRampTime;
+	template<class C>
+	PyObject* VoltageSource(PyObject* self, PyObject* args)
+	{
+		const char *name;
+		int src, dest;
+		Py_complex initVoltage;
 
-	public:
-		VoltageSourceFreq(String name, Int node1, Int node2, Complex voltage, Real resistance, Real omegaSource, Real switchTime, Real rampTime);
-		VoltageSourceFreq(String name, Int node1, Int node2, Real voltageMag, Real voltagePhase, Real resistance, Real omegaSource, Real switchTime, Real rampTime);
+		if (!PyArg_ParseTuple(args, "siiD", &name, &src, &dest, &initVoltage))
+			return nullptr;
 
-		void initialize(SystemModel& system) { }
-		void applySystemMatrixStamp(SystemModel& system);
-		void applyRightSideVectorStamp(SystemModel& system);
-		void step(SystemModel& system, Real time);
-		void postStep(SystemModel& system) { }
-	};
+		Component *pyComp = PyObject_New(Component, &DPsim::Python::ComponentType);
+		Component::init(pyComp);
+		pyComp->comp = std::make_shared<C>(name, src, dest, DPsim::Complex(initVoltage.real, initVoltage.imag));
 
+		return (PyObject*) pyComp;
+	}
 }
 }
 }
