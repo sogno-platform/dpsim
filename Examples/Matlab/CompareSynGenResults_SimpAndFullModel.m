@@ -2,13 +2,13 @@
 % from PLECS simulation
 
 %% read results from c++ simulation Full model
-VoltageVector_full = csvread('../../vsa/Results/SynGenVbrEmt_ABCLongFault_DPsim/data_vt.csv');
-CurrentVector_full = csvread('../../vsa/Results/SynGenVbrEmt_ABCLongFault_DPsim/data_j.csv');
-Log_SynGen_full = csvread('../../vsa/Results/SynGenVbrEmt_ABCLongFault_DPsim/SynGen_gen.csv');
+VoltageVector_full = csvread('../../../vsa/Results/SimpSynGen/DPsim/NewTest/Full/EMT_SynchronGenerator_ThreePhaseFault_LeftVector.csv',1);
+CurrentVector_full = csvread('../../../vsa/Results/SimpSynGen/DPsim/NewTest/Full/EMT_SynchronGenerator_ThreePhaseFault_RightVector.csv',1);
+%Log_SynGen_full = csvread('../../vsa/Results/SynGenVbrEmt_ABCLongFault_DPsim/SynGen_gen.csv');
 %% read results from c++ simulation
-VoltageVector = csvread('../../vsa/Results/SimpSynGenVbrEmt_ABCLongFault_DPsim/data_vt.csv');
-CurrentVector = csvread('../../vsa/Results/SimpSynGenVbrEmt_ABCLongFault_DPsim/data_j.csv');
-Log_SynGen = csvread('../../vsa/Results/SimpSynGenVbrEmt_ABCLongFault_DPsim/SynGen_gen.csv');
+VoltageVector = csvread('../../../vsa/Results/SimpSynGen/DPsim/NewTest/EMT_SynchronGenerator_ThreePhaseFault_LeftVector.csv',1);
+CurrentVector = csvread('../../../vsa/Results/SimpSynGen/DPsim/NewTest/EMT_SynchronGenerator_ThreePhaseFault_RightVector.csv',1);
+%Log_SynGen = csvread('../../vsa/Results/SimpSynGenVbrEmt_ABCLongFault_DPsim/SynGen_gen.csv');
  %% Plot
 figure(1)
 hold off
@@ -60,19 +60,19 @@ plot(CurrentVector_full(:,1),CurrentVector_full(:,4),'--');
 title('Current Phase c');
 legend('ic DPSim simplified model','ic DPSim detailed model');
 
-figure(7)
-hold off
-plot(Log_SynGen(:,1),Log_SynGen(:,9));
-hold on
-plot(Log_SynGen_full(:,1),Log_SynGen_full(:,9));
-title('Rotor speed');
-legend('\omega DPSim simplified model','\omega DPSim detailed model');
- 
-figure(8)
-hold off
-plot(Log_SynGen(:,1),Log_SynGen(:,8));
-hold on
-plot(Log_SynGen_full(:,1),Log_SynGen_full(:,8));
-title('Electrical Torque');
-legend('Te DPSim simplified model','Te DPSim detailed model');
+% figure(7)
+% hold off
+% plot(Log_SynGen(:,1),Log_SynGen(:,9));
+% hold on
+% plot(Log_SynGen_full(:,1),Log_SynGen_full(:,9));
+% title('Rotor speed');
+% legend('\omega DPSim simplified model','\omega DPSim detailed model');
+%  
+% figure(8)
+% hold off
+% plot(Log_SynGen(:,1),Log_SynGen(:,8));
+% hold on
+% plot(Log_SynGen_full(:,1),Log_SynGen_full(:,8));
+% title('Electrical Torque');
+% legend('Te DPSim simplified model','Te DPSim detailed model');
 

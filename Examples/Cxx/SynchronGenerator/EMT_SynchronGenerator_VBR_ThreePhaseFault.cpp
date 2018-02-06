@@ -1,4 +1,4 @@
-/** SynGenVBR Example
+﻿/** SynGenVBR Example
  *
  * @author Markus Mirz <mmirz@eonerc.rwth-aachen.de>
  * @copyright 2017, Institute for Automation of Complex Power Systems, EONERC
@@ -59,7 +59,7 @@ int main(int argc, char* argv[])
 		nomPower, nomPhPhVoltRMS, nomFreq, poleNum, nomFieldCurr,
 		Rs, Ll, Lmd, Lmd0, Lmq, Lmq0, Rfd, Llfd, Rkd, Llkd, Rkq1, Llkq1, Rkq2, Llkq2, H, Logger::Level::INFO);
 
-	Real loadRes = 1037.8378;
+	Real loadRes = 1.92;
 	Component::Ptr r1 = Resistor::make("r1", 0, GND, loadRes);
 	Component::Ptr r2 = Resistor::make("r2", 1, GND, loadRes);
 	Component::Ptr r3 = Resistor::make("r3", 2, GND, loadRes);
@@ -85,7 +85,7 @@ int main(int argc, char* argv[])
 	sim.switchSystemMatrix(0);
 
 	// Initialize generator
-	Real initActivePower = 555e3;
+	Real initActivePower = 300e6;
 	Real initReactivePower = 0;
 	Real initTerminalVolt = 24000 / sqrt(3) * sqrt(2);
 	Real initVoltAngle = -DPS_PI / 2;

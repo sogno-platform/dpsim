@@ -84,6 +84,8 @@ namespace EMT {
 		/// matrix for reversing stator current directions in calculations with respect to other currents
 		Matrix mReverseCurrents;
 
+		Matrix mR_load = Matrix::Zero(3, 3);
+
 	public:
 		~SynchronGeneratorSimplified();
 
@@ -113,6 +115,9 @@ namespace EMT {
 
 		/// Retrieves calculated voltage from simulation for next step
 		void postStep(SystemModel& system);
+
+		void initStatesInPerUnit(Real initActivePower, Real initReactivePower, Real initTerminalVolt,
+				Real initVoltAngle, Real initFieldVoltage, Real initMechPower);
 
 		/// Park transform as described in Krause
 		//Matrix parkTransform(Real theta, Matrix& in);

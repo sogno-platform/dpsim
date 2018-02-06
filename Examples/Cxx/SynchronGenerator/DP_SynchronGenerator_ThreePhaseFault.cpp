@@ -53,10 +53,10 @@ int main(int argc, char* argv[])
 	Real Llkd = 0.1713;
 	Real Rkq1 = 0.0062;
 	Real Llkq1 = 0.7252;
-	//Real Rkq2 = 0.0237;
-	//Real Llkq2 = 0.125;
-	Real Rkq2 = 0;
-	Real Llkq2 = 0;
+	Real Rkq2 = 0.0237;
+	Real Llkq2 = 0.125;
+	//Real Rkq2 = 0;
+	//Real Llkq2 = 0;
 
 	Real Ld_s = 0.23;
 	Real Lq_s = 0.25;

@@ -86,6 +86,9 @@ void Components::EMT::SynchronGeneratorSimplified::initialize(Real om, Real dt,
 	mEq_t = mVq + mXd_t*mId;
 	mEf = mOmMech*(mLmd / mRfd) * mVfd;
 
+	mVd = -mPsiq;
+	mVq = mPsid;
+
 	mVa = inverseParkTransform2(mThetaMech, mVd* mBase_v, mVq* mBase_v, mV0* mBase_v)(0);
 	mVb = inverseParkTransform2(mThetaMech, mVd* mBase_v, mVq* mBase_v, mV0* mBase_v)(1);
 	mVc = inverseParkTransform2(mThetaMech, mVd* mBase_v, mVq* mBase_v, mV0* mBase_v)(2);
@@ -95,8 +98,78 @@ void Components::EMT::SynchronGeneratorSimplified::initialize(Real om, Real dt,
 	mIc = inverseParkTransform2(mThetaMech, mId* mBase_i, mIq* mBase_i, mI0* mBase_i)(2);
 }
 
+void Components::EMT::SynchronGeneratorSimplified::initStatesInPerUnit(Real initActivePower, Real initReactivePower,
+		Real initTerminalVolt, Real initVoltAngle, Real initFieldVoltage, Real initMechPower)
+{
+		// Electrical variables
+		Real init_P = initActivePower / mNomPower;
+		Real init_Q = initReactivePower / mNomPower;
+		Real init_S = sqrt(pow(init_P, 2.) + pow(init_Q, 2.));
+		Real init_vt = initTerminalVolt / mBase_v;
+		Real init_it = init_S / init_vt;
+
+		// power factor
+		Real init_pf = acos(init_P / init_S);
+
+		// load angle
+		Real init_delta = atan(((mLmq + mLl) * init_it * cos(init_pf) - mRs * init_it * sin(init_pf)) /
+				(init_vt + mRs * init_it * cos(init_pf) + (mLmq + mLl) * init_it * sin(init_pf)));
+		Real init_delta_deg = init_delta / DPS_PI * 180;
+
+		// dq stator voltages and currents
+		Real init_vd = init_vt * sin(init_delta);
+		Real init_vq = init_vt * cos(init_delta);
+		Real init_id = init_it * sin(init_delta + init_pf);
+		Real init_iq = init_it * cos(init_delta + init_pf);
+
+		// rotor voltage and current
+		Real init_ifd = (init_vq + mRs * init_iq + (mLmd + mLl) * init_id) / mLmd;
+		Real init_vfd = mRfd * init_ifd;
+
+		// flux linkages
+		Real init_psid = -(mLl + mLmd)*init_id + mLmd*init_ifd;
+		Real init_psiq = -(mLl + mLmq)*init_iq;
+		Real init_psifd = (mLmd + mLlfd) * init_ifd - mLmd * init_id;
+
+		// rotor mechanical variables
+		Real init_Te = init_P + mRs * pow(init_it, 2.);
+
+		// Initialize mechanical variables
+		mOmMech = 1;
+		mMechPower = initMechPower / mNomPower;
+		mMechTorque = mMechPower / 1;
+
+		mThetaMech = initVoltAngle + init_delta - PI / 2.;
+
+		mVd = -init_psiq;
+		mVq = init_vq;
+		mV0 = 0;
+		mVfd = init_vfd;
+		mVkd = 0;
+		mVkq1 = 0;
+		mVkq2 = 0;
+
+		mIq = init_iq;
+		mId = init_id;
+		mI0 = 0;
+		mIfd = init_ifd;
+		mIkd = 0;
+		mIkq1 = 0;
+		mIkq2 = 0;
+
+		mPsiq = init_psiq;
+		mPsid = init_psid;
+		mPsi0 = 0;
+		mPsifd = init_psifd;
+
+}
+
 void Components::EMT::SynchronGeneratorSimplified::step(SystemModel& system, Real time)
 {
+
+	mR_load = system.getCurrentSystemMatrix().inverse();
+	mR_load = mR_load / mBase_Z;
+
 	stepInPerUnit(system.getOmega(), system.getTimeStep(), time, system.getNumMethod());
 
 	// Update current source accordingly
@@ -119,65 +192,48 @@ void Components::EMT::SynchronGeneratorSimplified::step(SystemModel& system, Rea
 
 void Components::EMT::SynchronGeneratorSimplified::stepInPerUnit(Real om, Real dt, Real time, NumericalMethod numMethod)
 {
-	mVa = (1 / mBase_v) * mVa;
-	mVb = (1 / mBase_v) * mVb;
-	mVc = (1 / mBase_v) * mVc;
 
-	mIa = (1 / mBase_i) * mIa;
-	mIb = (1 / mBase_i) * mIb;
-	mIc = (1 / mBase_i) * mIc;
-
-	// dq-transform of interface voltage
-	mVd = parkTransform2(mThetaMech, mVa, mVb, mVc)(0);
-	mVq = parkTransform2(mThetaMech, mVa, mVb, mVc)(1);
-	mV0 = parkTransform2(mThetaMech, mVa, mVb, mVc)(2);
 
 	// Calculation of rotational speed with euler
 	mElecTorque = (mPsid*mIq - mPsiq*mId);
 	mOmMech = mOmMech + dt * (1 / (2 * mH) * (mMechTorque - mElecTorque));
+	// Calculation of rotor angular position
+	mThetaMech = mThetaMech + dt * (mOmMech * mBase_OmMech);
 
-#if 0
+
 	// Using fundamental parameters
-	mPsiq = -mVd;
-	mPsid = mVq;
+
 	mPsifd = mPsifd + dt*mBase_OmMech*(mVfd - mRfd*mIfd);
 
+	Matrix mR_eq = Matrix::Zero(2, 2);
+	Matrix mE_eq = Matrix::Zero(2, 1);
+	Matrix mIdq = Matrix::Zero(2, 1);
+	mR_eq <<
+			-(mRs + mR_load(0, 0)), (mLl + mLmq),
+			-(mLl + mLmd) + mLmd*mLmd / (mLlfd + mLmd), -(mRs + mR_load(0, 0));
+	mE_eq <<
+			0,
+			(mLmd)*mPsifd / (mLlfd + mLmd);
+
+	mIdq = -mR_eq.inverse()*mE_eq;
+
+	mId = mIdq(0);
+	mIq = mIdq(1);
+	mIfd = (mPsifd + mLmd*mId) / (mLlfd + mLmd);
+
+	
 	Matrix Fluxes(3, 1);
-	Fluxes(0, 0) = mPsiq;
-	Fluxes(1, 0) = mPsid;
-	Fluxes(2, 0) = mPsifd;
 
 	Matrix Currents(3, 1);
-
-	Currents = mInductanceMat.inverse()*Fluxes;
-
-	mIq = Currents(0, 0);
-	mId = Currents(1, 0);
-	mIfd = Currents(2, 0);
-#endif
-
-	// Using operational parameters
-	mEq_t = mEq_t + dt*((1 / mTd0_t) * (-mEq_t + mEf - (mXd - mXd_t)*mId));
-
-	mId = (mEq_t - mVq) / mXd_t;
-	//mIq = mVd / mXq;
-
-	//mIfd = (mVfd - ((1 / mTd0_t) * (-mEq_t + mEf - (mXd - mXd_t)*mId))) / mRfd;
-
-	Matrix Currents(3, 1);
-	Currents << mIq,
-		mId,
-		mIfd;
-	Matrix Fluxes(3, 1);
+	Currents(0, 0) = mIq;
+	Currents(1, 0) = mId;
+	Currents(2, 0) = mIfd;
 
 	Fluxes = mInductanceMat*Currents;
 
 	mPsiq = Fluxes(0, 0);
 	mPsid = Fluxes(1, 0);
 	mPsifd = Fluxes(2, 0);
-
-	// Calculation of rotor angular position
-	mThetaMech = mThetaMech + dt * (mOmMech * mBase_OmMech);
 
 	mIa = mBase_i * inverseParkTransform2(mThetaMech, mId, mIq, mI0)(0);
 	mIb = mBase_i * inverseParkTransform2(mThetaMech, mId, mIq, mI0)(1);
