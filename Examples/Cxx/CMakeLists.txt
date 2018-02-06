@@ -43,7 +43,7 @@ set(SYNCGEN_SOURCES
 	SynchronGenerator/EMT_SynchronGenerator_PhaseToPhaseFault.cpp
 	SynchronGenerator/EMT_SynchronGenerator_ThreePhaseFault.cpp
 	SynchronGenerator/EMT_SynchronGenerator_VBR_ThreePhaseFault.cpp
-	SynchronGenerator/EMT_SynchronGenerator_Simplified_ThreePhaseFault_VBR.cpp
+	SynchronGenerator/EMT_SynchronGenerator_Simplified_ThreePhaseFault.cpp
 
 )
 
