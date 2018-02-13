@@ -19,7 +19,7 @@
 * along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *********************************************************************************/
 
-#include "Simulation.h"
+#include "SynGenSimulation.h"
 #include "Logger.h"
 #include "Components.h"
 
@@ -65,7 +65,7 @@ int main(int argc, char* argv[])
 		// Set up simulation
 		Real tf, dt, t;
 		Real om = 2.0*M_PI*60.0;
-		tf = 3; dt = 0.00005; t = 0;
+		tf = 3; dt = 0.0001; t = 0;
 		Int downSampling = 1;
 
 		Real Ra = (Ld_s + Lq_s) / dt;
@@ -74,7 +74,7 @@ int main(int argc, char* argv[])
 		Component::Ptr gen = SynchronGeneratorSimplified::make("gen", 0, 1, 2,
 				nomPower, nomPhPhVoltRMS, nomFreq, poleNum, nomFieldCurr,
 				Rs, Ll, Lmd, Lmd0, Lmq, Lmq0, Rfd, Llfd, Rkd, Llkd, Rkq1, Llkq1, Rkq2, Llkq2, H, Logger::Level::INFO);
-		Real loadRes = 1.92;
+		Real loadRes = 24e3*24e3/555e3;
 		Component::Ptr r1 = Resistor::make("r1", 0, GND, loadRes);
 		Component::Ptr r2 = Resistor::make("r2", 1, GND, loadRes);
 		Component::Ptr r3 = Resistor::make("r3", 2, GND, loadRes);
@@ -90,13 +90,13 @@ int main(int argc, char* argv[])
 
 		Component::List compsBreakerOn = { gen, rBreaker1, rBreaker2, rBreaker3, r1, r2, r3 };
 
-		Simulation sim("EMT_SynchronGenerator_ThreePhaseFault", comps, om, dt, tf, Logger::Level::INFO, SimulationType::EMT, downSampling);
+		SynGenSimulation sim("EMT_SynchronGenerator_ThreePhaseFault", comps, om, dt, tf, Logger::Level::INFO, SimulationType::EMT, downSampling);
 		sim.setNumericalMethod(NumericalMethod::Trapezoidal_flux);
 		sim.addSystemTopology(compsBreakerOn);
 		sim.switchSystemMatrix(0);
 
 		// Initialize generator
-		Real initActivePower = 300e6;
+		Real initActivePower = 555e3;
 		Real initReactivePower = 0;
 		Real initTerminalVolt = 24000 / sqrt(3) * sqrt(2);
 		Real initVoltAngle = -DPS_PI / 2;

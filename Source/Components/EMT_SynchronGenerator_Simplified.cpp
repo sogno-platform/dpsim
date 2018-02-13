@@ -33,6 +33,7 @@ Components::EMT::SynchronGeneratorSimplified::SynchronGeneratorSimplified(String
 	: SynchronGeneratorBase(name, node1, node2, node3, nomPower, nomVolt, nomFreq, poleNumber, nomFieldCur,
 		Rs, Ll, Lmd, Lmd0, Lmq, Lmq0, Rfd, Llfd, Rkd, Llkd, Rkq1, Llkq1, Rkq2, Llkq2,
 		inertia, logLevel) {
+
 }
 
 Components::EMT::SynchronGeneratorSimplified::~SynchronGeneratorSimplified()
@@ -41,6 +42,36 @@ Components::EMT::SynchronGeneratorSimplified::~SynchronGeneratorSimplified()
 		delete mLog;
 	}
 }
+
+//void Components::EMT::SynchronGeneratorSimplified::applySystemMatrixStamp(SystemModel& system)
+//{
+//		mR_eq2 <<
+//				-(mRs), (mLl + mLmq),
+//				-(mLl + mLmd) + mLmd*mLmd / (mLlfd + mLmd), -(mRs);
+//
+//		mKrs_teta <<
+//				2. / 3. * cos(mThetaMech), 2. / 3. * cos(mThetaMech - 2. * M_PI / 3.), 2. / 3. * cos(mThetaMech + 2. * M_PI / 3.),
+//				2. / 3. * sin(mThetaMech), 2. / 3. * sin(mThetaMech - 2. * M_PI / 3.), 2. / 3. * sin(mThetaMech + 2. * M_PI / 3.);
+//
+//		mKrs_teta_inv <<
+//				cos(mThetaMech), sin(mThetaMech),
+//				cos(mThetaMech - 2. * M_PI / 3.), sin(mThetaMech - 2. * M_PI / 3.),
+//				cos(mThetaMech + 2. * M_PI / 3.), sin(mThetaMech + 2. * M_PI / 3.);
+//
+//		mG_eq_abc2 = mKrs_teta_inv*mR_eq2.inverse()*mKrs_teta;
+//		mG_eq_abc2 = mG_eq_abc2*mBase_Z;
+//
+//		//Update Equivalent Resistance
+//		system.addRealToSystemMatrix(mNode1, mNode1, mG_eq_abc2(0, 0));
+//		system.addRealToSystemMatrix(mNode1, mNode2, mG_eq_abc2(0, 1));
+//		system.addRealToSystemMatrix(mNode1, mNode3, mG_eq_abc2(0, 2));
+//		system.addRealToSystemMatrix(mNode2, mNode1, mG_eq_abc2(1, 0));
+//		system.addRealToSystemMatrix(mNode2, mNode2, mG_eq_abc2(1, 1));
+//		system.addRealToSystemMatrix(mNode2, mNode3, mG_eq_abc2(1, 2));
+//		system.addRealToSystemMatrix(mNode3, mNode1, mG_eq_abc2(2, 0));
+//		system.addRealToSystemMatrix(mNode3, mNode2, mG_eq_abc2(2, 1));
+//		system.addRealToSystemMatrix(mNode3, mNode3, mG_eq_abc2(2, 2));
+//}
 
 void Components::EMT::SynchronGeneratorSimplified::initialize(Real om, Real dt,
 	Real initActivePower, Real initReactivePower, Real initTerminalVolt,
@@ -89,98 +120,47 @@ void Components::EMT::SynchronGeneratorSimplified::initialize(Real om, Real dt,
 	mVd = -mPsiq;
 	mVq = mPsid;
 
-	mVa = inverseParkTransform2(mThetaMech, mVd* mBase_v, mVq* mBase_v, mV0* mBase_v)(0);
-	mVb = inverseParkTransform2(mThetaMech, mVd* mBase_v, mVq* mBase_v, mV0* mBase_v)(1);
-	mVc = inverseParkTransform2(mThetaMech, mVd* mBase_v, mVq* mBase_v, mV0* mBase_v)(2);
+	mVa = inverseParkTransform(mThetaMech, mVd* mBase_v, mVq* mBase_v, mV0* mBase_v)(0);
+	mVb = inverseParkTransform(mThetaMech, mVd* mBase_v, mVq* mBase_v, mV0* mBase_v)(1);
+	mVc = inverseParkTransform(mThetaMech, mVd* mBase_v, mVq* mBase_v, mV0* mBase_v)(2);
 
-	mIa = inverseParkTransform2(mThetaMech, mId* mBase_i, mIq* mBase_i, mI0* mBase_i)(0);
-	mIb = inverseParkTransform2(mThetaMech, mId* mBase_i, mIq* mBase_i, mI0* mBase_i)(1);
-	mIc = inverseParkTransform2(mThetaMech, mId* mBase_i, mIq* mBase_i, mI0* mBase_i)(2);
-}
-
-void Components::EMT::SynchronGeneratorSimplified::initStatesInPerUnit(Real initActivePower, Real initReactivePower,
-		Real initTerminalVolt, Real initVoltAngle, Real initFieldVoltage, Real initMechPower)
-{
-		// Electrical variables
-		Real init_P = initActivePower / mNomPower;
-		Real init_Q = initReactivePower / mNomPower;
-		Real init_S = sqrt(pow(init_P, 2.) + pow(init_Q, 2.));
-		Real init_vt = initTerminalVolt / mBase_v;
-		Real init_it = init_S / init_vt;
-
-		// power factor
-		Real init_pf = acos(init_P / init_S);
-
-		// load angle
-		Real init_delta = atan(((mLmq + mLl) * init_it * cos(init_pf) - mRs * init_it * sin(init_pf)) /
-				(init_vt + mRs * init_it * cos(init_pf) + (mLmq + mLl) * init_it * sin(init_pf)));
-		Real init_delta_deg = init_delta / DPS_PI * 180;
-
-		// dq stator voltages and currents
-		Real init_vd = init_vt * sin(init_delta);
-		Real init_vq = init_vt * cos(init_delta);
-		Real init_id = init_it * sin(init_delta + init_pf);
-		Real init_iq = init_it * cos(init_delta + init_pf);
-
-		// rotor voltage and current
-		Real init_ifd = (init_vq + mRs * init_iq + (mLmd + mLl) * init_id) / mLmd;
-		Real init_vfd = mRfd * init_ifd;
-
-		// flux linkages
-		Real init_psid = -(mLl + mLmd)*init_id + mLmd*init_ifd;
-		Real init_psiq = -(mLl + mLmq)*init_iq;
-		Real init_psifd = (mLmd + mLlfd) * init_ifd - mLmd * init_id;
-
-		// rotor mechanical variables
-		Real init_Te = init_P + mRs * pow(init_it, 2.);
-
-		// Initialize mechanical variables
-		mOmMech = 1;
-		mMechPower = initMechPower / mNomPower;
-		mMechTorque = mMechPower / 1;
-
-		mThetaMech = initVoltAngle + init_delta - PI / 2.;
-
-		mVd = -init_psiq;
-		mVq = init_vq;
-		mV0 = 0;
-		mVfd = init_vfd;
-		mVkd = 0;
-		mVkq1 = 0;
-		mVkq2 = 0;
-
-		mIq = init_iq;
-		mId = init_id;
-		mI0 = 0;
-		mIfd = init_ifd;
-		mIkd = 0;
-		mIkq1 = 0;
-		mIkq2 = 0;
-
-		mPsiq = init_psiq;
-		mPsid = init_psid;
-		mPsi0 = 0;
-		mPsifd = init_psifd;
-
+	mIa = inverseParkTransform(mThetaMech, mId* mBase_i, mIq* mBase_i, mI0* mBase_i)(0);
+	mIb = inverseParkTransform(mThetaMech, mId* mBase_i, mIq* mBase_i, mI0* mBase_i)(1);
+	mIc = inverseParkTransform(mThetaMech, mId* mBase_i, mIq* mBase_i, mI0* mBase_i)(2);
 }
 
 void Components::EMT::SynchronGeneratorSimplified::step(SystemModel& system, Real time)
 {
 
-	mR_load = system.getCurrentSystemMatrix().inverse();
-	mR_load = mR_load / mBase_Z;
+	mG_load(0, 0) = system.getCurrentSystemMatrix()(mNode1, mNode1);
+	mG_load(0, 1) = system.getCurrentSystemMatrix()(mNode1, mNode2);
+	mG_load(0, 2) = system.getCurrentSystemMatrix()(mNode1, mNode3);
+	mG_load(1, 0) = system.getCurrentSystemMatrix()(mNode2, mNode1);
+	mG_load(1, 1) = system.getCurrentSystemMatrix()(mNode2, mNode2);
+	mG_load(1, 2) = system.getCurrentSystemMatrix()(mNode2, mNode3);
+	mG_load(2, 0) = system.getCurrentSystemMatrix()(mNode3, mNode1);
+	mG_load(2, 1) = system.getCurrentSystemMatrix()(mNode3, mNode2);
+	mG_load(2, 2) = system.getCurrentSystemMatrix()(mNode3, mNode3);
+	mR_load = mG_load.inverse() / mBase_Z;
+
 
 	stepInPerUnit(system.getOmega(), system.getTimeStep(), time, system.getNumMethod());
 
+
+	Matrix mConductanceMat = Matrix::Zero(3, 3);
+	Matrix mIabc_eq = Matrix::Zero(3, 1);
+	mConductanceMat = (mR_eq_abc*mBase_Z).inverse();
+	mIabc_eq = mConductanceMat*mEq_abc*mBase_v;
+
 	// Update current source accordingly
 	if (mNode1 >= 0) {
-		system.addRealToRightSideVector(mNode1, mIa);
+			system.addRealToRightSideVector(mNode1, mIa);
 	}
 	if (mNode2 >= 0) {
-		system.addRealToRightSideVector(mNode2, mIb);
+			system.addRealToRightSideVector(mNode2, mIb);
 	}
 	if (mNode3 >= 0) {
-		system.addRealToRightSideVector(mNode3, mIc);
+			system.addRealToRightSideVector(mNode3, mIc);
 	}
 
 	if (mLogLevel != Logger::Level::NONE) {
@@ -193,64 +173,71 @@ void Components::EMT::SynchronGeneratorSimplified::step(SystemModel& system, Rea
 void Components::EMT::SynchronGeneratorSimplified::stepInPerUnit(Real om, Real dt, Real time, NumericalMethod numMethod)
 {
 
-
-	// Calculation of rotational speed with euler
-	mElecTorque = (mPsid*mIq - mPsiq*mId);
-	mOmMech = mOmMech + dt * (1 / (2 * mH) * (mMechTorque - mElecTorque));
-	// Calculation of rotor angular position
-	mThetaMech = mThetaMech + dt * (mOmMech * mBase_OmMech);
+		mVabc <<
+				mVa / mBase_v,
+				mVb / mBase_v,
+				mVc / mBase_v;
 
 
-	// Using fundamental parameters
+		// Calculation of rotational speed with euler
+		mElecTorque = (mPsid*mIq - mPsiq*mId);
+		mOmMech = mOmMech + dt * (1 / (2 * mH) * (mMechTorque - mElecTorque));
 
-	mPsifd = mPsifd + dt*mBase_OmMech*(mVfd - mRfd*mIfd);
+		// Calculation of rotor angular position
+		mThetaMech = mThetaMech + dt * (mOmMech * mBase_OmMech);
 
-	Matrix mR_eq = Matrix::Zero(2, 2);
-	Matrix mE_eq = Matrix::Zero(2, 1);
-	Matrix mIdq = Matrix::Zero(2, 1);
-	mR_eq <<
-			-(mRs + mR_load(0, 0)), (mLl + mLmq),
-			-(mLl + mLmd) + mLmd*mLmd / (mLlfd + mLmd), -(mRs + mR_load(0, 0));
-	mE_eq <<
-			0,
-			(mLmd)*mPsifd / (mLlfd + mLmd);
+		mPsifd = mPsifd + dt*mBase_OmMech*(mVfd - mRfd*mIfd);
 
-	mIdq = -mR_eq.inverse()*mE_eq;
+		mR_eq <<
+				-mRs, (mLl + mLmq),
+				-(mLl + mLmd) + mLmd*mLmd / (mLlfd + mLmd), -mRs;
+		mE_eq <<
+				0,
+				(mLmd)*mPsifd / (mLlfd + mLmd);
 
-	mId = mIdq(0);
-	mIq = mIdq(1);
-	mIfd = (mPsifd + mLmd*mId) / (mLlfd + mLmd);
+		mKrs_teta <<
+				2. / 3. * cos(mThetaMech), 2. / 3. * cos(mThetaMech - 2. * M_PI / 3.), 2. / 3. * cos(mThetaMech + 2. * M_PI / 3.),
+				2. / 3. * sin(mThetaMech), 2. / 3. * sin(mThetaMech - 2. * M_PI / 3.), 2. / 3. * sin(mThetaMech + 2. * M_PI / 3.);
+
+		mKrs_teta_inv <<
+				cos(mThetaMech), sin(mThetaMech),
+				cos(mThetaMech - 2. * M_PI / 3.), sin(mThetaMech - 2. * M_PI / 3.),
+				cos(mThetaMech + 2. * M_PI / 3.), sin(mThetaMech + 2. * M_PI / 3.);
+
+		mR_eq_abc = mKrs_teta_inv*mR_eq*mKrs_teta;
+		mG_eq_abc = (mR_eq_abc + mR_load).inverse();
+		mEq_abc = mKrs_teta_inv*mE_eq;
 
 	
-	Matrix Fluxes(3, 1);
+		mIabc = -mG_eq_abc*mEq_abc;
 
-	Matrix Currents(3, 1);
-	Currents(0, 0) = mIq;
-	Currents(1, 0) = mId;
-	Currents(2, 0) = mIfd;
 
-	Fluxes = mInductanceMat*Currents;
+		mIdq = mKrs_teta*mIabc;
 
-	mPsiq = Fluxes(0, 0);
-	mPsid = Fluxes(1, 0);
-	mPsifd = Fluxes(2, 0);
+		mId = mIdq(0);
+		mIq = mIdq(1);
+		mIfd = (mPsifd + mLmd*mId) / (mLlfd + mLmd);
 
-	mIa = mBase_i * inverseParkTransform2(mThetaMech, mId, mIq, mI0)(0);
-	mIb = mBase_i * inverseParkTransform2(mThetaMech, mId, mIq, mI0)(1);
-	mIc = mBase_i * inverseParkTransform2(mThetaMech, mId, mIq, mI0)(2);
+		mCurrents(0, 0) = mIq;
+		mCurrents(1, 0) = mId;
+		mCurrents(2, 0) = mIfd;
 
-	mCurrents << mIq,
-		mId,
-		mIfd;
+		mFluxes = mInductanceMat*mCurrents;
+		
+		mPsiq = mFluxes(0, 0);
+		mPsid = mFluxes(1, 0);
+		mPsifd = mFluxes(2, 0);
 
-	mVoltages << mVq,
-		mVd,
-		mVfd;
+		mIa = mBase_i *  mIabc(0);
+		mIb = mBase_i *  mIabc(1);
+		mIc = mBase_i *  mIabc(2);
 
-	mFluxes << mPsiq,
-		mPsid,
-		mPsifd;
+
+		mVoltages << mVq,
+				mVd,
+				mVfd;
 }
+
 
 void Components::EMT::SynchronGeneratorSimplified::postStep(SystemModel& system)
 {
@@ -274,9 +261,12 @@ void Components::EMT::SynchronGeneratorSimplified::postStep(SystemModel& system)
 	else {
 		mVc = 0;
 	}
+
+
+
 }
 
-Matrix Components::EMT::SynchronGeneratorSimplified::parkTransform2(Real theta, Real a, Real b, Real c)
+Matrix Components::EMT::SynchronGeneratorSimplified::parkTransform(Real theta, Real a, Real b, Real c)
 {
 	Matrix dq0vector(3, 1);
 
@@ -296,7 +286,7 @@ Matrix Components::EMT::SynchronGeneratorSimplified::parkTransform2(Real theta, 
 	return dq0vector;
 }
 
-Matrix Components::EMT::SynchronGeneratorSimplified::inverseParkTransform2(Real theta, Real d, Real q, Real zero)
+Matrix Components::EMT::SynchronGeneratorSimplified::inverseParkTransform(Real theta, Real d, Real q, Real zero)
 {
 	Matrix abcVector(3, 1);
 

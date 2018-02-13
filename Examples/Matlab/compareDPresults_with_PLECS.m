@@ -10,9 +10,9 @@ Results_PLECS = csvread('../../../vsa/Results/SynGenDq_ABCFault/Simulink_PLECS/S
 %% Read data from DP simulation and calculate absolute value and phase
 
 % Read values from CSV files
-voltageDP = csvread('../../../vsa/Results/SynGenVBR_ABCFault/DPsim/SynGenDqDynPh_ABCFault_DPsim/DP_SynchronGenerator_ThreePhaseFault_LeftVector.csv',1);
+voltageDP = csvread('../../../vsa/Results/SynGenVbr_ABCFault/DPsim/DP/SynGenVbrDynPh_ABCFault_DPsim/DP_SynchronGenerator_VBR_LeftVector.csv',1);
 %currentDP = csvread('../../../vsa/Results/SynGenDq_ABCFault/DPsim/SynGenDqDynPh_ABCFault_DPsim/300MW/DP_SynchronGenerator_ThreePhaseFault_RightVector.csv',1);
-Log_SynGen = csvread('../../../vsa/Results/SynGenDq_ABCFault/DPsim/SynGenDqDynPh_ABCFault_DPsim/SynGen_gen.csv',1);
+Log_SynGen = csvread('../../../vsa/Results/SynGenVbr_ABCFault/DPsim/DP/SynGenVbrDynPh_ABCFault_DPsim/SynGen_gen.csv',1);
 currentDP = Log_SynGen(:,1:7);
 compOffsetDP = (size(voltageDP,2) - 1) / 2;
 
@@ -96,7 +96,7 @@ ylabel('voltage [V]')
 % Phase A
 figure(4)
 hold off
-PLECSplotc = plot(Results_PLECS(:,1), Results_PLECS(:,5), '--');
+PLECSplotc = plot(Results_PLECS(:,1), -Results_PLECS(:,5), '--');
 hold on
 DPplotc = plot(currentShiftDP(:,1),currentShiftDP(:,2));
 DPabsPlotc = plot(currentAbsDP(:,1),currentAbsDP(:,2));
@@ -108,7 +108,7 @@ ylabel('current [A]')
 % Phase B
 figure(5)
 hold off
-PLECSplot2c = plot(Results_PLECS(:,1), Results_PLECS(:,6), '--');
+PLECSplot2c = plot(Results_PLECS(:,1), -Results_PLECS(:,6), '--');
 hold on
 DPplot2c = plot(currentShiftDP(:,1),currentShiftDP(:,3));
 DPabsPlot2c = plot(currentAbsDP(:,1),currentAbsDP(:,3));
@@ -120,7 +120,7 @@ ylabel('current [A]')
 % Phase C
 figure(6)
 hold off
-PLECSplot3c = plot(Results_PLECS(:,1), Results_PLECS(:,7), '--');
+PLECSplot3c = plot(Results_PLECS(:,1),-Results_PLECS(:,7), '--');
 hold on
 DPplot3c = plot(currentShiftDP(:,1),currentShiftDP(:,4));
 DPabsPlot3c = plot(currentAbsDP(:,1),currentAbsDP(:,4));

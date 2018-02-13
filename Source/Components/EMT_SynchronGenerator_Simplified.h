@@ -84,7 +84,23 @@ namespace EMT {
 		/// matrix for reversing stator current directions in calculations with respect to other currents
 		Matrix mReverseCurrents;
 
+		Matrix mG_load = Matrix::Zero(3, 3);
 		Matrix mR_load = Matrix::Zero(3, 3);
+
+		Matrix mR_eq = Matrix::Zero(2, 2);
+		Matrix mE_eq = Matrix::Zero(2, 1);
+		Matrix mIdq = Matrix::Zero(2, 1);
+		Matrix mVdq = Matrix::Zero(2, 1);
+
+		Matrix mEq_abc = Matrix::Zero(3, 1);
+		Matrix mG_eq_abc = Matrix::Zero(3, 3);
+		Matrix mR_eq_abc = Matrix::Zero(3, 3);
+		Matrix mKrs_teta = Matrix::Zero(2, 3);
+		Matrix mKrs_teta_inv = Matrix::Zero(3, 2);
+
+		Matrix mIabc = Matrix::Zero(3, 1);
+		Matrix mVabc = Matrix::Zero(3, 1);
+
 
 	public:
 		~SynchronGeneratorSimplified();
@@ -116,22 +132,19 @@ namespace EMT {
 		/// Retrieves calculated voltage from simulation for next step
 		void postStep(SystemModel& system);
 
-		void initStatesInPerUnit(Real initActivePower, Real initReactivePower, Real initTerminalVolt,
-				Real initVoltAngle, Real initFieldVoltage, Real initMechPower);
-
 		/// Park transform as described in Krause
 		//Matrix parkTransform(Real theta, Matrix& in);
-		Matrix parkTransform2(Real theta, Real a, Real b, Real c);
+		Matrix parkTransform(Real theta, Real a, Real b, Real c);
 
 		/// Inverse Park transform as described in Krause
 		//Matrix inverseParkTransform(Real theta, Matrix& in);
-		Matrix inverseParkTransform2(Real theta, Real d, Real q, Real zero);
+		Matrix inverseParkTransform(Real theta, Real d, Real q, Real zero);
 
 		Matrix& getVoltages() { return mVoltages; }
 		Matrix& getCurrents() { return mCurrents; }
 		Matrix& getFluxes() { return mFluxes; }
 		Real getElectricalTorque() { return mElecTorque*mBase_T; }
-		Real getRotationalSpeed() { return mOmMech*mBase_OmMech; }
+		Real getRotationalSpeed() { return mOmMech; }
 		Real getRotorPosition() { return mThetaMech; }
 
 		// Methods for network integrated components

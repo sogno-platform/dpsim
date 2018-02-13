@@ -1,4 +1,4 @@
-/** Synchron generator (EMT)
+﻿/** Synchron generator (EMT)
 *
 * @file
 * @author Markus Mirz <mmirz@eonerc.rwth-aachen.de>
