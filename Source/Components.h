@@ -1,4 +1,4 @@
-/** All components
+﻿/** All components
  *
  * @file
  * @author Markus Mirz <mmirz@eonerc.rwth-aachen.de>
@@ -33,6 +33,7 @@
 #include "Components/DP_SynchronGenerator.h"
 #include "Components/DP_SynchronGenerator_VBR.h"
 #include "Components/DP_SynchronGenerator_VBR_Simplified.h"
+#include "Components/DP_SynchronGenerator_Simplified.h"
 #include "Components/DP_Transformer.h"
 #include "Components/DP_Transformer_Ideal.h"
 #include "Components/DP_VoltageSource.h"

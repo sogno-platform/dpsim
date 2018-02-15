@@ -43,6 +43,7 @@ list(APPEND SOURCES
 	Components/TurbineGovernor.cpp
 	Components/EMT_SynchronGenerator_VBR_New.cpp
 	Components/DP_SynchronGenerator_VBR_New.cpp
+	Components/DP_SynchronGenerator_Simplified.cpp
 )
 
 set(INCLUDE_DIRS
