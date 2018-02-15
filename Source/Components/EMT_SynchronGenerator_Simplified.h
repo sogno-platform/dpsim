@@ -94,12 +94,16 @@ namespace EMT {
 
 		Matrix mEq_abc = Matrix::Zero(3, 1);
 		Matrix mG_eq_abc = Matrix::Zero(3, 3);
+		Matrix mG_eq_abc2 = Matrix::Zero(3, 3);
 		Matrix mR_eq_abc = Matrix::Zero(3, 3);
 		Matrix mKrs_teta = Matrix::Zero(2, 3);
 		Matrix mKrs_teta_inv = Matrix::Zero(3, 2);
 
 		Matrix mIabc = Matrix::Zero(3, 1);
 		Matrix mVabc = Matrix::Zero(3, 1);
+		Matrix mVdq0 = Matrix::Zero(3, 1);
+
+		Real mRa;
 
 
 	public:
@@ -109,11 +113,11 @@ namespace EMT {
 		/// stator referred parameters depending on the setting of parameter type.
 		/// The initialization mode depends on the setting of state type.
 		SynchronGeneratorSimplified(String name, Int node1, Int node2, Int node3,
-			Real nomPower, Real nomVolt, Real nomFreq, Int poleNumber, Real nomFieldCur,
-			Real Rs, Real Ll, Real Lmd, Real Lmd0, Real Lmq, Real Lmq0,
-			Real Rfd, Real Llfd, Real Rkd, Real Llkd,
-			Real Rkq1, Real Llkq1, Real Rkq2, Real Llkq2,
-			Real inertia, Logger::Level logLevel = Logger::Level::NONE);
+				Real nomPower, Real nomVolt, Real nomFreq, Int poleNumber, Real nomFieldCur,
+				Real Rs, Real Ll, Real Lmd, Real Lmd0, Real Lmq, Real Lmq0,
+				Real Rfd, Real Llfd, Real Rkd, Real Llkd,
+				Real Rkq1, Real Llkq1, Real Rkq2, Real Llkq2,
+				Real inertia, Real Ra, Logger::Level logLevel = Logger::Level::NONE);
 
 		/// Initializes states in per unit or stator referred variables depending on the setting of the state type.
 		/// Function parameters have to be given in real units.
@@ -143,13 +147,14 @@ namespace EMT {
 		Matrix& getVoltages() { return mVoltages; }
 		Matrix& getCurrents() { return mCurrents; }
 		Matrix& getFluxes() { return mFluxes; }
+		Matrix& getStatorCurrents() { return mIabc; }
 		Real getElectricalTorque() { return mElecTorque*mBase_T; }
 		Real getRotationalSpeed() { return mOmMech; }
 		Real getRotorPosition() { return mThetaMech; }
 
 		// Methods for network integrated components
 		void initialize(SystemModel& system) { }
-		void applySystemMatrixStamp(SystemModel& system) { }
+		void applySystemMatrixStamp(SystemModel& system);
 		void applyRightSideVectorStamp(SystemModel& system) { }
 	};
 }

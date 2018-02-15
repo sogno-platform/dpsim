@@ -65,7 +65,7 @@ int main(int argc, char* argv[])
 		// Set up simulation
 		Real tf, dt, t;
 		Real om = 2.0*M_PI*60.0;
-		tf = 3; dt = 0.0001; t = 0;
+		tf = 3; dt = 0.00001; t = 0;
 		Int downSampling = 1;
 
 		Real Ra = (Ld_s + Lq_s) / dt;
@@ -73,7 +73,7 @@ int main(int argc, char* argv[])
 		// Declare circuit components
 		Component::Ptr gen = SynchronGeneratorSimplified::make("gen", 0, 1, 2,
 				nomPower, nomPhPhVoltRMS, nomFreq, poleNum, nomFieldCurr,
-				Rs, Ll, Lmd, Lmd0, Lmq, Lmq0, Rfd, Llfd, Rkd, Llkd, Rkq1, Llkq1, Rkq2, Llkq2, H, Logger::Level::INFO);
+				Rs, Ll, Lmd, Lmd0, Lmq, Lmq0, Rfd, Llfd, Rkd, Llkd, Rkq1, Llkq1, Rkq2, Llkq2, H, Ra, Logger::Level::INFO);
 		Real loadRes = 24e3*24e3/555e3;
 		Component::Ptr r1 = Resistor::make("r1", 0, GND, loadRes);
 		Component::Ptr r2 = Resistor::make("r2", 1, GND, loadRes);
