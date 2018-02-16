@@ -44,6 +44,8 @@ using namespace IEC61970::Base::Wires;
 namespace DPsim {
 namespace CIM {
 
+	class PowerflowTerminal;
+
 	class PowerflowNode {
 	public:
 		String mRID;
@@ -51,7 +53,14 @@ namespace CIM {
 		Real mVoltageAbs;
 		Real mVoltagePhase;
 		std::vector<std::shared_ptr<PowerflowTerminal>> mTerminals;
-		PowerflowNode(String rid, Matrix::Index simNode) : mRID(rid), mSimNode(simNode) {}		
+		PowerflowNode(String rid, Matrix::Index simNode) : mRID(rid), mSimNode(simNode) {}
+	};
+
+	class PowerflowEquipment {
+	public:
+		String mRID;
+		std::vector<std::shared_ptr<PowerflowTerminal>> mTerminals;
+		PowerflowEquipment(String rid) : mRID(rid) {}
 	};
 
 	class PowerflowTerminal {
@@ -62,14 +71,7 @@ namespace CIM {
 		std::shared_ptr<PowerflowNode> mNode;
 		std::shared_ptr<PowerflowEquipment> mEquipment;
 		PowerflowTerminal(String rid) : mRID(rid) {}
-	};
-
-	class PowerflowEquipment {
-	public:
-		String mRID;
-		std::vector<std::shared_ptr<PowerflowTerminal>> mTerminals;
-		PowerflowEquipment(String rid) : mRID(rid) {}
-	};
+	};	
 
 	class Reader {
 	private:
@@ -89,18 +91,24 @@ namespace CIM {
 		std::map<String, std::shared_ptr<PowerflowEquipment>> mPowerflowEquipment;
 		/// Maps the RID of a Terminal to a PowerflowTerminal
 		std::map<String, std::shared_ptr<PowerflowTerminal>> mPowerflowTerminals;
+
+		/// Resolves unit multipliers.
+		static Real unitValue(Real value, UnitMultiplier mult);
+
+		void processTopologicalNode(TopologicalNode* topNode);
+
+		void processSvVoltage(SvVoltage* volt);
+
+		void processSvPowerFlow(SvPowerFlow* flow);
+
+		/// Returns simulation node index which belongs to mRID.
+		Matrix::Index mapTopologicalNode(String mrid);		
 		/// Maps CIM components to DPsim components.
 		Component::Ptr mapComponent(BaseClass* obj);
 		/// Returns an RX-Line.
 		/// The voltage should be given in kV and the angle in degree.
 		/// TODO: Introduce different models such as PI and wave model.
-		Component::Ptr mapACLineSegment(ACLineSegment* line);
-		/// Not implemented yet.
-		void mapAsynchronousMachine(AsynchronousMachine* machine);
-		/// Not tested yet.
-		void mapEquivalentInjection(EquivalentInjection* inj);
-		/// Not tested yet.
-		Component::Ptr mapExternalNetworkInjection(ExternalNetworkInjection* inj);
+		Component::Ptr mapACLineSegment(ACLineSegment* line);			
 		/// Returns a transformer, either ideal or with RL elements to model losses.
 		Component::Ptr mapPowerTransformer(PowerTransformer *trans);
 		/// Returns an IdealVoltageSource with voltage setting according to load flow data
@@ -112,6 +120,10 @@ namespace CIM {
 		/// The voltage should be given in kV and the angle in degree.
 		/// TODO: Introduce real PQload model here.
 		Component::Ptr mapEnergyConsumer(EnergyConsumer* consumer);
+		/// Not tested yet.
+		Component::Ptr mapExternalNetworkInjection(ExternalNetworkInjection* inj);		
+		/// Not implemented yet.
+		void mapEquivalentInjection(EquivalentInjection* inj) {}
 	public:
 		Reader(Real om, Logger::Level logLevel = Logger::Level::NONE);
 		virtual ~Reader();
@@ -123,11 +135,6 @@ namespace CIM {
 		void parseFiles();
 		/// Returns list of components.
 		Component::List& getComponents();
-		/// Returns simulation node index which belongs to mRID.
-		Matrix::Index mapTopologicalNode(String mrid);
-		/// Resolves unit multipliers.
-		static Real unitValue(Real value, UnitMultiplier mult);
-
 	};
 }
 }
