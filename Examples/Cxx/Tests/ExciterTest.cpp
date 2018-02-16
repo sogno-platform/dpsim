@@ -1,4 +1,4 @@
-/** Synchron Generator Tests
+﻿/** Synchron Generator Tests
 *
 * @file
 * @author Markus Mirz <mmirz@eonerc.rwth-aachen.de>
@@ -47,8 +47,8 @@ int main(int argc, char* argv[])
 	Real Kf = 0.1;
 	Real Tf = 1;
 	Real Tr = 0.02;
-	Exciter mExciter;
-	mExciter = Exciter(Ta, Ka, Te, Ke, Tf, Kf, Tr, Lmd, Rfd);
+	DPsim::Components::Exciter mExciter;
+	mExciter = DPsim::Components::Exciter(Ta, Ka, Te, Ke, Tf, Kf, Tr, Lmd, Rfd);
 	Real Vref = 1;
 
 	// Variables to read input
@@ -60,7 +60,7 @@ int main(int argc, char* argv[])
 	std::ifstream vq("vq_pu.csv");
 
 	// Time step and time
-	Real dt = 0.00001;
+	Real dt = 0.00005;
 	Real t = 0;
 
 	// Exciter output

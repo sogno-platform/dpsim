@@ -2,10 +2,10 @@
 
 %% read Simulink results
 
-Results_Simulink = csvread('../../../vsa/Results/TestExciterAndTurbine/ExciterTest/ExciterOutput_Simulink.csv'); 
+Results_Simulink = csvread('../../../vsa/Results/MultimachineTest/Simulink/ExciterOutput_Simulink.csv'); 
 
 %% read results from c++ simulation
-Results_DPsim = csvread('../../../vsa/Results/TestExciterAndTurbine/ExciterTest/ExciterOutput_DPSim.csv');
+Results_DPsim = csvread('../../../vsa/Results/MultimachineTest/DPsim/Exciter/ExciterOutput_DPSim.csv');
 
 %% Plot
 figure(1)

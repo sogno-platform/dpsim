@@ -1,4 +1,4 @@
-/** Synchron Generator Tests
+﻿/** Synchron Generator Tests
 *
 * @file
 * @author Markus Mirz <mmirz@eonerc.rwth-aachen.de>
@@ -45,19 +45,19 @@ int main(int argc, char* argv[])
 	Real Tsm = 0.3;
 	Real Kg = 20;
 
-	Real initActivePower = 555e3;
+	Real initActivePower = 300e6;
 
-	TurbineGovernor mTurbineGovernor;
+	DPsim::Components::TurbineGovernor mTurbineGovernor;
 
-	mTurbineGovernor = TurbineGovernor(Ta_t, Tb, Tc, Fa, Fb, Fc, Kg, Tsr, Tsm);
+	mTurbineGovernor = DPsim::Components::TurbineGovernor(Ta_t, Tb, Tc, Fa, Fb, Fc, Kg, Tsr, Tsm);
 
 	Real OmRef = 1;
-	Real PmRef = 0.001;
+	Real PmRef = 300e6/555e6;
 
 	std::string line;
 	Real Om;
-	std::ifstream omega ("omega_input.csv");
-	Real dt = 0.00001;
+	std::ifstream omega ("omega.csv");
+	Real dt = 0.00005;
 	Real t = 0;
 	Real Pm = 0;
 

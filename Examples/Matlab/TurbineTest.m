@@ -2,11 +2,11 @@
 
 %% read Simulink results
 
-Results_Simulink = csvread('../../../vsa/Results/TestExciterAndTurbine/TurbineTest/TurbineOutput_Simulink.csv'); 
-Omega_Simulink = csvread('../../../vsa/Results/TestExciterAndTurbine/TurbineTest/omega.csv'); 
+Results_Simulink = csvread('../../../vsa/Results/MultimachineTest/Simulink/TurbineOutput.csv'); 
+%Omega_Simulink = csvread('../../../vsa/Results/MultimachineTest/Governor/omega.csv'); 
 
 %% read results from c++ simulation
-Results_DPsim = csvread('../../../vsa/Results/TestExciterAndTurbine/TurbineTest/TurbineOutput_DPsim.csv');
+Results_DPsim = csvread('../../../vsa/Results/MultimachineTest/DPsim/Governor/TurbineOutput_DPsim.csv');
 
 %% Plot
 figure(1)
@@ -17,7 +17,7 @@ plot(Results_DPsim(:,1),Results_Simulink(:,1),'--');
 
 % Calculate and plot difference between results
 AbsError = Results_DPsim(:,2) - Results_Simulink(:,1);
-plot(Results_DPsim(:,1),AbsError)
+%plot(Results_DPsim(:,1),AbsError)
 title('Turbine output');
 legend('DPSim','Simulink','Difference');
 

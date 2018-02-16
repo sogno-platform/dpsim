@@ -1,4 +1,4 @@
-/** Turbine Governor
+﻿/** Turbine Governor
 *
 * @author Markus Mirz <mmirz@eonerc.rwth-aachen.de>
 * @copyright 2017, Institute for Automation of Complex Power Systems, EONERC
@@ -43,6 +43,8 @@ void Components::TurbineGovernor::initialize(Real PmRef, Real Tm_init)
 	mVcv = PmRef;
 	mpVcv = 0;
 	Psm_in = PmRef;
+	T1 = (1 - mFa)*PmRef;
+	T2 = mFa*PmRef;
 }
 
 Real Components::TurbineGovernor::step(Real Om, Real OmRef, Real PmRef, Real dt)
@@ -67,7 +69,10 @@ Real Components::TurbineGovernor::step(Real Om, Real OmRef, Real PmRef, Real dt)
 
 	//### Turbine ###
 	// Simplified equation
-	mTm = mTm + dt*(mVcv / mTb + ((Psm_in - mVcv) / mTsm)*mFa - mTm / mTb);
+
+	T1 = Euler(T1, -1, (1 - mFa), dt / mTa, mVcv);
+	T2 = mVcv*mFa;
+	mTm = T1 + T2;
 
 	return mTm;
 }

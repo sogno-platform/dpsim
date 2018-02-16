@@ -45,6 +45,8 @@ set(SYNCGEN_SOURCES
 	SynchronGenerator/EMT_SynchronGenerator_ThreePhaseFault.cpp
 	SynchronGenerator/EMT_SynchronGenerator_VBR_ThreePhaseFault.cpp
 	SynchronGenerator/EMT_SynchronGenerator_Simplified_ThreePhaseFault.cpp
+	SynchronGenerator/EMT_Multimachine.cpp
+
 
 )
 

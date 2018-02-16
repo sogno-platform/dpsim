@@ -1,4 +1,4 @@
-/** Turbine Governor
+﻿/** Turbine Governor
 *
 * @file
 * @author Markus Mirz <mmirz@eonerc.rwth-aachen.de>
@@ -87,6 +87,9 @@ namespace Components {
 		Real Psm_in = 0;
 
 		Real AuxVar = 0;
+
+		Real T1;
+		Real T2;
 
 		bool mLogActive;
 		Logger* mLog;
