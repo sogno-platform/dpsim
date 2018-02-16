@@ -70,7 +70,7 @@ static int readFixedCIMFiles_LineLoad() {
 
 static int readFixedCIMFiles_IEEE9bus() {
 #ifdef _WIN32
-	String path("..\\..\\..\\..\\dpsim\\Examples\\CIM\\IEEE-09_Neplan_RX\\");
+	String path("..\\..\\..\\..\\dpsim\\Examples\\CIM\\WSCC-09_Neplan_RX\\");
 #elif defined(__linux__)
 	String path("../../../dpsim/Examples/CIM/IEEE-09_Neplan_RX/");
 #else
@@ -78,10 +78,10 @@ static int readFixedCIMFiles_IEEE9bus() {
 #endif
 
 	std::list<String> filenames = {
-		path + "IEEE-09_Neplan_RX_DI.xml",
-		path + "IEEE-09_Neplan_RX_EQ.xml",
-		path + "IEEE-09_Neplan_RX_SV.xml",
-		path + "IEEE-09_Neplan_RX_TP.xml"
+		path + "WSCC-09_Neplan_RX_DI.xml",
+		path + "WSCC-09_Neplan_RX_EQ.xml",
+		path + "WSCC-09_Neplan_RX_SV.xml",
+		path + "WSCC-09_Neplan_RX_TP.xml"
 	};
 
 	return testCIMReader(filenames);
