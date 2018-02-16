@@ -139,9 +139,9 @@ RMS_ref_SteadyState = rms(Reference_SteadyState(:,2));
 RMS_ref_Fault = rms(Reference_Fault(:,2));
 
 % % Voltage phase a steady state
-Dif_SS = abs(VoltageVector_SteadyState(:,2) - Reference_SteadyState(:,2));
+Dif_SS = abs(VoltageVector_SteadyState(:,8) - Reference_SteadyState(:,2));
 [MaxDif_SS,i1] = max(Dif_SS);
-err_SS = sqrt(immse(VoltageVector_SteadyState(:,2),Reference_SteadyState(:,2)));
+err_SS = sqrt(immse(VoltageVector_SteadyState(:,8),Reference_SteadyState(:,2)));
 disp(['RMS va steady state: ', num2str(RMS_ref_SteadyState), ' V']);
 disp(['Maximum Error va steady state: ', num2str(MaxDif_SS), ' V']);
 disp(['Root Mean-squared error va steady state: ', num2str(err_SS), ' V']);
@@ -149,9 +149,9 @@ disp(['Maximum Error va steady state: ', num2str(100*MaxDif_SS/RMS_ref_SteadySta
 disp(['Root Mean-squared error va steady state: ', num2str(100*err_SS/RMS_ref_SteadyState), ' %']);
 
 % % Voltage phase a fault
-Dif_Fault = abs(VoltageVector_Fault(:,2) - Reference_Fault(:,2));
+Dif_Fault = abs(VoltageVector_Fault(:,8) - Reference_Fault(:,2));
 [MaxDif_Fault,i2] = max(Dif_Fault);
-err_Fault = sqrt(immse(VoltageVector_Fault(:,2),Reference_Fault(:,2)));
+err_Fault = sqrt(immse(VoltageVector_Fault(:,8),Reference_Fault(:,2)));
 disp(['RMS va Fault: ', num2str(RMS_ref_Fault), ' V']);
 disp(['Maximum Error va Fault: ', num2str(MaxDif_Fault), ' V']);
 disp(['Root Mean-squared error va Fault: ', num2str(err_Fault), ' V']);
