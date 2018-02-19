@@ -44,6 +44,35 @@ using namespace IEC61970::Base::Wires;
 namespace DPsim {
 namespace CIM {
 
+	class PowerflowTerminal;
+
+	class PowerflowNode {
+	public:
+		String mRID;
+		Matrix::Index mSimNode;
+		Real mVoltageAbs;
+		Real mVoltagePhase;
+		std::vector<std::shared_ptr<PowerflowTerminal>> mTerminals;
+		PowerflowNode(String rid, Matrix::Index simNode) : mRID(rid), mSimNode(simNode) {}
+	};
+
+	class PowerflowEquipment {
+	public:
+		String mRID;
+		std::vector<std::shared_ptr<PowerflowTerminal>> mTerminals;
+		PowerflowEquipment(String rid) : mRID(rid) {}
+	};
+
+	class PowerflowTerminal {
+	public:
+		String mRID;
+		Real mActivePower;
+		Real mReactivePower;
+		std::shared_ptr<PowerflowNode> mNode;
+		std::shared_ptr<PowerflowEquipment> mEquipment;
+		PowerflowTerminal(String rid) : mRID(rid) {}
+	};	
+
 	class Reader {
 	private:
 		/// CIM logger
@@ -55,33 +84,32 @@ namespace CIM {
 		/// System frequency (has to be given to convert between reactances
 		/// in CIM and inductances used inside the simulation)
 		Real mFrequency;
-		// Maps the RID of a topological node to its simulation matrix index
-		// as given in the component constructors (1 for the first node).
-		std::map<String, Matrix::Index> mTopNodes;
-		// Maps the RID of a ConductingEquipment to a list of nodes as given in
-		// the component constructors.
-		std::map<String, std::vector<Matrix::Index>> mEqNodeMap;
-		// SvVoltage, if present, for each node (indexed starting with 0!)
-		SvVoltage **mVoltages;
-		/// Maps the RID of a Terminal to its associated power flow
-		std::map<String, SvPowerFlow*> mPowerFlows;
-		/// Number of ideal voltage sources
-		Int mNumVoltageSources;
+		/// Maps the RID of a topological node to a PowerflowNode which holds its simulation matrix index
+		/// as given in the component constructors (0 for the first node, -1 or GND for ground).
+		std::map<String, std::shared_ptr<PowerflowNode>> mPowerflowNodes;
+		/// Maps the RID of a ConductingEquipment to a PowerflowEquipment
+		std::map<String, std::shared_ptr<PowerflowEquipment>> mPowerflowEquipment;
+		/// Maps the RID of a Terminal to a PowerflowTerminal
+		std::map<String, std::shared_ptr<PowerflowTerminal>> mPowerflowTerminals;
 
+		/// Resolves unit multipliers.
+		static Real unitValue(Real value, UnitMultiplier mult);
+
+		void processTopologicalNode(TopologicalNode* topNode);
+
+		void processSvVoltage(SvVoltage* volt);
+
+		void processSvPowerFlow(SvPowerFlow* flow);
+
+		/// Returns simulation node index which belongs to mRID.
+		Matrix::Index mapTopologicalNode(String mrid);		
+		/// Maps CIM components to DPsim components.
 		Component::Ptr mapComponent(BaseClass* obj);
-
 		/// Returns an RX-Line.
 		/// The voltage should be given in kV and the angle in degree.
 		/// TODO: Introduce different models such as PI and wave model.
-		Component::Ptr mapACLineSegment(ACLineSegment* line);
-		void mapAsynchronousMachine(AsynchronousMachine* machine);
-		/// Returns an PQload with voltage setting according to load flow data.
-		/// Currently the only option is to create an RL-load.
-		/// The voltage should be given in kV and the angle in degree.
-		/// TODO: Introduce different load models here.
-		void mapEnergyConsumer(EnergyConsumer* con);
-		void mapEquivalentInjection(EquivalentInjection* inj);
-		Component::Ptr mapExternalNetworkInjection(ExternalNetworkInjection* inj);
+		Component::Ptr mapACLineSegment(ACLineSegment* line);			
+		/// Returns a transformer, either ideal or with RL elements to model losses.
 		Component::Ptr mapPowerTransformer(PowerTransformer *trans);
 		/// Returns an IdealVoltageSource with voltage setting according to load flow data
 		/// at machine terminals. The voltage should be given in kV and the angle in degree.
@@ -91,22 +119,22 @@ namespace CIM {
 		/// Currently the only option is to create an RL-load.
 		/// The voltage should be given in kV and the angle in degree.
 		/// TODO: Introduce real PQload model here.
-		Component::Ptr newPQLoad(String rid, String name);
+		Component::Ptr mapEnergyConsumer(EnergyConsumer* consumer);
+		/// Not tested yet.
+		Component::Ptr mapExternalNetworkInjection(ExternalNetworkInjection* inj);		
+		/// Not implemented yet.
+		void mapEquivalentInjection(EquivalentInjection* inj) {}
 	public:
 		Reader(Real om, Logger::Level logLevel = Logger::Level::NONE);
 		virtual ~Reader();
-
+		/// Adds CIM files to list of files to be parsed.
 		bool addFile(String filename);
-
 		/// First, go through all topological nodes and collect them in a list.
 		/// Since all nodes have references to the equipment connected to them (via Terminals), but not
 		/// the other way around (which we need for instantiating the components), we collect that information here as well.
 		void parseFiles();
+		/// Returns list of components.
 		Component::List& getComponents();
-		Matrix::Index mapTopologicalNode(String mrid);
-		Int getNumVoltageSources();
-
-		static Real unitValue(Real value, UnitMultiplier mult);
 	};
 }
 }
