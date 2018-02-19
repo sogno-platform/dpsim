@@ -3,4 +3,4 @@
 	url = https://git.rwth-aachen.de/acs/public/simulation/reference-results
 [submodule "Source/Components"]
 	path = Source/Components
-	url = git@git.rwth-aachen.de:acs/core/simulation/cpowersystems.git
+	url = ../cpowersystems.git
