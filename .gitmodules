@@ -1,3 +1,6 @@
 [submodule "Examples/Results"]
 	path = Examples/Results
 	url = https://git.rwth-aachen.de/acs/public/simulation/reference-results
+[submodule "Source/Components"]
+	path = Source/Components
+	url = git@git.rwth-aachen.de:acs/core/simulation/cpowersystems.git
