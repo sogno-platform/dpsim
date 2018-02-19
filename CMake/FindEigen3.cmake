@@ -4,6 +4,7 @@ find_path(EIGEN3_INCLUDE_DIR
 	PATHS
 		../Eigen
 		../Libraries/Eigen
+		../dpsim-libraries/Eigen
 )
 
 if(NOT EIGEN3_INCLUDE_DIR)

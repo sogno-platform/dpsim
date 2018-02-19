@@ -10,10 +10,12 @@ find_path(CIMPP_INCLUDE_DIR
 	PATH_SUFFIXES
 		cimpp/${CIM_VERSION}
 		${CIM_VERSION}
+		include/src
 	PATHS
 		${CIMPP_DIR}
 		../CIMpp
 		../Libraries/CIMpp
+		../dpsim-libraries/CIMpp
 )
 
 find_library(CIMPP_LIBRARY
@@ -25,6 +27,7 @@ find_library(CIMPP_LIBRARY
 	PATHS
 		../CIMpp
 		../Libraries/CIMpp
+		../dpsim-libraries/CIMpp
 		${CIMPP_DIR}
 )
 
@@ -36,6 +39,7 @@ if (WIN32)
 		PATHS
 			../Arabica/include
 			../Libraries/Arabica/include
+			../dpsim-libraries/Arabica/include
 	)
 
 	find_library(ARABICA_LIBRARY
@@ -47,6 +51,7 @@ if (WIN32)
 		PATHS
 		../Arabica
 		../Libraries/Arabica
+		../dpsim-libraries/Arabica
 	)
 endif ()
 
