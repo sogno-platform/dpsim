@@ -34,12 +34,23 @@ set(DPSIM_RELEASE ${YMD}git${GIT_HASH_SHORT})
 
 set(Python_ADDITIONAL_VERSIONS 3.5 3.6 3.7)
 set(CIM_VERSION 16v29a)
+set(USE_CIM_VERSION "IEC61970_16v29a")
 
 find_package(PythonInterp 3.5)
 find_package(PythonLibs 3.5)
 find_package(Eigen3 3.0 REQUIRED)
-find_package(CIMpp)
 find_package(VILLASnode)
+
+# CIMpp using submodule
+option(WITH_CIM_SUBMODULE "Build with CIMpp as submodule" ON)
+if (WITH_CIM_SUBMODULE)	
+	add_subdirectory(Source/CIM/libcimpp)
+	set(WITH_CIM TRUE)	
+	set(CIMPP_LIBRARIES libcimpp)
+else()
+	find_package(CIMpp)
+	option(WITH_CIM	"Enable support for parsing CIM files"	${CIMpp_FOUND})
+endif()
 
 if(PythonInterp_FOUND AND PythonLibs_FOUND)
 	set(Python_FOUND ON)
@@ -56,7 +67,6 @@ option(BUILD_EXAMPLES "Build C++ examples" ON)
 option(WITH_RT	 "Enable real-time features"			${Linux_FOUND})
 option(WITH_SHMEM  "Enable shared memory interface"		${VILLASnode_FOUND})
 option(WITH_PYTHON "Enable Python support"				${Python_FOUND})
-option(WITH_CIM	"Enable support for parsing CIM files"	${CIMpp_FOUND})
 
 add_subdirectory(Documentation)
 add_subdirectory(Source)
