@@ -32,6 +32,7 @@
 #include "MathLibrary.h"
 
 namespace DPsim {
+	class Terminal;
 
 	/// Base class for all components that might be added to the matrix.
 	class Component {
@@ -71,8 +72,18 @@ namespace DPsim {
 		Attribute::Map attrMap;
 
 	public:
+		String mRID;
+		std::vector<std::shared_ptr<Terminal>> mTerminals;
+
 		typedef std::shared_ptr<Component> Ptr;
 		typedef std::vector<Ptr> List;
+
+		Component(String rid) : mRID(rid) {}
+		Component(String rid, String name, std::vector<std::shared_ptr<Terminal>> terminals,
+			Logger::Level logLevel = Logger::Level::NONE)
+			: mRID(rid), mName(name), mTerminals(terminals),
+			mLogLevel(logLevel), mLog("Logs/" + name + ".log", logLevel) {
+		}
 
 		/// Creates a new component with basic features: name and nodes
 		/// Decrementing the node number is default so that the user can use zero for the ground node. It needs to be

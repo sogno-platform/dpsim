@@ -122,15 +122,7 @@ void Reader::parseFiles() {
 		}
 		// Check if object is of class SvPowerFlow
 		else if (SvPowerFlow* flow = dynamic_cast<SvPowerFlow*>(obj)) {
-			Terminal* term = flow->Terminal;
-			ConductingEquipment* eq = term->ConductingEquipment;			
-
-			mPowerflowTerminals[term->mRID]->mActivePower = flow->p.value;
-			mPowerflowTerminals[term->mRID]->mReactivePower = flow->q.value;
-
-			mLog.Log(Logger::Level::INFO) << "Terminal " << term->mRID << ":"
-				<< mPowerflowTerminals[term->mRID]->mActivePower << " + j"
-				<< mPowerflowTerminals[term->mRID]->mReactivePower << std::endl;
+			processSvPowerFlow(flow);
 		}
 	}
 
@@ -153,7 +145,7 @@ void Reader::processTopologicalNode(TopologicalNode* topNode) {
 	for (auto term : topNode->Terminal) {
 		// Insert Terminal if it does not exist in the map and add reference to node.
 		// This could be optimized because the Terminal is searched twice.
-		mPowerflowTerminals.insert(std::make_pair(term->mRID, std::make_shared<PowerflowTerminal>(term->mRID)));
+		mPowerflowTerminals.insert(std::make_pair(term->mRID, std::make_shared<Terminal>(term->mRID)));
 		mPowerflowTerminals[term->mRID]->mNode = mPowerflowNodes[topNode->mRID];
 		// Add reference to Terminal to this node.
 		mPowerflowNodes[topNode->mRID]->mTerminals.push_back(mPowerflowTerminals[term->mRID]);
@@ -169,8 +161,10 @@ void Reader::processTopologicalNode(TopologicalNode* topNode) {
 		else {
 			// Insert Equipment if it does not exist in the map and add reference to Terminal.
 			// This could be optimized because the Equipment is searched twice.
-			mPowerflowEquipment.insert(std::make_pair(equipment->mRID, std::make_shared<PowerflowEquipment>(equipment->mRID)));
+			mPowerflowEquipment.insert(std::make_pair(equipment->mRID, mapComponent(equipment)));
+				//std::make_shared<Component>(equipment->mRID)));
 			auto pfEquipment = mPowerflowEquipment[equipment->mRID];
+
 			if (pfEquipment->mTerminals.size() < term->sequenceNumber.value) {
 				pfEquipment->mTerminals.resize(term->sequenceNumber.value);
 			}
@@ -196,12 +190,21 @@ void Reader::processSvVoltage(SvVoltage* volt) {
 	}
 	mPowerflowNodes[node->mRID]->mVoltageAbs = volt->v.value;
 	mPowerflowNodes[node->mRID]->mVoltagePhase = volt->angle.value;
-	mLog.Log(Logger::Level::INFO) << "Node " << mPowerflowNodes[node->mRID]->mSimNode << ": " << mPowerflowNodes[node->mRID]->mVoltageAbs << "<"
+	mLog.Log(Logger::Level::INFO) << "Node " << mPowerflowNodes[node->mRID]->mSimNode << ": "
+		<< mPowerflowNodes[node->mRID]->mVoltageAbs << "<"
 		<< mPowerflowNodes[node->mRID]->mVoltagePhase << std::endl;
 }
 
 void Reader::processSvPowerFlow(SvPowerFlow* flow) {
+	IEC61970::Base::Core::Terminal* term = flow->Terminal;
+	ConductingEquipment* eq = term->ConductingEquipment;
 
+	mPowerflowTerminals[term->mRID]->mActivePower = flow->p.value;
+	mPowerflowTerminals[term->mRID]->mReactivePower = flow->q.value;
+
+	mLog.Log(Logger::Level::INFO) << "Terminal " << term->mRID << ":"
+		<< mPowerflowTerminals[term->mRID]->mActivePower << " + j"
+		<< mPowerflowTerminals[term->mRID]->mReactivePower << std::endl;
 }
 
 Component::List& Reader::getComponents() {
@@ -225,8 +228,8 @@ Component::Ptr Reader::mapEnergyConsumer(EnergyConsumer* consumer) {
 		return nullptr;
 	}
 
-	std::shared_ptr<PowerflowTerminal> term = mPowerflowEquipment[consumer->mRID]->mTerminals[0];
-	std::shared_ptr<PowerflowNode> node = term->mNode;
+	std::shared_ptr<Terminal> term = mPowerflowEquipment[consumer->mRID]->mTerminals[0];
+	std::shared_ptr<Node> node = term->mNode;
 
 	mLog.Log(Logger::Level::INFO) << "Found EnergyConsumer " << consumer->name
 		<< " rid=" << consumer->mRID << " node=" << node->mSimNode
@@ -255,8 +258,8 @@ Component::Ptr Reader::mapACLineSegment(ACLineSegment* line) {
 		return nullptr;
 	}
 
-	std::shared_ptr<PowerflowNode> node1 = mPowerflowEquipment[line->mRID]->mTerminals[0]->mNode;
-	std::shared_ptr<PowerflowNode> node2 = mPowerflowEquipment[line->mRID]->mTerminals[1]->mNode;
+	std::shared_ptr<Node> node1 = mPowerflowEquipment[line->mRID]->mTerminals[0]->mNode;
+	std::shared_ptr<Node> node2 = mPowerflowEquipment[line->mRID]->mTerminals[1]->mNode;
 	Real resistance = line->r.value;
 	Real inductance = line->x.value / mFrequency;
 
@@ -285,8 +288,8 @@ Component::Ptr Reader::mapPowerTransformer(PowerTransformer* trans) {
 		return nullptr;
 	}
 
-	std::shared_ptr<PowerflowNode> node1 = mPowerflowEquipment[trans->mRID]->mTerminals[0]->mNode;
-	std::shared_ptr<PowerflowNode> node2 = mPowerflowEquipment[trans->mRID]->mTerminals[1]->mNode;
+	std::shared_ptr<Node> node1 = mPowerflowEquipment[trans->mRID]->mTerminals[0]->mNode;
+	std::shared_ptr<Node> node2 = mPowerflowEquipment[trans->mRID]->mTerminals[1]->mNode;
 	
 	mLog.Log(Logger::Level::INFO) << "Found PowerTransformer " << trans->name << " rid=" << trans->mRID
 		<< " node1=" << node1 << " node2=" << node2 << std::endl;
@@ -333,7 +336,7 @@ Component::Ptr Reader::mapSynchronousMachine(SynchronousMachine* machine) {
 		return nullptr;
 	}
 
-	std::shared_ptr<PowerflowNode> node = mPowerflowEquipment[machine->mRID]->mTerminals[0]->mNode;
+	std::shared_ptr<Node> node = mPowerflowEquipment[machine->mRID]->mTerminals[0]->mNode;
 
 	// Apply unit multipliers according to CGMES convetions.
 	Real voltAbs = unitValue(node->mVoltageAbs, UnitMultiplier::k);

@@ -31,6 +31,8 @@
 
 #include "Definitions.h"
 #include "Component.h"
+#include "Components/Node.h"
+#include "Components/Terminal.h"
 
 #include "Logger.h"
 #include "Simulation.h"
@@ -86,11 +88,11 @@ namespace CIM {
 		Real mFrequency;
 		/// Maps the RID of a topological node to a PowerflowNode which holds its simulation matrix index
 		/// as given in the component constructors (0 for the first node, -1 or GND for ground).
-		std::map<String, std::shared_ptr<PowerflowNode>> mPowerflowNodes;
+		std::map<String, std::shared_ptr<Node>> mPowerflowNodes;
 		/// Maps the RID of a ConductingEquipment to a PowerflowEquipment
-		std::map<String, std::shared_ptr<PowerflowEquipment>> mPowerflowEquipment;
+		std::map<String, std::shared_ptr<Component>> mPowerflowEquipment;
 		/// Maps the RID of a Terminal to a PowerflowTerminal
-		std::map<String, std::shared_ptr<PowerflowTerminal>> mPowerflowTerminals;
+		std::map<String, std::shared_ptr<Terminal>> mPowerflowTerminals;
 
 		/// Resolves unit multipliers.
 		static Real unitValue(Real value, UnitMultiplier mult);

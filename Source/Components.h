@@ -1,4 +1,4 @@
-﻿/** All components
+/** All components
  *
  * @file
  * @author Markus Mirz <mmirz@eonerc.rwth-aachen.de>
