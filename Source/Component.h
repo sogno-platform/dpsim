@@ -103,6 +103,34 @@ namespace DPsim {
 		/// set virtual node
 		void setVirtualNode(Int nodeNum, Int virtualNode) { mVirtualNodes[nodeNum] = virtualNode; }
 
+		// Get the value of an attribute
+		template<typename T>
+		T getAttribute(const String &name) {
+			auto attr = findAttribute(name);
+			if (!attr)
+				throw InvalidAttributeException();
+
+			auto tattr = std::dynamic_pointer_cast<Attribute<T>>(attr);
+			if (!attr)
+				throw AttributeBase::TypeException();
+
+			return tattr->get();
+		}
+
+		// Set the value of an attribute
+		template<typename T>
+		void setAttribute(const String &name, const T &value) {
+			auto attr = findAttribute(name);
+			if (!attr)
+				throw InvalidAttributeException();
+
+			auto tattr = std::dynamic_pointer_cast<Attribute<T>>(attr);
+			if (!attr)
+				throw AttributeBase::TypeException();
+
+			tattr->set(value);
+		}
+
 		// Return pointer to an attribute
 		AttributeBase::Ptr findAttribute(const String &name) {
 			auto it = mAttributes.find(name);
