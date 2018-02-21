@@ -61,11 +61,6 @@ if(NOT WIN32)
 	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-write-strings -fPIC")
 endif()
 
-if (WITH_PYTHON)
-	list(APPEND INCLUDE_DIRS ${PYTHON_INCLUDE_DIRS})
-	list(APPEND LIBRARIES ${PYTHON_LIBRARIES})
-endif()
-
 if(WITH_RT)
 	list(APPEND LIBRARIES "-lrt")
 	list(APPEND SOURCES RealTimeSimulation.cpp)
@@ -82,6 +77,9 @@ if(WITH_SHMEM)
 endif()
 
 if(WITH_PYTHON)
+	list(APPEND INCLUDE_DIRS ${PYTHON_INCLUDE_DIRS})
+	list(APPEND LIBRARIES ${PYTHON_LIBRARIES})
+
 	add_subdirectory(Python)
 endif()
 
