@@ -40,7 +40,8 @@ class CMakeBuild(build_ext):
         build_args = ['--config', cfg]
 
         if platform.system() == "Windows":
-            cmake_args += ['-DCMAKE_RUNTIME_OUTPUT_DIRECTORY=' + extdir]
+            cmake_args += ['-DCMAKE_RUNTIME_OUTPUT_DIRECTORY_DEBUG=' + extdir]
+            cmake_args += ['-DCMAKE_RUNTIME_OUTPUT_DIRECTORY_RELEASE=' + extdir]
             if sys.maxsize > 2**32:
                 cmake_args += ['-A', 'x64']
             build_args += ['--', '/m']
@@ -77,7 +78,7 @@ def read(fname):
 
 setup(
     name = "dpsim",
-    version = "0.1.2.2",
+    version = "0.1.3",
     author = "Steffen Vogel",
     author_email = "stvogel@eonerc.rwth-aachen.de",
     description = "DPsim is a real-time power system simulator that operates in the dynamic phasor as well as electromagentic transient domain.",
