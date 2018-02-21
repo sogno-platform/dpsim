@@ -30,24 +30,12 @@
 #include "SystemModel.h"
 #include "Definitions.h"
 #include "MathLibrary.h"
+#include "Attribute.h"
 
 namespace DPsim {
 
 	/// Base class for all components that might be added to the matrix.
 	class Component {
-
-	public:
-		struct Attribute {
-			enum Type {
-				Real,
-				Integer,
-				String, // value should be *String, not *char!
-				Complex
-			} mType;
-			void* mValue;
-
-			typedef std::map<DPsim::String, Attribute> Map;
-		};
 
 	protected:
 		/// Component logger
@@ -68,9 +56,11 @@ namespace DPsim {
 		/// Index of virtual node
 		std::vector<Int> mVirtualNodes;
 		/// Map of all attributes that should be exported to the Python interface
-		Attribute::Map attrMap;
+		AttributeBase::Map mAttributes;
 
 	public:
+		class InvalidAttributeException { };
+
 		typedef std::shared_ptr<Component> Ptr;
 		typedef std::vector<Ptr> List;
 
@@ -84,16 +74,16 @@ namespace DPsim {
 			mNode1 = node1;
 			mNode2 = node2;
 			mLogLevel = logLevel;
-			attrMap["name"]  = { Attribute::String,  &mName };
-			attrMap["node1"] = { Attribute::Integer, &mNode1 };
-			attrMap["node2"] = { Attribute::Integer, &mNode2 };
-		}
 
+			mAttributes["name"]  = Attribute<String>::make(&mName, Flags::read);
+			mAttributes["node1"] = Attribute<Int>::make(&mNode1, Flags::read);
+			mAttributes["node2"] = Attribute<Int>::make(&mNode2, Flags::read);
+		}
 
 		Component(String name, Int node1, Int node2, Int node3, Logger::Level loglevel = Logger::Level::NONE)
 			: Component(name, node1, node2, loglevel) {
 			mNode3 = node3;
-			attrMap["node3"] = { Attribute::Integer, &mNode3 };
+			mAttributes["node3"] = Attribute<Int>::make(&mNode3, Flags::read);
 		}
 
 		virtual ~Component() { }
@@ -113,7 +103,14 @@ namespace DPsim {
 		/// set virtual node
 		void setVirtualNode(Int nodeNum, Int virtualNode) { mVirtualNodes[nodeNum] = virtualNode; }
 
-		std::map<String, Attribute>& getAttrMap() { return attrMap; }
+		// Return pointer to an attribute
+		AttributeBase::Ptr findAttribute(const String &name) {
+			auto it = mAttributes.find(name);
+			if (it == mAttributes.end())
+				throw InvalidAttributeException();
+
+			return it->second;
+		}
 
 		String getName() { return mName; }
 		String getType();
