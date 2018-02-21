@@ -26,7 +26,7 @@
 #include <vector>
 #include <memory>
 
-#include "SharedFactory.h"
+#include "PtrFactory.h"
 #include "SystemModel.h"
 #include "Definitions.h"
 #include "MathLibrary.h"
