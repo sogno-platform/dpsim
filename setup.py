@@ -86,6 +86,7 @@ setup(
     keywords = "simulation power system real-time",
     url = "https://dpsim.fein-aachen.org",
     packages = find_packages('Source/Python'),
+    package_data={'dpsim': ['*.csv']},
     package_dir = {
         'dpsim': 'Source/Python/dpsim'
     },
