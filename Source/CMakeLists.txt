@@ -1,4 +1,5 @@
 add_library(dpsim
+	Attribute.cpp
 	IntegrationMethod.cpp
 	Logger.cpp
 	MathLibrary.cpp
@@ -58,6 +59,11 @@ if(NOT WIN32)
 	# we use PyArg_ParseTupleAndKeywords several times, which erroneously accepts
 	# a char* array instead of a const char* array
 	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-write-strings -fPIC")
+endif()
+
+if (WITH_PYTHON)
+	list(APPEND INCLUDE_DIRS ${PYTHON_INCLUDE_DIRS})
+	list(APPEND LIBRARIES ${PYTHON_LIBRARIES})
 endif()
 
 if(WITH_RT)
