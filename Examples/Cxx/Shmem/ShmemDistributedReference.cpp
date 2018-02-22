@@ -29,14 +29,14 @@ int main(int argc, char* argv[])
 {
 	// Same circuit as above, but the simulation is done normally in one instance.
 	Component::List comps = {
-		VoltageSourceNorton::make("v_s", 1, 0, Complex(10000, 0), 1),
-		Inductor::make("l_1", 1, 2, 0.1),
-		Resistor::make("r_1", 2, 3, 1)
+		VoltageSourceNorton::make("v_s", 0, GND, Complex(10000, 0), 1),
+		Inductor::make("l_1", 0, 1, 0.1),
+		Resistor::make("r_1", 1, 2, 1)
 	};
 
 	auto comps2 = comps;
-	comps.push_back(Resistor::make("r_2", 3, 0, 10));
-	comps2.push_back(Resistor::make("r_2", 3, 0, 8));
+	comps.push_back(Resistor::make("r_2", 2, GND, 10));
+	comps2.push_back(Resistor::make("r_2", 2, GND, 8));
 
 	Real timeStep = 0.001;
 	Simulation sim("ShmemDistirbutedRef", comps, 2.0*M_PI*50.0, timeStep, 20, Logger::Level::INFO);

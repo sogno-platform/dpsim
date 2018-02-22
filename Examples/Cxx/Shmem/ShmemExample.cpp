@@ -35,15 +35,15 @@ int main(int argc, char* argv[])
 
 	Component::List comps = {
 		evs,
-		Resistor::make("r_s", 1, 2, 1),
-		Resistor::make("r_line", 2, 3, 1),
-		Inductor::make("l_line", 3, 4, 1),
-		Resistor::make("r_load", 4, 0, 1000)
+		Resistor::make("r_s", 0, 1, 1),
+		Resistor::make("r_line", 1, 2, 1),
+		Inductor::make("l_line", 2, 3, 1),
+		Resistor::make("r_load", 3, GND, 1000)
 	};
 
 	ShmemInterface villas("/villas1-in", "/villas1-out");
-	villas.registerControllableSource(evs, 0, 1);
-	villas.registerExportedCurrent(evs, 0, 1);
+	villas.registerControllableSource(evs, GND, 0);
+	villas.registerExportedCurrent(evs, GND, 0);
 
 	Real timeStep = 0.001;
 	Simulation sim("ShmemExample", comps, 2.0*M_PI*50.0, timeStep, 0.3, Logger::Level::INFO);
