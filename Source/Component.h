@@ -63,7 +63,8 @@ namespace DPsim {
 		Int mNode2;
 		/// Component node 3
 		Int mNode3;
-
+		/// Determines the number of Terminals which can be connected to nodes
+		Int mNumTerminals = 0;
 		/// Determines if the component has a virtual node
 		Int mNumVirtualNodes = 0;
 		/// Index of virtual node
@@ -78,11 +79,11 @@ namespace DPsim {
 		typedef std::shared_ptr<Component> Ptr;
 		typedef std::vector<Ptr> List;
 
-		Component(String rid) : mRID(rid) {}
-		Component(String rid, String name, std::vector<std::shared_ptr<Terminal>> terminals,
-			Logger::Level logLevel = Logger::Level::NONE)
-			: mRID(rid), mName(name), mTerminals(terminals),
-			mLogLevel(logLevel), mLog("Logs/" + name + ".log", logLevel) {
+		Component(String rid, String name, Logger::Level logLevel = Logger::Level::NONE)
+			: mLog("Logs/" + name + ".log", logLevel) {
+			mRID = rid;
+			mName = name;
+			mLogLevel = logLevel;
 		}
 
 		/// Creates a new component with basic features: name and nodes
@@ -119,6 +120,8 @@ namespace DPsim {
 		Bool hasVirtualNodes() { return mNumVirtualNodes > 0; }
 		/// Returns true if virtual node number is greater than zero.
 		Int getVirtualNodesNum() { return mNumVirtualNodes; }
+
+		Int getTerminalsNum() { return mNumTerminals; }
 		/// get virtual node
 		Int getVirtualNode(Int nodeNum) { return mVirtualNodes[nodeNum]; }
 		/// set virtual node
@@ -143,5 +146,7 @@ namespace DPsim {
 
 		/// Upgrade variable values based on the solution of the step
 		virtual void postStep(SystemModel& system) { }
+
+		virtual void initializePowerflow() { }
 	};
 }

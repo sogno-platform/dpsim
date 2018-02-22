@@ -34,9 +34,11 @@ using namespace IEC61970::Base::Topology;
 using namespace IEC61970::Base::Wires;
 
 
-Reader::Reader(Real systemFrequency, Logger::Level logLevel) : mLog("Logs/CIMpp.log", logLevel) {
+Reader::Reader(Real systemFrequency, Logger::Level logLevel, Logger::Level componentLogLevel)
+	: mLog("Logs/CIMpp.log", logLevel) {
 	mModel.setDependencyCheckOff();
 	mFrequency = systemFrequency;
+	mComponentLogLevel = componentLogLevel;
 }
 
 Reader::~Reader() {
@@ -128,16 +130,27 @@ void Reader::parseFiles() {
 
 	mLog.Log(Logger::Level::INFO) << "#### Create new components ####" << std::endl;
 	for (auto obj : mModel.Objects) {
-		Component::Ptr comp = mapComponent(obj);
-		if (comp) {
-			mComponents.push_back(comp);
+		// Check if object is not TopologicalNode, SvVoltage or SvPowerFlow
+		if (!dynamic_cast<TopologicalNode*>(obj)
+			&& !dynamic_cast<SvVoltage*>(obj)
+			&& !dynamic_cast<SvPowerFlow*>(obj)) {
+			// Check if object is already in equipment list
+			if (mPowerflowEquipment.find(dynamic_cast<IdentifiedObject*>(obj)->mRID) == mPowerflowEquipment.end()) {
+				Component::Ptr comp = mapComponent(obj);
+				if (comp) mPowerflowEquipment.insert(std::make_pair(comp->mRID, comp));
+			}
 		}
+	}
+
+	for (auto comp : mPowerflowEquipment) {
+		comp.second->initializePowerflow();
+		mComponents.push_back(comp.second);
 	}
 }
 
 void Reader::processTopologicalNode(TopologicalNode* topNode) {
 	// Add this node to global node list and assign simulation node incrementally.
-	mPowerflowNodes[topNode->mRID] = std::make_shared<PowerflowNode>(topNode->mRID, (Matrix::Index) mPowerflowNodes.size());
+	mPowerflowNodes[topNode->mRID] = std::make_shared<Node>(topNode->mRID, (Matrix::Index) mPowerflowNodes.size());
 
 	mLog.Log(Logger::Level::INFO) << "TopologicalNode " << topNode->mRID
 		<< "as simulation node " << mPowerflowNodes[topNode->mRID]->mRID << std::endl;
@@ -161,12 +174,16 @@ void Reader::processTopologicalNode(TopologicalNode* topNode) {
 		else {
 			// Insert Equipment if it does not exist in the map and add reference to Terminal.
 			// This could be optimized because the Equipment is searched twice.
-			mPowerflowEquipment.insert(std::make_pair(equipment->mRID, mapComponent(equipment)));
-				//std::make_shared<Component>(equipment->mRID)));
+			if (mPowerflowEquipment.find(equipment->mRID) == mPowerflowEquipment.end()) {
+				Component::Ptr comp = mapComponent(equipment);
+				if (comp) mPowerflowEquipment.insert(std::make_pair(equipment->mRID, comp));
+			}				
 			auto pfEquipment = mPowerflowEquipment[equipment->mRID];
-
-			if (pfEquipment->mTerminals.size() < term->sequenceNumber.value) {
-				pfEquipment->mTerminals.resize(term->sequenceNumber.value);
+			
+			if (pfEquipment->getTerminalsNum() < term->sequenceNumber) {
+				mLog.Log(Logger::Level::WARN) << "Terminal sequence number of " << term->mRID
+					<< " is too large for Equipment " << pfEquipment->mRID
+					<< " - Ignoring" << std::endl;
 			}
 			pfEquipment->mTerminals[term->sequenceNumber - 1] = mPowerflowTerminals[term->mRID];
 
@@ -250,49 +267,34 @@ Component::Ptr Reader::mapEnergyConsumer(EnergyConsumer* consumer) {
 		term->mActivePower, term->mReactivePower, node->mVoltageAbs, node->mVoltagePhase);
 }
 
-Component::Ptr Reader::mapACLineSegment(ACLineSegment* line) {
-	
-	if (mPowerflowEquipment[line->mRID]->mTerminals.size() != 2) {
-		mLog.Log(Logger::Level::WARN) << "ACLineSegment " << line->mRID << " has "
-			<< mPowerflowEquipment[line->mRID]->mTerminals.size() << " terminals, ignoring" << std::endl;
-		return nullptr;
-	}
+Component::Ptr Reader::mapACLineSegment(ACLineSegment* line) {	
+	mLog.Log(Logger::Level::INFO) << "Found ACLineSegment " << line->name
+		<< " rid=" << line->mRID << " r=" << line->r.value << " x=" << line->x.value
+		<< " length=" << line->length.value << std::endl;
 
-	std::shared_ptr<Node> node1 = mPowerflowEquipment[line->mRID]->mTerminals[0]->mNode;
-	std::shared_ptr<Node> node2 = mPowerflowEquipment[line->mRID]->mTerminals[1]->mNode;
 	Real resistance = line->r.value;
 	Real inductance = line->x.value / mFrequency;
 
-	mLog.Log(Logger::Level::INFO) << "Found ACLineSegment " << line->name
-		<< " rid=" << line->mRID << " node1=" << node1->mSimNode << " node2=" << node2->mSimNode
-		<< " R=" << line->r.value << " X=" << line->x.value << std::endl;
+	if (line->length.value > 0) {
+		resistance = line->r.value * line->length.value;
+		inductance = line->x.value / mFrequency * line->length.value;
+	}
 
-	mLog.Log(Logger::Level::INFO) << "Create RxLine " << line->name
-		<< " node1=" << node1->mSimNode << " node2=" << node2->mSimNode
+	mLog.Log(Logger::Level::INFO) << "Create RxLine " << line->mRID
 		<< " R=" << resistance << " L=" << inductance << std::endl;
-	return std::make_shared<Components::DP::RxLine>(line->name, node1->mSimNode, node2->mSimNode, resistance, inductance);
+	return std::make_shared<Components::DP::RxLine>(line->mRID, line->name, resistance, inductance, mComponentLogLevel);
 }
 
 
 Component::Ptr Reader::mapPowerTransformer(PowerTransformer* trans) {
-
-	if (mPowerflowEquipment[trans->mRID]->mTerminals.size() != trans->PowerTransformerEnd.size()) {
+	if (trans->PowerTransformerEnd.size() != 2) {
 		mLog.Log(Logger::Level::WARN) << "PowerTransformer " << trans->mRID
-			<< " has differing number of terminals and windings, ignoring" << std::endl;
+			<< " does not have exactly two windings, ignoring" << std::endl;
 		return nullptr;
-	}
-	if (mPowerflowEquipment[trans->mRID]->mTerminals.size() != 2) {
-		// TODO three windings also possible
-		mLog.Log(Logger::Level::WARN) << "PowerTransformer " << trans->mRID
-			<< " has " << mPowerflowEquipment[trans->mRID]->mTerminals.size() << "terminals; ignoring" << std::endl;
-		return nullptr;
-	}
-
-	std::shared_ptr<Node> node1 = mPowerflowEquipment[trans->mRID]->mTerminals[0]->mNode;
-	std::shared_ptr<Node> node2 = mPowerflowEquipment[trans->mRID]->mTerminals[1]->mNode;
+	}	
 	
-	mLog.Log(Logger::Level::INFO) << "Found PowerTransformer " << trans->name << " rid=" << trans->mRID
-		<< " node1=" << node1 << " node2=" << node2 << std::endl;
+	mLog.Log(Logger::Level::INFO) << "Found PowerTransformer " << trans->name
+		<< " rid=" << trans->mRID << std::endl;
 
 	PowerTransformerEnd* end1;
 	PowerTransformerEnd* end2;
@@ -319,12 +321,10 @@ Component::Ptr Reader::mapPowerTransformer(PowerTransformer* trans) {
 	Real ratioAbs = voltageNode1 / voltageNode2;
 	Real ratioPhase = 0;
 	mLog.Log(Logger::Level::INFO) << "Create PowerTransformer " << trans->name
-		<< " node1=" << node1->mSimNode << " node2=" << node2->mSimNode
 		<< " ratio=" << ratioAbs << "<" << ratioPhase
 		<< " inductance=" << inductanceNode1 << std::endl;
 
-	//return std::make_shared<TransformerDP>(trans->name, node1, node2, ratioAbs, ratioPhase, 0, inductanceNode1);
-	return std::make_shared<Components::DP::TransformerIdeal>(trans->name, node1->mSimNode, node2->mSimNode, ratioAbs, ratioPhase);
+	return std::make_shared<Components::DP::Transformer>(trans->mRID, trans->name, ratioAbs, ratioPhase);
 }
 
 

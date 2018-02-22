@@ -31,8 +31,8 @@
 
 #include "Definitions.h"
 #include "Component.h"
-#include "Components/Node.h"
-#include "Components/Terminal.h"
+#include "Node.h"
+#include "Terminal.h"
 
 #include "Logger.h"
 #include "Simulation.h"
@@ -45,40 +45,13 @@ using namespace IEC61970::Base::Wires;
 
 namespace DPsim {
 namespace CIM {
-
-	class PowerflowTerminal;
-
-	class PowerflowNode {
-	public:
-		String mRID;
-		Matrix::Index mSimNode;
-		Real mVoltageAbs;
-		Real mVoltagePhase;
-		std::vector<std::shared_ptr<PowerflowTerminal>> mTerminals;
-		PowerflowNode(String rid, Matrix::Index simNode) : mRID(rid), mSimNode(simNode) {}
-	};
-
-	class PowerflowEquipment {
-	public:
-		String mRID;
-		std::vector<std::shared_ptr<PowerflowTerminal>> mTerminals;
-		PowerflowEquipment(String rid) : mRID(rid) {}
-	};
-
-	class PowerflowTerminal {
-	public:
-		String mRID;
-		Real mActivePower;
-		Real mReactivePower;
-		std::shared_ptr<PowerflowNode> mNode;
-		std::shared_ptr<PowerflowEquipment> mEquipment;
-		PowerflowTerminal(String rid) : mRID(rid) {}
-	};	
-
+	
 	class Reader {
 	private:
 		/// CIM logger
 		Logger mLog;
+		/// Log level of components
+		Logger::Level mComponentLogLevel;
 		/// Model from CIM++
 		CIMModel mModel;
 		/// All components after mapping
@@ -106,7 +79,7 @@ namespace CIM {
 		/// Returns simulation node index which belongs to mRID.
 		Matrix::Index mapTopologicalNode(String mrid);		
 		/// Maps CIM components to DPsim components.
-		Component::Ptr mapComponent(BaseClass* obj);
+		Component::Ptr mapComponent(BaseClass* obj);		
 		/// Returns an RX-Line.
 		/// The voltage should be given in kV and the angle in degree.
 		/// TODO: Introduce different models such as PI and wave model.
@@ -127,7 +100,7 @@ namespace CIM {
 		/// Not implemented yet.
 		void mapEquivalentInjection(EquivalentInjection* inj) {}
 	public:
-		Reader(Real om, Logger::Level logLevel = Logger::Level::NONE);
+		Reader(Real om, Logger::Level logLevel = Logger::Level::NONE, Logger::Level componentLogLevel = Logger::Level::NONE);
 		virtual ~Reader();
 		/// Adds CIM files to list of files to be parsed.
 		bool addFile(String filename);
