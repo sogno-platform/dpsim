@@ -3,7 +3,7 @@
 %% read Simulink results
 
 Results_Simulink = csvread('../../../vsa/Results/MultimachineTest/Simulink/TurbineOutput.csv'); 
-%Omega_Simulink = csvread('../../../vsa/Results/MultimachineTest/Governor/omega.csv'); 
+Omega_Simulink = csvread('../../../vsa/Results/MultimachineTest/Simulink/omega.csv'); 
 
 %% read results from c++ simulation
 Results_DPsim = csvread('../../../vsa/Results/MultimachineTest/DPsim/Governor/TurbineOutput_DPsim.csv');
@@ -11,7 +11,7 @@ Results_DPsim = csvread('../../../vsa/Results/MultimachineTest/DPsim/Governor/Tu
 %% Plot
 figure(1)
 hold off
-plot(Results_DPsim(:,1),Results_DPsim(:,2));
+plot(Results_DPsim(:,1),Results_DPsim(:,2).*Omega_Simulink);
 hold on
 plot(Results_DPsim(:,1),Results_Simulink(:,1),'--');
 

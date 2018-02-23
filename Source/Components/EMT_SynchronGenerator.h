@@ -23,6 +23,8 @@
 #pragma once
 
 #include "Base_SynchronGenerator.h"
+#include "Exciter.h"
+#include "TurbineGovernor.h"
 
 namespace DPsim {
 namespace Components {
@@ -35,9 +37,21 @@ namespace EMT {
 	/// parameter names include underscores and typical variables names found in literature instead of
 	/// descriptive names in order to shorten formulas and increase the readability
 
+
 	class SynchronGenerator : public SynchronGeneratorBase, public SharedFactory<SynchronGenerator> {
 
 	protected:
+
+			/// Exciter Model
+			Exciter mExciter;
+			/// Determine if Exciter is activated
+			bool WithExciter = false;
+
+			/// Governor Model
+			TurbineGovernor mTurbineGovernor;
+			/// Determine if Turbine and Governor are activated
+			bool WithTurbineGovernor = false;
+
 
 		/// Determinant of Ld (inductance matrix of d axis)
 		Real detLd;
@@ -116,6 +130,11 @@ namespace EMT {
 		/// Inverse Park transform as described in Krause
 		//Matrix inverseParkTransform(Real theta, Matrix& in);
 		Matrix inverseParkTransform2(Real theta, Real d, Real q, Real zero);
+
+		/// Function to initialize Exciter
+		void AddExciter(Real Ta, Real Ka, Real Te, Real Ke, Real Tf, Real Kf, Real Tr, Real Lad, Real Rfd);
+		/// Function to initialize Governor and Turbine
+		void AddGovernor(Real Ta, Real Tb, Real Tc, Real Fa, Real Fb, Real Fc, Real K, Real Tsr, Real Tsm, Real Tm_init, Real PmRef);
 
 		Matrix& getVoltages() { return mVoltages; }
 		Matrix& getCurrents() { return mCurrents; }

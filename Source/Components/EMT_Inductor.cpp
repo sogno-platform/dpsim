@@ -1,4 +1,4 @@
-/** InductorDP (EMT)
+﻿/** InductorDP (EMT)
  *
  * @author Markus Mirz <mmirz@eonerc.rwth-aachen.de>
  * @copyright 2017, Institute for Automation of Complex Power Systems, EONERC
@@ -23,11 +23,13 @@
 
 using namespace DPsim;
 
-Components::EMT::Inductor::Inductor(String name, Int node1, Int node2, Real inductance)
+Components::EMT::Inductor::Inductor(String name, Int node1, Int node2, Real inductance, Real initI, Real initV)
 	: Component(name, node1, node2)
 {
 	mInductance = inductance;
 	attrMap["inductance"] = { Attribute::Real, &mInductance };
+	mI0 = initI;
+	mV0 = initV;
 }
 
 void Components::EMT::Inductor::applySystemMatrixStamp(SystemModel& system)
@@ -48,9 +50,9 @@ void Components::EMT::Inductor::applySystemMatrixStamp(SystemModel& system)
 
 
 void Components::EMT::Inductor::initialize(SystemModel& system) {
-	mCurr = 0;
-	mCureq = 0;
-	mDeltav = 0;
+	mCurr = mI0;
+	mDeltav = mV0;
+	mCureq = mGl * mDeltav + mCurr;
 }
 
 void Components::EMT::Inductor::step(SystemModel& system, Real time)

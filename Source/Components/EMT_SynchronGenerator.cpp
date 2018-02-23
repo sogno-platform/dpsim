@@ -41,6 +41,18 @@ Components::EMT::SynchronGenerator::~SynchronGenerator() {
 
 }
 
+void Components::EMT::SynchronGenerator::AddExciter(Real Ta, Real Ka, Real Te, Real Ke, Real Tf, Real Kf, Real Tr, Real Lad, Real Rfd) {
+		mExciter = Exciter(Ta, Ka, Te, Ke, Tf, Kf, Tr, Lad, Rfd);
+		mExciter.initialize(1, 1);
+		WithExciter = true;
+}
+
+void Components::EMT::SynchronGenerator::AddGovernor(Real Ta, Real Tb, Real Tc, Real Fa, Real Fb, Real Fc, Real K, Real Tsr, Real Tsm, Real Tm_init, Real PmRef) {
+		mTurbineGovernor = TurbineGovernor(Ta, Tb, Tc, Fa, Fb, Fc, K, Tsr, Tsm);
+		mTurbineGovernor.initialize(PmRef, Tm_init);
+		WithTurbineGovernor = true;
+}
+
 void Components::EMT::SynchronGenerator::applySystemMatrixStamp(SystemModel& system)
 {
 		mRa = mRa*mBase_Z;
@@ -191,6 +203,10 @@ void Components::EMT::SynchronGenerator::stepInPerUnit(Real om, Real dt, Real ti
 	mVq = parkTransform2(mThetaMech, mVa, mVb, mVc)(1);
 	mV0 = parkTransform2(mThetaMech, mVa, mVb, mVc)(2);
 
+	if (WithExciter == true) {
+			mVfd = mExciter.step(mVd, mVq, 1, dt);
+	}
+
 	if (numMethod == NumericalMethod::Trapezoidal_current) {
 		if (mNumDampingWindings == 2) {
 			Matrix A = (mReactanceMat*mResistanceMat);
@@ -280,6 +296,11 @@ void Components::EMT::SynchronGenerator::stepInPerUnit(Real om, Real dt, Real ti
 	}
 	else {
 		// Calculation of rotational speed with euler
+		if (WithTurbineGovernor == true)
+		{
+			mMechTorque = mTurbineGovernor.step(mOmMech, 1, 300e6 / 555e6, dt);
+
+		}
 		mElecTorque = (mPsid*mIq - mPsiq*mId);
 		mOmMech = mOmMech + dt * (1 / (2 * mH) * (mMechTorque - mElecTorque));
 

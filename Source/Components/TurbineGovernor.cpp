@@ -69,8 +69,7 @@ Real Components::TurbineGovernor::step(Real Om, Real OmRef, Real PmRef, Real dt)
 
 	//### Turbine ###
 	// Simplified equation
-
-	T1 = Euler(T1, -1, (1 - mFa), dt / mTa, mVcv);
+	T1 = Euler(T1, -1, (1 - mFa), dt / mTb, mVcv);
 	T2 = mVcv*mFa;
 	mTm = T1 + T2;
 

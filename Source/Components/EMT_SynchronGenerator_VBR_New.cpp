@@ -180,7 +180,7 @@ void Components::EMT::VoltageBehindReactanceEMTNew::stepInPerUnit(Real om, Real 
 		// Estimate mechanical variables with euler
 		if (WithTurbineGovernor == true)
 		{
-				mMechTorque = -mTurbineGovernor.step(mOmMech, 1, 300e6 / 555e6, dt);
+				mMechTorque = -mTurbineGovernor.step(mOmMech, 1, 285.89e6 / 555e6, dt);
 
 		}
 

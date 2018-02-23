@@ -1,4 +1,4 @@
-/** InductorDP (EMT)
+﻿/** InductorDP (EMT)
  *
  * @file
  * @author Markus Mirz <mmirz@eonerc.rwth-aachen.de>
@@ -37,9 +37,11 @@ namespace EMT {
 		Real mCureq;
 		Real mGl;
 		Real mP;
+		Real mI0;
+		Real mV0;
 
 	public:
-		Inductor(String name, Int node1, Int node2, Real inductance);
+		Inductor(String name, Int node1, Int node2, Real inductance, Real initI, Real initV);
 
 		void initialize(SystemModel& system);
 		void applySystemMatrixStamp(SystemModel& system);
