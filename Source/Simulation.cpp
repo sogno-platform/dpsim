@@ -1,4 +1,4 @@
-﻿/** Simulation
+/** Simulation
  *
  * @author Markus Mirz <mmirz@eonerc.rwth-aachen.de>
  * @copyright 2017, Institute for Automation of Complex Power Systems, EONERC
@@ -27,9 +27,8 @@ Simulation::Simulation(String name, Component::List comps, Real om, Real dt, Rea
 	SimulationType simType, Int downSampleRate) :
 	mLog("Logs/" + name + ".log", logLevel),
 	mLeftVectorLog("Logs/" + name + "_LeftVector.csv", logLevel),
-	mRightVectorLog("Logs/" + name + "_RightVector.csv", logLevel)
+	mRightVectorLog("Logs/" + name + "_RightVector.csv", logLevel) {
 
-{
 	mTime = 0;
 	mLastLogTimeStep = 0;
 	mCurrentSwitchTimeIndex = 0;
@@ -92,7 +91,6 @@ void Simulation::initialize(Component::List newComponents)
 	}
 
 	// Calculate size of system matrix
-	//Int numNodes = maxNode + currentVirtualNode + 1;
 	Int numNodes = currentVirtualNode + 1;
 
 	// Create right and left vector

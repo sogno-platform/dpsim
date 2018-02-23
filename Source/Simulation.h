@@ -73,12 +73,13 @@ namespace DPsim {
 		std::vector<Component::List> mComponentsVector;
 		/// Vector of ExternalInterfaces
 		std::vector<ExternalInterface*> mExternalInterfaces;
-
+		///
+		std::vector<std::shared_ptr<Node>> mNodes;
 	public:
 		/// Creates system matrix according to
 		Simulation(String name, Component::List comps, Real om, Real dt, Real tf, Logger::Level logLevel = Logger::Level::INFO, SimulationType simType = SimulationType::DP, Int downSampleRate = 1);
+		///
 		virtual ~Simulation() { };
-
 		/// TODO: check that every system matrix has the same dimensions
 		void initialize(Component::List comps);
 		/// Solve system A * x = z for x and current time
@@ -89,24 +90,25 @@ namespace DPsim {
 		void run(double duration);
 		/// Advance the simulation clock by 1 time-step.
 		void increaseByTimeStep();
-
+		///
 		void switchSystemMatrix(Int systemMatrixIndex);
+		///
 		void setSwitchTime(Real switchTime, Int systemIndex);
-
+		///
 		void addExternalInterface(ExternalInterface*);
-
+		///
 		void setNumericalMethod(NumericalMethod numMethod);
+		///
+		void addSystemTopology(Component::List newComps);
 
-		// Getter
+		// #### Getter ####
 		String getName() const { return mName; }
 		Real getTime() { return mTime; }
 		Real getFinalTime() { return mFinalTime; }
 		Real getTimeStep() { return mSystemModel.getTimeStep(); }
-		Matrix & getLeftSideVector() { return mSystemModel.getLeftSideVector(); }
-		Matrix & getRightSideVector() { return mSystemModel.getRightSideVector(); }
-		Matrix & getSystemMatrix() { return mSystemModel.getCurrentSystemMatrix(); }
-
-		void addSystemTopology(Component::List newComps);
+		Matrix& getLeftSideVector() { return mSystemModel.getLeftSideVector(); }
+		Matrix& getRightSideVector() { return mSystemModel.getRightSideVector(); }
+		Matrix& getSystemMatrix() { return mSystemModel.getCurrentSystemMatrix(); }
 	};
 
 }

@@ -143,7 +143,7 @@ void Reader::parseFiles() {
 	}
 
 	for (auto comp : mPowerflowEquipment) {
-		comp.second->initializePowerflow();
+		comp.second->initializePowerflow(mFrequency);
 		mComponents.push_back(comp.second);
 	}
 }
@@ -178,14 +178,8 @@ void Reader::processTopologicalNode(TopologicalNode* topNode) {
 				Component::Ptr comp = mapComponent(equipment);
 				if (comp) mPowerflowEquipment.insert(std::make_pair(equipment->mRID, comp));
 			}				
-			auto pfEquipment = mPowerflowEquipment[equipment->mRID];
-			
-			if (pfEquipment->getTerminalsNum() < term->sequenceNumber) {
-				mLog.Log(Logger::Level::WARN) << "Terminal sequence number of " << term->mRID
-					<< " is too large for Equipment " << pfEquipment->mRID
-					<< " - Ignoring" << std::endl;
-			}
-			pfEquipment->mTerminals[term->sequenceNumber - 1] = mPowerflowTerminals[term->mRID];
+			auto pfEquipment = mPowerflowEquipment[equipment->mRID];			
+			pfEquipment->setTerminal(mPowerflowTerminals[term->mRID], term->sequenceNumber-1);
 
 			mLog.Log(Logger::Level::INFO) << "        " << "Equipment " << equipment->mRID
 				<< ", sequenceNumber " << term->sequenceNumber - 1 << std::endl;
@@ -205,8 +199,8 @@ void Reader::processSvVoltage(SvVoltage* volt) {
 			<< " missing from mTopNodes, ignoring" << std::endl;
 		return;
 	}
-	mPowerflowNodes[node->mRID]->mVoltageAbs = volt->v.value;
-	mPowerflowNodes[node->mRID]->mVoltagePhase = volt->angle.value;
+	mPowerflowNodes[node->mRID]->mVoltageAbs = Reader::unitValue(volt->v.value, UnitMultiplier::k);
+	mPowerflowNodes[node->mRID]->mVoltagePhase = volt->angle.value * PI / 180;
 	mLog.Log(Logger::Level::INFO) << "Node " << mPowerflowNodes[node->mRID]->mSimNode << ": "
 		<< mPowerflowNodes[node->mRID]->mVoltageAbs << "<"
 		<< mPowerflowNodes[node->mRID]->mVoltagePhase << std::endl;
@@ -216,8 +210,8 @@ void Reader::processSvPowerFlow(SvPowerFlow* flow) {
 	IEC61970::Base::Core::Terminal* term = flow->Terminal;
 	ConductingEquipment* eq = term->ConductingEquipment;
 
-	mPowerflowTerminals[term->mRID]->mActivePower = flow->p.value;
-	mPowerflowTerminals[term->mRID]->mReactivePower = flow->q.value;
+	mPowerflowTerminals[term->mRID]->mActivePower = Reader::unitValue(flow->p.value, UnitMultiplier::M);
+	mPowerflowTerminals[term->mRID]->mReactivePower = Reader::unitValue(flow->q.value, UnitMultiplier::M);
 
 	mLog.Log(Logger::Level::INFO) << "Terminal " << term->mRID << ":"
 		<< mPowerflowTerminals[term->mRID]->mActivePower << " + j"
@@ -237,39 +231,15 @@ Matrix::Index Reader::mapTopologicalNode(String mrid) {
 }
 
 Component::Ptr Reader::mapEnergyConsumer(EnergyConsumer* consumer) {
-	
-	if (mPowerflowEquipment[consumer->mRID]->mTerminals.size() != 1) {
-		mLog.Log(Logger::Level::WARN) << consumer->mRID << " has "
-			<< mPowerflowEquipment[consumer->mRID]->mTerminals.size()
-			<< " terminals; ignoring" << std::endl;
-		return nullptr;
-	}
+	mLog.Log(Logger::Level::INFO) << "Found EnergyConsumer " << consumer->name << std::endl;	
+	mLog.Log(Logger::Level::INFO) << "Create PQLoad " << consumer->name << std::endl;
 
-	std::shared_ptr<Terminal> term = mPowerflowEquipment[consumer->mRID]->mTerminals[0];
-	std::shared_ptr<Node> node = term->mNode;
-
-	mLog.Log(Logger::Level::INFO) << "Found EnergyConsumer " << consumer->name
-		<< " rid=" << consumer->mRID << " node=" << node->mSimNode
-		<< " P=" << term->mActivePower << " Q=" << term->mReactivePower
-		<< " V=" << node->mVoltageAbs << "<" << node->mVoltagePhase << std::endl;
-	
-	// Apply unit multipliers according to CGMES convetions.
-	term->mActivePower = Reader::unitValue(term->mActivePower, UnitMultiplier::M);
-	term->mReactivePower = Reader::unitValue(term->mReactivePower, UnitMultiplier::M);
-	node->mVoltageAbs = Reader::unitValue(node->mVoltageAbs, UnitMultiplier::k);
-	node->mVoltagePhase = node->mVoltagePhase * PI / 180;
-
-	mLog.Log(Logger::Level::INFO) << "Create PQLoad " << consumer->name << " node=" << node->mSimNode
-		<< " P=" << term->mActivePower << " Q=" << term->mReactivePower
-		<< " V=" << node->mVoltageAbs << "<" << node->mVoltagePhase << std::endl;
-
-	return std::make_shared<Components::DP::PQLoad>(consumer->name, node->mSimNode,
-		term->mActivePower, term->mReactivePower, node->mVoltageAbs, node->mVoltagePhase);
+	return std::make_shared<Components::DP::PQLoad>(consumer->mRID, consumer->name, mComponentLogLevel);
 }
 
 Component::Ptr Reader::mapACLineSegment(ACLineSegment* line) {	
 	mLog.Log(Logger::Level::INFO) << "Found ACLineSegment " << line->name
-		<< " rid=" << line->mRID << " r=" << line->r.value << " x=" << line->x.value
+		<< " r=" << line->r.value << " x=" << line->x.value
 		<< " length=" << line->length.value << std::endl;
 
 	Real resistance = line->r.value;
@@ -280,7 +250,7 @@ Component::Ptr Reader::mapACLineSegment(ACLineSegment* line) {
 		inductance = line->x.value / mFrequency * line->length.value;
 	}
 
-	mLog.Log(Logger::Level::INFO) << "Create RxLine " << line->mRID
+	mLog.Log(Logger::Level::INFO) << "Create RxLine " << line->name
 		<< " R=" << resistance << " L=" << inductance << std::endl;
 	return std::make_shared<Components::DP::RxLine>(line->mRID, line->name, resistance, inductance, mComponentLogLevel);
 }
@@ -288,17 +258,15 @@ Component::Ptr Reader::mapACLineSegment(ACLineSegment* line) {
 
 Component::Ptr Reader::mapPowerTransformer(PowerTransformer* trans) {
 	if (trans->PowerTransformerEnd.size() != 2) {
-		mLog.Log(Logger::Level::WARN) << "PowerTransformer " << trans->mRID
+		mLog.Log(Logger::Level::WARN) << "PowerTransformer " << trans->name
 			<< " does not have exactly two windings, ignoring" << std::endl;
 		return nullptr;
 	}	
 	
-	mLog.Log(Logger::Level::INFO) << "Found PowerTransformer " << trans->name
-		<< " rid=" << trans->mRID << std::endl;
+	mLog.Log(Logger::Level::INFO) << "Found PowerTransformer " << trans->name << std::endl;
 
 	PowerTransformerEnd* end1;
 	PowerTransformerEnd* end2;
-
 	for (auto end : trans->PowerTransformerEnd) {
 		if (end->endNumber == 1) end1 = end;
 		else if (end->endNumber == 2) end2 = end;
@@ -307,7 +275,6 @@ Component::Ptr Reader::mapPowerTransformer(PowerTransformer* trans) {
 
 	mLog.Log(Logger::Level::INFO) << "    PowerTransformerEnd_1 " << end1->name
 		<< " Vrated=" << end1->ratedU.value << " R=" << end1->r.value << " X=" << end1->x.value << std::endl;	
-
 	mLog.Log(Logger::Level::INFO) << "    PowerTransformerEnd_2 " << end2->name
 		<< " Vrated=" << end2->ratedU.value << " R=" << end2->r.value << " X=" << end2->x.value << std::endl;
 
@@ -317,35 +284,20 @@ Component::Ptr Reader::mapPowerTransformer(PowerTransformer* trans) {
 	Real voltageNode2 = unitValue(end2->ratedU.value, UnitMultiplier::k);
 	Real inductanceNode2 = end2->x.value / mFrequency;
 	Real resistanceNode2 = end2->r.value;
-
 	Real ratioAbs = voltageNode1 / voltageNode2;
 	Real ratioPhase = 0;
+
 	mLog.Log(Logger::Level::INFO) << "Create PowerTransformer " << trans->name
 		<< " ratio=" << ratioAbs << "<" << ratioPhase
 		<< " inductance=" << inductanceNode1 << std::endl;
 
-	return std::make_shared<Components::DP::Transformer>(trans->mRID, trans->name, ratioAbs, ratioPhase);
+	return std::make_shared<Components::DP::Transformer>(trans->mRID, trans->name, ratioAbs, ratioPhase, mComponentLogLevel);
 }
 
 
-Component::Ptr Reader::mapSynchronousMachine(SynchronousMachine* machine) {
-
-	if (mPowerflowEquipment[machine->mRID]->mTerminals.size() != 1) {
-		mLog.Log(Logger::Level::WARN) << "SynchronousMachine " << machine->mRID << " has "
-			<< mPowerflowEquipment[machine->mRID]->mTerminals.size() << " terminals, ignoring" << std::endl;
-		return nullptr;
-	}
-
-	std::shared_ptr<Node> node = mPowerflowEquipment[machine->mRID]->mTerminals[0]->mNode;
-
-	// Apply unit multipliers according to CGMES convetions.
-	Real voltAbs = unitValue(node->mVoltageAbs, UnitMultiplier::k);
-	Real voltPhase = node->mVoltagePhase * PI / 180;
-	Complex initVoltage = std::polar(voltAbs, voltPhase);
-
-	mLog.Log(Logger::Level::INFO) << "Create IdealVoltageSource " << machine->name << " node=" << node->mSimNode
-		<< " V=" << voltAbs << "<" << voltPhase << std::endl;
-	return std::make_shared<Components::DP::VoltageSource>(machine->name, GND, node->mSimNode, initVoltage);
+Component::Ptr Reader::mapSynchronousMachine(SynchronousMachine* machine) {	
+	mLog.Log(Logger::Level::INFO) << "Create IdealVoltageSource " << machine->name << std::endl;
+	return std::make_shared<Components::DP::VoltageSource>(machine->mRID, machine->name, mComponentLogLevel);
 }
 
 Component::Ptr Reader::mapExternalNetworkInjection(ExternalNetworkInjection* inj) {
