@@ -1,4 +1,5 @@
 add_library(dpsim
+	Attribute.cpp
 	IntegrationMethod.cpp
 	Logger.cpp
 	MathLibrary.cpp
@@ -76,6 +77,9 @@ if(WITH_SHMEM)
 endif()
 
 if(WITH_PYTHON)
+	list(APPEND INCLUDE_DIRS ${PYTHON_INCLUDE_DIRS})
+	list(APPEND LIBRARIES ${PYTHON_LIBRARIES})
+
 	add_subdirectory(Python)
 endif()
 

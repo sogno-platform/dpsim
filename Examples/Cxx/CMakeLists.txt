@@ -46,8 +46,6 @@ set(SYNCGEN_SOURCES
 	SynchronGenerator/EMT_SynchronGenerator_VBR_ThreePhaseFault.cpp
 	SynchronGenerator/EMT_SynchronGenerator_Simplified_ThreePhaseFault.cpp
 	SynchronGenerator/EMT_Multimachine.cpp
-
-
 )
 
 set(VARFREQ_SOURCES
@@ -83,6 +81,11 @@ if(WITH_CIM)
 	set(CIM_SOURCES
 		CIM/CIM.cpp
 	)
+endif()
+
+if(WITH_PYTHON)
+	list(APPEND LIBRARIES ${PYTHON_LIBRARIES})
+	list(APPEND INCLUDE_DIRS ${PYTHON_INCLUDE_DIRS})
 endif()
 
 foreach(SOURCE ${CIRCUIT_SOURCES} ${SYNCGEN_SOURCES} ${VARFREQ_SOURCES} ${SHMEM_SOURCES} ${RT_SOURCES} ${CIM_SOURCES})

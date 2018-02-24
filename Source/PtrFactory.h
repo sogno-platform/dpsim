@@ -29,10 +29,21 @@
 /// See: https://en.wikipedia.org/wiki/Curiously_recurring_template_pattern
 template<typename T>
 class SharedFactory {
+
 public:
 	template<typename... Args>
-	static std::shared_ptr<T> make(Args&&... args)
-	{
-		return std::make_shared<T>(std::forward<Args>(args)...);
+	static std::shared_ptr<T> make(Args&&... args) {
+		return std::shared_ptr<T>(new T(std::forward<Args>(args)...));
+	}
+};
+
+template<typename T>
+class UniqueFactory {
+
+public:
+
+	template<typename... Args>
+	static std::unique_ptr<T> make(Args&&... args) {
+		return std::unique_ptr<T>(new T(std::forward<Args>(args)...));
 	}
 };
