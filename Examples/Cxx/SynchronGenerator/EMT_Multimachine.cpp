@@ -1,4 +1,4 @@
-﻿/** SynGenVBR Example
+/** SynGenVBR Example
 *
 * @author Markus Mirz <mmirz@eonerc.rwth-aachen.de>
 * @copyright 2017, Institute for Automation of Complex Power Systems, EONERC
@@ -27,7 +27,6 @@ using namespace DPsim::Components::EMT;
 
 int main(int argc, char* argv[])
 {
-
 		// Define machine parameters in per unit
 		Real nomPower = 555e6;
 		Real nomPhPhVoltRMS = 24e3;
@@ -134,8 +133,6 @@ int main(int argc, char* argv[])
 
 		//Component::List compsBreakerOn = { gen, rBreaker1, rBreaker2, rBreaker3, r1, r2, r3 };
 		Component::List compsBreakerOn = { gen, gen2, rBreaker1, rBreaker2, rBreaker3, LineR1, LineR2, LineR3, LineL1, LineL2, LineL3, r1, r2, r3, Res1, Res2, Res3, LineR12, LineR22, LineR32, LineL12, LineL22, LineL32, Res12, Res22, Res32 };
-
-
 
 		// Set up simulation
 		Real tf, dt, t;

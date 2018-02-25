@@ -1,4 +1,4 @@
-﻿/** SynGenVBR Example
+/** SynGenVBR Example
  *
  * @author Markus Mirz <mmirz@eonerc.rwth-aachen.de>
  * @copyright 2017, Institute for Automation of Complex Power Systems, EONERC
@@ -27,7 +27,6 @@ using namespace DPsim::Components::EMT;
 
 int main(int argc, char* argv[])
 {
-
 	// Define machine parameters in per unit
 	Real nomPower = 555e6;
 	Real nomPhPhVoltRMS = 24e3;

@@ -1,4 +1,4 @@
-﻿/** SynGenThreePhaseFault Example
+/** SynGenThreePhaseFault Example
  *
  * @author Markus Mirz <mmirz@eonerc.rwth-aachen.de>
  * @copyright 2017, Institute for Automation of Complex Power Systems, EONERC
@@ -84,7 +84,7 @@ int main(int argc, char* argv[])
 
 
 	Component::List compsBreakerOn = { gen, rBreaker1, rBreaker2, rBreaker3, r1, r2, r3};
-	
+
 	Simulation sim("EMT_SynchronGenerator_ThreePhaseFault", comps, om, dt, tf, Logger::Level::INFO, SimulationType::EMT, downSampling);
 	sim.setNumericalMethod(NumericalMethod::Trapezoidal_flux);
 	sim.addSystemTopology(compsBreakerOn);
