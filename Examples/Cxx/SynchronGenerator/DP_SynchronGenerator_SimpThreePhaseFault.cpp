@@ -73,21 +73,21 @@ int main(int argc, char* argv[])
 
 	Real Ra = (Ld_s + Lq_s) / dt;
 	// Declare circuit components
-	Component::Ptr gen = SynchronGenerator::make("gen", 1, 2, 3,
+	Component::Ptr gen = SynchronGenerator::make("gen", 0, 1, 2,
 		nomPower, nomPhPhVoltRMS, nomFreq, poleNum, nomFieldCurr,
 		Rs, Ll, Lmd, Lmd0, Lmq, Lmq0, Rfd, Llfd, Rkd, Llkd, Rkq1, Llkq1, Rkq2, Llkq2, H, Ra);
 	Real loadRes = 1037.8378;
-	Component::Ptr r1 = Resistor::make("r1", 1, 0, loadRes);
-	Component::Ptr r2 = Resistor::make("r2", 2, 0, loadRes);
-	Component::Ptr r3 = Resistor::make("r3", 3, 0, loadRes);
+	Component::Ptr r1 = Resistor::make("r1", 0, GND, loadRes);
+	Component::Ptr r2 = Resistor::make("r2", 1, GND, loadRes);
+	Component::Ptr r3 = Resistor::make("r3", 2, GND, loadRes);
 
 	Component::List comps = { gen, r1, r2, r3 };
 
 	// Declare circuit components for resistance change
 	Real breakerRes = 0.001;
-	Component::Ptr rBreaker1 = Resistor::make("rbreak1", 1, 0, breakerRes);
-	Component::Ptr rBreaker2 = Resistor::make("rbreak2", 2, 0, breakerRes);
-	Component::Ptr rBreaker3 = Resistor::make("rbreak3", 3, 0, breakerRes);
+	Component::Ptr rBreaker1 = Resistor::make("rbreak1", 0, GND, breakerRes);
+	Component::Ptr rBreaker2 = Resistor::make("rbreak2", 1, GND, breakerRes);
+	Component::Ptr rBreaker3 = Resistor::make("rbreak3", 2, GND, breakerRes);
 
 	Component::List compsBreakerOn = { gen, rBreaker1, rBreaker2, rBreaker3, r1, r2, r3 };
 
