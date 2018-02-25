@@ -74,12 +74,12 @@ int main(int argc, char* argv[])
 		Real Kg = 20;
 
 		// Declare circuit components
-		Component::Ptr gen = VoltageBehindReactanceEMTNew::make("gen", 0, 1, 2,
+		Component::Ptr gen = SynchronGeneratorVBRNew::make("gen", 0, 1, 2,
 				nomPower, nomPhPhVoltRMS, nomFreq, poleNum, nomFieldCurr,
 				Rs, Ll, Lmd, Lmd0, Lmq, Lmq0, Rfd, Llfd, Rkd, Llkd, Rkq1, Llkq1, Rkq2, Llkq2, H, Logger::Level::INFO);
 
 		// Declare circuit components
-		Component::Ptr gen2 = VoltageBehindReactanceEMTNew::make("gen2", 12, 13, 14,
+		Component::Ptr gen2 = SynchronGeneratorVBRNew::make("gen2", 12, 13, 14,
 				nomPower, nomPhPhVoltRMS, nomFreq, poleNum, nomFieldCurr,
 				Rs, Ll, Lmd, Lmd0, Lmq, Lmq0, Rfd, Llfd, Rkd, Llkd, Rkq1, Llkq1, Rkq2, Llkq2, H, Logger::Level::INFO);
 
@@ -151,12 +151,12 @@ int main(int argc, char* argv[])
 		Real initVoltAngle = -DPS_PI / 2;
 		Real fieldVoltage = 7.0821;
 		Real mechPower = 5.5558e5;
-		auto genPtr = std::dynamic_pointer_cast<Components::EMT::VoltageBehindReactanceEMTNew>(gen);
+		auto genPtr = std::dynamic_pointer_cast<Components::EMT::SynchronGeneratorVBRNew>(gen);
 		genPtr->initialize(om, dt, initActivePower, initReactivePower, initTerminalVolt, initVoltAngle, fieldVoltage, mechPower);
 		genPtr->AddExciter(Ta, Ka, Te, Ke, Tf, Kf, Tr, Lmd, Rfd);
 		genPtr->AddGovernor(Ta_t, Tb, Tc, Fa, Fb, Fc, Kg, Tsr, Tsm, initActivePower / nomPower, initActivePower / nomPower);
 
-		auto genPtr2 = std::dynamic_pointer_cast<Components::EMT::VoltageBehindReactanceEMTNew>(gen2);
+		auto genPtr2 = std::dynamic_pointer_cast<Components::EMT::SynchronGeneratorVBRNew>(gen2);
 		genPtr2->initialize(om, dt, initActivePower, initReactivePower, initTerminalVolt, initVoltAngle, fieldVoltage, mechPower);
 		genPtr2->AddExciter(Ta, Ka, Te, Ke, Tf, Kf, Tr, Lmd, Rfd);
 		genPtr2->AddGovernor(Ta_t, Tb, Tc, Fa, Fb, Fc, Kg, Tsr, Tsm, initActivePower / nomPower, initActivePower / nomPower);
