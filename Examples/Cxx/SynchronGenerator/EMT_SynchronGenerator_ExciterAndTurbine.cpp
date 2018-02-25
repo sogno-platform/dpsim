@@ -38,12 +38,21 @@ int main(int argc, char* argv[])
 	Real H = 3.7;
 
 	//Exciter
+#if 1
 	Real Ka = 20;
 	Real Ta = 0.2;
 	Real Ke = 1;
 	Real Te = 0.314;
 	Real Kf = 0.063;
 	Real Tf = 0.35;
+#else
+	Real Ka = 46;
+	Real Ta = 0.06;
+	Real Ke = -0.043478260869565223;
+	Real Te = 0.46;
+	Real Kf = 0.1;
+	Real Tf = 1;
+#endif
 	Real Tr = 0.02;
 
 	// Turbine
@@ -98,7 +107,7 @@ int main(int argc, char* argv[])
 	Real om = 2.0*M_PI*60.0;
 	tf = 10; dt = 0.0001; t = 0;
 	Int downSampling = 1;
-	Simulation sim("EMT_SynchronGenerator_ExciterTurbine", comps, om, dt, tf, Logger::Level::INFO, SimulationType::EMT, downSampling);
+	Simulation sim("EMT_SynchronGenerator_ExciterAndTurbine", comps, om, dt, tf, Logger::Level::INFO, SimulationType::EMT, downSampling);
 	sim.setNumericalMethod(NumericalMethod::Trapezoidal_flux);
 	sim.addSystemTopology(compsBreakerOn);
 	sim.switchSystemMatrix(0);
@@ -110,27 +119,20 @@ int main(int argc, char* argv[])
 	Real initVoltAngle = -DPS_PI / 2;
 	Real fieldVoltage = 7.0821;
 	Real mechPower = 5.5558e5;
-	auto genPtr = std::dynamic_pointer_cast<Components::EMT::SynchronGeneratorVBR>(gen);
+	auto genPtr = std::dynamic_pointer_cast<SynchronGeneratorVBR>(gen);
 	genPtr->initialize(om, dt, initActivePower, initReactivePower, initTerminalVolt, initVoltAngle, fieldVoltage, mechPower);
 	genPtr->addExciter(Ta, Ka, Te, Ke, Tf, Kf, Tr, Lmd, Rfd);
+#if 1
 	genPtr->addGovernor(Ta_t, Tb, Tc, Fa, Fb, Fc, Kg, Tsr, Tsm, initActivePower / nomPower, 0);
-
+#else
+	genPtr->addGovernor(Ta_t, Tb, Tc, Fa, Fb, Fc, Kg, Tsr, Tsm, initActivePower / nomPower, initActivePower / nomPower);
+#endif
 	// Calculate initial values for circuit at generator connection point
 	Real initApparentPower = sqrt(pow(initActivePower, 2) + pow(initReactivePower, 2));
 	Real initTerminalCurr = initApparentPower / (3 * initTerminalVolt)* sqrt(2);
 	Real initPowerFactor = acos(initActivePower / initApparentPower);
 
-	std::cout << "A matrix:" << std::endl;
-	std::cout << sim.getSystemMatrix() << std::endl;
-	std::cout << "vt vector:" << std::endl;
-	std::cout << sim.getLeftSideVector() << std::endl;
-	std::cout << "j vector:" << std::endl;
-	std::cout << sim.getRightSideVector() << std::endl;
-
-	Real lastLogTime = 0;
-	Real logTimeStep = 0.0001;
 	sim.setSwitchTime(1, 1);
-	//sim.setSwitchTime(6, 0);
 
 	sim.run();
 
