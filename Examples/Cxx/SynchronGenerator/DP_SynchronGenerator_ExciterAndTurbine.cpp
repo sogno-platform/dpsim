@@ -28,11 +28,6 @@ using namespace DPsim::Components::DP;
 
 int main(int argc, char* argv[])
 {
-	// Define Object for saving data on a file
-	Logger log("log.txt"),
-		vtLog("data_vt.csv"),
-		jLog("data_j.csv");
-
 	// Define machine parameters in per unit
 	Real nomPower = 555e6;
 	Real nomPhPhVoltRMS = 24e3;
