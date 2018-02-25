@@ -103,7 +103,7 @@ int main(int argc, char* argv[])
 	Real initVoltAngle = -DPS_PI / 2;
 	Real fieldVoltage = 7.0821;
 	Real mechPower = 5.5558e5;
-	auto genPtr = std::dynamic_pointer_cast<Components::DP::SynchronGenerator>(gen);
+	auto genPtr = std::dynamic_pointer_cast<SynchronGenerator>(gen);
 	genPtr->initialize(om, dt, initActivePower, initReactivePower, initTerminalVolt, initVoltAngle, fieldVoltage, mechPower);
 	//genPtr->addExciter(Ta, Ka, Te, Ke, Tf, Kf, Tr, Lmd, Rfd);
 
