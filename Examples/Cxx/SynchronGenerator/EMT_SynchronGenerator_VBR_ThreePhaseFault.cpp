@@ -93,15 +93,6 @@ int main(int argc, char* argv[])
 	auto genPtr = std::dynamic_pointer_cast<Components::EMT::SynchronGeneratorVBRNew>(gen);
 	genPtr->initialize(om, dt, initActivePower, initReactivePower, initTerminalVolt, initVoltAngle, fieldVoltage, mechPower);
 
-	std::cout << "A matrix:" << std::endl;
-	std::cout << sim.getSystemMatrix() << std::endl;
-	std::cout << "vt vector:" << std::endl;
-	std::cout << sim.getLeftSideVector() << std::endl;
-	std::cout << "j vector:" << std::endl;
-	std::cout << sim.getRightSideVector() << std::endl;
-
-	Real lastLogTime = 0;
-	Real logTimeStep = 0.00005;
 	sim.setSwitchTime(0.1, 1);
 	sim.setSwitchTime(0.2, 0);
 

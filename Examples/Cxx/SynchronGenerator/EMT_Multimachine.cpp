@@ -161,17 +161,7 @@ int main(int argc, char* argv[])
 		genPtr2->AddExciter(Ta, Ka, Te, Ke, Tf, Kf, Tr, Lmd, Rfd);
 		genPtr2->AddGovernor(Ta_t, Tb, Tc, Fa, Fb, Fc, Kg, Tsr, Tsm, initActivePower / nomPower, initActivePower / nomPower);
 
-		std::cout << "A matrix:" << std::endl;
-		std::cout << sim.getSystemMatrix() << std::endl;
-		std::cout << "vt vector:" << std::endl;
-		std::cout << sim.getLeftSideVector() << std::endl;
-		std::cout << "j vector:" << std::endl;
-		std::cout << sim.getRightSideVector() << std::endl;
-
-		Real lastLogTime = 0;
-		Real logTimeStep = 0.00005;
 		sim.setSwitchTime(0.1, 1);
-		//sim.setSwitchTime(0.2, 0);
 
 		sim.run();
 
