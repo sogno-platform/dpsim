@@ -1,4 +1,4 @@
-﻿/** Synchron Generator Tests
+/** Synchron Generator Tests
 *
 * @file
 * @author Markus Mirz <mmirz@eonerc.rwth-aachen.de>
@@ -28,11 +28,6 @@ using namespace DPsim::Components::DP;
 
 int main(int argc, char* argv[])
 {
-	// Define Object for saving data on a file
-	Logger log("log.txt"),
-		vtLog("data_vt.csv"),
-		jLog("data_j.csv");
-
 	// Define machine parameters in per unit
 	Real nomPower = 555e6;
 	Real nomPhPhVoltRMS = 24e3;
@@ -43,12 +38,21 @@ int main(int argc, char* argv[])
 	Real H = 3.7;
 
 	//Exciter
+#if 1
 	Real Ka = 20;
 	Real Ta = 0.2;
 	Real Ke = 1;
 	Real Te = 0.314;
 	Real Kf = 0.063;
 	Real Tf = 0.35;
+#else
+	Real Ka = 46;
+	Real Ta = 0.06;
+	Real Ke = -0.043478260869565223;
+	Real Te = 0.46;
+	Real Kf = 0.1;
+	Real Tf = 1;
+#endif
 	Real Tr = 0.02;
 
 	// Turbine
@@ -80,21 +84,21 @@ int main(int argc, char* argv[])
 	//Real Llkq2 = 0;
 
 	// Declare circuit components
-	Component::Ptr gen = SynchronGeneratorVBR::make("gen", 1, 2, 3,
+	Component::Ptr gen = SynchronGeneratorVBR::make("gen", 0, 1, 2,
 		nomPower, nomPhPhVoltRMS, nomFreq, poleNum, nomFieldCurr,
 		Rs, Ll, Lmd, Lmd0, Lmq, Lmq0, Rfd, Llfd, Rkd, Llkd, Rkq1, Llkq1, Rkq2, Llkq2, H);
 	Real loadRes = 1037.8378;
-	Component::Ptr r1 = Resistor::make("r1", 1, 0, loadRes);
-	Component::Ptr r2 = Resistor::make("r2", 2, 0, loadRes);
-	Component::Ptr r3 = Resistor::make("r3", 3, 0, loadRes);
+	Component::Ptr r1 = Resistor::make("r1", 0, GND, loadRes);
+	Component::Ptr r2 = Resistor::make("r2", 1, GND, loadRes);
+	Component::Ptr r3 = Resistor::make("r3", 2, GND, loadRes);
 
 	Component::List comps = { gen, r1, r2, r3 };
 
 	// Declare circuit components for resistance change
 	Real breakerRes = 1037.8378;
-	Component::Ptr rBreaker1 = Resistor::make("rbreak1", 1, 0, breakerRes);
-	Component::Ptr rBreaker2 = Resistor::make("rbreak2", 2, 0, breakerRes);
-	Component::Ptr rBreaker3 = Resistor::make("rbreak3", 3, 0, breakerRes);
+	Component::Ptr rBreaker1 = Resistor::make("rbreak1", 0, GND, breakerRes);
+	Component::Ptr rBreaker2 = Resistor::make("rbreak2", 1, GND, breakerRes);
+	Component::Ptr rBreaker3 = Resistor::make("rbreak3", 2, GND, breakerRes);
 
 	Component::List compsBreakerOn = { gen, rBreaker1, rBreaker2, rBreaker3, r1, r2, r3 };
 
@@ -103,7 +107,7 @@ int main(int argc, char* argv[])
 	Real om = 2.0*M_PI*60.0;
 	tf = 10; dt = 0.0001; t = 0;
 	Int downSampling = 1;
-	Simulation sim("DP_SynchronGenerator_ExciterTurbine", comps, om, dt, tf,
+	Simulation sim("DP_SynchronGenerator_ExciterAndTurbine", comps, om, dt, tf,
 	Logger::Level::INFO, SimulationType::DP, downSampling);
 	sim.setNumericalMethod(NumericalMethod::Trapezoidal_flux);
 	sim.addSystemTopology(compsBreakerOn);
@@ -116,27 +120,21 @@ int main(int argc, char* argv[])
 	Real initVoltAngle = -DPS_PI / 2;
 	Real fieldVoltage = 7.0821;
 	Real mechPower = 5.5558e5;
-	auto genPtr = std::dynamic_pointer_cast<Components::DP::SynchronGeneratorVBR>(gen);
+	auto genPtr = std::dynamic_pointer_cast<SynchronGeneratorVBR>(gen);
 	genPtr->initialize(om, dt, initActivePower, initReactivePower, initTerminalVolt, initVoltAngle, fieldVoltage, mechPower);
 	genPtr->addExciter(Ta, Ka, Te, Ke, Tf, Kf, Tr, Lmd, Rfd);
+#if 1
 	genPtr->addGovernor(Ta_t, Tb, Tc, Fa, Fb, Fc, Kg, Tsr, Tsm, initActivePower / nomPower, 0);
+#else
+	genPtr->addGovernor(Ta_t, Tb, Tc, Fa, Fb, Fc, Kg, Tsr, Tsm, initActivePower / nomPower, initActivePower / nomPower);
+#endif
 
 	// Calculate initial values for circuit at generator connection point
 	Real initApparentPower = sqrt(pow(initActivePower, 2) + pow(initReactivePower, 2));
 	Real initTerminalCurr = initApparentPower / (3 * initTerminalVolt)* sqrt(2);
 	Real initPowerFactor = acos(initActivePower / initApparentPower);
 
-	std::cout << "A matrix:" << std::endl;
-	std::cout << sim.getSystemMatrix() << std::endl;
-	std::cout << "vt vector:" << std::endl;
-	std::cout << sim.getLeftSideVector() << std::endl;
-	std::cout << "j vector:" << std::endl;
-	std::cout << sim.getRightSideVector() << std::endl;
-
-	Real lastLogTime = 0;
-	Real logTimeStep = 0.0001;
 	sim.setSwitchTime(1, 1);
-	//sim.setSwitchTime(6, 0);
 
 	sim.run();
 
