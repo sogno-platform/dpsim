@@ -21,6 +21,7 @@
 
 #include "EMT_SynchronGenerator.h"
 #include "../IntegrationMethod.h"
+#include <chrono>
 
 using namespace DPsim;
 
@@ -168,6 +169,9 @@ void Components::EMT::SynchronGenerator::initialize(Real om, Real dt,
 
 void Components::EMT::SynchronGenerator::step(SystemModel& system, Real time)
 {
+
+	auto start = std::chrono::high_resolution_clock::now();
+	
 	stepInPerUnit(system.getOmega(), system.getTimeStep(), time, system.getNumMethod());
 
 	// Update current source accordingly
@@ -181,9 +185,13 @@ void Components::EMT::SynchronGenerator::step(SystemModel& system, Real time)
 		system.addRealToRightSideVector(mNode3, mIc + mVc / mRa);
 	}
 
+	auto finish = std::chrono::high_resolution_clock::now();
+	std::chrono::duration<double> elapsed = finish - start;
+	Real StepDuration = elapsed.count();
+
 	if (mLogLevel != Logger::Level::NONE) {
-		Matrix logValues(getStatorCurrents().rows() + getFluxes().rows() + getVoltages().rows() + getCurrents().rows() + 3, 1);
-		logValues << getStatorCurrents(), getFluxes(), getVoltages(), getCurrents(), getElectricalTorque(), getRotationalSpeed(), getRotorPosition();
+		Matrix logValues(getStatorCurrents().rows() + getFluxes().rows() + getVoltages().rows() + getCurrents().rows() + 4, 1);
+		logValues << getStatorCurrents(), getFluxes(), getVoltages(), getCurrents(), getElectricalTorque(), getRotationalSpeed(), getRotorPosition(), StepDuration;
 		mLog->LogDataLine(time, logValues);
 	}
 }

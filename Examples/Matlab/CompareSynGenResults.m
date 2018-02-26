@@ -3,21 +3,21 @@
 clc
 clear all
 %% read PLECS results
-Results_Reference= csvread('../../../vsa/Results/MultimachineTest/Simulink/Voltages_and_currents.csv');
-l_Ref = length(Results_Reference);
-Results_Reference = Results_Reference(1:l_Ref,:);
-Te_Reference = csvread('../../../vsa/Results/MultimachineTest/Simulink/Te.csv'); 
-omega_Reference = csvread('../../../vsa/Results/MultimachineTest/Simulink/omega.csv'); 
+Results_Reference= csvread('../../../vsa/Results/ABCFault/Simulink/Voltages_and_currents.csv');
+%l_Ref = length(Results_Reference);
+%Results_Reference = Results_Reference(1:l_Ref,:);
+%Te_Reference = csvread('../../../vsa/Results/ABCFault/Simulink/Te.csv'); 
+%omega_Reference = csvread('../../../vsa/Results/ABCFault/Simulink/omega.csv'); 
 %theta_PLECS = csvread('../../../vsa/Results/SynGenDq_ABCFault/Sim-0.81113286269894136ulink_PLECS/SynGenDqEmt_ABCFault_300M_Simulink/theta.csv'); 
 %% read results from c++ simulation
-VoltageVector = csvread('../../../vsa/Results/MultimachineTest/DPsim/EMT_SynchronGenerator_VBR_LeftVector.csv',1);
+VoltageVector = csvread('../../../vsa/Results/ABCFault/DPsim/VBR/EMT_SynchronGenerator_VBR_0.000500_LeftVector.csv',1);
 %CurrentVector = csvread('../../../vsa/Results/MultimachineTest/DPsim/EMT_SynchronGenerator_VBR_RightVector.csv',1);
-Log_SynGen = csvread('../../../vsa/Results/MultimachineTest/DPsim/SynGen_gen.csv',1);
+Log_SynGen = csvread('../../../vsa/Results/ABCFault/DPsim/VBR/SynGen_VBR_0.0005.csv',1);
 CurrentVector = Log_SynGen(:,1:4);
  %% Plot
 figure(1)
 hold off
-plot(VoltageVector(:,1),VoltageVector(:,8));
+plot(VoltageVector(:,1),VoltageVector(:,2));
 hold on
 plot(Results_Reference(:,1),Results_Reference(:,2),'--');
 
@@ -26,7 +26,7 @@ legend('va DPSim','va Reference');
 
 figure(2)
 hold off
-plot(VoltageVector(:,1), VoltageVector(:,9));
+plot(VoltageVector(:,1), VoltageVector(:,3));
 hold on
 plot(Results_Reference(:,1),Results_Reference(:,3),'--');
 
@@ -35,7 +35,7 @@ legend('vb DPSim','vb Reference');
 
 figure(3)
 hold off
-plot(VoltageVector(:,1),VoltageVector(:,10));
+plot(VoltageVector(:,1),VoltageVector(:,4));
 hold on
 plot(Results_Reference(:,1),Results_Reference(:,4),'--');
 
@@ -93,28 +93,28 @@ legend('ic DPSim','ic Simulink');
 % title ('dq currents');
 % legend('q','d','fd');
 % 
-figure(7)
-hold off
-plot(Log_SynGen(:,1),Log_SynGen(:,8));
-hold on
-plot(Results_Reference(:,1),omega_Reference*2*pi*60);
-title('Rotor speed');
-legend('\omega DPSim','\omega Reference');
-
-figure(8)
-hold off
-plot(Log_SynGen(:,1),Log_SynGen(:,7));
-hold on
-plot(Results_Reference(:,1),-Te_Reference); 
-title('Electrical Torque');
- legend('Te DPSim','Te Reference');
+% figure(7)
+% hold off
+% plot(Log_SynGen(:,1),Log_SynGen(:,8));
+% hold on
+% plot(Results_Reference(:,1),omega_Reference*2*pi*60);
+% title('Rotor speed');
+% legend('\omega DPSim','\omega Reference');
+% 
+% figure(8)
+% hold off
+% plot(Log_SynGen(:,1),Log_SynGen(:,7));
+% hold on
+% plot(Results_Reference(:,1),-Te_Reference); 
+% title('Electrical Torque');
+%  legend('Te DPSim','Te Reference');
 
 
 
 
 %% Calculate and display error
 %Cut Current and Voltage vector to get steady state results
-l=length(VoltageVector)-1;
+l=length(VoltageVector);
 l_new=round(1/3*l);
 VoltageVector_SteadyState = VoltageVector(1:l_new,:);
 CurrentVector_SteadyState = -CurrentVector(1:l_new,:);
@@ -148,25 +148,8 @@ disp(['Maximum Error ia Fault: ', num2str(MaxDif_Fault), ' A']);
 disp(['Root Mean-squared error ia Fault: ', num2str(err_Fault), ' A']);
 disp(['Maximum Error va Fault: ', num2str(100*MaxDif_Fault/(RMS_ref_Fault*sqrt(2))), ' %']);
 disp(['Root Mean-squared error ia Fault: ', num2str(100*err_Fault/(RMS_ref_Fault*sqrt(2))), ' %']);
-
-% Voltage phase a
-% Dif = abs(VoltageVector(:,2) - Results_Reference(:,2));
-% [MaxDif,i3] = max(Dif);
-% err = sqrt(immse(VoltageVector(:,2),Results_Reference(:,2)));
-% disp(['Maximum Error va: ', num2str(MaxDif), ' V']);
-% disp(['Root Mean-squared error va Fault: ', num2str(err), ' V']);
-% 
-% figure(7)
-% hold off
-% plot(VoltageVector(:,1),Dif);
-% hold on
-% plot(VoltageVector(i1,1),MaxDif_SS,'r*')
-% plot(VoltageVector(i2 + l_new,1),MaxDif_Fault,'r*')
-% plot(VoltageVector(i3,1),MaxDif,'r*')
-% text(VoltageVector(i1,1), MaxDif_SS, sprintf('Maximum error SS = %6.3f', MaxDif_SS))
-% text(VoltageVector(i2 + l_new,1), MaxDif_Fault, sprintf('Maximum error Fault = %6.3f', MaxDif_Fault))
-% text(VoltageVector(i3,1), MaxDif, sprintf('Maximum error = %6.3f', MaxDif))
-
-
-
 % Va_PLECS_resampled = resample(PLECS_resampled(:,2),l_new,length(PLECS_resampled(:,2)));
+
+%% Calculate avarage step time
+StepTimeVector = Log_SynGen(:,7);
+disp(['Avarage step time for generator: ', num2str(mean(StepTimeVector)*1000), ' ms']);

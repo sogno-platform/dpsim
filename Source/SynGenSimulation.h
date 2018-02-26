@@ -32,6 +32,8 @@ namespace DPsim {
 		using Simulation::Simulation;
 
 		Int mActualSystemMatrixIndex = 0;
+		Real mStepDuration = 0;
+		Int j = 0;
 
 		Int step(bool blocking = false);
 		/// Run simulation until total time is elapsed.

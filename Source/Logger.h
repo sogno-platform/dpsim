@@ -1,4 +1,4 @@
-/** Logger
+﻿/** Logger
  *
  * @file
  * @author Markus Mirz <mmirz@eonerc.rwth-aachen.de>
@@ -53,6 +53,7 @@ namespace DPsim {
 		void LogDataLine(Real time, Matrix& data);
 		void LogDataLine(Real time, Real data);
 		void LogNodeValues(Real time, Matrix& data);
+		void LogVBR(Real time, Matrix& data);
 	};
 }
 

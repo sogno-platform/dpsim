@@ -21,6 +21,7 @@
 
 #include "EMT_SynchronGenerator_VBR_New.h"
 #include "../IntegrationMethod.h"
+#include <chrono>
 
 using namespace DPsim;
 
@@ -139,6 +140,8 @@ void Components::EMT::VoltageBehindReactanceEMTNew::initialize(Real om, Real dt,
 
 void Components::EMT::VoltageBehindReactanceEMTNew::step(SystemModel& system, Real time) {
 
+		auto start = std::chrono::high_resolution_clock::now();
+		
 		stepInPerUnit(system.getOmega(), system.getTimeStep(), time, system.getNumMethod());
 
 		if (mNode1 >= 0) {
@@ -164,10 +167,13 @@ void Components::EMT::VoltageBehindReactanceEMTNew::step(SystemModel& system, Re
 
 		system.updateLuFactored();
 
+		auto finish = std::chrono::high_resolution_clock::now();
+		std::chrono::duration<double> elapsed = finish - start;
+		Real StepDuration = elapsed.count();
 		if (mLogLevel != Logger::Level::NONE) {
-				Matrix logValues(getStatorCurrents().rows() + getDqStatorCurrents().rows() + 3, 1);
-				logValues << getStatorCurrents()*mBase_i, getDqStatorCurrents(), getElectricalTorque(), getRotationalSpeed(), getRotorPosition();
-				mLog->LogDataLine(time, logValues);
+				Matrix logValues(getStatorCurrents().rows() + 3, 1);
+				logValues << getStatorCurrents()*mBase_i, getElectricalTorque(), getRotationalSpeed(), StepDuration;
+				mLog->LogVBR(time, logValues);
 		}
 
 
@@ -180,7 +186,7 @@ void Components::EMT::VoltageBehindReactanceEMTNew::stepInPerUnit(Real om, Real 
 		// Estimate mechanical variables with euler
 		if (WithTurbineGovernor == true)
 		{
-				mMechTorque = -mTurbineGovernor.step(mOmMech, 1, 285.89e6 / 555e6, dt);
+				mMechTorque = -mTurbineGovernor.step(mOmMech, 1, 300e6 / 555e6, dt);
 
 		}
 

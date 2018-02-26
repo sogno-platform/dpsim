@@ -1,4 +1,4 @@
-/** Logger
+﻿/** Logger
  *
  * @author Markus Mirz <mmirz@eonerc.rwth-aachen.de>
  * @copyright 2017, Institute for Automation of Complex Power Systems, EONERC
@@ -149,6 +149,20 @@ void Logger::LogNodeValues(Real time, Matrix& data) {
 		mLogFile << std::endl;
 	}
 	LogDataLine(time, data);
+}
+
+void Logger::LogVBR(Real time, Matrix& data) {
+	if (mLogFile.tellp() == std::ofstream::pos_type(0)) {
+			mLogFile << std::right << std::setw(14) << "time";
+			mLogFile << ", " << std::right << std::setfill(' ') << std::setw(15 - 4) << "Ia" << std::setw(4);
+			mLogFile << ", " << std::right << std::setfill(' ') << std::setw(15 - 4) << "Ib" << std::setw(4);
+			mLogFile << ", " << std::right << std::setfill(' ') << std::setw(15 - 4) << "Ic" << std::setw(4);
+			mLogFile << ", " << std::right << std::setfill(' ') << std::setw(15 - 4) << "Te" << std::setw(4);
+			mLogFile << ", " << std::right << std::setfill(' ') << std::setw(15 - 4) << "omega" << std::setw(4);
+			mLogFile << ", " << std::right << std::setfill(' ') << std::setw(16 - 4) << "Step Duration" << std::setw(4);
+			mLogFile << std::endl;
+	}
+		LogDataLine(time, data);
 }
 
 std::ostream& Logger::getNullStream()

@@ -21,6 +21,7 @@
 
 #include "Simulation.h"
 
+
 using namespace DPsim;
 
 Simulation::Simulation(String name, Component::List comps, Real om, Real dt, Real tf, Logger::Level logLevel,
@@ -163,7 +164,7 @@ Int Simulation::step(bool blocking)
 	mLeftVectorLog.LogNodeValues(getTime(), getLeftSideVector());
 	mRightVectorLog.LogNodeValues(getTime(), getRightSideVector());
 
-	return mTime < mFinalTime;
+	return mTime <= mFinalTime;
 }
 
 void Simulation::run() {

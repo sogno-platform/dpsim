@@ -20,11 +20,13 @@
  *********************************************************************************/
 
 #include "SynGenSimulation.h"
+#include <chrono>
 
 using namespace DPsim;
 
 Int SynGenSimulation::step(bool blocking)
 {
+	auto start = std::chrono::high_resolution_clock::now();
 	mSystemModel.setRightSideVectorToZero();
 	switchSystemMatrix(mActualSystemMatrixIndex);
 
@@ -62,6 +64,18 @@ Int SynGenSimulation::step(bool blocking)
 
 	mLeftVectorLog.LogNodeValues(getTime(), getLeftSideVector());
 	mRightVectorLog.LogNodeValues(getTime(), getRightSideVector());
+
+	auto finish = std::chrono::high_resolution_clock::now();
+	std::chrono::duration<double> elapsed = finish - start;
+	mStepDuration = mStepDuration + elapsed.count();
+	j++;
+
+	if (mTime >= mFinalTime)
+	{
+			mStepDuration = mStepDuration / j;
+			mLog.Log(Logger::Level::INFO) << "Avarage step duration:" << std::endl << mStepDuration << "s" << std::endl;
+	}
+
 
 	return mTime < mFinalTime;
 }
