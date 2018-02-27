@@ -173,7 +173,7 @@ void Components::EMT::VoltageBehindReactanceEMTNew::step(SystemModel& system, Re
 		if (mLogLevel != Logger::Level::NONE) {
 				Matrix logValues(getStatorCurrents().rows() + 3, 1);
 				logValues << getStatorCurrents()*mBase_i, getElectricalTorque(), getRotationalSpeed(), StepDuration;
-				mLog->LogVBR(time, logValues);
+				mLog->LogGen(time, logValues);
 		}
 
 

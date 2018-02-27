@@ -190,9 +190,9 @@ void Components::EMT::SynchronGenerator::step(SystemModel& system, Real time)
 	Real StepDuration = elapsed.count();
 
 	if (mLogLevel != Logger::Level::NONE) {
-		Matrix logValues(getStatorCurrents().rows() + getFluxes().rows() + getVoltages().rows() + getCurrents().rows() + 4, 1);
-		logValues << getStatorCurrents(), getFluxes(), getVoltages(), getCurrents(), getElectricalTorque(), getRotationalSpeed(), getRotorPosition(), StepDuration;
-		mLog->LogDataLine(time, logValues);
+		Matrix logValues(getStatorCurrents().rows() + 3, 1);
+		logValues << getStatorCurrents(), getElectricalTorque(), getRotationalSpeed(), StepDuration;
+		mLog->LogGen(time, logValues);
 	}
 }
 
@@ -205,6 +205,15 @@ void Components::EMT::SynchronGenerator::stepInPerUnit(Real om, Real dt, Real ti
 	mIa = (1 / mBase_i) * mIa;
 	mIb = (1 / mBase_i) * mIb;
 	mIc = (1 / mBase_i) * mIc;
+
+	// Calculation of rotational speed with euler
+	if (WithTurbineGovernor == true)
+	{
+			mMechTorque = mTurbineGovernor.step(mOmMech, 1, 300e6 / 555e6, dt);
+
+	}
+	mElecTorque = (mPsid*mIq - mPsiq*mId);
+	mOmMech = mOmMech + dt * (1 / (2 * mH) * (mMechTorque - mElecTorque));
 
 	// dq-transform of interface voltage
 	mVd = parkTransform2(mThetaMech, mVa, mVb, mVc)(0);
@@ -303,14 +312,7 @@ void Components::EMT::SynchronGenerator::stepInPerUnit(Real om, Real dt, Real ti
 		}
 	}
 	else {
-		// Calculation of rotational speed with euler
-		if (WithTurbineGovernor == true)
-		{
-			mMechTorque = mTurbineGovernor.step(mOmMech, 1, 300e6 / 555e6, dt);
 
-		}
-		mElecTorque = (mPsid*mIq - mPsiq*mId);
-		mOmMech = mOmMech + dt * (1 / (2 * mH) * (mMechTorque - mElecTorque));
 
 		//Calculation of flux
 		if (mNumDampingWindings == 2) {

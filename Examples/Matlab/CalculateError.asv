@@ -33,12 +33,12 @@ FileNameVector = ['SynGen_VBR_0.000050.csv';
     'SynGen_VBR_0.000850.csv';
     'SynGen_VBR_0.000900.csv';
     'SynGen_VBR_0.000950.csv';
-    'SynGen_VBR_0.001000.csv'];
+    'SynGen_VBR_0.001000.csv']
 
 %% read results from c++ simulation
-for dt = 0.00005: 0.00005: 0.001
+for dt = 0.00005: 0.0001: 0.001
     FileName = FileNameVector(i,1:23);
-    Path = strcat('../../../vsa/Results/LoadChange/DPsim/EMT/VBR/', FileName);
+    Path = strcat('../../../vsa/Results/LoadChange/DPsim/VBR/', FileName);
     Log_SynGen = csvread(Path,1);
     CurrentVector = Log_SynGen(:,1:4);
     
@@ -111,12 +111,18 @@ FileNameVector = ['SynGen_Dq_0.000050.csv';
     'SynGen_Dq_0.000550.csv';
     'SynGen_Dq_0.000600.csv';
     'SynGen_Dq_0.000650.csv';
-    'SynGen_Dq_0.000700.csv'];
+    'SynGen_Dq_0.000700.csv';
+    'SynGen_Dq_0.000750.csv';
+    'SynGen_Dq_0.000800.csv';
+    'SynGen_Dq_0.000850.csv';
+    'SynGen_Dq_0.000900.csv';
+    'SynGen_Dq_0.000950.csv';
+    'SynGen_Dq_0.001000.csv']
 
 %read results from c++ simulation
-for dt = 0.00005: 0.00005: 0.0007
+for dt = 0.00005: 0.0001: 0.001
     FileName = FileNameVector(i,1:22);
-    Path = strcat('../../../vsa/Results/LoadChange/DPsim/EMT/Dq/', FileName);
+    Path = strcat('../../../vsa/Results/LoadChange/DPsim/Dq/', FileName);
     Log_SynGen = csvread(Path,1);
     CurrentVector = Log_SynGen(:,1:4);
     
@@ -142,7 +148,9 @@ for dt = 0.00005: 0.00005: 0.0007
     [MaxDif_F,i1] = max(Dif_F);
     err_F = sqrt(immse(CurrentVector_F(:,2),ReferenceCurrent_resampled_F));
     RMS_ref_F = rms(ReferenceCurrent_resampled_F);
-
+    %%disp(['RMS ia steady state: ', num2str(RMS_ref_SteadyState), ' A', '(dt = ', num2str(dt), ')' ]);
+    %%disp(['Maximum Error ia steady state: ', num2str(MaxDif_SS), ' A']);
+    %%disp(['Root Mean-squared error ia steady state: ', num2str(err_SS), ' A'] );
     disp(['   '])
     disp(['##################### Results for DQ Model ################################'])
     disp(['   '])
@@ -154,15 +162,15 @@ for dt = 0.00005: 0.00005: 0.0007
     disp(['  Maximum Error ia during fault: ', num2str(100*MaxDif_F/(RMS_ref_F*sqrt(2))), ' %']);
     disp(['  Root Mean-squared error ia during fault: ', num2str(100*err_F/(RMS_ref_F*sqrt(2))), ' %']);
 
-    ErrorVector_SS2(i) = 100*err_SS/(RMS_ref_SteadyState*sqrt(2));
-    ErrorVector_F2(i) = 100*err_F/(RMS_ref_F*sqrt(2));
-    dtVector2(i) = dt;
+    ErrorVector_SS(i) = 100*err_SS/(RMS_ref_SteadyState*sqrt(2));
+    ErrorVector_F(i) = 100*err_F/(RMS_ref_F*sqrt(2));
+    dtVector(i) = dt;
     i = i + 1;
 end
 
  figure(2)
- plot(dtVector2,ErrorVector_SS2);
- plot(dtVector2,ErrorVector_F2);
- legend('Steady state error - VBR','Load Change Error - VBR','Steady state error _ DQ','Load Change Error _ DQ')
+ plot(dtVector,ErrorVector_SS);
+ plot(dtVector,ErrorVector_F);
+ legend('Steady state error - VBR','Fault Error','Steady state error _ DQ','Fault Error _ DQ')
  ylabel('Error');
  xlabel('Time Step');

@@ -2,7 +2,7 @@ clc
 clear
 %% read PLECS results
 
-Results_PLECS = csvread('../../../vsa/Results/SynGenDq_ABCFault/Simulink_PLECS/SynGenDqEmt_ABCFault_Simulink/Voltages_and_currents.csv');
+Results_PLECS = csvread('../../../vsa/Results/LoadChange/Simulink/Voltages_and_currents.csv');
 %Te_PLECS = csvread('../../vsa/Results/SynGenVBREmt_ABCFault_PLECS/electrical_torque.csv'); 
 %omega_PLECS = csvread('../../../vsa/Results/SynGenVbrEmt_ABCFault_PLECS/omega.csv'); 
 %theta_PLECS = csvread('../../vsa/Results/SynGenVBREmt_ABCFault_PLECS/theta.csv'); 
@@ -10,10 +10,10 @@ Results_PLECS = csvread('../../../vsa/Results/SynGenDq_ABCFault/Simulink_PLECS/S
 %% Read data from DP simulation and calculate absolute value and phase
 
 % Read values from CSV files
-voltageDP = csvread('../../../vsa/Results/SynGenVbr_ABCFault/DPsim/DP/NewModel_ABCFault/DP_SynchronGenerator_VBR_LeftVector.csv',1);
-currentDP = csvread('../../../vsa/Results/SynGenVbr_ABCFault/DPsim/DP/NewModel_ABCFault/DP_SynchronGenerator_VBR_RightVector.csv',1);
-%Log_SynGen = csvread('../../../vsa/Results/SynGenVbr_ABCFault/DPsim/DP/NewModel_ABCFault/SynGen_gen.csv',1);
-%currentDP = Log_SynGen(:,1:7);
+voltageDP = csvread('../../../vsa/Results/LoadChange/DPsim/DP/DP_SynchronGenerator_Dq_0.000050_LeftVector.csv',1);
+%currentDP = csvread('../../../vsa/Results/LoadChange/DPsim/DP/DP_SynchronGenerator_Dq_RightVector.csv',1);
+Log_SynGen = csvread('../../../vsa/Results/LoadChange/DPsim/DP/SynGen_Dq_0.000050.csv',1);
+currentDP = Log_SynGen(:,1:7);
 compOffsetDP = (size(currentDP,2) - 1) / 2;
 
 % Calculate Voltage DP absolute value

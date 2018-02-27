@@ -36,19 +36,26 @@ FileNameVector = ['SynGen_VBR_0.000050.csv';
     'SynGen_VBR_0.001000.csv'];
 
 %% read results from c++ simulation
-for dt = 0.00005: 0.00005: 0.001
+for dt = 0.00005: 0.0001: 0.001
     FileName = FileNameVector(i,1:23);
-    Path = strcat('../../../vsa/Results/LoadChange/DPsim/EMT/VBR/', FileName);
+    Path = strcat('../../../vsa/Results/LoadChange/DPsim/DP/VBR/', FileName);
     Log_SynGen = csvread(Path,1);
-    CurrentVector = Log_SynGen(:,1:4);
+    currentDP = Log_SynGen(:,1:7);
+    compOffsetDP = (size(currentDP,2) - 1) / 2;
     
-    plot(CurrentVector(:,1),-CurrentVector(:,2))
+    currentShiftDP = currentDP(:,1);
+    col = 2;
+    for row = 1:size(currentDP,1)
+        currentShiftDP(row,col) = currentDP(row,col)*cos(2*pi*60*currentDP(row,1)) - ...
+            currentDP(row,col+compOffsetDP)*sin(2*pi*60*currentDP(row,1));
+    end
+    plot(currentShiftDP(:,1),-currentShiftDP(:,2))
     
     
-    l=length(CurrentVector);
+    l=length(currentDP);
     l_new=round(1/3*l);
-    CurrentVector_SteadyState = -CurrentVector(1:l_new,:);
-    CurrentVector_F = -CurrentVector(l_new+1:2*l_new-1,:);
+    CurrentVector_SteadyState = -currentShiftDP(1:l_new,:);
+    CurrentVector_F = -currentShiftDP(l_new+1:2*l_new-1,:);
     
     ReferenceCurrent = Results_Reference(:,5);
     ReferenceCurrent_resampled = resample(ReferenceCurrent,l,length(ReferenceCurrent));
@@ -81,6 +88,8 @@ for dt = 0.00005: 0.00005: 0.001
     dtVector(i) = dt;
     i = i + 1;
 end
+
+title('Current Phase a - VBR');
  
  figure(2)
  hold off
@@ -116,16 +125,25 @@ FileNameVector = ['SynGen_Dq_0.000050.csv';
 %read results from c++ simulation
 for dt = 0.00005: 0.00005: 0.0007
     FileName = FileNameVector(i,1:22);
-    Path = strcat('../../../vsa/Results/LoadChange/DPsim/EMT/Dq/', FileName);
+    Path = strcat('../../../vsa/Results/LoadChange/DPsim/DP/Dq/', FileName);
     Log_SynGen = csvread(Path,1);
-    CurrentVector = Log_SynGen(:,1:4);
+    currentDP = Log_SynGen(:,1:7);
+    compOffsetDP = (size(currentDP,2) - 1) / 2;
     
-    plot(CurrentVector(:,1),CurrentVector(:,2))
+    currentShiftDP = currentDP(:,1);
+    col = 2;
+    for row = 1:size(currentDP,1)
+        currentShiftDP(row,col) = currentDP(row,col)*cos(2*pi*60*currentDP(row,1)) - ...
+            currentDP(row,col+compOffsetDP)*sin(2*pi*60*currentDP(row,1));
+    end
+
     
-    l=length(CurrentVector);
+    plot(currentDP(:,1),currentShiftDP(:,2))
+    
+    l=length(currentShiftDP);
     l_new=round(1/3*l);
-    CurrentVector_SteadyState = CurrentVector(1:l_new,:);
-    CurrentVector_F = CurrentVector(l_new+1:2*l_new-1,:);
+    CurrentVector_SteadyState = currentShiftDP(1:l_new,:);
+    CurrentVector_F = currentShiftDP(l_new+1:2*l_new-1,:);
     
     ReferenceCurrent = Results_Reference(:,5);
     ReferenceCurrent_resampled = resample(ReferenceCurrent,l,length(ReferenceCurrent));
@@ -159,10 +177,11 @@ for dt = 0.00005: 0.00005: 0.0007
     dtVector2(i) = dt;
     i = i + 1;
 end
+title('Current Phase a - DQ');
 
  figure(2)
  plot(dtVector2,ErrorVector_SS2);
  plot(dtVector2,ErrorVector_F2);
- legend('Steady state error - VBR','Load Change Error - VBR','Steady state error _ DQ','Load Change Error _ DQ')
+ legend('Steady state error _ VBR','Load Change Error _ VBR','Steady state error _ DQ','Load Change Error _ DQ')
  ylabel('Error');
  xlabel('Time Step');

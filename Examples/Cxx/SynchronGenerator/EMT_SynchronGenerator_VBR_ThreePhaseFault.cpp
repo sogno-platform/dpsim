@@ -54,67 +54,62 @@ int main(int argc, char* argv[])
 	//Real Rkq2 = 0;
 	//Real Llkq2 = 0;
 
+	// Set up simulation
+	Real tf, dt, t;
+	Real om = 2.0*M_PI*60.0;
+	dt = 0.0005; tf = 0.3 - dt; t = 0;
+	Int downSampling = 1;
 
+	String mGeneratorName = "VBR_" + std::to_string(dt);
+	// Declare circuit components
+	Component::Ptr gen = VoltageBehindReactanceEMTNew::make(mGeneratorName, 0, 1, 2,
+			nomPower, nomPhPhVoltRMS, nomFreq, poleNum, nomFieldCurr,
+			Rs, Ll, Lmd, Lmd0, Lmq, Lmq0, Rfd, Llfd, Rkd, Llkd, Rkq1, Llkq1, Rkq2, Llkq2, H, Logger::Level::INFO);
 
-	for (Real i = 0.00005; i < 0.001; i = i + 0.00005)
-	{
-			String mGeneratorName = "VBR_" + std::to_string(i);
-			// Declare circuit components
-			Component::Ptr gen = VoltageBehindReactanceEMTNew::make(mGeneratorName, 0, 1, 2,
-					nomPower, nomPhPhVoltRMS, nomFreq, poleNum, nomFieldCurr,
-					Rs, Ll, Lmd, Lmd0, Lmq, Lmq0, Rfd, Llfd, Rkd, Llkd, Rkq1, Llkq1, Rkq2, Llkq2, H, Logger::Level::INFO);
+	Real loadRes = 1.92;
+	Component::Ptr r1 = Resistor::make("r1", 0, GND, loadRes);
+	Component::Ptr r2 = Resistor::make("r2", 1, GND, loadRes);
+	Component::Ptr r3 = Resistor::make("r3", 2, GND, loadRes);
 
-			Real loadRes = 1.92;
-			Component::Ptr r1 = Resistor::make("r1", 0, GND, loadRes);
-			Component::Ptr r2 = Resistor::make("r2", 1, GND, loadRes);
-			Component::Ptr r3 = Resistor::make("r3", 2, GND, loadRes);
-
-			Component::List comps = { gen, r1, r2, r3 };
+	Component::List comps = { gen, r1, r2, r3 };
 
 			// Declare circuit components for resistance change
-			Real breakerRes = 0.001;
-			Component::Ptr rBreaker1 = Resistor::make("rbreak1", 0, GND, breakerRes);
-			Component::Ptr rBreaker2 = Resistor::make("rbreak2", 1, GND, breakerRes);
-			Component::Ptr rBreaker3 = Resistor::make("rbreak3", 2, GND, breakerRes);
+	Real breakerRes = 0.001;
+	Component::Ptr rBreaker1 = Resistor::make("rbreak1", 0, GND, breakerRes);
+	Component::Ptr rBreaker2 = Resistor::make("rbreak2", 1, GND, breakerRes);
+	Component::Ptr rBreaker3 = Resistor::make("rbreak3", 2, GND, breakerRes);
 
-			Component::List compsBreakerOn = { gen, rBreaker1, rBreaker2, rBreaker3, r1, r2, r3 };
-			// Set up simulation
-			Real tf, dt, t;
-			Real om = 2.0*M_PI*60.0;
-			tf = 0.3 - i; dt = i; t = 0;
-			Int downSampling = 1;
-			String mSimulationName = "EMT_SynchronGenerator_VBR_" + std::to_string(i);
-			SynGenSimulation sim(mSimulationName, comps, om, dt, tf, Logger::Level::INFO, SimulationType::EMT, downSampling);
-			sim.setNumericalMethod(NumericalMethod::Trapezoidal_flux);
-			sim.addSystemTopology(compsBreakerOn);
-			sim.switchSystemMatrix(0);
+	Component::List compsBreakerOn = { gen, rBreaker1, rBreaker2, rBreaker3, r1, r2, r3 };
 
-			// Initialize generator
-			Real initActivePower = 300e6;
-			Real initReactivePower = 0;
-			Real initTerminalVolt = 24000 / sqrt(3) * sqrt(2);
-			Real initVoltAngle = -DPS_PI / 2;
-			Real fieldVoltage = 7.0821;
-			Real mechPower = 300e6;
-			auto genPtr = std::dynamic_pointer_cast<Components::EMT::VoltageBehindReactanceEMTNew>(gen);
-			genPtr->initialize(om, dt, initActivePower, initReactivePower, initTerminalVolt, initVoltAngle, fieldVoltage, mechPower);
+	String mSimulationName = "EMT_SynchronGenerator_VBR_" + std::to_string(dt);
+	SynGenSimulation sim(mSimulationName, comps, om, dt, tf, Logger::Level::INFO, SimulationType::EMT, downSampling);
+	sim.setNumericalMethod(NumericalMethod::Trapezoidal_flux);
+	sim.addSystemTopology(compsBreakerOn);
+	sim.switchSystemMatrix(0);
 
-			std::cout << "A matrix:" << std::endl;
-			std::cout << sim.getSystemMatrix() << std::endl;
-			std::cout << "vt vector:" << std::endl;
-			std::cout << sim.getLeftSideVector() << std::endl;
-			std::cout << "j vector:" << std::endl;
-			std::cout << sim.getRightSideVector() << std::endl;
+	// Initialize generator
+	Real initActivePower = 300e6;
+	Real initReactivePower = 0;
+	Real initTerminalVolt = 24000 / sqrt(3) * sqrt(2);
+	Real initVoltAngle = -DPS_PI / 2;
+	Real fieldVoltage = 7.0821;
+	Real mechPower = 300e6;
+	auto genPtr = std::dynamic_pointer_cast<Components::EMT::VoltageBehindReactanceEMTNew>(gen);
+	genPtr->initialize(om, dt, initActivePower, initReactivePower, initTerminalVolt, initVoltAngle, fieldVoltage, mechPower);
 
-			Real lastLogTime = 0;
-			Real logTimeStep = 0.00005;
-			sim.setSwitchTime(0.1, 1);
-			sim.setSwitchTime(0.2, 0);
+	std::cout << "A matrix:" << std::endl;
+	std::cout << sim.getSystemMatrix() << std::endl;
+	std::cout << "vt vector:" << std::endl;
+	std::cout << sim.getLeftSideVector() << std::endl;
+	std::cout << "j vector:" << std::endl;
+	std::cout << sim.getRightSideVector() << std::endl;
 
-			sim.run();
-	}
+	Real lastLogTime = 0;
+	Real logTimeStep = 0.00005;
+	sim.setSwitchTime(0.1, 1);
+	sim.setSwitchTime(0.2, 0);
 
-	
+	sim.run();
 
 	return 0;
 }

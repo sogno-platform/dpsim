@@ -53,7 +53,7 @@ namespace DPsim {
 		void LogDataLine(Real time, Matrix& data);
 		void LogDataLine(Real time, Real data);
 		void LogNodeValues(Real time, Matrix& data);
-		void LogVBR(Real time, Matrix& data);
+		void LogGen(Real time, Matrix& data);
 	};
 }
 

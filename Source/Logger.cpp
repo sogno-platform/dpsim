@@ -151,7 +151,7 @@ void Logger::LogNodeValues(Real time, Matrix& data) {
 	LogDataLine(time, data);
 }
 
-void Logger::LogVBR(Real time, Matrix& data) {
+void Logger::LogGen(Real time, Matrix& data) {
 	if (mLogFile.tellp() == std::ofstream::pos_type(0)) {
 			mLogFile << std::right << std::setw(14) << "time";
 			mLogFile << ", " << std::right << std::setfill(' ') << std::setw(15 - 4) << "Ia" << std::setw(4);
