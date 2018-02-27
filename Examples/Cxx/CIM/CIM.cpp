@@ -28,7 +28,7 @@
 using namespace DPsim;
 
 static int testCIMReader(std::list<String> filenames) {
-	CIM::Reader reader(50, Logger::Level::INFO);
+	CIM::Reader reader(50, Logger::Level::INFO, Logger::Level::DEBUG);
 
 	for (String & filename : filenames) {
 		if (!reader.addFile(filename))

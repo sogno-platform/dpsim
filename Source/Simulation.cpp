@@ -101,6 +101,7 @@ void Simulation::initialize(Component::List newComponents)
 
 	// Initialize right side vector and components
 	for (auto comp : newComponents) {
+		comp->initializePowerflow(mSystemModel.getOmega()/(2*PI));
 		comp->initialize(mSystemModel);
 		comp->applyRightSideVectorStamp(mSystemModel);
 	}

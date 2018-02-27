@@ -33,7 +33,6 @@ using namespace IEC61970::Base::Equivalents;
 using namespace IEC61970::Base::Topology;
 using namespace IEC61970::Base::Wires;
 
-
 Reader::Reader(Real systemFrequency, Logger::Level logLevel, Logger::Level componentLogLevel)
 	: mLog("Logs/CIMpp.log", logLevel) {
 	mModel.setDependencyCheckOff();
@@ -41,9 +40,7 @@ Reader::Reader(Real systemFrequency, Logger::Level logLevel, Logger::Level compo
 	mComponentLogLevel = componentLogLevel;
 }
 
-Reader::~Reader() {
-
-}
+Reader::~Reader() { }
 
 Real Reader::unitValue(Real value, UnitMultiplier mult) {
 	switch (mult) {
@@ -83,12 +80,9 @@ Real Reader::unitValue(Real value, UnitMultiplier mult) {
 	return value;
 }
 
-
 Component::Ptr Reader::mapComponent(BaseClass* obj) {
 	if (ACLineSegment *line = dynamic_cast<ACLineSegment*>(obj))
 		return mapACLineSegment(line);
-	if (ExternalNetworkInjection *inj = dynamic_cast<ExternalNetworkInjection*>(obj))
-		return mapExternalNetworkInjection(inj);
 	if (EnergyConsumer *consumer = dynamic_cast<EnergyConsumer*>(obj))
 		return mapEnergyConsumer(consumer);
 	if (PowerTransformer *trans = dynamic_cast<PowerTransformer*>(obj))
@@ -98,15 +92,13 @@ Component::Ptr Reader::mapComponent(BaseClass* obj) {
 	return nullptr;
 }
 
-
 bool Reader::addFile(String filename) {
 	return mModel.addCIMFile(filename);
 }
 
-
 void Reader::parseFiles() {
 	mModel.parseFiles();	
-	mLog.Log(Logger::Level::INFO) << "#### List of topological nodes and associated terminals ####" << std::endl;
+	mLog.Log(Logger::Level::INFO) << "#### List of TopologicalNodes, associated Terminals and Equipment" << std::endl;
 
 	for (auto obj : mModel.Objects) {
 		if (TopologicalNode* topNode = dynamic_cast<TopologicalNode*>(obj)) {
@@ -115,7 +107,7 @@ void Reader::parseFiles() {
 	}
 	// Collect voltage state variables associated to nodes that are used
 	// for various components.
-	mLog.Log(Logger::Level::INFO) << "#### List of node voltages from power flow calculation ####" << std::endl;
+	mLog.Log(Logger::Level::INFO) << "#### List of Node voltages and Terminal power flow data" << std::endl;
 
 	for (auto obj : mModel.Objects) {
 		// Check if object is of class SvVoltage
@@ -128,22 +120,25 @@ void Reader::parseFiles() {
 		}
 	}
 
-	mLog.Log(Logger::Level::INFO) << "#### Create new components ####" << std::endl;
+	mLog.Log(Logger::Level::INFO) << "#### Create other components" << std::endl;
 	for (auto obj : mModel.Objects) {
 		// Check if object is not TopologicalNode, SvVoltage or SvPowerFlow
 		if (!dynamic_cast<TopologicalNode*>(obj)
 			&& !dynamic_cast<SvVoltage*>(obj)
 			&& !dynamic_cast<SvPowerFlow*>(obj)) {
+			if (IdentifiedObject* idObj = dynamic_cast<IdentifiedObject*>(obj)) {
 			// Check if object is already in equipment list
-			if (mPowerflowEquipment.find(dynamic_cast<IdentifiedObject*>(obj)->mRID) == mPowerflowEquipment.end()) {
-				Component::Ptr comp = mapComponent(obj);
-				if (comp) mPowerflowEquipment.insert(std::make_pair(comp->mUID, comp));
+				if (mPowerflowEquipment.find(idObj->mRID) == mPowerflowEquipment.end()) {
+					Component::Ptr comp = mapComponent(obj);
+					if (comp) mPowerflowEquipment.insert(std::make_pair(comp->mUID, comp));
+				}
 			}
 		}
 	}
 
-	for (auto comp : mPowerflowEquipment) {
-		comp.second->initializePowerflow(mFrequency);
+	// Add power flow equipment to component list
+	// TODO: replace this with a better method
+	for (auto comp : mPowerflowEquipment) {		
 		mComponents.push_back(comp.second);
 	}
 }
@@ -153,7 +148,7 @@ void Reader::processTopologicalNode(TopologicalNode* topNode) {
 	mPowerflowNodes[topNode->mRID] = std::make_shared<Node>(topNode->mRID, (Matrix::Index) mPowerflowNodes.size());
 
 	mLog.Log(Logger::Level::INFO) << "TopologicalNode " << topNode->mRID
-		<< "as simulation node " << mPowerflowNodes[topNode->mRID]->mRID << std::endl;
+		<< " as simulation node " << mPowerflowNodes[topNode->mRID]->mSimNode << std::endl;
 
 	for (auto term : topNode->Terminal) {
 		// Insert Terminal if it does not exist in the map and add reference to node.
@@ -181,8 +176,8 @@ void Reader::processTopologicalNode(TopologicalNode* topNode) {
 			auto pfEquipment = mPowerflowEquipment[equipment->mRID];			
 			pfEquipment->setTerminalAt(mPowerflowTerminals[term->mRID], term->sequenceNumber-1);
 
-			mLog.Log(Logger::Level::INFO) << "        " << "Equipment " << equipment->mRID
-				<< ", sequenceNumber " << term->sequenceNumber - 1 << std::endl;
+			mLog.Log(Logger::Level::INFO) << "Added Terminal "
+				<< term->mRID << " to Equipment " << equipment->mRID << std::endl;
 		}
 	}
 }
@@ -202,9 +197,10 @@ void Reader::processSvVoltage(SvVoltage* volt) {
 	Real voltageAbs = Reader::unitValue(volt->v.value, UnitMultiplier::k);
 	Real voltagePhase = volt->angle.value * PI / 180;
 	mPowerflowNodes[node->mRID]->mVoltage = std::polar<Real>(voltageAbs, voltagePhase);
-	mLog.Log(Logger::Level::INFO) << "Node " << mPowerflowNodes[node->mRID]->mSimNode << ": "
-		<< std::abs(mPowerflowNodes[node->mRID]->mVoltage) << "<"
-		<< std::arg(mPowerflowNodes[node->mRID]->mVoltage) << std::endl;
+	mLog.Log(Logger::Level::INFO) << "Node " << mPowerflowNodes[node->mRID]->mRID
+		<< " SimNode " << mPowerflowNodes[node->mRID]->mSimNode << ": "
+		<< std::abs(mPowerflowNodes[node->mRID]->mVoltage) << " kV, "
+		<< std::arg(mPowerflowNodes[node->mRID]->mVoltage) << " rad" << std::endl;
 }
 
 void Reader::processSvPowerFlow(SvPowerFlow* flow) {
@@ -213,9 +209,9 @@ void Reader::processSvPowerFlow(SvPowerFlow* flow) {
 
 	mPowerflowTerminals[term->mRID]->mPower = { Reader::unitValue(flow->p.value, UnitMultiplier::M), Reader::unitValue(flow->q.value, UnitMultiplier::M) };
 
-	mLog.Log(Logger::Level::INFO) << "Terminal " << term->mRID << ":"
-		<< mPowerflowTerminals[term->mRID]->mPower.real() << " + j"
-		<< mPowerflowTerminals[term->mRID]->mPower.imag() << std::endl;
+	mLog.Log(Logger::Level::INFO) << "Terminal " << term->mRID << ": "
+		<< mPowerflowTerminals[term->mRID]->mPower.real() << " MW + j"
+		<< mPowerflowTerminals[term->mRID]->mPower.imag() << " MVar" << std::endl;
 }
 
 Component::List& Reader::getComponents() {
@@ -254,7 +250,6 @@ Component::Ptr Reader::mapACLineSegment(ACLineSegment* line) {
 		<< " R=" << resistance << " L=" << inductance << std::endl;
 	return std::make_shared<Components::DP::RxLine>(line->mRID, line->name, resistance, inductance, mComponentLogLevel);
 }
-
 
 Component::Ptr Reader::mapPowerTransformer(PowerTransformer* trans) {
 	if (trans->PowerTransformerEnd.size() != 2) {
@@ -301,19 +296,13 @@ Component::Ptr Reader::mapPowerTransformer(PowerTransformer* trans) {
 	}
 	
 	mLog.Log(Logger::Level::INFO) << "Create PowerTransformer " << trans->name
-		<< " ratio=" << ratioAbs << "<" << ratioPhase
+		<< " ratio=" << ratioAbs << " phase=" << ratioPhase
 		<< " inductance=" << inductance << std::endl;
 
 	return std::make_shared<Components::DP::Transformer>(trans->mRID, trans->name, ratioAbs, ratioPhase, 0, inductance, mComponentLogLevel);
 }
 
-
 Component::Ptr Reader::mapSynchronousMachine(SynchronousMachine* machine) {	
 	mLog.Log(Logger::Level::INFO) << "Create IdealVoltageSource " << machine->name << std::endl;
 	return std::make_shared<Components::DP::VoltageSource>(machine->mRID, machine->name, mComponentLogLevel);
 }
-
-Component::Ptr Reader::mapExternalNetworkInjection(ExternalNetworkInjection* inj) {
-	return nullptr;
-}
-

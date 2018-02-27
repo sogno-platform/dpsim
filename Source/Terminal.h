@@ -32,8 +32,15 @@ namespace DPsim {
 	public:
 		String mRID;
 		Complex mPower;
-		std::shared_ptr<Node> mNode;
-		std::shared_ptr<Component> mComponent;
+		std::weak_ptr<Node> mNode;
+		std::weak_ptr<Component> mComponent;
 		Terminal(String rid) : mRID(rid) {}
+		std::shared_ptr<Node> getNode() {			
+			return mNode.lock();
+		}
+
+		std::shared_ptr<Component> getComponent() {
+			return mComponent.lock();
+		}
 	};
 }

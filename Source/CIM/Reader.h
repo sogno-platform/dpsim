@@ -25,7 +25,6 @@
 #include <map>
 #include <vector>
 
-// CIMpp includes
 #include <CIMModel.hpp>
 #include <IEC61970.hpp>
 
@@ -33,7 +32,6 @@
 #include "Component.h"
 #include "Node.h"
 #include "Terminal.h"
-
 #include "Logger.h"
 #include "Simulation.h"
 
@@ -44,8 +42,7 @@ using namespace IEC61970::Base::Topology;
 using namespace IEC61970::Base::Wires;
 
 namespace DPsim {
-namespace CIM {
-	
+namespace CIM {	
 	class Reader {
 	private:
 		/// CIM logger
@@ -66,16 +63,14 @@ namespace CIM {
 		std::map<String, std::shared_ptr<Component>> mPowerflowEquipment;
 		/// Maps the RID of a Terminal to a PowerflowTerminal
 		std::map<String, std::shared_ptr<Terminal>> mPowerflowTerminals;
-
 		/// Resolves unit multipliers.
 		static Real unitValue(Real value, UnitMultiplier mult);
-
+		///
 		void processTopologicalNode(TopologicalNode* topNode);
-
+		///
 		void processSvVoltage(SvVoltage* volt);
-
+		///
 		void processSvPowerFlow(SvPowerFlow* flow);
-
 		/// Returns simulation node index which belongs to mRID.
 		Matrix::Index mapTopologicalNode(String mrid);		
 		/// Maps CIM components to DPsim components.
@@ -96,11 +91,11 @@ namespace CIM {
 		/// TODO: Introduce real PQload model here.
 		Component::Ptr mapEnergyConsumer(EnergyConsumer* consumer);
 		/// Not tested yet.
-		Component::Ptr mapExternalNetworkInjection(ExternalNetworkInjection* inj);		
-		/// Not implemented yet.
-		void mapEquivalentInjection(EquivalentInjection* inj) {}
+		Component::Ptr mapExternalNetworkInjection(ExternalNetworkInjection* inj);				
 	public:
+		///
 		Reader(Real om, Logger::Level logLevel = Logger::Level::NONE, Logger::Level componentLogLevel = Logger::Level::NONE);
+		///
 		virtual ~Reader();
 		/// Adds CIM files to list of files to be parsed.
 		bool addFile(String filename);

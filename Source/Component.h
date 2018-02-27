@@ -57,11 +57,11 @@ namespace DPsim {
 		/// Human readable name
 		String mName;
 		/// Component node 1
-		Matrix::Index mNode1;
+		Matrix::Index mNode1 = 0;
 		/// Component node 2
-		Matrix::Index mNode2;
+		Matrix::Index mNode2 = 0;
 		/// Component node 3
-		Matrix::Index mNode3;
+		Matrix::Index mNode3 = 0;
 		/// Determines the number of Terminals which can be connected to nodes
 		Int mNumTerminals = 0;
 		/// List of Terminals

@@ -82,6 +82,9 @@ void Component::setTerminalAt(std::shared_ptr<Terminal> terminal, Int terminalPo
 			<< " - Ignoring" << std::endl;
 	}
 	mTerminals[terminalPosition] = terminal;
+	if (terminalPosition == 0) mNode1 = terminal->getNode()->mSimNode;
+	else if (terminalPosition == 1) mNode2 = terminal->getNode()->mSimNode;
+	else if (terminalPosition == 2) mNode3 = terminal->getNode()->mSimNode;
 }
 
 void Component::setNodes(std::vector<std::shared_ptr<Node>> nodes) {

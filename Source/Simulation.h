@@ -75,7 +75,7 @@ namespace DPsim {
 		/// Vector of ExternalInterfaces
 		std::vector<ExternalInterface*> mExternalInterfaces;
 		///
-		std::vector<std::shared_ptr<Node>> mNodes;
+		Node::List mNodes;
 	public:
 		/// Creates system matrix according to
 		Simulation(String name, Component::List comps, Real om, Real dt, Real tf, Logger::Level logLevel = Logger::Level::INFO, SimulationType simType = SimulationType::DP, Int downSampleRate = 1);
