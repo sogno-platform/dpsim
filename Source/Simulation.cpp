@@ -57,8 +57,8 @@ Simulation::Simulation(String name, Component::List comps, Real om, Real dt, Rea
 
 void Simulation::initialize(Component::List newComponents)
 {
-	Int maxNode = 0;
-	Int currentVirtualNode = 0;
+	Matrix::Index maxNode = 0;
+	Matrix::Index currentVirtualNode = 0;
 
 	mLog.Log(Logger::Level::INFO) << "#### Start Initialization ####" << std::endl;
 
@@ -76,6 +76,7 @@ void Simulation::initialize(Component::List newComponents)
 	}
 
 	mLog.Log(Logger::Level::INFO) << "Maximum node number: " << maxNode << std::endl;
+	// virtual nodes are placed after network nodes
 	currentVirtualNode = maxNode;
 
 	// Check if component requires virtual node and if so set one
@@ -83,7 +84,9 @@ void Simulation::initialize(Component::List newComponents)
 		if (comp->hasVirtualNodes()) {
 			for (Int node = 0; node < comp->getVirtualNodesNum(); node++) {
 				currentVirtualNode++;
-				comp->setVirtualNode(node, currentVirtualNode);
+				std::shared_ptr<Node> newVirtualNode = std::make_shared<Node>(currentVirtualNode);
+				mNodes.push_back(newVirtualNode);
+				comp->setVirtualNodeAt(newVirtualNode, node);
 				mLog.Log(Logger::Level::INFO) << "Created virtual node"<< node << "=" << currentVirtualNode
 					<< " for " << comp->getName() << std::endl;
 			}
@@ -91,7 +94,7 @@ void Simulation::initialize(Component::List newComponents)
 	}
 
 	// Calculate size of system matrix
-	Int numNodes = currentVirtualNode + 1;
+	Int numNodes = Int(currentVirtualNode + 1);
 
 	// Create right and left vector
 	mSystemModel.initialize(numNodes);

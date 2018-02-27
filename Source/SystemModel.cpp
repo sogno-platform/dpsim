@@ -1,4 +1,4 @@
-﻿/** A simulation model
+/** A simulation model
  *
  * @author Markus Mirz <mmirz@eonerc.rwth-aachen.de>
  * @copyright 2017, Institute for Automation of Complex Power Systems, EONERC
@@ -24,8 +24,7 @@
 
 using namespace DPsim;
 
-void SystemModel::initialize(Int numNodes)
-{
+void SystemModel::initialize(Int numNodes) {
 	mNumNodes = numNodes;
 	mCompOffset = mNumNodes;
 
@@ -61,25 +60,25 @@ void SystemModel::updateLuFactored()
 		mLuFactored = Eigen::PartialPivLU<Matrix>(mSystemMatrix);
 }
 
-void SystemModel::addRealToSystemMatrix(Int row, Int column, Real value)
+void SystemModel::addRealToSystemMatrix(Matrix::Index row, Matrix::Index column, Real value)
 {
 	MathLibrary::addRealToMatrixElement(mSystemMatrix, row, column, value);
 }
 
-void SystemModel::addCompToSystemMatrix(Int row, Int column, Complex value) {
+void SystemModel::addCompToSystemMatrix(Matrix::Index row, Matrix::Index column, Complex value) {
 	MathLibrary::addCompToMatrixElement(mSystemMatrix, mCompOffset, row, column, value);
 }
 
-void SystemModel::setCompSystemMatrixElement(Int row, Int column, Complex value) {
+void SystemModel::setCompSystemMatrixElement(Matrix::Index row, Matrix::Index column, Complex value) {
 	MathLibrary::setCompMatrixElement(mSystemMatrix, mCompOffset, row, column, value);
 }
 
-void SystemModel::addRealToRightSideVector(Int row, Real value)
+void SystemModel::addRealToRightSideVector(Matrix::Index row, Real value)
 {
 	MathLibrary::addRealToVectorElement(mRightSideVector, row, value);
 }
 
-void SystemModel::addCompToRightSideVector(Int row, Complex value) {
+void SystemModel::addCompToRightSideVector(Matrix::Index row, Complex value) {
 	MathLibrary::addCompToVectorElement(mRightSideVector, mCompOffset, row, value);
 }
 

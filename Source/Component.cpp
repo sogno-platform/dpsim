@@ -26,11 +26,73 @@
 #include <typeinfo>
 
 #include "Component.h"
+#include "Node.h"
+#include "Terminal.h"
 
 using namespace DPsim;
 
-String Component::getType()
-{
+Component::Component(String uid, String name, Logger::Level logLevel)
+	: mLog("Logs/" + name + ".log", logLevel) {
+	mUID = uid;
+	mName = name;
+	mLogLevel = logLevel;
+}
+
+Component::Component(String name, Logger::Level logLevel)
+	: Component(name, name, logLevel) {
+}
+
+Component::Component(String name, Matrix::Index node1, Matrix::Index node2, Logger::Level logLevel)
+	: mLog("Logs/" + name + ".log", logLevel) {
+	mName = name;
+	mNode1 = node1;
+	mNode2 = node2;
+	mLogLevel = logLevel;
+	attrMap["name"] = { Attribute::String,  &mName };
+	attrMap["node1"] = { Attribute::Integer, &mNode1 };
+	attrMap["node2"] = { Attribute::Integer, &mNode2 };
+}
+
+Component::Component(String name, Matrix::Index node1, Matrix::Index node2, Matrix::Index node3, Logger::Level loglevel)
+	: Component(name, node1, node2, loglevel) {
+	mNode3 = node3;
+	attrMap["node3"] = { Attribute::Integer, &mNode3 };
+}
+
+void Component::setVirtualNodeAt(std::shared_ptr<Node> virtualNode, Int nodeNum) {
+	if (mNumVirtualNodes <= nodeNum) {
+		mLog.Log(Logger::Level::ERROR) << "Virtual node position number too large for Component " << mName
+			<< " - Ignoring" << std::endl;
+	}
+	mVirtualNodes[nodeNum] = virtualNode;
+}
+
+void Component::setTerminals(std::vector<std::shared_ptr<Terminal>> terminals) {
+	if (mNumTerminals < terminals.size()) {
+		mLog.Log(Logger::Level::ERROR) << "Number of Terminals is too large for Component " << mName
+			<< " - Ignoring" << std::endl;
+		return;
+	}
+	mTerminals = terminals;
+}
+
+void Component::setTerminalAt(std::shared_ptr<Terminal> terminal, Int terminalPosition) {
+	if (mNumTerminals <= terminalPosition) {
+		mLog.Log(Logger::Level::ERROR) << "Terminal position number too large for Component " << mName
+			<< " - Ignoring" << std::endl;
+	}
+	mTerminals[terminalPosition] = terminal;
+}
+
+void Component::setNodes(std::vector<std::shared_ptr<Node>> nodes) {
+	if (mNumTerminals < nodes.size()) {
+		mLog.Log(Logger::Level::ERROR) << "Number of Nodes is too large for Component " << mName
+			<< " - Ignoring" << std::endl;
+		return;
+	}
+}
+
+String Component::getType() {
 	Int status = 1;
 	const char *mangled;
 

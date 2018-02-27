@@ -29,6 +29,7 @@
 #include "Logger.h"
 #include "SystemModel.h"
 #include "ExternalInterface.h"
+#include "Node.h"
 
 namespace DPsim {
 

@@ -37,7 +37,6 @@ namespace DPsim {
 
 	/// Base class for all components that might be added to the matrix.
 	class Component {
-
 	public:
 		struct Attribute {
 			enum Type {
@@ -50,7 +49,6 @@ namespace DPsim {
 
 			typedef std::map<DPsim::String, Attribute> Map;
 		};
-
 	protected:
 		/// Component logger
 		Logger mLog;
@@ -59,11 +57,11 @@ namespace DPsim {
 		/// Human readable name
 		String mName;
 		/// Component node 1
-		Int mNode1;
+		Matrix::Index mNode1;
 		/// Component node 2
-		Int mNode2;
+		Matrix::Index mNode2;
 		/// Component node 3
-		Int mNode3;
+		Matrix::Index mNode3;
 		/// Determines the number of Terminals which can be connected to nodes
 		Int mNumTerminals = 0;
 		/// List of Terminals
@@ -77,46 +75,18 @@ namespace DPsim {
 	public:
 		typedef std::shared_ptr<Component> Ptr;
 		typedef std::vector<Ptr> List;
-
 		/// Unique identifier
-		String mRID;			
-
-		Component(String rid, String name, Logger::Level logLevel = Logger::Level::NONE)
-			: mLog("Logs/" + name + ".log", logLevel) {
-			mRID = rid;
-			mName = name;
-			mLogLevel = logLevel;
-		}
-
-		// TODO: handle nodes
-		Component(String rid, String name, std::vector<std::shared_ptr<Node>>, Logger::Level logLevel = Logger::Level::NONE)
-			: mLog("Logs/" + name + ".log", logLevel) {
-			mRID = rid;
-			mName = name;
-			mLogLevel = logLevel;
-		}
-
+		String mUID;			
+		///
+		Component(String uid, String name, Logger::Level logLevel = Logger::Level::NONE);
+		///
+		Component(String name, Logger::Level logLevel = Logger::Level::NONE);
 		/// Creates a new component with basic features: name, nodes and the log level for this component		
-		Component(String name, Int node1, Int node2, Logger::Level logLevel = Logger::Level::NONE)
-			: mLog("Logs/" + name + ".log", logLevel) {
-			mName = name;
-			mNode1 = node1;
-			mNode2 = node2;
-			mLogLevel = logLevel;
-			attrMap["name"]  = { Attribute::String,  &mName };
-			attrMap["node1"] = { Attribute::Integer, &mNode1 };
-			attrMap["node2"] = { Attribute::Integer, &mNode2 };
-		}
-
+		Component(String name, Matrix::Index node1, Matrix::Index node2, Logger::Level logLevel = Logger::Level::NONE);
 		/// Creates a new component with basic features: name, nodes and the log level for this component
-		Component(String name, Int node1, Int node2, Int node3, Logger::Level loglevel = Logger::Level::NONE)
-			: Component(name, node1, node2, loglevel) {
-			mNode3 = node3;
-			attrMap["node3"] = { Attribute::Integer, &mNode3 };
-		}
-
+		Component(String name, Matrix::Index node1, Matrix::Index node2, Matrix::Index node3, Logger::Level loglevel = Logger::Level::NONE);
+		//
 		virtual ~Component() { }
-
 		///
 		String getName() { return mName; }
 		///
@@ -124,11 +94,11 @@ namespace DPsim {
 		///
 		std::map<String, Attribute>& getAttrMap() { return attrMap; }
 		/// get value of node1
-		Int getNode1() { return mNode1; }
+		Matrix::Index getNode1() { return mNode1; }
 		/// get value of node2
-		Int getNode2() { return mNode2; }
+		Matrix::Index getNode2() { return mNode2; }
 		/// get value of node3
-		Int getNode3() { return mNode3; }
+		Matrix::Index getNode3() { return mNode3; }
 		/// Returns true if virtual node number is greater than zero.
 		Bool hasVirtualNodes() { return mNumVirtualNodes > 0; }
 		/// Returns true if virtual node number is greater than zero.
@@ -136,35 +106,15 @@ namespace DPsim {
 		///
 		Int getTerminalsNum() { return mNumTerminals; }
 		///
-		void setVirtualNodeAt(std::shared_ptr<Node> virtualNode, Int nodeNum) {
-			if (mNumVirtualNodes <= nodeNum) {
-				mLog.Log(Logger::Level::ERROR) << "Virtual node position number too large for Component " << mName
-					<< " - Ignoring" << std::endl;
-			}
-			mVirtualNodes[nodeNum] = virtualNode;
-		}	
+		void setVirtualNodeAt(std::shared_ptr<Node> virtualNode, Int nodeNum);
 		/// Set Terminals of the component
-		virtual void setTerminals(std::vector<std::shared_ptr<Terminal>> terminals) {
-			if (mNumTerminals < terminals.size()) {
-				mLog.Log(Logger::Level::ERROR) << "Number of Terminals is too large for Component " << mName
-					<< " - Ignoring" << std::endl;
-				return;
-			}
-			mTerminals = terminals;
-		}
+		virtual void setTerminals(std::vector<std::shared_ptr<Terminal>> terminals);
 		///
-		virtual void setTerminalAt(std::shared_ptr<Terminal> terminal, Int terminalPosition) {
-			if (mNumTerminals <= terminalPosition) {
-				mLog.Log(Logger::Level::ERROR) << "Terminal position number too large for Component " << mName
-					<< " - Ignoring" << std::endl;
-			}
-			mTerminals[terminalPosition] = terminal;
-		}
+		virtual void setTerminalAt(std::shared_ptr<Terminal> terminal, Int terminalPosition);
 		///
-		virtual void setNodes(std::vector<std::shared_ptr<Node>> nodes) { }
+		virtual void setNodes(std::vector<std::shared_ptr<Node>> nodes);
 		///
-		virtual void initializePowerflow(Real systemFrequency) { }
-
+		virtual void initializePowerflow(Real frequency) { }
 		// #### MNA section ####
 		/// Initializes variables of components
 		virtual void initialize(SystemModel& system) { }

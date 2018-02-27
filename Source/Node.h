@@ -29,10 +29,12 @@ namespace DPsim {
 
 	class Node {
 	public:
+		typedef std::shared_ptr<Node> Ptr;
+		typedef std::vector<Ptr> List;
 		String mRID;
+		String mName;
 		Matrix::Index mSimNode;
-		Real mVoltageAbs;
-		Real mVoltagePhase;
+		Complex mVoltage;
 		std::vector<std::shared_ptr<Terminal>> mTerminals;
 		Node(Matrix::Index simNode) : mSimNode(simNode) {}
 		Node(String rid, Matrix::Index simNode) : mRID(rid), mSimNode(simNode) {}

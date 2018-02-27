@@ -137,7 +137,7 @@ void Reader::parseFiles() {
 			// Check if object is already in equipment list
 			if (mPowerflowEquipment.find(dynamic_cast<IdentifiedObject*>(obj)->mRID) == mPowerflowEquipment.end()) {
 				Component::Ptr comp = mapComponent(obj);
-				if (comp) mPowerflowEquipment.insert(std::make_pair(comp->mRID, comp));
+				if (comp) mPowerflowEquipment.insert(std::make_pair(comp->mUID, comp));
 			}
 		}
 	}
@@ -179,7 +179,7 @@ void Reader::processTopologicalNode(TopologicalNode* topNode) {
 				if (comp) mPowerflowEquipment.insert(std::make_pair(equipment->mRID, comp));
 			}				
 			auto pfEquipment = mPowerflowEquipment[equipment->mRID];			
-			pfEquipment->setTerminal(mPowerflowTerminals[term->mRID], term->sequenceNumber-1);
+			pfEquipment->setTerminalAt(mPowerflowTerminals[term->mRID], term->sequenceNumber-1);
 
 			mLog.Log(Logger::Level::INFO) << "        " << "Equipment " << equipment->mRID
 				<< ", sequenceNumber " << term->sequenceNumber - 1 << std::endl;
@@ -199,23 +199,23 @@ void Reader::processSvVoltage(SvVoltage* volt) {
 			<< " missing from mTopNodes, ignoring" << std::endl;
 		return;
 	}
-	mPowerflowNodes[node->mRID]->mVoltageAbs = Reader::unitValue(volt->v.value, UnitMultiplier::k);
-	mPowerflowNodes[node->mRID]->mVoltagePhase = volt->angle.value * PI / 180;
+	Real voltageAbs = Reader::unitValue(volt->v.value, UnitMultiplier::k);
+	Real voltagePhase = volt->angle.value * PI / 180;
+	mPowerflowNodes[node->mRID]->mVoltage = std::polar<Real>(voltageAbs, voltagePhase);
 	mLog.Log(Logger::Level::INFO) << "Node " << mPowerflowNodes[node->mRID]->mSimNode << ": "
-		<< mPowerflowNodes[node->mRID]->mVoltageAbs << "<"
-		<< mPowerflowNodes[node->mRID]->mVoltagePhase << std::endl;
+		<< std::abs(mPowerflowNodes[node->mRID]->mVoltage) << "<"
+		<< std::arg(mPowerflowNodes[node->mRID]->mVoltage) << std::endl;
 }
 
 void Reader::processSvPowerFlow(SvPowerFlow* flow) {
 	IEC61970::Base::Core::Terminal* term = flow->Terminal;
 	ConductingEquipment* eq = term->ConductingEquipment;
 
-	mPowerflowTerminals[term->mRID]->mActivePower = Reader::unitValue(flow->p.value, UnitMultiplier::M);
-	mPowerflowTerminals[term->mRID]->mReactivePower = Reader::unitValue(flow->q.value, UnitMultiplier::M);
+	mPowerflowTerminals[term->mRID]->mPower = { Reader::unitValue(flow->p.value, UnitMultiplier::M), Reader::unitValue(flow->q.value, UnitMultiplier::M) };
 
 	mLog.Log(Logger::Level::INFO) << "Terminal " << term->mRID << ":"
-		<< mPowerflowTerminals[term->mRID]->mActivePower << " + j"
-		<< mPowerflowTerminals[term->mRID]->mReactivePower << std::endl;
+		<< mPowerflowTerminals[term->mRID]->mPower.real() << " + j"
+		<< mPowerflowTerminals[term->mRID]->mPower.imag() << std::endl;
 }
 
 Component::List& Reader::getComponents() {
@@ -262,14 +262,13 @@ Component::Ptr Reader::mapPowerTransformer(PowerTransformer* trans) {
 			<< " does not have exactly two windings, ignoring" << std::endl;
 		return nullptr;
 	}	
-	
 	mLog.Log(Logger::Level::INFO) << "Found PowerTransformer " << trans->name << std::endl;
 
 	PowerTransformerEnd* end1;
 	PowerTransformerEnd* end2;
 	for (auto end : trans->PowerTransformerEnd) {
-		if (end->endNumber == 1) end1 = end;
-		else if (end->endNumber == 2) end2 = end;
+		if (end->Terminal->sequenceNumber == 1) end1 = end;
+		else if (end->Terminal->sequenceNumber == 2) end2 = end;
 		else return nullptr;
 	}
 
@@ -279,19 +278,33 @@ Component::Ptr Reader::mapPowerTransformer(PowerTransformer* trans) {
 		<< " Vrated=" << end2->ratedU.value << " R=" << end2->r.value << " X=" << end2->x.value << std::endl;
 
 	Real voltageNode1 = unitValue(end1->ratedU.value, UnitMultiplier::k);
-	Real inductanceNode1 = end1->x.value / mFrequency;
-	Real resistanceNode1 = end1->r.value;
 	Real voltageNode2 = unitValue(end2->ratedU.value, UnitMultiplier::k);
-	Real inductanceNode2 = end2->x.value / mFrequency;
-	Real resistanceNode2 = end2->r.value;
 	Real ratioAbs = voltageNode1 / voltageNode2;
 	Real ratioPhase = 0;
 
+	Real inductance = 0;
+	Real resistance = 0;
+	if (voltageNode1 > voltageNode2 && end1->x.value > 0.001) {
+		inductance = end1->x.value / mFrequency;
+		resistance = end1->r.value;
+	} else if (voltageNode1 > voltageNode2 && end2->x.value > 0.001) {
+		inductance = end2->x.value / mFrequency * ratioAbs*ratioAbs;
+		resistance = end2->r.value * ratioAbs*ratioAbs;
+	}
+	else if (voltageNode2 > voltageNode1 && end2->x.value > 0.001) {
+		inductance = end2->x.value / mFrequency;
+		resistance = end2->r.value;
+	}
+	else if (voltageNode2 > voltageNode1 && end1->x.value > 0.001) {
+		inductance = end1->x.value / mFrequency * ratioAbs*ratioAbs;
+		resistance = end1->r.value * ratioAbs*ratioAbs;
+	}
+	
 	mLog.Log(Logger::Level::INFO) << "Create PowerTransformer " << trans->name
 		<< " ratio=" << ratioAbs << "<" << ratioPhase
-		<< " inductance=" << inductanceNode1 << std::endl;
+		<< " inductance=" << inductance << std::endl;
 
-	return std::make_shared<Components::DP::Transformer>(trans->mRID, trans->name, ratioAbs, ratioPhase, mComponentLogLevel);
+	return std::make_shared<Components::DP::Transformer>(trans->mRID, trans->name, ratioAbs, ratioPhase, 0, inductance, mComponentLogLevel);
 }
 
 

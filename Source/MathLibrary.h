@@ -29,12 +29,12 @@ namespace DPsim {
 	class MathLibrary {
 
 	public:
-		static void setCompMatrixElement(Matrix& mat, Int compOffset, Int row, Int column, Complex value);
-		static void setCompVectorElement(Matrix& mat, Int compOffset, Int row, Complex value);
-		static void addCompToMatrixElement(Matrix& mat, Int compOffset, Int row, Int column, Complex value);
-		static void addCompToVectorElement(Matrix& mat, Int compOffset, Int row, Complex value);
-		static void addRealToVectorElement(Matrix& mat, Int row, Real reValue);
-		static void addRealToMatrixElement(Matrix& mat, Int row, Int column, Real reValue);
+		static void setCompMatrixElement(Matrix& mat, Int compOffset, Matrix::Index row, Matrix::Index column, Complex value);
+		static void setCompVectorElement(Matrix& mat, Int compOffset, Matrix::Index row, Complex value);
+		static void addCompToMatrixElement(Matrix& mat, Int compOffset, Matrix::Index row, Matrix::Index column, Complex value);
+		static void addCompToVectorElement(Matrix& mat, Int compOffset, Matrix::Index row, Complex value);
+		static void addRealToVectorElement(Matrix& mat, Matrix::Index row, Real reValue);
+		static void addRealToMatrixElement(Matrix& mat, Matrix::Index row, Matrix::Index column, Real reValue);
 		static Complex polar(Real abs, Real phase) { return std::polar<Real>(abs, phase); }
 	};
 

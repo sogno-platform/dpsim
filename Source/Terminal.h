@@ -31,8 +31,7 @@ namespace DPsim {
 	class Terminal {
 	public:
 		String mRID;
-		Real mActivePower;
-		Real mReactivePower;
+		Complex mPower;
 		std::shared_ptr<Node> mNode;
 		std::shared_ptr<Component> mComponent;
 		Terminal(String rid) : mRID(rid) {}
