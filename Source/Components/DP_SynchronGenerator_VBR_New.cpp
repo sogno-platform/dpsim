@@ -21,6 +21,7 @@
 
 #include "DP_SynchronGenerator_VBR_New.h"
 #include "../IntegrationMethod.h"
+#include <chrono>
 
 using namespace DPsim;
 
@@ -128,6 +129,8 @@ void Components::DP::SynchronGeneratorVBRNew::initialize(Real om, Real dt,
 
 void Components::DP::SynchronGeneratorVBRNew::step(SystemModel& system, Real time)
 {
+		auto start = std::chrono::high_resolution_clock::now();
+
 		stepInPerUnit(system.getOmega(), system.getTimeStep(), time, system.getNumMethod());
 
 		// Update current source accordingly
@@ -185,11 +188,14 @@ void Components::DP::SynchronGeneratorVBRNew::step(SystemModel& system, Real tim
 		
 		system.updateLuFactored();
 
+		auto finish = std::chrono::high_resolution_clock::now();
+		std::chrono::duration<double> elapsed = finish - start;
+		Real StepDuration = elapsed.count();
 
 		if (mLogLevel != Logger::Level::NONE) {
-				Matrix logValues(getStatorCurrents().rows() + getDqStatorCurrents().rows() + 3, 1);
-				logValues << getStatorCurrents()*mBase_i, getDqStatorCurrents(), getElectricalTorque(), getRotationalSpeed(), getRotorPosition();
-				mLog->LogDataLine(time, logValues);
+				Matrix logValues(getStatorCurrents().rows() + 3, 1);
+				logValues << getStatorCurrents()*mBase_i, getElectricalTorque(), getRotationalSpeed(), StepDuration;
+				mLog->LogGenDP(time, logValues);
 		}
 
 }
@@ -390,7 +396,7 @@ void Components::DP::SynchronGeneratorVBRNew::CalculateAuxiliarVariables(Real ti
 
 		mKrs_teta_inv <<
 				cos(mThetaMech2), sin(mThetaMech2), 1.,
-				cos(mThetaMech2 - 2. * M_PI / 3.), sin(mThetaMech2 - 2. * M_PI / 3.), 1,
+				cos(mThetaMech2 - 2. * M_PI / 3.), sin(mThetaMech2 - 2. * M_PI / 3.), 1.,
 				cos(mThetaMech2 + 2. * M_PI / 3.), sin(mThetaMech2 + 2. * M_PI / 3.), 1.;
 
 		K = mKrs_teta_inv*K*mKrs_teta;
@@ -564,6 +570,7 @@ Matrix Components::DP::SynchronGeneratorVBRNew::abcToDq0Transform(Real theta, Re
 				pnzVector(1, 0).imag(),
 				pnzVector(1, 0).real(),
 				0;
+
 
 		return dq0Vector;
 }

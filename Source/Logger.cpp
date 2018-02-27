@@ -165,6 +165,23 @@ void Logger::LogGen(Real time, Matrix& data) {
 		LogDataLine(time, data);
 }
 
+void Logger::LogGenDP(Real time, Matrix& data) {
+		if (mLogFile.tellp() == std::ofstream::pos_type(0)) {
+				mLogFile << std::right << std::setw(14) << "time";
+				mLogFile << ", " << std::right << std::setfill(' ') << std::setw(15 - 4) << "Ia_Re" << std::setw(4);
+				mLogFile << ", " << std::right << std::setfill(' ') << std::setw(15 - 4) << "Ib_Re" << std::setw(4);
+				mLogFile << ", " << std::right << std::setfill(' ') << std::setw(15 - 4) << "Ic_Re" << std::setw(4);
+				mLogFile << ", " << std::right << std::setfill(' ') << std::setw(15 - 4) << "Ia_Im" << std::setw(4);
+				mLogFile << ", " << std::right << std::setfill(' ') << std::setw(15 - 4) << "Ib_Im" << std::setw(4);
+				mLogFile << ", " << std::right << std::setfill(' ') << std::setw(15 - 4) << "Ic_Im" << std::setw(4);
+				mLogFile << ", " << std::right << std::setfill(' ') << std::setw(15 - 4) << "Te" << std::setw(4);
+				mLogFile << ", " << std::right << std::setfill(' ') << std::setw(15 - 4) << "omega" << std::setw(4);
+				mLogFile << ", " << std::right << std::setfill(' ') << std::setw(16 - 4) << "Step Duration" << std::setw(4);
+				mLogFile << std::endl;
+		}
+		LogDataLine(time, data);
+}
+
 std::ostream& Logger::getNullStream()
 {
 	if (nullStream.good()) {
