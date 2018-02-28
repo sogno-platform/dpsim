@@ -31,6 +31,7 @@ Simulation::Simulation(String name, Component::List comps, Real om, Real dt, Rea
 	mRightVectorLog("Logs/" + name + "_RightVector.csv", logLevel)
 
 {
+
 	mTime = 0;
 	mLastLogTimeStep = 0;
 	mCurrentSwitchTimeIndex = 0;

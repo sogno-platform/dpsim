@@ -52,7 +52,6 @@ namespace EMT {
 			/// Determine if Turbine and Governor are activated
 			bool WithTurbineGovernor = false;
 
-
 		/// Determinant of Ld (inductance matrix of d axis)
 		Real detLd;
 		/// Determinant of Lq (inductance matrix of q axis)

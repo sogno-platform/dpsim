@@ -1,4 +1,4 @@
-/** Simulation
+﻿/** Simulation
  *
  * @author Markus Mirz <mmirz@eonerc.rwth-aachen.de>
  * @copyright 2017, Institute for Automation of Complex Power Systems, EONERC
@@ -75,6 +75,7 @@ namespace DPsim {
 		std::vector<ExternalInterface*> mExternalInterfaces;
 
 	public:
+
 		/// Creates system matrix according to
 		Simulation(String name, Component::List comps, Real om, Real dt, Real tf, Logger::Level logLevel = Logger::Level::INFO, SimulationType simType = SimulationType::DP, Int downSampleRate = 1);
 		virtual ~Simulation() { };

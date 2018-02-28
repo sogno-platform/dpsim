@@ -1,4 +1,4 @@
-/** A simulation model
+﻿/** A simulation model
  *
  * @file
  * @author Markus Mirz <mmirz@eonerc.rwth-aachen.de>
@@ -80,6 +80,7 @@ namespace DPsim {
 		void setRightSideVectorToZero();
 		void solve();
 		void updateLuFactored();
+		bool MeasuringTime = true;
 
 		Matrix& getCurrentSystemMatrix() { return mSystemMatrix; }
 		const Matrix& getLUdecomp() { return mLuFactored.matrixLU(); }

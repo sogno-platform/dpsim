@@ -55,6 +55,8 @@ namespace DPsim {
 		void LogNodeValues(Real time, Matrix& data);
 		void LogGen(Real time, Matrix& data);
 		void LogGenDP(Real time, Matrix& data);
+		void LogGenShort(Real time, Matrix& data);
+		void LogGenShortDP(Real time, Matrix& data);
 	};
 }
 

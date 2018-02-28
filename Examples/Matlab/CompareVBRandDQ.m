@@ -12,13 +12,17 @@ CurrentVectorVBR = Log_SynGenVBR(:,1:4);
  %% Plot
 figure(1)
 hold off
-plot(CurrentVectorDq(:,1),CurrentVectorDq(:,2));
+Dqplot = plot(CurrentVectorDq(:,1),CurrentVectorDq(:,2));
 hold on
-plot(CurrentVectorVBR(:,1),-CurrentVectorVBR(:,2),'--');
-plot(Results_Reference(:,1),Results_Reference(:,5),'--');
+VBRplot = plot(CurrentVectorVBR(:,1),-CurrentVectorVBR(:,2));
+Refplot = plot(Results_Reference(:,1),Results_Reference(:,5),'--');
+
+set(Dqplot,'LineWidth',2);
+set(VBRplot,'LineWidth',2);
+set(Refplot,'LineWidth',2);
 
 
-title('Current Phase a');
+title('Three Phase Fault Simulation - Time Step = 50\mu');
 legend('ia DPsim Classical','ia DPsim VBR', 'ia Reference');
 
 %% read results from c++ simulation
@@ -29,10 +33,15 @@ CurrentVectorVBR2 = Log_SynGenVBR2(:,1:4);
  %% Plot
 figure(2)
 hold off
-plot(CurrentVectorDq2(:,1),CurrentVectorDq2(:,2));
+Dqplot2 = plot(CurrentVectorDq2(:,1),CurrentVectorDq2(:,2));
 hold on
-plot(CurrentVectorVBR2(:,1),-CurrentVectorVBR2(:,2),'--');
-plot(Results_Reference(:,1),Results_Reference(:,5),'--');
+VBRplot2 = plot(CurrentVectorVBR2(:,1),-CurrentVectorVBR2(:,2));
+Refplot2 = plot(Results_Reference(:,1),Results_Reference(:,5),'--');
 
-title('Current Phase a');
+set(Dqplot2,'LineWidth',2);
+set(VBRplot2,'LineWidth',2);
+set(Refplot2,'LineWidth',2);
+
+
+title('Three Phase Fault Simulation - Time Step = 500\mu');
 legend('ia DPsim Classical','ia DPsim VBR', 'ia Reference');

@@ -33,19 +33,29 @@ set(CIRCUIT_SOURCES
 )
 
 set(SYNCGEN_SOURCES
+	SynchronGenerator/DP_Multimachine.cpp
 	SynchronGenerator/DP_SynchronGenerator_BalancedResLoad.cpp
+	SynchronGenerator/DP_SynchronGenerator_Dq_ThreePhaseFault.cpp
 	SynchronGenerator/DP_SynchronGenerator_ExciterAndTurbine.cpp
-	SynchronGenerator/DP_SynchronGenerator_SimpThreePhaseFault.cpp
-	SynchronGenerator/DP_SynchronGenerator_ThreePhaseFault.cpp
-	SynchronGenerator/DP_SynchronGenerator_VBR.cpp
 	SynchronGenerator/DP_SynchronGenerator_Simplified_ThreePhaseFault.cpp
+	SynchronGenerator/DP_SynchronGenerator_SimpThreePhaseFault.cpp
+	SynchronGenerator/DP_SynchronGenerator_VBR.cpp
+	SynchronGenerator/DP_SynchronGenerator_VBR_ThreePhaseFault.cpp
+	SynchronGenerator/DP_SynchronousGenerator_Dq_LoadChange.cpp
+	SynchronGenerator/DP_SynchronousGenerator_VBR_LoadChange
+	SynchronGenerator/EMT_Multimachine.cpp
+	SynchronGenerator/EMT_Multimachine_Classical.cpp
 	SynchronGenerator/EMT_SynchronGenerator_BalancedResLoad.cpp
+	SynchronGenerator/EMT_SynchronGenerator_Dq_ThreePhaseFault
 	SynchronGenerator/EMT_SynchronGenerator_ExciterAndTurbine.cpp
 	SynchronGenerator/EMT_SynchronGenerator_PhaseToPhaseFault.cpp
-	SynchronGenerator/EMT_SynchronGenerator_ThreePhaseFault.cpp
-	SynchronGenerator/EMT_SynchronGenerator_VBR_ThreePhaseFault.cpp
 	SynchronGenerator/EMT_SynchronGenerator_Simplified_ThreePhaseFault.cpp
-	SynchronGenerator/EMT_Multimachine.cpp
+	SynchronGenerator/EMT_SynchronGenerator_VBR_ThreePhaseFault.cpp
+	SynchronGenerator/EMT_SynchronousGenerator_Dq_LoadChange.cpp
+	SynchronGenerator/EMT_SynchronousGenerator_VBR_LoadChange.cpp
+	SynchronGenerator/ExciterAndTurbine.cpp
+	
+	
 
 
 )

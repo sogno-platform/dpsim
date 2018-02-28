@@ -165,6 +165,15 @@ void Logger::LogGen(Real time, Matrix& data) {
 		LogDataLine(time, data);
 }
 
+void Logger::LogGenShort(Real time, Matrix& data) {
+		if (mLogFile.tellp() == std::ofstream::pos_type(0)) {
+				mLogFile << std::right << std::setw(14) << "time";
+				mLogFile << ", " << std::right << std::setfill(' ') << std::setw(16 - 4) << "Step Duration" << std::setw(4);
+				mLogFile << std::endl;
+		}
+		LogDataLine(time, data);
+}
+
 void Logger::LogGenDP(Real time, Matrix& data) {
 		if (mLogFile.tellp() == std::ofstream::pos_type(0)) {
 				mLogFile << std::right << std::setw(14) << "time";
@@ -182,6 +191,14 @@ void Logger::LogGenDP(Real time, Matrix& data) {
 		LogDataLine(time, data);
 }
 
+void Logger::LogGenShortDP(Real time, Matrix& data) {
+		if (mLogFile.tellp() == std::ofstream::pos_type(0)) {
+				mLogFile << std::right << std::setw(14) << "time";
+				mLogFile << ", " << std::right << std::setfill(' ') << std::setw(16 - 4) << "Step Duration" << std::setw(4);
+				mLogFile << std::endl;
+		}
+		LogDataLine(time, data);
+}
 std::ostream& Logger::getNullStream()
 {
 	if (nullStream.good()) {

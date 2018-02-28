@@ -170,11 +170,21 @@ void Components::EMT::VoltageBehindReactanceEMTNew::step(SystemModel& system, Re
 		auto finish = std::chrono::high_resolution_clock::now();
 		std::chrono::duration<double> elapsed = finish - start;
 		Real StepDuration = elapsed.count();
-		if (mLogLevel != Logger::Level::NONE) {
-				Matrix logValues(getStatorCurrents().rows() + 3, 1);
-				logValues << getStatorCurrents()*mBase_i, getElectricalTorque(), getRotationalSpeed(), StepDuration;
-				mLog->LogGen(time, logValues);
+
+		if (!system.MeasuringTime) {
+				if (mLogLevel != Logger::Level::NONE) {
+						Matrix logValues(getStatorCurrents().rows() + 3, 1);
+						logValues << getStatorCurrents()*mBase_i, getElectricalTorque(), getRotationalSpeed(), StepDuration;
+						mLog->LogGen(time, logValues);
+				}
 		}
+		else
+		{
+				Matrix logValues(1, 1);
+				logValues << StepDuration;
+				mLog->LogGenShort(time, logValues);
+		}
+
 
 
 }

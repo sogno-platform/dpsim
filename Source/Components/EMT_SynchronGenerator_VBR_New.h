@@ -52,7 +52,7 @@ namespace DPsim {
 								TurbineGovernor mTurbineGovernor;
 								/// Determine if Turbine and Governor are activated
 								bool WithTurbineGovernor = false;
-							
+
 								/// d dynamic inductance
 								Real mDLmd;
 								/// q dynamic inductance
@@ -187,6 +187,8 @@ namespace DPsim {
 								Matrix F3b = Matrix::Zero(2, 1);
 								Matrix F3 = Matrix::Zero(2, 2);
 								Matrix C26 = Matrix::Zero(2, 1);
+
+								
 
 
 						public:
