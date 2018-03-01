@@ -49,8 +49,7 @@ Int SynGenSimulation::step(bool blocking)
 		eif->writeValues(mSystemModel);
 	}
 
-	if(!mSystemModel.MeasuringTime)
-	{ 
+
 	if (mCurrentSwitchTimeIndex < mSwitchEventVector.size()) {
 		if (mTime >= mSwitchEventVector[mCurrentSwitchTimeIndex].switchTime) {
 			switchSystemMatrix(mSwitchEventVector[mCurrentSwitchTimeIndex].systemIndex);
@@ -58,16 +57,21 @@ Int SynGenSimulation::step(bool blocking)
 			mActualSystemMatrixIndex = mSwitchEventVector[mCurrentSwitchTimeIndex].systemIndex;
 			mComponents = mComponentsVector[mSwitchEventVector[mCurrentSwitchTimeIndex].systemIndex];
 			++mCurrentSwitchTimeIndex;
+			if (!mSystemModel.MeasuringTime)
+			{
 			mLog.Log(Logger::Level::INFO) << "Switched to system " << mCurrentSwitchTimeIndex << " at " << mTime << std::endl;
 			mLog.Log(Logger::Level::INFO) << "New matrix:" << std::endl << mSystemModel.getCurrentSystemMatrix() << std::endl;
 			mLog.Log(Logger::Level::INFO) << "New decomp:" << std::endl << mSystemModel.getLUdecomp() << std::endl;
+			}
 		}
 	}
 
-	mLeftVectorLog.LogNodeValues(getTime(), getLeftSideVector());
-	mRightVectorLog.LogNodeValues(getTime(), getRightSideVector());
-
+	if (!mSystemModel.MeasuringTime)
+	{
+			mLeftVectorLog.LogNodeValues(getTime(), getLeftSideVector());
+			mRightVectorLog.LogNodeValues(getTime(), getRightSideVector());
 	}
+	
 
 	auto finish = std::chrono::high_resolution_clock::now();
 	std::chrono::duration<double> elapsed = finish - start;
