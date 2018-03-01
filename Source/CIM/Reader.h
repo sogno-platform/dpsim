@@ -56,6 +56,7 @@ namespace CIM {
 		/// System frequency (has to be given to convert between reactances
 		/// in CIM and inductances used inside the simulation)
 		Real mFrequency;
+		Real mOmega;
 		/// Maps the RID of a topological node to a PowerflowNode which holds its simulation matrix index
 		/// as given in the component constructors (0 for the first node, -1 or GND for ground).
 		std::map<String, std::shared_ptr<Node>> mPowerflowNodes;

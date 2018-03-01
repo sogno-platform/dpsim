@@ -45,7 +45,7 @@ static int testCIMReader(std::list<String> filenames) {
 
 	Component::List comps = reader.getComponents();
 
-	Simulation sim("CIM", comps, 2 * PI * 50, 0.001, 0.3);
+	Simulation sim("CIM", comps, 2 * PI * 50, 0.0001, 0.1);
 
 	sim.run();
 
@@ -70,18 +70,26 @@ static int readFixedCIMFiles_LineLoad() {
 
 static int readFixedCIMFiles_IEEE9bus() {
 #ifdef _WIN32
-	String path("..\\..\\..\\..\\dpsim\\Examples\\CIM\\WSCC-09_Neplan_RX\\");
+	//String path("..\\..\\..\\..\\dpsim\\Examples\\CIM\\WSCC-09_Neplan_RX\\");
+	String path("..\\..\\..\\..\\dpsim\\Examples\\CIM\\Gen_Trafo_Line_Load\\");
 #elif defined(__linux__)
 	String path("../../../dpsim/Examples/CIM/IEEE-09_Neplan_RX/");
 #else
   #error "Unkown platform"
 #endif
-
+	/*
 	std::list<String> filenames = {
 		path + "WSCC-09_Neplan_RX_DI.xml",
 		path + "WSCC-09_Neplan_RX_EQ.xml",
 		path + "WSCC-09_Neplan_RX_SV.xml",
 		path + "WSCC-09_Neplan_RX_TP.xml"
+	};
+	*/
+	std::list<String> filenames = {
+		path + "Gen_Trafo_Line_Load_DI.xml",
+		path + "Gen_Trafo_Line_Load_EQ.xml",
+		path + "Gen_Trafo_Line_Load_SV.xml",
+		path + "Gen_Trafo_Line_Load_TP.xml"
 	};
 
 	return testCIMReader(filenames);

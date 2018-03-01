@@ -100,6 +100,7 @@ void Simulation::initialize(Component::List newComponents)
 	mSystemModel.initialize(numNodes);
 
 	// Initialize right side vector and components
+	mLog.Log(Logger::Level::INFO) << "Initialize power flow" << std::endl;
 	for (auto comp : newComponents) {
 		comp->initializePowerflow(mSystemModel.getOmega()/(2*PI));
 		comp->initialize(mSystemModel);

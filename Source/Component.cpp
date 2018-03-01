@@ -61,10 +61,12 @@ Component::Component(String name, Matrix::Index node1, Matrix::Index node2, Matr
 
 void Component::setVirtualNodeAt(std::shared_ptr<Node> virtualNode, Int nodeNum) {
 	if (mNumVirtualNodes <= nodeNum) {
-		mLog.Log(Logger::Level::ERROR) << "Virtual node position number too large for Component " << mName
+		mLog.Log(Logger::Level::ERROR) << "Virtual Node position number too large for Component " << mName
 			<< " - Ignoring" << std::endl;
 	}
 	mVirtualNodes[nodeNum] = virtualNode;
+	mLog.Log(Logger::Level::DEBUG) << "Set virtual Node at position " << nodeNum << " to " << mVirtualNodes[nodeNum]->mName <<
+		" with simulation node " << mVirtualNodes[nodeNum]->mSimNode << std::endl;
 }
 
 void Component::setTerminals(std::vector<std::shared_ptr<Terminal>> terminals) {
@@ -74,6 +76,11 @@ void Component::setTerminals(std::vector<std::shared_ptr<Terminal>> terminals) {
 		return;
 	}
 	mTerminals = terminals;
+	for (int i = 0; i < terminals.size(); i++) {
+		if (i == 0) mNode1 = terminals[i]->getNode()->mSimNode;
+		if (i == 1) mNode2 = terminals[i]->getNode()->mSimNode;
+		if (i == 2) mNode3 = terminals[i]->getNode()->mSimNode;
+	}
 }
 
 void Component::setTerminalAt(std::shared_ptr<Terminal> terminal, Int terminalPosition) {
@@ -85,13 +92,25 @@ void Component::setTerminalAt(std::shared_ptr<Terminal> terminal, Int terminalPo
 	if (terminalPosition == 0) mNode1 = terminal->getNode()->mSimNode;
 	else if (terminalPosition == 1) mNode2 = terminal->getNode()->mSimNode;
 	else if (terminalPosition == 2) mNode3 = terminal->getNode()->mSimNode;
+
+	mLog.Log(Logger::Level::DEBUG) << "Set Terminal at position " << terminalPosition << " to Node " << mTerminals[terminalPosition]->getNode()->mName <<
+		" with simulation node " << mTerminals[terminalPosition]->getNode()->mSimNode << std::endl;
 }
 
+// TODO: process nodes
 void Component::setNodes(std::vector<std::shared_ptr<Node>> nodes) {
 	if (mNumTerminals < nodes.size()) {
-		mLog.Log(Logger::Level::ERROR) << "Number of Nodes is too large for Component " << mName
-			<< " - Ignoring" << std::endl;
+		mLog.Log(Logger::Level::ERROR) << "Number of Nodes is too large for Component "
+			<< mName << " - Ignoring" << std::endl;
 		return;
+	}
+	for (int i = 0; i < nodes.size(); i++) {
+		String name = mName + "_T" + std::to_string(i);
+		std::shared_ptr<Terminal> terminal = std::make_shared<Terminal>(name);
+		nodes[i]->mTerminals.push_back(terminal);
+		terminal->mNode = nodes[i];
+		setTerminalAt(terminal, i);
+		terminal->mComponent = weak_from_this();
 	}
 }
 

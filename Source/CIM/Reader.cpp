@@ -37,6 +37,7 @@ Reader::Reader(Real systemFrequency, Logger::Level logLevel, Logger::Level compo
 	: mLog("Logs/CIMpp.log", logLevel) {
 	mModel.setDependencyCheckOff();
 	mFrequency = systemFrequency;
+	mOmega = 2 * PI*mFrequency;
 	mComponentLogLevel = componentLogLevel;
 }
 
@@ -228,8 +229,6 @@ Matrix::Index Reader::mapTopologicalNode(String mrid) {
 
 Component::Ptr Reader::mapEnergyConsumer(EnergyConsumer* consumer) {
 	mLog.Log(Logger::Level::INFO) << "Found EnergyConsumer " << consumer->name << std::endl;	
-	mLog.Log(Logger::Level::INFO) << "Create PQLoad " << consumer->name << std::endl;
-
 	return std::make_shared<Components::DP::PQLoad>(consumer->mRID, consumer->name, mComponentLogLevel);
 }
 
@@ -239,15 +238,12 @@ Component::Ptr Reader::mapACLineSegment(ACLineSegment* line) {
 		<< " length=" << line->length.value << std::endl;
 
 	Real resistance = line->r.value;
-	Real inductance = line->x.value / mFrequency;
-
+	Real inductance = line->x.value / mOmega;
 	if (line->length.value > 0) {
 		resistance = line->r.value * line->length.value;
-		inductance = line->x.value / mFrequency * line->length.value;
+		inductance = line->x.value / mOmega * line->length.value;
 	}
 
-	mLog.Log(Logger::Level::INFO) << "Create RxLine " << line->name
-		<< " R=" << resistance << " L=" << inductance << std::endl;
 	return std::make_shared<Components::DP::RxLine>(line->mRID, line->name, resistance, inductance, mComponentLogLevel);
 }
 
@@ -280,29 +276,25 @@ Component::Ptr Reader::mapPowerTransformer(PowerTransformer* trans) {
 	Real inductance = 0;
 	Real resistance = 0;
 	if (voltageNode1 > voltageNode2 && end1->x.value > 0.001) {
-		inductance = end1->x.value / mFrequency;
+		inductance = end1->x.value / mOmega;
 		resistance = end1->r.value;
 	} else if (voltageNode1 > voltageNode2 && end2->x.value > 0.001) {
-		inductance = end2->x.value / mFrequency * ratioAbs*ratioAbs;
-		resistance = end2->r.value * ratioAbs*ratioAbs;
+		inductance = end2->x.value / mOmega / std::pow(ratioAbs, 2);
+		resistance = end2->r.value / std::pow(ratioAbs, 2);
 	}
 	else if (voltageNode2 > voltageNode1 && end2->x.value > 0.001) {
-		inductance = end2->x.value / mFrequency;
+		inductance = end2->x.value / mOmega;
 		resistance = end2->r.value;
 	}
 	else if (voltageNode2 > voltageNode1 && end1->x.value > 0.001) {
-		inductance = end1->x.value / mFrequency * ratioAbs*ratioAbs;
-		resistance = end1->r.value * ratioAbs*ratioAbs;
+		inductance = end1->x.value / mOmega / std::pow(ratioAbs, 2);
+		resistance = end1->r.value / std::pow(ratioAbs, 2);
 	}
-	
-	mLog.Log(Logger::Level::INFO) << "Create PowerTransformer " << trans->name
-		<< " ratio=" << ratioAbs << " phase=" << ratioPhase
-		<< " inductance=" << inductance << std::endl;
-
+		
 	return std::make_shared<Components::DP::Transformer>(trans->mRID, trans->name, ratioAbs, ratioPhase, 0, inductance, mComponentLogLevel);
 }
 
 Component::Ptr Reader::mapSynchronousMachine(SynchronousMachine* machine) {	
-	mLog.Log(Logger::Level::INFO) << "Create IdealVoltageSource " << machine->name << std::endl;
-	return std::make_shared<Components::DP::VoltageSource>(machine->mRID, machine->name, mComponentLogLevel);
+	mLog.Log(Logger::Level::INFO) << "Found  Synchronous machine " << machine->name << std::endl;
+	return std::make_shared<Components::DP::SynchronGeneratorIdeal>(machine->mRID, machine->name, mComponentLogLevel);
 }

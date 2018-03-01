@@ -36,7 +36,7 @@ namespace DPsim {
 	class Node;
 
 	/// Base class for all components that might be added to the matrix.
-	class Component {
+	class Component : std::enable_shared_from_this<Component> {
 	public:
 		struct Attribute {
 			enum Type {

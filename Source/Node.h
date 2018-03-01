@@ -27,7 +27,7 @@
 namespace DPsim {
 	class Terminal;
 
-	class Node {
+	class Node : std::enable_shared_from_this<Node> {
 	public:
 		typedef std::shared_ptr<Node> Ptr;
 		typedef std::vector<Ptr> List;
@@ -36,6 +36,7 @@ namespace DPsim {
 		Matrix::Index mSimNode;
 		Complex mVoltage;
 		std::vector<std::weak_ptr<Terminal>> mTerminals;
+		Node() : mRID("gnd"), mName("gnd"), mSimNode(-1), mVoltage(0,0) {}
 		Node(Matrix::Index simNode) : mSimNode(simNode) {}
 		Node(String rid, Matrix::Index simNode) : mRID(rid), mSimNode(simNode) {}
 		std::shared_ptr<Terminal> getTerminal(Int position) {
@@ -43,5 +44,6 @@ namespace DPsim {
 				return nullptr;
 			return mTerminals[position].lock();
 		}
+		void addTerminal(std::shared_ptr<Terminal> terminal);
 	};
 }

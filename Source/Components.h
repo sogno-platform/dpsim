@@ -30,6 +30,7 @@
 #include "Components/DP_Line_Rx.h"
 #include "Components/DP_Load_PQ.h"
 #include "Components/DP_Resistor.h"
+#include "Components/DP_SynchronGenerator_Ideal.h"
 #include "Components/DP_SynchronGenerator.h"
 #include "Components/DP_SynchronGenerator_VBR.h"
 #include "Components/DP_SynchronGenerator_VBR_Simplified.h"
