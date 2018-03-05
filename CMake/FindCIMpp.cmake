@@ -6,9 +6,10 @@ set(USE_CIM_VERSION "IEC61970_16v29a")
 
 if (WITH_CIM_SUBMODULE AND WIN32)
 	add_subdirectory(Source/CIM/libcimpp)	
-	set(CIMPP_LIBRARY libcimpp)
-# It is not required to set the include path.
-#	set(CIMPP_INCLUDE_DIR Source/CIM/libcimpp)
+	set(CIMPP_LIBRARY ${CMAKE_BINARY_DIR}/Source/CIM/libcimpp/Debug/CIMParser.lib)
+	set(CIMPP_INCLUDE_DIR ${CMAKE_SOURCE_DIR}/Source/CIM/libcimpp/src ${CMAKE_SOURCE_DIR}/Source/CIM/libcimpp/16v29a)
+	set(ARABICA_LIBRARY ${CMAKE_BINARY_DIR}/Source/CIM/libcimpp/thirdparty/arabica/Debug/arabica.lib)
+	set(ARABICA_INCLUDE_DIR ${CMAKE_SOURCE_DIR}/Source/CIM/libcimpp/thirdparty/arabica/include)
 else()
 	find_path(CIMPP_INCLUDE_DIR
 		NAMES CIMModel.hpp
@@ -56,12 +57,7 @@ endif()
 include(FindPackageHandleStandardArgs)
 # handle the QUIETLY and REQUIRED arguments and set CIMPP_FOUND to TRUE
 # if all listed variables are TRUE
-if (WITH_CIM_SUBMODULE)	
-	find_package_handle_standard_args(CIMpp DEFAULT_MSG CIMPP_LIBRARY)
-else()
-	find_package_handle_standard_args(CIMpp DEFAULT_MSG CIMPP_LIBRARY CIMPP_INCLUDE_DIR)
-endif()
-
+find_package_handle_standard_args(CIMpp DEFAULT_MSG CIMPP_LIBRARY CIMPP_INCLUDE_DIR)
 mark_as_advanced(CIMPP_INCLUDE_DIR CIMPP_LIBRARY)
 
 set(CIMPP_LIBRARIES ${CIMPP_LIBRARY} ${ARABICA_LIBRARY})

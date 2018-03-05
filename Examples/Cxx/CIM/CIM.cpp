@@ -45,7 +45,7 @@ static int testCIMReader(std::list<String> filenames) {
 
 	Component::List comps = reader.getComponents();
 
-	Simulation sim("CIM", comps, 2 * PI * 50, 0.0001, 0.1);
+	Simulation sim("CIM", comps, 2 * PI * 50, 0.0001, 0.1, Logger::Level::INFO, SimulationType::DP, true);
 
 	sim.run();
 
