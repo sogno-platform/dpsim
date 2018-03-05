@@ -34,9 +34,9 @@ namespace DPsim {
 		String mRID;
 		String mName;
 		Matrix::Index mSimNode;
-		Complex mVoltage;
+		Complex mVoltage = { 0, 0 };
 		std::vector<std::weak_ptr<Terminal>> mTerminals;
-		Node() : mRID("gnd"), mName("gnd"), mSimNode(-1), mVoltage(0,0) {}
+		Node() : mRID("gnd"), mName("gnd"), mSimNode(-1) {}
 		Node(Matrix::Index simNode) : mSimNode(simNode) {}
 		Node(String rid, Matrix::Index simNode) : mRID(rid), mSimNode(simNode) {}
 		std::shared_ptr<Terminal> getTerminal(Int position) {
@@ -44,6 +44,5 @@ namespace DPsim {
 				return nullptr;
 			return mTerminals[position].lock();
 		}
-		void addTerminal(std::shared_ptr<Terminal> terminal);
 	};
 }

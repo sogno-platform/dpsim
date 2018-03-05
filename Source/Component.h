@@ -117,14 +117,25 @@ namespace DPsim {
 		virtual void initializePowerflow(Real frequency) { }
 		// #### MNA section ####
 		/// Initializes variables of components
-		virtual void initialize(SystemModel& system) { }
+		virtual void initialize(SystemModel& system) { }		
 		/// Stamps conductance matrix
-		virtual void applySystemMatrixStamp(SystemModel& system) = 0;
+		virtual void applySystemMatrixStamp(SystemModel& system) = 0;		
 		/// Stamps current source vector
-		virtual void applyRightSideVectorStamp(SystemModel& system) { }
+		virtual void applyRightSideVectorStamp(SystemModel& system) { }		
 		/// Upgrade values on the current source vector
-		virtual void step(SystemModel& system, Real time) { }
+		virtual void step(SystemModel& system, Real time) { }		
 		/// Upgrade variable values based on the solution of the step
-		virtual void postStep(SystemModel& system) { }		
+		virtual void postStep(SystemModel& system) { }
+		// #### New MNA section ####
+		/// Initializes variables of components and
+		/// stamps initial values in system matrix and right side vector
+		virtual void mnaInitialize(Matrix& systemMatrix, Matrix& rightVector, Real omega) { }
+		/// Stamps system matrix
+		virtual void mnaApplySystemMatrixStamp(Matrix& systemMatrix) { }
+		/// Stamps right side (source) vector
+		virtual void mnaApplyRightSideVectorStamp(Matrix& rightVector) { }
+		/// Upgrade values on the current right side and maybe system matrix.
+		/// Calculate new internal states of the component.
+		virtual void mnaStep(Matrix& systemMatrix, Matrix& rightVector, Matrix& leftVector, Real time) { }
 	};
 }

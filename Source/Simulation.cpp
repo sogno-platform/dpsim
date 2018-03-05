@@ -23,12 +23,16 @@
 
 using namespace DPsim;
 
-Simulation::Simulation(String name, Component::List comps, Real om, Real dt, Real tf, Logger::Level logLevel,
-	SimulationType simType, Int downSampleRate) :
+Simulation::Simulation(String name, Component::List comps, Real om, Real dt,
+	Real tf, Logger::Level logLevel,
+	SimulationType simType,
+	Bool initializeFromPowerflow,
+	Int downSampleRate) :
 	mLog("Logs/" + name + ".log", logLevel),
 	mLeftVectorLog("Logs/" + name + "_LeftVector.csv", logLevel),
 	mRightVectorLog("Logs/" + name + "_RightVector.csv", logLevel) {
 
+	mGnd = std::make_shared<Node>(-1);
 	mTime = 0;
 	mLastLogTimeStep = 0;
 	mCurrentSwitchTimeIndex = 0;
@@ -40,6 +44,7 @@ Simulation::Simulation(String name, Component::List comps, Real om, Real dt, Rea
 	mSystemModel.setOmega(om);
 	mFinalTime = tf;
 	mDownSampleRate = downSampleRate;
+	mPowerflowInitialization = initializeFromPowerflow;
 
 	initialize(comps);
 
@@ -67,12 +72,29 @@ void Simulation::initialize(Component::List newComponents)
 	// these values don't change on switches
 	for (auto comp : newComponents) {
 		// determine maximum node in component list
-		if (comp->getNode1() > maxNode) {
+		if (comp->getNode1() > maxNode)
 			maxNode = comp->getNode1();
-		}
-		if (comp->getNode2() > maxNode) {
+		if (comp->getNode2() > maxNode)
 			maxNode = comp->getNode2();
-		}
+	}
+
+	// Create Nodes for all indices
+	mNodes.resize(maxNode + 1, nullptr);
+	for (int index = 0; index < mNodes.size(); index++)
+		mNodes[index] = std::make_shared<Node>(index);	
+
+	for (auto comp : newComponents) {
+		std::shared_ptr<Node> node1, node2;
+		if (comp->getNode1() < 0)
+			node1 = mGnd;
+		else
+			node1 = mNodes[comp->getNode1()];
+		if (comp->getNode2() < 0)
+			node2 = mGnd;
+		else
+			node2 = mNodes[comp->getNode2()];
+
+		comp->setNodes(Node::List{ node1, node2 });
 	}
 
 	mLog.Log(Logger::Level::INFO) << "Maximum node number: " << maxNode << std::endl;

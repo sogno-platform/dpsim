@@ -76,9 +76,17 @@ namespace DPsim {
 		std::vector<ExternalInterface*> mExternalInterfaces;
 		///
 		Node::List mNodes;
+		///
+		Node::Ptr mGnd;
+		///
+		Bool mPowerflowInitialization;
 	public:
 		/// Creates system matrix according to
-		Simulation(String name, Component::List comps, Real om, Real dt, Real tf, Logger::Level logLevel = Logger::Level::INFO, SimulationType simType = SimulationType::DP, Int downSampleRate = 1);
+		Simulation(String name, Component::List comps, Real om, Real dt, Real tf,
+			Logger::Level logLevel = Logger::Level::INFO,
+			SimulationType simType = SimulationType::DP,
+			Bool initializeFromPowerflow = false,
+			Int downSampleRate = 1);
 		///
 		virtual ~Simulation() { };
 		/// TODO: check that every system matrix has the same dimensions
