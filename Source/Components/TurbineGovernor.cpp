@@ -51,17 +51,21 @@ Real Components::TurbineGovernor::step(Real Om, Real OmRef, Real PmRef, Real dt)
 {
 	// ### Governing ###
 	// Input of speed relay
+	Real Psr_in_hist = Psr_in;
 	Psr_in = PmRef + (OmRef - Om)*mK;
 	// Input of servor motor
-	Psm_in = Euler(Psm_in, -1, 1, dt / mTsr, Psr_in);
+	//Psm_in = Trapezoidal(Psm_in, -1, 1, dt / mTsr, Psr_in);
+	Psm_in = Psm_in *(1 - dt / (2 * mTsr)) / (1 + dt / (2 * mTsr)) + (dt / 2) / (1 + dt / (2 * mTsr)) * (1 / mTsr)*(Psr_in + Psr_in_hist);
 	// rate of change of valve
+	Real mpVcv_hist = mpVcv;
 	mpVcv = (Psm_in - mVcv) / mTsm;
 	if (mpVcv >= 0.1)
 		mpVcv = 0.1;
 	else if (mpVcv <= -1)
 		mpVcv = -1;
 	//Valve position
-	mVcv = mVcv + dt*mpVcv;
+	Real mVcv_hist = mVcv;
+	mVcv = mVcv + dt/2*(mpVcv + mpVcv_hist);
 	if (mVcv >= 1)
 		mVcv = 1;
 	else if (mVcv <= 0)
@@ -69,7 +73,9 @@ Real Components::TurbineGovernor::step(Real Om, Real OmRef, Real PmRef, Real dt)
 
 	//### Turbine ###
 	// Simplified equation
-	T1 = Euler(T1, -1, (1 - mFa), dt / mTb, mVcv);
+	Real T1_hist = T1;
+	//T1 = Trapezoidal(T1, -1, (1 - mFa), dt / mTb, mVcv);
+	T1 = T1 *(1 - dt / (2*mTb)) / (1 + dt / (2*mTb)) + (dt / 2) / (1 + dt / (2 * mTb)) * ((1 - mFa) / mTb)*(mVcv + mVcv_hist);
 	T2 = mVcv*mFa;
 	mTm = T1 + T2;
 

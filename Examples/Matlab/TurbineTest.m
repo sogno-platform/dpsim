@@ -2,11 +2,11 @@
 
 %% read Simulink results
 
-Results_Simulink = csvread('../../../vsa/Results/MultimachineTest/Simulink/TurbineOutput.csv'); 
-Omega_Simulink = csvread('../../../vsa/Results/MultimachineTest/Simulink/omega.csv'); 
+Results_Simulink = csvread('../../../vsa/Results/TestExciterAndTurbine/Simulink/TurbineOutput.csv'); 
+Omega_Simulink = csvread('../../../vsa/Results/TestExciterAndTurbine/Simulink/omega.csv'); 
 
 %% read results from c++ simulation
-Results_DPsim = csvread('../../../vsa/Results/MultimachineTest/DPsim/Governor/TurbineOutput_DPsim.csv');
+Results_DPsim = csvread('../../../vsa/Results/TestExciterAndTurbine/DPsim/EMT/VBR/TurbineOutput_DPsim.csv');
 
 %% Plot
 figure(1)

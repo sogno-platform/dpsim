@@ -44,12 +44,12 @@ namespace DPsim {
 								/// Exciter Model
 								Exciter mExciter;
 								/// Determine if Exciter is activated
-								bool mHasExciter = false;
+								bool WithExciter = false;
 
 								/// Governor Model
 								TurbineGovernor mTurbineGovernor;
 								/// Determine if Turbine and Governor are activated
-								bool mHasTurbineGovernor = false;
+								bool WithTurbineGovernor = false;
 
 								/// d dynamic inductance
 								Real mDLmd;
@@ -219,9 +219,9 @@ namespace DPsim {
 										Real inertia, Logger::Level logLevel = Logger::Level::NONE);
 
 								/// Function to initialize Exciter
-								void addExciter(Real Ta, Real Ka, Real Te, Real Ke, Real Tf, Real Kf, Real Tr, Real Lad, Real Rfd);
+								void AddExciter(Real Ta, Real Ka, Real Te, Real Ke, Real Tf, Real Kf, Real Tr, Real Lad, Real Rfd);
 								/// Function to initialize Governor and Turbine
-								void addGovernor(Real Ta, Real Tb, Real Tc, Real Fa, Real Fb, Real Fc, Real K, Real Tsr, Real Tsm, Real Tm_init, Real PmRef);
+								void AddGovernor(Real Ta, Real Tb, Real Tc, Real Fa, Real Fb, Real Fc, Real K, Real Tsr, Real Tsm, Real Tm_init, Real PmRef);
 
 								/// Initializes states in per unit or stator referred variables depending on the setting of the state type.
 								/// Function parameters have to be given in real units.
@@ -254,6 +254,7 @@ namespace DPsim {
 								Real getRotationalSpeed() { return mOmMech*mBase_OmMech; }
 								Real getRotorPosition() { return mThetaMech; }
 								Matrix& getStatorCurrents() { return mIabc; }
+								Real getVt() { return sqrt(pow(mVd, 2.) + pow(mVq, 2.)); }
 
 								void initialize(SystemModel& system) { }
 								void applySystemMatrixStamp(SystemModel& system) { }

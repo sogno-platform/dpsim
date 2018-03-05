@@ -173,8 +173,8 @@ void Components::EMT::VoltageBehindReactanceEMTNew::step(SystemModel& system, Re
 
 		if (!system.MeasuringTime) {
 				if (mLogLevel != Logger::Level::NONE) {
-						Matrix logValues(getStatorCurrents().rows() + 3, 1);
-						logValues << getStatorCurrents()*mBase_i, getElectricalTorque(), getRotationalSpeed(), StepDuration;
+						Matrix logValues(getStatorCurrents().rows() + 4, 1);
+						logValues << getStatorCurrents()*mBase_i, getElectricalTorque(), getRotationalSpeed(), StepDuration, getVt();
 						mLog->LogGen(time, logValues);
 				}
 		}

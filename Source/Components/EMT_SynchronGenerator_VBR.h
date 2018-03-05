@@ -1,4 +1,4 @@
-/** Voltage behind reactance (EMT)
+﻿/** Voltage behind reactance (EMT)
  *
  * @file
  * @author Markus Mirz <mmirz@eonerc.rwth-aachen.de>

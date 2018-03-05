@@ -80,7 +80,8 @@ namespace DPsim {
 		void setRightSideVectorToZero();
 		void solve();
 		void updateLuFactored();
-		bool MeasuringTime = true;
+
+		bool MeasuringTime = false;
 
 		Matrix& getCurrentSystemMatrix() { return mSystemMatrix; }
 		const Matrix& getLUdecomp() { return mLuFactored.matrixLU(); }

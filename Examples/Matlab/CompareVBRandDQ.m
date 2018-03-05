@@ -3,11 +3,11 @@
 clc
 clear all
 %% read PLECS results
-Results_Reference= csvread('../../../vsa/Results/ABCFault/Simulink/Voltages_and_currents.csv');
+Results_Reference= csvread('../../../vsa/Results/LoadChange/Simulink/Voltages_and_currents.csv');
 %% read results from c++ simulation
-Log_SynGenDq = csvread('../../../vsa/Results/ABCFault/DPsim/EMT/Dq/SynGen_Dq_0.000050.csv',1);
+Log_SynGenDq = csvread('../../../vsa/Results/LoadChange/DPsim/EMT/Dq/SynGen_Dq_0.000050.csv',1);
 CurrentVectorDq = Log_SynGenDq(:,1:4);
-Log_SynGenVBR = csvread('../../../vsa/Results/ABCFault/DPsim/EMT/VBR/SynGen_VBR_0.000050.csv',1);
+Log_SynGenVBR = csvread('../../../vsa/Results/LoadChange/DPsim/EMT/VBR/SynGen_VBR_0.000050.csv',1);
 CurrentVectorVBR = Log_SynGenVBR(:,1:4);
  %% Plot
 figure(1)
@@ -21,14 +21,14 @@ set(Dqplot,'LineWidth',2);
 set(VBRplot,'LineWidth',2);
 set(Refplot,'LineWidth',2);
 
-
-title('Three Phase Fault Simulation - Time Step = 50\mu');
+xlabel('time [s]')
+ylabel('current [A]')
 legend('ia DPsim Classical','ia DPsim VBR', 'ia Reference');
 
 %% read results from c++ simulation
-Log_SynGenDq2 = csvread('../../../vsa/Results/ABCFault/DPsim/EMT/Dq/SynGen_Dq_0.000500.csv',1);
+Log_SynGenDq2 = csvread('../../../vsa/Results/LoadChange/DPsim/EMT/Dq/SynGen_Dq_0.000500.csv',1);
 CurrentVectorDq2 = Log_SynGenDq2(:,1:4);
-Log_SynGenVBR2 = csvread('../../../vsa/Results/ABCFault/DPsim/EMT/VBR/SynGen_VBR_0.000500.csv',1);
+Log_SynGenVBR2 = csvread('../../../vsa/Results/LoadChange/DPsim/EMT/VBR/SynGen_VBR_0.000500.csv',1);
 CurrentVectorVBR2 = Log_SynGenVBR2(:,1:4);
  %% Plot
 figure(2)
@@ -42,6 +42,6 @@ set(Dqplot2,'LineWidth',2);
 set(VBRplot2,'LineWidth',2);
 set(Refplot2,'LineWidth',2);
 
-
-title('Three Phase Fault Simulation - Time Step = 500\mu');
+xlabel('time [s]')
+ylabel('current [A]')
 legend('ia DPsim Classical','ia DPsim VBR', 'ia Reference');

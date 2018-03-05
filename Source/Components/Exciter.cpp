@@ -1,4 +1,4 @@
-/** Exciter
+﻿/** Exciter
 *
 * @author Markus Mirz <mmirz@eonerc.rwth-aachen.de>
 * @copyright 2017, Institute for Automation of Complex Power Systems, EONERC
@@ -55,11 +55,11 @@ Real Components::Exciter::step(Real mVd, Real mVq, Real Vref, Real dt)
 {
 	mVh = sqrt(pow(mVd, 2.) + pow(mVq, 2.));
 	// Voltage Transducer equation
-	mVm = Euler(mVm, -1, 1, dt / mTr, mVh);
+	mVm = Trapezoidal(mVm, -1, 1, dt / mTr, mVh);
 	// Stabilizing feedback equation
-	mVis = Euler(mVis, -1, mKf, dt / mTf, ((mVr - mVse) - mVf*mKe)/mTe);
+	mVis = Trapezoidal(mVis, -1, mKf, dt / mTf, ((mVr - mVse) - mVf*mKe)/mTe);
 	// Amplifier equation
-	mVr = Euler(mVr, -1, mKa, dt / mTa, Vref - mVm - mVis + mVf_init);
+	mVr = Trapezoidal(mVr, -1, mKa, dt / mTa, Vref - mVm - mVis + mVf_init);
 	if (mVr > 1)
 			mVr = 1;
 	else if (mVr < -0.9)
@@ -70,7 +70,7 @@ Real Components::Exciter::step(Real mVd, Real mVq, Real Vref, Real dt)
 	else
 			mVse = (0.33 / 3.1)*mVf;
 	mVse = mVse*mVf;
-	mVf = Euler(mVf, -mKe, 1, dt / mTe, mVr - mVse);
+	mVf = Trapezoidal(mVf, -mKe, 1, dt / mTe, mVr - mVse);
 
 	return (mRfd / mLad)*mVf;
 }

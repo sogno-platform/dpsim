@@ -41,20 +41,18 @@ Components::DP::SynchronGeneratorVBRNew::~SynchronGeneratorVBRNew() {
 
 }
 
-void Components::DP::SynchronGeneratorVBRNew::addExciter(Real Ta, Real Ka, Real Te, Real Ke, Real Tf, Real Kf, Real Tr, Real Lad, Real Rfd)
-{
+void Components::DP::SynchronGeneratorVBRNew::AddExciter(Real Ta, Real Ka, Real Te, Real Ke, Real Tf, Real Kf, Real Tr, Real Lad, Real Rfd) {
 		mExciter = Exciter(Ta, Ka, Te, Ke, Tf, Kf, Tr, Lad, Rfd);
 		mExciter.initialize(1, 1);
-
-		mHasExciter = true;
+		WithExciter = true;
 }
 
-void Components::DP::SynchronGeneratorVBRNew::addGovernor(Real Ta, Real Tb, Real Tc, Real Fa, Real Fb, Real Fc, Real K, Real Tsr, Real Tsm, Real Tm_init, Real PmRef)
-{
+void Components::DP::SynchronGeneratorVBRNew::AddGovernor(Real Ta, Real Tb, Real Tc, Real Fa, Real Fb, Real Fc, Real K, Real Tsr, Real Tsm, Real Tm_init, Real PmRef) {
 		mTurbineGovernor = TurbineGovernor(Ta, Tb, Tc, Fa, Fb, Fc, K, Tsr, Tsm);
 		mTurbineGovernor.initialize(PmRef, Tm_init);
-		mHasTurbineGovernor = true;
+		WithTurbineGovernor = true;
 }
+
 
 void Components::DP::SynchronGeneratorVBRNew::initialize(Real om, Real dt,
 		Real initActivePower, Real initReactivePower,
@@ -197,8 +195,8 @@ void Components::DP::SynchronGeneratorVBRNew::step(SystemModel& system, Real tim
 		if (!system.MeasuringTime)
 		{
 				if (mLogLevel != Logger::Level::NONE) {
-						Matrix logValues(getStatorCurrents().rows() + 3, 1);
-						logValues << getStatorCurrents()*mBase_i, getElectricalTorque(), getRotationalSpeed(), StepDuration;
+						Matrix logValues(getStatorCurrents().rows() + 4, 1);
+						logValues << getStatorCurrents()*mBase_i, getElectricalTorque(), getRotationalSpeed(), StepDuration, getVt();;
 						mLog->LogGenDP(time, logValues);
 				}
 		}
@@ -215,9 +213,11 @@ void Components::DP::SynchronGeneratorVBRNew::step(SystemModel& system, Real tim
 void Components::DP::SynchronGeneratorVBRNew::stepInPerUnit(Real om, Real dt, Real time, NumericalMethod numMethod)
 {
 
-		// Calculate mechanical variables with euler
-		if (mHasTurbineGovernor == true) {
-				mMechTorque = -mTurbineGovernor.step(mOmMech, 1, 0.001, dt);
+		// Estimate mechanical variables with euler
+		if (WithTurbineGovernor == true)
+		{
+				mMechTorque = -mTurbineGovernor.step(mOmMech, 1, 300e6 / 555e6, dt);
+
 		}
 
 		mElecTorque = (mPsimd*mIq - mPsimq*mId);
@@ -253,27 +253,26 @@ void Components::DP::SynchronGeneratorVBRNew::stepInPerUnit(Real om, Real dt, Re
 
 void Components::DP::SynchronGeneratorVBRNew::postStep(SystemModel& system)
 {
-		Real dt = system.getTimeStep();
 
 		if (mNode1 >= 0) {
-				mVaRe = system.getCompFromLeftSideVector(mNode1).real();
-				mVaIm = system.getCompFromLeftSideVector(mNode1).imag();
+				mVaRe = system.getCompFromLeftSideVector(mNode1).real() / mBase_v;
+				mVaIm = system.getCompFromLeftSideVector(mNode1).imag() / mBase_v;
 		}
 		else {
 				mVaRe = 0;
 				mVaIm = 0;
 		}
 		if (mNode2 >= 0) {
-				mVbRe = system.getCompFromLeftSideVector(mNode2).real();
-				mVbIm = system.getCompFromLeftSideVector(mNode2).imag();
+				mVbRe = system.getCompFromLeftSideVector(mNode2).real() / mBase_v;
+				mVbIm = system.getCompFromLeftSideVector(mNode2).imag() / mBase_v;
 		}
 		else {
 				mVbRe = 0;
 				mVbIm = 0;
 		}
 		if (mNode3 >= 0) {
-				mVcRe = system.getCompFromLeftSideVector(mNode3).real();
-				mVcIm = system.getCompFromLeftSideVector(mNode3).imag();
+				mVcRe = system.getCompFromLeftSideVector(mNode3).real() / mBase_v;
+				mVcIm = system.getCompFromLeftSideVector(mNode3).imag() / mBase_v;
 		}
 		else {
 				mVcRe = 0;
@@ -282,19 +281,19 @@ void Components::DP::SynchronGeneratorVBRNew::postStep(SystemModel& system)
 
 
 		mVabc <<
-				mVaRe / mBase_v,
-				mVbRe / mBase_v,
-				mVcRe / mBase_v,
-				mVaIm / mBase_v,
-				mVbIm / mBase_v,
-				mVcIm / mBase_v;
+				mVaRe,
+				mVbRe,
+				mVcRe,
+				mVaIm,
+				mVbIm,
+				mVcIm;
 
 		mVq = abcToDq0Transform(mThetaMech, mVaRe, mVbRe, mVcRe, mVaIm, mVbIm, mVcIm)(0);
 		mVd = abcToDq0Transform(mThetaMech, mVaRe, mVbRe, mVcRe, mVaIm, mVbIm, mVcIm)(1);
 		mV0 = abcToDq0Transform(mThetaMech, mVaRe, mVbRe, mVcRe, mVaIm, mVbIm, mVcIm)(2);
 
-		if (mHasExciter == true) {
-				mVfd = mExciter.step(mVd, mVq, 1, dt);
+		if (WithExciter == true) {
+				mVfd = mExciter.step(mVd, mVq, 1, system.getTimeStep());
 		}
 
 		mIabc = R_eq_DP.inverse()*(mVabc - E_eq_DP);

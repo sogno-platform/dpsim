@@ -243,6 +243,7 @@ namespace DPsim {
 								Real getRotationalSpeed() { return mOmMech*mBase_OmMech; }
 								Real getRotorPosition() { return mThetaMech; }
 								Matrix& getStatorCurrents() { return mIabc; }
+								Real getVt() { return sqrt(pow(mVd, 2.) + pow(mVq, 2.)); }
 
 								void init(Real om, Real dt) { }
 								void applySystemMatrixStamp(SystemModel& system) { }
