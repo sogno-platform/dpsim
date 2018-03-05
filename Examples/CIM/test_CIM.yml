@@ -21,8 +21,3 @@ IEEE-39_Neplan:
     - Examples/CIM/IEEE-39_Neplan/Rootnet_FULL_NE_29J10h_EQ.xml
     - Examples/CIM/IEEE-39_Neplan/Rootnet_FULL_NE_29J10h_SV.xml
     - Examples/CIM/IEEE-39_Neplan/Rootnet_FULL_NE_29J10h_TP.xml
-
-Line_Load:
-  cmd: build/Examples/Cxx/CIM
-  args:
-    - Examples/CIM/Line_Load/Line_Load.xml
