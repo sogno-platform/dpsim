@@ -34,7 +34,6 @@
 namespace DPsim {
 	class Terminal;
 	class Node;
-
 	/// Base class for all components that might be added to the matrix.
 	class Component : std::enable_shared_from_this<Component> {
 	public:
@@ -55,13 +54,7 @@ namespace DPsim {
 		/// Component logger control for internal variables
 		Logger::Level mLogLevel;
 		/// Human readable name
-		String mName;
-		/// Component node 1
-		Matrix::Index mNode1 = 0;
-		/// Component node 2
-		Matrix::Index mNode2 = 0;
-		/// Component node 3
-		Matrix::Index mNode3 = 0;
+		String mName;		
 		/// Determines the number of Terminals which can be connected to nodes
 		Int mNumTerminals = 0;
 		/// List of Terminals
@@ -72,6 +65,13 @@ namespace DPsim {
 		std::vector<std::shared_ptr<Node>> mVirtualNodes;
 		/// Map of all attributes that should be exported to the Python interface
 		Attribute::Map attrMap;
+		// #### Deprecated ####
+		/// Component node 1
+		Matrix::Index mNode1 = 0;
+		/// Component node 2
+		Matrix::Index mNode2 = 0;
+		/// Component node 3
+		Matrix::Index mNode3 = 0;
 	public:
 		typedef std::shared_ptr<Component> Ptr;
 		typedef std::vector<Ptr> List;
@@ -92,13 +92,7 @@ namespace DPsim {
 		///
 		String getType();
 		///
-		std::map<String, Attribute>& getAttrMap() { return attrMap; }
-		/// get value of node1
-		Matrix::Index getNode1() { return mNode1; }
-		/// get value of node2
-		Matrix::Index getNode2() { return mNode2; }
-		/// get value of node3
-		Matrix::Index getNode3() { return mNode3; }
+		std::map<String, Attribute>& getAttrMap() { return attrMap; }		
 		/// Returns true if virtual node number is greater than zero.
 		Bool hasVirtualNodes() { return mNumVirtualNodes > 0; }
 		/// Returns true if virtual node number is greater than zero.
@@ -116,17 +110,6 @@ namespace DPsim {
 		///
 		virtual void initializePowerflow(Real frequency) { }
 		// #### MNA section ####
-		/// Initializes variables of components
-		virtual void initialize(SystemModel& system) { }		
-		/// Stamps conductance matrix
-		virtual void applySystemMatrixStamp(SystemModel& system) = 0;		
-		/// Stamps current source vector
-		virtual void applyRightSideVectorStamp(SystemModel& system) { }		
-		/// Upgrade values on the current source vector
-		virtual void step(SystemModel& system, Real time) { }		
-		/// Upgrade variable values based on the solution of the step
-		virtual void postStep(SystemModel& system) { }
-		// #### New MNA section ####
 		/// Initializes variables of components and
 		/// stamps initial values in system matrix and right side vector
 		virtual void mnaInitialize(Matrix& systemMatrix, Matrix& rightVector, Real omega) { }
@@ -137,5 +120,23 @@ namespace DPsim {
 		/// Upgrade values on the current right side and maybe system matrix.
 		/// Calculate new internal states of the component.
 		virtual void mnaStep(Matrix& systemMatrix, Matrix& rightVector, Matrix& leftVector, Real time) { }
+		// #### Deprecated ####
+		/// get value of node1
+		Matrix::Index getNode1() { return mNode1; }
+		/// get value of node2
+		Matrix::Index getNode2() { return mNode2; }
+		/// get value of node3
+		Matrix::Index getNode3() { return mNode3; }
+		// #### MNA section ####
+		/// Initializes variables of components
+		virtual void initialize(SystemModel& system) { }		
+		/// Stamps conductance matrix
+		virtual void applySystemMatrixStamp(SystemModel& system) = 0;		
+		/// Stamps current source vector
+		virtual void applyRightSideVectorStamp(SystemModel& system) { }		
+		/// Upgrade values on the current source vector
+		virtual void step(SystemModel& system, Real time) { }		
+		/// Upgrade variable values based on the solution of the step
+		virtual void postStep(SystemModel& system) { }		
 	};
 }

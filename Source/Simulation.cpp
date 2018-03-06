@@ -20,23 +20,19 @@
  *********************************************************************************/
 
 #include "Simulation.h"
+#include "CIM/Reader.h"
 
 using namespace DPsim;
 
 Simulation::Simulation(String name, Component::List comps, Real om, Real dt,
 	Real tf, Logger::Level logLevel,
 	SimulationType simType,
-	Bool initializeFromPowerflow,
 	Int downSampleRate) :
 	mLog("Logs/" + name + ".log", logLevel),
 	mLeftVectorLog("Logs/" + name + "_LeftVector.csv", logLevel),
 	mRightVectorLog("Logs/" + name + "_RightVector.csv", logLevel) {
 
 	mGnd = std::make_shared<Node>(-1);
-	mTime = 0;
-	mLastLogTimeStep = 0;
-	mCurrentSwitchTimeIndex = 0;
-
 	mName = name;
 	mLogLevel = logLevel;
 	mSystemModel.setSimType(simType);
@@ -44,7 +40,6 @@ Simulation::Simulation(String name, Component::List comps, Real om, Real dt,
 	mSystemModel.setOmega(om);
 	mFinalTime = tf;
 	mDownSampleRate = downSampleRate;
-	mPowerflowInitialization = initializeFromPowerflow;
 
 	initialize(comps);
 
@@ -60,13 +55,55 @@ Simulation::Simulation(String name, Component::List comps, Real om, Real dt,
 	mLog.LogMatrix(Logger::Level::INFO, mSystemModel.getRightSideVector());
 }
 
-void Simulation::initialize(Component::List newComponents)
-{
+Simulation::Simulation(String name,
+	std::list<String> cimFiles,
+	Real frequency, Real timeStep, Real finalTime,
+	Logger::Level logLevel, SimulationType simType) :
+	mLog("Logs/" + name + ".log", logLevel),
+	mLeftVectorLog("Logs/" + name + "_LeftVector.csv", logLevel),
+	mRightVectorLog("Logs/" + name + "_RightVector.csv", logLevel) {
+
+	mGnd = std::make_shared<Node>(-1);
+	mName = name;
+	mLogLevel = logLevel;
+	mSystemModel.setSimType(simType);
+	mSystemModel.setTimeStep(timeStep);
+	mSystemModel.setOmega(2*PI*frequency);
+	mFinalTime = finalTime;
+
+	CIM::Reader reader(frequency, logLevel, logLevel);
+
+	for (String filename : cimFiles) {
+		if (!reader.addFile(filename))
+			std::cout << "Failed to read file " << filename << std::endl;
+	}
+	try {
+		reader.parseFiles();
+	}
+	catch (...) {
+		std::cerr << "Failed to parse CIM files" << std::endl;
+		return;
+	}
+	mNodes = reader.getNodes();
+	Component::List comps = reader.getComponents();
+	initialize(comps);
+	for (auto comp : comps) {
+		mLog.Log(Logger::Level::INFO) << "Added " << comp->getType() << " '" << comp->getName() << "' to simulation." << std::endl;
+	}
+
+	mLog.Log(Logger::Level::INFO) << "System matrix:" << std::endl;
+	mLog.LogMatrix(Logger::Level::INFO, mSystemModel.getCurrentSystemMatrix());
+	mLog.Log(Logger::Level::INFO) << "LU decomposition:" << std::endl;
+	mLog.LogMatrix(Logger::Level::INFO, mSystemModel.getLUdecomp());
+	mLog.Log(Logger::Level::INFO) << "Right side vector:" << std::endl;
+	mLog.LogMatrix(Logger::Level::INFO, mSystemModel.getRightSideVector());
+}
+
+void Simulation::initialize(Component::List newComponents) {
 	Matrix::Index maxNode = 0;
 	Matrix::Index currentVirtualNode = 0;
 
 	mLog.Log(Logger::Level::INFO) << "#### Start Initialization ####" << std::endl;
-
 	// Calculate the mNumber of nodes by going through the list of components
 	// TODO we use the values from the first component vector right now and assume that
 	// these values don't change on switches
@@ -78,23 +115,25 @@ void Simulation::initialize(Component::List newComponents)
 			maxNode = comp->getNode2();
 	}
 
-	// Create Nodes for all indices
-	mNodes.resize(maxNode + 1, nullptr);
-	for (int index = 0; index < mNodes.size(); index++)
-		mNodes[index] = std::make_shared<Node>(index);	
+	if (mNodes.size() == 0) {
+		// Create Nodes for all indices
+		mNodes.resize(maxNode + 1, nullptr);
+		for (int index = 0; index < mNodes.size(); index++)
+			mNodes[index] = std::make_shared<Node>(index);
 
-	for (auto comp : newComponents) {
-		std::shared_ptr<Node> node1, node2;
-		if (comp->getNode1() < 0)
-			node1 = mGnd;
-		else
-			node1 = mNodes[comp->getNode1()];
-		if (comp->getNode2() < 0)
-			node2 = mGnd;
-		else
-			node2 = mNodes[comp->getNode2()];
+		for (auto comp : newComponents) {
+			std::shared_ptr<Node> node1, node2;
+			if (comp->getNode1() < 0)
+				node1 = mGnd;
+			else
+				node1 = mNodes[comp->getNode1()];
+			if (comp->getNode2() < 0)
+				node2 = mGnd;
+			else
+				node2 = mNodes[comp->getNode2()];
 
-		comp->setNodes(Node::List{ node1, node2 });
+			comp->setNodes(Node::List{ node1, node2 });
+		}
 	}
 
 	mLog.Log(Logger::Level::INFO) << "Maximum node number: " << maxNode << std::endl;

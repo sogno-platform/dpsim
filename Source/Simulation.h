@@ -23,6 +23,7 @@
 
 #include <iostream>
 #include <vector>
+#include <list>
 
 #include "Definitions.h"
 #include "Component.h"
@@ -43,9 +44,7 @@ namespace DPsim {
 
 	class Simulation {
 
-	protected:
-		/// Simulation name
-		String mName;
+	protected:		
 		/// Simulation log level
 		Logger::Level mLogLevel;
 		/// Simulation logger
@@ -54,16 +53,18 @@ namespace DPsim {
 		Logger mLeftVectorLog;
 		/// Right side vector logger
 		Logger mRightVectorLog;
+		/// Simulation name
+		String mName;
 		/// Final time of the simulation
 		Real mFinalTime;
 		/// Time variable that is incremented at every step
-		Real mTime;
+		Real mTime = 0;
 		/// Last simulation time step when log was updated
-		Int mLastLogTimeStep;
+		Int mLastLogTimeStep = 0;
 		/// Down sampling rate
-		Int mDownSampleRate;
+		Int mDownSampleRate = 1;
 		/// Index of the next switching
-		UInt mCurrentSwitchTimeIndex;
+		UInt mCurrentSwitchTimeIndex = 0;
 		/// Vector of switch times
 		std::vector<switchConfiguration> mSwitchEventVector;
 		/// Structure that holds all system information.
@@ -85,8 +86,13 @@ namespace DPsim {
 		Simulation(String name, Component::List comps, Real om, Real dt, Real tf,
 			Logger::Level logLevel = Logger::Level::INFO,
 			SimulationType simType = SimulationType::DP,
-			Bool initializeFromPowerflow = false,
 			Int downSampleRate = 1);
+		/// Creates system matrix according to
+		Simulation(String name,
+			std::list<String> cimFiles,
+			Real frequency, Real timeStep, Real finalTime,
+			Logger::Level logLevel = Logger::Level::INFO,
+			SimulationType simType = SimulationType::DP);
 		///
 		virtual ~Simulation() { };
 		/// TODO: check that every system matrix has the same dimensions

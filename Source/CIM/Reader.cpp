@@ -136,12 +136,6 @@ void Reader::parseFiles() {
 			}
 		}
 	}
-
-	// Add power flow equipment to component list
-	// TODO: replace this with a better method
-	for (auto comp : mPowerflowEquipment) {		
-		mComponents.push_back(comp.second);
-	}
 }
 
 void Reader::processTopologicalNode(TopologicalNode* topNode) {
@@ -198,10 +192,10 @@ void Reader::processSvVoltage(SvVoltage* volt) {
 	Real voltageAbs = Reader::unitValue(volt->v.value, UnitMultiplier::k);
 	Real voltagePhase = volt->angle.value * PI / 180;
 	mPowerflowNodes[node->mRID]->mVoltage = std::polar<Real>(voltageAbs, voltagePhase);
-	mLog.Log(Logger::Level::INFO) << "Node " << mPowerflowNodes[node->mRID]->mRID
+	mLog.Log(Logger::Level::INFO) << "Node " << mPowerflowNodes[node->mRID]->mUID
 		<< " SimNode " << mPowerflowNodes[node->mRID]->mSimNode << ": "
-		<< std::abs(mPowerflowNodes[node->mRID]->mVoltage) << " kV, "
-		<< std::arg(mPowerflowNodes[node->mRID]->mVoltage) << " rad" << std::endl;
+		<< std::abs(mPowerflowNodes[node->mRID]->mVoltage) << " V, "
+		<< std::arg(mPowerflowNodes[node->mRID]->mVoltage)*180/PI << " deg" << std::endl;
 }
 
 void Reader::processSvPowerFlow(SvPowerFlow* flow) {
@@ -211,12 +205,25 @@ void Reader::processSvPowerFlow(SvPowerFlow* flow) {
 	mPowerflowTerminals[term->mRID]->mPower = { Reader::unitValue(flow->p.value, UnitMultiplier::M), Reader::unitValue(flow->q.value, UnitMultiplier::M) };
 
 	mLog.Log(Logger::Level::INFO) << "Terminal " << term->mRID << ": "
-		<< mPowerflowTerminals[term->mRID]->mPower.real() << " MW + j"
-		<< mPowerflowTerminals[term->mRID]->mPower.imag() << " MVar" << std::endl;
+		<< mPowerflowTerminals[term->mRID]->mPower.real() << " W + j"
+		<< mPowerflowTerminals[term->mRID]->mPower.imag() << " Var" << std::endl;
 }
 
-Component::List& Reader::getComponents() {
-	return mComponents;
+Component::List Reader::getComponents() {
+	Component::List components;
+	for (auto comp : mPowerflowEquipment) {
+		components.push_back(comp.second);
+	}
+	return components;
+}
+
+Node::List Reader::getNodes() {
+	Node::List nodes;
+	nodes.resize(mPowerflowNodes.size());	
+	for (auto node : mPowerflowNodes) {
+		nodes[node.second->mSimNode] = node.second;
+	}
+	return nodes;
 }
 
 Matrix::Index Reader::mapTopologicalNode(String mrid) {

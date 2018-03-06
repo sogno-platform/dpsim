@@ -90,12 +90,12 @@ namespace CIM {
 		/// Currently the only option is to create an RL-load.
 		/// The voltage should be given in kV and the angle in degree.
 		/// TODO: Introduce real PQload model here.
-		Component::Ptr mapEnergyConsumer(EnergyConsumer* consumer);
-		/// Not tested yet.
-		Component::Ptr mapExternalNetworkInjection(ExternalNetworkInjection* inj);				
+		Component::Ptr mapEnergyConsumer(EnergyConsumer* consumer);				
 	public:
 		///
-		Reader(Real om, Logger::Level logLevel = Logger::Level::NONE, Logger::Level componentLogLevel = Logger::Level::NONE);
+		Reader(Real frequency,
+			Logger::Level logLevel = Logger::Level::NONE,
+			Logger::Level componentLogLevel = Logger::Level::NONE);
 		///
 		virtual ~Reader();
 		/// Adds CIM files to list of files to be parsed.
@@ -105,7 +105,9 @@ namespace CIM {
 		/// the other way around (which we need for instantiating the components), we collect that information here as well.
 		void parseFiles();
 		/// Returns list of components.
-		Component::List& getComponents();
+		Component::List getComponents();
+		///
+		Node::List getNodes();
 	};
 }
 }

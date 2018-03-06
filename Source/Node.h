@@ -31,14 +31,15 @@ namespace DPsim {
 	public:
 		typedef std::shared_ptr<Node> Ptr;
 		typedef std::vector<Ptr> List;
-		String mRID;
+		String mUID;
 		String mName;
-		Matrix::Index mSimNode;
+		Matrix::Index mSimNode = -1;
 		Complex mVoltage = { 0, 0 };
 		std::vector<std::weak_ptr<Terminal>> mTerminals;
-		Node() : mRID("gnd"), mName("gnd"), mSimNode(-1) {}
+
+		Node() : mUID("gnd"), mName("gnd") {}
 		Node(Matrix::Index simNode) : mSimNode(simNode) {}
-		Node(String rid, Matrix::Index simNode) : mRID(rid), mSimNode(simNode) {}
+		Node(String uid, Matrix::Index simNode) : mUID(uid), mSimNode(simNode) {}
 		std::shared_ptr<Terminal> getTerminal(Int position) {
 			if (mTerminals.size() <= position)
 				return nullptr;
