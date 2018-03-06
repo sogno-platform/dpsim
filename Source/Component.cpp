@@ -48,15 +48,15 @@ Component::Component(String name, Matrix::Index node1, Matrix::Index node2, Logg
 	mNode1 = node1;
 	mNode2 = node2;
 	mLogLevel = logLevel;
-	attrMap["name"] = { Attribute::String,  &mName };
-	attrMap["node1"] = { Attribute::Integer, &mNode1 };
-	attrMap["node2"] = { Attribute::Integer, &mNode2 };
+	mAttributes["name"]  = Attribute<String>::make(&mName, Flags::read);
+	mAttributes["node1"] = Attribute<Int>::make(&mNode1, Flags::read);
+	mAttributes["node2"] = Attribute<Int>::make(&mNode2, Flags::read);
 }
 
 Component::Component(String name, Matrix::Index node1, Matrix::Index node2, Matrix::Index node3, Logger::Level loglevel)
 	: Component(name, node1, node2, loglevel) {
 	mNode3 = node3;
-	attrMap["node3"] = { Attribute::Integer, &mNode3 };
+	mAttributes["node3"] = Attribute<Int>::make(&mNode3, Flags::read);
 }
 
 void Component::setVirtualNodeAt(std::shared_ptr<Node> virtualNode, Int nodeNum) {
