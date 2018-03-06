@@ -20,6 +20,7 @@ list(APPEND SOURCES
 	Components/DP_Line_Rx.cpp
 	Components/DP_Load_PQ.cpp
 	Components/DP_Resistor.cpp
+	Components/DP_SynchronGenerator_Ideal.cpp
 	Components/DP_SynchronGenerator.cpp
 	Components/DP_SynchronGenerator_VBR.cpp
 	Components/DP_SynchronGenerator_VBR_Simplified.cpp

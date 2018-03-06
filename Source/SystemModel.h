@@ -72,11 +72,11 @@ namespace DPsim {
 		void InitializeRightSideVector(Matrix& rightSideVector) { mRightSideVector = rightSideVector; }
 		void InitializeLeftSideVector(Matrix& leftSideVector) { mLeftSideVector = leftSideVector; }
 		void switchSystemMatrix(UInt systemMatrixIndex);
-		void addRealToSystemMatrix(Int row, Int column, Real value);
-		void addCompToSystemMatrix(Int row, Int column, Complex value);
-		void setCompSystemMatrixElement(Int row, Int column, Complex value);
-		void addCompToRightSideVector(Int row, Complex value);
-		void addRealToRightSideVector(Int row, Real value);
+		void addRealToSystemMatrix(Matrix::Index row, Matrix::Index column, Real value);
+		void addCompToSystemMatrix(Matrix::Index row, Matrix::Index column, Complex value);
+		void setCompSystemMatrixElement(Matrix::Index row, Matrix::Index column, Complex value);
+		void addCompToRightSideVector(Matrix::Index row, Complex value);
+		void addRealToRightSideVector(Matrix::Index row, Real value);
 		void setRightSideVectorToZero();
 		void solve();
 		void updateLuFactored();
@@ -88,8 +88,8 @@ namespace DPsim {
 		Real getTimeStep() const { return mTimeStep; }
 		Real getOmega() const { return mSystemOmega; }
 		Int getCompOffset() const { return mCompOffset; }
-		Real getRealFromLeftSideVector(Int row) const { return mLeftSideVector(row, 0); }
-		Complex getCompFromLeftSideVector(Int row) const { return Complex(mLeftSideVector(row, 0), mLeftSideVector(row + mCompOffset, 0)); }
+		Real getRealFromLeftSideVector(Matrix::Index row) const { return mLeftSideVector(row, 0); }
+		Complex getCompFromLeftSideVector(Matrix::Index row) const { return Complex(mLeftSideVector(row, 0), mLeftSideVector(row + mCompOffset, 0)); }
 		SimulationType getSimType() const { return mSimType; }
 		Int getNumNodes() const { return mNumNodes; }
 		Int getNumIdealVS() const { return mNumIdealVS; }
@@ -98,8 +98,8 @@ namespace DPsim {
 		void setSimType(SimulationType simType) { mSimType = simType; }
 		void setTimeStep(Real timeStep) { mTimeStep = timeStep; }
 		void setOmega(Real omega) { mSystemOmega = omega; }
-		void setSystemMatrixElement(Int row, Int column, Real value) { mSystemMatrix(row, column) = value; }
-		void setCompSystemMatrixElement(Int row, Int column, Real reValue, Real imValue);
+		void setSystemMatrixElement(Matrix::Index row, Matrix::Index column, Real value) { mSystemMatrix(row, column) = value; }
+		void setCompSystemMatrixElement(Matrix::Index row, Matrix::Index column, Real reValue, Real imValue);
 		void setNumMethod(NumericalMethod numMethod) { mNumMethod = numMethod; }
 	};
 }

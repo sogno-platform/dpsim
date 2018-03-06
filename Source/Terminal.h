@@ -30,11 +30,19 @@ namespace DPsim {
 
 	class Terminal {
 	public:
-		String mRID;
-		Real mActivePower;
-		Real mReactivePower;
-		std::shared_ptr<Node> mNode;
-		std::shared_ptr<Component> mComponent;
-		Terminal(String rid) : mRID(rid) {}
+		typedef std::shared_ptr<Terminal> Ptr;
+		typedef std::vector<Ptr> List;
+		String mUID;
+		Complex mPower = { 0, 0 };
+		std::weak_ptr<Node> mNode;
+		std::weak_ptr<Component> mComponent;
+
+		Terminal(String uid) : mUID(uid) {}
+		std::shared_ptr<Node> getNode() {			
+			return mNode.lock();
+		}
+		std::shared_ptr<Component> getComponent() {
+			return mComponent.lock();
+		}
 	};
 }

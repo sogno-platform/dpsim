@@ -28,44 +28,9 @@
 using namespace DPsim;
 
 static int testCIMReader(std::list<String> filenames) {
-	CIM::Reader reader(50, Logger::Level::INFO);
-
-	for (String & filename : filenames) {
-		if (!reader.addFile(filename))
-			std::cout << "Failed to read file " << filename << std::endl;
-	}
-
-	try {
-		reader.parseFiles();
-	}
-	catch (...) {
-		std::cerr << "Failed to parse CIM files" << std::endl;
-		return -1;
-	}
-
-	Component::List comps = reader.getComponents();
-
-	Simulation sim("CIM", comps, 2 * PI * 50, 0.001, 0.3);
-
+	Simulation sim("CIM", filenames, 50, 0.0001, 0.1, Logger::Level::DEBUG, SimulationType::DP);
 	sim.run();
-
 	return 0;
-}
-
-static int readFixedCIMFiles_LineLoad() {
-#ifdef _WIN32
-	String path("..\\..\\..\\..\\dpsim\\Examples\\CIM\\Line_Load\\");
-#elif defined(__linux__)
-	String path("../../../dpsim/Examples/CIM/Line_Load/");
-#else
-  #error "Unkown platform"
-#endif
-
-	std::list<String> filenames = {
-		path + "Line_Load.xml"
-	};
-
-	return testCIMReader(filenames);
 }
 
 static int readFixedCIMFiles_IEEE9bus() {
@@ -76,15 +41,15 @@ static int readFixedCIMFiles_IEEE9bus() {
 #else
   #error "Unkown platform"
 #endif
-
+	
 	std::list<String> filenames = {
 		path + "WSCC-09_Neplan_RX_DI.xml",
 		path + "WSCC-09_Neplan_RX_EQ.xml",
 		path + "WSCC-09_Neplan_RX_SV.xml",
 		path + "WSCC-09_Neplan_RX_TP.xml"
 	};
-
-	return testCIMReader(filenames);
+	testCIMReader(filenames);
+	return 0;
 }
 
 static int readCIMFilesFromInput(int argc, char *argv[]) {

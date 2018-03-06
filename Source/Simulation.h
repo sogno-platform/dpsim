@@ -23,12 +23,14 @@
 
 #include <iostream>
 #include <vector>
+#include <list>
 
 #include "Definitions.h"
 #include "Component.h"
 #include "Logger.h"
 #include "SystemModel.h"
 #include "ExternalInterface.h"
+#include "Node.h"
 
 namespace DPsim {
 
@@ -42,9 +44,7 @@ namespace DPsim {
 
 	class Simulation {
 
-	protected:
-		/// Simulation name
-		String mName;
+	protected:		
 		/// Simulation log level
 		Logger::Level mLogLevel;
 		/// Simulation logger
@@ -53,16 +53,18 @@ namespace DPsim {
 		Logger mLeftVectorLog;
 		/// Right side vector logger
 		Logger mRightVectorLog;
+		/// Simulation name
+		String mName;
 		/// Final time of the simulation
 		Real mFinalTime;
 		/// Time variable that is incremented at every step
-		Real mTime;
+		Real mTime = 0;
 		/// Last simulation time step when log was updated
-		Int mLastLogTimeStep;
+		Int mLastLogTimeStep = 0;
 		/// Down sampling rate
-		Int mDownSampleRate;
+		Int mDownSampleRate = 1;
 		/// Index of the next switching
-		UInt mCurrentSwitchTimeIndex;
+		UInt mCurrentSwitchTimeIndex = 0;
 		/// Vector of switch times
 		std::vector<switchConfiguration> mSwitchEventVector;
 		/// Structure that holds all system information.
@@ -73,12 +75,26 @@ namespace DPsim {
 		std::vector<Component::List> mComponentsVector;
 		/// Vector of ExternalInterfaces
 		std::vector<ExternalInterface*> mExternalInterfaces;
-
+		///
+		Node::List mNodes;
+		///
+		Node::Ptr mGnd;
+		///
+		Bool mPowerflowInitialization;
 	public:
 		/// Creates system matrix according to
-		Simulation(String name, Component::List comps, Real om, Real dt, Real tf, Logger::Level logLevel = Logger::Level::INFO, SimulationType simType = SimulationType::DP, Int downSampleRate = 1);
+		Simulation(String name, Component::List comps, Real om, Real dt, Real tf,
+			Logger::Level logLevel = Logger::Level::INFO,
+			SimulationType simType = SimulationType::DP,
+			Int downSampleRate = 1);
+		/// Creates system matrix according to
+		Simulation(String name,
+			std::list<String> cimFiles,
+			Real frequency, Real timeStep, Real finalTime,
+			Logger::Level logLevel = Logger::Level::INFO,
+			SimulationType simType = SimulationType::DP);
+		///
 		virtual ~Simulation() { };
-
 		/// TODO: check that every system matrix has the same dimensions
 		void initialize(Component::List comps);
 		/// Solve system A * x = z for x and current time
@@ -89,24 +105,25 @@ namespace DPsim {
 		void run(double duration);
 		/// Advance the simulation clock by 1 time-step.
 		void increaseByTimeStep();
-
+		///
 		void switchSystemMatrix(Int systemMatrixIndex);
+		///
 		void setSwitchTime(Real switchTime, Int systemIndex);
-
+		///
 		void addExternalInterface(ExternalInterface*);
-
+		///
 		void setNumericalMethod(NumericalMethod numMethod);
+		///
+		void addSystemTopology(Component::List newComps);
 
-		// Getter
+		// #### Getter ####
 		String getName() const { return mName; }
 		Real getTime() { return mTime; }
 		Real getFinalTime() { return mFinalTime; }
 		Real getTimeStep() { return mSystemModel.getTimeStep(); }
-		Matrix & getLeftSideVector() { return mSystemModel.getLeftSideVector(); }
-		Matrix & getRightSideVector() { return mSystemModel.getRightSideVector(); }
-		Matrix & getSystemMatrix() { return mSystemModel.getCurrentSystemMatrix(); }
-
-		void addSystemTopology(Component::List newComps);
+		Matrix& getLeftSideVector() { return mSystemModel.getLeftSideVector(); }
+		Matrix& getRightSideVector() { return mSystemModel.getRightSideVector(); }
+		Matrix& getSystemMatrix() { return mSystemModel.getCurrentSystemMatrix(); }
 	};
 
 }

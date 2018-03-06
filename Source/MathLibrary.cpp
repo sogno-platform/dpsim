@@ -23,36 +23,36 @@
 
 using namespace DPsim;
 
-void MathLibrary::setCompMatrixElement(Matrix& mat, Int compOffset, Int row, Int column, Complex value) {
+void MathLibrary::setCompMatrixElement(Matrix& mat, Int compOffset, Matrix::Index row, Matrix::Index column, Complex value) {
 	mat(row, column) = value.real();
 	mat(row + compOffset, column + compOffset) = value.real();
 	mat(row, column + compOffset) = - value.imag();
 	mat(row + compOffset, column) = value.imag();
 }
 
-void MathLibrary::setCompVectorElement(Matrix& mat, Int compOffset, Int row, Complex value) {
+void MathLibrary::setCompVectorElement(Matrix& mat, Int compOffset, Matrix::Index row, Complex value) {
 	mat(row, 0) = value.real();
 	mat(row + compOffset, 0) = value.imag();
 }
 
-void MathLibrary::addCompToMatrixElement(Matrix& mat, Int compOffset, Int row, Int column, Complex value) {
+void MathLibrary::addCompToMatrixElement(Matrix& mat, Int compOffset, Matrix::Index row, Matrix::Index column, Complex value) {
 	mat(row, column) = mat(row, column) + value.real();
 	mat(row + compOffset, column + compOffset) = mat(row + compOffset, column + compOffset) + value.real();
 	mat(row, column + compOffset) = mat(row, column + compOffset) - value.imag();
 	mat(row + compOffset, column) = mat(row + compOffset, column) + value.imag();
 }
 
-void MathLibrary::addCompToVectorElement(Matrix& mat, Int compOffset, Int row, Complex value) {
+void MathLibrary::addCompToVectorElement(Matrix& mat, Int compOffset, Matrix::Index row, Complex value) {
 	mat(row, 0) = mat(row, 0) + value.real();
 	mat(row + compOffset, 0) = mat(row + compOffset, 0) + value.imag();
 }
 
-void MathLibrary::addRealToVectorElement(Matrix& mat, Int row, Real reValue)
+void MathLibrary::addRealToVectorElement(Matrix& mat, Matrix::Index row, Real reValue)
 {
 	mat(row, 0) = mat(row, 0) + reValue;
 }
 
-void MathLibrary::addRealToMatrixElement(Matrix& mat, Int row, Int column, Real reValue)
+void MathLibrary::addRealToMatrixElement(Matrix& mat, Matrix::Index row, Matrix::Index column, Real reValue)
 {
 	mat(row, column) = mat(row, column) + reValue;
 }
