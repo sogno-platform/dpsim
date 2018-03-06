@@ -95,7 +95,7 @@ namespace DPsim {
 		///
 		String getType();
 		///
-		std::map<String, Attribute>& getAttrMap() { return attrMap; }		
+		std::map<String, Attribute>& getAttrMap() { return mAttributes; }		
 		/// Returns true if virtual node number is greater than zero.
 		Bool hasVirtualNodes() { return mNumVirtualNodes > 0; }
 		/// Returns true if virtual node number is greater than zero.
