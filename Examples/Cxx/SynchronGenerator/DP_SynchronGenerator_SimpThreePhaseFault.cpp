@@ -28,11 +28,6 @@ using namespace DPsim::Components::DP;
 
 int main(int argc, char* argv[])
 {
-	// Define Object for saving data on a file
-	Logger log("log.txt"),
-		vtLog("data_vt.csv"),
-		jLog("data_j.csv");
-
 	// Define machine parameters in per unit
 	Real nomPower = 555e6;
 	Real nomPhPhVoltRMS = 24e3;
@@ -78,21 +73,21 @@ int main(int argc, char* argv[])
 
 	Real Ra = (Ld_s + Lq_s) / dt;
 	// Declare circuit components
-	Component::Ptr gen = SynchronGenerator::make("gen", 1, 2, 3,
+	Component::Ptr gen = SynchronGenerator::make("gen", 0, 1, 2,
 		nomPower, nomPhPhVoltRMS, nomFreq, poleNum, nomFieldCurr,
 		Rs, Ll, Lmd, Lmd0, Lmq, Lmq0, Rfd, Llfd, Rkd, Llkd, Rkq1, Llkq1, Rkq2, Llkq2, H, Ra);
 	Real loadRes = 1037.8378;
-	Component::Ptr r1 = Resistor::make("r1", 1, 0, loadRes);
-	Component::Ptr r2 = Resistor::make("r2", 2, 0, loadRes);
-	Component::Ptr r3 = Resistor::make("r3", 3, 0, loadRes);
+	Component::Ptr r1 = Resistor::make("r1", 0, GND, loadRes);
+	Component::Ptr r2 = Resistor::make("r2", 1, GND, loadRes);
+	Component::Ptr r3 = Resistor::make("r3", 2, GND, loadRes);
 
 	Component::List comps = { gen, r1, r2, r3 };
 
 	// Declare circuit components for resistance change
 	Real breakerRes = 0.001;
-	Component::Ptr rBreaker1 = Resistor::make("rbreak1", 1, 0, breakerRes);
-	Component::Ptr rBreaker2 = Resistor::make("rbreak2", 2, 0, breakerRes);
-	Component::Ptr rBreaker3 = Resistor::make("rbreak3", 3, 0, breakerRes);
+	Component::Ptr rBreaker1 = Resistor::make("rbreak1", 0, GND, breakerRes);
+	Component::Ptr rBreaker2 = Resistor::make("rbreak2", 1, GND, breakerRes);
+	Component::Ptr rBreaker3 = Resistor::make("rbreak3", 2, GND, breakerRes);
 
 	Component::List compsBreakerOn = { gen, rBreaker1, rBreaker2, rBreaker3, r1, r2, r3 };
 
@@ -108,7 +103,7 @@ int main(int argc, char* argv[])
 	Real initVoltAngle = -DPS_PI / 2;
 	Real fieldVoltage = 7.0821;
 	Real mechPower = 5.5558e5;
-	auto genPtr = std::dynamic_pointer_cast<Components::DP::SynchronGenerator>(gen);
+	auto genPtr = std::dynamic_pointer_cast<SynchronGenerator>(gen);
 	genPtr->initialize(om, dt, initActivePower, initReactivePower, initTerminalVolt, initVoltAngle, fieldVoltage, mechPower);
 	//genPtr->addExciter(Ta, Ka, Te, Ke, Tf, Kf, Tr, Lmd, Rfd);
 
@@ -117,15 +112,6 @@ int main(int argc, char* argv[])
 	Real initTerminalCurr = initApparentPower / (3 * initTerminalVolt)* sqrt(2);
 	Real initPowerFactor = acos(initActivePower / initApparentPower);
 
-	std::cout << "A matrix:" << std::endl;
-	std::cout << sim.getSystemMatrix() << std::endl;
-	std::cout << "vt vector:" << std::endl;
-	std::cout << sim.getLeftSideVector() << std::endl;
-	std::cout << "j vector:" << std::endl;
-	std::cout << sim.getRightSideVector() << std::endl;
-
-	Real lastLogTime = 0;
-	Real logTimeStep = 0.0001;
 	sim.setSwitchTime(0.1, 1);
 	sim.setSwitchTime(0.2, 0);
 

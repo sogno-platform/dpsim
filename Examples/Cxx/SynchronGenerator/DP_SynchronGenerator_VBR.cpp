@@ -1,4 +1,4 @@
-﻿/** SynGenVBRDP Example
+/** SynGenVBRDP Example
  *
  * @author Markus Mirz <mmirz@eonerc.rwth-aachen.de>
  * @copyright 2017, Institute for Automation of Complex Power Systems, EONERC
@@ -27,11 +27,6 @@ using namespace DPsim::Components::DP;
 
 int main(int argc, char* argv[])
 {
-	// Define Object for saving data on a file
-	Logger log("log.txt"),
-		vtLog("data_vt.csv"),
-		jLog("data_j.csv");
-
 	// Define machine parameters in per unit
 	Real nomPower = 555e6;
 	Real nomPhPhVoltRMS = 24e3;
@@ -94,18 +89,9 @@ int main(int argc, char* argv[])
 	Real initVoltAngle = -DPS_PI / 2;
 	Real fieldVoltage = 7.0821;
 	Real mechPower = 5.5558e5;
-	auto genPtr = std::dynamic_pointer_cast<Components::DP::SynchronGeneratorVBRNew>(gen);
+	auto genPtr = std::dynamic_pointer_cast<SynchronGeneratorVBRNew>(gen);
 	genPtr->initialize(om, dt, initActivePower, initReactivePower, initTerminalVolt, initVoltAngle, fieldVoltage, mechPower);
 
-	std::cout << "A matrix:" << std::endl;
-	std::cout << sim.getSystemMatrix() << std::endl;
-	std::cout << "vt vector:" << std::endl;
-	std::cout << sim.getLeftSideVector() << std::endl;
-	std::cout << "j vector:" << std::endl;
-	std::cout << sim.getRightSideVector() << std::endl;
-
-	Real lastLogTime = 0;
-	Real logTimeStep = 0.00005;
 	sim.setSwitchTime(0.1, 1);
 	sim.setSwitchTime(0.2, 0);
 

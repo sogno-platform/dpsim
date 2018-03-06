@@ -54,28 +54,28 @@ int main(int argc, char *argv[])
 	ShmemInterface shmem(in, out, &conf);
 
 	if (String(argv[1]) == "0") {
-		auto evs = VoltageSource::make("v_t", 3, 0, Complex(0, 0));
+		auto evs = VoltageSource::make("v_t", 2, GND, Complex(0, 0));
 
 		comps = {
-			VoltageSourceNorton::make("v_s", 1, 0, Complex(10000, 0), 1),
-			Inductor::make("l_1", 1, 2, 0.1),
-			Resistor::make("r_1", 2, 3, 1),
+			VoltageSourceNorton::make("v_s", 0, GND, Complex(10000, 0), 1),
+			Inductor::make("l_1", 0, 1, 0.1),
+			Resistor::make("r_1", 1, 2, 1),
 			evs
 		};
 
-		shmem.registerControllableSource(evs, 0, 1);
-		shmem.registerExportedCurrent(evs, 0, 1);
+		shmem.registerControllableSource(evs, GND, 0);
+		shmem.registerExportedCurrent(evs, GND, 0);
 	}
 	else if (String(argv[1]) == "1") {
-		auto ecs = CurrentSource::make("v_s", 1, 0, Complex(0, 0));
+		auto ecs = CurrentSource::make("v_s", 0, GND, Complex(0, 0));
 
 		comps = {
-			Resistor::make("r_2", 1, 0, 10),
+			Resistor::make("r_2", 0, GND, 10),
 			ecs
 		};
 
-		shmem.registerControllableSource(ecs, 0, 1);
-		shmem.registerExportedVoltage(1, 0, 0, 1);
+		shmem.registerControllableSource(ecs, GND, 0);
+		shmem.registerExportedVoltage(0, GND, 0, 1);
 	}
 	else {
 		std::cerr << "invalid test number" << std::endl;
@@ -92,7 +92,7 @@ int main(int argc, char *argv[])
 		auto comps2 = comps;
 
 		comps2.pop_back();
-		comps2.push_back(Resistor::make("r_2", 1, 0, 8));
+		comps2.push_back(Resistor::make("r_2", 0, GND, 8));
 
 		sim.addSystemTopology(comps2);
 		sim.setSwitchTime(10, 1);

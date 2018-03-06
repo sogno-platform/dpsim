@@ -27,11 +27,6 @@ using namespace DPsim::Components::DP;
 
 int main(int argc, char* argv[])
 {
-	// Define Object for saving data on a file
-	Logger log("log.txt"),
-		vtLog("data_vt.csv"),
-		jLog("data_j.csv");
-
 	// Define machine parameters in per unit
 	Real nomPower = 555e6;
 	Real nomPhPhVoltRMS = 24e3;
@@ -69,13 +64,13 @@ int main(int argc, char* argv[])
 
 
 	// Declare circuit components
-	Component::Ptr gen = SynchronGenerator::make("gen", 1, 2, 3,
+	Component::Ptr gen = SynchronGenerator::make("gen", 0, 1, 2,
 		nomPower, nomPhPhVoltRMS, nomFreq, poleNum, nomFieldCurr,
 		Rs, Ll, Lmd, Lmd0, Lmq, Lmq0, Rfd, Llfd, Rkd, Llkd, Rkq1, Llkq1, Rkq2, Llkq2, H, Ra);
 	Real loadRes = 1037.8378;
-	Component::Ptr r1 = Resistor::make("r1", 0, 1, loadRes);
-	Component::Ptr r2 = Resistor::make("r2", 0, 2, loadRes);
-	Component::Ptr r3 = Resistor::make("r3", 0, 3, loadRes);
+	Component::Ptr r1 = Resistor::make("r1", 0, GND, loadRes);
+	Component::Ptr r2 = Resistor::make("r2", 1, GND, loadRes);
+	Component::Ptr r3 = Resistor::make("r3", 2, GND, loadRes);
 
 	Component::List comps = { gen, r1, r2, r3 };
 
@@ -89,20 +84,13 @@ int main(int argc, char* argv[])
 	Real initVoltAngle = -DPS_PI / 2;
 	Real fieldVoltage = 7.0821;
 	Real mechPower = 5.5558e5;
-	auto genPtr = std::dynamic_pointer_cast<Components::DP::SynchronGenerator>(gen);
+	auto genPtr = std::dynamic_pointer_cast<SynchronGenerator>(gen);
 	genPtr->initialize(om, dt, initActivePower, initReactivePower, initTerminalVolt, initVoltAngle, fieldVoltage, mechPower);
 
 	// Calculate initial values for circuit at generator connection point
 	Real initApparentPower = sqrt(pow(initActivePower, 2) + pow(initReactivePower, 2));
 	Real initTerminalCurr = initApparentPower / (3 * initTerminalVolt)* sqrt(2);
 	Real initPowerFactor = acos(initActivePower / initApparentPower);
-
-	std::cout << "A matrix:" << std::endl;
-	std::cout << sim.getSystemMatrix() << std::endl;
-	std::cout << "vt vector:" << std::endl;
-	std::cout << sim.getLeftSideVector() << std::endl;
-	std::cout << "j vector:" << std::endl;
-	std::cout << sim.getRightSideVector() << std::endl;
 
 	sim.run();
 

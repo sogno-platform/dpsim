@@ -26,10 +26,11 @@
 #include <vector>
 #include <memory>
 
-#include "SharedFactory.h"
+#include "PtrFactory.h"
 #include "SystemModel.h"
 #include "Definitions.h"
 #include "MathLibrary.h"
+#include "Attribute.h"
 
 namespace DPsim {
 	class Terminal;
@@ -64,7 +65,7 @@ namespace DPsim {
 		/// List of virtual nodes
 		std::vector<std::shared_ptr<Node>> mVirtualNodes;
 		/// Map of all attributes that should be exported to the Python interface
-		Attribute::Map attrMap;
+		AttributeBase::Map mAttributes;
 		// #### Deprecated ####
 		/// Component node 1
 		Matrix::Index mNode1 = 0;
@@ -73,6 +74,8 @@ namespace DPsim {
 		/// Component node 3
 		Matrix::Index mNode3 = 0;
 	public:
+		class InvalidAttributeException { };
+
 		typedef std::shared_ptr<Component> Ptr;
 		typedef std::vector<Ptr> List;
 		/// Unique identifier
@@ -120,6 +123,40 @@ namespace DPsim {
 		/// Upgrade values on the current right side and maybe system matrix.
 		/// Calculate new internal states of the component.
 		virtual void mnaStep(Matrix& systemMatrix, Matrix& rightVector, Matrix& leftVector, Real time) { }
+		/// Get the value of an attribute
+		template<typename T>
+		T getAttribute(const String &name) {
+			auto attr = findAttribute(name);
+			if (!attr)
+				throw InvalidAttributeException();
+
+			auto tattr = std::dynamic_pointer_cast<Attribute<T>>(attr);
+			if (!attr)
+				throw AttributeBase::TypeException();
+
+			return tattr->get();
+		}
+		/// Set the value of an attribute
+		template<typename T>
+		void setAttribute(const String &name, const T &value) {
+			auto attr = findAttribute(name);
+			if (!attr)
+				throw InvalidAttributeException();
+
+			auto tattr = std::dynamic_pointer_cast<Attribute<T>>(attr);
+			if (!attr)
+				throw AttributeBase::TypeException();
+
+			tattr->set(value);
+		}
+		/// Return pointer to an attribute
+		AttributeBase::Ptr findAttribute(const String &name) {
+			auto it = mAttributes.find(name);
+			if (it == mAttributes.end())
+				throw InvalidAttributeException();
+
+			return it->second;
+		}
 		// #### Deprecated ####
 		/// get value of node1
 		Matrix::Index getNode1() { return mNode1; }
@@ -127,7 +164,7 @@ namespace DPsim {
 		Matrix::Index getNode2() { return mNode2; }
 		/// get value of node3
 		Matrix::Index getNode3() { return mNode3; }
-		// #### MNA section ####
+		// #### MNA section ####		
 		/// Initializes variables of components
 		virtual void initialize(SystemModel& system) { }		
 		/// Stamps conductance matrix

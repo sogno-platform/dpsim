@@ -1,4 +1,4 @@
-﻿/** SynGenThreePhaseFault Example
+/** SynGenThreePhaseFault Example
  *
  * @author Markus Mirz <mmirz@eonerc.rwth-aachen.de>
  * @copyright 2017, Institute for Automation of Complex Power Systems, EONERC
@@ -28,11 +28,6 @@ using namespace DPsim::Components::EMT;
 
 int main(int argc, char* argv[])
 {
-	// Define Object for saving data on a file
-	Logger log("log.txt"),
-		vtLog("data_vt.csv"),
-		jLog("data_j.csv");
-
 	// Define machine parameters in per unit
 	Real nomPower = 555e6;
 	Real nomPhPhVoltRMS = 24e3;
@@ -89,7 +84,7 @@ int main(int argc, char* argv[])
 
 
 	Component::List compsBreakerOn = { gen, rBreaker1, rBreaker2, rBreaker3, r1, r2, r3};
-	
+
 	Simulation sim("EMT_SynchronGenerator_ThreePhaseFault", comps, om, dt, tf, Logger::Level::INFO, SimulationType::EMT, downSampling);
 	sim.setNumericalMethod(NumericalMethod::Trapezoidal_flux);
 	sim.addSystemTopology(compsBreakerOn);
@@ -110,15 +105,6 @@ int main(int argc, char* argv[])
 	Real initTerminalCurr = initApparentPower / (3 * initTerminalVolt)* sqrt(2);
 	Real initPowerFactor = acos(initActivePower / initApparentPower);
 
-	std::cout << "A matrix:" << std::endl;
-	std::cout << sim.getSystemMatrix() << std::endl;
-	std::cout << "vt vector:" << std::endl;
-	std::cout << sim.getLeftSideVector() << std::endl;
-	std::cout << "j vector:" << std::endl;
-	std::cout << sim.getRightSideVector() << std::endl;
-
-	Real lastLogTime = 0;
-	Real logTimeStep = 0.00005;
 	sim.setSwitchTime(0.1, 1);
 	sim.setSwitchTime(0.2, 0);
 

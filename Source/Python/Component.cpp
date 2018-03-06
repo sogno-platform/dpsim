@@ -64,75 +64,46 @@ PyObject* Python::Component::getattr(Python::Component* self, char* name)
 		return nullptr;
 	}
 
-	DPsim::Component::Attribute::Map& attrMap = self->comp->getAttrMap();
+	try {
+		auto attr = self->comp->findAttribute(name);
 
-	auto search = attrMap.find(name);
-	if (search == attrMap.end()) {
+		return attr->toPyObject();
+	}
+	catch (DPsim::Component::InvalidAttributeException) {
 		PyErr_Format(PyExc_AttributeError, "Component has no attribute '%s'", name);
-		return nullptr;
+		return NULL;
 	}
-
-	DPsim::Component::Attribute attr = search->second;
-	switch (attr.mType) {
-	case DPsim::Component::Attribute::Real:
-		return PyFloat_FromDouble(*((Real*) attr.mValue));
-	case DPsim::Component::Attribute::Integer:
-		return PyLong_FromLong(*((Int*) attr.mValue));
-	case DPsim::Component::Attribute::String:
-		return PyUnicode_FromString(((std::string*) attr.mValue)->c_str());
-	case DPsim::Component::Attribute::Complex:
-		Complex c = *((Complex*) attr.mValue);
-		return PyComplex_FromDoubles(c.real(), c.imag());
+	catch (...) {
+		PyErr_Format(PyExc_RuntimeError, "Unkown Error Occured", name);
+		return NULL;
 	}
-
-	PyErr_Format(PyExc_SystemError, "invalid type in internal attribute map");
-
-	return nullptr;
 }
 
 int Python::Component::setattr(Python::Component* self, char* name, PyObject *v)
 {
-	Int i;
-	Real r;
-
 	if (!self->comp) {
 		PyErr_SetString(PyExc_ValueError, "setattr on unitialized Component");
 		return -1;
 	}
 
-	DPsim::Component::Attribute::Map& attrMap = self->comp->getAttrMap();
-	auto search = attrMap.find(name);
-	if (search == attrMap.end()) {
+	try {
+		auto attr = self->comp->findAttribute(name);
+		attr->fromPyObject(v);
+	}
+	catch (DPsim::Component::InvalidAttributeException) {
 		PyErr_Format(PyExc_AttributeError, "Component has no attribute '%s'", name);
 		return -1;
 	}
-
-	DPsim::Component::Attribute attr = search->second;
-	switch (attr.mType) {
-	case DPsim::Component::Attribute::Real:
-		r = PyFloat_AsDouble(v);
-		if (PyErr_Occurred())
-			return -1;
-		*((Real*) attr.mValue) = r;
-		break;
-	case DPsim::Component::Attribute::Integer:
-		i = PyLong_AsLong(v);
-		if (PyErr_Occurred())
-			return -1;
-		*((Int*) attr.mValue) = i;
-		break;
-	case DPsim::Component::Attribute::String:
-		if (!PyUnicode_Check(v))
-			return -1;
-		*((std::string*) attr.mValue) = std::string(PyUnicode_AsUTF8(v));
-		break;
-	case DPsim::Component::Attribute::Complex:
-		if (!PyComplex_Check(v))
-			return -1;
-		*((Complex*) attr.mValue) = Complex(PyComplex_RealAsDouble(v), PyComplex_ImagAsDouble(v));
-		break;
-	default:
-		PyErr_Format(PyExc_SystemError, "invalid type in internal attribute map");
+	catch (AttributeBase::TypeException) {
+		PyErr_Format(PyExc_TypeError, "Invalid type for attribute '%s'", name);
+		return -1;
+	}
+	catch (AttributeBase::AccessException) {
+		PyErr_Format(PyExc_AttributeError, "Attribute '%s' is not modifiable", name);
+		return -1;
+	}
+	catch (...) {
+		PyErr_Format(PyExc_RuntimeError, "Unkown Error Occured", name);
 		return -1;
 	}
 
