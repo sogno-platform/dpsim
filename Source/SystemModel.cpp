@@ -20,7 +20,7 @@
  *********************************************************************************/
 
 #include "SystemModel.h"
-#include "MathLibrary.h"
+#include "CPowerSystems/MathLibrary.h"
 
 using namespace DPsim;
 

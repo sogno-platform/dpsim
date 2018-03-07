@@ -25,12 +25,12 @@
 #include <vector>
 #include <list>
 
-#include "Definitions.h"
-#include "Component.h"
-#include "Logger.h"
+#include "CPowerSystems/Definitions.h"
+#include "CPowerSystems/Components/Component.h"
+#include "CPowerSystems/Logger.h"
 #include "SystemModel.h"
-#include "ExternalInterface.h"
-#include "Node.h"
+#include "CPowerSystems/ExternalInterface.h"
+#include "CPowerSystems/Node.h"
 
 namespace DPsim {
 

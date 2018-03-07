@@ -20,7 +20,7 @@
  *********************************************************************************/
 
 #include "Simulation.h"
-#include "CIM/Reader.h"
+#include "CPowerSystems/CIM/Reader.h"
 
 using namespace DPsim;
 
