@@ -4,3 +4,6 @@
 [submodule "Source/Components"]
 	path = Source/Components
 	url = ../cpowersystems.git
+[submodule "Dependencies/libcimpp"]
+	path = Dependencies/libcimpp
+	url = git@git.rwth-aachen.de:acs/core/cim/cimpp/libcimpp.git
