@@ -1,6 +1,6 @@
 option(WITH_EIGEN_SUBMODULE "Build with Eigen as submodule" OFF)
 
-if (WITH_CIM_SUBMODULE OR WIN32)
+if (WITH_EIGEN_SUBMODULE OR WIN32)
 	# This could be used when an optimized version of eigen is required
 	# add_subdirectory(Dependencies/eigen)
 	find_path(EIGEN3_INCLUDE_DIR
