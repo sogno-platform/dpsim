@@ -23,10 +23,10 @@
 #include "Python/LoadCim.h"
 #include "Python/Component.h"
 
-#include "Components.h"
+#include "CPowerSystems/Components.h"
 
 #ifdef WITH_CIM
-  #include "CIM/Reader.h"
+  #include "CPowerSystems/CIM/Reader.h"
 #endif
 
 using namespace DPsim;

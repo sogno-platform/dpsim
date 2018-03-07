@@ -22,6 +22,12 @@
 
 #pragma once
 
-#include <Python.h>
+#ifdef _DEBUG
+  #undef _DEBUG
+  #include <Python.h>
+  #define _DEBUG
+#else
+  #include <Python.h>
+#endif
 
 PyMODINIT_FUNC PyInit__dpsim(void);

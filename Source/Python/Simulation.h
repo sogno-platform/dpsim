@@ -28,11 +28,17 @@
 #include <thread>
 #include <vector>
 
-#include <Python.h>
+#ifdef _DEBUG
+  #undef _DEBUG
+  #include <Python.h>
+  #define _DEBUG
+#else
+  #include <Python.h>
+#endif
 
 #include "Config.h"
 #include "../Simulation.h"
-#include "../Component.h"
+#include "CPowerSystems/Components/Component.h"
 
 namespace DPsim {
 

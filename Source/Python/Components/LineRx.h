@@ -22,7 +22,7 @@
 #pragma once
 
 #include "Python/Component.h"
-#include "Components/DP_Line_Rx.h"
+#include "CPowerSystems/Components/DP_Line_Rx.h"
 
 namespace DPsim {
 namespace Python {

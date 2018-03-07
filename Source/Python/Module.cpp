@@ -19,10 +19,16 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *********************************************************************************/
 
-#include <Python.h>
+#ifdef _DEBUG
+  #undef _DEBUG
+  #include <Python.h>
+  #define _DEBUG
+#else
+  #include <Python.h>
+#endif
 
 #include "Config.h"
-#include "Components.h"
+#include "../CPowerSystems/Components.h"
 
 #include "Python/Component.h"
 #include "Python/LoadCim.h"

@@ -22,12 +22,18 @@
 
 #pragma once
 
-#include <Python.h>
+#ifdef _DEBUG
+  #undef _DEBUG
+  #include <Python.h>
+  #define _DEBUG
+#else
+  #include <Python.h>
+#endif
 
 #include <vector>
 #include <memory>
 
-#include "../Component.h"
+#include "../CPowerSystems/Components/Component.h"
 
 namespace DPsim {
 namespace Python {

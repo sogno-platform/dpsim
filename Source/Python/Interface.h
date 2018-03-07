@@ -22,9 +22,15 @@
 
 #pragma once
 
+#ifdef _DEBUG
+#undef _DEBUG
 #include <Python.h>
+#define _DEBUG
+#else
+#include <Python.h>
+#endif
 
-#include "ExternalInterface.h"
+#include "CPowerSystems/ExternalInterface.h"
 
 namespace DPsim {
 namespace Python {
