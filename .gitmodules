@@ -6,4 +6,7 @@
 	url = ../cpowersystems.git
 [submodule "Dependencies/libcimpp"]
 	path = Dependencies/libcimpp
-	url = git@git.rwth-aachen.de:acs/core/cim/cimpp/libcimpp.git
+	url = ../../cim/cimpp/libcimpp.git
+[submodule "Dependencies/eigen"]
+	path = Dependencies/eigen
+	url = https://github.com/eigenteam/eigen-git-mirror
