@@ -1,51 +1,54 @@
-add_library(dpsim
-	Attribute.cpp
-	IntegrationMethod.cpp
-	Logger.cpp
-	MathLibrary.cpp
+add_library(dpsim	
 	SystemModel.cpp
 	Utilities.cpp
 	Simulation.cpp
 	FaultSimulation.cpp
 	SynGenSimulation.cpp
-	Component.cpp
+	CPowerSystems/Components/Attribute.cpp
+	CPowerSystems/IntegrationMethod.cpp
+	CPowerSystems/Logger.cpp
+	CPowerSystems/MathLibrary.cpp
+	CPowerSystems/Components/Component.cpp
+	CPowerSystems/IntegrationMethod.cpp
+	CPowerSystems/Logger.cpp
+	CPowerSystems/MathLibrary.cpp
 )
 
 list(APPEND SOURCES
-	Components/Base_SynchronGenerator.cpp
-	Components/DP_Capacitor.cpp
-	Components/DP_CurrentSource.cpp
-	Components/DP_Inductor.cpp
-	Components/DP_Inductor_Interfaced.cpp
-	Components/DP_Line_Pi.cpp
-	Components/DP_Line_Rx.cpp
-	Components/DP_Load_PQ.cpp
-	Components/DP_Resistor.cpp
-	Components/DP_SynchronGenerator_Ideal.cpp
-	Components/DP_SynchronGenerator.cpp
-	Components/DP_SynchronGenerator_VBR.cpp
-	Components/DP_SynchronGenerator_VBR_Simplified.cpp
-	Components/DP_Transformer.cpp
-	Components/DP_Transformer_Ideal.cpp
-	Components/DP_VoltageSource.cpp
-	Components/DP_VoltageSource_Freq.cpp
-	Components/DP_VoltageSource_Norton.cpp
-	Components/EMT_Capacitor.cpp
-	Components/EMT_CurrentSource.cpp
-	Components/EMT_Inductor.cpp
-	Components/EMT_Resistor.cpp
-	Components/EMT_SynchronGenerator.cpp
-	Components/EMT_SynchronGenerator_Simplified.cpp
-	Components/EMT_SynchronGenerator_Simplified_CurrentSource.cpp
-	Components/EMT_SynchronGenerator_VBR.cpp
-	Components/EMT_VoltageSource.cpp
-	Components/EMT_VoltageSource_Freq.cpp
-	Components/EMT_VoltageSource_Norton.cpp
-	Components/Exciter.cpp
-	Components/TurbineGovernor.cpp
-	Components/EMT_SynchronGenerator_VBR_New.cpp
-	Components/DP_SynchronGenerator_VBR_New.cpp
-	Components/DP_SynchronGenerator_Simplified.cpp
+	CPowerSystems/Components/Base_SynchronGenerator.cpp
+	CPowerSystems/Components/DP_Capacitor.cpp
+	CPowerSystems/Components/DP_CurrentSource.cpp
+	CPowerSystems/Components/DP_Inductor.cpp
+	CPowerSystems/Components/DP_Inductor_Interfaced.cpp
+	CPowerSystems/Components/DP_Line_Pi.cpp
+	CPowerSystems/Components/DP_Line_Rx.cpp
+	CPowerSystems/Components/DP_Load_PQ.cpp
+	CPowerSystems/Components/DP_Resistor.cpp
+	CPowerSystems/Components/DP_SynchronGenerator_Ideal.cpp
+	CPowerSystems/Components/DP_SynchronGenerator.cpp
+	CPowerSystems/Components/DP_SynchronGenerator_VBR.cpp
+	CPowerSystems/Components/DP_SynchronGenerator_VBR_Simplified.cpp
+	CPowerSystems/Components/DP_Transformer.cpp
+	CPowerSystems/Components/DP_Transformer_Ideal.cpp
+	CPowerSystems/Components/DP_VoltageSource.cpp
+	CPowerSystems/Components/DP_VoltageSource_Freq.cpp
+	CPowerSystems/Components/DP_VoltageSource_Norton.cpp
+	CPowerSystems/Components/EMT_Capacitor.cpp
+	CPowerSystems/Components/EMT_CurrentSource.cpp
+	CPowerSystems/Components/EMT_Inductor.cpp
+	CPowerSystems/Components/EMT_Resistor.cpp
+	CPowerSystems/Components/EMT_SynchronGenerator.cpp
+	CPowerSystems/Components/EMT_SynchronGenerator_Simplified.cpp
+	CPowerSystems/Components/EMT_SynchronGenerator_Simplified_CurrentSource.cpp
+	CPowerSystems/Components/EMT_SynchronGenerator_VBR.cpp
+	CPowerSystems/Components/EMT_VoltageSource.cpp
+	CPowerSystems/Components/EMT_VoltageSource_Freq.cpp
+	CPowerSystems/Components/EMT_VoltageSource_Norton.cpp
+	CPowerSystems/Components/Exciter.cpp
+	CPowerSystems/Components/TurbineGovernor.cpp
+	CPowerSystems/Components/EMT_SynchronGenerator_VBR_New.cpp
+	CPowerSystems/Components/DP_SynchronGenerator_VBR_New.cpp
+	CPowerSystems/Components/DP_SynchronGenerator_Simplified.cpp
 )
 
 set(INCLUDE_DIRS
@@ -85,7 +88,7 @@ if(WITH_PYTHON)
 endif()
 
 if(WITH_CIM)
-	list(APPEND SOURCES CIM/Reader.cpp)
+	list(APPEND SOURCES CPowerSystems/CIM/Reader.cpp)
 	list(APPEND INCLUDE_DIRS ${CIMPP_INCLUDE_DIRS})
 	list(APPEND LIBRARIES ${CIMPP_LIBRARIES})
 endif()
