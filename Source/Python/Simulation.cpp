@@ -26,7 +26,7 @@
 #include "Python/Interface.h"
 #include "Python/Simulation.h"
 
-#include "SystemModel.h"
+#include "../SystemModel.h"
 
 #include <cfloat>
 #include <iostream>

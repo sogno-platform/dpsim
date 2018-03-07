@@ -20,7 +20,7 @@
  *********************************************************************************/
 
 #include "Python/Component.h"
-#include "../CPowerSystems/Components.h"
+#include "CPowerSystems/Components.h"
 
 using namespace DPsim;
 

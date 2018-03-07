@@ -37,7 +37,7 @@
 #endif
 
 #include "Config.h"
-#include "Simulation.h"
+#include "../Simulation.h"
 #include "CPowerSystems/Components/Component.h"
 
 namespace DPsim {
