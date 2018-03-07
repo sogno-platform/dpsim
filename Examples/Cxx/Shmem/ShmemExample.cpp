@@ -19,9 +19,9 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *********************************************************************************/
 
-#include "Simulation.h"
+
 #include "ShmemInterface.h"
-#include "Components.h"
+#include "DPsim.h"
 
 using namespace DPsim;
 using namespace DPsim::Components::DP;

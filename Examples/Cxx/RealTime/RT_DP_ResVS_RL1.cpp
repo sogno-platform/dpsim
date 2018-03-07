@@ -20,7 +20,7 @@
  *********************************************************************************/
 
 #include "RealTimeSimulation.h"
-#include "Components.h"
+#include "DPsim.h"
 
 using namespace DPsim;
 using namespace DPsim::Components::DP;

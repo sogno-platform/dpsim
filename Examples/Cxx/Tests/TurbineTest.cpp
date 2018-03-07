@@ -21,7 +21,7 @@
 * along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *********************************************************************************/
 
-#include "Simulation.h"
+
 #include "Components/TurbineGovernor.h"
 
 using namespace DPsim;

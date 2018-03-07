@@ -22,8 +22,7 @@
 #include <iostream>
 #include <list>
 
-#include "CIM/Reader.h"
-#include "Simulation.h"
+#include "DPsim.h"
 
 using namespace DPsim;
 
