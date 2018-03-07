@@ -22,7 +22,7 @@
 
 #pragma once
 
-#include "CPowerSystems\Definitions.h"
+#include "CPowerSystems/Definitions.h"
 
 namespace DPsim {
 
