@@ -2,7 +2,7 @@
 	path = Examples/Results
 	url = https://git.rwth-aachen.de/acs/public/simulation/reference-results
 [submodule "Source/Components"]
-	path = Source/Components
+	path = Source/CPowerSystems
 	url = ../cpowersystems.git
 [submodule "Dependencies/libcimpp"]
 	path = Dependencies/libcimpp
