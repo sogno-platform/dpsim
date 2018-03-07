@@ -4,6 +4,3 @@
 [submodule "Source/Components"]
 	path = Source/Components
 	url = ../cpowersystems.git
-[submodule "Source/CIM/libcimpp"]
-	path = Source/CIM/libcimpp
-	url = ../../cim/cimpp/libcimpp.git
