@@ -140,7 +140,7 @@ void Reader::parseFiles() {
 
 void Reader::processTopologicalNode(TopologicalNode* topNode) {
 	// Add this node to global node list and assign simulation node incrementally.
-	mPowerflowNodes[topNode->mRID] = std::make_shared<Node>(topNode->mRID, (Matrix::Index) mPowerflowNodes.size());
+	mPowerflowNodes[topNode->mRID] = std::make_shared<Node>(topNode->mRID, Int(mPowerflowNodes.size()));
 
 	mLog.Log(Logger::Level::INFO) << "TopologicalNode " << topNode->mRID
 		<< " as simulation node " << mPowerflowNodes[topNode->mRID]->mSimNode << std::endl;

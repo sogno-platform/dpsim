@@ -100,8 +100,8 @@ Simulation::Simulation(String name,
 }
 
 void Simulation::initialize(Component::List newComponents) {
-	Matrix::Index maxNode = 0;
-	Matrix::Index currentVirtualNode = 0;
+	Int maxNode = 0;
+	Int currentVirtualNode = 0;
 
 	mLog.Log(Logger::Level::INFO) << "#### Start Initialization ####" << std::endl;
 	// Calculate the mNumber of nodes by going through the list of components

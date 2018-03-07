@@ -26,7 +26,7 @@
 #include <typeinfo>
 
 #include "Component.h"
-#include "Node.h"
+#include "./Node.h"
 #include "Terminal.h"
 
 using namespace DPsim;
@@ -42,7 +42,7 @@ Component::Component(String name, Logger::Level logLevel)
 	: Component(name, name, logLevel) {
 }
 
-Component::Component(String name, Matrix::Index node1, Matrix::Index node2, Logger::Level logLevel)
+Component::Component(String name, Int node1, Int node2, Logger::Level logLevel)
 	: mLog("Logs/" + name + ".log", logLevel) {
 	mName = name;
 	mNode1 = node1;
@@ -53,7 +53,7 @@ Component::Component(String name, Matrix::Index node1, Matrix::Index node2, Logg
 	mAttributes["node2"] = Attribute<Int>::make(&mNode2, Flags::read);
 }
 
-Component::Component(String name, Matrix::Index node1, Matrix::Index node2, Matrix::Index node3, Logger::Level loglevel)
+Component::Component(String name, Int node1, Int node2, Int node3, Logger::Level loglevel)
 	: Component(name, node1, node2, loglevel) {
 	mNode3 = node3;
 	mAttributes["node3"] = Attribute<Int>::make(&mNode3, Flags::read);

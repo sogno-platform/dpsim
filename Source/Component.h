@@ -37,18 +37,6 @@ namespace DPsim {
 	class Node;
 	/// Base class for all components that might be added to the matrix.
 	class Component : std::enable_shared_from_this<Component> {
-	public:
-		struct Attribute {
-			enum Type {
-				Real,
-				Integer,
-				String, // value should be *String, not *char!
-				Complex
-			} mType;
-			void* mValue;
-
-			typedef std::map<DPsim::String, Attribute> Map;
-		};
 	protected:
 		/// Component logger
 		Logger mLog;
@@ -68,11 +56,11 @@ namespace DPsim {
 		AttributeBase::Map mAttributes;
 		// #### Deprecated ####
 		/// Component node 1
-		Matrix::Index mNode1 = 0;
+		Int mNode1 = 0;
 		/// Component node 2
-		Matrix::Index mNode2 = 0;
+		Int mNode2 = 0;
 		/// Component node 3
-		Matrix::Index mNode3 = 0;
+		Int mNode3 = 0;
 	public:
 		class InvalidAttributeException { };
 
@@ -85,17 +73,15 @@ namespace DPsim {
 		///
 		Component(String name, Logger::Level logLevel = Logger::Level::NONE);
 		/// Creates a new component with basic features: name, nodes and the log level for this component		
-		Component(String name, Matrix::Index node1, Matrix::Index node2, Logger::Level logLevel = Logger::Level::NONE);
+		Component(String name, Int node1, Int node2, Logger::Level logLevel = Logger::Level::NONE);
 		/// Creates a new component with basic features: name, nodes and the log level for this component
-		Component(String name, Matrix::Index node1, Matrix::Index node2, Matrix::Index node3, Logger::Level loglevel = Logger::Level::NONE);
+		Component(String name, Int node1, Int node2, Int node3, Logger::Level loglevel = Logger::Level::NONE);
 		//
 		virtual ~Component() { }
 		///
 		String getName() { return mName; }
 		///
-		String getType();
-		///
-		std::map<String, Attribute>& getAttrMap() { return mAttributes; }		
+		String getType();		
 		/// Returns true if virtual node number is greater than zero.
 		Bool hasVirtualNodes() { return mNumVirtualNodes > 0; }
 		/// Returns true if virtual node number is greater than zero.
@@ -159,11 +145,11 @@ namespace DPsim {
 		}
 		// #### Deprecated ####
 		/// get value of node1
-		Matrix::Index getNode1() { return mNode1; }
+		Int getNode1() { return mNode1; }
 		/// get value of node2
-		Matrix::Index getNode2() { return mNode2; }
+		Int getNode2() { return mNode2; }
 		/// get value of node3
-		Matrix::Index getNode3() { return mNode3; }
+		Int getNode3() { return mNode3; }
 		// #### MNA section ####		
 		/// Initializes variables of components
 		virtual void initialize(SystemModel& system) { }		

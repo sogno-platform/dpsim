@@ -33,13 +33,13 @@ namespace DPsim {
 		typedef std::vector<Ptr> List;
 		String mUID;
 		String mName;
-		Matrix::Index mSimNode = -1;
+		Int mSimNode = -1;
 		Complex mVoltage = { 0, 0 };
 		std::vector<std::weak_ptr<Terminal>> mTerminals;
 
 		Node() : mUID("gnd"), mName("gnd") {}
-		Node(Matrix::Index simNode) : mSimNode(simNode) {}
-		Node(String uid, Matrix::Index simNode) : mUID(uid), mSimNode(simNode) {}
+		Node(Int simNode) : mSimNode(simNode) {}
+		Node(String uid, Int simNode) : mUID(uid), mSimNode(simNode) {}
 		std::shared_ptr<Terminal> getTerminal(Int position) {
 			if (mTerminals.size() <= position)
 				return nullptr;
