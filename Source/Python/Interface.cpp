@@ -25,7 +25,7 @@
 #include "Python/Interface.h"
 
 #ifdef WITH_SHMEM
-  #include "ShmemInterface.h"
+  #include "CPowerSystems/ShmemInterface.h"
 #endif
 
 using namespace DPsim;
