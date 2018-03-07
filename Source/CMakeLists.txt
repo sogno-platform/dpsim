@@ -75,8 +75,8 @@ if(WITH_SHMEM)
 	list(APPEND INCLUDE_DIRS ${VILLASNODE_INCLUDE_DIRS})
 
 	list(APPEND SOURCES
-		ExternalInterface.cpp
-		ShmemInterface.cpp
+		CPowerSystems/ExternalInterface.cpp
+		CPowerSystems/ShmemInterface.cpp
 	)
 endif()
 
