@@ -88,6 +88,7 @@ void Components::DP::SynchronGeneratorVBRNew::initialize(Real om, Real dt,
 		initStatesInPerUnit(initActivePower, initReactivePower, initTerminalVolt, initVoltAngle, initFieldVoltage, initMechPower);
 
 		mThetaMech2 = mThetaMech + PI / 2;
+		mThetaMech = mThetaMech + PI / 2;
 		mTheta0 = mThetaMech2;
 		mMechTorque = -mMechTorque;
 		mIq = -mIq;
@@ -577,9 +578,14 @@ Matrix Components::DP::SynchronGeneratorVBRNew::abcToDq0Transform(Real theta, Re
 		pnzVector = AbcToPnz * abcVector * thetaCompInv;
 
 		Matrix dq0Vector(3, 1);
+		//dq0Vector <<
+		//		pnzVector(1, 0).imag(),
+		//		pnzVector(1, 0).real(),
+		//		0;
+
 		dq0Vector <<
-				pnzVector(1, 0).imag(),
 				pnzVector(1, 0).real(),
+				-pnzVector(1, 0).imag(),
 				0;
 
 
@@ -598,9 +604,14 @@ Matrix Components::DP::SynchronGeneratorVBRNew::dq0ToAbcTransform(Real theta, Re
 				1, alpha, pow(alpha, 2);
 
 		MatrixComp pnzVector(3, 1);
+		//pnzVector <<
+		//		0,
+		//		Complex(d, q),
+		//		Complex(0, 0);
+
 		pnzVector <<
 				0,
-				Complex(d, q),
+				Complex(q, -d),
 				Complex(0, 0);
 
 		MatrixComp abcCompVector(3, 1);

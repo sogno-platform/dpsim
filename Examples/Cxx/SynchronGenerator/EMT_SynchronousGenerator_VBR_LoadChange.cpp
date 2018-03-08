@@ -82,7 +82,7 @@ int main(int argc, char* argv[])
 				Real tf, dt, t;
 				Real om = 2.0*M_PI*60.0;
 				dt = i; t = 0;
-				tf = 0.3 - dt;
+				tf = 100000 *dt;
 				Int downSampling = 1;
 				String mSimulationName = "EMT_SynchronGenerator_VBR_" + std::to_string(i);
 				SynGenSimulation sim(mSimulationName, comps, om, dt, tf, Logger::Level::INFO, SimulationType::EMT, downSampling);

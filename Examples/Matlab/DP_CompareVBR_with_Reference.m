@@ -11,9 +11,9 @@ vt_Reference = csvread('../../../vsa/Results/TestExciterAndTurbine/Simulink/vt.c
 %% Read data from DP simulation and calculate absolute value and phase
 
 % Read values from CSV files
-voltageDP = csvread('../../../vsa/Results/TestExciterAndTurbine/DPsim/DP/VBR/DP_SynchronGenerator_VBR_0.010000_LeftVector.csv',1);
+voltageDP = csvread('../../../vsa/Results/TestExciterAndTurbine/DPsim/DP/VBR/DP_SynchronGenerator_VBR_0.001000_LeftVector.csv',1);
 %currentDP = csvread('../../../vsa/Results/ABCFault/DPsim/DP/VBR/DP_SynchronGenerator_VBR_0.003300_RightVector.csv',1);
-Log_SynGen = csvread('../../../vsa/Results/TestExciterAndTurbine/DPsim/DP/VBR/SynGen_VBR_0.010000.csv',1);
+Log_SynGen = csvread('../../../vsa/Results/TestExciterAndTurbine/DPsim/DP/VBR/SynGen_VBR_0.001000.csv',1);
 currentDP = Log_SynGen(:,1:7);
 compOffsetDP = (size(currentDP,2) - 1) / 2;
 

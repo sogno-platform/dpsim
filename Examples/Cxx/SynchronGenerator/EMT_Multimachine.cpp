@@ -55,12 +55,12 @@ int main(int argc, char* argv[])
 		//Real Llkq2 = 0;
 
 		//Exciter
-		Real Ka = 20;
-		Real Ta = 0.2;
-		Real Ke = 1;
-		Real Te = 0.314;
-		Real Kf = 0.063;
-		Real Tf = 0.35;
+		Real Ka = 46;
+		Real Ta = 0.06;
+		Real Ke = -0.043478260869565223;
+		Real Te = 0.46;
+		Real Kf = 0.1;
+		Real Tf = 1;
 		Real Tr = 0.02;
 
 		// Turbine
@@ -72,12 +72,12 @@ int main(int argc, char* argv[])
 		Real Fc = 0.4;
 		Real Tsr = 0.1;
 		Real Tsm = 0.3;
-		Real Kg = 20;
+		Real Kg = 20;;
 
 		// Set up simulation
 		Real tf, dt, t;
 		Real om = 2.0*M_PI*60.0;
-		tf = 0.30000; dt = 0.00005; t = 0;
+		dt = 0.0005; tf = 100000 * dt;  t = 0;
 		Int downSampling = 1;
 
 		// Declare circuit components
@@ -134,7 +134,7 @@ int main(int argc, char* argv[])
 				Res1, Res2, Res3, LineR12, LineR22, LineR32, LineL12, LineL22, LineL32, Res12, Res22, Res32 };
 
 		// Declare circuit components for resistance change
-		Real breakerRes = 0.96 + 0.0001;
+		Real breakerRes = 9.6 + 0.0001;
 		Component::Ptr rBreaker1 = Resistor::make("rbreak1", 6, GND, breakerRes);
 		Component::Ptr rBreaker2 = Resistor::make("rbreak2", 7, GND, breakerRes);
 		Component::Ptr rBreaker3 = Resistor::make("rbreak3", 8, GND, breakerRes);

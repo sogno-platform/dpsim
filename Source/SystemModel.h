@@ -81,7 +81,7 @@ namespace DPsim {
 		void solve();
 		void updateLuFactored();
 
-		bool MeasuringTime = false;
+		bool MeasuringTime = true;
 
 		Matrix& getCurrentSystemMatrix() { return mSystemMatrix; }
 		const Matrix& getLUdecomp() { return mLuFactored.matrixLU(); }

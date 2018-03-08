@@ -157,7 +157,7 @@ FileNameVector = ['SynGen_Dq_0.000050.csv';
 %read results from c++ simulation
 for dt = 0.00005: 0.00005: 0.0006
     FileName = FileNameVector(i,1:22);
-    Path = strcat('../../../vsa/Results/LoadChange/DPsim/DP/Dq/', FileName);
+    Path = strcat('../../../vsa/Results/LoadChange/DPsim/DP/Dq/RESERVE/', FileName);
     Log_SynGen = csvread(Path,1);
     currentDP = Log_SynGen(:,1:7);
     compOffsetDP = (size(currentDP,2) - 1) / 2;

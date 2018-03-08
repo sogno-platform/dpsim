@@ -10,9 +10,9 @@ Results_Reference = csvread('../../../vsa/Results/LoadChange/Simulink/Voltages_a
 %% Read data from DP simulation and calculate absolute value and phase
 
 % Read values from CSV files
-voltageDP = csvread('../../../vsa/Results/LoadChange/DPsim/DP/Dq/DP_SynchronGenerator_Dq_0.000700_LeftVector.csv',1);
+voltageDP = csvread('../../../vsa/Results/LoadChange/DPsim/DP/Dq/DP_SynchronGenerator_Dq_0.000500_LeftVector.csv',1);
 %currentDP = csvread('../../../vsa/Results/LoadChange/DPsim/DP/DP_SynchronGenerator_Dq_RightVector.csv',1);
-Log_SynGen = csvread('../../../vsa/Results/LoadChange/DPsim/DP/Dq/SynGen_Dq_0.000700.csv',1);
+Log_SynGen = csvread('../../../vsa/Results/LoadChange/DPsim/DP/Dq/SynGen_Dq_0.000500.csv',1);
 currentDP = Log_SynGen(:,1:7);
 compOffsetDP = (size(currentDP,2) - 1) / 2;
 
@@ -173,3 +173,7 @@ RMS_ref_F = rms(ReferenceCurrent_F);
     disp(['FAULT:'])
     disp(['  Maximum Error ia during fault: ', num2str(100*MaxDif_F/Peak_Ref_fault), ' %']);
     disp(['  Root Mean-squared error ia during fault: ', num2str(100*err_F/Peak_Ref_fault), ' %']);
+    
+    %% Calculate avarage step time
+StepTimeVector = Log_SynGen(:,10);
+disp(['Avarage step time for generator: ', num2str(mean(StepTimeVector)*1000), ' ms']);

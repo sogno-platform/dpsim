@@ -1,4 +1,4 @@
-/** Exciter
+﻿/** Exciter
 *
 * @file
 * @author Markus Mirz <mmirz@eonerc.rwth-aachen.de>
@@ -38,35 +38,42 @@ namespace Components {
 
 	protected:
 
+		/// Time constant Ta
 		Real mTa;
+		/// Gain Ka
 		Real mKa;
+		/// Gain Ke
 		Real mKe;
+		/// Time constant Te
 		Real mTe;
+		/// Gain Kf
 		Real mKf;
+		/// Time constant Tf
 		Real mTf;
+		/// Time constant Tr
 		Real mTr;
 
+		/// d - axis mutual inductance of synchronous generator Lmd[H]
 		Real mLad;
+		/// field resistance of synchronous generator Rfd [Ohm]
 		Real mRfd;
 
 		/// Reference voltage
 		Real mVref = 0;
 		/// Output of voltage transducer
-		Real mVm = 0;
+		Real mVc = 0;
 		/// Input of voltage transducer
-		Real mVh = 0;
+		Real mVt = 0;
 		/// Output of stablizing feedback
-		Real mVis = 0;
+		Real mVf = 0;
 		/// Output of se function
-		Real mVse = 0;
+		Real mVx = 0;
 		/// Regulator output
 		Real mVr = 0;
 		/// Exciter output
-		Real mVf = 0;
-		/// Auxiliar variable
-		Real mVfl = 0;
+		Real mEfd = 0;
 		/// Initial field votlage
-		Real mVf_init;
+		Real mEfd_init;
 
 		bool mLogActive;
 		Logger* mLog;
@@ -79,7 +86,7 @@ namespace Components {
 		Exciter(Real Ta, Real Ka, Real Te, Real Ke, Real Tf, Real Kf, Real Tr, Real Lad, Real Rfd);
 
 		/// Initializes exciter variables
-		void initialize(Real Vh_init, Real Vf_init);
+		void initialize(Real Vh_init, Real Efd_init);
 
 		/// Performs an step to update field voltage value
 		Real step(Real mVd, Real mVq, Real Vref, Real dt);

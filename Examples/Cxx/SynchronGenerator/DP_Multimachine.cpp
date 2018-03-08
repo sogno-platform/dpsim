@@ -55,12 +55,12 @@ int main(int argc, char* argv[])
 		//Real Llkq2 = 0;
 
 		//Exciter
-		Real Ka = 20;
-		Real Ta = 0.2;
-		Real Ke = 1;
-		Real Te = 0.314;
-		Real Kf = 0.063;
-		Real Tf = 0.35;
+		Real Ka = 46;
+		Real Ta = 0.06;
+		Real Ke = -0.043478260869565223;
+		Real Te = 0.46;
+		Real Kf = 0.1;
+		Real Tf = 1;
 		Real Tr = 0.02;
 
 		// Turbine
@@ -72,7 +72,7 @@ int main(int argc, char* argv[])
 		Real Fc = 0.4;
 		Real Tsr = 0.1;
 		Real Tsm = 0.3;
-		Real Kg = 20;
+		Real Kg = 20;;
 
 		Real Ld_s = 0.23;
 		Real Lq_s = 0.25;
@@ -80,7 +80,7 @@ int main(int argc, char* argv[])
 		// Set up simulation
 		Real tf, dt, t;
 		Real om = 2.0*M_PI*60.0;
-		tf = 0.30000; dt = 0.00005; t = 0;
+		dt = 0.0005; tf = 100000*dt;  t = 0;
 		Int downSampling = 1;
 
 		Real Ra = (Ld_s + Lq_s) / dt;
@@ -139,7 +139,7 @@ int main(int argc, char* argv[])
 		//Component::List comps = { gen, LineR1, LineR2, LineR3, LineL1, LineL2, LineL3, r1, r2, r3, Res1, Res2, Res3 };
 
 		// Declare circuit components for resistance change
-		Real breakerRes = 24e3*24e3 / 600e6;
+		Real breakerRes = 24e3*24e3 / 60e6;
 		Component::Ptr rBreaker1 = Resistor::make("rbreak1", 6, GND, breakerRes);
 		Component::Ptr rBreaker2 = Resistor::make("rbreak2", 7, GND, breakerRes);
 		Component::Ptr rBreaker3 = Resistor::make("rbreak3", 8, GND, breakerRes);
@@ -164,13 +164,13 @@ int main(int argc, char* argv[])
 		Real mechPower = 286.34e6;
 		auto genPtr = std::dynamic_pointer_cast<Components::DP::SynchronGeneratorVBRNew>(gen);
 		genPtr->initialize(om, dt, initActivePower, initReactivePower, initTerminalVolt, initVoltAngle, fieldVoltage, mechPower);
-		genPtr->addExciter(Ta, Ka, Te, Ke, Tf, Kf, Tr, Lmd, Rfd);
-		genPtr->addGovernor(Ta_t, Tb, Tc, Fa, Fb, Fc, Kg, Tsr, Tsm, initActivePower / nomPower, mechPower / nomPower);
+		genPtr->AddExciter(Ta, Ka, Te, Ke, Tf, Kf, Tr, Lmd, Rfd);
+		genPtr->AddGovernor(Ta_t, Tb, Tc, Fa, Fb, Fc, Kg, Tsr, Tsm, initActivePower / nomPower, mechPower / nomPower);
 
 		auto genPtr2 = std::dynamic_pointer_cast<Components::DP::SynchronGeneratorVBRNew>(gen2);
 		genPtr2->initialize(om, dt, initActivePower, initReactivePower, initTerminalVolt, initVoltAngle, fieldVoltage, mechPower);
-		genPtr2->addExciter(Ta, Ka, Te, Ke, Tf, Kf, Tr, Lmd, Rfd);
-		genPtr2->addGovernor(Ta_t, Tb, Tc, Fa, Fb, Fc, Kg, Tsr, Tsm, initActivePower / nomPower, mechPower / nomPower);
+		genPtr2->AddExciter(Ta, Ka, Te, Ke, Tf, Kf, Tr, Lmd, Rfd);
+		genPtr2->AddGovernor(Ta_t, Tb, Tc, Fa, Fb, Fc, Kg, Tsr, Tsm, initActivePower / nomPower, mechPower / nomPower);
 
 		std::cout << "A matrix:" << std::endl;
 		std::cout << sim.getSystemMatrix() << std::endl;
