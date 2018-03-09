@@ -66,11 +66,11 @@ void SystemModel::addRealToSystemMatrix(Matrix::Index row, Matrix::Index column,
 }
 
 void SystemModel::addCompToSystemMatrix(Matrix::Index row, Matrix::Index column, Complex value) {
-	MathLibrary::addCompToMatrixElement(mSystemMatrix, mCompOffset, row, column, value);
+	MathLibrary::addCompToMatrixElement(mSystemMatrix, row, column, value);
 }
 
 void SystemModel::setCompSystemMatrixElement(Matrix::Index row, Matrix::Index column, Complex value) {
-	MathLibrary::setCompMatrixElement(mSystemMatrix, mCompOffset, row, column, value);
+	MathLibrary::setCompMatrixElement(mSystemMatrix, row, column, value);
 }
 
 void SystemModel::addRealToRightSideVector(Matrix::Index row, Real value)
@@ -79,7 +79,7 @@ void SystemModel::addRealToRightSideVector(Matrix::Index row, Real value)
 }
 
 void SystemModel::addCompToRightSideVector(Matrix::Index row, Complex value) {
-	MathLibrary::addCompToVectorElement(mRightSideVector, mCompOffset, row, value);
+	MathLibrary::addCompToVectorElement(mRightSideVector, row, value);
 }
 
 void SystemModel::solve() {
