@@ -58,6 +58,7 @@ int main(int argc, char* argv[])
 
 		for (Real i = 0.00005; i <= 0.003; i = i + 0.00005)
 		{
+				if (i > 0.0001) i = i + 0.00005;
 				String mGeneratorName = "VBR_" + std::to_string(i);
 				// Declare circuit components
 				Component::Ptr gen = VoltageBehindReactanceEMTNew::make(mGeneratorName, 0, 1, 2,

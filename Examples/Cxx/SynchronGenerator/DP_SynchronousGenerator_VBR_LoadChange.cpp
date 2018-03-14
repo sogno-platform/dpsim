@@ -60,7 +60,7 @@ int main(int argc, char* argv[])
 
 		for (Real i = 0.00005; i <= 0.010000; i = i + 0.00005)
 		{
-
+				if (i > 0.0001) i =  i + 0.00005;
 				// Set up simulation
 				Real tf, dt, t;
 				Real om = 2.0*M_PI*60.0;

@@ -33,7 +33,7 @@ endif()
 #)
 
 set(SYNCGEN_SOURCES
-	#SynchronGenerator/DP_Multimachine.cpp
+	SynchronGenerator/DP_Multimachine.cpp
 	#SynchronGenerator/DP_SynchronGenerator_BalancedResLoad.cpp
 	#SynchronGenerator/DP_SynchronGenerator_Dq_ThreePhaseFault.cpp
 	#SynchronGenerator/DP_SynchronGenerator_VBR_ExciterAndTurbine.cpp
@@ -43,7 +43,7 @@ set(SYNCGEN_SOURCES
 	#SynchronGenerator/DP_SynchronGenerator_VBR_ThreePhaseFault.cpp
 	SynchronGenerator/DP_SynchronousGenerator_Dq_LoadChange.cpp
 	SynchronGenerator/DP_SynchronousGenerator_VBR_LoadChange
-	#SynchronGenerator/EMT_Multimachine.cpp
+	SynchronGenerator/EMT_Multimachine.cpp
 	#SynchronGenerator/EMT_Multimachine_Classical.cpp
 	#SynchronGenerator/EMT_SynchronGenerator_BalancedResLoad.cpp
 	#SynchronGenerator/EMT_SynchronGenerator_Dq_ThreePhaseFault
