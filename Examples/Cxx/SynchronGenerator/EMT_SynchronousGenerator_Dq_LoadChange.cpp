@@ -58,9 +58,10 @@ int main(int argc, char* argv[])
 		Real Lq_s = 0.25;
 
 
-		for (Real i = 0.00005; i <= 0.001; i = i + 0.00005)
+		for (Real i = 0.00005; i <= 0.0006; i = i + 0.00005)
 		{
 				if (i > 0.0001) i = i+0.00005;
+
 				// Set up simulation
 				Real tf, dt, t;
 				Real om = 2.0*M_PI*60.0;
@@ -70,7 +71,7 @@ int main(int argc, char* argv[])
 
 				Real Ra = (Ld_s + Lq_s) / dt;
 
-				String mGeneratorName = "Dq_" + std::to_string(i);
+				String mGeneratorName = "EMT_Dq_" + std::to_string(i);
 				// Declare circuit components
 				Component::Ptr gen = SynchronGenerator::make(mGeneratorName, 0, 1, 2,
 						nomPower, nomPhPhVoltRMS, nomFreq, poleNum, nomFieldCurr,

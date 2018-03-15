@@ -49,15 +49,15 @@ int main(int argc, char* argv[])
 		Real Llkd = 0.1713;
 		Real Rkq1 = 0.0062;
 		Real Llkq1 = 0.7252;
-		Real Rkq2 = 0.0237;
-		Real Llkq2 = 0.125;
-		//Real Rkq2 = 0;
-		//Real Llkq2 = 0;
+		//Real Rkq2 = 0.0237;
+		//Real Llkq2 = 0.125;
+		Real Rkq2 = 0;
+		Real Llkq2 = 0;
 
 		// Set up simulation
 		Real tf, dt, t;
 		Real om = 2.0*M_PI*60.0;
-		dt = 0.0007; tf = 0.3 - dt; t = 0;
+		dt = 0.0005; tf = 0.3 - dt; t = 0;
 		Int downSampling = 1;
 
 		Real Ld_s = 0.23;

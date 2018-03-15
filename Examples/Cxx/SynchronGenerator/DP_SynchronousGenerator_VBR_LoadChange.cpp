@@ -58,17 +58,18 @@ int main(int argc, char* argv[])
 		Real Lq_s = 0.25;
 
 
-		for (Real i = 0.00005; i <= 0.010000; i = i + 0.00005)
+		for (Real i = 0.00005; i <= 0.01; i = i + 0.00005)
 		{
 				if (i > 0.0001) i =  i + 0.00005;
+				if (i >= 0.0011) i = i + 0.0009;
 				// Set up simulation
 				Real tf, dt, t;
 				Real om = 2.0*M_PI*60.0;
 				dt = i; t = 0;
-				tf = 100000*dt;
+				tf = 100000 * dt;
 				Int downSampling = 1;
 
-				String mGeneratorName = "VBR_" + std::to_string(i);
+				String mGeneratorName = "DP_VBR_" + std::to_string(i);
 				// Declare circuit components
 				Component::Ptr gen = SynchronGeneratorVBRNew::make(mGeneratorName, 0, 1, 2,
 						nomPower, nomPhPhVoltRMS, nomFreq, poleNum, nomFieldCurr,

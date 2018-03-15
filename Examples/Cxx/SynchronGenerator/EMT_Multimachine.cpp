@@ -77,16 +77,18 @@ int main(int argc, char* argv[])
 		// Set up simulation
 		Real tf, dt, t;
 		Real om = 2.0*M_PI*60.0;
-		dt = 0.0005; tf = 100000 * dt;  t = 0;
+		dt = 0.0005; tf = 0.3;  t = 0;
 		Int downSampling = 1;
 
 		// Declare circuit components
-		Component::Ptr gen = VoltageBehindReactanceEMTNew::make("gen", 0, 1, 2,
+		String mGeneratorName = "EMT_VBR_1" + std::to_string(dt);
+		Component::Ptr gen = VoltageBehindReactanceEMTNew::make(mGeneratorName, 0, 1, 2,
 				nomPower, nomPhPhVoltRMS, nomFreq, poleNum, nomFieldCurr,
 				Rs, Ll, Lmd, Lmd0, Lmq, Lmq0, Rfd, Llfd, Rkd, Llkd, Rkq1, Llkq1, Rkq2, Llkq2, H, Logger::Level::INFO);
 
 		// Declare circuit components
-		Component::Ptr gen2 = VoltageBehindReactanceEMTNew::make("gen2", 12, 13, 14,
+		String mGeneratorName2 = "EMT_VBR_2" + std::to_string(dt);
+		Component::Ptr gen2 = VoltageBehindReactanceEMTNew::make(mGeneratorName2, 12, 13, 14,
 				nomPower, nomPhPhVoltRMS, nomFreq, poleNum, nomFieldCurr,
 				Rs, Ll, Lmd, Lmd0, Lmq, Lmq0, Rfd, Llfd, Rkd, Llkd, Rkq1, Llkq1, Rkq2, Llkq2, H, Logger::Level::INFO);
 
@@ -143,8 +145,8 @@ int main(int argc, char* argv[])
 				r1,	r2, r3, Res1, Res2, Res3, LineR12, LineR22, LineR32, LineL12, LineL22, LineL32,
 				Res12, Res22, Res32, rBreaker1, rBreaker2, rBreaker3, };
 
-
-		SynGenSimulation sim("EMT_SynchronGenerator_VBR", comps, om, dt, tf, Logger::Level::INFO, SimulationType::EMT, downSampling);
+		String mSimulationName = "EMT_SynchronGenerator_VBR_Multimachine" + std::to_string(dt);
+		SynGenSimulation sim(mSimulationName, comps, om, dt, tf, Logger::Level::INFO, SimulationType::EMT, downSampling);
 		sim.setNumericalMethod(NumericalMethod::Trapezoidal_flux);
 		sim.addSystemTopology(compsBreakerOn);
 		sim.switchSystemMatrix(0);
@@ -176,7 +178,7 @@ int main(int argc, char* argv[])
 		Real lastLogTime = 0;
 		Real logTimeStep = 0.00005;
 		sim.setSwitchTime(0.1, 1);
-		//sim.setSwitchTime(0.2, 0);
+		sim.setSwitchTime(0.2, 0);
 
 		sim.run();
 

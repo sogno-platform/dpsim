@@ -116,12 +116,16 @@ void Components::DP::SynchronGeneratorVBRNew::initialize(Real om, Real dt,
 
 		CalculateAuxiliarVariables(0);
 
+		E_r_vbr_DP = dq0ToAbcTransform(mThetaMech, h_qdr(1), h_qdr(0), 0);
+
 		K_DP << K, Matrix::Zero(3, 3),
 				Matrix::Zero(3, 3), K;
 
-		mDVabc = K_DP*mIabc + E_r_vbr_DP;
 		mVabc = dq0ToAbcTransform(mThetaMech, mVd, mVq, mV0);
 		mIabc = dq0ToAbcTransform(mThetaMech, mId, mIq, mI0);
+
+		mDVabc = K_DP*mIabc + E_r_vbr_DP;
+
 
 		CalculateLandR(0, dt*mBase_OmElec);
 }

@@ -56,10 +56,12 @@ int main(int argc, char* argv[])
 
 
 
-		for (Real i = 0.00005; i <= 0.003; i = i + 0.00005)
+		for (Real i = 0.00005; i <= 0.01; i = i + 0.00005)
 		{
 				if (i > 0.0001) i = i + 0.00005;
-				String mGeneratorName = "VBR_" + std::to_string(i);
+				if (i >= 0.0011) i = i + 0.0009;
+
+				String mGeneratorName = "EMT_VBR_" + std::to_string(i);
 				// Declare circuit components
 				Component::Ptr gen = VoltageBehindReactanceEMTNew::make(mGeneratorName, 0, 1, 2,
 						nomPower, nomPhPhVoltRMS, nomFreq, poleNum, nomFieldCurr,
@@ -83,7 +85,7 @@ int main(int argc, char* argv[])
 				Real tf, dt, t;
 				Real om = 2.0*M_PI*60.0;
 				dt = i; t = 0;
-				tf = 100000 *dt;
+				tf = 100000 * dt;
 				Int downSampling = 1;
 				String mSimulationName = "EMT_SynchronGenerator_VBR_" + std::to_string(i);
 				SynGenSimulation sim(mSimulationName, comps, om, dt, tf, Logger::Level::INFO, SimulationType::EMT, downSampling);

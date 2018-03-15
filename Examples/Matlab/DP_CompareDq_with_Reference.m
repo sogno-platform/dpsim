@@ -6,13 +6,18 @@ Results_Reference = csvread('../../../vsa/Results/LoadChange/Simulink/Voltages_a
 %Te_PLECS = csvread('../../vsa/Results/SynGenVBREmt_ABCFault_PLECS/electrical_torque.csv'); 
 %omega_PLECS = csvread('../../../vsa/Results/SynGenVbrEmt_ABCFault_PLECS/omega.csv'); 
 %theta_PLECS = csvread('../../vsa/Results/SynGenVBREmt_ABCFault_PLECS/theta.csv'); 
+l_Ref = length(Results_Reference);
+
+%Calculate reference peak values for steady state and after load change
+Peak_Ref_SS = max(Results_Reference(1:l_Ref/3,5));
+Peak_Ref_LC = max(Results_Reference(l_Ref/3:2*l_Ref/3,5));
 
 %% Read data from DP simulation and calculate absolute value and phase
 
 % Read values from CSV files
-voltageDP = csvread('../../../vsa/Results/LoadChange/DPsim/DP/Dq/DP_SynchronGenerator_Dq_0.000500_LeftVector.csv',1);
+voltageDP = csvread('../../../vsa/Results/LoadChange/DPsim/DP/Dq/DP_SynchronGenerator_Dq_0.000050_LeftVector.csv',1);
 %currentDP = csvread('../../../vsa/Results/LoadChange/DPsim/DP/DP_SynchronGenerator_Dq_RightVector.csv',1);
-Log_SynGen = csvread('../../../vsa/Results/LoadChange/DPsim/DP/Dq/SynGen_Dq_0.000500.csv',1);
+Log_SynGen = csvread('../../../vsa/Results/LoadChange/DPsim/DP/Dq/SynGen_Dq_0.000050.csv',1);
 currentDP = Log_SynGen(:,1:7);
 compOffsetDP = (size(currentDP,2) - 1) / 2;
 
@@ -129,51 +134,49 @@ legend('Current Phase c Simulink', 'DP shift c', 'DP abs c')
 xlabel('time [s]')
 ylabel('current [A]')
 
-l=length(currentShiftDP);
-l_Ref = length(Results_Reference);
-s = round(l_Ref/l);
-l_new=round(1/3*l_Ref);
+    
+    l_DP=length(currentShiftDP);
+    l_new_DP=round(1/3*l_DP);
 
-ReferenceCurrent_SS = Results_Reference(1:l_new,5);
-ReferenceCurrent_F = Results_Reference(l_new+1:2*l_new-1,5);
+    CurrentVector_SS_DP = currentShiftDP(1:l_new_DP,2);
+    CurrentVector_LC_DP = currentShiftDP(l_new_DP:2*l_new_DP,2);
 
+    CurrentReference_reduced = zeros(l_DP,2);
     
+    if l_DP == l_Ref
+        CurrentReference_reduced(:,1) = Results_Reference(:,1);
+        CurrentReference_reduced(:,2) = Results_Reference(:,5);
+    else
+        s = round(l_Ref/l_DP);
+        n = 1;
+        for m = 1:s:l_Ref
+            CurrentReference_reduced(n,1) = Results_Reference(m,1);
+            CurrentReference_reduced(n,2) = Results_Reference(m,5);
+            n = n+1;
+        end
+    end  
+ 
+    %Reference current in Steady state and after load change
+    Reference_SS = CurrentReference_reduced(1:l_new_DP,2);
+    Reference_LC = CurrentReference_reduced(l_new_DP:2*l_new_DP,2);
 
-    
-if l == l_Ref
-    CurrentVector_SS = currentShiftDP(1:l_new,2);
-    CurrentVector_LC = currentShiftDP(l_new+1:2*l_new-1,2);
-else
-    CurrentVector_interpolated = interp(currentShiftDP(:,2),s);
-    CurrentVector_SS = CurrentVector_interpolated(1:l_new,:);
-    CurrentVector_LC = CurrentVector_interpolated(l_new+1:2*l_new-1);
-end
-    
-Dif_SS = abs(CurrentVector_SS - ReferenceCurrent_SS);
-[MaxDif_SS,i1] = max(Dif_SS);
-err_SS = sqrt(immse(CurrentVector_SS,ReferenceCurrent_SS));
+    % Calculate maximum error and root mean squared error for steady state
+    Dif_SS_DP = abs(CurrentVector_SS_DP - Reference_SS);
+    [MaxDif_SS_DP,i1] = max(Dif_SS_DP);
+    err_SS_DP = sqrt(immse(CurrentVector_SS_DP,Reference_SS));
+    disp('############ Error for Dq DP model ###############');
+    disp(['Maximum Error ia steady state: ', num2str(100*MaxDif_SS_DP/Peak_Ref_SS), ' %']);
+    disp(['Root Mean-squared error ia steady state: ', num2str(100*err_SS_DP/Peak_Ref_SS), ' %']);
 
-Dif_F = abs(CurrentVector_LC - ReferenceCurrent_F);
-[MaxDif_F,i1] = max(Dif_F);
-err_F = sqrt(immse(CurrentVector_LC,ReferenceCurrent_F));
-RMS_ref_F = rms(ReferenceCurrent_F);
-    
-    Peak_Ref_SS = 10209;
-    %Peak_Ref_fault = 14650;
-    %Peak_Ref_fault = max(ReferenceCurrent_F);
-     Peak_Ref_fault = rms(ReferenceCurrent_F)*sqrt(2);
-    
-    
-        disp(['   '])
-    disp(['##################### Results for Dq Model ################################'])
-    disp(['   '])
-    disp(['STEADY STATE:'])
-    disp(['  Maximum Error ia steady state: ', num2str(100*MaxDif_SS/Peak_Ref_SS), ' %']);
-    disp(['  Root Mean-squared error ia steady state: ', num2str(100*err_SS/Peak_Ref_SS), ' %']);
-    disp(['FAULT:'])
-    disp(['  Maximum Error ia during fault: ', num2str(100*MaxDif_F/Peak_Ref_fault), ' %']);
-    disp(['  Root Mean-squared error ia during fault: ', num2str(100*err_F/Peak_Ref_fault), ' %']);
-    
+    % Calculate maximum error and root mean squared error after load change
+    Dif_LC_DP = abs(CurrentVector_LC_DP - Reference_LC);
+    [MaxDif_LC_DP,i1] = max(Dif_LC_DP);
+    err_LC_DP = sqrt(immse(CurrentVector_LC_DP,Reference_LC));
+    disp(' ');
+    disp(['Maximum Error ia load change: ', num2str(100*MaxDif_LC_DP/Peak_Ref_LC), ' %']);
+    disp(['Root Mean-squared error ia load change: ', num2str(100*err_LC_DP/Peak_Ref_LC), ' %']);
+    disp(' ');
+    disp(' ');   
     %% Calculate avarage step time
 StepTimeVector = Log_SynGen(:,10);
 disp(['Avarage step time for generator: ', num2str(mean(StepTimeVector)*1000), ' ms']);

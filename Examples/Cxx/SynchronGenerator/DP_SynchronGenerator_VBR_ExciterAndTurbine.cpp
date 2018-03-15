@@ -77,7 +77,7 @@ int main(int argc, char* argv[])
 		// Set up simulation
 		Real tf, dt, t;
 		Real om = 2.0*M_PI*60.0;
-		tf = 20; dt = 0.001; t = 0;
+		tf = 20; dt = 0.010; t = 0;
 		Int downSampling = 1;
 
 		// Declare circuit components

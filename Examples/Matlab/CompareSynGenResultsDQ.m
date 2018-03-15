@@ -3,17 +3,21 @@
 clc
 clear all
 %% read PLECS results
-Results_Reference= csvread('../../../vsa/Results/LoadChange/Simulink/Voltages_and_currents.csv');
+Results_Reference= csvread('../../../vsa/Results/ABCFault/PLECS/Voltages_and_currents.csv');
 l_Ref = length(Results_Reference);
+%Calculate reference peak values for steady state and after load change
+Peak_Ref_SS = max(Results_Reference(1:l_Ref/3,5));
+Peak_Ref_LC = max(Results_Reference(l_Ref/3:2*l_Ref/3,5));
 %Results_Reference = Results_Reference(1:l_Ref,:);
 %Te_Reference = csvread('../../../vsa/Results/ABCFault/Simulink/Te.csv'); 
 %omega_Reference = csvread('../../../vsa/Results/ABCFault/Simulink/omega.csv'); 
 %theta_PLECS = csvread('../../../vsa/Results/SynGenDq_ABCFault/Sim-0.81113286269894136ulink_PLECS/SynGenDqEmt_ABCFault_300M_Simulink/theta.csv'); 
 %% read results from c++ simulation
-VoltageVector = csvread('../../../vsa/Results/LoadChange/DPsim/EMT/Dq/EMT_SynchronGenerator_Dq_0.000050_LeftVector.csv',1);
+VoltageVector = csvread('../../../vsa/Results/ABCFault/DPsim/EMT/Dq/1DampingWinding/EMT_SynchronGenerator_Dq_0.000500_LeftVector.csv',1);
 %CurrentVector = csvread('../../../vsa/Results/MultimachineTest/DPsim/EMT_SynchronGenerator_VBR_RightVector.csv',1);
-Log_SynGen = csvread('../../../vsa/Results/LoadChange/DPsim/EMT/Dq/SynGen_Dq_0.000050.csv',1);
+Log_SynGen = csvread('../../../vsa/Results/ABCFault/DPsim/EMT/Dq/1DampingWinding/SynGen_Dq_0.000500.csv',1);
 CurrentVector = Log_SynGen(:,1:4);
+dt = 0.000500;
  %% Plot
 figure(1)
 hold off
@@ -44,7 +48,7 @@ legend('vc DPSim','vc Reference');
 
 figure(4)
 hold off
-plot(CurrentVector(:,1),CurrentVector(:,2));
+plot(CurrentVector(:,1),-CurrentVector(:,2));
 hold on
 plot(Results_Reference(:,1),Results_Reference(:,5),'--');
 title('Current phase a');
@@ -52,7 +56,7 @@ legend('ia DPSim','ia Reference');
 
 figure(5)
 hold off
-plot(CurrentVector(:,1),CurrentVector(:,3));
+plot(CurrentVector(:,1),-CurrentVector(:,3));
 hold on
 plot(Results_Reference(:,1),Results_Reference(:,6),'--');
 title('Current phase b');
@@ -60,7 +64,7 @@ legend('ib DPSim','ib Reference');
 
 figure(6)
 hold off
-plot(CurrentVector(:,1),CurrentVector(:,4));
+plot(CurrentVector(:,1),-CurrentVector(:,4));
 hold on
 plot(Results_Reference(:,1),Results_Reference(:,7),'--');
 title('Current phase c');
@@ -113,70 +117,51 @@ legend('ic DPSim','ic Simulink');
 
 
 %% Calculate and display error
-%Cut Current and Voltage vector to get steady state results
 l=length(CurrentVector);
-l_new=round(1/3*l_Ref);
+    l_new=round(1/3*l);
 
-if l == l_Ref
-    CurrentVector_SteadyState = CurrentVector(1:l_new,2);
-    CurrentVector_Fault = CurrentVector(l_new+1:2*l_new-1,2);
-else
-    s = round(l_Ref/l);
-    CurrentVector_interpolated = interp(CurrentVector(:,2),s);
-    CurrentVector_SteadyState = CurrentVector_interpolated(1:l_new,:);
-    CurrentVector_Fault = CurrentVector_interpolated(l_new+1:2*l_new-1,:);  
-end  
+    CurrentVector_SS = CurrentVector(1:l_new,2);
+    CurrentVector_LC = CurrentVector(l_new:2*l_new,2);
+
+    CurrentReference_reduced = zeros(l,2);
     
-%Cut Reference Results to get results before fault clearing
-l_Ref=length(Results_Reference);
-l_Ref_new = round(1/3*l);
-Reference_SteadyState = Results_Reference(1:l_new,5);
-Reference_Fault = Results_Reference(l_new+1:2*l_new-1,5);
+    if l == l_Ref
+     CurrentReference_reduced(:,1) = Results_Reference(:,1);
+     CurrentReference_reduced(:,2) = Results_Reference(:,5);
+    else
+        s = round(dt/5e-5);
+        n = 1;
+        for m = 1:s:l_Ref
+            CurrentReference_reduced(n,1) = Results_Reference(m,1);
+            CurrentReference_reduced(n,2) = Results_Reference(m,5);
+            n = n+1;
+        end
+    end  
+ 
+    %Reference current in Steady state and after load change
+    Reference_SS = CurrentReference_reduced(1:l_new,2);
+    Reference_LC = CurrentReference_reduced(l_new:2*l_new,2);
 
-% if(l_Ref == l)
-% Reference_SteadyState = Results_Reference(1:l_new,5);
-% Reference_Fault = Results_Reference(l_new+1:2*l_new-1,5);
-% else
-% ReferenceCurrent = Results_Reference(:,5);
-% ReferenceCurrent_resampled = resample(ReferenceCurrent,l,length(ReferenceCurrent));
-% Reference_SteadyState = ReferenceCurrent_resampled(1:l_new,:);
-% Reference_Fault = ReferenceCurrent_resampled(l_new+1:2*l_new-1,:);
-% end
+    % Calculate maximum error and root mean squared error for steady state
+    Dif_SS = abs(CurrentVector_SS - Reference_SS);
+    [MaxDif_SS,i1] = max(Dif_SS);
+    err_SS = sqrt(immse(CurrentVector_SS,Reference_SS));
+    disp('############ Error for Dq EMT model ###############');
+    disp(['############     dt= ',num2str(dt),'         ###############']);
+    disp(['Maximum Error ia steady state: ', num2str(100*MaxDif_SS/Peak_Ref_SS), ' %']);
+    disp(['Root Mean-squared error ia steady state: ', num2str(100*err_SS/Peak_Ref_SS), ' %']);
 
-figure(7)
-hold off
-plot(Results_Reference(1:l_new,1),CurrentVector_SteadyState)
-hold on
-plot(Results_Reference(1:l_new,1),Reference_SteadyState)
+    % Calculate maximum error and root mean squared error after load change
+    Dif_LC = abs(CurrentVector_LC - Reference_LC);
+    [MaxDif_LC,i1] = max(Dif_LC);
+    err_LC = sqrt(immse(CurrentVector_LC,Reference_LC));
+    disp(' ');
+    disp(['Maximum Error ia load change: ', num2str(100*MaxDif_LC/Peak_Ref_LC), ' %']);
+    disp(['Root Mean-squared error ia load change: ', num2str(100*err_LC/Peak_Ref_LC), ' %']);
+    disp(' ');
+    disp(' ');
 
-figure(8)
-hold off
-plot(Results_Reference(l_new+1:2*l_new-1,1),CurrentVector_Fault)
-hold on
-plot(Results_Reference(l_new+1:2*l_new-1,1),Reference_Fault)
 
-Peak_Ref_SS = 10209;
-%Peak_Ref_fault = 14650;
-%Peak_Ref_fault = max(Reference_Fault);
-Peak_Ref_fault = rms(Reference_Fault)*sqrt(2);
-
-% % Current phase a steady state
-Dif_SS = abs(CurrentVector_SteadyState - Reference_SteadyState);
-[MaxDif_SS,i1] = max(Dif_SS);
-err_SS = sqrt(immse(CurrentVector_SteadyState,Reference_SteadyState));
-disp(['Maximum Error ia steady state: ', num2str(MaxDif_SS), ' A']);
-disp(['Root Mean-squared error ia steady state: ', num2str(err_SS), ' A']);
-disp(['Maximum Error ia steady state: ', num2str(100*MaxDif_SS/Peak_Ref_SS), ' %']);
-disp(['Root Mean-squared error va steady state: ', num2str(100*err_SS/Peak_Ref_SS), ' %']);
-
-% % Current phase a fault
-Dif_Fault = abs(CurrentVector_Fault - Reference_Fault);
-[MaxDif_Fault,i2] = max(Dif_Fault);
-err_Fault = sqrt(immse(CurrentVector_Fault,Reference_Fault));
-disp(['Maximum Error ia Fault: ', num2str(MaxDif_Fault), ' A']);
-disp(['Root Mean-squared error ia Fault: ', num2str(err_Fault), ' A']);
-disp(['Maximum Error ia Fault: ', num2str(100*MaxDif_Fault/Peak_Ref_fault), ' %']);
-disp(['Root Mean-squared error ia Fault: ', num2str(100*err_Fault/Peak_Ref_fault), ' %']);
 
 %% Calculate avarage step time
 StepTimeVector = Log_SynGen(:,7);

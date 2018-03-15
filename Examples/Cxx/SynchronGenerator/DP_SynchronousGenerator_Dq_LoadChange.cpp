@@ -65,12 +65,12 @@ int main(int argc, char* argv[])
 				Real tf, dt, t;
 				Real om = 2.0*M_PI*60.0;
 				dt = i; t = 0;
-				tf = 100000*dt;
+				tf = 100000 * dt;
 				Int downSampling = 1;
 
 				Real Ra = (Ld_s + Lq_s) / dt;
 
-				String mGeneratorName = "Dq_" + std::to_string(i);
+				String mGeneratorName = "DP_Dq_" + std::to_string(i);
 				// Declare circuit components
 				Component::Ptr gen = SynchronGenerator::make(mGeneratorName, 0, 1, 2,
 						nomPower, nomPhPhVoltRMS, nomFreq, poleNum, nomFieldCurr,
