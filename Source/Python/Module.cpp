@@ -28,7 +28,7 @@
 #endif
 
 #include "Config.h"
-#include "CPowerSystems/Components.h"
+#include "CPowerSystems/Source/Components.h"
 
 #include "Python/Component.h"
 #include "Python/LoadCim.h"

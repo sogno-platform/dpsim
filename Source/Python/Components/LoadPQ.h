@@ -33,15 +33,15 @@ namespace Components {
 	PyObject* LoadPQ(PyObject* self, PyObject* args)
 	{
 		const char *name;
-		double activePower, reactivePower, volt, angle;
+		double activePower, reactivePower, volt;
 		int node;
 
-		if (!PyArg_ParseTuple(args, "sidddd", &name, &node, &activePower, &reactivePower, &volt, &angle))
+		if (!PyArg_ParseTuple(args, "siddd", &name, &node, &activePower, &reactivePower, &volt))
 			return nullptr;
 
 		Component *pyComp = PyObject_New(Component, &DPsim::Python::ComponentType);
 		Component::init(pyComp);
-		pyComp->comp = std::make_shared<C>(name, node, activePower, reactivePower, volt, angle);
+		pyComp->comp = std::make_shared<C>(name, node, activePower, reactivePower, volt);
 
 		return (PyObject*) pyComp;
 	}

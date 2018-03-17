@@ -34,14 +34,14 @@ namespace Components {
 	{
 		const char *name;
 		double resistance, inductance, capacitance;
-		int node1, node2, node3;
+		int node1, node2;
 
-		if (!PyArg_ParseTuple(args, "siiiddd", &name, &node1, &node2, &node3, &resistance, &inductance, &capacitance))
+		if (!PyArg_ParseTuple(args, "siiddd", &name, &node1, &node2, &resistance, &inductance, &capacitance))
 			return nullptr;
 
 		Component *pyComp = PyObject_New(Component, &DPsim::Python::ComponentType);
 		Component::init(pyComp);
-		pyComp->comp = std::make_shared<C>(name, node1, node2, node3, resistance, inductance, capacitance);
+		pyComp->comp = std::make_shared<C>(name, node1, node2, resistance, inductance, capacitance);
 
 		return (PyObject*) pyComp;
 	}
