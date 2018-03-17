@@ -459,7 +459,4 @@
     <cim:SvTapStep.position>6</cim:SvTapStep.position>
     <cim:SvTapStep.TapChanger rdf:resource="#_DA12-2E-F1-00000000383231363934"/>
   </cim:SvTapStep>
-  <cim:TopologicalIsland rdf:ID="N31-SLACK">
-    <cim:TopologicalIsland.AngleRef_TopologicalNode rdf:resource="#N31"/>
-  </cim:TopologicalIsland>
 </rdf:RDF>
