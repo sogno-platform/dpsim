@@ -25,8 +25,9 @@
 #include <iostream>
 #include <vector>
 
-#include "CPowerSystems/Definitions.h"
-#include "CPowerSystems/Logger.h"
+#include "CPowerSystems/Source/Definitions.h"
+#include "CPowerSystems/Source/MathUtils.h"
+#include "CPowerSystems/Source/Logger.h"
 
 namespace DPsim {
 
