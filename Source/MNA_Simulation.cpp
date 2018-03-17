@@ -233,7 +233,7 @@ Int MnaSimulation::step(bool blocking) {
 	}
 
 	for (auto eif : mExternalInterfaces) {
-		eif->writeValues(mLeftSideVector);
+		eif->writeValues();
 	}
 
 	if (mSwitchTimeIndex < mSwitchEvents.size()) {

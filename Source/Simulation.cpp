@@ -208,7 +208,7 @@ Int Simulation::step(bool blocking)
 	}
 
 	for (auto eif : mExternalInterfaces) {
-		eif->writeValues(mSystemModel);
+		eif->writeValues();
 	}
 
 	if (mCurrentSwitchTimeIndex < mSwitchEventVector.size()) {
