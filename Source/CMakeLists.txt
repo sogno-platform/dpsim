@@ -43,7 +43,7 @@ list(APPEND SOURCES
 	CPowerSystems/Source/Components/EMT_SynchronGenerator_Classic_Simplified.cpp
 	CPowerSystems/Source/Components/EMT_SynchronGenerator_Classic_Simpl_CurrentComp.cpp
 	CPowerSystems/Source/Components/EMT_SynchronGenerator_VBR.cpp
-	CPowerSystems/Source/Components/EMt_SynchronGenerator_VBR_UnitTest.cpp
+	CPowerSystems/Source/Components/EMT_SynchronGenerator_VBR_UnitTest.cpp
 )
 
 set(INCLUDE_DIRS
