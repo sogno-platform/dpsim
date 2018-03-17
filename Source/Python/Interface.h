@@ -30,7 +30,7 @@
 #include <Python.h>
 #endif
 
-#include "CPowerSystems/ExternalInterface.h"
+#include "CPowerSystems/Source/Interfaces/ExternalInterface.h"
 
 namespace DPsim {
 namespace Python {
