@@ -40,7 +40,7 @@ list(APPEND SOURCES
 	CPowerSystems/Source/Components/DP_SynchronGenerator_VBR_Simplified.cpp
 	CPowerSystems/Source/Components/EMT_SynchronGenerator_Classic.cpp
 	CPowerSystems/Source/Components/EMT_SynchronGenerator_Classic_Simplified.cpp
-	CPowerSystems/Source/Components/EMT_SynchronGenerator_classic_Simpl_CurrentComp.cpp
+	CPowerSystems/Source/Components/EMT_SynchronGenerator_Classic_Simpl_CurrentComp.cpp
 	CPowerSystems/Source/Components/EMT_SynchronGenerator_VBR.cpp
 )
 
