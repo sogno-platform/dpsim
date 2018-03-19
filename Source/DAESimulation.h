@@ -5,7 +5,7 @@
 //#include "Logger.h"
 #include "SystemModel.h"
 //#include "ExternalInterface.h"
-#include <ida/ida.h>
+//#include <ida/ida.h>
 
 using namespace DPsim ;
 
@@ -25,7 +25,7 @@ using namespace DPsim ;
 		std::vector<Component::List> mComponentsVector;
 
 	public:
-		/// Creates DAE System
+		/// Create DAE System
 		DAESimulation(String name, Component::List comps, Real om, Real dt, SimulationType simType = SimulationType::DynPhasor);
 		virtual ~DAESimulation() { };
 
@@ -35,6 +35,8 @@ using namespace DPsim ;
 
 		void switchSystemMatrix(Int systemMatrixIndex);
 
+		// Residual Function to be used by IDA
+		int residualFunction();
 		/// Run simulation until total time is elapsed.
 		void run();
 	};

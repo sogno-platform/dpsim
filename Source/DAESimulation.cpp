@@ -105,8 +105,15 @@ void DAESimulation::switchSystemMatrix(Int systemMatrixIndex)
 	mSystemModel.switchSystemMatrix(systemMatrixIndex);
 }
 
-//TO-DO: Add DAE Residual Vector calculation
+//TO-DO: Add calculation of DAE solution 
 void DAESimulation::run()
 {
 	std::cout<<"Future Res Vector"<<endl;
+}
+
+int DAESimulation::residualFunction()
+{
+	//TO-DO: Iterate over components and create combined resiudal vector
+
+	return 0;
 }
