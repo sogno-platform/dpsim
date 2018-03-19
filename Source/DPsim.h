@@ -1,5 +1,8 @@
 #include "Simulation.h"
-#include "CPowerSystems/Components.h"
-#include "CPowerSystems/Logger.h"
+#include "CPowerSystems/Source/Components.h"
+#include "CPowerSystems/Source/Logger.h"
 #include "RealTimeSimulation.h"
-#include "CPowerSystems/ShmemInterface.h"
+
+#ifdef WITH_SHMEM
+#include "CPowerSystems/Source/Interfaces/ShmemInterface.h"
+#endif

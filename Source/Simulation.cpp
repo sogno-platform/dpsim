@@ -20,7 +20,7 @@
  *********************************************************************************/
 
 #include "Simulation.h"
-#include "CPowerSystems/CIM/Reader.h"
+#include "CPowerSystems/Source/CIM/Reader.h"
 
 using namespace DPsim;
 
@@ -208,7 +208,7 @@ Int Simulation::step(bool blocking)
 	}
 
 	for (auto eif : mExternalInterfaces) {
-		eif->writeValues(mSystemModel);
+		eif->writeValues();
 	}
 
 	if (mCurrentSwitchTimeIndex < mSwitchEventVector.size()) {

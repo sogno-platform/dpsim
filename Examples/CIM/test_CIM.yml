@@ -13,6 +13,7 @@ IEEE-14_Neplan:
     - Examples/CIM/IEEE-14_Neplan/Rootnet_FULL_NE_29J09h_EQ.xml
     - Examples/CIM/IEEE-14_Neplan/Rootnet_FULL_NE_29J09h_SV.xml
     - Examples/CIM/IEEE-14_Neplan/Rootnet_FULL_NE_29J09h_TP.xml
+  xfail: True
 
 IEEE-39_Neplan:
   cmd: build/Examples/Cxx/CIM
@@ -21,3 +22,4 @@ IEEE-39_Neplan:
     - Examples/CIM/IEEE-39_Neplan/Rootnet_FULL_NE_29J10h_EQ.xml
     - Examples/CIM/IEEE-39_Neplan/Rootnet_FULL_NE_29J10h_SV.xml
     - Examples/CIM/IEEE-39_Neplan/Rootnet_FULL_NE_29J10h_TP.xml
+  xfail: True

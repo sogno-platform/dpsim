@@ -80,7 +80,7 @@ int main(int argc, char *argv[])
 		};
 
 		shmem.registerControllableSource(ecs, GND, 0);
-		shmem.registerExportedVoltage(0, GND, 0, 1);
+		shmem.registerExportedVoltage(ecs, 0, 1);
 	}
 	else {
 		std::cerr << "invalid test number" << std::endl;

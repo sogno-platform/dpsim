@@ -20,7 +20,6 @@
  *********************************************************************************/
 
 #include "SystemModel.h"
-#include "CPowerSystems/MathLibrary.h"
 
 using namespace DPsim;
 
@@ -62,24 +61,24 @@ void SystemModel::updateLuFactored()
 
 void SystemModel::addRealToSystemMatrix(Matrix::Index row, Matrix::Index column, Real value)
 {
-	MathLibrary::addRealToMatrixElement(mSystemMatrix, row, column, value);
+	Math::addRealToMatrixElement(mSystemMatrix, row, column, value);
 }
 
 void SystemModel::addCompToSystemMatrix(Matrix::Index row, Matrix::Index column, Complex value) {
-	MathLibrary::addCompToMatrixElement(mSystemMatrix, row, column, value);
+	Math::addCompToMatrixElement(mSystemMatrix, row, column, value);
 }
 
 void SystemModel::setCompSystemMatrixElement(Matrix::Index row, Matrix::Index column, Complex value) {
-	MathLibrary::setCompMatrixElement(mSystemMatrix, row, column, value);
+	Math::setCompMatrixElement(mSystemMatrix, row, column, value);
 }
 
 void SystemModel::addRealToRightSideVector(Matrix::Index row, Real value)
 {
-	MathLibrary::addRealToVectorElement(mRightSideVector, row, value);
+	Math::addRealToVectorElement(mRightSideVector, row, value);
 }
 
 void SystemModel::addCompToRightSideVector(Matrix::Index row, Complex value) {
-	MathLibrary::addCompToVectorElement(mRightSideVector, row, value);
+	Math::addCompToVectorElement(mRightSideVector, row, value);
 }
 
 void SystemModel::solve() {

@@ -25,7 +25,7 @@
 #include "Python/Interface.h"
 
 #ifdef WITH_SHMEM
-  #include "CPowerSystems/ShmemInterface.h"
+  #include "CPowerSystems/Source/Interfaces/ShmemInterface.h"
 #endif
 
 using namespace DPsim;
@@ -132,14 +132,27 @@ static const char* DocInterfaceExportVoltage =
 PyObject* Python::Interface::exportVoltage(PyObject* self, PyObject* args)
 {
 #ifdef WITH_SHMEM
-	int from, to, realIdx, imagIdx;
+	int realIdx, imagIdx;
+	PyObject* obj;
 	Python::Interface* pyIntf = (Python::Interface*) self;
 
-	if (!PyArg_ParseTuple(args, "iiii", &from, &to, &realIdx, &imagIdx)) {
+	if (!PyArg_ParseTuple(args, "Oii", &obj, &realIdx, &imagIdx)) {
 		return nullptr;
 	}
 
-	pyIntf->intf->registerExportedVoltage(from, to, realIdx, imagIdx);
+	if (!PyObject_TypeCheck(obj, &Python::ComponentType)) {
+		PyErr_SetString(PyExc_TypeError, "First argument must be a Component");
+		return nullptr;
+	}
+
+	Component *pyComp = (Component*) obj;
+	if (auto ex = std::dynamic_pointer_cast<DPsim::Components::ExportableVoltageBase>(pyComp->comp)) {
+		pyIntf->intf->registerExportedVoltage(ex, realIdx, imagIdx);
+	}
+	else {
+		PyErr_SetString(PyExc_TypeError, "First argument must be a component from which voltage can be exported");
+		return nullptr;
+	}
 
 	Py_INCREF(Py_None);
 

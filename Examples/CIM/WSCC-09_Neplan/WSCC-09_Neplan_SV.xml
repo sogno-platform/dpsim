@@ -79,7 +79,4 @@
     <cim:SvShuntCompensatorSections.sections>1</cim:SvShuntCompensatorSections.sections>
     <cim:SvShuntCompensatorSections.ShuntCompensator rdf:resource="#SVC"/>
   </cim:SvShuntCompensatorSections>
-  <cim:TopologicalIsland rdf:ID="BUS1-SLACK">
-    <cim:TopologicalIsland.AngleRef_TopologicalNode rdf:resource="#BUS1"/>
-  </cim:TopologicalIsland>
 </rdf:RDF>

@@ -94,7 +94,7 @@ Int FaultSimulation::step(bool blocking)
 	}
 
 	for (auto eif : mExternalInterfaces) {
-		eif->writeValues(mSystemModel);
+		eif->writeValues();
 	}
 
 	if (ClearingFault) {

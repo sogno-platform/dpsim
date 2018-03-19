@@ -32,7 +32,7 @@ static void VarFreqRxLineResLoad_NZ_Paper_DP(Real timeStep, Real finalTime, Real
 	String simName = "DP_RXLine_LoadStep_FreqStep_2_" + std::to_string(timeStep);
 
 	Component::List comps0 = {
-		DP::VoltageSourceFreq::make("v_s", 0, GND, 10000, 0, 1, 2 * PI*-1, freqStep, rampTime),
+		std::make_shared<DP::VoltageSourceFreq>("v_s", 0, GND, 10000, 0, 1, 2 * PI*-1, freqStep, rampTime),
 		DP::Resistor::make("r_line", 0, 1, 1),
 		DP::Inductor::make("l_line", 1, 2, 1)
 	};
@@ -54,7 +54,7 @@ static void VarFreqRxLineResLoad_NZ_Paper_EMT(Real timeStep, Real finalTime, Rea
 	String simName = "EMT_RXLine_LoadStep_FreqStep_2_" + std::to_string(timeStep);
 
 	Component::List comps0 = {
-		EMT::VoltageSourceFreq::make("v_s", 0, GND, 10000, 0, 1, 2 * PI*-1, freqStep, rampTime),
+		std::make_shared<EMT::VoltageSourceFreq>("v_s", 0, GND, 10000, 0, 1, 2 * PI*-1, freqStep, rampTime),
 		EMT::Resistor::make("r_line", 0, 1, 1),
 		EMT::Inductor::make("l_line", 1, 2, 1)
 	};

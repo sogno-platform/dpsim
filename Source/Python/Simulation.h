@@ -38,7 +38,7 @@
 
 #include "Config.h"
 #include "../Simulation.h"
-#include "CPowerSystems/Components/Component.h"
+#include "CPowerSystems/Source/Component.h"
 
 namespace DPsim {
 
