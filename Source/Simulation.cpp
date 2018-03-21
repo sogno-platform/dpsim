@@ -20,7 +20,10 @@
  *********************************************************************************/
 
 #include "Simulation.h"
+
+#ifdef WITH_CIM
 #include "CPowerSystems/Source/CIM/Reader.h"
+#endif /* WITH_CIM */
 
 using namespace DPsim;
 
@@ -55,6 +58,7 @@ Simulation::Simulation(String name, Component::List comps, Real om, Real dt,
 	mLog.LogMatrix(Logger::Level::INFO, mSystemModel.getRightSideVector());
 }
 
+#ifdef WITH_CIM
 Simulation::Simulation(String name,
 	std::list<String> cimFiles,
 	Real frequency, Real timeStep, Real finalTime,
@@ -98,6 +102,7 @@ Simulation::Simulation(String name,
 	mLog.Log(Logger::Level::INFO) << "Right side vector:" << std::endl;
 	mLog.LogMatrix(Logger::Level::INFO, mSystemModel.getRightSideVector());
 }
+#endif /* WITH_CIM */
 
 void Simulation::initialize(Component::List newComponents) {
 	Int maxNode = 0;
