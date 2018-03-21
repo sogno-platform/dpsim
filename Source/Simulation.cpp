@@ -80,7 +80,7 @@ Simulation::Simulation(String name,
 	mNodes = reader.getNodes();
 	Component::List comps = reader.getComponents();
 
-	Simulation(name, comps, frequency, timeStep, finalTime, logLevel, simType)
+	Simulation(name, comps, frequency, timeStep, finalTime, logLevel, simType);
 }
 #endif /* WITH_CIM */
 
