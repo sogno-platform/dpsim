@@ -7,7 +7,6 @@ import subprocess
 from setuptools import setup, find_packages, Extension
 from setuptools.command.build_ext import build_ext
 from distutils.version import LooseVersion
-from m2r import M2R
 
 class CMakeExtension(Extension):
     def __init__(self, name, sourcedir=''):
@@ -71,10 +70,12 @@ def read(fname):
         contents = f.read()
         sanatized = cleanhtml(contents)
 
-        m2r = M2R()
-        rest = m2r(sanatized)
-
-    return rest
+        try:
+            from m2r import M2R
+            m2r = M2R()
+            return m2r(sanatized)
+        except:
+            return sanatized
 
 setup(
     name = "dpsim",
