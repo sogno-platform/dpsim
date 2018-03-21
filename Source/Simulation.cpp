@@ -22,7 +22,7 @@
 #include "Simulation.h"
 
 #ifdef WITH_CIM
-#include "CPowerSystems/Source/CIM/Reader.h"
+#include "cps/Source/CIM/Reader.h"
 #endif /* WITH_CIM */
 
 using namespace DPsim;
@@ -62,19 +62,8 @@ Simulation::Simulation(String name, Component::List comps, Real om, Real dt,
 Simulation::Simulation(String name,
 	std::list<String> cimFiles,
 	Real frequency, Real timeStep, Real finalTime,
-	Logger::Level logLevel, SimulationType simType) :
-	mLog("Logs/" + name + ".log", logLevel),
-	mLeftVectorLog("Logs/" + name + "_LeftVector.csv", logLevel),
-	mRightVectorLog("Logs/" + name + "_RightVector.csv", logLevel) {
-
-	mGnd = std::make_shared<Node>(-1);
-	mName = name;
-	mLogLevel = logLevel;
-	mSystemModel.setSimType(simType);
-	mSystemModel.setTimeStep(timeStep);
-	mSystemModel.setOmega(2*PI*frequency);
-	mFinalTime = finalTime;
-
+	Logger::Level logLevel, SimulationType simType)
+{
 	CIM::Reader reader(frequency, logLevel, logLevel);
 
 	for (String filename : cimFiles) {
@@ -90,17 +79,8 @@ Simulation::Simulation(String name,
 	}
 	mNodes = reader.getNodes();
 	Component::List comps = reader.getComponents();
-	initialize(comps);
-	for (auto comp : comps) {
-		mLog.Log(Logger::Level::INFO) << "Added " << comp->getType() << " '" << comp->getName() << "' to simulation." << std::endl;
-	}
 
-	mLog.Log(Logger::Level::INFO) << "System matrix:" << std::endl;
-	mLog.LogMatrix(Logger::Level::INFO, mSystemModel.getCurrentSystemMatrix());
-	mLog.Log(Logger::Level::INFO) << "LU decomposition:" << std::endl;
-	mLog.LogMatrix(Logger::Level::INFO, mSystemModel.getLUdecomp());
-	mLog.Log(Logger::Level::INFO) << "Right side vector:" << std::endl;
-	mLog.LogMatrix(Logger::Level::INFO, mSystemModel.getRightSideVector());
+	Simulation(name, comps, frequency, timeStep, finalTime, logLevel, simType);
 }
 #endif /* WITH_CIM */
 
