@@ -34,7 +34,7 @@ int main(int argc, char* argv[])
 
 	Component::List comps = {
 		VoltageSource::make("v_1", 0, GND, Complex(10, 0)),
-		RxLine::make("Line_1", 0, 1, 0.1, 0.001),
+		RxLine::make("Line_1", 0, 1, 0.1, 0.001, RxLine::Node3),
 		Resistor::make("r_1", 1, GND, 20)
 	};
 
