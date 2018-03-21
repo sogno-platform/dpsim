@@ -22,7 +22,7 @@
 #include "MNA_Simulation.h"
 
 #ifdef WITH_CIM
-#include "CPowerSystems/Source/CIM/Reader.h"
+#include "cps/Source/CIM/Reader.h"
 #endif /* WITH_CIM */
 
 using namespace DPsim;

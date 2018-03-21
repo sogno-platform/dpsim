@@ -25,11 +25,11 @@
 #include <vector>
 #include <list>
 
-#include "CPowerSystems/Source/Definitions.h"
-#include "CPowerSystems/Source/Component.h"
-#include "CPowerSystems/Source/Logger.h"
-#include "CPowerSystems/Source/Interfaces/ExternalInterface.h"
-#include "CPowerSystems/Source/Node.h"
+#include "cps/Source/Definitions.h"
+#include "cps/Source/Component.h"
+#include "cps/Source/Logger.h"
+#include "cps/Source/Interfaces/ExternalInterface.h"
+#include "cps/Source/Node.h"
 
 namespace DPsim {
 	/// Ground node
