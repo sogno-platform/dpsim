@@ -18,7 +18,8 @@ Setuptools
 
 Using setuptools is most likely the easiest way to install DPsim on your system.::
 
-    $ cd DPsim
+    $ git clone --recursive git@git.rwth-aachen.de:acs/core/simulation/dpsim.git
+    $ cd dpsim
     # python3 ./setup.py install
 
 CMake
@@ -56,18 +57,23 @@ CMake
           villas-node-devel \
           libcimpp16v29a
 
-2. Generate a makefile with CMake and use it to build the project::
+2. Fetch sources::
+
+      $ git clone --recursive git@git.rwth-aachen.de:acs/core/simulation/dpsim.git
+      $ cd dpsim
+
+3. Generate a Makefile with CMake and use it to build the project::
 
       $ mkdir build
       $ cd build
       $ cmake ..
       $ make
 
-3. Test your build by running the Jupyter notebooks:::
+4. Test your build by running the Jupyter notebooks:::
 
       $ make jupyter
 
-4. Install the generated Python module to your system:::
+5. Install the generated Python module to your system:::
 
       # make install
 
@@ -77,7 +83,7 @@ Visual Studio
 **This method is not recommended. Please use CMake or Python setuptools instead.**
 
 Prerequisites
-~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~
 First, install Visual Studio 2017 and the C++ Desktop development package.
 Then, you can choose to either use the prepared Visual Studio project or generate the project files on your own using CMake.
 
