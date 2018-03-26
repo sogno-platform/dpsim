@@ -4,6 +4,7 @@ set(INCLUDE_DIRS
 	${EIGEN3_INCLUDE_DIR}
 	"${CMAKE_CURRENT_BINARY_DIR}/../../Source"
 	"${CMAKE_CURRENT_SOURCE_DIR}/../../Source"
+	"${CMAKE_CURRENT_SOURCE_DIR}/../../Dependencies"
 )
 
 if (NOT WIN32)

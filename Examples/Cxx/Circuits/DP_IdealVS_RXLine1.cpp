@@ -32,10 +32,9 @@ int main(int argc, char* argv[]) {
 	String simName = "DP_IdealVS_RxLine1_" + std::to_string(timeStep);
 
 	Component::List comps = {
-		VoltageSource::make("v_1", GND, 0, Complex(100, 0), Logger::Level::DEBUG),
-		//RxLine::make("Line_1", 0, 1, 0.1, 0.001, Logger::Level::DEBUG),
-		Inductor::make("l_1", 0, 1, 0.001, Logger::Level::DEBUG),
-		Resistor::make("r_1", 1, GND, 1, Logger::Level::DEBUG)
+		VoltageSource::make("v_1", 0, GND, Complex(10, 0)),
+		RxLine::make("Line_1", 0, 1, 0.1, 0.001, RxLine::Node3),
+		Resistor::make("r_1", 1, GND, 20)
 	};
 
 	MnaSimulation sim(simName, comps, frequency, timeStep, finalTime, SimulationType::DP, Logger::Level::INFO);

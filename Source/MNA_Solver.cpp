@@ -20,7 +20,10 @@
  *********************************************************************************/
 
 #include "MNA_Solver.h"
-#include "CPowerSystems/Source/CIM/Reader.h"
+
+#ifdef WITH_CIM
+#include "cps/Source/CIM/Reader.h"
+#endif /* WITH_CIM */
 
 using namespace DPsim;
 
@@ -56,6 +59,7 @@ MnaSimulation::MnaSimulation(String name,
 	mLog.LogMatrix(Logger::Level::INFO, mRightSideVector);
 }
 
+#ifdef WITH_CIM
 MnaSimulation::MnaSimulation(String name,
 	std::list<String> cimFiles,
 	Real frequency, Real timeStep, Real finalTime, SimulationType simType,
@@ -65,7 +69,7 @@ MnaSimulation::MnaSimulation(String name,
 	mRightVectorLog("Logs/" + name + "_RightVector.csv", logLevel) {
 
 	mGnd = std::make_shared<Node>(-1);
-	mName = name;	
+	mName = name;
 	mTimeStep = timeStep;
 	mFinalTime = finalTime;
 	mSystemFrequency = frequency;
@@ -93,7 +97,7 @@ MnaSimulation::MnaSimulation(String name,
 	initialize(comps);
 
 	// Logging
-	for (auto comp : comps) 
+	for (auto comp : comps)
 		mLog.Log(Logger::Level::INFO) << "Added " << comp->getType() << " '" << comp->getName() << "' to simulation." << std::endl;
 
 	mLog.Log(Logger::Level::INFO) << "System matrix:" << std::endl;
@@ -103,9 +107,10 @@ MnaSimulation::MnaSimulation(String name,
 	mLog.Log(Logger::Level::INFO) << "Right side vector:" << std::endl;
 	mLog.LogMatrix(Logger::Level::INFO, mRightSideVector);
 }
+#endif
 
 void MnaSimulation::initialize(Component::List newComponents) {
-	mComponents.push_back(newComponents);	
+	mComponents.push_back(newComponents);
 
 	mLog.Log(Logger::Level::INFO) << "#### Start Initialization ####" << std::endl;
 	// Calculate the mNumber of nodes by going through the list of components
@@ -203,12 +208,12 @@ void MnaSimulation::addSystemTopology(Component::List newComponents) {
 	createEmptySystemMatrix();
 	for (auto comp : newComponents)
 		comp->mnaApplySystemMatrixStamp(mSystemMatrices[mSystemMatrices.size()]);
-	
+
 	mLuFactorizations.push_back(LUFactorized(mSystemMatrices[mSystemMatrices.size()]));
 }
 
 void MnaSimulation::switchSystemMatrix(Int systemIndex) {
-	if (systemIndex < mSystemMatrices.size()) 
+	if (systemIndex < mSystemMatrices.size())
 		mSystemIndex = systemIndex;
 }
 

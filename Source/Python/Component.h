@@ -33,7 +33,7 @@
 #include <vector>
 #include <memory>
 
-#include "CPowerSystems/Source/Component.h"
+#include "cps/Source/Component.h"
 
 namespace DPsim {
 namespace Python {
