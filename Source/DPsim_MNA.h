@@ -1,4 +1,4 @@
-#include "Simulation.h"
+#include "MNA_Solver.h"
 #include "CPowerSystems/Source/Components.h"
 #include "CPowerSystems/Source/Logger.h"
 

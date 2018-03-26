@@ -123,7 +123,7 @@ namespace DPsim {
 	public:
 		/// Creates system matrix according to
 		MnaSimulation(String name,
-			Component::List comps, Real om, Real dt, Real tf, SimulationType simType = SimulationType::DP,
+			Component::List comps, Real frequency, Real timeStep, Real finalTime, SimulationType simType = SimulationType::DP,
 			Logger::Level logLevel = Logger::Level::INFO, Int downSampleRate = 1);
 		/// Creates system matrix according to
 		MnaSimulation(String name,

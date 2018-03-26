@@ -19,7 +19,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *********************************************************************************/
 
-#include "MNA_Simulation.h"
+#include "MNA_Solver.h"
 #include "CPowerSystems/Source/CIM/Reader.h"
 
 using namespace DPsim;
@@ -119,11 +119,11 @@ void MnaSimulation::initialize(Component::List newComponents) {
 		if (comp->getNode2() > maxNode)
 			maxNode = comp->getNode2();
 	}
-
-	if (mNodes[mSystemIndex].size() == 0) {
+	
+	if (mNodes.size() == 0) {
 		// Create Nodes for all node indices
 		mNodes.push_back(Node::List(maxNode + 1, nullptr));
-		for (int node = 0; node < mNodes.size(); node++)
+		for (int node = 0; node <= mNodes.size(); node++)
 			mNodes[mSystemIndex][node] = std::make_shared<Node>(node);
 
 		for (auto comp : mComponents[mSystemIndex]) {
@@ -197,6 +197,7 @@ void MnaSimulation::createEmptySystemMatrix() {
 
 void MnaSimulation::addSystemTopology(Component::List newComponents) {
 	mComponents.push_back(newComponents);
+	mNodes.push_back(Node::List(mNumNodes, nullptr));
 
 	// It is assumed that the system size does not change
 	createEmptySystemMatrix();

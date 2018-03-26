@@ -22,13 +22,14 @@
 #include <iostream>
 #include <list>
 
-#include "DPsim.h"
+#include "DPsim_MNA.h"
 
 using namespace DPsim;
 
 static int testCIMReader(std::list<String> filenames) {
-	Simulation sim("CIM", filenames, 50, 0.0001, 0.1, Logger::Level::DEBUG, SimulationType::DP);
+	MnaSimulation sim("CIM", filenames, 50, 0.0001, 0.1, SimulationType::DP, Logger::Level::DEBUG);
 	sim.run();
+
 	return 0;
 }
 
