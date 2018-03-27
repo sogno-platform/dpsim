@@ -28,7 +28,7 @@ int main(int argc, char* argv[]) {
 	Real timeStep = 0.00005;
 	Real omega = 2.0*M_PI*50.0;
 	Real finalTime = 0.2;
-	String simName = "DP_IdealVS1_R_2";
+	String simName = "DP_IdealVS_R_2";
 
 	Component::List comps = {
 		VoltageSource::make("v_in", 0, 1, Complex(10, 0)),
