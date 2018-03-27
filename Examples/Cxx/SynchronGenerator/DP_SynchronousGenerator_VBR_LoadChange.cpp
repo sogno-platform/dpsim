@@ -66,7 +66,7 @@ int main(int argc, char* argv[])
 				Real tf, dt, t;
 				Real om = 2.0*M_PI*60.0;
 				dt = i; t = 0;
-				tf = 100000 * dt;
+				tf = 0.3;
 				Int downSampling = 1;
 
 				String mGeneratorName = "DP_VBR_" + std::to_string(i);

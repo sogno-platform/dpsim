@@ -23,7 +23,7 @@
 #include "Components.h"
 
 using namespace DPsim;
-using namespace DPsim::Components::EMT;
+using namespace DPsim::Components::DP;
 
 int main(int argc, char* argv[])
 {
@@ -77,7 +77,7 @@ int main(int argc, char* argv[])
 		// Set up simulation
 		Real tf, dt, t;
 		Real om = 2.0*M_PI*60.0;
-		tf = 0.30000; dt = 0.00005; t = 0;
+		tf = 0.3; dt = 0.00005; t = 0;
 		Int downSampling = 1;
 
 		Real Ld_s = 0.23;
@@ -85,13 +85,13 @@ int main(int argc, char* argv[])
 		Real Ra = (Ld_s + Lq_s) / dt;
 
 		// Declare circuit components
-		String mGeneratorName = "EMT_Dq_" + std::to_string(dt);
+		String mGeneratorName = "DP_Dq_" + std::to_string(dt);
 		Component::Ptr gen = SynchronGenerator::make(mGeneratorName, 0, 1, 2,
 				nomPower, nomPhPhVoltRMS, nomFreq, poleNum, nomFieldCurr,
 				Rs, Ll, Lmd, Lmd0, Lmq, Lmq0, Rfd, Llfd, Rkd, Llkd, Rkq1, Llkq1, Rkq2, Llkq2, H, Ra, Logger::Level::INFO);
 
 		// Declare circuit components
-		String mGeneratorName2 = "EMT_Dq2_" + std::to_string(dt);
+		String mGeneratorName2 = "DP_Dq2_" + std::to_string(dt);
 		Component::Ptr gen2 = SynchronGenerator::make(mGeneratorName2, 12, 13, 14,
 				nomPower, nomPhPhVoltRMS, nomFreq, poleNum, nomFieldCurr,
 				Rs, Ll, Lmd, Lmd0, Lmq, Lmq0, Rfd, Llfd, Rkd, Llkd, Rkq1, Llkq1, Rkq2, Llkq2, H, Ra, Logger::Level::INFO);
@@ -119,9 +119,9 @@ int main(int argc, char* argv[])
 		Component::Ptr Rsn3 = Resistor::make("Rsn3", 2, GND, Rsn);
 
 		//Line Inductance
-		Component::Ptr LineL1 = Inductor::make("LineL1", 3, 6, lindeInd, -1743.9006140981385, 3404);
-		Component::Ptr LineL2 = Inductor::make("LineL2", 4, 7, lindeInd, -7551.1645960101869, -2231);
-		Component::Ptr LineL3 = Inductor::make("LineL3", 5, 8, lindeInd, 9295.0652101083233, -1174);
+		Component::Ptr LineL1 = Inductor::make("LineL1", 3, 6, lindeInd);
+		Component::Ptr LineL2 = Inductor::make("LineL2", 4, 7, lindeInd);
+		Component::Ptr LineL3 = Inductor::make("LineL3", 5, 8, lindeInd);
 
 		//Load
 		Component::Ptr r1 = Resistor::make("r1", 6, GND, loadRes);
@@ -129,9 +129,9 @@ int main(int argc, char* argv[])
 		Component::Ptr r3 = Resistor::make("r3", 8, GND, loadRes);
 
 		//Line Inductance2
-		Component::Ptr LineL12 = Inductor::make("LineL12", 6, 9, lindeInd, 1743.9006140981385, -3404);
-		Component::Ptr LineL22 = Inductor::make("LineL22", 7, 10, lindeInd, 7551.1645960101869, 2231);
-		Component::Ptr LineL32 = Inductor::make("LineL32", 8, 11, lindeInd, -9295.0652101083233, 1174);
+		Component::Ptr LineL12 = Inductor::make("LineL12", 6, 9, lindeInd);
+		Component::Ptr LineL22 = Inductor::make("LineL22", 7, 10, lindeInd);
+		Component::Ptr LineL32 = Inductor::make("LineL32", 8, 11, lindeInd);
 
 		//Line Resistance2
 		Component::Ptr LineR12 = Resistor::make("LineR12", 9, 12, lineRes);
@@ -163,8 +163,8 @@ int main(int argc, char* argv[])
 				Res12, Res22, Res32, rBreaker1, rBreaker2, rBreaker3, Rsn1, Rsn2, Rsn3, Rsn4, Rsn5, Rsn6 };
 
 
-		String mSimulationName = "EMT_SynchronGenerator_Dq_" + std::to_string(dt);
-		SynGenSimulation sim(mSimulationName, comps, om, dt, tf, Logger::Level::INFO, SimulationType::EMT, downSampling);
+		String mSimulationName = "DP_SynchronGenerator_Dq_" + std::to_string(dt);
+		SynGenSimulation sim(mSimulationName, comps, om, dt, tf, Logger::Level::INFO, SimulationType::DP, downSampling);
 		sim.setNumericalMethod(NumericalMethod::Trapezoidal_flux);
 		sim.addSystemTopology(compsBreakerOn);
 		sim.switchSystemMatrix(0);
@@ -176,12 +176,12 @@ int main(int argc, char* argv[])
 		Real initVoltAngle = -DPS_PI / 2;
 		Real fieldVoltage = 7.0821;
 		Real mechPower = 285.89e6;
-		auto genPtr = std::dynamic_pointer_cast<Components::EMT::SynchronGenerator>(gen);
+		auto genPtr = std::dynamic_pointer_cast<Components::DP::SynchronGenerator>(gen);
 		genPtr->initialize(om, dt, initActivePower, initReactivePower, initTerminalVolt, initVoltAngle, fieldVoltage, mechPower);
 		genPtr->AddExciter(Ta, Ka, Te, Ke, Tf, Kf, Tr, Lmd, Rfd);
 		genPtr->AddGovernor(Ta_t, Tb, Tc, Fa, Fb, Fc, Kg, Tsr, Tsm, initActivePower / nomPower, mechPower / nomPower);
 
-		auto genPtr2 = std::dynamic_pointer_cast<Components::EMT::SynchronGenerator>(gen2);
+		auto genPtr2 = std::dynamic_pointer_cast<Components::DP::SynchronGenerator>(gen2);
 		genPtr2->initialize(om, dt, initActivePower, initReactivePower, initTerminalVolt, initVoltAngle, fieldVoltage, mechPower);
 		genPtr2->AddExciter(Ta, Ka, Te, Ke, Tf, Kf, Tr, Lmd, Rfd);
 		genPtr2->AddGovernor(Ta_t, Tb, Tc, Fa, Fb, Fc, Kg, Tsr, Tsm, initActivePower / nomPower, mechPower / nomPower);

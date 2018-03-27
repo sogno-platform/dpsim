@@ -14,7 +14,6 @@ i = 1;
 
 FileNameVector = ['SynGen_VBR_0.000050.csv';
     'SynGen_VBR_0.000100.csv';
-    'SynGen_VBR_0.000150.csv';
     'SynGen_VBR_0.000200.csv';
     'SynGen_VBR_0.000250.csv';
     'SynGen_VBR_0.000300.csv';

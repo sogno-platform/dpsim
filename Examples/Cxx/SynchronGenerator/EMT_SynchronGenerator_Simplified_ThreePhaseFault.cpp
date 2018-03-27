@@ -65,16 +65,17 @@ int main(int argc, char* argv[])
 		// Set up simulation
 		Real tf, dt, t;
 		Real om = 2.0*M_PI*60.0;
-		tf = 3; dt = 0.00001; t = 0;
+		tf = 0.3; dt = 0.00005; t = 0;
 		Int downSampling = 1;
 
 		Real Ra = (Ld_s + Lq_s) / dt;
 
 		// Declare circuit components
-		Component::Ptr gen = SynchronGeneratorSimplified::make("gen", 0, 1, 2,
+		String mGeneratorName = "EMT_VBRSimplified_" + std::to_string(dt);
+		Component::Ptr gen = SynchronGeneratorVBRSimplified::make(mGeneratorName, 0, 1, 2,
 				nomPower, nomPhPhVoltRMS, nomFreq, poleNum, nomFieldCurr,
-				Rs, Ll, Lmd, Lmd0, Lmq, Lmq0, Rfd, Llfd, Rkd, Llkd, Rkq1, Llkq1, Rkq2, Llkq2, H, Ra, Logger::Level::INFO);
-		Real loadRes = 24e3*24e3/555e3;
+				Rs, Ll, Lmd, Lmd0, Lmq, Lmq0, Rfd, Llfd, Rkd, Llkd, Rkq1, Llkq1, Rkq2, Llkq2, H, Logger::Level::INFO);
+		Real loadRes = 24e3*24e3/300e6;
 		Component::Ptr r1 = Resistor::make("r1", 0, GND, loadRes);
 		Component::Ptr r2 = Resistor::make("r2", 1, GND, loadRes);
 		Component::Ptr r3 = Resistor::make("r3", 2, GND, loadRes);
@@ -82,7 +83,8 @@ int main(int argc, char* argv[])
 		Component::List comps = { gen, r1, r2, r3 };
 
 		// Declare circuit components for resistance change
-		Real breakerRes = 0.001;
+		//Real breakerRes = 0.001;
+		Real breakerRes = 19.2 + 0.001;
 		Component::Ptr rBreaker1 = Resistor::make("rbreak1", 0, GND, breakerRes);
 		Component::Ptr rBreaker2 = Resistor::make("rbreak2", 1, GND, breakerRes);
 		Component::Ptr rBreaker3 = Resistor::make("rbreak3", 2, GND, breakerRes);
@@ -90,19 +92,20 @@ int main(int argc, char* argv[])
 
 		Component::List compsBreakerOn = { gen, rBreaker1, rBreaker2, rBreaker3, r1, r2, r3 };
 
-		SynGenSimulation sim("EMT_SynchronGenerator_ThreePhaseFault", comps, om, dt, tf, Logger::Level::INFO, SimulationType::EMT, downSampling);
+		String mSimulationName = "EMT_SynchronGenerator_VBRSimplified_" + std::to_string(dt);
+		SynGenSimulation sim(mSimulationName, comps, om, dt, tf, Logger::Level::INFO, SimulationType::EMT, downSampling);
 		sim.setNumericalMethod(NumericalMethod::Trapezoidal_flux);
 		sim.addSystemTopology(compsBreakerOn);
 		sim.switchSystemMatrix(0);
 
 		// Initialize generator
-		Real initActivePower = 555e3;
+		Real initActivePower = 300e6;
 		Real initReactivePower = 0;
 		Real initTerminalVolt = 24000 / sqrt(3) * sqrt(2);
 		Real initVoltAngle = -DPS_PI / 2;
 		Real fieldVoltage = 7.0821;
-		Real mechPower = 5.5558e5;
-		auto genPtr = std::dynamic_pointer_cast<Components::EMT::SynchronGeneratorSimplified>(gen);
+		Real mechPower = 300e6;
+		auto genPtr = std::dynamic_pointer_cast<Components::EMT::SynchronGeneratorVBRSimplified>(gen);
 		genPtr->initialize(om, dt, initActivePower, initReactivePower, initTerminalVolt, initVoltAngle, fieldVoltage, mechPower);
 
 		// Calculate initial values for circuit at generator connection point
@@ -120,7 +123,7 @@ int main(int argc, char* argv[])
 		Real lastLogTime = 0;
 		Real logTimeStep = 0.00005;
 		sim.setSwitchTime(0.1, 1);
-		sim.setSwitchTime(2.1, 0);
+		sim.setSwitchTime(0.2, 0);
 
 		sim.run();
 

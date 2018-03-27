@@ -137,23 +137,23 @@ void Components::DP::SynchronGeneratorSimplified::step(SystemModel& system, Real
 
 void Components::DP::SynchronGeneratorSimplified::stepInPerUnit(Real om, Real dt, Real time, NumericalMethod numMethod)
 {
-		mVaRe = (1 / mBase_v) * mVaRe;
-		mVaIm = (1 / mBase_v) * mVaIm;
-		mVbRe = (1 / mBase_v) * mVbRe;
-		mVbIm = (1 / mBase_v) * mVbIm;
-		mVcRe = (1 / mBase_v) * mVcRe;
-		mVcIm = (1 / mBase_v) * mVcIm;
+		//mVaRe = (1 / mBase_v) * mVaRe;
+		//mVaIm = (1 / mBase_v) * mVaIm;
+		//mVbRe = (1 / mBase_v) * mVbRe;
+		//mVbIm = (1 / mBase_v) * mVbIm;
+		//mVcRe = (1 / mBase_v) * mVcRe;
+		//mVcIm = (1 / mBase_v) * mVcIm;
 
-		mIaRe = (1 / mBase_i) * mIaRe;
-		mIaIm = (1 / mBase_i) * mIaIm;
-		mIbRe = (1 / mBase_i) * mIbRe;
-		mIbIm = (1 / mBase_i) * mIbIm;
-		mIcRe = (1 / mBase_i) * mIcRe;
-		mIcIm = (1 / mBase_i) * mIcIm;
+		//mIaRe = (1 / mBase_i) * mIaRe;
+		//mIaIm = (1 / mBase_i) * mIaIm;
+		//mIbRe = (1 / mBase_i) * mIbRe;
+		//mIbIm = (1 / mBase_i) * mIbIm;
+		//mIcRe = (1 / mBase_i) * mIcRe;
+		//mIcIm = (1 / mBase_i) * mIcIm;
 
-		mVq = abcToDq0Transform(mThetaMech, mVaRe, mVbRe, mVcRe, mVaIm, mVbIm, mVcIm)(0);
-		mVd = abcToDq0Transform(mThetaMech, mVaRe, mVbRe, mVcRe, mVaIm, mVbIm, mVcIm)(1);
-		mV0 = abcToDq0Transform(mThetaMech, mVaRe, mVbRe, mVcRe, mVaIm, mVbIm, mVcIm)(2);
+		//mVq = abcToDq0Transform(mThetaMech, mVaRe, mVbRe, mVcRe, mVaIm, mVbIm, mVcIm)(0);
+		//mVd = abcToDq0Transform(mThetaMech, mVaRe, mVbRe, mVcRe, mVaIm, mVbIm, mVcIm)(1);
+		//mV0 = abcToDq0Transform(mThetaMech, mVaRe, mVbRe, mVcRe, mVaIm, mVbIm, mVcIm)(2);
 
 
 	   // Calculation of rotational speed with euler
@@ -163,11 +163,10 @@ void Components::DP::SynchronGeneratorSimplified::stepInPerUnit(Real om, Real dt
 		// Update mechanical rotor angle with respect to electrical angle
 		mThetaMech = mThetaMech + dt * ((mOmMech - 1) * mBase_OmMech);
 
-
 		mPsifd = mPsifd + dt*mBase_OmMech*(mVfd - mRfd*mIfd);
 
 		mR_eq <<
-				-mRs - mR_load(0,0), (mLl + mLmq),
+				-mRs - mR_load(0, 0), (mLl + mLmq),
 				-(mLl + mLmd) + mLmd*mLmd / (mLlfd + mLmd), -mRs - mR_load(0, 0);
 		mE_eq <<
 				0,
@@ -196,6 +195,14 @@ void Components::DP::SynchronGeneratorSimplified::stepInPerUnit(Real om, Real dt
 		mIaIm = mBase_i * dq0ToAbcTransform(mThetaMech, mId, mIq, mI0)(3);
 		mIbIm = mBase_i * dq0ToAbcTransform(mThetaMech, mId, mIq, mI0)(4);
 		mIcIm = mBase_i * dq0ToAbcTransform(mThetaMech, mId, mIq, mI0)(5);
+
+		mIabc <<
+				mIaRe,
+				mIbRe,
+				mIcRe,
+				mIaIm,
+				mIbIm,
+				mIcIm;
 
 }
 

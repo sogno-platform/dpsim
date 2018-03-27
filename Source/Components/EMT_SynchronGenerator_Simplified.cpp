@@ -105,10 +105,10 @@ void Components::EMT::SynchronGeneratorSimplified::initialize(Real om, Real dt,
 	mEq_t = mVq + mXd_t*mId;
 	mEf = mOmMech*(mLmd / mRfd) * mVfd;
 
-	mVdq0 <<
-			0.0017966582295287615,
-			0.99999836649049489,
-			0;
+	//mVdq0 <<
+	//		0.0017966582295287615,
+	//		0.99999836649049489,
+	//		0;
 
 	mVa = inverseParkTransform(mThetaMech, mVd* mBase_v, mVq* mBase_v, mV0* mBase_v)(0);
 	mVb = inverseParkTransform(mThetaMech, mVd* mBase_v, mVq* mBase_v, mV0* mBase_v)(1);
@@ -179,25 +179,9 @@ void Components::EMT::SynchronGeneratorSimplified::stepInPerUnit(Real om, Real d
 		mG_eq_abc = (mR_eq_abc - mR_load).inverse();
 		mEq_abc = mKrs_teta_inv*mE_eq;
 
-		//Matrix mEq_abc2 = Matrix::Zero(3, 1);
-		//mEq_abc2 = inverseParkTransform(mThetaMech, mE_eq(0), mE_eq(1), 0);
-
-		//Matrix mIdq2 = Matrix::Zero(2, 1);
-		//Matrix mVdq2 = Matrix::Zero(2, 1);
-		//Matrix mIabc2 = Matrix::Zero(3, 1);
-
-
-		//mVdq2 << mVdq0(0),
-		//		mVdq0(1);
-
-		//mIdq2 = mR_eq.inverse()*(mVdq2 - mE_eq);
-
-		//mIabc2 = mKrs_teta_inv*mIdq2;
 	
 		mIabc = -mG_eq_abc*mEq_abc;
 		mIdq = mKrs_teta*mIabc;
-
-		//mVdq = mR_eq*mIdq + mE_eq;
 
 		mId = mIdq(0);
 		mIq = mIdq(1);
@@ -249,18 +233,6 @@ void Components::EMT::SynchronGeneratorSimplified::postStep(SystemModel& system)
 		mVc = 0;
 	}
 
-
-	mVa = mVa / mBase_v;
-	mVb = mVb / mBase_v;
-	mVc = mVc / mBase_v;
-
-	mVabc <<
-			mVa,
-			mVb,
-			mVc;
-
-	
-	mVdq0 = parkTransform(mThetaMech, mVa, mVb, mVc);
   }
 
 Matrix Components::EMT::SynchronGeneratorSimplified::parkTransform(Real theta, Real a, Real b, Real c)

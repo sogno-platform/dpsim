@@ -273,6 +273,7 @@ namespace DP {
 		Real getElectricalTorque() { return mElecTorque*mBase_T; }
 		Real getRotationalSpeed() { return mOmMech*mBase_OmMech; }
 		Real getRotorPosition() { return mThetaMech; }
+		Matrix& getStatorCurrents() { return mIabc; }
 
 		void initialize(SystemModel& system) { }
 		void applySystemMatrixStamp(SystemModel& system) { }

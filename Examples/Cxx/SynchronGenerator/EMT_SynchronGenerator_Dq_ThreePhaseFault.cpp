@@ -49,10 +49,10 @@ int main(int argc, char* argv[])
 		Real Llkd = 0.1713;
 		Real Rkq1 = 0.0062;
 		Real Llkq1 = 0.7252;
-		//Real Rkq2 = 0.0237;
-		//Real Llkq2 = 0.125;
-		Real Rkq2 = 0;
-		Real Llkq2 = 0;
+		Real Rkq2 = 0.0237;
+		Real Llkq2 = 0.125;
+		//Real Rkq2 = 0;
+		//Real Llkq2 = 0;
 
 		// Set up simulation
 		Real tf, dt, t;
@@ -65,7 +65,7 @@ int main(int argc, char* argv[])
 		Real Ra = (Ld_s + Lq_s) / dt;
 
 
-		String mGeneratorName = "Dq_" + std::to_string(dt);
+		String mGeneratorName = "EMT_Dq_" + std::to_string(dt);
 		// Declare circuit components
 		Component::Ptr gen = SynchronGenerator::make(mGeneratorName, 0, 1, 2,
 				nomPower, nomPhPhVoltRMS, nomFreq, poleNum, nomFieldCurr,

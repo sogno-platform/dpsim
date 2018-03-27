@@ -81,7 +81,8 @@ int main(int argc, char* argv[])
 		Int downSampling = 1;
 
 		// Declare circuit components
-		Component::Ptr gen = VoltageBehindReactanceEMTNew::make("gen", 0, 1, 2,
+		String mGeneratorName = "EMT_VBR_" + std::to_string(dt);
+		Component::Ptr gen = VoltageBehindReactanceEMTNew::make(mGeneratorName, 0, 1, 2,
 				nomPower, nomPhPhVoltRMS, nomFreq, poleNum, nomFieldCurr,
 				Rs, Ll, Lmd, Lmd0, Lmq, Lmq0, Rfd, Llfd, Rkd, Llkd, Rkq1, Llkq1, Rkq2, Llkq2, H, Logger::Level::INFO);
 
@@ -102,8 +103,8 @@ int main(int argc, char* argv[])
 
 		Component::List compsBreakerOn = { gen, r1,	r2, r3, rBreaker1, rBreaker2, rBreaker3, };
 
-
-		SynGenSimulation sim("EMT_SynchronGenerator_VBR", comps, om, dt, tf, Logger::Level::INFO, SimulationType::EMT, downSampling);
+		String mSimulationName = "EMT_SynchronGenerator_VBR_" + std::to_string(dt);
+		SynGenSimulation sim(mSimulationName, comps, om, dt, tf, Logger::Level::INFO, SimulationType::EMT, downSampling);
 		sim.setNumericalMethod(NumericalMethod::Trapezoidal_flux);
 		sim.addSystemTopology(compsBreakerOn);
 		sim.switchSystemMatrix(0);

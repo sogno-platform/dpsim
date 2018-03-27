@@ -57,10 +57,10 @@ int main(int argc, char* argv[])
 		// Set up simulation
 		Real tf, dt, t;
 		Real om = 2.0*M_PI*60.0;
-		dt = 0.008; tf = 0.3 - dt; t = 0;
+		dt = 0.00005; tf = 0.3 - dt; t = 0;
 		Int downSampling = 1;
 
-		String mGeneratorName = "VBR_" + std::to_string(dt);
+		String mGeneratorName = "DP_VBR_" + std::to_string(dt);
 		// Declare circuit components
 		Component::Ptr gen = SynchronGeneratorVBRNew::make(mGeneratorName, 0, 1, 2,
 				nomPower, nomPhPhVoltRMS, nomFreq, poleNum, nomFieldCurr,

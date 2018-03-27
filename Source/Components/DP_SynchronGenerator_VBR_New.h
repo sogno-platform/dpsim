@@ -155,6 +155,7 @@ namespace DPsim {
 								Matrix K2b = Matrix::Zero(2, 1);
 								Matrix K2 = Matrix::Zero(2, 1);
 								Matrix h_qdr;
+								Matrix h_qdr2;
 								Matrix K = Matrix::Zero(3, 3);
 								Matrix E_r_vbr = Matrix::Zero(3, 1);
 								Matrix K_DP = Matrix::Zero(6, 6);
@@ -202,6 +203,7 @@ namespace DPsim {
 								Matrix Var2 = Matrix::Zero(6, 6);
 								Matrix mVabc = Matrix::Zero(6, 1);
 								Matrix E_r_vbr_DP = Matrix::Zero(6, 1);
+								Matrix E_r_vbr_DP2 = Matrix::Zero(6, 1);
 								
 
 

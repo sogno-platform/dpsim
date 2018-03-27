@@ -1,4 +1,4 @@
-/** Simplified Voltage behind reactance (EMT)
+﻿/** Simplified Voltage behind reactance (EMT)
 *
 * @file
 * @author Markus Mirz <mmirz@eonerc.rwth-aachen.de>
@@ -27,7 +27,7 @@
 
 namespace DPsim {
 namespace Components {
-namespace DP {
+namespace EMT {
 
 	/// Synchronous generator model
 	/// If parInPerUnit is not set, the parameters have to be given with their respective stator or rotor
@@ -118,7 +118,7 @@ namespace DP {
 		/// Load Resistance
 		Matrix R_load = Matrix::Zero(3, 3);
 
-		/// Phase currents in pu
+		/// Phase currents
 		Matrix mIabc = Matrix::Zero(3, 1);
 		/// Subtransient voltage in pu
 		Matrix mDVabc = Matrix::Zero(3, 1);
@@ -176,6 +176,7 @@ namespace DP {
 		Real getElectricalTorque() { return mElecTorque*mBase_T; }
 		Real getRotationalSpeed() { return mOmMech*mBase_OmMech; }
 		Real getRotorPosition() { return mThetaMech; }
+		Matrix& getStatorCurrents() { return mIabc; }
 
 		void initialize(SystemModel& system) { }
 		void applySystemMatrixStamp(SystemModel& system) { }

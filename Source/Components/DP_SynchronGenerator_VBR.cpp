@@ -194,9 +194,9 @@ void Components::DP::SynchronGeneratorVBR::step(SystemModel& system, Real time)
 		}
 
 		if (mLogLevel != Logger::Level::NONE) {
-				Matrix logValues(getRotorFluxes().rows() + getDqStatorCurrents().rows() + 3, 1);
-				logValues << getRotorFluxes(), getDqStatorCurrents(), getElectricalTorque(), getRotationalSpeed(), getRotorPosition();
-				mLog->LogDataLine(time, logValues);
+				Matrix logValues(getStatorCurrents().rows() + 2, 1);
+				logValues << getStatorCurrents()*mBase_i, getElectricalTorque(), getRotationalSpeed();
+				mLog->LogGenDP(time, logValues);
 		}
 
 }
@@ -309,6 +309,8 @@ void Components::DP::SynchronGeneratorVBR::stepInPerUnit(Real om, Real dt, Real 
 
 		mDVd = mDVqd(1);
 		mDVq = mDVqd(0);
+
+		mDVabc = K_DP*mIabc + E_r_vbr_DP;
 
 		//mDVaRe = dq0ToAbcTransform(mThetaMech, mDVd, mDVq, 0)(0);
 		//mDVbRe = dq0ToAbcTransform(mThetaMech, mDVd, mDVq, 0)(1);

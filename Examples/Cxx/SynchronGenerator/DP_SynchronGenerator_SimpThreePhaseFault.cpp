@@ -1,4 +1,4 @@
-/** Synchron Generator Tests
+﻿/** Synchron Generator Tests
  *
  * @file
  * @author Markus Mirz <mmirz@eonerc.rwth-aachen.de>
@@ -62,10 +62,10 @@ int main(int argc, char* argv[])
 	Real Llkd = 0.1713;
 	Real Rkq1 = 0.0062;
 	Real Llkq1 = 0.7252;
-	//Real Rkq2 = 0.0237;
-	//Real Llkq2 = 0.125;
-	Real Rkq2 = 0;
-	Real Llkq2 = 0;
+	Real Rkq2 = 0.0237;
+	Real Llkq2 = 0.125;
+	//Real Rkq2 = 0;
+	//Real Llkq2 = 0;
 
 	Real Ld_s = 0.23;
 	Real Lq_s = 0.25;
@@ -73,42 +73,45 @@ int main(int argc, char* argv[])
 	// Set up simulation
 	Real tf, dt, t;
 	Real om = 2.0*M_PI*60.0;
-	tf = 0.3; dt = 0.000001; t = 0;
+	tf = 0.3; dt = 0.00005; t = 0;
 	Int downSampling = 50;
 
 	Real Ra = (Ld_s + Lq_s) / dt;
 	// Declare circuit components
-	Component::Ptr gen = SynchronGenerator::make("gen", 1, 2, 3,
+	String mGeneratorName = "DP_DqSimplified_" + std::to_string(dt);
+	Component::Ptr gen = SynchronGeneratorSimplified::make(mGeneratorName, 0, 1, 2,
 		nomPower, nomPhPhVoltRMS, nomFreq, poleNum, nomFieldCurr,
-		Rs, Ll, Lmd, Lmd0, Lmq, Lmq0, Rfd, Llfd, Rkd, Llkd, Rkq1, Llkq1, Rkq2, Llkq2, H, Ra);
-	Real loadRes = 1037.8378;
-	Component::Ptr r1 = Resistor::make("r1", 1, 0, loadRes);
-	Component::Ptr r2 = Resistor::make("r2", 2, 0, loadRes);
-	Component::Ptr r3 = Resistor::make("r3", 3, 0, loadRes);
+		Rs, Ll, Lmd, Lmd0, Lmq, Lmq0, Rfd, Llfd, Rkd, Llkd, Rkq1, Llkq1, Rkq2, Llkq2, H, Ra, Logger::Level::INFO);
+	Real loadRes = 24e3*24e3 / 300e6;
+	Component::Ptr r1 = Resistor::make("r1", 0, GND, loadRes);
+	Component::Ptr r2 = Resistor::make("r2", 1, GND, loadRes);
+	Component::Ptr r3 = Resistor::make("r3", 2, GND, loadRes);
 
 	Component::List comps = { gen, r1, r2, r3 };
 
 	// Declare circuit components for resistance change
-	Real breakerRes = 0.001;
-	Component::Ptr rBreaker1 = Resistor::make("rbreak1", 1, 0, breakerRes);
-	Component::Ptr rBreaker2 = Resistor::make("rbreak2", 2, 0, breakerRes);
-	Component::Ptr rBreaker3 = Resistor::make("rbreak3", 3, 0, breakerRes);
+	//Real breakerRes = 0.001;
+	Real breakerRes = 19.2 + 0.001;
+	Component::Ptr rBreaker1 = Resistor::make("rbreak1", 0, GND, breakerRes);
+	Component::Ptr rBreaker2 = Resistor::make("rbreak2", 1, GND, breakerRes);
+	Component::Ptr rBreaker3 = Resistor::make("rbreak3", 2, GND, breakerRes);
 
 	Component::List compsBreakerOn = { gen, rBreaker1, rBreaker2, rBreaker3, r1, r2, r3 };
 
-	Simulation sim("DP_SynchronGenerator_SimpThreePhaseFault", comps, om, dt, tf, Logger::Level::INFO, SimulationType::DP, downSampling);
+	String mSimulationName = "DP_SynchronGenerator_DqSimplified_" + std::to_string(dt);
+	Simulation sim(mSimulationName, comps, om, dt, tf, Logger::Level::INFO, SimulationType::DP, downSampling);
 	sim.setNumericalMethod(NumericalMethod::Trapezoidal_flux);
 	sim.addSystemTopology(compsBreakerOn);
 	sim.switchSystemMatrix(0);
 
 	// Initialize generator
-	Real initActivePower = 555e3;
+	Real initActivePower = 300e6;
 	Real initReactivePower = 0;
 	Real initTerminalVolt = 24000 / sqrt(3) * sqrt(2);
 	Real initVoltAngle = -DPS_PI / 2;
 	Real fieldVoltage = 7.0821;
-	Real mechPower = 5.5558e5;
-	auto genPtr = std::dynamic_pointer_cast<Components::DP::SynchronGenerator>(gen);
+	Real mechPower = 300e6;
+	auto genPtr = std::dynamic_pointer_cast<Components::DP::SynchronGeneratorSimplified>(gen);
 	genPtr->initialize(om, dt, initActivePower, initReactivePower, initTerminalVolt, initVoltAngle, fieldVoltage, mechPower);
 	//genPtr->addExciter(Ta, Ka, Te, Ke, Tf, Kf, Tr, Lmd, Rfd);
 

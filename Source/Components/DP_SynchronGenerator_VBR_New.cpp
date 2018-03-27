@@ -124,7 +124,7 @@ void Components::DP::SynchronGeneratorVBRNew::initialize(Real om, Real dt,
 		mVabc = dq0ToAbcTransform(mThetaMech, mVd, mVq, mV0);
 		mIabc = dq0ToAbcTransform(mThetaMech, mId, mIq, mI0);
 
-		mDVabc = K_DP*mIabc + E_r_vbr_DP;
+		mDVabc = K_DP*mIabc + E_r_vbr_DP + E_r_vbr_DP2;
 
 
 		CalculateLandR(0, dt*mBase_OmElec);
@@ -247,7 +247,7 @@ void Components::DP::SynchronGeneratorVBRNew::stepInPerUnit(Real om, Real dt, Re
 				Matrix::Zero(3, 3), K;
 
 		R_eq_DP = Var1 + K_DP;
-		E_eq_DP = Var2*mIabc + mDVabc - mVabc + E_r_vbr_DP;
+		E_eq_DP = Var2*mIabc + mDVabc - mVabc + E_r_vbr_DP + E_r_vbr_DP2;
 
 		mConductanceMat = (R_eq_DP*mBase_Z).inverse();
 		mISourceEq = R_eq_DP.inverse()*E_eq_DP*mBase_i;
@@ -356,7 +356,7 @@ void Components::DP::SynchronGeneratorVBRNew::postStep(SystemModel& system)
 
 		mPsimd = mDLmd*(mPsifd / mLlfd + mPsikd / mLlkd + mId);
 
-		mDVabc = K_DP*mIabc + E_r_vbr_DP;
+		mDVabc = K_DP*mIabc + E_r_vbr_DP + E_r_vbr_DP2;
 }
 
 
@@ -410,17 +410,27 @@ void Components::DP::SynchronGeneratorVBRNew::CalculateAuxiliarVariables(Real ti
 				2. / 3. * sin(mThetaMech2), 2. / 3. * sin(mThetaMech2 - 2. * M_PI / 3.), 2. / 3. * sin(mThetaMech2 + 2. * M_PI / 3.),
 				1. / 3., 1. / 3., 1. / 3.;
 
-		mKrs_teta_inv <<
-				cos(mThetaMech2), sin(mThetaMech2), 1.,
-				cos(mThetaMech2 - 2. * M_PI / 3.), sin(mThetaMech2 - 2. * M_PI / 3.), 1.,
-				cos(mThetaMech2 + 2. * M_PI / 3.), sin(mThetaMech2 + 2. * M_PI / 3.), 1.;
+		mKrs_teta_inv = mKrs_teta.inverse();
 
 		K = mKrs_teta_inv*K*mKrs_teta;
 
 		if (mNumDampingWindings == 2)
-				h_qdr = K1a*E2*mPsikq1kq2 + K1a*E1*mIq + K2a*F2*mPsifdkd + K2a*F1*mId + (K2a*F3 + C26)*mVfd;
+				//h_qdr = K1a*E2*mPsikq1kq2 + K1a*E1*mIq + K2a*F2*mPsifdkd + K2a*F1*mId + (K2a*F3 + C26)*mVfd;
+				h_qdr = K1a*E2*mPsikq1kq2 + K2a*F2*mPsifdkd + (K2a*F3 + C26)*mVfd;
 		else
 				h_qdr = K1a*E2_1d*mPsikq1 + K1a*E1_1d*mIq + K2a*F2*mPsifdkd + K2a*F1*mId + (K2a*F3 + C26)*mVfd;
+
+		Matrix Knew = Matrix::Zero(3, 3);
+		Knew <<
+				K1a*E1, K2a*F1, Matrix::Zero(2, 1),
+				0, 0, 0;
+		Knew = mKrs_teta_inv*Knew*mKrs_teta;
+
+		Matrix KDPnew = Matrix::Zero(6, 6);
+		KDPnew << Knew, Matrix::Zero(3, 3),
+				Matrix::Zero(3, 3), Knew;
+
+		E_r_vbr_DP2 = KDPnew*mIabc;
 
 
 }
@@ -582,10 +592,6 @@ Matrix Components::DP::SynchronGeneratorVBRNew::abcToDq0Transform(Real theta, Re
 		pnzVector = AbcToPnz * abcVector * thetaCompInv;
 
 		Matrix dq0Vector(3, 1);
-		//dq0Vector <<
-		//		pnzVector(1, 0).imag(),
-		//		pnzVector(1, 0).real(),
-		//		0;
 
 		dq0Vector <<
 				pnzVector(1, 0).real(),

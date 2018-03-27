@@ -1,4 +1,4 @@
-/** Simplified Voltage behind reactance (EMT)
+﻿/** Simplified Voltage behind reactance (EMT)
 *
 * @author Markus Mirz <mmirz@eonerc.rwth-aachen.de>
 * @copyright 2017, Institute for Automation of Complex Power Systems, EONERC
@@ -19,12 +19,12 @@
 * along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *********************************************************************************/
 
-#include "DP_SynchronGenerator_VBR_Simplified.h"
+#include "EMT_SynchronGenerator_VBR_Simplified.h"
 #include "../IntegrationMethod.h"
 
 using namespace DPsim;
 
-Components::DP::SynchronGeneratorVBRSimplified::SynchronGeneratorVBRSimplified(String name, Int node1, Int node2, Int node3,
+Components::EMT::SynchronGeneratorVBRSimplified::SynchronGeneratorVBRSimplified(String name, Int node1, Int node2, Int node3,
 	Real nomPower, Real nomVolt, Real nomFreq, Int poleNumber, Real nomFieldCur,
 	Real Rs, Real Ll, Real Lmd, Real Lmd0, Real Lmq, Real Lmq0,
 	Real Rfd, Real Llfd, Real Rkd, Real Llkd,
@@ -36,18 +36,18 @@ Components::DP::SynchronGeneratorVBRSimplified::SynchronGeneratorVBRSimplified(S
 {
 }
 
-Components::DP::SynchronGeneratorVBRSimplified::~SynchronGeneratorVBRSimplified() {
+Components::EMT::SynchronGeneratorVBRSimplified::~SynchronGeneratorVBRSimplified() {
 
 }
 
-void Components::DP::SynchronGeneratorVBRSimplified::addExciter(Real Ta, Real Ka, Real Te, Real Ke, Real Tf, Real Kf, Real Tr, Real Lad, Real Rfd)
+void Components::EMT::SynchronGeneratorVBRSimplified::addExciter(Real Ta, Real Ka, Real Te, Real Ke, Real Tf, Real Kf, Real Tr, Real Lad, Real Rfd)
 {
 	mExciter = Exciter(Ta, Ka, Te, Ke, Tf, Kf, Tr, Lad, Rfd);
 	//init exciter
 	mHasExciter = true;
 }
 
-void Components::DP::SynchronGeneratorVBRSimplified::initialize(Real om, Real dt,
+void Components::EMT::SynchronGeneratorVBRSimplified::initialize(Real om, Real dt,
 	Real initActivePower, Real initReactivePower,
 	Real initTerminalVolt, Real initVoltAngle, Real initFieldVoltage, Real initMechPower)
 {
@@ -119,7 +119,7 @@ void Components::DP::SynchronGeneratorVBRSimplified::initialize(Real om, Real dt
 
 }
 
-void Components::DP::SynchronGeneratorVBRSimplified::step(SystemModel& system, Real time)
+void Components::EMT::SynchronGeneratorVBRSimplified::step(SystemModel& system, Real time)
 {
 	R_load = system.getCurrentSystemMatrix().inverse() / mBase_Z;
 
@@ -137,13 +137,13 @@ void Components::DP::SynchronGeneratorVBRSimplified::step(SystemModel& system, R
 	}
 
 	if (mLogLevel != Logger::Level::NONE) {
-		Matrix logValues(getRotorFluxes().rows() + getDqStatorCurrents().rows() + 3, 1);
-		logValues << getRotorFluxes(), getDqStatorCurrents(), getElectricalTorque(), getRotationalSpeed(), getRotorPosition();
-		mLog->LogDataLine(time, logValues);
+			Matrix logValues(getStatorCurrents().rows() + 3, 1);
+			logValues << getStatorCurrents(), getElectricalTorque(), getRotationalSpeed(), getRotorPosition();
+			mLog->LogDataLine(time, logValues);
 	}
 }
 
-void Components::DP::SynchronGeneratorVBRSimplified::stepInPerUnit(Real om, Real dt, Real time, NumericalMethod numMethod)
+void Components::EMT::SynchronGeneratorVBRSimplified::stepInPerUnit(Real om, Real dt, Real time, NumericalMethod numMethod)
 {
 	// Calculate mechanical variables with euler
 	//mElecTorque = (mPsimd*mIq - mPsimq*mId);
@@ -168,6 +168,12 @@ void Components::DP::SynchronGeneratorVBRSimplified::stepInPerUnit(Real om, Real
 	mIa = inverseParkTransform(mThetaMech, mIq, mId, 0)(0);
 	mIb = inverseParkTransform(mThetaMech, mIq, mId, 0)(1);
 	mIc = inverseParkTransform(mThetaMech, mIq, mId, 0)(2);
+
+	mIabc <<
+			mIa*mBase_i,
+			mIb*mBase_i,
+			mIc*mBase_i;
+
 
 	mVq = -mRs*mIq - mOmMech*mDLd*mId + mDVq;
 	mVd = -mRs*mId + mOmMech*mDLq*mIq + mDVd;
@@ -210,11 +216,11 @@ void Components::DP::SynchronGeneratorVBRSimplified::stepInPerUnit(Real om, Real
 		mDVd;
 }
 
-void Components::DP::SynchronGeneratorVBRSimplified::postStep(SystemModel& system)
+void Components::EMT::SynchronGeneratorVBRSimplified::postStep(SystemModel& system)
 {
 }
 
-void Components::DP::SynchronGeneratorVBRSimplified::CalculateLandpL()
+void Components::EMT::SynchronGeneratorVBRSimplified::CalculateLandpL()
 {
 	mDInductanceMat <<
 		mLl + mLa - mLb*cos(2 * mThetaMech), -mLa / 2 - mLb*cos(2 * mThetaMech - 2 * PI / 3), -mLa / 2 - mLb*cos(2 * mThetaMech + 2 * PI / 3),
@@ -227,7 +233,7 @@ void Components::DP::SynchronGeneratorVBRSimplified::CalculateLandpL()
 	pmDInductanceMat = pmDInductanceMat * 2 * mOmMech;
 }
 
-Matrix Components::DP::SynchronGeneratorVBRSimplified::parkTransform(Real theta, Real a, Real b, Real c)
+Matrix Components::EMT::SynchronGeneratorVBRSimplified::parkTransform(Real theta, Real a, Real b, Real c)
 {
 	Matrix dq0vector(3, 1);
 
@@ -243,7 +249,7 @@ Matrix Components::DP::SynchronGeneratorVBRSimplified::parkTransform(Real theta,
 	return dq0vector;
 }
 
-Matrix Components::DP::SynchronGeneratorVBRSimplified::inverseParkTransform(Real theta, Real q, Real d, Real zero)
+Matrix Components::EMT::SynchronGeneratorVBRSimplified::inverseParkTransform(Real theta, Real q, Real d, Real zero)
 {
 	Matrix abcVector(3, 1);
 

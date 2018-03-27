@@ -4,10 +4,10 @@
 %% read 
 TestName = 'LoadChange';
 GeneratorType = 'VBR';
-SimulationType = 'DP';
-TimeStep = '0.009500';
+SimulationType = 'EMT';
+TimeStep = '0.000500';
 Path = ['../../../vsa/Results/',TestName,'/DPsim/',SimulationType,'/',GeneratorType,'/','RESERVE/'];
-FileName = ['SynGen_',GeneratorType,'_',TimeStep,'.csv'];
+FileName = ['SynGen_',SimulationType,'_',GeneratorType,'_',TimeStep,'.csv'];
 Log_SynGen = csvread([Path,FileName],1);
 
 

@@ -32,7 +32,6 @@
 #include "Components/DP_Resistor.h"
 #include "Components/DP_SynchronGenerator.h"
 #include "Components/DP_SynchronGenerator_VBR.h"
-#include "Components/DP_SynchronGenerator_VBR_Simplified.h"
 #include "Components/DP_SynchronGenerator_Simplified.h"
 #include "Components/DP_Transformer.h"
 #include "Components/DP_Transformer_Ideal.h"
@@ -53,4 +52,5 @@
 #include "Components/Exciter.h"
 #include "Components/TurbineGovernor.h"
 #include "Components/EMT_SynchronGenerator_VBR_New.h"
+#include "Components/EMT_SynchronGenerator_VBR_Simplified.h"
 #include "Components/DP_SynchronGenerator_VBR_New.h"

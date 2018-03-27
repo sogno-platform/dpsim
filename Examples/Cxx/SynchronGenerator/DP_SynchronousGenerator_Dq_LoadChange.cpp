@@ -58,14 +58,14 @@ int main(int argc, char* argv[])
 		Real Lq_s = 0.25;
 
 
-		for (Real i = 0.00005; i <= 0.0006; i = i + 0.00005)
+		for (Real i = 0.00005; i <= 0.0007; i = i + 0.00005)
 		{
 				if (i > 0.0001) i = i + 0.00005;
 				// Set up simulation
 				Real tf, dt, t;
 				Real om = 2.0*M_PI*60.0;
 				dt = i; t = 0;
-				tf = 100000 * dt;
+				tf = 0.3;
 				Int downSampling = 1;
 
 				Real Ra = (Ld_s + Lq_s) / dt;

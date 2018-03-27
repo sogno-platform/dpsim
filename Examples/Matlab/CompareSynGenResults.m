@@ -1,63 +1,96 @@
-% Compare voltage and current of c++ simulation with voltage and currents
-% from PLECS simulation
+% Compare Results of DPsim EMT with Simulink
+% Plot Currents and Voltages and calculate errors for current
+
 clc
 clear all
-%% read PLECS results
-Results_Reference= csvread('../../../vsa/Results/LoadChange/Simulink/Voltages_and_currents.csv');
+
+%% Inputs
+TestName = 'MultimachineTest'; % ABCFault, LoadChange, MultimachineTest
+GeneratorType = 'Dq'; % VBR, Dq, DqSimplified
+SimulationType = 'EMT'; % EMT
+TimeStep = 0.000050;
+StringTimeStep = '0.000050';
+ShowVoltagePlots = 0;
+
+
+%% read results
+Results_Reference= csvread(['../../../vsa/Results/',TestName,'/Simulink/Voltages_and_currents.csv']);
 l_Ref = length(Results_Reference);
+
 %Calculate reference peak values for steady state and after load change
 Peak_Ref_SS = max(Results_Reference(1:l_Ref/3,5));
 Peak_Ref_LC = max(Results_Reference(l_Ref/3:2*l_Ref/3,5));
-%Results_Reference = Results_Reference(1:l_Ref,:);
-%omega_Reference = csvread('../../../vsa/Results/LoadChange/Simulink/omega.csv'); 
-%vt_Reference = csvread('../../../vsa/Results/ABCFault/Simulink/vt.csv'); 
-%theta_PLECS = csvread('../../../vsa/Results/SynGenDq_ABCFault/Sim-0.81113286269894136ulink_PLECS/SynGenDqEmt_ABCFault_300M_Simulink/theta.csv'); 
+if strcmp(TestName,'TestExciterAndTurbine') == 1
+omega_Reference = csvread('../../../vsa/Results/TestExciterAndTurbine/Simulink/omega.csv'); 
+vt_Reference = csvread('../../../vsa/Results/TestExciterAndTurbine/Simulink/vt.csv'); 
+end
 %% read results from c++ simulation
-VoltageVector = csvread('../../../vsa/Results/LoadChange/DPsim/EMT/VBR/EMT_SynchronGenerator_VBR_0.002500_LeftVector.csv',1);
-%CurrentVector = csvread('../../../vsa/Results/MultimachineTest/DPsim/EMT_SynchronGenerator_VBR_RightVector.csv',1);
-Log_SynGen = csvread('../../../vsa/Results/LoadChange/DPsim/EMT/VBR/SynGen_VBR_0.002500.csv',1);
+Path = ['../../../vsa/Results/',TestName,'/DPsim/',SimulationType,'/',GeneratorType,'/'];
+FileName = ['SynGen_',SimulationType,'_',GeneratorType,'_',StringTimeStep,'.csv'];
+FileName2 = [SimulationType,'_SynchronGenerator_',GeneratorType,'_',StringTimeStep,'_LeftVector.csv'];
+Log_SynGen = csvread([Path,FileName],1);
+VoltageVector = csvread([Path,FileName2],1);
 CurrentVector = Log_SynGen(:,1:4);
- %% Plot
-figure(1)
+
+
+%% Plot
+if ShowVoltagePlots == 1
+    figure(1)
+    hold off
+    plot(VoltageVector(:,1),VoltageVector(:,2));
+    hold on
+    plot(Results_Reference(:,1),Results_Reference(:,2),'--');
+    title('Voltage Phase a');
+    legend('va DPSim','va Reference');
+
+    figure(2)
+    hold off
+    plot(VoltageVector(:,1), VoltageVector(:,3));
+    hold on
+    plot(Results_Reference(:,1),Results_Reference(:,3),'--');
+    title('Voltage Phase b');
+    legend('vb DPSim','vb Reference');
+
+    figure(3)
+    hold off
+    plot(VoltageVector(:,1),VoltageVector(:,4));
+    hold on
+    plot(Results_Reference(:,1),Results_Reference(:,4),'--');
+    title('Voltage Phase c');
+    legend('vc DPSim','vc Reference');
+end
+
+h4 = figure(4)
 hold off
-plot(VoltageVector(:,1),VoltageVector(:,2));
+if strcmp(GeneratorType,'VBR') == 1 || strcmp(GeneratorType,'VBRSimplified') == 1
+    plot1=plot(CurrentVector(:,1),-CurrentVector(:,2));
+else
+    plot1=plot(CurrentVector(:,1),CurrentVector(:,2));
+end
 hold on
-plot(Results_Reference(:,1),Results_Reference(:,2),'--');
+plot2 = plot(Results_Reference(:,1),Results_Reference(:,5),'--');
+%title('Current phase a');
+legend({'ia DP VBR','ia Reference'},'FontSize',12);
+xlabel('Time [s]','FontSize',12);
+ylabel('Current [A]','FontSize',12);
 
-title('Voltage Phase a');
-legend('va DPSim','va Reference');
+xlim([0 0.3]);
 
-figure(2)
-hold off
-plot(VoltageVector(:,1), VoltageVector(:,3));
-hold on
-plot(Results_Reference(:,1),Results_Reference(:,3),'--');
+set(plot1,'LineWidth',2);
+set(plot2,'LineWidth',2);
 
-title('Voltage Phase b');
-legend('vb DPSim','vb Reference');
-
-figure(3)
-hold off
-plot(VoltageVector(:,1),VoltageVector(:,4));
-hold on
-plot(Results_Reference(:,1),Results_Reference(:,4),'--');
-
-title('Voltage Phase c');
-legend('vc DPSim','vc Reference');
-
-figure(4)
-hold off
-plot(CurrentVector(:,1),-CurrentVector(:,2));
-hold on
-plot(Results_Reference(:,1),Results_Reference(:,5),'--');
-title('Current phase a');
-legend('ia DPSim','ia Reference');
-xlabel('Time [s]');
-ylabel('Current [A]');
+set(h4,'Units','centimeters');
+set(h4,'pos',[5 5 24 13])
+pos = get(h4,'Position');
+set(h4,'PaperPositionMode','Auto','PaperUnits','centimeters','PaperSize',[pos(3), pos(4)])
 
 figure(5)
 hold off
-plot(CurrentVector(:,1),-CurrentVector(:,3));
+if strcmp(GeneratorType,'VBR') == 1
+    plot(CurrentVector(:,1),-CurrentVector(:,3));
+else
+    plot(CurrentVector(:,1),CurrentVector(:,3));
+end
 hold on
 plot(Results_Reference(:,1),Results_Reference(:,6),'--');
 title('Current phase b');
@@ -65,48 +98,54 @@ legend('ib DPSim','ib Reference');
 
 figure(6)
 hold off
-plot(CurrentVector(:,1),-CurrentVector(:,4));
+if strcmp(GeneratorType,'VBR') == 1
+    plot(CurrentVector(:,1),-CurrentVector(:,4));
+else
+    plot(CurrentVector(:,1),CurrentVector(:,4));
+end
 hold on
 plot(Results_Reference(:,1),Results_Reference(:,7),'--');
 title('Current phase c');
 legend('ic DPSim','ic Simulink');
 
- 
-% figure(7)
-% hold off
-% plotomega1 = plot(Log_SynGen(:,1),Log_SynGen(:,6));
-% hold on
-% plotomega2 = plot(Results_Reference(:,1),omega_Reference*2*pi*60);
-% %title('Rotor speed');
-% legend('\omega DPSim','\omega Reference');
-% xlabel('Time [s]');
-% ylabel('\omega [rad/s]');
-% 
-% set(plotomega1,'LineWidth',2);
-% set(plotomega2,'LineWidth',2);
-% 
-% figure(8)
-% hold off
-% plotvt1 = plot(Log_SynGen(:,1),Log_SynGen(:,8));
-% hold on
-% plotvt2 = plot(Results_Reference(:,1),vt_Reference);
-% %title('vt');
-% legend('Terminal Voltage DPSim','Terminal Voltage Reference');
-% xlabel('Time [s]');
-% ylabel('Terminal Voltage [V]');
-% 
-% set(plotvt1,'LineWidth',2);
-% set(plotvt2,'LineWidth',2);
+if strcmp(TestName,'TestExciterAndTurbine') == 1 
+h7=figure(7)
+hold off
+plotomega1 = plot(Log_SynGen(:,1),Log_SynGen(:,6));
+hold on
+plotomega2 = plot(Results_Reference(:,1),omega_Reference*2*pi*60);
+%title('Rotor speed');
+legend({'\omega DPSim','\omega Reference'},'FontSize',12);
+xlabel('Time [s]','FontSize',12);
+ylabel('\omega [rad/s]','FontSize',12);
 
+set(plotomega1,'LineWidth',2);
+set(plotomega2,'LineWidth',2);
 
-% 
-% figure(8)
-% hold off
-% plot(Log_SynGen(:,1),Log_SynGen(:,7));
-% hold on
-% plot(Results_Reference(:,1),-Te_Reference); 
-% title('Electrical Torque');
-%  legend('Te DPSim','Te Reference');
+set(h7,'Units','centimeters');
+set(h7,'pos',[5 5 24 13])
+pos = get(h7,'Position');
+set(h7,'PaperPositionMode','Auto','PaperUnits','centimeters','PaperSize',[pos(3), pos(4)])
+
+h8 = figure(8)
+hold off
+plotvt1 = plot(Log_SynGen(:,1),Log_SynGen(:,8));
+hold on
+plotvt2 = plot(Results_Reference(:,1),vt_Reference);
+%title('vt');
+legend({'Terminal Voltage DPSim','Terminal Voltage Reference'},'FontSize',12);
+xlabel('Time [s]','FontSize',12);
+ylabel('Terminal Voltage [V]','FontSize',12);
+
+set(plotvt1,'LineWidth',2);
+set(plotvt2,'LineWidth',2);
+
+set(h8,'Units','centimeters');
+set(h8,'pos',[5 5 24 13])
+pos = get(h8,'Position');
+set(h8,'PaperPositionMode','Auto','PaperUnits','centimeters','PaperSize',[pos(3), pos(4)])
+end
+
 
 
 
@@ -116,8 +155,15 @@ legend('ic DPSim','ic Simulink');
 
 l=length(CurrentVector);
 l_new=round(1/3*l);
-CurrentVector_SS = -CurrentVector(1:l_new,2);
-CurrentVector_LC = -CurrentVector(l_new:2*l_new,2);
+
+if strcmp(GeneratorType,'VBR') == 1 || strcmp(GeneratorType,'VBRSimplified') == 1
+    CurrentVector_SS = -CurrentVector(1:l_new,2);
+    CurrentVector_LC = -CurrentVector(l_new:2*l_new,2);
+else
+    CurrentVector_SS = CurrentVector(1:l_new,2);
+    CurrentVector_LC = CurrentVector(l_new:2*l_new,2);
+end
+    
 
 CurrentReference_reduced = zeros(l,2);
     
@@ -125,7 +171,7 @@ if l == l_Ref
     CurrentReference_reduced(:,1) = Results_Reference(:,1);
     CurrentReference_reduced(:,2) = Results_Reference(:,5);
 else
-    s = round(0.002500/5e-5);
+    s = round(TimeStep/5e-5);
     n = 1;
     for m = 1:s:l_Ref
     CurrentReference_reduced(n,1) = Results_Reference(m,1);
@@ -143,18 +189,22 @@ Reference_LC = CurrentReference_reduced(l_new:2*l_new,2);
 % Calculate maximum error and root mean squared error for steady state
 Dif_SS = abs(CurrentVector_SS - Reference_SS);
 [MaxDif_SS,i1] = max(Dif_SS);
-err_SS = sqrt(immse(CurrentVector_SS,Reference_SS));
-disp('############ Error for VBR EMT model ###############');
+%err_SS = sqrt(immse(CurrentVector_SS,Reference_SS));
+err_SS = sqrt( mean((CurrentVector_SS - Reference_SS).^2));
+disp(['############ Error for ',GeneratorType,' ',SimulationType,' model ###############]']);
+disp(['############ dt = ',StringTimeStep,' ###############]']);
+disp([' ']);
 disp(['Maximum Error ia steady state: ', num2str(100*MaxDif_SS/Peak_Ref_SS), ' %']);
 disp(['Root Mean-squared error ia steady state: ', num2str(100*err_SS/Peak_Ref_SS), ' %']);
 
 % Calculate maximum error and root mean squared error after load change
 Dif_LC = abs(CurrentVector_LC - Reference_LC);
 [MaxDif_LC,i1] = max(Dif_LC);
-err_LC = sqrt(immse(CurrentVector_LC,Reference_LC));
+%err_LC = sqrt(immse(CurrentVector_LC,Reference_LC));
+err_LC = sqrt( mean((CurrentVector_LC - Reference_LC).^2));
 disp(' ');
-disp(['Maximum Error ia load change: ', num2str(100*MaxDif_LC/Peak_Ref_LC), ' %']);
-disp(['Root Mean-squared error ia load change: ', num2str(100*err_LC/Peak_Ref_LC), ' %']);
+disp(['Maximum Error ia ',TestName,': ', num2str(100*MaxDif_LC/Peak_Ref_LC), ' %']);
+disp(['Root Mean-squared error ia ',TestName,': ', num2str(100*err_LC/Peak_Ref_LC), ' %']);
 disp(' ');
 disp(' ');
 
