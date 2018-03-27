@@ -108,12 +108,18 @@ void DAESimulation::switchSystemMatrix(Int systemMatrixIndex)
 //TO-DO: Add calculation of DAE solution 
 void DAESimulation::run()
 {
-	std::cout<<"Future Res Vector"<<endl;
+	std::cout<<"Future Solution Vector"<<endl;
 }
 
-int DAESimulation::residualFunction()
+int DAESimulation::residualFunction(realtype ttime, N_Vector state, N_Vector dstate_dt, N_Vector resid, void *user_data)
 {
-	//TO-DO: Iterate over components and create combined resiudal vector
-
-	return 0;
+	
+	for (auto comp : mComponents){  	//currently only supports DP_Resistor and DP_VoltageSource
+		comp->residual(ttime, NVECTOR_DATA(state), NVECTOR_DATA(dstate_dt), NVECTOR_DATA(resid));
+	}
+		int ret=0;
+	/*
+	Do Error checking with variable ret
+	*/
+	return ret; //if successful; positive value if recoverable error, negative if fatal error
 }

@@ -5,7 +5,10 @@
 //#include "Logger.h"
 #include "SystemModel.h"
 //#include "ExternalInterface.h"
-//#include <ida/ida.h>
+#include <ida/ida.h>
+#include "nvector/nvector_serial.h"
+
+#define NVECTOR_DATA(vec) NV_DATA_S (vec) // returns pointer to the first element of array vec
 
 using namespace DPsim ;
 
@@ -23,6 +26,9 @@ using namespace DPsim ;
 		Component::List mComponents;
 		/// Circuit list vector
 		std::vector<Component::List> mComponentsVector;
+		// stores the required offsets for adding new components to the residual vector
+		std::vector<int> offsets; 
+		///TO-DO: Implement the offset based on previous components
 
 	public:
 		/// Create DAE System
@@ -36,7 +42,8 @@ using namespace DPsim ;
 		void switchSystemMatrix(Int systemMatrixIndex);
 
 		// Residual Function to be used by IDA
-		int residualFunction();
+		int residualFunction(realtype ttime, N_Vector state, N_Vector dstate_dt, N_Vector resid, void *user_data);
+
 		/// Run simulation until total time is elapsed.
 		void run();
 	};
