@@ -2,7 +2,7 @@ DP_IdealVS_PILine1:
   cmd: build/Examples/Cxx/DP_IdealVS_PILine1
 
 DP_IdealVS_R1:
-  cmd: build/Examples/Cxx/DP_IdealVS_R1
+  cmd: build/Examples/Cxx/DP_IdealVS_R_1
 
 DP_IdealVS_RLC1:
   cmd: build/Examples/Cxx/DP_IdealVS_RLC1

@@ -5,11 +5,11 @@ import subprocess
 
 PATH = os.path.dirname(__file__)
 
-def test_IdealVS_R1_cpp():
+def test_IdealVS_R_1_cpp():
     name = 'DP_IdealVS_R_1'
     frequency = 50
-    subprocess.run(PATH + "/Debug/" + name + ".exe", shell=True, check=True)
-    results = rt.read_timeseries_dpsim_cmpl(PATH + '/Logs/' + name + '_LeftVector.csv')
+    subprocess.run(PATH + "/../../../build/Examples/Cxx/" + name, shell=True, check=True)
+    results = rt.read_timeseries_dpsim_cmpl('Logs/' + name + '_LeftVector.csv')
     expected = rt.read_timeseries_simulink(PATH + '/../../Results/Simulink/Circuits/SL_' + name + '.csv')
 
     err = 0
