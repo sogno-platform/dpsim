@@ -19,28 +19,20 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *********************************************************************************/
 
-
 #include "DPsim.h"
 
 using namespace DPsim;
 using namespace DPsim::Components::DP;
 
-int main(int argc, char* argv[])
-{
-	// Define simulation scenario
-	Real timeStep = 0.001;
+int main(int argc, char* argv[]) {
+	Real timeStep = 0.00005;
 	Real omega = 2.0*M_PI*50.0;
-	Real finalTime = 0.3;
-	String simName = "DP_IdealVS3_R2_" + std::to_string(timeStep);
+	Real finalTime = 0.2;
+	String simName = "DP_IdealVS_R_1";
 
 	Component::List comps = {
-		VoltageSource::make("v_1", 0, GND, Complex(10, 0)),
-		Resistor::make("r_1", 0, 1, 1),
-		Resistor::make("r_2", 1, GND, 1),
-		Resistor::make("r_3", 1, 2, 1),
-		Resistor::make("r_4", 2, GND, 1),
-		Resistor::make("r_5", 2, 3, 1),
-		VoltageSource::make("v_2", 3, GND, Complex(20, 0))
+		VoltageSource::make("v_in", GND, 0, Complex(10, 0)),
+		Resistor::make("r_1", 0, GND, 1)
 	};
 
 	Simulation sim(simName, comps, omega, timeStep, finalTime);

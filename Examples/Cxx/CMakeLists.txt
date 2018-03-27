@@ -19,8 +19,9 @@ endif()
 # targets
 set(CIRCUIT_SOURCES
 	Circuits/DP_IdealVS_PILine1.cpp
-	Circuits/DP_IdealVS_R1.cpp
-	Circuits/DP_IdealVS_R2.cpp
+	Circuits/DP_IdealVS_R_1.cpp
+	Circuits/DP_IdealVS_R_2.cpp
+	Circuits/DP_IdealVS_R_3.cpp
 	Circuits/DP_IdealVS_RLC1.cpp
 	Circuits/DP_IdealVS_RXLine1.cpp
 	Circuits/DP_IdealVS_RXLine2.cpp
