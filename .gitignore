@@ -2,6 +2,8 @@
 build/
 build_*/
 dist/
+_dpsim.pyd
+_dpsim.pdb
 
 # Folders
 Libraries/

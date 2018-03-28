@@ -6,9 +6,25 @@ set(USE_CIM_VERSION "IEC61970_16v29a")
 
 if (WITH_CIM_SUBMODULE OR WIN32)
 	add_subdirectory(Dependencies/libcimpp)	
-	set(CIMPP_LIBRARY ${CMAKE_BINARY_DIR}/Dependencies/libcimpp/Debug/CIMParser.lib)
+	#set(CIMPP_LIBRARY ${CMAKE_BINARY_DIR}/Dependencies/libcimpp/Debug/CIMParser.lib)
+	find_library(CIMPP_LIBRARY
+		NAMES CIMParser.lib
+		PATH_SUFFIXES
+			Debug
+			Release
+		PATHS
+			${CMAKE_BINARY_DIR}/Dependencies/libcimpp/	
+	)
 	set(CIMPP_INCLUDE_DIR ${CMAKE_SOURCE_DIR}/Dependencies/libcimpp/src ${CMAKE_SOURCE_DIR}/Dependencies/libcimpp/16v29a)
-	set(ARABICA_LIBRARY ${CMAKE_BINARY_DIR}/Dependencies/libcimpp/thirdparty/arabica/Debug/arabica.lib)
+	#set(ARABICA_LIBRARY ${CMAKE_BINARY_DIR}/Dependencies/libcimpp/thirdparty/arabica/Debug/arabica.lib)
+	find_library(ARABICA_LIBRARY
+		NAMES arabica.lib
+		PATH_SUFFIXES
+			Debug
+			Release
+		PATHS
+			${CMAKE_BINARY_DIR}/Dependencies/libcimpp/thirdparty/arabica/
+	)
 	set(ARABICA_INCLUDE_DIR ${CMAKE_SOURCE_DIR}/Dependencies/libcimpp/thirdparty/arabica/include)
 else()
 	find_path(CIMPP_INCLUDE_DIR
