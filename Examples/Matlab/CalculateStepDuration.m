@@ -2,10 +2,10 @@
 %calculate the average duration.
 
 %% read 
-TestName = 'LoadChange';
-GeneratorType = 'VBR';
-SimulationType = 'EMT';
-TimeStep = '0.000500';
+TestName = 'MultimachineTest';
+GeneratorType = 'Dq';
+SimulationType = 'DP';
+TimeStep = '0.000050';
 Path = ['../../../vsa/Results/',TestName,'/DPsim/',SimulationType,'/',GeneratorType,'/','RESERVE/'];
 FileName = ['SynGen_',SimulationType,'_',GeneratorType,'_',TimeStep,'.csv'];
 Log_SynGen = csvread([Path,FileName],1);

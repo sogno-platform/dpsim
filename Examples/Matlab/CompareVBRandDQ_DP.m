@@ -1,3 +1,6 @@
+% Compare DP VBR, EMT Classical and Reference stator currents for ABCFault
+% or LoadChange Simulation
+
 clc
 clear
 

@@ -1,5 +1,6 @@
-% Compare voltage and current of c++ simulation with voltage and currents
-% from PLECS simulation
+% Compare EMT VBR, EMT Classical and Reference stator currents for ABCFault
+% or LoadChange Simulation
+
 clc
 clear all
 

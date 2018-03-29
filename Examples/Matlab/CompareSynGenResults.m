@@ -5,11 +5,11 @@ clc
 clear all
 
 %% Inputs
-TestName = 'MultimachineTest'; % ABCFault, LoadChange, MultimachineTest
-GeneratorType = 'Dq'; % VBR, Dq, DqSimplified
+TestName = 'MultimachineTest'; % ABCFault, LoadChange, MultimachineTest, TestExciterAndTurbine
+GeneratorType = 'VBR'; % VBR, Dq, DqSimplified
 SimulationType = 'EMT'; % EMT
-TimeStep = 0.000050;
-StringTimeStep = '0.000050';
+TimeStep = 0.000500;
+StringTimeStep = '0.000500';
 ShowVoltagePlots = 0;
 
 
@@ -70,7 +70,11 @@ end
 hold on
 plot2 = plot(Results_Reference(:,1),Results_Reference(:,5),'--');
 %title('Current phase a');
-legend({'ia DP VBR','ia Reference'},'FontSize',12);
+if strcmp(GeneratorType,'VBR') == 1
+legend({'EMT VBR','Reference'},'FontSize',12);
+else
+legend({'EMT Classical','Reference'},'FontSize',12);
+end
 xlabel('Time [s]','FontSize',12);
 ylabel('Current [A]','FontSize',12);
 
