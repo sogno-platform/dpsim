@@ -17,7 +17,8 @@ Simulation::DAESimulation(String name, Component::List comps, Real om, Real dt,S
 	//mDownSampleRate = downSampleRate;
 
 	initialize(comps);
-
+	offsets.push_back(0);
+	offsets.push_back(1);
 	/*for (auto comp : comps) {
 		mLog.Log(Logger::Level::INFO) << "Added " << comp->getType() << " '" << comp->getName() << "' to simulation." << std::endl;
 	}
@@ -105,17 +106,43 @@ void DAESimulation::switchSystemMatrix(Int systemMatrixIndex)
 	mSystemModel.switchSystemMatrix(systemMatrixIndex);
 }
 
-//TO-DO: Add calculation of DAE solution 
+ 
 void DAESimulation::run()
 {
+	void *mem = NULL;
+	mem = IDACreate();
+	int retval1 = IDAInit(mem, residualFunction, t0, state, dstate_dt); //TO-DO: get remaining parameters
+	// Do error checking with retval 1
+	/*
+		Add IDA tolerances 
+	*/
+	int NEQ = mComponents.size(); // is this implemented?
+	retval = IDADense(mem, NEQ); // choose right solver
+	int iout = 0;
+	int tout = 1; //final time
+	while(1){
+
+		int retval2 = IDASolve(mem, tout, &tret, state, dstate_dt, IDA_NORMAL); //TO-DO: implement parameters 
+		if(retval2==1) return 1;
+		if (retval == IDA_SUCCESS){ 
+			iout++;
+			tout+= 0.1; //10 iterations here
+		}
+		if (iout == maxIt) break; //maxIt = max number of iterations
+	}
 	std::cout<<"Future Solution Vector"<<endl;
+	 IDAFree(&mem);
+	 /*
+		Free state and dstate_dt
+	 */
 }
 
 int DAESimulation::residualFunction(realtype ttime, N_Vector state, N_Vector dstate_dt, N_Vector resid, void *user_data)
 {
 	
 	for (auto comp : mComponents){  	//currently only supports DP_Resistor and DP_VoltageSource
-		comp->residual(ttime, NVECTOR_DATA(state), NVECTOR_DATA(dstate_dt), NVECTOR_DATA(resid));
+		comp->residual(ttime, NVECTOR_DATA(state), NVECTOR_DATA(dstate_dt), NVECTOR_DATA(resid), offsets);
+
 	}
 		int ret=0;
 	/*
