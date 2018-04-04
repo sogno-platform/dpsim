@@ -21,10 +21,6 @@
 
 #include "Simulation.h"
 
-#ifdef WITH_CIM
-#include "cps/Source/CIM/Reader.h"
-#endif /* WITH_CIM */
-
 using namespace DPsim;
 
 Simulation::Simulation(String name, Component::List comps, Real om, Real dt,
@@ -57,32 +53,6 @@ Simulation::Simulation(String name, Component::List comps, Real om, Real dt,
 	mLog.Log(Logger::Level::INFO) << "Right side vector:" << std::endl;
 	mLog.LogMatrix(Logger::Level::INFO, mSystemModel.getRightSideVector());
 }
-
-#ifdef WITH_CIM
-Simulation::Simulation(String name,
-	std::list<String> cimFiles,
-	Real frequency, Real timeStep, Real finalTime,
-	Logger::Level logLevel, SimulationType simType)
-{
-	CIM::Reader reader(frequency, logLevel, logLevel);
-
-	for (String filename : cimFiles) {
-		if (!reader.addFile(filename))
-			std::cout << "Failed to read file " << filename << std::endl;
-	}
-	try {
-		reader.parseFiles();
-	}
-	catch (...) {
-		std::cerr << "Failed to parse CIM files" << std::endl;
-		return;
-	}
-	mNodes = reader.getNodes();
-	Component::List comps = reader.getComponents();
-
-	Simulation(name, comps, frequency, timeStep, finalTime, logLevel, simType);
-}
-#endif /* WITH_CIM */
 
 void Simulation::initialize(Component::List newComponents) {
 	Int maxNode = 0;

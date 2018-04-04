@@ -86,13 +86,7 @@ namespace DPsim {
 		Simulation(String name, Component::List comps, Real om, Real dt, Real tf,
 			Logger::Level logLevel = Logger::Level::INFO,
 			SimulationType simType = SimulationType::DP,
-			Int downSampleRate = 1);
-		/// Creates system matrix according to
-		Simulation(String name,
-			std::list<String> cimFiles,
-			Real frequency, Real timeStep, Real finalTime,
-			Logger::Level logLevel = Logger::Level::INFO,
-			SimulationType simType = SimulationType::DP);
+			Int downSampleRate = 1);		
 		///
 		virtual ~Simulation() { };
 		/// TODO: check that every system matrix has the same dimensions

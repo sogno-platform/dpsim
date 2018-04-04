@@ -25,11 +25,9 @@
 #include <vector>
 #include <list>
 
-#include "cps/Source/Definitions.h"
-#include "cps/Source/Component.h"
 #include "cps/Source/Logger.h"
 #include "cps/Source/Interfaces/ExternalInterface.h"
-#include "cps/Source/Node.h"
+#include "cps/Source/SystemTopology.h"
 
 namespace DPsim {
 	/// Ground node
@@ -49,17 +47,11 @@ namespace DPsim {
 		/// Final time of the simulation
 		Real mFinalTime;
 		/// Time variable that is incremented at every step
-		Real mTime = 0;
-		/// system frequency
-		Real mSystemFrequency;
-		/// System angular frequency - omega
-		Real mSystemOmega;
+		Real mTime = 0;		
 		/// Simulation time step
 		Real mTimeStep;
 		/// Simulation type, which can be dynamic phasor (DP) or EMT
-		SimulationType mSimType;
-		/// Ground node
-		Node::Ptr mGnd;
+		SimulationType mSimType;		
 		/// Number of nodes
 		UInt mNumNodes = 0;
 		/// Vector of ExternalInterfaces
@@ -69,10 +61,8 @@ namespace DPsim {
 		Bool mPowerflowInitialization;
 		/// System matrix A that is modified by matrix stamps
 		UInt mSystemIndex = 0;
-		/// Stores all lists of electrical nodes
-		std::vector<Node::List> mNodes;
-		/// Circuit list vector
-		std::vector<Component::List> mComponents;
+		/// System list
+		std::vector<SystemTopology> mSystemTopologies;
 		/// System matrices list for swtiching events
 		std::vector<Matrix> mSystemMatrices;
 		/// LU decomposition of system matrix A
@@ -83,6 +73,8 @@ namespace DPsim {
 		Matrix mLeftSideVector;		
 		/// Numerical integration method for components which are not part of the network
 		NumericalMethod mNumMethod;
+		/// Switch to trigger steady-state initialization
+		Bool mSteadyStateInit = false;
 
 		// Variables related to switching
 		/// Index of the next switching event
@@ -105,13 +97,13 @@ namespace DPsim {
 		Logger mRightVectorLog;
 
 		/// TODO: check that every system matrix has the same dimensions
-		void initialize(Component::List comps);
+		void initialize(SystemTopology system);
 		/// Solve system A * x = z for x and current time
-		Int step(bool blocking = true);
+		void step(bool blocking = true);
 		/// Advance the simulation clock by 1 time-step.
 		void increaseByTimeStep() { mTime = mTime + mTimeStep; }
 		///
-		void addSystemTopology(Component::List newComps);
+		void addSystemTopology(SystemTopology system);
 		///
 		void switchSystemMatrix(Int systemMatrixIndex);
 		///
@@ -123,12 +115,15 @@ namespace DPsim {
 	public:
 		/// Creates system matrix according to
 		MnaSimulation(String name,
-			Component::List comps, Real frequency, Real timeStep, Real finalTime, SimulationType simType = SimulationType::DP,
+			Real timeStep, Real finalTime, SimulationType simType = SimulationType::DP,
+			Logger::Level logLevel = Logger::Level::INFO, Bool steadyStateInit = false, Int downSampleRate = 1);
+		/// Creates system matrix according to
+		MnaSimulation(String name, SystemTopology system,
+			Real timeStep, Real finalTime, SimulationType simType = SimulationType::DP,
 			Logger::Level logLevel = Logger::Level::INFO, Int downSampleRate = 1);
 		/// Creates system matrix according to
-		MnaSimulation(String name,
-			std::list<String> cimFiles,
-			Real frequency, Real timeStep, Real finalTime, SimulationType simType = SimulationType::DP,
+		MnaSimulation(String name, std::list<String> cimFiles, Real frequency,
+			Real timeStep, Real finalTime, SimulationType simType = SimulationType::DP,
 			Logger::Level logLevel = Logger::Level::INFO, Int downSampleRate = 1);
 		///
 		virtual ~MnaSimulation() { };
