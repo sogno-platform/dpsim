@@ -26,20 +26,11 @@
 
 using namespace DPsim;
 
-static int testCIMReader(std::list<String> filenames) {
-	MnaSimulation sim("CIM", filenames, 50, 0.0001, 0.1, SimulationType::DP, Logger::Level::DEBUG);
-	sim.run();
-
-	return 0;
-}
-
-static int readFixedCIMFiles_IEEE9bus() {
+int main(int argc, char *argv[]) {
 #ifdef _WIN32
 	String path("..\\..\\..\\..\\dpsim\\Examples\\CIM\\WSCC-09_Neplan_RX\\");
 #elif defined(__linux__)
 	String path("../../../dpsim/Examples/CIM/IEEE-09_Neplan_RX/");
-#else
-  #error "Unkown platform"
 #endif
 	
 	std::list<String> filenames = {
@@ -48,23 +39,9 @@ static int readFixedCIMFiles_IEEE9bus() {
 		path + "WSCC-09_Neplan_RX_SV.xml",
 		path + "WSCC-09_Neplan_RX_TP.xml"
 	};
-	testCIMReader(filenames);
+
+	MnaSimulation sim("CIM", filenames, 50, 0.0001, 0.1, SimulationType::DP, Logger::Level::DEBUG);
+	sim.run();
+
 	return 0;
-}
-
-static int readCIMFilesFromInput(int argc, char *argv[]) {
-	std::list<String> filenames;
-
-	for (int i = 1; i < argc; i++) {
-		std::cout << "Adding file: " << argv[i] << std::endl;
-		filenames.push_back(String(argv[i]));
-	}
-
-	return testCIMReader(filenames);
-}
-
-int main(int argc, char *argv[]) {
-	return argc < 2
-		? readFixedCIMFiles_IEEE9bus()
-		: readCIMFilesFromInput(argc, argv);
 }

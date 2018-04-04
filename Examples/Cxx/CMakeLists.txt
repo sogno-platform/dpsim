@@ -81,7 +81,9 @@ if(WITH_CIM)
 	list(APPEND INCLUDE_DIRS ${CIMPP_INCLUDE_DIRS})
 
 	set(CIM_SOURCES
-		CIM/CIM.cpp
+		CIM/cmd_CIM_input.cpp
+		CIM/WSCC-9bus_CIM.cpp
+		CIM/WSCC-9bus_CIM_ext.cpp
 	)
 endif()
 
