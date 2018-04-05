@@ -24,6 +24,7 @@
 #include "Python/Component.h"
 
 #include "cps/Source/Components.h"
+#include "cps/Source/SystemTopology.h"
 
 #ifdef WITH_CIM
   #include "cps/Source/CIM/Reader.h"
@@ -51,7 +52,7 @@ PyObject* Python::LoadCim(PyObject* self, PyObject* args)
 	CIM::Reader reader(2*PI*frequency, Logger::Level::INFO);
 
 	if (PyArg_ParseTuple(args, "O&|d", PyUnicode_FSConverter, &filename, &frequency)) {
-		reader.addFile(PyBytes_AsString((PyObject*) filename));
+		reader.addFiles(PyBytes_AsString((PyObject*) filename));
 		Py_DECREF(filename);
 	}
 	else if (PyArg_ParseTuple(args, "O|d", &list, &frequency)) {
@@ -67,7 +68,7 @@ PyObject* Python::LoadCim(PyObject* self, PyObject* args)
 				PyErr_SetString(PyExc_TypeError, "First argument must be filename or list of filenames");
 				return nullptr;
 			}
-			reader.addFile(PyBytes_AsString((PyObject*) filename));
+			reader.addFiles(PyBytes_AsString((PyObject*) filename));
 			Py_DECREF(filename);
 		}
 	}
@@ -78,7 +79,8 @@ PyObject* Python::LoadCim(PyObject* self, PyObject* args)
 
 	reader.parseFiles();
 
-	DPsim::Component::List comps = reader.getComponents();
+	DPsim::SystemTopology system = reader.getSystemTopology();
+	/* TODO
 	list = PyList_New(comps.size());
 
 	for (unsigned i = 0; i < comps.size(); i++) {
@@ -88,7 +90,7 @@ PyObject* Python::LoadCim(PyObject* self, PyObject* args)
 		pyComp->comp = comps[i];
 		PyList_SET_ITEM(list, i, (PyObject*) pyComp);
 	}
-
+	*/
 	return list;
 #else
 	PyErr_SetString(PyExc_NotImplementedError, "not implemented on this platform");
