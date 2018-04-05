@@ -6,7 +6,7 @@ import dataprocessing.timeseries as ts
 
 PATH = os.path.dirname(__file__)
 
-def test_IdealVS_R1():
+def test_IdealVS_R_2():
     sim = dpsim.Simulation('IdealVS_R_2',
             [
                 dp.VoltageSource("v_in", 0, 1, 10),

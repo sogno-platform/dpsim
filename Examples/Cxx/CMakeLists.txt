@@ -18,20 +18,12 @@ endif()
 
 # targets
 set(CIRCUIT_SOURCES
-	Circuits/DP_IdealVS_PILine1.cpp
 	Circuits/DP_IdealVS_R_1.cpp
-	Circuits/DP_IdealVS_R_2.cpp
-	Circuits/DP_IdealVS_R_3.cpp
-	Circuits/DP_IdealVS_RLC1.cpp
-	Circuits/DP_IdealVS_RXLine1.cpp
-	Circuits/DP_IdealVS_RXLine2.cpp
-	Circuits/DP_ResVS_PILine1.cpp
-	Circuits/DP_ResVS_RL1.cpp
-	Circuits/DP_ResVS_RL2.cpp
-	Circuits/DP_ResVS_RLC1.cpp
-	Circuits/DP_ResVS_RXLine1.cpp
-	Circuits/EMT_IdealVS_R1.cpp
-	Circuits/EMT_ResVS_RXLine_Switch1.cpp
+	Circuits/DP_IdealVS_RXLine_1.cpp
+	Circuits/DP_IdealVS_Trafo_1.cpp
+	Circuits/DP_ResVS_RL_Switch_1.cpp
+	Circuits/EMT_IdealVS_R_1.cpp
+	Circuits/EMT_ResVS_RL_Switch_1.cpp
 )
 
 set(SYNCGEN_SOURCES
