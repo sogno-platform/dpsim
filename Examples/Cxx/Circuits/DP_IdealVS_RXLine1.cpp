@@ -19,7 +19,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *********************************************************************************/
 
-#include "DPsim_MNA.h"
+#include "DPsim.h"
 
 using namespace DPsim;
 using namespace DPsim::Components::DP;
@@ -27,7 +27,7 @@ using namespace DPsim::Components::DP;
 int main(int argc, char* argv[]) {
 	// Define simulation scenario
 	Real timeStep = 0.00001;
-	Real frequency = 50;
+	Real omega = 2*PI*50;
 	Real finalTime = 0.1;
 	String simName = "DP_IdealVS_RxLine1_" + std::to_string(timeStep);
 
@@ -37,7 +37,7 @@ int main(int argc, char* argv[]) {
 		Resistor::make("r_1", 1, GND, 20)
 	};
 
-	MnaSimulation sim(simName, comps, frequency, timeStep, finalTime, SimulationType::DP, Logger::Level::INFO);
+	Simulation sim(simName, comps, omega, timeStep, finalTime);
 	sim.run();
 
 	return 0;
