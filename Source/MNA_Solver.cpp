@@ -129,6 +129,7 @@ void MnaSimulation::initialize(SystemTopology system) {
 	mLog.Log(Logger::Level::INFO) << "Maximum node number: " << maxNode << std::endl;
 	// virtual nodes are placed after network nodes
 	UInt virtualNode = maxNode;
+	mNumRealNodes = maxNode + 1;
 
 	// Check if component requires virtual node and if so set one
 	for (auto comp : mSystemTopologies[mSystemIndex].mComponents) {
@@ -145,6 +146,8 @@ void MnaSimulation::initialize(SystemTopology system) {
 
 	// Calculate system size and create matrices and vectors
 	mNumNodes = virtualNode + 1;
+	mNumVirtualNodes = mNumNodes - mNumRealNodes;
+
 	createEmptyVectors();
 	createEmptySystemMatrix();
 
@@ -251,6 +254,10 @@ void MnaSimulation::step(bool blocking) {
 
 	for (auto comp : mSystemTopologies[mSystemIndex].mComponents) {
 		comp->mnaPostStep(mRightSideVector, mLeftSideVector, mTime);
+	}
+
+	for (UInt nodeIdx = 0; nodeIdx < mNumRealNodes; nodeIdx++) {
+		mSystemTopologies[mSystemIndex].mNodes[nodeIdx]->mnaUpdateVoltages(mLeftSideVector);
 	}
 
 	for (auto eif : mExternalInterfaces) {

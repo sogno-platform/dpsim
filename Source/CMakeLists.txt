@@ -9,6 +9,7 @@ add_library(dpsim
 	../Dependencies/cps/Source/MathUtils.cpp
 	../Dependencies/cps/Source/Attribute.cpp
 	../Dependencies/cps/Source/Component.cpp
+	../Dependencies/cps/Source/Node.cpp
 )
 
 list(APPEND SOURCES	

@@ -54,6 +54,10 @@ namespace DPsim {
 		SimulationType mSimType;		
 		/// Number of nodes
 		UInt mNumNodes = 0;
+		/// Number of nodes
+		UInt mNumRealNodes = 0;
+		/// Number of nodes
+		UInt mNumVirtualNodes = 0;
 		/// Vector of ExternalInterfaces
 		std::vector<ExternalInterface*> mExternalInterfaces;
 		/// Flag to activate power flow based initialization.
