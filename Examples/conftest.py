@@ -3,7 +3,7 @@ import subprocess
 import pytest
 
 def pytest_collect_file(parent, path):
-    if path.ext == ".yml" and path.basename.startswith("test_"):
+    if path.ext == ".yml" and path.basename.startswith("test_") and os.name == 'posix':
         return YamlFile(path, parent)
 
 class YamlFile(pytest.File):
