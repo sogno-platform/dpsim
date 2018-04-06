@@ -5,6 +5,7 @@ add_library(dpsim_python SHARED
 	Component.cpp
 	Module.cpp
 	Simulation.cpp
+	SystemTopology.cpp
 	Interface.cpp
 	LoadCim.cpp
 	
