@@ -67,16 +67,16 @@ void Python::Simulation::simThreadFunctionNonRT(Python::Simulation *pySim)
 
 		if (pySim->sigPause) {
 			lk.lock();
-			pySim->state = StatePaused;
+			pySim->state = State::Paused;
 			pySim->cond->notify_one();
 			pySim->cond->wait(lk);
-			pySim->state = StateRunning;
+			pySim->state = State::Running;
 			lk.unlock();
 		}
 	}
 	lk.lock();
 
-	pySim->state = StateDone;
+	pySim->state = State::Done;
 	pySim->cond->notify_one();
 }
 
@@ -135,10 +135,10 @@ void Python::Simulation::simThreadFunctionRT(Python::Simulation *pySim)
 		// as it will most likely lead to overruns, but it's possible nonetheless
 		if (pySim->sigPause) {
 			lk.lock();
-			pySim->state = StatePaused;
+			pySim->state = State::Paused;
 			pySim->cond->notify_one();
 			pySim->cond->wait(lk);
-			pySim->state = StateRunning;
+			pySim->state = State::Running;
 			lk.unlock();
 		}
 	}
@@ -146,7 +146,7 @@ void Python::Simulation::simThreadFunctionRT(Python::Simulation *pySim)
 	close(timerfd);
 	lk.lock();
 
-	pySim->state = StateDone;
+	pySim->state = State::Done;
 	pySim->cond->notify_one();
 }
 #endif /* WITH_RT */
@@ -293,7 +293,7 @@ PyObject* Python::Simulation::lvector(PyObject *self, PyObject *args)
 {
 	Python::Simulation *pySim = (Python::Simulation*) self;
 
-	if (pySim->state == StateRunning) {
+	if (pySim->state == State::Running) {
 		PyErr_SetString(PyExc_SystemError, "Simulation currently running");
 		return nullptr;
 	}
@@ -327,7 +327,7 @@ PyObject* Python::Simulation::pause(PyObject *self, PyObject *args)
 	Python::Simulation *pySim = (Python::Simulation*) self;
 	std::unique_lock<std::mutex> lk(*pySim->mut);
 
-	if (pySim->state != StateRunning) {
+	if (pySim->state != State::Running) {
 		PyErr_SetString(PyExc_SystemError, "Simulation not currently running");
 		return nullptr;
 	}
@@ -335,7 +335,7 @@ PyObject* Python::Simulation::pause(PyObject *self, PyObject *args)
 	pySim->sigPause = 1;
 	pySim->cond->notify_one();
 
-	while (pySim->state == StateRunning)
+	while (pySim->state == State::Running)
 		pySim->cond->wait(lk);
 
 	Py_INCREF(Py_None);
@@ -355,21 +355,21 @@ PyObject* Python::Simulation::start(PyObject *self, PyObject *args)
 	Python::Simulation *pySim = (Python::Simulation*) self;
 	std::unique_lock<std::mutex> lk(*pySim->mut);
 
-	if (pySim->state == StateRunning) {
+	if (pySim->state == State::Running) {
 		PyErr_SetString(PyExc_SystemError, "Simulation already started");
 		return nullptr;
 	}
-	else if (pySim->state == StateDone) {
+	else if (pySim->state == State::Done) {
 		PyErr_SetString(PyExc_SystemError, "Simulation already finished");
 		return nullptr;
 	}
-	else if (pySim->state == StatePaused) {
+	else if (pySim->state == State::Paused) {
 		pySim->sigPause = 0;
 		pySim->cond->notify_one();
 	}
 	else {
 		pySim->sigPause = 0;
-		pySim->state = StateRunning;
+		pySim->state = State::Running;
 		pySim->running = true;
 		pySim->simThread = new std::thread(simThreadFunction, pySim);
 	}
@@ -390,17 +390,17 @@ PyObject* Python::Simulation::step(PyObject *self, PyObject *args)
 	std::unique_lock<std::mutex> lk(*pySim->mut);
 
 	int oldStep = pySim->numStep;
-	if (pySim->state == StateStopped) {
-		pySim->state = StateRunning;
+	if (pySim->state == State::Stopped) {
+		pySim->state = State::Running;
 		pySim->sigPause = 1;
 		pySim->running = true;
 		pySim->simThread = new std::thread(simThreadFunction, pySim);
 	}
-	else if (pySim->state == StatePaused) {
+	else if (pySim->state == State::Paused) {
 		pySim->sigPause = 1;
 		pySim->cond->notify_one();
 	}
-	else if (pySim->state == StateDone) {
+	else if (pySim->state == State::Done) {
 		PyErr_SetString(PyExc_SystemError, "Simulation already finished");
 		return nullptr;
 	}
@@ -427,7 +427,7 @@ PyObject* Python::Simulation::stop(PyObject *self, PyObject *args)
 	std::unique_lock<std::mutex> lk(*pySim->mut);
 	pySim->running = false;
 
-	while (pySim->state == StateRunning)
+	while (pySim->state == State::Running)
 		pySim->cond->wait(lk);
 
 	Py_INCREF(Py_None);
@@ -445,20 +445,20 @@ PyObject* Python::Simulation::wait(PyObject *self, PyObject *args)
 	Python::Simulation *pySim = (Python::Simulation*) self;
 	std::unique_lock<std::mutex> lk(*pySim->mut);
 
-	if (pySim->state == StateDone) {
+	if (pySim->state == State::Done) {
 		Py_INCREF(Py_None);
 		return Py_None;
 	}
-	else if (pySim->state == StateStopped) {
+	else if (pySim->state == State::Stopped) {
 		PyErr_SetString(PyExc_SystemError, "Simulation not currently running");
 		return nullptr;
 	}
-	else if (pySim->state == StatePaused) {
+	else if (pySim->state == State::Paused) {
 		PyErr_SetString(PyExc_SystemError, "Simulation currently paused");
 		return nullptr;
 	}
 
-	while (pySim->state == StateRunning)
+	while (pySim->state == State::Running)
 		pySim->cond->wait(lk);
 
 	Py_INCREF(Py_None);

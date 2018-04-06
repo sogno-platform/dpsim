@@ -41,14 +41,6 @@
 #include "cps/Source/Component.h"
 
 namespace DPsim {
-
-	enum SimState {
-		StateStopped = 0,
-		StateRunning,
-		StatePaused,
-		StateDone
-	};
-
 namespace Python {
 
 	struct Simulation {
@@ -56,13 +48,20 @@ namespace Python {
 
 		DPsim::Simulation *sim;
 		Logger *log, *llog, *rlog;
+		enum class State : int {
+			Stopped = 0,
+			Running,
+			Paused,
+			Done
+		};
+
 
 		std::condition_variable *cond;
 		std::mutex *mut;
 		std::atomic_bool running;
 		std::atomic_int sigPause, numStep;
 		std::thread *simThread;
-		SimState state;
+		State state;
 
 		bool rt;
 		bool startSync;
