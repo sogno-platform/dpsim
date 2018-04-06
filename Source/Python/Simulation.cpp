@@ -46,10 +46,16 @@ void Python::Simulation::simThreadFunction(Python::Simulation* pySim)
 #ifdef WITH_RT
 	if (pySim->rt) {
 		simThreadFunctionRT(pySim);
-		return;
 	}
 #endif
 
+	if (!pySim->rt) {
+		simThreadFunctionNonRT(pySim);
+	}
+}
+
+void Python::Simulation::simThreadFunctionNonRT(Python::Simulation *pySim)
+{
 	std::unique_lock<std::mutex> lk(*pySim->mut, std::defer_lock);
 
 	pySim->numStep = 0;

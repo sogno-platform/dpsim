@@ -78,6 +78,7 @@ namespace Python {
 
 		// Function executed by the simulation thread
 		static void simThreadFunction(Simulation* pySim);
+		static void simThreadFunctionNonRT(Simulation* pySim);
 #ifdef WITH_RT
 		static void simThreadFunctionRT(Simulation* pySim);
 #endif
