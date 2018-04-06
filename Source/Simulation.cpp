@@ -24,7 +24,7 @@
 using namespace DPsim;
 
 Simulation::Simulation(String name,
-	Real timeStep, Real finalTime,	
+	Real timeStep, Real finalTime,
 	Solver::SimulationType simType,
 	Solver::Type solverType,
 	Logger::Level logLevel,
@@ -62,7 +62,7 @@ Simulation::Simulation(String name, std::list<String> cimFiles, Real frequency,
 		simType, solverType, logLevel, true) {
 
 	switch (solverType) {
-	case Solver::Type::MNA:	
+	case Solver::Type::MNA:
 	default:
 		mSolver = std::make_shared<MnaSolver>(name,
 			cimFiles, frequency, timeStep, finalTime,

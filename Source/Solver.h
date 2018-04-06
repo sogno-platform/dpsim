@@ -38,7 +38,7 @@ namespace DPsim {
 		UInt systemIndex;
 	};
 
-	class Solver {		
+	class Solver {
 	public:
 		enum class Type { MNA, IDA };
 		enum class SimulationType { DP, EMT };
@@ -52,7 +52,7 @@ namespace DPsim {
 		///
 		void addSystemTopology(SystemTopology system) { }
 		///
-		virtual void setSwitchTime(Real switchTime, Int systemIndex) { }		
+		virtual void setSwitchTime(Real switchTime, Int systemIndex) { }
 	};
 
 }

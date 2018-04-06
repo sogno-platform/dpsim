@@ -31,10 +31,10 @@
 #include "MNA_Solver.h"
 
 namespace DPsim {
-	
+
 	class Simulation {
 
-	protected:		
+	protected:
 		/// Simulation log level
 		Logger::Level mLogLevel;
 		/// Simulation logger
@@ -45,13 +45,13 @@ namespace DPsim {
 		Solver::Type mSolverType;
 		///
 		std::shared_ptr<Solver> mSolver;
-	public:	
+	public:
 		/// Creates system matrix according to
 		Simulation(String name,
 			Real timeStep, Real finalTime,
 			Solver::SimulationType simType = Solver::SimulationType::DP,
 			Solver::Type solverType = Solver::Type::MNA,
-			Logger::Level logLevel = Logger::Level::INFO,			
+			Logger::Level logLevel = Logger::Level::INFO,
 			Bool steadyStateInit = false);
 		/// Creates system matrix according to
 		Simulation(String name, SystemTopology system,
@@ -66,7 +66,7 @@ namespace DPsim {
 			Solver::Type solverType = Solver::Type::MNA,
 			Logger::Level logLevel = Logger::Level::INFO);
 		///
-		virtual ~Simulation() { };		
+		virtual ~Simulation() { };
 		/// Run simulation until total time is elapsed.
 		void run();
 		/// Run simulation for \p duration seconds.
@@ -74,7 +74,7 @@ namespace DPsim {
 		///
 		void setSwitchTime(Real switchTime, Int systemIndex);
 		///
-		void addExternalInterface(ExternalInterface*);	
+		void addExternalInterface(ExternalInterface*);
 		///
 		void addSystemTopology(SystemTopology system);
 		///
