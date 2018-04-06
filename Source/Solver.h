@@ -1,4 +1,4 @@
-/** Reference Circuits
+/** Simulation
  *
  * @author Markus Mirz <mmirz@eonerc.rwth-aachen.de>
  * @copyright 2017, Institute for Automation of Complex Power Systems, EONERC
@@ -19,30 +19,33 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *********************************************************************************/
 
+#pragma once
 
-#include "DPsim.h"
+#include <iostream>
+#include <vector>
+#include <list>
 
-using namespace DPsim;
-using namespace DPsim::Components::DP;
+#include "cps/Source/Logger.h"
+#include "cps/Source/Interfaces/ExternalInterface.h"
+#include "cps/Source/SystemTopology.h"
 
-int main(int argc, char* argv[]) {
-	// Define system topology
-	SystemTopology system(50);
-	system.mComponents = {
-		VoltageSource::make("v_1", GND, 0, 100., 0 * -90. / 180.*PI, Logger::Level::DEBUG),
-		//Inductor::make("l_1", 0, 1, 0.1, Logger::Level::DEBUG),
-		//Resistor::make("r_2", 1, GND, 1, Logger::Level::DEBUG),
-		Transformer::make("trafo_1", 0, 1, 10, 0, 0, 0.1, Logger::Level::DEBUG),
-		Resistor::make("r_1", 1, GND, 1, Logger::Level::DEBUG)
+namespace DPsim {
+
+	class Solver {		
+	public:
+		enum class Type { MNA, IDA };
+		enum class SimulationType { DP, EMT };
+		enum class NumericalMethod { Euler, Trapezoidal_flux, Trapezoidal_current };
+		/// Run simulation until total time is elapsed.
+		virtual void run() = 0;
+		/// Run simulation for \p duration seconds.
+		virtual void run(double duration) { }
+		///
+		virtual void addExternalInterface(ExternalInterface* eint) { }
+		///
+		void addSystemTopology(SystemTopology system) { }
+		///
+		virtual void setSwitchTime(Real switchTime, Int systemIndex) { }		
 	};
 
-	// Define simulation scenario
-	Real timeStep = 0.00005;
-	Real finalTime = 0.2;
-	String simName = "DP_IdealVS_Trafo_" + std::to_string(timeStep);
-	
-	Simulation sim(simName, system, timeStep, finalTime);
-	sim.run();
-
-	return 0;
 }

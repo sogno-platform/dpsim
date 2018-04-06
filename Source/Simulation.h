@@ -26,22 +26,12 @@
 #include <list>
 
 #include "cps/Source/Definitions.h"
-#include "cps/Source/Component.h"
 #include "cps/Source/Logger.h"
-#include "SystemModel.h"
-#include "cps/Source/Interfaces/ExternalInterface.h"
-#include "cps/Source/Node.h"
+#include "cps/Source/SystemTopology.h"
+#include "MNA_Solver.h"
 
 namespace DPsim {
-
-	/// Ground node
-	const Int GND = -1;
-
-	struct switchConfiguration {
-		Real switchTime;
-		UInt systemIndex;
-	};
-
+	
 	class Simulation {
 
 	protected:		
@@ -49,75 +39,49 @@ namespace DPsim {
 		Logger::Level mLogLevel;
 		/// Simulation logger
 		Logger mLog;
-		/// Left side vector logger
-		Logger mLeftVectorLog;
-		/// Right side vector logger
-		Logger mRightVectorLog;
 		/// Simulation name
 		String mName;
-		/// Final time of the simulation
-		Real mFinalTime;
-		/// Time variable that is incremented at every step
-		Real mTime = 0;
-		/// Last simulation time step when log was updated
-		Int mLastLogTimeStep = 0;
-		/// Down sampling rate
-		Int mDownSampleRate = 1;
-		/// Index of the next switching
-		UInt mCurrentSwitchTimeIndex = 0;
-		/// Vector of switch times
-		std::vector<switchConfiguration> mSwitchEventVector;
-		/// Structure that holds all system information.
-		SystemModel mSystemModel;
-		/// Stores a list of circuit elements that are used to generate the system matrix
-		Component::List mComponents;
-		/// Circuit list vector
-		std::vector<Component::List> mComponentsVector;
-		/// Vector of ExternalInterfaces
-		std::vector<ExternalInterface*> mExternalInterfaces;
 		///
-		Node::List mNodes;
+		Solver::Type mSolverType;
 		///
-		Node::Ptr mGnd;
-		///
-		Bool mPowerflowInitialization;
-	public:
+		std::shared_ptr<Solver> mSolver;
+	public:	
 		/// Creates system matrix according to
-		Simulation(String name, Component::List comps, Real om, Real dt, Real tf,
-			Logger::Level logLevel = Logger::Level::INFO,
-			SimulationType simType = SimulationType::DP,
-			Int downSampleRate = 1);		
+		Simulation(String name,
+			Real timeStep, Real finalTime,
+			Solver::SimulationType simType = Solver::SimulationType::DP,
+			Solver::Type solverType = Solver::Type::MNA,
+			Logger::Level logLevel = Logger::Level::INFO,			
+			Bool steadyStateInit = false);
+		/// Creates system matrix according to
+		Simulation(String name, SystemTopology system,
+			Real timeStep, Real finalTime,
+			Solver::SimulationType simType = Solver::SimulationType::DP,
+			Solver::Type solverType = Solver::Type::MNA,
+			Logger::Level logLevel = Logger::Level::INFO);
+		/// Creates system matrix according to
+		Simulation(String name, std::list<String> cimFiles, Real frequency,
+			Real timeStep, Real finalTime,
+			Solver::SimulationType simType = Solver::SimulationType::DP,
+			Solver::Type solverType = Solver::Type::MNA,
+			Logger::Level logLevel = Logger::Level::INFO);
 		///
-		virtual ~Simulation() { };
-		/// TODO: check that every system matrix has the same dimensions
-		void initialize(Component::List comps);
-		/// Solve system A * x = z for x and current time
-		Int step(bool blocking = true);
+		virtual ~Simulation() { };		
 		/// Run simulation until total time is elapsed.
 		void run();
 		/// Run simulation for \p duration seconds.
 		void run(double duration);
-		/// Advance the simulation clock by 1 time-step.
-		void increaseByTimeStep();
-		///
-		void switchSystemMatrix(Int systemMatrixIndex);
 		///
 		void setSwitchTime(Real switchTime, Int systemIndex);
 		///
-		void addExternalInterface(ExternalInterface*);
+		void addExternalInterface(ExternalInterface*);	
 		///
-		void setNumericalMethod(NumericalMethod numMethod);
+		void addSystemTopology(SystemTopology system);
 		///
-		void addSystemTopology(Component::List newComps);
+		void setLogDownsamplingRate(Int divider) {}
 
 		// #### Getter ####
 		String getName() const { return mName; }
-		Real getTime() { return mTime; }
-		Real getFinalTime() { return mFinalTime; }
-		Real getTimeStep() { return mSystemModel.getTimeStep(); }
-		Matrix& getLeftSideVector() { return mSystemModel.getLeftSideVector(); }
-		Matrix& getRightSideVector() { return mSystemModel.getRightSideVector(); }
-		Matrix& getSystemMatrix() { return mSystemModel.getCurrentSystemMatrix(); }
 	};
 
 }

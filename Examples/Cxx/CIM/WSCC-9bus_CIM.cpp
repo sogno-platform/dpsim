@@ -22,7 +22,7 @@
 #include <iostream>
 #include <list>
 
-#include "DPsim_MNA.h"
+#include "DPsim.h"
 
 using namespace DPsim;
 
@@ -40,7 +40,8 @@ int main(int argc, char *argv[]) {
 		path + "WSCC-09_Neplan_RX_TP.xml"
 	};
 
-	MnaSimulation sim("CIM", filenames, 50, 0.0001, 0.1, SimulationType::DP, Logger::Level::DEBUG);
+	Simulation sim("CIM", filenames, 50, 0.0001, 0.1,
+		Solver::SimulationType::DP, Solver::Type::MNA, Logger::Level::DEBUG);
 	sim.run();
 
 	return 0;

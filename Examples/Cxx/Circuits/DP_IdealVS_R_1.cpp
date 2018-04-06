@@ -25,18 +25,19 @@ using namespace DPsim;
 using namespace DPsim::Components::DP;
 
 int main(int argc, char* argv[]) {
-	Real timeStep = 0.00005;
-	Real omega = 2.0*M_PI*50.0;
-	Real finalTime = 0.2;
-	String simName = "DP_IdealVS_R_1";
-
-	Component::List comps = {
+	// Define system topology
+	SystemTopology system(50);
+	system.mComponents = {
 		VoltageSource::make("v_in", GND, 0, Complex(10, 0)),
 		Resistor::make("r_1", 0, GND, 1)
 	};
 
-	Simulation sim(simName, comps, omega, timeStep, finalTime);
+	// Define simulation scenario
+	Real timeStep = 0.00005;
+	Real finalTime = 0.2;
+	String simName = "DP_IdealVS_R_1";
 
+	Simulation sim(simName, system, timeStep, finalTime);
 	sim.run();
 
 	return 0;

@@ -123,7 +123,8 @@ int main(int argc, char* argv[])
 	Component::Ptr Res22 = Resistor::make("Res22", 7, 13, Res);
 	Component::Ptr Res32 = Resistor::make("Res32", 8, 14, Res);
 
-	Component::List comps = { gen, gen2, LineR1, LineR2, LineR3, LineL1, LineL2, LineL3, r1, r2, r3, Res1, Res2, Res3, LineR12, LineR22, LineR32, LineL12, LineL22, LineL32, Res12, Res22, Res32 };
+	SystemTopology system(50);
+	system.mComponents = { gen, gen2, LineR1, LineR2, LineR3, LineL1, LineL2, LineL3, r1, r2, r3, Res1, Res2, Res3, LineR12, LineR22, LineR32, LineL12, LineL22, LineL32, Res12, Res22, Res32 };
 
 	// Declare circuit components for resistance change
 	Real breakerRes = 24e3*24e3 / 600e6;
@@ -131,18 +132,19 @@ int main(int argc, char* argv[])
 	Component::Ptr rBreaker2 = Resistor::make("rbreak2", 7, GND, breakerRes);
 	Component::Ptr rBreaker3 = Resistor::make("rbreak3", 8, GND, breakerRes);
 
+	SystemTopology systemBreakerOn(50);
 	//Component::List compsBreakerOn = { gen, rBreaker1, rBreaker2, rBreaker3, r1, r2, r3 };
-	Component::List compsBreakerOn = { gen, gen2, rBreaker1, rBreaker2, rBreaker3, LineR1, LineR2, LineR3, LineL1, LineL2, LineL3, r1, r2, r3, Res1, Res2, Res3, LineR12, LineR22, LineR32, LineL12, LineL22, LineL32, Res12, Res22, Res32 };
+	systemBreakerOn.mComponents = { gen, gen2, rBreaker1, rBreaker2, rBreaker3, LineR1, LineR2, LineR3, LineL1, LineL2, LineL3, r1, r2, r3, Res1, Res2, Res3, LineR12, LineR22, LineR32, LineL12, LineL22, LineL32, Res12, Res22, Res32 };
 
 	// Set up simulation
 	Real tf, dt, t;
 	Real om = 2.0*M_PI*60.0;
 	tf = 0.30000; dt = 0.00005; t = 0;
 	Int downSampling = 1;
-	SynGenSimulation sim("EMT_SynchronGenerator_VBR", comps, om, dt, tf, Logger::Level::INFO, SimulationType::EMT, downSampling);
-	sim.setNumericalMethod(NumericalMethod::Trapezoidal_flux);
-	sim.addSystemTopology(compsBreakerOn);
-	sim.switchSystemMatrix(0);
+	SynGenSimulation sim("EMT_SynchronGenerator_VBR", system, dt, tf,
+		Solver::SimulationType::EMT, Solver::Type::MNA, Logger::Level::INFO);
+	sim.setLogDownsamplingRate(downSampling);
+	sim.addSystemTopology(systemBreakerOn);
 
 	// Initialize generator
 	Real initActivePower = 300e6;

@@ -25,6 +25,7 @@
 #include <vector>
 #include <list>
 
+#include "Solver.h"
 #include "cps/Source/Logger.h"
 #include "cps/Source/Interfaces/ExternalInterface.h"
 #include "cps/Source/SystemTopology.h"
@@ -38,7 +39,7 @@ namespace DPsim {
 		UInt systemIndex;
 	};
 	/// Simulation class which uses Modified Nodal Analysis (MNA).
-	class MnaSimulation {
+	class MnaSolver : public Solver {
 	protected:
 		/// Simulation name
 		String mName;
@@ -105,9 +106,7 @@ namespace DPsim {
 		/// Solve system A * x = z for x and current time
 		void step(bool blocking = true);
 		/// Advance the simulation clock by 1 time-step.
-		void increaseByTimeStep() { mTime = mTime + mTimeStep; }
-		///
-		void addSystemTopology(SystemTopology system);
+		void increaseByTimeStep() { mTime = mTime + mTimeStep; }		
 		///
 		void switchSystemMatrix(Int systemMatrixIndex);
 		///
@@ -116,21 +115,29 @@ namespace DPsim {
 		void createEmptySystemMatrix();
 		///
 		void solve();
+		///
+		void assignNodesToComponents(Component::List components);
+		///
+		void steadyStateInitialization();
 	public:
 		/// Creates system matrix according to
-		MnaSimulation(String name,
-			Real timeStep, Real finalTime, SimulationType simType = SimulationType::DP,
-			Logger::Level logLevel = Logger::Level::INFO, Bool steadyStateInit = false, Int downSampleRate = 1);
+		MnaSolver(String name,
+			Real timeStep, Real finalTime,
+			SimulationType simType = SimulationType::DP,
+			Logger::Level logLevel = Logger::Level::INFO,
+			Bool steadyStateInit = false, Int downSampleRate = 1);
 		/// Creates system matrix according to
-		MnaSimulation(String name, SystemTopology system,
-			Real timeStep, Real finalTime, SimulationType simType = SimulationType::DP,
+		MnaSolver(String name, SystemTopology system,
+			Real timeStep, Real finalTime,
+			SimulationType simType = SimulationType::DP,
 			Logger::Level logLevel = Logger::Level::INFO, Int downSampleRate = 1);
 		/// Creates system matrix according to
-		MnaSimulation(String name, std::list<String> cimFiles, Real frequency,
-			Real timeStep, Real finalTime, SimulationType simType = SimulationType::DP,
+		MnaSolver(String name, std::list<String> cimFiles, Real frequency,
+			Real timeStep, Real finalTime,
+			SimulationType simType = SimulationType::DP,
 			Logger::Level logLevel = Logger::Level::INFO, Int downSampleRate = 1);
 		///
-		virtual ~MnaSimulation() { };
+		virtual ~MnaSolver() { };
 		/// Run simulation until total time is elapsed.
 		void run();
 		/// Run simulation for \p duration seconds.
@@ -139,6 +146,8 @@ namespace DPsim {
 		void addExternalInterface(ExternalInterface* eint) { mExternalInterfaces.push_back(eint); }
 		///
 		void setSwitchTime(Real switchTime, Int systemIndex);
+		///
+		void addSystemTopology(SystemTopology system);
 
 		// #### Getter ####
 		String getName() const { return mName; }

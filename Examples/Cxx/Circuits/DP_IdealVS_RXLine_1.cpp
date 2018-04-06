@@ -24,20 +24,21 @@
 using namespace DPsim;
 using namespace DPsim::Components::DP;
 
-int main(int argc, char* argv[]) {
-	// Define simulation scenario
-	Real timeStep = 0.00001;
-	Real omega = 2*PI*50;
-	Real finalTime = 0.1;
-	String simName = "DP_IdealVS_RxLine1_" + std::to_string(timeStep);
-
-	Component::List comps = {
+int main(int argc, char* argv[]) {	
+	// Define system topology
+	SystemTopology system(50);
+	system.mComponents = {
 		VoltageSource::make("v_1", 0, GND, Complex(10, 0)),
 		RxLine::make("Line_1", 0, 1, 0.1, 0.001, RxLine::Node3),
 		Resistor::make("r_1", 1, GND, 20)
 	};
 
-	Simulation sim(simName, comps, omega, timeStep, finalTime);
+	// Define simulation scenario
+	Real timeStep = 0.00001;
+	Real finalTime = 0.1;
+	String simName = "DP_IdealVS_RxLine1_" + std::to_string(timeStep);
+
+	Simulation sim(simName, system, timeStep, finalTime);
 	sim.run();
 
 	return 0;

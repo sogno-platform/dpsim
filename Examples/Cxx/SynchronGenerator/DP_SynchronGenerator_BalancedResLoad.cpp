@@ -72,11 +72,11 @@ int main(int argc, char* argv[])
 	Component::Ptr r2 = Resistor::make("r2", 1, GND, loadRes);
 	Component::Ptr r3 = Resistor::make("r3", 2, GND, loadRes);
 
-	Component::List comps = { gen, r1, r2, r3 };
+	SystemTopology system(50);
+	system.mComponents = { gen, r1, r2, r3 };
 
-	Simulation sim("DP_SynchronGenerator_BalancedResLoad", comps, om, dt, tf, Logger::Level::INFO, SimulationType::DP, downSampling);
-	sim.setNumericalMethod(NumericalMethod::Trapezoidal_flux);
-
+	Simulation sim("DP_SynchronGenerator_BalancedResLoad", system, dt, tf, Solver::SimulationType::DP, Solver::Type::MNA, Logger::Level::INFO);
+	
 	// Initialize generator
 	Real initActivePower = 555e3;
 	Real initReactivePower = 0;

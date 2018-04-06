@@ -27,10 +27,10 @@
 
 using namespace DPsim;
 
-MnaSimulation::MnaSimulation(String name,
+MnaSolver::MnaSolver(String name,
 	Real timeStep, Real finalTime, SimulationType simType,
 	Logger::Level logLevel, Bool steadyStateInit, Int downSampleRate) :
-	mLog("Logs/" + name + ".log", logLevel),
+	mLog("Logs/" + name + "_MNA.log", logLevel),
 	mLeftVectorLog("Logs/" + name + "_LeftVector.csv", logLevel),
 	mRightVectorLog("Logs/" + name + "_RightVector.csv", logLevel) {
 		
@@ -43,10 +43,10 @@ MnaSimulation::MnaSimulation(String name,
 	mSteadyStateInit = steadyStateInit;
 }
 
-MnaSimulation::MnaSimulation(String name, SystemTopology system,
+MnaSolver::MnaSolver(String name, SystemTopology system,
 	Real timeStep, Real finalTime, SimulationType simType,
 	Logger::Level logLevel, Int downSampleRate)
-	: MnaSimulation(name, timeStep, finalTime, simType,
+	: MnaSolver(name, timeStep, finalTime, simType,
 		logLevel, false, downSampleRate) {
 	
 	initialize(system);
@@ -64,10 +64,10 @@ MnaSimulation::MnaSimulation(String name, SystemTopology system,
 }
 
 #ifdef WITH_CIM
-MnaSimulation::MnaSimulation(String name, std::list<String> cimFiles, Real frequency,
+MnaSolver::MnaSolver(String name, std::list<String> cimFiles, Real frequency,
 	Real timeStep, Real finalTime, SimulationType simType,
 	Logger::Level logLevel, Int downSampleRate)
-	: MnaSimulation(name, timeStep, finalTime, simType,
+	: MnaSolver(name, timeStep, finalTime, simType,
 		logLevel, true, downSampleRate) {
 	
 	CIM::Reader reader(frequency, logLevel, logLevel);
@@ -89,7 +89,7 @@ MnaSimulation::MnaSimulation(String name, std::list<String> cimFiles, Real frequ
 }
 #endif
 
-void MnaSimulation::initialize(SystemTopology system) {
+void MnaSolver::initialize(SystemTopology system) {
 	mSystemTopologies.push_back(system);
 
 	mLog.Log(Logger::Level::INFO) << "#### Start Initialization ####" << std::endl;
@@ -105,25 +105,13 @@ void MnaSimulation::initialize(SystemTopology system) {
 			maxNode = comp->getNode2();
 	}
 	
-	if (mSystemTopologies[mSystemIndex].mNodes.size() == 0) {
+	if (mSystemTopologies[0].mNodes.size() == 0) {
 		// Create Nodes for all node indices
-		mSystemTopologies[mSystemIndex].mNodes.resize(maxNode + 1, nullptr);
-		for (int node = 0; node <= mSystemTopologies[mSystemIndex].mNodes.size(); node++)
-			mSystemTopologies[mSystemIndex].mNodes[node] = std::make_shared<Node>(node);
+		mSystemTopologies[0].mNodes.resize(maxNode + 1, nullptr);
+		for (int node = 0; node <= mSystemTopologies[0].mNodes.size(); node++)
+			mSystemTopologies[0].mNodes[node] = std::make_shared<Node>(node);
 
-		for (auto comp : mSystemTopologies[mSystemIndex].mComponents) {
-			std::shared_ptr<Node> node1, node2;
-			if (comp->getNode1() < 0)
-				node1 = mSystemTopologies[mSystemIndex].mGnd;
-			else
-				node1 = mSystemTopologies[mSystemIndex].mNodes[comp->getNode1()];
-			if (comp->getNode2() < 0)
-				node2 = mSystemTopologies[mSystemIndex].mGnd;
-			else
-				node2 = mSystemTopologies[mSystemIndex].mNodes[comp->getNode2()];
-
-			comp->setNodes(Node::List{ node1, node2 });
-		}
+		assignNodesToComponents(mSystemTopologies[mSystemIndex].mComponents);
 	}
 
 	mLog.Log(Logger::Level::INFO) << "Maximum node number: " << maxNode << std::endl;
@@ -136,8 +124,8 @@ void MnaSimulation::initialize(SystemTopology system) {
 		if (comp->hasVirtualNodes()) {
 			for (Int node = 0; node < comp->getVirtualNodesNum(); node++) {
 				virtualNode++;
-				mSystemTopologies[mSystemIndex].mNodes.push_back(std::make_shared<Node>(virtualNode));
-				comp->setVirtualNodeAt(mSystemTopologies[mSystemIndex].mNodes[virtualNode], node);
+				mSystemTopologies[0].mNodes.push_back(std::make_shared<Node>(virtualNode));
+				comp->setVirtualNodeAt(mSystemTopologies[0].mNodes[virtualNode], node);
 				mLog.Log(Logger::Level::INFO) << "Created virtual node" << node << "= " << virtualNode
 					<< " for " << comp->getName() << std::endl;
 			}
@@ -156,36 +144,7 @@ void MnaSimulation::initialize(SystemTopology system) {
 		comp->initializePowerflow(mSystemTopologies[mSystemIndex].mSystemFrequency);
 
 	if (mSteadyStateInit && mSimType == SimulationType::DP) {
-		// Initialize right side vector and components
-		for (auto comp : mSystemTopologies[mSystemIndex].mComponents) {
-			comp->mnaInitialize(mSystemTopologies[mSystemIndex].mSystemOmega, mTimeStep);
-			comp->mnaApplyRightSideVectorStamp(mRightSideVector);
-			comp->mnaApplySystemMatrixStamp(mSystemMatrices[mSystemIndex]);
-			comp->mnaApplyInitialSystemMatrixStamp(mSystemMatrices[mSystemIndex]);
-		}
-		// Compute LU-factorization for system matrix
-		mLuFactorizations.push_back(Eigen::PartialPivLU<Matrix>(mSystemMatrices[mSystemIndex]));
-
-		mLog.Log(Logger::Level::INFO) << "Start initialization." << std::endl;
-		Matrix prevLeftSideVector = Matrix::Zero(2 * mNumNodes, 1);
-		Matrix diff;
-		Real maxDiff, max;
-		while(mTime < 10) {
-			step();
-			increaseByTimeStep();
-			diff = prevLeftSideVector - mLeftSideVector;
-			prevLeftSideVector = mLeftSideVector;
-			maxDiff = diff.lpNorm<Eigen::Infinity>();
-			max = mLeftSideVector.lpNorm<Eigen::Infinity>();
-			if ((maxDiff / max) < 0.0001) break;
-		}
-		mLog.Log(Logger::Level::INFO) << "Initialization finished. Max difference: "
-			<< maxDiff << " or " << maxDiff / max << "% at time " << mTime << std::endl;
-		mSystemMatrices.pop_back();
-		mLuFactorizations.pop_back();
-		mSystemIndex = 0;
-		mTime = 0;
-		createEmptySystemMatrix();
+		steadyStateInitialization();
 	}
 
 	// Initialize right side vector and components
@@ -199,7 +158,59 @@ void MnaSimulation::initialize(SystemTopology system) {
 	
 }
 
-void MnaSimulation::createEmptyVectors() {
+void MnaSolver::steadyStateInitialization() {
+	// Initialize right side vector and components
+	for (auto comp : mSystemTopologies[mSystemIndex].mComponents) {
+		comp->mnaInitialize(mSystemTopologies[mSystemIndex].mSystemOmega, mTimeStep);
+		comp->mnaApplyRightSideVectorStamp(mRightSideVector);
+		comp->mnaApplySystemMatrixStamp(mSystemMatrices[mSystemIndex]);
+		comp->mnaApplyInitialSystemMatrixStamp(mSystemMatrices[mSystemIndex]);
+	}
+	// Compute LU-factorization for system matrix
+	mLuFactorizations.push_back(Eigen::PartialPivLU<Matrix>(mSystemMatrices[mSystemIndex]));
+
+	mLog.Log(Logger::Level::INFO) << "Start initialization." << std::endl;
+	Matrix prevLeftSideVector = Matrix::Zero(2 * mNumNodes, 1);
+	Matrix diff;
+	Real maxDiff, max;
+	while (mTime < 10) {
+		step();
+		increaseByTimeStep();
+		diff = prevLeftSideVector - mLeftSideVector;
+		prevLeftSideVector = mLeftSideVector;
+		maxDiff = diff.lpNorm<Eigen::Infinity>();
+		max = mLeftSideVector.lpNorm<Eigen::Infinity>();
+		if ((maxDiff / max) < 0.0001) break;
+	}
+	mLog.Log(Logger::Level::INFO) << "Initialization finished. Max difference: "
+		<< maxDiff << " or " << maxDiff / max << "% at time " << mTime << std::endl;
+	mSystemMatrices.pop_back();
+	mLuFactorizations.pop_back();
+	mSystemIndex = 0;
+	mTime = 0;
+	createEmptySystemMatrix();
+}
+
+void MnaSolver::assignNodesToComponents(Component::List components) {
+	for (auto comp : components) {
+		// Do not reassign nodes or change them
+		if (comp->getNodeNum() > 0) {
+			std::shared_ptr<Node> node1, node2;
+			if (comp->getNode1() < 0)
+				node1 = mSystemTopologies[0].mGnd;
+			else
+				node1 = mSystemTopologies[0].mNodes[comp->getNode1()];
+			if (comp->getNode2() < 0)
+				node2 = mSystemTopologies[0].mGnd;
+			else
+				node2 = mSystemTopologies[0].mNodes[comp->getNode2()];
+
+			comp->setNodes(Node::List{ node1, node2 });
+		}
+	}
+}
+
+void MnaSolver::createEmptyVectors() {
 	if (mSimType == SimulationType::EMT) {
 		mRightSideVector = Matrix::Zero(mNumNodes, 1);
 		mLeftSideVector = Matrix::Zero(mNumNodes, 1);
@@ -210,7 +221,7 @@ void MnaSimulation::createEmptyVectors() {
 	}
 }
 
-void MnaSimulation::createEmptySystemMatrix() {
+void MnaSolver::createEmptySystemMatrix() {
 	if (mSimType == SimulationType::EMT) {
 		mSystemMatrices.push_back(Matrix::Zero(mNumNodes, mNumNodes));
 	}
@@ -219,8 +230,9 @@ void MnaSimulation::createEmptySystemMatrix() {
 	}
 }
 
-void MnaSimulation::addSystemTopology(SystemTopology system) {
+void MnaSolver::addSystemTopology(SystemTopology system) {
 	mSystemTopologies.push_back(system);
+	assignNodesToComponents(system.mComponents);
 
 	// It is assumed that the system size does not change
 	createEmptySystemMatrix();
@@ -230,16 +242,16 @@ void MnaSimulation::addSystemTopology(SystemTopology system) {
 	mLuFactorizations.push_back(LUFactorized(mSystemMatrices[mSystemMatrices.size()]));
 }
 
-void MnaSimulation::switchSystemMatrix(Int systemIndex) {
+void MnaSolver::switchSystemMatrix(Int systemIndex) {
 	if (systemIndex < mSystemMatrices.size())
 		mSystemIndex = systemIndex;
 }
 
-void MnaSimulation::solve()  {
+void MnaSolver::solve()  {
 	mLeftSideVector = mLuFactorizations[mSystemIndex].solve(mRightSideVector);
 }
 
-void MnaSimulation::step(bool blocking) {
+void MnaSolver::step(bool blocking) {
 	mRightSideVector.setZero();
 
 	for (auto eif : mExternalInterfaces) {
@@ -257,7 +269,7 @@ void MnaSimulation::step(bool blocking) {
 	}
 
 	for (UInt nodeIdx = 0; nodeIdx < mNumRealNodes; nodeIdx++) {
-		mSystemTopologies[mSystemIndex].mNodes[nodeIdx]->mnaUpdateVoltages(mLeftSideVector);
+		mSystemTopologies[0].mNodes[nodeIdx]->mnaUpdateVoltages(mLeftSideVector);
 	}
 
 	for (auto eif : mExternalInterfaces) {
@@ -276,7 +288,7 @@ void MnaSimulation::step(bool blocking) {
 	}	
 }
 
-void MnaSimulation::run() {
+void MnaSolver::run() {
 	mLog.Log(Logger::Level::INFO) << "Start simulation." << std::endl;
 
 	while (mTime < mFinalTime) {
@@ -289,7 +301,7 @@ void MnaSimulation::run() {
 	mLog.Log(Logger::Level::INFO) << "Simulation finished." << std::endl;
 }
 
-void MnaSimulation::run(double duration) {
+void MnaSolver::run(double duration) {
 	mLog.Log(Logger::Level::INFO) << "Run simulation for " << duration << " seconds." << std::endl;
 	double started = mTime;
 
@@ -302,7 +314,7 @@ void MnaSimulation::run(double duration) {
 	mLog.Log(Logger::Level::INFO) << "Simulation finished." << std::endl;
 }
 
-void MnaSimulation::setSwitchTime(Real switchTime, Int systemIndex) {
+void MnaSolver::setSwitchTime(Real switchTime, Int systemIndex) {
 	SwitchConfiguration newSwitchConf;
 	newSwitchConf.switchTime = switchTime;
 	newSwitchConf.systemIndex = systemIndex;

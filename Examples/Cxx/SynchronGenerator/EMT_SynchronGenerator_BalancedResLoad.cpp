@@ -73,10 +73,12 @@ int main(int argc, char* argv[])
 	Component::Ptr r2 = Resistor::make("r2", 1, GND, loadRes);
 	Component::Ptr r3 = Resistor::make("r3", 2, GND, loadRes);
 
-	Component::List comps = { gen, r1, r2, r3 };
+	SystemTopology system(50);
+	system.mComponents = { gen, r1, r2, r3 };
 
-	Simulation sim("EMT_SynchronGenerator_BalanceResLoad", comps, om, dt, tf, Logger::Level::INFO, SimulationType::EMT, downSampling);
-	sim.setNumericalMethod(NumericalMethod::Trapezoidal_flux);
+	Simulation sim("EMT_SynchronGenerator_BalanceResLoad", system, dt, tf,
+		Solver::SimulationType::EMT, Solver::Type::MNA, Logger::Level::INFO);
+	sim.setLogDownsamplingRate(downSampling);
 
 	// Initialize generator
 	Real initActivePower = 555e3;
