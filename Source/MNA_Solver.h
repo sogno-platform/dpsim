@@ -44,8 +44,8 @@ namespace DPsim {
 		Real mTime = 0;
 		/// Simulation time step
 		Real mTimeStep;
-		/// Simulation type, which can be dynamic phasor (DP) or EMT
-		SimulationType mSimType;
+		/// Simulation domain, which can be dynamic phasor (DP) or EMT
+		Domain mDomain;
 		/// Number of nodes
 		UInt mNumNodes = 0;
 		/// Number of nodes
@@ -116,13 +116,13 @@ namespace DPsim {
 		/// Creates system matrix according to
 		MnaSolver(String name,
 			Real timeStep, Real finalTime,
-			SimulationType simType = SimulationType::DP,
+			Solver::Domain domain = Solver::Domain::DP,
 			Logger::Level logLevel = Logger::Level::INFO,
 			Bool steadyStateInit = false, Int downSampleRate = 1);
 		/// Creates system matrix according to
 		MnaSolver(String name, SystemTopology system,
 			Real timeStep, Real finalTime,
-			SimulationType simType = SimulationType::DP,
+			Solver::Domain domain = Solver::Domain::DP,
 			Logger::Level logLevel = Logger::Level::INFO, Int downSampleRate = 1);
 		/// Creates system matrix according to
 		MnaSolver(String name, std::list<String> cimFiles, Real frequency,

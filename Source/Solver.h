@@ -41,6 +41,8 @@ namespace DPsim {
 	class Solver {
 	public:
 		enum class Type { MNA, IDA };
+		enum class Domain { DP, EMT };
+
 		/// Run simulation until total time is elapsed.
 		virtual void run() = 0;
 		/// Run simulation for \p duration seconds.

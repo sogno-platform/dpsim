@@ -38,7 +38,7 @@ namespace DPsim {
 
 	private:
 		/// Simulation mType
-		SimulationType mSimType;
+		SimulationType mDomain;
 		///Numerical method
 		NumericalMethod mNumMethod;
 		/// Number of nodes
@@ -91,12 +91,12 @@ namespace DPsim {
 		Int getCompOffset() const { return mCompOffset; }
 		Real getRealFromLeftSideVector(Matrix::Index row) const { return mLeftSideVector(row, 0); }
 		Complex getCompFromLeftSideVector(Matrix::Index row) const { return Complex(mLeftSideVector(row, 0), mLeftSideVector(row + mCompOffset, 0)); }
-		SimulationType getSimType() const { return mSimType; }
+		SimulationType getSimType() const { return mDomain; }
 		Int getNumNodes() const { return mNumNodes; }
 		Int getNumIdealVS() const { return mNumIdealVS; }
 		NumericalMethod getNumMethod() const { return mNumMethod; }
 
-		void setSimType(SimulationType simType) { mSimType = simType; }
+		void setSimType(SimulationType domain) { mDomain = domain; }
 		void setTimeStep(Real timeStep) { mTimeStep = timeStep; }
 		void setOmega(Real omega) { mSystemOmega = omega; }
 		void setSystemMatrixElement(Matrix::Index row, Matrix::Index column, Real value) { mSystemMatrix(row, column) = value; }

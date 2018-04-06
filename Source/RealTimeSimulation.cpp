@@ -28,8 +28,8 @@
 
 using namespace DPsim;
 
-RealTimeSimulation::RealTimeSimulation(String name, Component::List comps, Real om, Real dt, Real tf, Logger::Level logLevel, SimulationType simType, Int downSampleRate)
-	: Simulation(name, comps, om, dt, tf, logLevel, simType, downSampleRate)
+RealTimeSimulation::RealTimeSimulation(String name, Component::List comps, Real om, Real dt, Real tf, Logger::Level logLevel, SimulationType domain, Int downSampleRate)
+	: Simulation(name, comps, om, dt, tf, logLevel, domain, downSampleRate)
 {
 #ifdef RTMETHOD_TIMERFD
 	mTimerFd = timerfd_create(CLOCK_MONOTONIC, 0);

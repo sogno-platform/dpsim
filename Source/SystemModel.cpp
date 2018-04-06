@@ -27,7 +27,7 @@ void SystemModel::initialize(Int numNodes) {
 	mNumNodes = numNodes;
 	mCompOffset = mNumNodes;
 
-	if (mSimType == SimulationType::EMT) {
+	if (mDomain == SimulationType::EMT) {
 		mRightSideVector = Matrix::Zero(mNumNodes, 1);
 		mLeftSideVector = Matrix::Zero(mNumNodes, 1);
 	}
@@ -39,7 +39,7 @@ void SystemModel::initialize(Int numNodes) {
 
 void SystemModel::createEmptySystemMatrix()
 {
-	if (mSimType == SimulationType::EMT) {
+	if (mDomain == SimulationType::EMT) {
 		mSystemMatrix = Matrix::Zero(mNumNodes, mNumNodes);
 	}
 	else {

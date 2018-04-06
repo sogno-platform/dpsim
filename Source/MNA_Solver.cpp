@@ -28,7 +28,7 @@
 using namespace DPsim;
 
 MnaSolver::MnaSolver(String name,
-	Real timeStep, Real finalTime, Simulation::Type simType,
+	Real timeStep, Real finalTime, Solver::Domain domain,
 	Logger::Level logLevel, Bool steadyStateInit, Int downSampleRate) :
 	mLog("Logs/" + name + "_MNA.log", logLevel),
 	mLeftVectorLog("Logs/" + name + "_LeftVector.csv", logLevel),
@@ -37,16 +37,16 @@ MnaSolver::MnaSolver(String name,
 	mName = name;
 	mTimeStep = timeStep;
 	mFinalTime = finalTime;
-	mSimType = simType;
+	mDomain = domain;
 	mLogLevel = logLevel;
 	mDownSampleRate = downSampleRate;
 	mSteadyStateInit = steadyStateInit;
 }
 
 MnaSolver::MnaSolver(String name, SystemTopology system,
-	Real timeStep, Real finalTime, Simulation::Type simType,
+	Real timeStep, Real finalTime, Solver::Domain domain,
 	Logger::Level logLevel, Int downSampleRate)
-	: MnaSolver(name, timeStep, finalTime, simType,
+	: MnaSolver(name, timeStep, finalTime, domain,
 		logLevel, false, downSampleRate) {
 	
 	initialize(system);
@@ -143,7 +143,7 @@ void MnaSolver::initialize(SystemTopology system) {
 	for (auto comp : mSystemTopologies[mSystemIndex].mComponents)
 		comp->initializePowerflow(mSystemTopologies[mSystemIndex].mSystemFrequency);
 
-	if (mSteadyStateInit && mSimType == SimulationType::DP) {
+	if (mSteadyStateInit && mDomain == Solver::Domain::DP) {
 		steadyStateInitialization();
 	}
 
@@ -211,7 +211,7 @@ void MnaSolver::assignNodesToComponents(Component::List components) {
 }
 
 void MnaSolver::createEmptyVectors() {
-	if (mSimType == SimulationType::EMT) {
+	if (mDomain == Solver::Domain::EMT) {
 		mRightSideVector = Matrix::Zero(mNumNodes, 1);
 		mLeftSideVector = Matrix::Zero(mNumNodes, 1);
 	}
@@ -222,7 +222,7 @@ void MnaSolver::createEmptyVectors() {
 }
 
 void MnaSolver::createEmptySystemMatrix() {
-	if (mSimType == SimulationType::EMT) {
+	if (mDomain == Solver::Domain::EMT) {
 		mSystemMatrices.push_back(Matrix::Zero(mNumNodes, mNumNodes));
 	}
 	else {
@@ -295,7 +295,7 @@ void MnaSolver::run() {
 		step();
 		mLeftVectorLog.LogNodeValues(getTime(), getLeftSideVector());
 		mRightVectorLog.LogNodeValues(getTime(), getRightSideVector());
-		increaseByTimeStep();		
+		increaseByTimeStep();
 	}
 
 	mLog.Log(Logger::Level::INFO) << "Simulation finished." << std::endl;
