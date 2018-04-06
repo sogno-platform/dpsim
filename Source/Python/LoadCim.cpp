@@ -25,6 +25,7 @@
 
 #include "cps/Source/Components.h"
 #include "cps/Source/SystemTopology.h"
+#include "Python/SystemTopology.h"
 
 #ifdef WITH_CIM
   #include "cps/Source/CIM/Reader.h"
@@ -43,44 +44,46 @@ const char* Python::DocLoadCim =
 "Note that in order for the CIM parser to function properly, the CSV "
 "files containing the alias configuration have to be in the working directory "
 "of the program.\n";
-PyObject* Python::LoadCim(PyObject* self, PyObject* args)
-{
+PyObject* Python::LoadCim(PyObject* self, PyObject* args) {
 #ifdef WITH_CIM
-	double frequency = 50;
-	PyObject *list;
+	Real frequency = 50;
+	PyObject *pySystem;
+	PyObject *filenames;
 	PyBytesObject *filename;
-	CIM::Reader reader(2*PI*frequency, Logger::Level::INFO);
+	std::list<String> cimFiles;
 
 	if (PyArg_ParseTuple(args, "O&|d", PyUnicode_FSConverter, &filename, &frequency)) {
-		reader.addFiles(PyBytes_AsString((PyObject*) filename));
+		cimFiles.push_back(PyBytes_AsString((PyObject*) filename));
 		Py_DECREF(filename);
 	}
-	else if (PyArg_ParseTuple(args, "O|d", &list, &frequency)) {
+	else if (PyArg_ParseTuple(args, "O|d", &filenames, &frequency)) {
 		PyErr_Clear();
 
-		if (!PyList_Check(list)) {
-			PyErr_SetString(PyExc_TypeError, "First argument must be filename or list of filenames");
-			return nullptr;
-		}
-
-		for (int i = 0; i < PyList_Size(list); i++) {
-			if (!PyUnicode_FSConverter(PyList_GetItem(list, i), &filename)) {
-				PyErr_SetString(PyExc_TypeError, "First argument must be filename or list of filenames");
-				return nullptr;
+		if (PyList_Check(filenames)) {	
+			for (int i = 0; i < PyList_Size(filenames); i++) {
+				if (!PyUnicode_FSConverter(PyList_GetItem(filenames, i), &filename)) {
+					PyErr_SetString(PyExc_TypeError, "First argument must be filename or list of filenames");
+					return nullptr;
+				}
+				cimFiles.push_back(PyBytes_AsString((PyObject*) filename));
+				Py_DECREF(filename);
 			}
-			reader.addFiles(PyBytes_AsString((PyObject*) filename));
-			Py_DECREF(filename);
 		}
-	}
-	else {
+	}	
+
+	if (cimFiles.size() == 0) {
 		PyErr_SetString(PyExc_TypeError, "First argument must be filename or list of filenames");
 		return nullptr;
 	}
+		
+	CIM::Reader reader(frequency, Logger::Level::INFO);
+	reader.addFiles(cimFiles);
 
 	reader.parseFiles();
-
 	DPsim::SystemTopology system = reader.getSystemTopology();
-	/* TODO
+	pySystem = PyObject_New(SystemTopology, &DPsim::Python::SystemTopologyType);
+
+	/* Old
 	list = PyList_New(comps.size());
 
 	for (unsigned i = 0; i < comps.size(); i++) {
@@ -91,7 +94,7 @@ PyObject* Python::LoadCim(PyObject* self, PyObject* args)
 		PyList_SET_ITEM(list, i, (PyObject*) pyComp);
 	}
 	*/
-	return list;
+	return pySystem;
 #else
 	PyErr_SetString(PyExc_NotImplementedError, "not implemented on this platform");
 	return nullptr;
