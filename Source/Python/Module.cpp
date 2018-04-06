@@ -33,6 +33,7 @@
 #include "Python/Component.h"
 #include "Python/LoadCim.h"
 #include "Python/Interface.h"
+#include "Python/SystemTopology.h"
 #include "Python/Module.h"
 #include "Python/Simulation.h"
 
@@ -82,6 +83,8 @@ PyMODINIT_FUNC PyInit__dpsim(void) {
 		return nullptr;
 	if (PyType_Ready(&Python::SimulationType) < 0)
 		return nullptr;
+	if (PyType_Ready(&Python::SystemTopologyType) < 0)
+		return nullptr;
 	Python::InterfaceType.tp_new = PyType_GenericNew;
 	if (PyType_Ready(&Python::InterfaceType) < 0)
 		return nullptr;
@@ -92,6 +95,8 @@ PyMODINIT_FUNC PyInit__dpsim(void) {
 
 	Py_INCREF(&Python::SimulationType);
 	PyModule_AddObject(m, "Simulation", (PyObject*) &Python::SimulationType);
+	Py_INCREF(&Python::SystemTopologyType);
+	PyModule_AddObject(m, "SystemTopology", (PyObject*) &Python::SystemTopologyType);
 	Py_INCREF(&Python::ComponentType);
 	PyModule_AddObject(m, "Component", (PyObject*) &Python::ComponentType);
 	Py_INCREF(&Python::InterfaceType);
