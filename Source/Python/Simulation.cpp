@@ -278,6 +278,7 @@ PyObject* Python::Simulation::addInterface(PyObject* self, PyObject* args)
 	return Py_None;
 }
 
+#if 0
 static const char* DocSimulationLvector =
 "lvector()\n"
 "Return the left-side vector of the last step as a list of floats.";
@@ -298,6 +299,7 @@ PyObject* Python::Simulation::lvector(PyObject *self, PyObject *args)
 
 	return list;
 }
+#endif
 
 static const char* DocSimulationName =
 "name()\n"
@@ -472,8 +474,8 @@ PyObject* Python::Simulation::getState(PyObject *self, PyObject *args)
 static PyMethodDef Simulation_methods[] = {
 	{"add_interface", Python::Simulation::addInterface, METH_VARARGS, DocSimulationAddInterface},
 	{"get_state", Python::Simulation::getState, METH_NOARGS, DocSimulationGetState},
-	{"lvector", Python::Simulation::lvector, METH_NOARGS, DocSimulationLvector},
 	{"name", Python::Simulation::name, METH_NOARGS, DocSimulationName},
+//	{"lvector", Python::Simulation::lvector, METH_NOARGS, DocSimulationLvector},
 	{"pause", Python::Simulation::pause, METH_NOARGS, DocSimulationPause},
 	{"start", Python::Simulation::start, METH_NOARGS, DocSimulationStart},
 	{"step", Python::Simulation::step, METH_NOARGS, DocSimulationStep},
