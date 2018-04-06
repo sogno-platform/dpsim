@@ -302,9 +302,9 @@ PyObject* Python::Simulation::lvector(PyObject *self, PyObject *args)
 #endif
 
 static const char* DocSimulationName =
-"name()\n"
+"get_name()\n"
 "Return the of the simulation.";
-PyObject* Python::Simulation::name(PyObject *self, PyObject *args)
+PyObject* Python::Simulation::getName(PyObject *self, PyObject *args)
 {
 	Python::Simulation *pySim = (Python::Simulation*) self;
 
@@ -468,13 +468,13 @@ PyObject* Python::Simulation::getState(PyObject *self, PyObject *args)
 	Python::Simulation* pySim = (Python::Simulation*) self;
 	std::unique_lock<std::mutex> lk(*pySim->mut);
 
-	/** @todo Create and return state enum */
+	return Py_BuildValue("i", pySim->state);
 }
 
 static PyMethodDef Simulation_methods[] = {
 	{"add_interface", Python::Simulation::addInterface, METH_VARARGS, DocSimulationAddInterface},
 	{"get_state", Python::Simulation::getState, METH_NOARGS, DocSimulationGetState},
-	{"name", Python::Simulation::name, METH_NOARGS, DocSimulationName},
+	{"get_name", Python::Simulation::getName, METH_NOARGS, DocSimulationName},
 //	{"lvector", Python::Simulation::lvector, METH_NOARGS, DocSimulationLvector},
 	{"pause", Python::Simulation::pause, METH_NOARGS, DocSimulationPause},
 	{"start", Python::Simulation::start, METH_NOARGS, DocSimulationStart},
