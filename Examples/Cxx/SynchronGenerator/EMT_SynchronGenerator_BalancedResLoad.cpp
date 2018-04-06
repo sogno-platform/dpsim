@@ -77,7 +77,7 @@ int main(int argc, char* argv[])
 	system.mComponents = { gen, r1, r2, r3 };
 
 	Simulation sim("EMT_SynchronGenerator_BalanceResLoad", system, dt, tf,
-		Solver::SimulationType::EMT, Solver::Type::MNA, Logger::Level::INFO);
+		Solver::Domain::EMT, Solver::Type::MNA, Logger::Level::INFO);
 	sim.setLogDownsamplingRate(downSampling);
 
 	// Initialize generator

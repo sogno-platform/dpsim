@@ -90,7 +90,7 @@ int main(int argc, char* argv[])
 		SystemTopology systemBreakerOn(50);
 		systemBreakerOn.mComponents = { gen, rBreaker1, rBreaker2, rBreaker3, r1, r2, r3 };
 		Simulation sim(simName, system, dt, tf,
-			Solver::SimulationType::DP, Solver::Type::MNA, Logger::Level::INFO);
+			Solver::Domain::DP, Solver::Type::MNA, Logger::Level::INFO);
 
 		sim.setLogDownsamplingRate(downSampling);		
 		sim.addSystemTopology(systemBreakerOn);

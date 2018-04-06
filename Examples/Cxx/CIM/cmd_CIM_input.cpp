@@ -35,7 +35,7 @@ int main(int argc, char *argv[]) {
 	}
 
 	Simulation sim("CIM", filenames, 50, 0.0001, 0.1,
-		Solver::SimulationType::DP, Solver::Type::MNA, Logger::Level::DEBUG);
+		Solver::Domain::DP, Solver::Type::MNA, Logger::Level::DEBUG);
 	sim.run();
 
 	return 0;

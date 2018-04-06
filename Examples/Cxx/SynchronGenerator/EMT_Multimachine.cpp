@@ -142,7 +142,7 @@ int main(int argc, char* argv[])
 	tf = 0.30000; dt = 0.00005; t = 0;
 	Int downSampling = 1;
 	SynGenSimulation sim("EMT_SynchronGenerator_VBR", system, dt, tf,
-		Solver::SimulationType::EMT, Solver::Type::MNA, Logger::Level::INFO);
+		Solver::Domain::EMT, Solver::Type::MNA, Logger::Level::INFO);
 	sim.setLogDownsamplingRate(downSampling);
 	sim.addSystemTopology(systemBreakerOn);
 
