@@ -25,7 +25,7 @@ using namespace DPsim;
 
 Simulation::Simulation(String name,
 	Real timeStep, Real finalTime,
-	Solver::SimulationType simType,
+	Simulation::Type simType,
 	Solver::Type solverType,
 	Logger::Level logLevel,
 	Bool steadyStateInit) :
@@ -37,7 +37,7 @@ Simulation::Simulation(String name,
 
 Simulation::Simulation(String name, SystemTopology system,
 	Real timeStep, Real finalTime,
-	Solver::SimulationType simType,
+	Simulation::Type simType,
 	Solver::Type solverType,
 	Logger::Level logLevel) :
 	Simulation(name, timeStep, finalTime,
@@ -55,7 +55,7 @@ Simulation::Simulation(String name, SystemTopology system,
 
 Simulation::Simulation(String name, std::list<String> cimFiles, Real frequency,
 	Real timeStep, Real finalTime,
-	Solver::SimulationType simType,
+	Simulation::Type simType,
 	Solver::Type solverType,
 	Logger::Level logLevel) :
 	Simulation(name, timeStep, finalTime,

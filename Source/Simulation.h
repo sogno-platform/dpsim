@@ -46,23 +46,25 @@ namespace DPsim {
 		///
 		std::shared_ptr<Solver> mSolver;
 	public:
+		enum class Type { DP, EMT };
+
 		/// Creates system matrix according to
 		Simulation(String name,
 			Real timeStep, Real finalTime,
-			Solver::SimulationType simType = Solver::SimulationType::DP,
+			Simulation::Type simType = Simulation::Type::DP,
 			Solver::Type solverType = Solver::Type::MNA,
 			Logger::Level logLevel = Logger::Level::INFO,
 			Bool steadyStateInit = false);
 		/// Creates system matrix according to
 		Simulation(String name, SystemTopology system,
 			Real timeStep, Real finalTime,
-			Solver::SimulationType simType = Solver::SimulationType::DP,
+			Simulation::Type simType = Simulation::Type::DP,
 			Solver::Type solverType = Solver::Type::MNA,
 			Logger::Level logLevel = Logger::Level::INFO);
 		/// Creates system matrix according to
 		Simulation(String name, std::list<String> cimFiles, Real frequency,
 			Real timeStep, Real finalTime,
-			Solver::SimulationType simType = Solver::SimulationType::DP,
+			Simulation::Type simType = Simulation::Type::DP,
 			Solver::Type solverType = Solver::Type::MNA,
 			Logger::Level logLevel = Logger::Level::INFO);
 		///

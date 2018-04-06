@@ -28,7 +28,7 @@
 using namespace DPsim;
 
 MnaSolver::MnaSolver(String name,
-	Real timeStep, Real finalTime, SimulationType simType,
+	Real timeStep, Real finalTime, Simulation::Type simType,
 	Logger::Level logLevel, Bool steadyStateInit, Int downSampleRate) :
 	mLog("Logs/" + name + "_MNA.log", logLevel),
 	mLeftVectorLog("Logs/" + name + "_LeftVector.csv", logLevel),
@@ -44,7 +44,7 @@ MnaSolver::MnaSolver(String name,
 }
 
 MnaSolver::MnaSolver(String name, SystemTopology system,
-	Real timeStep, Real finalTime, SimulationType simType,
+	Real timeStep, Real finalTime, Simulation::Type simType,
 	Logger::Level logLevel, Int downSampleRate)
 	: MnaSolver(name, timeStep, finalTime, simType,
 		logLevel, false, downSampleRate) {

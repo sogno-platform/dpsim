@@ -41,8 +41,6 @@ namespace DPsim {
 	class Solver {
 	public:
 		enum class Type { MNA, IDA };
-		enum class SimulationType { DP, EMT };
-		enum class NumericalMethod { Euler, Trapezoidal_flux, Trapezoidal_current };
 		/// Run simulation until total time is elapsed.
 		virtual void run() = 0;
 		/// Run simulation for \p duration seconds.
