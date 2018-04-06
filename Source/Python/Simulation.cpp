@@ -483,8 +483,20 @@ PyObject* Python::Simulation::wait(PyObject *self, PyObject *args)
 	return Py_None;
 }
 
+static const char* DocSimulationGetState =
+"get_state()\n"
+"Get current state of simulation.\n";
+PyObject* Python::Simulation::getState(PyObject *self, PyObject *args)
+{
+	Python::Simulation* pySim = (Python::Simulation*) self;
+	std::unique_lock<std::mutex> lk(*pySim->mut);
+
+	/** @todo Create and return state enum */
+}
+
 static PyMethodDef Simulation_methods[] = {
 	{"add_interface", Python::Simulation::addInterface, METH_VARARGS, DocSimulationAddInterface},
+	{"get_state", Python::Simulation::getState, METH_NOARGS, DocSimulationGetState},
 	{"lvector", Python::Simulation::lvector, METH_NOARGS, DocSimulationLvector},
 	{"name", Python::Simulation::name, METH_NOARGS, DocSimulationName},
 	{"pause", Python::Simulation::pause, METH_NOARGS, DocSimulationPause},

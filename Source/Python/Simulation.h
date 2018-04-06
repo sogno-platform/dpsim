@@ -101,6 +101,7 @@ namespace Python {
 		static PyObject* stop(PyObject *self, PyObject *args);
 		static PyObject* updateMatrix(PyObject *self, PyObject *args);
 		static PyObject* wait(PyObject *self, PyObject *args);
+		static PyObject* getState(PyObject *self, PyObject *args);
 	};
 
 	extern PyTypeObject SimulationType;
