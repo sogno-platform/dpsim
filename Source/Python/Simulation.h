@@ -78,6 +78,7 @@ namespace Python {
 
 		// Function executed by the simulation thread
 		static void simThreadFunction(Simulation* pySim);
+		static void simThreadFunctionNonRT(Simulation* pySim);
 #ifdef WITH_RT
 		static void simThreadFunctionRT(Simulation* pySim);
 #endif
@@ -100,6 +101,7 @@ namespace Python {
 		static PyObject* stop(PyObject *self, PyObject *args);
 		static PyObject* updateMatrix(PyObject *self, PyObject *args);
 		static PyObject* wait(PyObject *self, PyObject *args);
+		static PyObject* getState(PyObject *self, PyObject *args);
 	};
 
 	extern PyTypeObject SimulationType;
