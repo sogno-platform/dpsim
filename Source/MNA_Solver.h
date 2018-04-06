@@ -124,11 +124,6 @@ namespace DPsim {
 			Real timeStep, Real finalTime,
 			Solver::Domain domain = Solver::Domain::DP,
 			Logger::Level logLevel = Logger::Level::INFO, Int downSampleRate = 1);
-		/// Creates system matrix according to
-		MnaSolver(String name, std::list<String> cimFiles, Real frequency,
-			Real timeStep, Real finalTime,
-			SimulationType simType = SimulationType::DP,
-			Logger::Level logLevel = Logger::Level::INFO, Int downSampleRate = 1);
 		///
 		virtual ~MnaSolver() { };
 		/// Run simulation until total time is elapsed.

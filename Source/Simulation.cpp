@@ -53,6 +53,7 @@ Simulation::Simulation(String name, SystemTopology system,
 	}
 }
 
+#ifdef WITH_CIM
 Simulation::Simulation(String name, std::list<String> cimFiles, Real frequency,
 	Real timeStep, Real finalTime,
 	Solver::Domain domain,
@@ -61,15 +62,23 @@ Simulation::Simulation(String name, std::list<String> cimFiles, Real frequency,
 	Simulation(name, timeStep, finalTime,
 		domain, solverType, logLevel, true) {
 
+	CIM::Reader reader(frequency, logLevel, logLevel);
+	reader.addFiles(cimFiles);
+	reader.parseFiles();
+
+	SystemTopology system = reader.getSystemTopology();
+	initialize(system);
+
 	switch (solverType) {
 	case Solver::Type::MNA:
 	default:
 		mSolver = std::make_shared<MnaSolver>(name,
-			cimFiles, frequency, timeStep, finalTime,
+			system, frequency, timeStep, finalTime,
 			domain, logLevel);
 		break;
 	}
 }
+#endif
 
 void Simulation::run() {
 	mSolver->run();

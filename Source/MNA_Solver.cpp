@@ -48,7 +48,7 @@ MnaSolver::MnaSolver(String name, SystemTopology system,
 	Logger::Level logLevel, Int downSampleRate)
 	: MnaSolver(name, timeStep, finalTime, domain,
 		logLevel, false, downSampleRate) {
-	
+
 	initialize(system);
 
 	// Logging
@@ -62,32 +62,6 @@ MnaSolver::MnaSolver(String name, SystemTopology system,
 	mLog.Log(Logger::Level::INFO) << "Right side vector:" << std::endl;
 	mLog.LogMatrix(Logger::Level::INFO, mRightSideVector);
 }
-
-#ifdef WITH_CIM
-MnaSolver::MnaSolver(String name, std::list<String> cimFiles, Real frequency,
-	Real timeStep, Real finalTime, SimulationType simType,
-	Logger::Level logLevel, Int downSampleRate)
-	: MnaSolver(name, timeStep, finalTime, simType,
-		logLevel, true, downSampleRate) {
-	
-	CIM::Reader reader(frequency, logLevel, logLevel);
-	reader.addFiles(cimFiles);
-	reader.parseFiles();	
-	SystemTopology system = reader.getSystemTopology();
-	initialize(system);
-
-	// Logging
-	for (auto comp : system.mComponents)
-		mLog.Log(Logger::Level::INFO) << "Added " << comp->getType() << " '" << comp->getName() << "' to simulation." << std::endl;
-
-	mLog.Log(Logger::Level::INFO) << "System matrix:" << std::endl;
-	mLog.LogMatrix(Logger::Level::INFO, mSystemMatrices[mSystemIndex]);
-	mLog.Log(Logger::Level::INFO) << "LU decomposition:" << std::endl;
-	mLog.LogMatrix(Logger::Level::INFO, mLuFactorizations[mSystemIndex].matrixLU());
-	mLog.Log(Logger::Level::INFO) << "Right side vector:" << std::endl;
-	mLog.LogMatrix(Logger::Level::INFO, mRightSideVector);
-}
-#endif
 
 void MnaSolver::initialize(SystemTopology system) {
 	mSystemTopologies.push_back(system);
