@@ -67,8 +67,9 @@ PyObject* Python::LoadCim(PyObject* self, PyObject* args) {
 				}
 				cimFiles.push_back(PyBytes_AsString((PyObject*) filename));
 				Py_DECREF(filename);
-			}
+			}			
 		}
+		Py_DECREF(filenames);
 	}	
 
 	if (cimFiles.size() == 0) {
