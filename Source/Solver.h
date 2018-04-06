@@ -30,12 +30,17 @@
 #include "cps/Source/SystemTopology.h"
 
 namespace DPsim {
+	/// Ground node
+	const Int GND = -1;
+	/// Holds switching time and which system should be activated.
+	struct SwitchConfiguration {
+		Real switchTime;
+		UInt systemIndex;
+	};
 
-	class Solver {		
+	class Solver {
 	public:
 		enum class Type { MNA, IDA };
-		enum class SimulationType { DP, EMT };
-		enum class NumericalMethod { Euler, Trapezoidal_flux, Trapezoidal_current };
 		/// Run simulation until total time is elapsed.
 		virtual void run() = 0;
 		/// Run simulation for \p duration seconds.
@@ -45,7 +50,7 @@ namespace DPsim {
 		///
 		void addSystemTopology(SystemTopology system) { }
 		///
-		virtual void setSwitchTime(Real switchTime, Int systemIndex) { }		
+		virtual void setSwitchTime(Real switchTime, Int systemIndex) { }
 	};
 
 }

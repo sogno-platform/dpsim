@@ -31,13 +31,6 @@
 #include "cps/Source/SystemTopology.h"
 
 namespace DPsim {
-	/// Ground node
-	const Int GND = -1;
-	/// Holds switching time and which system should be activated.
-	struct SwitchConfiguration {
-		Real switchTime;
-		UInt systemIndex;
-	};
 	/// Simulation class which uses Modified Nodal Analysis (MNA).
 	class MnaSolver : public Solver {
 	protected:
@@ -48,11 +41,11 @@ namespace DPsim {
 		/// Final time of the simulation
 		Real mFinalTime;
 		/// Time variable that is incremented at every step
-		Real mTime = 0;		
+		Real mTime = 0;
 		/// Simulation time step
 		Real mTimeStep;
 		/// Simulation type, which can be dynamic phasor (DP) or EMT
-		SimulationType mSimType;		
+		SimulationType mSimType;
 		/// Number of nodes
 		UInt mNumNodes = 0;
 		/// Number of nodes
@@ -75,7 +68,7 @@ namespace DPsim {
 		/// Vector of known quantities
 		Matrix mRightSideVector;
 		/// Vector of unknown quantities
-		Matrix mLeftSideVector;		
+		Matrix mLeftSideVector;
 		/// Numerical integration method for components which are not part of the network
 		NumericalMethod mNumMethod;
 		/// Switch to trigger steady-state initialization
@@ -106,7 +99,7 @@ namespace DPsim {
 		/// Solve system A * x = z for x and current time
 		void step(bool blocking = true);
 		/// Advance the simulation clock by 1 time-step.
-		void increaseByTimeStep() { mTime = mTime + mTimeStep; }		
+		void increaseByTimeStep() { mTime = mTime + mTimeStep; }
 		///
 		void switchSystemMatrix(Int systemMatrixIndex);
 		///
@@ -141,7 +134,7 @@ namespace DPsim {
 		/// Run simulation until total time is elapsed.
 		void run();
 		/// Run simulation for \p duration seconds.
-		void run(double duration);		
+		void run(double duration);
 		///
 		void addExternalInterface(ExternalInterface* eint) { mExternalInterfaces.push_back(eint); }
 		///

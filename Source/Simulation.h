@@ -31,10 +31,10 @@
 #include "MNA_Solver.h"
 
 namespace DPsim {
-	
+
 	class Simulation {
 
-	protected:		
+	protected:
 		/// Simulation log level
 		Logger::Level mLogLevel;
 		/// Simulation logger
@@ -45,28 +45,30 @@ namespace DPsim {
 		Solver::Type mSolverType;
 		///
 		std::shared_ptr<Solver> mSolver;
-	public:	
+	public:
+		enum class Type { DP, EMT };
+
 		/// Creates system matrix according to
 		Simulation(String name,
 			Real timeStep, Real finalTime,
-			Solver::SimulationType simType = Solver::SimulationType::DP,
+			Simulation::Type simType = Simulation::Type::DP,
 			Solver::Type solverType = Solver::Type::MNA,
-			Logger::Level logLevel = Logger::Level::INFO,			
+			Logger::Level logLevel = Logger::Level::INFO,
 			Bool steadyStateInit = false);
 		/// Creates system matrix according to
 		Simulation(String name, SystemTopology system,
 			Real timeStep, Real finalTime,
-			Solver::SimulationType simType = Solver::SimulationType::DP,
+			Simulation::Type simType = Simulation::Type::DP,
 			Solver::Type solverType = Solver::Type::MNA,
 			Logger::Level logLevel = Logger::Level::INFO);
 		/// Creates system matrix according to
 		Simulation(String name, std::list<String> cimFiles, Real frequency,
 			Real timeStep, Real finalTime,
-			Solver::SimulationType simType = Solver::SimulationType::DP,
+			Simulation::Type simType = Simulation::Type::DP,
 			Solver::Type solverType = Solver::Type::MNA,
 			Logger::Level logLevel = Logger::Level::INFO);
 		///
-		virtual ~Simulation() { };		
+		virtual ~Simulation() { };
 		/// Run simulation until total time is elapsed.
 		void run();
 		/// Run simulation for \p duration seconds.
@@ -74,7 +76,7 @@ namespace DPsim {
 		///
 		void setSwitchTime(Real switchTime, Int systemIndex);
 		///
-		void addExternalInterface(ExternalInterface*);	
+		void addExternalInterface(ExternalInterface*);
 		///
 		void addSystemTopology(SystemTopology system);
 		///

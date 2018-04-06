@@ -69,7 +69,6 @@ namespace Python {
 
 		PyObject* pyComps; // Components as a (Python) list of PyComponents
 		DPsim::Component::List comps;
-		int numSwitch;
 
 		// List of additional objects that aren't directly used from Simulation
 		// methods, but that a reference has be kept to to avoid them from being
@@ -99,7 +98,6 @@ namespace Python {
 		static PyObject* start(PyObject *self, PyObject *args);
 		static PyObject* step(PyObject *self, PyObject *args);
 		static PyObject* stop(PyObject *self, PyObject *args);
-		static PyObject* updateMatrix(PyObject *self, PyObject *args);
 		static PyObject* wait(PyObject *self, PyObject *args);
 		static PyObject* getState(PyObject *self, PyObject *args);
 	};

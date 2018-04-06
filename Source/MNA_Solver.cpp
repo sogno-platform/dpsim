@@ -28,15 +28,15 @@
 using namespace DPsim;
 
 MnaSolver::MnaSolver(String name,
-	Real timeStep, Real finalTime, SimulationType simType,
+	Real timeStep, Real finalTime, Simulation::Type simType,
 	Logger::Level logLevel, Bool steadyStateInit, Int downSampleRate) :
 	mLog("Logs/" + name + "_MNA.log", logLevel),
 	mLeftVectorLog("Logs/" + name + "_LeftVector.csv", logLevel),
 	mRightVectorLog("Logs/" + name + "_RightVector.csv", logLevel) {
-		
+
 	mName = name;
 	mTimeStep = timeStep;
-	mFinalTime = finalTime;	
+	mFinalTime = finalTime;
 	mSimType = simType;
 	mLogLevel = logLevel;
 	mDownSampleRate = downSampleRate;
@@ -44,7 +44,7 @@ MnaSolver::MnaSolver(String name,
 }
 
 MnaSolver::MnaSolver(String name, SystemTopology system,
-	Real timeStep, Real finalTime, SimulationType simType,
+	Real timeStep, Real finalTime, Simulation::Type simType,
 	Logger::Level logLevel, Int downSampleRate)
 	: MnaSolver(name, timeStep, finalTime, simType,
 		logLevel, false, downSampleRate) {
@@ -104,7 +104,7 @@ void MnaSolver::initialize(SystemTopology system) {
 		if (comp->getNode2() > maxNode)
 			maxNode = comp->getNode2();
 	}
-	
+
 	if (mSystemTopologies[0].mNodes.size() == 0) {
 		// Create Nodes for all node indices
 		mSystemTopologies[0].mNodes.resize(maxNode + 1, nullptr);
@@ -155,7 +155,7 @@ void MnaSolver::initialize(SystemTopology system) {
 	}
 	// Compute LU-factorization for system matrix
 	mLuFactorizations.push_back(Eigen::PartialPivLU<Matrix>(mSystemMatrices[mSystemIndex]));
-	
+
 }
 
 void MnaSolver::steadyStateInitialization() {
@@ -285,7 +285,7 @@ void MnaSolver::step(bool blocking) {
 			mLog.Log(Logger::Level::INFO) << "New matrix:" << std::endl << mSystemMatrices[mSystemIndex] << std::endl;
 			mLog.Log(Logger::Level::INFO) << "New decomp:" << std::endl << mLuFactorizations[mSystemIndex].matrixLU() << std::endl;
 		}
-	}	
+	}
 }
 
 void MnaSolver::run() {
