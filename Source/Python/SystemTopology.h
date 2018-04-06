@@ -30,16 +30,24 @@ namespace Python {
 	struct SystemTopology {
 		PyObject_HEAD
 
+		std::shared_ptr<DPsim::SystemTopology> sys;
+
+		// List of additional objects that aren't directly used from Simulation
+		// methods, but that a reference has be kept to to avoid them from being
+		// freed (e.g. ExternalInterfaces).
+		std::vector<PyObject*> refs;
+
+		static PyObject* addComponent(PyObject *self, PyObject *args);
 
 		// The Python API has no notion of C++ classes and methods, so the methods
 		// that can be called from Python are static.
 		//
 		// Helper methods for memory management / initialization etc.
-		static PyObject* newfunc(PyTypeObject* type, PyObject *args, PyObject *kwds);
-		static int init(Simulation* self, PyObject *args, PyObject *kwds);
-		static void dealloc(Simulation*);
+		static PyObject* newfunc(PyTypeObject *type, PyObject *args, PyObject *kwds);
+		static int init(SystemTopology *self, PyObject *args, PyObject *kwds);
+		static void dealloc(SystemTopology *self);
 	};
 
-	extern PyTypeObject SystemType;
+	extern PyTypeObject SystemTopologyType;
 }
 }

@@ -22,7 +22,6 @@
 
 #include "Config.h"
 
-#include "Python/Component.h"
 #include "Python/Interface.h"
 #include "Python/Simulation.h"
 
@@ -56,6 +55,7 @@ void Python::Simulation::simThreadFunction(Python::Simulation* pySim)
 
 void Python::Simulation::simThreadFunctionNonRT(Python::Simulation *pySim)
 {
+	bool notDone = true;
 	std::unique_lock<std::mutex> lk(*pySim->mut, std::defer_lock);
 
 	pySim->numStep = 0;
@@ -162,34 +162,43 @@ PyObject* Python::Simulation::newfunc(PyTypeObject* type, PyObject *args, PyObje
 		// implement them as pointers
 		self->cond = new std::condition_variable();
 		self->mut = new std::mutex();
-		self->numSwitch = 0;
 	}
 	return (PyObject*) self;
 }
 
 int Python::Simulation::init(Python::Simulation* self, PyObject *args, PyObject *kwds)
 {
-	static char *kwlist[] = {"name", "components", "frequency", "timestep", "duration", "rt", "start_sync", "type", NULL};
-	double frequency = 50, timestep = 1e-3, duration = DBL_MAX;
+	static char *kwlist[] = {"name", "system", "timestep", "duration", "rt", "start_sync", "sim_type", "solver_type", NULL};
+	double timestep = 1e-3, duration = DBL_MAX;
 	const char *name = nullptr;
-	int type = 0;
-	enum SimulationType simType;
+	int t = 0, s = 0;
 
-	if (!PyArg_ParseTupleAndKeywords(args, kwds, "sO|dddbbi", kwlist,
-		&name, &self->pyComps, &frequency, &timestep, &duration, &self->rt, &self->startSync, &type)) {
+	enum Solver::Type solverType;
+	enum Solver::Domain domain;
+
+	if (!PyArg_ParseTupleAndKeywords(args, kwds, "sO|ddbbii", kwlist,
+		&name, &self->pySys, &timestep, &duration, &self->rt, &self->startSync, &s, &t)) {
 		return -1;
 	}
 
-	switch (type) {
-		case 0: simType = DPsim::SimulationType::DP; break;
-		case 1: simType = DPsim::SimulationType::EMT; break;
+	switch (s) {
+		case 0: domain = DPsim::Solver::Domain::DP; break;
+		case 1: domain = DPsim::Solver::Domain::EMT; break;
 		default:
-			PyErr_SetString(PyExc_TypeError, "Invalid type argument (must be 0 or 1)");
+			PyErr_SetString(PyExc_TypeError, "Invalid sim_type argument (must be 0 or 1)");
 			return -1;
 	}
 
-	if (!compsFromPython(self->pyComps, self->comps)) {
-		PyErr_SetString(PyExc_TypeError, "Invalid components argument (must by list of dpsim.Component)");
+	switch (t) {
+		case 0: solverType = DPsim::Solver::Type::MNA; break;
+		case 1: solverType = DPsim::Solver::Type::IDA; break;
+		default:
+			PyErr_SetString(PyExc_TypeError, "Invalid solver_type argument (must be 0 or 1)");
+			return -1;
+	}
+
+	if (!PyObject_TypeCheck(self->pySys, &Python::SystemTopologyType)) {
+		PyErr_SetString(PyExc_TypeError, "Argument system must be dpsim.SystemTopology");
 		return -1;
 	}
 
@@ -205,9 +214,9 @@ int Python::Simulation::init(Python::Simulation* self, PyObject *args, PyObject 
 		return -1;
 	}
 
-	Py_INCREF(self->pyComps);
+	Py_INCREF(self->pySys);
 
-	self->sim = new DPsim::Simulation(name, self->comps, 2*PI*frequency, timestep, duration, Logger::Level::INFO, simType);
+	self->sim = std::make_shared<DPsim::Simulation>(name, *self->pySys->sys, timestep, duration, domain, solverType, Logger::Level::INFO);
 	return 0;
 };
 
@@ -221,9 +230,10 @@ void Python::Simulation::dealloc(Python::Simulation* self)
 		delete self->simThread;
 	}
 
-	if (self->sim)
-		delete self->sim;
-
+	if (self->sim) {
+		using SimSharedPtr = std::shared_ptr<DPsim::Simulation>;
+		self->sim.~SimSharedPtr();
+	}
 
 	delete self->mut;
 	delete self->cond;
@@ -237,13 +247,11 @@ void Python::Simulation::dealloc(Python::Simulation* self)
 	// the vectors here to free the associated memory.
 
 	// This is a workaround for a compiler bug: https://stackoverflow.com/a/42647153/8178705
-	using ComponentList = DPsim::Component::List;
 	using PyObjectsList = std::vector<PyObject *>;
 
-	self->comps.~ComponentList();
 	self->refs.~PyObjectsList();
 
-	Py_XDECREF(self->pyComps);
+	Py_XDECREF(self->pySys);
 	Py_TYPE(self)->tp_free((PyObject*) self);
 }
 

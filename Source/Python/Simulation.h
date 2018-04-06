@@ -37,6 +37,7 @@
 #endif
 
 #include "Config.h"
+#include "SystemTopology.h"
 #include "../Simulation.h"
 #include "cps/Source/Component.h"
 
@@ -46,7 +47,6 @@ namespace Python {
 	struct Simulation {
 		PyObject_HEAD
 
-		DPsim::Simulation *sim;
 		enum class State : int {
 			Stopped = 0,
 			Running,
@@ -54,6 +54,9 @@ namespace Python {
 			Done
 		};
 
+		std::shared_ptr<DPsim::Simulation> sim;
+
+		Python::SystemTopology *pySys;
 
 		std::condition_variable *cond;
 		std::mutex *mut;
@@ -64,9 +67,6 @@ namespace Python {
 
 		bool rt;
 		bool startSync;
-
-		PyObject* pyComps; // Components as a (Python) list of PyComponents
-		DPsim::Component::List comps;
 
 		// List of additional objects that aren't directly used from Simulation
 		// methods, but that a reference has be kept to to avoid them from being
