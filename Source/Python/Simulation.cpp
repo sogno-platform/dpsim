@@ -46,10 +46,16 @@ void Python::Simulation::simThreadFunction(Python::Simulation* pySim)
 #ifdef WITH_RT
 	if (pySim->rt) {
 		simThreadFunctionRT(pySim);
-		return;
 	}
 #endif
 
+	if (!pySim->rt) {
+		simThreadFunctionNonRT(pySim);
+	}
+}
+
+void Python::Simulation::simThreadFunctionNonRT(Python::Simulation *pySim)
+{
 	std::unique_lock<std::mutex> lk(*pySim->mut, std::defer_lock);
 
 	pySim->numStep = 0;
@@ -82,39 +88,49 @@ void Python::Simulation::simThreadFunctionRT(Python::Simulation *pySim)
 	int timerfd;
 	struct itimerspec ts;
 	uint64_t overrun;
+
 	std::unique_lock<std::mutex> lk(*pySim->mut, std::defer_lock);
 
 	pySim->numStep = 0;
+
 	// RT method is limited to timerfd right now; to implement it with Exceptions,
 	// look at Simulation::runRT
 	timerfd = timerfd_create(CLOCK_REALTIME, 0);
+
 	// TODO: better error mechanism (somehow pass an Exception to the Python thread?)
 	if (timerfd < 0) {
 		throw SystemError("Failed to create timerfd");
 	}
+
 	ts.it_value.tv_sec = (time_t) pySim->sim->getTimeStep();
 	ts.it_value.tv_nsec = (long) (pySim->sim->getTimeStep() *1e9);
 	ts.it_interval = ts.it_value;
+
 	// optional start synchronization
 	if (pySim->startSync) {
 		pySim->sim->step(false); // first step, sending the initial values
 		pySim->sim->step(true); // blocking step for synchronization + receiving the initial state of the other network
 		pySim->sim->increaseByTimeStep();
 	}
+
 	if (timerfd_settime(timerfd, 0, &ts, 0) < 0) {
 		throw SystemError("Failed to arm timerfd");
 	}
+
 	while (pySim->running && notDone) {
 		notDone = pySim->sim->step();
 		if (read(timerfd, timebuf, 8) < 0) {
 			throw SystemError("Read from timerfd failed");
 		}
+
 		overrun = *((uint64_t*) timebuf);
 		if (overrun > 1) {
 			std::cerr << "timerfd overrun of " << overrun-1 << " at " << pySim->sim->getTime() << std::endl;
 		}
+
 		pySim->numStep++;
 		pySim->sim->increaseByTimeStep();
+
 		// in case it wasn't obvious, pausing a RT simulation is a bad idea
 		// as it will most likely lead to overruns, but it's possible nonetheless
 		if (pySim->sigPause) {
@@ -126,8 +142,10 @@ void Python::Simulation::simThreadFunctionRT(Python::Simulation *pySim)
 			lk.unlock();
 		}
 	}
+
 	close(timerfd);
 	lk.lock();
+
 	pySim->state = StateDone;
 	pySim->cond->notify_one();
 }
@@ -465,8 +483,20 @@ PyObject* Python::Simulation::wait(PyObject *self, PyObject *args)
 	return Py_None;
 }
 
+static const char* DocSimulationGetState =
+"get_state()\n"
+"Get current state of simulation.\n";
+PyObject* Python::Simulation::getState(PyObject *self, PyObject *args)
+{
+	Python::Simulation* pySim = (Python::Simulation*) self;
+	std::unique_lock<std::mutex> lk(*pySim->mut);
+
+	/** @todo Create and return state enum */
+}
+
 static PyMethodDef Simulation_methods[] = {
 	{"add_interface", Python::Simulation::addInterface, METH_VARARGS, DocSimulationAddInterface},
+	{"get_state", Python::Simulation::getState, METH_NOARGS, DocSimulationGetState},
 	{"lvector", Python::Simulation::lvector, METH_NOARGS, DocSimulationLvector},
 	{"name", Python::Simulation::name, METH_NOARGS, DocSimulationName},
 	{"pause", Python::Simulation::pause, METH_NOARGS, DocSimulationPause},

@@ -46,6 +46,9 @@ list(APPEND SOURCES
 
 set(INCLUDE_DIRS
 	${EIGEN3_INCLUDE_DIR}
+	${CMAKE_CURRENT_SOURCE_DIR}
+	${CMAKE_CURRENT_BINARY_DIR}
+	../Dependencies
 )
 
 if(NOT MSVC)
@@ -86,13 +89,10 @@ if(WITH_CIM)
 	list(APPEND LIBRARIES ${CIMPP_LIBRARIES})
 endif()
 
-list(APPEND INCLUDE_DIRS ../Dependencies)
-
 target_sources(dpsim PRIVATE ${SOURCES})
 target_link_libraries(dpsim ${LIBRARIES})
 target_include_directories(dpsim PRIVATE ${INCLUDE_DIRS})
 
-include_directories(${CMAKE_CURRENT_SOURCE_DIR} ${CMAKE_CURRENT_BINARY_DIR})
 configure_file(Config.h.in ${CMAKE_CURRENT_BINARY_DIR}/Config.h)
 
 include(GNUInstallDirs)
