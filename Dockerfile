@@ -17,7 +17,7 @@ RUN dnf -y update
 # Toolchain
 RUN dnf -y install \
 	git \
-	gcc-c++ \
+	gcc-c++ gdb \
 	redhat-rpm-config \
 	rpmdevtools \
 	make cmake \
@@ -25,6 +25,10 @@ RUN dnf -y install \
 	graphviz \
 	pandoc \
 	python3-pip
+
+# Install some debuginfos
+RUN dnf -y debuginfo-install \
+	python3
 
 # Dependencies
 RUN dnf -y install \
