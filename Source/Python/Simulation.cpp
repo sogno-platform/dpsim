@@ -435,23 +435,6 @@ PyObject* Python::Simulation::stop(PyObject *self, PyObject *args)
 	return Py_None;
 }
 
-static const char* DocSimulationUpdateMatrix =
-"update_matrix()\n"
-"Recompute the internal system matrix. Must be called after component parameters "
-"have been changed during a simulation.";
-PyObject* Python::Simulation::updateMatrix(PyObject *self, PyObject *args)
-{
-	Python::Simulation *pySim = (Python::Simulation*) self;
-
-	// TODO: this is a quick-and-dirty method that keeps the old matrix in memory
-	pySim->sim->addSystemTopology(pySim->comps);
-	pySim->sim->switchSystemMatrix(++pySim->numSwitch);
-
-	Py_INCREF(Py_None);
-
-	return Py_None;
-}
-
 static const char* DocSimulationWait =
 "wait()\n"
 "Block until the simulation is finished, returning immediately if this is already the case.\n"
@@ -503,7 +486,6 @@ static PyMethodDef Simulation_methods[] = {
 	{"start", Python::Simulation::start, METH_NOARGS, DocSimulationStart},
 	{"step", Python::Simulation::step, METH_NOARGS, DocSimulationStep},
 	{"stop", Python::Simulation::stop, METH_NOARGS, DocSimulationStop},
-	{"update_matrix", Python::Simulation::updateMatrix, METH_NOARGS, DocSimulationUpdateMatrix},
 	{"wait", Python::Simulation::wait, METH_NOARGS, DocSimulationWait},
 	{NULL, NULL, 0, NULL}
 };
