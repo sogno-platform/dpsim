@@ -26,11 +26,10 @@ using namespace DPsim::Components::DP;
 
 int main(int argc, char* argv[]) {
 	// Define system topology
-	SystemTopology system(50);
-	system.mComponents = {
+	SystemTopology system(50, {
 		VoltageSource::make("v_in", GND, 0, Complex(10, 0)),
 		Resistor::make("r_1", 0, GND, 1)
-	};
+		});
 
 	// Define simulation scenario
 	Real timeStep = 0.00005;
