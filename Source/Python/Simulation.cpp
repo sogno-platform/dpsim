@@ -224,14 +224,6 @@ void Python::Simulation::dealloc(Python::Simulation* self)
 	if (self->sim)
 		delete self->sim;
 
-	if (self->log)
-		delete self->log;
-
-	if (self->llog)
-		delete self->llog;
-
-	if (self->rlog)
-		delete self->rlog;
 
 	delete self->mut;
 	delete self->cond;

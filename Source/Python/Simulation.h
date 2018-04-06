@@ -47,7 +47,6 @@ namespace Python {
 		PyObject_HEAD
 
 		DPsim::Simulation *sim;
-		Logger *log, *llog, *rlog;
 		enum class State : int {
 			Stopped = 0,
 			Running,
