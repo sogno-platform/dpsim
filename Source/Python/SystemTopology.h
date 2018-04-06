@@ -22,12 +22,12 @@
 
 #pragma once
 
-#include <cps/SystemTopology.h>
+#include <cps/Source/SystemTopology.h>
 
 namespace DPsim {
 namespace Python {
 
-	struct System {
+	struct SystemTopology {
 		PyObject_HEAD
 
 
