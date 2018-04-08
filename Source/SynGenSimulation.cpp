@@ -21,6 +21,7 @@
 
 #include "SynGenSimulation.h"
 
+using namespace CPS;
 using namespace DPsim;
 
 Int SynGenSimulation::step(bool blocking)

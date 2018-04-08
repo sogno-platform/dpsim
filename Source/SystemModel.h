@@ -29,10 +29,11 @@
 #include "cps/Source/MathUtils.h"
 #include "cps/Source/Logger.h"
 
+using namespace CPS;
+
 namespace DPsim {
 
 	enum class SimulationType { DP, EMT };
-	enum class NumericalMethod { Euler, Trapezoidal_flux, Trapezoidal_current };
 
 	class SystemModel {
 
@@ -40,7 +41,7 @@ namespace DPsim {
 		/// Simulation mType
 		SimulationType mSimType;
 		///Numerical method
-		NumericalMethod mNumMethod;
+		CPS::NumericalMethod mNumMethod;
 		/// Number of nodes
 		Int mNumNodes;
 		/// Index offset for imaginary part
@@ -94,13 +95,13 @@ namespace DPsim {
 		SimulationType getSimType() const { return mSimType; }
 		Int getNumNodes() const { return mNumNodes; }
 		Int getNumIdealVS() const { return mNumIdealVS; }
-		NumericalMethod getNumMethod() const { return mNumMethod; }
+		CPS::NumericalMethod getNumMethod() const { return mNumMethod; }
 
 		void setSimType(SimulationType simType) { mSimType = simType; }
 		void setTimeStep(Real timeStep) { mTimeStep = timeStep; }
 		void setOmega(Real omega) { mSystemOmega = omega; }
 		void setSystemMatrixElement(Matrix::Index row, Matrix::Index column, Real value) { mSystemMatrix(row, column) = value; }
 		void setCompSystemMatrixElement(Matrix::Index row, Matrix::Index column, Real reValue, Real imValue);
-		void setNumMethod(NumericalMethod numMethod) { mNumMethod = numMethod; }
+		void setNumMethod(CPS::NumericalMethod numMethod) { mNumMethod = numMethod; }
 	};
 }

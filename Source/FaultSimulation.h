@@ -23,6 +23,8 @@
 
 #include "Simulation.h"
 
+using namespace CPS;
+
 namespace DPsim {
 
 	class FaultSimulation : public Simulation {

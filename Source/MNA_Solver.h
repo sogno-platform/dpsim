@@ -29,6 +29,8 @@
 #include "cps/Source/Interfaces/ExternalInterface.h"
 #include "cps/Source/SystemTopology.h"
 
+using namespace CPS;
+
 namespace DPsim {
 	/// Ground node
 	const Int GND = -1;
@@ -47,11 +49,11 @@ namespace DPsim {
 		/// Final time of the simulation
 		Real mFinalTime;
 		/// Time variable that is incremented at every step
-		Real mTime = 0;		
+		Real mTime = 0;
 		/// Simulation time step
 		Real mTimeStep;
 		/// Simulation type, which can be dynamic phasor (DP) or EMT
-		SimulationType mSimType;		
+		SimulationType mSimType;
 		/// Number of nodes
 		UInt mNumNodes = 0;
 		/// Number of nodes
@@ -74,7 +76,7 @@ namespace DPsim {
 		/// Vector of known quantities
 		Matrix mRightSideVector;
 		/// Vector of unknown quantities
-		Matrix mLeftSideVector;		
+		Matrix mLeftSideVector;
 		/// Numerical integration method for components which are not part of the network
 		NumericalMethod mNumMethod;
 		/// Switch to trigger steady-state initialization
@@ -134,7 +136,7 @@ namespace DPsim {
 		/// Run simulation until total time is elapsed.
 		void run();
 		/// Run simulation for \p duration seconds.
-		void run(double duration);		
+		void run(double duration);
 		///
 		void addExternalInterface(ExternalInterface* eint) { mExternalInterfaces.push_back(eint); }
 		///

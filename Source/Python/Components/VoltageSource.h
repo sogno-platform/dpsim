@@ -41,7 +41,7 @@ namespace Components {
 
 		Component *pyComp = PyObject_New(Component, &DPsim::Python::ComponentType);
 		Component::init(pyComp);
-		pyComp->comp = std::make_shared<C>(name, src, dest, DPsim::Complex(initVoltage.real, initVoltage.imag));
+		pyComp->comp = std::make_shared<C>(name, src, dest, CPS::Complex(initVoltage.real, initVoltage.imag));
 
 		return (PyObject*) pyComp;
 	}

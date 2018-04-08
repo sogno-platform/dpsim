@@ -32,6 +32,8 @@
 #include "cps/Source/Interfaces/ExternalInterface.h"
 #include "cps/Source/Node.h"
 
+using namespace CPS;
+
 namespace DPsim {
 
 	/// Ground node
@@ -44,7 +46,7 @@ namespace DPsim {
 
 	class Simulation {
 
-	protected:		
+	protected:
 		/// Simulation log level
 		Logger::Level mLogLevel;
 		/// Simulation logger
@@ -86,7 +88,7 @@ namespace DPsim {
 		Simulation(String name, Component::List comps, Real om, Real dt, Real tf,
 			Logger::Level logLevel = Logger::Level::INFO,
 			SimulationType simType = SimulationType::DP,
-			Int downSampleRate = 1);		
+			Int downSampleRate = 1);
 		///
 		virtual ~Simulation() { };
 		/// TODO: check that every system matrix has the same dimensions

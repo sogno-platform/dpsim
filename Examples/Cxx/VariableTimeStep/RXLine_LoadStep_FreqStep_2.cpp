@@ -23,7 +23,7 @@
 #include "DPsim.h"
 
 using namespace DPsim;
-using namespace DPsim::Components;
+using namespace CPS::Components;
 
 static void VarFreqRxLineResLoad_NZ_Paper_DP(Real timeStep, Real finalTime, Real freqStep, Real loadStep, Real rampTime)
 {

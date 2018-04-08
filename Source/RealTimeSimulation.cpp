@@ -26,6 +26,7 @@
 #include <time.h>
 #include <unistd.h>
 
+using namespace CPS;
 using namespace DPsim;
 
 RealTimeSimulation::RealTimeSimulation(String name, Component::List comps, Real om, Real dt, Real tf, Logger::Level logLevel, SimulationType simType, Int downSampleRate)

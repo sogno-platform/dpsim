@@ -40,10 +40,10 @@ namespace Components {
 		if (!PyArg_ParseTuple(args, "siiddd|i", &name, &src, &dest, &resistance, &inductance, &capacitance, &type))
 			return nullptr;
 
-		DPsim::Components::DP::RxLine::Type ltype;
+		CPS::Components::DP::RxLine::Type ltype;
 		switch (type) {
-			case 2: ltype = DPsim::Components::DP::RxLine::Node2; break;
-			case 3: ltype = DPsim::Components::DP::RxLine::Node3; break;
+			case 2: ltype = CPS::Components::DP::RxLine::Node2; break;
+			case 3: ltype = CPS::Components::DP::RxLine::Node3; break;
 		}
 
 		Component *pyComp = PyObject_New(Component, &DPsim::Python::ComponentType);

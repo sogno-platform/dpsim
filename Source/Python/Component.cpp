@@ -36,13 +36,13 @@ PyObject* Python::Component::newfunc(PyTypeObject* type, PyObject *args, PyObjec
 
 void Python::Component::init(Component* self)
 {
-	new (&self->comp) DPsim::Component::Ptr(nullptr);
+	new (&self->comp) CPS::Component::Ptr(nullptr);
 }
 
 void Python::Component::dealloc(Python::Component* self)
 {
 	// This is a workaround for a compiler bug: https://stackoverflow.com/a/42647153/8178705
-	using Ptr = DPsim::Component::Ptr;
+	using Ptr = CPS::Component::Ptr;
 
 	self->comp.~Ptr();
 
@@ -69,7 +69,7 @@ PyObject* Python::Component::getattr(Python::Component* self, char* name)
 
 		return attr->toPyObject();
 	}
-	catch (DPsim::Component::InvalidAttributeException) {
+	catch (CPS::Component::InvalidAttributeException) {
 		PyErr_Format(PyExc_AttributeError, "Component has no attribute '%s'", name);
 		return NULL;
 	}
@@ -90,7 +90,7 @@ int Python::Component::setattr(Python::Component* self, char* name, PyObject *v)
 		auto attr = self->comp->findAttribute(name);
 		attr->fromPyObject(v);
 	}
-	catch (DPsim::Component::InvalidAttributeException) {
+	catch (CPS::Component::InvalidAttributeException) {
 		PyErr_Format(PyExc_AttributeError, "Component has no attribute '%s'", name);
 		return -1;
 	}
@@ -110,7 +110,7 @@ int Python::Component::setattr(Python::Component* self, char* name, PyObject *v)
 	return 0;
 }
 
-bool Python::compsFromPython(PyObject* list, DPsim::Component::List& comps)
+bool Python::compsFromPython(PyObject* list, CPS::Component::List& comps)
 {
 	if (!PyList_Check(list))
 		return false;

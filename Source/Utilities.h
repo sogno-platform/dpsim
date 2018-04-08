@@ -26,6 +26,6 @@
 
 namespace DPsim {
 
-	void updateProgressBar(Real time, Real finalTime);
+	void updateProgressBar(CPS::Real time, CPS::Real finalTime);
 
 }

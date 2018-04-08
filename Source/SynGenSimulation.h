@@ -23,6 +23,8 @@
 
 #include "Simulation.h"
 
+using namespace CPS;
+
 namespace DPsim {
 
 	class SynGenSimulation : public Simulation {

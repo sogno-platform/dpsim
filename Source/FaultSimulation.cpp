@@ -21,6 +21,7 @@
 
 #include "FaultSimulation.h"
 
+using namespace CPS;
 using namespace DPsim;
 
 void FaultSimulation::clearFault(Int Node1, Int Node2, Int Node3)

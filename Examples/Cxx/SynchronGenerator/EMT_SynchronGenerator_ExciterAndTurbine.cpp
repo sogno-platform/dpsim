@@ -24,7 +24,7 @@
 #include "DPsim.h"
 
 using namespace DPsim;
-using namespace DPsim::Components::EMT;
+using namespace CPS::Components::EMT;
 
 int main(int argc, char* argv[])
 {
