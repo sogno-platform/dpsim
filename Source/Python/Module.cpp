@@ -28,46 +28,36 @@
 #endif
 
 #include "Config.h"
-#include "cps/Components.h"
-
-#include "Python/Component.h"
-#include "Python/LoadCim.h"
-#include "Python/Interface.h"
 #include "Python/Module.h"
 #include "Python/Simulation.h"
 
-#include "Python/Components/LinePi.h"
-#include "Python/Components/LineRx.h"
-#include "Python/Components/LoadPQ.h"
-#include "Python/Components/Capacitor.h"
-#include "Python/Components/Resistor.h"
-#include "Python/Components/Inductor.h"
-#include "Python/Components/CurrentSource.h"
-#include "Python/Components/VoltageSource.h"
-#include "Python/Components/VoltageSourceNorton.h"
+#include "cps/Components.h"
+#include "cps/Python/Components.h"
+#include "cps/Python/LoadCim.h"
+#include "cps/Python/Interface.h"
 
 using namespace DPsim;
 
 static PyMethodDef dpsimModuleMethods[] = {
-	{ "load_cim", Python::LoadCim, METH_VARARGS, Python::DocLoadCim },
-	{ "open_shmem_interface", (PyCFunction) Python::OpenShmemInterface, METH_VARARGS|METH_KEYWORDS, Python::DocOpenShmemInterface },
+	{ "load_cim",               CPS::Python::LoadCim, METH_VARARGS, CPS::Python::DocLoadCim },
+	{ "open_shmem_interface",   (PyCFunction) CPS::Python::OpenShmemInterface, METH_VARARGS|METH_KEYWORDS, CPS::Python::DocOpenShmemInterface },
 
 	// Component constructors
-	{ "CurrentSourceDP",        Python::Components::CurrentSource<CPS::Components::DP::CurrentSource>,              METH_VARARGS, Python::Components::DocCurrentSource },
-	{ "CurrentSourceEMT",       Python::Components::CurrentSource<CPS::Components::EMT::CurrentSource>,             METH_VARARGS, Python::Components::DocCurrentSource },
-	{ "VoltageSourceDP",        Python::Components::VoltageSource<CPS::Components::DP::VoltageSource>,              METH_VARARGS, Python::Components::DocVoltageSource },
-	{ "VoltageSourceEMT",       Python::Components::VoltageSource<CPS::Components::EMT::VoltageSource>,             METH_VARARGS, Python::Components::DocVoltageSource },
-	{ "VoltageSourceNortonDP",  Python::Components::VoltageSourceNorton<CPS::Components::DP::VoltageSourceNorton>,  METH_VARARGS, Python::Components::DocVoltageSourceNorton },
-	{ "VoltageSourceNortonEMT", Python::Components::VoltageSourceNorton<CPS::Components::EMT::VoltageSourceNorton>, METH_VARARGS, Python::Components::DocVoltageSourceNorton },
-	{ "InductorDP",             Python::Components::Inductor<CPS::Components::DP::Inductor>,                        METH_VARARGS, Python::Components::DocInductor },
-	{ "InductorEMT",            Python::Components::Inductor<CPS::Components::EMT::Inductor>,                       METH_VARARGS, Python::Components::DocInductor },
-	{ "ResistorDP",	            Python::Components::Resistor<CPS::Components::DP::Resistor>,                        METH_VARARGS, Python::Components::DocResistor },
-	{ "ResistorEMT",            Python::Components::Resistor<CPS::Components::EMT::Resistor>,                       METH_VARARGS, Python::Components::DocResistor },
-	{ "CapacitorDP",            Python::Components::Capacitor<CPS::Components::DP::Capacitor>,                      METH_VARARGS, Python::Components::DocCapacitor },
-	{ "CapacitorEMT",           Python::Components::Capacitor<CPS::Components::EMT::Capacitor>,                     METH_VARARGS, Python::Components::DocCapacitor },
-	{ "LinePiDP",               Python::Components::LinePi<CPS::Components::DP::PiLine>,                            METH_VARARGS, Python::Components::DocLinePi },
-	{ "LineRxDP",               Python::Components::LineRx<CPS::Components::DP::RxLine>,                            METH_VARARGS, Python::Components::DocLineRx },
-	{ "LoadPQDP",               Python::Components::LoadPQ<CPS::Components::DP::PQLoad>,                            METH_VARARGS, Python::Components::DocLoadPQ },
+	{ "CurrentSourceDP",        CPS::Python::Components::CurrentSource<CPS::Components::DP::CurrentSource>,              METH_VARARGS, CPS::Python::Components::DocCurrentSource },
+	{ "CurrentSourceEMT",       CPS::Python::Components::CurrentSource<CPS::Components::EMT::CurrentSource>,             METH_VARARGS, CPS::Python::Components::DocCurrentSource },
+	{ "VoltageSourceDP",        CPS::Python::Components::VoltageSource<CPS::Components::DP::VoltageSource>,              METH_VARARGS, CPS::Python::Components::DocVoltageSource },
+	{ "VoltageSourceEMT",       CPS::Python::Components::VoltageSource<CPS::Components::EMT::VoltageSource>,             METH_VARARGS, CPS::Python::Components::DocVoltageSource },
+	{ "VoltageSourceNortonDP",  CPS::Python::Components::VoltageSourceNorton<CPS::Components::DP::VoltageSourceNorton>,  METH_VARARGS, CPS::Python::Components::DocVoltageSourceNorton },
+	{ "VoltageSourceNortonEMT", CPS::Python::Components::VoltageSourceNorton<CPS::Components::EMT::VoltageSourceNorton>, METH_VARARGS, CPS::Python::Components::DocVoltageSourceNorton },
+	{ "InductorDP",             CPS::Python::Components::Inductor<CPS::Components::DP::Inductor>,                        METH_VARARGS, CPS::Python::Components::DocInductor },
+	{ "InductorEMT",            CPS::Python::Components::Inductor<CPS::Components::EMT::Inductor>,                       METH_VARARGS, CPS::Python::Components::DocInductor },
+	{ "ResistorDP",	            CPS::Python::Components::Resistor<CPS::Components::DP::Resistor>,                        METH_VARARGS, CPS::Python::Components::DocResistor },
+	{ "ResistorEMT",            CPS::Python::Components::Resistor<CPS::Components::EMT::Resistor>,                       METH_VARARGS, CPS::Python::Components::DocResistor },
+	{ "CapacitorDP",            CPS::Python::Components::Capacitor<CPS::Components::DP::Capacitor>,                      METH_VARARGS, CPS::Python::Components::DocCapacitor },
+	{ "CapacitorEMT",           CPS::Python::Components::Capacitor<CPS::Components::EMT::Capacitor>,                     METH_VARARGS, CPS::Python::Components::DocCapacitor },
+	{ "LinePiDP",               CPS::Python::Components::LinePi<CPS::Components::DP::PiLine>,                            METH_VARARGS, CPS::Python::Components::DocLinePi },
+	{ "LineRxDP",               CPS::Python::Components::LineRx<CPS::Components::DP::RxLine>,                            METH_VARARGS, CPS::Python::Components::DocLineRx },
+	{ "LoadPQDP",               CPS::Python::Components::LoadPQ<CPS::Components::DP::PQLoad>,                            METH_VARARGS, CPS::Python::Components::DocLoadPQ },
 	{ 0 }
 };
 
@@ -78,24 +68,24 @@ static PyModuleDef dpsimModule = {
 PyMODINIT_FUNC PyInit__dpsim(void) {
 	PyObject* m;
 
-	if (PyType_Ready(&Python::ComponentType) < 0)
+	if (PyType_Ready(&CPS::Python::ComponentType) < 0)
 		return nullptr;
-	if (PyType_Ready(&Python::SimulationType) < 0)
+	if (PyType_Ready(&DPsim::Python::SimulationType) < 0)
 		return nullptr;
-	Python::InterfaceType.tp_new = PyType_GenericNew;
-	if (PyType_Ready(&Python::InterfaceType) < 0)
+	CPS::Python::InterfaceType.tp_new = PyType_GenericNew;
+	if (PyType_Ready(&CPS::Python::InterfaceType) < 0)
 		return nullptr;
 
 	m = PyModule_Create(&dpsimModule);
 	if (!m)
 		return nullptr;
 
-	Py_INCREF(&Python::SimulationType);
-	PyModule_AddObject(m, "Simulation", (PyObject*) &Python::SimulationType);
-	Py_INCREF(&Python::ComponentType);
-	PyModule_AddObject(m, "Component", (PyObject*) &Python::ComponentType);
-	Py_INCREF(&Python::InterfaceType);
-	PyModule_AddObject(m, "Interface", (PyObject*) &Python::InterfaceType);
+	Py_INCREF(&DPsim::Python::SimulationType);
+	PyModule_AddObject(m, "Simulation", (PyObject*) &DPsim::Python::SimulationType);
+	Py_INCREF(&CPS::Python::ComponentType);
+	PyModule_AddObject(m, "Component", (PyObject*) &CPS::Python::ComponentType);
+	Py_INCREF(&CPS::Python::InterfaceType);
+	PyModule_AddObject(m, "Interface", (PyObject*) &CPS::Python::InterfaceType);
 
 	return m;
 }
