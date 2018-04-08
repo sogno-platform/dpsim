@@ -20,7 +20,7 @@
  *********************************************************************************/
 
 #include "Python/Component.h"
-#include "cps/Source/Components.h"
+#include "cps/Components.h"
 
 using namespace DPsim;
 

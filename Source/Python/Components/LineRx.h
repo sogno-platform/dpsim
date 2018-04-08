@@ -22,7 +22,7 @@
 #pragma once
 
 #include "Python/Component.h"
-#include "cps/Source/Components/DP_Line_Rx.h"
+#include "cps/Components/DP_Line_Rx.h"
 
 namespace DPsim {
 namespace Python {

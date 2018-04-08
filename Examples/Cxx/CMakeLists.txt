@@ -1,12 +1,5 @@
 set(LIBRARIES "dpsim")
 
-set(INCLUDE_DIRS
-	${EIGEN3_INCLUDE_DIR}
-	"${CMAKE_CURRENT_BINARY_DIR}/../../Source"
-	"${CMAKE_CURRENT_SOURCE_DIR}/../../Source"
-	"${CMAKE_CURRENT_SOURCE_DIR}/../../Dependencies"
-)
-
 if (NOT WIN32)
 	# needed so CIMParser and arabica (which are first compiled into static libs)
 	# can be included in the .so

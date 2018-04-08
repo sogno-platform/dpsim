@@ -28,7 +28,7 @@
 #endif
 
 #include "Config.h"
-#include "cps/Source/Components.h"
+#include "cps/Components.h"
 
 #include "Python/Component.h"
 #include "Python/LoadCim.h"

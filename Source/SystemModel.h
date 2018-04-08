@@ -25,9 +25,9 @@
 #include <iostream>
 #include <vector>
 
-#include "cps/Source/Definitions.h"
-#include "cps/Source/MathUtils.h"
-#include "cps/Source/Logger.h"
+#include "cps/Definitions.h"
+#include "cps/MathUtils.h"
+#include "cps/Logger.h"
 
 using namespace CPS;
 
@@ -41,7 +41,7 @@ namespace DPsim {
 		/// Simulation mType
 		SimulationType mSimType;
 		///Numerical method
-		CPS::NumericalMethod mNumMethod;
+		NumericalMethod mNumMethod;
 		/// Number of nodes
 		Int mNumNodes;
 		/// Index offset for imaginary part
@@ -95,13 +95,13 @@ namespace DPsim {
 		SimulationType getSimType() const { return mSimType; }
 		Int getNumNodes() const { return mNumNodes; }
 		Int getNumIdealVS() const { return mNumIdealVS; }
-		CPS::NumericalMethod getNumMethod() const { return mNumMethod; }
+		NumericalMethod getNumMethod() const { return mNumMethod; }
 
 		void setSimType(SimulationType simType) { mSimType = simType; }
 		void setTimeStep(Real timeStep) { mTimeStep = timeStep; }
 		void setOmega(Real omega) { mSystemOmega = omega; }
 		void setSystemMatrixElement(Matrix::Index row, Matrix::Index column, Real value) { mSystemMatrix(row, column) = value; }
 		void setCompSystemMatrixElement(Matrix::Index row, Matrix::Index column, Real reValue, Real imValue);
-		void setNumMethod(CPS::NumericalMethod numMethod) { mNumMethod = numMethod; }
+		void setNumMethod(NumericalMethod numMethod) { mNumMethod = numMethod; }
 	};
 }

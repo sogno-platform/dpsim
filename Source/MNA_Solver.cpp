@@ -22,7 +22,7 @@
 #include "MNA_Solver.h"
 
 #ifdef WITH_CIM
-#include "cps/Source/CIM/Reader.h"
+#include "cps/CIM/Reader.h"
 #endif /* WITH_CIM */
 
 using namespace CPS;
