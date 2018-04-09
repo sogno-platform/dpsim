@@ -29,6 +29,8 @@
 #define RTMETHOD_TIMERFD
 //#define RTMETHOD_EXCEPTIONS
 
+using namespace CPS;
+
 namespace DPsim {
 
 #ifdef RTMETHOD_EXCEPTIONS

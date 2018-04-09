@@ -20,8 +20,9 @@
  *********************************************************************************/
 
 #include "Simulation.h"
-#include "cps/Source/CIM/Reader.h"
+#include "cps/CIM/Reader.h"
 
+using namespace CPS;
 using namespace DPsim;
 
 Simulation::Simulation(String name,

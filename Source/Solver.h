@@ -25,9 +25,9 @@
 #include <vector>
 #include <list>
 
-#include "cps/Source/Logger.h"
-#include "cps/Source/Interfaces/ExternalInterface.h"
-#include "cps/Source/SystemTopology.h"
+#include "cps/Logger.h"
+#include "cps/Interfaces/ExternalInterface.h"
+#include "cps/SystemTopology.h"
 
 namespace DPsim {
 	/// Ground node
@@ -54,5 +54,4 @@ namespace DPsim {
 		///
 		virtual void setSwitchTime(Real switchTime, Int systemIndex) { }
 	};
-
 }

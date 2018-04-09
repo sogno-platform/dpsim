@@ -25,10 +25,16 @@
 #include <vector>
 #include <list>
 
-#include "cps/Source/Definitions.h"
-#include "cps/Source/Logger.h"
-#include "cps/Source/SystemTopology.h"
 #include "MNA_Solver.h"
+
+#include "cps/Definitions.h"
+#include "cps/Component.h"
+#include "cps/Logger.h"
+#include "cps/SystemTopology.h"
+#include "cps/Interfaces/ExternalInterface.h"
+#include "cps/Node.h"
+
+using namespace CPS;
 
 namespace DPsim {
 

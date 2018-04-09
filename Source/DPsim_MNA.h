@@ -1,7 +1,7 @@
 #include "MNA_Solver.h"
-#include "cps/Source/Components.h"
-#include "cps/Source/Logger.h"
+#include "cps/Components.h"
+#include "cps/Logger.h"
 
 #ifdef WITH_SHMEM
-#include "cps/Source/Interfaces/ShmemInterface.h"
+#include "cps/Interfaces/ShmemInterface.h"
 #endif

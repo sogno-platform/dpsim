@@ -37,9 +37,8 @@
 #endif
 
 #include "Config.h"
-#include "SystemTopology.h"
+#include "cps/Python/SystemTopology.h"
 #include "../Simulation.h"
-#include "cps/Source/Component.h"
 
 namespace DPsim {
 namespace Python {
@@ -56,7 +55,7 @@ namespace Python {
 
 		std::shared_ptr<DPsim::Simulation> sim;
 
-		Python::SystemTopology *pySys;
+		CPS::Python::SystemTopology *pySys;
 
 		std::condition_variable *cond;
 		std::mutex *mut;

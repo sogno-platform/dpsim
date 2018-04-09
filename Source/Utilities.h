@@ -22,10 +22,10 @@
 
 #pragma once
 
-#include "cps/Source/Definitions.h"
+#include "cps/Definitions.h"
 
 namespace DPsim {
 
-	void updateProgressBar(Real time, Real finalTime);
+	void updateProgressBar(CPS::Real time, CPS::Real finalTime);
 
 }

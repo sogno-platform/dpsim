@@ -22,9 +22,10 @@
 #include "MNA_Solver.h"
 
 #ifdef WITH_CIM
-#include "cps/Source/CIM/Reader.h"
+#include "cps/CIM/Reader.h"
 #endif /* WITH_CIM */
 
+using namespace CPS;
 using namespace DPsim;
 
 MnaSolver::MnaSolver(String name,
@@ -48,7 +49,6 @@ MnaSolver::MnaSolver(String name, SystemTopology system,
 	Logger::Level logLevel, Int downSampleRate)
 	: MnaSolver(name, timeStep, finalTime, domain,
 		logLevel, false, downSampleRate) {
-
 	initialize(system);
 
 	// Logging

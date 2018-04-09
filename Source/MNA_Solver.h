@@ -26,9 +26,11 @@
 #include <list>
 
 #include "Solver.h"
-#include "cps/Source/Logger.h"
-#include "cps/Source/Interfaces/ExternalInterface.h"
-#include "cps/Source/SystemTopology.h"
+#include "cps/Logger.h"
+#include "cps/Interfaces/ExternalInterface.h"
+#include "cps/SystemTopology.h"
+
+using namespace CPS;
 
 namespace DPsim {
 	/// Simulation class which uses Modified Nodal Analysis (MNA).

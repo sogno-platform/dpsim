@@ -23,7 +23,7 @@
 #include "DPsim.h"
 
 using namespace DPsim;
-using namespace DPsim::Components::DP;
+using namespace CPS::Components::DP;
 
 int main(int argc, char* argv[])
 {

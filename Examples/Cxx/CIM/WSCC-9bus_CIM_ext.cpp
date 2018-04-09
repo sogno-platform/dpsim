@@ -23,11 +23,11 @@
 #include <list>
 
 #include "DPsim_MNA.h"
-#include "cps/Source/CIM/Reader.h"
-#include "cps/Source/Interfaces/ShmemInterface.h"
+#include "cps/CIM/Reader.h"
+#include "cps/Interfaces/ShmemInterface.h"
 
 using namespace DPsim;
-using namespace DPsim::Components::DP;
+using namespace CPS::Components::DP;
 
 int main(int argc, char *argv[]) {
 	// Specify CIM files
@@ -35,7 +35,7 @@ int main(int argc, char *argv[]) {
 	String path("..\\..\\..\\..\\dpsim\\Examples\\CIM\\WSCC-09_Neplan_RX\\");
 #elif defined(__linux__)
 	String path("../../../dpsim/Examples/CIM/IEEE-09_Neplan_RX/");
-#endif	
+#endif
 	std::list<String> filenames = {
 		path + "WSCC-09_Neplan_RX_DI.xml",
 		path + "WSCC-09_Neplan_RX_EQ.xml",

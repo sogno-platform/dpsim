@@ -1,12 +1,5 @@
 set(LIBRARIES "dpsim")
 
-set(INCLUDE_DIRS
-	${EIGEN3_INCLUDE_DIR}
-	"${CMAKE_CURRENT_BINARY_DIR}/../../Source"
-	"${CMAKE_CURRENT_SOURCE_DIR}/../../Source"
-	"${CMAKE_CURRENT_SOURCE_DIR}/../../Dependencies"
-)
-
 if (NOT WIN32)
 	# needed so CIMParser and arabica (which are first compiled into static libs)
 	# can be included in the .so
@@ -22,36 +15,36 @@ set(CIRCUIT_SOURCES
 	Circuits/DP_IdealVS_RXLine_1.cpp
 	Circuits/DP_IdealVS_Trafo_1.cpp
 	Circuits/DP_ResVS_RL_Switch_1.cpp
-	Circuits/EMT_IdealVS_R_1.cpp
+#	Circuits/EMT_IdealVS_R_1.cpp
 	Circuits/EMT_ResVS_RL_Switch_1.cpp
 )
 
 set(SYNCGEN_SOURCES
 	SynchronGenerator/DP_SynchronGenerator_BalancedResLoad.cpp
-	SynchronGenerator/DP_SynchronGenerator_ExciterAndTurbine.cpp
-	SynchronGenerator/DP_SynchronGenerator_SimpThreePhaseFault.cpp
-	SynchronGenerator/DP_SynchronGenerator_ThreePhaseFault.cpp
+#	SynchronGenerator/DP_SynchronGenerator_ExciterAndTurbine.cpp
+#	SynchronGenerator/DP_SynchronGenerator_SimpThreePhaseFault.cpp
+#	SynchronGenerator/DP_SynchronGenerator_ThreePhaseFault.cpp
 	SynchronGenerator/DP_SynchronGenerator_VBR.cpp
-	SynchronGenerator/DP_SynchronGenerator_Simplified_ThreePhaseFault.cpp
+#	SynchronGenerator/DP_SynchronGenerator_Simplified_ThreePhaseFault.cpp
 	SynchronGenerator/EMT_SynchronGenerator_BalancedResLoad.cpp
-	SynchronGenerator/EMT_SynchronGenerator_ExciterAndTurbine.cpp
-	SynchronGenerator/EMT_SynchronGenerator_PhaseToPhaseFault.cpp
-	SynchronGenerator/EMT_SynchronGenerator_ThreePhaseFault.cpp
-	SynchronGenerator/EMT_SynchronGenerator_VBR_ThreePhaseFault.cpp
-	SynchronGenerator/EMT_SynchronGenerator_Simplified_ThreePhaseFault.cpp
+#	SynchronGenerator/EMT_SynchronGenerator_ExciterAndTurbine.cpp
+#	SynchronGenerator/EMT_SynchronGenerator_PhaseToPhaseFault.cpp
+#	SynchronGenerator/EMT_SynchronGenerator_ThreePhaseFault.cpp
+#	SynchronGenerator/EMT_SynchronGenerator_VBR_ThreePhaseFault.cpp
+#	SynchronGenerator/EMT_SynchronGenerator_Simplified_ThreePhaseFault.cpp
 	SynchronGenerator/EMT_Multimachine.cpp
 )
 
 set(VARFREQ_SOURCES
-	VariableTimeStep/RXLine_LoadStep_FreqStep_1.cpp
-	VariableTimeStep/RXLine_LoadStep_FreqStep_2.cpp
+#	VariableTimeStep/RXLine_LoadStep_FreqStep_1.cpp
+#	VariableTimeStep/RXLine_LoadStep_FreqStep_2.cpp
 )
 
 if(WITH_RT)
 	list(APPEND LIBRARIES "-lrt")
 
 	set(RT_SOURCES
-		RealTime/RT_DP_ResVS_RL1.cpp
+#		RealTime/RT_DP_ResVS_RL1.cpp
 	)
 endif()
 
@@ -60,11 +53,11 @@ if(WITH_SHMEM)
 	list(APPEND INCLUDE_DIRS ${VILLASNODE_INCLUDE_DIRS})
 
 	set(SHMEM_SOURCES
-		Shmem/ShmemExample.cpp
-		Shmem/ShmemDistributedReference.cpp
-		Shmem/ShmemDistributedVillas.cpp
-		Shmem/ShmemDistributedDirect.cpp
-		Shmem/ShmemRealTime.cpp
+#		Shmem/ShmemExample.cpp
+#		Shmem/ShmemDistributedReference.cpp
+#		Shmem/ShmemDistributedVillas.cpp
+#		Shmem/ShmemDistributedDirect.cpp
+#		Shmem/ShmemRealTime.cpp
 	)
 endif()
 
@@ -80,7 +73,7 @@ endif()
 
 if(WITH_CIM AND WITH_SHMEM)
 	set(CIM_SHMEM_SOURCES
-		CIM/WSCC-9bus_CIM_ext.cpp		
+#		CIM/WSCC-9bus_CIM_ext.cpp		
 	)
 endif()
 

@@ -4,10 +4,10 @@ project(DPsim CXX)
 # Enable C++11 support
 set(CMAKE_CXX_STANDARD 11)
 
+set(CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/CMake")
+
 set(PROJECT_AUTHOR "Institute for Automation of Complex Power Systems, RWTH Aachen University")
 set(PROJECT_COPYRIGHT "2017, Institute for Automation of Complex Power Systems, RWTH Aachen University")
-
-set(CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/CMake")
 
 include(GetGitRevisionDescription)
 git_describe(DPSIM_VERSION --tags --dirty=-dirty)
@@ -33,14 +33,8 @@ string(TIMESTAMP YMD "%Y%m%d")
 set(DPSIM_RELEASE ${YMD}git${GIT_HASH_SHORT})
 
 set(Python_ADDITIONAL_VERSIONS 3.5 3.6 3.7)
-set(CIM_VERSION 16v29a)
-set(USE_CIM_VERSION "IEC61970_16v29a")
-
 find_package(PythonInterp 3.5)
 find_package(PythonLibs 3.5)
-find_package(Eigen3 3.0 REQUIRED)
-find_package(VILLASnode)
-find_package(CIMpp)
 
 if(PythonInterp_FOUND AND PythonLibs_FOUND)
 	set(Python_FOUND ON)
@@ -54,12 +48,27 @@ endif()
 option(BUILD_SHARED_LIBS "Build shared library" OFF)
 option(BUILD_EXAMPLES "Build C++ examples" ON)
 
-option(WITH_RT	 "Enable real-time features"			${Linux_FOUND})
-option(WITH_SHMEM  "Enable shared memory interface"		${VILLASnode_FOUND})
+option(WITH_RT	   "Enable real-time features"			${Linux_FOUND})
 option(WITH_PYTHON "Enable Python support"				${Python_FOUND})
-option(WITH_CIM	"Enable support for parsing CIM files"	${CIMpp_FOUND})
+
+# This signalizes CPowerSystems, that it is build with DPsim and should include
+# the old MNA interface. This should be removed as soon as CPS has fixed. See
+# https://git.rwth-aachen.de/acs/core/simulation/cpowersystems/issues/10
+set(WITH_DPSIM ON)
 
 add_subdirectory(Documentation)
+add_subdirectory(Dependencies/libcps)
+
+configure_file(
+	${CMAKE_CURRENT_SOURCE_DIR}/Source/Config.h.in
+	${CMAKE_CURRENT_BINARY_DIR}/Source/Config.h
+)
+
+set(INCLUDE_DIRS
+	${CMAKE_CURRENT_BINARY_DIR}/Source
+	${CMAKE_CURRENT_SOURCE_DIR}/Source
+)
+
 add_subdirectory(Source)
 
 if(BUILD_EXAMPLES)
@@ -77,5 +86,4 @@ feature_summary(WHAT ALL VAR enabledFeaturesText)
 
 message(STATUS "${enabledFeaturesText}")
 
-# CPack configuration
 include(DPsimPackaging)

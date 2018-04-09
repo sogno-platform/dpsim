@@ -2,57 +2,14 @@ add_library(dpsim
 	Utilities.cpp
 	Simulation.cpp
 	MNA_Solver.cpp
-	../Dependencies/cps/Source/Logger.cpp
-	../Dependencies/cps/Source/MathUtils.cpp
-	../Dependencies/cps/Source/Attribute.cpp
-	../Dependencies/cps/Source/Component.cpp
-	../Dependencies/cps/Source/Node.cpp
+
+#	SynGenSimulation.cpp	
 )
 
-list(APPEND SOURCES	
-	../Dependencies/cps/Source/Components/DP_Capacitor.cpp
-	../Dependencies/cps/Source/Components/DP_CurrentSource.cpp
-	../Dependencies/cps/Source/Components/DP_Inductor.cpp
-	../Dependencies/cps/Source/Components/DP_Line_Pi.cpp
-	../Dependencies/cps/Source/Components/DP_Line_Rx.cpp
-	../Dependencies/cps/Source/Components/DP_Load_PQ.cpp
-	../Dependencies/cps/Source/Components/DP_Resistor.cpp
-	../Dependencies/cps/Source/Components/DP_Transformer.cpp
-	../Dependencies/cps/Source/Components/DP_VoltageSource.cpp
-	../Dependencies/cps/Source/Components/DP_VoltageSource_Freq.cpp
-	../Dependencies/cps/Source/Components/DP_VoltageSource_Norton.cpp
-	../Dependencies/cps/Source/Components/EMT_Capacitor.cpp
-	../Dependencies/cps/Source/Components/EMT_CurrentSource.cpp
-	../Dependencies/cps/Source/Components/EMT_Inductor.cpp
-	../Dependencies/cps/Source/Components/EMT_Resistor.cpp
-	../Dependencies/cps/Source/Components/EMT_VoltageSource.cpp
-	../Dependencies/cps/Source/Components/EMT_VoltageSource_Freq.cpp
-	../Dependencies/cps/Source/Components/EMT_VoltageSource_Norton.cpp
-	../Dependencies/cps/Source/Components/Exciter.cpp
-	../Dependencies/cps/Source/Components/TurbineGovernor.cpp
-	../Dependencies/cps/Source/Components/DP_SynchronGenerator_Ideal.cpp
-	../Dependencies/cps/Source/Components/Base_SynchronGenerator.cpp
-	../Dependencies/cps/Source/Components/DP_SynchronGenerator_Classic_Simplified.cpp
-	../Dependencies/cps/Source/Components/DP_SynchronGenerator_Classic.cpp
-	../Dependencies/cps/Source/Components/DP_SynchronGenerator_VBR.cpp
-	../Dependencies/cps/Source/Components/DP_SynchronGenerator_VBR_UnitTest.cpp
-	../Dependencies/cps/Source/Components/DP_SynchronGenerator_VBR_Simplified.cpp
-	../Dependencies/cps/Source/Components/EMT_SynchronGenerator_Classic.cpp
-	../Dependencies/cps/Source/Components/EMT_SynchronGenerator_Classic_Simplified.cpp
-	../Dependencies/cps/Source/Components/EMT_SynchronGenerator_Classic_Simpl_CurrentComp.cpp
-	../Dependencies/cps/Source/Components/EMT_SynchronGenerator_VBR.cpp
-	../Dependencies/cps/Source/Components/EMT_SynchronGenerator_VBR_UnitTest.cpp
-)
-
-set(INCLUDE_DIRS
-	${EIGEN3_INCLUDE_DIR}
-	${CMAKE_CURRENT_SOURCE_DIR}
-	${CMAKE_CURRENT_BINARY_DIR}
-	../Dependencies
-)
+set(LIBRARIES cps)
 
 if(NOT MSVC)
-	set(LIBRARIES "-lstdc++fs")
+	list(APPEND LIBRARIES "-lstdc++fs")
 endif()
 
 if(NOT WIN32)
@@ -63,17 +20,7 @@ endif()
 
 if(WITH_RT)
 	list(APPEND LIBRARIES "-lrt")
-	list(APPEND SOURCES RealTimeSimulation.cpp)
-endif()
-
-if(WITH_SHMEM)
-	list(APPEND LIBRARIES ${VILLASNODE_LIBRARIES})
-	list(APPEND INCLUDE_DIRS ${VILLASNODE_INCLUDE_DIRS})
-
-	list(APPEND SOURCES
-		../Dependencies/cps/Source/Interfaces/ExternalInterface.cpp
-		../Dependencies/cps/Source/Interfaces/ShmemInterface.cpp
-	)
+#	list(APPEND SOURCES RealTimeSimulation.cpp)
 endif()
 
 if(WITH_PYTHON)
@@ -83,17 +30,11 @@ if(WITH_PYTHON)
 	add_subdirectory(Python)
 endif()
 
-if(WITH_CIM)
-	list(APPEND SOURCES ../Dependencies/cps/Source/CIM/Reader.cpp)
-	list(APPEND INCLUDE_DIRS ${CIMPP_INCLUDE_DIRS})
-	list(APPEND LIBRARIES ${CIMPP_LIBRARIES})
-endif()
-
 target_sources(dpsim PRIVATE ${SOURCES})
 target_link_libraries(dpsim ${LIBRARIES})
 target_include_directories(dpsim PRIVATE ${INCLUDE_DIRS})
 
-configure_file(Config.h.in ${CMAKE_CURRENT_BINARY_DIR}/Config.h)
+include_directories(${CMAKE_CURRENT_SOURCE_DIR} ${CMAKE_CURRENT_BINARY_DIR})
 
 include(GNUInstallDirs)
 

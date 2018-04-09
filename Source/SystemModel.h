@@ -25,20 +25,20 @@
 #include <iostream>
 #include <vector>
 
-#include "cps/Source/Definitions.h"
-#include "cps/Source/MathUtils.h"
-#include "cps/Source/Logger.h"
+#include "Solver.h"
+#include "cps/Definitions.h"
+#include "cps/MathUtils.h"
+#include "cps/Logger.h"
+
+using namespace CPS;
 
 namespace DPsim {
-
-	enum class SimulationType { DP, EMT };
-	enum class NumericalMethod { Euler, Trapezoidal_flux, Trapezoidal_current };
 
 	class SystemModel {
 
 	private:
 		/// Simulation mType
-		SimulationType mDomain;
+		Solver::Domain mDomain;
 		///Numerical method
 		NumericalMethod mNumMethod;
 		/// Number of nodes
@@ -91,7 +91,7 @@ namespace DPsim {
 		Int getCompOffset() const { return mCompOffset; }
 		Real getRealFromLeftSideVector(Matrix::Index row) const { return mLeftSideVector(row, 0); }
 		Complex getCompFromLeftSideVector(Matrix::Index row) const { return Complex(mLeftSideVector(row, 0), mLeftSideVector(row + mCompOffset, 0)); }
-		SimulationType getSimType() const { return mDomain; }
+		Solver::Domain getDomain() const { return mDomain; }
 		Int getNumNodes() const { return mNumNodes; }
 		Int getNumIdealVS() const { return mNumIdealVS; }
 		NumericalMethod getNumMethod() const { return mNumMethod; }

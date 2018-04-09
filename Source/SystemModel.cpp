@@ -21,6 +21,7 @@
 
 #include "SystemModel.h"
 
+using namespace CPS;
 using namespace DPsim;
 
 void SystemModel::initialize(Int numNodes) {
@@ -55,7 +56,7 @@ void SystemModel::addSystemMatrix()
 }
 
 void SystemModel::updateLuFactored()
-{		
+{
 		mLuFactored = Eigen::PartialPivLU<Matrix>(mSystemMatrix);
 }
 
