@@ -20,6 +20,7 @@
  *********************************************************************************/
 
 #include "Simulation.h"
+#include "cps/Source/CIM/Reader.h"
 
 using namespace DPsim;
 
@@ -67,13 +68,12 @@ Simulation::Simulation(String name, std::list<String> cimFiles, Real frequency,
 	reader.parseFiles();
 
 	SystemTopology system = reader.getSystemTopology();
-	initialize(system);
 
 	switch (solverType) {
 	case Solver::Type::MNA:
 	default:
 		mSolver = std::make_shared<MnaSolver>(name,
-			system, frequency, timeStep, finalTime,
+			system, timeStep, finalTime,
 			domain, logLevel);
 		break;
 	}
