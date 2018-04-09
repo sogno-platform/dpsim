@@ -501,9 +501,9 @@ static const char* DocSimulation =
 PyTypeObject DPsim::Python::SimulationType = {
 	PyVarObject_HEAD_INIT(NULL, 0)
 	"dpsim.Simulation",                      /* tp_name */
-	sizeof(Python::Simulation),              /* tp_basicsize */
+	sizeof(DPsim::Python::Simulation),       /* tp_basicsize */
 	0,                                       /* tp_itemsize */
-	(destructor)Python::Simulation::dealloc, /* tp_dealloc */
+	(destructor)DPsim::Python::Simulation::dealloc, /* tp_dealloc */
 	0,                                       /* tp_print */
 	0,                                       /* tp_getattr */
 	0,                                       /* tp_setattr */
@@ -534,7 +534,7 @@ PyTypeObject DPsim::Python::SimulationType = {
 	0,                                       /* tp_descr_get */
 	0,                                       /* tp_descr_set */
 	0,                                       /* tp_dictoffset */
-	(initproc)Python::Simulation::init,      /* tp_init */
+	(initproc)DPsim::Python::Simulation::init, /* tp_init */
 	0,                                       /* tp_alloc */
-	Python::Simulation::newfunc,             /* tp_new */
+	DPsim::Python::Simulation::newfunc,      /* tp_new */
 };
