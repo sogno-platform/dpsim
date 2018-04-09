@@ -25,14 +25,15 @@
 #include <iostream>
 #include <vector>
 
-#include "cps/Source/Definitions.h"
-#include "cps/Source/MathUtils.h"
-#include "cps/Source/Logger.h"
+#include "cps/Definitions.h"
+#include "cps/MathUtils.h"
+#include "cps/Logger.h"
+
+using namespace CPS;
 
 namespace DPsim {
 
 	enum class SimulationType { DP, EMT };
-	enum class NumericalMethod { Euler, Trapezoidal_flux, Trapezoidal_current };
 
 	class SystemModel {
 

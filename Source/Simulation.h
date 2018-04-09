@@ -25,12 +25,14 @@
 #include <vector>
 #include <list>
 
-#include "cps/Source/Definitions.h"
-#include "cps/Source/Component.h"
-#include "cps/Source/Logger.h"
+#include "cps/Definitions.h"
+#include "cps/Component.h"
+#include "cps/Logger.h"
 #include "SystemModel.h"
-#include "cps/Source/Interfaces/ExternalInterface.h"
-#include "cps/Source/Node.h"
+#include "cps/Interfaces/ExternalInterface.h"
+#include "cps/Node.h"
+
+using namespace CPS;
 
 namespace DPsim {
 
@@ -44,7 +46,7 @@ namespace DPsim {
 
 	class Simulation {
 
-	protected:		
+	protected:
 		/// Simulation log level
 		Logger::Level mLogLevel;
 		/// Simulation logger
@@ -86,7 +88,7 @@ namespace DPsim {
 		Simulation(String name, Component::List comps, Real om, Real dt, Real tf,
 			Logger::Level logLevel = Logger::Level::INFO,
 			SimulationType simType = SimulationType::DP,
-			Int downSampleRate = 1);		
+			Int downSampleRate = 1);
 		///
 		virtual ~Simulation() { };
 		/// TODO: check that every system matrix has the same dimensions

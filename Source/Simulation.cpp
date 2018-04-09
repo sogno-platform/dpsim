@@ -21,6 +21,7 @@
 
 #include "Simulation.h"
 
+using namespace CPS;
 using namespace DPsim;
 
 Simulation::Simulation(String name, Component::List comps, Real om, Real dt,

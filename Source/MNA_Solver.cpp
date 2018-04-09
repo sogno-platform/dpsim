@@ -22,9 +22,10 @@
 #include "MNA_Solver.h"
 
 #ifdef WITH_CIM
-#include "cps/Source/CIM/Reader.h"
+#include "cps/CIM/Reader.h"
 #endif /* WITH_CIM */
 
+using namespace CPS;
 using namespace DPsim;
 
 MnaSimulation::MnaSimulation(String name,
@@ -33,10 +34,10 @@ MnaSimulation::MnaSimulation(String name,
 	mLog("Logs/" + name + ".log", logLevel),
 	mLeftVectorLog("Logs/" + name + "_LeftVector.csv", logLevel),
 	mRightVectorLog("Logs/" + name + "_RightVector.csv", logLevel) {
-		
+
 	mName = name;
 	mTimeStep = timeStep;
-	mFinalTime = finalTime;	
+	mFinalTime = finalTime;
 	mSimType = simType;
 	mLogLevel = logLevel;
 	mDownSampleRate = downSampleRate;
@@ -48,7 +49,7 @@ MnaSimulation::MnaSimulation(String name, SystemTopology system,
 	Logger::Level logLevel, Int downSampleRate)
 	: MnaSimulation(name, timeStep, finalTime, simType,
 		logLevel, false, downSampleRate) {
-	
+
 	initialize(system);
 
 	// Logging
@@ -69,10 +70,10 @@ MnaSimulation::MnaSimulation(String name, std::list<String> cimFiles, Real frequ
 	Logger::Level logLevel, Int downSampleRate)
 	: MnaSimulation(name, timeStep, finalTime, simType,
 		logLevel, true, downSampleRate) {
-	
+
 	CIM::Reader reader(frequency, logLevel, logLevel);
 	reader.addFiles(cimFiles);
-	reader.parseFiles();	
+	reader.parseFiles();
 	SystemTopology system = reader.getSystemTopology();
 	initialize(system);
 
@@ -104,7 +105,7 @@ void MnaSimulation::initialize(SystemTopology system) {
 		if (comp->getNode2() > maxNode)
 			maxNode = comp->getNode2();
 	}
-	
+
 	if (mSystemTopologies[mSystemIndex].mNodes.size() == 0) {
 		// Create Nodes for all node indices
 		mSystemTopologies[mSystemIndex].mNodes.resize(maxNode + 1, nullptr);
@@ -196,7 +197,7 @@ void MnaSimulation::initialize(SystemTopology system) {
 	}
 	// Compute LU-factorization for system matrix
 	mLuFactorizations.push_back(Eigen::PartialPivLU<Matrix>(mSystemMatrices[mSystemIndex]));
-	
+
 }
 
 void MnaSimulation::createEmptyVectors() {
@@ -273,7 +274,7 @@ void MnaSimulation::step(bool blocking) {
 			mLog.Log(Logger::Level::INFO) << "New matrix:" << std::endl << mSystemMatrices[mSystemIndex] << std::endl;
 			mLog.Log(Logger::Level::INFO) << "New decomp:" << std::endl << mLuFactorizations[mSystemIndex].matrixLU() << std::endl;
 		}
-	}	
+	}
 }
 
 void MnaSimulation::run() {
@@ -283,7 +284,7 @@ void MnaSimulation::run() {
 		step();
 		mLeftVectorLog.LogNodeValues(getTime(), getLeftSideVector());
 		mRightVectorLog.LogNodeValues(getTime(), getRightSideVector());
-		increaseByTimeStep();		
+		increaseByTimeStep();
 	}
 
 	mLog.Log(Logger::Level::INFO) << "Simulation finished." << std::endl;

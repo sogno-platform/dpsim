@@ -24,6 +24,7 @@
 #include <cstring>
 #include <iostream>
 
+using namespace CPS;
 using namespace DPsim;
 
 void DPsim::updateProgressBar(Real time, Real finalTime)
