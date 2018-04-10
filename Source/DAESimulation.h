@@ -29,6 +29,8 @@ using namespace DPsim ;
 		// stores the required offsets for adding new components to the residual vector
 		std::vector<int> offsets; 
 		///TO-DO: Implement the offset based on previous components
+		///list of Nodes for residual calculation
+		Node::List mNodes;
 
 	public:
 		/// Create DAE System
@@ -42,7 +44,7 @@ using namespace DPsim ;
 		void switchSystemMatrix(Int systemMatrixIndex);
 
 		// Residual Function to be used by IDA
-		int residualFunction(realtype ttime, N_Vector state, N_Vector dstate_dt, N_Vector resid, void *user_data);
+		int DAE_residualFunction(realtype ttime, N_Vector state, N_Vector dstate_dt, N_Vector resid, void *user_data);
 
 		/// Run simulation until total time is elapsed.
 		void run();

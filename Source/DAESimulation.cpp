@@ -137,14 +137,20 @@ void DAESimulation::run()
 	 */
 }
 
-int DAESimulation::residualFunction(realtype ttime, N_Vector state, N_Vector dstate_dt, N_Vector resid, void *user_data)
+int DAESimulation::DAE_residualFunction(realtype ttime, N_Vector state, N_Vector dstate_dt, N_Vector resid, void *user_data)
 {
-	
+	//TO-DO: add Node-equations to residual
+	for (auto node : mNodes){
+		//add necessary equations 
+
+	}
 	for (auto comp : mComponents){  	//currently only supports DP_Resistor and DP_VoltageSource
 		comp->residual(ttime, NVECTOR_DATA(state), NVECTOR_DATA(dstate_dt), NVECTOR_DATA(resid), offsets);
 
 	}
 		int ret=0;
+
+
 	/*
 	Do Error checking with variable ret
 	*/
