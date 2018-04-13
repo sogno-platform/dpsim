@@ -33,6 +33,21 @@ build:code:
   tags:
     - docker
 
+build:win32:
+  stage: pre-build
+  script:
+    - mkdir build
+    - cd build
+    - cmake -G "Visual Studio 15 2017 Win64" ..
+    - cmake --build .
+  artifacts:
+    paths:
+      - build
+  allow_failure: true
+  when: manual
+  tags:
+    - windows
+
 build:docs:
   stage: build
   script:
