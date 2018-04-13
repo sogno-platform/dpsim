@@ -4,13 +4,9 @@ variables:
   DOCKER_IMAGE_DEV: dpsim-dev
 
 before_script:
+  - git config --system core.longpaths true
   - git submodule sync --recursive
-  - git submodule update --init
-      Examples/Results
-      Dependencies/libcps
-      Dependencies/libcps/Dependencies/eigen
-      Dependencies/libcps/Dependencies/libcimpp
-      Dependencies/libcps/Dependencies/libcimpp/thirdparty/arabica
+  - git submodule update --init --recursive
 
 stages:
   - prepare
