@@ -2,7 +2,15 @@ variables:
   DOCKER_TAG_DEV: ${CI_COMMIT_REF_NAME}
   RSYNC_OPTS: --recursive --ignore-missing-args --chown ${DEPLOY_USER}:${DEPLOY_USER}
   DOCKER_IMAGE_DEV: dpsim-dev
-  GIT_SUBMODULE_STRATEGY: recursive
+
+before_script:
+  - git submodule sync --recursive
+  - git submodule update --init
+      Examples/Results
+      Dependencies/libcps
+      Dependencies/libcps/Dependencies/eigen
+      Dependencies/libcps/Dependencies/libcimpp
+      Dependencies/libcps/Dependencies/libcimpp/thirdparty/arabica
 
 stages:
   - prepare
