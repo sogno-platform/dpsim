@@ -25,7 +25,6 @@
 #include <iostream>
 #include <vector>
 
-#include "Solver.h"
 #include "cps/Definitions.h"
 #include "cps/MathUtils.h"
 #include "cps/Logger.h"
@@ -34,11 +33,13 @@ using namespace CPS;
 
 namespace DPsim {
 
+	enum class SimulationType { DP, EMT };
+
 	class SystemModel {
 
 	private:
 		/// Simulation mType
-		Solver::Domain mDomain;
+		SimulationType mDomain;
 		///Numerical method
 		NumericalMethod mNumMethod;
 		/// Number of nodes
@@ -91,7 +92,7 @@ namespace DPsim {
 		Int getCompOffset() const { return mCompOffset; }
 		Real getRealFromLeftSideVector(Matrix::Index row) const { return mLeftSideVector(row, 0); }
 		Complex getCompFromLeftSideVector(Matrix::Index row) const { return Complex(mLeftSideVector(row, 0), mLeftSideVector(row + mCompOffset, 0)); }
-		Solver::Domain getDomain() const { return mDomain; }
+		SimulationType getDomain() const { return mDomain; }
 		Int getNumNodes() const { return mNumNodes; }
 		Int getNumIdealVS() const { return mNumIdealVS; }
 		NumericalMethod getNumMethod() const { return mNumMethod; }
