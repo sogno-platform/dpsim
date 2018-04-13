@@ -43,8 +43,6 @@ build:win32:
   artifacts:
     paths:
       - build
-  allow_failure: true
-  when: manual
   tags:
     - windows
 
