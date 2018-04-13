@@ -29,6 +29,8 @@
 #include "cps/Interfaces/ExternalInterface.h"
 #include "cps/SystemTopology.h"
 
+using namespace CPS;
+
 namespace DPsim {
 	/// Ground node
 	const Int GND = -1;
