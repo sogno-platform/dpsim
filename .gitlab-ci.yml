@@ -4,7 +4,7 @@ variables:
   DOCKER_IMAGE_DEV: dpsim-dev
 
 before_script:
-  - git config --system core.longpaths true
+  - git config --local core.longpaths true
   - git submodule sync --recursive
   - git submodule update --init --recursive
 
@@ -23,7 +23,7 @@ docker:
   tags:
     - shell
 
-build:code:
+build:linux:
   stage: pre-build
   script:
     - mkdir build
@@ -37,16 +37,13 @@ build:code:
   tags:
     - docker
 
-build:win32:
+build:windows:
   stage: pre-build
   script:
     - mkdir build
     - cd build
     - cmake -G "Visual Studio 15 2017 Win64" ..
     - cmake --build .
-  artifacts:
-    paths:
-      - build
   tags:
     - windows
 
@@ -57,7 +54,7 @@ build:docs:
     - make -C build docs_cxx
   image: ${DOCKER_IMAGE_DEV}:${DOCKER_TAG_DEV}
   dependencies:
-    - build:code
+    - build:linux
   artifacts:
     paths:
       - build/Documentation/html
@@ -75,7 +72,7 @@ build:packages:
     - docker
   image: ${DOCKER_IMAGE_DEV}:${DOCKER_TAG_DEV}
   dependencies:
-    - build:code
+    - build:linux
   artifacts:
     paths:
       - build/*.rpm
@@ -88,7 +85,7 @@ test:pytest:
     - pytest -v
   image: ${DOCKER_IMAGE_DEV}:${DOCKER_TAG_DEV}
   dependencies:
-    - build:code
+    - build:linux
   artifacts:
     paths:
       - Logs/
