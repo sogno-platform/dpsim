@@ -3,6 +3,7 @@ project(DPsim CXX)
 
 # Enable C++11 support
 set(CMAKE_CXX_STANDARD 17)
+add_definitions(-D_SILENCE_ALL_CXX17_DEPRECATION_WARNINGS)
 
 set(CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/CMake")
 
