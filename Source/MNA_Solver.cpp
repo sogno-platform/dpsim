@@ -56,9 +56,9 @@ MnaSolver::MnaSolver(String name, SystemTopology system,
 		mLog.Log(Logger::Level::INFO) << "Added " << comp->getType() << " '" << comp->getName() << "' to simulation." << std::endl;
 
 	mLog.Log(Logger::Level::INFO) << "System matrix:" << std::endl;
-	mLog.LogMatrix(Logger::Level::INFO, mSystemMatrices[mSystemIndex]);
+	mLog.LogMatrix(Logger::Level::INFO, mSystemMatrices[0]);
 	mLog.Log(Logger::Level::INFO) << "LU decomposition:" << std::endl;
-	mLog.LogMatrix(Logger::Level::INFO, mLuFactorizations[mSystemIndex].matrixLU());
+	mLog.LogMatrix(Logger::Level::INFO, mLuFactorizations[0].matrixLU());
 	mLog.Log(Logger::Level::INFO) << "Right side vector:" << std::endl;
 	mLog.LogMatrix(Logger::Level::INFO, mRightSideVector);
 }
@@ -71,7 +71,7 @@ void MnaSolver::initialize(SystemTopology system) {
 	// TODO we use the values from the first component vector right now and assume that
 	// these values don't change on switches
 	Int maxNode = 0;
-	for (auto comp : mSystemTopologies[mSystemIndex].mComponents) {
+	for (auto comp : mSystemTopologies[0].mComponents) {
 		// determine maximum node in component list
 		if (comp->getNode1() > maxNode)
 			maxNode = comp->getNode1();
@@ -82,10 +82,10 @@ void MnaSolver::initialize(SystemTopology system) {
 	if (mSystemTopologies[0].mNodes.size() == 0) {
 		// Create Nodes for all node indices
 		mSystemTopologies[0].mNodes.resize(maxNode + 1, nullptr);
-		for (int node = 0; node <= mSystemTopologies[0].mNodes.size(); node++)
+		for (int node = 0; node < mSystemTopologies[0].mNodes.size(); node++)
 			mSystemTopologies[0].mNodes[node] = std::make_shared<Node>(node);
 
-		assignNodesToComponents(mSystemTopologies[mSystemIndex].mComponents);
+		assignNodesToComponents(mSystemTopologies[0].mComponents);
 	}
 
 	mLog.Log(Logger::Level::INFO) << "Maximum node number: " << maxNode << std::endl;
@@ -94,7 +94,7 @@ void MnaSolver::initialize(SystemTopology system) {
 	mNumRealNodes = maxNode + 1;
 
 	// Check if component requires virtual node and if so set one
-	for (auto comp : mSystemTopologies[mSystemIndex].mComponents) {
+	for (auto comp : mSystemTopologies[0].mComponents) {
 		if (comp->hasVirtualNodes()) {
 			for (Int node = 0; node < comp->getVirtualNodesNum(); node++) {
 				virtualNode++;
@@ -114,34 +114,34 @@ void MnaSolver::initialize(SystemTopology system) {
 	createEmptySystemMatrix();
 
 	mLog.Log(Logger::Level::INFO) << "Initialize power flow" << std::endl;
-	for (auto comp : mSystemTopologies[mSystemIndex].mComponents)
-		comp->initializePowerflow(mSystemTopologies[mSystemIndex].mSystemFrequency);
+	for (auto comp : mSystemTopologies[0].mComponents)
+		comp->initializePowerflow(mSystemTopologies[0].mSystemFrequency);
 
 	if (mSteadyStateInit && mDomain == Solver::Domain::DP) {
 		steadyStateInitialization();
 	}
 
 	// Initialize right side vector and components
-	for (auto comp : mSystemTopologies[mSystemIndex].mComponents) {
-		comp->mnaInitialize(mSystemTopologies[mSystemIndex].mSystemOmega, mTimeStep);
+	for (auto comp : mSystemTopologies[0].mComponents) {
+		comp->mnaInitialize(mSystemTopologies[0].mSystemOmega, mTimeStep);
 		comp->mnaApplyRightSideVectorStamp(mRightSideVector);
-		comp->mnaApplySystemMatrixStamp(mSystemMatrices[mSystemIndex]);
+		comp->mnaApplySystemMatrixStamp(mSystemMatrices[0]);
 	}
 	// Compute LU-factorization for system matrix
-	mLuFactorizations.push_back(Eigen::PartialPivLU<Matrix>(mSystemMatrices[mSystemIndex]));
+	mLuFactorizations.push_back(Eigen::PartialPivLU<Matrix>(mSystemMatrices[0]));
 
 }
 
 void MnaSolver::steadyStateInitialization() {
 	// Initialize right side vector and components
-	for (auto comp : mSystemTopologies[mSystemIndex].mComponents) {
-		comp->mnaInitialize(mSystemTopologies[mSystemIndex].mSystemOmega, mTimeStep);
+	for (auto comp : mSystemTopologies[0].mComponents) {
+		comp->mnaInitialize(mSystemTopologies[0].mSystemOmega, mTimeStep);
 		comp->mnaApplyRightSideVectorStamp(mRightSideVector);
-		comp->mnaApplySystemMatrixStamp(mSystemMatrices[mSystemIndex]);
-		comp->mnaApplyInitialSystemMatrixStamp(mSystemMatrices[mSystemIndex]);
+		comp->mnaApplySystemMatrixStamp(mSystemMatrices[0]);
+		comp->mnaApplyInitialSystemMatrixStamp(mSystemMatrices[0]);
 	}
 	// Compute LU-factorization for system matrix
-	mLuFactorizations.push_back(Eigen::PartialPivLU<Matrix>(mSystemMatrices[mSystemIndex]));
+	mLuFactorizations.push_back(Eigen::PartialPivLU<Matrix>(mSystemMatrices[0]));
 
 	mLog.Log(Logger::Level::INFO) << "Start initialization." << std::endl;
 	Matrix prevLeftSideVector = Matrix::Zero(2 * mNumNodes, 1);
