@@ -27,12 +27,10 @@ using namespace CPS::Components::DP;
 
 int main(int argc, char* argv[]) {
 	// Define system topology
-	SystemTopology system0(50);
-	system0.mComponents = {
+	SystemTopology system0(50, {
 		VoltageSourceNorton::make("v_s", 0, GND, Complex(10000, 0), 1),
 		Resistor::make("r_line", 0, 1, 1),
-		Inductor::make("l_line", 1, 2, 1)
-	};
+		Inductor::make("l_line", 1, 2, 1)});
 
 	SystemTopology system1 = system0;
 	SystemTopology system2 = system0;

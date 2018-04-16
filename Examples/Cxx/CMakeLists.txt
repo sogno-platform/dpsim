@@ -15,7 +15,7 @@ set(CIRCUIT_SOURCES
 	Circuits/DP_IdealVS_RXLine_1.cpp
 	Circuits/DP_IdealVS_Trafo_1.cpp
 	Circuits/DP_ResVS_RL_Switch_1.cpp
-#	Circuits/EMT_IdealVS_R_1.cpp
+	Circuits/EMT_IdealVS_R_1.cpp
 	Circuits/EMT_ResVS_RL_Switch_1.cpp
 )
 
