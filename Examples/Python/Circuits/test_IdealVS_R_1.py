@@ -13,7 +13,7 @@ def test_IdealVS_R_1():
             dp.Resistor("r_1", 0, -1, 1)
         ])
         
-    sim = dpsim.Simulation('IdealVS_R_1', system,duration=0.2, timestep=0.00005)
+    sim = dpsim.Simulation('IdealVS_R_1', system, duration=0.2, timestep=0.00005)
 
     sim.run()
 

@@ -7,17 +7,16 @@ import dataprocessing.timeseries as ts
 PATH = os.path.dirname(__file__)
 
 def test_IdealVS_RLC_1():
-    sim = dpsim.Simulation('IdealVS_RLC_1',
-            [
-                dp.VoltageSource("v_1", -1, 0, 10),
-                dp.Resistor("r_1", 0, 1, 1),
-                dp.Capacitor("c_1", 1, 2, 0.001),
-                dp.Inductor("l_1", 2, -1, 0.001),
-                dp.Resistor("r_2", 2, -1, 1)
-            ],
-            duration=0.2,
-            timestep=0.00005
-    )
+    system = dpsim.SystemTopology(50, 
+        [
+            dp.VoltageSource("v_1", -1, 0, 10),
+            dp.Resistor("r_1", 0, 1, 1),
+            dp.Capacitor("c_1", 1, 2, 0.001),
+            dp.Inductor("l_1", 2, -1, 0.001),
+            dp.Resistor("r_2", 2, -1, 1)
+        ])
+
+    sim = dpsim.Simulation('IdealVS_RLC_1', system, duration=0.2, timestep=0.00005)
 
     sim.run()
 

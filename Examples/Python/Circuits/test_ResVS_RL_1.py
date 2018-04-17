@@ -7,17 +7,16 @@ import dataprocessing.timeseries as ts
 PATH = os.path.dirname(__file__)
 
 def test_ResVS_RL_1():
-    sim = dpsim.Simulation('ResVS_RL_1',
-            [
-                dp.VoltageSourceNorton("v_1", -1, 0, 10, 1),
-                dp.Inductor("l_1", 0, 1, 0.02),
-                dp.Inductor("l_2", 1, -1, 0.1),
-                dp.Inductor("l_3", 1, 2, 0.05),
-                dp.Resistor("r_1", 2, -1, 2)
-            ],
-            duration=0.2,
-            timestep=0.00005
-    )
+    system = dpsim.SystemTopology(50, 
+        [
+            dp.VoltageSourceNorton("v_1", -1, 0, 10, 1),
+            dp.Inductor("l_1", 0, 1, 0.02),
+            dp.Inductor("l_2", 1, -1, 0.1),
+            dp.Inductor("l_3", 1, 2, 0.05),
+            dp.Resistor("r_1", 2, -1, 2)
+        ])
+
+    sim = dpsim.Simulation('ResVS_RL_1', system, duration=0.2, timestep=0.00005)
 
     sim.run()
 

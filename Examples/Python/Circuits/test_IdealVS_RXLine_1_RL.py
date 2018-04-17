@@ -7,16 +7,15 @@ import dataprocessing.timeseries as ts
 PATH = os.path.dirname(__file__)
 
 def test_IdealVS_RXLine_1_RL():
-    sim = dpsim.Simulation('IdealVS_RXLine_1_RL',
-            [
-                dp.VoltageSource("v_1", -1, 0, 10),
-                dp.Inductor("l_L", 1, 2, 0.001),
-                dp.Resistor("r_L", 0, 1, 0.1),
-                dp.Resistor("r_1", 2, -1, 20)
-            ],
-            duration=0.2,
-            timestep=0.00005
-    )
+    system = dpsim.SystemTopology(50, 
+        [
+            dp.VoltageSource("v_1", -1, 0, 10),
+            dp.Inductor("l_L", 1, 2, 0.001),
+            dp.Resistor("r_L", 0, 1, 0.1),
+            dp.Resistor("r_1", 2, -1, 20)
+        ])
+
+    sim = dpsim.Simulation('IdealVS_RXLine_1_RL', system, duration=0.2, timestep=0.00005)
 
     sim.run()
 
