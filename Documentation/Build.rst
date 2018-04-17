@@ -95,7 +95,7 @@ Generate a Visual Studio project with CMake and use it to build the project:
 
 2. Enter the folder and run cmake::
 
-    cmake "Visual Studio 15 2017 Win64" ..
+    cmake -G "Visual Studio 15 2017 Win64" ..
 
 3. Now you can either open the project in VS and build it or execute::
 
