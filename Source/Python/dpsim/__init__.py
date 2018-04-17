@@ -13,6 +13,7 @@ __status__ = "Beta"
 
 from _dpsim import Component
 from _dpsim import Interface
+from _dpsim import SystemTopology
 
 from _dpsim import load_cim
 from _dpsim import open_shmem_interface
