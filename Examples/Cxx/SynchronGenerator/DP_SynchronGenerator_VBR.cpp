@@ -62,7 +62,8 @@ int main(int argc, char* argv[])
 	Component::Ptr r2 = Resistor::make("r2", 1, GND, loadRes);
 	Component::Ptr r3 = Resistor::make("r3", 2, GND, loadRes);
 
-	Component::List comps = { gen, r1, r2, r3 };
+	SystemTopology system(60);
+	system.mComponents = { gen, r1, r2, r3 };
 
 	// Declare circuit components for resistance change
 	Real breakerRes = 0.001;
@@ -70,17 +71,17 @@ int main(int argc, char* argv[])
 	Component::Ptr rBreaker2 = Resistor::make("rbreak2", 1, GND, breakerRes);
 	Component::Ptr rBreaker3 = Resistor::make("rbreak3", 2, GND, breakerRes);
 
-	Component::List compsBreakerOn = { gen, rBreaker1, rBreaker2, rBreaker3, r1, r2, r3 };
+	SystemTopology systemBreakerOn(60);
+	systemBreakerOn.mComponents = { gen, rBreaker1, rBreaker2, rBreaker3, r1, r2, r3 };
 
 	// Set up simulation
 	Real tf, dt, t;
 	Real om = 2.0*M_PI*60.0;
 	tf = 0.3; dt = 0.00001; t = 0;
 	Int downSampling = 1;
-	SynGenSimulation sim("DP_SynchronGenerator_VBR", comps, om, dt, tf, Logger::Level::INFO, SimulationType::DP, downSampling);
-	sim.setNumericalMethod(NumericalMethod::Trapezoidal_flux);
-	sim.addSystemTopology(compsBreakerOn);
-	sim.switchSystemMatrix(0);
+	Simulation sim("DP_SynchronGenerator_VBR", system, dt, tf);
+	sim.setLogDownsamplingRate(downSampling);
+	sim.addSystemTopology(systemBreakerOn);
 
 	// Initialize generator
 	Real initActivePower = 300e6;

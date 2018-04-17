@@ -123,7 +123,7 @@ int main(int argc, char* argv[])
 	Component::Ptr Res22 = Resistor::make("Res22", 7, 13, Res);
 	Component::Ptr Res32 = Resistor::make("Res32", 8, 14, Res);
 
-	SystemTopology system(50);
+	SystemTopology system(60);
 	system.mComponents = { gen, gen2, LineR1, LineR2, LineR3, LineL1, LineL2, LineL3, r1, r2, r3, Res1, Res2, Res3, LineR12, LineR22, LineR32, LineL12, LineL22, LineL32, Res12, Res22, Res32 };
 
 	// Declare circuit components for resistance change
@@ -141,7 +141,7 @@ int main(int argc, char* argv[])
 	Real om = 2.0*M_PI*60.0;
 	tf = 0.30000; dt = 0.00005; t = 0;
 	Int downSampling = 1;
-	SynGenSimulation sim("EMT_SynchronGenerator_VBR", system, dt, tf,
+	Simulation sim("EMT_SynchronGenerator_VBR", system, dt, tf,
 		Solver::Domain::EMT, Solver::Type::MNA, Logger::Level::INFO);
 	sim.setLogDownsamplingRate(downSampling);
 	sim.addSystemTopology(systemBreakerOn);

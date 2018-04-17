@@ -66,7 +66,7 @@ int main(int argc, char* argv[])
 
 
 		// Declare circuit components
-		SystemTopology system(50);
+		SystemTopology system(60);
 		
 		Component::Ptr gen = SynchronGeneratorSimplified::make("gen", 0, 1, 2,
 			nomPower, nomPhPhVoltRMS, nomFreq, poleNum, nomFieldCurr,
@@ -87,11 +87,10 @@ int main(int argc, char* argv[])
 		Component::Ptr rBreaker3 = Resistor::make("rbreak3", 2, GND, breakerRes);
 
 		// Breakers on
-		SystemTopology systemBreakerOn(50);
+		SystemTopology systemBreakerOn(60);
 		systemBreakerOn.mComponents = { gen, rBreaker1, rBreaker2, rBreaker3, r1, r2, r3 };
 		Simulation sim(simName, system, dt, tf,
 			Solver::Domain::DP, Solver::Type::MNA, Logger::Level::INFO);
-
 		sim.setLogDownsamplingRate(downSampling);		
 		sim.addSystemTopology(systemBreakerOn);
 

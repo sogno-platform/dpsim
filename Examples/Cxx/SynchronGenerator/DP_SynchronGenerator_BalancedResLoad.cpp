@@ -25,8 +25,7 @@
 using namespace DPsim;
 using namespace CPS::Components::DP;
 
-int main(int argc, char* argv[])
-{
+int main(int argc, char* argv[]) {
 	// Define machine parameters in per unit
 	Real nomPower = 555e6;
 	Real nomPhPhVoltRMS = 24e3;
@@ -72,7 +71,7 @@ int main(int argc, char* argv[])
 	Component::Ptr r2 = Resistor::make("r2", 1, GND, loadRes);
 	Component::Ptr r3 = Resistor::make("r3", 2, GND, loadRes);
 
-	SystemTopology system(50);
+	SystemTopology system(60);
 	system.mComponents = { gen, r1, r2, r3 };
 
 	Simulation sim("DP_SynchronGenerator_BalancedResLoad", system, dt, tf, Solver::Domain::DP, Solver::Type::MNA, Logger::Level::INFO);

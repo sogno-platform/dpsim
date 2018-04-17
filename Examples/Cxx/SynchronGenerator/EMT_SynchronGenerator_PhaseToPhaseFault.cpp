@@ -71,17 +71,19 @@ int main(int argc, char* argv[])
 	Component::Ptr r2 = Resistor::make("r2", 1, GND, loadRes);
 	Component::Ptr r3 = Resistor::make("r3", 2, GND, loadRes);
 
-	Component::List comps = { gen, r1, r2, r3 };
+	SystemTopology system(60);
+	system.mComponents = { gen, r1, r2, r3 };
 
 	// Declare circuit components for resistance change
 	Real breakerRes = 0.01;
 	Component::Ptr rBreaker = Resistor::make("rbreak", 0, 1, breakerRes);
 
-	Component::List compsBreakerOn = { rBreaker, r1, r2, r3 };
+	SystemTopology systemBreakerOn(60);
+	systemBreakerOn.mComponents = { rBreaker, r1, r2, r3 };
 
 
-	Simulation sim("EMT_SynchronGenerator_PhaseToPhaseFault", comps, om, dt, tf, Logger::Level::INFO, SimulationType::EMT, downSampling);
-	sim.addSystemTopology(compsBreakerOn);
+	Simulation sim("EMT_SynchronGenerator_PhaseToPhaseFault", system, dt, tf, Solver::Domain::EMT);
+	sim.addSystemTopology(systemBreakerOn);
 
 	// Initialize generator
 	Real initActivePower = 555e3;
