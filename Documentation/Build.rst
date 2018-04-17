@@ -82,7 +82,9 @@ CMake - Windows
 
 Prerequisites
 ~~~~~~~~~~~~~
+
 First, install:
+
 - Visual Studio 2017 and the C++ Desktop development package
 - CMake
 
