@@ -26,8 +26,6 @@
 #include "cps/Python/Interface.h"
 #include "cps/Python/Component.h"
 
-#include "../SystemModel.h"
-
 #include <cfloat>
 #include <iostream>
 

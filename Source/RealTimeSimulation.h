@@ -56,7 +56,7 @@ namespace DPsim {
 		void stopTimer();
 
 	public:
-		RealTimeSimulation(String name, Component::List comps, Real om, Real dt, Real tf, Logger::Level logLevel = Logger::Level::INFO, SimulationType domain = SimulationType::DP, Int downSampleRate = 1);
+		RealTimeSimulation(String name, SystemTopology system, Real timeStep, Real finalTime, Solver::Domain domain = Solver::Domain::DP, Solver::Type type = Solver::Type::MNA, Logger::Level logLevel = Logger::Level::INFO);
 		~RealTimeSimulation();
 
 		/* Perform the main simulation loop in real time.
