@@ -29,9 +29,10 @@
 using namespace CPS;
 using namespace DPsim;
 
-RealTimeSimulation::RealTimeSimulation(String name, Component::List comps, Real om, Real dt, Real tf, Logger::Level logLevel, SimulationType domain, Int downSampleRate)
-	: Simulation(name, comps, om, dt, tf, logLevel, domain, downSampleRate)
-{
+RealTimeSimulation(String name, SystemTopology system, Real timeStep, Real finalTime, 
+		Solver::Domain domain, Solver::Type type, 
+		Logger::Level logLevel);
+	: Simulation(name, system, timeStep, finalTime, domain, downSampleRate, logLevel) {
 #ifdef RTMETHOD_TIMERFD
 	mTimerFd = timerfd_create(CLOCK_MONOTONIC, 0);
 	if (mTimerFd < 0) {
