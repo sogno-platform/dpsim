@@ -56,7 +56,8 @@ if(WITH_SHMEM)
 #		Shmem/ShmemExample.cpp
 #		Shmem/ShmemDistributedReference.cpp
 #		Shmem/ShmemDistributedVillas.cpp
-#		Shmem/ShmemDistributedDirect.cpp
+		Shmem/ShmemDistributedDirect.cpp
+		Shmem/ShmemControllableSource.cpp
 #		Shmem/ShmemRealTime.cpp
 	)
 endif()
