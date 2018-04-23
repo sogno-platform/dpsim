@@ -40,7 +40,7 @@ int main(int argc, char *argv[]) {
 
 	auto ecs = CurrentSource::make("v_intf", GND, 0, Complex(100, 0));
 
-	Component<Complex>::List comps = {		
+	ComponentBase::List comps = {		
 		Resistor::make("r_1", GND, 0, 1),
 		ecs
 	};

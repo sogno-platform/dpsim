@@ -61,7 +61,7 @@ int main(int argc, char *argv[]) {
 	if (String(argv[1]) == "0") {
 		auto evs = VoltageSource::make("v_intf", GND, 1, Complex(0, 0));
 
-		Component<Complex>::List comps = {
+		ComponentBase::List comps = {
 			VoltageSourceNorton::make("v_s", GND, 0, Complex(1000, 0), 1),
 			Resistor::make("r_0_1", 0, 1, 1),
 			Resistor::make("r_1_gnd", 1, GND, 1),
@@ -81,7 +81,7 @@ int main(int argc, char *argv[]) {
 		auto ecs = CurrentSource::make("i_intf", GND, 0, Complex(0, 0));
 		//auto ecs_switch = CurrentSource::make("i_switch", GND, 1, Complex(0, 0));
 
-		Component<Complex>::List comps = {
+		ComponentBase::List comps = {
 			Resistor::make("r_gnd_0", GND, 0, 1),
 			Resistor::make("r_0_1", 0, 1, 1),			
 			ecs
