@@ -165,7 +165,7 @@ void MnaSolver::steadyStateInitialization() {
 	createEmptySystemMatrix();
 }
 
-void MnaSolver::assignNodesToComponents(Component<Complex>::List components) {
+void MnaSolver::assignNodesToComponents(ComponentBase::List components) {
 	for (auto comp : components) {
 		// Do not reassign nodes or change them
 		if (comp->getNodeNum() > 0) {
@@ -228,7 +228,7 @@ void MnaSolver::solve()  {
 void MnaSolver::step(bool blocking) {
 	mRightSideVector.setZero();
 
-	for (auto eif : mExternalInterfaces) {
+	for (auto eif : mInterfaces) {
 		eif->readValues(blocking);
 	}
 
@@ -246,7 +246,7 @@ void MnaSolver::step(bool blocking) {
 		mSystemTopologies[0].mNodes[nodeIdx]->mnaUpdateVoltages(mLeftSideVector);
 	}
 
-	for (auto eif : mExternalInterfaces) {
+	for (auto eif : mInterfaces) {
 		eif->writeValues();
 	}
 

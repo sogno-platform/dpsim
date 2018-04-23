@@ -73,12 +73,12 @@ int main(int argc, char* argv[])
 	Real Kg = 20;
 
 	// Declare circuit components
-	Component<Complex>::Ptr gen = SynchronGeneratorVBRNew::make("gen", 0, 1, 2,
+	ComponentBase::Ptr gen = SynchronGeneratorVBRNew::make("gen", 0, 1, 2,
 			nomPower, nomPhPhVoltRMS, nomFreq, poleNum, nomFieldCurr,
 			Rs, Ll, Lmd, Lmd0, Lmq, Lmq0, Rfd, Llfd, Rkd, Llkd, Rkq1, Llkq1, Rkq2, Llkq2, H, Logger::Level::INFO);
 
 	// Declare circuit components
-	Component<Complex>::Ptr gen2 = SynchronGeneratorVBRNew::make("gen2", 12, 13, 14,
+	ComponentBase::Ptr gen2 = SynchronGeneratorVBRNew::make("gen2", 12, 13, 14,
 			nomPower, nomPhPhVoltRMS, nomFreq, poleNum, nomFieldCurr,
 			Rs, Ll, Lmd, Lmd0, Lmq, Lmq0, Rfd, Llfd, Rkd, Llkd, Rkq1, Llkq1, Rkq2, Llkq2, H, Logger::Level::INFO);
 
@@ -88,51 +88,51 @@ int main(int argc, char* argv[])
 	Real Res = 1e6;
 
 	//Line Resistance
-	Component<Complex>::Ptr LineR1 = Resistor::make("LineR1", 0, 3, lineRes);
-	Component<Complex>::Ptr LineR2 = Resistor::make("LineR2", 1, 4, lineRes);
-	Component<Complex>::Ptr LineR3 = Resistor::make("LineR3", 2, 5, lineRes);
+	ComponentBase::Ptr LineR1 = Resistor::make("LineR1", 0, 3, lineRes);
+	ComponentBase::Ptr LineR2 = Resistor::make("LineR2", 1, 4, lineRes);
+	ComponentBase::Ptr LineR3 = Resistor::make("LineR3", 2, 5, lineRes);
 
 	//Line Resistance
-	Component<Complex>::Ptr Res1 = Resistor::make("Res1", 0, 6, Res);
-	Component<Complex>::Ptr Res2 = Resistor::make("Res2", 1, 7, Res);
-	Component<Complex>::Ptr Res3 = Resistor::make("Res3", 2, 8, Res);
+	ComponentBase::Ptr Res1 = Resistor::make("Res1", 0, 6, Res);
+	ComponentBase::Ptr Res2 = Resistor::make("Res2", 1, 7, Res);
+	ComponentBase::Ptr Res3 = Resistor::make("Res3", 2, 8, Res);
 
 	//Line Inductance
-	Component<Complex>::Ptr LineL1 = Inductor::make("LineL1", 3, 6, lindeInd);
-	Component<Complex>::Ptr LineL2 = Inductor::make("LineL2", 4, 7, lindeInd);
-	Component<Complex>::Ptr LineL3 = Inductor::make("LineL3", 5, 8, lindeInd);
+	ComponentBase::Ptr LineL1 = Inductor::make("LineL1", 3, 6, lindeInd);
+	ComponentBase::Ptr LineL2 = Inductor::make("LineL2", 4, 7, lindeInd);
+	ComponentBase::Ptr LineL3 = Inductor::make("LineL3", 5, 8, lindeInd);
 
 	//Load
-	Component<Complex>::Ptr r1 = Resistor::make("r1", 6, GND, loadRes);
-	Component<Complex>::Ptr r2 = Resistor::make("r2", 7, GND, loadRes);
-	Component<Complex>::Ptr r3 = Resistor::make("r3", 8, GND, loadRes);
+	ComponentBase::Ptr r1 = Resistor::make("r1", 6, GND, loadRes);
+	ComponentBase::Ptr r2 = Resistor::make("r2", 7, GND, loadRes);
+	ComponentBase::Ptr r3 = Resistor::make("r3", 8, GND, loadRes);
 
 	//Line Inductance2
-	Component<Complex>::Ptr LineL12 = Inductor::make("LineL12", 6, 9, lindeInd);
-	Component<Complex>::Ptr LineL22 = Inductor::make("LineL22", 7, 10, lindeInd);
-	Component<Complex>::Ptr LineL32 = Inductor::make("LineL32", 8, 11, lindeInd);
+	ComponentBase::Ptr LineL12 = Inductor::make("LineL12", 6, 9, lindeInd);
+	ComponentBase::Ptr LineL22 = Inductor::make("LineL22", 7, 10, lindeInd);
+	ComponentBase::Ptr LineL32 = Inductor::make("LineL32", 8, 11, lindeInd);
 
 	//Line Resistance2
-	Component<Complex>::Ptr LineR12 = Resistor::make("LineR12", 9, 12, lineRes);
-	Component<Complex>::Ptr LineR22 = Resistor::make("LineR22", 10, 13, lineRes);
-	Component<Complex>::Ptr LineR32 = Resistor::make("LineR32", 11, 14, lineRes);
+	ComponentBase::Ptr LineR12 = Resistor::make("LineR12", 9, 12, lineRes);
+	ComponentBase::Ptr LineR22 = Resistor::make("LineR22", 10, 13, lineRes);
+	ComponentBase::Ptr LineR32 = Resistor::make("LineR32", 11, 14, lineRes);
 
 	//Line Resistance
-	Component<Complex>::Ptr Res12 = Resistor::make("Res12", 6, 12, Res);
-	Component<Complex>::Ptr Res22 = Resistor::make("Res22", 7, 13, Res);
-	Component<Complex>::Ptr Res32 = Resistor::make("Res32", 8, 14, Res);
+	ComponentBase::Ptr Res12 = Resistor::make("Res12", 6, 12, Res);
+	ComponentBase::Ptr Res22 = Resistor::make("Res22", 7, 13, Res);
+	ComponentBase::Ptr Res32 = Resistor::make("Res32", 8, 14, Res);
 
 	SystemTopology system(60);
 	system.mComponents = { gen, gen2, LineR1, LineR2, LineR3, LineL1, LineL2, LineL3, r1, r2, r3, Res1, Res2, Res3, LineR12, LineR22, LineR32, LineL12, LineL22, LineL32, Res12, Res22, Res32 };
 
 	// Declare circuit components for resistance change
 	Real breakerRes = 24e3*24e3 / 600e6;
-	Component<Complex>::Ptr rBreaker1 = Resistor::make("rbreak1", 6, GND, breakerRes);
-	Component<Complex>::Ptr rBreaker2 = Resistor::make("rbreak2", 7, GND, breakerRes);
-	Component<Complex>::Ptr rBreaker3 = Resistor::make("rbreak3", 8, GND, breakerRes);
+	ComponentBase::Ptr rBreaker1 = Resistor::make("rbreak1", 6, GND, breakerRes);
+	ComponentBase::Ptr rBreaker2 = Resistor::make("rbreak2", 7, GND, breakerRes);
+	ComponentBase::Ptr rBreaker3 = Resistor::make("rbreak3", 8, GND, breakerRes);
 
 	SystemTopology systemBreakerOn(50);
-	//Component::List compsBreakerOn = { gen, rBreaker1, rBreaker2, rBreaker3, r1, r2, r3 };
+	//PowerComponent::List compsBreakerOn = { gen, rBreaker1, rBreaker2, rBreaker3, r1, r2, r3 };
 	systemBreakerOn.mComponents = { gen, gen2, rBreaker1, rBreaker2, rBreaker3, LineR1, LineR2, LineR3, LineL1, LineL2, LineL3, r1, r2, r3, Res1, Res2, Res3, LineR12, LineR22, LineR32, LineL12, LineL22, LineL32, Res12, Res22, Res32 };
 
 	// Set up simulation
