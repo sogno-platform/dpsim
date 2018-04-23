@@ -45,7 +45,7 @@ int main(int argc, char* argv[])
 
 	Real timeStep = 0.001;
 	Simulation sim("ShmemExample", comps, 2.0*M_PI*50.0, timeStep, 0.3, Logger::Level::INFO);
-	sim.addExternalInterface(&villas);
+	sim.addInterface(&villas);
 
 	sim.run();
 

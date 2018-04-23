@@ -85,7 +85,7 @@ int main(int argc, char *argv[])
 	Real timeStep = 0.001000;
 
 	RealTimeSimulation sim(simName + argv[1], comps, 2.0*M_PI*50.0, timeStep, 20, Logger::Level::INFO);
-	sim.addExternalInterface(&shmem);
+	sim.addInterface(&shmem);
 
 	if (String(argv[1]) == "1") {
 		auto comps2 = comps;

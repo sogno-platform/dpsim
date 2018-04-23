@@ -49,7 +49,7 @@ int main(int argc, char* argv[])
 
 	Real timeStep = 0.001;
 	RealTimeSimulation sim("ShmemRealTime", comps, 2.0*M_PI*50.0, timeStep, 5.0);
-	sim.addExternalInterface(&villas);
+	sim.addInterface(&villas);
 	sim.run(false);
 
 	return 0;

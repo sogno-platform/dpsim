@@ -73,7 +73,7 @@ int main(int argc, char *argv[]) {
 
 		SystemTopology system(50, comps);		
 		Simulation sim("ShmemDistributedDirect_1", system, timeStep, 1);
-		sim.addExternalInterface(&shmem);
+		sim.addInterface(&shmem);
 
 		sim.run(false);
 	}
@@ -94,7 +94,7 @@ int main(int argc, char *argv[]) {
 		
 		SystemTopology system(50, comps);
 		Simulation sim("ShmemDistributedDirect_2", system, timeStep, 1);
-		sim.addExternalInterface(&shmem);
+		sim.addInterface(&shmem);
 
 		sim.run(false);
 	}
