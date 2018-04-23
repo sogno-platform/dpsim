@@ -31,8 +31,8 @@
 #include "cps/Component.h"
 #include "cps/Logger.h"
 #include "cps/SystemTopology.h"
-#include "cps/Interfaces/ExternalInterface.h"
 #include "cps/Node.h"
+#include "cps/Interface.h"
 
 using namespace CPS;
 
@@ -80,7 +80,7 @@ namespace DPsim {
 		///
 		void setSwitchTime(Real switchTime, Int systemIndex);
 		///
-		void addExternalInterface(ExternalInterface*);
+		void addInterface(Interface*);
 		///
 		void addSystemTopology(SystemTopology system);
 		///

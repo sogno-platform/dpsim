@@ -26,8 +26,8 @@
 #include <list>
 
 #include "cps/Logger.h"
-#include "cps/Interfaces/ExternalInterface.h"
 #include "cps/SystemTopology.h"
+#include "cps/Interface.h"
 
 using namespace CPS;
 
@@ -50,7 +50,7 @@ namespace DPsim {
 		/// Run simulation for \p duration seconds.
 		virtual void run(double duration) { }
 		///
-		virtual void addExternalInterface(ExternalInterface* eint) { }
+		virtual void addInterface(Interface* eint) { }
 		///
 		void addSystemTopology(SystemTopology system) { }
 		///

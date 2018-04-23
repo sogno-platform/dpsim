@@ -69,7 +69,7 @@ namespace Python {
 
 		// List of additional objects that aren't directly used from Simulation
 		// methods, but that a reference has be kept to to avoid them from being
-		// freed (e.g. ExternalInterfaces).
+		// freed (e.g. Interfaces).
 		std::vector<PyObject*> refs;
 
 		// Function executed by the simulation thread
