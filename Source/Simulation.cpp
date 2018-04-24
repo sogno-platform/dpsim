@@ -85,12 +85,12 @@ Simulation::Simulation(String name, std::list<String> cimFiles, Real frequency,
 }
 #endif
 
-void Simulation::run() {
+void Simulation::run(bool blocking) {
 	mLog.Log(Logger::Level::INFO) << "Start simulation." << std::endl;
 
 	while (mTime < mFinalTime) {
 		Real nextTime;
-		nextTime = mSolver->step(mTime);
+		nextTime = mSolver->step(mTime, blocking);
 		mSolver->log(mTime);
 		mTime = nextTime;
 		mTimeStepCount++;
@@ -99,14 +99,14 @@ void Simulation::run() {
 	mLog.Log(Logger::Level::INFO) << "Simulation finished." << std::endl;
 }
 
-void Simulation::run(double duration) {
+void Simulation::run(double duration, bool blocking) {
 	double started = mTime;
 
 	mLog.Log(Logger::Level::INFO) << "Run simulation for " << duration << " seconds." << std::endl;
 
 	while ((mTime - started) < duration) {
 		Real nextTime;
-		nextTime = mSolver->step(mTime);
+		nextTime = mSolver->step(mTime, blocking);
 		mSolver->log(mTime);
 		mTime = nextTime;
 		mTimeStepCount++;

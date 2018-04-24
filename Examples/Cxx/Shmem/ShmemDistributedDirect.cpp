@@ -59,44 +59,43 @@ int main(int argc, char *argv[]) {
 	Real timeStep = 0.000150;
 
 	if (String(argv[1]) == "0") {
-		auto evs = VoltageSource::make("v_intf", GND, 1, Complex(0, 0));
+		auto evs = VoltageSource::make("v_intf", GND, 1, Complex(5, 0), Logger::Level::DEBUG);
 
 		ComponentBase::List comps = {
-			VoltageSourceNorton::make("v_s", GND, 0, Complex(1000, 0), 1),
+			VoltageSource::make("vs_1", GND, 0, Complex(10, 0), Logger::Level::DEBUG),
 			Resistor::make("r_0_1", 0, 1, 1),
-			Resistor::make("r_1_gnd", 1, GND, 1),
 			evs
 		};
 
-		shmem.registerControllableAttribute(evs->findAttribute<Complex>("VoltageRef"), 0, 1);
-		shmem.registerExportedAttribute(evs->findAttribute<Complex>("CompCurrent"), 0, 1);
+		shmem.registerControllableAttribute(evs->findAttribute<Complex>("voltage_ref"), 0, 1);
+		shmem.registerExportedAttribute(evs->findAttribute<Complex>("comp_current"), 0, 1);
 
 		SystemTopology system(50, comps);
-		Simulation sim("ShmemDistributedDirect_1", system, timeStep, 1);
+		Simulation sim("ShmemDistributedDirect_1", system, timeStep, 0.1);
 		sim.addInterface(&shmem);
 
-		sim.run(false);
+		sim.run();
 	}
 	else if (String(argv[1]) == "1") {
-		auto ecs = CurrentSource::make("i_intf", GND, 0, Complex(0, 0));
+		auto ecs = CurrentSource::make("i_intf", GND, 0, Complex(5, 0), Logger::Level::DEBUG);
 		//auto ecs_switch = CurrentSource::make("i_switch", GND, 1, Complex(0, 0));
 
 		ComponentBase::List comps = {
 			Resistor::make("r_gnd_0", GND, 0, 1),
-			Resistor::make("r_0_1", 0, 1, 1),
+			//Resistor::make("r_0_1", 0, 1, 1),
 			ecs
 			//ecs_switch
 		};
 
-		shmem.registerControllableAttribute(ecs->findAttribute<Complex>("CurrentRef"), 0, 1);
-		shmem.registerExportedAttribute(ecs->findAttribute<Complex>("CompVoltage"), 0, 1);
+		shmem.registerControllableAttribute(ecs->findAttribute<Complex>("current_ref"), 0, 1);
+		shmem.registerExportedAttribute(ecs->findAttribute<Complex>("comp_voltage"), 0, 1);
 		//shmem.registerControllableAttribute(ecs_switch->findAttribute('CurrentRef'), 2, 3);
 
 		SystemTopology system(50, comps);
-		Simulation sim("ShmemDistributedDirect_2", system, timeStep, 1);
+		Simulation sim("ShmemDistributedDirect_2", system, timeStep, 0.1);
 		sim.addInterface(&shmem);
 
-		sim.run(false);
+		sim.run();
 	}
 	else {
 		std::cerr << "invalid test number" << std::endl;

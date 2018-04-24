@@ -27,13 +27,13 @@ using namespace CPS::Components::DP;
 int main(int argc, char* argv[]) {
 	// Define system topology
 	SystemTopology system(50, {
-		VoltageSource::make("v_1", GND, 0, Complex(10, 0), Logger::Level::DEBUG),
+		CurrentSource::make("i_1", GND, 0, Complex(10, 0), Logger::Level::DEBUG),
 		Resistor::make("r_1", 0, GND, 1)});
 
 	// Define simulation scenario
-	Real timeStep = 0.00005;
-	Real finalTime = 0.2;
-	String simName = "DP_IdealVS_R_1";
+	Real timeStep = 0.001;
+	Real finalTime = 0.1;
+	String simName = "DP_CS_R_1";
 
 	Simulation sim(simName, system, timeStep, finalTime);
 	sim.run();

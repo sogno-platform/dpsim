@@ -81,9 +81,9 @@ namespace DPsim {
 		virtual ~Simulation() { };
 
 		/// Run simulation until total time is elapsed.
-		void run();
+		void run(bool blocking = true);
 		/// Run simulation for \p duration seconds.
-		void run(double duration);
+		void run(double duration, bool blocking = true);
 		/// Solve system A * x = z for x and current time
 		Real step(bool blocking = true);
 
