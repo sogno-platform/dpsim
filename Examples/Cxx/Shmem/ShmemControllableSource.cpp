@@ -50,7 +50,7 @@ int main(int argc, char *argv[]) {
 
 	SystemTopology system(50, comps);		
 	Simulation sim("ShmemControllableSource", system, timeStep, 1);
-	sim.addExternalInterface(&shmem);
+	sim.addInterface(&shmem);
 
 	sim.run(false);
 	
