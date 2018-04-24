@@ -33,9 +33,6 @@ namespace DPsim {
 	/// Simulation class which uses Modified Nodal Analysis (MNA).
 	class MnaSolver : public Solver {
 	protected:
-		/// Simulation name
-		String mName;
-
 		// General simulation settings
 		/// Final time of the simulation
 		Real mFinalTime;
@@ -137,7 +134,6 @@ namespace DPsim {
 		void addSystemTopology(SystemTopology system);
 
 		// #### Getter ####
-		String getName() const { return mName; }
 		Real getTime() { return mTime; }
 		Real getFinalTime() { return mFinalTime; }
 		Real getTimeStep() { return mTimeStep; }

@@ -35,7 +35,6 @@ MnaSolver::MnaSolver(String name,
 	mLeftVectorLog("Logs/" + name + "_LeftVector.csv", logLevel),
 	mRightVectorLog("Logs/" + name + "_RightVector.csv", logLevel) {
 
-	mName = name;
 	mTimeStep = timeStep;
 	mFinalTime = finalTime;
 	mDomain = domain;
