@@ -1,6 +1,5 @@
 import os
-import dpsim
-from dpsim import Node
+import dpsim as dps
 import dpsim.components.dp as dp
 import dataprocessing.readtools as rt
 import dataprocessing.timeseries as ts
@@ -8,17 +7,18 @@ import dataprocessing.timeseries as ts
 PATH = os.path.dirname(__file__)
 
 def test_IdealVS_R_1():
-    nodes = [
-        Node("n0", 0)
-    ]
-    comps = [
-            dp.VoltageSource("v_1", Node.gnd(), nodes[0], 10),
-            dp.Resistor("r_1", nodes[0], Node.gnd(), 1)
-        ]
-    system = dpsim.SystemTopology(50, nodes, comps)
-        
-    sim = dpsim.Simulation('IdealVS_R_1', system, duration=0.2, timestep=0.00005)
+    # We first define list of nodes
+    gnd = dps.Node.GND()
+    n1  = dps.Node("n1")
 
+    # Then a list of components
+    v1 = dp.VoltageSource("v_1", [gnd, n1], 10)
+    r1 = dp.Resistor("r_1", [n1, gnd], 1)
+
+    # Finally a system topology
+    system = dps.SystemTopology(50, [gnd, n1], [v1, r1])
+
+    sim = dps.Simulation('IdealVS_R_1', system, duration=0.2, timestep=0.00005)
     sim.run()
 
     results = rt.read_timeseries_dpsim_cmpl('Logs/' + sim.name() + '_LeftVector.csv')
