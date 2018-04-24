@@ -54,18 +54,16 @@ void DPsim::Python::Simulation::simThreadFunction(Python::Simulation* pySim)
 
 void DPsim::Python::Simulation::simThreadFunctionNonRT(DPsim::Python::Simulation *pySim)
 {
-	bool notDone = true;
+	Real time, endTime;
 	std::unique_lock<std::mutex> lk(*pySim->mut, std::defer_lock);
 
+	endTime = pySim->sim->getFinalTime();
+
 	pySim->numStep = 0;
-	while (pySim->running && notDone) {
-// TODO
-//		notDone = pySim->sim->step();
+	while (pySim->running && time < endTime) {
+		time = pySim->sim->step();
 
 		pySim->numStep++;
-
-// TODO
-//		pySim->sim->increaseByTimeStep();
 
 		if (pySim->sigPause) {
 			lk.lock();
