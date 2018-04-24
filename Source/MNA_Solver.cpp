@@ -111,6 +111,7 @@ void MnaSolver::initialize(SystemTopology system) {
 	createEmptyVectors();
 	createEmptySystemMatrix();
 
+	// TODO: Move to base solver class
 	mLog.Log(Logger::Level::INFO) << "Initialize power flow" << std::endl;
 	for (auto comp : mSystemTopologies[0].mComponents)
 		comp->initializePowerflow(mSystemTopologies[0].mSystemFrequency);
@@ -130,6 +131,7 @@ void MnaSolver::initialize(SystemTopology system) {
 
 }
 
+// TODO: check if this works with AC sources
 void MnaSolver::steadyStateInitialization() {
 	Real time = 0;
 
