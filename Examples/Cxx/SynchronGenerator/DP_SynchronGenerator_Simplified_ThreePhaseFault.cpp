@@ -68,11 +68,11 @@ int main(int argc, char* argv[])
 		// Declare circuit components
 		SystemTopology system(60);
 		
-		ComponentBase::Ptr gen = SynchronGeneratorSimplified::make("gen", 0, 1, 2,
+		ComponentBase::Ptr gen = SynchronGeneratorDQSmpl::make("gen", 0, 1, 2,
 			nomPower, nomPhPhVoltRMS, nomFreq, poleNum, nomFieldCurr,
 			Rs, Ll, Lmd, Lmd0, Lmq, Lmq0, Rfd, Llfd,
 			Rkd, Llkd, Rkq1, Llkq1, Rkq2, Llkq2, H, Ra, Logger::Level::INFO);
-		auto genPtr = std::dynamic_pointer_cast<SynchronGeneratorSimplified>(gen);
+		auto genPtr = std::dynamic_pointer_cast<SynchronGeneratorDQSmpl>(gen);
 		
 		Real loadRes = 24e3*24e3 / 555e3;
 		ComponentBase::Ptr r1 = Resistor::make("r1", 0, GND, loadRes);

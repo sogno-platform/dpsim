@@ -65,7 +65,7 @@ int main(int argc, char* argv[])
 	Real Ra = (Ld_s + Lq_s) / dt;
 
 	// Declare circuit components
-	ComponentBase::Ptr gen = SynchronGenerator::make("gen", 0, 1, 2,
+	ComponentBase::Ptr gen = SynchronGeneratorDQ::make("gen", 0, 1, 2,
 		nomPower, nomPhPhVoltRMS, nomFreq, poleNum, nomFieldCurr,
 		Rs, Ll, Lmd, Lmd0, Lmq, Lmq0, Rfd, Llfd, Rkd, Llkd, Rkq1, Llkq1, Rkq2, Llkq2, H, Ra);
 	Real loadRes = 1037.8378;
@@ -76,7 +76,7 @@ int main(int argc, char* argv[])
 	SystemTopology system(50);
 	system.mComponents = { gen, r1, r2, r3 };
 
-	Simulation sim("EMT_SynchronGenerator_BalanceResLoad", system, dt, tf,
+	Simulation sim("EMT_SynchronGeneratorDQ_BalanceResLoad", system, dt, tf,
 		Solver::Domain::EMT, Solver::Type::MNA, Logger::Level::INFO);
 	sim.setLogDownsamplingRate(downSampling);
 
@@ -87,7 +87,7 @@ int main(int argc, char* argv[])
 	Real initVoltAngle = -DPS_PI / 2;
 	Real fieldVoltage = 7.0821;
 	Real mechPower = 5.5558e5;
-	auto genPtr = std::dynamic_pointer_cast<Components::EMT::SynchronGenerator>(gen);
+	auto genPtr = std::dynamic_pointer_cast<Components::EMT::SynchronGeneratorDQ>(gen);
 	genPtr->initialize(om, dt, initActivePower, initReactivePower, initTerminalVolt, initVoltAngle, fieldVoltage, mechPower);
 
 	// Calculate initial values for circuit at generator connection point
