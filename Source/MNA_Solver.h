@@ -108,7 +108,7 @@ namespace DPsim {
 		///
 		void solve();
 		///
-		void assignNodesToComponents(Component<Complex>::List components);
+		void assignNodesToComponents(ComponentBase::List components);
 		///
 		void steadyStateInitialization();
 	public:

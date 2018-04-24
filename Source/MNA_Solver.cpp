@@ -165,7 +165,7 @@ void MnaSolver::steadyStateInitialization() {
 	createEmptySystemMatrix();
 }
 
-void MnaSolver::assignNodesToComponents(Component<Complex>::List components) {
+void MnaSolver::assignNodesToComponents(ComponentBase::List components) {
 	for (auto comp : components) {
 		// Do not reassign nodes or change them
 		if (comp->getNodeNum() > 0) {
