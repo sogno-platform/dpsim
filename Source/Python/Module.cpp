@@ -45,10 +45,10 @@ static PyMethodDef dpsimModuleMethods[] = {
 	{ "open_shmem_interface",   (PyCFunction) CPS::Python::OpenShmemInterface, METH_VARARGS|METH_KEYWORDS, CPS::Python::DocOpenShmemInterface },
 
 	// Component constructors
-	{ "CurrentSourceDP",        CPS::Python::Components::CurrentSourceDP,                                                METH_VARARGS, CPS::Python::Components::DocCurrentSource },
-	{ "CurrentSourceEMT",       CPS::Python::Components::CurrentSourceEMT,                                               METH_VARARGS, CPS::Python::Components::DocCurrentSource },
-	{ "VoltageSourceDP",        CPS::Python::Components::VoltageSourceDP,                                                METH_VARARGS, CPS::Python::Components::DocVoltageSource },
-	{ "VoltageSourceEMT",       CPS::Python::Components::VoltageSourceEMT,                                               METH_VARARGS, CPS::Python::Components::DocVoltageSource },
+	{ "CurrentSourceDP",        CPS::Python::Components::CurrentSource<CPS::Components::DP::CurrentSource>,              METH_VARARGS, CPS::Python::Components::DocCurrentSource },
+	{ "CurrentSourceEMT",       CPS::Python::Components::CurrentSource<CPS::Components::EMT::CurrentSource>,             METH_VARARGS, CPS::Python::Components::DocCurrentSource },
+	{ "VoltageSourceDP",        CPS::Python::Components::VoltageSource<CPS::Components::DP::VoltageSource>,              METH_VARARGS, CPS::Python::Components::DocVoltageSource },
+	{ "VoltageSourceEMT",       CPS::Python::Components::VoltageSource<CPS::Components::EMT::VoltageSource>,             METH_VARARGS, CPS::Python::Components::DocVoltageSource },
 	{ "VoltageSourceNortonDP",  CPS::Python::Components::VoltageSourceNorton<CPS::Components::DP::VoltageSourceNorton>,  METH_VARARGS, CPS::Python::Components::DocVoltageSourceNorton },
 	{ "VoltageSourceNortonEMT", CPS::Python::Components::VoltageSourceNorton<CPS::Components::EMT::VoltageSourceNorton>, METH_VARARGS, CPS::Python::Components::DocVoltageSourceNorton },
 	{ "InductorDP",             CPS::Python::Components::Inductor<CPS::Components::DP::Inductor>,                        METH_VARARGS, CPS::Python::Components::DocInductor },
