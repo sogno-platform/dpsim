@@ -31,7 +31,7 @@ int main(int argc, char* argv[])
 
 	auto evs = VoltageSource::make("v_s", 1, 0, Complex(0, 0));
 
-	Component::List comps = {
+	ComponentBase::List comps = {
 		evs,
 		Resistor::make("r_s", 0, 1, 1),
 		Resistor::make("r_line", 1, 2, 1),

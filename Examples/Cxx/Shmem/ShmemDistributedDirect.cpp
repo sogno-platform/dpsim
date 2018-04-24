@@ -61,7 +61,7 @@ int main(int argc, char *argv[]) {
 	if (String(argv[1]) == "0") {
 		auto evs = VoltageSource::make("v_intf", GND, 1, Complex(0, 0));
 
-		Component<Complex>::List comps = {
+		ComponentBase::List comps = {
 			VoltageSourceNorton::make("v_s", GND, 0, Complex(1000, 0), 1),
 			Resistor::make("r_0_1", 0, 1, 1),
 			Resistor::make("r_1_gnd", 1, GND, 1),
@@ -71,7 +71,7 @@ int main(int argc, char *argv[]) {
 		shmem.registerControllableAttribute(evs->findAttribute<Complex>("VoltageRef"), 0, 1);
 		shmem.registerExportedAttribute(evs->findAttribute<Complex>("CompCurrent"), 0, 1);
 
-		SystemTopology system(50, comps);		
+		SystemTopology system(50, comps);
 		Simulation sim("ShmemDistributedDirect_1", system, timeStep, 1);
 		sim.addInterface(&shmem);
 
