@@ -100,7 +100,7 @@ namespace DPsim {
 		String getName() const { return mName; }
 		Real getTime() const { return mTime; }
 		Real getFinalTime() const { return mFinalTime; }
-		It getTimeStepCount() const { return mTimeStepCount; }
+		Int getTimeStepCount() const { return mTimeStepCount; }
 	};
 
 }
