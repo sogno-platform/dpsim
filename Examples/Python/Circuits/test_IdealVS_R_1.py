@@ -7,11 +7,14 @@ import dataprocessing.timeseries as ts
 PATH = os.path.dirname(__file__)
 
 def test_IdealVS_R_1():
-    system = dpsim.SystemTopology(50, 
-        [
-            dp.VoltageSource("v_1", -1, 0, 10),
-            dp.Resistor("r_1", 0, -1, 1)
-        ])
+    nodes = [
+        Node("n0", 0),
+    ]
+    comps = [
+            dp.VoltageSource("v_1", -1, nodes[0], 10),
+            dp.Resistor("r_1", nodes[0], -1, 1)
+        ]
+    system = dpsim.SystemTopology(50, nodes, comps)
         
     sim = dpsim.Simulation('IdealVS_R_1', system, duration=0.2, timestep=0.00005)
 
