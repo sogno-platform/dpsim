@@ -25,12 +25,12 @@ def test_invalid():
         x = c.doesnotexist
 
 def test_access():
-     with pytest.raises(AttributeError) as e_info:
-         c = dp.Capacitor('c1', 1, 1, 1.234);
+    with pytest.raises(AttributeError) as e_info:
+        c = dp.Capacitor('c1', 1, 1, 1.234);
 
-         # Current is a read-only property.
-         # This should throw a AttributeError exception!
-         c.current = 5
+        # Current is a read-only property.
+        # This should throw a AttributeError exception!
+        c.current = 5
 
 def test_type():
     with pytest.raises(TypeError) as e_info:
