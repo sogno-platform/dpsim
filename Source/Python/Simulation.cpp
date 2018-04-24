@@ -54,18 +54,16 @@ void DPsim::Python::Simulation::simThreadFunction(Python::Simulation* pySim)
 
 void DPsim::Python::Simulation::simThreadFunctionNonRT(DPsim::Python::Simulation *pySim)
 {
-	bool notDone = true;
+	Real time, endTime;
 	std::unique_lock<std::mutex> lk(*pySim->mut, std::defer_lock);
 
+	endTime = pySim->sim->getFinalTime();
+
 	pySim->numStep = 0;
-	while (pySim->running && notDone) {
-// TODO
-//		notDone = pySim->sim->step();
+	while (pySim->running && time < endTime) {
+		time = pySim->sim->step();
 
 		pySim->numStep++;
-
-// TODO
-//		pySim->sim->increaseByTimeStep();
 
 		if (pySim->sigPause) {
 			lk.lock();
@@ -316,16 +314,6 @@ PyObject*DPsim::Python::Simulation::lvector(PyObject *self, PyObject *args)
 }
 #endif
 
-static const char* DocSimulationName =
-"get_name()\n"
-"Return the of the simulation.";
-PyObject* DPsim::Python::Simulation::getName(PyObject *self, PyObject *args)
-{
-	Python::Simulation *pySim = (Python::Simulation*) self;
-
-	return PyUnicode_FromString(pySim->sim->getName().c_str());
-}
-
 static const char* DocSimulationPause =
 "pause()\n"
 "Pause the simulation at the next possible time (usually, after finishing the current timestep).\n"
@@ -475,10 +463,10 @@ PyObject* DPsim::Python::Simulation::wait(PyObject *self, PyObject *args)
 	return Py_None;
 }
 
-static const char* DocSimulationGetState =
-"get_state()\n"
-"Get current state of simulation.\n";
-PyObject* DPsim::Python::Simulation::getState(PyObject *self, PyObject *args)
+static char* DocSimulationGetState =
+"state\n"
+"The current state of simulation.\n";
+PyObject* DPsim::Python::Simulation::getState(PyObject *self, void *ctx)
 {
 	Python::Simulation* pySim = (Python::Simulation*) self;
 	std::unique_lock<std::mutex> lk(*pySim->mut);
@@ -486,10 +474,24 @@ PyObject* DPsim::Python::Simulation::getState(PyObject *self, PyObject *args)
 	return Py_BuildValue("i", pySim->state);
 }
 
+static char* DocSimulationGetName =
+"name\n"
+"The name of the simulation.";
+PyObject* DPsim::Python::Simulation::getName(PyObject *self, void *ctx)
+{
+	Python::Simulation *pySim = (Python::Simulation*) self;
+
+	return PyUnicode_FromString(pySim->sim->getName().c_str());
+}
+
+static PyGetSetDef Simulation_attrs[] = {
+	{"state", DPsim::Python::Simulation::getState, NULL, DocSimulationGetState, NULL},
+	{"name",  DPsim::Python::Simulation::getName, NULL, DocSimulationGetName, NULL},
+	{NULL, NULL, NULL, NULL, NULL}
+};
+
 static PyMethodDef Simulation_methods[] = {
 	{"add_interface",	DPsim::Python::Simulation::addInterface, METH_VARARGS, DocSimulationAddInterface},
-	{"get_state",           DPsim::Python::Simulation::getState, METH_NOARGS, DocSimulationGetState},
-	{"get_name",		DPsim::Python::Simulation::getName, METH_NOARGS, DocSimulationName},
 	{"pause",		DPsim::Python::Simulation::pause, METH_NOARGS, DocSimulationPause},
 	{"start",		DPsim::Python::Simulation::start, METH_NOARGS, DocSimulationStart},
 	{"step",		DPsim::Python::Simulation::step, METH_NOARGS, DocSimulationStep},
@@ -548,7 +550,7 @@ PyTypeObject DPsim::Python::SimulationType = {
 	0,                                       /* tp_iternext */
 	Simulation_methods,                      /* tp_methods */
 	0,                                       /* tp_members */
-	0,                                       /* tp_getset */
+	Simulation_attrs,                        /* tp_getset */
 	0,                                       /* tp_base */
 	0,                                       /* tp_dict */
 	0,                                       /* tp_descr_get */

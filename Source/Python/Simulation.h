@@ -90,8 +90,8 @@ namespace Python {
 		// Methods that are actually available from Python
 		static PyObject* addInterface(PyObject *self, PyObject *args);
 //		static PyObject* lvector(PyObject *self, PyObject *args);
-		static PyObject* getName(PyObject *self, PyObject *args);
-		static PyObject* getState(PyObject *self, PyObject *args);
+		static PyObject* getName(PyObject *self, void *ctx);
+		static PyObject* getState(PyObject *self, void *ctx);
 		static PyObject* pause(PyObject *self, PyObject *args);
 		static PyObject* start(PyObject *self, PyObject *args);
 		static PyObject* step(PyObject *self, PyObject *args);

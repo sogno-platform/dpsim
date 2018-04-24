@@ -78,7 +78,6 @@ PyMODINIT_FUNC PyInit__dpsim(void) {
 		return nullptr;
 	if (PyType_Ready(&CPS::Python::SystemTopologyType) < 0)
 		return nullptr;
-	CPS::Python::InterfaceType.tp_new = PyType_GenericNew;
 	if (PyType_Ready(&CPS::Python::InterfaceType) < 0)
 		return nullptr;
 
