@@ -63,20 +63,20 @@ int main(int argc, char* argv[])
 	Real Ra = (Ld_s + Lq_s) / dt;
 
 	// Declare circuit components
-	Component<Complex>::Ptr gen = SynchronGenerator::make("gen", 0, 1, 2,
+	ComponentBase::Ptr gen = SynchronGenerator::make("gen", 0, 1, 2,
 		nomPower, nomPhPhVoltRMS, nomFreq, poleNum, nomFieldCurr,
 		Rs, Ll, Lmd, Lmd0, Lmq, Lmq0, Rfd, Llfd, Rkd, Llkd, Rkq1, Llkq1, Rkq2, Llkq2, H, Ra);
 	Real loadRes = 1037.8378;
-	Component<Complex>::Ptr r1 = Resistor::make("r1", 0, GND, loadRes);
-	Component<Complex>::Ptr r2 = Resistor::make("r2", 1, GND, loadRes);
-	Component<Complex>::Ptr r3 = Resistor::make("r3", 2, GND, loadRes);
+	ComponentBase::Ptr r1 = Resistor::make("r1", 0, GND, loadRes);
+	ComponentBase::Ptr r2 = Resistor::make("r2", 1, GND, loadRes);
+	ComponentBase::Ptr r3 = Resistor::make("r3", 2, GND, loadRes);
 
 	SystemTopology system(60);
 	system.mComponents = { gen, r1, r2, r3 };
 
 	// Declare circuit components for resistance change
 	Real breakerRes = 0.01;
-	Component<Complex>::Ptr rBreaker = Resistor::make("rbreak", 0, 1, breakerRes);
+	ComponentBase::Ptr rBreaker = Resistor::make("rbreak", 0, 1, breakerRes);
 
 	SystemTopology systemBreakerOn(60);
 	systemBreakerOn.mComponents = { rBreaker, r1, r2, r3 };

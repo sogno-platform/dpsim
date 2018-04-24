@@ -26,8 +26,8 @@
 #include <list>
 
 #include "cps/Logger.h"
-#include "cps/Interface.h"
 #include "cps/SystemTopology.h"
+#include "cps/Interface.h"
 
 using namespace CPS;
 

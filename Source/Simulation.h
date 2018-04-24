@@ -31,8 +31,8 @@
 #include "cps/Component.h"
 #include "cps/Logger.h"
 #include "cps/SystemTopology.h"
-#include "cps/Interface.h"
 #include "cps/Node.h"
+#include "cps/Interface.h"
 
 using namespace CPS;
 

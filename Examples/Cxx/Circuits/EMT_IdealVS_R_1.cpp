@@ -28,7 +28,7 @@ using namespace CPS::Components::EMT;
 int main(int argc, char* argv[]) {
 	// Define system topology
 	SystemTopology system(50, {
-		VoltageSource::make("v_in", 0, 1, 10, 0),
+		VoltageSource::make("v_in", 0, 1, 10),
 		Resistor::make("r_1", 0, GND, 5),
 		Resistor::make("r_2", 1, GND, 10),
 		Resistor::make("r_3", 1, GND, 2)});
