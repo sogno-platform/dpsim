@@ -1,5 +1,6 @@
 import os
 import dpsim
+from dpsim import Node
 import dpsim.components.dp as dp
 import dataprocessing.readtools as rt
 import dataprocessing.timeseries as ts
@@ -8,11 +9,11 @@ PATH = os.path.dirname(__file__)
 
 def test_IdealVS_R_1():
     nodes = [
-        Node("n0", 0),
+        Node("n0", 0)
     ]
     comps = [
-            dp.VoltageSource("v_1", -1, nodes[0], 10),
-            dp.Resistor("r_1", nodes[0], -1, 1)
+            dp.VoltageSource("v_1", Node.gnd(), nodes[0], 10),
+            dp.Resistor("r_1", nodes[0], Node.gnd(), 1)
         ]
     system = dpsim.SystemTopology(50, nodes, comps)
         
