@@ -14,7 +14,7 @@ def test_ResVS_RL_1():
     n3 = dps.Node("n3")
 
     # Components
-    v1 = dp.VoltageSourceNorton("v_1", gnd, n1, 10, 1)
+    v1 = dp.VoltageSourceNorton("v_1", [gnd, n1], 10, 1)
     l1 = dp.Inductor("l_1", [n1, n2], 0.02)
     l2 = dp.Inductor("l_2", [n2, gnd], 0.1)
     l3 = dp.Inductor("l_3", [n2, n3], 0.05)

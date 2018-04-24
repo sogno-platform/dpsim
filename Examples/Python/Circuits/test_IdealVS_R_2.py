@@ -13,7 +13,7 @@ def test_IdealVS_R_2():
     n2 = dps.Node("n2")
 
     # Components
-    vin = dp.VoltageSource("v_in", n1, n2, 10)
+    vin = dp.VoltageSource("v_in", [n1, n2], 10)
     r1 =  dp.Resistor("r_1", [n1, gnd], 1)
     r2 =  dp.Resistor("r_2", [n2, gnd], 1)
     r3 =  dp.Resistor("r_3", [n2, gnd], 1)
