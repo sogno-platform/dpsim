@@ -26,13 +26,13 @@ def test_invalid():
         x = c.doesnotexist
 
 def test_access():
-     with pytest.raises(AttributeError) as e_info:
+    with pytest.raises(AttributeError) as e_info:
         gnd = dpsim.Node.GND()
         c = dp.Capacitor('c1', [gnd, gnd], 1.234);
 
-         # Current is a read-only property.
-         # This should throw a AttributeError exception!
-         c.current = 5
+        # Current is a read-only property.
+        # This should throw a AttributeError exception!
+        c.current = 5
 
 def test_type():
     with pytest.raises(TypeError) as e_info:
