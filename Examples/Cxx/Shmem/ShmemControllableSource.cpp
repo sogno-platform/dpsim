@@ -25,7 +25,7 @@ using namespace DPsim;
 using namespace CPS::Components::DP;
 
 int main(int argc, char *argv[]) {
-	
+
 	struct shmem_conf conf;
 	conf.samplelen = 64;
 	conf.queuelen = 1024;
@@ -40,7 +40,7 @@ int main(int argc, char *argv[]) {
 
 	auto ecs = CurrentSource::make("v_intf", GND, 0, Complex(100, 0));
 
-	ComponentBase::List comps = {		
+	ComponentBase::List comps = {
 		Resistor::make("r_1", GND, 0, 1),
 		ecs
 	};
@@ -48,12 +48,12 @@ int main(int argc, char *argv[]) {
 	shmem.registerControllableAttribute(ecs->findAttribute<Complex>("current_ref"), 0, 1);
 	shmem.registerExportedAttribute(ecs->findAttribute<Complex>("comp_current"), 0, 1);
 
-	SystemTopology system(50, comps);		
+	SystemTopology system(50, comps);
 	Simulation sim("ShmemControllableSource", system, timeStep, 1);
 	sim.addInterface(&shmem);
 
 	sim.run(false);
-	
-	
+
+
 	return 0;
 }

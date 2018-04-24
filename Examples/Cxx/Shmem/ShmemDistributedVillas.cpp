@@ -26,7 +26,7 @@ using namespace CPS::Components::DP;
 
 int main(int argc, char *argv[])
 {
-	Component::List comps;
+	ComponentBase::List comps;
 
 	struct shmem_conf conf;
 	conf.samplelen = 4;

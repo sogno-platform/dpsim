@@ -26,9 +26,6 @@
 #include <list>
 
 #include "Solver.h"
-#include "cps/Logger.h"
-#include "cps/Interface.h"
-#include "cps/SystemTopology.h"
 
 using namespace CPS;
 

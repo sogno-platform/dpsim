@@ -27,7 +27,7 @@ using namespace CPS::Components::DP;
 int main(int argc, char* argv[])
 {
 	// Same circuit as above, but the simulation is done normally in one instance.
-	Component::List comps = {
+	ComponentBase::List comps = {
 		VoltageSourceNorton::make("v_s", 0, GND, Complex(10000, 0), 1),
 		Inductor::make("l_1", 0, 1, 0.1),
 		Resistor::make("r_1", 1, 2, 1)
