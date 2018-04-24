@@ -37,6 +37,7 @@ Simulation::Simulation(String name,
 	mLog("Logs/" + name + ".log", logLevel) {
 
 	mName = name;
+	mFinalTime = finalTime;
 	mLogLevel = logLevel;
 }
 
@@ -52,7 +53,7 @@ Simulation::Simulation(String name, SystemTopology system,
 	case Solver::Type::MNA:
 	default:
 		mSolver = std::make_shared<MnaSolver>(name,
-			system, timeStep, finalTime,
+			system, timeStep,
 			domain, logLevel);
 		break;
 	}
@@ -77,7 +78,7 @@ Simulation::Simulation(String name, std::list<String> cimFiles, Real frequency,
 	case Solver::Type::MNA:
 	default:
 		mSolver = std::make_shared<MnaSolver>(name,
-			system, timeStep, finalTime,
+			system, timeStep,
 			domain, logLevel);
 		break;
 	}
@@ -85,11 +86,44 @@ Simulation::Simulation(String name, std::list<String> cimFiles, Real frequency,
 #endif
 
 void Simulation::run() {
-	mSolver->run();
+	mLog.Log(Logger::Level::INFO) << "Start simulation." << std::endl;
+
+	while (mTime < mFinalTime) {
+		Real nextTime;
+		mTime += mSolver->step(mTime);
+		mSolver->log(mTime);
+		mTime = nextTime;
+		mTimeStepCount++;
+	}
+
+	mLog.Log(Logger::Level::INFO) << "Simulation finished." << std::endl;
 }
 
 void Simulation::run(double duration) {
-	mSolver->run(duration);
+	double started = mTime;
+
+	mLog.Log(Logger::Level::INFO) << "Run simulation for " << duration << " seconds." << std::endl;
+
+	while ((mTime - started) < duration) {
+		Real nextTime;
+		nextTime = mSolver->step(mTime);
+		mSolver->log(mTime);
+		mTime = nextTime;
+		mTimeStepCount++;
+	}
+
+	mLog.Log(Logger::Level::INFO) << "Simulation finished." << std::endl;
+}
+
+Real Simulation::step(bool blocking) {
+	Real nextTime;
+
+	nextTime = mSolver->step(mTime, blocking);
+	mSolver->log(mTime);
+	mTime = nextTime;
+	mTimeStepCount++;
+
+	return mTime;
 }
 
 void Simulation::setSwitchTime(Real switchTime, Int systemIndex) {

@@ -34,11 +34,7 @@ namespace DPsim {
 	class MnaSolver : public Solver {
 	protected:
 		// General simulation settings
-		/// Final time of the simulation
-		Real mFinalTime;
-		/// Time variable that is incremented at every step
-		Real mTime = 0;
-		/// Simulation time step
+		/// System time step is constant for MNA solver
 		Real mTimeStep;
 		/// Simulation domain, which can be dynamic phasor (DP) or EMT
 		Domain mDomain;
@@ -92,10 +88,6 @@ namespace DPsim {
 
 		/// TODO: check that every system matrix has the same dimensions
 		void initialize(SystemTopology system);
-		/// Solve system A * x = z for x and current time
-		void step(bool blocking = true);
-		/// Advance the simulation clock by 1 time-step.
-		void increaseByTimeStep() { mTime = mTime + mTimeStep; }
 		///
 		void switchSystemMatrix(Int systemMatrixIndex);
 		///
@@ -111,21 +103,21 @@ namespace DPsim {
 	public:
 		/// Creates system matrix according to
 		MnaSolver(String name,
-			Real timeStep, Real finalTime,
+			Real timeStep,
 			Solver::Domain domain = Solver::Domain::DP,
 			Logger::Level logLevel = Logger::Level::INFO,
 			Bool steadyStateInit = false, Int downSampleRate = 1);
 		/// Creates system matrix according to
 		MnaSolver(String name, SystemTopology system,
-			Real timeStep, Real finalTime,
+			Real timeStep,
 			Solver::Domain domain = Solver::Domain::DP,
 			Logger::Level logLevel = Logger::Level::INFO, Int downSampleRate = 1);
 		///
 		virtual ~MnaSolver() { };
-		/// Run simulation until total time is elapsed.
-		void run();
-		/// Run simulation for \p duration seconds.
-		void run(double duration);
+		/// Solve system A * x = z for x and current time
+		Real step(Real time, bool blocking = true);
+		/// Log results
+		void log(Real time);
 		///
 		void addInterface(Interface* eint) { mInterfaces.push_back(eint); }
 		///
@@ -134,9 +126,6 @@ namespace DPsim {
 		void addSystemTopology(SystemTopology system);
 
 		// #### Getter ####
-		Real getTime() { return mTime; }
-		Real getFinalTime() { return mFinalTime; }
-		Real getTimeStep() { return mTimeStep; }
 		Matrix& getLeftSideVector() { return mLeftSideVector; }
 		Matrix& getRightSideVector() { return mRightSideVector; }
 		Matrix& getSystemMatrix() { return mSystemMatrices[mSystemIndex]; }

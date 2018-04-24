@@ -41,14 +41,15 @@ namespace DPsim {
 	};
 
 	class Solver {
+
 	public:
 		enum class Type { MNA, IDA };
 		enum class Domain { DP, EMT };
 
-		/// Run simulation until total time is elapsed.
-		virtual void run() = 0;
-		/// Run simulation for \p duration seconds.
-		virtual void run(double duration) { }
+		/// Solve system A * x = z for x and current time
+		virtual Real step(Real time, bool blocking = true) = 0;
+		/// Log results
+		virtual void log(Real time) = 0;
 		///
 		virtual void addInterface(Interface* eint) { }
 		///

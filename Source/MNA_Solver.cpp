@@ -29,14 +29,13 @@ using namespace CPS;
 using namespace DPsim;
 
 MnaSolver::MnaSolver(String name,
-	Real timeStep, Real finalTime, Solver::Domain domain,
+	Real timeStep, Solver::Domain domain,
 	Logger::Level logLevel, Bool steadyStateInit, Int downSampleRate) :
 	mLog("Logs/" + name + "_MNA.log", logLevel),
 	mLeftVectorLog("Logs/" + name + "_LeftVector.csv", logLevel),
 	mRightVectorLog("Logs/" + name + "_RightVector.csv", logLevel) {
 
 	mTimeStep = timeStep;
-	mFinalTime = finalTime;
 	mDomain = domain;
 	mLogLevel = logLevel;
 	mDownSampleRate = downSampleRate;
@@ -44,9 +43,9 @@ MnaSolver::MnaSolver(String name,
 }
 
 MnaSolver::MnaSolver(String name, SystemTopology system,
-	Real timeStep, Real finalTime, Solver::Domain domain,
+	Real timeStep, Solver::Domain domain,
 	Logger::Level logLevel, Int downSampleRate)
-	: MnaSolver(name, timeStep, finalTime, domain,
+	: MnaSolver(name, timeStep, domain,
 		logLevel, false, downSampleRate) {
 	initialize(system);
 
@@ -132,6 +131,8 @@ void MnaSolver::initialize(SystemTopology system) {
 }
 
 void MnaSolver::steadyStateInitialization() {
+	Real time = 0;
+
 	// Initialize right side vector and components
 	for (auto comp : mSystemTopologies[0].mComponents) {
 		comp->mnaInitialize(mSystemTopologies[0].mSystemOmega, mTimeStep);
@@ -146,21 +147,24 @@ void MnaSolver::steadyStateInitialization() {
 	Matrix prevLeftSideVector = Matrix::Zero(2 * mNumNodes, 1);
 	Matrix diff;
 	Real maxDiff, max;
-	while (mTime < 10) {
-		step();
-		increaseByTimeStep();
+
+	while (time < 10) {
+		time += step(time);
+
 		diff = prevLeftSideVector - mLeftSideVector;
 		prevLeftSideVector = mLeftSideVector;
 		maxDiff = diff.lpNorm<Eigen::Infinity>();
 		max = mLeftSideVector.lpNorm<Eigen::Infinity>();
-		if ((maxDiff / max) < 0.0001) break;
+
+		if ((maxDiff / max) < 0.0001)
+			break;
 	}
 	mLog.Log(Logger::Level::INFO) << "Initialization finished. Max difference: "
-		<< maxDiff << " or " << maxDiff / max << "% at time " << mTime << std::endl;
+		<< maxDiff << " or " << maxDiff / max << "% at time " << time << std::endl;
 	mSystemMatrices.pop_back();
 	mLuFactorizations.pop_back();
 	mSystemIndex = 0;
-	mTime = 0;
+
 	createEmptySystemMatrix();
 }
 
@@ -224,7 +228,7 @@ void MnaSolver::solve()  {
 	mLeftSideVector = mLuFactorizations[mSystemIndex].solve(mRightSideVector);
 }
 
-void MnaSolver::step(bool blocking) {
+Real MnaSolver::step(Real time, bool blocking) {
 	mRightSideVector.setZero();
 
 	for (auto eif : mInterfaces) {
@@ -232,13 +236,13 @@ void MnaSolver::step(bool blocking) {
 	}
 
 	for (auto comp : mSystemTopologies[mSystemIndex].mComponents) {
-		comp->mnaStep(mSystemMatrices[mSystemIndex], mRightSideVector, mLeftSideVector, mTime);
+		comp->mnaStep(mSystemMatrices[mSystemIndex], mRightSideVector, mLeftSideVector, time);
 	}
 
 	solve();
 
 	for (auto comp : mSystemTopologies[mSystemIndex].mComponents) {
-		comp->mnaPostStep(mRightSideVector, mLeftSideVector, mTime);
+		comp->mnaPostStep(mRightSideVector, mLeftSideVector, time);
 	}
 
 	for (UInt nodeIdx = 0; nodeIdx < mNumRealNodes; nodeIdx++) {
@@ -250,41 +254,22 @@ void MnaSolver::step(bool blocking) {
 	}
 
 	if (mSwitchTimeIndex < mSwitchEvents.size()) {
-		if (mTime >= mSwitchEvents[mSwitchTimeIndex].switchTime) {
+		if (time >= mSwitchEvents[mSwitchTimeIndex].switchTime) {
 			switchSystemMatrix(mSwitchEvents[mSwitchTimeIndex].systemIndex);
 			++mSwitchTimeIndex;
 
-			mLog.Log(Logger::Level::INFO) << "Switched to system " << mSwitchTimeIndex << " at " << mTime << std::endl;
+			mLog.Log(Logger::Level::INFO) << "Switched to system " << mSwitchTimeIndex << " at " << time << std::endl;
 			mLog.Log(Logger::Level::INFO) << "New matrix:" << std::endl << mSystemMatrices[mSystemIndex] << std::endl;
 			mLog.Log(Logger::Level::INFO) << "New decomp:" << std::endl << mLuFactorizations[mSystemIndex].matrixLU() << std::endl;
 		}
 	}
+
+	return time + mTimeStep;
 }
 
-void MnaSolver::run() {
-	mLog.Log(Logger::Level::INFO) << "Start simulation." << std::endl;
-
-	while (mTime < mFinalTime) {
-		step();
-		mLeftVectorLog.LogNodeValues(getTime(), getLeftSideVector());
-		mRightVectorLog.LogNodeValues(getTime(), getRightSideVector());
-		increaseByTimeStep();
-	}
-
-	mLog.Log(Logger::Level::INFO) << "Simulation finished." << std::endl;
-}
-
-void MnaSolver::run(double duration) {
-	mLog.Log(Logger::Level::INFO) << "Run simulation for " << duration << " seconds." << std::endl;
-	double started = mTime;
-
-	while ((mTime - started) < duration) {
-		step();
-		mLeftVectorLog.LogNodeValues(getTime(), getLeftSideVector());
-		mRightVectorLog.LogNodeValues(getTime(), getRightSideVector());
-		increaseByTimeStep();
-	}
-	mLog.Log(Logger::Level::INFO) << "Simulation finished." << std::endl;
+void MnaSolver::log(Real time) {
+	mLeftVectorLog.LogNodeValues(time, getLeftSideVector());
+	mRightVectorLog.LogNodeValues(time, getRightSideVector());
 }
 
 void MnaSolver::setSwitchTime(Real switchTime, Int systemIndex) {

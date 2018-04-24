@@ -41,6 +41,11 @@ namespace DPsim {
 	class Simulation {
 
 	protected:
+		/// Final time of the simulation
+		Real mFinalTime;
+		/// Time variable that is incremented at every step
+		Real mTime = 0;
+		Int mTimeStepCount = 0;
 		/// Simulation log level
 		Logger::Level mLogLevel;
 		/// Simulation logger
@@ -51,6 +56,7 @@ namespace DPsim {
 		Solver::Type mSolverType;
 		///
 		std::shared_ptr<Solver> mSolver;
+
 	public:
 		/// Creates system matrix according to
 		Simulation(String name,
@@ -73,10 +79,14 @@ namespace DPsim {
 			Logger::Level logLevel = Logger::Level::INFO);
 		///
 		virtual ~Simulation() { };
+
 		/// Run simulation until total time is elapsed.
 		void run();
 		/// Run simulation for \p duration seconds.
 		void run(double duration);
+		/// Solve system A * x = z for x and current time
+		Real step(bool blocking = true);
+
 		///
 		void setSwitchTime(Real switchTime, Int systemIndex);
 		///
@@ -88,6 +98,9 @@ namespace DPsim {
 
 		// #### Getter ####
 		String getName() const { return mName; }
+		Real getTime() const { return mTime; }
+		Real getFinalTime() const { return mFinalTime; }
+		It getTimeStepCount() const { return mTimeStepCount; }
 	};
 
 }
