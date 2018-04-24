@@ -25,7 +25,7 @@ using namespace DPsim;
 using namespace CPS::Components::DP;
 
 int main(int argc, char *argv[]) {
-	
+
 	struct shmem_conf conf;
 	conf.samplelen = 64;
 	conf.queuelen = 1024;
@@ -53,7 +53,7 @@ int main(int argc, char *argv[]) {
 	sim.addInterface(&shmem);
 
 	sim.run(false);
-	
-	
+
+
 	return 0;
 }

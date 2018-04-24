@@ -83,7 +83,7 @@ int main(int argc, char *argv[]) {
 
 		Component<Complex>::List comps = {
 			Resistor::make("r_gnd_0", GND, 0, 1),
-			Resistor::make("r_0_1", 0, 1, 1),			
+			Resistor::make("r_0_1", 0, 1, 1),
 			ecs
 			//ecs_switch
 		};
@@ -91,7 +91,7 @@ int main(int argc, char *argv[]) {
 		shmem.registerControllableAttribute(ecs->findAttribute<Complex>("CurrentRef"), 0, 1);
 		shmem.registerExportedAttribute(ecs->findAttribute<Complex>("CompVoltage"), 0, 1);
 		//shmem.registerControllableAttribute(ecs_switch->findAttribute('CurrentRef'), 2, 3);
-		
+
 		SystemTopology system(50, comps);
 		Simulation sim("ShmemDistributedDirect_2", system, timeStep, 1);
 		sim.addInterface(&shmem);
@@ -102,6 +102,6 @@ int main(int argc, char *argv[]) {
 		std::cerr << "invalid test number" << std::endl;
 		std::exit(1);
 	}
-	
+
 	return 0;
 }
