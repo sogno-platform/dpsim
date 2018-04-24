@@ -90,7 +90,7 @@ void Simulation::run() {
 
 	while (mTime < mFinalTime) {
 		Real nextTime;
-		mTime += mSolver->step(mTime);
+		nextTime = mSolver->step(mTime);
 		mSolver->log(mTime);
 		mTime = nextTime;
 		mTimeStepCount++;
