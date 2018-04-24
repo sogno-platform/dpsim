@@ -12,6 +12,7 @@ __email__ = "stvogel@eonerc.rwth-aachen.de"
 __status__ = "Beta"
 
 from _dpsim import Component
+from _dpsim import Node
 from _dpsim import Interface
 from _dpsim import SystemTopology
 

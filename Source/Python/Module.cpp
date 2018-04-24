@@ -35,6 +35,7 @@
 #include "cps/Python/Components.h"
 #include "cps/Python/LoadCim.h"
 #include "cps/Python/Interface.h"
+#include "cps/Python/Node.h"
 #include "cps/Python/SystemTopology.h"
 
 using namespace DPsim;
@@ -71,6 +72,8 @@ PyMODINIT_FUNC PyInit__dpsim(void) {
 
 	if (PyType_Ready(&CPS::Python::ComponentType) < 0)
 		return nullptr;
+	if (PyType_Ready(&CPS::Python::NodeType) < 0)
+		return nullptr;
 	if (PyType_Ready(&DPsim::Python::SimulationType) < 0)
 		return nullptr;
 	if (PyType_Ready(&CPS::Python::SystemTopologyType) < 0)
@@ -89,6 +92,8 @@ PyMODINIT_FUNC PyInit__dpsim(void) {
 	PyModule_AddObject(m, "SystemTopology", (PyObject*) &CPS::Python::SystemTopologyType);
 	Py_INCREF(&CPS::Python::ComponentType);
 	PyModule_AddObject(m, "Component", (PyObject*) &CPS::Python::ComponentType);
+	Py_INCREF(&CPS::Python::NodeType);
+	PyModule_AddObject(m, "Node", (PyObject*) &CPS::Python::NodeType);
 	Py_INCREF(&CPS::Python::InterfaceType);
 	PyModule_AddObject(m, "Interface", (PyObject*) &CPS::Python::InterfaceType);
 
