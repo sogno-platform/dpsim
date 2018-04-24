@@ -67,7 +67,7 @@ int main(int argc, char *argv[]) {
 			evs
 		};
 
-		shmem.registerControllableAttribute(evs->findAttribute<Complex>("voltage_ref"), 0, 1);
+		shmem.registerControlledAttribute(evs->findAttribute<Complex>("voltage_ref"), 0, 1);
 		shmem.registerExportedAttribute(evs->findAttribute<Complex>("comp_current"), 0, 1);
 
 		SystemTopology system(50, comps);
@@ -87,9 +87,9 @@ int main(int argc, char *argv[]) {
 			//ecs_switch
 		};
 
-		shmem.registerControllableAttribute(ecs->findAttribute<Complex>("current_ref"), 0, 1);
+		shmem.registerControlledAttribute(ecs->findAttribute<Complex>("current_ref"), 0, 1);
 		shmem.registerExportedAttribute(ecs->findAttribute<Complex>("comp_voltage"), 0, 1);
-		//shmem.registerControllableAttribute(ecs_switch->findAttribute('CurrentRef'), 2, 3);
+		//shmem.registerControlledAttribute(ecs_switch->findAttribute('CurrentRef'), 2, 3);
 
 		SystemTopology system(50, comps);
 		Simulation sim("ShmemDistributedDirect_2", system, timeStep, 0.1);

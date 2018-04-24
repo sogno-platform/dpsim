@@ -45,7 +45,7 @@ int main(int argc, char *argv[]) {
 		ecs
 	};
 
-	shmem.registerControllableAttribute(ecs->findAttribute<Complex>("current_ref"), 0, 1);
+	shmem.registerControlledAttribute(ecs->findAttribute<Complex>("current_ref"), 0, 1);
 	shmem.registerExportedAttribute(ecs->findAttribute<Complex>("comp_current"), 0, 1);
 
 	SystemTopology system(50, comps);
