@@ -97,8 +97,8 @@ void Simulation::setSwitchTime(Real switchTime, Int systemIndex) {
 }
 
 
-void Simulation::addExternalInterface(ExternalInterface *eint) {
-	mSolver->addExternalInterface(eint);
+void Simulation::addInterface(Interface *eint) {
+	mSolver->addInterface(eint);
 }
 
 void Simulation::addSystemTopology(SystemTopology system) {

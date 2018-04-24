@@ -26,9 +26,6 @@
 #include <list>
 
 #include "Solver.h"
-#include "cps/Logger.h"
-#include "cps/Interfaces/ExternalInterface.h"
-#include "cps/SystemTopology.h"
 
 using namespace CPS;
 
@@ -54,8 +51,8 @@ namespace DPsim {
 		UInt mNumRealNodes = 0;
 		/// Number of nodes
 		UInt mNumVirtualNodes = 0;
-		/// Vector of ExternalInterfaces
-		std::vector<ExternalInterface*> mExternalInterfaces;
+		/// Vector of Interfaces
+		std::vector<Interface*> mInterfaces;
 		/// Flag to activate power flow based initialization.
 		/// If this is false, all voltages are initialized with zero.
 		Bool mPowerflowInitialization;
@@ -133,7 +130,7 @@ namespace DPsim {
 		/// Run simulation for \p duration seconds.
 		void run(double duration);
 		///
-		void addExternalInterface(ExternalInterface* eint) { mExternalInterfaces.push_back(eint); }
+		void addInterface(Interface* eint) { mInterfaces.push_back(eint); }
 		///
 		void setSwitchTime(Real switchTime, Int systemIndex);
 		///

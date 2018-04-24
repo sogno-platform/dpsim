@@ -284,7 +284,7 @@ PyObject* DPsim::Python::Simulation::addInterface(PyObject* self, PyObject* args
 	}
 
 	pyIntf = (CPS::Python::Interface*) pyObj;
-	pySim->sim->addExternalInterface(pyIntf->intf);
+	pySim->sim->addInterface(pyIntf->intf);
 	Py_INCREF(pyObj);
 
 	pySim->refs.push_back(pyObj);
