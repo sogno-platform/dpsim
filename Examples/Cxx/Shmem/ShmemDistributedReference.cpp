@@ -26,20 +26,26 @@ using namespace CPS::Components::DP;
 
 int main(int argc, char* argv[])
 {
-	// Same circuit as above, but the simulation is done normally in one instance.
-	ComponentBase::List comps = {
-		VoltageSourceNorton::make("v_s", 0, GND, Complex(10000, 0), 1),
-		Inductor::make("l_1", 0, 1, 0.1),
-		Resistor::make("r_1", 1, 2, 1)
-	};
+	// Nodes
+	auto n1 = Node::make("n1");
+	auto n2 = Node::make("n2");
+	auto n3 = Node::make("n3");
 
-	auto comps2 = comps;
-	comps.push_back(Resistor::make("r_2", 2, GND, 10));
-	comps2.push_back(Resistor::make("r_2", 2, GND, 8));
+	// Components
+	auto vs = VoltageSourceNorton::make("v_s", Node::List{GLOBALGND, n1}, Complex(10000, 0), 1);
+	auto l1 = Inductor::make("l_1", Node::List{n1, n2}, 0.1);
+	auto r1 = Resistor::make("r_1", Node::List{n2, n3}, 1);
 
-	Real timeStep = 0.001;
-	Simulation sim("ShmemDistirbutedRef", comps, 2.0*M_PI*50.0, timeStep, 20, Logger::Level::INFO);
-	sim.addSystemTopology(comps2);
+	auto r2A = Resistor::make("r_2", Node::List{n3, GLOBALGND}, 10);
+	auto r2B = Resistor::make("r_2", Node::List{n3, GLOBALGND}, 8);
+
+	auto nodes = Node::List{GLOBALGND, n1, n2, n3};
+
+	auto sys1 = SystemTopology(50, nodes, ComponentBase::List{vs, l1, r1, r2A});
+	auto sys2 = SystemTopology(50, nodes, ComponentBase::List{vs, l1, r1, r2B});
+
+	auto sim = Simulation("ShmemDistributedRef", sys1, 0.001, 20);
+	sim.addSystemTopology(sys2);
 	sim.setSwitchTime(10, 1);
 	sim.run();
 

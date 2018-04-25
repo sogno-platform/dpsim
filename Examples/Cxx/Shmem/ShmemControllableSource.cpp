@@ -38,22 +38,21 @@ int main(int argc, char *argv[]) {
 
 	Real timeStep = 0.000150;
 
-	auto ecs = CurrentSource::make("v_intf", GND, 0, Complex(100, 0));
+	// Nodes
+	auto n1 = Node::make("n1");
 
-	ComponentBase::List comps = {
-		Resistor::make("r_1", GND, 0, 1),
-		ecs
-	};
+	// Components
+	auto ecs = CurrentSource::make("v_intf", Node::List{GLOBALGND, n1}, Complex(100, 0));
+	auto r1 = Resistor::make("r_1", Node::List{GLOBALGND, n1}, 1);
 
 	shmem.registerControlledAttribute(ecs->findAttribute<Complex>("current_ref"), 0, 1);
 	shmem.registerExportedAttribute(ecs->findAttribute<Complex>("comp_current"), 0, 1);
 
-	SystemTopology system(50, comps);
-	Simulation sim("ShmemControllableSource", system, timeStep, 1);
+	auto sys = SystemTopology(50, Node::List{GLOBALGND, n1}, ComponentBase::List{ecs, r1});
+	auto sim = Simulation("ShmemControllableSource", sys, timeStep, 1);
+
 	sim.addInterface(&shmem);
-
 	sim.run(false);
-
 
 	return 0;
 }
