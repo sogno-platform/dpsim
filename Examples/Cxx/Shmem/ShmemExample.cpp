@@ -45,13 +45,13 @@ int main(int argc, char* argv[])
 	auto sys = SystemTopology(50, Node::List{GLOBALGND, n1, n2, n3, n4}, ComponentBase::List{evs, rs, rl, ll, rL});
 
 	auto villas = ShmemInterface("/villas1-in", "/villas1-out");
-	villas.registerControllableSource(evs, GND, 0);
-	villas.registerExportedCurrent(evs, GND, 0);
+	villas.registerControlledAttribute(evs->findAttribute<Complex>("voltage_ref"), 0, 1);
+	villas.registerExportedAttribute(evs->findAttribute<Complex>("comp_current"), 0, 1);
 
 	Real timeStep = 0.001;
-	auto sim = Simulation("ShmemExample", comps, 2.0*M_PI*50.0, timeStep, 0.3, Logger::Level::INFO);
-	sim.addInterface(&villas);
+	auto sim = Simulation("ShmemExample", sys, timeStep, 0.3);
 
+	sim.addInterface(&villas);
 	sim.run();
 
 	return 0;

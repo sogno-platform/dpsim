@@ -56,10 +56,10 @@ if(WITH_SHMEM)
 	set(SHMEM_SOURCES
 		Shmem/ShmemExample.cpp
 		Shmem/ShmemDistributedReference.cpp
-#		Shmem/ShmemDistributedVillas.cpp
+		Shmem/ShmemDistributedVillas.cpp
 		Shmem/ShmemDistributedDirect.cpp
 		Shmem/ShmemControllableSource.cpp
-#		Shmem/ShmemRealTime.cpp
+		Shmem/ShmemRealTime.cpp
 	)
 endif()
 
