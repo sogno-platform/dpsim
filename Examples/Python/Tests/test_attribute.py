@@ -28,12 +28,8 @@ def test_invalid():
 
 def test_access():
     with pytest.raises(AttributeError) as e_info:
-<<<<<<< HEAD
-        c = dp.Capacitor('c1', 1, 1, 1.234);
-=======
         gnd = dps.Node.GND()
         c = dp.Capacitor('c1', [gnd, gnd], 1.234);
->>>>>>> redesign-simulation
 
         # Current is a read-only property.
         # This should throw a AttributeError exception!
