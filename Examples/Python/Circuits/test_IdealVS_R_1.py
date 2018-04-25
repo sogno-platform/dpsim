@@ -20,7 +20,7 @@ def test_IdealVS_R_1():
     sim = dps.Simulation('IdealVS_R_1', system, duration=0.2, timestep=0.00005)
     sim.run()
 
-    results = rt.read_timeseries_dpsim_cmpl('Logs/' + sim.name + '_LeftVector.csv')
+    #results = rt.read_timeseries_dpsim_cmpl('Logs/' + sim.name + '_LeftVector.csv')
     #expected = rt.read_timeseries_dpsim_real('Examples/Results/Simulink/Circuits/SL_' + sim.name() + '.csv')
 
     err = 0
