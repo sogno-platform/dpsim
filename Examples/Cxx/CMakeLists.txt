@@ -45,7 +45,7 @@ if(WITH_RT)
 	list(APPEND LIBRARIES "-lrt")
 
 	set(RT_SOURCES
-#		RealTime/RT_DP_ResVS_RL1.cpp
+		RealTime/RT_DP_ResVS_RL1.cpp
 	)
 endif()
 
