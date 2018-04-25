@@ -1,6 +1,3 @@
-[submodule "Examples/Results"]
-	path = Examples/Results
-	url = https://git.rwth-aachen.de/acs/public/simulation/reference-results
 [submodule "Dependencies/libcps"]
 	path = Dependencies/libcps
 	url = ../cpowersystems.git

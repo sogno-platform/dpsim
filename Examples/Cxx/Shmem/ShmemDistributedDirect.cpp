@@ -24,8 +24,7 @@
 using namespace DPsim;
 using namespace CPS::Components::DP;
 
-int main(int argc, char *argv[])
-{
+int main(int argc, char *argv[]) {
 	// Testing the interface with a simple circuit,
 	// but the load is simulated in a different instance.
 	// Values are exchanged using the ideal transformator model: an ideal
@@ -33,8 +32,6 @@ int main(int argc, char *argv[])
 	// supply side, whose values are received from the respective other circuit.
 	// Here, the two instances directly communicate with each other without using
 	// VILLASnode in between.
-
-	Component::List comps;
 
 	struct shmem_conf conf;
 	conf.samplelen = 4;
@@ -59,38 +56,51 @@ int main(int argc, char *argv[])
 
 	ShmemInterface shmem(in, out, &conf);
 
+	Real timeStep = 0.000150;
+
 	if (String(argv[1]) == "0") {
-		auto evs = VoltageSource::make("v_t", 1, GND, Complex(0, 0));
+		// Nodes
+		auto n1 = Node::make("n1");
+		auto n2 = Node::make("n2");
 
-		comps = {
-			VoltageSourceNorton::make("v_s", 0, GND, Complex(10000, 0), 1),
-			Inductor::make("l_1", 0, 1, 1e-3),
-			evs
-		};
+		// Components
+		auto evs = VoltageSource::make("v_intf", Node::List{GND, n2}, Complex(5, 0), Logger::Level::DEBUG);
+		auto vs1 = VoltageSource::make("vs_1", Node::List{GND, n1}, Complex(10, 0), Logger::Level::DEBUG);
+		auto r01 = Resistor::make("r_0_1", Node::List{n1, n2}, 1);
 
-		shmem.registerControllableSource(evs, GND, 0);
-		shmem.registerExportedCurrent(evs, GND, 0);
+		shmem.registerControlledAttribute(evs->findAttribute<Complex>("voltage_ref"), 0, 1);
+		shmem.registerExportedAttribute(evs->findAttribute<Complex>("comp_current"), 0, 1);
+
+		auto sys = SystemTopology(50, Node::List{GND, n1, n2}, ComponentBase::List{evs, vs1, r01});
+		auto sim = Simulation("ShmemDistributedDirect_1", sys, timeStep, 0.1);
+
+		sim.addInterface(&shmem);
+		sim.run();
 	}
 	else if (String(argv[1]) == "1") {
-		auto ecs = CurrentSource::make("v_s", 0, GND, Complex(0, 0));
+		// Nodes
+		auto n1 = Node::make("n1");
 
-		comps = {
-			Resistor::make("r_2", 0, GND, 1),
-			ecs
-		};
+		// Components
+		auto ecs = CurrentSource::make("i_intf", Node::List{GND, n1}, Complex(5, 0), Logger::Level::DEBUG);
+		auto rgnd0 = Resistor::make("r_gnd_0", Node::List{GND, n1}, 1);
+		//auto ecs_switch = CurrentSource::make("i_switch", GND, 1, Complex(0, 0));
+		//auto r01 = Resistor::make("r_0_1", 0, 1, 1);
 
-		shmem.registerControllableSource(ecs, GND, 0);
-		shmem.registerExportedVoltage(ecs, 0, 1);
+		shmem.registerControlledAttribute(ecs->findAttribute<Complex>("current_ref"), 0, 1);
+		shmem.registerExportedAttribute(ecs->findAttribute<Complex>("comp_voltage"), 0, 1);
+		//shmem.registerControlledAttribute(ecs_switch->findAttribute('CurrentRef'), 2, 3);
+
+		auto sys = SystemTopology(50, Node::List{GND, n1}, ComponentBase::List{ecs, rgnd0});
+		auto sim = Simulation("ShmemDistributedDirect_2", sys, timeStep, 0.1);
+
+		sim.addInterface(&shmem);
+		sim.run();
 	}
 	else {
 		std::cerr << "invalid test number" << std::endl;
 		std::exit(1);
 	}
-
-	Real timeStep = 0.000150;
-	RealTimeSimulation sim("ShmemDistributedDirect", comps, 2.0*M_PI*50.0, timeStep, 1);
-	sim.addExternalInterface(&shmem);
-	sim.run(false);
 
 	return 0;
 }

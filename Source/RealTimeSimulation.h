@@ -41,6 +41,8 @@ namespace DPsim {
 	class RealTimeSimulation : public Simulation {
 
 	protected:
+		Real mTimeStep;
+
 #ifdef RTMETHOD_EXCEPTIONS
 		static void alarmHandler(int, siginfo_t*, void*);
 		timer_t mTimer;
@@ -56,7 +58,9 @@ namespace DPsim {
 		void stopTimer();
 
 	public:
-		RealTimeSimulation(String name, Component::List comps, Real om, Real dt, Real tf, Logger::Level logLevel = Logger::Level::INFO, SimulationType simType = SimulationType::DP, Int downSampleRate = 1);
+		RealTimeSimulation(String name, SystemTopology system, Real timeStep, Real finalTime,
+			Solver::Domain domain = Solver::Domain::DP, Solver::Type type = Solver::Type::MNA,
+			Logger::Level logLevel = Logger::Level::INFO);
 		~RealTimeSimulation();
 
 		/* Perform the main simulation loop in real time.

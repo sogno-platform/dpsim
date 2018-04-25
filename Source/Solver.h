@@ -1,4 +1,4 @@
-﻿/** Simulation with a configurable fault
+/** Simulation
  *
  * @author Markus Mirz <mmirz@eonerc.rwth-aachen.de>
  * @copyright 2017, Institute for Automation of Complex Power Systems, EONERC
@@ -21,23 +21,38 @@
 
 #pragma once
 
-#include "Simulation.h"
+#include <iostream>
+#include <vector>
+#include <list>
+
+#include "cps/Logger.h"
+#include "cps/SystemTopology.h"
+#include "cps/Interface.h"
 
 using namespace CPS;
 
 namespace DPsim {
-
-	class SynGenSimulation : public Simulation {
-
-	public:
-		// Explicity inheritance of parent constructor
-		using Simulation::Simulation;
-
-		Int mActualSystemMatrixIndex = 0;
-
-		Int step(bool blocking = false);
-		/// Run simulation until total time is elapsed.
-		void run();
+	/// Holds switching time and which system should be activated.
+	struct SwitchConfiguration {
+		Real switchTime;
+		UInt systemIndex;
 	};
 
+	class Solver {
+
+	public:
+		enum class Type { MNA, IDA };
+		enum class Domain { DP, EMT };
+
+		/// Solve system A * x = z for x and current time
+		virtual Real step(Real time, bool blocking = true) = 0;
+		/// Log results
+		virtual void log(Real time) = 0;
+		///
+		virtual void addInterface(Interface* eint) { }
+		///
+		void addSystemTopology(SystemTopology system) { }
+		///
+		virtual void setSwitchTime(Real switchTime, Int systemIndex) { }
+	};
 }

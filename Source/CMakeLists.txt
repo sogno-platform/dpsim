@@ -1,10 +1,7 @@
 add_library(dpsim	
-	SystemModel.cpp
 	Utilities.cpp
 	Simulation.cpp
 	MNA_Solver.cpp
-	FaultSimulation.cpp
-	SynGenSimulation.cpp	
 )
 
 set(LIBRARIES cps)

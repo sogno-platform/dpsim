@@ -25,43 +25,27 @@
 #include <vector>
 #include <list>
 
-#include "cps/Logger.h"
-#include "cps/Interfaces/ExternalInterface.h"
-#include "cps/SystemTopology.h"
+#include "Solver.h"
 
 using namespace CPS;
 
 namespace DPsim {
-	/// Ground node
-	const Int GND = -1;
-	/// Holds switching time and which system should be activated.
-	struct SwitchConfiguration {
-		Real switchTime;
-		UInt systemIndex;
-	};
 	/// Simulation class which uses Modified Nodal Analysis (MNA).
-	class MnaSimulation {
+	class MnaSolver : public Solver {
 	protected:
-		/// Simulation name
-		String mName;
-
 		// General simulation settings
-		/// Final time of the simulation
-		Real mFinalTime;
-		/// Time variable that is incremented at every step
-		Real mTime = 0;
-		/// Simulation time step
+		/// System time step is constant for MNA solver
 		Real mTimeStep;
-		/// Simulation type, which can be dynamic phasor (DP) or EMT
-		SimulationType mSimType;
+		/// Simulation domain, which can be dynamic phasor (DP) or EMT
+		Domain mDomain;
 		/// Number of nodes
 		UInt mNumNodes = 0;
 		/// Number of nodes
 		UInt mNumRealNodes = 0;
 		/// Number of nodes
 		UInt mNumVirtualNodes = 0;
-		/// Vector of ExternalInterfaces
-		std::vector<ExternalInterface*> mExternalInterfaces;
+		/// Vector of Interfaces
+		std::vector<Interface*> mInterfaces;
 		/// Flag to activate power flow based initialization.
 		/// If this is false, all voltages are initialized with zero.
 		Bool mPowerflowInitialization;
@@ -104,12 +88,6 @@ namespace DPsim {
 
 		/// TODO: check that every system matrix has the same dimensions
 		void initialize(SystemTopology system);
-		/// Solve system A * x = z for x and current time
-		void step(bool blocking = true);
-		/// Advance the simulation clock by 1 time-step.
-		void increaseByTimeStep() { mTime = mTime + mTimeStep; }
-		///
-		void addSystemTopology(SystemTopology system);
 		///
 		void switchSystemMatrix(Int systemMatrixIndex);
 		///
@@ -118,35 +96,36 @@ namespace DPsim {
 		void createEmptySystemMatrix();
 		///
 		void solve();
+		///
+		void assignNodesToComponents(ComponentBase::List components);
+		///
+		void steadyStateInitialization();
 	public:
 		/// Creates system matrix according to
-		MnaSimulation(String name,
-			Real timeStep, Real finalTime, SimulationType simType = SimulationType::DP,
-			Logger::Level logLevel = Logger::Level::INFO, Bool steadyStateInit = false, Int downSampleRate = 1);
+		MnaSolver(String name,
+			Real timeStep,
+			Solver::Domain domain = Solver::Domain::DP,
+			Logger::Level logLevel = Logger::Level::INFO,
+			Bool steadyStateInit = false, Int downSampleRate = 1);
 		/// Creates system matrix according to
-		MnaSimulation(String name, SystemTopology system,
-			Real timeStep, Real finalTime, SimulationType simType = SimulationType::DP,
-			Logger::Level logLevel = Logger::Level::INFO, Int downSampleRate = 1);
-		/// Creates system matrix according to
-		MnaSimulation(String name, std::list<String> cimFiles, Real frequency,
-			Real timeStep, Real finalTime, SimulationType simType = SimulationType::DP,
+		MnaSolver(String name, SystemTopology system,
+			Real timeStep,
+			Solver::Domain domain = Solver::Domain::DP,
 			Logger::Level logLevel = Logger::Level::INFO, Int downSampleRate = 1);
 		///
-		virtual ~MnaSimulation() { };
-		/// Run simulation until total time is elapsed.
-		void run();
-		/// Run simulation for \p duration seconds.
-		void run(double duration);
+		virtual ~MnaSolver() { };
+		/// Solve system A * x = z for x and current time
+		Real step(Real time, bool blocking = true);
+		/// Log results
+		void log(Real time);
 		///
-		void addExternalInterface(ExternalInterface* eint) { mExternalInterfaces.push_back(eint); }
+		void addInterface(Interface* eint) { mInterfaces.push_back(eint); }
 		///
 		void setSwitchTime(Real switchTime, Int systemIndex);
+		///
+		void addSystemTopology(SystemTopology system);
 
 		// #### Getter ####
-		String getName() const { return mName; }
-		Real getTime() { return mTime; }
-		Real getFinalTime() { return mFinalTime; }
-		Real getTimeStep() { return mTimeStep; }
 		Matrix& getLeftSideVector() { return mLeftSideVector; }
 		Matrix& getRightSideVector() { return mRightSideVector; }
 		Matrix& getSystemMatrix() { return mSystemMatrices[mSystemIndex]; }
