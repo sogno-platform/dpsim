@@ -45,6 +45,7 @@ namespace DPsim {
 		Real mFinalTime;
 		/// Time variable that is incremented at every step
 		Real mTime = 0;
+		/// Number of step which have been executed for this simulation.
 		Int mTimeStepCount = 0;
 		/// Simulation log level
 		Logger::Level mLogLevel;
