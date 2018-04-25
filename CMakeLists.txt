@@ -53,13 +53,13 @@ option(WITH_RT	   "Enable real-time features"			${Linux_FOUND})
 option(WITH_PYTHON "Enable Python support"				${Python_FOUND})
 
 configure_file(
-	${CMAKE_CURRENT_SOURCE_DIR}/Source/Config.h.in
-	${CMAKE_CURRENT_BINARY_DIR}/Source/Config.h
+	${CMAKE_CURRENT_SOURCE_DIR}/Include/dpsim/Config.h.in
+	${CMAKE_CURRENT_BINARY_DIR}/Include/dpsim/Config.h
 )
 
 set(INCLUDE_DIRS
-	${CMAKE_CURRENT_BINARY_DIR}/Source
-	${CMAKE_CURRENT_SOURCE_DIR}/Source
+	${CMAKE_CURRENT_BINARY_DIR}/Include/dpsim
+	${CMAKE_CURRENT_SOURCE_DIR}/Include/dpsim
 )
 
 add_subdirectory(Source)
