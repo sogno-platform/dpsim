@@ -92,6 +92,7 @@ namespace Python {
 //		static PyObject* lvector(PyObject *self, PyObject *args);
 		static PyObject* getName(PyObject *self, void *ctx);
 		static PyObject* getState(PyObject *self, void *ctx);
+		static PyObject* getEventFD(PyObject *self, PyObject *args);
 		static PyObject* pause(PyObject *self, PyObject *args);
 		static PyObject* start(PyObject *self, PyObject *args);
 		static PyObject* step(PyObject *self, PyObject *args);

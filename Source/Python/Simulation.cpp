@@ -463,6 +463,29 @@ PyObject* DPsim::Python::Simulation::wait(PyObject *self, PyObject *args)
 	return Py_None;
 }
 
+static char* DocSimulationGetEventFD =
+"get_eventfd(flags)\n"
+"Return a poll()/select()'able file descriptor which can be used to asynchronously\n"
+"notify the Python code about state changes and other events of the simulation.\n"
+"\n"
+":param flags: An optional mask of events which should be reported.\n"
+":param coalesce: Do not report each event  but do a rate reduction instead.\n";
+PyObject * DPsim::Python::Simulation::getEventFD(PyObject *self, PyObject *args) {
+	int flags = -1, coalesce = 1, fd;
+	Python::Simulation *pySim = (Python::Simulation *) self;
+
+	if (!PyArg_ParseTuple(args, "|ii", &flags, &coalesce))
+		return nullptr;
+
+	fd = pySim->sim->getEventFD(flags, coalesce);
+	if (fd < 0) {
+		PyErr_SetString(PyExc_SystemError, "Failed to created event file descriptor");
+		return nullptr;
+	}
+
+	return Py_BuildValue("i", fd);
+}
+
 static char* DocSimulationGetState =
 "state\n"
 "The current state of simulation.\n";
@@ -497,6 +520,7 @@ static PyMethodDef Simulation_methods[] = {
 	{"step",		DPsim::Python::Simulation::step, METH_NOARGS, DocSimulationStep},
 	{"stop",		DPsim::Python::Simulation::stop, METH_NOARGS, DocSimulationStop},
 	{"wait",		DPsim::Python::Simulation::wait, METH_NOARGS, DocSimulationWait},
+	{"get_eventfd",         DPsim::Python::Simulation::getEventFD, METH_VARARGS, DocSimulationGetEventFD},
 	{NULL, NULL, 0, NULL}
 };
 

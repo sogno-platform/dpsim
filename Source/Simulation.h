@@ -101,6 +101,7 @@ namespace DPsim {
 		Real getTime() const { return mTime; }
 		Real getFinalTime() const { return mFinalTime; }
 		Int getTimeStepCount() const { return mTimeStepCount; }
+		int getEventFD(Int flags = -1, Int coalesce = 1);
 	};
 
 }

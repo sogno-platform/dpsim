@@ -138,3 +138,8 @@ void Simulation::addInterface(Interface *eint) {
 void Simulation::addSystemTopology(SystemTopology system) {
 	mSolver->addSystemTopology(system);
 }
+
+int Simulation::getEventFD(Int flags, Int coalesce) {
+	// TODO
+	return -1;
+}
