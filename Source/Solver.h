@@ -32,8 +32,6 @@
 using namespace CPS;
 
 namespace DPsim {
-	/// Ground node
-	const Int GND = -1;
 	/// Holds switching time and which system should be activated.
 	struct SwitchConfiguration {
 		Real switchTime;

@@ -29,9 +29,9 @@ int main(int argc, char* argv[]) {
 	// Define system topology
 	SystemTopology system(50, {
 		VoltageSource::make("v_in", 0, 1, 10),
-		Resistor::make("r_1", 0, GND, 5),
-		Resistor::make("r_2", 1, GND, 10),
-		Resistor::make("r_3", 1, GND, 2)});
+		Resistor::make("r_1", 0, DEPRECATEDGND, 5),
+		Resistor::make("r_2", 1, DEPRECATEDGND, 10),
+		Resistor::make("r_3", 1, DEPRECATEDGND, 2)});
 
 	// Define simulation scenario
 	Real timeStep = 0.00005;
@@ -40,6 +40,6 @@ int main(int argc, char* argv[]) {
 
 	Simulation sim(simName, system, timeStep, finalTime, Solver::Domain::EMT);
 	sim.run();
-	
+
 	return 0;
 }

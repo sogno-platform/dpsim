@@ -27,8 +27,8 @@ using namespace CPS::Components::DP;
 int main(int argc, char* argv[]) {
 	// Define system topology
 	SystemTopology system(50, {
-		VoltageSource::make("v_1", GND, 0, Complex(10, 0), Logger::Level::DEBUG),
-		Resistor::make("r_1", 0, GND, 1)});
+		VoltageSource::make("v_1", DEPRECATEDGND, 0, Complex(10, 0), Logger::Level::DEBUG),
+		Resistor::make("r_1", 0, DEPRECATEDGND, 1)});
 
 	// Define simulation scenario
 	Real timeStep = 0.00005;

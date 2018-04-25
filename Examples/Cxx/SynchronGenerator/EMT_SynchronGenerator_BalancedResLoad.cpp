@@ -69,9 +69,9 @@ int main(int argc, char* argv[])
 		nomPower, nomPhPhVoltRMS, nomFreq, poleNum, nomFieldCurr,
 		Rs, Ll, Lmd, Lmd0, Lmq, Lmq0, Rfd, Llfd, Rkd, Llkd, Rkq1, Llkq1, Rkq2, Llkq2, H, Ra);
 	Real loadRes = 1037.8378;
-	ComponentBase::Ptr r1 = Resistor::make("r1", 0, GND, loadRes);
-	ComponentBase::Ptr r2 = Resistor::make("r2", 1, GND, loadRes);
-	ComponentBase::Ptr r3 = Resistor::make("r3", 2, GND, loadRes);
+	ComponentBase::Ptr r1 = Resistor::make("r1", 0, DEPRECATEDGND, loadRes);
+	ComponentBase::Ptr r2 = Resistor::make("r2", 1, DEPRECATEDGND, loadRes);
+	ComponentBase::Ptr r3 = Resistor::make("r3", 2, DEPRECATEDGND, loadRes);
 
 	SystemTopology system(50);
 	system.mComponents = { gen, r1, r2, r3 };

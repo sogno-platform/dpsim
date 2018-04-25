@@ -28,17 +28,17 @@ using namespace CPS::Components::DP;
 int main(int argc, char* argv[]) {
 	// Define system topology
 	SystemTopology system(50, {
-		VoltageSource::make("v_1", GND, 0, Math::polarDeg(100., 0 * -90.), Logger::Level::DEBUG),
+		VoltageSource::make("v_1", DEPRECATEDGND, 0, Math::polarDeg(100., 0 * -90.), Logger::Level::DEBUG),
 		//Inductor::make("l_1", 0, 1, 0.1, Logger::Level::DEBUG),
-		//Resistor::make("r_2", 1, GND, 1, Logger::Level::DEBUG),
+		//Resistor::make("r_2", 1, DEPRECATEDGND, 1, Logger::Level::DEBUG),
 		Transformer::make("trafo_1", 0, 1, 10, 0, 0, 0.1, Logger::Level::DEBUG),
-		Resistor::make("r_1", 1, GND, 1, Logger::Level::DEBUG)});
+		Resistor::make("r_1", 1, DEPRECATEDGND, 1, Logger::Level::DEBUG)});
 
 	// Define simulation scenario
 	Real timeStep = 0.00005;
 	Real finalTime = 0.2;
 	String simName = "DP_IdealVS_Trafo_" + std::to_string(timeStep);
-	
+
 	Simulation sim(simName, system, timeStep, finalTime);
 	sim.run();
 

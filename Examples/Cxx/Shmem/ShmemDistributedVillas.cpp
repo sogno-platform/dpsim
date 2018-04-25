@@ -26,7 +26,7 @@ using namespace CPS::Components::DP;
 
 int main(int argc, char *argv[])
 {
-	ComponentBase::List comps;
+	ComponentBase::List comps, comps2;
 	Node::List nodes;
 
 	struct shmem_conf conf;
@@ -59,13 +59,13 @@ int main(int argc, char *argv[])
 		auto n3 = Node::make("n3");
 
 		// Components
-		auto evs = VoltageSource::make("v_t", Node::List{GLOBALGND, n3}, Complex(0, 0));
-		auto vs = VoltageSourceNorton::make("v_s", Node::List{GLOBALGND, n1}, Complex(10000, 0), 1);
+		auto evs = VoltageSource::make("v_t", Node::List{GND, n3}, Complex(0, 0));
+		auto vs = VoltageSourceNorton::make("v_s", Node::List{GND, n1}, Complex(10000, 0), 1);
 		auto l1 = Inductor::make("l_1", Node::List{n1, n2}, 0.1);
 		auto r1 = Resistor::make("r_1", Node::List{n2, n3}, 1);
 
 		comps = ComponentBase::List{evs, vs, l1, r1};
-		nodes = Node::List{GLOBALGND, n1, n2, n3};
+		nodes = Node::List{GND, n1, n2, n3};
 
 		shmem.registerControlledAttribute(evs->findAttribute<Complex>("voltage_ref"), 0, 1);
 		shmem.registerExportedAttribute(evs->findAttribute<Complex>("comp_current"), 0, 1);
@@ -75,11 +75,13 @@ int main(int argc, char *argv[])
 		auto n4 = Node::make("n4");
 
 		// Components
-		auto ecs = CurrentSource::make("v_s", Node::List{GLOBALGND, n4}, Complex(0, 0));
-		auto r2A = Resistor::make("r_2", Node::List{GLOBALGND, n4}, 10);
+		auto ecs = CurrentSource::make("v_s", Node::List{GND, n4}, Complex(0, 0));
+		auto r2A = Resistor::make("r_2", Node::List{GND, n4}, 10);
+		auto r2B = Resistor::make("r_2", Node::List{GND, n4}, 8);
 
 		comps = ComponentBase::List{ecs, r2A};
-		nodes = Node::List{GLOBALGND, n4};
+		comps2 = ComponentBase::List{ecs, r2B};
+		nodes = Node::List{GND, n4};
 
 		shmem.registerControlledAttribute(ecs->findAttribute<Complex>("current_ref"), 0, 1);
 		shmem.registerExportedAttribute(ecs->findAttribute<Complex>("comp_voltage"), 0, 1);
@@ -90,7 +92,7 @@ int main(int argc, char *argv[])
 	}
 
 	String simName = "ShmemDistributed";
-	Real timeStep = 0.001000;
+	Real timeStep = 0.001;
 
 	auto sys1 = SystemTopology(50, nodes, comps);
 
@@ -98,10 +100,6 @@ int main(int argc, char *argv[])
 	sim.addInterface(&shmem);
 
 	if (String(argv[1]) == "1") {
-		auto comps2 = comps;
-
-		comps2[1] = Resistor::make("r_2", 0, GND, 8);
-
 		auto sys2 = SystemTopology(50, comps2);
 
 		sim.addSystemTopology(sys2);

@@ -103,9 +103,9 @@ int main(int argc, char* argv[])
 	ComponentBase::Ptr LineL3 = Inductor::make("LineL3", 5, 8, lindeInd);
 
 	//Load
-	ComponentBase::Ptr r1 = Resistor::make("r1", 6, GND, loadRes);
-	ComponentBase::Ptr r2 = Resistor::make("r2", 7, GND, loadRes);
-	ComponentBase::Ptr r3 = Resistor::make("r3", 8, GND, loadRes);
+	ComponentBase::Ptr r1 = Resistor::make("r1", 6, DEPRECATEDGND, loadRes);
+	ComponentBase::Ptr r2 = Resistor::make("r2", 7, DEPRECATEDGND, loadRes);
+	ComponentBase::Ptr r3 = Resistor::make("r3", 8, DEPRECATEDGND, loadRes);
 
 	//Line Inductance2
 	ComponentBase::Ptr LineL12 = Inductor::make("LineL12", 6, 9, lindeInd);
@@ -127,9 +127,9 @@ int main(int argc, char* argv[])
 
 	// Declare circuit components for resistance change
 	Real breakerRes = 24e3*24e3 / 600e6;
-	ComponentBase::Ptr rBreaker1 = Resistor::make("rbreak1", 6, GND, breakerRes);
-	ComponentBase::Ptr rBreaker2 = Resistor::make("rbreak2", 7, GND, breakerRes);
-	ComponentBase::Ptr rBreaker3 = Resistor::make("rbreak3", 8, GND, breakerRes);
+	ComponentBase::Ptr rBreaker1 = Resistor::make("rbreak1", 6, DEPRECATEDGND, breakerRes);
+	ComponentBase::Ptr rBreaker2 = Resistor::make("rbreak2", 7, DEPRECATEDGND, breakerRes);
+	ComponentBase::Ptr rBreaker3 = Resistor::make("rbreak3", 8, DEPRECATEDGND, breakerRes);
 
 	SystemTopology systemBreakerOn(50);
 	//PowerComponent::List compsBreakerOn = { gen, rBreaker1, rBreaker2, rBreaker3, r1, r2, r3 };

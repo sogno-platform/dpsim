@@ -36,13 +36,13 @@ int main(int argc, char* argv[])
 	auto n4 = Node::make("n4");
 
 	// Components
-	auto evs = VoltageSource::make("v_s", Node::List{GLOBALGND, n1}, Complex(0, 0));
+	auto evs = VoltageSource::make("v_s", Node::List{GND, n1}, Complex(0, 0));
 	auto rs =  Resistor::make("r_s", Node::List{n1, n2}, 1);
 	auto rl =  Resistor::make("r_line", Node::List{n2, n3}, 1);
 	auto ll =  Inductor::make("l_line", Node::List{n3, n4}, 1);
-	auto rL =  Resistor::make("r_load", Node::List{n4, GLOBALGND}, 1000);
+	auto rL =  Resistor::make("r_load", Node::List{n4, GND}, 1000);
 
-	auto sys = SystemTopology(50, Node::List{GLOBALGND, n1, n2, n3, n4}, ComponentBase::List{evs, rs, rl, ll, rL});
+	auto sys = SystemTopology(50, Node::List{GND, n1, n2, n3, n4}, ComponentBase::List{evs, rs, rl, ll, rL});
 
 	auto villas = ShmemInterface("/villas1-in", "/villas1-out");
 	villas.registerControlledAttribute(evs->findAttribute<Complex>("voltage_ref"), 0, 1);

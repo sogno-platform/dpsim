@@ -28,21 +28,21 @@ using namespace CPS::Components::EMT;
 int main(int argc, char* argv[]) {
 	// Define system topology
 	SystemTopology system0(50, {
-		VoltageSourceNorton::make("v_s", 0, GND, Complex(10000, 0), 1),
+		VoltageSourceNorton::make("v_s", 0, DEPRECATEDGND, Complex(10000, 0), 1),
 		Resistor::make("r_line", 0, 1, 1),
 		Inductor::make("l_line", 1, 2, 1)});
 
 	SystemTopology system1 = system0;
 	SystemTopology system2 = system0;
-	system1.mComponents.push_back(Resistor::make("r_load", 2, GND, 1000));
-	system2.mComponents.push_back(Resistor::make("r_load", 2, GND, 800));
+	system1.mComponents.push_back(Resistor::make("r_load", 2, DEPRECATEDGND, 1000));
+	system2.mComponents.push_back(Resistor::make("r_load", 2, DEPRECATEDGND, 800));
 
 	// Define simulation scenario
 	Real timeStep = 0.001;
 	Real omega = 2.0*M_PI*50.0;
 	Real finalTime = 0.3;
 	String simName = "EMT_ResVS_RxLine_Switch1_" + std::to_string(timeStep);
-	
+
 	Simulation sim(simName, system1, timeStep, finalTime,
 		Solver::Domain::EMT, Solver::Type::MNA, Logger::Level::INFO);
 	sim.addSystemTopology(system2);

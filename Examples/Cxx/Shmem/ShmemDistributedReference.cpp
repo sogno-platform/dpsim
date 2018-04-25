@@ -32,14 +32,14 @@ int main(int argc, char* argv[])
 	auto n3 = Node::make("n3");
 
 	// Components
-	auto vs = VoltageSourceNorton::make("v_s", Node::List{GLOBALGND, n1}, Complex(10000, 0), 1);
+	auto vs = VoltageSourceNorton::make("v_s", Node::List{GND, n1}, Complex(10000, 0), 1);
 	auto l1 = Inductor::make("l_1", Node::List{n1, n2}, 0.1);
 	auto r1 = Resistor::make("r_1", Node::List{n2, n3}, 1);
 
-	auto r2A = Resistor::make("r_2", Node::List{n3, GLOBALGND}, 10);
-	auto r2B = Resistor::make("r_2", Node::List{n3, GLOBALGND}, 8);
+	auto r2A = Resistor::make("r_2", Node::List{n3, GND}, 10);
+	auto r2B = Resistor::make("r_2", Node::List{n3, GND}, 8);
 
-	auto nodes = Node::List{GLOBALGND, n1, n2, n3};
+	auto nodes = Node::List{GND, n1, n2, n3};
 
 	auto sys1 = SystemTopology(50, nodes, ComponentBase::List{vs, l1, r1, r2A});
 	auto sys2 = SystemTopology(50, nodes, ComponentBase::List{vs, l1, r1, r2B});

@@ -42,13 +42,13 @@ int main(int argc, char *argv[]) {
 	auto n1 = Node::make("n1");
 
 	// Components
-	auto ecs = CurrentSource::make("v_intf", Node::List{GLOBALGND, n1}, Complex(100, 0));
-	auto r1 = Resistor::make("r_1", Node::List{GLOBALGND, n1}, 1);
+	auto ecs = CurrentSource::make("v_intf", Node::List{GND, n1}, Complex(100, 0));
+	auto r1 = Resistor::make("r_1", Node::List{GND, n1}, 1);
 
 	shmem.registerControlledAttribute(ecs->findAttribute<Complex>("current_ref"), 0, 1);
 	shmem.registerExportedAttribute(ecs->findAttribute<Complex>("comp_current"), 0, 1);
 
-	auto sys = SystemTopology(50, Node::List{GLOBALGND, n1}, ComponentBase::List{ecs, r1});
+	auto sys = SystemTopology(50, Node::List{GND, n1}, ComponentBase::List{ecs, r1});
 	auto sim = Simulation("ShmemControllableSource", sys, timeStep, 1);
 
 	sim.addInterface(&shmem);

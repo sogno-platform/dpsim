@@ -28,14 +28,14 @@ using namespace CPS::Components;
 static void VarFreqRxLineResLoad_NZ_Paper_DP(Real timeStep, Real finalTime, Real freqStep, Real loadStep, Real rampTime) {
 	// Define system topology
 	SystemTopology system0(50, {
-		std::make_shared<DP::VoltageSourceFreq>("v_s", 0, GND, 10000, 0, 1, 2 * PI*-1, freqStep, rampTime),
+		std::make_shared<DP::VoltageSourceFreq>("v_s", 0, DEPRECATEDGND, 10000, 0, 1, 2 * PI*-1, freqStep, rampTime),
 		DP::Resistor::make("r_line", 0, 1, 1),
 		DP::Inductor::make("l_line", 1, 2, 1)});
 
 	SystemTopology system1 = system0;
 	SystemTopology system2 = system0;
-	system1.mComponents.push_back(DP::Resistor::make("r_load", 2, GND, 10));
-	system2.mComponents.push_back(DP::Resistor::make("r_load", 2, GND, 5));
+	system1.mComponents.push_back(DP::Resistor::make("r_load", 2, DEPRECATEDGND, 10));
+	system2.mComponents.push_back(DP::Resistor::make("r_load", 2, DEPRECATEDGND, 5));
 
 	// Define simulation scenario
 	String simName = "DP_RXLine_LoadStep_FreqStep_2_" + std::to_string(timeStep);
@@ -50,14 +50,14 @@ static void VarFreqRxLineResLoad_NZ_Paper_DP(Real timeStep, Real finalTime, Real
 static void VarFreqRxLineResLoad_NZ_Paper_EMT(Real timeStep, Real finalTime, Real freqStep, Real loadStep, Real rampTime) {
 	// Define system topology
 	SystemTopology system0(50, {
-		std::make_shared<EMT::VoltageSourceFreq>("v_s", 0, GND, 10000, 0, 1, 2 * PI*-1, freqStep, rampTime),
+		std::make_shared<EMT::VoltageSourceFreq>("v_s", 0, DEPRECATEDGND, 10000, 0, 1, 2 * PI*-1, freqStep, rampTime),
 		EMT::Resistor::make("r_line", 0, 1, 1),
 		EMT::Inductor::make("l_line", 1, 2, 1)});
 
 	SystemTopology system1 = system0;
 	SystemTopology system2 = system0;
-	system1.mComponents.push_back(EMT::Resistor::make("r_load", 2, GND, 10));
-	system2.mComponents.push_back(EMT::Resistor::make("r_load", 2, GND, 8));
+	system1.mComponents.push_back(EMT::Resistor::make("r_load", 2, DEPRECATEDGND, 10));
+	system2.mComponents.push_back(EMT::Resistor::make("r_load", 2, DEPRECATEDGND, 8));
 	
 	// Define simulation scenario
 	String simName = "EMT_RXLine_LoadStep_FreqStep_2_" + std::to_string(timeStep);
