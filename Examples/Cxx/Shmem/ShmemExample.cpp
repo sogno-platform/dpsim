@@ -29,24 +29,29 @@ int main(int argc, char* argv[])
 	// Very simple test circuit. Just a few resistors and an inductance.
 	// Voltage is read from VILLASnode and current through everything is written back.
 
-	auto evs = VoltageSource::make("v_s", 1, 0, Complex(0, 0));
+	// Nodes
+	auto n1 = Node::make("n1");
+	auto n2 = Node::make("n2");
+	auto n3 = Node::make("n3");
+	auto n4 = Node::make("n4");
 
-	Component::List comps = {
-		evs,
-		Resistor::make("r_s", 0, 1, 1),
-		Resistor::make("r_line", 1, 2, 1),
-		Inductor::make("l_line", 2, 3, 1),
-		Resistor::make("r_load", 3, GND, 1000)
-	};
+	// Components
+	auto evs = VoltageSource::make("v_s", Node::List{GND, n1}, Complex(0, 0));
+	auto rs =  Resistor::make("r_s", Node::List{n1, n2}, 1);
+	auto rl =  Resistor::make("r_line", Node::List{n2, n3}, 1);
+	auto ll =  Inductor::make("l_line", Node::List{n3, n4}, 1);
+	auto rL =  Resistor::make("r_load", Node::List{n4, GND}, 1000);
 
-	ShmemInterface villas("/villas1-in", "/villas1-out");
-	villas.registerControllableSource(evs, GND, 0);
-	villas.registerExportedCurrent(evs, GND, 0);
+	auto sys = SystemTopology(50, Node::List{GND, n1, n2, n3, n4}, ComponentBase::List{evs, rs, rl, ll, rL});
+
+	auto villas = ShmemInterface("/villas1-in", "/villas1-out");
+	villas.registerControlledAttribute(evs->findAttribute<Complex>("voltage_ref"), 0, 1);
+	villas.registerExportedAttribute(evs->findAttribute<Complex>("comp_current"), 0, 1);
 
 	Real timeStep = 0.001;
-	Simulation sim("ShmemExample", comps, 2.0*M_PI*50.0, timeStep, 0.3, Logger::Level::INFO);
-	sim.addExternalInterface(&villas);
+	auto sim = Simulation("ShmemExample", sys, timeStep, 0.3);
 
+	sim.addInterface(&villas);
 	sim.run();
 
 	return 0;

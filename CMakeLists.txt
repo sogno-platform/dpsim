@@ -2,7 +2,8 @@ cmake_minimum_required(VERSION 3.5)
 project(DPsim CXX)
 
 # Enable C++11 support
-set(CMAKE_CXX_STANDARD 11)
+set(CMAKE_CXX_STANDARD 17)
+add_definitions(-D_SILENCE_ALL_CXX17_DEPRECATION_WARNINGS)
 
 set(CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/CMake")
 
@@ -51,14 +52,6 @@ option(BUILD_EXAMPLES "Build C++ examples" ON)
 option(WITH_RT	   "Enable real-time features"			${Linux_FOUND})
 option(WITH_PYTHON "Enable Python support"				${Python_FOUND})
 
-# This signalizes CPowerSystems, that it is build with DPsim and should include
-# the old MNA interface. This should be removed as soon as CPS has fixed. See
-# https://git.rwth-aachen.de/acs/core/simulation/cpowersystems/issues/10
-set(WITH_DPSIM ON)
-
-add_subdirectory(Documentation)
-add_subdirectory(Dependencies/libcps)
-
 configure_file(
 	${CMAKE_CURRENT_SOURCE_DIR}/Source/Config.h.in
 	${CMAKE_CURRENT_BINARY_DIR}/Source/Config.h
@@ -70,6 +63,8 @@ set(INCLUDE_DIRS
 )
 
 add_subdirectory(Source)
+add_subdirectory(Documentation)
+add_subdirectory(Dependencies/libcps)
 
 if(BUILD_EXAMPLES)
 	add_subdirectory(Examples/Cxx)

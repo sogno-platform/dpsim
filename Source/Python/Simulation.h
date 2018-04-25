@@ -37,47 +37,44 @@
 #endif
 
 #include "Config.h"
+#include "cps/Python/SystemTopology.h"
 #include "../Simulation.h"
-#include "cps/Component.h"
 
 namespace DPsim {
-
-	enum SimState {
-		StateStopped = 0,
-		StateRunning,
-		StatePaused,
-		StateDone
-	};
-
 namespace Python {
 
 	struct Simulation {
 		PyObject_HEAD
 
-		DPsim::Simulation *sim;
-		Logger *log, *llog, *rlog;
+		enum class State : int {
+			Stopped = 0,
+			Running,
+			Paused,
+			Done
+		};
+
+		std::shared_ptr<DPsim::Simulation> sim;
+
+		CPS::Python::SystemTopology *pySys;
 
 		std::condition_variable *cond;
 		std::mutex *mut;
 		std::atomic_bool running;
 		std::atomic_int sigPause, numStep;
 		std::thread *simThread;
-		SimState state;
+		State state;
 
 		bool rt;
 		bool startSync;
 
-		PyObject* pyComps; // Components as a (Python) list of PyComponents
-		CPS::Component::List comps;
-		int numSwitch;
-
 		// List of additional objects that aren't directly used from Simulation
 		// methods, but that a reference has be kept to to avoid them from being
-		// freed (e.g. ExternalInterfaces).
+		// freed (e.g. Interfaces).
 		std::vector<PyObject*> refs;
 
 		// Function executed by the simulation thread
 		static void simThreadFunction(Simulation* pySim);
+		static void simThreadFunctionNonRT(Simulation* pySim);
 #ifdef WITH_RT
 		static void simThreadFunctionRT(Simulation* pySim);
 #endif
@@ -92,13 +89,14 @@ namespace Python {
 
 		// Methods that are actually available from Python
 		static PyObject* addInterface(PyObject *self, PyObject *args);
-		static PyObject* lvector(PyObject *self, PyObject *args);
-		static PyObject* name(PyObject *self, PyObject *args);
+//		static PyObject* lvector(PyObject *self, PyObject *args);
+		static PyObject* getName(PyObject *self, void *ctx);
+		static PyObject* getState(PyObject *self, void *ctx);
+		static PyObject* getEventFD(PyObject *self, PyObject *args);
 		static PyObject* pause(PyObject *self, PyObject *args);
 		static PyObject* start(PyObject *self, PyObject *args);
 		static PyObject* step(PyObject *self, PyObject *args);
 		static PyObject* stop(PyObject *self, PyObject *args);
-		static PyObject* updateMatrix(PyObject *self, PyObject *args);
 		static PyObject* wait(PyObject *self, PyObject *args);
 	};
 

@@ -12,6 +12,7 @@ endif()
 # targets
 set(CIRCUIT_SOURCES
 	Circuits/DP_IdealVS_R_1.cpp
+	Circuits/DP_CS_R_1.cpp
 	Circuits/DP_IdealVS_RXLine_1.cpp
 	Circuits/DP_IdealVS_Trafo_1.cpp
 	Circuits/DP_ResVS_RL_Switch_1.cpp
@@ -57,6 +58,7 @@ if(WITH_SHMEM)
 		Shmem/ShmemDistributedReference.cpp
 		Shmem/ShmemDistributedVillas.cpp
 		Shmem/ShmemDistributedDirect.cpp
+		Shmem/ShmemControllableSource.cpp
 		Shmem/ShmemRealTime.cpp
 	)
 endif()
@@ -73,7 +75,7 @@ endif()
 
 if(WITH_CIM AND WITH_SHMEM)
 	set(CIM_SHMEM_SOURCES
-		CIM/WSCC-9bus_CIM_ext.cpp		
+#		CIM/WSCC-9bus_CIM_ext.cpp		
 	)
 endif()
 

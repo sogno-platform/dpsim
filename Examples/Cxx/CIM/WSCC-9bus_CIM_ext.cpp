@@ -23,16 +23,19 @@
 #include <list>
 
 #include "DPsim_MNA.h"
+#include "cps/CIM/Reader.h"
+#include "cps/Interfaces/ShmemInterface.h"
 
 using namespace DPsim;
+using namespace CPS::Components::DP;
 
 int main(int argc, char *argv[]) {
+	// Specify CIM files
 #ifdef _WIN32
 	String path("..\\..\\..\\..\\dpsim\\Examples\\CIM\\WSCC-09_Neplan_RX\\");
-#elif defined(__linux__)
+#elif defined(__linux__) || defined(__APPLE__)
 	String path("../../../dpsim/Examples/CIM/IEEE-09_Neplan_RX/");
 #endif
-	
 	std::list<String> filenames = {
 		path + "WSCC-09_Neplan_RX_DI.xml",
 		path + "WSCC-09_Neplan_RX_EQ.xml",
@@ -40,7 +43,28 @@ int main(int argc, char *argv[]) {
 		path + "WSCC-09_Neplan_RX_TP.xml"
 	};
 
-	MnaSimulation sim("CIM", filenames, 50, 0.0001, 0.1, SimulationType::DP, Logger::Level::DEBUG);
+	// Read CIM data
+	CIM::Reader reader(50, Logger::Level::INFO, Logger::Level::INFO);
+	reader.addFiles(filenames);
+	reader.parseFiles();
+	SystemTopology system = reader.getSystemTopology();
+
+	// Extend system with current source
+	auto ecs = CurrentSource::make("v_s", 0, GND, Complex(0, 0));
+	system.mComponents.push_back(ecs);
+
+	// Add shared memory interface
+	struct shmem_conf conf;
+	conf.samplelen = 4;
+	conf.queuelen = 1024;
+	conf.polling = false;
+	in = "/dpsim10";
+	out = "/dpsim01";
+	ShmemInterface shmem(in, out, &conf);
+	shmem.registerControllableSource(ecs, GND, 0);
+	shmem.registerExportedVoltage(ecs, 0, 1);
+
+	MnaSimulation sim("CIM", system, 0.0001, 0.1, SimulationType::DP, Logger::Level::DEBUG);
 	sim.run();
 
 	return 0;

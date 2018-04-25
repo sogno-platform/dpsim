@@ -25,23 +25,20 @@
 using namespace DPsim;
 using namespace CPS::Components::EMT;
 
-int main(int argc, char* argv[])
-{
+int main(int argc, char* argv[]) {
+	// Define system topology
+	SystemTopology system(50, {
+		VoltageSource::make("v_in", 0, 1, 10),
+		Resistor::make("r_1", 0, DEPRECATEDGND, 5),
+		Resistor::make("r_2", 1, DEPRECATEDGND, 10),
+		Resistor::make("r_3", 1, DEPRECATEDGND, 2)});
+
 	// Define simulation scenario
-	Real timeStep = 0.001;
-	Real omega = 2.0*M_PI*50.0;
-	Real finalTime = 0.3;
-	String simName = "EMT_IdealVS_R1_" + std::to_string(timeStep);
+	Real timeStep = 0.00005;
+	Real finalTime = 0.2;
+	String simName = "EMT_IdealVS_R1";
 
-	Component::List comps = {
-		VoltageSource::make("v_in", 0, 1, 10, 0),
-		Resistor::make("r_1", 0, GND, 5),
-		Resistor::make("r_2", 1, GND, 10),
-		Resistor::make("r_3", 1, GND, 2)
-	};
-
-	Simulation sim(simName, comps, omega, timeStep, finalTime, Logger::Level::INFO, SimulationType::EMT);
-
+	Simulation sim(simName, system, timeStep, finalTime, Solver::Domain::EMT);
 	sim.run();
 
 	return 0;
