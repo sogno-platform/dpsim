@@ -94,8 +94,6 @@ Simulation::~Simulation() {
 void Simulation::run(bool blocking) {
 	mLog.Log(Logger::Level::INFO) << "Start simulation." << std::endl;
 
-	sendNotification(Event::STARTED);
-
 	while (mTime < mFinalTime) {
 		Real nextTime;
 		nextTime = mSolver->step(mTime, blocking);
