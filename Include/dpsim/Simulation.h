@@ -43,10 +43,12 @@ namespace DPsim {
 
 	public:
 		enum class Event : std::uint32_t {
-			STARTED = 1,
-			STOPPED = 2,
-			COMPLETED = 3,
-			OVERRUN = 4
+			Started = 1,
+			Stopped = 2,
+			Finished = 3,
+			Overrun = 4,
+			Paused = 5,
+			Resumed = 6
 		};
 
 	protected:
