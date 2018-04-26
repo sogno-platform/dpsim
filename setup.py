@@ -105,6 +105,7 @@ setup(
     ],
     install_requires = [
         'acs-dataprocessing>=0.1.2',
+        'progressbar2'
     ],
     setup_requires = [
         'm2r',
