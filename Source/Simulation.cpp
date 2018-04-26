@@ -85,7 +85,7 @@ Simulation::Simulation(String name, std::list<String> cimFiles, Real frequency,
 #endif
 
 Simulation::~Simulation() {
-	if (mPipe[0] => 0) {
+	if (mPipe[0] >= 0) {
 		close(mPipe[0]);
 		close(mPipe[1]);
 	}
