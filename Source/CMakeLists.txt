@@ -1,5 +1,4 @@
 add_library(dpsim	
-	Utilities.cpp
 	Simulation.cpp
 	MNA_Solver.cpp
 )
