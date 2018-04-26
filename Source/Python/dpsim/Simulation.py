@@ -37,8 +37,11 @@ class Simulation(_dpsim.Simulation):
                 self.pbar_task.cancel()
 
         # Call user defined callbacks
-        for cb in self.callbacks:
-            cb(self, evt)
+        for e in self.callbacks:
+            cb = e[0]
+            args = e[1]
+
+            cb(self, evt, *args)
 
         print("Received event: %d" % evt)
 
@@ -89,5 +92,5 @@ class Simulation(_dpsim.Simulation):
             redirect_stdout = True
         )
 
-    def register_callback(self, cb):
-        self.callbacks.append(cb)
+    def register_callback(self, cb, *args):
+        self.callbacks.append((cb, args))
