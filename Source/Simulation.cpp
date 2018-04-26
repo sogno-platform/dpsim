@@ -19,6 +19,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *********************************************************************************/
 
+#include <unistd.h>
+
 #include "Simulation.h"
 
 #ifdef WITH_CIM
@@ -30,24 +32,21 @@ using namespace DPsim;
 
 Simulation::Simulation(String name,
 	Real timeStep, Real finalTime,
-	Solver::Domain domain,
-	Solver::Type solverType,
-	Logger::Level logLevel,
-	Bool steadyStateInit) :
-	mLog("Logs/" + name + ".log", logLevel) {
-
-	mName = name;
-	mFinalTime = finalTime;
-	mLogLevel = logLevel;
-}
+	Solver::Domain domain, Solver::Type solverType,
+	Logger::Level logLevel) :
+	mLog("Logs/" + name + ".log", logLevel),
+	mName(name),
+	mFinalTime(finalTime),
+	mLogLevel(logLevel),
+	mPipe{-1, -1}
+{ }
 
 Simulation::Simulation(String name, SystemTopology system,
 	Real timeStep, Real finalTime,
-	Solver::Domain domain,
-	Solver::Type solverType,
+	Solver::Domain domain, Solver::Type solverType,
 	Logger::Level logLevel) :
 	Simulation(name, timeStep, finalTime,
-		domain, solverType, logLevel, false) {
+		domain, solverType, logLevel) {
 
 	switch (solverType) {
 	case Solver::Type::MNA:
@@ -66,7 +65,7 @@ Simulation::Simulation(String name, std::list<String> cimFiles, Real frequency,
 	Solver::Type solverType,
 	Logger::Level logLevel) :
 	Simulation(name, timeStep, finalTime,
-		domain, solverType, logLevel, true) {
+		domain, solverType, logLevel) {
 
 	CIM::Reader reader(frequency, logLevel, logLevel);
 	reader.addFiles(cimFiles);
@@ -84,6 +83,13 @@ Simulation::Simulation(String name, std::list<String> cimFiles, Real frequency,
 	}
 }
 #endif
+
+Simulation::~Simulation() {
+	if (mPipe[0] >= 0) {
+		close(mPipe[0]);
+		close(mPipe[1]);
+	}
+}
 
 void Simulation::run(bool blocking) {
 	mLog.Log(Logger::Level::INFO) << "Start simulation." << std::endl;
@@ -112,7 +118,7 @@ void Simulation::run(double duration, bool blocking) {
 		mTimeStepCount++;
 	}
 
-	mLog.Log(Logger::Level::INFO) << "Simulation finished." << std::endl;
+	mLog.Log(Logger::Level::INFO) << "Simulation ran for " << duration << " seconds." << std::endl;
 }
 
 Real Simulation::step(bool blocking) {
@@ -140,6 +146,31 @@ void Simulation::addSystemTopology(SystemTopology system) {
 }
 
 int Simulation::getEventFD(Int flags, Int coalesce) {
-	// TODO
-	return -1;
+	int ret;
+
+	// Create a new pipe of not existant
+	if (mPipe[0] < 0) {
+		ret = pipe(mPipe);
+		if (ret < 0)
+			throw SystemError("Failed to create pipe");
+	}
+
+	// Return read end
+	return mPipe[0];
+}
+
+void Simulation::sendNotification(enum Event evt) {
+	int ret;
+
+	if (mPipe[0] < 0) {
+		ret = pipe(mPipe);
+		if (ret < 0)
+			throw SystemError("Failed to create pipe");
+	}
+
+	uint32_t msg = static_cast<uint32_t>(evt);
+
+	ret = write(mPipe[1], &msg, 4);
+	if (ret < 0)
+		throw SystemError("Failed notify");
 }
