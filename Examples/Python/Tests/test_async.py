@@ -4,15 +4,26 @@ import pytest
 import asyncio
 import time
 
-def my_callback(sim, evt):
+def my_callback(sim, evt, myvar):
+    assert myvar == 1337
+
     if evt == 1:
         print("Simulation started")
+    if evt == 2:
+        print("Simulation stopped")
+    if evt == 3:
+        print("Simulation finished")
+    if evt == 4:
+        print("Simulation overrun")
+    if evt == 5:
+        print("Simulation paused")
+    if evt == 6:
+        print("Simulation resumed")
 
     if evt == 3:
-        print("Completed. Goodbye")
         sim.wait()
-
         sim.loop.stop()
+
 
 def test_async():
     el = asyncio.get_event_loop()
@@ -31,8 +42,15 @@ def test_async():
 
     # Start in two seconds!
     sim.start(when = time.time() + 2)
-    sim.register_callback(my_callback)
     sim.show_progressbar()
+
+    sim.register_callback(my_callback, 1337)
+
+    # Pause the simulation after 5 sec
+    el.call_at(el.time() + 5, sim.pause)
+
+    # Resume after 7 sec
+    el.call_at(el.time() + 7, sim.start)
 
     el.run_forever()
 
