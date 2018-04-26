@@ -36,7 +36,7 @@ class CMakeBuild(build_ext):
                       '-DBUILD_EXAMPLES=OFF']
 
         cfg = 'Debug' if self.debug else 'Release'
-        cmake_args = ['-DCMAKE_BUILD_TYPE=' + cfg]
+        cmake_args += ['-DCMAKE_BUILD_TYPE=' + cfg]
 
         print("building CMake extension in %s configuration" % cfg)
 
