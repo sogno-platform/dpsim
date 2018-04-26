@@ -24,6 +24,7 @@
 #include <iostream>
 #include <vector>
 #include <list>
+#include <cstdint>
 
 #include "MNA_Solver.h"
 
@@ -40,6 +41,14 @@ namespace DPsim {
 
 	class Simulation {
 
+	public:
+		enum class Event : std::uint32_t {
+			STARTED = 1,
+			STOPPED = 2,
+			COMPLETED = 3,
+			OVERRUN = 4
+		};
+
 	protected:
 		/// Final time of the simulation
 		Real mFinalTime;
@@ -47,6 +56,8 @@ namespace DPsim {
 		Real mTime = 0;
 		/// Number of step which have been executed for this simulation.
 		Int mTimeStepCount = 0;
+		/// Pipe for asynchronous inter-process communication (IPC) to the Python world
+		int mPipe[2];
 		/// Simulation log level
 		Logger::Level mLogLevel;
 		/// Simulation logger
@@ -64,8 +75,7 @@ namespace DPsim {
 			Real timeStep, Real finalTime,
 			Solver::Domain domain = Solver::Domain::DP,
 			Solver::Type solverType = Solver::Type::MNA,
-			Logger::Level logLevel = Logger::Level::INFO,
-			Bool steadyStateInit = false);
+			Logger::Level logLevel = Logger::Level::INFO);
 		/// Creates system matrix according to
 		Simulation(String name, SystemTopology system,
 			Real timeStep, Real finalTime,
@@ -79,7 +89,7 @@ namespace DPsim {
 			Solver::Type solverType = Solver::Type::MNA,
 			Logger::Level logLevel = Logger::Level::INFO);
 		///
-		virtual ~Simulation() { };
+		virtual ~Simulation();
 
 		/// Run simulation until total time is elapsed.
 		void run(bool blocking = true);
@@ -103,6 +113,9 @@ namespace DPsim {
 		Real getFinalTime() const { return mFinalTime; }
 		Int getTimeStepCount() const { return mTimeStepCount; }
 		int getEventFD(Int flags = -1, Int coalesce = 1);
+
+		/// Sends a notification to other processes / Python
+		void sendNotification(enum Event evt);
 	};
 
 }

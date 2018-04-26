@@ -59,6 +59,8 @@ void DPsim::Python::Simulation::simThreadFunctionNonRT(DPsim::Python::Simulation
 
 	endTime = pySim->sim->getFinalTime();
 
+	pySim->sim->sendNotification(DPsim::Simulation::Event::STARTED);
+
 	pySim->numStep = 0;
 	while (pySim->running && time < endTime) {
 		time = pySim->sim->step();
@@ -75,6 +77,8 @@ void DPsim::Python::Simulation::simThreadFunctionNonRT(DPsim::Python::Simulation
 		}
 	}
 	lk.lock();
+
+	pySim->sim->sendNotification(DPsim::Simulation::Event::COMPLETED);
 
 	pySim->state = State::Done;
 	pySim->cond->notify_one();
