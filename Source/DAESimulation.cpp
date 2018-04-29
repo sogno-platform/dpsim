@@ -1,35 +1,16 @@
-#pragma once 
+
 #include "DAESimulation.h"
 
 
-Simulation::DAESimulation(String name, Component::List comps, Real om, Real dt,SimulationType simType)
+Simulation::DAESimulation(String name, SystemTopology system, Real dt, Real tfinal) : DAESys(system), mName(name)
 {
-	/*mTime = 0;
-	mLastLogTimeStep = 0;
-	mCurrentSwitchTimeIndex = 0;
-	*/
-	mName = name;
-	//mLogLevel = logLevel;
-	mSystemModel.setSimType(simType);
-	mSystemModel.setTimeStep(dt);
-	mSystemModel.setOmega(om);
-	//mFinalTime = tf;
-	//mDownSampleRate = downSampleRate;
 
-	initialize(comps);
+	//defines offset vector which is composed as follows:
+	//offset[0]= # nodal voltage equations
+	//offset[1]= # of componets and their respective equations (1 per component for now as inductance is not yet considered) 
+	
 	offsets.push_back(0);
-	offsets.push_back(1);
-	/*for (auto comp : comps) {
-		mLog.Log(Logger::Level::INFO) << "Added " << comp->getType() << " '" << comp->getName() << "' to simulation." << std::endl;
-	}
-
-	mLog.Log(Logger::Level::INFO) << "System matrix:" << std::endl;
-	mLog.LogMatrix(Logger::Level::INFO, mSystemModel.getCurrentSystemMatrix());
-	mLog.Log(Logger::Level::INFO) << "LU decomposition:" << std::endl;
-	mLog.LogMatrix(Logger::Level::INFO, mSystemModel.getLUdecomp());
-	mLog.Log(Logger::Level::INFO) << "Right side vector:" << std::endl;
-	mLog.LogMatrix(Logger::Level::INFO, mSystemModel.getRightSideVector());
-	*/
+	offsets.push_back(0);
 }
 
 void DAESimulation::initialize(Component::List newComponents)
@@ -42,6 +23,7 @@ void DAESimulation::initialize(Component::List newComponents)
 	// Calculate the mNumber of nodes by going through the list of components
 	// TODO we use the values from the first component vector right now and assume that
 	// these values don't change on switches
+	int maxNode = 0;
 	for (auto comp : newComponents) {
 		// determine maximum node in component list
 		if (comp->getNode1() > maxNode) {
@@ -52,58 +34,28 @@ void DAESimulation::initialize(Component::List newComponents)
 		}
 	}
 
-	//mLog.Log(Logger::Level::INFO) << "Maximum node number: " << maxNode << std::endl;
-	//currentVirtualNode = maxNode;
+	if (mNodes.size() == 0) {
+		// Create Nodes for all indices
+		mNodes.resize(maxNode + 1, nullptr);
+		for (int index = 0; index < mNodes.size(); index++)
+			mNodes[index] = std::make_shared<Node>(index);
 
-	// Check if component requires virtual node and if so set one
-	for (auto comp : newComponents) {
-		if (comp->hasVirtualNodes()) {
-			for (Int node = 0; node < comp->getVirtualNodesNum(); node++) {
-				currentVirtualNode++;
-				comp->setVirtualNode(node, currentVirtualNode);
-				//mLog.Log(Logger::Level::INFO) << "Created virtual node"<< node << "=" << currentVirtualNode
-				//	<< " for " << comp->getName() << std::endl;
-			}
+		for (auto comp : newComponents) {
+			std::shared_ptr<Node> node1, node2;
+			if (comp->getNode1() < 0)
+				node1 = mGnd;
+			else
+				node1 = mNodes[comp->getNode1()];
+			if (comp->getNode2() < 0)
+				node2 = mGnd;
+			else
+				node2 = mNodes[comp->getNode2()];
+
+			comp->setNodes(Node::List{ node1, node2 });
 		}
 	}
 
-	// Calculate size of system matrix
-	//Int numNodes = maxNode + currentVirtualNode + 1;
-	Int numNodes = currentVirtualNode + 1;
-
-	// Create right and left vector
-	mSystemModel.initialize(numNodes);
-
-	// Initialize right side vector and components
-	for (auto comp : newComponents) {
-		comp->initialize(mSystemModel);
-		comp->applyRightSideVectorStamp(mSystemModel);
-	}
-
-	// Create new system matrix and apply matrix stamps
-	addSystemTopology(newComponents);
-
-	switchSystemMatrix(0);
-	mComponents = mComponentsVector[0];
-}
-
-void DAESimulation::addSystemTopology(Component::List newComponents)
-{
-	mComponentsVector.push_back(newComponents);
-
-	// It is assumed that the system size does not change
-	mSystemModel.createEmptySystemMatrix();
-
-	for (auto comp : newComponents) {
-		comp->applySystemMatrixStamp(mSystemModel);
-	}
-
-	mSystemModel.addSystemMatrix();
-}
-
-void DAESimulation::switchSystemMatrix(Int systemMatrixIndex)
-{
-	mSystemModel.switchSystemMatrix(systemMatrixIndex);
+	// TO-DO: Initialize right side vector and components
 }
 
  
@@ -139,18 +91,16 @@ void DAESimulation::run()
 
 int DAESimulation::DAE_residualFunction(realtype ttime, N_Vector state, N_Vector dstate_dt, N_Vector resid, void *user_data)
 {
-	//TO-DO: add Node-equations to residual
-	for (auto node : mNodes){
-		//add necessary equations 
-
+	for (auto node : mNodes){ 
+		double residual[]=NVECTOR_DATA(resid);
+		double tempstate[]=NVECTOR_DATA(state);
+		residual[offsets[0]]=tempstate[offsets[0]]-node->voltage;
+		offsets[0]=offsets[0]+1;
 	}
 	for (auto comp : mComponents){  	//currently only supports DP_Resistor and DP_VoltageSource
 		comp->residual(ttime, NVECTOR_DATA(state), NVECTOR_DATA(dstate_dt), NVECTOR_DATA(resid), offsets);
-
 	}
 		int ret=0;
-
-
 	/*
 	Do Error checking with variable ret
 	*/
