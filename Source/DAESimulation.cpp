@@ -2,7 +2,7 @@
 #include "DAESimulation.h"
 
 
-Simulation::DAESimulation(String name, SystemTopology system, Real dt, Real tfinal) : DAESys(system), mName(name)
+DAESimulation::DAESimulation(String name, SystemTopology system, Real dt, Real tfinal) : DAESys(system), mName(name)
 {
 
 	//defines offset vector which is composed as follows:
@@ -62,13 +62,45 @@ void DAESimulation::initialize(Component::List newComponents)
 void DAESimulation::run()
 {
 	void *mem = NULL;
+	N_Vector state, state_dt, avtol ;
+	state=state_dt = avtol=NULL;
+	realtype tout, rtol, *sval, *s_dtval, *atval;
+	sval = s_dtval=  atval =NULL;
+	int NEQ = DAESys.mComponents.size(); // is this implemented?
+	
+	state = N_VNew_Serial(NEQ);
+    if(check_flag((void *)state, "N_VNew_Serial", 0)) return;
+    state_dt = N_VNew_Serial(NEQ);
+    if(check_flag((void *)state_dt, "N_VNew_Serial", 0)) return;
+	avtol = N_VNew_Serial(NEQ);
+    if(check_flag((void *)avtol, "N_VNew_Serial", 0)) return;
+
+	sval = N_VGetArrayPointer_Serial(state);
+	/*
+		set intial values state
+	*/
+	s_dtval = N_VGetArrayPointer_Serial(state_dt);
+	/*
+
+		set inital values for state derivative
+	*/
+	atval = N_VGetArrayPointer_Serial(avtol);
+	/*
+
+		set inital values for absolute tolerance
+	*/
+
+	rtol = ..; //set relative tolerance
+
+	int t0 = 0;
+	tout1 = DAESys.mFinalTime;
 	mem = IDACreate();
 	int retval1 = IDAInit(mem, residualFunction, t0, state, dstate_dt); //TO-DO: get remaining parameters
 	// Do error checking with retval 1
 	/*
-		Add IDA tolerances 
+		Add IDA tolerances using avtol and rtol 
 	*/
-	int NEQ = mComponents.size(); // is this implemented?
+ 	N_VDestroy_Serial(avtol);
 	retval = IDADense(mem, NEQ); // choose right solver
 	int iout = 0;
 	int tout = 1; //final time
@@ -91,13 +123,13 @@ void DAESimulation::run()
 
 int DAESimulation::DAE_residualFunction(realtype ttime, N_Vector state, N_Vector dstate_dt, N_Vector resid, void *user_data)
 {
-	for (auto node : mNodes){ 
+	for (auto node : DAESys.mNodes){ 
 		double residual[]=NVECTOR_DATA(resid);
 		double tempstate[]=NVECTOR_DATA(state);
 		residual[offsets[0]]=tempstate[offsets[0]]-node->voltage;
 		offsets[0]=offsets[0]+1;
 	}
-	for (auto comp : mComponents){  	//currently only supports DP_Resistor and DP_VoltageSource
+	for (auto comp : DAESys.mComponents){  	//currently only supports DP_Resistor and DP_VoltageSource
 		comp->residual(ttime, NVECTOR_DATA(state), NVECTOR_DATA(dstate_dt), NVECTOR_DATA(resid), offsets);
 	}
 		int ret=0;

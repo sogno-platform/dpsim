@@ -4,15 +4,17 @@
 #include <vector>
 #include <list>
 #include "Simulation.h"
+#include "cps/SystemTopology.h"
 //#include "Logger.h"
 #include <ida/ida.h>
+#include <ida/ida_dense.h>
 #include <nvector/nvector_serial.h>
 
 #define NVECTOR_DATA(vec) NV_DATA_S (vec) // returns pointer to the first element of array vec
 
 using namespace DPsim ;
 
-	class DAESimulation{
+	class DAESimulation : public Simulation{
  //inherit from Simulation?
 	protected:
 		/// Simulation name
