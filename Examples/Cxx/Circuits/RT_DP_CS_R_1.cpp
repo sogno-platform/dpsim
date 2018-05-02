@@ -40,7 +40,7 @@ int main(int argc, char* argv[]) {
 	Real finalTime = 0.1;
 	String simName = "DP_CS_R_1";
 
-	Simulation sim(simName, sys, timeStep, finalTime);
+	RealTimeSimulation sim(simName, sys, timeStep, finalTime);
 	sim.run();
 
 	return 0;
