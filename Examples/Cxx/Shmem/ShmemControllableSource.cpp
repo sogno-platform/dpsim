@@ -34,10 +34,12 @@ int main(int argc, char *argv[]) {
 	String in  = "/dpsim10";
 	String out = "/dpsim01";
 
-	std::cout << "Create shmem interface" << std::endl;
+	Real timeStep = 0.001;
+	Real finalTime = 10;
+	String simName = "ShmemControllableSource";
+
 	ShmemInterface shmem(out, in, &conf);
 
-	std::cout << "Define network" << std::endl;
 	// Nodes
 	auto n1 = Node::make("n1");
 
@@ -49,16 +51,11 @@ int main(int argc, char *argv[]) {
 	shmem.registerExportedAttribute(ecs->findAttribute<Complex>("comp_current"), 0, 1);
 
 	auto sys = SystemTopology(50, Node::List{GND, n1}, ComponentBase::List{ecs, r1});
-	
-	Real timeStep = 0.001;
-	Real finalTime = 0.1;
-	String simName = "ShmemControllableSource";
-	auto sim = Simulation(simName, sys, timeStep, finalTime, 
+	auto sim = RealTimeSimulation(simName, sys, timeStep, finalTime,
 	Solver::Domain::DP, Solver::Type::MNA, Logger::Level::DEBUG);
 
 	sim.addInterface(&shmem);
-
-	sim.run(false);
+	sim.run(true);
 
 	return 0;
 }
