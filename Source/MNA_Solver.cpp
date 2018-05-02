@@ -176,11 +176,11 @@ void MnaSolver::assignNodesToComponents(ComponentBase::List components) {
 		if (comp->getNodeNum() > 0) {
 			std::shared_ptr<Node> node1, node2;
 			if (comp->getNode1() < 0)
-				node1 = mSystemTopologies[0].mGnd;
+				node1 = GND;
 			else
 				node1 = mSystemTopologies[0].mNodes[comp->getNode1()];
 			if (comp->getNode2() < 0)
-				node2 = mSystemTopologies[0].mGnd;
+				node2 = GND;
 			else
 				node2 = mSystemTopologies[0].mNodes[comp->getNode2()];
 
