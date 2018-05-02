@@ -34,24 +34,30 @@ int main(int argc, char *argv[]) {
 	String in  = "/dpsim10";
 	String out = "/dpsim01";
 
-	ShmemInterface shmem(in, out, &conf);
+	std::cout << "Create shmem interface" << std::endl;
+	ShmemInterface shmem(out, in, &conf);
 
-	Real timeStep = 0.000150;
-
+	std::cout << "Define network" << std::endl;
 	// Nodes
 	auto n1 = Node::make("n1");
 
 	// Components
-	auto ecs = CurrentSource::make("v_intf", Node::List{GND, n1}, Complex(100, 0));
+	auto ecs = CurrentSource::make("v_intf", Node::List{GND, n1}, Complex(10, 0));
 	auto r1 = Resistor::make("r_1", Node::List{GND, n1}, 1);
 
 	shmem.registerControlledAttribute(ecs->findAttribute<Complex>("current_ref"), 0, 1);
 	shmem.registerExportedAttribute(ecs->findAttribute<Complex>("comp_current"), 0, 1);
 
 	auto sys = SystemTopology(50, Node::List{GND, n1}, ComponentBase::List{ecs, r1});
-	auto sim = Simulation("ShmemControllableSource", sys, timeStep, 1);
+	
+	Real timeStep = 0.001;
+	Real finalTime = 0.1;
+	String simName = "ShmemControllableSource";
+	auto sim = Simulation(simName, sys, timeStep, finalTime, 
+	Solver::Domain::DP, Solver::Type::MNA, Logger::Level::DEBUG);
 
 	sim.addInterface(&shmem);
+
 	sim.run(false);
 
 	return 0;
