@@ -3,13 +3,17 @@ import subprocess
 import pytest
 
 def pytest_collect_file(parent, path):
-    if path.ext == ".yml" and path.basename.startswith("test_"):
+    if path.ext == ".yml" and path.basename.startswith("test_") and os.name == 'posix':
         return YamlFile(path, parent)
 
 class YamlFile(pytest.File):
     def collect(self):
         import yaml # we need a yaml parser, e.g. PyYAML
         raw = yaml.safe_load(self.fspath.open())
+
+        if not raw:
+            return
+
         for name, spec in sorted(raw.items()):
             yield YamlItem(name, self, spec)
 

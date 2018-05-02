@@ -2,6 +2,9 @@
 build/
 build_*/
 dist/
+_dpsim.pyd
+_dpsim.pdb
+.pytest_cache/
 
 # Folders
 Libraries/

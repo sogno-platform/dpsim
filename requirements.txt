@@ -10,3 +10,4 @@ pytest
 pyyaml
 
 acs-dataprocessing
+progressbar2

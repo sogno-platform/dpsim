@@ -7,7 +7,6 @@ import subprocess
 from setuptools import setup, find_packages, Extension
 from setuptools.command.build_ext import build_ext
 from distutils.version import LooseVersion
-from m2r import M2R
 
 class CMakeExtension(Extension):
     def __init__(self, name, sourcedir=''):
@@ -37,17 +36,19 @@ class CMakeBuild(build_ext):
                       '-DBUILD_EXAMPLES=OFF']
 
         cfg = 'Debug' if self.debug else 'Release'
-        build_args = ['--config', cfg]
+        cmake_args += ['-DCMAKE_BUILD_TYPE=' + cfg]
+
+        print("building CMake extension in %s configuration" % cfg)
 
         if platform.system() == "Windows":
             cmake_args += ['-DCMAKE_RUNTIME_OUTPUT_DIRECTORY_DEBUG=' + extdir]
             cmake_args += ['-DCMAKE_RUNTIME_OUTPUT_DIRECTORY_RELEASE=' + extdir]
             if sys.maxsize > 2**32:
                 cmake_args += ['-A', 'x64']
-            build_args += ['--', '/m']
+            build_args = ['--', '/m']
         else:
             cmake_args += ['-DCMAKE_LIBRARY_OUTPUT_DIRECTORY=' + extdir]
-            build_args += ['--', '-j4']
+            build_args = ['--', '-j4']
 
         env = os.environ.copy()
         env['CXXFLAGS'] = '{} -DVERSION_INFO=\\"{}\\"'.format(env.get('CXXFLAGS', ''), self.distribution.get_version())
@@ -71,10 +72,12 @@ def read(fname):
         contents = f.read()
         sanatized = cleanhtml(contents)
 
-        m2r = M2R()
-        rest = m2r(sanatized)
-
-    return rest
+        try:
+            from m2r import M2R
+            m2r = M2R()
+            return m2r(sanatized)
+        except:
+            return sanatized
 
 setup(
     name = "dpsim",
@@ -102,6 +105,7 @@ setup(
     ],
     install_requires = [
         'acs-dataprocessing>=0.1.2',
+        'progressbar2'
     ],
     setup_requires = [
         'm2r',

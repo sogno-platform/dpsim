@@ -24,7 +24,7 @@
 #include "DPsim.h"
 
 using namespace DPsim;
-using namespace DPsim::Components::DP;
+using namespace CPS::Components::DP;
 
 int main(int argc, char* argv[])
 {
@@ -84,34 +84,36 @@ int main(int argc, char* argv[])
 	//Real Llkq2 = 0;
 
 	// Declare circuit components
-	Component::Ptr gen = SynchronGeneratorVBR::make("gen", 0, 1, 2,
+	ComponentBase::Ptr gen = SynchronGeneratorVBRStandalone::make("gen", 0, 1, 2,
 		nomPower, nomPhPhVoltRMS, nomFreq, poleNum, nomFieldCurr,
 		Rs, Ll, Lmd, Lmd0, Lmq, Lmq0, Rfd, Llfd, Rkd, Llkd, Rkq1, Llkq1, Rkq2, Llkq2, H);
+		
 	Real loadRes = 1037.8378;
-	Component::Ptr r1 = Resistor::make("r1", 0, GND, loadRes);
-	Component::Ptr r2 = Resistor::make("r2", 1, GND, loadRes);
-	Component::Ptr r3 = Resistor::make("r3", 2, GND, loadRes);
+	ComponentBase::Ptr r1 = Resistor::make("r1", 0, DEPRECATEDGND, loadRes);
+	ComponentBase::Ptr r2 = Resistor::make("r2", 1, DEPRECATEDGND, loadRes);
+	ComponentBase::Ptr r3 = Resistor::make("r3", 2, DEPRECATEDGND, loadRes);
 
-	Component::List comps = { gen, r1, r2, r3 };
+	SystemTopology system(50);
+	system.mComponents = { gen, r1, r2, r3 };
 
 	// Declare circuit components for resistance change
 	Real breakerRes = 1037.8378;
-	Component::Ptr rBreaker1 = Resistor::make("rbreak1", 0, GND, breakerRes);
-	Component::Ptr rBreaker2 = Resistor::make("rbreak2", 1, GND, breakerRes);
-	Component::Ptr rBreaker3 = Resistor::make("rbreak3", 2, GND, breakerRes);
+	ComponentBase::Ptr rBreaker1 = Resistor::make("rbreak1", 0, DEPRECATEDGND, breakerRes);
+	ComponentBase::Ptr rBreaker2 = Resistor::make("rbreak2", 1, DEPRECATEDGND, breakerRes);
+	ComponentBase::Ptr rBreaker3 = Resistor::make("rbreak3", 2, DEPRECATEDGND, breakerRes);
 
-	Component::List compsBreakerOn = { gen, rBreaker1, rBreaker2, rBreaker3, r1, r2, r3 };
+	SystemTopology systemBreakerOn(50);
+	systemBreakerOn.mComponents = { gen, rBreaker1, rBreaker2, rBreaker3, r1, r2, r3 };
 
 	// Set up simulation
 	Real tf, dt, t;
 	Real om = 2.0*M_PI*60.0;
 	tf = 10; dt = 0.0001; t = 0;
 	Int downSampling = 1;
-	Simulation sim("DP_SynchronGenerator_ExciterAndTurbine", comps, om, dt, tf,
-	Logger::Level::INFO, SimulationType::DP, downSampling);
-	sim.setNumericalMethod(NumericalMethod::Trapezoidal_flux);
-	sim.addSystemTopology(compsBreakerOn);
-	sim.switchSystemMatrix(0);
+	Simulation sim("DP_SynchronGenerator_ExciterAndTurbine", system, dt, tf,
+		Solver::Domain::DP, Solver::Type::MNA, Logger::Level::INFO);
+	sim.setLogDownsamplingRate(downSampling);
+	sim.addSystemTopology(systemBreakerOn);
 
 	// Initialize generator
 	Real initActivePower = 555e3;
@@ -120,7 +122,7 @@ int main(int argc, char* argv[])
 	Real initVoltAngle = -DPS_PI / 2;
 	Real fieldVoltage = 7.0821;
 	Real mechPower = 5.5558e5;
-	auto genPtr = std::dynamic_pointer_cast<SynchronGeneratorVBR>(gen);
+	auto genPtr = std::dynamic_pointer_cast<SynchronGeneratorVBRStandalone>(gen);
 	genPtr->initialize(om, dt, initActivePower, initReactivePower, initTerminalVolt, initVoltAngle, fieldVoltage, mechPower);
 	genPtr->addExciter(Ta, Ka, Te, Ke, Tf, Kf, Tr, Lmd, Rfd);
 #if 1

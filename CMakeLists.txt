@@ -2,12 +2,13 @@ cmake_minimum_required(VERSION 3.5)
 project(DPsim CXX)
 
 # Enable C++11 support
-set(CMAKE_CXX_STANDARD 11)
+set(CMAKE_CXX_STANDARD 17)
+add_definitions(-D_SILENCE_ALL_CXX17_DEPRECATION_WARNINGS)
+
+set(CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/CMake")
 
 set(PROJECT_AUTHOR "Institute for Automation of Complex Power Systems, RWTH Aachen University")
 set(PROJECT_COPYRIGHT "2017, Institute for Automation of Complex Power Systems, RWTH Aachen University")
-
-set(CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/CMake")
 
 include(GetGitRevisionDescription)
 git_describe(DPSIM_VERSION --tags --dirty=-dirty)
@@ -33,14 +34,8 @@ string(TIMESTAMP YMD "%Y%m%d")
 set(DPSIM_RELEASE ${YMD}git${GIT_HASH_SHORT})
 
 set(Python_ADDITIONAL_VERSIONS 3.5 3.6 3.7)
-set(CIM_VERSION 16v29a)
-set(USE_CIM_VERSION "IEC61970_16v29a")
-
 find_package(PythonInterp 3.5)
 find_package(PythonLibs 3.5)
-find_package(Eigen3 3.0 REQUIRED)
-find_package(VILLASnode)
-find_package(CIMpp)
 
 if(PythonInterp_FOUND AND PythonLibs_FOUND)
 	set(Python_FOUND ON)
@@ -54,13 +49,22 @@ endif()
 option(BUILD_SHARED_LIBS "Build shared library" OFF)
 option(BUILD_EXAMPLES "Build C++ examples" ON)
 
-option(WITH_RT	 "Enable real-time features"			${Linux_FOUND})
-option(WITH_SHMEM  "Enable shared memory interface"		${VILLASnode_FOUND})
+option(WITH_RT	   "Enable real-time features"			${Linux_FOUND})
 option(WITH_PYTHON "Enable Python support"				${Python_FOUND})
-option(WITH_CIM	"Enable support for parsing CIM files"	${CIMpp_FOUND})
 
-add_subdirectory(Documentation)
+configure_file(
+	${CMAKE_CURRENT_SOURCE_DIR}/Include/dpsim/Config.h.in
+	${CMAKE_CURRENT_BINARY_DIR}/Include/dpsim/Config.h
+)
+
+set(INCLUDE_DIRS
+	${CMAKE_CURRENT_BINARY_DIR}/Include/dpsim
+	${CMAKE_CURRENT_SOURCE_DIR}/Include/dpsim
+)
+
 add_subdirectory(Source)
+add_subdirectory(Documentation)
+add_subdirectory(Dependencies/libcps)
 
 if(BUILD_EXAMPLES)
 	add_subdirectory(Examples/Cxx)
@@ -77,5 +81,4 @@ feature_summary(WHAT ALL VAR enabledFeaturesText)
 
 message(STATUS "${enabledFeaturesText}")
 
-# CPack configuration
 include(DPsimPackaging)

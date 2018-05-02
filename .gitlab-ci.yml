@@ -2,7 +2,11 @@ variables:
   DOCKER_TAG_DEV: ${CI_COMMIT_REF_NAME}
   RSYNC_OPTS: --recursive --ignore-missing-args --chown ${DEPLOY_USER}:${DEPLOY_USER}
   DOCKER_IMAGE_DEV: dpsim-dev
-  GIT_SUBMODULE_STRATEGY: recursive
+
+before_script:
+  - git config --local core.longpaths true
+  - git submodule sync --recursive
+  - git submodule update --init --recursive
 
 stages:
   - prepare
@@ -10,6 +14,7 @@ stages:
   - build
   - test
   - deploy
+  - post-all
 
 docker:
   stage: prepare
@@ -19,7 +24,7 @@ docker:
   tags:
     - shell
 
-build:code:
+build:linux:
   stage: pre-build
   script:
     - mkdir build
@@ -40,7 +45,7 @@ build:docs:
     - make -C build docs_cxx
   image: ${DOCKER_IMAGE_DEV}:${DOCKER_TAG_DEV}
   dependencies:
-    - build:code
+    - build:linux
   artifacts:
     paths:
       - build/Documentation/html
@@ -58,7 +63,7 @@ build:packages:
     - docker
   image: ${DOCKER_IMAGE_DEV}:${DOCKER_TAG_DEV}
   dependencies:
-    - build:code
+    - build:linux
   artifacts:
     paths:
       - build/*.rpm
@@ -71,7 +76,7 @@ test:pytest:
     - pytest -v
   image: ${DOCKER_IMAGE_DEV}:${DOCKER_TAG_DEV}
   dependencies:
-    - build:code
+    - build:linux
   artifacts:
     paths:
       - Logs/
@@ -110,3 +115,14 @@ deploy:packages:
   tags:
     - shell
 
+# We run the windows build at last as it takes ages to finish
+build:windows:
+  stage: post-all
+  script:
+    - rmdir build /s
+    - mkdir build
+    - cd build
+    - cmake -G "Visual Studio 15 2017 Win64" ..
+    - cmake --build .
+  tags:
+    - windows

@@ -23,10 +23,9 @@
 #include "DPsim.h"
 
 using namespace DPsim;
-using namespace DPsim::Components::DP;
+using namespace CPS::Components::DP;
 
-int main(int argc, char* argv[])
-{
+int main(int argc, char* argv[]) {
 	// Define machine parameters in per unit
 	Real nomPower = 555e6;
 	Real nomPhPhVoltRMS = 24e3;
@@ -64,19 +63,19 @@ int main(int argc, char* argv[])
 
 
 	// Declare circuit components
-	Component::Ptr gen = SynchronGenerator::make("gen", 0, 1, 2,
+	ComponentBase::Ptr gen = SynchronGeneratorDQ::make("gen", 0, 1, 2,
 		nomPower, nomPhPhVoltRMS, nomFreq, poleNum, nomFieldCurr,
 		Rs, Ll, Lmd, Lmd0, Lmq, Lmq0, Rfd, Llfd, Rkd, Llkd, Rkq1, Llkq1, Rkq2, Llkq2, H, Ra);
 	Real loadRes = 1037.8378;
-	Component::Ptr r1 = Resistor::make("r1", 0, GND, loadRes);
-	Component::Ptr r2 = Resistor::make("r2", 1, GND, loadRes);
-	Component::Ptr r3 = Resistor::make("r3", 2, GND, loadRes);
+	ComponentBase::Ptr r1 = Resistor::make("r1", 0, DEPRECATEDGND, loadRes);
+	ComponentBase::Ptr r2 = Resistor::make("r2", 1, DEPRECATEDGND, loadRes);
+	ComponentBase::Ptr r3 = Resistor::make("r3", 2, DEPRECATEDGND, loadRes);
 
-	Component::List comps = { gen, r1, r2, r3 };
+	SystemTopology system(60);
+	system.mComponents = { gen, r1, r2, r3 };
 
-	Simulation sim("DP_SynchronGenerator_BalancedResLoad", comps, om, dt, tf, Logger::Level::INFO, SimulationType::DP, downSampling);
-	sim.setNumericalMethod(NumericalMethod::Trapezoidal_flux);
-
+	Simulation sim("DP_SynchronGeneratorDQ_BalancedResLoad", system, dt, tf, Solver::Domain::DP, Solver::Type::MNA, Logger::Level::INFO);
+	
 	// Initialize generator
 	Real initActivePower = 555e3;
 	Real initReactivePower = 0;
@@ -84,7 +83,7 @@ int main(int argc, char* argv[])
 	Real initVoltAngle = -DPS_PI / 2;
 	Real fieldVoltage = 7.0821;
 	Real mechPower = 5.5558e5;
-	auto genPtr = std::dynamic_pointer_cast<SynchronGenerator>(gen);
+	auto genPtr = std::dynamic_pointer_cast<SynchronGeneratorDQ>(gen);
 	genPtr->initialize(om, dt, initActivePower, initReactivePower, initTerminalVolt, initVoltAngle, fieldVoltage, mechPower);
 
 	// Calculate initial values for circuit at generator connection point

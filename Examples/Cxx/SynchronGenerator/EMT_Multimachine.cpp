@@ -19,11 +19,10 @@
 * along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *********************************************************************************/
 
-#include "SynGenSimulation.h"
 #include "DPsim.h"
 
 using namespace DPsim;
-using namespace DPsim::Components::EMT;
+using namespace CPS::Components::EMT;
 
 int main(int argc, char* argv[])
 {
@@ -74,12 +73,12 @@ int main(int argc, char* argv[])
 	Real Kg = 20;
 
 	// Declare circuit components
-	Component::Ptr gen = SynchronGeneratorVBRNew::make("gen", 0, 1, 2,
+	ComponentBase::Ptr gen = SynchronGeneratorVBR::make("gen", 0, 1, 2,
 			nomPower, nomPhPhVoltRMS, nomFreq, poleNum, nomFieldCurr,
 			Rs, Ll, Lmd, Lmd0, Lmq, Lmq0, Rfd, Llfd, Rkd, Llkd, Rkq1, Llkq1, Rkq2, Llkq2, H, Logger::Level::INFO);
 
 	// Declare circuit components
-	Component::Ptr gen2 = SynchronGeneratorVBRNew::make("gen2", 12, 13, 14,
+	ComponentBase::Ptr gen2 = SynchronGeneratorVBR::make("gen2", 12, 13, 14,
 			nomPower, nomPhPhVoltRMS, nomFreq, poleNum, nomFieldCurr,
 			Rs, Ll, Lmd, Lmd0, Lmq, Lmq0, Rfd, Llfd, Rkd, Llkd, Rkq1, Llkq1, Rkq2, Llkq2, H, Logger::Level::INFO);
 
@@ -89,60 +88,62 @@ int main(int argc, char* argv[])
 	Real Res = 1e6;
 
 	//Line Resistance
-	Component::Ptr LineR1 = Resistor::make("LineR1", 0, 3, lineRes);
-	Component::Ptr LineR2 = Resistor::make("LineR2", 1, 4, lineRes);
-	Component::Ptr LineR3 = Resistor::make("LineR3", 2, 5, lineRes);
+	ComponentBase::Ptr LineR1 = Resistor::make("LineR1", 0, 3, lineRes);
+	ComponentBase::Ptr LineR2 = Resistor::make("LineR2", 1, 4, lineRes);
+	ComponentBase::Ptr LineR3 = Resistor::make("LineR3", 2, 5, lineRes);
 
 	//Line Resistance
-	Component::Ptr Res1 = Resistor::make("Res1", 0, 6, Res);
-	Component::Ptr Res2 = Resistor::make("Res2", 1, 7, Res);
-	Component::Ptr Res3 = Resistor::make("Res3", 2, 8, Res);
+	ComponentBase::Ptr Res1 = Resistor::make("Res1", 0, 6, Res);
+	ComponentBase::Ptr Res2 = Resistor::make("Res2", 1, 7, Res);
+	ComponentBase::Ptr Res3 = Resistor::make("Res3", 2, 8, Res);
 
 	//Line Inductance
-	Component::Ptr LineL1 = Inductor::make("LineL1", 3, 6, lindeInd);
-	Component::Ptr LineL2 = Inductor::make("LineL2", 4, 7, lindeInd);
-	Component::Ptr LineL3 = Inductor::make("LineL3", 5, 8, lindeInd);
+	ComponentBase::Ptr LineL1 = Inductor::make("LineL1", 3, 6, lindeInd);
+	ComponentBase::Ptr LineL2 = Inductor::make("LineL2", 4, 7, lindeInd);
+	ComponentBase::Ptr LineL3 = Inductor::make("LineL3", 5, 8, lindeInd);
 
 	//Load
-	Component::Ptr r1 = Resistor::make("r1", 6, GND, loadRes);
-	Component::Ptr r2 = Resistor::make("r2", 7, GND, loadRes);
-	Component::Ptr r3 = Resistor::make("r3", 8, GND, loadRes);
+	ComponentBase::Ptr r1 = Resistor::make("r1", 6, DEPRECATEDGND, loadRes);
+	ComponentBase::Ptr r2 = Resistor::make("r2", 7, DEPRECATEDGND, loadRes);
+	ComponentBase::Ptr r3 = Resistor::make("r3", 8, DEPRECATEDGND, loadRes);
 
 	//Line Inductance2
-	Component::Ptr LineL12 = Inductor::make("LineL12", 6, 9, lindeInd);
-	Component::Ptr LineL22 = Inductor::make("LineL22", 7, 10, lindeInd);
-	Component::Ptr LineL32 = Inductor::make("LineL32", 8, 11, lindeInd);
+	ComponentBase::Ptr LineL12 = Inductor::make("LineL12", 6, 9, lindeInd);
+	ComponentBase::Ptr LineL22 = Inductor::make("LineL22", 7, 10, lindeInd);
+	ComponentBase::Ptr LineL32 = Inductor::make("LineL32", 8, 11, lindeInd);
 
 	//Line Resistance2
-	Component::Ptr LineR12 = Resistor::make("LineR12", 9, 12, lineRes);
-	Component::Ptr LineR22 = Resistor::make("LineR22", 10, 13, lineRes);
-	Component::Ptr LineR32 = Resistor::make("LineR32", 11, 14, lineRes);
+	ComponentBase::Ptr LineR12 = Resistor::make("LineR12", 9, 12, lineRes);
+	ComponentBase::Ptr LineR22 = Resistor::make("LineR22", 10, 13, lineRes);
+	ComponentBase::Ptr LineR32 = Resistor::make("LineR32", 11, 14, lineRes);
 
 	//Line Resistance
-	Component::Ptr Res12 = Resistor::make("Res12", 6, 12, Res);
-	Component::Ptr Res22 = Resistor::make("Res22", 7, 13, Res);
-	Component::Ptr Res32 = Resistor::make("Res32", 8, 14, Res);
+	ComponentBase::Ptr Res12 = Resistor::make("Res12", 6, 12, Res);
+	ComponentBase::Ptr Res22 = Resistor::make("Res22", 7, 13, Res);
+	ComponentBase::Ptr Res32 = Resistor::make("Res32", 8, 14, Res);
 
-	Component::List comps = { gen, gen2, LineR1, LineR2, LineR3, LineL1, LineL2, LineL3, r1, r2, r3, Res1, Res2, Res3, LineR12, LineR22, LineR32, LineL12, LineL22, LineL32, Res12, Res22, Res32 };
+	SystemTopology system(60);
+	system.mComponents = { gen, gen2, LineR1, LineR2, LineR3, LineL1, LineL2, LineL3, r1, r2, r3, Res1, Res2, Res3, LineR12, LineR22, LineR32, LineL12, LineL22, LineL32, Res12, Res22, Res32 };
 
 	// Declare circuit components for resistance change
 	Real breakerRes = 24e3*24e3 / 600e6;
-	Component::Ptr rBreaker1 = Resistor::make("rbreak1", 6, GND, breakerRes);
-	Component::Ptr rBreaker2 = Resistor::make("rbreak2", 7, GND, breakerRes);
-	Component::Ptr rBreaker3 = Resistor::make("rbreak3", 8, GND, breakerRes);
+	ComponentBase::Ptr rBreaker1 = Resistor::make("rbreak1", 6, DEPRECATEDGND, breakerRes);
+	ComponentBase::Ptr rBreaker2 = Resistor::make("rbreak2", 7, DEPRECATEDGND, breakerRes);
+	ComponentBase::Ptr rBreaker3 = Resistor::make("rbreak3", 8, DEPRECATEDGND, breakerRes);
 
-	//Component::List compsBreakerOn = { gen, rBreaker1, rBreaker2, rBreaker3, r1, r2, r3 };
-	Component::List compsBreakerOn = { gen, gen2, rBreaker1, rBreaker2, rBreaker3, LineR1, LineR2, LineR3, LineL1, LineL2, LineL3, r1, r2, r3, Res1, Res2, Res3, LineR12, LineR22, LineR32, LineL12, LineL22, LineL32, Res12, Res22, Res32 };
+	SystemTopology systemBreakerOn(50);
+	//PowerComponent::List compsBreakerOn = { gen, rBreaker1, rBreaker2, rBreaker3, r1, r2, r3 };
+	systemBreakerOn.mComponents = { gen, gen2, rBreaker1, rBreaker2, rBreaker3, LineR1, LineR2, LineR3, LineL1, LineL2, LineL3, r1, r2, r3, Res1, Res2, Res3, LineR12, LineR22, LineR32, LineL12, LineL22, LineL32, Res12, Res22, Res32 };
 
 	// Set up simulation
 	Real tf, dt, t;
 	Real om = 2.0*M_PI*60.0;
 	tf = 0.30000; dt = 0.00005; t = 0;
 	Int downSampling = 1;
-	SynGenSimulation sim("EMT_SynchronGenerator_VBR", comps, om, dt, tf, Logger::Level::INFO, SimulationType::EMT, downSampling);
-	sim.setNumericalMethod(NumericalMethod::Trapezoidal_flux);
-	sim.addSystemTopology(compsBreakerOn);
-	sim.switchSystemMatrix(0);
+	Simulation sim("EMT_SynchronGenerator_VBR", system, dt, tf,
+		Solver::Domain::EMT, Solver::Type::MNA, Logger::Level::INFO);
+	sim.setLogDownsamplingRate(downSampling);
+	sim.addSystemTopology(systemBreakerOn);
 
 	// Initialize generator
 	Real initActivePower = 300e6;
@@ -151,12 +152,12 @@ int main(int argc, char* argv[])
 	Real initVoltAngle = -DPS_PI / 2;
 	Real fieldVoltage = 7.0821;
 	Real mechPower = 5.5558e5;
-	auto genPtr = std::dynamic_pointer_cast<SynchronGeneratorVBRNew>(gen);
+	auto genPtr = std::dynamic_pointer_cast<SynchronGeneratorVBR>(gen);
 	genPtr->initialize(om, dt, initActivePower, initReactivePower, initTerminalVolt, initVoltAngle, fieldVoltage, mechPower);
 	genPtr->addExciter(Ta, Ka, Te, Ke, Tf, Kf, Tr, Lmd, Rfd);
 	genPtr->addGovernor(Ta_t, Tb, Tc, Fa, Fb, Fc, Kg, Tsr, Tsm, initActivePower / nomPower, initActivePower / nomPower);
 
-	auto genPtr2 = std::dynamic_pointer_cast<SynchronGeneratorVBRNew>(gen2);
+	auto genPtr2 = std::dynamic_pointer_cast<SynchronGeneratorVBR>(gen2);
 	genPtr2->initialize(om, dt, initActivePower, initReactivePower, initTerminalVolt, initVoltAngle, fieldVoltage, mechPower);
 	genPtr2->addExciter(Ta, Ka, Te, Ke, Tf, Kf, Tr, Lmd, Rfd);
 	genPtr2->addGovernor(Ta_t, Tb, Tc, Fa, Fb, Fc, Kg, Tsr, Tsm, initActivePower / nomPower, initActivePower / nomPower);

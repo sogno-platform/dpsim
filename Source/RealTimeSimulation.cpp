@@ -26,11 +26,12 @@
 #include <time.h>
 #include <unistd.h>
 
+using namespace CPS;
 using namespace DPsim;
 
-RealTimeSimulation::RealTimeSimulation(String name, Component::List comps, Real om, Real dt, Real tf, Logger::Level logLevel, SimulationType simType, Int downSampleRate)
-	: Simulation(name, comps, om, dt, tf, logLevel, simType, downSampleRate)
-{
+RealTimeSimulation::RealTimeSimulation(String name, SystemTopology system, Real timeStep, Real finalTime,
+		Solver::Domain domain, Solver::Type type, Logger::Level logLevel)
+	: Simulation(name, system, timeStep, finalTime, domain, type, logLevel), mTimeStep(timeStep) {
 #ifdef RTMETHOD_TIMERFD
 	mTimerFd = timerfd_create(CLOCK_MONOTONIC, 0);
 	if (mTimerFd < 0) {
@@ -80,7 +81,7 @@ void RealTimeSimulation::alarmHandler(int sig, siginfo_t* si, void* ctx)
 	auto sim = static_cast<RealTimeSimulation*>(si->si_value.sival_ptr);
 
 	/* only throw an exception if we're actually behind */
-	if (++sim->mTimerCount * sim->mSystemModel.getTimeStep() > sim->mTime)
+	if (++sim->mTimerCount * sim->mTimeStep > sim->mTime)
 		throw TimerExpiredException();
 }
 #endif
@@ -89,8 +90,8 @@ void RealTimeSimulation::startTimer()
 {
 	struct itimerspec ts;
 
-	ts.it_value.tv_sec = (time_t) mSystemModel.getTimeStep();
-	ts.it_value.tv_nsec = (long) (mSystemModel.getTimeStep() * 1e9);
+	ts.it_value.tv_sec = (time_t) mTimeStep;
+	ts.it_value.tv_nsec = (long) (mTimeStep * 1e9);
 	ts.it_interval = ts.it_value;
 
 #ifdef RTMETHOD_TIMERFD
@@ -136,9 +137,10 @@ void RealTimeSimulation::run(double duration, bool startSynch)
 	uint64_t overrun;
 
 	if (startSynch) {
+		mTime = 0;
+
 		step(false); // first step, sending the initial values
 		step(true); // blocking step for synchronization + receiving the initial state of the other network
-		increaseByTimeStep();
 	}
 
 	double started = mTime;
@@ -148,7 +150,7 @@ void RealTimeSimulation::run(double duration, bool startSynch)
 	// main loop
 	do {
 #ifdef RTMETHOD_TIMERFD
-		ret = step(false);
+		step(false);
 
 		if (read(mTimerFd, &overrun, sizeof(overrun)) < 0) {
 			throw SystemError("Read from timerfd failed");
@@ -158,7 +160,7 @@ void RealTimeSimulation::run(double duration, bool startSynch)
 		}
 #elif defined(RTMETHOD_EXCEPTIONS)
 		try {
-			ret = step(false);
+			step(false);
 			sigwait(&alrmset, &sig);
 		}
 		catch (TimerExpiredException& e) {
@@ -167,8 +169,6 @@ void RealTimeSimulation::run(double duration, bool startSynch)
 #else
   #error Unkown real-time execution mode
 #endif
-		increaseByTimeStep();
-
 	} while (ret && mTime - started < duration);
 
 	stopTimer();

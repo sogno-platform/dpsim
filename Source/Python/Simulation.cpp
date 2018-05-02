@@ -21,12 +21,10 @@
  *********************************************************************************/
 
 #include "Config.h"
-
-#include "Python/Component.h"
-#include "Python/Interface.h"
 #include "Python/Simulation.h"
 
-#include "../SystemModel.h"
+#include "cps/Python/Interface.h"
+#include "cps/Python/Component.h"
 
 #include <cfloat>
 #include <iostream>
@@ -39,101 +37,134 @@
 
 using namespace DPsim;
 
-void Python::Simulation::simThreadFunction(Python::Simulation* pySim)
+void DPsim::Python::Simulation::simThreadFunction(Python::Simulation* pySim)
 {
 	bool notDone = true;
 
 #ifdef WITH_RT
 	if (pySim->rt) {
 		simThreadFunctionRT(pySim);
-		return;
 	}
 #endif
 
+	if (!pySim->rt) {
+		simThreadFunctionNonRT(pySim);
+	}
+}
+
+void DPsim::Python::Simulation::simThreadFunctionNonRT(DPsim::Python::Simulation *pySim)
+{
+	Real time, endTime;
 	std::unique_lock<std::mutex> lk(*pySim->mut, std::defer_lock);
 
+	endTime = pySim->sim->getFinalTime();
+
+	pySim->sim->sendNotification(DPsim::Simulation::Event::Started);
+
 	pySim->numStep = 0;
-	while (pySim->running && notDone) {
-		notDone = pySim->sim->step();
+	while (pySim->running && time < endTime) {
+		time = pySim->sim->step();
 
 		pySim->numStep++;
-		pySim->sim->increaseByTimeStep();
 
 		if (pySim->sigPause) {
 			lk.lock();
-			pySim->state = StatePaused;
+			pySim->state = State::Paused;
+			pySim->sim->sendNotification(DPsim::Simulation::Event::Paused);
+
 			pySim->cond->notify_one();
 			pySim->cond->wait(lk);
-			pySim->state = StateRunning;
+
+			pySim->state = State::Running;
+			pySim->sim->sendNotification(DPsim::Simulation::Event::Resumed);
 			lk.unlock();
 		}
 	}
 	lk.lock();
 
-	pySim->state = StateDone;
+	pySim->sim->sendNotification(DPsim::Simulation::Event::Finished);
+
+	pySim->state = State::Done;
 	pySim->cond->notify_one();
 }
 
 #ifdef WITH_RT
-void Python::Simulation::simThreadFunctionRT(Python::Simulation *pySim)
+void DPsim::Python::Simulation::simThreadFunctionRT(Python::Simulation *pySim)
 {
 	bool notDone = true;
 	char timebuf[8];
 	int timerfd;
 	struct itimerspec ts;
 	uint64_t overrun;
+
 	std::unique_lock<std::mutex> lk(*pySim->mut, std::defer_lock);
 
 	pySim->numStep = 0;
+
 	// RT method is limited to timerfd right now; to implement it with Exceptions,
 	// look at Simulation::runRT
 	timerfd = timerfd_create(CLOCK_REALTIME, 0);
+
 	// TODO: better error mechanism (somehow pass an Exception to the Python thread?)
 	if (timerfd < 0) {
 		throw SystemError("Failed to create timerfd");
 	}
-	ts.it_value.tv_sec = (time_t) pySim->sim->getTimeStep();
-	ts.it_value.tv_nsec = (long) (pySim->sim->getTimeStep() *1e9);
+
+// TODO
+//	ts.it_value.tv_sec = (time_t) pySim->sim->getTimeStep();
+//	ts.it_value.tv_nsec = (long) (pySim->sim->getTimeStep() *1e9);
 	ts.it_interval = ts.it_value;
+
 	// optional start synchronization
 	if (pySim->startSync) {
-		pySim->sim->step(false); // first step, sending the initial values
-		pySim->sim->step(true); // blocking step for synchronization + receiving the initial state of the other network
-		pySim->sim->increaseByTimeStep();
+// TODO
+//		pySim->sim->step(false); // first step, sending the initial values
+//		pySim->sim->step(true); // blocking step for synchronization + receiving the initial state of the other network
+//		pySim->sim->increaseByTimeStep();
 	}
+
 	if (timerfd_settime(timerfd, 0, &ts, 0) < 0) {
 		throw SystemError("Failed to arm timerfd");
 	}
+
 	while (pySim->running && notDone) {
-		notDone = pySim->sim->step();
+// TODO
+//		notDone = pySim->sim->step();
 		if (read(timerfd, timebuf, 8) < 0) {
 			throw SystemError("Read from timerfd failed");
 		}
+
 		overrun = *((uint64_t*) timebuf);
 		if (overrun > 1) {
-			std::cerr << "timerfd overrun of " << overrun-1 << " at " << pySim->sim->getTime() << std::endl;
+// TODO
+//			std::cerr << "timerfd overrun of " << overrun-1 << " at " << pySim->sim->getTime() << std::endl;
 		}
+
 		pySim->numStep++;
-		pySim->sim->increaseByTimeStep();
+// TODO
+//		pySim->sim->increaseByTimeStep();
+
 		// in case it wasn't obvious, pausing a RT simulation is a bad idea
 		// as it will most likely lead to overruns, but it's possible nonetheless
 		if (pySim->sigPause) {
 			lk.lock();
-			pySim->state = StatePaused;
+			pySim->state = State::Paused;
 			pySim->cond->notify_one();
 			pySim->cond->wait(lk);
-			pySim->state = StateRunning;
+			pySim->state = State::Running;
 			lk.unlock();
 		}
 	}
+
 	close(timerfd);
 	lk.lock();
-	pySim->state = StateDone;
+
+	pySim->state = State::Done;
 	pySim->cond->notify_one();
 }
 #endif /* WITH_RT */
 
-PyObject* Python::Simulation::newfunc(PyTypeObject* type, PyObject *args, PyObject *kwds)
+PyObject* DPsim::Python::Simulation::newfunc(PyTypeObject* type, PyObject *args, PyObject *kwds)
 {
 	Python::Simulation *self;
 
@@ -144,34 +175,43 @@ PyObject* Python::Simulation::newfunc(PyTypeObject* type, PyObject *args, PyObje
 		// implement them as pointers
 		self->cond = new std::condition_variable();
 		self->mut = new std::mutex();
-		self->numSwitch = 0;
 	}
 	return (PyObject*) self;
 }
 
-int Python::Simulation::init(Python::Simulation* self, PyObject *args, PyObject *kwds)
+int DPsim::Python::Simulation::init(Python::Simulation* self, PyObject *args, PyObject *kwds)
 {
-	static char *kwlist[] = {"name", "components", "frequency", "timestep", "duration", "rt", "start_sync", "type", NULL};
-	double frequency = 50, timestep = 1e-3, duration = DBL_MAX;
+	static char *kwlist[] = {"name", "system", "timestep", "duration", "rt", "start_sync", "sim_type", "solver_type", NULL};
+	double timestep = 1e-3, duration = DBL_MAX;
 	const char *name = nullptr;
-	int type = 0;
-	enum SimulationType simType;
+	int t = 0, s = 0;
 
-	if (!PyArg_ParseTupleAndKeywords(args, kwds, "sO|dddbbi", kwlist,
-		&name, &self->pyComps, &frequency, &timestep, &duration, &self->rt, &self->startSync, &type)) {
+	enum Solver::Type solverType;
+	enum Solver::Domain domain;
+
+	if (!PyArg_ParseTupleAndKeywords(args, kwds, "sO|ddbbii", kwlist,
+		&name, &self->pySys, &timestep, &duration, &self->rt, &self->startSync, &s, &t)) {
 		return -1;
 	}
 
-	switch (type) {
-		case 0: simType = DPsim::SimulationType::DP; break;
-		case 1: simType = DPsim::SimulationType::EMT; break;
+	switch (s) {
+		case 0: domain = DPsim::Solver::Domain::DP; break;
+		case 1: domain = DPsim::Solver::Domain::EMT; break;
 		default:
-			PyErr_SetString(PyExc_TypeError, "Invalid type argument (must be 0 or 1)");
+			PyErr_SetString(PyExc_TypeError, "Invalid sim_type argument (must be 0 or 1)");
 			return -1;
 	}
 
-	if (!compsFromPython(self->pyComps, self->comps)) {
-		PyErr_SetString(PyExc_TypeError, "Invalid components argument (must by list of dpsim.Component)");
+	switch (t) {
+		case 0: solverType = DPsim::Solver::Type::MNA; break;
+		case 1: solverType = DPsim::Solver::Type::IDA; break;
+		default:
+			PyErr_SetString(PyExc_TypeError, "Invalid solver_type argument (must be 0 or 1)");
+			return -1;
+	}
+
+	if (!PyObject_TypeCheck(self->pySys, &CPS::Python::SystemTopologyType)) {
+		PyErr_SetString(PyExc_TypeError, "Argument system must be dpsim.SystemTopology");
 		return -1;
 	}
 
@@ -187,13 +227,13 @@ int Python::Simulation::init(Python::Simulation* self, PyObject *args, PyObject 
 		return -1;
 	}
 
-	Py_INCREF(self->pyComps);
+	Py_INCREF(self->pySys);
 
-	self->sim = new DPsim::Simulation(name, self->comps, 2*PI*frequency, timestep, duration, Logger::Level::INFO, simType);
+	self->sim = std::make_shared<DPsim::Simulation>(name, *self->pySys->sys, timestep, duration, domain, solverType, Logger::Level::INFO);
 	return 0;
 };
 
-void Python::Simulation::dealloc(Python::Simulation* self)
+void DPsim::Python::Simulation::dealloc(Python::Simulation* self)
 {
 	if (self->simThread) {
 		// We have to cancel the running thread here, because otherwise self can't
@@ -203,17 +243,10 @@ void Python::Simulation::dealloc(Python::Simulation* self)
 		delete self->simThread;
 	}
 
-	if (self->sim)
-		delete self->sim;
-
-	if (self->log)
-		delete self->log;
-
-	if (self->llog)
-		delete self->llog;
-
-	if (self->rlog)
-		delete self->rlog;
+	if (self->sim) {
+		using SimSharedPtr = std::shared_ptr<DPsim::Simulation>;
+		self->sim.~SimSharedPtr();
+	}
 
 	delete self->mut;
 	delete self->cond;
@@ -227,13 +260,11 @@ void Python::Simulation::dealloc(Python::Simulation* self)
 	// the vectors here to free the associated memory.
 
 	// This is a workaround for a compiler bug: https://stackoverflow.com/a/42647153/8178705
-	using ComponentList = DPsim::Component::List;
 	using PyObjectsList = std::vector<PyObject *>;
 
-	self->comps.~ComponentList();
 	self->refs.~PyObjectsList();
 
-	Py_XDECREF(self->pyComps);
+	Py_XDECREF(self->pySys);
 	Py_TYPE(self)->tp_free((PyObject*) self);
 }
 
@@ -244,22 +275,22 @@ static const char* DocSimulationAddInterface =
 "See the documentation of `Interface` for more details.\n"
 "\n"
 ":param intf: The `Interface` to be added.";
-PyObject* Python::Simulation::addInterface(PyObject* self, PyObject* args)
+PyObject* DPsim::Python::Simulation::addInterface(PyObject* self, PyObject* args)
 {
-	Python::Simulation *pySim = (Python::Simulation*) self;
+	DPsim::Python::Simulation *pySim = (DPsim::Python::Simulation*) self;
 	PyObject* pyObj;
-	Python::Interface* pyIntf;
+	CPS::Python::Interface* pyIntf;
 
 	if (!PyArg_ParseTuple(args, "O", &pyObj))
 		return nullptr;
 
-	if (!PyObject_TypeCheck(pyObj, &Python::InterfaceType)) {
+	if (!PyObject_TypeCheck(pyObj, &CPS::Python::InterfaceType)) {
 		PyErr_SetString(PyExc_TypeError, "Argument must be dpsim.Interface");
 		return nullptr;
 	}
 
-	pyIntf = (Interface*) pyObj;
-	pySim->sim->addExternalInterface(pyIntf->intf);
+	pyIntf = (CPS::Python::Interface*) pyObj;
+	pySim->sim->addInterface(pyIntf->intf);
 	Py_INCREF(pyObj);
 
 	pySim->refs.push_back(pyObj);
@@ -268,14 +299,15 @@ PyObject* Python::Simulation::addInterface(PyObject* self, PyObject* args)
 	return Py_None;
 }
 
+#if 0
 static const char* DocSimulationLvector =
 "lvector()\n"
 "Return the left-side vector of the last step as a list of floats.";
-PyObject* Python::Simulation::lvector(PyObject *self, PyObject *args)
+PyObject*DPsim::Python::Simulation::lvector(PyObject *self, PyObject *args)
 {
 	Python::Simulation *pySim = (Python::Simulation*) self;
 
-	if (pySim->state == StateRunning) {
+	if (pySim->state == State::Running) {
 		PyErr_SetString(PyExc_SystemError, "Simulation currently running");
 		return nullptr;
 	}
@@ -288,28 +320,19 @@ PyObject* Python::Simulation::lvector(PyObject *self, PyObject *args)
 
 	return list;
 }
-
-static const char* DocSimulationName =
-"name()\n"
-"Return the of the simulation.";
-PyObject* Python::Simulation::name(PyObject *self, PyObject *args)
-{
-	Python::Simulation *pySim = (Python::Simulation*) self;
-
-	return PyUnicode_FromString(pySim->sim->getName().c_str());
-}
+#endif
 
 static const char* DocSimulationPause =
 "pause()\n"
 "Pause the simulation at the next possible time (usually, after finishing the current timestep).\n"
 "\n"
 ":raises: ``SystemError`` if the simulation is not running.\n";
-PyObject* Python::Simulation::pause(PyObject *self, PyObject *args)
+PyObject* DPsim::Python::Simulation::pause(PyObject *self, PyObject *args)
 {
 	Python::Simulation *pySim = (Python::Simulation*) self;
 	std::unique_lock<std::mutex> lk(*pySim->mut);
 
-	if (pySim->state != StateRunning) {
+	if (pySim->state != State::Running) {
 		PyErr_SetString(PyExc_SystemError, "Simulation not currently running");
 		return nullptr;
 	}
@@ -317,7 +340,7 @@ PyObject* Python::Simulation::pause(PyObject *self, PyObject *args)
 	pySim->sigPause = 1;
 	pySim->cond->notify_one();
 
-	while (pySim->state == StateRunning)
+	while (pySim->state == State::Running)
 		pySim->cond->wait(lk);
 
 	Py_INCREF(Py_None);
@@ -332,26 +355,26 @@ static const char* DocSimulationStart =
 "simulation to finish, but returns immediately.\n"
 "\n"
 ":raises: ``SystemError`` if the simulation is already running or finished.";
-PyObject* Python::Simulation::start(PyObject *self, PyObject *args)
+PyObject* DPsim::Python::Simulation::start(PyObject *self, PyObject *args)
 {
 	Python::Simulation *pySim = (Python::Simulation*) self;
 	std::unique_lock<std::mutex> lk(*pySim->mut);
 
-	if (pySim->state == StateRunning) {
+	if (pySim->state == State::Running) {
 		PyErr_SetString(PyExc_SystemError, "Simulation already started");
 		return nullptr;
 	}
-	else if (pySim->state == StateDone) {
+	else if (pySim->state == State::Done) {
 		PyErr_SetString(PyExc_SystemError, "Simulation already finished");
 		return nullptr;
 	}
-	else if (pySim->state == StatePaused) {
+	else if (pySim->state == State::Paused) {
 		pySim->sigPause = 0;
 		pySim->cond->notify_one();
 	}
 	else {
 		pySim->sigPause = 0;
-		pySim->state = StateRunning;
+		pySim->state = State::Running;
 		pySim->running = true;
 		pySim->simThread = new std::thread(simThreadFunction, pySim);
 	}
@@ -366,23 +389,23 @@ static const char* DocSimulationStep =
 "Perform a single step of the simulation (possibly the first).\n"
 "\n"
 ":raises: ``SystemError`` if the simulation is already running or finished.";
-PyObject* Python::Simulation::step(PyObject *self, PyObject *args)
+PyObject* DPsim::Python::Simulation::step(PyObject *self, PyObject *args)
 {
 	Python::Simulation *pySim = (Python::Simulation*) self;
 	std::unique_lock<std::mutex> lk(*pySim->mut);
 
 	int oldStep = pySim->numStep;
-	if (pySim->state == StateStopped) {
-		pySim->state = StateRunning;
+	if (pySim->state == State::Stopped) {
+		pySim->state = State::Running;
 		pySim->sigPause = 1;
 		pySim->running = true;
 		pySim->simThread = new std::thread(simThreadFunction, pySim);
 	}
-	else if (pySim->state == StatePaused) {
+	else if (pySim->state == State::Paused) {
 		pySim->sigPause = 1;
 		pySim->cond->notify_one();
 	}
-	else if (pySim->state == StateDone) {
+	else if (pySim->state == State::Done) {
 		PyErr_SetString(PyExc_SystemError, "Simulation already finished");
 		return nullptr;
 	}
@@ -403,31 +426,14 @@ static const char* DocSimulationStop =
 "stop()\n"
 "Stop the simulation at the next possible time. The simulation thread is canceled "
 "and the simulation can not be restarted. No-op if the simulation is not running.";
-PyObject* Python::Simulation::stop(PyObject *self, PyObject *args)
+PyObject* DPsim::Python::Simulation::stop(PyObject *self, PyObject *args)
 {
 	Python::Simulation* pySim = (Python::Simulation*) self;
 	std::unique_lock<std::mutex> lk(*pySim->mut);
 	pySim->running = false;
 
-	while (pySim->state == StateRunning)
+	while (pySim->state == State::Running)
 		pySim->cond->wait(lk);
-
-	Py_INCREF(Py_None);
-
-	return Py_None;
-}
-
-static const char* DocSimulationUpdateMatrix =
-"update_matrix()\n"
-"Recompute the internal system matrix. Must be called after component parameters "
-"have been changed during a simulation.";
-PyObject* Python::Simulation::updateMatrix(PyObject *self, PyObject *args)
-{
-	Python::Simulation *pySim = (Python::Simulation*) self;
-
-	// TODO: this is a quick-and-dirty method that keeps the old matrix in memory
-	pySim->sim->addSystemTopology(pySim->comps);
-	pySim->sim->switchSystemMatrix(++pySim->numSwitch);
 
 	Py_INCREF(Py_None);
 
@@ -439,25 +445,25 @@ static const char* DocSimulationWait =
 "Block until the simulation is finished, returning immediately if this is already the case.\n"
 "\n"
 ":raises: ``SystemError`` if the simulation is paused or was not started yet.";
-PyObject* Python::Simulation::wait(PyObject *self, PyObject *args)
+PyObject* DPsim::Python::Simulation::wait(PyObject *self, PyObject *args)
 {
-	Python::Simulation *pySim = (Python::Simulation*) self;
+	DPsim::Python::Simulation *pySim = (DPsim::Python::Simulation*) self;
 	std::unique_lock<std::mutex> lk(*pySim->mut);
 
-	if (pySim->state == StateDone) {
+	if (pySim->state == State::Done) {
 		Py_INCREF(Py_None);
 		return Py_None;
 	}
-	else if (pySim->state == StateStopped) {
+	else if (pySim->state == State::Stopped) {
 		PyErr_SetString(PyExc_SystemError, "Simulation not currently running");
 		return nullptr;
 	}
-	else if (pySim->state == StatePaused) {
+	else if (pySim->state == State::Paused) {
 		PyErr_SetString(PyExc_SystemError, "Simulation currently paused");
 		return nullptr;
 	}
 
-	while (pySim->state == StateRunning)
+	while (pySim->state == State::Running)
 		pySim->cond->wait(lk);
 
 	Py_INCREF(Py_None);
@@ -465,16 +471,89 @@ PyObject* Python::Simulation::wait(PyObject *self, PyObject *args)
 	return Py_None;
 }
 
+static char* DocSimulationGetEventFD =
+"get_eventfd(flags)\n"
+"Return a poll()/select()'able file descriptor which can be used to asynchronously\n"
+"notify the Python code about state changes and other events of the simulation.\n"
+"\n"
+":param flags: An optional mask of events which should be reported.\n"
+":param coalesce: Do not report each event  but do a rate reduction instead.\n";
+PyObject * DPsim::Python::Simulation::getEventFD(PyObject *self, PyObject *args) {
+	int flags = -1, coalesce = 1, fd;
+	Python::Simulation *pySim = (Python::Simulation *) self;
+
+	if (!PyArg_ParseTuple(args, "|ii", &flags, &coalesce))
+		return nullptr;
+
+	fd = pySim->sim->getEventFD(flags, coalesce);
+	if (fd < 0) {
+		PyErr_SetString(PyExc_SystemError, "Failed to created event file descriptor");
+		return nullptr;
+	}
+
+	return Py_BuildValue("i", fd);
+}
+
+static char* DocSimulationGetState =
+"state\n"
+"The current state of simulation.\n";
+PyObject* DPsim::Python::Simulation::getState(PyObject *self, void *ctx)
+{
+	Python::Simulation* pySim = (Python::Simulation*) self;
+	std::unique_lock<std::mutex> lk(*pySim->mut);
+
+	return Py_BuildValue("i", pySim->state);
+}
+
+static char* DocSimulationGetName =
+"name\n"
+"The name of the simulation.";
+PyObject* DPsim::Python::Simulation::getName(PyObject *self, void *ctx)
+{
+	Python::Simulation *pySim = (Python::Simulation*) self;
+
+	return PyUnicode_FromString(pySim->sim->getName().c_str());
+}
+
+PyObject* DPsim::Python::Simulation::getSteps(PyObject *self, void *ctx)
+{
+	Python::Simulation *pySim = (Python::Simulation*) self;
+
+	return Py_BuildValue("i", pySim->sim->getTimeStepCount());
+}
+
+PyObject* DPsim::Python::Simulation::getTime(PyObject *self, void *ctx)
+{
+	Python::Simulation *pySim = (Python::Simulation*) self;
+
+	return Py_BuildValue("f", pySim->sim->getTime());
+}
+
+PyObject* DPsim::Python::Simulation::getFinalTime(PyObject *self, void *ctx)
+{
+	Python::Simulation *pySim = (Python::Simulation*) self;
+
+	return Py_BuildValue("f", pySim->sim->getFinalTime());
+}
+
+
+static PyGetSetDef Simulation_attrs[] = {
+	{"state", DPsim::Python::Simulation::getState, NULL, DocSimulationGetState, NULL},
+	{"name",  DPsim::Python::Simulation::getName, NULL, DocSimulationGetName, NULL},
+	{"steps",  DPsim::Python::Simulation::getSteps, NULL, NULL, NULL},
+	{"time",  DPsim::Python::Simulation::getTime, NULL, NULL, NULL},
+	{"final_time",  DPsim::Python::Simulation::getFinalTime, NULL, NULL, NULL},
+	{NULL, NULL, NULL, NULL, NULL}
+};
+
 static PyMethodDef Simulation_methods[] = {
-	{"add_interface", Python::Simulation::addInterface, METH_VARARGS, DocSimulationAddInterface},
-	{"lvector", Python::Simulation::lvector, METH_NOARGS, DocSimulationLvector},
-	{"name", Python::Simulation::name, METH_NOARGS, DocSimulationName},
-	{"pause", Python::Simulation::pause, METH_NOARGS, DocSimulationPause},
-	{"start", Python::Simulation::start, METH_NOARGS, DocSimulationStart},
-	{"step", Python::Simulation::step, METH_NOARGS, DocSimulationStep},
-	{"stop", Python::Simulation::stop, METH_NOARGS, DocSimulationStop},
-	{"update_matrix", Python::Simulation::updateMatrix, METH_NOARGS, DocSimulationUpdateMatrix},
-	{"wait", Python::Simulation::wait, METH_NOARGS, DocSimulationWait},
+	{"add_interface",	DPsim::Python::Simulation::addInterface, METH_VARARGS, DocSimulationAddInterface},
+	{"pause",		DPsim::Python::Simulation::pause, METH_NOARGS, DocSimulationPause},
+	{"start",		DPsim::Python::Simulation::start, METH_NOARGS, DocSimulationStart},
+	{"step",		DPsim::Python::Simulation::step, METH_NOARGS, DocSimulationStep},
+	{"stop",		DPsim::Python::Simulation::stop, METH_NOARGS, DocSimulationStop},
+	{"wait",		DPsim::Python::Simulation::wait, METH_NOARGS, DocSimulationWait},
+	{"get_eventfd",         DPsim::Python::Simulation::getEventFD, METH_VARARGS, DocSimulationGetEventFD},
 	{NULL, NULL, 0, NULL}
 };
 
@@ -501,9 +580,9 @@ static const char* DocSimulation =
 PyTypeObject DPsim::Python::SimulationType = {
 	PyVarObject_HEAD_INIT(NULL, 0)
 	"dpsim.Simulation",                      /* tp_name */
-	sizeof(Python::Simulation),              /* tp_basicsize */
+	sizeof(DPsim::Python::Simulation),       /* tp_basicsize */
 	0,                                       /* tp_itemsize */
-	(destructor)Python::Simulation::dealloc, /* tp_dealloc */
+	(destructor)DPsim::Python::Simulation::dealloc, /* tp_dealloc */
 	0,                                       /* tp_print */
 	0,                                       /* tp_getattr */
 	0,                                       /* tp_setattr */
@@ -528,13 +607,13 @@ PyTypeObject DPsim::Python::SimulationType = {
 	0,                                       /* tp_iternext */
 	Simulation_methods,                      /* tp_methods */
 	0,                                       /* tp_members */
-	0,                                       /* tp_getset */
+	Simulation_attrs,                        /* tp_getset */
 	0,                                       /* tp_base */
 	0,                                       /* tp_dict */
 	0,                                       /* tp_descr_get */
 	0,                                       /* tp_descr_set */
 	0,                                       /* tp_dictoffset */
-	(initproc)Python::Simulation::init,      /* tp_init */
+	(initproc)DPsim::Python::Simulation::init, /* tp_init */
 	0,                                       /* tp_alloc */
-	Python::Simulation::newfunc,             /* tp_new */
+	DPsim::Python::Simulation::newfunc,      /* tp_new */
 };

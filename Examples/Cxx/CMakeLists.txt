@@ -1,11 +1,5 @@
 set(LIBRARIES "dpsim")
 
-set(INCLUDE_DIRS
-	${EIGEN3_INCLUDE_DIR}
-	"${CMAKE_CURRENT_BINARY_DIR}/../../Source"
-	"${CMAKE_CURRENT_SOURCE_DIR}/../../Source"
-)
-
 if (NOT WIN32)
 	# needed so CIMParser and arabica (which are first compiled into static libs)
 	# can be included in the .so
@@ -17,19 +11,13 @@ endif()
 
 # targets
 set(CIRCUIT_SOURCES
-	Circuits/DP_IdealVS_PILine1.cpp
-	Circuits/DP_IdealVS_R1.cpp
-	Circuits/DP_IdealVS_R2.cpp
-	Circuits/DP_IdealVS_RLC1.cpp
-	Circuits/DP_IdealVS_RXLine1.cpp
-	Circuits/DP_IdealVS_RXLine2.cpp
-	Circuits/DP_ResVS_PILine1.cpp
-	Circuits/DP_ResVS_RL1.cpp
-	Circuits/DP_ResVS_RL2.cpp
-	Circuits/DP_ResVS_RLC1.cpp
-	Circuits/DP_ResVS_RXLine1.cpp
-	Circuits/EMT_IdealVS_R1.cpp
-	Circuits/EMT_ResVS_RXLine_Switch1.cpp
+	Circuits/DP_IdealVS_R_1.cpp
+	Circuits/DP_CS_R_1.cpp
+	Circuits/DP_IdealVS_RXLine_1.cpp
+	Circuits/DP_IdealVS_Trafo_1.cpp
+	Circuits/DP_ResVS_RL_Switch_1.cpp
+	Circuits/EMT_IdealVS_R_1.cpp
+	Circuits/EMT_ResVS_RL_Switch_1.cpp
 )
 
 set(SYNCGEN_SOURCES
@@ -70,6 +58,7 @@ if(WITH_SHMEM)
 		Shmem/ShmemDistributedReference.cpp
 		Shmem/ShmemDistributedVillas.cpp
 		Shmem/ShmemDistributedDirect.cpp
+		Shmem/ShmemControllableSource.cpp
 		Shmem/ShmemRealTime.cpp
 	)
 endif()
@@ -79,7 +68,14 @@ if(WITH_CIM)
 	list(APPEND INCLUDE_DIRS ${CIMPP_INCLUDE_DIRS})
 
 	set(CIM_SOURCES
-		CIM/CIM.cpp
+		CIM/cmd_CIM_input.cpp
+		CIM/WSCC-9bus_CIM.cpp		
+	)
+endif()
+
+if(WITH_CIM AND WITH_SHMEM)
+	set(CIM_SHMEM_SOURCES
+#		CIM/WSCC-9bus_CIM_ext.cpp		
 	)
 endif()
 
@@ -88,7 +84,7 @@ if(WITH_PYTHON)
 	list(APPEND INCLUDE_DIRS ${PYTHON_INCLUDE_DIRS})
 endif()
 
-foreach(SOURCE ${CIRCUIT_SOURCES} ${SYNCGEN_SOURCES} ${VARFREQ_SOURCES} ${SHMEM_SOURCES} ${RT_SOURCES} ${CIM_SOURCES})
+foreach(SOURCE ${CIRCUIT_SOURCES} ${SYNCGEN_SOURCES} ${VARFREQ_SOURCES} ${SHMEM_SOURCES} ${RT_SOURCES} ${CIM_SOURCES} ${CIM_SHMEM_SOURCES})
 	get_filename_component(TARGET ${SOURCE} NAME_WE)
 
 	add_executable(${TARGET} ${SOURCE})

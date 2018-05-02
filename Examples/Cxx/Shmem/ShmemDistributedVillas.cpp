@@ -22,11 +22,12 @@
 #include "DPsim.h"
 
 using namespace DPsim;
-using namespace DPsim::Components::DP;
+using namespace CPS::Components::DP;
 
 int main(int argc, char *argv[])
 {
-	Component::List comps;
+	ComponentBase::List comps, comps2;
+	Node::List nodes;
 
 	struct shmem_conf conf;
 	conf.samplelen = 4;
@@ -52,28 +53,38 @@ int main(int argc, char *argv[])
 	ShmemInterface shmem(in, out, &conf);
 
 	if (String(argv[1]) == "0") {
-		auto evs = VoltageSource::make("v_t", 2, GND, Complex(0, 0));
+		// Nodes
+		auto n1 = Node::make("n1");
+		auto n2 = Node::make("n2");
+		auto n3 = Node::make("n3");
 
-		comps = {
-			VoltageSourceNorton::make("v_s", 0, GND, Complex(10000, 0), 1),
-			Inductor::make("l_1", 0, 1, 0.1),
-			Resistor::make("r_1", 1, 2, 1),
-			evs
-		};
+		// Components
+		auto evs = VoltageSource::make("v_t", Node::List{GND, n3}, Complex(0, 0));
+		auto vs = VoltageSourceNorton::make("v_s", Node::List{GND, n1}, Complex(10000, 0), 1);
+		auto l1 = Inductor::make("l_1", Node::List{n1, n2}, 0.1);
+		auto r1 = Resistor::make("r_1", Node::List{n2, n3}, 1);
 
-		shmem.registerControllableSource(evs, GND, 0);
-		shmem.registerExportedCurrent(evs, GND, 0);
+		comps = ComponentBase::List{evs, vs, l1, r1};
+		nodes = Node::List{GND, n1, n2, n3};
+
+		shmem.registerControlledAttribute(evs->findAttribute<Complex>("voltage_ref"), 0, 1);
+		shmem.registerExportedAttribute(evs->findAttribute<Complex>("comp_current"), 0, 1);
 	}
 	else if (String(argv[1]) == "1") {
-		auto ecs = CurrentSource::make("v_s", 0, GND, Complex(0, 0));
+		// Nodes
+		auto n4 = Node::make("n4");
 
-		comps = {
-			Resistor::make("r_2", 0, GND, 10),
-			ecs
-		};
+		// Components
+		auto ecs = CurrentSource::make("v_s", Node::List{GND, n4}, Complex(0, 0));
+		auto r2A = Resistor::make("r_2", Node::List{GND, n4}, 10);
+		auto r2B = Resistor::make("r_2", Node::List{GND, n4}, 8);
 
-		shmem.registerControllableSource(ecs, GND, 0);
-		shmem.registerExportedVoltage(0, GND, 0, 1);
+		comps = ComponentBase::List{ecs, r2A};
+		comps2 = ComponentBase::List{ecs, r2B};
+		nodes = Node::List{GND, n4};
+
+		shmem.registerControlledAttribute(ecs->findAttribute<Complex>("current_ref"), 0, 1);
+		shmem.registerExportedAttribute(ecs->findAttribute<Complex>("comp_voltage"), 0, 1);
 	}
 	else {
 		std::cerr << "invalid test number" << std::endl;
@@ -81,18 +92,17 @@ int main(int argc, char *argv[])
 	}
 
 	String simName = "ShmemDistributed";
-	Real timeStep = 0.001000;
+	Real timeStep = 0.001;
 
-	RealTimeSimulation sim(simName + argv[1], comps, 2.0*M_PI*50.0, timeStep, 20, Logger::Level::INFO);
-	sim.addExternalInterface(&shmem);
+	auto sys1 = SystemTopology(50, nodes, comps);
+
+	auto sim = RealTimeSimulation(simName + argv[1], sys1, timeStep, 20);
+	sim.addInterface(&shmem);
 
 	if (String(argv[1]) == "1") {
-		auto comps2 = comps;
+		auto sys2 = SystemTopology(50, comps2);
 
-		comps2.pop_back();
-		comps2.push_back(Resistor::make("r_2", 0, GND, 8));
-
-		sim.addSystemTopology(comps2);
+		sim.addSystemTopology(sys2);
 		sim.setSwitchTime(10, 1);
 	}
 
