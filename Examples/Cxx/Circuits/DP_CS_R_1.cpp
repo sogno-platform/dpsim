@@ -26,10 +26,10 @@ using namespace CPS::Components::DP;
 
 int main(int argc, char* argv[]) {
 	// Nodes
-	auto n1 = Node::make("n1");
+	auto n1 = Node::make("n1", 0);
 
 	// Components
-	auto cs = CurrentSource::make("cs", Node::List{GND, n1}, Complex(10, 0), Logger::Level::DEBUG);
+	auto cs = CurrentSource::make("cs", Node::List{GND, n1}, Complex(10, 0));
 	auto r1 = Resistor::make("r_1", Node::List{GND, n1}, 1);
 
 	// Define system topology
