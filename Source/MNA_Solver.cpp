@@ -98,7 +98,7 @@ void MnaSolver::initialize(SystemTopology system) {
 				virtualNode++;
 				mSystemTopologies[0].mNodes.push_back(std::make_shared<Node>(virtualNode));
 				comp->setVirtualNodeAt(mSystemTopologies[0].mNodes[virtualNode], node);
-				mLog.Log(Logger::Level::INFO) << "Created virtual node" << node << "= " << virtualNode
+				mLog.Log(Logger::Level::INFO) << "Created virtual node" << node << " = " << virtualNode
 					<< " for " << comp->getName() << std::endl;
 			}
 		}
