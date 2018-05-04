@@ -60,8 +60,8 @@ int main(int argc, char *argv[]) {
 
 	if (String(argv[1]) == "0") {
 		// Nodes
-		auto n1 = Node::make("n1");
-		auto n2 = Node::make("n2");
+		auto n1 = Node::make("n1", 0);
+		auto n2 = Node::make("n2", 1);
 
 		// Components
 		auto evs = VoltageSource::make("v_intf", Node::List{GND, n2}, Complex(5, 0), Logger::Level::DEBUG);
@@ -79,7 +79,7 @@ int main(int argc, char *argv[]) {
 	}
 	else if (String(argv[1]) == "1") {
 		// Nodes
-		auto n1 = Node::make("n1");
+		auto n1 = Node::make("n1", 0);
 
 		// Components
 		auto ecs = CurrentSource::make("i_intf", Node::List{GND, n1}, Complex(5, 0), Logger::Level::DEBUG);
