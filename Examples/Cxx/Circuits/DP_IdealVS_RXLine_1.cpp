@@ -25,18 +25,23 @@ using namespace DPsim;
 using namespace CPS::Components::DP;
 
 int main(int argc, char* argv[]) {
-	// Define system topology
-	SystemTopology system(50, {
-		VoltageSource::make("v_1", 0, DEPRECATEDGND, Complex(10, 0)),
-		RxLine::make("Line_1", 0, 1, 0.1, 0.001, RxLine::Node3),
-		Resistor::make("r_1", 1, DEPRECATEDGND, 20)});
+	// Nodes
+	auto n1 = Node::make("n1");
+	auto n2 = Node::make("n2");
+
+	// Components
+	auto vs = VoltageSource::make("v_1", Node::List{GND, n1}, Complex(10, 0));
+	auto line = RxLine::make("Line_1", Node::List{n1, n2}, 0.1, 0.001, RxLine::Node3);
+	auto r = Resistor::make("r_1", Node::List{n2, GND}, 20);
+
+	auto sys = SystemTopology(50, Node::List{n1, n2}, ComponentBase::List{vs, line, r});
 
 	// Define simulation scenario
 	Real timeStep = 0.00001;
 	Real finalTime = 0.1;
 	String simName = "DP_IdealVS_RxLine1_" + std::to_string(timeStep);
 
-	Simulation sim(simName, system, timeStep, finalTime);
+	Simulation sim(simName, sys, timeStep, finalTime);
 	sim.run();
 
 	return 0;
