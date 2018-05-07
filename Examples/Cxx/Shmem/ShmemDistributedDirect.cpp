@@ -68,8 +68,8 @@ int main(int argc, char *argv[]) {
 		auto vs1 = VoltageSource::make("vs_1", Node::List{GND, n1}, Complex(10, 0), Logger::Level::DEBUG);
 		auto r01 = Resistor::make("r_0_1", Node::List{n1, n2}, 1, Logger::Level::DEBUG);
 
-		shmem.registerControlledAttribute(evs->findAttribute<Complex>("voltage_ref"), 0, 1);
-		shmem.registerExportedAttribute(evs->findAttribute<Complex>("comp_current"), 0, 1);
+		shmem.registerControlledAttribute(evs->findAttribute<Complex>("voltage_ref"), 1.0, 0, 1);
+		shmem.registerExportedAttribute(evs->findAttribute<Complex>("comp_current"), 1.0, 0, 1);
 
 		auto sys = SystemTopology(50, Node::List{n1, n2}, ComponentBase::List{evs, vs1, r01});
 		auto sim = Simulation("ShmemDistributedDirect_1", sys, timeStep, 0.1);
@@ -87,9 +87,9 @@ int main(int argc, char *argv[]) {
 		//auto ecs_switch = CurrentSource::make("i_switch", GND, 1, Complex(0, 0));
 		//auto r01 = Resistor::make("r_0_1", 0, 1, 1);
 
-		shmem.registerControlledAttribute(ecs->findAttribute<Complex>("current_ref"), 0, 1);
-		shmem.registerExportedAttribute(ecs->findAttribute<Complex>("comp_voltage"), 0, 1);
-		//shmem.registerControlledAttribute(ecs_switch->findAttribute('CurrentRef'), 2, 3);
+		shmem.registerControlledAttribute(ecs->findAttribute<Complex>("current_ref"), 1.0, 0, 1);
+		shmem.registerExportedAttribute(ecs->findAttribute<Complex>("comp_voltage"), 1.0, 0, 1);
+		//shmem.registerControlledAttribute(ecs_switch->findAttribute('CurrentRef'), 1.0, 2, 3);
 
 		auto sys = SystemTopology(50, Node::List{n1}, ComponentBase::List{ecs, rgnd0});
 		auto sim = Simulation("ShmemDistributedDirect_2", sys, timeStep, 0.1);

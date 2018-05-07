@@ -47,8 +47,8 @@ int main(int argc, char *argv[]) {
 	auto ecs = CurrentSource::make("v_intf", Node::List{GND, n1}, Complex(10, 0));
 	auto r1 = Resistor::make("r_1", Node::List{GND, n1}, 1);
 
-	shmem.registerControlledAttribute(ecs->findAttribute<Complex>("current_ref"), 0, 1);
-	shmem.registerExportedAttribute(ecs->findAttribute<Complex>("comp_voltage"), 0, 1);
+	shmem.registerControlledAttribute(ecs->findAttribute<Complex>("current_ref"), 1.0, 0, 1);
+	shmem.registerExportedAttribute(ecs->findAttribute<Complex>("comp_voltage"), 1.0, 0, 1);
 
 	auto sys = SystemTopology(50, Node::List{n1}, ComponentBase::List{ecs, r1});
 	auto sim = RealTimeSimulation(simName, sys, timeStep, finalTime,
