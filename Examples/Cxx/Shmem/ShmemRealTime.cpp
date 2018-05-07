@@ -48,8 +48,8 @@ int main(int argc, char* argv[])
 	auto rL =  Resistor::make("r_load", Node::List{n4, GND}, 1000);
 
 	ShmemInterface villas("/villas1-in", "/villas1-out", &conf);
-	villas.registerControlledAttribute(evs->findAttribute<Complex>("voltage_ref"), 0, 1);
-	villas.registerExportedAttribute(evs->findAttribute<Complex>("comp_current"), 0, 1);
+	villas.registerControlledAttribute(evs->findAttribute<Complex>("voltage_ref"), 1.0, 0, 1);
+	villas.registerExportedAttribute(evs->findAttribute<Complex>("comp_current"), 1.0,  0, 1);
 
 	Real timeStep = 0.001;
 	auto sys = SystemTopology(50, Node::List{GND, n1, n2, n3, n4}, ComponentBase::List{evs, rs, rl, ll, rL});

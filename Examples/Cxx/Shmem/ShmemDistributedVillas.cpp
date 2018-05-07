@@ -67,8 +67,8 @@ int main(int argc, char *argv[])
 		comps = ComponentBase::List{evs, vs, l1, r1};
 		nodes = Node::List{GND, n1, n2, n3};
 
-		shmem.registerControlledAttribute(evs->findAttribute<Complex>("voltage_ref"), 0, 1);
-		shmem.registerExportedAttribute(evs->findAttribute<Complex>("comp_current"), 0, 1);
+		shmem.registerControlledAttribute(evs->findAttribute<Complex>("voltage_ref"), 1.0, 0, 1);
+		shmem.registerExportedAttribute(evs->findAttribute<Complex>("comp_current"), 1.0, 0, 1);
 	}
 	else if (String(argv[1]) == "1") {
 		// Nodes
@@ -83,8 +83,8 @@ int main(int argc, char *argv[])
 		comps2 = ComponentBase::List{ecs, r2B};
 		nodes = Node::List{GND, n4};
 
-		shmem.registerControlledAttribute(ecs->findAttribute<Complex>("current_ref"), 0, 1);
-		shmem.registerExportedAttribute(ecs->findAttribute<Complex>("comp_voltage"), 0, 1);
+		shmem.registerControlledAttribute(ecs->findAttribute<Complex>("current_ref"), 1.0, 0, 1);
+		shmem.registerExportedAttribute(ecs->findAttribute<Complex>("comp_voltage"), 1.0, 0, 1);
 	}
 	else {
 		std::cerr << "invalid test number" << std::endl;
