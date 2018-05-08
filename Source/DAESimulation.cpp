@@ -11,51 +11,17 @@ DAESimulation::DAESimulation(String name, SystemTopology system, Real dt, Real t
 	
 	offsets.push_back(0);
 	offsets.push_back(0);
+	mFinalTime=tfinal;
 }
 
 void DAESimulation::initialize(Component::List newComponents)
 {
-	Int maxNode = 0;
-	Int currentVirtualNode = 0;
-
-	//mLog.Log(Logger::Level::INFO) << "#### Start Initialization ####" << std::endl;
-
-	// Calculate the mNumber of nodes by going through the list of components
-	// TODO we use the values from the first component vector right now and assume that
-	// these values don't change on switches
-	int maxNode = 0;
 	for (auto comp : newComponents) {
-		// determine maximum node in component list
-		if (comp->getNode1() > maxNode) {
-			maxNode = comp->getNode1();
-		}
-		if (comp->getNode2() > maxNode) {
-			maxNode = comp->getNode2();
-		}
+			
+		comp->initializePowerflow(DAESys.mSystemFrequency);
 	}
 
-	if (mNodes.size() == 0) {
-		// Create Nodes for all indices
-		mNodes.resize(maxNode + 1, nullptr);
-		for (int index = 0; index < mNodes.size(); index++)
-			mNodes[index] = std::make_shared<Node>(index);
-
-		for (auto comp : newComponents) {
-			std::shared_ptr<Node> node1, node2;
-			if (comp->getNode1() < 0)
-				node1 = mGnd;
-			else
-				node1 = mNodes[comp->getNode1()];
-			if (comp->getNode2() < 0)
-				node2 = mGnd;
-			else
-				node2 = mNodes[comp->getNode2()];
-
-			comp->setNodes(Node::List{ node1, node2 });
-		}
-	}
-
-	// TO-DO: Initialize right side vector and components
+	// TO-DO: Get more Ida initialization stuff from run function
 }
 
  
@@ -66,7 +32,7 @@ void DAESimulation::run()
 	state=state_dt = avtol=NULL;
 	realtype tout, rtol, *sval, *s_dtval, *atval;
 	sval = s_dtval=  atval =NULL;
-	int NEQ = DAESys.mComponents.size(); // is this implemented?
+	int NEQ = DAESys.mComponents.size(); 
 	
 	state = N_VNew_Serial(NEQ);
     if(check_flag((void *)state, "N_VNew_Serial", 0)) return;
@@ -75,38 +41,70 @@ void DAESimulation::run()
 	avtol = N_VNew_Serial(NEQ);
     if(check_flag((void *)avtol, "N_VNew_Serial", 0)) return;
 
-	sval = N_VGetArrayPointer_Serial(state);
-	/*
-		set intial values state
+	///set intial values for state vector 
+	initialize(DAESys.mComponents);
+
+	/*vector definintion: 
+	
+	state[0]=node0_voltage
+	state[1]=node1_voltage
+	....
+	state[n]=noden_voltage
+	state[n+1]=component0_voltage
+	state[n+2]=component0_inductance (not yet implemented)
+	...
+	state[m-1]=componentm_voltage
+	state[m]=componentm_inductance
+	
 	*/
+	int counter = 0;
+	sval = N_VGetArrayPointer_Serial(state);
+	for (auto node : DAESys.mNodes) {
+
+		sval[counter++]=node->getVoltage();
+
+	}
+	
+	for (auto comp : DAESys.mComponents){
+
+		sval[counter++]=comp->getVoltage();
+		//sval[counter++]=component inductance;
+
+	}	
+	
 	s_dtval = N_VGetArrayPointer_Serial(state_dt);
 	/*
-
 		set inital values for state derivative
+		for now all equal to 0
 	*/
+	for (int i =0, i<(DAESys.mNodes.size()+DAESys.mComponents.size()-1), i++)
+		s_dtval[i] = 0; //TODO: add derivative calculation
+
+
 	atval = N_VGetArrayPointer_Serial(avtol);
 	/*
 
 		set inital values for absolute tolerance
 	*/
 
-	rtol = ..; //set relative tolerance
+	 rtol = RCONST(1.0e-4); //set relative tolerance, is this correct?
 
 	int t0 = 0;
-	tout1 = DAESys.mFinalTime;
+	tout1 = mFinalTime;
 	mem = IDACreate();
-	int retval1 = IDAInit(mem, residualFunction, t0, state, dstate_dt); //TO-DO: get remaining parameters
+
+	int retval1 = IDAInit(mem, DAE_residualFunction, t0, state, dstate_dt); //TO-DO: get remaining parameters
 	// Do error checking with retval 1
-	/*
-		Add IDA tolerances using avtol and rtol 
-	*/
+
  	N_VDestroy_Serial(avtol);
+
 	retval = IDADense(mem, NEQ); // choose right solver
+	
 	int iout = 0;
 	int tout = 1; //final time
 	while(1){
 
-		int retval2 = IDASolve(mem, tout, &tret, state, dstate_dt, IDA_NORMAL); //TO-DO: implement parameters 
+		int retval2 = IDASolve(mem, tout, &tret, state, dstate_dt, IDA_NORMAL);  
 		if(retval2==1) return 1;
 		if (retval == IDA_SUCCESS){ 
 			iout++;

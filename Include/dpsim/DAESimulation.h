@@ -26,16 +26,14 @@ using namespace DPsim ;
 		///TO-DO: Implement the offset based on previous components
 
 	public:
-		/// Create DAE System
+		/// #### Create DAE System ####
 		//TO-DO: initilaize state vector with nodes and components;
 		DAESimulation(String name,  SystemTopology system, Real dt, Real tfinal);
 		virtual ~DAESimulation() { };
 		//TO-DO: initialize Components/Nodes with inital values
 		void initialize(Component::List comps);
-
 		// Residual Function to be used by IDA
 		int DAE_residualFunction(realtype ttime, N_Vector state, N_Vector dstate_dt, N_Vector resid, void *user_data);
-
 		/// Run simulation until total time is elapsed.
 		void run();
 	};
