@@ -71,9 +71,9 @@ void MnaSolver::initialize(SystemTopology system) {
 	Int maxNode = 0;
 	for (auto comp : mSystemTopologies[0].mComponents) {
 		// determine maximum node in component list
-		if (comp->getNode1() > maxNode)
+		if (comp->getTerminalsNum() > 0 && comp->getNode1() > maxNode)
 			maxNode = comp->getNode1();
-		if (comp->getNode2() > maxNode)
+		if (comp->getTerminalsNum() > 1 && comp->getNode2() > maxNode)
 			maxNode = comp->getNode2();
 	}
 
