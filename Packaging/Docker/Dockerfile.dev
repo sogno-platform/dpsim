@@ -1,4 +1,4 @@
-FROM fedora:27
+FROM fedora:28
 
 LABEL \
 	org.label-schema.schema-version = "1.0" \
@@ -24,37 +24,24 @@ RUN dnf -y install \
 	doxygen \
 	graphviz \
 	pandoc \
-	python3-pip
+	python3-pip \
+	pkg-config
 
 # Install some debuginfos
 RUN dnf -y debuginfo-install \
 	python3 \
-	villas-node
+	villas-node \
+	expat
 
 # Dependencies
 RUN dnf -y install \
 	python3-devel \
 	eigen3-devel \
 	villas-node-devel \
+	expat-devel \
 	libcimpp16v29a
-
-RUN dnf -y install \
-	pkg-config \
-	expat \
-	expat-devel
-
-# Python Packages
-ADD requirements.txt .
-RUN pip3 install -r requirements.txt
 
 ENV LD_LIBRARY_PATH /usr/local/lib64
 
-RUN useradd -m dpsim
-COPY Source/ /home/dpsim/Source/
-COPY CMake/ /home/dpsim/CMake/
-COPY Documentation/ /home/dpsim/Documentation/
-COPY Examples/ /home/dpsim/Examples/
-COPY Dependencies/ /home/dpsim/Dependencies/
-COPY CMakeLists.txt COPYING.md README.md setup.py /home/dpsim/
-WORKDIR /home/dpsim
-RUN python3 setup.py install
+ADD requirements.txt .
+RUN pip3 install -r requirements.txt
