@@ -59,6 +59,7 @@ if(WITH_SHMEM)
 		Shmem/ShmemDistributedVillas.cpp
 		Shmem/ShmemDistributedDirect.cpp
 		Shmem/ShmemControllableSource.cpp
+		Shmem/ShmemControllableFiltSource.cpp
 		Shmem/ShmemRealTime.cpp
 	)
 endif()

@@ -28,7 +28,8 @@ RUN dnf -y install \
 
 # Install some debuginfos
 RUN dnf -y debuginfo-install \
-	python3
+	python3 \
+	villas-node
 
 # Dependencies
 RUN dnf -y install \

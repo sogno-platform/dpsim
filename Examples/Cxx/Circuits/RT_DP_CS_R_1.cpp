@@ -29,18 +29,18 @@ int main(int argc, char* argv[]) {
 	auto n1 = Node::make("n1");
 
 	// Components
-	auto cs = CurrentSource::make("cs", Node::List{GND, n1}, Complex(10, 0));
+	auto cs = CurrentSource::make("cs", Node::List{GND, n1}, Complex(10, 0), Logger::Level::DEBUG);
 	auto r1 = Resistor::make("r_1", Node::List{GND, n1}, 1);
 
 	// Define system topology
-	auto sys = SystemTopology(50, Node::List{n1}, ComponentBase::List{cs, r1});
+	auto sys = SystemTopology(50, Node::List{GND, n1}, ComponentBase::List{cs, r1});
 		
 	// Define simulation scenario
 	Real timeStep = 0.001;
 	Real finalTime = 0.1;
 	String simName = "DP_CS_R_1";
 
-	Simulation sim(simName, sys, timeStep, finalTime);
+	RealTimeSimulation sim(simName, sys, timeStep, finalTime);
 	sim.run();
 
 	return 0;

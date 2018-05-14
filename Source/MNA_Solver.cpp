@@ -71,9 +71,9 @@ void MnaSolver::initialize(SystemTopology system) {
 	Int maxNode = 0;
 	for (auto comp : mSystemTopologies[0].mComponents) {
 		// determine maximum node in component list
-		if (comp->getNode1() > maxNode)
+		if (comp->getTerminalsNum() > 0 && comp->getNode1() > maxNode)
 			maxNode = comp->getNode1();
-		if (comp->getNode2() > maxNode)
+		if (comp->getTerminalsNum() > 1 && comp->getNode2() > maxNode)
 			maxNode = comp->getNode2();
 	}
 
@@ -98,7 +98,7 @@ void MnaSolver::initialize(SystemTopology system) {
 				virtualNode++;
 				mSystemTopologies[0].mNodes.push_back(std::make_shared<Node>(virtualNode));
 				comp->setVirtualNodeAt(mSystemTopologies[0].mNodes[virtualNode], node);
-				mLog.Log(Logger::Level::INFO) << "Created virtual node" << node << "= " << virtualNode
+				mLog.Log(Logger::Level::INFO) << "Created virtual node" << node << " = " << virtualNode
 					<< " for " << comp->getName() << std::endl;
 			}
 		}
@@ -176,11 +176,11 @@ void MnaSolver::assignNodesToComponents(ComponentBase::List components) {
 		if (comp->getNodeNum() > 0) {
 			std::shared_ptr<Node> node1, node2;
 			if (comp->getNode1() < 0)
-				node1 = mSystemTopologies[0].mGnd;
+				node1 = GND;
 			else
 				node1 = mSystemTopologies[0].mNodes[comp->getNode1()];
 			if (comp->getNode2() < 0)
-				node2 = mSystemTopologies[0].mGnd;
+				node2 = GND;
 			else
 				node2 = mSystemTopologies[0].mNodes[comp->getNode2()];
 
