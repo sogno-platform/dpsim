@@ -70,13 +70,13 @@ if(WITH_CIM)
 
 	set(CIM_SOURCES
 		CIM/cmd_CIM_input.cpp
-		CIM/WSCC-9bus_CIM.cpp		
+		CIM/WSCC-9bus_CIM.cpp
 	)
 endif()
 
 if(WITH_CIM AND WITH_SHMEM)
 	set(CIM_SHMEM_SOURCES
-#		CIM/WSCC-9bus_CIM_ext.cpp		
+		Shmem/Shmem_WSCC-9bus_CIM.cpp
 	)
 endif()
 

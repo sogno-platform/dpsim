@@ -22,7 +22,7 @@
 #include <iostream>
 #include <list>
 
-#include "DPsim_MNA.h"
+#include "DPsim.h"
 #include "cps/Interfaces/ShmemInterface.h"
 #include "cps/CIM/Reader.h"
 
@@ -49,9 +49,9 @@ int main(int argc, char *argv[]) {
 	CIM::Reader reader(50, Logger::Level::INFO, Logger::Level::INFO);
 	SystemTopology sys = reader.loadCIM(filenames);
 
-	Simulation sim(sys, 0.0001, 0.1,
+	Simulation sim("Shmem_WSCC-9bus_CIM", sys, 0.0001, 0.1,
 		Solver::Domain::DP, Solver::Type::MNA, Logger::Level::DEBUG);
-	
+
 	// Create shmem interface
 	struct shmem_conf conf;
 	conf.samplelen = 64;
@@ -74,7 +74,7 @@ int main(int argc, char *argv[]) {
 
 	// TODO
 	// Extend system with controllable load
-	// Register controllable load	
+	// Register controllable load
 
 	sim.addInterface(&shmem);
 	sim.run();
