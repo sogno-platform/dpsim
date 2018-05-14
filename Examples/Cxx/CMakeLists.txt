@@ -61,6 +61,7 @@ if(WITH_SHMEM)
 		Shmem/ShmemControllableSource.cpp
 		Shmem/ShmemControllableFiltSource.cpp
 		Shmem/ShmemRealTime.cpp
+		Shmem/ShmemControllable_WSCC-9bus_CIM.cpp
 	)
 endif()
 
