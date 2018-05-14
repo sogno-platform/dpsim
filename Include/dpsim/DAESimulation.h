@@ -23,7 +23,8 @@ using namespace DPsim ;
 		SystemTopology DAESys;
 		// stores the required offsets for adding new components to the residual vector
 		std::vector<int> offsets; 
-		///TO-DO: Implement the offset based on previous components
+		//Time step
+		Real timestep;
 
 	public:
 		/// #### Create DAE System ####

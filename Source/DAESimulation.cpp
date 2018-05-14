@@ -2,7 +2,7 @@
 #include "DAESimulation.h"
 
 
-DAESimulation::DAESimulation(String name, SystemTopology system, Real dt, Real tfinal) : DAESys(system), mName(name)
+DAESimulation::DAESimulation(String name, SystemTopology system, Real dt, Real tfinal) : DAESys(system), mName(name), timestep(dt)
 {
 
 	//defines offset vector which is composed as follows:
@@ -21,27 +21,39 @@ void DAESimulation::initialize(Component::List newComponents)
 		comp->initializePowerflow(DAESys.mSystemFrequency);
 	}
 
-	// TO-DO: Get more Ida initialization stuff from run function
+	// TO-DO: move init functions from run
 }
 
  
 void DAESimulation::run()
 {
 	void *mem = NULL;
-	N_Vector state, state_dt, avtol ;
-	state=state_dt = avtol=NULL;
-	realtype tout, rtol, *sval, *s_dtval, *atval;
-	sval = s_dtval=  atval =NULL;
-	int NEQ = DAESys.mComponents.size(); 
+	//initialize state vectors
+	N_Vector state, dstate_dt; //avtol ;
+	state=state_dt = NULL;
+
+	 /* 
+	 	t0 = starting time (usually 0)
+	 	tout = time for desired solution;
+		rtol = relative tolerance
+	 	tret = time IDA reached while solving
+		abstol = scalar absolute tolerance 
+	 */
+
+	realtype t0, tout, rtol, ,tret , sval, *s_dtval, abstol//*atval;
+	sval = s_dtval =NULL;
+	int NEQ = DAESys.mComponents.size()+DAESys.mNodes.size(); 
 	
 	state = N_VNew_Serial(NEQ);
-    if(check_flag((void *)state, "N_VNew_Serial", 0)) return;
-    state_dt = N_VNew_Serial(NEQ);
-    if(check_flag((void *)state_dt, "N_VNew_Serial", 0)) return;
+   // if(check_flag((void *)state, "N_VNew_Serial", 0)) return;
+    dstate_dt = N_VNew_Serial(NEQ);
+    //if(check_flag((void *)state_dt, "N_VNew_Serial", 0)) return;
 	avtol = N_VNew_Serial(NEQ);
-    if(check_flag((void *)avtol, "N_VNew_Serial", 0)) return;
+    //if(check_flag((void *)avtol, "N_VNew_Serial", 0)) return;
 
 	///set intial values for state vector 
+
+	//set inital values of components
 	initialize(DAESys.mComponents);
 
 	/*vector definintion: 
@@ -54,9 +66,10 @@ void DAESimulation::run()
 	state[n+2]=component0_inductance (not yet implemented)
 	...
 	state[m-1]=componentm_voltage
-	state[m]=componentm_inductance
+	state[m]=componentm_inductance (not yet implemented)
 	
 	*/
+
 	int counter = 0;
 	sval = N_VGetArrayPointer_Serial(state);
 	for (auto node : DAESys.mNodes) {
@@ -72,7 +85,8 @@ void DAESimulation::run()
 
 	}	
 	
-	s_dtval = N_VGetArrayPointer_Serial(state_dt);
+	s_dtval = N_VGetArrayPointer_Serial(dstate_dt);
+
 	/*
 		set inital values for state derivative
 		for now all equal to 0
@@ -80,43 +94,52 @@ void DAESimulation::run()
 	for (int i =0, i<(DAESys.mNodes.size()+DAESys.mComponents.size()-1), i++)
 		s_dtval[i] = 0; //TODO: add derivative calculation
 
-
-	atval = N_VGetArrayPointer_Serial(avtol);
 	/*
-
-		set inital values for absolute tolerance
+	atval = N_VGetArrayPointer_Serial(avtol);
+		set inital values for absolute tolerance if noise differs for each component
 	*/
+	
+	rtol = RCONST(1.0e-6); //set relative tolerance, is this correct?
+	abstol = RCONST(1.0e-1);//set absolute error
+	
 
-	 rtol = RCONST(1.0e-4); //set relative tolerance, is this correct?
-
-	int t0 = 0;
-	tout1 = mFinalTime;
 	mem = IDACreate();
+	if(check_flag((void *)mem, "IDACreate", 0)) return(1);
 
-	int retval1 = IDAInit(mem, DAE_residualFunction, t0, state, dstate_dt); //TO-DO: get remaining parameters
-	// Do error checking with retval 1
+	int retval = IDAInit(mem, DAE_residualFunction, t0, state, dstate_dt); 
+	//if(check_flag(&retval, "IDAInit", 1)) return(1);
 
- 	N_VDestroy_Serial(avtol);
+	retval = IDASStolerances(mem, rtol, abstol);
+ 	//if(check_flag(&retval, "IDASStolerances", 1)) return(1);
+
 
 	retval = IDADense(mem, NEQ); // choose right solver
 	
-	int iout = 0;
-	int tout = 1; //final time
+	t0 = 0;
+	tout=timestep;
+	
 	while(1){
 
-		int retval2 = IDASolve(mem, tout, &tret, state, dstate_dt, IDA_NORMAL);  
-		if(retval2==1) return 1;
+		retval = IDASolve(mem, tout, &tret, state, dstate_dt, IDA_NORMAL);  
+		
 		if (retval == IDA_SUCCESS){ 
-			iout++;
-			tout+= 0.1; //10 iterations here
+			tout += timestep;
 		}
-		if (iout == maxIt) break; //maxIt = max number of iterations
+		else {
+			std::cout <<"Ida Error"<<std::endl;
+			break;
+		}
+		
+		if(tout>=mFinalTime) break;
 	}
+	
 	std::cout<<"Future Solution Vector"<<endl;
+	//Freeing allocated memory
 	 IDAFree(&mem);
-	 /*
-		Free state and dstate_dt
-	 */
+	 //N_VDestroy(avtol);
+	 N_VDestroy(state);
+	 N_VDestroy(state_dt);
+	 
 }
 
 int DAESimulation::DAE_residualFunction(realtype ttime, N_Vector state, N_Vector dstate_dt, N_Vector resid, void *user_data)
