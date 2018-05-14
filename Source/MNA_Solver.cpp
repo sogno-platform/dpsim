@@ -87,6 +87,12 @@ void MnaSolver::initialize(SystemTopology system) {
 	}
 
 	mLog.Log(Logger::Level::INFO) << "Maximum node number: " << maxNode << std::endl;
+	mLog.Log(Logger::Level::INFO) << "Number of nodes: " << mSystemTopologies[0].mNodes.size() << std::endl;
+
+	for (int i = 0; i < mSystemTopologies[0].mNodes.size(); i++) {
+		mLog.Log(Logger::Level::INFO) << "Found node " << mSystemTopologies[0].mNodes[i]->mName << std::endl;
+	}
+
 	// virtual nodes are placed after network nodes
 	UInt virtualNode = maxNode;
 	mNumRealNodes = maxNode + 1;
