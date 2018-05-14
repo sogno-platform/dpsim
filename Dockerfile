@@ -38,8 +38,23 @@ RUN dnf -y install \
 	villas-node-devel \
 	libcimpp16v29a
 
+RUN dnf -y install \
+	pkg-config \
+	expat \
+	expat-devel
+
 # Python Packages
 ADD requirements.txt .
 RUN pip3 install -r requirements.txt
 
 ENV LD_LIBRARY_PATH /usr/local/lib64
+
+RUN useradd -m dpsim
+COPY Source/ /home/dpsim/Source/
+COPY CMake/ /home/dpsim/CMake/
+COPY Documentation/ /home/dpsim/Documentation/
+COPY Examples/ /home/dpsim/Examples/
+COPY Dependencies/ /home/dpsim/Dependencies/
+COPY CMakeLists.txt COPYING.md README.md setup.py /home/dpsim/
+WORKDIR /home/dpsim
+RUN python3 setup.py install
