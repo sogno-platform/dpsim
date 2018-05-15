@@ -61,7 +61,6 @@ if(WITH_SHMEM)
 		Shmem/ShmemControllableSource.cpp
 		Shmem/ShmemControllableFiltSource.cpp
 		Shmem/ShmemRealTime.cpp
-		Shmem/ShmemControllable_WSCC-9bus_CIM.cpp
 	)
 endif()
 
@@ -77,7 +76,9 @@ endif()
 
 if(WITH_CIM AND WITH_SHMEM)
 	set(CIM_SHMEM_SOURCES
-		Shmem/Shmem_WSCC-9bus_CIM.cpp
+	Shmem/Shmem_WSCC-9bus_CIM.cpp
+	Shmem/ShmemControllable_WSCC-9bus_CIM.cpp
+	Shmem/ShmemControllable_WSCC-9bus_separate.cpp
 	)
 endif()
 

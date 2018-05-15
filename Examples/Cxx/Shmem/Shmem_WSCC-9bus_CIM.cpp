@@ -36,7 +36,7 @@ int main(int argc, char *argv[]) {
 #ifdef _WIN32
 	String path("..\\..\\..\\..\\dpsim\\Examples\\CIM\\WSCC-09_Neplan_RX\\");
 #elif defined(__linux__) || defined(__APPLE__)
-	String path("../../../dpsim/Examples/CIM/IEEE-09_Neplan_RX/");
+	String path("Examples/CIM/IEEE-09_Neplan_RX/");
 #endif
 
 	std::list<String> filenames = {
