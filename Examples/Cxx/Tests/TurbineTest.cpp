@@ -59,7 +59,7 @@ int main(int argc, char* argv[])
 	std::ifstream omega ("omega.csv");
 	Real dt = 0.00005;
 	Real t = 0;
-	Real Pm = 0;
+	Real Pm = PmRef;
 
 	mTurbineGovernor.initialize(PmRef, initActivePower / nomPower);
 

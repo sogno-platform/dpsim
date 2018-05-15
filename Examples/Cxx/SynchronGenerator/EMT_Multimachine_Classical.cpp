@@ -1,4 +1,4 @@
-/** SynGenVBR Example
+﻿/** SynGenVBR Example
 *
 * @author Markus Mirz <mmirz@eonerc.rwth-aachen.de>
 * @copyright 2017, Institute for Automation of Complex Power Systems, EONERC
@@ -19,10 +19,11 @@
 * along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *********************************************************************************/
 
-#include "DPsim.h"
+#include "SynGenSimulation.h"
+#include "Components.h"
 
 using namespace DPsim;
-using namespace CPS::Components::EMT;
+using namespace DPsim::Components::EMT;
 
 int main(int argc, char* argv[])
 {
@@ -54,12 +55,12 @@ int main(int argc, char* argv[])
 		//Real Llkq2 = 0;
 
 		//Exciter
-		Real Ka = 46;
-		Real Ta = 0.06;
-		Real Ke = -0.043478260869565223;
-		Real Te = 0.46;
-		Real Kf = 0.1;
-		Real Tf = 1;
+		Real Ka = 20;
+		Real Ta = 0.2;
+		Real Ke = 1;
+		Real Te = 0.314;
+		Real Kf = 0.063;
+		Real Tf = 0.35;
 		Real Tr = 0.02;
 
 		// Turbine
@@ -71,29 +72,34 @@ int main(int argc, char* argv[])
 		Real Fc = 0.4;
 		Real Tsr = 0.1;
 		Real Tsm = 0.3;
-		Real Kg = 20;;
+		Real Kg = 20;
 
 		// Set up simulation
 		Real tf, dt, t;
 		Real om = 2.0*M_PI*60.0;
-		dt = 0.0005; tf = 0.3;  t = 0;
+		tf = 0.30000; dt = 0.00005; t = 0;
 		Int downSampling = 1;
 
-		// Declare circuit components
-		String mGeneratorName = "EMT_VBR_1" + std::to_string(dt);
-		Component::Ptr gen = VoltageBehindReactanceEMTNew::make(mGeneratorName, 0, 1, 2,
-				nomPower, nomPhPhVoltRMS, nomFreq, poleNum, nomFieldCurr,
-				Rs, Ll, Lmd, Lmd0, Lmq, Lmq0, Rfd, Llfd, Rkd, Llkd, Rkq1, Llkq1, Rkq2, Llkq2, H, Logger::Level::INFO);
+		Real Ld_s = 0.23;
+		Real Lq_s = 0.25;
+		Real Ra = (Ld_s + Lq_s) / dt;
 
 		// Declare circuit components
-		String mGeneratorName2 = "EMT_VBR_2" + std::to_string(dt);
-		Component::Ptr gen2 = VoltageBehindReactanceEMTNew::make(mGeneratorName2, 12, 13, 14,
+		String mGeneratorName = "EMT_Dq_" + std::to_string(dt);
+		Component::Ptr gen = SynchronGenerator::make(mGeneratorName, 0, 1, 2,
 				nomPower, nomPhPhVoltRMS, nomFreq, poleNum, nomFieldCurr,
-				Rs, Ll, Lmd, Lmd0, Lmq, Lmq0, Rfd, Llfd, Rkd, Llkd, Rkq1, Llkq1, Rkq2, Llkq2, H, Logger::Level::INFO);
+				Rs, Ll, Lmd, Lmd0, Lmq, Lmq0, Rfd, Llfd, Rkd, Llkd, Rkq1, Llkq1, Rkq2, Llkq2, H, Ra, Logger::Level::INFO);
+
+		// Declare circuit components
+		String mGeneratorName2 = "EMT_Dq2_" + std::to_string(dt);
+		Component::Ptr gen2 = SynchronGenerator::make(mGeneratorName2, 12, 13, 14,
+				nomPower, nomPhPhVoltRMS, nomFreq, poleNum, nomFieldCurr,
+				Rs, Ll, Lmd, Lmd0, Lmq, Lmq0, Rfd, Llfd, Rkd, Llkd, Rkq1, Llkq1, Rkq2, Llkq2, H, Ra, Logger::Level::INFO);
 
 		Real loadRes = 0.96;
 		Real lineRes = 0.032;
 		Real lindeInd = 0.35 / (2 * PI * 60);
+		Real Rsn = 25;
 		Real Res = 1e10;
 
 		//Line Resistance
@@ -105,6 +111,12 @@ int main(int argc, char* argv[])
 		Component::Ptr Res1 = Resistor::make("Res1", 0, 6, Res);
 		Component::Ptr Res2 = Resistor::make("Res2", 1, 7, Res);
 		Component::Ptr Res3 = Resistor::make("Res3", 2, 8, Res);
+
+
+		//Snubber Resistance
+		Component::Ptr Rsn1 = Resistor::make("Rsn1", 0, GND, Rsn);
+		Component::Ptr Rsn2 = Resistor::make("Rsn2", 1, GND, Rsn);
+		Component::Ptr Rsn3 = Resistor::make("Rsn3", 2, GND, Rsn);
 
 		//Line Inductance
 		Component::Ptr LineL1 = Inductor::make("LineL1", 3, 6, lindeInd, -1743.9006140981385, 3404);
@@ -127,12 +139,18 @@ int main(int argc, char* argv[])
 		Component::Ptr LineR32 = Resistor::make("LineR32", 11, 14, lineRes);
 
 		//Line Resistance
+		Component::Ptr Rsn4 = Resistor::make("Rsn4", 12, GND, Rsn);
+		Component::Ptr Rsn5 = Resistor::make("Rsn5", 13, GND, Rsn);
+		Component::Ptr Rsn6 = Resistor::make("Rsn6", 14, GND, Rsn);
+
+		//Line Resistance
 		Component::Ptr Res12 = Resistor::make("Res12", 6, 12, Res);
 		Component::Ptr Res22 = Resistor::make("Res22", 7, 13, Res);
 		Component::Ptr Res32 = Resistor::make("Res32", 8, 14, Res);
 
+
 		Component::List comps = { gen, gen2, LineR1, LineR2, LineR3, LineL1, LineL2, LineL3, r1, r2, r3,
-				Res1, Res2, Res3, LineR12, LineR22, LineR32, LineL12, LineL22, LineL32, Res12, Res22, Res32 };
+				Res1, Res2, Res3, LineR12, LineR22, LineR32, LineL12, LineL22, LineL32, Res12, Res22, Res32, Rsn1, Rsn2, Rsn3, Rsn4, Rsn5, Rsn6 };
 
 		// Declare circuit components for resistance change
 		Real breakerRes = 9.6 + 0.0001;
@@ -142,9 +160,10 @@ int main(int argc, char* argv[])
 
 		Component::List compsBreakerOn = { gen, gen2, LineR1, LineR2, LineR3, LineL1, LineL2, LineL3,
 				r1,	r2, r3, Res1, Res2, Res3, LineR12, LineR22, LineR32, LineL12, LineL22, LineL32,
-				Res12, Res22, Res32, rBreaker1, rBreaker2, rBreaker3, };
+				Res12, Res22, Res32, rBreaker1, rBreaker2, rBreaker3, Rsn1, Rsn2, Rsn3, Rsn4, Rsn5, Rsn6 };
 
-		String mSimulationName = "EMT_SynchronGenerator_VBR_Multimachine" + std::to_string(dt);
+
+		String mSimulationName = "EMT_SynchronGenerator_Dq_" + std::to_string(dt);
 		SynGenSimulation sim(mSimulationName, comps, om, dt, tf, Logger::Level::INFO, SimulationType::EMT, downSampling);
 		sim.setNumericalMethod(NumericalMethod::Trapezoidal_flux);
 		sim.addSystemTopology(compsBreakerOn);
@@ -152,17 +171,17 @@ int main(int argc, char* argv[])
 
 		// Initialize generator
 		Real initActivePower = 285.89e6;
-		Real initReactivePower = 51.261e6;
+		Real initReactivePower = 0;
 		Real initTerminalVolt = 24000 / sqrt(3) * sqrt(2);
 		Real initVoltAngle = -DPS_PI / 2;
 		Real fieldVoltage = 7.0821;
 		Real mechPower = 285.89e6;
-		auto genPtr = std::dynamic_pointer_cast<Components::EMT::VoltageBehindReactanceEMTNew>(gen);
+		auto genPtr = std::dynamic_pointer_cast<Components::EMT::SynchronGenerator>(gen);
 		genPtr->initialize(om, dt, initActivePower, initReactivePower, initTerminalVolt, initVoltAngle, fieldVoltage, mechPower);
 		genPtr->AddExciter(Ta, Ka, Te, Ke, Tf, Kf, Tr, Lmd, Rfd);
 		genPtr->AddGovernor(Ta_t, Tb, Tc, Fa, Fb, Fc, Kg, Tsr, Tsm, initActivePower / nomPower, mechPower / nomPower);
 
-		auto genPtr2 = std::dynamic_pointer_cast<Components::EMT::VoltageBehindReactanceEMTNew>(gen2);
+		auto genPtr2 = std::dynamic_pointer_cast<Components::EMT::SynchronGenerator>(gen2);
 		genPtr2->initialize(om, dt, initActivePower, initReactivePower, initTerminalVolt, initVoltAngle, fieldVoltage, mechPower);
 		genPtr2->AddExciter(Ta, Ka, Te, Ke, Tf, Kf, Tr, Lmd, Rfd);
 		genPtr2->AddGovernor(Ta_t, Tb, Tc, Fa, Fb, Fc, Kg, Tsr, Tsm, initActivePower / nomPower, mechPower / nomPower);
