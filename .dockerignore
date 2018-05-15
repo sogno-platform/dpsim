@@ -1,1 +1,9 @@
 build/
+build_linux/
+build_osx/
+
+Dependencies/libcps/build/
+Dependencies/libcps/build_osx/
+Dependencies/libcps/build_linux/
+
+Packaging/
