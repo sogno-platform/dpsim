@@ -12,7 +12,7 @@ set(CPACK_RPM_PACKAGE_RELEASE ${DPSIM_RELEASE})
 set(CPACK_RPM_PACKAGE_ARCHITECTURE "x86_64")
 set(CPACK_RPM_PACKAGE_LICENSE "GPLv3")
 set(CPACK_RPM_PACKAGE_URL "http://www.fein-aachen.org/projects/dpsim/")
-set(CPACK_RPM_PACKAGE_REQUIRES "libcimpp libvillas python3-libs")
+set(CPACK_RPM_PACKAGE_REQUIRES "libcimpp16v29a villas-node python3-libs python3 python3-pip")
 set(CPACK_RPM_PACKAGE_GROUP "Development/Libraries")
 
 # As close as possible to Fedoras naming
