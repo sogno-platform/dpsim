@@ -36,7 +36,7 @@ int main(int argc, char *argv[]) {
 #ifdef _WIN32
 	String path("..\\..\\..\\..\\dpsim\\Examples\\CIM\\WSCC-09_Neplan_RX\\");
 #elif defined(__linux__) || defined(__APPLE__)
-	String path("Examples/CIM/IEEE-09_Neplan_RX/");
+	String path("../Examples/CIM/WSCC-09_Neplan_RX/");
 #endif
 
 	std::list<String> filenames = {
@@ -46,10 +46,16 @@ int main(int argc, char *argv[]) {
 		path + "WSCC-09_Neplan_RX_TP.xml"
 	};
 
-	CIM::Reader reader(50, Logger::Level::INFO, Logger::Level::INFO);
+	String simName = "Shmem_WSCC-9bus_Ctrl";
+
+	CIM::Reader reader(simName, 50, Logger::Level::INFO, Logger::Level::INFO);
 	SystemTopology sys = reader.loadCIM(filenames);
 
-	Simulation sim("Shmem_WSCC-9bus_CIM", sys, 0.0001, 0.1,
+	// Extend system with controllable load
+	auto load = PQLoadCS::make("load_cs", Node::List{sys.mNodes[3]}, 500000, 0, 230000);
+	sys.mComponents.push_back(load);
+	
+	RealTimeSimulation sim(simName, sys, 0.0001, 0.1,
 		Solver::Domain::DP, Solver::Type::MNA, Logger::Level::DEBUG);
 
 	// Create shmem interface
@@ -72,11 +78,11 @@ int main(int argc, char *argv[]) {
 	shmem.registerExportedAttribute(sys.mNodes[7]->findAttribute<Complex>("voltage"), 1.0, 13, 14);
 	shmem.registerExportedAttribute(sys.mNodes[8]->findAttribute<Complex>("voltage"), 1.0, 15, 16);
 
-	// TODO
-	// Extend system with controllable load
 	// Register controllable load
-
+	shmem.registerControlledAttribute(load->findAttribute<Real>("active_power"), 1.0, 0);
+	
 	sim.addInterface(&shmem);
+
 	sim.run();
 
 	return 0;

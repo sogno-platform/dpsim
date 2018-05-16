@@ -81,6 +81,9 @@ int main(int argc, char *argv[]) {
 		CIM::Reader reader(50, Logger::Level::INFO, Logger::Level::INFO);
 		SystemTopology sys = reader.loadCIM(filenames);
 
+		// Extend system with controllable load
+		auto ecs = CurrentSource::make("i_intf", Node::List{sys.mNodes[3], GND}, Complex(0, 0), Logger::Level::DEBUG);
+
 		Simulation sim("Shmem_WSCC-9bus_CIM", sys, 0.0001, 0.1,
 			Solver::Domain::DP, Solver::Type::MNA, Logger::Level::DEBUG);
 
@@ -104,8 +107,6 @@ int main(int argc, char *argv[]) {
 		shmem.registerExportedAttribute(sys.mNodes[7]->findAttribute<Complex>("voltage"), 1.0, 13, 14);
 		shmem.registerExportedAttribute(sys.mNodes[8]->findAttribute<Complex>("voltage"), 1.0, 15, 16);
 
-		// Extend system with controllable load
-		auto ecs = CurrentSource::make("i_intf", Node::List{sys.mNodes[3], GND}, Complex(0, 0), Logger::Level::DEBUG);
 		// Register interface current source and voltage drop 
 		shmem.registerControlledAttribute(ecs->findAttribute<Real>("current_ref"), 1.0, 0);
 		shmem.registerExportedAttribute(ecs->findAttribute<Complex>("comp_voltage"), 1.0, 0, 1);

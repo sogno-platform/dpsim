@@ -36,7 +36,7 @@ int main(int argc, char *argv[]) {
 #ifdef _WIN32
 	String path("..\\..\\..\\..\\dpsim\\Examples\\CIM\\WSCC-09_Neplan_RX\\");
 #elif defined(__linux__) || defined(__APPLE__)
-	String path("Examples/CIM/IEEE-09_Neplan_RX/");
+	String path("../Examples/CIM/WSCC-09_Neplan_RX/");
 #endif
 
 	std::list<String> filenames = {
@@ -46,10 +46,12 @@ int main(int argc, char *argv[]) {
 		path + "WSCC-09_Neplan_RX_TP.xml"
 	};
 
-	CIM::Reader reader(50, Logger::Level::INFO, Logger::Level::INFO);
+	String simName = "Shmem_WSCC-9bus";
+
+	CIM::Reader reader(simName, 50, Logger::Level::INFO, Logger::Level::INFO);
 	SystemTopology sys = reader.loadCIM(filenames);
 
-	Simulation sim("Shmem_WSCC-9bus_CIM", sys, 0.0001, 0.1,
+	RealTimeSimulation sim(simName, sys, 0.0001, 0.1,
 		Solver::Domain::DP, Solver::Type::MNA, Logger::Level::DEBUG);
 
 	// Create shmem interface
@@ -74,9 +76,7 @@ int main(int argc, char *argv[]) {
 
 	// TODO
 	// Extend system with controllable load
-	auto load = PQLoadCS::make("load_cs", Node::List{sys.mNodes[3]}, 1000, 0, 230000);
 	// Register controllable load
-	shmem.registerControlledAttribute(load->findAttribute<Real>("active_power"), 1.0, 0);
 
 	sim.addInterface(&shmem);
 	sim.run();
