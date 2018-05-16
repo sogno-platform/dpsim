@@ -89,7 +89,7 @@ int main(int argc, char *argv[]) {
 
 		intf.addImport(ecs->findAttribute<Complex>("current_ref"), 1.0, 0, 1);
 		intf.addExport(ecs->findAttribute<Complex>("comp_voltage"), 1.0, 0, 1);
-		//intf.registerControlledAttribute(ecs_switch->findAttribute('CurrentRef'), 1.0, 2, 3);
+		//intf.addImport(ecs_switch->findAttribute('CurrentRef'), 1.0, 2, 3);
 
 		auto sys = SystemTopology(50, Node::List{n1}, ComponentBase::List{ecs, rgnd0});
 		auto sim = Simulation("ShmemDistributedDirect_2", sys, timeStep, 0.1);
