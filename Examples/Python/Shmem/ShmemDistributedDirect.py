@@ -31,7 +31,7 @@ def right():
     ecs = dp.CurrentSource("i_ext", [n3, gnd], 0+0j)
     r1 = dp.Resistor("r_1", [n3, gnd], 1)
 
-    intf = dps.open_shmem_interface("/dpsim21", "/dpsim12", samplelen = 2)
+    intf = dps.open_interface("/dpsim21", "/dpsim12", samplelen = 2)
     intf.import_attribute(ecs, "current_ref", 0, 1)
     intf.export_attribute(r1, "voltage", 0, 1)
 
