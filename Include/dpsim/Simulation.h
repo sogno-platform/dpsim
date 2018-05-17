@@ -39,7 +39,7 @@ using namespace CPS;
 
 namespace DPsim {
 
-	class Simulation {
+	class Simulation : public AttributeList {
 
 	public:
 		enum class Event : std::uint32_t {

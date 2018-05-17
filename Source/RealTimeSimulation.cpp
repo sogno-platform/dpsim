@@ -31,7 +31,11 @@ using namespace DPsim;
 
 RealTimeSimulation::RealTimeSimulation(String name, SystemTopology system, Real timeStep, Real finalTime,
 		Solver::Domain domain, Solver::Type type, Logger::Level logLevel)
-	: Simulation(name, system, timeStep, finalTime, domain, type, logLevel), mTimeStep(timeStep) {
+	: Simulation(name, system, timeStep, finalTime, domain, type, logLevel),
+	mTimeStep(timeStep),
+{
+	mAttributes["time_step"] = Attribute<Real>::make(&mTimeStep, Flags::read);
+
 #ifdef RTMETHOD_TIMERFD
 	mTimerFd = timerfd_create(CLOCK_MONOTONIC, 0);
 	if (mTimerFd < 0) {
