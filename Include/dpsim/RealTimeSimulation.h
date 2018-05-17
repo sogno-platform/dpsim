@@ -42,6 +42,7 @@ namespace DPsim {
 
 	protected:
 		Real mTimeStep;
+		Int mOverruns;
 
 #ifdef RTMETHOD_EXCEPTIONS
 		static void alarmHandler(int, siginfo_t*, void*);

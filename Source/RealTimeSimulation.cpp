@@ -33,8 +33,10 @@ RealTimeSimulation::RealTimeSimulation(String name, SystemTopology system, Real 
 		Solver::Domain domain, Solver::Type type, Logger::Level logLevel)
 	: Simulation(name, system, timeStep, finalTime, domain, type, logLevel),
 	mTimeStep(timeStep),
+	mOverruns(0)
 {
 	mAttributes["time_step"] = Attribute<Real>::make(&mTimeStep, Flags::read);
+	mAttributes["overruns"] = Attribute<Int>::make(&mOverruns, Flags::read);
 
 #ifdef RTMETHOD_TIMERFD
 	mTimerFd = timerfd_create(CLOCK_MONOTONIC, 0);
@@ -161,6 +163,7 @@ void RealTimeSimulation::run(double duration, bool startSynch)
 		}
 		if (overrun > 1) {
 			mLog.Log(Logger::Level::WARN) << "Overrun of "<< overrun-1 << " timesteps at " << mTime << std::endl;
+			mOverruns =+ overrun - 1;
 		}
 #elif defined(RTMETHOD_EXCEPTIONS)
 		try {
@@ -169,6 +172,7 @@ void RealTimeSimulation::run(double duration, bool startSynch)
 		}
 		catch (TimerExpiredException& e) {
 			mLog.Log(Logger::Level::WARN) << "Overrun at " << mTime << std::endl;
+			mOverruns = timer_getoverrun(mTimer);
 		}
 #else
   #error Unkown real-time execution mode
