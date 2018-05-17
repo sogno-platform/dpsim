@@ -23,7 +23,7 @@
 #include <list>
 
 #include "DPsim.h"
-#include "cps/Interfaces/ShmemInterface.h"
+#include "cps/Interface.h"
 #include "cps/CIM/Reader.h"
 
 using namespace DPsim;
@@ -39,10 +39,12 @@ int main(int argc, char *argv[]) {
 	// Here, the two instances directly communicate with each other without using
 	// VILLASnode in between.
 
-	struct shmem_conf conf;
-	conf.samplelen = 4;
+	Interface::Config conf;
+	conf.samplelen = 64;
 	conf.queuelen = 1024;
 	conf.polling = false;
+
+	Real timeStep = 0.00015;
 
 	if (argc < 2) {
 		std::cerr << "not enough arguments (either 0 or 1 for the test number)" << std::endl;
@@ -59,9 +61,6 @@ int main(int argc, char *argv[]) {
 		in  = "/dpsim01";
 		out = "/dpsim10";
 	}
-
-	ShmemInterface shmem(in, out, &conf);
-	Real timeStep = 0.000150;
 
 	if (String(argv[1]) == "0") {
 		// Specify CIM files
@@ -88,30 +87,24 @@ int main(int argc, char *argv[]) {
 			Solver::Domain::DP, Solver::Type::MNA, Logger::Level::DEBUG);
 
 		// Create shmem interface
-		struct shmem_conf conf;
-		conf.samplelen = 64;
-		conf.queuelen = 1024;
-		conf.polling = false;
-		String in  = "/dpsim10";
-		String out = "/dpsim01";
-		ShmemInterface shmem(out, in, &conf);
+		Interface intf(in, out, &conf);
 
 		// Register exportable node voltages
-		shmem.registerExportedAttribute(sys.mNodes[0]->findAttribute<Complex>("voltage"), 1.0, 0, 1);
-		shmem.registerExportedAttribute(sys.mNodes[1]->findAttribute<Complex>("voltage"), 1.0, 1, 2);
-		shmem.registerExportedAttribute(sys.mNodes[2]->findAttribute<Complex>("voltage"), 1.0, 3, 4);
-		shmem.registerExportedAttribute(sys.mNodes[3]->findAttribute<Complex>("voltage"), 1.0, 5, 6);
-		shmem.registerExportedAttribute(sys.mNodes[4]->findAttribute<Complex>("voltage"), 1.0, 7, 8);
-		shmem.registerExportedAttribute(sys.mNodes[5]->findAttribute<Complex>("voltage"), 1.0, 9, 10);
-		shmem.registerExportedAttribute(sys.mNodes[6]->findAttribute<Complex>("voltage"), 1.0, 11, 12);
-		shmem.registerExportedAttribute(sys.mNodes[7]->findAttribute<Complex>("voltage"), 1.0, 13, 14);
-		shmem.registerExportedAttribute(sys.mNodes[8]->findAttribute<Complex>("voltage"), 1.0, 15, 16);
+		intf.addExport(sys.mNodes[0]->findAttribute<Complex>("voltage"), 1.0, 0, 1);
+		intf.addExport(sys.mNodes[1]->findAttribute<Complex>("voltage"), 1.0, 1, 2);
+		intf.addExport(sys.mNodes[2]->findAttribute<Complex>("voltage"), 1.0, 3, 4);
+		intf.addExport(sys.mNodes[3]->findAttribute<Complex>("voltage"), 1.0, 5, 6);
+		intf.addExport(sys.mNodes[4]->findAttribute<Complex>("voltage"), 1.0, 7, 8);
+		intf.addExport(sys.mNodes[5]->findAttribute<Complex>("voltage"), 1.0, 9, 10);
+		intf.addExport(sys.mNodes[6]->findAttribute<Complex>("voltage"), 1.0, 11, 12);
+		intf.addExport(sys.mNodes[7]->findAttribute<Complex>("voltage"), 1.0, 13, 14);
+		intf.addExport(sys.mNodes[8]->findAttribute<Complex>("voltage"), 1.0, 15, 16);
 
-		// Register interface current source and voltage drop 
-		shmem.registerControlledAttribute(ecs->findAttribute<Real>("current_ref"), 1.0, 0);
-		shmem.registerExportedAttribute(ecs->findAttribute<Complex>("comp_voltage"), 1.0, 0, 1);
+		// Register interface current source and voltage drop
+		intf.addImport(ecs->findAttribute<Real>("current_ref"), 1.0, 0);
+		intf.addExport(ecs->findAttribute<Complex>("comp_voltage"), 1.0, 0, 1);
 
-		sim.addInterface(&shmem);
+		sim.addInterface(&intf);
 		sim.run();
 	}
 
@@ -121,20 +114,24 @@ int main(int argc, char *argv[]) {
 
 		// Add interface voltage source
 		auto evs = VoltageSource::make("v_intf", Node::List{GND, n1}, Complex(0, 0), Logger::Level::DEBUG);
-		// Register voltage source reference and current flowing through source 
-		// multiply with -1 to consider passive sign convention
-		shmem.registerControlledAttribute(evs->findAttribute<Complex>("voltage_ref"), 1.0, 0, 1);
-		shmem.registerExportedAttribute(evs->findAttribute<Complex>("comp_current"), -1.0, 0, 1);
-		
+
 		// Extend system with controllable load
 		auto load = PQLoadCS::make("load_cs", Node::List{n1}, 0, 0, 230000);
-		// Register controllable load
-		shmem.registerControlledAttribute(load->findAttribute<Real>("active_power"), 1.0, 0);
 
 		auto sys = SystemTopology(50, Node::List{n1}, ComponentBase::List{evs, load});
 		auto sim = Simulation("ShmemDistributedDirect_2", sys, timeStep, 0.1);
 
-		sim.addInterface(&shmem);
+		Interface intf(out, in, &conf);
+
+		// Register voltage source reference and current flowing through source
+		// multiply with -1 to consider passive sign convention
+		intf.addImport(evs->findAttribute<Complex>("voltage_ref"), 1.0, 0, 1);
+		intf.addExport(evs->findAttribute<Complex>("comp_current"), -1.0, 0, 1);
+
+		// Register controllable load
+		intf.addImport(load->findAttribute<Real>("active_power"), 1.0, 0);
+
+		sim.addInterface(&intf);
 		sim.run();
 	}
 
