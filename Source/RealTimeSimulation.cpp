@@ -37,7 +37,27 @@ RealTimeSimulation::RealTimeSimulation(String name, SystemTopology system, Real 
 {
 	mAttributes["time_step"] = Attribute<Real>::make(&mTimeStep, Flags::read);
 	mAttributes["overruns"] = Attribute<Int>::make(&mOverruns, Flags::read);
+}
 
+
+RealTimeSimulation::~RealTimeSimulation()
+{
+	destroyTimer();
+}
+
+#ifdef RTMETHOD_EXCEPTIONS
+void RealTimeSimulation::alarmHandler(int sig, siginfo_t* si, void* ctx)
+{
+	auto sim = static_cast<RealTimeSimulation*>(si->si_value.sival_ptr);
+
+	/* only throw an exception if we're actually behind */
+	if (++sim->mTimerCount * sim->mTimeStep > sim->mTime)
+		throw TimerExpiredException();
+}
+#endif
+
+void RealTimeSimulation::createTimer()
+{
 #ifdef RTMETHOD_TIMERFD
 	mTimerFd = timerfd_create(CLOCK_MONOTONIC, 0);
 	if (mTimerFd < 0) {
@@ -70,7 +90,7 @@ RealTimeSimulation::RealTimeSimulation(String name, SystemTopology system, Real 
 #endif
 }
 
-RealTimeSimulation::~RealTimeSimulation()
+void RealTimeSimulation::destroyTimer()
 {
 #ifdef RTMETHOD_TIMERFD
 	close(mTimerFd);
@@ -80,17 +100,6 @@ RealTimeSimulation::~RealTimeSimulation()
   #error Unkown real-time execution mode
 #endif
 }
-
-#ifdef RTMETHOD_EXCEPTIONS
-void RealTimeSimulation::alarmHandler(int sig, siginfo_t* si, void* ctx)
-{
-	auto sim = static_cast<RealTimeSimulation*>(si->si_value.sival_ptr);
-
-	/* only throw an exception if we're actually behind */
-	if (++sim->mTimerCount * sim->mTimeStep > sim->mTime)
-		throw TimerExpiredException();
-}
-#endif
 
 void RealTimeSimulation::startTimer()
 {

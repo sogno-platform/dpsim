@@ -58,6 +58,9 @@ namespace DPsim {
 		void startTimer();
 		void stopTimer();
 
+		void createTimer();
+		void destroyTimer();
+
 	public:
 		RealTimeSimulation(String name, SystemTopology system, Real timeStep, Real finalTime,
 			Solver::Domain domain = Solver::Domain::DP, Solver::Type type = Solver::Type::MNA,
