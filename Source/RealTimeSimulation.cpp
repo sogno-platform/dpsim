@@ -101,20 +101,24 @@ void RealTimeSimulation::destroyTimer()
 #endif
 }
 
-void RealTimeSimulation::startTimer()
+void RealTimeSimulation::startTimer(const StartClock::time_point &startAt)
 {
 	struct itimerspec ts;
 
-	ts.it_value.tv_sec = (time_t) mTimeStep;
-	ts.it_value.tv_nsec = (long) (mTimeStep * 1e9);
-	ts.it_interval = ts.it_value;
+	auto startAtDur = startAt.time_since_epoch();
+	auto startAtNSecs = std::chrono::duration_cast<std::chrono::nanoseconds>(startAtDur);
+
+	ts.it_value.tv_sec  = startAtNSecs.count() / 1000000;
+	ts.it_value.tv_nsec = startAtNSecs.count() % 1000000;
+	ts.it_interval.tv_sec  = (time_t) mTimeStep;
+	ts.it_interval.tv_nsec = (long) (mTimeStep * 1e9);
 
 #ifdef RTMETHOD_TIMERFD
-	if (timerfd_settime(mTimerFd, 0, &ts, 0) < 0) {
+	if (timerfd_settime(mTimerFd, TFD_TIMER_ABSTIME, &ts, 0) < 0) {
 		throw SystemError("Failed to arm timerfd");
 	}
 #elif defined(RTMETHOD_EXCEPTIONS)
-	if (timer_settime(mTimer, 0, &ts, NULL)) {
+	if (timer_settime(mTimer, TIMER_ABSTIME, &ts, NULL)) {
 		throw SystemError("Failed to arm timer");
 	}
 #else
@@ -141,15 +145,18 @@ void RealTimeSimulation::stopTimer()
 #endif
 }
 
-void RealTimeSimulation::run(bool startSynch)
+void RealTimeSimulation::run(bool startSynch, const StartClock::duration &startIn)
 {
-	run(mFinalTime - mTime, startSynch);
+	run(startSynch, StartClock::now() + startIn);
 }
 
-void RealTimeSimulation::run(double duration, bool startSynch)
+
+void RealTimeSimulation::run(bool startSynch, const StartClock::time_point &startAt)
 {
 	int ret;
-	uint64_t overrun;
+
+	auto startAtDur = startAt.time_since_epoch();
+	auto startAtNSecs = std::chrono::duration_cast<std::chrono::nanoseconds>(startAtDur);
 
 	if (startSynch) {
 		mTime = 0;
@@ -158,13 +165,16 @@ void RealTimeSimulation::run(double duration, bool startSynch)
 		step(true); // blocking step for synchronization + receiving the initial state of the other network
 	}
 
-	double started = mTime;
+	mLog.Log(Logger::Level::INFO) << "Synchronized simulation start with remotes" << std::endl;
 
-	startTimer();
+	startTimer(startAt);
+
+	mLog.Log(Logger::Level::INFO) << "Synchronized simulation start with remotes" << std::endl;
 
 	// main loop
 	do {
 #ifdef RTMETHOD_TIMERFD
+		uint64_t overrun;
 		step(false);
 
 		if (read(mTimerFd, &overrun, sizeof(overrun)) < 0) {
@@ -180,13 +190,15 @@ void RealTimeSimulation::run(double duration, bool startSynch)
 			sigwait(&alrmset, &sig);
 		}
 		catch (TimerExpiredException& e) {
-			mLog.Log(Logger::Level::WARN) << "Overrun at " << mTime << std::endl;
-			mOverruns = timer_getoverrun(mTimer);
+			// TODO: TimerExpired does not actually indicate an overrun
+			//       It rather signals that the timestep is coming to and end.
+			//mLog.Log(Logger::Level::WARN) << "Overrun at " << mTime << std::endl;
+			//mOverruns = timer_getoverrun(mTimer);
 		}
 #else
   #error Unkown real-time execution mode
 #endif
-	} while (ret && mTime - started < duration);
+	} while (ret && mTime < mFinalTime);
 
 	stopTimer();
 }
