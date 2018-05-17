@@ -25,5 +25,9 @@
 #include "RealTimeSimulation.h"
 
 #ifdef WITH_SHMEM
-#include "cps/Interfaces/ShmemInterface.h"
+  #include "cps/Interface.h"
+#endif
+
+#ifdef WITH_CIM
+  #include "cps/CIM/Reader.h"
 #endif

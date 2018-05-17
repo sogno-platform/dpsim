@@ -23,8 +23,6 @@
 #include <list>
 
 #include "DPsim.h"
-#include "cps/Interfaces/ShmemInterface.h"
-#include "cps/CIM/Reader.h"
 
 using namespace DPsim;
 using namespace CPS;
@@ -54,35 +52,36 @@ int main(int argc, char *argv[]) {
 	// Extend system with controllable load
 	auto load = PQLoadCS::make("load_cs", Node::List{sys.mNodes[3]}, 500000, 0, 230000);
 	sys.mComponents.push_back(load);
-	
+
 	RealTimeSimulation sim(simName, sys, 0.0001, 0.1,
 		Solver::Domain::DP, Solver::Type::MNA, Logger::Level::DEBUG);
 
 	// Create shmem interface
-	struct shmem_conf conf;
+	Interface::Config conf;
 	conf.samplelen = 64;
 	conf.queuelen = 1024;
 	conf.polling = false;
 	String in  = "/dpsim10";
 	String out = "/dpsim01";
-	ShmemInterface shmem(out, in, &conf);
+	Interface intf(out, in, &conf);
 
 	// Register exportable node voltages
-	shmem.registerExportedAttribute(sys.mNodes[0]->findAttribute<Complex>("voltage"), 1.0, 0, 1);
-	shmem.registerExportedAttribute(sys.mNodes[1]->findAttribute<Complex>("voltage"), 1.0, 1, 2);
-	shmem.registerExportedAttribute(sys.mNodes[2]->findAttribute<Complex>("voltage"), 1.0, 3, 4);
-	shmem.registerExportedAttribute(sys.mNodes[3]->findAttribute<Complex>("voltage"), 1.0, 5, 6);
-	shmem.registerExportedAttribute(sys.mNodes[4]->findAttribute<Complex>("voltage"), 1.0, 7, 8);
-	shmem.registerExportedAttribute(sys.mNodes[5]->findAttribute<Complex>("voltage"), 1.0, 9, 10);
-	shmem.registerExportedAttribute(sys.mNodes[6]->findAttribute<Complex>("voltage"), 1.0, 11, 12);
-	shmem.registerExportedAttribute(sys.mNodes[7]->findAttribute<Complex>("voltage"), 1.0, 13, 14);
-	shmem.registerExportedAttribute(sys.mNodes[8]->findAttribute<Complex>("voltage"), 1.0, 15, 16);
+	Int i = 0, o = 0;
+	for (auto n : sys.mNodes) {
+		auto v = n->findAttribute<Complex>("voltage");
+
+		std::function<Real()> getMag = [v](){ return std::abs(v->get()); };
+		std::function<Real()> getPhas = [v](){ return std::arg(v->get()); };
+
+		intf.addExport(v, 1.0, o++, o++);
+		intf.addExport(getMag, o++);
+		intf.addExport(getPhas, o++);
+	}
 
 	// Register controllable load
-	shmem.registerControlledAttribute(load->findAttribute<Real>("active_power"), 1.0, 0);
-	
-	sim.addInterface(&shmem);
+	intf.addImport(load->findAttribute<Real>("active_power"), 1.0, 0);
 
+	sim.addInterface(&intf);
 	sim.run();
 
 	return 0;
