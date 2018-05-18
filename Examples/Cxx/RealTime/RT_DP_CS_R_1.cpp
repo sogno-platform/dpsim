@@ -34,11 +34,11 @@ int main(int argc, char* argv[]) {
 
 	// Define system topology
 	auto sys = SystemTopology(50, Node::List{GND, n1}, ComponentBase::List{cs, r1});
-		
+
 	// Define simulation scenario
 	Real timeStep = 0.001;
-	Real finalTime = 0.1;
-	String simName = "DP_CS_R_1";
+	Real finalTime = 5;
+	String simName = "RT_DP_CS_R_1";
 
 	RealTimeSimulation sim(simName, sys, timeStep, finalTime);
 	sim.run();
