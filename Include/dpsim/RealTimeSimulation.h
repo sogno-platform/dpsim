@@ -23,6 +23,8 @@
 
 #include <signal.h>
 
+#include <chrono>
+
 #include "Config.h"
 #include "Simulation.h"
 
@@ -41,7 +43,11 @@ namespace DPsim {
 	class RealTimeSimulation : public Simulation {
 
 	protected:
+		typedef std::chrono::system_clock StartClock;
+
+		// TODO: we should use a std::chrono::duration here!
 		Real mTimeStep;
+		Int mOverruns;
 
 #ifdef RTMETHOD_EXCEPTIONS
 		static void alarmHandler(int, siginfo_t*, void*);
@@ -54,8 +60,16 @@ namespace DPsim {
   #error Unkown real-time execution mode
 #endif
 
-		void startTimer();
+		/** Start the real-time timer.
+		 *
+		 * If no start time is provided, we will default to now() + mTimeStep
+		 */
+		void startTimer(const StartClock::time_point &startAt);
+		/** Stop the real-time timer. */
 		void stopTimer();
+
+		void createTimer();
+		void destroyTimer();
 
 	public:
 		RealTimeSimulation(String name, SystemTopology system, Real timeStep, Real finalTime,
@@ -63,12 +77,12 @@ namespace DPsim {
 			Logger::Level logLevel = Logger::Level::INFO);
 		~RealTimeSimulation();
 
-		/* Perform the main simulation loop in real time.
+		/** Perform the main simulation loop in real time.
 		 *
 		 * @param startSynch If true, the simulation waits for the first external value before starting the timing.
 		 */
-		void run(double duration, bool startSynch = true);
+		void run(bool startSynch = true, const StartClock::duration &startIn = std::chrono::milliseconds(100));
 
-		void run(bool startSynch = true);
+		void run(bool startSynch, const StartClock::time_point &startAt);
 	};
 }

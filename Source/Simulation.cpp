@@ -24,7 +24,7 @@
 #include "Simulation.h"
 
 #ifdef WITH_CIM
-#include "cps/CIM/Reader.h"
+  #include "cps/CIM/Reader.h"
 #endif
 
 using namespace CPS;
@@ -39,7 +39,10 @@ Simulation::Simulation(String name,
 	mFinalTime(finalTime),
 	mLogLevel(logLevel),
 	mPipe{-1, -1}
-{ }
+{
+	mAttributes["name"] = Attribute<String>::make(&mName, Flags::read);
+	mAttributes["final_time"] = Attribute<Real>::make(&mFinalTime, Flags::read);
+}
 
 Simulation::Simulation(String name, SystemTopology system,
 	Real timeStep, Real finalTime,
@@ -136,10 +139,11 @@ void Simulation::setSwitchTime(Real switchTime, Int systemIndex) {
 	mSolver->setSwitchTime(switchTime, systemIndex);
 }
 
-
+#ifdef WITH_SHMEM
 void Simulation::addInterface(Interface *eint) {
 	mSolver->addInterface(eint);
 }
+#endif
 
 void Simulation::addSystemTopology(SystemTopology system) {
 	mSolver->addSystemTopology(system);

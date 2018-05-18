@@ -25,6 +25,7 @@
 #include <vector>
 #include <list>
 
+#include "Config.h"
 #include "Solver.h"
 
 using namespace CPS;
@@ -44,8 +45,10 @@ namespace DPsim {
 		UInt mNumRealNodes = 0;
 		/// Number of nodes
 		UInt mNumVirtualNodes = 0;
+#ifdef WITH_SHMEM
 		/// Vector of Interfaces
 		std::vector<Interface*> mInterfaces;
+#endif
 		/// Flag to activate power flow based initialization.
 		/// If this is false, all voltages are initialized with zero.
 		Bool mPowerflowInitialization;
@@ -118,8 +121,10 @@ namespace DPsim {
 		Real step(Real time, bool blocking = true);
 		/// Log results
 		void log(Real time);
+#ifdef WITH_SHMEM
 		///
 		void addInterface(Interface* eint) { mInterfaces.push_back(eint); }
+#endif
 		///
 		void setSwitchTime(Real switchTime, Int systemIndex);
 		///
