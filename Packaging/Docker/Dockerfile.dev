@@ -39,6 +39,7 @@ RUN dnf -y install \
 	eigen3-devel \
 	villas-node-devel \
 	expat-devel \
+	graphviz-devel \
 	libcimpp16v29a
 
 ENV LD_LIBRARY_PATH /usr/local/lib64
