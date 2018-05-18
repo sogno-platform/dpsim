@@ -30,6 +30,16 @@ List of Notebooks
 -----------------
 
 .. toctree::
+
+   Quickstart Guide <Notebooks/Quickstart Guide.ipynb>
+   Rendering Network Topologies with Graphviz <Notebooks/Graphviz.ipynb>
+
+List of old Notebooks
+---------------------
+
+Please note that many of these Jupyter Notebooks are outdated and not working.
+
+.. toctree::
    :glob:
 
    Notebooks/*
