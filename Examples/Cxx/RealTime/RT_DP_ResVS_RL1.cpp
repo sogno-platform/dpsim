@@ -45,7 +45,9 @@ int main(int argc, char* argv[])
 	auto sys = SystemTopology(50, Node::List{GND, n1, n2, n3}, ComponentBase::List{vs, rl, ll, rL});
 	auto sim = RealTimeSimulation(simName, sys, timeStep, 1.0);
 
-	sim.run();
+	auto startIn = std::chrono::seconds(5);
+
+	sim.run(false, startIn);
 
 	return 0;
 }
