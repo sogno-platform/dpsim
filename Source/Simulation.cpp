@@ -24,7 +24,7 @@
 #include "Simulation.h"
 
 #ifdef WITH_CIM
-#include "cps/CIM/Reader.h"
+  #include "cps/CIM/Reader.h"
 #endif
 
 using namespace CPS;
@@ -139,10 +139,11 @@ void Simulation::setSwitchTime(Real switchTime, Int systemIndex) {
 	mSolver->setSwitchTime(switchTime, systemIndex);
 }
 
-
+#ifdef WITH_SHMEM
 void Simulation::addInterface(Interface *eint) {
 	mSolver->addInterface(eint);
 }
+#endif
 
 void Simulation::addSystemTopology(SystemTopology system) {
 	mSolver->addSystemTopology(system);

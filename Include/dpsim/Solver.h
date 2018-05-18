@@ -25,9 +25,13 @@
 #include <vector>
 #include <list>
 
+#include "Config.h"
 #include "cps/Logger.h"
 #include "cps/SystemTopology.h"
-#include "cps/Interface.h"
+
+#ifdef WITH_SHMEM
+  #include "cps/Interface.h"
+#endif
 
 using namespace CPS;
 
@@ -48,8 +52,10 @@ namespace DPsim {
 		virtual Real step(Real time, bool blocking = true) = 0;
 		/// Log results
 		virtual void log(Real time) = 0;
+#ifdef WITH_SHMEM
 		///
 		virtual void addInterface(Interface* eint) { }
+#endif
 		///
 		void addSystemTopology(SystemTopology system) { }
 		///

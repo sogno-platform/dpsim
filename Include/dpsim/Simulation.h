@@ -26,6 +26,7 @@
 #include <list>
 #include <cstdint>
 
+#include "Config.h"
 #include "MNA_Solver.h"
 
 #include "cps/Definitions.h"
@@ -33,7 +34,10 @@
 #include "cps/Logger.h"
 #include "cps/SystemTopology.h"
 #include "cps/Node.h"
-#include "cps/Interface.h"
+
+#ifdef WITH_SHMEM
+  #include "cps/Interface.h"
+#endif
 
 using namespace CPS;
 
@@ -102,8 +106,10 @@ namespace DPsim {
 
 		///
 		void setSwitchTime(Real switchTime, Int systemIndex);
+#ifdef WITH_SHMEM
 		///
 		void addInterface(Interface*);
+#endif
 		///
 		void addSystemTopology(SystemTopology system);
 		///
