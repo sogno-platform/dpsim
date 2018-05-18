@@ -37,6 +37,8 @@ RealTimeSimulation::RealTimeSimulation(String name, SystemTopology system, Real 
 {
 	mAttributes["time_step"] = Attribute<Real>::make(&mTimeStep, Flags::read);
 	mAttributes["overruns"] = Attribute<Int>::make(&mOverruns, Flags::read);
+
+	createTimer();
 }
 
 
@@ -103,13 +105,21 @@ void RealTimeSimulation::destroyTimer()
 
 void RealTimeSimulation::startTimer(const StartClock::time_point &startAt)
 {
+	/* Determine offset between clocks */
+	auto rt     = std::chrono::system_clock::now();
+	auto steady = std::chrono::steady_clock::now();
+
 	struct itimerspec ts;
 
-	auto startAtDur = startAt.time_since_epoch();
+	/* This handles the offset between
+	 * - CLOCK_MONOTONIC (aka std::chrono::steady_clock) and
+	 * - CLOCK_REALTIME (aka std::chrono::system_clock)
+	 */
+	auto startAtDur = startAt.time_since_epoch() - rt.time_since_epoch() + steady.time_since_epoch();
 	auto startAtNSecs = std::chrono::duration_cast<std::chrono::nanoseconds>(startAtDur);
 
-	ts.it_value.tv_sec  = startAtNSecs.count() / 1000000;
-	ts.it_value.tv_nsec = startAtNSecs.count() % 1000000;
+	ts.it_value.tv_sec  = startAtNSecs.count() / 1000000000;
+	ts.it_value.tv_nsec = startAtNSecs.count() % 1000000000;
 	ts.it_interval.tv_sec  = (time_t) mTimeStep;
 	ts.it_interval.tv_nsec = (long) (mTimeStep * 1e9);
 
@@ -150,7 +160,6 @@ void RealTimeSimulation::run(bool startSynch, const StartClock::duration &startI
 	run(startSynch, StartClock::now() + startIn);
 }
 
-
 void RealTimeSimulation::run(bool startSynch, const StartClock::time_point &startAt)
 {
 	int ret;
@@ -163,15 +172,16 @@ void RealTimeSimulation::run(bool startSynch, const StartClock::time_point &star
 
 		step(false); // first step, sending the initial values
 		step(true); // blocking step for synchronization + receiving the initial state of the other network
+
+		std::cout << "Synchronized simulation start with remotes" << std::endl;
 	}
 
-	mLog.Log(Logger::Level::INFO) << "Synchronized simulation start with remotes" << std::endl;
+	std::cout << "Starting simulation at " << startAt << " (delta_T = " << std::chrono::duration_cast<std::chrono::seconds>(startAt - StartClock::now()).count() << " seconds)" << std::endl;
 
 	startTimer(startAt);
 
-	mLog.Log(Logger::Level::INFO) << "Synchronized simulation start with remotes" << std::endl;
-
 	// main loop
+	Int steps = 0;
 	do {
 #ifdef RTMETHOD_TIMERFD
 		uint64_t overrun;
@@ -198,6 +208,9 @@ void RealTimeSimulation::run(bool startSynch, const StartClock::time_point &star
 #else
   #error Unkown real-time execution mode
 #endif
+	if (steps++ == 0)
+		std::cout << "Simulation started!" << std::endl;
+
 	} while (ret && mTime < mFinalTime);
 
 	stopTimer();
