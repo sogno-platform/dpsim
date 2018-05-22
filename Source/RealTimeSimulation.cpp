@@ -208,10 +208,10 @@ void RealTimeSimulation::run(bool startSynch, const StartClock::time_point &star
 #else
   #error Unkown real-time execution mode
 #endif
-	if (steps++ == 0)
-		std::cout << "Simulation started!" << std::endl;
+		if (steps++ == 0)
+			std::cout << "Simulation started!" << std::endl;
 
-	} while (ret && mTime < mFinalTime);
+	} while (mTime < mFinalTime);
 
 	stopTimer();
 }
