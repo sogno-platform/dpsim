@@ -46,7 +46,7 @@ int main(int argc, char *argv[]) {
 	};
 
 	String simName = "Shmem_WSCC-9bus_Ctrl";
-	
+
 	CIM::Reader reader(simName, Logger::Level::INFO, Logger::Level::INFO);
 	SystemTopology sys = reader.loadCIM(60, filenames);
 
@@ -62,7 +62,7 @@ int main(int argc, char *argv[]) {
 	filtP->initialize(0.);
 	filtP->setConnection(load->findAttribute<Real>("active_power"));
 	filtP->findAttribute<Real>("input")->set(0.);
-	
+
 	RealTimeSimulation sim(simName, sys, 0.001, 20,
 		Solver::Domain::DP, Solver::Type::MNA, Logger::Level::INFO, true);
 
