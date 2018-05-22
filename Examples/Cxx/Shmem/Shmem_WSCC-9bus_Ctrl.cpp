@@ -50,11 +50,11 @@ int main(int argc, char *argv[]) {
 	SystemTopology sys = reader.loadCIM(50, filenames);
 
 	// Extend system with controllable load
-	auto load = PQLoadCS::make("load_cs", Node::List{sys.mNodes[3]}, 500000, 0, 230000);
+	auto load = PQLoadCS::make("load_cs", Node::List{sys.mNodes[3]}, 0, 0, 230000, Logger::Level::INFO);
 	sys.mComponents.push_back(load);
 
-	RealTimeSimulation sim(simName, sys, 0.0001, 0.1,
-		Solver::Domain::DP, Solver::Type::MNA, Logger::Level::DEBUG, true);
+	RealTimeSimulation sim(simName, sys, 0.001, 20,
+		Solver::Domain::DP, Solver::Type::MNA, Logger::Level::INFO, true);
 
 	// Create shmem interface
 	Interface::Config conf;
