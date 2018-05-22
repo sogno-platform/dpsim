@@ -26,6 +26,7 @@
 
 using namespace DPsim;
 using namespace CPS;
+using namespace CPS::Components;
 using namespace CPS::Components::DP;
 
 int main(int argc, char *argv[]) {
@@ -45,7 +46,7 @@ int main(int argc, char *argv[]) {
 	};
 
 	String simName = "Shmem_WSCC-9bus_Ctrl";
-
+	
 	CIM::Reader reader(simName, Logger::Level::INFO, Logger::Level::INFO);
 	SystemTopology sys = reader.loadCIM(50, filenames);
 
@@ -53,6 +54,20 @@ int main(int argc, char *argv[]) {
 	auto load = PQLoadCS::make("load_cs", Node::List{sys.mNodes[3]}, 0, 0, 230000, Logger::Level::INFO);
 	sys.mComponents.push_back(load);
 
+	// Controllers and filter
+	std::vector<Real> coefficients = { -0.0024229,-0.0020832,0.0067703,0.016732,
+	0.011117,-0.0062311,-0.0084016,0.0092568, 0.012983,-0.010121,-0.018274,0.011432,
+	0.026176,-0.012489,-0.037997,0.013389,0.058155,-0.014048,-0.10272,0.014462,0.31717,
+	0.48539, 0.31717,0.014462,-0.10272,-0.014048,0.058155,0.013389,-0.037997,-0.012489,
+	0.026176,0.011432,-0.018274,-0.010121, 0.012983,0.0092568,-0.0084016,-0.0062311,
+	0.011117,0.016732,0.0067703,-0.0020832,-0.0024229 };
+
+	auto filtP = FIRFilter::make("filter_p", coefficients, Logger::Level::INFO);
+	filtP->setPriority(1);
+	filtP->initialize(0.);
+	filtP->setConnection(load->findAttribute<Real>("active_power"));
+	filtP->findAttribute<Real>("input")->set(0.);
+	
 	RealTimeSimulation sim(simName, sys, 0.001, 20,
 		Solver::Domain::DP, Solver::Type::MNA, Logger::Level::INFO, true);
 
@@ -79,7 +94,8 @@ int main(int argc, char *argv[]) {
 	}
 
 	// Register controllable load
-	intf.addImport(load->findAttribute<Real>("active_power"), 1.0, 0);
+	//intf.addImport(load->findAttribute<Real>("active_power"), 1.0, 0);
+	intf.addImport(filtP->findAttribute<Real>("input"), 1.0, 0);
 
 	sim.addInterface(&intf);
 	sim.run();
