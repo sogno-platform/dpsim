@@ -1,6 +1,9 @@
 build/
 build_linux/
 build_osx/
+build_win/
+
+.git/
 
 Dependencies/libcps/build/
 Dependencies/libcps/build_osx/

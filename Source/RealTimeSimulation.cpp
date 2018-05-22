@@ -30,8 +30,8 @@ using namespace CPS;
 using namespace DPsim;
 
 RealTimeSimulation::RealTimeSimulation(String name, SystemTopology system, Real timeStep, Real finalTime,
-		Solver::Domain domain, Solver::Type type, Logger::Level logLevel)
-	: Simulation(name, system, timeStep, finalTime, domain, type, logLevel),
+		Solver::Domain domain, Solver::Type type, Logger::Level logLevel, Bool steadyStateInit)
+	: Simulation(name, system, timeStep, finalTime, domain, type, logLevel, steadyStateInit),
 	mTimeStep(timeStep),
 	mOverruns(0)
 {
