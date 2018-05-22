@@ -66,11 +66,8 @@ int main(int argc, char *argv[]) {
 	for (auto n : sys.mNodes) {
 		auto v = n->findAttribute<Complex>("voltage");
 
-		std::function<Real()> getMag  = [v](){ return std::abs(v->get()); };
-		std::function<Real()> getPhas = [v, i](){
-			std::cout << "phas of node " << i << ": " << std::arg(v->get()) << std::endl;
-			return std::arg(v->get());
-		};
+		std::function<Real()> getMag  = [v](){ return Math::abs(v->get()); };
+		std::function<Real()> getPhas = [v](){ return Math::phaseDeg(v->get()); };
 
 		intf.addExport(v, 1.0, o++, o++);
 		intf.addExport(getMag, o++);
