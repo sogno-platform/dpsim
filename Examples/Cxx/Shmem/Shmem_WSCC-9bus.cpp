@@ -49,7 +49,7 @@ int main(int argc, char *argv[]) {
 	CIM::Reader reader(simName, 50, Logger::Level::INFO, Logger::Level::INFO);
 	SystemTopology sys = reader.loadCIM(filenames);
 
-	RealTimeSimulation sim(simName, sys, 0.0001, 0.1,
+	RealTimeSimulation sim(simName, sys, 0.001, 120,
 		Solver::Domain::DP, Solver::Type::MNA, Logger::Level::DEBUG);
 
 	// Create shmem interface
