@@ -114,7 +114,9 @@ namespace DPsim {
 		MnaSolver(String name, SystemTopology system,
 			Real timeStep,
 			Solver::Domain domain = Solver::Domain::DP,
-			Logger::Level logLevel = Logger::Level::INFO, Int downSampleRate = 1);
+			Logger::Level logLevel = Logger::Level::INFO, 
+			Bool steadyStateInit = false,
+			Int downSampleRate = 1);
 		///
 		virtual ~MnaSolver() { };
 		/// Solve system A * x = z for x and current time
