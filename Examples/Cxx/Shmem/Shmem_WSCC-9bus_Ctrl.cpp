@@ -46,15 +46,15 @@ int main(int argc, char *argv[]) {
 
 	String simName = "Shmem_WSCC-9bus_Ctrl";
 
-	CIM::Reader reader(simName, 50, Logger::Level::INFO, Logger::Level::INFO);
-	SystemTopology sys = reader.loadCIM(filenames);
+	CIM::Reader reader(simName, Logger::Level::INFO, Logger::Level::INFO);
+	SystemTopology sys = reader.loadCIM(50, filenames);
 
 	// Extend system with controllable load
 	auto load = PQLoadCS::make("load_cs", Node::List{sys.mNodes[3]}, 500000, 0, 230000);
 	sys.mComponents.push_back(load);
 
 	RealTimeSimulation sim(simName, sys, 0.0001, 0.1,
-		Solver::Domain::DP, Solver::Type::MNA, Logger::Level::DEBUG);
+		Solver::Domain::DP, Solver::Type::MNA, Logger::Level::DEBUG, true);
 
 	// Create shmem interface
 	Interface::Config conf;

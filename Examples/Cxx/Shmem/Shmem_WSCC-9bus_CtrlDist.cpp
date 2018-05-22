@@ -62,6 +62,8 @@ int main(int argc, char *argv[]) {
 		out = "/dpsim10";
 	}
 
+	String simName = "Shmem_WSCC-9bus_CtrlDist";
+
 	if (String(argv[1]) == "0") {
 		// Specify CIM files
 #ifdef _WIN32
@@ -77,14 +79,16 @@ int main(int argc, char *argv[]) {
 			path + "WSCC-09_Neplan_RX_TP.xml"
 		};
 
-		CIM::Reader reader(50, Logger::Level::INFO, Logger::Level::INFO);
-		SystemTopology sys = reader.loadCIM(filenames);
+		String simName = "Shmem_WSCC-9bus_CtrlDist";
 
+		CIM::Reader reader(simName, Logger::Level::INFO, Logger::Level::INFO);
+		SystemTopology sys = reader.loadCIM(50, filenames);
+		
 		// Extend system with controllable load
 		auto ecs = CurrentSource::make("i_intf", Node::List{sys.mNodes[3], GND}, Complex(0, 0), Logger::Level::DEBUG);
 
-		Simulation sim("Shmem_WSCC-9bus_CIM", sys, 0.0001, 0.1,
-			Solver::Domain::DP, Solver::Type::MNA, Logger::Level::DEBUG);
+		Simulation sim(simName + "_1", sys, 0.0001, 0.1,
+			Solver::Domain::DP, Solver::Type::MNA, Logger::Level::DEBUG, true);
 
 		// Create shmem interface
 		Interface intf(in, out, &conf);
@@ -110,7 +114,7 @@ int main(int argc, char *argv[]) {
 
 	if (String(argv[1]) == "1") {
 		// Nodes
-		auto n1 = Node::make("n1");
+		auto n1 = Node::make("n1", Complex(02.180675e+05, -1.583367e+04));
 
 		// Add interface voltage source
 		auto evs = VoltageSource::make("v_intf", Node::List{GND, n1}, Complex(0, 0), Logger::Level::DEBUG);
@@ -119,7 +123,7 @@ int main(int argc, char *argv[]) {
 		auto load = PQLoadCS::make("load_cs", Node::List{n1}, 0, 0, 230000);
 
 		auto sys = SystemTopology(50, Node::List{n1}, ComponentBase::List{evs, load});
-		auto sim = Simulation("ShmemDistributedDirect_2", sys, timeStep, 0.1);
+		auto sim = Simulation(simName + "_2", sys, timeStep, 0.1);
 
 		Interface intf(out, in, &conf);
 
