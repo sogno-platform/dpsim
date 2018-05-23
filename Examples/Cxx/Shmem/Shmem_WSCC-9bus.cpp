@@ -57,8 +57,8 @@ int main(int argc, char *argv[]) {
 	conf.samplelen = 64;
 	conf.queuelen = 1024;
 	conf.polling = false;
-	String in  = "/dpsim-in";
-	String out = "/dpsim-out";
+	String in  = "/villas-dpsim";
+	String out = "/dpsim-villas";
 	Interface intf(out, in, &conf);
 
 	// Register exportable node voltages
