@@ -47,7 +47,7 @@ int main(int argc, char *argv[]) {
 	String simName = "Shmem_WSCC-9bus";
 
 	CIM::Reader reader(simName, Logger::Level::INFO, Logger::Level::INFO);
-	SystemTopology sys = reader.loadCIM(50, filenames);
+	SystemTopology sys = reader.loadCIM(60, filenames);
 
 	RealTimeSimulation sim(simName, sys, 0.001, 120,
 		Solver::Domain::DP, Solver::Type::MNA, Logger::Level::DEBUG, true);

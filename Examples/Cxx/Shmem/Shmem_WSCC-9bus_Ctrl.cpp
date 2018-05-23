@@ -48,19 +48,14 @@ int main(int argc, char *argv[]) {
 	String simName = "Shmem_WSCC-9bus_Ctrl";
 	
 	CIM::Reader reader(simName, Logger::Level::INFO, Logger::Level::INFO);
-	SystemTopology sys = reader.loadCIM(50, filenames);
+	SystemTopology sys = reader.loadCIM(60, filenames);
 
 	// Extend system with controllable load
 	auto load = PQLoadCS::make("load_cs", Node::List{sys.mNodes[3]}, 0, 0, 230000, Logger::Level::INFO);
 	sys.mComponents.push_back(load);
 
 	// Controllers and filter
-	std::vector<Real> coefficients = { -0.0024229,-0.0020832,0.0067703,0.016732,
-	0.011117,-0.0062311,-0.0084016,0.0092568, 0.012983,-0.010121,-0.018274,0.011432,
-	0.026176,-0.012489,-0.037997,0.013389,0.058155,-0.014048,-0.10272,0.014462,0.31717,
-	0.48539, 0.31717,0.014462,-0.10272,-0.014048,0.058155,0.013389,-0.037997,-0.012489,
-	0.026176,0.011432,-0.018274,-0.010121, 0.012983,0.0092568,-0.0084016,-0.0062311,
-	0.011117,0.016732,0.0067703,-0.0020832,-0.0024229 };
+	std::vector<Real> coefficients = std::vector(100, 1./100);
 
 	auto filtP = FIRFilter::make("filter_p", coefficients, Logger::Level::INFO);
 	filtP->setPriority(1);
