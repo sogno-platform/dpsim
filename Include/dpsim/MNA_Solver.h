@@ -25,7 +25,6 @@
 #include <vector>
 #include <list>
 
-#include "Config.h"
 #include "Solver.h"
 
 using namespace CPS;
