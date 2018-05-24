@@ -31,6 +31,8 @@ using namespace CPS::Components::DP;
 
 int main(int argc, char *argv[]) {
 
+	CommandLineArgs args(argc, argv);
+
 	// Specify CIM files
 #ifdef _WIN32
 	String path("..\\..\\..\\..\\dpsim\\Examples\\CIM\\WSCC-09_Neplan_RX\\");
@@ -46,7 +48,7 @@ int main(int argc, char *argv[]) {
 	};
 
 	String simName = "Shmem_WSCC-9bus_Ctrl";
-	
+
 	CIM::Reader reader(simName, Logger::Level::INFO, Logger::Level::INFO);
 	SystemTopology sys = reader.loadCIM(60, filenames);
 
@@ -62,9 +64,8 @@ int main(int argc, char *argv[]) {
 	filtP->initialize(0.);
 	filtP->setConnection(load->findAttribute<Real>("active_power"));
 	filtP->findAttribute<Real>("input")->set(0.);
-	
-	RealTimeSimulation sim(simName, sys, 0.001, 20,
-		Solver::Domain::DP, Solver::Type::MNA, Logger::Level::INFO, true);
+
+	RealTimeSimulation sim(simName, sys, args.timeStep, args.duration, args.solver.domain, args.solver.type, args.logLevel, true);
 
 	// Create shmem interface
 	Interface::Config conf;
@@ -93,7 +94,7 @@ int main(int argc, char *argv[]) {
 	intf.addImport(filtP->findAttribute<Real>("input"), 1.0, 0);
 
 	sim.addInterface(&intf);
-	sim.run();
+	sim.run(args.startSynch, args.startAt);
 
 	return 0;
 }
