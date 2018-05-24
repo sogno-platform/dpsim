@@ -42,8 +42,10 @@ namespace DPsim {
 
 	class RealTimeSimulation : public Simulation {
 
-	protected:
+	public:
 		typedef std::chrono::system_clock StartClock;
+
+	protected:
 
 		// TODO: we should use a std::chrono::duration here!
 		Real mTimeStep;

@@ -31,6 +31,8 @@ using namespace CPS::Components::DP;
 
 int main(int argc, char *argv[]) {
 
+	CommandLineArgs args(argc, argv);
+
 	// Specify CIM files
 #ifdef _WIN32
 	String path("..\\..\\..\\..\\dpsim\\Examples\\CIM\\WSCC-09_Neplan_RX\\");
@@ -64,8 +66,7 @@ int main(int argc, char *argv[]) {
 	filtP->findAttribute<Real>("input")->set(0.);
 	sys.mComponents.push_back(filtP);
 
-	RealTimeSimulation sim(simName, sys, 0.001, 20,
-		Solver::Domain::DP, Solver::Type::MNA, Logger::Level::INFO, true);
+	RealTimeSimulation sim(simName, sys, args.timeStep, args.duration, args.solver.domain, args.solver.type, args.logLevel, true);
 
 	// Create shmem interface
 	Interface::Config conf;
@@ -94,7 +95,7 @@ int main(int argc, char *argv[]) {
 	intf.addImport(filtP->findAttribute<Real>("input"), 1.0, 0);
 
 	sim.addInterface(&intf);
-	sim.run();
+	sim.run(args.startSynch, args.startTime);
 
 	return 0;
 }
