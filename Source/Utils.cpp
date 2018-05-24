@@ -190,8 +190,20 @@ void DPsim::CommandLineArgs::showUsage() {
 	std::cout << std::endl;
 	std::cout << " Available options:" << std::endl;
 
-	for (auto a : mArguments)
-		std::cout << "  -" << a.val << ", --" << a.name << " " << a.valdesc << " " << a.desc << std::endl;
+	for (auto a : mArguments) {
+		if (!a.val)
+			continue;
+
+		std::cout << "  -" << static_cast<char>(a.val) << ", --" << a.name;
+
+		if (a.valdesc)
+			std::cout << " " << a.valdesc;
+
+		if (a.desc)
+			std::cout << " " << a.desc;
+
+		std::cout << std::endl;
+	}
 
 	std::cout << std::endl;
 	showCopyright();

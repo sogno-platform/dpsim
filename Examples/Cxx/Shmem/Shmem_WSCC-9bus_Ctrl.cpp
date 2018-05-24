@@ -94,7 +94,7 @@ int main(int argc, char *argv[]) {
 	intf.addImport(filtP->findAttribute<Real>("input"), 1.0, 0);
 
 	sim.addInterface(&intf);
-	sim.run(args.startSynch, args.startAt);
+	sim.run(args.startSynch, args.startTime);
 
 	return 0;
 }
