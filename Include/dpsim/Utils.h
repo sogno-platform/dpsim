@@ -32,6 +32,16 @@ namespace DPsim {
 class CommandLineArgs {
 
 protected:
+	struct Argument {
+		char *name;
+                int has_arg;
+                int *flag;
+                int val;
+		char *valdesc;
+		char *desc;
+	};
+
+	std::vector<Argument> mArguments;
 	String mProgramName;
 
 public:

@@ -27,9 +27,24 @@
 
 using namespace DPsim;
 
-DPsim::CommandLineArgs::CommandLineArgs(int argc, char *argv[]) {
-	mProgramName = argv[0];
-
+DPsim::CommandLineArgs::CommandLineArgs(int argc, char *argv[]) :
+	mProgramName(argv[0]),
+	mArguments {
+		{ "start-synch",	no_argument,		0, 'S', NULL, "" },
+		{ "blocking",		no_argument,		0, 'b', NULL, "" },
+		{ "help",		no_argument,		0, 'h', NULL, "" },
+		{ "timestep",		required_argument,	0, 't', "SECS", "" },
+		{ "duration",		required_argument,	0, 'd', "SECS", "" },
+		{ "scenario",		required_argument,	0, 's', "NUM", "" },
+		{ "log-level",		required_argument,	0, 'l', "(NONE|INFO|DEBUG|WARN|ERROR)", "" },
+		{ "start-at",		required_argument,	0, 'a', "ISO8601", "" },
+		{ "start-in",		required_argument,	0, 'i', "SECS", "" },
+		{ "solver-domain",	required_argument,	0, 'D', "(DP|EMT)", "" },
+		{ "solver-type",	required_argument,	0, 'T', "(MNA)", "" },
+		{ "option",		required_argument,	0, 'o', "KEY=VALUE", "" },
+		{ 0 }
+	}
+{
 	/* Default settings */
 	timeStep = 0.001;
 	duration = 1;
@@ -41,31 +56,16 @@ DPsim::CommandLineArgs::CommandLineArgs(int argc, char *argv[]) {
 	solver.domain = Solver::Domain::DP;
 	solver.type = Solver::Type::MNA;
 
+	std::vector<option> long_options;
+	for (auto a : mArguments)
+		long_options.push_back({ a.name, a.has_arg, a.flag, a.val});
+
 	int c;
-
 	while (1) {
-		static struct option long_options[] = {
-			/* These options set a flag. */
-			{ "start-synch",	no_argument,		0, 'S' },
-			{ "blocking",		no_argument,		0, 'b' },
-			{ "help",		no_argument,		0, 'h' },
-			/* These options don’t set a flag. We distinguish them by their indices. */
-			{ "timestep",		required_argument,	0, 't' },
-			{ "duration",		required_argument,	0, 'd' },
-			{ "scenario",		required_argument,	0, 's' },
-			{ "log-level",		required_argument,	0, 'l' },
-			{ "start-at",		required_argument,	0, 'a' },
-			{ "start-in",		required_argument,	0, 'i' },
-			{ "solver-domain",	required_argument,	0, 'D' },
-			{ "solver-type",	required_argument,	0, 'T' },
-			{ "option",		required_argument,	0, 'o' },
-			{ 0, 0, 0, 0 }
-		};
-
 		/* getopt_long stores the option index here. */
 		int option_index = 0;
 
-		c = getopt_long(argc, argv, "ht:d:s:l:a:i:D:T:o:Sb", long_options, &option_index);
+		c = getopt_long(argc, argv, "ht:d:s:l:a:i:D:T:o:Sb", long_options.data(), &option_index);
 
 		/* Detect the end of the options. */
 		if (c == -1)
@@ -171,13 +171,12 @@ DPsim::CommandLineArgs::CommandLineArgs(int argc, char *argv[]) {
 
 			case 'h':
 				showUsage();
+				exit(0);
 
 			case '?':
-				/* getopt_long already printed an error message. */
-				break;
-
 			default:
-				abort ();
+				showUsage();
+				exit(-1);
 		}
 	}
 
@@ -191,8 +190,10 @@ void DPsim::CommandLineArgs::showUsage() {
 	std::cout << std::endl;
 	std::cout << " Available options:" << std::endl;
 
-	// TODO: document all options
+	for (auto a : mArguments)
+		std::cout << "  -" << a.val << ", --" << a.name << " " << a.valdesc << " " << a.desc << std::endl;
 
+	std::cout << std::endl;
 	showCopyright();
 }
 
