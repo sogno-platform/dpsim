@@ -46,19 +46,19 @@ int main(int argc, char *argv[]) {
 
 	String simName = "Shmem_WSCC-9bus";
 
-	CIM::Reader reader(simName, 50, Logger::Level::INFO, Logger::Level::INFO);
-	SystemTopology sys = reader.loadCIM(filenames);
+	CIM::Reader reader(simName, Logger::Level::INFO, Logger::Level::INFO);
+	SystemTopology sys = reader.loadCIM(60, filenames);
 
-	RealTimeSimulation sim(simName, sys, 0.0001, 0.1,
-		Solver::Domain::DP, Solver::Type::MNA, Logger::Level::DEBUG);
+	RealTimeSimulation sim(simName, sys, 0.001, 120,
+		Solver::Domain::DP, Solver::Type::MNA, Logger::Level::DEBUG, true);
 
 	// Create shmem interface
 	Interface::Config conf;
 	conf.samplelen = 64;
 	conf.queuelen = 1024;
 	conf.polling = false;
-	String in  = "/dpsim10";
-	String out = "/dpsim01";
+	String in  = "/villas-dpsim";
+	String out = "/dpsim-villas";
 	Interface intf(out, in, &conf);
 
 	// Register exportable node voltages
@@ -66,12 +66,17 @@ int main(int argc, char *argv[]) {
 	for (auto n : sys.mNodes) {
 		auto v = n->findAttribute<Complex>("voltage");
 
-		std::function<Real()> getMag = [v](){ return std::abs(v->get()); };
-		std::function<Real()> getPhas = [v](){ return std::arg(v->get()); };
+		std::function<Real()> getMag  = [v](){ return std::abs(v->get()); };
+		std::function<Real()> getPhas = [v, i](){
+			std::cout << "phas of node " << i << ": " << std::arg(v->get()) << std::endl;
+			return std::arg(v->get());
+		};
 
 		intf.addExport(v, 1.0, o++, o++);
 		intf.addExport(getMag, o++);
 		intf.addExport(getPhas, o++);
+
+		i++;
 	}
 
 	// TODO

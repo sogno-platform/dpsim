@@ -25,12 +25,13 @@
 #include "DPsim.h"
 
 using namespace DPsim;
+using namespace CPS;
 
 int main(int argc, char *argv[]) {
 #ifdef _WIN32
 	String path("..\\..\\..\\..\\dpsim\\Examples\\CIM\\WSCC-09_Neplan_RX\\");
 #elif defined(__linux__) || defined(__APPLE__)
-	String path("../../../dpsim/Examples/CIM/WSCC-09_Neplan_RX/");
+	String path("../Examples/CIM/WSCC-09_Neplan_RX/");
 #endif
 
 	std::list<String> filenames = {
@@ -40,8 +41,13 @@ int main(int argc, char *argv[]) {
 		path + "WSCC-09_Neplan_RX_TP.xml"
 	};
 
-	Simulation sim("WSCC_9-bus", filenames, 50, 0.0001, 0.1,
-		Solver::Domain::DP, Solver::Type::MNA, Logger::Level::DEBUG);
+	String simName = "WSCC-9bus";
+
+	CIM::Reader reader(simName, Logger::Level::DEBUG, Logger::Level::DEBUG);
+	SystemTopology sys = reader.loadCIM(60, filenames);
+
+	Simulation sim(simName, sys, 0.0001, 0.1,
+		Solver::Domain::DP, Solver::Type::MNA, Logger::Level::DEBUG, true);
 	sim.run();
 
 	return 0;

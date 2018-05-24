@@ -44,9 +44,9 @@ MnaSolver::MnaSolver(String name,
 
 MnaSolver::MnaSolver(String name, SystemTopology system,
 	Real timeStep, Solver::Domain domain,
-	Logger::Level logLevel, Int downSampleRate)
+	Logger::Level logLevel,Bool steadyStateInit, Int downSampleRate)
 	: MnaSolver(name, timeStep, domain,
-		logLevel, false, downSampleRate) {
+		logLevel, steadyStateInit, downSampleRate) {
 	initialize(system);
 
 	// Logging
@@ -123,6 +123,7 @@ void MnaSolver::initialize(SystemTopology system) {
 		comp->initializePowerflow(mSystemTopologies[0].mSystemFrequency);
 
 	if (mSteadyStateInit && mDomain == Solver::Domain::DP) {
+		mLog.Log(Logger::Level::INFO) << "Run steady-state initialization." << std::endl;
 		steadyStateInitialization();
 	}
 
@@ -151,13 +152,12 @@ void MnaSolver::steadyStateInitialization() {
 	// Compute LU-factorization for system matrix
 	mLuFactorizations.push_back(Eigen::PartialPivLU<Matrix>(mSystemMatrices[0]));
 
-	mLog.Log(Logger::Level::INFO) << "Start initialization." << std::endl;
 	Matrix prevLeftSideVector = Matrix::Zero(2 * mNumNodes, 1);
 	Matrix diff;
 	Real maxDiff, max;
 
 	while (time < 10) {
-		time += step(time);
+		time = step(time);
 
 		diff = prevLeftSideVector - mLeftSideVector;
 		prevLeftSideVector = mLeftSideVector;

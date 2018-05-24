@@ -26,6 +26,7 @@
 
 using namespace DPsim;
 using namespace CPS;
+using namespace CPS::Components;
 using namespace CPS::Components::DP;
 
 int main(int argc, char *argv[]) {
@@ -45,24 +46,33 @@ int main(int argc, char *argv[]) {
 	};
 
 	String simName = "Shmem_WSCC-9bus_Ctrl";
-
-	CIM::Reader reader(simName, 50, Logger::Level::INFO, Logger::Level::INFO);
-	SystemTopology sys = reader.loadCIM(filenames);
+	
+	CIM::Reader reader(simName, Logger::Level::INFO, Logger::Level::INFO);
+	SystemTopology sys = reader.loadCIM(60, filenames);
 
 	// Extend system with controllable load
-	auto load = PQLoadCS::make("load_cs", Node::List{sys.mNodes[3]}, 500000, 0, 230000);
+	auto load = PQLoadCS::make("load_cs", Node::List{sys.mNodes[3]}, 0, 0, 230000, Logger::Level::INFO);
 	sys.mComponents.push_back(load);
 
-	RealTimeSimulation sim(simName, sys, 0.0001, 0.1,
-		Solver::Domain::DP, Solver::Type::MNA, Logger::Level::DEBUG);
+	// Controllers and filter
+	std::vector<Real> coefficients = std::vector(100, 1./100);
+
+	auto filtP = FIRFilter::make("filter_p", coefficients, Logger::Level::INFO);
+	filtP->setPriority(1);
+	filtP->initialize(0.);
+	filtP->setConnection(load->findAttribute<Real>("active_power"));
+	filtP->findAttribute<Real>("input")->set(0.);
+	
+	RealTimeSimulation sim(simName, sys, 0.001, 20,
+		Solver::Domain::DP, Solver::Type::MNA, Logger::Level::INFO, true);
 
 	// Create shmem interface
 	Interface::Config conf;
 	conf.samplelen = 64;
 	conf.queuelen = 1024;
 	conf.polling = false;
-	String in  = "/dpsim10";
-	String out = "/dpsim01";
+	String in  = "/villas-dpsim";
+	String out = "/dpsim-villas";
 	Interface intf(out, in, &conf);
 
 	// Register exportable node voltages
@@ -79,7 +89,8 @@ int main(int argc, char *argv[]) {
 	}
 
 	// Register controllable load
-	intf.addImport(load->findAttribute<Real>("active_power"), 1.0, 0);
+	//intf.addImport(load->findAttribute<Real>("active_power"), 1.0, 0);
+	intf.addImport(filtP->findAttribute<Real>("input"), 1.0, 0);
 
 	sim.addInterface(&intf);
 	sim.run();

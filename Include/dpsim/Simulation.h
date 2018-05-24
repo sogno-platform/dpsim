@@ -82,18 +82,13 @@ namespace DPsim {
 			Solver::Domain domain = Solver::Domain::DP,
 			Solver::Type solverType = Solver::Type::MNA,
 			Logger::Level logLevel = Logger::Level::INFO);
-		/// Creates system matrix according to
+		/// Creates system matrix according to System topology
 		Simulation(String name, SystemTopology system,
 			Real timeStep, Real finalTime,
 			Solver::Domain domain = Solver::Domain::DP,
-			Solver::Type solverType = Solver::Type::MNA,
-			Logger::Level logLevel = Logger::Level::INFO);
-		/// Creates system matrix according to
-		Simulation(String name, std::list<String> cimFiles, Real frequency,
-			Real timeStep, Real finalTime,
-			Solver::Domain domain = Solver::Domain::DP,
-			Solver::Type solverType = Solver::Type::MNA,
-			Logger::Level logLevel = Logger::Level::INFO);
+			Solver::Type solverType = Solver::Type::MNA,			
+			Logger::Level logLevel = Logger::Level::INFO,
+			Bool steadyStateInit = false);
 		///
 		virtual ~Simulation();
 

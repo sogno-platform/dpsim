@@ -30,8 +30,8 @@ using namespace CPS;
 using namespace DPsim;
 
 RealTimeSimulation::RealTimeSimulation(String name, SystemTopology system, Real timeStep, Real finalTime,
-		Solver::Domain domain, Solver::Type type, Logger::Level logLevel)
-	: Simulation(name, system, timeStep, finalTime, domain, type, logLevel),
+		Solver::Domain domain, Solver::Type type, Logger::Level logLevel, Bool steadyStateInit)
+	: Simulation(name, system, timeStep, finalTime, domain, type, logLevel, steadyStateInit),
 	mTimeStep(timeStep),
 	mOverruns(0)
 {
@@ -208,10 +208,10 @@ void RealTimeSimulation::run(bool startSynch, const StartClock::time_point &star
 #else
   #error Unkown real-time execution mode
 #endif
-	if (steps++ == 0)
-		std::cout << "Simulation started!" << std::endl;
+		if (steps++ == 0)
+			std::cout << "Simulation started!" << std::endl;
 
-	} while (ret && mTime < mFinalTime);
+	} while (mTime < mFinalTime);
 
 	stopTimer();
 }
