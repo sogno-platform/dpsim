@@ -28,42 +28,56 @@
 using namespace DPsim;
 
 DPsim::CommandLineArgs::CommandLineArgs(int argc, char *argv[]) {
+	mProgramName = argv[0];
+
+	/* Default settings */
+	timeStep = 0.001;
+	duration = 1;
+	logLevel = Logger::Level::INFO;
+
+	startSynch = false;
+	blocking = false;
+
+	solver.domain = Solver::Domain::DP;
+	solver.type = Solver::Type::MNA;
 
 	int c;
 
 	while (1) {
 		static struct option long_options[] = {
-			{ "timestep",	required_argument,	0, 't' },
-			{ "duration",	required_argument,	0, 'd' },
-			{ "scenario",	required_argument,	0, 's' },
-			{ "log-level",	required_argument,	0, 'l' },
-			{ "start-at",	required_argument,	0, 'a' },
-			{ "start-in",	required_argument,	0, 'i' },
+			/* These options set a flag. */
+			{ "start-synch",	no_argument,		0, 'S' },
+			{ "blocking",		no_argument,		0, 'b' },
+			{ "help",		no_argument,		0, 'h' },
+			/* These options don’t set a flag. We distinguish them by their indices. */
+			{ "timestep",		required_argument,	0, 't' },
+			{ "duration",		required_argument,	0, 'd' },
+			{ "scenario",		required_argument,	0, 's' },
+			{ "log-level",		required_argument,	0, 'l' },
+			{ "start-at",		required_argument,	0, 'a' },
+			{ "start-in",		required_argument,	0, 'i' },
+			{ "solver-domain",	required_argument,	0, 'D' },
+			{ "solver-type",	required_argument,	0, 'T' },
+			{ "option",		required_argument,	0, 'o' },
 			{ 0, 0, 0, 0 }
 		};
 
 		/* getopt_long stores the option index here. */
 		int option_index = 0;
 
-		c = getopt_long(argc, argv, "t:d:s:l:a:i:", long_options, &option_index);
+		c = getopt_long(argc, argv, "ht:d:s:l:a:i:D:T:o:Sb", long_options, &option_index);
 
 		/* Detect the end of the options. */
 		if (c == -1)
 			break;
 
 		switch (c) {
-			/* If this option set a flag, do nothing else now. */
-			case 0:
-				if (long_options[option_index].flag != 0)
-					break;
+			case 'S':
+				startSynch = true;
+				break;
 
-#if 0
-				printf ("option %s", long_options[option_index].name);
-
-				if (optarg)
-					printf (" with arg %s", optarg);
-				printf ("\n");
-#endif
+			case 'b':
+				blocking = true;
 				break;
 
 			case 't':
@@ -78,7 +92,20 @@ DPsim::CommandLineArgs::CommandLineArgs(int argc, char *argv[]) {
 				scenario = std::stoi(optarg);
 				break;
 
-			case 'l':
+			case 'o': {
+				String arg = optarg;
+				String key;
+				Real value;
+				int p = arg.find("=");
+				key = arg.substr(0, p);
+				if (p != String::npos)
+					value = std::stod(arg.substr(p + 1));
+
+				options[key] = value;
+				break;
+			}
+
+			case 'l': {
 				String arg = optarg;
 
 				if (arg == "DEBUG")
@@ -92,15 +119,39 @@ DPsim::CommandLineArgs::CommandLineArgs(int argc, char *argv[]) {
 				else if (arg == "NONE")
 					logLevel = Logger::Level::NONE;
 				else
-					throw std::invalid_argument();
+					throw std::invalid_argument("Invalid value for --log-level: must be a string of DEBUG, INFO, ERROR, WARN or NONE");
 				break;
+			}
 
-			case 'i':
+			case 'D': {
+				String arg = optarg;
+
+				if (arg == "DP")
+					solver.domain = Solver::Domain::DP;
+				else if (arg == "EMT")
+					solver.domain = Solver::Domain::EMT;
+				else
+					throw std::invalid_argument("Invalid value for --solver-domain: must be a string of DP, EMT");
+				break;
+			}
+
+			case 'T': {
+				String arg = optarg;
+
+				if (arg == "MNA")
+					solver.type = Solver::Type::MNA;
+				else
+					throw std::invalid_argument("Invalid value for --solver-type: must be a string of MNA");
+				break;
+			}
+
+			case 'i': {
 				double deltaT = std::stod(optarg);
 
-				startTime = RealTimeSimulation::StartClock::now() + std::chrono::milliseconds(deltaT * 1e3);
+				startTime = RealTimeSimulation::StartClock::now() + std::chrono::milliseconds(static_cast<int>(deltaT * 1e3));
 
 				break;
+			}
 
 			case 'a': {
 				std::tm t;
@@ -109,7 +160,7 @@ DPsim::CommandLineArgs::CommandLineArgs(int argc, char *argv[]) {
 				ss >> std::get_time(&t, "%Y%m%dT%H%M%S");
 
 				if (ss.fail())
-					throw std::invalid_argument();
+					throw std::invalid_argument("Invalid value for --start-at: must be a ISO8601 date");
 
 				std::time_t tt = std::mktime(&t);
 
@@ -117,6 +168,9 @@ DPsim::CommandLineArgs::CommandLineArgs(int argc, char *argv[]) {
 
 				break;
 			}
+
+			case 'h':
+				showUsage();
 
 			case '?':
 				/* getopt_long already printed an error message. */
@@ -129,5 +183,22 @@ DPsim::CommandLineArgs::CommandLineArgs(int argc, char *argv[]) {
 
 	/* Positional arguments like files */
 	while (optind < argc)
-		positional.push_back(argv[optind++])
+		positional.push_back(argv[optind++]);
+}
+
+void DPsim::CommandLineArgs::showUsage() {
+	std::cout << "Usage: " << mProgramName << " [OPTIONS] [FILES]" << std::endl;
+	std::cout << std::endl;
+	std::cout << " Available options:" << std::endl;
+
+	// TODO: document all options
+
+	showCopyright();
+}
+
+void DPsim::CommandLineArgs::showCopyright() {
+	std::cout << "DPsim " << DPSIM_VERSION << "-" << DPSIM_RELEASE << std::endl;
+	std::cout << " Copyright 2017-2018, Institute for Automation of Complex Power Systems, EONERC" << std::endl;
+	std::cout << " Markus Mirz <MMirz@eonerc.rwth-aachen.de>" << std::endl;
+	std::cout << " Steffen Vogel <StVogel@eonerc.rwth-aachen.de>" << std::endl;
 }
