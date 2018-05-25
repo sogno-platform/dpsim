@@ -31,27 +31,17 @@ using namespace CPS;
 using namespace CPS::Components::DP;
 
 int main(int argc, char *argv[]) {
-	// Testing the interface with a simple circuit,
-	// but the load is simulated in a different instance.
-	// Values are exchanged using the ideal transformator model: an ideal
-	// current source on the supply side and an ideal voltage source on the
-	// supply side, whose values are received from the respective other circuit.
-	// Here, the two instances directly communicate with each other without using
-	// VILLASnode in between.
 
-	if (argc < 2) {
-		std::cerr << "not enough arguments (either 0 or 1 for the test number)" << std::endl;
-		std::exit(1);
-	}
+	CommandLineArgs args(argc, argv);
 
 	Real timeStep = 0.001;
 	Real finalTime = 20;
 	String simName = "Shmem_WSCC-9bus_CtrlDist";
 
-	if (String(argv[1]) == "0") {
+	if (args.scenario == 0) {
 		
 		// Specify CIM files
-		String path("../Examples/CIM/WSCC-09_Neplan_RX/");
+		String path("Examples/CIM/WSCC-09_Neplan_RX/");
 		std::list<String> filenames = {
 			path + "WSCC-09_Neplan_RX_DI.xml",
 			path + "WSCC-09_Neplan_RX_EQ.xml",
@@ -65,7 +55,7 @@ int main(int argc, char *argv[]) {
 		// Extend system with controllable load
 		auto ecs = CurrentSource::make("i_intf", Node::List{sys.mNodes[3], GND}, Complex(0, 0), Logger::Level::DEBUG);
 
-		RealTimeSimulation sim(simName + "_1", sys, 0.0001, finalTime,
+		RealTimeSimulation sim(simName + "_1", sys, timeStep, finalTime,
 			Solver::Domain::DP, Solver::Type::MNA, Logger::Level::DEBUG, true);
 
 		// Create shmem interface and add it to simulation
@@ -95,10 +85,10 @@ int main(int argc, char *argv[]) {
 		intf.addImport(ecs->findAttribute<Complex>("current_ref"), 1.0, 0, 1);
 		intf.addExport(ecs->findAttribute<Complex>("comp_voltage"), 1.0, 0, 1);		
 
-		sim.run();
+		sim.run(false, args.startTime);
 	}
 
-	if (String(argv[1]) == "1") {
+	if (args.scenario == 1) {
 		// Nodes
 		auto n1 = Node::make("n1", Complex(02.180675e+05, -1.583367e+04));
 
@@ -129,7 +119,7 @@ int main(int argc, char *argv[]) {
 		conf2.queuelen = 1024;
 		conf2.polling = false;
 		Interface intf2(out2, in2, &conf2);
-		sim.addInterface(&intf2);
+		//sim.addInterface(&intf2);
 
 		// Register voltage source reference and current flowing through source
 		// multiply with -1 to consider passive sign convention
@@ -139,7 +129,7 @@ int main(int argc, char *argv[]) {
 		// Register controllable load
 		intf2.addImport(load->findAttribute<Real>("active_power"), 1.0, 0);
 
-		sim.run();
+		sim.run(false, args.startTime);
 	}
 
 	return 0;
