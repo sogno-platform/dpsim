@@ -1,4 +1,4 @@
-TIME=$(date -d "+20 seconds" +%Y%m%dT%H%M%S) #-Iseconds
+TIME=$(date -d "+10 seconds" +%Y%m%dT%H%M%S) #-Iseconds
 echo "Start simulation at: $TIME"
 
 build/Examples/Cxx/Shmem_WSCC-9bus_CtrlDist --start-at $TIME --scenario 0 & P1=$!

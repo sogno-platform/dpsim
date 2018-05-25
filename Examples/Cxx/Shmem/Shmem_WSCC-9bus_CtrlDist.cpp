@@ -119,7 +119,7 @@ int main(int argc, char *argv[]) {
 		conf2.queuelen = 1024;
 		conf2.polling = false;
 		Interface intf2(out2, in2, &conf2);
-		//sim.addInterface(&intf2);
+		sim.addInterface(&intf2);
 
 		// Register voltage source reference and current flowing through source
 		// multiply with -1 to consider passive sign convention
