@@ -56,24 +56,24 @@ namespace DPsim {
 		};
 
 	protected:
+		/// Simulation logger
+		Logger mLog;
+		/// Simulation name
+		String mName;
 		/// Final time of the simulation
 		Real mFinalTime;
 		/// Time variable that is incremented at every step
 		Real mTime = 0;
 		/// Number of step which have been executed for this simulation.
 		Int mTimeStepCount = 0;
-		/// Pipe for asynchronous inter-process communication (IPC) to the Python world
-		int mPipe[2];
 		/// Simulation log level
 		Logger::Level mLogLevel;
-		/// Simulation logger
-		Logger mLog;
-		/// Simulation name
-		String mName;
 		///
 		Solver::Type mSolverType;
 		///
 		std::shared_ptr<Solver> mSolver;
+		/// Pipe for asynchronous inter-process communication (IPC) to the Python world
+		int mPipe[2];
 
 	public:
 		/// Creates system matrix according to
@@ -86,7 +86,7 @@ namespace DPsim {
 		Simulation(String name, SystemTopology system,
 			Real timeStep, Real finalTime,
 			Solver::Domain domain = Solver::Domain::DP,
-			Solver::Type solverType = Solver::Type::MNA,			
+			Solver::Type solverType = Solver::Type::MNA,
 			Logger::Level logLevel = Logger::Level::INFO,
 			Bool steadyStateInit = false);
 		///
