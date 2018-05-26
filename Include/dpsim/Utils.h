@@ -41,18 +41,32 @@ protected:
 		char *desc;
 	};
 
-	std::vector<Argument> mArguments;
 	String mProgramName;
+	std::vector<Argument> mArguments;
 
 public:
-	CommandLineArgs(int argc, char *argv[]);
+	CommandLineArgs(int argc, char *argv[],
+		/* Default settings */
+		Real dt = 0.001,
+		Real d = 1,
+		Real sf = 50,
+		Int s = -1,
+		Logger::Level ll = Logger::Level::INFO,
+		Bool ss = false,
+		Bool b = false,
+		Solver::Domain sd = Solver::Domain::DP,
+		Solver::Type st = Solver::Type::MNA
+	);
 
 	void showUsage();
 	void showCopyright();
 
 	double timeStep;
 	double duration;
+	double sysFreq;
 	int scenario;
+
+	Logger::Level logLevel;
 
 	bool startSynch;
 	bool blocking;
@@ -61,8 +75,6 @@ public:
 		Solver::Domain domain;
 		Solver::Type type;
 	} solver;
-
-	Logger::Level logLevel;
 
 	DPsim::RealTimeSimulation::StartClock::time_point startTime;
 

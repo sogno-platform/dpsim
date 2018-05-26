@@ -27,35 +27,43 @@
 
 using namespace DPsim;
 
-DPsim::CommandLineArgs::CommandLineArgs(int argc, char *argv[]) :
+DPsim::CommandLineArgs::CommandLineArgs(int argc, char *argv[],
+		Real dt,
+		Real d,
+		Real sf,
+		Int s,
+		Logger::Level ll,
+		Bool ss,
+		Bool b,
+		Solver::Domain sd,
+		Solver::Type st
+	) :
 	mProgramName(argv[0]),
 	mArguments {
 		{ "start-synch",	no_argument,		0, 'S', NULL, "" },
 		{ "blocking",		no_argument,		0, 'b', NULL, "" },
 		{ "help",		no_argument,		0, 'h', NULL, "" },
-		{ "timestep",		required_argument,	0, 't', "SECS", "" },
-		{ "duration",		required_argument,	0, 'd', "SECS", "" },
-		{ "scenario",		required_argument,	0, 's', "NUM", "" },
-		{ "log-level",		required_argument,	0, 'l', "(NONE|INFO|DEBUG|WARN|ERROR)", "" },
-		{ "start-at",		required_argument,	0, 'a', "ISO8601", "" },
+		{ "timestep",		required_argument,	0, 't', "SECS", "Simulation time-step" },
+		{ "duration",		required_argument,	0, 'd', "SECS", "Simulation duration" },
+		{ "system-freq",	required_argument,	0, 'f', "HZ", "System Frequency" },
+		{ "scenario",		required_argument,	0, 's', "NUM", "Scenario selection" },
+		{ "log-level",		required_argument,	0, 'l', "(NONE|INFO|DEBUG|WARN|ERROR)", "Logging level" },
+		{ "start-at",		required_argument,	0, 'a', "ISO8601", "Start time of real-time simulation" },
 		{ "start-in",		required_argument,	0, 'i', "SECS", "" },
-		{ "solver-domain",	required_argument,	0, 'D', "(DP|EMT)", "" },
-		{ "solver-type",	required_argument,	0, 'T', "(MNA)", "" },
-		{ "option",		required_argument,	0, 'o', "KEY=VALUE", "" },
+		{ "solver-domain",	required_argument,	0, 'D', "(DP|EMT)", "Domain of solver" },
+		{ "solver-type",	required_argument,	0, 'T', "(MNA)", "Type of solver" },
+		{ "option",		required_argument,	0, 'o', "KEY=VALUE", "User-definable options" },
 		{ 0 }
-	}
+	},
+	timeStep(dt),
+	duration(d),
+	sysFreq(sf),
+	scenario(s),
+	logLevel(ll),
+	startSynch(ss),
+	blocking(b),
+	solver{sd, st}
 {
-	/* Default settings */
-	timeStep = 0.001;
-	duration = 1;
-	logLevel = Logger::Level::INFO;
-
-	startSynch = false;
-	blocking = false;
-
-	solver.domain = Solver::Domain::DP;
-	solver.type = Solver::Type::MNA;
-
 	std::vector<option> long_options;
 	for (auto a : mArguments)
 		long_options.push_back({ a.name, a.has_arg, a.flag, a.val});
@@ -65,7 +73,7 @@ DPsim::CommandLineArgs::CommandLineArgs(int argc, char *argv[]) :
 		/* getopt_long stores the option index here. */
 		int option_index = 0;
 
-		c = getopt_long(argc, argv, "ht:d:s:l:a:i:D:T:o:Sb", long_options.data(), &option_index);
+		c = getopt_long(argc, argv, "ht:d:s:l:a:i:f:D:T:o:Sb", long_options.data(), &option_index);
 
 		/* Detect the end of the options. */
 		if (c == -1)
@@ -86,6 +94,10 @@ DPsim::CommandLineArgs::CommandLineArgs(int argc, char *argv[]) :
 
 			case 'd':
 				duration = std::stod(optarg);
+				break;
+
+			case 'f':
+				sysFreq = std::stod(optarg);
 				break;
 
 			case 's':
