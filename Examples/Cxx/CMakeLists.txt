@@ -99,9 +99,6 @@ foreach(SOURCE ${CIRCUIT_SOURCES} ${SYNCGEN_SOURCES} ${VARFREQ_SOURCES} ${SHMEM_
 
 	target_link_libraries(${TARGET} ${LIBRARIES})
 	target_include_directories(${TARGET} PRIVATE ${INCLUDE_DIRS})
-
-	if (CXX_SUPPORTS_WERROR)
-		target_compile_options(${TARGET} PUBLIC -Werror)
-	endif()
+	target_compile_options(${TARGET} PUBLIC ${DPSIM_CXX_FLAGS})
 endforeach()
 

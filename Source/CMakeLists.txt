@@ -31,10 +31,7 @@ endif()
 target_sources(dpsim PRIVATE ${SOURCES})
 target_link_libraries(dpsim ${LIBRARIES})
 target_include_directories(dpsim PRIVATE ${INCLUDE_DIRS})
-
-if (CXX_SUPPORTS_WERROR)
-	target_compile_options(dpsim PUBLIC -Werror)
-endif()
+target_compile_options(dpsim PUBLIC ${DPSIM_CXX_FLAGS})
 
 include_directories(${CMAKE_CURRENT_SOURCE_DIR} ${CMAKE_CURRENT_BINARY_DIR})
 
