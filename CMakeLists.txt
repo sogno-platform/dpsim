@@ -10,6 +10,9 @@ set(CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/CMake")
 set(PROJECT_AUTHOR "Institute for Automation of Complex Power Systems, RWTH Aachen University")
 set(PROJECT_COPYRIGHT "2017, Institute for Automation of Complex Power Systems, RWTH Aachen University")
 
+include(CheckCXXCompilerFlag)
+check_cxx_compiler_flag(-Werror CXX_SUPPORTS_WERROR)
+
 include(GetGitRevisionDescription)
 git_describe(DPSIM_VERSION --tags --dirty=-dirty)
 

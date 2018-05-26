@@ -15,6 +15,10 @@ endif()
 target_link_libraries(dpsim_python dpsim cps_python cps ${LIBRARIES})
 target_include_directories(dpsim_python PRIVATE ${INCLUDE_DIRS})
 
+if (CXX_SUPPORTS_WERROR)
+	target_compile_options(dpsim_python PUBLIC -Werror)
+endif()
+
 set_target_properties(dpsim_python
 	PROPERTIES
 		OUTPUT_NAME "_dpsim"
