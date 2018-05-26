@@ -91,7 +91,7 @@ namespace DPsim {
 		/// TODO: check that every system matrix has the same dimensions
 		void initialize(SystemTopology system);
 		///
-		void switchSystemMatrix(Int systemMatrixIndex);
+		void switchSystemMatrix(UInt systemMatrixIndex);
 		///
 		void createEmptyVectors();
 		///
@@ -113,7 +113,7 @@ namespace DPsim {
 		MnaSolver(String name, SystemTopology system,
 			Real timeStep,
 			Solver::Domain domain = Solver::Domain::DP,
-			Logger::Level logLevel = Logger::Level::INFO, 
+			Logger::Level logLevel = Logger::Level::INFO,
 			Bool steadyStateInit = false,
 			Int downSampleRate = 1);
 		///

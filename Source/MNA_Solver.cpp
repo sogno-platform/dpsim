@@ -80,7 +80,7 @@ void MnaSolver::initialize(SystemTopology system) {
 	if (mSystemTopologies[0].mNodes.size() == 0) {
 		// Create Nodes for all node indices
 		mSystemTopologies[0].mNodes.resize(maxNode + 1, nullptr);
-		for (int node = 0; node < mSystemTopologies[0].mNodes.size(); node++)
+		for (UInt node = 0; node < mSystemTopologies[0].mNodes.size(); node++)
 			mSystemTopologies[0].mNodes[node] = std::make_shared<Node>(node);
 
 		assignNodesToComponents(mSystemTopologies[0].mComponents);
@@ -89,7 +89,7 @@ void MnaSolver::initialize(SystemTopology system) {
 	mLog.Log(Logger::Level::INFO) << "Maximum node number: " << maxNode << std::endl;
 	mLog.Log(Logger::Level::INFO) << "Number of nodes: " << mSystemTopologies[0].mNodes.size() << std::endl;
 
-	for (int i = 0; i < mSystemTopologies[0].mNodes.size(); i++) {
+	for (UInt i = 0; i < mSystemTopologies[0].mNodes.size(); i++) {
 		mLog.Log(Logger::Level::INFO) << "Found node " << mSystemTopologies[0].mNodes[i]->mName << std::endl;
 	}
 
@@ -100,7 +100,7 @@ void MnaSolver::initialize(SystemTopology system) {
 	// Check if component requires virtual node and if so set one
 	for (auto comp : mSystemTopologies[0].mComponents) {
 		if (comp->hasVirtualNodes()) {
-			for (Int node = 0; node < comp->getVirtualNodesNum(); node++) {
+			for (UInt node = 0; node < comp->getVirtualNodesNum(); node++) {
 				virtualNode++;
 				mSystemTopologies[0].mNodes.push_back(std::make_shared<Node>(virtualNode));
 				comp->setVirtualNodeAt(mSystemTopologies[0].mNodes[virtualNode], node);
@@ -227,7 +227,7 @@ void MnaSolver::addSystemTopology(SystemTopology system) {
 	mLuFactorizations.push_back(LUFactorized(mSystemMatrices[mSystemMatrices.size()]));
 }
 
-void MnaSolver::switchSystemMatrix(Int systemIndex) {
+void MnaSolver::switchSystemMatrix(UInt systemIndex) {
 	if (systemIndex < mSystemMatrices.size())
 		mSystemIndex = systemIndex;
 }

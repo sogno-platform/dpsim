@@ -96,7 +96,7 @@ DPsim::CommandLineArgs::CommandLineArgs(int argc, char *argv[]) :
 				String arg = optarg;
 				String key;
 				Real value;
-				int p = arg.find("=");
+				unsigned p = arg.find("=");
 				key = arg.substr(0, p);
 				if (p != String::npos)
 					value = std::stod(arg.substr(p + 1));
