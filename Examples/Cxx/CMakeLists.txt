@@ -56,12 +56,17 @@ if(WITH_SHMEM)
 	set(SHMEM_SOURCES
 		Shmem/ShmemExample.cpp
 		Shmem/ShmemDistributedReference.cpp
-		Shmem/ShmemDistributedVillas.cpp
 		Shmem/ShmemDistributedDirect.cpp
-		Shmem/ShmemControllableSource.cpp
-		Shmem/ShmemControllableFiltSource.cpp
-		Shmem/ShmemRealTime.cpp
 	)
+
+	if (WITH_RT)
+		list(APPEND SHMEM_SOURCES
+			Shmem/ShmemDistributedVillas.cpp
+			Shmem/ShmemControllableSource.cpp
+			Shmem/ShmemControllableFiltSource.cpp
+			Shmem/ShmemRealTime.cpp
+		)
+	endif()
 endif()
 
 if(WITH_CIM)
