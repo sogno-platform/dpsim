@@ -39,7 +39,7 @@ int main(int argc, char *argv[]) {
 	String simName = "Shmem_WSCC-9bus_CtrlDist";
 
 	if (args.scenario == 0) {
-		
+
 		// Specify CIM files
 		String path("Examples/CIM/WSCC-09_Neplan_RX/");
 		std::list<String> filenames = {
@@ -47,11 +47,11 @@ int main(int argc, char *argv[]) {
 			path + "WSCC-09_Neplan_RX_EQ.xml",
 			path + "WSCC-09_Neplan_RX_SV.xml",
 			path + "WSCC-09_Neplan_RX_TP.xml"
-		};		
+		};
 
 		CIM::Reader reader(simName, Logger::Level::INFO, Logger::Level::INFO);
 		SystemTopology sys = reader.loadCIM(60, filenames);
-		
+
 		// Extend system with controllable load
 		auto ecs = CurrentSource::make("i_intf", Node::List{sys.mNodes[3], GND}, Complex(0, 0), Logger::Level::DEBUG);
 
@@ -69,21 +69,23 @@ int main(int argc, char *argv[]) {
 		sim.addInterface(&intf);
 
 		// Register exportable node voltages
-		Int i = 0, o = 0;
+		UInt o = 0;
 		for (auto n : sys.mNodes) {
 			auto v = n->findAttribute<Complex>("voltage");
 
 			std::function<Real()> getMag = [v](){ return std::abs(v->get()); };
 			std::function<Real()> getPhas = [v](){ return std::arg(v->get()); };
 
-			intf.addExport(v, 1.0, o++, o++);
-			intf.addExport(getMag, o++);
-			intf.addExport(getPhas, o++);
+			intf.addExport(v, 1.0, o, o+1);
+			intf.addExport(getMag, o+2);
+			intf.addExport(getPhas, o+3);
+
+			o += 4;
 		}
 
 		// Register interface current source and voltage drop
 		intf.addImport(ecs->findAttribute<Complex>("current_ref"), 1.0, 0, 1);
-		intf.addExport(ecs->findAttribute<Complex>("comp_voltage"), 1.0, 0, 1);		
+		intf.addExport(ecs->findAttribute<Complex>("comp_voltage"), 1.0, 0, 1);
 
 		sim.run(false, args.startTime);
 	}
