@@ -162,8 +162,6 @@ void RealTimeSimulation::run(bool startSynch, const StartClock::duration &startI
 
 void RealTimeSimulation::run(bool startSynch, const StartClock::time_point &startAt)
 {
-	int ret;
-
 	auto startAtDur = startAt.time_since_epoch();
 	auto startAtNSecs = std::chrono::duration_cast<std::chrono::nanoseconds>(startAtDur);
 
