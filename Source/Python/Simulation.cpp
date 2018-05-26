@@ -39,8 +39,6 @@ using namespace DPsim;
 
 void DPsim::Python::Simulation::simThreadFunction(Python::Simulation* pySim)
 {
-	bool notDone = true;
-
 #ifdef WITH_RT
 	if (pySim->rt) {
 		simThreadFunctionRT(pySim);

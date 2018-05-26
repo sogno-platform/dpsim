@@ -32,7 +32,6 @@ int main(int argc, char* argv[])
 	Real nomFreq = 60;
 	Real nomFieldCurr = 1300;
 	Int poleNum = 2;
-	Real J = 2.8898e+04;
 	Real H = 3.7;
 
 	Real Rs = 0.003;
@@ -136,10 +135,11 @@ int main(int argc, char* argv[])
 	systemBreakerOn.mComponents = { gen, gen2, rBreaker1, rBreaker2, rBreaker3, LineR1, LineR2, LineR3, LineL1, LineL2, LineL3, r1, r2, r3, Res1, Res2, Res3, LineR12, LineR22, LineR32, LineL12, LineL22, LineL32, Res12, Res22, Res32 };
 
 	// Set up simulation
-	Real tf, dt, t;
 	Real om = 2.0*M_PI*60.0;
-	tf = 0.30000; dt = 0.00005; t = 0;
+	Real tf = 0.30000;
+	Real dt = 0.00005;
 	Int downSampling = 1;
+
 	Simulation sim("EMT_SynchronGenerator_VBR", system, dt, tf,
 		Solver::Domain::EMT, Solver::Type::MNA, Logger::Level::INFO);
 	sim.setLogDownsamplingRate(downSampling);
