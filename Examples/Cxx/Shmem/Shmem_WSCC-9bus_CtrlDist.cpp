@@ -54,6 +54,7 @@ int main(int argc, char *argv[]) {
 
 		// Extend system with controllable load
 		auto ecs = CurrentSource::make("i_intf", Node::List{sys.mNodes[3], GND}, Complex(0, 0), Logger::Level::DEBUG);
+		sys.mComponents.push_back(ecs);
 
 		RealTimeSimulation sim(simName + "_1", sys, timeStep, finalTime,
 			Solver::Domain::DP, Solver::Type::MNA, Logger::Level::DEBUG, true);
@@ -130,6 +131,9 @@ int main(int argc, char *argv[]) {
 
 		// Register controllable load
 		intf2.addImport(load->findAttribute<Real>("active_power"), 1.0, 0);
+		intf2.addExport(load->findAttribute<Real>("active_power"), 1.0, 0);
+		intf2.addExport(load->findAttribute<Complex>("comp_voltage"), 1.0, 1, 2);
+		intf2.addExport(load->findAttribute<Complex>("comp_current"), 1.0, 3, 4);
 
 		sim.run(false, args.startTime);
 	}

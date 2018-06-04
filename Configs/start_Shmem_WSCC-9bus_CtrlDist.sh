@@ -6,7 +6,7 @@ sleep 2
 build/Examples/Cxx/Shmem_WSCC-9bus_CtrlDist --start-at $TIME --scenario 1 & P2=$!
 
 sleep 1
-villas-pipe Configs/villas-shmem.conf shmem
+(sleep 10; echo "1 50e6"; sleep 10000) | villas-pipe Configs/villas-shmem.conf shmem
 
 for job in $P1 $P2; do
     wait $job || exit 1
