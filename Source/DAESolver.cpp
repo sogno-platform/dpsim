@@ -1,8 +1,8 @@
 
-#include "DAESimulation.h"
+#include "DAESolver.h"
 
 
-DAESimulation::DAESimulation(String name, SystemTopology system, Real dt, Real tfinal) : DAESys(system), mName(name), timestep(dt)
+DAESolver::DAESolver(String name,  SystemTopology system, Real dt) : DAESys(system), timestep(dt)
 {
 
 	// defines offset vector which is composed as follows:
@@ -11,10 +11,9 @@ DAESimulation::DAESimulation(String name, SystemTopology system, Real dt, Real t
 	
 	offsets.push_back(0);
 	offsets.push_back(0);
-	mFinalTime=tfinal;
 }
 
-void DAESimulation::initialize(Component::List newComponents)
+void DAESolver::initialize(Component::List newComponents)
 {
 	for (auto comp : newComponents) {
 			
@@ -25,7 +24,7 @@ void DAESimulation::initialize(Component::List newComponents)
 }
 
  
-void DAESimulation::run()
+void DAESolver::run()
 {
 
 	 /* 
@@ -109,7 +108,7 @@ void DAESimulation::run()
 		set inital values for absolute tolerance if noise differs for each component
 	*/
 	
-	rtol = RCONST(1.0e-6); // set relative tolerance, is this correct?
+	rtol = RCONST(1.0e-6); // set relative tolerance
 	abstol = RCONST(1.0e-1); // set absolute error
 	
 
@@ -156,7 +155,7 @@ void DAESimulation::run()
 	 
 }
 
-int DAESimulation::DAE_residualFunction(realtype ttime, N_Vector state, N_Vector dstate_dt, N_Vector resid, void *user_data)
+int DAESolver::DAE_residualFunction(realtype ttime, N_Vector state, N_Vector dstate_dt, N_Vector resid, void *user_data)
 {
 	for (auto node : DAESys.mNodes){ 
 		double residual[]=NVECTOR_DATA(resid);
@@ -164,6 +163,7 @@ int DAESimulation::DAE_residualFunction(realtype ttime, N_Vector state, N_Vector
 		residual[offsets[0]]=tempstate[offsets[0]]-node->voltage;
 		offsets[0]=offsets[0]+1;
 	}
+
 	for (auto comp : DAESys.mComponents){  	// currently only supports DP_Resistor and DP_VoltageSource
 		comp->residual(ttime, NVECTOR_DATA(state), NVECTOR_DATA(dstate_dt), NVECTOR_DATA(resid), offsets);
 	}
@@ -173,4 +173,18 @@ int DAESimulation::DAE_residualFunction(realtype ttime, N_Vector state, N_Vector
 	*/
 
 	return ret; // if successful; positive value if recoverable error, negative if fatal error
+}
+
+Real DAESolver::step(Real time, bool blocking){
+	
+	retval = IDASolve(mem, time, &tret, state, dstate_dt, IDA_NORMAL);  
+		
+	if (retval == IDA_SUCCESS){ 
+		return time + mTimestep	
+	}
+
+	else {
+		std::cout <<"Ida Error"<<std::endl;
+		break;
+	}
 }

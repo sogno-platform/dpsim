@@ -16,27 +16,29 @@
 
 using namespace DPsim ;
 
-	/// Simulation class which uses Differential Algebraic Equation(DAE) Systems
-	class DAESimulation : public Solver{
+	/// Solver class which uses Differential Algebraic Equation(DAE) systems
+	class DAESolver : public Solver{
 	protected:
 		// General simulation parameters
 		/// Local copy of the SystemTopology 
 		SystemTopology DAESys;
 		/// Offsets vector for adding new equations to the residual vector
 		std::vector<int> offsets; 
-		/// Constant Time step
+		/// Constant time step
 		Real mTimestep;
 
 	public:
 		/// Create solve object with given parameters
-		DAESimulation(String name,  SystemTopology system, Real dt, Real tfinal);
-		virtual ~DAESimulation() { };
+		DAESolver(String name,  SystemTopology system, Real dt);
+		virtual ~DAESolver() { };
 		/// Initialize Components & Nodes with inital values
 		void initialize(Component::List comps);
 		/// Residual Function of entire System
 		int DAE_residualFunction(realtype ttime, N_Vector state, N_Vector dstate_dt, N_Vector resid, void *user_data);
 		/// Run simulation until total time is elapsed
 		void run();
+		/// Solve system for the current time
+		Real step(Real time, bool blocking = true);
 	};
 
 
