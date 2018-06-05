@@ -116,13 +116,13 @@ deploy:packages:
     - shell
 
 # We run the windows build at last as it takes ages to finish
-build:windows:
-  stage: post-all
-  script:
-    - rmdir build /s
-    - mkdir build
-    - cd build
-    - cmake -G "Visual Studio 15 2017 Win64" ..
-    - cmake --build .
-  tags:
-    - windows
+#build:windows:
+#  stage: post-all
+#  script:
+#    - rmdir build /s
+#    - mkdir build
+#    - cd build
+#    - cmake -G "Visual Studio 15 2017 Win64" ..
+#    - cmake --build .
+#  tags:
+#    - windows
