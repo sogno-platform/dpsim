@@ -14,7 +14,7 @@ stages:
   - build
   - test
   - deploy
-  - post-all
+  #- post-all
 
 docker:
   stage: prepare
