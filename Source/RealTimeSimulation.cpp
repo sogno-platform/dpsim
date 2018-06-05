@@ -155,35 +155,46 @@ void RealTimeSimulation::stopTimer()
 #endif
 }
 
-void RealTimeSimulation::run(bool startSynch, const StartClock::duration &startIn)
+void RealTimeSimulation::run(const StartClock::duration &startIn)
 {
-	run(startSynch, StartClock::now() + startIn);
+	run(StartClock::now() + startIn);
 }
 
-void RealTimeSimulation::run(bool startSynch, const StartClock::time_point &startAt)
+void RealTimeSimulation::run(const StartClock::time_point &startAt)
 {
 	auto startAtDur = startAt.time_since_epoch();
 	auto startAtNSecs = std::chrono::duration_cast<std::chrono::nanoseconds>(startAtDur);
 
-	if (startSynch) {
-		mTime = 0;
-
-		step(false); // first step, sending the initial values
-		step(true); // blocking step for synchronization + receiving the initial state of the other network
-
-		std::cout << "Synchronized simulation start with remotes" << std::endl;
+#ifdef WITH_SHMEM
+	// We send initial state over all interfaces
+	for (auto ifm : mInterfaces) {
+		ifm.interface->writeValues();
 	}
 
-	std::cout << "Starting simulation at " << startAt << " (delta_T = " << std::chrono::duration_cast<std::chrono::seconds>(startAt - StartClock::now()).count() << " seconds)" << std::endl;
+	std::cout << Logger::prefix() << "Waiting for start synchronization on " << mInterfaces.size() << " interfaces" << std::endl;
+
+	// Blocking wait for interfaces
+	for (auto ifm : mInterfaces) {
+		ifm.interface->readValues(ifm.syncStart);
+	}
+
+	std::cout << Logger::prefix() << "Synchronized simulation start with remotes" << std::endl;
+#endif
+
+	std::cout << Logger::prefix() << "Starting simulation at " << startAt << " (delta_T = " << std::chrono::duration_cast<std::chrono::seconds>(startAt - StartClock::now()).count() << " seconds)" << std::endl;
 
 	startTimer(startAt);
+
+	for (auto ifm : mInterfaces) {
+		ifm.interface->writeValues();
+	}
 
 	// main loop
 	Int steps = 0;
 	do {
 #ifdef RTMETHOD_TIMERFD
 		uint64_t overrun;
-		step(false);
+		step();
 
 		if (read(mTimerFd, &overrun, sizeof(overrun)) < 0) {
 			throw SystemError("Read from timerfd failed");
@@ -194,7 +205,7 @@ void RealTimeSimulation::run(bool startSynch, const StartClock::time_point &star
 		}
 #elif defined(RTMETHOD_EXCEPTIONS)
 		try {
-			step(false);
+			step();
 			sigwait(&alrmset, &sig);
 		}
 		catch (TimerExpiredException& e) {
@@ -207,7 +218,7 @@ void RealTimeSimulation::run(bool startSynch, const StartClock::time_point &star
   #error Unkown real-time execution mode
 #endif
 		if (steps++ == 0)
-			std::cout << "Simulation started!" << std::endl;
+			std::cout << Logger::prefix() << "Simulation started!" << std::endl;
 
 	} while (mTime < mFinalTime);
 

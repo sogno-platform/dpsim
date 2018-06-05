@@ -55,8 +55,8 @@ int main(int argc, char* argv[])
 	auto sys = SystemTopology(50, Node::List{GND, n1, n2, n3, n4}, ComponentBase::List{evs, rs, rl, ll, rL});
 	auto sim = RealTimeSimulation("ShmemRealTime", sys, timeStep, 5.0);
 
-	sim.addInterface(&intf);
-	sim.run(false);
+	sim.addInterface(&intf, false, true);
+	sim.run();
 
 	return 0;
 }
