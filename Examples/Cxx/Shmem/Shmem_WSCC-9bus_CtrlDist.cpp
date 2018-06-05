@@ -69,8 +69,8 @@ int main(int argc, char *argv[]) {
 		Interface intf(out, in, &conf);
 		sim.addInterface(&intf);
 
-		// Register exportable node voltages
-		UInt o = 0;
+		// Register exportable node voltages		
+		UInt o = 2;
 		for (auto n : sys.mNodes) {
 			auto v = n->findAttribute<Complex>("voltage");
 
