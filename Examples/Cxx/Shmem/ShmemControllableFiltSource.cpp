@@ -79,7 +79,7 @@ int main(int argc, char *argv[]) {
 	Solver::Domain::DP, Solver::Type::MNA, Logger::Level::INFO);
 
 	sim.addInterface(&intf);
-	sim.run(true);
+	sim.run();
 
 	return 0;
 }

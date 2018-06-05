@@ -35,9 +35,9 @@ int main(int argc, char *argv[]) {
 
 	// Specify CIM files
 #ifdef _WIN32
-	String path("..\\..\\..\\..\\dpsim\\Examples\\CIM\\WSCC-09_Neplan_RX\\");
+	String path("Examples\\CIM\\WSCC-09_Neplan_RX\\");
 #elif defined(__linux__) || defined(__APPLE__)
-	String path("../Examples/CIM/WSCC-09_Neplan_RX/");
+	String path("Examples/CIM/WSCC-09_Neplan_RX/");
 #endif
 
 	std::list<String> filenames = {
@@ -96,8 +96,8 @@ int main(int argc, char *argv[]) {
 	//intf.addImport(load->findAttribute<Real>("active_power"), 1.0, 0);
 	intf.addImport(filtP->findAttribute<Real>("input"), 1.0, 0);
 
-	sim.addInterface(&intf);
-	sim.run(args.startSynch, args.startTime);
+	sim.addInterface(&intf, false, true);
+	sim.run();
 
 	return 0;
 }

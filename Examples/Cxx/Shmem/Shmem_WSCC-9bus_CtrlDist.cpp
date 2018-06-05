@@ -66,7 +66,7 @@ int main(int argc, char *argv[]) {
 		conf.queuelen = 1024;
 		conf.polling = false;
 		Interface intf(out, in, &conf);
-		sim.addInterface(&intf);
+		sim.addInterface(&intf, false, true);
 
 		// Register exportable node voltages
 		UInt o = 0;
@@ -87,7 +87,7 @@ int main(int argc, char *argv[]) {
 		intf.addImport(ecs->findAttribute<Complex>("current_ref"), 1.0, 0, 1);
 		intf.addExport(ecs->findAttribute<Complex>("comp_voltage"), 1.0, 0, 1);
 
-		sim.run(false, args.startTime);
+		sim.run(args.startTime);
 	}
 
 	if (args.scenario == 1) {
@@ -111,7 +111,7 @@ int main(int argc, char *argv[]) {
 		conf1.queuelen = 1024;
 		conf1.polling = false;
 		Interface intf1(out1, in1, &conf1);
-		sim.addInterface(&intf1);
+		sim.addInterface(&intf1, false, true);
 
 		// Create shmem interface 2
 		String in2  = "/villas-dpsim";
@@ -121,7 +121,7 @@ int main(int argc, char *argv[]) {
 		conf2.queuelen = 1024;
 		conf2.polling = false;
 		Interface intf2(out2, in2, &conf2);
-		sim.addInterface(&intf2);
+		sim.addInterface(&intf2, false, false);
 
 		// Register voltage source reference and current flowing through source
 		// multiply with -1 to consider passive sign convention
@@ -131,7 +131,7 @@ int main(int argc, char *argv[]) {
 		// Register controllable load
 		intf2.addImport(load->findAttribute<Real>("active_power"), 1.0, 0);
 
-		sim.run(false, args.startTime);
+		sim.run(args.startTime);
 	}
 
 	return 0;

@@ -83,9 +83,9 @@ namespace DPsim {
 		 *
 		 * @param startSynch If true, the simulation waits for the first external value before starting the timing.
 		 */
-		void run(bool startSynch = true, const StartClock::duration &startIn = std::chrono::milliseconds(100));
+		void run(const StartClock::duration &startIn = std::chrono::seconds(1));
 
-		void run(bool startSynch, const StartClock::time_point &startAt);
+		void run(const StartClock::time_point &startAt);
 	};
 }
 

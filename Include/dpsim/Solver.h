@@ -49,13 +49,10 @@ namespace DPsim {
 		enum class Domain { DP, EMT };
 
 		/// Solve system A * x = z for x and current time
-		virtual Real step(Real time, bool blocking = true) = 0;
+		virtual Real step(Real time) = 0;
 		/// Log results
 		virtual void log(Real time) = 0;
-#ifdef WITH_SHMEM
-		///
-		virtual void addInterface(Interface* eint) { }
-#endif
+
 		///
 		void addSystemTopology(SystemTopology system) { }
 		///

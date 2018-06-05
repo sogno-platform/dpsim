@@ -236,14 +236,9 @@ void MnaSolver::solve()  {
 	mLeftSideVector = mLuFactorizations[mSystemIndex].solve(mRightSideVector);
 }
 
-Real MnaSolver::step(Real time, bool blocking) {
+Real MnaSolver::step(Real time) {
 	mRightSideVector.setZero();
 
-#ifdef WITH_SHMEM
-	for (auto eif : mInterfaces) {
-		eif->readValues(blocking);
-	}
-#endif
 	for (auto comp : mSystemTopologies[mSystemIndex].mComponents) {
 		comp->mnaStep(mSystemMatrices[mSystemIndex], mRightSideVector, mLeftSideVector, time);
 	}
@@ -257,12 +252,6 @@ Real MnaSolver::step(Real time, bool blocking) {
 	for (UInt nodeIdx = 0; nodeIdx < mNumRealNodes; nodeIdx++) {
 		mSystemTopologies[0].mNodes[nodeIdx]->mnaUpdateVoltages(mLeftSideVector);
 	}
-
-#ifdef WITH_SHMEM
-	for (auto eif : mInterfaces) {
-		eif->writeValues();
-	}
-#endif
 
 	if (mSwitchTimeIndex < mSwitchEvents.size()) {
 		if (time >= mSwitchEvents[mSwitchTimeIndex].switchTime) {

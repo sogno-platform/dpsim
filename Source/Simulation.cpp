@@ -46,7 +46,7 @@ Simulation::Simulation(String name,
 
 Simulation::Simulation(String name, SystemTopology system,
 	Real timeStep, Real finalTime,
-	Solver::Domain domain, Solver::Type solverType, 
+	Solver::Domain domain, Solver::Type solverType,
 	Logger::Level logLevel,
 	Bool steadyStateInit) :
 	Simulation(name, timeStep, finalTime,
@@ -69,40 +69,45 @@ Simulation::~Simulation() {
 	}
 }
 
-void Simulation::run(bool blocking) {
+void Simulation::run() {
 	mLog.Log(Logger::Level::INFO) << "Start simulation." << std::endl;
 
+#ifdef WITH_SHMEM
+	// We send initial state over all interfaces
+	for (auto ifm : mInterfaces) {
+		ifm.interface->writeValues();
+	}
+
+	// Blocking wait for interfaces
+	for (auto ifm : mInterfaces) {
+		ifm.interface->readValues(ifm.syncStart);
+	}
+#endif
+
 	while (mTime < mFinalTime) {
-		Real nextTime;
-		nextTime = mSolver->step(mTime, blocking);
-		mSolver->log(mTime);
-		mTime = nextTime;
-		mTimeStepCount++;
+		step();
 	}
 
 	mLog.Log(Logger::Level::INFO) << "Simulation finished." << std::endl;
 }
 
-void Simulation::run(double duration, bool blocking) {
-	double started = mTime;
-
-	mLog.Log(Logger::Level::INFO) << "Run simulation for " << duration << " seconds." << std::endl;
-
-	while ((mTime - started) < duration) {
-		Real nextTime;
-		nextTime = mSolver->step(mTime, blocking);
-		mSolver->log(mTime);
-		mTime = nextTime;
-		mTimeStepCount++;
-	}
-
-	mLog.Log(Logger::Level::INFO) << "Simulation ran for " << duration << " seconds." << std::endl;
-}
-
-Real Simulation::step(bool blocking) {
+Real Simulation::step() {
 	Real nextTime;
 
-	nextTime = mSolver->step(mTime, blocking);
+#ifdef WITH_SHMEM
+	for (auto ifm : mInterfaces) {
+		ifm.interface->readValues(ifm.sync);
+	}
+#endif
+
+	nextTime = mSolver->step(mTime);
+
+#ifdef WITH_SHMEM
+	for (auto ifm : mInterfaces) {
+		ifm.interface->writeValues();
+	}
+#endif
+
 	mSolver->log(mTime);
 	mTime = nextTime;
 	mTimeStepCount++;
@@ -113,12 +118,6 @@ Real Simulation::step(bool blocking) {
 void Simulation::setSwitchTime(Real switchTime, Int systemIndex) {
 	mSolver->setSwitchTime(switchTime, systemIndex);
 }
-
-#ifdef WITH_SHMEM
-void Simulation::addInterface(Interface *eint) {
-	mSolver->addInterface(eint);
-}
-#endif
 
 void Simulation::addSystemTopology(SystemTopology system) {
 	mSolver->addSystemTopology(system);

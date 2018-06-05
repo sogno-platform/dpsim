@@ -47,7 +47,7 @@ int main(int argc, char* argv[])
 
 	auto startIn = std::chrono::seconds(5);
 
-	sim.run(false, startIn);
+	sim.run(startIn);
 
 	return 0;
 }
