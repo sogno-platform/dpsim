@@ -28,6 +28,7 @@
 
 using namespace DPsim;
 using namespace CPS;
+using namespace CPS::Components;
 using namespace CPS::Components::DP;
 
 int main(int argc, char *argv[]) {
@@ -101,7 +102,15 @@ int main(int argc, char *argv[]) {
 		// Extend system with controllable load
 		auto load = PQLoadCS::make("load_cs", Node::List{n1}, 0, 0, 230000);
 
-		auto sys = SystemTopology(60, Node::List{n1}, ComponentBase::List{evs, load});
+		// Controllers and filter
+		std::vector<Real> coefficients = std::vector(100, 1./100);
+		auto filtP = FIRFilter::make("filter_p", coefficients, Logger::Level::INFO);
+		filtP->setPriority(1);
+		filtP->initialize(0.);
+		filtP->setConnection(load->findAttribute<Real>("active_power"));
+		filtP->findAttribute<Real>("input")->set(0.);
+
+		auto sys = SystemTopology(60, Node::List{n1}, ComponentBase::List{evs, load, filtP});
 		RealTimeSimulation sim(simName + "_2", sys, timeStep, finalTime);
 
 		// Create shmem interface 1
@@ -130,7 +139,7 @@ int main(int argc, char *argv[]) {
 		intf1.addExport(evs->findAttribute<Complex>("comp_current"), -1.0, 0, 1);
 
 		// Register controllable load
-		intf2.addImport(load->findAttribute<Real>("active_power"), 1.0, 0);
+		intf2.addImport(filtP->findAttribute<Real>("input"), 1.0, 0);
 		intf2.addExport(load->findAttribute<Real>("active_power"), 1.0, 0);
 		intf2.addExport(load->findAttribute<Complex>("comp_voltage"), 1.0, 1, 2);
 		intf2.addExport(load->findAttribute<Complex>("comp_current"), 1.0, 3, 4);
