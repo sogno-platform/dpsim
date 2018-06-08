@@ -75,6 +75,21 @@ namespace DPsim {
 		/// Pipe for asynchronous inter-process communication (IPC) to the Python world
 		int mPipe[2];
 
+#ifdef WITH_SHMEM
+		struct InterfaceMapping {
+			/// A pointer to the external interface
+			Interface *interface;
+			///
+			bool sync;
+			bool syncStart;
+		};
+
+		/// Vector of Interfaces
+		std::vector<InterfaceMapping> mInterfaces;
+		/// Interfaces are initialized
+		bool mInit = false;
+#endif
+
 	public:
 		/// Creates system matrix according to
 		Simulation(String name,
@@ -93,17 +108,21 @@ namespace DPsim {
 		virtual ~Simulation();
 
 		/// Run simulation until total time is elapsed.
-		void run(bool blocking = true);
-		/// Run simulation for \p duration seconds.
-		void run(double duration, bool blocking = true);
+		void run();
 		/// Solve system A * x = z for x and current time
-		Real step(bool blocking = true);
+		Real step();
 
 		///
 		void setSwitchTime(Real switchTime, Int systemIndex);
 #ifdef WITH_SHMEM
 		///
-		void addInterface(Interface*);
+		void addInterface(Interface *eint, bool sync, bool syncStart) {
+			mInterfaces.push_back({eint, sync, syncStart});
+		}
+
+		void addInterface(Interface *eint, bool sync = true) {
+			mInterfaces.push_back({eint, sync, sync});
+		}
 #endif
 		///
 		void addSystemTopology(SystemTopology system);

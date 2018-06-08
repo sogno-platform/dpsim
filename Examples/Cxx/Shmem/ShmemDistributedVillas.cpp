@@ -106,7 +106,7 @@ int main(int argc, char *argv[])
 		sim.setSwitchTime(10, 1);
 	}
 
-	sim.run(true);
+	sim.run();
 
 	return 0;
 }

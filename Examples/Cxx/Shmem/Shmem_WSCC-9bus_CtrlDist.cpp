@@ -28,14 +28,13 @@
 
 using namespace DPsim;
 using namespace CPS;
+using namespace CPS::Components;
 using namespace CPS::Components::DP;
 
 int main(int argc, char *argv[]) {
 
-	CommandLineArgs args(argc, argv);
+	CommandLineArgs args(argc, argv, 0.001, 20, 60);
 
-	Real timeStep = 0.001;
-	Real finalTime = 20;
 	String simName = "Shmem_WSCC-9bus_CtrlDist";
 
 	if (args.scenario == 0) {
@@ -50,12 +49,13 @@ int main(int argc, char *argv[]) {
 		};
 
 		CIM::Reader reader(simName, Logger::Level::INFO, Logger::Level::INFO);
-		SystemTopology sys = reader.loadCIM(60, filenames);
+		SystemTopology sys = reader.loadCIM(args.sysFreq, filenames);
 
 		// Extend system with controllable load
 		auto ecs = CurrentSource::make("i_intf", Node::List{sys.mNodes[3], GND}, Complex(0, 0), Logger::Level::DEBUG);
+		sys.mComponents.push_back(ecs);
 
-		RealTimeSimulation sim(simName + "_1", sys, timeStep, finalTime,
+		RealTimeSimulation sim(simName + "_1", sys, args.timeStep, args.duration,
 			Solver::Domain::DP, Solver::Type::MNA, Logger::Level::DEBUG, true);
 
 		// Create shmem interface and add it to simulation
@@ -66,10 +66,10 @@ int main(int argc, char *argv[]) {
 		conf.queuelen = 1024;
 		conf.polling = false;
 		Interface intf(out, in, &conf);
-		sim.addInterface(&intf);
+		sim.addInterface(&intf, false, true);
 
 		// Register exportable node voltages
-		UInt o = 0;
+		UInt o = 2;
 		for (auto n : sys.mNodes) {
 			auto v = n->findAttribute<Complex>("voltage");
 
@@ -87,7 +87,7 @@ int main(int argc, char *argv[]) {
 		intf.addImport(ecs->findAttribute<Complex>("current_ref"), 1.0, 0, 1);
 		intf.addExport(ecs->findAttribute<Complex>("comp_voltage"), 1.0, 0, 1);
 
-		sim.run(false, args.startTime);
+		sim.run(args.startTime);
 	}
 
 	if (args.scenario == 1) {
@@ -100,8 +100,16 @@ int main(int argc, char *argv[]) {
 		// Extend system with controllable load
 		auto load = PQLoadCS::make("load_cs", Node::List{n1}, 0, 0, 230000);
 
-		auto sys = SystemTopology(60, Node::List{n1}, ComponentBase::List{evs, load});
-		RealTimeSimulation sim(simName + "_2", sys, timeStep, finalTime);
+		// Controllers and filter
+		std::vector<Real> coefficients = std::vector(100, 1./100);
+		auto filtP = FIRFilter::make("filter_p", coefficients, Logger::Level::INFO);
+		filtP->setPriority(1);
+		filtP->initialize(0.);
+		filtP->setConnection(load->findAttribute<Real>("active_power"));
+		filtP->findAttribute<Real>("input")->set(0.);
+
+		auto sys = SystemTopology(args.sysFreq, Node::List{n1}, ComponentBase::List{evs, load, filtP});
+		RealTimeSimulation sim(simName + "_2", sys, args.timeStep, args.duration);
 
 		// Create shmem interface 1
 		String in1  = "/dpsim01";
@@ -111,7 +119,7 @@ int main(int argc, char *argv[]) {
 		conf1.queuelen = 1024;
 		conf1.polling = false;
 		Interface intf1(out1, in1, &conf1);
-		sim.addInterface(&intf1);
+		sim.addInterface(&intf1, false, true);
 
 		// Create shmem interface 2
 		String in2  = "/villas-dpsim";
@@ -121,7 +129,7 @@ int main(int argc, char *argv[]) {
 		conf2.queuelen = 1024;
 		conf2.polling = false;
 		Interface intf2(out2, in2, &conf2);
-		sim.addInterface(&intf2);
+		sim.addInterface(&intf2, false, false);
 
 		// Register voltage source reference and current flowing through source
 		// multiply with -1 to consider passive sign convention
@@ -129,9 +137,12 @@ int main(int argc, char *argv[]) {
 		intf1.addExport(evs->findAttribute<Complex>("comp_current"), -1.0, 0, 1);
 
 		// Register controllable load
-		intf2.addImport(load->findAttribute<Real>("active_power"), 1.0, 0);
+		intf2.addImport(filtP->findAttribute<Real>("input"), 1.0, 0);
+		intf2.addExport(load->findAttribute<Real>("active_power"), 1.0, 0);
+		intf2.addExport(load->findAttribute<Complex>("comp_voltage"), 1.0, 1, 2);
+		intf2.addExport(load->findAttribute<Complex>("comp_current"), 1.0, 3, 4);
 
-		sim.run(false, args.startTime);
+		sim.run(args.startTime);
 	}
 
 	return 0;

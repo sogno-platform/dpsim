@@ -44,10 +44,6 @@ namespace DPsim {
 		UInt mNumRealNodes = 0;
 		/// Number of nodes
 		UInt mNumVirtualNodes = 0;
-#ifdef WITH_SHMEM
-		/// Vector of Interfaces
-		std::vector<Interface*> mInterfaces;
-#endif
 		/// Flag to activate power flow based initialization.
 		/// If this is false, all voltages are initialized with zero.
 		Bool mPowerflowInitialization;
@@ -119,13 +115,9 @@ namespace DPsim {
 		///
 		virtual ~MnaSolver() { };
 		/// Solve system A * x = z for x and current time
-		Real step(Real time, bool blocking = true);
+		Real step(Real time);
 		/// Log results
 		void log(Real time);
-#ifdef WITH_SHMEM
-		///
-		void addInterface(Interface* eint) { mInterfaces.push_back(eint); }
-#endif
 		///
 		void setSwitchTime(Real switchTime, Int systemIndex);
 		///

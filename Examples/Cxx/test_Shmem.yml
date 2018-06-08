@@ -6,6 +6,7 @@ ShmemDistributedReference:
   cmd: build/Examples/Cxx/ShmemDistributedReference
 
 ShmemDistributedDirect:
+  skip: true
   shell: True
   cmd: |
     build/Examples/Cxx/ShmemDistributedDirect 0 & P1=$!
