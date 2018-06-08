@@ -1,9 +1,10 @@
-/** Simulation
+/** EventHandler
  *
+ * @file
  * @author Markus Mirz <mmirz@eonerc.rwth-aachen.de>
- * @copyright 2017, Institute for Automation of Complex Power Systems, EONERC
+ * @copyright 2017-2018, Institute for Automation of Complex Power Systems, EONERC
  *
- * DPsim
+ * CPowerSystems
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -21,44 +22,39 @@
 
 #pragma once
 
-#include <iostream>
 #include <vector>
-#include <list>
-
-#include "Config.h"
+#include "cps/Config.h"
+#include "cps/Definitions.h"
 #include "cps/Logger.h"
-#include "cps/SystemTopology.h"
-
-#ifdef WITH_SHMEM
-  #include "cps/Interface.h"
-#endif
 
 using namespace CPS;
 
 namespace DPsim {
-	/// Holds switching time and which system should be activated.
-	struct SwitchConfiguration {
-		Real switchTime;
-		UInt systemIndex;
+
+	class Event {
+	public:
+		std::function<void()> mfunction;
 	};
 
-	class Solver {
+	class EventHandler {
+
+	protected:
+		std::map<Real, std::vector<Event> > mEvents;
 
 	public:
-		enum class Type { MNA, IDA };
-		enum class Domain { DP, EMT };
+		/// Creates new reader with a name for logging.
+		/// The first log level is for the reader and the second for the generated components.
+		EventHandler(String name,			
+			Logger::Level logLevel = Logger::Level::NONE);
 
-		/// Solve system A * x = z for x and current time
-		virtual Real step(Real time, bool blocking = true) = 0;
-		/// Log results
-		virtual void log(Real time) = 0;
-#ifdef WITH_SHMEM
-		///
-		virtual void addInterface(Interface* eint) { }
-#endif
-		///
-		void addSystemTopology(SystemTopology system) { }
-		///
-		virtual void setSwitchTime(Real switchTime, Int systemIndex) { }
+		addEvent(Real startTime, Event newEvent, Int iterations = 1, Real period = 0) {
+			std::vector<Event> events;
+			events.push_back(newEvent);
+			if (!mEvents.insert(std::make_pair(startTime, events)).second) {
+				mEvents[startTime].push_back(newEvent);
+			}
+		}
+
 	};
 }
+

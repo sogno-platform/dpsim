@@ -44,14 +44,14 @@ int main(int argc, char* argv[])
 
 	auto sys = SystemTopology(50, Node::List{GND, n1, n2, n3, n4}, ComponentBase::List{evs, rs, rl, ll, rL});
 
-	auto villas = ShmemInterface("/villas1-in", "/villas1-out");
-	villas.registerControlledAttribute(evs->findAttribute<Complex>("voltage_ref"), 0, 1);
-	villas.registerExportedAttribute(evs->findAttribute<Complex>("comp_current"), 0, 1);
+	auto intf = Interface("/villas1-in", "/villas1-out");
+	intf.addImport(evs->findAttribute<Complex>("voltage_ref"), 1.0, 0, 1);
+	intf.addExport(evs->findAttribute<Complex>("comp_current"), 1.0, 0, 1);
 
 	Real timeStep = 0.001;
 	auto sim = Simulation("ShmemExample", sys, timeStep, 0.3);
 
-	sim.addInterface(&villas);
+	sim.addInterface(&intf);
 	sim.run();
 
 	return 0;

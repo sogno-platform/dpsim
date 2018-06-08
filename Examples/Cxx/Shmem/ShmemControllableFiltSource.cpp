@@ -22,6 +22,7 @@
 #include "DPsim.h"
 
 using namespace DPsim;
+using namespace CPS::Components;
 using namespace CPS::Components::DP;
 
 int main(int argc, char *argv[]) {
@@ -40,17 +41,40 @@ int main(int argc, char *argv[]) {
 
 	Interface intf(out, in, &conf);
 
+	// Controllers and filter
+	std::vector<Real> coefficients = { -0.0024229,-0.0020832,0.0067703,0.016732,
+	0.011117,-0.0062311,-0.0084016,0.0092568, 0.012983,-0.010121,-0.018274,0.011432,
+	0.026176,-0.012489,-0.037997,0.013389,0.058155,-0.014048,-0.10272,0.014462,0.31717,
+	0.48539, 0.31717,0.014462,-0.10272,-0.014048,0.058155,0.013389,-0.037997,-0.012489,
+	0.026176,0.011432,-0.018274,-0.010121, 0.012983,0.0092568,-0.0084016,-0.0062311,
+	0.011117,0.016732,0.0067703,-0.0020832,-0.0024229 };
+
+	auto filtP = FIRFilter::make("filter_p", coefficients, Logger::Level::DEBUG);
+	auto filtQ = FIRFilter::make("filter_q", coefficients, Logger::Level::DEBUG);
+
+	filtP->setPriority(1);
+	filtQ->setPriority(1);
+	filtP->initialize(10.);
+	filtQ->initialize(0);
+
 	// Nodes
 	auto n1 = Node::make("n1");
 
 	// Components
 	auto ecs = CurrentSource::make("v_intf", Node::List{GND, n1}, Complex(10, 0));
 	auto r1 = Resistor::make("r_1", Node::List{GND, n1}, 1);
+	auto load = PQLoadCS::make("load_cs", Node::List{n1}, 10., 0., 10.);
 
-	intf.addImport(ecs->findAttribute<Complex>("current_ref"), 1.0, 0, 1);
-	intf.addExport(ecs->findAttribute<Complex>("comp_voltage"), 1.0, 0, 1);
+	filtP->setConnection(load->findAttribute<Real>("active_power"));
+	filtQ->setConnection(load->findAttribute<Real>("reactive_power"));
 
-	auto sys = SystemTopology(50, Node::List{n1}, ComponentBase::List{ecs, r1});
+	filtP->findAttribute<Real>("input")->set(8.);
+	filtQ->findAttribute<Real>("input")->set(0.);
+
+	intf.addImport(filtP->findAttribute<Real>("input"), 1.0, 0);
+	intf.addImport(filtQ->findAttribute<Real>("input"), 1.0, 1);
+
+	auto sys = SystemTopology(50, Node::List{n1}, ComponentBase::List{ecs, r1, load, filtP, filtQ});
 	auto sim = RealTimeSimulation(simName, sys, timeStep, finalTime,
 	Solver::Domain::DP, Solver::Type::MNA, Logger::Level::INFO);
 

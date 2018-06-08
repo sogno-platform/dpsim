@@ -25,17 +25,21 @@ using namespace DPsim;
 using namespace CPS::Components::DP;
 
 int main(int argc, char* argv[]) {
-	// Define system topology
-	SystemTopology system(50, {
-		VoltageSource::make("v_1", DEPRECATEDGND, 0, Complex(10, 0), Logger::Level::DEBUG),
-		Resistor::make("r_1", 0, DEPRECATEDGND, 1)});
+	// Nodes
+	auto n1 = Node::make("n1");
+
+	// Components
+	auto vs = VoltageSource::make("v_1", Node::List{GND, n1}, Complex(10, 0));
+	auto r = Resistor::make("r_1", Node::List{n1, GND}, 1);
+
+	auto sys = SystemTopology(50, Node::List{n1}, ComponentBase::List{vs, r});
 
 	// Define simulation scenario
 	Real timeStep = 0.00005;
 	Real finalTime = 0.2;
 	String simName = "DP_IdealVS_R_1";
 
-	Simulation sim(simName, system, timeStep, finalTime);
+	Simulation sim(simName, sys, timeStep, finalTime);
 	sim.run();
 
 	return 0;

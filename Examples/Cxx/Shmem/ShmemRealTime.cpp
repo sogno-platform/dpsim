@@ -29,7 +29,7 @@ int main(int argc, char* argv[])
 	// Same circuit as above, but now with realtime support.
 	ComponentBase::List comps;
 
-	struct shmem_conf conf;
+	Interface::Config conf;
 	conf.samplelen = 4;
 	conf.queuelen = 1024;
 	conf.polling = false;
@@ -47,15 +47,15 @@ int main(int argc, char* argv[])
 	auto ll =  Inductor::make("l_line", Node::List{n3, n4}, 1);
 	auto rL =  Resistor::make("r_load", Node::List{n4, GND}, 1000);
 
-	ShmemInterface villas("/villas1-in", "/villas1-out", &conf);
-	villas.registerControlledAttribute(evs->findAttribute<Complex>("voltage_ref"), 0, 1);
-	villas.registerExportedAttribute(evs->findAttribute<Complex>("comp_current"), 0, 1);
+	Interface intf("/villas1-in", "/villas1-out", &conf);
+	intf.addImport(evs->findAttribute<Complex>("voltage_ref"), 1.0, 0, 1);
+	intf.addExport(evs->findAttribute<Complex>("comp_current"), 1.0,  0, 1);
 
 	Real timeStep = 0.001;
 	auto sys = SystemTopology(50, Node::List{GND, n1, n2, n3, n4}, ComponentBase::List{evs, rs, rl, ll, rL});
 	auto sim = RealTimeSimulation("ShmemRealTime", sys, timeStep, 5.0);
 
-	sim.addInterface(&villas);
+	sim.addInterface(&intf);
 	sim.run(false);
 
 	return 0;

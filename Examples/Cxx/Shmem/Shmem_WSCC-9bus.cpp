@@ -22,20 +22,21 @@
 #include <iostream>
 #include <list>
 
-#include "DPsim_MNA.h"
-#include "cps/CIM/Reader.h"
-#include "cps/Interfaces/ShmemInterface.h"
+#include "DPsim.h"
 
 using namespace DPsim;
+using namespace CPS;
 using namespace CPS::Components::DP;
 
 int main(int argc, char *argv[]) {
+
 	// Specify CIM files
 #ifdef _WIN32
-	String path("..\\..\\..\\..\\dpsim\\Examples\\CIM\\WSCC-09_Neplan_RX\\");
+	String path("Examples\\CIM\\WSCC-09_Neplan_RX\\");
 #elif defined(__linux__) || defined(__APPLE__)
-	String path("../../../dpsim/Examples/CIM/IEEE-09_Neplan_RX/");
+	String path("Examples/CIM/WSCC-09_Neplan_RX/");
 #endif
+
 	std::list<String> filenames = {
 		path + "WSCC-09_Neplan_RX_DI.xml",
 		path + "WSCC-09_Neplan_RX_EQ.xml",
@@ -43,28 +44,43 @@ int main(int argc, char *argv[]) {
 		path + "WSCC-09_Neplan_RX_TP.xml"
 	};
 
-	// Read CIM data
-	CIM::Reader reader(50, Logger::Level::INFO, Logger::Level::INFO);
-	reader.addFiles(filenames);
-	reader.parseFiles();
-	SystemTopology system = reader.getSystemTopology();
+	String simName = "Shmem_WSCC-9bus";
 
-	// Extend system with current source
-	auto ecs = CurrentSource::make("v_s", 0, GND, Complex(0, 0));
-	system.mComponents.push_back(ecs);
+	CIM::Reader reader(simName, Logger::Level::INFO, Logger::Level::INFO);
+	SystemTopology sys = reader.loadCIM(60, filenames);
 
-	// Add shared memory interface
-	struct shmem_conf conf;
-	conf.samplelen = 4;
+	RealTimeSimulation sim(simName, sys, 0.001, 120,
+		Solver::Domain::DP, Solver::Type::MNA, Logger::Level::DEBUG, true);
+
+	// Create shmem interface
+	Interface::Config conf;
+	conf.samplelen = 64;
 	conf.queuelen = 1024;
 	conf.polling = false;
-	in = "/dpsim10";
-	out = "/dpsim01";
-	ShmemInterface shmem(in, out, &conf);
-	shmem.registerControllableSource(ecs, GND, 0);
-	shmem.registerExportedVoltage(ecs, 0, 1);
+	String in  = "/villas-dpsim";
+	String out = "/dpsim-villas";
+	Interface intf(out, in, &conf);
 
-	MnaSimulation sim("CIM", system, 0.0001, 0.1, SimulationType::DP, Logger::Level::DEBUG);
+	// Register exportable node voltages
+	UInt o = 0;
+	for (auto n : sys.mNodes) {
+		auto v = n->findAttribute<Complex>("voltage");
+
+		std::function<Real()> getMag = [v](){ return std::abs(v->get()); };
+		std::function<Real()> getPhas = [v](){ return std::arg(v->get()); };
+
+		intf.addExport(v, 1.0, o, o+1);
+		intf.addExport(getMag, o+2);
+		intf.addExport(getPhas, o+3);
+
+		o += 4;
+	}
+
+	// TODO
+	// Extend system with controllable load
+	// Register controllable load
+
+	sim.addInterface(&intf);
 	sim.run();
 
 	return 0;

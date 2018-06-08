@@ -1,4 +1,15 @@
-FROM fedora:27
+# rwthacs/dpsim-dev is built by dpsim-git/Packaging/Docker/Dockerfile.dev
+FROM rwthacs/dpsim-dev AS builder
+
+COPY . /dpsim/
+
+RUN rm -rf /dpsim/build && mkdir /dpsim/build 
+WORKDIR /dpsim/build
+
+RUN cmake -DBUILD_EXAMPLES=OFF -DCPACK_GENERATOR=RPM ..
+RUN make -j2 package
+
+FROM fedora:28
 
 LABEL \
 	org.label-schema.schema-version = "1.0" \
@@ -12,33 +23,10 @@ LABEL \
 
 ADD https://villas.fein-aachen.org/packages/villas.repo /etc/yum.repos.d/
 
-RUN dnf -y update
+COPY --from=builder /dpsim/build/*.rpm /tmp
+RUN dnf -y install /tmp/*.rpm
 
-# Toolchain
-RUN dnf -y install \
-	git \
-	gcc-c++ gdb \
-	redhat-rpm-config \
-	rpmdevtools \
-	make cmake \
-	doxygen \
-	graphviz \
-	pandoc \
-	python3-pip
-
-# Install some debuginfos
-RUN dnf -y debuginfo-install \
-	python3
-
-# Dependencies
-RUN dnf -y install \
-	python3-devel \
-	eigen3-devel \
-	villas-node-devel \
-	libcimpp16v29a
-
-# Python Packages
 ADD requirements.txt .
 RUN pip3 install -r requirements.txt
 
-ENV LD_LIBRARY_PATH /usr/local/lib64
+CMD python3

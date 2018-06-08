@@ -32,7 +32,6 @@ int main(int argc, char* argv[]) {
 	Real nomFreq = 60;
 	Real nomFieldCurr = 1300;
 	Int poleNum = 2;
-	Real J = 2.8898e+04;
 	Real H = 3.7;
 
 	Real Rs = 0.003;
@@ -54,13 +53,11 @@ int main(int argc, char* argv[]) {
 	Real Lq_s = 0.25;
 
 	// Set up simulation
-	Real tf, dt, t;
 	Real om = 2.0*M_PI*60.0;
-	tf = 0.1; dt = 0.000001; t = 0;
-	Int downSampling = 50;
+	Real tf = 0.1;
+	Real dt = 0.000001;
 
 	Real Ra = (Ld_s + Lq_s) / dt;
-
 
 	// Declare circuit components
 	ComponentBase::Ptr gen = SynchronGeneratorDQ::make("gen", 0, 1, 2,
@@ -75,7 +72,7 @@ int main(int argc, char* argv[]) {
 	system.mComponents = { gen, r1, r2, r3 };
 
 	Simulation sim("DP_SynchronGeneratorDQ_BalancedResLoad", system, dt, tf, Solver::Domain::DP, Solver::Type::MNA, Logger::Level::INFO);
-	
+
 	// Initialize generator
 	Real initActivePower = 555e3;
 	Real initReactivePower = 0;
@@ -87,9 +84,11 @@ int main(int argc, char* argv[]) {
 	genPtr->initialize(om, dt, initActivePower, initReactivePower, initTerminalVolt, initVoltAngle, fieldVoltage, mechPower);
 
 	// Calculate initial values for circuit at generator connection point
+#if 0
 	Real initApparentPower = sqrt(pow(initActivePower, 2) + pow(initReactivePower, 2));
 	Real initTerminalCurr = initApparentPower / (3 * initTerminalVolt)* sqrt(2);
 	Real initPowerFactor = acos(initActivePower / initApparentPower);
+#endif
 
 	sim.run();
 

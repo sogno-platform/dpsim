@@ -33,7 +33,7 @@ int main(int argc, char *argv[]) {
 	// Here, the two instances directly communicate with each other without using
 	// VILLASnode in between.
 
-	struct shmem_conf conf;
+	Interface::Config conf;
 	conf.samplelen = 4;
 	conf.queuelen = 1024;
 	conf.polling = false;
@@ -54,7 +54,7 @@ int main(int argc, char *argv[]) {
 		out = "/dpsim10";
 	}
 
-	ShmemInterface shmem(in, out, &conf);
+	Interface intf(in, out, &conf);
 
 	Real timeStep = 0.000150;
 
@@ -66,15 +66,15 @@ int main(int argc, char *argv[]) {
 		// Components
 		auto evs = VoltageSource::make("v_intf", Node::List{GND, n2}, Complex(5, 0), Logger::Level::DEBUG);
 		auto vs1 = VoltageSource::make("vs_1", Node::List{GND, n1}, Complex(10, 0), Logger::Level::DEBUG);
-		auto r01 = Resistor::make("r_0_1", Node::List{n1, n2}, 1);
+		auto r01 = Resistor::make("r_0_1", Node::List{n1, n2}, 1, Logger::Level::DEBUG);
 
-		shmem.registerControlledAttribute(evs->findAttribute<Complex>("voltage_ref"), 0, 1);
-		shmem.registerExportedAttribute(evs->findAttribute<Complex>("comp_current"), 0, 1);
+		intf.addImport(evs->findAttribute<Complex>("voltage_ref"), 1.0, 0, 1);
+		intf.addExport(evs->findAttribute<Complex>("comp_current"), 1.0, 0, 1);
 
-		auto sys = SystemTopology(50, Node::List{GND, n1, n2}, ComponentBase::List{evs, vs1, r01});
+		auto sys = SystemTopology(50, Node::List{n1, n2}, ComponentBase::List{evs, vs1, r01});
 		auto sim = Simulation("ShmemDistributedDirect_1", sys, timeStep, 0.1);
 
-		sim.addInterface(&shmem);
+		sim.addInterface(&intf);
 		sim.run();
 	}
 	else if (String(argv[1]) == "1") {
@@ -83,18 +83,18 @@ int main(int argc, char *argv[]) {
 
 		// Components
 		auto ecs = CurrentSource::make("i_intf", Node::List{GND, n1}, Complex(5, 0), Logger::Level::DEBUG);
-		auto rgnd0 = Resistor::make("r_gnd_0", Node::List{GND, n1}, 1);
+		auto rgnd0 = Resistor::make("r_gnd_0", Node::List{GND, n1}, 1, Logger::Level::DEBUG);
 		//auto ecs_switch = CurrentSource::make("i_switch", GND, 1, Complex(0, 0));
 		//auto r01 = Resistor::make("r_0_1", 0, 1, 1);
 
-		shmem.registerControlledAttribute(ecs->findAttribute<Complex>("current_ref"), 0, 1);
-		shmem.registerExportedAttribute(ecs->findAttribute<Complex>("comp_voltage"), 0, 1);
-		//shmem.registerControlledAttribute(ecs_switch->findAttribute('CurrentRef'), 2, 3);
+		intf.addImport(ecs->findAttribute<Complex>("current_ref"), 1.0, 0, 1);
+		intf.addExport(ecs->findAttribute<Complex>("comp_voltage"), 1.0, 0, 1);
+		//intf.addImport(ecs_switch->findAttribute('CurrentRef'), 1.0, 2, 3);
 
-		auto sys = SystemTopology(50, Node::List{GND, n1}, ComponentBase::List{ecs, rgnd0});
+		auto sys = SystemTopology(50, Node::List{n1}, ComponentBase::List{ecs, rgnd0});
 		auto sim = Simulation("ShmemDistributedDirect_2", sys, timeStep, 0.1);
 
-		sim.addInterface(&shmem);
+		sim.addInterface(&intf);
 		sim.run();
 	}
 	else {

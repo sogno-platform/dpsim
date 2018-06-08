@@ -34,7 +34,6 @@ int main(int argc, char* argv[])
 	Real nomFreq = 60;
 	Real nomFieldCurr = 1300;
 	Int poleNum = 2;
-	Real J = 2.8898e+04;
 	Real H = 3.7;
 
 	//Exciter
@@ -87,7 +86,7 @@ int main(int argc, char* argv[])
 	ComponentBase::Ptr gen = SynchronGeneratorVBRStandalone::make("gen", 0, 1, 2,
 		nomPower, nomPhPhVoltRMS, nomFreq, poleNum, nomFieldCurr,
 		Rs, Ll, Lmd, Lmd0, Lmq, Lmq0, Rfd, Llfd, Rkd, Llkd, Rkq1, Llkq1, Rkq2, Llkq2, H);
-		
+
 	Real loadRes = 1037.8378;
 	ComponentBase::Ptr r1 = Resistor::make("r1", 0, DEPRECATEDGND, loadRes);
 	ComponentBase::Ptr r2 = Resistor::make("r2", 1, DEPRECATEDGND, loadRes);
@@ -106,10 +105,11 @@ int main(int argc, char* argv[])
 	systemBreakerOn.mComponents = { gen, rBreaker1, rBreaker2, rBreaker3, r1, r2, r3 };
 
 	// Set up simulation
-	Real tf, dt, t;
 	Real om = 2.0*M_PI*60.0;
-	tf = 10; dt = 0.0001; t = 0;
+	Real tf = 10;
+	Real dt = 0.0001;
 	Int downSampling = 1;
+
 	Simulation sim("DP_SynchronGenerator_ExciterAndTurbine", system, dt, tf,
 		Solver::Domain::DP, Solver::Type::MNA, Logger::Level::INFO);
 	sim.setLogDownsamplingRate(downSampling);
@@ -132,9 +132,11 @@ int main(int argc, char* argv[])
 #endif
 
 	// Calculate initial values for circuit at generator connection point
+#if 0
 	Real initApparentPower = sqrt(pow(initActivePower, 2) + pow(initReactivePower, 2));
 	Real initTerminalCurr = initApparentPower / (3 * initTerminalVolt)* sqrt(2);
 	Real initPowerFactor = acos(initActivePower / initApparentPower);
+#endif
 
 	sim.setSwitchTime(1, 1);
 

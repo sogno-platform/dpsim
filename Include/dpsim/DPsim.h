@@ -19,11 +19,21 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *********************************************************************************/
 
+#include "Config.h"
+#include "Utils.h"
 #include "Simulation.h"
+
+#ifdef WITH_RT
+  #include "RealTimeSimulation.h"
+#endif
+
 #include "cps/Components.h"
 #include "cps/Logger.h"
-#include "RealTimeSimulation.h"
 
 #ifdef WITH_SHMEM
-#include "cps/Interfaces/ShmemInterface.h"
+  #include "cps/Interface.h"
+#endif
+
+#ifdef WITH_CIM
+  #include "cps/CIM/Reader.h"
 #endif

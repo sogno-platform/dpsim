@@ -10,6 +10,21 @@ set(CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/CMake")
 set(PROJECT_AUTHOR "Institute for Automation of Complex Power Systems, RWTH Aachen University")
 set(PROJECT_COPYRIGHT "2017, Institute for Automation of Complex Power Systems, RWTH Aachen University")
 
+include(CheckCXXCompilerFlag)
+if(MSVC)
+	check_cxx_compiler_flag("/W4 /WX" CXX_SUPPORTS_WERROR)
+
+	if(CXX_SUPPORTS_WERROR)
+		set(DPSIM_CXX_FLAGS /W4 /WX)
+	endif()
+else()
+	check_cxx_compiler_flag("-Wall -Werror" CXX_SUPPORTS_WERROR)
+
+	if(CXX_SUPPORTS_WERROR)
+		set(DPSIM_CXX_FLAGS -Wall -Werror)
+	endif()
+endif()
+
 include(GetGitRevisionDescription)
 git_describe(DPSIM_VERSION --tags --dirty=-dirty)
 
@@ -31,6 +46,7 @@ endif()
 string(SUBSTRING ${GIT_HASH} 0 7 GIT_HASH_SHORT)
 string(TIMESTAMP YMD "%Y%m%d")
 
+set(DPSIM_VERSION 0.1.4)
 set(DPSIM_RELEASE ${YMD}git${GIT_HASH_SHORT})
 
 set(Python_ADDITIONAL_VERSIONS 3.5 3.6 3.7)

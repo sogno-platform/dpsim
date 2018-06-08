@@ -41,8 +41,8 @@
 using namespace DPsim;
 
 static PyMethodDef dpsimModuleMethods[] = {
-	{ "load_cim",               CPS::Python::LoadCim, METH_VARARGS, CPS::Python::DocLoadCim },
-	{ "open_shmem_interface",   (PyCFunction) CPS::Python::OpenShmemInterface, METH_VARARGS|METH_KEYWORDS, CPS::Python::DocOpenShmemInterface },
+	{ "load_cim",               CPS::Python::LoadCim,                                                                    METH_VARARGS, CPS::Python::DocLoadCim },
+	{ "open_interface",         (PyCFunction) CPS::Python::OpenInterface,                                                METH_VARARGS|METH_KEYWORDS, CPS::Python::DocOpenInterface },
 
 	// Component constructors
 	{ "CurrentSourceDP",        CPS::Python::Components::CurrentSource<CPS::Components::DP::CurrentSource>,              METH_VARARGS, CPS::Python::Components::DocCurrentSource },

@@ -1,6 +1,7 @@
 add_library(dpsim	
 	Simulation.cpp
 	MNA_Solver.cpp
+	Utils.cpp
 )
 
 set(LIBRARIES cps)
@@ -30,6 +31,7 @@ endif()
 target_sources(dpsim PRIVATE ${SOURCES})
 target_link_libraries(dpsim ${LIBRARIES})
 target_include_directories(dpsim PRIVATE ${INCLUDE_DIRS})
+target_compile_options(dpsim PUBLIC ${DPSIM_CXX_FLAGS})
 
 include_directories(${CMAKE_CURRENT_SOURCE_DIR} ${CMAKE_CURRENT_BINARY_DIR})
 

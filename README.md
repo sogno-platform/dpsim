@@ -23,7 +23,10 @@ DPsim is a Python extension module which is implemented in optimized native C++ 
 Users can control and script the simulation with Python scripts. Checkout the [Quickstart Guide](https://dpsim.fein-aachen.org/doc/development/sphinx/Notebooks/Quickstart%20Guide.html).
 
 ## Documentation
-[Latest development documentation](http://dpsim.fein-aachen.org/doc/development/sphinx/)
+
+Latest development documentation:
+- [Sphinx for Python API](http://dpsim.fein-aachen.org/doc/development/sphinx/)
+- [Doxygen for C++ API](http://dpsim.fein-aachen.org/doc/development/doxygen/)
 
 ## Copyright
 

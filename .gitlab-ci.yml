@@ -19,7 +19,7 @@ stages:
 docker:
   stage: prepare
   script:
-    - docker build -t ${DOCKER_IMAGE_DEV}:${DOCKER_TAG_DEV} .
+    - docker build -f Packaging/Docker/Dockerfile.dev -t ${DOCKER_IMAGE_DEV}:${DOCKER_TAG_DEV} .
     - docker images
   tags:
     - shell

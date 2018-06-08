@@ -27,8 +27,8 @@ if(SPHINX_EXECUTABLE)
 				"${CMAKE_CURRENT_BINARY_DIR}/html/Figures/"
 		COMMAND
 			${CMAKE_COMMAND} -E copy
-				"${CMAKE_CURRENT_SOURCE_DIR}/../Figures/dpsim.png"
-				"${CMAKE_CURRENT_SOURCE_DIR}/../Figures/eonerc_logo.png"
+				"${CMAKE_CURRENT_SOURCE_DIR}/Figures/dpsim.png"
+				"${CMAKE_CURRENT_SOURCE_DIR}/Figures/eonerc_logo.png"
 				"${CMAKE_CURRENT_BINARY_DIR}/html/Figures/"
 		COMMENT "Copying figures to Sphinx output dir"
 	)

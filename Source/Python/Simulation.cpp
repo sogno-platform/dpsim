@@ -39,8 +39,6 @@ using namespace DPsim;
 
 void DPsim::Python::Simulation::simThreadFunction(Python::Simulation* pySim)
 {
-	bool notDone = true;
-
 #ifdef WITH_RT
 	if (pySim->rt) {
 		simThreadFunctionRT(pySim);
@@ -277,6 +275,7 @@ static const char* DocSimulationAddInterface =
 ":param intf: The `Interface` to be added.";
 PyObject* DPsim::Python::Simulation::addInterface(PyObject* self, PyObject* args)
 {
+#ifdef WITH_SHMEM
 	DPsim::Python::Simulation *pySim = (DPsim::Python::Simulation*) self;
 	PyObject* pyObj;
 	CPS::Python::Interface* pyIntf;
@@ -297,6 +296,10 @@ PyObject* DPsim::Python::Simulation::addInterface(PyObject* self, PyObject* args
 	Py_INCREF(Py_None);
 
 	return Py_None;
+#else
+	PyErr_SetString(PyExc_NotImplementedError, "not implemented on this platform");
+	return nullptr;
+#endif
 }
 
 #if 0
