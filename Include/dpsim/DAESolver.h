@@ -26,19 +26,38 @@ using namespace DPsim ;
 		std::vector<int> offsets; 
 		/// Constant time step
 		Real mTimestep;
+		/// Number of equations in problem
+		int NEQ;
+
+		//IDA simulation variables
+		/// Memory block allocated by IDA
+		void *mem = NULL;
+		/// Vector of problem variables
+		N_Vector state = NULL, 
+		///  Derivates of the state vector with respect to time
+		N_Vector dstate_dt = NULL; 
+		/// Time IDA reached while solving
+		realtype tret; 
+		/// Scalar absolute tolerance
+		realtype abstol;
+		/// Relative tolerance
+		realtype rtol;
+		/// Template Jacobian Matrix
+		SUNMatrix A = NULL;
+		/// Linear solver object
+		SUNLinearSolver LS = NULL;
+	
 
 	public:
 		/// Create solve object with given parameters
 		DAESolver(String name,  SystemTopology system, Real dt);
-		virtual ~DAESolver() { };
+		virtual ~DAESolver();
 		/// Initialize Components & Nodes with inital values
 		void initialize(Component::List comps);
 		/// Residual Function of entire System
 		int DAE_residualFunction(realtype ttime, N_Vector state, N_Vector dstate_dt, N_Vector resid, void *user_data);
-		/// Run simulation until total time is elapsed
-		void run();
 		/// Solve system for the current time
-		Real step(Real time, bool blocking = true);
+		Real step(Real time);
 	};
 
 
