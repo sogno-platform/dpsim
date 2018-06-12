@@ -73,30 +73,37 @@ int main(int argc, char *argv[]) {
 	conf.samplelen = 64;
 	conf.queuelen = 1024;
 	conf.polling = false;
-	String in  = "/villas-dpsim";
-	String out = "/dpsim-villas";
+	String in  = "/villas-dpsim1";
+	String out = "/dpsim1-villas";
 	Interface intf(out, in, &conf);
 
 	// Register exportable node voltages
-	UInt o = 0;
 	for (auto n : sys.mNodes) {
+		UInt i;
+		if (sscanf(n->getName().c_str(), "BUS%u", &i) != 1) {
+			std::cerr << "Failed to determine bus no of bus: " << n->getName() << std::endl;
+			continue;
+		}
+
+		i--;
+
 		auto v = n->findAttribute<Complex>("voltage");
+
+		std::cout << "Signal << " << (i*2)+0 << ": Mag " << n->getName() << std::endl;
+		std::cout << "Signal << " << (i*2)+1 << ": Phas " << n->getName() << std::endl;
 
 		std::function<Real()> getMag = [v](){ return std::abs(v->get()); };
 		std::function<Real()> getPhas = [v](){ return std::arg(v->get()); };
 
-		intf.addExport(v, 1.0, o, o+1);
-		intf.addExport(getMag, o+2);
-		intf.addExport(getPhas, o+3);
-
-		o += 4;
+		intf.addExport(getMag,  (i*2)+0);
+		intf.addExport(getPhas, (i*2)+1);
 	}
 
 	// Register controllable load
 	//intf.addImport(load->findAttribute<Real>("active_power"), 1.0, 0);
 	intf.addImport(filtP->findAttribute<Real>("input"), 1.0, 0);
 
-	sim.addInterface(&intf, false, true);
+	sim.addInterface(&intf, false, false);
 	sim.run();
 
 	return 0;

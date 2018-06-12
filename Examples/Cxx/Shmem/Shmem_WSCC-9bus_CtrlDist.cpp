@@ -65,27 +65,44 @@ int main(int argc, char *argv[]) {
 		conf.samplelen = 64;
 		conf.queuelen = 1024;
 		conf.polling = false;
-		Interface intf(out, in, &conf);
-		sim.addInterface(&intf, false, true);
+		Interface intf1(out, in, &conf);
+		sim.addInterface(&intf1, false, true);
+
+		// Create shmem interface 2
+		String in2  = "/villas-dpsim1";
+		String out2 = "/dpsim1-villas";
+		Interface::Config conf2;
+		conf2.samplelen = 64;
+		conf2.queuelen = 1024;
+		conf2.polling = false;
+		Interface intf2(out2, in2, &conf2);
+		sim.addInterface(&intf2, false, false);
+
+		// Register interface current source and voltage drop
+		intf1.addImport(ecs->findAttribute<Complex>("current_ref"), 1.0, 0, 1);
+		intf1.addExport(ecs->findAttribute<Complex>("comp_voltage"), 1.0, 0, 1);
 
 		// Register exportable node voltages
-		UInt o = 2;
 		for (auto n : sys.mNodes) {
+			UInt i;
+			if (sscanf(n->getName().c_str(), "BUS%u", &i) != 1) {
+				std::cerr << "Failed to determine bus no of bus: " << n->getName() << std::endl;
+				continue;
+			}
+
+			i--;
+
 			auto v = n->findAttribute<Complex>("voltage");
+
+			std::cout << "Signal << " << (i*2)+0 << ": Mag " << n->getName() << std::endl;
+			std::cout << "Signal << " << (i*2)+1 << ": Phas " << n->getName() << std::endl;
 
 			std::function<Real()> getMag = [v](){ return std::abs(v->get()); };
 			std::function<Real()> getPhas = [v](){ return std::arg(v->get()); };
 
-			intf.addExport(v, 1.0, o, o+1);
-			intf.addExport(getMag, o+2);
-			intf.addExport(getPhas, o+3);
-
-			o += 4;
+			intf2.addExport(getMag,  (i*2)+0);
+			intf2.addExport(getPhas, (i*2)+1);
 		}
-
-		// Register interface current source and voltage drop
-		intf.addImport(ecs->findAttribute<Complex>("current_ref"), 1.0, 0, 1);
-		intf.addExport(ecs->findAttribute<Complex>("comp_voltage"), 1.0, 0, 1);
 
 		sim.run(args.startTime);
 	}
@@ -122,8 +139,8 @@ int main(int argc, char *argv[]) {
 		sim.addInterface(&intf1, false, true);
 
 		// Create shmem interface 2
-		String in2  = "/villas-dpsim";
-		String out2 = "/dpsim-villas";
+		String in2  = "/villas-dpsim2";
+		String out2 = "/dpsim2-villas";
 		Interface::Config conf2;
 		conf2.samplelen = 64;
 		conf2.queuelen = 1024;
