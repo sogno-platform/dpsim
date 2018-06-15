@@ -173,7 +173,14 @@ PyObject* DPsim::Python::Simulation::newfunc(PyTypeObject* type, PyObject *args,
 		// implement them as pointers
 		self->cond = new std::condition_variable();
 		self->mut = new std::mutex();
+
+		using SharedSimPtr = std::shared_ptr<DPsim::Simulation>;
+		using PyObjectsList = std::vector<PyObject *>;
+
+		new (&self->sim) SharedSimPtr();
+		new (&self->refs) PyObjectsList();
 	}
+
 	return (PyObject*) self;
 }
 
@@ -186,6 +193,8 @@ int DPsim::Python::Simulation::init(Python::Simulation* self, PyObject *args, Py
 
 	enum Solver::Type solverType;
 	enum Solver::Domain domain;
+
+	self->rt = 0;
 
 	if (!PyArg_ParseTupleAndKeywords(args, kwds, "sO|ddbbii", kwlist,
 		&name, &self->pySys, &timestep, &duration, &self->rt, &self->startSync, &s, &t)) {
@@ -236,7 +245,7 @@ void DPsim::Python::Simulation::dealloc(Python::Simulation* self)
 	if (self->simThread) {
 		// We have to cancel the running thread here, because otherwise self can't
 		// be freed.
-		Python::Simulation::stop((PyObject*)self, NULL);
+		Python::Simulation::stop((PyObject*) self, NULL);
 		self->simThread->join();
 		delete self->simThread;
 	}
@@ -289,7 +298,7 @@ PyObject* DPsim::Python::Simulation::addInterface(PyObject* self, PyObject* args
 	}
 
 	pyIntf = (CPS::Python::Interface*) pyObj;
-	pySim->sim->addInterface(pyIntf->intf);
+	pySim->sim->addInterface(pyIntf->intf.get());
 	Py_INCREF(pyObj);
 
 	pySim->refs.push_back(pyObj);
