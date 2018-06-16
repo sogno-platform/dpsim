@@ -1,69 +1,101 @@
 import _dpsim
 import asyncio
 import time
-import progressbar
-import struct
-import os
+import sys
+import logging
+
+LOGGER = logging.getLogger('dpsim.simulation')
+
+from .EventQueue import EventQueue, Event
+
+def is_interactive():
+    import __main__ as main
+    return not hasattr(main, '__file__')
+
+def is_ipython():
+    if 'ipykernel' in sys.modules:
+        return 'notebook'
+    elif 'IPython' in sys.modules:
+        return 'terminal'
+    else:
+        return False
 
 class Simulation(_dpsim.Simulation):
 
-    def __init__(self, *args, **kwargs):
+    def __init__(self, *args, loop = None, **kwargs):
         super().__init__(*args, **kwargs)
 
-        if 'loop' in kwargs:
-            self.loop = kwargs.get('loop')
-        else:
-            self.loop = asyncio.get_event_loop()
+        self._loop = loop
+        if loop is None:
+            self._loop = asyncio.get_event_loop()
 
-        self.started = 0
-        self.callbacks = []
+        if 'timestep' in kwargs:
+            self.ts = kwargs.get('timestep')
 
-        self.fd = self.get_eventfd()
-        self.loop.add_reader(self.fd, self.__event_handler)
+        self._start_time = None
+        self._pbar_tui = None
+        self._pbar_widget = None
 
-    def __event_handler(self):
+        self._fd = self.get_eventfd()
 
-        unpacked = struct.unpack('i', os.read(self.fd, 4))
-        evt = unpacked[0]
+        self.events = EventQueue(self._fd, self._loop)
 
-        if evt == 1: # started
-            self.started = time.time()
+        self.events.add_callback(Event.STARTED, self.started)
+        self.events.add_callback(Event.STOPPED, self.stopped)
 
-            if self.pbar:
-                self.pbar_task = self.loop.create_task(self.__update_progressbar())
+    def started(self, *args):
+        LOGGER.info("Started simulation!")
 
-        if evt == 3 or evt == 2: # stopped
-            if self.pbar_task:
-                self.pbar_task.cancel()
+        self._start_time = time.time()
 
-        # Call user defined callbacks
-        for e in self.callbacks:
-            cb = e[0]
-            args = e[1]
+        if self._pbar_tui:
+            self._pbar_tui.start()
 
-            cb(self, evt, *args)
+        self._pbar_task = self._loop.create_task(self.__update_progressbar_task())
 
-        print("Received event: %d" % evt)
+    def stopped(self, *args):
+        self.__update_progressbar()
 
-    async def __update_progressbar(self):
-        self.pbar.start()
-        while True:
-            elapsed = time.time() - self.started
+        if self._pbar_tui:
+            self._pbar_tui.finish()
+
+        LOGGER.info('Finished simulation!')
+
+    async def __update_progressbar_task(self):
+        while self.time < self.final_time:
+            self.__update_progressbar()
+            await asyncio.sleep(0.05)
+
+        self.__update_progressbar()
+
+    def __update_progressbar(self):
+        if self._pbar_widget:
+            elapsed = time.time() - self._start_time
+            rtfactor = self.time / elapsed
+            progress = self.time / self.final_time
+            total_steps = int(self.final_time / self.ts)
+
+            if self.time >= self.final_time:
+                state = 'finished'
+            elif self.time == 0:
+                state = 'starting'
+            else:
+                state = 'running'
+
+            self._pbar_widget.value = self.time # signal to increment the progress bar
+            self._pbar_widget_text.value = "Simulation is {:s}: <pre>{:8d}/{:d} steps, progress={:.0%} time={:.2f}, elapsed={:.2f}, rtfactor={:.2f}</pre>".format(state, self.steps, total_steps, progress, self.time, elapsed, rtfactor)
+
+            self._pbar_widget.value = self.time
+
+        elif self._pbar_tui:
+            elapsed = time.time() - self._start_time
             rtfactor = self.time / elapsed
 
-            self.pbar.update(self.time,
+            self._pbar_tui.update(self.time,
                 step = self.steps,
                 elapsed = elapsed,
                 rtmul = rtfactor
             )
-            await asyncio.sleep(0.05)
-        self.pbar.finish()
-
-    def run(self):
-        """Start a simulation and wait for its completion."""
-
-        self.start()
-        self.wait()
 
     def start(self, **kwargs):
         """Start the simulation at a specific point in time."""
@@ -72,25 +104,45 @@ class Simulation(_dpsim.Simulation):
             when = kwargs.get('when')
 
             delta = when - time.time()
-            self.loop.call_at(self.loop.time() + delta, self.start)
+            self._loop.call_at(self._loop.time() + delta, super().start)
         else:
             # Start immediately
             super().start()
 
-    def show_progressbar(self):
-        self.pbar = progressbar.ProgressBar(
-            widgets = [
-                ' ', progressbar.Percentage(),
-                ' ', progressbar.SimpleProgress(format='%(value).2f of %(max_value).2f secs'),
-                ' ', progressbar.Bar('=', fill='.'),
-                ' ', progressbar.DynamicMessage('elapsed'),
-                ' ', progressbar.ETA(format='eta: %(eta_seconds).2f', ),
-                ' ', progressbar.DynamicMessage('step'),
-                ' ', progressbar.DynamicMessage('rtmul')
-            ],
-            max_value = self.final_time,
-            redirect_stdout = True
-        )
+    async def simulate(self, **kwargs):
+        self.start(**kwargs)
 
-    def register_callback(self, cb, *args):
-        self.callbacks.append((cb, args))
+        await self.events.wait(Event.STARTED)
+        await self.events.wait(Event.STOPPED)
+
+    def run(self, **kwargs):
+        if 'pbar' in kwargs and kwargs['pbar']:
+            self.show_progressbar()
+
+        self._loop.run_until_complete(self.simulate(**kwargs))
+
+    def show_progressbar(self):
+        if is_ipython():
+            from ipywidgets import FloatProgress, HTML
+            from IPython.display import display
+
+            self._pbar_widget = FloatProgress(min = 0, max = self.final_time)
+            self._pbar_widget_text = HTML(value = 'Simulation start is pending...')
+
+            display(self._pbar_widget_text, self._pbar_widget)
+        else:
+            import progressbar
+
+            self._pbar_tui = progressbar.ProgressBar(
+                widgets = [
+                    ' ', progressbar.Percentage(),
+                    ' ', progressbar.SimpleProgress(format='%(value).2f of %(max_value).2f secs'),
+                    ' ', progressbar.Bar('=', fill='.'),
+                    ' ', progressbar.DynamicMessage('elapsed'),
+                    ' ', progressbar.ETA(format='eta: %(eta_seconds).2f', ),
+                    ' ', progressbar.DynamicMessage('step'),
+                    ' ', progressbar.DynamicMessage('rtmul')
+                ],
+                max_value = self.final_time,
+                redirect_stdout = True
+            )
