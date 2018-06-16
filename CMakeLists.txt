@@ -49,9 +49,8 @@ string(TIMESTAMP YMD "%Y%m%d")
 set(DPSIM_VERSION 0.1.4)
 set(DPSIM_RELEASE ${YMD}git${GIT_HASH_SHORT})
 
-set(Python_ADDITIONAL_VERSIONS 3.5 3.6 3.7)
-find_package(PythonInterp 3.5)
-find_package(PythonLibs 3.5)
+find_package(PythonInterp 3.6)
+find_package(PythonLibs 3.6)
 
 if(PythonInterp_FOUND AND PythonLibs_FOUND)
 	set(Python_FOUND ON)
