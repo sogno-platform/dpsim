@@ -18,7 +18,7 @@ if false; then
 	villas-pipe Configs/villas-shmem.conf shmem
 else
 	VILLAS_LOG_PREFIX="[Node] " \
-	villas-node /projects/reserve/node.conf
+	villas-node /projects/reserve/Shmem_WSCC-9bus_Ctrl.conf
 fi
 
 for job in $P1; do
