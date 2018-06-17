@@ -52,12 +52,24 @@ int main(int argc, char *argv[]) {
 	CIM::Reader reader(simName, Logger::Level::INFO, Logger::Level::INFO);
 	SystemTopology sys = reader.loadCIM(60, filenames);
 
+	// Extend system with controllable load (Profile)
+	auto load_profile = PQLoadCS::make("load_cs_profile", Node::List{sys.mNodes[6]}, 0, 0, 230000, Logger::Level::INFO);
+	sys.mComponents.push_back(load_profile);
+
 	// Extend system with controllable load
 	auto load = PQLoadCS::make("load_cs", Node::List{sys.mNodes[3]}, 0, 0, 230000, Logger::Level::INFO);
 	sys.mComponents.push_back(load);
 
 	// Controllers and filter
+	std::vector<Real> coefficients_profile = std::vector(2000, 1./2000);
 	std::vector<Real> coefficients = std::vector(100, 1./100);
+
+	auto filtP_profile = FIRFilter::make("filter_p_profile", coefficients_profile, Logger::Level::INFO);
+	filtP_profile->setPriority(1);
+	filtP_profile->initialize(0.);
+	filtP_profile->setConnection(load_profile->findAttribute<Real>("active_power"));
+	filtP_profile->findAttribute<Real>("input")->set(0.);
+	sys.mComponents.push_back(filtP_profile);
 
 	auto filtP = FIRFilter::make("filter_p", coefficients, Logger::Level::INFO);
 	filtP->setPriority(1);
@@ -102,6 +114,7 @@ int main(int argc, char *argv[]) {
 	// Register controllable load
 	//intf.addImport(load->findAttribute<Real>("active_power"), 1.0, 0);
 	intf.addImport(filtP->findAttribute<Real>("input"), 1.0, 0);
+	intf.addImport(filtP_profile->findAttribute<Real>("input"), 20e8, 1);
 
 	sim.addInterface(&intf, false, false);
 	sim.run();
