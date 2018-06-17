@@ -69,6 +69,13 @@ build:packages:
       - build/*.rpm
       - build/*.tar.gz
 
+build:docker:
+  stage: build
+  script:
+    - docker build -f Packaging/Docker/Dockerfile -t rwthacs/dpsim:${DOCKER_TAG_DEV} .
+  tags:
+    - shell
+
 test:pytest:
   stage: test
   script:
@@ -82,6 +89,15 @@ test:pytest:
       - Logs/
   tags:
     - docker
+
+deploy:docker:
+  stage: deploy
+  script:
+    - docker push rwthacs/dpsim:${DOCKER_TAG_DEV} .
+  dependencies:
+    - build:docker
+  tags:
+    - shell
 
 deploy:docs:
   stage: deploy
