@@ -51,6 +51,10 @@ int main(int argc, char *argv[]) {
 		CIM::Reader reader(simName, Logger::Level::INFO, Logger::Level::INFO);
 		SystemTopology sys = reader.loadCIM(args.sysFreq, filenames);
 
+		// Extend system with controllable load (Profile)
+		auto load_profile = PQLoadCS::make("load_cs_profile", Node::List{sys.mNodes[6]}, 0, 0, 230000, Logger::Level::INFO);
+		sys.mComponents.push_back(load_profile);
+
 		// Extend system with controllable load
 		auto ecs = CurrentSource::make("i_intf", Node::List{sys.mNodes[3], GND}, Complex(0, 0), Logger::Level::DEBUG);
 		sys.mComponents.push_back(ecs);
@@ -78,9 +82,21 @@ int main(int argc, char *argv[]) {
 		Interface intf2(out2, in2, &conf2);
 		sim.addInterface(&intf2, false, false);
 
+		// Controllers and filter
+		std::vector<Real> coefficients_profile = std::vector(2000, 1./2000);
+
+		auto filtP_profile = FIRFilter::make("filter_p_profile", coefficients_profile, Logger::Level::INFO);
+		filtP_profile->setPriority(1);
+		filtP_profile->initialize(0.);
+		filtP_profile->setConnection(load_profile->findAttribute<Real>("active_power"));
+		filtP_profile->findAttribute<Real>("input")->set(0.);
+		sys.mComponents.push_back(filtP_profile);
+
 		// Register interface current source and voltage drop
 		intf1.addImport(ecs->findAttribute<Complex>("current_ref"), 1.0, 0, 1);
 		intf1.addExport(ecs->findAttribute<Complex>("comp_voltage"), 1.0, 0, 1);
+
+		intf2.addImport(filtP_profile->findAttribute<Real>("input"), 20e8, 0);
 
 		// Register exportable node voltages
 		for (auto n : sys.mNodes) {
