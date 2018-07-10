@@ -32,7 +32,6 @@ int main(int argc, char* argv[])
 	Real nomFreq = 60;
 	Real nomFieldCurr = 1300;
 	Int poleNum = 2;
-	Real J = 2.8898e+04;
 	Real H = 3.7;
 
 	Real Rs = 0.003;
@@ -56,9 +55,9 @@ int main(int argc, char* argv[])
 	Real Lq_s = 0.25;
 
 	// Set up simulation
-	Real tf, dt, t;
+	Real tf, dt;
 	Real om = 2.0*M_PI*60.0;
-	tf = 0.3; dt = 0.0001; t = 0;
+	tf = 0.3; dt = 0.0001;
 	Int downSampling = 1;
 
 	Real Ra = (Ld_s + Lq_s) / dt;
@@ -99,9 +98,11 @@ int main(int argc, char* argv[])
 	genPtr->initialize(om, dt, initActivePower, initReactivePower, initTerminalVolt, initVoltAngle, fieldVoltage, mechPower);
 
 	// Calculate initial values for circuit at generator connection point
+#if 0
 	Real initApparentPower = sqrt(pow(initActivePower, 2) + pow(initReactivePower, 2));
 	Real initTerminalCurr = initApparentPower / (3 * initTerminalVolt)* sqrt(2);
 	Real initPowerFactor = acos(initActivePower / initApparentPower);
+#endif
 
 	sim.setSwitchTime(0.1, 1);
 	sim.setSwitchTime(0.2, 0);

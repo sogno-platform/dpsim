@@ -56,13 +56,17 @@ if(WITH_SHMEM)
 	set(SHMEM_SOURCES
 		Shmem/ShmemExample.cpp
 		Shmem/ShmemDistributedReference.cpp
-		Shmem/ShmemDistributedVillas.cpp
 		Shmem/ShmemDistributedDirect.cpp
-		Shmem/ShmemControllableSource.cpp
-		Shmem/ShmemControllableFiltSource.cpp
-		Shmem/ShmemRealTime.cpp
-		Shmem/ShmemControllable_WSCC-9bus_CIM.cpp
 	)
+
+	if (WITH_RT)
+		list(APPEND SHMEM_SOURCES
+			Shmem/ShmemDistributedVillas.cpp
+			Shmem/ShmemControllableSource.cpp
+			Shmem/ShmemControllableFiltSource.cpp
+			Shmem/ShmemRealTime.cpp
+		)
+	endif()
 endif()
 
 if(WITH_CIM)
@@ -77,7 +81,9 @@ endif()
 
 if(WITH_CIM AND WITH_SHMEM)
 	set(CIM_SHMEM_SOURCES
-		Shmem/Shmem_WSCC-9bus_CIM.cpp
+	Shmem/Shmem_WSCC-9bus.cpp
+	Shmem/Shmem_WSCC-9bus_Ctrl.cpp
+	Shmem/Shmem_WSCC-9bus_CtrlDist.cpp
 	)
 endif()
 
@@ -93,5 +99,6 @@ foreach(SOURCE ${CIRCUIT_SOURCES} ${SYNCGEN_SOURCES} ${VARFREQ_SOURCES} ${SHMEM_
 
 	target_link_libraries(${TARGET} ${LIBRARIES})
 	target_include_directories(${TARGET} PRIVATE ${INCLUDE_DIRS})
+	target_compile_options(${TARGET} PUBLIC ${DPSIM_CXX_FLAGS})
 endforeach()
 

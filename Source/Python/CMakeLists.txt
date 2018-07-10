@@ -14,6 +14,7 @@ endif()
 
 target_link_libraries(dpsim_python dpsim cps_python cps ${LIBRARIES})
 target_include_directories(dpsim_python PRIVATE ${INCLUDE_DIRS})
+target_compile_options(dpsim_python PUBLIC ${DPSIM_CXX_FLAGS})
 
 set_target_properties(dpsim_python
 	PROPERTIES

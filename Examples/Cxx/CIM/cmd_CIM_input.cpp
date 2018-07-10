@@ -25,6 +25,7 @@
 #include "DPsim.h"
 
 using namespace DPsim;
+using namespace CPS;
 
 int main(int argc, char *argv[]) {
 	std::list<String> filenames;
@@ -34,8 +35,12 @@ int main(int argc, char *argv[]) {
 		filenames.push_back(String(argv[i]));
 	}
 
-	Simulation sim("CIM", filenames, 50, 0.0001, 0.1,
-		Solver::Domain::DP, Solver::Type::MNA, Logger::Level::DEBUG);
+	String simName = "CIM_example";
+
+	CIM::Reader reader(simName);
+	SystemTopology sys = reader.loadCIM(50, filenames);
+
+	Simulation sim(simName, sys, 0.0001, 0.1, Solver::Domain::DP, Solver::Type::MNA);
 	sim.run();
 
 	return 0;

@@ -33,7 +33,6 @@ int main(int argc, char* argv[])
 	Real nomFreq = 60;
 	Real nomFieldCurr = 1300;
 	Int poleNum = 2;
-	Real J = 2.8898e+04;
 	Real H = 3.7;
 
 	Real Rs = 0.003;
@@ -57,7 +56,6 @@ int main(int argc, char* argv[])
 	Real om = 2.0*M_PI*60.0;
 	Real tf = 0.1;
 	Real dt = 0.000001;
-	Real t = 0;
 	Int downSampling = 25;
 
 	Real Ld_s = 0.23;

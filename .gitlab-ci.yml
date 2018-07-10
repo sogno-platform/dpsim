@@ -1,7 +1,9 @@
 variables:
-  DOCKER_TAG_DEV: ${CI_COMMIT_REF_NAME}
   RSYNC_OPTS: --recursive --ignore-missing-args --chown ${DEPLOY_USER}:${DEPLOY_USER}
-  DOCKER_IMAGE_DEV: dpsim-dev
+  DOCKER_TAG: ${CI_COMMIT_REF_NAME}
+  DOCKER_TAG_DEV: ${CI_COMMIT_REF_NAME}
+  DOCKER_IMAGE: rwthacs/dpsim
+  DOCKER_IMAGE_DEV: rwthacs/dpsim-dev
 
 before_script:
   - git config --local core.longpaths true
@@ -14,13 +16,12 @@ stages:
   - build
   - test
   - deploy
-  - post-all
+  #- post-all
 
 docker:
   stage: prepare
   script:
     - docker build -f Packaging/Docker/Dockerfile.dev -t ${DOCKER_IMAGE_DEV}:${DOCKER_TAG_DEV} .
-    - docker images
   tags:
     - shell
 
@@ -69,6 +70,13 @@ build:packages:
       - build/*.rpm
       - build/*.tar.gz
 
+build:docker:
+  stage: build
+  script:
+    - docker build -f Packaging/Docker/Dockerfile -t ${DOCKER_IMAGE}:${DOCKER_TAG} .
+  tags:
+    - shell
+
 test:pytest:
   stage: test
   script:
@@ -82,6 +90,15 @@ test:pytest:
       - Logs/
   tags:
     - docker
+
+deploy:docker:
+  stage: deploy
+  script:
+    - docker push ${DOCKER_IMAGE}:${DOCKER_TAG}
+  dependencies:
+    - build:docker
+  tags:
+    - shell
 
 deploy:docs:
   stage: deploy
@@ -116,13 +133,13 @@ deploy:packages:
     - shell
 
 # We run the windows build at last as it takes ages to finish
-build:windows:
-  stage: post-all
-  script:
-    - rmdir build /s
-    - mkdir build
-    - cd build
-    - cmake -G "Visual Studio 15 2017 Win64" ..
-    - cmake --build .
-  tags:
-    - windows
+#build:windows:
+#  stage: post-all
+#  script:
+#    - rmdir build /s
+#    - mkdir build
+#    - cd build
+#    - cmake -G "Visual Studio 15 2017 Win64" ..
+#    - cmake --build .
+#  tags:
+#    - windows

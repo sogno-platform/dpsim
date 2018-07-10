@@ -29,7 +29,7 @@ int main(int argc, char *argv[])
 	ComponentBase::List comps, comps2;
 	Node::List nodes;
 
-	struct shmem_conf conf;
+	Interface::Config conf;
 	conf.samplelen = 4;
 	conf.queuelen = 1024;
 	conf.polling = true;
@@ -50,7 +50,7 @@ int main(int argc, char *argv[])
 		out = "/villas1-out";
 	}
 
-	ShmemInterface shmem(in, out, &conf);
+	Interface intf(in, out, &conf);
 
 	if (String(argv[1]) == "0") {
 		// Nodes
@@ -67,8 +67,8 @@ int main(int argc, char *argv[])
 		comps = ComponentBase::List{evs, vs, l1, r1};
 		nodes = Node::List{GND, n1, n2, n3};
 
-		shmem.registerControlledAttribute(evs->findAttribute<Complex>("voltage_ref"), 1.0, 0, 1);
-		shmem.registerExportedAttribute(evs->findAttribute<Complex>("comp_current"), 1.0, 0, 1);
+		intf.addImport(evs->findAttribute<Complex>("voltage_ref"), 1.0, 0, 1);
+		intf.addExport(evs->findAttribute<Complex>("comp_current"), 1.0, 0, 1);
 	}
 	else if (String(argv[1]) == "1") {
 		// Nodes
@@ -83,8 +83,8 @@ int main(int argc, char *argv[])
 		comps2 = ComponentBase::List{ecs, r2B};
 		nodes = Node::List{GND, n4};
 
-		shmem.registerControlledAttribute(ecs->findAttribute<Complex>("current_ref"), 1.0, 0, 1);
-		shmem.registerExportedAttribute(ecs->findAttribute<Complex>("comp_voltage"), 1.0, 0, 1);
+		intf.addImport(ecs->findAttribute<Complex>("current_ref"), 1.0, 0, 1);
+		intf.addExport(ecs->findAttribute<Complex>("comp_voltage"), 1.0, 0, 1);
 	}
 	else {
 		std::cerr << "invalid test number" << std::endl;
@@ -97,7 +97,7 @@ int main(int argc, char *argv[])
 	auto sys1 = SystemTopology(50, nodes, comps);
 
 	auto sim = RealTimeSimulation(simName + argv[1], sys1, timeStep, 20);
-	sim.addInterface(&shmem);
+	sim.addInterface(&intf);
 
 	if (String(argv[1]) == "1") {
 		auto sys2 = SystemTopology(50, comps2);
@@ -106,7 +106,7 @@ int main(int argc, char *argv[])
 		sim.setSwitchTime(10, 1);
 	}
 
-	sim.run(true);
+	sim.run();
 
 	return 0;
 }

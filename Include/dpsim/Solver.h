@@ -25,9 +25,13 @@
 #include <vector>
 #include <list>
 
+#include "Config.h"
 #include "cps/Logger.h"
 #include "cps/SystemTopology.h"
-#include "cps/Interface.h"
+
+#ifdef WITH_SHMEM
+  #include "cps/Interface.h"
+#endif
 
 using namespace CPS;
 
@@ -45,11 +49,10 @@ namespace DPsim {
 		enum class Domain { DP, EMT };
 
 		/// Solve system A * x = z for x and current time
-		virtual Real step(Real time, bool blocking = true) = 0;
+		virtual Real step(Real time) = 0;
 		/// Log results
 		virtual void log(Real time) = 0;
-		///
-		virtual void addInterface(Interface* eint) { }
+
 		///
 		void addSystemTopology(SystemTopology system) { }
 		///

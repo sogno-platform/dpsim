@@ -30,8 +30,36 @@ using namespace CPS;
 using namespace DPsim;
 
 RealTimeSimulation::RealTimeSimulation(String name, SystemTopology system, Real timeStep, Real finalTime,
-		Solver::Domain domain, Solver::Type type, Logger::Level logLevel)
-	: Simulation(name, system, timeStep, finalTime, domain, type, logLevel), mTimeStep(timeStep) {
+		Solver::Domain domain, Solver::Type type, Logger::Level logLevel, Bool steadyStateInit)
+	: Simulation(name, system, timeStep, finalTime, domain, type, logLevel, steadyStateInit),
+	mTimeStep(timeStep),
+	mOverruns(0)
+{
+	mAttributes["time_step"] = Attribute<Real>::make(&mTimeStep, Flags::read);
+	mAttributes["overruns"] = Attribute<Int>::make(&mOverruns, Flags::read);
+
+	createTimer();
+}
+
+
+RealTimeSimulation::~RealTimeSimulation()
+{
+	destroyTimer();
+}
+
+#ifdef RTMETHOD_EXCEPTIONS
+void RealTimeSimulation::alarmHandler(int sig, siginfo_t* si, void* ctx)
+{
+	auto sim = static_cast<RealTimeSimulation*>(si->si_value.sival_ptr);
+
+	/* only throw an exception if we're actually behind */
+	if (++sim->mTimerCount * sim->mTimeStep > sim->mTime)
+		throw TimerExpiredException();
+}
+#endif
+
+void RealTimeSimulation::createTimer()
+{
 #ifdef RTMETHOD_TIMERFD
 	mTimerFd = timerfd_create(CLOCK_MONOTONIC, 0);
 	if (mTimerFd < 0) {
@@ -64,7 +92,7 @@ RealTimeSimulation::RealTimeSimulation(String name, SystemTopology system, Real 
 #endif
 }
 
-RealTimeSimulation::~RealTimeSimulation()
+void RealTimeSimulation::destroyTimer()
 {
 #ifdef RTMETHOD_TIMERFD
 	close(mTimerFd);
@@ -75,31 +103,32 @@ RealTimeSimulation::~RealTimeSimulation()
 #endif
 }
 
-#ifdef RTMETHOD_EXCEPTIONS
-void RealTimeSimulation::alarmHandler(int sig, siginfo_t* si, void* ctx)
+void RealTimeSimulation::startTimer(const StartClock::time_point &startAt)
 {
-	auto sim = static_cast<RealTimeSimulation*>(si->si_value.sival_ptr);
+	/* Determine offset between clocks */
+	auto rt     = std::chrono::system_clock::now();
+	auto steady = std::chrono::steady_clock::now();
 
-	/* only throw an exception if we're actually behind */
-	if (++sim->mTimerCount * sim->mTimeStep > sim->mTime)
-		throw TimerExpiredException();
-}
-#endif
-
-void RealTimeSimulation::startTimer()
-{
 	struct itimerspec ts;
 
-	ts.it_value.tv_sec = (time_t) mTimeStep;
-	ts.it_value.tv_nsec = (long) (mTimeStep * 1e9);
-	ts.it_interval = ts.it_value;
+	/* This handles the offset between
+	 * - CLOCK_MONOTONIC (aka std::chrono::steady_clock) and
+	 * - CLOCK_REALTIME (aka std::chrono::system_clock)
+	 */
+	auto startAtDur = startAt.time_since_epoch() - rt.time_since_epoch() + steady.time_since_epoch();
+	auto startAtNSecs = std::chrono::duration_cast<std::chrono::nanoseconds>(startAtDur);
+
+	ts.it_value.tv_sec  = startAtNSecs.count() / 1000000000;
+	ts.it_value.tv_nsec = startAtNSecs.count() % 1000000000;
+	ts.it_interval.tv_sec  = (time_t) mTimeStep;
+	ts.it_interval.tv_nsec = (long) (mTimeStep * 1e9);
 
 #ifdef RTMETHOD_TIMERFD
-	if (timerfd_settime(mTimerFd, 0, &ts, 0) < 0) {
+	if (timerfd_settime(mTimerFd, TFD_TIMER_ABSTIME, &ts, 0) < 0) {
 		throw SystemError("Failed to arm timerfd");
 	}
 #elif defined(RTMETHOD_EXCEPTIONS)
-	if (timer_settime(mTimer, 0, &ts, NULL)) {
+	if (timer_settime(mTimer, TIMER_ABSTIME, &ts, NULL)) {
 		throw SystemError("Failed to arm timer");
 	}
 #else
@@ -126,50 +155,72 @@ void RealTimeSimulation::stopTimer()
 #endif
 }
 
-void RealTimeSimulation::run(bool startSynch)
+void RealTimeSimulation::run(const StartClock::duration &startIn)
 {
-	run(mFinalTime - mTime, startSynch);
+	run(StartClock::now() + startIn);
 }
 
-void RealTimeSimulation::run(double duration, bool startSynch)
+void RealTimeSimulation::run(const StartClock::time_point &startAt)
 {
-	int ret;
-	uint64_t overrun;
+	auto startAtDur = startAt.time_since_epoch();
+	auto startAtNSecs = std::chrono::duration_cast<std::chrono::nanoseconds>(startAtDur);
 
-	if (startSynch) {
-		mTime = 0;
-
-		step(false); // first step, sending the initial values
-		step(true); // blocking step for synchronization + receiving the initial state of the other network
+#ifdef WITH_SHMEM
+	// We send initial state over all interfaces
+	for (auto ifm : mInterfaces) {
+		ifm.interface->writeValues();
 	}
 
-	double started = mTime;
+	std::cout << Logger::prefix() << "Waiting for start synchronization on " << mInterfaces.size() << " interfaces" << std::endl;
 
-	startTimer();
+	// Blocking wait for interfaces
+	for (auto ifm : mInterfaces) {
+		ifm.interface->readValues(ifm.syncStart);
+	}
+
+	std::cout << Logger::prefix() << "Synchronized simulation start with remotes" << std::endl;
+#endif
+
+	std::cout << Logger::prefix() << "Starting simulation at " << startAt << " (delta_T = " << std::chrono::duration_cast<std::chrono::seconds>(startAt - StartClock::now()).count() << " seconds)" << std::endl;
+
+	startTimer(startAt);
+
+	for (auto ifm : mInterfaces) {
+		ifm.interface->writeValues();
+	}
 
 	// main loop
+	Int steps = 0;
 	do {
 #ifdef RTMETHOD_TIMERFD
-		step(false);
+		uint64_t overrun;
+		step();
 
 		if (read(mTimerFd, &overrun, sizeof(overrun)) < 0) {
 			throw SystemError("Read from timerfd failed");
 		}
 		if (overrun > 1) {
 			mLog.Log(Logger::Level::WARN) << "Overrun of "<< overrun-1 << " timesteps at " << mTime << std::endl;
+			mOverruns =+ overrun - 1;
 		}
 #elif defined(RTMETHOD_EXCEPTIONS)
 		try {
-			step(false);
+			step();
 			sigwait(&alrmset, &sig);
 		}
 		catch (TimerExpiredException& e) {
-			mLog.Log(Logger::Level::WARN) << "Overrun at " << mTime << std::endl;
+			// TODO: TimerExpired does not actually indicate an overrun
+			//       It rather signals that the timestep is coming to and end.
+			//mLog.Log(Logger::Level::WARN) << "Overrun at " << mTime << std::endl;
+			//mOverruns = timer_getoverrun(mTimer);
 		}
 #else
   #error Unkown real-time execution mode
 #endif
-	} while (ret && mTime - started < duration);
+		if (steps++ == 0)
+			std::cout << Logger::prefix() << "Simulation started!" << std::endl;
+
+	} while (mTime < mFinalTime);
 
 	stopTimer();
 }

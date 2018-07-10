@@ -26,6 +26,7 @@
 #include <list>
 #include <cstdint>
 
+#include "Config.h"
 #include "MNA_Solver.h"
 
 #include "cps/Definitions.h"
@@ -33,13 +34,16 @@
 #include "cps/Logger.h"
 #include "cps/SystemTopology.h"
 #include "cps/Node.h"
-#include "cps/Interface.h"
+
+#ifdef WITH_SHMEM
+  #include "cps/Interface.h"
+#endif
 
 using namespace CPS;
 
 namespace DPsim {
 
-	class Simulation {
+	class Simulation : public AttributeList {
 
 	public:
 		enum class Event : std::uint32_t {
@@ -52,24 +56,39 @@ namespace DPsim {
 		};
 
 	protected:
+		/// Simulation logger
+		Logger mLog;
+		/// Simulation name
+		String mName;
 		/// Final time of the simulation
 		Real mFinalTime;
 		/// Time variable that is incremented at every step
 		Real mTime = 0;
 		/// Number of step which have been executed for this simulation.
 		Int mTimeStepCount = 0;
-		/// Pipe for asynchronous inter-process communication (IPC) to the Python world
-		int mPipe[2];
 		/// Simulation log level
 		Logger::Level mLogLevel;
-		/// Simulation logger
-		Logger mLog;
-		/// Simulation name
-		String mName;
 		///
 		Solver::Type mSolverType;
 		///
 		std::shared_ptr<Solver> mSolver;
+		/// Pipe for asynchronous inter-process communication (IPC) to the Python world
+		int mPipe[2];
+
+#ifdef WITH_SHMEM
+		struct InterfaceMapping {
+			/// A pointer to the external interface
+			Interface *interface;
+			///
+			bool sync;
+			bool syncStart;
+		};
+
+		/// Vector of Interfaces
+		std::vector<InterfaceMapping> mInterfaces;
+		/// Interfaces are initialized
+		bool mInit = false;
+#endif
 
 	public:
 		/// Creates system matrix according to
@@ -78,32 +97,33 @@ namespace DPsim {
 			Solver::Domain domain = Solver::Domain::DP,
 			Solver::Type solverType = Solver::Type::MNA,
 			Logger::Level logLevel = Logger::Level::INFO);
-		/// Creates system matrix according to
+		/// Creates system matrix according to System topology
 		Simulation(String name, SystemTopology system,
 			Real timeStep, Real finalTime,
 			Solver::Domain domain = Solver::Domain::DP,
 			Solver::Type solverType = Solver::Type::MNA,
-			Logger::Level logLevel = Logger::Level::INFO);
-		/// Creates system matrix according to
-		Simulation(String name, std::list<String> cimFiles, Real frequency,
-			Real timeStep, Real finalTime,
-			Solver::Domain domain = Solver::Domain::DP,
-			Solver::Type solverType = Solver::Type::MNA,
-			Logger::Level logLevel = Logger::Level::INFO);
+			Logger::Level logLevel = Logger::Level::INFO,
+			Bool steadyStateInit = false);
 		///
 		virtual ~Simulation();
 
 		/// Run simulation until total time is elapsed.
-		void run(bool blocking = true);
-		/// Run simulation for \p duration seconds.
-		void run(double duration, bool blocking = true);
+		void run();
 		/// Solve system A * x = z for x and current time
-		Real step(bool blocking = true);
+		Real step();
 
 		///
 		void setSwitchTime(Real switchTime, Int systemIndex);
+#ifdef WITH_SHMEM
 		///
-		void addInterface(Interface*);
+		void addInterface(Interface *eint, bool sync, bool syncStart) {
+			mInterfaces.push_back({eint, sync, syncStart});
+		}
+
+		void addInterface(Interface *eint, bool sync = true) {
+			mInterfaces.push_back({eint, sync, sync});
+		}
+#endif
 		///
 		void addSystemTopology(SystemTopology system);
 		///

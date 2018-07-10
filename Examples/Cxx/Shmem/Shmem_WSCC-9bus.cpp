@@ -23,8 +23,6 @@
 #include <list>
 
 #include "DPsim.h"
-#include "cps/Interfaces/ShmemInterface.h"
-#include "cps/CIM/Reader.h"
 
 using namespace DPsim;
 using namespace CPS;
@@ -34,9 +32,9 @@ int main(int argc, char *argv[]) {
 
 	// Specify CIM files
 #ifdef _WIN32
-	String path("..\\..\\..\\..\\dpsim\\Examples\\CIM\\WSCC-09_Neplan_RX\\");
+	String path("Examples\\CIM\\WSCC-09_Neplan_RX\\");
 #elif defined(__linux__) || defined(__APPLE__)
-	String path("../../../dpsim/Examples/CIM/IEEE-09_Neplan_RX/");
+	String path("Examples/CIM/WSCC-09_Neplan_RX/");
 #endif
 
 	std::list<String> filenames = {
@@ -46,37 +44,43 @@ int main(int argc, char *argv[]) {
 		path + "WSCC-09_Neplan_RX_TP.xml"
 	};
 
-	CIM::Reader reader(50, Logger::Level::INFO, Logger::Level::INFO);
-	SystemTopology sys = reader.loadCIM(filenames);
+	String simName = "Shmem_WSCC-9bus";
 
-	Simulation sim("Shmem_WSCC-9bus_CIM", sys, 0.0001, 0.1,
-		Solver::Domain::DP, Solver::Type::MNA, Logger::Level::DEBUG);
+	CIM::Reader reader(simName, Logger::Level::INFO, Logger::Level::INFO);
+	SystemTopology sys = reader.loadCIM(60, filenames);
+
+	RealTimeSimulation sim(simName, sys, 0.001, 120,
+		Solver::Domain::DP, Solver::Type::MNA, Logger::Level::DEBUG, true);
 
 	// Create shmem interface
-	struct shmem_conf conf;
+	Interface::Config conf;
 	conf.samplelen = 64;
 	conf.queuelen = 1024;
 	conf.polling = false;
-	String in  = "/dpsim10";
-	String out = "/dpsim01";
-	ShmemInterface shmem(out, in, &conf);
+	String in  = "/villas-dpsim";
+	String out = "/dpsim-villas";
+	Interface intf(out, in, &conf);
 
 	// Register exportable node voltages
-	shmem.registerExportedAttribute(sys.mNodes[0]->findAttribute<Complex>("voltage"), 1.0, 0, 1);
-	shmem.registerExportedAttribute(sys.mNodes[1]->findAttribute<Complex>("voltage"), 1.0, 1, 2);
-	shmem.registerExportedAttribute(sys.mNodes[2]->findAttribute<Complex>("voltage"), 1.0, 3, 4);
-	shmem.registerExportedAttribute(sys.mNodes[3]->findAttribute<Complex>("voltage"), 1.0, 5, 6);
-	shmem.registerExportedAttribute(sys.mNodes[4]->findAttribute<Complex>("voltage"), 1.0, 7, 8);
-	shmem.registerExportedAttribute(sys.mNodes[5]->findAttribute<Complex>("voltage"), 1.0, 9, 10);
-	shmem.registerExportedAttribute(sys.mNodes[6]->findAttribute<Complex>("voltage"), 1.0, 11, 12);
-	shmem.registerExportedAttribute(sys.mNodes[7]->findAttribute<Complex>("voltage"), 1.0, 13, 14);
-	shmem.registerExportedAttribute(sys.mNodes[8]->findAttribute<Complex>("voltage"), 1.0, 15, 16);
+	UInt o = 0;
+	for (auto n : sys.mNodes) {
+		auto v = n->findAttribute<Complex>("voltage");
+
+		std::function<Real()> getMag = [v](){ return std::abs(v->get()); };
+		std::function<Real()> getPhas = [v](){ return std::arg(v->get()); };
+
+		intf.addExport(v, 1.0, o, o+1);
+		intf.addExport(getMag, o+2);
+		intf.addExport(getPhas, o+3);
+
+		o += 4;
+	}
 
 	// TODO
 	// Extend system with controllable load
 	// Register controllable load
 
-	sim.addInterface(&shmem);
+	sim.addInterface(&intf);
 	sim.run();
 
 	return 0;

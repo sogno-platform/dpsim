@@ -1,18 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:cim="http://iec.ch/TC57/2012/CIM-schema-cim16#" xmlns:md="http://iec.ch/TC57/61970-552/ModelDescription/1#" xmlns:entsoe="http://entsoe.eu/Secretariat/ProfileExtension/2#" xmlns:neplan="http://www.neplan.ch#">
-  <md:FullModel rdf:about="urn:uuid:ba90b9e5-c56d-4f88-8776-b014619eca1a">
-    <md:Model.created>2017-12-20T10:09:13</md:Model.created>
-    <neplan:Model.createdBy>NEPLAN by Busarello + Cott + Partner AG, Switzerland</neplan:Model.createdBy>
-    <md:Model.scenarioTime>2017-12-20T10:09:11</md:Model.scenarioTime>
-    <md:Model.version>7</md:Model.version>
-    <md:Model.DependentOn rdf:resource="urn:uuid:62f3c818-3856-406c-80a1-2ae73e557d21"/>
-    <md:Model.description>NEPLAN</md:Model.description>
-    <md:Model.modelingAuthoritySet>FULL</md:Model.modelingAuthoritySet>
-    <md:Model.profile>http://iec.ch/TC57/61970-456/Topology/3</md:Model.profile>
-  </md:FullModel>
-  <cim:NameType rdf:ID="_7f185634-0bbc-44c5-ad87-9ea4d7e8b8b7">
-    <cim:NameType.name>description</cim:NameType.name>
-  </cim:NameType>
+<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:cim="http://iec.ch/TC57/2012/CIM-schema-cim16#" xmlns:md="http://iec.ch/TC57/61970-552/ModelDescription/1#" xmlns:entsoe="http://entsoe.eu/Secretariat/ProfileExtension/2#">
   <cim:TopologicalNode rdf:ID="BUS2">
     <cim:IdentifiedObject.name>BUS2</cim:IdentifiedObject.name>
     <cim:TopologicalNode.BaseVoltage rdf:resource="#_6291eed9-b3aa-4aaf-a5cf-0a76bb459899"/>

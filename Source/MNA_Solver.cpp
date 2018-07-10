@@ -44,9 +44,9 @@ MnaSolver::MnaSolver(String name,
 
 MnaSolver::MnaSolver(String name, SystemTopology system,
 	Real timeStep, Solver::Domain domain,
-	Logger::Level logLevel, Int downSampleRate)
+	Logger::Level logLevel,Bool steadyStateInit, Int downSampleRate)
 	: MnaSolver(name, timeStep, domain,
-		logLevel, false, downSampleRate) {
+		logLevel, steadyStateInit, downSampleRate) {
 	initialize(system);
 
 	// Logging
@@ -80,7 +80,7 @@ void MnaSolver::initialize(SystemTopology system) {
 	if (mSystemTopologies[0].mNodes.size() == 0) {
 		// Create Nodes for all node indices
 		mSystemTopologies[0].mNodes.resize(maxNode + 1, nullptr);
-		for (int node = 0; node < mSystemTopologies[0].mNodes.size(); node++)
+		for (UInt node = 0; node < mSystemTopologies[0].mNodes.size(); node++)
 			mSystemTopologies[0].mNodes[node] = std::make_shared<Node>(node);
 
 		assignNodesToComponents(mSystemTopologies[0].mComponents);
@@ -89,7 +89,7 @@ void MnaSolver::initialize(SystemTopology system) {
 	mLog.Log(Logger::Level::INFO) << "Maximum node number: " << maxNode << std::endl;
 	mLog.Log(Logger::Level::INFO) << "Number of nodes: " << mSystemTopologies[0].mNodes.size() << std::endl;
 
-	for (int i = 0; i < mSystemTopologies[0].mNodes.size(); i++) {
+	for (UInt i = 0; i < mSystemTopologies[0].mNodes.size(); i++) {
 		mLog.Log(Logger::Level::INFO) << "Found node " << mSystemTopologies[0].mNodes[i]->mName << std::endl;
 	}
 
@@ -100,7 +100,7 @@ void MnaSolver::initialize(SystemTopology system) {
 	// Check if component requires virtual node and if so set one
 	for (auto comp : mSystemTopologies[0].mComponents) {
 		if (comp->hasVirtualNodes()) {
-			for (Int node = 0; node < comp->getVirtualNodesNum(); node++) {
+			for (UInt node = 0; node < comp->getVirtualNodesNum(); node++) {
 				virtualNode++;
 				mSystemTopologies[0].mNodes.push_back(std::make_shared<Node>(virtualNode));
 				comp->setVirtualNodeAt(mSystemTopologies[0].mNodes[virtualNode], node);
@@ -123,6 +123,7 @@ void MnaSolver::initialize(SystemTopology system) {
 		comp->initializePowerflow(mSystemTopologies[0].mSystemFrequency);
 
 	if (mSteadyStateInit && mDomain == Solver::Domain::DP) {
+		mLog.Log(Logger::Level::INFO) << "Run steady-state initialization." << std::endl;
 		steadyStateInitialization();
 	}
 
@@ -151,13 +152,12 @@ void MnaSolver::steadyStateInitialization() {
 	// Compute LU-factorization for system matrix
 	mLuFactorizations.push_back(Eigen::PartialPivLU<Matrix>(mSystemMatrices[0]));
 
-	mLog.Log(Logger::Level::INFO) << "Start initialization." << std::endl;
 	Matrix prevLeftSideVector = Matrix::Zero(2 * mNumNodes, 1);
 	Matrix diff;
 	Real maxDiff, max;
 
 	while (time < 10) {
-		time += step(time);
+		time = step(time);
 
 		diff = prevLeftSideVector - mLeftSideVector;
 		prevLeftSideVector = mLeftSideVector;
@@ -227,7 +227,7 @@ void MnaSolver::addSystemTopology(SystemTopology system) {
 	mLuFactorizations.push_back(LUFactorized(mSystemMatrices[mSystemMatrices.size()]));
 }
 
-void MnaSolver::switchSystemMatrix(Int systemIndex) {
+void MnaSolver::switchSystemMatrix(UInt systemIndex) {
 	if (systemIndex < mSystemMatrices.size())
 		mSystemIndex = systemIndex;
 }
@@ -236,12 +236,8 @@ void MnaSolver::solve()  {
 	mLeftSideVector = mLuFactorizations[mSystemIndex].solve(mRightSideVector);
 }
 
-Real MnaSolver::step(Real time, bool blocking) {
+Real MnaSolver::step(Real time) {
 	mRightSideVector.setZero();
-
-	for (auto eif : mInterfaces) {
-		eif->readValues(blocking);
-	}
 
 	for (auto comp : mSystemTopologies[mSystemIndex].mComponents) {
 		comp->mnaStep(mSystemMatrices[mSystemIndex], mRightSideVector, mLeftSideVector, time);
@@ -255,10 +251,6 @@ Real MnaSolver::step(Real time, bool blocking) {
 
 	for (UInt nodeIdx = 0; nodeIdx < mNumRealNodes; nodeIdx++) {
 		mSystemTopologies[0].mNodes[nodeIdx]->mnaUpdateVoltages(mLeftSideVector);
-	}
-
-	for (auto eif : mInterfaces) {
-		eif->writeValues();
 	}
 
 	if (mSwitchTimeIndex < mSwitchEvents.size()) {

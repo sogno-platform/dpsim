@@ -39,7 +39,6 @@ int main(int argc, char* argv[]) {
 
 	// Define simulation scenario
 	Real timeStep = 0.001;
-	Real omega = 2.0*M_PI*50.0;
 	Real finalTime = 0.3;
 	String simName = "EMT_ResVS_RxLine_Switch1_" + std::to_string(timeStep);
 

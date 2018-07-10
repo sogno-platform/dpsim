@@ -81,10 +81,12 @@ def read(fname):
 
 setup(
     name = "dpsim",
-    version = "0.1.3",
-    author = "Steffen Vogel",
-    author_email = "stvogel@eonerc.rwth-aachen.de",
-    description = "DPsim is a real-time power system simulator that operates in the dynamic phasor as well as electromagentic transient domain.",
+    version = "0.1.4",
+    author = "Markus Mirz",
+	author_mail = "mmirz@eonerc.rwth-aachen.de>",
+    maintainer = "Steffen Vogel",
+    maintainer_email = "stvogel@eonerc.rwth-aachen.de",
+    description = "A real-time simulator that operates in the dynamic phasor as well as electromagentic transient domain",
     license = "GPL-3.0",
     keywords = "simulation power system real-time",
     url = "https://dpsim.fein-aachen.org",
@@ -100,7 +102,7 @@ setup(
         "Operating System :: MacOS :: MacOS X",
         "Operating System :: Microsoft :: Windows",
         "Operating System :: POSIX :: Linux",
-        "Programming Language :: Python :: 3",
+        "Programming Language :: Python :: 3.6",
         "Programming Language :: Python :: Implementation :: CPython"
     ],
     install_requires = [
