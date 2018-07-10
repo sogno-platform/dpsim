@@ -31,14 +31,14 @@ int main(int argc, char *argv[]) {
 #ifdef _WIN32
 	String path("..\\..\\..\\..\\dpsim\\Examples\\CIM\\WSCC-09_Neplan_RX\\");
 #elif defined(__linux__) || defined(__APPLE__)
-	String path("../Examples/CIM/WSCC-09_Neplan_RX/");
+	String path("Examples/CIM/WSCC-09_Neplan/");
 #endif
 
 	std::list<String> filenames = {
-		path + "WSCC-09_Neplan_RX_DI.xml",
-		path + "WSCC-09_Neplan_RX_EQ.xml",
-		path + "WSCC-09_Neplan_RX_SV.xml",
-		path + "WSCC-09_Neplan_RX_TP.xml"
+		path + "WSCC-09_Neplan_DI.xml",
+		path + "WSCC-09_Neplan_EQ.xml",
+		path + "WSCC-09_Neplan_SV.xml",
+		path + "WSCC-09_Neplan_TP.xml"
 	};
 
 	String simName = "WSCC-9bus";
@@ -47,7 +47,7 @@ int main(int argc, char *argv[]) {
 	SystemTopology sys = reader.loadCIM(60, filenames);
 
 	Simulation sim(simName, sys, 0.0001, 0.1,
-		Solver::Domain::DP, Solver::Type::MNA, Logger::Level::DEBUG, true);
+		Solver::Domain::DP, Solver::Type::MNA, Logger::Level::DEBUG, false);
 	sim.run();
 
 	return 0;
