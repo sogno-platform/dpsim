@@ -1,4 +1,4 @@
-/** SynGenThreePhaseFault Example
+﻿/** SynGenVBR Example
 *
 * @author Markus Mirz <mmirz@eonerc.rwth-aachen.de>
 * @copyright 2017, Institute for Automation of Complex Power Systems, EONERC
@@ -19,14 +19,14 @@
 * along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *********************************************************************************/
 
-#include "DPsim.h"
+#include "SynGenSimulation.h"
+#include "Components.h"
 
 using namespace DPsim;
-using namespace CPS::Components::EMT;
+using namespace DPsim::Components::DP;
 
-int main(int argc, char* argv[]) {
-
-	/* simplified VBR model does not exist at the moment
+int main(int argc, char* argv[])
+{
 
 		// Define machine parameters in per unit
 		Real nomPower = 555e6;
@@ -34,6 +34,7 @@ int main(int argc, char* argv[]) {
 		Real nomFreq = 60;
 		Real nomFieldCurr = 1300;
 		Int poleNum = 2;
+		Real J = 2.8898e+04;
 		Real H = 3.7;
 
 		Real Rs = 0.003;
@@ -53,44 +54,38 @@ int main(int argc, char* argv[]) {
 		//Real Rkq2 = 0;
 		//Real Llkq2 = 0;
 
-		Real Ld_s = 0.23;
-		Real Lq_s = 0.25;
-
 		// Set up simulation
+		Real tf, dt, t;
 		Real om = 2.0*M_PI*60.0;
-		Real tf = 3;
-		Real dt = 0.00001;
+		dt = 0.00005; tf = 0.3 - dt; t = 0;
 		Int downSampling = 1;
 
-		Real Ra = (Ld_s + Lq_s) / dt;
-
+		String mGeneratorName = "DP_VBR_" + std::to_string(dt);
 		// Declare circuit components
-		ComponentBase::Ptr gen = SynchronGeneratorVBRSmpl::make("EMT_VBRSimplified_", 0, 1, 2,
+		Component::Ptr gen = SynchronGeneratorVBRNew::make(mGeneratorName, 0, 1, 2,
 				nomPower, nomPhPhVoltRMS, nomFreq, poleNum, nomFieldCurr,
 				Rs, Ll, Lmd, Lmd0, Lmq, Lmq0, Rfd, Llfd, Rkd, Llkd, Rkq1, Llkq1, Rkq2, Llkq2, H, Logger::Level::INFO);
-		Real loadRes = 24e3*24e3/300e6;
-		ComponentBase::Ptr r1 = Resistor::make("r1", 0, DEPRECATEDGND, loadRes);
-		ComponentBase::Ptr r2 = Resistor::make("r2", 1, DEPRECATEDGND, loadRes);
-		ComponentBase::Ptr r3 = Resistor::make("r3", 2, DEPRECATEDGND, loadRes);
 
-		SystemTopology system(60);
-		system.mComponents = { gen, r1, r2, r3 };
+		Real loadRes = 1.92;
+		Component::Ptr r1 = Resistor::make("r1", 0, GND, loadRes);
+		Component::Ptr r2 = Resistor::make("r2", 1, GND, loadRes);
+		Component::Ptr r3 = Resistor::make("r3", 2, GND, loadRes);
+
+		Component::List comps = { gen, r1, r2, r3 };
 
 		// Declare circuit components for resistance change
-		//Real breakerRes = 0.001;
-		Real breakerRes = 19.2 + 0.001;
-		ComponentBase::Ptr rBreaker1 = Resistor::make("rbreak1", 0, DEPRECATEDGND, breakerRes);
-		ComponentBase::Ptr rBreaker2 = Resistor::make("rbreak2", 1, DEPRECATEDGND, breakerRes);
-		ComponentBase::Ptr rBreaker3 = Resistor::make("rbreak3", 2, DEPRECATEDGND, breakerRes);
+		Real breakerRes = 0.001;
+		Component::Ptr rBreaker1 = Resistor::make("rbreak1", 0, GND, breakerRes);
+		Component::Ptr rBreaker2 = Resistor::make("rbreak2", 1, GND, breakerRes);
+		Component::Ptr rBreaker3 = Resistor::make("rbreak3", 2, GND, breakerRes);
 
+		Component::List compsBreakerOn = { gen, rBreaker1, rBreaker2, rBreaker3, r1, r2, r3 };
 
-		SystemTopology systemBreakerOn(60);
-		systemBreakerOn.mComponents = { gen, rBreaker1, rBreaker2, rBreaker3, r1, r2, r3 };
-
-		String mSimulationName = "EMT_SynchronGenerator_VBRSimplified_" + std::to_string(dt);
-		Simulation sim(mSimulationName, system, dt, tf, Solver::Domain::EMT);
-		sim.setLogDownsamplingRate(downSampling);
-		sim.addSystemTopology(systemBreakerOn);
+		String mSimulationName = "DP_SynchronGenerator_VBR_" + std::to_string(dt);
+		SynGenSimulation sim(mSimulationName, comps, om, dt, tf, Logger::Level::INFO, SimulationType::DP, downSampling);
+		sim.setNumericalMethod(NumericalMethod::Trapezoidal_flux);
+		sim.addSystemTopology(compsBreakerOn);
+		sim.switchSystemMatrix(0);
 
 		// Initialize generator
 		Real initActivePower = 300e6;
@@ -99,22 +94,22 @@ int main(int argc, char* argv[]) {
 		Real initVoltAngle = -DPS_PI / 2;
 		Real fieldVoltage = 7.0821;
 		Real mechPower = 300e6;
-		auto genPtr = std::dynamic_pointer_cast<Components::EMT::SynchronGeneratorVBRSmpl>(gen);
+		auto genPtr = std::dynamic_pointer_cast<Components::DP::SynchronGeneratorVBRNew>(gen);
 		genPtr->initialize(om, dt, initActivePower, initReactivePower, initTerminalVolt, initVoltAngle, fieldVoltage, mechPower);
 
-		// Calculate initial values for circuit at generator connection point
-#if 0
-		Real initApparentPower = sqrt(pow(initActivePower, 2) + pow(initReactivePower, 2));
-		Real initTerminalCurr = initApparentPower / (3 * initTerminalVolt)* sqrt(2);
-		Real initPowerFactor = acos(initActivePower / initApparentPower);
-#endif
+		std::cout << "A matrix:" << std::endl;
+		std::cout << sim.getSystemMatrix() << std::endl;
+		std::cout << "vt vector:" << std::endl;
+		std::cout << sim.getLeftSideVector() << std::endl;
+		std::cout << "j vector:" << std::endl;
+		std::cout << sim.getRightSideVector() << std::endl;
 
+		Real lastLogTime = 0;
+		Real logTimeStep = 0.00005;
 		sim.setSwitchTime(0.1, 1);
 		sim.setSwitchTime(0.2, 0);
 
 		sim.run();
-	
-	*/
 
 		return 0;
 }
