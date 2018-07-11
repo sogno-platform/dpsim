@@ -77,20 +77,6 @@ build:docker:
   tags:
     - shell
 
-test:pytest:
-  stage: test
-  script:
-    - make -C build install
-    - pytest -v
-  image: ${DOCKER_IMAGE_DEV}:${DOCKER_TAG_DEV}
-  dependencies:
-    - build:linux
-  artifacts:
-    paths:
-      - Logs/
-  tags:
-    - docker
-
 deploy:docker:
   stage: deploy
   script:
