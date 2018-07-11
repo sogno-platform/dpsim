@@ -68,8 +68,8 @@ int main(int argc, char* argv[])
 
 	// Set up simulation
 	Real om = 2.0*M_PI*60.0;
-	tf = 0.3; 
-	dt = 0.00005; 
+	Real tf = 0.3; 
+	Real dt = 0.00005; 
 	Int downSampling = 50;
 
 	Real Ra = (Ld_s + Lq_s) / dt;

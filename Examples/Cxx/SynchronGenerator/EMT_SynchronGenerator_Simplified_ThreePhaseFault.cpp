@@ -24,8 +24,10 @@
 using namespace DPsim;
 using namespace CPS::Components::EMT;
 
-int main(int argc, char* argv[])
-{
+int main(int argc, char* argv[]) {
+
+	/* simplified VBR model does not exist at the moment
+
 		// Define machine parameters in per unit
 		Real nomPower = 555e6;
 		Real nomPhPhVoltRMS = 24e3;
@@ -111,6 +113,8 @@ int main(int argc, char* argv[])
 		sim.setSwitchTime(0.2, 0);
 
 		sim.run();
+	
+	*/
 
 		return 0;
 }

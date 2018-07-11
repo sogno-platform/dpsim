@@ -52,9 +52,9 @@ int main(int argc, char* argv[])
 	//Real Llkq2 = 0;
 
 	// Set up simulation
-	Real tf, dt, t;
 	Real om = 2.0*M_PI*60.0;
-	dt = 0.00005; tf = 0.3 - dt; t = 0;
+	Real dt = 0.00005; 
+	Real tf = 0.3 - dt;
 	Int downSampling = 1;
 
 	String mGeneratorName = "EMT_VBR_" + std::to_string(dt);
@@ -81,10 +81,6 @@ int main(int argc, char* argv[])
 	systemBreakerOn.mComponents = {gen, rBreaker1, rBreaker2, rBreaker3, r1, r2, r3 };
 
 	// Set up simulation
-	Real om = 2.0*M_PI*60.0;
-	Real tf = 0.3;
-	Real dt = 0.00001;
-	Int downSampling = 50;
 	String mSimulationName = "EMT_SynchronGenerator_VBR_" + std::to_string(dt);
 	Simulation sim(mSimulationName, system, dt, tf, Solver::Domain::EMT);
 	sim.setLogDownsamplingRate(downSampling);
