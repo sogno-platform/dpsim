@@ -56,7 +56,7 @@ void DPsim::Python::Simulation::simThreadFunctionNonRT(DPsim::Python::Simulation
 	std::unique_lock<std::mutex> lk(*pySim->mut, std::defer_lock);
 
 	endTime = pySim->sim->getFinalTime();
-#ifdef _LINUX
+#ifdef __linux__
 	pySim->sim->sendNotification(DPsim::Simulation::Event::Started);
 #endif
 	pySim->numStep = 0;
@@ -68,21 +68,21 @@ void DPsim::Python::Simulation::simThreadFunctionNonRT(DPsim::Python::Simulation
 		if (pySim->sigPause) {
 			lk.lock();
 			pySim->state = State::Paused;
-#ifdef _LINUX
+#ifdef __linux__
 			pySim->sim->sendNotification(DPsim::Simulation::Event::Paused);
 #endif
 			pySim->cond->notify_one();
 			pySim->cond->wait(lk);
 
 			pySim->state = State::Running;
-#ifdef _LINUX
+#ifdef __linux__
 			pySim->sim->sendNotification(DPsim::Simulation::Event::Resumed);
 #endif
 			lk.unlock();
 		}
 	}
 	lk.lock();
-#ifdef _LINUX
+#ifdef __linux__
 	pySim->sim->sendNotification(DPsim::Simulation::Event::Finished);
 #endif
 	pySim->state = State::Done;
@@ -486,7 +486,7 @@ PyObject* DPsim::Python::Simulation::wait(PyObject *self, PyObject *args)
 	return Py_None;
 }
 
-#ifdef _LINUX
+#ifdef __linux__
 static char* DocSimulationGetEventFD =
 "get_eventfd(flags)\n"
 "Return a poll()/select()'able file descriptor which can be used to asynchronously\n"
@@ -570,7 +570,7 @@ static PyMethodDef Simulation_methods[] = {
 	{"step",		DPsim::Python::Simulation::step, METH_NOARGS, DocSimulationStep},
 	{"stop",		DPsim::Python::Simulation::stop, METH_NOARGS, DocSimulationStop},
 	{"wait",		DPsim::Python::Simulation::wait, METH_NOARGS, DocSimulationWait},
-#ifdef _LINUX
+#ifdef __linux__
 	{"get_eventfd",         DPsim::Python::Simulation::getEventFD, METH_VARARGS, DocSimulationGetEventFD},
 #endif
 	{NULL, NULL, 0, NULL}

@@ -18,7 +18,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *********************************************************************************/
-#ifdef _LINUX
+#ifdef __linux__
 #include <getopt.h>
 #endif
 
@@ -29,7 +29,7 @@
 
 using namespace DPsim;
 
-#ifdef _LINUX
+#ifdef __linux__
 DPsim::CommandLineArgs::CommandLineArgs(int argc, char *argv[],
 		Real dt,
 		Real d,

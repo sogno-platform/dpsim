@@ -19,7 +19,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *********************************************************************************/
 
-#ifdef _LINUX
+#ifdef __linux__
 #include <unistd.h>
 #endif
 
@@ -125,7 +125,7 @@ void Simulation::addSystemTopology(SystemTopology system) {
 	mSolver->addSystemTopology(system);
 }
 
-#ifdef _LINUX
+#ifdef __linux__
 int Simulation::getEventFD(Int flags, Int coalesce) {
 	int ret;
 
