@@ -65,10 +65,12 @@ Simulation::Simulation(String name, SystemTopology system,
 }
 
 Simulation::~Simulation() {
+#ifdef __linux__
 	if (mPipe[0] >= 0) {
 		close(mPipe[0]);
 		close(mPipe[1]);
 	}
+#endif
 }
 
 void Simulation::run() {
