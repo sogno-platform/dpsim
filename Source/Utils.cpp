@@ -18,8 +18,10 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *********************************************************************************/
-
+#ifdef _LINUX
 #include <getopt.h>
+#endif
+
 #include <string>
 #include <chrono>
 
@@ -27,6 +29,7 @@
 
 using namespace DPsim;
 
+#ifdef _LINUX
 DPsim::CommandLineArgs::CommandLineArgs(int argc, char *argv[],
 		Real dt,
 		Real d,
@@ -220,6 +223,7 @@ void DPsim::CommandLineArgs::showUsage() {
 	std::cout << std::endl;
 	showCopyright();
 }
+#endif
 
 void DPsim::CommandLineArgs::showCopyright() {
 	std::cout << "DPsim " << DPSIM_VERSION << "-" << DPSIM_RELEASE << std::endl;

@@ -19,7 +19,9 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *********************************************************************************/
 
+#ifdef _LINUX
 #include <unistd.h>
+#endif
 
 #include "Simulation.h"
 
@@ -123,6 +125,7 @@ void Simulation::addSystemTopology(SystemTopology system) {
 	mSolver->addSystemTopology(system);
 }
 
+#ifdef _LINUX
 int Simulation::getEventFD(Int flags, Int coalesce) {
 	int ret;
 
@@ -152,3 +155,4 @@ void Simulation::sendNotification(enum Event evt) {
 	if (ret < 0)
 		throw SystemError("Failed notify");
 }
+#endif

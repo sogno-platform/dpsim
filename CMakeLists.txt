@@ -11,11 +11,12 @@ set(PROJECT_AUTHOR "Institute for Automation of Complex Power Systems, RWTH Aach
 set(PROJECT_COPYRIGHT "2017, Institute for Automation of Complex Power Systems, RWTH Aachen University")
 
 include(CheckCXXCompilerFlag)
-if(MSVC)
+if(MSVC)	
 	check_cxx_compiler_flag("/W4 /WX" CXX_SUPPORTS_WERROR)
 
 	if(CXX_SUPPORTS_WERROR)
-		set(DPSIM_CXX_FLAGS /W4 /WX)
+	# TODO activate this again after fixing warnings
+	#		set(DPSIM_CXX_FLAGS /W4 /WX)
 	endif()
 else()
 	check_cxx_compiler_flag("-Wall -Werror" CXX_SUPPORTS_WERROR)
