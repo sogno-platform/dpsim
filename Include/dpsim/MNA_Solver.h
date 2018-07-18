@@ -26,11 +26,15 @@
 #include <list>
 
 #include "Solver.h"
+#ifdef WITH_CIM
+#include "cps/CIM/Reader.h"
+#endif /* WITH_CIM */
 
 using namespace CPS;
 
 namespace DPsim {
 	/// Simulation class which uses Modified Nodal Analysis (MNA).
+	template <typename VarType>
 	class MnaSolver : public Solver {
 	protected:
 		// General simulation settings
@@ -47,10 +51,18 @@ namespace DPsim {
 		/// Flag to activate power flow based initialization.
 		/// If this is false, all voltages are initialized with zero.
 		Bool mPowerflowInitialization;
+		/// System list
+		SystemTopology mSystem;
+		/// 
+		std::vector<Node<VarType>> mNodes;
+		/// 
+		std::vector<PowerComponent<VarType>> mPowerComponents;
+		/// 
+		std::vector<SignalComponent> mSignalComponents;
+		
+		// #### MNA specific attributes ####
 		/// System matrix A that is modified by matrix stamps
 		UInt mSystemIndex = 0;
-		/// System list
-		std::vector<SystemTopology> mSystemTopologies;
 		/// System matrices list for swtiching events
 		std::vector<Matrix> mSystemMatrices;
 		/// LU decomposition of system matrix A
@@ -59,18 +71,16 @@ namespace DPsim {
 		Matrix mRightSideVector;
 		/// Vector of unknown quantities
 		Matrix mLeftSideVector;
-		/// Numerical integration method for components which are not part of the network
-		NumericalMethod mNumMethod;
 		/// Switch to trigger steady-state initialization
 		Bool mSteadyStateInit = false;
 
-		// Variables related to switching
+		// #### Attributes related to switching ####
 		/// Index of the next switching event
 		UInt mSwitchTimeIndex = 0;
 		/// Vector of switch times
 		std::vector<SwitchConfiguration> mSwitchEvents;
 
-		// Attributes related to logging
+		// #### Attributes related to logging ####
 		/// Last simulation time step when log was updated
 		Int mLastLogTimeStep = 0;
 		/// Down sampling rate for log
@@ -85,48 +95,312 @@ namespace DPsim {
 		Logger mRightVectorLog;
 
 		/// TODO: check that every system matrix has the same dimensions
-		void initialize(SystemTopology system);
-		///
-		void switchSystemMatrix(UInt systemMatrixIndex);
-		///
-		void createEmptyVectors();
-		///
-		void createEmptySystemMatrix();
-		///
-		void solve();
-		///
-		void assignNodesToComponents(ComponentBase::List components);
-		///
-		void steadyStateInitialization();
+		void initialize(SystemTopology system) {
+			mLog.Log(Logger::Level::INFO) << "#### Start Initialization ####" << std::endl;
+			mSystem = system;
+
+			// We need to differentiate between power and signal components and
+			// ground nodes should be ignored.
+			IdentifyTopologyObjects();
+
+			// These steps complete the network information.
+			assignSimNodes();		
+			createVirtualNodes();
+
+			// For the power components the step order should not be important
+			// but signal components need to be executed following the connections.
+			sortExecutionPriority();
+
+			// The system topology is prepared and we create the MNA matrices.
+			createEmptyVectors();
+			createEmptySystemMatrix();
+
+			// TODO: Move to base solver class?
+			// This intialization according to power flow information is not MNA specific.
+			mLog.Log(Logger::Level::INFO) << "Initialize power flow" << std::endl;
+			for (auto comp : mPowerComponents)
+				comp->initializePowerflow(mSystem.mSystemFrequency);
+
+			// This steady state initialization is MNA specific and runs a simulation 
+			// before the actual simulation executed by the user.
+			if (mSteadyStateInit && mDomain == Solver::Domain::DP) {
+				mLog.Log(Logger::Level::INFO) << "Run steady-state initialization." << std::endl;
+				steadyStateInitialization();
+			}
+
+			// Now, initialize the components for the actual simulation.			
+			for (auto comp : mSignalComponents) {
+				comp->initialize();
+			}
+			for (auto comp : mPowerComponents) {
+				comp->mnaInitialize(mSystem.mSystemOmega, mTimeStep);
+				comp->mnaApplyRightSideVectorStamp(mRightSideVector);
+				comp->mnaApplySystemMatrixStamp(mSystemMatrices[0]);
+			}
+						
+			// Compute LU-factorization for system matrix
+			mLuFactorizations.push_back(Eigen::PartialPivLU<Matrix>(mSystemMatrices[0]));
+		}
+
+		/// Identify Nodes and PowerComponents and SignalComponents
+		void IdentifyTopologyObjects() {			
+			for (auto node : mSystem.mNodes) {	
+				// Add nodes to the list and ignore ground nodes.
+				if (!node->isGround())			
+					mNodes.push_back(dynamic_cast<Node<VarType>::Ptr>(node));	
+			}
+			
+			for (UInt i = 0; i < mNodes.size(); i++) {
+				mLog.Log(Logger::Level::INFO) << "Found node " << mNodes[i]->getName() << std::endl;
+			}
+
+			for (auto comp : mSystem.mComponents) {
+				if (PowerComponent<VarType>::Ptr powercomp = dynamic_cast<PowerComponent<VarType>::Ptr>(comp))
+					mPowerComponents.push_back(powercomp);		
+				else if (SignalComponent::Ptr signalcomp = dynamic_cast<SignalComponent::Ptr>(comp))		
+					mSignalComponents.push_back(signalcomp);	
+			}
+		}
+
+		void sortExecutionPriority() {			
+			// Sort SignalComponents according to execution priority.
+			// Components with a higher priority number should come first.
+			std::sort(mSignalComponents.begin(), mSignalComponents.end(), [](const auto& lhs, const auto& rhs) {
+				return lhs->getPriority() > rhs->getPriority();
+			});
+		}
+
+		/// Assign simulation node index according to index in the vector.
+		void assignSimNodes() {			
+			UInt simNodeIdx = -1;
+			for (UInt idx = 0; idx < mNodes.size(); idx++) {
+				mNodes[idx]->getSimNodes()[0] = ++simNodeIdx;
+				if (mNodes[idx]->mPhaseType == PhaseType::ABC) {
+					mNodes[idx]->getSimNodes()[1] = ++simNodeIdx;
+					mNodes[idx]->getSimNodes()[2] = ++simNodeIdx;
+				}
+			}	
+
+			// Total number of network nodes is simNodeIdx + 1
+			mNumRealNodes = maxNode + 1;	
+
+			mLog.Log(Logger::Level::INFO) << "Maximum node number: " << simNodeIdx << std::endl;
+			mLog.Log(Logger::Level::INFO) << "Number of nodes: " << mNodes.size() << std::endl;
+		}
+
+		/// Creates virtual nodes inside components.
+		/// The MNA algorithm handles these nodes in the same way as network nodes.
+		void createVirtualNodes() {
+			// virtual nodes are placed after network nodes
+			UInt virtualNode = mNumRealNodes - 1;	
+
+			// Check if component requires virtual node and if so set one
+			for (auto comp : mPowerComponents) {
+				if (comp->hasVirtualNodes()) {
+					for (UInt node = 0; node < comp->getVirtualNodesNum(); node++) {
+						virtualNode++;
+						mNodes.push_back(std::make_shared<Node<VarType>>(virtualNode));
+						comp->setVirtualNodeAt(mNodes[virtualNode], node);
+						mLog.Log(Logger::Level::INFO) << "Created virtual node" << node << " = " << virtualNode
+							<< " for " << comp->getName() << std::endl;
+					}
+				}
+			}
+
+			// Calculate system size and create matrices and vectors
+			mNumNodes = virtualNode + 1;
+			mNumVirtualNodes = mNumNodes - mNumRealNodes;
+		}
+
+		// TODO: check if this works with AC sources
+		void steadyStateInitialization() {
+			Real time = 0;
+
+			// Initialize right side vector and components
+			for (auto comp : mPowerComponents) {
+				comp->mnaInitialize(mSystem.mSystemOmega, mTimeStep);
+				comp->mnaApplyRightSideVectorStamp(mRightSideVector);
+				comp->mnaApplySystemMatrixStamp(mSystemMatrices[0]);
+				comp->mnaApplyInitialSystemMatrixStamp(mSystemMatrices[0]);
+			}
+			// Compute LU-factorization for system matrix
+			mLuFactorizations.push_back(Eigen::PartialPivLU<Matrix>(mSystemMatrices[0]));
+
+			Matrix prevLeftSideVector = Matrix::Zero(2 * mNumNodes, 1);
+			Matrix diff;
+			Real maxDiff, max;
+
+			while (time < 10) {
+				time = step(time);
+
+				diff = prevLeftSideVector - mLeftSideVector;
+				prevLeftSideVector = mLeftSideVector;
+				maxDiff = diff.lpNorm<Eigen::Infinity>();
+				max = mLeftSideVector.lpNorm<Eigen::Infinity>();
+
+				if ((maxDiff / max) < 0.0001)
+					break;
+			}
+			mLog.Log(Logger::Level::INFO) << "Initialization finished. Max difference: "
+				<< maxDiff << " or " << maxDiff / max << "% at time " << time << std::endl;
+			mSystemMatrices.pop_back();
+			mLuFactorizations.pop_back();
+			mSystemIndex = 0;
+
+			createEmptySystemMatrix();
+		}
+
+		/// Create left and right side vector
+		template<>
+		void createEmptyVectors<Real>() {	
+			mRightSideVector = Matrix::Zero(mNumNodes, 1);
+			mLeftSideVector = Matrix::Zero(mNumNodes, 1);			
+		}
+
+		/// Create left and right side vector
+		template<>
+		void createEmptyVectors<Complex>() {			
+			mRightSideVector = Matrix::Zero(2 * mNumNodes, 1);
+			mLeftSideVector = Matrix::Zero(2 * mNumNodes, 1);
+		}
+
+		/// Create system matrix
+		template<>
+		void MnaSolver::createEmptySystemMatrix<Real>() {			
+			mSystemMatrices.push_back(Matrix::Zero(mNumNodes, mNumNodes));
+		}
+
+		template<>
+		void MnaSolver::createEmptySystemMatrix<Real>() {
+			mSystemMatrices.push_back(Matrix::Zero(2 * mNumNodes, 2 * mNumNodes));			
+		}
+
+		/// TODO remove and replace with function that handles breakers
+		void MnaSolver::addSystemTopology(SystemTopology system) {
+			mSystemTopology = system;
+			assignNodesToComponents(system.mComponents);
+
+			// It is assumed that the system size does not change
+			createEmptySystemMatrix();
+			for (auto comp : system.mComponents)
+				comp->mnaApplySystemMatrixStamp(mSystemMatrices[mSystemMatrices.size()]);
+
+			mLuFactorizations.push_back(LUFactorized(mSystemMatrices[mSystemMatrices.size()]));
+		}
+
+		/// TODO This should be activated by switch/breaker components
+		void MnaSolver::switchSystemMatrix(UInt systemIndex) {
+			if (systemIndex < mSystemMatrices.size())
+				mSystemIndex = systemIndex;
+		}
+
+		/// Solve system matrices
+		void MnaSolver::solve()  {
+			mLeftSideVector = mLuFactorizations[mSystemIndex].solve(mRightSideVector);
+		}
+
 	public:
-		/// Creates system matrix according to
+		/// This constructor should not be called by users.
 		MnaSolver(String name,
 			Real timeStep,
 			Solver::Domain domain = Solver::Domain::DP,
 			Logger::Level logLevel = Logger::Level::INFO,
-			Bool steadyStateInit = false, Int downSampleRate = 1);
-		/// Creates system matrix according to
+			Bool steadyStateInit = false, Int downSampleRate = 1) :			
+			mLog("Logs/" + name + "_MNA.log", logLevel),
+			mLeftVectorLog("Logs/" + name + "_LeftVector.csv", logLevel),
+			mRightVectorLog("Logs/" + name + "_RightVector.csv", logLevel) {
+
+			mTimeStep = timeStep;
+			mDomain = domain;
+			mLogLevel = logLevel;
+			mDownSampleRate = downSampleRate;
+			mSteadyStateInit = steadyStateInit;
+		}
+
+		/// Constructor to be used in simulation examples.
 		MnaSolver(String name, SystemTopology system,
 			Real timeStep,
 			Solver::Domain domain = Solver::Domain::DP,
 			Logger::Level logLevel = Logger::Level::INFO,
 			Bool steadyStateInit = false,
-			Int downSampleRate = 1);
+			Int downSampleRate = 1)
+			: MnaSolver(name, timeStep, domain,
+			logLevel, steadyStateInit, downSampleRate) {
+			initialize(system);
+
+			// Logging
+			for (auto comp : system.mComponents)
+				mLog.Log(Logger::Level::INFO) << "Added " << comp->getType() << " '" << comp->getName() << "' to simulation." << std::endl;
+
+			mLog.Log(Logger::Level::INFO) << "System matrix:" << std::endl;
+			mLog.LogMatrix(Logger::Level::INFO, mSystemMatrices[0]);
+			mLog.Log(Logger::Level::INFO) << "LU decomposition:" << std::endl;
+			mLog.LogMatrix(Logger::Level::INFO, mLuFactorizations[0].matrixLU());
+			mLog.Log(Logger::Level::INFO) << "Right side vector:" << std::endl;
+			mLog.LogMatrix(Logger::Level::INFO, mRightSideVector);
+		}
+
 		///
 		virtual ~MnaSolver() { };
+
 		/// Solve system A * x = z for x and current time
-		Real step(Real time);
-		/// Log results
-		void log(Real time);
-		///
-		void setSwitchTime(Real switchTime, Int systemIndex);
-		///
-		void addSystemTopology(SystemTopology system);
+		Real step(Real time) {
+			mRightSideVector.setZero();
+
+			// First, step signal components and then power components
+			for (auto comp : mSignalComponents) {
+				comp->step(mSystemMatrices[mSystemIndex], mRightSideVector, mLeftSideVector, time);
+			}
+			for (auto comp : mPowerComponents) {
+				comp->mnaStep(mSystemMatrices[mSystemIndex], mRightSideVector, mLeftSideVector, time);
+			}
+
+			// Solve MNA system
+			solve();
+
+			// Some components need to update internal states
+			for (auto comp : mPowerComponents) {
+				comp->mnaPostStep(mRightSideVector, mLeftSideVector, time);
+			}
+
+			// TODO Try to avoid this step.
+			for (UInt nodeIdx = 0; nodeIdx < mNumRealNodes; nodeIdx++) {
+				mSystem.mNodes[nodeIdx]->mnaUpdateVoltages(mLeftSideVector);
+			}
+
+			// Handle switching events
+			if (mSwitchTimeIndex < mSwitchEvents.size()) {
+				if (time >= mSwitchEvents[mSwitchTimeIndex].switchTime) {
+					switchSystemMatrix(mSwitchEvents[mSwitchTimeIndex].systemIndex);
+					++mSwitchTimeIndex;
+
+					mLog.Log(Logger::Level::INFO) << "Switched to system " << mSwitchTimeIndex << " at " << time << std::endl;
+					mLog.Log(Logger::Level::INFO) << "New matrix:" << std::endl << mSystemMatrices[mSystemIndex] << std::endl;
+					mLog.Log(Logger::Level::INFO) << "New decomp:" << std::endl << mLuFactorizations[mSystemIndex].matrixLU() << std::endl;
+				}
+			}
+
+			// Calculate new simulation time
+			return time + mTimeStep;
+		}
+
+		/// Log left and right vector values for each simulation step
+		void log(Real time) {
+			mLeftVectorLog.LogNodeValues(time, getLeftSideVector());
+			mRightVectorLog.LogNodeValues(time, getRightSideVector());
+		}
+
+		/// TODO This should be handled by a switch/breaker component
+		void setSwitchTime(Real switchTime, Int systemIndex) {
+			SwitchConfiguration newSwitchConf;
+			newSwitchConf.switchTime = switchTime;
+			newSwitchConf.systemIndex = systemIndex;
+			mSwitchEvents.push_back(newSwitchConf);
+		}
 
 		// #### Getter ####
 		Matrix& getLeftSideVector() { return mLeftSideVector; }
 		Matrix& getRightSideVector() { return mRightSideVector; }
 		Matrix& getSystemMatrix() { return mSystemMatrices[mSystemIndex]; }
 	};
-
 }

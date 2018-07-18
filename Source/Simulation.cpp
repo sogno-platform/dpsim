@@ -57,9 +57,12 @@ Simulation::Simulation(String name, SystemTopology system,
 	switch (solverType) {
 	case Solver::Type::MNA:
 	default:
-		mSolver = std::make_shared<MnaSolver>(name,
-			system, timeStep,
-			domain, logLevel, steadyStateInit);
+		if (Solver::Domain::DP)
+			mSolver = std::make_shared<MnaSolver<Complex>>(name, system, timeStep,
+				domain, logLevel, steadyStateInit);
+		else 
+			mSolver = std::make_shared<MnaSolver<Real>>(name, system, timeStep,
+				domain, logLevel, steadyStateInit);
 		break;
 	}
 }
