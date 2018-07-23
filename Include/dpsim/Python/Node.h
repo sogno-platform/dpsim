@@ -65,28 +65,6 @@ namespace Python {
 	template<typename VarType>
 	PyObject *Node<VarType>::Py_GND = NULL;
 
-	typename CPS::NodeBase::List nodesFromPython(PyObject* list) {
-		CPS::NodeBase::List nodes;
-
-		if (!PyList_Check(list))
-			throw std::invalid_argument( "argument is not a list" );
-
-		for (int i = 0; i < PyList_Size(list); i++) {
-			PyObject* obj = PyList_GetItem(list, i);
-			if (PyObject_TypeCheck(obj, &Python::Node<Real>::type)) {
-				Node<Real>* pyNode = (Node<Real>*) obj;
-				nodes.push_back(std::dynamic_pointer_cast<NodeBase>(pyNode->node));
-			}
-			else if (PyObject_TypeCheck(obj, &Python::Node<Complex>::type)) {
-				Node<Complex>* pyNode = (Node<Complex>*) obj;
-				nodes.push_back(std::dynamic_pointer_cast<NodeBase>(pyNode->node));
-			}
-			else {
-				throw std::invalid_argument( "list element is not a dpsim.Node" );		
-			}			
-		}
-
-		return nodes;
-	}
+	CPS::NodeBase::List nodesFromPython(PyObject* list);	
 }
 }

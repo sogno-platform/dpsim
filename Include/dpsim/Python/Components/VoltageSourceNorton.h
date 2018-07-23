@@ -35,59 +35,6 @@ namespace Components {
 	template<class C>
 	PyObject* VoltageSourceNorton(PyObject* self, PyObject* args);
 
-	template<>
-	PyObject* VoltageSourceNorton<CPS::Components::EMT::VoltageSourceNorton>(PyObject* self, PyObject* args) {
-		const char *name;
-		double resistance;
-
-		Py_complex voltage;
-		PyObject *pyNodes;
-
-		if (!PyArg_ParseTuple(args, "sODd", &name, &pyNodes, &voltage, &resistance))
-			return nullptr;
-
-		try {
-			CPS::Node<Real>::List nodes = Python::Node<Real>::fromPython(pyNodes);
-
-			Component *pyComp = PyObject_New(Component, &ComponentType);
-			Component::init(pyComp);
-
-			String *mystring = new String(name);
-
-			pyComp->comp = std::make_shared<CPS::Components::EMT::VoltageSourceNorton>(*mystring, nodes, Complex(voltage.real, voltage.imag), resistance);
-
-			return (PyObject*) pyComp;
-		} catch (...) {
-			return nullptr;
-		}
-	}
-
-	template<>
-	PyObject* VoltageSourceNorton<CPS::Components::DP::VoltageSourceNorton>(PyObject* self, PyObject* args) {
-		const char *name;
-		double resistance;
-
-		Py_complex voltage;
-		PyObject *pyNodes;
-
-		if (!PyArg_ParseTuple(args, "sODd", &name, &pyNodes, &voltage, &resistance))
-			return nullptr;
-
-		try {
-			CPS::Node<Complex>::List nodes = Python::Node<Complex>::fromPython(pyNodes);
-
-			Component *pyComp = PyObject_New(Component, &ComponentType);
-			Component::init(pyComp);
-
-			String *mystring = new String(name);
-
-			pyComp->comp = std::make_shared<CPS::Components::DP::VoltageSourceNorton>(*mystring, nodes, Complex(voltage.real, voltage.imag), resistance);
-
-			return (PyObject*) pyComp;
-		} catch (...) {
-			return nullptr;
-		}
-	}
 }
 }
 }

@@ -35,51 +35,6 @@ namespace Components {
 	template<class C>
 	PyObject* CurrentSource(PyObject* self, PyObject* args);
 	
-	template<>
-	PyObject* CurrentSource<CPS::Components::EMT::CurrentSource>(PyObject* self, PyObject* args) {
-		const char *name;
-
-		PyObject *pyNodes;
-		Py_complex initCurrent;
-
-		if (!PyArg_ParseTuple(args, "sOD", &name, &pyNodes, &initCurrent))
-			return nullptr;
-
-		try {
-			CPS::Node<Real>::List nodes = Python::Node<Real>::fromPython(pyNodes);
-
-			Component *pyComp = PyObject_New(Component, &CPS::Python::ComponentType);
-			Component::init(pyComp);
-			pyComp->comp = std::make_shared<CPS::Components::EMT::CurrentSource>(name, nodes, CPS::Complex(initCurrent.real, initCurrent.imag));
-
-			return (PyObject*) pyComp;
-		} catch (...) {
-			return nullptr;
-		}
-	}
-
-	template<>
-	PyObject* CurrentSource<CPS::Components::DP::CurrentSource>(PyObject* self, PyObject* args) {
-		const char *name;
-
-		PyObject *pyNodes;
-		Py_complex initCurrent;
-
-		if (!PyArg_ParseTuple(args, "sOD", &name, &pyNodes, &initCurrent))
-			return nullptr;
-
-		try {
-			CPS::Node<Complex>::List nodes = Python::Node<Complex>::fromPython(pyNodes);
-
-			Component *pyComp = PyObject_New(Component, &CPS::Python::ComponentType);
-			Component::init(pyComp);
-			pyComp->comp = std::make_shared<CPS::Components::DP::CurrentSource>(name, nodes, CPS::Complex(initCurrent.real, initCurrent.imag));
-
-			return (PyObject*) pyComp;
-		} catch (...) {
-			return nullptr;
-		}
-	}
 }
 }
 }

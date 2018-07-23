@@ -1,9 +1,9 @@
-/** Python binding for ExternalVoltageSource
+/** MNA Solver
  *
  * @author Markus Mirz <mmirz@eonerc.rwth-aachen.de>
  * @copyright 2017, Institute for Automation of Complex Power Systems, EONERC
  *
- * CPowerSystems
+ * DPsim
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -19,22 +19,31 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *********************************************************************************/
 
-#pragma once
+#include "MNA_Solver.h"
 
-#include "Python/Component.h"
-#include "Python/Node.h"
-#include "cps/Components/DP_VoltageSource.h"
-#include "cps/Components/EMT_VoltageSource.h"
+using namespace DPism;
 
-namespace CPS {
-namespace Python {
-namespace Components {
-
-	extern const char* DocVoltageSource;
-
-	template<class C>
-	PyObject* VoltageSource(PyObject* self, PyObject* args);
-
+/// Create left and right side vector
+template<>
+void MnaSolver<Real>::createEmptyVectors() {	
+    mRightSideVector = Matrix::Zero(mNumNodes, 1);
+    mLeftSideVector = Matrix::Zero(mNumNodes, 1);			
 }
+
+/// Create left and right side vector
+template<>
+void MnaSolver<Complex>::createEmptyVectors() {			
+    mRightSideVector = Matrix::Zero(2 * mNumNodes, 1);
+    mLeftSideVector = Matrix::Zero(2 * mNumNodes, 1);
 }
+
+/// Create system matrix
+template<>
+void MnaSolver<Real>::createEmptySystemMatrix() {			
+    mSystemMatrices.push_back(Matrix::Zero(mNumNodes, mNumNodes));
+}
+
+template<>
+void MnaSolver<Complex>::createEmptySystemMatrix() {
+    mSystemMatrices.push_back(Matrix::Zero(2 * mNumNodes, 2 * mNumNodes));			
 }

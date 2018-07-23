@@ -31,3 +31,49 @@ const char *CPS::Python::Components::DocVoltageSource =
 "\n"
 ":param initial_current: The voltage of this source in the first timestep (as a complex value).\n"
 ":returns: A new `Component` representing this voltage source.\n";
+
+template<>
+PyObject* CPS::Python::Components::VoltageSource<CPS::Components::EMT::VoltageSource>(PyObject* self, PyObject* args) {
+    const char *name;
+
+    PyObject *pyNodes;
+    Py_complex initVoltage;
+
+    if (!PyArg_ParseTuple(args, "sOD", &name, &pyNodes, &initVoltage))
+        return nullptr;
+
+    try {
+        CPS::Node<Real>::List nodes = Python::Node<Real>::fromPython(pyNodes);
+
+        Component *pyComp = PyObject_New(Component, &CPS::Python::ComponentType);
+        Component::init(pyComp);
+        pyComp->comp = std::make_shared<CPS::Components::EMT::VoltageSource>(name, nodes, CPS::Complex(initVoltage.real, initVoltage.imag));
+
+        return (PyObject*) pyComp;
+    } catch (...) {
+        return nullptr;
+    }
+}
+
+template<>
+PyObject* CPS::Python::Components::VoltageSource<CPS::Components::DP::VoltageSource>(PyObject* self, PyObject* args) {
+    const char *name;
+
+    PyObject *pyNodes;
+    Py_complex initVoltage;
+
+    if (!PyArg_ParseTuple(args, "sOD", &name, &pyNodes, &initVoltage))
+        return nullptr;
+
+    try {
+        CPS::Node<Complex>::List nodes = Python::Node<Complex>::fromPython(pyNodes);
+
+        Component *pyComp = PyObject_New(Component, &CPS::Python::ComponentType);
+        Component::init(pyComp);
+        pyComp->comp = std::make_shared<CPS::Components::DP::VoltageSource>(name, nodes, CPS::Complex(initVoltage.real, initVoltage.imag));
+
+        return (PyObject*) pyComp;
+    } catch (...) {
+        return nullptr;
+    }
+}

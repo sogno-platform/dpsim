@@ -28,3 +28,27 @@ const char *CPS::Python::Components::DocLoadPQ =
 ":param activePower: Active Power in VA.\n"
 ":param reactivePower: Reactive Power in VAr.\n"
 ":returns: A new `Component` representing this PQ load.\n";
+
+template<>
+PyObject* CPS::Python::Components::LoadPQ<CPS::Components::DP::PQLoad>(PyObject* self, PyObject* args)
+{
+    const char *name;
+    double activePower, reactivePower, volt;
+
+    PyObject *pyNodes;
+
+    if (!PyArg_ParseTuple(args, "sOddd", &name, &pyNodes, &activePower, &reactivePower, &volt))
+        return nullptr;
+
+    try {
+        CPS::Node<Complex>::List nodes = Python::Node<Complex>::fromPython(pyNodes);
+
+        Component *pyComp = PyObject_New(Component, &CPS::Python::ComponentType);
+        Component::init(pyComp);
+        pyComp->comp = std::make_shared<CPS::Components::DP::PQLoad>(name, nodes, activePower, reactivePower, volt);
+
+        return (PyObject*) pyComp;
+    } catch (...) {
+        return nullptr;
+    }
+}

@@ -32,52 +32,7 @@ namespace Components {
 	extern const char* DocLoadPQ;
 
 	template<class C>
-	PyObject* LoadPQ(PyObject* self, PyObject* args)
-	{
-		const char *name;
-		double activePower, reactivePower, volt;
-
-		PyObject *pyNodes;
-
-		if (!PyArg_ParseTuple(args, "sOddd", &name, &pyNodes, &activePower, &reactivePower, &volt))
-			return nullptr;
-
-		try {
-			CPS::NodeBase::List nodes = nodesFromPython(pyNodes);
-
-			Component *pyComp = PyObject_New(Component, &CPS::Python::ComponentType);
-			Component::init(pyComp);
-			pyComp->comp = std::make_shared<C>(name, nodes, activePower, reactivePower, volt);
-
-			return (PyObject*) pyComp;
-		} catch (...) {
-			return nullptr;
-		}
-	}
-
-	template<>
-	PyObject* LoadPQ<CPS::Components::DP::PQLoad>(PyObject* self, PyObject* args)
-	{
-		const char *name;
-		double activePower, reactivePower, volt;
-
-		PyObject *pyNodes;
-
-		if (!PyArg_ParseTuple(args, "sOddd", &name, &pyNodes, &activePower, &reactivePower, &volt))
-			return nullptr;
-
-		try {
-			CPS::Node<Complex>::List nodes = Python::Node<Complex>::fromPython(pyNodes);
-
-			Component *pyComp = PyObject_New(Component, &CPS::Python::ComponentType);
-			Component::init(pyComp);
-			pyComp->comp = std::make_shared<CPS::Components::DP::PQLoad>(name, nodes, activePower, reactivePower, volt);
-
-			return (PyObject*) pyComp;
-		} catch (...) {
-			return nullptr;
-		}
-	}
+	PyObject* LoadPQ(PyObject* self, PyObject* args);
 
 }
 }

@@ -388,28 +388,5 @@ namespace DPsim {
 		Matrix& getSystemMatrix() { return mSystemMatrices[mSystemIndex]; }
 	};
 
-	/// Create left and right side vector
-		template<>
-		void MnaSolver<Real>::createEmptyVectors() {	
-			mRightSideVector = Matrix::Zero(mNumNodes, 1);
-			mLeftSideVector = Matrix::Zero(mNumNodes, 1);			
-		}
-
-		/// Create left and right side vector
-		template<>
-		void MnaSolver<Complex>::createEmptyVectors() {			
-			mRightSideVector = Matrix::Zero(2 * mNumNodes, 1);
-			mLeftSideVector = Matrix::Zero(2 * mNumNodes, 1);
-		}
-
-		/// Create system matrix
-		template<>
-		void MnaSolver<Real>::createEmptySystemMatrix() {			
-			mSystemMatrices.push_back(Matrix::Zero(mNumNodes, mNumNodes));
-		}
-
-		template<>
-		void MnaSolver<Complex>::createEmptySystemMatrix() {
-			mSystemMatrices.push_back(Matrix::Zero(2 * mNumNodes, 2 * mNumNodes));			
-		}
+	
 }

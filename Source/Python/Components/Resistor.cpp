@@ -29,3 +29,51 @@ const char *CPS::Python::Components::DocResistor =
 "\n"
 ":param resistance: Resistance in Ohm.\n"
 ":returns: A new `Component` representing this resistor.\n";
+
+template<>
+PyObject* CPS::Python::Components::Resistor<CPS::Components::EMT::Resistor>(PyObject* self, PyObject* args)
+{
+    const char *name;
+    double resistance;
+
+    PyObject *pyNodes;
+
+    if (!PyArg_ParseTuple(args, "sOd", &name, &pyNodes, &resistance))
+        return nullptr;
+
+    try {
+        CPS::Node<Real>::List nodes = Python::Node<Real>::fromPython(pyNodes);
+
+        Component *pyComp = PyObject_New(Component, &CPS::Python::ComponentType);
+        Component::init(pyComp);
+        pyComp->comp = std::make_shared<CPS::Components::EMT::Resistor>(name, nodes, resistance);
+
+        return (PyObject*) pyComp;
+    } catch (...) {
+        return nullptr;
+    }
+}
+
+template<>
+PyObject* CPS::Python::Components::Resistor<CPS::Components::DP::Resistor>(PyObject* self, PyObject* args)
+{
+    const char *name;
+    double resistance;
+
+    PyObject *pyNodes;
+
+    if (!PyArg_ParseTuple(args, "sOd", &name, &pyNodes, &resistance))
+        return nullptr;
+
+    try {
+        CPS::Node<Complex>::List nodes = Python::Node<Complex>::fromPython(pyNodes);
+
+        Component *pyComp = PyObject_New(Component, &CPS::Python::ComponentType);
+        Component::init(pyComp);
+        pyComp->comp = std::make_shared<CPS::Components::DP::Resistor>(name, nodes, resistance);
+
+        return (PyObject*) pyComp;
+    } catch (...) {
+        return nullptr;
+    }
+}

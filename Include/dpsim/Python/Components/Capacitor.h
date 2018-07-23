@@ -33,55 +33,7 @@ namespace Components {
 	extern const char* DocCapacitor;
 
 	template<class C>
-	PyObject* Capacitor(PyObject* self, PyObject* args);
-
-	template<>
-	PyObject* Capacitor<CPS::Components::EMT::Capacitor>(PyObject* self, PyObject* args)
-	{
-		const char *name;
-		double capacitance;
-
-		PyObject *pyNodes;
-
-		if (!PyArg_ParseTuple(args, "sOd", &name, &pyNodes, &capacitance))
-			return nullptr;
-
-		try {
-			CPS::Node<Real>::List nodes = Python::Node<Real>::fromPython(pyNodes);
-
-			Component *pyComp = PyObject_New(Component, &CPS::Python::ComponentType);
-			Component::init(pyComp);
-			pyComp->comp = std::make_shared<CPS::Components::EMT::Capacitor>(name, nodes, capacitance);
-
-			return (PyObject*) pyComp;
-		} catch (...) {
-			return nullptr;
-		}
-	}
-
-	template<>
-	PyObject* Capacitor<CPS::Components::DP::Capacitor>(PyObject* self, PyObject* args)
-	{
-		const char *name;
-		double capacitance;
-
-		PyObject *pyNodes;
-
-		if (!PyArg_ParseTuple(args, "sOd", &name, &pyNodes, &capacitance))
-			return nullptr;
-
-		try {
-			CPS::Node<Complex>::List nodes = Python::Node<Complex>::fromPython(pyNodes);
-
-			Component *pyComp = PyObject_New(Component, &CPS::Python::ComponentType);
-			Component::init(pyComp);
-			pyComp->comp = std::make_shared<CPS::Components::DP::Capacitor>(name, nodes, capacitance);
-
-			return (PyObject*) pyComp;
-		} catch (...) {
-			return nullptr;
-		}
-	}
+	PyObject* Capacitor(PyObject* self, PyObject* args);	
 }
 }
 }

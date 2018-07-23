@@ -34,29 +34,6 @@ namespace Components {
 	template<class C>
 	PyObject* LinePi(PyObject* self, PyObject* args);	
 
-	template<>
-	PyObject* LinePi<CPS::Components::DP::PiLine>(PyObject* self, PyObject* args)
-	{
-		const char *name;
-		double resistance, inductance, capacitance, conductance;
-
-		PyObject *pyNodes;
-
-		if (!PyArg_ParseTuple(args, "sOdddd", &name, &pyNodes, &resistance, &inductance, &capacitance, &conductance))
-			return nullptr;
-
-		try {
-			CPS::Node<Complex>::List nodes = Python::Node<Complex>::fromPython(pyNodes);
-
-			Component *pyComp = PyObject_New(Component, &CPS::Python::ComponentType);
-			Component::init(pyComp);
-			pyComp->comp = std::make_shared<CPS::Components::DP::PiLine>(name, nodes, resistance, inductance, capacitance, conductance);
-
-			return (PyObject*) pyComp;
-		} catch (...) {
-			return nullptr;
-		}
-	}
 }
 }
 }

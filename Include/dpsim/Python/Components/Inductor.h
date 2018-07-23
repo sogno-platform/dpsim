@@ -35,53 +35,6 @@ namespace Components {
 	template<class C>
 	PyObject* Inductor(PyObject* self, PyObject* args);
 
-	template<>
-	PyObject* Inductor<CPS::Components::EMT::Inductor>(PyObject* self, PyObject* args)
-	{
-		const char *name;
-		double inductance;
-
-		PyObject *pyNodes;
-
-		if (!PyArg_ParseTuple(args, "sOd", &name, &pyNodes, &inductance))
-			return nullptr;
-
-		try {
-			CPS::Node<Real>::List nodes = Python::Node<Real>::fromPython(pyNodes);
-
-			Component *pyComp = PyObject_New(Component, &CPS::Python::ComponentType);
-			Component::init(pyComp);
-			pyComp->comp = std::make_shared<CPS::Components::EMT::Inductor>(name, nodes, inductance);
-
-			return (PyObject*) pyComp;
-		} catch (...) {
-			return nullptr;
-		}
-	}
-
-	template<>
-	PyObject* Inductor<CPS::Components::DP::Inductor>(PyObject* self, PyObject* args)
-	{
-		const char *name;
-		double inductance;
-
-		PyObject *pyNodes;
-
-		if (!PyArg_ParseTuple(args, "sOd", &name, &pyNodes, &inductance))
-			return nullptr;
-
-		try {
-			CPS::Node<Complex>::List nodes = Python::Node<Complex>::fromPython(pyNodes);
-
-			Component *pyComp = PyObject_New(Component, &CPS::Python::ComponentType);
-			Component::init(pyComp);
-			pyComp->comp = std::make_shared<CPS::Components::DP::Inductor>(name, nodes, inductance);
-
-			return (PyObject*) pyComp;
-		} catch (...) {
-			return nullptr;
-		}
-	}
 }
 }
 }
