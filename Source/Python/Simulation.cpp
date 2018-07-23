@@ -23,8 +23,8 @@
 #include "Config.h"
 #include "Python/Simulation.h"
 
-#include "cps/Python/Interface.h"
-#include "cps/Python/Component.h"
+#include "Python/Interface.h"
+#include "Python/Component.h"
 
 #include <cfloat>
 #include <iostream>

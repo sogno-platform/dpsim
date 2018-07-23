@@ -32,11 +32,11 @@
 #include "Python/Simulation.h"
 
 #include "cps/Components.h"
-#include "cps/Python/Components.h"
-#include "cps/Python/LoadCim.h"
-#include "cps/Python/Interface.h"
-#include "cps/Python/Node.h"
-#include "cps/Python/SystemTopology.h"
+#include "Python/Components.h"
+#include "Python/LoadCim.h"
+#include "Python/Interface.h"
+#include "Python/Node.h"
+#include "Python/SystemTopology.h"
 
 using namespace DPsim;
 

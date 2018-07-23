@@ -37,7 +37,7 @@
 #endif
 
 #include "Config.h"
-#include "cps/Python/SystemTopology.h"
+#include "Python/SystemTopology.h"
 #include "../Simulation.h"
 
 namespace DPsim {
