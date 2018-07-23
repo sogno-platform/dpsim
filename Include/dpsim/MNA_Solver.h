@@ -349,7 +349,7 @@ namespace DPsim {
 
 			// TODO Try to avoid this step.
 			for (UInt nodeIdx = 0; nodeIdx < mNumRealNodes; nodeIdx++) {
-				mSystem.mNodes[nodeIdx]->mnaUpdateVoltage(mLeftSideVector);
+				mNodes[nodeIdx]->mnaUpdateVoltage(mLeftSideVector);
 			}
 
 			// Handle switching events

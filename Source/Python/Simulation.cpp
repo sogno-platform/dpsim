@@ -195,7 +195,7 @@ int DPsim::Python::Simulation::init(Python::Simulation* self, PyObject *args, Py
 	int t = 0, s = 0;
 
 	enum Solver::Type solverType;
-	enum Solver::Domain domain;
+	enum Domain domain;
 
 	self->rt = 0;
 
@@ -205,8 +205,8 @@ int DPsim::Python::Simulation::init(Python::Simulation* self, PyObject *args, Py
 	}
 
 	switch (s) {
-		case 0: domain = DPsim::Solver::Domain::DP; break;
-		case 1: domain = DPsim::Solver::Domain::EMT; break;
+		case 0: domain = CPS::Domain::DP; break;
+		case 1: domain = CPS::Domain::EMT; break;
 		default:
 			PyErr_SetString(PyExc_TypeError, "Invalid sim_type argument (must be 0 or 1)");
 			return -1;

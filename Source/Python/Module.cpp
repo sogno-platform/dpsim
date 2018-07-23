@@ -58,7 +58,6 @@ static PyMethodDef dpsimModuleMethods[] = {
 	{ "CapacitorDP",            CPS::Python::Components::Capacitor<CPS::Components::DP::Capacitor>,                      METH_VARARGS, CPS::Python::Components::DocCapacitor },
 	{ "CapacitorEMT",           CPS::Python::Components::Capacitor<CPS::Components::EMT::Capacitor>,                     METH_VARARGS, CPS::Python::Components::DocCapacitor },
 	{ "LinePiDP",               CPS::Python::Components::LinePi<CPS::Components::DP::PiLine>,                            METH_VARARGS, CPS::Python::Components::DocLinePi },
-	{ "LineRxDP",               CPS::Python::Components::LineRx<CPS::Components::DP::RxLine>,                            METH_VARARGS, CPS::Python::Components::DocLineRx },
 	{ "LoadPQDP",               CPS::Python::Components::LoadPQ<CPS::Components::DP::PQLoad>,                            METH_VARARGS, CPS::Python::Components::DocLoadPQ },
 	{ 0 }
 };
