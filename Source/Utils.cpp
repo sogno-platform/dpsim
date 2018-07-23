@@ -38,7 +38,7 @@ DPsim::CommandLineArgs::CommandLineArgs(int argc, char *argv[],
 		Logger::Level ll,
 		Bool ss,
 		Bool b,
-		Solver::Domain sd,
+		Domain sd,
 		Solver::Type st
 	) :
 	mProgramName(argv[0]),
@@ -142,9 +142,9 @@ DPsim::CommandLineArgs::CommandLineArgs(int argc, char *argv[],
 				String arg = optarg;
 
 				if (arg == "DP")
-					solver.domain = Solver::Domain::DP;
+					solver.domain = Domain::DP;
 				else if (arg == "EMT")
-					solver.domain = Solver::Domain::EMT;
+					solver.domain = Domain::EMT;
 				else
 					throw std::invalid_argument("Invalid value for --solver-domain: must be a string of DP, EMT");
 				break;

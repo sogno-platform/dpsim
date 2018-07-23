@@ -54,11 +54,11 @@ namespace DPsim {
 		/// System list
 		SystemTopology mSystem;
 		/// 
-		std::vector<Node<VarType>> mNodes;
+		typename Node<VarType>::List mNodes;
 		/// 
-		std::vector<PowerComponent<VarType>> mPowerComponents;
+		typename PowerComponent<VarType>::List mPowerComponents;
 		/// 
-		std::vector<SignalComponent> mSignalComponents;
+		SignalComponent::List mSignalComponents;
 		
 		// #### MNA specific attributes ####
 		/// System matrix A that is modified by matrix stamps
@@ -123,7 +123,7 @@ namespace DPsim {
 
 			// This steady state initialization is MNA specific and runs a simulation 
 			// before the actual simulation executed by the user.
-			if (mSteadyStateInit && mDomain == Solver::Domain::DP) {
+			if (mSteadyStateInit && mDomain == Domain::DP) {
 				mLog.Log(Logger::Level::INFO) << "Run steady-state initialization." << std::endl;
 				steadyStateInitialization();
 			}
@@ -144,10 +144,12 @@ namespace DPsim {
 
 		/// Identify Nodes and PowerComponents and SignalComponents
 		void IdentifyTopologyObjects() {			
-			for (auto node : mSystem.mNodes) {	
+			for (auto baseNode : mSystem.mNodes) {	
 				// Add nodes to the list and ignore ground nodes.
-				if (!node->isGround())			
-					mNodes.push_back(dynamic_cast<Node<VarType>::Ptr>(node));	
+				if (!baseNode->isGround()) {			
+					auto node = std::dynamic_pointer_cast< Node<VarType> >(baseNode);
+					mNodes.push_back( node );	
+				}
 			}
 			
 			for (UInt i = 0; i < mNodes.size(); i++) {
@@ -155,10 +157,12 @@ namespace DPsim {
 			}
 
 			for (auto comp : mSystem.mComponents) {
-				if (PowerComponent<VarType>::Ptr powercomp = dynamic_cast<PowerComponent<VarType>::Ptr>(comp))
+				if ( typename PowerComponent<VarType>::Ptr powercomp = std::dynamic_pointer_cast< PowerComponent<VarType> >(comp) ) {
 					mPowerComponents.push_back(powercomp);		
-				else if (SignalComponent::Ptr signalcomp = dynamic_cast<SignalComponent::Ptr>(comp))		
+				}
+				else if ( SignalComponent::Ptr signalcomp = std::dynamic_pointer_cast< SignalComponent >(comp) )	{	
 					mSignalComponents.push_back(signalcomp);	
+				}
 			}
 		}
 
@@ -175,14 +179,14 @@ namespace DPsim {
 			UInt simNodeIdx = -1;
 			for (UInt idx = 0; idx < mNodes.size(); idx++) {
 				mNodes[idx]->getSimNodes()[0] = ++simNodeIdx;
-				if (mNodes[idx]->mPhaseType == PhaseType::ABC) {
+				if (mNodes[idx]->getPhaseType() == PhaseType::ABC) {
 					mNodes[idx]->getSimNodes()[1] = ++simNodeIdx;
 					mNodes[idx]->getSimNodes()[2] = ++simNodeIdx;
 				}
 			}	
 
 			// Total number of network nodes is simNodeIdx + 1
-			mNumRealNodes = maxNode + 1;	
+			mNumRealNodes = simNodeIdx + 1;	
 
 			mLog.Log(Logger::Level::INFO) << "Maximum node number: " << simNodeIdx << std::endl;
 			mLog.Log(Logger::Level::INFO) << "Number of nodes: " << mNodes.size() << std::endl;
@@ -250,35 +254,15 @@ namespace DPsim {
 			createEmptySystemMatrix();
 		}
 
-		/// Create left and right side vector
-		template<>
-		void createEmptyVectors<Real>() {	
-			mRightSideVector = Matrix::Zero(mNumNodes, 1);
-			mLeftSideVector = Matrix::Zero(mNumNodes, 1);			
-		}
-
-		/// Create left and right side vector
-		template<>
-		void createEmptyVectors<Complex>() {			
-			mRightSideVector = Matrix::Zero(2 * mNumNodes, 1);
-			mLeftSideVector = Matrix::Zero(2 * mNumNodes, 1);
-		}
+		/// Create left and right side vector	
+		void createEmptyVectors();
 
 		/// Create system matrix
-		template<>
-		void MnaSolver::createEmptySystemMatrix<Real>() {			
-			mSystemMatrices.push_back(Matrix::Zero(mNumNodes, mNumNodes));
-		}
-
-		template<>
-		void MnaSolver::createEmptySystemMatrix<Real>() {
-			mSystemMatrices.push_back(Matrix::Zero(2 * mNumNodes, 2 * mNumNodes));			
-		}
+		void createEmptySystemMatrix();
 
 		/// TODO remove and replace with function that handles breakers
-		void MnaSolver::addSystemTopology(SystemTopology system) {
-			mSystemTopology = system;
-			assignNodesToComponents(system.mComponents);
+		void addSystemTopology(SystemTopology system) {
+			mSystem = system;
 
 			// It is assumed that the system size does not change
 			createEmptySystemMatrix();
@@ -289,13 +273,13 @@ namespace DPsim {
 		}
 
 		/// TODO This should be activated by switch/breaker components
-		void MnaSolver::switchSystemMatrix(UInt systemIndex) {
+		void switchSystemMatrix(UInt systemIndex) {
 			if (systemIndex < mSystemMatrices.size())
 				mSystemIndex = systemIndex;
 		}
 
 		/// Solve system matrices
-		void MnaSolver::solve()  {
+		void solve()  {
 			mLeftSideVector = mLuFactorizations[mSystemIndex].solve(mRightSideVector);
 		}
 
@@ -303,7 +287,7 @@ namespace DPsim {
 		/// This constructor should not be called by users.
 		MnaSolver(String name,
 			Real timeStep,
-			Solver::Domain domain = Solver::Domain::DP,
+			Domain domain = Domain::DP,
 			Logger::Level logLevel = Logger::Level::INFO,
 			Bool steadyStateInit = false, Int downSampleRate = 1) :			
 			mLog("Logs/" + name + "_MNA.log", logLevel),
@@ -320,7 +304,7 @@ namespace DPsim {
 		/// Constructor to be used in simulation examples.
 		MnaSolver(String name, SystemTopology system,
 			Real timeStep,
-			Solver::Domain domain = Solver::Domain::DP,
+			Domain domain = Domain::DP,
 			Logger::Level logLevel = Logger::Level::INFO,
 			Bool steadyStateInit = false,
 			Int downSampleRate = 1)
@@ -349,7 +333,7 @@ namespace DPsim {
 
 			// First, step signal components and then power components
 			for (auto comp : mSignalComponents) {
-				comp->step(mSystemMatrices[mSystemIndex], mRightSideVector, mLeftSideVector, time);
+				comp->step(time);
 			}
 			for (auto comp : mPowerComponents) {
 				comp->mnaStep(mSystemMatrices[mSystemIndex], mRightSideVector, mLeftSideVector, time);
@@ -365,7 +349,7 @@ namespace DPsim {
 
 			// TODO Try to avoid this step.
 			for (UInt nodeIdx = 0; nodeIdx < mNumRealNodes; nodeIdx++) {
-				mSystem.mNodes[nodeIdx]->mnaUpdateVoltages(mLeftSideVector);
+				mSystem.mNodes[nodeIdx]->mnaUpdateVoltage(mLeftSideVector);
 			}
 
 			// Handle switching events
@@ -403,4 +387,29 @@ namespace DPsim {
 		Matrix& getRightSideVector() { return mRightSideVector; }
 		Matrix& getSystemMatrix() { return mSystemMatrices[mSystemIndex]; }
 	};
+
+	/// Create left and right side vector
+		template<>
+		void MnaSolver<Real>::createEmptyVectors() {	
+			mRightSideVector = Matrix::Zero(mNumNodes, 1);
+			mLeftSideVector = Matrix::Zero(mNumNodes, 1);			
+		}
+
+		/// Create left and right side vector
+		template<>
+		void MnaSolver<Complex>::createEmptyVectors() {			
+			mRightSideVector = Matrix::Zero(2 * mNumNodes, 1);
+			mLeftSideVector = Matrix::Zero(2 * mNumNodes, 1);
+		}
+
+		/// Create system matrix
+		template<>
+		void MnaSolver<Real>::createEmptySystemMatrix() {			
+			mSystemMatrices.push_back(Matrix::Zero(mNumNodes, mNumNodes));
+		}
+
+		template<>
+		void MnaSolver<Complex>::createEmptySystemMatrix() {
+			mSystemMatrices.push_back(Matrix::Zero(2 * mNumNodes, 2 * mNumNodes));			
+		}
 }

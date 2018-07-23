@@ -72,7 +72,9 @@ PyMODINIT_FUNC PyInit__dpsim(void) {
 
 	if (PyType_Ready(&CPS::Python::ComponentType) < 0)
 		return nullptr;
-	if (PyType_Ready(&CPS::Python::NodeType) < 0)
+	if (PyType_Ready(&CPS::Python::Node<Real>::type) < 0)
+		return nullptr;
+	if (PyType_Ready(&CPS::Python::Node<Complex>::type) < 0)
 		return nullptr;
 	if (PyType_Ready(&DPsim::Python::SimulationType) < 0)
 		return nullptr;
@@ -91,8 +93,13 @@ PyMODINIT_FUNC PyInit__dpsim(void) {
 	PyModule_AddObject(m, "SystemTopology", (PyObject*) &CPS::Python::SystemTopologyType);
 	Py_INCREF(&CPS::Python::ComponentType);
 	PyModule_AddObject(m, "Component", (PyObject*) &CPS::Python::ComponentType);
-	Py_INCREF(&CPS::Python::NodeType);
-	PyModule_AddObject(m, "Node", (PyObject*) &CPS::Python::NodeType);
+	
+	Py_INCREF(&CPS::Python::Node<Complex>::type);
+	PyModule_AddObject(m, "DPNode", (PyObject*) &CPS::Python::Node<Complex>::type);
+
+	Py_INCREF(&CPS::Python::Node<Real>::type);
+	PyModule_AddObject(m, "EMTNode", (PyObject*) &CPS::Python::Node<Real>::type);
+	
 	Py_INCREF(&CPS::Python::InterfaceType);
 	PyModule_AddObject(m, "Interface", (PyObject*) &CPS::Python::InterfaceType);
 

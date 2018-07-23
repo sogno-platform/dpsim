@@ -34,7 +34,7 @@ using namespace DPsim;
 
 Simulation::Simulation(String name,
 	Real timeStep, Real finalTime,
-	Solver::Domain domain, Solver::Type solverType,
+	Domain domain, Solver::Type solverType,
 	Logger::Level logLevel) :
 	mLog("Logs/" + name + ".log", logLevel),
 	mName(name),
@@ -48,7 +48,7 @@ Simulation::Simulation(String name,
 
 Simulation::Simulation(String name, SystemTopology system,
 	Real timeStep, Real finalTime,
-	Solver::Domain domain, Solver::Type solverType,
+	Domain domain, Solver::Type solverType,
 	Logger::Level logLevel,
 	Bool steadyStateInit) :
 	Simulation(name, timeStep, finalTime,
@@ -57,7 +57,7 @@ Simulation::Simulation(String name, SystemTopology system,
 	switch (solverType) {
 	case Solver::Type::MNA:
 	default:
-		if (Solver::Domain::DP)
+		if (domain == Domain::DP)
 			mSolver = std::make_shared<MnaSolver<Complex>>(name, system, timeStep,
 				domain, logLevel, steadyStateInit);
 		else 
