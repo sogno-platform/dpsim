@@ -22,8 +22,11 @@ Using setuptools is most likely the easiest way to install DPsim on your system.
     $ cd dpsim
     # python3 ./setup.py install
 
-CMake - Linux
--------------
+CMake
+-----
+
+Linux
+*****
 
 1. Make sure that the required dependecies are installed.
 
@@ -77,29 +80,34 @@ CMake - Linux
 
       # make install
 
-CMake - Windows
----------------
+Windows
+*******
 
-Prerequisites
-~~~~~~~~~~~~~
+1. Make sure that the required dependecies are installed::
 
-First, install:
+   - Visual Studio 2017 and the C++ Desktop development package
+     - ACS students and assistants can install Visual Studio via the ICT software center.
+   - `CMake`_ for Windows
+   - `Git for Windows`_
+   
+2. Open a Git Bash shell in a directory where you want to checkout the DPsim files::
 
-- Visual Studio 2017 and the C++ Desktop development package
-- CMake
+2. Fetch sources::
 
-Installation with CMake
-~~~~~~~~~~~~~~~~~~~~~~~
+      $ git clone --recursive git@git.rwth-aachen.de:acs/core/simulation/dpsim.git
+      $ cd dpsim
 
-Generate a Visual Studio project with CMake and use it to build the project:
+3. Open a windows command prompt and navigate into the newly created DPsim folder.
 
-1. In the folder of dpsim, create 'build' folder.
+4. Generate a Visual Studio project with CMake and use it to build the project::
 
-2. Enter the folder and run cmake::
+      $ mkdir build
+      $ cd build
+      $ cmake -G "Visual Studio 15 2017 Win64" ..
 
-    cmake -G "Visual Studio 15 2017 Win64" ..
+5. Open Visual Studio and load the Visual Studio project from the build directory within the DPsim folder.
 
-3. Now you can either open the project in VS and build it or execute::
+6. Alternatively, you can build the project from command line by running the following command in the windows command prompt::
 
     cmake --build .
 
@@ -113,6 +121,7 @@ Python support for Windows
 .. _`Python 3`: https://www.python.org/downloads/
 .. _Eigen: http://eigen.tuxfamily.org
 .. _CMake: https://cmake.org/download/
+.. _`Git for Windows`: https://git-scm.com/download/win
 .. _VILLASnode: https://git.rwth-aachen.de/VILLASframework/VILLASnode
 .. _DPsim: https://git.rwth-aachen.de/acs/core/simulation/dpsim
 .. _`DPsim Libraries`: https://git.rwth-aachen.de/acs/core/simulation/dpsim-libraries
