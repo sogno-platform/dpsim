@@ -57,6 +57,9 @@ if(PythonInterp_FOUND AND PythonLibs_FOUND)
 	set(Python_FOUND ON)
 endif()
 
+find_package(VILLASnode)
+find_package(CIMpp)
+
 if("${CMAKE_SYSTEM}" MATCHES "Linux")
 	set(Linux_FOUND ON)
 endif()
@@ -65,8 +68,10 @@ endif()
 option(BUILD_SHARED_LIBS "Build shared library" OFF)
 option(BUILD_EXAMPLES "Build C++ examples" ON)
 
+option(WITH_SHMEM   "Enable shared memory interface"        ${VILLASnode_FOUND})
 option(WITH_RT	   "Enable real-time features"			${Linux_FOUND})
 option(WITH_PYTHON "Enable Python support"				${Python_FOUND})
+option(WITH_CIM     "Enable support for parsing CIM files"  ${CIMpp_FOUND})
 
 configure_file(
 	${CMAKE_CURRENT_SOURCE_DIR}/Include/dpsim/Config.h.in
