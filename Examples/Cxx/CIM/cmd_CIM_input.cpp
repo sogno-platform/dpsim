@@ -40,7 +40,7 @@ int main(int argc, char *argv[]) {
 	CIM::Reader reader(simName);
 	SystemTopology sys = reader.loadCIM(50, filenames);
 
-	Simulation sim(simName, sys, 0.0001, 0.1, Solver::Domain::DP, Solver::Type::MNA);
+	Simulation sim(simName, sys, 0.0001, 0.1, Domain::DP, Solver::Type::MNA);
 	sim.run();
 
 	return 0;

@@ -38,7 +38,7 @@ int main(int argc, char* argv[]) {
 	Real finalTime = 0.2;
 	String simName = "EMT_IdealVS_R1";
 
-	Simulation sim(simName, system, timeStep, finalTime, Solver::Domain::EMT);
+	Simulation sim(simName, system, timeStep, finalTime, Domain::EMT);
 	sim.run();
 
 	return 0;

@@ -21,7 +21,7 @@
 
 #include "MNA_Solver.h"
 
-using namespace DPism;
+using namespace DPsim;
 
 /// Create left and right side vector
 template<>
@@ -47,3 +47,6 @@ template<>
 void MnaSolver<Complex>::createEmptySystemMatrix() {
     mSystemMatrices.push_back(Matrix::Zero(2 * mNumNodes, 2 * mNumNodes));			
 }
+
+template class DPsim::MnaSolver<Real>;
+template class DPsim::MnaSolver<Complex>;

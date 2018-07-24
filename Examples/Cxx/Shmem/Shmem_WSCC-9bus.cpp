@@ -50,7 +50,7 @@ int main(int argc, char *argv[]) {
 	SystemTopology sys = reader.loadCIM(60, filenames);
 
 	RealTimeSimulation sim(simName, sys, 0.001, 120,
-		Solver::Domain::DP, Solver::Type::MNA, Logger::Level::DEBUG, true);
+		Domain::DP, Solver::Type::MNA, Logger::Level::DEBUG, true);
 
 	// Create shmem interface
 	Interface::Config conf;

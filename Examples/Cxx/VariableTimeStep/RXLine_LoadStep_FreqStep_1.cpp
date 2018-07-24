@@ -62,7 +62,7 @@ static void VarFreqRxLineResLoad_EMT(Real timeStep, Real finalTime, Real freqSte
 	// Define simulation scenario
 	String simName = "EMT_RXLine_LoadStep_FreqStep_1_" + std::to_string(timeStep);	
 
-	Simulation sim(simName, system1, timeStep, finalTime, Solver::Domain::EMT);
+	Simulation sim(simName, system1, timeStep, finalTime, Domain::EMT);
 	sim.addSystemTopology(system2);
 	sim.setSwitchTime(loadStep, 1);
 

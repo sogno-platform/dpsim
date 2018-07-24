@@ -11,41 +11,41 @@ endif()
 
 # targets
 set(CIRCUIT_SOURCES
-	Circuits/DP_IdealVS_R_1.cpp
-	Circuits/DP_CS_R_1.cpp
-	Circuits/DP_IdealVS_RXLine_1.cpp
-	Circuits/DP_IdealVS_Trafo_1.cpp
-	Circuits/DP_ResVS_RL_Switch_1.cpp
-	Circuits/EMT_IdealVS_R_1.cpp
-	Circuits/EMT_ResVS_RL_Switch_1.cpp
+	#Circuits/DP_IdealVS_R_1.cpp
+	#Circuits/DP_CS_R_1.cpp
+	#Circuits/DP_IdealVS_RXLine_1.cpp
+	#Circuits/DP_IdealVS_Trafo_1.cpp
+	#Circuits/DP_ResVS_RL_Switch_1.cpp
+	#Circuits/EMT_IdealVS_R_1.cpp
+	#Circuits/EMT_ResVS_RL_Switch_1.cpp
 )
 
 set(SYNCGEN_SOURCES
-	#SynchronGenerator/DP_SynchronGenerator_BalancedResLoad.cpp
-	SynchronGenerator/DP_SynchronGenerator_ExciterAndTurbine.cpp
-	SynchronGenerator/DP_SynchronGenerator_SimpThreePhaseFault.cpp
-	#SynchronGenerator/DP_SynchronGenerator_ThreePhaseFault.cpp
-	SynchronGenerator/DP_SynchronGenerator_VBR.cpp
-	SynchronGenerator/DP_SynchronGenerator_Simplified_ThreePhaseFault.cpp
-	SynchronGenerator/EMT_SynchronGenerator_BalancedResLoad.cpp
-	SynchronGenerator/EMT_SynchronGenerator_ExciterAndTurbine.cpp
-	SynchronGenerator/EMT_SynchronGenerator_PhaseToPhaseFault.cpp
-	SynchronGenerator/EMT_SynchronGenerator_ThreePhaseFault.cpp
-	SynchronGenerator/EMT_SynchronGenerator_VBR_ThreePhaseFault.cpp
-	SynchronGenerator/EMT_SynchronGenerator_Simplified_ThreePhaseFault.cpp
-	SynchronGenerator/EMT_Multimachine.cpp
-)
+	##SynchronGenerator/DP_SynchronGenerator_BalancedResLoad.cpp
+	#SynchronGenerator/DP_SynchronGenerator_ExciterAndTurbine.cpp
+	#SynchronGenerator/DP_SynchronGenerator_SimpThreePhaseFault.cpp
+	##SynchronGenerator/DP_SynchronGenerator_ThreePhaseFault.cpp
+	#SynchronGenerator/DP_SynchronGenerator_VBR.cpp
+	#SynchronGenerator/DP_SynchronGenerator_Simplified_ThreePhaseFault.cpp
+	#SynchronGenerator/EMT_SynchronGenerator_BalancedResLoad.cpp
+	#SynchronGenerator/EMT_SynchronGenerator_ExciterAndTurbine.cpp
+	#SynchronGenerator/EMT_SynchronGenerator_PhaseToPhaseFault.cpp
+	#SynchronGenerator/EMT_SynchronGenerator_ThreePhaseFault.cpp
+	#SynchronGenerator/EMT_SynchronGenerator_VBR_ThreePhaseFault.cpp
+	#SynchronGenerator/EMT_SynchronGenerator_Simplified_ThreePhaseFault.cpp
+	#SynchronGenerator/EMT_Multimachine.cpp
+)#
 
 set(VARFREQ_SOURCES
-	VariableTimeStep/RXLine_LoadStep_FreqStep_1.cpp
-	VariableTimeStep/RXLine_LoadStep_FreqStep_2.cpp
+	#VariableTimeStep/RXLine_LoadStep_FreqStep_1.cpp
+	#VariableTimeStep/RXLine_LoadStep_FreqStep_2.cpp
 )
 
 if(WITH_RT)
 	list(APPEND LIBRARIES "-lrt")
 
 	set(RT_SOURCES
-		RealTime/RT_DP_ResVS_RL1.cpp
+		#RealTime/RT_DP_ResVS_RL1.cpp
 	)
 endif()
 
@@ -54,17 +54,17 @@ if(WITH_SHMEM)
 	list(APPEND INCLUDE_DIRS ${VILLASNODE_INCLUDE_DIRS})
 
 	set(SHMEM_SOURCES
-		Shmem/ShmemExample.cpp
-		Shmem/ShmemDistributedReference.cpp
-		Shmem/ShmemDistributedDirect.cpp
+		#Shmem/ShmemExample.cpp
+		#Shmem/ShmemDistributedReference.cpp
+		#Shmem/ShmemDistributedDirect.cpp
 	)
 
 	if (WITH_RT)
 		list(APPEND SHMEM_SOURCES
-			Shmem/ShmemDistributedVillas.cpp
-			Shmem/ShmemControllableSource.cpp
-			Shmem/ShmemControllableFiltSource.cpp
-			Shmem/ShmemRealTime.cpp
+			#Shmem/ShmemDistributedVillas.cpp
+			#Shmem/ShmemControllableSource.cpp
+			#Shmem/ShmemControllableFiltSource.cpp
+			#Shmem/ShmemRealTime.cpp
 		)
 	endif()
 endif()
@@ -82,7 +82,7 @@ endif()
 if(WITH_CIM AND WITH_SHMEM)
 	set(CIM_SHMEM_SOURCES
 	Shmem/Shmem_WSCC-9bus.cpp
-	Shmem/Shmem_WSCC-9bus_Ctrl.cpp
+	#Shmem/Shmem_WSCC-9bus_Ctrl.cpp
 	Shmem/Shmem_WSCC-9bus_CtrlDist.cpp
 	)
 endif()

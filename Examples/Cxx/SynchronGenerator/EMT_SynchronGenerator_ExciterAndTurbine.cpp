@@ -109,7 +109,7 @@ int main(int argc, char* argv[])
 	Real dt = 0.0001;
 	Int downSampling = 1;
 
-	Simulation sim("EMT_SynchronGenerator_ExciterAndTurbine", system, dt, tf, Solver::Domain::EMT);
+	Simulation sim("EMT_SynchronGenerator_ExciterAndTurbine", system, dt, tf, Domain::EMT);
 	sim.setLogDownsamplingRate(downSampling);
 	sim.addSystemTopology(systemBreakerOn);
 

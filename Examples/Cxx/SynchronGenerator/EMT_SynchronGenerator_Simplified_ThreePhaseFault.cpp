@@ -88,7 +88,7 @@ int main(int argc, char* argv[]) {
 		systemBreakerOn.mComponents = { gen, rBreaker1, rBreaker2, rBreaker3, r1, r2, r3 };
 
 		String mSimulationName = "EMT_SynchronGenerator_VBRSimplified_" + std::to_string(dt);
-		Simulation sim(mSimulationName, system, dt, tf, Solver::Domain::EMT);
+		Simulation sim(mSimulationName, system, dt, tf, Domain::EMT);
 		sim.setLogDownsamplingRate(downSampling);
 		sim.addSystemTopology(systemBreakerOn);
 

@@ -83,7 +83,7 @@ int main(int argc, char* argv[])
 	SystemTopology systemBreakerOn(60);
 	systemBreakerOn.mComponents = { gen, rBreaker1, rBreaker2, rBreaker3, r1, r2, r3};
 
-	Simulation sim("EMT_SynchronGeneratorDQ_ThreePhaseFault", system, dt, tf, Solver::Domain::EMT);
+	Simulation sim("EMT_SynchronGeneratorDQ_ThreePhaseFault", system, dt, tf, Domain::EMT);
 	sim.setLogDownsamplingRate(downSampling);
 	sim.addSystemTopology(systemBreakerOn);
 
