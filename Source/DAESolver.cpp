@@ -8,14 +8,12 @@ DAESolver::DAESolver(String name,  SystemTopology system, Real dt, Real t0) : DA
 	// defines offset vector of the residual which is composed as follows:
 	// offset[0] = # nodal voltage equations
 	// offset[1] = # of componets and their respective equations (1 per component for now as inductance is not yet considered) 
-	// offset[2] = # of Node equations with current summation to 0
 	offsets.push_back(0);
 	offsets.push_back(0);
-	offsets.push_back(0);
-	NEQ = DAESys.mComponents.size()+DAESys.mNodes.size();
+    NEQ = DAESys.mComponents.size() + (2 * DAESys.mNodes.size());
 	 
 	// set inital values of all required variables and create IDA solver environment
-	initialize(DAESys.mComponents,t0);
+    initialize(DAESys.mComponents,t0);
 }
 
 void DAESolver::initialize(Component::List newComponents, Real t0)
@@ -85,12 +83,12 @@ void DAESolver::initialize(Component::List newComponents, Real t0)
 int DAESolver::DAE_residualFunction(realtype ttime, N_Vector state, N_Vector dstate_dt, N_Vector resid, void *user_data)
 {
 	offsets[0]=0;  //reset Offset
-	offsets[1]=0;  //reeset Offset
+    offsets[1]=0;  //reset Offset
 	for (auto node : DAESys.mNodes){ //solve for all node Voltages
 		double residual[]=NVECTOR_DATA(resid);
 		double tempstate[]=NVECTOR_DATA(state);
 		residual[offsets[0]]=tempstate[offsets[0]]-node->voltage;
-		offsets[0]=offsets[0]+1;
+        offsets[0] += 1;
 	}
 	
 	for (auto comp : DAESys.mComponents){  	// currently only supports DP_Resistor and DP_VoltageSource

@@ -50,7 +50,7 @@ using namespace DPsim ;
 
 	public:
 		/// Create solve object with given parameters
-		DAESolver(String name,  SystemTopology system, Real dt);
+        DAESolver(String name,  SystemTopology system, Real dt, Real t0);
 		virtual ~DAESolver();
 		/// Initialize Components & Nodes with inital values
 		void initialize(Component::List comps);
