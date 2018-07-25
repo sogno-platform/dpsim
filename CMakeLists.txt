@@ -57,9 +57,6 @@ if(PythonInterp_FOUND AND PythonLibs_FOUND)
 	set(Python_FOUND ON)
 endif()
 
-find_package(VILLASnode)
-find_package(CIMpp)
-
 if("${CMAKE_SYSTEM}" MATCHES "Linux")
 	set(Linux_FOUND ON)
 endif()
