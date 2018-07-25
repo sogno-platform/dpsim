@@ -31,14 +31,14 @@ int main(int argc, char *argv[]) {
 #ifdef _WIN32
 	String path("..\\..\\..\\..\\dpsim\\Examples\\CIM\\WSCC-09_Neplan_RX\\");
 #elif defined(__linux__) || defined(__APPLE__)
-	String path("Examples/CIM/WSCC-09_Neplan/");
+	String path("Examples/CIM/WSCC-09_Neplan_RX/");
 #endif
 
 	std::list<String> filenames = {
-		path + "WSCC-09_Neplan_DI.xml",
-		path + "WSCC-09_Neplan_EQ.xml",
-		path + "WSCC-09_Neplan_SV.xml",
-		path + "WSCC-09_Neplan_TP.xml"
+		path + "WSCC-09_Neplan_RX_DI.xml",
+		path + "WSCC-09_Neplan_RX_EQ.xml",
+		path + "WSCC-09_Neplan_RX_SV.xml",
+		path + "WSCC-09_Neplan_RX_TP.xml"
 	};
 
 	String simName = "WSCC-9bus";
