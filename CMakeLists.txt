@@ -50,6 +50,8 @@ string(TIMESTAMP YMD "%Y%m%d")
 set(DPSIM_VERSION 0.1.4)
 set(DPSIM_RELEASE ${YMD}git${GIT_HASH_SHORT})
 
+add_subdirectory(Dependencies/libcps)
+
 find_package(PythonInterp 3.6)
 find_package(PythonLibs 3.6)
 
@@ -82,7 +84,7 @@ set(INCLUDE_DIRS
 
 add_subdirectory(Source)
 add_subdirectory(Documentation)
-add_subdirectory(Dependencies/libcps)
+
 
 if(BUILD_EXAMPLES)
 	add_subdirectory(Examples/Cxx)
@@ -97,6 +99,7 @@ add_feature_info(Shmem  WITH_SHMEM  "Interface DPsim solvers via shared-memory i
 add_feature_info(RT	 WITH_RT	 "Execute simulation in real time")
 feature_summary(WHAT ALL VAR enabledFeaturesText)
 
+message(STATUS "Feature summary for CPS")
 message(STATUS "${enabledFeaturesText}")
 
 include(DPsimPackaging)
