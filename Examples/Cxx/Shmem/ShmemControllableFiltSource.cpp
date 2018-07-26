@@ -24,6 +24,7 @@
 using namespace DPsim;
 using namespace CPS::Components;
 using namespace CPS::Components::DP;
+using namespace CPS::Signal;
 
 int main(int argc, char *argv[]) {
 

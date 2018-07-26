@@ -30,6 +30,7 @@ using namespace DPsim;
 using namespace CPS;
 using namespace CPS::Components;
 using namespace CPS::Components::DP;
+using namespace CPS::Signal;
 
 int main(int argc, char *argv[]) {
 
@@ -52,11 +53,11 @@ int main(int argc, char *argv[]) {
 		SystemTopology sys = reader.loadCIM(args.sysFreq, filenames);
 
 		// Extend system with controllable load (Profile)
-		auto load_profile = PQLoadCS::make("load_cs_profile", DP::Node::List{sys.getDPNodeAt(6)}, 0, 0, 230000, Logger::Level::INFO);
+		auto load_profile = PQLoadCS::make("load_cs_profile", ComplexNode::List{sys.getDPNodeAt(6)}, 0, 0, 230000, Logger::Level::INFO);
 		sys.mComponents.push_back(load_profile);
 
 		// Extend system with controllable load
-		auto ecs = CurrentSource::make("i_intf", DP::Node::List{sys.getDPNodeAt(3), DP::Node::GND}, Complex(0, 0), Logger::Level::DEBUG);
+		auto ecs = CurrentSource::make("i_intf", ComplexNode::List{sys.getDPNodeAt(3), ComplexNode::GND}, Complex(0, 0), Logger::Level::DEBUG);
 		sys.mComponents.push_back(ecs);
 
 		RealTimeSimulation sim(simName + "_1", sys, args.timeStep, args.duration,
@@ -125,13 +126,13 @@ int main(int argc, char *argv[]) {
 
 	if (args.scenario == 1) {
 		// Nodes
-		auto n1 = DP::Node::make("n1", Complex(02.180675e+05, -1.583367e+04));
+		auto n1 = ComplexNode::make("n1", Complex(02.180675e+05, -1.583367e+04));
 
 		// Add interface voltage source
-		auto evs = VoltageSource::make("v_intf", DP::Node::List{DP::Node::GND, n1}, Complex(0, 0), Logger::Level::DEBUG);
+		auto evs = VoltageSource::make("v_intf", ComplexNode::List{ComplexNode::GND, n1}, Complex(0, 0), Logger::Level::DEBUG);
 
 		// Extend system with controllable load
-		auto load = PQLoadCS::make("load_cs", DP::Node::List{n1}, 0, 0, 230000);
+		auto load = PQLoadCS::make("load_cs", ComplexNode::List{n1}, 0, 0, 230000);
 
 		// Controllers and filter
 		std::vector<Real> coefficients = std::vector(100, 1./100);
