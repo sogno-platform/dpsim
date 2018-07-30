@@ -21,7 +21,7 @@
 
 #include "Python/Components/CurrentSource.h"
 
-const char *CPS::Python::Components::DocCurrentSource =
+const char *DPsim::Python::Components::DocCurrentSource =
 "CurrentSource(name, node1, node2, initial_current)\n"
 "Construct a new external current source.\n"
 "\n"
@@ -33,7 +33,7 @@ const char *CPS::Python::Components::DocCurrentSource =
 ":returns: A new `Component` representing this current source.\n";
 
 template<>
-PyObject* CPS::Python::Components::CurrentSource<CPS::Components::EMT::CurrentSource>(PyObject* self, PyObject* args) {
+PyObject* DPsim::Python::Components::CurrentSource<CPS::EMT::Ph1::CurrentSource>(PyObject* self, PyObject* args) {
     const char *name;
 
     PyObject *pyNodes;
@@ -43,11 +43,11 @@ PyObject* CPS::Python::Components::CurrentSource<CPS::Components::EMT::CurrentSo
         return nullptr;
 
     try {
-        CPS::Node<Real>::List nodes = Python::Node<Real>::fromPython(pyNodes);
+        CPS::Node<CPS::Real>::List nodes = Python::Node<CPS::Real>::fromPython(pyNodes);
 
-        Component *pyComp = PyObject_New(Component, &CPS::Python::ComponentType);
+        Component *pyComp = PyObject_New(Component, &DPsim::Python::ComponentType);
         Component::init(pyComp);
-        pyComp->comp = std::make_shared<CPS::Components::EMT::CurrentSource>(name, nodes, CPS::Complex(initCurrent.real, initCurrent.imag));
+        pyComp->comp = std::make_shared<CPS::EMT::Ph1::CurrentSource>(name, nodes, CPS::Complex(initCurrent.real, initCurrent.imag));
 
         return (PyObject*) pyComp;
     } catch (...) {
@@ -56,7 +56,7 @@ PyObject* CPS::Python::Components::CurrentSource<CPS::Components::EMT::CurrentSo
 }
 
 template<>
-PyObject* CPS::Python::Components::CurrentSource<CPS::Components::DP::CurrentSource>(PyObject* self, PyObject* args) {
+PyObject* DPsim::Python::Components::CurrentSource<CPS::DP::Ph1::CurrentSource>(PyObject* self, PyObject* args) {
     const char *name;
 
     PyObject *pyNodes;
@@ -66,11 +66,11 @@ PyObject* CPS::Python::Components::CurrentSource<CPS::Components::DP::CurrentSou
         return nullptr;
 
     try {
-        CPS::Node<Complex>::List nodes = Python::Node<Complex>::fromPython(pyNodes);
+        CPS::Node<CPS::Complex>::List nodes = Python::Node<CPS::Complex>::fromPython(pyNodes);
 
-        Component *pyComp = PyObject_New(Component, &CPS::Python::ComponentType);
+        Component *pyComp = PyObject_New(Component, &DPsim::Python::ComponentType);
         Component::init(pyComp);
-        pyComp->comp = std::make_shared<CPS::Components::DP::CurrentSource>(name, nodes, CPS::Complex(initCurrent.real, initCurrent.imag));
+        pyComp->comp = std::make_shared<CPS::DP::Ph1::CurrentSource>(name, nodes, CPS::Complex(initCurrent.real, initCurrent.imag));
 
         return (PyObject*) pyComp;
     } catch (...) {

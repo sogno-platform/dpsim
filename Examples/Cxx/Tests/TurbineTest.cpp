@@ -47,9 +47,9 @@ int main(int argc, char* argv[])
 
 	Real initActivePower = 300e6;
 
-	DPsim::Components::TurbineGovernor mTurbineGovernor;
+	DPsim::TurbineGovernor mTurbineGovernor;
 
-	mTurbineGovernor = DPsim::Components::TurbineGovernor(Ta_t, Tb, Tc, Fa, Fb, Fc, Kg, Tsr, Tsm);
+	mTurbineGovernor = DPsim::TurbineGovernor(Ta_t, Tb, Tc, Fa, Fb, Fc, Kg, Tsr, Tsm);
 
 	Real OmRef = 1;
 	Real PmRef = 300e6/555e6;

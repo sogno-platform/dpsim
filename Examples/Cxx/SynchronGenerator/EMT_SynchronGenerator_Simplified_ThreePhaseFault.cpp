@@ -22,7 +22,7 @@
 #include "DPsim.h"
 
 using namespace DPsim;
-using namespace CPS::Components::EMT;
+using namespace CPS::EMT::Ph3;
 
 int main(int argc, char* argv[]) {
 
@@ -99,7 +99,7 @@ int main(int argc, char* argv[]) {
 		Real initVoltAngle = -DPS_PI / 2;
 		Real fieldVoltage = 7.0821;
 		Real mechPower = 300e6;
-		auto genPtr = std::dynamic_pointer_cast<Components::EMT::SynchronGeneratorVBRSmpl>(gen);
+		auto genPtr = std::dynamic_pointer_cast<EMT::Ph3::SynchronGeneratorVBRSmpl>(gen);
 		genPtr->initialize(om, dt, initActivePower, initReactivePower, initTerminalVolt, initVoltAngle, fieldVoltage, mechPower);
 
 		// Calculate initial values for circuit at generator connection point

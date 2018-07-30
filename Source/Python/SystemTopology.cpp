@@ -23,7 +23,7 @@
 #include "Python/Component.h"
 #include "Python/Node.h"
 
-using namespace CPS;
+using namespace DPsim;
 
 const char *DocSystemTopologyAddComponent =
 "add_component(comp)\n"
@@ -148,9 +148,9 @@ void Python::SystemTopology::dealloc(Python::SystemTopology *self)
 
 
 static PyMethodDef SystemTopology_methods[] = {
-	{"add_component", CPS::Python::SystemTopology::addComponent, METH_VARARGS, DocSystemTopologyAddComponent},
+	{"add_component", DPsim::Python::SystemTopology::addComponent, METH_VARARGS, DocSystemTopologyAddComponent},
 #ifdef WITH_GRAPHVIZ
-	{"_repr_svg_", CPS::Python::SystemTopology::reprSVG, METH_NOARGS, DocSystemTopologyReprSVG},
+	{"_repr_svg_", DPsim::Python::SystemTopology::reprSVG, METH_NOARGS, DocSystemTopologyReprSVG},
 #endif
 	{NULL, NULL, 0, NULL}
 };
@@ -163,12 +163,12 @@ static const char* DocSystemTopology =
 "``__init__(self, frequency=50.0, components)``.\n\n"
 "``frequency`` is the nominal system frequency in Hz.\n\n"
 "``components`` must be a list of `Component` that are to be simulated.\n\n";
-PyTypeObject CPS::Python::SystemTopologyType = {
+PyTypeObject DPsim::Python::SystemTopologyType = {
 	PyVarObject_HEAD_INIT(NULL, 0)
 	"dpsim.SystemTopology",                  /* tp_name */
-	sizeof(CPS::Python::SystemTopology),     /* tp_basicsize */
+	sizeof(DPsim::Python::SystemTopology),     /* tp_basicsize */
 	0,                                       /* tp_itemsize */
-	(destructor)CPS::Python::SystemTopology::dealloc, /* tp_dealloc */
+	(destructor)DPsim::Python::SystemTopology::dealloc, /* tp_dealloc */
 	0,                                       /* tp_print */
 	0,                                       /* tp_getattr */
 	0,                                       /* tp_setattr */
@@ -199,7 +199,7 @@ PyTypeObject CPS::Python::SystemTopologyType = {
 	0,                                       /* tp_descr_get */
 	0,                                       /* tp_descr_set */
 	0,                                       /* tp_dictoffset */
-	(initproc)CPS::Python::SystemTopology::init,/* tp_init */
+	(initproc)DPsim::Python::SystemTopology::init,/* tp_init */
 	0,                                       /* tp_alloc */
-	CPS::Python::SystemTopology::newfunc,    /* tp_new */
+	DPsim::Python::SystemTopology::newfunc,    /* tp_new */
 };

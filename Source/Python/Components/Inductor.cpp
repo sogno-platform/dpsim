@@ -21,7 +21,7 @@
 
 #include "Python/Components/Inductor.h"
 
-const char *CPS::Python::Components::DocInductor =
+const char *DPsim::Python::Components::DocInductor =
 "Inductor(name, node1, node2, inductance)\n"
 "Construct a new inductor.\n"
 "\n"
@@ -31,7 +31,7 @@ const char *CPS::Python::Components::DocInductor =
 ":returns: A new `Component` representing this inductor.\n";
 
 template<>
-PyObject* CPS::Python::Components::Inductor<CPS::Components::EMT::Inductor>(PyObject* self, PyObject* args)
+PyObject* DPsim::Python::Components::Inductor<CPS::EMT::Ph1::Inductor>(PyObject* self, PyObject* args)
 {
     const char *name;
     double inductance;
@@ -42,11 +42,11 @@ PyObject* CPS::Python::Components::Inductor<CPS::Components::EMT::Inductor>(PyOb
         return nullptr;
 
     try {
-        CPS::Node<Real>::List nodes = Python::Node<Real>::fromPython(pyNodes);
+        CPS::Node<CPS::Real>::List nodes = Python::Node<CPS::Real>::fromPython(pyNodes);
 
-        Component *pyComp = PyObject_New(Component, &CPS::Python::ComponentType);
+        Component *pyComp = PyObject_New(Component, &DPsim::Python::ComponentType);
         Component::init(pyComp);
-        pyComp->comp = std::make_shared<CPS::Components::EMT::Inductor>(name, nodes, inductance);
+        pyComp->comp = std::make_shared<CPS::EMT::Ph1::Inductor>(name, nodes, inductance);
 
         return (PyObject*) pyComp;
     } catch (...) {
@@ -55,7 +55,7 @@ PyObject* CPS::Python::Components::Inductor<CPS::Components::EMT::Inductor>(PyOb
 }
 
 template<>
-PyObject* CPS::Python::Components::Inductor<CPS::Components::DP::Inductor>(PyObject* self, PyObject* args)
+PyObject* DPsim::Python::Components::Inductor<CPS::DP::Ph1::Inductor>(PyObject* self, PyObject* args)
 {
     const char *name;
     double inductance;
@@ -66,11 +66,11 @@ PyObject* CPS::Python::Components::Inductor<CPS::Components::DP::Inductor>(PyObj
         return nullptr;
 
     try {
-        CPS::Node<Complex>::List nodes = Python::Node<Complex>::fromPython(pyNodes);
+        CPS::Node<CPS::Complex>::List nodes = Python::Node<CPS::Complex>::fromPython(pyNodes);
 
-        Component *pyComp = PyObject_New(Component, &CPS::Python::ComponentType);
+        Component *pyComp = PyObject_New(Component, &DPsim::Python::ComponentType);
         Component::init(pyComp);
-        pyComp->comp = std::make_shared<CPS::Components::DP::Inductor>(name, nodes, inductance);
+        pyComp->comp = std::make_shared<CPS::DP::Ph1::Inductor>(name, nodes, inductance);
 
         return (PyObject*) pyComp;
     } catch (...) {

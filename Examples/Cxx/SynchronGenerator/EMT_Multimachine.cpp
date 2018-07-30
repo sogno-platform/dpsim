@@ -22,7 +22,7 @@
 #include "DPsim.h"
 
 using namespace DPsim;
-using namespace CPS::Components::EMT;
+using namespace CPS::EMT::Ph3;
 
 int main(int argc, char* argv[])
 {
@@ -156,12 +156,12 @@ int main(int argc, char* argv[])
 		Real initVoltAngle = -DPS_PI / 2;
 		Real fieldVoltage = 7.0821;
 		Real mechPower = 285.89e6;
-		auto genPtr = std::dynamic_pointer_cast<Components::EMT::SynchronGeneratorVBR>(gen);
+		auto genPtr = std::dynamic_pointer_cast<EMT::Ph3::SynchronGeneratorVBR>(gen);
 		genPtr->initialize(om, dt, initActivePower, initReactivePower, initTerminalVolt, initVoltAngle, fieldVoltage, mechPower);
 		genPtr->addExciter(Ta, Ka, Te, Ke, Tf, Kf, Tr, Lmd, Rfd);
 		genPtr->addGovernor(Ta_t, Tb, Tc, Fa, Fb, Fc, Kg, Tsr, Tsm, initActivePower / nomPower, mechPower / nomPower);
 
-		auto genPtr2 = std::dynamic_pointer_cast<Components::EMT::SynchronGeneratorVBR>(gen2);
+		auto genPtr2 = std::dynamic_pointer_cast<EMT::Ph3::SynchronGeneratorVBR>(gen2);
 		genPtr2->initialize(om, dt, initActivePower, initReactivePower, initTerminalVolt, initVoltAngle, fieldVoltage, mechPower);
 		genPtr2->addExciter(Ta, Ka, Te, Ke, Tf, Kf, Tr, Lmd, Rfd);
 		genPtr2->addGovernor(Ta_t, Tb, Tc, Fa, Fb, Fc, Kg, Tsr, Tsm, initActivePower / nomPower, mechPower / nomPower);

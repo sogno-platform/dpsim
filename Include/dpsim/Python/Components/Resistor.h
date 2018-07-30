@@ -23,10 +23,10 @@
 
 #include "Python/Component.h"
 #include "Python/Node.h"
-#include "cps/Components/DP_Resistor.h"
-#include "cps/Components/EMT_Resistor.h"
+#include "cps/DP/DP_Resistor.h"
+#include "cps/EMT/EMT_Resistor.h"
 
-namespace CPS {
+namespace DPsim {
 namespace Python {
 namespace Components {
 

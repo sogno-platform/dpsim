@@ -21,7 +21,7 @@
 
 #include "Python/Components/LoadPQ.h"
 
-const char *CPS::Python::Components::DocLoadPQ =
+const char *DPsim::Python::Components::DocLoadPQ =
 "LoadPQ(name, node, activePower, reactivePower, volt, angle)\n"
 "Construct a new PQ load.\n"
 "\n"
@@ -30,7 +30,7 @@ const char *CPS::Python::Components::DocLoadPQ =
 ":returns: A new `Component` representing this PQ load.\n";
 
 template<>
-PyObject* CPS::Python::Components::LoadPQ<CPS::Components::DP::PQLoad>(PyObject* self, PyObject* args)
+PyObject* DPsim::Python::Components::LoadPQ<CPS::DP::Ph1::PQLoad>(PyObject* self, PyObject* args)
 {
     const char *name;
     double activePower, reactivePower, volt;
@@ -41,11 +41,11 @@ PyObject* CPS::Python::Components::LoadPQ<CPS::Components::DP::PQLoad>(PyObject*
         return nullptr;
 
     try {
-        CPS::Node<Complex>::List nodes = Python::Node<Complex>::fromPython(pyNodes);
+        CPS::Node<CPS::Complex>::List nodes = Python::Node<CPS::Complex>::fromPython(pyNodes);
 
-        Component *pyComp = PyObject_New(Component, &CPS::Python::ComponentType);
+        Component *pyComp = PyObject_New(Component, &DPsim::Python::ComponentType);
         Component::init(pyComp);
-        pyComp->comp = std::make_shared<CPS::Components::DP::PQLoad>(name, nodes, activePower, reactivePower, volt);
+        pyComp->comp = std::make_shared<CPS::DP::Ph1::PQLoad>(name, nodes, activePower, reactivePower, volt);
 
         return (PyObject*) pyComp;
     } catch (...) {

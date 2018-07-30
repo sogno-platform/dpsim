@@ -21,7 +21,7 @@
 
 #include "Python/Node.h"
 
-using namespace CPS;
+using namespace DPsim;
 
 CPS::NodeBase::List Python::nodesFromPython(PyObject* list) {
 		CPS::NodeBase::List nodes;
@@ -31,13 +31,13 @@ CPS::NodeBase::List Python::nodesFromPython(PyObject* list) {
 
 		for (int i = 0; i < PyList_Size(list); i++) {
 			PyObject* obj = PyList_GetItem(list, i);
-			if (PyObject_TypeCheck(obj, &Python::Node<Real>::type)) {
-				Node<Real>* pyNode = (Node<Real>*) obj;
-				nodes.push_back(std::dynamic_pointer_cast<NodeBase>(pyNode->node));
+			if (PyObject_TypeCheck(obj, &Python::Node<CPS::Real>::type)) {
+				Node<CPS::Real>* pyNode = (Node<CPS::Real>*) obj;
+				nodes.push_back(std::dynamic_pointer_cast<CPS::NodeBase>(pyNode->node));
 			}
-			else if (PyObject_TypeCheck(obj, &Python::Node<Complex>::type)) {
-				Node<Complex>* pyNode = (Node<Complex>*) obj;
-				nodes.push_back(std::dynamic_pointer_cast<NodeBase>(pyNode->node));
+			else if (PyObject_TypeCheck(obj, &Python::Node<CPS::Complex>::type)) {
+				Node<CPS::Complex>* pyNode = (Node<CPS::Complex>*) obj;
+				nodes.push_back(std::dynamic_pointer_cast<CPS::NodeBase>(pyNode->node));
 			}
 			else {
 				throw std::invalid_argument( "list element is not a dpsim.Node" );		
@@ -88,7 +88,7 @@ int Python::Node<VarType>::init(Python::Node<VarType> *self, PyObject *args, PyO
 	static char *kwlist[] = {"uid", "initial_voltage", NULL};
 
 	const char *uid;
-	Complex initialVoltage;
+	CPS::Complex initialVoltage;
 
 	if (!PyArg_ParseTupleAndKeywords(args, kwds, "s|D", kwlist, &uid, &initialVoltage)) {
 		return -1;
@@ -123,7 +123,7 @@ char* Python::Node<VarType>::DocGND =
 template<typename VarType>
 PyObject * Python::Node<VarType>::getGND(PyObject *self, PyObject *args) {
 	if (!Py_GND) {
-		Python::Node<VarType> *pyNode = PyObject_New(Node<VarType>, &CPS::Python::Node<VarType>::type);
+		Python::Node<VarType> *pyNode = PyObject_New(Node<VarType>, &DPsim::Python::Node<VarType>::type);
 
 		new (&pyNode->node) typename CPS::Node<VarType>::Ptr(nullptr);
 		pyNode->node = CPS::Node<VarType>::GND;
@@ -138,7 +138,7 @@ PyObject * Python::Node<VarType>::getGND(PyObject *self, PyObject *args) {
 
 template<typename VarType>
 PyMethodDef Python::Node<VarType>::methods[] = {
-	{"GND", CPS::Python::Node<VarType>::getGND, METH_NOARGS | METH_STATIC, CPS::Python::Node<VarType>::DocGND},
+	{"GND", DPsim::Python::Node<VarType>::getGND, METH_NOARGS | METH_STATIC, DPsim::Python::Node<VarType>::DocGND},
 	{NULL, NULL, 0, NULL}
 };
 
@@ -153,18 +153,18 @@ char* Python::Node<VarType>::Doc =
 "``initial_voltage`` is the initial voltage of the node.\n\n";
 
 template<>
-char* Python::Node<Real>::name = "dpsim.EMTNode";
+char* Python::Node<CPS::Real>::name = "dpsim.EMTNode";
 
 template<>
-char* Python::Node<Complex>::name = "dpsim.DPNode";
+char* Python::Node<CPS::Complex>::name = "dpsim.DPNode";
 
 template<typename VarType>
-PyTypeObject CPS::Python::Node<VarType>::type = {
+PyTypeObject DPsim::Python::Node<VarType>::type = {
 	PyVarObject_HEAD_INIT(NULL, 0)
-	CPS::Python::Node<VarType>::name,        /* tp_name */
-	sizeof(CPS::Python::Node<VarType>),      /* tp_basicsize */
+	DPsim::Python::Node<VarType>::name,        /* tp_name */
+	sizeof(DPsim::Python::Node<VarType>),      /* tp_basicsize */
 	0,                                       /* tp_itemsize */
-	(destructor)CPS::Python::Node<VarType>::dealloc,  /* tp_dealloc */
+	(destructor)DPsim::Python::Node<VarType>::dealloc,  /* tp_dealloc */
 	0,                                       /* tp_print */
 	0,                                       /* tp_getattr */
 	0,                                       /* tp_setattr */
@@ -195,11 +195,11 @@ PyTypeObject CPS::Python::Node<VarType>::type = {
 	0,                                       /* tp_descr_get */
 	0,                                       /* tp_descr_set */
 	0,                                       /* tp_dictoffset */
-	(initproc)CPS::Python::Node<VarType>::init,       /* tp_init */
+	(initproc)DPsim::Python::Node<VarType>::init,       /* tp_init */
 	0,                                       /* tp_alloc */
-	CPS::Python::Node<VarType>::newfunc,     /* tp_new */
+	DPsim::Python::Node<VarType>::newfunc,     /* tp_new */
 };
 
-template struct CPS::Python::Node<Real>;
-template struct CPS::Python::Node<Complex>;
+template struct DPsim::Python::Node<CPS::Real>;
+template struct DPsim::Python::Node<CPS::Complex>;
 

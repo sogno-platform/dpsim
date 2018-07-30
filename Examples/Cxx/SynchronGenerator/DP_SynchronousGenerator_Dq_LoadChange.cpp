@@ -23,7 +23,7 @@
 #include "Components.h"
 
 using namespace DPsim;
-using namespace DPsim::Components::DP;
+using namespace DPsim::DP::Ph1;
 
 int main(int argc, char* argv[])
 {
@@ -104,7 +104,7 @@ int main(int argc, char* argv[])
 				Real initVoltAngle = -DPS_PI / 2;
 				Real fieldVoltage = 7.0821;
 				Real mechPower = 300e6;
-				auto genPtr = std::dynamic_pointer_cast<Components::DP::SynchronGenerator>(gen);
+				auto genPtr = std::dynamic_pointer_cast<DP::Ph3SynchronGenerator>(gen);
 				genPtr->initialize(om, dt, initActivePower, initReactivePower, initTerminalVolt, initVoltAngle, fieldVoltage, mechPower);
 
 				std::cout << "A matrix:" << std::endl;

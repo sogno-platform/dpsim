@@ -21,7 +21,7 @@
 
 #include "Python/Components/LinePi.h"
 
-const char *CPS::Python::Components::DocLinePi =
+const char *DPsim::Python::Components::DocLinePi =
 "LinePi(name, node1, node2, resistance, inductance, capacitance)\n"
 "Construct a new Pi line.\n"
 "\n"
@@ -34,7 +34,7 @@ const char *CPS::Python::Components::DocLinePi =
 
 
 template<>
-PyObject* CPS::Python::Components::LinePi<CPS::Components::DP::PiLine>(PyObject* self, PyObject* args)
+PyObject* DPsim::Python::Components::LinePi<CPS::DP::Ph1::PiLine>(PyObject* self, PyObject* args)
 {
     const char *name;
     double resistance, inductance, capacitance, conductance;
@@ -45,11 +45,11 @@ PyObject* CPS::Python::Components::LinePi<CPS::Components::DP::PiLine>(PyObject*
         return nullptr;
 
     try {
-        CPS::Node<Complex>::List nodes = Python::Node<Complex>::fromPython(pyNodes);
+        CPS::Node<CPS::Complex>::List nodes = Python::Node<CPS::Complex>::fromPython(pyNodes);
 
-        Component *pyComp = PyObject_New(Component, &CPS::Python::ComponentType);
+        Component *pyComp = PyObject_New(Component, &DPsim::Python::ComponentType);
         Component::init(pyComp);
-        pyComp->comp = std::make_shared<CPS::Components::DP::PiLine>(name, nodes, resistance, inductance, capacitance, conductance);
+        pyComp->comp = std::make_shared<CPS::DP::Ph1::PiLine>(name, nodes, resistance, inductance, capacitance, conductance);
 
         return (PyObject*) pyComp;
     } catch (...) {

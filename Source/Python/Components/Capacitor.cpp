@@ -21,7 +21,7 @@
 
 #include "Python/Components/Capacitor.h"
 
-const char *CPS::Python::Components::DocCapacitor =
+const char *DPsim::Python::Components::DocCapacitor =
 "Capacitor(name, node1, node2, capacitance)\n"
 "Construct a new Capacitor.\n"
 "\n"
@@ -31,7 +31,7 @@ const char *CPS::Python::Components::DocCapacitor =
 ":returns: A new `Component` representing this Capacitor.\n";
 
 template<>
-PyObject* CPS::Python::Components::Capacitor<CPS::Components::EMT::Capacitor>(PyObject* self, PyObject* args)
+PyObject* DPsim::Python::Components::Capacitor<CPS::EMT::Ph1::Capacitor>(PyObject* self, PyObject* args)
 {
     const char *name;
     double capacitance;
@@ -42,11 +42,11 @@ PyObject* CPS::Python::Components::Capacitor<CPS::Components::EMT::Capacitor>(Py
         return nullptr;
 
     try {
-        CPS::Node<Real>::List nodes = Python::Node<Real>::fromPython(pyNodes);
+        CPS::Node<CPS::Real>::List nodes = Python::Node<CPS::Real>::fromPython(pyNodes);
 
-        Component *pyComp = PyObject_New(Component, &CPS::Python::ComponentType);
+        Component *pyComp = PyObject_New(Component, &DPsim::Python::ComponentType);
         Component::init(pyComp);
-        pyComp->comp = std::make_shared<CPS::Components::EMT::Capacitor>(name, nodes, capacitance);
+        pyComp->comp = std::make_shared<CPS::EMT::Ph1::Capacitor>(name, nodes, capacitance);
 
         return (PyObject*) pyComp;
     } catch (...) {
@@ -55,7 +55,7 @@ PyObject* CPS::Python::Components::Capacitor<CPS::Components::EMT::Capacitor>(Py
 }
 
 template<>
-PyObject* CPS::Python::Components::Capacitor<CPS::Components::DP::Capacitor>(PyObject* self, PyObject* args)
+PyObject* DPsim::Python::Components::Capacitor<CPS::DP::Ph1::Capacitor>(PyObject* self, PyObject* args)
 {
     const char *name;
     double capacitance;
@@ -66,11 +66,11 @@ PyObject* CPS::Python::Components::Capacitor<CPS::Components::DP::Capacitor>(PyO
         return nullptr;
 
     try {
-        CPS::Node<Complex>::List nodes = Python::Node<Complex>::fromPython(pyNodes);
+        CPS::Node<CPS::Complex>::List nodes = Python::Node<CPS::Complex>::fromPython(pyNodes);
 
-        Component *pyComp = PyObject_New(Component, &CPS::Python::ComponentType);
+        Component *pyComp = PyObject_New(Component, &DPsim::Python::ComponentType);
         Component::init(pyComp);
-        pyComp->comp = std::make_shared<CPS::Components::DP::Capacitor>(name, nodes, capacitance);
+        pyComp->comp = std::make_shared<CPS::DP::Ph1::Capacitor>(name, nodes, capacitance);
 
         return (PyObject*) pyComp;
     } catch (...) {

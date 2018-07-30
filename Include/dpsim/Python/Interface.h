@@ -30,7 +30,7 @@
 #include <Python.h>
 #endif
 
-namespace CPS {
+namespace DPsim {
 #ifdef WITH_SHMEM
 	class Interface;
 #endif

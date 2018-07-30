@@ -21,7 +21,7 @@
 
 #include "Python/Components/Resistor.h"
 
-const char *CPS::Python::Components::DocResistor =
+const char *DPsim::Python::Components::DocResistor =
 "Resistor(name, node1, node2, resistance)\n"
 "Construct a new resistor.\n"
 "\n"
@@ -31,7 +31,7 @@ const char *CPS::Python::Components::DocResistor =
 ":returns: A new `Component` representing this resistor.\n";
 
 template<>
-PyObject* CPS::Python::Components::Resistor<CPS::Components::EMT::Resistor>(PyObject* self, PyObject* args)
+PyObject* DPsim::Python::Components::Resistor<CPS::EMT::Ph1::Resistor>(PyObject* self, PyObject* args)
 {
     const char *name;
     double resistance;
@@ -42,11 +42,11 @@ PyObject* CPS::Python::Components::Resistor<CPS::Components::EMT::Resistor>(PyOb
         return nullptr;
 
     try {
-        CPS::Node<Real>::List nodes = Python::Node<Real>::fromPython(pyNodes);
+        CPS::Node<CPS::Real>::List nodes = Python::Node<CPS::Real>::fromPython(pyNodes);
 
-        Component *pyComp = PyObject_New(Component, &CPS::Python::ComponentType);
+        Component *pyComp = PyObject_New(Component, &DPsim::Python::ComponentType);
         Component::init(pyComp);
-        pyComp->comp = std::make_shared<CPS::Components::EMT::Resistor>(name, nodes, resistance);
+        pyComp->comp = std::make_shared<CPS::EMT::Ph1::Resistor>(name, nodes, resistance);
 
         return (PyObject*) pyComp;
     } catch (...) {
@@ -55,7 +55,7 @@ PyObject* CPS::Python::Components::Resistor<CPS::Components::EMT::Resistor>(PyOb
 }
 
 template<>
-PyObject* CPS::Python::Components::Resistor<CPS::Components::DP::Resistor>(PyObject* self, PyObject* args)
+PyObject* DPsim::Python::Components::Resistor<CPS::DP::Ph1::Resistor>(PyObject* self, PyObject* args)
 {
     const char *name;
     double resistance;
@@ -66,11 +66,11 @@ PyObject* CPS::Python::Components::Resistor<CPS::Components::DP::Resistor>(PyObj
         return nullptr;
 
     try {
-        CPS::Node<Complex>::List nodes = Python::Node<Complex>::fromPython(pyNodes);
+        CPS::Node<CPS::Complex>::List nodes = Python::Node<CPS::Complex>::fromPython(pyNodes);
 
-        Component *pyComp = PyObject_New(Component, &CPS::Python::ComponentType);
+        Component *pyComp = PyObject_New(Component, &DPsim::Python::ComponentType);
         Component::init(pyComp);
-        pyComp->comp = std::make_shared<CPS::Components::DP::Resistor>(name, nodes, resistance);
+        pyComp->comp = std::make_shared<CPS::DP::Ph1::Resistor>(name, nodes, resistance);
 
         return (PyObject*) pyComp;
     } catch (...) {

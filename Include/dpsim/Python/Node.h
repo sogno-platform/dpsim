@@ -32,7 +32,7 @@
 
 #include <cps/Node.h>
 
-namespace CPS {
+namespace DPsim {
 namespace Python {
 
 	template<typename VarType>

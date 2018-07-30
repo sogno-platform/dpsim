@@ -23,7 +23,7 @@
 #include "DPsim.h"
 
 using namespace DPsim;
-using namespace CPS::Components::EMT;
+using namespace CPS::EMT::Ph3;
 
 int main(int argc, char* argv[])
 {

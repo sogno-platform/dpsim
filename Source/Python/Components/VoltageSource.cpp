@@ -21,7 +21,7 @@
 
 #include "Python/Components/VoltageSource.h"
 
-const char *CPS::Python::Components::DocVoltageSource =
+const char *DPsim::Python::Components::DocVoltageSource =
 "VoltageSource(name, node1, node2, initial_voltage)\n"
 "Construct a new external voltage source.\n"
 "\n"
@@ -33,7 +33,7 @@ const char *CPS::Python::Components::DocVoltageSource =
 ":returns: A new `Component` representing this voltage source.\n";
 
 template<>
-PyObject* CPS::Python::Components::VoltageSource<CPS::Components::EMT::VoltageSource>(PyObject* self, PyObject* args) {
+PyObject* DPsim::Python::Components::VoltageSource<CPS::EMT::Ph1::VoltageSource>(PyObject* self, PyObject* args) {
     const char *name;
 
     PyObject *pyNodes;
@@ -43,11 +43,11 @@ PyObject* CPS::Python::Components::VoltageSource<CPS::Components::EMT::VoltageSo
         return nullptr;
 
     try {
-        CPS::Node<Real>::List nodes = Python::Node<Real>::fromPython(pyNodes);
+        CPS::Node<CPS::Real>::List nodes = Python::Node<CPS::Real>::fromPython(pyNodes);
 
-        Component *pyComp = PyObject_New(Component, &CPS::Python::ComponentType);
+        Component *pyComp = PyObject_New(Component, &DPsim::Python::ComponentType);
         Component::init(pyComp);
-        pyComp->comp = std::make_shared<CPS::Components::EMT::VoltageSource>(name, nodes, CPS::Complex(initVoltage.real, initVoltage.imag));
+        pyComp->comp = std::make_shared<CPS::EMT::Ph1::VoltageSource>(name, nodes, CPS::Complex(initVoltage.real, initVoltage.imag));
 
         return (PyObject*) pyComp;
     } catch (...) {
@@ -56,7 +56,7 @@ PyObject* CPS::Python::Components::VoltageSource<CPS::Components::EMT::VoltageSo
 }
 
 template<>
-PyObject* CPS::Python::Components::VoltageSource<CPS::Components::DP::VoltageSource>(PyObject* self, PyObject* args) {
+PyObject* DPsim::Python::Components::VoltageSource<CPS::DP::Ph1::VoltageSource>(PyObject* self, PyObject* args) {
     const char *name;
 
     PyObject *pyNodes;
@@ -66,11 +66,11 @@ PyObject* CPS::Python::Components::VoltageSource<CPS::Components::DP::VoltageSou
         return nullptr;
 
     try {
-        CPS::Node<Complex>::List nodes = Python::Node<Complex>::fromPython(pyNodes);
+        CPS::Node<CPS::Complex>::List nodes = Python::Node<CPS::Complex>::fromPython(pyNodes);
 
-        Component *pyComp = PyObject_New(Component, &CPS::Python::ComponentType);
+        Component *pyComp = PyObject_New(Component, &DPsim::Python::ComponentType);
         Component::init(pyComp);
-        pyComp->comp = std::make_shared<CPS::Components::DP::VoltageSource>(name, nodes, CPS::Complex(initVoltage.real, initVoltage.imag));
+        pyComp->comp = std::make_shared<CPS::DP::Ph1::VoltageSource>(name, nodes, CPS::Complex(initVoltage.real, initVoltage.imag));
 
         return (PyObject*) pyComp;
     } catch (...) {

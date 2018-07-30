@@ -31,7 +31,7 @@
   #include "cps/CIM/Reader.h"
 #endif
 
-using namespace CPS;
+using namespace DPsim;
 
 const char* Python::DocLoadCim =
 "load_cim(filenames, frequency=50.0)\n"
@@ -46,7 +46,7 @@ const char* Python::DocLoadCim =
 "of the program.\n";
 PyObject* Python::LoadCim(PyObject* self, PyObject* args) {
 #ifdef WITH_CIM
-	Real frequency = 50;
+	CPS::Real frequency = 50;
 	PyObject *filenames;
 	PyBytesObject *filename;
 	std::list<String> cimFiles;
@@ -76,9 +76,9 @@ PyObject* Python::LoadCim(PyObject* self, PyObject* args) {
 		return nullptr;
 	}
 
-	CIM::Reader reader("Python", Logger::Level::INFO);
+	CPS::CIM::Reader reader("Python", CPS::Logger::Level::INFO);
 
-	CPS::Python::SystemTopology *pySys = PyObject_New(CPS::Python::SystemTopology, &CPS::Python::SystemTopologyType);
+	DPsim::Python::SystemTopology *pySys = PyObject_New(DPsim::Python::SystemTopology, &DPsim::Python::SystemTopologyType);
 
 	using SharedSysPtr = std::shared_ptr<CPS::SystemTopology>;
 	using PyObjectsList = std::vector<PyObject *>;
@@ -89,7 +89,7 @@ PyObject* Python::LoadCim(PyObject* self, PyObject* args) {
 	try {
 		pySys->sys = std::make_shared<CPS::SystemTopology>(reader.loadCIM(frequency, cimFiles));
 	}
-	catch (CIM::InvalidTopology) {
+	catch (CPS::CIM::InvalidTopology) {
 		PyErr_SetString(PyExc_TypeError, "The topology of the CIM model is invalid");
 		return nullptr;
 	}

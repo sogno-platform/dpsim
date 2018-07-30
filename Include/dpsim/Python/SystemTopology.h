@@ -25,7 +25,7 @@
 #include <Config.h>
 #include <cps/SystemTopology.h>
 
-namespace CPS {
+namespace DPsim {
 namespace Python {
 
 	struct SystemTopology {

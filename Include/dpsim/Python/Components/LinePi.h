@@ -23,9 +23,9 @@
 
 #include "Python/Component.h"
 #include "Python/Node.h"
-#include "cps/Components/DP_Line_Pi.h"
+#include "cps/DP/DP_Line_Pi.h"
 
-namespace CPS {
+namespace DPsim {
 namespace Python {
 namespace Components {
 

@@ -220,7 +220,7 @@ int DPsim::Python::Simulation::init(Python::Simulation* self, PyObject *args, Py
 			return -1;
 	}
 
-	if (!PyObject_TypeCheck(self->pySys, &CPS::Python::SystemTopologyType)) {
+	if (!PyObject_TypeCheck(self->pySys, &DPsim::Python::SystemTopologyType)) {
 		PyErr_SetString(PyExc_TypeError, "Argument system must be dpsim.SystemTopology");
 		return -1;
 	}
@@ -290,17 +290,17 @@ PyObject* DPsim::Python::Simulation::addInterface(PyObject* self, PyObject* args
 #ifdef WITH_SHMEM
 	DPsim::Python::Simulation *pySim = (DPsim::Python::Simulation*) self;
 	PyObject* pyObj;
-	CPS::Python::Interface* pyIntf;
+	DPsim::Python::Interface* pyIntf;
 
 	if (!PyArg_ParseTuple(args, "O", &pyObj))
 		return nullptr;
 
-	if (!PyObject_TypeCheck(pyObj, &CPS::Python::InterfaceType)) {
+	if (!PyObject_TypeCheck(pyObj, &DPsim::Python::InterfaceType)) {
 		PyErr_SetString(PyExc_TypeError, "Argument must be dpsim.Interface");
 		return nullptr;
 	}
 
-	pyIntf = (CPS::Python::Interface*) pyObj;
+	pyIntf = (DPsim::Python::Interface*) pyObj;
 	pySim->sim->addInterface(pyIntf->intf.get());
 	Py_INCREF(pyObj);
 

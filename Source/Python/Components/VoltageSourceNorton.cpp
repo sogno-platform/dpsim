@@ -21,7 +21,7 @@
 
 #include "Python/Components/VoltageSourceNorton.h"
 
-const char *CPS::Python::Components::DocVoltageSourceNorton =
+const char *DPsim::Python::Components::DocVoltageSourceNorton =
 "VoltSourceRes(name, node1, node2, voltage, resistance)\n"
 "Construct a new voltage source with an internal resistance.\n"
 "\n"
@@ -35,7 +35,7 @@ const char *CPS::Python::Components::DocVoltageSourceNorton =
 ":returns: A new `Component` representing this voltage source.\n";
 
 template<>
-PyObject* CPS::Python::Components::VoltageSourceNorton<CPS::Components::EMT::VoltageSourceNorton>(PyObject* self, PyObject* args) {
+PyObject* DPsim::Python::Components::VoltageSourceNorton<CPS::EMT::Ph1::VoltageSourceNorton>(PyObject* self, PyObject* args) {
     const char *name;
     double resistance;
 
@@ -46,14 +46,14 @@ PyObject* CPS::Python::Components::VoltageSourceNorton<CPS::Components::EMT::Vol
         return nullptr;
 
     try {
-        CPS::Node<Real>::List nodes = Python::Node<Real>::fromPython(pyNodes);
+        CPS::Node<CPS::Real>::List nodes = Python::Node<CPS::Real>::fromPython(pyNodes);
 
         Component *pyComp = PyObject_New(Component, &ComponentType);
         Component::init(pyComp);
 
-        String *mystring = new String(name);
+        CPS::String *mystring = new CPS::String(name);
 
-        pyComp->comp = std::make_shared<CPS::Components::EMT::VoltageSourceNorton>(*mystring, nodes, Complex(voltage.real, voltage.imag), resistance);
+        pyComp->comp = std::make_shared<CPS::EMT::Ph1::VoltageSourceNorton>(*mystring, nodes, CPS::Complex(voltage.real, voltage.imag), resistance);
 
         return (PyObject*) pyComp;
     } catch (...) {
@@ -62,7 +62,7 @@ PyObject* CPS::Python::Components::VoltageSourceNorton<CPS::Components::EMT::Vol
 }
 
 template<>
-PyObject* CPS::Python::Components::VoltageSourceNorton<CPS::Components::DP::VoltageSourceNorton>(PyObject* self, PyObject* args) {
+PyObject* DPsim::Python::Components::VoltageSourceNorton<CPS::DP::Ph1::VoltageSourceNorton>(PyObject* self, PyObject* args) {
     const char *name;
     double resistance;
 
@@ -73,14 +73,14 @@ PyObject* CPS::Python::Components::VoltageSourceNorton<CPS::Components::DP::Volt
         return nullptr;
 
     try {
-        CPS::Node<Complex>::List nodes = Python::Node<Complex>::fromPython(pyNodes);
+        CPS::Node<CPS::Complex>::List nodes = Python::Node<CPS::Complex>::fromPython(pyNodes);
 
         Component *pyComp = PyObject_New(Component, &ComponentType);
         Component::init(pyComp);
 
-        String *mystring = new String(name);
+        CPS::String *mystring = new CPS::String(name);
 
-        pyComp->comp = std::make_shared<CPS::Components::DP::VoltageSourceNorton>(*mystring, nodes, Complex(voltage.real, voltage.imag), resistance);
+        pyComp->comp = std::make_shared<CPS::DP::Ph1::VoltageSourceNorton>(*mystring, nodes, CPS::Complex(voltage.real, voltage.imag), resistance);
 
         return (PyObject*) pyComp;
     } catch (...) {

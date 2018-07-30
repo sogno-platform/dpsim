@@ -28,8 +28,8 @@
 
 using namespace DPsim;
 using namespace CPS;
-using namespace CPS::Components;
-using namespace CPS::Components::DP;
+using namespace CPS;
+using namespace CPS::DP::Ph1;
 using namespace CPS::Signal;
 
 int main(int argc, char *argv[]) {

@@ -35,7 +35,7 @@
 
 #include "cps/Component.h"
 
-namespace CPS {
+namespace DPsim {
 namespace Python {
 
 	struct Component {

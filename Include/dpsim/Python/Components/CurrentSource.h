@@ -23,10 +23,10 @@
 
 #include "Python/Component.h"
 #include "Python/Node.h"
-#include "cps/Components/DP_CurrentSource.h"
-#include "cps/Components/EMT_CurrentSource.h"
+#include "cps/DP/DP_CurrentSource.h"
+#include "cps/EMT/EMT_CurrentSource.h"
 
-namespace CPS {
+namespace DPsim {
 namespace Python {
 namespace Components {
 

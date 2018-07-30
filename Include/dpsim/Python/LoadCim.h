@@ -30,7 +30,7 @@
   #include <Python.h>
 #endif
 
-namespace CPS {
+namespace DPsim {
 namespace Python {
 
 	extern const char* DocLoadCim;

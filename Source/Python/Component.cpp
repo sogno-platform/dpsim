@@ -24,7 +24,7 @@
 #include "Python/Component.h"
 #include "cps/Components.h"
 
-using namespace CPS;
+using namespace DPsim;
 
 PyObject* Python::Component::newfunc(PyTypeObject* type, PyObject *args, PyObject *kwds)
 {
@@ -78,7 +78,7 @@ PyObject* Python::Component::getattr(Python::Component* self, char* name)
 
 		return attr->toPyObject();
 	}
-	catch (CPS::PowerComponent<Complex>::InvalidAttributeException) {
+	catch (CPS::PowerComponent<CPS::Complex>::InvalidAttributeException) {
 		PyErr_Format(PyExc_AttributeError, "Component has no attribute '%s'", name);
 		return NULL;
 	}
@@ -99,15 +99,15 @@ int Python::Component::setattr(Python::Component* self, char* name, PyObject *v)
 		auto attr = self->comp->findAttribute(name);
 		attr->fromPyObject(v);
 	}
-	catch (CPS::PowerComponent<Complex>::InvalidAttributeException) {
+	catch (CPS::PowerComponent<CPS::Complex>::InvalidAttributeException) {
 		PyErr_Format(PyExc_AttributeError, "Component has no attribute '%s'", name);
 		return -1;
 	}
-	catch (AttributeBase::TypeException) {
+	catch (CPS::AttributeBase::TypeException) {
 		PyErr_Format(PyExc_TypeError, "Invalid type for attribute '%s'", name);
 		return -1;
 	}
-	catch (AttributeBase::AccessException) {
+	catch (CPS::AttributeBase::AccessException) {
 		PyErr_Format(PyExc_AttributeError, "Attribute '%s' is not modifiable", name);
 		return -1;
 	}

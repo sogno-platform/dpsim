@@ -29,7 +29,7 @@
 #include "Python/Interface.h"
 #include "Python/Component.h"
 
-using namespace CPS;
+using namespace DPsim;
 
 PyObject* Python::Interface::newfunc(PyTypeObject *type, PyObject *args, PyObject *kwds)
 {
@@ -88,13 +88,13 @@ PyObject* Python::Interface::registerControlledAttribute(PyObject* self, PyObjec
 	Python::Component *pyComp = (Python::Component*) obj;
 
 	try {
-		Attribute<Real>::Ptr realAttr = pyComp->comp->findAttribute<Real>(attrName);
+		CPS::Attribute<CPS::Real>::Ptr realAttr = pyComp->comp->findAttribute<CPS::Real>(attrName);
 
 		pyIntf->intf->addImport(realAttr, gain, realIdx);
 	}
 	catch (CPS::AttributeList::InvalidAttributeException) {
 		try {
-			Attribute<Complex>::Ptr compAttr = pyComp->comp->findAttribute<Complex>(attrName);
+			CPS::Attribute<CPS::Complex>::Ptr compAttr = pyComp->comp->findAttribute<CPS::Complex>(attrName);
 
 			if (imagIdx < 0) {
 				PyErr_SetString(PyExc_TypeError, "Both a real and imaginary index must be specified");
@@ -148,13 +148,13 @@ PyObject* Python::Interface::registerExportedAttribute(PyObject* self, PyObject*
 	Component *pyComp = (Component*) obj;
 
 	try {
-		Attribute<Real>::Ptr realAttr = pyComp->comp->findAttribute<Real>(attrName);
+		CPS::Attribute<CPS::Real>::Ptr realAttr = pyComp->comp->findAttribute<CPS::Real>(attrName);
 
 		pyIntf->intf->addExport(realAttr, gain, realIdx);
 	}
 	catch (CPS::AttributeList::InvalidAttributeException exp) {
 		try {
-			Attribute<Complex>::Ptr compAttr = pyComp->comp->findAttribute<Complex>(attrName);
+			CPS::Attribute<CPS::Complex>::Ptr compAttr = pyComp->comp->findAttribute<CPS::Complex>(attrName);
 
 			if (imagIdx < 0) {
 				PyErr_SetString(PyExc_TypeError, "Both a real and imaginary index must be specified");

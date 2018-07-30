@@ -23,10 +23,10 @@
 
 #include "Python/Component.h"
 #include "Python/Node.h"
-#include "cps/Components/DP_VoltageSource.h"
-#include "cps/Components/EMT_VoltageSource.h"
+#include "cps/DP/DP_VoltageSource.h"
+#include "cps/EMT/EMT_VoltageSource.h"
 
-namespace CPS {
+namespace DPsim {
 namespace Python {
 namespace Components {
 
