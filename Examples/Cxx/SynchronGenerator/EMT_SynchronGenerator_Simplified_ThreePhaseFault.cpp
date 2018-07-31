@@ -22,10 +22,12 @@
 #include "DPsim.h"
 
 using namespace DPsim;
-using namespace CPS::Components::EMT;
+using namespace CPS::EMT::Ph3;
 
-int main(int argc, char* argv[])
-{
+int main(int argc, char* argv[]) {
+
+	/* simplified VBR model does not exist at the moment
+
 		// Define machine parameters in per unit
 		Real nomPower = 555e6;
 		Real nomPhPhVoltRMS = 24e3;
@@ -63,10 +65,10 @@ int main(int argc, char* argv[])
 		Real Ra = (Ld_s + Lq_s) / dt;
 
 		// Declare circuit components
-		ComponentBase::Ptr gen = SynchronGeneratorDQSmpl::make("gen", 0, 1, 2,
+		ComponentBase::Ptr gen = SynchronGeneratorVBRSmpl::make("EMT_VBRSimplified_", 0, 1, 2,
 				nomPower, nomPhPhVoltRMS, nomFreq, poleNum, nomFieldCurr,
-				Rs, Ll, Lmd, Lmd0, Lmq, Lmq0, Rfd, Llfd, Rkd, Llkd, Rkq1, Llkq1, Rkq2, Llkq2, H, Ra, Logger::Level::INFO);
-		Real loadRes = 24e3*24e3/555e3;
+				Rs, Ll, Lmd, Lmd0, Lmq, Lmq0, Rfd, Llfd, Rkd, Llkd, Rkq1, Llkq1, Rkq2, Llkq2, H, Logger::Level::INFO);
+		Real loadRes = 24e3*24e3/300e6;
 		ComponentBase::Ptr r1 = Resistor::make("r1", 0, DEPRECATEDGND, loadRes);
 		ComponentBase::Ptr r2 = Resistor::make("r2", 1, DEPRECATEDGND, loadRes);
 		ComponentBase::Ptr r3 = Resistor::make("r3", 2, DEPRECATEDGND, loadRes);
@@ -75,7 +77,8 @@ int main(int argc, char* argv[])
 		system.mComponents = { gen, r1, r2, r3 };
 
 		// Declare circuit components for resistance change
-		Real breakerRes = 0.001;
+		//Real breakerRes = 0.001;
+		Real breakerRes = 19.2 + 0.001;
 		ComponentBase::Ptr rBreaker1 = Resistor::make("rbreak1", 0, DEPRECATEDGND, breakerRes);
 		ComponentBase::Ptr rBreaker2 = Resistor::make("rbreak2", 1, DEPRECATEDGND, breakerRes);
 		ComponentBase::Ptr rBreaker3 = Resistor::make("rbreak3", 2, DEPRECATEDGND, breakerRes);
@@ -84,18 +87,19 @@ int main(int argc, char* argv[])
 		SystemTopology systemBreakerOn(60);
 		systemBreakerOn.mComponents = { gen, rBreaker1, rBreaker2, rBreaker3, r1, r2, r3 };
 
-		Simulation sim("EMT_SynchronGenerator_ThreePhaseFault", system, dt, tf, Solver::Domain::EMT);
+		String mSimulationName = "EMT_SynchronGenerator_VBRSimplified_" + std::to_string(dt);
+		Simulation sim(mSimulationName, system, dt, tf, Domain::EMT);
 		sim.setLogDownsamplingRate(downSampling);
 		sim.addSystemTopology(systemBreakerOn);
 
 		// Initialize generator
-		Real initActivePower = 555e3;
+		Real initActivePower = 300e6;
 		Real initReactivePower = 0;
 		Real initTerminalVolt = 24000 / sqrt(3) * sqrt(2);
 		Real initVoltAngle = -DPS_PI / 2;
 		Real fieldVoltage = 7.0821;
-		Real mechPower = 5.5558e5;
-		auto genPtr = std::dynamic_pointer_cast<Components::EMT::SynchronGeneratorDQSmpl>(gen);
+		Real mechPower = 300e6;
+		auto genPtr = std::dynamic_pointer_cast<EMT::Ph3::SynchronGeneratorVBRSmpl>(gen);
 		genPtr->initialize(om, dt, initActivePower, initReactivePower, initTerminalVolt, initVoltAngle, fieldVoltage, mechPower);
 
 		// Calculate initial values for circuit at generator connection point
@@ -106,9 +110,11 @@ int main(int argc, char* argv[])
 #endif
 
 		sim.setSwitchTime(0.1, 1);
-		sim.setSwitchTime(2.1, 0);
+		sim.setSwitchTime(0.2, 0);
 
 		sim.run();
+	
+	*/
 
 		return 0;
 }

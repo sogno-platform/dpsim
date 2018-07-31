@@ -19,7 +19,9 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *********************************************************************************/
 
+#ifdef __linux__
 #include <unistd.h>
+#endif
 
 #include "Simulation.h"
 
@@ -32,7 +34,7 @@ using namespace DPsim;
 
 Simulation::Simulation(String name,
 	Real timeStep, Real finalTime,
-	Solver::Domain domain, Solver::Type solverType,
+	Domain domain, Solver::Type solverType,
 	Logger::Level logLevel) :
 	mLog("Logs/" + name + ".log", logLevel),
 	mName(name),
@@ -46,7 +48,7 @@ Simulation::Simulation(String name,
 
 Simulation::Simulation(String name, SystemTopology system,
 	Real timeStep, Real finalTime,
-	Solver::Domain domain, Solver::Type solverType,
+	Domain domain, Solver::Type solverType,
 	Logger::Level logLevel,
 	Bool steadyStateInit) :
 	Simulation(name, timeStep, finalTime,
@@ -55,18 +57,23 @@ Simulation::Simulation(String name, SystemTopology system,
 	switch (solverType) {
 	case Solver::Type::MNA:
 	default:
-		mSolver = std::make_shared<MnaSolver>(name,
-			system, timeStep,
-			domain, logLevel, steadyStateInit);
+		if (domain == Domain::DP)
+			mSolver = std::make_shared<MnaSolver<Complex>>(name, system, timeStep,
+				domain, logLevel, steadyStateInit);
+		else 
+			mSolver = std::make_shared<MnaSolver<Real>>(name, system, timeStep,
+				domain, logLevel, steadyStateInit);
 		break;
 	}
 }
 
 Simulation::~Simulation() {
+#ifdef __linux__
 	if (mPipe[0] >= 0) {
 		close(mPipe[0]);
 		close(mPipe[1]);
 	}
+#endif
 }
 
 void Simulation::run() {
@@ -123,6 +130,7 @@ void Simulation::addSystemTopology(SystemTopology system) {
 	mSolver->addSystemTopology(system);
 }
 
+#ifdef __linux__
 int Simulation::getEventFD(Int flags, Int coalesce) {
 	int ret;
 
@@ -152,3 +160,4 @@ void Simulation::sendNotification(enum Event evt) {
 	if (ret < 0)
 		throw SystemError("Failed notify");
 }
+#endif

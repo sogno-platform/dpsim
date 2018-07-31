@@ -23,7 +23,7 @@
 #include "DPsim.h"
 
 using namespace DPsim;
-using namespace CPS::Components::EMT;
+using namespace CPS::EMT::Ph1;
 
 int main(int argc, char* argv[]) {
 	// Define system topology
@@ -43,7 +43,7 @@ int main(int argc, char* argv[]) {
 	String simName = "EMT_ResVS_RxLine_Switch1_" + std::to_string(timeStep);
 
 	Simulation sim(simName, system1, timeStep, finalTime,
-		Solver::Domain::EMT, Solver::Type::MNA, Logger::Level::INFO);
+		Domain::EMT, Solver::Type::MNA, Logger::Level::INFO);
 	sim.addSystemTopology(system2);
 	sim.setSwitchTime(0.1, 1);
 

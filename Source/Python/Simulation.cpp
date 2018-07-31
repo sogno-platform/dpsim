@@ -23,8 +23,8 @@
 #include "Config.h"
 #include "Python/Simulation.h"
 
-#include "cps/Python/Interface.h"
-#include "cps/Python/Component.h"
+#include "Python/Interface.h"
+#include "Python/Component.h"
 
 #include <cfloat>
 #include <iostream>
@@ -56,9 +56,9 @@ void DPsim::Python::Simulation::simThreadFunctionNonRT(DPsim::Python::Simulation
 	std::unique_lock<std::mutex> lk(*pySim->mut, std::defer_lock);
 
 	endTime = pySim->sim->getFinalTime();
-
+#ifdef __linux__
 	pySim->sim->sendNotification(DPsim::Simulation::Event::Started);
-
+#endif
 	pySim->numStep = 0;
 	while (pySim->running && time < endTime) {
 		time = pySim->sim->step();
@@ -68,20 +68,23 @@ void DPsim::Python::Simulation::simThreadFunctionNonRT(DPsim::Python::Simulation
 		if (pySim->sigPause) {
 			lk.lock();
 			pySim->state = State::Paused;
+#ifdef __linux__
 			pySim->sim->sendNotification(DPsim::Simulation::Event::Paused);
-
+#endif
 			pySim->cond->notify_one();
 			pySim->cond->wait(lk);
 
 			pySim->state = State::Running;
+#ifdef __linux__
 			pySim->sim->sendNotification(DPsim::Simulation::Event::Resumed);
+#endif
 			lk.unlock();
 		}
 	}
 	lk.lock();
-
+#ifdef __linux__
 	pySim->sim->sendNotification(DPsim::Simulation::Event::Finished);
-
+#endif
 	pySim->state = State::Done;
 	pySim->cond->notify_one();
 }
@@ -173,7 +176,14 @@ PyObject* DPsim::Python::Simulation::newfunc(PyTypeObject* type, PyObject *args,
 		// implement them as pointers
 		self->cond = new std::condition_variable();
 		self->mut = new std::mutex();
+
+		using SharedSimPtr = std::shared_ptr<DPsim::Simulation>;
+		using PyObjectsList = std::vector<PyObject *>;
+
+		new (&self->sim) SharedSimPtr();
+		new (&self->refs) PyObjectsList();
 	}
+
 	return (PyObject*) self;
 }
 
@@ -185,7 +195,9 @@ int DPsim::Python::Simulation::init(Python::Simulation* self, PyObject *args, Py
 	int t = 0, s = 0;
 
 	enum Solver::Type solverType;
-	enum Solver::Domain domain;
+	enum Domain domain;
+
+	self->rt = 0;
 
 	if (!PyArg_ParseTupleAndKeywords(args, kwds, "sO|ddbbii", kwlist,
 		&name, &self->pySys, &timestep, &duration, &self->rt, &self->startSync, &s, &t)) {
@@ -193,8 +205,8 @@ int DPsim::Python::Simulation::init(Python::Simulation* self, PyObject *args, Py
 	}
 
 	switch (s) {
-		case 0: domain = DPsim::Solver::Domain::DP; break;
-		case 1: domain = DPsim::Solver::Domain::EMT; break;
+		case 0: domain = CPS::Domain::DP; break;
+		case 1: domain = CPS::Domain::EMT; break;
 		default:
 			PyErr_SetString(PyExc_TypeError, "Invalid sim_type argument (must be 0 or 1)");
 			return -1;
@@ -208,7 +220,7 @@ int DPsim::Python::Simulation::init(Python::Simulation* self, PyObject *args, Py
 			return -1;
 	}
 
-	if (!PyObject_TypeCheck(self->pySys, &CPS::Python::SystemTopologyType)) {
+	if (!PyObject_TypeCheck(self->pySys, &DPsim::Python::SystemTopologyType)) {
 		PyErr_SetString(PyExc_TypeError, "Argument system must be dpsim.SystemTopology");
 		return -1;
 	}
@@ -236,7 +248,7 @@ void DPsim::Python::Simulation::dealloc(Python::Simulation* self)
 	if (self->simThread) {
 		// We have to cancel the running thread here, because otherwise self can't
 		// be freed.
-		Python::Simulation::stop((PyObject*)self, NULL);
+		Python::Simulation::stop((PyObject*) self, NULL);
 		self->simThread->join();
 		delete self->simThread;
 	}
@@ -278,18 +290,18 @@ PyObject* DPsim::Python::Simulation::addInterface(PyObject* self, PyObject* args
 #ifdef WITH_SHMEM
 	DPsim::Python::Simulation *pySim = (DPsim::Python::Simulation*) self;
 	PyObject* pyObj;
-	CPS::Python::Interface* pyIntf;
+	DPsim::Python::Interface* pyIntf;
 
 	if (!PyArg_ParseTuple(args, "O", &pyObj))
 		return nullptr;
 
-	if (!PyObject_TypeCheck(pyObj, &CPS::Python::InterfaceType)) {
+	if (!PyObject_TypeCheck(pyObj, &DPsim::Python::InterfaceType)) {
 		PyErr_SetString(PyExc_TypeError, "Argument must be dpsim.Interface");
 		return nullptr;
 	}
 
-	pyIntf = (CPS::Python::Interface*) pyObj;
-	pySim->sim->addInterface(pyIntf->intf);
+	pyIntf = (DPsim::Python::Interface*) pyObj;
+	pySim->sim->addInterface(pyIntf->intf.get());
 	Py_INCREF(pyObj);
 
 	pySim->refs.push_back(pyObj);
@@ -474,6 +486,7 @@ PyObject* DPsim::Python::Simulation::wait(PyObject *self, PyObject *args)
 	return Py_None;
 }
 
+#ifdef __linux__
 static char* DocSimulationGetEventFD =
 "get_eventfd(flags)\n"
 "Return a poll()/select()'able file descriptor which can be used to asynchronously\n"
@@ -496,6 +509,7 @@ PyObject * DPsim::Python::Simulation::getEventFD(PyObject *self, PyObject *args)
 
 	return Py_BuildValue("i", fd);
 }
+#endif
 
 static char* DocSimulationGetState =
 "state\n"
@@ -556,7 +570,9 @@ static PyMethodDef Simulation_methods[] = {
 	{"step",		DPsim::Python::Simulation::step, METH_NOARGS, DocSimulationStep},
 	{"stop",		DPsim::Python::Simulation::stop, METH_NOARGS, DocSimulationStop},
 	{"wait",		DPsim::Python::Simulation::wait, METH_NOARGS, DocSimulationWait},
+#ifdef __linux__
 	{"get_eventfd",         DPsim::Python::Simulation::getEventFD, METH_VARARGS, DocSimulationGetEventFD},
+#endif
 	{NULL, NULL, 0, NULL}
 };
 

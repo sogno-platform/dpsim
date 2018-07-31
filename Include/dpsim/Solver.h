@@ -45,8 +45,7 @@ namespace DPsim {
 	class Solver {
 
 	public:
-		enum class Type { MNA, IDA };
-		enum class Domain { DP, EMT };
+		enum class Type { MNA, IDA };		
 
 		/// Solve system A * x = z for x and current time
 		virtual Real step(Real time) = 0;

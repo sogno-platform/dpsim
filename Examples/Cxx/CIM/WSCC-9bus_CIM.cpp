@@ -31,7 +31,7 @@ int main(int argc, char *argv[]) {
 #ifdef _WIN32
 	String path("..\\..\\..\\..\\dpsim\\Examples\\CIM\\WSCC-09_Neplan_RX\\");
 #elif defined(__linux__) || defined(__APPLE__)
-	String path("../Examples/CIM/WSCC-09_Neplan_RX/");
+	String path("Examples/CIM/WSCC-09_Neplan_RX/");
 #endif
 
 	std::list<String> filenames = {
@@ -47,7 +47,7 @@ int main(int argc, char *argv[]) {
 	SystemTopology sys = reader.loadCIM(60, filenames);
 
 	Simulation sim(simName, sys, 0.0001, 0.1,
-		Solver::Domain::DP, Solver::Type::MNA, Logger::Level::DEBUG, true);
+		Domain::DP, Solver::Type::MNA, Logger::Level::DEBUG, false);
 	sim.run();
 
 	return 0;

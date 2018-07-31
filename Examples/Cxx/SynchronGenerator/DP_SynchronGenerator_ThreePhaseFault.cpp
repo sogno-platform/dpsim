@@ -23,7 +23,7 @@
 #include "DPsim.h"
 
 using namespace DPsim;
-using namespace CPS::Components::DP;
+using namespace CPS::DP::Ph1;
 
 int main(int argc, char* argv[])
 {
@@ -85,7 +85,7 @@ int main(int argc, char* argv[])
 	systemBreakerOn.mComponents = { gen, rBreaker1, rBreaker2, rBreaker3, r1, r2, r3 };
 
 	Simulation sim("DP_SynchronGeneratorDQ_ThreePhaseFault", system, dt, tf,
-		Solver::Domain::DP, Solver::Type::MNA, Logger::Level::INFO);
+		Domain::DP, Solver::Type::MNA, Logger::Level::INFO);
 	sim.setLogDownsamplingRate(downSampling);
 	sim.addSystemTopology(systemBreakerOn);
 

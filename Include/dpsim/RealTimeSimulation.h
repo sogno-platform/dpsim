@@ -75,7 +75,7 @@ namespace DPsim {
 
 	public:
 		RealTimeSimulation(String name, SystemTopology system, Real timeStep, Real finalTime,
-			Solver::Domain domain = Solver::Domain::DP, Solver::Type type = Solver::Type::MNA,
+			Domain domain = Domain::DP, Solver::Type type = Solver::Type::MNA,
 			Logger::Level logLevel = Logger::Level::INFO, Bool steadyStateInit = false);
 		~RealTimeSimulation();
 

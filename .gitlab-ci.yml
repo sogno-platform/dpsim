@@ -1,7 +1,9 @@
 variables:
-  DOCKER_TAG_DEV: ${CI_COMMIT_REF_NAME}
   RSYNC_OPTS: --recursive --ignore-missing-args --chown ${DEPLOY_USER}:${DEPLOY_USER}
-  DOCKER_IMAGE_DEV: dpsim-dev
+  DOCKER_TAG: ${CI_COMMIT_REF_NAME}
+  DOCKER_TAG_DEV: ${CI_COMMIT_REF_NAME}
+  DOCKER_IMAGE: rwthacs/dpsim
+  DOCKER_IMAGE_DEV: rwthacs/dpsim-dev
 
 before_script:
   - git config --local core.longpaths true
@@ -20,7 +22,6 @@ docker:
   stage: prepare
   script:
     - docker build -f Packaging/Docker/Dockerfile.dev -t ${DOCKER_IMAGE_DEV}:${DOCKER_TAG_DEV} .
-    - docker images
   tags:
     - shell
 
@@ -69,19 +70,21 @@ build:packages:
       - build/*.rpm
       - build/*.tar.gz
 
-test:pytest:
-  stage: test
+build:docker:
+  stage: build
   script:
-    - make -C build install
-    - pytest -v
-  image: ${DOCKER_IMAGE_DEV}:${DOCKER_TAG_DEV}
-  dependencies:
-    - build:linux
-  artifacts:
-    paths:
-      - Logs/
+    - docker build -f Packaging/Docker/Dockerfile -t ${DOCKER_IMAGE}:${DOCKER_TAG} .
   tags:
-    - docker
+    - shell
+
+deploy:docker:
+  stage: deploy
+  script:
+    - docker push ${DOCKER_IMAGE}:${DOCKER_TAG}
+  dependencies:
+    - build:docker
+  tags:
+    - shell
 
 deploy:docs:
   stage: deploy

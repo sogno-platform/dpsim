@@ -1,6 +1,7 @@
 set -x
 
 # Start time
+export TZ=UTC
 TIME=$(date -d "+10 seconds" +%Y%m%dT%H%M%S) #-Iseconds
 echo "Start simulation at: $TIME"
 
@@ -24,11 +25,9 @@ if false; then
 	villas-pipe Configs/villas-shmem.conf shmem
 else
 	VILLAS_LOG_PREFIX="[Node] " \
-	villas-node /projects/reserve/node.conf
+	villas-node /projects/reserve/node2.conf
 fi
 
 for job in $P1 $P2; do
     wait $job || exit 1
 done
-
-exit 0

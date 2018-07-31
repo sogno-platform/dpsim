@@ -23,7 +23,7 @@
 #include "DPsim.h"
 
 using namespace DPsim;
-using namespace CPS::Components::DP;
+using namespace CPS::DP::Ph1;
 
 int main(int argc, char* argv[]) {
 	// Define machine parameters in per unit
@@ -71,7 +71,7 @@ int main(int argc, char* argv[]) {
 	SystemTopology system(60);
 	system.mComponents = { gen, r1, r2, r3 };
 
-	Simulation sim("DP_SynchronGeneratorDQ_BalancedResLoad", system, dt, tf, Solver::Domain::DP, Solver::Type::MNA, Logger::Level::INFO);
+	Simulation sim("DP_SynchronGeneratorDQ_BalancedResLoad", system, dt, tf, Domain::DP, Solver::Type::MNA, Logger::Level::INFO);
 
 	// Initialize generator
 	Real initActivePower = 555e3;

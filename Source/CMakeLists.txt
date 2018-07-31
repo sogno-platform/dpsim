@@ -1,7 +1,7 @@
 add_library(dpsim	
 	Simulation.cpp
-	MNA_Solver.cpp
 	Utils.cpp
+	MNA_Solver.cpp
 )
 
 set(LIBRARIES cps)

@@ -7,7 +7,7 @@ RUN rm -rf /dpsim/build && mkdir /dpsim/build
 WORKDIR /dpsim/build
 
 RUN cmake -DBUILD_EXAMPLES=OFF -DCPACK_GENERATOR=RPM ..
-RUN make -j2 package
+RUN make -j$(nproc) package
 
 FROM fedora:28
 

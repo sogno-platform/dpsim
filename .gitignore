@@ -1,6 +1,7 @@
 # Outputs
 build/
 build_*/
+build-*/
 dist/
 _dpsim.pyd
 _dpsim.pdb

@@ -23,7 +23,7 @@
 #include "DPsim.h"
 
 using namespace DPsim;
-using namespace CPS::Components;
+using namespace CPS;
 
 static void VarFreqRxLineResLoad_NZ_Paper_DP(Real timeStep, Real finalTime, Real freqStep, Real loadStep, Real rampTime) {
 	// Define system topology
@@ -62,7 +62,7 @@ static void VarFreqRxLineResLoad_NZ_Paper_EMT(Real timeStep, Real finalTime, Rea
 	// Define simulation scenario
 	String simName = "EMT_RXLine_LoadStep_FreqStep_2_" + std::to_string(timeStep);
 	
-	Simulation sim(simName, system1, timeStep, finalTime, Solver::Domain::EMT);
+	Simulation sim(simName, system1, timeStep, finalTime, Domain::EMT);
 	sim.addSystemTopology(system2);
 	sim.setSwitchTime(loadStep, 1);
 

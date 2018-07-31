@@ -23,7 +23,7 @@
 #include "DPsim.h"
 
 using namespace DPsim;
-using namespace CPS::Components::EMT;
+using namespace CPS::EMT::Ph3;
 
 int main(int argc, char* argv[])
 {
@@ -75,7 +75,7 @@ int main(int argc, char* argv[])
 	system.mComponents = { gen, r1, r2, r3 };
 
 	Simulation sim("EMT_SynchronGeneratorDQ_BalanceResLoad", system, dt, tf,
-		Solver::Domain::EMT, Solver::Type::MNA, Logger::Level::INFO);
+		Domain::EMT, Solver::Type::MNA, Logger::Level::INFO);
 	sim.setLogDownsamplingRate(downSampling);
 
 	// Initialize generator
@@ -85,7 +85,7 @@ int main(int argc, char* argv[])
 	Real initVoltAngle = -DPS_PI / 2;
 	Real fieldVoltage = 7.0821;
 	Real mechPower = 5.5558e5;
-	auto genPtr = std::dynamic_pointer_cast<Components::EMT::SynchronGeneratorDQ>(gen);
+	auto genPtr = std::dynamic_pointer_cast<EMT::Ph3::SynchronGeneratorDQ>(gen);
 	genPtr->initialize(om, dt, initActivePower, initReactivePower, initTerminalVolt, initVoltAngle, fieldVoltage, mechPower);
 
 	// Calculate initial values for circuit at generator connection point

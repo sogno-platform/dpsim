@@ -1,4 +1,4 @@
-# <img src="Figures/dpsim.png" width=40 /> DPsim
+# <img src="Documentation/Figures/dpsim.png" width=40 /> DPsim
 
 [![build status](https://git.rwth-aachen.de/acs/core/simulation/DPsim/badges/development/build.svg)](https://git.rwth-aachen.de/acs/core/simulation/DPsim/commits/development)
 [![coverage report](https://git.rwth-aachen.de/acs/core/simulation/DPsim/badges/development/coverage.svg)](https://git.rwth-aachen.de/acs/core/simulation/DPsim/commits/development)

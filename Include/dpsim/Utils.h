@@ -54,7 +54,7 @@ public:
 		Logger::Level ll = Logger::Level::INFO,
 		Bool ss = false,
 		Bool b = false,
-		Solver::Domain sd = Solver::Domain::DP,
+		Domain sd = Domain::DP,
 		Solver::Type st = Solver::Type::MNA
 	);
 
@@ -72,7 +72,7 @@ public:
 	bool blocking;
 
 	struct {
-		Solver::Domain domain;
+		Domain domain;
 		Solver::Type type;
 	} solver;
 

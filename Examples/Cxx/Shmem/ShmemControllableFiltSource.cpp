@@ -22,8 +22,9 @@
 #include "DPsim.h"
 
 using namespace DPsim;
-using namespace CPS::Components;
-using namespace CPS::Components::DP;
+using namespace CPS;
+using namespace CPS::DP::Ph1;
+using namespace CPS::Signal;
 
 int main(int argc, char *argv[]) {
 
@@ -76,7 +77,7 @@ int main(int argc, char *argv[]) {
 
 	auto sys = SystemTopology(50, Node::List{n1}, ComponentBase::List{ecs, r1, load, filtP, filtQ});
 	auto sim = RealTimeSimulation(simName, sys, timeStep, finalTime,
-	Solver::Domain::DP, Solver::Type::MNA, Logger::Level::INFO);
+	Domain::DP, Solver::Type::MNA, Logger::Level::INFO);
 
 	sim.addInterface(&intf);
 	sim.run();

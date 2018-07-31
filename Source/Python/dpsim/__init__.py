@@ -20,11 +20,12 @@ from _dpsim import load_cim
 from _dpsim import open_interface
 
 from .Simulation import Simulation
+from .EventQueue import EventQueue
 
 __all__ = [
     'Component',
     'Interface',
     'Simulation',
     'load_cim',
-    'open_shmem_interface'
+    'open_interface'
 ]
