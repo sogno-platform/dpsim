@@ -39,17 +39,20 @@ void DAESolver::initialize(Component::List newComponents, Real t0)
 	sval = N_VGetArrayPointer_Serial(state); 
 	for (auto node : DAESys.mNodes) {
 		//initialize nodal values of state vector
-		sval[counter++]=node->getVoltage();
-
+        sval[counter++] = node->getVoltage();
 	}
 	
 	for (auto comp : DAESys.mComponents){
 		//initialize  component values of state vector
 		sval[counter++]=comp->getVoltage();
 		//sval[counter++]=component inductance;
-
 	}	
 	
+    for (int j = 1; j<NEQ; j++){
+        //initialize nodal current equations
+        sval[counter++] = 0 ;
+    }
+
 	s_dtval = N_VGetArrayPointer_Serial(dstate_dt); 
 
 	/*
@@ -57,7 +60,7 @@ void DAESolver::initialize(Component::List newComponents, Real t0)
 		for now all equal to 0
 	*/
 
-    for (int i =0; i<(DAESys.mNodes.size()+DAESys.mComponents.size()-1); i++)
+    for (int i =0; i<(NEQ-1); i++)
 		s_dtval[i] = 0; // TODO: add derivative calculation
 
 	rtol = RCONST(1.0e-6); // set relative tolerance

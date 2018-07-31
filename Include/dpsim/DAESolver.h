@@ -33,7 +33,7 @@ using namespace DPsim ;
 		/// Memory block allocated by IDA
 		void *mem = NULL;
 		/// Vector of problem variables
-		N_Vector state = NULL, 
+        N_Vector state = NULL;
 		///  Derivates of the state vector with respect to time
 		N_Vector dstate_dt = NULL; 
 		/// Time IDA reached while solving
@@ -53,7 +53,7 @@ using namespace DPsim ;
         DAESolver(String name,  SystemTopology system, Real dt, Real t0);
 		virtual ~DAESolver();
 		/// Initialize Components & Nodes with inital values
-		void initialize(Component::List comps);
+        void initialize(Component::List newComponents, Real t0);
 		/// Residual Function of entire System
 		int DAE_residualFunction(realtype ttime, N_Vector state, N_Vector dstate_dt, N_Vector resid, void *user_data);
 		/// Solve system for the current time
