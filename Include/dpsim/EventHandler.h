@@ -27,8 +27,6 @@
 #include "cps/Definitions.h"
 #include "cps/Logger.h"
 
-using namespace CPS;
-
 namespace DPsim {
 
 	class Event {

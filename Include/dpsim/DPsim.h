@@ -37,3 +37,10 @@
 #ifdef WITH_CIM
   #include "cps/CIM/Reader.h"
 #endif
+
+namespace DPsim {
+  // #### CPS for users ####
+  using SystemTopology = CPS::SystemTopology;
+  using SystemNodeList = CPS::NodeBase::List;
+  using SystemComponentList = CPS::ComponentBase::List;
+}

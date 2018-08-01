@@ -51,10 +51,10 @@ public:
 		Real d = 1,
 		Real sf = 50,
 		Int s = -1,
-		Logger::Level ll = Logger::Level::INFO,
+		CPS::Logger::Level ll = CPS::Logger::Level::INFO,
 		Bool ss = false,
 		Bool b = false,
-		Domain sd = Domain::DP,
+		CPS::Domain sd = CPS::Domain::DP,
 		Solver::Type st = Solver::Type::MNA
 	);
 
@@ -66,13 +66,13 @@ public:
 	double sysFreq;
 	int scenario;
 
-	Logger::Level logLevel;
+	CPS::Logger::Level logLevel;
 
 	bool startSynch;
 	bool blocking;
 
 	struct {
-		Domain domain;
+		CPS::Domain domain;
 		Solver::Type type;
 	} solver;
 

@@ -30,8 +30,6 @@
 #include "cps/CIM/Reader.h"
 #endif /* WITH_CIM */
 
-using namespace CPS;
-
 namespace DPsim {
 	/// Simulation class which uses Modified Nodal Analysis (MNA).
 	template <typename VarType>
@@ -41,7 +39,7 @@ namespace DPsim {
 		/// System time step is constant for MNA solver
 		Real mTimeStep;
 		/// Simulation domain, which can be dynamic phasor (DP) or EMT
-		Domain mDomain;
+		CPS::Domain mDomain;
 		/// Number of nodes
 		UInt mNumNodes = 0;
 		/// Number of nodes
@@ -52,13 +50,13 @@ namespace DPsim {
 		/// If this is false, all voltages are initialized with zero.
 		Bool mPowerflowInitialization;
 		/// System list
-		SystemTopology mSystem;
+		CPS::SystemTopology mSystem;
 		/// 
-		typename Node<VarType>::List mNodes;
+		typename CPS::Node<VarType>::List mNodes;
 		/// 
-		typename PowerComponent<VarType>::List mPowerComponents;
+		typename CPS::PowerComponent<VarType>::List mPowerComponents;
 		/// 
-		SignalComponent::List mSignalComponents;
+		CPS::SignalComponent::List mSignalComponents;
 		
 		// #### MNA specific attributes ####
 		/// System matrix A that is modified by matrix stamps
@@ -66,7 +64,7 @@ namespace DPsim {
 		/// System matrices list for swtiching events
 		std::vector<Matrix> mSystemMatrices;
 		/// LU decomposition of system matrix A
-		std::vector<LUFactorized> mLuFactorizations;
+		std::vector<CPS::LUFactorized> mLuFactorizations;
 		/// Vector of known quantities
 		Matrix mRightSideVector;
 		/// Vector of unknown quantities
@@ -86,17 +84,17 @@ namespace DPsim {
 		/// Down sampling rate for log
 		Int mDownSampleRate = 1;
 		/// Simulation log level
-		Logger::Level mLogLevel;
+		CPS::Logger::Level mLogLevel;
 		/// Simulation logger
-		Logger mLog;
+		CPS::Logger mLog;
 		/// Left side vector logger
-		Logger mLeftVectorLog;
+		CPS::Logger mLeftVectorLog;
 		/// Right side vector logger
-		Logger mRightVectorLog;
+		CPS::Logger mRightVectorLog;
 
 		/// TODO: check that every system matrix has the same dimensions
-		void initialize(SystemTopology system) {
-			mLog.Log(Logger::Level::INFO) << "#### Start Initialization ####" << std::endl;
+		void initialize(CPS::SystemTopology system) {
+			mLog.Log(CPS::Logger::Level::INFO) << "#### Start Initialization ####" << std::endl;
 			mSystem = system;
 
 			// We need to differentiate between power and signal components and
@@ -117,14 +115,14 @@ namespace DPsim {
 
 			// TODO: Move to base solver class?
 			// This intialization according to power flow information is not MNA specific.
-			mLog.Log(Logger::Level::INFO) << "Initialize power flow" << std::endl;
+			mLog.Log(CPS::Logger::Level::INFO) << "Initialize power flow" << std::endl;
 			for (auto comp : mPowerComponents)
 				comp->initializePowerflow(mSystem.mSystemFrequency);
 
 			// This steady state initialization is MNA specific and runs a simulation 
 			// before the actual simulation executed by the user.
-			if (mSteadyStateInit && mDomain == Domain::DP) {
-				mLog.Log(Logger::Level::INFO) << "Run steady-state initialization." << std::endl;
+			if (mSteadyStateInit && mDomain == CPS::Domain::DP) {
+				mLog.Log(CPS::Logger::Level::INFO) << "Run steady-state initialization." << std::endl;
 				steadyStateInitialization();
 			}
 
@@ -147,20 +145,20 @@ namespace DPsim {
 			for (auto baseNode : mSystem.mNodes) {	
 				// Add nodes to the list and ignore ground nodes.
 				if (!baseNode->isGround()) {			
-					auto node = std::dynamic_pointer_cast< Node<VarType> >(baseNode);
+					auto node = std::dynamic_pointer_cast< CPS::Node<VarType> >(baseNode);
 					mNodes.push_back( node );	
 				}
 			}
 			
 			for (UInt i = 0; i < mNodes.size(); i++) {
-				mLog.Log(Logger::Level::INFO) << "Found node " << mNodes[i]->getName() << std::endl;
+				mLog.Log(CPS::Logger::Level::INFO) << "Found node " << mNodes[i]->getName() << std::endl;
 			}
 
 			for (auto comp : mSystem.mComponents) {
-				if ( typename PowerComponent<VarType>::Ptr powercomp = std::dynamic_pointer_cast< PowerComponent<VarType> >(comp) ) {
+				if ( typename CPS::PowerComponent<VarType>::Ptr powercomp = std::dynamic_pointer_cast< CPS::PowerComponent<VarType> >(comp) ) {
 					mPowerComponents.push_back(powercomp);		
 				}
-				else if ( SignalComponent::Ptr signalcomp = std::dynamic_pointer_cast< SignalComponent >(comp) )	{	
+				else if ( CPS::SignalComponent::Ptr signalcomp = std::dynamic_pointer_cast< CPS::SignalComponent >(comp) )	{	
 					mSignalComponents.push_back(signalcomp);	
 				}
 			}
@@ -179,7 +177,7 @@ namespace DPsim {
 			UInt simNodeIdx = -1;
 			for (UInt idx = 0; idx < mNodes.size(); idx++) {
 				mNodes[idx]->getSimNodes()[0] = ++simNodeIdx;
-				if (mNodes[idx]->getPhaseType() == PhaseType::ABC) {
+				if (mNodes[idx]->getPhaseType() == CPS::PhaseType::ABC) {
 					mNodes[idx]->getSimNodes()[1] = ++simNodeIdx;
 					mNodes[idx]->getSimNodes()[2] = ++simNodeIdx;
 				}
@@ -188,8 +186,8 @@ namespace DPsim {
 			// Total number of network nodes is simNodeIdx + 1
 			mNumRealNodes = simNodeIdx + 1;	
 
-			mLog.Log(Logger::Level::INFO) << "Maximum node number: " << simNodeIdx << std::endl;
-			mLog.Log(Logger::Level::INFO) << "Number of nodes: " << mNodes.size() << std::endl;
+			mLog.Log(CPS::Logger::Level::INFO) << "Maximum node number: " << simNodeIdx << std::endl;
+			mLog.Log(CPS::Logger::Level::INFO) << "Number of nodes: " << mNodes.size() << std::endl;
 		}
 
 		/// Creates virtual nodes inside components.
@@ -203,9 +201,9 @@ namespace DPsim {
 				if (comp->hasVirtualNodes()) {
 					for (UInt node = 0; node < comp->getVirtualNodesNum(); node++) {
 						virtualNode++;
-						mNodes.push_back(std::make_shared<Node<VarType>>(virtualNode));
+						mNodes.push_back(std::make_shared<CPS::Node<VarType>>(virtualNode));
 						comp->setVirtualNodeAt(mNodes[virtualNode], node);
-						mLog.Log(Logger::Level::INFO) << "Created virtual node" << node << " = " << virtualNode
+						mLog.Log(CPS::Logger::Level::INFO) << "Created virtual node" << node << " = " << virtualNode
 							<< " for " << comp->getName() << std::endl;
 					}
 				}
@@ -245,7 +243,7 @@ namespace DPsim {
 				if ((maxDiff / max) < 0.0001)
 					break;
 			}
-			mLog.Log(Logger::Level::INFO) << "Initialization finished. Max difference: "
+			mLog.Log(CPS::Logger::Level::INFO) << "Initialization finished. Max difference: "
 				<< maxDiff << " or " << maxDiff / max << "% at time " << time << std::endl;
 			mSystemMatrices.pop_back();
 			mLuFactorizations.pop_back();
@@ -261,7 +259,7 @@ namespace DPsim {
 		void createEmptySystemMatrix();
 
 		/// TODO remove and replace with function that handles breakers
-		void addSystemTopology(SystemTopology system) {
+		void addSystemTopology(CPS::SystemTopology system) {
 			mSystem = system;
 
 			// It is assumed that the system size does not change
@@ -269,7 +267,7 @@ namespace DPsim {
 			for (auto comp : system.mComponents)
 				comp->mnaApplySystemMatrixStamp(mSystemMatrices[mSystemMatrices.size()]);
 
-			mLuFactorizations.push_back(LUFactorized(mSystemMatrices[mSystemMatrices.size()]));
+			mLuFactorizations.push_back(CPS::LUFactorized(mSystemMatrices[mSystemMatrices.size()]));
 		}
 
 		/// TODO This should be activated by switch/breaker components
@@ -287,8 +285,8 @@ namespace DPsim {
 		/// This constructor should not be called by users.
 		MnaSolver(String name,
 			Real timeStep,
-			Domain domain = Domain::DP,
-			Logger::Level logLevel = Logger::Level::INFO,
+			CPS::Domain domain = CPS::Domain::DP,
+			CPS::Logger::Level logLevel = CPS::Logger::Level::INFO,
 			Bool steadyStateInit = false, Int downSampleRate = 1) :			
 			mLog("Logs/" + name + "_MNA.log", logLevel),
 			mLeftVectorLog("Logs/" + name + "_LeftVector.csv", logLevel),
@@ -302,10 +300,10 @@ namespace DPsim {
 		}
 
 		/// Constructor to be used in simulation examples.
-		MnaSolver(String name, SystemTopology system,
+		MnaSolver(String name, CPS::SystemTopology system,
 			Real timeStep,
-			Domain domain = Domain::DP,
-			Logger::Level logLevel = Logger::Level::INFO,
+			CPS::Domain domain = CPS::Domain::DP,
+			CPS::Logger::Level logLevel = CPS::Logger::Level::INFO,
 			Bool steadyStateInit = false,
 			Int downSampleRate = 1)
 			: MnaSolver(name, timeStep, domain,
@@ -314,14 +312,14 @@ namespace DPsim {
 
 			// Logging
 			for (auto comp : system.mComponents)
-				mLog.Log(Logger::Level::INFO) << "Added " << comp->getType() << " '" << comp->getName() << "' to simulation." << std::endl;
+				mLog.Log(CPS::Logger::Level::INFO) << "Added " << comp->getType() << " '" << comp->getName() << "' to simulation." << std::endl;
 
-			mLog.Log(Logger::Level::INFO) << "System matrix:" << std::endl;
-			mLog.LogMatrix(Logger::Level::INFO, mSystemMatrices[0]);
-			mLog.Log(Logger::Level::INFO) << "LU decomposition:" << std::endl;
-			mLog.LogMatrix(Logger::Level::INFO, mLuFactorizations[0].matrixLU());
-			mLog.Log(Logger::Level::INFO) << "Right side vector:" << std::endl;
-			mLog.LogMatrix(Logger::Level::INFO, mRightSideVector);
+			mLog.Log(CPS::Logger::Level::INFO) << "System matrix:" << std::endl;
+			mLog.LogMatrix(CPS::Logger::Level::INFO, mSystemMatrices[0]);
+			mLog.Log(CPS::Logger::Level::INFO) << "LU decomposition:" << std::endl;
+			mLog.LogMatrix(CPS::Logger::Level::INFO, mLuFactorizations[0].matrixLU());
+			mLog.Log(CPS::Logger::Level::INFO) << "Right side vector:" << std::endl;
+			mLog.LogMatrix(CPS::Logger::Level::INFO, mRightSideVector);
 		}
 
 		///
@@ -358,9 +356,9 @@ namespace DPsim {
 					switchSystemMatrix(mSwitchEvents[mSwitchTimeIndex].systemIndex);
 					++mSwitchTimeIndex;
 
-					mLog.Log(Logger::Level::INFO) << "Switched to system " << mSwitchTimeIndex << " at " << time << std::endl;
-					mLog.Log(Logger::Level::INFO) << "New matrix:" << std::endl << mSystemMatrices[mSystemIndex] << std::endl;
-					mLog.Log(Logger::Level::INFO) << "New decomp:" << std::endl << mLuFactorizations[mSystemIndex].matrixLU() << std::endl;
+					mLog.Log(CPS::Logger::Level::INFO) << "Switched to system " << mSwitchTimeIndex << " at " << time << std::endl;
+					mLog.Log(CPS::Logger::Level::INFO) << "New matrix:" << std::endl << mSystemMatrices[mSystemIndex] << std::endl;
+					mLog.Log(CPS::Logger::Level::INFO) << "New decomp:" << std::endl << mLuFactorizations[mSystemIndex].matrixLU() << std::endl;
 				}
 			}
 

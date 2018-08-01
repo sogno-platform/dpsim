@@ -39,12 +39,9 @@
   #include "cps/Interface.h"
 #endif
 
-using namespace CPS;
-
 namespace DPsim {
 
-	class Simulation : public AttributeList {
-
+	class Simulation : public CPS::AttributeList {
 	public:
 		enum class Event : std::uint32_t {
 			Started = 1,
@@ -57,7 +54,7 @@ namespace DPsim {
 
 	protected:
 		/// Simulation logger
-		Logger mLog;
+		CPS::Logger mLog;
 		/// Simulation name
 		String mName;
 		/// Final time of the simulation
@@ -67,7 +64,7 @@ namespace DPsim {
 		/// Number of step which have been executed for this simulation.
 		Int mTimeStepCount = 0;
 		/// Simulation log level
-		Logger::Level mLogLevel;
+		CPS::Logger::Level mLogLevel;
 		///
 		Solver::Type mSolverType;
 		///
@@ -78,7 +75,7 @@ namespace DPsim {
 #ifdef WITH_SHMEM
 		struct InterfaceMapping {
 			/// A pointer to the external interface
-			Interface *interface;
+			CPS::Interface *interface;
 			///
 			bool sync;
 			bool syncStart;
@@ -94,15 +91,15 @@ namespace DPsim {
 		/// Creates system matrix according to
 		Simulation(String name,
 			Real timeStep, Real finalTime,
-			Domain domain = Domain::DP,
+			CPS::Domain domain = CPS::Domain::DP,
 			Solver::Type solverType = Solver::Type::MNA,
-			Logger::Level logLevel = Logger::Level::INFO);
+			CPS::Logger::Level logLevel = CPS::Logger::Level::INFO);
 		/// Creates system matrix according to System topology
-		Simulation(String name, SystemTopology system,
+		Simulation(String name, CPS::SystemTopology system,
 			Real timeStep, Real finalTime,
-			Domain domain = Domain::DP,
+			CPS::Domain domain = CPS::Domain::DP,
 			Solver::Type solverType = Solver::Type::MNA,
-			Logger::Level logLevel = Logger::Level::INFO,
+			CPS::Logger::Level logLevel = CPS::Logger::Level::INFO,
 			Bool steadyStateInit = false);
 		///
 		virtual ~Simulation();
@@ -116,16 +113,16 @@ namespace DPsim {
 		void setSwitchTime(Real switchTime, Int systemIndex);
 #ifdef WITH_SHMEM
 		///
-		void addInterface(Interface *eint, bool sync, bool syncStart) {
+		void addInterface(CPS::Interface *eint, bool sync, bool syncStart) {
 			mInterfaces.push_back({eint, sync, syncStart});
 		}
 
-		void addInterface(Interface *eint, bool sync = true) {
+		void addInterface(CPS::Interface *eint, bool sync = true) {
 			mInterfaces.push_back({eint, sync, sync});
 		}
 #endif
 		///
-		void addSystemTopology(SystemTopology system);
+		void addSystemTopology(CPS::SystemTopology system);
 		///
 		void setLogDownsamplingRate(Int divider) {}
 

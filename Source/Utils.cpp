@@ -28,6 +28,7 @@
 #include "Utils.h"
 
 using namespace DPsim;
+using namespace CPS;
 
 #ifdef __linux__
 DPsim::CommandLineArgs::CommandLineArgs(int argc, char *argv[],
@@ -35,10 +36,10 @@ DPsim::CommandLineArgs::CommandLineArgs(int argc, char *argv[],
 		Real d,
 		Real sf,
 		Int s,
-		Logger::Level ll,
+		CPS::Logger::Level ll,
 		Bool ss,
 		Bool b,
-		Domain sd,
+		CPS::Domain sd,
 		Solver::Type st
 	) :
 	mProgramName(argv[0]),
