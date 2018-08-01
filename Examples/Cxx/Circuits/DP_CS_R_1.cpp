@@ -26,14 +26,14 @@ using namespace CPS::DP::Ph1;
 
 int main(int argc, char* argv[]) {
 	// Nodes
-	auto n1 = Node::make("n1");
+	auto n1 = DP::Node::make("n1");
 
 	// Components
-	auto cs = CurrentSource::make("cs", Node::List{GND, n1}, Complex(10, 0));
-	auto r1 = Resistor::make("r_1", Node::List{GND, n1}, 1);
+	auto cs = CurrentSource::make("cs", DP::Node::List{DP::Node::GND, n1}, Complex(10, 0));
+	auto r1 = Resistor::make("r_1", DP::Node::List{DP::Node::GND, n1}, 1);
 
 	// Define system topology
-	auto sys = SystemTopology(50, Node::List{n1}, ComponentBase::List{cs, r1});
+	auto sys = SystemTopology(50, NodeBase::List{n1}, ComponentBase::List{cs, r1});
 		
 	// Define simulation scenario
 	Real timeStep = 0.001;
