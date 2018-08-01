@@ -63,6 +63,7 @@ if(DOXYGEN_FOUND)
 		"${CMAKE_CURRENT_BINARY_DIR}/Doxyfile"
 		@ONLY
 	)
+	
 
 	# HTML output directory
 	set(DOXYGEN_HTML_DIR "${CMAKE_CURRENT_BINARY_DIR}/Cxx")
@@ -73,4 +74,8 @@ if(DOXYGEN_FOUND)
 		WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
 		COMMENT "Generating API documentation with Doxygen" VERBATIM
 	)
+
+	file(COPY "${CMAKE_CURRENT_SOURCE_DIR}/images"
+		DESTINATION "${CMAKE_CURRENT_BINARY_DIR}/Cxx/html")
+
 endif(DOXYGEN_FOUND)
