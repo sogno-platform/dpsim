@@ -94,7 +94,7 @@ int Python::Node<VarType>::init(Python::Node<VarType> *self, PyObject *args, PyO
 		return -1;
 	}
 
-	self->node = std::make_shared<CPS::Node<VarType>>(uid, initialVoltage);
+	self->node = std::make_shared<CPS::Node<VarType>>(uid, CPS::PhaseType::Single, std::vector<CPS::Complex>({ initialVoltage }));
 
 	return 0;
 };
