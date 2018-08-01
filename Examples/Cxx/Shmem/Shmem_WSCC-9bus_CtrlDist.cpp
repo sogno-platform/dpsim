@@ -28,7 +28,6 @@
 
 using namespace DPsim;
 using namespace CPS;
-using namespace CPS;
 using namespace CPS::DP::Ph1;
 using namespace CPS::Signal;
 
@@ -126,7 +125,7 @@ int main(int argc, char *argv[]) {
 
 	if (args.scenario == 1) {
 		// Nodes
-		auto n1 = ComplexNode::make("n1", Complex(02.180675e+05, -1.583367e+04));
+		auto n1 = ComplexNode::make("n1", PhaseType::Single, std::vector<Complex>({Complex(02.180675e+05, -1.583367e+04)}));
 
 		// Add interface voltage source
 		auto evs = VoltageSource::make("v_intf", ComplexNode::List{ComplexNode::GND, n1}, Complex(0, 0), Logger::Level::DEBUG);
