@@ -84,6 +84,7 @@ set(INCLUDE_DIRS
 
 add_subdirectory(Source)
 add_subdirectory(Documentation)
+add_subdirectory(Dependencies/fpotencia)
 
 
 if(BUILD_EXAMPLES)
