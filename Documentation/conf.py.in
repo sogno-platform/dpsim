@@ -99,7 +99,7 @@ html_theme_options = {
 # so a file named "default.css" will overwrite the builtin "default.css".
 html_static_path = [ ]
 
-html_logo = '@CMAKE_SOURCE_DIR@/Figures/dpsim.png'
+html_logo = '@CMAKE_SOURCE_DIR@/images/dpsim.png'
 
 # Custom sidebar templates, must be a dictionary that maps document names
 # to template names.
