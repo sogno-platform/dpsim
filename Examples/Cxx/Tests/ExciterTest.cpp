@@ -77,7 +77,7 @@ int main(int argc, char* argv[])
 			}
 
 			vt = mExciter.step(mVd, mVq, Vref, dt);
-			ExciterOut.LogDataLine(t, vt*257198.07031934269);
+			ExciterOut.debug(t, vt*257198.07031934269);
 	}
 
 	return 0;
