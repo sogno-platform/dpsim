@@ -40,7 +40,9 @@ RUN dnf -y install \
 	villas-node-devel \
 	expat-devel \
 	graphviz-devel \
-	libcimpp16v29a
+	libcimpp16v29a \
+	spdlog \
+	sundials
 
 ENV LD_LIBRARY_PATH /usr/local/lib64
 
