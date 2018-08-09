@@ -26,26 +26,26 @@ using namespace DPsim;
 /// Create left and right side vector
 template<>
 void MnaSolver<Real>::createEmptyVectors() {	
-    mRightSideVector = Matrix::Zero(mNumNodes, 1);
-    mLeftSideVector = Matrix::Zero(mNumNodes, 1);			
+    mRightSideVector = Matrix::Zero(mNumSimNodes, 1);
+    mLeftSideVector = Matrix::Zero(mNumSimNodes, 1);			
 }
 
 /// Create left and right side vector
 template<>
 void MnaSolver<Complex>::createEmptyVectors() {			
-    mRightSideVector = Matrix::Zero(2 * mNumNodes, 1);
-    mLeftSideVector = Matrix::Zero(2 * mNumNodes, 1);
+    mRightSideVector = Matrix::Zero(2 * mNumSimNodes, 1);
+    mLeftSideVector = Matrix::Zero(2 * mNumSimNodes, 1);
 }
 
 /// Create system matrix
 template<>
 void MnaSolver<Real>::createEmptySystemMatrix() {			
-    mSystemMatrices.push_back(Matrix::Zero(mNumNodes, mNumNodes));
+    mSystemMatrices.push_back(Matrix::Zero(mNumSimNodes, mNumSimNodes));
 }
 
 template<>
 void MnaSolver<Complex>::createEmptySystemMatrix() {
-    mSystemMatrices.push_back(Matrix::Zero(2 * mNumNodes, 2 * mNumNodes));			
+    mSystemMatrices.push_back(Matrix::Zero(2 * mNumSimNodes, 2 * mNumSimNodes));			
 }
 
 template class DPsim::MnaSolver<Real>;

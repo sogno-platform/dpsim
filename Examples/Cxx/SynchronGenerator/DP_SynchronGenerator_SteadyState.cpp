@@ -29,7 +29,7 @@ using namespace CPS::DP::Ph3;
 int main(int argc, char* argv[]) {
 	// Define simulation parameters
 	Real timeStep = 0.000001;
-	Real finalTime = 0.1;
+	Real finalTime = 0.0001;
     // Define machine parameters in per unit
 	Real nomPower = 555e6;
 	Real nomPhPhVoltRMS = 24e3;

@@ -42,10 +42,16 @@ namespace DPsim {
 		CPS::Domain mDomain;
 		/// Number of nodes
 		UInt mNumNodes = 0;
-		/// Number of nodes
-		UInt mNumRealNodes = 0;
-		/// Number of nodes
+		/// Number of network nodes
+		UInt mNumNetNodes = 0;
+		/// Number of virtual nodes
 		UInt mNumVirtualNodes = 0;
+		/// Number of simulation nodes
+		UInt mNumSimNodes = 0;
+		/// Number of simulation network nodes
+		UInt mNumNetSimNodes = 0;
+		/// Number of simulation virtual nodes
+		UInt mNumVirtualSimNodes = 0;
 		/// Flag to activate power flow based initialization.
 		/// If this is false, all voltages are initialized with zero.
 		Bool mPowerflowInitialization;
@@ -94,7 +100,7 @@ namespace DPsim {
 
 		/// TODO: check that every system matrix has the same dimensions
 		void initialize(CPS::SystemTopology system) {
-			mLog.Log(CPS::Logger::Level::INFO) << "#### Start Initialization ####" << std::endl;
+			mLog.info() << "#### Start Initialization ####" << std::endl;
 			mSystem = system;
 
 			// We need to differentiate between power and signal components and
@@ -102,8 +108,8 @@ namespace DPsim {
 			IdentifyTopologyObjects();
 
 			// These steps complete the network information.
-			assignSimNodes();		
 			createVirtualNodes();
+			assignSimNodes();					
 
 			// For the power components the step order should not be important
 			// but signal components need to be executed following the connections.
@@ -115,14 +121,14 @@ namespace DPsim {
 
 			// TODO: Move to base solver class?
 			// This intialization according to power flow information is not MNA specific.
-			mLog.Log(CPS::Logger::Level::INFO) << "Initialize power flow" << std::endl;
+			mLog.info() << "Initialize power flow" << std::endl;
 			for (auto comp : mPowerComponents)
 				comp->initializePowerflow(mSystem.mSystemFrequency);
 
 			// This steady state initialization is MNA specific and runs a simulation 
 			// before the actual simulation executed by the user.
 			if (mSteadyStateInit && mDomain == CPS::Domain::DP) {
-				mLog.Log(CPS::Logger::Level::INFO) << "Run steady-state initialization." << std::endl;
+				mLog.info() << "Run steady-state initialization." << std::endl;
 				steadyStateInitialization();
 			}
 
@@ -151,7 +157,7 @@ namespace DPsim {
 			}
 			
 			for (UInt i = 0; i < mNodes.size(); i++) {
-				mLog.Log(CPS::Logger::Level::INFO) << "Found node " << mNodes[i]->getName() << std::endl;
+				mLog.info() << "Found node " << mNodes[i]->getName() << std::endl;
 			}
 
 			for (auto comp : mSystem.mComponents) {
@@ -174,28 +180,33 @@ namespace DPsim {
 
 		/// Assign simulation node index according to index in the vector.
 		void assignSimNodes() {			
-			UInt simNodeIdx = -1;
+			UInt simNodeIdx = 0;
 			for (UInt idx = 0; idx < mNodes.size(); idx++) {
-				mNodes[idx]->getSimNodes()[0] = ++simNodeIdx;
+				mNodes[idx]->setSimNode(0, simNodeIdx);
+				simNodeIdx++;
 				if (mNodes[idx]->getPhaseType() == CPS::PhaseType::ABC) {
-					mNodes[idx]->getSimNodes()[1] = ++simNodeIdx;
-					mNodes[idx]->getSimNodes()[2] = ++simNodeIdx;
+					mNodes[idx]->setSimNode(1, simNodeIdx);
+					simNodeIdx++;
+					mNodes[idx]->setSimNode(2, simNodeIdx);
+					simNodeIdx++;
 				}
+				if (idx == mNumNetNodes-1) mNumNetSimNodes = simNodeIdx;
 			}	
-
 			// Total number of network nodes is simNodeIdx + 1
-			mNumRealNodes = simNodeIdx + 1;	
+			mNumSimNodes = simNodeIdx;	
+			mNumVirtualSimNodes = mNumSimNodes - mNumNetSimNodes;
 
-			mLog.Log(CPS::Logger::Level::INFO) << "Maximum node number: " << simNodeIdx << std::endl;
-			mLog.Log(CPS::Logger::Level::INFO) << "Number of nodes: " << mNodes.size() << std::endl;
+			mLog.info() << "Number of network simulation nodes: " << mNumNetSimNodes << std::endl;
+			mLog.info() << "Number of simulation nodes: " << mNumSimNodes << std::endl;
 		}
 
 		/// Creates virtual nodes inside components.
 		/// The MNA algorithm handles these nodes in the same way as network nodes.
 		void createVirtualNodes() {
+			// We have not added virtual nodes yet so the list has only network nodes
+			mNumNetNodes = mNodes.size();
 			// virtual nodes are placed after network nodes
-			UInt virtualNode = mNumRealNodes - 1;	
-
+			UInt virtualNode = mNumNetNodes - 1;
 			// Check if component requires virtual node and if so set one
 			for (auto comp : mPowerComponents) {
 				if (comp->hasVirtualNodes()) {
@@ -203,15 +214,17 @@ namespace DPsim {
 						virtualNode++;
 						mNodes.push_back(std::make_shared<CPS::Node<VarType>>(virtualNode));
 						comp->setVirtualNodeAt(mNodes[virtualNode], node);
-						mLog.Log(CPS::Logger::Level::INFO) << "Created virtual node" << node << " = " << virtualNode
+						mLog.info() << "Created virtual node" << node << " = " << virtualNode
 							<< " for " << comp->getName() << std::endl;
 					}
 				}
 			}
+			// Update node number to create matrices and vectors
+			mNumNodes = mNodes.size();
+			mNumVirtualNodes = mNumNodes - mNumNetNodes;
 
-			// Calculate system size and create matrices and vectors
-			mNumNodes = virtualNode + 1;
-			mNumVirtualNodes = mNumNodes - mNumRealNodes;
+			mLog.info() << "Number of network nodes: " << mNumNetNodes << std::endl;
+			mLog.info() << "Number of nodes: " << mNumNodes << std::endl;
 		}
 
 		// TODO: check if this works with AC sources
@@ -243,7 +256,7 @@ namespace DPsim {
 				if ((maxDiff / max) < 0.0001)
 					break;
 			}
-			mLog.Log(CPS::Logger::Level::INFO) << "Initialization finished. Max difference: "
+			mLog.info() << "Initialization finished. Max difference: "
 				<< maxDiff << " or " << maxDiff / max << "% at time " << time << std::endl;
 			mSystemMatrices.pop_back();
 			mLuFactorizations.pop_back();
@@ -312,14 +325,14 @@ namespace DPsim {
 
 			// Logging
 			for (auto comp : system.mComponents)
-				mLog.Log(CPS::Logger::Level::INFO) << "Added " << comp->getType() << " '" << comp->getName() << "' to simulation." << std::endl;
+				mLog.info() << "Added " << comp->getType() << " '" << comp->getName() << "' to simulation." << std::endl;
 
-			mLog.Log(CPS::Logger::Level::INFO) << "System matrix:" << std::endl;
-			mLog.LogMatrix(CPS::Logger::Level::INFO, mSystemMatrices[0]);
-			mLog.Log(CPS::Logger::Level::INFO) << "LU decomposition:" << std::endl;
-			mLog.LogMatrix(CPS::Logger::Level::INFO, mLuFactorizations[0].matrixLU());
-			mLog.Log(CPS::Logger::Level::INFO) << "Right side vector:" << std::endl;
-			mLog.LogMatrix(CPS::Logger::Level::INFO, mRightSideVector);
+			mLog.info() << "System matrix:" << std::endl;
+			mLog.info(mSystemMatrices[0]);
+			mLog.info() << "LU decomposition:" << std::endl;
+			mLog.info(mLuFactorizations[0].matrixLU());
+			mLog.info() << "Right side vector:" << std::endl;
+			mLog.info(mRightSideVector);
 		}
 
 		///
@@ -346,7 +359,7 @@ namespace DPsim {
 			}
 
 			// TODO Try to avoid this step.
-			for (UInt nodeIdx = 0; nodeIdx < mNumRealNodes; nodeIdx++) {
+			for (UInt nodeIdx = 0; nodeIdx < mNumNetNodes; nodeIdx++) {
 				mNodes[nodeIdx]->mnaUpdateVoltage(mLeftSideVector);
 			}
 
@@ -356,9 +369,9 @@ namespace DPsim {
 					switchSystemMatrix(mSwitchEvents[mSwitchTimeIndex].systemIndex);
 					++mSwitchTimeIndex;
 
-					mLog.Log(CPS::Logger::Level::INFO) << "Switched to system " << mSwitchTimeIndex << " at " << time << std::endl;
-					mLog.Log(CPS::Logger::Level::INFO) << "New matrix:" << std::endl << mSystemMatrices[mSystemIndex] << std::endl;
-					mLog.Log(CPS::Logger::Level::INFO) << "New decomp:" << std::endl << mLuFactorizations[mSystemIndex].matrixLU() << std::endl;
+					mLog.info() << "Switched to system " << mSwitchTimeIndex << " at " << time << std::endl;
+					mLog.info() << "New matrix:" << std::endl << mSystemMatrices[mSystemIndex] << std::endl;
+					mLog.info() << "New decomp:" << std::endl << mLuFactorizations[mSystemIndex].matrixLU() << std::endl;
 				}
 			}
 
