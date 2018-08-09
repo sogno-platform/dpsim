@@ -41,8 +41,7 @@ RUN dnf -y install \
 	expat-devel \
 	graphviz-devel \
 	libcimpp16v29a \
-	spdlog \
-	sundials
+	spdlog
 
 ENV LD_LIBRARY_PATH /usr/local/lib64
 
