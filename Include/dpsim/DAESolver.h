@@ -12,22 +12,24 @@
 #include <sundials/sundials_types.h>
 #include <nvector/nvector_serial.h>
 
-#define NVECTOR_DATA(vec) NV_DATA_S (vec) // Returns pointer to the first element of array vec
+//#define NVECTOR_DATA(vec) NV_DATA_S (vec) // Returns pointer to the first element of array vec
 
 using namespace DPsim ;
-
+using namespace CPS;
 	/// Solver class which uses Differential Algebraic Equation(DAE) systems
 	class DAESolver : public Solver{
 	protected:
 		// General simulation parameters
 		/// Local copy of the SystemTopology 
-		SystemTopology DAESys;
+        static SystemTopology DAESys;
 		/// Offsets vector for adding new equations to the residual vector
-		std::vector<int> offsets; 
+        static std::vector<int> offsets;
 		/// Constant time step
 		Real mTimestep;
 		/// Number of equations in problem
 		int NEQ;
+        ///
+        PowerComponent<Real>::List mComponents;
 
 		//IDA simulation variables
 		/// Memory block allocated by IDA
@@ -51,11 +53,12 @@ using namespace DPsim ;
 	public:
 		/// Create solve object with given parameters
         DAESolver(String name,  SystemTopology system, Real dt, Real t0);
-		virtual ~DAESolver();
+        /// Deallocate all memory
+        ~DAESolver();
 		/// Initialize Components & Nodes with inital values
-        void initialize(Component::List newComponents, Real t0);
+        void initialize(Real t0);
 		/// Residual Function of entire System
-		int DAE_residualFunction(realtype ttime, N_Vector state, N_Vector dstate_dt, N_Vector resid, void *user_data);
+        static int DAE_residualFunction(realtype ttime, N_Vector state, N_Vector dstate_dt, N_Vector resid, void *user_data);
 		/// Solve system for the current time
 		Real step(Real time);
 	};

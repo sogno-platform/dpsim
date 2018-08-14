@@ -64,10 +64,11 @@ Simulation::Simulation(String name, SystemTopology system,
 			mSolver = std::make_shared<MnaSolver<Real>>(name, system, timeStep,
 				domain, logLevel, steadyStateInit);
 		break;
-	}
-    case Solver::Type::IDA:
-        mSolver = std::make_shared<DAESolver>(name, system, timeStep, 0.0);
-        break;
+
+//    case Solver::Type::IDA:
+//        mSolver = std::make_shared<DAESolver>(name, system, timeStep, 0.0);
+//        break;
+    }
 }
 
 Simulation::~Simulation() {
