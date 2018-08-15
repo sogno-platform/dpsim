@@ -28,8 +28,9 @@ using namespace CPS::DP::Ph3;
 
 int main(int argc, char* argv[]) {
 	// Define simulation parameters
-	Real timeStep = 0.000001;
-	Real finalTime = 0.0001;
+	Real timeStep = 0.0005;
+	Real finalTime = 0.03;
+	String name = "DP_SynGen_dq_SteadyState";
     // Define machine parameters in per unit
 	Real nomPower = 555e6;
 	Real nomPhPhVoltRMS = 24e3;
@@ -50,14 +51,14 @@ int main(int argc, char* argv[]) {
 	Real Rkq2 = 0.0237;
 	Real Llkq2 = 0.125;
     // Initialization parameters
-    Real initActivePower = 555e3;
+    Real initActivePower = 300e6;
 	Real initReactivePower = 0;
 	Real initTerminalVolt = 24000 / sqrt(3) * sqrt(2);
 	Real initVoltAngle = -PI / 2;
 	Real fieldVoltage = 7.0821;
-	Real mechPower = 5.5558e5;
+	Real mechPower = 300e6;
     // Define grid parameters
-    Real Rload = 1037.8378;
+    Real Rload = 1.92;
 
 	// Nodes
 	std::vector<Complex> initVoltN1 = std::vector<Complex>({
@@ -67,7 +68,7 @@ int main(int argc, char* argv[]) {
 	auto n1 = Node::make("n1", PhaseType::ABC, initVoltN1);
 
 	// Components
-	auto gen = Ph3::SynchronGeneratorDQ::make("SynchronGeneratorDQ", Logger::Level::DEBUG);  
+	auto gen = Ph3::SynchronGeneratorDQ::make("DP_SynGen_dq_SteadyState_SynGen", Logger::Level::OUT);  
 	gen->setParameters(nomPower, nomPhPhVoltRMS, nomFreq, poleNum, nomFieldCurr,
 		Rs, Ll, Lmd, Lmq, Rfd, Llfd, Rkd, Llkd, Rkq1, Llkq1, Rkq2, Llkq2, H, 
 		initActivePower, initReactivePower, initTerminalVolt, initVoltAngle, fieldVoltage, mechPower);
@@ -79,7 +80,7 @@ int main(int argc, char* argv[]) {
 	auto sys = SystemTopology(60, SystemNodeList{n1}, SystemComponentList{gen, res});
 
 	// Simulation
-	Simulation sim("DP_SynchronGeneratorDQ_SteadyState", sys, timeStep, finalTime, 
+	Simulation sim(name, sys, timeStep, finalTime, 
 		Domain::DP, Solver::Type::MNA, Logger::Level::INFO);
 
 	sim.run();
