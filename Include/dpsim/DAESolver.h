@@ -30,6 +30,8 @@ using namespace CPS;
 		int NEQ;
         ///
         PowerComponent<Real>::List mComponents;
+        ///
+        static Node<Real>::List mNodes;
 
 		//IDA simulation variables
 		/// Memory block allocated by IDA

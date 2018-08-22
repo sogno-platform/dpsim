@@ -18,6 +18,24 @@ DAESolver::DAESolver(String name,  SystemTopology system, Real dt, Real t0) :  m
        PowerComponent<Real>::Ptr ncomp = std::dynamic_pointer_cast< PowerComponent<Real> >(comp);
        mComponents.push_back(ncomp);
     }
+
+    for (auto baseNode : DAESys.mNodes) {
+        // Add nodes to the list and ignore ground nodes.
+        if (!baseNode->isGround()) {
+            auto node = std::dynamic_pointer_cast<Node<Real> >(baseNode);
+            mNodes.push_back(node);
+        }
+    }
+
+    UInt simNodeIdx = -1;
+    for (UInt idx = 0; idx < mNodes.size(); idx++) {
+        mNodes[idx]->getSimNodes()[0] = ++simNodeIdx;
+        if (mNodes[idx]->getPhaseType() == PhaseType::ABC) {
+            mNodes[idx]->getSimNodes()[1] = ++simNodeIdx;
+            mNodes[idx]->getSimNodes()[2] = ++simNodeIdx;
+        }
+    }
+
     initialize(t0);
 }
 
@@ -42,10 +60,19 @@ void DAESolver::initialize(Real t0)
 	int counter = 0;
 
 	sval = N_VGetArrayPointer_Serial(state); 
-	for (auto node : DAESys.mNodes) {
+
+    for (auto node : mNodes) {
         //initialize nodal values of state vector
-        sval[counter++] = node->getVoltage();
-	}
+        Real tempVolt = 0;
+        tempVolt += std::real(node->getInitialVoltage()(0,0));
+        sval[counter++] = tempVolt;
+
+//        if (node->getPhaseType() == PhaseType::ABC) {
+//           tempVolt += std::real(node->getInitialVoltage()(1,0));
+//           tempVolt += std::real(node->getInitialVoltage()(2,0));
+//
+//        }
+    }
 
     for (auto comp : mComponents){
 		//initialize  component values of state vector
@@ -76,6 +103,7 @@ void DAESolver::initialize(Real t0)
     int retval = IDAInit(mem, &DAESolver::DAE_residualFunction, t0, state, dstate_dt);
 	// if(check_flag(&retval, "IDAInit", 1)) return(1);
 
+    if (retval == 0)std::cout<<"test"<<std::endl; //TODO: Remove this(only for compile purpose)
 	retval = IDASStolerances(mem, rtol, abstol);
  	// if(check_flag(&retval, "IDASStolerances", 1)) return(1);
 
@@ -92,10 +120,20 @@ int DAESolver::DAE_residualFunction(realtype ttime, N_Vector state, N_Vector dst
 {
 	offsets[0]=0;  //reset Offset
     offsets[1]=0;  //reset Offset
-	for (auto node : DAESys.mNodes){ //solve for all node Voltages
+
+    for (auto node : mNodes){ //solve for all node Voltages
         double * residual = NV_DATA_S(resid);
         double * tempstate = NV_DATA_S(state);
-        residual[offsets[0]] = tempstate[offsets[0]]-node->voltage;
+        Real tempVolt = 0;
+        tempVolt += std::real(node->getVoltage()(0,0));
+
+//        if (node->getPhaseType() == PhaseType::ABC) {
+//           tempVolt += std::real(node->getVoltage()(1,0));
+//           tempVolt += std::real(node->getVoltage()(2,0));
+//           sval[counter++] = tempVolt;
+//        }
+
+        residual[offsets[0]] = tempstate[offsets[0]]-tempVolt;
         offsets[0] += 1;
 	}
 	
