@@ -68,7 +68,7 @@ void MnaSolver<VarType>::initialize(CPS::SystemTopology system) {
         comp->mnaApplyRightSideVectorStamp(mRightSideVector);        
         comp->mnaApplySystemMatrixStamp(mSystemMatrix);        
     }
-    for (auto comp : mBreakers) {
+    for (auto comp : mSwitches) {
         comp->mnaInitialize(mSystem.mSystemOmega, mTimeStep);
         comp->mnaApplyRightSideVectorStamp(mRightSideVector);        
         comp->mnaApplySystemMatrixStamp(mSystemMatrix);        
@@ -81,8 +81,8 @@ void MnaSolver<VarType>::initialize(CPS::SystemTopology system) {
         for (auto comp : mPowerComponents) {
             comp->mnaApplySystemMatrixStamp(sys.second);        
         }    
-        for (UInt i = 0; i < mBreakers.size(); i++) {            
-            mBreakers[i]->mnaApplyBreakerSystemMatrixStamp(sys.second, sys.first[i]);        
+        for (UInt i = 0; i < mSwitches.size(); i++) {            
+            mSwitches[i]->mnaApplySwitchSystemMatrixStamp(sys.second, sys.first[i]);        
         }
         mLuFactorizations[sys.first] = Eigen::PartialPivLU<Matrix>(sys.second);
     }
@@ -111,8 +111,8 @@ void MnaSolver<VarType>::initialize(CPS::SystemTopology system) {
 
 template <typename VarType>
 void MnaSolver<VarType>::updateSwitchStatus() {
-    for (UInt i = 0; i < mBreakers.size(); i++) {           
-        mCurrentSwitchStatus.set(i, mBreakers[i]->mnaIsClosed());
+    for (UInt i = 0; i < mSwitches.size(); i++) {           
+        mCurrentSwitchStatus.set(i, mSwitches[i]->mnaIsClosed());
     }
 }
 
@@ -131,8 +131,8 @@ void MnaSolver<VarType>::IdentifyTopologyObjects() {
     }
 
     for (auto comp : mSystem.mComponents) {
-        if ( CPS::MNABreakerInterface::Ptr breaker = std::dynamic_pointer_cast<CPS::MNABreakerInterface>(comp) ) {
-		    mBreakers.push_back(breaker);
+        if ( CPS::MNASwitchInterface::Ptr Switch = std::dynamic_pointer_cast<CPS::MNASwitchInterface>(comp) ) {
+		    mSwitches.push_back(Switch);
 		} 
         // TODO: cast to MNAInterface instead		
         else if ( typename CPS::PowerComponent<VarType>::Ptr powercomp = std::dynamic_pointer_cast< CPS::PowerComponent<VarType> >(comp) ) {
@@ -199,10 +199,10 @@ template<>
 void MnaSolver<Real>::createEmptySystemMatrix() {			
     mSystemMatrix = Matrix::Zero(mNumSimNodes, mNumSimNodes);
     
-    if (mBreakers.size() > SWITCH_NUM)
-        throw SystemError("Too many breakers.");
+    if (mSwitches.size() > SWITCH_NUM)
+        throw SystemError("Too many Switches.");
 
-    for (UInt i = 0; i < mBreakers.size() * 2; i++) {
+    for (UInt i = 0; i < mSwitches.size() * 2; i++) {
         mSwitchedMatrices[std::bitset<SWITCH_NUM>(i)] = Matrix::Zero(mNumSimNodes, mNumSimNodes);
     }
 }
@@ -211,10 +211,10 @@ template<>
 void MnaSolver<Complex>::createEmptySystemMatrix() {
     mSystemMatrix = Matrix::Zero(2 * mNumSimNodes, 2 * mNumSimNodes);		
 
-    if (mBreakers.size() > SWITCH_NUM)
-        throw SystemError("Too many breakers.");
+    if (mSwitches.size() > SWITCH_NUM)
+        throw SystemError("Too many Switches.");
 
-    for (UInt i = 0; i < mBreakers.size() * 2; i++) {
+    for (UInt i = 0; i < mSwitches.size() * 2; i++) {
         mSwitchedMatrices[std::bitset<SWITCH_NUM>(i)] = Matrix::Zero(2 * mNumSimNodes, 2 * mNumSimNodes);
     }	
 }
@@ -291,7 +291,7 @@ Real MnaSolver<VarType>::step(Real time) {
     for (auto comp : mPowerComponents) {
         comp->mnaStep(mSystemMatrix, mRightSideVector, mLeftSideVector, time);
     }
-    for (auto comp : mBreakers) {
+    for (auto comp : mSwitches) {
 	comp->mnaStep(mSystemMatrix, mRightSideVector, mLeftSideVector, time);
     }
 	

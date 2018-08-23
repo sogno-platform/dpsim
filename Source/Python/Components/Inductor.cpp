@@ -46,7 +46,11 @@ PyObject* DPsim::Python::Components::Inductor<CPS::EMT::Ph1::Inductor>(PyObject*
 
         Component *pyComp = PyObject_New(Component, &DPsim::Python::ComponentType);
         Component::init(pyComp);
-        pyComp->comp = std::make_shared<CPS::EMT::Ph1::Inductor>(name, nodes, inductance);
+        
+        std::shared_ptr<CPS::EMT::Ph1::Inductor> cps_comp = CPS::EMT::Ph1::Inductor::make(name);
+        cps_comp->setParameters(inductance);
+        cps_comp->setNodes(nodes);
+        pyComp->comp = cps_comp;
 
         return (PyObject*) pyComp;
     } catch (...) {
@@ -70,7 +74,11 @@ PyObject* DPsim::Python::Components::Inductor<CPS::DP::Ph1::Inductor>(PyObject* 
 
         Component *pyComp = PyObject_New(Component, &DPsim::Python::ComponentType);
         Component::init(pyComp);
-        pyComp->comp = std::make_shared<CPS::DP::Ph1::Inductor>(name, nodes, inductance);
+
+        std::shared_ptr<CPS::DP::Ph1::Inductor> cps_comp = CPS::DP::Ph1::Inductor::make(name);
+        cps_comp->setParameters(inductance);
+        cps_comp->setNodes(nodes);
+        pyComp->comp = cps_comp;
 
         return (PyObject*) pyComp;
     } catch (...) {

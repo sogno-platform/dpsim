@@ -78,7 +78,7 @@ int main(int argc, char* argv[]) {
 	
 	auto res = Ph3::SeriesResistor::make("R_load", Node::List{Node::GND, n1}, Rload);
 
-	auto fault = Ph3::SeriesBreaker::make("Br_fault");
+	auto fault = Ph3::SeriesSwitch::make("Br_fault");
 	fault->setParameters(BreakerOpen, BreakerClosed);
 	fault->setNodes(Node::List{Node::GND, n1});
 	auto sw1 = SwitchEvent(0.05, true);

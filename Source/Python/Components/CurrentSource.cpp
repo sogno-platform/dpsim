@@ -47,7 +47,11 @@ PyObject* DPsim::Python::Components::CurrentSource<CPS::EMT::Ph1::CurrentSource>
 
         Component *pyComp = PyObject_New(Component, &DPsim::Python::ComponentType);
         Component::init(pyComp);
-        pyComp->comp = std::make_shared<CPS::EMT::Ph1::CurrentSource>(name, nodes, CPS::Complex(initCurrent.real, initCurrent.imag));
+        
+        std::shared_ptr<CPS::EMT::Ph1::CurrentSource> cps_comp = std::make_shared<CPS::EMT::Ph1::CurrentSource>(name);
+        cps_comp->setParameters(CPS::Complex(initCurrent.real, initCurrent.imag));
+        cps_comp->setNodes(nodes);
+        pyComp->comp = cps_comp;  
 
         return (PyObject*) pyComp;
     } catch (...) {
@@ -70,7 +74,11 @@ PyObject* DPsim::Python::Components::CurrentSource<CPS::DP::Ph1::CurrentSource>(
 
         Component *pyComp = PyObject_New(Component, &DPsim::Python::ComponentType);
         Component::init(pyComp);
-        pyComp->comp = std::make_shared<CPS::DP::Ph1::CurrentSource>(name, nodes, CPS::Complex(initCurrent.real, initCurrent.imag));
+
+        std::shared_ptr<CPS::DP::Ph1::CurrentSource> cps_comp = std::make_shared<CPS::DP::Ph1::CurrentSource>(name);
+        cps_comp->setParameters(CPS::Complex(initCurrent.real, initCurrent.imag));
+        cps_comp->setNodes(nodes);
+        pyComp->comp = cps_comp;  
 
         return (PyObject*) pyComp;
     } catch (...) {

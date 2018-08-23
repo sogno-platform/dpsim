@@ -47,7 +47,11 @@ PyObject* DPsim::Python::Components::VoltageSource<CPS::EMT::Ph1::VoltageSource>
 
         Component *pyComp = PyObject_New(Component, &DPsim::Python::ComponentType);
         Component::init(pyComp);
-        pyComp->comp = std::make_shared<CPS::EMT::Ph1::VoltageSource>(name, nodes, CPS::Complex(initVoltage.real, initVoltage.imag));
+
+        std::shared_ptr<CPS::EMT::Ph1::VoltageSource> cps_comp = CPS::EMT::Ph1::VoltageSource::make(name);
+        cps_comp->setParameters(CPS::Complex(initVoltage.real, initVoltage.imag));
+        cps_comp->setNodes(nodes);
+        pyComp->comp = cps_comp;
 
         return (PyObject*) pyComp;
     } catch (...) {
@@ -70,7 +74,11 @@ PyObject* DPsim::Python::Components::VoltageSource<CPS::DP::Ph1::VoltageSource>(
 
         Component *pyComp = PyObject_New(Component, &DPsim::Python::ComponentType);
         Component::init(pyComp);
-        pyComp->comp = std::make_shared<CPS::DP::Ph1::VoltageSource>(name, nodes, CPS::Complex(initVoltage.real, initVoltage.imag));
+
+        std::shared_ptr<CPS::DP::Ph1::VoltageSource> cps_comp = CPS::DP::Ph1::VoltageSource::make(name);
+        cps_comp->setParameters(CPS::Complex(initVoltage.real, initVoltage.imag));
+        cps_comp->setNodes(nodes);
+        pyComp->comp = cps_comp;
 
         return (PyObject*) pyComp;
     } catch (...) {
