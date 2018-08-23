@@ -100,7 +100,7 @@ add_feature_info(Shmem  WITH_SHMEM  "Interface DPsim solvers via shared-memory i
 add_feature_info(RT	 WITH_RT	 "Execute simulation in real time")
 feature_summary(WHAT ALL VAR enabledFeaturesText)
 
-message(STATUS "Feature summary for CPS")
+message(STATUS "Feature summary for DPsim")
 message(STATUS "${enabledFeaturesText}")
 
 include(DPsimPackaging)

@@ -77,7 +77,7 @@ Simulation::~Simulation() {
 }
 
 void Simulation::run() {
-	mLog.Log(Logger::Level::INFO) << "Start simulation." << std::endl;
+	mLog.info() << "Start simulation." << std::endl;
 
 #ifdef WITH_SHMEM
 	// We send initial state over all interfaces
@@ -95,7 +95,7 @@ void Simulation::run() {
 		step();
 	}
 
-	mLog.Log(Logger::Level::INFO) << "Simulation finished." << std::endl;
+	mLog.info() << "Simulation finished." << std::endl;
 }
 
 Real Simulation::step() {

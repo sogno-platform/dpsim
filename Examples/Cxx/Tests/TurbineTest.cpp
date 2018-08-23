@@ -69,7 +69,7 @@ int main(int argc, char* argv[])
 		Om = std::stod(line);
 		std::cout << Om << '\n';
 		Pm = mTurbineGovernor.step(Om, OmRef, PmRef, dt);
-		TurbineOut.LogDataLine(t,Pm);
+		TurbineOut.debug(t,Pm);
 	}
 
 	return 0;

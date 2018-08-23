@@ -25,12 +25,12 @@ if(WITH_PYTHON)
 		add_custom_target(copy_imgs
 			COMMAND
 				${CMAKE_COMMAND} -E make_directory
-					"${CMAKE_CURRENT_BINARY_DIR}/html/Figures/"
+					"${CMAKE_CURRENT_BINARY_DIR}/html/images/"
 			COMMAND
 				${CMAKE_COMMAND} -E copy
-					"${CMAKE_CURRENT_SOURCE_DIR}/Figures/dpsim.png"
-					"${CMAKE_CURRENT_SOURCE_DIR}/Figures/eonerc_logo.png"
-					"${CMAKE_CURRENT_BINARY_DIR}/html/Figures/"
+					"${CMAKE_CURRENT_SOURCE_DIR}/images/dpsim.png"
+					"${CMAKE_CURRENT_SOURCE_DIR}/images/eonerc_logo.png"
+					"${CMAKE_CURRENT_BINARY_DIR}/html/images/"
 			COMMENT "Copying figures to Sphinx output dir"
 		)
 
@@ -63,6 +63,7 @@ if(DOXYGEN_FOUND)
 		"${CMAKE_CURRENT_BINARY_DIR}/Doxyfile"
 		@ONLY
 	)
+	
 
 	# HTML output directory
 	set(DOXYGEN_HTML_DIR "${CMAKE_CURRENT_BINARY_DIR}/Cxx")
@@ -73,4 +74,8 @@ if(DOXYGEN_FOUND)
 		WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
 		COMMENT "Generating API documentation with Doxygen" VERBATIM
 	)
+
+	file(COPY "${CMAKE_CURRENT_SOURCE_DIR}/images"
+		DESTINATION "${CMAKE_CURRENT_BINARY_DIR}/Cxx/html")
+
 endif(DOXYGEN_FOUND)

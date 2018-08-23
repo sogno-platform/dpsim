@@ -36,6 +36,7 @@
 #endif /* WITH_RT */
 
 using namespace DPsim;
+using namespace CPS;
 
 void DPsim::Python::Simulation::simThreadFunction(Python::Simulation* pySim)
 {

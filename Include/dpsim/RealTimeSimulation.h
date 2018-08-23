@@ -31,8 +31,6 @@
 #define RTMETHOD_TIMERFD
 //#define RTMETHOD_EXCEPTIONS
 
-using namespace CPS;
-
 namespace DPsim {
 
 #ifdef RTMETHOD_EXCEPTIONS
@@ -74,9 +72,9 @@ namespace DPsim {
 		void destroyTimer();
 
 	public:
-		RealTimeSimulation(String name, SystemTopology system, Real timeStep, Real finalTime,
-			Domain domain = Domain::DP, Solver::Type type = Solver::Type::MNA,
-			Logger::Level logLevel = Logger::Level::INFO, Bool steadyStateInit = false);
+		RealTimeSimulation(String name, CPS::SystemTopology system, Real timeStep, Real finalTime,
+			CPS::Domain domain = CPS::Domain::DP, Solver::Type type = Solver::Type::MNA,
+			CPS::Logger::Level logLevel = CPS::Logger::Level::INFO, Bool steadyStateInit = false);
 		~RealTimeSimulation();
 
 		/** Perform the main simulation loop in real time.

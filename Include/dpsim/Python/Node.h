@@ -65,6 +65,6 @@ namespace Python {
 	template<typename VarType>
 	PyObject *Node<VarType>::Py_GND = NULL;
 
-	CPS::NodeBase::List nodesFromPython(PyObject* list);	
+	CPS::TopologicalNode::List nodesFromPython(PyObject* list);	
 }
 }

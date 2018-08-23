@@ -1,12 +1,4 @@
-build/
-build_linux/
-build_osx/
-build_win/
-
+build*
+Dependencies/libcps/build*
 .git/
-
-Dependencies/libcps/build/
-Dependencies/libcps/build_osx/
-Dependencies/libcps/build_linux/
-
 Packaging/

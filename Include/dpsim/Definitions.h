@@ -1,5 +1,5 @@
-/** Simulation
- *
+/** 
+ * @file
  * @author Markus Mirz <mmirz@eonerc.rwth-aachen.de>
  * @copyright 2017, Institute for Automation of Complex Power Systems, EONERC
  *
@@ -19,41 +19,16 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *********************************************************************************/
 
-#pragma once
-
-#include <iostream>
-#include <vector>
-#include <list>
-
-#include "Config.h"
-#include "cps/Logger.h"
-#include "cps/SystemTopology.h"
-#include "Definitions.h"
-
-#ifdef WITH_SHMEM
-  #include "cps/Interface.h"
-#endif
+#include <cps/Definitions.h>
 
 namespace DPsim {
-	/// Holds switching time and which system should be activated.
-	struct SwitchConfiguration {
-		Real switchTime;
-		UInt systemIndex;
-	};
-
-	class Solver {
-
-	public:
-		enum class Type { MNA, IDA };		
-
-		/// Solve system A * x = z for x and current time
-		virtual Real step(Real time) = 0;
-		/// Log results
-		virtual void log(Real time) = 0;
-
-		///
-		void addSystemTopology(CPS::SystemTopology system) { }
-		///
-		virtual void setSwitchTime(Real switchTime, Int systemIndex) { }
-	};
+    // #### Types ####
+    using Real = CPS::Real;
+    using Complex = CPS::Complex;
+    using String = CPS::String;
+    using Bool = CPS::Bool;
+    using Int = CPS::Int;
+    using UInt = CPS::UInt;
+    using Matrix = CPS::Matrix;
+    using MatrixComp = CPS::MatrixComp;
 }

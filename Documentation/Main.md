@@ -1,7 +1,4 @@
-# <img src="Documentation/images/dpsim.png" width=40 /> DPsim
-
-[![build status](https://git.rwth-aachen.de/acs/core/simulation/DPsim/badges/development/build.svg)](https://git.rwth-aachen.de/acs/core/simulation/DPsim/commits/development)
-[![coverage report](https://git.rwth-aachen.de/acs/core/simulation/DPsim/badges/development/coverage.svg)](https://git.rwth-aachen.de/acs/core/simulation/DPsim/commits/development)
+<img src="images/dpsim.png" align="right" width="150px" >
 
 DPsim is a solver library for power system simulation.
 
@@ -54,11 +51,12 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 For other licensing options please consult [Prof. Antonello Monti](mailto:amonti@eonerc.rwth-aachen.de).
 
 ## Contact
-
-[![EONERC ACS Logo](https://www.fein-aachen.org/img/logos/eonerc.png)](http://www.acs.eonerc.rwth-aachen.de)
-
 - Markus Mirz <mmirz@eonerc.rwth-aachen.de>
 
-[Institute for Automation of Complex Power Systems (ACS)](http://www.acs.eonerc.rwth-aachen.de)
-[EON Energy Research Center (EONERC)](http://www.eonerc.rwth-aachen.de)
-[RWTH University Aachen, Germany](http://www.rwth-aachen.de)
+<img alt="EONERC ACS Logo" src="images/eonerc_logo.png" align="right" />
+
+[Institute for Automation of Complex Power Systems (ACS)](http://www.acs.eonerc.rwth-aachen.de)  
+[EON Energy Research Center (EONERC)](http://www.eonerc.rwth-aachen.de)  
+[RWTH University Aachen, Germany](http://www.rwth-aachen.de)  
+
+
