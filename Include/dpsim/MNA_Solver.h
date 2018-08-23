@@ -28,7 +28,7 @@
 #include <bitset>
 
 #include "Solver.h"
-#include "cps/Solver/MNABreakerInterface.h"
+#include "cps/Solver/MNASwitchInterface.h"
 #ifdef WITH_CIM
 #include "cps/CIM/Reader.h"
 #endif /* WITH_CIM */
@@ -87,7 +87,7 @@ namespace DPsim {
 		/// 
 		std::unordered_map< std::bitset<SWITCH_NUM>, CPS::LUFactorized > mLuFactorizations;
 		///
-		CPS::MNABreakerInterface::List mBreakers;
+		CPS::MNASwitchInterface::List mSwitches;
 
 
 		// #### Attributes related to switching ####
@@ -122,7 +122,7 @@ namespace DPsim {
 		/// The MNA algorithm handles these nodes in the same way as network nodes.
 		void createVirtualNodes();
 		///
-		void processBreakers();
+		void processSwitches();
 		// TODO: check if this works with AC sources
 		void steadyStateInitialization();
 		/// Create left and right side vector	
