@@ -46,7 +46,11 @@ PyObject* DPsim::Python::Components::Resistor<CPS::EMT::Ph1::Resistor>(PyObject*
 
         Component *pyComp = PyObject_New(Component, &DPsim::Python::ComponentType);
         Component::init(pyComp);
-        pyComp->comp = std::make_shared<CPS::EMT::Ph1::Resistor>(name, nodes, resistance);
+
+        std::shared_ptr<CPS::EMT::Ph1::Resistor> cps_comp = CPS::EMT::Ph1::Resistor::make(name);
+        cps_comp->setParameters(resistance);
+        cps_comp->setNodes(nodes);
+        pyComp->comp = cps_comp;
 
         return (PyObject*) pyComp;
     } catch (...) {
@@ -70,7 +74,11 @@ PyObject* DPsim::Python::Components::Resistor<CPS::DP::Ph1::Resistor>(PyObject* 
 
         Component *pyComp = PyObject_New(Component, &DPsim::Python::ComponentType);
         Component::init(pyComp);
-        pyComp->comp = std::make_shared<CPS::DP::Ph1::Resistor>(name, nodes, resistance);
+
+        std::shared_ptr<CPS::DP::Ph1::Resistor> cps_comp = CPS::DP::Ph1::Resistor::make(name);
+        cps_comp->setParameters(resistance);
+        cps_comp->setNodes(nodes);
+        pyComp->comp = cps_comp;
 
         return (PyObject*) pyComp;
     } catch (...) {
