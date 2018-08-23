@@ -30,7 +30,7 @@
 #include "MNA_Solver.h"
 
 #include "cps/Definitions.h"
-#include "cps/Component.h"
+#include <cps/PowerComponent.h>
 #include "cps/Logger.h"
 #include "cps/SystemTopology.h"
 #include "cps/Node.h"
