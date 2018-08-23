@@ -23,8 +23,8 @@
 
 using namespace DPsim;
 
-CPS::NodeBase::List Python::nodesFromPython(PyObject* list) {
-		CPS::NodeBase::List nodes;
+CPS::TopologyNode::List Python::nodesFromPython(PyObject* list) {
+		CPS::TopologyNode::List nodes;
 
 		if (!PyList_Check(list))
 			throw std::invalid_argument( "argument is not a list" );
@@ -33,11 +33,11 @@ CPS::NodeBase::List Python::nodesFromPython(PyObject* list) {
 			PyObject* obj = PyList_GetItem(list, i);
 			if (PyObject_TypeCheck(obj, &Python::Node<CPS::Real>::type)) {
 				Node<CPS::Real>* pyNode = (Node<CPS::Real>*) obj;
-				nodes.push_back(std::dynamic_pointer_cast<CPS::NodeBase>(pyNode->node));
+				nodes.push_back(std::dynamic_pointer_cast<CPS::TopologyNode>(pyNode->node));
 			}
 			else if (PyObject_TypeCheck(obj, &Python::Node<CPS::Complex>::type)) {
 				Node<CPS::Complex>* pyNode = (Node<CPS::Complex>*) obj;
-				nodes.push_back(std::dynamic_pointer_cast<CPS::NodeBase>(pyNode->node));
+				nodes.push_back(std::dynamic_pointer_cast<CPS::TopologyNode>(pyNode->node));
 			}
 			else {
 				throw std::invalid_argument( "list element is not a dpsim.Node" );		

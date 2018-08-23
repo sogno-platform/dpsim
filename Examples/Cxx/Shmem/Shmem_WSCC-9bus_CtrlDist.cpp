@@ -141,7 +141,7 @@ int main(int argc, char *argv[]) {
 		filtP->setConnection(load->findAttribute<Real>("active_power"));
 		filtP->findAttribute<Real>("input")->set(0.);
 
-		auto sys = SystemTopology(args.sysFreq, NodeBase::List{n1}, ComponentBase::List{evs, load, filtP});
+		auto sys = SystemTopology(args.sysFreq, TopologyNode::List{n1}, ComponentBase::List{evs, load, filtP});
 		RealTimeSimulation sim(simName + "_2", sys, args.timeStep, args.duration);
 
 		// Create shmem interface 1
