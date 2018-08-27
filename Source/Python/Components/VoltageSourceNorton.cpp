@@ -40,20 +40,15 @@ PyObject* DPsim::Python::Components::VoltageSourceNorton<CPS::EMT::Ph1::VoltageS
     double resistance;
 
     Py_complex voltage;
-    PyObject *pyNodes;
 
-    if (!PyArg_ParseTuple(args, "sODd", &name, &pyNodes, &voltage, &resistance))
+    if (!PyArg_ParseTuple(args, "sDd", &name, &voltage, &resistance))
         return nullptr;
 
     try {
-        CPS::Node<CPS::Real>::List nodes = Python::Node<CPS::Real>::fromPython(pyNodes);
-
         Component *pyComp = PyObject_New(Component, &ComponentType);
         Component::init(pyComp);
 
-        CPS::String *mystring = new CPS::String(name);
-
-        pyComp->comp = std::make_shared<CPS::EMT::Ph1::VoltageSourceNorton>(*mystring, nodes, CPS::Complex(voltage.real, voltage.imag), resistance);
+        pyComp->comp = std::make_shared<CPS::EMT::Ph1::VoltageSourceNorton>(name, name, CPS::Complex(voltage.real, voltage.imag), resistance);
 
         return (PyObject*) pyComp;
     } catch (...) {
@@ -67,20 +62,15 @@ PyObject* DPsim::Python::Components::VoltageSourceNorton<CPS::DP::Ph1::VoltageSo
     double resistance;
 
     Py_complex voltage;
-    PyObject *pyNodes;
 
-    if (!PyArg_ParseTuple(args, "sODd", &name, &pyNodes, &voltage, &resistance))
+    if (!PyArg_ParseTuple(args, "sDd", &name, &voltage, &resistance))
         return nullptr;
 
     try {
-        CPS::Node<CPS::Complex>::List nodes = Python::Node<CPS::Complex>::fromPython(pyNodes);
-
         Component *pyComp = PyObject_New(Component, &ComponentType);
         Component::init(pyComp);
 
-        CPS::String *mystring = new CPS::String(name);
-
-        pyComp->comp = std::make_shared<CPS::DP::Ph1::VoltageSourceNorton>(*mystring, nodes, CPS::Complex(voltage.real, voltage.imag), resistance);
+        pyComp->comp = std::make_shared<CPS::DP::Ph1::VoltageSourceNorton>(name, name, CPS::Complex(voltage.real, voltage.imag), resistance);
 
         return (PyObject*) pyComp;
     } catch (...) {

@@ -35,17 +35,13 @@ PyObject* DPsim::Python::Components::LoadPQ<CPS::DP::Ph1::PQLoad>(PyObject* self
     const char *name;
     double activePower, reactivePower, volt;
 
-    PyObject *pyNodes;
-
-    if (!PyArg_ParseTuple(args, "sOddd", &name, &pyNodes, &activePower, &reactivePower, &volt))
+    if (!PyArg_ParseTuple(args, "sddd", &name, &activePower, &reactivePower, &volt))
         return nullptr;
 
     try {
-        CPS::Node<CPS::Complex>::List nodes = Python::Node<CPS::Complex>::fromPython(pyNodes);
-
         Component *pyComp = PyObject_New(Component, &DPsim::Python::ComponentType);
         Component::init(pyComp);
-        pyComp->comp = std::make_shared<CPS::DP::Ph1::PQLoad>(name, nodes, activePower, reactivePower, volt);
+        pyComp->comp = std::make_shared<CPS::DP::Ph1::PQLoad>(name/*, activePower, reactivePower, volt*/);
 
         return (PyObject*) pyComp;
     } catch (...) {

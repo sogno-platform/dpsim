@@ -39,17 +39,13 @@ PyObject* DPsim::Python::Components::LinePi<CPS::DP::Ph1::PiLine>(PyObject* self
     const char *name;
     double resistance, inductance, capacitance, conductance;
 
-    PyObject *pyNodes;
-
-    if (!PyArg_ParseTuple(args, "sOdddd", &name, &pyNodes, &resistance, &inductance, &capacitance, &conductance))
+    if (!PyArg_ParseTuple(args, "sdddd", &name, &resistance, &inductance, &capacitance, &conductance))
         return nullptr;
 
     try {
-        CPS::Node<CPS::Complex>::List nodes = Python::Node<CPS::Complex>::fromPython(pyNodes);
-
         Component *pyComp = PyObject_New(Component, &DPsim::Python::ComponentType);
         Component::init(pyComp);
-        pyComp->comp = std::make_shared<CPS::DP::Ph1::PiLine>(name, nodes, resistance, inductance, capacitance, conductance);
+        pyComp->comp = std::make_shared<CPS::DP::Ph1::PiLine>(name, resistance, inductance, capacitance, conductance);
 
         return (PyObject*) pyComp;
     } catch (...) {

@@ -36,20 +36,15 @@ PyObject* DPsim::Python::Components::Resistor<CPS::EMT::Ph1::Resistor>(PyObject*
     const char *name;
     double resistance;
 
-    PyObject *pyNodes;
-
-    if (!PyArg_ParseTuple(args, "sOd", &name, &pyNodes, &resistance))
+    if (!PyArg_ParseTuple(args, "sd", &name, &resistance))
         return nullptr;
 
     try {
-        CPS::Node<CPS::Real>::List nodes = Python::Node<CPS::Real>::fromPython(pyNodes);
-
         Component *pyComp = PyObject_New(Component, &DPsim::Python::ComponentType);
         Component::init(pyComp);
 
         std::shared_ptr<CPS::EMT::Ph1::Resistor> cps_comp = CPS::EMT::Ph1::Resistor::make(name);
         cps_comp->setParameters(resistance);
-        cps_comp->setNodes(nodes);
         pyComp->comp = cps_comp;
 
         return (PyObject*) pyComp;
@@ -64,20 +59,15 @@ PyObject* DPsim::Python::Components::Resistor<CPS::DP::Ph1::Resistor>(PyObject* 
     const char *name;
     double resistance;
 
-    PyObject *pyNodes;
-
-    if (!PyArg_ParseTuple(args, "sOd", &name, &pyNodes, &resistance))
+    if (!PyArg_ParseTuple(args, "sd", &name, &resistance))
         return nullptr;
 
     try {
-        CPS::Node<CPS::Complex>::List nodes = Python::Node<CPS::Complex>::fromPython(pyNodes);
-
         Component *pyComp = PyObject_New(Component, &DPsim::Python::ComponentType);
         Component::init(pyComp);
 
         std::shared_ptr<CPS::DP::Ph1::Resistor> cps_comp = CPS::DP::Ph1::Resistor::make(name);
         cps_comp->setParameters(resistance);
-        cps_comp->setNodes(nodes);
         pyComp->comp = cps_comp;
 
         return (PyObject*) pyComp;

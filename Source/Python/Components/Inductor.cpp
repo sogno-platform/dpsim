@@ -36,20 +36,15 @@ PyObject* DPsim::Python::Components::Inductor<CPS::EMT::Ph1::Inductor>(PyObject*
     const char *name;
     double inductance;
 
-    PyObject *pyNodes;
-
-    if (!PyArg_ParseTuple(args, "sOd", &name, &pyNodes, &inductance))
+    if (!PyArg_ParseTuple(args, "sd", &name, &inductance))
         return nullptr;
 
     try {
-        CPS::Node<CPS::Real>::List nodes = Python::Node<CPS::Real>::fromPython(pyNodes);
-
         Component *pyComp = PyObject_New(Component, &DPsim::Python::ComponentType);
         Component::init(pyComp);
-        
+
         std::shared_ptr<CPS::EMT::Ph1::Inductor> cps_comp = CPS::EMT::Ph1::Inductor::make(name);
         cps_comp->setParameters(inductance);
-        cps_comp->setNodes(nodes);
         pyComp->comp = cps_comp;
 
         return (PyObject*) pyComp;
@@ -64,20 +59,15 @@ PyObject* DPsim::Python::Components::Inductor<CPS::DP::Ph1::Inductor>(PyObject* 
     const char *name;
     double inductance;
 
-    PyObject *pyNodes;
-
-    if (!PyArg_ParseTuple(args, "sOd", &name, &pyNodes, &inductance))
+    if (!PyArg_ParseTuple(args, "sd", &name, &inductance))
         return nullptr;
 
     try {
-        CPS::Node<CPS::Complex>::List nodes = Python::Node<CPS::Complex>::fromPython(pyNodes);
-
         Component *pyComp = PyObject_New(Component, &DPsim::Python::ComponentType);
         Component::init(pyComp);
 
         std::shared_ptr<CPS::DP::Ph1::Inductor> cps_comp = CPS::DP::Ph1::Inductor::make(name);
         cps_comp->setParameters(inductance);
-        cps_comp->setNodes(nodes);
         pyComp->comp = cps_comp;
 
         return (PyObject*) pyComp;

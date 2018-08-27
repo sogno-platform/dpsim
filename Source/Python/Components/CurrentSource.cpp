@@ -36,22 +36,18 @@ template<>
 PyObject* DPsim::Python::Components::CurrentSource<CPS::EMT::Ph1::CurrentSource>(PyObject* self, PyObject* args) {
     const char *name;
 
-    PyObject *pyNodes;
     Py_complex initCurrent;
 
-    if (!PyArg_ParseTuple(args, "sOD", &name, &pyNodes, &initCurrent))
+    if (!PyArg_ParseTuple(args, "sD", &name, &initCurrent))
         return nullptr;
 
     try {
-        CPS::Node<CPS::Real>::List nodes = Python::Node<CPS::Real>::fromPython(pyNodes);
-
         Component *pyComp = PyObject_New(Component, &DPsim::Python::ComponentType);
         Component::init(pyComp);
-        
+
         std::shared_ptr<CPS::EMT::Ph1::CurrentSource> cps_comp = std::make_shared<CPS::EMT::Ph1::CurrentSource>(name);
         cps_comp->setParameters(CPS::Complex(initCurrent.real, initCurrent.imag));
-        cps_comp->setNodes(nodes);
-        pyComp->comp = cps_comp;  
+        pyComp->comp = cps_comp;
 
         return (PyObject*) pyComp;
     } catch (...) {
@@ -63,22 +59,18 @@ template<>
 PyObject* DPsim::Python::Components::CurrentSource<CPS::DP::Ph1::CurrentSource>(PyObject* self, PyObject* args) {
     const char *name;
 
-    PyObject *pyNodes;
     Py_complex initCurrent;
 
-    if (!PyArg_ParseTuple(args, "sOD", &name, &pyNodes, &initCurrent))
+    if (!PyArg_ParseTuple(args, "sD", &name, &initCurrent))
         return nullptr;
 
     try {
-        CPS::Node<CPS::Complex>::List nodes = Python::Node<CPS::Complex>::fromPython(pyNodes);
-
         Component *pyComp = PyObject_New(Component, &DPsim::Python::ComponentType);
         Component::init(pyComp);
 
         std::shared_ptr<CPS::DP::Ph1::CurrentSource> cps_comp = std::make_shared<CPS::DP::Ph1::CurrentSource>(name);
         cps_comp->setParameters(CPS::Complex(initCurrent.real, initCurrent.imag));
-        cps_comp->setNodes(nodes);
-        pyComp->comp = cps_comp;  
+        pyComp->comp = cps_comp;
 
         return (PyObject*) pyComp;
     } catch (...) {

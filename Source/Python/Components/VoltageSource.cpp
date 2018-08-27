@@ -36,21 +36,17 @@ template<>
 PyObject* DPsim::Python::Components::VoltageSource<CPS::EMT::Ph1::VoltageSource>(PyObject* self, PyObject* args) {
     const char *name;
 
-    PyObject *pyNodes;
     Py_complex initVoltage;
 
-    if (!PyArg_ParseTuple(args, "sOD", &name, &pyNodes, &initVoltage))
+    if (!PyArg_ParseTuple(args, "sD", &name, &initVoltage))
         return nullptr;
 
     try {
-        CPS::Node<CPS::Real>::List nodes = Python::Node<CPS::Real>::fromPython(pyNodes);
-
         Component *pyComp = PyObject_New(Component, &DPsim::Python::ComponentType);
         Component::init(pyComp);
 
         std::shared_ptr<CPS::EMT::Ph1::VoltageSource> cps_comp = CPS::EMT::Ph1::VoltageSource::make(name);
         cps_comp->setParameters(CPS::Complex(initVoltage.real, initVoltage.imag));
-        cps_comp->setNodes(nodes);
         pyComp->comp = cps_comp;
 
         return (PyObject*) pyComp;
@@ -63,21 +59,17 @@ template<>
 PyObject* DPsim::Python::Components::VoltageSource<CPS::DP::Ph1::VoltageSource>(PyObject* self, PyObject* args) {
     const char *name;
 
-    PyObject *pyNodes;
     Py_complex initVoltage;
 
-    if (!PyArg_ParseTuple(args, "sOD", &name, &pyNodes, &initVoltage))
+    if (!PyArg_ParseTuple(args, "sD", &name, &initVoltage))
         return nullptr;
 
     try {
-        CPS::Node<CPS::Complex>::List nodes = Python::Node<CPS::Complex>::fromPython(pyNodes);
-
         Component *pyComp = PyObject_New(Component, &DPsim::Python::ComponentType);
         Component::init(pyComp);
 
         std::shared_ptr<CPS::DP::Ph1::VoltageSource> cps_comp = CPS::DP::Ph1::VoltageSource::make(name);
         cps_comp->setParameters(CPS::Complex(initVoltage.real, initVoltage.imag));
-        cps_comp->setNodes(nodes);
         pyComp->comp = cps_comp;
 
         return (PyObject*) pyComp;

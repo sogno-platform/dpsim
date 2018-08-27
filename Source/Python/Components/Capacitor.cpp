@@ -36,17 +36,13 @@ PyObject* DPsim::Python::Components::Capacitor<CPS::EMT::Ph1::Capacitor>(PyObjec
     const char *name;
     double capacitance;
 
-    PyObject *pyNodes;
-
-    if (!PyArg_ParseTuple(args, "sOd", &name, &pyNodes, &capacitance))
+    if (!PyArg_ParseTuple(args, "sd", &name, &capacitance))
         return nullptr;
 
     try {
-        CPS::Node<CPS::Real>::List nodes = Python::Node<CPS::Real>::fromPython(pyNodes);
-
         Component *pyComp = PyObject_New(Component, &DPsim::Python::ComponentType);
         Component::init(pyComp);
-        pyComp->comp = std::make_shared<CPS::EMT::Ph1::Capacitor>(name, nodes, capacitance);
+        pyComp->comp = std::make_shared<CPS::EMT::Ph1::Capacitor>(name, name, capacitance);
 
         return (PyObject*) pyComp;
     } catch (...) {
@@ -60,17 +56,15 @@ PyObject* DPsim::Python::Components::Capacitor<CPS::DP::Ph1::Capacitor>(PyObject
     const char *name;
     double capacitance;
 
-    PyObject *pyNodes;
-
-    if (!PyArg_ParseTuple(args, "sOd", &name, &pyNodes, &capacitance))
+    if (!PyArg_ParseTuple(args, "sd", &name, &capacitance))
         return nullptr;
 
     try {
-        CPS::Node<CPS::Complex>::List nodes = Python::Node<CPS::Complex>::fromPython(pyNodes);
-
         Component *pyComp = PyObject_New(Component, &DPsim::Python::ComponentType);
         Component::init(pyComp);
-        pyComp->comp = std::make_shared<CPS::DP::Ph1::Capacitor>(name, nodes, capacitance);
+        auto comp = std::make_shared<CPS::DP::Ph1::Capacitor>(name, name);
+	comp->setParameters(capacitance);
+	pyComp->comp = comp;
 
         return (PyObject*) pyComp;
     } catch (...) {
