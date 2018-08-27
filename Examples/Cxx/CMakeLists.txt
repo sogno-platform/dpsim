@@ -23,6 +23,7 @@ set(CIRCUIT_SOURCES
 set(SYNCGEN_SOURCES
 	SynchronGenerator/DP_SynGen_dq_SteadyState.cpp
 	SynchronGenerator/DP_SynGen_dq_ThreePhFault.cpp
+	SynchronGenerator/DP_SynGen_TrStab_SteadyState.cpp
 	#SynchronGenerator/DP_SynchronGenerator_BalancedResLoad.cpp
 	#SynchronGenerator/DP_SynchronGenerator_ExciterAndTurbine.cpp
 	#SynchronGenerator/DP_SynchronGenerator_SimpThreePhaseFault.cpp

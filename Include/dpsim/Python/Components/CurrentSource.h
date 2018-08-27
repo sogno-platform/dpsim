@@ -23,7 +23,7 @@
 
 #include "Python/Component.h"
 #include "Python/Node.h"
-#include "cps/DP/DP_CurrentSource.h"
+#include "cps/DP/DP_Ph1_CurrentSource.h"
 #include "cps/EMT/EMT_CurrentSource.h"
 
 namespace DPsim {

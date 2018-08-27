@@ -23,7 +23,7 @@
 
 #include "Python/Component.h"
 #include "Python/Node.h"
-#include "cps/DP/DP_Resistor.h"
+#include "cps/DP/DP_Ph1_Resistor.h"
 #include "cps/EMT/EMT_Resistor.h"
 
 namespace DPsim {

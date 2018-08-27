@@ -23,7 +23,7 @@
 
 #include "Python/Component.h"
 #include "Python/Node.h"
-#include "cps/DP/DP_Load_PQ.h"
+#include "cps/DP/DP_Ph1_Load_PQ.h"
 
 namespace DPsim {
 namespace Python {

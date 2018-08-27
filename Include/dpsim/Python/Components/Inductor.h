@@ -23,7 +23,7 @@
 
 #include "Python/Component.h"
 #include "Python/Node.h"
-#include "cps/DP/DP_Inductor.h"
+#include "cps/DP/DP_Ph1_Inductor.h"
 #include "cps/EMT/EMT_Inductor.h"
 
 namespace DPsim {
