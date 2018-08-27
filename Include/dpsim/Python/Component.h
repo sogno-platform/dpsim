@@ -57,6 +57,8 @@ namespace Python {
 
 		static PyObject* getattr(Component* self, char* name);
 		static int setattr(Component *self, char* name, PyObject *v);
+
+		static PyObject* connect(PyObject* self, PyObject *args);
 	};
 
 	extern PyTypeObject ComponentType;

@@ -22,6 +22,7 @@
 #include <stdexcept>
 
 #include "Python/Component.h"
+#include "Python/Node.h"
 #include "cps/Components.h"
 
 using namespace DPsim;
@@ -138,6 +139,46 @@ CPS::ComponentBase::List Python::compsFromPython(PyObject* list)
 	return comps;
 }
 
+static const char* DocComponentConnect = "";
+PyObject* Python::Component::connect(PyObject* self, PyObject* args)
+{
+	Python::Component *pyComp = reinterpret_cast<Python::Component *>(self);
+	PyObject *pyNodes;
+
+	if (!PyArg_ParseTuple(args, "O", &pyNodes))
+		return nullptr;
+
+	try {
+		if (auto emtComp = std::dynamic_pointer_cast<CPS::EMTComponent>(pyComp->comp)) {
+			auto nodes = Python::Node<CPS::Real>::fromPython(pyNodes);
+
+			emtComp->setNodes(nodes);
+
+		}
+		else if (auto dpComp = std::dynamic_pointer_cast<CPS::DPComponent>(pyComp->comp)) {
+			auto nodes = Python::Node<CPS::Complex>::fromPython(pyNodes);
+
+			dpComp->setNodes(nodes);
+		}
+		else {
+			PyErr_SetString(PyExc_TypeError, "Failed to connect nodes");
+			return nullptr;
+		}
+
+		Py_INCREF(Py_None);
+		return Py_None;
+	} catch (...) {
+		PyErr_SetString(PyExc_TypeError, "Failed to connect nodes");
+		return nullptr;
+	}
+}
+
+static PyMethodDef Component_methods[] = {
+	{"connect", Python::Component::connect, METH_VARARGS, DocComponentConnect},
+	{0},
+};
+
+
 static const char* DocComponent =
 "A component of a network that is to be simulated.\n"
 "\n"
@@ -185,7 +226,7 @@ PyTypeObject Python::ComponentType = {
 	0,                                         /* tp_weaklistoffset */
 	0,                                         /* tp_iter */
 	0,                                         /* tp_iternext */
-	0,                                         /* tp_methods */
+	Component_methods,                         /* tp_methods */
 	0,                                         /* tp_members */
 	0,                                         /* tp_getset */
 	0,                                         /* tp_base */
