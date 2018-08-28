@@ -309,7 +309,7 @@ Real MnaSolver<VarType>::step(Real time) {
     }
 
     updateSwitchStatus();
-    mLog.info() << "Switch status is " << mCurrentSwitchStatus << " for " << time << std::endl;
+    mLog.debug() << "Switch status is " << mCurrentSwitchStatus << " for " << time << std::endl;
 
     // Calculate new simulation time
     return time + mTimeStep;
