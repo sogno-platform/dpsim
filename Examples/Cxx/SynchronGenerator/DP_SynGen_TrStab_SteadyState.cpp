@@ -48,14 +48,10 @@ int main(int argc, char* argv[]) {
     Real Rload = 1.92;
 
 	// Nodes
-	std::vector<Complex> initVoltN1 = std::vector<Complex>({
-		Complex(initTerminalVolt * cos(initVoltAngle), initTerminalVolt * sin(initVoltAngle)),
-		Complex(initTerminalVolt * cos(initVoltAngle - 2 * PI / 3), initTerminalVolt * sin(initVoltAngle - 2 * PI / 3)),
-		Complex(initTerminalVolt * cos(initVoltAngle + 2 * PI / 3), initTerminalVolt * sin(initVoltAngle + 2 * PI / 3)) });
-	auto n1 = Node::make("n1", PhaseType::ABC, initVoltN1);
+	auto n1 = Node::make("n1", PhaseType::Single, std::vector<Complex>{ initVoltage });
 
 	// Components
-	auto gen = Ph1::SynchronGeneratorTrStab::make("DP_SynGen_TrStab_SteadyState_SynGen", Logger::Level::OUT);  
+	auto gen = Ph1::SynchronGeneratorTrStab::make("DP_SynGen_TrStab_SteadyState_SynGen", Logger::Level::DEBUG);  
 	gen->setParameters(nomPower, nomPhPhVoltRMS, nomFreq, Ll, Lmd, Llfd, H, initElecPower, initVoltage, mechPower);
     gen->setNodes(Node::List{n1});
 	
