@@ -31,9 +31,15 @@ int main(int argc, char* argv[]) {
 	auto n2 = Node::make("n2");
 
 	// Components
-	auto vs = VoltageSource::make("vs", Node::List{ Node::GND, n1 }, Complex(10, 0));
-	auto r1 = Resistor::make("r_1", Node::List{n1, n2}, 1);
-	auto l1 = Inductor::make("l_1", Node::List{ n2, Node::GND }, 1);
+	auto vs = VoltageSource::make("vs");
+	vs->setParameters(Complex(10, 0));
+	vs->setNodes(Node::List{ Node::GND, n1 });
+	auto r1 = Resistor::make("r_1");
+	r1->setParameters(1);
+	r1->setNodes(Node::List{ n1, n2 });
+	auto l1 = Inductor::make("l_1");
+	l1->setParameters(1);
+	l1->setNodes(Node::List{ n2, Node::GND });
 
 	// Define system topology
 	auto sys = SystemTopology(50, SystemNodeList{n1, n2}, SystemComponentList{vs, r1, l1});

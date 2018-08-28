@@ -32,12 +32,24 @@ int main(int argc, char* argv[]) {
 	auto n3 = Node::make("n3");
 
 	// Components
-	auto vs = VoltageSource::make("vs", Node::List{Node::GND, n1}, 10);
-	auto r1 = Resistor::make("r_1", Node::List{n1, n2}, 1);
-	auto r2 = Resistor::make("r_2", Node::List{ n2, Node::GND }, 1);
-	auto r3 = Resistor::make("r_3", Node::List{ n2, n3 }, 10);
-	auto r4 = Resistor::make("r_4", Node::List{ n3, Node::GND }, 5);
-	auto cs = CurrentSource::make("cs", Node::List{ n3, Node::GND }, 1);
+	auto vs = VoltageSource::make("vs");
+	vs->setParameters(10);
+	vs->setNodes(Node::List{ Node::GND, n1 });
+	auto r1 = Resistor::make("r_1");
+	r1->setParameters(1);
+	r1->setNodes(Node::List{ n1, n2 });
+	auto r2 = Resistor::make("r_2");
+	r2->setParameters(1);
+	r2->setNodes(Node::List{ n2, Node::GND });
+	auto r3 = Resistor::make("r_3");
+	r3->setParameters(10);
+	r3->setNodes(Node::List{ n2, n3 });
+	auto r4 = Resistor::make("r_4");
+	r4->setParameters(5);
+	r4->setNodes(Node::List{ n3, Node::GND });
+	auto cs = CurrentSource::make("cs");
+	cs->setParameters(1);
+	cs->setNodes(Node::List{ Node::GND, n3 });
 
 	// Define system topology
 	auto sys = SystemTopology(50, SystemNodeList{n1, n2, n3}, SystemComponentList{vs, r1, r2, r3, r4, cs});
