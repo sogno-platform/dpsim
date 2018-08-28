@@ -23,7 +23,7 @@
 
 #include "Python/Component.h"
 #include "Python/Node.h"
-#include "cps/DP/DP_Capacitor.h"
+#include "cps/DP/DP_Ph1_Capacitor.h"
 #include "cps/EMT/EMT_Capacitor.h"
 
 namespace DPsim {

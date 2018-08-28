@@ -23,7 +23,7 @@
 
 #include "Python/Component.h"
 #include "Python/Node.h"
-#include "cps/DP/DP_VoltageSource.h"
+#include "cps/DP/DP_Ph1_VoltageSource.h"
 #include "cps/EMT/EMT_VoltageSource.h"
 
 namespace DPsim {
