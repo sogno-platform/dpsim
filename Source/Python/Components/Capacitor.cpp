@@ -46,7 +46,7 @@ PyObject* DPsim::Python::Components::Capacitor<CPS::EMT::Ph1::Capacitor>(PyObjec
 
         Component *pyComp = PyObject_New(Component, &DPsim::Python::ComponentType);
         Component::init(pyComp);
-        pyComp->comp = std::make_shared<CPS::EMT::Ph1::Capacitor>(name, nodes, capacitance);
+        pyComp->comp = std::make_shared<CPS::EMT::Ph1::Capacitor>(name);
 
         return (PyObject*) pyComp;
     } catch (...) {
@@ -70,7 +70,7 @@ PyObject* DPsim::Python::Components::Capacitor<CPS::DP::Ph1::Capacitor>(PyObject
 
         Component *pyComp = PyObject_New(Component, &DPsim::Python::ComponentType);
         Component::init(pyComp);
-        pyComp->comp = std::make_shared<CPS::DP::Ph1::Capacitor>(name, nodes, capacitance);
+        pyComp->comp = std::make_shared<CPS::DP::Ph1::Capacitor>(name);
 
         return (PyObject*) pyComp;
     } catch (...) {
