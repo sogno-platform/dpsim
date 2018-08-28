@@ -55,7 +55,7 @@ int main(int argc, char* argv[]) {
 	gen->setParameters(nomPower, nomPhPhVoltRMS, nomFreq, Ll, Lmd, Llfd, H, initElecPower, initVoltage, mechPower);
     gen->setNodes(Node::List{n1});
 	
-	auto res = Ph1::Resistor::make("R_load");
+	auto res = Ph1::Resistor::make("R_load", Logger::Level::DEBUG);
 	res->setParameters(Rload);
 	res->setNodes(Node::List{Node::GND, n1});
 
