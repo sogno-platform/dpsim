@@ -22,30 +22,40 @@
 #include "DPsim.h"
 
 using namespace DPsim;
-using namespace CPS::DP;
-using namespace CPS::DP::Ph1;
+using namespace CPS::EMT;
+using namespace CPS::EMT::Ph1;
 
 int main(int argc, char* argv[]) {
 	// Nodes
 	auto n1 = Node::make("n1");
+	auto n2 = Node::make("n2");
 
 	// Components
 	auto cs = CurrentSource::make("cs");
-	cs->setParameters(Complex(10, 0));
+	cs->setParameters(10);
 	cs->setNodes(Node::List{ Node::GND, n1 });
 	auto r1 = Resistor::make("r_1");
 	r1->setParameters(1);
-	r1->setNodes(Node::List{ Node::GND, n1 });
+	r1->setNodes(Node::List{ n1, Node::GND });
+	auto c1 = Capacitor::make("c_1");
+	c1->setParameters(0.001);
+	c1->setNodes(Node::List{ n1, n2 });
+	auto l1 = Inductor::make("l_1");
+	l1->setParameters(0.001);
+	l1->setNodes(Node::List{ n2, Node::GND });
+	auto r2 = Resistor::make("r_2");
+	r2->setParameters(1);
+	r2->setNodes(Node::List{ n2, Node::GND });
 
 	// Define system topology
-	auto sys = SystemTopology(50, SystemNodeList{n1}, SystemComponentList{cs, r1});
+	auto sys = SystemTopology(50, SystemNodeList{n1, n2}, SystemComponentList{cs, r1, c1, l1, r2});
 		
 	// Define simulation scenario
 	Real timeStep = 0.001;
 	Real finalTime = 0.1;
-	String simName = "DP_CS_R_1";
+	String simName = "EMT_CS_R2CL";
 
-	Simulation sim(simName, sys, timeStep, finalTime);
+	Simulation sim(simName, sys, timeStep, finalTime, Domain::EMT);
 	sim.run();
 
 	return 0;

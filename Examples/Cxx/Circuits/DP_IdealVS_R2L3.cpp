@@ -28,22 +28,37 @@ using namespace CPS::DP::Ph1;
 int main(int argc, char* argv[]) {
 	// Nodes
 	auto n1 = Node::make("n1");
+	auto n2 = Node::make("n2");
+	auto n3 = Node::make("n3");
+	auto n4 = Node::make("n4");
 
 	// Components
-	auto cs = CurrentSource::make("cs");
-	cs->setParameters(Complex(10, 0));
-	cs->setNodes(Node::List{ Node::GND, n1 });
+	auto vs = VoltageSource::make("vs");
+	vs->setParameters(10 * sin(2 * PI * 50));  //V_in(t) = 10*sin(w*t)
+	vs->setNodes(Node::List{ Node::GND, n1 });
 	auto r1 = Resistor::make("r_1");
 	r1->setParameters(1);
-	r1->setNodes(Node::List{ Node::GND, n1 });
+	r1->setNodes(Node::List{ n1, n2 });
+	auto l1 = Inductor::make("l_1");
+	l1->setParameters(0.02);
+	l1->setNodes(Node::List{ n2, n3 });
+	auto l2 = Inductor::make("l_2");
+	l2->setParameters(0.1);
+	l2->setNodes(Node::List{ n3, Node::GND });
+	auto l3 = Inductor::make("l_3", Node::List{ n3, n4 }, 0.05);
+	l3->setParameters(0.05);
+	l3->setNodes(Node::List{ n3, n4 });
+	auto r2 = Resistor::make("r_2");
+	r2->setParameters(2);
+	r2->setNodes(Node::List{ n4, Node::GND });
 
 	// Define system topology
-	auto sys = SystemTopology(50, SystemNodeList{n1}, SystemComponentList{cs, r1});
+	auto sys = SystemTopology(50, SystemNodeList{n1, n2, n3, n4}, SystemComponentList{vs, r1, l1, l2, l3, r2});
 		
 	// Define simulation scenario
 	Real timeStep = 0.001;
 	Real finalTime = 0.1;
-	String simName = "DP_CS_R_1";
+	String simName = "DP_IdealVS_R2L3";
 
 	Simulation sim(simName, sys, timeStep, finalTime);
 	sim.run();

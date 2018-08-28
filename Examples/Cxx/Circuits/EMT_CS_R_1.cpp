@@ -22,8 +22,8 @@
 #include "DPsim.h"
 
 using namespace DPsim;
-using namespace CPS::DP;
-using namespace CPS::DP::Ph1;
+using namespace CPS::EMT;
+using namespace CPS::EMT::Ph1;
 
 int main(int argc, char* argv[]) {
 	// Nodes
@@ -43,9 +43,9 @@ int main(int argc, char* argv[]) {
 	// Define simulation scenario
 	Real timeStep = 0.001;
 	Real finalTime = 0.1;
-	String simName = "DP_CS_R_1";
+	String simName = "EMT_CS_R_1";
 
-	Simulation sim(simName, sys, timeStep, finalTime);
+	Simulation sim(simName, sys, timeStep, finalTime, Domain::EMT);
 	sim.run();
 
 	return 0;
