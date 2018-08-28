@@ -128,7 +128,9 @@ int main(int argc, char *argv[]) {
 		auto n1 = ComplexNode::make("n1", PhaseType::Single, std::vector<Complex>({Complex(02.180675e+05, -1.583367e+04)}));
 
 		// Add interface voltage source
-		auto evs = VoltageSource::make("v_intf", ComplexNode::List{ComplexNode::GND, n1}, Complex(0, 0), Logger::Level::DEBUG);
+		auto evs = VoltageSource::make("v_intf", Logger::Level::DEBUG);
+		evs->setParameters(Complex(0, 0));
+		evs->setNodes(ComplexNode::List{ComplexNode::GND, n1}); 
 
 		// Extend system with controllable load
 		auto load = PQLoadCS::make("load_cs", ComplexNode::List{n1}, 0, 0, 230000);
