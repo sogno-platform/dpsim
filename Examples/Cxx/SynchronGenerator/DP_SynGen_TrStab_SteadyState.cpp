@@ -39,9 +39,9 @@ int main(int argc, char* argv[]) {
 	Real Lmd = 1.6599;	
 	Real Llfd = 0.1648;
     // Initialization parameters
-	Complex initElecPower = Complex(300e6, 0);
+	//Complex initElecPower = Complex(300e6, 0);
 	Real initTerminalVolt = 24000 / sqrt(3) * sqrt(2);
-	Real initVoltAngle = -PI / 2;
+	Real initVoltAngle = 0;
 	Complex initVoltage = Complex(initTerminalVolt * cos(initVoltAngle), initTerminalVolt * sin(initVoltAngle));
 	Real mechPower = 300e6;
     // Define grid parameters
@@ -52,7 +52,7 @@ int main(int argc, char* argv[]) {
 
 	// Components
 	auto gen = Ph1::SynchronGeneratorTrStab::make("DP_SynGen_TrStab_SteadyState_SynGen", Logger::Level::DEBUG);  
-	gen->setParameters(nomPower, nomPhPhVoltRMS, nomFreq, Ll, Lmd, Llfd, H, initElecPower, initVoltage, mechPower);
+	gen->setParameters(nomPower, nomPhPhVoltRMS, nomFreq, Ll, Lmd, Llfd, H, mechPower);
     gen->setNodes(Node::List{n1});
 	
 	auto res = Ph1::Resistor::make("R_load", Logger::Level::DEBUG);

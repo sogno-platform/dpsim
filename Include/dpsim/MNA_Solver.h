@@ -170,8 +170,14 @@ namespace DPsim {
 		Real step(Real time);
 		/// Log left and right vector values for each simulation step
 		void log(Real time) {
-			mLeftVectorLog.LogNodeValues(time, getLeftSideVector());
-			mRightVectorLog.LogNodeValues(time, getRightSideVector());
+			if (mDomain == CPS::Domain::EMT) {
+				mLeftVectorLog.LogEMTNodeValues(time, getLeftSideVector());
+				mRightVectorLog.LogEMTNodeValues(time, getRightSideVector());
+			} 
+			else {
+				mLeftVectorLog.LogPhasorNodeValues(time, getLeftSideVector());
+				mRightVectorLog.LogPhasorNodeValues(time, getRightSideVector());
+			}
 		}		
 		// #### Getter ####
 		Matrix& getLeftSideVector() { return mLeftSideVector; }
