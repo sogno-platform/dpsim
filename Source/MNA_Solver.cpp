@@ -228,7 +228,7 @@ void MnaSolver<VarType>::createVirtualNodes() {
     // Check if component requires virtual node and if so set one
     for (auto comp : mPowerComponents) {
         if (comp->hasVirtualNodes()) {
-            for (UInt node = 0; node < comp->getVirtualNodesNum(); node++) {
+            for (UInt node = 0; node < comp->virtualNodesNumber(); node++) {
                 virtualNode++;
                 mNodes.push_back(std::make_shared<CPS::Node<VarType>>(virtualNode));
                 comp->setVirtualNodeAt(mNodes[virtualNode], node);

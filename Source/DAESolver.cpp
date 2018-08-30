@@ -29,10 +29,10 @@ DAESolver::DAESolver(String name,  SystemTopology system, Real dt, Real t0) :  m
 
     UInt simNodeIdx = -1;
     for (UInt idx = 0; idx < mNodes.size(); idx++) {
-        mNodes[idx]->getSimNodes()[0] = ++simNodeIdx;
+        mNodes[idx]->simNodes()[0] = ++simNodeIdx;
         if (mNodes[idx]->getPhaseType() == PhaseType::ABC) {
-            mNodes[idx]->getSimNodes()[1] = ++simNodeIdx;
-            mNodes[idx]->getSimNodes()[2] = ++simNodeIdx;
+            mNodes[idx]->simNodes()[1] = ++simNodeIdx;
+            mNodes[idx]->simNodes()[2] = ++simNodeIdx;
         }
     }
 
@@ -64,12 +64,12 @@ void DAESolver::initialize(Real t0)
     for (auto node : mNodes) {
         //initialize nodal values of state vector
         Real tempVolt = 0;
-        tempVolt += std::real(node->getInitialVoltage()(0,0));
+        tempVolt += std::real(node->initialVoltage()(0,0));
         sval[counter++] = tempVolt;
 
 //        if (node->getPhaseType() == PhaseType::ABC) {
-//           tempVolt += std::real(node->getInitialVoltage()(1,0));
-//           tempVolt += std::real(node->getInitialVoltage()(2,0));
+//           tempVolt += std::real(node->initialVoltage()(1,0));
+//           tempVolt += std::real(node->initialVoltage()(2,0));
 //
 //        }
     }
