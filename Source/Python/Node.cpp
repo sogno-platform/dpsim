@@ -40,8 +40,8 @@ CPS::TopologicalNode::List Python::nodesFromPython(PyObject* list) {
 				nodes.push_back(std::dynamic_pointer_cast<CPS::TopologicalNode>(pyNode->node));
 			}
 			else {
-				throw std::invalid_argument( "list element is not a dpsim.Node" );		
-			}			
+				throw std::invalid_argument( "list element is not a dpsim.Node" );
+			}
 		}
 
 		return nodes;
@@ -57,11 +57,11 @@ typename CPS::Node<VarType>::List Python::Node<VarType>::fromPython(PyObject* li
 
 	for (int i = 0; i < PyList_Size(list); i++) {
 		PyObject* obj = PyList_GetItem(list, i);
-		if (!PyObject_TypeCheck(obj, &Python::Node<VarType>::type)) 
+		if (!PyObject_TypeCheck(obj, &Python::Node<VarType>::type))
 			throw std::invalid_argument( "list element is not a dpsim.Node" );
-			
+
 		Node<VarType>* pyNode = (Node<VarType>*) obj;
-		nodes.push_back(pyNode->node);	
+		nodes.push_back(pyNode->node);
 	}
 
 	return nodes;

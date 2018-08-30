@@ -85,7 +85,6 @@ set(INCLUDE_DIRS
 add_subdirectory(Source)
 add_subdirectory(Documentation)
 
-
 if(BUILD_EXAMPLES)
 	add_subdirectory(Examples/Cxx)
 endif(BUILD_EXAMPLES)
