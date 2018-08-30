@@ -149,13 +149,16 @@ PyObject* Python::Component::connect(PyObject* self, PyObject* args)
 		return nullptr;
 
 	try {
-		if (auto emtComp = std::dynamic_pointer_cast<CPS::EMTComponent>(pyComp->comp)) {
+		using EMTComponent = CPS::PowerComponent<CPS::Real>;
+		using DPComponent = CPS::PowerComponent<CPS::Complex>;
+
+		if (auto emtComp = std::dynamic_pointer_cast<EMTComponent>(pyComp->comp)) {
 			auto nodes = Python::Node<CPS::Real>::fromPython(pyNodes);
 
 			emtComp->setNodes(nodes);
 
 		}
-		else if (auto dpComp = std::dynamic_pointer_cast<CPS::DPComponent>(pyComp->comp)) {
+		else if (auto dpComp = std::dynamic_pointer_cast<DPComponent>(pyComp->comp)) {
 			auto nodes = Python::Node<CPS::Complex>::fromPython(pyNodes);
 
 			dpComp->setNodes(nodes);

@@ -153,10 +153,10 @@ char* Python::Node<VarType>::Doc =
 "``initial_voltage`` is the initial voltage of the node.\n\n";
 
 template<>
-char* Python::Node<CPS::Real>::name = "dpsim.EMTNode";
+char* Python::Node<CPS::Real>::name = "dpsim.emt.Node";
 
 template<>
-char* Python::Node<CPS::Complex>::name = "dpsim.DPNode";
+char* Python::Node<CPS::Complex>::name = "dpsim.dp.Node";
 
 template<typename VarType>
 PyTypeObject DPsim::Python::Node<VarType>::type = {

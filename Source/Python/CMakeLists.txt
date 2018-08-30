@@ -16,18 +16,6 @@ add_library(dpsim_python SHARED
 	Interface.cpp
 	LoadCim.cpp
 	SystemTopology.cpp
-	
-	Components/LinePi.cpp
-	Components/LoadPQ.cpp
-	
-	Components/VoltageSourceNorton.cpp
-	
-	Components/CurrentSource.cpp
-	Components/VoltageSource.cpp
-	
-	Components/Resistor.cpp
-	Components/Inductor.cpp
-	Components/Capacitor.cpp
 
 	Utils.cpp
 )
