@@ -49,7 +49,7 @@ void MnaSolver<VarType>::initialize(CPS::SystemTopology system) {
     // This intialization according to power flow information is not MNA specific.
     mLog.info() << "Initialize power flow" << std::endl;
     for (auto comp : mPowerComponents)
-        comp->initializePowerflow(mSystem.mSystemFrequency);
+        comp->initializeFromPowerflow(mSystem.mSystemFrequency);
 
     // This steady state initialization is MNA specific and runs a simulation 
     // before the actual simulation executed by the user.

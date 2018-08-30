@@ -44,7 +44,7 @@ void DAESolver::initialize(Real t0)
 	//set inital values of all components
     for (auto comp : mComponents) {
 			
-		comp->initializePowerflow(DAESys.mSystemFrequency);
+		comp->initializeFromPowerflow(DAESys.mSystemFrequency);
 	}
 
 	// allocate state vectors

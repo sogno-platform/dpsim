@@ -46,13 +46,13 @@ int main(int argc, char* argv[]) {
 	Real mechPower = 300e6;
     // Define grid parameters
     Real Rload = 1.92;
-	Real RloadStep = 1.5;
+	Real RloadStep = 0.7;
 
 	// Nodes
 	auto n1 = Node::make("n1", PhaseType::Single, std::vector<Complex>{ initVoltage });
 
 	// Components
-	auto gen = Ph1::SynchronGeneratorTrStab::make("DP_SynGen_TrStab_Step_SynGen", Logger::Level::DEBUG);  
+	auto gen = Ph1::SynchronGeneratorTrStab::make("DP_SynGen_TrStab_Step_SynGen", Logger::Level::OUT);  
 	gen->setParameters(nomPower, nomPhPhVoltRMS, nomFreq, Ll, Lmd, Llfd, H, initElecPower, mechPower);
     gen->setNodes(Node::List{n1});
 
@@ -64,7 +64,7 @@ int main(int argc, char* argv[]) {
 	load->open();
 
 	// System
-	auto sys = SystemTopology(60, SystemNodeList{n1}, SystemComponentList{gen, res});
+	auto sys = SystemTopology(60, SystemNodeList{n1}, SystemComponentList{gen, load});
 
 	// Simulation
 	Simulation sim(name, sys, timeStep, finalTime, 

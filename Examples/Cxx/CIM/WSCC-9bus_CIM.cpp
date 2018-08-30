@@ -47,7 +47,7 @@ int main(int argc, char *argv[]) {
 	SystemTopology sys = reader.loadCIM(60, filenames);
 
 	Simulation sim(simName, sys, 0.0001, 0.1,
-		Domain::DP, Solver::Type::MNA, Logger::Level::DEBUG, false);
+		Domain::DP, Solver::Type::MNA, Logger::Level::DEBUG, true);
 	sim.run();
 
 	return 0;
