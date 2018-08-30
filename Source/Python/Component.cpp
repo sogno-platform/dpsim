@@ -79,7 +79,7 @@ PyObject* Python::Component::getattr(Python::Component* self, char* name)
 
 		return attr->toPyObject();
 	}
-	catch (CPS::PowerComponent<CPS::Complex>::InvalidAttributeException) {
+	catch (const CPS::InvalidAttributeException &) {
 		PyErr_Format(PyExc_AttributeError, "Component has no attribute '%s'", name);
 		return NULL;
 	}
@@ -100,15 +100,15 @@ int Python::Component::setattr(Python::Component* self, char* name, PyObject *v)
 		auto attr = self->comp->findAttribute(name);
 		attr->fromPyObject(v);
 	}
-	catch (CPS::PowerComponent<CPS::Complex>::InvalidAttributeException) {
+	catch (const CPS::InvalidAttributeException &) {
 		PyErr_Format(PyExc_AttributeError, "Component has no attribute '%s'", name);
 		return -1;
 	}
-	catch (CPS::AttributeBase::TypeException) {
+	catch (const CPS::TypeException &) {
 		PyErr_Format(PyExc_TypeError, "Invalid type for attribute '%s'", name);
 		return -1;
 	}
-	catch (CPS::AttributeBase::AccessException) {
+	catch (const CPS::AccessException &) {
 		PyErr_Format(PyExc_AttributeError, "Attribute '%s' is not modifiable", name);
 		return -1;
 	}
