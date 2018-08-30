@@ -60,7 +60,7 @@ Simulation::Simulation(String name, SystemTopology system,
 		if (domain == Domain::DP)
 			mSolver = std::make_shared<MnaSolver<Complex>>(name, system, timeStep,
 				domain, logLevel, steadyStateInit);
-		else 
+		else
 			mSolver = std::make_shared<MnaSolver<Real>>(name, system, timeStep,
 				domain, logLevel, steadyStateInit);
 		break;
@@ -149,7 +149,7 @@ int Simulation::getEventFD(Int flags, Int coalesce) {
 	return mPipe[0];
 }
 
-void Simulation::sendNotification(enum Event evt) {
+void Simulation::sendEvent(enum Event evt) {
 	int ret;
 
 	if (mPipe[0] < 0) {
