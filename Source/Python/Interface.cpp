@@ -232,7 +232,7 @@ static const char* DocInterface =
 "\n"
 "Currently, only an interface using POSIX shared memory is implemented (see `open_interface`).\n";
 PyTypeObject Python::InterfaceType = {
-	PyVarObject_HEAD_INIT(NULL, 0)
+	PyVarObject_HEAD_INIT(nullptr, 0)
 	"dpsim.Interface",                       /* tp_name */
 	sizeof(Python::Interface),               /* tp_basicsize */
 	0,                                       /* tp_itemsize */

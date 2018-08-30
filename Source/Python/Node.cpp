@@ -85,7 +85,7 @@ PyObject* Python::Node<VarType>::newfunc(PyTypeObject *type, PyObject *args, PyO
 template<typename VarType>
 int Python::Node<VarType>::init(Python::Node<VarType> *self, PyObject *args, PyObject *kwds)
 {
-	static char *kwlist[] = {"uid", "initial_voltage", NULL};
+	static char *kwlist[] = {"uid", "initial_voltage", nullptr};
 
 	const char *uid;
 	CPS::Complex initialVoltage;
@@ -139,7 +139,7 @@ PyObject * Python::Node<VarType>::getGND(PyObject *self, PyObject *args) {
 template<typename VarType>
 PyMethodDef Python::Node<VarType>::methods[] = {
 	{"GND", DPsim::Python::Node<VarType>::getGND, METH_NOARGS | METH_STATIC, DPsim::Python::Node<VarType>::DocGND},
-	{NULL, NULL, 0, NULL}
+	{nullptr, nullptr, 0, nullptr}
 };
 
 template<typename VarType>
@@ -160,7 +160,7 @@ char* Python::Node<CPS::Complex>::name = "dpsim.dp.Node";
 
 template<typename VarType>
 PyTypeObject DPsim::Python::Node<VarType>::type = {
-	PyVarObject_HEAD_INIT(NULL, 0)
+	PyVarObject_HEAD_INIT(nullptr, 0)
 	DPsim::Python::Node<VarType>::name,        /* tp_name */
 	sizeof(DPsim::Python::Node<VarType>),      /* tp_basicsize */
 	0,                                       /* tp_itemsize */

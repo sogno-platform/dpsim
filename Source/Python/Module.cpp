@@ -49,7 +49,7 @@ static PyMethodDef dpsimModuleMethods[] = {
 };
 
 static PyModuleDef dpsimModule = {
-	PyModuleDef_HEAD_INIT, "_dpsim", NULL, -1, dpsimModuleMethods, NULL, NULL, NULL, NULL
+	PyModuleDef_HEAD_INIT, "_dpsim", nullptr, -1, dpsimModuleMethods, nullptr, nullptr, nullptr, nullptr
 };
 
 PyMODINIT_FUNC PyInit__dpsim(void) {

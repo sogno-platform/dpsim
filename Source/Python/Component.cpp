@@ -81,11 +81,11 @@ PyObject* Python::Component::getattr(Python::Component* self, char* name)
 	}
 	catch (const CPS::InvalidAttributeException &) {
 		PyErr_Format(PyExc_AttributeError, "Component has no attribute '%s'", name);
-		return NULL;
+		return nullptr;
 	}
 	catch (...) {
 		PyErr_Format(PyExc_RuntimeError, "Unkown Error Occured", name);
-		return NULL;
+		return nullptr;
 	}
 }
 
@@ -201,7 +201,7 @@ static const char* DocComponent =
 "after creation. These values must only be changed if the simulation is paused, "
 "and `update_matrix` has to be called after changes are made.\n";
 PyTypeObject Python::ComponentType = {
-	PyVarObject_HEAD_INIT(NULL, 0)
+	PyVarObject_HEAD_INIT(nullptr, 0)
 	"dpsim.Component",                         /* tp_name */
 	sizeof(Python::Component),                 /* tp_basicsize */
 	0,                                         /* tp_itemsize */
