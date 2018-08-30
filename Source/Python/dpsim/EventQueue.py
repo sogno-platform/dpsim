@@ -9,7 +9,11 @@ LOGGER = logging.getLogger('dpsim.eventqueue')
 class Event(enum.IntEnum):
     UNKNOWN = 0
     STARTED = 1
-    STOPPED = 3
+    STOPPED = 2
+    FINISHED = 3
+    OVERRUN = 4
+    PAUSED = 5
+    RESUMED = 6
 
 class EventQueue(object):
     def __init__(self, fd, loop = None):
@@ -31,8 +35,8 @@ class EventQueue(object):
         self._loop.create_task(self.__task())
         self._loop.add_reader(self._fd, self.__reader)
 
-    def add_callback(self, evt, cb, *args):
-        self._callbacks.append((evt, cb, args))
+    def add_callback(self, cb, *args, event = None):
+        self._callbacks.append((event, cb, args))
 
     async def wait(self, evt):
         await self._lock.acquire()
@@ -43,10 +47,10 @@ class EventQueue(object):
 
         self._lock.release()
 
-    async def notify(self, evt):
+    async def notify(self, event):
         await self._lock.acquire()
 
-        self._last = evt
+        self._last = event
         self._cond.notify_all()
 
         self._lock.release()
@@ -64,9 +68,9 @@ class EventQueue(object):
             data = await self.sr.readexactly(4)
 
             unpacked = struct.unpack('i', data)
-            evt = Event(unpacked[0])
+            event = Event(unpacked[0])
 
-            LOGGER.debug("Received event: evt=%s", evt)
+            LOGGER.debug("Received event: event=%s", event)
 
             # Call user defined callbacks
             for e in self._callbacks:
@@ -74,7 +78,7 @@ class EventQueue(object):
                 cb = e[1]
                 args = e[2]
 
-                if tevt == evt:
-                    cb(self, *args)
+                if tevt == event or tevt is None:
+                    cb(event, *args)
 
-            await self.notify(evt)
+            await self.notify(event)

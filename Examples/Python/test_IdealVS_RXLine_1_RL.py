@@ -33,6 +33,3 @@ def test_IdealVS_RXLine_1_RL():
     print("Total RMSE: %g" % (err))
 
     assert err < 1e-4
-
-if __name__ == "__main__":
-    test_IdealVS_RXLine_1_RL()

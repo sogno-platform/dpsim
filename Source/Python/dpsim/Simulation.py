@@ -40,8 +40,11 @@ class Simulation(_dpsim.Simulation):
 
         self.events = EventQueue(self._fd, self._loop)
 
-        self.events.add_callback(Event.STARTED, self.started)
-        self.events.add_callback(Event.STOPPED, self.stopped)
+        self.events.add_callback(self.started, self, event=Event.STARTED)
+        self.events.add_callback(self.stopped, self, event=Event.STOPPED)
+
+    def add_callback(self, cb, *args, evt=None):
+        self.events.add_callback(cb, *args, event=evt)
 
     def started(self, *args):
         LOGGER.info("Started simulation!")

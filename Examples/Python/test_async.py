@@ -1,58 +1,55 @@
-import dpsim as dps
-import dpsim.components.dp as dp
+import dpsim
 import pytest
 import asyncio
 import time
+import logging
 
-def my_callback(sim, evt, myvar):
+def my_callback(event, sim, myvar):
     assert myvar == 1337
 
-    if evt == 1:
+    if event == 1:
         print("Simulation started")
-    if evt == 2:
+    if event == 2:
         print("Simulation stopped")
-    if evt == 3:
+    if event == 3:
         print("Simulation finished")
-    if evt == 4:
+    if event == 4:
         print("Simulation overrun")
-    if evt == 5:
+    if event == 5:
         print("Simulation paused")
-    if evt == 6:
+    if event == 6:
         print("Simulation resumed")
 
-    if evt == 3:
-        sim.wait()
-        sim.loop.stop()
+    if event == 3:
+        el = asyncio.get_event_loop()
+        el.stop()
 
 
 def test_async():
     el = asyncio.get_event_loop()
 
     # Nodes
-    gnd = dps.Node.GND()
-    n1  = dps.Node("n1")
+    gnd = dpsim.dp.Node.GND()
+    n1  = dpsim.dp.Node("n1")
 
     # Components
-    v1 = dp.VoltageSource("v_1", [gnd, n1], 10)
-    r1 = dp.Resistor("r_1", [n1, gnd], 1)
+    v1 = dpsim.dp.ph1.VoltageSource("v_1", [gnd, n1], voltage_ref=10)
+    r1 = dpsim.dp.ph1.Resistor("r_1", [n1, gnd], resistance=1)
 
-    system = dps.SystemTopology(50, [gnd, n1], [v1, r1])
+    system = dpsim.SystemTopology(20, [gnd, n1], [v1, r1])
 
-    sim = dps.Simulation('async', system, duration=200, timestep=0.0005)
+    sim = dpsim.Simulation('async', system, duration=20, timestep=0.0005)
 
     # Start in two seconds!
-    sim.start(when = time.time() + 2)
+    sim.start(when=time.time() + 2)
     sim.show_progressbar()
 
-    sim.register_callback(my_callback, 1337)
+    sim.add_callback(my_callback, sim, 1337)
 
     # Pause the simulation after 5 sec
     el.call_at(el.time() + 5, sim.pause)
 
     # Resume after 7 sec
-    el.call_at(el.time() + 7, sim.start)
+    el.call_at(el.time() + 10, sim.start)
 
     el.run_forever()
-
-if __name__ == "__main__":
-    test_async()
