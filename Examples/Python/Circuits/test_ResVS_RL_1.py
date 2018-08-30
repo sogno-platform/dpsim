@@ -1,6 +1,5 @@
 import os
-import dpsim as dps
-import dpsim.components.dp as dp
+import dpsim
 import dataprocessing.readtools as rt
 import dataprocessing.timeseries as ts
 
@@ -8,22 +7,22 @@ PATH = os.path.dirname(__file__)
 
 def test_ResVS_RL_1():
     # Nodes
-    gnd = dps.Node.GND()
-    n1 = dps.Node("n1")
-    n2 = dps.Node("n2")
-    n3 = dps.Node("n3")
+    gnd = dpsim.dp.Node.GND()
+    n1 =  dpsim.dp.Node("n1")
+    n2 =  dpsim.dp.Node("n2")
+    n3 =  dpsim.dp.Node("n3")
 
     # Components
-    v1 = dp.VoltageSourceNorton("v_1", [gnd, n1], 10, 1)
-    l1 = dp.Inductor("l_1", [n1, n2], 0.02)
-    l2 = dp.Inductor("l_2", [n2, gnd], 0.1)
-    l3 = dp.Inductor("l_3", [n2, n3], 0.05)
-    r1 = dp.Resistor("r_1", [n3, gnd], 2)
+    v1 = dpsim.dp.ph1.VoltageSourceNorton("v_1", [gnd, n1], voltage_ref=10, resistance=1)
+    l1 = dpsim.dp.ph1.Inductor("l_1", [n1, n2], inductance=0.02)
+    l2 = dpsim.dp.ph1.Inductor("l_2", [n2, gnd], inductance=0.1)
+    l3 = dpsim.dp.ph1.Inductor("l_3", [n2, n3], inductance=0.05)
+    r1 = dpsim.dp.ph1.Resistor("r_1", [n3, gnd], resistance=2)
 
-    system = dps.SystemTopology(50,  [gnd, n1, n2, n3], [v1, l1, l2, l3, r1])
+    system = dpsim.SystemTopology(50, [gnd, n1, n2, n3], [v1, l1, l2, l3, r1])
 
-    sim = dps.Simulation('ResVS_RL_1', system, duration=0.2, timestep=0.00005)
-    sim.run()
+    sim = dpsim.Simulation('ResVS_RL_1', system, duration=0.2, timestep=0.00005)
+    #sim.run()
 
     #results = rt.read_timeseries_dpsim_cmpl('Logs/' + sim.name + '_LeftVector.csv')
     #expected = rt.read_timeseries_dpsim_real('Examples/Results/Simulink/Circuits/SL_' + sim.name + '.csv')

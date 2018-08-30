@@ -1,6 +1,5 @@
 import os
-import dpsim as dps
-import dpsim.components.dp as dp
+import dpsim
 import dataprocessing.readtools as rt
 import dataprocessing.timeseries as ts
 
@@ -8,24 +7,24 @@ PATH = os.path.dirname(__file__)
 
 def test_IdealVS_R_3():
     # Nodes
-    gnd = dps.Node.GND()
-    n1 = dps.Node("n1")
-    n2 = dps.Node("n2")
-    n3 = dps.Node("n3")
-    n4 = dps.Node("n4")
+    gnd = dpsim.dp.Node.GND()
+    n1 =  dpsim.dp.Node("n1")
+    n2 =  dpsim.dp.Node("n2")
+    n3 =  dpsim.dp.Node("n3")
+    n4 =  dpsim.dp.Node("n4")
 
     # Components
-    v1 = dp.VoltageSource("v_1", [gnd, n1], 10)
-    r1 = dp.Resistor("r_1", [n1, n2], 1)
-    r2 = dp.Resistor("r_2", [n2, gnd], 1)
-    r3 = dp.Resistor("r_3", [n2, n3], 1)
-    r4 = dp.Resistor("r_4", [n3, gnd], 1)
-    r5 = dp.Resistor("r_5", [n3, n4], 1)
-    v2 = dp.VoltageSource("v_2", [n4, gnd], 20)
+    v1 = dpsim.dp.ph1.VoltageSource("v_1", [gnd, n1], voltage_ref=10)
+    r1 = dpsim.dp.ph1.Resistor("r_1", [n1, n2],  resistance=1)
+    r2 = dpsim.dp.ph1.Resistor("r_2", [n2, gnd], resistance=1)
+    r3 = dpsim.dp.ph1.Resistor("r_3", [n2, n3],  resistance=1)
+    r4 = dpsim.dp.ph1.Resistor("r_4", [n3, gnd], resistance=1)
+    r5 = dpsim.dp.ph1.Resistor("r_5", [n3, n4],  resistance=1)
+    v2 = dpsim.dp.ph1.VoltageSource("v_2", [n4, gnd], voltage_ref=20)
 
-    system = dps.SystemTopology(50, [gnd, n1, n2, n3, n4], [v1, v2, r1, r2, r3, r4, r5])
+    system = dpsim.SystemTopology(50, [gnd, n1, n2, n3, n4], [v1, v2, r1, r2, r3, r4, r5])
 
-    sim = dps.Simulation('IdealVS_R_3', system, duration=0.2, timestep=0.00005)
+    sim = dpsim.Simulation('IdealVS_R_3', system, duration=0.2, timestep=0.00005)
     sim.run()
 
     #results = rt.read_timeseries_dpsim_cmpl('Logs/' + sim.name + '_LeftVector.csv')
