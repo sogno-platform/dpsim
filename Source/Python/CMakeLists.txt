@@ -28,6 +28,8 @@ add_library(dpsim_python SHARED
 	Components/Resistor.cpp
 	Components/Inductor.cpp
 	Components/Capacitor.cpp
+
+	Utils.cpp
 )
 
 file(MAKE_DIRECTORY ${CMAKE_BINARY_DIR}/Include/dpsim/Python)
