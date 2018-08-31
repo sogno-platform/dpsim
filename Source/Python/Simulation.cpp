@@ -29,29 +29,10 @@
 #include <cfloat>
 #include <iostream>
 
-#ifdef WITH_RT
-  #include <sys/timerfd.h>
-  #include <time.h>
-  #include <unistd.h>
-#endif /* WITH_RT */
-
 using namespace DPsim;
 using namespace CPS;
 
-void DPsim::Python::Simulation::simThreadFunction(Simulation* self)
-{
-#ifdef WITH_RT
-	if (self->rt) {
-		simThreadFunctionRT(self);
-	}
-#endif
-
-	if (!self->rt) {
-		simThreadFunctionNonRT(self);
-	}
-}
-
-void DPsim::Python::Simulation::simThreadFunctionNonRT(DPsim::Python::Simulation *self)
+void DPsim::Python::Simulation::simThreadFunction(DPsim::Python::Simulation *self)
 {
 	Real time, endTime;
 	std::unique_lock<std::mutex> lk(*self->mut, std::defer_lock);
@@ -90,82 +71,6 @@ void DPsim::Python::Simulation::simThreadFunctionNonRT(DPsim::Python::Simulation
 	self->cond->notify_one();
 }
 
-#ifdef WITH_RT
-void DPsim::Python::Simulation::simThreadFunctionRT(Python::Simulation *self)
-{
-	bool notDone = true;
-	char timebuf[8];
-	int timerfd;
-	struct itimerspec ts;
-	uint64_t overrun;
-
-	std::unique_lock<std::mutex> lk(*self->mut, std::defer_lock);
-
-	self->numStep = 0;
-
-	// RT method is limited to timerfd right now; to implement it with Exceptions,
-	// look at Simulation::runRT
-	timerfd = timerfd_create(CLOCK_REALTIME, 0);
-
-	// TODO: better error mechanism (somehow pass an Exception to the Python thread?)
-	if (timerfd < 0) {
-		throw SystemError("Failed to create timerfd");
-	}
-
-// TODO
-//	ts.it_value.tv_sec = (time_t) self->sim->timeStep();
-//	ts.it_value.tv_nsec = (long) (self->sim->timeStep() *1e9);
-	ts.it_interval = ts.it_value;
-
-	// optional start synchronization
-	if (self->startSync) {
-// TODO
-//		self->sim->step(false); // first step, sending the initial values
-//		self->sim->step(true); // blocking step for synchronization + receiving the initial state of the other network
-//		self->sim->increaseByTimeStep();
-	}
-
-	if (timerfd_settime(timerfd, 0, &ts, 0) < 0) {
-		throw SystemError("Failed to arm timerfd");
-	}
-
-	while (self->running && notDone) {
-// TODO
-//		notDone = self->sim->step();
-		if (read(timerfd, timebuf, 8) < 0) {
-			throw SystemError("Read from timerfd failed");
-		}
-
-		overrun = *((uint64_t*) timebuf);
-		if (overrun > 1) {
-// TODO
-//			std::cerr << "timerfd overrun of " << overrun-1 << " at " << self->sim->time() << std::endl;
-		}
-
-		self->numStep++;
-// TODO
-//		self->sim->increaseByTimeStep();
-
-		// in case it wasn't obvious, pausing a RT simulation is a bad idea
-		// as it will most likely lead to overruns, but it's possible nonetheless
-		if (self->sigPause) {
-			lk.lock();
-			self->simState = State::Paused;
-			self->cond->notify_one();
-			self->cond->wait(lk);
-			self->simState = State::Running;
-			lk.unlock();
-		}
-	}
-
-	close(timerfd);
-	lk.lock();
-
-	self->simState = State::Done;
-	self->cond->notify_one();
-}
-#endif /* WITH_RT */
-
 PyObject* DPsim::Python::Simulation::newfunc(PyTypeObject* type, PyObject *args, PyObject *kwds)
 {
 	Python::Simulation *self;
@@ -190,7 +95,7 @@ PyObject* DPsim::Python::Simulation::newfunc(PyTypeObject* type, PyObject *args,
 
 int DPsim::Python::Simulation::init(Simulation* self, PyObject *args, PyObject *kwds)
 {
-	static char *kwlist[] = {"name", "system", "timestep", "duration", "rt", "start_sync", "sim_type", "solver_type", nullptr};
+	static char *kwlist[] = {"name", "system", "timestep", "duration", "sim_type", "solver_type", nullptr};
 	double timestep = 1e-3, duration = DBL_MAX;
 	const char *name = nullptr;
 	int t = 0, s = 0;
@@ -198,10 +103,8 @@ int DPsim::Python::Simulation::init(Simulation* self, PyObject *args, PyObject *
 	enum Solver::Type solverType;
 	enum Domain domain;
 
-	self->rt = 0;
-
-	if (!PyArg_ParseTupleAndKeywords(args, kwds, "sO|ddbbii", kwlist,
-		&name, &self->pySys, &timestep, &duration, &self->rt, &self->startSync, &s, &t)) {
+	if (!PyArg_ParseTupleAndKeywords(args, kwds, "sO|ddii", kwlist,
+		&name, &self->pySys, &timestep, &duration, &s, &t)) {
 		return -1;
 	}
 
@@ -223,18 +126,6 @@ int DPsim::Python::Simulation::init(Simulation* self, PyObject *args, PyObject *
 
 	if (!PyObject_TypeCheck(self->pySys, &DPsim::Python::SystemTopologyType)) {
 		PyErr_SetString(PyExc_TypeError, "Argument system must be dpsim.SystemTopology");
-		return -1;
-	}
-
-#ifndef WITH_RT
-	if (self->rt) {
-		PyErr_SetString(PyExc_SystemError, "RT mode not available on this platform");
-		return -1;
-	}
-#endif /* WITH_RT */
-
-	if (self->startSync && !self->rt) {
-		PyErr_Format(PyExc_ValueError, "start_sync only valid in rt mode");
 		return -1;
 	}
 

@@ -64,20 +64,13 @@ namespace Python {
 		std::thread *simThread;
 		State simState;
 
-		bool rt;
-		bool startSync;
-
 		// List of additional objects that aren't directly used from Simulation
 		// methods, but that a reference has be kept to to avoid them from being
 		// freed (e.g. Interfaces).
 		std::vector<PyObject*> refs;
 
 		// Function executed by the simulation thread
-		static void simThreadFunction(Simulation* pySim);
-		static void simThreadFunctionNonRT(Simulation* pySim);
-#ifdef WITH_RT
-		static void simThreadFunctionRT(Simulation* pySim);
-#endif
+		static void simThreadFunction(Simulation* self);
 
 		// The Python API has no notion of C++ classes and methods, so the methods
 		// that can be called from Python are static.
