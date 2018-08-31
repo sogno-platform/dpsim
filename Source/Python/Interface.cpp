@@ -67,15 +67,13 @@ static const char* DocInterfaceRegisterControlledAttribute =
 ":param attr:\n"
 ":param real_idx: Index of the real part of the current or voltage.\n"
 ":param imag_idx: Index of the imaginary part of the current or voltage.\n";
-PyObject* Python::Interface::registerControlledAttribute(PyObject* self, PyObject* args)
+PyObject* Python::Interface::registerControlledAttribute(Interface* self, PyObject* args)
 {
 #ifdef WITH_SHMEM
 	PyObject *obj;
 	int realIdx, imagIdx = -1;
 	const char *attrName;
 	double gain;
-
-	Python::Interface *pyIntf = (Python::Interface*) self;
 
 	if (!PyArg_ParseTuple(args, "Osfi|i", &obj, &attrName, &gain, &realIdx, &imagIdx))
 		return nullptr;
@@ -90,7 +88,7 @@ PyObject* Python::Interface::registerControlledAttribute(PyObject* self, PyObjec
 	try {
 		CPS::Attribute<CPS::Real>::Ptr realAttr = pyComp->comp->findAttribute<CPS::Real>(attrName);
 
-		pyIntf->intf->addImport(realAttr, gain, realIdx);
+		self->intf->addImport(realAttr, gain, realIdx);
 	}
 	catch (const CPS::InvalidAttributeException &) {
 		try {
@@ -101,7 +99,7 @@ PyObject* Python::Interface::registerControlledAttribute(PyObject* self, PyObjec
 				return nullptr;
 			}
 
-			pyIntf->intf->addImport(compAttr, gain, realIdx, imagIdx);
+			self->intf->addImport(compAttr, gain, realIdx, imagIdx);
 		}
 		catch (const CPS::InvalidAttributeException &) {
 			PyErr_SetString(PyExc_TypeError, "First argument must be a readable attribute");
@@ -110,7 +108,6 @@ PyObject* Python::Interface::registerControlledAttribute(PyObject* self, PyObjec
 	}
 
 	Py_INCREF(Py_None);
-
 	return Py_None;
 #else
 	PyErr_SetString(PyExc_NotImplementedError, "not implemented on this platform");
@@ -126,15 +123,13 @@ static const char* DocInterfaceRegisterExportedAttribute =
 ":param attr:\n"
 ":param real_idx: Index where the real part of the voltage is written.\n"
 ":param imag_idx: Index where the imaginary part of the voltage is written.\n";
-PyObject* Python::Interface::registerExportedAttribute(PyObject* self, PyObject* args)
+PyObject* Python::Interface::registerExportedAttribute(Interface* self, PyObject* args)
 {
 #ifdef WITH_SHMEM
 	PyObject* obj;
 	int realIdx, imagIdx = -1;
 	const char *attrName;
 	double gain;
-
-	Python::Interface* pyIntf = (Python::Interface*) self;
 
 	if (!PyArg_ParseTuple(args, "Osfi|i", &obj, &attrName, &gain, &realIdx, &imagIdx)) {
 		return nullptr;
@@ -150,7 +145,7 @@ PyObject* Python::Interface::registerExportedAttribute(PyObject* self, PyObject*
 	try {
 		CPS::Attribute<CPS::Real>::Ptr realAttr = pyComp->comp->findAttribute<CPS::Real>(attrName);
 
-		pyIntf->intf->addExport(realAttr, gain, realIdx);
+		self->intf->addExport(realAttr, gain, realIdx);
 	}
 	catch (const CPS::InvalidAttributeException &exp) {
 		try {
@@ -161,7 +156,7 @@ PyObject* Python::Interface::registerExportedAttribute(PyObject* self, PyObject*
 				return nullptr;
 			}
 
-			pyIntf->intf->addExport(compAttr, gain, realIdx, imagIdx);
+			self->intf->addExport(compAttr, gain, realIdx, imagIdx);
 		}
 		catch (const CPS::InvalidAttributeException &exp) {
 			PyErr_SetString(PyExc_TypeError, "First argument must be a writable attribute");
@@ -222,8 +217,8 @@ PyObject* Python::OpenInterface(PyObject *self, PyObject *args, PyObject *kwds)
 }
 
 static PyMethodDef Interface_methods[] = {
-	{"export_attribute", Python::Interface::registerExportedAttribute, METH_VARARGS, DocInterfaceRegisterExportedAttribute},
-	{"import_attribute", Python::Interface::registerControlledAttribute, METH_VARARGS, DocInterfaceRegisterControlledAttribute},
+	{"export_attribute", (PyCFunction) Python::Interface::registerExportedAttribute, METH_VARARGS, DocInterfaceRegisterExportedAttribute},
+	{"import_attribute", (PyCFunction) Python::Interface::registerControlledAttribute, METH_VARARGS, DocInterfaceRegisterControlledAttribute},
 	{0},
 };
 

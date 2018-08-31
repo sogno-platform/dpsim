@@ -31,7 +31,7 @@
 #endif
 
 // For Python PyDateTime_* functions
-#include <dpsim/datetime.h>
+#include <datetime.h>
 
 #include <dpsim/Python/Utils.h>
 

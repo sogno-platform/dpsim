@@ -49,7 +49,7 @@ namespace Python {
 		static int init(Node<VarType> *self, PyObject *args, PyObject *kwds);
 		static void dealloc(Node<VarType> *self);
 
-		static PyObject * getGND(PyObject *self, PyObject *args);
+		static PyObject * gnd(PyObject *self, PyObject *args);
 
 		static char *name;
 		static PyMethodDef methods[];

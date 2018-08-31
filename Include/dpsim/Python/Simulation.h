@@ -37,8 +37,8 @@
 #endif
 
 #include <dpsim/Config.h>
+#include <dpsim/Simulation.h>
 #include <dpsim/Python/SystemTopology.h>
-#include <dpsim/../Simulation.h>
 
 namespace DPsim {
 namespace Python {
@@ -88,21 +88,21 @@ namespace Python {
 		static void dealloc(Simulation*);
 
 		// Methods that are actually available from Python
-		static PyObject* addInterface(PyObject *self, PyObject *args);
-//		static PyObject* lvector(PyObject *self, PyObject *args);
-		static PyObject* pause(PyObject *self, PyObject *args);
-		static PyObject* start(PyObject *self, PyObject *args);
-		static PyObject* step(PyObject *self, PyObject *args);
-		static PyObject* stop(PyObject *self, PyObject *args);
-		static PyObject* wait(PyObject *self, PyObject *args);
+		static PyObject* addInterface(Simulation *self, PyObject *args);
+//		static PyObject* lvector(Simulation *self, PyObject *args);
+		static PyObject* pause(Simulation *self, PyObject *args);
+		static PyObject* start(Simulation *self, PyObject *args);
+		static PyObject* step(Simulation *self, PyObject *args);
+		static PyObject* stop(Simulation *self, PyObject *args);
+		static PyObject* wait(Simulation *self, PyObject *args);
+		static PyObject* eventFD(Simulation *self, PyObject *args);
 
 		// Getters
-		static PyObject* name(PyObject *self, void *ctx);
-		static PyObject* state(PyObject *self, void *ctx);
-		static PyObject* steps(PyObject *self, void *ctx);
-		static PyObject* time(PyObject *self, void *ctx);
-		static PyObject* finalTime(PyObject *self, void *ctx);
-		static PyObject* eventFD(PyObject *self, PyObject *args);
+		static PyObject* name(Simulation *self, void *ctx);
+		static PyObject* state(Simulation *self, void *ctx);
+		static PyObject* steps(Simulation *self, void *ctx);
+		static PyObject* time(Simulation *self, void *ctx);
+		static PyObject* finalTime(Simulation *self, void *ctx);
 	};
 
 	extern PyTypeObject SimulationType;

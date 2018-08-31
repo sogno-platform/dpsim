@@ -121,7 +121,7 @@ char* Python::Node<VarType>::DocGND =
 "Get a reference of the global ground node.\n";
 
 template<typename VarType>
-PyObject * Python::Node<VarType>::getGND(PyObject *self, PyObject *args) {
+PyObject * Python::Node<VarType>::gnd(PyObject *self, PyObject *args) {
 	if (!Py_GND) {
 		Python::Node<VarType> *pyNode = PyObject_New(Node<VarType>, &DPsim::Python::Node<VarType>::type);
 
@@ -132,13 +132,12 @@ PyObject * Python::Node<VarType>::getGND(PyObject *self, PyObject *args) {
 	}
 
 	Py_INCREF(Py_GND);
-
 	return Py_GND;
 }
 
 template<typename VarType>
 PyMethodDef Python::Node<VarType>::methods[] = {
-	{"GND", DPsim::Python::Node<VarType>::getGND, METH_NOARGS | METH_STATIC, DPsim::Python::Node<VarType>::DocGND},
+	{"GND", (PyCFunction) DPsim::Python::Node<VarType>::gnd, METH_NOARGS | METH_STATIC, DPsim::Python::Node<VarType>::DocGND},
 	{nullptr, nullptr, 0, nullptr}
 };
 

@@ -22,7 +22,7 @@
 
 #pragma once
 
-#include <Config.h>
+#include <dpsim/Config.h>
 #include <cps/SystemTopology.h>
 
 namespace DPsim {

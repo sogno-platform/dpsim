@@ -36,8 +36,8 @@
 #include <cps/PowerComponent.h>
 #include <cps/Attribute.h>
 
-#include <Python/Node.h>
-#include <Python/Utils.h>
+#include <dpsim/Python/Node.h>
+#include <dpsim/Python/Utils.h>
 
 namespace DPsim {
 namespace Python {
@@ -64,7 +64,7 @@ namespace Python {
 		static PyObject* getattr(Component* self, char* name);
 		static int setattr(Component *self, char* name, PyObject *v);
 
-		static PyObject* connect(PyObject* self, PyObject *args);
+		static PyObject* connect(Component* self, PyObject *args);
 
 		template<typename T>
 		static PyObject* createInstance(PyObject* self, PyObject* args, PyObject *kwargs)

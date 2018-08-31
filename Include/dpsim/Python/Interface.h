@@ -48,8 +48,8 @@ namespace Python {
 		static void dealloc(Interface*);
 
 		static PyObject* newfunc(PyTypeObject *type, PyObject *args, PyObject *kwds);
-		static PyObject* registerControlledAttribute(PyObject* self, PyObject* args);
-		static PyObject* registerExportedAttribute(PyObject* self, PyObject* args);
+		static PyObject* registerControlledAttribute(Interface* self, PyObject* args);
+		static PyObject* registerExportedAttribute(Interface* self, PyObject* args);
 	};
 
 	extern PyTypeObject InterfaceType;

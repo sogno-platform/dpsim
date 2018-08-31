@@ -140,9 +140,8 @@ CPS::Component::List Python::compsFromPython(PyObject* list)
 }
 
 static const char* DocComponentConnect = "";
-PyObject* Python::Component::connect(PyObject* self, PyObject* args)
+PyObject* Python::Component::connect(Component* self, PyObject* args)
 {
-	Python::Component *pyComp = reinterpret_cast<Python::Component *>(self);
 	PyObject *pyNodes;
 
 	if (!PyArg_ParseTuple(args, "O", &pyNodes))
@@ -152,13 +151,13 @@ PyObject* Python::Component::connect(PyObject* self, PyObject* args)
 		using EMTComponent = CPS::PowerComponent<CPS::Real>;
 		using DPComponent = CPS::PowerComponent<CPS::Complex>;
 
-		if (auto emtComp = std::dynamic_pointer_cast<EMTComponent>(pyComp->comp)) {
+		if (auto emtComp = std::dynamic_pointer_cast<EMTComponent>(self->comp)) {
 			auto nodes = Python::Node<CPS::Real>::fromPython(pyNodes);
 
 			emtComp->setNodes(nodes);
 
 		}
-		else if (auto dpComp = std::dynamic_pointer_cast<DPComponent>(pyComp->comp)) {
+		else if (auto dpComp = std::dynamic_pointer_cast<DPComponent>(self->comp)) {
 			auto nodes = Python::Node<CPS::Complex>::fromPython(pyNodes);
 
 			dpComp->setNodes(nodes);
@@ -177,7 +176,7 @@ PyObject* Python::Component::connect(PyObject* self, PyObject* args)
 }
 
 static PyMethodDef Component_methods[] = {
-	{"connect", Python::Component::connect, METH_VARARGS, DocComponentConnect},
+	{"connect", (PyCFunction) Python::Component::connect, METH_VARARGS, DocComponentConnect},
 	{0},
 };
 
