@@ -27,15 +27,15 @@
   #include "RealTimeSimulation.h"
 #endif
 
-#include "cps/Components.h"
-#include "cps/Logger.h"
+#include <cps/Components.h>
+#include <cps/Logger.h>
 
 #ifdef WITH_SHMEM
-  #include "cps/Interface.h"
+  #include <cps/Interface.h>
 #endif
 
 #ifdef WITH_CIM
-  #include "cps/CIM/Reader.h"
+  #include <cps/CIM/Reader.h>
 #endif
 
 namespace DPsim {

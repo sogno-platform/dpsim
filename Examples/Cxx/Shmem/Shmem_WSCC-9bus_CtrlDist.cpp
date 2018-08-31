@@ -23,8 +23,8 @@
 #include <list>
 
 #include "DPsim.h"
-#include "cps/Interface.h"
-#include "cps/CIM/Reader.h"
+#include <cps/Interface.h>
+#include <cps/CIM/Reader.h>
 
 using namespace DPsim;
 using namespace CPS;

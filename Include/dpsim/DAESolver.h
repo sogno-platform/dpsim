@@ -24,7 +24,7 @@
 #include <vector>
 #include <list>
 #include "Solver.h"
-#include "cps/SystemTopology.h"
+#include <cps/SystemTopology.h>
 //#include "Logger.h"
 #include <ida/ida.h>
 #include <ida/ida_direct.h>

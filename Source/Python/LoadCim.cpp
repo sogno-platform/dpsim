@@ -23,12 +23,12 @@
 #include "Python/LoadCim.h"
 #include "Python/Component.h"
 
-#include "cps/Components.h"
-#include "cps/SystemTopology.h"
+#include <cps/Components.h>
+#include <cps/SystemTopology.h>
 #include "Python/SystemTopology.h"
 
 #ifdef WITH_CIM
-  #include "cps/CIM/Reader.h"
+  #include <cps/CIM/Reader.h>
 #endif
 
 using namespace DPsim;

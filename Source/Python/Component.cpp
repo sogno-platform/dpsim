@@ -23,7 +23,7 @@
 
 #include "Python/Component.h"
 #include "Python/Node.h"
-#include "cps/Components.h"
+#include <cps/Components.h>
 
 using namespace DPsim;
 

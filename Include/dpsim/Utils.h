@@ -25,7 +25,7 @@
 
 #include "RealTimeSimulation.h"
 #include "Solver.h"
-#include "cps/Logger.h"
+#include <cps/Logger.h>
 
 namespace DPsim {
 

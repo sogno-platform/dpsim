@@ -28,9 +28,9 @@
 #include <bitset>
 
 #include "Solver.h"
-#include "cps/Solver/MNASwitchInterface.h"
+#include <cps/Solver/MNASwitchInterface.h>
 #ifdef WITH_CIM
-#include "cps/CIM/Reader.h"
+#include <cps/CIM/Reader.h>
 #endif /* WITH_CIM */
 
 #define SWITCH_NUM 32

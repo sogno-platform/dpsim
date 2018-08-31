@@ -29,14 +29,14 @@
 #include "Config.h"
 #include "MNASolver.h"
 //#include "DAESolver.h"
-#include "cps/Definitions.h"
+#include <cps/Definitions.h>
 #include <cps/PowerComponent.h>
-#include "cps/Logger.h"
-#include "cps/SystemTopology.h"
-#include "cps/Node.h"
+#include <cps/Logger.h>
+#include <cps/SystemTopology.h>
+#include <cps/Node.h>
 
 #ifdef WITH_SHMEM
-  #include "cps/Interface.h"
+  #include <cps/Interface.h>
 #endif
 
 namespace DPsim {

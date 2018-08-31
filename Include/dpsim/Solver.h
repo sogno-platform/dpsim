@@ -26,12 +26,12 @@
 #include <list>
 
 #include "Config.h"
-#include "cps/Logger.h"
-#include "cps/SystemTopology.h"
+#include <cps/Logger.h>
+#include <cps/SystemTopology.h>
 #include "Definitions.h"
 
 #ifdef WITH_SHMEM
-  #include "cps/Interface.h"
+  #include <cps/Interface.h>
 #endif
 
 namespace DPsim {

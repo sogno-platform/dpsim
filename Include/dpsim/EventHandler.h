@@ -24,8 +24,8 @@
 
 #include <vector>
 #include "Config.h"
-#include "cps/Definitions.h"
-#include "cps/Logger.h"
+#include <cps/Definitions.h>
+#include <cps/Logger.h>
 
 namespace DPsim {
 

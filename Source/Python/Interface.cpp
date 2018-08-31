@@ -23,7 +23,7 @@
 #include "Config.h"
 
 #ifdef WITH_SHMEM
-  #include "cps/Interface.h"
+  #include <cps/Interface.h>
 #endif
 
 #include "Python/Interface.h"
