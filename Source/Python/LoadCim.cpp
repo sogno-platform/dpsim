@@ -89,7 +89,7 @@ PyObject* Python::LoadCim(PyObject* self, PyObject* args) {
 	try {
 		pySys->sys = std::make_shared<CPS::SystemTopology>(reader.loadCIM(frequency, cimFiles));
 	}
-	catch (CPS::CIM::InvalidTopology) {
+	catch (const CPS::CIM::InvalidTopology &) {
 		PyErr_SetString(PyExc_TypeError, "The topology of the CIM model is invalid");
 		return nullptr;
 	}

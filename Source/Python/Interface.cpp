@@ -92,7 +92,7 @@ PyObject* Python::Interface::registerControlledAttribute(PyObject* self, PyObjec
 
 		pyIntf->intf->addImport(realAttr, gain, realIdx);
 	}
-	catch (CPS::AttributeList::InvalidAttributeException) {
+	catch (const CPS::InvalidAttributeException &) {
 		try {
 			CPS::Attribute<CPS::Complex>::Ptr compAttr = pyComp->comp->findAttribute<CPS::Complex>(attrName);
 
@@ -103,7 +103,7 @@ PyObject* Python::Interface::registerControlledAttribute(PyObject* self, PyObjec
 
 			pyIntf->intf->addImport(compAttr, gain, realIdx, imagIdx);
 		}
-		catch (CPS::AttributeList::InvalidAttributeException) {
+		catch (const CPS::InvalidAttributeException &) {
 			PyErr_SetString(PyExc_TypeError, "First argument must be a readable attribute");
 			return nullptr;
 		}
@@ -152,7 +152,7 @@ PyObject* Python::Interface::registerExportedAttribute(PyObject* self, PyObject*
 
 		pyIntf->intf->addExport(realAttr, gain, realIdx);
 	}
-	catch (CPS::AttributeList::InvalidAttributeException exp) {
+	catch (const CPS::InvalidAttributeException &exp) {
 		try {
 			CPS::Attribute<CPS::Complex>::Ptr compAttr = pyComp->comp->findAttribute<CPS::Complex>(attrName);
 
@@ -163,7 +163,7 @@ PyObject* Python::Interface::registerExportedAttribute(PyObject* self, PyObject*
 
 			pyIntf->intf->addExport(compAttr, gain, realIdx, imagIdx);
 		}
-		catch (CPS::AttributeList::InvalidAttributeException exp) {
+		catch (const CPS::InvalidAttributeException &exp) {
 			PyErr_SetString(PyExc_TypeError, "First argument must be a writable attribute");
 			return nullptr;
 		}
@@ -232,7 +232,7 @@ static const char* DocInterface =
 "\n"
 "Currently, only an interface using POSIX shared memory is implemented (see `open_interface`).\n";
 PyTypeObject Python::InterfaceType = {
-	PyVarObject_HEAD_INIT(NULL, 0)
+	PyVarObject_HEAD_INIT(nullptr, 0)
 	"dpsim.Interface",                       /* tp_name */
 	sizeof(Python::Interface),               /* tp_basicsize */
 	0,                                       /* tp_itemsize */

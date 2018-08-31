@@ -1,7 +1,7 @@
-/** Python binding for Inductors.
+/** Utils for Python bindings.
  *
  * @author Steffen Vogel <stvogel@eonerc.rwth-aachen.de>
- * @copyright 2017, Institute for Automation of Complex Power Systems, EONERC
+ * @copyright 2018, Institute for Automation of Complex Power Systems, EONERC
  *
  * CPowerSystems
  *
@@ -21,20 +21,24 @@
 
 #pragma once
 
-#include "Python/Component.h"
-#include "Python/Node.h"
-#include "cps/DP/DP_Ph1_Inductor.h"
-#include "cps/EMT/EMT_Ph1_Inductor.h"
+#include <chrono>
+
+#ifdef _DEBUG
+  #undef _DEBUG
+  #include <Python.h>
+  #define _DEBUG
+#else
+  #include <Python.h>
+#endif
+
+#include <cps/AttributeList.h>
 
 namespace DPsim {
 namespace Python {
-namespace Components {
 
-	extern const char* DocInductor;
+int PyDateTime_DateTimeType_to_timepoint(PyObject *po, std::chrono::system_clock::time_point &tp);
 
-	template<class C>
-	PyObject* Inductor(PyObject* self, PyObject* args);
+void setAttributes(CPS::AttributeList::Ptr al, PyObject *kwargs);
 
-}
 }
 }

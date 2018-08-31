@@ -34,9 +34,15 @@
 #include <memory>
 
 #include <cps/PowerComponent.h>
+#include <cps/Attribute.h>
+
+#include <Python/Node.h>
+#include <Python/Utils.h>
 
 namespace DPsim {
 namespace Python {
+
+	extern PyTypeObject ComponentType;
 
 	struct Component {
 		PyObject_HEAD
@@ -57,9 +63,103 @@ namespace Python {
 
 		static PyObject* getattr(Component* self, char* name);
 		static int setattr(Component *self, char* name, PyObject *v);
-	};
 
-	extern PyTypeObject ComponentType;
+		static PyObject* connect(PyObject* self, PyObject *args);
+
+		template<typename T>
+		static PyObject* createInstance(PyObject* self, PyObject* args, PyObject *kwargs)
+		{
+			int ret;
+			const char *name;
+
+			PyObject *pyNodes = nullptr;
+
+			ret = PyArg_ParseTuple(args, "s|O", &name, &pyNodes);
+			if (!ret)
+				return nullptr;
+
+			try {
+				// Create Python wrapper
+				Component *pyComp = PyObject_New(Component, &ComponentType);
+				Component::init(pyComp);
+
+				// Create CPS component
+				auto comp = std::make_shared<T>(name, name);
+
+				// Set parameters
+				setAttributes(comp, kwargs);
+
+				// Set nodes
+				if (pyNodes) {
+					auto nodes = Python::Node<typename T::Type>::fromPython(pyNodes);
+
+					comp->setNodes(nodes);
+				}
+
+				pyComp->comp = comp;
+
+				return (PyObject*) pyComp;
+			}
+			catch (const CPS::AccessException &) {
+				PyErr_SetString(PyExc_ValueError, "Attribute access is prohibited");
+				return nullptr;
+			}
+			catch (const CPS::TypeException &e) {
+				PyErr_SetString(PyExc_ValueError, "Invalid attribute type");
+				return nullptr;
+			}
+			catch (const CPS::InvalidAttributeException &e) {
+				PyErr_SetString(PyExc_ValueError, "Invalid attribute");
+				return nullptr;
+			}
+			catch (const CPS::Exception &e) {
+				PyErr_SetString(PyExc_ValueError, e.what());
+				return nullptr;
+			}
+		}
+
+		template<typename T>
+		static const char * getDocumentation()
+		{
+			std::stringstream doc;
+
+			T comp("uid", "name");
+
+			doc << comp.getType() << "(name, nodes, **attributes)" << std::endl
+			    << "Construct a new component with a given name an list of nodes." << std::endl;
+#if 0
+			    << comp.getDescription() << std::endl
+			    << std::endl;
+
+			for (auto& it : comp.getAttributes()) {
+				auto name = it.first;
+				auto attr = it.second;
+
+				if (!(attr->getFlags() & CPS::Flags::write))
+					continue;
+
+				doc << ":param " << name << ": " << attr->getDescription() << std::endl;
+			}
+
+			    << ":returns: A new `Component` representing this " << comp.getType() << "." << std::endl;
+#endif
+
+			auto docstr = new CPS::String(doc.str());
+
+			return docstr->c_str();
+		}
+
+		template<typename T>
+		static PyMethodDef getConstructorDef(const char *name)
+		{
+			return {
+				name,
+				(PyCFunction) createInstance<T>,
+				METH_VARARGS | METH_KEYWORDS,
+				getDocumentation<T>()
+			};
+		}
+	};
 
 	CPS::Component::List compsFromPython(PyObject* list);
 }

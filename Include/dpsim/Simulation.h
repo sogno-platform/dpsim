@@ -134,7 +134,7 @@ namespace DPsim {
 		int getEventFD(Int flags = -1, Int coalesce = 1);
 
 		/// Sends a notification to other processes / Python
-		void sendNotification(enum Event evt);
+		void sendEvent(enum Event evt);
 	};
 
 }

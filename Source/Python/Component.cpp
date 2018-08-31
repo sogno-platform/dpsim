@@ -22,6 +22,7 @@
 #include <stdexcept>
 
 #include "Python/Component.h"
+#include "Python/Node.h"
 #include "cps/Components.h"
 
 using namespace DPsim;
@@ -78,13 +79,13 @@ PyObject* Python::Component::getattr(Python::Component* self, char* name)
 
 		return attr->toPyObject();
 	}
-	catch (CPS::PowerComponent<CPS::Complex>::InvalidAttributeException) {
+	catch (const CPS::InvalidAttributeException &) {
 		PyErr_Format(PyExc_AttributeError, "Component has no attribute '%s'", name);
-		return NULL;
+		return nullptr;
 	}
 	catch (...) {
 		PyErr_Format(PyExc_RuntimeError, "Unkown Error Occured", name);
-		return NULL;
+		return nullptr;
 	}
 }
 
@@ -99,15 +100,15 @@ int Python::Component::setattr(Python::Component* self, char* name, PyObject *v)
 		auto attr = self->comp->findAttribute(name);
 		attr->fromPyObject(v);
 	}
-	catch (CPS::PowerComponent<CPS::Complex>::InvalidAttributeException) {
+	catch (const CPS::InvalidAttributeException &) {
 		PyErr_Format(PyExc_AttributeError, "Component has no attribute '%s'", name);
 		return -1;
 	}
-	catch (CPS::AttributeBase::TypeException) {
+	catch (const CPS::TypeException &) {
 		PyErr_Format(PyExc_TypeError, "Invalid type for attribute '%s'", name);
 		return -1;
 	}
-	catch (CPS::AttributeBase::AccessException) {
+	catch (const CPS::AccessException &) {
 		PyErr_Format(PyExc_AttributeError, "Attribute '%s' is not modifiable", name);
 		return -1;
 	}
@@ -138,6 +139,49 @@ CPS::Component::List Python::compsFromPython(PyObject* list)
 	return comps;
 }
 
+static const char* DocComponentConnect = "";
+PyObject* Python::Component::connect(PyObject* self, PyObject* args)
+{
+	Python::Component *pyComp = reinterpret_cast<Python::Component *>(self);
+	PyObject *pyNodes;
+
+	if (!PyArg_ParseTuple(args, "O", &pyNodes))
+		return nullptr;
+
+	try {
+		using EMTComponent = CPS::PowerComponent<CPS::Real>;
+		using DPComponent = CPS::PowerComponent<CPS::Complex>;
+
+		if (auto emtComp = std::dynamic_pointer_cast<EMTComponent>(pyComp->comp)) {
+			auto nodes = Python::Node<CPS::Real>::fromPython(pyNodes);
+
+			emtComp->setNodes(nodes);
+
+		}
+		else if (auto dpComp = std::dynamic_pointer_cast<DPComponent>(pyComp->comp)) {
+			auto nodes = Python::Node<CPS::Complex>::fromPython(pyNodes);
+
+			dpComp->setNodes(nodes);
+		}
+		else {
+			PyErr_SetString(PyExc_TypeError, "Failed to connect nodes");
+			return nullptr;
+		}
+
+		Py_INCREF(Py_None);
+		return Py_None;
+	} catch (...) {
+		PyErr_SetString(PyExc_TypeError, "Failed to connect nodes");
+		return nullptr;
+	}
+}
+
+static PyMethodDef Component_methods[] = {
+	{"connect", Python::Component::connect, METH_VARARGS, DocComponentConnect},
+	{0},
+};
+
+
 static const char* DocComponent =
 "A component of a network that is to be simulated.\n"
 "\n"
@@ -157,7 +201,7 @@ static const char* DocComponent =
 "after creation. These values must only be changed if the simulation is paused, "
 "and `update_matrix` has to be called after changes are made.\n";
 PyTypeObject Python::ComponentType = {
-	PyVarObject_HEAD_INIT(NULL, 0)
+	PyVarObject_HEAD_INIT(nullptr, 0)
 	"dpsim.Component",                         /* tp_name */
 	sizeof(Python::Component),                 /* tp_basicsize */
 	0,                                         /* tp_itemsize */
@@ -185,7 +229,7 @@ PyTypeObject Python::ComponentType = {
 	0,                                         /* tp_weaklistoffset */
 	0,                                         /* tp_iter */
 	0,                                         /* tp_iternext */
-	0,                                         /* tp_methods */
+	Component_methods,                         /* tp_methods */
 	0,                                         /* tp_members */
 	0,                                         /* tp_getset */
 	0,                                         /* tp_base */

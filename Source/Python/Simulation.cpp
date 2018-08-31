@@ -58,7 +58,7 @@ void DPsim::Python::Simulation::simThreadFunctionNonRT(DPsim::Python::Simulation
 
 	endTime = pySim->sim->getFinalTime();
 #ifdef __linux__
-	pySim->sim->sendNotification(DPsim::Simulation::Event::Started);
+	pySim->sim->sendEvent(DPsim::Simulation::Event::Started);
 #endif
 	pySim->numStep = 0;
 	while (pySim->running && time < endTime) {
@@ -70,21 +70,21 @@ void DPsim::Python::Simulation::simThreadFunctionNonRT(DPsim::Python::Simulation
 			lk.lock();
 			pySim->state = State::Paused;
 #ifdef __linux__
-			pySim->sim->sendNotification(DPsim::Simulation::Event::Paused);
+			pySim->sim->sendEvent(DPsim::Simulation::Event::Paused);
 #endif
 			pySim->cond->notify_one();
 			pySim->cond->wait(lk);
 
 			pySim->state = State::Running;
 #ifdef __linux__
-			pySim->sim->sendNotification(DPsim::Simulation::Event::Resumed);
+			pySim->sim->sendEvent(DPsim::Simulation::Event::Resumed);
 #endif
 			lk.unlock();
 		}
 	}
 	lk.lock();
 #ifdef __linux__
-	pySim->sim->sendNotification(DPsim::Simulation::Event::Finished);
+	pySim->sim->sendEvent(DPsim::Simulation::Event::Finished);
 #endif
 	pySim->state = State::Done;
 	pySim->cond->notify_one();
@@ -190,7 +190,7 @@ PyObject* DPsim::Python::Simulation::newfunc(PyTypeObject* type, PyObject *args,
 
 int DPsim::Python::Simulation::init(Python::Simulation* self, PyObject *args, PyObject *kwds)
 {
-	static char *kwlist[] = {"name", "system", "timestep", "duration", "rt", "start_sync", "sim_type", "solver_type", NULL};
+	static char *kwlist[] = {"name", "system", "timestep", "duration", "rt", "start_sync", "sim_type", "solver_type", nullptr};
 	double timestep = 1e-3, duration = DBL_MAX;
 	const char *name = nullptr;
 	int t = 0, s = 0;
@@ -249,7 +249,7 @@ void DPsim::Python::Simulation::dealloc(Python::Simulation* self)
 	if (self->simThread) {
 		// We have to cancel the running thread here, because otherwise self can't
 		// be freed.
-		Python::Simulation::stop((PyObject*) self, NULL);
+		Python::Simulation::stop((PyObject*) self, nullptr);
 		self->simThread->join();
 		delete self->simThread;
 	}
@@ -556,12 +556,12 @@ PyObject* DPsim::Python::Simulation::getFinalTime(PyObject *self, void *ctx)
 
 
 static PyGetSetDef Simulation_attrs[] = {
-	{"state", DPsim::Python::Simulation::getState, NULL, DocSimulationGetState, NULL},
-	{"name",  DPsim::Python::Simulation::getName, NULL, DocSimulationGetName, NULL},
-	{"steps",  DPsim::Python::Simulation::getSteps, NULL, NULL, NULL},
-	{"time",  DPsim::Python::Simulation::getTime, NULL, NULL, NULL},
-	{"final_time",  DPsim::Python::Simulation::getFinalTime, NULL, NULL, NULL},
-	{NULL, NULL, NULL, NULL, NULL}
+	{"state", DPsim::Python::Simulation::getState, nullptr, DocSimulationGetState, nullptr},
+	{"name",  DPsim::Python::Simulation::getName, nullptr, DocSimulationGetName, nullptr},
+	{"steps",  DPsim::Python::Simulation::getSteps, nullptr, nullptr, nullptr},
+	{"time",  DPsim::Python::Simulation::getTime, nullptr, nullptr, nullptr},
+	{"final_time",  DPsim::Python::Simulation::getFinalTime, nullptr, nullptr, nullptr},
+	{nullptr, nullptr, nullptr, nullptr, nullptr}
 };
 
 static PyMethodDef Simulation_methods[] = {
@@ -574,7 +574,7 @@ static PyMethodDef Simulation_methods[] = {
 #ifdef __linux__
 	{"get_eventfd",         DPsim::Python::Simulation::getEventFD, METH_VARARGS, DocSimulationGetEventFD},
 #endif
-	{NULL, NULL, 0, NULL}
+	{nullptr, nullptr, 0, nullptr}
 };
 
 static const char* DocSimulation =
@@ -598,7 +598,7 @@ static const char* DocSimulation =
 "the first message(s) from the external interface(s) until the realtime simulation "
 "starts properly.";
 PyTypeObject DPsim::Python::SimulationType = {
-	PyVarObject_HEAD_INIT(NULL, 0)
+	PyVarObject_HEAD_INIT(nullptr, 0)
 	"dpsim.Simulation",                      /* tp_name */
 	sizeof(DPsim::Python::Simulation),       /* tp_basicsize */
 	0,                                       /* tp_itemsize */

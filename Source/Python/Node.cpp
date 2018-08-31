@@ -40,8 +40,8 @@ CPS::TopologicalNode::List Python::nodesFromPython(PyObject* list) {
 				nodes.push_back(std::dynamic_pointer_cast<CPS::TopologicalNode>(pyNode->node));
 			}
 			else {
-				throw std::invalid_argument( "list element is not a dpsim.Node" );		
-			}			
+				throw std::invalid_argument( "list element is not a dpsim.Node" );
+			}
 		}
 
 		return nodes;
@@ -57,11 +57,11 @@ typename CPS::Node<VarType>::List Python::Node<VarType>::fromPython(PyObject* li
 
 	for (int i = 0; i < PyList_Size(list); i++) {
 		PyObject* obj = PyList_GetItem(list, i);
-		if (!PyObject_TypeCheck(obj, &Python::Node<VarType>::type)) 
+		if (!PyObject_TypeCheck(obj, &Python::Node<VarType>::type))
 			throw std::invalid_argument( "list element is not a dpsim.Node" );
-			
+
 		Node<VarType>* pyNode = (Node<VarType>*) obj;
-		nodes.push_back(pyNode->node);	
+		nodes.push_back(pyNode->node);
 	}
 
 	return nodes;
@@ -85,7 +85,7 @@ PyObject* Python::Node<VarType>::newfunc(PyTypeObject *type, PyObject *args, PyO
 template<typename VarType>
 int Python::Node<VarType>::init(Python::Node<VarType> *self, PyObject *args, PyObject *kwds)
 {
-	static char *kwlist[] = {"uid", "initial_voltage", NULL};
+	static char *kwlist[] = {"uid", "initial_voltage", nullptr};
 
 	const char *uid;
 	CPS::Complex initialVoltage;
@@ -139,7 +139,7 @@ PyObject * Python::Node<VarType>::getGND(PyObject *self, PyObject *args) {
 template<typename VarType>
 PyMethodDef Python::Node<VarType>::methods[] = {
 	{"GND", DPsim::Python::Node<VarType>::getGND, METH_NOARGS | METH_STATIC, DPsim::Python::Node<VarType>::DocGND},
-	{NULL, NULL, 0, NULL}
+	{nullptr, nullptr, 0, nullptr}
 };
 
 template<typename VarType>
@@ -153,14 +153,14 @@ char* Python::Node<VarType>::Doc =
 "``initial_voltage`` is the initial voltage of the node.\n\n";
 
 template<>
-char* Python::Node<CPS::Real>::name = "dpsim.EMTNode";
+char* Python::Node<CPS::Real>::name = "dpsim.emt.Node";
 
 template<>
-char* Python::Node<CPS::Complex>::name = "dpsim.DPNode";
+char* Python::Node<CPS::Complex>::name = "dpsim.dp.Node";
 
 template<typename VarType>
 PyTypeObject DPsim::Python::Node<VarType>::type = {
-	PyVarObject_HEAD_INIT(NULL, 0)
+	PyVarObject_HEAD_INIT(nullptr, 0)
 	DPsim::Python::Node<VarType>::name,        /* tp_name */
 	sizeof(DPsim::Python::Node<VarType>),      /* tp_basicsize */
 	0,                                       /* tp_itemsize */

@@ -88,11 +88,11 @@ PyObject* Python::SystemTopology::newfunc(PyTypeObject *type, PyObject *args, Py
 
 int Python::SystemTopology::init(Python::SystemTopology *self, PyObject *args, PyObject *kwds)
 {
-	static char *kwlist[] = {"frequency", "nodes", "components", NULL};
+	static char *kwlist[] = {"frequency", "nodes", "components", nullptr};
 	double frequency = 50;
 
-	PyObject *pyCompList = NULL;
-	PyObject *pyNodeList = NULL;
+	PyObject *pyCompList = nullptr;
+	PyObject *pyNodeList = nullptr;
 
 	if (!PyArg_ParseTupleAndKeywords(args, kwds, "d|OO", kwlist, &frequency, &pyNodeList, &pyCompList)) {
 		return -1;
@@ -152,7 +152,7 @@ static PyMethodDef SystemTopology_methods[] = {
 #ifdef WITH_GRAPHVIZ
 	{"_repr_svg_", DPsim::Python::SystemTopology::reprSVG, METH_NOARGS, DocSystemTopologyReprSVG},
 #endif
-	{NULL, NULL, 0, NULL}
+	{nullptr, nullptr, 0, nullptr}
 };
 
 static const char* DocSystemTopology =
@@ -164,7 +164,7 @@ static const char* DocSystemTopology =
 "``frequency`` is the nominal system frequency in Hz.\n\n"
 "``components`` must be a list of `Component` that are to be simulated.\n\n";
 PyTypeObject DPsim::Python::SystemTopologyType = {
-	PyVarObject_HEAD_INIT(NULL, 0)
+	PyVarObject_HEAD_INIT(nullptr, 0)
 	"dpsim.SystemTopology",                  /* tp_name */
 	sizeof(DPsim::Python::SystemTopology),     /* tp_basicsize */
 	0,                                       /* tp_itemsize */

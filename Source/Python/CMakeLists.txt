@@ -16,19 +16,17 @@ add_library(dpsim_python SHARED
 	Interface.cpp
 	LoadCim.cpp
 	SystemTopology.cpp
-	
-	Components/LinePi.cpp
-	Components/LoadPQ.cpp
-	
-	Components/VoltageSourceNorton.cpp
-	
-	Components/CurrentSource.cpp
-	Components/VoltageSource.cpp
-	
-	Components/Resistor.cpp
-	Components/Inductor.cpp
-	Components/Capacitor.cpp
+
+	Utils.cpp
 )
+
+file(MAKE_DIRECTORY ${CMAKE_BINARY_DIR}/Include/dpsim/Python)
+add_custom_target(dpsim_python_list
+	COMMAND ${PYTHON_EXECUTABLE} ${CMAKE_SOURCE_DIR}/Scripts/find_cps_components.py
+		${CMAKE_SOURCE_DIR}/Dependencies/libcps/Include/cps
+		${CMAKE_BINARY_DIR}/Include/dpsim/Python/ComponentConstructors.h
+)
+add_dependencies(dpsim_python dpsim_python_list)
 
 if(APPLE)
 	set(INSTALL_RPATH "@loader_path")
