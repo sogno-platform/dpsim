@@ -20,14 +20,14 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *********************************************************************************/
 
-#include "Config.h"
+#include <dpsim/Config.h>
 
 #ifdef WITH_SHMEM
   #include <cps/Interface.h>
 #endif
 
-#include "Python/Interface.h"
-#include "Python/Component.h"
+#include <dpsim/Python/Interface.h>
+#include <dpsim/Python/Component.h>
 
 using namespace DPsim;
 

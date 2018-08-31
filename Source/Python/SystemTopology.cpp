@@ -19,9 +19,9 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *********************************************************************************/
 
-#include "Python/SystemTopology.h"
-#include "Python/Component.h"
-#include "Python/Node.h"
+#include <dpsim/Python/SystemTopology.h>
+#include <dpsim/Python/Component.h>
+#include <dpsim/Python/Node.h>
 
 using namespace DPsim;
 

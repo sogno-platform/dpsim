@@ -23,7 +23,7 @@
 #include <unistd.h>
 #endif
 
-#include "Simulation.h"
+#include <dpsim/Simulation.h>
 
 #ifdef WITH_CIM
   #include <cps/CIM/Reader.h>

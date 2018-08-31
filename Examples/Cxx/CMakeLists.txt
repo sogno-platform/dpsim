@@ -37,7 +37,7 @@ set(SYNCGEN_SOURCES
 	#SynchronGenerator/DP_SynchronGenerator_BalancedResLoad.cpp
 	#SynchronGenerator/DP_SynchronGenerator_ExciterAndTurbine.cpp
 	#SynchronGenerator/DP_SynchronGenerator_SimpThreePhaseFault.cpp
-	##SynchronGenerator/DP_SynchronGenerator_ThreePhaseFault.cpp
+	#SynchronGenerator/DP_SynchronGenerator_ThreePhaseFault.cpp
 	#SynchronGenerator/DP_SynchronGenerator_VBR.cpp
 	#SynchronGenerator/DP_SynchronGenerator_Simplified_ThreePhaseFault.cpp
 	#SynchronGenerator/EMT_SynchronGenerator_BalancedResLoad.cpp

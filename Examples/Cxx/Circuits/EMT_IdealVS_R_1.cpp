@@ -20,7 +20,7 @@
  *********************************************************************************/
 
 
-#include "DPsim.h"
+#include <DPsim.h>
 
 using namespace DPsim;
 using namespace CPS::EMT::Ph1;

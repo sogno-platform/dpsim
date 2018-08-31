@@ -19,7 +19,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *********************************************************************************/
 
-#include "RealTimeSimulation.h"
+#include <dpsim/RealTimeSimulation.h>
 
 #include <signal.h>
 #include <sys/timerfd.h>

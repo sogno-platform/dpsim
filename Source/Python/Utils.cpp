@@ -31,9 +31,9 @@
 #endif
 
 // For Python PyDateTime_* functions
-#include "datetime.h"
+#include <dpsim/datetime.h>
 
-#include "Python/Utils.h"
+#include <dpsim/Python/Utils.h>
 
 using namespace DPsim::Python;
 

@@ -22,7 +22,7 @@
 #include <iostream>
 #include <list>
 
-#include "DPsim.h"
+#include <DPsim.h>
 #include <cps/Interface.h>
 #include <cps/CIM/Reader.h>
 

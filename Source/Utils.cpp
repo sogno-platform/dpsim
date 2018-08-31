@@ -25,7 +25,7 @@
 #include <string>
 #include <chrono>
 
-#include "Utils.h"
+#include <dpsim/Utils.h>
 
 using namespace DPsim;
 using namespace CPS;

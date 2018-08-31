@@ -21,8 +21,8 @@
 
 #include <stdexcept>
 
-#include "Python/Component.h"
-#include "Python/Node.h"
+#include <dpsim/Python/Component.h>
+#include <dpsim/Python/Node.h>
 #include <cps/Components.h>
 
 using namespace DPsim;

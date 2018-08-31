@@ -20,11 +20,11 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *********************************************************************************/
 
-#include "Config.h"
-#include "Python/Simulation.h"
+#include <dpsim/Config.h>
+#include <dpsim/Python/Simulation.h>
 
-#include "Python/Interface.h"
-#include "Python/Component.h"
+#include <dpsim/Python/Interface.h>
+#include <dpsim/Python/Component.h>
 
 #include <cfloat>
 #include <iostream>

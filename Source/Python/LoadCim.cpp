@@ -19,13 +19,13 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *********************************************************************************/
 
-#include "Config.h"
-#include "Python/LoadCim.h"
-#include "Python/Component.h"
+#include <dpsim/Config.h>
+#include <dpsim/Python/LoadCim.h>
+#include <dpsim/Python/Component.h>
 
 #include <cps/Components.h>
 #include <cps/SystemTopology.h>
-#include "Python/SystemTopology.h"
+#include <dpsim/Python/SystemTopology.h>
 
 #ifdef WITH_CIM
   #include <cps/CIM/Reader.h>

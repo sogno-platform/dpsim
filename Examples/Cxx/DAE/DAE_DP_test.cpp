@@ -20,7 +20,7 @@
  *********************************************************************************/
 
 #include "DAESimulation.h"
-#include "DPsim.h"
+#include <DPsim.h>
 
 using namespace DPsim;
 using namespace CPS::Components::DP;

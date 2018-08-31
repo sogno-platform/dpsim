@@ -20,7 +20,7 @@
 * along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *********************************************************************************/
 
-#include "DAESolver.h"
+#include <dpsim/DAESolver.h>
 
 DAESolver::DAESolver(String name,  SystemTopology system, Real dt, Real t0) :  mTimestep(dt)
 {

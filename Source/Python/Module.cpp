@@ -27,14 +27,14 @@
   #include <Python.h>
 #endif
 
-#include "Config.h"
-#include "Python/Module.h"
-#include "Python/Component.h"
-#include "Python/Node.h"
-#include "Python/SystemTopology.h"
-#include "Python/Simulation.h"
-#include "Python/Interface.h"
-#include "Python/LoadCim.h"
+#include <dpsim/Config.h>
+#include <dpsim/Python/Module.h>
+#include <dpsim/Python/Component.h>
+#include <dpsim/Python/Node.h>
+#include <dpsim/Python/SystemTopology.h>
+#include <dpsim/Python/Simulation.h>
+#include <dpsim/Python/Interface.h>
+#include <dpsim/Python/LoadCim.h>
 
 using namespace DPsim::Python;
 
@@ -43,7 +43,7 @@ static PyMethodDef dpsimModuleMethods[] = {
 	{ "open_interface",         (PyCFunction) OpenInterface,                                        METH_VARARGS | METH_KEYWORDS, DPsim::Python::DocOpenInterface },
 
 	// Component constructors
-	#include "Python/ComponentConstructors.h"
+	#include <dpsim/Python/ComponentConstructors.h>
 
 	{ 0 }
 };
