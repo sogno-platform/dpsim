@@ -475,7 +475,7 @@ PyObject* DPsim::Python::Simulation::wait(Simulation *self, PyObject *args)
 }
 
 #ifdef __linux__
-static char* DocSimulationGetEventFD =
+static char* DocSimulationEventFD =
 "get_eventfd(flags)\n"
 "Return a poll()/select()'able file descriptor which can be used to asynchronously\n"
 "notify the Python code about state changes and other events of the simulation.\n"
@@ -549,7 +549,7 @@ static PyMethodDef Simulation_methods[] = {
 	{"stop",          (PyCFunction) DPsim::Python::Simulation::stop, METH_NOARGS, DocSimulationStop},
 	{"wait",          (PyCFunction) DPsim::Python::Simulation::wait, METH_NOARGS, DocSimulationWait},
 #ifdef __linux__
-	{"eventfd",         	DPsim::Python::Simulation::eventFD, METH_VARARGS, DocSimulationGetEventFD},
+	{"eventfd",       (PyCFunction) DPsim::Python::Simulation::eventFD, METH_VARARGS, DocSimulationEventFD},
 #endif
 	{nullptr, nullptr, 0, nullptr}
 };

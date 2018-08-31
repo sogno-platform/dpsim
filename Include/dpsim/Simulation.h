@@ -131,7 +131,7 @@ namespace DPsim {
 		Real time() const { return mTime; }
 		Real finalTime() const { return mFinalTime; }
 		Int timeStepCount() const { return mTimeStepCount; }
-		int getEventFD(Int flags = -1, Int coalesce = 1);
+		int eventFD(Int flags = -1, Int coalesce = 1);
 
 		/// Sends a notification to other processes / Python
 		void sendEvent(enum Event evt);

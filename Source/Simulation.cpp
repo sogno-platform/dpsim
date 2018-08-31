@@ -135,7 +135,7 @@ void Simulation::addSystemTopology(SystemTopology system) {
 }
 
 #ifdef __linux__
-int Simulation::getEventFD(Int flags, Int coalesce) {
+int Simulation::eventFD(Int flags, Int coalesce) {
 	int ret;
 
 	// Create a new pipe of not existant
