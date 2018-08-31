@@ -62,7 +62,7 @@ namespace Python {
 		std::atomic_bool running;
 		std::atomic_int sigPause, numStep;
 		std::thread *simThread;
-		State state;
+		State simState;
 
 		bool rt;
 		bool startSync;
@@ -90,17 +90,19 @@ namespace Python {
 		// Methods that are actually available from Python
 		static PyObject* addInterface(PyObject *self, PyObject *args);
 //		static PyObject* lvector(PyObject *self, PyObject *args);
-		static PyObject* getName(PyObject *self, void *ctx);
-		static PyObject* getState(PyObject *self, void *ctx);
-		static PyObject* getSteps(PyObject *self, void *ctx);
-		static PyObject* getTime(PyObject *self, void *ctx);
-		static PyObject* getFinalTime(PyObject *self, void *ctx);
-		static PyObject* getEventFD(PyObject *self, PyObject *args);
 		static PyObject* pause(PyObject *self, PyObject *args);
 		static PyObject* start(PyObject *self, PyObject *args);
 		static PyObject* step(PyObject *self, PyObject *args);
 		static PyObject* stop(PyObject *self, PyObject *args);
 		static PyObject* wait(PyObject *self, PyObject *args);
+
+		// Getters
+		static PyObject* name(PyObject *self, void *ctx);
+		static PyObject* state(PyObject *self, void *ctx);
+		static PyObject* steps(PyObject *self, void *ctx);
+		static PyObject* time(PyObject *self, void *ctx);
+		static PyObject* finalTime(PyObject *self, void *ctx);
+		static PyObject* eventFD(PyObject *self, PyObject *args);
 	};
 
 	extern PyTypeObject SimulationType;

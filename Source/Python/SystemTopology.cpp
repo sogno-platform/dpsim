@@ -60,7 +60,7 @@ PyObject* Python::SystemTopology::reprSVG(PyObject *self, PyObject *args)
 {
 	Python::SystemTopology *pySys = (Python::SystemTopology*) self;
 
-	auto graph = pySys->sys->getTopologyGraph();
+	auto graph = pySys->sys->topologyGraph();
 
 	std::stringstream ss;
 

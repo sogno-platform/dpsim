@@ -101,8 +101,8 @@ int main(int argc, char *argv[]) {
 		// Register exportable node voltages
 		for (auto n : sys.mNodes) {
 			UInt i;
-			if (sscanf(n->getName().c_str(), "BUS%u", &i) != 1) {
-				std::cerr << "Failed to determine bus no of bus: " << n->getName() << std::endl;
+			if (sscanf(n->name().c_str(), "BUS%u", &i) != 1) {
+				std::cerr << "Failed to determine bus no of bus: " << n->name() << std::endl;
 				continue;
 			}
 
@@ -110,8 +110,8 @@ int main(int argc, char *argv[]) {
 
 			auto v = n->findAttribute<Complex>("voltage");
 
-			std::cout << "Signal << " << (i*2)+0 << ": Mag " << n->getName() << std::endl;
-			std::cout << "Signal << " << (i*2)+1 << ": Phas " << n->getName() << std::endl;
+			std::cout << "Signal << " << (i*2)+0 << ": Mag " << n->name() << std::endl;
+			std::cout << "Signal << " << (i*2)+1 << ": Phas " << n->name() << std::endl;
 
 			std::function<Real()> getMag = [v](){ return std::abs(v->get()); };
 			std::function<Real()> getPhas = [v](){ return std::arg(v->get()); };

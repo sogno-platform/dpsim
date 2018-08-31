@@ -187,11 +187,11 @@ int main(int argc, char* argv[])
 		genPtr2->AddGovernor(Ta_t, Tb, Tc, Fa, Fb, Fc, Kg, Tsr, Tsm, initActivePower / nomPower, mechPower / nomPower);
 
 		std::cout << "A matrix:" << std::endl;
-		std::cout << sim.getSystemMatrix() << std::endl;
+		std::cout << sim.systemMatrix() << std::endl;
 		std::cout << "vt vector:" << std::endl;
-		std::cout << sim.getLeftSideVector() << std::endl;
+		std::cout << sim.leftSideVector() << std::endl;
 		std::cout << "j vector:" << std::endl;
-		std::cout << sim.getRightSideVector() << std::endl;
+		std::cout << sim.rightSideVector() << std::endl;
 
 		Real lastLogTime = 0;
 		Real logTimeStep = 0.00005;

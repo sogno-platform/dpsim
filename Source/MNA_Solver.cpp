@@ -91,7 +91,7 @@ void MnaSolver<VarType>::initialize(CPS::SystemTopology system) {
 
     // Logging
     for (auto comp : system.mComponents)
-        mLog.info() << "Added " << comp->type() << " '" << comp->getName() << "' to simulation." << std::endl;
+        mLog.info() << "Added " << comp->type() << " '" << comp->name() << "' to simulation." << std::endl;
 
     mLog.info() << "System matrix:" << std::endl;
     mLog.info(mSystemMatrix);
@@ -127,7 +127,7 @@ void MnaSolver<VarType>::IdentifyTopologyObjects() {
     }
     
     for (UInt i = 0; i < mNodes.size(); i++) {
-        mLog.info() << "Found node " << mNodes[i]->getName() << std::endl;
+        mLog.info() << "Found node " << mNodes[i]->name() << std::endl;
     }
 
     for (auto comp : mSystem.mComponents) {
@@ -145,11 +145,11 @@ void MnaSolver<VarType>::IdentifyTopologyObjects() {
 }
 
 template <typename VarType>
-void MnaSolver<VarType>::sortExecutionPriority() {			
+void MnaSolver<VarType>::sortExecutionPriority() {		
     // Sort SignalComponents according to execution priority.
     // Components with a higher priority number should come first.
     std::sort(mSignalComponents.begin(), mSignalComponents.end(), [](const auto& lhs, const auto& rhs) {
-        return lhs->getPriority() > rhs->getPriority();
+        return lhs->priority() > rhs->priority();
     });
 }
 
@@ -233,7 +233,7 @@ void MnaSolver<VarType>::createVirtualNodes() {
                 mNodes.push_back(std::make_shared<CPS::Node<VarType>>(virtualNode));
                 comp->setVirtualNodeAt(mNodes[virtualNode], node);
                 mLog.info() << "Created virtual node" << node << " = " << virtualNode
-                    << " for " << comp->getName() << std::endl;
+                    << " for " << comp->name() << std::endl;
             }
         }
     }

@@ -104,11 +104,11 @@ int main(int argc, char* argv[])
 				genPtr->initialize(om, dt, initActivePower, initReactivePower, initTerminalVolt, initVoltAngle, fieldVoltage, mechPower);
 
 				std::cout << "A matrix:" << std::endl;
-				std::cout << sim.getSystemMatrix() << std::endl;
+				std::cout << sim.systemMatrix() << std::endl;
 				std::cout << "vt vector:" << std::endl;
-				std::cout << sim.getLeftSideVector() << std::endl;
+				std::cout << sim.leftSideVector() << std::endl;
 				std::cout << "j vector:" << std::endl;
-				std::cout << sim.getRightSideVector() << std::endl;
+				std::cout << sim.rightSideVector() << std::endl;
 
 				Real lastLogTime = 0;
 				Real logTimeStep = 0.00005;

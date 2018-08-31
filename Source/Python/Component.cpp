@@ -64,7 +64,7 @@ PyObject* Python::Component::str(Python::Component* self)
 	if (!self->comp)
 		return PyUnicode_FromString("<unitialized Component>");
 
-	return PyUnicode_FromString(self->comp->getName().c_str());
+	return PyUnicode_FromString(self->comp->name().c_str());
 }
 
 PyObject* Python::Component::getattr(Python::Component* self, char* name)

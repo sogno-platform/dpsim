@@ -127,10 +127,10 @@ namespace DPsim {
 		void setLogDownsamplingRate(Int divider) {}
 
 		// #### Getter ####
-		String getName() const { return mName; }
-		Real getTime() const { return mTime; }
-		Real getFinalTime() const { return mFinalTime; }
-		Int getTimeStepCount() const { return mTimeStepCount; }
+		String name() const { return mName; }
+		Real time() const { return mTime; }
+		Real finalTime() const { return mFinalTime; }
+		Int timeStepCount() const { return mTimeStepCount; }
 		int getEventFD(Int flags = -1, Int coalesce = 1);
 
 		/// Sends a notification to other processes / Python
