@@ -125,8 +125,12 @@ namespace Python {
 
 			T comp("uid", "name");
 
+			doc << comp.getType() << "(name, nodes, **attributes)" << std::endl
+			    << "Construct a new component with a given name an list of nodes." << std::endl;
 #if 0
-			std::stringstream params;
+			    << comp.getDescription() << std::endl
+			    << std::endl;
+
 			for (auto& it : comp.getAttributes()) {
 				auto name = it.first;
 				auto attr = it.second;
@@ -134,24 +138,15 @@ namespace Python {
 				if (!(attr->getFlags() & CPS::Flags::write))
 					continue;
 
-				params << ":param " << name << ": " << attr->getDescription() << std::endl;
+				doc << ":param " << name << ": " << attr->getDescription() << std::endl;
 			}
+
+			    << ":returns: A new `Component` representing this " << comp.getType() << "." << std::endl;
 #endif
 
-			doc << comp.getType() << "(name)" << std::endl
-			<< "Construct a new external current source." << std::endl
-			<< std::endl;
+			auto docstr = new CPS::String(doc.str());
 
-			return doc.str().c_str();
-
-#if 0
-			<< comp.getDescription() << std::endl
-			<< std::endl
-			<< params.str()
-			<< ":returns: A new `Component` representing this " << comp.getType() << "." << std::endl;
-
-			return doc.str().c_str();
-#endif
+			return docstr->c_str();
 		}
 
 		template<typename T>
@@ -161,7 +156,7 @@ namespace Python {
 				name,
 				(PyCFunction) createInstance<T>,
 				METH_VARARGS | METH_KEYWORDS,
-				nullptr//getDocumentation<T>()
+				getDocumentation<T>()
 			};
 		}
 	};
