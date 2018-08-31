@@ -148,7 +148,7 @@ template <typename VarType>
 void MnaSolver<VarType>::sortExecutionPriority() {		
     // Sort SignalComponents according to execution priority.
     // Components with a higher priority number should come first.
-    std::sort(mSignalComponents.begin(), mSignalComponents.end(), [](const auto& lhs, const auto& rhs) {
+    std::sort(mSignalComponents.begin(), mSignalComponents.end(), [] (const auto& lhs, const auto& rhs) -> bool {
         return lhs->priority() > rhs->priority();
     });
 }
