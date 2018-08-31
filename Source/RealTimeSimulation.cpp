@@ -22,9 +22,12 @@
 #include <dpsim/RealTimeSimulation.h>
 
 #include <signal.h>
-#include <sys/timerfd.h>
 #include <time.h>
 #include <unistd.h>
+
+#ifdef HAVE_TIMERFD
+  #include <sys/timerfd.h>
+#endif /* HAVE_TIMERFD */
 
 using namespace CPS;
 using namespace DPsim;
@@ -38,69 +41,16 @@ RealTimeSimulation::RealTimeSimulation(String name, SystemTopology system, Real 
 	mAttributes["time_step"] = Attribute<Real>::make(&mTimeStep, Flags::read);
 	mAttributes["overruns"] = Attribute<Int>::make(&mOverruns, Flags::read);
 
-	createTimer();
+	mTimerFd = timerfd_create(CLOCK_MONOTONIC, 0);
+	if (mTimerFd < 0) {
+		throw SystemError("Failed to create timerfd");
+	}
 }
 
 
 RealTimeSimulation::~RealTimeSimulation()
 {
-	destroyTimer();
-}
-
-#ifdef RTMETHOD_EXCEPTIONS
-void RealTimeSimulation::alarmHandler(int sig, siginfo_t* si, void* ctx)
-{
-	auto sim = static_cast<RealTimeSimulation*>(si->si_value.sival_ptr);
-
-	/* only throw an exception if we're actually behind */
-	if (++sim->mTimerCount * sim->mTimeStep > sim->mTime)
-		throw TimerExpiredException();
-}
-#endif
-
-void RealTimeSimulation::createTimer()
-{
-#ifdef RTMETHOD_TIMERFD
-	mTimerFd = timerfd_create(CLOCK_MONOTONIC, 0);
-	if (mTimerFd < 0) {
-		throw SystemError("Failed to create timerfd");
-	}
-#elif defined(RTMETHOD_EXCEPTIONS)
-	struct sigaction sa;
-	struct sigevent evp;
-
-	sa.sa_sigaction = RealTimeSimulation::alarmHandler;
-	sa.sa_flags = SA_SIGINFO;
-	sigemptyset(&sa.sa_mask);
-
-	if (sigaction(SIGALRM, &sa, NULL)) {
-		throw SystemError("Failed to establish SIGALRM handler");
-	}
-
-	evp.sigev_notify = SIGEV_SIGNAL;
-	evp.sigev_signo = SIGALRM;
-	evp.sigev_value.sival_ptr = this;
-
-	if (timer_create(CLOCK_MONOTONIC, &evp, &timer)) {
-		throw SystemError("Failed to create timerfd");
-	}
-
-	sigemptyset(&mAlrmset);
-	sigaddset(&mAlrmset, SIGALRM);
-#else
-  #error Unkown real-time execution mode
-#endif
-}
-
-void RealTimeSimulation::destroyTimer()
-{
-#ifdef RTMETHOD_TIMERFD
 	close(mTimerFd);
-#elif defined(RTMETHOD_EXCEPTIONS)
-	timer_delete(mTimer);
-#else
-  #error Unkown real-time execution mode
-#endif
 }
 
 void RealTimeSimulation::startTimer(const StartClock::time_point &startAt)
@@ -123,17 +73,9 @@ void RealTimeSimulation::startTimer(const StartClock::time_point &startAt)
 	ts.it_interval.tv_sec  = (time_t) mTimeStep;
 	ts.it_interval.tv_nsec = (long) (mTimeStep * 1e9);
 
-#ifdef RTMETHOD_TIMERFD
 	if (timerfd_settime(mTimerFd, TFD_TIMER_ABSTIME, &ts, 0) < 0) {
 		throw SystemError("Failed to arm timerfd");
 	}
-#elif defined(RTMETHOD_EXCEPTIONS)
-	if (timer_settime(mTimer, TIMER_ABSTIME, &ts, NULL)) {
-		throw SystemError("Failed to arm timer");
-	}
-#else
-  #error Unkown real-time execution mode
-#endif
 }
 
 void RealTimeSimulation::stopTimer()
@@ -142,17 +84,9 @@ void RealTimeSimulation::stopTimer()
 
 	ts.it_value = { 0, 0 };
 
-#ifdef RTMETHOD_TIMERFD
 	if (timerfd_settime(mTimerFd, 0, &ts, 0) < 0) {
 		throw SystemError("Failed to arm timerfd");
 	}
-#elif defined(RTMETHOD_EXCEPTIONS)
-	if (timer_settime(mTimer, 0, &ts, NULL)) {
-		throw SystemError("Failed to arm timer");
-	}
-#else
-  #error Unkown real-time execution mode
-#endif
 }
 
 void RealTimeSimulation::run(const StartClock::duration &startIn)
@@ -192,7 +126,6 @@ void RealTimeSimulation::run(const StartClock::time_point &startAt)
 	// main loop
 	Int steps = 0;
 	do {
-#ifdef RTMETHOD_TIMERFD
 		uint64_t overrun;
 		step();
 
@@ -203,20 +136,7 @@ void RealTimeSimulation::run(const StartClock::time_point &startAt)
 			mLog.Log(Logger::Level::WARN) << "Overrun of "<< overrun-1 << " timesteps at " << mTime << std::endl;
 			mOverruns =+ overrun - 1;
 		}
-#elif defined(RTMETHOD_EXCEPTIONS)
-		try {
-			step();
-			sigwait(&alrmset, &sig);
-		}
-		catch (TimerExpiredException& e) {
-			// TODO: TimerExpired does not actually indicate an overrun
-			//       It rather signals that the timestep is coming to and end.
-			//mLog.Log(Logger::Level::WARN) << "Overrun at " << mTime << std::endl;
-			//mOverruns = timer_getoverrun(mTimer);
-		}
-#else
-  #error Unkown real-time execution mode
-#endif
+
 		if (steps++ == 0)
 			std::cout << Logger::prefix() << "Simulation started!" << std::endl;
 

@@ -28,15 +28,7 @@
 #include <dpsim/Config.h>
 #include <dpsim/Simulation.h>
 
-#define RTMETHOD_TIMERFD
-//#define RTMETHOD_EXCEPTIONS
-
 namespace DPsim {
-
-#ifdef RTMETHOD_EXCEPTIONS
-	class TimerExpiredException {
-	};
-#endif
 
 	class RealTimeSimulation : public Simulation {
 
@@ -49,16 +41,7 @@ namespace DPsim {
 		Real mTimeStep;
 		Int mOverruns;
 
-#ifdef RTMETHOD_EXCEPTIONS
-		static void alarmHandler(int, siginfo_t*, void*);
-		timer_t mTimer;
-		sigset_t alrmset;
-		uint64_t mTimerCount = 0;
-#elif defined(RTMETHOD_TIMERFD)
 		int mTimerFd;
-#else
-  #error Unkown real-time execution mode
-#endif
 
 		/** Start the real-time timer.
 		 *
