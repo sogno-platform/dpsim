@@ -91,7 +91,7 @@ void MnaSolver<VarType>::initialize(CPS::SystemTopology system) {
 
     // Logging
     for (auto comp : system.mComponents)
-        mLog.info() << "Added " << comp->getType() << " '" << comp->getName() << "' to simulation." << std::endl;
+        mLog.info() << "Added " << comp->type() << " '" << comp->getName() << "' to simulation." << std::endl;
 
     mLog.info() << "System matrix:" << std::endl;
     mLog.info(mSystemMatrix);

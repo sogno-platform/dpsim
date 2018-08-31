@@ -49,7 +49,7 @@ PyObject* DPsim::Python::Components::LinePi<CPS::DP::Ph1::PiLine>(PyObject* self
 
         Component *pyComp = PyObject_New(Component, &DPsim::Python::ComponentType);
         Component::init(pyComp);
-        pyComp->comp = std::make_shared<CPS::DP::Ph1::PiLine>(name, nodes, resistance, inductance, capacitance, conductance);
+        pyComp->comp = std::make_shared<CPS::DP::Ph1::PiLine>(name);
 
         return (PyObject*) pyComp;
     } catch (...) {

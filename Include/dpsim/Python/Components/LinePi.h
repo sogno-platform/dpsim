@@ -23,7 +23,7 @@
 
 #include "Python/Component.h"
 #include "Python/Node.h"
-#include "cps/DP/DP_Ph1_Line_Pi.h"
+#include "cps/DP/DP_Ph1_PiLine.h"
 
 namespace DPsim {
 namespace Python {
