@@ -21,11 +21,11 @@
 
 #pragma once
 
-#include "Python/Components/LinePi.h"
-#include "Python/Components/LoadPQ.h"
-#include "Python/Components/Capacitor.h"
-#include "Python/Components/Resistor.h"
-#include "Python/Components/Inductor.h"
-#include "Python/Components/CurrentSource.h"
-#include "Python/Components/VoltageSource.h"
-#include "Python/Components/VoltageSourceNorton.h"
+#include <dpsim/Python/Components/LinePi.h>
+#include <dpsim/Python/Components/LoadPQ.h>
+#include <dpsim/Python/Components/Capacitor.h>
+#include <dpsim/Python/Components/Resistor.h>
+#include <dpsim/Python/Components/Inductor.h>
+#include <dpsim/Python/Components/CurrentSource.h>
+#include <dpsim/Python/Components/VoltageSource.h>
+#include <dpsim/Python/Components/VoltageSourceNorton.h>

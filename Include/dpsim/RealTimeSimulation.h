@@ -25,8 +25,8 @@
 
 #include <chrono>
 
-#include "Config.h"
-#include "Simulation.h"
+#include <dpsim/Config.h>
+#include <dpsim/Simulation.h>
 
 #define RTMETHOD_TIMERFD
 //#define RTMETHOD_EXCEPTIONS

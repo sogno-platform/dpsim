@@ -23,7 +23,7 @@
 #pragma once
 
 #include <vector>
-#include "Config.h"
+#include <dpsim/Config.h>
 #include <cps/Definitions.h>
 #include <cps/Logger.h>
 

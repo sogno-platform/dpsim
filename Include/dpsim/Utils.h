@@ -23,8 +23,8 @@
 
 #include <vector>
 
-#include "RealTimeSimulation.h"
-#include "Solver.h"
+#include <dpsim/RealTimeSimulation.h>
+#include <dpsim/Solver.h>
 #include <cps/Logger.h>
 
 namespace DPsim {

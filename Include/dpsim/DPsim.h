@@ -19,12 +19,12 @@
 * along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *********************************************************************************/
 
-#include "Config.h"
-#include "Utils.h"
-#include "Simulation.h"
+#include <dpsim/Config.h>
+#include <dpsim/Utils.h>
+#include <dpsim/Simulation.h>
 
 #ifdef WITH_RT
-  #include "RealTimeSimulation.h"
+  #include <dpsim/RealTimeSimulation.h>
 #endif
 
 #include <cps/Components.h>

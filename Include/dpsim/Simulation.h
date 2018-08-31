@@ -26,9 +26,9 @@
 #include <list>
 #include <cstdint>
 
-#include "Config.h"
-#include "MNASolver.h"
-//#include "DAESolver.h"
+#include <dpsim/Config.h>
+#include <dpsim/MNASolver.h>
+//#include <dpsim/DAESolver.h>
 #include <cps/Definitions.h>
 #include <cps/PowerComponent.h>
 #include <cps/Logger.h>

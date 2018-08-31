@@ -27,7 +27,7 @@
 #include <unordered_map>
 #include <bitset>
 
-#include "Solver.h"
+#include <dpsim/Solver.h>
 #include <cps/Solver/MNASwitchInterface.h>
 #ifdef WITH_CIM
 #include <cps/CIM/Reader.h>
