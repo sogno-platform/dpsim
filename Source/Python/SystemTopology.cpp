@@ -98,7 +98,7 @@ int Python::SystemTopology::init(Python::SystemTopology *self, PyObject *args, P
 		return -1;
 	}
 
-	CPS::ComponentBase::List compList;
+	CPS::Component::List compList;
 	CPS::TopologicalNode::List nodeList;
 
 	if (pyNodeList) {

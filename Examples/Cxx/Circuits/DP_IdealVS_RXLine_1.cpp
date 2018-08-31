@@ -34,7 +34,7 @@ int main(int argc, char* argv[]) {
 	auto line = RxLine::make("Line_1", Node::List{n1, n2}, 0.1, 0.001, RxLine::Node3);
 	auto r = Resistor::make("r_1", Node::List{n2, GND}, 20);
 
-	auto sys = SystemTopology(50, Node::List{n1, n2}, ComponentBase::List{vs, line, r});
+	auto sys = SystemTopology(50, Node::List{n1, n2}, Component::List{vs, line, r});
 
 	// Define simulation scenario
 	Real timeStep = 0.00001;

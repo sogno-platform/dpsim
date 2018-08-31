@@ -80,13 +80,13 @@ int main(int argc, char* argv[])
 
 		// Declare circuit components
 		String mGeneratorName = "EMT_VBR_1" + std::to_string(dt);
-		ComponentBase::Ptr gen = SynchronGeneratorVBR::make(mGeneratorName, 0, 1, 2,
+		Component::Ptr gen = SynchronGeneratorVBR::make(mGeneratorName, 0, 1, 2,
 				nomPower, nomPhPhVoltRMS, nomFreq, poleNum, nomFieldCurr,
 				Rs, Ll, Lmd, Lmd0, Lmq, Lmq0, Rfd, Llfd, Rkd, Llkd, Rkq1, Llkq1, Rkq2, Llkq2, H, Logger::Level::INFO);
 
 		// Declare circuit components
 		String mGeneratorName2 = "EMT_VBR_2" + std::to_string(dt);
-		ComponentBase::Ptr gen2 = SynchronGeneratorVBR::make(mGeneratorName2, 12, 13, 14,
+		Component::Ptr gen2 = SynchronGeneratorVBR::make(mGeneratorName2, 12, 13, 14,
 				nomPower, nomPhPhVoltRMS, nomFreq, poleNum, nomFieldCurr,
 				Rs, Ll, Lmd, Lmd0, Lmq, Lmq0, Rfd, Llfd, Rkd, Llkd, Rkq1, Llkq1, Rkq2, Llkq2, H, Logger::Level::INFO);
 
@@ -96,39 +96,39 @@ int main(int argc, char* argv[])
 		Real Res = 1e10;
 
 		//Line Resistance
-		ComponentBase::Ptr LineR1 = Resistor::make("LineR1", 0, 3, lineRes);
-		ComponentBase::Ptr LineR2 = Resistor::make("LineR2", 1, 4, lineRes);
-		ComponentBase::Ptr LineR3 = Resistor::make("LineR3", 2, 5, lineRes);
+		Component::Ptr LineR1 = Resistor::make("LineR1", 0, 3, lineRes);
+		Component::Ptr LineR2 = Resistor::make("LineR2", 1, 4, lineRes);
+		Component::Ptr LineR3 = Resistor::make("LineR3", 2, 5, lineRes);
 
 		//Line Resistance
-		ComponentBase::Ptr Res1 = Resistor::make("Res1", 0, 6, Res);
-		ComponentBase::Ptr Res2 = Resistor::make("Res2", 1, 7, Res);
-		ComponentBase::Ptr Res3 = Resistor::make("Res3", 2, 8, Res);
+		Component::Ptr Res1 = Resistor::make("Res1", 0, 6, Res);
+		Component::Ptr Res2 = Resistor::make("Res2", 1, 7, Res);
+		Component::Ptr Res3 = Resistor::make("Res3", 2, 8, Res);
 
 		//Line Inductance
-		ComponentBase::Ptr LineL1 = Inductor::make("LineL1", 3, 6, lindeInd);
-		ComponentBase::Ptr LineL2 = Inductor::make("LineL2", 4, 7, lindeInd);
-		ComponentBase::Ptr LineL3 = Inductor::make("LineL3", 5, 8, lindeInd);
+		Component::Ptr LineL1 = Inductor::make("LineL1", 3, 6, lindeInd);
+		Component::Ptr LineL2 = Inductor::make("LineL2", 4, 7, lindeInd);
+		Component::Ptr LineL3 = Inductor::make("LineL3", 5, 8, lindeInd);
 
 		//Load
-		ComponentBase::Ptr r1 = Resistor::make("r1", 6, -1, loadRes);
-		ComponentBase::Ptr r2 = Resistor::make("r2", 7, -1, loadRes);
-		ComponentBase::Ptr r3 = Resistor::make("r3", 8, -1, loadRes);
+		Component::Ptr r1 = Resistor::make("r1", 6, -1, loadRes);
+		Component::Ptr r2 = Resistor::make("r2", 7, -1, loadRes);
+		Component::Ptr r3 = Resistor::make("r3", 8, -1, loadRes);
 
 		//Line Inductance2
-		ComponentBase::Ptr LineL12 = Inductor::make("LineL12", 6, 9, lindeInd);
-		ComponentBase::Ptr LineL22 = Inductor::make("LineL22", 7, 10, lindeInd);
-		ComponentBase::Ptr LineL32 = Inductor::make("LineL32", 8, 11, lindeInd);
+		Component::Ptr LineL12 = Inductor::make("LineL12", 6, 9, lindeInd);
+		Component::Ptr LineL22 = Inductor::make("LineL22", 7, 10, lindeInd);
+		Component::Ptr LineL32 = Inductor::make("LineL32", 8, 11, lindeInd);
 
 		//Line Resistance2
-		ComponentBase::Ptr LineR12 = Resistor::make("LineR12", 9, 12, lineRes);
-		ComponentBase::Ptr LineR22 = Resistor::make("LineR22", 10, 13, lineRes);
-		ComponentBase::Ptr LineR32 = Resistor::make("LineR32", 11, 14, lineRes);
+		Component::Ptr LineR12 = Resistor::make("LineR12", 9, 12, lineRes);
+		Component::Ptr LineR22 = Resistor::make("LineR22", 10, 13, lineRes);
+		Component::Ptr LineR32 = Resistor::make("LineR32", 11, 14, lineRes);
 
 		//Line Resistance
-		ComponentBase::Ptr Res12 = Resistor::make("Res12", 6, 12, Res);
-		ComponentBase::Ptr Res22 = Resistor::make("Res22", 7, 13, Res);
-		ComponentBase::Ptr Res32 = Resistor::make("Res32", 8, 14, Res);
+		Component::Ptr Res12 = Resistor::make("Res12", 6, 12, Res);
+		Component::Ptr Res22 = Resistor::make("Res22", 7, 13, Res);
+		Component::Ptr Res32 = Resistor::make("Res32", 8, 14, Res);
 
 		SystemTopology system(60);
 		system.mComponents = { gen, gen2, LineR1, LineR2, LineR3, LineL1, LineL2, LineL3, r1, r2, r3,
@@ -136,9 +136,9 @@ int main(int argc, char* argv[])
 
 		// Declare circuit components for resistance change
 		Real breakerRes = 9.6 + 0.0001;
-		ComponentBase::Ptr rBreaker1 = Resistor::make("rbreak1", 6, -1, breakerRes);
-		ComponentBase::Ptr rBreaker2 = Resistor::make("rbreak2", 7, -1, breakerRes);
-		ComponentBase::Ptr rBreaker3 = Resistor::make("rbreak3", 8, -1, breakerRes);
+		Component::Ptr rBreaker1 = Resistor::make("rbreak1", 6, -1, breakerRes);
+		Component::Ptr rBreaker2 = Resistor::make("rbreak2", 7, -1, breakerRes);
+		Component::Ptr rBreaker3 = Resistor::make("rbreak3", 8, -1, breakerRes);
 		
 		SystemTopology compsBreakerOn(60);
 		compsBreakerOn.mComponents = { gen, gen2, LineR1, LineR2, LineR3, LineL1, LineL2, LineL3,

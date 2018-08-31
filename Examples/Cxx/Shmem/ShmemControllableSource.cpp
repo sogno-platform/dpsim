@@ -50,7 +50,7 @@ int main(int argc, char *argv[]) {
 	intf.addImport(ecs->findAttribute<Complex>("current_ref"), 1.0, 0, 1);
 	intf.addExport(ecs->findAttribute<Complex>("comp_voltage"), 1.0, 0, 1);
 
-	auto sys = SystemTopology(50, Node::List{n1}, ComponentBase::List{ecs, r1});
+	auto sys = SystemTopology(50, Node::List{n1}, Component::List{ecs, r1});
 	auto sim = RealTimeSimulation(simName, sys, timeStep, finalTime,
 	Domain::DP, Solver::Type::MNA, Logger::Level::INFO);
 

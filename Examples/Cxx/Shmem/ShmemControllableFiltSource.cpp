@@ -75,7 +75,7 @@ int main(int argc, char *argv[]) {
 	intf.addImport(filtP->findAttribute<Real>("input"), 1.0, 0);
 	intf.addImport(filtQ->findAttribute<Real>("input"), 1.0, 1);
 
-	auto sys = SystemTopology(50, Node::List{n1}, ComponentBase::List{ecs, r1, load, filtP, filtQ});
+	auto sys = SystemTopology(50, Node::List{n1}, Component::List{ecs, r1, load, filtP, filtQ});
 	auto sim = RealTimeSimulation(simName, sys, timeStep, finalTime,
 	Domain::DP, Solver::Type::MNA, Logger::Level::INFO);
 

@@ -42,7 +42,7 @@ int main(int argc, char* argv[])
 
 	String simName = "RT_DP_ResVS_RL1_" + std::to_string(timeStep);
 
-	auto sys = SystemTopology(50, Node::List{GND, n1, n2, n3}, ComponentBase::List{vs, rl, ll, rL});
+	auto sys = SystemTopology(50, Node::List{GND, n1, n2, n3}, Component::List{vs, rl, ll, rL});
 	auto sim = RealTimeSimulation(simName, sys, timeStep, 1.0);
 
 	auto startIn = std::chrono::seconds(5);

@@ -26,7 +26,7 @@ using namespace CPS::DP::Ph1;
 
 int main(int argc, char *argv[])
 {
-	ComponentBase::List comps, comps2;
+	Component::List comps, comps2;
 	Node::List nodes;
 
 	Interface::Config conf;
@@ -64,7 +64,7 @@ int main(int argc, char *argv[])
 		auto l1 = Inductor::make("l_1", Node::List{n1, n2}, 0.1);
 		auto r1 = Resistor::make("r_1", Node::List{n2, n3}, 1);
 
-		comps = ComponentBase::List{evs, vs, l1, r1};
+		comps = Component::List{evs, vs, l1, r1};
 		nodes = Node::List{GND, n1, n2, n3};
 
 		intf.addImport(evs->findAttribute<Complex>("voltage_ref"), 1.0, 0, 1);
@@ -79,8 +79,8 @@ int main(int argc, char *argv[])
 		auto r2A = Resistor::make("r_2", Node::List{GND, n4}, 10);
 		auto r2B = Resistor::make("r_2", Node::List{GND, n4}, 8);
 
-		comps = ComponentBase::List{ecs, r2A};
-		comps2 = ComponentBase::List{ecs, r2B};
+		comps = Component::List{ecs, r2A};
+		comps2 = Component::List{ecs, r2B};
 		nodes = Node::List{GND, n4};
 
 		intf.addImport(ecs->findAttribute<Complex>("current_ref"), 1.0, 0, 1);

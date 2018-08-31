@@ -41,8 +41,8 @@ int main(int argc, char* argv[])
 
 	auto nodes = Node::List{GND, n1, n2, n3};
 
-	auto sys1 = SystemTopology(50, nodes, ComponentBase::List{vs, l1, r1, r2A});
-	auto sys2 = SystemTopology(50, nodes, ComponentBase::List{vs, l1, r1, r2B});
+	auto sys1 = SystemTopology(50, nodes, Component::List{vs, l1, r1, r2A});
+	auto sys2 = SystemTopology(50, nodes, Component::List{vs, l1, r1, r2B});
 
 	auto sim = Simulation("ShmemDistributedRef", sys1, 0.001, 20);
 	sim.addSystemTopology(sys2);

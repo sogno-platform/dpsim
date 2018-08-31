@@ -42,7 +42,7 @@ int main(int argc, char* argv[])
 	auto ll =  Inductor::make("l_line", Node::List{n3, n4}, 1);
 	auto rL =  Resistor::make("r_load", Node::List{n4, GND}, 1000);
 
-	auto sys = SystemTopology(50, Node::List{GND, n1, n2, n3, n4}, ComponentBase::List{evs, rs, rl, ll, rL});
+	auto sys = SystemTopology(50, Node::List{GND, n1, n2, n3, n4}, Component::List{evs, rs, rl, ll, rL});
 
 	auto intf = Interface("/villas1-in", "/villas1-out");
 	intf.addImport(evs->findAttribute<Complex>("voltage_ref"), 1.0, 0, 1);

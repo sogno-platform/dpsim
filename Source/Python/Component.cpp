@@ -38,7 +38,7 @@ PyObject* Python::Component::newfunc(PyTypeObject* type, PyObject *args, PyObjec
 
 void Python::Component::init(Component* self)
 {
-	new (&self->comp) CPS::ComponentBase::Ptr(nullptr);
+	new (&self->comp) CPS::Component::Ptr(nullptr);
 	new (&self->refs) std::vector<PyObject *>();
 }
 
@@ -49,7 +49,7 @@ void Python::Component::dealloc(Python::Component* self)
 	}
 
 	// This is a workaround for a compiler bug: https://stackoverflow.com/a/42647153/8178705
-	using Ptr = CPS::ComponentBase::Ptr;
+	using Ptr = CPS::Component::Ptr;
 	using PyObjectsList = std::vector<PyObject *>;
 
 	self->comp.~Ptr();
@@ -119,9 +119,9 @@ int Python::Component::setattr(Python::Component* self, char* name, PyObject *v)
 	return 0;
 }
 
-CPS::ComponentBase::List Python::compsFromPython(PyObject* list)
+CPS::Component::List Python::compsFromPython(PyObject* list)
 {
-	CPS::ComponentBase::List comps;
+	CPS::Component::List comps;
 
 	if (!PyList_Check(list))
 		throw std::invalid_argument("argument must be a list");

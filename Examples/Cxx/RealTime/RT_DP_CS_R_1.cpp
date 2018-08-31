@@ -33,7 +33,7 @@ int main(int argc, char* argv[]) {
 	auto r1 = Resistor::make("r_1", Node::List{GND, n1}, 1);
 
 	// Define system topology
-	auto sys = SystemTopology(50, Node::List{GND, n1}, ComponentBase::List{cs, r1});
+	auto sys = SystemTopology(50, Node::List{GND, n1}, Component::List{cs, r1});
 
 	// Define simulation scenario
 	Real timeStep = 0.001;

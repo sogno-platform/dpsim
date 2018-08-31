@@ -71,7 +71,7 @@ int main(int argc, char *argv[]) {
 		intf.addImport(evs->findAttribute<Complex>("voltage_ref"), 1.0, 0, 1);
 		intf.addExport(evs->findAttribute<Complex>("comp_current"), 1.0, 0, 1);
 
-		auto sys = SystemTopology(50, Node::List{n1, n2}, ComponentBase::List{evs, vs1, r01});
+		auto sys = SystemTopology(50, Node::List{n1, n2}, Component::List{evs, vs1, r01});
 		auto sim = Simulation("ShmemDistributedDirect_1", sys, timeStep, 0.1);
 
 		sim.addInterface(&intf);
@@ -91,7 +91,7 @@ int main(int argc, char *argv[]) {
 		intf.addExport(ecs->findAttribute<Complex>("comp_voltage"), 1.0, 0, 1);
 		//intf.addImport(ecs_switch->findAttribute('CurrentRef'), 1.0, 2, 3);
 
-		auto sys = SystemTopology(50, Node::List{n1}, ComponentBase::List{ecs, rgnd0});
+		auto sys = SystemTopology(50, Node::List{n1}, Component::List{ecs, rgnd0});
 		auto sim = Simulation("ShmemDistributedDirect_2", sys, timeStep, 0.1);
 
 		sim.addInterface(&intf);

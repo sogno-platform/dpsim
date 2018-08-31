@@ -27,7 +27,7 @@ using namespace CPS::DP::Ph1;
 int main(int argc, char* argv[])
 {
 	// Same circuit as above, but now with realtime support.
-	ComponentBase::List comps;
+	Component::List comps;
 
 	Interface::Config conf;
 	conf.samplelen = 4;
@@ -52,7 +52,7 @@ int main(int argc, char* argv[])
 	intf.addExport(evs->findAttribute<Complex>("comp_current"), 1.0,  0, 1);
 
 	Real timeStep = 0.001;
-	auto sys = SystemTopology(50, Node::List{GND, n1, n2, n3, n4}, ComponentBase::List{evs, rs, rl, ll, rL});
+	auto sys = SystemTopology(50, Node::List{GND, n1, n2, n3, n4}, Component::List{evs, rs, rl, ll, rL});
 	auto sim = RealTimeSimulation("ShmemRealTime", sys, timeStep, 5.0);
 
 	sim.addInterface(&intf, false, true);

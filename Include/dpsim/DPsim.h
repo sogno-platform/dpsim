@@ -42,7 +42,7 @@ namespace DPsim {
   // #### CPS for users ####
   using SystemTopology = CPS::SystemTopology;
   using SystemNodeList = CPS::TopologicalNode::List;
-  using SystemComponentList = CPS::ComponentBase::List;
+  using SystemComponentList = CPS::Component::List;
   using Logger = CPS::Logger;
   using Domain = CPS::Domain;
   using PhaseType = CPS::PhaseType;

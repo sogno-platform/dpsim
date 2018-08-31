@@ -41,7 +41,7 @@ namespace Python {
 	struct Component {
 		PyObject_HEAD
 
-		CPS::ComponentBase::Ptr comp;
+		CPS::Component::Ptr comp;
 
 		// List of additional objects that aren't directly used from Simulation
 		// methods, but that a reference has be kept to to avoid them from being
@@ -61,6 +61,6 @@ namespace Python {
 
 	extern PyTypeObject ComponentType;
 
-	CPS::ComponentBase::List compsFromPython(PyObject* list);
+	CPS::Component::List compsFromPython(PyObject* list);
 }
 }
