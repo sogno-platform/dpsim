@@ -27,7 +27,7 @@
 #include <cstdint>
 
 #include "Config.h"
-#include "MNA_Solver.h"
+#include "MNASolver.h"
 //#include "DAESolver.h"
 #include "cps/Definitions.h"
 #include <cps/PowerComponent.h>

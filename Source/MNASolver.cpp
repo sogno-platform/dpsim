@@ -19,7 +19,7 @@
 * along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *********************************************************************************/
 
-#include "MNA_Solver.h"
+#include "MNASolver.h"
 
 using namespace DPsim;
 using namespace CPS;
