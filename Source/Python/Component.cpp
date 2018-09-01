@@ -154,13 +154,13 @@ PyObject* Python::Component::connect(Component* self, PyObject* args)
 		if (auto emtComp = std::dynamic_pointer_cast<EMTComponent>(self->comp)) {
 			auto nodes = Python::Node<CPS::Real>::fromPython(pyNodes);
 
-			emtComp->setNodes(nodes);
+			emtComp->connect(nodes);
 
 		}
 		else if (auto dpComp = std::dynamic_pointer_cast<DPComponent>(self->comp)) {
 			auto nodes = Python::Node<CPS::Complex>::fromPython(pyNodes);
 
-			dpComp->setNodes(nodes);
+			dpComp->connect(nodes);
 		}
 		else {
 			PyErr_SetString(PyExc_TypeError, "Failed to connect nodes");
