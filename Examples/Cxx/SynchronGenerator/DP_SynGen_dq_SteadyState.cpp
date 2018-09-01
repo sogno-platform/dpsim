@@ -31,7 +31,7 @@ int main(int argc, char* argv[]) {
 	Real timeStep = 0.0005;
 	Real finalTime = 0.03;
 	String name = "DP_SynGen_dq_SteadyState";
-    // Define machine parameters in per unit
+	// Define machine parameters in per unit
 	Real nomPower = 555e6;
 	Real nomPhPhVoltRMS = 24e3;
 	Real nomFreq = 60;
@@ -50,15 +50,16 @@ int main(int argc, char* argv[]) {
 	Real Llkq1 = 0.7252;
 	Real Rkq2 = 0.0237;
 	Real Llkq2 = 0.125;
-    // Initialization parameters
-    Real initActivePower = 300e6;
+	// Initialization parameters
+	Real initActivePower = 300e6;
 	Real initReactivePower = 0;
+	Real initMechPower = 300e6;
 	Real initTerminalVolt = 24000 / sqrt(3) * sqrt(2);
 	Real initVoltAngle = -PI / 2;
 	Real fieldVoltage = 7.0821;
-	Real mechPower = 300e6;
-    // Define grid parameters
-    Real Rload = 1.92;
+	
+	// Define grid parameters
+	Real Rload = 1.92;
 
 	// Nodes
 	std::vector<Complex> initVoltN1 = std::vector<Complex>({

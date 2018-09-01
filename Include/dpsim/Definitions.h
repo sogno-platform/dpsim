@@ -22,13 +22,13 @@
 #include <cps/Definitions.h>
 
 namespace DPsim {
-    // #### Types ####
-    using Real = CPS::Real;
-    using Complex = CPS::Complex;
-    using String = CPS::String;
-    using Bool = CPS::Bool;
-    using Int = CPS::Int;
-    using UInt = CPS::UInt;
-    using Matrix = CPS::Matrix;
-    using MatrixComp = CPS::MatrixComp;
+	// #### Types ####
+	using Real = CPS::Real;
+	using Complex = CPS::Complex;
+	using String = CPS::String;
+	using Bool = CPS::Bool;
+	using Int = CPS::Int;
+	using UInt = CPS::UInt;
+	using Matrix = CPS::Matrix;
+	using MatrixComp = CPS::MatrixComp;
 }

@@ -30,7 +30,7 @@ int main(int argc, char* argv[]) {
 	Real timeStep = 0.0005;
 	Real finalTime = 0.03;
 	String name = "DP_SynGen_TrStab_StState";
-    // Define machine parameters in per unit
+	// Define machine parameters in per unit
 	Real nomPower = 555e6;
 	Real nomPhPhVoltRMS = 24e3;
 	Real nomFreq = 60;	
@@ -38,14 +38,14 @@ int main(int argc, char* argv[]) {
 	Real Ll = 0.15;
 	Real Lmd = 1.6599;	
 	Real Llfd = 0.1648;
-    // Initialization parameters
+	// Initialization parameters
 	Complex initElecPower = Complex(300e6, 0);
 	Real initTerminalVolt = 24000;
 	Real initVoltAngle = 0;
 	Complex initVoltage = Complex(initTerminalVolt * cos(initVoltAngle), initTerminalVolt * sin(initVoltAngle));
 	Real mechPower = 300e6;
-    // Define grid parameters
-    Real Rload = 1.92;
+	// Define grid parameters
+	Real Rload = 1.92;
 
 	// Nodes
 	auto n1 = Node::make("n1", PhaseType::Single, std::vector<Complex>{ initVoltage });
@@ -53,7 +53,7 @@ int main(int argc, char* argv[]) {
 	// Components
 	auto gen = Ph1::SynchronGeneratorTrStab::make("DP_SynGen_TrStab_StState_SynGen", Logger::Level::DEBUG);  
 	gen->setParameters(nomPower, nomPhPhVoltRMS, nomFreq, Ll, Lmd, Llfd, H, initElecPower, mechPower);
-    gen->connect({n1});
+   	gen->connect({n1});
 	
 	auto res = Ph1::Resistor::make("DP_SynGen_TrStab_StState_Rl", Logger::Level::DEBUG);
 	res->setParameters(Rload);

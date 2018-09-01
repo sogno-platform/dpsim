@@ -31,7 +31,7 @@ int main(int argc, char* argv[]) {
 	Real timeStep = 0.00005;
 	Real finalTime = 0.1;
 	String name = "DP_SynchronGenerator_dq_ThreePhFault";
-    // Define machine parameters in per unit
+	// Define machine parameters in per unit
 	Real nomPower = 555e6;
 	Real nomPhPhVoltRMS = 24e3;
 	Real nomFreq = 60;
@@ -50,15 +50,15 @@ int main(int argc, char* argv[]) {
 	Real Llkq1 = 0.7252;
 	Real Rkq2 = 0.0237;
 	Real Llkq2 = 0.125;
-    // Initialization parameters
-    Real initActivePower = 300e6;
+	// Initialization parameters
+	Real initActivePower = 300e6;
 	Real initReactivePower = 0;
 	Real initTerminalVolt = 24000 / sqrt(3) * sqrt(2);
 	Real initVoltAngle = -PI / 2;
 	Real fieldVoltage = 7.0821;
 	Real mechPower = 300e6;
-    // Define grid parameters
-    Real Rload = 1.92;
+	// Define grid parameters
+	Real Rload = 1.92;
 	Real BreakerOpen = 1e6;
 	Real BreakerClosed = 1e-6;
 
@@ -74,7 +74,7 @@ int main(int argc, char* argv[]) {
 	gen->setParameters(nomPower, nomPhPhVoltRMS, nomFreq, poleNum, nomFieldCurr,
 		Rs, Ll, Lmd, Lmq, Rfd, Llfd, Rkd, Llkd, Rkq1, Llkq1, Rkq2, Llkq2, H, 
 		initActivePower, initReactivePower, initTerminalVolt, initVoltAngle, fieldVoltage, mechPower);
-    gen->connect({n1});
+	gen->connect({n1});
 	
 	auto res = Ph3::SeriesResistor::make("R_load", Node::List{Node::GND, n1}, Rload);
 

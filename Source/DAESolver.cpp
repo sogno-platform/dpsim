@@ -117,7 +117,7 @@ void DAESolver::initialize(Real t0)
 			throw CPS::Exception();
 
 		mResidualFunctions.push_back([daeComp](double ttime, const double state[], const double dstate_dt[], double resid[], std::vector<int>& off) {
-    			daeComp->daeResidual(ttime, state, dstate_dt, resid, off);
+			daeComp->daeResidual(ttime, state, dstate_dt, resid, off);
 		});
 	}	
 	
