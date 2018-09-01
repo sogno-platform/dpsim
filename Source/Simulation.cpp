@@ -47,8 +47,8 @@ Simulation::Simulation(String name,
 	mLogLevel(logLevel),
 	mPipe{-1, -1}
 {
-	mAttributes["name"] = Attribute<String>::make(&mName, Flags::read);
-	mAttributes["final_time"] = Attribute<Real>::make(&mFinalTime, Flags::read);
+	addAttribute<String>("name", &mName, Flags::read);
+	addAttribute<Real>("final_time", &mFinalTime, Flags::read);
 }
 
 Simulation::Simulation(String name, SystemTopology system,
