@@ -88,13 +88,13 @@ PyObject* Python::SystemTopology::newfunc(PyTypeObject *type, PyObject *args, Py
 
 int Python::SystemTopology::init(Python::SystemTopology *self, PyObject *args, PyObject *kwds)
 {
-	static char *kwlist[] = {"frequency", "nodes", "components", nullptr};
+	static const char *kwlist[] = {"frequency", "nodes", "components", nullptr};
 	double frequency = 50;
 
 	PyObject *pyCompList = nullptr;
 	PyObject *pyNodeList = nullptr;
 
-	if (!PyArg_ParseTupleAndKeywords(args, kwds, "d|OO", kwlist, &frequency, &pyNodeList, &pyCompList)) {
+	if (!PyArg_ParseTupleAndKeywords(args, kwds, "d|OO", (char **) kwlist, &frequency, &pyNodeList, &pyCompList)) {
 		return -1;
 	}
 

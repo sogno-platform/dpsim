@@ -95,7 +95,7 @@ PyObject* DPsim::Python::Simulation::newfunc(PyTypeObject* type, PyObject *args,
 
 int DPsim::Python::Simulation::init(Simulation* self, PyObject *args, PyObject *kwds)
 {
-	static char *kwlist[] = {"name", "system", "timestep", "duration", "sim_type", "solver_type", nullptr};
+	static const char *kwlist[] = {"name", "system", "timestep", "duration", "sim_type", "solver_type", "rt", "start_sync", nullptr};
 	double timestep = 1e-3, duration = DBL_MAX;
 	const char *name = nullptr;
 	int t = 0, s = 0;
@@ -226,7 +226,7 @@ PyObject*DPsim::Python::Simulation::lvector(PyObject *self, PyObject *args)
 }
 #endif
 
-static const char* DocSimulationPause =
+static const char *DocSimulationPause =
 "pause()\n"
 "Pause the simulation at the next possible time (usually, after finishing the current timestep).\n"
 "\n"
@@ -250,7 +250,7 @@ PyObject* DPsim::Python::Simulation::pause(Simulation *self, PyObject *args)
 	return Py_None;
 }
 
-static const char* DocSimulationStart =
+static const char *DocSimulationStart =
 "start()\n"
 "Start the simulation, or resume it if it has been paused. "
 "The simulation runs in a separate thread, so this method doesn't wait for the "
@@ -284,7 +284,7 @@ PyObject* DPsim::Python::Simulation::start(Simulation *self, PyObject *args)
 	return Py_None;
 }
 
-static const char* DocSimulationStep =
+static const char *DocSimulationStep =
 "step()\n"
 "Perform a single step of the simulation (possibly the first).\n"
 "\n"
@@ -320,7 +320,7 @@ PyObject* DPsim::Python::Simulation::step(Simulation *self, PyObject *args)
 	return Py_None;
 }
 
-static const char* DocSimulationStop =
+static const char *DocSimulationStop =
 "stop()\n"
 "Stop the simulation at the next possible time. The simulation thread is canceled "
 "and the simulation can not be restarted. No-op if the simulation is not running.";
@@ -336,7 +336,7 @@ PyObject* DPsim::Python::Simulation::stop(Simulation *self, PyObject *args)
 	return Py_None;
 }
 
-static const char* DocSimulationWait =
+static const char *DocSimulationWait =
 "wait()\n"
 "Block until the simulation is finished, returning immediately if this is already the case.\n"
 "\n"
@@ -366,7 +366,7 @@ PyObject* DPsim::Python::Simulation::wait(Simulation *self, PyObject *args)
 }
 
 #ifdef __linux__
-static char* DocSimulationEventFD =
+static const char *DocSimulationEventFD =
 "get_eventfd(flags)\n"
 "Return a poll()/select()'able file descriptor which can be used to asynchronously\n"
 "notify the Python code about state changes and other events of the simulation.\n"
@@ -389,7 +389,7 @@ PyObject * DPsim::Python::Simulation::eventFD(Simulation *self, PyObject *args) 
 }
 #endif
 
-static char* DocSimulationState =
+static const char *DocSimulationState =
 "state\n"
 "The current state of simulation.\n";
 PyObject* DPsim::Python::Simulation::state(Simulation *self, void *ctx)
@@ -399,7 +399,7 @@ PyObject* DPsim::Python::Simulation::state(Simulation *self, void *ctx)
 	return Py_BuildValue("i", self->simState);
 }
 
-static char* DocSimulationName =
+static const char *DocSimulationName =
 "name\n"
 "The name of the simulation.";
 PyObject* DPsim::Python::Simulation::name(Simulation *self, void *ctx)
@@ -422,30 +422,29 @@ PyObject* DPsim::Python::Simulation::finalTime(Simulation *self, void *ctx)
 	return Py_BuildValue("f", self->sim->finalTime());
 }
 
-
 static PyGetSetDef Simulation_attrs[] = {
-	{"state",      (getter) DPsim::Python::Simulation::state, nullptr, DocSimulationState, nullptr},
-	{"name",       (getter) DPsim::Python::Simulation::name, nullptr, DocSimulationName, nullptr},
-	{"steps",      (getter) DPsim::Python::Simulation::steps, nullptr, nullptr, nullptr},
-	{"time",       (getter) DPsim::Python::Simulation::time, nullptr, nullptr, nullptr},
-	{"final_time", (getter) DPsim::Python::Simulation::finalTime, nullptr, nullptr, nullptr},
+	{(char *) "state",      (getter) DPsim::Python::Simulation::state, nullptr, (char *) DocSimulationState, nullptr},
+	{(char *) "name",       (getter) DPsim::Python::Simulation::name,  nullptr, (char *) DocSimulationName, nullptr},
+	{(char *) "steps",      (getter) DPsim::Python::Simulation::steps, nullptr, nullptr, nullptr},
+	{(char *) "time",       (getter) DPsim::Python::Simulation::time,  nullptr, nullptr, nullptr},
+	{(char *) "final_time", (getter) DPsim::Python::Simulation::finalTime, nullptr, nullptr, nullptr},
 	{nullptr, nullptr, nullptr, nullptr, nullptr}
 };
 
 static PyMethodDef Simulation_methods[] = {
-	{"add_interface", (PyCFunction) DPsim::Python::Simulation::addInterface, METH_VARARGS, DocSimulationAddInterface},
-	{"pause",         (PyCFunction) DPsim::Python::Simulation::pause, METH_NOARGS, DocSimulationPause},
-	{"start",         (PyCFunction) DPsim::Python::Simulation::start, METH_NOARGS, DocSimulationStart},
-	{"step",          (PyCFunction) DPsim::Python::Simulation::step, METH_NOARGS, DocSimulationStep},
-	{"stop",          (PyCFunction) DPsim::Python::Simulation::stop, METH_NOARGS, DocSimulationStop},
-	{"wait",          (PyCFunction) DPsim::Python::Simulation::wait, METH_NOARGS, DocSimulationWait},
-#ifdef __linux__
-	{"eventfd",       (PyCFunction) DPsim::Python::Simulation::eventFD, METH_VARARGS, DocSimulationEventFD},
+	{"add_interface", (PyCFunction) DPsim::Python::Simulation::addInterface, METH_VARARGS, (char *) DocSimulationAddInterface},
+	{"pause",         (PyCFunction) DPsim::Python::Simulation::pause, METH_NOARGS, (char *) DocSimulationPause},
+	{"start",         (PyCFunction) DPsim::Python::Simulation::start, METH_NOARGS, (char *) DocSimulationStart},
+	{"step",          (PyCFunction) DPsim::Python::Simulation::step, METH_NOARGS,  (char *) DocSimulationStep},
+	{"stop",          (PyCFunction) DPsim::Python::Simulation::stop, METH_NOARGS,  (char *) DocSimulationStop},
+	{"wait",          (PyCFunction) DPsim::Python::Simulation::wait, METH_NOARGS,  (char *) DocSimulationWait},
+#ifdef HAVE_PIPE
+	{"eventfd",       (PyCFunction) DPsim::Python::Simulation::eventFD, METH_VARARGS, (char *) DocSimulationEventFD},
 #endif
 	{nullptr, nullptr, 0, nullptr}
 };
 
-static const char* DocSimulation =
+static const char *DocSimulation =
 "A single simulation.\n"
 "\n"
 "Proper ``__init__`` signature:\n"
@@ -486,7 +485,7 @@ PyTypeObject DPsim::Python::SimulationType = {
 	0,                                       /* tp_setattro */
 	0,                                       /* tp_as_buffer */
 	Py_TPFLAGS_DEFAULT | Py_TPFLAGS_BASETYPE,/* tp_flags */
-	DocSimulation,                           /* tp_doc */
+	(char *) DocSimulation,                  /* tp_doc */
 	0,                                       /* tp_traverse */
 	0,                                       /* tp_clear */
 	0,                                       /* tp_richcompare */
@@ -501,7 +500,7 @@ PyTypeObject DPsim::Python::SimulationType = {
 	0,                                       /* tp_descr_get */
 	0,                                       /* tp_descr_set */
 	0,                                       /* tp_dictoffset */
-	(initproc)DPsim::Python::Simulation::init, /* tp_init */
+	(initproc) DPsim::Python::Simulation::init, /* tp_init */
 	0,                                       /* tp_alloc */
 	DPsim::Python::Simulation::newfunc,      /* tp_new */
 };

@@ -33,12 +33,12 @@ class CommandLineArgs {
 
 protected:
 	struct Argument {
-		char *name;
+		const char *name;
 		int has_arg;
 		int *flag;
 		int val;
-		char *valdesc;
-		char *desc;
+		const char *valdesc;
+		const char *desc;
 	};
 
 	String mProgramName;

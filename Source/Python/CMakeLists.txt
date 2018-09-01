@@ -1,16 +1,9 @@
 execute_process(COMMAND ${PYTHON_EXECUTABLE} -c "import sysconfig; print(sysconfig.get_path('platlib'), end='')" OUTPUT_VARIABLE PYTHON_PKGPATH)
 execute_process(COMMAND ${PYTHON_EXECUTABLE} -c "import sysconfig; print(sysconfig.get_config_var('EXT_SUFFIX'), end='')" OUTPUT_VARIABLE PYTHON_EXT_SUFFIX)
 
-if(NOT WIN32)
-	# we use PyArg_ParseTupleAndKeywords several times, which erroneously accepts
-	# a char* array instead of a const char* array
-	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-write-strings")
-endif()
-
 add_library(dpsim_python SHARED	
 	Module.cpp
 	Simulation.cpp
-
 	Component.cpp
 	Node.cpp
 	Interface.cpp

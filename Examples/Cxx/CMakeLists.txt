@@ -4,9 +4,6 @@ if (NOT WIN32)
 	# needed so CIMParser and arabica (which are first compiled into static libs)
 	# can be included in the .so
 	set(CMAKE_CXX_FLAGS "-fPIC")
-	# we use PyArg_ParseTupleAndKeywords several times, which erroneously accepts
-	# a char* array instead of a const char* array
-	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-write-strings")
 endif()
 
 # targets

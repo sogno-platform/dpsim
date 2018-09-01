@@ -51,12 +51,10 @@ namespace Python {
 
 		static PyObject * gnd(PyObject *self, PyObject *args);
 
-		static char *name;
+		static const char *name;
 		static PyMethodDef methods[];
 		static PyTypeObject type;
-		static char* DocGND;
-		static char* Doc;
-		
+
 		static PyObject *Py_GND;
 
 		static typename CPS::Node<VarType>::List fromPython(PyObject* list);
@@ -65,6 +63,6 @@ namespace Python {
 	template<typename VarType>
 	PyObject *Node<VarType>::Py_GND = NULL;
 
-	CPS::TopologicalNode::List nodesFromPython(PyObject* list);	
+	CPS::TopologicalNode::List nodesFromPython(PyObject* list);
 }
 }

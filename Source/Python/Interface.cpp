@@ -195,14 +195,14 @@ const char* Python::DocOpenInterface =
 PyObject* Python::OpenInterface(PyObject *self, PyObject *args, PyObject *kwds)
 {
 #ifdef WITH_SHMEM
-	static char *kwlist[] = {"wname", "rname", "queuelen", "samplelen", "polling", nullptr};
+	static const char *kwlist[] = {"wname", "rname", "queuelen", "samplelen", "polling", nullptr};
 	CPS::Interface::Config conf;
 	const char *wname, *rname;
 
 	conf.queuelen = 512;
 	conf.samplelen = 64;
 	conf.polling = 0;
-	if (!PyArg_ParseTupleAndKeywords(args, kwds, "ss|iib", kwlist,
+	if (!PyArg_ParseTupleAndKeywords(args, kwds, "ss|iib", (char **) kwlist,
 		&wname, &rname, &conf.queuelen, &conf.samplelen, &conf.polling)) {
 		return nullptr;
 	}

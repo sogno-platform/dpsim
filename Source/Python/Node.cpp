@@ -85,12 +85,12 @@ PyObject* Python::Node<VarType>::newfunc(PyTypeObject *type, PyObject *args, PyO
 template<typename VarType>
 int Python::Node<VarType>::init(Python::Node<VarType> *self, PyObject *args, PyObject *kwds)
 {
-	static char *kwlist[] = {"uid", "initial_voltage", nullptr};
+	static const char *kwlist[] = {"uid", "initial_voltage", nullptr};
 
 	const char *uid;
 	CPS::Complex initialVoltage;
 
-	if (!PyArg_ParseTupleAndKeywords(args, kwds, "s|D", kwlist, &uid, &initialVoltage)) {
+	if (!PyArg_ParseTupleAndKeywords(args, kwds, "s|D", (char **) kwlist, &uid, &initialVoltage)) {
 		return -1;
 	}
 
@@ -115,8 +115,7 @@ void Python::Node<VarType>::dealloc(Python::Node<VarType> *self)
 	Py_TYPE(self)->tp_free((PyObject*) self);
 }
 
-template<typename VarType>
-char* Python::Node<VarType>::DocGND =
+static const char *DocGND =
 "GND\n"
 "Get a reference of the global ground node.\n";
 
@@ -137,12 +136,11 @@ PyObject * Python::Node<VarType>::gnd(PyObject *self, PyObject *args) {
 
 template<typename VarType>
 PyMethodDef Python::Node<VarType>::methods[] = {
-	{"GND", (PyCFunction) DPsim::Python::Node<VarType>::gnd, METH_NOARGS | METH_STATIC, DPsim::Python::Node<VarType>::DocGND},
+	{"GND", (PyCFunction) DPsim::Python::Node<VarType>::gnd, METH_NOARGS | METH_STATIC, (char *) DocGND},
 	{nullptr, nullptr, 0, nullptr}
 };
 
-template<typename VarType>
-char* Python::Node<VarType>::Doc =
+static const char* NodeDoc =
 "A system node.\n"
 "\n"
 "Proper ``__init__`` signature:\n"
@@ -152,15 +150,15 @@ char* Python::Node<VarType>::Doc =
 "``initial_voltage`` is the initial voltage of the node.\n\n";
 
 template<>
-char* Python::Node<CPS::Real>::name = "dpsim.emt.Node";
+const char* Python::Node<CPS::Real>::name = "dpsim.emt.Node";
 
 template<>
-char* Python::Node<CPS::Complex>::name = "dpsim.dp.Node";
+const char* Python::Node<CPS::Complex>::name = "dpsim.dp.Node";
 
 template<typename VarType>
 PyTypeObject DPsim::Python::Node<VarType>::type = {
 	PyVarObject_HEAD_INIT(nullptr, 0)
-	DPsim::Python::Node<VarType>::name,        /* tp_name */
+	(char *) DPsim::Python::Node<VarType>::name, /* tp_name */
 	sizeof(DPsim::Python::Node<VarType>),      /* tp_basicsize */
 	0,                                       /* tp_itemsize */
 	(destructor)DPsim::Python::Node<VarType>::dealloc,  /* tp_dealloc */
@@ -179,7 +177,7 @@ PyTypeObject DPsim::Python::Node<VarType>::type = {
 	0,                                       /* tp_setattro */
 	0,                                       /* tp_as_buffer */
 	Py_TPFLAGS_DEFAULT | Py_TPFLAGS_BASETYPE,/* tp_flags */
-	Node<VarType>::Doc,                      /* tp_doc */
+	(char *) NodeDoc,                        /* tp_doc */
 	0,                                       /* tp_traverse */
 	0,                                       /* tp_clear */
 	0,                                       /* tp_richcompare */
