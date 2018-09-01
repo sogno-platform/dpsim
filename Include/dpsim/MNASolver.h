@@ -29,6 +29,8 @@
 
 #include <dpsim/Solver.h>
 #include <cps/Solver/MNASwitchInterface.h>
+#include <cps/SignalComponent.h>
+#include <cps/PowerComponent.h>
 #ifdef WITH_CIM
 #include <cps/CIM/Reader.h>
 #endif /* WITH_CIM */
@@ -64,9 +66,11 @@ namespace DPsim {
 		CPS::SystemTopology mSystem;
 		///
 		typename CPS::Node<VarType>::List mNodes;
-		/// 
-		typename CPS::PowerComponent<VarType>::List mPowerComponents;
-		/// 
+		///
+		CPS::MNAInterface::List mPowerComponents;
+		///
+		CPS::MNASwitchInterface::List mSwitches;
+		///
 		CPS::SignalComponent::List mSignalComponents;
 
 		// #### MNA specific attributes ####
@@ -84,11 +88,8 @@ namespace DPsim {
 		Bool mSteadyStateInit = false;
 		///
 		std::unordered_map< std::bitset<SWITCH_NUM>, Matrix > mSwitchedMatrices;
-		/// 
-		std::unordered_map< std::bitset<SWITCH_NUM>, CPS::LUFactorized > mLuFactorizations;
 		///
-		CPS::MNASwitchInterface::List mSwitches;
-
+		std::unordered_map< std::bitset<SWITCH_NUM>, CPS::LUFactorized > mLuFactorizations;
 
 		// #### Attributes related to switching ####
 		/// Index of the next switching event

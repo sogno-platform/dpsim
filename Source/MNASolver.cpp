@@ -48,8 +48,13 @@ void MnaSolver<VarType>::initialize(CPS::SystemTopology system) {
 	// TODO: Move to base solver class?
 	// This intialization according to power flow information is not MNA specific.
 	mLog.info() << "Initialize power flow" << std::endl;
-	for (auto comp : mPowerComponents)
-		comp->initializeFromPowerflow(mSystem.mSystemFrequency);
+	for (auto comp : mSystem.mComponents) {
+		auto pComp = std::dynamic_pointer_cast<CPS::PowerComponent<VarType>>(comp);
+		if (!pComp)
+			continue;
+
+		pComp->initializeFromPowerflow(mSystem.mSystemFrequency);
+	}
 
 	// This steady state initialization is MNA specific and runs a simulation
 	// before the actual simulation executed by the user.
@@ -135,15 +140,19 @@ void MnaSolver<VarType>::IdentifyTopologyObjects() {
 	}
 
 	for (auto comp : mSystem.mComponents) {
-		if ( CPS::MNASwitchInterface::Ptr Switch = std::dynamic_pointer_cast<CPS::MNASwitchInterface>(comp) ) {
-			mSwitches.push_back(Switch);
-		} 
-		// TODO: cast to MNAInterface instead		
-		else if ( typename CPS::PowerComponent<VarType>::Ptr powercomp = std::dynamic_pointer_cast< CPS::PowerComponent<VarType> >(comp) ) {
-			mPowerComponents.push_back(powercomp);		
+		auto swComp = std::dynamic_pointer_cast<CPS::MNASwitchInterface>(comp);
+		if (swComp) {
+			mSwitches.push_back(swComp);
 		}
-		else if ( CPS::SignalComponent::Ptr signalcomp = std::dynamic_pointer_cast< CPS::SignalComponent >(comp) )	{	
-			mSignalComponents.push_back(signalcomp);	
+
+		auto mnaComp = std::dynamic_pointer_cast<CPS::MNAInterface>(comp);
+		if (mnaComp) {
+			mPowerComponents.push_back(mnaComp);
+		}
+
+		auto sigComp = std::dynamic_pointer_cast<CPS::SignalComponent>(comp);
+		if (sigComp)	{
+			mSignalComponents.push_back(sigComp);
 		}
 	}
 }
@@ -231,13 +240,20 @@ void MnaSolver<VarType>::createVirtualNodes() {
 	UInt virtualNode = mNumNetNodes - 1;
 	// Check if component requires virtual node and if so set one
 	for (auto comp : mPowerComponents) {
-		if (comp->hasVirtualNodes()) {
-			for (UInt node = 0; node < comp->virtualNodesNumber(); node++) {
+		auto pComp = std::dynamic_pointer_cast<PowerComponent<VarType>>(comp);
+		if (!pComp)
+			continue;
+
+		if (pComp->hasVirtualNodes()) {
+			for (UInt node = 0; node < pComp->virtualNodesNumber(); node++) {
 				virtualNode++;
+
 				mNodes.push_back(std::make_shared<CPS::Node<VarType>>(virtualNode));
-				comp->setVirtualNodeAt(mNodes[virtualNode], node);
+
+				pComp->setVirtualNodeAt(mNodes[virtualNode], node);
+
 				mLog.info() << "Created virtual node" << node << " = " << virtualNode
-					<< " for " << comp->name() << std::endl;
+					<< " for " << pComp->name() << std::endl;
 			}
 		}
 	}
