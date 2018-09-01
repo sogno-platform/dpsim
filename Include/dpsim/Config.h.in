@@ -36,3 +36,4 @@
 #cmakedefine WITH_SHMEM
 #cmakedefine WITH_CIM
 #cmakedefine WITH_PYTHON
+#cmakedefine WITH_SUNDIALS

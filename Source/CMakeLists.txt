@@ -1,7 +1,7 @@
-add_library(dpsim	
+set(SOURCES
 	Simulation.cpp
-	Utils.cpp
 	MNASolver.cpp
+	Utils.cpp
 )
 
 set(LIBRARIES cps)
@@ -21,6 +21,13 @@ if(WITH_RT)
 	list(APPEND SOURCES RealTimeSimulation.cpp)
 endif()
 
+if(WITH_SUNDIALS)
+	list(APPEND SOURCES DAESolver.cpp)
+
+	list(APPEND INCLUDE_DIRS ${SUNDIALS_INCLUDE_DIRS})
+	list(APPEND LIBRARIES ${SUNDIALS_LIBRARIES})
+endif()
+
 if(WITH_PYTHON)
 	list(APPEND INCLUDE_DIRS ${PYTHON_INCLUDE_DIRS})
 	list(APPEND LIBRARIES ${PYTHON_LIBRARIES})
@@ -28,6 +35,7 @@ if(WITH_PYTHON)
 	add_subdirectory(Python)
 endif()
 
+add_library(dpsim)
 target_sources(dpsim PRIVATE ${SOURCES})
 target_link_libraries(dpsim ${LIBRARIES})
 target_include_directories(dpsim PRIVATE ${INCLUDE_DIRS})

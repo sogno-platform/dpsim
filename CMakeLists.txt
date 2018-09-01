@@ -5,7 +5,7 @@ project(DPsim CXX)
 set(CMAKE_CXX_STANDARD 17)
 add_definitions(-D_SILENCE_ALL_CXX17_DEPRECATION_WARNINGS)
 
-set(CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/CMake")
+set(CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/CMake;${PROJECT_SOURCE_DIR}/Dependencies/libcps/CMake")
 
 set(PROJECT_AUTHOR "Institute for Automation of Complex Power Systems, RWTH Aachen University")
 set(PROJECT_COPYRIGHT "2017, Institute for Automation of Complex Power Systems, RWTH Aachen University")
@@ -54,6 +54,7 @@ add_subdirectory(Dependencies/libcps)
 
 find_package(PythonInterp 3.6)
 find_package(PythonLibs 3.6)
+find_package(Sundials)
 
 if(PythonInterp_FOUND AND PythonLibs_FOUND)
 	set(Python_FOUND ON)
@@ -71,6 +72,7 @@ option(WITH_SHMEM   "Enable shared memory interface"        ${VILLASnode_FOUND})
 option(WITH_RT	   "Enable real-time features"			${Linux_FOUND})
 option(WITH_PYTHON "Enable Python support"				${Python_FOUND})
 option(WITH_CIM     "Enable support for parsing CIM files"  ${CIMpp_FOUND})
+option(WITH_SUNDIALS "Enable sundials solver suite"         ${Sundials_FOUND})
 
 configure_file(
 	${CMAKE_CURRENT_SOURCE_DIR}/Include/dpsim/Config.h.in
