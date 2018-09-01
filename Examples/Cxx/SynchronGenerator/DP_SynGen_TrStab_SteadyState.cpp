@@ -53,11 +53,11 @@ int main(int argc, char* argv[]) {
 	// Components
 	auto gen = Ph1::SynchronGeneratorTrStab::make("DP_SynGen_TrStab_StState_SynGen", Logger::Level::DEBUG);  
 	gen->setParameters(nomPower, nomPhPhVoltRMS, nomFreq, Ll, Lmd, Llfd, H, initElecPower, mechPower);
-    gen->setNodes(Node::List{n1});
+    gen->connect({n1});
 	
 	auto res = Ph1::Resistor::make("DP_SynGen_TrStab_StState_Rl", Logger::Level::DEBUG);
 	res->setParameters(Rload);
-	res->setNodes(Node::List{Node::GND, n1});
+	res->connect({Node::GND, n1});
 
 	// System
 	auto sys = SystemTopology(60, SystemNodeList{n1}, SystemComponentList{gen, res});

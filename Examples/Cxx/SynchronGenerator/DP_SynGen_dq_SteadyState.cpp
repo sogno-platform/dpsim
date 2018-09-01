@@ -72,7 +72,7 @@ int main(int argc, char* argv[]) {
 	gen->setParameters(nomPower, nomPhPhVoltRMS, nomFreq, poleNum, nomFieldCurr,
 		Rs, Ll, Lmd, Lmq, Rfd, Llfd, Rkd, Llkd, Rkq1, Llkq1, Rkq2, Llkq2, H, 
 		initActivePower, initReactivePower, initTerminalVolt, initVoltAngle, fieldVoltage, mechPower);
-    gen->setNodes(Node::List{n1});
+    gen->connect({n1});
 	
 	auto res = Ph3::SeriesResistor::make("R_load", Node::List{Node::GND, n1}, Rload);
 

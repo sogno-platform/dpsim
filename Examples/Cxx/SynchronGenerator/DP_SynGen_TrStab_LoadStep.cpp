@@ -54,11 +54,11 @@ int main(int argc, char* argv[]) {
 	// Components
 	auto gen = Ph1::SynchronGeneratorTrStab::make("DP_SynGen_TrStab_Step_SynGen", Logger::Level::OUT);  
 	gen->setParameters(nomPower, nomPhPhVoltRMS, nomFreq, Ll, Lmd, Llfd, H, initElecPower, mechPower);
-    gen->setNodes(Node::List{n1});
+    gen->connect({n1});
 
 	auto load = Ph1::Switch::make("DP_SynGen_TrStab_Step_StepLoad");
 	load->setParameters(Rload, RloadStep);
-	load->setNodes(Node::List{Node::GND, n1});
+	load->connect({Node::GND, n1});
 	auto sw1 = SwitchEvent(0.05, true);
 	load->setSwitchEvents(std::vector<SwitchEvent>{sw1});
 	load->open();

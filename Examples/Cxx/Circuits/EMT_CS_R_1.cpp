@@ -32,10 +32,10 @@ int main(int argc, char* argv[]) {
 	// Components
 	auto cs = CurrentSource::make("cs");
 	cs->setParameters(Complex(10, 0));
-	cs->setNodes(Node::List{ Node::GND, n1 });
+	cs->connect({ Node::GND, n1 });
 	auto r1 = Resistor::make("r_1");
 	r1->setParameters(1);
-	r1->setNodes(Node::List{ Node::GND, n1 });
+	r1->connect({ Node::GND, n1 });
 
 	// Define system topology
 	auto sys = SystemTopology(50, SystemNodeList{n1}, SystemComponentList{cs, r1});

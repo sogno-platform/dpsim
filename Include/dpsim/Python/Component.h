@@ -93,7 +93,7 @@ namespace Python {
 				if (pyNodes) {
 					auto nodes = Python::Node<typename T::Type>::fromPython(pyNodes);
 
-					comp->setNodes(nodes);
+					comp->connect(nodes);
 				}
 
 				pyComp->comp = comp;

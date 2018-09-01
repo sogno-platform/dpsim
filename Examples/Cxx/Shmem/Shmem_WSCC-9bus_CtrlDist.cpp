@@ -130,7 +130,7 @@ int main(int argc, char *argv[]) {
 		// Add interface voltage source
 		auto evs = VoltageSource::make("v_intf", Logger::Level::DEBUG);
 		evs->setParameters(Complex(0, 0));
-		evs->setNodes(ComplexNode::List{ComplexNode::GND, n1}); 
+		evs->connect(ComplexNode::List{ComplexNode::GND, n1}); 
 
 		// Extend system with controllable load
 		auto load = PQLoadCS::make("load_cs", ComplexNode::List{n1}, 0, 0, 230000);
