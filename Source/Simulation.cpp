@@ -24,9 +24,14 @@
 #endif
 
 #include <dpsim/Simulation.h>
+#include <dpsim/MNASolver.h>
 
 #ifdef WITH_CIM
   #include <cps/CIM/Reader.h>
+#endif
+
+#ifdef WITH_SUNDIALS
+	#include <dpsim/DAESolver.h>
 #endif
 
 using namespace CPS;
@@ -65,10 +70,12 @@ Simulation::Simulation(String name, SystemTopology system,
 				domain, logLevel, steadyStateInit);
 		break;
 
-//    case Solver::Type::IDA:
-//        mSolver = std::make_shared<DAESolver>(name, system, timeStep, 0.0);
-//        break;
-    }
+#ifdef WITH_SUNDIALS
+	case Solver::Type::IDA:
+		mSolver = std::make_shared<DAESolver>(name, system, timeStep, 0.0);
+		break;
+#endif /* WITH_SUNDIALS */
+	}
 }
 
 Simulation::~Simulation() {
