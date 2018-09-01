@@ -18,12 +18,8 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *********************************************************************************/
-#ifdef __linux__
-#include <getopt.h>
-#endif
 
 #include <string>
-#include <chrono>
 
 #include <dpsim/Utils.h>
 
@@ -31,6 +27,8 @@ using namespace DPsim;
 using namespace CPS;
 
 #ifdef __linux__
+#include <getopt.h>
+
 DPsim::CommandLineArgs::CommandLineArgs(int argc, char *argv[],
 		Real dt,
 		Real d,
@@ -110,14 +108,14 @@ DPsim::CommandLineArgs::CommandLineArgs(int argc, char *argv[],
 
 			case 'o': {
 				String arg = optarg;
-				String key;
-				Real value;
-				unsigned p = arg.find("=");
-				key = arg.substr(0, p);
-				if (p != String::npos)
-					value = std::stod(arg.substr(p + 1));
+				
+				auto p = arg.find("=");
+				auto key = arg.substr(0, p);
+				auto value = arg.substr(p + 1);
 
-				options[key] = value;
+				if (p != String::npos)
+					options[key] = std::stod(value);
+					
 				break;
 			}
 
