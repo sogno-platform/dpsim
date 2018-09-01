@@ -64,8 +64,7 @@ int DPsim::Python::PyDateTime_DateTimeType_to_timepoint(PyObject *po, std::chron
 	// tm is given in system timezone
 	time_t tt = std::mktime(&tm);
 
-	std::chrono::system_clock::duration d = std::chrono::seconds(tt) +
-	                                        std::chrono::microseconds(PyDateTime_DATE_GET_MICROSECOND(pydt));
+	std::chrono::system_clock::duration d = std::chrono::seconds(tt) + std::chrono::microseconds(PyDateTime_DATE_GET_MICROSECOND(pydt));
 
 	tp = std::chrono::system_clock::time_point(d);
 

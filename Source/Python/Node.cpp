@@ -53,12 +53,12 @@ typename CPS::Node<VarType>::List Python::Node<VarType>::fromPython(PyObject* li
 	typename CPS::Node<VarType>::List nodes;
 
 	if (!PyList_Check(list))
-		throw std::invalid_argument( "argument is not a list" );
+		throw std::invalid_argument("argument is not a list");
 
 	for (int i = 0; i < PyList_Size(list); i++) {
 		PyObject* obj = PyList_GetItem(list, i);
 		if (!PyObject_TypeCheck(obj, &Python::Node<VarType>::type))
-			throw std::invalid_argument( "list element is not a dpsim.Node" );
+			throw std::invalid_argument("list element is not a dpsim.Node");
 
 		Node<VarType>* pyNode = (Node<VarType>*) obj;
 		nodes.push_back(pyNode->node);
@@ -192,7 +192,7 @@ PyTypeObject DPsim::Python::Node<VarType>::type = {
 	0,                                       /* tp_descr_get */
 	0,                                       /* tp_descr_set */
 	0,                                       /* tp_dictoffset */
-	(initproc)DPsim::Python::Node<VarType>::init,       /* tp_init */
+	(initproc) DPsim::Python::Node<VarType>::init, /* tp_init */
 	0,                                       /* tp_alloc */
 	DPsim::Python::Node<VarType>::newfunc,     /* tp_new */
 };

@@ -62,13 +62,13 @@ namespace DPsim {
 		Bool mPowerflowInitialization;
 		/// System list
 		CPS::SystemTopology mSystem;
-		/// 
+		///
 		typename CPS::Node<VarType>::List mNodes;
 		/// 
 		typename CPS::PowerComponent<VarType>::List mPowerComponents;
 		/// 
 		CPS::SignalComponent::List mSignalComponents;
-		
+
 		// #### MNA specific attributes ####
 		/// System matrix A that is modified by matrix stamps
 		std::bitset<SWITCH_NUM> mCurrentSwitchStatus;
@@ -82,7 +82,7 @@ namespace DPsim {
 		Matrix mLeftSideVector;
 		/// Switch to trigger steady-state initialization
 		Bool mSteadyStateInit = false;
-		/// 
+		///
 		std::unordered_map< std::bitset<SWITCH_NUM>, Matrix > mSwitchedMatrices;
 		/// 
 		std::unordered_map< std::bitset<SWITCH_NUM>, CPS::LUFactorized > mLuFactorizations;
@@ -125,10 +125,10 @@ namespace DPsim {
 		void processSwitches();
 		// TODO: check if this works with AC sources
 		void steadyStateInitialization();
-		/// Create left and right side vector	
+		/// Create left and right side vector
 		void createEmptyVectors();
 		/// Create system matrix
-		void createEmptySystemMatrix();		
+		void createEmptySystemMatrix();
 		/// Solve system matrices
 		void solve();
 		///
@@ -139,7 +139,7 @@ namespace DPsim {
 			Real timeStep,
 			CPS::Domain domain = CPS::Domain::DP,
 			CPS::Logger::Level logLevel = CPS::Logger::Level::INFO,
-			Bool steadyStateInit = false, Int downSampleRate = 1) :			
+			Bool steadyStateInit = false, Int downSampleRate = 1) :
 			mLog("Logs/" + name + "_MNA.log", logLevel),
 			mLeftVectorLog("Logs/" + name + "_LeftVector.csv", CPS::Logger::Level::OUT),
 			mRightVectorLog("Logs/" + name + "_RightVector.csv", CPS::Logger::Level::OUT) {
@@ -160,7 +160,7 @@ namespace DPsim {
 			Int downSampleRate = 1)
 			: MnaSolver(name, timeStep, domain,
 			logLevel, steadyStateInit, downSampleRate) {
-			initialize(system);		
+			initialize(system);
 		}
 
 		///
@@ -173,17 +173,17 @@ namespace DPsim {
 			if (mDomain == CPS::Domain::EMT) {
 				mLeftVectorLog.LogEMTNodeValues(time, leftSideVector());
 				mRightVectorLog.LogEMTNodeValues(time, rightSideVector());
-			} 
+			}
 			else {
 				mLeftVectorLog.LogPhasorNodeValues(time, leftSideVector());
 				mRightVectorLog.LogPhasorNodeValues(time, rightSideVector());
 			}
-		}		
+		}
 		// #### Getter ####
 		Matrix& leftSideVector() { return mLeftSideVector; }
 		Matrix& rightSideVector() { return mRightSideVector; }
 		Matrix& systemMatrix() { return mSystemMatrix; }
 	};
 
-	
+
 }

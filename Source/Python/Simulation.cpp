@@ -22,7 +22,6 @@
 
 #include <dpsim/Config.h>
 #include <dpsim/Python/Simulation.h>
-
 #include <dpsim/Python/Interface.h>
 #include <dpsim/Python/Component.h>
 
@@ -196,7 +195,7 @@ PyObject* DPsim::Python::Simulation::addInterface(Simulation* self, PyObject* ar
 	Py_INCREF(pyObj);
 
 	self->refs.push_back(pyObj);
-	
+
 	Py_INCREF(Py_None);
 	return Py_None;
 #else
