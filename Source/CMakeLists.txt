@@ -6,10 +6,6 @@ set(SOURCES
 
 set(LIBRARIES cps)
 
-if(NOT MSVC)
-	list(APPEND LIBRARIES "-lstdc++fs")
-endif()
-
 if(NOT WIN32)
 	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fPIC")
 endif()
