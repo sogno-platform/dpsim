@@ -17,7 +17,10 @@ if(NOT WIN32)
 endif()
 
 if(WITH_RT)
-	list(APPEND LIBRARIES "-lrt")
+	if(HAVE_TIMERFD)
+		list(APPEND LIBRARIES "-lrt")
+	endif()
+
 	list(APPEND SOURCES RealTimeSimulation.cpp)
 endif()
 

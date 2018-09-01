@@ -26,6 +26,10 @@ else()
 	endif()
 endif()
 
+include(CheckSymbolExists)
+check_symbol_exists(pipe unistd.h HAVE_PIPE)
+check_symbol_exists(timerfd_create sys/timerfd.h HAVE_TIMERFD)
+
 include(GetGitRevisionDescription)
 git_describe(DPSIM_VERSION --tags --dirty=-dirty)
 
@@ -68,11 +72,11 @@ endif()
 option(BUILD_SHARED_LIBS "Build shared library" OFF)
 option(BUILD_EXAMPLES "Build C++ examples" ON)
 
-option(WITH_SHMEM   "Enable shared memory interface"        ${VILLASnode_FOUND})
-option(WITH_RT	   "Enable real-time features"			${Linux_FOUND})
-option(WITH_PYTHON "Enable Python support"				${Python_FOUND})
-option(WITH_CIM     "Enable support for parsing CIM files"  ${CIMpp_FOUND})
 option(WITH_SUNDIALS "Enable sundials solver suite"         ${Sundials_FOUND})
+option(WITH_SHMEM    "Enable shared memory interface"       ${VILLASnode_FOUND})
+option(WITH_RT	     "Enable real-time features"            ${HAVE_TIMERFD})
+option(WITH_PYTHON   "Enable Python support"                ${Python_FOUND})
+option(WITH_CIM      "Enable support for parsing CIM files" ${CIMpp_FOUND})
 
 configure_file(
 	${CMAKE_CURRENT_SOURCE_DIR}/Include/dpsim/Config.h.in

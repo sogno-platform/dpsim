@@ -79,12 +79,12 @@ Simulation::Simulation(String name, SystemTopology system,
 }
 
 Simulation::~Simulation() {
-#ifdef __linux__
+#ifdef HAVE_PIPE
 	if (mPipe[0] >= 0) {
 		close(mPipe[0]);
 		close(mPipe[1]);
 	}
-#endif
+#endif /* HAVE_PIPE */
 }
 
 void Simulation::run() {
@@ -141,7 +141,7 @@ void Simulation::addSystemTopology(SystemTopology system) {
 	mSolver->addSystemTopology(system);
 }
 
-#ifdef __linux__
+#ifdef HAVE_PIPE
 int Simulation::eventFD(Int flags, Int coalesce) {
 	int ret;
 
@@ -171,4 +171,4 @@ void Simulation::sendEvent(enum Event evt) {
 	if (ret < 0)
 		throw SystemError("Failed notify");
 }
-#endif
+#endif /* HAVE_PIPE */
