@@ -50,13 +50,11 @@ int main(int argc, char *argv[]) {
 	0.026176,0.011432,-0.018274,-0.010121, 0.012983,0.0092568,-0.0084016,-0.0062311,
 	0.011117,0.016732,0.0067703,-0.0020832,-0.0024229 };
 
-	auto filtP = FIRFilter::make("filter_p", coefficients, Logger::Level::DEBUG);
-	auto filtQ = FIRFilter::make("filter_q", coefficients, Logger::Level::DEBUG);
+	auto filtP = FIRFilter::make("filter_p", coefficients, 10, Logger::Level::DEBUG);
+	auto filtQ = FIRFilter::make("filter_q", coefficients, 0, Logger::Level::DEBUG);
 
 	filtP->setPriority(1);
 	filtQ->setPriority(1);
-	filtP->initialize(10.);
-	filtQ->initialize(0);
 
 	// Nodes
 	auto n1 = Node::make("n1");
