@@ -53,12 +53,12 @@ int main(int argc, char *argv[]) {
 
 		// Extend system with controllable load (Profile)
 		auto load_profile = PQLoadCS::make("load_cs_profile", 0, 0, 230000, Logger::Level::INFO);
-		load_profile->connect({sys.getDPNodeAt(6)})
+		load_profile->connect({ sys.getDPNodeAt(6) });
 		sys.mComponents.push_back(load_profile);
 
 		// Extend system with controllable load
 		auto ecs = CurrentSource::make("i_intf", Complex(0, 0), Logger::Level::DEBUG);
-		ecs->connect({sys.getDPNodeAt(3), Node::GND})
+		ecs->connect({ sys.getDPNodeAt(3), DP::Node::GND });
 		sys.mComponents.push_back(ecs);
 
 		RealTimeSimulation sim(simName + "_1", sys, args.timeStep, args.duration,
@@ -126,16 +126,16 @@ int main(int argc, char *argv[]) {
 
 	if (args.scenario == 1) {
 		// Nodes
-		auto n1 = Node::make("n1", PhaseType::Single, std::vector<Complex>({Complex(02.180675e+05, -1.583367e+04)}));
+		auto n1 = DP::Node::make("n1", PhaseType::Single, std::vector<Complex>({Complex(02.180675e+05, -1.583367e+04)}));
 
 		// Add interface voltage source
 		auto evs = VoltageSource::make("v_intf", Logger::Level::DEBUG);
 		evs->setParameters(Complex(0, 0));
-		evs->connect({Node::GND, n1});
+		evs->connect({ DP::Node::GND, n1 });
 
 		// Extend system with controllable load
 		auto load = PQLoadCS::make("load_cs", 0, 0, 230000);
-		load->connect({n1})
+		load->connect({ n1 });
 
 		// Controllers and filter
 		std::vector<Real> coefficients = std::vector(100, 1./100);
