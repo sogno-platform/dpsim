@@ -44,7 +44,7 @@ set(SYNCGEN_SOURCES
 	#SynchronGenerator/EMT_SynchronGenerator_VBR_ThreePhaseFault.cpp
 	#SynchronGenerator/EMT_SynchronGenerator_Simplified_ThreePhaseFault.cpp
 	#SynchronGenerator/EMT_Multimachine.cpp
-)#
+)
 
 set(VARFREQ_SOURCES
 	#VariableTimeStep/RXLine_LoadStep_FreqStep_1.cpp
@@ -97,9 +97,9 @@ endif()
 
 if(WITH_CIM AND WITH_SHMEM)
 	set(CIM_SHMEM_SOURCES
-	Shmem/Shmem_WSCC-9bus.cpp
-	#Shmem/Shmem_WSCC-9bus_Ctrl.cpp
-	Shmem/Shmem_WSCC-9bus_CtrlDist.cpp
+		Shmem/Shmem_WSCC-9bus.cpp
+		Shmem/Shmem_WSCC-9bus_Ctrl.cpp
+		Shmem/Shmem_WSCC-9bus_CtrlDist.cpp
 	)
 endif()
 

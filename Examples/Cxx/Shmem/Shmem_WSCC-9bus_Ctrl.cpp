@@ -26,7 +26,7 @@
 
 using namespace DPsim;
 using namespace CPS;
-using namespace CPS;
+using namespace CPS::DP;
 using namespace CPS::DP::Ph1;
 using namespace CPS::Signal;
 
@@ -54,13 +54,15 @@ int main(int argc, char *argv[]) {
 	SystemTopology sys = reader.loadCIM(60, filenames);
 
 	// Extend system with controllable load (Profile)
-	auto load_profile = PQLoadCS::make("load_cs_profile", 0, 0, 230000, Logger::Level::INFO);
-	load_profile->connect({sys.mNodes[6]});
+	auto load_profile = PQLoadCS::make("load_cs_profile");
+	load_profile->connect({ sys.getDPNodeAt(6) });
+	load_profile->setParameters(0, 0, 230000);
 	sys.mComponents.push_back(load_profile);
 
 	// Extend system with controllable load
-	auto load = PQLoadCS::make("load_cs", 0, 0, 230000, Logger::Level::INFO);
-	load->connect({sys.mNodes[3]});
+	auto load = PQLoadCS::make("load_cs");
+	load->connect({ sys.getDPNodeAt(3) });
+	load->setParameters(0, 0, 230000);
 	sys.mComponents.push_back(load);
 
 	// Controllers and filter
