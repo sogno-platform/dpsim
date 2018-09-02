@@ -101,7 +101,9 @@ void Timer::start() {
 	* - IntervalClock (CLOCK_MONOTONIC aka std::chrono::steady_clock) and
 	* - StartClock (CLOCK_REALTIME aka std::chrono::system_clock)
 	*/
-	auto start = mStartAt.time_since_epoch() - rt.time_since_epoch() + steady.time_since_epoch();
+	auto start = mStartAt > StartTimePoint()
+			? mStartAt.time_since_epoch() - rt.time_since_epoch() + steady.time_since_epoch()
+			: steady.time_since_epoch();
 
 #ifdef HAVE_TIMERFD
 	int ret;

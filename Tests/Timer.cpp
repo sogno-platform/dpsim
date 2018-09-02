@@ -13,12 +13,16 @@ int main(int argc, char *argv[]) {
 	t.setStartTime(args.startTime);
 	t.setInterval(dt);
 
-	std::cout << "Start clock at: " << args.startTime << std::endl;
+	if (args.startTime > Timer::StartTimePoint())
+		std::cout << "Start clock at: " << args.startTime << std::endl;
+	else
+		std::cout << "Start clock immeadiatly" << std::endl;
+
 	std::cout << "Timer interval: " << dt << std::endl;
 
 	t.start();
 
-	while (t.ticks() < 10) {
+	while (t.ticks() * args.timeStep < args.duration) {
 		t.sleep();
 
 		std::cout << ".";
