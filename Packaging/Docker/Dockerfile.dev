@@ -16,11 +16,10 @@ RUN dnf -y update
 
 # Toolchain
 RUN dnf -y install \
-	git \
-	gcc-c++ gdb \
+	git clang gdb ccache \
 	redhat-rpm-config \
 	rpmdevtools \
-	make cmake \
+	make cmake ninja-build \
 	doxygen \
 	graphviz \
 	pandoc \
