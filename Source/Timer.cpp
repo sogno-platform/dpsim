@@ -49,6 +49,9 @@ Timer::Timer(int flags) :
 }
 
 Timer::~Timer() {
+	if (mState == State::running)
+		stop();
+
 #ifdef HAVE_TIMERFD
 	close(mTimerFd);
 #endif
