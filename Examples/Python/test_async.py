@@ -7,20 +7,30 @@ import logging
 def my_callback(event, sim, myvar):
     assert myvar == 1337
 
-    if event == 1:
-        print("Simulation started")
-    if event == 2:
-        print("Simulation stopped")
-    if event == 3:
-        print("Simulation finished")
-    if event == 4:
-        print("Simulation overrun")
-    if event == 5:
-        print("Simulation paused")
-    if event == 6:
-        print("Simulation resumed")
+    print("Received Event: %d" % event)
 
-    if event == 3:
+    if event == EventChannel.Event.stopped:
+        print("Simulation stopped")
+    if event == EventChannel.Event.starting:
+        print("Simulation starting")
+    if event == EventChannel.Event.running:
+        print("Simulation running")
+    if event == EventChannel.Event.pausing:
+        print("Simulation pausing")
+    if event == EventChannel.Event.paused:
+        print("Simulation paused")
+    if event == EventChannel.Event.resuming:
+        print("Simulation resuming")
+    if event == EventChannel.Event.stopping:
+        print("Simulation stopping")
+    if event == EventChannel.Event.failed:
+        print("Simulation failed")
+    if event == EventChannel.Event.overrun:
+        print("Simulation overrun")
+    if event == EventChannel.Event.done:
+        print("Simulation done")
+
+    if event in [ EventChannel.Event.stopped, EventChannel.Event.stopped, EventChannel.Event.failed, EventChannel.Event.overrun ]:
         el = asyncio.get_event_loop()
         el.stop()
 
@@ -38,7 +48,7 @@ def test_async():
 
     system = dpsim.SystemTopology(20, [gnd, n1], [v1, r1])
 
-    sim = dpsim.Simulation('async', system, duration=20, timestep=0.0005)
+    sim = dpsim.RealTimeSimulation('async', system, duration=20, timestep=0.0005)
 
     # Start in two seconds!
     sim.start(when=time.time() + 2)
