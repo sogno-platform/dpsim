@@ -44,8 +44,8 @@ Simulation::Simulation(String name,
 	mLog("Logs/" + name + ".log", logLevel),
 	mName(name),
 	mFinalTime(finalTime),
-	mLogLevel(logLevel),
-	mPipe{-1, -1}
+	mTimeStep(timeStep),
+	mLogLevel(logLevel)
 {
 	addAttribute<String>("name", &mName, Flags::read);
 	addAttribute<Real>("final_time", &mFinalTime, Flags::read);
@@ -79,28 +79,32 @@ Simulation::Simulation(String name, SystemTopology system,
 }
 
 Simulation::~Simulation() {
-#ifdef HAVE_PIPE
-	if (mPipe[0] >= 0) {
-		close(mPipe[0]);
-		close(mPipe[1]);
-	}
-#endif /* HAVE_PIPE */
+
 }
 
-void Simulation::run() {
-	mLog.info() << "Start simulation." << std::endl;
-
+void Simulation::sync()
+{
 #ifdef WITH_SHMEM
 	// We send initial state over all interfaces
 	for (auto ifm : mInterfaces) {
 		ifm.interface->writeValues();
 	}
 
+	std::cout << Logger::prefix() << "Waiting for start synchronization on " << mInterfaces.size() << " interfaces" << std::endl;
+
 	// Blocking wait for interfaces
 	for (auto ifm : mInterfaces) {
 		ifm.interface->readValues(ifm.syncStart);
 	}
+
+	std::cout << Logger::prefix() << "Synchronized simulation start with remotes" << std::endl;
 #endif
+}
+
+void Simulation::run() {
+	mLog.info() << "Start simulation." << std::endl;
+
+	sync();
 
 	while (mTime < mFinalTime) {
 		step();
@@ -140,35 +144,3 @@ void Simulation::setSwitchTime(Real switchTime, Int systemIndex) {
 void Simulation::addSystemTopology(SystemTopology system) {
 	mSolver->addSystemTopology(system);
 }
-
-#ifdef HAVE_PIPE
-int Simulation::eventFD(Int flags, Int coalesce) {
-	int ret;
-
-	// Create a new pipe of not existant
-	if (mPipe[0] < 0) {
-		ret = pipe(mPipe);
-		if (ret < 0)
-			throw SystemError("Failed to create pipe");
-	}
-
-	// Return read end
-	return mPipe[0];
-}
-
-void Simulation::sendEvent(enum Event evt) {
-	int ret;
-
-	if (mPipe[0] < 0) {
-		ret = pipe(mPipe);
-		if (ret < 0)
-			throw SystemError("Failed to create pipe");
-	}
-
-	uint32_t msg = static_cast<uint32_t>(evt);
-
-	ret = write(mPipe[1], &msg, 4);
-	if (ret < 0)
-		throw SystemError("Failed notify");
-}
-#endif /* HAVE_PIPE */

@@ -42,14 +42,7 @@ namespace DPsim {
 
 	class Simulation : public CPS::AttributeList {
 	public:
-		enum class Event : std::uint32_t {
-			Started = 1,
-			Stopped = 2,
-			Finished = 3,
-			Overrun = 4,
-			Paused = 5,
-			Resumed = 6
-		};
+		typedef std::shared_ptr<Simulation> Ptr;
 
 	protected:
 		/// Simulation logger
@@ -60,6 +53,8 @@ namespace DPsim {
 		Real mFinalTime;
 		/// Time variable that is incremented at every step
 		Real mTime = 0;
+		/// Simulation timestep
+		Real mTimeStep;
 		/// Number of step which have been executed for this simulation.
 		Int mTimeStepCount = 0;
 		/// Simulation log level
@@ -68,8 +63,6 @@ namespace DPsim {
 		Solver::Type mSolverType;
 		///
 		std::shared_ptr<Solver> mSolver;
-		/// Pipe for asynchronous inter-process communication (IPC) to the Python world
-		int mPipe[2];
 
 #ifdef WITH_SHMEM
 		struct InterfaceMapping {
@@ -84,7 +77,7 @@ namespace DPsim {
 		std::vector<InterfaceMapping> mInterfaces;
 		/// Interfaces are initialized
 		bool mInit = false;
-#endif
+#endif /* WITH_SHMEM */
 
 	public:
 		/// Creates system matrix according to
@@ -107,6 +100,8 @@ namespace DPsim {
 		void run();
 		/// Solve system A * x = z for x and current time
 		Real step();
+		/// Synchronize simulation with remotes by exchanging intial state over interfaces
+		void sync();
 
 		///
 		void setSwitchTime(Real switchTime, Int systemIndex);
@@ -130,10 +125,7 @@ namespace DPsim {
 		Real time() const { return mTime; }
 		Real finalTime() const { return mFinalTime; }
 		Int timeStepCount() const { return mTimeStepCount; }
-		int eventFD(Int flags = -1, Int coalesce = 1);
-
-		/// Sends a notification to other processes / Python
-		void sendEvent(enum Event evt);
+		Real timeStep() const { return mTimeStep; }
 	};
 
 }

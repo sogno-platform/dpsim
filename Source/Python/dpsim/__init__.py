@@ -23,7 +23,7 @@ from _dpsim import open_interface
 
 import _dpsim
 
-from .Simulation import Simulation
+from .Simulation import Simulation, RealTimeSimulation
 from .EventQueue import EventQueue
 
 def __get_module(parts):

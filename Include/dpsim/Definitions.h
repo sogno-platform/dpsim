@@ -1,4 +1,4 @@
-/** 
+/**
  * @file
  * @author Markus Mirz <mmirz@eonerc.rwth-aachen.de>
  * @copyright 2017, Institute for Automation of Complex Power Systems, EONERC
@@ -31,4 +31,6 @@ namespace DPsim {
 	using UInt = CPS::UInt;
 	using Matrix = CPS::Matrix;
 	using MatrixComp = CPS::MatrixComp;
+
+	class UnsupportedSolverException { };
 }

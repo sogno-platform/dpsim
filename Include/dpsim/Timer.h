@@ -88,6 +88,10 @@ namespace DPsim {
 			return mTicks;
 		}
 
+		Ticks interval() {
+			return mTickInterval;
+		}
+
 		// Setter
 		void setStartTime(const StartTimePoint &start) {
 			mStartAt = start;
@@ -95,6 +99,10 @@ namespace DPsim {
 
 		void setInterval(const Ticks &intv) {
 			mTickInterval = intv;
+		}
+
+		void setInterval(double dt) {
+			mTickInterval = Timer::Ticks((uintmax_t) (dt * 1e9));
 		}
 };
 

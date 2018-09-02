@@ -40,8 +40,8 @@ class Simulation(_dpsim.Simulation):
 
         self.events = EventQueue(self._fd, self._loop)
 
-        self.events.add_callback(self.started, self, event=Event.STARTED)
-        self.events.add_callback(self.stopped, self, event=Event.STOPPED)
+        self.events.add_callback(self.started, self, event=Event.running)
+        self.events.add_callback(self.stopped, self, event=Event.stopped)
 
     def add_callback(self, cb, *args, evt=None):
         self.events.add_callback(cb, *args, event=evt)
@@ -115,8 +115,8 @@ class Simulation(_dpsim.Simulation):
     async def simulate(self, **kwargs):
         self.start(**kwargs)
 
-        await self.events.wait(Event.STARTED)
-        await self.events.wait(Event.STOPPED)
+        await self.events.wait(Event.running)
+        await self.events.wait(Event.stopped)
 
     def run(self, **kwargs):
         if 'pbar' in kwargs and kwargs['pbar']:
@@ -149,3 +149,7 @@ class Simulation(_dpsim.Simulation):
                 max_value = self.final_time,
                 redirect_stdout = True
             )
+
+class RealTimeSimulation(Simulation):
+     def __init__(self, *args, **kwargs):
+        super().__init__(*args, rt=True, **kwargs)

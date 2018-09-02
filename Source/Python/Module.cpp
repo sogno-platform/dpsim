@@ -36,6 +36,8 @@
 #include <dpsim/Python/Interface.h>
 #include <dpsim/Python/LoadCim.h>
 
+#include <cps/Components.h>
+
 using namespace DPsim::Python;
 
 static PyMethodDef dpsimModuleMethods[] = {

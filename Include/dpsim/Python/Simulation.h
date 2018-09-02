@@ -39,6 +39,7 @@
 #include <dpsim/Config.h>
 #include <dpsim/Simulation.h>
 #include <dpsim/Python/SystemTopology.h>
+#include <dpsim/Python/EventChannel.h>
 
 namespace DPsim {
 namespace Python {
@@ -47,22 +48,32 @@ namespace Python {
 		PyObject_HEAD
 
 		enum class State : int {
-			Stopped = 0,
-			Running,
-			Paused,
-			Done
+			stopped = 0,
+			starting,
+			running,
+			pausing,
+			paused,
+			resuming,
+			stopping,
+			failed,
+			overrun,
+			done
 		};
 
-		std::shared_ptr<DPsim::Simulation> sim;
-
-		DPsim::Python::SystemTopology *pySys;
+		DPsim::Simulation::Ptr sim;
+		Python::SystemTopology *pySys;
+		Python::EventChannel *channel;
 
 		std::condition_variable *cond;
 		std::mutex *mut;
-		std::atomic_bool running;
-		std::atomic_int sigPause, numStep;
-		std::thread *simThread;
-		State simState;
+		std::thread *thread;
+
+		std::atomic<State> state;
+
+		// Only relevant for real-time simulations
+		bool realTime;
+		bool startSync;
+		bool singleStepping;
 
 		// List of additional objects that aren't directly used from Simulation
 		// methods, but that a reference has be kept to to avoid them from being
@@ -70,7 +81,9 @@ namespace Python {
 		std::vector<PyObject*> refs;
 
 		// Function executed by the simulation thread
-		static void simThreadFunction(Simulation* self);
+		static void threadFunction(Simulation* self);
+
+		static void newState(Python::Simulation *self, Simulation::State newState);
 
 		// The Python API has no notion of C++ classes and methods, so the methods
 		// that can be called from Python are static.
@@ -82,17 +95,16 @@ namespace Python {
 
 		// Methods that are actually available from Python
 		static PyObject* addInterface(Simulation *self, PyObject *args);
-//		static PyObject* lvector(Simulation *self, PyObject *args);
 		static PyObject* pause(Simulation *self, PyObject *args);
 		static PyObject* start(Simulation *self, PyObject *args);
 		static PyObject* step(Simulation *self, PyObject *args);
 		static PyObject* stop(Simulation *self, PyObject *args);
 		static PyObject* wait(Simulation *self, PyObject *args);
-		static PyObject* eventFD(Simulation *self, PyObject *args);
+		static PyObject* getEventFD(Simulation *self, PyObject *args);
 
 		// Getters
+		static PyObject* getState(Simulation *self, void *ctx);
 		static PyObject* name(Simulation *self, void *ctx);
-		static PyObject* state(Simulation *self, void *ctx);
 		static PyObject* steps(Simulation *self, void *ctx);
 		static PyObject* time(Simulation *self, void *ctx);
 		static PyObject* finalTime(Simulation *self, void *ctx);

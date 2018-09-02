@@ -7,13 +7,17 @@ import enum
 LOGGER = logging.getLogger('dpsim.eventqueue')
 
 class Event(enum.IntEnum):
-    UNKNOWN = 0
-    STARTED = 1
-    STOPPED = 2
-    FINISHED = 3
-    OVERRUN = 4
-    PAUSED = 5
-    RESUMED = 6
+    stopped = 0
+    starting = 1
+    running = 2
+    pausing = 3
+    paused = 4
+    resuming = 5
+    stopping = 6
+    failed = 7
+    overrun = 8
+    done = 9
+    unknown = -1
 
 class EventQueue(object):
     def __init__(self, fd, loop = None):
@@ -26,7 +30,7 @@ class EventQueue(object):
 
         self._callbacks = []
 
-        self._last = Event.UNKNOWN
+        self._last = Event.unknown
         self._lock = asyncio.Lock(loop = loop)
         self._cond = asyncio.Condition(lock = self._lock, loop = loop)
 
