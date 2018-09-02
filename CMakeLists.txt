@@ -29,6 +29,7 @@ endif()
 include(CheckSymbolExists)
 check_symbol_exists(pipe unistd.h HAVE_PIPE)
 check_symbol_exists(timerfd_create sys/timerfd.h HAVE_TIMERFD)
+check_symbol_exists(getopt_long getopt.h HAVE_GETOPT)
 
 include(GetGitRevisionDescription)
 git_describe(DPSIM_VERSION --tags --dirty=-dirty)

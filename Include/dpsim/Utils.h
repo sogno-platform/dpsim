@@ -23,7 +23,7 @@
 
 #include <vector>
 
-#include <dpsim/RealTimeSimulation.h>
+#include <dpsim/Timer.h>
 #include <dpsim/Solver.h>
 #include <cps/Logger.h>
 
@@ -76,7 +76,7 @@ public:
 		Solver::Type type;
 	} solver;
 
-	DPsim::RealTimeSimulation::StartClock::time_point startTime;
+	DPsim::Timer::StartClock::time_point startTime;
 
 	std::vector<String> positional;
 

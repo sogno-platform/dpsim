@@ -21,12 +21,13 @@
 
 #include <string>
 
+#include <dpsim/Config.h>
 #include <dpsim/Utils.h>
 
 using namespace DPsim;
 using namespace CPS;
 
-#ifdef __linux__
+#ifdef HAVE_GETOPT
 #include <getopt.h>
 
 DPsim::CommandLineArgs::CommandLineArgs(int argc, char *argv[],
@@ -108,14 +109,14 @@ DPsim::CommandLineArgs::CommandLineArgs(int argc, char *argv[],
 
 			case 'o': {
 				String arg = optarg;
-				
+
 				auto p = arg.find("=");
 				auto key = arg.substr(0, p);
 				auto value = arg.substr(p + 1);
 
 				if (p != String::npos)
 					options[key] = std::stod(value);
-					
+
 				break;
 			}
 
@@ -162,7 +163,7 @@ DPsim::CommandLineArgs::CommandLineArgs(int argc, char *argv[],
 			case 'i': {
 				double deltaT = std::stod(optarg);
 
-				startTime = RealTimeSimulation::StartClock::now() + std::chrono::milliseconds(static_cast<int>(deltaT * 1e3));
+				startTime = Timer::StartClock::now() + std::chrono::milliseconds(static_cast<int>(deltaT * 1e3));
 
 				break;
 			}
@@ -178,7 +179,7 @@ DPsim::CommandLineArgs::CommandLineArgs(int argc, char *argv[],
 
 				std::time_t tt = std::mktime(&t);
 
-				startTime = RealTimeSimulation::StartClock::from_time_t(tt);
+				startTime = Timer::StartClock::from_time_t(tt);
 
 				break;
 			}
@@ -222,7 +223,7 @@ void DPsim::CommandLineArgs::showUsage() {
 	std::cout << std::endl;
 	showCopyright();
 }
-#endif
+#endif /* HAVE_GETOPT */
 
 void DPsim::CommandLineArgs::showCopyright() {
 	std::cout << "DPsim " << DPSIM_VERSION << "-" << DPSIM_RELEASE << std::endl;
