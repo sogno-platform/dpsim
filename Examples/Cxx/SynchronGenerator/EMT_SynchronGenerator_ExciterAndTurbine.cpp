@@ -26,8 +26,7 @@
 using namespace DPsim;
 using namespace CPS::EMT::Ph3;
 
-int main(int argc, char* argv[])
-{
+int main(int argc, char* argv[]) {
 	// Define machine parameters in per unit
 	Real nomPower = 555e6;
 	Real nomPhPhVoltRMS = 24e3;
