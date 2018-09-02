@@ -26,8 +26,7 @@
 
 using namespace DPsim;
 
-int main(int argc, char* argv[])
-{
+int main(int argc, char* argv[]) {
 	// Define Object for saving data on a file
 	Logger ExciterOut("ExciterOutput_DPsim.csv");
 
@@ -67,17 +66,17 @@ int main(int argc, char* argv[])
 	Real vt = 0;
 
 	while (getline(vd, line_vd) && getline(vq, line_vq)) {
-			t = t + dt;
-			mVd = std::stod(line_vd);
-			mVq = std::stod(line_vq);
-			std::cout << t << '\n';
+		t = t + dt;
+		mVd = std::stod(line_vd);
+		mVq = std::stod(line_vq);
+		std::cout << t << '\n';
 
-			if (t == dt) {
-				mExciter.initialize(Vh_init, Vf_init);
-			}
+		if (t == dt) {
+			mExciter.initialize(Vh_init, Vf_init);
+		}
 
-			vt = mExciter.step(mVd, mVq, Vref, dt);
-			ExciterOut.debug(t, vt*257198.07031934269);
+		vt = mExciter.step(mVd, mVq, Vref, dt);
+		ExciterOut.debug(t, vt*257198.07031934269);
 	}
 
 	return 0;

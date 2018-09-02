@@ -29,11 +29,19 @@ int main(int argc, char* argv[]) {
 	auto n1 = Node::make("n1");
 
 	// Components
-	auto cs = CurrentSource::make("cs", Node::List{GND, n1}, Complex(10, 0), Logger::Level::DEBUG);
-	auto r1 = Resistor::make("r_1", Node::List{GND, n1}, 1);
+	auto cs = CurrentSource::make("cs");
+	auto r1 = Resistor::make("r_1");
+
+	// Topology
+	cs->connect({ Node::GND, n1 });
+	r1->connect({ Node::GND, n1 });
+
+	// Parameters
+	cs->setParameters(Complex(10, 0));
+	r1->setParameters(1);
 
 	// Define system topology
-	auto sys = SystemTopology(50, Node::List{GND, n1}, Component::List{cs, r1});
+	auto sys = SystemTopology(50, SystemNodeList{Node::GND, n1}, SystemComponentList{cs, r1});
 
 	// Define simulation scenario
 	Real timeStep = 0.001;

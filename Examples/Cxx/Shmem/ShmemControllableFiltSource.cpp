@@ -60,9 +60,13 @@ int main(int argc, char *argv[]) {
 	auto n1 = Node::make("n1");
 
 	// Components
-	auto ecs = CurrentSource::make("v_intf", Node::List{GND, n1}, Complex(10, 0));
-	auto r1 = Resistor::make("r_1", Node::List{GND, n1}, 1);
-	auto load = PQLoadCS::make("load_cs", Node::List{n1}, 10., 0., 10.);
+	auto ecs = CurrentSource::make("v_intf", Complex(10, 0));
+	auto r1 = Resistor::make("r_1", 1);
+	auto load = PQLoadCS::make("load_cs", 10., 0., 10.);
+
+	ecs->connect({GND, n1});
+	r1->connect({GND, n1});
+	load->connect({n1});
 
 	filtP->setConnection(load->findAttribute<Real>("active_power"));
 	filtQ->setConnection(load->findAttribute<Real>("reactive_power"));
@@ -73,7 +77,7 @@ int main(int argc, char *argv[]) {
 	intf.addImport(filtP->findAttribute<Real>("input"), 1.0, 0);
 	intf.addImport(filtQ->findAttribute<Real>("input"), 1.0, 1);
 
-	auto sys = SystemTopology(50, Node::List{n1}, Component::List{ecs, r1, load, filtP, filtQ});
+	auto sys = SystemTopology(50, SystemNodeList{n1}, SystemComponentList{ecs, r1, load, filtP, filtQ});
 	auto sim = RealTimeSimulation(simName, sys, timeStep, finalTime,
 	Domain::DP, Solver::Type::MNA, Logger::Level::INFO);
 

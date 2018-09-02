@@ -26,8 +26,7 @@
 
 using namespace DPsim;
 
-int main(int argc, char* argv[])
-{
+int main(int argc, char* argv[]) {
 	// Define Object for saving data on a file
 	Logger TurbineOut("TurbineOutput_DPsim.csv");
 
@@ -63,8 +62,7 @@ int main(int argc, char* argv[])
 
 	mTurbineGovernor.initialize(PmRef, initActivePower / nomPower);
 
-	while (getline(omega, line))
-	{
+	while (getline(omega, line)) {
 		t = t + dt;
 		Om = std::stod(line);
 		std::cout << Om << '\n';

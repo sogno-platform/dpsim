@@ -54,11 +54,13 @@ int main(int argc, char *argv[]) {
 	SystemTopology sys = reader.loadCIM(60, filenames);
 
 	// Extend system with controllable load (Profile)
-	auto load_profile = PQLoadCS::make("load_cs_profile", Node::List{sys.mNodes[6]}, 0, 0, 230000, Logger::Level::INFO);
+	auto load_profile = PQLoadCS::make("load_cs_profile", 0, 0, 230000, Logger::Level::INFO);
+	load_profile->connect({sys.mNodes[6]});
 	sys.mComponents.push_back(load_profile);
 
 	// Extend system with controllable load
-	auto load = PQLoadCS::make("load_cs", Node::List{sys.mNodes[3]}, 0, 0, 230000, Logger::Level::INFO);
+	auto load = PQLoadCS::make("load_cs", 0, 0, 230000, Logger::Level::INFO);
+	load->connect({sys.mNodes[3]});
 	sys.mComponents.push_back(load);
 
 	// Controllers and filter

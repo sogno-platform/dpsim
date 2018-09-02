@@ -26,8 +26,8 @@ using namespace CPS::DP::Ph1;
 
 int main(int argc, char *argv[])
 {
-	Component::List comps, comps2;
-	Node::List nodes;
+	SystemComponentList comps, comps2;
+	SystemNodeList nodes;
 
 	Interface::Config conf;
 	conf.samplelen = 4;
@@ -59,13 +59,13 @@ int main(int argc, char *argv[])
 		auto n3 = Node::make("n3");
 
 		// Components
-		auto evs = VoltageSource::make("v_t", Node::List{GND, n3}, Complex(0, 0));
-		auto vs = VoltageSourceNorton::make("v_s", Node::List{GND, n1}, Complex(10000, 0), 1);
-		auto l1 = Inductor::make("l_1", Node::List{n1, n2}, 0.1);
-		auto r1 = Resistor::make("r_1", Node::List{n2, n3}, 1);
+		auto evs = VoltageSource::make("v_t", SystemNodeList{GND, n3}, Complex(0, 0));
+		auto vs = VoltageSourceNorton::make("v_s", SystemNodeList{GND, n1}, Complex(10000, 0), 1);
+		auto l1 = Inductor::make("l_1", SystemNodeList{n1, n2}, 0.1);
+		auto r1 = Resistor::make("r_1", SystemNodeList{n2, n3}, 1);
 
-		comps = Component::List{evs, vs, l1, r1};
-		nodes = Node::List{GND, n1, n2, n3};
+		comps = SystemComponentList{evs, vs, l1, r1};
+		nodes = SystemNodeList{GND, n1, n2, n3};
 
 		intf.addImport(evs->findAttribute<Complex>("voltage_ref"), 1.0, 0, 1);
 		intf.addExport(evs->findAttribute<Complex>("comp_current"), 1.0, 0, 1);
@@ -75,13 +75,13 @@ int main(int argc, char *argv[])
 		auto n4 = Node::make("n4");
 
 		// Components
-		auto ecs = CurrentSource::make("v_s", Node::List{GND, n4}, Complex(0, 0));
-		auto r2A = Resistor::make("r_2", Node::List{GND, n4}, 10);
-		auto r2B = Resistor::make("r_2", Node::List{GND, n4}, 8);
+		auto ecs = CurrentSource::make("v_s", SystemNodeList{GND, n4}, Complex(0, 0));
+		auto r2A = Resistor::make("r_2", SystemNodeList{GND, n4}, 10);
+		auto r2B = Resistor::make("r_2", SystemNodeList{GND, n4}, 8);
 
-		comps = Component::List{ecs, r2A};
-		comps2 = Component::List{ecs, r2B};
-		nodes = Node::List{GND, n4};
+		comps = SystemComponentList{ecs, r2A};
+		comps2 = SystemComponentList{ecs, r2B};
+		nodes = SystemNodeList{GND, n4};
 
 		intf.addImport(ecs->findAttribute<Complex>("current_ref"), 1.0, 0, 1);
 		intf.addExport(ecs->findAttribute<Complex>("comp_voltage"), 1.0, 0, 1);

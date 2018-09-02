@@ -44,13 +44,16 @@ int main(int argc, char *argv[]) {
 	auto n1 = Node::make("n1");
 
 	// Components
-	auto ecs = CurrentSource::make("v_intf", Node::List{GND, n1}, Complex(10, 0));
-	auto r1 = Resistor::make("r_1", Node::List{GND, n1}, 1);
+	auto ecs = CurrentSource::make("v_intf", Complex(10, 0));
+	auto r1 = Resistor::make("r_1", 1);
+
+	ecs->connect({GND, n1});
+	r1->connect({GND, n1});
 
 	intf.addImport(ecs->findAttribute<Complex>("current_ref"), 1.0, 0, 1);
 	intf.addExport(ecs->findAttribute<Complex>("comp_voltage"), 1.0, 0, 1);
 
-	auto sys = SystemTopology(50, Node::List{n1}, Component::List{ecs, r1});
+	auto sys = SystemTopology(50, SystemNodeList{n1}, SystemComponentList{ecs, r1});
 	auto sim = RealTimeSimulation(simName, sys, timeStep, finalTime,
 	Domain::DP, Solver::Type::MNA, Logger::Level::INFO);
 

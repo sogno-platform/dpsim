@@ -64,14 +64,18 @@ int main(int argc, char *argv[]) {
 		auto n2 = Node::make("n2");
 
 		// Components
-		auto evs = VoltageSource::make("v_intf", Node::List{GND, n2}, Complex(5, 0), Logger::Level::DEBUG);
-		auto vs1 = VoltageSource::make("vs_1", Node::List{GND, n1}, Complex(10, 0), Logger::Level::DEBUG);
-		auto r01 = Resistor::make("r_0_1", Node::List{n1, n2}, 1, Logger::Level::DEBUG);
+		auto evs = VoltageSource::make("v_intf", Complex(5, 0), Logger::Level::DEBUG);
+		auto vs1 = VoltageSource::make("vs_1", Complex(10, 0), Logger::Level::DEBUG);
+		auto r01 = Resistor::make("r_0_1", 1, Logger::Level::DEBUG);
+
+		evs->connect({GND, n2});
+		vs1->connect({GND, n1});
+		r01->connect({n1, n2});
 
 		intf.addImport(evs->findAttribute<Complex>("voltage_ref"), 1.0, 0, 1);
 		intf.addExport(evs->findAttribute<Complex>("comp_current"), 1.0, 0, 1);
 
-		auto sys = SystemTopology(50, Node::List{n1, n2}, Component::List{evs, vs1, r01});
+		auto sys = SystemTopology(50, SystemNodeList{n1, n2}, SystemComponentList{evs, vs1, r01});
 		auto sim = Simulation("ShmemDistributedDirect_1", sys, timeStep, 0.1);
 
 		sim.addInterface(&intf);
@@ -82,8 +86,12 @@ int main(int argc, char *argv[]) {
 		auto n1 = Node::make("n1");
 
 		// Components
-		auto ecs = CurrentSource::make("i_intf", Node::List{GND, n1}, Complex(5, 0), Logger::Level::DEBUG);
-		auto rgnd0 = Resistor::make("r_gnd_0", Node::List{GND, n1}, 1, Logger::Level::DEBUG);
+		auto ecs = CurrentSource::make("i_intf", Complex(5, 0), Logger::Level::DEBUG);
+		auto rgnd0 = Resistor::make("r_gnd_0", 1, Logger::Level::DEBUG);
+
+		ecs->connect({GND, n1});
+		rgnd0->connect({GND, n1});
+
 		//auto ecs_switch = CurrentSource::make("i_switch", GND, 1, Complex(0, 0));
 		//auto r01 = Resistor::make("r_0_1", 0, 1, 1);
 
@@ -91,7 +99,7 @@ int main(int argc, char *argv[]) {
 		intf.addExport(ecs->findAttribute<Complex>("comp_voltage"), 1.0, 0, 1);
 		//intf.addImport(ecs_switch->findAttribute('CurrentRef'), 1.0, 2, 3);
 
-		auto sys = SystemTopology(50, Node::List{n1}, Component::List{ecs, rgnd0});
+		auto sys = SystemTopology(50, SystemNodeList{n1}, SystemComponentList{ecs, rgnd0});
 		auto sim = Simulation("ShmemDistributedDirect_2", sys, timeStep, 0.1);
 
 		sim.addInterface(&intf);

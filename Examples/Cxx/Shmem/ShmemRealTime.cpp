@@ -27,7 +27,7 @@ using namespace CPS::DP::Ph1;
 int main(int argc, char* argv[])
 {
 	// Same circuit as above, but now with realtime support.
-	Component::List comps;
+	SystemComponentList comps;
 
 	Interface::Config conf;
 	conf.samplelen = 4;
@@ -41,18 +41,24 @@ int main(int argc, char* argv[])
 	auto n4 = Node::make("n4");
 
 	// Components
-	auto evs = VoltageSource::make("v_s", Node::List{GND, n1}, Complex(0, 0));
-	auto rs =  Resistor::make("r_s", Node::List{n1, n2}, 1);
-	auto rl =  Resistor::make("r_line", Node::List{n2, n3}, 1);
-	auto ll =  Inductor::make("l_line", Node::List{n3, n4}, 1);
-	auto rL =  Resistor::make("r_load", Node::List{n4, GND}, 1000);
+	auto evs = VoltageSource::make("v_s", Complex(0, 0));
+	auto rs =  Resistor::make("r_s", 1);
+	auto rl =  Resistor::make("r_line", 1);
+	auto ll =  Inductor::make("l_line", 1);
+	auto rL =  Resistor::make("r_load", 1000);
+
+	evs->connect({GND, n1});
+	rs->connect({n1, n2});
+	rl->connect({n2, n3});
+	ll->connect({n3, n4});
+	rL->connect({n4, GND});
 
 	Interface intf("/villas1-in", "/villas1-out", &conf);
 	intf.addImport(evs->findAttribute<Complex>("voltage_ref"), 1.0, 0, 1);
 	intf.addExport(evs->findAttribute<Complex>("comp_current"), 1.0,  0, 1);
 
 	Real timeStep = 0.001;
-	auto sys = SystemTopology(50, Node::List{GND, n1, n2, n3, n4}, Component::List{evs, rs, rl, ll, rL});
+	auto sys = SystemTopology(50, SystemNodeList{GND, n1, n2, n3, n4}, SystemComponentList{evs, rs, rl, ll, rL});
 	auto sim = RealTimeSimulation("ShmemRealTime", sys, timeStep, 5.0);
 
 	sim.addInterface(&intf, false, true);

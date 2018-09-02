@@ -35,14 +35,26 @@ int main(int argc, char* argv[])
 	auto n3 = Node::make("n3");
 
 	// Components
-	auto vs = VoltageSource::make("v_s", Node::List{GND, n1}, Complex(10000, 0));
-	auto rl = Resistor::make("r_line",Node::List{n1, n2}, 1);
-	auto ll = Inductor::make("l_line",Node::List{n2, n3}, 1);
-	auto rL = Resistor::make("r_load",Node::List{GND, n3}, 1000);
+	auto vs = VoltageSource::make("v_s");
+	auto rl = Resistor::make("r_line");
+	auto ll = Inductor::make("l_line");
+	auto rL = Resistor::make("r_load");
+
+	// Topology
+	vs->connect({GND, n1});
+	rl->connect({n1, n2});
+	ll->connect({n2, n3});
+	rL->connect({GND, n3});
+
+	// Parameters
+	vs->setParameters(Complex(10000, 0));
+	rl->setParameters(1);
+	ll->setParameters(1);
+	rL->setParameters(1000);
 
 	String simName = "RT_DP_ResVS_RL1_" + std::to_string(timeStep);
 
-	auto sys = SystemTopology(50, Node::List{GND, n1, n2, n3}, Component::List{vs, rl, ll, rL});
+	auto sys = SystemTopology(50, SystemNodeList{GND, n1, n2, n3}, SystemComponentList{vs, rl, ll, rL});
 	auto sim = RealTimeSimulation(simName, sys, timeStep, 1.0);
 
 	auto startIn = std::chrono::seconds(5);

@@ -52,11 +52,13 @@ int main(int argc, char *argv[]) {
 		SystemTopology sys = reader.loadCIM(args.sysFreq, filenames);
 
 		// Extend system with controllable load (Profile)
-		auto load_profile = PQLoadCS::make("load_cs_profile", ComplexNode::List{sys.getDPNodeAt(6)}, 0, 0, 230000, Logger::Level::INFO);
+		auto load_profile = PQLoadCS::make("load_cs_profile", 0, 0, 230000, Logger::Level::INFO);
+		load_profile->connect({sys.getDPNodeAt(6)})
 		sys.mComponents.push_back(load_profile);
 
 		// Extend system with controllable load
-		auto ecs = CurrentSource::make("i_intf", ComplexNode::List{sys.getDPNodeAt(3), ComplexNode::GND}, Complex(0, 0), Logger::Level::DEBUG);
+		auto ecs = CurrentSource::make("i_intf", Complex(0, 0), Logger::Level::DEBUG);
+		ecs->connect({sys.getDPNodeAt(3), Node::GND})
 		sys.mComponents.push_back(ecs);
 
 		RealTimeSimulation sim(simName + "_1", sys, args.timeStep, args.duration,
@@ -124,15 +126,16 @@ int main(int argc, char *argv[]) {
 
 	if (args.scenario == 1) {
 		// Nodes
-		auto n1 = ComplexNode::make("n1", PhaseType::Single, std::vector<Complex>({Complex(02.180675e+05, -1.583367e+04)}));
+		auto n1 = Node::make("n1", PhaseType::Single, std::vector<Complex>({Complex(02.180675e+05, -1.583367e+04)}));
 
 		// Add interface voltage source
 		auto evs = VoltageSource::make("v_intf", Logger::Level::DEBUG);
 		evs->setParameters(Complex(0, 0));
-		evs->connect(ComplexNode::List{ComplexNode::GND, n1});
+		evs->connect({Node::GND, n1});
 
 		// Extend system with controllable load
-		auto load = PQLoadCS::make("load_cs", ComplexNode::List{n1}, 0, 0, 230000);
+		auto load = PQLoadCS::make("load_cs", 0, 0, 230000);
+		load->connect({n1})
 
 		// Controllers and filter
 		std::vector<Real> coefficients = std::vector(100, 1./100);
@@ -141,7 +144,7 @@ int main(int argc, char *argv[]) {
 		filtP->setConnection(load->findAttribute<Real>("active_power"));
 		filtP->findAttribute<Real>("input")->set(0.);
 
-		auto sys = SystemTopology(args.sysFreq, TopologicalNode::List{n1}, Component::List{evs, load, filtP});
+		auto sys = SystemTopology(args.sysFreq, SystemNodeList{n1}, SystemComponentList{evs, load, filtP});
 		RealTimeSimulation sim(simName + "_2", sys, args.timeStep, args.duration);
 
 		// Create shmem interface 1
