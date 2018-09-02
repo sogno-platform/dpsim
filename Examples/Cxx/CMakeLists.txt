@@ -57,13 +57,10 @@ if(WITH_SUNDIALS)
 	)
 endif()
 
-if(WITH_RT)
-	list(APPEND LIBRARIES "-lrt")
-
-	set(RT_SOURCES
-		#RealTime/RT_DP_ResVS_RL1.cpp
-	)
-endif()
+set(RT_SOURCES
+	RealTime/RT_DP_CS_R_1.cpp
+	RealTime/RT_DP_ResVS_RL1.cpp
+)
 
 if(WITH_SHMEM)
 	list(APPEND LIBRARIES ${VILLASNODE_LIBRARIES})
@@ -73,16 +70,11 @@ if(WITH_SHMEM)
 		#Shmem/ShmemExample.cpp
 		#Shmem/ShmemDistributedReference.cpp
 		#Shmem/ShmemDistributedDirect.cpp
+		#Shmem/ShmemDistributedVillas.cpp
+		#Shmem/ShmemControllableSource.cpp
+		#Shmem/ShmemControllableFiltSource.cpp
+		#Shmem/ShmemRealTime.cpp
 	)
-
-	if (WITH_RT)
-		list(APPEND SHMEM_SOURCES
-			#Shmem/ShmemDistributedVillas.cpp
-			#Shmem/ShmemControllableSource.cpp
-			#Shmem/ShmemControllableFiltSource.cpp
-			#Shmem/ShmemRealTime.cpp
-		)
-	endif()
 endif()
 
 if(WITH_CIM)

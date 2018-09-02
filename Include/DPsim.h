@@ -22,10 +22,7 @@
 #include <dpsim/Config.h>
 #include <dpsim/Utils.h>
 #include <dpsim/Simulation.h>
-
-#ifdef WITH_RT
-  #include <dpsim/RealTimeSimulation.h>
-#endif
+#include <dpsim/RealTimeSimulation.h>
 
 #include <cps/Components.h>
 #include <cps/Logger.h>

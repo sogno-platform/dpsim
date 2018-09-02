@@ -1,21 +1,19 @@
 set(SOURCES
 	Simulation.cpp
+	RealTimeSimulation.cpp
 	MNASolver.cpp
 	Utils.cpp
+	Timer.cpp
 )
 
-set(LIBRARIES cps)
+list(APPEND LIBRARIES cps)
 
 if(NOT WIN32)
 	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fPIC")
 endif()
 
-if(WITH_RT)
-	if(HAVE_TIMERFD)
-		list(APPEND LIBRARIES "-lrt")
-	endif()
-
-	list(APPEND SOURCES RealTimeSimulation.cpp)
+if(WITH_RT AND HAVE_TIMERFD)
+	list(APPEND LIBRARIES "-lrt")
 endif()
 
 if(WITH_SUNDIALS)
@@ -28,14 +26,14 @@ endif()
 if(WITH_PYTHON)
 	list(APPEND INCLUDE_DIRS ${PYTHON_INCLUDE_DIRS})
 	list(APPEND LIBRARIES ${PYTHON_LIBRARIES})
-
+	
 	add_subdirectory(Python)
 endif()
 
 add_library(dpsim)
 target_sources(dpsim PRIVATE ${SOURCES})
 target_link_libraries(dpsim ${LIBRARIES})
-target_include_directories(dpsim PRIVATE ${INCLUDE_DIRS})
+target_include_directories(dpsim PUBLIC ${INCLUDE_DIRS})
 target_compile_options(dpsim PUBLIC ${DPSIM_CXX_FLAGS})
 
 include_directories(${CMAKE_CURRENT_SOURCE_DIR} ${CMAKE_CURRENT_BINARY_DIR})
