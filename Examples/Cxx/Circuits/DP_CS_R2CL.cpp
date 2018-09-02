@@ -32,24 +32,27 @@ int main(int argc, char* argv[]) {
 
 	// Components
 	auto cs = CurrentSource::make("cs");
-	cs->setParameters(10);
-	cs->connect({ Node::GND, n1 });
 	auto r1 = Resistor::make("r_1");
-	r1->setParameters(1);
-	r1->connect({ n1, Node::GND });
 	auto c1 = Capacitor::make("c_1");
-	c1->setParameters(0.001);
-	c1->connect({ n1, n2 });
 	auto l1 = Inductor::make("l_1");
-	l1->setParameters(0.001);
-	l1->connect({ n2, Node::GND });
 	auto r2 = Resistor::make("r_2");
-	r2->setParameters(1);
+
+	// Topology
+	cs->connect({ Node::GND, n1 });
+	r1->connect({ n1, Node::GND });
+	c1->connect({ n1, n2 });
+	l1->connect({ n2, Node::GND });
 	r2->connect({ n2, Node::GND });
+
+	cs->setParameters(10);
+	r1->setParameters(1);
+	c1->setParameters(0.001);
+	l1->setParameters(0.001);
+	r2->setParameters(1);
 
 	// Define system topology
 	auto sys = SystemTopology(50, SystemNodeList{n1, n2}, SystemComponentList{cs, r1, c1, l1, r2});
-		
+
 	// Define simulation scenario
 	Real timeStep = 0.001;
 	Real finalTime = 0.1;

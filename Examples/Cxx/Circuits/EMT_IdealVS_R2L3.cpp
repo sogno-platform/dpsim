@@ -34,27 +34,31 @@ int main(int argc, char* argv[]) {
 
 	// Components
 	auto vs = VoltageSource::make("vs");
-	vs->setParameters(10 * sin(2 * PI * 50));  //V_in(t) = 10*sin(w*t)
-	vs->connect({ Node::GND, n1 });
 	auto r1 = Resistor::make("r_1");
-	r1->setParameters(1);
-	r1->connect({ n1, n2 });
 	auto l1 = Inductor::make("l_1");
-	l1->setParameters(0.02);
-	l1->connect({ n2, n3 });
 	auto l2 = Inductor::make("l_2");
-	l2->setParameters(0.1);
-	l2->connect({ n3, Node::GND });
 	auto l3 = Inductor::make("l_3");
-	l3->setParameters(0.05);
-	l3->connect({ n3, n4 });
 	auto r2 = Resistor::make("r_2");
-	r2->setParameters(2);
+
+	// Topology
+	vs->connect({ Node::GND, n1 });
+	r1->connect({ n1, n2 });
+	l1->connect({ n2, n3 });
+	l2->connect({ n3, Node::GND });
+	l3->connect({ n3, n4 });
 	r2->connect({ n4, Node::GND });
+
+	// Parameters
+	vs->setParameters(10 * sin(2 * PI * 50));  //V_in(t) = 10*sin(w*t)
+	r1->setParameters(1);
+	l1->setParameters(0.02);
+	l2->setParameters(0.1);
+	l3->setParameters(0.05);
+	r2->setParameters(2);
 
 	// Define system topology
 	auto sys = SystemTopology(50, SystemNodeList{n1, n2, n3, n4}, SystemComponentList{vs, r1, l1, l2, l3, r2});
-		
+
 	// Define simulation scenario
 	Real timeStep = 0.001;
 	Real finalTime = 0.1;

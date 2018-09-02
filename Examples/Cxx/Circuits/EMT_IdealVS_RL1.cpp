@@ -32,18 +32,22 @@ int main(int argc, char* argv[]) {
 
 	// Components
 	auto vs = VoltageSource::make("vs");
-	vs->setParameters(Complex(10, 0));
-	vs->connect({ Node::GND, n1 });
 	auto r1 = Resistor::make("r_1");
-	r1->setParameters(1);
-	r1->connect({ n1, n2 });
 	auto l1 = Inductor::make("l_1");
-	l1->setParameters(1);
+
+	// Topology
+	vs->connect({ Node::GND, n1 });
+	r1->connect({ n1, n2 });
 	l1->connect({ n2, Node::GND });
+
+	// Parameters
+	vs->setParameters(Complex(10, 0));
+	r1->setParameters(1);
+	l1->setParameters(1);
 
 	// Define system topology
 	auto sys = SystemTopology(50, SystemNodeList{n1, n2}, SystemComponentList{vs, r1, l1});
-		
+
 	// Define simulation scenario
 	Real timeStep = 0.001;
 	Real finalTime = 0.1;

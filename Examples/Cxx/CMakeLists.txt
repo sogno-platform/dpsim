@@ -8,7 +8,7 @@ endif()
 
 # targets
 set(CIRCUIT_SOURCES
-	#Circuits/DP_IdealVS_R_1.cpp
+	Circuits/DP_IdealVS_R_1.cpp
 	Circuits/DP_CS_R_1.cpp
 	Circuits/DP_IdealVS_RL1.cpp
 	Circuits/DP_CS_R2CL.cpp
@@ -19,11 +19,11 @@ set(CIRCUIT_SOURCES
 	Circuits/EMT_CS_R2CL.cpp
 	Circuits/EMT_IdealVS_R2L3.cpp
 	Circuits/EMT_IdealVS_CS_R4.cpp
-	#Circuits/DP_IdealVS_RXLine_1.cpp
-	#Circuits/DP_IdealVS_Trafo_1.cpp
-	#Circuits/DP_ResVS_RL_Switch_1.cpp
-	#Circuits/EMT_IdealVS_R_1.cpp
-	#Circuits/EMT_ResVS_RL_Switch_1.cpp
+	Circuits/DP_IdealVS_RXLine_1.cpp
+	Circuits/DP_IdealVS_Trafo_1.cpp
+#	Circuits/DP_ResVS_RL_Switch_1.cpp
+	Circuits/EMT_IdealVS_R_1.cpp
+#	Circuits/EMT_ResVS_RL_Switch_1.cpp
 )
 
 set(SYNCGEN_SOURCES

@@ -26,11 +26,28 @@ using namespace DPsim;
 using namespace CPS::EMT::Ph1;
 
 int main(int argc, char* argv[]) {
+	// Nodes
+	auto n1 = Node::make("n1");
+	auto n2 = Node::make("n2");
+	auto n3 = Node::make("n3");
+
+	// Components
+	auto vs = VoltageSourceNorton::make("v_s");
+	auto rl = Resistor::make("r_line");
+	auto ll = Inductor::make("l_line");
+
+	// Topology
+	vs->connect({n1, GND});
+	rl->connect({n1, n2});
+	ll->connect({n2, n3});
+
+	// Parameters
+	vs->setParameters(Complex(10000, 0), 1);
+	rl->setParameters(1);
+	ll->setParameters(1);
+
 	// Define system topology
-	SystemTopology system0(50, {
-		VoltageSourceNorton::make("v_s", 0, DEPRECATEDGND, Complex(10000, 0), 1),
-		Resistor::make("r_line", 0, 1, 1),
-		Inductor::make("l_line", 1, 2, 1)});
+	SystemTopology system0(50, {GND, n1, n2, n3}, {vs, rl, ll});
 
 	SystemTopology system1 = system0;
 	SystemTopology system2 = system0;

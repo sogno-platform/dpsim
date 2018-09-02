@@ -23,15 +23,35 @@
 #include <DPsim.h>
 
 using namespace DPsim;
+using namespace CPS::EMT;
 using namespace CPS::EMT::Ph1;
 
 int main(int argc, char* argv[]) {
+	// Nodes
+	auto n1 = Node::make("n1");
+	auto n2 = Node::make("n2");
+	auto n3 = Node::make("n3");
+
+	// Components
+	auto vin = VoltageSource::make("v_in");
+	auto r1 = Resistor::make("r_1");
+	auto r2 = Resistor::make("r_2");
+	auto r3 = Resistor::make("r_3");
+
+	// Topology
+	vin->connect({ n1, n2 });
+	r1->connect({ n1, Node::GND });
+	r2->connect({ n2, Node::GND });
+	r3->connect({ n2, Node::GND });
+
+	// Parameters
+	vin->setParameters(10);
+	r1->setParameters(5);
+	r2->setParameters(10);
+	r3->setParameters(2);
+
 	// Define system topology
-	SystemTopology system(50, {
-		VoltageSource::make("v_in", 0, 1, 10),
-		Resistor::make("r_1", 0, DEPRECATEDGND, 5),
-		Resistor::make("r_2", 1, DEPRECATEDGND, 10),
-		Resistor::make("r_3", 1, DEPRECATEDGND, 2)});
+	SystemTopology system(50, SystemNodeList{n1, n2, n3, Node::GND}, SystemComponentList{vin, r1, r2, r3});
 
 	// Define simulation scenario
 	Real timeStep = 0.00005;
