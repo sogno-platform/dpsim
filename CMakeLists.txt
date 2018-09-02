@@ -88,6 +88,7 @@ set(INCLUDE_DIRS
 	${CMAKE_CURRENT_SOURCE_DIR}/Include
 )
 
+add_subdirectory(Tests)
 add_subdirectory(Source)
 add_subdirectory(Documentation)
 
