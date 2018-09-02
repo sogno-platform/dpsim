@@ -61,7 +61,6 @@ Simulation::Simulation(String name, SystemTopology system,
 
 	switch (solverType) {
 	case Solver::Type::MNA:
-	default:
 		if (domain == Domain::DP)
 			mSolver = std::make_shared<MnaSolver<Complex>>(name, system, timeStep,
 				domain, logLevel, steadyStateInit);
@@ -71,10 +70,13 @@ Simulation::Simulation(String name, SystemTopology system,
 		break;
 
 #ifdef WITH_SUNDIALS
-	case Solver::Type::IDA:
+	case Solver::Type::DAE:
 		mSolver = std::make_shared<DAESolver>(name, system, timeStep, 0.0);
 		break;
 #endif /* WITH_SUNDIALS */
+
+	default:
+		throw UnsupportedSolverException();
 	}
 }
 
