@@ -8,17 +8,14 @@ int main(int argc, char *argv[]) {
 
 	CommandLineArgs args(argc, argv);
 
-	Timer::Ticks dt = Timer::Ticks(static_cast<Timer::Ticks::rep>(args.timeStep * 1e9));
-
 	t.setStartTime(args.startTime);
-	t.setInterval(dt);
+	t.setInterval(args.timeStep);
 
-	if (args.startTime > Timer::StartTimePoint())
-		std::cout << "Start clock at: " << args.startTime << std::endl;
-	else
-		std::cout << "Start clock immeadiatly" << std::endl;
+	if (args.startTime == Timer::StartTimePoint())
+		args.startTime = Timer::StartClock::now();
 
-	std::cout << "Timer interval: " << dt << std::endl;
+	std::cout << "Start clock at: " << args.startTime << "(in " << args.startTime - Timer::StartClock::now() << ")" << std::endl;
+	std::cout << "Timer interval: " << t.interval() << std::endl;
 
 	t.start();
 
