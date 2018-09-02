@@ -4,7 +4,7 @@ import os
 import logging
 import enum
 
-LOGGER = logging.getLogger('dpsim.eventqueue')
+LOGGER = logging.getLogger('dpsim.EventChannel')
 
 class Event(enum.IntEnum):
     stopped = 0
@@ -19,7 +19,7 @@ class Event(enum.IntEnum):
     done = 9
     unknown = -1
 
-class EventQueue(object):
+class EventChannel(object):
     def __init__(self, fd, loop = None):
         self._loop = loop
         if self._loop is None:

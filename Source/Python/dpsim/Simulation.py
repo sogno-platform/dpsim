@@ -6,7 +6,7 @@ import logging
 
 LOGGER = logging.getLogger('dpsim.simulation')
 
-from .EventQueue import EventQueue, Event
+from .EventChannel import EventChannel, Event
 
 def is_interactive():
     import __main__ as main
@@ -38,7 +38,7 @@ class Simulation(_dpsim.Simulation):
 
         self._fd = self.get_eventfd()
 
-        self.events = EventQueue(self._fd, self._loop)
+        self.events = EventChannel(self._fd, self._loop)
 
         self.events.add_callback(self.started, self, event=Event.running)
         self.events.add_callback(self.stopped, self, event=Event.stopped)

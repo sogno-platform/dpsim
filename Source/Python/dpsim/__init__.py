@@ -24,7 +24,7 @@ from _dpsim import open_interface
 import _dpsim
 
 from .Simulation import Simulation, RealTimeSimulation
-from .EventQueue import EventQueue
+from .EventChannel import EventChannel
 
 def __get_module(parts):
     full_name = ".".join(parts)
