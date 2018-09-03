@@ -31,10 +31,8 @@ namespace Python {
 class EventChannel {
 
 protected:
-#ifdef HAVE_PIPE
-	/// Pipe for asynchronous inter-process communication (IPC) to the Python world
-	int mPipe[2];
-#endif /* HAVE_PIPE */
+	/// Socketpair for asynchronous inter-process communication (IPC) to the Python world
+	int mFds[2];
 
 public:
 	EventChannel();
