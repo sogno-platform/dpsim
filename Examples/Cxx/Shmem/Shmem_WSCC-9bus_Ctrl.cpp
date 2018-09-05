@@ -71,13 +71,13 @@ int main(int argc, char *argv[]) {
 
 	auto filtP_profile = FIRFilter::make("filter_p_profile", coefficients_profile, 0, Logger::Level::INFO);
 	filtP_profile->setPriority(1);
-	filtP_profile->setConnection(load_profile->findAttribute<Real>("active_power"));
+	filtP_profile->setConnection(load_profile->findAttribute<Real>("power_active"));
 	filtP_profile->findAttribute<Real>("input")->set(0.);
 	sys.mComponents.push_back(filtP_profile);
 
 	auto filtP = FIRFilter::make("filter_p", coefficients, 0, Logger::Level::INFO);
 	filtP->setPriority(1);
-	filtP->setConnection(load->findAttribute<Real>("active_power"));
+	filtP->setConnection(load->findAttribute<Real>("power_active"));
 	filtP->findAttribute<Real>("input")->set(0.);
 	sys.mComponents.push_back(filtP);
 

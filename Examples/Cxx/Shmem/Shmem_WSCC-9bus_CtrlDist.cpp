@@ -89,13 +89,13 @@ int main(int argc, char *argv[]) {
 
 		auto filtP_profile = FIRFilter::make("filter_p_profile", coefficients_profile, 0, Logger::Level::INFO);
 		filtP_profile->setPriority(1);
-		filtP_profile->setConnection(load_profile->findAttribute<Real>("active_power"));
+		filtP_profile->setConnection(load_profile->findAttribute<Real>("power_active"));
 		filtP_profile->findAttribute<Real>("input")->set(0.);
 		sys.mComponents.push_back(filtP_profile);
 
 		// Register interface current source and voltage drop
 		intf1.addImport(ecs->findAttribute<Complex>("current_ref"), 1.0, 0, 1);
-		intf1.addExport(ecs->findAttribute<Complex>("comp_voltage"), 1.0, 0, 1);
+		intf1.addExport(ecs->findAttribute<Complex>("voltage_comp"), 1.0, 0, 1);
 
 		intf2.addImport(filtP_profile->findAttribute<Real>("input"), 20e8, 0);
 
