@@ -86,7 +86,7 @@ namespace DPsim {
 		/// Map of system matrices where the key is the bitset describing the switch states
 		std::unordered_map< std::bitset<SWITCH_NUM>, Matrix > mSwitchedMatrices;
 		/// Map of LU factorizations related to the system matrices
-		std::unordered_map< std::bitset<SWITCH_NUM>, CPS::LUFactorized > mTmpLuFactorizations;
+		std::unordered_map< std::bitset<SWITCH_NUM>, CPS::LUFactorized > mLuFactorizations;
 
 		// #### Attributes related to switching ####
 		/// Index of the next switching event

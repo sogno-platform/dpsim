@@ -53,9 +53,7 @@ void MnaSolver<VarType>::initialize(CPS::SystemTopology system) {
 	mLog.info() << "Initialize power flow" << std::endl;
 	for (auto comp : mPowerComponents) {
 		auto pComp = std::dynamic_pointer_cast<PowerComponent<VarType>>(comp);
-		if (!pComp)
-			continue;
-
+		if (!pComp)	continue;
 		pComp->initializeFromPowerflow(mSystem.mSystemFrequency);
 	}
 
@@ -76,6 +74,9 @@ void MnaSolver<VarType>::initialize(CPS::SystemTopology system) {
 		mLog.info() << "Finished steady-state initialization." << std::endl;
 	}
 
+	for (auto comp : mSystem.mComponents)
+		comp->setBehaviour(Component::Behaviour::Simulation);
+
 	// Create initial system matrix
 	for (auto comp : mPowerComponents)
 		comp->mnaApplySystemMatrixStamp(mTmpSystemMatrix);
@@ -92,7 +93,7 @@ void MnaSolver<VarType>::initialize(CPS::SystemTopology system) {
 		for (UInt i = 0; i < mSwitches.size(); i++)
 			mSwitches[i]->mnaApplySwitchSystemMatrixStamp(sys.second, sys.first[i]);
 
-		mTmpLuFactorizations[sys.first] = Eigen::PartialPivLU<Matrix>(sys.second);
+		mLuFactorizations[sys.first] = Eigen::PartialPivLU<Matrix>(sys.second);
 	}
 	updateSwitchStatus();
 
@@ -109,8 +110,10 @@ void MnaSolver<VarType>::initialize(CPS::SystemTopology system) {
 	mLog.info() << "Right side vector:" << mRightSideVector << std::endl;
 
 	for (auto sys : mSwitchedMatrices) {
-		mLog.info() << "Switching System matrix " << sys.first << ": " << sys.second << std::endl;
-		mLog.info() << "LU Factorization for System Matrix " << sys.first << ": " << mLuFactorizations[sys.first].matrixLU() << std::endl;
+		mLog.info() << "Switching System matrix " 
+					<< sys.first << ": " << sys.second << std::endl;
+		mLog.info() << "LU Factorization for System Matrix " 
+					<< sys.first << ": " << mLuFactorizations[sys.first].matrixLU() << std::endl;
 	}
 
 	mLog.info() << "Initial switch status: " << mCurrentSwitchStatus << std::endl;
@@ -182,7 +185,9 @@ void MnaSolver<VarType>::assignSimNodes() {
 template <typename VarType>
 void MnaSolver<VarType>::solve()  {
 	if (mSwitchedMatrices.size() > 0)
-		mLeftSideVector = mTmpLuFactorizations[mCurrentSwitchStatus].solve(mRightSideVector);
+		mLeftSideVector = mLuFactorizations[mCurrentSwitchStatus].solve(mRightSideVector);
+	else
+		mLeftSideVector = mTmpLuFactorization.solve(mRightSideVector);
 }
 
 template<>
@@ -257,8 +262,14 @@ void MnaSolver<VarType>::steadyStateInitialization() {
 	Matrix diff;
 	Matrix prevLeftSideVector = Matrix::Zero(2 * mNumNodes, 1);
 
+	for (auto comp : mSystem.mComponents)
+		comp->setBehaviour(Component::Behaviour::Initialization);
+		
+	// Create system matrix
 	for (auto comp : mPowerComponents)
-		comp->mnaApplyInitSystemMatrixStamp(mTmpSystemMatrix);
+		comp->mnaApplySystemMatrixStamp(mTmpSystemMatrix);
+	for (auto comp : mSwitches)
+		comp->mnaApplySystemMatrixStamp(mTmpSystemMatrix);
 	
 	// Compute LU-factorization for system matrix
 	mTmpLuFactorization = Eigen::PartialPivLU<Matrix>(mTmpSystemMatrix);
@@ -271,26 +282,26 @@ void MnaSolver<VarType>::steadyStateInitialization() {
 		for (auto comp : mSignalComponents)
 			comp->step(time);
 		for (auto comp : mPowerComponents)
-			comp->mnaInitStep(mTmpSystemMatrix, mRightSideVector, mLeftSideVector, time);
+			comp->mnaStep(mTmpSystemMatrix, mRightSideVector, mLeftSideVector, time);
 
 		// Solve MNA system
 		mLeftSideVector = mTmpLuFactorization.solve(mRightSideVector);
 
 		// Some components need to update internal states
 		for (auto comp : mPowerComponents)
-			comp->mnaInitPostStep(mRightSideVector, mLeftSideVector, time);
+			comp->mnaPostStep(mRightSideVector, mLeftSideVector, time);
 
 		// TODO Try to avoid this step.
 		for (UInt nodeIdx = 0; nodeIdx < mNumNetNodes; nodeIdx++)
 			mNodes[nodeIdx]->mnaUpdateVoltage(mLeftSideVector);
 
 		if (mDomain == CPS::Domain::EMT) {
-				mInitLeftVectorLog.LogEMTNodeValues(time, leftSideVector());
-				mInitRightVectorLog.LogEMTNodeValues(time, rightSideVector());
+				mInitLeftVectorLog.logEMTNodeValues(time, leftSideVector());
+				mInitRightVectorLog.logEMTNodeValues(time, rightSideVector());
 			}
 			else {
-				mInitLeftVectorLog.LogPhasorNodeValues(time, leftSideVector());
-				mInitRightVectorLog.LogPhasorNodeValues(time, rightSideVector());
+				mInitLeftVectorLog.logPhasorNodeValues(time, leftSideVector());
+				mInitRightVectorLog.logPhasorNodeValues(time, rightSideVector());
 		}
 
 		// Calculate new simulation time
