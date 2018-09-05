@@ -32,5 +32,6 @@ namespace DPsim {
 	using Matrix = CPS::Matrix;
 	using MatrixComp = CPS::MatrixComp;
 
+	class SolverException { };
 	class UnsupportedSolverException { };
 }

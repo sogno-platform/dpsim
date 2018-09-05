@@ -22,13 +22,13 @@
 #include <DPsim.h>
 
 using namespace DPsim;
-using namespace CPS;
-using namespace CPS::DP::Ph1;
 using namespace CPS::Signal;
+using namespace CPS::DP;
+using namespace CPS::DP::Ph1;
 
 int main(int argc, char *argv[]) {
 
-	Interface::Config conf;
+	CPS::Interface::Config conf;
 	conf.samplelen = 64;
 	conf.queuelen = 1024;
 	conf.polling = false;
@@ -40,7 +40,7 @@ int main(int argc, char *argv[]) {
 	Real finalTime = 10;
 	String simName = "ShmemControllableSource";
 
-	Interface intf(out, in, &conf);
+	CPS::Interface intf(out, in, &conf);
 
 	// Controllers and filter
 	std::vector<Real> coefficients = { -0.0024229,-0.0020832,0.0067703,0.016732,
@@ -64,9 +64,9 @@ int main(int argc, char *argv[]) {
 	auto r1 = Resistor::make("r_1", 1);
 	auto load = PQLoadCS::make("load_cs", 10., 0., 10.);
 
-	ecs->connect({GND, n1});
-	r1->connect({GND, n1});
-	load->connect({n1});
+	ecs->connect({ Node::GND, n1 });
+	r1->connect({ Node::GND, n1 });
+	load->connect({ n1 });
 
 	filtP->setConnection(load->findAttribute<Real>("active_power"));
 	filtQ->setConnection(load->findAttribute<Real>("reactive_power"));

@@ -23,7 +23,6 @@
 #include <dpsim/Python/LoadCim.h>
 #include <dpsim/Python/Component.h>
 
-#include <cps/Components.h>
 #include <cps/SystemTopology.h>
 #include <dpsim/Python/SystemTopology.h>
 

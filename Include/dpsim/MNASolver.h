@@ -111,7 +111,7 @@ namespace DPsim {
 		/// TODO: check that every system matrix has the same dimensions
 		void initialize(CPS::SystemTopology system);
 		/// Identify Nodes and PowerComponents and SignalComponents
-		void IdentifyTopologyObjects();
+		void identifyTopologyObjects();
 		///
 		void sortExecutionPriority();
 		/// Assign simulation node index according to index in the vector.

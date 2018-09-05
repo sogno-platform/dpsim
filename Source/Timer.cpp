@@ -129,9 +129,10 @@ void Timer::stop() {
 
 #ifdef HAVE_TIMERFD
 	int ret;
-	struct itimerspec ts;
-
-	ts.it_value = { 0, 0 };
+	struct itimerspec ts = {
+		.it_interval = { 0, 0},
+		.it_value = { 0, 0 }
+	};
 
 	ret = timerfd_settime(mTimerFd, 0, &ts, 0);
 	if (ret < 0) {
