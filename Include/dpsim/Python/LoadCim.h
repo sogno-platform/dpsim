@@ -34,6 +34,6 @@ namespace DPsim {
 namespace Python {
 
 	extern const char* DocLoadCim;
-	PyObject* LoadCim(PyObject* self, PyObject* args);
+	PyObject* LoadCim(PyObject* self, PyObject* args, PyObject *kwargs);
 }
 }

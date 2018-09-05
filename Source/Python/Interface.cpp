@@ -58,7 +58,7 @@ void Python::Interface::dealloc(Python::Interface* self)
 	Py_TYPE(self)->tp_free((PyObject*) self);
 }
 
-static const char* DocInterfaceRegisterControlledAttribute =
+const char* Python::Interface::docRegisterControlledAttribute =
 "import(comp, attr, real_idx, imag_idx)\n"
 "Register a source with this interface, causing it to use values received from "
 "this interface as its current or voltage value.\n"
@@ -78,7 +78,7 @@ PyObject* Python::Interface::registerControlledAttribute(Interface* self, PyObje
 	if (!PyArg_ParseTuple(args, "Osfi|i", &obj, &attrName, &gain, &realIdx, &imagIdx))
 		return nullptr;
 
-	if (!PyObject_TypeCheck(obj, &Python::ComponentType)) {
+	if (!PyObject_TypeCheck(obj, &Python::Component::type)) {
 		PyErr_SetString(PyExc_TypeError, "First argument must be a Component");
 		return nullptr;
 	}
@@ -115,7 +115,7 @@ PyObject* Python::Interface::registerControlledAttribute(Interface* self, PyObje
 #endif
 }
 
-static const char* DocInterfaceRegisterExportedAttribute =
+const char* Python::Interface::docRegisterExportedAttribute =
 "export(comp, attr, real_idx, imag_idx)\n"
 "Register a voltage between two nodes to be written to this interface after every timestep.\n"
 "\n"
@@ -135,7 +135,7 @@ PyObject* Python::Interface::registerExportedAttribute(Interface* self, PyObject
 		return nullptr;
 	}
 
-	if (!PyObject_TypeCheck(obj, &Python::ComponentType)) {
+	if (!PyObject_TypeCheck(obj, &Python::Component::type)) {
 		PyErr_SetString(PyExc_TypeError, "First argument must be a Component");
 		return nullptr;
 	}
@@ -173,7 +173,7 @@ PyObject* Python::Interface::registerExportedAttribute(Interface* self, PyObject
 #endif
 }
 
-const char* Python::DocOpenInterface =
+const char* Python::Interface::docOpen =
 "open_interface(wname, rname, queuelen=512, samplelen=64, polling=False)\n"
 "Opens a set of shared memory regions to use as an interface for communication. The communication type / format of VILLASNode's shmem node-type is used; see its documentation for more information on the internals.\n"
 "\n"
@@ -207,7 +207,7 @@ PyObject* Python::OpenInterface(PyObject *self, PyObject *args, PyObject *kwds)
 		return nullptr;
 	}
 
-	Python::Interface *pyIntf = PyObject_New(Python::Interface, &Python::InterfaceType);
+	Python::Interface *pyIntf = PyObject_New(Python::Interface, &Python::Interface::type);
 	pyIntf->intf = CPS::Interface::make(wname, rname, &conf);
 	return (PyObject*) pyIntf;
 #else
@@ -216,17 +216,17 @@ PyObject* Python::OpenInterface(PyObject *self, PyObject *args, PyObject *kwds)
 #endif
 }
 
-static PyMethodDef Interface_methods[] = {
-	{"export_attribute", (PyCFunction) Python::Interface::registerExportedAttribute, METH_VARARGS, DocInterfaceRegisterExportedAttribute},
-	{"import_attribute", (PyCFunction) Python::Interface::registerControlledAttribute, METH_VARARGS, DocInterfaceRegisterControlledAttribute},
+PyMethodDef Python::Interface::methods[] = {
+	{"export_attribute", (PyCFunction) Python::Interface::registerExportedAttribute, METH_VARARGS, Python::Interface::docRegisterExportedAttribute},
+	{"import_attribute", (PyCFunction) Python::Interface::registerControlledAttribute, METH_VARARGS, Python::Interface::docRegisterControlledAttribute},
 	{0},
 };
 
-static const char* DocInterface =
+const char* Python::Interface::doc =
 "A connection to an external program, using which simulation data is exchanged.\n"
 "\n"
 "Currently, only an interface using POSIX shared memory is implemented (see `open_interface`).\n";
-PyTypeObject Python::InterfaceType = {
+PyTypeObject Python::Interface::type = {
 	PyVarObject_HEAD_INIT(nullptr, 0)
 	"dpsim.Interface",                       /* tp_name */
 	sizeof(Python::Interface),               /* tp_basicsize */
@@ -247,14 +247,14 @@ PyTypeObject Python::InterfaceType = {
 	0,                                       /* tp_setattro */
 	0,                                       /* tp_as_buffer */
 	Py_TPFLAGS_DEFAULT | Py_TPFLAGS_BASETYPE,/* tp_flags */
-	DocInterface,                            /* tp_doc */
+	Python::Interface::doc,                  /* tp_doc */
 	0,                                       /* tp_traverse */
 	0,                                       /* tp_clear */
 	0,                                       /* tp_richcompare */
 	0,                                       /* tp_weaklistoffset */
 	0,                                       /* tp_iter */
 	0,                                       /* tp_iternext */
-	Interface_methods,                       /* tp_methods */
+	Python::Interface::methods,              /* tp_methods */
 	0,                                       /* tp_members */
 	0,                                       /* tp_getset */
 	0,                                       /* tp_base */
