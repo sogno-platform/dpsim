@@ -29,9 +29,9 @@ using namespace CPS;
 
 int main(int argc, char *argv[]) {
 #ifdef _WIN32
-	String path("..\\..\\..\\..\\dpsim\\Examples\\CIM\\WSCC-09_RX\\");
+	String path("..\\..\\..\\..\\dpsim\\Examples\\CIM\\WSCC-09_RX_Dyn\\");
 #elif defined(__linux__) || defined(__APPLE__)
-	String path("Examples/CIM/WSCC-09_RX/");
+	String path("Examples/CIM/WSCC-09_RX_Dyn/");
 #endif
 
 	std::list<String> filenames = {
@@ -41,7 +41,7 @@ int main(int argc, char *argv[]) {
 		path + "WSCC-09_RX_TP.xml"
 	};
 
-	String simName = "WSCC-9bus";
+	String simName = "WSCC-9bus_dyn";
 
 	CIM::Reader reader(simName, Logger::Level::DEBUG, Logger::Level::DEBUG);
 	SystemTopology sys = reader.loadCIM(60, filenames);

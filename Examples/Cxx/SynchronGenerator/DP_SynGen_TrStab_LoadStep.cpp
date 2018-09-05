@@ -53,8 +53,9 @@ int main(int argc, char* argv[]) {
 
 	// Components
 	auto gen = Ph1::SynchronGeneratorTrStab::make("DP_SynGen_TrStab_Step_SynGen", Logger::Level::OUT);  
-	gen->setParameters(nomPower, nomPhPhVoltRMS, nomFreq, Ll, Lmd, Llfd, H, initElecPower, mechPower);
+	gen->setFundamentalParametersPU(nomPower, nomPhPhVoltRMS, nomFreq, Ll, Lmd, Llfd, H);
 	gen->connect({n1});
+	gen->setInitialValues(initElecPower, mechPower);
 
 	auto load = Ph1::Switch::make("DP_SynGen_TrStab_Step_StepLoad");
 	load->setParameters(Rload, RloadStep);

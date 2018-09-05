@@ -29,9 +29,9 @@ using namespace CPS;
 
 int main(int argc, char *argv[]) {
 #ifdef _WIN32
-	String path("..\\..\\..\\..\\dpsim\\Examples\\CIM\\WSCC-09_RX\\");
+	String path("..\\..\\..\\..\\dpsim\\Examples\\CIM\\WSCC-09_RX_Dyn\\");
 #elif defined(__linux__) || defined(__APPLE__)
-	String path("Examples/CIM/WSCC-09_RX/");
+	String path("Examples/CIM/WSCC-09_RX_Dyn/");
 #endif
 
 	std::list<String> filenames = {
@@ -41,10 +41,21 @@ int main(int argc, char *argv[]) {
 		path + "WSCC-09_RX_TP.xml"
 	};
 
-	String simName = "WSCC-9bus";
+	String simName = "WSCC-9bus_dyn_switch";
 
 	CIM::Reader reader(simName, Logger::Level::DEBUG, Logger::Level::DEBUG);
 	SystemTopology sys = reader.loadCIM(60, filenames);
+
+	// Extend topology with switch
+	Real swOpen = 1e9;
+	Real swClosed = 0.1;
+	auto sw = Ph1::Switch::make("DP_SynGen_TrStab_Step_StepLoad");
+	sw->setParameters(Rload, RloadStep);
+	sw->connect({Node::GND, n1});
+	auto swEvent = SwitchEvent(0.05, true);
+	sw->setSwitchEvents(std::vector<SwitchEvent>{swEvent});
+	sw->open();
+	sys.addComponent(sw);
 
 	Simulation sim(simName, sys, 0.0001, 0.1,
 		Domain::DP, Solver::Type::MNA, Logger::Level::DEBUG, true);

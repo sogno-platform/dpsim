@@ -84,6 +84,7 @@ if(WITH_CIM)
 	set(CIM_SOURCES
 		CIM/cmd_CIM_input.cpp
 		CIM/WSCC-9bus_CIM.cpp
+		CIM/WSCC-9bus_CIM_Dyn.cpp
 	)
 endif()
 

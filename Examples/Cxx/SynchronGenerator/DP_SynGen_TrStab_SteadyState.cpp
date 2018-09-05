@@ -52,8 +52,9 @@ int main(int argc, char* argv[]) {
 
 	// Components
 	auto gen = Ph1::SynchronGeneratorTrStab::make("DP_SynGen_TrStab_StState_SynGen", Logger::Level::DEBUG);  
-	gen->setParameters(nomPower, nomPhPhVoltRMS, nomFreq, Ll, Lmd, Llfd, H, initElecPower, mechPower);
+	gen->setFundamentalParametersPU(nomPower, nomPhPhVoltRMS, nomFreq, Ll, Lmd, Llfd, H);
    	gen->connect({n1});
+	gen->setInitialValues(initElecPower, mechPower);
 	
 	auto res = Ph1::Resistor::make("DP_SynGen_TrStab_StState_Rl", Logger::Level::DEBUG);
 	res->setParameters(Rload);
