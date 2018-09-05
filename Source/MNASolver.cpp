@@ -29,9 +29,12 @@ void MnaSolver<VarType>::initialize(CPS::SystemTopology system) {
 	mLog.info() << "#### Start Initialization ####" << std::endl;
 	mSystem = system;
 
+	if (mSystem.mComponents.size() == 0)
+		throw SolverException(); // Otherwise LU decomposition will fail
+
 	// We need to differentiate between power and signal components and
 	// ground nodes should be ignored.
-	IdentifyTopologyObjects();
+	identifyTopologyObjects();
 
 	// These steps complete the network information.
 	createVirtualNodes();
@@ -101,17 +104,13 @@ void MnaSolver<VarType>::initialize(CPS::SystemTopology system) {
 	for (auto comp : system.mComponents)
 		mLog.info() << "Added " << comp->type() << " '" << comp->name() << "' to simulation." << std::endl;
 
-	mLog.info() << "System matrix:" << std::endl;
-	mLog.info(mTmpSystemMatrix);
-	mLog.info() << "LU decomposition:" << std::endl;
-	mLog.info(mTmpLuFactorization.matrixLU());
-	mLog.info() << "Right side vector:" << std::endl;
-	mLog.info(mRightSideVector);
+	mLog.info() << "System matrix: " << mTmpSystemMatrix << std::endl;
+	mLog.info() << "LU decomposition:" << mTmpLuFactorization.matrixLU() << std::endl;
+	mLog.info() << "Right side vector:" << mRightSideVector << std::endl;
 
 	for (auto sys : mSwitchedMatrices) {
-		mLog.info() << "Switching System matrix " << sys.first << std::endl;
-		mLog.info(sys.second);
-		mLog.info(mTmpLuFactorizations[sys.first].matrixLU());
+		mLog.info() << "Switching System matrix " << sys.first << ": " << sys.second << std::endl;
+		mLog.info() << "LU Factorization for System Matrix " << sys.first << ": " << mLuFactorizations[sys.first].matrixLU() << std::endl;
 	}
 
 	mLog.info() << "Initial switch status: " << mCurrentSwitchStatus << std::endl;
@@ -125,7 +124,7 @@ void MnaSolver<VarType>::updateSwitchStatus() {
 }
 
 template <typename VarType>
-void MnaSolver<VarType>::IdentifyTopologyObjects() {
+void MnaSolver<VarType>::identifyTopologyObjects() {
 	for (auto baseNode : mSystem.mNodes) {
 		// Add nodes to the list and ignore ground nodes.
 		if (!baseNode->isGround()) {
@@ -140,7 +139,7 @@ void MnaSolver<VarType>::IdentifyTopologyObjects() {
 	for (auto comp : mSystem.mComponents) {
 		auto swComp = std::dynamic_pointer_cast<CPS::MNASwitchInterface>(comp);
 		if (swComp) mSwitches.push_back(swComp);
-		
+
 		auto mnaComp = std::dynamic_pointer_cast<CPS::MNAInterface>(comp);
 		if (mnaComp) mPowerComponents.push_back(mnaComp);
 
@@ -252,16 +251,15 @@ void MnaSolver<VarType>::createVirtualNodes() {
 
 template <typename VarType>
 void MnaSolver<VarType>::steadyStateInitialization() {
-	Real time = 0;		
-	Real eps = 0.0001;	
-	Real maxDiff, max;	
+	Real time = 0;
+	Real eps = 0.0001;
+	Real maxDiff, max;
 	Matrix diff;
 	Matrix prevLeftSideVector = Matrix::Zero(2 * mNumNodes, 1);
 
-	// Initialize right side vector and components
-	for (auto comp : mPowerComponents) {		
+	for (auto comp : mPowerComponents)
 		comp->mnaApplyInitSystemMatrixStamp(mTmpSystemMatrix);
-	}
+	
 	// Compute LU-factorization for system matrix
 	mTmpLuFactorization = Eigen::PartialPivLU<Matrix>(mTmpSystemMatrix);
 
@@ -284,7 +282,7 @@ void MnaSolver<VarType>::steadyStateInitialization() {
 
 		// TODO Try to avoid this step.
 		for (UInt nodeIdx = 0; nodeIdx < mNumNetNodes; nodeIdx++)
-			mNodes[nodeIdx]->mnaUpdateVoltage(mLeftSideVector);	
+			mNodes[nodeIdx]->mnaUpdateVoltage(mLeftSideVector);
 
 		if (mDomain == CPS::Domain::EMT) {
 				mInitLeftVectorLog.LogEMTNodeValues(time, leftSideVector());
@@ -308,7 +306,7 @@ void MnaSolver<VarType>::steadyStateInitialization() {
 			break;
 	}
 
-	mLog.info() << "Max difference: " << maxDiff << " or " 
+	mLog.info() << "Max difference: " << maxDiff << " or "
 		<< maxDiff / max << "% at time " << time << std::endl;
 
 	// Reset system for actual simulation

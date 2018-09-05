@@ -19,7 +19,6 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *********************************************************************************/
 
-
 #include <DPsim.h>
 
 using namespace DPsim;
@@ -69,7 +68,7 @@ int main(int argc, char* argv[]) {
 	auto n1 = Node::make("n1", PhaseType::ABC, initVoltN1);
 
 	// Components
-	auto gen = Ph3::SynchronGeneratorDQ::make("DP_SynGen_dq_SteadyState_SynGen", Logger::Level::OUT);
+	auto gen = Ph3::SynchronGeneratorDQ::make("DP_SynGen_dq_SteadyState_SynGen");
 	gen->setParameters(nomPower, nomPhPhVoltRMS, nomFreq, poleNum, nomFieldCurr,
 		Rs, Ll, Lmd, Lmq, Rfd, Llfd, Rkd, Llkd, Rkq1, Llkq1, Rkq2, Llkq2, H,
 		initActivePower, initReactivePower, initTerminalVolt, initVoltAngle, fieldVoltage, initMechPower);

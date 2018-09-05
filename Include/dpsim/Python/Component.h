@@ -87,7 +87,8 @@ namespace Python {
 				auto comp = std::make_shared<T>(name, name);
 
 				// Set parameters
-				setAttributes(comp, kwargs);
+				if (kwargs)
+					setAttributes(comp, kwargs);
 
 				// Set nodes
 				if (pyNodes) {

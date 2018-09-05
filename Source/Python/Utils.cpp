@@ -30,46 +30,9 @@
   #include <Python.h>
 #endif
 
-// For Python PyDateTime_* functions
-#include <datetime.h>
-
 #include <dpsim/Python/Utils.h>
 
 using namespace DPsim::Python;
-
-int DPsim::Python::PyDateTime_DateTimeType_to_timepoint(PyObject *po, std::chrono::system_clock::time_point &tp)
-{
-	if (!PyDateTime_Check(po)) {
-		PyErr_SetString(PyExc_TypeError, "Invalid start_at argument (must be of type datetime.datetime)");
-		return -1;
-	}
-
-	PyDateTime_DateTime *pydt = (PyDateTime_DateTime *) po;
-
-	if (pydt->hastzinfo) {
-		PyErr_SetString(PyExc_TypeError, "Timezone aware datetime objects are not supported");
-		return -1;
-	}
-
-	std::tm tm;
-
-	tm.tm_sec  = PyDateTime_DATE_GET_SECOND(pydt);
-	tm.tm_min  = PyDateTime_DATE_GET_MINUTE(pydt);
-	tm.tm_hour = PyDateTime_DATE_GET_HOUR(pydt);
-	tm.tm_mday = PyDateTime_GET_DAY(pydt);
-	tm.tm_mon  = PyDateTime_GET_MONTH(pydt);
-	tm.tm_year = PyDateTime_GET_YEAR(pydt);
-	tm.tm_isdst = -1;
-
-	// tm is given in system timezone
-	time_t tt = std::mktime(&tm);
-
-	std::chrono::system_clock::duration d = std::chrono::seconds(tt) + std::chrono::microseconds(PyDateTime_DATE_GET_MICROSECOND(pydt));
-
-	tp = std::chrono::system_clock::time_point(d);
-
-	return 0;
-}
 
 void DPsim::Python::setAttributes(CPS::AttributeList::Ptr al, PyObject *kwargs)
 {

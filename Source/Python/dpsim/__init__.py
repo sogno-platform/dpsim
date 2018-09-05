@@ -14,14 +14,13 @@ __maintainer__ = "Steffen Vogel"
 __email__ = "stvogel@eonerc.rwth-aachen.de"
 __status__ = "Beta"
 
-from _dpsim import Component
+import _dpsim
+
 from _dpsim import Interface
 from _dpsim import SystemTopology
 
 from _dpsim import load_cim
 from _dpsim import open_interface
-
-import _dpsim
 
 from .Simulation import Simulation, RealTimeSimulation
 from .EventChannel import EventChannel
@@ -49,6 +48,7 @@ def __get_module(parts):
 
         return module
 
+# Register aliases
 for ctor in [x for x in _dpsim.__dict__ if x.startswith("_dp") or x.startswith("_emt") ]:
     parts = ctor.split("_")
 
@@ -57,8 +57,6 @@ for ctor in [x for x in _dpsim.__dict__ if x.startswith("_dp") or x.startswith("
 
     module = __get_module(module_parts)
     module.__dict__[name] = _dpsim.__dict__[ctor]
-
-    print("Registered: %s" % ".".join(parts[1:]))
 
 __all__ = [
     'Component',

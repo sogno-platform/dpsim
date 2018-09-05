@@ -31,9 +31,6 @@
 #include <cps/Solver/MNASwitchInterface.h>
 #include <cps/SignalComponent.h>
 #include <cps/PowerComponent.h>
-#ifdef WITH_CIM
-#include <cps/CIM/Reader.h>
-#endif /* WITH_CIM */
 
 #define SWITCH_NUM 32
 
@@ -118,7 +115,7 @@ namespace DPsim {
 		/// TODO: check that every system matrix has the same dimensions
 		void initialize(CPS::SystemTopology system);
 		/// Identify Nodes and PowerComponents and SignalComponents
-		void IdentifyTopologyObjects();
+		void identifyTopologyObjects();
 		///
 		void sortExecutionPriority();
 		/// Assign simulation node index according to index in the vector.
@@ -145,18 +142,17 @@ namespace DPsim {
 			CPS::Domain domain = CPS::Domain::DP,
 			CPS::Logger::Level logLevel = CPS::Logger::Level::INFO,
 			Bool steadyStateInit = false, Int downSampleRate = 1) :
-			mLog("Logs/" + name + "_MNA.log", logLevel),
-			mLeftVectorLog("Logs/" + name + "_LeftVector.csv", logLevel),
-			mRightVectorLog("Logs/" + name + "_RightVector.csv", logLevel),
-			mInitLeftVectorLog("Logs/" + name + "_InitLeftVector.csv", logLevel),
-			mInitRightVectorLog("Logs/" + name + "_InitRightVector.csv", logLevel) {
-
-			mTimeStep = timeStep;
-			mDomain = domain;
-			mLogLevel = logLevel;
-			mDownSampleRate = downSampleRate;
-			mSteadyStateInit = steadyStateInit;
-		}
+			mTimeStep(timeStep),
+			mDomain(domain),
+			mSteadyStateInit(steadyStateInit),
+			mDownSampleRate(downSampleRate),
+			mLogLevel(logLevel),
+			mLog(name + "_MNA", logLevel),
+			mLeftVectorLog(name + "_LeftVector", logLevel),
+			mRightVectorLog(name + "_RightVector", logLevel),
+			mInitLeftVectorLog(name + "_InitLeftVector", logLevel),
+			mInitRightVectorLog(name + "_InitRightVector", logLevel)
+		{ }
 
 		/// Constructor to be used in simulation examples.
 		MnaSolver(String name, CPS::SystemTopology system,
