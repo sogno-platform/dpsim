@@ -102,17 +102,13 @@ void MnaSolver<VarType>::initialize(CPS::SystemTopology system) {
 	for (auto comp : system.mComponents)
 		mLog.info() << "Added " << comp->type() << " '" << comp->name() << "' to simulation." << std::endl;
 
-	mLog.info() << "System matrix:" << std::endl;
-	mLog.info(mSystemMatrix);
-	mLog.info() << "LU decomposition:" << std::endl;
-	mLog.info(mLuFactorization.matrixLU());
-	mLog.info() << "Right side vector:" << std::endl;
-	mLog.info(mRightSideVector);
+	mLog.info() << "System matrix: " << mSystemMatrix << std::endl;
+	mLog.info() << "LU decomposition:" << mLuFactorization.matrixLU() << std::endl;
+	mLog.info() << "Right side vector:" << mRightSideVector << std::endl;
 
 	for (auto sys : mSwitchedMatrices) {
-		mLog.info() << "Switching System matrix " << sys.first << std::endl;
-		mLog.info(sys.second);
-		mLog.info(mLuFactorizations[sys.first].matrixLU());
+		mLog.info() << "Switching System matrix " << sys.first << ": " << sys.second << std::endl;
+		mLog.info() << "LU Factorization for System Matrix " << sys.first << ": " << mLuFactorizations[sys.first].matrixLU() << std::endl;
 	}
 
 	mLog.info() << "Initial switch status: " << mCurrentSwitchStatus << std::endl;
@@ -141,7 +137,7 @@ void MnaSolver<VarType>::IdentifyTopologyObjects() {
 	for (auto comp : mSystem.mComponents) {
 		auto swComp = std::dynamic_pointer_cast<CPS::MNASwitchInterface>(comp);
 		if (swComp) mSwitches.push_back(swComp);
-		
+
 		auto mnaComp = std::dynamic_pointer_cast<CPS::MNAInterface>(comp);
 		if (mnaComp) mPowerComponents.push_back(mnaComp);
 
@@ -255,14 +251,14 @@ void MnaSolver<VarType>::createVirtualNodes() {
 
 template <typename VarType>
 void MnaSolver<VarType>::steadyStateInitialization() {
-	Real time = 0;		
-	Real eps = 0.0001;	
-	Real maxDiff, max;	
+	Real time = 0;
+	Real eps = 0.0001;
+	Real maxDiff, max;
 	Matrix diff;
 	Matrix prevLeftSideVector = Matrix::Zero(2 * mNumNodes, 1);
 
 	// Initialize right side vector and components
-	for (auto comp : mPowerComponents) {		
+	for (auto comp : mPowerComponents) {
 		comp->mnaApplyInitSystemMatrixStamp(mSystemMatrix);
 	}
 	// Compute LU-factorization for system matrix
@@ -287,7 +283,7 @@ void MnaSolver<VarType>::steadyStateInitialization() {
 
 		// TODO Try to avoid this step.
 		for (UInt nodeIdx = 0; nodeIdx < mNumNetNodes; nodeIdx++)
-			mNodes[nodeIdx]->mnaUpdateVoltage(mLeftSideVector);	
+			mNodes[nodeIdx]->mnaUpdateVoltage(mLeftSideVector);
 
 		// Calculate new simulation time
 		time = time + mTimeStep;
@@ -302,7 +298,7 @@ void MnaSolver<VarType>::steadyStateInitialization() {
 			break;
 	}
 
-	mLog.info() << "Max difference: " << maxDiff << " or " 
+	mLog.info() << "Max difference: " << maxDiff << " or "
 		<< maxDiff / max << "% at time " << time << std::endl;
 
 	// Reset system for actual simulation

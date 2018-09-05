@@ -104,9 +104,9 @@ namespace DPsim {
 		/// Simulation logger
 		CPS::Logger mLog;
 		/// Left side vector logger
-		CPS::Logger mLeftVectorLog;
+		CPS::DataLogger mLeftVectorLog;
 		/// Right side vector logger
-		CPS::Logger mRightVectorLog;
+		CPS::DataLogger mRightVectorLog;
 
 		/// TODO: check that every system matrix has the same dimensions
 		void initialize(CPS::SystemTopology system);
@@ -138,16 +138,15 @@ namespace DPsim {
 			CPS::Domain domain = CPS::Domain::DP,
 			CPS::Logger::Level logLevel = CPS::Logger::Level::INFO,
 			Bool steadyStateInit = false, Int downSampleRate = 1) :
-			mLog("Logs/" + name + "_MNA.log", logLevel),
-			mLeftVectorLog("Logs/" + name + "_LeftVector.csv", CPS::Logger::Level::OUT),
-			mRightVectorLog("Logs/" + name + "_RightVector.csv", CPS::Logger::Level::OUT) {
-
-			mTimeStep = timeStep;
-			mDomain = domain;
-			mLogLevel = logLevel;
-			mDownSampleRate = downSampleRate;
-			mSteadyStateInit = steadyStateInit;
-		}
+			mTimeStep(timeStep),
+			mDomain(domain),
+			mSteadyStateInit(steadyStateInit),
+			mDownSampleRate(downSampleRate),
+			mLogLevel(logLevel),
+			mLog(name + "_MNA", logLevel),
+			mLeftVectorLog(name + "_LeftVector", logLevel),
+			mRightVectorLog(name + "_RightVector", logLevel)
+		{ }
 
 		/// Constructor to be used in simulation examples.
 		MnaSolver(String name, CPS::SystemTopology system,
@@ -169,12 +168,12 @@ namespace DPsim {
 		/// Log left and right vector values for each simulation step
 		void log(Real time) {
 			if (mDomain == CPS::Domain::EMT) {
-				mLeftVectorLog.LogEMTNodeValues(time, leftSideVector());
-				mRightVectorLog.LogEMTNodeValues(time, rightSideVector());
+				mLeftVectorLog.logEMTNodeValues(time, leftSideVector());
+				mRightVectorLog.logEMTNodeValues(time, rightSideVector());
 			}
 			else {
-				mLeftVectorLog.LogPhasorNodeValues(time, leftSideVector());
-				mRightVectorLog.LogPhasorNodeValues(time, rightSideVector());
+				mLeftVectorLog.logPhasorNodeValues(time, leftSideVector());
+				mRightVectorLog.logPhasorNodeValues(time, rightSideVector());
 			}
 		}
 		// #### Getter ####
