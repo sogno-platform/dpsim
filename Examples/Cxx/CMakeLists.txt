@@ -67,13 +67,13 @@ if(WITH_SHMEM)
 	list(APPEND INCLUDE_DIRS ${VILLASNODE_INCLUDE_DIRS})
 
 	set(SHMEM_SOURCES
-		#Shmem/ShmemExample.cpp
-		#Shmem/ShmemDistributedReference.cpp
-		#Shmem/ShmemDistributedDirect.cpp
-		#Shmem/ShmemDistributedVillas.cpp
-		#Shmem/ShmemControllableSource.cpp
-		#Shmem/ShmemControllableFiltSource.cpp
-		#Shmem/ShmemRealTime.cpp
+		Shmem/ShmemExample.cpp
+		Shmem/ShmemDistributedReference.cpp
+		Shmem/ShmemDistributedDirect.cpp
+		Shmem/ShmemDistributedVillas.cpp
+		Shmem/ShmemControllableSource.cpp
+		Shmem/ShmemControllableFiltSource.cpp
+		Shmem/ShmemRealTime.cpp
 	)
 endif()
 

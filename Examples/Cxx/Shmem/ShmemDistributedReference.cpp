@@ -22,6 +22,7 @@
 #include <DPsim.h>
 
 using namespace DPsim;
+using namespace CPS::DP;
 using namespace CPS::DP::Ph1;
 
 int main(int argc, char* argv[])
@@ -38,13 +39,13 @@ int main(int argc, char* argv[])
 	auto r2A = Resistor::make("r_2", 10);
 	auto r2B = Resistor::make("r_2", 8);
 
-	vs->connect({GND, n1});
-	l1->connect({n1, n2});
-	r1->connect({n2, n3});
-	r2A->connect({n3, GND});
-	r2B->connect({n3, GND});
+	vs->connect({ Node::GND, n1 });
+	l1->connect({ n1, n2 });
+	r1->connect({ n2, n3 });
+	r2A->connect({ n3, Node::GND });
+	r2B->connect({ n3, Node::GND });
 
-	auto nodes = SystemNodeList{GND, n1, n2, n3};
+	auto nodes = SystemNodeList{Node::GND, n1, n2, n3};
 
 	auto sys1 = SystemTopology(50, nodes, SystemComponentList{vs, l1, r1, r2A});
 	auto sys2 = SystemTopology(50, nodes, SystemComponentList{vs, l1, r1, r2B});

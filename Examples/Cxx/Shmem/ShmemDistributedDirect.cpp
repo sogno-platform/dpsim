@@ -22,6 +22,7 @@
 #include <DPsim.h>
 
 using namespace DPsim;
+using namespace CPS::DP;
 using namespace CPS::DP::Ph1;
 
 int main(int argc, char *argv[]) {
@@ -33,7 +34,7 @@ int main(int argc, char *argv[]) {
 	// Here, the two instances directly communicate with each other without using
 	// VILLASnode in between.
 
-	Interface::Config conf;
+	CPS::Interface::Config conf;
 	conf.samplelen = 4;
 	conf.queuelen = 1024;
 	conf.polling = false;
@@ -54,7 +55,7 @@ int main(int argc, char *argv[]) {
 		out = "/dpsim10";
 	}
 
-	Interface intf(in, out, &conf);
+	auto intf = CPS::Interface(in, out, &conf);
 
 	Real timeStep = 0.000150;
 
@@ -64,13 +65,16 @@ int main(int argc, char *argv[]) {
 		auto n2 = Node::make("n2");
 
 		// Components
-		auto evs = VoltageSource::make("v_intf", Complex(5, 0), Logger::Level::DEBUG);
-		auto vs1 = VoltageSource::make("vs_1", Complex(10, 0), Logger::Level::DEBUG);
+		auto evs = VoltageSource::make("v_intf", Logger::Level::DEBUG);
+		auto vs1 = VoltageSource::make("vs_1", Logger::Level::DEBUG);
 		auto r01 = Resistor::make("r_0_1", 1, Logger::Level::DEBUG);
 
-		evs->connect({GND, n2});
-		vs1->connect({GND, n1});
-		r01->connect({n1, n2});
+		evs->setParameters(Complex(5, 0));
+		vs1->setParameters(Complex(10, 0));
+
+		evs->connect({ Node::GND, n2 });
+		vs1->connect({ Node::GND, n1 });
+		r01->connect({ n1, n2 });
 
 		intf.addImport(evs->findAttribute<Complex>("voltage_ref"), 1.0, 0, 1);
 		intf.addExport(evs->findAttribute<Complex>("comp_current"), 1.0, 0, 1);
@@ -89,8 +93,8 @@ int main(int argc, char *argv[]) {
 		auto ecs = CurrentSource::make("i_intf", Complex(5, 0), Logger::Level::DEBUG);
 		auto rgnd0 = Resistor::make("r_gnd_0", 1, Logger::Level::DEBUG);
 
-		ecs->connect({GND, n1});
-		rgnd0->connect({GND, n1});
+		ecs->connect({ Node::GND, n1 });
+		rgnd0->connect({ Node::GND, n1 });
 
 		//auto ecs_switch = CurrentSource::make("i_switch", GND, 1, Complex(0, 0));
 		//auto r01 = Resistor::make("r_0_1", 0, 1, 1);

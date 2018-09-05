@@ -22,11 +22,12 @@
 #include <DPsim.h>
 
 using namespace DPsim;
+using namespace CPS::DP;
 using namespace CPS::DP::Ph1;
 
 int main(int argc, char *argv[]) {
 
-	Interface::Config conf;
+	CPS::Interface::Config conf;
 	conf.samplelen = 64;
 	conf.queuelen = 1024;
 	conf.polling = false;
@@ -38,7 +39,7 @@ int main(int argc, char *argv[]) {
 	Real finalTime = 10;
 	String simName = "ShmemControllableSource";
 
-	Interface intf(out, in, &conf);
+	CPS::Interface intf(out, in, &conf);
 
 	// Nodes
 	auto n1 = Node::make("n1");
@@ -47,8 +48,8 @@ int main(int argc, char *argv[]) {
 	auto ecs = CurrentSource::make("v_intf", Complex(10, 0));
 	auto r1 = Resistor::make("r_1", 1);
 
-	ecs->connect({GND, n1});
-	r1->connect({GND, n1});
+	ecs->connect({ Node::GND, n1 });
+	r1->connect({ Node::GND, n1 });
 
 	intf.addImport(ecs->findAttribute<Complex>("current_ref"), 1.0, 0, 1);
 	intf.addExport(ecs->findAttribute<Complex>("comp_voltage"), 1.0, 0, 1);

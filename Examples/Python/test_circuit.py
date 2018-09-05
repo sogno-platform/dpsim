@@ -1,11 +1,9 @@
 import os
 import dpsim
-import dataprocessing.readtools as rt
-import dataprocessing.timeseries as ts
 
 PATH = os.path.dirname(__file__)
 
-def test_IdealVS_RXLine_1_RL():
+def test_circuit():
     # Nodes
     gnd = dpsim.dp.Node.GND()
     n1 =  dpsim.dp.Node("n1")
@@ -20,7 +18,7 @@ def test_IdealVS_RXLine_1_RL():
 
     system = dpsim.SystemTopology(50, [gnd, n1, n2, n3], [v1, lL, rL, r1])
 
-    sim = dpsim.Simulation('IdealVS_RXLine_1_RL', system, duration=0.2, timestep=0.00005)
+    sim = dpsim.Simulation(__name__, system, duration=0.2, timestep=0.0005)
     sim.run()
 
     #results = rt.read_timeseries_dpsim_cmpl('Logs/' + sim.name + '_LeftVector.csv')
@@ -33,3 +31,6 @@ def test_IdealVS_RXLine_1_RL():
     print("Total RMSE: %g" % (err))
 
     assert err < 1e-4
+
+if __name__ == "__main__":
+    test_circuit()
