@@ -1,5 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:cim="http://iec.ch/TC57/2012/CIM-schema-cim16#" xmlns:md="http://iec.ch/TC57/61970-552/ModelDescription/1#" xmlns:entsoe="http://entsoe.eu/Secretariat/ProfileExtension/2#">
+  <cim:NameType rdf:ID="_1b855250-0d16-41e4-bf2b-725a23b25b04">
+    <cim:NameType.name>description</cim:NameType.name>
+  </cim:NameType>
   <cim:TopologicalNode rdf:ID="BUS3">
     <cim:IdentifiedObject.name>BUS3</cim:IdentifiedObject.name>
     <cim:TopologicalNode.BaseVoltage rdf:resource="#_5efd264d-c4b8-41aa-921f-e423e58fee04"/>
@@ -25,8 +28,8 @@
     <cim:TopologicalNode.BaseVoltage rdf:resource="#_0cae189e-5250-4cd2-9ab7-8bb9f1a58c8b"/>
     <cim:TopologicalNode.ConnectivityNodeContainer rdf:resource="#_747d2a10-a3a7-45cf-abfb-05b933fc78f0"/>
   </cim:TopologicalNode>
-  <cim:TopologicalNode rdf:ID="Bus 2">
-    <cim:IdentifiedObject.name>Bus 2</cim:IdentifiedObject.name>
+  <cim:TopologicalNode rdf:ID="BUS2">
+    <cim:IdentifiedObject.name>BUS2</cim:IdentifiedObject.name>
     <cim:TopologicalNode.BaseVoltage rdf:resource="#_5c7701c6-e7cd-46f0-a27c-489c5e45afb3"/>
     <cim:TopologicalNode.ConnectivityNodeContainer rdf:resource="#_c941c004-7df4-4955-a07e-b3ac863e5901"/>
   </cim:TopologicalNode>
@@ -111,7 +114,7 @@
   </cim:Terminal>
   <cim:Terminal rdf:about="#E-1076922506">
     <cim:Terminal.connected>true</cim:Terminal.connected>
-    <cim:Terminal.TopologicalNode rdf:resource="#Bus 2"/>
+    <cim:Terminal.TopologicalNode rdf:resource="#BUS2"/>
   </cim:Terminal>
   <cim:Terminal rdf:about="#E-1076922509">
     <cim:Terminal.connected>true</cim:Terminal.connected>
@@ -127,7 +130,7 @@
   </cim:Terminal>
   <cim:Terminal rdf:about="#E-1076922486">
     <cim:Terminal.connected>true</cim:Terminal.connected>
-    <cim:Terminal.TopologicalNode rdf:resource="#Bus 2"/>
+    <cim:Terminal.TopologicalNode rdf:resource="#BUS2"/>
   </cim:Terminal>
   <cim:Terminal rdf:about="#E-1076922569">
     <cim:Terminal.connected>true</cim:Terminal.connected>
