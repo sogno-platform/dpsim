@@ -25,7 +25,7 @@
 #include <DPsim.h>
 
 using namespace DPsim;
-using namespace CPS;
+using namespace CPS::DP;
 
 int main(int argc, char *argv[]) {
 #ifdef _WIN32
@@ -43,15 +43,16 @@ int main(int argc, char *argv[]) {
 
 	String simName = "WSCC-9bus_dyn_switch";
 
-	CIM::Reader reader(simName, Logger::Level::DEBUG, Logger::Level::DEBUG);
+	CIMReader reader(simName, Logger::Level::DEBUG, Logger::Level::DEBUG);
 	SystemTopology sys = reader.loadCIM(60, filenames);
 
 	// Extend topology with switch
+	auto n7 = sys.getDPNodeAt(7);
 	Real swOpen = 1e9;
 	Real swClosed = 0.1;
 	auto sw = Ph1::Switch::make("DP_SynGen_TrStab_Step_StepLoad");
-	sw->setParameters(Rload, RloadStep);
-	sw->connect({Node::GND, n1});
+	sw->setParameters(swOpen, swClosed);
+	sw->connect({Node::GND, n7});
 	auto swEvent = SwitchEvent(0.05, true);
 	sw->setSwitchEvents(std::vector<SwitchEvent>{swEvent});
 	sw->open();
