@@ -31,7 +31,7 @@ build:linux:
     - mkdir build
     - cd build
     - cmake ..
-    - make -j 8
+    - make -j 32
   image: ${DOCKER_IMAGE_DEV}:${DOCKER_TAG_DEV}
   artifacts:
     paths:
@@ -41,6 +41,8 @@ build:linux:
 
 test:pytest:
   stage: test
+  variables:
+    PYTHONPATH: "build/Source/Python:Source/Python"
   script:
     - pytest -v
   image: ${DOCKER_IMAGE_DEV}:${DOCKER_TAG_DEV}
@@ -95,6 +97,8 @@ deploy:docker:
     - build:docker
   tags:
     - shell
+  only:
+    - tags
 
 deploy:docs:
   stage: deploy
