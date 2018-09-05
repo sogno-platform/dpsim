@@ -22,7 +22,10 @@
 #include <dpsim/Config.h>
 #include <dpsim/Utils.h>
 #include <dpsim/Simulation.h>
-#include <dpsim/RealTimeSimulation.h>
+
+#ifndef _MSC_VER
+  #include <dpsim/RealTimeSimulation.h>
+#endif
 
 #include <cps/Components.h>
 #include <cps/Logger.h>
