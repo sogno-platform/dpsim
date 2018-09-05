@@ -47,12 +47,9 @@ int main(int argc, char *argv[]) {
 	SystemTopology sys = reader.loadCIM(60, filenames);
 
 	// Extend topology with switch
-	auto n7 = sys.getDPNodeAt(7);
-	Real swOpen = 1e9;
-	Real swClosed = 0.1;
 	auto sw = Ph1::Switch::make("DP_SynGen_TrStab_Step_StepLoad");
-	sw->setParameters(swOpen, swClosed);
-	sw->connect({Node::GND, n7});
+	sw->setParameters(1e9, 0.1);
+	sw->connect({ Node::GND, sys.node<Node>("BUS9") });
 	auto swEvent = SwitchEvent(0.05, true);
 	sw->setSwitchEvents(std::vector<SwitchEvent>{swEvent});
 	sw->open();

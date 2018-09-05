@@ -53,12 +53,12 @@ int main(int argc, char *argv[]) {
 
 		// Extend system with controllable load (Profile)
 		auto load_profile = PQLoadCS::make("load_cs_profile", 0, 0, 230000, Logger::Level::INFO);
-		load_profile->connect({ sys.getDPNodeAt(6) });
+		load_profile->connect({ sys.node<DP::Node>("BUS7") });
 		sys.mComponents.push_back(load_profile);
 
 		// Extend system with controllable load
 		auto ecs = CurrentSource::make("i_intf", Complex(0, 0), Logger::Level::DEBUG);
-		ecs->connect({ sys.getDPNodeAt(3), DP::Node::GND });
+		ecs->connect({ sys.node<DP::Node>("BUS4"), DP::Node::GND });
 		sys.mComponents.push_back(ecs);
 
 		RealTimeSimulation sim(simName + "_1", sys, args.timeStep, args.duration,
