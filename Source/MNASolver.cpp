@@ -29,6 +29,9 @@ void MnaSolver<VarType>::initialize(CPS::SystemTopology system) {
 	mLog.info() << "#### Start Initialization ####" << std::endl;
 	mSystem = system;
 
+	if (mSystem.mComponents.size() == 0)
+		throw SolverException(); // Otherwise LU decomposition will fail
+
 	// We need to differentiate between power and signal components and
 	// ground nodes should be ignored.
 	identifyTopologyObjects();
