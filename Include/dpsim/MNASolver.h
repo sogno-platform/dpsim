@@ -31,9 +31,6 @@
 #include <cps/Solver/MNASwitchInterface.h>
 #include <cps/SignalComponent.h>
 #include <cps/PowerComponent.h>
-#ifdef WITH_CIM
-#include <cps/CIM/Reader.h>
-#endif /* WITH_CIM */
 
 #define SWITCH_NUM 32
 
