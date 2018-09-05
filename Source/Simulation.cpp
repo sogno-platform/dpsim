@@ -37,7 +37,7 @@ Simulation::Simulation(String name,
 	Real timeStep, Real finalTime,
 	Domain domain, Solver::Type solverType,
 	Logger::Level logLevel) :
-	mLog("Logs/" + name + ".log", logLevel),
+	mLog(name, logLevel),
 	mName(name),
 	mFinalTime(finalTime),
 	mTimeStep(timeStep),
