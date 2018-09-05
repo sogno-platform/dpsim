@@ -31,7 +31,7 @@ void MnaSolver<VarType>::initialize(CPS::SystemTopology system) {
 
 	// We need to differentiate between power and signal components and
 	// ground nodes should be ignored.
-	IdentifyTopologyObjects();
+	identifyTopologyObjects();
 
 	// These steps complete the network information.
 	createVirtualNodes();
@@ -126,7 +126,7 @@ void MnaSolver<VarType>::updateSwitchStatus() {
 }
 
 template <typename VarType>
-void MnaSolver<VarType>::IdentifyTopologyObjects() {
+void MnaSolver<VarType>::identifyTopologyObjects() {
 	for (auto baseNode : mSystem.mNodes) {
 		// Add nodes to the list and ignore ground nodes.
 		if (!baseNode->isGround()) {
