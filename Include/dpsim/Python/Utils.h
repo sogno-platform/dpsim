@@ -36,8 +36,6 @@
 namespace DPsim {
 namespace Python {
 
-int PyDateTime_DateTimeType_to_timepoint(PyObject *po, std::chrono::system_clock::time_point &tp);
-
 void setAttributes(CPS::AttributeList::Ptr al, PyObject *kwargs);
 
 }
