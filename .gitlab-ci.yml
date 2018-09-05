@@ -39,6 +39,16 @@ build:linux:
   tags:
     - docker
 
+test:pytest:
+  stage: test
+  script:
+    - pytest -v
+  image: ${DOCKER_IMAGE_DEV}:${DOCKER_TAG_DEV}
+  dependencies:
+    - build:linux
+  tags:
+    - docker
+
 build:docs:
   stage: build
   script:
