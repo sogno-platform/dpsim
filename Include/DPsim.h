@@ -47,4 +47,5 @@ namespace DPsim {
   using Domain = CPS::Domain;
   using PhaseType = CPS::PhaseType;
   using SwitchEvent = CPS::Base::SwitchEvent;
+  using CIMReader = CPS::CIM::Reader;
 }
