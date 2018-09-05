@@ -37,6 +37,7 @@
 #endif
 
 #include <dpsim/Config.h>
+#include <dpsim/Timer.h>
 #include <dpsim/Simulation.h>
 #include <dpsim/Python/SystemTopology.h>
 #include <dpsim/Python/EventChannel.h>
@@ -71,9 +72,12 @@ namespace Python {
 		std::atomic<State> state;
 
 		// Only relevant for real-time simulations
+		double realTimeStep; /// effective timestep for real-time simulation
 		bool realTime;
 		bool startSync;
-		bool singleStepping;
+		bool singleStepping; /// Debugger like stepping for simulations
+
+		Timer::StartTimePoint startTime;
 
 		// List of additional objects that aren't directly used from Simulation
 		// methods, but that a reference has be kept to to avoid them from being

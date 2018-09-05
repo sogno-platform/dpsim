@@ -2,22 +2,11 @@ import asyncio
 import struct
 import os
 import logging
-import enum
+import queue
+
+from .Event import Event
 
 LOGGER = logging.getLogger('dpsim.EventChannel')
-
-class Event(enum.IntEnum):
-    stopped = 0
-    starting = 1
-    running = 2
-    pausing = 3
-    paused = 4
-    resuming = 5
-    stopping = 6
-    failed = 7
-    overrun = 8
-    done = 9
-    unknown = -1
 
 class EventChannel(object):
     def __init__(self, fd, loop = None):
@@ -29,6 +18,7 @@ class EventChannel(object):
         self.sr = asyncio.StreamReader(loop = loop)
 
         self._callbacks = []
+        self._queue = asyncio.Queue()
 
         self._last = Event.unknown
         self._lock = asyncio.Lock(loop = loop)
@@ -43,21 +33,19 @@ class EventChannel(object):
         self._callbacks.append((event, cb, args))
 
     async def wait(self, evt):
-        await self._lock.acquire()
+        if evt == None:
+            LOGGER.debug("Waiting for any event")
+            revt = await self._queue.get()
+        else:
+            while True:
+                LOGGER.debug("Waiting for event: %s. Current event %s" % (evt, self._last))
+                revt = await self._queue.get()
 
-        while evt != self._last:
-            LOGGER.debug("Waiting for event: %s. Current event %s" % (evt, self._last))
-            await self._cond.wait()
+                if evt == revt:
+                    break
 
-        self._lock.release()
-
-    async def notify(self, event):
-        await self._lock.acquire()
-
-        self._last = event
-        self._cond.notify_all()
-
-        self._lock.release()
+        LOGGER.debug("Received event in wait: event=%s", revt)
+        return revt
 
     def __reader(self):
         data = os.read(self._fd, 4)
@@ -72,9 +60,9 @@ class EventChannel(object):
             data = await self.sr.readexactly(4)
 
             unpacked = struct.unpack('i', data)
-            event = Event(unpacked[0])
+            evt = Event(unpacked[0])
 
-            LOGGER.debug("Received event: event=%s", event)
+            LOGGER.debug("Received event: event=%s", evt)
 
             # Call user defined callbacks
             for e in self._callbacks:
@@ -82,7 +70,7 @@ class EventChannel(object):
                 cb = e[1]
                 args = e[2]
 
-                if tevt == event or tevt is None:
-                    cb(event, *args)
+                if tevt == evt or tevt is None:
+                    cb(evt, *args)
 
-            await self.notify(event)
+            await self._queue.put(evt)
