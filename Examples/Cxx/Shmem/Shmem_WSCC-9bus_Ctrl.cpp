@@ -36,16 +36,16 @@ int main(int argc, char *argv[]) {
 
 	// Specify CIM files
 #ifdef _WIN32
-	String path("Examples\\CIM\\WSCC-09_Neplan_RX\\");
+	String path("Examples\\CIM\\WSCC-09_RX\\");
 #elif defined(__linux__) || defined(__APPLE__)
-	String path("Examples/CIM/WSCC-09_Neplan_RX/");
+	String path("Examples/CIM/WSCC-09_RX/");
 #endif
 
 	std::list<String> filenames = {
-		path + "WSCC-09_Neplan_RX_DI.xml",
-		path + "WSCC-09_Neplan_RX_EQ.xml",
-		path + "WSCC-09_Neplan_RX_SV.xml",
-		path + "WSCC-09_Neplan_RX_TP.xml"
+		path + "WSCC-09_RX_DI.xml",
+		path + "WSCC-09_RX_EQ.xml",
+		path + "WSCC-09_RX_SV.xml",
+		path + "WSCC-09_RX_TP.xml"
 	};
 
 	String simName = "Shmem_WSCC-9bus_Ctrl";
