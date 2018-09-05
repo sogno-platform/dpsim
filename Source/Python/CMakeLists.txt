@@ -9,7 +9,7 @@ add_library(dpsim_python SHARED
 	Interface.cpp
 	LoadCim.cpp
 	SystemTopology.cpp
-
+	EventChannel.cpp
 	Utils.cpp
 
 	${CMAKE_BINARY_DIR}/Include/dpsim/Python/ComponentConstructors.h

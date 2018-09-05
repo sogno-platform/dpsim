@@ -19,31 +19,44 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *********************************************************************************/
 
-#pragma once
+#include <dpsim/Python/EventChannel.h>
+#include <cps/Definitions.h>
 
-#include <cstdint>
-
-#include <dpsim/Config.h>
-
-namespace DPsim {
-namespace Python {
-
-class EventChannel {
-
-protected:
 #ifdef HAVE_PIPE
-	/// Pipe for asynchronous inter-process communication (IPC) to the Python world
-	int mPipe[2];
+  #include <unistd.h>
+#endif
+
+using namespace DPsim::Python;
+
+EventChannel::EventChannel() {
+#ifdef HAVE_PIPE
+	int ret;
+
+	ret = pipe(mPipe);
+	if (ret < 0)
+		throw CPS::SystemError("Failed to create pipe");
+#endif
+	}
+
+EventChannel::~EventChannel() {
+#ifdef HAVE_PIPE
+	if (mPipe[0] >= 0) {
+		close(mPipe[0]);
+		close(mPipe[1]);
+	}
 #endif /* HAVE_PIPE */
-
-public:
-	EventChannel();
-	~EventChannel();
-
-	int fd();
-
-	void sendEvent(uint32_t evt);
-};
-
 }
+
+int EventChannel::fd() {
+	return mPipe[0];
+}
+
+void EventChannel::sendEvent(uint32_t evt) {
+#ifdef HAVE_PIPE
+	int ret;
+
+	ret = write(mPipe[1], &evt, 4);
+	if (ret < 0)
+		throw CPS::SystemError("Failed notify");
+#endif /* HAVE_PIPE */
 }
