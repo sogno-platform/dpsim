@@ -33,9 +33,7 @@ using namespace CPS::Signal;
 
 int main(int argc, char *argv[]) {
 
-	CommandLineArgs args(argc, argv, 0.001, 20, 60);
-
-	String simName = "Shmem_WSCC-9bus_CtrlDist";
+	CommandLineArgs args(argc, argv, "Shmem_WSCC-9bus_CtrlDist", 0.001, 20, 60);
 
 	if (args.scenario == 0) {
 
@@ -48,7 +46,7 @@ int main(int argc, char *argv[]) {
 			path + "WSCC-09_RX_TP.xml"
 		};
 
-		CIM::Reader reader(simName, Logger::Level::INFO, Logger::Level::INFO);
+		CIM::Reader reader(args.name, Logger::Level::INFO, Logger::Level::INFO);
 		SystemTopology sys = reader.loadCIM(args.sysFreq, filenames);
 
 		// Extend system with controllable load (Profile)
@@ -61,7 +59,7 @@ int main(int argc, char *argv[]) {
 		ecs->connect({ sys.node<DP::Node>("BUS4"), DP::Node::GND });
 		sys.mComponents.push_back(ecs);
 
-		RealTimeSimulation sim(simName + "_1", sys, args.timeStep, args.duration,
+		RealTimeSimulation sim(args.name + "_1", sys, args.timeStep, args.duration,
 			Domain::DP, Solver::Type::MNA, Logger::Level::DEBUG, true);
 
 		// Create shmem interface and add it to simulation
@@ -145,7 +143,7 @@ int main(int argc, char *argv[]) {
 		filtP->findAttribute<Real>("input")->set(0.);
 
 		auto sys = SystemTopology(args.sysFreq, SystemNodeList{n1}, SystemComponentList{evs, load, filtP});
-		RealTimeSimulation sim(simName + "_2", sys, args.timeStep, args.duration);
+		RealTimeSimulation sim(args.name + "_2", sys, args.timeStep, args.duration);
 
 		// Create shmem interface 1
 		String in1  = "/dpsim01";
