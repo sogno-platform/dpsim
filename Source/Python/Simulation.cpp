@@ -30,6 +30,8 @@
 #include <dpsim/Python/Interface.h>
 #include <dpsim/Python/Component.h>
 
+#include <cps/DP/DP_Ph1_Switch.h>
+
 using namespace DPsim;
 using namespace CPS;
 
@@ -234,6 +236,44 @@ void Python::Simulation::dealloc(Python::Simulation* self)
 
 	Py_XDECREF(self->pySys);
 	Py_TYPE(self)->tp_free((PyObject*) self);
+}
+
+const char* Python::Simulation::docAddSwitchEvent =
+"add_switch_event(sw, time, state)\n"
+"Add a switch event to the simulation.\n"
+"\n"
+":param sw: The Switch `Component` which should perform the switch action.\n"
+":param time: The time at which the switch action should occur.\n"
+":param state: Wether to open or close the switch.";
+PyObject* Python::Simulation::addSwitchEvent(Simulation* self, PyObject* args)
+{
+	int switchState;
+	double switchTime;
+	PyObject *pyObj;
+	Python::Component *pyComp;
+
+	if (!PyArg_ParseTuple(args, "Odp", &pyObj, &switchTime, &switchState))
+		return nullptr;
+
+	if (!PyObject_TypeCheck(pyObj, &Python::Component::type)) {
+		PyErr_SetString(PyExc_TypeError, "First argument must be of type dpsim.Component");
+		return nullptr;
+	}
+
+	pyComp = (Python::Component *) pyObj;
+
+	auto sw = std::dynamic_pointer_cast<CPS::DP::Ph1::Switch>(pyComp->comp);
+	if (!sw) {
+		PyErr_SetString(PyExc_TypeError, "First argument must be a switch");
+		return nullptr;
+	}
+
+	auto swEvent = CPS::Base::SwitchEvent(switchTime, switchState);
+
+	sw->setSwitchEvents({swEvent});
+
+	Py_INCREF(Py_None);
+	return Py_None;
 }
 
 const char* Python::Simulation::docAddInterface =
@@ -468,6 +508,7 @@ PyGetSetDef Python::Simulation::getset[] = {
 
 PyMethodDef Python::Simulation::methods[] = {
 	{"add_interface", (PyCFunction) Python::Simulation::addInterface, METH_VARARGS, (char *) Python::Simulation::docAddInterface},
+	{"add_switch_event", (PyCFunction) Python::Simulation::addSwitchEvent, METH_VARARGS, (char *) docAddSwitchEvent},
 	{"pause",         (PyCFunction) Python::Simulation::pause, METH_NOARGS, (char *) Python::Simulation::docPause},
 	{"start",         (PyCFunction) Python::Simulation::start, METH_NOARGS, (char *) Python::Simulation::docStart},
 	{"step",          (PyCFunction) Python::Simulation::step, METH_NOARGS,  (char *) Python::Simulation::docStep},
