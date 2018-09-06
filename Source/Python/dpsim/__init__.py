@@ -4,6 +4,7 @@
 
 import types
 import sys
+import re
 
 __author__ = "Markus Mirz, Steffen Vogel"
 __copyright__ = "Copyright 2017, Institute for Automation of Complex Power Systems, EONERC"
