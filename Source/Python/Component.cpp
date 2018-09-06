@@ -66,15 +66,29 @@ PyObject* Python::Component::str(Python::Component* self)
 	return PyUnicode_FromString(self->comp->name().c_str());
 }
 
-PyObject* Python::Component::getattr(Python::Component* self, char* name)
+PyObject* Python::Component::getattro(Python::Component* self, PyObject* name)
 {
+	PyObject *attr;
+
+	// Check is there is already an attibute with this name
+	attr = PyObject_GenericGetAttr((PyObject *) self, name);
+	if (!attr) {
+		if (!PyErr_ExceptionMatches(PyExc_AttributeError))
+			return NULL;
+
+		PyErr_Clear();
+	}
+	else
+		return attr;
+
 	if (!self->comp) {
 		PyErr_SetString(PyExc_ValueError, "getattr on unitialized Component");
 		return nullptr;
 	}
 
 	try {
-		auto attr = self->comp->findAttribute(name);
+		const char *name_str = PyUnicode_AsUTF8(name);
+		auto attr = self->comp->findAttribute(name_str);
 
 		return attr->toPyObject();
 	}
@@ -88,7 +102,7 @@ PyObject* Python::Component::getattr(Python::Component* self, char* name)
 	}
 }
 
-int Python::Component::setattr(Python::Component* self, char* name, PyObject *v)
+int Python::Component::setattro(Python::Component* self, PyObject *name, PyObject *v)
 {
 	if (!self->comp) {
 		PyErr_SetString(PyExc_ValueError, "setattr on unitialized Component");
@@ -96,7 +110,8 @@ int Python::Component::setattr(Python::Component* self, char* name, PyObject *v)
 	}
 
 	try {
-		auto attr = self->comp->findAttribute(name);
+		const char *name_str = PyUnicode_AsUTF8(name);
+		auto attr = self->comp->findAttribute(name_str);
 		attr->fromPyObject(v);
 	}
 	catch (const CPS::InvalidAttributeException &) {
@@ -221,8 +236,8 @@ PyTypeObject Python::Component::type = {
 	0,                                         /* tp_itemsize */
 	(destructor)Python::Component::dealloc,    /* tp_dealloc */
 	0,                                         /* tp_print */
-	(getattrfunc)Python::Component::getattr,   /* tp_getattr */
-	(setattrfunc)Python::Component::setattr,   /* tp_setattr */
+	0,                                         /* tp_getattr */
+	0,                                         /* tp_setattr */
 	0,                                         /* tp_reserved */
 	0,                                         /* tp_repr */
 	0,                                         /* tp_as_number */
@@ -231,8 +246,8 @@ PyTypeObject Python::Component::type = {
 	0,                                         /* tp_hash  */
 	0,                                         /* tp_call */
 	(reprfunc)Python::Component::str,          /* tp_str */
-	0,                                         /* tp_getattro */
-	0,                                         /* tp_setattro */
+	(getattrofunc)Python::Component::getattro, /* tp_getattro */
+	(setattrofunc)Python::Component::setattro, /* tp_setattro */
 	0,                                         /* tp_as_buffer */
 	Py_TPFLAGS_DEFAULT | Py_TPFLAGS_BASETYPE,  /* tp_flags */
 	Python::Component::doc,                    /* tp_doc */
