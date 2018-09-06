@@ -238,21 +238,21 @@ void Python::Simulation::dealloc(Python::Simulation* self)
 	Py_TYPE(self)->tp_free((PyObject*) self);
 }
 
-const char* Python::Simulation::docAddSwitchEvent =
+const char* Python::Simulation::docAddEvent =
 "add_switch_event(sw, time, state)\n"
 "Add a switch event to the simulation.\n"
 "\n"
 ":param sw: The Switch `Component` which should perform the switch action.\n"
 ":param time: The time at which the switch action should occur.\n"
 ":param state: Wether to open or close the switch.";
-PyObject* Python::Simulation::addSwitchEvent(Simulation* self, PyObject* args)
+PyObject* Python::Simulation::addEvent(Simulation* self, PyObject* args)
 {
-	int switchState;
-	double switchTime;
-	PyObject *pyObj;
+	double eventTime;
+	PyObject *pyObj, *pyVal;
 	Python::Component *pyComp;
+	const char *name;
 
-	if (!PyArg_ParseTuple(args, "Odp", &pyObj, &switchTime, &switchState))
+	if (!PyArg_ParseTuple(args, "OsdO", &pyObj, &name, &eventTime, &pyVal))
 		return nullptr;
 
 	if (!PyObject_TypeCheck(pyObj, &Python::Component::type)) {
@@ -262,18 +262,64 @@ PyObject* Python::Simulation::addSwitchEvent(Simulation* self, PyObject* args)
 
 	pyComp = (Python::Component *) pyObj;
 
-	auto sw = std::dynamic_pointer_cast<CPS::DP::Ph1::Switch>(pyComp->comp);
-	if (!sw) {
-		PyErr_SetString(PyExc_TypeError, "First argument must be a switch");
-		return nullptr;
+	if (PyLong_Check(pyVal)) {
+		Int val = PyLong_AsLong(pyVal);
+
+		auto intAttr = pyComp->comp->findAttribute<Int>(name);
+		auto uintAttr = pyComp->comp->findAttribute<UInt>(name);
+		if (!intAttr && !uintAttr)
+			goto fail;
+
+		if (intAttr) {
+			auto evt = AttributeEvent<Int>::make(eventTime, intAttr, val);
+			self->sim->addEvent(evt);
+		}
+
+		if (uintAttr) {
+			auto evt = AttributeEvent<UInt>::make(eventTime, uintAttr, val);
+			self->sim->addEvent(evt);
+		}
 	}
+	else if (PyFloat_Check(pyVal)) {
+		double val = PyFloat_AsDouble(pyVal);
 
-	auto swEvent = CPS::Base::SwitchEvent(switchTime, switchState);
+		auto attr = pyComp->comp->findAttribute<Real>(name);
+		if (!attr)
+			goto fail;
 
-	sw->setSwitchEvents({swEvent});
+		auto evt = AttributeEvent<Real>::make(eventTime, attr, val);
+		self->sim->addEvent(evt);
+	}
+	else if (PyBool_Check(pyVal)) {
+		Bool val = PyObject_IsTrue(pyVal);
+
+		auto attr = pyComp->comp->findAttribute<Bool>(name);
+		if (!attr)
+			goto fail;
+
+		auto evt = AttributeEvent<Bool>::make(eventTime, attr, val);
+		self->sim->addEvent(evt);
+	}
+	else if (PyComplex_Check(pyVal)) {
+		Complex val(
+			PyComplex_RealAsDouble(pyVal),
+			PyComplex_ImagAsDouble(pyVal)
+		);
+
+		auto attr = pyComp->comp->findAttribute<Complex>(name);
+		if (!attr)
+			goto fail;
+
+		auto evt = AttributeEvent<Complex>::make(eventTime, attr, val);
+		self->sim->addEvent(evt);
+	}
 
 	Py_INCREF(Py_None);
 	return Py_None;
+
+fail:
+	PyErr_SetString(PyExc_TypeError, "Invalid attribute or type");
+	return nullptr;
 }
 
 const char* Python::Simulation::docAddInterface =
@@ -508,7 +554,7 @@ PyGetSetDef Python::Simulation::getset[] = {
 
 PyMethodDef Python::Simulation::methods[] = {
 	{"add_interface", (PyCFunction) Python::Simulation::addInterface, METH_VARARGS, (char *) Python::Simulation::docAddInterface},
-	{"add_switch_event", (PyCFunction) Python::Simulation::addSwitchEvent, METH_VARARGS, (char *) docAddSwitchEvent},
+	{"add_event",     (PyCFunction) Python::Simulation::addEvent, METH_VARARGS, (char *) docAddEvent},
 	{"pause",         (PyCFunction) Python::Simulation::pause, METH_NOARGS, (char *) Python::Simulation::docPause},
 	{"start",         (PyCFunction) Python::Simulation::start, METH_NOARGS, (char *) Python::Simulation::docStart},
 	{"step",          (PyCFunction) Python::Simulation::step, METH_NOARGS,  (char *) Python::Simulation::docStep},

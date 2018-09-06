@@ -52,10 +52,5 @@ namespace DPsim {
 		virtual Real step(Real time) = 0;
 		/// Log results
 		virtual void log(Real time) { };
-
-		///
-		void addSystemTopology(CPS::SystemTopology system) { }
-		///
-		virtual void setSwitchTime(Real switchTime, Int systemIndex) { }
 	};
 }

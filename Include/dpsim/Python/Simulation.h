@@ -99,6 +99,7 @@ namespace Python {
 
 		// Methods that are actually available from Python
 		static PyObject* addInterface(Simulation *self, PyObject *args);
+		static PyObject* addEvent(Simulation* self, PyObject* args);
 		static PyObject* pause(Simulation *self, PyObject *args);
 		static PyObject* start(Simulation *self, PyObject *args);
 		static PyObject* step(Simulation *self, PyObject *args);
@@ -118,6 +119,7 @@ namespace Python {
 		static const char *docStop;
 		static const char *docStep;
 		static const char *docAddInterface;
+		static const char *docAddEvent;
 		static const char *docGetEventFD;
 		static const char *docState;
 		static const char *docName;
