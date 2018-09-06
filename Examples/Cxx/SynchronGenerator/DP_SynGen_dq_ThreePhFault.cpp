@@ -81,8 +81,6 @@ int main(int argc, char* argv[]) {
 	auto fault = Ph3::SeriesSwitch::make("Br_fault");
 	fault->setParameters(BreakerOpen, BreakerClosed);
 	fault->connect({Node::GND, n1});
-	auto sw1 = SwitchEvent(0.05, true);
-	fault->setSwitchEvents(std::vector<SwitchEvent>{sw1});
 	fault->open();
 
 	// System
@@ -91,6 +89,10 @@ int main(int argc, char* argv[]) {
 	// Simulation
 	Simulation sim(name, sys, timeStep, finalTime,
 		Domain::DP, Solver::Type::MNA, Logger::Level::INFO);
+
+	auto sw1 = SwitchEvent::make(0.05, fault, true);
+
+	sim.addEvent(sw1);
 
 	sim.run();
 

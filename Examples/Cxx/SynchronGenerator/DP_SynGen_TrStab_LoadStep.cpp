@@ -33,10 +33,10 @@ int main(int argc, char* argv[]) {
 	// Define machine parameters in per unit
 	Real nomPower = 555e6;
 	Real nomPhPhVoltRMS = 24e3;
-	Real nomFreq = 60;	
-	Real H = 3.7;	
+	Real nomFreq = 60;
+	Real H = 3.7;
 	Real Ll = 0.15;
-	Real Lmd = 1.6599;	
+	Real Lmd = 1.6599;
 	Real Llfd = 0.1648;
 	// Initialization parameters
 	Complex initElecPower = Complex(300e6, 0);
@@ -60,16 +60,19 @@ int main(int argc, char* argv[]) {
 	auto load = Ph1::Switch::make("DP_SynGen_TrStab_Step_StepLoad");
 	load->setParameters(Rload, RloadStep);
 	load->connect({Node::GND, n1});
-	auto sw1 = SwitchEvent(0.05, true);
-	load->setSwitchEvents(std::vector<SwitchEvent>{sw1});
 	load->open();
 
 	// System
 	auto sys = SystemTopology(60, SystemNodeList{n1}, SystemComponentList{gen, load});
 
 	// Simulation
-	Simulation sim(name, sys, timeStep, finalTime, 
+	Simulation sim(name, sys, timeStep, finalTime,
 		Domain::DP, Solver::Type::MNA, Logger::Level::INFO);
+
+	// Events
+	auto sw1 = SwitchEvent::make(0.05, load, true);
+
+	sim.addEvent(sw1);
 
 	sim.run();
 
