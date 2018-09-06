@@ -82,7 +82,7 @@ if(WITH_CIM)
 	list(APPEND INCLUDE_DIRS ${CIMPP_INCLUDE_DIRS})
 
 	set(CIM_SOURCES
-		CIM/cmd_CIM_input.cpp
+		CIM/dpsim-cim.cpp
 		CIM/WSCC-9bus_CIM.cpp
 		CIM/WSCC-9bus_CIM_Dyn.cpp
 		CIM/WSCC-9bus_CIM_Dyn_Switch.cpp

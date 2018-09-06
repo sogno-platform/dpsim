@@ -23,24 +23,19 @@
 #include <list>
 
 #include <DPsim.h>
+#include <dpsim/Utils.h>
 
 using namespace DPsim;
-using namespace CPS;
 
 int main(int argc, char *argv[]) {
-	std::list<String> filenames;
+	CommandLineArgs args(argc, argv);
 
-	for (int i = 1; i < argc; i++) {
-		std::cout << "Adding file: " << argv[i] << std::endl;
-		filenames.push_back(String(argv[i]));
-	}
+	String simName = "dpsim";
 
-	String simName = "CIM_example";
+	CIMReader reader(simName);
+	SystemTopology sys = reader.loadCIM(args.sysFreq, args.positional, args.solver.domain);
 
-	CIM::Reader reader(simName);
-	SystemTopology sys = reader.loadCIM(50, filenames);
-
-	Simulation sim(simName, sys, 0.0001, 0.1, Domain::DP, Solver::Type::MNA);
+	Simulation sim(simName, sys, args.timeStep, args.duration, args.solver.domain, args.solver.type);
 	sim.run();
 
 	return 0;
