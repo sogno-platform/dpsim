@@ -93,7 +93,7 @@ PyObject* Python::SystemTopology::newfunc(PyTypeObject *type, PyObject *args, Py
 		new (&self->sys) SharedSysPtr();
 
 		self->pyComponentDict = PyDict_New();
-		self->pyComponentDict = PyDict_New();
+		self->pyNodeDict = PyDict_New();
 	}
 
 	return (PyObject*) self;
