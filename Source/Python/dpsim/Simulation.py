@@ -161,7 +161,7 @@ class Simulation(_dpsim.Simulation):
             )
 
     def add_switch_event(self, time, switch, state):
-        self.add_event(time, switch, 'closed', !state)
+        self.add_event(time, switch, 'closed', state)
 
 class RealTimeSimulation(Simulation):
      def __init__(self, *args, **kwargs):

@@ -252,7 +252,7 @@ PyObject* Python::Simulation::addEvent(Simulation* self, PyObject* args)
 	Python::Component *pyComp;
 	const char *name;
 
-	if (!PyArg_ParseTuple(args, "OsdO", &pyObj, &name, &eventTime, &pyVal))
+	if (!PyArg_ParseTuple(args, "dOsO", &eventTime, &pyObj, &name, &pyVal))
 		return nullptr;
 
 	if (!PyObject_TypeCheck(pyObj, &Python::Component::type)) {
@@ -262,7 +262,25 @@ PyObject* Python::Simulation::addEvent(Simulation* self, PyObject* args)
 
 	pyComp = (Python::Component *) pyObj;
 
-	if (PyLong_Check(pyVal)) {
+	try {
+		auto attr = pyComp->comp->findAttribute(name);
+	}
+	catch (InvalidAttributeException &e) {
+		PyErr_SetString(PyExc_TypeError, "Invalid attribute");
+		return nullptr;
+	}
+
+	if (PyBool_Check(pyVal)) {
+		Bool val = PyObject_IsTrue(pyVal);
+
+		auto attr = pyComp->comp->findAttribute<Bool>(name);
+		if (!attr)
+			goto fail;
+
+		auto evt = AttributeEvent<Bool>::make(eventTime, attr, val);
+		self->sim->addEvent(evt);
+	}
+	else if (PyLong_Check(pyVal)) {
 		Int val = PyLong_AsLong(pyVal);
 
 		auto intAttr = pyComp->comp->findAttribute<Int>(name);
@@ -288,16 +306,6 @@ PyObject* Python::Simulation::addEvent(Simulation* self, PyObject* args)
 			goto fail;
 
 		auto evt = AttributeEvent<Real>::make(eventTime, attr, val);
-		self->sim->addEvent(evt);
-	}
-	else if (PyBool_Check(pyVal)) {
-		Bool val = PyObject_IsTrue(pyVal);
-
-		auto attr = pyComp->comp->findAttribute<Bool>(name);
-		if (!attr)
-			goto fail;
-
-		auto evt = AttributeEvent<Bool>::make(eventTime, attr, val);
 		self->sim->addEvent(evt);
 	}
 	else if (PyComplex_Check(pyVal)) {
