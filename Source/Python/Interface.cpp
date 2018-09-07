@@ -24,6 +24,7 @@
 
 #ifdef WITH_SHMEM
   #include <cps/Interface.h>
+  #include <cps/AttributeList.h>
 #endif
 
 #include <dpsim/Python/Interface.h>
@@ -67,44 +68,84 @@ const char* Python::Interface::docRegisterControlledAttribute =
 ":param attr:\n"
 ":param real_idx: Index of the real part of the current or voltage.\n"
 ":param imag_idx: Index of the imaginary part of the current or voltage.\n";
-PyObject* Python::Interface::registerControlledAttribute(Interface* self, PyObject* args)
+PyObject* Python::Interface::registerControlledAttribute(Interface* self, PyObject* args, PyObject *kwargs)
 {
 #ifdef WITH_SHMEM
-	PyObject *obj;
-	int realIdx, imagIdx = -1;
+	PyObject *pyObj;
+	int idx;
 	const char *attrName;
 	double gain;
+	int mode;
 
-	if (!PyArg_ParseTuple(args, "Osfi|i", &obj, &attrName, &gain, &realIdx, &imagIdx))
+	const char *kwlist[] = {"component", "attribute", "idx", "mode", "gain", nullptr};
+
+	if (!PyArg_ParseTupleAndKeywords(args, kwargs, "Osi|ds", (char **) kwlist, &pyObj, &attrName, &idx, &gain, &mode))
 		return nullptr;
 
-	if (!PyObject_TypeCheck(obj, &Python::Component::type)) {
-		PyErr_SetString(PyExc_TypeError, "First argument must be a Component");
+	CPS::AttributeList::Ptr attrList;
+	if (PyObject_TypeCheck(pyObj, &Python::Component::type)) {
+		auto *pyComp = (Component*) pyObj;
+
+		attrList = std::dynamic_pointer_cast<CPS::AttributeList>(pyComp->comp);
+	}
+	else if (PyObject_TypeCheck(pyObj, &Python::Node<CPS::Real>::type)) {
+		auto *pyNode = (Node<CPS::Real> *) pyObj;
+
+		attrList = std::dynamic_pointer_cast<CPS::AttributeList>(pyNode->node);
+	}
+	else if (PyObject_TypeCheck(pyObj, &Python::Node<CPS::Complex>::type)) {
+		auto *pyNode = (Node<CPS::Complex> *) pyObj;
+
+		attrList = std::dynamic_pointer_cast<CPS::AttributeList>(pyNode->node);
+	}
+	else {
+		PyErr_SetString(PyExc_TypeError, "First argument must be a Component or a Node");
 		return nullptr;
 	}
-
-	Python::Component *pyComp = (Python::Component*) obj;
 
 	try {
-		CPS::Attribute<CPS::Real>::Ptr realAttr = pyComp->comp->findAttribute<CPS::Real>(attrName);
+		switch (mode) {
+			case 0: { // Real Attribute
 
-		self->intf->addImport(realAttr, gain, realIdx);
-	}
-	catch (const CPS::InvalidAttributeException &) {
-		try {
-			CPS::Attribute<CPS::Complex>::Ptr compAttr = pyComp->comp->findAttribute<CPS::Complex>(attrName);
+				CPS::Attribute<CPS::Real>::Ptr a = attrList->findAttribute<CPS::Real>(attrName);
 
-			if (imagIdx < 0) {
-				PyErr_SetString(PyExc_TypeError, "Both a real and imaginary index must be specified");
-				return nullptr;
+				self->intf->addImport(a, gain, idx);
+				break;
 			}
 
-			self->intf->addImport(compAttr, gain, realIdx, imagIdx);
+			case 1: { // Complex Attribute: real & imag
+				auto a = attrList->findAttribute<CPS::Complex>(attrName);
+
+				self->intf->addImport(a, gain, idx, idx + 1);
+				break;
+			}
+
+			case 2: { // Complex Attribute: mag & phase
+				auto a = attrList->findAttribute<CPS::Complex>(attrName);
+
+				std::function<void(CPS::Real)> setMag = [a](CPS::Real r) {
+					CPS::Complex z = a->get();
+					a->set(CPS::Complex(r, z.imag()));
+				};
+
+				std::function<void(CPS::Real)> setPhas = [a](CPS::Real i) {
+					CPS::Complex z = a->get();
+					a->set(CPS::Complex(z.real(), i));
+				};
+
+				self->intf->addImport(setMag,  idx);
+				self->intf->addImport(setPhas, idx+1);
+				break;
+			}
+
+			default:
+				PyErr_SetString(PyExc_TypeError, "Invalid mode");
+				return nullptr;
 		}
-		catch (const CPS::InvalidAttributeException &) {
-			PyErr_SetString(PyExc_TypeError, "First argument must be a readable attribute");
-			return nullptr;
-		}
+	}
+	catch (const CPS::InvalidAttributeException &exp) {
+		PyErr_SetString(PyExc_TypeError, "First argument must be a writable attribute");
+		return nullptr;
 	}
 
 	Py_INCREF(Py_None);
@@ -123,49 +164,80 @@ const char* Python::Interface::docRegisterExportedAttribute =
 ":param attr:\n"
 ":param real_idx: Index where the real part of the voltage is written.\n"
 ":param imag_idx: Index where the imaginary part of the voltage is written.\n";
-PyObject* Python::Interface::registerExportedAttribute(Interface* self, PyObject* args)
+PyObject* Python::Interface::registerExportedAttribute(Interface* self, PyObject* args, PyObject* kwargs)
 {
 #ifdef WITH_SHMEM
-	PyObject* obj;
-	int realIdx, imagIdx = -1;
+	PyObject* pyObj;
+	int idx;
 	const char *attrName;
-	double gain;
+	double gain = 1;
+	int mode = 0;
 
-	if (!PyArg_ParseTuple(args, "Osfi|i", &obj, &attrName, &gain, &realIdx, &imagIdx)) {
+	const char *kwlist[] = {"component", "attribute", "idx", "mode", "gain", nullptr};
+
+	if (!PyArg_ParseTupleAndKeywords(args, kwargs, "Osi|id", (char **) kwlist, &pyObj, &attrName, &idx, &mode, &gain))
+		return nullptr;
+
+	CPS::AttributeList::Ptr attrList;
+	if (PyObject_TypeCheck(pyObj, &Python::Component::type)) {
+		auto *pyComp = (Component*) pyObj;
+
+		attrList = std::dynamic_pointer_cast<CPS::AttributeList>(pyComp->comp);
+	}
+	else if (PyObject_TypeCheck(pyObj, &Python::Node<CPS::Real>::type)) {
+		auto *pyNode = (Node<CPS::Real> *) pyObj;
+
+		attrList = std::dynamic_pointer_cast<CPS::AttributeList>(pyNode->node);
+	}
+	else if (PyObject_TypeCheck(pyObj, &Python::Node<CPS::Complex>::type)) {
+		auto *pyNode = (Node<CPS::Complex> *) pyObj;
+
+		attrList = std::dynamic_pointer_cast<CPS::AttributeList>(pyNode->node);
+	}
+	else {
+		PyErr_SetString(PyExc_TypeError, "First argument must be a Component or a Node");
 		return nullptr;
 	}
-
-	if (!PyObject_TypeCheck(obj, &Python::Component::type)) {
-		PyErr_SetString(PyExc_TypeError, "First argument must be a Component");
-		return nullptr;
-	}
-
-	Component *pyComp = (Component*) obj;
 
 	try {
-		CPS::Attribute<CPS::Real>::Ptr realAttr = pyComp->comp->findAttribute<CPS::Real>(attrName);
+		switch (mode) {
+			case 0: { // Real Attribute
 
-		self->intf->addExport(realAttr, gain, realIdx);
-	}
-	catch (const CPS::InvalidAttributeException &exp) {
-		try {
-			CPS::Attribute<CPS::Complex>::Ptr compAttr = pyComp->comp->findAttribute<CPS::Complex>(attrName);
+				CPS::Attribute<CPS::Real>::Ptr realAttr = attrList->findAttribute<CPS::Real>(attrName);
 
-			if (imagIdx < 0) {
-				PyErr_SetString(PyExc_TypeError, "Both a real and imaginary index must be specified");
-				return nullptr;
+				self->intf->addExport(realAttr, gain, idx);
+				break;
 			}
 
-			self->intf->addExport(compAttr, gain, realIdx, imagIdx);
+			case 1: { // Complex Attribute: real & imag
+				auto a = attrList->findAttribute<CPS::Complex>(attrName);
+
+				self->intf->addExport(a, gain, idx, idx + 1);
+				break;
+			}
+
+			case 2: { // Complex Attribute: mag & phase
+				auto a = attrList->findAttribute<CPS::Complex>(attrName);
+
+				std::function<CPS::Real()> getMag = [a](){ return std::abs(a->get()); };
+				std::function<CPS::Real()> getPhas = [a](){ return std::arg(a->get()); };
+
+				self->intf->addExport(getMag,  idx);
+				self->intf->addExport(getPhas, idx+1);
+				break;
+			}
+
+			default:
+				PyErr_SetString(PyExc_TypeError, "Invalid mode");
+				return nullptr;
 		}
-		catch (const CPS::InvalidAttributeException &exp) {
-			PyErr_SetString(PyExc_TypeError, "First argument must be a writable attribute");
-			return nullptr;
-		}
+	}
+	catch (const CPS::InvalidAttributeException &exp) {
+		PyErr_SetString(PyExc_TypeError, "First argument must be a writable attribute");
+		return nullptr;
 	}
 
 	Py_INCREF(Py_None);
-
 	return Py_None;
 #else
 	PyErr_SetString(PyExc_NotImplementedError, "not implemented on this platform");
@@ -217,7 +289,7 @@ PyObject* Python::OpenInterface(PyObject *self, PyObject *args, PyObject *kwds)
 }
 
 PyMethodDef Python::Interface::methods[] = {
-	{"export_attribute", (PyCFunction) Python::Interface::registerExportedAttribute, METH_VARARGS, Python::Interface::docRegisterExportedAttribute},
+	{"export_attribute", (PyCFunction) Python::Interface::registerExportedAttribute, METH_VARARGS | METH_KEYWORDS, Python::Interface::docRegisterExportedAttribute},
 	{"import_attribute", (PyCFunction) Python::Interface::registerControlledAttribute, METH_VARARGS, Python::Interface::docRegisterControlledAttribute},
 	{0},
 };
