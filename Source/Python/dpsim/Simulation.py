@@ -130,9 +130,6 @@ class Simulation(_dpsim.Simulation):
         return self._loop.run_until_complete(self._events.wait(evt))
 
     def run(self, **kwargs):
-        if 'pbar' in kwargs and kwargs['pbar']:
-            self.show_progressbar()
-
         self._loop.run_until_complete(self.simulate())
 
     def show_progressbar(self):
