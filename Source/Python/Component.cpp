@@ -87,13 +87,12 @@ PyObject* Python::Component::getattro(Python::Component* self, PyObject* name)
 	}
 
 	try {
-		const char *name_str = PyUnicode_AsUTF8(name);
-		auto attr = self->comp->findAttribute(name_str);
+		auto attr = self->comp->findAttribute(PyUnicode_AsUTF8(name));
 
 		return attr->toPyObject();
 	}
 	catch (const CPS::InvalidAttributeException &) {
-		PyErr_Format(PyExc_AttributeError, "Component has no attribute '%s'", name);
+		PyErr_Format(PyExc_AttributeError, "Component has no attribute '%s'", PyUnicode_AsUTF8(name));
 		return nullptr;
 	}
 	catch (...) {
@@ -110,24 +109,23 @@ int Python::Component::setattro(Python::Component* self, PyObject *name, PyObjec
 	}
 
 	try {
-		const char *name_str = PyUnicode_AsUTF8(name);
-		auto attr = self->comp->findAttribute(name_str);
+		auto attr = self->comp->findAttribute(PyUnicode_AsUTF8(name));
 		attr->fromPyObject(v);
 	}
 	catch (const CPS::InvalidAttributeException &) {
-		PyErr_Format(PyExc_AttributeError, "Component has no attribute '%s'", name);
+		PyErr_Format(PyExc_AttributeError, "Component has no attribute '%s'", PyUnicode_AsUTF8(name));
 		return -1;
 	}
 	catch (const CPS::TypeException &) {
-		PyErr_Format(PyExc_TypeError, "Invalid type for attribute '%s'", name);
+		PyErr_Format(PyExc_TypeError, "Invalid type for attribute '%s'", PyUnicode_AsUTF8(name));
 		return -1;
 	}
 	catch (const CPS::AccessException &) {
-		PyErr_Format(PyExc_AttributeError, "Attribute '%s' is not modifiable", name);
+		PyErr_Format(PyExc_AttributeError, "Attribute '%s' is not modifiable", PyUnicode_AsUTF8(name));
 		return -1;
 	}
 	catch (...) {
-		PyErr_Format(PyExc_RuntimeError, "Unkown Error Occured", name);
+		PyErr_Format(PyExc_RuntimeError, "Unkown Error Occured", PyUnicode_AsUTF8(name));
 		return -1;
 	}
 
