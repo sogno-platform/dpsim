@@ -22,8 +22,8 @@
 #include "DPsim.h"
 
 using namespace DPsim;
-using namespace CPS::EMT;
-using namespace CPS::EMT::Ph1;
+using namespace CPS::DP;
+using namespace CPS::DP::Ph1;
 
 int main(int argc, char* argv[]) {
 	// Nodes
@@ -38,7 +38,7 @@ int main(int argc, char* argv[]) {
 	auto r1 = Resistor::make("r_1");
 	r1->setParameters(1);
 	r1->setNodes(Node::List{ n1, n2 });
-	auto r2 = Resistor::make("r_2");
+	auto r2 = Resistor::make("r_2", Logger::Level::DEBUG);
 	r2->setParameters(1);
 	r2->setNodes(Node::List{ n2, Node::GND });
 	auto r3 = Resistor::make("r_3");
@@ -57,9 +57,9 @@ int main(int argc, char* argv[]) {
 	// Define simulation scenario
 	Real timeStep = 0.001;
 	Real finalTime = 0.1;
-	String simName = "EMT_IdealVS_CS_R4";
+	String simName = "DP_IdealVS_CS_R4_1b";
 
-	Simulation sim(simName, sys, timeStep, finalTime, Domain::EMT);
+	Simulation sim(simName, sys, timeStep, finalTime);
 	sim.run();
 
 	return 0;

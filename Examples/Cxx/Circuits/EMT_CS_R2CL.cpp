@@ -32,7 +32,7 @@ int main(int argc, char* argv[]) {
 
 	// Components
 	auto cs = CurrentSource::make("cs");
-	cs->setParameters(10);
+	cs->setParameters(10, 50);
 	cs->setNodes(Node::List{ Node::GND, n1 });
 	auto r1 = Resistor::make("r_1");
 	r1->setParameters(1);
@@ -51,7 +51,7 @@ int main(int argc, char* argv[]) {
 	auto sys = SystemTopology(50, SystemNodeList{n1, n2}, SystemComponentList{cs, r1, c1, l1, r2});
 		
 	// Define simulation scenario
-	Real timeStep = 0.001;
+	Real timeStep = 0.00005;
 	Real finalTime = 0.1;
 	String simName = "EMT_CS_R2CL";
 

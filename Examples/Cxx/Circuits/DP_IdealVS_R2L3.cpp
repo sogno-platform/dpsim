@@ -34,7 +34,7 @@ int main(int argc, char* argv[]) {
 
 	// Components
 	auto vs = VoltageSource::make("vs");
-	vs->setParameters(10 * sin(2 * PI * 50));  //V_in(t) = 10*sin(w*t)
+	vs->setParameters(10);
 	vs->setNodes(Node::List{ Node::GND, n1 });
 	auto r1 = Resistor::make("r_1");
 	r1->setParameters(1);
@@ -45,7 +45,7 @@ int main(int argc, char* argv[]) {
 	auto l2 = Inductor::make("l_2");
 	l2->setParameters(0.1);
 	l2->setNodes(Node::List{ n3, Node::GND });
-	auto l3 = Inductor::make("l_3", Node::List{ n3, n4 }, 0.05);
+	auto l3 = Inductor::make("l_3");
 	l3->setParameters(0.05);
 	l3->setNodes(Node::List{ n3, n4 });
 	auto r2 = Resistor::make("r_2");

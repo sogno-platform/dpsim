@@ -31,7 +31,7 @@ int main(int argc, char* argv[]) {
 
 	// Components
 	auto cs = CurrentSource::make("cs");
-	cs->setParameters(Complex(10, 0));
+	cs->setParameters(Complex(10, 0), 50);
 	cs->setNodes(Node::List{ Node::GND, n1 });
 	auto r1 = Resistor::make("r_1");
 	r1->setParameters(1);

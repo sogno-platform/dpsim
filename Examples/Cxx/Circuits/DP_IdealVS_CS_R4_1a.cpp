@@ -29,25 +29,35 @@ int main(int argc, char* argv[]) {
 	// Nodes
 	auto n1 = Node::make("n1");
 	auto n2 = Node::make("n2");
+	auto n3 = Node::make("n3");
 
 	// Components
 	auto vs = VoltageSource::make("vs");
-	vs->setParameters(Complex(10, 0));
+	vs->setParameters(10);
 	vs->setNodes(Node::List{ Node::GND, n1 });
 	auto r1 = Resistor::make("r_1");
-	r1->setParameters(5);
+	r1->setParameters(1);
 	r1->setNodes(Node::List{ n1, n2 });
-	auto l1 = Inductor::make("l_1");
-	l1->setParameters(0.02);
-	l1->setNodes(Node::List{ n2, Node::GND });
+	auto r2 = Resistor::make("r_2", Logger::Level::DEBUG);
+	r2->setParameters(1);
+	r2->setNodes(Node::List{ n2, Node::GND });
+	auto r3 = Resistor::make("r_3");
+	r3->setParameters(10);
+	r3->setNodes(Node::List{ n2, n3 });
+	auto r4 = Resistor::make("r_4");
+	r4->setParameters(5);
+	r4->setNodes(Node::List{ n3, Node::GND });
+	auto cs = CurrentSource::make("cs");
+	cs->setParameters(1);
+	cs->setNodes(Node::List{ Node::GND, n3 });
 
 	// Define system topology
-	auto sys = SystemTopology(50, SystemNodeList{n1, n2}, SystemComponentList{vs, r1, l1});
+	auto sys = SystemTopology(50, SystemNodeList{n1, n2, n3}, SystemComponentList{vs, r1, r2, r3, r4, cs});
 		
 	// Define simulation scenario
 	Real timeStep = 0.001;
 	Real finalTime = 0.1;
-	String simName = "DP_IdealVS_RL1";
+	String simName = "DP_IdealVS_CS_R4_1a";
 
 	Simulation sim(simName, sys, timeStep, finalTime);
 	sim.run();
