@@ -322,8 +322,7 @@ PyObject* Python::Simulation::addEvent(Simulation* self, PyObject* args)
 		self->sim->addEvent(evt);
 	}
 
-	Py_INCREF(Py_None);
-	return Py_None;
+	Py_RETURN_NONE;
 
 fail:
 	PyErr_SetString(PyExc_TypeError, "Invalid attribute or type");
@@ -357,8 +356,7 @@ PyObject* Python::Simulation::addInterface(Simulation* self, PyObject* args)
 
 	self->refs.push_back(pyObj);
 
-	Py_INCREF(Py_None);
-	return Py_None;
+	Py_RETURN_NONE;
 #else
 	PyErr_SetString(PyExc_NotImplementedError, "not implemented on this platform");
 	return nullptr;
@@ -385,8 +383,7 @@ PyObject* Python::Simulation::pause(Simulation *self, PyObject *args)
 	while (self->state != State::paused)
 		self->cond->wait(lk);
 
-	Py_INCREF(Py_None);
-	return Py_None;
+	Py_RETURN_NONE;
 }
 
 const char *Python::Simulation::docStart =
@@ -424,8 +421,7 @@ PyObject* Python::Simulation::start(Simulation *self, PyObject *args)
 	while (self->state != State::running)
 		self->cond->wait(lk);
 
-	Py_INCREF(Py_None);
-	return Py_None;
+	Py_RETURN_NONE;
 }
 
 const char *Python::Simulation::docStep =
@@ -461,8 +457,7 @@ PyObject* Python::Simulation::step(Simulation *self, PyObject *args)
 	while (self->state == State::running)
 		self->cond->wait(lk);
 
-	Py_INCREF(Py_None);
-	return Py_None;
+	Py_RETURN_NONE;
 }
 
 const char *Python::Simulation::docStop =
@@ -484,8 +479,7 @@ PyObject* Python::Simulation::stop(Simulation *self, PyObject *args)
 	while (self->state != Simulation::State::stopped)
 		self->cond->wait(lk);
 
-	Py_INCREF(Py_None);
-	return Py_None;
+	Py_RETURN_NONE;
 }
 
 const char *Python::Simulation::docGetEventFD =

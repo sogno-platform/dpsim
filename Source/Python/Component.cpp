@@ -179,8 +179,7 @@ PyObject* Python::Component::connect(Component* self, PyObject* args)
 			return nullptr;
 		}
 
-		Py_INCREF(Py_None);
-		return Py_None;
+		Py_RETURN_NONE;
 	} catch (...) {
 		PyErr_SetString(PyExc_TypeError, "Failed to connect nodes");
 		return nullptr;

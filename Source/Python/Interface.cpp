@@ -148,8 +148,7 @@ PyObject* Python::Interface::registerControlledAttribute(Interface* self, PyObje
 		return nullptr;
 	}
 
-	Py_INCREF(Py_None);
-	return Py_None;
+	Py_RETURN_NONE;
 #else
 	PyErr_SetString(PyExc_NotImplementedError, "not implemented on this platform");
 	return nullptr;
@@ -237,8 +236,7 @@ PyObject* Python::Interface::registerExportedAttribute(Interface* self, PyObject
 		return nullptr;
 	}
 
-	Py_INCREF(Py_None);
-	return Py_None;
+	Py_RETURN_NONE;
 #else
 	PyErr_SetString(PyExc_NotImplementedError, "not implemented on this platform");
 	return nullptr;

@@ -60,8 +60,7 @@ PyObject* Python::SystemTopology::addComponent(SystemTopology *self, PyObject *a
 	Py_DECREF(pyName);
 	Py_DECREF(pyObj);
 
-	Py_INCREF(Py_None);
-	return Py_None;
+	Py_RETURN_NONE;
 }
 
 #ifdef WITH_GRAPHVIZ
