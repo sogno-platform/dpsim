@@ -28,6 +28,7 @@
 
 #include <dpsim/Config.h>
 #include <dpsim/Solver.h>
+#include <dpsim/Event.h>
 #include <cps/Definitions.h>
 #include <cps/PowerComponent.h>
 #include <cps/Logger.h>
@@ -63,6 +64,8 @@ namespace DPsim {
 		Solver::Type mSolverType;
 		///
 		std::shared_ptr<Solver> mSolver;
+		/// The simulation event queue
+		EventQueue mEvents;
 
 #ifdef WITH_SHMEM
 		struct InterfaceMapping {
@@ -103,8 +106,10 @@ namespace DPsim {
 		/// Synchronize simulation with remotes by exchanging intial state over interfaces
 		void sync();
 
-		///
-		void setSwitchTime(Real switchTime, Int systemIndex);
+		/// Schedule an event in the simulation
+		void addEvent(Event::Ptr e) {
+			mEvents.addEvent(e);
+		}
 #ifdef WITH_SHMEM
 		///
 		void addInterface(CPS::Interface *eint, bool sync, bool syncStart) {
@@ -115,8 +120,6 @@ namespace DPsim {
 			mInterfaces.push_back({eint, sync, sync});
 		}
 #endif
-		///
-		void addSystemTopology(CPS::SystemTopology system);
 		///
 		void setLogDownsamplingRate(Int divider) {}
 

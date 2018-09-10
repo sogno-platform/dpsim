@@ -99,11 +99,11 @@ namespace Python {
 
 		// Methods that are actually available from Python
 		static PyObject* addInterface(Simulation *self, PyObject *args);
+		static PyObject* addEvent(Simulation* self, PyObject* args);
 		static PyObject* pause(Simulation *self, PyObject *args);
 		static PyObject* start(Simulation *self, PyObject *args);
 		static PyObject* step(Simulation *self, PyObject *args);
 		static PyObject* stop(Simulation *self, PyObject *args);
-		static PyObject* wait(Simulation *self, PyObject *args);
 		static PyObject* getEventFD(Simulation *self, PyObject *args);
 
 		// Getters
@@ -112,8 +112,20 @@ namespace Python {
 		static PyObject* steps(Simulation *self, void *ctx);
 		static PyObject* time(Simulation *self, void *ctx);
 		static PyObject* finalTime(Simulation *self, void *ctx);
-	};
 
-	extern PyTypeObject SimulationType;
+		static const char *doc;
+		static const char *docStart;
+		static const char *docPause;
+		static const char *docStop;
+		static const char *docStep;
+		static const char *docAddInterface;
+		static const char *docAddEvent;
+		static const char *docGetEventFD;
+		static const char *docState;
+		static const char *docName;
+		static PyMethodDef methods[];
+		static PyGetSetDef getset[];
+		static PyTypeObject type;
+	};
 }
 }

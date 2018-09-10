@@ -42,8 +42,6 @@
 namespace DPsim {
 namespace Python {
 
-	extern PyTypeObject ComponentType;
-
 	struct Component {
 		PyObject_HEAD
 
@@ -61,10 +59,12 @@ namespace Python {
 
 		static PyObject* str(Component* self);
 
-		static PyObject* getattr(Component* self, char* name);
-		static int setattr(Component *self, char* name, PyObject *v);
+		static PyObject* getattro(Component* self, PyObject *name);
+		static int setattro(Component *self, PyObject *name, PyObject *v);
 
 		static PyObject* connect(Component* self, PyObject *args);
+
+		static PyObject* dir(Component* self, PyObject* args);
 
 		template<typename T>
 		static PyObject* createInstance(PyObject* self, PyObject* args, PyObject *kwargs)
@@ -80,7 +80,7 @@ namespace Python {
 
 			try {
 				// Create Python wrapper
-				Component *pyComp = PyObject_New(Component, &ComponentType);
+				Component *pyComp = PyObject_New(Component, &Component::type);
 				Component::init(pyComp);
 
 				// Create CPS component
@@ -160,6 +160,11 @@ namespace Python {
 				getDocumentation<T>()
 			};
 		}
+
+		static const char* doc;
+		static const char* docConnect;
+		static PyMethodDef methods[];
+		static PyTypeObject type;
 	};
 
 	CPS::Component::List compsFromPython(PyObject* list);

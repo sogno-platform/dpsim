@@ -31,6 +31,7 @@ using namespace CPS;
 #include <getopt.h>
 
 DPsim::CommandLineArgs::CommandLineArgs(int argc, char *argv[],
+		String nm,
 		Real dt,
 		Real d,
 		Real sf,
@@ -56,6 +57,7 @@ DPsim::CommandLineArgs::CommandLineArgs(int argc, char *argv[],
 		{ "solver-domain",	required_argument,	0, 'D', "(DP|EMT)", "Domain of solver" },
 		{ "solver-type",	required_argument,	0, 'T', "(MNA)", "Type of solver" },
 		{ "option",		required_argument,	0, 'o', "KEY=VALUE", "User-definable options" },
+		{ "name",		required_argument,	0, 'n', "NAME", "Name of log files" },
 		{ 0 }
 	},
 	timeStep(dt),
@@ -63,6 +65,7 @@ DPsim::CommandLineArgs::CommandLineArgs(int argc, char *argv[],
 	sysFreq(sf),
 	scenario(s),
 	logLevel(ll),
+	name(nm),
 	startSynch(ss),
 	blocking(b),
 	solver{sd, st}
@@ -76,7 +79,7 @@ DPsim::CommandLineArgs::CommandLineArgs(int argc, char *argv[],
 		/* getopt_long stores the option index here. */
 		int option_index = 0;
 
-		c = getopt_long(argc, argv, "ht:d:s:l:a:i:f:D:T:o:Sb", long_options.data(), &option_index);
+		c = getopt_long(argc, argv, "ht:d:s:l:a:i:f:D:T:o:Sbn:", long_options.data(), &option_index);
 
 		/* Detect the end of the options. */
 		if (c == -1)
@@ -183,6 +186,10 @@ DPsim::CommandLineArgs::CommandLineArgs(int argc, char *argv[],
 
 				break;
 			}
+
+			case 'n':
+				name = optarg;
+				break;
 
 			case 'h':
 				showUsage();

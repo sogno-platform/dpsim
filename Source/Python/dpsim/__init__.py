@@ -4,6 +4,7 @@
 
 import types
 import sys
+import re
 
 __author__ = "Markus Mirz, Steffen Vogel"
 __copyright__ = "Copyright 2017, Institute for Automation of Complex Power Systems, EONERC"
@@ -49,7 +50,7 @@ def __get_module(parts):
         return module
 
 # Register aliases
-for ctor in [x for x in _dpsim.__dict__ if x.startswith("_dp") or x.startswith("_emt") ]:
+for ctor in [x for x in _dpsim.__dict__ if re.match("^_(dp|emt|signal)", x) ]:
     parts = ctor.split("_")
 
     module_parts = parts[1:-1]

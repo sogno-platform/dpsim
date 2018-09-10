@@ -37,7 +37,7 @@ Simulation::Simulation(String name,
 	Real timeStep, Real finalTime,
 	Domain domain, Solver::Type solverType,
 	Logger::Level logLevel) :
-	mLog("Logs/" + name + ".log", logLevel),
+	mLog(name, logLevel),
 	mName(name),
 	mFinalTime(finalTime),
 	mTimeStep(timeStep),
@@ -120,6 +120,8 @@ Real Simulation::step() {
 	}
 #endif
 
+	mEvents.handleEvents(mTime);
+
 	nextTime = mSolver->step(mTime);
 
 #ifdef WITH_SHMEM
@@ -133,12 +135,4 @@ Real Simulation::step() {
 	mTimeStepCount++;
 
 	return mTime;
-}
-
-void Simulation::setSwitchTime(Real switchTime, Int systemIndex) {
-	mSolver->setSwitchTime(switchTime, systemIndex);
-}
-
-void Simulation::addSystemTopology(SystemTopology system) {
-	mSolver->addSystemTopology(system);
 }

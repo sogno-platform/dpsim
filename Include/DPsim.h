@@ -39,13 +39,14 @@
 #endif
 
 namespace DPsim {
-  // #### CPS for users ####
-  using SystemTopology = CPS::SystemTopology;
-  using SystemNodeList = CPS::TopologicalNode::List;
-  using SystemComponentList = CPS::Component::List;
-  using Logger = CPS::Logger;
-  using Domain = CPS::Domain;
-  using PhaseType = CPS::PhaseType;
-  using SwitchEvent = CPS::Base::SwitchEvent;
-  using CIMReader = CPS::CIM::Reader;
+	// #### CPS for users ####
+	using SystemTopology = CPS::SystemTopology;
+	using SystemNodeList = CPS::TopologicalNode::List;
+	using SystemComponentList = CPS::Component::List;
+	using Logger = CPS::Logger;
+	using Domain = CPS::Domain;
+	using PhaseType = CPS::PhaseType;
+#ifdef WITH_CIM
+	using CIMReader = CPS::CIM::Reader;
+#endif
 }

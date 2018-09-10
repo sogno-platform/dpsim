@@ -130,9 +130,6 @@ class Simulation(_dpsim.Simulation):
         return self._loop.run_until_complete(self._events.wait(evt))
 
     def run(self, **kwargs):
-        if 'pbar' in kwargs and kwargs['pbar']:
-            self.show_progressbar()
-
         self._loop.run_until_complete(self.simulate())
 
     def show_progressbar(self):
@@ -159,6 +156,9 @@ class Simulation(_dpsim.Simulation):
                 max_value = self.final_time,
                 redirect_stdout = True
             )
+
+    def add_switch_event(self, time, switch, state):
+        self.add_event(time, switch, 'closed', state)
 
 class RealTimeSimulation(Simulation):
      def __init__(self, *args, **kwargs):

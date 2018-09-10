@@ -86,25 +86,28 @@ int main(int argc, char *argv[])
 	else if (String(argv[1]) == "1") {
 		// Nodes
 		auto n4 = Node::make("n4");
+		auto n5 = Node::make("n5");
 
 		// Components
 		auto ecs = CurrentSource::make("v_s");
 		auto r2A = Resistor::make("r_2");
 		auto r2B = Resistor::make("r_2");
+		auto sw = Ph1::Switch::make("sw");
 
 		// Topology
 		ecs->connect({ Node::GND, n4 });
 		r2A->connect({ Node::GND, n4 });
-		r2B->connect({ Node::GND, n4 });
+		sw->connect({ n4, n5 });
+		r2B->connect({ Node::GND, n5 });
 
 		// Parameters
 		ecs->setParameters(Complex(0, 0));
 		r2A->setParameters(10);
 		r2B->setParameters(8);
+		sw->setParameters(1e9, 0.1, false);
 
-		comps = SystemComponentList{ecs, r2A};
-		comps2 = SystemComponentList{ecs, r2B};
-		nodes = SystemNodeList{Node::GND, n4};
+		comps = SystemComponentList{ecs, sw, r2A, r2B};
+		nodes = SystemNodeList{Node::GND, n4, n5};
 
 		intf.addImport(ecs->findAttribute<Complex>("current_ref"), 1.0, 0, 1);
 		intf.addExport(ecs->findAttribute<Complex>("comp_voltage"), 1.0, 0, 1);
@@ -117,16 +120,15 @@ int main(int argc, char *argv[])
 	String simName = "ShmemDistributed";
 	Real timeStep = 0.001;
 
-	auto sys1 = SystemTopology(50, nodes, comps);
+	auto sys = SystemTopology(50, nodes, comps);
 
-	auto sim = RealTimeSimulation(simName + argv[1], sys1, timeStep, 20);
+	auto sim = RealTimeSimulation(simName + argv[1], sys, timeStep, 20);
 	sim.addInterface(&intf);
 
 	if (String(argv[1]) == "1") {
-		auto sys2 = SystemTopology(50, comps2);
+		auto evt = SwitchEvent::make(10, sys.component<CPS::Base::Ph1::Switch>("sw"), true);
 
-		sim.addSystemTopology(sys2);
-		sim.setSwitchTime(10, 1);
+		sim.addEvent(evt);
 	}
 
 	sim.run();

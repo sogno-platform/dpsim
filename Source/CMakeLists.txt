@@ -2,7 +2,8 @@ set(SOURCES
 	Simulation.cpp
 	MNASolver.cpp
 	Utils.cpp
-	Timer.cpp	
+	Timer.cpp
+	Event.cpp
 )
 
 if(NOT WIN32)

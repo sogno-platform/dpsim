@@ -21,7 +21,7 @@
 
 #pragma once
 
-#include <vector>
+#include <list>
 
 #include <dpsim/Timer.h>
 #include <dpsim/Solver.h>
@@ -47,6 +47,7 @@ protected:
 public:
 	CommandLineArgs(int argc, char *argv[],
 		/* Default settings */
+		String name = "dpsim",
 		Real dt = 0.001,
 		Real d = 1,
 		Real sf = 50,
@@ -67,6 +68,7 @@ public:
 	int scenario;
 
 	CPS::Logger::Level logLevel;
+	String name;
 
 	bool startSynch;
 	bool blocking;
@@ -78,7 +80,7 @@ public:
 
 	DPsim::Timer::StartClock::time_point startTime;
 
-	std::vector<String> positional;
+	std::list<String> positional;
 
 	std::map<String, Real> options;
 };

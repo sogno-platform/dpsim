@@ -1,8 +1,8 @@
-/** Python components
+/** Event system
  *
  * @file
- * @author Georg Reinke <georg.reinke@rwth-aachen.de>
- * @copyright 2017, Institute for Automation of Complex Power Systems, EONERC
+ * @author Steffen Vogel <stvogel@eonerc.rwth-aachen.de>
+ * @copyright 2018, Institute for Automation of Complex Power Systems, EONERC
  *
  * DPsim
  *
@@ -20,20 +20,25 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *********************************************************************************/
 
-#pragma once
+#include <dpsim/Event.h>
 
-#ifdef _DEBUG
-  #undef _DEBUG
-  #include <Python.h>
-  #define _DEBUG
-#else
-  #include <Python.h>
-#endif
+using namespace DPsim;
+using namespace CPS;
 
-namespace DPsim {
-namespace Python {
-
-	extern const char* DocLoadCim;
-	PyObject* LoadCim(PyObject* self, PyObject* args, PyObject *kwargs);
+void EventQueue::addEvent(Event::Ptr e) {
+	mEvents.push(e);
 }
+
+void EventQueue::handleEvents(Real currentTime) {
+	Event::Ptr e;
+
+	while (!mEvents.empty()) {
+		e = mEvents.top();
+		if (e->mTime > currentTime)
+			break;
+
+		e->execute();
+		std::cout << currentTime << ": Handle event" << std::endl;
+		mEvents.pop();
+	}
 }

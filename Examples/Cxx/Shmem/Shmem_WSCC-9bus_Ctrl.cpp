@@ -36,16 +36,16 @@ int main(int argc, char *argv[]) {
 
 	// Specify CIM files
 #ifdef _WIN32
-	String path("Examples\\CIM\\WSCC-09_Neplan_RX\\");
+	String path("Examples\\CIM\\WSCC-09_RX\\");
 #elif defined(__linux__) || defined(__APPLE__)
-	String path("Examples/CIM/WSCC-09_Neplan_RX/");
+	String path("Examples/CIM/WSCC-09_RX/");
 #endif
 
 	std::list<String> filenames = {
-		path + "WSCC-09_Neplan_RX_DI.xml",
-		path + "WSCC-09_Neplan_RX_EQ.xml",
-		path + "WSCC-09_Neplan_RX_SV.xml",
-		path + "WSCC-09_Neplan_RX_TP.xml"
+		path + "WSCC-09_RX_DI.xml",
+		path + "WSCC-09_RX_EQ.xml",
+		path + "WSCC-09_RX_SV.xml",
+		path + "WSCC-09_RX_TP.xml"
 	};
 
 	String simName = "Shmem_WSCC-9bus_Ctrl";
@@ -55,13 +55,13 @@ int main(int argc, char *argv[]) {
 
 	// Extend system with controllable load (Profile)
 	auto load_profile = PQLoadCS::make("load_cs_profile");
-	load_profile->connect({ sys.getDPNodeAt(6) });
+	load_profile->connect({ sys.node<DP::Node>("BUS7") });
 	load_profile->setParameters(0, 0, 230000);
 	sys.mComponents.push_back(load_profile);
 
 	// Extend system with controllable load
 	auto load = PQLoadCS::make("load_cs");
-	load->connect({ sys.getDPNodeAt(3) });
+	load->connect({ sys.node<DP::Node>("BUS4") });
 	load->setParameters(0, 0, 230000);
 	sys.mComponents.push_back(load);
 
@@ -71,13 +71,13 @@ int main(int argc, char *argv[]) {
 
 	auto filtP_profile = FIRFilter::make("filter_p_profile", coefficients_profile, 0, Logger::Level::INFO);
 	filtP_profile->setPriority(1);
-	filtP_profile->setConnection(load_profile->findAttribute<Real>("active_power"));
+	filtP_profile->setConnection(load_profile->findAttribute<Real>("power_active"));
 	filtP_profile->findAttribute<Real>("input")->set(0.);
 	sys.mComponents.push_back(filtP_profile);
 
 	auto filtP = FIRFilter::make("filter_p", coefficients, 0, Logger::Level::INFO);
 	filtP->setPriority(1);
-	filtP->setConnection(load->findAttribute<Real>("active_power"));
+	filtP->setConnection(load->findAttribute<Real>("power_active"));
 	filtP->findAttribute<Real>("input")->set(0.);
 	sys.mComponents.push_back(filtP);
 

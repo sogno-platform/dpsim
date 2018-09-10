@@ -33,35 +33,33 @@ using namespace CPS::Signal;
 
 int main(int argc, char *argv[]) {
 
-	CommandLineArgs args(argc, argv, 0.001, 20, 60);
-
-	String simName = "Shmem_WSCC-9bus_CtrlDist";
+	CommandLineArgs args(argc, argv, "Shmem_WSCC-9bus_CtrlDist", 0.001, 20, 60);
 
 	if (args.scenario == 0) {
 
 		// Specify CIM files
-		String path("Examples/CIM/WSCC-09_Neplan_RX/");
+		String path("Examples/CIM/WSCC-09_RX/");
 		std::list<String> filenames = {
-			path + "WSCC-09_Neplan_RX_DI.xml",
-			path + "WSCC-09_Neplan_RX_EQ.xml",
-			path + "WSCC-09_Neplan_RX_SV.xml",
-			path + "WSCC-09_Neplan_RX_TP.xml"
+			path + "WSCC-09_RX_DI.xml",
+			path + "WSCC-09_RX_EQ.xml",
+			path + "WSCC-09_RX_SV.xml",
+			path + "WSCC-09_RX_TP.xml"
 		};
 
-		CIM::Reader reader(simName, Logger::Level::INFO, Logger::Level::INFO);
+		CIM::Reader reader(args.name, Logger::Level::INFO, Logger::Level::INFO);
 		SystemTopology sys = reader.loadCIM(args.sysFreq, filenames);
 
 		// Extend system with controllable load (Profile)
 		auto load_profile = PQLoadCS::make("load_cs_profile", 0, 0, 230000, Logger::Level::INFO);
-		load_profile->connect({ sys.getDPNodeAt(6) });
+		load_profile->connect({ sys.node<DP::Node>("BUS7") });
 		sys.mComponents.push_back(load_profile);
 
 		// Extend system with controllable load
 		auto ecs = CurrentSource::make("i_intf", Complex(0, 0), Logger::Level::DEBUG);
-		ecs->connect({ sys.getDPNodeAt(3), DP::Node::GND });
+		ecs->connect({ sys.node<DP::Node>("BUS4"), DP::Node::GND });
 		sys.mComponents.push_back(ecs);
 
-		RealTimeSimulation sim(simName + "_1", sys, args.timeStep, args.duration,
+		RealTimeSimulation sim(args.name + "_1", sys, args.timeStep, args.duration,
 			Domain::DP, Solver::Type::MNA, Logger::Level::DEBUG, true);
 
 		// Create shmem interface and add it to simulation
@@ -89,13 +87,13 @@ int main(int argc, char *argv[]) {
 
 		auto filtP_profile = FIRFilter::make("filter_p_profile", coefficients_profile, 0, Logger::Level::INFO);
 		filtP_profile->setPriority(1);
-		filtP_profile->setConnection(load_profile->findAttribute<Real>("active_power"));
+		filtP_profile->setConnection(load_profile->findAttribute<Real>("power_active"));
 		filtP_profile->findAttribute<Real>("input")->set(0.);
 		sys.mComponents.push_back(filtP_profile);
 
 		// Register interface current source and voltage drop
 		intf1.addImport(ecs->findAttribute<Complex>("current_ref"), 1.0, 0, 1);
-		intf1.addExport(ecs->findAttribute<Complex>("comp_voltage"), 1.0, 0, 1);
+		intf1.addExport(ecs->findAttribute<Complex>("voltage_comp"), 1.0, 0, 1);
 
 		intf2.addImport(filtP_profile->findAttribute<Real>("input"), 20e8, 0);
 
@@ -145,7 +143,7 @@ int main(int argc, char *argv[]) {
 		filtP->findAttribute<Real>("input")->set(0.);
 
 		auto sys = SystemTopology(args.sysFreq, SystemNodeList{n1}, SystemComponentList{evs, load, filtP});
-		RealTimeSimulation sim(simName + "_2", sys, args.timeStep, args.duration);
+		RealTimeSimulation sim(args.name + "_2", sys, args.timeStep, args.duration);
 
 		// Create shmem interface 1
 		String in1  = "/dpsim01";

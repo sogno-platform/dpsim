@@ -13,8 +13,12 @@ directory = sys.argv[1]
 filenames = glob.glob(directory + "/**/*.h", recursive = True)
 
 regex =  r"namespace\s+(CPS)\s+\{[\W\w]+" \
-         r"namespace\s+(EMT|DP)\s+\{[\W\w]+" \
+         r"namespace\s+(EMT|DP|Signal)\s+\{[\W\w]+" \
          r"namespace\s+(Ph\d+)\s+\{[\W\w]+" \
+         r"class\s+(\w+)"
+
+regex2 =  r"namespace\s+(CPS)\s+\{[\W\w]+" \
+         r"namespace\s+(Signal)\s+\{[\W\w]+" \
          r"class\s+(\w+)"
 
 classnames = [ ]
@@ -30,6 +34,15 @@ for filename in filenames:
             )
 
             classnames.append(classname)
+
+        #for match in re.finditer(regex2, contents, re.MULTILINE):
+        #    classname = "Component::getConstructorDef<{}::{}::{}>(\"_{}_{}\"),\n".format(
+        #        match[1], match[2], match[3],
+        #        match[2].lower(), match[3]
+        #    )
+        #
+        #    classnames.append(classname)
+
 
 
 blacklist = [
