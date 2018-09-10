@@ -60,7 +60,7 @@ int main(int argc, char* argv[])
 	auto sys = SystemTopology(50, SystemNodeList{Node::GND, n1, n2, n3, n4}, SystemComponentList{evs, rs, rl, ll, rL});
 
 	auto intf = CPS::Interface("/villas1-in", "/villas1-out");
-	intf.addImport(evs->findAttribute<Complex>("voltage_ref"), 1.0, 0, 1);
+	intf.addImport(evs->findAttribute<Complex>("v_ref"), 1.0, 0, 1);
 	intf.addExport(evs->findAttribute<Complex>("comp_current"), 1.0, 0, 1);
 
 	Real timeStep = 0.001;

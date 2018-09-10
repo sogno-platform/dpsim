@@ -11,7 +11,7 @@ def test_circuit():
     n3 =  dpsim.dp.Node("n3")
 
     # Components
-    v1 = dpsim.dp.ph1.VoltageSource("v_1", [gnd, n1], voltage_ref=10)
+    v1 = dpsim.dp.ph1.VoltageSource("v_1", [gnd, n1], v_ref=10)
     lL = dpsim.dp.ph1.Inductor("l_L", [n2, n3], inductance=0.001)
     rL = dpsim.dp.ph1.Resistor("r_L", [n1, n2], resistance=0.1)
     r1 = dpsim.dp.ph1.Resistor("r_1", [n3, gnd], resistance=20)

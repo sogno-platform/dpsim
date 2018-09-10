@@ -23,7 +23,7 @@ def test_async():
     n1  = dpsim.dp.Node("n1")
 
     # Components
-    v1 = dpsim.dp.ph1.VoltageSource("v_1", [gnd, n1], voltage_ref=10)
+    v1 = dpsim.dp.ph1.VoltageSource("v_1", [gnd, n1], v_ref=10)
     r1 = dpsim.dp.ph1.Resistor("r_1", [n1, gnd], resistance=1)
 
     system = dpsim.SystemTopology(50, [gnd, n1], [v1, r1])

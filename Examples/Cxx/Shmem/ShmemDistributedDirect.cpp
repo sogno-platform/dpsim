@@ -76,7 +76,7 @@ int main(int argc, char *argv[]) {
 		vs1->connect({ Node::GND, n1 });
 		r01->connect({ n1, n2 });
 
-		intf.addImport(evs->findAttribute<Complex>("voltage_ref"), 1.0, 0, 1);
+		intf.addImport(evs->findAttribute<Complex>("v_ref"), 1.0, 0, 1);
 		intf.addExport(evs->findAttribute<Complex>("comp_current"), 1.0, 0, 1);
 
 		auto sys = SystemTopology(50, SystemNodeList{n1, n2}, SystemComponentList{evs, vs1, r01});
@@ -99,7 +99,7 @@ int main(int argc, char *argv[]) {
 		//auto ecs_switch = CurrentSource::make("i_switch", GND, 1, Complex(0, 0));
 		//auto r01 = Resistor::make("r_0_1", 0, 1, 1);
 
-		intf.addImport(ecs->findAttribute<Complex>("current_ref"), 1.0, 0, 1);
+		intf.addImport(ecs->findAttribute<Complex>("i_ref"), 1.0, 0, 1);
 		intf.addExport(ecs->findAttribute<Complex>("comp_voltage"), 1.0, 0, 1);
 		//intf.addImport(ecs_switch->findAttribute('CurrentRef'), 1.0, 2, 3);
 

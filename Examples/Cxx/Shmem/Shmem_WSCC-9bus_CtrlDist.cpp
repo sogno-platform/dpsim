@@ -92,7 +92,7 @@ int main(int argc, char *argv[]) {
 		sys.mComponents.push_back(filtP_profile);
 
 		// Register interface current source and voltage drop
-		intf1.addImport(ecs->findAttribute<Complex>("current_ref"), 1.0, 0, 1);
+		intf1.addImport(ecs->findAttribute<Complex>("i_ref"), 1.0, 0, 1);
 		intf1.addExport(ecs->findAttribute<Complex>("voltage_comp"), 1.0, 0, 1);
 
 		intf2.addImport(filtP_profile->findAttribute<Real>("input"), 20e8, 0);
@@ -167,7 +167,7 @@ int main(int argc, char *argv[]) {
 
 		// Register voltage source reference and current flowing through source
 		// multiply with -1 to consider passive sign convention
-		intf1.addImport(evs->findAttribute<Complex>("voltage_ref"), 1.0, 0, 1);
+		intf1.addImport(evs->findAttribute<Complex>("v_ref"), 1.0, 0, 1);
 		intf1.addExport(evs->findAttribute<Complex>("comp_current"), -1.0, 0, 1);
 
 		// Register controllable load

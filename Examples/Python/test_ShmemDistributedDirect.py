@@ -14,7 +14,7 @@ class Left(threading.Thread):
         l1 =  dpsim.dp.ph1.Inductor("l_1", [n1, n2], 1e-3)
 
         intf = dpsim.open_interface("/dpsim12", "/dpsim21", samplelen = 2)
-        intf.import_attribute(evs, "voltage_ref", 1, 0, 1)
+        intf.import_attribute(evs, "v_ref", 1, 0, 1)
         intf.export_attribute(evs, "comp_current", 1, 0, 1)
 
         sys = dpsim.SystemTopology(50, [gnd, n1, n2], [evs, vs, l1])
@@ -36,7 +36,7 @@ class Right(threading.Thread):
         r1 = dpsim.dp.ph1.Resistor("r_1", [n3, gnd], 1)
 
         intf = dpsim.open_interface("/dpsim21", "/dpsim12", samplelen = 2)
-        intf.import_attribute(ecs, "current_ref", 1, 0, 1)
+        intf.import_attribute(ecs, "i_ref", 1, 0, 1)
         intf.export_attribute(r1, "comp_voltage", 1, 0, 1)
 
         sys = dpsim.SystemTopology(50, [gnd, n3], [ecs, r1])

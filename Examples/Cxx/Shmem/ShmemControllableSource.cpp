@@ -51,7 +51,7 @@ int main(int argc, char *argv[]) {
 	ecs->connect({ Node::GND, n1 });
 	r1->connect({ Node::GND, n1 });
 
-	intf.addImport(ecs->findAttribute<Complex>("current_ref"), 1.0, 0, 1);
+	intf.addImport(ecs->findAttribute<Complex>("i_ref"), 1.0, 0, 1);
 	intf.addExport(ecs->findAttribute<Complex>("comp_voltage"), 1.0, 0, 1);
 
 	auto sys = SystemTopology(50, SystemNodeList{n1}, SystemComponentList{ecs, r1});
