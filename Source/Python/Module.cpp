@@ -42,7 +42,6 @@ using namespace DPsim::Python;
 
 static PyMethodDef dpsimModuleMethods[] = {
 	{ "load_cim",               (PyCFunction) LoadCim,       METH_VARARGS | METH_KEYWORDS, DPsim::Python::DocLoadCim },
-	{ "open_interface",         (PyCFunction) OpenInterface, METH_VARARGS | METH_KEYWORDS, DPsim::Python::Interface::docOpen },
 
 	// Component constructors
 	#include <dpsim/Python/ComponentConstructors.h>

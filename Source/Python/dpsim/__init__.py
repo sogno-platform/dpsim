@@ -21,8 +21,8 @@ from _dpsim import Interface
 from _dpsim import SystemTopology
 
 from _dpsim import load_cim
-from _dpsim import open_interface
 
+from .Interface import Interface
 from .Simulation import Simulation, RealTimeSimulation
 from .EventChannel import EventChannel
 
