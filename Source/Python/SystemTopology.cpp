@@ -241,10 +241,6 @@ PyMemberDef Python::SystemTopology::members[] = {
 	{nullptr, 0, 0, 0, nullptr}
 };
 
-PyGetSetDef Python::SystemTopology::getset[] = {
-	{nullptr, nullptr, nullptr, nullptr, nullptr}
-};
-
 PyMethodDef Python::SystemTopology::methods[] = {
 	{"add_component", (PyCFunction) Python::SystemTopology::addComponent, METH_VARARGS, Python::SystemTopology::docAddComponent},
 	{"add_node",      (PyCFunction) Python::SystemTopology::addNode, METH_VARARGS, Python::SystemTopology::docAddNode},
@@ -292,7 +288,7 @@ PyTypeObject Python::SystemTopology::type = {
 	0,                                       /* tp_iternext */
 	Python::SystemTopology::methods,         /* tp_methods */
 	Python::SystemTopology::members,         /* tp_members */
-	Python::SystemTopology::getset,          /* tp_getset */
+	0,                                       /* tp_getset */
 	0,                                       /* tp_base */
 	0,                                       /* tp_dict */
 	0,                                       /* tp_descr_get */

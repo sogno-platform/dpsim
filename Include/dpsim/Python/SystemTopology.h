@@ -66,7 +66,6 @@ namespace Python {
 		static const char *docReprSVG;
 		static PyTypeObject type;
 		static PyMethodDef methods[];
-		static PyGetSetDef getset[];
 		static PyMemberDef members[];
 	};
 }
