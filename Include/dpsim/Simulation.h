@@ -48,6 +48,8 @@ namespace DPsim {
 	protected:
 		/// Simulation logger
 		CPS::Logger mLog;
+		/// Simulation data logger
+		CPS::AttributeDataLogger mAttributeLog;
 		/// Simulation name
 		String mName;
 		/// Final time of the simulation
@@ -117,7 +119,7 @@ namespace DPsim {
 		}
 
 		void addInterface(CPS::Interface *eint, bool sync = true) {
-			mInterfaces.push_back({eint, sync, sync});
+			addInterface(eint, sync, sync);
 		}
 #endif
 		///
@@ -129,6 +131,7 @@ namespace DPsim {
 		Real finalTime() const { return mFinalTime; }
 		Int timeStepCount() const { return mTimeStepCount; }
 		Real timeStep() const { return mTimeStep; }
+		CPS::AttributeDataLogger & attributeLog() { return mAttributeLog; }
 	};
 
 }

@@ -87,7 +87,7 @@ PyObject* Python::Component::getattro(Python::Component* self, PyObject* name)
 	}
 
 	try {
-		auto attr = self->comp->findAttribute(PyUnicode_AsUTF8(name));
+		auto attr = self->comp->attribute(PyUnicode_AsUTF8(name));
 
 		return attr->toPyObject();
 	}
@@ -109,7 +109,7 @@ int Python::Component::setattro(Python::Component* self, PyObject *name, PyObjec
 	}
 
 	try {
-		auto attr = self->comp->findAttribute(PyUnicode_AsUTF8(name));
+		auto attr = self->comp->attribute(PyUnicode_AsUTF8(name));
 		attr->fromPyObject(v);
 	}
 	catch (const CPS::InvalidAttributeException &) {

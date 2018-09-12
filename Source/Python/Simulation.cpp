@@ -64,12 +64,6 @@ void Python::Simulation::threadFunction(Python::Simulation *self)
 
 	finalTime = self->sim->finalTime();
 
-	{
-		std::unique_lock<std::mutex> lk(*self->mut);
-		newState(self, Simulation::State::running);
-		self->cond->notify_one();
-	}
-
 	time = 0;
 	while (time < finalTime) {
 		time = self->sim->step();
@@ -85,6 +79,12 @@ void Python::Simulation::threadFunction(Python::Simulation *self)
 				self->cond->notify_one();
 				return;
 			}
+		}
+
+		if (self->sim->timeStepCount() == 1) {
+			std::unique_lock<std::mutex> lk(*self->mut);
+			newState(self, Simulation::State::running);
+			self->cond->notify_one();
 		}
 
 		if (self->state == State::pausing || self->singleStepping) {
@@ -263,7 +263,7 @@ PyObject* Python::Simulation::addEvent(Simulation* self, PyObject* args)
 	pyComp = (Python::Component *) pyObj;
 
 	try {
-		auto attr = pyComp->comp->findAttribute(name);
+		auto attr = pyComp->comp->attribute(name);
 	}
 	catch (InvalidAttributeException &e) {
 		PyErr_SetString(PyExc_TypeError, "Invalid attribute");
@@ -273,7 +273,7 @@ PyObject* Python::Simulation::addEvent(Simulation* self, PyObject* args)
 	if (PyBool_Check(pyVal)) {
 		Bool val = PyObject_IsTrue(pyVal);
 
-		auto attr = pyComp->comp->findAttribute<Bool>(name);
+		auto attr = pyComp->comp->attribute<Bool>(name);
 		if (!attr)
 			goto fail;
 
@@ -283,8 +283,8 @@ PyObject* Python::Simulation::addEvent(Simulation* self, PyObject* args)
 	else if (PyLong_Check(pyVal)) {
 		Int val = PyLong_AsLong(pyVal);
 
-		auto intAttr = pyComp->comp->findAttribute<Int>(name);
-		auto uintAttr = pyComp->comp->findAttribute<UInt>(name);
+		auto intAttr = pyComp->comp->attribute<Int>(name);
+		auto uintAttr = pyComp->comp->attribute<UInt>(name);
 		if (!intAttr && !uintAttr)
 			goto fail;
 
@@ -301,7 +301,7 @@ PyObject* Python::Simulation::addEvent(Simulation* self, PyObject* args)
 	else if (PyFloat_Check(pyVal)) {
 		double val = PyFloat_AsDouble(pyVal);
 
-		auto attr = pyComp->comp->findAttribute<Real>(name);
+		auto attr = pyComp->comp->attribute<Real>(name);
 		if (!attr)
 			goto fail;
 
@@ -314,7 +314,7 @@ PyObject* Python::Simulation::addEvent(Simulation* self, PyObject* args)
 			PyComplex_ImagAsDouble(pyVal)
 		);
 
-		auto attr = pyComp->comp->findAttribute<Complex>(name);
+		auto attr = pyComp->comp->attribute<Complex>(name);
 		if (!attr)
 			goto fail;
 
@@ -336,14 +336,20 @@ const char* Python::Simulation::docAddInterface =
 "See the documentation of `Interface` for more details.\n"
 "\n"
 ":param intf: The `Interface` to be added.";
-PyObject* Python::Simulation::addInterface(Simulation* self, PyObject* args)
+PyObject* Python::Simulation::addInterface(Simulation* self, PyObject* args, PyObject *kwargs)
 {
 #ifdef WITH_SHMEM
 	PyObject* pyObj;
 	Python::Interface* pyIntf;
+	int sync = 1, start_sync = -1;
 
-	if (!PyArg_ParseTuple(args, "O", &pyObj))
+	const char *kwlist[] = {"intf", "sync", "sync_start", nullptr};
+
+	if (!PyArg_ParseTupleAndKeywords(args, kwargs, "O|pp", (char **) kwlist, &pyObj, &sync, &start_sync))
 		return nullptr;
+
+	if (start_sync < 0)
+		start_sync = sync;
 
 	if (!PyObject_TypeCheck(pyObj, &Python::Interface::type)) {
 		PyErr_SetString(PyExc_TypeError, "Argument must be dpsim.Interface");
@@ -351,7 +357,7 @@ PyObject* Python::Simulation::addInterface(Simulation* self, PyObject* args)
 	}
 
 	pyIntf = (Python::Interface*) pyObj;
-	self->sim->addInterface(pyIntf->intf.get());
+	self->sim->addInterface(pyIntf->intf.get(), sync, start_sync);
 	Py_INCREF(pyObj);
 
 	self->refs.push_back(pyObj);
@@ -361,6 +367,45 @@ PyObject* Python::Simulation::addInterface(Simulation* self, PyObject* args)
 	PyErr_SetString(PyExc_NotImplementedError, "not implemented on this platform");
 	return nullptr;
 #endif
+}
+
+const char *Python::Simulation::docLogAttribute =
+"log_attribute(component, attribute)";
+PyObject* Python::Simulation::logAttribute(Simulation *self, PyObject *args)
+{
+	const char *attrName;
+	PyObject *pyObj;
+
+	if (!PyArg_ParseTuple(args, "Os", &pyObj, &attrName))
+		return nullptr;
+
+	CPS::IdentifiedObject::Ptr obj;
+	if (PyObject_TypeCheck(pyObj, &Python::Component::type)) {
+		auto *pyComp = (Component*) pyObj;
+
+		obj = std::dynamic_pointer_cast<CPS::IdentifiedObject>(pyComp->comp);
+	}
+	else if (PyObject_TypeCheck(pyObj, &Python::Node<CPS::Real>::type)) {
+		auto *pyNode = (Node<CPS::Real> *) pyObj;
+
+		obj = std::dynamic_pointer_cast<CPS::IdentifiedObject>(pyNode->node);
+	}
+	else if (PyObject_TypeCheck(pyObj, &Python::Node<CPS::Complex>::type)) {
+		auto *pyNode = (Node<CPS::Complex> *) pyObj;
+
+		obj = std::dynamic_pointer_cast<CPS::IdentifiedObject>(pyNode->node);
+	}
+	else {
+		PyErr_SetString(PyExc_TypeError, "First argument must be a Component or a Node");
+		return nullptr;
+	}
+
+	auto name = obj->name() + "." + attrName;
+	auto attr = obj->attribute(attrName);
+
+	self->sim->attributeLog().addAttribute(name, attr);
+
+	Py_RETURN_NONE;
 }
 
 const char *Python::Simulation::docPause =
@@ -555,8 +600,9 @@ PyGetSetDef Python::Simulation::getset[] = {
 };
 
 PyMethodDef Python::Simulation::methods[] = {
-	{"add_interface", (PyCFunction) Python::Simulation::addInterface, METH_VARARGS, (char *) Python::Simulation::docAddInterface},
+	{"add_interface", (PyCFunction) Python::Simulation::addInterface, METH_VARARGS | METH_KEYWORDS, (char *) Python::Simulation::docAddInterface},
 	{"add_event",     (PyCFunction) Python::Simulation::addEvent, METH_VARARGS, (char *) docAddEvent},
+	{"log_attribute", (PyCFunction) Python::Simulation::logAttribute, METH_VARARGS, (char *) docLogAttribute},
 	{"pause",         (PyCFunction) Python::Simulation::pause, METH_NOARGS, (char *) Python::Simulation::docPause},
 	{"start",         (PyCFunction) Python::Simulation::start, METH_NOARGS, (char *) Python::Simulation::docStart},
 	{"step",          (PyCFunction) Python::Simulation::step, METH_NOARGS,  (char *) Python::Simulation::docStep},

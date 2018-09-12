@@ -42,7 +42,7 @@ void DPsim::Python::setAttributes(CPS::AttributeList::Ptr al, PyObject *kwargs)
 	while (PyDict_Next(kwargs, &pos, &key, &value)) {
 		CPS::String name = PyUnicode_AsUTF8(key);
 
-		auto attr = al->findAttribute(name);
+		auto attr = al->attribute(name);
 		attr->fromPyObject(value);
 	}
 }

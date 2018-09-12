@@ -38,6 +38,7 @@ Simulation::Simulation(String name,
 	Domain domain, Solver::Type solverType,
 	Logger::Level logLevel) :
 	mLog(name, logLevel),
+	mAttributeLog(name),
 	mName(name),
 	mFinalTime(finalTime),
 	mTimeStep(timeStep),
@@ -131,6 +132,7 @@ Real Simulation::step() {
 #endif
 
 	mSolver->log(mTime);
+	mAttributeLog.log(mTime);
 	mTime = nextTime;
 	mTimeStepCount++;
 

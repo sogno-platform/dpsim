@@ -68,14 +68,14 @@ int main(int argc, char *argv[]) {
 	r1->connect({ Node::GND, n1 });
 	load->connect({ n1 });
 
-	filtP->setConnection(load->findAttribute<Real>("active_power"));
-	filtQ->setConnection(load->findAttribute<Real>("reactive_power"));
+	filtP->setConnection(load->attribute<Real>("power_active"));
+	filtQ->setConnection(load->attribute<Real>("power_reactive"));
 
-	filtP->findAttribute<Real>("input")->set(8.);
-	filtQ->findAttribute<Real>("input")->set(0.);
+	filtP->attribute<Real>("input")->set(8.);
+	filtQ->attribute<Real>("input")->set(0.);
 
-	intf.addImport(filtP->findAttribute<Real>("input"), 1.0, 0);
-	intf.addImport(filtQ->findAttribute<Real>("input"), 1.0, 1);
+	intf.addImport(filtP->attribute<Real>("input"), 0);
+	intf.addImport(filtQ->attribute<Real>("input"), 1);
 
 	auto sys = SystemTopology(50, SystemNodeList{n1}, SystemComponentList{ecs, r1, load, filtP, filtQ});
 	auto sim = RealTimeSimulation(simName, sys, timeStep, finalTime,

@@ -64,16 +64,12 @@ int main(int argc, char *argv[]) {
 	// Register exportable node voltages
 	UInt o = 0;
 	for (auto n : sys.mNodes) {
-		auto v = n->findAttribute<Complex>("voltage");
+		auto v = n->attributeComplex("voltage");
 
-		std::function<Real()> getMag = [v](){ return std::abs(v->get()); };
-		std::function<Real()> getPhas = [v](){ return std::arg(v->get()); };
+		intf.addExport(v->mag(),   o+0);
+		intf.addExport(v->phase(), o+1);
 
-		intf.addExport(v, 1.0, o, o+1);
-		intf.addExport(getMag, o+2);
-		intf.addExport(getPhas, o+3);
-
-		o += 4;
+		o += 2;
 	}
 
 	// TODO

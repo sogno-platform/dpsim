@@ -80,8 +80,8 @@ int main(int argc, char *argv[])
 		comps = SystemComponentList{evs, vs, l1, r1};
 		nodes = SystemNodeList{Node::GND, n1, n2, n3};
 
-		intf.addImport(evs->findAttribute<Complex>("v_ref"), 1.0, 0, 1);
-		intf.addExport(evs->findAttribute<Complex>("comp_current"), 1.0, 0, 1);
+		intf.addImport(evs->attribute<Complex>("v_ref"), 0);
+		intf.addExport(evs->attribute<Complex>("i_comp"), 0);
 	}
 	else if (String(argv[1]) == "1") {
 		// Nodes
@@ -109,8 +109,8 @@ int main(int argc, char *argv[])
 		comps = SystemComponentList{ecs, sw, r2A, r2B};
 		nodes = SystemNodeList{Node::GND, n4, n5};
 
-		intf.addImport(ecs->findAttribute<Complex>("i_ref"), 1.0, 0, 1);
-		intf.addExport(ecs->findAttribute<Complex>("comp_voltage"), 1.0, 0, 1);
+		intf.addImport(ecs->attribute<Complex>("i_ref"), 0);
+		intf.addExport(ecs->attribute<Complex>("v_comp"), 0);
 	}
 	else {
 		std::cerr << "invalid test number" << std::endl;

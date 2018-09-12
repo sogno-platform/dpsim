@@ -45,6 +45,7 @@ namespace Python {
 		PyObject *pyComponentDict;
 
 		static PyObject* addComponent(SystemTopology *self, PyObject *args);
+		static PyObject* addNode(SystemTopology *self, PyObject *args);
 #ifdef WITH_GRAPHVIZ
 		static PyObject* reprSVG(SystemTopology *self, PyObject *args);
 #endif
@@ -61,6 +62,7 @@ namespace Python {
 		static const char *docNodes;
 		static const char *docComponents;
 		static const char *docAddComponent;
+		static const char *docAddNode;
 		static const char *docReprSVG;
 		static PyTypeObject type;
 		static PyMethodDef methods[];

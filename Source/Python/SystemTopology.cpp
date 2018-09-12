@@ -63,6 +63,50 @@ PyObject* Python::SystemTopology::addComponent(SystemTopology *self, PyObject *a
 	Py_RETURN_NONE;
 }
 
+const char *Python::SystemTopology::docAddNode =
+"add_node(comp)\n"
+"Add a node to this system topology\n";
+PyObject* Python::SystemTopology::addNode(SystemTopology *self, PyObject *args)
+{
+	PyObject* pyObj;
+	PyObject *pyName;
+
+	if (!PyArg_ParseTuple(args, "O", &pyObj))
+		return nullptr;
+
+	CPS::TopologicalNode::Ptr topoNode;
+	if (PyObject_TypeCheck(pyObj, &Python::Node<CPS::Real>::type)) {
+		auto pyNode = (Python::Node<CPS::Real> *) pyObj;
+
+		topoNode = std::dynamic_pointer_cast<CPS::TopologicalNode>(pyNode->node);
+	}
+	else if (PyObject_TypeCheck(pyObj, &Python::Node<CPS::Complex>::type)) {
+		auto pyNode = (Python::Node<CPS::Complex> *) pyObj;
+
+		topoNode = std::dynamic_pointer_cast<CPS::TopologicalNode>(pyNode->node);
+	}
+	else {
+		PyErr_SetString(PyExc_TypeError, "Argument must be dpsim.Node");
+		return nullptr;
+	}
+
+	pyName = PyUnicode_FromString(topoNode->name().c_str());
+	if (PyDict_Contains(self->pyNodeDict, pyName)) {
+		PyErr_SetString(PyExc_TypeError, "SystemTopology already contains a node with this name");
+		return nullptr;
+	}
+
+	self->sys->addNode(topoNode);
+
+	PyDict_SetItem(self->pyNodeDict, pyName, pyObj);
+
+	Py_DECREF(pyName);
+	Py_DECREF(pyObj);
+
+	Py_RETURN_NONE;
+}
+
+
 #ifdef WITH_GRAPHVIZ
 const char *Python::SystemTopology::docReprSVG =
 "_repr_svg_(comp)\n"
@@ -203,8 +247,9 @@ PyGetSetDef Python::SystemTopology::getset[] = {
 
 PyMethodDef Python::SystemTopology::methods[] = {
 	{"add_component", (PyCFunction) Python::SystemTopology::addComponent, METH_VARARGS, Python::SystemTopology::docAddComponent},
+	{"add_node",      (PyCFunction) Python::SystemTopology::addNode, METH_VARARGS, Python::SystemTopology::docAddNode},
 #ifdef WITH_GRAPHVIZ
-	{"_repr_svg_", (PyCFunction) Python::SystemTopology::reprSVG, METH_NOARGS, Python::SystemTopology::docReprSVG},
+	{"_repr_svg_",    (PyCFunction) Python::SystemTopology::reprSVG, METH_NOARGS, Python::SystemTopology::docReprSVG},
 #endif
 	{nullptr, nullptr, 0, nullptr}
 };
