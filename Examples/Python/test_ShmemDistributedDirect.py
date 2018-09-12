@@ -15,7 +15,7 @@ class Left(threading.Thread):
 
         intf = dpsim.open_interface("/dpsim12", "/dpsim21", samplelen = 2)
         intf.import_attribute(evs, "v_ref", 1, 0, 1)
-        intf.export_attribute(evs, "comp_current", 1, 0, 1)
+        intf.export_attribute(evs, "i_comp", 1, 0, 1)
 
         sys = dpsim.SystemTopology(50, [gnd, n1, n2], [evs, vs, l1])
 
@@ -37,7 +37,7 @@ class Right(threading.Thread):
 
         intf = dpsim.open_interface("/dpsim21", "/dpsim12", samplelen = 2)
         intf.import_attribute(ecs, "i_ref", 1, 0, 1)
-        intf.export_attribute(r1, "comp_voltage", 1, 0, 1)
+        intf.export_attribute(r1, "v_comp", 1, 0, 1)
 
         sys = dpsim.SystemTopology(50, [gnd, n3], [ecs, r1])
 
