@@ -30,7 +30,21 @@
 #include <dpsim/Python/Interface.h>
 #include <dpsim/Python/Component.h>
 
+#include "structmember.h"
+
 using namespace DPsim;
+
+void Python::Interface::addExportDesc(Python::Interface* self, int idx, const CPS::String &type, const CPS::String &name, const CPS::String &suffix)
+{
+	while (PyList_Size(self->pyExports) < idx + 1)
+		PyList_Append(self->pyExports, PyDict_New());
+
+	PyObject *pyExport = PyDict_New();
+	PyDict_SetItemString(pyExport, "name", PyUnicode_FromFormat("%s%s", name.c_str(), suffix.c_str()));
+	PyDict_SetItemString(pyExport, "type", PyUnicode_FromString(type.c_str()));
+
+	PyList_SetItem(self->pyExports, idx, pyExport);
+}
 
 PyObject* Python::Interface::newfunc(PyTypeObject *type, PyObject *args, PyObject *kwds)
 {
@@ -42,6 +56,8 @@ PyObject* Python::Interface::newfunc(PyTypeObject *type, PyObject *args, PyObjec
 		using SharedIntfPtr = std::shared_ptr<CPS::Interface>;
 
 		new (&self->intf) SharedIntfPtr();
+
+		self->pyExports = PyList_New(0);
 #endif
 	}
 
@@ -54,12 +70,14 @@ void Python::Interface::dealloc(Python::Interface* self)
 		using SharedIntfPtr = std::shared_ptr<CPS::Interface>;
 
 		self->intf.~SharedIntfPtr();
+
+		Py_DECREF(self->pyExports);
 #endif
 
 	Py_TYPE(self)->tp_free((PyObject*) self);
 }
 
-const char* Python::Interface::docRegisterControlledAttribute =
+const char* Python::Interface::docAddImport =
 "import(comp, attr, real_idx, imag_idx)\n"
 "Register a source with this interface, causing it to use values received from "
 "this interface as its current or voltage value.\n"
@@ -68,7 +86,7 @@ const char* Python::Interface::docRegisterControlledAttribute =
 ":param attr:\n"
 ":param real_idx: Index of the real part of the current or voltage.\n"
 ":param imag_idx: Index of the imaginary part of the current or voltage.\n";
-PyObject* Python::Interface::registerControlledAttribute(Interface* self, PyObject* args, PyObject *kwargs)
+PyObject* Python::Interface::addImport(Interface* self, PyObject* args, PyObject *kwargs)
 {
 #ifdef WITH_SHMEM
 	PyObject *pyObj;
@@ -106,35 +124,45 @@ PyObject* Python::Interface::registerControlledAttribute(Interface* self, PyObje
 	try {
 		switch (mode) {
 			case 0: { // Real Attribute
+				auto a = attrList->attribute<CPS::Real>(attrName);
 
-				CPS::Attribute<CPS::Real>::Ptr a = attrList->findAttribute<CPS::Real>(attrName);
-
-				self->intf->addImport(a, gain, idx);
-				break;
-			}
-
-			case 1: { // Complex Attribute: real & imag
-				auto a = attrList->findAttribute<CPS::Complex>(attrName);
-
-				self->intf->addImport(a, gain, idx, idx + 1);
+				self->intf->addImport(a, idx);
 				break;
 			}
 
 			case 2: { // Complex Attribute: mag & phase
-				auto a = attrList->findAttribute<CPS::Complex>(attrName);
+				auto a = attrList->attributeComplex(attrName);
 
-				std::function<void(CPS::Real)> setMag = [a](CPS::Real r) {
-					CPS::Complex z = a->get();
-					a->set(CPS::Complex(r, z.imag()));
-				};
+				self->intf->addImport(a->mag(),   idx);
+				self->intf->addImport(a->phase(), idx+1);
+				break;
+			}
 
-				std::function<void(CPS::Real)> setPhas = [a](CPS::Real i) {
-					CPS::Complex z = a->get();
-					a->set(CPS::Complex(z.real(), i));
-				};
+			case 3: { // Complex Attribute: real part
+				auto a = attrList->attributeComplex(attrName);
 
-				self->intf->addImport(setMag,  idx);
-				self->intf->addImport(setPhas, idx+1);
+				self->intf->addImport(a->real(), idx);
+				break;
+			}
+
+			case 4: { // Complex Attribute: imag part
+				auto a = attrList->attributeComplex(attrName);
+
+				self->intf->addImport(a->imag(), idx);
+				break;
+			}
+
+			case 5: { // Complex Attribute: phase
+				auto a = attrList->attributeComplex(attrName);
+
+				self->intf->addImport(a->phase(), idx);
+				break;
+			}
+
+			case 6: { // Complex Attribute: magnitude
+				auto a = attrList->attributeComplex(attrName);
+
+				self->intf->addImport(a->mag(), idx);
 				break;
 			}
 
@@ -155,7 +183,7 @@ PyObject* Python::Interface::registerControlledAttribute(Interface* self, PyObje
 #endif
 }
 
-const char* Python::Interface::docRegisterExportedAttribute =
+const char* Python::Interface::docAddExport =
 "export(comp, attr, real_idx, imag_idx)\n"
 "Register a voltage between two nodes to be written to this interface after every timestep.\n"
 "\n"
@@ -163,7 +191,7 @@ const char* Python::Interface::docRegisterExportedAttribute =
 ":param attr:\n"
 ":param real_idx: Index where the real part of the voltage is written.\n"
 ":param imag_idx: Index where the imaginary part of the voltage is written.\n";
-PyObject* Python::Interface::registerExportedAttribute(Interface* self, PyObject* args, PyObject* kwargs)
+PyObject* Python::Interface::addExport(Interface* self, PyObject* args, PyObject* kwargs)
 {
 #ifdef WITH_SHMEM
 	PyObject* pyObj;
@@ -171,58 +199,123 @@ PyObject* Python::Interface::registerExportedAttribute(Interface* self, PyObject
 	const char *attrName;
 	double gain = 1;
 	int mode = 0;
+	int row = 0, col = 0;
 
-	const char *kwlist[] = {"component", "attribute", "idx", "mode", "gain", nullptr};
+	const char *kwlist[] = {"component", "attribute", "idx", "mode", "gain", "row", "col", nullptr};
 
-	if (!PyArg_ParseTupleAndKeywords(args, kwargs, "Osi|id", (char **) kwlist, &pyObj, &attrName, &idx, &mode, &gain))
+	if (!PyArg_ParseTupleAndKeywords(args, kwargs, "Osi|idii", (char **) kwlist, &pyObj, &attrName, &idx, &mode, &gain, &row, &col))
 		return nullptr;
 
-	CPS::AttributeList::Ptr attrList;
+	CPS::IdentifiedObject::Ptr obj;
 	if (PyObject_TypeCheck(pyObj, &Python::Component::type)) {
 		auto *pyComp = (Component*) pyObj;
 
-		attrList = std::dynamic_pointer_cast<CPS::AttributeList>(pyComp->comp);
+		obj = std::dynamic_pointer_cast<CPS::IdentifiedObject>(pyComp->comp);
 	}
 	else if (PyObject_TypeCheck(pyObj, &Python::Node<CPS::Real>::type)) {
 		auto *pyNode = (Node<CPS::Real> *) pyObj;
 
-		attrList = std::dynamic_pointer_cast<CPS::AttributeList>(pyNode->node);
+		obj = std::dynamic_pointer_cast<CPS::IdentifiedObject>(pyNode->node);
 	}
 	else if (PyObject_TypeCheck(pyObj, &Python::Node<CPS::Complex>::type)) {
 		auto *pyNode = (Node<CPS::Complex> *) pyObj;
 
-		attrList = std::dynamic_pointer_cast<CPS::AttributeList>(pyNode->node);
+		obj = std::dynamic_pointer_cast<CPS::IdentifiedObject>(pyNode->node);
 	}
 	else {
 		PyErr_SetString(PyExc_TypeError, "First argument must be a Component or a Node");
 		return nullptr;
 	}
 
+	CPS::String name = obj->name() + "." + attrName;
+
 	try {
 		switch (mode) {
 			case 0: { // Real Attribute
+				auto realAttr = obj->attribute<CPS::Real>(attrName);
 
-				CPS::Attribute<CPS::Real>::Ptr realAttr = attrList->findAttribute<CPS::Real>(attrName);
-
-				self->intf->addExport(realAttr, gain, idx);
+				self->intf->addExport(realAttr, idx);
+				addExportDesc(self, idx, "float", name);
 				break;
 			}
 
-			case 1: { // Complex Attribute: real & imag
-				auto a = attrList->findAttribute<CPS::Complex>(attrName);
+			case 1: { // Complex Attribute
+				auto compAttr = obj->attribute<CPS::Complex>(attrName);
 
-				self->intf->addExport(a, gain, idx, idx + 1);
+				self->intf->addExport(compAttr, idx);
+				addExportDesc(self, idx, "complex", name);
 				break;
 			}
 
 			case 2: { // Complex Attribute: mag & phase
-				auto a = attrList->findAttribute<CPS::Complex>(attrName);
+				auto a = obj->attributeComplex(attrName);
 
-				std::function<CPS::Real()> getMag = [a](){ return std::abs(a->get()); };
-				std::function<CPS::Real()> getPhas = [a](){ return std::arg(a->get()); };
+				self->intf->addExport(a->mag(),   idx);
+				self->intf->addExport(a->phase(), idx+1);
+				addExportDesc(self, idx,   "float", name + ".mag");
+				addExportDesc(self, idx+1, "float", name + ".phase");
+				break;
+			}
 
-				self->intf->addExport(getMag,  idx);
-				self->intf->addExport(getPhas, idx+1);
+			case 3: { // Complex Attribute: real part
+				auto a = obj->attributeComplex(attrName);
+
+				self->intf->addExport(a->real(), idx);
+				addExportDesc(self, idx, "float", name, ".real");
+				break;
+			}
+
+			case 4: { // Complex Attribute: imag part
+				auto a = obj->attributeComplex(attrName);
+
+				self->intf->addExport(a->imag(), idx);
+				addExportDesc(self, idx, "float", name + ".imag");
+				break;
+			}
+
+			case 5: { // Complex Attribute: phase
+				auto a = obj->attributeComplex(attrName);
+
+				self->intf->addExport(a->phase(), idx);
+				addExportDesc(self, idx, "float", name + ".phase");
+				break;
+			}
+
+			case 6: { // Complex Attribute: magnitude
+				auto a = obj->attributeComplex(attrName);
+
+				self->intf->addExport(a->mag(), idx);
+				addExportDesc(self, idx, "float", name + ".mag");
+				break;
+			}
+
+			case 7: {
+				auto a = obj->attributeMatrix<CPS::Real>(attrName);
+				auto c = a->coeff(row, col);
+
+				self->intf->addExport(c, idx);
+				addExportDesc(self, idx, "float", name + "(" + std::to_string(row) + "," + std::to_string(col) + ")");
+				break;
+			}
+
+			case 8: {
+				auto a = obj->attributeMatrix<CPS::Complex>(attrName);
+				auto c = a->coeff(row, col);
+
+				self->intf->addExport(c, idx);
+				addExportDesc(self, idx, "complex", name + "(" + std::to_string(row) + "," + std::to_string(col) + ")");
+				break;
+			}
+
+			case 9: {
+				auto a = obj->attributeMatrix<CPS::Complex>(attrName);
+				auto c = a->coeff(row, col);
+				auto z = std::static_pointer_cast<CPS::ComplexAttribute>(c);
+
+				self->intf->addExport(z->mag(),   idx);
+				self->intf->addExport(z->phase(), idx+1);
+				addExportDesc(self, idx,   "float", name + "(" + std::to_string(row) + "," + std::to_string(col) + ").mag");
+				addExportDesc(self, idx+1, "float", name + "(" + std::to_string(row) + "," + std::to_string(col) + ").phase");
 				break;
 			}
 
@@ -232,7 +325,7 @@ PyObject* Python::Interface::registerExportedAttribute(Interface* self, PyObject
 		}
 	}
 	catch (const CPS::InvalidAttributeException &exp) {
-		PyErr_SetString(PyExc_TypeError, "First argument must be a writable attribute");
+		PyErr_SetString(PyExc_TypeError, "First argument must be a readable attribute");
 		return nullptr;
 	}
 
@@ -243,8 +336,48 @@ PyObject* Python::Interface::registerExportedAttribute(Interface* self, PyObject
 #endif
 }
 
-const char* Python::Interface::docOpen =
-"open_interface(wname, rname, queuelen=512, samplelen=64, polling=False)\n"
+int Python::Interface::init(Python::Interface *self, PyObject *args, PyObject *kwds)
+{
+#ifdef WITH_SHMEM
+	static const char *kwlist[] = {"wname", "rname", "queuelen", "samplelen", "polling", nullptr};
+
+	/* Default values */
+	self->conf.queuelen = 512;
+	self->conf.samplelen = 64;
+	self->conf.polling = 0;
+
+	if (!PyArg_ParseTupleAndKeywords(args, kwds, "ss|iib", (char **) kwlist,
+		&self->wname, &self->rname, &self->conf.queuelen, &self->conf.samplelen, &self->conf.polling)) {
+		return -1;
+	}
+
+	self->intf = CPS::Interface::make(self->wname, self->rname, &self->conf);
+
+	return 0;
+#else
+	PyErr_SetString(PyExc_NotImplementedError, "not implemented on this platform");
+	return -1;
+#endif
+}
+
+PyMemberDef Python::Interface::members[] = {
+	{(char *) "wname",     T_STRING, offsetof(Python::Interface, wname),          READONLY, nullptr},
+	{(char *) "rname",     T_STRING, offsetof(Python::Interface, rname),          READONLY, nullptr},
+	{(char *) "queuelen",  T_INT,    offsetof(Python::Interface, conf.queuelen),  READONLY, nullptr},
+	{(char *) "samplelen", T_INT,    offsetof(Python::Interface, conf.samplelen), READONLY, nullptr},
+	{(char *) "polling",   T_INT,    offsetof(Python::Interface, conf.polling),   READONLY, nullptr},
+	{(char *) "exports",   T_OBJECT, offsetof(Python::Interface, pyExports),      READONLY, nullptr},
+	{nullptr}
+};
+
+PyMethodDef Python::Interface::methods[] = {
+	{"export_attribute", (PyCFunction) Python::Interface::addExport, METH_VARARGS | METH_KEYWORDS, Python::Interface::docAddExport},
+	{"import_attribute", (PyCFunction) Python::Interface::addImport, METH_VARARGS, Python::Interface::docAddImport},
+	{nullptr},
+};
+
+const char* Python::Interface::doc =
+"__init__(wname, rname, queuelen=512, samplelen=64, polling=False)\n"
 "Opens a set of shared memory regions to use as an interface for communication. The communication type / format of VILLASNode's shmem node-type is used; see its documentation for more information on the internals.\n"
 "\n"
 "For this interface type, the indices passed to the methods specify the indices "
@@ -262,40 +395,6 @@ const char* Python::Interface::docOpen =
 "interface, meaning that polling will have to be used. This may increase "
 "performance at the cost of wasted CPU time.\n"
 ":returns: A new `Interface` object.\n";
-PyObject* Python::OpenInterface(PyObject *self, PyObject *args, PyObject *kwds)
-{
-#ifdef WITH_SHMEM
-	static const char *kwlist[] = {"wname", "rname", "queuelen", "samplelen", "polling", nullptr};
-	CPS::Interface::Config conf;
-	const char *wname, *rname;
-
-	conf.queuelen = 512;
-	conf.samplelen = 64;
-	conf.polling = 0;
-	if (!PyArg_ParseTupleAndKeywords(args, kwds, "ss|iib", (char **) kwlist,
-		&wname, &rname, &conf.queuelen, &conf.samplelen, &conf.polling)) {
-		return nullptr;
-	}
-
-	Python::Interface *pyIntf = PyObject_New(Python::Interface, &Python::Interface::type);
-	pyIntf->intf = CPS::Interface::make(wname, rname, &conf);
-	return (PyObject*) pyIntf;
-#else
-	PyErr_SetString(PyExc_NotImplementedError, "not implemented on this platform");
-	return nullptr;
-#endif
-}
-
-PyMethodDef Python::Interface::methods[] = {
-	{"export_attribute", (PyCFunction) Python::Interface::registerExportedAttribute, METH_VARARGS | METH_KEYWORDS, Python::Interface::docRegisterExportedAttribute},
-	{"import_attribute", (PyCFunction) Python::Interface::registerControlledAttribute, METH_VARARGS, Python::Interface::docRegisterControlledAttribute},
-	{0},
-};
-
-const char* Python::Interface::doc =
-"A connection to an external program, using which simulation data is exchanged.\n"
-"\n"
-"Currently, only an interface using POSIX shared memory is implemented (see `open_interface`).\n";
 PyTypeObject Python::Interface::type = {
 	PyVarObject_HEAD_INIT(nullptr, 0)
 	"dpsim.Interface",                       /* tp_name */
@@ -325,14 +424,14 @@ PyTypeObject Python::Interface::type = {
 	0,                                       /* tp_iter */
 	0,                                       /* tp_iternext */
 	Python::Interface::methods,              /* tp_methods */
-	0,                                       /* tp_members */
+	Python::Interface::members,              /* tp_members */
 	0,                                       /* tp_getset */
 	0,                                       /* tp_base */
 	0,                                       /* tp_dict */
 	0,                                       /* tp_descr_get */
 	0,                                       /* tp_descr_set */
 	0,                                       /* tp_dictoffset */
-	0,                                       /* tp_init */
+	(initproc)Python::Interface::init,       /* tp_init */
 	0,                                       /* tp_alloc */
 	Python::Interface::newfunc               /* tp_new */
 };
