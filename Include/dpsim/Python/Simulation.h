@@ -93,9 +93,9 @@ namespace Python {
 		// that can be called from Python are static.
 		//
 		// Helper methods for memory management / initialization etc.
-		static PyObject* newfunc(PyTypeObject* type, PyObject *args, PyObject *kwds);
-		static int init(Simulation* self, PyObject *args, PyObject *kwds);
-		static void dealloc(Simulation*);
+		static PyObject* newfunc(PyTypeObject *type, PyObject *args, PyObject *kwds);
+		static int init(Simulation *self, PyObject *args, PyObject *kwds);
+		static void dealloc(Simulation *self);
 
 		// Methods that are actually available from Python
 		static PyObject* addInterface(Simulation *self, PyObject *args, PyObject *kwargs);

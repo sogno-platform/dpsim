@@ -47,7 +47,7 @@ static PyMethodDef dpsimModuleMethods[] = {
 	// Component constructors
 	#include <dpsim/Python/ComponentConstructors.h>
 
-	{ 0 }
+	{ nullptr }
 };
 
 static PyModuleDef dpsimModule = {

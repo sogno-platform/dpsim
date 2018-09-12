@@ -667,7 +667,7 @@ PyTypeObject Python::Simulation::type = {
 	0,                                       /* tp_descr_get */
 	0,                                       /* tp_descr_set */
 	0,                                       /* tp_dictoffset */
-	(initproc) Python::Simulation::init, /* tp_init */
+	(initproc) Python::Simulation::init,     /* tp_init */
 	0,                                       /* tp_alloc */
-	Python::Simulation::newfunc,      /* tp_new */
+	Python::Simulation::newfunc,             /* tp_new */
 };
