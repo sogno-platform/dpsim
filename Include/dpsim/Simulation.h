@@ -80,8 +80,6 @@ namespace DPsim {
 
 		/// Vector of Interfaces
 		std::vector<InterfaceMapping> mInterfaces;
-		/// Interfaces are initialized
-		bool mInit = false;
 #endif /* WITH_SHMEM */
 
 	public:
