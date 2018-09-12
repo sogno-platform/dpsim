@@ -34,10 +34,12 @@
 
 namespace DPsim {
 
+	class EventComparator;
 	class EventQueue;
 
 	class Event {
 
+		friend class EventComparator;
 		friend class EventQueue;
 
 	protected:
@@ -51,9 +53,12 @@ namespace DPsim {
 		Event(CPS::Real t) :
 			mTime(t)
 		{ }
+	};
 
-		friend bool operator<(const Event& l, const Event& r) {
-     			return l.mTime < r.mTime;
+	class EventComparator {
+	public:
+		bool operator() (const Event::Ptr &l, const Event::Ptr &r) {
+			return l->mTime > r->mTime;
 		}
 	};
 
@@ -101,7 +106,7 @@ namespace DPsim {
 	class EventQueue {
 
 	protected:
-		std::priority_queue<Event::Ptr, std::deque<Event::Ptr>> mEvents;
+		std::priority_queue<Event::Ptr, std::deque<Event::Ptr>, EventComparator> mEvents;
 
 	public:
 		///
