@@ -47,7 +47,7 @@ void Python::Simulation::threadFunction(Python::Simulation *self)
 {
 	Real time, finalTime;
 
-	Timer timer;
+	Timer timer(Timer::Flags::fail_on_overrun);
 
 	// optional start synchronization
 	if (self->startSync) {
@@ -77,7 +77,6 @@ void Python::Simulation::threadFunction(Python::Simulation *self)
 
 				newState(self, Simulation::State::overrun);
 				self->cond->notify_one();
-				return;
 			}
 		}
 

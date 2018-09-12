@@ -53,6 +53,7 @@ class Simulation(_dpsim.Simulation):
         self._events.add_callback(self.running, self, event=Event.running)
         self._events.add_callback(self.stopped, self, event=Event.stopped)
         self._events.add_callback(self.stopped, self, event=Event.done)
+        self._events.add_callback(self.overrun, self, event=Event.overrun)
 
         if pbar:
             self.show_progressbar()
@@ -77,6 +78,9 @@ class Simulation(_dpsim.Simulation):
             self._pbar_tui.finish()
 
         LOGGER.info('Finished simulation!')
+
+    def overrun(self, *args):
+        LOGGER.warn('Overrun in simulation!');
 
     async def __update_progressbar_task(self):
         while self.time < self.final_time:
