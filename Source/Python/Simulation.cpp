@@ -150,10 +150,12 @@ PyObject* Python::Simulation::newfunc(PyTypeObject* subtype, PyObject *args, PyO
 
 int Python::Simulation::init(Simulation* self, PyObject *args, PyObject *kwds)
 {
-	static const char *kwlist[] = {"name", "system", "timestep", "duration", "start_time", "start_time_us", "sim_type", "solver_type", "single_stepping", "rt", "rt_factor", "start_sync", "init_steady_state", nullptr};
+	static const char *kwlist[] = {"name", "system", "timestep", "duration", "start_time", "start_time_us", "sim_type", "solver_type", "single_stepping", "rt", "rt_factor", "start_sync", "init_steady_state", "log_level", nullptr};
 	double timestep = 1e-3, duration = DBL_MAX, rtFactor = 1;
 	const char *name = nullptr;
 	int t = 0, s = 0, rt = 0, ss = 0, st = 0, initSteadyState = 0;
+
+	Logger::Level logLevel = Logger::Level::INFO;
 
 	unsigned long startTime = -1;
 	unsigned long startTimeUs = 0;
@@ -161,8 +163,8 @@ int Python::Simulation::init(Simulation* self, PyObject *args, PyObject *kwds)
 	enum Solver::Type solverType;
 	enum Domain domain;
 
-	if (!PyArg_ParseTupleAndKeywords(args, kwds, "sO|ddkkiippdpp", (char **) kwlist,
-		&name, &self->pySys, &timestep, &duration, &startTime, &startTimeUs, &s, &t, &ss, &rt, &rtFactor, &st, &initSteadyState)) {
+	if (!PyArg_ParseTupleAndKeywords(args, kwds, "sO|ddkkiippdppi", (char **) kwlist,
+		&name, &self->pySys, &timestep, &duration, &startTime, &startTimeUs, &s, &t, &ss, &rt, &rtFactor, &st, &initSteadyState, &logLevel)) {
 		return -1;
 	}
 
@@ -179,8 +181,8 @@ int Python::Simulation::init(Simulation* self, PyObject *args, PyObject *kwds)
 		self->startTime = Timer::StartClock::now();
 
 	switch (s) {
-		case 0: domain = CPS::Domain::DP; break;
-		case 1: domain = CPS::Domain::EMT; break;
+		case 0: domain = Domain::DP; break;
+		case 1: domain = Domain::EMT; break;
 		default:
 			PyErr_SetString(PyExc_TypeError, "Invalid sim_type argument (must be 0 or 1)");
 			return -1;
@@ -202,9 +204,9 @@ int Python::Simulation::init(Simulation* self, PyObject *args, PyObject *kwds)
 	Py_INCREF(self->pySys);
 
 	if (self->realTime)
-		self->sim = std::make_shared<DPsim::RealTimeSimulation>(name, *self->pySys->sys, timestep, duration, domain, solverType, Logger::Level::INFO);
+		self->sim = std::make_shared<DPsim::RealTimeSimulation>(name, *self->pySys->sys, timestep, duration, domain, solverType, logLevel);
 	else
-		self->sim = std::make_shared<DPsim::Simulation>(name, *self->pySys->sys, timestep, duration, domain, solverType, Logger::Level::INFO, initSteadyState);
+		self->sim = std::make_shared<DPsim::Simulation>(name, *self->pySys->sys, timestep, duration, domain, solverType, logLevel, initSteadyState);
 
 	self->channel = new EventChannel();
 
