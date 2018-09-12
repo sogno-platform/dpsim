@@ -132,6 +132,7 @@ namespace DPsim {
 		Int timeStepCount() const { return mTimeStepCount; }
 		Real timeStep() const { return mTimeStep; }
 		CPS::AttributeDataLogger & attributeLog() { return mAttributeLog; }
+		std::vector<InterfaceMapping> interfaces() { return mInterfaces; }
 	};
 
 }

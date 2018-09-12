@@ -49,6 +49,11 @@ void Python::Simulation::threadFunction(Python::Simulation *self)
 
 	Timer timer(Timer::Flags::fail_on_overrun);
 
+#ifdef WITH_SHMEM
+	for (auto ifm : self->sim->interfaces())
+		ifm.interface->open();
+#endif
+
 	// optional start synchronization
 	if (self->startSync) {
 		self->sim->sync();
@@ -114,6 +119,11 @@ void Python::Simulation::threadFunction(Python::Simulation *self)
 		newState(self, State::done);
 		self->cond->notify_one();
 	}
+
+#ifdef WITH_SHMEM
+	for (auto ifm : self->sim->interfaces())
+		ifm.interface->close();
+#endif
 }
 
 PyObject* Python::Simulation::newfunc(PyTypeObject* subtype, PyObject *args, PyObject *kwds)
