@@ -44,6 +44,11 @@ void RealTimeSimulation::run(const Timer::StartClock::time_point &startAt)
 	auto startAtDur = startAt.time_since_epoch();
 	auto startAtNSecs = std::chrono::duration_cast<std::chrono::nanoseconds>(startAtDur);
 
+	mLog.info() << "Opening interfaces." << std::endl;
+
+	for (auto ifm : mInterfaces)
+		ifm.interface->open();
+
 	sync();
 
 	mLog.info() << "Starting simulation at " << startAt << " (delta_T = " << startAt - Timer::StartClock::now() << " seconds)" << std::endl;
@@ -62,6 +67,9 @@ void RealTimeSimulation::run(const Timer::StartClock::time_point &startAt)
 	} while (mTime < mFinalTime);
 
 	mLog.info() << "Simulation finished." << std::endl;
+
+	for (auto ifm : mInterfaces)
+		ifm.interface->close();
 
 	mTimer.stop();
 }

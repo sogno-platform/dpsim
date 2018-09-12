@@ -101,13 +101,21 @@ void Simulation::sync()
 }
 
 void Simulation::run() {
-	mLog.info() << "Start simulation." << std::endl;
+	mLog.info() << "Opening interfaces." << std::endl;
+
+	for (auto ifm : mInterfaces)
+		ifm.interface->open();
 
 	sync();
+
+	mLog.info() << "Start simulation." << std::endl;
 
 	while (mTime < mFinalTime) {
 		step();
 	}
+
+	for (auto ifm : mInterfaces)
+		ifm.interface->close();
 
 	mLog.info() << "Simulation finished." << std::endl;
 }
