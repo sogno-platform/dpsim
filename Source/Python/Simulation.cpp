@@ -390,21 +390,21 @@ PyObject* Python::Simulation::logAttribute(Simulation *self, PyObject *args)
 	if (!PyArg_ParseTuple(args, "Os", &pyObj, &attrName))
 		return nullptr;
 
-	CPS::IdentifiedObject::Ptr obj;
+	IdentifiedObject::Ptr obj;
 	if (PyObject_TypeCheck(pyObj, &Python::Component::type)) {
 		auto *pyComp = (Component*) pyObj;
 
-		obj = std::dynamic_pointer_cast<CPS::IdentifiedObject>(pyComp->comp);
+		obj = std::dynamic_pointer_cast<IdentifiedObject>(pyComp->comp);
 	}
-	else if (PyObject_TypeCheck(pyObj, &Python::Node<CPS::Real>::type)) {
-		auto *pyNode = (Node<CPS::Real> *) pyObj;
+	else if (PyObject_TypeCheck(pyObj, &Python::Node<Real>::type)) {
+		auto *pyNode = (Node<Real> *) pyObj;
 
-		obj = std::dynamic_pointer_cast<CPS::IdentifiedObject>(pyNode->node);
+		obj = std::dynamic_pointer_cast<IdentifiedObject>(pyNode->node);
 	}
-	else if (PyObject_TypeCheck(pyObj, &Python::Node<CPS::Complex>::type)) {
-		auto *pyNode = (Node<CPS::Complex> *) pyObj;
+	else if (PyObject_TypeCheck(pyObj, &Python::Node<Complex>::type)) {
+		auto *pyNode = (Node<Complex> *) pyObj;
 
-		obj = std::dynamic_pointer_cast<CPS::IdentifiedObject>(pyNode->node);
+		obj = std::dynamic_pointer_cast<IdentifiedObject>(pyNode->node);
 	}
 	else {
 		PyErr_SetString(PyExc_TypeError, "First argument must be a Component or a Node");
