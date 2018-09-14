@@ -166,7 +166,7 @@ void MnaSolver<VarType>::assignSimNodes() {
 	for (UInt idx = 0; idx < mNodes.size(); idx++) {
 		mNodes[idx]->setSimNode(0, simNodeIdx);
 		simNodeIdx++;
-		if (mNodes[idx]->getPhaseType() == CPS::PhaseType::ABC) {
+		if (mNodes[idx]->phaseType() == CPS::PhaseType::ABC) {
 			mNodes[idx]->setSimNode(1, simNodeIdx);
 			simNodeIdx++;
 			mNodes[idx]->setSimNode(2, simNodeIdx);

@@ -28,7 +28,7 @@ for filename in filenames:
         contents = f.read()
 
         for match in re.finditer(regex, contents, re.MULTILINE):
-            classname = "Component::getConstructorDef<{}::{}::{}::{}>(\"_{}_{}_{}\"),\n".format(
+            classname = "Component::constructorDef<{}::{}::{}::{}>(\"_{}_{}_{}\"),\n".format(
                 match[1], match[2], match[3], match[4],
                 match[2].lower(), match[3].lower(), match[4]
             )

@@ -28,7 +28,7 @@ namespace fs = std::experimental::filesystem;
 
 using namespace DPsim;
 
-std::ostringstream DataLogger::nullStream;
+std::ostringstream DataLogger::mNullStream;
 
 DataLogger::DataLogger(Bool enabled) :
 	mLogFile(),
@@ -131,12 +131,12 @@ void DataLogger::logEMTNodeValues(Real time, const Matrix& data) {
 	logDataLine(time, data);
 }
 
-std::ostream& DataLogger::getNullStream() {
-	if (nullStream.good()) {
-		nullStream.setstate(std::ios_base::badbit);
+std::ostream& DataLogger::nullStream() {
+	if (mNullStream.good()) {
+		mNullStream.setstate(std::ios_base::badbit);
 	}
 
-	return nullStream;
+	return mNullStream;
 }
 
 void AttributeDataLogger::log(Real time) {

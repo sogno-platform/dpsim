@@ -120,7 +120,7 @@ namespace Python {
 		}
 
 		template<typename T>
-		static const char * getDocumentation()
+		static const char * documentation()
 		{
 			std::stringstream doc;
 
@@ -129,20 +129,20 @@ namespace Python {
 			doc << comp.type() << "(name, nodes, **attributes)" << std::endl
 			    << "Construct a new component with a given name an list of nodes." << std::endl;
 #if 0
-			    << comp.getDescription() << std::endl
+			    << comp.description() << std::endl
 			    << std::endl;
 
-			for (auto& it : comp.getAttributes()) {
+			for (auto& it : comp.attributes()) {
 				auto name = it.first;
 				auto attr = it.second;
 
-				if (!(attr->getFlags() & CPS::Flags::write))
+				if (!(attr->flags() & CPS::Flags::write))
 					continue;
 
-				doc << ":param " << name << ": " << attr->getDescription() << std::endl;
+				doc << ":param " << name << ": " << attr->description() << std::endl;
 			}
 
-			    << ":returns: A new `Component` representing this " << comp.getType() << "." << std::endl;
+			    << ":returns: A new `Component` representing this " << comp.type() << "." << std::endl;
 #endif
 
 			auto docstr = new CPS::String(doc.str());
@@ -151,13 +151,13 @@ namespace Python {
 		}
 
 		template<typename T>
-		static PyMethodDef getConstructorDef(const char *name)
+		static PyMethodDef constructorDef(const char *name)
 		{
 			return {
 				name,
 				(PyCFunction) createInstance<T>,
 				METH_VARARGS | METH_KEYWORDS,
-				getDocumentation<T>()
+				documentation<T>()
 			};
 		}
 

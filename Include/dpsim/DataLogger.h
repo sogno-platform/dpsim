@@ -37,8 +37,8 @@ namespace DPsim {
 		std::ofstream mLogFile;
 		Bool mEnabled;
 
-		static std::ostringstream nullStream;
-		static std::ostream& getNullStream();
+		static std::ostringstream mNullStream;
+		static std::ostream& nullStream();
 
 	public:
 		DataLogger(Bool enabled = true);
@@ -60,6 +60,7 @@ namespace DPsim {
 		std::map<String, CPS::AttributeBase::Ptr> mAttributes;
 
 	public:
+		using Ptr = std::shared_ptr<AttributeDataLogger>;
 		using DataLogger::DataLogger;
 
 		void addAttribute(const String &name, CPS::AttributeBase::Ptr attr);

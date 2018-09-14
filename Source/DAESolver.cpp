@@ -59,7 +59,7 @@ DAESolver::DAESolver(String name, SystemTopology system, Real dt, Real t0) :
 	UInt simNodeIdx = -1;
 	for (UInt idx = 0; idx < mNodes.size(); idx++) {
 		mNodes[idx]->simNodes()[0] = ++simNodeIdx;
-		if (mNodes[idx]->getPhaseType() == PhaseType::ABC) {
+		if (mNodes[idx]->phaseType() == PhaseType::ABC) {
 			mNodes[idx]->simNodes()[1] = ++simNodeIdx;
 			mNodes[idx]->simNodes()[2] = ++simNodeIdx;
 		}
@@ -96,7 +96,7 @@ void DAESolver::initialize(Real t0)
 		tempVolt += std::real(node->initialVoltage()(0,0));
 		sval[counter++] = tempVolt;
 
-//		if (node->getPhaseType() == PhaseType::ABC) {
+//		if (node->phaseType() == PhaseType::ABC) {
 //			tempVolt += std::real(node->initialVoltage()(1,0));
 //			tempVolt += std::real(node->initialVoltage()(2,0));
 //		}
@@ -182,7 +182,7 @@ int DAESolver::residualFunction(realtype ttime, N_Vector state, N_Vector dstate_
 
 		tempVolt += std::real(node->voltage()(0,0));
 
-//		if (node->getPhaseType() == PhaseType::ABC) {
+//		if (node->phaseType() == PhaseType::ABC) {
 //			tempVolt += std::real(node->voltage()(1,0));
 //			tempVolt += std::real(node->voltage()(2,0));
 //			sval[counter++] = tempVolt;
