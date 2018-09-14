@@ -28,6 +28,7 @@
 #include <bitset>
 
 #include <dpsim/Solver.h>
+#include <dpsim/DataLogger.h>
 #include <cps/Solver/MNASwitchInterface.h>
 #include <cps/SignalComponent.h>
 #include <cps/PowerComponent.h>
@@ -104,13 +105,13 @@ namespace DPsim {
 		/// Simulation logger
 		CPS::Logger mLog;
 		/// Left side vector logger
-		CPS::DataLogger mLeftVectorLog;
+		DataLogger mLeftVectorLog;
 		/// Right side vector logger
-		CPS::DataLogger mRightVectorLog;
+		DataLogger mRightVectorLog;
 		/// Left side vector logger for initialization
-		CPS::DataLogger mInitLeftVectorLog;
+		DataLogger mInitLeftVectorLog;
 		/// Right side vector logger for initialization
-		CPS::DataLogger mInitRightVectorLog;
+		DataLogger mInitRightVectorLog;
 
 		/// TODO: check that every system matrix has the same dimensions
 		void initialize(CPS::SystemTopology system);
@@ -148,10 +149,10 @@ namespace DPsim {
 			mDownSampleRate(downSampleRate),
 			mLogLevel(logLevel),
 			mLog(name + "_MNA", logLevel),
-			mLeftVectorLog(name + "_LeftVector", logLevel),
-			mRightVectorLog(name + "_RightVector", logLevel),
-			mInitLeftVectorLog(name + "_InitLeftVector", logLevel),
-			mInitRightVectorLog(name + "_InitRightVector", logLevel)
+			mLeftVectorLog(name + "_LeftVector", logLevel != CPS::Logger::Level::NONE),
+			mRightVectorLog(name + "_RightVector", logLevel != CPS::Logger::Level::NONE),
+			mInitLeftVectorLog(name + "_InitLeftVector", logLevel != CPS::Logger::Level::NONE),
+			mInitRightVectorLog(name + "_InitRightVector", logLevel != CPS::Logger::Level::NONE)
 		{ }
 
 		/// Constructor to be used in simulation examples.

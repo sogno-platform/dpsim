@@ -4,6 +4,7 @@ set(SOURCES
 	Utils.cpp
 	Timer.cpp
 	Event.cpp
+	DataLogger.cpp
 )
 
 if(NOT WIN32)

@@ -19,6 +19,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *********************************************************************************/
 
+#pragma once
+
 #include <cps/Definitions.h>
 
 namespace DPsim {
@@ -31,6 +33,9 @@ namespace DPsim {
 	using UInt = CPS::UInt;
 	using Matrix = CPS::Matrix;
 	using MatrixComp = CPS::MatrixComp;
+
+	template<typename T>
+	using MatrixVar = CPS::MatrixVar<T>;
 
 	class SolverException { };
 	class UnsupportedSolverException { };

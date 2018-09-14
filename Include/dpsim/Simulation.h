@@ -27,6 +27,7 @@
 #include <cstdint>
 
 #include <dpsim/Config.h>
+#include <dpsim/DataLogger.h>
 #include <dpsim/Solver.h>
 #include <dpsim/Event.h>
 #include <cps/Definitions.h>
@@ -49,7 +50,7 @@ namespace DPsim {
 		/// Simulation logger
 		CPS::Logger mLog;
 		/// Simulation data logger
-		CPS::AttributeDataLogger mAttributeLog;
+		AttributeDataLogger mAttributeLog;
 		/// Simulation name
 		String mName;
 		/// Final time of the simulation
@@ -129,7 +130,7 @@ namespace DPsim {
 		Real finalTime() const { return mFinalTime; }
 		Int timeStepCount() const { return mTimeStepCount; }
 		Real timeStep() const { return mTimeStep; }
-		CPS::AttributeDataLogger & attributeLog() { return mAttributeLog; }
+		AttributeDataLogger & attributeLog() { return mAttributeLog; }
 		std::vector<InterfaceMapping> interfaces() { return mInterfaces; }
 	};
 
