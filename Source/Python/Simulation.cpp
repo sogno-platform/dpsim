@@ -1,6 +1,5 @@
 /** Python simulation
  *
- * @file
  * @author Georg Reinke <georg.reinke@rwth-aachen.de>
  * @author Steffen Vogel <stvogel@eonerc.rwth-aachen.de>
  * @copyright 2017-2018, Institute for Automation of Complex Power Systems, EONERC
