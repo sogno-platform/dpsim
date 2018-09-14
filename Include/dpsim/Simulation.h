@@ -86,7 +86,7 @@ namespace DPsim {
 
 		struct LoggerMapping {
 			/// Simulation data logger
-			AttributeDataLogger::Ptr logger;
+			DataLogger::Ptr logger;
 			/// Downsampling
 			UInt downsampling;
 		};
@@ -132,7 +132,7 @@ namespace DPsim {
 			addInterface(eint, sync, sync);
 		}
 #endif
-		void addLogger(AttributeDataLogger::Ptr logger, UInt downsampling = 1) {
+		void addLogger(DataLogger::Ptr logger, UInt downsampling = 1) {
 			mLoggers.push_back({logger, downsampling});
 		}
 

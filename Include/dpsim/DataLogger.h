@@ -39,29 +39,24 @@ namespace DPsim {
 
 		static std::ostringstream mNullStream;
 		static std::ostream& nullStream();
-
-	public:
-		DataLogger(Bool enabled = true);
-		DataLogger(String name, Bool enabled = true);
-		~DataLogger();
+		
+		std::map<String, CPS::AttributeBase::Ptr> mAttributes;
 
 		void logDataLine(Real time, Real data);
 		void logDataLine(Real time, const Matrix& data);
 		void logDataLine(Real time, const MatrixComp& data);
 
+	public:
+		using Ptr = std::shared_ptr<DataLogger>;
+
+		DataLogger(Bool enabled = true);
+		DataLogger(String name, Bool enabled = true);
+		~DataLogger();		
+
 		void logPhasorNodeValues(Real time, const Matrix& data);
 		void logEMTNodeValues(Real time, const Matrix& data);
 
 		void setColumnNames(std::vector<String> names);
-	};
-
-	class AttributeDataLogger : public DataLogger {
-	protected:
-		std::map<String, CPS::AttributeBase::Ptr> mAttributes;
-
-	public:
-		using Ptr = std::shared_ptr<AttributeDataLogger>;
-		using DataLogger::DataLogger;
 
 		void addAttribute(const String &name, CPS::AttributeBase::Ptr attr);
 		void addAttribute(const String &name, CPS::Attribute<Int>::Ptr attr);

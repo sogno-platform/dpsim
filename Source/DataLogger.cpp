@@ -139,7 +139,7 @@ std::ostream& DataLogger::nullStream() {
 	return mNullStream;
 }
 
-void AttributeDataLogger::log(Real time) {
+void DataLogger::log(Real time) {
 	if (mLogFile.tellp() == std::ofstream::pos_type(0)) {
 		mLogFile << std::right << std::setw(14) << "time";
 		for (auto it : mAttributes)
@@ -153,22 +153,22 @@ void AttributeDataLogger::log(Real time) {
 	mLogFile << '\n';
 }
 
-void AttributeDataLogger::addAttribute(const String &name, CPS::Attribute<Int>::Ptr attr) {
+void DataLogger::addAttribute(const String &name, CPS::Attribute<Int>::Ptr attr) {
 	mAttributes[name] = attr;
 }
 
-void AttributeDataLogger::addAttribute(const String &name, CPS::Attribute<Real>::Ptr attr) {
+void DataLogger::addAttribute(const String &name, CPS::Attribute<Real>::Ptr attr) {
 	mAttributes[name] = attr;
 }
 
-void AttributeDataLogger::addAttribute(const String &name, CPS::Attribute<Complex>::Ptr attr) {
+void DataLogger::addAttribute(const String &name, CPS::Attribute<Complex>::Ptr attr) {
 	auto attrComp = std::static_pointer_cast<CPS::ComplexAttribute>(attr);
 
 	mAttributes[name + ".real"] = attrComp->real();
 	mAttributes[name + ".imag"] = attrComp->imag();
 }
 
-void AttributeDataLogger::addAttribute(const String &name, CPS::Attribute<MatrixVar<Real>>::Ptr attr) {
+void DataLogger::addAttribute(const String &name, CPS::Attribute<MatrixVar<Real>>::Ptr attr) {
 	const MatrixVar<Real> &m = attr->get();
 
 	auto attrMat = std::static_pointer_cast<CPS::MatrixAttribute<Real>>(attr);
@@ -190,7 +190,7 @@ void AttributeDataLogger::addAttribute(const String &name, CPS::Attribute<Matrix
 	}
 }
 
-void AttributeDataLogger::addAttribute(const String &name, CPS::Attribute<MatrixVar<Complex>>::Ptr attr) {
+void DataLogger::addAttribute(const String &name, CPS::Attribute<MatrixVar<Complex>>::Ptr attr) {
 	const MatrixVar<Complex> &m = attr->get();
 
 	auto attrMat = std::static_pointer_cast<CPS::MatrixAttribute<Complex>>(attr);
@@ -212,7 +212,7 @@ void AttributeDataLogger::addAttribute(const String &name, CPS::Attribute<Matrix
 	}
 }
 
-void AttributeDataLogger::addAttribute(const String &name, CPS::AttributeBase::Ptr attr) {
+void DataLogger::addAttribute(const String &name, CPS::AttributeBase::Ptr attr) {
 	auto intAttr = std::dynamic_pointer_cast<CPS::Attribute<Int>>(attr);
 	if (intAttr) {
 		addAttribute(name, intAttr);
