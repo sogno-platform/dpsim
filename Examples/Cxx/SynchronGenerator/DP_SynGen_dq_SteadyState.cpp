@@ -74,7 +74,8 @@ int main(int argc, char* argv[]) {
 		initActivePower, initReactivePower, initTerminalVolt, initVoltAngle, fieldVoltage, initMechPower);
 	gen->connect({n1});
 
-	auto res = Ph3::SeriesResistor::make("R_load", Rload);
+	auto res = Ph3::SeriesResistor::make("R_load");
+	res->setParameters(Rload);
 	res->connect({Node::GND, n1});
 
 	// System

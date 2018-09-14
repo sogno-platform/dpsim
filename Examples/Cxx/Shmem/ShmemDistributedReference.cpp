@@ -34,15 +34,22 @@ int main(int argc, char* argv[])
 	auto n4 = Node::make("n4");
 
 	// Components
-	auto vs = VoltageSourceNorton::make("v_s", Complex(10000, 0), 1);
-	auto l1 = Inductor::make("l_1", 0.1);
-	auto r1 = Resistor::make("r_1", 1);
-	auto r2A = Resistor::make("r_2", 10);
-	auto r2B = Resistor::make("r_2", 8);
+	auto vs = VoltageSourceNorton::make("v_s");
+	auto l1 = Inductor::make("l_1");
+	auto r1 = Resistor::make("r_1");
+	auto r2A = Resistor::make("r_2");
+	auto r2B = Resistor::make("r_2");
 	auto sw = Ph1::Switch::make("sw");
 
+	// Parameters
+	vs->setParameters(Complex(10000, 0), 1);
+	l1->setParameters(0.1);
+	r1->setParameters(1);
+	r2A->setParameters(10);
+	r2B->setParameters(8);
 	sw->setParameters(1e9, 0.1, false);
 
+	// Topology
 	vs->connect({ Node::GND, n1 });
 	l1->connect({ n1, n2 });
 	r1->connect({ n2, n3 });
