@@ -4,7 +4,7 @@
  * @author Steffen Vogel <stvogel@eonerc.rwth-aachen.de>
  * @copyright 2018, Institute for Automation of Complex Power Systems, EONERC
  *
- * CPowerSystems
+ * DPsim
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
