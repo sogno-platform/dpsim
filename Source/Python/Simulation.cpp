@@ -414,7 +414,8 @@ PyObject* Python::Simulation::logAttribute(Simulation *self, PyObject *args)
 	auto name = obj->name() + "." + attrName;
 	auto attr = obj->attribute(attrName);
 
-	self->sim->attributeLog().addAttribute(name, attr);
+	// TODO
+	//self->sim->attributeLog().addAttribute(name, attr);
 
 	Py_RETURN_NONE;
 }

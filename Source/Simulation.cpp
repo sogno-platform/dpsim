@@ -38,7 +38,6 @@ Simulation::Simulation(String name,
 	Domain domain, Solver::Type solverType,
 	Logger::Level logLevel) :
 	mLog(name, logLevel),
-	mAttributeLog(name),
 	mName(name),
 	mFinalTime(finalTime),
 	mTimeStep(timeStep),
@@ -125,22 +124,28 @@ Real Simulation::step() {
 
 #ifdef WITH_SHMEM
 	for (auto ifm : mInterfaces) {
-		ifm.interface->readValues(ifm.sync);
+		if (mTimeStepCount % ifm.downsampling == 0)
+			ifm.interface->readValues(ifm.sync);
 	}
 #endif
 
 	mEvents.handleEvents(mTime);
 
 	nextTime = mSolver->step(mTime);
+	mSolver->log(mTime);
 
 #ifdef WITH_SHMEM
 	for (auto ifm : mInterfaces) {
-		ifm.interface->writeValues();
+		if (mTimeStepCount % ifm.downsampling == 0)
+			ifm.interface->writeValues();
 	}
 #endif
 
-	mSolver->log(mTime);
-	mAttributeLog.log(mTime);
+	for (auto lg : mLoggers) {
+		if (mTimeStepCount % lg.downsampling == 0)
+			lg.logger->log(mTime);
+	}
+
 	mTime = nextTime;
 	mTimeStepCount++;
 

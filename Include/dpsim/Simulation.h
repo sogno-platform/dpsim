@@ -49,8 +49,6 @@ namespace DPsim {
 	protected:
 		/// Simulation logger
 		CPS::Logger mLog;
-		/// Simulation data logger
-		AttributeDataLogger mAttributeLog;
 		/// Simulation name
 		String mName;
 		/// Final time of the simulation
@@ -74,14 +72,27 @@ namespace DPsim {
 		struct InterfaceMapping {
 			/// A pointer to the external interface
 			CPS::Interface *interface;
-			///
+			/// Is this interface used for synchorinzation?
 			bool sync;
+			/// Is this interface used for synchronization of the simulation start?
 			bool syncStart;
+			/// Downsampling
+			UInt downsampling;
 		};
 
 		/// Vector of Interfaces
 		std::vector<InterfaceMapping> mInterfaces;
 #endif /* WITH_SHMEM */
+
+		struct LoggerMapping {
+			/// Simulation data logger
+			AttributeDataLogger::Ptr logger;
+			/// Downsampling
+			UInt downsampling;
+		};
+
+		/// The data loggers
+		std::vector<LoggerMapping> mLoggers;
 
 	public:
 		/// Creates system matrix according to
@@ -113,16 +124,17 @@ namespace DPsim {
 		}
 #ifdef WITH_SHMEM
 		///
-		void addInterface(CPS::Interface *eint, bool sync, bool syncStart) {
-			mInterfaces.push_back({eint, sync, syncStart});
+		void addInterface(CPS::Interface *eint, Bool sync, Bool syncStart, UInt downsampling = 1) {
+			mInterfaces.push_back({eint, sync, syncStart, downsampling});
 		}
 
-		void addInterface(CPS::Interface *eint, bool sync = true) {
+		void addInterface(CPS::Interface *eint, Bool sync = true) {
 			addInterface(eint, sync, sync);
 		}
 #endif
-		///
-		void setLogDownsamplingRate(Int divider) {}
+		void addLogger(AttributeDataLogger::Ptr logger, UInt downsampling = 1) {
+			mLoggers.push_back({logger, downsampling});
+		}
 
 		// #### Getter ####
 		String name() const { return mName; }
@@ -130,8 +142,8 @@ namespace DPsim {
 		Real finalTime() const { return mFinalTime; }
 		Int timeStepCount() const { return mTimeStepCount; }
 		Real timeStep() const { return mTimeStep; }
-		AttributeDataLogger & attributeLog() { return mAttributeLog; }
-		std::vector<InterfaceMapping> interfaces() { return mInterfaces; }
+		std::vector<LoggerMapping> & loggers() { return mLoggers; }
+		std::vector<InterfaceMapping> & interfaces() { return mInterfaces; }
 	};
 
 }
