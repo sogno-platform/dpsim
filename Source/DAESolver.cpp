@@ -1,5 +1,5 @@
 /** DAE Solver
- * 
+ *
  * @file
  * @author Markus Mirz <mmirz@eonerc.rwth-aachen.de>
  * @copyright 2017-2018, Institute for Automation of Complex Power Systems, EONERC
@@ -31,14 +31,14 @@ using namespace CPS;
 DAESolver::DAESolver(String name, SystemTopology system, Real dt, Real t0) :
 	mSystem(system),
 	mTimestep(dt) {
-	
+
 	// Defines offset vector of the residual which is composed as follows:
 	// mOffset[0] = # nodal voltage equations
-	// mOffset[1] = # of componets and their respective equations (1 per component for now as inductance is not yet considered) 
+	// mOffset[1] = # of componets and their respective equations (1 per component for now as inductance is not yet considered)
 	mOffsets.push_back(0);
 	mOffsets.push_back(0);
 	mNEQ = mSystem.mComponents.size() + (2 * mSystem.mNodes.size());
-	 
+
 	// Set inital values of all required variables and create IDA solver environment
 	for(Component::Ptr comp : mSystem.mComponents) {
 		auto daeComp = std::dynamic_pointer_cast<DAEInterface>(comp);
@@ -84,10 +84,10 @@ void DAESolver::initialize(Real t0)
 	dstate_dt = N_VNew_Serial(mNEQ);
 
 //	avtol = N_VNew_Serial(mNEQ);
-	
-	realtype *sval = NULL, *s_dtval=NULL ; 
 
-	sval = N_VGetArrayPointer_Serial(state); 
+	realtype *sval = NULL, *s_dtval=NULL ;
+
+	sval = N_VGetArrayPointer_Serial(state);
 
 	int counter = 0;
 	for (auto node : mNodes) {
@@ -119,14 +119,14 @@ void DAESolver::initialize(Real t0)
 		mResidualFunctions.push_back([daeComp](double ttime, const double state[], const double dstate_dt[], double resid[], std::vector<int>& off) {
 			daeComp->daeResidual(ttime, state, dstate_dt, resid, off);
 		});
-	}	
-	
+	}
+
 	for (int j = 1; j < mNEQ; j++) {
 		// Initialize nodal current equations
 		sval[counter++] = 0;
 	}
 
-	s_dtval = N_VGetArrayPointer_Serial(dstate_dt); 
+	s_dtval = N_VGetArrayPointer_Serial(dstate_dt);
 
 	// Set inital values for state derivative for now all equal to 0
 	for (int i = 0; i < (mNEQ-1); i++) {
@@ -148,14 +148,14 @@ void DAESolver::initialize(Real t0)
 //	if (check_flag(&ret, "IDAInit", 1)) {
 //		throw CPS::Exception();
 //	}
-	
+
 	ret = IDASStolerances(mem, rtol, abstol);
 // 	if (check_flag(&ret, "IDASStolerances", 1)) {
 //		throw CPS::Exception();
 //	}
 
-	// Allocate and connect Matrix A and solver LS to IDA 
-	A = SUNDenseMatrix(mNEQ, mNEQ); 
+	// Allocate and connect Matrix A and solver LS to IDA
+	A = SUNDenseMatrix(mNEQ, mNEQ);
 	LS = SUNDenseLinearSolver(state, A);
 	ret = IDADlsSetLinearSolver(mem, LS, A);
 
@@ -203,10 +203,10 @@ int DAESolver::residualFunction(realtype ttime, N_Vector state, N_Vector dstate_
 }
 
 Real DAESolver::step(Real time) {
-	
+
 	int ret = IDASolve(mem, time, &tret, state, dstate_dt, IDA_NORMAL);  // TODO: find alternative to IDA_NORMAL
-		
-	if (ret == IDA_SUCCESS) { 
+
+	if (ret == IDA_SUCCESS) {
 		return time + mTimestep	;
 	}
 	else {
