@@ -11,6 +11,7 @@ set(CIRCUIT_SOURCES
 	Circuits/DP_IdealVS_R_1.cpp
 	Circuits/DP_CS_R_1.cpp
 	Circuits/DP_IdealVS_RL1.cpp
+	Circuits/DP_IdealVS_RC1.cpp
 	Circuits/DP_CS_R2CL.cpp
 	Circuits/DP_IdealVS_CS_R4.cpp
 	Circuits/DP_IdealVS_R2L3.cpp
