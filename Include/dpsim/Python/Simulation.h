@@ -85,7 +85,7 @@ namespace Python {
 		// freed (e.g. Interfaces).
 		std::vector<PyObject*> refs;
 
-		// Function executed by the simulation thread
+		/// Function executed by the simulation thread
 		static void threadFunction(Simulation* self);
 
 		static void newState(Python::Simulation *self, Simulation::State newState);
@@ -100,8 +100,8 @@ namespace Python {
 
 		// Methods that are actually available from Python
 		static PyObject* addInterface(Simulation *self, PyObject *args, PyObject *kwargs);
+		static PyObject* addLogger(Simulation* self, PyObject* args, PyObject *kwargs);
 		static PyObject* addEvent(Simulation* self, PyObject* args);
-		static PyObject* logAttribute(Simulation* self, PyObject* args);
 		static PyObject* pause(Simulation *self, PyObject *args);
 		static PyObject* start(Simulation *self, PyObject *args);
 		static PyObject* step(Simulation *self, PyObject *args);
@@ -122,7 +122,7 @@ namespace Python {
 		static const char *docStep;
 		static const char *docAddInterface;
 		static const char *docAddEvent;
-		static const char *docLogAttribute;
+		static const char *docAddLogger;
 		static const char *docGetEventFD;
 		static const char *docState;
 		static const char *docName;

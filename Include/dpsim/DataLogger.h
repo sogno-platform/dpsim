@@ -26,12 +26,13 @@
 #include <fstream>
 
 #include <dpsim/Definitions.h>
+#include <cps/PtrFactory.h>
 #include <cps/Attribute.h>
 #include <cps/Node.h>
 
 namespace DPsim {
 
-	class DataLogger {
+	class DataLogger : public SharedFactory<DataLogger> {
 
 	protected:
 		std::ofstream mLogFile;
@@ -39,7 +40,7 @@ namespace DPsim {
 
 		static std::ostringstream mNullStream;
 		static std::ostream& nullStream();
-		
+
 		std::map<String, CPS::AttributeBase::Ptr> mAttributes;
 
 		void logDataLine(Real time, Real data);
@@ -51,7 +52,7 @@ namespace DPsim {
 
 		DataLogger(Bool enabled = true);
 		DataLogger(String name, Bool enabled = true);
-		~DataLogger();		
+		~DataLogger();
 
 		void logPhasorNodeValues(Real time, const Matrix& data);
 		void logEMTNodeValues(Real time, const Matrix& data);

@@ -7,6 +7,7 @@ add_library(dpsim_python SHARED
 	Component.cpp
 	Node.cpp
 	Interface.cpp
+	Logger.cpp
 	LoadCim.cpp
 	SystemTopology.cpp
 	EventChannel.cpp

@@ -28,6 +28,7 @@
 #include <dpsim/RealTimeSimulation.h>
 #include <dpsim/Python/Simulation.h>
 #include <dpsim/Python/Interface.h>
+#include <dpsim/Python/Logger.h>
 #include <dpsim/Python/Component.h>
 
 #include <cps/DP/DP_Ph1_Switch.h>
@@ -155,7 +156,7 @@ int Python::Simulation::init(Simulation* self, PyObject *args, PyObject *kwds)
 	const char *name = nullptr;
 	int t = 0, s = 0, rt = 0, ss = 0, st = 0, initSteadyState = 0;
 
-	Logger::Level logLevel = Logger::Level::INFO;
+	CPS::Logger::Level logLevel = CPS::Logger::Level::INFO;
 
 	unsigned long startTime = -1;
 	unsigned long startTimeUs = 0;
@@ -380,42 +381,26 @@ PyObject* Python::Simulation::addInterface(Simulation* self, PyObject* args, PyO
 #endif
 }
 
-const char *Python::Simulation::docLogAttribute =
-"log_attribute(component, attribute)";
-PyObject* Python::Simulation::logAttribute(Simulation *self, PyObject *args)
+const char *Python::Simulation::docAddLogger =
+"add_logger(logger, down_sampling=1)";
+PyObject* Python::Simulation::addLogger(Simulation *self, PyObject *args, PyObject *kwargs)
 {
-	const char *attrName;
+	int downsampling = 1;
 	PyObject *pyObj;
 
-	if (!PyArg_ParseTuple(args, "Os", &pyObj, &attrName))
+	const char *kwlist[] = {"logger", "down_sampling", nullptr};
+
+	if (!PyArg_ParseTupleAndKeywords(args, kwargs, "O|i", (char **) kwlist, &pyObj, &downsampling))
 		return nullptr;
 
-	IdentifiedObject::Ptr obj;
-	if (PyObject_TypeCheck(pyObj, &Python::Component::type)) {
-		auto *pyComp = (Component*) pyObj;
-
-		obj = std::dynamic_pointer_cast<IdentifiedObject>(pyComp->comp);
-	}
-	else if (PyObject_TypeCheck(pyObj, &Python::Node<Real>::type)) {
-		auto *pyNode = (Node<Real> *) pyObj;
-
-		obj = std::dynamic_pointer_cast<IdentifiedObject>(pyNode->node);
-	}
-	else if (PyObject_TypeCheck(pyObj, &Python::Node<Complex>::type)) {
-		auto *pyNode = (Node<Complex> *) pyObj;
-
-		obj = std::dynamic_pointer_cast<IdentifiedObject>(pyNode->node);
-	}
-	else {
-		PyErr_SetString(PyExc_TypeError, "First argument must be a Component or a Node");
+	if (!PyObject_TypeCheck(pyObj, &Python::Logger::type)) {
+		PyErr_SetString(PyExc_TypeError, "First argument must be a of type dpsim.Logger");
 		return nullptr;
 	}
 
-	auto name = obj->name() + "." + attrName;
-	auto attr = obj->attribute(attrName);
+	Python::Logger *pyLogger = (Python::Logger*) pyObj;
 
-	// TODO
-	//self->sim->attributeLog().addAttribute(name, attr);
+	self->sim->addLogger(pyLogger->logger, downsampling);
 
 	Py_RETURN_NONE;
 }
@@ -613,8 +598,8 @@ PyGetSetDef Python::Simulation::getset[] = {
 
 PyMethodDef Python::Simulation::methods[] = {
 	{"add_interface", (PyCFunction) Python::Simulation::addInterface, METH_VARARGS | METH_KEYWORDS, (char *) Python::Simulation::docAddInterface},
+	{"add_logger",    (PyCFunction) Python::Simulation::addLogger, METH_VARARGS | METH_KEYWORDS, (char *) Python::Simulation::docAddLogger},
 	{"add_event",     (PyCFunction) Python::Simulation::addEvent, METH_VARARGS, (char *) docAddEvent},
-	{"log_attribute", (PyCFunction) Python::Simulation::logAttribute, METH_VARARGS, (char *) docLogAttribute},
 	{"pause",         (PyCFunction) Python::Simulation::pause, METH_NOARGS, (char *) Python::Simulation::docPause},
 	{"start",         (PyCFunction) Python::Simulation::start, METH_NOARGS, (char *) Python::Simulation::docStart},
 	{"step",          (PyCFunction) Python::Simulation::step, METH_NOARGS,  (char *) Python::Simulation::docStep},
