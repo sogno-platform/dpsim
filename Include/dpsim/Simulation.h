@@ -94,21 +94,22 @@ namespace DPsim {
 		/// The data loggers
 		std::vector<LoggerMapping> mLoggers;
 
-	public:
 		/// Creates system matrix according to
 		Simulation(String name,
 			Real timeStep, Real finalTime,
 			CPS::Domain domain = CPS::Domain::DP,
 			Solver::Type solverType = Solver::Type::MNA,
 			CPS::Logger::Level logLevel = CPS::Logger::Level::INFO);
-		/// Creates system matrix according to System topology
+
+	public:
+		/// Creates system matrix according to a given System topology
 		Simulation(String name, CPS::SystemTopology system,
 			Real timeStep, Real finalTime,
 			CPS::Domain domain = CPS::Domain::DP,
 			Solver::Type solverType = Solver::Type::MNA,
 			CPS::Logger::Level logLevel = CPS::Logger::Level::INFO,
 			Bool steadyStateInit = false);
-		///
+		/// Desctructor
 		virtual ~Simulation();
 
 		/// Run simulation until total time is elapsed.

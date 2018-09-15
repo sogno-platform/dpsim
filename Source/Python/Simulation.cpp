@@ -204,7 +204,7 @@ int Python::Simulation::init(Simulation* self, PyObject *args, PyObject *kwds)
 	Py_INCREF(self->pySys);
 
 	if (self->realTime)
-		self->sim = std::make_shared<DPsim::RealTimeSimulation>(name, *self->pySys->sys, timestep, duration, domain, solverType, logLevel);
+		self->sim = std::make_shared<DPsim::RealTimeSimulation>(name, *self->pySys->sys, timestep, duration, domain, solverType, logLevel, initSteadyState);
 	else
 		self->sim = std::make_shared<DPsim::Simulation>(name, *self->pySys->sys, timestep, duration, domain, solverType, logLevel, initSteadyState);
 

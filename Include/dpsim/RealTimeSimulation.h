@@ -38,9 +38,13 @@ namespace DPsim {
 		Timer mTimer;
 
 	public:
-		RealTimeSimulation(String name, CPS::SystemTopology system, Real timeStep, Real finalTime,
-			CPS::Domain domain = CPS::Domain::DP, Solver::Type type = Solver::Type::MNA,
-			CPS::Logger::Level logLevel = CPS::Logger::Level::INFO, Bool steadyStateInit = false);
+		/// Creates system matrix according to a given System topology
+		RealTimeSimulation(String name, CPS::SystemTopology system,
+			Real timeStep, Real finalTime,
+			CPS::Domain domain = CPS::Domain::DP,
+			Solver::Type solverType = Solver::Type::MNA,
+			CPS::Logger::Level logLevel = CPS::Logger::Level::INFO,
+			Bool steadyStateInit = false);
 
 		/** Perform the main simulation loop in real time.
 		 *
