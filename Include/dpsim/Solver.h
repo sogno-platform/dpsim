@@ -41,8 +41,8 @@ namespace DPsim {
 		UInt systemIndex;
 	};
 
+	/// Base class for more specific solvers such as MNA, ODE or IDA.
 	class Solver {
-
 	public:
 		virtual ~Solver() { }
 

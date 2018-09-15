@@ -30,7 +30,7 @@
 #include <dpsim/Timer.h>
 
 namespace DPsim {
-
+	/// Extending Simulation class by real-time functionality.
 	class RealTimeSimulation : public Simulation {
 
 	protected:

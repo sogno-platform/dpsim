@@ -36,7 +36,7 @@
 #define SWITCH_NUM 32
 
 namespace DPsim {
-	/// Simulation class which uses Modified Nodal Analysis (MNA).
+	/// Solver class using Modified Nodal Analysis (MNA).
 	template <typename VarType>
 	class MnaSolver : public Solver {
 	protected:

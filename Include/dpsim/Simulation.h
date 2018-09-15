@@ -41,8 +41,11 @@
 #endif
 
 namespace DPsim {
-
-	class Simulation : public CPS::AttributeList {
+	/// \brief The Simulation holds a SystemTopology and a Solver.
+	///
+	/// Every time step, the Simulation calls the step function of the Solver.
+	class Simulation : 
+		public CPS::AttributeList {
 	public:
 		typedef std::shared_ptr<Simulation> Ptr;
 
