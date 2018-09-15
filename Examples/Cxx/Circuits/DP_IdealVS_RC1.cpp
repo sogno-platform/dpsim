@@ -1,4 +1,4 @@
-/** Simulation
+/** Reference Circuits
  *
  * @author Markus Mirz <mmirz@eonerc.rwth-aachen.de>
  * @copyright 2017-2018, Institute for Automation of Complex Power Systems, EONERC
@@ -19,38 +19,41 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *********************************************************************************/
 
-#pragma once
+#include <DPsim.h>
 
-#include <iostream>
-#include <vector>
-#include <list>
+using namespace DPsim;
+using namespace CPS::DP;
+using namespace CPS::DP::Ph1;
 
-#include <dpsim/Config.h>
-#include <cps/Logger.h>
-#include <cps/SystemTopology.h>
-#include <dpsim/Definitions.h>
+int main(int argc, char* argv[]) {
+	// Nodes
+	auto n1 = Node::make("n1");
+	auto n2 = Node::make("n2");
 
-#ifdef WITH_SHMEM
-  #include <cps/Interface.h>
-#endif
+	// Components
+	auto vs = VoltageSource::make("vs");
+	auto r1 = Resistor::make("r_1");
+	auto c1 = Capacitor::make("c_1");
 
-namespace DPsim {
-	/// Holds switching time and which system should be activated.
-	struct SwitchConfiguration {
-		Real switchTime;
-		UInt systemIndex;
-	};
+	// Topology
+	vs->connect({ Node::GND, n1 });
+	r1->connect({ n1, n2 });
+	c1->connect({ n2, Node::GND });
 
-	/// Base class for more specific solvers such as MNA, ODE or IDA.
-	class Solver {
-	public:
-		virtual ~Solver() { }
+	vs->setParameters(Complex(10, 0));
+	r1->setParameters(1);
+	c1->setParameters(0.001);
 
-		enum class Type { MNA, DAE };
+	// Define system topology
+	auto sys = SystemTopology(50, SystemNodeList{n1, n2}, SystemComponentList{vs, r1, c1});
 
-		/// Solve system A * x = z for x and current time
-		virtual Real step(Real time) = 0;
-		/// Log results
-		virtual void log(Real time) { };
-	};
+	// Define simulation scenario
+	Real timeStep = 0.001;
+	Real finalTime = 0.1;
+	String simName = "DP_IdealVS_RL1";
+
+	Simulation sim(simName, sys, timeStep, finalTime);
+	sim.run();
+
+	return 0;
 }
