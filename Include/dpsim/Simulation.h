@@ -37,14 +37,14 @@
 #include <cps/Node.h>
 
 #ifdef WITH_SHMEM
-  #include <cps/Interface.h>
+  #include <dpsim/Interface.h>
 #endif
 
 namespace DPsim {
 	/// \brief The Simulation holds a SystemTopology and a Solver.
 	///
 	/// Every time step, the Simulation calls the step function of the Solver.
-	class Simulation : 
+	class Simulation :
 		public CPS::AttributeList {
 	public:
 		typedef std::shared_ptr<Simulation> Ptr;
@@ -74,7 +74,7 @@ namespace DPsim {
 #ifdef WITH_SHMEM
 		struct InterfaceMapping {
 			/// A pointer to the external interface
-			CPS::Interface *interface;
+			Interface *interface;
 			/// Is this interface used for synchorinzation?
 			bool sync;
 			/// Is this interface used for synchronization of the simulation start?
@@ -128,11 +128,11 @@ namespace DPsim {
 		}
 #ifdef WITH_SHMEM
 		///
-		void addInterface(CPS::Interface *eint, Bool sync, Bool syncStart, UInt downsampling = 1) {
+		void addInterface(Interface *eint, Bool sync, Bool syncStart, UInt downsampling = 1) {
 			mInterfaces.push_back({eint, sync, syncStart, downsampling});
 		}
 
-		void addInterface(CPS::Interface *eint, Bool sync = true) {
+		void addInterface(Interface *eint, Bool sync = true) {
 			addInterface(eint, sync, sync);
 		}
 #endif

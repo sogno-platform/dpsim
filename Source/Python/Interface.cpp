@@ -23,7 +23,7 @@
 #include <dpsim/Config.h>
 
 #ifdef WITH_SHMEM
-  #include <cps/Interface.h>
+  #include <dpsim/Interface.h>
   #include <cps/AttributeList.h>
 #endif
 
@@ -53,7 +53,7 @@ PyObject* Python::Interface::newfunc(PyTypeObject *type, PyObject *args, PyObjec
 	self = (Python::Interface*) type->tp_alloc(type, 0);
 	if (self) {
 #ifdef WITH_SHMEM
-		using SharedIntfPtr = std::shared_ptr<CPS::Interface>;
+		using SharedIntfPtr = std::shared_ptr<DPsim::Interface>;
 
 		new (&self->intf) SharedIntfPtr();
 
@@ -67,7 +67,7 @@ PyObject* Python::Interface::newfunc(PyTypeObject *type, PyObject *args, PyObjec
 void Python::Interface::dealloc(Python::Interface* self)
 {
 #ifdef WITH_SHMEM
-		using SharedIntfPtr = std::shared_ptr<CPS::Interface>;
+		using SharedIntfPtr = std::shared_ptr<DPsim::Interface>;
 
 		self->intf.~SharedIntfPtr();
 
@@ -351,7 +351,7 @@ int Python::Interface::init(Python::Interface *self, PyObject *args, PyObject *k
 		return -1;
 	}
 
-	self->intf = CPS::Interface::make(self->wname, self->rname, &self->conf);
+	self->intf = DPsim::Interface::make(self->wname, self->rname, &self->conf);
 
 	return 0;
 #else

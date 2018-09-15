@@ -24,7 +24,7 @@
 #include <list>
 
 #include <DPsim.h>
-#include <cps/Interface.h>
+#include <dpsim/Interface.h>
 #include <cps/CIM/Reader.h>
 
 using namespace DPsim;

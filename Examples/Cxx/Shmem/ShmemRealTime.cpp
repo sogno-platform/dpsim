@@ -30,7 +30,7 @@ int main(int argc, char* argv[])
 	// Same circuit as above, but now with realtime support.
 	SystemComponentList comps;
 
-	CPS::Interface::Config conf;
+	Interface::Config conf;
 	conf.samplelen = 4;
 	conf.queuelen = 1024;
 	conf.polling = false;
@@ -62,7 +62,7 @@ int main(int argc, char* argv[])
 	ll->setParameters(1);
 	rL->setParameters(1000);
 
-	auto intf = CPS::Interface("/villas1-in", "/villas1-out", &conf);
+	auto intf = Interface("/villas1-in", "/villas1-out", &conf);
 
 	intf.addImport(evs->attribute<Complex>("v_ref"), 0);
 	intf.addExport(evs->attribute<Complex>("i_comp"), 0);

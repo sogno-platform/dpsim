@@ -60,6 +60,7 @@ add_subdirectory(Dependencies/libcps)
 find_package(PythonInterp 3.6)
 find_package(PythonLibs 3.6)
 find_package(Sundials)
+find_package(VILLASnode)
 
 if(PythonInterp_FOUND AND PythonLibs_FOUND)
 	set(Python_FOUND ON)

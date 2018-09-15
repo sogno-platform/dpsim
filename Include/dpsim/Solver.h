@@ -25,14 +25,10 @@
 #include <vector>
 #include <list>
 
+#include <dpsim/Definitions.h>
 #include <dpsim/Config.h>
 #include <cps/Logger.h>
 #include <cps/SystemTopology.h>
-#include <dpsim/Definitions.h>
-
-#ifdef WITH_SHMEM
-  #include <cps/Interface.h>
-#endif
 
 namespace DPsim {
 	/// Holds switching time and which system should be activated.

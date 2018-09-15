@@ -31,7 +31,7 @@
 #include <cps/Logger.h>
 
 #ifdef WITH_SHMEM
-  #include <cps/Interface.h>
+  #include <dpsim/Interface.h>
 #endif
 
 #ifdef WITH_CIM

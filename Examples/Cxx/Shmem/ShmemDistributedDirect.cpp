@@ -34,7 +34,7 @@ int main(int argc, char *argv[]) {
 	// Here, the two instances directly communicate with each other without using
 	// VILLASnode in between.
 
-	CPS::Interface::Config conf;
+	Interface::Config conf;
 	conf.samplelen = 4;
 	conf.queuelen = 1024;
 	conf.polling = false;
@@ -55,7 +55,7 @@ int main(int argc, char *argv[]) {
 		out = "/dpsim10";
 	}
 
-	auto intf = CPS::Interface(in, out, &conf);
+	auto intf = Interface(in, out, &conf);
 
 	Real timeStep = 0.000150;
 

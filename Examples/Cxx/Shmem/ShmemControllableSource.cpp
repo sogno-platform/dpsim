@@ -27,7 +27,7 @@ using namespace CPS::DP::Ph1;
 
 int main(int argc, char *argv[]) {
 
-	CPS::Interface::Config conf;
+	Interface::Config conf;
 	conf.samplelen = 64;
 	conf.queuelen = 1024;
 	conf.polling = false;
@@ -39,7 +39,7 @@ int main(int argc, char *argv[]) {
 	Real finalTime = 10;
 	String simName = "ShmemControllableSource";
 
-	CPS::Interface intf(out, in, &conf);
+	Interface intf(out, in, &conf);
 
 	// Nodes
 	auto n1 = Node::make("n1");

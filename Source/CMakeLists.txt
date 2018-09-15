@@ -35,6 +35,15 @@ if(WITH_PYTHON)
 	add_subdirectory(Python)
 endif()
 
+if(WITH_SHMEM)
+	list(APPEND SOURCES
+		Interface.cpp
+	)
+
+	list(APPEND LIBRARIES ${VILLASNODE_LIBRARIES})
+	list(APPEND INCLUDE_DIRS ${VILLASNODE_INCLUDE_DIRS})
+endif()
+
 add_library(dpsim)
 target_sources(dpsim PRIVATE ${SOURCES})
 target_link_libraries(dpsim ${LIBRARIES})

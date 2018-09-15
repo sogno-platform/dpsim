@@ -30,7 +30,7 @@ int main(int argc, char *argv[])
 	SystemComponentList comps, comps2;
 	SystemNodeList nodes;
 
-	CPS::Interface::Config conf;
+	Interface::Config conf;
 	conf.samplelen = 4;
 	conf.queuelen = 1024;
 	conf.polling = true;
@@ -51,7 +51,7 @@ int main(int argc, char *argv[])
 		out = "/villas1-out";
 	}
 
-	auto intf = CPS::Interface(in, out, &conf);
+	auto intf = Interface(in, out, &conf);
 
 	if (String(argv[1]) == "0") {
 		// Nodes

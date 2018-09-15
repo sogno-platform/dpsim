@@ -45,8 +45,8 @@ namespace Python {
 		PyObject_HEAD
 
 #ifdef WITH_SHMEM
-		CPS::Interface::Config conf;
-		CPS::Interface::Ptr intf;
+		DPsim::Interface::Config conf;
+		DPsim::Interface::Ptr intf;
 		const char *wname, *rname;
 		PyObject *pyExports;
 #endif

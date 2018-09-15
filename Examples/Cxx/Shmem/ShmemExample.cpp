@@ -59,7 +59,7 @@ int main(int argc, char* argv[])
 
 	auto sys = SystemTopology(50, SystemNodeList{Node::GND, n1, n2, n3, n4}, SystemComponentList{evs, rs, rl, ll, rL});
 
-	auto intf = CPS::Interface("/villas1-in", "/villas1-out");
+	auto intf = Interface("/villas1-in", "/villas1-out");
 	intf.addImport(evs->attribute<Complex>("v_ref"), 0);
 	intf.addExport(evs->attribute<Complex>("i_comp"), 0);
 
