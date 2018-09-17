@@ -34,9 +34,11 @@ int main(int argc, char* argv[]) {
 	auto vs = VoltageSource::make("vs");
 	vs->setParameters(Complex(10, 0), 50);
 	vs->connect(Node::List{ Node::GND, n1 });
+
 	auto r1 = Resistor::make("r_1");
 	r1->setParameters(5);
 	r1->connect(Node::List{ n1, n2 });
+
 	auto l1 = Inductor::make("l_1");
 	l1->setParameters(0.02);
 	l1->connect(Node::List{ n2, Node::GND });
@@ -49,7 +51,15 @@ int main(int argc, char* argv[]) {
 	Real finalTime = 0.1;
 	String simName = "EMT_IdealVS_RL1";
 
+	// Logger
+	auto logger = DataLogger::make(simName);
+	logger->addAttribute("v1", n1->attribute("voltage"));
+	logger->addAttribute("v2", n2->attribute("voltage"));
+	logger->addAttribute("i1", r1->attribute("i_comp"));
+
 	Simulation sim(simName, sys, timeStep, finalTime, Domain::EMT);
+	sim.addLogger(logger);
+
 	sim.run();
 
 	return 0;
