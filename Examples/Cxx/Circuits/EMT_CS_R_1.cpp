@@ -41,7 +41,7 @@ int main(int argc, char* argv[]) {
 	auto sys = SystemTopology(50, SystemNodeList{n1}, SystemComponentList{cs, r1});
 		
 	// Define simulation scenario
-	Real timeStep = 0.001;
+	Real timeStep = 0.0001;
 	Real finalTime = 0.1;
 	String simName = "EMT_CS_R_1";
 

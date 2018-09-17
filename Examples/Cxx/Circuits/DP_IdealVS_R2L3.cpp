@@ -56,7 +56,7 @@ int main(int argc, char* argv[]) {
 	auto sys = SystemTopology(50, SystemNodeList{n1, n2, n3, n4}, SystemComponentList{vs, r1, l1, l2, l3, r2});
 		
 	// Define simulation scenario
-	Real timeStep = 0.001;
+	Real timeStep = 0.0001;
 	Real finalTime = 0.1;
 	String simName = "DP_IdealVS_R2L3";
 
