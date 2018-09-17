@@ -135,6 +135,8 @@ namespace DPsim {
 		void addInterface(Interface *eint, Bool sync = true) {
 			addInterface(eint, sync, sync);
 		}
+
+		std::vector<InterfaceMapping> & interfaces() { return mInterfaces; }
 #endif
 		void addLogger(DataLogger::Ptr logger, UInt downsampling = 1) {
 			mLoggers.push_back({logger, downsampling});
@@ -147,7 +149,6 @@ namespace DPsim {
 		Int timeStepCount() const { return mTimeStepCount; }
 		Real timeStep() const { return mTimeStep; }
 		std::vector<LoggerMapping> & loggers() { return mLoggers; }
-		std::vector<InterfaceMapping> & interfaces() { return mInterfaces; }
 	};
 
 }
