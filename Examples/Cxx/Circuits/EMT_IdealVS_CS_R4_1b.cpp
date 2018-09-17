@@ -19,7 +19,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *********************************************************************************/
 
-#include <DPsim.h>
+#include "DPsim.h"
 
 using namespace DPsim;
 using namespace CPS::EMT;
@@ -30,32 +30,34 @@ int main(int argc, char* argv[]) {
 	auto n1 = Node::make("n1");
 	auto n2 = Node::make("n2");
 	auto n3 = Node::make("n3");
-	auto n4 = Node::make("n4");
 
 	// Components
-	auto cs = CurrentSource::make("cs");
-	cs->setParameters(10, 50);
-	cs->setNodes(Node::List{ Node::GND, n1 });
+	auto vs = VoltageSource::make("vs");
+	vs->setParameters(10, 50); // 10 * Complex(cos(phi), sin(phi))
+	vs->setNodes(Node::List{ Node::GND, n1 });
 	auto r1 = Resistor::make("r_1");
 	r1->setParameters(1);
-	r1->setNodes(Node::List{ n1, Node::GND });
-	auto c1 = Capacitor::make("c_1");
-	c1->setParameters(0.001);
-	c1->setNodes(Node::List{ n1, n2 });
-	auto l1 = Inductor::make("l_1");
-	l1->setParameters(0.001);
-	l1->setNodes(Node::List{ n2, Node::GND });
+	r1->setNodes(Node::List{ n1, n2 });
 	auto r2 = Resistor::make("r_2");
 	r2->setParameters(1);
 	r2->setNodes(Node::List{ n2, Node::GND });
+	auto r3 = Resistor::make("r_3");
+	r3->setParameters(10);
+	r3->setNodes(Node::List{ n2, n3 });
+	auto r4 = Resistor::make("r_4");
+	r4->setParameters(5);
+	r4->setNodes(Node::List{ n3, Node::GND });
+	auto cs = CurrentSource::make("cs");
+	cs->setParameters(1, 50);
+	cs->setNodes(Node::List{ Node::GND, n3 });
 
 	// Define system topology
-	auto sys = SystemTopology(50, SystemNodeList{n1, n2, n3, n4}, SystemComponentList{vs, r1, l1, l2, l3, r2});
-
+	auto sys = SystemTopology(50, SystemNodeList{n1, n2, n3}, SystemComponentList{vs, r1, r2, r3, r4, cs});
+		
 	// Define simulation scenario
 	Real timeStep = 0.0001;
 	Real finalTime = 0.1;
-	String simName = "EMT_IdealVS_R2L3";
+	String simName = "EMT_IdealVS_CS_R4_1b";
 
 	Simulation sim(simName, sys, timeStep, finalTime, Domain::EMT);
 	sim.run();
