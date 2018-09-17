@@ -34,26 +34,26 @@ int main(int argc, char* argv[]) {
 	// Components
 	auto vs = VoltageSource::make("vs");
 	vs->setParameters(10);
-	vs->setNodes(Node::List{ Node::GND, n1 });
+	vs->connect(Node::List{ Node::GND, n1 });
 	auto r1 = Resistor::make("r_1");
 	r1->setParameters(1);
-	r1->setNodes(Node::List{ n1, n2 });
+	r1->connect(Node::List{ n1, n2 });
 	auto r2 = Resistor::make("r_2", Logger::Level::DEBUG);
 	r2->setParameters(1);
-	r2->setNodes(Node::List{ n2, Node::GND });
+	r2->connect(Node::List{ n2, Node::GND });
 	auto r3 = Resistor::make("r_3");
 	r3->setParameters(10);
-	r3->setNodes(Node::List{ n2, n3 });
+	r3->connect(Node::List{ n2, n3 });
 	auto r4 = Resistor::make("r_4");
 	r4->setParameters(5);
-	r4->setNodes(Node::List{ n3, Node::GND });
+	r4->connect(Node::List{ n3, Node::GND });
 	auto cs = CurrentSource::make("cs");
 	cs->setParameters(1);
-	cs->setNodes(Node::List{ Node::GND, n3 });
+	cs->connect(Node::List{ Node::GND, n3 });
 
 	// Define system topology
 	auto sys = SystemTopology(50, SystemNodeList{n1, n2, n3}, SystemComponentList{vs, r1, r2, r3, r4, cs});
-		
+
 	// Define simulation scenario
 	Real timeStep = 0.0001;
 	Real finalTime = 0.1;

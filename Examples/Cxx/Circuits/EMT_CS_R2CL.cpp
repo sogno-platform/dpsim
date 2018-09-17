@@ -33,19 +33,19 @@ int main(int argc, char* argv[]) {
 	// Components
 	auto cs = CurrentSource::make("cs");
 	cs->setParameters(10, 50);
-	cs->setNodes(Node::List{ Node::GND, n1 });
+	cs->connect(Node::List{ Node::GND, n1 });
 	auto r1 = Resistor::make("r_1");
 	r1->setParameters(1);
-	r1->setNodes(Node::List{ n1, Node::GND });
+	r1->connect(Node::List{ n1, Node::GND });
 	auto c1 = Capacitor::make("c_1");
 	c1->setParameters(0.001);
-	c1->setNodes(Node::List{ n1, n2 });
+	c1->connect(Node::List{ n1, n2 });
 	auto l1 = Inductor::make("l_1");
 	l1->setParameters(0.001);
-	l1->setNodes(Node::List{ n2, Node::GND });
+	l1->connect(Node::List{ n2, Node::GND });
 	auto r2 = Resistor::make("r_2");
 	r2->setParameters(1);
-	r2->setNodes(Node::List{ n2, Node::GND });
+	r2->connect(Node::List{ n2, Node::GND });
 
 	// Define system topology
 	auto sys = SystemTopology(50, SystemNodeList{n1, n2}, SystemComponentList{cs, r1, c1, l1, r2});

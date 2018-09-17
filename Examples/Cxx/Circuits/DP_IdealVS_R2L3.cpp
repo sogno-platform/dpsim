@@ -35,22 +35,22 @@ int main(int argc, char* argv[]) {
 	// Components
 	auto vs = VoltageSource::make("vs");
 	vs->setParameters(10);
-	vs->setNodes(Node::List{ Node::GND, n1 });
+	vs->connect(Node::List{ Node::GND, n1 });
 	auto r1 = Resistor::make("r_1");
 	r1->setParameters(1);
-	r1->setNodes(Node::List{ n1, n2 });
+	r1->connect(Node::List{ n1, n2 });
 	auto l1 = Inductor::make("l_1");
 	l1->setParameters(0.02);
-	l1->setNodes(Node::List{ n2, n3 });
+	l1->connect(Node::List{ n2, n3 });
 	auto l2 = Inductor::make("l_2");
 	l2->setParameters(0.1);
-	l2->setNodes(Node::List{ n3, Node::GND });
+	l2->connect(Node::List{ n3, Node::GND });
 	auto l3 = Inductor::make("l_3");
 	l3->setParameters(0.05);
-	l3->setNodes(Node::List{ n3, n4 });
+	l3->connect(Node::List{ n3, n4 });
 	auto r2 = Resistor::make("r_2");
 	r2->setParameters(2);
-	r2->setNodes(Node::List{ n4, Node::GND });
+	r2->connect(Node::List{ n4, Node::GND });
 
 	// Define system topology
 	auto sys = SystemTopology(50, SystemNodeList{n1, n2, n3, n4}, SystemComponentList{vs, r1, l1, l2, l3, r2});

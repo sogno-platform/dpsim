@@ -33,13 +33,13 @@ int main(int argc, char* argv[]) {
 	// Components
 	auto vs = VoltageSource::make("vs");
 	vs->setParameters(Complex(10, 0), 50);
-	vs->setNodes(Node::List{ Node::GND, n1 });
+	vs->connect(Node::List{ Node::GND, n1 });
 	auto r1 = Resistor::make("r_1");
 	r1->setParameters(5);
-	r1->setNodes(Node::List{ n1, n2 });
+	r1->connect(Node::List{ n1, n2 });
 	auto l1 = Inductor::make("l_1");
 	l1->setParameters(0.02);
-	l1->setNodes(Node::List{ n2, Node::GND });
+	l1->connect(Node::List{ n2, Node::GND });
 
 	// Define system topology
 	auto sys = SystemTopology(50, SystemNodeList{n1, n2}, SystemComponentList{vs, r1, l1});
