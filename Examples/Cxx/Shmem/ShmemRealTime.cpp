@@ -64,7 +64,7 @@ int main(int argc, char* argv[])
 
 	auto intf = Interface("/villas1-in", "/villas1-out", &conf);
 
-	intf.addImport(evs->attribute<Complex>("v_ref"), 0);
+	intf.addImport(evs->attribute<Complex>("V_ref"), 0);
 	intf.addExport(evs->attribute<Complex>("i_comp"), 0);
 
 	Real timeStep = 0.001;
