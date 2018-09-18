@@ -4,7 +4,7 @@ import logging
 
 from dpsim.Event import Event
 
-def no_test_simulation():
+def test_simulation():
     logging.getLogger().setLevel(logging.DEBUG)
     logging.info("hello\n")
 

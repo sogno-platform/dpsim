@@ -3,7 +3,7 @@ import dpsim
 
 PATH = os.path.dirname(__file__)
 
-def no_test_circuit():
+def test_circuit():
     # Nodes
     gnd = dpsim.dp.Node.GND()
     n1 =  dpsim.dp.Node("n1")
