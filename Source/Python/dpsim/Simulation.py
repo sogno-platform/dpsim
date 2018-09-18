@@ -80,7 +80,7 @@ class Simulation(_dpsim.Simulation):
         LOGGER.info('Finished simulation!')
 
     def overrun(self, *args):
-        LOGGER.warn('Overrun in simulation!');
+        raise RuntimeError("Simulation overrun!")
 
     async def __update_progressbar_task(self):
         while self.time < self.final_time:
