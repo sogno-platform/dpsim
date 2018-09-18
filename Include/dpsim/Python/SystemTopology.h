@@ -39,7 +39,7 @@ namespace Python {
 	struct SystemTopology {
 		PyObject_HEAD
 
-		std::shared_ptr<CPS::SystemTopology> sys;
+		CPS::SystemTopology::Ptr sys;
 
 		PyObject *pyNodeDict;
 		PyObject *pyComponentDict;
