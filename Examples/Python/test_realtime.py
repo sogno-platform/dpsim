@@ -6,11 +6,11 @@ from dpsim.Event import Event
 def test_realtime():
     # Nodes
     gnd = dpsim.dp.Node.GND()
-    n1  = dpsim.dp.Node("n1")
+    n1  = dpsim.dp.Node('n1')
 
     # Components
-    v1 = dpsim.dp.ph1.VoltageSource("v_1", [gnd, n1], v_ref=10)
-    r1 = dpsim.dp.ph1.Resistor("r_1", [n1, gnd], resistance=1)
+    v1 = dpsim.dp.ph1.VoltageSource('v_1', [gnd, n1], V_ref=10)
+    r1 = dpsim.dp.ph1.Resistor('r_1', [n1, gnd], R=1)
 
     system = dpsim.SystemTopology(50, [gnd, n1], [v1, r1])
 
@@ -23,5 +23,5 @@ def test_realtime():
 
     sim.run(pbar=True)
 
-if __name__ == "__main__":
+if __name__ == '__main__':
     test_realtime()

@@ -6,11 +6,11 @@ from dpsim.Event import Event
 
 def test_simulation():
     logging.getLogger().setLevel(logging.DEBUG)
-    logging.info("hello\n")
+    logging.info('hello\n')
 
-    n1 = dpsim.dp.Node("n1")
+    n1 = dpsim.dp.Node('n1')
     gnd = dpsim.dp.Node.GND()
-    r = dpsim.dp.ph1.Resistor("r1", [gnd, n1])
+    r = dpsim.dp.ph1.Resistor('r1', [gnd, n1])
 
     sys = dpsim.SystemTopology(50, [n1], [r])
 
@@ -48,5 +48,5 @@ def test_simulation():
     assert sim.wait_until() == Event.stopping
     assert sim.wait_until() == Event.stopped
 
-if __name__ == "__main__":
+if __name__ == '__main__':
     test_simulation()
