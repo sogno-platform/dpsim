@@ -31,21 +31,17 @@ int main(int argc, char* argv[]) {
 
 	// Components
 	auto cs = CurrentSource::make("cs");
+	cs->setParameters(Complex(10, 0), 50);
+	cs->connect(Node::List{ Node::GND, n1 });
 	auto r1 = Resistor::make("r_1");
-
-	// Topology
-	cs->connect({ Node::GND, n1 });
-	r1->connect({ Node::GND, n1 });
-
-	// Parameters
-	cs->setParameters(Complex(10, 0));
 	r1->setParameters(1);
+	r1->connect({ Node::GND, n1 });
 
 	// Define system topology
 	auto sys = SystemTopology(50, SystemNodeList{n1}, SystemComponentList{cs, r1});
 
 	// Define simulation scenario
-	Real timeStep = 0.001;
+	Real timeStep = 0.0001;
 	Real finalTime = 0.1;
 	String simName = "EMT_CS_R_1";
 

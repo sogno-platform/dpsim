@@ -36,6 +36,7 @@ using namespace DPsim;
 
 void Python::Interface::addExportDesc(Python::Interface* self, int idx, const CPS::String &type, const CPS::String &name, const CPS::String &suffix)
 {
+#ifdef WITH_SHMEM
 	while (PyList_Size(self->pyExports) < idx + 1)
 		PyList_Append(self->pyExports, PyDict_New());
 
@@ -44,6 +45,7 @@ void Python::Interface::addExportDesc(Python::Interface* self, int idx, const CP
 	PyDict_SetItemString(pyExport, "type", PyUnicode_FromString(type.c_str()));
 
 	PyList_SetItem(self->pyExports, idx, pyExport);
+#endif
 }
 
 PyObject* Python::Interface::newfunc(PyTypeObject *type, PyObject *args, PyObject *kwds)
@@ -361,6 +363,7 @@ int Python::Interface::init(Python::Interface *self, PyObject *args, PyObject *k
 }
 
 PyMemberDef Python::Interface::members[] = {
+#ifdef WITH_SHMEM
 	{(char *) "wname",     T_STRING, offsetof(Python::Interface, wname),          READONLY, nullptr},
 	{(char *) "rname",     T_STRING, offsetof(Python::Interface, rname),          READONLY, nullptr},
 	{(char *) "queuelen",  T_INT,    offsetof(Python::Interface, conf.queuelen),  READONLY, nullptr},
@@ -368,6 +371,7 @@ PyMemberDef Python::Interface::members[] = {
 	{(char *) "polling",   T_INT,    offsetof(Python::Interface, conf.polling),   READONLY, nullptr},
 	{(char *) "exports",   T_OBJECT, offsetof(Python::Interface, pyExports),      READONLY, nullptr},
 	{nullptr}
+#endif
 };
 
 PyMethodDef Python::Interface::methods[] = {

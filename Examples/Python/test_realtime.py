@@ -3,7 +3,7 @@ import datetime as dt
 
 from dpsim.Event import Event
 
-def test_realtime():
+def no_test_realtime():
     # Nodes
     gnd = dpsim.dp.Node.GND()
     n1  = dpsim.dp.Node("n1")

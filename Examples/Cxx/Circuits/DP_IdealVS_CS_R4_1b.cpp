@@ -19,7 +19,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *********************************************************************************/
 
-#include <DPsim.h>
+#include "DPsim.h"
 
 using namespace DPsim;
 using namespace CPS::DP;
@@ -28,25 +28,36 @@ using namespace CPS::DP::Ph1;
 int main(int argc, char* argv[]) {
 	// Nodes
 	auto n1 = Node::make("n1");
+	auto n2 = Node::make("n2");
+	auto n3 = Node::make("n3");
 
 	// Components
-	auto cs = CurrentSource::make("cs");
+	auto vs = VoltageSource::make("vs");
+	vs->setParameters(10);
+	vs->connect(Node::List{ Node::GND, n1 });
 	auto r1 = Resistor::make("r_1");
-
-	// Topology
-	cs->connect({ Node::GND, n1 });
-	r1->connect({ Node::GND, n1 });
-
-	cs->setParameters(Complex(10, 0));
 	r1->setParameters(1);
+	r1->connect(Node::List{ n1, n2 });
+	auto r2 = Resistor::make("r_2", Logger::Level::DEBUG);
+	r2->setParameters(1);
+	r2->connect(Node::List{ n2, Node::GND });
+	auto r3 = Resistor::make("r_3");
+	r3->setParameters(10);
+	r3->connect(Node::List{ n2, n3 });
+	auto r4 = Resistor::make("r_4");
+	r4->setParameters(5);
+	r4->connect(Node::List{ n3, Node::GND });
+	auto cs = CurrentSource::make("cs");
+	cs->setParameters(1);
+	cs->connect(Node::List{ Node::GND, n3 });
 
 	// Define system topology
-	auto sys = SystemTopology(50, SystemNodeList{n1}, SystemComponentList{cs, r1});
+	auto sys = SystemTopology(50, SystemNodeList{n1, n2, n3}, SystemComponentList{vs, r1, r2, r3, r4, cs});
 
 	// Define simulation scenario
 	Real timeStep = 0.0001;
 	Real finalTime = 0.1;
-	String simName = "DP_CS_R_1";
+	String simName = "DP_IdealVS_CS_R4_1b";
 
 	Simulation sim(simName, sys, timeStep, finalTime);
 	sim.run();

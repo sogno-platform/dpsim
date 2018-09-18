@@ -46,8 +46,10 @@ void RealTimeSimulation::run(const Timer::StartClock::time_point &startAt)
 
 	mLog.info() << "Opening interfaces." << std::endl;
 
+#ifdef WITH_SHMEM
 	for (auto ifm : mInterfaces)
 		ifm.interface->open();
+#endif
 
 	sync();
 
@@ -68,8 +70,10 @@ void RealTimeSimulation::run(const Timer::StartClock::time_point &startAt)
 
 	mLog.info() << "Simulation finished." << std::endl;
 
+#ifdef WITH_SHMEM
 	for (auto ifm : mInterfaces)
 		ifm.interface->close();
+#endif
 
 	mTimer.stop();
 }

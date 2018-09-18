@@ -101,8 +101,10 @@ void Simulation::sync()
 void Simulation::run() {
 	mLog.info() << "Opening interfaces." << std::endl;
 
+#ifdef WITH_SHMEM
 	for (auto ifm : mInterfaces)
 		ifm.interface->open();
+#endif
 
 	sync();
 
@@ -112,8 +114,10 @@ void Simulation::run() {
 		step();
 	}
 
+#ifdef WITH_SHMEM
 	for (auto ifm : mInterfaces)
 		ifm.interface->close();
+#endif
 
 	mLog.info() << "Simulation finished." << std::endl;
 }
