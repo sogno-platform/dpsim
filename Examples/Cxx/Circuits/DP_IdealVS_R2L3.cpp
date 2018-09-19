@@ -60,7 +60,18 @@ int main(int argc, char* argv[]) {
 	Real finalTime = 0.1;
 	String simName = "DP_IdealVS_R2L3";
 
+	// Logging
+	auto logger = DataLogger::make(simName);
+	logger->addAttribute("v1", n1->attribute("voltage"));
+	logger->addAttribute("v2", n2->attribute("voltage"));
+	logger->addAttribute("v3", n3->attribute("voltage"));
+	logger->addAttribute("v4", n4->attribute("voltage"));
+	logger->addAttribute("i30", l2->attribute("i_intf"));
+	logger->addAttribute("i34", l3->attribute("i_intf"));
+
 	Simulation sim(simName, sys, timeStep, finalTime);
+	sim.addLogger(logger);
+
 	sim.run();
 
 	return 0;
