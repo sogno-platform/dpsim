@@ -93,7 +93,7 @@ int main(int argc, char *argv[]) {
 		sys.mComponents.push_back(filtP_profile);
 
 		// Register interface current source and voltage drop
-		intf1.addImport(ecs->attribute<Complex>("i_ref"), 0);
+		intf1.addImport(ecs->attribute<Complex>("I_ref"), 0);
 		intf1.addExport(ecs->attribute<Complex>("v_comp"), 0);
 
 		// TODO: gain by 20e8
@@ -166,7 +166,7 @@ int main(int argc, char *argv[]) {
 
 		// Register voltage source reference and current flowing through source
 		// multiply with -1 to consider passive sign convention
-		intf1.addImport(evs->attribute<Complex>("v_ref"), 0);
+		intf1.addImport(evs->attribute<Complex>("V_ref"), 0);
 		// TODO: invalid sign
 		intf1.addExport(evs->attribute<Complex>("i_comp"), 0);
 

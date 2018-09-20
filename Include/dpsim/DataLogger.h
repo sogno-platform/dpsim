@@ -38,8 +38,6 @@ namespace DPsim {
 		std::ofstream mLogFile;
 		Bool mEnabled;
 
-		static std::ostringstream mNullStream;
-		static std::ostream& nullStream();
 
 		std::map<String, CPS::AttributeBase::Ptr> mAttributes;
 

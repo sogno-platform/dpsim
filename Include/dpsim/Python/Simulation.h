@@ -76,6 +76,7 @@ namespace Python {
 		double realTimeStep; /// effective timestep for real-time simulation
 		bool realTime;
 		bool startSync;
+		bool failOnOverrun;
 		bool singleStepping; /// Debugger like stepping for simulations
 
 		Timer::StartTimePoint startTime;
