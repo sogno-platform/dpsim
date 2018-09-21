@@ -28,12 +28,13 @@ for filename in filenames:
         contents = f.read()
 
         for match in re.finditer(regex, contents, re.MULTILINE):
-            classname = "Component::constructorDef<{}::{}::{}::{}>(\"_{}_{}_{}\"),\n".format(
-                match[1], match[2], match[3], match[4],
-                match[2].lower(), match[3].lower(), match[4]
-            )
+            if not match[4].endswith("Step"):
+                classname = "Component::constructorDef<{}::{}::{}::{}>(\"_{}_{}_{}\"),\n".format(
+                    match[1], match[2], match[3], match[4],
+                    match[2].lower(), match[3].lower(), match[4]
+                )
 
-            classnames.append(classname)
+                classnames.append(classname)
 
         #for match in re.finditer(regex2, contents, re.MULTILINE):
         #    classname = "Component::getConstructorDef<{}::{}::{}>(\"_{}_{}\"),\n".format(
