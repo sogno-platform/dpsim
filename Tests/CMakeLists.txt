@@ -1,6 +1,8 @@
-set(TEST_SRCS
-    Timer.cpp
-)
+if(NOT WIN32)
+	set(TEST_SRCS
+		Timer.cpp
+	)
+endif()
 
 foreach(SOURCE ${TEST_SRCS})
 	get_filename_component(TARGET ${SOURCE} NAME_WE)

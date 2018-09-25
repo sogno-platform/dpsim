@@ -25,12 +25,14 @@
 #include <iostream>
 
 #include <dpsim/Config.h>
-#include <dpsim/RealTimeSimulation.h>
+
 #include <dpsim/Python/Simulation.h>
-#include <dpsim/Python/Interface.h>
 #include <dpsim/Python/Logger.h>
 #include <dpsim/Python/Component.h>
-
+#ifndef _MSC_VER
+#include <dpsim/Python/Interface.h>
+#include <dpsim/RealTimeSimulation.h>
+#endif
 #include <cps/DP/DP_Ph1_Switch.h>
 
 using namespace DPsim;
@@ -39,22 +41,25 @@ using namespace CPS;
 void Python::Simulation::newState(Python::Simulation *self, Simulation::State newState)
 {
 	uint32_t evt = static_cast<uint32_t>(newState);
-
+#ifndef _MSC_VER
 	self->channel->sendEvent(evt);
+#endif
 	self->state = newState;
 }
 
 void Python::Simulation::threadFunction(Python::Simulation *self)
 {
 	Real time, finalTime;
-
+#ifndef _MSC_VER
 	Timer timer(Timer::Flags::fail_on_overrun);
+#endif
 
 #ifdef WITH_SHMEM
 	for (auto ifm : self->sim->interfaces())
 		ifm.interface->open();
 #endif
 
+#ifndef _MSC_VER
 	// optional start synchronization
 	if (self->startSync) {
 		self->sim->sync();
@@ -67,13 +72,14 @@ void Python::Simulation::threadFunction(Python::Simulation *self)
 
 		std::cout << "Starting simulation at " << self->startTime << " (delta_T = " << self->startTime - Timer::StartClock::now() << " seconds)" << std::endl;
 	}
+#endif
 
 	finalTime = self->sim->finalTime();
 
 	time = 0;
 	while (time < finalTime) {
 		time = self->sim->step();
-
+#ifndef _MSC_VER
 		if (self->realTime) {
 			try {
 				timer.sleep();
@@ -87,7 +93,7 @@ void Python::Simulation::threadFunction(Python::Simulation *self)
 				}
 			}
 		}
-
+#endif
 		if (self->sim->timeStepCount() == 1) {
 			std::unique_lock<std::mutex> lk(*self->mut);
 			newState(self, Simulation::State::running);
@@ -178,13 +184,13 @@ int Python::Simulation::init(Simulation* self, PyObject *args, PyObject *kwds)
 	self->singleStepping = st;
 	self->failOnOverrun = failOnOverrun;
 	self->realTimeStep = timestep / rtFactor;
-
+#ifndef _MSC_VER
 	if (startTime > 0) {
 		self->startTime = Timer::StartClock::from_time_t(startTime) + std::chrono::microseconds(startTimeUs);
 	}
 	else
 		self->startTime = Timer::StartClock::now();
-
+#endif
 	switch (s) {
 		case 0: domain = Domain::DP; break;
 		case 1: domain = Domain::EMT; break;
@@ -208,12 +214,17 @@ int Python::Simulation::init(Simulation* self, PyObject *args, PyObject *kwds)
 
 	Py_INCREF(self->pySys);
 
-	if (self->realTime)
+	if (self->realTime) {
+#ifndef _MSC_VER
 		self->sim = std::make_shared<DPsim::RealTimeSimulation>(name, *self->pySys->sys, timestep, duration, domain, solverType, logLevel, initSteadyState);
-	else
+#endif
+	}
+	else {
 		self->sim = std::make_shared<DPsim::Simulation>(name, *self->pySys->sys, timestep, duration, domain, solverType, logLevel, initSteadyState);
-
+	}
+#ifndef _MSC_VER
 	self->channel = new EventChannel();
+#endif
 
 	return 0;
 }
@@ -235,7 +246,9 @@ void Python::Simulation::dealloc(Python::Simulation* self)
 
 	delete self->mut;
 	delete self->cond;
+#ifndef _MSC_VER
 	delete self->channel;
+#endif
 
 	for (auto it : self->refs) {
 		Py_DECREF(it);
@@ -540,8 +553,9 @@ PyObject * Python::Simulation::getEventFD(Simulation *self, PyObject *args) {
 
 	if (!PyArg_ParseTuple(args, "|ii", &flags, &coalesce))
 		return nullptr;
-
+#ifndef _MSC_VER
 	fd = self->channel->fd();
+#endif
 	if (fd < 0) {
 		PyErr_SetString(PyExc_SystemError, "Failed to created event file descriptor");
 		return nullptr;
