@@ -6,7 +6,7 @@ import subprocess
 PATH = os.path.dirname(__file__)
 
 def test_IdealVS_R_1_cpp():
-    name = 'IdealVS_R_1'
+    name = 'VS_R_1'
     frequency = 50
     path = PATH + "/../../../build/Examples/Cxx/DP_" + name
     if os.name == 'nt':
