@@ -1,7 +1,6 @@
-/** Simulation
- *
+/**
  * @author Markus Mirz <mmirz@eonerc.rwth-aachen.de>
- * @copyright 2017, Institute for Automation of Complex Power Systems, EONERC
+ * @copyright 2017-2018, Institute for Automation of Complex Power Systems, EONERC
  *
  * DPsim
  *
@@ -19,14 +18,15 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *********************************************************************************/
 
-#ifdef __linux__
-#include <unistd.h>
-#endif
-
-#include "Simulation.h"
+#include <dpsim/Simulation.h>
+#include <dpsim/MNASolver.h>
 
 #ifdef WITH_CIM
-  #include "cps/CIM/Reader.h"
+  #include <cps/CIM/Reader.h>
+#endif
+
+#ifdef WITH_SUNDIALS
+  #include <dpsim/DAESolver.h>
 #endif
 
 using namespace CPS;
@@ -36,14 +36,14 @@ Simulation::Simulation(String name,
 	Real timeStep, Real finalTime,
 	Domain domain, Solver::Type solverType,
 	Logger::Level logLevel) :
-	mLog("Logs/" + name + ".log", logLevel),
+	mLog(name, logLevel),
 	mName(name),
 	mFinalTime(finalTime),
-	mLogLevel(logLevel),
-	mPipe{-1, -1}
+	mTimeStep(timeStep),
+	mLogLevel(logLevel)
 {
-	mAttributes["name"] = Attribute<String>::make(&mName, Flags::read);
-	mAttributes["final_time"] = Attribute<Real>::make(&mFinalTime, Flags::read);
+	addAttribute<String>("name", &mName, Flags::read);
+	addAttribute<Real>("final_time", &mFinalTime, Flags::read);
 }
 
 Simulation::Simulation(String name, SystemTopology system,
@@ -56,44 +56,68 @@ Simulation::Simulation(String name, SystemTopology system,
 
 	switch (solverType) {
 	case Solver::Type::MNA:
-	default:
 		if (domain == Domain::DP)
 			mSolver = std::make_shared<MnaSolver<Complex>>(name, system, timeStep,
 				domain, logLevel, steadyStateInit);
-		else 
+		else
 			mSolver = std::make_shared<MnaSolver<Real>>(name, system, timeStep,
 				domain, logLevel, steadyStateInit);
 		break;
+
+#ifdef WITH_SUNDIALS
+	case Solver::Type::DAE:
+		mSolver = std::make_shared<DAESolver>(name, system, timeStep, 0.0);
+		break;
+#endif /* WITH_SUNDIALS */
+
+	default:
+		throw UnsupportedSolverException();
 	}
 }
 
 Simulation::~Simulation() {
-#ifdef __linux__
-	if (mPipe[0] >= 0) {
-		close(mPipe[0]);
-		close(mPipe[1]);
-	}
-#endif
+
 }
 
-void Simulation::run() {
-	mLog.info() << "Start simulation." << std::endl;
-
+void Simulation::sync()
+{
 #ifdef WITH_SHMEM
 	// We send initial state over all interfaces
 	for (auto ifm : mInterfaces) {
 		ifm.interface->writeValues();
 	}
 
+	std::cout << Logger::prefix() << "Waiting for start synchronization on " << mInterfaces.size() << " interfaces" << std::endl;
+
 	// Blocking wait for interfaces
 	for (auto ifm : mInterfaces) {
 		ifm.interface->readValues(ifm.syncStart);
 	}
+
+	std::cout << Logger::prefix() << "Synchronized simulation start with remotes" << std::endl;
 #endif
+}
+
+void Simulation::run() {
+	mLog.info() << "Opening interfaces." << std::endl;
+
+#ifdef WITH_SHMEM
+	for (auto ifm : mInterfaces)
+		ifm.interface->open();
+#endif
+
+	sync();
+
+	mLog.info() << "Start simulation." << std::endl;
 
 	while (mTime < mFinalTime) {
 		step();
 	}
+
+#ifdef WITH_SHMEM
+	for (auto ifm : mInterfaces)
+		ifm.interface->close();
+#endif
 
 	mLog.info() << "Simulation finished." << std::endl;
 }
@@ -103,61 +127,30 @@ Real Simulation::step() {
 
 #ifdef WITH_SHMEM
 	for (auto ifm : mInterfaces) {
-		ifm.interface->readValues(ifm.sync);
+		if (mTimeStepCount % ifm.downsampling == 0)
+			ifm.interface->readValues(ifm.sync);
 	}
 #endif
 
+	mEvents.handleEvents(mTime);
+
 	nextTime = mSolver->step(mTime);
+	mSolver->log(mTime);
 
 #ifdef WITH_SHMEM
 	for (auto ifm : mInterfaces) {
-		ifm.interface->writeValues();
+		if (mTimeStepCount % ifm.downsampling == 0)
+			ifm.interface->writeValues();
 	}
 #endif
 
-	mSolver->log(mTime);
+	for (auto lg : mLoggers) {
+		if (mTimeStepCount % lg.downsampling == 0)
+			lg.logger->log(mTime);
+	}
+
 	mTime = nextTime;
 	mTimeStepCount++;
 
 	return mTime;
 }
-
-void Simulation::setSwitchTime(Real switchTime, Int systemIndex) {
-	mSolver->setSwitchTime(switchTime, systemIndex);
-}
-
-void Simulation::addSystemTopology(SystemTopology system) {
-	mSolver->addSystemTopology(system);
-}
-
-#ifdef __linux__
-int Simulation::getEventFD(Int flags, Int coalesce) {
-	int ret;
-
-	// Create a new pipe of not existant
-	if (mPipe[0] < 0) {
-		ret = pipe(mPipe);
-		if (ret < 0)
-			throw SystemError("Failed to create pipe");
-	}
-
-	// Return read end
-	return mPipe[0];
-}
-
-void Simulation::sendNotification(enum Event evt) {
-	int ret;
-
-	if (mPipe[0] < 0) {
-		ret = pipe(mPipe);
-		if (ret < 0)
-			throw SystemError("Failed to create pipe");
-	}
-
-	uint32_t msg = static_cast<uint32_t>(evt);
-
-	ret = write(mPipe[1], &msg, 4);
-	if (ret < 0)
-		throw SystemError("Failed notify");
-}
-#endif

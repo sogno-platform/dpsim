@@ -107,7 +107,8 @@ setup(
     ],
     install_requires = [
         'acs-dataprocessing>=0.1.2',
-        'progressbar2'
+        'progressbar2',
+        'ipywidgets'
     ],
     setup_requires = [
         'm2r',

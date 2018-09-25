@@ -1,7 +1,7 @@
 /** Simulation
  *
- * @author Markus Mirz <mmirz@eonerc.rwth-aachen.de>
- * @copyright 2017, Institute for Automation of Complex Power Systems, EONERC
+ * @author Steffen Vogel <stvogel@eonerc.rwth-aachen.de>
+ * @copyright 2017-2018, Institute for Automation of Complex Power Systems, EONERC
  *
  * DPsim
  *
@@ -25,85 +25,34 @@
 
 #include <chrono>
 
-#include "Config.h"
-#include "Simulation.h"
-
-#define RTMETHOD_TIMERFD
-//#define RTMETHOD_EXCEPTIONS
+#include <dpsim/Config.h>
+#include <dpsim/Simulation.h>
+#include <dpsim/Timer.h>
 
 namespace DPsim {
-
-#ifdef RTMETHOD_EXCEPTIONS
-	class TimerExpiredException {
-	};
-#endif
-
+	/// Extending Simulation class by real-time functionality.
 	class RealTimeSimulation : public Simulation {
 
-	public:
-		typedef std::chrono::system_clock StartClock;
-
 	protected:
-
-		// TODO: we should use a std::chrono::duration here!
 		Real mTimeStep;
-		Int mOverruns;
-
-#ifdef RTMETHOD_EXCEPTIONS
-		static void alarmHandler(int, siginfo_t*, void*);
-		timer_t mTimer;
-		sigset_t alrmset;
-		uint64_t mTimerCount = 0;
-#elif defined(RTMETHOD_TIMERFD)
-		int mTimerFd;
-#else
-  #error Unkown real-time execution mode
-#endif
-
-		/** Start the real-time timer.
-		 *
-		 * If no start time is provided, we will default to now() + mTimeStep
-		 */
-		void startTimer(const StartClock::time_point &startAt);
-		/** Stop the real-time timer. */
-		void stopTimer();
-
-		void createTimer();
-		void destroyTimer();
+		Timer mTimer;
 
 	public:
-		RealTimeSimulation(String name, CPS::SystemTopology system, Real timeStep, Real finalTime,
-			CPS::Domain domain = CPS::Domain::DP, Solver::Type type = Solver::Type::MNA,
-			CPS::Logger::Level logLevel = CPS::Logger::Level::INFO, Bool steadyStateInit = false);
-		~RealTimeSimulation();
+		/// Creates system matrix according to a given System topology
+		RealTimeSimulation(String name, CPS::SystemTopology system,
+			Real timeStep, Real finalTime,
+			CPS::Domain domain = CPS::Domain::DP,
+			Solver::Type solverType = Solver::Type::MNA,
+			CPS::Logger::Level logLevel = CPS::Logger::Level::INFO,
+			Bool steadyStateInit = false);
 
 		/** Perform the main simulation loop in real time.
 		 *
 		 * @param startSynch If true, the simulation waits for the first external value before starting the timing.
 		 */
-		void run(const StartClock::duration &startIn = std::chrono::seconds(1));
+		void run(const Timer::StartClock::duration &startIn = std::chrono::seconds(1));
 
-		void run(const StartClock::time_point &startAt);
+		void run(const Timer::StartTimePoint &startAt);
 	};
 }
 
-#include <iomanip>
-#include <iostream>
-#include <ctime>
-
-template<typename Clock, typename Duration>
-std::ostream &operator<<(std::ostream &stream,
-	const std::chrono::time_point<Clock, Duration> &time_point) {
-	const time_t time = Clock::to_time_t(time_point);
-#if __GNUC__ > 4 || ((__GNUC__ == 4) && __GNUC_MINOR__ > 8 && __GNUC_REVISION__ > 1)
-	// Maybe the put_time will be implemented later?
-	struct tm tm;
-	localtime_r(&time, &tm);
-	return stream << std::put_time(&tm, "%c"); // Print standard date&time
-#else
-	char buffer[26];
-	ctime_r(&time, buffer);
-	buffer[24] = '\0';  // Removes the newline that is added
-	return stream << buffer;
-#endif
-}

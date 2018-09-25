@@ -1,48 +1,46 @@
-/** Reference Circuits
- *
- * @author Markus Mirz <mmirz@eonerc.rwth-aachen.de>
- * @copyright 2017, Institute for Automation of Complex Power Systems, EONERC
- *
- * DPsim
- *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- *********************************************************************************/
+/*********************************************************************************
+* @file
+* @author Markus Mirz <mmirz@eonerc.rwth-aachen.de>
+* @copyright 2017-2018, Institute for Automation of Complex Power Systems, EONERC
+*
+* CPowerSystems
+*
+* This program is free software: you can redistribute it and/or modify
+* it under the terms of the GNU General Public License as published by
+* the Free Software Foundation, either version 3 of the License, or
+* any later version.
+*
+* This program is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+* GNU General Public License for more details.
+*
+* You should have received a copy of the GNU General Public License
+* along with this program.  If not, see <http://www.gnu.org/licenses/>.
+*********************************************************************************/
 
-
-#include "DPsim.h"
+#include <DPsim.h>
 
 using namespace DPsim;
 using namespace CPS;
 
 static void VarFreqRxLineResLoad_DP(Real timeStep, Real finalTime, Real freqStep, Real loadStep, Real rampTime) {
 	// Define system topology
-	SystemTopology system0(50, {
-		std::make_shared<DP::VoltageSourceFreq>("v_s", 0, DEPRECATEDGND, 1000, 0, 1, 2 * PI*-5, freqStep, rampTime),
-		DP::Resistor::make("r_line", 0, 1, 1),
-		DP::Inductor::make("l_line", 1, 2, 0.2)});
+	auto n1 = Node::make("n1");
+	auto n2 = Node::make("n2");
+	auto n3 = Node::make("n3");
 
-	SystemTopology system1 = system0;
-	SystemTopology system2 = system0;
-	system1.mComponents.push_back(DP::Resistor::make("r_load", 2, DEPRECATEDGND, 100));
-	system2.mComponents.push_back(DP::Resistor::make("r_load", 2, DEPRECATEDGND, 50));
-	
+	auto vs = std::make_shared<DP::VoltageSourceFreq>("v_s", 0, DEPRECATEDGND, 1000, 0, 1, 2 * PI*-5, freqStep, rampTime);
+	vs->setParameters()
+	auto r = DP::Resistor::make("r_line", 0, 1, 1);
+	auto l = DP::Inductor::make("l_line", 1, 2, 0.2)});
+	auto sw = DP::Resistor::make("r_load", 2, DEPRECATEDGND, 100);
+
+	auto sys = SystemTopology(50, SystemNodeList{ n1, n2, n3 }, SystemComponentList{ vs, r, l });
+
 	// Define simulation scenario
 	String simName = "DP_RXLine_LoadStep_FreqStep_1_" + std::to_string(timeStep);
-
 	Simulation sim(simName, system1, timeStep, finalTime);
-	sim.addSystemTopology(system2);
-	sim.setSwitchTime(loadStep, 1);
 
 	sim.run();
 }
@@ -58,9 +56,9 @@ static void VarFreqRxLineResLoad_EMT(Real timeStep, Real finalTime, Real freqSte
 	SystemTopology system2 = system0;
 	system1.mComponents.push_back(EMT::Resistor::make("r_load", 2, DEPRECATEDGND, 100));
 	system2.mComponents.push_back(EMT::Resistor::make("r_load", 2, DEPRECATEDGND, 50));
-	
+
 	// Define simulation scenario
-	String simName = "EMT_RXLine_LoadStep_FreqStep_1_" + std::to_string(timeStep);	
+	String simName = "EMT_RXLine_LoadStep_FreqStep_1_" + std::to_string(timeStep);
 
 	Simulation sim(simName, system1, timeStep, finalTime, Domain::EMT);
 	sim.addSystemTopology(system2);

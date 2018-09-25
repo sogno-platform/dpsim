@@ -4,7 +4,7 @@
  * @author Steffen Vogel <stvogel@eonerc.rwth-aachen.de>
  * @copyright 2018, Institute for Automation of Complex Power Systems, EONERC
  *
- * CPowerSystems
+ * DPsim
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -22,7 +22,15 @@
 
 #pragma once
 
-#include <Config.h>
+#ifdef _DEBUG
+  #undef _DEBUG
+  #include <Python.h>
+  #define _DEBUG
+#else
+  #include <Python.h>
+#endif
+
+#include <dpsim/Config.h>
 #include <cps/SystemTopology.h>
 
 namespace DPsim {
@@ -31,16 +39,15 @@ namespace Python {
 	struct SystemTopology {
 		PyObject_HEAD
 
-		std::shared_ptr<CPS::SystemTopology> sys;
+		CPS::SystemTopology::Ptr sys;
 
-		// List of additional objects that aren't directly used from Simulation
-		// methods, but that a reference has be kept to to avoid them from being
-		// freed (e.g. Interfaces).
-		std::vector<PyObject*> refs;
+		PyObject *pyNodeDict;
+		PyObject *pyComponentDict;
 
-		static PyObject* addComponent(PyObject *self, PyObject *args);
+		static PyObject* addComponent(SystemTopology *self, PyObject *args);
+		static PyObject* addNode(SystemTopology *self, PyObject *args);
 #ifdef WITH_GRAPHVIZ
-		static PyObject* reprSVG(PyObject *self, PyObject *args);
+		static PyObject* reprSVG(SystemTopology *self, PyObject *args);
 #endif
 
 		// The Python API has no notion of C++ classes and methods, so the methods
@@ -50,8 +57,16 @@ namespace Python {
 		static PyObject* newfunc(PyTypeObject *type, PyObject *args, PyObject *kwds);
 		static int init(SystemTopology *self, PyObject *args, PyObject *kwds);
 		static void dealloc(SystemTopology *self);
-	};
 
-	extern PyTypeObject SystemTopologyType;
+		static const char *doc;
+		static const char *docNodes;
+		static const char *docComponents;
+		static const char *docAddComponent;
+		static const char *docAddNode;
+		static const char *docReprSVG;
+		static PyTypeObject type;
+		static PyMethodDef methods[];
+		static PyMemberDef members[];
+	};
 }
 }

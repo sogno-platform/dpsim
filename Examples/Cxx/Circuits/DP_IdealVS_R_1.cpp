@@ -1,7 +1,7 @@
 /** Reference Circuits
  *
  * @author Markus Mirz <mmirz@eonerc.rwth-aachen.de>
- * @copyright 2017, Institute for Automation of Complex Power Systems, EONERC
+ * @copyright 2017-2018, Institute for Automation of Complex Power Systems, EONERC
  *
  * DPsim
  *
@@ -19,9 +19,10 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *********************************************************************************/
 
-#include "DPsim.h"
+#include <DPsim.h>
 
 using namespace DPsim;
+using namespace CPS::DP;
 using namespace CPS::DP::Ph1;
 
 int main(int argc, char* argv[]) {
@@ -29,10 +30,18 @@ int main(int argc, char* argv[]) {
 	auto n1 = Node::make("n1");
 
 	// Components
-	auto vs = VoltageSource::make("v_1", Node::List{GND, n1}, Complex(10, 0));
-	auto r = Resistor::make("r_1", Node::List{n1, GND}, 1);
+	auto vs = VoltageSource::make("v_1");
+	auto r = Resistor::make("r_1");
 
-	auto sys = SystemTopology(50, Node::List{n1}, ComponentBase::List{vs, r});
+	// Topology
+	vs->connect({Node::GND, n1});
+	r->connect({n1, Node::GND});
+
+	// Parameters
+	vs->setParameters(Complex(10, 0));
+	r->setParameters(1);
+
+	auto sys = SystemTopology(50, SystemNodeList{n1}, SystemComponentList{vs, r});
 
 	// Define simulation scenario
 	Real timeStep = 0.00005;

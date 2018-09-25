@@ -2,7 +2,8 @@
  *
  * @file
  * @author Georg Reinke <georg.reinke@rwth-aachen.de>
- * @copyright 2017, Institute for Automation of Complex Power Systems, EONERC
+ * @author Steffen Vogel <stvogel@eonerc.rwth-aachen.de>
+ * @copyright 2017-2018, Institute for Automation of Complex Power Systems, EONERC
  *
  * DPsim
  *
@@ -30,6 +31,8 @@
 #include <Python.h>
 #endif
 
+#include <cps/Definitions.h>
+
 namespace DPsim {
 #ifdef WITH_SHMEM
 	class Interface;
@@ -42,19 +45,28 @@ namespace Python {
 		PyObject_HEAD
 
 #ifdef WITH_SHMEM
-		CPS::Interface::Ptr intf;
+		DPsim::Interface::Config conf;
+		DPsim::Interface::Ptr intf;
+		const char *wname, *rname;
+		PyObject *pyExports;
 #endif
+		static void addExportDesc(Interface *self, int idx, const CPS::String &type, const CPS::String &name, const CPS::String &suffix = "");
 
-		static void dealloc(Interface*);
+		static void dealloc(Interface *self);
 
+		static int init(Interface *self, PyObject *args, PyObject *kwds);
 		static PyObject* newfunc(PyTypeObject *type, PyObject *args, PyObject *kwds);
-		static PyObject* registerControlledAttribute(PyObject* self, PyObject* args);
-		static PyObject* registerExportedAttribute(PyObject* self, PyObject* args);
+		static PyObject* addImport(Interface *self, PyObject *args, PyObject *kwargs);
+		static PyObject* addExport(Interface *self, PyObject *args, PyObject *kwargs);
+		static PyObject* exports(Interface *self, void *ctx);
+
+		static PyMethodDef methods[];
+		static PyMemberDef members[];
+		static PyTypeObject type;
+		static const char* doc;
+		static const char* docOpen;
+		static const char* docAddImport;
+		static const char* docAddExport;
 	};
-
-	extern PyTypeObject InterfaceType;
-
-	extern const char* DocOpenInterface;
-	PyObject* OpenInterface(PyObject *self, PyObject *args, PyObject *kwds);
 }
 }

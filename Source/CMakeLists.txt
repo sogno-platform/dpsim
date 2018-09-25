@@ -1,36 +1,53 @@
-add_library(dpsim	
+set(SOURCES
 	Simulation.cpp
+	MNASolver.cpp
 	Utils.cpp
-	MNA_Solver.cpp
+	Timer.cpp
+	Event.cpp
+	DataLogger.cpp
 )
 
-set(LIBRARIES cps)
-
-if(NOT MSVC)
-	list(APPEND LIBRARIES "-lstdc++fs")
+if(NOT WIN32)
+	list(APPEND SOURCES RealTimeSimulation.cpp)	
 endif()
+
+list(APPEND LIBRARIES cps)
 
 if(NOT WIN32)
-	# we use PyArg_ParseTupleAndKeywords several times, which erroneously accepts
-	# a char* array instead of a const char* array
-	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-write-strings -fPIC")
+	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fPIC")
 endif()
 
-if(WITH_RT)
+if(WITH_RT AND HAVE_TIMERFD)
 	list(APPEND LIBRARIES "-lrt")
-	list(APPEND SOURCES RealTimeSimulation.cpp)
+endif()
+
+if(WITH_SUNDIALS)
+	list(APPEND SOURCES DAESolver.cpp)
+
+	list(APPEND INCLUDE_DIRS ${SUNDIALS_INCLUDE_DIRS})
+	list(APPEND LIBRARIES ${SUNDIALS_LIBRARIES})
 endif()
 
 if(WITH_PYTHON)
 	list(APPEND INCLUDE_DIRS ${PYTHON_INCLUDE_DIRS})
 	list(APPEND LIBRARIES ${PYTHON_LIBRARIES})
-
+	
 	add_subdirectory(Python)
 endif()
 
+if(WITH_SHMEM)
+	list(APPEND SOURCES
+		Interface.cpp
+	)
+
+	list(APPEND LIBRARIES ${VILLASNODE_LIBRARIES})
+	list(APPEND INCLUDE_DIRS ${VILLASNODE_INCLUDE_DIRS})
+endif()
+
+add_library(dpsim)
 target_sources(dpsim PRIVATE ${SOURCES})
 target_link_libraries(dpsim ${LIBRARIES})
-target_include_directories(dpsim PRIVATE ${INCLUDE_DIRS})
+target_include_directories(dpsim PUBLIC ${INCLUDE_DIRS})
 target_compile_options(dpsim PUBLIC ${DPSIM_CXX_FLAGS})
 
 include_directories(${CMAKE_CURRENT_SOURCE_DIR} ${CMAKE_CURRENT_BINARY_DIR})

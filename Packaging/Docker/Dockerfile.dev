@@ -10,38 +10,36 @@ LABEL \
 	org.label-schema.url = "http://fein-aachen.org/projects/dpsim/" \
 	org.label-schema.vcs-url = "https://git.rwth-aachen.de/acs/core/simulation/DPsim"
 
-ADD https://villas.fein-aachen.org/packages/villas.repo /etc/yum.repos.d/
+ADD https://villas.fein-aachen.org/packages/fein.repo /etc/yum.repos.d/
 
 RUN dnf -y update
 
 # Toolchain
 RUN dnf -y install \
-	git \
-	gcc-c++ gdb \
+	git clang gdb ccache \
 	redhat-rpm-config \
 	rpmdevtools \
-	make cmake \
+	make cmake ninja-build \
 	doxygen \
 	graphviz \
 	pandoc \
 	python3-pip \
 	pkg-config
 
-# Install some debuginfos
-RUN dnf -y debuginfo-install \
-	python3 \
-	villas-node \
-	expat
-
 # Dependencies
 RUN dnf -y install \
 	python3-devel \
 	eigen3-devel \
-	villas-node-devel \
 	expat-devel \
 	graphviz-devel \
+	sundials-devel \
 	libcimpp16v29a \
+	libvillas-devel \
 	spdlog
+
+# Install some debuginfos
+RUN dnf -y debuginfo-install \
+	python3
 
 ENV LD_LIBRARY_PATH /usr/local/lib64
 

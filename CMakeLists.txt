@@ -5,7 +5,7 @@ project(DPsim CXX)
 set(CMAKE_CXX_STANDARD 17)
 add_definitions(-D_SILENCE_ALL_CXX17_DEPRECATION_WARNINGS)
 
-set(CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/CMake")
+set(CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/CMake;${PROJECT_SOURCE_DIR}/Dependencies/libcps/CMake")
 
 set(PROJECT_AUTHOR "Institute for Automation of Complex Power Systems, RWTH Aachen University")
 set(PROJECT_COPYRIGHT "2017, Institute for Automation of Complex Power Systems, RWTH Aachen University")
@@ -25,6 +25,11 @@ else()
 		set(DPSIM_CXX_FLAGS -Wall -Werror)
 	endif()
 endif()
+
+include(CheckSymbolExists)
+check_symbol_exists(pipe unistd.h HAVE_PIPE)
+check_symbol_exists(timerfd_create sys/timerfd.h HAVE_TIMERFD)
+check_symbol_exists(getopt_long getopt.h HAVE_GETOPT)
 
 include(GetGitRevisionDescription)
 git_describe(DPSIM_VERSION --tags --dirty=-dirty)
@@ -54,6 +59,8 @@ add_subdirectory(Dependencies/libcps)
 
 find_package(PythonInterp 3.6)
 find_package(PythonLibs 3.6)
+find_package(Sundials)
+find_package(VILLASnode)
 
 if(PythonInterp_FOUND AND PythonLibs_FOUND)
 	set(Python_FOUND ON)
@@ -67,10 +74,11 @@ endif()
 option(BUILD_SHARED_LIBS "Build shared library" OFF)
 option(BUILD_EXAMPLES "Build C++ examples" ON)
 
-option(WITH_SHMEM   "Enable shared memory interface"        ${VILLASnode_FOUND})
-option(WITH_RT	   "Enable real-time features"			${Linux_FOUND})
-option(WITH_PYTHON "Enable Python support"				${Python_FOUND})
-option(WITH_CIM     "Enable support for parsing CIM files"  ${CIMpp_FOUND})
+option(WITH_SUNDIALS "Enable sundials solver suite"         ${Sundials_FOUND})
+option(WITH_SHMEM    "Enable shared memory interface"       ${VILLASnode_FOUND})
+option(WITH_RT	     "Enable real-time features"            ${Linux_FOUND})
+option(WITH_PYTHON   "Enable Python support"                ${Python_FOUND})
+option(WITH_CIM      "Enable support for parsing CIM files" ${CIMpp_FOUND})
 
 configure_file(
 	${CMAKE_CURRENT_SOURCE_DIR}/Include/dpsim/Config.h.in
@@ -78,14 +86,14 @@ configure_file(
 )
 
 set(INCLUDE_DIRS
-	${CMAKE_CURRENT_BINARY_DIR}/Include/dpsim
-	${CMAKE_CURRENT_SOURCE_DIR}/Include/dpsim
+	${CMAKE_CURRENT_BINARY_DIR}/Include
+	${CMAKE_CURRENT_SOURCE_DIR}/Include
 )
 
+add_subdirectory(Tests)
 add_subdirectory(Source)
 add_subdirectory(Documentation)
 add_subdirectory(Dependencies/fpotencia)
-
 
 if(BUILD_EXAMPLES)
 	add_subdirectory(Examples/Cxx)
@@ -97,7 +105,7 @@ include(FeatureSummary)
 add_feature_info(CIM	WITH_CIM	"Loading Common Information Model Files")
 add_feature_info(Python WITH_PYTHON "Use DPsim as a Python module")
 add_feature_info(Shmem  WITH_SHMEM  "Interface DPsim solvers via shared-memory interfaces")
-add_feature_info(RT	 WITH_RT	 "Execute simulation in real time")
+add_feature_info(RT	    WITH_RT     "Extended real-time features")
 feature_summary(WHAT ALL VAR enabledFeaturesText)
 
 message(STATUS "Feature summary for DPsim")

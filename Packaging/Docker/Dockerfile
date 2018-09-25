@@ -1,5 +1,6 @@
 # rwthacs/dpsim-dev is built by dpsim-git/Packaging/Docker/Dockerfile.dev
-FROM rwthacs/dpsim-dev AS builder
+ARG DOCKER_TAG=latest
+FROM rwthacs/dpsim-dev:${DOCKER_TAG} AS builder
 
 COPY . /dpsim/
 

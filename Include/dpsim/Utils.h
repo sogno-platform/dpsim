@@ -21,11 +21,11 @@
 
 #pragma once
 
-#include <vector>
+#include <list>
 
-#include "RealTimeSimulation.h"
-#include "Solver.h"
-#include "cps/Logger.h"
+#include <dpsim/Timer.h>
+#include <dpsim/Solver.h>
+#include <cps/Logger.h>
 
 namespace DPsim {
 
@@ -33,12 +33,12 @@ class CommandLineArgs {
 
 protected:
 	struct Argument {
-		char *name;
-                int has_arg;
-                int *flag;
-                int val;
-		char *valdesc;
-		char *desc;
+		const char *name;
+		int has_arg;
+		int *flag;
+		int val;
+		const char *valdesc;
+		const char *desc;
 	};
 
 	String mProgramName;
@@ -47,6 +47,7 @@ protected:
 public:
 	CommandLineArgs(int argc, char *argv[],
 		/* Default settings */
+		String name = "dpsim",
 		Real dt = 0.001,
 		Real d = 1,
 		Real sf = 50,
@@ -67,6 +68,7 @@ public:
 	int scenario;
 
 	CPS::Logger::Level logLevel;
+	String name;
 
 	bool startSynch;
 	bool blocking;
@@ -76,9 +78,9 @@ public:
 		Solver::Type type;
 	} solver;
 
-	DPsim::RealTimeSimulation::StartClock::time_point startTime;
+	DPsim::Timer::StartClock::time_point startTime;
 
-	std::vector<String> positional;
+	std::list<String> positional;
 
 	std::map<String, Real> options;
 };

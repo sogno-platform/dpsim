@@ -1,7 +1,7 @@
 /** Example of shared memory interface
  *
- * @author Markus Mirz <mmirz@eonerc.rwth-aachen.de>
- * @copyright 2017, Institute for Automation of Complex Power Systems, EONERC
+ * @author Steffen Vogel <stvogel@eonerc.rwth-aachen.de>
+ * @copyright 2017-2018, Institute for Automation of Complex Power Systems, EONERC
  *
  * DPsim
  *
@@ -19,9 +19,10 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *********************************************************************************/
 
-#include "DPsim.h"
+#include <DPsim.h>
 
 using namespace DPsim;
+using namespace CPS::DP;
 using namespace CPS::DP::Ph1;
 
 int main(int argc, char* argv[])
@@ -36,17 +37,31 @@ int main(int argc, char* argv[])
 	auto n4 = Node::make("n4");
 
 	// Components
-	auto evs = VoltageSource::make("v_s", Node::List{GND, n1}, Complex(0, 0));
-	auto rs =  Resistor::make("r_s", Node::List{n1, n2}, 1);
-	auto rl =  Resistor::make("r_line", Node::List{n2, n3}, 1);
-	auto ll =  Inductor::make("l_line", Node::List{n3, n4}, 1);
-	auto rL =  Resistor::make("r_load", Node::List{n4, GND}, 1000);
+	auto evs = VoltageSource::make("v_s");
+	auto rs =  Resistor::make("r_s");
+	auto rl =  Resistor::make("r_line");
+	auto ll =  Inductor::make("l_line");
+	auto rL =  Resistor::make("r_load");
 
-	auto sys = SystemTopology(50, Node::List{GND, n1, n2, n3, n4}, ComponentBase::List{evs, rs, rl, ll, rL});
+	// Topology
+	evs->connect({ Node::GND, n1 });
+	rs->connect({ n1, n2 });
+	rl->connect({ n2, n3 });
+	ll->connect({ n3, n4 });
+	rL->connect({ n4, Node::GND });
+
+	// Parameters
+	evs->setParameters(Complex(0, 0));
+	rs->setParameters(1);
+	rl->setParameters(1);
+	ll->setParameters(1);
+	rL->setParameters(1000);
+
+	auto sys = SystemTopology(50, SystemNodeList{Node::GND, n1, n2, n3, n4}, SystemComponentList{evs, rs, rl, ll, rL});
 
 	auto intf = Interface("/villas1-in", "/villas1-out");
-	intf.addImport(evs->findAttribute<Complex>("voltage_ref"), 1.0, 0, 1);
-	intf.addExport(evs->findAttribute<Complex>("comp_current"), 1.0, 0, 1);
+	intf.addImport(evs->attribute<Complex>("V_ref"), 0);
+	intf.addExport(evs->attribute<Complex>("i_comp"), 0);
 
 	Real timeStep = 0.001;
 	auto sim = Simulation("ShmemExample", sys, timeStep, 0.3);

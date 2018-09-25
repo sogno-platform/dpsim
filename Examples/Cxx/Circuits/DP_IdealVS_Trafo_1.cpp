@@ -1,7 +1,7 @@
 /** Reference Circuits
  *
  * @author Markus Mirz <mmirz@eonerc.rwth-aachen.de>
- * @copyright 2017, Institute for Automation of Complex Power Systems, EONERC
+ * @copyright 2017-2018, Institute for Automation of Complex Power Systems, EONERC
  *
  * DPsim
  *
@@ -20,19 +20,41 @@
  *********************************************************************************/
 
 
-#include "DPsim.h"
+#include <DPsim.h>
 
 using namespace DPsim;
+using namespace CPS::DP;
 using namespace CPS::DP::Ph1;
 
 int main(int argc, char* argv[]) {
+	// Nodes
+	auto n1 = Node::make("n1");
+	auto n2 = Node::make("n2");
+	auto n3 = Node::make("n3");
+
+	// Components
+	auto v1 = VoltageSource::make("v_1");
+//	auto l1 = Inductor::make("l_1");
+//	auto r2 = Resistor::make("r_2");
+	auto t1 = Transformer::make("trafo_1");
+	auto r1 = Resistor::make("r_1");
+
+	// Topology
+	v1->connect({ Node::GND, n1 });
+//	l1->connect({ n1, n2 });
+//	r2->connect({ n2, Node::GND });
+	t1->connect({ n1, n2 });
+	r1->connect({ n2, Node::GND });
+
+	// Parameters
+	v1->setParameters(CPS::Math::polarDeg(100., 0 * -90.));
+//	l1->setParameters(0.1);
+//	r2->setParameters(1);
+	t1->setParameters(10, 0, 0, 0.1);
+	r1->setParameters(1);
+
 	// Define system topology
-	SystemTopology system(50, {
-		VoltageSource::make("v_1", DEPRECATEDGND, 0, Math::polarDeg(100., 0 * -90.), Logger::Level::DEBUG),
-		//Inductor::make("l_1", 0, 1, 0.1, Logger::Level::DEBUG),
-		//Resistor::make("r_2", 1, DEPRECATEDGND, 1, Logger::Level::DEBUG),
-		Transformer::make("trafo_1", 0, 1, 10, 0, 0, 0.1, Logger::Level::DEBUG),
-		Resistor::make("r_1", 1, DEPRECATEDGND, 1, Logger::Level::DEBUG)});
+	SystemTopology system(50, SystemNodeList{n1, n2, n3, Node::GND}, SystemComponentList{v1, t1, r1});
 
 	// Define simulation scenario
 	Real timeStep = 0.00005;

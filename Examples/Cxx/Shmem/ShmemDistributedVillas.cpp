@@ -1,7 +1,7 @@
 /** Example of shared memory interface
  *
- * @author Markus Mirz <mmirz@eonerc.rwth-aachen.de>
- * @copyright 2017, Institute for Automation of Complex Power Systems, EONERC
+ * @author Steffen Vogel <stvogel@eonerc.rwth-aachen.de>
+ * @copyright 2017-2018, Institute for Automation of Complex Power Systems, EONERC
  *
  * DPsim
  *
@@ -19,15 +19,16 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *********************************************************************************/
 
-#include "DPsim.h"
+#include <DPsim.h>
 
 using namespace DPsim;
+using namespace CPS::DP;
 using namespace CPS::DP::Ph1;
 
 int main(int argc, char *argv[])
 {
-	ComponentBase::List comps, comps2;
-	Node::List nodes;
+	SystemComponentList comps, comps2;
+	SystemNodeList nodes;
 
 	Interface::Config conf;
 	conf.samplelen = 4;
@@ -50,7 +51,7 @@ int main(int argc, char *argv[])
 		out = "/villas1-out";
 	}
 
-	Interface intf(in, out, &conf);
+	auto intf = Interface(in, out, &conf);
 
 	if (String(argv[1]) == "0") {
 		// Nodes
@@ -59,32 +60,57 @@ int main(int argc, char *argv[])
 		auto n3 = Node::make("n3");
 
 		// Components
-		auto evs = VoltageSource::make("v_t", Node::List{GND, n3}, Complex(0, 0));
-		auto vs = VoltageSourceNorton::make("v_s", Node::List{GND, n1}, Complex(10000, 0), 1);
-		auto l1 = Inductor::make("l_1", Node::List{n1, n2}, 0.1);
-		auto r1 = Resistor::make("r_1", Node::List{n2, n3}, 1);
+		auto evs = VoltageSource::make("v_t");
+		auto vs = VoltageSourceNorton::make("v_s");
+		auto l1 = Inductor::make("l_1");
+		auto r1 = Resistor::make("r_1");
 
-		comps = ComponentBase::List{evs, vs, l1, r1};
-		nodes = Node::List{GND, n1, n2, n3};
+		// Topology
+		evs->connect({ Node::GND, n3 });
+		vs->connect({ Node::GND, n1 });
+		l1->connect({ n1, n2 });
+		r1->connect({ n2, n3 });
 
-		intf.addImport(evs->findAttribute<Complex>("voltage_ref"), 1.0, 0, 1);
-		intf.addExport(evs->findAttribute<Complex>("comp_current"), 1.0, 0, 1);
+		// Parameters
+		evs->setParameters(Complex(0, 0));
+		vs->setParameters(Complex(10000, 0), 1);
+		l1->setParameters(0.1);
+		r1->setParameters(1);
+
+		comps = SystemComponentList{evs, vs, l1, r1};
+		nodes = SystemNodeList{Node::GND, n1, n2, n3};
+
+		intf.addImport(evs->attribute<Complex>("V_ref"), 0);
+		intf.addExport(evs->attribute<Complex>("i_comp"), 0);
 	}
 	else if (String(argv[1]) == "1") {
 		// Nodes
 		auto n4 = Node::make("n4");
+		auto n5 = Node::make("n5");
 
 		// Components
-		auto ecs = CurrentSource::make("v_s", Node::List{GND, n4}, Complex(0, 0));
-		auto r2A = Resistor::make("r_2", Node::List{GND, n4}, 10);
-		auto r2B = Resistor::make("r_2", Node::List{GND, n4}, 8);
+		auto ecs = CurrentSource::make("v_s");
+		auto r2A = Resistor::make("r_2");
+		auto r2B = Resistor::make("r_2");
+		auto sw = Ph1::Switch::make("sw");
 
-		comps = ComponentBase::List{ecs, r2A};
-		comps2 = ComponentBase::List{ecs, r2B};
-		nodes = Node::List{GND, n4};
+		// Topology
+		ecs->connect({ Node::GND, n4 });
+		r2A->connect({ Node::GND, n4 });
+		sw->connect({ n4, n5 });
+		r2B->connect({ Node::GND, n5 });
 
-		intf.addImport(ecs->findAttribute<Complex>("current_ref"), 1.0, 0, 1);
-		intf.addExport(ecs->findAttribute<Complex>("comp_voltage"), 1.0, 0, 1);
+		// Parameters
+		ecs->setParameters(Complex(0, 0));
+		r2A->setParameters(10);
+		r2B->setParameters(8);
+		sw->setParameters(1e9, 0.1, false);
+
+		comps = SystemComponentList{ecs, sw, r2A, r2B};
+		nodes = SystemNodeList{Node::GND, n4, n5};
+
+		intf.addImport(ecs->attribute<Complex>("I_ref"), 0);
+		intf.addExport(ecs->attribute<Complex>("v_comp"), 0);
 	}
 	else {
 		std::cerr << "invalid test number" << std::endl;
@@ -94,16 +120,15 @@ int main(int argc, char *argv[])
 	String simName = "ShmemDistributed";
 	Real timeStep = 0.001;
 
-	auto sys1 = SystemTopology(50, nodes, comps);
+	auto sys = SystemTopology(50, nodes, comps);
 
-	auto sim = RealTimeSimulation(simName + argv[1], sys1, timeStep, 20);
+	auto sim = RealTimeSimulation(simName + argv[1], sys, timeStep, 20);
 	sim.addInterface(&intf);
 
 	if (String(argv[1]) == "1") {
-		auto sys2 = SystemTopology(50, comps2);
+		auto evt = SwitchEvent::make(10, sys.component<CPS::Base::Ph1::Switch>("sw"), true);
 
-		sim.addSystemTopology(sys2);
-		sim.setSwitchTime(10, 1);
+		sim.addEvent(evt);
 	}
 
 	sim.run();
