@@ -31,9 +31,9 @@ int main(int argc, char* argv[]) {
 	auto n2 = Node::make("n2");
 
 	// Components
-	auto vs = VoltageSource::make("vs");
-	auto r1 = Resistor::make("r_1");
-	auto c1 = Capacitor::make("c_1");
+	auto vs = VoltageSource::make("vs", Logger::Level::DEBUG);
+	auto r1 = Resistor::make("r_1", Logger::Level::DEBUG);
+	auto c1 = Capacitor::make("c_1", Logger::Level::DEBUG);
 
 	// Topology
 	vs->connect({ Node::GND, n1 });
@@ -48,11 +48,19 @@ int main(int argc, char* argv[]) {
 	auto sys = SystemTopology(50, SystemNodeList{n1, n2}, SystemComponentList{vs, r1, c1});
 
 	// Define simulation scenario
-	Real timeStep = 0.001;
+	Real timeStep = 0.0001;
 	Real finalTime = 0.1;
-	String simName = "DP_IdealVS_RL1";
+	String simName = "DP_IdealVS_RC1";
+
+	// Logging
+	auto logger = DataLogger::make(simName);
+	logger->addAttribute("v1", n1->attribute("voltage"));
+	logger->addAttribute("v2", n2->attribute("voltage"));
+	logger->addAttribute("i1", r1->attribute("i_comp"));
 
 	Simulation sim(simName, sys, timeStep, finalTime);
+	sim.addLogger(logger);
+
 	sim.run();
 
 	return 0;
