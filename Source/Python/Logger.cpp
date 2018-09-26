@@ -67,7 +67,7 @@ PyObject* Python::Logger::logAttribute(Logger* self, PyObject* args, PyObject *k
 	PyObject *pyObj;
 	const char *attrName;
 
-	const char *kwlist[] = {"component", "attribute", nullptr};
+	const char *kwlist[] = {"obj", "attribute", nullptr};
 
 	if (!PyArg_ParseTupleAndKeywords(args, kwargs, "Os", (char **) kwlist, &pyObj, &attrName))
 		return nullptr;
@@ -94,7 +94,7 @@ PyObject* Python::Logger::logAttribute(Logger* self, PyObject* args, PyObject *k
 	}
 
 	try {
-		auto a = attrList->attribute<CPS::Real>(attrName);
+		auto a = attrList->attribute(attrName);
 
 		self->logger->addAttribute(attrName, a);
 	}
