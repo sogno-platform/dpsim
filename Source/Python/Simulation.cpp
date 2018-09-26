@@ -415,7 +415,7 @@ PyObject* Python::Simulation::addLogger(Simulation *self, PyObject *args, PyObje
 		return nullptr;
 	}
 
-	Python::Logger *pyLogger = (Python::Logger*) pyObj;
+	Python::Logger *pyLogger = (Python::Logger *) pyObj;
 
 	self->sim->addLogger(pyLogger->logger, downsampling);
 
