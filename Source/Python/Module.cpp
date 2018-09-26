@@ -72,7 +72,7 @@ PyMODINIT_FUNC PyInit__dpsim(void) {
 		return nullptr;
 	if (PyType_Ready(&Logger::type) < 0)
 		return nullptr;
-#ifndef _MSC_VER
+#ifdef WITH_SHMEM
 	if (PyType_Ready(&Interface::type) < 0)
 		return nullptr;
 #endif
@@ -89,7 +89,7 @@ PyMODINIT_FUNC PyInit__dpsim(void) {
 	PyModule_AddObject(m, "Logger", (PyObject*) &Logger::type);
 	Py_INCREF(&Component::type);
 	PyModule_AddObject(m, "Component", (PyObject*) &Component::type);
-#ifndef _MSC_VER
+#ifdef WITH_SHMEM
 	Py_INCREF(&Interface::type);
 	PyModule_AddObject(m, "Interface", (PyObject*) &Interface::type);
 #endif
