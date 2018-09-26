@@ -69,7 +69,7 @@ PyObject* Python::Logger::logAttribute(Logger* self, PyObject* args, PyObject *k
 
 	const char *kwlist[] = {"component", "attribute", nullptr};
 
-	if (!PyArg_ParseTupleAndKeywords(args, kwargs, "Osi|ds", (char **) kwlist, &pyObj, &attrName))
+	if (!PyArg_ParseTupleAndKeywords(args, kwargs, "Os", (char **) kwlist, &pyObj, &attrName))
 		return nullptr;
 
 	CPS::AttributeList::Ptr attrList;
@@ -99,7 +99,7 @@ PyObject* Python::Logger::logAttribute(Logger* self, PyObject* args, PyObject *k
 		self->logger->addAttribute(attrName, a);
 	}
 	catch (const CPS::InvalidAttributeException &exp) {
-		PyErr_SetString(PyExc_TypeError, "First argument must be a readable attribute");
+		PyErr_SetString(PyExc_TypeError, "Second argument must be a readable attribute");
 		return nullptr;
 	}
 
