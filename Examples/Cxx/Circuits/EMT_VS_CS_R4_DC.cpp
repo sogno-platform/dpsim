@@ -26,6 +26,11 @@ using namespace CPS::EMT;
 using namespace CPS::EMT::Ph1;
 
 int main(int argc, char* argv[]) {
+	// Define simulation scenario
+	Real timeStep = 0.001;
+	Real finalTime = 0.1;
+	String simName = "EMT_VS_CS_R4_DC";
+
 	// Nodes
 	auto n1 = Node::make("n1");
 	auto n2 = Node::make("n2");
@@ -34,32 +39,37 @@ int main(int argc, char* argv[]) {
 	// Components
 	auto vs = VoltageSource::make("vs");
 	vs->setParameters(10);
-	vs->connect(Node::List{ Node::GND, n1 });
 	auto r1 = Resistor::make("r_1", Logger::Level::DEBUG);
 	r1->setParameters(1);
-	r1->connect(Node::List{ n1, n2 });
 	auto r2 = Resistor::make("r_2");
 	r2->setParameters(1);
-	r2->connect(Node::List{ n2, Node::GND });
 	auto r3 = Resistor::make("r_3");
 	r3->setParameters(10);
-	r3->connect(Node::List{ n2, n3 });
 	auto r4 = Resistor::make("r_4");
 	r4->setParameters(5);
-	r4->connect(Node::List{ n3, Node::GND });
 	auto cs = CurrentSource::make("cs");
 	cs->setParameters(1);
+
+	// Topology
+	vs->connect(Node::List{ Node::GND, n1 });
+	r1->connect(Node::List{ n1, n2 });
+	r2->connect(Node::List{ n2, Node::GND });
+	r3->connect(Node::List{ n2, n3 });
+	r4->connect(Node::List{ n3, Node::GND });
 	cs->connect(Node::List{ Node::GND, n3 });
 
 	// Define system topology
 	auto sys = SystemTopology(50, SystemNodeList{n1, n2, n3}, SystemComponentList{vs, r1, r2, r3, r4, cs});
 
-	// Define simulation scenario
-	Real timeStep = 0.001;
-	Real finalTime = 0.1;
-	String simName = "EMT_IdealVS_CS_R4_1a";
+	// Logging
+	auto logger = DataLogger::make(simName);
+	logger->addAttribute("v1", n1->attribute("voltage"));
+	logger->addAttribute("v2", n2->attribute("voltage"));
+	logger->addAttribute("v3", n3->attribute("voltage"));
 
 	Simulation sim(simName, sys, timeStep, finalTime, Domain::EMT);
+	sim.addLogger(logger);
+
 	sim.run();
 
 	return 0;

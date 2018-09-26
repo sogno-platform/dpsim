@@ -26,6 +26,11 @@ using namespace CPS::EMT;
 using namespace CPS::EMT::Ph1;
 
 int main(int argc, char* argv[]) {
+	// Define simulation scenario
+	Real timeStep = 0.0001;
+	Real finalTime = 0.1;
+	String simName = "EMT_CS_R2CL";
+
 	// Nodes
 	auto n1 = Node::make("n1");
 	auto n2 = Node::make("n2");
@@ -50,12 +55,14 @@ int main(int argc, char* argv[]) {
 	// Define system topology
 	auto sys = SystemTopology(50, SystemNodeList{n1, n2}, SystemComponentList{cs, r1, c1, l1, r2});
 
-	// Define simulation scenario
-	Real timeStep = 0.0001;
-	Real finalTime = 0.1;
-	String simName = "EMT_CS_R2CL";
+	// Logging
+	auto logger = DataLogger::make(simName);
+	logger->addAttribute("v1", n1->attribute("voltage"));
+	logger->addAttribute("v2", n2->attribute("voltage"));
 
 	Simulation sim(simName, sys, timeStep, finalTime, Domain::EMT);
+	sim.addLogger(logger);
+
 	sim.run();
 
 	return 0;

@@ -27,6 +27,11 @@ using namespace CPS::EMT;
 using namespace CPS::EMT::Ph1;
 
 int main(int argc, char* argv[]) {
+	// Define simulation scenario
+	Real timeStep = 0.0001;
+	Real finalTime = 0.1;
+	String simName = "EMT_VS_R1";
+
 	// Nodes
 	auto n1 = Node::make("n1");
 	auto n2 = Node::make("n2");
@@ -34,9 +39,13 @@ int main(int argc, char* argv[]) {
 
 	// Components
 	auto vin = VoltageSource::make("v_in");
+	vin->setParameters(10);
 	auto r1 = Resistor::make("r_1");
+	r1->setParameters(5);
 	auto r2 = Resistor::make("r_2");
+	r2->setParameters(10);
 	auto r3 = Resistor::make("r_3");
+	r3->setParameters(2);
 
 	// Topology
 	vin->connect({ n1, n2 });
@@ -44,21 +53,18 @@ int main(int argc, char* argv[]) {
 	r2->connect({ n2, Node::GND });
 	r3->connect({ n2, Node::GND });
 
-	// Parameters
-	vin->setParameters(10);
-	r1->setParameters(5);
-	r2->setParameters(10);
-	r3->setParameters(2);
-
 	// Define system topology
 	SystemTopology system(50, SystemNodeList{n1, n2, n3, Node::GND}, SystemComponentList{vin, r1, r2, r3});
 
-	// Define simulation scenario
-	Real timeStep = 0.00005;
-	Real finalTime = 0.2;
-	String simName = "EMT_VS_R1";
+	// Logging
+	auto logger = DataLogger::make(simName);
+	logger->addAttribute("v1", n1->attribute("voltage"));
+	logger->addAttribute("v2", n2->attribute("voltage"));
+	logger->addAttribute("v3", n3->attribute("voltage"));
 
 	Simulation sim(simName, system, timeStep, finalTime, Domain::EMT);
+	sim.addLogger(logger);
+
 	sim.run();
 
 	return 0;

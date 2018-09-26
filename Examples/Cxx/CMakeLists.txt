@@ -23,6 +23,7 @@ set(CIRCUIT_SOURCES
 
 	# EMT examples
 	Circuits/EMT_VS_R1.cpp
+	Circuits/EMT_VS_RC1.cpp
 	Circuits/EMT_CS_R1.cpp
 	Circuits/EMT_VS_RL1.cpp
 	Circuits/EMT_CS_R2CL.cpp

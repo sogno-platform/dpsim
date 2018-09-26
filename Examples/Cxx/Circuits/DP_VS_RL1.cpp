@@ -26,6 +26,11 @@ using namespace CPS::DP;
 using namespace CPS::DP::Ph1;
 
 int main(int argc, char* argv[]) {
+	// Define simulation scenario
+	Real timeStep = 0.0001;
+	Real finalTime = 0.1;
+	String simName = "DP_VS_RL1";
+
 	// Nodes
 	auto n1 = Node::make("n1");
 	auto n2 = Node::make("n2");
@@ -46,16 +51,11 @@ int main(int argc, char* argv[]) {
 	// Define system topology
 	auto sys = SystemTopology(50, SystemNodeList{n1, n2}, SystemComponentList{vs, r1, l1});
 
-	// Define simulation scenario
-	Real timeStep = 0.0001;
-	Real finalTime = 0.1;
-	String simName = "DP_IdealVS_RL1";
-
 	// Logger
 	auto logger = DataLogger::make(simName);
 	logger->addAttribute("v1", n1->attribute("voltage"));
 	logger->addAttribute("v2", n2->attribute("voltage"));
-	logger->addAttribute("i1", r1->attribute("i_comp"));
+	logger->addAttribute("i1", r1->attribute("i_intf"));
 
 	Simulation sim(simName, sys, timeStep, finalTime);
 	sim.addLogger(logger);

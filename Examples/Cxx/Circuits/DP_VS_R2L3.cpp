@@ -26,6 +26,11 @@ using namespace CPS::DP;
 using namespace CPS::DP::Ph1;
 
 int main(int argc, char* argv[]) {
+	// Define simulation scenario
+	Real timeStep = 0.0001;
+	Real finalTime = 0.1;
+	String simName = "DP_VS_R2L3";
+
 	// Nodes
 	auto n1 = Node::make("n1");
 	auto n2 = Node::make("n2");
@@ -35,30 +40,26 @@ int main(int argc, char* argv[]) {
 	// Components
 	auto vs = VoltageSource::make("vs");
 	vs->setParameters(10);
-	vs->connect(Node::List{ Node::GND, n1 });
 	auto r1 = Resistor::make("r_1");
 	r1->setParameters(1);
-	r1->connect(Node::List{ n1, n2 });
 	auto l1 = Inductor::make("l_1");
 	l1->setParameters(0.02);
-	l1->connect(Node::List{ n2, n3 });
 	auto l2 = Inductor::make("l_2");
 	l2->setParameters(0.1);
-	l2->connect(Node::List{ n3, Node::GND });
 	auto l3 = Inductor::make("l_3");
 	l3->setParameters(0.05);
-	l3->connect(Node::List{ n3, n4 });
 	auto r2 = Resistor::make("r_2");
 	r2->setParameters(2);
+
+	// Topology
+	vs->connect(Node::List{ Node::GND, n1 });
+	r1->connect(Node::List{ n1, n2 });
+	l1->connect(Node::List{ n2, n3 });
+	l2->connect(Node::List{ n3, Node::GND });
+	l3->connect(Node::List{ n3, n4 });
 	r2->connect(Node::List{ n4, Node::GND });
 
-	// Define system topology
 	auto sys = SystemTopology(50, SystemNodeList{n1, n2, n3, n4}, SystemComponentList{vs, r1, l1, l2, l3, r2});
-
-	// Define simulation scenario
-	Real timeStep = 0.0001;
-	Real finalTime = 0.1;
-	String simName = "DP_IdealVS_R2L3";
 
 	// Logging
 	auto logger = DataLogger::make(simName);
