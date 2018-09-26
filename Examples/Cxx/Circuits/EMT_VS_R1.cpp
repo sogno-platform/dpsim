@@ -56,7 +56,7 @@ int main(int argc, char* argv[]) {
 	// Define simulation scenario
 	Real timeStep = 0.00005;
 	Real finalTime = 0.2;
-	String simName = "EMT_IdealVS_R1";
+	String simName = "EMT_VS_R1";
 
 	Simulation sim(simName, system, timeStep, finalTime, Domain::EMT);
 	sim.run();

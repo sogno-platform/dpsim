@@ -33,22 +33,22 @@ int main(int argc, char* argv[]) {
 	auto n4 = Node::make("n4");
 
 	// Components
-	auto vs = VoltageSource::make("vs");
+	auto vs = VoltageSource::make("vs", Logger::Level::DEBUG);
 	vs->setParameters(10, 50);
 	vs->connect(Node::List{ Node::GND, n1 });
-	auto r1 = Resistor::make("r_1");
+	auto r1 = Resistor::make("r_1", Logger::Level::DEBUG);
 	r1->setParameters(1);
 	r1->connect(Node::List{ n1, n2 });
-	auto l1 = Inductor::make("l_1");
+	auto l1 = Inductor::make("l_1", Logger::Level::DEBUG);
 	l1->setParameters(0.02);
 	l1->connect(Node::List{ n2, n3 });
-	auto l2 = Inductor::make("l_2");
+	auto l2 = Inductor::make("l_2", Logger::Level::DEBUG);
 	l2->setParameters(0.1);
 	l2->connect(Node::List{ n3, Node::GND });
-	auto l3 = Inductor::make("l_3");
+	auto l3 = Inductor::make("l_3", Logger::Level::DEBUG);
 	l3->setParameters(0.05);
 	l3->connect(Node::List{ n3, n4 });
-	auto r2 = Resistor::make("r_2");
+	auto r2 = Resistor::make("r_2", Logger::Level::DEBUG);
 	r2->setParameters(2);
 	r2->connect(Node::List{ n4, Node::GND });
 
@@ -56,11 +56,22 @@ int main(int argc, char* argv[]) {
 	auto sys = SystemTopology(50, SystemNodeList{n1, n2, n3, n4}, SystemComponentList{vs, r1, l1, l2, l3, r2});
 
 	// Define simulation scenario
-	Real timeStep = 0.0001;
+	Real timeStep = 0.00001;
 	Real finalTime = 0.1;
 	String simName = "EMT_IdealVS_R2L3";
 
+	// Logging
+	auto logger = DataLogger::make(simName);
+	logger->addAttribute("v1", n1->attribute("voltage"));
+	logger->addAttribute("v2", n2->attribute("voltage"));
+	logger->addAttribute("v3", n3->attribute("voltage"));
+	logger->addAttribute("v4", n4->attribute("voltage"));
+	logger->addAttribute("i30", l2->attribute("i_intf"));
+	logger->addAttribute("i34", l3->attribute("i_intf"));
+
 	Simulation sim(simName, sys, timeStep, finalTime, Domain::EMT);
+	sim.addLogger(logger);
+
 	sim.run();
 
 	return 0;
