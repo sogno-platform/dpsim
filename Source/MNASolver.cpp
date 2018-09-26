@@ -104,15 +104,15 @@ void MnaSolver<VarType>::initialize(CPS::SystemTopology system) {
 	for (auto comp : system.mComponents)
 		mLog.info() << "Added " << comp->type() << " '" << comp->name() << "' to simulation." << std::endl;
 
-	mLog.info() << "System matrix: " << mTmpSystemMatrix << std::endl;
-	mLog.info() << "LU decomposition:" << mTmpLuFactorization.matrixLU() << std::endl;
-	mLog.info() << "Right side vector:" << mRightSideVector << std::endl;
+	mLog.info() << "System matrix: \n" << mTmpSystemMatrix << std::endl;
+	mLog.info() << "LU decomposition: \n" << mTmpLuFactorization.matrixLU() << std::endl;
+	mLog.info() << "Right side vector: \n" << mRightSideVector << std::endl;
 
 	for (auto sys : mSwitchedMatrices) {
 		mLog.info() << "Switching System matrix "
-					<< sys.first << ": " << sys.second << std::endl;
+					<< sys.first << ": \n" << sys.second << std::endl;
 		mLog.info() << "LU Factorization for System Matrix "
-					<< sys.first << ": " << mLuFactorizations[sys.first].matrixLU() << std::endl;
+					<< sys.first << ": \n" << mLuFactorizations[sys.first].matrixLU() << std::endl;
 	}
 
 	mLog.info() << "Initial switch status: " << mCurrentSwitchStatus << std::endl;
