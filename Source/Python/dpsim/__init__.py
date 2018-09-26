@@ -17,13 +17,13 @@ __status__ = "Beta"
 
 import _dpsim
 
-#from _dpsim import Interface
+from _dpsim import Interface
 from _dpsim import SystemTopology
 from _dpsim import Logger
 
 from _dpsim import load_cim
 
-#from .Interface import Interface
+from .Interface import Interface
 from .Simulation import Simulation, RealTimeSimulation
 from .EventChannel import EventChannel
 
@@ -62,7 +62,7 @@ for ctor in [x for x in _dpsim.__dict__ if re.match("^_(dp|emt|signal)", x) ]:
 
 __all__ = [
     'Component',
-#    'Interface',
+    'Interface',
     'Simulation',
     'load_cim',
     'open_interface'
