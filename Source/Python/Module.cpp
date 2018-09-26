@@ -35,6 +35,7 @@
 #include <dpsim/Python/SystemTopology.h>
 #include <dpsim/Python/Simulation.h>
 #include <dpsim/Python/LoadCim.h>
+#include <dpsim/Python/Logger.h>
 #ifndef _MSC_VER
 #include <dpsim/Python/Interface.h>
 #endif
@@ -69,6 +70,8 @@ PyMODINIT_FUNC PyInit__dpsim(void) {
 		return nullptr;
 	if (PyType_Ready(&SystemTopology::type) < 0)
 		return nullptr;
+	if (PyType_Ready(&Logger::type) < 0)
+		return nullptr;
 #ifndef _MSC_VER
 	if (PyType_Ready(&Interface::type) < 0)
 		return nullptr;
@@ -82,6 +85,8 @@ PyMODINIT_FUNC PyInit__dpsim(void) {
 	PyModule_AddObject(m, "Simulation", (PyObject*) &Simulation::type);
 	Py_INCREF(&SystemTopology::type);
 	PyModule_AddObject(m, "SystemTopology", (PyObject*) &SystemTopology::type);
+	Py_INCREF(&Logger::type);
+	PyModule_AddObject(m, "Logger", (PyObject*) &Logger::type);
 	Py_INCREF(&Component::type);
 	PyModule_AddObject(m, "Component", (PyObject*) &Component::type);
 #ifndef _MSC_VER

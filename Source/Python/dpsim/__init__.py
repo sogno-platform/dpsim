@@ -19,6 +19,7 @@ import _dpsim
 
 #from _dpsim import Interface
 from _dpsim import SystemTopology
+from _dpsim import Logger
 
 from _dpsim import load_cim
 
