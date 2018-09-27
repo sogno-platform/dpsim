@@ -55,6 +55,7 @@ int main(int argc, char* argv[]) {
 	auto logger = DataLogger::make(simName);
 	logger->addAttribute("v1", n1->attribute("voltage"));
 	logger->addAttribute("v2", n2->attribute("voltage"));
+	logger->addAttribute("i12", r1->attribute("i_intf"));
 
 	Simulation sim(simName, sys, timeStep, finalTime, Domain::EMT);
 	sim.addLogger(logger);

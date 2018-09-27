@@ -66,6 +66,8 @@ int main(int argc, char* argv[]) {
 	logger->addAttribute("v1", n1->attribute("voltage"));
 	logger->addAttribute("v2", n2->attribute("voltage"));
 	logger->addAttribute("v3", n3->attribute("voltage"));
+	logger->addAttribute("i12", r1->attribute("i_intf"));
+	logger->addAttribute("i23", r3->attribute("i_intf"));
 
 	Simulation sim(simName, sys, timeStep, finalTime);
 	sim.addLogger(logger);
