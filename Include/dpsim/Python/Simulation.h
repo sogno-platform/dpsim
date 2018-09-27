@@ -40,10 +40,8 @@
 #include <dpsim/Config.h>
 #include <dpsim/Python/SystemTopology.h>
 #include <dpsim/Simulation.h>
-#ifndef _MSC_VER
 #include <dpsim/Python/EventChannel.h>
 #include <dpsim/Timer.h>
-#endif
 
 namespace DPsim {
 namespace Python {
@@ -66,9 +64,7 @@ namespace Python {
 
 		DPsim::Simulation::Ptr sim;
 		Python::SystemTopology *pySys;
-#ifndef _MSC_VER
 		Python::EventChannel *channel;
-#endif
 
 		std::condition_variable *cond;
 		std::mutex *mut;
@@ -83,9 +79,7 @@ namespace Python {
 		bool failOnOverrun;
 		bool singleStepping; /// Debugger like stepping for simulations
 
-#ifndef _MSC_VER
 		Timer::StartTimePoint startTime;
-#endif
 
 		// List of additional objects that aren't directly used from Simulation
 		// methods, but that a reference has be kept to to avoid them from being
