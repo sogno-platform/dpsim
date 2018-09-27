@@ -54,8 +54,8 @@ namespace DPsim {
 #ifdef HAVE_TIMERFD
 		int mTimerFd;
 #endif
-		int mOverruns;
-		int mTicks;
+		long long mOverruns;
+		long long mTicks;
 		int mFlags;
 
 	public:
@@ -79,11 +79,11 @@ namespace DPsim {
 		void sleep();
 
 		// Getter
-		int overruns() {
+		long long overruns() {
 			return mOverruns;
 		}
 
-		int ticks() {
+		long long ticks() {
 			return mTicks;
 		}
 
@@ -172,7 +172,7 @@ std::ostream &operator<<(std::ostream &stream,
 		d -= us;
 		auto ns = duration_cast<nanoseconds>(d);
 
-		long int vals[] = { h.count(), m.count(), s.count(), ms.count(), us.count(), ns.count() };
+		long long vals[] = { h.count(), m.count(), s.count(), ms.count(), us.count(), ns.count() };
 		const char *units[] = { "hrs", "mins", "secs", "msecs", "usecs", "nsecs" };
 
 		for (int i = 0; i < 6; i++) {
