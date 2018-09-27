@@ -1,15 +1,12 @@
 set(SOURCES
 	Simulation.cpp
+	RealTimeSimulation.cpp
 	MNASolver.cpp
 	Utils.cpp
 	Timer.cpp
 	Event.cpp
 	DataLogger.cpp
 )
-
-if(NOT WIN32)
-	list(APPEND SOURCES RealTimeSimulation.cpp)	
-endif()
 
 list(APPEND LIBRARIES cps)
 

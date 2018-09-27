@@ -84,7 +84,7 @@ void Python::Simulation::threadFunction(Python::Simulation *self)
 			try {
 				timer.sleep();
 			}
-			catch (Timer::OverrunException e) {
+			catch (Timer::OverrunException) {
 				std::unique_lock<std::mutex> lk(*self->mut);
 
 				if (self->failOnOverrun) {
@@ -297,7 +297,7 @@ PyObject* Python::Simulation::addEvent(Simulation* self, PyObject* args)
 	try {
 		auto attr = pyComp->comp->attribute(name);
 	}
-	catch (InvalidAttributeException &e) {
+	catch (InvalidAttributeException &) {
 		PyErr_SetString(PyExc_TypeError, "Invalid attribute");
 		return nullptr;
 	}

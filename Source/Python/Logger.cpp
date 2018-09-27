@@ -107,7 +107,7 @@ PyObject* Python::Logger::logAttribute(Logger* self, PyObject* args, PyObject *k
 
 		self->logger->addAttribute(n, a);
 	}
-	catch (const CPS::InvalidAttributeException &exp) {
+	catch (const CPS::InvalidAttributeException &) {
 		PyErr_SetString(PyExc_TypeError, "Second argument must be a readable attribute");
 		return nullptr;
 	}
