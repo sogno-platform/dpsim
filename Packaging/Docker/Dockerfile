@@ -22,7 +22,7 @@ LABEL \
 	org.label-schema.url = "http://fein-aachen.org/projects/dpsim/" \
 	org.label-schema.vcs-url = "https://git.rwth-aachen.de/acs/core/simulation/DPsim"
 
-ADD https://villas.fein-aachen.org/packages/villas.repo /etc/yum.repos.d/
+ADD https://packages.fein-aachen.org/fein.repo /etc/yum.repos.d/
 
 COPY --from=builder /dpsim/build/*.rpm /tmp
 RUN dnf -y install /tmp/*.rpm
