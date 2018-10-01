@@ -133,6 +133,11 @@ void Python::Simulation::threadFunction(Python::Simulation *self)
 	for (auto ifm : self->sim->interfaces())
 		ifm.interface->close();
 #endif
+
+	for (auto lg : self->sim->loggers()) {
+		if (self->sim->timeStepCount() % lg.downsampling == 0)
+			lg.logger->log(self->sim->time());
+	}
 }
 
 PyObject* Python::Simulation::newfunc(PyTypeObject* subtype, PyObject *args, PyObject *kwds)
