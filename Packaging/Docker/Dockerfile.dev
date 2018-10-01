@@ -47,4 +47,9 @@ ADD requirements.txt .
 RUN pip3 install -r requirements.txt
 RUN pip3 install jupyterlab
 
+# Activate Jupyter extensions
+RUN dnf -y install npm
+RUN jupyter nbextension enable --py widgetsnbextension
+RUN jupyter labextension install @jupyter-widgets/jupyterlab-manager
+
 EXPOSE 8888
