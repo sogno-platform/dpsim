@@ -72,6 +72,7 @@ const char* Python::Logger::docLogAttribute =
 PyObject* Python::Logger::logAttribute(Logger* self, PyObject* args, PyObject *kwargs)
 {
 	PyObject *pyObj;
+	CPS::IdentifiedObject::Ptr obj;
 	const char *attrName;
 
 	const char *kwlist[] = {"obj", "attribute", nullptr};
@@ -83,17 +84,17 @@ PyObject* Python::Logger::logAttribute(Logger* self, PyObject* args, PyObject *k
 	if (PyObject_TypeCheck(pyObj, &Python::Component::type)) {
 		auto *pyComp = (Component*) pyObj;
 
-		attrList = std::dynamic_pointer_cast<CPS::AttributeList>(pyComp->comp);
+		obj = std::dynamic_pointer_cast<CPS::IdentifiedObject>(pyComp->comp);
 	}
 	else if (PyObject_TypeCheck(pyObj, &Python::Node<CPS::Real>::type)) {
 		auto *pyNode = (Node<CPS::Real> *) pyObj;
 
-		attrList = std::dynamic_pointer_cast<CPS::AttributeList>(pyNode->node);
+		obj = std::dynamic_pointer_cast<CPS::IdentifiedObject>(pyNode->node);
 	}
 	else if (PyObject_TypeCheck(pyObj, &Python::Node<CPS::Complex>::type)) {
 		auto *pyNode = (Node<CPS::Complex> *) pyObj;
 
-		attrList = std::dynamic_pointer_cast<CPS::AttributeList>(pyNode->node);
+		obj = std::dynamic_pointer_cast<CPS::IdentifiedObject>(pyNode->node);
 	}
 	else {
 		PyErr_SetString(PyExc_TypeError, "First argument must be a Component or a Node");
@@ -101,9 +102,10 @@ PyObject* Python::Logger::logAttribute(Logger* self, PyObject* args, PyObject *k
 	}
 
 	try {
-		auto a = attrList->attribute(attrName);
+		auto n = obj->name() + "." + attrName;
+		auto a = obj->attribute(attrName);
 
-		self->logger->addAttribute(attrName, a);
+		self->logger->addAttribute(n, a);
 	}
 	catch (const CPS::InvalidAttributeException &exp) {
 		PyErr_SetString(PyExc_TypeError, "Second argument must be a readable attribute");
