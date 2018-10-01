@@ -36,8 +36,10 @@ PyObject* Python::Logger::newfunc(PyTypeObject *type, PyObject *args, PyObject *
 
 	self = (Python::Logger*) type->tp_alloc(type, 0);
 	if (self) {
+		using PyObjectVector = std::vector<PyObject *>;
 		using SharedLoggerPtr = std::shared_ptr<DPsim::DataLogger>;
 
+		new (&self->refs) PyObjectVector();
 		new (&self->logger) SharedLoggerPtr();
 	}
 
@@ -46,9 +48,14 @@ PyObject* Python::Logger::newfunc(PyTypeObject *type, PyObject *args, PyObject *
 
 void Python::Logger::dealloc(Python::Logger* self)
 {
+	using PyObjectVector = std::vector<PyObject *>;
 	using SharedLoggerPtr = std::shared_ptr<DPsim::DataLogger>;
 
+	for (PyObject *pyRef : self->refs)
+		Py_DECREF(pyRef);
+
 	self->logger.~SharedLoggerPtr();
+	self->refs.~PyObjectVector();
 
 	Py_TYPE(self)->tp_free((PyObject*) self);
 }
@@ -102,6 +109,9 @@ PyObject* Python::Logger::logAttribute(Logger* self, PyObject* args, PyObject *k
 		PyErr_SetString(PyExc_TypeError, "Second argument must be a readable attribute");
 		return nullptr;
 	}
+
+	self->refs.push_back(pyObj);
+	Py_INCREF(pyObj);
 
 	Py_RETURN_NONE;
 }
