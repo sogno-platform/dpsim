@@ -46,6 +46,8 @@ void MnaSolver<VarType>::initialize(CPS::SystemTopology system) {
 	// The system topology is prepared and we create the MNA matrices.
 	createEmptyVectors();
 	createEmptySystemMatrix();
+	addAttribute<Matrix>("b", &mRightSideVector, Flags::read);
+	addAttribute<Matrix>("x", &mLeftSideVector, Flags::read);
 
 	// TODO: Move to base solver class?
 	// This intialization according to power flow information is not MNA specific.

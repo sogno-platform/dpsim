@@ -29,6 +29,7 @@
 
 #include <dpsim/Solver.h>
 #include <dpsim/DataLogger.h>
+#include <cps/AttributeList.h>
 #include <cps/Solver/MNASwitchInterface.h>
 #include <cps/SignalComponent.h>
 #include <cps/PowerComponent.h>
@@ -38,7 +39,7 @@
 namespace DPsim {
 	/// Solver class using Modified Nodal Analysis (MNA).
 	template <typename VarType>
-	class MnaSolver : public Solver {
+	class MnaSolver : public Solver, public CPS::AttributeList {
 	protected:
 		// General simulation settings
 		/// System time step is constant for MNA solver
