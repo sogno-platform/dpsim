@@ -38,7 +38,6 @@ namespace DPsim {
 		std::ofstream mLogFile;
 		Bool mEnabled;
 
-
 		std::map<String, CPS::AttributeBase::Ptr> mAttributes;
 
 		void logDataLine(Real time, Real data);
@@ -48,7 +47,6 @@ namespace DPsim {
 	public:
 		using Ptr = std::shared_ptr<DataLogger>;
 
-		DataLogger(Bool enabled = true);
 		DataLogger(String name, Bool enabled = true);
 		~DataLogger();
 

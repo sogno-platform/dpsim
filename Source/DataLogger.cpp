@@ -27,12 +27,6 @@ namespace fs = std::experimental::filesystem;
 
 using namespace DPsim;
 
-DataLogger::DataLogger(Bool enabled) :
-	mLogFile(),
-	mEnabled(enabled) {
-	mLogFile.setstate(std::ios_base::badbit);
-}
-
 DataLogger::DataLogger(String name, Bool enabled) :
 	mEnabled(enabled) {
 	if (!mEnabled)
