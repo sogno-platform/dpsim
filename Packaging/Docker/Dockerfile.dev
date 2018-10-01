@@ -50,4 +50,9 @@ RUN jupyter nbextension enable --py widgetsnbextension \
     jupyter labextension install --py jupyterlab_widgets \
     jupyter labextension enable --py jupyterlab_widgets
 
+# Activate Jupyter extensions
+RUN dnf -y install npm
+RUN jupyter nbextension enable --py widgetsnbextension
+RUN jupyter labextension install @jupyter-widgets/jupyterlab-manager
+
 EXPOSE 8888
