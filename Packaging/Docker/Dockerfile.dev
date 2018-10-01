@@ -46,5 +46,8 @@ ENV LD_LIBRARY_PATH /usr/local/lib64
 ADD requirements.txt .
 RUN pip3 install -r requirements.txt
 RUN pip3 install jupyterlab
+RUN jupyter nbextension enable --py widgetsnbextension \
+    jupyter labextension install --py jupyterlab_widgets \
+    jupyter labextension enable --py jupyterlab_widgets
 
 EXPOSE 8888
