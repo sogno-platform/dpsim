@@ -103,7 +103,7 @@ int main(int argc, char *argv[]) {
 
 		i--;
 
-		auto v = n->attributeComplex("voltage");
+		auto v = n->attributeComplex("v");
 
 		std::cout << "Signal << " << (i*2)+0 << ": Mag " << n->name() << std::endl;
 		std::cout << "Signal << " << (i*2)+1 << ": Phas " << n->name() << std::endl;
