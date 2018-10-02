@@ -134,6 +134,10 @@ class Simulation(_dpsim.Simulation):
         return self._loop.run_until_complete(self._events.wait(evt))
 
     def run(self, **kwargs):
+        # https://github.com/jupyter/notebook/issues/3397#issuecomment-419474214
+        if self._loop.is_running():
+            raise RuntimeError("Event loop is already running! Please use: await sim.simulate()")
+
         self._loop.run_until_complete(self.simulate())
 
     def show_progressbar(self):

@@ -52,6 +52,10 @@ DataLogger::~DataLogger() {
 		mLogFile.close();
 }
 
+void DataLogger::flush() {
+	mLogFile.flush();
+}
+
 void DataLogger::setColumnNames(std::vector<String> names) {
 	if (mLogFile.tellp() == std::ofstream::pos_type(0)) {
 		mLogFile << std::right << std::setw(14) << "time";
