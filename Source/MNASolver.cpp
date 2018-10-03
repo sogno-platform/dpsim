@@ -77,10 +77,18 @@ void MnaSolver<VarType>::initialize(CPS::SystemTopology system) {
 		comp->setBehaviour(Component::Behaviour::Simulation);
 
 	// Create initial system matrix
-	for (auto comp : mPowerComponents)
+	for (auto comp : mPowerComponents) {
 		comp->mnaApplySystemMatrixStamp(mTmpSystemMatrix);
-	for (auto comp : mSwitches)
+		auto idObj = std::dynamic_pointer_cast<IdentifiedObject>(comp);
+		mLog.debug() << "Stamping " << idObj->type() << " " << idObj->name()
+					<< " into system matrix: \n" << mTmpSystemMatrix << std::endl;
+	}
+	for (auto comp : mSwitches) {
 		comp->mnaApplySystemMatrixStamp(mTmpSystemMatrix);
+		auto idObj = std::dynamic_pointer_cast<IdentifiedObject>(comp);
+		mLog.debug() << "Stamping " << idObj->type() << " " << idObj->name()
+			<< " into system matrix: \n" << mTmpSystemMatrix << std::endl;
+	}
 
 	// Compute LU-factorization for system matrix
 	mTmpLuFactorization = Eigen::PartialPivLU<Matrix>(mTmpSystemMatrix);
@@ -97,8 +105,12 @@ void MnaSolver<VarType>::initialize(CPS::SystemTopology system) {
 	updateSwitchStatus();
 
 	// Initialize source vector for debugging
-	for (auto comp : mPowerComponents)
+	for (auto comp : mPowerComponents) {
 		comp->mnaApplyRightSideVectorStamp(mRightSideVector);
+		auto idObj = std::dynamic_pointer_cast<IdentifiedObject>(comp);
+		mLog.debug() << "Stamping " << idObj->type() << " " << idObj->name()
+			<< " into source vector: \n" << mRightSideVector << std::endl;
+	}
 
 	// Logging
 	for (auto comp : system.mComponents)
