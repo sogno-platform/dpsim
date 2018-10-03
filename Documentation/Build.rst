@@ -176,6 +176,7 @@ The DPsim C++ and DPsim Python library can be build as follows::
 
     $ cd dpsim-validation/dpsim
     $ mkdir build
+    $ cd build
     $ cmake ..
     $ cmake --build . --target dpsim_python
 
