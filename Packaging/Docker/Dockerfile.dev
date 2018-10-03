@@ -45,6 +45,11 @@ ENV LD_LIBRARY_PATH /usr/local/lib64
 
 ADD requirements.txt .
 RUN pip3 install -r requirements.txt
+
+# Temporary fix for newest ipykernel version
+RUN pip3 uninstall ipykernel -y
+RUN pip3 install 'ipykernel<5.0.0'
+
 RUN pip3 install jupyter
 
 # Activate Jupyter extensions
