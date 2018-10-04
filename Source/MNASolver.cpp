@@ -373,7 +373,23 @@ Task::List MnaSolver<VarType>::getTasks() {
 
 template <typename VarType>
 void MnaSolver<VarType>::SolveTask::execute() {
-	// TODO
+	// Reset source vector
+	mSolver.mRightSideVector.setZero();
+
+	// Add together the right side vector (computed by the components'
+	// pre-step tasks)
+	for (auto comp : mSolver.mPowerComponents)
+		mSolver.mRightSideVector += comp->attribute<Matrix>("b")->get();
+
+	mSolver.solve();
+
+	// TODO still necessary?
+	for (UInt nodeIdx = 0; nodeIdx < mSolver.mNumNetNodes; nodeIdx++)
+		mSolver.mNodes[nodeIdx]->mnaUpdateVoltage(mSolver.mLeftSideVector);
+
+	mSolver.updateSwitchStatus();
+
+	// Components' states will be updated by the post-step tasks
 }
 
 
