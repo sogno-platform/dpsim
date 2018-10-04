@@ -63,9 +63,9 @@ void MnaSolver<VarType>::initialize(CPS::SystemTopology system) {
 		comp->initialize();
 	// Initialize MNA specific parts of components.
 	for (auto comp : mPowerComponents)
-		comp->mnaInitialize(mSystem.mSystemOmega, mTimeStep);
+		comp->mnaInitialize(mSystem.mSystemOmega, mTimeStep, mRightSideVector.rows());
 	for (auto comp : mSwitches)
-		comp->mnaInitialize(mSystem.mSystemOmega, mTimeStep);
+		comp->mnaInitialize(mSystem.mSystemOmega, mTimeStep, mRightSideVector.rows());
 
 	// This steady state initialization is MNA specific and runs a simulation
 	// before the actual simulation executed by the user.
