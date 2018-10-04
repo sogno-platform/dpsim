@@ -215,6 +215,11 @@ Real DAESolver::step(Real time) {
 	}
 }
 
+Task::List DAESolver::getTasks() {
+	// TODO
+	return Task::List();
+}
+
 DAESolver::~DAESolver() {
 	// Releasing all memory allocated by IDA
 	IDAFree(&mem);
