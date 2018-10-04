@@ -357,5 +357,26 @@ Real MnaSolver<VarType>::step(Real time) {
 	return time + mTimeStep;
 }
 
+template <typename VarType>
+Task::List MnaSolver<VarType>::getTasks() {
+	Task::List l;
+
+	for (auto it : mPowerComponents) {
+		for (auto taskIt : it->mnaTasks(attribute<Matrix>("x"))) {
+			l.push_back(taskIt);
+		}
+	}
+	l.push_back(std::make_shared<MnaSolver<VarType>::SolveTask>(*this));
+
+	return l;
+}
+
+template <typename VarType>
+void MnaSolver<VarType>::SolveTask::execute() {
+	// TODO
+}
+
+
+
 template class DPsim::MnaSolver<Real>;
 template class DPsim::MnaSolver<Complex>;

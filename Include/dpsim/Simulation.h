@@ -30,6 +30,7 @@
 #include <dpsim/DataLogger.h>
 #include <dpsim/Solver.h>
 #include <dpsim/Event.h>
+#include <dpsim/Scheduler.h>
 #include <cps/Definitions.h>
 #include <cps/PowerComponent.h>
 #include <cps/Logger.h>
@@ -70,6 +71,8 @@ namespace DPsim {
 		std::shared_ptr<Solver> mSolver;
 		/// The simulation event queue
 		EventQueue mEvents;
+		/// Scheduler used for task scheduling
+		std::shared_ptr<Scheduler> mScheduler;
 
 #ifdef WITH_SHMEM
 		struct InterfaceMapping {

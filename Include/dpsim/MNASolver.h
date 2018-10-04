@@ -188,6 +188,23 @@ namespace DPsim {
 		Matrix& leftSideVector() { return mLeftSideVector; }
 		Matrix& rightSideVector() { return mRightSideVector; }
 		Matrix& systemMatrix() { return mTmpSystemMatrix; }
+
+		CPS::Task::List getTasks();
+
+		class SolveTask : public CPS::Task {
+		public:
+			SolveTask(MnaSolver<VarType>& solver) : mSolver(solver) {
+				for (auto it : solver.mPowerComponents) {
+					mAttributeDependencies.push_back(it->attribute("b"));
+				}
+				mModifiedAttributes.push_back(solver.attribute("x"));
+			}
+
+			void execute();
+
+		private:
+			MnaSolver<VarType>& mSolver;
+		};
 	};
 
 

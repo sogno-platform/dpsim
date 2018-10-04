@@ -5,6 +5,7 @@ set(SOURCES
 	Timer.cpp
 	Event.cpp
 	DataLogger.cpp
+	SequentialScheduler.cpp
 )
 
 if(NOT WIN32)

@@ -18,6 +18,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *********************************************************************************/
 
+#include <dpsim/SequentialScheduler.h>
 #include <dpsim/Simulation.h>
 #include <dpsim/MNASolver.h>
 
@@ -73,6 +74,13 @@ Simulation::Simulation(String name, SystemTopology system,
 	default:
 		throw UnsupportedSolverException();
 	}
+
+	// TODO:
+	// - pass scheduler / scheduling parameters to this constructor ?
+	// - multiple solver support
+	mScheduler = std::make_shared<SequentialScheduler>();
+	auto tasks = mSolver->getTasks();
+	mScheduler->createSchedule(tasks);
 }
 
 Simulation::~Simulation() {
@@ -123,8 +131,7 @@ void Simulation::run() {
 }
 
 Real Simulation::step() {
-	Real nextTime;
-
+	// TODO: interfacing and logging should be integrated into tasking system
 #ifdef WITH_SHMEM
 	for (auto ifm : mInterfaces) {
 		if (mTimeStepCount % ifm.downsampling == 0)
@@ -134,7 +141,8 @@ Real Simulation::step() {
 
 	mEvents.handleEvents(mTime);
 
-	nextTime = mSolver->step(mTime);
+	//nextTime = mSolver->step(mTime);
+	mScheduler->step();
 	mSolver->log(mTime);
 
 #ifdef WITH_SHMEM
@@ -149,7 +157,7 @@ Real Simulation::step() {
 			lg.logger->log(mTime);
 	}
 
-	mTime = nextTime;
+	mTime += mTimeStep;
 	mTimeStepCount++;
 
 	return mTime;

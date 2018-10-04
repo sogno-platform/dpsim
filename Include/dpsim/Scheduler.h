@@ -1,6 +1,6 @@
-/** Simulation
+/** Task scheduler base class
  *
- * @author Markus Mirz <mmirz@eonerc.rwth-aachen.de>
+ * @author Georg Reinke <georg.reinke@rwth-aachen.de>
  * @copyright 2017-2018, Institute for Automation of Complex Power Systems, EONERC
  *
  * DPsim
@@ -21,35 +21,12 @@
 
 #pragma once
 
-#include <iostream>
-#include <vector>
-#include <list>
-
-#include <dpsim/Definitions.h>
-#include <dpsim/Config.h>
-#include <cps/Logger.h>
-#include <cps/SystemTopology.h>
 #include <cps/Task.h>
 
 namespace DPsim {
-	/// Holds switching time and which system should be activated.
-	struct SwitchConfiguration {
-		Real switchTime;
-		UInt systemIndex;
-	};
-
-	/// Base class for more specific solvers such as MNA, ODE or IDA.
-	class Solver {
+	class Scheduler {
 	public:
-		virtual ~Solver() { }
-
-		enum class Type { MNA, DAE };
-
-		/// Solve system A * x = z for x and current time
-		virtual Real step(Real time) = 0;
-
-		virtual CPS::Task::List getTasks() = 0;
-		/// Log results
-		virtual void log(Real time) { };
+		virtual void createSchedule(CPS::Task::List& tasks) = 0;
+		virtual void step() = 0;
 	};
 }

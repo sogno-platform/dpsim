@@ -1,6 +1,6 @@
-/** Simulation
+/** Simple non-parallel task scheduler
  *
- * @author Markus Mirz <mmirz@eonerc.rwth-aachen.de>
+ * @author Georg Reinke <georg.reinke@rwth-aachen.de>
  * @copyright 2017-2018, Institute for Automation of Complex Power Systems, EONERC
  *
  * DPsim
@@ -21,35 +21,15 @@
 
 #pragma once
 
-#include <iostream>
-#include <vector>
-#include <list>
-
-#include <dpsim/Definitions.h>
-#include <dpsim/Config.h>
-#include <cps/Logger.h>
-#include <cps/SystemTopology.h>
-#include <cps/Task.h>
+#include <dpsim/Scheduler.h>
 
 namespace DPsim {
-	/// Holds switching time and which system should be activated.
-	struct SwitchConfiguration {
-		Real switchTime;
-		UInt systemIndex;
-	};
-
-	/// Base class for more specific solvers such as MNA, ODE or IDA.
-	class Solver {
+	class SequentialScheduler : public Scheduler {
 	public:
-		virtual ~Solver() { }
+		void createSchedule(CPS::Task::List& tasks);
+		void step();
 
-		enum class Type { MNA, DAE };
-
-		/// Solve system A * x = z for x and current time
-		virtual Real step(Real time) = 0;
-
-		virtual CPS::Task::List getTasks() = 0;
-		/// Log results
-		virtual void log(Real time) { };
+	private:
+		CPS::Task::List mSchedule;
 	};
 }
