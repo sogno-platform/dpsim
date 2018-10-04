@@ -28,7 +28,7 @@ using namespace CPS;
 
 //#define NVECTOR_DATA(vec) NV_DATA_S (vec) // Returns pointer to the first element of array vec
 
-DAESolver::DAESolver(String name, SystemTopology system, Real dt, Real t0) :
+DAESolver::DAESolver(String name, CPS::SystemTopology system, Real dt, Real t0) :
 	mSystem(system),
 	mTimestep(dt) {
 	
@@ -41,9 +41,10 @@ DAESolver::DAESolver(String name, SystemTopology system, Real dt, Real t0) :
 	 
 	// Set inital values of all required variables and create IDA solver environment
 	for(Component::Ptr comp : mSystem.mComponents) {
-		auto daeComp = std::dynamic_pointer_cast<DAEInterface>(comp);
-		if (!daeComp)
-			throw CPS::Exception(); // Commponent does not support the DAE solver interface
+        auto daeComp = std::dynamic_pointer_cast<DAEInterface>(comp);
+        std::cout <<"Added Comp"<<std::endl;
+        if (!daeComp)
+            throw CPS::Exception(); // Commponent does not support the DAE solver interface
 
 		mComponents.push_back(comp);
 	}
@@ -51,20 +52,28 @@ DAESolver::DAESolver(String name, SystemTopology system, Real dt, Real t0) :
 	for (auto baseNode : mSystem.mNodes) {
 		// Add nodes to the list and ignore ground nodes.
 		if (!baseNode->isGround()) {
-			auto node = std::dynamic_pointer_cast<Node<Real> >(baseNode);
-			mNodes.push_back(node);
+            auto node = std::dynamic_pointer_cast<CPS::Node<Complex>>(baseNode);
+            mNodes.push_back(node);
+            std::cout <<"Added Node"<<std::endl;
 		}
 	}
-
-	UInt simNodeIdx = -1;
-	for (UInt idx = 0; idx < mNodes.size(); idx++) {
-		mNodes[idx]->simNodes()[0] = ++simNodeIdx;
-		if (mNodes[idx]->getPhaseType() == PhaseType::ABC) {
-			mNodes[idx]->simNodes()[1] = ++simNodeIdx;
-			mNodes[idx]->simNodes()[2] = ++simNodeIdx;
-		}
-	}
-
+    std::cout <<"Processing Nodes"<<std::endl;
+    UInt simNodeIdx = 0;
+    for (UInt idx = 0; idx < mNodes.size(); idx++) {
+        //std::cout <<"loop enterd"<<std::endl;
+        mNodes[idx]->setSimNode(0, simNodeIdx);
+        simNodeIdx++;
+       // std::cout <<"1"<<std::endl;
+        if (mNodes[idx]->getPhaseType() == PhaseType::ABC) {
+            //std::cout <<"2"<<std::endl;
+            mNodes[idx]->setSimNode(1, simNodeIdx);
+            simNodeIdx++;
+            //std::cout <<"3"<<std::endl;
+            mNodes[idx]->setSimNode(2, simNodeIdx);
+            simNodeIdx++;
+        }
+    }
+    std::cout <<"Nodes Setup Done"<<std::endl;
 	initialize(t0);
 }
 
@@ -74,43 +83,50 @@ void DAESolver::initialize(Real t0)
 
 	// Set inital values of all components
 	for (Component::Ptr comp : mComponents) {
-		auto emtComp = std::dynamic_pointer_cast<PowerComponent<Real> >(comp);
-		if (emtComp)
+        auto emtComp = std::dynamic_pointer_cast<PowerComponent<Complex> >(comp);
+        if (emtComp){
 			emtComp->initializeFromPowerflow(mSystem.mSystemFrequency);
-	}
 
+            std::cout <<"Comps Setup Done"<<std::endl;
+        }
+      }
+std::cout <<"Init states"<<std::endl;
 	// Allocate state vectors
 	state = N_VNew_Serial(mNEQ);
 	dstate_dt = N_VNew_Serial(mNEQ);
 
+    std::cout <<"State Init done"<<std::endl;
 //	avtol = N_VNew_Serial(mNEQ);
 	
 	realtype *sval = NULL, *s_dtval=NULL ; 
-
+std::cout <<"Tol Init"<<std::endl;
 	sval = N_VGetArrayPointer_Serial(state); 
-
+std::cout <<"Tol Init done"<<std::endl;
 	int counter = 0;
-	for (auto node : mNodes) {
+    for (auto node : mNodes) {
 		// Initialize nodal values of state vector
-		Real tempVolt = 0;
-		tempVolt += std::real(node->initialVoltage()(0,0));
+        Real tempVolt = 0.0;
+        PhaseType test = node->getPhaseType();
+        tempVolt += std::real(node->initialSingleVoltage(test));
+        //std::cout <<"temp done"<<std::endl;
 		sval[counter++] = tempVolt;
-
+        std::cout <<"Node initalized"<<std::endl;
 //		if (node->getPhaseType() == PhaseType::ABC) {
 //			tempVolt += std::real(node->initialVoltage()(1,0));
 //			tempVolt += std::real(node->initialVoltage()(2,0));
 //		}
 	}
-
-	for (Component::Ptr comp : mComponents) {
-		auto emtComp = std::dynamic_pointer_cast<PowerComponent<Real> >(comp);
+std::cout<<"Node Init Done"<<std::endl;
+    for (Component::Ptr comp : mComponents) {
+        auto emtComp = std::dynamic_pointer_cast<PowerComponent<Complex>>(comp);
 		if (!emtComp)
 			throw CPS::Exception();
 
 		// Initialize component values of state vector
-		sval[counter++] = emtComp->voltage();
-//		sval[counter++] = component inductance;
 
+        sval[counter++] = std::real(emtComp->initialSingleVoltage(1)-emtComp->initialSingleVoltage(0));
+//		sval[counter++] = component inductance;
+        std::cout <<"State init Dones"<<std::endl;
 		// Register residual functions of components
 		auto daeComp = std::dynamic_pointer_cast<DAEInterface>(comp);
 		if (!daeComp)
@@ -119,6 +135,7 @@ void DAESolver::initialize(Real t0)
 		mResidualFunctions.push_back([daeComp](double ttime, const double state[], const double dstate_dt[], double resid[], std::vector<int>& off) {
 			daeComp->daeResidual(ttime, state, dstate_dt, resid, off);
 		});
+        std::cout <<"Res added"<<std::endl;
 	}	
 	
 	for (int j = 1; j < mNEQ; j++) {
@@ -130,11 +147,11 @@ void DAESolver::initialize(Real t0)
 
 	// Set inital values for state derivative for now all equal to 0
 	for (int i = 0; i < (mNEQ-1); i++) {
-		s_dtval[i] = 0; // TODO: add derivative calculation
+        s_dtval[i] = 0; // TODO: add derivative calculation
 	}
 
-	rtol = RCONST(1.0e-6); // Set relative tolerance
-	abstol = RCONST(1.0e-1); // Set absolute error
+    rtol = RCONST(1.0e-10); // Set relative tolerance
+    abstol = RCONST(1.0e-4); // Set absolute error
 
 	mem = IDACreate();
 
@@ -180,7 +197,7 @@ int DAESolver::residualFunction(realtype ttime, N_Vector state, N_Vector dstate_
 		double *tempstate = NV_DATA_S(state);
 		Real tempVolt = 0;
 
-		tempVolt += std::real(node->voltage()(0,0));
+        tempVolt += std::real(node->getSingleVoltage());
 
 //		if (node->getPhaseType() == PhaseType::ABC) {
 //			tempVolt += std::real(node->voltage()(1,0));
@@ -204,14 +221,15 @@ int DAESolver::residualFunction(realtype ttime, N_Vector state, N_Vector dstate_
 
 Real DAESolver::step(Real time) {
 	
-	int ret = IDASolve(mem, time, &tret, state, dstate_dt, IDA_NORMAL);  // TODO: find alternative to IDA_NORMAL
+    Real NextTime = time + mTimestep;
+    int ret = IDASolve(mem, NextTime, &tret, state, dstate_dt, IDA_NORMAL);  // TODO: find alternative to IDA_NORMAL
 		
 	if (ret == IDA_SUCCESS) { 
-		return time + mTimestep	;
+        return NextTime;
 	}
 	else {
-		std::cout <<"Ida Error"<<std::endl;
-		return time + mTimestep	;
+        std::cout <<"Ida Error "<<ret<<std::endl;
+        throw CPS::Exception();
 	}
 }
 
