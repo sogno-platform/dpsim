@@ -363,12 +363,14 @@ int Python::Interface::init(Python::Interface *self, PyObject *args, PyObject *k
 }
 
 PyMemberDef Python::Interface::members[] = {
+#ifdef WITH_SHMEM
 	{(char *) "wname",     T_STRING, offsetof(Python::Interface, wname),          READONLY, nullptr},
 	{(char *) "rname",     T_STRING, offsetof(Python::Interface, rname),          READONLY, nullptr},
 	{(char *) "queuelen",  T_INT,    offsetof(Python::Interface, conf.queuelen),  READONLY, nullptr},
 	{(char *) "samplelen", T_INT,    offsetof(Python::Interface, conf.samplelen), READONLY, nullptr},
 	{(char *) "polling",   T_INT,    offsetof(Python::Interface, conf.polling),   READONLY, nullptr},
 	{(char *) "exports",   T_OBJECT, offsetof(Python::Interface, pyExports),      READONLY, nullptr},
+#endif
 	{nullptr}
 };
 
