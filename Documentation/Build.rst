@@ -170,7 +170,12 @@ Alternatively, the image can be pulled from DockerHub like so::
 To run Jupyter lab notebooks from the dpsim-validation repository, call::
 
     $ git clone --recurse-submodules git@git.rwth-aachen.de:acs/core/simulation/dpsim-validation.git
+    $ cd dpsim-validation
     $ docker run -it -p 8888:8888 -v $(pwd):/dpsim-validation --privileged rwthacs/dpsim-dev bash
+
+For Windows, you might need to specify the current directory like this::
+
+    $ docker run -it -p 8888:8888 -v ${pwd}:/dpsim-validation --privileged rwthacs/dpsim-dev bash
 
 The DPsim C++ and DPsim Python library can be build as follows::
 
