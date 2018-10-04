@@ -31,6 +31,7 @@
 #include <Python.h>
 #endif
 
+#include <cps/Config.h>
 #include <cps/Definitions.h>
 
 namespace DPsim {
