@@ -29,4 +29,7 @@ namespace DPsim {
 		virtual void createSchedule(CPS::Task::List& tasks) = 0;
 		virtual void step() = 0;
 	};
+
+	// TODO extend / subclass
+	class SchedulingException {};
 }

@@ -26,6 +26,8 @@ using namespace CPS;
 using namespace DPsim;
 
 #include <deque>
+#include <iostream>
+#include <typeinfo>
 #include <unordered_map>
 
 // Simple topological sorting using Kahn's algorithm.
@@ -58,6 +60,8 @@ void SequentialScheduler::createSchedule(Task::List& tasks) {
 		}
 	}
 
+	// keep list of tasks without incoming edges;
+	// iteratively remove such tasks from the graph and put them into the schedule
 	while (!ready.empty()) {
 		Task::Ptr t = ready.front();
 		ready.pop_front();
@@ -70,9 +74,23 @@ void SequentialScheduler::createSchedule(Task::List& tasks) {
 					break;
 				}
 			}
-			if (in_edges[after].empty())
+			if (in_edges[after].empty()) {
 				ready.push_back(after);
+			}
 		}
+		out_edges.erase(t);
+	}
+
+	// sanity check: all edges should have been removed, otherwise
+	// the graph had a cycle
+	for (auto t : tasks) {
+		if (!out_edges[t].empty() || !in_edges[t].empty())
+			throw SchedulingException();
+	}
+
+	std::cout << "Schedule:" << std::endl;
+	for (auto it : mSchedule) {
+		std::cout << typeid(*it).name() << std::endl;
 	}
 }
 
