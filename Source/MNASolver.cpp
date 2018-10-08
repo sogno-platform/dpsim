@@ -379,7 +379,13 @@ void MnaSolver<VarType>::SolveTask::execute() {
 	// Add together the right side vector (computed by the components'
 	// pre-step tasks)
 	for (auto comp : mSolver.mPowerComponents)
-		mSolver.mRightSideVector += comp->attribute<Matrix>("b")->get();
+	{
+		try {
+			mSolver.mRightSideVector += comp->attribute<Matrix>("b")->get();
+		} catch (InvalidAttributeException& e) {
+			// component does not contribute to right side vector
+		}
+	}
 
 	mSolver.solve();
 

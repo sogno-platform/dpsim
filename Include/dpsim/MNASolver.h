@@ -195,7 +195,11 @@ namespace DPsim {
 		public:
 			SolveTask(MnaSolver<VarType>& solver) : mSolver(solver) {
 				for (auto it : solver.mPowerComponents) {
-					mAttributeDependencies.push_back(it->attribute("b"));
+					try {
+						mAttributeDependencies.push_back(it->attribute("b"));
+					} catch (CPS::InvalidAttributeException& e) {
+						// component does not contribute to right side vector
+					}
 				}
 				mModifiedAttributes.push_back(solver.attribute("x"));
 			}
