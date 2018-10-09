@@ -361,9 +361,16 @@ template <typename VarType>
 Task::List MnaSolver<VarType>::getTasks() {
 	Task::List l;
 
-	for (auto it : mPowerComponents) {
-		for (auto taskIt : it->mnaTasks(attribute<Matrix>("x"))) {
-			l.push_back(taskIt);
+	for (auto comp : mPowerComponents) {
+		for (auto task : comp->mnaTasks(attribute<Matrix>("x"))) {
+			l.push_back(task);
+		}
+	}
+
+	// TODO signal components should be moved out of MNA solver
+	for (auto comp : mSignalComponents) {
+		for (auto task : comp->getTasks()) {
+			l.push_back(task);
 		}
 	}
 	l.push_back(std::make_shared<MnaSolver<VarType>::SolveTask>(*this));

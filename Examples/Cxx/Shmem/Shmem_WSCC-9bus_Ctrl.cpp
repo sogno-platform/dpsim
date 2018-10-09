@@ -70,16 +70,20 @@ int main(int argc, char *argv[]) {
 	std::vector<Real> coefficients_profile = std::vector(2000, 1./2000);
 	std::vector<Real> coefficients = std::vector(100, 1./100);
 
+	Real inputProfile = 0;
+	auto inputProfileAttr = Attribute<Real>::make(&inputProfile);
 	auto filtP_profile = FIRFilter::make("filter_p_profile", coefficients_profile, 0, Logger::Level::INFO);
 	filtP_profile->setPriority(1);
-	filtP_profile->setConnection(load_profile->attribute<Real>("power_active"));
-	filtP_profile->attribute<Real>("input")->set(0.);
+	filtP_profile->setInput(inputProfileAttr);
+	load_profile->setAttributeRef("power_active", filtP_profile->attribute<Real>("output"));
 	sys.mComponents.push_back(filtP_profile);
 
+	Real inputP = 0;
+	auto inputPAttr = Attribute<Real>::make(&inputP);
 	auto filtP = FIRFilter::make("filter_p", coefficients, 0, Logger::Level::INFO);
 	filtP->setPriority(1);
-	filtP->setConnection(load->attribute<Real>("power_active"));
-	filtP->attribute<Real>("input")->set(0.);
+	filtP->setInput(inputPAttr);
+	load->setAttributeRef("power_active", filtP->attribute<Real>("output"));
 	sys.mComponents.push_back(filtP);
 
 	RealTimeSimulation sim(simName, sys, args.timeStep, args.duration, args.solver.domain, args.solver.type, args.logLevel, true);
@@ -114,10 +118,10 @@ int main(int argc, char *argv[]) {
 
 	// Register controllable load
 	//intf.addImport(load->attribute<Real>("power_active"), 0);
-	intf.addImport(filtP->attribute<Real>("input"), 0);
+	intf.addImport(inputPAttr, 0);
 
 	// TODO gain by 20e8
-	intf.addImport(filtP_profile->attribute<Real>("input"), 1);
+	intf.addImport(inputProfileAttr, 1);
 
 	sim.addInterface(&intf, false, false);
 	sim.run();
