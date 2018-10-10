@@ -19,14 +19,11 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *********************************************************************************/
 
-
 #pragma once
 
-#include <cps/Definitions.h>
+#include <cstdint>
 
-#ifdef WITH_PIPE
-  #include <unistd.h>
-#endif
+#include <dpsim/Config.h>
 
 namespace DPsim {
 namespace Python {
@@ -40,39 +37,12 @@ protected:
 #endif /* HAVE_PIPE */
 
 public:
-	EventChannel() {
-#ifdef HAVE_PIPE
-		int ret;
+	EventChannel();
+	~EventChannel();
 
-		ret = pipe(mPipe);
-		if (ret < 0)
-			throw CPS::SystemError("Failed to create pipe");
-#endif
-	}
+	int fd();
 
-	~EventChannel() {
-#ifdef HAVE_PIPE
-		if (mPipe[0] >= 0) {
-			close(mPipe[0]);
-			close(mPipe[1]);
-		}
-#endif /* HAVE_PIPE */
-	}
-
-	int fd() {
-		return mPipe[0];
-	}
-
-	void sendEvent(uint32_t evt) {
-#ifdef HAVE_PIPE
-		int ret;
-
-		ret = write(mPipe[1], &evt, 4);
-		if (ret < 0)
-			throw CPS::SystemError("Failed notify");
-#endif /* HAVE_PIPE */
-	}
-
+	void sendEvent(uint32_t evt);
 };
 
 }

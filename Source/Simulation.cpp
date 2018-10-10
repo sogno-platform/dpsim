@@ -1,7 +1,6 @@
 /**
- * @file
  * @author Markus Mirz <mmirz@eonerc.rwth-aachen.de>
- * @copyright 2017, Institute for Automation of Complex Power Systems, EONERC
+ * @copyright 2017-2018, Institute for Automation of Complex Power Systems, EONERC
  *
  * DPsim
  *
@@ -37,7 +36,7 @@ Simulation::Simulation(String name,
 	Real timeStep, Real finalTime,
 	Domain domain, Solver::Type solverType,
 	Logger::Level logLevel) :
-	mLog("Logs/" + name + ".log", logLevel),
+	mLog(name, logLevel),
 	mName(name),
 	mFinalTime(finalTime),
 	mTimeStep(timeStep),
@@ -100,13 +99,28 @@ void Simulation::sync()
 }
 
 void Simulation::run() {
-	mLog.info() << "Start simulation." << std::endl;
+	mLog.info() << "Opening interfaces." << std::endl;
+
+#ifdef WITH_SHMEM
+	for (auto ifm : mInterfaces)
+		ifm.interface->open();
+#endif
 
 	sync();
+
+	mLog.info() << "Start simulation." << std::endl;
 
 	while (mTime < mFinalTime) {
 		step();
 	}
+
+#ifdef WITH_SHMEM
+	for (auto ifm : mInterfaces)
+		ifm.interface->close();
+#endif
+
+	for (auto lg : mLoggers)
+		lg.logger->flush();
 
 	mLog.info() << "Simulation finished." << std::endl;
 }
@@ -116,29 +130,30 @@ Real Simulation::step() {
 
 #ifdef WITH_SHMEM
 	for (auto ifm : mInterfaces) {
-		ifm.interface->readValues(ifm.sync);
+		if (mTimeStepCount % ifm.downsampling == 0)
+			ifm.interface->readValues(ifm.sync);
 	}
 #endif
 
+	mEvents.handleEvents(mTime);
+
 	nextTime = mSolver->step(mTime);
+	mSolver->log(mTime);
 
 #ifdef WITH_SHMEM
 	for (auto ifm : mInterfaces) {
-		ifm.interface->writeValues();
+		if (mTimeStepCount % ifm.downsampling == 0)
+			ifm.interface->writeValues();
 	}
 #endif
 
-	mSolver->log(mTime);
+	for (auto lg : mLoggers) {
+		if (mTimeStepCount % lg.downsampling == 0)
+			lg.logger->log(mTime);
+	}
+
 	mTime = nextTime;
 	mTimeStepCount++;
 
 	return mTime;
-}
-
-void Simulation::setSwitchTime(Real switchTime, Int systemIndex) {
-	mSolver->setSwitchTime(switchTime, systemIndex);
-}
-
-void Simulation::addSystemTopology(SystemTopology system) {
-	mSolver->addSystemTopology(system);
 }

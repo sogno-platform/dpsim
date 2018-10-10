@@ -25,10 +25,10 @@
     <cim:SvVoltage.angle>-0e+000</cim:SvVoltage.angle>
     <cim:SvVoltage.TopologicalNode rdf:resource="#BUS1"/>
   </cim:SvVoltage>
-  <cim:SvVoltage rdf:ID="Bus 2_5B20">
+  <cim:SvVoltage rdf:ID="BUS2_5B20">
     <cim:SvVoltage.v>18.450000</cim:SvVoltage.v>
     <cim:SvVoltage.angle>9.280005</cim:SvVoltage.angle>
-    <cim:SvVoltage.TopologicalNode rdf:resource="#Bus 2"/>
+    <cim:SvVoltage.TopologicalNode rdf:resource="#BUS2"/>
   </cim:SvVoltage>
   <cim:SvVoltage rdf:ID="BUS7_5B20">
     <cim:SvVoltage.v>235.926956</cim:SvVoltage.v>

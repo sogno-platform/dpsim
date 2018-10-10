@@ -1,7 +1,7 @@
 /** SynGenDPBalancedResLoad Example
  *
  * @author Markus Mirz <mmirz@eonerc.rwth-aachen.de>
- * @copyright 2017, Institute for Automation of Complex Power Systems, EONERC
+ * @copyright 2017-2018, Institute for Automation of Complex Power Systems, EONERC
  *
  * DPsim
  *
@@ -18,7 +18,6 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *********************************************************************************/
-
 
 #include <DPsim.h>
 
@@ -70,20 +69,19 @@ int main(int argc, char* argv[]) {
 	auto n1 = Node::make("n1", PhaseType::ABC, initVoltN1);
 
 	// Components
-	auto gen = Ph3::SynchronGeneratorDQ::make("DP_SynGen_dq_ThreePhFault_SynGen", Logger::Level::OUT);
+	auto gen = Ph3::SynchronGeneratorDQ::make("DP_SynGen_dq_ThreePhFault_SynGen");
 	gen->setParameters(nomPower, nomPhPhVoltRMS, nomFreq, poleNum, nomFieldCurr,
 		Rs, Ll, Lmd, Lmq, Rfd, Llfd, Rkd, Llkd, Rkq1, Llkq1, Rkq2, Llkq2, H,
 		initActivePower, initReactivePower, initTerminalVolt, initVoltAngle, fieldVoltage, mechPower);
 	gen->connect({n1});
 
-	auto res = Ph3::SeriesResistor::make("R_load", Rload);
+	auto res = Ph3::SeriesResistor::make("R_load");
+	res->setParameters(Rload);
 	res->connect({Node::GND, n1});
 
 	auto fault = Ph3::SeriesSwitch::make("Br_fault");
 	fault->setParameters(BreakerOpen, BreakerClosed);
 	fault->connect({Node::GND, n1});
-	auto sw1 = SwitchEvent(0.05, true);
-	fault->setSwitchEvents(std::vector<SwitchEvent>{sw1});
 	fault->open();
 
 	// System
@@ -92,6 +90,10 @@ int main(int argc, char* argv[]) {
 	// Simulation
 	Simulation sim(name, sys, timeStep, finalTime,
 		Domain::DP, Solver::Type::MNA, Logger::Level::INFO);
+
+	auto sw1 = SwitchEvent::make(0.05, fault, true);
+
+	sim.addEvent(sw1);
 
 	sim.run();
 

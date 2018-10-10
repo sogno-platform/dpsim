@@ -2,9 +2,10 @@
  *
  * @file
  * @author Georg Reinke <georg.reinke@rwth-aachen.de>
- * @copyright 2017, Institute for Automation of Complex Power Systems, EONERC
+ * @author Steffen Vogel <stvogel@eonerc.rwth-aachen.de>
+ * @copyright 2017-2018, Institute for Automation of Complex Power Systems, EONERC
  *
- * CPowerSystems
+ * DPsim
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -42,8 +43,6 @@
 namespace DPsim {
 namespace Python {
 
-	extern PyTypeObject ComponentType;
-
 	struct Component {
 		PyObject_HEAD
 
@@ -61,10 +60,12 @@ namespace Python {
 
 		static PyObject* str(Component* self);
 
-		static PyObject* getattr(Component* self, char* name);
-		static int setattr(Component *self, char* name, PyObject *v);
+		static PyObject* getattro(Component* self, PyObject *name);
+		static int setattro(Component *self, PyObject *name, PyObject *v);
 
 		static PyObject* connect(Component* self, PyObject *args);
+
+		static PyObject* dir(Component* self, PyObject* args);
 
 		template<typename T>
 		static PyObject* createInstance(PyObject* self, PyObject* args, PyObject *kwargs)
@@ -80,14 +81,15 @@ namespace Python {
 
 			try {
 				// Create Python wrapper
-				Component *pyComp = PyObject_New(Component, &ComponentType);
+				Component *pyComp = PyObject_New(Component, &Component::type);
 				Component::init(pyComp);
 
 				// Create CPS component
 				auto comp = std::make_shared<T>(name, name);
 
 				// Set parameters
-				setAttributes(comp, kwargs);
+				if (kwargs)
+					setAttributes(comp, kwargs);
 
 				// Set nodes
 				if (pyNodes) {
@@ -119,7 +121,7 @@ namespace Python {
 		}
 
 		template<typename T>
-		static const char * getDocumentation()
+		static const char * documentation()
 		{
 			std::stringstream doc;
 
@@ -128,20 +130,20 @@ namespace Python {
 			doc << comp.type() << "(name, nodes, **attributes)" << std::endl
 			    << "Construct a new component with a given name an list of nodes." << std::endl;
 #if 0
-			    << comp.getDescription() << std::endl
+			    << comp.description() << std::endl
 			    << std::endl;
 
-			for (auto& it : comp.getAttributes()) {
+			for (auto& it : comp.attributes()) {
 				auto name = it.first;
 				auto attr = it.second;
 
-				if (!(attr->getFlags() & CPS::Flags::write))
+				if (!(attr->flags() & CPS::Flags::write))
 					continue;
 
-				doc << ":param " << name << ": " << attr->getDescription() << std::endl;
+				doc << ":param " << name << ": " << attr->description() << std::endl;
 			}
 
-			    << ":returns: A new `Component` representing this " << comp.getType() << "." << std::endl;
+			    << ":returns: A new `Component` representing this " << comp.type() << "." << std::endl;
 #endif
 
 			auto docstr = new CPS::String(doc.str());
@@ -150,15 +152,20 @@ namespace Python {
 		}
 
 		template<typename T>
-		static PyMethodDef getConstructorDef(const char *name)
+		static PyMethodDef constructorDef(const char *name)
 		{
 			return {
 				name,
 				(PyCFunction) createInstance<T>,
 				METH_VARARGS | METH_KEYWORDS,
-				getDocumentation<T>()
+				documentation<T>()
 			};
 		}
+
+		static const char* doc;
+		static const char* docConnect;
+		static PyMethodDef methods[];
+		static PyTypeObject type;
 	};
 
 	CPS::Component::List compsFromPython(PyObject* list);

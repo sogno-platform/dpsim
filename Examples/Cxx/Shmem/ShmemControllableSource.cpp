@@ -1,7 +1,7 @@
 /** Example of shared memory interface
  *
- * @author Markus Mirz <mmirz@eonerc.rwth-aachen.de>
- * @copyright 2017, Institute for Automation of Complex Power Systems, EONERC
+ * @author Steffen Vogel <stvogel@eonerc.rwth-aachen.de>
+ * @copyright 2017-2018, Institute for Automation of Complex Power Systems, EONERC
  *
  * DPsim
  *
@@ -22,6 +22,7 @@
 #include <DPsim.h>
 
 using namespace DPsim;
+using namespace CPS::DP;
 using namespace CPS::DP::Ph1;
 
 int main(int argc, char *argv[]) {
@@ -44,14 +45,16 @@ int main(int argc, char *argv[]) {
 	auto n1 = Node::make("n1");
 
 	// Components
-	auto ecs = CurrentSource::make("v_intf", Complex(10, 0));
-	auto r1 = Resistor::make("r_1", 1);
+	auto ecs = CurrentSource::make("v_intf");
+	ecs->setParameters(Complex(10, 0));
+	auto r1 = Resistor::make("r_1");
+	r1->setParameters(1);
 
-	ecs->connect({GND, n1});
-	r1->connect({GND, n1});
+	ecs->connect({ Node::GND, n1 });
+	r1->connect({ Node::GND, n1 });
 
-	intf.addImport(ecs->findAttribute<Complex>("current_ref"), 1.0, 0, 1);
-	intf.addExport(ecs->findAttribute<Complex>("comp_voltage"), 1.0, 0, 1);
+	intf.addImport(ecs->attribute<Complex>("I_ref"), 0);
+	intf.addExport(ecs->attribute<Complex>("v_comp"), 0);
 
 	auto sys = SystemTopology(50, SystemNodeList{n1}, SystemComponentList{ecs, r1});
 	auto sim = RealTimeSimulation(simName, sys, timeStep, finalTime,

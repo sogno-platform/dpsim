@@ -1,7 +1,7 @@
 /** Example of shared memory interface
  *
- * @author Markus Mirz <mmirz@eonerc.rwth-aachen.de>
- * @copyright 2017, Institute for Automation of Complex Power Systems, EONERC
+ * @author Steffen Vogel <stvogel@eonerc.rwth-aachen.de>
+ * @copyright 2017-2018, Institute for Automation of Complex Power Systems, EONERC
  *
  * DPsim
  *
@@ -22,6 +22,7 @@
 #include <DPsim.h>
 
 using namespace DPsim;
+using namespace CPS::DP;
 using namespace CPS::DP::Ph1;
 
 int main(int argc, char *argv[]) {
@@ -54,7 +55,7 @@ int main(int argc, char *argv[]) {
 		out = "/dpsim10";
 	}
 
-	Interface intf(in, out, &conf);
+	auto intf = Interface(in, out, &conf);
 
 	Real timeStep = 0.000150;
 
@@ -64,16 +65,20 @@ int main(int argc, char *argv[]) {
 		auto n2 = Node::make("n2");
 
 		// Components
-		auto evs = VoltageSource::make("v_intf", Complex(5, 0), Logger::Level::DEBUG);
-		auto vs1 = VoltageSource::make("vs_1", Complex(10, 0), Logger::Level::DEBUG);
-		auto r01 = Resistor::make("r_0_1", 1, Logger::Level::DEBUG);
+		auto evs = VoltageSource::make("v_intf", Logger::Level::DEBUG);
+		auto vs1 = VoltageSource::make("vs_1", Logger::Level::DEBUG);
+		auto r01 = Resistor::make("r_0_1", Logger::Level::DEBUG);
 
-		evs->connect({GND, n2});
-		vs1->connect({GND, n1});
-		r01->connect({n1, n2});
+		evs->setParameters(Complex(5, 0));
+		vs1->setParameters(Complex(10, 0));
+		r01->setParameters(1);
 
-		intf.addImport(evs->findAttribute<Complex>("voltage_ref"), 1.0, 0, 1);
-		intf.addExport(evs->findAttribute<Complex>("comp_current"), 1.0, 0, 1);
+		evs->connect({ Node::GND, n2 });
+		vs1->connect({ Node::GND, n1 });
+		r01->connect({ n1, n2 });
+
+		intf.addImport(evs->attribute<Complex>("V_ref"), 0);
+		intf.addExport(evs->attribute<Complex>("i_comp"), 0);
 
 		auto sys = SystemTopology(50, SystemNodeList{n1, n2}, SystemComponentList{evs, vs1, r01});
 		auto sim = Simulation("ShmemDistributedDirect_1", sys, timeStep, 0.1);
@@ -86,18 +91,20 @@ int main(int argc, char *argv[]) {
 		auto n1 = Node::make("n1");
 
 		// Components
-		auto ecs = CurrentSource::make("i_intf", Complex(5, 0), Logger::Level::DEBUG);
-		auto rgnd0 = Resistor::make("r_gnd_0", 1, Logger::Level::DEBUG);
+		auto ecs = CurrentSource::make("i_intf", Logger::Level::DEBUG);
+		ecs->setParameters(Complex(5, 0));
+		auto rgnd0 = Resistor::make("r_gnd_0", Logger::Level::DEBUG);
+		rgnd0->setParameters(1);
 
-		ecs->connect({GND, n1});
-		rgnd0->connect({GND, n1});
+		ecs->connect({ Node::GND, n1 });
+		rgnd0->connect({ Node::GND, n1 });
 
 		//auto ecs_switch = CurrentSource::make("i_switch", GND, 1, Complex(0, 0));
 		//auto r01 = Resistor::make("r_0_1", 0, 1, 1);
 
-		intf.addImport(ecs->findAttribute<Complex>("current_ref"), 1.0, 0, 1);
-		intf.addExport(ecs->findAttribute<Complex>("comp_voltage"), 1.0, 0, 1);
-		//intf.addImport(ecs_switch->findAttribute('CurrentRef'), 1.0, 2, 3);
+		intf.addImport(ecs->attribute<Complex>("I_ref"), 0);
+		intf.addExport(ecs->attribute<Complex>("v_comp"), 0);
+		//intf.addImport(ecs_switch->attribute('CurrentRef'), 1);
 
 		auto sys = SystemTopology(50, SystemNodeList{n1}, SystemComponentList{ecs, rgnd0});
 		auto sim = Simulation("ShmemDistributedDirect_2", sys, timeStep, 0.1);

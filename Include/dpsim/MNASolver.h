@@ -1,7 +1,7 @@
 /** Simulation
  *
  * @author Markus Mirz <mmirz@eonerc.rwth-aachen.de>
- * @copyright 2017, Institute for Automation of Complex Power Systems, EONERC
+ * @copyright 2017-2018, Institute for Automation of Complex Power Systems, EONERC
  *
  * DPsim
  *
@@ -28,17 +28,15 @@
 #include <bitset>
 
 #include <dpsim/Solver.h>
+#include <dpsim/DataLogger.h>
 #include <cps/Solver/MNASwitchInterface.h>
 #include <cps/SignalComponent.h>
 #include <cps/PowerComponent.h>
-#ifdef WITH_CIM
-#include <cps/CIM/Reader.h>
-#endif /* WITH_CIM */
 
 #define SWITCH_NUM 32
 
 namespace DPsim {
-	/// Simulation class which uses Modified Nodal Analysis (MNA).
+	/// Solver class using Modified Nodal Analysis (MNA).
 	template <typename VarType>
 	class MnaSolver : public Solver {
 	protected:
@@ -76,19 +74,19 @@ namespace DPsim {
 		// #### MNA specific attributes ####
 		/// System matrix A that is modified by matrix stamps
 		std::bitset<SWITCH_NUM> mCurrentSwitchStatus;
-		/// System matrices list for swtiching events
-		Matrix mSystemMatrix;
+		/// Temporary system matrix, i.e. for initialization
+		Matrix mTmpSystemMatrix;
 		/// LU decomposition of system matrix A
-		CPS::LUFactorized mLuFactorization;
-		/// Vector of known quantities
+		CPS::LUFactorized mTmpLuFactorization;
+		/// Source vector of known quantities
 		Matrix mRightSideVector;
-		/// Vector of unknown quantities
+		/// Solution vector of unknown quantities
 		Matrix mLeftSideVector;
 		/// Switch to trigger steady-state initialization
 		Bool mSteadyStateInit = false;
-		///
+		/// Map of system matrices where the key is the bitset describing the switch states
 		std::unordered_map< std::bitset<SWITCH_NUM>, Matrix > mSwitchedMatrices;
-		///
+		/// Map of LU factorizations related to the system matrices
 		std::unordered_map< std::bitset<SWITCH_NUM>, CPS::LUFactorized > mLuFactorizations;
 
 		// #### Attributes related to switching ####
@@ -107,14 +105,18 @@ namespace DPsim {
 		/// Simulation logger
 		CPS::Logger mLog;
 		/// Left side vector logger
-		CPS::Logger mLeftVectorLog;
+		DataLogger mLeftVectorLog;
 		/// Right side vector logger
-		CPS::Logger mRightVectorLog;
+		DataLogger mRightVectorLog;
+		/// Left side vector logger for initialization
+		DataLogger mInitLeftVectorLog;
+		/// Right side vector logger for initialization
+		DataLogger mInitRightVectorLog;
 
 		/// TODO: check that every system matrix has the same dimensions
 		void initialize(CPS::SystemTopology system);
 		/// Identify Nodes and PowerComponents and SignalComponents
-		void IdentifyTopologyObjects();
+		void identifyTopologyObjects();
 		///
 		void sortExecutionPriority();
 		/// Assign simulation node index according to index in the vector.
@@ -141,16 +143,17 @@ namespace DPsim {
 			CPS::Domain domain = CPS::Domain::DP,
 			CPS::Logger::Level logLevel = CPS::Logger::Level::INFO,
 			Bool steadyStateInit = false, Int downSampleRate = 1) :
-			mLog("Logs/" + name + "_MNA.log", logLevel),
-			mLeftVectorLog("Logs/" + name + "_LeftVector.csv", CPS::Logger::Level::OUT),
-			mRightVectorLog("Logs/" + name + "_RightVector.csv", CPS::Logger::Level::OUT) {
-
-			mTimeStep = timeStep;
-			mDomain = domain;
-			mLogLevel = logLevel;
-			mDownSampleRate = downSampleRate;
-			mSteadyStateInit = steadyStateInit;
-		}
+			mTimeStep(timeStep),
+			mDomain(domain),
+			mSteadyStateInit(steadyStateInit),
+			mDownSampleRate(downSampleRate),
+			mLogLevel(logLevel),
+			mLog(name + "_MNA", logLevel),
+			mLeftVectorLog(name + "_LeftVector", logLevel != CPS::Logger::Level::NONE),
+			mRightVectorLog(name + "_RightVector", logLevel != CPS::Logger::Level::NONE),
+			mInitLeftVectorLog(name + "_InitLeftVector", logLevel != CPS::Logger::Level::NONE),
+			mInitRightVectorLog(name + "_InitRightVector", logLevel != CPS::Logger::Level::NONE)
+		{ }
 
 		/// Constructor to be used in simulation examples.
 		MnaSolver(String name, CPS::SystemTopology system,
@@ -172,18 +175,18 @@ namespace DPsim {
 		/// Log left and right vector values for each simulation step
 		void log(Real time) {
 			if (mDomain == CPS::Domain::EMT) {
-				mLeftVectorLog.LogEMTNodeValues(time, leftSideVector());
-				mRightVectorLog.LogEMTNodeValues(time, rightSideVector());
+				mLeftVectorLog.logEMTNodeValues(time, leftSideVector());
+				mRightVectorLog.logEMTNodeValues(time, rightSideVector());
 			}
 			else {
-				mLeftVectorLog.LogPhasorNodeValues(time, leftSideVector());
-				mRightVectorLog.LogPhasorNodeValues(time, rightSideVector());
+				mLeftVectorLog.logPhasorNodeValues(time, leftSideVector());
+				mRightVectorLog.logPhasorNodeValues(time, rightSideVector());
 			}
 		}
 		// #### Getter ####
 		Matrix& leftSideVector() { return mLeftSideVector; }
 		Matrix& rightSideVector() { return mRightSideVector; }
-		Matrix& systemMatrix() { return mSystemMatrix; }
+		Matrix& systemMatrix() { return mTmpSystemMatrix; }
 	};
 
 

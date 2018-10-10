@@ -1,7 +1,7 @@
 /**
  * @file
  * @author Markus Mirz <mmirz@eonerc.rwth-aachen.de>
- * @copyright 2017, Institute for Automation of Complex Power Systems, EONERC
+ * @copyright 2017-2018, Institute for Automation of Complex Power Systems, EONERC
  *
  * DPsim
  *
@@ -19,6 +19,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *********************************************************************************/
 
+#pragma once
+
 #include <cps/Definitions.h>
 
 namespace DPsim {
@@ -32,5 +34,9 @@ namespace DPsim {
 	using Matrix = CPS::Matrix;
 	using MatrixComp = CPS::MatrixComp;
 
+	template<typename T>
+	using MatrixVar = CPS::MatrixVar<T>;
+
+	class SolverException { };
 	class UnsupportedSolverException { };
 }

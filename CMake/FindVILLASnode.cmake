@@ -3,7 +3,7 @@ find_path(VILLASNODE_INCLUDE_DIR
 )
 
 find_library(VILLASNODE_LIBRARY
-	NAMES villas-ext
+	NAMES villas
 )
 
 include(FindPackageHandleStandardArgs)

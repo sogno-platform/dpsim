@@ -1,9 +1,10 @@
 /** Python components
  *
  * @author Georg Reinke <georg.reinke@rwth-aachen.de>
- * @copyright 2017, Institute for Automation of Complex Power Systems, EONERC
+ * @author Steffen Vogel <stvogel@eonerc.rwth-aachen.de>
+ * @copyright 2017-2018, Institute for Automation of Complex Power Systems, EONERC
  *
- * CPowerSystems
+ * DPsim
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -23,7 +24,6 @@
 
 #include <dpsim/Python/Component.h>
 #include <dpsim/Python/Node.h>
-#include <cps/Components.h>
 
 using namespace DPsim;
 
@@ -67,20 +67,33 @@ PyObject* Python::Component::str(Python::Component* self)
 	return PyUnicode_FromString(self->comp->name().c_str());
 }
 
-PyObject* Python::Component::getattr(Python::Component* self, char* name)
+PyObject* Python::Component::getattro(Python::Component* self, PyObject* name)
 {
+	PyObject *attr;
+
+	// Check is there is already an attibute with this name
+	attr = PyObject_GenericGetAttr((PyObject *) self, name);
+	if (!attr) {
+		if (!PyErr_ExceptionMatches(PyExc_AttributeError))
+			return NULL;
+
+		PyErr_Clear();
+	}
+	else
+		return attr;
+
 	if (!self->comp) {
 		PyErr_SetString(PyExc_ValueError, "getattr on unitialized Component");
 		return nullptr;
 	}
 
 	try {
-		auto attr = self->comp->findAttribute(name);
+		auto attr = self->comp->attribute(PyUnicode_AsUTF8(name));
 
 		return attr->toPyObject();
 	}
 	catch (const CPS::InvalidAttributeException &) {
-		PyErr_Format(PyExc_AttributeError, "Component has no attribute '%s'", name);
+		PyErr_Format(PyExc_AttributeError, "Component has no attribute '%s'", PyUnicode_AsUTF8(name));
 		return nullptr;
 	}
 	catch (...) {
@@ -89,7 +102,7 @@ PyObject* Python::Component::getattr(Python::Component* self, char* name)
 	}
 }
 
-int Python::Component::setattr(Python::Component* self, char* name, PyObject *v)
+int Python::Component::setattro(Python::Component* self, PyObject *name, PyObject *v)
 {
 	if (!self->comp) {
 		PyErr_SetString(PyExc_ValueError, "setattr on unitialized Component");
@@ -97,23 +110,23 @@ int Python::Component::setattr(Python::Component* self, char* name, PyObject *v)
 	}
 
 	try {
-		auto attr = self->comp->findAttribute(name);
+		auto attr = self->comp->attribute(PyUnicode_AsUTF8(name));
 		attr->fromPyObject(v);
 	}
 	catch (const CPS::InvalidAttributeException &) {
-		PyErr_Format(PyExc_AttributeError, "Component has no attribute '%s'", name);
+		PyErr_Format(PyExc_AttributeError, "Component has no attribute '%s'", PyUnicode_AsUTF8(name));
 		return -1;
 	}
 	catch (const CPS::TypeException &) {
-		PyErr_Format(PyExc_TypeError, "Invalid type for attribute '%s'", name);
+		PyErr_Format(PyExc_TypeError, "Invalid type for attribute '%s'", PyUnicode_AsUTF8(name));
 		return -1;
 	}
 	catch (const CPS::AccessException &) {
-		PyErr_Format(PyExc_AttributeError, "Attribute '%s' is not modifiable", name);
+		PyErr_Format(PyExc_AttributeError, "Attribute '%s' is not modifiable", PyUnicode_AsUTF8(name));
 		return -1;
 	}
 	catch (...) {
-		PyErr_Format(PyExc_RuntimeError, "Unkown Error Occured", name);
+		PyErr_Format(PyExc_RuntimeError, "Unkown Error Occured", PyUnicode_AsUTF8(name));
 		return -1;
 	}
 
@@ -129,7 +142,7 @@ CPS::Component::List Python::compsFromPython(PyObject* list)
 
 	for (int i = 0; i < PyList_Size(list); i++) {
 		PyObject* obj = PyList_GetItem(list, i);
-		if (!PyObject_TypeCheck(obj, &Python::ComponentType))
+		if (!PyObject_TypeCheck(obj, &Python::Component::type))
 			throw std::invalid_argument( "list element is not a dpsim.Component" );
 
 		Component* pyComp = (Component*) obj;
@@ -139,7 +152,7 @@ CPS::Component::List Python::compsFromPython(PyObject* list)
 	return comps;
 }
 
-static const char* DocComponentConnect = "";
+const char* Python::Component::docConnect = "";
 PyObject* Python::Component::connect(Component* self, PyObject* args)
 {
 	PyObject *pyNodes;
@@ -167,21 +180,36 @@ PyObject* Python::Component::connect(Component* self, PyObject* args)
 			return nullptr;
 		}
 
-		Py_INCREF(Py_None);
-		return Py_None;
+		Py_RETURN_NONE;
 	} catch (...) {
 		PyErr_SetString(PyExc_TypeError, "Failed to connect nodes");
 		return nullptr;
 	}
 }
 
-static PyMethodDef Component_methods[] = {
-	{"connect", (PyCFunction) Python::Component::connect, METH_VARARGS, DocComponentConnect},
+PyObject* Python::Component::dir(Component* self, PyObject* args) {
+	auto compAttrs = self->comp->attributes();
+
+	PyObject *pyAttrs, *pyAttrName;
+
+	pyAttrs = PyList_New(0);
+
+	for (auto it : compAttrs) {
+		pyAttrName = PyUnicode_FromString(it.first.c_str());
+
+		PyList_Append(pyAttrs, pyAttrName);
+	}
+
+	return pyAttrs;
+}
+
+PyMethodDef Python::Component::methods[] = {
+	{"connect", (PyCFunction) Python::Component::connect, METH_VARARGS, Python::Component::docConnect},
+	{"__dir__", (PyCFunction) Python::Component::dir, METH_NOARGS, nullptr},
 	{0},
 };
 
-
-static const char* DocComponent =
+const char* Python::Component::doc =
 "A component of a network that is to be simulated.\n"
 "\n"
 "Instances of this class should either be created with the module-level "
@@ -199,15 +227,15 @@ static const char* DocComponent =
 "Most components have other parameters that are also accessible as attributes "
 "after creation. These values must only be changed if the simulation is paused, "
 "and `update_matrix` has to be called after changes are made.\n";
-PyTypeObject Python::ComponentType = {
+PyTypeObject Python::Component::type = {
 	PyVarObject_HEAD_INIT(nullptr, 0)
 	"dpsim.Component",                         /* tp_name */
 	sizeof(Python::Component),                 /* tp_basicsize */
 	0,                                         /* tp_itemsize */
 	(destructor)Python::Component::dealloc,    /* tp_dealloc */
 	0,                                         /* tp_print */
-	(getattrfunc)Python::Component::getattr,   /* tp_getattr */
-	(setattrfunc)Python::Component::setattr,   /* tp_setattr */
+	0,                                         /* tp_getattr */
+	0,                                         /* tp_setattr */
 	0,                                         /* tp_reserved */
 	0,                                         /* tp_repr */
 	0,                                         /* tp_as_number */
@@ -216,19 +244,18 @@ PyTypeObject Python::ComponentType = {
 	0,                                         /* tp_hash  */
 	0,                                         /* tp_call */
 	(reprfunc)Python::Component::str,          /* tp_str */
-	0,                                         /* tp_getattro */
-	0,                                         /* tp_setattro */
+	(getattrofunc)Python::Component::getattro, /* tp_getattro */
+	(setattrofunc)Python::Component::setattro, /* tp_setattro */
 	0,                                         /* tp_as_buffer */
-	Py_TPFLAGS_DEFAULT |
-		Py_TPFLAGS_BASETYPE,               /* tp_flags */
-	DocComponent,                              /* tp_doc */
+	Py_TPFLAGS_DEFAULT | Py_TPFLAGS_BASETYPE,  /* tp_flags */
+	Python::Component::doc,                    /* tp_doc */
 	0,                                         /* tp_traverse */
 	0,                                         /* tp_clear */
 	0,                                         /* tp_richcompare */
 	0,                                         /* tp_weaklistoffset */
 	0,                                         /* tp_iter */
 	0,                                         /* tp_iternext */
-	Component_methods,                         /* tp_methods */
+	Python::Component::methods,                /* tp_methods */
 	0,                                         /* tp_members */
 	0,                                         /* tp_getset */
 	0,                                         /* tp_base */

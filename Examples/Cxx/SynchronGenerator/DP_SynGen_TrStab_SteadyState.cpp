@@ -1,23 +1,22 @@
-/*********************************************************************************
-* @file
-* @author Markus Mirz <mmirz@eonerc.rwth-aachen.de>
-* @copyright 2017-2018, Institute for Automation of Complex Power Systems, EONERC
-*
-* CPowerSystems
-*
-* This program is free software: you can redistribute it and/or modify
-* it under the terms of the GNU General Public License as published by
-* the Free Software Foundation, either version 3 of the License, or
-* any later version.
-*
-* This program is distributed in the hope that it will be useful,
-* but WITHOUT ANY WARRANTY; without even the implied warranty of
-* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-* GNU General Public License for more details.
-*
-* You should have received a copy of the GNU General Public License
-* along with this program.  If not, see <http://www.gnu.org/licenses/>.
-*********************************************************************************/
+/**
+ * @author Markus Mirz <mmirz@eonerc.rwth-aachen.de>
+ * @copyright 2017-2018, Institute for Automation of Complex Power Systems, EONERC
+ *
+ * DPsim
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *********************************************************************************/
 
 #include <DPsim.h>
 
@@ -52,8 +51,9 @@ int main(int argc, char* argv[]) {
 
 	// Components
 	auto gen = Ph1::SynchronGeneratorTrStab::make("DP_SynGen_TrStab_StState_SynGen", Logger::Level::DEBUG);  
-	gen->setParameters(nomPower, nomPhPhVoltRMS, nomFreq, Ll, Lmd, Llfd, H, initElecPower, mechPower);
+	gen->setFundamentalParametersPU(nomPower, nomPhPhVoltRMS, nomFreq, Ll, Lmd, Llfd, H);
    	gen->connect({n1});
+	gen->setInitialValues(initElecPower, mechPower);
 	
 	auto res = Ph1::Resistor::make("DP_SynGen_TrStab_StState_Rl", Logger::Level::DEBUG);
 	res->setParameters(Rload);

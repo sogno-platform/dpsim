@@ -1,7 +1,7 @@
 /**
  * @file
  * @author Markus Mirz <mmirz@eonerc.rwth-aachen.de>
- * @copyright 2017, Institute for Automation of Complex Power Systems, EONERC
+ * @copyright 2017-2018, Institute for Automation of Complex Power Systems, EONERC
  *
  * DPsim
  *
@@ -27,7 +27,9 @@
 #include <cstdint>
 
 #include <dpsim/Config.h>
+#include <dpsim/DataLogger.h>
 #include <dpsim/Solver.h>
+#include <dpsim/Event.h>
 #include <cps/Definitions.h>
 #include <cps/PowerComponent.h>
 #include <cps/Logger.h>
@@ -35,12 +37,15 @@
 #include <cps/Node.h>
 
 #ifdef WITH_SHMEM
-  #include <cps/Interface.h>
+  #include <dpsim/Interface.h>
 #endif
 
 namespace DPsim {
-
-	class Simulation : public CPS::AttributeList {
+	/// \brief The Simulation holds a SystemTopology and a Solver.
+	///
+	/// Every time step, the Simulation calls the step function of the Solver.
+	class Simulation :
+		public CPS::AttributeList {
 	public:
 		typedef std::shared_ptr<Simulation> Ptr;
 
@@ -63,37 +68,51 @@ namespace DPsim {
 		Solver::Type mSolverType;
 		///
 		std::shared_ptr<Solver> mSolver;
+		/// The simulation event queue
+		EventQueue mEvents;
 
 #ifdef WITH_SHMEM
 		struct InterfaceMapping {
 			/// A pointer to the external interface
-			CPS::Interface *interface;
-			///
+			Interface *interface;
+			/// Is this interface used for synchorinzation?
 			bool sync;
+			/// Is this interface used for synchronization of the simulation start?
 			bool syncStart;
+			/// Downsampling
+			UInt downsampling;
 		};
 
 		/// Vector of Interfaces
 		std::vector<InterfaceMapping> mInterfaces;
-		/// Interfaces are initialized
-		bool mInit = false;
 #endif /* WITH_SHMEM */
 
-	public:
+		struct LoggerMapping {
+			/// Simulation data logger
+			DataLogger::Ptr logger;
+			/// Downsampling
+			UInt downsampling;
+		};
+
+		/// The data loggers
+		std::vector<LoggerMapping> mLoggers;
+
 		/// Creates system matrix according to
 		Simulation(String name,
 			Real timeStep, Real finalTime,
 			CPS::Domain domain = CPS::Domain::DP,
 			Solver::Type solverType = Solver::Type::MNA,
 			CPS::Logger::Level logLevel = CPS::Logger::Level::INFO);
-		/// Creates system matrix according to System topology
+
+	public:
+		/// Creates system matrix according to a given System topology
 		Simulation(String name, CPS::SystemTopology system,
 			Real timeStep, Real finalTime,
 			CPS::Domain domain = CPS::Domain::DP,
 			Solver::Type solverType = Solver::Type::MNA,
 			CPS::Logger::Level logLevel = CPS::Logger::Level::INFO,
 			Bool steadyStateInit = false);
-		///
+		/// Desctructor
 		virtual ~Simulation();
 
 		/// Run simulation until total time is elapsed.
@@ -103,22 +122,25 @@ namespace DPsim {
 		/// Synchronize simulation with remotes by exchanging intial state over interfaces
 		void sync();
 
-		///
-		void setSwitchTime(Real switchTime, Int systemIndex);
+		/// Schedule an event in the simulation
+		void addEvent(Event::Ptr e) {
+			mEvents.addEvent(e);
+		}
 #ifdef WITH_SHMEM
 		///
-		void addInterface(CPS::Interface *eint, bool sync, bool syncStart) {
-			mInterfaces.push_back({eint, sync, syncStart});
+		void addInterface(Interface *eint, Bool sync, Bool syncStart, UInt downsampling = 1) {
+			mInterfaces.push_back({eint, sync, syncStart, downsampling});
 		}
 
-		void addInterface(CPS::Interface *eint, bool sync = true) {
-			mInterfaces.push_back({eint, sync, sync});
+		void addInterface(Interface *eint, Bool sync = true) {
+			addInterface(eint, sync, sync);
 		}
+
+		std::vector<InterfaceMapping> & interfaces() { return mInterfaces; }
 #endif
-		///
-		void addSystemTopology(CPS::SystemTopology system);
-		///
-		void setLogDownsamplingRate(Int divider) {}
+		void addLogger(DataLogger::Ptr logger, UInt downsampling = 1) {
+			mLoggers.push_back({logger, downsampling});
+		}
 
 		// #### Getter ####
 		String name() const { return mName; }
@@ -126,6 +148,7 @@ namespace DPsim {
 		Real finalTime() const { return mFinalTime; }
 		Int timeStepCount() const { return mTimeStepCount; }
 		Real timeStep() const { return mTimeStep; }
+		std::vector<LoggerMapping> & loggers() { return mLoggers; }
 	};
 
 }

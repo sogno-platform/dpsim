@@ -4,7 +4,7 @@
  * @author Steffen Vogel <stvogel@eonerc.rwth-aachen.de>
  * @copyright 2018, Institute for Automation of Complex Power Systems, EONERC
  *
- * CPowerSystems
+ * DPsim
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -39,7 +39,7 @@ namespace Python {
 	struct Node {
 		PyObject_HEAD
 
-		std::shared_ptr<CPS::Node<VarType>> node;
+		typename CPS::Node<VarType>::Ptr node;
 
 		// The Python API has no notion of C++ classes and methods, so the methods
 		// that can be called from Python are static.
@@ -52,6 +52,8 @@ namespace Python {
 		static PyObject * gnd(PyObject *self, PyObject *args);
 
 		static const char *name;
+		static const char *doc;
+		static const char *docGND;
 		static PyMethodDef methods[];
 		static PyTypeObject type;
 

@@ -2,7 +2,8 @@
  *
  * @file
  * @author Georg Reinke <georg.reinke@rwth-aachen.de>
- * @copyright 2017, Institute for Automation of Complex Power Systems, EONERC
+ * @author Steffen Vogel <stvogel@eonerc.rwth-aachen.de>
+ * @copyright 2017-2018, Institute for Automation of Complex Power Systems, EONERC
  *
  * DPsim
  *
@@ -37,9 +38,12 @@
 #endif
 
 #include <dpsim/Config.h>
-#include <dpsim/Simulation.h>
 #include <dpsim/Python/SystemTopology.h>
+#include <dpsim/Simulation.h>
+#ifndef _MSC_VER
 #include <dpsim/Python/EventChannel.h>
+#include <dpsim/Timer.h>
+#endif
 
 namespace DPsim {
 namespace Python {
@@ -62,7 +66,9 @@ namespace Python {
 
 		DPsim::Simulation::Ptr sim;
 		Python::SystemTopology *pySys;
+#ifndef _MSC_VER
 		Python::EventChannel *channel;
+#endif
 
 		std::condition_variable *cond;
 		std::mutex *mut;
@@ -71,16 +77,22 @@ namespace Python {
 		std::atomic<State> state;
 
 		// Only relevant for real-time simulations
+		double realTimeStep; /// effective timestep for real-time simulation
 		bool realTime;
 		bool startSync;
-		bool singleStepping;
+		bool failOnOverrun;
+		bool singleStepping; /// Debugger like stepping for simulations
+
+#ifndef _MSC_VER
+		Timer::StartTimePoint startTime;
+#endif
 
 		// List of additional objects that aren't directly used from Simulation
 		// methods, but that a reference has be kept to to avoid them from being
 		// freed (e.g. Interfaces).
 		std::vector<PyObject*> refs;
 
-		// Function executed by the simulation thread
+		/// Function executed by the simulation thread
 		static void threadFunction(Simulation* self);
 
 		static void newState(Python::Simulation *self, Simulation::State newState);
@@ -89,17 +101,18 @@ namespace Python {
 		// that can be called from Python are static.
 		//
 		// Helper methods for memory management / initialization etc.
-		static PyObject* newfunc(PyTypeObject* type, PyObject *args, PyObject *kwds);
-		static int init(Simulation* self, PyObject *args, PyObject *kwds);
-		static void dealloc(Simulation*);
+		static PyObject* newfunc(PyTypeObject *type, PyObject *args, PyObject *kwds);
+		static int init(Simulation *self, PyObject *args, PyObject *kwds);
+		static void dealloc(Simulation *self);
 
 		// Methods that are actually available from Python
-		static PyObject* addInterface(Simulation *self, PyObject *args);
+		static PyObject* addInterface(Simulation *self, PyObject *args, PyObject *kwargs);
+		static PyObject* addLogger(Simulation* self, PyObject* args, PyObject *kwargs);
+		static PyObject* addEvent(Simulation* self, PyObject* args);
 		static PyObject* pause(Simulation *self, PyObject *args);
 		static PyObject* start(Simulation *self, PyObject *args);
 		static PyObject* step(Simulation *self, PyObject *args);
 		static PyObject* stop(Simulation *self, PyObject *args);
-		static PyObject* wait(Simulation *self, PyObject *args);
 		static PyObject* getEventFD(Simulation *self, PyObject *args);
 
 		// Getters
@@ -108,8 +121,21 @@ namespace Python {
 		static PyObject* steps(Simulation *self, void *ctx);
 		static PyObject* time(Simulation *self, void *ctx);
 		static PyObject* finalTime(Simulation *self, void *ctx);
-	};
 
-	extern PyTypeObject SimulationType;
+		static const char *doc;
+		static const char *docStart;
+		static const char *docPause;
+		static const char *docStop;
+		static const char *docStep;
+		static const char *docAddInterface;
+		static const char *docAddEvent;
+		static const char *docAddLogger;
+		static const char *docGetEventFD;
+		static const char *docState;
+		static const char *docName;
+		static PyMethodDef methods[];
+		static PyGetSetDef getset[];
+		static PyTypeObject type;
+	};
 }
 }

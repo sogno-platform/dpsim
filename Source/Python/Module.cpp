@@ -1,7 +1,8 @@
 /** Python module
  *
  * @author Georg Reinke <georg.reinke@rwth-aachen.de>
- * @copyright 2017, Institute for Automation of Complex Power Systems, EONERC
+ * @author Steffen Vogel <stvogel@eonerc.rwth-aachen.de>
+ * @copyright 2017-2018, Institute for Automation of Complex Power Systems, EONERC
  *
  * DPsim
  *
@@ -33,21 +34,23 @@
 #include <dpsim/Python/Node.h>
 #include <dpsim/Python/SystemTopology.h>
 #include <dpsim/Python/Simulation.h>
-#include <dpsim/Python/Interface.h>
 #include <dpsim/Python/LoadCim.h>
+#include <dpsim/Python/Logger.h>
+#ifndef _MSC_VER
+#include <dpsim/Python/Interface.h>
+#endif
 
 #include <cps/Components.h>
 
 using namespace DPsim::Python;
 
 static PyMethodDef dpsimModuleMethods[] = {
-	{ "load_cim",               LoadCim,                                                            METH_VARARGS, DPsim::Python::DocLoadCim },
-	{ "open_interface",         (PyCFunction) OpenInterface,                                        METH_VARARGS | METH_KEYWORDS, DPsim::Python::DocOpenInterface },
+	{ "load_cim",               (PyCFunction) LoadCim,       METH_VARARGS | METH_KEYWORDS, DPsim::Python::DocLoadCim },
 
 	// Component constructors
 	#include <dpsim/Python/ComponentConstructors.h>
 
-	{ 0 }
+	{ nullptr }
 };
 
 static PyModuleDef dpsimModule = {
@@ -57,31 +60,39 @@ static PyModuleDef dpsimModule = {
 PyMODINIT_FUNC PyInit__dpsim(void) {
 	PyObject* m;
 
-	if (PyType_Ready(&ComponentType) < 0)
+	if (PyType_Ready(&Component::type) < 0)
 		return nullptr;
 	if (PyType_Ready(&Node<CPS::Real>::type) < 0)
 		return nullptr;
 	if (PyType_Ready(&Node<CPS::Complex>::type) < 0)
 		return nullptr;
-	if (PyType_Ready(&SimulationType) < 0)
+	if (PyType_Ready(&Simulation::type) < 0)
 		return nullptr;
-	if (PyType_Ready(&SystemTopologyType) < 0)
+	if (PyType_Ready(&SystemTopology::type) < 0)
 		return nullptr;
-	if (PyType_Ready(&InterfaceType) < 0)
+	if (PyType_Ready(&Logger::type) < 0)
 		return nullptr;
+#ifndef _MSC_VER
+	if (PyType_Ready(&Interface::type) < 0)
+		return nullptr;
+#endif
 
 	m = PyModule_Create(&dpsimModule);
 	if (!m)
 		return nullptr;
 
-	Py_INCREF(&SimulationType);
-	PyModule_AddObject(m, "Simulation", (PyObject*) &SimulationType);
-	Py_INCREF(&SystemTopologyType);
-	PyModule_AddObject(m, "SystemTopology", (PyObject*) &SystemTopologyType);
-	Py_INCREF(&ComponentType);
-	PyModule_AddObject(m, "Component", (PyObject*) &ComponentType);
-	Py_INCREF(&InterfaceType);
-	PyModule_AddObject(m, "Interface", (PyObject*) &InterfaceType);
+	Py_INCREF(&Simulation::type);
+	PyModule_AddObject(m, "Simulation", (PyObject*) &Simulation::type);
+	Py_INCREF(&SystemTopology::type);
+	PyModule_AddObject(m, "SystemTopology", (PyObject*) &SystemTopology::type);
+	Py_INCREF(&Logger::type);
+	PyModule_AddObject(m, "Logger", (PyObject*) &Logger::type);
+	Py_INCREF(&Component::type);
+	PyModule_AddObject(m, "Component", (PyObject*) &Component::type);
+#ifndef _MSC_VER
+	Py_INCREF(&Interface::type);
+	PyModule_AddObject(m, "Interface", (PyObject*) &Interface::type);
+#endif
 	Py_INCREF(&Node<CPS::Complex>::type);
 	PyModule_AddObject(m, "_dp_Node", (PyObject*) &Node<CPS::Complex>::type);
 	Py_INCREF(&Node<CPS::Real>::type);

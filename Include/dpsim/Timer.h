@@ -1,8 +1,7 @@
-/** Timer for real-time execution
- *
+/**
  * @file
  * @author Steffen Vogel <stvogel@eonerc.rwth-aachen.de>
- * @copyright 2018, Institute for Automation of Complex Power Systems, EONERC
+ * @copyright 2017-2018, Institute for Automation of Complex Power Systems, EONERC
  *
  * DPsim
  *
@@ -106,6 +105,7 @@ namespace DPsim {
 		}
 };
 
+#ifdef HAVE_TIMERFD
 template<class Rep, class Period>
 struct timespec to_timespec(std::chrono::duration<Rep, Period> dur) {
 	auto nsDur = std::chrono::duration_cast<std::chrono::nanoseconds>(dur);
@@ -117,6 +117,7 @@ struct timespec to_timespec(std::chrono::duration<Rep, Period> dur) {
 
 	return ts;
 }
+#endif
 
 }
 
@@ -124,15 +125,21 @@ struct timespec to_timespec(std::chrono::duration<Rep, Period> dur) {
 #include <iostream>
 #include <ctime>
 
+#ifndef _MSC_VER
 template<typename Clock, typename Duration>
 std::ostream &operator<<(std::ostream &stream,
 	const std::chrono::time_point<Clock, Duration> &time_point) {
-	const time_t time = Clock::to_time_t(time_point);
+	const std::time_t time = Clock::to_time_t(time_point);
 #if __GNUC__ > 4 || ((__GNUC__ == 4) && __GNUC_MINOR__ > 8 && __GNUC_REVISION__ > 1)
 	// Maybe the put_time will be implemented later?
 	struct tm tm;
 	localtime_r(&time, &tm);
 	return stream << std::put_time(&tm, "%c"); // Print standard date&time
+#elif defined _MSC_VER
+	char buffer[26];
+	ctime_s(buffer, 26, &time);
+	buffer[24] = '\0';  // Removes the newline that is added
+	return stream << buffer;
 #else
 	char buffer[26];
 	ctime_r(&time, buffer);
@@ -140,6 +147,7 @@ std::ostream &operator<<(std::ostream &stream,
 	return stream << buffer;
 #endif
 }
+#endif
 
 template<typename Rep, typename Period>
 std::ostream &operator<<(std::ostream &stream,

@@ -1,5 +1,6 @@
 # rwthacs/dpsim-dev is built by dpsim-git/Packaging/Docker/Dockerfile.dev
-FROM rwthacs/dpsim-dev AS builder
+ARG DOCKER_TAG=latest
+FROM rwthacs/dpsim-dev:${DOCKER_TAG} AS builder
 
 COPY . /dpsim/
 
@@ -9,7 +10,7 @@ WORKDIR /dpsim/build
 RUN cmake -DBUILD_EXAMPLES=OFF -DCPACK_GENERATOR=RPM ..
 RUN make -j$(nproc) package
 
-FROM fedora:28
+FROM fedora:29
 
 LABEL \
 	org.label-schema.schema-version = "1.0" \
@@ -21,7 +22,7 @@ LABEL \
 	org.label-schema.url = "http://fein-aachen.org/projects/dpsim/" \
 	org.label-schema.vcs-url = "https://git.rwth-aachen.de/acs/core/simulation/DPsim"
 
-ADD https://villas.fein-aachen.org/packages/villas.repo /etc/yum.repos.d/
+ADD https://packages.fein-aachen.org/fedora/fein.repo /etc/yum.repos.d/
 
 COPY --from=builder /dpsim/build/*.rpm /tmp
 RUN dnf -y install /tmp/*.rpm

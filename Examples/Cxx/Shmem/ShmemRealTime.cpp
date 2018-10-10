@@ -1,7 +1,7 @@
 /** Example of shared memory interface
  *
- * @author Markus Mirz <mmirz@eonerc.rwth-aachen.de>
- * @copyright 2017, Institute for Automation of Complex Power Systems, EONERC
+ * @author Steffen Vogel <stvogel@eonerc.rwth-aachen.de>
+ * @copyright 2017-2018, Institute for Automation of Complex Power Systems, EONERC
  *
  * DPsim
  *
@@ -22,6 +22,7 @@
 #include <DPsim.h>
 
 using namespace DPsim;
+using namespace CPS::DP;
 using namespace CPS::DP::Ph1;
 
 int main(int argc, char* argv[])
@@ -41,24 +42,33 @@ int main(int argc, char* argv[])
 	auto n4 = Node::make("n4");
 
 	// Components
-	auto evs = VoltageSource::make("v_s", Complex(0, 0));
-	auto rs =  Resistor::make("r_s", 1);
-	auto rl =  Resistor::make("r_line", 1);
-	auto ll =  Inductor::make("l_line", 1);
-	auto rL =  Resistor::make("r_load", 1000);
+	auto evs = VoltageSource::make("v_s");
+	auto rs =  Resistor::make("r_s");
+	auto rl =  Resistor::make("r_line");
+	auto ll =  Inductor::make("l_line");
+	auto rL =  Resistor::make("r_load");
 
-	evs->connect({GND, n1});
-	rs->connect({n1, n2});
-	rl->connect({n2, n3});
-	ll->connect({n3, n4});
-	rL->connect({n4, GND});
+	// Topology
+	evs->connect({ Node::GND, n1 });
+	rs->connect({ n1, n2 });
+	rl->connect({ n2, n3 });
+	ll->connect({ n3, n4 });
+	rL->connect({ n4, Node::GND });
 
-	Interface intf("/villas1-in", "/villas1-out", &conf);
-	intf.addImport(evs->findAttribute<Complex>("voltage_ref"), 1.0, 0, 1);
-	intf.addExport(evs->findAttribute<Complex>("comp_current"), 1.0,  0, 1);
+	// Parameters
+	evs->setParameters(Complex(0, 0));
+	rs->setParameters(1);
+	rl->setParameters(1);
+	ll->setParameters(1);
+	rL->setParameters(1000);
+
+	auto intf = Interface("/villas1-in", "/villas1-out", &conf);
+
+	intf.addImport(evs->attribute<Complex>("V_ref"), 0);
+	intf.addExport(evs->attribute<Complex>("i_comp"), 0);
 
 	Real timeStep = 0.001;
-	auto sys = SystemTopology(50, SystemNodeList{GND, n1, n2, n3, n4}, SystemComponentList{evs, rs, rl, ll, rL});
+	auto sys = SystemTopology(50, SystemNodeList{Node::GND, n1, n2, n3, n4}, SystemComponentList{evs, rs, rl, ll, rL});
 	auto sim = RealTimeSimulation("ShmemRealTime", sys, timeStep, 5.0);
 
 	sim.addInterface(&intf, false, true);

@@ -1,10 +1,15 @@
 set(SOURCES
 	Simulation.cpp
-	RealTimeSimulation.cpp
 	MNASolver.cpp
 	Utils.cpp
 	Timer.cpp
+	Event.cpp
+	DataLogger.cpp
 )
+
+if(NOT WIN32)
+	list(APPEND SOURCES RealTimeSimulation.cpp)	
+endif()
 
 list(APPEND LIBRARIES cps)
 
@@ -28,6 +33,15 @@ if(WITH_PYTHON)
 	list(APPEND LIBRARIES ${PYTHON_LIBRARIES})
 	
 	add_subdirectory(Python)
+endif()
+
+if(WITH_SHMEM)
+	list(APPEND SOURCES
+		Interface.cpp
+	)
+
+	list(APPEND LIBRARIES ${VILLASNODE_LIBRARIES})
+	list(APPEND INCLUDE_DIRS ${VILLASNODE_INCLUDE_DIRS})
 endif()
 
 add_library(dpsim)

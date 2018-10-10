@@ -1,7 +1,8 @@
 /** CIM Test
  *
  * @author Markus Mirz <mmirz@eonerc.rwth-aachen.de>
- * @copyright 2017, Institute for Automation of Complex Power Systems, EONERC
+ * @author Steffen Vogel <stvogel@eonerc.rwth-aachen.de>
+ * @copyright 2017-2018, Institute for Automation of Complex Power Systems, EONERC
  *
  * DPsim
  *
@@ -36,16 +37,16 @@ int main(int argc, char *argv[]) {
 
 	// Specify CIM files
 #ifdef _WIN32
-	String path("Examples\\CIM\\WSCC-09_Neplan_RX\\");
+	String path("Examples\\CIM\\WSCC-09_RX\\");
 #elif defined(__linux__) || defined(__APPLE__)
-	String path("Examples/CIM/WSCC-09_Neplan_RX/");
+	String path("Examples/CIM/WSCC-09_RX/");
 #endif
 
 	std::list<String> filenames = {
-		path + "WSCC-09_Neplan_RX_DI.xml",
-		path + "WSCC-09_Neplan_RX_EQ.xml",
-		path + "WSCC-09_Neplan_RX_SV.xml",
-		path + "WSCC-09_Neplan_RX_TP.xml"
+		path + "WSCC-09_RX_DI.xml",
+		path + "WSCC-09_RX_EQ.xml",
+		path + "WSCC-09_RX_SV.xml",
+		path + "WSCC-09_RX_TP.xml"
 	};
 
 	String simName = "Shmem_WSCC-9bus_Ctrl";
@@ -55,13 +56,13 @@ int main(int argc, char *argv[]) {
 
 	// Extend system with controllable load (Profile)
 	auto load_profile = PQLoadCS::make("load_cs_profile");
-	load_profile->connect({ sys.getDPNodeAt(6) });
+	load_profile->connect({ sys.node<DP::Node>("BUS7") });
 	load_profile->setParameters(0, 0, 230000);
 	sys.mComponents.push_back(load_profile);
 
 	// Extend system with controllable load
 	auto load = PQLoadCS::make("load_cs");
-	load->connect({ sys.getDPNodeAt(3) });
+	load->connect({ sys.node<DP::Node>("BUS4") });
 	load->setParameters(0, 0, 230000);
 	sys.mComponents.push_back(load);
 
@@ -71,14 +72,14 @@ int main(int argc, char *argv[]) {
 
 	auto filtP_profile = FIRFilter::make("filter_p_profile", coefficients_profile, 0, Logger::Level::INFO);
 	filtP_profile->setPriority(1);
-	filtP_profile->setConnection(load_profile->findAttribute<Real>("active_power"));
-	filtP_profile->findAttribute<Real>("input")->set(0.);
+	filtP_profile->setConnection(load_profile->attribute<Real>("power_active"));
+	filtP_profile->attribute<Real>("input")->set(0.);
 	sys.mComponents.push_back(filtP_profile);
 
 	auto filtP = FIRFilter::make("filter_p", coefficients, 0, Logger::Level::INFO);
 	filtP->setPriority(1);
-	filtP->setConnection(load->findAttribute<Real>("active_power"));
-	filtP->findAttribute<Real>("input")->set(0.);
+	filtP->setConnection(load->attribute<Real>("power_active"));
+	filtP->attribute<Real>("input")->set(0.);
 	sys.mComponents.push_back(filtP);
 
 	RealTimeSimulation sim(simName, sys, args.timeStep, args.duration, args.solver.domain, args.solver.type, args.logLevel, true);
@@ -102,22 +103,21 @@ int main(int argc, char *argv[]) {
 
 		i--;
 
-		auto v = n->findAttribute<Complex>("voltage");
+		auto v = n->attributeComplex("v");
 
 		std::cout << "Signal << " << (i*2)+0 << ": Mag " << n->name() << std::endl;
 		std::cout << "Signal << " << (i*2)+1 << ": Phas " << n->name() << std::endl;
 
-		std::function<Real()> getMag = [v](){ return std::abs(v->get()); };
-		std::function<Real()> getPhas = [v](){ return std::arg(v->get()); };
-
-		intf.addExport(getMag,  (i*2)+0);
-		intf.addExport(getPhas, (i*2)+1);
+		intf.addExport(v->mag(),   (i*2)+0);
+		intf.addExport(v->phase(), (i*2)+1);
 	}
 
 	// Register controllable load
-	//intf.addImport(load->findAttribute<Real>("active_power"), 1.0, 0);
-	intf.addImport(filtP->findAttribute<Real>("input"), 1.0, 0);
-	intf.addImport(filtP_profile->findAttribute<Real>("input"), 20e8, 1);
+	//intf.addImport(load->attribute<Real>("power_active"), 0);
+	intf.addImport(filtP->attribute<Real>("input"), 0);
+
+	// TODO gain by 20e8
+	intf.addImport(filtP_profile->attribute<Real>("input"), 1);
 
 	sim.addInterface(&intf, false, false);
 	sim.run();

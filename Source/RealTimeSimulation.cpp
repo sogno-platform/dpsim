@@ -1,7 +1,7 @@
 /** Simulation
  *
- * @author Markus Mirz <mmirz@eonerc.rwth-aachen.de>
- * @copyright 2017, Institute for Automation of Complex Power Systems, EONERC
+ * @author Steffen Vogel <stvogel@eonerc.rwth-aachen.de>
+ * @copyright 2017-2018, Institute for Automation of Complex Power Systems, EONERC
  *
  * DPsim
  *
@@ -44,6 +44,13 @@ void RealTimeSimulation::run(const Timer::StartClock::time_point &startAt)
 	auto startAtDur = startAt.time_since_epoch();
 	auto startAtNSecs = std::chrono::duration_cast<std::chrono::nanoseconds>(startAtDur);
 
+	mLog.info() << "Opening interfaces." << std::endl;
+
+#ifdef WITH_SHMEM
+	for (auto ifm : mInterfaces)
+		ifm.interface->open();
+#endif
+
 	sync();
 
 	mLog.info() << "Starting simulation at " << startAt << " (delta_T = " << startAt - Timer::StartClock::now() << " seconds)" << std::endl;
@@ -62,6 +69,14 @@ void RealTimeSimulation::run(const Timer::StartClock::time_point &startAt)
 	} while (mTime < mFinalTime);
 
 	mLog.info() << "Simulation finished." << std::endl;
+
+#ifdef WITH_SHMEM
+	for (auto ifm : mInterfaces)
+		ifm.interface->close();
+#endif
+
+	for (auto lg : mLoggers)
+		lg.logger->flush();
 
 	mTimer.stop();
 }

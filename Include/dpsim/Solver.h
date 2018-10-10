@@ -1,7 +1,7 @@
 /** Simulation
  *
  * @author Markus Mirz <mmirz@eonerc.rwth-aachen.de>
- * @copyright 2017, Institute for Automation of Complex Power Systems, EONERC
+ * @copyright 2017-2018, Institute for Automation of Complex Power Systems, EONERC
  *
  * DPsim
  *
@@ -25,14 +25,10 @@
 #include <vector>
 #include <list>
 
+#include <dpsim/Definitions.h>
 #include <dpsim/Config.h>
 #include <cps/Logger.h>
 #include <cps/SystemTopology.h>
-#include <dpsim/Definitions.h>
-
-#ifdef WITH_SHMEM
-  #include <cps/Interface.h>
-#endif
 
 namespace DPsim {
 	/// Holds switching time and which system should be activated.
@@ -41,8 +37,8 @@ namespace DPsim {
 		UInt systemIndex;
 	};
 
+	/// Base class for more specific solvers such as MNA, ODE or IDA.
 	class Solver {
-
 	public:
 		virtual ~Solver() { }
 
@@ -52,10 +48,5 @@ namespace DPsim {
 		virtual Real step(Real time) = 0;
 		/// Log results
 		virtual void log(Real time) { };
-
-		///
-		void addSystemTopology(CPS::SystemTopology system) { }
-		///
-		virtual void setSwitchTime(Real switchTime, Int systemIndex) { }
 	};
 }

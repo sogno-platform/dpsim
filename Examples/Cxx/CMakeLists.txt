@@ -8,22 +8,30 @@ endif()
 
 # targets
 set(CIRCUIT_SOURCES
-	Circuits/DP_IdealVS_R_1.cpp
-	Circuits/DP_CS_R_1.cpp
-	Circuits/DP_IdealVS_RL1.cpp
+	# Dynamic phasor examples
+	Circuits/DP_VS_R1.cpp
+	Circuits/DP_CS_R1.cpp
+	Circuits/DP_VS_RL1.cpp
+	Circuits/DP_VS_RC1.cpp	
 	Circuits/DP_CS_R2CL.cpp
-	Circuits/DP_IdealVS_CS_R4.cpp
-	Circuits/DP_IdealVS_R2L3.cpp
-	Circuits/EMT_CS_R_1.cpp
-	Circuits/EMT_IdealVS_RL1.cpp
+	Circuits/DP_VS_CS_R4.cpp
+	Circuits/DP_VS_R2L3.cpp
+
+	#Circuits/DP_VS_PiLine_R.cpp
+	#Circuits/DP_VS_Trafo_R.cpp
+	#Circuits/DP_ResVS_RL_Switch.cpp	
+
+	# EMT examples
+	Circuits/EMT_VS_R1.cpp
+	Circuits/EMT_VS_RC1.cpp
+	Circuits/EMT_CS_R1.cpp
+	Circuits/EMT_VS_RL1.cpp
 	Circuits/EMT_CS_R2CL.cpp
-	Circuits/EMT_IdealVS_R2L3.cpp
-	Circuits/EMT_IdealVS_CS_R4.cpp
-	Circuits/DP_IdealVS_RXLine_1.cpp
-	Circuits/DP_IdealVS_Trafo_1.cpp
-#	Circuits/DP_ResVS_RL_Switch_1.cpp
-	Circuits/EMT_IdealVS_R_1.cpp
-#	Circuits/EMT_ResVS_RL_Switch_1.cpp
+	Circuits/EMT_VS_R2L3.cpp
+	Circuits/EMT_VS_CS_R4_AC.cpp
+	Circuits/EMT_VS_CS_R4_DC.cpp	
+	
+	#Circuits/EMT_ResVS_RL_Switch.cpp
 )
 
 set(SYNCGEN_SOURCES
@@ -57,23 +65,25 @@ if(WITH_SUNDIALS)
 	)
 endif()
 
-set(RT_SOURCES
-	RealTime/RT_DP_CS_R_1.cpp
-	RealTime/RT_DP_ResVS_RL1.cpp
-)
+if(WITH_RT)
+	set(RT_SOURCES
+		RealTime/RT_DP_CS_R_1.cpp
+		RealTime/RT_DP_ResVS_RL1.cpp
+	)
+endif()
 
 if(WITH_SHMEM)
 	list(APPEND LIBRARIES ${VILLASNODE_LIBRARIES})
 	list(APPEND INCLUDE_DIRS ${VILLASNODE_INCLUDE_DIRS})
 
 	set(SHMEM_SOURCES
-		#Shmem/ShmemExample.cpp
-		#Shmem/ShmemDistributedReference.cpp
-		#Shmem/ShmemDistributedDirect.cpp
-		#Shmem/ShmemDistributedVillas.cpp
-		#Shmem/ShmemControllableSource.cpp
-		#Shmem/ShmemControllableFiltSource.cpp
-		#Shmem/ShmemRealTime.cpp
+		Shmem/ShmemExample.cpp
+		Shmem/ShmemDistributedReference.cpp
+		Shmem/ShmemDistributedDirect.cpp
+		Shmem/ShmemDistributedVillas.cpp
+		Shmem/ShmemControllableSource.cpp
+		Shmem/ShmemControllableFiltSource.cpp
+		Shmem/ShmemRealTime.cpp
 	)
 endif()
 
@@ -81,9 +91,17 @@ if(WITH_CIM)
 	list(APPEND LIBRARIES ${CIMPP_LIBRARIES})
 	list(APPEND INCLUDE_DIRS ${CIMPP_INCLUDE_DIRS})
 
+	if (NOT WIN32)
+		set(CIM_SOURCES_POSIX
+			CIM/dpsim-cim.cpp
+		)
+	endif()
+
 	set(CIM_SOURCES
-		CIM/cmd_CIM_input.cpp
+		
 		CIM/WSCC-9bus_CIM.cpp
+		CIM/WSCC-9bus_CIM_Dyn.cpp
+		CIM/WSCC-9bus_CIM_Dyn_Switch.cpp
 	)
 endif()
 
@@ -100,7 +118,7 @@ if(WITH_PYTHON)
 	list(APPEND INCLUDE_DIRS ${PYTHON_INCLUDE_DIRS})
 endif()
 
-foreach(SOURCE ${CIRCUIT_SOURCES} ${SYNCGEN_SOURCES} ${VARFREQ_SOURCES} ${SHMEM_SOURCES} ${RT_SOURCES} ${CIM_SOURCES} ${CIM_SHMEM_SOURCES} ${DAE_SOURCES})
+foreach(SOURCE ${CIRCUIT_SOURCES} ${SYNCGEN_SOURCES} ${VARFREQ_SOURCES} ${SHMEM_SOURCES} ${RT_SOURCES} ${CIM_SOURCES} ${CIM_SOURCES_POSIX} ${CIM_SHMEM_SOURCES} ${DAE_SOURCES})
 	get_filename_component(TARGET ${SOURCE} NAME_WE)
 
 	add_executable(${TARGET} ${SOURCE})

@@ -1,7 +1,7 @@
 /** Simulation
  *
- * @author Markus Mirz <mmirz@eonerc.rwth-aachen.de>
- * @copyright 2017, Institute for Automation of Complex Power Systems, EONERC
+ * @author Steffen Vogel <stvogel@eonerc.rwth-aachen.de>
+ * @copyright 2017-2018, Institute for Automation of Complex Power Systems, EONERC
  *
  * DPsim
  *
@@ -30,7 +30,7 @@
 #include <dpsim/Timer.h>
 
 namespace DPsim {
-
+	/// Extending Simulation class by real-time functionality.
 	class RealTimeSimulation : public Simulation {
 
 	protected:
@@ -38,9 +38,13 @@ namespace DPsim {
 		Timer mTimer;
 
 	public:
-		RealTimeSimulation(String name, CPS::SystemTopology system, Real timeStep, Real finalTime,
-			CPS::Domain domain = CPS::Domain::DP, Solver::Type type = Solver::Type::MNA,
-			CPS::Logger::Level logLevel = CPS::Logger::Level::INFO, Bool steadyStateInit = false);
+		/// Creates system matrix according to a given System topology
+		RealTimeSimulation(String name, CPS::SystemTopology system,
+			Real timeStep, Real finalTime,
+			CPS::Domain domain = CPS::Domain::DP,
+			Solver::Type solverType = Solver::Type::MNA,
+			CPS::Logger::Level logLevel = CPS::Logger::Level::INFO,
+			Bool steadyStateInit = false);
 
 		/** Perform the main simulation loop in real time.
 		 *

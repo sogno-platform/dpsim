@@ -3,7 +3,7 @@
  * @author Steffen Vogel <stvogel@eonerc.rwth-aachen.de>
  * @copyright 2018, Institute for Automation of Complex Power Systems, EONERC
  *
- * CPowerSystems
+ * DPsim
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -115,14 +115,14 @@ void Python::Node<VarType>::dealloc(Python::Node<VarType> *self)
 	Py_TYPE(self)->tp_free((PyObject*) self);
 }
 
-static const char *DocGND =
+template<typename VarType>
+const char * Python::Node<VarType>::docGND =
 "GND\n"
 "Get a reference of the global ground node.\n";
-
 template<typename VarType>
 PyObject * Python::Node<VarType>::gnd(PyObject *self, PyObject *args) {
 	if (!Py_GND) {
-		Python::Node<VarType> *pyNode = PyObject_New(Node<VarType>, &DPsim::Python::Node<VarType>::type);
+		Python::Node<VarType> *pyNode = PyObject_New(Node<VarType>, &Python::Node<VarType>::type);
 
 		new (&pyNode->node) typename CPS::Node<VarType>::Ptr(nullptr);
 		pyNode->node = CPS::Node<VarType>::GND;
@@ -136,11 +136,12 @@ PyObject * Python::Node<VarType>::gnd(PyObject *self, PyObject *args) {
 
 template<typename VarType>
 PyMethodDef Python::Node<VarType>::methods[] = {
-	{"GND", (PyCFunction) DPsim::Python::Node<VarType>::gnd, METH_NOARGS | METH_STATIC, (char *) DocGND},
+	{"GND", (PyCFunction) Python::Node<VarType>::gnd, METH_NOARGS | METH_STATIC, (char *) Python::Node<VarType>::docGND},
 	{nullptr, nullptr, 0, nullptr}
 };
 
-static const char* NodeDoc =
+template<typename VarType>
+const char* Python::Node<VarType>::doc =
 "A system node.\n"
 "\n"
 "Proper ``__init__`` signature:\n"
@@ -156,12 +157,12 @@ template<>
 const char* Python::Node<CPS::Complex>::name = "dpsim.dp.Node";
 
 template<typename VarType>
-PyTypeObject DPsim::Python::Node<VarType>::type = {
+PyTypeObject Python::Node<VarType>::type = {
 	PyVarObject_HEAD_INIT(nullptr, 0)
-	(char *) DPsim::Python::Node<VarType>::name, /* tp_name */
-	sizeof(DPsim::Python::Node<VarType>),      /* tp_basicsize */
+	(char *) Python::Node<VarType>::name,    /* tp_name */
+	sizeof(Python::Node<VarType>),           /* tp_basicsize */
 	0,                                       /* tp_itemsize */
-	(destructor)DPsim::Python::Node<VarType>::dealloc,  /* tp_dealloc */
+	(destructor)Python::Node<VarType>::dealloc, /* tp_dealloc */
 	0,                                       /* tp_print */
 	0,                                       /* tp_getattr */
 	0,                                       /* tp_setattr */
@@ -177,14 +178,14 @@ PyTypeObject DPsim::Python::Node<VarType>::type = {
 	0,                                       /* tp_setattro */
 	0,                                       /* tp_as_buffer */
 	Py_TPFLAGS_DEFAULT | Py_TPFLAGS_BASETYPE,/* tp_flags */
-	(char *) NodeDoc,                        /* tp_doc */
+	(char *) Python::Node<VarType>::doc,     /* tp_doc */
 	0,                                       /* tp_traverse */
 	0,                                       /* tp_clear */
 	0,                                       /* tp_richcompare */
 	0,                                       /* tp_weaklistoffset */
 	0,                                       /* tp_iter */
 	0,                                       /* tp_iternext */
-	Node<VarType>::methods,                  /* tp_methods */
+	Python::Node<VarType>::methods,          /* tp_methods */
 	0,                                       /* tp_members */
 	0,                                       /* tp_getset */
 	0,                                       /* tp_base */
@@ -192,11 +193,11 @@ PyTypeObject DPsim::Python::Node<VarType>::type = {
 	0,                                       /* tp_descr_get */
 	0,                                       /* tp_descr_set */
 	0,                                       /* tp_dictoffset */
-	(initproc) DPsim::Python::Node<VarType>::init, /* tp_init */
+	(initproc) Python::Node<VarType>::init,  /* tp_init */
 	0,                                       /* tp_alloc */
-	DPsim::Python::Node<VarType>::newfunc,     /* tp_new */
+	Python::Node<VarType>::newfunc,     /* tp_new */
 };
 
-template struct DPsim::Python::Node<CPS::Real>;
-template struct DPsim::Python::Node<CPS::Complex>;
+template struct Python::Node<CPS::Real>;
+template struct Python::Node<CPS::Complex>;
 
