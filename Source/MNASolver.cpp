@@ -63,9 +63,9 @@ void MnaSolver<VarType>::initialize(CPS::SystemTopology system) {
 		comp->initialize();
 	// Initialize MNA specific parts of components.
 	for (auto comp : mPowerComponents)
-		comp->mnaInitialize(mSystem.mSystemOmega, mTimeStep, mRightSideVector.rows());
+		comp->mnaInitialize(mSystem.mSystemOmega, mTimeStep, attribute<Matrix>("x"));
 	for (auto comp : mSwitches)
-		comp->mnaInitialize(mSystem.mSystemOmega, mTimeStep, mRightSideVector.rows());
+		comp->mnaInitialize(mSystem.mSystemOmega, mTimeStep, attribute<Matrix>("x"));
 
 	// This steady state initialization is MNA specific and runs a simulation
 	// before the actual simulation executed by the user.
@@ -362,7 +362,7 @@ Task::List MnaSolver<VarType>::getTasks() {
 	Task::List l;
 
 	for (auto comp : mPowerComponents) {
-		for (auto task : comp->mnaTasks(attribute<Matrix>("x"))) {
+		for (auto task : comp->mnaTasks()) {
 			l.push_back(task);
 		}
 	}
