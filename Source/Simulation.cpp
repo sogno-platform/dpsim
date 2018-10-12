@@ -75,12 +75,6 @@ Simulation::Simulation(String name, SystemTopology system,
 		throw UnsupportedSolverException();
 	}
 
-	// TODO:
-	// - pass scheduler / scheduling parameters to this constructor ?
-	// - multiple solver support
-	mScheduler = std::make_shared<SequentialScheduler>();
-	auto tasks = mSolver->getTasks();
-	mScheduler->createSchedule(tasks);
 }
 
 Simulation::~Simulation() {
@@ -107,6 +101,20 @@ void Simulation::sync()
 }
 
 void Simulation::run() {
+	// TODO:
+	// - pass scheduler / scheduling parameters to Simulation constructor ?
+	// - multiple solver support
+	mScheduler = std::make_shared<SequentialScheduler>();
+	auto tasks = mSolver->getTasks();
+#ifdef WITH_SHMEM
+	for (auto intfm : mInterfaces) {
+		for (auto t : intfm.interface->getTasks()) {
+			tasks.push_back(t);
+		}
+	}
+#endif
+	mScheduler->createSchedule(tasks);
+
 	mLog.info() << "Opening interfaces." << std::endl;
 
 #ifdef WITH_SHMEM
@@ -131,27 +139,13 @@ void Simulation::run() {
 }
 
 Real Simulation::step() {
-	// TODO: interfacing and logging should be integrated into tasking system
-#ifdef WITH_SHMEM
-	for (auto ifm : mInterfaces) {
-		if (mTimeStepCount % ifm.downsampling == 0)
-			ifm.interface->readValues(ifm.sync);
-	}
-#endif
-
 	mEvents.handleEvents(mTime);
 
 	//nextTime = mSolver->step(mTime);
 	mScheduler->step();
 	mSolver->log(mTime);
 
-#ifdef WITH_SHMEM
-	for (auto ifm : mInterfaces) {
-		if (mTimeStepCount % ifm.downsampling == 0)
-			ifm.interface->writeValues();
-	}
-#endif
-
+	// TODO: events and logging should be integrated into tasking system
 	for (auto lg : mLoggers) {
 		if (mTimeStepCount % lg.downsampling == 0)
 			lg.logger->log(mTime);

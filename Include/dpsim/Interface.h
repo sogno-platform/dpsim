@@ -31,6 +31,7 @@
 #include <dpsim/Config.h>
 #include <dpsim/Definitions.h>
 #include <cps/Attribute.h>
+#include <cps/Task.h>
 #include <cps/PtrFactory.h>
 
 namespace DPsim {
@@ -70,33 +71,63 @@ namespace DPsim {
 		String mRName, mWName;
 		Config mConf;
 
+		/// Is this interface used for synchorinzation?
+		bool mSync;
+		/// Downsampling
+		UInt mDownsampling;
+		Int mTimeStepCount = 0;
+
 	public:
 
-		/** Create a Interface using the given shmem object names.
-		 *
-		 * @param wname The name of the POSIX shmem object where samples will be written to.
-		 * @param rname The name of the POSIX shmem object where samples will be read from.
-		 */
-		Interface(const String &wn, const String &rn) :
-			mOpened(false),
-			mRName(rn),
-			mWName(wn)
-		{
-			mConf.queuelen = 512;
-			mConf.samplelen = 64;
-			mConf.polling = 0;
-		}
+		class PreStep : public CPS::Task {
+		public:
+			PreStep(Interface& intf) : mIntf(intf) {
+				for (auto attr : intf.mImportAttrs) {
+					mModifiedAttributes.push_back(attr);
+				}
+			}
+
+			void execute();
+
+		private:
+			Interface& mIntf;
+		};
+
+		class PostStep : public CPS::Task {
+		public:
+			PostStep(Interface& intf) : mIntf(intf) {
+				for (auto attr : intf.mExportAttrs) {
+					mAttributeDependencies.push_back(attr);
+				}
+			}
+
+			void execute();
+
+		private:
+			Interface& mIntf;
+		};
 
 		/** Create a Interface with a specific configuration for the output queue.
 		 *
-		 * @param conf The configuration object for the output queue (see VILLASnode's documentation).
+		 * @param wname The name of the POSIX shmem object where samples will be written to.
+		 * @param rname The name of the POSIX shmem object where samples will be read from.
+		 * @param conf The configuration object for the output queue (see VILLASnode's documentation), or nullptr for sensible defaults.
 		 */
-		Interface(const String &wn, const String &rn, Config *conf) :
+		Interface(const String &wn, const String &rn, Config *conf = nullptr, Bool sync = true, UInt downsampling = 1) :
 			mOpened(false),
 			mRName(rn),
 			mWName(wn),
-			mConf(*conf)
-		{ }
+			mSync(sync),
+			mDownsampling(downsampling)
+		{
+			if (conf != nullptr) {
+				mConf = *conf;
+			} else {
+				mConf.queuelen = 512;
+				mConf.samplelen = 64;
+				mConf.polling = 0;
+			}
+		}
 
 		~Interface() {
 			if (mOpened)
@@ -126,6 +157,8 @@ namespace DPsim {
 		 * calculate needed voltages.
 		 */
 		void writeValues();
+
+		CPS::Task::List getTasks();
 	};
 }
 

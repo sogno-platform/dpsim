@@ -62,7 +62,7 @@ int main(int argc, char* argv[])
 	ll->setParameters(1);
 	rL->setParameters(1000);
 
-	auto intf = Interface("/villas1-in", "/villas1-out", &conf);
+	auto intf = Interface("/villas1-in", "/villas1-out", &conf, false);
 
 	evs->setAttributeRef("V_ref", intf.importComplex(0));
 	intf.addExport(evs->attribute<Complex>("i_comp"), 0);
@@ -71,7 +71,7 @@ int main(int argc, char* argv[])
 	auto sys = SystemTopology(50, SystemNodeList{Node::GND, n1, n2, n3, n4}, SystemComponentList{evs, rs, rl, ll, rL});
 	auto sim = RealTimeSimulation("ShmemRealTime", sys, timeStep, 5.0);
 
-	sim.addInterface(&intf, false, true);
+	sim.addInterface(&intf);
 	sim.run();
 
 	return 0;

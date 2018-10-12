@@ -70,8 +70,8 @@ int main(int argc, char *argv[]) {
 		conf.samplelen = 64;
 		conf.queuelen = 1024;
 		conf.polling = false;
-		Interface intf1(out, in, &conf);
-		sim.addInterface(&intf1, false, true);
+		Interface intf1(out, in, &conf, false);
+		sim.addInterface(&intf1);
 
 		// Create shmem interface 2
 		String in2  = "/villas-dpsim1";
@@ -80,8 +80,8 @@ int main(int argc, char *argv[]) {
 		conf2.samplelen = 64;
 		conf2.queuelen = 1024;
 		conf2.polling = false;
-		Interface intf2(out2, in2, &conf2);
-		sim.addInterface(&intf2, false, false);
+		Interface intf2(out2, in2, &conf2, false);
+		sim.addInterface(&intf2, false);
 
 		// Controllers and filter
 		std::vector<Real> coefficients_profile = std::vector(2000, 1./2000);
@@ -149,8 +149,8 @@ int main(int argc, char *argv[]) {
 		conf1.samplelen = 64;
 		conf1.queuelen = 1024;
 		conf1.polling = false;
-		Interface intf1(out1, in1, &conf1);
-		sim.addInterface(&intf1, false, true);
+		Interface intf1(out1, in1, &conf1, false);
+		sim.addInterface(&intf1);
 
 		// Create shmem interface 2
 		String in2  = "/villas-dpsim2";
@@ -159,8 +159,8 @@ int main(int argc, char *argv[]) {
 		conf2.samplelen = 64;
 		conf2.queuelen = 1024;
 		conf2.polling = false;
-		Interface intf2(out2, in2, &conf2);
-		sim.addInterface(&intf2, false, false);
+		Interface intf2(out2, in2, &conf2, false);
+		sim.addInterface(&intf2, false);
 
 		// Register voltage source reference and current flowing through source
 		// multiply with -1 to consider passive sign convention

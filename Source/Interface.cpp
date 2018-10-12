@@ -143,8 +143,19 @@ void Interface::writeValues() {
 	}
 }
 
+void Interface::PreStep::execute() {
+	if (mIntf.mTimeStepCount % mIntf.mDownsampling == 0)
+		mIntf.readValues(mIntf.mSync);
+}
+
+void Interface::PostStep::execute() {
+	if (mIntf.mTimeStepCount % mIntf.mDownsampling == 0)
+		mIntf.writeValues();
+	mIntf.mTimeStepCount++;
+}
+
 Attribute<Int>::Ptr Interface::importInt(Int idx) {
-	Attribute<Int>::Ptr attr = Attribute<Int>::make(0, Flags::read | Flags::write);
+	Attribute<Int>::Ptr attr = Attribute<Int>::make(Flags::read | Flags::write);
 	addImport([attr, idx](Sample *smp) {
 		if (idx >= smp->length)
 			throw std::length_error("incomplete data received from interface");
@@ -156,7 +167,7 @@ Attribute<Int>::Ptr Interface::importInt(Int idx) {
 }
 
 Attribute<Real>::Ptr Interface::importReal(Int idx) {
-	Attribute<Real>::Ptr attr = Attribute<Real>::make(0, Flags::read | Flags::write);
+	Attribute<Real>::Ptr attr = Attribute<Real>::make(Flags::read | Flags::write);
 	addImport([attr, idx](Sample *smp) {
 		if (idx >= smp->length)
 			throw std::length_error("incomplete data received from interface");
@@ -168,7 +179,7 @@ Attribute<Real>::Ptr Interface::importReal(Int idx) {
 }
 
 Attribute<Bool>::Ptr Interface::importBool(Int idx) {
-	Attribute<Bool>::Ptr attr = Attribute<Bool>::make(false, Flags::read | Flags::write);
+	Attribute<Bool>::Ptr attr = Attribute<Bool>::make(Flags::read | Flags::write);
 	addImport([attr, idx](Sample *smp) {
 		if (idx >= smp->length)
 			throw std::length_error("incomplete data received from interface");
@@ -180,7 +191,7 @@ Attribute<Bool>::Ptr Interface::importBool(Int idx) {
 }
 
 Attribute<Complex>::Ptr Interface::importComplex(Int idx) {
-	Attribute<Complex>::Ptr attr = Attribute<Complex>::make(0, Flags::read | Flags::write);
+	Attribute<Complex>::Ptr attr = Attribute<Complex>::make(Flags::read | Flags::write);
 	addImport([attr, idx](Sample *smp) {
 		if (idx >= smp->length)
 			throw std::length_error("incomplete data received from interface");
@@ -239,5 +250,12 @@ void Interface::addExport(Attribute<Complex>::Ptr attr, Int idx) {
 
 		z[0] = y.real();
 		z[1] = y.imag();
+	});
+}
+
+Task::List Interface::getTasks() {
+	return Task::List({
+		std::make_shared<Interface::PreStep>(*this),
+		std::make_shared<Interface::PostStep>(*this)
 	});
 }

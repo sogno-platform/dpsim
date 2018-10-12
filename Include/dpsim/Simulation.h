@@ -78,12 +78,8 @@ namespace DPsim {
 		struct InterfaceMapping {
 			/// A pointer to the external interface
 			Interface *interface;
-			/// Is this interface used for synchorinzation?
-			bool sync;
 			/// Is this interface used for synchronization of the simulation start?
 			bool syncStart;
-			/// Downsampling
-			UInt downsampling;
 		};
 
 		/// Vector of Interfaces
@@ -130,13 +126,8 @@ namespace DPsim {
 			mEvents.addEvent(e);
 		}
 #ifdef WITH_SHMEM
-		///
-		void addInterface(Interface *eint, Bool sync, Bool syncStart, UInt downsampling = 1) {
-			mInterfaces.push_back({eint, sync, syncStart, downsampling});
-		}
-
-		void addInterface(Interface *eint, Bool sync = true) {
-			addInterface(eint, sync, sync);
+		void addInterface(Interface *eint, Bool syncStart = true) {
+			mInterfaces.push_back({eint, syncStart});
 		}
 
 		std::vector<InterfaceMapping> & interfaces() { return mInterfaces; }

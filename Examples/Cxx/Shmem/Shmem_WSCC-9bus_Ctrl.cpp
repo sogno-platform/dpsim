@@ -90,7 +90,7 @@ int main(int argc, char *argv[]) {
 	conf.polling = false;
 	String in  = "/villas-dpsim1";
 	String out = "/dpsim1-villas";
-	Interface intf(out, in, &conf);
+	Interface intf(out, in, &conf, false);
 
 	// Register exportable node voltages
 	for (auto n : sys.mNodes) {
@@ -117,7 +117,7 @@ int main(int argc, char *argv[]) {
 	filtP->setInput(intf.importReal(0));
 	filtP_profile->setInput(intf.importReal(1));
 
-	sim.addInterface(&intf, false, false);
+	sim.addInterface(&intf, false);
 	sim.run();
 
 	return 0;

@@ -346,26 +346,24 @@ fail:
 }
 
 const char* Python::Simulation::docAddInterface =
-"add_interface(intf)\n"
+"add_interface(intf,sync_start=True)\n"
 "Add an external interface to the simulation. "
 "Before each timestep, values are read from this interface and results are written to this interface afterwards. "
 "See the documentation of `Interface` for more details.\n"
 "\n"
-":param intf: The `Interface` to be added.";
+":param intf: The `Interface` to be added.\n"
+":param sync_start: Whether to use the interface to synchronize at the start of the simulation.";
 PyObject* Python::Simulation::addInterface(Simulation* self, PyObject* args, PyObject *kwargs)
 {
 #ifdef WITH_SHMEM
 	PyObject* pyObj;
 	Python::Interface* pyIntf;
-	int sync = 1, start_sync = -1;
+	int start_sync = 1;
 
-	const char *kwlist[] = {"intf", "sync", "sync_start", nullptr};
+	const char *kwlist[] = {"intf", "sync_start", nullptr};
 
-	if (!PyArg_ParseTupleAndKeywords(args, kwargs, "O|pp", (char **) kwlist, &pyObj, &sync, &start_sync))
+	if (!PyArg_ParseTupleAndKeywords(args, kwargs, "O|p", (char **) kwlist, &pyObj, &start_sync))
 		return nullptr;
-
-	if (start_sync < 0)
-		start_sync = sync;
 
 	if (!PyObject_TypeCheck(pyObj, &Python::Interface::type)) {
 		PyErr_SetString(PyExc_TypeError, "Argument must be dpsim.Interface");
@@ -373,7 +371,7 @@ PyObject* Python::Simulation::addInterface(Simulation* self, PyObject* args, PyO
 	}
 
 	pyIntf = (Python::Interface*) pyObj;
-	self->sim->addInterface(pyIntf->intf.get(), sync, start_sync);
+	self->sim->addInterface(pyIntf->intf.get(), start_sync);
 	Py_INCREF(pyObj);
 
 	self->refs.push_back(pyObj);
