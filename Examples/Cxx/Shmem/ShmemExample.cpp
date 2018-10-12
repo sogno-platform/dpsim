@@ -60,7 +60,7 @@ int main(int argc, char* argv[])
 	auto sys = SystemTopology(50, SystemNodeList{Node::GND, n1, n2, n3, n4}, SystemComponentList{evs, rs, rl, ll, rL});
 
 	auto intf = Interface("/villas1-in", "/villas1-out");
-	intf.addImport(evs->attribute<Complex>("V_ref"), 0);
+	evs->setAttributeRef("V_ref", intf.importComplex(0));
 	intf.addExport(evs->attribute<Complex>("i_comp"), 0);
 
 	Real timeStep = 0.001;

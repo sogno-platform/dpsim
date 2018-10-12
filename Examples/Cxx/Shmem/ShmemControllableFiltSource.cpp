@@ -68,17 +68,11 @@ int main(int argc, char *argv[]) {
 	r1->connect({ Node::GND, n1 });
 	load->connect({ n1 });
 
-	Real inputP = 8, inputQ = 0;
-	auto inputPAttr = CPS::Attribute<Real>::make(&inputP);
-	auto inputQAttr = CPS::Attribute<Real>::make(&inputQ);
-	filtP->setInput(inputPAttr);
-	filtQ->setInput(inputQAttr);
-
 	load->setAttributeRef("power_active", filtP->attribute<Real>("output"));
 	load->setAttributeRef("power_reactive", filtQ->attribute<Real>("output"));
 
-	intf.addImport(inputPAttr, 0);
-	intf.addImport(inputQAttr, 1);
+	filtP->setInput(intf.importReal(0));
+	filtQ->setInput(intf.importReal(1));
 
 	auto sys = SystemTopology(50, SystemNodeList{n1}, SystemComponentList{ecs, r1, load, filtP, filtQ});
 	auto sim = RealTimeSimulation(simName, sys, timeStep, finalTime,

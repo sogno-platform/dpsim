@@ -86,20 +86,17 @@ int main(int argc, char *argv[]) {
 		// Controllers and filter
 		std::vector<Real> coefficients_profile = std::vector(2000, 1./2000);
 
-		Real input = 0;
-		auto inputAttr = Attribute<Real>::make(&input);
 		auto filtP_profile = FIRFilter::make("filter_p_profile", coefficients_profile, 0, Logger::Level::INFO);
 		filtP_profile->setPriority(1);
-		filtP_profile->setInput(inputAttr);
 		load_profile->setAttributeRef("power_active", filtP_profile->attribute<Real>("output"));
 		sys.mComponents.push_back(filtP_profile);
 
 		// Register interface current source and voltage drop
-		intf1.addImport(ecs->attribute<Complex>("I_ref"), 0);
+		ecs->setAttributeRef("I_ref", intf1.importComplex(0));
 		intf1.addExport(ecs->attribute<Complex>("v_comp"), 0);
 
 		// TODO: gain by 20e8
-		intf2.addImport(inputAttr, 0);
+		filtP_profile->setInput(intf2.importReal(0));
 
 		// Register exportable node voltages
 		for (auto n : sys.mNodes) {
@@ -138,11 +135,8 @@ int main(int argc, char *argv[]) {
 
 		// Controllers and filter
 		std::vector<Real> coefficients = std::vector(100, 1./100);
-		Real input = 0;
-		auto inputAttr = Attribute<Real>::make(&input);
 		auto filtP = FIRFilter::make("filter_p", coefficients, 0, Logger::Level::INFO);
 		filtP->setPriority(1);
-		filtP->setInput(inputAttr);
 		load->setAttributeRef("active_power", filtP->attribute<Real>("output"));
 
 		auto sys = SystemTopology(args.sysFreq, SystemNodeList{n1}, SystemComponentList{evs, load, filtP});
@@ -170,12 +164,12 @@ int main(int argc, char *argv[]) {
 
 		// Register voltage source reference and current flowing through source
 		// multiply with -1 to consider passive sign convention
-		intf1.addImport(evs->attribute<Complex>("V_ref"), 0);
+		evs->setAttributeRef("V_ref", intf1.importComplex(0));
 		// TODO: invalid sign
 		intf1.addExport(evs->attribute<Complex>("i_comp"), 0);
 
 		// Register controllable load
-		intf2.addImport(inputAttr, 0);
+		filtP->setInput(intf2.importReal(0));
 		intf2.addExport(load->attribute<Real>("power_active"), 0);
 		intf2.addExport(load->attribute<Complex>("v_comp"), 1);
 		intf2.addExport(load->attribute<Complex>("i_comp"), 2);

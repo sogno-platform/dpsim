@@ -143,34 +143,44 @@ void Interface::writeValues() {
 	}
 }
 
-void Interface::addImport(Attribute<Int>::Ptr attr, Int idx) {
+Attribute<Int>::Ptr Interface::importInt(Int idx) {
+	Attribute<Int>::Ptr attr = Attribute<Int>::make(0, Flags::read | Flags::write);
 	addImport([attr, idx](Sample *smp) {
 		if (idx >= smp->length)
 			throw std::length_error("incomplete data received from interface");
 
 		attr->set(smp->data[idx].i);
 	});
+	mImportAttrs.push_back(attr);
+	return attr;
 }
 
-void Interface::addImport(Attribute<Real>::Ptr attr, Int idx) {
+Attribute<Real>::Ptr Interface::importReal(Int idx) {
+	Attribute<Real>::Ptr attr = Attribute<Real>::make(0, Flags::read | Flags::write);
 	addImport([attr, idx](Sample *smp) {
 		if (idx >= smp->length)
 			throw std::length_error("incomplete data received from interface");
 
 		attr->set(smp->data[idx].f);
 	});
+	mImportAttrs.push_back(attr);
+	return attr;
 }
 
-void Interface::addImport(Attribute<Bool>::Ptr attr, Int idx) {
+Attribute<Bool>::Ptr Interface::importBool(Int idx) {
+	Attribute<Bool>::Ptr attr = Attribute<Bool>::make(false, Flags::read | Flags::write);
 	addImport([attr, idx](Sample *smp) {
 		if (idx >= smp->length)
 			throw std::length_error("incomplete data received from interface");
 
 		attr->set(smp->data[idx].b);
 	});
+	mImportAttrs.push_back(attr);
+	return attr;
 }
 
-void Interface::addImport(Attribute<Complex>::Ptr attr, Int idx) {
+Attribute<Complex>::Ptr Interface::importComplex(Int idx) {
+	Attribute<Complex>::Ptr attr = Attribute<Complex>::make(0, Flags::read | Flags::write);
 	addImport([attr, idx](Sample *smp) {
 		if (idx >= smp->length)
 			throw std::length_error("incomplete data received from interface");
@@ -180,6 +190,8 @@ void Interface::addImport(Attribute<Complex>::Ptr attr, Int idx) {
 
 		attr->set(y);
 	});
+	mImportAttrs.push_back(attr);
+	return attr;
 }
 
 void Interface::addExport(Attribute<Int>::Ptr attr, Int idx) {

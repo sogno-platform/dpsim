@@ -52,7 +52,15 @@ namespace DPsim {
 		typedef struct ::shmem_int ShmemInterface;
 
 	protected:
+		// Using std::function / lambda makes the other template code nicer, but from
+		// the outside, only the attribute-based functions should be used to
+		// guarantee proper scheduling
+
+		void addImport(std::function<void(Sample*)> l) { mImports.push_back(l); }
+		void addExport(std::function<void(Sample*)> l) { mExports.push_back(l); }
+
 		std::vector<std::function<void(Sample*)>> mExports, mImports;
+		CPS::AttributeBase::List mExportAttrs, mImportAttrs;
 
 		ShmemInterface mShmem;
 		Sample *mLastSample;
@@ -98,13 +106,10 @@ namespace DPsim {
 		void open();
 		void close();
 
-		void addImport(std::function<void(Sample*)> l) { mImports.push_back(l); }
-		void addExport(std::function<void(Sample*)> l) { mExports.push_back(l); }
-
-		void addImport(CPS::Attribute<Int>::Ptr attr, Int idx);
-		void addImport(CPS::Attribute<Real>::Ptr attr, Int idx);
-		void addImport(CPS::Attribute<Bool>::Ptr attr, Int idx);
-		void addImport(CPS::Attribute<Complex>::Ptr attr, Int idx);
+		CPS::Attribute<Int>::Ptr importInt(Int idx);
+		CPS::Attribute<Real>::Ptr importReal(Int idx);
+		CPS::Attribute<Bool>::Ptr importBool(Int idx);
+		CPS::Attribute<Complex>::Ptr importComplex(Int idx);
 
 		void addExport(CPS::Attribute<Int>::Ptr attr, Int idx);
 		void addExport(CPS::Attribute<Real>::Ptr attr, Int idx);

@@ -95,9 +95,9 @@ PyObject* Python::Interface::addImport(Interface* self, PyObject* args, PyObject
 	int idx;
 	const char *attrName;
 	double gain;
-	int mode;
+	int mode = 0;
 
-	const char *kwlist[] = {"component", "attribute", "idx", "mode", "gain", nullptr};
+	const char *kwlist[] = {"component", "attribute", "idx", "gain", "mode", nullptr};
 
 	if (!PyArg_ParseTupleAndKeywords(args, kwargs, "Osi|ds", (char **) kwlist, &pyObj, &attrName, &idx, &gain, &mode))
 		return nullptr;
@@ -124,49 +124,52 @@ PyObject* Python::Interface::addImport(Interface* self, PyObject* args, PyObject
 	}
 
 	try {
+		// TODO this mode stuff will not easily work with the new attribute system
+		// (has it ever?).
 		switch (mode) {
 			case 0: { // Real Attribute
-				auto a = attrList->attribute<CPS::Real>(attrName);
-
-				self->intf->addImport(a, idx);
+				auto a = self->intf->importReal(idx);
+				attrList->setAttributeRef(attrName, a);
 				break;
 			}
 
-			case 2: { // Complex Attribute: mag & phase
-				auto a = attrList->attributeComplex(attrName);
-
-				self->intf->addImport(a->mag(),   idx);
-				self->intf->addImport(a->phase(), idx+1);
-				break;
-			}
-
-			case 3: { // Complex Attribute: real part
-				auto a = attrList->attributeComplex(attrName);
-
-				self->intf->addImport(a->real(), idx);
-				break;
-			}
-
-			case 4: { // Complex Attribute: imag part
-				auto a = attrList->attributeComplex(attrName);
-
-				self->intf->addImport(a->imag(), idx);
-				break;
-			}
-
-			case 5: { // Complex Attribute: phase
-				auto a = attrList->attributeComplex(attrName);
-
-				self->intf->addImport(a->phase(), idx);
-				break;
-			}
-
-			case 6: { // Complex Attribute: magnitude
-				auto a = attrList->attributeComplex(attrName);
-
-				self->intf->addImport(a->mag(), idx);
-				break;
-			}
+//			case 2: { // Complex Attribute: mag & phase
+//				auto magAttr = self->intf->importReal(idx);
+//				auto phaseAttr = self->intf->importReal(idx+1);
+//
+//				self->intf->addImport([attr, idx](Sample *smp))
+//				self->intf->addImport(a->mag(),   idx);
+//				self->intf->addImport(a->phase(), idx+1);
+//				break;
+//			}
+//
+//			case 3: { // Complex Attribute: real part
+//				auto a = attrList->attributeComplex(attrName);
+//
+//				self->intf->addImport(a->real(), idx);
+//				break;
+//			}
+//
+//			case 4: { // Complex Attribute: imag part
+//				auto a = attrList->attributeComplex(attrName);
+//
+//				self->intf->addImport(a->imag(), idx);
+//				break;
+//			}
+//
+//			case 5: { // Complex Attribute: phase
+//				auto a = attrList->attributeComplex(attrName);
+//
+//				self->intf->addImport(a->phase(), idx);
+//				break;
+//			}
+//
+//			case 6: { // Complex Attribute: magnitude
+//				auto a = attrList->attributeComplex(attrName);
+//
+//				self->intf->addImport(a->mag(), idx);
+//				break;
+//			}
 
 			default:
 				PyErr_SetString(PyExc_TypeError, "Invalid mode");
