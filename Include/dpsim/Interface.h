@@ -86,6 +86,10 @@ namespace DPsim {
 				}
 			}
 
+			String toString() const {
+				return mIntf.mRName + ".Read";
+			}
+
 			void execute(Real time, Int timeStepCount);
 
 		private:
@@ -98,6 +102,10 @@ namespace DPsim {
 				for (auto attr : intf.mExportAttrs) {
 					mAttributeDependencies.push_back(attr);
 				}
+			}
+
+			String toString() const {
+				return mIntf.mWName + ".Write";
 			}
 
 			void execute(Real time, Int timeStepCount);

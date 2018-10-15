@@ -35,6 +35,7 @@ DataLogger::DataLogger(Bool enabled) :
 }
 
 DataLogger::DataLogger(String name, Bool enabled, UInt downsampling) :
+	mName(name),
 	mEnabled(enabled),
 	mDownsampling(downsampling) {
 	if (!mEnabled)

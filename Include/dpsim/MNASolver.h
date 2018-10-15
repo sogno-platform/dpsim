@@ -204,6 +204,10 @@ namespace DPsim {
 				mModifiedAttributes.push_back(solver.attribute("x"));
 			}
 
+			String toString() const {
+				return "MNASolver.Solve";
+			}
+
 			void execute(Real time, Int timeStepCount);
 
 		private:

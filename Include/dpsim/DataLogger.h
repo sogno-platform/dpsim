@@ -37,6 +37,7 @@ namespace DPsim {
 
 	protected:
 		std::ofstream mLogFile;
+		String mName;
 		Bool mEnabled;
 		UInt mDownsampling;
 
@@ -81,6 +82,10 @@ namespace DPsim {
 				for (auto attr : logger.mAttributes) {
 					mAttributeDependencies.push_back(attr.second);
 				}
+			}
+
+			String toString() const {
+				return mLogger.mName + ".Write";
 			}
 
 			void execute(Real time, Int timeStepCount);
