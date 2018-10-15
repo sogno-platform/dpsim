@@ -29,6 +29,7 @@
 #include <cps/PtrFactory.h>
 #include <cps/Attribute.h>
 #include <cps/Node.h>
+#include <cps/Task.h>
 
 namespace DPsim {
 
@@ -37,7 +38,7 @@ namespace DPsim {
 	protected:
 		std::ofstream mLogFile;
 		Bool mEnabled;
-
+		UInt mDownsampling;
 
 		std::map<String, CPS::AttributeBase::Ptr> mAttributes;
 
@@ -46,10 +47,11 @@ namespace DPsim {
 		void logDataLine(Real time, const MatrixComp& data);
 
 	public:
-		using Ptr = std::shared_ptr<DataLogger>;
+		typedef std::shared_ptr<DataLogger> Ptr;
+		typedef std::vector<DataLogger::Ptr> List;
 
 		DataLogger(Bool enabled = true);
-		DataLogger(String name, Bool enabled = true);
+		DataLogger(String name, Bool enabled = true, UInt downsampling = 1);
 		~DataLogger();
 
 		void logPhasorNodeValues(Real time, const Matrix& data);
@@ -69,7 +71,23 @@ namespace DPsim {
 			addAttribute(node->name() + ".voltage", node->attributeMatrix("voltage"));
 		}
 
-		void log(Real time);
+		void log(Real time, Int timeStepCount);
+
+		CPS::Task::Ptr getTask();
+
+		class Step : public CPS::Task {
+		public:
+			Step(DataLogger& logger) : mLogger(logger) {
+				for (auto attr : logger.mAttributes) {
+					mAttributeDependencies.push_back(attr.second);
+				}
+			}
+
+			void execute(Real time, Int timeStepCount);
+
+		private:
+			DataLogger& mLogger;
+		};
 	};
 }
 

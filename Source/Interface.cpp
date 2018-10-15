@@ -143,15 +143,14 @@ void Interface::writeValues() {
 	}
 }
 
-void Interface::PreStep::execute() {
-	if (mIntf.mTimeStepCount % mIntf.mDownsampling == 0)
+void Interface::PreStep::execute(Real time, Int timeStepCount) {
+	if (timeStepCount % mIntf.mDownsampling == 0)
 		mIntf.readValues(mIntf.mSync);
 }
 
-void Interface::PostStep::execute() {
-	if (mIntf.mTimeStepCount % mIntf.mDownsampling == 0)
+void Interface::PostStep::execute(Real time, Int timeStepCount) {
+	if (timeStepCount % mIntf.mDownsampling == 0)
 		mIntf.writeValues();
-	mIntf.mTimeStepCount++;
 }
 
 Attribute<Int>::Ptr Interface::importInt(Int idx) {

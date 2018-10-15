@@ -108,13 +108,14 @@ PyObject* Python::Logger::logAttribute(Logger* self, PyObject* args, PyObject *k
 
 int Python::Logger::init(Python::Logger *self, PyObject *args, PyObject *kwds)
 {
-	static const char *kwlist[] = {"filename", nullptr};
+	static const char *kwlist[] = {"filename", "down_sampling", nullptr};
+	int downsampling = 1;
 
-	if (!PyArg_ParseTupleAndKeywords(args, kwds, "s", (char **) kwlist, &self->filename)) {
+	if (!PyArg_ParseTupleAndKeywords(args, kwds, "s|i", (char **) kwlist, &self->filename, &downsampling)) {
 		return -1;
 	}
 
-	self->logger = DPsim::DataLogger::make(self->filename);
+	self->logger = DPsim::DataLogger::make(self->filename, true, downsampling);
 
 	return 0;
 }

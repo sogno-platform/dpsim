@@ -27,7 +27,7 @@ namespace DPsim {
 	class SequentialScheduler : public Scheduler {
 	public:
 		void createSchedule(CPS::Task::List& tasks);
-		void step();
+		void step(Real time, Int timeStepCount);
 
 	private:
 		CPS::Task::List mSchedule;

@@ -23,11 +23,13 @@
 
 #include <cps/Task.h>
 
+#include <dpsim/Definitions.h>
+
 namespace DPsim {
 	class Scheduler {
 	public:
 		virtual void createSchedule(CPS::Task::List& tasks) = 0;
-		virtual void step() = 0;
+		virtual void step(Real time, Int timeStepCount) = 0;
 	};
 
 	// TODO extend / subclass

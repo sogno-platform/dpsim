@@ -379,7 +379,7 @@ Task::List MnaSolver<VarType>::getTasks() {
 }
 
 template <typename VarType>
-void MnaSolver<VarType>::SolveTask::execute() {
+void MnaSolver<VarType>::SolveTask::execute(Real time, Int timeStepCount) {
 	// Reset source vector
 	mSolver.mRightSideVector.setZero();
 

@@ -204,7 +204,7 @@ namespace DPsim {
 				mModifiedAttributes.push_back(solver.attribute("x"));
 			}
 
-			void execute();
+			void execute(Real time, Int timeStepCount);
 
 		private:
 			MnaSolver<VarType>& mSolver;

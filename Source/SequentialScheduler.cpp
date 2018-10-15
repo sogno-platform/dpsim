@@ -94,8 +94,8 @@ void SequentialScheduler::createSchedule(Task::List& tasks) {
 	}
 }
 
-void SequentialScheduler::step() {
+void SequentialScheduler::step(Real time, Int timeStepCount) {
 	for (auto it : mSchedule) {
-		it->execute();
+		it->execute(time, timeStepCount);
 	}
 }

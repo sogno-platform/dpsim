@@ -384,15 +384,14 @@ PyObject* Python::Simulation::addInterface(Simulation* self, PyObject* args, PyO
 }
 
 const char *Python::Simulation::docAddLogger =
-"add_logger(logger, down_sampling=1)";
+"add_logger(logger)";
 PyObject* Python::Simulation::addLogger(Simulation *self, PyObject *args, PyObject *kwargs)
 {
-	int downsampling = 1;
 	PyObject *pyObj;
 
-	const char *kwlist[] = {"logger", "down_sampling", nullptr};
+	const char *kwlist[] = {"logger", nullptr};
 
-	if (!PyArg_ParseTupleAndKeywords(args, kwargs, "O|i", (char **) kwlist, &pyObj, &downsampling))
+	if (!PyArg_ParseTupleAndKeywords(args, kwargs, "O", (char **) kwlist, &pyObj))
 		return nullptr;
 
 	if (!PyObject_TypeCheck(pyObj, &Python::Logger::type)) {
@@ -402,7 +401,7 @@ PyObject* Python::Simulation::addLogger(Simulation *self, PyObject *args, PyObje
 
 	Python::Logger *pyLogger = (Python::Logger*) pyObj;
 
-	self->sim->addLogger(pyLogger->logger, downsampling);
+	self->sim->addLogger(pyLogger->logger);
 
 	Py_RETURN_NONE;
 }

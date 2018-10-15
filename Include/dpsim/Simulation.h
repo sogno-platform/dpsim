@@ -94,7 +94,7 @@ namespace DPsim {
 		};
 
 		/// The data loggers
-		std::vector<LoggerMapping> mLoggers;
+		DataLogger::List mLoggers;
 
 		/// Creates system matrix according to
 		Simulation(String name,
@@ -132,8 +132,8 @@ namespace DPsim {
 
 		std::vector<InterfaceMapping> & interfaces() { return mInterfaces; }
 #endif
-		void addLogger(DataLogger::Ptr logger, UInt downsampling = 1) {
-			mLoggers.push_back({logger, downsampling});
+		void addLogger(DataLogger::Ptr logger) {
+			mLoggers.push_back(logger);
 		}
 
 		// #### Getter ####
@@ -142,7 +142,7 @@ namespace DPsim {
 		Real finalTime() const { return mFinalTime; }
 		Int timeStepCount() const { return mTimeStepCount; }
 		Real timeStep() const { return mTimeStep; }
-		std::vector<LoggerMapping> & loggers() { return mLoggers; }
+		DataLogger::List& loggers() { return mLoggers; }
 	};
 
 }

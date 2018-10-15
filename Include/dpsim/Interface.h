@@ -75,7 +75,6 @@ namespace DPsim {
 		bool mSync;
 		/// Downsampling
 		UInt mDownsampling;
-		Int mTimeStepCount = 0;
 
 	public:
 
@@ -87,7 +86,7 @@ namespace DPsim {
 				}
 			}
 
-			void execute();
+			void execute(Real time, Int timeStepCount);
 
 		private:
 			Interface& mIntf;
@@ -101,7 +100,7 @@ namespace DPsim {
 				}
 			}
 
-			void execute();
+			void execute(Real time, Int timeStepCount);
 
 		private:
 			Interface& mIntf;

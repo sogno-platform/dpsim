@@ -113,6 +113,9 @@ void Simulation::run() {
 		}
 	}
 #endif
+	for (auto logger : mLoggers) {
+		tasks.push_back(logger->getTask());
+	}
 	mScheduler->createSchedule(tasks);
 
 	mLog.info() << "Opening interfaces." << std::endl;
@@ -139,17 +142,11 @@ void Simulation::run() {
 }
 
 Real Simulation::step() {
+	// TODO: events should be integrated into tasking system
 	mEvents.handleEvents(mTime);
 
-	//nextTime = mSolver->step(mTime);
-	mScheduler->step();
+	mScheduler->step(mTime, mTimeStepCount);
 	mSolver->log(mTime);
-
-	// TODO: events and logging should be integrated into tasking system
-	for (auto lg : mLoggers) {
-		if (mTimeStepCount % lg.downsampling == 0)
-			lg.logger->log(mTime);
-	}
 
 	mTime += mTimeStep;
 	mTimeStepCount++;
