@@ -22,76 +22,57 @@
 
 #include <dpsim/SequentialScheduler.h>
 
-using namespace CPS;
-using namespace DPsim;
-
 #include <deque>
+#include <fstream>
 #include <iostream>
 #include <typeinfo>
 #include <unordered_map>
+
+#include <boost/graph/adjacency_list.hpp>
+#include <boost/graph/graphviz.hpp>
+#include <boost/graph/topological_sort.hpp>
+
+using namespace CPS;
+using namespace DPsim;
+using namespace boost;
 
 // Simple topological sorting using Kahn's algorithm.
 void SequentialScheduler::createSchedule(Task::List& tasks) {
 	mSchedule.clear();
 
 	// Create graph (list of out/in edges for each node) from attribute dependencies
-	std::unordered_map<CPS::AttributeBase::Ptr, std::deque<Task::Ptr>> dependencies;
-	for (auto task : tasks) {
-		for (auto attr : task->getAttributeDependencies()) {
-			dependencies[attr].push_back(task);
+	std::unordered_map<CPS::AttributeBase::Ptr, std::deque<int>> dependencies;
+	for (size_t i = 0; i < tasks.size(); i++) {
+		for (auto attr : tasks[i]->getAttributeDependencies()) {
+			dependencies[attr].push_back(i);
 		}
 	}
 
-	std::unordered_map<Task::Ptr, std::deque<Task::Ptr>> out_edges;
-	std::unordered_map<Task::Ptr, std::deque<Task::Ptr>> in_edges;
-	for (auto from : tasks) {
-		for (auto attr : from->getModifiedAttributes()) {
-			for (auto to : dependencies[attr]) {
-				out_edges[from].push_back(to);
-				in_edges[to].push_back(from);
+	typedef adjacency_list<vecS, vecS, directedS> Graph;
+	typedef graph_traits<Graph>::vertex_descriptor Vertex;
+	typedef std::list<Vertex> Order;
+
+	Graph g(tasks.size());
+
+	for (size_t i = 0; i < tasks.size(); i++) {
+		for (auto attr : tasks[i]->getModifiedAttributes()) {
+			for (auto j : dependencies[attr]) {
+				add_edge(i, j, g);
 			}
 		}
 	}
 
-	std::deque<Task::Ptr> ready;
-	for (auto task : tasks) {
-		if (in_edges[task].empty()) {
-			ready.push_back(task);
-		}
-	}
+	Order order;
+	topological_sort(g, std::front_inserter(order));
+	for (auto i : order)
+		mSchedule.push_back(tasks[i]);
 
-	// keep list of tasks without incoming edges;
-	// iteratively remove such tasks from the graph and put them into the schedule
-	while (!ready.empty()) {
-		Task::Ptr t = ready.front();
-		ready.pop_front();
-		mSchedule.push_back(t);
+	std::vector<String> names(tasks.size());
+	for (size_t i = 0; i < tasks.size(); i++)
+		names[i] = tasks[i]->toString();
 
-		for (auto after : out_edges[t]) {
-			for (auto edgeIt = in_edges[after].begin(); edgeIt != in_edges[after].end(); ++edgeIt) {
-				if (*edgeIt == t) {
-					in_edges[after].erase(edgeIt);
-					break;
-				}
-			}
-			if (in_edges[after].empty()) {
-				ready.push_back(after);
-			}
-		}
-		out_edges.erase(t);
-	}
-
-	// sanity check: all edges should have been removed, otherwise
-	// the graph had a cycle
-	for (auto t : tasks) {
-		if (!out_edges[t].empty() || !in_edges[t].empty())
-			throw SchedulingException();
-	}
-
-	std::cout << "Schedule:" << std::endl;
-	for (auto it : mSchedule) {
-		std::cout << typeid(*it).name() << std::endl;
-	}
+	std::ofstream outfile("dependencies.dot");
+	write_graphviz(outfile, g, make_label_writer(names.data()));
 }
 
 void SequentialScheduler::step(Real time, Int timeStepCount) {
