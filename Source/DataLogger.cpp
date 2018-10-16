@@ -158,15 +158,18 @@ CPS::Task::Ptr DataLogger::getTask() {
 
 void DataLogger::addAttribute(const String &name, CPS::Attribute<Int>::Ptr attr) {
 	mAttributes[name] = attr;
+	mDependencies.push_back(attr);
 }
 
 void DataLogger::addAttribute(const String &name, CPS::Attribute<Real>::Ptr attr) {
 	mAttributes[name] = attr;
+	mDependencies.push_back(attr);
 }
 
 void DataLogger::addAttribute(const String &name, CPS::Attribute<Complex>::Ptr attr) {
 	auto attrComp = std::static_pointer_cast<CPS::ComplexAttribute>(attr);
 
+	mDependencies.push_back(attr);
 	mAttributes[name + ".real"] = attrComp->real();
 	mAttributes[name + ".imag"] = attrComp->imag();
 }
@@ -174,6 +177,7 @@ void DataLogger::addAttribute(const String &name, CPS::Attribute<Complex>::Ptr a
 void DataLogger::addAttribute(const String &name, CPS::Attribute<MatrixVar<Real>>::Ptr attr) {
 	const MatrixVar<Real> &m = attr->get();
 
+	mDependencies.push_back(attr);
 	auto attrMat = std::static_pointer_cast<CPS::MatrixAttribute<Real>>(attr);
 
 	if (m.rows() == 1 && m.cols() == 1) {
@@ -197,6 +201,7 @@ void DataLogger::addAttribute(const String &name, CPS::Attribute<MatrixVar<Compl
 	const MatrixVar<Complex> &m = attr->get();
 
 	auto attrMat = std::static_pointer_cast<CPS::MatrixAttribute<Complex>>(attr);
+	mDependencies.push_back(attr);
 
 	if (m.rows() == 1 && m.cols() == 1) {
 		addAttribute(name, attrMat->coeff(0, 0));
