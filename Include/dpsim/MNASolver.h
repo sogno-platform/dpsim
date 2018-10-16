@@ -101,6 +101,8 @@ namespace DPsim {
 		Int mLastLogTimeStep = 0;
 		/// Down sampling rate for log
 		Int mDownSampleRate = 1;
+		/// Name for displaying
+		String mName;
 		/// Simulation log level
 		CPS::Logger::Level mLogLevel;
 		/// Simulation logger
@@ -148,6 +150,7 @@ namespace DPsim {
 			mDomain(domain),
 			mSteadyStateInit(steadyStateInit),
 			mDownSampleRate(downSampleRate),
+			mName(name),
 			mLogLevel(logLevel),
 			mLog(name + "_MNA", logLevel),
 			mLeftVectorLog(name + "_LeftVector", logLevel != CPS::Logger::Level::NONE),
@@ -196,7 +199,7 @@ namespace DPsim {
 			}
 
 			String toString() const {
-				return "MNASolver.Solve";
+				return mSolver.mName + ".Solve";
 			}
 
 			void execute(Real time, Int timeStepCount);
@@ -212,7 +215,7 @@ namespace DPsim {
 			}
 
 			String toString() const {
-				return "MNASolver.Log";
+				return mSolver.mName + ".Log";
 			}
 
 			void execute(Real time, Int timeStepCount);
