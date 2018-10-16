@@ -146,7 +146,6 @@ Real Simulation::step() {
 	mEvents.handleEvents(mTime);
 
 	mScheduler->step(mTime, mTimeStepCount);
-	mSolver->log(mTime);
 
 	mTime += mTimeStep;
 	mTimeStepCount++;

@@ -174,16 +174,7 @@ namespace DPsim {
 		/// Solve system A * x = z for x and current time
 		Real step(Real time);
 		/// Log left and right vector values for each simulation step
-		void log(Real time) {
-			if (mDomain == CPS::Domain::EMT) {
-				mLeftVectorLog.logEMTNodeValues(time, leftSideVector());
-				mRightVectorLog.logEMTNodeValues(time, rightSideVector());
-			}
-			else {
-				mLeftVectorLog.logPhasorNodeValues(time, leftSideVector());
-				mRightVectorLog.logPhasorNodeValues(time, rightSideVector());
-			}
-		}
+		void log(Real time);
 		// #### Getter ####
 		Matrix& leftSideVector() { return mLeftSideVector; }
 		Matrix& rightSideVector() { return mRightSideVector; }
@@ -206,6 +197,22 @@ namespace DPsim {
 
 			String toString() const {
 				return "MNASolver.Solve";
+			}
+
+			void execute(Real time, Int timeStepCount);
+
+		private:
+			MnaSolver<VarType>& mSolver;
+		};
+
+		class LogTask : public CPS::Task {
+		public:
+			LogTask(MnaSolver<VarType>& solver) : mSolver(solver) {
+				mAttributeDependencies.push_back(solver.attribute("x"));
+			}
+
+			String toString() const {
+				return "MNASolver.Log";
 			}
 
 			void execute(Real time, Int timeStepCount);

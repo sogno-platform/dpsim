@@ -374,6 +374,7 @@ Task::List MnaSolver<VarType>::getTasks() {
 		}
 	}
 	l.push_back(std::make_shared<MnaSolver<VarType>::SolveTask>(*this));
+	l.push_back(std::make_shared<MnaSolver<VarType>::LogTask>(*this));
 
 	return l;
 }
@@ -405,7 +406,22 @@ void MnaSolver<VarType>::SolveTask::execute(Real time, Int timeStepCount) {
 	// Components' states will be updated by the post-step tasks
 }
 
+template <typename VarType>
+void MnaSolver<VarType>::log(Real time) {
+	if (mDomain == CPS::Domain::EMT) {
+		mLeftVectorLog.logEMTNodeValues(time, leftSideVector());
+		mRightVectorLog.logEMTNodeValues(time, rightSideVector());
+	}
+	else {
+		mLeftVectorLog.logPhasorNodeValues(time, leftSideVector());
+		mRightVectorLog.logPhasorNodeValues(time, rightSideVector());
+	}
+}
 
+template <typename VarType>
+void MnaSolver<VarType>::LogTask::execute(Real time, Int timeStepCount) {
+	mSolver.log(time);
+}
 
 template class DPsim::MnaSolver<Real>;
 template class DPsim::MnaSolver<Complex>;
