@@ -529,25 +529,30 @@ PyObject* Python::Simulation::stop(Simulation *self, PyObject *args)
 	Py_RETURN_NONE;
 }
 
-const char *Python::Simulation::docGetEventFD =
-"get_eventfd(flags)\n"
-"Return a poll()/select()'able file descriptor which can be used to asynchronously\n"
-"notify the Python code about state changes and other events of the simulation.\n"
-"\n"
-":param flags: An optional mask of events which should be reported.\n"
-":param coalesce: Do not report each event  but do a rate reduction instead.\n";
-PyObject * Python::Simulation::getEventFD(Simulation *self, PyObject *args) {
+const char *Python::Simulation::docAddEventFD =
+"add_eventfd(flags)\n";
+PyObject * Python::Simulation::addEventFD(Simulation *self, PyObject *args) {
 	int flags = -1, coalesce = 1, fd;
 
-	if (!PyArg_ParseTuple(args, "|ii", &flags, &coalesce))
+	if (!PyArg_ParseTuple(args, "i|ii", &fd, &flags, &coalesce))
 		return nullptr;
-	fd = self->channel->fd();
-	if (fd < 0) {
-		PyErr_SetString(PyExc_SystemError, "Failed to created event file descriptor");
-		return nullptr;
-	}
 
-	return Py_BuildValue("i", fd);
+	self->channel->addFd(fd);
+
+	Py_RETURN_NONE;
+}
+
+const char *Python::Simulation::docRemoveEventFD =
+"remove_eventfd(fd)\n";
+PyObject * Python::Simulation::removeEventFD(Simulation *self, PyObject *args) {
+	int flags = -1, coalesce = 1, fd;
+
+	if (!PyArg_ParseTuple(args, "i", &fd, &flags, &coalesce))
+		return nullptr;
+
+	self->channel->removeFd(fd);
+
+	Py_RETURN_NONE;
 }
 
 const char *Python::Simulation::docState =
@@ -608,7 +613,8 @@ PyMethodDef Python::Simulation::methods[] = {
 	{"start",         (PyCFunction) Python::Simulation::start, METH_NOARGS, (char *) Python::Simulation::docStart},
 	{"step",          (PyCFunction) Python::Simulation::step, METH_NOARGS,  (char *) Python::Simulation::docStep},
 	{"stop",          (PyCFunction) Python::Simulation::stop, METH_NOARGS,  (char *) Python::Simulation::docStop},
-	{"get_eventfd",   (PyCFunction) Python::Simulation::getEventFD, METH_VARARGS, (char *) Python::Simulation::docGetEventFD},
+	{"add_eventfd",   (PyCFunction) Python::Simulation::addEventFD, METH_VARARGS, (char *) Python::Simulation::docAddEventFD},
+	{"remove_eventfd",(PyCFunction) Python::Simulation::removeEventFD, METH_VARARGS, (char *) Python::Simulation::docRemoveEventFD},
 	{nullptr, nullptr, 0, nullptr}
 };
 

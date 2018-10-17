@@ -4,6 +4,7 @@ import time
 import sys
 import datetime
 import logging
+import socket
 
 LOGGER = logging.getLogger('dpsim.simulation')
 
@@ -46,9 +47,11 @@ class Simulation(_dpsim.Simulation):
         if loop is None:
             self._loop = asyncio.get_event_loop()
 
-        self._fd = self.get_eventfd()
+        self._event_socks = socket.socketpair()
 
-        self._events = EventChannel(self._fd, self._loop)
+        self._events = EventChannel(self._event_socks[0], self._loop)
+
+        self.add_eventfd(self._event_socks[1].fileno())
 
         self._events.add_callback(self.running, self, event=Event.running)
         self._events.add_callback(self.stopped, self, event=Event.stopped)
@@ -57,6 +60,9 @@ class Simulation(_dpsim.Simulation):
 
         if pbar:
             self.show_progressbar()
+
+    def __del__(self):
+        self.remove_eventfd(self._event_socks[0].fileno())
 
     def add_callback(self, cb, *args, event=None):
         self._events.add_callback(cb, *args, event=event)

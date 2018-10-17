@@ -15,7 +15,7 @@ add_library(dpsim_python SHARED
 )
 
 if(WITH_SHMEM)
-	target_sources(dpsim_python Interface.cpp)
+	target_sources(dpsim_python PUBLIC Interface.cpp)
 endif()
 
 file(MAKE_DIRECTORY ${CMAKE_BINARY_DIR}/Include/dpsim/Python)

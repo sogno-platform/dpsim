@@ -21,147 +21,33 @@
 #include <dpsim/Python/EventChannel.h>
 #include <cps/Definitions.h>
 
+#ifdef _WIN32
+  #include <winsock2.h>
+#else
+  #include <sys/socket.h>
+#endif
+
 using namespace DPsim::Python;
 
-#ifdef _WIN32
-// Source: https://github.com/libevent/libevent/blob/master/evutil.c
-static int createSocketPair(int family, int type, int protocol, Socket fds[2]) {
-	int ret;
-	Socket listener = -1;
-	Socket connector = -1;
-	Socket acceptor = -1;
-
-	struct sockaddr_in listen_addr;
-	struct sockaddr_in connect_addr;
-	int size;
-
-	int test = family != AF_INET || type != SOCK_STREAM;
-#ifdef AF_UNIX
-	test = test && (family != AF_UNIX);
-#endif
-	if (test)
-		return -1;
-
-	if (!fds)
-		return -1;
-
-	listener = socket(AF_INET, type, 0);
-	if (listener < 0)
-		return -1;
-
-	memset(&connect_addr, 0, sizeof(connect_addr));
-	memset(&listen_addr, 0, sizeof(listen_addr));
-
-	listen_addr.sin_family = AF_INET;
-	listen_addr.sin_addr.s_addr = htonl(INADDR_LOOPBACK);
-	listen_addr.sin_port = 0; // kernel chooses port
-
-	ret = bind(listener, (struct sockaddr *) &listen_addr, sizeof (listen_addr));
-	if (ret == -1)
-		goto fail;
-
-	ret = listen(listener, 1);
-	if (ret == -1)
-		goto fail;
-
-	connector = socket(AF_INET, type, 0);
-	if (connector < 0)
-		goto fail;
-
-	/* We want to find out the port number to connect to.  */
-	size = sizeof(connect_addr);
-	ret = getsockname(listener, (struct sockaddr *) &connect_addr, &size);
-	if (ret == -1)
-		goto fail;
-
-	if (size != sizeof(connect_addr))
-		goto fail;
-
-	ret = connect(connector, (struct sockaddr *) &connect_addr, sizeof(connect_addr));
-	if (ret == -1)
-		goto fail;
-
-	size = sizeof(listen_addr);
-	acceptor = accept(listener, (struct sockaddr *) &listen_addr, &size);
-	if (acceptor < 0)
-		goto fail;
-
-	if (size != sizeof(listen_addr))
-		goto fail;
-
-	// Now check we are talking to ourself by matching port and host on the two sockets
-	ret = getsockname(connector, (struct sockaddr *) &connect_addr, &size);
-	if (ret == -1)
-		goto fail;
-
-	if (size != sizeof (connect_addr)
-		|| listen_addr.sin_family != connect_addr.sin_family
-		|| listen_addr.sin_addr.s_addr != connect_addr.sin_addr.s_addr
-		|| listen_addr.sin_port != connect_addr.sin_port)
-		goto fail;
-
-	closesocket(listener);
-
-	fds[0] = (int) connector;
-	fds[1] = (int) acceptor;
-
-	return 0;
-
-fail:
-	if (listener != -1)
-		closesocket(listener);
-
-	if (connector != -1)
-		closesocket(connector);
-
-	if (acceptor != -1)
-		closesocket(acceptor);
-
-	return -1;
+void EventChannel::addFd(int fd) {
+	mFds.push_back(fd);
 }
 
-void closeSocketPair(Socket fds[2]) {
-	closesocket(fds[0]);
-	closesocket(fds[1]);
-}
-#else
-static int createSocketPair(int family, int type, int protocol, Socket fds[2]) {
-	return socketpair(family, type, protocol, fds);
-}
-
-void closeSocketPair(Socket fds[2]) {
-	close(fds[0]);
-	close(fds[1]);
-}
-#endif /* _WIN32 */
-
-EventChannel::EventChannel() {
-	int ret;
-
-#ifdef _WIN32
-	int af = AF_INET;
-#else
-	int af = AF_LOCAL;
-#endif
-
-	ret = createSocketPair(af, SOCK_STREAM, 0, mFds);
-	if (ret < 0)
-		throw CPS::SystemError("Failed to create pipe");
+void EventChannel::removeFd(int fd) {
+	for (auto it = mFds.begin(); it != mFds.end(); ) {
+		if (*it == fd)
+			it = mFds.erase(it);
+		else
+			++it;
 	}
-
-EventChannel::~EventChannel() {
-	if (mFds[0] >= 0)
-		closeSocketPair(mFds);
-}
-
-int EventChannel::fd() {
-	return (int) mFds[0];
 }
 
 void EventChannel::sendEvent(uint32_t evt) {
 	int ret;
 
-	ret = send(mFds[1], (char *) &evt, 4, 0);
-	if (ret < 0)
-		throw CPS::SystemError("Failed notify");
+	for (int fd : mFds) {
+		ret = send(fd, (char *) &evt, 4, 0);
+		if (ret < 0)
+			throw CPS::SystemError("Failed notify");
+	}
 }

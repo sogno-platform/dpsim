@@ -22,20 +22,9 @@
 #pragma once
 
 #include <cstdint>
+#include <vector>
 
 #include <dpsim/Config.h>
-
-#ifdef _WIN32
-  #include <winsock2.h>
-#else
-  #include <sys/socket.h>
-#endif
-
-#ifdef _WIN32
-using Socket = SOCKET;
-#else
-using Socket = int;
-#endif
 
 namespace DPsim {
 namespace Python {
@@ -44,14 +33,11 @@ class EventChannel {
 
 protected:
 
-	/// Socketpair for asynchronous inter-process communication (IPC) to the Python world
-	Socket mFds[2];
+	std::vector<int> mFds;
 
 public:
-	EventChannel();
-	~EventChannel();
-
-	int fd();
+	void addFd(int fd);
+	void removeFd(int fd);
 
 	void sendEvent(uint32_t evt);
 };

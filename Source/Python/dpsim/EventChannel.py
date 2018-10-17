@@ -9,45 +9,20 @@ from .Event import Event
 
 LOGGER = logging.getLogger('dpsim.EventChannel')
 
-class EventChannelProtocol(asyncio.Protocol):
-
-    def __init__(self, ec):
-        self.transport = None
-		self.ec = ec
-
-    def connection_made(self, transport):
-        self.transport = transport
-
-    def data_received(self, data):
-        self.ec.sr.feed_data(data)
-
-        LOGGER.debug("Read from: data=%s", repr(data))
-
-    def connection_lost(self, exc):
-		pass
-
 class EventChannel(object):
-    def __init__(self, fd, loop = None):
+    def __init__(self, sock, loop = None):
         self._loop = loop
         if self._loop is None:
             self._loop = asyncio.get_event_loop()
 
-        self._sock = socket.fromfd(fd, socket.AF_INET, socket.SOCK_STREAM, 0)
-        self.sr = asyncio.StreamReader(loop = loop)
-
+        self._sock = sock
         self._callbacks = []
         self._queue = asyncio.Queue()
 
         self._last = Event.unknown
-        self._lock = asyncio.Lock(loop = loop)
-        self._cond = asyncio.Condition(lock = self._lock, loop = loop)
-
-        LOGGER.debug("Created new event queue with fd=%d", fd)
 
         self._loop.create_task(self.__task())
 
-		self._transport, self._protocol = await loop.create_connection(lambda: EventChannelProtocol(self), sock = self._sock)
-		
     def add_callback(self, cb, *args, event = None):
         self._callbacks.append((event, cb, args))
 
@@ -69,8 +44,10 @@ class EventChannel(object):
     async def __task(self):
         LOGGER.debug("Entering events task")
 
+        (reader, writer) = await asyncio.open_connection(loop = self._loop, sock = self._sock)
+
         while True:
-            data = await self.sr.readexactly(4)
+            data = await reader.readexactly(4)
 
             unpacked = struct.unpack('i', data)
             evt = Event(unpacked[0])

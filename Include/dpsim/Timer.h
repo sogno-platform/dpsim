@@ -127,9 +127,9 @@ struct timespec to_timespec(std::chrono::duration<Rep, Period> dur) {
 
 template<typename Clock, typename Duration>
 std::ostream &operator<<(std::ostream &stream, const std::chrono::time_point<Clock, Duration> &time_point) {
-	const auto sys_time_point = std::chrono::time_point_cast<Clock::duration, Clock>(time_point);
+	const auto sys_time_point = std::chrono::time_point_cast<typename Clock::duration, Clock>(time_point);
 	const std::time_t time = Clock::to_time_t(sys_time_point);
-	
+
 #if __GNUC__ > 4 || ((__GNUC__ == 4) && __GNUC_MINOR__ > 8 && __GNUC_REVISION__ > 1)
 	// Maybe the put_time will be implemented later?
 	struct tm tm;
