@@ -25,14 +25,27 @@
 
 #include <dpsim/Config.h>
 
+#ifdef _WIN32
+  #include <winsock2.h>
+#else
+  #include <sys/socket.h>
+#endif
+
+#ifdef _WIN32
+using Socket = SOCKET;
+#else
+using Socket = int;
+#endif
+
 namespace DPsim {
 namespace Python {
 
 class EventChannel {
 
 protected:
+
 	/// Socketpair for asynchronous inter-process communication (IPC) to the Python world
-	int mFds[2];
+	Socket mFds[2];
 
 public:
 	EventChannel();

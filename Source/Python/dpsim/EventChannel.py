@@ -3,10 +3,28 @@ import struct
 import os
 import logging
 import queue
+import socket
 
 from .Event import Event
 
 LOGGER = logging.getLogger('dpsim.EventChannel')
+
+class EventChannelProtocol(asyncio.Protocol):
+
+    def __init__(self, ec):
+        self.transport = None
+		self.ec = ec
+
+    def connection_made(self, transport):
+        self.transport = transport
+
+    def data_received(self, data):
+        self.ec.sr.feed_data(data)
+
+        LOGGER.debug("Read from: data=%s", repr(data))
+
+    def connection_lost(self, exc):
+		pass
 
 class EventChannel(object):
     def __init__(self, fd, loop = None):
@@ -14,7 +32,7 @@ class EventChannel(object):
         if self._loop is None:
             self._loop = asyncio.get_event_loop()
 
-        self._fd = fd
+        self._sock = socket.fromfd(fd, socket.AF_INET, socket.SOCK_STREAM, 0)
         self.sr = asyncio.StreamReader(loop = loop)
 
         self._callbacks = []
@@ -24,11 +42,12 @@ class EventChannel(object):
         self._lock = asyncio.Lock(loop = loop)
         self._cond = asyncio.Condition(lock = self._lock, loop = loop)
 
-        LOGGER.debug("Created new event queue with fd=%d", self._fd)
+        LOGGER.debug("Created new event queue with fd=%d", fd)
 
         self._loop.create_task(self.__task())
-        self._loop.add_reader(self._fd, self.__reader)
 
+		self._transport, self._protocol = await loop.create_connection(lambda: EventChannelProtocol(self), sock = self._sock)
+		
     def add_callback(self, cb, *args, event = None):
         self._callbacks.append((event, cb, args))
 
@@ -46,12 +65,6 @@ class EventChannel(object):
 
         LOGGER.debug("Received event in wait: event=%s", revt)
         return revt
-
-    def __reader(self):
-        data = os.read(self._fd, 4)
-        self.sr.feed_data(data)
-
-        LOGGER.debug("Read from: fd=%d, data=%s", self._fd, repr(data))
 
     async def __task(self):
         LOGGER.debug("Entering events task")
