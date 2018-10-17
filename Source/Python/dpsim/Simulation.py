@@ -98,7 +98,7 @@ class Simulation(_dpsim.Simulation):
     def __update_progressbar(self):
         if self._pbar_widget:
             elapsed = time.time() - self._start_time
-            rtfactor = self.time / elapsed
+            rtfactor = self.time / elapsed if elapsed > 0 else 0
             progress = self.time / self.final_time
             total_steps = int(self.final_time / self._ts)
 
@@ -120,7 +120,7 @@ class Simulation(_dpsim.Simulation):
                 t = self.final_time
 
             elapsed = time.time() - self._start_time
-            rtfactor = t / elapsed
+            rtfactor = t / elapsed if elapsed > 0 else 0
 
             self._pbar_tui.update(t,
                 elapsed = elapsed,
