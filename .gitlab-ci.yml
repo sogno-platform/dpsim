@@ -14,7 +14,7 @@ stages:
   - prepare
   - build
   - test
-  - docs
+  - generate
   - deploy
   #- post-all
 
@@ -51,8 +51,8 @@ test:pytest:
   tags:
     - docker
 
-build:docs:
-  stage: docs
+generate:docs:
+  stage: generate
   script:
     - make -C build docs
     - make -C build docs_cxx
@@ -66,8 +66,8 @@ build:docs:
   tags:
     - docker
 
-build:packages:
-  stage: build
+generate:packages:
+  stage: generate
   script:
     - make -C build package
   only:
@@ -107,7 +107,7 @@ deploy:docs:
     - rsync ${RSYNC_OPTS} --delete build/Documentation/html/ ${DEPLOY_USER}@${DEPLOY_HOST}:${DEPLOY_PATH}/doc/${CI_BUILD_REF_NAME}/sphinx
     - rsync ${RSYNC_OPTS} --delete build/Documentation/Cxx/html/ ${DEPLOY_USER}@${DEPLOY_HOST}:${DEPLOY_PATH}/doc/${CI_BUILD_REF_NAME}/doxygen
   dependencies:
-    - build:docs
+    - generate:docs
   only:
     - tags
     - master
@@ -124,7 +124,7 @@ deploy:packages:
     - rsync ${RSYNC_OPTS} build/*.tar.gz ${DEPLOY_USER}@${DEPLOY_HOST}:/var/www/dpsim/src
     - ssh ${DEPLOY_USER}@${DEPLOY_HOST} createrepo /var/www/packages/redhat
   dependencies:
-    - build:packages
+    - generate:packages
   only:
     - tags
   tags:
