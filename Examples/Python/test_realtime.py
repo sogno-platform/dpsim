@@ -10,9 +10,9 @@ def test_realtime():
 
     # Components
     v1 = dpsim.dp.ph1.VoltageSource('v_1')
-    v1.V_ref=10
+    v1.V_ref = complex(10, 0)
     r1 = dpsim.dp.ph1.Resistor('r_1')
-    r1.R=1
+    r1.R = 1
 
     v1.connect([gnd, n1])
     r1.connect([n1, gnd])

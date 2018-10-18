@@ -12,13 +12,13 @@ def test_circuit():
 
     # Components
     v1 = dpsim.dp.ph1.VoltageSource('v_1')
-    v1.V_ref=10
+    v1.V_ref= complex(10, 0)
     lL = dpsim.dp.ph1.Inductor('l_L')
-    lL.L=0.001
+    lL.L= 0.001
     rL = dpsim.dp.ph1.Resistor('r_L')
-    rL.R=0.1
+    rL.R= 0.1
     r1 = dpsim.dp.ph1.Resistor('r_1')
-    r1.R=20
+    r1.R= 20
 
     v1.connect([gnd, n1])
     lL.connect([n2, n3])
