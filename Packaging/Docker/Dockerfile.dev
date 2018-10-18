@@ -35,7 +35,8 @@ RUN dnf -y install \
 	sundials-devel \
 	libcimpp16v29a \
 	libvillas-devel \
-	spdlog
+	spdlog \
+	boost
 
 # Install some debuginfos
 RUN dnf -y debuginfo-install \
