@@ -388,10 +388,9 @@ void MnaSolver<VarType>::SolveTask::execute(Real time, Int timeStepCount) {
 	// pre-step tasks)
 	for (auto comp : mSolver.mPowerComponents)
 	{
-		try {
-			mSolver.mRightSideVector += comp->attribute<Matrix>("b")->get();
-		} catch (InvalidAttributeException& e) {
-			// component does not contribute to right side vector
+		const Matrix& stamp = comp->attribute<Matrix>("b")->get();
+		if (stamp.size() != 0) {
+			mSolver.mRightSideVector += stamp;
 		}
 	}
 
