@@ -36,7 +36,8 @@ RUN dnf -y install \
 	libcimpp16v29a \
 	libvillas-devel \
 	spdlog \
-	boost-graph
+	boost-graph \
+	boost-devel
 
 # Install some debuginfos
 RUN dnf -y debuginfo-install \
