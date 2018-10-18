@@ -9,7 +9,8 @@ def test_realtime():
     n1  = dpsim.dp.Node('n1')
 
     # Components
-    v1 = dpsim.dp.ph1.VoltageSource('v_1', [gnd, n1], V_ref=10)
+    v1 = dpsim.dp.ph1.VoltageSource('v_1', V_ref=10)
+    v1.connect([gnd, n1])
     r1 = dpsim.dp.ph1.Resistor('r_1', [n1, gnd], R=1)
 
     system = dpsim.SystemTopology(50, [gnd, n1], [v1, r1])
