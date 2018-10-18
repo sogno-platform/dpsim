@@ -80,14 +80,11 @@ namespace DPsim {
 
 		class PreStep : public CPS::Task {
 		public:
-			PreStep(Interface& intf) : mIntf(intf) {
+			PreStep(Interface& intf) :
+				Task(intf.mRName + ".Read"), mIntf(intf) {
 				for (auto attr : intf.mImportAttrs) {
 					mModifiedAttributes.push_back(attr);
 				}
-			}
-
-			String toString() const {
-				return mIntf.mRName + ".Read";
 			}
 
 			void execute(Real time, Int timeStepCount);
@@ -98,14 +95,11 @@ namespace DPsim {
 
 		class PostStep : public CPS::Task {
 		public:
-			PostStep(Interface& intf) : mIntf(intf) {
+			PostStep(Interface& intf) :
+				Task(intf.mWName + ".Write"), mIntf(intf) {
 				for (auto attr : intf.mExportAttrs) {
 					mAttributeDependencies.push_back(attr);
 				}
-			}
-
-			String toString() const {
-				return mIntf.mWName + ".Write";
 			}
 
 			void execute(Real time, Int timeStepCount);

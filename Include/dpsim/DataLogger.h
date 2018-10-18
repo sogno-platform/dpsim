@@ -79,14 +79,11 @@ namespace DPsim {
 
 		class Step : public CPS::Task {
 		public:
-			Step(DataLogger& logger) : mLogger(logger) {
+			Step(DataLogger& logger) :
+				Task(logger.mName + ".Write"), mLogger(logger) {
 				for (auto attr : logger.mDependencies) {
 					mAttributeDependencies.push_back(attr);
 				}
-			}
-
-			String toString() const {
-				return mLogger.mName + ".Write";
 			}
 
 			void execute(Real time, Int timeStepCount);

@@ -187,7 +187,8 @@ namespace DPsim {
 
 		class SolveTask : public CPS::Task {
 		public:
-			SolveTask(MnaSolver<VarType>& solver) : mSolver(solver) {
+			SolveTask(MnaSolver<VarType>& solver) :
+				Task(solver.mName + ".Solve"), mSolver(solver) {
 				for (auto it : solver.mPowerComponents) {
 					try {
 						mAttributeDependencies.push_back(it->attribute("b"));
@@ -198,10 +199,6 @@ namespace DPsim {
 				mModifiedAttributes.push_back(solver.attribute("x"));
 			}
 
-			String toString() const {
-				return mSolver.mName + ".Solve";
-			}
-
 			void execute(Real time, Int timeStepCount);
 
 		private:
@@ -210,12 +207,9 @@ namespace DPsim {
 
 		class LogTask : public CPS::Task {
 		public:
-			LogTask(MnaSolver<VarType>& solver) : mSolver(solver) {
+			LogTask(MnaSolver<VarType>& solver) :
+				Task(solver.mName + ".Log"), mSolver(solver) {
 				mAttributeDependencies.push_back(solver.attribute("x"));
-			}
-
-			String toString() const {
-				return mSolver.mName + ".Log";
 			}
 
 			void execute(Real time, Int timeStepCount);
