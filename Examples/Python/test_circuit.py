@@ -11,10 +11,19 @@ def test_circuit():
     n3 =  dpsim.dp.Node('n3')
 
     # Components
-    v1 = dpsim.dp.ph1.VoltageSource('v_1', [gnd, n1], V_ref=10)
-    lL = dpsim.dp.ph1.Inductor('l_L', [n2, n3], L=0.001)
-    rL = dpsim.dp.ph1.Resistor('r_L', [n1, n2], R=0.1)
-    r1 = dpsim.dp.ph1.Resistor('r_1', [n3, gnd], R=20)
+    v1 = dpsim.dp.ph1.VoltageSource('v_1')
+    v1.V_ref=10
+    lL = dpsim.dp.ph1.Inductor('l_L')
+    lL.L=0.001
+    rL = dpsim.dp.ph1.Resistor('r_L')
+    rL.R=0.1
+    r1 = dpsim.dp.ph1.Resistor('r_1')
+    r1.R=20
+
+    v1.connect([gnd, n1])
+    lL.connect([n2, n3])
+    rL.connect([n1, n2])
+    r1.connect([n3, gnd])
 
     system = dpsim.SystemTopology(50, [gnd, n1, n2, n3], [v1, lL, rL, r1])
 
