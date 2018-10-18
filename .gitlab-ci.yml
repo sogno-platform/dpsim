@@ -12,9 +12,9 @@ before_script:
 
 stages:
   - prepare
-  - pre-build
   - build
   - test
+  - docs
   - deploy
   #- post-all
 
@@ -26,7 +26,7 @@ docker:
     - shell
 
 build:linux:
-  stage: pre-build
+  stage: build
   script:
     - mkdir build
     - cd build
@@ -52,7 +52,7 @@ test:pytest:
     - docker
 
 build:docs:
-  stage: build
+  stage: docs
   script:
     - make -C build docs
     - make -C build docs_cxx
@@ -131,6 +131,18 @@ deploy:packages:
     - fein-deploy
   tags:
     - shell
+
+test:jupyter:
+  stage: test
+  script:
+    - make -C Examples/notebooks
+  image: ${DOCKER_IMAGE_DEV}:${DOCKER_TAG}
+  artifacts:
+    paths:
+      - Logs/
+      - Examples/notebooks/build
+  tags:
+    - docker
 
 # We run the windows build at last as it takes ages to finish
 #build:windows:
