@@ -137,8 +137,7 @@ deploy:packages:
 test:jupyter:
   stage: test
   script:
-    - ls Examples/notebooks
-    #- make -C Examples/notebooks
+    - make -C Examples/notebooks
   image: ${DOCKER_IMAGE_DEV}:${DOCKER_TAG}
   artifacts:
     paths:
