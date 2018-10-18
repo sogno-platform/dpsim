@@ -88,6 +88,8 @@ build:docker:
     - docker build -f Packaging/Docker/Dockerfile --build-arg DOCKER_TAG=${DOCKER_TAG} -t ${DOCKER_IMAGE}:${DOCKER_TAG} .
   tags:
     - shell
+  only:
+    - tags
 
 deploy:docker:
   stage: deploy
