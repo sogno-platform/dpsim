@@ -103,6 +103,7 @@ namespace DPsim {
 			Solver::Type solverType = Solver::Type::MNA,
 			CPS::Logger::Level logLevel = CPS::Logger::Level::INFO);
 
+		void schedule();
 	public:
 		/// Creates system matrix according to a given System topology
 		Simulation(String name, CPS::SystemTopology system,

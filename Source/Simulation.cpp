@@ -100,7 +100,9 @@ void Simulation::sync()
 #endif
 }
 
-void Simulation::run() {
+void Simulation::schedule()
+{
+	mLog.info() << "Scheduling tasks." << std::endl;
 	// TODO:
 	// - pass scheduler / scheduling parameters to Simulation constructor ?
 	// - multiple solver support
@@ -117,6 +119,10 @@ void Simulation::run() {
 		tasks.push_back(logger->getTask());
 	}
 	mScheduler->createSchedule(tasks);
+}
+
+void Simulation::run() {
+	schedule();
 
 	mLog.info() << "Opening interfaces." << std::endl;
 
