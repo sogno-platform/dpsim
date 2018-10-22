@@ -48,6 +48,8 @@ void Python::Simulation::threadFunction(Python::Simulation *self)
 {
 	Real time, finalTime;
 
+	self->sim->schedule();
+
 	Timer timer(Timer::Flags::fail_on_overrun);
 
 #ifdef WITH_SHMEM

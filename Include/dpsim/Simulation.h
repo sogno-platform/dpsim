@@ -103,7 +103,6 @@ namespace DPsim {
 			Solver::Type solverType = Solver::Type::MNA,
 			CPS::Logger::Level logLevel = CPS::Logger::Level::INFO);
 
-		void schedule();
 	public:
 		/// Creates system matrix according to a given System topology
 		Simulation(String name, CPS::SystemTopology system,
@@ -121,6 +120,8 @@ namespace DPsim {
 		Real step();
 		/// Synchronize simulation with remotes by exchanging intial state over interfaces
 		void sync();
+		/// Create the schedule for the independent tasks
+		void schedule();
 
 		/// Schedule an event in the simulation
 		void addEvent(Event::Ptr e) {
