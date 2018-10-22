@@ -36,8 +36,10 @@ PyObject* Python::Logger::newfunc(PyTypeObject *type, PyObject *args, PyObject *
 
 	self = (Python::Logger*) type->tp_alloc(type, 0);
 	if (self) {
+		using PyObjectVector = std::vector<PyObject *>;
 		using SharedLoggerPtr = std::shared_ptr<DPsim::DataLogger>;
 
+		new (&self->refs) PyObjectVector();
 		new (&self->logger) SharedLoggerPtr();
 	}
 
@@ -46,9 +48,14 @@ PyObject* Python::Logger::newfunc(PyTypeObject *type, PyObject *args, PyObject *
 
 void Python::Logger::dealloc(Python::Logger* self)
 {
+	using PyObjectVector = std::vector<PyObject *>;
 	using SharedLoggerPtr = std::shared_ptr<DPsim::DataLogger>;
 
+	for (PyObject *pyRef : self->refs)
+		Py_DECREF(pyRef);
+
 	self->logger.~SharedLoggerPtr();
+	self->refs.~PyObjectVector();
 
 	Py_TYPE(self)->tp_free((PyObject*) self);
 }
@@ -65,28 +72,29 @@ const char* Python::Logger::docLogAttribute =
 PyObject* Python::Logger::logAttribute(Logger* self, PyObject* args, PyObject *kwargs)
 {
 	PyObject *pyObj;
+	CPS::IdentifiedObject::Ptr obj;
 	const char *attrName;
 
-	const char *kwlist[] = {"component", "attribute", nullptr};
+	const char *kwlist[] = {"obj", "attribute", nullptr};
 
-	if (!PyArg_ParseTupleAndKeywords(args, kwargs, "Osi|ds", (char **) kwlist, &pyObj, &attrName))
+	if (!PyArg_ParseTupleAndKeywords(args, kwargs, "Os", (char **) kwlist, &pyObj, &attrName))
 		return nullptr;
 
 	CPS::AttributeList::Ptr attrList;
 	if (PyObject_TypeCheck(pyObj, &Python::Component::type)) {
 		auto *pyComp = (Component*) pyObj;
 
-		attrList = std::dynamic_pointer_cast<CPS::AttributeList>(pyComp->comp);
+		obj = std::dynamic_pointer_cast<CPS::IdentifiedObject>(pyComp->comp);
 	}
 	else if (PyObject_TypeCheck(pyObj, &Python::Node<CPS::Real>::type)) {
 		auto *pyNode = (Node<CPS::Real> *) pyObj;
 
-		attrList = std::dynamic_pointer_cast<CPS::AttributeList>(pyNode->node);
+		obj = std::dynamic_pointer_cast<CPS::IdentifiedObject>(pyNode->node);
 	}
 	else if (PyObject_TypeCheck(pyObj, &Python::Node<CPS::Complex>::type)) {
 		auto *pyNode = (Node<CPS::Complex> *) pyObj;
 
-		attrList = std::dynamic_pointer_cast<CPS::AttributeList>(pyNode->node);
+		obj = std::dynamic_pointer_cast<CPS::IdentifiedObject>(pyNode->node);
 	}
 	else {
 		PyErr_SetString(PyExc_TypeError, "First argument must be a Component or a Node");
@@ -94,14 +102,18 @@ PyObject* Python::Logger::logAttribute(Logger* self, PyObject* args, PyObject *k
 	}
 
 	try {
-		auto a = attrList->attribute<CPS::Real>(attrName);
+		auto n = obj->name() + "." + attrName;
+		auto a = obj->attribute(attrName);
 
-		self->logger->addAttribute(attrName, a);
+		self->logger->addAttribute(n, a);
 	}
-	catch (const CPS::InvalidAttributeException &exp) {
-		PyErr_SetString(PyExc_TypeError, "First argument must be a readable attribute");
+	catch (const CPS::InvalidAttributeException &) {
+		PyErr_SetString(PyExc_TypeError, "Second argument must be a readable attribute");
 		return nullptr;
 	}
+
+	self->refs.push_back(pyObj);
+	Py_INCREF(pyObj);
 
 	Py_RETURN_NONE;
 }

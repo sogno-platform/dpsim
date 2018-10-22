@@ -6,15 +6,17 @@ add_library(dpsim_python SHARED
 	Simulation.cpp
 	Component.cpp
 	Node.cpp
-	Interface.cpp
 	Logger.cpp
 	LoadCim.cpp
-	SystemTopology.cpp
-	EventChannel.cpp
+	SystemTopology.cpp	
 	Utils.cpp
-
+	EventChannel.cpp
 	${CMAKE_BINARY_DIR}/Include/dpsim/Python/ComponentConstructors.h
 )
+
+if(WITH_SHMEM)
+	target_sources(dpsim_python PUBLIC Interface.cpp)
+endif()
 
 file(MAKE_DIRECTORY ${CMAKE_BINARY_DIR}/Include/dpsim/Python)
 add_custom_command(

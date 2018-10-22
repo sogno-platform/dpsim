@@ -144,6 +144,9 @@ void Simulation::run() {
 		ifm.interface->close();
 #endif
 
+	for (auto lg : mLoggers)
+		lg->flush();
+
 	mLog.info() << "Simulation finished." << std::endl;
 }
 

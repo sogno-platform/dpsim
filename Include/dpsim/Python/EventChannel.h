@@ -22,6 +22,7 @@
 #pragma once
 
 #include <cstdint>
+#include <vector>
 
 #include <dpsim/Config.h>
 
@@ -31,16 +32,12 @@ namespace Python {
 class EventChannel {
 
 protected:
-#ifdef HAVE_PIPE
-	/// Pipe for asynchronous inter-process communication (IPC) to the Python world
-	int mPipe[2];
-#endif /* HAVE_PIPE */
+
+	std::vector<int> mFds;
 
 public:
-	EventChannel();
-	~EventChannel();
-
-	int fd();
+	void addFd(int fd);
+	void removeFd(int fd);
 
 	void sendEvent(uint32_t evt);
 };

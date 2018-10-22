@@ -2,10 +2,6 @@
 
 """
 
-import types
-import sys
-import re
-
 __author__ = "Markus Mirz, Steffen Vogel"
 __copyright__ = "Copyright 2017-2018, Institute for Automation of Complex Power Systems, EONERC"
 __credits__ = [ "Georg Reinke", "Steffen Vogel", "Markus Mirz" ]
@@ -15,16 +11,24 @@ __maintainer__ = "Steffen Vogel"
 __email__ = "stvogel@eonerc.rwth-aachen.de"
 __status__ = "Beta"
 
+import types
+import sys
+import re
+
 import _dpsim
 
-from _dpsim import Interface
 from _dpsim import SystemTopology
-
+from _dpsim import Logger
 from _dpsim import load_cim
 
-from .Interface import Interface
 from .Simulation import Simulation, RealTimeSimulation
 from .EventChannel import EventChannel
+
+# Try to shmem load interface on supported platforms
+try:
+    from _dpsim import Interface
+finally:
+    from .Interface import Interface
 
 def __get_module(parts):
     full_name = ".".join(parts)
@@ -63,6 +67,7 @@ __all__ = [
     'Component',
     'Interface',
     'Simulation',
+    'SystemTopology',
+    'Logger',
     'load_cim',
-    'open_interface'
 ]

@@ -21,41 +21,33 @@
 #include <dpsim/Python/EventChannel.h>
 #include <cps/Definitions.h>
 
-#ifdef HAVE_PIPE
-  #include <unistd.h>
+#ifdef _WIN32
+  #include <winsock2.h>
+#else
+  #include <sys/socket.h>
 #endif
 
 using namespace DPsim::Python;
 
-EventChannel::EventChannel() {
-#ifdef HAVE_PIPE
-	int ret;
-
-	ret = pipe(mPipe);
-	if (ret < 0)
-		throw CPS::SystemError("Failed to create pipe");
-#endif
-	}
-
-EventChannel::~EventChannel() {
-#ifdef HAVE_PIPE
-	if (mPipe[0] >= 0) {
-		close(mPipe[0]);
-		close(mPipe[1]);
-	}
-#endif /* HAVE_PIPE */
+void EventChannel::addFd(int fd) {
+	mFds.push_back(fd);
 }
 
-int EventChannel::fd() {
-	return mPipe[0];
+void EventChannel::removeFd(int fd) {
+	for (auto it = mFds.begin(); it != mFds.end(); ) {
+		if (*it == fd)
+			it = mFds.erase(it);
+		else
+			++it;
+	}
 }
 
 void EventChannel::sendEvent(uint32_t evt) {
-#ifdef HAVE_PIPE
 	int ret;
 
-	ret = write(mPipe[1], &evt, 4);
-	if (ret < 0)
-		throw CPS::SystemError("Failed notify");
-#endif /* HAVE_PIPE */
+	for (int fd : mFds) {
+		ret = send(fd, (char *) &evt, 4, 0);
+		if (ret < 0)
+			throw CPS::SystemError("Failed notify");
+	}
 }

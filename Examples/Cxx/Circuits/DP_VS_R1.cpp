@@ -26,33 +26,33 @@ using namespace CPS::DP;
 using namespace CPS::DP::Ph1;
 
 int main(int argc, char* argv[]) {
+	// Define simulation scenario
+	Real timeStep = 0.0001;
+	Real finalTime = 0.1;
+	String simName = "DP_VS_R1";
+
 	// Nodes
 	auto n1 = Node::make("n1");
-	auto n2 = Node::make("n2");
 
 	// Components
-	auto vs = VoltageSource::make("vs");
-	auto r1 = Resistor::make("r_1");
-	auto c1 = Capacitor::make("c_1");
+	auto vs = VoltageSource::make("v_1");
+	vs->setParameters(Complex(10, 0));
+	auto r = Resistor::make("r_1");
+	r->setParameters(1);
 
 	// Topology
-	vs->connect({ Node::GND, n1 });
-	r1->connect({ n1, n2 });
-	c1->connect({ n2, Node::GND });
+	vs->connect({Node::GND, n1});
+	r->connect({n1, Node::GND});
 
-	vs->setParameters(Complex(10, 0));
-	r1->setParameters(1);
-	c1->setParameters(0.001);
+	auto sys = SystemTopology(50, SystemNodeList{n1}, SystemComponentList{vs, r});
 
-	// Define system topology
-	auto sys = SystemTopology(50, SystemNodeList{n1, n2}, SystemComponentList{vs, r1, c1});
-
-	// Define simulation scenario
-	Real timeStep = 0.001;
-	Real finalTime = 0.1;
-	String simName = "DP_IdealVS_RL1";
+	// Logging
+	auto logger = DataLogger::make(simName);
+	logger->addAttribute("v1", n1->attribute("v"));
 
 	Simulation sim(simName, sys, timeStep, finalTime);
+	sim.addLogger(logger);
+
 	sim.run();
 
 	return 0;

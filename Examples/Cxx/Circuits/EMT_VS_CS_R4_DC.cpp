@@ -19,7 +19,6 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *********************************************************************************/
 
-
 #include <DPsim.h>
 
 using namespace DPsim;
@@ -27,38 +26,50 @@ using namespace CPS::EMT;
 using namespace CPS::EMT::Ph1;
 
 int main(int argc, char* argv[]) {
+	// Define simulation scenario
+	Real timeStep = 0.001;
+	Real finalTime = 0.1;
+	String simName = "EMT_VS_CS_R4_DC";
+
 	// Nodes
 	auto n1 = Node::make("n1");
 	auto n2 = Node::make("n2");
 	auto n3 = Node::make("n3");
 
 	// Components
-	auto vin = VoltageSource::make("v_in");
-	auto r1 = Resistor::make("r_1");
+	auto vs = VoltageSource::make("vs");
+	vs->setParameters(10);
+	auto r1 = Resistor::make("r_1", Logger::Level::DEBUG);
+	r1->setParameters(1);
 	auto r2 = Resistor::make("r_2");
+	r2->setParameters(1);
 	auto r3 = Resistor::make("r_3");
+	r3->setParameters(10);
+	auto r4 = Resistor::make("r_4");
+	r4->setParameters(5);
+	auto cs = CurrentSource::make("cs");
+	cs->setParameters(1);
 
 	// Topology
-	vin->connect({ n1, n2 });
-	r1->connect({ n1, Node::GND });
-	r2->connect({ n2, Node::GND });
-	r3->connect({ n2, Node::GND });
-
-	// Parameters
-	vin->setParameters(10);
-	r1->setParameters(5);
-	r2->setParameters(10);
-	r3->setParameters(2);
+	vs->connect(Node::List{ Node::GND, n1 });
+	r1->connect(Node::List{ n1, n2 });
+	r2->connect(Node::List{ n2, Node::GND });
+	r3->connect(Node::List{ n2, n3 });
+	r4->connect(Node::List{ n3, Node::GND });
+	cs->connect(Node::List{ Node::GND, n3 });
 
 	// Define system topology
-	SystemTopology system(50, SystemNodeList{n1, n2, n3, Node::GND}, SystemComponentList{vin, r1, r2, r3});
+	auto sys = SystemTopology(50, SystemNodeList{n1, n2, n3}, SystemComponentList{vs, r1, r2, r3, r4, cs});
 
-	// Define simulation scenario
-	Real timeStep = 0.00005;
-	Real finalTime = 0.2;
-	String simName = "EMT_IdealVS_R1";
+	// Logging
+	auto logger = DataLogger::make(simName);
+	logger->addAttribute("v1", n1->attribute("v"));
+	logger->addAttribute("v2", n2->attribute("v"));
+	logger->addAttribute("v3", n3->attribute("v"));
 
-	Simulation sim(simName, system, timeStep, finalTime, Domain::EMT);
+	Simulation sim(simName, sys, timeStep, finalTime, Domain::EMT);
+	sim.addLogger(logger);
+
 	sim.run();
 
 	return 0;

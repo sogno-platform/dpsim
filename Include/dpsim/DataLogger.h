@@ -56,6 +56,8 @@ namespace DPsim {
 		DataLogger(String name, Bool enabled = true, UInt downsampling = 1);
 		~DataLogger();
 
+		void flush();
+
 		void logPhasorNodeValues(Real time, const Matrix& data);
 		void logEMTNodeValues(Real time, const Matrix& data);
 

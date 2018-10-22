@@ -127,8 +127,6 @@ namespace DPsim {
 		/// Creates virtual nodes inside components.
 		/// The MNA algorithm handles these nodes in the same way as network nodes.
 		void createVirtualNodes();
-		///
-		void processSwitches();
 		// TODO: check if this works with AC sources
 		void steadyStateInitialization();
 		/// Create left and right side vector

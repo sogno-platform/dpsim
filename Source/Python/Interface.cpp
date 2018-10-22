@@ -373,8 +373,8 @@ PyMemberDef Python::Interface::members[] = {
 	{(char *) "samplelen", T_INT,    offsetof(Python::Interface, conf.samplelen), READONLY, nullptr},
 	{(char *) "polling",   T_INT,    offsetof(Python::Interface, conf.polling),   READONLY, nullptr},
 	{(char *) "exports",   T_OBJECT, offsetof(Python::Interface, pyExports),      READONLY, nullptr},
-	{nullptr}
 #endif
+	{nullptr}
 };
 
 PyMethodDef Python::Interface::methods[] = {

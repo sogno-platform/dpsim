@@ -92,7 +92,8 @@ setup(
     url = "https://dpsim.fein-aachen.org",
     packages = find_packages('Source/Python'),
     package_dir = {
-        'dpsim': 'Source/Python/dpsim'
+        'dpsim': 'Source/Python/dpsim',
+        'villas': 'Source/Python/villas'
     },
     long_description = read('README.md'),
     classifiers = [

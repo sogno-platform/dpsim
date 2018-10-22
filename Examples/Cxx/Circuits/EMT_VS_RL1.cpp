@@ -22,33 +22,44 @@
 #include <DPsim.h>
 
 using namespace DPsim;
-using namespace CPS::DP;
-using namespace CPS::DP::Ph1;
+using namespace CPS::EMT;
+using namespace CPS::EMT::Ph1;
 
 int main(int argc, char* argv[]) {
+	// Define simulation scenario
+	Real timeStep = 0.0001;
+	Real finalTime = 0.1;
+	String simName = "EMT_VS_RL1";
+
 	// Nodes
 	auto n1 = Node::make("n1");
+	auto n2 = Node::make("n2");
 
 	// Components
-	auto vs = VoltageSource::make("v_1");
-	auto r = Resistor::make("r_1");
+	auto vs = VoltageSource::make("vs");
+	vs->setParameters(Complex(10, 0), 50);
+	auto r1 = Resistor::make("r_1");
+	r1->setParameters(5);
+	auto l1 = Inductor::make("l_1");
+	l1->setParameters(0.02);
 
 	// Topology
-	vs->connect({Node::GND, n1});
-	r->connect({n1, Node::GND});
+	vs->connect(Node::List{ Node::GND, n1 });
+	r1->connect(Node::List{ n1, n2 });
+	l1->connect(Node::List{ n2, Node::GND });
 
-	// Parameters
-	vs->setParameters(Complex(10, 0));
-	r->setParameters(1);
+	// Define system topology
+	auto sys = SystemTopology(50, SystemNodeList{n1, n2}, SystemComponentList{vs, r1, l1});
 
-	auto sys = SystemTopology(50, SystemNodeList{n1}, SystemComponentList{vs, r});
+	// Logger
+	auto logger = DataLogger::make(simName);
+	logger->addAttribute("v1", n1->attribute("v"));
+	logger->addAttribute("v2", n2->attribute("v"));
+	logger->addAttribute("i12", r1->attribute("i_intf"));
 
-	// Define simulation scenario
-	Real timeStep = 0.00005;
-	Real finalTime = 0.2;
-	String simName = "DP_IdealVS_R_1";
+	Simulation sim(simName, sys, timeStep, finalTime, Domain::EMT);
+	sim.addLogger(logger);
 
-	Simulation sim(simName, sys, timeStep, finalTime);
 	sim.run();
 
 	return 0;

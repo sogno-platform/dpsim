@@ -60,9 +60,12 @@ int main(int argc, char *argv[]) {
 	auto n1 = Node::make("n1");
 
 	// Components
-	auto ecs = CurrentSource::make("v_intf", Complex(10, 0));
-	auto r1 = Resistor::make("r_1", 1);
-	auto load = PQLoadCS::make("load_cs", 10., 0., 10.);
+	auto ecs = CurrentSource::make("v_intf");
+	ecs->setParameters(Complex(10, 0));
+	auto r1 = Resistor::make("r_1");
+	r1->setParameters(1);
+	auto load = PQLoadCS::make("load_cs");
+	load->setParameters(10., 0., 10.);
 
 	ecs->connect({ Node::GND, n1 });
 	r1->connect({ Node::GND, n1 });

@@ -38,10 +38,10 @@
 #endif
 
 #include <dpsim/Config.h>
-#include <dpsim/Timer.h>
-#include <dpsim/Simulation.h>
 #include <dpsim/Python/SystemTopology.h>
+#include <dpsim/Simulation.h>
 #include <dpsim/Python/EventChannel.h>
+#include <dpsim/Timer.h>
 
 namespace DPsim {
 namespace Python {
@@ -107,7 +107,8 @@ namespace Python {
 		static PyObject* start(Simulation *self, PyObject *args);
 		static PyObject* step(Simulation *self, PyObject *args);
 		static PyObject* stop(Simulation *self, PyObject *args);
-		static PyObject* getEventFD(Simulation *self, PyObject *args);
+		static PyObject* addEventFD(Simulation *self, PyObject *args);
+		static PyObject* removeEventFD(Simulation *self, PyObject *args);
 
 		// Getters
 		static PyObject* getState(Simulation *self, void *ctx);
@@ -124,7 +125,8 @@ namespace Python {
 		static const char *docAddInterface;
 		static const char *docAddEvent;
 		static const char *docAddLogger;
-		static const char *docGetEventFD;
+		static const char *docAddEventFD;
+		static const char *docRemoveEventFD;
 		static const char *docState;
 		static const char *docName;
 		static PyMethodDef methods[];

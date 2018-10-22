@@ -1,5 +1,6 @@
 set(SOURCES
 	Simulation.cpp
+	RealTimeSimulation.cpp
 	MNASolver.cpp
 	Utils.cpp
 	Timer.cpp
@@ -7,10 +8,6 @@ set(SOURCES
 	DataLogger.cpp
 	SequentialScheduler.cpp
 )
-
-if(NOT WIN32)
-	list(APPEND SOURCES RealTimeSimulation.cpp)	
-endif()
 
 list(APPEND LIBRARIES cps)
 

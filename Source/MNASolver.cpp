@@ -79,10 +79,18 @@ void MnaSolver<VarType>::initialize(CPS::SystemTopology system) {
 		comp->setBehaviour(Component::Behaviour::Simulation);
 
 	// Create initial system matrix
-	for (auto comp : mPowerComponents)
+	for (auto comp : mPowerComponents) {
 		comp->mnaApplySystemMatrixStamp(mTmpSystemMatrix);
-	for (auto comp : mSwitches)
+		auto idObj = std::dynamic_pointer_cast<IdentifiedObject>(comp);
+		mLog.debug() << "Stamping " << idObj->type() << " " << idObj->name()
+					<< " into system matrix: \n" << mTmpSystemMatrix << std::endl;
+	}
+	for (auto comp : mSwitches) {
 		comp->mnaApplySystemMatrixStamp(mTmpSystemMatrix);
+		auto idObj = std::dynamic_pointer_cast<IdentifiedObject>(comp);
+		mLog.debug() << "Stamping " << idObj->type() << " " << idObj->name()
+			<< " into system matrix: \n" << mTmpSystemMatrix << std::endl;
+	}
 
 	// Compute LU-factorization for system matrix
 	mTmpLuFactorization = Eigen::PartialPivLU<Matrix>(mTmpSystemMatrix);
@@ -99,22 +107,26 @@ void MnaSolver<VarType>::initialize(CPS::SystemTopology system) {
 	updateSwitchStatus();
 
 	// Initialize source vector for debugging
-	for (auto comp : mPowerComponents)
+	for (auto comp : mPowerComponents) {
 		comp->mnaApplyRightSideVectorStamp(mRightSideVector);
+		auto idObj = std::dynamic_pointer_cast<IdentifiedObject>(comp);
+		mLog.debug() << "Stamping " << idObj->type() << " " << idObj->name()
+			<< " into source vector: \n" << mRightSideVector << std::endl;
+	}
 
 	// Logging
 	for (auto comp : system.mComponents)
 		mLog.info() << "Added " << comp->type() << " '" << comp->name() << "' to simulation." << std::endl;
 
-	mLog.info() << "System matrix: " << mTmpSystemMatrix << std::endl;
-	mLog.info() << "LU decomposition:" << mTmpLuFactorization.matrixLU() << std::endl;
-	mLog.info() << "Right side vector:" << mRightSideVector << std::endl;
+	mLog.info() << "System matrix: \n" << mTmpSystemMatrix << std::endl;
+	mLog.info() << "LU decomposition: \n" << mTmpLuFactorization.matrixLU() << std::endl;
+	mLog.info() << "Right side vector: \n" << mRightSideVector << std::endl;
 
 	for (auto sys : mSwitchedMatrices) {
 		mLog.info() << "Switching System matrix "
-					<< sys.first << ": " << sys.second << std::endl;
+					<< sys.first << ": \n" << sys.second << std::endl;
 		mLog.info() << "LU Factorization for System Matrix "
-					<< sys.first << ": " << mLuFactorizations[sys.first].matrixLU() << std::endl;
+					<< sys.first << ": \n" << mLuFactorizations[sys.first].matrixLU() << std::endl;
 	}
 
 	mLog.info() << "Initial switch status: " << mCurrentSwitchStatus << std::endl;
@@ -228,7 +240,7 @@ void MnaSolver<Complex>::createEmptySystemMatrix() {
 template <typename VarType>
 void MnaSolver<VarType>::createVirtualNodes() {
 	// We have not added virtual nodes yet so the list has only network nodes
-	mNumNetNodes = mNodes.size();
+	mNumNetNodes = (UInt) mNodes.size();
 	// virtual nodes are placed after network nodes
 	UInt virtualNode = mNumNetNodes - 1;
 	// Check if component requires virtual node and if so set one
@@ -248,7 +260,7 @@ void MnaSolver<VarType>::createVirtualNodes() {
 		}
 	}
 	// Update node number to create matrices and vectors
-	mNumNodes = mNodes.size();
+	mNumNodes = (UInt) mNodes.size();
 	mNumVirtualNodes = mNumNodes - mNumNetNodes;
 
 	mLog.info() << "Number of network nodes: " << mNumNetNodes << std::endl;

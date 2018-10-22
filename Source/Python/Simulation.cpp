@@ -25,12 +25,12 @@
 #include <iostream>
 
 #include <dpsim/Config.h>
-#include <dpsim/RealTimeSimulation.h>
+
 #include <dpsim/Python/Simulation.h>
-#include <dpsim/Python/Interface.h>
 #include <dpsim/Python/Logger.h>
 #include <dpsim/Python/Component.h>
-
+#include <dpsim/Python/Interface.h>
+#include <dpsim/RealTimeSimulation.h>
 #include <cps/DP/DP_Ph1_Switch.h>
 
 using namespace DPsim;
@@ -39,7 +39,6 @@ using namespace CPS;
 void Python::Simulation::newState(Python::Simulation *self, Simulation::State newState)
 {
 	uint32_t evt = static_cast<uint32_t>(newState);
-
 	self->channel->sendEvent(evt);
 	self->state = newState;
 }
@@ -80,7 +79,7 @@ void Python::Simulation::threadFunction(Python::Simulation *self)
 			try {
 				timer.sleep();
 			}
-			catch (Timer::OverrunException e) {
+			catch (Timer::OverrunException) {
 				std::unique_lock<std::mutex> lk(*self->mut);
 
 				if (self->failOnOverrun) {
@@ -129,6 +128,9 @@ void Python::Simulation::threadFunction(Python::Simulation *self)
 	for (auto ifm : self->sim->interfaces())
 		ifm.interface->close();
 #endif
+
+	for (auto lg : self->sim->loggers())
+		lg->flush();
 }
 
 PyObject* Python::Simulation::newfunc(PyTypeObject* subtype, PyObject *args, PyObject *kwds)
@@ -186,7 +188,6 @@ int Python::Simulation::init(Simulation* self, PyObject *args, PyObject *kwds)
 	}
 	else
 		self->startTime = Timer::StartClock::now();
-
 	switch (s) {
 		case 0: domain = Domain::DP; break;
 		case 1: domain = Domain::EMT; break;
@@ -210,11 +211,12 @@ int Python::Simulation::init(Simulation* self, PyObject *args, PyObject *kwds)
 
 	Py_INCREF(self->pySys);
 
-	if (self->realTime)
+	if (self->realTime) {
 		self->sim = std::make_shared<DPsim::RealTimeSimulation>(name, *self->pySys->sys, timestep, duration, domain, solverType, logLevel, initSteadyState);
-	else
+	}
+	else {
 		self->sim = std::make_shared<DPsim::Simulation>(name, *self->pySys->sys, timestep, duration, domain, solverType, logLevel, initSteadyState);
-
+	}
 	self->channel = new EventChannel();
 
 	return 0;
@@ -283,7 +285,7 @@ PyObject* Python::Simulation::addEvent(Simulation* self, PyObject* args)
 	try {
 		auto attr = pyComp->comp->attribute(name);
 	}
-	catch (InvalidAttributeException &e) {
+	catch (InvalidAttributeException &) {
 		PyErr_SetString(PyExc_TypeError, "Invalid attribute");
 		return nullptr;
 	}
@@ -401,7 +403,7 @@ PyObject* Python::Simulation::addLogger(Simulation *self, PyObject *args, PyObje
 		return nullptr;
 	}
 
-	Python::Logger *pyLogger = (Python::Logger*) pyObj;
+	Python::Logger *pyLogger = (Python::Logger *) pyObj;
 
 	self->sim->addLogger(pyLogger->logger);
 
@@ -527,26 +529,30 @@ PyObject* Python::Simulation::stop(Simulation *self, PyObject *args)
 	Py_RETURN_NONE;
 }
 
-const char *Python::Simulation::docGetEventFD =
-"get_eventfd(flags)\n"
-"Return a poll()/select()'able file descriptor which can be used to asynchronously\n"
-"notify the Python code about state changes and other events of the simulation.\n"
-"\n"
-":param flags: An optional mask of events which should be reported.\n"
-":param coalesce: Do not report each event  but do a rate reduction instead.\n";
-PyObject * Python::Simulation::getEventFD(Simulation *self, PyObject *args) {
+const char *Python::Simulation::docAddEventFD =
+"add_eventfd(flags)\n";
+PyObject * Python::Simulation::addEventFD(Simulation *self, PyObject *args) {
 	int flags = -1, coalesce = 1, fd;
 
-	if (!PyArg_ParseTuple(args, "|ii", &flags, &coalesce))
+	if (!PyArg_ParseTuple(args, "i|ii", &fd, &flags, &coalesce))
 		return nullptr;
 
-	fd = self->channel->fd();
-	if (fd < 0) {
-		PyErr_SetString(PyExc_SystemError, "Failed to created event file descriptor");
-		return nullptr;
-	}
+	self->channel->addFd(fd);
 
-	return Py_BuildValue("i", fd);
+	Py_RETURN_NONE;
+}
+
+const char *Python::Simulation::docRemoveEventFD =
+"remove_eventfd(fd)\n";
+PyObject * Python::Simulation::removeEventFD(Simulation *self, PyObject *args) {
+	int flags = -1, coalesce = 1, fd;
+
+	if (!PyArg_ParseTuple(args, "i", &fd, &flags, &coalesce))
+		return nullptr;
+
+	self->channel->removeFd(fd);
+
+	Py_RETURN_NONE;
 }
 
 const char *Python::Simulation::docState =
@@ -607,7 +613,8 @@ PyMethodDef Python::Simulation::methods[] = {
 	{"start",         (PyCFunction) Python::Simulation::start, METH_NOARGS, (char *) Python::Simulation::docStart},
 	{"step",          (PyCFunction) Python::Simulation::step, METH_NOARGS,  (char *) Python::Simulation::docStep},
 	{"stop",          (PyCFunction) Python::Simulation::stop, METH_NOARGS,  (char *) Python::Simulation::docStop},
-	{"get_eventfd",   (PyCFunction) Python::Simulation::getEventFD, METH_VARARGS, (char *) Python::Simulation::docGetEventFD},
+	{"add_eventfd",   (PyCFunction) Python::Simulation::addEventFD, METH_VARARGS, (char *) Python::Simulation::docAddEventFD},
+	{"remove_eventfd",(PyCFunction) Python::Simulation::removeEventFD, METH_VARARGS, (char *) Python::Simulation::docRemoveEventFD},
 	{nullptr, nullptr, 0, nullptr}
 };
 

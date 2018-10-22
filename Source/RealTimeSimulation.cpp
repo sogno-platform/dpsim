@@ -77,5 +77,8 @@ void RealTimeSimulation::run(const Timer::StartClock::time_point &startAt)
 		ifm.interface->close();
 #endif
 
+	for (auto lg : mLoggers)
+		lg->flush();
+
 	mTimer.stop();
 }

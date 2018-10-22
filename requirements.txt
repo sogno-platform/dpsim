@@ -12,3 +12,4 @@ pyyaml
 acs-dataprocessing
 progressbar2
 ipywidgets
+jupyterlab_widgets

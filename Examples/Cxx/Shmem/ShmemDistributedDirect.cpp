@@ -67,10 +67,11 @@ int main(int argc, char *argv[]) {
 		// Components
 		auto evs = VoltageSource::make("v_intf", Logger::Level::DEBUG);
 		auto vs1 = VoltageSource::make("vs_1", Logger::Level::DEBUG);
-		auto r01 = Resistor::make("r_0_1", 1, Logger::Level::DEBUG);
+		auto r01 = Resistor::make("r_0_1", Logger::Level::DEBUG);
 
 		evs->setParameters(Complex(5, 0));
 		vs1->setParameters(Complex(10, 0));
+		r01->setParameters(1);
 
 		evs->connect({ Node::GND, n2 });
 		vs1->connect({ Node::GND, n1 });
@@ -90,8 +91,10 @@ int main(int argc, char *argv[]) {
 		auto n1 = Node::make("n1");
 
 		// Components
-		auto ecs = CurrentSource::make("i_intf", Complex(5, 0), Logger::Level::DEBUG);
-		auto rgnd0 = Resistor::make("r_gnd_0", 1, Logger::Level::DEBUG);
+		auto ecs = CurrentSource::make("i_intf", Logger::Level::DEBUG);
+		ecs->setParameters(Complex(5, 0));
+		auto rgnd0 = Resistor::make("r_gnd_0", Logger::Level::DEBUG);
+		rgnd0->setParameters(1);
 
 		ecs->connect({ Node::GND, n1 });
 		rgnd0->connect({ Node::GND, n1 });
