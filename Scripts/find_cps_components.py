@@ -15,7 +15,7 @@ filenames = glob.glob(directory + "/**/*.h", recursive = True)
 regex =  r"namespace\s+(CPS)\s+\{[\W\w]+" \
          r"namespace\s+(EMT|DP|Signal)\s+\{[\W\w]+" \
          r"namespace\s+(Ph\d+)\s+\{[\W\w]+" \
-         r"class\s+(\w+)"
+         r"class\s+(?!\w+Step\b)(\w+)"
 
 regex2 =  r"namespace\s+(CPS)\s+\{[\W\w]+" \
          r"namespace\s+(Signal)\s+\{[\W\w]+" \
@@ -28,13 +28,12 @@ for filename in filenames:
         contents = f.read()
 
         for match in re.finditer(regex, contents, re.MULTILINE):
-            if not match[4].endswith("Step"):
-                classname = "Component::constructorDef<{}::{}::{}::{}>(\"_{}_{}_{}\"),\n".format(
-                    match[1], match[2], match[3], match[4],
-                    match[2].lower(), match[3].lower(), match[4]
-                )
+            classname = "Component::constructorDef<{}::{}::{}::{}>(\"_{}_{}_{}\"),\n".format(
+                match[1], match[2], match[3], match[4],
+                match[2].lower(), match[3].lower(), match[4]
+            )
 
-                classnames.append(classname)
+            classnames.append(classname)
 
         #for match in re.finditer(regex2, contents, re.MULTILINE):
         #    classname = "Component::getConstructorDef<{}::{}::{}>(\"_{}_{}\"),\n".format(
