@@ -408,7 +408,7 @@ void MnaSolver<VarType>::SolveTask::execute(Real time, Int timeStepCount) {
 
 	mSolver.solve();
 
-	// TODO still necessary?
+	// TODO split into separate task? (dependent on x, updating all v attributes)
 	for (UInt nodeIdx = 0; nodeIdx < mSolver.mNumNetNodes; nodeIdx++)
 		mSolver.mNodes[nodeIdx]->mnaUpdateVoltage(mSolver.mLeftSideVector);
 

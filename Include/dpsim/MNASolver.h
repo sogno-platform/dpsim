@@ -194,6 +194,9 @@ namespace DPsim {
 						// component does not contribute to right side vector
 					}
 				}
+				for (auto node : solver.mNodes) {
+					mModifiedAttributes.push_back(node->attribute("v"));
+				}
 				mModifiedAttributes.push_back(solver.attribute("x"));
 			}
 

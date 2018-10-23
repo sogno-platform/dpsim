@@ -136,7 +136,7 @@ void DataLogger::logEMTNodeValues(Real time, const Matrix& data) {
 }
 
 void DataLogger::log(Real time, Int timeStepCount) {
-	if (!mEnabled || (timeStepCount % mDownsampling == 0))
+	if (!mEnabled || !(timeStepCount % mDownsampling == 0))
 		return;
 
 	if (mLogFile.tellp() == std::ofstream::pos_type(0)) {
