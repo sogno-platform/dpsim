@@ -28,7 +28,7 @@ int main(int argc, char* argv[]) {
 	// Define simulation parameters
 	Real timeStep = 0.0005;
 	Real finalTime = 0.1;
-	String name = "DP_SynGen_TrStab_Step";
+	String name = "DP_SynGen_TrStab_LoadStep";
 	// Define machine parameters in per unit
 	Real nomPower = 555e6;
 	Real nomPhPhVoltRMS = 24e3;
