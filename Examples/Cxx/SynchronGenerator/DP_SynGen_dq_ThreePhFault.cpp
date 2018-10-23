@@ -95,7 +95,8 @@ int main(int argc, char* argv[]) {
 
 	sim.addEvent(sw1);
 
+	//gen->print_States();
 	sim.run();
-
+	//gen->print_States();
 	return 0;
 }
