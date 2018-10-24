@@ -12,9 +12,9 @@ before_script:
 
 stages:
   - prepare
-  - pre-build
   - build
   - test
+  - generate
   - deploy
   #- post-all
 
@@ -26,7 +26,7 @@ docker:
     - shell
 
 build:linux:
-  stage: pre-build
+  stage: build
   script:
     - mkdir build
     - cd build
@@ -51,8 +51,8 @@ test:pytest:
   tags:
     - docker
 
-build:docs:
-  stage: build
+generate:docs:
+  stage: generate
   script:
     - make -C build docs
     - make -C build docs_cxx
@@ -66,8 +66,8 @@ build:docs:
   tags:
     - docker
 
-build:packages:
-  stage: build
+generate:packages:
+  stage: generate
   script:
     - make -C build package
   only:
@@ -88,6 +88,8 @@ build:docker:
     - docker build -f Packaging/Docker/Dockerfile --build-arg DOCKER_TAG=${DOCKER_TAG} -t ${DOCKER_IMAGE}:${DOCKER_TAG} .
   tags:
     - shell
+  only:
+    - tags
 
 deploy:docker:
   stage: deploy
@@ -107,7 +109,7 @@ deploy:docs:
     - rsync ${RSYNC_OPTS} --delete build/Documentation/html/ ${DEPLOY_USER}@${DEPLOY_HOST}:${DEPLOY_PATH}/doc/${CI_BUILD_REF_NAME}/sphinx
     - rsync ${RSYNC_OPTS} --delete build/Documentation/Cxx/html/ ${DEPLOY_USER}@${DEPLOY_HOST}:${DEPLOY_PATH}/doc/${CI_BUILD_REF_NAME}/doxygen
   dependencies:
-    - build:docs
+    - generate:docs
   only:
     - tags
     - master
@@ -124,13 +126,25 @@ deploy:packages:
     - rsync ${RSYNC_OPTS} build/*.tar.gz ${DEPLOY_USER}@${DEPLOY_HOST}:/var/www/dpsim/src
     - ssh ${DEPLOY_USER}@${DEPLOY_HOST} createrepo /var/www/packages/redhat
   dependencies:
-    - build:packages
+    - generate:packages
   only:
     - tags
   tags:
     - fein-deploy
   tags:
     - shell
+
+test:jupyter:
+  stage: test
+  script:
+    - make -C Examples/notebooks
+  image: ${DOCKER_IMAGE_DEV}:${DOCKER_TAG}
+  artifacts:
+    paths:
+      - Logs/
+      - Examples/notebooks/build
+  tags:
+    - docker
 
 # We run the windows build at last as it takes ages to finish
 #build:windows:

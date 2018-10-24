@@ -41,6 +41,8 @@ namespace Python {
 	struct Logger {
 		PyObject_HEAD
 
+		std::vector<PyObject *> refs;
+
 		DPsim::DataLogger::Ptr logger;
 		const char *filename;
 

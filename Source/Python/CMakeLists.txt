@@ -1,15 +1,6 @@
 execute_process(COMMAND ${PYTHON_EXECUTABLE} -c "import sysconfig; print(sysconfig.get_path('platlib'), end='')" OUTPUT_VARIABLE PYTHON_PKGPATH)
 execute_process(COMMAND ${PYTHON_EXECUTABLE} -c "import sysconfig; print(sysconfig.get_config_var('EXT_SUFFIX'), end='')" OUTPUT_VARIABLE PYTHON_EXT_SUFFIX)
 
-if(NOT WIN32)
-	list(APPEND PYTHON_UNIX_SOURCES 
-		Interface.cpp 		
-		EventChannel.cpp
-	)
-elseif()
-
-endif()
-
 add_library(dpsim_python SHARED	
 	Module.cpp
 	Simulation.cpp
@@ -18,10 +9,14 @@ add_library(dpsim_python SHARED
 	Logger.cpp
 	LoadCim.cpp
 	SystemTopology.cpp	
-	Utils.cpp 
-	${PYTHON_UNIX_SOURCES}
+	Utils.cpp
+	EventChannel.cpp
 	${CMAKE_BINARY_DIR}/Include/dpsim/Python/ComponentConstructors.h
 )
+
+if(WITH_SHMEM)
+	target_sources(dpsim_python PUBLIC Interface.cpp)
+endif()
 
 file(MAKE_DIRECTORY ${CMAKE_BINARY_DIR}/Include/dpsim/Python)
 add_custom_command(

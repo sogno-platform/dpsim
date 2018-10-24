@@ -29,10 +29,8 @@
 #include <dpsim/Python/Simulation.h>
 #include <dpsim/Python/Logger.h>
 #include <dpsim/Python/Component.h>
-#ifndef _MSC_VER
 #include <dpsim/Python/Interface.h>
 #include <dpsim/RealTimeSimulation.h>
-#endif
 #include <cps/DP/DP_Ph1_Switch.h>
 
 using namespace DPsim;
@@ -41,25 +39,20 @@ using namespace CPS;
 void Python::Simulation::newState(Python::Simulation *self, Simulation::State newState)
 {
 	uint32_t evt = static_cast<uint32_t>(newState);
-#ifndef _MSC_VER
 	self->channel->sendEvent(evt);
-#endif
 	self->state = newState;
 }
 
 void Python::Simulation::threadFunction(Python::Simulation *self)
 {
 	Real time, finalTime;
-#ifndef _MSC_VER
 	Timer timer(Timer::Flags::fail_on_overrun);
-#endif
 
 #ifdef WITH_SHMEM
 	for (auto ifm : self->sim->interfaces())
 		ifm.interface->open();
 #endif
 
-#ifndef _MSC_VER
 	// optional start synchronization
 	if (self->startSync) {
 		self->sim->sync();
@@ -72,19 +65,18 @@ void Python::Simulation::threadFunction(Python::Simulation *self)
 
 		std::cout << "Starting simulation at " << self->startTime << " (delta_T = " << self->startTime - Timer::StartClock::now() << " seconds)" << std::endl;
 	}
-#endif
 
 	finalTime = self->sim->finalTime();
 
 	time = 0;
 	while (time < finalTime) {
 		time = self->sim->step();
-#ifndef _MSC_VER
+
 		if (self->realTime) {
 			try {
 				timer.sleep();
 			}
-			catch (Timer::OverrunException e) {
+			catch (Timer::OverrunException) {
 				std::unique_lock<std::mutex> lk(*self->mut);
 
 				if (self->failOnOverrun) {
@@ -93,7 +85,7 @@ void Python::Simulation::threadFunction(Python::Simulation *self)
 				}
 			}
 		}
-#endif
+
 		if (self->sim->timeStepCount() == 1) {
 			std::unique_lock<std::mutex> lk(*self->mut);
 			newState(self, Simulation::State::running);
@@ -133,6 +125,9 @@ void Python::Simulation::threadFunction(Python::Simulation *self)
 	for (auto ifm : self->sim->interfaces())
 		ifm.interface->close();
 #endif
+
+	for (auto lg : self->sim->loggers())
+		lg.logger->flush();
 }
 
 PyObject* Python::Simulation::newfunc(PyTypeObject* subtype, PyObject *args, PyObject *kwds)
@@ -184,13 +179,12 @@ int Python::Simulation::init(Simulation* self, PyObject *args, PyObject *kwds)
 	self->singleStepping = st;
 	self->failOnOverrun = failOnOverrun;
 	self->realTimeStep = timestep / rtFactor;
-#ifndef _MSC_VER
+
 	if (startTime > 0) {
 		self->startTime = Timer::StartClock::from_time_t(startTime) + std::chrono::microseconds(startTimeUs);
 	}
 	else
 		self->startTime = Timer::StartClock::now();
-#endif
 	switch (s) {
 		case 0: domain = Domain::DP; break;
 		case 1: domain = Domain::EMT; break;
@@ -215,16 +209,12 @@ int Python::Simulation::init(Simulation* self, PyObject *args, PyObject *kwds)
 	Py_INCREF(self->pySys);
 
 	if (self->realTime) {
-#ifndef _MSC_VER
 		self->sim = std::make_shared<DPsim::RealTimeSimulation>(name, *self->pySys->sys, timestep, duration, domain, solverType, logLevel, initSteadyState);
-#endif
 	}
 	else {
 		self->sim = std::make_shared<DPsim::Simulation>(name, *self->pySys->sys, timestep, duration, domain, solverType, logLevel, initSteadyState);
 	}
-#ifndef _MSC_VER
 	self->channel = new EventChannel();
-#endif
 
 	return 0;
 }
@@ -246,9 +236,7 @@ void Python::Simulation::dealloc(Python::Simulation* self)
 
 	delete self->mut;
 	delete self->cond;
-#ifndef _MSC_VER
 	delete self->channel;
-#endif
 
 	for (auto it : self->refs) {
 		Py_DECREF(it);
@@ -294,7 +282,7 @@ PyObject* Python::Simulation::addEvent(Simulation* self, PyObject* args)
 	try {
 		auto attr = pyComp->comp->attribute(name);
 	}
-	catch (InvalidAttributeException &e) {
+	catch (InvalidAttributeException &) {
 		PyErr_SetString(PyExc_TypeError, "Invalid attribute");
 		return nullptr;
 	}
@@ -541,27 +529,30 @@ PyObject* Python::Simulation::stop(Simulation *self, PyObject *args)
 	Py_RETURN_NONE;
 }
 
-const char *Python::Simulation::docGetEventFD =
-"get_eventfd(flags)\n"
-"Return a poll()/select()'able file descriptor which can be used to asynchronously\n"
-"notify the Python code about state changes and other events of the simulation.\n"
-"\n"
-":param flags: An optional mask of events which should be reported.\n"
-":param coalesce: Do not report each event  but do a rate reduction instead.\n";
-PyObject * Python::Simulation::getEventFD(Simulation *self, PyObject *args) {
+const char *Python::Simulation::docAddEventFD =
+"add_eventfd(flags)\n";
+PyObject * Python::Simulation::addEventFD(Simulation *self, PyObject *args) {
 	int flags = -1, coalesce = 1, fd;
 
-	if (!PyArg_ParseTuple(args, "|ii", &flags, &coalesce))
+	if (!PyArg_ParseTuple(args, "i|ii", &fd, &flags, &coalesce))
 		return nullptr;
-#ifndef _MSC_VER
-	fd = self->channel->fd();
-#endif
-	if (fd < 0) {
-		PyErr_SetString(PyExc_SystemError, "Failed to created event file descriptor");
-		return nullptr;
-	}
 
-	return Py_BuildValue("i", fd);
+	self->channel->addFd(fd);
+
+	Py_RETURN_NONE;
+}
+
+const char *Python::Simulation::docRemoveEventFD =
+"remove_eventfd(fd)\n";
+PyObject * Python::Simulation::removeEventFD(Simulation *self, PyObject *args) {
+	int flags = -1, coalesce = 1, fd;
+
+	if (!PyArg_ParseTuple(args, "i", &fd, &flags, &coalesce))
+		return nullptr;
+
+	self->channel->removeFd(fd);
+
+	Py_RETURN_NONE;
 }
 
 const char *Python::Simulation::docState =
@@ -622,7 +613,8 @@ PyMethodDef Python::Simulation::methods[] = {
 	{"start",         (PyCFunction) Python::Simulation::start, METH_NOARGS, (char *) Python::Simulation::docStart},
 	{"step",          (PyCFunction) Python::Simulation::step, METH_NOARGS,  (char *) Python::Simulation::docStep},
 	{"stop",          (PyCFunction) Python::Simulation::stop, METH_NOARGS,  (char *) Python::Simulation::docStop},
-	{"get_eventfd",   (PyCFunction) Python::Simulation::getEventFD, METH_VARARGS, (char *) Python::Simulation::docGetEventFD},
+	{"add_eventfd",   (PyCFunction) Python::Simulation::addEventFD, METH_VARARGS, (char *) Python::Simulation::docAddEventFD},
+	{"remove_eventfd",(PyCFunction) Python::Simulation::removeEventFD, METH_VARARGS, (char *) Python::Simulation::docRemoveEventFD},
 	{nullptr, nullptr, 0, nullptr}
 };
 

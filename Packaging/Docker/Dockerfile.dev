@@ -1,4 +1,4 @@
-FROM fedora:28
+FROM fedora:29
 
 LABEL \
 	org.label-schema.schema-version = "1.0" \
@@ -10,7 +10,7 @@ LABEL \
 	org.label-schema.url = "http://fein-aachen.org/projects/dpsim/" \
 	org.label-schema.vcs-url = "https://git.rwth-aachen.de/acs/core/simulation/DPsim"
 
-ADD https://villas.fein-aachen.org/packages/fein.repo /etc/yum.repos.d/
+ADD https://packages.fein-aachen.org/fedora/fein.repo /etc/yum.repos.d/
 
 RUN dnf -y update
 
@@ -27,14 +27,14 @@ RUN dnf -y install \
 	pkg-config
 
 # Dependencies
-RUN dnf -y install \
+RUN dnf --refresh -y install \
 	python3-devel \
 	eigen3-devel \
 	expat-devel \
 	graphviz-devel \
 	sundials-devel \
-	libcimpp16v29a \
 	libvillas-devel \
+	libcimpp16v29a \
 	spdlog
 
 # Install some debuginfos
@@ -45,3 +45,16 @@ ENV LD_LIBRARY_PATH /usr/local/lib64
 
 ADD requirements.txt .
 RUN pip3 install -r requirements.txt
+
+# Temporary fix for newest ipykernel version
+RUN pip3 uninstall ipykernel -y
+RUN pip3 install 'ipykernel<5.0.0'
+
+RUN pip3 install jupyter
+
+# Activate Jupyter extensions
+RUN dnf -y install npm
+RUN jupyter nbextension enable --py widgetsnbextension
+RUN jupyter labextension install @jupyter-widgets/jupyterlab-manager
+
+EXPOSE 8888

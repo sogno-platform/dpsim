@@ -1,0 +1,41 @@
+# rwthacs/dpsim-dev is built by dpsim-git/Packaging/Docker/Dockerfile.dev
+ARG DOCKER_TAG=latest
+FROM rwthacs/dpsim:${DOCKER_TAG}
+
+LABEL \
+	org.label-schema.schema-version = "1.0" \
+	org.label-schema.name = "DPsim" \
+	org.label-schema.license = "GPL-3.0" \
+	org.label-schema.vendor = "Institute for Automation of Complex Power Systems, RWTH Aachen University" \
+	org.label-schema.author.name = "Steffen Vogel" \
+	org.label-schema.author.email = "stvogel@eonerc.rwth-aachen.de" \
+	org.label-schema.url = "http://fein-aachen.org/projects/dpsim/" \
+	org.label-schema.vcs-url = "https://git.rwth-aachen.de/acs/core/simulation/DPsim"
+
+RUN mkdir /dpsim-validation
+RUN mkdir /dpsim-validation/data-processing
+
+ADD notebooks/* /dpsim-validation/notebooks
+ADD data-processing/* /dpsim-validation/data-processing/
+
+WORKDIR /dpsim-validation
+
+# Install validation specific python packages
+RUN pip3 install jupyter
+
+# Activate Jupyter extensions
+RUN dnf -y install npm
+RUN jupyter nbextension enable --py widgetsnbextension
+RUN jupyter labextension install @jupyter-widgets/jupyterlab-manager
+
+# Remove old version of data-processing and install from source
+RUN pip3 uninstall acs-dataprocessing -y
+WORKDIR /dpsim-validation/data-processing
+RUN ls
+RUN python3 setup.py install
+
+EXPOSE 8888
+
+WORKDIR /dpsim-validation
+# To start jupyter run:
+# CMD jupyter lab --ip="0.0.0.0" --allow-root

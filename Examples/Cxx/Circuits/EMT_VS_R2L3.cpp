@@ -26,6 +26,11 @@ using namespace CPS::EMT;
 using namespace CPS::EMT::Ph1;
 
 int main(int argc, char* argv[]) {
+	// Define simulation scenario
+	Real timeStep = 0.00001;
+	Real finalTime = 0.1;
+	String simName = "EMT_VS_R2L3";
+
 	// Nodes
 	auto n1 = Node::make("n1");
 	auto n2 = Node::make("n2");
@@ -35,38 +40,35 @@ int main(int argc, char* argv[]) {
 	// Components
 	auto vs = VoltageSource::make("vs", Logger::Level::DEBUG);
 	vs->setParameters(10, 50);
-	vs->connect(Node::List{ Node::GND, n1 });
 	auto r1 = Resistor::make("r_1", Logger::Level::DEBUG);
 	r1->setParameters(1);
-	r1->connect(Node::List{ n1, n2 });
 	auto l1 = Inductor::make("l_1", Logger::Level::DEBUG);
 	l1->setParameters(0.02);
-	l1->connect(Node::List{ n2, n3 });
 	auto l2 = Inductor::make("l_2", Logger::Level::DEBUG);
 	l2->setParameters(0.1);
-	l2->connect(Node::List{ n3, Node::GND });
 	auto l3 = Inductor::make("l_3", Logger::Level::DEBUG);
 	l3->setParameters(0.05);
-	l3->connect(Node::List{ n3, n4 });
 	auto r2 = Resistor::make("r_2", Logger::Level::DEBUG);
 	r2->setParameters(2);
+
+	// Topology
+	vs->connect(Node::List{ Node::GND, n1 });
+	r1->connect(Node::List{ n1, n2 });
+	l1->connect(Node::List{ n2, n3 });
+	l2->connect(Node::List{ n3, Node::GND });
+	l3->connect(Node::List{ n3, n4 });
 	r2->connect(Node::List{ n4, Node::GND });
 
 	// Define system topology
 	auto sys = SystemTopology(50, SystemNodeList{n1, n2, n3, n4}, SystemComponentList{vs, r1, l1, l2, l3, r2});
 
-	// Define simulation scenario
-	Real timeStep = 0.00001;
-	Real finalTime = 0.1;
-	String simName = "EMT_IdealVS_R2L3";
-
 	// Logging
 	auto logger = DataLogger::make(simName);
-	logger->addAttribute("v1", n1->attribute("voltage"));
-	logger->addAttribute("v2", n2->attribute("voltage"));
-	logger->addAttribute("v3", n3->attribute("voltage"));
-	logger->addAttribute("v4", n4->attribute("voltage"));
-	logger->addAttribute("i30", l2->attribute("i_intf"));
+	logger->addAttribute("v1", n1->attribute("v"));
+	logger->addAttribute("v2", n2->attribute("v"));
+	logger->addAttribute("v3", n3->attribute("v"));
+	logger->addAttribute("v4", n4->attribute("v"));
+	logger->addAttribute("i12", r1->attribute("i_intf"));
 	logger->addAttribute("i34", l3->attribute("i_intf"));
 
 	Simulation sim(simName, sys, timeStep, finalTime, Domain::EMT);

@@ -54,8 +54,8 @@ namespace DPsim {
 #ifdef HAVE_TIMERFD
 		int mTimerFd;
 #endif
-		int mOverruns;
-		int mTicks;
+		long long mOverruns;
+		long long mTicks;
 		int mFlags;
 
 	public:
@@ -79,11 +79,11 @@ namespace DPsim {
 		void sleep();
 
 		// Getter
-		int overruns() {
+		long long overruns() {
 			return mOverruns;
 		}
 
-		int ticks() {
+		long long ticks() {
 			return mTicks;
 		}
 
@@ -125,17 +125,17 @@ struct timespec to_timespec(std::chrono::duration<Rep, Period> dur) {
 #include <iostream>
 #include <ctime>
 
-#ifndef _MSC_VER
 template<typename Clock, typename Duration>
-std::ostream &operator<<(std::ostream &stream,
-	const std::chrono::time_point<Clock, Duration> &time_point) {
-	const std::time_t time = Clock::to_time_t(time_point);
+std::ostream &operator<<(std::ostream &stream, const std::chrono::time_point<Clock, Duration> &time_point) {
+	const auto sys_time_point = std::chrono::time_point_cast<typename Clock::duration, Clock>(time_point);
+	const std::time_t time = Clock::to_time_t(sys_time_point);
+
 #if __GNUC__ > 4 || ((__GNUC__ == 4) && __GNUC_MINOR__ > 8 && __GNUC_REVISION__ > 1)
 	// Maybe the put_time will be implemented later?
 	struct tm tm;
 	localtime_r(&time, &tm);
 	return stream << std::put_time(&tm, "%c"); // Print standard date&time
-#elif defined _MSC_VER
+#elif defined(_MSC_VER)
 	char buffer[26];
 	ctime_s(buffer, 26, &time);
 	buffer[24] = '\0';  // Removes the newline that is added
@@ -147,7 +147,6 @@ std::ostream &operator<<(std::ostream &stream,
 	return stream << buffer;
 #endif
 }
-#endif
 
 template<typename Rep, typename Period>
 std::ostream &operator<<(std::ostream &stream,
@@ -172,7 +171,7 @@ std::ostream &operator<<(std::ostream &stream,
 		d -= us;
 		auto ns = duration_cast<nanoseconds>(d);
 
-		long int vals[] = { h.count(), m.count(), s.count(), ms.count(), us.count(), ns.count() };
+		long long vals[] = { h.count(), m.count(), s.count(), ms.count(), us.count(), ns.count() };
 		const char *units[] = { "hrs", "mins", "secs", "msecs", "usecs", "nsecs" };
 
 		for (int i = 0; i < 6; i++) {
