@@ -27,7 +27,7 @@ using namespace CPS::DP::Ph3;
 
 int main(int argc, char* argv[]) {
 	// Define simulation parameters
-	Real timeStep = 0.00005;
+	Real timeStep = 0.000001; //initial: 0.00005
 	Real finalTime = 0.1;
 	String name = "DP_SynchronGenerator_dq_ThreePhFault";
 	// Define machine parameters in per unit
