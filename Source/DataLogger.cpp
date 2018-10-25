@@ -24,6 +24,9 @@ namespace fs = std::experimental::filesystem;
 
 #include <dpsim/DataLogger.h>
 #include <cps/Logger.h>
+#include<iostream>
+
+using namespace std;
 
 using namespace DPsim;
 
@@ -179,6 +182,9 @@ void DataLogger::addAttribute(const String &name, CPS::Attribute<MatrixVar<Real>
 
 void DataLogger::addAttribute(const String &name, CPS::Attribute<MatrixVar<Complex>>::Ptr attr) {
 	const MatrixVar<Complex> &m = attr->get();
+
+	//cout << attr <<endl;
+	//cout << m.rows() <<"	"<< m.cols() << endl;
 
 	auto attrMat = std::static_pointer_cast<CPS::MatrixAttribute<Complex>>(attr);
 
