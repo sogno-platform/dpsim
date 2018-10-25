@@ -112,9 +112,9 @@ void DataLogger::logPhasorNodeValues(Real time, const Matrix& data) {
 		for (Int i = 0; i < data.rows(); i++) {
 			std::stringstream name;
 			if (i < data.rows() / 2)
-				name << "node" << std::setfill('0') << std::setw(5) << i << "_re";
+				name << "node" << std::setfill('0') << std::setw(5) << i << ".real";
 			else
-				name << "node" << std::setfill('0') << std::setw(5) << (i - data.rows() / 2) << "_im";
+				name << "node" << std::setfill('0') << std::setw(5) << (i - data.rows() / 2) << ".imag";
 			names.push_back(name.str());
 		}
 		setColumnNames(names);
