@@ -9,8 +9,8 @@ wheel
 pytest
 pyyaml
 
-acs-dataprocessing
-jupyter
+acs-dataprocessing>=0.1.5
 progressbar2
 ipywidgets
+jupyter
 jupyterlab_widgets
