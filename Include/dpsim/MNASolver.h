@@ -120,8 +120,6 @@ namespace DPsim {
 		void initialize(CPS::SystemTopology system);
 		/// Identify Nodes and PowerComponents and SignalComponents
 		void identifyTopologyObjects();
-		///
-		void sortExecutionPriority();
 		/// Assign simulation node index according to index in the vector.
 		void assignSimNodes();
 		/// Creates virtual nodes inside components.

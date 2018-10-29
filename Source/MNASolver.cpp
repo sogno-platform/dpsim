@@ -40,10 +40,6 @@ void MnaSolver<VarType>::initialize(CPS::SystemTopology system) {
 	createVirtualNodes();
 	assignSimNodes();
 
-	// For the power components the step order should not be important
-	// but signal components need to be executed following the connections.
-	sortExecutionPriority();
-
 	// The system topology is prepared and we create the MNA matrices.
 	createEmptyVectors();
 	createEmptySystemMatrix();
@@ -163,15 +159,6 @@ void MnaSolver<VarType>::identifyTopologyObjects() {
 		auto sigComp = std::dynamic_pointer_cast<CPS::SignalComponent>(comp);
 		if (sigComp) mSignalComponents.push_back(sigComp);
 	}
-}
-
-template <typename VarType>
-void MnaSolver<VarType>::sortExecutionPriority() {
-	// Sort SignalComponents according to execution priority.
-	// Components with a higher priority number should come first.
-	std::sort(mSignalComponents.begin(), mSignalComponents.end(), [] (const auto& lhs, const auto& rhs) -> bool {
-		return lhs->priority() > rhs->priority();
-	});
 }
 
 template <typename VarType>
