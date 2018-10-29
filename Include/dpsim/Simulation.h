@@ -73,6 +73,10 @@ namespace DPsim {
 		EventQueue mEvents;
 		/// Scheduler used for task scheduling
 		std::shared_ptr<Scheduler> mScheduler;
+		/// List of all tasks to be scheduled
+		CPS::Task::List mTasks;
+		/// Task dependencies as incoming / outgoing edges
+		Scheduler::Edges mTaskInEdges, mTaskOutEdges;
 
 #ifdef WITH_SHMEM
 		struct InterfaceMapping {
@@ -122,6 +126,9 @@ namespace DPsim {
 		void sync();
 		/// Create the schedule for the independent tasks
 		void schedule();
+#ifdef WITH_GRAPHVIZ
+		void renderDependencyGraph(std::ostream& os);
+#endif
 
 		/// Schedule an event in the simulation
 		void addEvent(Event::Ptr e) {

@@ -31,31 +31,15 @@ using namespace DPsim;
 #include <unordered_map>
 
 // Simple topological sorting using Kahn's algorithm.
-void SequentialScheduler::createSchedule(Task::List& tasks) {
+void SequentialScheduler::createSchedule(const Task::List& tasks, const Edges& inEdges, const Edges& outEdges) {
 	mSchedule.clear();
 
-	// Create graph (list of out/in edges for each node) from attribute dependencies
-	std::unordered_map<CPS::AttributeBase::Ptr, std::deque<Task::Ptr>> dependencies;
-	for (auto task : tasks) {
-		for (auto attr : task->getAttributeDependencies()) {
-			dependencies[attr].push_back(task);
-		}
-	}
-
-	std::unordered_map<Task::Ptr, std::deque<Task::Ptr>> out_edges;
-	std::unordered_map<Task::Ptr, std::deque<Task::Ptr>> in_edges;
-	for (auto from : tasks) {
-		for (auto attr : from->getModifiedAttributes()) {
-			for (auto to : dependencies[attr]) {
-				out_edges[from].push_back(to);
-				in_edges[to].push_back(from);
-			}
-		}
-	}
+	// make copies of the edge lists because we modify them
+	Edges inEdgesCpy = inEdges, outEdgesCpy = outEdges;
 
 	std::deque<Task::Ptr> ready;
 	for (auto task : tasks) {
-		if (in_edges[task].empty()) {
+		if (inEdgesCpy[task].empty()) {
 			ready.push_back(task);
 		}
 	}
@@ -67,30 +51,30 @@ void SequentialScheduler::createSchedule(Task::List& tasks) {
 		ready.pop_front();
 		mSchedule.push_back(t);
 
-		for (auto after : out_edges[t]) {
-			for (auto edgeIt = in_edges[after].begin(); edgeIt != in_edges[after].end(); ++edgeIt) {
+		for (auto after : outEdgesCpy[t]) {
+			for (auto edgeIt = inEdgesCpy[after].begin(); edgeIt != inEdgesCpy[after].end(); ++edgeIt) {
 				if (*edgeIt == t) {
-					in_edges[after].erase(edgeIt);
+					inEdgesCpy[after].erase(edgeIt);
 					break;
 				}
 			}
-			if (in_edges[after].empty()) {
+			if (inEdgesCpy[after].empty()) {
 				ready.push_back(after);
 			}
 		}
-		out_edges.erase(t);
+		outEdgesCpy.erase(t);
 	}
 
 	// sanity check: all edges should have been removed, otherwise
 	// the graph had a cycle
 	for (auto t : tasks) {
-		if (!out_edges[t].empty() || !in_edges[t].empty())
+		if (!outEdgesCpy[t].empty() || !inEdgesCpy[t].empty())
 			throw SchedulingException();
 	}
 
 	std::cout << "Schedule:" << std::endl;
 	for (auto it : mSchedule) {
-		std::cout << typeid(*it).name() << std::endl;
+		std::cout << it->toString() << std::endl;
 	}
 }
 

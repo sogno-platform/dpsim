@@ -26,6 +26,10 @@
   #include <cps/CIM/Reader.h>
 #endif
 
+#ifdef WITH_GRAPHVIZ
+  #include <cps/Graph.h>
+#endif
+
 #ifdef WITH_SUNDIALS
   #include <dpsim/DAESolver.h>
 #endif
@@ -75,6 +79,10 @@ Simulation::Simulation(String name, SystemTopology system,
 		throw UnsupportedSolverException();
 	}
 
+	// TODO:
+	// - pass scheduler / scheduling parameters to Simulation constructor ?
+	// - multiple solver support
+	mScheduler = std::make_shared<SequentialScheduler>();
 }
 
 Simulation::~Simulation() {
@@ -103,22 +111,57 @@ void Simulation::sync()
 void Simulation::schedule()
 {
 	mLog.info() << "Scheduling tasks." << std::endl;
-	// TODO:
-	// - pass scheduler / scheduling parameters to Simulation constructor ?
-	// - multiple solver support
-	mScheduler = std::make_shared<SequentialScheduler>();
-	auto tasks = mSolver->getTasks();
+	mTasks.clear();
+	mTaskOutEdges.clear();
+	mTaskInEdges.clear();
+	mTasks = mSolver->getTasks();
 #ifdef WITH_SHMEM
 	for (auto intfm : mInterfaces) {
 		for (auto t : intfm.interface->getTasks()) {
-			tasks.push_back(t);
+			mTasks.push_back(t);
 		}
 	}
 #endif
 	for (auto logger : mLoggers) {
-		tasks.push_back(logger->getTask());
+		mTasks.push_back(logger->getTask());
 	}
-	mScheduler->createSchedule(tasks);
+
+	// Create graph (list of out/in edges for each node) from attribute dependencies
+	std::unordered_map<CPS::AttributeBase::Ptr, std::deque<Task::Ptr>> dependencies;
+	for (auto task : mTasks) {
+		for (auto attr : task->getAttributeDependencies()) {
+			dependencies[attr].push_back(task);
+		}
+	}
+
+	for (auto from : mTasks) {
+		for (auto attr : from->getModifiedAttributes()) {
+			for (auto to : dependencies[attr]) {
+				mTaskOutEdges[from].push_back(to);
+				mTaskInEdges[to].push_back(from);
+			}
+		}
+	}
+
+	mScheduler->createSchedule(mTasks, mTaskInEdges, mTaskOutEdges);
+}
+
+void Simulation::renderDependencyGraph(std::ostream &os)
+{
+	if (mTasks.size() == 0)
+		schedule();
+
+	Graph::Graph g("dependencies", Graph::Type::directed);
+	for (auto task : mTasks) {
+		g.addNode(task->toString());
+	}
+	for (auto from : mTasks) {
+		for (auto to : mTaskOutEdges[from]) {
+			g.addEdge("", g.node(from->toString()), g.node(to->toString()));
+		}
+	}
+
+	g.render(os, "dot", "svg");
 }
 
 void Simulation::run() {
