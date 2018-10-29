@@ -126,23 +126,7 @@ void Simulation::schedule()
 		mTasks.push_back(logger->getTask());
 	}
 
-	// Create graph (list of out/in edges for each node) from attribute dependencies
-	std::unordered_map<CPS::AttributeBase::Ptr, std::deque<Task::Ptr>> dependencies;
-	for (auto task : mTasks) {
-		for (auto attr : task->getAttributeDependencies()) {
-			dependencies[attr].push_back(task);
-		}
-	}
-
-	for (auto from : mTasks) {
-		for (auto attr : from->getModifiedAttributes()) {
-			for (auto to : dependencies[attr]) {
-				mTaskOutEdges[from].push_back(to);
-				mTaskInEdges[to].push_back(from);
-			}
-		}
-	}
-
+	Scheduler::resolveDeps(mTasks, mTaskInEdges, mTaskOutEdges);
 	mScheduler->createSchedule(mTasks, mTaskInEdges, mTaskOutEdges);
 }
 

@@ -71,11 +71,6 @@ void SequentialScheduler::createSchedule(const Task::List& tasks, const Edges& i
 		if (!outEdgesCpy[t].empty() || !inEdgesCpy[t].empty())
 			throw SchedulingException();
 	}
-
-	std::cout << "Schedule:" << std::endl;
-	for (auto it : mSchedule) {
-		std::cout << it->toString() << std::endl;
-	}
 }
 
 void SequentialScheduler::step(Real time, Int timeStepCount) {

@@ -34,6 +34,9 @@ namespace DPsim {
 
 		virtual void createSchedule(const CPS::Task::List& tasks, const Edges& inEdges, const Edges& outEdges) = 0;
 		virtual void step(Real time, Int timeStepCount) = 0;
+
+		// Helper function that resolves the task-attribute dependencies to task-task dependencies.
+		static void resolveDeps(const CPS::Task::List& tasks, Edges& inEdges, Edges& outEdges);
 	};
 
 	// TODO extend / subclass

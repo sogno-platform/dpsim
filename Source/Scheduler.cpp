@@ -1,6 +1,6 @@
-/** Simulation
+/** Common scheduler methods
  *
- * @author Markus Mirz <mmirz@eonerc.rwth-aachen.de>
+ * @author Georg Reinke <georg.reinke@rwth-aachen.de>
  * @copyright 2017-2018, Institute for Automation of Complex Power Systems, EONERC
  *
  * DPsim
@@ -19,34 +19,27 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *********************************************************************************/
 
-#pragma once
+#include <dpsim/Scheduler.h>
 
-#include <iostream>
-#include <vector>
-#include <list>
+using namespace CPS;
+using namespace DPsim;
 
-#include <dpsim/Definitions.h>
-#include <dpsim/Config.h>
-#include <cps/Logger.h>
-#include <cps/SystemTopology.h>
-#include <cps/Task.h>
+void Scheduler::resolveDeps(const Task::List& tasks, Edges& inEdges, Edges& outEdges) {
+	// Create graph (list of out/in edges for each node) from attribute dependencies
+	std::unordered_map<CPS::AttributeBase::Ptr, std::deque<Task::Ptr>> dependencies;
+	for (auto task : tasks) {
+		for (auto attr : task->getAttributeDependencies()) {
+			dependencies[attr].push_back(task);
+		}
+	}
 
-namespace DPsim {
-	/// Holds switching time and which system should be activated.
-	struct SwitchConfiguration {
-		Real switchTime;
-		UInt systemIndex;
-	};
+	for (auto from : tasks) {
+		for (auto attr : from->getModifiedAttributes()) {
+			for (auto to : dependencies[attr]) {
+				outEdges[from].push_back(to);
+				inEdges[to].push_back(from);
+			}
+		}
+	}
 
-	/// Base class for more specific solvers such as MNA, ODE or IDA.
-	class Solver {
-	public:
-		virtual ~Solver() { }
-
-		enum class Type { MNA, DAE };
-
-		virtual CPS::Task::List getTasks() = 0;
-		/// Log results
-		virtual void log(Real time) { };
-	};
 }

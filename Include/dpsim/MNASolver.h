@@ -172,8 +172,6 @@ namespace DPsim {
 		///
 		virtual ~MnaSolver() { };
 
-		/// Solve system A * x = z for x and current time
-		Real step(Real time);
 		/// Log left and right vector values for each simulation step
 		void log(Real time);
 		// #### Getter ####

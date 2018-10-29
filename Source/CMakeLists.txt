@@ -6,6 +6,7 @@ set(SOURCES
 	Timer.cpp
 	Event.cpp
 	DataLogger.cpp
+	Scheduler.cpp
 	SequentialScheduler.cpp
 )
 

@@ -19,6 +19,7 @@
  *********************************************************************************/
 
 #include <dpsim/MNASolver.h>
+#include <dpsim/SequentialScheduler.h>
 
 using namespace DPsim;
 using namespace CPS;
@@ -269,6 +270,7 @@ void MnaSolver<VarType>::createVirtualNodes() {
 
 template <typename VarType>
 void MnaSolver<VarType>::steadyStateInitialization() {
+	Int timeStepCount = 0;
 	Real time = 0;
 	Real eps = 0.0001;
 	Real maxDiff, max;
@@ -287,22 +289,33 @@ void MnaSolver<VarType>::steadyStateInitialization() {
 	// Compute LU-factorization for system matrix
 	mTmpLuFactorization = Eigen::PartialPivLU<Matrix>(mTmpSystemMatrix);
 
+	// Use sequential scheduler
+	SequentialScheduler sched;
+	CPS::Task::List tasks;
+	Scheduler::Edges inEdges, outEdges;
+
+	for (auto comp : mPowerComponents) {
+		for (auto task : comp->mnaTasks()) {
+			tasks.push_back(task);
+		}
+	}
+
+	// TODO signal components should be moved out of MNA solver
+	for (auto comp : mSignalComponents) {
+		for (auto task : comp->getTasks()) {
+			tasks.push_back(task);
+		}
+	}
+	tasks.push_back(std::make_shared<MnaSolver<VarType>::SolveTask>(*this));
+
+	Scheduler::resolveDeps(tasks, inEdges, outEdges);
+	sched.createSchedule(tasks, inEdges, outEdges);
+
 	while (time < 10) {
 		// Reset source vector
 		mRightSideVector.setZero();
 
-		// First, step signal components and then power components
-		for (auto comp : mSignalComponents)
-			comp->step(time);
-		for (auto comp : mPowerComponents)
-			comp->mnaStep(mTmpSystemMatrix, mRightSideVector, mLeftSideVector, time);
-
-		// Solve MNA system
-		mLeftSideVector = mTmpLuFactorization.solve(mRightSideVector);
-
-		// Some components need to update internal states
-		for (auto comp : mPowerComponents)
-			comp->mnaPostStep(mRightSideVector, mLeftSideVector, time);
+		sched.step(time, timeStepCount);
 
 		// TODO Try to avoid this step.
 		for (UInt nodeIdx = 0; nodeIdx < mNumNetNodes; nodeIdx++)
@@ -319,6 +332,7 @@ void MnaSolver<VarType>::steadyStateInitialization() {
 
 		// Calculate new simulation time
 		time = time + mTimeStep;
+		timeStepCount++;
 
 		// Calculate difference
 		diff = prevLeftSideVector - mLeftSideVector;
@@ -336,37 +350,6 @@ void MnaSolver<VarType>::steadyStateInitialization() {
 	// Reset system for actual simulation
 	mTmpSystemMatrix.setZero();
 	mRightSideVector.setZero();
-}
-
-template <typename VarType>
-Real MnaSolver<VarType>::step(Real time) {
-	// Reset source vector
-	mRightSideVector.setZero();
-
-	// First, step signal components and then power components
-	for (auto comp : mSignalComponents)
-		comp->step(time);
-	for (auto comp : mPowerComponents)
-		comp->mnaStep(mTmpSystemMatrix, mRightSideVector, mLeftSideVector, time);
-	for (auto comp : mSwitches)
-		comp->mnaStep(mTmpSystemMatrix, mRightSideVector, mLeftSideVector, time);
-
-	// Solve MNA system
-	solve();
-
-	// Some components need to update internal states
-	for (auto comp : mPowerComponents)
-		comp->mnaPostStep(mRightSideVector, mLeftSideVector, time);
-
-	// TODO Try to avoid this step.
-	for (UInt nodeIdx = 0; nodeIdx < mNumNetNodes; nodeIdx++)
-		mNodes[nodeIdx]->mnaUpdateVoltage(mLeftSideVector);
-
-	updateSwitchStatus();
-	mLog.debug() << "Switch status is " << mCurrentSwitchStatus << " for " << time << std::endl;
-
-	// Calculate new simulation time
-	return time + mTimeStep;
 }
 
 template <typename VarType>
