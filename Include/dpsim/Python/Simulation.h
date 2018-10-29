@@ -132,6 +132,11 @@ namespace Python {
 		static PyMethodDef methods[];
 		static PyGetSetDef getset[];
 		static PyTypeObject type;
+
+#ifdef WITH_GRAPHVIZ
+		static const char *docReprSVG;
+		static PyObject* reprSVG(Simulation* self, PyObject* args);
+#endif
 	};
 }
 }

@@ -555,6 +555,20 @@ PyObject * Python::Simulation::removeEventFD(Simulation *self, PyObject *args) {
 	Py_RETURN_NONE;
 }
 
+#ifdef WITH_GRAPHVIZ
+const char *Python::Simulation::docReprSVG =
+"_repr_svg_()\n"
+"Return a SVG graph rendering of the task dependency graph\n";
+PyObject* Python::Simulation::reprSVG(Simulation *self, PyObject *args)
+{
+	std::stringstream ss;
+
+	self->sim->renderDependencyGraph(ss);
+
+	return PyUnicode_FromString(ss.str().c_str());
+}
+#endif
+
 const char *Python::Simulation::docState =
 "state\n"
 "The current state of simulation.\n";
@@ -615,6 +629,9 @@ PyMethodDef Python::Simulation::methods[] = {
 	{"stop",          (PyCFunction) Python::Simulation::stop, METH_NOARGS,  (char *) Python::Simulation::docStop},
 	{"add_eventfd",   (PyCFunction) Python::Simulation::addEventFD, METH_VARARGS, (char *) Python::Simulation::docAddEventFD},
 	{"remove_eventfd",(PyCFunction) Python::Simulation::removeEventFD, METH_VARARGS, (char *) Python::Simulation::docRemoveEventFD},
+#ifdef WITH_GRAPHVIZ
+	{"_repr_svg_",    (PyCFunction) Python::Simulation::reprSVG, METH_NOARGS, (char*) Python::Simulation::docReprSVG},
+#endif
 	{nullptr, nullptr, 0, nullptr}
 };
 
