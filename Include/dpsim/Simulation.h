@@ -145,6 +145,10 @@ namespace DPsim {
 			mLoggers.push_back(logger);
 		}
 
+		void setScheduler(std::shared_ptr<Scheduler> scheduler) {
+			mScheduler = scheduler;
+		}
+
 		// #### Getter ####
 		String name() const { return mName; }
 		Real time() const { return mTime; }

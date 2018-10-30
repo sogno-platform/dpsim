@@ -59,6 +59,7 @@ Simulation::Simulation(String name, SystemTopology system,
 	Simulation(name, timeStep, finalTime,
 		domain, solverType, logLevel) {
 
+	// TODO: multiple solver support
 	switch (solverType) {
 	case Solver::Type::MNA:
 		if (domain == Domain::DP)
@@ -79,18 +80,13 @@ Simulation::Simulation(String name, SystemTopology system,
 		throw UnsupportedSolverException();
 	}
 
-	// TODO:
-	// - pass scheduler / scheduling parameters to Simulation constructor ?
-	// - multiple solver support
-	mScheduler = std::make_shared<SequentialScheduler>();
 }
 
 Simulation::~Simulation() {
 
 }
 
-void Simulation::sync()
-{
+void Simulation::sync() {
 #ifdef WITH_SHMEM
 	// We send initial state over all interfaces
 	for (auto ifm : mInterfaces) {
@@ -108,9 +104,11 @@ void Simulation::sync()
 #endif
 }
 
-void Simulation::schedule()
-{
+void Simulation::schedule() {
 	mLog.info() << "Scheduling tasks." << std::endl;
+	if (!mScheduler) {
+		mScheduler = std::make_shared<SequentialScheduler>();
+	}
 	mTasks.clear();
 	mTaskOutEdges.clear();
 	mTaskInEdges.clear();
@@ -130,8 +128,7 @@ void Simulation::schedule()
 	mScheduler->createSchedule(mTasks, mTaskInEdges, mTaskOutEdges);
 }
 
-void Simulation::renderDependencyGraph(std::ostream &os)
-{
+void Simulation::renderDependencyGraph(std::ostream &os) {
 	if (mTasks.size() == 0)
 		schedule();
 
@@ -179,7 +176,6 @@ void Simulation::run() {
 }
 
 Real Simulation::step() {
-	// TODO: events should be integrated into tasking system
 	mEvents.handleEvents(mTime);
 
 	mScheduler->step(mTime, mTimeStepCount);
