@@ -37,9 +37,10 @@ endif()
 if(WITH_SHMEM)
 	list(APPEND SOURCES
 		Interface.cpp
+		PthreadPoolScheduler.cpp
 	)
 
-	list(APPEND LIBRARIES ${VILLASNODE_LIBRARIES})
+	list(APPEND LIBRARIES ${VILLASNODE_LIBRARIES} pthread)
 	list(APPEND INCLUDE_DIRS ${VILLASNODE_INCLUDE_DIRS})
 endif()
 

@@ -1,6 +1,6 @@
-/**
- * @file
- * @author Markus Mirz <mmirz@eonerc.rwth-aachen.de>
+/** Scheduler that dynamically distributes tasks to a pool of POSIX threads.
+ *
+ * @author Georg Reinke <georg.reinke@rwth-aachen.de>
  * @copyright 2017-2018, Institute for Automation of Complex Power Systems, EONERC
  *
  * DPsim
@@ -19,36 +19,37 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *********************************************************************************/
 
-#include <dpsim/Config.h>
-#include <dpsim/Utils.h>
-#include <dpsim/Simulation.h>
-#include <dpsim/SequentialScheduler.h>
-#include <dpsim/PthreadPoolScheduler.h>
+#pragma once
 
-#ifndef _MSC_VER
-  #include <dpsim/RealTimeSimulation.h>
-#endif
+#include <dpsim/Scheduler.h>
 
-#include <cps/Components.h>
-#include <cps/Logger.h>
+#include <villas/queue_signalled.h>
 
-#ifdef WITH_SHMEM
-  #include <dpsim/Interface.h>
-#endif
-
-#ifdef WITH_CIM
-  #include <cps/CIM/Reader.h>
-#endif
+#include <vector>
 
 namespace DPsim {
-	// #### CPS for users ####
-	using SystemTopology = CPS::SystemTopology;
-	using SystemNodeList = CPS::TopologicalNode::List;
-	using SystemComponentList = CPS::Component::List;
-	using Logger = CPS::Logger;
-	using Domain = CPS::Domain;
-	using PhaseType = CPS::PhaseType;
-#ifdef WITH_CIM
-	using CIMReader = CPS::CIM::Reader;
-#endif
-}
+	class PthreadPoolScheduler : public Scheduler {
+	public:
+		PthreadPoolScheduler(size_t poolSize);
+		~PthreadPoolScheduler();
+
+		void createSchedule(const CPS::Task::List& tasks, const Edges& inEdges, const Edges& outEdges);
+		void step(Real time, Int timeStepCount);
+		void getMeasurements();
+
+	private:
+		static void* poolThreadFunction(void* data);
+
+		std::vector<pthread_t> mThreads;
+
+		CPS::Task::List mTasks;
+		Edges mInEdges;
+		Edges mOutEdges;
+
+		struct queue_signalled mOutQueue;
+		struct queue_signalled mDoneQueue;
+
+		Real mTime;
+		Int mTimeStepCount;
+	};
+};
