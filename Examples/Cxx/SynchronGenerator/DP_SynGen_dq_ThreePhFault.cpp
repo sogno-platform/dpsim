@@ -89,11 +89,12 @@ int main(int argc, char* argv[]) {
 
 	//logger:
 	auto logger = DataLogger::make(simName);
-	logger->addAttribute("Current", gen->attribute("Current"));
+	logger->addAttribute("i", gen->attribute("i_intf"));
+	//logger->addAttribute("v1", n1->attribute("v"));
 	logger->addAttribute("theta", gen->attribute("theta"));
 	// Simulation
 	Simulation sim(simName, sys, timeStep, finalTime,
-		Domain::DP, Solver::Type::MNA); //Logger::Level::INFO
+		Domain::DP, Solver::Type::MNA, Logger::Level::INFO); //Domain::DP, Solver::Type::MNA, Logger::Level::INFO
 
 	sim.addLogger(logger);
 
