@@ -183,14 +183,6 @@ void MnaSolver<VarType>::assignSimNodes() {
 	mLog.info() << "Number of simulation nodes: " << mNumSimNodes << std::endl;
 }
 
-template <typename VarType>
-void MnaSolver<VarType>::solve()  {
-	if (mSwitchedMatrices.size() > 0)
-		mLeftSideVector = mLuFactorizations[mCurrentSwitchStatus].solve(mRightSideVector);
-	else
-		mLeftSideVector = mTmpLuFactorization.solve(mRightSideVector);
-}
-
 template<>
 void MnaSolver<Real>::createEmptyVectors() {
 	mRightSideVector = Matrix::Zero(mNumSimNodes, 1);
@@ -293,7 +285,7 @@ void MnaSolver<VarType>::steadyStateInitialization() {
 			tasks.push_back(task);
 		}
 	}
-	tasks.push_back(std::make_shared<MnaSolver<VarType>::SolveTask>(*this));
+	tasks.push_back(std::make_shared<MnaSolver<VarType>::SolveTask>(*this, true));
 
 	Scheduler::resolveDeps(tasks, inEdges, outEdges);
 	sched.createSchedule(tasks, inEdges, outEdges);
@@ -355,7 +347,7 @@ Task::List MnaSolver<VarType>::getTasks() {
 			l.push_back(task);
 		}
 	}
-	l.push_back(std::make_shared<MnaSolver<VarType>::SolveTask>(*this));
+	l.push_back(std::make_shared<MnaSolver<VarType>::SolveTask>(*this, false));
 	l.push_back(std::make_shared<MnaSolver<VarType>::LogTask>(*this));
 
 	return l;
@@ -376,13 +368,17 @@ void MnaSolver<VarType>::SolveTask::execute(Real time, Int timeStepCount) {
 		}
 	}
 
-	mSolver.solve();
+	if (mSolver.mSwitchedMatrices.size() > 0 && !mSteadyStateInit)
+		mSolver.mLeftSideVector = mSolver.mLuFactorizations[mSolver.mCurrentSwitchStatus].solve(mSolver.mRightSideVector);
+	else
+		mSolver.mLeftSideVector = mSolver.mTmpLuFactorization.solve(mSolver.mRightSideVector);
 
 	// TODO split into separate task? (dependent on x, updating all v attributes)
 	for (UInt nodeIdx = 0; nodeIdx < mSolver.mNumNetNodes; nodeIdx++)
 		mSolver.mNodes[nodeIdx]->mnaUpdateVoltage(mSolver.mLeftSideVector);
 
-	mSolver.updateSwitchStatus();
+	if (!mSteadyStateInit)
+		mSolver.updateSwitchStatus();
 
 	// Components' states will be updated by the post-step tasks
 }

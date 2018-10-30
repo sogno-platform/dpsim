@@ -131,8 +131,6 @@ namespace DPsim {
 		void createEmptyVectors();
 		/// Create system matrix
 		void createEmptySystemMatrix();
-		/// Solve system matrices
-		void solve();
 		///
 		void updateSwitchStatus();
 	public:
@@ -181,8 +179,8 @@ namespace DPsim {
 
 		class SolveTask : public CPS::Task {
 		public:
-			SolveTask(MnaSolver<VarType>& solver) :
-				Task(solver.mName + ".Solve"), mSolver(solver) {
+			SolveTask(MnaSolver<VarType>& solver, Bool steadyStateInit) :
+				Task(solver.mName + ".Solve"), mSolver(solver), mSteadyStateInit(steadyStateInit) {
 				for (auto it : solver.mPowerComponents) {
 					try {
 						mAttributeDependencies.push_back(it->attribute("b"));
@@ -200,6 +198,7 @@ namespace DPsim {
 
 		private:
 			MnaSolver<VarType>& mSolver;
+			Bool mSteadyStateInit;
 		};
 
 		class LogTask : public CPS::Task {
