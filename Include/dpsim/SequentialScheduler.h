@@ -23,13 +23,20 @@
 
 #include <dpsim/Scheduler.h>
 
+#include <chrono>
+#include <typeinfo>
+#include <unordered_map>
+#include <vector>
+
 namespace DPsim {
 	class SequentialScheduler : public Scheduler {
 	public:
 		void createSchedule(const CPS::Task::List& tasks, const Edges& inEdges, const Edges& outEdges);
 		void step(Real time, Int timeStepCount);
+		void getMeasurements();
 
 	private:
 		CPS::Task::List mSchedule;
+		std::unordered_map<size_t, std::vector<std::chrono::nanoseconds>> mMeasurements;
 	};
 }

@@ -175,6 +175,7 @@ void Simulation::run() {
 		lg->flush();
 
 	mLog.info() << "Simulation finished." << std::endl;
+	mScheduler->getMeasurements();
 }
 
 Real Simulation::step() {

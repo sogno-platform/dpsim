@@ -33,6 +33,7 @@ namespace DPsim {
 		typedef std::unordered_map<CPS::Task::Ptr, std::deque<CPS::Task::Ptr>> Edges;
 
 		virtual void createSchedule(const CPS::Task::List& tasks, const Edges& inEdges, const Edges& outEdges) = 0;
+		virtual void getMeasurements() = 0;
 		virtual void step(Real time, Int timeStepCount) = 0;
 
 		// Helper function that resolves the task-attribute dependencies to task-task dependencies.
