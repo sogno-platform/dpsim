@@ -22,6 +22,7 @@
 
 #include <dpsim/DAESolver.h>
 #include <cps/PowerComponent.h>
+#include <cps/Solver/MNAInterface.h>
 
 using namespace DPsim;
 using namespace CPS;
@@ -81,123 +82,118 @@ DAESolver::DAESolver(String name, CPS::SystemTopology system, Real dt, Real t0) 
     initialize(t0);
 }
 
-void DAESolver::initialize(Real t0)
-{
+void DAESolver::initialize(Real t0) {
     int ret;
+    int counter = 0;
+    realtype *sval = NULL, *s_dtval = NULL;
+    std::cout << "Init states" << std::endl;
 
-    // Set initial values of all components
-    for (Component::Ptr comp : mComponents) {
-        auto emtComp = std::dynamic_pointer_cast<PowerComponent<Complex> >(comp);
-        if (emtComp){
-            emtComp->initializeFromPowerflow(mSystem.mSystemFrequency);
-
-            std::cout <<"Comp Setup Done"<<std::endl;
-        }
-    }
-    std::cout <<"Init states"<<std::endl;
     // Allocate state vectors
     state = N_VNew_Serial(mNEQ);
     dstate_dt = N_VNew_Serial(mNEQ);
 
-    std::cout <<"State Init done"<<std::endl;
+    std::cout << "State Init done" << std::endl;
+    std::cout << "Pointer Init" << std::endl;
+    sval = N_VGetArrayPointer_Serial(state);
+    s_dtval = N_VGetArrayPointer_Serial(dstate_dt);
+    std::cout << "Pointer Init done" << std::endl << std::endl;
+
+    for (auto node : mNodes) {
+        // Initialize nodal voltages of state vector
+        Real tempVolt;
+        PhaseType phase = node->phaseType();
+        tempVolt = std::real(node->initialSingleVoltage(phase));
+
+        std::cout << "Node Volt " << counter << ": " << tempVolt << std::endl;
+        sval[counter++] = tempVolt;
+        // std::cout <<"Node initialized"<<std::endl;
+    }
+    // Set initial values of all components
+    for (Component::Ptr comp : mComponents) {
+        auto emtComp = std::dynamic_pointer_cast<PowerComponent<Complex> >(comp);
+        if (emtComp) {
+            emtComp->initializeFromPowerflow(mSystem.mSystemFrequency);
+        }
+    }
+
 //	avtol = N_VNew_Serial(mNEQ);
 
 
-    realtype *sval = NULL, *s_dtval=NULL ;
-    std::cout <<"Pointer Init"<<std::endl;
-    sval = N_VGetArrayPointer_Serial(state);
-    s_dtval = N_VGetArrayPointer_Serial(dstate_dt);
-    std::cout <<"Pointer Init done"<<std::endl<<std::endl;
-
-    int counter = 0;
-    for (auto node : mNodes) {
-        // Initialize nodal voltages of state vector
-        Real tempVolt = 0.0;
-        PhaseType phase = node->phaseType();
-        tempVolt += std::real(node->initialSingleVoltage(phase));
-
-        std::cout <<"Node Volt "<<counter<<": "<<tempVolt<<std::endl;
-        sval[counter++] = tempVolt;
-        // std::cout <<"Node initialized"<<std::endl;
-
-//		if (node->phaseType() == PhaseType::ABC) {
-//			tempVolt += std::real(node->initialVoltage()(1,0));
-//			tempVolt += std::real(node->initialVoltage()(2,0));
-//		}
-    }
-
 
     for (Component::Ptr comp : mComponents) {
-        auto emtComp = std::dynamic_pointer_cast<PowerComponent<Complex>>(comp);
+        //auto emtComp = std::dynamic_pointer_cast<PowerComponent<Complex>>(comp);
+        auto emtComp = std::dynamic_pointer_cast<CPS::DAEInterface>(comp);
         if (!emtComp)
             throw CPS::Exception();
 
         // Initialize component values of state vector
-        std::cout <<"Comp Volt "<<counter<<": " <<std::real(emtComp->initialSingleVoltage(1)-emtComp->initialSingleVoltage(0))<<std::endl;
-        sval[counter++] = std::real(emtComp->initialSingleVoltage(1)-emtComp->initialSingleVoltage(0));
+        sval[counter++] = std::real(emtComp->daeInitialize());
+        std::cout << "Comp Volt " << counter-1 << ": " << sval[counter-1]<< std::endl;
 //		sval[counter++] = component inductance;
 
-
+        //TODO: mVoltageRef
         // Register residual functions of components
         auto daeComp = std::dynamic_pointer_cast<DAEInterface>(comp);
         if (!daeComp)
             throw CPS::Exception();
 
-        mResidualFunctions.push_back([daeComp](double ttime, const double state[], const double dstate_dt[], double resid[], std::vector<int>& off) {
-            daeComp->daeResidual(ttime, state, dstate_dt, resid, off);
-        });
+        mResidualFunctions.push_back(
+                [daeComp](double ttime, const double state[], const double dstate_dt[], double resid[],
+                          std::vector<int> &off) {
+                    daeComp->daeResidual(ttime, state, dstate_dt, resid, off);
+                });
     }
 
-    for (int j = 0; j < (int)mNodes.size(); j++) {
+    for (int j = 0; j < (int) mNodes.size(); j++) {
         // Initialize nodal current equations
         sval[counter++] = 0;
-        std::cout<<"Nodal Equation value "<<sval[counter-1]<<std::endl;
+        std::cout << "Nodal Equation value " << sval[counter - 1] << std::endl;
     }
 
-    std::cout<<std::endl;
+    std::cout << std::endl;
 
     // Set initial values for state derivative for now all equal to 0
     for (int i = 0; i < (mNEQ); i++) {
         s_dtval[i] = 0; // TODO: add derivative calculation
-        std::cout <<"derivative "<<i<<": " <<s_dtval[i]<<std::endl;
+        std::cout << "derivative " << i << ": " << s_dtval[i] << std::endl;
     }
 
-    std::cout<<std::endl;
+    std::cout << std::endl;
 
-    std::cout <<"Init Tolerances"<<std::endl;
+    std::cout << "Init Tolerances" << std::endl;
     rtol = RCONST(1.0e-10); // Set relative tolerance
     abstol = RCONST(1.0e-4); // Set absolute error
-    std::cout <<"Init Tolerances done"<<std::endl;
+    std::cout << "Init Tolerances done" << std::endl;
 
     mem = IDACreate();
-    if(mem!=NULL) std::cout<<"Memory Ok"<<std::endl;
-    std::cout <<"Define Userdata"<<std::endl;
+    if (mem != NULL) std::cout << "Memory Ok" << std::endl;
+    std::cout << "Define Userdata" << std::endl;
     // This passes the solver instance as the user_data argument to the residual functions
     ret = IDASetUserData(mem, this);
 //	if (check_flag(&ret, "IDASetUserData", 1)) {
 //		throw CPS::Exception();
 //	}
-    std::cout <<"Call IDAInit"<<std::endl;
+    std::cout << "Call IDAInit" << std::endl;
 
     ret = IDAInit(mem, &DAESolver::residualFunctionWrapper, t0, state, dstate_dt);
 //	if (check_flag(&ret, "IDAInit", 1)) {
 //		throw CPS::Exception();
 //	}
-    std::cout <<"Call IDATolerances"<<std::endl;
+    std::cout << "Call IDATolerances" << std::endl;
     ret = IDASStolerances(mem, rtol, abstol);
 // 	if (check_flag(&ret, "IDASStolerances", 1)) {
 //		throw CPS::Exception();
 //	}
-    std::cout <<"Call IDA Solver Stuff"<<std::endl;
+    std::cout << "Call IDA Solver Stuff" << std::endl;
     // Allocate and connect Matrix A and solver LS to IDA
     A = SUNDenseMatrix(mNEQ, mNEQ);
     LS = SUNDenseLinearSolver(state, A);
     ret = IDADlsSetLinearSolver(mem, LS, A);
-
+    //ret = IDASpilsSetLinearSolver(mem, LS);
     //IDA input functions
-    ret = IDASetMaxNumSteps(mem,-1);  //Max. number of timesteps until tout
+    ret = IDASetMaxNumSteps(mem, -1);  //Max. number of timesteps until tout
     //ret = IDASetMaxConvFails(mem, 100); //Max. number of convergence failures at one step
-    (void)ret;
+    (void) ret;
 }
 
 int DAESolver::residualFunctionWrapper(realtype ttime, N_Vector state, N_Vector dstate_dt, N_Vector resid, void *user_data)

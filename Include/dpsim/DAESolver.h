@@ -35,6 +35,7 @@
 
 #include <ida/ida.h>
 #include <ida/ida_direct.h>
+#include <ida/ida_spils.h>
 #include <sunlinsol/sunlinsol_dense.h>
 #include <sundials/sundials_types.h>
 #include <nvector/nvector_serial.h>
