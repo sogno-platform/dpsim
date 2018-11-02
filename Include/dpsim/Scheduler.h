@@ -39,6 +39,11 @@ namespace DPsim {
 
 		// Helper function that resolves the task-attribute dependencies to task-task dependencies.
 		static void resolveDeps(const CPS::Task::List& tasks, Edges& inEdges, Edges& outEdges);
+		// Simple topological sorting using Kahn's algorithm.
+		static void topologicalSort(const CPS::Task::List& tasks, const Edges& inEdges, const Edges& outEdges, CPS::Task::List& sortedTasks);
+		// Separate topologically sorted list of tasks into levels which can be
+		// executed in parallel
+		static void levelSchedule(const CPS::Task::List& tasks, const Edges& inEdges, const Edges& outEdges, std::vector<CPS::Task::List>& levels);
 	};
 
 	// TODO extend / subclass

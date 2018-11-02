@@ -41,5 +41,69 @@ void Scheduler::resolveDeps(const Task::List& tasks, Edges& inEdges, Edges& outE
 			}
 		}
 	}
+}
 
+void Scheduler::topologicalSort(const Task::List& tasks, const Edges& inEdges, const Edges& outEdges, Task::List& sortedTasks) {
+	sortedTasks.clear();
+
+	// make copies of the edge lists because we modify them
+	Edges inEdgesCpy = inEdges, outEdgesCpy = outEdges;
+
+	std::deque<Task::Ptr> ready;
+	for (auto task : tasks) {
+		if (inEdgesCpy[task].empty()) {
+			ready.push_back(task);
+		}
+	}
+
+	// keep list of tasks without incoming edges;
+	// iteratively remove such tasks from the graph and put them into the schedule
+	while (!ready.empty()) {
+		Task::Ptr t = ready.front();
+		ready.pop_front();
+		sortedTasks.push_back(t);
+
+		for (auto after : outEdgesCpy[t]) {
+			for (auto edgeIt = inEdgesCpy[after].begin(); edgeIt != inEdgesCpy[after].end(); ++edgeIt) {
+				if (*edgeIt == t) {
+					inEdgesCpy[after].erase(edgeIt);
+					break;
+				}
+			}
+			if (inEdgesCpy[after].empty()) {
+				ready.push_back(after);
+			}
+		}
+		outEdgesCpy.erase(t);
+	}
+
+	// sanity check: all edges should have been removed, otherwise
+	// the graph had a cycle
+	for (auto t : tasks) {
+		if (!outEdgesCpy[t].empty() || !inEdgesCpy[t].empty())
+			throw SchedulingException();
+	}
+}
+
+void Scheduler::levelSchedule(const Task::List& tasks, const Edges& inEdges, const Edges& outEdges, std::vector<Task::List>& levels) {
+	std::unordered_map<Task::Ptr, int> time;
+
+	for (auto task : tasks) {
+		if (inEdges.at(task).empty()) {
+			time[task] = 0;
+		} else {
+			int maxdist = 0;
+			for (auto before : inEdges.at(task)) {
+				if (time[before] > maxdist)
+					maxdist = time[before];
+			}
+			time[task] = maxdist + 1;
+		}
+	}
+
+	levels.clear();
+	levels.resize(time[tasks.back()]);
+	for (auto task : tasks) {
+		levels[time[task]].push_back(task);
+	}
 }

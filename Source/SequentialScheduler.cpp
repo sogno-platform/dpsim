@@ -32,47 +32,8 @@ using namespace DPsim;
 #include <typeinfo>
 #include <unordered_map>
 
-// Simple topological sorting using Kahn's algorithm.
 void SequentialScheduler::createSchedule(const Task::List& tasks, const Edges& inEdges, const Edges& outEdges) {
-	mSchedule.clear();
-
-	// make copies of the edge lists because we modify them
-	Edges inEdgesCpy = inEdges, outEdgesCpy = outEdges;
-
-	std::deque<Task::Ptr> ready;
-	for (auto task : tasks) {
-		if (inEdgesCpy[task].empty()) {
-			ready.push_back(task);
-		}
-	}
-
-	// keep list of tasks without incoming edges;
-	// iteratively remove such tasks from the graph and put them into the schedule
-	while (!ready.empty()) {
-		Task::Ptr t = ready.front();
-		ready.pop_front();
-		mSchedule.push_back(t);
-
-		for (auto after : outEdgesCpy[t]) {
-			for (auto edgeIt = inEdgesCpy[after].begin(); edgeIt != inEdgesCpy[after].end(); ++edgeIt) {
-				if (*edgeIt == t) {
-					inEdgesCpy[after].erase(edgeIt);
-					break;
-				}
-			}
-			if (inEdgesCpy[after].empty()) {
-				ready.push_back(after);
-			}
-		}
-		outEdgesCpy.erase(t);
-	}
-
-	// sanity check: all edges should have been removed, otherwise
-	// the graph had a cycle
-	for (auto t : tasks) {
-		if (!outEdgesCpy[t].empty() || !inEdgesCpy[t].empty())
-			throw SchedulingException();
-	}
+	Scheduler::topologicalSort(tasks, inEdges, outEdges, mSchedule);
 }
 
 void SequentialScheduler::getMeasurements() {
