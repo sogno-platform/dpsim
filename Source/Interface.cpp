@@ -204,6 +204,21 @@ Attribute<Complex>::Ptr Interface::importComplex(Int idx) {
 	return attr;
 }
 
+Attribute<Complex>::Ptr Interface::importComplexMagPhase(Int idx) {
+	Attribute<Complex>::Ptr attr = Attribute<Complex>::make(Flags::read | Flags::write);
+	addImport([attr, idx](Sample *smp) {
+		if (idx >= smp->length)
+			throw std::length_error("incomplete data received from interface");
+
+		auto *z = reinterpret_cast<float*>(&smp->data[idx].z);
+		auto  y = std::polar(z[0], z[1]);
+
+		attr->set(y);
+	});
+	mImportAttrs.push_back(attr);
+	return attr;
+}
+
 void Interface::addExport(Attribute<Int>::Ptr attr, Int idx) {
 	addExport([attr, idx](Sample *smp) {
 		if (idx >= smp->capacity)

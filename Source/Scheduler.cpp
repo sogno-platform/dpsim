@@ -29,7 +29,7 @@ void Scheduler::resolveDeps(const Task::List& tasks, Edges& inEdges, Edges& outE
 	std::unordered_map<CPS::AttributeBase::Ptr, std::deque<Task::Ptr>> dependencies;
 	for (auto task : tasks) {
 		for (auto attr : task->getAttributeDependencies()) {
-			dependencies[attr].push_back(task);
+			dependencies[AttributeBase::getRefAttribute(attr)].push_back(task);
 		}
 	}
 

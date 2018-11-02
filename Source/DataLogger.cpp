@@ -162,40 +162,36 @@ CPS::Task::Ptr DataLogger::getTask() {
 
 void DataLogger::addAttribute(const String &name, CPS::Attribute<Int>::Ptr attr) {
 	mAttributes[name] = attr;
-	mDependencies.push_back(attr);
 }
 
 void DataLogger::addAttribute(const String &name, CPS::Attribute<Real>::Ptr attr) {
 	mAttributes[name] = attr;
-	mDependencies.push_back(attr);
 }
 
 void DataLogger::addAttribute(const String &name, CPS::Attribute<Complex>::Ptr attr) {
 	auto attrComp = std::static_pointer_cast<CPS::ComplexAttribute>(attr);
 
-	mDependencies.push_back(attr);
-	mAttributes[name + ".real"] = attrComp->real();
-	mAttributes[name + ".imag"] = attrComp->imag();
+	mAttributes[name + ".real"] = CPS::ComplexAttribute::real(attrComp);
+	mAttributes[name + ".imag"] = CPS::ComplexAttribute::imag(attrComp);
 }
 
 void DataLogger::addAttribute(const String &name, CPS::Attribute<MatrixVar<Real>>::Ptr attr) {
 	const MatrixVar<Real> &m = attr->get();
 
-	mDependencies.push_back(attr);
 	auto attrMat = std::static_pointer_cast<CPS::MatrixAttribute<Real>>(attr);
 
 	if (m.rows() == 1 && m.cols() == 1) {
-		addAttribute(name, attrMat->coeff(0, 0));
+		addAttribute(name, CPS::MatrixAttribute<Real>::coeff(attrMat, 0, 0));
 	}
 	else if (m.cols() == 1) {
 		for (UInt k = 0; k < m.rows(); k++) {
-			addAttribute(name + "(" + std::to_string(k) + ")", attrMat->coeff(k, 0));
+			addAttribute(name + "(" + std::to_string(k) + ")", CPS::MatrixAttribute<Real>::coeff(attrMat, k, 0));
 		}
 	}
 	else {
 		for (UInt k = 0; k < m.rows(); k++) {
 			for (UInt l = 0; l < m.cols(); l++) {
-				addAttribute(name + "(" + std::to_string(k) + ", " + std::to_string(l) + ")", attrMat->coeff(k, l));
+				addAttribute(name + "(" + std::to_string(k) + ", " + std::to_string(l) + ")", CPS::MatrixAttribute<Real>::coeff(attrMat, k, l));
 			}
 		}
 	}
@@ -205,20 +201,19 @@ void DataLogger::addAttribute(const String &name, CPS::Attribute<MatrixVar<Compl
 	const MatrixVar<Complex> &m = attr->get();
 
 	auto attrMat = std::static_pointer_cast<CPS::MatrixAttribute<Complex>>(attr);
-	mDependencies.push_back(attr);
 
 	if (m.rows() == 1 && m.cols() == 1) {
-		addAttribute(name, attrMat->coeff(0, 0));
+		addAttribute(name, CPS::MatrixAttribute<Complex>::coeff(attrMat, 0, 0));
 	}
 	else if (m.cols() == 1) {
 		for (UInt k = 0; k < m.rows(); k++) {
-			addAttribute(name + "(" + std::to_string(k) + ")", attrMat->coeff(k, 0));
+			addAttribute(name + "(" + std::to_string(k) + ")", CPS::MatrixAttribute<Complex>::coeff(attrMat, k, 0));
 		}
 	}
 	else {
 		for (UInt k = 0; k < m.rows(); k++) {
 			for (UInt l = 0; l < m.cols(); l++) {
-				addAttribute(name + "(" + std::to_string(k) + ", " + std::to_string(l) + ")", attrMat->coeff(k, l));
+				addAttribute(name + "(" + std::to_string(k) + ", " + std::to_string(l) + ")", CPS::MatrixAttribute<Complex>::coeff(attrMat, k, l));
 			}
 		}
 	}

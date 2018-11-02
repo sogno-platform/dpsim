@@ -124,53 +124,23 @@ PyObject* Python::Interface::addImport(Interface* self, PyObject* args, PyObject
 	}
 
 	try {
-		// TODO this mode stuff will not easily work with the new attribute system
-		// (has it ever?).
 		switch (mode) {
 			case 0: { // Real Attribute
 				auto a = self->intf->importReal(idx);
 				attrList->setAttributeRef(attrName, a);
 				break;
 			}
+			case 1: { // Complex Attribute: real & imag
+				auto a = self->intf->importComplex(idx);
+				attrList->setAttributeRef(attrName, a);
+				break;
+			}
+			case 2: { // Complex Attribute: mag & phase
+				auto a = self->intf->importComplexMagPhase(idx);
 
-//			case 2: { // Complex Attribute: mag & phase
-//				auto magAttr = self->intf->importReal(idx);
-//				auto phaseAttr = self->intf->importReal(idx+1);
-//
-//				self->intf->addImport([attr, idx](Sample *smp))
-//				self->intf->addImport(a->mag(),   idx);
-//				self->intf->addImport(a->phase(), idx+1);
-//				break;
-//			}
-//
-//			case 3: { // Complex Attribute: real part
-//				auto a = attrList->attributeComplex(attrName);
-//
-//				self->intf->addImport(a->real(), idx);
-//				break;
-//			}
-//
-//			case 4: { // Complex Attribute: imag part
-//				auto a = attrList->attributeComplex(attrName);
-//
-//				self->intf->addImport(a->imag(), idx);
-//				break;
-//			}
-//
-//			case 5: { // Complex Attribute: phase
-//				auto a = attrList->attributeComplex(attrName);
-//
-//				self->intf->addImport(a->phase(), idx);
-//				break;
-//			}
-//
-//			case 6: { // Complex Attribute: magnitude
-//				auto a = attrList->attributeComplex(attrName);
-//
-//				self->intf->addImport(a->mag(), idx);
-//				break;
-//			}
-
+				attrList->setAttributeRef(attrName, a);
+				break;
+			}
 			default:
 				PyErr_SetString(PyExc_TypeError, "Invalid mode");
 				return nullptr;
@@ -255,8 +225,8 @@ PyObject* Python::Interface::addExport(Interface* self, PyObject* args, PyObject
 			case 2: { // Complex Attribute: mag & phase
 				auto a = obj->attributeComplex(attrName);
 
-				self->intf->addExport(a->mag(),   idx);
-				self->intf->addExport(a->phase(), idx+1);
+				self->intf->addExport(CPS::ComplexAttribute::mag(a),   idx);
+				self->intf->addExport(CPS::ComplexAttribute::phase(a), idx+1);
 				addExportDesc(self, idx,   "float", name + ".mag");
 				addExportDesc(self, idx+1, "float", name + ".phase");
 				break;
@@ -265,7 +235,7 @@ PyObject* Python::Interface::addExport(Interface* self, PyObject* args, PyObject
 			case 3: { // Complex Attribute: real part
 				auto a = obj->attributeComplex(attrName);
 
-				self->intf->addExport(a->real(), idx);
+				self->intf->addExport(CPS::ComplexAttribute::real(a), idx);
 				addExportDesc(self, idx, "float", name, ".real");
 				break;
 			}
@@ -273,7 +243,7 @@ PyObject* Python::Interface::addExport(Interface* self, PyObject* args, PyObject
 			case 4: { // Complex Attribute: imag part
 				auto a = obj->attributeComplex(attrName);
 
-				self->intf->addExport(a->imag(), idx);
+				self->intf->addExport(CPS::ComplexAttribute::imag(a), idx);
 				addExportDesc(self, idx, "float", name + ".imag");
 				break;
 			}
@@ -281,7 +251,7 @@ PyObject* Python::Interface::addExport(Interface* self, PyObject* args, PyObject
 			case 5: { // Complex Attribute: phase
 				auto a = obj->attributeComplex(attrName);
 
-				self->intf->addExport(a->phase(), idx);
+				self->intf->addExport(CPS::ComplexAttribute::phase(a), idx);
 				addExportDesc(self, idx, "float", name + ".phase");
 				break;
 			}
@@ -289,14 +259,14 @@ PyObject* Python::Interface::addExport(Interface* self, PyObject* args, PyObject
 			case 6: { // Complex Attribute: magnitude
 				auto a = obj->attributeComplex(attrName);
 
-				self->intf->addExport(a->mag(), idx);
+				self->intf->addExport(CPS::ComplexAttribute::mag(a), idx);
 				addExportDesc(self, idx, "float", name + ".mag");
 				break;
 			}
 
 			case 7: {
 				auto a = obj->attributeMatrix<CPS::Real>(attrName);
-				auto c = a->coeff(row, col);
+				auto c = CPS::MatrixAttribute<CPS::Real>::coeff(a, row, col);
 
 				self->intf->addExport(c, idx);
 				addExportDesc(self, idx, "float", name + "(" + std::to_string(row) + "," + std::to_string(col) + ")");
@@ -305,7 +275,7 @@ PyObject* Python::Interface::addExport(Interface* self, PyObject* args, PyObject
 
 			case 8: {
 				auto a = obj->attributeMatrix<CPS::Complex>(attrName);
-				auto c = a->coeff(row, col);
+				auto c = CPS::MatrixAttribute<CPS::Complex>::coeff(a, row, col);
 
 				self->intf->addExport(c, idx);
 				addExportDesc(self, idx, "complex", name + "(" + std::to_string(row) + "," + std::to_string(col) + ")");
@@ -314,11 +284,11 @@ PyObject* Python::Interface::addExport(Interface* self, PyObject* args, PyObject
 
 			case 9: {
 				auto a = obj->attributeMatrix<CPS::Complex>(attrName);
-				auto c = a->coeff(row, col);
+				auto c = CPS::MatrixAttribute<CPS::Complex>::coeff(a, row, col);
 				auto z = std::static_pointer_cast<CPS::ComplexAttribute>(c);
 
-				self->intf->addExport(z->mag(),   idx);
-				self->intf->addExport(z->phase(), idx+1);
+				self->intf->addExport(CPS::ComplexAttribute::mag(z),   idx);
+				self->intf->addExport(CPS::ComplexAttribute::phase(z), idx+1);
 				addExportDesc(self, idx,   "float", name + "(" + std::to_string(row) + "," + std::to_string(col) + ").mag");
 				addExportDesc(self, idx+1, "float", name + "(" + std::to_string(row) + "," + std::to_string(col) + ").phase");
 				break;

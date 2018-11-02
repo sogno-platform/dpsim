@@ -142,6 +142,7 @@ namespace DPsim {
 		CPS::Attribute<Real>::Ptr importReal(Int idx);
 		CPS::Attribute<Bool>::Ptr importBool(Int idx);
 		CPS::Attribute<Complex>::Ptr importComplex(Int idx);
+		CPS::Attribute<Complex>::Ptr importComplexMagPhase(Int idx);
 
 		void addExport(CPS::Attribute<Int>::Ptr attr, Int idx);
 		void addExport(CPS::Attribute<Real>::Ptr attr, Int idx);

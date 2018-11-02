@@ -42,7 +42,6 @@ namespace DPsim {
 		UInt mDownsampling;
 
 		std::map<String, CPS::AttributeBase::Ptr> mAttributes;
-		CPS::AttributeBase::List mDependencies;
 
 		void logDataLine(Real time, Real data);
 		void logDataLine(Real time, const Matrix& data);
@@ -83,8 +82,8 @@ namespace DPsim {
 		public:
 			Step(DataLogger& logger) :
 				Task(logger.mName + ".Write"), mLogger(logger) {
-				for (auto attr : logger.mDependencies) {
-					mAttributeDependencies.push_back(attr);
+				for (auto attr : logger.mAttributes) {
+					mAttributeDependencies.push_back(attr.second);
 				}
 			}
 

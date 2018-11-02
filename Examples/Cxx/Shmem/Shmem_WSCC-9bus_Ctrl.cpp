@@ -107,8 +107,8 @@ int main(int argc, char *argv[]) {
 		std::cout << "Signal << " << (i*2)+0 << ": Mag " << n->name() << std::endl;
 		std::cout << "Signal << " << (i*2)+1 << ": Phas " << n->name() << std::endl;
 
-		intf.addExport(v->mag(),   (i*2)+0);
-		intf.addExport(v->phase(), (i*2)+1);
+		intf.addExport(ComplexAttribute::mag(v),   (i*2)+0);
+		intf.addExport(ComplexAttribute::phase(v), (i*2)+1);
 	}
 
 	// Register controllable load
