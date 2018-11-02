@@ -89,7 +89,7 @@ void Scheduler::levelSchedule(const Task::List& tasks, const Edges& inEdges, con
 	std::unordered_map<Task::Ptr, int> time;
 
 	for (auto task : tasks) {
-		if (inEdges.at(task).empty()) {
+		if (inEdges.find(task) == inEdges.end() || inEdges.at(task).empty()) {
 			time[task] = 0;
 		} else {
 			int maxdist = 0;
@@ -102,7 +102,7 @@ void Scheduler::levelSchedule(const Task::List& tasks, const Edges& inEdges, con
 	}
 
 	levels.clear();
-	levels.resize(time[tasks.back()]);
+	levels.resize(time[tasks.back()] + 1);
 	for (auto task : tasks) {
 		levels[time[task]].push_back(task);
 	}

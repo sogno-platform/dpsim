@@ -44,6 +44,14 @@ if(WITH_SHMEM)
 	list(APPEND INCLUDE_DIRS ${VILLASNODE_INCLUDE_DIRS})
 endif()
 
+if(WITH_OPENMP)
+	list(APPEND SOURCES
+		OpenMPLevelScheduler.cpp
+	)
+
+	list(APPEND DPSIM_CXX_FLAGS ${OpenMP_CXX_FLAGS})
+endif()
+
 add_library(dpsim)
 target_sources(dpsim PRIVATE ${SOURCES})
 target_link_libraries(dpsim ${LIBRARIES})

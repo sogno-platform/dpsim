@@ -23,7 +23,6 @@
 #include <dpsim/Utils.h>
 #include <dpsim/Simulation.h>
 #include <dpsim/SequentialScheduler.h>
-#include <dpsim/PthreadPoolScheduler.h>
 
 #ifndef _MSC_VER
   #include <dpsim/RealTimeSimulation.h>
@@ -34,11 +33,16 @@
 
 #ifdef WITH_SHMEM
   #include <dpsim/Interface.h>
+  #include <dpsim/PthreadPoolScheduler.h>
 #endif
 
 #ifdef WITH_CIM
   #include <cps/CIM/Reader.h>
 #endif
+
+// TODO for some reason WITH_OPENMP doesn't seem to be defined here when compiling
+// the examples, even if its enabled in CMake
+#include <dpsim/OpenMPLevelScheduler.h>
 
 namespace DPsim {
 	// #### CPS for users ####

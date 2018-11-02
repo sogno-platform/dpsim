@@ -61,6 +61,7 @@ find_package(PythonInterp 3.6)
 find_package(PythonLibs 3.6)
 find_package(Sundials)
 find_package(VILLASnode)
+find_package(OpenMP)
 
 if(PythonInterp_FOUND AND PythonLibs_FOUND)
 	set(Python_FOUND ON)
@@ -79,6 +80,7 @@ option(WITH_SHMEM    "Enable shared memory interface"       ${VILLASnode_FOUND})
 option(WITH_RT	     "Enable real-time features"            ${Linux_FOUND})
 option(WITH_PYTHON   "Enable Python support"                ${Python_FOUND})
 option(WITH_CIM      "Enable support for parsing CIM files" ${CIMpp_FOUND})
+option(WITH_OPENMP   "Enable OpenMP-based parallelisation"  ${OPENMP_FOUND})
 
 configure_file(
 	${CMAKE_CURRENT_SOURCE_DIR}/Include/dpsim/Config.h.in
