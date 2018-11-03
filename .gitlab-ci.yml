@@ -21,7 +21,10 @@ stages:
 docker:
   stage: prepare
   script:
-    - docker build -f Packaging/Docker/Dockerfile.dev -t ${DOCKER_IMAGE_DEV}:${DOCKER_TAG_DEV} .
+    - docker build
+        --file Packaging/Docker/Dockerfile.dev
+        --tag ${DOCKER_IMAGE_DEV}:${DOCKER_TAG_DEV}
+        --tag ${DOCKER_IMAGE_DEV}:latest .
   tags:
     - shell
 
@@ -85,7 +88,11 @@ generate:packages:
 build:docker:
   stage: build
   script:
-    - docker build -f Packaging/Docker/Dockerfile --build-arg DOCKER_TAG=${DOCKER_TAG} -t ${DOCKER_IMAGE}:${DOCKER_TAG} .
+    - docker build 
+        --file Packaging/Docker/Dockerfile
+        --build-arg DOCKER_TAG=${DOCKER_TAG}
+        --tag ${DOCKER_IMAGE}:${DOCKER_TAG}
+        --tag ${DOCKER_IMAGE}:latest .
   tags:
     - shell
   only:
@@ -94,7 +101,10 @@ build:docker:
 deploy:docker:
   stage: deploy
   script:
+    - docker push ${DOCKER_IMAGE_DEV}:${DOCKER_TAG_DEV}
+    - docker push ${DOCKER_IMAGE_DEV}:latest
     - docker push ${DOCKER_IMAGE}:${DOCKER_TAG}
+    - docker push ${DOCKER_IMAGE}:latest
   dependencies:
     - build:docker
   tags:
@@ -141,8 +151,7 @@ test:jupyter:
   image: ${DOCKER_IMAGE_DEV}:${DOCKER_TAG}
   artifacts:
     paths:
-      - Logs/
-      - Examples/Notebooks/build
+      - build/Examples/Notebooks/
   tags:
     - docker
 
