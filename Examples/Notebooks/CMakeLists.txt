@@ -22,7 +22,7 @@ if(WITH_PYTHON AND JUPYTER)
 			set(DIR "${DIR}/")
 		endif()
 
-		set(HTML ${CMAKE_CURRENT_BINARY_DIR}/${DIR}/${NAME}.html)
+		set(HTML "${CMAKE_CURRENT_BINARY_DIR}/${DIR}/${NAME}.html")
 
 		add_custom_command(
 			COMMAND
@@ -31,15 +31,15 @@ if(WITH_PYTHON AND JUPYTER)
 					--to html_embed
 					--output-dir ${CMAKE_CURRENT_BINARY_DIR}/${DIR}
 					"${CMAKE_CURRENT_SOURCE_DIR}/${IPYNB}"
-			OUTPUT ${HTML}
+			OUTPUT "${HTML}"
 			WORKING_DIRECTORY ${DIR}
 			DEPENDS
-				${IPYNB}
+				"${IPYNB}"
 				dpsim_python
 			COMMENT "Creating HTML from IPython notebook"
 		)
 
-		list(APPEND HTMLS ${HTML})
+		list(APPEND HTMLS "${HTML}")
 	endforeach()
 
 	# Convert Jupyter Notebooks to HTML
