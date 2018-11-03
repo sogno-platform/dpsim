@@ -1,5 +1,3 @@
-add_subdirectory(Notebooks)
-
 if(WITH_PYTHON)
 	find_package(Sphinx)
 

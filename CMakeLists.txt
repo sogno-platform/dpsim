@@ -95,7 +95,7 @@ add_subdirectory(Source)
 add_subdirectory(Documentation)
 
 if(BUILD_EXAMPLES)
-	add_subdirectory(Examples/Cxx)
+	add_subdirectory(Examples)
 endif(BUILD_EXAMPLES)
 
 # Show feature summary

@@ -13,4 +13,5 @@ villas-dataprocessing>=0.2
 progressbar2
 ipywidgets
 jupyter
+jupyter_contrib_nbextensions
 jupyterlab_widgets
