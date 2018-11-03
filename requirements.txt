@@ -9,7 +9,7 @@ wheel
 pytest
 pyyaml
 
-acs-dataprocessing>=0.1.5
+villas-dataprocessing>=0.2
 progressbar2
 ipywidgets
 jupyter
