@@ -105,7 +105,7 @@ setup(
         'Programming Language :: Python :: Implementation :: CPython'
     ],
     install_requires = [
-        'acs-dataprocessing>=0.1.2',
+        'villas-dataprocessing>=0.2',
         'progressbar2',
         'ipywidgets'
     ],

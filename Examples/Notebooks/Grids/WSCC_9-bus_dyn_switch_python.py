@@ -6,7 +6,7 @@
 # **Authors**:
 #  - Markus Mirz <mmirz@eonerc.rwth-aachen.de>
 #  - Steffen Vogel <stvogel@eoner.rwth-aachen.de>
-# 
+#
 # This Jupyter Notebook shows a simple dynamic phasor simulation of the WSCC-9bus benchmark model.
 # The grid data is loaded from CIM-XML files, while simulation results are stored in CSV files and plotted via Matplotlib
 
@@ -65,7 +65,7 @@ sw.connect([ bus9, gnd ])
 
 
 # ### Running Simulation
-# 
+#
 # The actual simulation is done by the C++ DPsim solver. Python is just used for configuration, scripting and analysis
 
 # In[ ]:
@@ -96,14 +96,14 @@ while (sim.state != 0):
 print('Simulation done')
 
 # ## Analysis
-# 
+#
 # ### Read log files and list all column names
 
 # In[7]:
 
 
-from dataprocessing.dpsim import *
-from dataprocessing.plottools import *
+from villas.dataprocessing.dpsim import *
+from villas.dataprocessing.plottools import *
 
 ts = read_timeseries_dpsim('Logs/WSCC-9bus_dyn_switch.csv')
 
@@ -137,10 +137,10 @@ for node, phasor in phasors.items():
 nominal_voltages = {
     'BUS1.voltage': 16.5e3,
     'BUS2.voltage': 18e3,
-    'BUS3.voltage': 13.8e3, 
+    'BUS3.voltage': 13.8e3,
     'BUS4.voltage': 230e3,
     'BUS5.voltage': 230e3,
-    'BUS6.voltage': 230e3, 
+    'BUS6.voltage': 230e3,
     'BUS7.voltage': 230e3,
     'BUS8.voltage': 230e3,
     'BUS9.voltage': 230e3
