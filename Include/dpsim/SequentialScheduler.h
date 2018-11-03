@@ -31,12 +31,16 @@
 namespace DPsim {
 	class SequentialScheduler : public Scheduler {
 	public:
+		SequentialScheduler(Bool measureTaskTime = false) : mMeasureTaskTime(measureTaskTime) { }
 		void createSchedule(const CPS::Task::List& tasks, const Edges& inEdges, const Edges& outEdges);
 		void step(Real time, Int timeStepCount);
 		void getMeasurements();
 
 	private:
 		CPS::Task::List mSchedule;
+
 		std::unordered_map<size_t, std::vector<std::chrono::nanoseconds>> mMeasurements;
+		std::vector<std::chrono::nanoseconds> mStepMeasurements;
+		Bool mMeasureTaskTime;
 	};
 }

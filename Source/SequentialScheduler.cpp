@@ -37,25 +37,41 @@ void SequentialScheduler::createSchedule(const Task::List& tasks, const Edges& i
 }
 
 void SequentialScheduler::getMeasurements() {
-	std::set<size_t> done;
-	for (auto it : mSchedule) {
-		if (done.find(typeid(*it).hash_code()) != done.end())
-			continue;
-		done.insert(typeid(*it).hash_code());
-		std::vector<std::chrono::nanoseconds> meas = mMeasurements[typeid(*it).hash_code()];
-		std::chrono::nanoseconds tot(0);
-		for (size_t i = 0; i < meas.size(); i++)
-			tot += meas[i];
-		auto avg = tot / meas.size();
-		std::cout << typeid(*it).name() << " " << avg.count() << std::endl;
+	if (mMeasureTaskTime) {
+		std::set<size_t> done;
+		for (auto it : mSchedule) {
+			if (done.find(typeid(*it).hash_code()) != done.end())
+				continue;
+			done.insert(typeid(*it).hash_code());
+			std::vector<std::chrono::nanoseconds> meas = mMeasurements[typeid(*it).hash_code()];
+			std::chrono::nanoseconds tot(0);
+			for (size_t i = 0; i < meas.size(); i++)
+				tot += meas[i];
+			auto avg = tot / meas.size();
+			std::cout << typeid(*it).name() << " " << avg.count() << std::endl;
+		}
 	}
+	std::chrono::nanoseconds tot(0);
+	for (size_t i = 0; i < mStepMeasurements.size(); i++)
+		tot += mStepMeasurements[i];
+	auto avg = tot / mStepMeasurements.size();
+	std::cout << "per step " << avg.count() << std::endl;
 }
 
 void SequentialScheduler::step(Real time, Int timeStepCount) {
-	for (auto it : mSchedule) {
-		auto start = std::chrono::system_clock::now();
-		it->execute(time, timeStepCount);
-		auto end = std::chrono::system_clock::now();
-		mMeasurements[typeid(*it).hash_code()].push_back(end-start);
+	auto stepStart = std::chrono::system_clock::now();
+	if (mMeasureTaskTime) {
+		for (auto it : mSchedule) {
+			auto start = std::chrono::system_clock::now();
+			it->execute(time, timeStepCount);
+			auto end = std::chrono::system_clock::now();
+			mMeasurements[typeid(*it).hash_code()].push_back(end-start);
+		}
+	} else {
+		for (auto it : mSchedule) {
+			it->execute(time, timeStepCount);
+		}
 	}
+	auto stepEnd = std::chrono::system_clock::now();
+	mStepMeasurements.push_back(stepEnd-stepStart);
 }
