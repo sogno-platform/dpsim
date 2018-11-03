@@ -1,7 +1,7 @@
 # <img src="Documentation/images/dpsim.png" width=40 /> DPsim
 
-[![build status](https://git.rwth-aachen.de/acs/core/simulation/DPsim/badges/development/build.svg)](https://git.rwth-aachen.de/acs/core/simulation/DPsim/commits/development)
-[![coverage report](https://git.rwth-aachen.de/acs/core/simulation/DPsim/badges/development/coverage.svg)](https://git.rwth-aachen.de/acs/core/simulation/DPsim/commits/development)
+[![build status](https://git.rwth-aachen.de/acs/core/simulation/dpsim/badges/development/build.svg)](https://git.rwth-aachen.de/acs/core/simulation/dpsim/commits/development)
+[![coverage report](https://git.rwth-aachen.de/acs/core/simulation/dpsim/badges/development/coverage.svg)](https://git.rwth-aachen.de/acs/core/simulation/dpsim/commits/development)
 
 DPsim is a solver library for power system simulation.
 
