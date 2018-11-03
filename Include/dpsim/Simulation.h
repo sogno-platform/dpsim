@@ -156,6 +156,7 @@ namespace DPsim {
 		Int timeStepCount() const { return mTimeStepCount; }
 		Real timeStep() const { return mTimeStep; }
 		DataLogger::List& loggers() { return mLoggers; }
+		std::shared_ptr<Scheduler> scheduler() { return mScheduler; }
 	};
 
 }

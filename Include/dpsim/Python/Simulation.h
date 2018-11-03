@@ -109,6 +109,7 @@ namespace Python {
 		static PyObject* stop(Simulation *self, PyObject *args);
 		static PyObject* addEventFD(Simulation *self, PyObject *args);
 		static PyObject* removeEventFD(Simulation *self, PyObject *args);
+		static PyObject* setScheduler(Simulation *self, PyObject *args, PyObject *kwargs);
 
 		// Getters
 		static PyObject* getState(Simulation *self, void *ctx);
@@ -127,6 +128,7 @@ namespace Python {
 		static const char *docAddLogger;
 		static const char *docAddEventFD;
 		static const char *docRemoveEventFD;
+		static const char *docSetScheduler;
 		static const char *docState;
 		static const char *docName;
 		static PyMethodDef methods[];

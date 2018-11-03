@@ -31,8 +31,16 @@
 #include <dpsim/Python/Component.h>
 #include <dpsim/Python/Interface.h>
 #include <dpsim/RealTimeSimulation.h>
+#include <dpsim/SequentialScheduler.h>
 #include <cps/DP/DP_Ph1_Switch.h>
 
+#ifdef WITH_OPENMP
+  #include <dpsim/OpenMPLevelScheduler.h>
+#endif
+
+#ifdef WITH_SHMEM
+  #include <dpsim/PthreadPoolScheduler.h>
+#endif
 using namespace DPsim;
 using namespace CPS;
 
@@ -131,6 +139,8 @@ void Python::Simulation::threadFunction(Python::Simulation *self)
 
 	for (auto lg : self->sim->loggers())
 		lg->flush();
+
+	self->sim->scheduler()->getMeasurements();
 }
 
 PyObject* Python::Simulation::newfunc(PyTypeObject* subtype, PyObject *args, PyObject *kwds)
@@ -555,6 +565,42 @@ PyObject * Python::Simulation::removeEventFD(Simulation *self, PyObject *args) {
 	Py_RETURN_NONE;
 }
 
+const char *Python::Simulation::docSetScheduler =
+"set_scheduler(scheduler,...)\n"
+"Set the scheduler to be used for parallel simulation, as well as "
+"additional scheduler-specific parameters.\n";
+PyObject* Python::Simulation::setScheduler(Simulation *self, PyObject *args, PyObject *kwargs)
+{
+	Bool measurements = false;
+	const char *schedName = nullptr;
+	int poolsize = 1;
+
+	const char *kwlist[] = {"scheduler", "measurements", "poolsize", nullptr};
+
+	if (!PyArg_ParseTupleAndKeywords(args, kwargs, "s|bi", (char **) kwlist, &schedName, &measurements, &poolsize))
+		return nullptr;
+
+	if (!strcmp(schedName, "sequential")) {
+		self->sim->setScheduler(std::make_shared<SequentialScheduler>(measurements));
+	} else if (!strcmp(schedName, "omp_level")) {
+#ifdef WITH_OPENMP
+		self->sim->setScheduler(std::make_shared<OpenMPLevelScheduler>());
+#else
+		PyErr_SetString(PyExc_NotImplementedError, "not implemented on this platform");
+#endif
+	} else if (!strcmp(schedName, "pthread_pool")) {
+#ifdef WITH_SHMEM
+		self->sim->setScheduler(std::make_shared<PthreadPoolScheduler>(poolsize));
+#else
+		PyErr_SetString(PyExc_NotImplementedError, "not implemented on this platform");
+#endif
+	} else {
+		PyErr_SetString(PyExc_ValueError, "invalid scheduler");
+	}
+
+	Py_RETURN_NONE;
+}
+
 #ifdef WITH_GRAPHVIZ
 const char *Python::Simulation::docReprSVG =
 "_repr_svg_()\n"
@@ -629,6 +675,7 @@ PyMethodDef Python::Simulation::methods[] = {
 	{"stop",          (PyCFunction) Python::Simulation::stop, METH_NOARGS,  (char *) Python::Simulation::docStop},
 	{"add_eventfd",   (PyCFunction) Python::Simulation::addEventFD, METH_VARARGS, (char *) Python::Simulation::docAddEventFD},
 	{"remove_eventfd",(PyCFunction) Python::Simulation::removeEventFD, METH_VARARGS, (char *) Python::Simulation::docRemoveEventFD},
+	{"set_scheduler", (PyCFunction) Python::Simulation::setScheduler, METH_VARARGS | METH_KEYWORDS, (char*) Python::Simulation::docSetScheduler},
 #ifdef WITH_GRAPHVIZ
 	{"_repr_svg_",    (PyCFunction) Python::Simulation::reprSVG, METH_NOARGS, (char*) Python::Simulation::docReprSVG},
 #endif
