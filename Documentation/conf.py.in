@@ -69,7 +69,7 @@ language = None
 # List of patterns, relative to source directory, that match files and
 # directories to ignore when looking for source files.
 # This patterns also effect to html_static_path and html_extra_path
-exclude_patterns = ['_build', 'Thumbs.db', '.DS_Store', 'Notebooks/.ipynb_checkpoints/*']
+exclude_patterns = ['_build', 'Thumbs.db', '.DS_Store', '.ipynb_checkpoints/*']
 
 # The name of the Pygments (syntax highlighting) style to use.
 pygments_style = 'sphinx'
@@ -90,7 +90,6 @@ html_theme = 'alabaster'
 # documentation.
 #
 html_theme_options = {
-     'analytics_id' : 'UA-110889373-2',
      'show_related' : True
 }
 
@@ -99,7 +98,7 @@ html_theme_options = {
 # so a file named "default.css" will overwrite the builtin "default.css".
 html_static_path = [ ]
 
-html_logo = '@CMAKE_SOURCE_DIR@/images/dpsim.png'
+html_logo = '@CMAKE_CURRENT_SOURCE_DIR@/images/dpsim.png'
 
 # Custom sidebar templates, must be a dictionary that maps document names
 # to template names.
@@ -184,3 +183,7 @@ default_role = 'any'
 
 breathe_projects = { 'dpsim' : '@CMAKE_BINARY_DIR@/Documentation/Cxx/xml' }
 breathe_default_project = 'dpsim'
+
+# -- Options for nbsphinx
+
+nbsphinx_execute = 'never'

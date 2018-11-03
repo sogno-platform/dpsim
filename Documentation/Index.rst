@@ -3,13 +3,14 @@
    You can adapt this file completely to your liking, but it should at least
    contain the root `toctree` directive.
 
-.. mdinclude:: ../README.md
+.. mdinclude:: README.md
 
 .. toctree::
    :maxdepth: 2
    :caption: Contents:
 
-   Quickstart Guide <Notebooks/Quickstart Guide.ipynb>
+   Notebooks/Quickstart Guide
+   Notebooks
    Examples
    Install
    Build

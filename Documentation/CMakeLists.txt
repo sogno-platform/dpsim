@@ -44,10 +44,22 @@ if(WITH_PYTHON)
 					"${SPHINX_HTML_DIR}"
 			COMMENT "Building HTML documentation with Sphinx"
 			DEPENDS
+				${CMAKE_CURRENT_SOURCE_DIR}/README.md
 				dpsim_python
 				copy_imgs
 				docs_cxx
 		)
+
+		add_custom_command(
+			OUTPUT ${CMAKE_CURRENT_SOURCE_DIR}/README.md
+			DEPENDS ${PROJECT_SOURCE_DIR}/README.md
+			COMMENT Fixing mainpage for Sphinx
+			COMMAND
+				sed -e 's/Documentation\\/images/images/'
+					< ${PROJECT_SOURCE_DIR}/README.md
+					> ${CMAKE_CURRENT_SOURCE_DIR}/README.md
+		)
+
 	endif()
 endif()
 

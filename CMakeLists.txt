@@ -52,7 +52,6 @@ endif()
 string(SUBSTRING ${GIT_HASH} 0 7 GIT_HASH_SHORT)
 string(TIMESTAMP YMD "%Y%m%d")
 
-set(DPSIM_VERSION 0.1.4)
 set(DPSIM_RELEASE ${YMD}git${GIT_HASH_SHORT})
 
 add_subdirectory(Dependencies/libcps)
