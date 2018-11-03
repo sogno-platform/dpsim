@@ -26,13 +26,14 @@ if(WITH_PYTHON AND JUPYTER)
 
 		add_custom_command(
 			COMMAND
+				${CMAKE_COMMAND}  -E make_directory ${CMAKE_CURRENT_BINARY_DIR}/${DIR}
+			COMMAND
 				${CMAKE_COMMAND} -E env PYTHONPATH=${PYTHONPATH}
 				${JUPYTER} nbconvert
 					--to html_embed
 					--output-dir ${CMAKE_CURRENT_BINARY_DIR}/${DIR}
 					"${CMAKE_CURRENT_SOURCE_DIR}/${IPYNB}"
 			OUTPUT "${HTML}"
-			WORKING_DIRECTORY ${DIR}
 			DEPENDS
 				"${IPYNB}"
 				dpsim_python
