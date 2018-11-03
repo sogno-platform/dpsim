@@ -27,10 +27,10 @@ if(WITH_PYTHON AND JUPYTER)
 		add_custom_command(
 			COMMAND
 				${CMAKE_COMMAND} -E env PYTHONPATH=${PYTHONPATH}
-				jupyter nbconvert
+				${JUPYTER} nbconvert
 					--to html_embed
 					--output-dir ${CMAKE_CURRENT_BINARY_DIR}/${DIR}
-					${CMAKE_CURRENT_SOURCE_DIR}/${IPYNB}
+					"${CMAKE_CURRENT_SOURCE_DIR}/${IPYNB}"
 			OUTPUT ${HTML}
 			WORKING_DIRECTORY ${DIR}
 			DEPENDS
@@ -51,7 +51,7 @@ if(WITH_PYTHON AND JUPYTER)
 	add_custom_target(jupyter
 		COMMAND
 			${CMAKE_COMMAND} -E env PYTHONPATH=${PYTHONPATH}
-			jupyter lab
+			${JUPYTER} lab
 		DEPENDS
 			dpsim_python
 		WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
