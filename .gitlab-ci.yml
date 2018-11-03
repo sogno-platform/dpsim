@@ -137,12 +137,12 @@ deploy:packages:
 test:jupyter:
   stage: test
   script:
-    - make -C Examples/notebooks
+    - make -C Examples/Notebooks
   image: ${DOCKER_IMAGE_DEV}:${DOCKER_TAG}
   artifacts:
     paths:
       - Logs/
-      - Examples/notebooks/build
+      - Examples/Notebooks/build
   tags:
     - docker
 
