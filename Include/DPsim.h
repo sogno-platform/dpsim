@@ -40,9 +40,9 @@
   #include <cps/CIM/Reader.h>
 #endif
 
-// TODO for some reason WITH_OPENMP doesn't seem to be defined here when compiling
-// the examples, even if its enabled in CMake
-#include <dpsim/OpenMPLevelScheduler.h>
+#ifdef WITH_OPENMP
+  #include <dpsim/OpenMPLevelScheduler.h>
+#endif
 
 namespace DPsim {
 	// #### CPS for users ####
