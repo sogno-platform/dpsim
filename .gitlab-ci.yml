@@ -17,6 +17,7 @@ stages:
   - generate
   - deploy
   #- post-all
+  - trigger
 
 docker:
   stage: prepare
@@ -106,7 +107,22 @@ build:docker:
   only:
     - tags
 
-deploy:docker:
+test:jupyter:
+  stage: test
+  script:
+    - cd build
+    - cmake ..
+    - make -j32 notebooks
+  image: ${DOCKER_IMAGE_DEV}:${DOCKER_TAG}
+  dependencies:
+    - build:linux
+  artifacts:
+    paths:
+      - build/Examples/Notebooks/
+  tags:
+    - docker
+
+    deploy:docker:
   stage: deploy
   script:
     - docker push ${DOCKER_IMAGE_DEV}:${DOCKER_TAG_DEV}
@@ -152,21 +168,6 @@ deploy:packages:
   tags:
     - shell
 
-test:jupyter:
-  stage: test
-  script:
-    - cd build
-    - cmake ..
-    - make -j32 notebooks
-  image: ${DOCKER_IMAGE_DEV}:${DOCKER_TAG}
-  dependencies:
-    - build:linux
-  artifacts:
-    paths:
-      - build/Examples/Notebooks/
-  tags:
-    - docker
-
 # We run the windows build at last as it takes ages to finish
 #build:windows:
 #  stage: post-all
@@ -178,3 +179,13 @@ test:jupyter:
 #    - cmake --build .
 #  tags:
 #    - windows
+
+trigger:jupyter:
+  stage: trigger
+  only:
+    - tags
+  script:
+    - curl -X POST
+           -F token=e9751bbb33e68c8206046d0062b5ff
+           -F ref=kubernetes
+            https://git.rwth-aachen.de/api/v4/projects/13613/trigger/pipeline
