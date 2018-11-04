@@ -95,6 +95,10 @@ build:docker:
     - docker build 
         --file Packaging/Docker/Dockerfile
         --build-arg DOCKER_TAG=${DOCKER_TAG}
+        --build-arg CI=1
+        --build-arg CI_COMMIT_SHA=${CI_COMMIT_SHA}
+        --build-arg CI_COMMIT_REF_NAME=${CI_COMMIT_REF_NAME}
+        --build-arg CI_COMMIT_TAG=${CI_COMMIT_TAG}
         --tag ${DOCKER_IMAGE}:${DOCKER_TAG}
         --tag ${DOCKER_IMAGE}:latest .
   tags:
