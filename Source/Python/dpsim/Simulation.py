@@ -134,7 +134,7 @@ class Simulation(_dpsim.Simulation):
         await self._events.wait(Event.done)
 
     async def wait(self, evt=None):
-        await self._events.wait(evt)
+        return await self._events.wait(evt)
 
     def wait_until(self, evt=None):
         return self._loop.run_until_complete(self._events.wait(evt))

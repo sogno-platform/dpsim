@@ -117,6 +117,7 @@ namespace Python {
 		static PyObject* steps(Simulation *self, void *ctx);
 		static PyObject* time(Simulation *self, void *ctx);
 		static PyObject* finalTime(Simulation *self, void *ctx);
+		static PyObject* lastStepTime(Simulation *self, void *ctx);
 
 		static const char *doc;
 		static const char *docStart;

@@ -37,7 +37,6 @@ void OpenMPLevelScheduler::createSchedule(const Task::List& tasks, const Edges& 
 void OpenMPLevelScheduler::step(Real time, Int timeStepCount) {
 	size_t i = 0;
 
-	auto start = std::chrono::system_clock::now();
 	for (size_t level = 0; level < mLevels.size(); level++) {
 		#pragma omp parallel shared(time,timeStepCount,level) private(i)
 		{
@@ -47,14 +46,7 @@ void OpenMPLevelScheduler::step(Real time, Int timeStepCount) {
 			}
 		}
 	}
-	auto end = std::chrono::system_clock::now();
-	mMeasurements.push_back(end-start);
 }
 
 void OpenMPLevelScheduler::getMeasurements() {
-	std::chrono::nanoseconds tot(0);
-	for (size_t i = 0; i < mMeasurements.size(); i++)
-		tot += mMeasurements[i];
-	auto avg = tot / mMeasurements.size();
-	std::cout << "per step " << avg.count() << std::endl;
 }

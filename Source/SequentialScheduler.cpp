@@ -51,15 +51,9 @@ void SequentialScheduler::getMeasurements() {
 			std::cout << typeid(*it).name() << " " << avg.count() << std::endl;
 		}
 	}
-	std::chrono::nanoseconds tot(0);
-	for (size_t i = 0; i < mStepMeasurements.size(); i++)
-		tot += mStepMeasurements[i];
-	auto avg = tot / mStepMeasurements.size();
-	std::cout << "per step " << avg.count() << std::endl;
 }
 
 void SequentialScheduler::step(Real time, Int timeStepCount) {
-	auto stepStart = std::chrono::system_clock::now();
 	if (mMeasureTaskTime) {
 		for (auto it : mSchedule) {
 			auto start = std::chrono::system_clock::now();
@@ -72,6 +66,4 @@ void SequentialScheduler::step(Real time, Int timeStepCount) {
 			it->execute(time, timeStepCount);
 		}
 	}
-	auto stepEnd = std::chrono::system_clock::now();
-	mStepMeasurements.push_back(stepEnd-stepStart);
 }

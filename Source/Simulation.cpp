@@ -18,6 +18,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *********************************************************************************/
 
+#include <chrono>
+
 #include <dpsim/SequentialScheduler.h>
 #include <dpsim/Simulation.h>
 #include <dpsim/MNASolver.h>
@@ -49,6 +51,7 @@ Simulation::Simulation(String name,
 {
 	addAttribute<String>("name", &mName, Flags::read);
 	addAttribute<Real>("final_time", &mFinalTime, Flags::read);
+	addAttribute<Real>("last_step_time", &mLastStepTime, Flags::read);
 }
 
 Simulation::Simulation(String name, SystemTopology system,
@@ -176,6 +179,7 @@ void Simulation::run() {
 }
 
 Real Simulation::step() {
+	auto start = std::chrono::steady_clock::now();
 	mEvents.handleEvents(mTime);
 
 	mScheduler->step(mTime, mTimeStepCount);
@@ -183,5 +187,8 @@ Real Simulation::step() {
 	mTime += mTimeStep;
 	mTimeStepCount++;
 
+	auto end = std::chrono::steady_clock::now();
+	std::chrono::duration<double> diff = end-start;
+	mLastStepTime = diff.count();
 	return mTime;
 }

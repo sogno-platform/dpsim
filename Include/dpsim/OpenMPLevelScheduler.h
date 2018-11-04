@@ -23,7 +23,6 @@
 
 #include <dpsim/Scheduler.h>
 
-#include <chrono>
 #include <vector>
 
 namespace DPsim {
@@ -35,6 +34,5 @@ namespace DPsim {
 
 	private:
 		std::vector<CPS::Task::List> mLevels;
-		std::vector<std::chrono::nanoseconds> mMeasurements;
 	};
 };

@@ -139,8 +139,6 @@ void Python::Simulation::threadFunction(Python::Simulation *self)
 
 	for (auto lg : self->sim->loggers())
 		lg->flush();
-
-	self->sim->scheduler()->getMeasurements();
 }
 
 PyObject* Python::Simulation::newfunc(PyTypeObject* subtype, PyObject *args, PyObject *kwds)
@@ -511,7 +509,7 @@ PyObject* Python::Simulation::step(Simulation *self, PyObject *args)
 		return nullptr;
 	}
 
-	while (self->state == State::running)
+	while (self->state == State::starting || self->state == State::resuming || self->state == State::running)
 		self->cond->wait(lk);
 
 	Py_RETURN_NONE;
@@ -656,12 +654,22 @@ PyObject* Python::Simulation::finalTime(Simulation *self, void *ctx)
 	return Py_BuildValue("f", self->sim->finalTime());
 }
 
+PyObject* Python::Simulation::lastStepTime(Simulation *self, void *ctx)
+{
+	std::unique_lock<std::mutex> lk(*self->mut);
+
+	return Py_BuildValue("f", self->sim->attribute<Real>("last_step_time")->get());
+}
+
+// TODO: for everything but state, we could use read-only Attributes and a getattro
+// implementation that locks the mutex before access
 PyGetSetDef Python::Simulation::getset[] = {
 	{(char *) "state",      (getter) Python::Simulation::getState, nullptr, (char *) Python::Simulation::docState, nullptr},
 	{(char *) "name",       (getter) Python::Simulation::name,  nullptr, (char *) Python::Simulation::docName, nullptr},
 	{(char *) "steps",      (getter) Python::Simulation::steps, nullptr, nullptr, nullptr},
 	{(char *) "time",       (getter) Python::Simulation::time,  nullptr, nullptr, nullptr},
 	{(char *) "final_time", (getter) Python::Simulation::finalTime, nullptr, nullptr, nullptr},
+	{(char *) "last_step_time", (getter) Python::Simulation::lastStepTime, nullptr, nullptr, nullptr},
 	{nullptr, nullptr, nullptr, nullptr, nullptr}
 };
 
