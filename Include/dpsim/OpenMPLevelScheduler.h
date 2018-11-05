@@ -28,11 +28,13 @@
 namespace DPsim {
 	class OpenMPLevelScheduler : public Scheduler {
 	public:
+		OpenMPLevelScheduler(Int threads = -1);
 		void createSchedule(const CPS::Task::List& tasks, const Edges& inEdges, const Edges& outEdges);
 		void step(Real time, Int timeStepCount);
 		void getMeasurements();
 
 	private:
+		Int mNumThreads;
 		std::vector<CPS::Task::List> mLevels;
 	};
 };

@@ -27,6 +27,13 @@
 using namespace CPS;
 using namespace DPsim;
 
+OpenMPLevelScheduler::OpenMPLevelScheduler(Int threads) {
+	if (threads >= 0)
+		mNumThreads = threads;
+	else
+		mNumThreads = omp_get_num_threads();
+}
+
 void OpenMPLevelScheduler::createSchedule(const Task::List& tasks, const Edges& inEdges, const Edges& outEdges) {
 	Task::List ordered;
 
@@ -38,7 +45,7 @@ void OpenMPLevelScheduler::step(Real time, Int timeStepCount) {
 	size_t i = 0;
 
 	for (size_t level = 0; level < mLevels.size(); level++) {
-		#pragma omp parallel shared(time,timeStepCount,level) private(i)
+		#pragma omp parallel shared(time,timeStepCount,level) private(i) num_threads(mNumThreads)
 		{
 			#pragma omp for schedule(static)
 			for (i = 0; i < mLevels[level].size(); i++) {
