@@ -1,4 +1,4 @@
-/** Task scheduler base class
+/** Task scheduler base class and utilities / static methods
  *
  * @author Georg Reinke <georg.reinke@rwth-aachen.de>
  * @copyright 2017-2018, Institute for Automation of Complex Power Systems, EONERC
@@ -25,7 +25,9 @@
 
 #include <dpsim/Definitions.h>
 
+#include <condition_variable>
 #include <deque>
+#include <mutex>
 
 namespace DPsim {
 	class Scheduler {
@@ -48,4 +50,32 @@ namespace DPsim {
 
 	// TODO extend / subclass
 	class SchedulingException {};
+
+	class Barrier {
+	public:
+		Barrier() = delete;
+		Barrier(Int limit);
+
+		/// Blocks until |limit| calls have been made, at which point all threads
+		/// return. Can in general be reused, but some other synchronization method
+		/// (like a second barrier) has to be used to ensure that all calls of the
+		/// first use have returned before the first call to the second use.
+		void wait();
+
+	private:
+		Int mLimit, mCount;
+		std::mutex mMutex;
+		std::condition_variable mCondition;
+	};
+
+	class BarrierTask : public CPS::Task {
+	public:
+		BarrierTask() = delete;
+		BarrierTask(Int limit) : mBarrier(limit) {}
+
+		void execute(Real time, Int timeStepCount);
+
+	private:
+		Barrier mBarrier;
+	};
 }

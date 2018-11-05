@@ -8,6 +8,7 @@ set(SOURCES
 	DataLogger.cpp
 	Scheduler.cpp
 	SequentialScheduler.cpp
+	ThreadLevelScheduler.cpp
 )
 
 list(APPEND LIBRARIES cps)

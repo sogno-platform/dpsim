@@ -32,6 +32,7 @@
 #include <dpsim/Python/Interface.h>
 #include <dpsim/RealTimeSimulation.h>
 #include <dpsim/SequentialScheduler.h>
+#include <dpsim/ThreadLevelScheduler.h>
 #include <cps/DP/DP_Ph1_Switch.h>
 
 #ifdef WITH_OPENMP
@@ -571,11 +572,11 @@ PyObject* Python::Simulation::setScheduler(Simulation *self, PyObject *args, PyO
 {
 	Bool measurements = false;
 	const char *schedName = nullptr;
-	int poolsize = 1;
+	int threads = 1;
 
-	const char *kwlist[] = {"scheduler", "measurements", "poolsize", nullptr};
+	const char *kwlist[] = {"scheduler", "measurements", "threads", nullptr};
 
-	if (!PyArg_ParseTupleAndKeywords(args, kwargs, "s|bi", (char **) kwlist, &schedName, &measurements, &poolsize))
+	if (!PyArg_ParseTupleAndKeywords(args, kwargs, "s|bi", (char **) kwlist, &schedName, &measurements, &threads))
 		return nullptr;
 
 	if (!strcmp(schedName, "sequential")) {
@@ -588,10 +589,12 @@ PyObject* Python::Simulation::setScheduler(Simulation *self, PyObject *args, PyO
 #endif
 	} else if (!strcmp(schedName, "pthread_pool")) {
 #ifdef WITH_SHMEM
-		self->sim->setScheduler(std::make_shared<PthreadPoolScheduler>(poolsize));
+		self->sim->setScheduler(std::make_shared<PthreadPoolScheduler>(threads));
 #else
 		PyErr_SetString(PyExc_NotImplementedError, "not implemented on this platform");
 #endif
+	} else if (!strcmp(schedName, "thread_level")) {
+		self->sim->setScheduler(std::make_shared<ThreadLevelScheduler>(threads));
 	} else {
 		PyErr_SetString(PyExc_ValueError, "invalid scheduler");
 	}

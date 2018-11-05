@@ -107,3 +107,23 @@ void Scheduler::levelSchedule(const Task::List& tasks, const Edges& inEdges, con
 		levels[time[task]].push_back(task);
 	}
 }
+
+Barrier::Barrier(Int limit) : mLimit(limit), mCount(0) {}
+
+void Barrier::wait() {
+	std::unique_lock<std::mutex> lk(mMutex);
+	mCount++;
+	if (mCount == mLimit) {
+		mCount = 0;
+		lk.unlock();
+		mCondition.notify_all();
+	} else {
+		// necessary because of spurious wakeups
+		while (mCount != mLimit && mCount != 0)
+			mCondition.wait(lk);
+	}
+}
+
+void BarrierTask::execute(Real time, Int timeStepCount) {
+	mBarrier.wait();
+}
