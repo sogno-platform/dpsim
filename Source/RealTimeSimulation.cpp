@@ -78,7 +78,7 @@ void RealTimeSimulation::run(const Timer::StartClock::time_point &startAt)
 #endif
 
 	for (auto lg : mLoggers)
-		lg->flush();
+		lg->close();
 
 	mTimer.stop();
 }

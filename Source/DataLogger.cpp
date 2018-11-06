@@ -61,8 +61,8 @@ DataLogger::~DataLogger() {
 		mLogFile.close();
 }
 
-void DataLogger::flush() {
-	mLogFile.flush();
+void DataLogger::close() {
+	mLogFile.close();
 }
 
 void DataLogger::setColumnNames(std::vector<String> names) {

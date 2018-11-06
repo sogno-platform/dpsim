@@ -31,16 +31,6 @@ ThreadLevelScheduler::ThreadLevelScheduler(Int threads) :
 	mSchedules.resize(threads);
 }
 
-ThreadLevelScheduler::~ThreadLevelScheduler() {
-	if (!mThreads.empty()) {
-		mJoining = true;
-		mStartBarrier.wait();
-		for (size_t thread = 0; thread < mThreads.size(); thread++) {
-			mThreads[thread].join();
-		}
-	}
-}
-
 void ThreadLevelScheduler::createSchedule(const Task::List& tasks, const Edges& inEdges, const Edges& outEdges) {
 	Task::List ordered;
 	std::vector<Task::List> levels;
@@ -74,6 +64,16 @@ void ThreadLevelScheduler::step(Real time, Int timeStepCount) {
 	mTimeStepCount = timeStepCount;
 	mStartBarrier.wait();
 	mEndBarrier.wait();
+}
+
+void ThreadLevelScheduler::stop() {
+	if (!mThreads.empty()) {
+		mJoining = true;
+		mStartBarrier.wait();
+		for (size_t thread = 0; thread < mThreads.size(); thread++) {
+			mThreads[thread].join();
+		}
+	}
 }
 
 void ThreadLevelScheduler::threadFunction(ThreadLevelScheduler* sched, Int idx) {

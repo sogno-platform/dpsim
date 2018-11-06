@@ -166,13 +166,15 @@ void Simulation::run() {
 		step();
 	}
 
+	mScheduler->stop();
+
 #ifdef WITH_SHMEM
 	for (auto ifm : mInterfaces)
 		ifm.interface->close();
 #endif
 
 	for (auto lg : mLoggers)
-		lg->flush();
+		lg->close();
 
 	mLog.info() << "Simulation finished." << std::endl;
 	mScheduler->getMeasurements();

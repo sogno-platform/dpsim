@@ -30,10 +30,10 @@ namespace DPsim {
 	class ThreadLevelScheduler : public Scheduler {
 	public:
 		ThreadLevelScheduler(Int threads = 1);
-		~ThreadLevelScheduler();
 
 		void createSchedule(const CPS::Task::List& tasks, const Edges& inEdges, const Edges& outEdges);
 		void step(Real time, Int timeStepCount);
+		void stop();
 		void getMeasurements();
 
 	private:

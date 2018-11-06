@@ -133,13 +133,15 @@ void Python::Simulation::threadFunction(Python::Simulation *self)
 		self->cond->notify_one();
 	}
 
+	self->sim->scheduler()->stop();
+
 #ifdef WITH_SHMEM
 	for (auto ifm : self->sim->interfaces())
 		ifm.interface->close();
 #endif
 
 	for (auto lg : self->sim->loggers())
-		lg->flush();
+		lg->close();
 }
 
 PyObject* Python::Simulation::newfunc(PyTypeObject* subtype, PyObject *args, PyObject *kwds)
