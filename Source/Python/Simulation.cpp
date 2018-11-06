@@ -525,8 +525,7 @@ PyObject* Python::Simulation::stop(Simulation *self, PyObject *args)
 	std::unique_lock<std::mutex> lk(*self->mut);
 
 	if (self->state != State::running && self->state != State::paused) {
-		PyErr_SetString(PyExc_SystemError, "Simulation currently not running");
-		return nullptr;
+		Py_RETURN_NONE;
 	}
 
 	newState(self, Simulation::State::stopping);
