@@ -25,6 +25,7 @@
 
 #include <dpsim/Definitions.h>
 
+#include <atomic>
 #include <condition_variable>
 #include <deque>
 #include <mutex>
@@ -54,7 +55,8 @@ namespace DPsim {
 	class Barrier {
 	public:
 		Barrier() = delete;
-		Barrier(Int limit);
+		Barrier(Int limit, Bool useCondition = false) :
+			mLimit(limit), mCount(0), mUseCondition(useCondition) {}
 
 		/// Blocks until |limit| calls have been made, at which point all threads
 		/// return. Can in general be reused, but some other synchronization method
@@ -63,7 +65,10 @@ namespace DPsim {
 		void wait();
 
 	private:
-		Int mLimit, mCount;
+		Int mLimit;
+		std::atomic<Int> mCount;
+		Bool mUseCondition;
+
 		std::mutex mMutex;
 		std::condition_variable mCondition;
 	};
