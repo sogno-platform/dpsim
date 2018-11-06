@@ -51,6 +51,7 @@ Simulation::Simulation(String name,
 {
 	addAttribute<String>("name", &mName, Flags::read);
 	addAttribute<Real>("final_time", &mFinalTime, Flags::read);
+	Eigen::setNbThreads(1);
 }
 
 Simulation::Simulation(String name, SystemTopology system,
