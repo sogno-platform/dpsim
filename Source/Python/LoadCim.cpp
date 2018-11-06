@@ -81,8 +81,6 @@ PyObject* Python::LoadCim(PyObject* self, PyObject* args, PyObject *kwargs) {
 		return nullptr;
 	}
 
-	Py_DECREF(filenames);
-
 	if (cimFiles.size() == 0) {
 		PyErr_SetString(PyExc_TypeError, "First argument must be filename or list of filenames");
 		return nullptr;
