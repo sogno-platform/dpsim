@@ -7,20 +7,32 @@ DPsim
 Docker
 ------
 
-There is a Docker image available with all required dependecies:::
+There is a Docker image available with all required dependencies::
 
-    $ cd DPsim
-    $ docker build -t dpsim .
-    $ docker run -tiv$(pwd):/dpsim dpsim bash
+    $ cd dpsim
+    $ docker build -t rwthacs/dpsim -f Packaging/Docker/Dockerfile .
+
+Alternatively, the image can be pulled from DockerHub like so::
+
+    $ docker pull rwthacs/dpsim
+
+After running the container::
+
+    $ docker run -it -v $(pwd):/dpsim rwthacs/dpsim bash
+
 
 Setuptools
 ----------
 
 Using setuptools is most likely the easiest way to install DPsim on your system.::
 
-    $ git clone --recursive git@git.rwth-aachen.de:acs/core/simulation/dpsim.git
+    $ git clone --recurse-submodules git@git.rwth-aachen.de:acs/core/simulation/dpsim.git
     $ cd dpsim
-    # python3 ./setup.py install
+    $ python3 ./setup.py install
+
+To build the Python package::
+
+    $ python3 setup.py bdist
 
 CMake
 -----
@@ -28,7 +40,9 @@ CMake
 Linux
 *****
 
-1. Make sure that the required dependecies are installed.
+The most recent list of requirements can be found in the Dockerfiles. 
+
+1. Make sure that the required dependencies are installed.
 
    Ubuntu/Debian:::
    
@@ -46,23 +60,34 @@ Linux
 
    Redhat/Fedora/CentOS:::
    
-      # wget https://villas.fein-aachen.org/packages/fein.repo -O /etc/yum.repos.d/fein.repo
-      # yum install \
-          gcc-c++ \
-          redhat-rpm-config \
-          rpmdevtools \
-          make cmake \
-          doxygen \
-          graphviz \
-          python3-pip \
-          python3-devel \
-          eigen3-devel \
-          villas-node-devel \
-          libcimpp16v29a
+      # wget https://packages.fein-aachen.org/redhat/fein.repo /etc/yum.repos.d/
+      # dnf -y install \
+	    git clang gdb ccache \
+	    redhat-rpm-config \
+	    rpmdevtools \
+	    make cmake ninja-build \
+	    doxygen \
+	    graphviz \
+	    pandoc \
+	    python3-pip \
+	    pkg-config
+
+      # dnf -y install \
+	    python3-devel \
+	    eigen3-devel \
+	    expat-devel \
+	    graphviz-devel \
+	    sundials-devel \
+	    libcimpp16v29a \
+	    libvillas-devel \
+	    spdlog
+
+      # dnf -y debuginfo-install \
+	    python3
 
 2. Fetch sources::
 
-      $ git clone --recursive git@git.rwth-aachen.de:acs/core/simulation/dpsim.git
+      $ git clone --recurse-submodules git@git.rwth-aachen.de:acs/core/simulation/dpsim.git
       $ cd dpsim
 
 3. Generate a Makefile with CMake and use it to build the project::
@@ -126,6 +151,50 @@ Python support for Windows
 .. _DPsim: https://git.rwth-aachen.de/acs/core/simulation/dpsim
 .. _`DPsim Libraries`: https://git.rwth-aachen.de/acs/core/simulation/dpsim-libraries
 
+
+DPsim for Development
+^^^^^^^^^^^^^^^^^^^^^
+
+Docker
+------
+
+There is a Docker image available with all required dependencies::
+
+    $ cd dpsim
+    $ docker build -t rwthacs/dpsim-dev -f Packaging/Docker/Dockerfile.dev .
+
+Alternatively, the image can be pulled from DockerHub like so::
+
+    $ docker pull rwthacs/dpsim-dev
+
+To run Jupyter lab notebooks from the dpsim-validation repository, call::
+
+    $ git clone --recurse-submodules git@git.rwth-aachen.de:acs/core/simulation/dpsim-validation.git
+    $ cd dpsim-validation
+    $ docker run -it -p 8888:8888 -v $(pwd):/dpsim-validation --privileged rwthacs/dpsim-dev bash
+
+For Windows, you might need to specify the current directory like this::
+
+    $ docker run -it -p 8888:8888 -v ${pwd}:/dpsim-validation --privileged rwthacs/dpsim-dev bash
+
+The DPsim C++ and DPsim Python library can be build as follows::
+
+    $ cd dpsim-validation/dpsim
+    $ mkdir build
+    $ cd build
+    $ cmake ..
+    $ cmake --build . --target dpsim_python
+
+To build everything run:::
+
+    $ cmake --build .
+
+Finally, the Python package is added to the path and Jupyter started::
+
+    $ export PYTHONPATH=$(pwd)/Source/Python:$(pwd)/../Source/Python
+    $ cd /dpsim-validation
+    $ jupyter lab --ip="0.0.0.0" --allow-root
+    
 Documentation
 ^^^^^^^^^^^^^
 

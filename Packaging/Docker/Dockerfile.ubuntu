@@ -26,7 +26,8 @@ RUN apt-get -y install \
 	graphviz \
 	python3-pip \
 	python3-dev \
-	libeigen3-dev
+	libeigen3-dev \
+	libsundials-serial-dev
 
 # Python Packages
 ADD requirements.txt .

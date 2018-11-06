@@ -18,20 +18,20 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *********************************************************************************/
-#ifdef __linux__
-#include <getopt.h>
-#endif
 
 #include <string>
-#include <chrono>
 
-#include "Utils.h"
+#include <dpsim/Config.h>
+#include <dpsim/Utils.h>
 
 using namespace DPsim;
 using namespace CPS;
 
-#ifdef __linux__
+#ifdef HAVE_GETOPT
+#include <getopt.h>
+
 DPsim::CommandLineArgs::CommandLineArgs(int argc, char *argv[],
+		String nm,
 		Real dt,
 		Real d,
 		Real sf,
@@ -57,6 +57,7 @@ DPsim::CommandLineArgs::CommandLineArgs(int argc, char *argv[],
 		{ "solver-domain",	required_argument,	0, 'D', "(DP|EMT)", "Domain of solver" },
 		{ "solver-type",	required_argument,	0, 'T', "(MNA)", "Type of solver" },
 		{ "option",		required_argument,	0, 'o', "KEY=VALUE", "User-definable options" },
+		{ "name",		required_argument,	0, 'n', "NAME", "Name of log files" },
 		{ 0 }
 	},
 	timeStep(dt),
@@ -64,6 +65,7 @@ DPsim::CommandLineArgs::CommandLineArgs(int argc, char *argv[],
 	sysFreq(sf),
 	scenario(s),
 	logLevel(ll),
+	name(nm),
 	startSynch(ss),
 	blocking(b),
 	solver{sd, st}
@@ -77,7 +79,7 @@ DPsim::CommandLineArgs::CommandLineArgs(int argc, char *argv[],
 		/* getopt_long stores the option index here. */
 		int option_index = 0;
 
-		c = getopt_long(argc, argv, "ht:d:s:l:a:i:f:D:T:o:Sb", long_options.data(), &option_index);
+		c = getopt_long(argc, argv, "ht:d:s:l:a:i:f:D:T:o:Sbn:", long_options.data(), &option_index);
 
 		/* Detect the end of the options. */
 		if (c == -1)
@@ -110,14 +112,14 @@ DPsim::CommandLineArgs::CommandLineArgs(int argc, char *argv[],
 
 			case 'o': {
 				String arg = optarg;
-				String key;
-				Real value;
-				unsigned p = arg.find("=");
-				key = arg.substr(0, p);
-				if (p != String::npos)
-					value = std::stod(arg.substr(p + 1));
 
-				options[key] = value;
+				auto p = arg.find("=");
+				auto key = arg.substr(0, p);
+				auto value = arg.substr(p + 1);
+
+				if (p != String::npos)
+					options[key] = std::stod(value);
+
 				break;
 			}
 
@@ -164,7 +166,7 @@ DPsim::CommandLineArgs::CommandLineArgs(int argc, char *argv[],
 			case 'i': {
 				double deltaT = std::stod(optarg);
 
-				startTime = RealTimeSimulation::StartClock::now() + std::chrono::milliseconds(static_cast<int>(deltaT * 1e3));
+				startTime = Timer::StartClock::now() + std::chrono::milliseconds(static_cast<int>(deltaT * 1e3));
 
 				break;
 			}
@@ -180,10 +182,14 @@ DPsim::CommandLineArgs::CommandLineArgs(int argc, char *argv[],
 
 				std::time_t tt = std::mktime(&t);
 
-				startTime = RealTimeSimulation::StartClock::from_time_t(tt);
+				startTime = Timer::StartClock::from_time_t(tt);
 
 				break;
 			}
+
+			case 'n':
+				name = optarg;
+				break;
 
 			case 'h':
 				showUsage();
@@ -224,7 +230,7 @@ void DPsim::CommandLineArgs::showUsage() {
 	std::cout << std::endl;
 	showCopyright();
 }
-#endif
+#endif /* HAVE_GETOPT */
 
 void DPsim::CommandLineArgs::showCopyright() {
 	std::cout << "DPsim " << DPSIM_VERSION << "-" << DPSIM_RELEASE << std::endl;

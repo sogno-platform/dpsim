@@ -1,7 +1,7 @@
 /** SynGenDPBalancedResLoad Example
  *
  * @author Markus Mirz <mmirz@eonerc.rwth-aachen.de>
- * @copyright 2017, Institute for Automation of Complex Power Systems, EONERC
+ * @copyright 2017-2018, Institute for Automation of Complex Power Systems, EONERC
  *
  * DPsim
  *
@@ -19,8 +19,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *********************************************************************************/
 
-
-#include "DPsim.h"
+#include <DPsim.h>
 
 using namespace DPsim;
 using namespace CPS::DP;
@@ -31,7 +30,7 @@ int main(int argc, char* argv[]) {
 	Real timeStep = 0.00005;
 	Real finalTime = 0.1;
 	String name = "DP_SynchronGenerator_dq_ThreePhFault";
-    // Define machine parameters in per unit
+	// Define machine parameters in per unit
 	Real nomPower = 555e6;
 	Real nomPhPhVoltRMS = 24e3;
 	Real nomFreq = 60;
@@ -50,15 +49,15 @@ int main(int argc, char* argv[]) {
 	Real Llkq1 = 0.7252;
 	Real Rkq2 = 0.0237;
 	Real Llkq2 = 0.125;
-    // Initialization parameters
-    Real initActivePower = 300e6;
+	// Initialization parameters
+	Real initActivePower = 300e6;
 	Real initReactivePower = 0;
 	Real initTerminalVolt = 24000 / sqrt(3) * sqrt(2);
 	Real initVoltAngle = -PI / 2;
 	Real fieldVoltage = 7.0821;
 	Real mechPower = 300e6;
-    // Define grid parameters
-    Real Rload = 1.92;
+	// Define grid parameters
+	Real Rload = 1.92;
 	Real BreakerOpen = 1e6;
 	Real BreakerClosed = 1e-6;
 
@@ -70,27 +69,31 @@ int main(int argc, char* argv[]) {
 	auto n1 = Node::make("n1", PhaseType::ABC, initVoltN1);
 
 	// Components
-	auto gen = Ph3::SynchronGeneratorDQ::make("DP_SynGen_dq_ThreePhFault_SynGen", Logger::Level::OUT);  
+	auto gen = Ph3::SynchronGeneratorDQ::make("DP_SynGen_dq_ThreePhFault_SynGen");
 	gen->setParameters(nomPower, nomPhPhVoltRMS, nomFreq, poleNum, nomFieldCurr,
-		Rs, Ll, Lmd, Lmq, Rfd, Llfd, Rkd, Llkd, Rkq1, Llkq1, Rkq2, Llkq2, H, 
+		Rs, Ll, Lmd, Lmq, Rfd, Llfd, Rkd, Llkd, Rkq1, Llkq1, Rkq2, Llkq2, H,
 		initActivePower, initReactivePower, initTerminalVolt, initVoltAngle, fieldVoltage, mechPower);
-    gen->setNodes(Node::List{n1});
-	
-	auto res = Ph3::SeriesResistor::make("R_load", Node::List{Node::GND, n1}, Rload);
+	gen->connect({n1});
+
+	auto res = Ph3::SeriesResistor::make("R_load");
+	res->setParameters(Rload);
+	res->connect({Node::GND, n1});
 
 	auto fault = Ph3::SeriesSwitch::make("Br_fault");
 	fault->setParameters(BreakerOpen, BreakerClosed);
-	fault->setNodes(Node::List{Node::GND, n1});
-	auto sw1 = SwitchEvent(0.05, true);
-	fault->setSwitchEvents(std::vector<SwitchEvent>{sw1});
+	fault->connect({Node::GND, n1});
 	fault->open();
 
 	// System
 	auto sys = SystemTopology(60, SystemNodeList{n1}, SystemComponentList{gen, res, fault});
 
 	// Simulation
-	Simulation sim(name, sys, timeStep, finalTime, 
+	Simulation sim(name, sys, timeStep, finalTime,
 		Domain::DP, Solver::Type::MNA, Logger::Level::INFO);
+
+	auto sw1 = SwitchEvent::make(0.05, fault, true);
+
+	sim.addEvent(sw1);
 
 	sim.run();
 

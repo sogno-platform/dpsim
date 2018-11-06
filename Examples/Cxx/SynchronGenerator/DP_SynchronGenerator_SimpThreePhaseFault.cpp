@@ -1,8 +1,7 @@
 ﻿/** Synchron Generator Tests
  *
- * @file
  * @author Markus Mirz <mmirz@eonerc.rwth-aachen.de>
- * @copyright 2017, Institute for Automation of Complex Power Systems, EONERC
+ * @copyright 2017-2018, Institute for Automation of Complex Power Systems, EONERC
  *
  * DPsim
  *
@@ -20,14 +19,12 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *********************************************************************************/
 
-
-#include "DPsim.h"
+#include <DPsim.h>
 
 using namespace DPsim;
 using namespace CPS::DP::Ph1;
 
-int main(int argc, char* argv[])
-{
+int main(int argc, char* argv[]) {
 	// Define machine parameters in per unit
 	Real nomPower = 555e6;
 	Real nomPhPhVoltRMS = 24e3;
@@ -68,20 +65,20 @@ int main(int argc, char* argv[])
 
 	// Set up simulation
 	Real om = 2.0*M_PI*60.0;
-	Real tf = 0.3; 
-	Real dt = 0.00005; 
+	Real tf = 0.3;
+	Real dt = 0.00005;
 	Int downSampling = 50;
 
 	Real Ra = (Ld_s + Lq_s) / dt;
 	// Declare circuit components
 	String mGeneratorName = "DP_DqSimplified_" + std::to_string(dt);
-	ComponentBase::Ptr gen = SynchronGeneratorDQSmpl::make(mGeneratorName, 0, 1, 2,
+	Component::Ptr gen = SynchronGeneratorDQSmpl::make(mGeneratorName, 0, 1, 2,
 		nomPower, nomPhPhVoltRMS, nomFreq, poleNum, nomFieldCurr,
 		Rs, Ll, Lmd, Lmd0, Lmq, Lmq0, Rfd, Llfd, Rkd, Llkd, Rkq1, Llkq1, Rkq2, Llkq2, H, Ra);
 	Real loadRes = 24e3*24e3 / 300e6;
-	ComponentBase::Ptr r1 = Resistor::make("r1", 0, DEPRECATEDGND, loadRes);
-	ComponentBase::Ptr r2 = Resistor::make("r2", 1, DEPRECATEDGND, loadRes);
-	ComponentBase::Ptr r3 = Resistor::make("r3", 2, DEPRECATEDGND, loadRes);
+	Component::Ptr r1 = Resistor::make("r1", 0, DEPRECATEDGND, loadRes);
+	Component::Ptr r2 = Resistor::make("r2", 1, DEPRECATEDGND, loadRes);
+	Component::Ptr r3 = Resistor::make("r3", 2, DEPRECATEDGND, loadRes);
 
 	SystemTopology system(60);
 	system.mComponents = { gen, r1, r2, r3 };
@@ -89,9 +86,9 @@ int main(int argc, char* argv[])
 	// Declare circuit components for resistance change
 	//Real breakerRes = 0.001;
 	Real breakerRes = 19.2 + 0.001;
-	ComponentBase::Ptr rBreaker1 = Resistor::make("rbreak1", 0, DEPRECATEDGND, breakerRes);
-	ComponentBase::Ptr rBreaker2 = Resistor::make("rbreak2", 1, DEPRECATEDGND, breakerRes);
-	ComponentBase::Ptr rBreaker3 = Resistor::make("rbreak3", 2, DEPRECATEDGND, breakerRes);
+	Component::Ptr rBreaker1 = Resistor::make("rbreak1", 0, DEPRECATEDGND, breakerRes);
+	Component::Ptr rBreaker2 = Resistor::make("rbreak2", 1, DEPRECATEDGND, breakerRes);
+	Component::Ptr rBreaker3 = Resistor::make("rbreak3", 2, DEPRECATEDGND, breakerRes);
 
 	SystemTopology systemBreakerOn(60);
 	systemBreakerOn.mComponents = { gen, rBreaker1, rBreaker2, rBreaker3, r1, r2, r3 };

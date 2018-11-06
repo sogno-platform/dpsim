@@ -1,33 +1,30 @@
 execute_process(COMMAND ${PYTHON_EXECUTABLE} -c "import sysconfig; print(sysconfig.get_path('platlib'), end='')" OUTPUT_VARIABLE PYTHON_PKGPATH)
 execute_process(COMMAND ${PYTHON_EXECUTABLE} -c "import sysconfig; print(sysconfig.get_config_var('EXT_SUFFIX'), end='')" OUTPUT_VARIABLE PYTHON_EXT_SUFFIX)
 
-if(NOT WIN32)
-	# we use PyArg_ParseTupleAndKeywords several times, which erroneously accepts
-	# a char* array instead of a const char* array
-	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-write-strings")
-endif()
-
 add_library(dpsim_python SHARED	
 	Module.cpp
 	Simulation.cpp
-
 	Component.cpp
 	Node.cpp
-	Interface.cpp
+	Logger.cpp
 	LoadCim.cpp
-	SystemTopology.cpp
-	
-	Components/LinePi.cpp
-	Components/LoadPQ.cpp
-	
-	Components/VoltageSourceNorton.cpp
-	
-	Components/CurrentSource.cpp
-	Components/VoltageSource.cpp
-	
-	Components/Resistor.cpp
-	Components/Inductor.cpp
-	Components/Capacitor.cpp
+	SystemTopology.cpp	
+	Utils.cpp
+	EventChannel.cpp
+	${CMAKE_BINARY_DIR}/Include/dpsim/Python/ComponentConstructors.h
+)
+
+if(WITH_SHMEM)
+	target_sources(dpsim_python PUBLIC Interface.cpp)
+endif()
+
+file(MAKE_DIRECTORY ${CMAKE_BINARY_DIR}/Include/dpsim/Python)
+add_custom_command(
+	OUTPUT ${CMAKE_BINARY_DIR}/Include/dpsim/Python/ComponentConstructors.h
+	COMMAND ${PYTHON_EXECUTABLE} ${CMAKE_SOURCE_DIR}/Scripts/find_cps_components.py
+		${CMAKE_SOURCE_DIR}/Dependencies/libcps/Include/cps
+		${CMAKE_BINARY_DIR}/Include/dpsim/Python/ComponentConstructors.h
+	DEPENDS cps
 )
 
 if(APPLE)

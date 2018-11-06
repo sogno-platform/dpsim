@@ -1,7 +1,7 @@
 /** Example of shared memory interface
  *
- * @author Markus Mirz <mmirz@eonerc.rwth-aachen.de>
- * @copyright 2017, Institute for Automation of Complex Power Systems, EONERC
+ * @author Steffen Vogel <stvogel@eonerc.rwth-aachen.de>
+ * @copyright 2017-2018, Institute for Automation of Complex Power Systems, EONERC
  *
  * DPsim
  *
@@ -19,12 +19,12 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *********************************************************************************/
 
-#include "DPsim.h"
+#include <DPsim.h>
 
 using namespace DPsim;
-using namespace CPS;
-using namespace CPS::DP::Ph1;
 using namespace CPS::Signal;
+using namespace CPS::DP;
+using namespace CPS::DP::Ph1;
 
 int main(int argc, char *argv[]) {
 
@@ -50,32 +50,37 @@ int main(int argc, char *argv[]) {
 	0.026176,0.011432,-0.018274,-0.010121, 0.012983,0.0092568,-0.0084016,-0.0062311,
 	0.011117,0.016732,0.0067703,-0.0020832,-0.0024229 };
 
-	auto filtP = FIRFilter::make("filter_p", coefficients, Logger::Level::DEBUG);
-	auto filtQ = FIRFilter::make("filter_q", coefficients, Logger::Level::DEBUG);
+	auto filtP = FIRFilter::make("filter_p", coefficients, 10, Logger::Level::DEBUG);
+	auto filtQ = FIRFilter::make("filter_q", coefficients, 0, Logger::Level::DEBUG);
 
 	filtP->setPriority(1);
 	filtQ->setPriority(1);
-	filtP->initialize(10.);
-	filtQ->initialize(0);
 
 	// Nodes
 	auto n1 = Node::make("n1");
 
 	// Components
-	auto ecs = CurrentSource::make("v_intf", Node::List{GND, n1}, Complex(10, 0));
-	auto r1 = Resistor::make("r_1", Node::List{GND, n1}, 1);
-	auto load = PQLoadCS::make("load_cs", Node::List{n1}, 10., 0., 10.);
+	auto ecs = CurrentSource::make("v_intf");
+	ecs->setParameters(Complex(10, 0));
+	auto r1 = Resistor::make("r_1");
+	r1->setParameters(1);
+	auto load = PQLoadCS::make("load_cs");
+	load->setParameters(10., 0., 10.);
 
-	filtP->setConnection(load->findAttribute<Real>("active_power"));
-	filtQ->setConnection(load->findAttribute<Real>("reactive_power"));
+	ecs->connect({ Node::GND, n1 });
+	r1->connect({ Node::GND, n1 });
+	load->connect({ n1 });
 
-	filtP->findAttribute<Real>("input")->set(8.);
-	filtQ->findAttribute<Real>("input")->set(0.);
+	filtP->setConnection(load->attribute<Real>("power_active"));
+	filtQ->setConnection(load->attribute<Real>("power_reactive"));
 
-	intf.addImport(filtP->findAttribute<Real>("input"), 1.0, 0);
-	intf.addImport(filtQ->findAttribute<Real>("input"), 1.0, 1);
+	filtP->attribute<Real>("input")->set(8.);
+	filtQ->attribute<Real>("input")->set(0.);
 
-	auto sys = SystemTopology(50, Node::List{n1}, ComponentBase::List{ecs, r1, load, filtP, filtQ});
+	intf.addImport(filtP->attribute<Real>("input"), 0);
+	intf.addImport(filtQ->attribute<Real>("input"), 1);
+
+	auto sys = SystemTopology(50, SystemNodeList{n1}, SystemComponentList{ecs, r1, load, filtP, filtQ});
 	auto sim = RealTimeSimulation(simName, sys, timeStep, finalTime,
 	Domain::DP, Solver::Type::MNA, Logger::Level::INFO);
 

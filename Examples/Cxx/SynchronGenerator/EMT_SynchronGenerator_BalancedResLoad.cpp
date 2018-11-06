@@ -1,7 +1,7 @@
 /** SynGenBalancedResLoad Example
  *
  * @author Markus Mirz <mmirz@eonerc.rwth-aachen.de>
- * @copyright 2017, Institute for Automation of Complex Power Systems, EONERC
+ * @copyright 2017-2018, Institute for Automation of Complex Power Systems, EONERC
  *
  * DPsim
  *
@@ -19,14 +19,12 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *********************************************************************************/
 
-
-#include "DPsim.h"
+#include <DPsim.h>
 
 using namespace DPsim;
 using namespace CPS::EMT::Ph3;
 
-int main(int argc, char* argv[])
-{
+int main(int argc, char* argv[]) {
 	// Define machine parameters in per unit
 	Real nomPower = 555e6;
 	Real nomPhPhVoltRMS = 24e3;
@@ -63,13 +61,13 @@ int main(int argc, char* argv[])
 	Real Ra = (Ld_s + Lq_s) / dt;
 
 	// Declare circuit components
-	ComponentBase::Ptr gen = SynchronGeneratorDQ::make("gen", 0, 1, 2,
+	Component::Ptr gen = SynchronGeneratorDQ::make("gen", 0, 1, 2,
 		nomPower, nomPhPhVoltRMS, nomFreq, poleNum, nomFieldCurr,
 		Rs, Ll, Lmd, Lmd0, Lmq, Lmq0, Rfd, Llfd, Rkd, Llkd, Rkq1, Llkq1, Rkq2, Llkq2, H, Ra);
 	Real loadRes = 1037.8378;
-	ComponentBase::Ptr r1 = Resistor::make("r1", 0, DEPRECATEDGND, loadRes);
-	ComponentBase::Ptr r2 = Resistor::make("r2", 1, DEPRECATEDGND, loadRes);
-	ComponentBase::Ptr r3 = Resistor::make("r3", 2, DEPRECATEDGND, loadRes);
+	Component::Ptr r1 = Resistor::make("r1", 0, DEPRECATEDGND, loadRes);
+	Component::Ptr r2 = Resistor::make("r2", 1, DEPRECATEDGND, loadRes);
+	Component::Ptr r3 = Resistor::make("r3", 2, DEPRECATEDGND, loadRes);
 
 	SystemTopology system(50);
 	system.mComponents = { gen, r1, r2, r3 };
