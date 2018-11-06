@@ -61,9 +61,6 @@ class Simulation(_dpsim.Simulation):
         if pbar:
             self.show_progressbar()
 
-    def __del__(self):
-        self.remove_eventfd(self._event_socks[0].fileno())
-
     def add_callback(self, cb, *args, event=None):
         self._events.add_callback(cb, *args, event=event)
 
@@ -83,6 +80,9 @@ class Simulation(_dpsim.Simulation):
         if self._pbar_tui:
             self._pbar_tui.finish()
 
+        self._pbar_task.cancel()
+        self.remove_eventfd(self._event_socks[0].fileno())
+        self._events.close()
         LOGGER.info('Finished simulation!')
 
     def overrun(self, *args):
