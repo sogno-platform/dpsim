@@ -77,8 +77,8 @@ namespace DPsim {
 		CPS::Task::List mTasks;
 		/// Task dependencies as incoming / outgoing edges
 		Scheduler::Edges mTaskInEdges, mTaskOutEdges;
-		/// (Real) time needed for the last timestep
-		Real mLastStepTime = 0;
+		/// (Real) time needed for the timesteps
+		std::vector<Real> mStepTimes;
 
 #ifdef WITH_SHMEM
 		struct InterfaceMapping {
@@ -159,6 +159,7 @@ namespace DPsim {
 		Real timeStep() const { return mTimeStep; }
 		DataLogger::List& loggers() { return mLoggers; }
 		std::shared_ptr<Scheduler> scheduler() { return mScheduler; }
+		std::vector<Real>& stepTimes() { return mStepTimes; }
 	};
 
 }

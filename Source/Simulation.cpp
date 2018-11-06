@@ -51,7 +51,6 @@ Simulation::Simulation(String name,
 {
 	addAttribute<String>("name", &mName, Flags::read);
 	addAttribute<Real>("final_time", &mFinalTime, Flags::read);
-	addAttribute<Real>("last_step_time", &mLastStepTime, Flags::read);
 }
 
 Simulation::Simulation(String name, SystemTopology system,
@@ -191,6 +190,6 @@ Real Simulation::step() {
 
 	auto end = std::chrono::steady_clock::now();
 	std::chrono::duration<double> diff = end-start;
-	mLastStepTime = diff.count();
+	mStepTimes.push_back(diff.count());
 	return mTime;
 }

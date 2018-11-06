@@ -663,11 +663,17 @@ PyObject* Python::Simulation::finalTime(Simulation *self, void *ctx)
 	return Py_BuildValue("f", self->sim->finalTime());
 }
 
-PyObject* Python::Simulation::lastStepTime(Simulation *self, void *ctx)
+PyObject* Python::Simulation::avgStepTime(Simulation *self, void *ctx)
 {
 	std::unique_lock<std::mutex> lk(*self->mut);
 
-	return Py_BuildValue("f", self->sim->attribute<Real>("last_step_time")->get());
+	Real tot = 0;
+	for (auto meas : self->sim->stepTimes()) {
+		tot += meas;
+	}
+	Real avg = tot / self->sim->stepTimes().size();
+
+	return Py_BuildValue("f", avg);
 }
 
 // TODO: for everything but state, we could use read-only Attributes and a getattro
@@ -678,7 +684,7 @@ PyGetSetDef Python::Simulation::getset[] = {
 	{(char *) "steps",      (getter) Python::Simulation::steps, nullptr, nullptr, nullptr},
 	{(char *) "time",       (getter) Python::Simulation::time,  nullptr, nullptr, nullptr},
 	{(char *) "final_time", (getter) Python::Simulation::finalTime, nullptr, nullptr, nullptr},
-	{(char *) "last_step_time", (getter) Python::Simulation::lastStepTime, nullptr, nullptr, nullptr},
+	{(char *) "avg_step_time", (getter) Python::Simulation::avgStepTime, nullptr, nullptr, nullptr},
 	{nullptr, nullptr, nullptr, nullptr, nullptr}
 };
 
