@@ -108,34 +108,30 @@ void DAESolver::initialize(Real t0) {
         sval[counter++] = tempVolt;
         // std::cout <<"Node initialized"<<std::endl;
     }
-    // Set initial values of all components
-    for (Component::Ptr comp : mComponents) {
-        auto emtComp = std::dynamic_pointer_cast<PowerComponent<Complex> >(comp);
-        if (emtComp) {
-            emtComp->initializeFromPowerflow(mSystem.mSystemFrequency);
-        }
-    }
+
 
 //	avtol = N_VNew_Serial(mNEQ);
 
 
 
     for (Component::Ptr comp : mComponents) {
-        //auto emtComp = std::dynamic_pointer_cast<PowerComponent<Complex>>(comp);
-        auto emtComp = std::dynamic_pointer_cast<CPS::DAEInterface>(comp);
-        if (!emtComp)
+        auto emtComp = std::dynamic_pointer_cast<PowerComponent<Complex> >(comp);
+        if (emtComp) {
+            emtComp->initializeFromPowerflow(mSystem.mSystemFrequency);// Set initial values of all components
+        }
+
+        auto daeComp = std::dynamic_pointer_cast<DAEInterface>(comp);
+        if (!daeComp)
             throw CPS::Exception();
 
         // Initialize component values of state vector
-        sval[counter++] = std::real(emtComp->daeInitialize());
+        sval[counter++] = std::real(daeComp->daeInitialize());
         std::cout << "Comp Volt " << counter-1 << ": " << sval[counter-1]<< std::endl;
 //		sval[counter++] = component inductance;
 
         //TODO: mVoltageRef
         // Register residual functions of components
-        auto daeComp = std::dynamic_pointer_cast<DAEInterface>(comp);
-        if (!daeComp)
-            throw CPS::Exception();
+
 
         mResidualFunctions.push_back(
                 [daeComp](double ttime, const double state[], const double dstate_dt[], double resid[],
@@ -190,9 +186,12 @@ void DAESolver::initialize(Real t0) {
     LS = SUNDenseLinearSolver(state, A);
     ret = IDADlsSetLinearSolver(mem, LS, A);
     //ret = IDASpilsSetLinearSolver(mem, LS);
+
     //IDA input functions
-    ret = IDASetMaxNumSteps(mem, -1);  //Max. number of timesteps until tout
+    //ret = IDASetMaxNumSteps(mem, -1);  //Max. number of timesteps until tout
     //ret = IDASetMaxConvFails(mem, 100); //Max. number of convergence failures at one step
+    ret = IDACalcIC(mem, IDA_Y_INIT, t0);
+    std::cout<<"Return "<<ret << std::endl;
     (void) ret;
 }
 
