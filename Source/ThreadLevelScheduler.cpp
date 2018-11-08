@@ -26,8 +26,8 @@
 using namespace CPS;
 using namespace DPsim;
 
-ThreadLevelScheduler::ThreadLevelScheduler(Int threads) :
-	mNumThreads(threads), mStartBarrier(threads+1), mEndBarrier(threads+1) {
+ThreadLevelScheduler::ThreadLevelScheduler(Int threads, String outMeasurementFile) :
+	mNumThreads(threads), mOutMeasurementFile(outMeasurementFile), mStartBarrier(threads+1), mEndBarrier(threads+1) {
 	mSchedules.resize(threads);
 }
 
@@ -37,6 +37,9 @@ void ThreadLevelScheduler::createSchedule(const Task::List& tasks, const Edges& 
 
 	Scheduler::topologicalSort(tasks, inEdges, outEdges, ordered);
 	Scheduler::levelSchedule(ordered, inEdges, outEdges, levels);
+
+	if (!mOutMeasurementFile.empty())
+		Scheduler::initMeasurements(tasks);
 
 	for (size_t level = 0; level < levels.size(); level++) {
 		// Distribute tasks of one level evenly between threads
@@ -74,6 +77,9 @@ void ThreadLevelScheduler::stop() {
 			mThreads[thread].join();
 		}
 	}
+	if (!mOutMeasurementFile.empty()) {
+		writeMeasurements(mOutMeasurementFile);
+	}
 }
 
 void ThreadLevelScheduler::threadFunction(ThreadLevelScheduler* sched, Int idx) {
@@ -82,12 +88,21 @@ void ThreadLevelScheduler::threadFunction(ThreadLevelScheduler* sched, Int idx) 
 		if (sched->mJoining)
 			return;
 
-		for (auto task : sched->mSchedules[idx])
-			task->execute(sched->mTime, sched->mTimeStepCount);
+		if (sched->mOutMeasurementFile.empty()) {
+			for (auto task : sched->mSchedules[idx])
+				task->execute(sched->mTime, sched->mTimeStepCount);
+		} else {
+			for (auto task : sched->mSchedules[idx]) {
+				auto start = std::chrono::steady_clock::now();
+				task->execute(sched->mTime, sched->mTimeStepCount);
+				auto end = std::chrono::steady_clock::now();
+				// kind of ugly workaround since the barrier tasks are shared
+				// between threads and we don't want to measure them anyway
+				if (!std::dynamic_pointer_cast<BarrierTask>(task))
+					sched->updateMeasurement(task, end-start);
+			}
+		}
 
 		sched->mEndBarrier.wait();
 	}
-}
-
-void ThreadLevelScheduler::getMeasurements() {
 }

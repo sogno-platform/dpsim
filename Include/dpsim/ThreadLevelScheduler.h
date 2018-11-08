@@ -29,7 +29,7 @@
 namespace DPsim {
 	class ThreadLevelScheduler : public Scheduler {
 	public:
-		ThreadLevelScheduler(Int threads = 1);
+		ThreadLevelScheduler(Int threads = 1, String outMeasurementFile = String());
 
 		void createSchedule(const CPS::Task::List& tasks, const Edges& inEdges, const Edges& outEdges);
 		void step(Real time, Int timeStepCount);
@@ -40,6 +40,7 @@ namespace DPsim {
 		static void threadFunction(ThreadLevelScheduler* sched, Int idx);
 
 		Int mNumThreads;
+		String mOutMeasurementFile;
 		std::vector<std::thread> mThreads;
 		std::vector<CPS::Task::List> mSchedules;
 		Barrier mStartBarrier, mEndBarrier;

@@ -27,7 +27,7 @@
 using namespace CPS;
 using namespace DPsim;
 
-OpenMPLevelScheduler::OpenMPLevelScheduler(Int threads) {
+OpenMPLevelScheduler::OpenMPLevelScheduler(Int threads, String outMeasurementFile) : mOutMeasurementFile(outMeasurementFile) {
 	if (threads >= 0)
 		mNumThreads = threads;
 	else
@@ -39,21 +39,43 @@ void OpenMPLevelScheduler::createSchedule(const Task::List& tasks, const Edges& 
 
 	Scheduler::topologicalSort(tasks, inEdges, outEdges, ordered);
 	Scheduler::levelSchedule(ordered, inEdges, outEdges, mLevels);
+
+	if (!mOutMeasurementFile.empty())
+		Scheduler::initMeasurements(tasks);
 }
 
 void OpenMPLevelScheduler::step(Real time, Int timeStepCount) {
 	size_t i = 0;
+	std::chrono::steady_clock::time_point start, end;
 
-	for (size_t level = 0; level < mLevels.size(); level++) {
-		#pragma omp parallel shared(time,timeStepCount,level) private(i) num_threads(mNumThreads)
-		{
-			#pragma omp for schedule(static)
-			for (i = 0; i < mLevels[level].size(); i++) {
-				mLevels[level][i]->execute(time, timeStepCount);
+	if (!mOutMeasurementFile.empty()) {
+		for (size_t level = 0; level < mLevels.size(); level++) {
+			#pragma omp parallel shared(time,timeStepCount,level) private(i, start, end) num_threads(mNumThreads)
+			{
+				#pragma omp for schedule(static)
+				for (i = 0; i < mLevels[level].size(); i++) {
+					start = std::chrono::steady_clock::now();
+					mLevels[level][i]->execute(time, timeStepCount);
+					end = std::chrono::steady_clock::now();
+					updateMeasurement(mLevels[level][i], end-start);
+				}
+			}
+		}
+	} else {
+		for (size_t level = 0; level < mLevels.size(); level++) {
+			#pragma omp parallel shared(time,timeStepCount,level) private(i) num_threads(mNumThreads)
+			{
+				#pragma omp for schedule(static)
+				for (i = 0; i < mLevels[level].size(); i++) {
+					mLevels[level][i]->execute(time, timeStepCount);
+				}
 			}
 		}
 	}
 }
 
-void OpenMPLevelScheduler::getMeasurements() {
+void OpenMPLevelScheduler::stop() {
+	if (!mOutMeasurementFile.empty()) {
+		writeMeasurements(mOutMeasurementFile);
+	}
 }
