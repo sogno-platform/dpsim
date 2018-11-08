@@ -59,6 +59,7 @@ endif()
 # Options
 option(BUILD_SHARED_LIBS "Build shared library" OFF)
 option(BUILD_EXAMPLES "Build C++ examples" ON)
+option(COMPARE_REFERENCE "Download reference results and compare" OFF)
 
 option(WITH_SUNDIALS "Enable sundials solver suite"         ${Sundials_FOUND})
 option(WITH_SHMEM    "Enable shared memory interface"       ${VILLASnode_FOUND})
@@ -84,6 +85,18 @@ if(BUILD_EXAMPLES)
 	add_subdirectory(Examples)
 endif(BUILD_EXAMPLES)
 
+if(COMPARE_REFERENCE)
+	include(ExternalProject)
+	ExternalProject_Add(reference-results
+	  GIT_REPOSITORY    https://git.rwth-aachen.de/acs/public/simulation/reference-results.git
+	  #GIT_TAG           origin/master
+	  PREFIX			reference-results
+	  CONFIGURE_COMMAND	""
+	  BUILD_COMMAND		""
+	  INSTALL_COMMAND	""
+	)
+endif()
+
 if(TOPLEVEL_PROJECT)
 	# Show feature summary
 	include(FeatureSummary)
@@ -94,7 +107,7 @@ if(TOPLEVEL_PROJECT)
 	add_feature_info(RT	    WITH_RT     "Extended real-time features")
 	feature_summary(WHAT ALL VAR enabledFeaturesText)
 
-	message(STATUS "Building ${CMAKE_PROJECT_DESCRIPTION}:")
+	message(STATUS "Building ${CMAKE_PROJECT_NAME}:")
 	message(STATUS "Feature summary for DPsim")
 	message(STATUS "${enabledFeaturesText}")
     message(STATUS "  VERSION:         ${DPSIM_VERSION}")
