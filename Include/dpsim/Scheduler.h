@@ -26,6 +26,7 @@
 #include <dpsim/Definitions.h>
 
 #include <atomic>
+#include <chrono>
 #include <condition_variable>
 #include <deque>
 #include <mutex>
@@ -34,13 +35,20 @@ namespace DPsim {
 	class Scheduler {
 	public:
 		typedef std::unordered_map<CPS::Task::Ptr, std::deque<CPS::Task::Ptr>> Edges;
+		typedef std::chrono::steady_clock::duration TaskTime;
 
 		virtual ~Scheduler() { }
+
+		// Interface functions
+
+		// Creates the schedule for the given dependency graph
 		virtual void createSchedule(const CPS::Task::List& tasks, const Edges& inEdges, const Edges& outEdges) = 0;
-		// TODO think of better interface for this
-		virtual void getMeasurements() = 0;
+		// Performs a single simulation step
 		virtual void step(Real time, Int timeStepCount) = 0;
+		// Called on simulation stop to reliably clean up e.g. running helper threads
 		virtual void stop() {}
+
+		// Static helper functions that are useful for all schedulers.
 
 		// Helper function that resolves the task-attribute dependencies to task-task dependencies.
 		static void resolveDeps(const CPS::Task::List& tasks, Edges& inEdges, Edges& outEdges);
@@ -49,6 +57,19 @@ namespace DPsim {
 		// Separate topologically sorted list of tasks into levels which can be
 		// executed in parallel
 		static void levelSchedule(const CPS::Task::List& tasks, const Edges& inEdges, const Edges& outEdges, std::vector<CPS::Task::List>& levels);
+
+	protected:
+		void initMeasurements(const CPS::Task::List& tasks);
+		// Not thread-safe for multiple calls with same task, but should only
+		// be called once for each task in each step anyway
+		void updateMeasurement(CPS::Task::Ptr task, TaskTime time);
+		void writeMeasurements(CPS::String filename);
+
+	private:
+		// TODO more sophisticated measurement method might be necessary for
+		// longer simulations (risk of high memory requirements and integer
+		// overflow)
+		std::unordered_map<CPS::Task::Ptr, std::vector<TaskTime>> mMeasurements;
 	};
 
 	// TODO extend / subclass

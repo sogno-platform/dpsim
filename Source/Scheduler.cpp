@@ -21,8 +21,41 @@
 
 #include <dpsim/Scheduler.h>
 
+#include <fstream>
+
 using namespace CPS;
 using namespace DPsim;
+
+void Scheduler::initMeasurements(const Task::List& tasks) {
+	// Fill map here already since it's not protected by a mutex
+	for (auto task : tasks) {
+		mMeasurements[task] = std::vector<TaskTime>();
+	}
+}
+
+void Scheduler::updateMeasurement(Task::Ptr ptr, TaskTime time) {
+	mMeasurements[ptr].push_back(time);
+}
+
+void Scheduler::writeMeasurements(String filename) {
+	std::ofstream os(filename);
+	std::unordered_map<String, TaskTime> averages;
+	for (auto& pair : mMeasurements) {
+		TaskTime avg(0), tot(0);
+
+		for (TaskTime time : pair.second) {
+			tot += time;
+		}
+		if (!pair.second.empty())
+			avg = tot / pair.second.size();
+		averages[pair.first->toString()] = avg;
+	}
+	// TODO think of nicer output format
+	for (auto pair : averages) {
+		os << pair.first << " " << pair.second.count() << std::endl;
+	}
+	os.close();
+}
 
 void Scheduler::resolveDeps(const Task::List& tasks, Edges& inEdges, Edges& outEdges) {
 	// Create graph (list of out/in edges for each node) from attribute dependencies

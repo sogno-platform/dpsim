@@ -571,17 +571,17 @@ const char *Python::Simulation::docSetScheduler =
 "additional scheduler-specific parameters.\n";
 PyObject* Python::Simulation::setScheduler(Simulation *self, PyObject *args, PyObject *kwargs)
 {
-	Bool measurements = false;
+	const char *outMeasurementFile = "";
 	const char *schedName = nullptr;
 	int threads = -1;
 
-	const char *kwlist[] = {"scheduler", "measurements", "threads", nullptr};
+	const char *kwlist[] = {"scheduler", "out_measurement_file", "threads", nullptr};
 
-	if (!PyArg_ParseTupleAndKeywords(args, kwargs, "s|bi", (char **) kwlist, &schedName, &measurements, &threads))
+	if (!PyArg_ParseTupleAndKeywords(args, kwargs, "s|si", (char **) kwlist, &schedName, &outMeasurementFile, &threads))
 		return nullptr;
 
 	if (!strcmp(schedName, "sequential")) {
-		self->sim->setScheduler(std::make_shared<SequentialScheduler>(measurements));
+		self->sim->setScheduler(std::make_shared<SequentialScheduler>(outMeasurementFile));
 	} else if (!strcmp(schedName, "omp_level")) {
 #ifdef WITH_OPENMP
 		self->sim->setScheduler(std::make_shared<OpenMPLevelScheduler>(threads));

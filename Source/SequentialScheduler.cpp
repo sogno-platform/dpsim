@@ -33,37 +33,27 @@ using namespace DPsim;
 #include <unordered_map>
 
 void SequentialScheduler::createSchedule(const Task::List& tasks, const Edges& inEdges, const Edges& outEdges) {
+	if (mOutMeasurementFile.size() != 0)
+		Scheduler::initMeasurements(tasks);
 	Scheduler::topologicalSort(tasks, inEdges, outEdges, mSchedule);
 }
 
-void SequentialScheduler::getMeasurements() {
-	if (mMeasureTaskTime) {
-		std::set<size_t> done;
-		for (auto it : mSchedule) {
-			if (done.find(typeid(*it).hash_code()) != done.end())
-				continue;
-			done.insert(typeid(*it).hash_code());
-			std::vector<std::chrono::nanoseconds> meas = mMeasurements[typeid(*it).hash_code()];
-			std::chrono::nanoseconds tot(0);
-			for (size_t i = 0; i < meas.size(); i++)
-				tot += meas[i];
-			auto avg = tot / meas.size();
-			std::cout << typeid(*it).name() << " " << avg.count() << std::endl;
-		}
-	}
-}
-
 void SequentialScheduler::step(Real time, Int timeStepCount) {
-	if (mMeasureTaskTime) {
+	if (mOutMeasurementFile.size() != 0) {
 		for (auto it : mSchedule) {
-			auto start = std::chrono::system_clock::now();
+			auto start = std::chrono::steady_clock::now();
 			it->execute(time, timeStepCount);
-			auto end = std::chrono::system_clock::now();
-			mMeasurements[typeid(*it).hash_code()].push_back(end-start);
+			auto end = std::chrono::steady_clock::now();
+			updateMeasurement(it, end-start);
 		}
 	} else {
 		for (auto it : mSchedule) {
 			it->execute(time, timeStepCount);
 		}
 	}
+}
+
+void SequentialScheduler::stop() {
+	if (mOutMeasurementFile.size() != 0)
+		writeMeasurements(mOutMeasurementFile);
 }
