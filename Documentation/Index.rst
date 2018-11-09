@@ -7,22 +7,12 @@
 
 .. toctree::
    :maxdepth: 2
-   :caption: Contents:
+   :hidden:
 
-   Notebooks/Quickstart Guide
-   Notebooks
    Examples
    Install
    Build
-   Structure
    Reference
-   ToDo
    License <Copying>
    Changelog
 
-Indices and tables
-==================
-
-* :ref:`genindex`
-* :ref:`modindex`
-* :ref:`search`
