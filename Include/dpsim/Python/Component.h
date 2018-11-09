@@ -128,7 +128,7 @@ namespace Python {
 			T comp("uid", "name");
 
 			doc << comp.type() << "(name, nodes, **attributes)" << std::endl
-			    << "Construct a new component with a given name an list of nodes." << std::endl;
+			    << "Construct a new component with a given name and list of nodes." << std::endl;
 #if 0
 			    << comp.description() << std::endl
 			    << std::endl;
