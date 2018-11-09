@@ -181,8 +181,8 @@ default_role = 'any'
 
 # -- Options for Breathe -------------------------------------------
 
-breathe_projects = { 'dpsim' : '@CMAKE_BINARY_DIR@/Documentation/Cxx/xml' }
-breathe_default_project = 'dpsim'
+#breathe_projects = { 'dpsim' : '@CMAKE_BINARY_DIR@/Documentation/Cxx/xml' }
+#breathe_default_project = 'dpsim'
 
 # -- Options for nbsphinx
 
