@@ -47,7 +47,6 @@ if(WITH_PYTHON)
 				${CMAKE_CURRENT_SOURCE_DIR}/README.md
 				dpsim_python
 				copy_imgs
-				docs_cxx
 		)
 
 		add_custom_command(
@@ -79,13 +78,25 @@ if(DOXYGEN_FOUND)
 	set(DOXYGEN_HTML_DIR "${CMAKE_CURRENT_BINARY_DIR}/Cxx")
 	file(MAKE_DIRECTORY ${DOXYGEN_HTML_DIR})
 
-	add_custom_target(docs_cxx
-		COMMAND ${DOXYGEN_EXECUTABLE} ${CMAKE_CURRENT_BINARY_DIR}/Doxyfile
-		WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
-		COMMENT "Generating API documentation with Doxygen" VERBATIM
+	# Copy figures into Doxygen working directory
+	add_custom_target(copy_imgs_cxx
+		COMMAND
+			${CMAKE_COMMAND} -E make_directory
+				"${CMAKE_CURRENT_BINARY_DIR}/Cxx/html/images/"
+		COMMAND
+			${CMAKE_COMMAND} -E copy
+				"${CMAKE_CURRENT_SOURCE_DIR}/images/dpsim.png"
+				"${CMAKE_CURRENT_SOURCE_DIR}/images/eonerc_logo.png"
+				"${CMAKE_CURRENT_BINARY_DIR}/Cxx/html/images/"
+		COMMENT "Copy figures to Doxygen output dir"
 	)
 
-	file(COPY "${CMAKE_CURRENT_SOURCE_DIR}/images"
-		DESTINATION "${CMAKE_CURRENT_BINARY_DIR}/Cxx/html")
+	add_custom_target(docs_cxx
+		COMMAND ${DOXYGEN_EXECUTABLE} ${CMAKE_CURRENT_BINARY_DIR}/Doxyfile
+			WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
+		COMMENT "Generating API documentation with Doxygen" VERBATIM
+		DEPENDS
+			copy_imgs_cxx
+	)	
 
 endif(DOXYGEN_FOUND)
