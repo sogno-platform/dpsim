@@ -106,6 +106,20 @@ PyObject* Python::SystemTopology::addNode(SystemTopology *self, PyObject *args)
 	Py_RETURN_NONE;
 }
 
+const char *Python::SystemTopology::docMultiply =
+"multiply(n)\n"
+"Add n copies of the topology (all components, nodes and their connections) "
+"to itself.\n";
+PyObject* Python::SystemTopology::multiply(SystemTopology *self, PyObject *args) {
+	int n;
+
+	if (!PyArg_ParseTuple(args, "i", &n))
+		return nullptr;
+
+	self->sys->multiply(n);
+
+	Py_RETURN_NONE;
+}
 
 #ifdef WITH_GRAPHVIZ
 const char *Python::SystemTopology::docReprSVG =
@@ -244,6 +258,7 @@ PyMemberDef Python::SystemTopology::members[] = {
 PyMethodDef Python::SystemTopology::methods[] = {
 	{"add_component", (PyCFunction) Python::SystemTopology::addComponent, METH_VARARGS, Python::SystemTopology::docAddComponent},
 	{"add_node",      (PyCFunction) Python::SystemTopology::addNode, METH_VARARGS, Python::SystemTopology::docAddNode},
+	{"multiply",      (PyCFunction) Python::SystemTopology::multiply, METH_VARARGS, Python::SystemTopology::docMultiply},
 #ifdef WITH_GRAPHVIZ
 	{"_repr_svg_",    (PyCFunction) Python::SystemTopology::reprSVG, METH_NOARGS, Python::SystemTopology::docReprSVG},
 #endif

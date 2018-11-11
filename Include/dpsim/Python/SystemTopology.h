@@ -46,8 +46,10 @@ namespace Python {
 
 		static PyObject* addComponent(SystemTopology *self, PyObject *args);
 		static PyObject* addNode(SystemTopology *self, PyObject *args);
+		static PyObject* multiply(SystemTopology *self, PyObject *args);
 #ifdef WITH_GRAPHVIZ
 		static PyObject* reprSVG(SystemTopology *self, PyObject *args);
+		static const char *docReprSVG;
 #endif
 
 		// The Python API has no notion of C++ classes and methods, so the methods
@@ -63,7 +65,7 @@ namespace Python {
 		static const char *docComponents;
 		static const char *docAddComponent;
 		static const char *docAddNode;
-		static const char *docReprSVG;
+		static const char *docMultiply;
 		static PyTypeObject type;
 		static PyMethodDef methods[];
 		static PyMemberDef members[];
