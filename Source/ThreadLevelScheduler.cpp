@@ -27,7 +27,9 @@ using namespace CPS;
 using namespace DPsim;
 
 ThreadLevelScheduler::ThreadLevelScheduler(Int threads, String outMeasurementFile) :
-	mNumThreads(threads), mOutMeasurementFile(outMeasurementFile), mStartBarrier(threads+1), mEndBarrier(threads+1) {
+	mNumThreads(threads), mOutMeasurementFile(outMeasurementFile), mStartBarrier(threads), mEndBarrier(threads) {
+	if (threads < 1)
+		throw SchedulingException();
 	mSchedules.resize(threads);
 }
 
@@ -56,7 +58,7 @@ void ThreadLevelScheduler::createSchedule(const Task::List& tasks, const Edges& 
 			mSchedules[thread].push_back(barrier);
 	}
 
-	for (int i = 0; i < mNumThreads; i++) {
+	for (int i = 1; i < mNumThreads; i++) {
 		std::thread thread(threadFunction, this, i);
 		mThreads.push_back(std::move(thread));
 	}
@@ -66,6 +68,7 @@ void ThreadLevelScheduler::step(Real time, Int timeStepCount) {
 	mTime = time;
 	mTimeStepCount = timeStepCount;
 	mStartBarrier.wait();
+	doStep(0);
 	mEndBarrier.wait();
 }
 
@@ -88,21 +91,24 @@ void ThreadLevelScheduler::threadFunction(ThreadLevelScheduler* sched, Int idx) 
 		if (sched->mJoining)
 			return;
 
-		if (sched->mOutMeasurementFile.empty()) {
-			for (auto task : sched->mSchedules[idx])
-				task->execute(sched->mTime, sched->mTimeStepCount);
-		} else {
-			for (auto task : sched->mSchedules[idx]) {
-				auto start = std::chrono::steady_clock::now();
-				task->execute(sched->mTime, sched->mTimeStepCount);
-				auto end = std::chrono::steady_clock::now();
-				// kind of ugly workaround since the barrier tasks are shared
-				// between threads and we don't want to measure them anyway
-				if (!std::dynamic_pointer_cast<BarrierTask>(task))
-					sched->updateMeasurement(task, end-start);
-			}
-		}
-
+		sched->doStep(idx);
 		sched->mEndBarrier.wait();
+	}
+}
+
+void ThreadLevelScheduler::doStep(Int idx) {
+	if (mOutMeasurementFile.empty()) {
+		for (auto task : mSchedules[idx])
+			task->execute(mTime, mTimeStepCount);
+	} else {
+		for (auto task : mSchedules[idx]) {
+			auto start = std::chrono::steady_clock::now();
+			task->execute(mTime, mTimeStepCount);
+			auto end = std::chrono::steady_clock::now();
+			// kind of ugly workaround since the barrier tasks are shared
+			// between threads and we don't want to measure them anyway
+			if (!std::dynamic_pointer_cast<BarrierTask>(task))
+				updateMeasurement(task, end-start);
+		}
 	}
 }

@@ -38,6 +38,7 @@ namespace DPsim {
 
 	private:
 		static void threadFunction(ThreadLevelScheduler* sched, Int idx);
+		void doStep(Int scheduleIdx);
 
 		Int mNumThreads;
 		String mOutMeasurementFile;
