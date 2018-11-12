@@ -572,12 +572,13 @@ const char *Python::Simulation::docSetScheduler =
 PyObject* Python::Simulation::setScheduler(Simulation *self, PyObject *args, PyObject *kwargs)
 {
 	const char *outMeasurementFile = "";
+	const char *inMeasurementFile = "";
 	const char *schedName = nullptr;
 	int threads = -1;
 
-	const char *kwlist[] = {"scheduler", "out_measurement_file", "threads", nullptr};
+	const char *kwlist[] = {"scheduler", "threads", "out_measurement_file", "in_measurement_file", nullptr};
 
-	if (!PyArg_ParseTupleAndKeywords(args, kwargs, "s|si", (char **) kwlist, &schedName, &outMeasurementFile, &threads))
+	if (!PyArg_ParseTupleAndKeywords(args, kwargs, "s|iss", (char **) kwlist, &schedName, &threads, &outMeasurementFile, &inMeasurementFile))
 		return nullptr;
 
 	if (!strcmp(schedName, "sequential")) {
@@ -587,6 +588,7 @@ PyObject* Python::Simulation::setScheduler(Simulation *self, PyObject *args, PyO
 		self->sim->setScheduler(std::make_shared<OpenMPLevelScheduler>(threads, outMeasurementFile));
 #else
 		PyErr_SetString(PyExc_NotImplementedError, "not implemented on this platform");
+		return nullptr;
 #endif
 	} else if (!strcmp(schedName, "pthread_pool")) {
 #ifdef WITH_SHMEM
@@ -595,14 +597,16 @@ PyObject* Python::Simulation::setScheduler(Simulation *self, PyObject *args, PyO
 		self->sim->setScheduler(std::make_shared<PthreadPoolScheduler>(threads));
 #else
 		PyErr_SetString(PyExc_NotImplementedError, "not implemented on this platform");
+		return nullptr;
 #endif
 	} else if (!strcmp(schedName, "thread_level")) {
 		// TODO sensible default (`nproc`?)
 		if (threads <= 0)
 			threads = 1;
-		self->sim->setScheduler(std::make_shared<ThreadLevelScheduler>(threads, outMeasurementFile));
+		self->sim->setScheduler(std::make_shared<ThreadLevelScheduler>(threads, outMeasurementFile, inMeasurementFile));
 	} else {
 		PyErr_SetString(PyExc_ValueError, "invalid scheduler");
+		return nullptr;
 	}
 
 	Py_RETURN_NONE;

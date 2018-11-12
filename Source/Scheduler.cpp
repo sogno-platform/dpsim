@@ -57,6 +57,19 @@ void Scheduler::writeMeasurements(String filename) {
 	os.close();
 }
 
+void Scheduler::readMeasurements(String filename, std::unordered_map<String, TaskTime::rep>& measurements) {
+	std::ifstream fs(filename);
+	if (!fs.good())
+		throw SchedulingException();
+
+	String name;
+	TaskTime::rep duration;
+	while (fs.good()) {
+		fs >> name >> duration;
+		measurements[name] = duration;
+	}
+}
+
 void Scheduler::resolveDeps(const Task::List& tasks, Edges& inEdges, Edges& outEdges) {
 	// Create graph (list of out/in edges for each node) from attribute dependencies
 	std::unordered_map<CPS::AttributeBase::Ptr, std::deque<Task::Ptr>> dependencies;

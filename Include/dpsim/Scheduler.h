@@ -64,6 +64,7 @@ namespace DPsim {
 		// be called once for each task in each step anyway
 		void updateMeasurement(CPS::Task::Ptr task, TaskTime time);
 		void writeMeasurements(CPS::String filename);
+		void readMeasurements(CPS::String filename, std::unordered_map<CPS::String, TaskTime::rep>& measurements);
 
 	private:
 		// TODO more sophisticated measurement method might be necessary for

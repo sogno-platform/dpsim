@@ -21,13 +21,14 @@
 
 #include <dpsim/ThreadLevelScheduler.h>
 
+#include <algorithm>
 #include <iostream>
 
 using namespace CPS;
 using namespace DPsim;
 
-ThreadLevelScheduler::ThreadLevelScheduler(Int threads, String outMeasurementFile) :
-	mNumThreads(threads), mOutMeasurementFile(outMeasurementFile), mStartBarrier(threads), mEndBarrier(threads) {
+ThreadLevelScheduler::ThreadLevelScheduler(Int threads, String outMeasurementFile, String inMeasurementFile) :
+	mNumThreads(threads), mOutMeasurementFile(outMeasurementFile), mInMeasurementFile(inMeasurementFile), mStartBarrier(threads) {
 	if (threads < 1)
 		throw SchedulingException();
 	mSchedules.resize(threads);
@@ -43,19 +44,32 @@ void ThreadLevelScheduler::createSchedule(const Task::List& tasks, const Edges& 
 	if (!mOutMeasurementFile.empty())
 		Scheduler::initMeasurements(tasks);
 
-	for (size_t level = 0; level < levels.size(); level++) {
-		// Distribute tasks of one level evenly between threads
-		size_t nextThread = 0;
-		for (auto task : levels[level]) {
-			mSchedules[nextThread++].push_back(task);
-			if (nextThread == mSchedules.size())
-				nextThread = 0;
+	if (!mInMeasurementFile.empty()) {
+		std::unordered_map<String, TaskTime::rep> measurements;
+		readMeasurements(mInMeasurementFile, measurements);
+		for (size_t level = 0; level < levels.size(); level++) {
+			// Distribute tasks such that the execution time is (approximately) minimized
+			scheduleLevel(levels[level], measurements);
+			// Insert BarrierTask for synchronization
+			auto barrier = std::make_shared<BarrierTask>(mSchedules.size());
+			for (int thread = 0; thread < mNumThreads; thread++)
+				mSchedules[thread].push_back(barrier);
 		}
+	} else {
+		for (size_t level = 0; level < levels.size(); level++) {
+			// Distribute tasks of one level evenly between threads
+			size_t nextThread = 0;
+			for (auto task : levels[level]) {
+				mSchedules[nextThread++].push_back(task);
+				if (nextThread == mSchedules.size())
+					nextThread = 0;
+			}
 
-		// Insert BarrierTask for synchronization
-		auto barrier = std::make_shared<BarrierTask>(mSchedules.size());
-		for (int thread = 0; thread < mNumThreads; thread++)
-			mSchedules[thread].push_back(barrier);
+			// Insert BarrierTask for synchronization
+			auto barrier = std::make_shared<BarrierTask>(mSchedules.size());
+			for (int thread = 0; thread < mNumThreads; thread++)
+				mSchedules[thread].push_back(barrier);
+		}
 	}
 
 	for (int i = 1; i < mNumThreads; i++) {
@@ -64,12 +78,36 @@ void ThreadLevelScheduler::createSchedule(const Task::List& tasks, const Edges& 
 	}
 }
 
+void ThreadLevelScheduler::scheduleLevel(const Task::List& tasks, const std::unordered_map<String, TaskTime::rep>& measurements) {
+	Task::List tasksSorted = tasks;
+
+	// Check that measurements map is complete
+	for (auto task : tasks) {
+		if (measurements.find(task->toString()) == measurements.end())
+			throw SchedulingException();
+	}
+
+	// Sort tasks in descending execution time
+	auto cmp = [measurements](const Task::Ptr& p1, const Task::Ptr& p2) -> bool {
+		return measurements.at(p1->toString()) > measurements.at(p2->toString());
+	};
+	std::sort(tasksSorted.begin(), tasksSorted.end(), cmp);
+
+	// Greedy heuristic: schedule the tasks to the thread with the smallest current execution time
+	std::vector<TaskTime::rep> totalTimes(mSchedules.size(), 0);
+	for (auto task : tasksSorted) {
+		auto minIt = std::min_element(totalTimes.begin(), totalTimes.end());
+		size_t minIdx = minIt - totalTimes.begin();
+		mSchedules[minIdx].push_back(task);
+		totalTimes[minIdx] += measurements.at(task->toString());
+	}
+}
+
 void ThreadLevelScheduler::step(Real time, Int timeStepCount) {
 	mTime = time;
 	mTimeStepCount = timeStepCount;
 	mStartBarrier.wait();
 	doStep(0);
-	mEndBarrier.wait();
 }
 
 void ThreadLevelScheduler::stop() {
@@ -92,7 +130,6 @@ void ThreadLevelScheduler::threadFunction(ThreadLevelScheduler* sched, Int idx) 
 			return;
 
 		sched->doStep(idx);
-		sched->mEndBarrier.wait();
 	}
 }
 
