@@ -99,8 +99,8 @@ void Simulation::createSolvers(const SystemTopology& system, Solver::Type solver
 		// Split nodes into subnet groups
 		for (auto node : system.mNodes) {
 			auto pnode = std::dynamic_pointer_cast<Node<VarType>>(node);
-			if (!pnode)
-				continue; // shouldn't happen, but just to be sure
+			if (!pnode || node->isGround())
+				continue;
 
 			nodes[subnet[pnode]].push_back(node);
 		}
@@ -157,9 +157,7 @@ int Simulation::checkTopologySubnets(const SystemTopology& system, std::unordere
 		if (!pcomp)
 			continue;
 		for (UInt nodeIdx1 = 0; nodeIdx1 < pcomp->terminalNumberConnected(); nodeIdx1++) {
-			for (UInt nodeIdx2 = 0; nodeIdx2 < pcomp->terminalNumberConnected(); nodeIdx2++) {
-				if (nodeIdx1 == nodeIdx2)
-					continue;
+			for (UInt nodeIdx2 = 0; nodeIdx2 < nodeIdx1; nodeIdx2++) {
 				auto node1 = pcomp->node(nodeIdx1);
 				auto node2 = pcomp->node(nodeIdx2);
 				if (node1->isGround() || node2->isGround())
@@ -171,13 +169,22 @@ int Simulation::checkTopologySubnets(const SystemTopology& system, std::unordere
 	}
 
 	int currentNet = 0;
-	while (subnet.size() != system.mNodes.size()) {
+	size_t totalNodes = system.mNodes.size();
+	for (auto tnode : system.mNodes) {
+		auto node = std::dynamic_pointer_cast<Node<VarType>>(tnode);
+		if (!node || tnode->isGround()) {
+			totalNodes--;
+		}
+	}
+
+	while (subnet.size() != totalNodes) {
 		std::list<typename Node<VarType>::Ptr> nextSet;
 
 		for (auto tnode : system.mNodes) {
 			auto node = std::dynamic_pointer_cast<Node<VarType>>(tnode);
-			if (!node)
+			if (!node || tnode->isGround())
 				continue;
+
 			if (subnet.find(node) == subnet.end()) {
 				nextSet.push_back(node);
 				break;
