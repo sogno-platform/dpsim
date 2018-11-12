@@ -41,6 +41,9 @@ namespace DPsim {
 	/// Base class for more specific solvers such as MNA, ODE or IDA.
 	class Solver {
 	public:
+		typedef std::shared_ptr<Solver> Ptr;
+		typedef std::vector<Ptr> List;
+
 		virtual ~Solver() { }
 
 		enum class Type { MNA, DAE };

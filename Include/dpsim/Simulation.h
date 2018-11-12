@@ -57,6 +57,8 @@ namespace DPsim {
 		String mName;
 		/// Final time of the simulation
 		Real mFinalTime;
+		///
+		CPS::Domain mDomain;
 		/// Time variable that is incremented at every step
 		Real mTime = 0;
 		/// Simulation timestep
@@ -66,9 +68,7 @@ namespace DPsim {
 		/// Simulation log level
 		CPS::Logger::Level mLogLevel;
 		///
-		Solver::Type mSolverType;
-		///
-		std::shared_ptr<Solver> mSolver;
+		Solver::List mSolvers;
 		/// The simulation event queue
 		EventQueue mEvents;
 		/// Scheduler used for task scheduling
@@ -106,9 +106,13 @@ namespace DPsim {
 		Simulation(String name,
 			Real timeStep, Real finalTime,
 			CPS::Domain domain = CPS::Domain::DP,
-			Solver::Type solverType = Solver::Type::MNA,
 			CPS::Logger::Level logLevel = CPS::Logger::Level::INFO);
 
+		template <typename VarType>
+		void createSolvers(const CPS::SystemTopology& system, Solver::Type solverType, Bool steadyStateInit, Bool splitSubnets);
+
+		template <typename VarType>
+		int checkTopologySubnets(const CPS::SystemTopology& system, std::unordered_map<typename CPS::Node<VarType>::Ptr, int>& subnet);
 	public:
 		/// Creates system matrix according to a given System topology
 		Simulation(String name, CPS::SystemTopology system,
@@ -116,7 +120,8 @@ namespace DPsim {
 			CPS::Domain domain = CPS::Domain::DP,
 			Solver::Type solverType = Solver::Type::MNA,
 			CPS::Logger::Level logLevel = CPS::Logger::Level::INFO,
-			Bool steadyStateInit = false);
+			Bool steadyStateInit = false,
+			Bool splitSubnets = true);
 		/// Desctructor
 		virtual ~Simulation();
 

@@ -41,11 +41,12 @@ using namespace DPsim;
 
 Simulation::Simulation(String name,
 	Real timeStep, Real finalTime,
-	Domain domain, Solver::Type solverType,
+	Domain domain,
 	Logger::Level logLevel) :
 	mLog(name, logLevel),
 	mName(name),
 	mFinalTime(finalTime),
+	mDomain(domain),
 	mTimeStep(timeStep),
 	mLogLevel(logLevel)
 {
@@ -58,35 +59,143 @@ Simulation::Simulation(String name, SystemTopology system,
 	Real timeStep, Real finalTime,
 	Domain domain, Solver::Type solverType,
 	Logger::Level logLevel,
-	Bool steadyStateInit) :
+	Bool steadyStateInit,
+	Bool splitSubnets) :
 	Simulation(name, timeStep, finalTime,
-		domain, solverType, logLevel) {
+		domain, logLevel) {
 
-	// TODO: multiple solver support
-	switch (solverType) {
-	case Solver::Type::MNA:
-		if (domain == Domain::DP)
-			mSolver = std::make_shared<MnaSolver<Complex>>(name, system, timeStep,
-				domain, logLevel, steadyStateInit);
-		else
-			mSolver = std::make_shared<MnaSolver<Real>>(name, system, timeStep,
-				domain, logLevel, steadyStateInit);
-		break;
-
-#ifdef WITH_SUNDIALS
-	case Solver::Type::DAE:
-		mSolver = std::make_shared<DAESolver>(name, system, timeStep, 0.0);
-		break;
-#endif /* WITH_SUNDIALS */
-
-	default:
-		throw UnsupportedSolverException();
-	}
-
+	if (domain == Domain::DP)
+		createSolvers<Complex>(system, solverType, steadyStateInit, splitSubnets);
+	else
+		createSolvers<Real>(system, solverType, steadyStateInit, splitSubnets);
 }
 
 Simulation::~Simulation() {
 
+}
+
+template <typename VarType>
+void Simulation::createSolvers(const SystemTopology& system, Solver::Type solverType, Bool steadyStateInit, Bool splitSubnets) {
+	std::unordered_map<typename Node<VarType>::Ptr, int> subnet;
+	int numberSubnets = checkTopologySubnets<VarType>(system, subnet);
+	if (numberSubnets == 1 || !splitSubnets) {
+		switch (solverType) {
+			case Solver::Type::MNA:
+				mSolvers.push_back(std::make_shared<MnaSolver<VarType>>(mName, system, mTimeStep,
+					mDomain, mLogLevel, steadyStateInit));
+				break;
+#ifdef WITH_SUNDIALS
+			case Solver::Type::DAE:
+				mSolvers.push_back(std::make_shared<DAESolver>(mName, system, mTimeStep, 0.0));
+				break;
+#endif /* WITH_SUNDIALS */
+			default:
+				throw UnsupportedSolverException();
+		}
+	} else {
+		std::vector<Component::List> components(numberSubnets);
+		std::vector<TopologicalNode::List> nodes(numberSubnets);
+
+		// Split nodes into subnet groups
+		for (auto node : system.mNodes) {
+			auto pnode = std::dynamic_pointer_cast<Node<VarType>>(node);
+			if (!pnode)
+				continue; // shouldn't happen, but just to be sure
+
+			nodes[subnet[pnode]].push_back(node);
+		}
+
+		// Split components into subnet groups
+		for (auto comp : system.mComponents) {
+			auto pcomp = std::dynamic_pointer_cast<PowerComponent<VarType>>(comp);
+			if (!pcomp) {
+				// TODO this should only be signal components.
+				// Proper solution would be to pass them to a different "solver"
+				// since they are actually independent of which solver we use
+				// for the electric part.
+				// Just adding them to an arbitrary solver for now has the same effect.
+				components[0].push_back(comp);
+				continue;
+			}
+			for (UInt nodeIdx = 0; nodeIdx < pcomp->terminalNumber(); nodeIdx++) {
+				if (!pcomp->node(nodeIdx)->isGround()) {
+					components[subnet[pcomp->node(nodeIdx)]].push_back(comp);
+					break;
+				}
+			}
+		}
+
+		for (int currentNet = 0; currentNet < numberSubnets; currentNet++) {
+			SystemTopology partSys(system.mSystemFrequency, nodes[currentNet], components[currentNet]);
+			String copySuffix = "_" + std::to_string(currentNet);
+			// TODO in the future, here we could possibly even use different
+			// solvers for different subnets if deemed useful
+			switch (solverType) {
+				case Solver::Type::MNA:
+					mSolvers.push_back(std::make_shared<MnaSolver<VarType>>(mName + copySuffix, partSys, mTimeStep,
+						mDomain, mLogLevel, steadyStateInit));
+					break;
+#ifdef WITH_SUNDIALS
+				case Solver::Type::DAE:
+					mSolvers.push_back(std::make_shared<DAESolver>(mName + copySuffix, partSys, mTimeStep, 0.0));
+					break;
+#endif /* WITH_SUNDIALS */
+				default:
+					throw UnsupportedSolverException();
+			}
+		}
+	}
+
+}
+
+template <typename VarType>
+int Simulation::checkTopologySubnets(const SystemTopology& system, std::unordered_map<typename Node<VarType>::Ptr, int>& subnet) {
+	std::unordered_map<typename Node<VarType>::Ptr, typename Node<VarType>::List> neighbours;
+
+	for (auto comp : system.mComponents) {
+		auto pcomp = std::dynamic_pointer_cast<PowerComponent<VarType>>(comp);
+		if (!pcomp)
+			continue;
+		for (UInt nodeIdx1 = 0; nodeIdx1 < pcomp->terminalNumberConnected(); nodeIdx1++) {
+			for (UInt nodeIdx2 = 0; nodeIdx2 < pcomp->terminalNumberConnected(); nodeIdx2++) {
+				if (nodeIdx1 == nodeIdx2)
+					continue;
+				auto node1 = pcomp->node(nodeIdx1);
+				auto node2 = pcomp->node(nodeIdx2);
+				if (node1->isGround() || node2->isGround())
+					continue;
+				neighbours[node1].push_back(node2);
+				neighbours[node2].push_back(node1);
+			}
+		}
+	}
+
+	int currentNet = 0;
+	while (subnet.size() != system.mNodes.size()) {
+		std::list<typename Node<VarType>::Ptr> nextSet;
+
+		for (auto tnode : system.mNodes) {
+			auto node = std::dynamic_pointer_cast<Node<VarType>>(tnode);
+			if (!node)
+				continue;
+			if (subnet.find(node) == subnet.end()) {
+				nextSet.push_back(node);
+				break;
+			}
+		}
+		while (!nextSet.empty()) {
+			auto node = nextSet.front();
+			nextSet.pop_front();
+
+			subnet[node] = currentNet;
+			for (auto neighbour : neighbours[node]) {
+				if (subnet.find(neighbour) == subnet.end())
+					nextSet.push_back(neighbour);
+			}
+		}
+		currentNet++;
+	}
+	return currentNet;
 }
 
 void Simulation::sync() {
@@ -115,7 +224,11 @@ void Simulation::schedule() {
 	mTasks.clear();
 	mTaskOutEdges.clear();
 	mTaskInEdges.clear();
-	mTasks = mSolver->getTasks();
+	for (auto solver : mSolvers) {
+		for (auto t : solver->getTasks()) {
+			mTasks.push_back(t);
+		}
+	}
 #ifdef WITH_SHMEM
 	for (auto intfm : mInterfaces) {
 		for (auto t : intfm.interface->getTasks()) {
