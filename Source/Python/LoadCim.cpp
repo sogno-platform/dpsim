@@ -86,7 +86,7 @@ PyObject* Python::LoadCim(PyObject* self, PyObject* args, PyObject *kwargs) {
 		return nullptr;
 	}
 
-	CPS::CIM::Reader reader(name, (CPS::Logger::Level) logLevel, (CPS::Logger::Level) logLevel);
+	CPS::CIM::Reader reader(name, (CPS::Logger::Level) logLevel, CPS::Logger::Level::NONE);
 
 	DPsim::Python::SystemTopology *pySys = PyObject_New(DPsim::Python::SystemTopology, &DPsim::Python::SystemTopology::type);
 

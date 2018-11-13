@@ -9,7 +9,9 @@ wheel
 pytest
 pyyaml
 
-acs-dataprocessing
+villas-dataprocessing>=0.2.2
 progressbar2
 ipywidgets
+jupyter
+jupyter_contrib_nbextensions
 jupyterlab_widgets

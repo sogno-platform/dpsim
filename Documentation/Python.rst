@@ -1,42 +1,44 @@
 Python Module
 =============
 
+Simulation
+----------
+
 .. autoclass:: dpsim.Simulation
     :members:
     :undoc-members:
     :inherited-members:
+
+Interface
+----------
 
 .. autoclass:: dpsim.Interface
     :members:
     :undoc-members:
     :inherited-members:
 
-.. autoclass:: dpsim.Component
+System Topology
+---------------
+
+.. autoclass:: dpsim.SystemTopology
+    :members:
+    :undoc-members:
+    :inherited-members:
+
+Logger
+------
+
+.. autoclass:: dpsim.Logger
     :members:
     :undoc-members:
     :inherited-members:
 
 Helpers
-~~~~~~~
+-------
 
 .. autofunction:: dpsim.load_cim
-.. autofunction:: dpsim.open_shmem_interface
 
 Components
-~~~~~~~~~~
+----------
 
-Electro Magnetic Transient
-~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-.. automodule:: dpsim.components.emt
-    :members:
-    :undoc-members:
-    :inherited-members:
-
-Dynamic Phasor
-~~~~~~~~~~~~~~
-
-.. automodule:: dpsim.components.dp
-    :members:
-    :undoc-members:
-    :inherited-members:
+So far, the documentation for components cannot be automatically generated.

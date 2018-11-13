@@ -1,6 +1,6 @@
 import os
-import dataprocessing.readtools as rt
-import dataprocessing.timeseries as ts
+import villas.dataprocessing.readtools as rt
+import villas.dataprocessing.timeseries as ts
 import subprocess
 
 PATH = os.path.dirname(__file__)

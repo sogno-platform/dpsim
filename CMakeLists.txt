@@ -1,6 +1,12 @@
 cmake_minimum_required(VERSION 3.5)
 project(DPsim CXX)
 
+if(CMAKE_PROJECT_NAME STREQUAL PROJECT_NAME)
+	set(TOPLEVEL_PROJECT ON)
+else()
+		set(TOPLEVEL_PROJECT OFF)
+endif()
+
 # Enable C++11 support
 set(CMAKE_CXX_STANDARD 17)
 add_definitions(-D_SILENCE_ALL_CXX17_DEPRECATION_WARNINGS)
@@ -31,29 +37,9 @@ check_symbol_exists(pipe unistd.h HAVE_PIPE)
 check_symbol_exists(timerfd_create sys/timerfd.h HAVE_TIMERFD)
 check_symbol_exists(getopt_long getopt.h HAVE_GETOPT)
 
-include(GetGitRevisionDescription)
-git_describe(DPSIM_VERSION --tags --dirty=-dirty)
-
-# Parse the version information into pieces.
-string(REGEX REPLACE "^v([0-9]+)\\..*" "\\1" DPSIM_MAJOR_VERSION "${DPSIM_VERSION}")
-string(REGEX REPLACE "^v[0-9]+\\.([0-9]+).*" "\\1" DPSIM_MINOR_VERSION "${DPSIM_VERSION}")
-string(REGEX REPLACE "^v[0-9]+\\.[0-9]+\\.([0-9]+).*" "\\1" DPSIM_PATCH_VERSION "${DPSIM_VERSION}")
-set(DPSIM_SHORT_VERSION "${DPSIM_MAJOR_VERSION}.${DPSIM_MINOR_VERSION}.${DPSIM_PATCH_VERSION}")
-
-if(DEFINED ENV{CI})
-	set(GIT_HASH $ENV{CI_COMMIT_SHA})
-	set(GIT_BRANCH $ENV{CI_COMMIT_REF_NAME})
-	set(GIT_REF_SPEC $ENV{CI_COMMIT_REF_NAME})
-else()
-	git_rev_parse(GIT_BRANCH --abbrev-ref HEAD)
-	get_git_head_revision(GIT_REFSPEC GIT_HASH)
-endif()
-
-string(SUBSTRING ${GIT_HASH} 0 7 GIT_HASH_SHORT)
-string(TIMESTAMP YMD "%Y%m%d")
-
-set(DPSIM_VERSION 0.1.4)
-set(DPSIM_RELEASE ${YMD}git${GIT_HASH_SHORT})
+# Get version info and buildid from Git
+include(GetVersion)
+GetVersion(${PROJECT_SOURCE_DIR} "DPSIM")
 
 add_subdirectory(Dependencies/libcps)
 
@@ -74,6 +60,7 @@ endif()
 # Options
 option(BUILD_SHARED_LIBS "Build shared library" OFF)
 option(BUILD_EXAMPLES "Build C++ examples" ON)
+option(COMPARE_REFERENCE "Download reference results and compare" OFF)
 
 option(WITH_SUNDIALS "Enable sundials solver suite"         ${Sundials_FOUND})
 option(WITH_SHMEM    "Enable shared memory interface"       ${VILLASnode_FOUND})
@@ -97,19 +84,41 @@ add_subdirectory(Source)
 add_subdirectory(Documentation)
 
 if(BUILD_EXAMPLES)
-	add_subdirectory(Examples/Cxx)
+	add_subdirectory(Examples)
 endif(BUILD_EXAMPLES)
 
-# Show feature summary
-include(FeatureSummary)
+if(COMPARE_REFERENCE)
+	include(ExternalProject)
+	ExternalProject_Add(reference-results
+	  GIT_REPOSITORY    https://git.rwth-aachen.de/acs/public/simulation/reference-results.git
+	  #GIT_TAG           origin/master
+	  PREFIX			reference-results
+	  CONFIGURE_COMMAND	""
+	  BUILD_COMMAND		""
+	  INSTALL_COMMAND	""
+	)
+endif()
 
-add_feature_info(CIM	WITH_CIM	"Loading Common Information Model Files")
-add_feature_info(Python WITH_PYTHON "Use DPsim as a Python module")
-add_feature_info(Shmem  WITH_SHMEM  "Interface DPsim solvers via shared-memory interfaces")
-add_feature_info(RT	    WITH_RT     "Extended real-time features")
-feature_summary(WHAT ALL VAR enabledFeaturesText)
+if(TOPLEVEL_PROJECT)
+	# Show feature summary
+	include(FeatureSummary)
 
-message(STATUS "Feature summary for DPsim")
-message(STATUS "${enabledFeaturesText}")
+	add_feature_info(CIM	WITH_CIM	"Loading Common Information Model Files")
+	add_feature_info(Python WITH_PYTHON "Use DPsim as a Python module")
+	add_feature_info(Shmem  WITH_SHMEM  "Interface DPsim solvers via shared-memory interfaces")
+	add_feature_info(RT	    WITH_RT     "Extended real-time features")
+	feature_summary(WHAT ALL VAR enabledFeaturesText)
+
+	message(STATUS "Building ${CMAKE_PROJECT_NAME}:")
+	message(STATUS "Feature summary for DPsim")
+	message(STATUS "${enabledFeaturesText}")
+    message(STATUS "  VERSION:         ${DPSIM_VERSION}")
+    message(STATUS "  RELEASE:         ${DPSIM_RELEASE}")
+    message(STATUS "  GIT_REV:         ${DPSIM_GIT_REV}")
+    message(STATUS "  GIT_BRANCH:      ${DPSIM_GIT_BRANCH}")
+    message(STATUS "  VARIANT:         ${DPSIM_VARIANT}")
+    message(STATUS "  BUILD_ID:        ${DPSIM_BUILD_ID}")
+    message(STATUS "  BUILD_DATE:      ${DPSIM_BUILD_DATE}")
+endif()
 
 include(DPsimPackaging)

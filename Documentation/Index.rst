@@ -3,25 +3,16 @@
    You can adapt this file completely to your liking, but it should at least
    contain the root `toctree` directive.
 
-.. mdinclude:: ../README.md
+.. mdinclude:: README.md
 
 .. toctree::
    :maxdepth: 2
-   :caption: Contents:
+   :hidden:
 
-   Quickstart Guide <Notebooks/Quickstart Guide.ipynb>
    Examples
    Install
    Build
-   Structure
    Reference
-   ToDo
    License <Copying>
    Changelog
 
-Indices and tables
-==================
-
-* :ref:`genindex`
-* :ref:`modindex`
-* :ref:`search`

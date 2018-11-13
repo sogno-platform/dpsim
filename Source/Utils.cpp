@@ -28,7 +28,10 @@ using namespace DPsim;
 using namespace CPS;
 
 #ifdef HAVE_GETOPT
-#include <getopt.h>
+  #include <getopt.h>
+#else
+  #include <dpsim/Compat/getopt.h>
+#endif
 
 DPsim::CommandLineArgs::CommandLineArgs(int argc, char *argv[],
 		String nm,
@@ -230,7 +233,6 @@ void DPsim::CommandLineArgs::showUsage() {
 	std::cout << std::endl;
 	showCopyright();
 }
-#endif /* HAVE_GETOPT */
 
 void DPsim::CommandLineArgs::showCopyright() {
 	std::cout << "DPsim " << DPSIM_VERSION << "-" << DPSIM_RELEASE << std::endl;
