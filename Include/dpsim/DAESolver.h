@@ -54,9 +54,9 @@ namespace DPsim {
 		Real mTimestep;
 		/// Number of equations in problem
 		Int mNEQ;
-		/// Components of the solver
+		/// Components of the Problem
         CPS::Component::List mComponents;
-		///
+		/// Nodes of the Problem
         CPS::Node<Complex>::List mNodes;
 
 		// IDA simulation variables

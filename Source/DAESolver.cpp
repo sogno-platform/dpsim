@@ -129,7 +129,7 @@ void DAESolver::initialize(Real t0) {
         std::cout << "Comp Volt " << counter-1 << ": " << sval[counter-1]<< std::endl;
 //		sval[counter++] = component inductance;
 
-        //TODO: mVoltageRef
+
         // Register residual functions of components
 
 
@@ -190,8 +190,6 @@ void DAESolver::initialize(Real t0) {
     //IDA input functions
     //ret = IDASetMaxNumSteps(mem, -1);  //Max. number of timesteps until tout
     //ret = IDASetMaxConvFails(mem, 100); //Max. number of convergence failures at one step
-    ret = IDACalcIC(mem, IDA_Y_INIT, t0);
-    std::cout<<"Return "<<ret << std::endl;
     (void) ret;
 }
 
