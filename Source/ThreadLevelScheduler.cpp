@@ -88,7 +88,7 @@ void ThreadLevelScheduler::scheduleLevel(const Task::List& tasks, const std::uno
 	}
 
 	// Sort tasks in descending execution time
-	auto cmp = [measurements](const Task::Ptr& p1, const Task::Ptr& p2) -> bool {
+	auto cmp = [&measurements](const Task::Ptr& p1, const Task::Ptr& p2) -> bool {
 		return measurements.at(p1->toString()) > measurements.at(p2->toString());
 	};
 	std::sort(tasksSorted.begin(), tasksSorted.end(), cmp);
