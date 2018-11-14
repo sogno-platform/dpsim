@@ -113,6 +113,8 @@ namespace DPsim {
 
 		template <typename VarType>
 		int checkTopologySubnets(const CPS::SystemTopology& system, std::unordered_map<typename CPS::Node<VarType>::Ptr, int>& subnet);
+
+		void prepSchedule();
 	public:
 		/// Creates system matrix according to a given System topology
 		Simulation(String name, CPS::SystemTopology system,

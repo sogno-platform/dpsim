@@ -223,11 +223,7 @@ void Simulation::sync() {
 #endif
 }
 
-void Simulation::schedule() {
-	mLog.info() << "Scheduling tasks." << std::endl;
-	if (!mScheduler) {
-		mScheduler = std::make_shared<SequentialScheduler>();
-	}
+void Simulation::prepSchedule() {
 	mTasks.clear();
 	mTaskOutEdges.clear();
 	mTaskInEdges.clear();
@@ -248,12 +244,20 @@ void Simulation::schedule() {
 	}
 
 	Scheduler::resolveDeps(mTasks, mTaskInEdges, mTaskOutEdges);
+}
+
+void Simulation::schedule() {
+	mLog.info() << "Scheduling tasks." << std::endl;
+	if (!mScheduler) {
+		mScheduler = std::make_shared<SequentialScheduler>();
+	}
+	prepSchedule();
 	mScheduler->createSchedule(mTasks, mTaskInEdges, mTaskOutEdges);
 }
 
 void Simulation::renderDependencyGraph(std::ostream &os) {
 	if (mTasks.size() == 0)
-		schedule();
+		prepSchedule();
 
 	Graph::Graph g("dependencies", Graph::Type::directed);
 	for (auto task : mTasks) {
