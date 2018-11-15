@@ -14,6 +14,16 @@ class CMakeExtension(Extension):
         self.sourcedir = os.path.abspath(sourcedir)
 
 class CMakeBuild(build_ext):
+    user_options = build_ext.user_options + [("cmake-defines=", "C", "additional defines passed to CMake")]
+
+    def initialize_options(self):
+        super().initialize_options()
+        self.cmake_defines = []
+
+    def finalize_options(self):
+        super().finalize_options()
+        self.ensure_string_list('cmake_defines')
+
     def run(self):
         try:
             out = subprocess.check_output(['cmake', '--version'])
@@ -30,6 +40,8 @@ class CMakeBuild(build_ext):
             self.build_extension(ext)
 
     def build_extension(self, ext):
+        # TODO would be nice to honor all of the options that build_ext normally accepts,
+        # but that's probably not worth the effort since most would rarely be used
         extdir = os.path.abspath(os.path.dirname(self.get_ext_fullpath(ext.name)))
         cmake_args = ['-DCMAKE_BUILD_WITH_INSTALL_RPATH=TRUE',
                       '-DPYTHON_EXECUTABLE=' + sys.executable,
@@ -48,7 +60,10 @@ class CMakeBuild(build_ext):
             build_args = ['--', '/m']
         else:
             cmake_args += ['-DCMAKE_LIBRARY_OUTPUT_DIRECTORY=' + extdir]
-            build_args = ['--', '-j4']
+            if self.parallel:
+                build_args = ['--', '-j' + str(self.parallel)]
+            else:
+                build_args = []
 
         env = os.environ.copy()
         env['CXXFLAGS'] = '{} -DVERSION_INFO=\'{}\''.format(env.get('CXXFLAGS', ''), self.distribution.get_version())
@@ -56,6 +71,7 @@ class CMakeBuild(build_ext):
         if not os.path.exists(self.build_temp):
             os.makedirs(self.build_temp)
 
+        cmake_args += ['-D' + d for d in self.cmake_defines]
         subprocess.check_call(['cmake', ext.sourcedir] + cmake_args, cwd = self.build_temp, env = env)
         subprocess.check_call(['cmake', '--build', '.'] + build_args, cwd = self.build_temp)
 
