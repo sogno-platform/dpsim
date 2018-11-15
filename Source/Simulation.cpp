@@ -255,6 +255,7 @@ void Simulation::schedule() {
 	mScheduler->createSchedule(mTasks, mTaskInEdges, mTaskOutEdges);
 }
 
+#ifdef WITH_GRAPHVIZ
 void Simulation::renderDependencyGraph(std::ostream &os) {
 	if (mTasks.size() == 0)
 		prepSchedule();
@@ -271,6 +272,7 @@ void Simulation::renderDependencyGraph(std::ostream &os) {
 
 	g.render(os, "dot", "svg");
 }
+#endif
 
 void Simulation::run() {
 	schedule();
