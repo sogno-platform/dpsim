@@ -25,8 +25,6 @@ namespace fs = std::experimental::filesystem;
 #include <dpsim/DataLogger.h>
 #include <cps/Logger.h>
 
-using namespace std;
-
 using namespace DPsim;
 
 DataLogger::DataLogger(String name, Bool enabled) :
