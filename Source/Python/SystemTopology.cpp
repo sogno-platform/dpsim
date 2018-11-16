@@ -19,6 +19,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *********************************************************************************/
 
+#include <cps/Signal/DecouplingLine.h>
 #include <dpsim/Python/SystemTopology.h>
 #include <dpsim/Python/Component.h>
 #include <dpsim/Python/Node.h>
@@ -100,6 +101,41 @@ PyObject* Python::SystemTopology::addNode(SystemTopology *self, PyObject *args)
 	PyDict_SetItem(self->pyNodeDict, pyName, pyObj);
 
 	Py_DECREF(pyName);
+
+	Py_RETURN_NONE;
+}
+
+const char *Python::SystemTopology::docAddDecouplingLine =
+"add_decoupling_line(name, node1, node2, resistance, inductance, capacitance)\n";
+PyObject* Python::SystemTopology::addDecouplingLine(SystemTopology *self, PyObject *args)
+{
+	PyObject *pyObj1, *pyObj2;
+	double resistance, inductance, capacitance;
+	const char* name;
+
+	if (!PyArg_ParseTuple(args, "sOOddd", &name, &pyObj1, &pyObj2, &resistance, &inductance, &capacitance))
+		return nullptr;
+
+	Python::Node<CPS::Complex> *pyNode1, *pyNode2;
+	if (PyObject_TypeCheck(pyObj1, &Python::Node<CPS::Complex>::type)) {
+		pyNode1 = (Python::Node<CPS::Complex>*) pyObj1;
+	}
+	else {
+		PyErr_SetString(PyExc_TypeError, "First argument must be dpsim.Node");
+		return nullptr;
+	}
+
+	if (PyObject_TypeCheck(pyObj2, &Python::Node<CPS::Complex>::type)) {
+		pyNode2 = (Python::Node<CPS::Complex>*) pyObj2;
+	}
+	else {
+		PyErr_SetString(PyExc_TypeError, "First argument must be dpsim.Node");
+		return nullptr;
+	}
+
+	auto line = CPS::Signal::DecouplingLine::make(name, pyNode1->node, pyNode2->node, resistance, inductance, capacitance);
+	self->sys->addComponent(line);
+	self->sys->addComponents(line->getLineComponents());
 
 	Py_RETURN_NONE;
 }
@@ -260,6 +296,7 @@ PyMemberDef Python::SystemTopology::members[] = {
 PyMethodDef Python::SystemTopology::methods[] = {
 	{"add_component", (PyCFunction) Python::SystemTopology::addComponent, METH_VARARGS, Python::SystemTopology::docAddComponent},
 	{"add_node",      (PyCFunction) Python::SystemTopology::addNode, METH_VARARGS, Python::SystemTopology::docAddNode},
+	{"add_decoupling_line", (PyCFunction) Python::SystemTopology::addDecouplingLine, METH_VARARGS, Python::SystemTopology::docAddDecouplingLine},
 	{"multiply",      (PyCFunction) Python::SystemTopology::multiply, METH_VARARGS, Python::SystemTopology::docMultiply},
 #ifdef WITH_GRAPHVIZ
 	{"_repr_svg_",    (PyCFunction) Python::SystemTopology::reprSVG, METH_NOARGS, Python::SystemTopology::docReprSVG},
