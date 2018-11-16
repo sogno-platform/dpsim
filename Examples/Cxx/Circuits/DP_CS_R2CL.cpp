@@ -58,7 +58,7 @@ int main(int argc, char* argv[]) {
 	auto sys = SystemTopology(50, SystemNodeList{n1, n2}, SystemComponentList{cs, r1, c1, l1, r2});
 
 	// Logging
-	auto logger = DataLogger::make(simName);					//similar in ThreeFault
+	auto logger = DataLogger::make(simName);
 	logger->addAttribute("v1", n1->attribute("v"));
 	logger->addAttribute("v2", n2->attribute("v"));
 	logger->addAttribute("i12", cs->attribute("i_intf"));
