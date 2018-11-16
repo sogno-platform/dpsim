@@ -72,7 +72,7 @@ void DataLogger::setColumnNames(std::vector<String> names) {
 void DataLogger::logDataLine(Real time, Real data) {
 	if (!mEnabled)
 		return;
-	//cout <<"logging real" << endl;
+		
 	mLogFile << std::scientific << std::right << std::setw(14) << time;
 	mLogFile << ", " << std::right << std::setw(13) << data;
 	mLogFile << '\n';
