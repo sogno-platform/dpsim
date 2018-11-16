@@ -58,7 +58,6 @@ PyObject* Python::SystemTopology::addComponent(SystemTopology *self, PyObject *a
 	PyDict_SetItem(self->pyComponentDict, pyName, pyObj);
 
 	Py_DECREF(pyName);
-	Py_DECREF(pyObj);
 
 	Py_RETURN_NONE;
 }
@@ -101,7 +100,6 @@ PyObject* Python::SystemTopology::addNode(SystemTopology *self, PyObject *args)
 	PyDict_SetItem(self->pyNodeDict, pyName, pyObj);
 
 	Py_DECREF(pyName);
-	Py_DECREF(pyObj);
 
 	Py_RETURN_NONE;
 }
