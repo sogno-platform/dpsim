@@ -28,6 +28,47 @@
 
 using namespace DPsim;
 
+void Python::SystemTopology::addCppComponent(CPS::Component::Ptr comp) {
+	Python::Component* pyComp = PyObject_New(Python::Component, &Python::Component::type);
+	new (&pyComp->comp) CPS::Component::Ptr(nullptr);
+	pyComp->comp = comp;
+
+	PyDict_SetItemString(pyComponentDict, comp->name().c_str(), (PyObject*) pyComp);
+	Py_DECREF(pyComp);
+}
+
+void Python::SystemTopology::addCppNode(CPS::TopologicalNode::Ptr node) {
+	auto emtNode = std::dynamic_pointer_cast<CPS::Node<CPS::Real>>(node);
+	if (emtNode) {
+		Python::Node<CPS::Real>* pyNode = PyObject_New(Python::Node<CPS::Real>, &Python::Node<CPS::Real>::type);
+		new (&pyNode->node) CPS::Node<CPS::Real>::Ptr(nullptr);
+		pyNode->node = emtNode;
+
+		PyDict_SetItemString(pyNodeDict, node->name().c_str(), (PyObject*) pyNode);
+		Py_DECREF(pyNode);
+	}
+	auto dpNode = std::dynamic_pointer_cast<CPS::Node<CPS::Complex>>(node);
+	if (dpNode) {
+		Python::Node<CPS::Complex>* pyNode = PyObject_New(Python::Node<CPS::Complex>, &Python::Node<CPS::Complex>::type);
+		new (&pyNode->node) CPS::Node<CPS::Complex>::Ptr(nullptr);
+		pyNode->node = dpNode;
+
+		PyDict_SetItemString(pyNodeDict, node->name().c_str(), (PyObject*) pyNode);
+		Py_DECREF(pyNode);
+	}
+}
+
+void Python::SystemTopology::updateDicts() {
+	for (auto node : sys->mNodes) {
+		if (!PyObject_HasAttrString(pyNodeDict, node->name().c_str()))
+			addCppNode(node);
+	}
+	for (auto comp : sys->mComponents) {
+		if (!PyObject_HasAttrString(pyComponentDict, comp->name().c_str()))
+			addCppComponent(comp);
+	}
+}
+
 const char *Python::SystemTopology::docAddComponent =
 "add_component(comp)\n"
 "Add a component to this system topology\n";
@@ -136,6 +177,7 @@ PyObject* Python::SystemTopology::addDecouplingLine(SystemTopology *self, PyObje
 	auto line = CPS::Signal::DecouplingLine::make(name, pyNode1->node, pyNode2->node, resistance, inductance, capacitance);
 	self->sys->addComponent(line);
 	self->sys->addComponents(line->getLineComponents());
+	self->updateDicts();
 
 	Py_RETURN_NONE;
 }
@@ -151,6 +193,7 @@ PyObject* Python::SystemTopology::multiply(SystemTopology *self, PyObject *args)
 		return nullptr;
 
 	self->sys->multiply(n);
+	self->updateDicts();
 
 	Py_RETURN_NONE;
 }

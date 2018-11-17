@@ -44,6 +44,12 @@ namespace Python {
 		PyObject *pyNodeDict;
 		PyObject *pyComponentDict;
 
+		// Helper functions to update the python dicts after a C++ method
+		// adds components or nodes.
+		void addCppComponent(CPS::Component::Ptr comp);
+		void addCppNode(CPS::TopologicalNode::Ptr node);
+		void updateDicts();
+
 		static PyObject* addComponent(SystemTopology *self, PyObject *args);
 		static PyObject* addNode(SystemTopology *self, PyObject *args);
 		static PyObject* addDecouplingLine(SystemTopology *self, PyObject *args);
