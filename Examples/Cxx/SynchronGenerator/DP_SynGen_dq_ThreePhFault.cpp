@@ -27,9 +27,9 @@ using namespace CPS::DP::Ph3;
 
 int main(int argc, char* argv[]) {
 	// Define simulation parameters
-	Real timeStep = 0.00005;
+	Real timeStep = 0.00005; //initial: 0.00005
 	Real finalTime = 0.1;
-	String name = "DP_SynchronGenerator_dq_ThreePhFault";
+	String simName = "DP_SynchronGenerator_dq_ThreePhFault";
 	// Define machine parameters in per unit
 	Real nomPower = 555e6;
 	Real nomPhPhVoltRMS = 24e3;
@@ -89,15 +89,23 @@ int main(int argc, char* argv[]) {
 	// System
 	auto sys = SystemTopology(60, SystemNodeList{n1}, SystemComponentList{gen, res, fault});
 
+	//logger:
+	auto logger = DataLogger::make(simName);
+	logger->addAttribute("i", gen->attribute("i_intf"));
+	//logger->addAttribute("v1", n1->attribute("v"));
+	logger->addAttribute("theta", gen->attribute("theta"));
 	// Simulation
-	Simulation sim(name, sys, timeStep, finalTime,
-		Domain::DP, Solver::Type::MNA, Logger::Level::INFO);
+	Simulation sim(simName, sys, timeStep, finalTime,
+		Domain::DP, Solver::Type::MNA, Logger::Level::INFO); //Domain::DP, Solver::Type::MNA, Logger::Level::INFO
+
+	sim.addLogger(logger);
 
 	// Events
 	auto sw1 = SwitchEvent::make(0.05, fault, true);
 	sim.addEvent(sw1);
 
+	//gen->print_States();
 	sim.run();
-
+	//gen->print_States();
 	return 0;
 }
