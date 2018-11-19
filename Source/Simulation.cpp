@@ -152,8 +152,7 @@ Real Simulation::step() {
 	for (auto lg : mLoggers) {
 		if (mTimeStepCount % lg.downsampling == 0){
 			lg.logger->log(mTime);
-    //  cout <<"printing" << endl;
-    }
+        }
 	}
 
 	mTime = nextTime;
