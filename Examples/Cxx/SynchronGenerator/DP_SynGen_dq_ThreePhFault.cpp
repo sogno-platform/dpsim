@@ -70,19 +70,21 @@ int main(int argc, char* argv[]) {
 
 	// Components
 	auto gen = Ph3::SynchronGeneratorDQ::make("DP_SynGen_dq_ThreePhFault_SynGen");
-	gen->setParameters(nomPower, nomPhPhVoltRMS, nomFreq, poleNum, nomFieldCurr,
+	gen->setFundamentalParametersPU(nomPower, nomPhPhVoltRMS, nomFreq, poleNum, nomFieldCurr,
 		Rs, Ll, Lmd, Lmq, Rfd, Llfd, Rkd, Llkd, Rkq1, Llkq1, Rkq2, Llkq2, H,
 		initActivePower, initReactivePower, initTerminalVolt, initVoltAngle, fieldVoltage, mechPower);
-	gen->connect({n1});
 
 	auto res = Ph3::SeriesResistor::make("R_load");
 	res->setParameters(Rload);
-	res->connect({Node::GND, n1});
 
 	auto fault = Ph3::SeriesSwitch::make("Br_fault");
 	fault->setParameters(BreakerOpen, BreakerClosed);
-	fault->connect({Node::GND, n1});
 	fault->open();
+
+	// Connections
+	gen->connect({n1});
+	res->connect({Node::GND, n1});
+	fault->connect({Node::GND, n1});
 
 	// System
 	auto sys = SystemTopology(60, SystemNodeList{n1}, SystemComponentList{gen, res, fault});
@@ -91,8 +93,8 @@ int main(int argc, char* argv[]) {
 	Simulation sim(name, sys, timeStep, finalTime,
 		Domain::DP, Solver::Type::MNA, Logger::Level::INFO);
 
+	// Events
 	auto sw1 = SwitchEvent::make(0.05, fault, true);
-
 	sim.addEvent(sw1);
 
 	sim.run();
