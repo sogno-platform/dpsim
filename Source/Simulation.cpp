@@ -29,8 +29,6 @@
   #include <dpsim/DAESolver.h>
 #endif
 
-#include<iostream>
-using namespace std;
 using namespace CPS;
 using namespace DPsim;
 
@@ -150,7 +148,7 @@ Real Simulation::step() {
 #endif
 
 	for (auto lg : mLoggers) {
-		if (mTimeStepCount % lg.downsampling == 0){
+		if (mTimeStepCount % lg.downsampling == 0) {
 			lg.logger->log(mTime);
         }
 	}
