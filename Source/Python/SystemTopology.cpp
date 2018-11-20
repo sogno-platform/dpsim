@@ -146,6 +146,29 @@ PyObject* Python::SystemTopology::addNode(SystemTopology *self, PyObject *args)
 	Py_RETURN_NONE;
 }
 
+const char *Python::SystemTopology::docRemoveComponent =
+"remove_component(id)\n"
+"Remove the component with the given name\n";
+PyObject* Python::SystemTopology::removeComponent(SystemTopology *self, PyObject *args)
+{
+	const char* name;
+
+	if (!PyArg_ParseTuple(args, "s", &name))
+		return nullptr;
+
+	for (auto it = self->sys->mComponents.begin(); it != self->sys->mComponents.end(); ++it) {
+		if ((*it)->name() == name) {
+			self->sys->mComponents.erase(it);
+
+			PyDict_DelItemString(self->pyComponentDict, name);
+			Py_RETURN_NONE;
+		}
+	}
+
+	PyErr_SetString(PyExc_AttributeError, "No component with that name");
+	return nullptr;
+}
+
 const char *Python::SystemTopology::docAddDecouplingLine =
 "add_decoupling_line(name, node1, node2, resistance, inductance, capacitance)\n";
 PyObject* Python::SystemTopology::addDecouplingLine(SystemTopology *self, PyObject *args)
@@ -341,6 +364,7 @@ PyMethodDef Python::SystemTopology::methods[] = {
 	{"add_node",      (PyCFunction) Python::SystemTopology::addNode, METH_VARARGS, Python::SystemTopology::docAddNode},
 	{"add_decoupling_line", (PyCFunction) Python::SystemTopology::addDecouplingLine, METH_VARARGS, Python::SystemTopology::docAddDecouplingLine},
 	{"multiply",      (PyCFunction) Python::SystemTopology::multiply, METH_VARARGS, Python::SystemTopology::docMultiply},
+	{"remove_component", (PyCFunction) Python::SystemTopology::removeComponent, METH_VARARGS, Python::SystemTopology::docRemoveComponent},
 #ifdef WITH_GRAPHVIZ
 	{"_repr_svg_",    (PyCFunction) Python::SystemTopology::reprSVG, METH_NOARGS, Python::SystemTopology::docReprSVG},
 #endif

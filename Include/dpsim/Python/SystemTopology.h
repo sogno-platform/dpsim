@@ -54,6 +54,7 @@ namespace Python {
 		static PyObject* addNode(SystemTopology *self, PyObject *args);
 		static PyObject* addDecouplingLine(SystemTopology *self, PyObject *args);
 		static PyObject* multiply(SystemTopology *self, PyObject *args);
+		static PyObject* removeComponent(SystemTopology *self, PyObject *args);
 #ifdef WITH_GRAPHVIZ
 		static PyObject* reprSVG(SystemTopology *self, PyObject *args);
 		static const char *docReprSVG;
@@ -73,6 +74,7 @@ namespace Python {
 		static const char *docAddComponent;
 		static const char *docAddNode;
 		static const char *docAddDecouplingLine;
+		static const char *docRemoveComponent;
 		static const char *docMultiply;
 		static PyTypeObject type;
 		static PyMethodDef methods[];
