@@ -57,7 +57,7 @@ void MnaSolver<VarType>::initialize(CPS::SystemTopology system) {
 
 	// Initialize signal components.
 	for (auto comp : mSignalComponents)
-		comp->initialize(mTimeStep);
+		comp->initialize(mSystem.mSystemOmega, mTimeStep);
 	// Initialize MNA specific parts of components.
 	for (auto comp : mPowerComponents)
 		comp->mnaInitialize(mSystem.mSystemOmega, mTimeStep, attribute<Matrix>("x"));
