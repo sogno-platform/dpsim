@@ -28,13 +28,35 @@ using namespace CPS;
 ODESolver::ODESolver(String name, SystemTopology system, Real dt, Real t0) :
 	mSystem(system), mTimestep(dt) {
 
+	// Append components described with ODE's
+	for(Component::Ptr comp : mSystem.mComponents) {
+		auto odeComp = std::dynamic_pointer_cast<ODEInterface>(comp);
+		if (!odeComp)
+			throw CPS::Exception(); // Commponent does not support the ODE solver interface
+
+		mComponents.push_back(comp);
+
+		mProbDims.push_back(odeComp->get_mDiff_States());
+		mStates.push_back(N_VNew_Serial(odeComp->get_mDiff_States()));
+		if (check_flag((void *)(mStates.back()), "N_VNew_Serial", 0))
+			throw CPS::Exception(); // Initialization went wrong
+
+		mArkode_mems.push_back(ARKodeCreate());
+		if (check_flag(mArkode_mems.back(), "ARKodeCreate", 0))
+			throw CPS::Exception(); // Could not create ARKode memory properly
+	}
+
 }
 
 void ODESolver::initialize(Real t0) {
 
+	for(int i=0; i<mComponents.size();i++){
+		
+	}
+
 }
 
-int ODESolver::solve (Real initial_time, bool implicit) {
+Real ODESolver::step (Real initial_time) {
 	// Not absolutely necessary; realtype by default double (same as Real)
 	realtype T0 = (realtype) initial_time;
 	realtype Tf = (realtype) initial_time+mTimeStep;
@@ -46,41 +68,41 @@ int ODESolver::solve (Real initial_time, bool implicit) {
 
 	// Initialize vector data structure
 	y = N_VNew_Serial(mProbDim);
-	if (check_flag((void *)y, "N_VNew_Serial", 0)) return 1;
+	if (check_flag((void *)y, "N_VNew_Serial", 0)) throw CPS::Exception();
 
 	// Set initial values:
 	NV_Ith_S(y,0) = 1.0;
 
 	// Create the ARKode memory structure
 	arkode_mem = ARKodeCreate();
-	if (check_flag(arkode_mem, "ARKodeCreate", 0)) return 1;
+	if (check_flag(arkode_mem, "ARKodeCreate", 0)) throw CPS::Exception();
 
 	 // Call ARKodeInit to initialize the integrator memory and specify the
 	 // right-hand side function in y'=f(t,y), the inital time T0, and
 	 // the initial dependent variable vector y(fluxes+mech. vars).
 	if(implicit) {
 		flag = ARKodeInit(arkode_mem, NULL, &ODESolver::StateSpaceWrapper, T0, y);
-		if (check_flag(&flag, "ARKodeInit", 1)) return 1;
+		if (check_flag(&flag, "ARKodeInit", 1)) throw CPS::Exception();
 
 		// Initialize dense matrix data structure
 	  A = SUNDenseMatrix(dim, dim);
-	  if (check_flag((void *)A, "SUNDenseMatrix", 0)) return 1;
+	  if (check_flag((void *)A, "SUNDenseMatrix", 0)) throw CPS::Exception();
 
 		// Initialize linear solver
 	  LS = SUNDenseLinearSolver(y, A);
-	  if (check_flag((void *)LS, "SUNDenseLinearSolver", 0)) return 1;
+	  if (check_flag((void *)LS, "SUNDenseLinearSolver", 0)) throw CPS::Exception();
 
 		// Attach matrix and linear solver
 		flag = ARKDlsSetLinearSolver(arkode_mem, LS, A);
-		if (check_flag(&flag, "ARKDlsSetLinearSolver", 1)) return 1;
+		if (check_flag(&flag, "ARKDlsSetLinearSolver", 1)) throw CPS::Exception();
 
 		// Set Jacobian routine
 		flag = ARKDlsSetJacFn(arkode_mem, &ODESolver::JacobianWrapper);
-		if (check_flag(&flag, "ARKDlsSetJacFn", 1)) return 1;
+		if (check_flag(&flag, "ARKDlsSetJacFn", 1)) throw CPS::Exception();
 	}
 	else {
 		flag = ARKodeInit(arkode_mem, &ODESolver::StateSpaceWrapper, NULL, T0, y);
-		if (check_flag(&flag, "ARKodeInit", 1)) return 1;
+		if (check_flag(&flag, "ARKodeInit", 1)) throw CPS::Exception();
 	}
 
 	// Specify Runge-Kutta Method/order
@@ -90,12 +112,12 @@ int ODESolver::solve (Real initial_time, bool implicit) {
 	// Pass class to user functions(access member variables)
 	flag = ARKodeSetUserData(arkode_mem, this);
 	if (check_flag(&flag, "ARKodeSetUserData", 1))
-		return 1;
+		throw CPS::Exception();
 
 	// Specify tolerances
 	flag = ARKodeSStolerances(arkode_mem, reltol, abstol);
 	if (check_flag(&flag, "ARKodeSStolerances", 1))
-		return 1;
+		throw CPS::Exception();
 
 	// Main integrator loop
 	realtype t = T0;
@@ -104,7 +126,7 @@ int ODESolver::solve (Real initial_time, bool implicit) {
 		if (check_flag(&flag, "ARKode", 1))	break;
 	}
 
-	return flag;
+	return Tf;
 }
 
 int ODESolver::StateSpaceWrapper(realtype t, N_Vector y, N_Vector ydot, void *user_data){

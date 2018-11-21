@@ -56,19 +56,27 @@ namespace DPsim {
 		/// Components of the solver
 		Component::List mComponents;
 
+		std::vector<ODEInterface::StSpFn> mStSpFunctions; // Really needed?
+
 		// ### General problem variables ###
+		// For every component we get an additional entry in the vector
+		std::vector<sunindextype> mProbDims;
+		std::vector<N_Vector> mStates;
+		std::vector<void*> mArkode_mems;
+
 		/// Dimension of differential variables
-  		sunindextype mProbDim;
+  	//	sunindextype mProbDim;
 		// reusable error-checking flag
 		int flag;
-		// vector for storing solution
-		N_Vector y = NULL;
+		// vector for differential variables
+	/*	N_Vector y = NULL;
 		// ARKode memory structure
-		void *arkode_mem = NULL;
+		void *arkode_mem = NULL;*/
 		/// Template Jacobian Matrix (implicit solver)
-		SUNMatrix A = NULL;
+	/*	SUNMatrix A = NULL;
 		/// Linear solver object (implicit solver)
-		SUNLinearSolver LS = NULL;
+		SUNLinearSolver LS = NULL; */
+		// Keep tolerance for each component equal
 		/// Relative tolerance
 		realtype reltol = RCONST(1.0e-6);
 		/// Scalar absolute tolerance
@@ -88,7 +96,7 @@ namespace DPsim {
     	/// ARKode- standard error detection function; in DAE-solver not detection function is used -> for efficiency purposes?
 		static int check_flag(void *flagvalue, const std::string funcname, int opt);
 		///
-    	int solve(Real initial_time, bool implicit);
+    	Real step(Real initial_time);
 	};
 }
 #endif // WITH_SUNDIALS
