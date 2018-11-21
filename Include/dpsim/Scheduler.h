@@ -30,6 +30,7 @@
 #include <condition_variable>
 #include <deque>
 #include <mutex>
+#include <unordered_map>
 
 namespace DPsim {
 	class Scheduler {

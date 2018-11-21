@@ -24,6 +24,8 @@
 using namespace DPsim;
 using namespace CPS;
 
+namespace DPsim {
+
 template <typename VarType>
 void MnaSolver<VarType>::initialize(CPS::SystemTopology system) {
 	mLog.info() << "#### Start Initialization ####" << std::endl;
@@ -398,6 +400,8 @@ void MnaSolver<VarType>::log(Real time) {
 template <typename VarType>
 void MnaSolver<VarType>::LogTask::execute(Real time, Int timeStepCount) {
 	mSolver.log(time);
+}
+
 }
 
 template class DPsim::MnaSolver<Real>;
