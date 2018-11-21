@@ -51,7 +51,7 @@ int main(int argc, char *argv[])
 		out = "/villas1-out";
 	}
 
-	auto intf = Interface(in, out, &conf);
+	Interface intf(in, out, &conf);
 
 	if (String(argv[1]) == "0") {
 		// Nodes
@@ -122,7 +122,7 @@ int main(int argc, char *argv[])
 
 	auto sys = SystemTopology(50, nodes, comps);
 
-	auto sim = RealTimeSimulation(simName + argv[1], sys, timeStep, 20);
+	RealTimeSimulation sim(simName + argv[1], sys, timeStep, 20);
 	sim.addInterface(&intf);
 
 	if (String(argv[1]) == "1") {

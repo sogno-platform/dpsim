@@ -67,8 +67,8 @@ int main(int argc, char *argv[]) {
 	sys.mComponents.push_back(load);
 
 	// Controllers and filter
-	std::vector<Real> coefficients_profile = std::vector(2000, 1./2000);
-	std::vector<Real> coefficients = std::vector(100, 1./100);
+	std::vector<Real> coefficients_profile = std::vector<Real>(2000, 1./2000);
+	std::vector<Real> coefficients = std::vector<Real>(100, 1./100);
 
 	auto filtP_profile = FIRFilter::make("filter_p_profile", coefficients_profile, 0, Logger::Level::INFO);
 	filtP_profile->setPriority(1);

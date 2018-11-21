@@ -57,8 +57,8 @@ int main(int argc, char *argv[]) {
 	intf.addExport(ecs->attribute<Complex>("v_comp"), 0);
 
 	auto sys = SystemTopology(50, SystemNodeList{n1}, SystemComponentList{ecs, r1});
-	auto sim = RealTimeSimulation(simName, sys, timeStep, finalTime,
-	Domain::DP, Solver::Type::MNA, Logger::Level::INFO);
+	RealTimeSimulation sim(simName, sys, timeStep, finalTime,
+		Domain::DP, Solver::Type::MNA, Logger::Level::INFO);
 
 	sim.addInterface(&intf);
 	sim.run();
