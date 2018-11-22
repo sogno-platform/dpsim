@@ -575,10 +575,11 @@ PyObject* Python::Simulation::setScheduler(Simulation *self, PyObject *args, PyO
 	const char *inMeasurementFile = "";
 	const char *schedName = nullptr;
 	int threads = -1;
+	bool useConditionVariable = false;
 
-	const char *kwlist[] = {"scheduler", "threads", "out_measurement_file", "in_measurement_file", nullptr};
+	const char *kwlist[] = {"scheduler", "threads", "out_measurement_file", "in_measurement_file", "use_condition_variable", nullptr};
 
-	if (!PyArg_ParseTupleAndKeywords(args, kwargs, "s|iss", (char **) kwlist, &schedName, &threads, &outMeasurementFile, &inMeasurementFile))
+	if (!PyArg_ParseTupleAndKeywords(args, kwargs, "s|issb", (char **) kwlist, &schedName, &threads, &outMeasurementFile, &inMeasurementFile, &useConditionVariable))
 		return nullptr;
 
 	if (!strcmp(schedName, "sequential")) {
@@ -603,7 +604,7 @@ PyObject* Python::Simulation::setScheduler(Simulation *self, PyObject *args, PyO
 		// TODO sensible default (`nproc`?)
 		if (threads <= 0)
 			threads = 1;
-		self->sim->setScheduler(std::make_shared<ThreadLevelScheduler>(threads, outMeasurementFile, inMeasurementFile));
+		self->sim->setScheduler(std::make_shared<ThreadLevelScheduler>(threads, outMeasurementFile, inMeasurementFile, useConditionVariable));
 	} else {
 		PyErr_SetString(PyExc_ValueError, "invalid scheduler");
 		return nullptr;

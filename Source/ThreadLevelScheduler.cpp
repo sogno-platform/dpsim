@@ -27,8 +27,8 @@
 using namespace CPS;
 using namespace DPsim;
 
-ThreadLevelScheduler::ThreadLevelScheduler(Int threads, String outMeasurementFile, String inMeasurementFile) :
-	mNumThreads(threads), mOutMeasurementFile(outMeasurementFile), mInMeasurementFile(inMeasurementFile), mStartBarrier(threads) {
+ThreadLevelScheduler::ThreadLevelScheduler(Int threads, String outMeasurementFile, String inMeasurementFile, Bool useConditionVariable) :
+	mNumThreads(threads), mOutMeasurementFile(outMeasurementFile), mInMeasurementFile(inMeasurementFile), mUseConditionVariable(useConditionVariable), mStartBarrier(threads, useConditionVariable) {
 	if (threads < 1)
 		throw SchedulingException();
 	mSchedules.resize(threads);
@@ -51,7 +51,7 @@ void ThreadLevelScheduler::createSchedule(const Task::List& tasks, const Edges& 
 			// Distribute tasks such that the execution time is (approximately) minimized
 			scheduleLevel(levels[level], measurements);
 			// Insert BarrierTask for synchronization
-			auto barrier = std::make_shared<BarrierTask>(mSchedules.size());
+			auto barrier = std::make_shared<BarrierTask>(mSchedules.size(), mUseConditionVariable);
 			for (int thread = 0; thread < mNumThreads; thread++)
 				mSchedules[thread].push_back(barrier);
 		}
@@ -66,7 +66,7 @@ void ThreadLevelScheduler::createSchedule(const Task::List& tasks, const Edges& 
 			}
 
 			// Insert BarrierTask for synchronization
-			auto barrier = std::make_shared<BarrierTask>(mSchedules.size());
+			auto barrier = std::make_shared<BarrierTask>(mSchedules.size(), mUseConditionVariable);
 			for (int thread = 0; thread < mNumThreads; thread++)
 				mSchedules[thread].push_back(barrier);
 		}

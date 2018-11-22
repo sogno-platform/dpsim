@@ -30,7 +30,7 @@ namespace DPsim {
 	class ThreadLevelScheduler : public Scheduler {
 	public:
 		// TODO: maybe extra parameter for whether the start and/or inter-level barriers use spinlock or CV
-		ThreadLevelScheduler(Int threads = 1, String outMeasurementFile = String(), String inMeasurementFile = String());
+		ThreadLevelScheduler(Int threads = 1, String outMeasurementFile = String(), String inMeasurementFile = String(), Bool useConditionVariables = false);
 
 		void createSchedule(const CPS::Task::List& tasks, const Edges& inEdges, const Edges& outEdges);
 		void step(Real time, Int timeStepCount);
@@ -45,6 +45,7 @@ namespace DPsim {
 		Int mNumThreads;
 		String mOutMeasurementFile;
 		String mInMeasurementFile;
+		Bool mUseConditionVariable;
 		std::vector<std::thread> mThreads;
 		std::vector<CPS::Task::List> mSchedules;
 		Barrier mStartBarrier;

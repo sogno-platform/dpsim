@@ -101,7 +101,7 @@ namespace DPsim {
 	class BarrierTask : public CPS::Task {
 	public:
 		BarrierTask() = delete;
-		BarrierTask(Int limit) : mBarrier(limit) {}
+		BarrierTask(Int limit, Bool useConditionVariable = false) : mBarrier(limit, useConditionVariable) {}
 
 		void execute(Real time, Int timeStepCount);
 
