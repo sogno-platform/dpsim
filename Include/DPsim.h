@@ -38,7 +38,7 @@
   #include <cps/CIM/Reader.h>
 #endif
 
-namespace DPsim {
+namespace DPsim{ 
 	// #### CPS for users ####
 	using SystemTopology = CPS::SystemTopology;
 	using SystemNodeList = CPS::TopologicalNode::List;
