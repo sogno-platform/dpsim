@@ -1,4 +1,4 @@
-/** DAE Solver
+/** ODE Solver
  *
  * @author Markus Mirz <mmirz@eonerc.rwth-aachen.de>
  * @author Steffen Vogel <stvogel@eonerc.rwth-aachen.de>
@@ -51,7 +51,7 @@ ODESolver::ODESolver(String name, SystemTopology system, Real dt, Real t0) :
 void ODESolver::initialize(Real t0) {
 
 	for(int i=0; i<mComponents.size();i++){
-		
+
 	}
 
 }

@@ -26,7 +26,7 @@
 #ifdef WITH_SUNDIALS
 
 #include <dpsim/Solver.h>
-#include <cps/SystemTopology.h>
+// #include <cps/SystemTopology.h> // neccessary?
 #include <cps/Logger.h>
 
 #include <arkode/arkode.h>              // prototypes for ARKode fcts., consts. and includes sundials_types.h
@@ -53,38 +53,37 @@ namespace DPsim {
 	protected:
 		/// Constant time step
 		Real mTimestep;
-		/// Components of the solver
-		Component::List mComponents;
+		/// Component to simulate, possible specialized component needed
+		Component mComponent;
+		/// Number of differential Variables (states)
+		Int mProbDim;
 
-		std::vector<ODEInterface::StSpFn> mStSpFunctions; // Really needed?
-
-		// ### General problem variables ###
-		// For every component we get an additional entry in the vector
-		std::vector<sunindextype> mProbDims;
-		std::vector<N_Vector> mStates;
-		std::vector<void*> mArkode_mems;
-
-		/// Dimension of differential variables
-  	//	sunindextype mProbDim;
-		// reusable error-checking flag
-		int flag;
-		// vector for differential variables
-	/*	N_Vector y = NULL;
-		// ARKode memory structure
-		void *arkode_mem = NULL;*/
-		/// Template Jacobian Matrix (implicit solver)
-	/*	SUNMatrix A = NULL;
-		/// Linear solver object (implicit solver)
-		SUNLinearSolver LS = NULL; */
-		// Keep tolerance for each component equal
+		// ###ARKode-specific variables ###
+		/// Memory block allocated by ARKode
+		void* mArkode_mem;
+		/// State vector
+		N_Vector states = NULL;
+		// Same tolerance for each component regardless of system characteristics
 		/// Relative tolerance
 		realtype reltol = RCONST(1.0e-6);
 		/// Scalar absolute tolerance
 		realtype abstol = RCONST(1.0e-10);
 
+		// TODO: Variables for implicit solve?
+		/// Template Jacobian Matrix (implicit solver)
+		/*	SUNMatrix A = NULL;
+		/// Linear solver object (implicit solver)
+		SUNLinearSolver LS = NULL; */
+
+		/// reusable error-checking flag
+		int flag;
+
+		// Similar to DAE-Solver
+		ODEInterface::StSpFn mStSpFunctions; // Really needed?
+
 	public:
 		/// Create solve object with given parameters
-		ODESolver(String name, SystemTopology system, Real dt, Real t0);
+		ODESolver(String name, Component system, Real dt, Real t0);
 		/// Deallocate all memory
 		~ODESolver();
 
