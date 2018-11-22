@@ -76,10 +76,10 @@ namespace DPsim {
 		SUNLinearSolver LS = NULL; */
 
 		/// reusable error-checking flag
-		int flag;
+		int mFlag;
 
 		// Similar to DAE-Solver
-		ODEInterface::StSpFn mStSpFunctions;
+		ODEInterface::StSpFn mStSpFunction;
 
 		/// use wrappers similar to DAE_Solver
 		static int StateSpaceWrapper(realtype t, N_Vector y, N_Vector ydot, void *user_data);
@@ -93,8 +93,8 @@ namespace DPsim {
 		static int check_flag(void *flagvalue, const std::string funcname, int opt);
 
 	public:
-		/// Create solve object with given parameters
-		ODESolver(String name, Component system, Real dt, Real t0);
+		/// Create solve object with given parameters; Smth. mnore specialized than component needed?
+		ODESolver(String name, Component comp, Real dt, Real t0);
 		/// Deallocate all memory
 		~ODESolver();
 

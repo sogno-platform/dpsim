@@ -25,35 +25,45 @@
 using namespace DPsim;
 using namespace CPS;
 
-ODESolver::ODESolver(String name, SystemTopology system, Real dt, Real t0) :
-	mSystem(system), mTimestep(dt) {
+ODESolver::ODESolver(String name, Component comp, Real dt, Real t0) :
+	mComponent(comp), mTimestep(dt) {
 
-	// Append components described with ODE's
-	for(Component::Ptr comp : mSystem.mComponents) {
-		auto odeComp = std::dynamic_pointer_cast<ODEInterface>(comp);
-		if (!odeComp)
-			throw CPS::Exception(); // Commponent does not support the ODE solver interface
+	auto odecomp = std::dynamic_pointer_cast<ODEInterface>(comp); //Address of comp?
+	if (!odecomp)
+		throw CPS::Exception(); // Component does not support the ODE-solver interface
 
-		mComponents.push_back(comp);
+	mProbDim=odecomp->num_states(); // TODO: implement 'num_states'
 
-		mProbDims.push_back(odeComp->get_mDiff_States());
-		mStates.push_back(N_VNew_Serial(odeComp->get_mDiff_States()));
-		if (check_flag((void *)(mStates.back()), "N_VNew_Serial", 0))
-			throw CPS::Exception(); // Initialization went wrong
-
-		mArkode_mems.push_back(ARKodeCreate());
-		if (check_flag(mArkode_mems.back(), "ARKodeCreate", 0))
-			throw CPS::Exception(); // Could not create ARKode memory properly
-	}
-
+	initialize(t0);
 }
 
 void ODESolver::initialize(Real t0) {
 
-	for(int i=0; i<mComponents.size();i++){
+	// Component initialization needed?
 
-	}
+	state=N_VNew_Serial(mProbDim);
+	// Set initial value: (Different from DAESolver)
+	NVSetArrayPointer(N_VGetArrayPointer(mComponent->state_vector()),state);
 
+// Copied from DAESolver
+	mStSpFunction=[mComponent](double t, double  y[], double  ydot[]){
+		mComponent->StateSpace(t, y, ydot);}
+
+	mArkode_mem= ARKodeCreate();
+	 if (check_flag(arkode_mem, "ARKodeCreate", 0))
+		mFlag=1;
+
+	mFlag = ARKodeSetUserData(mArkode_mem, this);
+	if (check_flag(&mFlag, "ARKodeSetUserData", 1))
+		mFlag=1;
+
+	mFlag = ARKodeInit(mArkode_mem, &ODESolver::StateSpaceWrapper, NULL, T0, y);
+	if (check_flag(&mFlag, "ARKodeInit", 1))
+		mFlag=1;
+
+	mFlag = ARKodeSStolerances(mArkode_mem, reltol, abstol);
+	if (check_flag(&mFlag, "ARKodeSStolerances", 1))
+		mFlag=1;
 }
 
 Real ODESolver::step (Real initial_time) {
