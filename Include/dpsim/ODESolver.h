@@ -79,7 +79,18 @@ namespace DPsim {
 		int flag;
 
 		// Similar to DAE-Solver
-		ODEInterface::StSpFn mStSpFunctions; // Really needed?
+		ODEInterface::StSpFn mStSpFunctions;
+
+		/// use wrappers similar to DAE_Solver
+		static int StateSpaceWrapper(realtype t, N_Vector y, N_Vector ydot, void *user_data);
+		int StateSpace(realtype t, N_Vector y, N_Vector ydot);
+		// neeeded for implicit solve:
+		static int JacobianWrapper(realtype t, N_Vector y, N_Vector fy, SUNMatrix J, void *user_data,
+															 N_Vector tmp1, N_Vector tmp2, N_Vector tmp3);
+	  int Jacobian(realtype t, N_Vector y, N_Vector fy, SUNMatrix J,
+	 													 N_Vector tmp1, N_Vector tmp2, N_Vector tmp3);
+		/// ARKode- standard error detection function; in DAE-solver not detection function is used -> for efficiency purposes?
+		static int check_flag(void *flagvalue, const std::string funcname, int opt);
 
 	public:
 		/// Create solve object with given parameters
@@ -87,15 +98,10 @@ namespace DPsim {
 		/// Deallocate all memory
 		~ODESolver();
 
-		/// use wrappers similar to DAE_Solver
-    	static int StateSpaceWrapper(realtype t, N_Vector y, N_Vector ydot, void *user_data);
-    	// neeeded for implicit solve:
-    	static int JacobianWrapper(realtype t, N_Vector y, N_Vector fy, SUNMatrix J, void *user_data,
-            N_Vector tmp1, N_Vector tmp2, N_Vector tmp3);
-    	/// ARKode- standard error detection function; in DAE-solver not detection function is used -> for efficiency purposes?
-		static int check_flag(void *flagvalue, const std::string funcname, int opt);
-		///
-    	Real step(Real initial_time);
+		/// Initialize ARKode-solve_environment
+		void initialize(Real t0);
+		/// Solve system for the current time
+		Real step(Real initial_time);
 	};
 }
 #endif // WITH_SUNDIALS
