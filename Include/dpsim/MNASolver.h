@@ -81,6 +81,8 @@ namespace DPsim {
 		CPS::LUFactorized mTmpLuFactorization;
 		/// Source vector of known quantities
 		Matrix mRightSideVector;
+		/// List of all right side vector contributions
+		std::vector<const Matrix*> mRightVectorStamps;
 		/// Solution vector of unknown quantities
 		Matrix mLeftSideVector;
 		/// Switch to trigger steady-state initialization
@@ -182,10 +184,8 @@ namespace DPsim {
 			SolveTask(MnaSolver<VarType>& solver, Bool steadyStateInit) :
 				Task(solver.mName + ".Solve"), mSolver(solver), mSteadyStateInit(steadyStateInit) {
 				for (auto it : solver.mPowerComponents) {
-					try {
+					if (it->attribute<Matrix>("b")->get().size() != 0) {
 						mAttributeDependencies.push_back(it->attribute("b"));
-					} catch (CPS::InvalidAttributeException& e) {
-						// component does not contribute to right side vector
 					}
 				}
 				for (auto node : solver.mNodes) {

@@ -135,10 +135,10 @@ void ThreadLevelScheduler::threadFunction(ThreadLevelScheduler* sched, Int idx) 
 
 void ThreadLevelScheduler::doStep(Int idx) {
 	if (mOutMeasurementFile.empty()) {
-		for (auto task : mSchedules[idx])
+		for (auto& task : mSchedules[idx])
 			task->execute(mTime, mTimeStepCount);
 	} else {
-		for (auto task : mSchedules[idx]) {
+		for (auto& task : mSchedules[idx]) {
 			auto start = std::chrono::steady_clock::now();
 			task->execute(mTime, mTimeStepCount);
 			auto end = std::chrono::steady_clock::now();

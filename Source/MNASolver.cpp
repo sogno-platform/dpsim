@@ -61,8 +61,13 @@ void MnaSolver<VarType>::initialize(CPS::SystemTopology system) {
 	for (auto comp : mSignalComponents)
 		comp->initialize(mSystem.mSystemOmega, mTimeStep);
 	// Initialize MNA specific parts of components.
-	for (auto comp : mPowerComponents)
+	for (auto comp : mPowerComponents) {
 		comp->mnaInitialize(mSystem.mSystemOmega, mTimeStep, attribute<Matrix>("x"));
+		const Matrix& stamp = comp->attribute<Matrix>("b")->get();
+		if (stamp.size() != 0) {
+			mRightVectorStamps.push_back(&stamp);
+		}
+	}
 	for (auto comp : mSwitches)
 		comp->mnaInitialize(mSystem.mSystemOmega, mTimeStep, attribute<Matrix>("x"));
 
@@ -81,14 +86,14 @@ void MnaSolver<VarType>::initialize(CPS::SystemTopology system) {
 	for (auto comp : mPowerComponents) {
 		comp->mnaApplySystemMatrixStamp(mTmpSystemMatrix);
 		auto idObj = std::dynamic_pointer_cast<IdentifiedObject>(comp);
-		mLog.debug() << "Stamping " << idObj->type() << " " << idObj->name()
-					<< " into system matrix: \n" << mTmpSystemMatrix << std::endl;
+		//mLog.debug() << "Stamping " << idObj->type() << " " << idObj->name()
+		//			<< " into system matrix: \n" << mTmpSystemMatrix << std::endl;
 	}
 	for (auto comp : mSwitches) {
 		comp->mnaApplySystemMatrixStamp(mTmpSystemMatrix);
 		auto idObj = std::dynamic_pointer_cast<IdentifiedObject>(comp);
-		mLog.debug() << "Stamping " << idObj->type() << " " << idObj->name()
-			<< " into system matrix: \n" << mTmpSystemMatrix << std::endl;
+		//mLog.debug() << "Stamping " << idObj->type() << " " << idObj->name()
+		//	<< " into system matrix: \n" << mTmpSystemMatrix << std::endl;
 	}
 
 	// Compute LU-factorization for system matrix
@@ -109,17 +114,17 @@ void MnaSolver<VarType>::initialize(CPS::SystemTopology system) {
 	for (auto comp : mPowerComponents) {
 		comp->mnaApplyRightSideVectorStamp(mRightSideVector);
 		auto idObj = std::dynamic_pointer_cast<IdentifiedObject>(comp);
-		mLog.debug() << "Stamping " << idObj->type() << " " << idObj->name()
-			<< " into source vector: \n" << mRightSideVector << std::endl;
+		//mLog.debug() << "Stamping " << idObj->type() << " " << idObj->name()
+		//	<< " into source vector: \n" << mRightSideVector << std::endl;
 	}
 
 	// Logging
 	for (auto comp : system.mComponents)
 		mLog.info() << "Added " << comp->type() << " '" << comp->name() << "' to simulation." << std::endl;
 
-	mLog.info() << "System matrix: \n" << mTmpSystemMatrix << std::endl;
-	mLog.info() << "LU decomposition: \n" << mTmpLuFactorization.matrixLU() << std::endl;
-	mLog.info() << "Right side vector: \n" << mRightSideVector << std::endl;
+	//mLog.info() << "System matrix: \n" << mTmpSystemMatrix << std::endl;
+	//mLog.info() << "LU decomposition: \n" << mTmpLuFactorization.matrixLU() << std::endl;
+	//mLog.info() << "Right side vector: \n" << mRightSideVector << std::endl;
 
 	for (auto sys : mSwitchedMatrices) {
 		mLog.info() << "Switching System matrix "
@@ -362,13 +367,8 @@ void MnaSolver<VarType>::SolveTask::execute(Real time, Int timeStepCount) {
 
 	// Add together the right side vector (computed by the components'
 	// pre-step tasks)
-	for (auto comp : mSolver.mPowerComponents)
-	{
-		const Matrix& stamp = comp->attribute<Matrix>("b")->get();
-		if (stamp.size() != 0) {
-			mSolver.mRightSideVector += stamp;
-		}
-	}
+	for (auto stamp : mSolver.mRightVectorStamps)
+		mSolver.mRightSideVector += *stamp;
 
 	if (mSolver.mSwitchedMatrices.size() > 0 && !mSteadyStateInit)
 		mSolver.mLeftSideVector = mSolver.mLuFactorizations[mSolver.mCurrentSwitchStatus].solve(mSolver.mRightSideVector);
