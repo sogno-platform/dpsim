@@ -197,7 +197,7 @@ PyObject* Python::SystemTopology::addDecouplingLine(SystemTopology *self, PyObje
 		return nullptr;
 	}
 
-	auto line = CPS::Signal::DecouplingLine::make(name, pyNode1->node, pyNode2->node, resistance, inductance, capacitance);
+	auto line = CPS::Signal::DecouplingLine::make(name, pyNode1->node, pyNode2->node, resistance, inductance, capacitance, CPS::Logger::Level::NONE);
 	self->sys->addComponent(line);
 	self->sys->addComponents(line->getLineComponents());
 	self->updateDicts();
