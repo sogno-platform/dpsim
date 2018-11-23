@@ -66,7 +66,7 @@ class CMakeBuild(build_ext):
                 build_args = []
 
         env = os.environ.copy()
-        env['CXXFLAGS'] = '{} -DVERSION_INFO=\'{}\''.format(env.get('CXXFLAGS', ''), self.distribution.get_version())
+        cmake_args.append('-DCMAKE_CXX_FLAGS={} -DVERSION_INFO=\'{}\''.format(env.get('CXXFLAGS', ''), self.distribution.get_version()))
 
         if not os.path.exists(self.build_temp):
             os.makedirs(self.build_temp)
