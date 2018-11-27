@@ -29,6 +29,8 @@
 // #include <cps/SystemTopology.h> // neccessary?
 #include <cps/Logger.h>
 
+#include <ODEInterface.h>
+
 #include <arkode/arkode.h>              // prototypes for ARKode fcts., consts. and includes sundials_types.h
 #include <nvector/nvector_serial.h>     // access to serial N_Vector
 #include <sunmatrix/sunmatrix_dense.h>  // access to dense SUNMatrix
@@ -60,9 +62,9 @@ namespace DPsim {
 
 		// ###ARKode-specific variables ###
 		/// Memory block allocated by ARKode
-		void* mArkode_mem;
+		void* mArkode_mem=NULL;
 		/// State vector
-		N_Vector states = NULL;
+		N_Vector mStates = NULL;
 		// Same tolerance for each component regardless of system characteristics
 		/// Relative tolerance
 		realtype reltol = RCONST(1.0e-6);
