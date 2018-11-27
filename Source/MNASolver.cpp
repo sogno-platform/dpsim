@@ -63,7 +63,7 @@ void MnaSolver<VarType>::initialize(CPS::SystemTopology system) {
 	// Initialize MNA specific parts of components.
 	for (auto comp : mPowerComponents) {
 		comp->mnaInitialize(mSystem.mSystemOmega, mTimeStep, attribute<Matrix>("x"));
-		const Matrix& stamp = comp->attribute<Matrix>("b")->get();
+		const Matrix& stamp = comp->template attribute<Matrix>("b")->get();
 		if (stamp.size() != 0) {
 			mRightVectorStamps.push_back(&stamp);
 		}

@@ -53,6 +53,8 @@ namespace DPsim {
 		Event(CPS::Real t) :
 			mTime(t)
 		{ }
+
+		virtual ~Event() {}
 	};
 
 	class EventComparator {

@@ -184,7 +184,7 @@ namespace DPsim {
 			SolveTask(MnaSolver<VarType>& solver, Bool steadyStateInit) :
 				Task(solver.mName + ".Solve"), mSolver(solver), mSteadyStateInit(steadyStateInit) {
 				for (auto it : solver.mPowerComponents) {
-					if (it->attribute<Matrix>("b")->get().size() != 0) {
+					if (it->template attribute<Matrix>("b")->get().size() != 0) {
 						mAttributeDependencies.push_back(it->attribute("b"));
 					}
 				}
