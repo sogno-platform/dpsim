@@ -95,8 +95,15 @@ int main(int argc, char* argv[]) {
 	//logger->addAttribute("v1", n1->attribute("v"));
 	logger->addAttribute("theta", gen->attribute("theta"));
 	// Simulation
-	Simulation sim(simName, sys, timeStep, finalTime,
-		Domain::DP, Solver::Type::MNA, Logger::Level::INFO); //Domain::DP, Solver::Type::MNA, Logger::Level::INFO
+	/*Simulation sim(simName, sys, timeStep, finalTime,
+		Domain::DP, Solver::Type::MNA, Logger::Level::INFO); //Domain::DP, Solver::Type::MNA, Logger::Level::INFO*/
+
+	std::shared_ptr<ODESolver>  ode_solver;
+	ode_solver->initialize("SynchronGenerator", gen, timeStep, 0);
+	std::vector<std::shared_ptr<ODESolver> > ode_comps;
+	ode_comps.push_back(ode_solver);
+
+	Sim_ODE sim(simName, sys, timeStep, finalTime, ode_comps,Domain::DP, Solver::Type::MNA, Logger::Level::INFO);
 
 	sim.addLogger(logger);
 

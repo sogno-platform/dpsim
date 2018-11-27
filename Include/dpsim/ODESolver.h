@@ -26,28 +26,14 @@
 #ifdef WITH_SUNDIALS
 
 #include <dpsim/Solver.h>
-// #include <cps/SystemTopology.h> // neccessary?
-#include <cps/Logger.h>
 
-#include <ODEInterface.h>
+#include <cps/Solver/ODEInterface.h>
 
 #include <arkode/arkode.h>              // prototypes for ARKode fcts., consts. and includes sundials_types.h
 #include <nvector/nvector_serial.h>     // access to serial N_Vector
 #include <sunmatrix/sunmatrix_dense.h>  // access to dense SUNMatrix
 #include <sunlinsol/sunlinsol_dense.h>  // access to dense SUNLinearSolver
 #include <arkode/arkode_direct.h>       // access to ARKDls interface
-
-#if defined(SUNDIALS_EXTENDED_PRECISION)
-#define GSYM "Lg"
-#define ESYM "Le"
-#define FSYM "Lf"
-#else
-#define GSYM "g"
-#define ESYM "e"
-#define FSYM "f"
-#endif // defined(SUNDIALS_EXTENDED_PRECISION)
-
-using namespace CPS;
 
 namespace DPsim {
 	/// Solver class for ODE (Ordinary Differential Equation) systems
@@ -56,7 +42,7 @@ namespace DPsim {
 		/// Constant time step
 		Real mTimestep;
 		/// Component to simulate, possible specialized component needed
-		Component mComponent;
+		CPS::Component mComponent;
 		/// Number of differential Variables (states)
 		Int mProbDim;
 
@@ -81,7 +67,7 @@ namespace DPsim {
 		int mFlag;
 
 		// Similar to DAE-Solver
-		ODEInterface::StSpFn mStSpFunction;
+		CPS::ODEInterface::StSpFn mStSpFunction;
 
 		/// use wrappers similar to DAE_Solver
 		static int StateSpaceWrapper(realtype t, N_Vector y, N_Vector ydot, void *user_data);
@@ -96,12 +82,12 @@ namespace DPsim {
 
 	public:
 		/// Create solve object with given parameters; Smth. mnore specialized than component needed?
-		ODESolver(String name, Component comp, Real dt, Real t0);
+		//ODESolver(String name, std::shared_ptr<CPS::Component>, Real dt, Real t0);
 		/// Deallocate all memory
 		~ODESolver();
 
 		/// Initialize ARKode-solve_environment
-		void initialize(Real t0);
+		void initialize(String name, std::shared_ptr<CPS::Component> comp, Real dt, Real t0);
 		/// Solve system for the current time
 		Real step(Real initial_time);
 	};

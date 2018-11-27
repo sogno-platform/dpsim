@@ -19,35 +19,22 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *********************************************************************************/
 
-#include <dpsim/Config.h>
-#include <dpsim/Utils.h>
-//#include <dpsim/Simulation.h>
-#include <dpsim/Sim_ODE.h>
+#pragma once
 
-#ifndef _MSC_VER
-  #include <dpsim/RealTimeSimulation.h>
-#endif
+#include <dpsim/Simulation.h>
+#include <dpsim/ODESolver.h>
 
-#include <cps/Components.h>
-#include <cps/Logger.h>
-
-#ifdef WITH_SHMEM
-  #include <dpsim/Interface.h>
-#endif
-
-#ifdef WITH_CIM
-  #include <cps/CIM/Reader.h>
-#endif
-
-namespace DPsim{
-	// #### CPS for users ####
-	using SystemTopology = CPS::SystemTopology;
-	using SystemNodeList = CPS::TopologicalNode::List;
-	using SystemComponentList = CPS::Component::List;
-	using Logger = CPS::Logger;
-	using Domain = CPS::Domain;
-	using PhaseType = CPS::PhaseType;
-#ifdef WITH_CIM
-	using CIMReader = CPS::CIM::Reader;
-#endif
+namespace DPsim {
+  /// \brief enhances the regular Simulation Class with multiple ODE-Solver units
+  class Sim_ODE: public Simulation{
+  protected:
+      std::vector<std::shared_ptr<ODESolver> >mODESolverList;
+  public:
+    Sim_ODE(String name, CPS::SystemTopology system,
+			Real timeStep, Real finalTime, std::vector<std::shared_ptr<ODESolver> > ODESolverList,
+			CPS::Domain domain = CPS::Domain::DP,
+			Solver::Type solverType = Solver::Type::MNA,
+			CPS::Logger::Level logLevel = CPS::Logger::Level::INFO,
+			Bool steadyStateInit = false);
+  };
 }

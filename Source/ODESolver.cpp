@@ -25,25 +25,21 @@
 using namespace DPsim;
 using namespace CPS;
 
-ODESolver::ODESolver(String name, Component comp, Real dt, Real t0) :
-	mComponent(comp), mTimestep(dt) {
+ODESolver::ODESolver(){} //Probably issue with constructor
+
+void ODESolver::initialize(String name, std::shared_ptr<CPS::Component> comp, Real dt, Real t0) {
 
 	auto odecomp = std::dynamic_pointer_cast<ODEInterface>(comp); //Address of comp?
 	if (!odecomp)
 		throw CPS::Exception(); // Component does not support the ODE-solver interface
 
-	mProbDim=odecomp->num_states(); // TODO: implement 'num_states': in ODEInterface header define?
-
-	initialize(t0);
-}
-
-void ODESolver::initialize(Real t0) {
+	mProbDim=odecomp->num_states();
 
 	// Component initialization needed?
 
 	mStates=N_VNew_Serial(mProbDim);
 	// Set initial value: (Different from DAESolver)
-NVSetArrayPointer(N_VGetArrayPointer(mComponent->state_vector()),mStates); //getter state-vector in Interface?
+NVSetArrayPointer(N_VGetArrayPointer(mComponent->state_vector()),mStates);
 
 // Copied from DAESolver
 	mStSpFunction=[mComponent](double t, double  y[], double  ydot[]){
