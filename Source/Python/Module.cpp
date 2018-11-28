@@ -48,7 +48,31 @@ static PyMethodDef dpsimModuleMethods[] = {
 	{ "load_cim",               (PyCFunction) LoadCim,       METH_VARARGS | METH_KEYWORDS, DPsim::Python::DocLoadCim },
 
 	// Component constructors
-	#include <dpsim/Python/ComponentConstructors.h>
+	Component::constructorDef<CPS::DP::Ph1::Capacitor>("_dp_ph1_Capacitor"),
+	Component::constructorDef<CPS::DP::Ph1::CurrentSource>("_dp_ph1_CurrentSource"),
+	Component::constructorDef<CPS::DP::Ph1::Inductor>("_dp_ph1_Inductor"),
+	Component::constructorDef<CPS::DP::Ph1::PQLoadCS>("_dp_ph1_PQLoadCS"),
+	Component::constructorDef<CPS::DP::Ph1::PiLine>("_dp_ph1_PiLine"),
+	Component::constructorDef<CPS::DP::Ph1::RXLoad>("_dp_ph1_RXLoad"),
+	Component::constructorDef<CPS::DP::Ph1::Resistor>("_dp_ph1_Resistor"),
+	Component::constructorDef<CPS::DP::Ph1::RxLine>("_dp_ph1_RxLine"),
+	Component::constructorDef<CPS::DP::Ph1::Switch>("_dp_ph1_Switch"),
+	Component::constructorDef<CPS::DP::Ph1::SynchronGeneratorIdeal>("_dp_ph1_SynchronGeneratorIdeal"),
+	Component::constructorDef<CPS::DP::Ph1::SynchronGeneratorTrStab>("_dp_ph1_SynchronGeneratorTrStab"),
+	Component::constructorDef<CPS::DP::Ph1::Transformer>("_dp_ph1_Transformer"),
+	Component::constructorDef<CPS::DP::Ph1::VoltageSource>("_dp_ph1_VoltageSource"),
+	Component::constructorDef<CPS::DP::Ph1::VoltageSourceFreq>("_dp_ph1_VoltageSourceFreq"),
+	Component::constructorDef<CPS::DP::Ph1::VoltageSourceNorton>("_dp_ph1_VoltageSourceNorton"),
+	Component::constructorDef<CPS::DP::Ph3::SeriesResistor>("_dp_ph3_SeriesResistor"),
+	Component::constructorDef<CPS::DP::Ph3::SeriesSwitch>("_dp_ph3_SeriesSwitch"),
+	Component::constructorDef<CPS::DP::Ph3::SynchronGeneratorDQ>("_dp_ph3_SynchronGeneratorDQ"),
+	Component::constructorDef<CPS::EMT::Ph1::Capacitor>("_emt_ph1_Capacitor"),
+	Component::constructorDef<CPS::EMT::Ph1::CurrentSource>("_emt_ph1_CurrentSource"),
+	Component::constructorDef<CPS::EMT::Ph1::Inductor>("_emt_ph1_Inductor"),
+	Component::constructorDef<CPS::EMT::Ph1::Resistor>("_emt_ph1_Resistor"),
+	Component::constructorDef<CPS::EMT::Ph1::VoltageSource>("_emt_ph1_VoltageSource"),
+	Component::constructorDef<CPS::EMT::Ph1::VoltageSourceFreq>("_emt_ph1_VoltageSourceFreq"),
+	Component::constructorDef<CPS::EMT::Ph1::VoltageSourceNorton>("_emt_ph1_VoltageSourceNorton"),
 
 	{ nullptr }
 };
@@ -72,7 +96,7 @@ PyMODINIT_FUNC PyInit__dpsim(void) {
 		return nullptr;
 	if (PyType_Ready(&Logger::type) < 0)
 		return nullptr;
-#ifndef _MSC_VER
+#ifdef WITH_SHMEM
 	if (PyType_Ready(&Interface::type) < 0)
 		return nullptr;
 #endif
@@ -89,7 +113,7 @@ PyMODINIT_FUNC PyInit__dpsim(void) {
 	PyModule_AddObject(m, "Logger", (PyObject*) &Logger::type);
 	Py_INCREF(&Component::type);
 	PyModule_AddObject(m, "Component", (PyObject*) &Component::type);
-#ifndef _MSC_VER
+#ifdef WITH_SHMEM
 	Py_INCREF(&Interface::type);
 	PyModule_AddObject(m, "Interface", (PyObject*) &Interface::type);
 #endif

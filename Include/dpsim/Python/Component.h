@@ -106,11 +106,11 @@ namespace Python {
 				PyErr_SetString(PyExc_ValueError, "Attribute access is prohibited");
 				return nullptr;
 			}
-			catch (const CPS::TypeException &e) {
+			catch (const CPS::TypeException &) {
 				PyErr_SetString(PyExc_ValueError, "Invalid attribute type");
 				return nullptr;
 			}
-			catch (const CPS::InvalidAttributeException &e) {
+			catch (const CPS::InvalidAttributeException &) {
 				PyErr_SetString(PyExc_ValueError, "Invalid attribute");
 				return nullptr;
 			}
@@ -128,7 +128,7 @@ namespace Python {
 			T comp("uid", "name");
 
 			doc << comp.type() << "(name, nodes, **attributes)" << std::endl
-			    << "Construct a new component with a given name an list of nodes." << std::endl;
+			    << "Construct a new component with a given name and list of nodes." << std::endl;
 #if 0
 			    << comp.description() << std::endl
 			    << std::endl;

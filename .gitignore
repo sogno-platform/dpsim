@@ -25,7 +25,6 @@ CMakeFiles/
 CMakeCache.txt
 cmake_install.cmake
 install_manifest.txt
-Makefile
 
 # Mac
 __MACOSX
@@ -38,3 +37,6 @@ __pycache__/
 .eggs/
 *.egg-info/
 .ipynb_checkpoints/
+
+# Auto-generated
+Documentation/README.md

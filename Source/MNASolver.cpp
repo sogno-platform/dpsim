@@ -238,7 +238,7 @@ void MnaSolver<Complex>::createEmptySystemMatrix() {
 template <typename VarType>
 void MnaSolver<VarType>::createVirtualNodes() {
 	// We have not added virtual nodes yet so the list has only network nodes
-	mNumNetNodes = mNodes.size();
+	mNumNetNodes = (UInt) mNodes.size();
 	// virtual nodes are placed after network nodes
 	UInt virtualNode = mNumNetNodes - 1;
 	// Check if component requires virtual node and if so set one
@@ -258,7 +258,7 @@ void MnaSolver<VarType>::createVirtualNodes() {
 		}
 	}
 	// Update node number to create matrices and vectors
-	mNumNodes = mNodes.size();
+	mNumNodes = (UInt) mNodes.size();
 	mNumVirtualNodes = mNumNodes - mNumNetNodes;
 
 	mLog.info() << "Number of network nodes: " << mNumNetNodes << std::endl;

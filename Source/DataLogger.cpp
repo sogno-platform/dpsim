@@ -69,7 +69,7 @@ void DataLogger::setColumnNames(std::vector<String> names) {
 void DataLogger::logDataLine(Real time, Real data) {
 	if (!mEnabled)
 		return;
-
+		
 	mLogFile << std::scientific << std::right << std::setw(14) << time;
 	mLogFile << ", " << std::right << std::setw(13) << data;
 	mLogFile << '\n';
@@ -89,7 +89,6 @@ void DataLogger::logDataLine(Real time, const Matrix& data) {
 void DataLogger::logDataLine(Real time, const MatrixComp& data) {
 	if (!mEnabled)
 		return;
-
 	mLogFile << std::scientific << std::right << std::setw(14) << time;
 	for (Int i = 0; i < data.rows(); i++) {
 		mLogFile << ", " << std::right << std::setw(13) << data(i, 0);
@@ -181,7 +180,7 @@ void DataLogger::addAttribute(const String &name, CPS::Attribute<MatrixVar<Compl
 	const MatrixVar<Complex> &m = attr->get();
 
 	auto attrMat = std::static_pointer_cast<CPS::MatrixAttribute<Complex>>(attr);
-
+	
 	if (m.rows() == 1 && m.cols() == 1) {
 		addAttribute(name, attrMat->coeff(0, 0));
 	}

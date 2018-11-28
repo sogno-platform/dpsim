@@ -40,10 +40,8 @@
 #include <dpsim/Config.h>
 #include <dpsim/Python/SystemTopology.h>
 #include <dpsim/Simulation.h>
-#ifndef _MSC_VER
 #include <dpsim/Python/EventChannel.h>
 #include <dpsim/Timer.h>
-#endif
 
 namespace DPsim {
 namespace Python {
@@ -66,9 +64,7 @@ namespace Python {
 
 		DPsim::Simulation::Ptr sim;
 		Python::SystemTopology *pySys;
-#ifndef _MSC_VER
 		Python::EventChannel *channel;
-#endif
 
 		std::condition_variable *cond;
 		std::mutex *mut;
@@ -83,9 +79,7 @@ namespace Python {
 		bool failOnOverrun;
 		bool singleStepping; /// Debugger like stepping for simulations
 
-#ifndef _MSC_VER
 		Timer::StartTimePoint startTime;
-#endif
 
 		// List of additional objects that aren't directly used from Simulation
 		// methods, but that a reference has be kept to to avoid them from being
@@ -113,7 +107,8 @@ namespace Python {
 		static PyObject* start(Simulation *self, PyObject *args);
 		static PyObject* step(Simulation *self, PyObject *args);
 		static PyObject* stop(Simulation *self, PyObject *args);
-		static PyObject* getEventFD(Simulation *self, PyObject *args);
+		static PyObject* addEventFD(Simulation *self, PyObject *args);
+		static PyObject* removeEventFD(Simulation *self, PyObject *args);
 
 		// Getters
 		static PyObject* getState(Simulation *self, void *ctx);
@@ -130,7 +125,8 @@ namespace Python {
 		static const char *docAddInterface;
 		static const char *docAddEvent;
 		static const char *docAddLogger;
-		static const char *docGetEventFD;
+		static const char *docAddEventFD;
+		static const char *docRemoveEventFD;
 		static const char *docState;
 		static const char *docName;
 		static PyMethodDef methods[];

@@ -1,11 +1,11 @@
 # <img src="Documentation/images/dpsim.png" width=40 /> DPsim
 
-[![build status](https://git.rwth-aachen.de/acs/core/simulation/DPsim/badges/development/build.svg)](https://git.rwth-aachen.de/acs/core/simulation/DPsim/commits/development)
-[![coverage report](https://git.rwth-aachen.de/acs/core/simulation/DPsim/badges/development/coverage.svg)](https://git.rwth-aachen.de/acs/core/simulation/DPsim/commits/development)
+[![build status](https://git.rwth-aachen.de/acs/core/simulation/dpsim/badges/development/build.svg)](https://git.rwth-aachen.de/acs/core/simulation/dpsim/commits/development)
+[![coverage report](https://git.rwth-aachen.de/acs/core/simulation/dpsim/badges/development/coverage.svg)](https://git.rwth-aachen.de/acs/core/simulation/dpsim/commits/development)
 
 DPsim is a solver library for power system simulation.
 
-- It supports both the electro-magnetic transient (EMT) and dynamic phasor (DP) domains.
+- It supports both the electro-magnetic transient (EMT) and dynamic phasor (DP) domain.
 - It provides a Python module which can be embedded in any Python 3 application / scripts.
 - It is implemented in highly-efficient C++ code.
 - It supports real-time execution with time-steps up to 50 uS.
@@ -18,15 +18,15 @@ If you just want to use DPsim for simulations, take a look at the [installation 
 If you would like to modify / extend DPsim or build it for a specific platform, take a look at the [build instructions](https://dpsim.fein-aachen.org/doc/development/sphinx/Build.html).
 
 ## Usage
-DPsim is a Python extension module which is implemented in optimized native C++ code.
-
-Users can control and script the simulation with Python scripts. Checkout the [Quickstart Guide](https://dpsim.fein-aachen.org/doc/development/sphinx/Notebooks/Quickstart%20Guide.html).
+DPsim is a Python extension module which is implemented in optimized native C++ code. 
+Users can control and script the simulation with Python scripts. Checkout the [Examples](https://dpsim.fein-aachen.org/doc/development/sphinx/Examples.html).
 
 ## Documentation
 
-Latest development documentation:
-- [Sphinx for Python API](http://dpsim.fein-aachen.org/doc/development/sphinx/)
-- [Doxygen for C++ API](http://dpsim.fein-aachen.org/doc/development/doxygen/)
+The [user documentation](http://dpsim.fein-aachen.org/doc/development/sphinx/) has examples, build / installation instructions and covers the Python API.
+
+The C++ [developer documentation](http://dpsim.fein-aachen.org/doc/development/doxygen/) only includes automatically generated content using Doxygen.
+It is helpful to understand the general structure of the C++ DPsim core components.
 
 ## Copyright
 
@@ -58,7 +58,9 @@ For other licensing options please consult [Prof. Antonello Monti](mailto:amonti
 [![EONERC ACS Logo](https://www.fein-aachen.org/img/logos/eonerc.png)](http://www.acs.eonerc.rwth-aachen.de)
 
 - Markus Mirz <mmirz@eonerc.rwth-aachen.de>
+- Steffen Vogel <stvogel@eonerc.rwth-aachen.de>
 
-[Institute for Automation of Complex Power Systems (ACS)](http://www.acs.eonerc.rwth-aachen.de)
-[EON Energy Research Center (EONERC)](http://www.eonerc.rwth-aachen.de)
-[RWTH University Aachen, Germany](http://www.rwth-aachen.de)
+[Institute for Automation of Complex Power Systems (ACS)](http://www.acs.eonerc.rwth-aachen.de)  
+[EON Energy Research Center (EONERC)](http://www.eonerc.rwth-aachen.de)  
+[RWTH University Aachen, Germany](http://www.rwth-aachen.de)  
+

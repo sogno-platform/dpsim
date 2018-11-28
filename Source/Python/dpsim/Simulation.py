@@ -4,6 +4,7 @@ import time
 import sys
 import datetime
 import logging
+import socket
 
 LOGGER = logging.getLogger('dpsim.simulation')
 
@@ -46,9 +47,11 @@ class Simulation(_dpsim.Simulation):
         if loop is None:
             self._loop = asyncio.get_event_loop()
 
-        self._fd = self.get_eventfd()
+        self._event_socks = socket.socketpair()
 
-        self._events = EventChannel(self._fd, self._loop)
+        self._events = EventChannel(self._event_socks[0], self._loop)
+
+        self.add_eventfd(self._event_socks[1].fileno())
 
         self._events.add_callback(self.running, self, event=Event.running)
         self._events.add_callback(self.stopped, self, event=Event.stopped)
@@ -57,6 +60,9 @@ class Simulation(_dpsim.Simulation):
 
         if pbar:
             self.show_progressbar()
+
+    def __del__(self):
+        self.remove_eventfd(self._event_socks[0].fileno())
 
     def add_callback(self, cb, *args, event=None):
         self._events.add_callback(cb, *args, event=event)
@@ -92,7 +98,7 @@ class Simulation(_dpsim.Simulation):
     def __update_progressbar(self):
         if self._pbar_widget:
             elapsed = time.time() - self._start_time
-            rtfactor = self.time / elapsed
+            rtfactor = self.time / elapsed if elapsed > 0 else 0
             progress = self.time / self.final_time
             total_steps = int(self.final_time / self._ts)
 
@@ -114,7 +120,7 @@ class Simulation(_dpsim.Simulation):
                 t = self.final_time
 
             elapsed = time.time() - self._start_time
-            rtfactor = t / elapsed
+            rtfactor = t / elapsed if elapsed > 0 else 0
 
             self._pbar_tui.update(t,
                 elapsed = elapsed,
