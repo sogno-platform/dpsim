@@ -44,16 +44,19 @@ void ThreadLevelScheduler::createSchedule(const Task::List& tasks, const Edges& 
 	if (!mOutMeasurementFile.empty())
 		Scheduler::initMeasurements(tasks);
 
-	std::unordered_map<String, TaskTime::rep> measurements;
 	if (!mInMeasurementFile.empty()) {
+		std::unordered_map<String, TaskTime::rep> measurements;
 		readMeasurements(mInMeasurementFile, measurements);
-	}
-
-	for (size_t level = 0; level < levels.size(); level++) {
-		if (!mInMeasurementFile.empty()) {
+		for (size_t level = 0; level < levels.size(); level++) {
 			// Distribute tasks such that the execution time is (approximately) minimized
 			scheduleLevel(levels[level], measurements);
-		} else {
+			// Insert BarrierTask for synchronization
+			auto barrier = std::make_shared<BarrierTask>(mSchedules.size(), mUseConditionVariable);
+			for (int thread = 0; thread < mNumThreads; thread++)
+				mSchedules[thread].push_back(barrier);
+		}
+	} else {
+		for (size_t level = 0; level < levels.size(); level++) {
 			// Distribute tasks of one level evenly between threads
 			size_t nextThread = 0;
 			for (auto task : levels[level]) {
@@ -61,27 +64,13 @@ void ThreadLevelScheduler::createSchedule(const Task::List& tasks, const Edges& 
 				if (nextThread == mSchedules.size())
 					nextThread = 0;
 			}
-		}
 
-		// Insert BarrierTask for synchronization
-		std::shared_ptr<BarrierTask> barrier;
-		if (levels[level].size() < static_cast<size_t>(mNumThreads)) {
-			// at least one thread has nothing to do at all, so use a condition
-			// variable to avoid unnecessarily spinlocking right away
-			barrier = std::make_shared<BarrierTask>(mSchedules.size(), true);
-		} else {
-			barrier = std::make_shared<BarrierTask>(mSchedules.size(), mUseConditionVariable);
+			// Insert BarrierTask for synchronization
+			auto barrier = std::make_shared<BarrierTask>(mSchedules.size(), mUseConditionVariable);
+			for (int thread = 0; thread < mNumThreads; thread++)
+				mSchedules[thread].push_back(barrier);
 		}
-		for (int thread = 0; thread < mNumThreads; thread++)
-			mSchedules[thread].push_back(barrier);
 	}
-
-	//std::cout << "Schedule:" << std::endl;
-	//for (int thread = 0; thread < mNumThreads; thread++) {
-	//	std::cout << "Thread " << thread << std::endl << std::endl;
-	//	for (auto task : mSchedules[thread])
-	//		std::cout << task->toString() << std::endl;
-	//}
 
 	for (int i = 1; i < mNumThreads; i++) {
 		std::thread thread(threadFunction, this, i);
