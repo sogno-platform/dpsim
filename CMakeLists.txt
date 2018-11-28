@@ -9,6 +9,10 @@ endif()
 
 # Enable C++11 support
 set(CMAKE_CXX_STANDARD 11)
+if(CMAKE_CXX_COMPILER_ID STREQUAL Intel)
+	# needed by icc, but for some reason not added by CMake
+	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
+endif()
 add_definitions(-D_SILENCE_ALL_CXX17_DEPRECATION_WARNINGS)
 
 set(CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/CMake;${PROJECT_SOURCE_DIR}/Dependencies/libcps/CMake")
