@@ -35,7 +35,6 @@
 
 #include <ida/ida.h>
 #include <ida/ida_direct.h>
-#include <ida/ida_spils.h>
 #include <sunlinsol/sunlinsol_dense.h>
 #include <sundials/sundials_types.h>
 #include <nvector/nvector_serial.h>
@@ -76,7 +75,8 @@ namespace DPsim {
 		SUNMatrix A = NULL;
 		/// Linear solver object
 		SUNLinearSolver LS = NULL;
-
+        long int interalSteps = 0;
+        long int resEval=0;
         std::vector<CPS::DAEInterface::ResFn> mResidualFunctions;
 
 		/// Residual Function of entire System

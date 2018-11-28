@@ -106,11 +106,7 @@ void DAESolver::initialize(Real t0) {
 
         std::cout << "Node Volt " << counter << ": " << tempVolt << std::endl;
         sval[counter++] = tempVolt;
-        // std::cout <<"Node initialized"<<std::endl;
     }
-
-
-//	avtol = N_VNew_Serial(mNEQ);
 
 
 
@@ -142,7 +138,7 @@ void DAESolver::initialize(Real t0) {
 
     for (int j = 0; j < (int) mNodes.size(); j++) {
         // Initialize nodal current equations
-        sval[counter++] = 0;
+        sval[counter++] = 0; //TODO: check for correctness
         std::cout << "Nodal Equation value " << sval[counter - 1] << std::endl;
     }
 
@@ -185,10 +181,9 @@ void DAESolver::initialize(Real t0) {
     A = SUNDenseMatrix(mNEQ, mNEQ);
     LS = SUNDenseLinearSolver(state, A);
     ret = IDADlsSetLinearSolver(mem, LS, A);
-    //ret = IDASpilsSetLinearSolver(mem, LS);
 
-    //IDA input functions
-    //ret = IDASetMaxNumSteps(mem, -1);  //Max. number of timesteps until tout
+    //Optional IDA input functions
+    //ret = IDASetMaxNumSteps(mem, -1);  //Max. number of timesteps until tout (-1 = unlimited)
     //ret = IDASetMaxConvFails(mem, 100); //Max. number of convergence failures at one step
     (void) ret;
 }
@@ -204,22 +199,17 @@ int DAESolver::residualFunction(realtype ttime, N_Vector state, N_Vector dstate_
 {
     mOffsets[0] = 0; // Reset Offset
     mOffsets[1] = 0; // Reset Offset
-
+    double *residual = NV_DATA_S(resid);
+    double *tempstate = NV_DATA_S(state);
     // Solve for all node Voltages
     for (auto node : mNodes) {
-        double *residual = NV_DATA_S(resid);
-        double *tempstate = NV_DATA_S(state);
+
         Real tempVolt = 0;
 
         tempVolt += std::real(node->singleVoltage());
 
-//		if (node->phaseType() == PhaseType::ABC) {
-//			tempVolt += std::real(node->voltage()(1,0));
-//			tempVolt += std::real(node->voltage()(2,0));
-//			sval[counter++] = tempVolt;
-//		}
 
-        residual[mOffsets[0]] = tempstate[mOffsets[0]] - tempVolt;
+        residual[mOffsets[0]] = tempVolt - tempstate[mOffsets[0]];
         mOffsets[0] += 1;
     }
 
@@ -236,7 +226,7 @@ int DAESolver::residualFunction(realtype ttime, N_Vector state, N_Vector dstate_
 Real DAESolver::step(Real time) {
 
     Real NextTime = time + mTimestep;
-    std::cout<<"Next Time "<<NextTime<<std::endl;
+    std::cout<<"Current Time "<<NextTime<<std::endl;
     int ret = IDASolve(mem, NextTime, &tret, state, dstate_dt, IDA_NORMAL);  // TODO: find alternative to IDA_NORMAL
 
     if (ret == IDA_SUCCESS) {
@@ -244,7 +234,12 @@ Real DAESolver::step(Real time) {
     }
     else {
         std::cout <<"Ida Error "<<ret<<std::endl;
-        throw CPS::Exception();
+        //throw CPS::Exception();
+        void(IDAGetNumSteps(mem, &interalSteps));
+        void(IDAGetNumResEvals(mem, &resEval));
+        std::cout<<"Interal steps: "<< interalSteps<<std::endl;
+        std::cout<<"Res Eval :"<<resEval<<std::endl;
+        return NextTime;
     }
 }
 
