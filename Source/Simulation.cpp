@@ -242,15 +242,14 @@ void Simulation::prepSchedule() {
 	for (auto logger : mLoggers) {
 		mTasks.push_back(logger->getTask());
 	}
-
-	Scheduler::resolveDeps(mTasks, mTaskInEdges, mTaskOutEdges);
+	if (!mScheduler) {
+		mScheduler = std::make_shared<SequentialScheduler>();
+	}
+	mScheduler->resolveDeps(mTasks, mTaskInEdges, mTaskOutEdges);
 }
 
 void Simulation::schedule() {
 	mLog.info() << "Scheduling tasks." << std::endl;
-	if (!mScheduler) {
-		mScheduler = std::make_shared<SequentialScheduler>();
-	}
 	prepSchedule();
 	mScheduler->createSchedule(mTasks, mTaskInEdges, mTaskOutEdges);
 }

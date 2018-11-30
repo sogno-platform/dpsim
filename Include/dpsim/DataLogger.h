@@ -26,6 +26,7 @@
 #include <fstream>
 
 #include <dpsim/Definitions.h>
+#include <dpsim/Scheduler.h>
 #include <cps/PtrFactory.h>
 #include <cps/Attribute.h>
 #include <cps/Node.h>
@@ -85,6 +86,7 @@ namespace DPsim {
 				for (auto attr : logger.mAttributes) {
 					mAttributeDependencies.push_back(attr.second);
 				}
+				mModifiedAttributes.push_back(Scheduler::external);
 			}
 
 			void execute(Real time, Int timeStepCount);

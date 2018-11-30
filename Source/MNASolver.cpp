@@ -294,7 +294,7 @@ void MnaSolver<VarType>::steadyStateInitialization() {
 	}
 	tasks.push_back(std::make_shared<MnaSolver<VarType>::SolveTask>(*this, true));
 
-	Scheduler::resolveDeps(tasks, inEdges, outEdges);
+	sched.resolveDeps(tasks, inEdges, outEdges);
 	sched.createSchedule(tasks, inEdges, outEdges);
 
 	while (time < 10) {

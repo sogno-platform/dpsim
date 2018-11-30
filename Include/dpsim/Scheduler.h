@@ -33,11 +33,15 @@
 #include <unordered_map>
 
 namespace DPsim {
+	// TODO extend / subclass
+	class SchedulingException {};
+
 	class Scheduler {
 	public:
 		typedef std::unordered_map<CPS::Task::Ptr, std::deque<CPS::Task::Ptr>> Edges;
 		typedef std::chrono::steady_clock::duration TaskTime;
 
+		Scheduler() : mRoot(std::make_shared<Root>()) { }
 		virtual ~Scheduler() { }
 
 		// Interface functions
@@ -49,17 +53,23 @@ namespace DPsim {
 		// Called on simulation stop to reliably clean up e.g. running helper threads
 		virtual void stop() {}
 
-		// Static helper functions that are useful for all schedulers.
+		// Helper function that resolves the task-attribute dependencies to task-task dependencies
+		// and inserts a root task
+		void resolveDeps(CPS::Task::List& tasks, Edges& inEdges, Edges& outEdges);
 
-		// Helper function that resolves the task-attribute dependencies to task-task dependencies.
-		static void resolveDeps(const CPS::Task::List& tasks, Edges& inEdges, Edges& outEdges);
-		// Simple topological sorting using Kahn's algorithm.
-		static void topologicalSort(const CPS::Task::List& tasks, const Edges& inEdges, const Edges& outEdges, CPS::Task::List& sortedTasks);
+		// Special attribute that can be returned in the modified attributes of a task
+		// to mark that this task has external side-effects (like logging / interfacing)
+		// and thus has to be executed even though it doesn't modify any attribute.
+		// TODO is it really fine to use nullptr or should we create a special sentinel attribute?
+		static CPS::AttributeBase::Ptr external;
+
+	protected:
+		// Simple topological sort, filtering out tasks that do not need to be executed.
+		void topologicalSort(const CPS::Task::List& tasks, const Edges& inEdges, const Edges& outEdges, CPS::Task::List& sortedTasks);
 		// Separate topologically sorted list of tasks into levels which can be
 		// executed in parallel
 		static void levelSchedule(const CPS::Task::List& tasks, const Edges& inEdges, const Edges& outEdges, std::vector<CPS::Task::List>& levels);
 
-	protected:
 		void initMeasurements(const CPS::Task::List& tasks);
 		// Not thread-safe for multiple calls with same task, but should only
 		// be called once for each task in each step anyway
@@ -67,15 +77,25 @@ namespace DPsim {
 		void writeMeasurements(CPS::String filename);
 		void readMeasurements(CPS::String filename, std::unordered_map<CPS::String, TaskTime::rep>& measurements);
 
+		CPS::Task::Ptr mRoot;
+
 	private:
 		// TODO more sophisticated measurement method might be necessary for
 		// longer simulations (risk of high memory requirements and integer
 		// overflow)
 		std::unordered_map<CPS::Task::Ptr, std::vector<TaskTime>> mMeasurements;
-	};
 
-	// TODO extend / subclass
-	class SchedulingException {};
+		class Root : public CPS::Task {
+		public:
+			Root() : Task("Root") {
+				mAttributeDependencies.push_back(external);
+			}
+
+			void execute(Real time, Int timeStepCount) {
+				throw SchedulingException();
+			}
+		};
+	};
 
 	class Barrier {
 	public:

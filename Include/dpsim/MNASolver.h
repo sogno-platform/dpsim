@@ -206,6 +206,7 @@ namespace DPsim {
 			LogTask(MnaSolver<VarType>& solver) :
 				Task(solver.mName + ".Log"), mSolver(solver) {
 				mAttributeDependencies.push_back(solver.attribute("x"));
+				mModifiedAttributes.push_back(Scheduler::external);
 			}
 
 			void execute(Real time, Int timeStepCount);

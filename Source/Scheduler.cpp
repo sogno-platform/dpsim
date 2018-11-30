@@ -22,9 +22,14 @@
 #include <dpsim/Scheduler.h>
 
 #include <fstream>
+#include <iostream>
+#include <unordered_map>
+#include <unordered_set>
 
 using namespace CPS;
 using namespace DPsim;
+
+CPS::AttributeBase::Ptr Scheduler::external;
 
 void Scheduler::initMeasurements(const Task::List& tasks) {
 	// Fill map here already since it's not protected by a mutex
@@ -70,12 +75,17 @@ void Scheduler::readMeasurements(String filename, std::unordered_map<String, Tas
 	}
 }
 
-void Scheduler::resolveDeps(const Task::List& tasks, Edges& inEdges, Edges& outEdges) {
+void Scheduler::resolveDeps(Task::List& tasks, Edges& inEdges, Edges& outEdges) {
 	// Create graph (list of out/in edges for each node) from attribute dependencies
-	std::unordered_map<CPS::AttributeBase::Ptr, std::deque<Task::Ptr>> dependencies;
+	tasks.push_back(mRoot);
+	std::unordered_map<AttributeBase::Ptr, std::deque<Task::Ptr>> dependencies;
+	std::unordered_set<AttributeBase::Ptr> prevStepDependencies;
 	for (auto task : tasks) {
 		for (auto attr : task->getAttributeDependencies()) {
 			dependencies[AttributeBase::getRefAttribute(attr)].push_back(task);
+		}
+		for (auto attr : task->getPrevStepDependencies()) {
+			prevStepDependencies.insert(attr);
 		}
 	}
 
@@ -85,6 +95,10 @@ void Scheduler::resolveDeps(const Task::List& tasks, Edges& inEdges, Edges& outE
 				outEdges[from].push_back(to);
 				inEdges[to].push_back(from);
 			}
+			if (prevStepDependencies.count(attr)) {
+				outEdges[from].push_back(mRoot);
+				inEdges[mRoot].push_back(from);
+			}
 		}
 	}
 }
@@ -92,22 +106,47 @@ void Scheduler::resolveDeps(const Task::List& tasks, Edges& inEdges, Edges& outE
 void Scheduler::topologicalSort(const Task::List& tasks, const Edges& inEdges, const Edges& outEdges, Task::List& sortedTasks) {
 	sortedTasks.clear();
 
-	// make copies of the edge lists because we modify them
+	// make copies of the edge lists because we modify them (and it makes
+	// things easier since empty lists are automatically created)
 	Edges inEdgesCpy = inEdges, outEdgesCpy = outEdges;
 
-	std::deque<Task::Ptr> ready;
-	for (auto task : tasks) {
-		if (inEdgesCpy[task].empty()) {
-			ready.push_back(task);
+	// do a breadth-first search backwards from the root node first to filter
+	// out unnecessary nodes
+	std::deque<Task::Ptr> q;
+	std::unordered_set<Task::Ptr> visited;
+
+	q.push_back(mRoot);
+	while (!q.empty()) {
+		auto t = q.front();
+		q.pop_front();
+		if (visited.count(t))
+			continue;
+
+		visited.insert(t);
+		for (auto dep : inEdgesCpy[t]) {
+			if (!visited.count(dep)) {
+				q.push_back(dep);
+			}
 		}
 	}
 
+	for (auto t : tasks) {
+		if (inEdgesCpy[t].empty()) {
+			q.push_back(t);
+		}
+	}
 	// keep list of tasks without incoming edges;
 	// iteratively remove such tasks from the graph and put them into the schedule
-	while (!ready.empty()) {
-		Task::Ptr t = ready.front();
-		ready.pop_front();
-		sortedTasks.push_back(t);
+	while (!q.empty()) {
+		Task::Ptr t = q.front();
+		q.pop_front();
+		if (!visited.count(t)) {
+			// don't put unneeded tasks in the schedule, but process them as usual
+			// so the cycle check still works
+			//std::cout << "Dropping " << t->toString() << std::endl;
+		} else if (t != mRoot) {
+			sortedTasks.push_back(t);
+		}
 
 		for (auto after : outEdgesCpy[t]) {
 			for (auto edgeIt = inEdgesCpy[after].begin(); edgeIt != inEdgesCpy[after].end(); ++edgeIt) {
@@ -117,7 +156,7 @@ void Scheduler::topologicalSort(const Task::List& tasks, const Edges& inEdges, c
 				}
 			}
 			if (inEdgesCpy[after].empty()) {
-				ready.push_back(after);
+				q.push_back(after);
 			}
 		}
 		outEdgesCpy.erase(t);
@@ -129,6 +168,7 @@ void Scheduler::topologicalSort(const Task::List& tasks, const Edges& inEdges, c
 		if (!outEdgesCpy[t].empty() || !inEdgesCpy[t].empty())
 			throw SchedulingException();
 	}
+
 }
 
 void Scheduler::levelSchedule(const Task::List& tasks, const Edges& inEdges, const Edges& outEdges, std::vector<Task::List>& levels) {
