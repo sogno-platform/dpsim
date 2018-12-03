@@ -30,6 +30,7 @@
 
 #include <dpsim/Config.h>
 #include <dpsim/Definitions.h>
+#include <dpsim/Scheduler.h>
 #include <cps/Attribute.h>
 #include <cps/Task.h>
 #include <cps/PtrFactory.h>
