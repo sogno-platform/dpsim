@@ -23,12 +23,13 @@
 
 #include <algorithm>
 #include <iostream>
+#include <typeinfo>
 
 using namespace CPS;
 using namespace DPsim;
 
-ThreadLevelScheduler::ThreadLevelScheduler(Int threads, String outMeasurementFile, String inMeasurementFile, Bool useConditionVariable) :
-	mNumThreads(threads), mOutMeasurementFile(outMeasurementFile), mInMeasurementFile(inMeasurementFile), mUseConditionVariable(useConditionVariable), mStartBarrier(threads, useConditionVariable) {
+ThreadLevelScheduler::ThreadLevelScheduler(Int threads, String outMeasurementFile, String inMeasurementFile, Bool useConditionVariable, Bool sortTaskTypes) :
+	mNumThreads(threads), mOutMeasurementFile(outMeasurementFile), mInMeasurementFile(inMeasurementFile), mUseConditionVariable(useConditionVariable), mStartBarrier(threads, useConditionVariable), mSortTaskTypes(sortTaskTypes) {
 	if (threads < 1)
 		throw SchedulingException();
 	mSchedules.resize(threads);
@@ -72,9 +73,32 @@ void ThreadLevelScheduler::createSchedule(const Task::List& tasks, const Edges& 
 		}
 	}
 
+	if (mSortTaskTypes)
+		sortTaskTypes();
+
 	for (int i = 1; i < mNumThreads; i++) {
 		std::thread thread(threadFunction, this, i);
 		mThreads.push_back(std::move(thread));
+	}
+}
+
+void ThreadLevelScheduler::sortTaskTypes() {
+	for (int thread = 0; thread < mNumThreads; thread++) {
+		auto& schedule = mSchedules[thread];
+
+		auto isBarrier = [](const Task::Ptr& t) -> bool {
+			return std::dynamic_pointer_cast<BarrierTask>(t) != nullptr;
+		};
+		auto cmp = [](const Task::Ptr& p1, const Task::Ptr& p2) -> bool {
+			// TODO: according to the standard, the ordering may change between invocations
+			return typeid(*p1).before(typeid(*p2));
+		};
+		auto levelBegin = schedule.begin();
+		while (levelBegin != schedule.end()) {
+			auto levelEnd = std::find_if(levelBegin, schedule.end(), isBarrier);
+			std::sort(levelBegin, levelEnd, cmp);
+			levelBegin = std::find_if_not(levelEnd, schedule.end(), isBarrier);
+		}
 	}
 }
 
