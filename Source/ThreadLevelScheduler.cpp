@@ -58,6 +58,10 @@ void ThreadLevelScheduler::createSchedule(const Task::List& tasks, const Edges& 
 		}
 	} else {
 		for (size_t level = 0; level < levels.size(); level++) {
+			std::vector<size_t> levelBegins(mNumThreads);
+			for (int thread = 0; thread < mNumThreads; thread++)
+				levelBegins[thread] = mSchedules[thread].size();
+
 			// Distribute tasks of one level evenly between threads
 			size_t nextThread = 0;
 			for (auto task : levels[level]) {
@@ -66,6 +70,9 @@ void ThreadLevelScheduler::createSchedule(const Task::List& tasks, const Edges& 
 					nextThread = 0;
 			}
 
+			for (int thread = 0; thread < mNumThreads; thread++)
+				sortTasksByType(mSchedules[thread].begin() + levelBegins[thread], mSchedules[thread].end());
+
 			// Insert BarrierTask for synchronization
 			auto barrier = std::make_shared<BarrierTask>(mSchedules.size(), mUseConditionVariable);
 			for (int thread = 0; thread < mNumThreads; thread++)
@@ -73,33 +80,18 @@ void ThreadLevelScheduler::createSchedule(const Task::List& tasks, const Edges& 
 		}
 	}
 
-	if (mSortTaskTypes)
-		sortTaskTypes();
-
 	for (int i = 1; i < mNumThreads; i++) {
 		std::thread thread(threadFunction, this, i);
 		mThreads.push_back(std::move(thread));
 	}
 }
 
-void ThreadLevelScheduler::sortTaskTypes() {
-	for (int thread = 0; thread < mNumThreads; thread++) {
-		auto& schedule = mSchedules[thread];
-
-		auto isBarrier = [](const Task::Ptr& t) -> bool {
-			return std::dynamic_pointer_cast<BarrierTask>(t) != nullptr;
-		};
-		auto cmp = [](const Task::Ptr& p1, const Task::Ptr& p2) -> bool {
-			// TODO: according to the standard, the ordering may change between invocations
-			return typeid(*p1).before(typeid(*p2));
-		};
-		auto levelBegin = schedule.begin();
-		while (levelBegin != schedule.end()) {
-			auto levelEnd = std::find_if(levelBegin, schedule.end(), isBarrier);
-			std::sort(levelBegin, levelEnd, cmp);
-			levelBegin = std::find_if_not(levelEnd, schedule.end(), isBarrier);
-		}
-	}
+void ThreadLevelScheduler::sortTasksByType(Task::List::iterator begin, CPS::Task::List::iterator end) {
+	auto cmp = [](const Task::Ptr& p1, const Task::Ptr& p2) -> bool {
+		// TODO: according to the standard, the ordering may change between invocations
+		return typeid(*p1).before(typeid(*p2));
+	};
+	std::sort(begin, end, cmp);
 }
 
 void ThreadLevelScheduler::scheduleLevel(const Task::List& tasks, const std::unordered_map<String, TaskTime::rep>& measurements) {
@@ -111,19 +103,47 @@ void ThreadLevelScheduler::scheduleLevel(const Task::List& tasks, const std::uno
 			throw SchedulingException();
 	}
 
-	// Sort tasks in descending execution time
-	auto cmp = [&measurements](const Task::Ptr& p1, const Task::Ptr& p2) -> bool {
-		return measurements.at(p1->toString()) > measurements.at(p2->toString());
-	};
-	std::sort(tasksSorted.begin(), tasksSorted.end(), cmp);
+	if (mSortTaskTypes) {
+		TaskTime::rep totalTime = 0;
+		for (auto task : tasks) {
+			totalTime += measurements.at(task->toString());
+		}
 
-	// Greedy heuristic: schedule the tasks to the thread with the smallest current execution time
-	std::vector<TaskTime::rep> totalTimes(mSchedules.size(), 0);
-	for (auto task : tasksSorted) {
-		auto minIt = std::min_element(totalTimes.begin(), totalTimes.end());
-		size_t minIdx = minIt - totalTimes.begin();
-		mSchedules[minIdx].push_back(task);
-		totalTimes[minIdx] += measurements.at(task->toString());
+		TaskTime::rep avgTime = totalTime / mNumThreads;
+
+		// Sort the tasks by type and then push them to the threads in order
+		// while aiming for approximately equal execution time.
+		// Should work well enough for a large enough number of tasks
+		sortTasksByType(tasksSorted.begin(), tasksSorted.end());
+		size_t task = 0;
+		for (int thread = 0; thread < mNumThreads; thread++) {
+			TaskTime::rep curTime = 0;
+			while (curTime < avgTime && task < tasksSorted.size()) {
+				mSchedules[thread].push_back(tasksSorted[task]);
+				curTime += measurements.at(tasksSorted[task]->toString());
+				task++;
+			}
+		}
+		// All tasks should be distributed, but just to be sure, put the remaining
+		// ones to the last thread
+		for (; task < tasksSorted.size(); task++)
+			mSchedules[mNumThreads-1].push_back(tasksSorted[task]);
+	}
+	else {
+		// Sort tasks in descending execution time
+		auto cmp = [&measurements](const Task::Ptr& p1, const Task::Ptr& p2) -> bool {
+			return measurements.at(p1->toString()) > measurements.at(p2->toString());
+		};
+		std::sort(tasksSorted.begin(), tasksSorted.end(), cmp);
+
+		// Greedy heuristic: schedule the tasks to the thread with the smallest current execution time
+		std::vector<TaskTime::rep> totalTimes(mSchedules.size(), 0);
+		for (auto task : tasksSorted) {
+			auto minIt = std::min_element(totalTimes.begin(), totalTimes.end());
+			size_t minIdx = minIt - totalTimes.begin();
+			mSchedules[minIdx].push_back(task);
+			totalTimes[minIdx] += measurements.at(task->toString());
+		}
 	}
 }
 

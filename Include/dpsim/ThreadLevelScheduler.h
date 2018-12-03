@@ -40,7 +40,7 @@ namespace DPsim {
 	private:
 		void scheduleLevel(const CPS::Task::List& tasks, const std::unordered_map<String, TaskTime::rep>& measurements);
 		static void threadFunction(ThreadLevelScheduler* sched, Int idx);
-		void sortTaskTypes();
+		void sortTasksByType(CPS::Task::List::iterator begin, CPS::Task::List::iterator end);
 		void doStep(Int scheduleIdx);
 
 		Int mNumThreads;
