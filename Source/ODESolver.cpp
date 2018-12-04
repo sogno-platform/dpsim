@@ -21,29 +21,35 @@
  *********************************************************************************/
 
 #include <dpsim/ODESolver.h>
+#include <cps/PowerComponent.h>
 
 using namespace DPsim;
-using namespace CPS;
+//using namespace CPS;
 
-ODESolver::ODESolver(){} //Probably issue with constructor
+ODESolver::ODESolver(String name, std::shared_ptr<CPS::Component> comp, Real dt, Real t0):
+	mTimestep(dt){
 
-void ODESolver::initialize(String name, std::shared_ptr<CPS::Component> comp, Real dt, Real t0) {
-
-	auto odecomp = std::dynamic_pointer_cast<ODEInterface>(comp); //Address of comp?
+	auto odecomp = std::dynamic_pointer_cast<CPS::ODEInterface>(comp); //Address of comp?
 	if (!odecomp)
 		throw CPS::Exception(); // Component does not support the ODE-solver interface
 
+	mComponent=odecomp;
+
 	mProbDim=odecomp->num_states();
+} //Probably issue with constructor
+
+void ODESolver::initialize(Real t0) {
 
 	// Component initialization needed?
 
 	mStates=N_VNew_Serial(mProbDim);
 	// Set initial value: (Different from DAESolver)
-NVSetArrayPointer(N_VGetArrayPointer(mComponent->state_vector()),mStates);
+N_VSetArrayPointer(mComponent->state_vector(),mStates);
 
 // Copied from DAESolver
-	mStSpFunction=[mComponent](double t, double  y[], double  ydot[]){
-		mComponent->StateSpace(t, y, ydot);}
+auto odecomp = std::dynamic_pointer_cast<CPS::ODEInterface>)(mComponent)
+	mStSpFunction=[odecomp](double t, double  y[], double  ydot[]){
+		odecomp->StateSpace(t, y, ydot);}
 
 	mArkode_mem= ARKodeCreate();
 	 if (check_flag(mArkode_mem, "ARKodeCreate", 0))
@@ -85,7 +91,7 @@ NVSetArrayPointer(N_VGetArrayPointer(mComponent->state_vector()),mStates);
  	//flag = ARKodeSetOrder(arkode_mem, 4);
  	//if (check_flag(&flag, "ARKodeOrderSet", 1)) return 1;
 
-	mFlag = ARKodeInit(mArkode_mem, &ODESolver::StateSpaceWrapper, NULL, T0, mStates);
+	mFlag = ARKodeInit(mArkode_mem, &ODESolver::StateSpaceWrapper, NULL, t0, mStates);
 	if (check_flag(&mFlag, "ARKodeInit", 1))
 		mFlag=1;
 
@@ -113,7 +119,7 @@ int ODESolver::StateSpace(realtype t, N_Vector y, N_Vector ydot){
 Real ODESolver::step(Real initial_time) {
 	// Not absolutely necessary; realtype by default double (same as Real)
 	realtype T0 = (realtype) initial_time;
-	realtype Tf = (realtype) initial_time+mTimeStep;
+	realtype Tf = (realtype) initial_time+mTimestep;
 
 	// number integration steps
 	//long int nst,
@@ -123,8 +129,8 @@ Real ODESolver::step(Real initial_time) {
 	// Main integrator loop
 	realtype t = T0;
 	while (Tf-t > 1.0e-15) {
-		flag = ARKode(mArkode_mem, Tf, mStates, &t, ARK_NORMAL);
-		if (check_flag(&flag, "ARKode", 1))	break;
+		mFlag = ARKode(mArkode_mem, Tf, mStates, &t, ARK_NORMAL);
+		if (check_flag(&mFlag, "ARKode", 1))	break;
 	}
 
 	return Tf;
@@ -138,30 +144,29 @@ Real ODESolver::step(Real initial_time) {
 //			 flag >= 0
 //	opt == 2 means function allocates memory so check if returned
 //			 NULL pointer
-int ODESolver::check_flag(void *flagvalue, const string funcname, int opt) {
-	int *errflag;
+int ODESolver::check_flag(void *flagvalue, const std::string funcname, int opt){
+  int *errflag;
 
-	// Check if SUNDIALS function returned NULL pointer - no memory allocated
-	if (opt == 0 && flagvalue == NULL) {
-		cerr << "\nSUNDIALS_ERROR: " << funcname << " failed - returned NULL pointer\n\n";
-		return 1;
-	}
+// Check if SUNDIALS function returned NULL pointer - no memory allocated
+  if (opt == 0 && flagvalue == NULL) {
+    std::cout << "\nSUNDIALS_ERROR: " << funcname << " failed - returned NULL pointer\n\n";
+    return 1; }
 
-	// Check if flag < 0
-	else if (opt == 1) {
-		errflag = (int *) flagvalue;
-		if (*errflag < 0) {
-			cerr << "\nSUNDIALS_ERROR: " << funcname << " failed with flag = " << *errflag << "\n\n";
-			return 1;
-		}
-	}
-	// Check if function returned NULL pointer - no memory allocated
-	else if (opt == 2 && flagvalue == NULL) {
-		cerr << "\nMEMORY_ERROR: " << funcname << " failed - returned NULL pointer\n\n";
-		return 1;
-	}
+  // Check if flag < 0
+  else if (opt == 1) {
+    errflag = (int *) flagvalue;
+    if (*errflag < 0) {
+      std::cout << "\nSUNDIALS_ERROR: " << funcname << " failed with flag = " << *errflag << "\n\n";
+      return 1;
+    }
+  }
 
-	return 0;
+  // Check if function returned NULL pointer - no memory allocated
+  else if (opt == 2 && flagvalue == NULL) {
+    std::cout << "\nMEMORY_ERROR: " << funcname << " failed - returned NULL pointer\n\n";
+    return 1; }
+
+  return 0;
 }
 
 ODESolver::~ODESolver() {

@@ -23,17 +23,19 @@
 
 #pragma once
 
-#ifdef WITH_SUNDIALS
-
 #include <dpsim/Solver.h>
 
 #include <cps/Solver/ODEInterface.h>
+#include <cps/Logger.h>
 
 #include <arkode/arkode.h>              // prototypes for ARKode fcts., consts. and includes sundials_types.h
 #include <nvector/nvector_serial.h>     // access to serial N_Vector
 #include <sunmatrix/sunmatrix_dense.h>  // access to dense SUNMatrix
 #include <sunlinsol/sunlinsol_dense.h>  // access to dense SUNLinearSolver
 #include <arkode/arkode_direct.h>       // access to ARKDls interface
+
+// led to problems before:
+//using namespace CPS;
 
 namespace DPsim {
 	/// Solver class for ODE (Ordinary Differential Equation) systems
@@ -42,7 +44,7 @@ namespace DPsim {
 		/// Constant time step
 		Real mTimestep;
 		/// Component to simulate, possible specialized component needed
-		CPS::Component mComponent;
+		CPS::ODEInterface::Ptr mComponent;
 		/// Number of differential Variables (states)
 		Int mProbDim;
 
@@ -78,18 +80,17 @@ namespace DPsim {
 	  int Jacobian(realtype t, N_Vector y, N_Vector fy, SUNMatrix J,
 	 													 N_Vector tmp1, N_Vector tmp2, N_Vector tmp3);
 		/// ARKode- standard error detection function; in DAE-solver not detection function is used -> for efficiency purposes?
-		static int check_flag(void *flagvalue, const std::string funcname, int opt);
+		int check_flag(void *flagvalue, const std::string funcname, int opt);
 
 	public:
 		/// Create solve object with given parameters; Smth. mnore specialized than component needed?
-		//ODESolver(String name, std::shared_ptr<CPS::Component>, Real dt, Real t0);
+		ODESolver(String name, std::shared_ptr<CPS::Component>, Real dt, Real t0);
 		/// Deallocate all memory
 		~ODESolver();
 
 		/// Initialize ARKode-solve_environment
-		void initialize(String name, std::shared_ptr<CPS::Component> comp, Real dt, Real t0);
+		void initialize(Real t0);
 		/// Solve system for the current time
 		Real step(Real initial_time);
 	};
 }
-#endif // WITH_SUNDIALS

@@ -99,11 +99,13 @@ int main(int argc, char* argv[]) {
 		Domain::DP, Solver::Type::MNA, Logger::Level::INFO); //Domain::DP, Solver::Type::MNA, Logger::Level::INFO*/
 
 	std::shared_ptr<ODESolver>  ode_solver;
-	ode_solver->initialize("SynchronGenerator", gen, timeStep, 0);
-	std::vector<std::shared_ptr<ODESolver> > ode_comps;
-	ode_comps.push_back(ode_solver);
+	ode_solver= std::make_shared<ODESolver>("DP_SynGen_dq_ThreePhFault_SynGen_SOLVER", gen, timeStep, 0);
 
-	Sim_ODE sim(simName, sys, timeStep, finalTime, ode_comps,Domain::DP, Solver::Type::MNA, Logger::Level::INFO);
+	std::vector<std::shared_ptr<ODESolver> > ode_comps;
+	ode_comps.push_back(ode_solver); // for each ODE-component
+
+	// could try auto instead of Sim_ODE(did not work out as intended) or delete logger parameter
+	Sim_ODE sim(simName, sys, timeStep, finalTime, ode_comps, Domain::DP, Solver::Type::MNA, Logger::Level::INFO);
 
 	sim.addLogger(logger);
 

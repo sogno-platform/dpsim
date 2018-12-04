@@ -9,36 +9,36 @@ endif()
 # targets
 set(CIRCUIT_SOURCES
 	# Dynamic phasor examples
-	Circuits/DP_VS_R1.cpp
-	Circuits/DP_CS_R1.cpp
-	Circuits/DP_VS_RL1.cpp
-	Circuits/DP_VS_RC1.cpp	
-	Circuits/DP_CS_R2CL.cpp
-	Circuits/DP_VS_CS_R4.cpp
-	Circuits/DP_VS_R2L3.cpp
+	#Circuits/DP_VS_R1.cpp
+	#Circuits/DP_CS_R1.cpp
+	#Circuits/DP_VS_RL1.cpp
+	#Circuits/DP_VS_RC1.cpp	
+	#Circuits/DP_CS_R2CL.cpp
+	#Circuits/DP_VS_CS_R4.cpp
+	#Circuits/DP_VS_R2L3.cpp
 
 	#Circuits/DP_VS_PiLine_R.cpp
 	#Circuits/DP_VS_Trafo_R.cpp
 	#Circuits/DP_ResVS_RL_Switch.cpp	
 
 	# EMT examples
-	Circuits/EMT_VS_R1.cpp
-	Circuits/EMT_VS_RC1.cpp
-	Circuits/EMT_CS_R1.cpp
-	Circuits/EMT_VS_RL1.cpp
-	Circuits/EMT_CS_R2CL.cpp
-	Circuits/EMT_VS_R2L3.cpp
-	Circuits/EMT_VS_CS_R4_AC.cpp
-	Circuits/EMT_VS_CS_R4_DC.cpp	
+	#Circuits/EMT_VS_R1.cpp
+	#Circuits/EMT_VS_RC1.cpp
+	#Circuits/EMT_CS_R1.cpp
+	#Circuits/EMT_VS_RL1.cpp
+	#Circuits/EMT_CS_R2CL.cpp
+	#Circuits/EMT_VS_R2L3.cpp
+	#Circuits/EMT_VS_CS_R4_AC.cpp
+	#Circuits/EMT_VS_CS_R4_DC.cpp	
 	
 	#Circuits/EMT_ResVS_RL_Switch.cpp
 )
 
 set(SYNCGEN_SOURCES
-	SynchronGenerator/DP_SynGen_dq_SteadyState.cpp
+	#SynchronGenerator/DP_SynGen_dq_SteadyState.cpp
 	SynchronGenerator/DP_SynGen_dq_ThreePhFault.cpp
-	SynchronGenerator/DP_SynGen_TrStab_SteadyState.cpp
-	SynchronGenerator/DP_SynGen_TrStab_LoadStep.cpp
+	#SynchronGenerator/DP_SynGen_TrStab_SteadyState.cpp
+	#SynchronGenerator/DP_SynGen_TrStab_LoadStep.cpp
 	#SynchronGenerator/DP_SynchronGenerator_BalancedResLoad.cpp
 	#SynchronGenerator/DP_SynchronGenerator_ExciterAndTurbine.cpp
 	#SynchronGenerator/DP_SynchronGenerator_SimpThreePhaseFault.cpp
