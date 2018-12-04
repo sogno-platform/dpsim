@@ -72,7 +72,7 @@ int main(int argc, char* argv[]) {
 	auto gen = Ph3::SynchronGeneratorDQ::make("DP_SynGen_dq_ThreePhFault_SynGen");
 	gen->setFundamentalParametersPU(nomPower, nomPhPhVoltRMS, nomFreq, poleNum, nomFieldCurr,
 		Rs, Ll, Lmd, Lmq, Rfd, Llfd, Rkd, Llkd, Rkq1, Llkq1, Rkq2, Llkq2, H,
-		initActivePower, initReactivePower, initTerminalVolt, initVoltAngle, fieldVoltage, mechPower);
+		initActivePower, initReactivePower, initTerminalVolt, initVoltAngle, fieldVoltage, mechPower); //no real initialization
 
 	auto res = Ph3::SeriesResistor::make("R_load");
 	res->setParameters(Rload);
@@ -106,7 +106,7 @@ int main(int argc, char* argv[]) {
 	ode_comps.push_back(ode_solver); // for each ODE-component
 
 	Sim_ODE sim(simName, sys, timeStep, finalTime, ode_comps, Domain::DP, Solver::Type::MNA, Logger::Level::INFO);
-
+	std::cout <<"made sim" << std::endl;
 	sim.addLogger(logger);
 
 	// Events

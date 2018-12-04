@@ -39,9 +39,7 @@ void ODESolver::initialize(Real t0) {
 	// Component initialization needed?
 	mStates=N_VNew_Serial(mProbDim);
 	// Set initial value: (Different from DAESolver)
-	N_VSetArrayPointer(mComponent->state_vector(),mStates); //breaks down
-	/*std::cout<< NV_Ith_S(mStates,0)<< " "<<  NV_Ith_S(mStates,1)<< " "<<NV_Ith_S(mStates,2)<< " "<<NV_Ith_S(mStates,3)<< " "<<NV_Ith_S(mStates,4)
-	<< " "<<NV_Ith_S(mStates,5)<< " "<<NV_Ith_S(mStates,6)<< " "<<NV_Ith_S(mStates,7)<< " "<<NV_Ith_S(mStates,8)<< std::endl;*/
+	N_VSetArrayPointer(mComponent->state_vector(),mStates);
 	// Copied from DAESolver
   CPS::ODEInterface::Ptr dummy = mComponent;
 	mStSpFunction=[dummy](double t, const double  y[], double  ydot[]){

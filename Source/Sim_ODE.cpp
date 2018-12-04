@@ -43,42 +43,42 @@
    mODESolverList(ODESolverList){}
 
 Real Sim_ODE::step(){
-     Real nextTime;
+  Real nextTime; //Auxiliary variable necessary?
 
-   #ifdef WITH_SHMEM
-   	for (auto ifm : mInterfaces) {
-   		if (mTimeStepCount % ifm.downsampling == 0)
-   			ifm.interface->readValues(ifm.sync);
-   	}
-   #endif
+ #ifdef WITH_SHMEM
+ 	for (auto ifm : mInterfaces) {
+ 		if (mTimeStepCount % ifm.downsampling == 0)
+ 			ifm.interface->readValues(ifm.sync);
+ 	}
+ #endif
 
-   	mEvents.handleEvents(mTime);
+ 	mEvents.handleEvents(mTime);
 
-    // ODE-Solver:
-    for (auto ode_solver:mODESolverList){
-      nextTime = ode_solver->step(mTime);
-      ode_solver->log(mTime); //currently not supported
-    }
+  // ODE-Solver:
+  for (auto ode_solver:mODESolverList){
+    nextTime = ode_solver->step(mTime);
+    ode_solver->log(mTime); //currently not supported
+  }
 
-    //DAE-Solver:
-    nextTime = mSolver->step(mTime);
-  	mSolver->log(mTime);
+  //DAE-Solver:
+  nextTime = mSolver->step(mTime);
+	mSolver->log(mTime);
 
-    #ifdef WITH_SHMEM
-    	for (auto ifm : mInterfaces) {
-    		if (mTimeStepCount % ifm.downsampling == 0)
-    			ifm.interface->writeValues();
-    	}
-    #endif
+  #ifdef WITH_SHMEM
+  	for (auto ifm : mInterfaces) {
+  		if (mTimeStepCount % ifm.downsampling == 0)
+  			ifm.interface->writeValues();
+  	}
+  #endif
 
-    	for (auto lg : mLoggers) {
-    		if (mTimeStepCount % lg.downsampling == 0) {
-    			lg.logger->log(mTime);
-            }
-    	}
+  	for (auto lg : mLoggers) {
+  		if (mTimeStepCount % lg.downsampling == 0) {
+  			lg.logger->log(mTime);
+          }
+  	}
 
-    	mTime = nextTime;
-    	mTimeStepCount++;
+  	mTime = nextTime;
+  	mTimeStepCount++;
 
-      return mTime;
+    return mTime;
 }
