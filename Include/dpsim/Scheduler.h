@@ -109,6 +109,8 @@ namespace DPsim {
 		/// first use have returned before the first call to the second use.
 		void wait();
 
+		void signal();
+
 	private:
 		Int mLimit;
 		std::atomic<Int> mCount;
@@ -120,12 +122,11 @@ namespace DPsim {
 
 	class BarrierTask : public CPS::Task {
 	public:
-		BarrierTask() = delete;
-		BarrierTask(Int limit, Bool useConditionVariable = false) : mBarrier(limit, useConditionVariable) {}
-
+		typedef std::shared_ptr<BarrierTask> Ptr;
+		void addBarrier(Barrier* b);
 		void execute(Real time, Int timeStepCount);
 
 	private:
-		Barrier mBarrier;
+		std::vector<Barrier*> mBarriers;
 	};
 }

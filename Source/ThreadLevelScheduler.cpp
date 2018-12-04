@@ -35,6 +35,11 @@ ThreadLevelScheduler::ThreadLevelScheduler(Int threads, String outMeasurementFil
 	mSchedules.resize(threads);
 }
 
+ThreadLevelScheduler::~ThreadLevelScheduler() {
+	for (auto barrier : mBarriers)
+		delete barrier;
+}
+
 void ThreadLevelScheduler::createSchedule(const Task::List& tasks, const Edges& inEdges, const Edges& outEdges) {
 	Task::List ordered;
 	std::vector<Task::List> levels;
@@ -52,9 +57,7 @@ void ThreadLevelScheduler::createSchedule(const Task::List& tasks, const Edges& 
 			// Distribute tasks such that the execution time is (approximately) minimized
 			scheduleLevel(levels[level], measurements);
 			// Insert BarrierTask for synchronization
-			auto barrier = std::make_shared<BarrierTask>(mSchedules.size(), mUseConditionVariable);
-			for (int thread = 0; thread < mNumThreads; thread++)
-				mSchedules[thread].push_back(barrier);
+			insertBarrierTask();
 		}
 	} else {
 		for (size_t level = 0; level < levels.size(); level++) {
@@ -74,9 +77,7 @@ void ThreadLevelScheduler::createSchedule(const Task::List& tasks, const Edges& 
 				sortTasksByType(mSchedules[thread].begin() + levelBegins[thread], mSchedules[thread].end());
 
 			// Insert BarrierTask for synchronization
-			auto barrier = std::make_shared<BarrierTask>(mSchedules.size(), mUseConditionVariable);
-			for (int thread = 0; thread < mNumThreads; thread++)
-				mSchedules[thread].push_back(barrier);
+			insertBarrierTask();
 		}
 	}
 
@@ -143,6 +144,20 @@ void ThreadLevelScheduler::scheduleLevel(const Task::List& tasks, const std::uno
 			size_t minIdx = minIt - totalTimes.begin();
 			mSchedules[minIdx].push_back(task);
 			totalTimes[minIdx] += measurements.at(task->toString());
+		}
+	}
+}
+
+void ThreadLevelScheduler::insertBarrierTask() {
+	mBarriers.push_back(new Barrier(mNumThreads, mUseConditionVariable));
+	for (int thread = 0; thread < mNumThreads; thread++) {
+		BarrierTask::Ptr task;
+		if (mSchedules[thread].size() != 0 && (task = std::dynamic_pointer_cast<BarrierTask>(mSchedules[thread].back()))) {
+			task->addBarrier(mBarriers.back());
+		} else {
+			task = std::make_shared<BarrierTask>();
+			task->addBarrier(mBarriers.back());
+			mSchedules[thread].push_back(task);
 		}
 	}
 }

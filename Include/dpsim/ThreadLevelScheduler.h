@@ -31,6 +31,7 @@ namespace DPsim {
 	public:
 		// TODO: maybe extra parameter for whether the start and/or inter-level barriers use spinlock or CV
 		ThreadLevelScheduler(Int threads = 1, String outMeasurementFile = String(), String inMeasurementFile = String(), Bool useConditionVariables = false, Bool sortTaskTypes = false);
+		~ThreadLevelScheduler();
 
 		void createSchedule(const CPS::Task::List& tasks, const Edges& inEdges, const Edges& outEdges);
 		void step(Real time, Int timeStepCount);
@@ -38,10 +39,12 @@ namespace DPsim {
 		void getMeasurements();
 
 	private:
+		void insertBarrierTask();
 		void scheduleLevel(const CPS::Task::List& tasks, const std::unordered_map<String, TaskTime::rep>& measurements);
-		static void threadFunction(ThreadLevelScheduler* sched, Int idx);
 		void sortTasksByType(CPS::Task::List::iterator begin, CPS::Task::List::iterator end);
+
 		void doStep(Int scheduleIdx);
+		static void threadFunction(ThreadLevelScheduler* sched, Int idx);
 
 		Int mNumThreads;
 		String mOutMeasurementFile;
@@ -51,6 +54,7 @@ namespace DPsim {
 		Bool mSortTaskTypes;
 
 		std::vector<std::thread> mThreads;
+		std::vector<Barrier*> mBarriers;
 		std::vector<CPS::Task::List> mSchedules;
 
 		Bool mJoining = false;

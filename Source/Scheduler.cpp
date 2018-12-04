@@ -208,14 +208,41 @@ void Barrier::wait() {
 				mCondition.wait(lk);
 		}
 	} else {
-		if (mCount.fetch_add(1) == mLimit-1) {
-			mCount = 0;
+		if (mCount.fetch_add(1, std::memory_order_acquire) == mLimit-1) {
+			mCount.store(0, std::memory_order_release);
 		} else {
-			while (mCount != 0);
+			while (mCount.load(std::memory_order_acquire) != 0);
 		}
 	}
 }
 
+void Barrier::signal() {
+	if (mUseCondition) {
+		std::unique_lock<std::mutex> lk(mMutex);
+		mCount++;
+		if (mCount == mLimit) {
+			mCount = 0;
+			lk.unlock();
+			mCondition.notify_all();
+		}
+	} else {
+		if (mCount.fetch_add(1, std::memory_order_acquire) == mLimit-1) {
+			mCount.store(0, std::memory_order_release);
+		}
+	}
+}
+
+void BarrierTask::addBarrier(Barrier* b) {
+	mBarriers.push_back(b);
+}
+
 void BarrierTask::execute(Real time, Int timeStepCount) {
-	mBarrier.wait();
+	if (mBarriers.size() == 1) {
+		mBarriers[0]->wait();
+	} else {
+		for (size_t i = 0; i < mBarriers.size()-1; i++) {
+			mBarriers[i]->signal();
+		}
+		mBarriers[mBarriers.size()-1]->wait();
+	}
 }
