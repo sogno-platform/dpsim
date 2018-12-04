@@ -20,7 +20,9 @@ endif()
 
 if(WITH_SUNDIALS)
 	list(APPEND SOURCES DAESolver.cpp)
+	#For ODE-Solver class:
     list(APPEND SOURCES ODESolver.cpp)
+	list(APPEND SOURCES Sim_ODE.cpp)
 	list(APPEND INCLUDE_DIRS ${SUNDIALS_INCLUDE_DIRS})
 	list(APPEND LIBRARIES ${SUNDIALS_LIBRARIES})
 endif()
@@ -28,7 +30,7 @@ endif()
 if(WITH_PYTHON)
 	list(APPEND INCLUDE_DIRS ${PYTHON_INCLUDE_DIRS})
 	list(APPEND LIBRARIES ${PYTHON_LIBRARIES})
-	
+
 	add_subdirectory(Python)
 endif()
 

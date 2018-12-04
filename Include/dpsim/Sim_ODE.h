@@ -34,7 +34,8 @@ namespace DPsim {
 			Real timeStep, Real finalTime, std::vector<std::shared_ptr<ODESolver> > ODESolverList,
 			CPS::Domain domain = CPS::Domain::DP,
 			Solver::Type solverType = Solver::Type::MNA,
-			CPS::Logger::Level logLevel = CPS::Logger::Level::INFO,
-			Bool steadyStateInit = false);
+			CPS::Logger::Level logLevel = CPS::Logger::Level::INFO);
+
+    Real step();
   };
 }

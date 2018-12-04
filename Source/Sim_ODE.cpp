@@ -30,7 +30,7 @@
 
  #include <dpsim/Sim_ODE.h>
 
- using namespace CPS;
+ //using namespace CPS;
  using namespace DPsim;
 
  Sim_ODE::Sim_ODE(String name,
@@ -42,7 +42,7 @@
    Simulation(name, system, timeStep, finalTime, domain, solverType, logLevel),
    mODESolverList(ODESolverList){}
 
-   Real Sim_ODE:.step(){
+Real Sim_ODE::step(){
      Real nextTime;
 
    #ifdef WITH_SHMEM
@@ -54,10 +54,15 @@
 
    	mEvents.handleEvents(mTime);
 
+    // ODE-Solver:
     for (auto ode_solver:mODESolverList){
       nextTime = ode_solver->step(mTime);
-      ode_solver->log(mTime);
+      ode_solver->log(mTime); //currently not supported
     }
+
+    //DAE-Solver:
+    nextTime = mSolver->step(mTime);
+  	mSolver->log(mTime);
 
     #ifdef WITH_SHMEM
     	for (auto ifm : mInterfaces) {
@@ -76,4 +81,4 @@
     	mTimeStepCount++;
 
       return mTime;
-   }
+}

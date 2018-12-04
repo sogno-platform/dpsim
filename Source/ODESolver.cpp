@@ -26,30 +26,26 @@
 using namespace DPsim;
 //using namespace CPS;
 
-ODESolver::ODESolver(String name, std::shared_ptr<CPS::Component> comp, Real dt, Real t0):
+ODESolver::ODESolver(String name, CPS::ODEInterface::Ptr comp, Real dt, Real t0):
 	mTimestep(dt){
 
-	auto odecomp = std::dynamic_pointer_cast<CPS::ODEInterface>(comp); //Address of comp?
-	if (!odecomp)
-		throw CPS::Exception(); // Component does not support the ODE-solver interface
-
-	mComponent=odecomp;
-
-	mProbDim=odecomp->num_states();
+	mComponent=comp;
+	mProbDim=mComponent->num_states();
+	initialize(t0);
 } //Probably issue with constructor
 
 void ODESolver::initialize(Real t0) {
 
 	// Component initialization needed?
-
 	mStates=N_VNew_Serial(mProbDim);
 	// Set initial value: (Different from DAESolver)
-N_VSetArrayPointer(mComponent->state_vector(),mStates);
-
-// Copied from DAESolver
-auto odecomp = std::dynamic_pointer_cast<CPS::ODEInterface>)(mComponent)
-	mStSpFunction=[odecomp](double t, double  y[], double  ydot[]){
-		odecomp->StateSpace(t, y, ydot);}
+	N_VSetArrayPointer(mComponent->state_vector(),mStates); //breaks down
+	/*std::cout<< NV_Ith_S(mStates,0)<< " "<<  NV_Ith_S(mStates,1)<< " "<<NV_Ith_S(mStates,2)<< " "<<NV_Ith_S(mStates,3)<< " "<<NV_Ith_S(mStates,4)
+	<< " "<<NV_Ith_S(mStates,5)<< " "<<NV_Ith_S(mStates,6)<< " "<<NV_Ith_S(mStates,7)<< " "<<NV_Ith_S(mStates,8)<< std::endl;*/
+	// Copied from DAESolver
+  CPS::ODEInterface::Ptr dummy = mComponent;
+	mStSpFunction=[dummy](double t, const double  y[], double  ydot[]){
+		dummy->StateSpace(t, y, ydot);};
 
 	mArkode_mem= ARKodeCreate();
 	 if (check_flag(mArkode_mem, "ARKodeCreate", 0))
@@ -104,12 +100,12 @@ int ODESolver::StateSpaceWrapper(realtype t, N_Vector y, N_Vector ydot, void *us
 	ODESolver *self=reinterpret_cast<ODESolver *>(user_data);
 	return self->StateSpace(t, y, ydot);
 }
-
+/*
 int ODESolver::JacobianWrapper(realtype t, N_Vector y, N_Vector fy, SUNMatrix J, void *user_data,
                N_Vector tmp1, N_Vector tmp2, N_Vector tmp3){
 	ODESolver *self=reinterpret_cast<ODESolver *>(user_data);
 	return self->Jacobian(t, y, fy, J, tmp1, tmp2, tmp3);
-}
+}*/
 
 int ODESolver::StateSpace(realtype t, N_Vector y, N_Vector ydot){
 	mStSpFunction(t, NV_DATA_S(y), NV_DATA_S(ydot));

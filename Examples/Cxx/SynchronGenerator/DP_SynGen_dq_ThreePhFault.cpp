@@ -91,9 +91,10 @@ int main(int argc, char* argv[]) {
 
 	//logger:
 	auto logger = DataLogger::make(simName);
+	/*
 	logger->addAttribute("i", gen->attribute("i_intf"));
 	//logger->addAttribute("v1", n1->attribute("v"));
-	logger->addAttribute("theta", gen->attribute("theta"));
+	logger->addAttribute("theta", gen->attribute("theta"));*/
 	// Simulation
 	/*Simulation sim(simName, sys, timeStep, finalTime,
 		Domain::DP, Solver::Type::MNA, Logger::Level::INFO); //Domain::DP, Solver::Type::MNA, Logger::Level::INFO*/
@@ -104,7 +105,6 @@ int main(int argc, char* argv[]) {
 	std::vector<std::shared_ptr<ODESolver> > ode_comps;
 	ode_comps.push_back(ode_solver); // for each ODE-component
 
-	// could try auto instead of Sim_ODE(did not work out as intended) or delete logger parameter
 	Sim_ODE sim(simName, sys, timeStep, finalTime, ode_comps, Domain::DP, Solver::Type::MNA, Logger::Level::INFO);
 
 	sim.addLogger(logger);
