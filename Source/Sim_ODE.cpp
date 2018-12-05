@@ -53,6 +53,10 @@ Real Sim_ODE::step(){
  #endif
 
  	mEvents.handleEvents(mTime);
+  //for testing purposes
+  /*for(auto ode_solver:mODESolverList){
+    std::cout <<ode_solver->get_comp()->get_data() << std::endl;
+  }*/
 
   // ODE-Solver:
   for (auto ode_solver:mODESolverList){

@@ -40,6 +40,7 @@ void ODESolver::initialize(Real t0) {
 	mStates=N_VNew_Serial(mProbDim);
 	// Set initial value: (Different from DAESolver)
 	N_VSetArrayPointer(mComponent->state_vector(),mStates);
+
 	// Copied from DAESolver
   CPS::ODEInterface::Ptr dummy = mComponent;
 	mStSpFunction=[dummy](double t, const double  y[], double  ydot[]){
@@ -127,6 +128,8 @@ Real ODESolver::step(Real initial_time) {
 		if (check_flag(&mFlag, "ARKode", 1))	break;
 	}
 
+	//here write back?
+	mComponent->write_back_states(N_VGetArrayPointer_Serial(mStates));
 	return Tf;
 }
 

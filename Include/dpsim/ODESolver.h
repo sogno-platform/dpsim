@@ -93,5 +93,10 @@ namespace DPsim {
 		void initialize(Real t0);
 		/// Solve system for the current time
 		Real step(Real initial_time);
+
+		//for testing purposes:
+		CPS::ODEInterface::Ptr get_comp(){
+			return mComponent;
+		}
 	};
 }
