@@ -106,7 +106,6 @@ int main(int argc, char* argv[]) {
 	ode_comps.push_back(ode_solver); // for each ODE-component
 
 	Sim_ODE sim(simName, sys, timeStep, finalTime, ode_comps, Domain::DP, Solver::Type::MNA, Logger::Level::INFO);
-	std::cout <<"made sim" << std::endl;
 	sim.addLogger(logger);
 
 	// Events
