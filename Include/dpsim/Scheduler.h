@@ -104,11 +104,17 @@ namespace DPsim {
 			mLimit(limit), mCount(0), mUseCondition(useCondition) {}
 
 		/// Blocks until |limit| calls have been made, at which point all threads
-		/// return. Can in general be reused, but some other synchronization method
+		/// return. Provide synchronization, i.e. all writes from before this call
+		/// are visible in all threads after this call.
+		/// Can in general be reused, but some other synchronization method
 		/// (like a second barrier) has to be used to ensure that all calls of the
 		/// first use have returned before the first call to the second use.
 		void wait();
 
+		/// Increases the barrier counter like wait does, but does not wait for it to
+		/// reach the limit (so this does not provide any synchronization with
+		/// other threads). Can be used to eliminate unnecessary waits if
+		/// multiple barriers are used in sequence.
 		void signal();
 
 	private:

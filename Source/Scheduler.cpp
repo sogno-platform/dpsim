@@ -208,7 +208,11 @@ void Barrier::wait() {
 				mCondition.wait(lk);
 		}
 	} else {
-		if (mCount.fetch_add(1, std::memory_order_acquire) == mLimit-1) {
+		// We need at least one release from each thread to ensure that
+		// every write from before the wait() is visible in every other thread,
+		// and the fetch needs to be an acquire anyway, so use acq_rel instead of acquire.
+		// (This generates the same code on x86.)
+		if (mCount.fetch_add(1, std::memory_order_acq_rel) == mLimit-1) {
 			mCount.store(0, std::memory_order_release);
 		} else {
 			while (mCount.load(std::memory_order_acquire) != 0);
@@ -226,6 +230,7 @@ void Barrier::signal() {
 			mCondition.notify_all();
 		}
 	} else {
+		// No release here, as this call does not provide any synchronization anyway.
 		if (mCount.fetch_add(1, std::memory_order_acquire) == mLimit-1) {
 			mCount.store(0, std::memory_order_release);
 		}
