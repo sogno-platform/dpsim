@@ -27,9 +27,9 @@ using namespace DPsim;
 //using namespace CPS;
 
 ODESolver::ODESolver(String name, CPS::ODEInterface::Ptr comp, Real dt, Real t0):
+	mComponent(comp),
 	mTimestep(dt){
 
-	mComponent=comp;
 	mProbDim=mComponent->num_states();
 	initialize(t0);
 } //Probably issue with constructor
@@ -122,6 +122,9 @@ Real ODESolver::step(Real initial_time) {
 	//long int netf;
 
 	// Main integrator loop
+
+	mComponent->pre_step();
+
 	realtype t = T0;
 	while (Tf-t > 1.0e-15) {
 		mFlag = ARKode(mArkode_mem, Tf, mStates, &t, ARK_NORMAL);
@@ -129,7 +132,7 @@ Real ODESolver::step(Real initial_time) {
 	}
 
 	//here write back?
-	mComponent->write_back_states(N_VGetArrayPointer_Serial(mStates));
+	mComponent->write_back_states(NV_DATA_S(mStates));
 	return Tf;
 }
 

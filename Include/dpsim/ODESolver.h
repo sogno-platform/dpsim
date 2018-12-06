@@ -41,10 +41,12 @@ namespace DPsim {
 	/// Solver class for ODE (Ordinary Differential Equation) systems
 	class ODESolver: public Solver {
 	protected:
-		/// Constant time step
-		Real mTimestep;
+
 		/// Component to simulate, possible specialized component needed
 		CPS::ODEInterface::Ptr mComponent;
+
+		/// Constant time step
+		Real mTimestep;
 
 		/// Number of differential Variables (states)
 		Int mProbDim;
