@@ -105,6 +105,7 @@ PyMODINIT_FUNC PyInit__dpsim(void) {
 	if (!m)
 		return nullptr;
 
+	PyModule_AddStringConstant(m, "__version__", DPSIM_RELEASE);
 	Py_INCREF(&Simulation::type);
 	PyModule_AddObject(m, "Simulation", (PyObject*) &Simulation::type);
 	Py_INCREF(&SystemTopology::type);
