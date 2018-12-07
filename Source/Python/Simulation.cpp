@@ -127,12 +127,6 @@ void Python::Simulation::threadFunction(Python::Simulation *self)
 		}
 	}
 
-	{
-		std::unique_lock<std::mutex> lk(*self->mut);
-		newState(self, State::done);
-		self->cond->notify_one();
-	}
-
 	self->sim->scheduler()->stop();
 
 #ifdef WITH_SHMEM
@@ -142,6 +136,12 @@ void Python::Simulation::threadFunction(Python::Simulation *self)
 
 	for (auto lg : self->sim->loggers())
 		lg->close();
+
+	{
+		std::unique_lock<std::mutex> lk(*self->mut);
+		newState(self, State::done);
+		self->cond->notify_one();
+	}
 }
 
 PyObject* Python::Simulation::newfunc(PyTypeObject* subtype, PyObject *args, PyObject *kwds)
