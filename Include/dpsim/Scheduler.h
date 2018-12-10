@@ -109,13 +109,52 @@ namespace DPsim {
 		/// Can in general be reused, but some other synchronization method
 		/// (like a second barrier) has to be used to ensure that all calls of the
 		/// first use have returned before the first call to the second use.
-		void wait();
+		void wait() {
+			if (mUseCondition) {
+				std::unique_lock<std::mutex> lk(mMutex);
+				mCount++;
+				if (mCount == mLimit) {
+					mCount = 0;
+					lk.unlock();
+					mCondition.notify_all();
+				} else {
+					// necessary because of spurious wakeups
+					while (mCount != mLimit && mCount != 0)
+						mCondition.wait(lk);
+				}
+			} else {
+				// We need at least one release from each thread to ensure that
+				// every write from before the wait() is visible in every other thread,
+				// and the fetch needs to be an acquire anyway, so use acq_rel instead of acquire.
+				// (This generates the same code on x86.)
+				if (mCount.fetch_add(1, std::memory_order_acq_rel) == mLimit-1) {
+					mCount.store(0, std::memory_order_release);
+				} else {
+					while (mCount.load(std::memory_order_acquire) != 0);
+				}
+			}
+		}
 
 		/// Increases the barrier counter like wait does, but does not wait for it to
 		/// reach the limit (so this does not provide any synchronization with
 		/// other threads). Can be used to eliminate unnecessary waits if
 		/// multiple barriers are used in sequence.
-		void signal();
+		void signal() {
+			if (mUseCondition) {
+				std::unique_lock<std::mutex> lk(mMutex);
+				mCount++;
+				if (mCount == mLimit) {
+					mCount = 0;
+					lk.unlock();
+					mCondition.notify_all();
+				}
+			} else {
+				// No release here, as this call does not provide any synchronization anyway.
+				if (mCount.fetch_add(1, std::memory_order_acquire) == mLimit-1) {
+					mCount.store(0, std::memory_order_release);
+				}
+			}
+		}
 
 	private:
 		Int mLimit;
