@@ -32,30 +32,18 @@ ODESolver::ODESolver(String name, CPS::ODEInterface::Ptr comp, Real dt, Real t0)
 
 	mProbDim=mComponent->num_states();
 	initialize(t0);
-} //Probably issue with constructor
+}
 
 void ODESolver::initialize(Real t0) {
 
-	// Component initialization needed?
 	mStates=N_VNew_Serial(mProbDim);
-	// Set initial value: (Different from DAESolver)
+	// Set initial value: (Different from DAESolver), only for already initialized components!
 	N_VSetArrayPointer(mComponent->state_vector(),mStates);
-
-	/*double* comp_states = mComponent->state_vector();
-	std::cout <<"intialize ode-class" << std::endl;
-	for(int i=0;i<mProbDim;i++){
-		NV_Ith_S(mStates,i)=comp_states[i];
-		std::cout << comp_states[i] << " " ;
-	}
-	std::cout<<std::endl;*/
 
 	// Copied from DAESolver
   CPS::ODEInterface::Ptr dummy = mComponent;
 	mStSpFunction=[dummy](double t, const double y[], double  ydot[]){
 		dummy->StateSpace(t, y, ydot);};
-
-//	mStSpFunction=[mComponent](double t, const double y[], double  ydot[]){
-//		mComponent->StateSpace(t, y, ydot);};
 
 	mArkode_mem= ARKodeCreate();
 	 if (check_flag(mArkode_mem, "ARKodeCreate", 0))
@@ -65,9 +53,9 @@ void ODESolver::initialize(Real t0) {
 	if (check_flag(&mFlag, "ARKodeSetUserData", 1))
 		mFlag=1;
 
-		// Call ARKodeInit to initialize the integrator memory and specify the
- 	 // right-hand side function in y'=f(t,y), the inital time T0, and
- 	 // the initial dependent variable vector y(fluxes+mech. vars).
+		/* Call ARKodeInit to initialize the integrator memory and specify the
+ 	  right-hand side function in y'=f(t,y), the inital time T0, and
+ 	  the initial dependent variable vector y(fluxes+mech. vars).*/
  /*	if(implicit) {
  		flag = ARKodeInit(arkode_mem, NULL, &ODESolver::StateSpaceWrapper, T0, y);
  		if (check_flag(&flag, "ARKodeInit", 1)) throw CPS::Exception();
@@ -110,7 +98,7 @@ int ODESolver::StateSpaceWrapper(realtype t, N_Vector y, N_Vector ydot, void *us
 	ODESolver *self=reinterpret_cast<ODESolver *>(user_data);
 	return self->StateSpace(t, y, ydot);
 }
-/*
+/* TODO for implicit solve
 int ODESolver::JacobianWrapper(realtype t, N_Vector y, N_Vector fy, SUNMatrix J, void *user_data,
                N_Vector tmp1, N_Vector tmp2, N_Vector tmp3){
 	ODESolver *self=reinterpret_cast<ODESolver *>(user_data);
@@ -127,9 +115,9 @@ Real ODESolver::step(Real initial_time) {
 	realtype T0 = (realtype) initial_time;
 	realtype Tf = (realtype) initial_time+mTimestep;
 
-	// number integration steps
+	/// Number of integration steps
 	//long int nst,
-	// number error test fails
+	/// Number of error test fails
 	//long int netf;
 
 	// Main integrator loop
@@ -144,12 +132,20 @@ Real ODESolver::step(Real initial_time) {
 		mFlag = ARKode(mArkode_mem, Tf, mStates, &t, ARK_NORMAL);
 		if (check_flag(&mFlag, "ARKode", 1))	break;
 	}
-	/*
-	if(initial_time==0)
-		get_states();*/
 
-	//here write back?
-	mComponent->write_back_states(NV_DATA_S(mStates));
+	// Get some statistics to check for numerical problems (instability, blow-up etc)
+	/*flag = ARKodeGetNumSteps(arkode_mem, &nst);
+	 if(check_flag(&flag, "ARKodeGetNumSteps", 1))
+	 	return 1;
+	flag = ARKodeGetNumErrTestFails(arkode_mem, &netf);
+	if(check_flag(&flag, "ARKodeGetNumErrTestFails", 1))
+		return 1;
+
+	// Print statistics:
+		cout << "Number Computing Steps: "<< nst << " Number Error-Test-Fails: " << netf << endl; */
+
+	mComponent->write_back_states();
+
 	return Tf;
 }
 
@@ -192,12 +188,3 @@ ODESolver::~ODESolver() {
   //SUNLinSolFree(LS);
 	//SUNMatDestroy(A);
 }
-/*
-void ODESolver::get_states(){
-
-	//mComponent->pre_step();
-
-		for(int i=0; i<mProbDim;i++)
-			std::cout << NV_Ith_S(mStates,i)<<" ";
-		std::cout<<std::endl;
-}*/

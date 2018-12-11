@@ -54,11 +54,7 @@ void Sim_ODE::append_solver(std::shared_ptr<ODESolver> solver){
 }
 
 Real Sim_ODE::step(){
-  Real nextTime; //Auxiliary variable necessary?
-
-  /*if(mTime==0){
-    mODESolverList[0]->get_comp()->get_states();
-  }*/
+  Real nextTime;
 
  #ifdef WITH_SHMEM
  	for (auto ifm : mInterfaces) {
@@ -71,10 +67,8 @@ Real Sim_ODE::step(){
 
   // ODE-Solver:
   for (auto ode_solver:mODESolverList){
-    nextTime = ode_solver->step(mTime); //possibly some pre-coperation necessary?
+    nextTime = ode_solver->step(mTime);
     ode_solver->log(mTime); //currently not supported
-      //for testing purposes
-    //ode_solver->get_states();
   }
 
   //DAE-Solver:

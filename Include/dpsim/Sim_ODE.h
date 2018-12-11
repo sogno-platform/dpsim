@@ -30,23 +30,24 @@ namespace DPsim {
   protected:
       std::vector<std::shared_ptr<ODESolver> >mODESolverList;
   public:
-    // Constructor with pre-initialized components
+    /// Constructor with pre-initialized components
     Sim_ODE(String name, CPS::SystemTopology system,
 			Real timeStep, Real finalTime, std::vector<std::shared_ptr<ODESolver> > ODESolverList,
 			CPS::Domain domain = CPS::Domain::DP,
 			Solver::Type solverType = Solver::Type::MNA,
 			CPS::Logger::Level logLevel = CPS::Logger::Level::INFO);
 
-    // Constructor for non-pre initialized comps
+    /// Constructor for non-pre initialized comps
     Sim_ODE(String name, CPS::SystemTopology system,
 			Real timeStep, Real finalTime,
 			CPS::Domain domain = CPS::Domain::DP,
 			Solver::Type solverType = Solver::Type::MNA,
 			CPS::Logger::Level logLevel = CPS::Logger::Level::INFO);
 
+    /// Implementation of step-function
     Real step();
 
-    //add initialized comp:
+    ///add initialized comp:
     void append_solver(std::shared_ptr<ODESolver> solver);
   };
 }

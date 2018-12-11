@@ -34,8 +34,7 @@
 #include <sunlinsol/sunlinsol_dense.h>  // access to dense SUNLinearSolver
 #include <arkode/arkode_direct.h>       // access to ARKDls interface
 
-// led to problems before:
-//using namespace CPS;
+//using namespace CPS; // led to problems
 
 namespace DPsim {
 	/// Solver class for ODE (Ordinary Differential Equation) systems
@@ -96,11 +95,5 @@ namespace DPsim {
 		/// Solve system for the current time
 		Real step(Real initial_time);
 
-		//for testing purposes:
-		CPS::ODEInterface::Ptr get_comp(){
-			return mComponent;
-		}
-
-		void get_states();
 	};
 }
