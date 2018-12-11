@@ -101,36 +101,37 @@ namespace DPsim {
 	public:
 		Barrier() = delete;
 		Barrier(Int limit, Bool useCondition = false) :
-			mLimit(limit), mCount(0), mUseCondition(useCondition) {}
+			mLimit(limit), mCount(0), mGeneration(0), mUseCondition(useCondition) {}
 
 		/// Blocks until |limit| calls have been made, at which point all threads
-		/// return. Provide synchronization, i.e. all writes from before this call
+		/// return. Provides synchronization, i.e. all writes from before this call
 		/// are visible in all threads after this call.
-		/// Can in general be reused, but some other synchronization method
-		/// (like a second barrier) has to be used to ensure that all calls of the
-		/// first use have returned before the first call to the second use.
 		void wait() {
 			if (mUseCondition) {
 				std::unique_lock<std::mutex> lk(mMutex);
+				Int gen = mGeneration;
 				mCount++;
 				if (mCount == mLimit) {
 					mCount = 0;
+					mGeneration++;
 					lk.unlock();
 					mCondition.notify_all();
 				} else {
 					// necessary because of spurious wakeups
-					while (mCount != mLimit && mCount != 0)
+					while (gen == mGeneration)
 						mCondition.wait(lk);
 				}
 			} else {
+				Int gen = mGeneration.load(std::memory_order_acquire);
 				// We need at least one release from each thread to ensure that
 				// every write from before the wait() is visible in every other thread,
 				// and the fetch needs to be an acquire anyway, so use acq_rel instead of acquire.
 				// (This generates the same code on x86.)
 				if (mCount.fetch_add(1, std::memory_order_acq_rel) == mLimit-1) {
-					mCount.store(0, std::memory_order_release);
+					mCount.store(0, std::memory_order_relaxed);
+					mGeneration.fetch_add(1, std::memory_order_release);
 				} else {
-					while (mCount.load(std::memory_order_acquire) != 0);
+					while (mGeneration.load(std::memory_order_acquire) == gen);
 				}
 			}
 		}
@@ -145,13 +146,15 @@ namespace DPsim {
 				mCount++;
 				if (mCount == mLimit) {
 					mCount = 0;
+					mGeneration++;
 					lk.unlock();
 					mCondition.notify_all();
 				}
 			} else {
 				// No release here, as this call does not provide any synchronization anyway.
 				if (mCount.fetch_add(1, std::memory_order_acquire) == mLimit-1) {
-					mCount.store(0, std::memory_order_release);
+					mCount.store(0, std::memory_order_relaxed);
+					mGeneration.fetch_add(1, std::memory_order_release);
 				}
 			}
 		}
@@ -159,6 +162,7 @@ namespace DPsim {
 	private:
 		Int mLimit;
 		std::atomic<Int> mCount;
+		std::atomic<Int> mGeneration;
 		Bool mUseCondition;
 
 		std::mutex mMutex;
@@ -173,5 +177,21 @@ namespace DPsim {
 
 	private:
 		std::vector<Barrier*> mBarriers;
+	};
+
+	class Counter {
+	public:
+		Counter() : mValue(0) {}
+
+		void inc() {
+			mValue.fetch_add(1, std::memory_order_release);
+		}
+
+		void wait(Int value) {
+			while (mValue.load(std::memory_order_acquire) != value);
+		}
+
+	private:
+		std::atomic<Int> mValue;
 	};
 }

@@ -36,8 +36,8 @@ ThreadLevelScheduler::ThreadLevelScheduler(Int threads, String outMeasurementFil
 }
 
 ThreadLevelScheduler::~ThreadLevelScheduler() {
-	for (auto barrier : mBarriers)
-		delete barrier;
+	for (auto pair : mCounters)
+		delete pair.second;
 }
 
 void ThreadLevelScheduler::createSchedule(const Task::List& tasks, const Edges& inEdges, const Edges& outEdges) {
@@ -47,6 +47,9 @@ void ThreadLevelScheduler::createSchedule(const Task::List& tasks, const Edges& 
 	Scheduler::topologicalSort(tasks, inEdges, outEdges, ordered);
 	Scheduler::levelSchedule(ordered, inEdges, outEdges, levels);
 
+	for (auto& task : ordered) {
+		mCounters[task] = new Counter();
+	}
 	if (!mOutMeasurementFile.empty())
 		Scheduler::initMeasurements(tasks);
 
@@ -55,9 +58,7 @@ void ThreadLevelScheduler::createSchedule(const Task::List& tasks, const Edges& 
 		readMeasurements(mInMeasurementFile, measurements);
 		for (size_t level = 0; level < levels.size(); level++) {
 			// Distribute tasks such that the execution time is (approximately) minimized
-			scheduleLevel(levels[level], measurements);
-			// Insert BarrierTask for synchronization
-			insertBarrierTask();
+			scheduleLevel(levels[level], measurements, inEdges);
 		}
 	} else {
 		for (size_t level = 0; level < levels.size(); level++) {
@@ -68,16 +69,10 @@ void ThreadLevelScheduler::createSchedule(const Task::List& tasks, const Edges& 
 			// Distribute tasks of one level evenly between threads
 			size_t nextThread = 0;
 			for (auto task : levels[level]) {
-				mSchedules[nextThread++].push_back(task);
+				scheduleTask(nextThread++, task, inEdges);
 				if (nextThread == mSchedules.size())
 					nextThread = 0;
 			}
-
-			for (int thread = 0; thread < mNumThreads; thread++)
-				sortTasksByType(mSchedules[thread].begin() + levelBegins[thread], mSchedules[thread].end());
-
-			// Insert BarrierTask for synchronization
-			insertBarrierTask();
 		}
 	}
 
@@ -95,7 +90,7 @@ void ThreadLevelScheduler::sortTasksByType(Task::List::iterator begin, CPS::Task
 	std::sort(begin, end, cmp);
 }
 
-void ThreadLevelScheduler::scheduleLevel(const Task::List& tasks, const std::unordered_map<String, TaskTime::rep>& measurements) {
+void ThreadLevelScheduler::scheduleLevel(const Task::List& tasks, const std::unordered_map<String, TaskTime::rep>& measurements, const Edges& inEdges) {
 	Task::List tasksSorted = tasks;
 
 	// Check that measurements map is complete
@@ -120,7 +115,7 @@ void ThreadLevelScheduler::scheduleLevel(const Task::List& tasks, const std::uno
 		for (int thread = 0; thread < mNumThreads; thread++) {
 			TaskTime::rep curTime = 0;
 			while (curTime < avgTime && task < tasksSorted.size()) {
-				mSchedules[thread].push_back(tasksSorted[task]);
+				scheduleTask(thread, tasksSorted[task], inEdges);
 				curTime += measurements.at(tasksSorted[task]->toString());
 				task++;
 			}
@@ -128,7 +123,7 @@ void ThreadLevelScheduler::scheduleLevel(const Task::List& tasks, const std::uno
 		// All tasks should be distributed, but just to be sure, put the remaining
 		// ones to the last thread
 		for (; task < tasksSorted.size(); task++)
-			mSchedules[mNumThreads-1].push_back(tasksSorted[task]);
+			scheduleTask(mNumThreads-1, tasksSorted[task], inEdges);
 	}
 	else {
 		// Sort tasks in descending execution time
@@ -142,24 +137,20 @@ void ThreadLevelScheduler::scheduleLevel(const Task::List& tasks, const std::uno
 		for (auto task : tasksSorted) {
 			auto minIt = std::min_element(totalTimes.begin(), totalTimes.end());
 			size_t minIdx = minIt - totalTimes.begin();
-			mSchedules[minIdx].push_back(task);
+			scheduleTask(minIdx, task, inEdges);
 			totalTimes[minIdx] += measurements.at(task->toString());
 		}
 	}
 }
 
-void ThreadLevelScheduler::insertBarrierTask() {
-	mBarriers.push_back(new Barrier(mNumThreads, mUseConditionVariable));
-	for (int thread = 0; thread < mNumThreads; thread++) {
-		BarrierTask::Ptr task;
-		if (mSchedules[thread].size() != 0 && (task = std::dynamic_pointer_cast<BarrierTask>(mSchedules[thread].back()))) {
-			task->addBarrier(mBarriers.back());
-		} else {
-			task = std::make_shared<BarrierTask>();
-			task->addBarrier(mBarriers.back());
-			mSchedules[thread].push_back(task);
+void ThreadLevelScheduler::scheduleTask(int thread, CPS::Task::Ptr task, const Edges& inEdges) {
+	std::vector<Counter*> reqCounters;
+	if (inEdges.find(task) != inEdges.end()) {
+		for (auto req : inEdges.at(task)) {
+			reqCounters.push_back(mCounters[req]);
 		}
 	}
+	mSchedules[thread].push_back({task, mCounters[task], reqCounters});
 }
 
 void ThreadLevelScheduler::step(Real time, Int timeStepCount) {
@@ -167,6 +158,12 @@ void ThreadLevelScheduler::step(Real time, Int timeStepCount) {
 	mTimeStepCount = timeStepCount;
 	mStartBarrier.wait();
 	doStep(0);
+	// since we don't have a final BarrierTask, wait for all threads to finish
+	// their last task explicitly
+	for (int thread = 1; thread < mNumThreads; thread++) {
+		if (mSchedules[thread].size() != 0)
+			mSchedules[thread].back().endCounter->wait(mTimeStepCount+1);
+	}
 }
 
 void ThreadLevelScheduler::stop() {
@@ -194,17 +191,21 @@ void ThreadLevelScheduler::threadFunction(ThreadLevelScheduler* sched, Int idx) 
 
 void ThreadLevelScheduler::doStep(Int idx) {
 	if (mOutMeasurementFile.empty()) {
-		for (auto& task : mSchedules[idx])
-			task->execute(mTime, mTimeStepCount);
+		for (auto& entry : mSchedules[idx]) {
+			for (Counter* counter : entry.reqCounters)
+				counter->wait(mTimeStepCount+1);
+			entry.task->execute(mTime, mTimeStepCount);
+			entry.endCounter->inc();
+		}
 	} else {
-		for (auto& task : mSchedules[idx]) {
+		for (auto& entry : mSchedules[idx]) {
+			for (Counter* counter : entry.reqCounters)
+				counter->wait(mTimeStepCount+1);
 			auto start = std::chrono::steady_clock::now();
-			task->execute(mTime, mTimeStepCount);
+			entry.task->execute(mTime, mTimeStepCount);
 			auto end = std::chrono::steady_clock::now();
-			// kind of ugly workaround since the barrier tasks are shared
-			// between threads and we don't want to measure them anyway
-			if (!std::dynamic_pointer_cast<BarrierTask>(task))
-				updateMeasurement(task, end-start);
+			updateMeasurement(entry.task, end-start);
+			entry.endCounter->inc();
 		}
 	}
 }
