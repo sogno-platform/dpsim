@@ -42,8 +42,23 @@
    Simulation(name, system, timeStep, finalTime, domain, solverType, logLevel),
    mODESolverList(ODESolverList){}
 
+ Sim_ODE::Sim_ODE(String name,
+   CPS::SystemTopology system,
+   Real timeStep, Real finalTime,
+   Domain domain, Solver::Type solverType,
+   Logger::Level logLevel) :
+   Simulation(name, system, timeStep, finalTime, domain, solverType, logLevel){}
+
+void Sim_ODE::append_solver(std::shared_ptr<ODESolver> solver){
+  mODESolverList.push_back(solver);
+}
+
 Real Sim_ODE::step(){
   Real nextTime; //Auxiliary variable necessary?
+
+  /*if(mTime==0){
+    mODESolverList[0]->get_comp()->get_states();
+  }*/
 
  #ifdef WITH_SHMEM
  	for (auto ifm : mInterfaces) {
@@ -53,15 +68,13 @@ Real Sim_ODE::step(){
  #endif
 
  	mEvents.handleEvents(mTime);
-  //for testing purposes
-  /*for(auto ode_solver:mODESolverList){
-    std::cout <<ode_solver->get_comp()->get_data() << std::endl;
-  }*/
 
   // ODE-Solver:
   for (auto ode_solver:mODESolverList){
     nextTime = ode_solver->step(mTime); //possibly some pre-coperation necessary?
     ode_solver->log(mTime); //currently not supported
+      //for testing purposes
+    //ode_solver->get_states();
   }
 
   //DAE-Solver:

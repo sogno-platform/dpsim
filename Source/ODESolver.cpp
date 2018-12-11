@@ -41,10 +41,21 @@ void ODESolver::initialize(Real t0) {
 	// Set initial value: (Different from DAESolver)
 	N_VSetArrayPointer(mComponent->state_vector(),mStates);
 
+	/*double* comp_states = mComponent->state_vector();
+	std::cout <<"intialize ode-class" << std::endl;
+	for(int i=0;i<mProbDim;i++){
+		NV_Ith_S(mStates,i)=comp_states[i];
+		std::cout << comp_states[i] << " " ;
+	}
+	std::cout<<std::endl;*/
+
 	// Copied from DAESolver
   CPS::ODEInterface::Ptr dummy = mComponent;
-	mStSpFunction=[dummy](double t, const double  y[], double  ydot[]){
+	mStSpFunction=[dummy](double t, const double y[], double  ydot[]){
 		dummy->StateSpace(t, y, ydot);};
+
+//	mStSpFunction=[mComponent](double t, const double y[], double  ydot[]){
+//		mComponent->StateSpace(t, y, ydot);};
 
 	mArkode_mem= ARKodeCreate();
 	 if (check_flag(mArkode_mem, "ARKodeCreate", 0))
@@ -124,12 +135,18 @@ Real ODESolver::step(Real initial_time) {
 	// Main integrator loop
 
 	mComponent->pre_step();
+/*
+	if(initial_time==0)
+		get_states();*/
 
 	realtype t = T0;
 	while (Tf-t > 1.0e-15) {
 		mFlag = ARKode(mArkode_mem, Tf, mStates, &t, ARK_NORMAL);
 		if (check_flag(&mFlag, "ARKode", 1))	break;
 	}
+	/*
+	if(initial_time==0)
+		get_states();*/
 
 	//here write back?
 	mComponent->write_back_states(NV_DATA_S(mStates));
@@ -175,3 +192,12 @@ ODESolver::~ODESolver() {
   //SUNLinSolFree(LS);
 	//SUNMatDestroy(A);
 }
+/*
+void ODESolver::get_states(){
+
+	//mComponent->pre_step();
+
+		for(int i=0; i<mProbDim;i++)
+			std::cout << NV_Ith_S(mStates,i)<<" ";
+		std::cout<<std::endl;
+}*/

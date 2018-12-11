@@ -100,5 +100,7 @@ namespace DPsim {
 		CPS::ODEInterface::Ptr get_comp(){
 			return mComponent;
 		}
+
+		void get_states();
 	};
 }
