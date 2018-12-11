@@ -21,49 +21,20 @@
 
 #pragma once
 
-#include <dpsim/Scheduler.h>
-
-#include <thread>
-#include <vector>
+#include <dpsim/ThreadScheduler.h>
 
 namespace DPsim {
-	class ThreadLevelScheduler : public Scheduler {
+	class ThreadLevelScheduler : public ThreadScheduler {
 	public:
 		ThreadLevelScheduler(Int threads = 1, String outMeasurementFile = String(), String inMeasurementFile = String(), Bool useConditionVariables = false, Bool sortTaskTypes = false);
-		~ThreadLevelScheduler();
 
 		void createSchedule(const CPS::Task::List& tasks, const Edges& inEdges, const Edges& outEdges);
-		void step(Real time, Int timeStepCount);
-		void stop();
-		void getMeasurements();
 
 	private:
-		void scheduleTask(int thread, CPS::Task::Ptr task, const Edges& inEdges);
 		void scheduleLevel(const CPS::Task::List& tasks, const std::unordered_map<String, TaskTime::rep>& measurements, const Edges& inEdges);
 		void sortTasksByType(CPS::Task::List::iterator begin, CPS::Task::List::iterator end);
 
-		void doStep(Int scheduleIdx);
-		static void threadFunction(ThreadLevelScheduler* sched, Int idx);
-
-		Int mNumThreads;
-		String mOutMeasurementFile;
 		String mInMeasurementFile;
-		Bool mUseConditionVariable;
-		Barrier mStartBarrier;
 		Bool mSortTaskTypes;
-
-		std::vector<std::thread> mThreads;
-
-		std::map<CPS::Task::Ptr, Counter*> mCounters;
-		struct ScheduleEntry {
-			CPS::Task::Ptr task;
-			Counter* endCounter;
-			std::vector<Counter*> reqCounters;
-		};
-		std::vector<std::vector<ScheduleEntry>> mSchedules;
-
-		Bool mJoining = false;
-		Real mTime = 0;
-		Int mTimeStepCount = 0;
 	};
 };

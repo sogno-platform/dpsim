@@ -29,15 +29,7 @@ using namespace CPS;
 using namespace DPsim;
 
 ThreadLevelScheduler::ThreadLevelScheduler(Int threads, String outMeasurementFile, String inMeasurementFile, Bool useConditionVariable, Bool sortTaskTypes) :
-	mNumThreads(threads), mOutMeasurementFile(outMeasurementFile), mInMeasurementFile(inMeasurementFile), mUseConditionVariable(useConditionVariable), mStartBarrier(threads, useConditionVariable), mSortTaskTypes(sortTaskTypes) {
-	if (threads < 1)
-		throw SchedulingException();
-	mSchedules.resize(threads);
-}
-
-ThreadLevelScheduler::~ThreadLevelScheduler() {
-	for (auto pair : mCounters)
-		delete pair.second;
+	ThreadScheduler(threads, outMeasurementFile, useConditionVariable), mInMeasurementFile(inMeasurementFile), mSortTaskTypes(sortTaskTypes) {
 }
 
 void ThreadLevelScheduler::createSchedule(const Task::List& tasks, const Edges& inEdges, const Edges& outEdges) {
@@ -45,13 +37,9 @@ void ThreadLevelScheduler::createSchedule(const Task::List& tasks, const Edges& 
 	std::vector<Task::List> levels;
 
 	Scheduler::topologicalSort(tasks, inEdges, outEdges, ordered);
-	Scheduler::levelSchedule(ordered, inEdges, outEdges, levels);
+	Scheduler::initMeasurements(ordered);
 
-	for (auto& task : ordered) {
-		mCounters[task] = new Counter();
-	}
-	if (!mOutMeasurementFile.empty())
-		Scheduler::initMeasurements(tasks);
+	Scheduler::levelSchedule(ordered, inEdges, outEdges, levels);
 
 	if (!mInMeasurementFile.empty()) {
 		std::unordered_map<String, TaskTime::rep> measurements;
@@ -62,24 +50,17 @@ void ThreadLevelScheduler::createSchedule(const Task::List& tasks, const Edges& 
 		}
 	} else {
 		for (size_t level = 0; level < levels.size(); level++) {
-			std::vector<size_t> levelBegins(mNumThreads);
-			for (int thread = 0; thread < mNumThreads; thread++)
-				levelBegins[thread] = mSchedules[thread].size();
-
 			// Distribute tasks of one level evenly between threads
-			size_t nextThread = 0;
+			int nextThread = 0;
 			for (auto task : levels[level]) {
 				scheduleTask(nextThread++, task, inEdges);
-				if (nextThread == mSchedules.size())
+				if (nextThread == mNumThreads)
 					nextThread = 0;
 			}
 		}
 	}
 
-	for (int i = 1; i < mNumThreads; i++) {
-		std::thread thread(threadFunction, this, i);
-		mThreads.push_back(std::move(thread));
-	}
+	ThreadScheduler::startThreads();
 }
 
 void ThreadLevelScheduler::sortTasksByType(Task::List::iterator begin, CPS::Task::List::iterator end) {
@@ -133,79 +114,12 @@ void ThreadLevelScheduler::scheduleLevel(const Task::List& tasks, const std::uno
 		std::sort(tasksSorted.begin(), tasksSorted.end(), cmp);
 
 		// Greedy heuristic: schedule the tasks to the thread with the smallest current execution time
-		std::vector<TaskTime::rep> totalTimes(mSchedules.size(), 0);
+		std::vector<TaskTime::rep> totalTimes(mNumThreads, 0);
 		for (auto task : tasksSorted) {
 			auto minIt = std::min_element(totalTimes.begin(), totalTimes.end());
 			size_t minIdx = minIt - totalTimes.begin();
 			scheduleTask(minIdx, task, inEdges);
 			totalTimes[minIdx] += measurements.at(task->toString());
-		}
-	}
-}
-
-void ThreadLevelScheduler::scheduleTask(int thread, CPS::Task::Ptr task, const Edges& inEdges) {
-	std::vector<Counter*> reqCounters;
-	if (inEdges.find(task) != inEdges.end()) {
-		for (auto req : inEdges.at(task)) {
-			reqCounters.push_back(mCounters[req]);
-		}
-	}
-	mSchedules[thread].push_back({task, mCounters[task], reqCounters});
-}
-
-void ThreadLevelScheduler::step(Real time, Int timeStepCount) {
-	mTime = time;
-	mTimeStepCount = timeStepCount;
-	mStartBarrier.wait();
-	doStep(0);
-	// since we don't have a final BarrierTask, wait for all threads to finish
-	// their last task explicitly
-	for (int thread = 1; thread < mNumThreads; thread++) {
-		if (mSchedules[thread].size() != 0)
-			mSchedules[thread].back().endCounter->wait(mTimeStepCount+1);
-	}
-}
-
-void ThreadLevelScheduler::stop() {
-	if (!mThreads.empty()) {
-		mJoining = true;
-		mStartBarrier.wait();
-		for (size_t thread = 0; thread < mThreads.size(); thread++) {
-			mThreads[thread].join();
-		}
-	}
-	if (!mOutMeasurementFile.empty()) {
-		writeMeasurements(mOutMeasurementFile);
-	}
-}
-
-void ThreadLevelScheduler::threadFunction(ThreadLevelScheduler* sched, Int idx) {
-	while (true) {
-		sched->mStartBarrier.wait();
-		if (sched->mJoining)
-			return;
-
-		sched->doStep(idx);
-	}
-}
-
-void ThreadLevelScheduler::doStep(Int idx) {
-	if (mOutMeasurementFile.empty()) {
-		for (auto& entry : mSchedules[idx]) {
-			for (Counter* counter : entry.reqCounters)
-				counter->wait(mTimeStepCount+1);
-			entry.task->execute(mTime, mTimeStepCount);
-			entry.endCounter->inc();
-		}
-	} else {
-		for (auto& entry : mSchedules[idx]) {
-			for (Counter* counter : entry.reqCounters)
-				counter->wait(mTimeStepCount+1);
-			auto start = std::chrono::steady_clock::now();
-			entry.task->execute(mTime, mTimeStepCount);
-			auto end = std::chrono::steady_clock::now();
-			updateMeasurement(entry.task, end-start);
-			entry.endCounter->inc();
 		}
 	}
 }

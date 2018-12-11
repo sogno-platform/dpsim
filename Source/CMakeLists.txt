@@ -8,6 +8,7 @@ set(SOURCES
 	DataLogger.cpp
 	Scheduler.cpp
 	SequentialScheduler.cpp
+	ThreadScheduler.cpp
 	ThreadLevelScheduler.cpp
 )
 
