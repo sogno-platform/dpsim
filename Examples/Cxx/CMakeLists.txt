@@ -12,14 +12,14 @@ set(CIRCUIT_SOURCES
 	#Circuits/DP_VS_R1.cpp
 	#Circuits/DP_CS_R1.cpp
 	#Circuits/DP_VS_RL1.cpp
-	#Circuits/DP_VS_RC1.cpp	
+	#Circuits/DP_VS_RC1.cpp
 	#Circuits/DP_CS_R2CL.cpp
 	#Circuits/DP_VS_CS_R4.cpp
 	#Circuits/DP_VS_R2L3.cpp
 
 	#Circuits/DP_VS_PiLine_R.cpp
 	#Circuits/DP_VS_Trafo_R.cpp
-	#Circuits/DP_ResVS_RL_Switch.cpp	
+	#Circuits/DP_ResVS_RL_Switch.cpp
 
 	# EMT examples
 	#Circuits/EMT_VS_R1.cpp
@@ -29,8 +29,8 @@ set(CIRCUIT_SOURCES
 	#Circuits/EMT_CS_R2CL.cpp
 	#Circuits/EMT_VS_R2L3.cpp
 	#Circuits/EMT_VS_CS_R4_AC.cpp
-	#Circuits/EMT_VS_CS_R4_DC.cpp	
-	
+	#Circuits/EMT_VS_CS_R4_DC.cpp
+
 	#Circuits/EMT_ResVS_RL_Switch.cpp
 )
 
@@ -61,14 +61,14 @@ set(VARFREQ_SOURCES
 
 if(WITH_SUNDIALS)
 	set(DAE_SOURCES
-		DAE/DAE_DP_test.cpp
+	#	DAE/DAE_DP_test.cpp
 	)
 endif()
 
 if(WITH_RT)
 	set(RT_SOURCES
-		RealTime/RT_DP_CS_R_1.cpp
-		RealTime/RT_DP_ResVS_RL1.cpp
+	#	RealTime/RT_DP_CS_R_1.cpp
+	#	RealTime/RT_DP_ResVS_RL1.cpp
 	)
 endif()
 
@@ -77,13 +77,13 @@ if(WITH_SHMEM)
 	list(APPEND INCLUDE_DIRS ${VILLASNODE_INCLUDE_DIRS})
 
 	set(SHMEM_SOURCES
-		Shmem/ShmemExample.cpp
-		Shmem/ShmemDistributedReference.cpp
-		Shmem/ShmemDistributedDirect.cpp
-		Shmem/ShmemDistributedVillas.cpp
-		Shmem/ShmemControllableSource.cpp
-		Shmem/ShmemControllableFiltSource.cpp
-		Shmem/ShmemRealTime.cpp
+	#	Shmem/ShmemExample.cpp
+	#	Shmem/ShmemDistributedReference.cpp
+	#	Shmem/ShmemDistributedDirect.cpp
+	#	Shmem/ShmemDistributedVillas.cpp
+	#	Shmem/ShmemControllableSource.cpp
+	#	Shmem/ShmemControllableFiltSource.cpp
+	#	Shmem/ShmemRealTime.cpp
 	)
 endif()
 
@@ -93,23 +93,23 @@ if(WITH_CIM)
 
 	if (NOT WIN32)
 		set(CIM_SOURCES_POSIX
-			CIM/dpsim-cim.cpp
+		#	CIM/dpsim-cim.cpp
 		)
 	endif()
 
 	set(CIM_SOURCES
-		
-		CIM/WSCC-9bus_CIM.cpp
-		CIM/WSCC-9bus_CIM_Dyn.cpp
-		CIM/WSCC-9bus_CIM_Dyn_Switch.cpp
+
+	#	CIM/WSCC-9bus_CIM.cpp
+	#	CIM/WSCC-9bus_CIM_Dyn.cpp
+	#	CIM/WSCC-9bus_CIM_Dyn_Switch.cpp
 	)
 endif()
 
 if(WITH_CIM AND WITH_SHMEM)
 	set(CIM_SHMEM_SOURCES
-		Shmem/Shmem_WSCC-9bus.cpp
-		Shmem/Shmem_WSCC-9bus_Ctrl.cpp
-		Shmem/Shmem_WSCC-9bus_CtrlDist.cpp
+	#	Shmem/Shmem_WSCC-9bus.cpp
+	#	Shmem/Shmem_WSCC-9bus_Ctrl.cpp
+	#	Shmem/Shmem_WSCC-9bus_CtrlDist.cpp
 	)
 endif()
 
@@ -127,4 +127,3 @@ foreach(SOURCE ${CIRCUIT_SOURCES} ${SYNCGEN_SOURCES} ${VARFREQ_SOURCES} ${SHMEM_
 	target_include_directories(${TARGET} PRIVATE ${INCLUDE_DIRS})
 	target_compile_options(${TARGET} PUBLIC ${DPSIM_CXX_FLAGS})
 endforeach()
-
