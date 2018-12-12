@@ -48,6 +48,6 @@ namespace DPsim {
     Real step();
 
     ///add initialized comp:
-    void append_solver(std::shared_ptr<ODESolver> solver);
+    void addSolver(std::shared_ptr<ODESolver> solver);
   };
 }

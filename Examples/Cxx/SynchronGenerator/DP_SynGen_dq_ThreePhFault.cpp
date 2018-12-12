@@ -95,19 +95,13 @@ int main(int argc, char* argv[]) {
 	logger->addAttribute("i", gen->attribute("i_intf"));
 	//logger->addAttribute("v1", n1->attribute("v"));
 	logger->addAttribute("theta", gen->attribute("theta"));*/
-/*
-	std::shared_ptr<ODESolver>  ode_solver;
-	ode_solver= std::make_shared<ODESolver>("DP_SynGen_dq_ThreePhFault_SynGen_SOLVER", gen, timeStep, 0);
-
-	std::vector<std::shared_ptr<ODESolver> > ode_comps;
-	ode_comps.push_back(ode_solver); // for each ODE-component*/
 
 	Sim_ODE sim(simName, sys, timeStep, finalTime, Domain::DP, Solver::Type::MNA, Logger::Level::INFO);
 
 	std::shared_ptr<ODESolver>  ode_solver;
 	ode_solver= std::make_shared<ODESolver>("DP_SynGen_dq_ThreePhFault_SynGen_SOLVER", gen, timeStep, 0);
 
-	sim.append_solver(ode_solver);
+	sim.addSolver(ode_solver);
 
 	//Simulation sim(simName, sys, timeStep, finalTime,Domain::DP, Solver::Type::MNA, Logger::Level::INFO); //for non ODE-Class simulation
 	sim.addLogger(logger);

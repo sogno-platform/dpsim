@@ -116,17 +116,15 @@ Real ODESolver::step(Real initial_time) {
 	realtype Tf = (realtype) initial_time+mTimestep;
 
 	/// Number of integration steps
-	//long int nst,
+	long int nst;
 	/// Number of error test fails
-	//long int netf;
+	long int netf;
 
-	// Main integrator loop
+
 
 	mComponent->pre_step();
-/*
-	if(initial_time==0)
-		get_states();*/
 
+// Main integrator loop
 	realtype t = T0;
 	while (Tf-t > 1.0e-15) {
 		mFlag = ARKode(mArkode_mem, Tf, mStates, &t, ARK_NORMAL);
@@ -134,15 +132,15 @@ Real ODESolver::step(Real initial_time) {
 	}
 
 	// Get some statistics to check for numerical problems (instability, blow-up etc)
-	/*flag = ARKodeGetNumSteps(arkode_mem, &nst);
-	 if(check_flag(&flag, "ARKodeGetNumSteps", 1))
+	mFlag = ARKodeGetNumSteps(mArkode_mem, &nst);
+	 if(check_flag(&mFlag, "ARKodeGetNumSteps", 1))
 	 	return 1;
-	flag = ARKodeGetNumErrTestFails(arkode_mem, &netf);
-	if(check_flag(&flag, "ARKodeGetNumErrTestFails", 1))
+	mFlag = ARKodeGetNumErrTestFails(mArkode_mem, &netf);
+	if(check_flag(&mFlag, "ARKodeGetNumErrTestFails", 1))
 		return 1;
 
 	// Print statistics:
-		cout << "Number Computing Steps: "<< nst << " Number Error-Test-Fails: " << netf << endl; */
+		std::cout << "Number Computing Steps: "<< nst << " Number Error-Test-Fails: " << netf << std::endl;
 
 	mComponent->write_back_states();
 

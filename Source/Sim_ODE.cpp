@@ -49,7 +49,7 @@
    Logger::Level logLevel) :
    Simulation(name, system, timeStep, finalTime, domain, solverType, logLevel){}
 
-void Sim_ODE::append_solver(std::shared_ptr<ODESolver> solver){
+void Sim_ODE::addSolver(std::shared_ptr<ODESolver> solver){
   mODESolverList.push_back(solver);
 }
 
