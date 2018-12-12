@@ -33,6 +33,7 @@
 #include <dpsim/RealTimeSimulation.h>
 #include <dpsim/SequentialScheduler.h>
 #include <dpsim/ThreadLevelScheduler.h>
+#include <dpsim/ThreadListScheduler.h>
 #include <cps/DP/DP_Ph1_Switch.h>
 
 #ifdef WITH_OPENMP
@@ -606,6 +607,10 @@ PyObject* Python::Simulation::setScheduler(Simulation *self, PyObject *args, PyO
 		if (threads <= 0)
 			threads = 1;
 		self->sim->setScheduler(std::make_shared<ThreadLevelScheduler>(threads, outMeasurementFile, inMeasurementFile, useConditionVariable, sortTaskTypes));
+	} else if (!strcmp(schedName, "thread_list")) {
+		if (threads <= 0)
+			threads = 1;
+		self->sim->setScheduler(std::make_shared<ThreadListScheduler>(threads, outMeasurementFile, inMeasurementFile, useConditionVariable));
 	} else {
 		PyErr_SetString(PyExc_ValueError, "invalid scheduler");
 		return nullptr;

@@ -10,6 +10,7 @@ set(SOURCES
 	SequentialScheduler.cpp
 	ThreadScheduler.cpp
 	ThreadLevelScheduler.cpp
+	ThreadListScheduler.cpp
 )
 
 list(APPEND LIBRARIES cps)
