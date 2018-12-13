@@ -81,7 +81,7 @@ int main(int argc, char* argv[]) {
 	auto gen = Ph3::SynchronGeneratorDQ::make("DP_SynGen_dq_ThreePhFault_SynGen", sim_class);
 	gen->setFundamentalParametersPU(nomPower, nomPhPhVoltRMS, nomFreq, poleNum, nomFieldCurr,
 		Rs, Ll, Lmd, Lmq, Rfd, Llfd, Rkd, Llkd, Rkq1, Llkq1, Rkq2, Llkq2, H,
-		initActivePower, initReactivePower, initTerminalVolt, initVoltAngle, fieldVoltage, mechPower); //no real initialization
+		initActivePower, initReactivePower, initTerminalVolt, initVoltAngle, fieldVoltage, mechPower);
 
 	auto res = Ph3::SeriesResistor::make("R_load");
 	res->setParameters(Rload);
@@ -131,7 +131,6 @@ int main(int argc, char* argv[]) {
 
 		sim.run();
 	}
-
 
 	return 0;
 }

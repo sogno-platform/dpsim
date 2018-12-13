@@ -65,13 +65,13 @@ Real Sim_ODE::step(){
 
  	mEvents.handleEvents(mTime);
 
-  // ODE-Solver:
+  // iterate through all ODE-Solvers
   for (auto ode_solver:mODESolverList){
     nextTime = ode_solver->step(mTime);
     ode_solver->log(mTime); //currently not supported
   }
 
-  //DAE-Solver:
+  //DAE/MNA-Solver:
   nextTime = mSolver->step(mTime);
 	mSolver->log(mTime);
 

@@ -45,6 +45,7 @@ void ODESolver::initialize(Real t0) {
 	mStSpFunction=[dummy](double t, const double y[], double  ydot[]){
 		dummy->StateSpace(t, y, ydot);};
 
+	// Causes numerical issues, better allocate in every step
 	/*mArkode_mem= ARKodeCreate();
 	 if (check_flag(mArkode_mem, "ARKodeCreate", 0))
 		mFlag=1;
@@ -86,6 +87,7 @@ void ODESolver::initialize(Real t0) {
  	if (check_flag(&mFlag, "ARKodeOrderSet", 1))
 		mFlag=1;*/
 
+	// Shifted to every step because of numerical issues
 	/*mFlag = ARKodeInit(mArkode_mem, &ODESolver::StateSpaceWrapper, NULL, t0, mStates);
 	if (check_flag(&mFlag, "ARKodeInit", 1))
 		mFlag=1;
@@ -99,6 +101,7 @@ int ODESolver::StateSpaceWrapper(realtype t, N_Vector y, N_Vector ydot, void *us
 	ODESolver *self=reinterpret_cast<ODESolver *>(user_data);
 	return self->StateSpace(t, y, ydot);
 }
+
 /* TODO for implicit solve
 int ODESolver::JacobianWrapper(realtype t, N_Vector y, N_Vector fy, SUNMatrix J, void *user_data,
                N_Vector tmp1, N_Vector tmp2, N_Vector tmp3){
@@ -121,6 +124,7 @@ Real ODESolver::step(Real initial_time) {
 	/// Number of error test fails
 //	long int netf;
 
+	// Better allocate the arkode memory here to prevent numerical problems
 	mArkode_mem= ARKodeCreate();
 	 if (check_flag(mArkode_mem, "ARKodeCreate", 0))
 		mFlag=1;
@@ -137,6 +141,7 @@ Real ODESolver::step(Real initial_time) {
 	if (check_flag(&mFlag, "ARKodeSStolerances", 1))
 		mFlag=1;
 
+ 	// If allocation in 'initialize': start here
 	mComponent->pre_step();
 
 // Main integrator loop
@@ -157,7 +162,7 @@ Real ODESolver::step(Real initial_time) {
 	// Print statistics:
 	//	std::cout << "Number Computing Steps: "<< nst << " Number Error-Test-Fails: " << netf << std::endl;
 
-	mComponent->write_back_states();
+	mComponent->post_step();
 	return Tf;
 }
 

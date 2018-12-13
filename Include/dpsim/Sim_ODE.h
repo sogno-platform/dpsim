@@ -25,9 +25,10 @@
 #include <dpsim/ODESolver.h>
 
 namespace DPsim {
-  /// \brief enhances the regular Simulation Class with multiple ODE-Solver units
+  /// @brief enhances the regular Simulation Class with multiple ODE-Solver units
   class Sim_ODE: public Simulation{
   protected:
+      /// Stores all ODE-Solver objects corresponding to a certain component
       std::vector<std::shared_ptr<ODESolver> >mODESolverList;
   public:
     /// Constructor with pre-initialized components
@@ -37,7 +38,7 @@ namespace DPsim {
 			Solver::Type solverType = Solver::Type::MNA,
 			CPS::Logger::Level logLevel = CPS::Logger::Level::INFO);
 
-    /// Constructor for non-pre initialized comps
+    /// Constructor for non-pre initialized components
     Sim_ODE(String name, CPS::SystemTopology system,
 			Real timeStep, Real finalTime,
 			CPS::Domain domain = CPS::Domain::DP,
@@ -47,7 +48,7 @@ namespace DPsim {
     /// Implementation of step-function
     Real step();
 
-    ///add initialized comp:
+    /// Add initialized components
     void addSolver(std::shared_ptr<ODESolver> solver);
   };
 }
