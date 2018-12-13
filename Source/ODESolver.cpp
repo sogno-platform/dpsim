@@ -26,10 +26,10 @@
 using namespace DPsim;
 //using namespace CPS;
 
-ODESolver::ODESolver(String name, CPS::ODEInterface::Ptr comp, Real dt, Real t0):
+ODESolver::ODESolver(String name, CPS::ODEInterface::Ptr comp, bool implicit_integration, Real dt, Real t0):
 	mComponent(comp),
+	mImplicitIntegration(implicit_integration),
 	mTimestep(dt){
-
 	mProbDim=mComponent->num_states();
 	initialize(t0);
 }
@@ -44,10 +44,10 @@ void ODESolver::initialize(Real t0) {
   CPS::ODEInterface::Ptr dummy = mComponent;
 	mStSpFunction=[dummy](double t, const double y[], double  ydot[]){
 		dummy->StateSpace(t, y, ydot);};
-	mJacFunction=[dummy](double t, const double y[] double fy[], double J[][],
+	mJacFunction=[dummy](double t, const double y[], double fy[], double J[],
 											 double tmp1[], double tmp2[], double tmp3[]){
 		dummy->Jacobian(t, y, fy, J, tmp1, tmp2, tmp3);};
-											 }
+
 
 	// Causes numerical issues, better allocate in every step
 	/*mArkode_mem= ARKodeCreate();
@@ -118,10 +118,11 @@ int ODESolver::JacobianWrapper(realtype t, N_Vector y, N_Vector fy, SUNMatrix J,
 	return self->Jacobian(t, y, fy, J, tmp1, tmp2, tmp3);
 }
 
-int ODE::Solver::Jacobian(realtype t, N_Vector y, N_Vector fy, SUNMatrix J,
+int ODESolver::Jacobian(realtype t, N_Vector y, N_Vector fy, SUNMatrix J,
                N_Vector tmp1, N_Vector tmp2, N_Vector tmp3){
-		mJacFunction(t, NV_DATA_S(y), NV_DATA_S(fy), //TODO matrix data-getter
+		mJacFunction(t, NV_DATA_S(y), NV_DATA_S(fy), SM_DATA_D(J),
 								 NV_DATA_S(tmp1), NV_DATA_S(tmp2), NV_DATA_S(tmp3));
+		return 0;
 	}
 
 Real ODESolver::step(Real initial_time) {
@@ -143,9 +144,37 @@ Real ODESolver::step(Real initial_time) {
 	if (check_flag(&mFlag, "ARKodeSetUserData", 1))
 		mFlag=1;
 
-	mFlag = ARKodeInit(mArkode_mem, &ODESolver::StateSpaceWrapper, NULL, initial_time, mStates);
+		/* Call ARKodeInit to initialize the integrator memory and specify the
+ 	  right-hand side function in y'=f(t,y), the inital time T0, and
+ 	  the initial dependent variable vector y(fluxes+mech. vars).*/
+ 	if(mImplicitIntegration){
+ 		mFlag = ARKodeInit(mArkode_mem, NULL, &ODESolver::StateSpaceWrapper, initial_time, mStates);
+ 		if (check_flag(&mFlag, "ARKodeInit", 1)) throw CPS::Exception();
+
+ 		// Initialize dense matrix data structure
+ 	  A = SUNDenseMatrix(mProbDim, mProbDim);
+ 	  if (check_flag((void *)A, "SUNDenseMatrix", 0)) throw CPS::Exception();
+
+ 		// Initialize linear solver
+ 	  LS = SUNDenseLinearSolver(mStates, A);
+ 	  if (check_flag((void *)LS, "SUNDenseLinearSolver", 0)) throw CPS::Exception();
+
+ 		// Attach matrix and linear solver
+ 		mFlag = ARKDlsSetLinearSolver(mArkode_mem, LS, A);
+ 		if (check_flag(&mFlag, "ARKDlsSetLinearSolver", 1)) throw CPS::Exception();
+
+ 		// Set Jacobian routine
+ 		mFlag = ARKDlsSetJacFn(mArkode_mem, &ODESolver::JacobianWrapper);
+ 		if (check_flag(&mFlag, "ARKDlsSetJacFn", 1)) throw CPS::Exception();
+ 	}
+ 	else {
+ 		mFlag = ARKodeInit(mArkode_mem, &ODESolver::StateSpaceWrapper, NULL, initial_time, mStates);
+ 		if (check_flag(&mFlag, "ARKodeInit", 1)) throw CPS::Exception();
+ 	}
+
+	/*mFlag = ARKodeInit(mArkode_mem, &ODESolver::StateSpaceWrapper, NULL, initial_time, mStates);
 	if (check_flag(&mFlag, "ARKodeInit", 1))
-		mFlag=1;
+		mFlag=1;*/
 
 	mFlag = ARKodeSStolerances(mArkode_mem, reltol, abstol);
 	if (check_flag(&mFlag, "ARKodeSStolerances", 1))
@@ -212,6 +241,6 @@ int ODESolver::check_flag(void *flagvalue, const std::string funcname, int opt){
 ODESolver::~ODESolver() {
 	ARKodeFree(&mArkode_mem);
 	N_VDestroy(mStates);
-  //SUNLinSolFree(LS);
-	//SUNMatDestroy(A);
+  SUNLinSolFree(LS);
+	SUNMatDestroy(A);
 }

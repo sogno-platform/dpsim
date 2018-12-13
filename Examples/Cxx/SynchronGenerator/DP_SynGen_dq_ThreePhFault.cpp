@@ -104,12 +104,12 @@ int main(int argc, char* argv[]) {
 	logger->addAttribute("i", gen->attribute("i_intf"));
 	//logger->addAttribute("v1", n1->attribute("v"));
 	logger->addAttribute("theta", gen->attribute("theta"));*/
-
 	if(sim_class){
 		Sim_ODE sim(simName, sys, timeStep, finalTime, Domain::DP, Solver::Type::MNA, Logger::Level::INFO); //not compiling if 'sim' is a shared pointer
 
 		std::shared_ptr<ODESolver>  ode_solver;
-		ode_solver= std::make_shared<ODESolver>("DP_SynGen_dq_ThreePhFault_SynGen_SOLVER", gen, timeStep, 0);
+		bool implicit_integration=true;
+		ode_solver= std::make_shared<ODESolver>("DP_SynGen_dq_ThreePhFault_SynGen_SOLVER", gen, implicit_integration, timeStep, 0);
 		sim.addSolver(ode_solver);
 
 		sim.addLogger(logger);

@@ -44,9 +44,6 @@ namespace DPsim {
 		/// Component to simulate, possible specialized component needed
 		CPS::ODEInterface::Ptr mComponent;
 
-		/// Constant time step
-		Real mTimestep;
-
 		/// Number of differential Variables (states)
 		Int mProbDim;
 
@@ -55,6 +52,15 @@ namespace DPsim {
 		void* mArkode_mem=NULL;
 		/// State vector
 		N_Vector mStates = NULL;
+
+		//for implicit solve:
+		bool mImplicitIntegration;
+		SUNMatrix A = NULL;            // empty matrix for solver
+		SUNLinearSolver LS = NULL;     // empty linear solver object
+
+		/// Constant time step
+		Real mTimestep;
+
 		// Same tolerance for each component regardless of system characteristics
 		/// Relative tolerance
 		realtype reltol = RCONST(1.0e-6);
@@ -77,7 +83,7 @@ namespace DPsim {
 		/// use wrappers similar to DAE_Solver
 		static int StateSpaceWrapper(realtype t, N_Vector y, N_Vector ydot, void *user_data);
 		int StateSpace(realtype t, N_Vector y, N_Vector ydot);
-		
+
 		// TODO: Jacobian Routines neeeded for implicit solve:
 		static int JacobianWrapper(realtype t, N_Vector y, N_Vector fy, SUNMatrix J, void *user_data,
 															 N_Vector tmp1, N_Vector tmp2, N_Vector tmp3);
@@ -88,7 +94,7 @@ namespace DPsim {
 
 	public:
 		/// Create solve object with given parameters; Smth. mnore specialized than component needed?
-		ODESolver(String name, CPS::ODEInterface::Ptr comp, Real dt, Real t0);
+		ODESolver(String name, CPS::ODEInterface::Ptr comp, bool implicit_integration, Real dt, Real t0);
 		/// Deallocate all memory
 		~ODESolver();
 

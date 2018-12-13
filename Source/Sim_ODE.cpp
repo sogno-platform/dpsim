@@ -47,7 +47,9 @@
    Real timeStep, Real finalTime,
    Domain domain, Solver::Type solverType,
    Logger::Level logLevel) :
-   Simulation(name, system, timeStep, finalTime, domain, solverType, logLevel){}
+   Simulation(name, system, timeStep, finalTime, domain, solverType, logLevel){
+     std::cout <<"built sim-ode"<<std::endl;
+   }
 
 void Sim_ODE::addSolver(std::shared_ptr<ODESolver> solver){
   mODESolverList.push_back(solver);
