@@ -68,8 +68,11 @@ int main(int argc, char* argv[]) {
 		Complex(initTerminalVolt * cos(initVoltAngle + 2 * PI / 3), initTerminalVolt * sin(initVoltAngle + 2 * PI / 3)) });
 	auto n1 = Node::make("n1", PhaseType::ABC, initVoltN1);
 
+	/// Use seperate ODE-Solver and Simulation Class->true ; use directly built-in solver: false
+	bool sim_class=false;
+
 	// Components
-	auto gen = Ph3::SynchronGeneratorDQ::make("DP_SynGen_dq_ThreePhFault_SynGen");
+	auto gen = Ph3::SynchronGeneratorDQ::make("DP_SynGen_dq_ThreePhFault_SynGen", sim_class);
 	gen->setFundamentalParametersPU(nomPower, nomPhPhVoltRMS, nomFreq, poleNum, nomFieldCurr,
 		Rs, Ll, Lmd, Lmq, Rfd, Llfd, Rkd, Llkd, Rkq1, Llkq1, Rkq2, Llkq2, H,
 		initActivePower, initReactivePower, initTerminalVolt, initVoltAngle, fieldVoltage, mechPower); //no real initialization
@@ -96,20 +99,33 @@ int main(int argc, char* argv[]) {
 	//logger->addAttribute("v1", n1->attribute("v"));
 	logger->addAttribute("theta", gen->attribute("theta"));*/
 
-	Sim_ODE sim(simName, sys, timeStep, finalTime, Domain::DP, Solver::Type::MNA, Logger::Level::INFO);
+	if(sim_class){
+		Sim_ODE sim(simName, sys, timeStep, finalTime, Domain::DP, Solver::Type::MNA, Logger::Level::INFO); //not compiling if 'sim' is a shared pointer
 
-	std::shared_ptr<ODESolver>  ode_solver;
-	ode_solver= std::make_shared<ODESolver>("DP_SynGen_dq_ThreePhFault_SynGen_SOLVER", gen, timeStep, 0);
+		std::shared_ptr<ODESolver>  ode_solver;
+		ode_solver= std::make_shared<ODESolver>("DP_SynGen_dq_ThreePhFault_SynGen_SOLVER", gen, timeStep, 0);
+		sim.addSolver(ode_solver);
 
-	sim.addSolver(ode_solver);
+		sim.addLogger(logger);
 
-	//Simulation sim(simName, sys, timeStep, finalTime,Domain::DP, Solver::Type::MNA, Logger::Level::INFO); //for non ODE-Class simulation
-	sim.addLogger(logger);
+		// Events
+		auto sw1 = SwitchEvent::make(0.05, fault, true);
+		sim.addEvent(sw1);
 
-	// Events
-	auto sw1 = SwitchEvent::make(0.05, fault, true);
-	sim.addEvent(sw1);
+		sim.run();
 
-	sim.run();
+	}else{ //for non ODE-Class simulation
+		Simulation sim(simName, sys, timeStep, finalTime,Domain::DP, Solver::Type::MNA, Logger::Level::INFO);
+
+		sim.addLogger(logger);
+
+		// Events
+		auto sw1 = SwitchEvent::make(0.05, fault, true);
+		sim.addEvent(sw1);
+
+		sim.run();
+	}
+
+
 	return 0;
 }

@@ -82,8 +82,9 @@ void ODESolver::initialize(Real t0) {
  	}*/
 
  	// Specify Runge-Kutta Method/order
- 	//flag = ARKodeSetOrder(arkode_mem, 4);
- 	//if (check_flag(&flag, "ARKodeOrderSet", 1)) return 1;
+ 	/*mFlag = ARKodeSetOrder(mArkode_mem, 4);
+ 	if (check_flag(&mFlag, "ARKodeOrderSet", 1))
+		mFlag=1;*/
 
 	mFlag = ARKodeInit(mArkode_mem, &ODESolver::StateSpaceWrapper, NULL, t0, mStates);
 	if (check_flag(&mFlag, "ARKodeInit", 1))
@@ -116,11 +117,9 @@ Real ODESolver::step(Real initial_time) {
 	realtype Tf = (realtype) initial_time+mTimestep;
 
 	/// Number of integration steps
-	long int nst;
+//	long int nst;
 	/// Number of error test fails
-	long int netf;
-
-
+//	long int netf;
 
 	mComponent->pre_step();
 
@@ -132,18 +131,17 @@ Real ODESolver::step(Real initial_time) {
 	}
 
 	// Get some statistics to check for numerical problems (instability, blow-up etc)
-	mFlag = ARKodeGetNumSteps(mArkode_mem, &nst);
+	/*mFlag = ARKodeGetNumSteps(mArkode_mem, &nst);
 	 if(check_flag(&mFlag, "ARKodeGetNumSteps", 1))
 	 	return 1;
 	mFlag = ARKodeGetNumErrTestFails(mArkode_mem, &netf);
 	if(check_flag(&mFlag, "ARKodeGetNumErrTestFails", 1))
-		return 1;
+		return 1;*/
 
 	// Print statistics:
-		std::cout << "Number Computing Steps: "<< nst << " Number Error-Test-Fails: " << netf << std::endl;
+	//	std::cout << "Number Computing Steps: "<< nst << " Number Error-Test-Fails: " << netf << std::endl;
 
 	mComponent->write_back_states();
-
 	return Tf;
 }
 
