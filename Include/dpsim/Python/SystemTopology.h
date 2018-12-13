@@ -53,6 +53,7 @@ namespace Python {
 		static PyObject* addComponent(SystemTopology *self, PyObject *args);
 		static PyObject* addNode(SystemTopology *self, PyObject *args);
 		static PyObject* addDecouplingLine(SystemTopology *self, PyObject *args);
+		static PyObject* autoDecouple(SystemTopology *self, PyObject *args);
 		static PyObject* multiply(SystemTopology *self, PyObject *args);
 		static PyObject* removeComponent(SystemTopology *self, PyObject *args);
 #ifdef WITH_GRAPHVIZ
@@ -74,6 +75,7 @@ namespace Python {
 		static const char *docAddComponent;
 		static const char *docAddNode;
 		static const char *docAddDecouplingLine;
+		static const char *docAutoDecouple;
 		static const char *docRemoveComponent;
 		static const char *docMultiply;
 		static PyTypeObject type;

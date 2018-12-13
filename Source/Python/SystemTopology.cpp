@@ -19,6 +19,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *********************************************************************************/
 
+#include <cps/DP/DP_Ph1_PiLine.h>
 #include <cps/Signal/DecouplingLine.h>
 #include <dpsim/Python/SystemTopology.h>
 #include <dpsim/Python/Component.h>
@@ -146,6 +147,52 @@ PyObject* Python::SystemTopology::addNode(SystemTopology *self, PyObject *args)
 	Py_RETURN_NONE;
 }
 
+const char *Python::SystemTopology::docAutoDecouple =
+"auto_decouple(timestep, threshold=1)\n"
+"Automatically replace suitable transmission lines with decoupling lines in order "
+"to speed up the simulation.\n"
+"\n"
+":param timestep: Timestep to be used for the simulation.\n"
+":param threshold: Maximum ratio of resistance to surge impedance for a decoupling line. "
+"Passing higher values leads to more lines being considered for decoupling, possibly at the "
+"cost of simulation accuracy.\n";
+PyObject* Python::SystemTopology::autoDecouple(SystemTopology* self, PyObject* args)
+{
+	double timestep, threshold = 1;
+
+	if (!PyArg_ParseTuple(args, "d|d", &timestep, &threshold))
+		return nullptr;
+
+	CPS::Component::List newComponents;
+	for (auto it = self->sys->mComponents.begin(); it != self->sys->mComponents.end(); ) {
+		auto line = std::dynamic_pointer_cast<CPS::DP::Ph1::PiLine>(*it);
+		if (line) {
+			using Real = CPS::Real;
+
+			Real delay = sqrt(line->attribute<Real>("L_series")->get() * line->attribute<Real>("C_parallel")->get());
+			Real surgeImpedance = sqrt(line->attribute<Real>("L_series")->get() / line->attribute<Real>("C_parallel")->get());
+			Real ratio = line->attribute<Real>("R_series")->get() / surgeImpedance;
+
+			//std::cout << line->name() << " delay " << delay << " ratio " << ratio << std::endl;
+			if (delay >= timestep && ratio < threshold) {
+				auto decoupledLine = CPS::Signal::DecouplingLine::make(line->name(), line->node(0), line->node(1), line->attribute<Real>("R_series")->get(), line->attribute<Real>("L_series")->get(), line->attribute<Real>("C_parallel")->get(), CPS::Logger::Level::NONE);
+				newComponents.push_back(decoupledLine);
+				for (auto comp : decoupledLine->getLineComponents())
+					newComponents.push_back(comp);
+
+				PyDict_DelItemString(self->pyComponentDict, line->name().c_str());
+				it = self->sys->mComponents.erase(it);
+				continue;
+			}
+		}
+		++it;
+	}
+
+	self->sys->addComponents(newComponents);
+	self->updateDicts();
+	Py_RETURN_NONE;
+}
+
 const char *Python::SystemTopology::docRemoveComponent =
 "remove_component(id)\n"
 "Remove the component with the given name\n";
@@ -170,14 +217,15 @@ PyObject* Python::SystemTopology::removeComponent(SystemTopology *self, PyObject
 }
 
 const char *Python::SystemTopology::docAddDecouplingLine =
-"add_decoupling_line(name, node1, node2, resistance, inductance, capacitance)\n";
+"add_decoupling_line(name, node1, node2, resistance, inductance, capacitance, log_level=0)\n";
 PyObject* Python::SystemTopology::addDecouplingLine(SystemTopology *self, PyObject *args)
 {
 	PyObject *pyObj1, *pyObj2;
 	double resistance, inductance, capacitance;
+	int logLevel = 0;
 	const char* name;
 
-	if (!PyArg_ParseTuple(args, "sOOddd", &name, &pyObj1, &pyObj2, &resistance, &inductance, &capacitance))
+	if (!PyArg_ParseTuple(args, "sOOddd|i", &name, &pyObj1, &pyObj2, &resistance, &inductance, &capacitance, &logLevel))
 		return nullptr;
 
 	Python::Node<CPS::Complex> *pyNode1, *pyNode2;
@@ -197,7 +245,7 @@ PyObject* Python::SystemTopology::addDecouplingLine(SystemTopology *self, PyObje
 		return nullptr;
 	}
 
-	auto line = CPS::Signal::DecouplingLine::make(name, pyNode1->node, pyNode2->node, resistance, inductance, capacitance, CPS::Logger::Level::NONE);
+	auto line = CPS::Signal::DecouplingLine::make(name, pyNode1->node, pyNode2->node, resistance, inductance, capacitance, CPS::Logger::Level(logLevel));
 	self->sys->addComponent(line);
 	self->sys->addComponents(line->getLineComponents());
 	self->updateDicts();
@@ -363,6 +411,7 @@ PyMethodDef Python::SystemTopology::methods[] = {
 	{"add_component", (PyCFunction) Python::SystemTopology::addComponent, METH_VARARGS, Python::SystemTopology::docAddComponent},
 	{"add_node",      (PyCFunction) Python::SystemTopology::addNode, METH_VARARGS, Python::SystemTopology::docAddNode},
 	{"add_decoupling_line", (PyCFunction) Python::SystemTopology::addDecouplingLine, METH_VARARGS, Python::SystemTopology::docAddDecouplingLine},
+	{"auto_decouple", (PyCFunction) Python::SystemTopology::autoDecouple, METH_VARARGS, Python::SystemTopology::docAutoDecouple},
 	{"multiply",      (PyCFunction) Python::SystemTopology::multiply, METH_VARARGS, Python::SystemTopology::docMultiply},
 	{"remove_component", (PyCFunction) Python::SystemTopology::removeComponent, METH_VARARGS, Python::SystemTopology::docRemoveComponent},
 #ifdef WITH_GRAPHVIZ
