@@ -72,15 +72,17 @@ namespace DPsim {
 
 		// Similar to DAE-Solver
 		CPS::ODEInterface::StSpFn mStSpFunction;
+		CPS::ODEInterface::JacFn mJacFunction;
 
 		/// use wrappers similar to DAE_Solver
 		static int StateSpaceWrapper(realtype t, N_Vector y, N_Vector ydot, void *user_data);
 		int StateSpace(realtype t, N_Vector y, N_Vector ydot);
+		
 		// TODO: Jacobian Routines neeeded for implicit solve:
-		/*static int JacobianWrapper(realtype t, N_Vector y, N_Vector fy, SUNMatrix J, void *user_data,
+		static int JacobianWrapper(realtype t, N_Vector y, N_Vector fy, SUNMatrix J, void *user_data,
 															 N_Vector tmp1, N_Vector tmp2, N_Vector tmp3);
 	  int Jacobian(realtype t, N_Vector y, N_Vector fy, SUNMatrix J,
-	 													 N_Vector tmp1, N_Vector tmp2, N_Vector tmp3);*/
+	 													 N_Vector tmp1, N_Vector tmp2, N_Vector tmp3);
 		/// ARKode- standard error detection function; in DAE-solver not detection function is used -> for efficiency purposes?
 		int check_flag(void *flagvalue, const std::string funcname, int opt);
 

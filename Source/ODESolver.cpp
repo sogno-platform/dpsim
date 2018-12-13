@@ -44,6 +44,10 @@ void ODESolver::initialize(Real t0) {
   CPS::ODEInterface::Ptr dummy = mComponent;
 	mStSpFunction=[dummy](double t, const double y[], double  ydot[]){
 		dummy->StateSpace(t, y, ydot);};
+	mJacFunction=[dummy](double t, const double y[] double fy[], double J[][],
+											 double tmp1[], double tmp2[], double tmp3[]){
+		dummy->Jacobian(t, y, fy, J, tmp1, tmp2, tmp3);};
+											 }
 
 	// Causes numerical issues, better allocate in every step
 	/*mArkode_mem= ARKodeCreate();
@@ -57,7 +61,7 @@ void ODESolver::initialize(Real t0) {
 		/* Call ARKodeInit to initialize the integrator memory and specify the
  	  right-hand side function in y'=f(t,y), the inital time T0, and
  	  the initial dependent variable vector y(fluxes+mech. vars).*/
- /*	if(implicit) {
+ /*	if(implicit)//TODO: variable for implicit/explicit integration specification {
  		flag = ARKodeInit(arkode_mem, NULL, &ODESolver::StateSpaceWrapper, T0, y);
  		if (check_flag(&flag, "ARKodeInit", 1)) throw CPS::Exception();
 
@@ -102,17 +106,23 @@ int ODESolver::StateSpaceWrapper(realtype t, N_Vector y, N_Vector ydot, void *us
 	return self->StateSpace(t, y, ydot);
 }
 
-/* TODO for implicit solve
-int ODESolver::JacobianWrapper(realtype t, N_Vector y, N_Vector fy, SUNMatrix J, void *user_data,
-               N_Vector tmp1, N_Vector tmp2, N_Vector tmp3){
-	ODESolver *self=reinterpret_cast<ODESolver *>(user_data);
-	return self->Jacobian(t, y, fy, J, tmp1, tmp2, tmp3);
-}*/
-
 int ODESolver::StateSpace(realtype t, N_Vector y, N_Vector ydot){
 	mStSpFunction(t, NV_DATA_S(y), NV_DATA_S(ydot));
 	return 0;
 }
+
+// TODO for implicit solve
+int ODESolver::JacobianWrapper(realtype t, N_Vector y, N_Vector fy, SUNMatrix J, void *user_data,
+               N_Vector tmp1, N_Vector tmp2, N_Vector tmp3){
+	ODESolver *self=reinterpret_cast<ODESolver *>(user_data);
+	return self->Jacobian(t, y, fy, J, tmp1, tmp2, tmp3);
+}
+
+int ODE::Solver::Jacobian(realtype t, N_Vector y, N_Vector fy, SUNMatrix J,
+               N_Vector tmp1, N_Vector tmp2, N_Vector tmp3){
+		mJacFunction(t, NV_DATA_S(y), NV_DATA_S(fy), //TODO matrix data-getter
+								 NV_DATA_S(tmp1), NV_DATA_S(tmp2), NV_DATA_S(tmp3));
+	}
 
 Real ODESolver::step(Real initial_time) {
 	// Not absolutely necessary; realtype by default double (same as Real)
