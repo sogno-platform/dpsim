@@ -45,13 +45,13 @@ void ODESolver::initialize(Real t0) {
 	mStSpFunction=[dummy](double t, const double y[], double  ydot[]){
 		dummy->StateSpace(t, y, ydot);};
 
-	mArkode_mem= ARKodeCreate();
+	/*mArkode_mem= ARKodeCreate();
 	 if (check_flag(mArkode_mem, "ARKodeCreate", 0))
 		mFlag=1;
 
 	mFlag = ARKodeSetUserData(mArkode_mem, this);
 	if (check_flag(&mFlag, "ARKodeSetUserData", 1))
-		mFlag=1;
+		mFlag=1;*/
 
 		/* Call ARKodeInit to initialize the integrator memory and specify the
  	  right-hand side function in y'=f(t,y), the inital time T0, and
@@ -86,13 +86,13 @@ void ODESolver::initialize(Real t0) {
  	if (check_flag(&mFlag, "ARKodeOrderSet", 1))
 		mFlag=1;*/
 
-	mFlag = ARKodeInit(mArkode_mem, &ODESolver::StateSpaceWrapper, NULL, t0, mStates);
+	/*mFlag = ARKodeInit(mArkode_mem, &ODESolver::StateSpaceWrapper, NULL, t0, mStates);
 	if (check_flag(&mFlag, "ARKodeInit", 1))
 		mFlag=1;
 
 	mFlag = ARKodeSStolerances(mArkode_mem, reltol, abstol);
 	if (check_flag(&mFlag, "ARKodeSStolerances", 1))
-		mFlag=1;
+		mFlag=1;*/
 }
 
 int ODESolver::StateSpaceWrapper(realtype t, N_Vector y, N_Vector ydot, void *user_data){
@@ -120,6 +120,22 @@ Real ODESolver::step(Real initial_time) {
 //	long int nst;
 	/// Number of error test fails
 //	long int netf;
+
+	mArkode_mem= ARKodeCreate();
+	 if (check_flag(mArkode_mem, "ARKodeCreate", 0))
+		mFlag=1;
+
+	mFlag = ARKodeSetUserData(mArkode_mem, this);
+	if (check_flag(&mFlag, "ARKodeSetUserData", 1))
+		mFlag=1;
+
+	mFlag = ARKodeInit(mArkode_mem, &ODESolver::StateSpaceWrapper, NULL, initial_time, mStates);
+	if (check_flag(&mFlag, "ARKodeInit", 1))
+		mFlag=1;
+
+	mFlag = ARKodeSStolerances(mArkode_mem, reltol, abstol);
+	if (check_flag(&mFlag, "ARKodeSStolerances", 1))
+		mFlag=1;
 
 	mComponent->pre_step();
 
