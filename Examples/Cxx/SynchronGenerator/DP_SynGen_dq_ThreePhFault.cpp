@@ -69,7 +69,13 @@ int main(int argc, char* argv[]) {
 	auto n1 = Node::make("n1", PhaseType::ABC, initVoltN1);
 
 	/// Use seperate ODE-Solver and Simulation Class->true ; use directly built-in solver: false
-	bool sim_class=false;
+	bool sim_class;
+	/// Pass on command line '1' for execution with ODE-Class; else use built-in solver
+	if(atoi(argv[1])==1){
+		sim_class=true;
+	}else{
+		sim_class=false;
+	}
 
 	// Components
 	auto gen = Ph3::SynchronGeneratorDQ::make("DP_SynGen_dq_ThreePhFault_SynGen", sim_class);
