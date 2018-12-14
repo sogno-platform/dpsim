@@ -17,7 +17,6 @@ stages:
   - generate
   - deploy
   #- post-all
-  - trigger
 
 docker:
   stage: prepare
@@ -179,13 +178,3 @@ deploy:packages:
 #    - cmake --build .
 #  tags:
 #    - windows
-
-trigger:jupyter:
-  stage: trigger
-  only:
-    - tags
-  script:
-    - curl -X POST
-           -F token=e9751bbb33e68c8206046d0062b5ff
-           -F ref=kubernetes
-            https://git.rwth-aachen.de/api/v4/projects/13613/trigger/pipeline
