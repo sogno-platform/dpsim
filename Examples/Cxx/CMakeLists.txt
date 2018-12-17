@@ -100,6 +100,7 @@ if(WITH_CIM)
 	set(CIM_SOURCES
 		
 		CIM/WSCC-9bus_CIM.cpp
+		CIM/WSCC-9bus_CIM_mult.cpp
 		CIM/WSCC-9bus_CIM_Dyn.cpp
 		CIM/WSCC-9bus_CIM_Dyn_Switch.cpp
 	)
