@@ -40,7 +40,7 @@ void ODESolver::initialize(Real t0) {
 	// Set initial value: (Different from DAESolver), only for already initialized components!
 	N_VSetArrayPointer(mComponent->state_vector(),mStates);
 
-	// Copied from DAESolver
+	// Analogous to DAESolver
   CPS::ODEInterface::Ptr dummy = mComponent;
 	mStSpFunction=[dummy](double t, const double y[], double  ydot[]){
 		dummy->StateSpace(t, y, ydot);};
@@ -49,7 +49,7 @@ void ODESolver::initialize(Real t0) {
 		dummy->Jacobian(t, y, fy, J, tmp1, tmp2, tmp3);};
 
 
-	// Causes numerical issues, better allocate in every step
+	// Causes numerical issues, better allocate in every step-> see step
 	/*mArkode_mem= ARKodeCreate();
 	 if (check_flag(mArkode_mem, "ARKodeCreate", 0))
 		mFlag=1;
@@ -61,42 +61,39 @@ void ODESolver::initialize(Real t0) {
 		/* Call ARKodeInit to initialize the integrator memory and specify the
  	  right-hand side function in y'=f(t,y), the inital time T0, and
  	  the initial dependent variable vector y(fluxes+mech. vars).*/
- /*	if(implicit)//TODO: variable for implicit/explicit integration specification {
- 		flag = ARKodeInit(arkode_mem, NULL, &ODESolver::StateSpaceWrapper, T0, y);
- 		if (check_flag(&flag, "ARKodeInit", 1)) throw CPS::Exception();
+ /*	if(mImplicitIntegration){
+	 mFlag = ARKodeInit(mArkode_mem, NULL, &ODESolver::StateSpaceWrapper, initial_time, mStates);
+	 if (check_flag(&mFlag, "ARKodeInit", 1)) throw CPS::Exception();
 
- 		// Initialize dense matrix data structure
- 	  A = SUNDenseMatrix(dim, dim);
- 	  if (check_flag((void *)A, "SUNDenseMatrix", 0)) throw CPS::Exception();
+	 // Initialize dense matrix data structure
+	 A = SUNDenseMatrix(mProbDim, mProbDim);
+	 if (check_flag((void *)A, "SUNDenseMatrix", 0)) throw CPS::Exception();
 
- 		// Initialize linear solver
- 	  LS = SUNDenseLinearSolver(y, A);
- 	  if (check_flag((void *)LS, "SUNDenseLinearSolver", 0)) throw CPS::Exception();
+	 // Initialize linear solver
+	 LS = SUNDenseLinearSolver(mStates, A);
+	 if (check_flag((void *)LS, "SUNDenseLinearSolver", 0)) throw CPS::Exception();
 
- 		// Attach matrix and linear solver
- 		flag = ARKDlsSetLinearSolver(arkode_mem, LS, A);
- 		if (check_flag(&flag, "ARKDlsSetLinearSolver", 1)) throw CPS::Exception();
+	 // Attach matrix and linear solver
+	 mFlag = ARKDlsSetLinearSolver(mArkode_mem, LS, A);
+	 if (check_flag(&mFlag, "ARKDlsSetLinearSolver", 1)) throw CPS::Exception();
 
- 		// Set Jacobian routine
- 		flag = ARKDlsSetJacFn(arkode_mem, &ODESolver::JacobianWrapper);
- 		if (check_flag(&flag, "ARKDlsSetJacFn", 1)) throw CPS::Exception();
- 	}
- 	else {
- 		flag = ARKodeInit(arkode_mem, &ODESolver::StateSpaceWrapper, NULL, T0, y);
- 		if (check_flag(&flag, "ARKodeInit", 1)) throw CPS::Exception();
- 	}*/
+	 // Set Jacobian routine
+	 mFlag = ARKDlsSetJacFn(mArkode_mem, &ODESolver::JacobianWrapper);
+	 if (check_flag(&mFlag, "ARKDlsSetJacFn", 1)) throw CPS::Exception();
+ }
+ else {
+	 mFlag = ARKodeInit(mArkode_mem, &ODESolver::StateSpaceWrapper, NULL, initial_time, mStates);
+	 if (check_flag(&mFlag, "ARKodeInit", 1)) throw CPS::Exception();
+ }*/
+
+	// Shifted to every step because of numerical issues
 
  	// Specify Runge-Kutta Method/order
  	/*mFlag = ARKodeSetOrder(mArkode_mem, 4);
  	if (check_flag(&mFlag, "ARKodeOrderSet", 1))
 		mFlag=1;*/
 
-	// Shifted to every step because of numerical issues
-	/*mFlag = ARKodeInit(mArkode_mem, &ODESolver::StateSpaceWrapper, NULL, t0, mStates);
-	if (check_flag(&mFlag, "ARKodeInit", 1))
-		mFlag=1;
-
-	mFlag = ARKodeSStolerances(mArkode_mem, reltol, abstol);
+	/*mFlag = ARKodeSStolerances(mArkode_mem, reltol, abstol);
 	if (check_flag(&mFlag, "ARKodeSStolerances", 1))
 		mFlag=1;*/
 }
@@ -171,10 +168,6 @@ Real ODESolver::step(Real initial_time) {
  		mFlag = ARKodeInit(mArkode_mem, &ODESolver::StateSpaceWrapper, NULL, initial_time, mStates);
  		if (check_flag(&mFlag, "ARKodeInit", 1)) throw CPS::Exception();
  	}
-
-	/*mFlag = ARKodeInit(mArkode_mem, &ODESolver::StateSpaceWrapper, NULL, initial_time, mStates);
-	if (check_flag(&mFlag, "ARKodeInit", 1))
-		mFlag=1;*/
 
 	mFlag = ARKodeSStolerances(mArkode_mem, reltol, abstol);
 	if (check_flag(&mFlag, "ARKodeSStolerances", 1))

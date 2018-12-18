@@ -54,9 +54,12 @@ namespace DPsim {
 		N_Vector mStates = NULL;
 
 		//for implicit solve:
+		/// Indicates whether the ODE shall be solved using an implicit scheme
 		bool mImplicitIntegration;
-		SUNMatrix A = NULL;            // empty matrix for solver
-		SUNLinearSolver LS = NULL;     // empty linear solver object
+		/// Empty matrix for linear solve in each Newton step while solving the Jacobian Matrix
+		SUNMatrix A = NULL;
+		/// Empty linear solver object
+		SUNLinearSolver LS = NULL;
 
 		/// Constant time step
 		Real mTimestep;
@@ -84,7 +87,6 @@ namespace DPsim {
 		static int StateSpaceWrapper(realtype t, N_Vector y, N_Vector ydot, void *user_data);
 		int StateSpace(realtype t, N_Vector y, N_Vector ydot);
 
-		// TODO: Jacobian Routines neeeded for implicit solve:
 		static int JacobianWrapper(realtype t, N_Vector y, N_Vector fy, SUNMatrix J, void *user_data,
 															 N_Vector tmp1, N_Vector tmp2, N_Vector tmp3);
 	  int Jacobian(realtype t, N_Vector y, N_Vector fy, SUNMatrix J,
@@ -93,7 +95,7 @@ namespace DPsim {
 		int check_flag(void *flagvalue, const std::string funcname, int opt);
 
 	public:
-		/// Create solve object with given parameters; Smth. mnore specialized than component needed?
+		/// Create solve object with corresponding component and information on the integration type
 		ODESolver(String name, CPS::ODEInterface::Ptr comp, bool implicit_integration, Real dt, Real t0);
 		/// Deallocate all memory
 		~ODESolver();

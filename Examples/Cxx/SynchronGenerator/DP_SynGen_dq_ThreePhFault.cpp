@@ -71,6 +71,7 @@ int main(int argc, char* argv[]) {
 	/// Use seperate ODE-Solver and Simulation Class->true ; use directly built-in solver: false
 	bool sim_class;
 	/// Pass on command line '1' for execution with ODE-Class; else use built-in solver
+	assert(argc>=2);
 	if(atoi(argv[1])==1){
 		sim_class=true;
 	}else{
@@ -108,7 +109,14 @@ int main(int argc, char* argv[]) {
 		Sim_ODE sim(simName, sys, timeStep, finalTime, Domain::DP, Solver::Type::MNA, Logger::Level::INFO); //not compiling if 'sim' is a shared pointer
 
 		std::shared_ptr<ODESolver>  ode_solver;
-		bool implicit_integration=true;
+		assert(argc==3);
+		bool implicit_integration;
+		if(atoi(argv[2])==1){
+			implicit_integration=true;
+		}else{
+			implicit_integration=false;
+		}
+
 		ode_solver= std::make_shared<ODESolver>("DP_SynGen_dq_ThreePhFault_SynGen_SOLVER", gen, implicit_integration, timeStep, 0);
 		sim.addSolver(ode_solver);
 
