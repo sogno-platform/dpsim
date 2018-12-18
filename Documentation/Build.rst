@@ -149,3 +149,11 @@ CMake for Windows
 .. _`Git for Windows`: https://git-scm.com/download/win
 .. _VILLASnode: https://git.rwth-aachen.de/VILLASframework/VILLASnode
 .. _DPsim: https://git.rwth-aachen.de/acs/core/simulation/dpsim
+
+Operating System Optimizations
+------------------------------
+
+The operating system configuration has a large impact on the real-time performance of DPsim.
+For optimal results, follow the suggestions collected in the `VILLASnode documentation`_. 
+
+.. _`VILLASnode documentation`: https://villas.fein-aachen.org/doc/node-tuning.html
