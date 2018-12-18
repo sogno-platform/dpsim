@@ -25,6 +25,17 @@ using namespace DPsim;
 using namespace CPS::DP;
 using namespace CPS::DP::Ph3;
 
+/*###### For execution at least one command line argument is required: ###########
+	First argument: binary flag (0 or 1),
+	0: The Generator Equations are solved without using the ODE-Simulation Class
+	1: The Generator Equations are solved using the ODE-Simulation Class
+
+	Second argument (optional): binary flag (0 or 1),
+	0: The Generator Equations are solved explicitly (this is also the default case if only one command line argument is provided)
+	1: The Generator Equations are solved explicitly (increased computational effort)
+	This distinction is only applicable if the ODE-Simulation Class approach is used, in the built-in approach the explicit solve is hard-coded.
+	*/
+
 int main(int argc, char* argv[]) {
 	// Define simulation parameters
 	Real timeStep = 0.00005; //initial: 0.00005
@@ -69,17 +80,17 @@ int main(int argc, char* argv[]) {
 	auto n1 = Node::make("n1", PhaseType::ABC, initVoltN1);
 
 	/// Use seperate ODE-Solver and Simulation Class->true ; use directly built-in solver: false
-	bool sim_class;
+	bool ode_class;
 	/// Pass on command line '1' for execution with ODE-Class; else use built-in solver
 	assert(argc>=2);
 	if(atoi(argv[1])==1){
-		sim_class=true;
+		ode_class=true; // simulate with ode-class
 	}else{
-		sim_class=false;
+		ode_class=false; // simulate without ode-class (use built in solver)
 	}
 
 	// Components
-	auto gen = Ph3::SynchronGeneratorDQ::make("DP_SynGen_dq_ThreePhFault_SynGen", sim_class);
+	auto gen = Ph3::SynchronGeneratorDQ::make("DP_SynGen_dq_ThreePhFault_SynGen", ode_class);
 	gen->setFundamentalParametersPU(nomPower, nomPhPhVoltRMS, nomFreq, poleNum, nomFieldCurr,
 		Rs, Ll, Lmd, Lmq, Rfd, Llfd, Rkd, Llkd, Rkq1, Llkq1, Rkq2, Llkq2, H,
 		initActivePower, initReactivePower, initTerminalVolt, initVoltAngle, fieldVoltage, mechPower);
@@ -101,22 +112,22 @@ int main(int argc, char* argv[]) {
 
 	//logger:
 	auto logger = DataLogger::make(simName);
-	/*
-	logger->addAttribute("i", gen->attribute("i_intf"));
-	//logger->addAttribute("v1", n1->attribute("v"));
-	logger->addAttribute("theta", gen->attribute("theta"));*/
-	if(sim_class){
+
+	if(ode_class){ // use ode-class -> instantiate own simulation and solver class
 		Sim_ODE sim(simName, sys, timeStep, finalTime, Domain::DP, Solver::Type::MNA, Logger::Level::INFO); //not compiling if 'sim' is a shared pointer
 
 		std::shared_ptr<ODESolver>  ode_solver;
-		assert(argc==3);
-		bool implicit_integration;
-		if(atoi(argv[2])==1){
-			implicit_integration=true;
-		}else{
-			implicit_integration=false;
-		}
 
+		// Check whether implicit integration is desired
+		bool implicit_integration=false;
+		if(argc==3){ //check if user information is given, else use explicit integration
+			if(atoi(argv[2])==1){
+				implicit_integration=true;
+			}else{
+				implicit_integration=false;
+			}
+		}
+		/// Create ODE-Solver object
 		ode_solver= std::make_shared<ODESolver>("DP_SynGen_dq_ThreePhFault_SynGen_SOLVER", gen, implicit_integration, timeStep, 0);
 		sim.addSolver(ode_solver);
 
