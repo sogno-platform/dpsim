@@ -12,14 +12,14 @@ set(CIRCUIT_SOURCES
 	Circuits/DP_VS_R1.cpp
 	Circuits/DP_CS_R1.cpp
 	Circuits/DP_VS_RL1.cpp
-	Circuits/DP_VS_RC1.cpp
+	Circuits/DP_VS_RC1.cpp	
 	Circuits/DP_CS_R2CL.cpp
 	Circuits/DP_VS_CS_R4.cpp
 	Circuits/DP_VS_R2L3.cpp
 
-	Circuits/DP_VS_PiLine_R.cpp
-	Circuits/DP_VS_Trafo_R.cpp
-	Circuits/DP_ResVS_RL_Switch.cpp
+	#Circuits/DP_VS_PiLine_R.cpp
+	#Circuits/DP_VS_Trafo_R.cpp
+	#Circuits/DP_ResVS_RL_Switch.cpp	
 
 	# EMT examples
 	Circuits/EMT_VS_R1.cpp
@@ -29,9 +29,9 @@ set(CIRCUIT_SOURCES
 	Circuits/EMT_CS_R2CL.cpp
 	Circuits/EMT_VS_R2L3.cpp
 	Circuits/EMT_VS_CS_R4_AC.cpp
-	Circuits/EMT_VS_CS_R4_DC.cpp
-
-	Circuits/EMT_ResVS_RL_Switch.cpp
+	Circuits/EMT_VS_CS_R4_DC.cpp	
+	
+	#Circuits/EMT_ResVS_RL_Switch.cpp
 )
 
 set(SYNCGEN_SOURCES
@@ -39,24 +39,24 @@ set(SYNCGEN_SOURCES
 	SynchronGenerator/DP_SynGen_dq_ThreePhFault.cpp
 	SynchronGenerator/DP_SynGen_TrStab_SteadyState.cpp
 	SynchronGenerator/DP_SynGen_TrStab_LoadStep.cpp
-	SynchronGenerator/DP_SynchronGenerator_BalancedResLoad.cpp
-	SynchronGenerator/DP_SynchronGenerator_ExciterAndTurbine.cpp
-	SynchronGenerator/DP_SynchronGenerator_SimpThreePhaseFault.cpp
-	SynchronGenerator/DP_SynchronGenerator_ThreePhaseFault.cpp
-	SynchronGenerator/DP_SynchronGenerator_VBR.cpp
-	SynchronGenerator/DP_SynchronGenerator_Simplified_ThreePhaseFault.cpp
-	SynchronGenerator/EMT_SynchronGenerator_BalancedResLoad.cpp
-	SynchronGenerator/EMT_SynchronGenerator_ExciterAndTurbine.cpp
-	SynchronGenerator/EMT_SynchronGenerator_PhaseToPhaseFault.cpp
-	SynchronGenerator/EMT_SynchronGenerator_ThreePhaseFault.cpp
-	SynchronGenerator/EMT_SynchronGenerator_VBR_ThreePhaseFault.cpp
-	SynchronGenerator/EMT_SynchronGenerator_Simplified_ThreePhaseFault.cpp
-	SynchronGenerator/EMT_Multimachine.cpp
+	#SynchronGenerator/DP_SynchronGenerator_BalancedResLoad.cpp
+	#SynchronGenerator/DP_SynchronGenerator_ExciterAndTurbine.cpp
+	#SynchronGenerator/DP_SynchronGenerator_SimpThreePhaseFault.cpp
+	#SynchronGenerator/DP_SynchronGenerator_ThreePhaseFault.cpp
+	#SynchronGenerator/DP_SynchronGenerator_VBR.cpp
+	#SynchronGenerator/DP_SynchronGenerator_Simplified_ThreePhaseFault.cpp
+	#SynchronGenerator/EMT_SynchronGenerator_BalancedResLoad.cpp
+	#SynchronGenerator/EMT_SynchronGenerator_ExciterAndTurbine.cpp
+	#SynchronGenerator/EMT_SynchronGenerator_PhaseToPhaseFault.cpp
+	#SynchronGenerator/EMT_SynchronGenerator_ThreePhaseFault.cpp
+	#SynchronGenerator/EMT_SynchronGenerator_VBR_ThreePhaseFault.cpp
+	#SynchronGenerator/EMT_SynchronGenerator_Simplified_ThreePhaseFault.cpp
+	#SynchronGenerator/EMT_Multimachine.cpp
 )
 
 set(VARFREQ_SOURCES
-	VariableTimeStep/RXLine_LoadStep_FreqStep_1.cpp
-	VariableTimeStep/RXLine_LoadStep_FreqStep_2.cpp
+	#VariableTimeStep/RXLine_LoadStep_FreqStep_1.cpp
+	#VariableTimeStep/RXLine_LoadStep_FreqStep_2.cpp
 )
 
 if(WITH_SUNDIALS)
@@ -98,7 +98,7 @@ if(WITH_CIM)
 	endif()
 
 	set(CIM_SOURCES
-
+		
 		CIM/WSCC-9bus_CIM.cpp
 		CIM/WSCC-9bus_CIM_Dyn.cpp
 		CIM/WSCC-9bus_CIM_Dyn_Switch.cpp
