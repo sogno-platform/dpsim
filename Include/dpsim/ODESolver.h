@@ -23,10 +23,9 @@
 
 #pragma once
 
-#ifdef WITH_SUNDIALS
-
 #include <dpsim/Solver.h>
-#include <cps/SystemTopology.h>
+
+#include <cps/Solver/ODEInterface.h>
 #include <cps/Logger.h>
 
 #include <arkode/arkode.h>              // prototypes for ARKode fcts., consts. and includes sundials_types.h
@@ -35,60 +34,76 @@
 #include <sunlinsol/sunlinsol_dense.h>  // access to dense SUNLinearSolver
 #include <arkode/arkode_direct.h>       // access to ARKDls interface
 
-#if defined(SUNDIALS_EXTENDED_PRECISION)
-#define GSYM "Lg"
-#define ESYM "Le"
-#define FSYM "Lf"
-#else
-#define GSYM "g"
-#define ESYM "e"
-#define FSYM "f"
-#endif // defined(SUNDIALS_EXTENDED_PRECISION)
-
-using namespace CPS;
+//using namespace CPS; // led to problems
 
 namespace DPsim {
 	/// Solver class for ODE (Ordinary Differential Equation) systems
 	class ODESolver: public Solver {
 	protected:
+
+		/// Component to simulate, possible specialized component needed
+		CPS::ODEInterface::Ptr mComponent;
+
+		/// Number of differential Variables (states)
+		Int mProbDim;
+
+		// ###ARKode-specific variables ###
+		/// Memory block allocated by ARKode
+		void* mArkode_mem=NULL;
+		/// State vector
+		N_Vector mStates = NULL;
+
+		//for implicit solve:
+		/// Indicates whether the ODE shall be solved using an implicit scheme
+		bool mImplicitIntegration;
+		/// Empty matrix for linear solve in each Newton step while solving the Jacobian Matrix
+		SUNMatrix A = NULL;
+		/// Empty linear solver object
+		SUNLinearSolver LS = NULL;
+
 		/// Constant time step
 		Real mTimestep;
-		/// Components of the solver
-		Component::List mComponents;
 
-		// ### General problem variables ###
-		/// Dimension of differential variables
-  		sunindextype mProbDim;
-		// reusable error-checking flag
-		int flag;
-		// vector for storing solution
-		N_Vector y = NULL;
-		// ARKode memory structure
-		void *arkode_mem = NULL;
-		/// Template Jacobian Matrix (implicit solver)
-		SUNMatrix A = NULL;
-		/// Linear solver object (implicit solver)
-		SUNLinearSolver LS = NULL;
+		// Same tolerance for each component regardless of system characteristics
 		/// Relative tolerance
 		realtype reltol = RCONST(1.0e-6);
 		/// Scalar absolute tolerance
 		realtype abstol = RCONST(1.0e-10);
 
+		// TODO: Variables for implicit solve?
+		/// Template Jacobian Matrix (implicit solver)
+		/*	SUNMatrix A = NULL;
+		/// Linear solver object (implicit solver)
+		SUNLinearSolver LS = NULL; */
+
+		/// reusable error-checking flag
+		int mFlag;
+
+		// Similar to DAE-Solver
+		CPS::ODEInterface::StSpFn mStSpFunction;
+		CPS::ODEInterface::JacFn mJacFunction;
+
+		/// use wrappers similar to DAE_Solver
+		static int StateSpaceWrapper(realtype t, N_Vector y, N_Vector ydot, void *user_data);
+		int StateSpace(realtype t, N_Vector y, N_Vector ydot);
+
+		static int JacobianWrapper(realtype t, N_Vector y, N_Vector fy, SUNMatrix J, void *user_data,
+															 N_Vector tmp1, N_Vector tmp2, N_Vector tmp3);
+	  int Jacobian(realtype t, N_Vector y, N_Vector fy, SUNMatrix J,
+	 													 N_Vector tmp1, N_Vector tmp2, N_Vector tmp3);
+		/// ARKode- standard error detection function; in DAE-solver not detection function is used -> for efficiency purposes?
+		int check_flag(void *flagvalue, const std::string funcname, int opt);
+
 	public:
-		/// Create solve object with given parameters
-		ODESolver(String name, SystemTopology system, Real dt, Real t0);
+		/// Create solve object with corresponding component and information on the integration type
+		ODESolver(String name, CPS::ODEInterface::Ptr comp, bool implicit_integration, Real dt, Real t0);
 		/// Deallocate all memory
 		~ODESolver();
 
-		/// use wrappers similar to DAE_Solver
-    	static int StateSpaceWrapper(realtype t, N_Vector y, N_Vector ydot, void *user_data);
-    	// neeeded for implicit solve:
-    	static int JacobianWrapper(realtype t, N_Vector y, N_Vector fy, SUNMatrix J, void *user_data,
-            N_Vector tmp1, N_Vector tmp2, N_Vector tmp3);
-    	/// ARKode- standard error detection function; in DAE-solver not detection function is used -> for efficiency purposes?
-		static int check_flag(void *flagvalue, const std::string funcname, int opt);
-		///
-    	int solve(Real initial_time, bool implicit);
+		/// Initialize ARKode-solve_environment
+		void initialize(Real t0);
+		/// Solve system for the current time
+		Real step(Real initial_time);
+
 	};
 }
-#endif // WITH_SUNDIALS
