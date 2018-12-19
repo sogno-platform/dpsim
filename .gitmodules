@@ -1,4 +1,4 @@
 [submodule "Dependencies/libcps"]
 	path = Dependencies/libcps
-	url = ../cpowersystems.git
+	url = git@git.rwth-aachen.de:acs/public/simulation/cpowersystems.git
 	branch = ode-class
