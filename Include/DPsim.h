@@ -21,8 +21,11 @@
 
 #include <dpsim/Config.h>
 #include <dpsim/Utils.h>
-//#include <dpsim/Simulation.h>
-#include <dpsim/Sim_ODE.h>
+#include <dpsim/Simulation.h>
+
+#ifdef WITH_SUNDIALS
+  #include <dpsim/Sim_ODE.h>
+#endif
 
 #ifndef _MSC_VER
   #include <dpsim/RealTimeSimulation.h>
