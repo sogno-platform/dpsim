@@ -87,7 +87,7 @@ void ThreadListScheduler::createSchedule(const Task::List& tasks, const Edges& i
 
 		auto minIt = std::min_element(totalTimes.begin(), totalTimes.end());
 		size_t minIdx = minIt - totalTimes.begin();
-		scheduleTask(minIdx, task, inEdges);
+		scheduleTask(minIdx, task);
 		totalTimes[minIdx] += measurements.at(task->toString());
 
 		if (outEdges.find(task) != outEdges.end()) {
@@ -105,5 +105,5 @@ void ThreadListScheduler::createSchedule(const Task::List& tasks, const Edges& i
 		}
 	}
 
-	ThreadScheduler::startThreads();
+	ThreadScheduler::finishSchedule(inEdges);
 }

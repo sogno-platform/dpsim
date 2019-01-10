@@ -34,11 +34,11 @@ CPS::AttributeBase::Ptr Scheduler::external;
 void Scheduler::initMeasurements(const Task::List& tasks) {
 	// Fill map here already since it's not protected by a mutex
 	for (auto task : tasks) {
-		mMeasurements[task] = std::vector<TaskTime>();
+		mMeasurements[task.get()] = std::vector<TaskTime>();
 	}
 }
 
-void Scheduler::updateMeasurement(Task::Ptr ptr, TaskTime time) {
+void Scheduler::updateMeasurement(Task* ptr, TaskTime time) {
 	mMeasurements[ptr].push_back(time);
 }
 
@@ -57,7 +57,7 @@ void Scheduler::writeMeasurements(String filename) {
 	}
 	// TODO think of nicer output format
 	for (auto pair : averages) {
-		os << pair.first << " " << pair.second.count() << std::endl;
+		os << pair.first << "," << pair.second.count() << std::endl;
 	}
 	os.close();
 }
@@ -68,10 +68,16 @@ void Scheduler::readMeasurements(String filename, std::unordered_map<String, Tas
 		throw SchedulingException();
 
 	String name;
-	TaskTime::rep duration;
 	while (fs.good()) {
-		fs >> name >> duration;
-		measurements[name] = duration;
+		std::string line;
+		std::getline(fs, line);
+		int idx = line.find(',');
+		if (idx == -1) {
+			if (line.empty())
+				continue;
+			throw SchedulingException();
+		}
+		measurements[line.substr(0, idx)] = std::stol(line.substr(idx+1));
 	}
 }
 

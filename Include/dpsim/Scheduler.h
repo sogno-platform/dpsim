@@ -73,7 +73,7 @@ namespace DPsim {
 		void initMeasurements(const CPS::Task::List& tasks);
 		// Not thread-safe for multiple calls with same task, but should only
 		// be called once for each task in each step anyway
-		void updateMeasurement(CPS::Task::Ptr task, TaskTime time);
+		void updateMeasurement(CPS::Task* task, TaskTime time);
 		void writeMeasurements(CPS::String filename);
 		void readMeasurements(CPS::String filename, std::unordered_map<CPS::String, TaskTime::rep>& measurements);
 
@@ -83,7 +83,7 @@ namespace DPsim {
 		// TODO more sophisticated measurement method might be necessary for
 		// longer simulations (risk of high memory requirements and integer
 		// overflow)
-		std::unordered_map<CPS::Task::Ptr, std::vector<TaskTime>> mMeasurements;
+		std::unordered_map<CPS::Task*, std::vector<TaskTime>> mMeasurements;
 
 		class Root : public CPS::Task {
 		public:

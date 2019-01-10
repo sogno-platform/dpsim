@@ -40,11 +40,11 @@ void SequentialScheduler::createSchedule(const Task::List& tasks, const Edges& i
 
 void SequentialScheduler::step(Real time, Int timeStepCount) {
 	if (mOutMeasurementFile.size() != 0) {
-		for (auto it : mSchedule) {
+		for (auto task : mSchedule) {
 			auto start = std::chrono::steady_clock::now();
-			it->execute(time, timeStepCount);
+			task->execute(time, timeStepCount);
 			auto end = std::chrono::steady_clock::now();
-			updateMeasurement(it, end-start);
+			updateMeasurement(task.get(), end-start);
 		}
 	} else {
 		for (auto it : mSchedule) {

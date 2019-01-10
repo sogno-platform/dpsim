@@ -50,17 +50,19 @@ void ThreadLevelScheduler::createSchedule(const Task::List& tasks, const Edges& 
 		}
 	} else {
 		for (size_t level = 0; level < levels.size(); level++) {
+			if (mSortTaskTypes)
+				sortTasksByType(levels[level].begin(), levels[level].end());
 			// Distribute tasks of one level evenly between threads
-			int nextThread = 0;
-			for (auto task : levels[level]) {
-				scheduleTask(nextThread++, task, inEdges);
-				if (nextThread == mNumThreads)
-					nextThread = 0;
+			for (int thread = 0; thread < mNumThreads; thread++) {
+				int start = levels[level].size() * thread / mNumThreads;
+				int end = levels[level].size() * (thread + 1) / mNumThreads;
+				for (int idx = start; idx != end; idx++)
+					scheduleTask(thread, levels[level][idx]);
 			}
 		}
 	}
 
-	ThreadScheduler::startThreads();
+	ThreadScheduler::finishSchedule(inEdges);
 }
 
 void ThreadLevelScheduler::sortTasksByType(Task::List::iterator begin, CPS::Task::List::iterator end) {
@@ -96,7 +98,7 @@ void ThreadLevelScheduler::scheduleLevel(const Task::List& tasks, const std::uno
 		for (int thread = 0; thread < mNumThreads; thread++) {
 			TaskTime::rep curTime = 0;
 			while (curTime < avgTime && task < tasksSorted.size()) {
-				scheduleTask(thread, tasksSorted[task], inEdges);
+				scheduleTask(thread, tasksSorted[task]);
 				curTime += measurements.at(tasksSorted[task]->toString());
 				task++;
 			}
@@ -104,7 +106,7 @@ void ThreadLevelScheduler::scheduleLevel(const Task::List& tasks, const std::uno
 		// All tasks should be distributed, but just to be sure, put the remaining
 		// ones to the last thread
 		for (; task < tasksSorted.size(); task++)
-			scheduleTask(mNumThreads-1, tasksSorted[task], inEdges);
+			scheduleTask(mNumThreads-1, tasksSorted[task]);
 	}
 	else {
 		// Sort tasks in descending execution time
@@ -118,7 +120,7 @@ void ThreadLevelScheduler::scheduleLevel(const Task::List& tasks, const std::uno
 		for (auto task : tasksSorted) {
 			auto minIt = std::min_element(totalTimes.begin(), totalTimes.end());
 			size_t minIdx = minIt - totalTimes.begin();
-			scheduleTask(minIdx, task, inEdges);
+			scheduleTask(minIdx, task);
 			totalTimes[minIdx] += measurements.at(task->toString());
 		}
 	}

@@ -37,8 +37,8 @@ namespace DPsim {
 		virtual void stop();
 
 	protected:
-		void startThreads();
-		void scheduleTask(int thread, CPS::Task::Ptr task, const Edges& inEdges);
+		void finishSchedule(const Edges& inEdges);
+		void scheduleTask(int thread, CPS::Task::Ptr task);
 
 		Int mNumThreads;
 
@@ -51,13 +51,13 @@ namespace DPsim {
 
 		std::vector<std::thread> mThreads;
 
-		std::map<CPS::Task::Ptr, Counter*> mCounters;
+		std::vector<CPS::Task::List> mTempSchedules;
 		struct ScheduleEntry {
-			CPS::Task::Ptr task;
-			Counter* endCounter;
+			CPS::Task* task;
+			Counter endCounter;
 			std::vector<Counter*> reqCounters;
 		};
-		std::vector<std::vector<ScheduleEntry>> mSchedules;
+		std::vector<ScheduleEntry*> mSchedules;
 
 		Bool mJoining = false;
 		Real mTime = 0;

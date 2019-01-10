@@ -57,7 +57,7 @@ void OpenMPLevelScheduler::step(Real time, Int timeStepCount) {
 					start = std::chrono::steady_clock::now();
 					mLevels[level][i]->execute(time, timeStepCount);
 					end = std::chrono::steady_clock::now();
-					updateMeasurement(mLevels[level][i], end-start);
+					updateMeasurement(mLevels[level][i].get(), end-start);
 				}
 			}
 		}
