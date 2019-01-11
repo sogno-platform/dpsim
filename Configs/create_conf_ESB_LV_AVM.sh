@@ -33,7 +33,7 @@ cat << EOF
 
 		builtin = false,
 
-		host = "acs-os-reserve",
+		host = "acs-os-villas",
 
 		out = {
 			publish = "reserve_esb_lv",
@@ -87,7 +87,7 @@ cat << EOF
 
 		username = "guest",
 	        password = "guest",
-		host = "acs-os-reserve",
+		host = "acs-os-villas",
 		port = 1883,
 
 		out = {
