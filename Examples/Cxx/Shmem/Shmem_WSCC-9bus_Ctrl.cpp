@@ -94,6 +94,7 @@ int main(int argc, char *argv[]) {
 	Interface intf(out, in, &conf);
 
 	// Register exportable node voltages
+	UInt o = 0;
 	for (auto n : sys.mNodes) {
 		UInt i;
 		if (sscanf(n->name().c_str(), "BUS%u", &i) != 1) {
@@ -108,16 +109,19 @@ int main(int argc, char *argv[]) {
 		std::cout << "Signal << " << (i*2)+0 << ": Mag " << n->name() << std::endl;
 		std::cout << "Signal << " << (i*2)+1 << ": Phas " << n->name() << std::endl;
 
-		intf.addExport(v->mag(),   (i*2)+0);
-		intf.addExport(v->phase(), (i*2)+1);
+		intf.addExport(v->mag(),   (i*2)+0); o++;
+		intf.addExport(v->phase(), (i*2)+1); o++;
 	}
 
 	// Register controllable load
 	//intf.addImport(load->attribute<Real>("power_active"), 0);
 	intf.addImport(filtP->attribute<Real>("input"), 0);
 
-	// TODO gain by 20e8
+	// TODO gain by 10e8
 	intf.addImport(filtP_profile->attribute<Real>("input"), 1);
+
+	intf.addExport(load->findAttribute<Real>("active_power"), o++);
+	intf.addExport(load_profile->findAttribute<Real>("active_power"), o++);
 
 	sim.addInterface(&intf, false, false);
 	sim.run();
