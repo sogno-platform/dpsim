@@ -120,8 +120,8 @@ int main(int argc, char *argv[]) {
 	// TODO gain by 10e8
 	intf.addImport(filtP_profile->attribute<Real>("input"), 1);
 
-	intf.addExport(load->findAttribute<Real>("active_power"), o++);
-	intf.addExport(load_profile->findAttribute<Real>("active_power"), o++);
+	intf.addExport(load->attribute<Real>("active_power"), o++);
+	intf.addExport(load_profile->attribute<Real>("active_power"), o++);
 
 	sim.addInterface(&intf, false, false);
 	sim.run();
