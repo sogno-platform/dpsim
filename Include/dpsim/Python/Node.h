@@ -49,10 +49,12 @@ namespace Python {
 		static int init(Node<VarType> *self, PyObject *args, PyObject *kwds);
 		static void dealloc(Node<VarType> *self);
 
+		static PyObject* initialVoltage(PyObject *self, PyObject *args);
 		static PyObject * gnd(PyObject *self, PyObject *args);
 
 		static const char *name;
 		static const char *doc;
+		static const char *docInitialVoltage;
 		static const char *docGND;
 		static PyMethodDef methods[];
 		static PyTypeObject type;

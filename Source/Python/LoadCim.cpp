@@ -86,7 +86,7 @@ PyObject* Python::LoadCim(PyObject* self, PyObject* args, PyObject *kwargs) {
 		return nullptr;
 	}
 
-	CPS::CIM::Reader reader(name, (CPS::Logger::Level) logLevel, CPS::Logger::Level::NONE);
+	CPS::CIM::Reader reader(name, (CPS::Logger::Level) logLevel, (CPS::Logger::Level) logLevel);
 
 	DPsim::Python::SystemTopology *pySys = PyObject_New(DPsim::Python::SystemTopology, &DPsim::Python::SystemTopology::type);
 
@@ -106,7 +106,7 @@ PyObject* Python::LoadCim(PyObject* self, PyObject* args, PyObject *kwargs) {
 
 	// Fill pyComponentDict, pyNodeDict
 	for (auto comp : pySys->sys->mComponents) {
-		PyObject *pyName = PyUnicode_FromString(comp->name().c_str());
+		PyObject *pyName = PyUnicode_FromString(comp->uid().c_str());
 
 		if (PyDict_Contains(pySys->pyComponentDict, pyName)) {
 			PyErr_Format(PyExc_AttributeError, "Duplicated Component name");
