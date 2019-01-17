@@ -34,8 +34,7 @@ RUN dnf --refresh -y install \
 	graphviz-devel \
 	sundials-devel \
 	libvillas-devel \
-	libcimpp16v29a \
-	spdlog
+	libcimpp16v29a
 
 # Install some debuginfos
 RUN dnf -y debuginfo-install \
