@@ -1,4 +1,14 @@
-FROM rwth/dpsim-dev:latest
+FROM rwthacs/dpsim-dev:latest
+
+LABEL \
+	org.label-schema.schema-version = "1.0" \
+	org.label-schema.name = "DPsim-VILLAS" \
+	org.label-schema.license = "GPL-3.0" \
+	org.label-schema.vendor = "Institute for Automation of Complex Power Systems, RWTH Aachen University" \
+	org.label-schema.author.name = "Steffen Vogel" \
+	org.label-schema.author.email = "stvogel@eonerc.rwth-aachen.de" \
+	org.label-schema.url = "http://fein-aachen.org/projects/dpsim/" \
+	org.label-schema.vcs-url = "https://git.rwth-aachen.de/acs/core/simulation/DPsim"
 
 RUN dnf -y install \
 	villas-node
