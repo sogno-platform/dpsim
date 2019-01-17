@@ -93,7 +93,6 @@ int main(int argc, char *argv[]) {
 	Interface intf(out, in, &conf, false);
 
 	// Register exportable node voltages
-	UInt o = 0;
 	for (auto n : sys.mNodes) {
 		UInt i;
 		if (sscanf(n->name().c_str(), "BUS%u", &i) != 1) {
