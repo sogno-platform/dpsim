@@ -65,9 +65,13 @@ int main(int argc, char* argv[]) {
 	auto sys = SystemTopology(60, SystemNodeList{n1}, SystemComponentList{gen, load});
 
 	// Simulation
+	auto logger = DataLogger::make(name);//added
+	logger->addAttribute("Current", gen->attribute("i_intf")); //Added
+	
 	Simulation sim(name, sys, timeStep, finalTime,
 		Domain::DP, Solver::Type::MNA, Logger::Level::INFO);
 
+	sim.addLogger(logger);//added
 	// Events
 	auto sw1 = SwitchEvent::make(0.05, load, true);
 

@@ -97,7 +97,7 @@ def read(fname):
 
 setup(
     name = 'dpsim',
-    version = '0.1.6',
+    version = '1.0.0',
     author = 'Markus Mirz, Steffen Vogel',
     author_email = 'acs-software@eonerc.rwth-aachen.de',
     description = 'A real-time simulator that operates in the dynamic phasor as well as electromagentic transient domain',

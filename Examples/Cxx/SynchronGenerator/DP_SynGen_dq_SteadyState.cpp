@@ -30,6 +30,7 @@ int main(int argc, char* argv[]) {
 	Real timeStep = 0.0005;
 	Real finalTime = 0.03;
 	String name = "DP_SynGen_dq_SteadyState";
+
 	// Define machine parameters in per unit
 	Real nomPower = 555e6;
 	Real nomPhPhVoltRMS = 24e3;
@@ -69,7 +70,7 @@ int main(int argc, char* argv[]) {
 
 	// Components
 	auto gen = Ph3::SynchronGeneratorDQ::make("DP_SynGen_dq_SteadyState_SynGen");
-	gen->setParameters(nomPower, nomPhPhVoltRMS, nomFreq, poleNum, nomFieldCurr,
+	gen->setFundamentalParametersPU(nomPower, nomPhPhVoltRMS, nomFreq, poleNum, nomFieldCurr,
 		Rs, Ll, Lmd, Lmq, Rfd, Llfd, Rkd, Llkd, Rkq1, Llkq1, Rkq2, Llkq2, H,
 		initActivePower, initReactivePower, initTerminalVolt, initVoltAngle, fieldVoltage, initMechPower);
 	gen->connect({n1});
