@@ -1,0 +1,6 @@
+FROM rwth/dpsim-dev:latest
+
+RUN dnf -y install \
+	villas-node
+
+EXPOSE 8888
