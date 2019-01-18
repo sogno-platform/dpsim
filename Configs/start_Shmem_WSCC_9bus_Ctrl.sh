@@ -44,9 +44,9 @@ CHILDS=$P1
 
 sleep 2
 
-if false; then
+if true; then
 	VILLAS_LOG_PREFIX="[Pipe] " \
-	villas-pipe Configs/villas-shmem.conf shmem
+	villas-pipe Configs/Shmem_WSCC-9bus_Ctrl.conf dpsim1
 else
 	VILLAS_LOG_PREFIX="[Node] " \
 	villas-node /projects/reserve/Shmem_WSCC-9bus_Ctrl.conf & VN=$!
