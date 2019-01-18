@@ -26,7 +26,7 @@
 #include <DPsim.h>
 
 using namespace DPsim;
-using namespace CPS;
+using namespace CPS::DP;
 using namespace CPS::DP::Ph1;
 
 int main(int argc, char *argv[]) {
@@ -47,7 +47,7 @@ int main(int argc, char *argv[]) {
 
 	String simName = "Shmem_WSCC-9bus";
 
-	CIM::Reader reader(simName, Logger::Level::INFO, Logger::Level::INFO);
+	CIMReader reader(simName, Logger::Level::INFO, Logger::Level::INFO);
 	SystemTopology sys = reader.loadCIM(60, filenames);
 
 	RealTimeSimulation sim(simName, sys, 0.001, 120,
@@ -64,18 +64,13 @@ int main(int argc, char *argv[]) {
 
 	// Register exportable node voltages
 	UInt o = 0;
-	for (auto n : sys.mNodes) {
-		auto v = n->attributeComplex("v");
-
-		intf.addExport(v->mag(),   o+0);
-		intf.addExport(v->phase(), o+1);
-
+	for (UInt nodeIdx = 0; nodeIdx < sys.mNodes.size(); nodeIdx++) {
+		auto v = sys.node<CPS::DP::Node>(nodeIdx)->attributeMatrix<Complex>("v");
+		CPS::ComplexAttribute::Ptr v0 = v->coeffComplex(0,0);
+		intf.addExport(v0->mag(), o+0);
+		intf.addExport(v0->phase(), o+1);
 		o += 2;
 	}
-
-	// TODO
-	// Extend system with controllable load
-	// Register controllable load
 
 	sim.addInterface(&intf);
 	sim.run();
