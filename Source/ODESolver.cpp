@@ -26,27 +26,30 @@
 using namespace DPsim;
 //using namespace CPS;
 
-ODESolver::ODESolver(String name, CPS::ODEInterface::Ptr comp, bool implicit_integration, Real dt, Real t0):
-	mComponent(comp),
-	mImplicitIntegration(implicit_integration),
-	mTimestep(dt){
-	mProbDim=mComponent->num_states();
-	initialize(t0);
+ODESolver::ODESolver(String name, CPS::ODEInterface::Ptr comp, bool implicit_integration, Real timestep)
+	: mName(name), mComponent(comp), mImplicitIntegration(implicit_integration), mTimestep(timestep) {
+	mProbDim = mComponent->attribute<Matrix>("ode_pre_state")->get().rows();
+	initialize();
 }
 
-void ODESolver::initialize(Real t0) {
-
+void ODESolver::initialize() {
 	mStates=N_VNew_Serial(mProbDim);
 	// Set initial value: (Different from DAESolver), only for already initialized components!
-	N_VSetArrayPointer(mComponent->state_vector(),mStates);
+	// XXX
+	N_VSetArrayPointer(mComponent->attribute<Matrix>("ode_post_state")->operator Matrix&().data(), mStates);
+	// Forbid SUNdials from deleting the underlying state vector (which is managed
+	// by our attribute / shared_ptr system)
+	NV_OWN_DATA_S(mStates) = false;
 
 	// Analogous to DAESolver
-  CPS::ODEInterface::Ptr dummy = mComponent;
-	mStSpFunction=[dummy](double t, const double y[], double  ydot[]){
-		dummy->StateSpace(t, y, ydot);};
-	mJacFunction=[dummy](double t, const double y[], double fy[], double J[],
-											 double tmp1[], double tmp2[], double tmp3[]){
-		dummy->Jacobian(t, y, fy, J, tmp1, tmp2, tmp3);};
+	CPS::ODEInterface::Ptr dummy = mComponent;
+	mStSpFunction = [dummy](double t, const double y[], double ydot[]) {
+		dummy->odeStateSpace(t, y, ydot);
+	};
+	mJacFunction = [dummy](double t, const double y[], double fy[], double J[],
+	                       double tmp1[], double tmp2[], double tmp3[]) {
+		dummy->odeJacobian(t, y, fy, J, tmp1, tmp2, tmp3);
+	};
 
 
 	// Causes numerical issues, better allocate in every step-> see step
@@ -108,7 +111,6 @@ int ODESolver::StateSpace(realtype t, N_Vector y, N_Vector ydot){
 	return 0;
 }
 
-// TODO for implicit solve
 int ODESolver::JacobianWrapper(realtype t, N_Vector y, N_Vector fy, SUNMatrix J, void *user_data,
                N_Vector tmp1, N_Vector tmp2, N_Vector tmp3){
 	ODESolver *self=reinterpret_cast<ODESolver *>(user_data);
@@ -117,10 +119,10 @@ int ODESolver::JacobianWrapper(realtype t, N_Vector y, N_Vector fy, SUNMatrix J,
 
 int ODESolver::Jacobian(realtype t, N_Vector y, N_Vector fy, SUNMatrix J,
                N_Vector tmp1, N_Vector tmp2, N_Vector tmp3){
-		mJacFunction(t, NV_DATA_S(y), NV_DATA_S(fy), SM_DATA_D(J),
-								 NV_DATA_S(tmp1), NV_DATA_S(tmp2), NV_DATA_S(tmp3));
-		return 0;
-	}
+	mJacFunction(t, NV_DATA_S(y), NV_DATA_S(fy), SM_DATA_D(J),
+	             NV_DATA_S(tmp1), NV_DATA_S(tmp2), NV_DATA_S(tmp3));
+	return 0;
+}
 
 Real ODESolver::step(Real initial_time) {
 	// Not absolutely necessary; realtype by default double (same as Real)
@@ -128,9 +130,11 @@ Real ODESolver::step(Real initial_time) {
 	realtype Tf = (realtype) initial_time+mTimestep;
 
 	/// Number of integration steps
-//	long int nst;
+	long int nst;
 	/// Number of error test fails
-//	long int netf;
+	long int netf;
+
+	mComponent->attribute<Matrix>("ode_post_state")->set(mComponent->attribute<Matrix>("ode_pre_state")->get());
 
 	// Better allocate the arkode memory here to prevent numerical problems
 	mArkode_mem= ARKodeCreate();
@@ -173,10 +177,8 @@ Real ODESolver::step(Real initial_time) {
 	if (check_flag(&mFlag, "ARKodeSStolerances", 1))
 		mFlag=1;
 
- 	// If allocation in 'initialize': start here
-	mComponent->pre_step();
 
-// Main integrator loop
+	// Main integrator loop
 	realtype t = T0;
 	while (Tf-t > 1.0e-15) {
 		mFlag = ARKode(mArkode_mem, Tf, mStates, &t, ARK_NORMAL);
@@ -184,18 +186,20 @@ Real ODESolver::step(Real initial_time) {
 	}
 
 	// Get some statistics to check for numerical problems (instability, blow-up etc)
-	/*mFlag = ARKodeGetNumSteps(mArkode_mem, &nst);
+	mFlag = ARKodeGetNumSteps(mArkode_mem, &nst);
 	 if(check_flag(&mFlag, "ARKodeGetNumSteps", 1))
 	 	return 1;
 	mFlag = ARKodeGetNumErrTestFails(mArkode_mem, &netf);
 	if(check_flag(&mFlag, "ARKodeGetNumErrTestFails", 1))
-		return 1;*/
+		return 1;
 
 	// Print statistics:
-	//	std::cout << "Number Computing Steps: "<< nst << " Number Error-Test-Fails: " << netf << std::endl;
-
-	mComponent->post_step();
+	std::cout << "Number Computing Steps: "<< nst << " Number Error-Test-Fails: " << netf << std::endl;
 	return Tf;
+}
+
+void ODESolver::SolveTask::execute(Real time, Int timeStepCount) {
+	mSolver.step(time);
 }
 
 // ARKode-Error checking functions

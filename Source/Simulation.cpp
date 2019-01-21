@@ -33,7 +33,9 @@
 #endif
 
 #ifdef WITH_SUNDIALS
+  #include <cps/Solver/ODEInterface.h>
   #include <dpsim/DAESolver.h>
+  #include <dpsim/ODESolver.h>
 #endif
 
 using namespace CPS;
@@ -145,7 +147,16 @@ void Simulation::createSolvers(const SystemTopology& system, Solver::Type solver
 			}
 		}
 	}
-
+#ifdef WITH_SUNDIALS
+	for (auto comp : system.mComponents) {
+		auto odeComp = std::dynamic_pointer_cast<ODEInterface>(comp);
+		if (odeComp) {
+			// TODO explicit / implicit integration
+			auto odeSolver = std::make_shared<ODESolver>(odeComp->attribute<String>("name")->get() + "_ODE", odeComp, false, mTimeStep);
+			mSolvers.push_back(odeSolver);
+		}
+	}
+#endif /* WITH_SUNDIALS */
 }
 
 template <typename VarType>

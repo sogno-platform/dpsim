@@ -40,6 +40,7 @@ namespace DPsim {
 	/// Solver class for ODE (Ordinary Differential Equation) systems
 	class ODESolver: public Solver {
 	protected:
+		std::string mName;
 
 		/// Component to simulate, possible specialized component needed
 		CPS::ODEInterface::Ptr mComponent;
@@ -88,24 +89,38 @@ namespace DPsim {
 		int StateSpace(realtype t, N_Vector y, N_Vector ydot);
 
 		static int JacobianWrapper(realtype t, N_Vector y, N_Vector fy, SUNMatrix J, void *user_data,
-															 N_Vector tmp1, N_Vector tmp2, N_Vector tmp3);
-	  int Jacobian(realtype t, N_Vector y, N_Vector fy, SUNMatrix J,
-	 													 N_Vector tmp1, N_Vector tmp2, N_Vector tmp3);
+		                           N_Vector tmp1, N_Vector tmp2, N_Vector tmp3);
+		int Jacobian(realtype t, N_Vector y, N_Vector fy, SUNMatrix J,
+		             N_Vector tmp1, N_Vector tmp2, N_Vector tmp3);
 		/// ARKode- standard error detection function; in DAE-solver not detection function is used -> for efficiency purposes?
 		int check_flag(void *flagvalue, const std::string funcname, int opt);
 
 	public:
 		/// Create solve object with corresponding component and information on the integration type
-		ODESolver(String name, CPS::ODEInterface::Ptr comp, bool implicit_integration, Real dt, Real t0);
+		ODESolver(String name, CPS::ODEInterface::Ptr comp, bool implicit_integration, Real timestep);
 		/// Deallocate all memory
 		~ODESolver();
 
+		class SolveTask : public CPS::Task {
+		public:
+			SolveTask(ODESolver& solver)
+			: Task(solver.mName + ".Solve"), mSolver(solver) {
+				mAttributeDependencies.push_back(solver.mComponent->attribute("ode_pre_state"));
+				mModifiedAttributes.push_back(solver.mComponent->attribute("ode_post_state"));
+			}
+
+			void execute(Real time, Int timeStepCount);
+
+		private:
+			ODESolver& mSolver;
+		};
+
 		virtual CPS::Task::List getTasks() {
-			// TODO
-			return CPS::Task::List();
+			return CPS::Task::List{std::make_shared<SolveTask>(*this)};
 		}
+
 		/// Initialize ARKode-solve_environment
-		void initialize(Real t0);
+		void initialize();
 		/// Solve system for the current time
 		Real step(Real initial_time);
 	};
