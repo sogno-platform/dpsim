@@ -72,13 +72,13 @@ int main(int argc, char *argv[]) {
 
 	auto filtP_profile = FIRFilter::make("filter_p_profile", coefficients_profile, 0, Logger::Level::INFO);
 	filtP_profile->setPriority(1);
-	filtP_profile->setConnection(load_profile->attribute<Real>("power_active"));
+	filtP_profile->setConnection(load_profile->attribute<Real>("P"));
 	filtP_profile->attribute<Real>("input")->set(0.);
 	sys.mComponents.push_back(filtP_profile);
 
 	auto filtP = FIRFilter::make("filter_p", coefficients, 0, Logger::Level::INFO);
 	filtP->setPriority(1);
-	filtP->setConnection(load->attribute<Real>("power_active"));
+	filtP->setConnection(load->attribute<Real>("P"));
 	filtP->attribute<Real>("input")->set(0.);
 	sys.mComponents.push_back(filtP);
 
@@ -104,13 +104,15 @@ int main(int argc, char *argv[]) {
 
 		i--;
 
-		auto v = n->attributeComplex("v");
+		auto n_dp = std::dynamic_pointer_cast<CPS::DP::Node>(n);
+		auto v = n_dp->attributeMatrix<Complex>("v");
+		auto v0 = v->coeffComplex(0,0);
 
 		std::cout << "Signal << " << (i*2)+0 << ": Mag " << n->name() << std::endl;
 		std::cout << "Signal << " << (i*2)+1 << ": Phas " << n->name() << std::endl;
 
-		intf.addExport(v->mag(),   (i*2)+0); o++;
-		intf.addExport(v->phase(), (i*2)+1); o++;
+		intf.addExport(v0->mag(),   (i*2)+0); o++;
+		intf.addExport(v0->phase(), (i*2)+1); o++;
 	}
 
 	// Register controllable load
@@ -120,8 +122,8 @@ int main(int argc, char *argv[]) {
 	// TODO gain by 10e8
 	intf.addImport(filtP_profile->attribute<Real>("input"), 1);
 
-	intf.addExport(load->attribute<Real>("active_power"), o++);
-	intf.addExport(load_profile->attribute<Real>("active_power"), o++);
+	intf.addExport(load->attribute<Real>("P"), o++);
+	intf.addExport(load_profile->attribute<Real>("P"), o++);
 
 	sim.addInterface(&intf, false, false);
 	sim.run();
