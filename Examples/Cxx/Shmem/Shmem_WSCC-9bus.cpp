@@ -26,7 +26,7 @@
 #include <DPsim.h>
 
 using namespace DPsim;
-using namespace CPS;
+using namespace CPS::DP;
 using namespace CPS::DP::Ph1;
 
 int main(int argc, char *argv[]) {
@@ -47,7 +47,7 @@ int main(int argc, char *argv[]) {
 
 	String simName = "Shmem_WSCC-9bus";
 
-	CIM::Reader reader(simName, Logger::Level::INFO, Logger::Level::INFO);
+	CIMReader reader(simName, Logger::Level::INFO, Logger::Level::INFO);
 	SystemTopology sys = reader.loadCIM(60, filenames);
 
 	RealTimeSimulation sim(simName, sys, 0.001, 120,
@@ -67,15 +67,11 @@ int main(int argc, char *argv[]) {
 	for (auto n : sys.mNodes) {
 		auto v = n->attributeComplex("v");
 
-		intf.addExport(ComplexAttribute::mag(v),   o+0);
-		intf.addExport(ComplexAttribute::phase(v), o+1);
+		intf.addExport(CPS::ComplexAttribute::mag(v),   o+0);
+		intf.addExport(CPS::ComplexAttribute::phase(v), o+1);
 
 		o += 2;
 	}
-
-	// TODO
-	// Extend system with controllable load
-	// Register controllable load
 
 	sim.addInterface(&intf);
 	sim.run();

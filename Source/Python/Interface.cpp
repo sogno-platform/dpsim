@@ -266,7 +266,7 @@ PyObject* Python::Interface::addExport(Interface* self, PyObject* args, PyObject
 
 			case 7: {
 				auto a = obj->attributeMatrix<CPS::Real>(attrName);
-				auto c = CPS::MatrixAttribute<CPS::Real>::coeff(a, row, col);
+				auto c = a->coeff(row, col);
 
 				self->intf->addExport(c, idx);
 				addExportDesc(self, idx, "float", name + "(" + std::to_string(row) + "," + std::to_string(col) + ")");
@@ -275,7 +275,7 @@ PyObject* Python::Interface::addExport(Interface* self, PyObject* args, PyObject
 
 			case 8: {
 				auto a = obj->attributeMatrix<CPS::Complex>(attrName);
-				auto c = CPS::MatrixAttribute<CPS::Complex>::coeff(a, row, col);
+				auto c = a->coeff(row, col);
 
 				self->intf->addExport(c, idx);
 				addExportDesc(self, idx, "complex", name + "(" + std::to_string(row) + "," + std::to_string(col) + ")");
@@ -284,7 +284,7 @@ PyObject* Python::Interface::addExport(Interface* self, PyObject* args, PyObject
 
 			case 9: {
 				auto a = obj->attributeMatrix<CPS::Complex>(attrName);
-				auto c = CPS::MatrixAttribute<CPS::Complex>::coeff(a, row, col);
+				auto c = a->coeff(row, col);
 				auto z = std::static_pointer_cast<CPS::ComplexAttribute>(c);
 
 				self->intf->addExport(CPS::ComplexAttribute::mag(z),   idx);
