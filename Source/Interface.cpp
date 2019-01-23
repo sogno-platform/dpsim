@@ -97,6 +97,7 @@ void Interface::readValues(bool blocking) {
 		 * we're not leaking memory from the queue pool */
 		if (sample)
 			sample_decref(sample);
+
 		throw exc;
 	}
 }
@@ -107,7 +108,7 @@ void Interface::writeValues() {
 	bool done = false;
 	try {
 		if (shmem_int_alloc(&mShmem, &sample, 1) < 1) {
-			std::cerr << Logger::prefix() << "Fatal error: pool underrun in: " << mWName << " <->" << mRName;
+			std::cerr << Logger::prefix() << "Fatal error: pool underrun in: " << mWName << " <-> " << mRName;
 			std::cerr << " at sequence no " << mSequence << std::endl;
 			close();
 			std::exit(1);
@@ -142,6 +143,7 @@ void Interface::writeValues() {
 
 		if (ret < 0)
 			std::cerr << Logger::prefix() << "Failed to write samples to interface" << std::endl;
+
 		/* Don't throw here, because we managed to send something */
 	}
 }
