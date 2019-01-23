@@ -46,6 +46,7 @@ void Interface::open() {
 
 	if (shmem_int_alloc(&mShmem, &mLastSample, 1) < 0) {
 		std::cout << Logger::prefix() << "Failed to allocate single sample from pool" << std::endl;
+		close();
 		std::exit(1);
 	}
 
@@ -80,6 +81,7 @@ void Interface::readValues(bool blocking) {
 		}
 		if (ret < 0) {
 			std::cerr << Logger::prefix() << "Fatal error: failed to read sample from interface" << std::endl;
+			close();
 			std::exit(1);
 		}
 
@@ -107,6 +109,7 @@ void Interface::writeValues() {
 		if (shmem_int_alloc(&mShmem, &sample, 1) < 1) {
 			std::cerr << Logger::prefix() << "Fatal error: pool underrun in: " << mWName << " <->" << mRName;
 			std::cerr << " at sequence no " << mSequence << std::endl;
+			close();
 			std::exit(1);
 		}
 
