@@ -72,13 +72,13 @@ int main(int argc, char *argv[]) {
 
 	auto filtP_profile = FIRFilter::make("filter_p_profile", coefficients_profile, 0, Logger::Level::INFO);
 	filtP_profile->setPriority(1);
-	load_profile->setAttributeRef("power_active", filtP_profile->attribute<Real>("output"));
+	load_profile->setAttributeRef("P", filtP_profile->attribute<Real>("output"));
 
 	sys.mComponents.push_back(filtP_profile);
 
 	auto filtP = FIRFilter::make("filter_p", coefficients, 0, Logger::Level::INFO);
 	filtP->setPriority(1);
-	load->setAttributeRef("power_active", filtP->attribute<Real>("output"));
+	load->setAttributeRef("P", filtP->attribute<Real>("output"));
 	sys.mComponents.push_back(filtP);
 
 	RealTimeSimulation sim(simName, sys, args.timeStep, args.duration, args.solver.domain, args.solver.type, args.logLevel, true);
@@ -93,6 +93,7 @@ int main(int argc, char *argv[]) {
 	Interface intf(out, in, &conf, false);
 
 	// Register exportable node voltages
+	UInt o = 0;
 	for (auto n : sys.mNodes) {
 		UInt i;
 		if (sscanf(n->name().c_str(), "BUS%u", &i) != 1) {
@@ -102,20 +103,23 @@ int main(int argc, char *argv[]) {
 
 		i--;
 
-		auto v = n->attributeComplex("v");
+		auto n_dp = std::dynamic_pointer_cast<CPS::DP::Node>(n);
+		auto v = n_dp->attributeMatrix<Complex>("v");
+		auto v0 = v->coeffComplex(0,0);
 
-		std::cout << "Signal << " << (i*2)+0 << ": Mag " << n->name() << std::endl;
-		std::cout << "Signal << " << (i*2)+1 << ": Phas " << n->name() << std::endl;
+		std::cout << "Signal " << (i*2)+0 << ": Mag  " << n->name() << std::endl;
+		std::cout << "Signal " << (i*2)+1 << ": Phas " << n->name() << std::endl;
 
-		intf.addExport(ComplexAttribute::mag(v),   (i*2)+0);
-		intf.addExport(ComplexAttribute::phase(v), (i*2)+1);
+		intf.addExport(ComplexAttribute::mag(v0),   (i*2)+0); o++;
+		intf.addExport(ComplexAttribute::phase(v0), (i*2)+1); o++;
 	}
 
-	// Register controllable load
-	//intf.addImport(load->attribute<Real>("power_active"), 0);
 	// TODO gain by 20e8
 	filtP->setInput(intf.importReal(0));
 	filtP_profile->setInput(intf.importReal(1));
+
+	intf.addExport(load->attribute<Real>("P"), o++);
+	intf.addExport(load_profile->attribute<Real>("P"), o++);
 
 	sim.addInterface(&intf, false);
 	sim.run();

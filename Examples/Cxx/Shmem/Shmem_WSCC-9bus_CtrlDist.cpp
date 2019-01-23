@@ -110,8 +110,8 @@ int main(int argc, char *argv[]) {
 
 			auto v = n->attributeComplex("v");
 
-			std::cout << "Signal << " << (i*2)+0 << ": Mag " << n->name() << std::endl;
-			std::cout << "Signal << " << (i*2)+1 << ": Phas " << n->name() << std::endl;
+			std::cout << "Signal " << (i*2)+0 << ": Mag " << n->name() << std::endl;
+			std::cout << "Signal " << (i*2)+1 << ": Phas " << n->name() << std::endl;
 
 			intf2.addExport(CPS::ComplexAttribute::mag(v),   (i*2)+0);
 			intf2.addExport(CPS::ComplexAttribute::phase(v), (i*2)+1);
