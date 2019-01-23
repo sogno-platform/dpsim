@@ -108,8 +108,8 @@ int main(int argc, char *argv[]) {
 		auto v = n_dp->attributeMatrix<Complex>("v");
 		auto v0 = v->coeffComplex(0,0);
 
-		std::cout << "Signal << " << (i*2)+0 << ": Mag " << n->name() << std::endl;
-		std::cout << "Signal << " << (i*2)+1 << ": Phas " << n->name() << std::endl;
+		std::cout << "Signal " << (i*2)+0 << ": Mag  " << n->name() << std::endl;
+		std::cout << "Signal " << (i*2)+1 << ": Phas " << n->name() << std::endl;
 
 		intf.addExport(v0->mag(),   (i*2)+0); o++;
 		intf.addExport(v0->phase(), (i*2)+1); o++;
