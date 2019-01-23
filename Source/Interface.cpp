@@ -119,6 +119,7 @@ void Interface::writeValues() {
 		}
 
 		sample->sequence = mSequence++;
+		sample->flags |= SAMPLE_HAS_DATA;
 		clock_gettime(CLOCK_REALTIME, &sample->ts.origin);
 		done = true;
 
