@@ -11,6 +11,7 @@ set(SOURCES
 	ThreadScheduler.cpp
 	ThreadLevelScheduler.cpp
 	ThreadListScheduler.cpp
+	DiakopticsSolver.cpp
 )
 
 list(APPEND LIBRARIES cps)
