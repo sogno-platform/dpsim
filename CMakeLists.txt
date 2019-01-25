@@ -93,7 +93,6 @@ set(INCLUDE_DIRS
 add_subdirectory(Tests)
 add_subdirectory(Source)
 add_subdirectory(Documentation)
-add_subdirectory(Dependencies/fpotencia)
 
 if(BUILD_EXAMPLES)
 	add_subdirectory(Examples/Cxx)

@@ -1,4 +1,4 @@
-/** Simulation
+﻿/** Simulation
  *
  * @author Markus Mirz <mmirz@eonerc.rwth-aachen.de>
  * @copyright 2017-2018, Institute for Automation of Complex Power Systems, EONERC
@@ -42,7 +42,7 @@ namespace DPsim {
 	public:
 		virtual ~Solver() { }
 
-		enum class Type { MNA, DAE };
+		enum class Type { MNA, DAE, NRP };
 
 		/// Solve system A * x = z for x and current time
 		virtual Real step(Real time) = 0;

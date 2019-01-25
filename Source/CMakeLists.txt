@@ -2,6 +2,8 @@ set(SOURCES
 	Simulation.cpp
 	RealTimeSimulation.cpp
 	MNASolver.cpp
+	NRPSolver.cpp
+	NRPSolution.cpp
 	Utils.cpp
 	Timer.cpp
 	Event.cpp
