@@ -27,6 +27,8 @@
 #include <dpsim/DataLogger.h>
 #include <dpsim/Solver.h>
 
+#include <unordered_map>
+
 namespace DPsim {
 	template <typename VarType>
 	class DiakopticsSolver : public Solver, public CPS::AttributeList {
@@ -69,16 +71,23 @@ namespace DPsim {
 		Matrix mTearTopology;
 		Matrix mRemovedImpedance;
 		CPS::LUFactorized mNetToRemovedImpedance;
+		Matrix mIPsi;
+		Matrix mIPsiMapped;
 
 		void init(const CPS::SystemTopology& system);
-		void initSubnets(const std::vector<CPS::SystemTopology>& subnets);
-		void createMatrices();
-		void initComponents();
-		void initMatrices();
 
+		void initSubnets(const std::vector<CPS::SystemTopology>& subnets);
 		void createVirtualNodes(int net);
 		void assignSimNodes(int net);
 		void setSubnetSize(int net, UInt nodes);
+
+		void createMatrices();
+		void createTearMatrices(UInt totalSize);
+
+		void initComponents();
+
+		void initMatrices();
+		void applyTearComponentStamp(std::unordered_map<typename CPS::Node<VarType>::Ptr, Subnet*>& subnetMap, UInt compIdx);
 
 		void log(Real time);
 

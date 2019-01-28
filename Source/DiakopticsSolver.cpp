@@ -22,6 +22,7 @@
 #include <dpsim/DiakopticsSolver.h>
 
 #include <cps/DP/DP_Ph1_Resistor.h>
+#include <cps/EMT/EMT_Ph1_Resistor.h>
 #include <dpsim/Definitions.h>
 #include <dpsim/Simulation.h>
 
@@ -139,8 +140,6 @@ template <typename VarType>
 void DiakopticsSolver<VarType>::createMatrices() {
 	UInt totalSize = mSubnets.back().sysOff + mSubnets.back().sysSize;
 	mSystemMatrix = Matrix::Zero(totalSize, totalSize);
-	mTearTopology = Matrix::Zero(totalSize, mTearComponents.size());
-	mRemovedImpedance = Matrix::Zero(mTearComponents.size(), mTearComponents.size());
 	mYinv = Matrix::Zero(totalSize, totalSize);
 
 	mRightSideVector = Matrix::Zero(totalSize, 1);
@@ -149,6 +148,23 @@ void DiakopticsSolver<VarType>::createMatrices() {
 	addAttribute<Matrix>("x", &mLeftSideVector, Flags::read);
 	mOrigLeftSideVector = Matrix::Zero(totalSize, 1);
 	addAttribute<Matrix>("xOld", &mOrigLeftSideVector, Flags::read);
+	mIPsiMapped = Matrix::Zero(totalSize, 1);
+
+	createTearMatrices(totalSize);
+}
+
+template <>
+void DiakopticsSolver<Real>::createTearMatrices(UInt totalSize) {
+	mTearTopology = Matrix::Zero(totalSize, mTearComponents.size());
+	mRemovedImpedance = Matrix::Zero(mTearComponents.size(), mTearComponents.size());
+	mIPsi = Matrix::Zero(mTearComponents.size(), 1);
+}
+
+template <>
+void DiakopticsSolver<Complex>::createTearMatrices(UInt totalSize) {
+	mTearTopology = Matrix::Zero(totalSize, 2*mTearComponents.size());
+	mRemovedImpedance = Matrix::Zero(2*mTearComponents.size(), 2*mTearComponents.size());
+	mIPsi = Matrix::Zero(2*mTearComponents.size(), 1);
 }
 
 template <typename VarType>
@@ -208,16 +224,7 @@ void DiakopticsSolver<VarType>::initMatrices() {
 
 	// initialize tear topology matrix and impedance matrix of removed network
 	for (UInt compIdx = 0; compIdx < mTearComponents.size(); compIdx++) {
-		auto comp = mTearComponents[compIdx];
-		mTearTopology(subnetMap[comp->node(0)]->sysOff + comp->node(0)->simNode(), compIdx) = 1;
-		mTearTopology(subnetMap[comp->node(1)]->sysOff + comp->node(1)->simNode(), compIdx) = -1;
-
-		// TODO use a nice interface for this
-		auto res = std::dynamic_pointer_cast<DP::Ph1::Resistor>(comp);
-		if (!res)
-			throw SystemError("Unsupported component type for diakoptics");
-
-		mRemovedImpedance(compIdx, compIdx) = res->template attribute<Real>("R")->get();
+		applyTearComponentStamp(subnetMap, compIdx);
 	}
 	mLog.debug() << "Topology matrix: \n" << mTearTopology << std::endl;
 	mLog.debug() << "Removed impedance matrix: \n" << mRemovedImpedance << std::endl;
@@ -227,6 +234,41 @@ void DiakopticsSolver<VarType>::initMatrices() {
 	}
 	mNetToRemovedImpedance = Eigen::PartialPivLU<Matrix>(mRemovedImpedance + mTearTopology.transpose() * mYinv * mTearTopology);
 	mLog.debug() << "Net to removed impedance matrix decomposition: \n" << mNetToRemovedImpedance.matrixLU() << std::endl;
+}
+
+template <>
+void DiakopticsSolver<Real>::applyTearComponentStamp(std::unordered_map<Node<Real>::Ptr, Subnet*>& subnetMap, UInt compIdx) {
+	auto comp = mTearComponents[compIdx];
+	mTearTopology(subnetMap[comp->node(0)]->sysOff + comp->node(0)->simNode(), compIdx) = 1;
+	mTearTopology(subnetMap[comp->node(1)]->sysOff + comp->node(1)->simNode(), compIdx) = -1;
+
+	// TODO use a nice interface for this
+	auto res = std::dynamic_pointer_cast<EMT::Ph1::Resistor>(comp);
+	if (!res)
+		throw SystemError("Unsupported component type for diakoptics");
+
+	mRemovedImpedance(compIdx, compIdx) = res->template attribute<Real>("R")->get();
+}
+
+template <>
+void DiakopticsSolver<Complex>::applyTearComponentStamp(std::unordered_map<Node<Complex>::Ptr, Subnet*>& subnetMap, UInt compIdx) {
+	auto comp = mTearComponents[compIdx];
+
+	auto net1 = subnetMap[comp->node(0)];
+	auto net2 = subnetMap[comp->node(1)];
+
+	mTearTopology(net1->sysOff + comp->node(0)->simNode(), compIdx) = 1;
+	mTearTopology(net1->sysOff + net1->sysSize/2 + comp->node(0)->simNode(), mTearComponents.size() + compIdx) = 1;
+	mTearTopology(net2->sysOff + comp->node(1)->simNode(), compIdx) = -1;
+	mTearTopology(net2->sysOff + net2->sysSize/2 + comp->node(1)->simNode(), mTearComponents.size() + compIdx) = -1;
+
+	// TODO use a nice interface for this
+	auto res = std::dynamic_pointer_cast<DP::Ph1::Resistor>(comp);
+	if (!res)
+		throw SystemError("Unsupported component type for diakoptics");
+
+	mRemovedImpedance(compIdx, compIdx) = res->template attribute<Real>("R")->get();
+	mRemovedImpedance(mTearComponents.size() + compIdx, mTearComponents.size() + compIdx) = res->template attribute<Real>("R")->get();
 }
 
 template <typename VarType>
@@ -267,15 +309,13 @@ void DiakopticsSolver<VarType>::SubnetSolveTask::execute(Real time, Int timeStep
 
 template <typename VarType>
 void DiakopticsSolver<VarType>::SolveTask::execute(Real time, Int timeStepCount) {
-	// TODO allocate in init
-	Matrix iPsi = Matrix::Zero(mSolver.mTearComponents.size(), mSolver.mTearComponents.size());
-	iPsi = mSolver.mNetToRemovedImpedance.solve(-mSolver.mTearTopology.transpose() * mSolver.mOrigLeftSideVector);
-	Matrix iPsiMapped = mSolver.mTearTopology * iPsi;
+	mSolver.mIPsi = mSolver.mNetToRemovedImpedance.solve(-mSolver.mTearTopology.transpose() * mSolver.mOrigLeftSideVector);
+	mSolver.mIPsiMapped = mSolver.mTearTopology * mSolver.mIPsi;
 	mSolver.mLeftSideVector = mSolver.mOrigLeftSideVector;
 	// TODO parallelize as well?
 	for (auto& net : mSolver.mSubnets) {
 		auto lBlock = mSolver.mLeftSideVector.block(net.sysOff, 0, net.sysSize, 1);
-		auto rBlock = iPsiMapped.block(net.sysOff, 0, net.sysSize, 1);
+		auto rBlock = mSolver.mIPsiMapped.block(net.sysOff, 0, net.sysSize, 1);
 		lBlock += net.luFactorization.solve(rBlock);
 	}
 }
