@@ -36,7 +36,6 @@ set(CIRCUIT_SOURCES
 
 set(SYNCGEN_SOURCES
 	SynchronGenerator/DP_SynGen_dq_SteadyState.cpp
-	SynchronGenerator/DP_SynGen_dq_ThreePhFault.cpp
 	SynchronGenerator/DP_SynGen_TrStab_SteadyState.cpp
 	SynchronGenerator/DP_SynGen_TrStab_LoadStep.cpp
 	#SynchronGenerator/DP_SynchronGenerator_BalancedResLoad.cpp
@@ -53,6 +52,12 @@ set(SYNCGEN_SOURCES
 	#SynchronGenerator/EMT_SynchronGenerator_Simplified_ThreePhaseFault.cpp
 	#SynchronGenerator/EMT_Multimachine.cpp
 )
+
+if(WITH_SUNDIALS)
+	list(APPEND SYNCGEN_SOURCES
+		SynchronGenerator/DP_SynGen_dq_ThreePhFault.cpp
+	)
+endif()
 
 set(VARFREQ_SOURCES
 	#VariableTimeStep/RXLine_LoadStep_FreqStep_1.cpp
@@ -130,4 +135,3 @@ foreach(SOURCE ${CIRCUIT_SOURCES} ${SYNCGEN_SOURCES} ${VARFREQ_SOURCES} ${SHMEM_
 	target_include_directories(${TARGET} PRIVATE ${INCLUDE_DIRS})
 	target_compile_options(${TARGET} PUBLIC ${DPSIM_CXX_FLAGS})
 endforeach()
-

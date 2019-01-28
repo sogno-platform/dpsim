@@ -118,7 +118,7 @@ namespace DPsim {
 		/// Run simulation until total time is elapsed.
 		void run();
 		/// Solve system A * x = z for x and current time
-		Real step();
+		virtual Real step();
 		/// Synchronize simulation with remotes by exchanging intial state over interfaces
 		void sync();
 

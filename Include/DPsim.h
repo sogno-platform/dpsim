@@ -23,6 +23,10 @@
 #include <dpsim/Utils.h>
 #include <dpsim/Simulation.h>
 
+#ifdef WITH_SUNDIALS
+  #include <dpsim/Sim_ODE.h>
+#endif
+
 #ifndef _MSC_VER
   #include <dpsim/RealTimeSimulation.h>
 #endif
@@ -38,7 +42,7 @@
   #include <cps/CIM/Reader.h>
 #endif
 
-namespace DPsim {
+namespace DPsim{
 	// #### CPS for users ####
 	using SystemTopology = CPS::SystemTopology;
 	using SystemNodeList = CPS::TopologicalNode::List;

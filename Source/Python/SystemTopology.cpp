@@ -177,6 +177,10 @@ int Python::SystemTopology::init(Python::SystemTopology *self, PyObject *args, P
 				Python::Node<CPS::Real> *pyNode = (Python::Node<CPS::Real> *) pyObj;
 				pyName = PyUnicode_FromString(pyNode->node->name().c_str());
 			}
+			else {
+				PyErr_Format(PyExc_AttributeError, "Parameter 'nodes' must be a list of dpsim.Node");
+				return -1;
+			}
 
 			if (PyDict_Contains(self->pyNodeDict, pyName)) {
 				PyErr_Format(PyExc_AttributeError, "Duplicated Node name");

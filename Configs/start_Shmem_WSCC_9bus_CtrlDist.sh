@@ -1,3 +1,5 @@
+#!/bin/bash
+
 set -x
 
 # Start time
@@ -25,7 +27,7 @@ if false; then
 	villas-pipe Configs/villas-shmem.conf shmem
 else
 	VILLAS_LOG_PREFIX="[Node] " \
-	villas-node /projects/reserve/node2.conf
+	villas-node /projects/reserve/Shmem_WSCC-9bus_CtrlDist.conf
 fi
 
 for job in $P1 $P2; do

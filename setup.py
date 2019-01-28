@@ -18,13 +18,13 @@ class CMakeBuild(build_ext):
         try:
             out = subprocess.check_output(['cmake', '--version'])
         except OSError:
-            raise RuntimeError("CMake must be installed to build the following extensions: " +
-                               ", ".join(e.name for e in self.extensions))
+            raise RuntimeError('CMake must be installed to build the following extensions: ' +
+                               ', '.join(e.name for e in self.extensions))
 
-        if platform.system() == "Windows":
+        if platform.system() == 'Windows':
             cmake_version = LooseVersion(re.search(r'version\s*([\d.]+)', out.decode()).group(1))
             if cmake_version < '3.1.0':
-                raise RuntimeError("CMake >= 3.1.0 is required on Windows")
+                raise RuntimeError('CMake >= 3.1.0 is required on Windows')
 
         for ext in self.extensions:
             self.build_extension(ext)
@@ -38,9 +38,9 @@ class CMakeBuild(build_ext):
         cfg = 'Debug' if self.debug else 'Release'
         cmake_args += ['-DCMAKE_BUILD_TYPE=' + cfg]
 
-        print("building CMake extension in %s configuration" % cfg)
+        print('building CMake extension in %s configuration' % cfg)
 
-        if platform.system() == "Windows":
+        if platform.system() == 'Windows':
             cmake_args += ['-DCMAKE_RUNTIME_OUTPUT_DIRECTORY_DEBUG=' + extdir]
             cmake_args += ['-DCMAKE_RUNTIME_OUTPUT_DIRECTORY_RELEASE=' + extdir]
             if sys.maxsize > 2**32:
@@ -51,7 +51,7 @@ class CMakeBuild(build_ext):
             build_args = ['--', '-j4']
 
         env = os.environ.copy()
-        env['CXXFLAGS'] = '{} -DVERSION_INFO=\\"{}\\"'.format(env.get('CXXFLAGS', ''), self.distribution.get_version())
+        env['CXXFLAGS'] = '{} -DVERSION_INFO=\'{}\''.format(env.get('CXXFLAGS', ''), self.distribution.get_version())
 
         if not os.path.exists(self.build_temp):
             os.makedirs(self.build_temp)
@@ -80,16 +80,14 @@ def read(fname):
             return sanatized
 
 setup(
-    name = "dpsim",
-    version = "0.1.4",
-    author = "Markus Mirz",
-	author_mail = "mmirz@eonerc.rwth-aachen.de>",
-    maintainer = "Steffen Vogel",
-    maintainer_email = "stvogel@eonerc.rwth-aachen.de",
-    description = "A real-time simulator that operates in the dynamic phasor as well as electromagentic transient domain",
-    license = "GPL-3.0",
-    keywords = "simulation power system real-time",
-    url = "https://dpsim.fein-aachen.org",
+    name = 'dpsim',
+    version = '1.0.0',
+    author = 'Markus Mirz, Steffen Vogel',
+    author_email = 'acs-software@eonerc.rwth-aachen.de',
+    description = 'A real-time simulator that operates in the dynamic phasor as well as electromagentic transient domain',
+    license = 'GPL-3.0',
+    keywords = 'simulation power system real-time',
+    url = 'https://www.fein-aachen.org/projects/dpsim/',
     packages = find_packages('Source/Python'),
     package_dir = {
         'dpsim': 'Source/Python/dpsim',
@@ -97,17 +95,17 @@ setup(
     },
     long_description = read('README.md'),
     classifiers = [
-        "Development Status :: 4 - Beta",
-        "Topic :: Scientific/Engineering",
-        "License :: OSI Approved :: GNU General Public License v3 or later (GPLv3+)",
-        "Operating System :: MacOS :: MacOS X",
-        "Operating System :: Microsoft :: Windows",
-        "Operating System :: POSIX :: Linux",
-        "Programming Language :: Python :: 3.6",
-        "Programming Language :: Python :: Implementation :: CPython"
+        'Development Status :: 4 - Beta',
+        'Topic :: Scientific/Engineering',
+        'License :: OSI Approved :: GNU General Public License v3 or later (GPLv3+)',
+        'Operating System :: MacOS :: MacOS X',
+        'Operating System :: Microsoft :: Windows',
+        'Operating System :: POSIX :: Linux',
+        'Programming Language :: Python :: 3.6',
+        'Programming Language :: Python :: Implementation :: CPython'
     ],
     install_requires = [
-        'acs-dataprocessing>=0.1.2',
+        'villas-dataprocessing>=0.2',
         'progressbar2',
         'ipywidgets'
     ],

@@ -11,21 +11,11 @@ add_library(dpsim_python SHARED
 	SystemTopology.cpp	
 	Utils.cpp
 	EventChannel.cpp
-	${CMAKE_BINARY_DIR}/Include/dpsim/Python/ComponentConstructors.h
 )
 
 if(WITH_SHMEM)
 	target_sources(dpsim_python PUBLIC Interface.cpp)
 endif()
-
-file(MAKE_DIRECTORY ${CMAKE_BINARY_DIR}/Include/dpsim/Python)
-add_custom_command(
-	OUTPUT ${CMAKE_BINARY_DIR}/Include/dpsim/Python/ComponentConstructors.h
-	COMMAND ${PYTHON_EXECUTABLE} ${CMAKE_SOURCE_DIR}/Scripts/find_cps_components.py
-		${CMAKE_SOURCE_DIR}/Dependencies/libcps/Include/cps
-		${CMAKE_BINARY_DIR}/Include/dpsim/Python/ComponentConstructors.h
-	DEPENDS cps
-)
 
 if(APPLE)
 	set(INSTALL_RPATH "@loader_path")

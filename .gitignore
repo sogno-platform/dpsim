@@ -37,3 +37,6 @@ __pycache__/
 .eggs/
 *.egg-info/
 .ipynb_checkpoints/
+
+# Auto-generated
+Documentation/README.md
