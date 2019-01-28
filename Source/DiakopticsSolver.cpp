@@ -21,8 +21,7 @@
 
 #include <dpsim/DiakopticsSolver.h>
 
-#include <cps/DP/DP_Ph1_Resistor.h>
-#include <cps/EMT/EMT_Ph1_Resistor.h>
+#include <cps/Solver/MNATearInterface.h>
 #include <dpsim/Definitions.h>
 #include <dpsim/Simulation.h>
 
@@ -242,12 +241,11 @@ void DiakopticsSolver<Real>::applyTearComponentStamp(std::unordered_map<Node<Rea
 	mTearTopology(subnetMap[comp->node(0)]->sysOff + comp->node(0)->simNode(), compIdx) = 1;
 	mTearTopology(subnetMap[comp->node(1)]->sysOff + comp->node(1)->simNode(), compIdx) = -1;
 
-	// TODO use a nice interface for this
-	auto res = std::dynamic_pointer_cast<EMT::Ph1::Resistor>(comp);
-	if (!res)
+	auto tearComp = std::dynamic_pointer_cast<MNATearInterface>(comp);
+	if (!tearComp)
 		throw SystemError("Unsupported component type for diakoptics");
 
-	mRemovedImpedance(compIdx, compIdx) = res->template attribute<Real>("R")->get();
+	tearComp->mnaTearApplyMatrixStamp(mRemovedImpedance);
 }
 
 template <>
@@ -262,13 +260,11 @@ void DiakopticsSolver<Complex>::applyTearComponentStamp(std::unordered_map<Node<
 	mTearTopology(net2->sysOff + comp->node(1)->simNode(), compIdx) = -1;
 	mTearTopology(net2->sysOff + net2->sysSize/2 + comp->node(1)->simNode(), mTearComponents.size() + compIdx) = -1;
 
-	// TODO use a nice interface for this
-	auto res = std::dynamic_pointer_cast<DP::Ph1::Resistor>(comp);
-	if (!res)
+	auto tearComp = std::dynamic_pointer_cast<MNATearInterface>(comp);
+	if (!tearComp)
 		throw SystemError("Unsupported component type for diakoptics");
 
-	mRemovedImpedance(compIdx, compIdx) = res->template attribute<Real>("R")->get();
-	mRemovedImpedance(mTearComponents.size() + compIdx, mTearComponents.size() + compIdx) = res->template attribute<Real>("R")->get();
+	tearComp->mnaTearApplyMatrixStamp(mRemovedImpedance);
 }
 
 template <typename VarType>
