@@ -56,8 +56,8 @@ namespace DPsim {
         std::vector<CPS::ODEintInterface::stateFnc> system;
 
     private:
-        ///static pointer to current object
-        static ODEintSolver *self;
+        ///static pointer to current object; only one instance currently allowed
+        inline static ODEintSolver *self = nullptr;
         /// State space of the System and corresponding static wrapper
         static void StateSpaceWrapper(  std::vector<double> y, std::vector<double> ydot, double t);
 

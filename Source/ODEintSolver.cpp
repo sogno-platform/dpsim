@@ -64,6 +64,5 @@ void ODEintSolver::StateSpaceWrapper( const std::vector<double> y, std::vector<d
 }
 
 ODEintSolver::~ODEintSolver() {
-
 }
 
