@@ -46,8 +46,6 @@ namespace DPsim {
         int ProbDim;
         /// Stepper needed by ODEint
         boost::numeric::odeint::runge_kutta4<std::vector<Real>> stepper;
-        /// Current solution vector
-        std::vector<Real> curSolution;
         /// Vector containing the solution at every timestep
         std::vector<std::vector<Real>> solution;
         /// Vector containing all timesteps
@@ -63,6 +61,8 @@ namespace DPsim {
 
 
     public:
+        /// Current solution vector
+        std::vector<Real> curSolution;
         /// Create solve object with given parameters
         ODEintSolver(String name,CPS::ODEintInterface::Ptr comp, Real dt, Real t0);
 

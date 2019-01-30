@@ -39,10 +39,9 @@ using namespace CPS::DP::Ph3;
 int main(int argc, char* argv[]) {
     // Define simulation parameters
     Real om = 2.0 * PI * 60.0;
-    Real t0 = 0.0;
     Real timeStep = 0.00005; //initial: 0.00005
     Real finalTime = 0.1;
-    Real curTime = 0.0;
+    Real curTime = timeStep;
     String simName = "DP_SynchronGenerator_dq_ThreePhFault";
     // Define machine parameters in per unit
     Real nomPower = 555e6;
@@ -89,12 +88,14 @@ int main(int argc, char* argv[]) {
                                     initActivePower, initReactivePower, initTerminalVolt, initVoltAngle, fieldVoltage, mechPower);
     gen->initialize(om, timeStep);
 
-    ODEintSolver sim(simName, gen, timeStep, t0);
+    ODEintSolver sim(simName, gen, timeStep, timeStep);
 
 
     while (curTime < finalTime){
 
         curTime = sim.step(curTime);
+        for (auto sol : sim.curSolution)
+            std::cout<< sol<<std::endl;
 
     }
 
