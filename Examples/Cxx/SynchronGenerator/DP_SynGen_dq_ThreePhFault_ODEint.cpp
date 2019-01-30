@@ -90,7 +90,6 @@ int main(int argc, char* argv[]) {
 
     ODEintSolver sim(simName, gen, timeStep, timeStep);
 
-
     while (curTime < finalTime){
 
         curTime = sim.step(curTime);
