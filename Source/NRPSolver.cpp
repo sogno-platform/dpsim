@@ -163,9 +163,7 @@ bool NRpolarSolver::checks() const
     return slackBusIndex.size() <= 1;
 }
 
-/*//////////////////////////////////////////////////////////////////////////
-    * Calculate the slack bus power
-    */
+// Calculate the slack bus power
 void NRpolarSolver::calculate_slack_power() {        
     for (auto k: slackBusIndex) {
         CPS::Complex I(0.0, 0.0);
@@ -178,9 +176,7 @@ void NRpolarSolver::calculate_slack_power() {
     }
 }
 
-/*//////////////////////////////////////////////////////////////////////////
-    * Calculate the reactive power of the bus k (usefull for PV uses)
-    */
+// Calculate the reactive power of the bus k (usefull for PV uses)
 void NRpolarSolver::calculate_Q(UInt npq, UInt npv) {
     double val;
     UInt k;
@@ -191,9 +187,7 @@ void NRpolarSolver::calculate_Q(UInt npq, UInt npv) {
     }
 }
 
-/*//////////////////////////////////////////////////////////////////////////
-    * Calculate the active power at a bus
-    */
+// Calculate the active power at a bus
 double NRpolarSolver::P(UInt k) {
     double val = 0.0;
     for (UInt j = 0; j < SysTopology.mNodes.size(); j++) {
@@ -204,9 +198,7 @@ double NRpolarSolver::P(UInt k) {
     return sol_V.coeff(k) * val;
 }
 
-/*//////////////////////////////////////////////////////////////////////////
-    * Calculate the reactive power at a bus
-    */
+// Calculate the reactive power at a bus
 double NRpolarSolver::Q(UInt k) {
     double val = 0.0;
     for (UInt j = 0; j < SysTopology.mNodes.size(); j++) {
@@ -217,9 +209,7 @@ double NRpolarSolver::Q(UInt k) {
     return sol_V.coeff(k) * val;
 }
 
-/*//////////////////////////////////////////////////////////////////////////
-* set the parameters for powerflow
-*/
+// set the parameters for powerflow
 void NRpolarSolver::setSbase() {
 
 	CPS::Real maxPower = 0.;
@@ -240,14 +230,11 @@ void NRpolarSolver::setSbase() {
 		mLog.warn() << "No suitable quantity found for setting Sbase. Using 100kVA." << std::endl;
 		Sbase = 100000;
 	}			
-	mLog.info() << "Base power= " << Sbase << " VA." << std::std::endl;
+	mLog.info() << "Base power= " << Sbase << " VA." << std::endl;
 }
 
 
-/*
-* set a node to VD
-* using its name
-*/
+// set a node to VD using its name
 void NRpolarSolver::setVDNode(CPS::String name) {
 
 	switch (externalGrids.empty())
@@ -287,13 +274,10 @@ void NRpolarSolver::modifyPowerFlowBusComponent(CPS::String name,CPS::PowerflowB
 
 };
 
-/*//////////////////////////////////////////////////////////////////////////
-/* This function determines power flow bus type for each node
-*  according to the components attached to it.
-    */
+// determines power flow bus type for each node according to the components attached to it.
 void NRpolarSolver::determinePowerFlowBusType() {
-	// Make sure we do not double-add:
 
+	// Make sure we do not double-add:
 	PQBusIndices.clear();
 	PVBusIndices.clear();
 	slackBusIndex.clear();
@@ -357,10 +341,6 @@ void NRpolarSolver::determinePowerFlowBusType() {
 
 }
 
-// this function is reserved.
-void NRpolarSolver::compile() {
-
-}
 
 
 // this could be integrated into the function that determines node type (PV,PQ)
@@ -408,9 +388,8 @@ void NRpolarSolver::generate_initial_solution(bool keep_last_solution) {
 			if (!SynchronGenerators.empty()) {
 				for (auto gen : SynchronGenerators)
 				{
-                    /* if multiple generators attached to a node,
-					*  their voltage should be the same.
-					*/
+                    /// if multiple generators attached to a node,
+					///  their voltage should be the same.
 					if (gen->node(0)->simNode() == vd->simNode())
 						sol_V(vd->simNode()) = gen->mVD->attribute<CPS::Real>("V_set_pu")->get();
 				}
@@ -832,8 +811,6 @@ void NRpolarSolver::set_solution() {
     * the circuit power values while keeping the previous voltage solution
     */
 void NRpolarSolver::update_solution_power_from_circuit(){    
-    sol_P = get_initial_solution().P;
-    sol_Q = get_initial_solution().Q;
     Pesp = sol_P;
     Qesp = sol_Q;
 }
