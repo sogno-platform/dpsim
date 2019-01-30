@@ -16,17 +16,13 @@
 #include <cmath>
 
 #include <dpsim/Solver.h>
-#include "NRPSolution.h"
 #include "cps/SystemTopology.h"
 #include "cps/Components.h"
 #include "cps/Component.h"
 #include <cps/Logger.h>
 #include <iterator>
 
-#define DEFAULT_SOLUTION_TOLERANCE 10e-9
-#define DEFAULT_MAX_ITERATIONS 10
 
-using namespace std;
 
 namespace DPsim {
 
@@ -36,7 +32,22 @@ namespace DPsim {
      */
     class NRpolarSolver: public Solver
     {
+	protected:
+
+		/// Simulation log level
+		CPS::Logger::Level mLogLevel;
+		/// Simulation logger
+		CPS::Logger mLog;
+		/// Logging for integer vectors
+		CPS::String logVector(std::vector<int> index_vector)
+		{
+			std::stringstream result;
+			std::copy(index_vector.begin(), index_vector.end(), std::ostream_iterator<int>(result, " "));
+			return result.str().c_str();
+		};
     public:
+		// General simulation settings
+		/// System time step is constant for NRP solver
 		CPS::Real mTimeStep;
 
 		CPS::Real Sbase;
@@ -47,44 +58,49 @@ namespace DPsim {
 
 		CPS::MatrixComp Zred;
 
-        CPS::String Slack_mRID;
+		//solutions
+		CPS::UInt sol_length;
+		/// Complex solution 
+		CPS::VectorComp sol_S_complex;
+		CPS::VectorComp sol_V_complex;
 
-        CPS::Real Slack_simNode;
+		/// Cartesian solution
+		CPS::Vector sol_P;
+		CPS::Vector sol_Q;
+		CPS::Vector sol_V;
+		CPS::Vector sol_D;
+		CPS::Real sol_Vi(CPS::UInt k);
+		CPS::Real sol_Vr(CPS::UInt k);
+		CPS::Complex sol_Vcx(CPS::UInt k);
+		CPS::Complex sol_Scx(CPS::UInt k);
 
-		/*Real part of Y
-		*/
+		// solution settings
+		bool sol_initialized = false;
+		bool sol_complex_initialized = false;
+		void resize_sol(int n);
+		void resize_complex_sol(int n);
+		void clear_sol();
+		void clear_complex_sol(int n);
+		///Real part of Y
 		CPS::Real G(int i, int j);
-
-		/*Imaginary part of Y
-		*/
+		///Imaginary part of Y
 		CPS::Real B(int i, int j);
 
-		/// Constructor
+
+		// solver settings
+		double tolerance=10e-9;
+		/// Maximum number of iterations
+		CPS::UInt maxIterations=9;
+		CPS::UInt Iterations;
+
+		// Constructor
 		NRpolarSolver(CPS::String simName,
 			CPS::SystemTopology & sysTopology, 
 			Real timeStep,
 			CPS::Domain domain,
 			CPS::Logger::Level logLevel);
-
-		/// Destructor
+		// Destructor
 		virtual ~NRpolarSolver() noexcept;
-
-
-		/*!
-		* \brief Allowable tolerance of the solver instance
-		*
-		* \sa DEFAULT_SOLUTION_TOLERANCE
-		*/
-		double tolerance;
-
-
-		/*!
-		* \brief Maximum number of iterations
-		*
-		* \sa DEFAULT_MAX_ITERATIONS
-		*/
-		unsigned maxIterations;
-		unsigned Iterations;
 
 		/*!
 		* \brief Solves a polynomial of 3rd degree
@@ -102,7 +118,7 @@ namespace DPsim {
 			double x) const;
 
 		//! \brief Checks whether a particular solution converged
-		bool converged(vec const& PQinc, uint npqpvpq) const;
+		bool converged(CPS::Vector const& PQinc, CPS::UInt npqpvpq) const;
 
 		/*!
 		* \brief Solves the grid
@@ -117,8 +133,6 @@ namespace DPsim {
 
         void determinePowerFlowBusType();
 
-		solution get_initial_solution();
-
 		void update_solution_power_from_circuit();
 
 		void setSbase();
@@ -129,34 +143,21 @@ namespace DPsim {
 
 		Real step(Real time);
 
-	protected:
-
-		/// Simulation log level
-		CPS::Logger::Level mLogLevel;
-		/// Simulation logger
-		CPS::Logger mLog;
-		/// Logging for integer vectors
-		CPS::String logVector(vector<int> index_vector)
-		{
-			std::stringstream result;
-			std::copy(index_vector.begin(), index_vector.end(), std::ostream_iterator<int>(result, " "));
-			return result.str().c_str();
-		};
     private:
 		CPS::SystemTopology SysTopology;
 
-        vector<int> BUSES;
+        std::vector<int> BUSES;
 
-        vector<int> PQPV;
+        std::vector<int> PQPV;
 
-        vector<int> LastPQ;
+        std::vector<int> LastPQ;
         
-        vector<int> LastPV;
+        std::vector<int> LastPV;
 
 		//******* vectors of node indices for pf calculation ********
-		std::vector<unsigned int> PQBusIndices;
-		std::vector<unsigned int> PVBusIndices;
-		std::vector<unsigned int> slackBusIndex;
+		std::vector<CPS::UInt> PQBusIndices;
+		std::vector<CPS::UInt> PVBusIndices;
+		std::vector<CPS::UInt> slackBusIndex;
 		
 		//******* vectors of nodes for pf calculation ********
 		CPS::TopologicalNode::List PQBuses;
@@ -171,30 +172,27 @@ namespace DPsim {
 		std::vector<std::shared_ptr<CPS::Static::Ph1::Shunt>> Shunts;
 		std::vector<std::shared_ptr<CPS::Static::Ph1::externalGridInjection>> externalGrids;
 
+		CPS::Vector Pesp;
 
-		vec Pesp;
+		CPS::Vector Qesp;
 
-		vec Qesp;
-
-		solution Sol;
-		cx_solution cx_Sol;
-
-			void Jacobian(mat &J, vec &V, vec &D, uint npq, uint npv); //calculate the jacobian, J is passed by reference
+		void Jacobian(CPS::Matrix &J, CPS::Vector &V, CPS::Vector &D, CPS::UInt npq, CPS::UInt npv); //calculate the jacobian, J is passed by reference
         
-			double mu(mat &J, mat &J2, vec &F, vec &dV, vec &dD, vec & dx, uint npq, uint npv);
-			void get_power_inc(vec &PQinc, uint npq, uint npv); //PQinc is passed by reference
+		double mu(CPS::Matrix &J, CPS::Matrix &J2, CPS::Vector &F, CPS::Vector &dV, CPS::Vector &dD, CPS::Vector & dx, CPS::UInt npq, CPS::UInt npv);
 
-			void calculate_Q(uint npq, uint npv); //calculate the reative power at the PV buses
+		void get_power_inc(CPS::Vector &PQinc, CPS::UInt npq, CPS::UInt npv); //PQinc is passed by reference
 
-			double Q(uint k);
+		void calculate_Q(CPS::UInt npq, CPS::UInt npv); //calculate the reative power at the PV buses
 
-		double P(uint k);
+		double Q(CPS::UInt k);
 
-			void update_solution(vec X, uint npq, uint npv);
+		double P(CPS::UInt k);
+
+		void update_solution(CPS::Vector X, CPS::UInt npq, CPS::UInt npv);
         
-			void get_increments(vec X, vec &incV, vec &incD, uint npq, uint npv);
+		void get_increments(CPS::Vector X, CPS::Vector &incV, CPS::Vector &incD, CPS::UInt npq, CPS::UInt npv);
 
-			void calculate_slack_power(); //calculate the slack bus power        
+		void calculate_slack_power(); //calculate the slack bus power        
 				      
 		/*
 		* Composes the circuit admittance matrix
@@ -205,8 +203,8 @@ namespace DPsim {
 
 		void generate_initial_solution(bool keep_last_solution=false);
 
-		void set_solution(solution sol);
-		void calculate_flows(cx_solution sol);
+		void set_solution();
+		void calculate_flows();
 
 		/* TODO: Z matrix composition to be fixed after moving from Circuit to Solver_NRpolar
 		* Composes the circuit impedance matrix and reduced ipedance matrix by
@@ -218,7 +216,7 @@ namespace DPsim {
 		bool checks() const;
 
 
-		void correct_PVbuses_violating_Q(uint &npq, uint &npv, mat &J, vec &K, vec &X);
+		void correct_PVbuses_violating_Q(CPS::UInt &npq, CPS::UInt &npv, CPS::Matrix &J, CPS::Vector &K, CPS::Vector &X);
         
 
     };

@@ -64,24 +64,22 @@ CPS::Complex NRpolarSolver::sol_Vcx(UInt k) {
     * constructor
     */
 NRpolarSolver::NRpolarSolver(CPS::String simName, CPS::SystemTopology & sysTopology, CPS::Real timeStep, CPS::Domain domain,CPS::Logger::Level logLevel) :
-	SysTopology(sysTopology),
-	tolerance(DEFAULT_SOLUTION_TOLERANCE),
-	maxIterations(DEFAULT_MAX_ITERATIONS),
-	mTimeStep(timeStep),
 	mLogLevel(logLevel),
 	mLog(simName + "_PF", logLevel)
 {
+	SysTopology = sysTopology;
+	mTimeStep = timeStep;
 
 	for (auto comp : SysTopology.mComponents) {
-		if (std::shared_ptr<CPS::Static::Ph1::SynchronGenerator> gen = dynamic_pointer_cast<CPS::Static::Ph1::SynchronGenerator>(comp))
+		if (std::shared_ptr<CPS::Static::Ph1::SynchronGenerator> gen = std::dynamic_pointer_cast<CPS::Static::Ph1::SynchronGenerator>(comp))
 			SynchronGenerators.push_back(gen);
-		else if (std::shared_ptr<CPS::Static::Ph1::Load> load = dynamic_pointer_cast<CPS::Static::Ph1::Load>(comp))
+		else if (std::shared_ptr<CPS::Static::Ph1::Load> load = std::dynamic_pointer_cast<CPS::Static::Ph1::Load>(comp))
 			Loads.push_back(load);
-		else if (std::shared_ptr<CPS::Static::Ph1::Transformer> trafo = dynamic_pointer_cast<CPS::Static::Ph1::Transformer>(comp))
+		else if (std::shared_ptr<CPS::Static::Ph1::Transformer> trafo = std::dynamic_pointer_cast<CPS::Static::Ph1::Transformer>(comp))
 			Transformers.push_back(trafo);
-		else if (std::shared_ptr<CPS::Static::Ph1::PiLine> line = dynamic_pointer_cast<CPS::Static::Ph1::PiLine>(comp))
+		else if (std::shared_ptr<CPS::Static::Ph1::PiLine> line = std::dynamic_pointer_cast<CPS::Static::Ph1::PiLine>(comp))
 			Lines.push_back(line);
-		else if (std::shared_ptr<CPS::Static::Ph1::externalGridInjection> extnet = dynamic_pointer_cast<CPS::Static::Ph1::externalGridInjection>(comp))
+		else if (std::shared_ptr<CPS::Static::Ph1::externalGridInjection> extnet = std::dynamic_pointer_cast<CPS::Static::Ph1::externalGridInjection>(comp))
 			externalGrids.push_back(extnet);
 	}
 
@@ -95,7 +93,6 @@ void NRpolarSolver::NRP_initialize(){
 
 	if (!sol_initialized) {
 		generate_initial_solution();
-		Sol = get_initial_solution();
 	}
 	mLog.info() << "#### NEWTON-RAPHSON POLAR SOLVER " << std::endl;
 
@@ -172,7 +169,7 @@ bool NRpolarSolver::checks() const
 void NRpolarSolver::calculate_slack_power() {        
     for (auto k: slackBusIndex) {
         CPS::Complex I(0.0, 0.0);
-        for (uint j = 0; j < SysTopology.mNodes.size(); j++) {
+        for (UInt j = 0; j < SysTopology.mNodes.size(); j++) {
             I += Y.coeff(k, j) * sol_Vcx(j);
         }
         I = sol_Vcx(k) * conj(I); //now this is the power
@@ -184,10 +181,10 @@ void NRpolarSolver::calculate_slack_power() {
 /*//////////////////////////////////////////////////////////////////////////
     * Calculate the reactive power of the bus k (usefull for PV uses)
     */
-void NRpolarSolver::calculate_Q(uint npq, uint npv) {
+void NRpolarSolver::calculate_Q(UInt npq, UInt npv) {
     double val;
-    uint k;
-    for (uint i = npq - 1; i < npq + npv; i++) {
+    UInt k;
+    for (UInt i = npq - 1; i < npq + npv; i++) {
         k = PQPV[i];
         val = Q(k);
         sol_Q(k) = val;
@@ -197,9 +194,9 @@ void NRpolarSolver::calculate_Q(uint npq, uint npv) {
 /*//////////////////////////////////////////////////////////////////////////
     * Calculate the active power at a bus
     */
-double NRpolarSolver::P(uint k) {
+double NRpolarSolver::P(UInt k) {
     double val = 0.0;
-    for (uint j = 0; j < SysTopology.mNodes.size(); j++) {
+    for (UInt j = 0; j < SysTopology.mNodes.size(); j++) {
         val += sol_V.coeff(j)
                 *(G(k, j) * cos(sol_D.coeff(k) - sol_D.coeff(j))
                 + B(k, j) * sin(sol_D.coeff(k) - sol_D.coeff(j)));
@@ -210,9 +207,9 @@ double NRpolarSolver::P(uint k) {
 /*//////////////////////////////////////////////////////////////////////////
     * Calculate the reactive power at a bus
     */
-double NRpolarSolver::Q(uint k) {
+double NRpolarSolver::Q(UInt k) {
     double val = 0.0;
-    for (uint j = 0; j < SysTopology.mNodes.size(); j++) {
+    for (UInt j = 0; j < SysTopology.mNodes.size(); j++) {
         val += sol_V.coeff(j)
                 *(G(k, j) * sin(sol_D.coeff(k) - sol_D.coeff(j))
                 - B(k, j) * cos(sol_D.coeff(k) - sol_D.coeff(j)));
@@ -240,10 +237,10 @@ void NRpolarSolver::setSbase() {
         Sbase = pow(10, 1 + floor(log10(maxPower)));
 	else
 	{
-		mLog.warn() << "No suitable quantity found for setting Sbase. Using 100kVA." << endl;
+		mLog.warn() << "No suitable quantity found for setting Sbase. Using 100kVA." << std::endl;
 		Sbase = 100000;
 	}			
-	mLog.info() << "Base power= " << Sbase << " VA." << std::endl;
+	mLog.info() << "Base power= " << Sbase << " VA." << std::std::endl;
 }
 
 
@@ -277,9 +274,9 @@ void NRpolarSolver::setVDNode(CPS::String name) {
 void NRpolarSolver::modifyPowerFlowBusComponent(CPS::String name,CPS::PowerflowBusType powerFlowBusType) {
 	for (auto comp : SysTopology.mComponents) {
 		if (comp->name() == name) {
-			if (std::shared_ptr<CPS::Static::Ph1::externalGridInjection> extnet = dynamic_pointer_cast<CPS::Static::Ph1::externalGridInjection>(comp))
+			if (std::shared_ptr<CPS::Static::Ph1::externalGridInjection> extnet = std::dynamic_pointer_cast<CPS::Static::Ph1::externalGridInjection>(comp))
 				extnet->modifyPowerFlowBusType(powerFlowBusType);
-			else if(std::shared_ptr<CPS::Static::Ph1::SynchronGenerator> gen = dynamic_pointer_cast<CPS::Static::Ph1::SynchronGenerator>(comp))
+			else if(std::shared_ptr<CPS::Static::Ph1::SynchronGenerator> gen = std::dynamic_pointer_cast<CPS::Static::Ph1::SynchronGenerator>(comp))
 				gen->modifyPowerFlowBusType(powerFlowBusType);
 
 		}
@@ -289,12 +286,6 @@ void NRpolarSolver::modifyPowerFlowBusComponent(CPS::String name,CPS::PowerflowB
 
 
 };
-
-solution NRpolarSolver::get_initial_solution() {
-
-	return Sol;
-
-}
 
 /*//////////////////////////////////////////////////////////////////////////
 /* This function determines power flow bus type for each node
@@ -316,14 +307,14 @@ void NRpolarSolver::determinePowerFlowBusType() {
 
 		for (auto comp : SysTopology.mComponentsAtNode[node]) {
 
-			if (std::shared_ptr<CPS::Static::Ph1::Load> load = dynamic_pointer_cast<CPS::Static::Ph1::Load>(comp))
+			if (std::shared_ptr<CPS::Static::Ph1::Load> load = std::dynamic_pointer_cast<CPS::Static::Ph1::Load>(comp))
 			{
 				if (load->mPowerflowBusType == CPS::PowerflowBusType::PQ) {
 					load->modifyPowerFlowBusType(CPS::PowerflowBusType::PQ);
 					connectedPQ = true;
 				}
 			}
-			else if (std::shared_ptr<CPS::Static::Ph1::SynchronGenerator> gen = dynamic_pointer_cast<CPS::Static::Ph1::SynchronGenerator>(comp)) {
+			else if (std::shared_ptr<CPS::Static::Ph1::SynchronGenerator> gen = std::dynamic_pointer_cast<CPS::Static::Ph1::SynchronGenerator>(comp)) {
 				    
 				if (gen->mPowerflowBusType == CPS::PowerflowBusType::PV) {
 					connectedPV = true;
@@ -333,7 +324,7 @@ void NRpolarSolver::determinePowerFlowBusType() {
 				}
 
 			}
-			else if (std::shared_ptr<CPS::Static::Ph1::externalGridInjection> extnet = dynamic_pointer_cast<CPS::Static::Ph1::externalGridInjection>(comp)) {
+			else if (std::shared_ptr<CPS::Static::Ph1::externalGridInjection> extnet = std::dynamic_pointer_cast<CPS::Static::Ph1::externalGridInjection>(comp)) {
 				if (extnet->mPowerflowBusType == CPS::PowerflowBusType::VD) {
 					connectedVD = true;
 				}
@@ -374,23 +365,23 @@ void NRpolarSolver::compile() {
 
 // this could be integrated into the function that determines node type (PV,PQ)
 void NRpolarSolver::generate_initial_solution(bool keep_last_solution) {
-	Sol.resize(SysTopology.mNodes.size());
-	cx_Sol.resize(SysTopology.mNodes.size());
+	resize_sol(SysTopology.mNodes.size());
+	resize_complex_sol(SysTopology.mNodes.size());
 
 	for (auto pq : PQBuses) {
 		if (!keep_last_solution) {
 			sol_V(pq->simNode()) = 1.0;
 			sol_D(pq->simNode()) = 0.0;
-			cx_Sol.V(pq->simNode()) = cx_double(sol_V[pq->simNode()], sol_D[pq->simNode()]);
+			sol_V_complex(pq->simNode()) = CPS::Complex(sol_V[pq->simNode()], sol_D[pq->simNode()]);
 		}
 		for (auto comp : SysTopology.mComponentsAtNode[pq]) {
 
-			if (std::shared_ptr<CPS::Static::Ph1::Load> load = dynamic_pointer_cast<CPS::Static::Ph1::Load>(comp)) {
+			if (std::shared_ptr<CPS::Static::Ph1::Load> load = std::dynamic_pointer_cast<CPS::Static::Ph1::Load>(comp)) {
 
 				sol_P(pq->simNode()) -= load->mPQ->attribute<CPS::Real>("P_set")->get() / Sbase;
 				sol_Q(pq->simNode()) -= load->mPQ->attribute<CPS::Real>("Q_set")->get() / Sbase;
 
-				cx_Sol.S(pq->simNode()) = cx_double(sol_P[pq->simNode()], sol_Q[pq->simNode()]);
+				sol_S_complex(pq->simNode()) = CPS::Complex(sol_P[pq->simNode()], sol_Q[pq->simNode()]);
 
 			}
 		}
@@ -401,13 +392,13 @@ void NRpolarSolver::generate_initial_solution(bool keep_last_solution) {
 			sol_D(pv->simNode()) = 0;
 		}
 		for (auto comp : SysTopology.mComponentsAtNode[pv]) {
-			if (std::shared_ptr<CPS::Static::Ph1::SynchronGenerator> gen = dynamic_pointer_cast<CPS::Static::Ph1::SynchronGenerator>(comp)) {
+			if (std::shared_ptr<CPS::Static::Ph1::SynchronGenerator> gen = std::dynamic_pointer_cast<CPS::Static::Ph1::SynchronGenerator>(comp)) {
 				sol_P(pv->simNode()) += gen->mPV->attribute<CPS::Real>("P_set")->get() / Sbase;
 				sol_V(pv->simNode()) = gen->mPV->attribute<CPS::Real>("V_set_pu")->get();
 
 			}
-			cx_Sol.S(pv->simNode()) = cx_double(sol_P[pv->simNode()], sol_Q[pv->simNode()]);
-			cx_Sol.V(pv->simNode()) = cx_double(sol_V[pv->simNode()], sol_D[pv->simNode()]);
+			sol_S_complex(pv->simNode()) = CPS::Complex(sol_P[pv->simNode()], sol_Q[pv->simNode()]);
+			sol_V_complex(pv->simNode()) = CPS::Complex(sol_V[pv->simNode()], sol_D[pv->simNode()]);
 
 		}
 	}
@@ -427,8 +418,8 @@ void NRpolarSolver::generate_initial_solution(bool keep_last_solution) {
 			else
 				sol_V(vd->simNode()) = 1.0;
 			sol_D(vd->simNode()) = 0.0;
-			cx_Sol.S(vd->simNode()) = cx_double(sol_P[vd->simNode()], sol_Q[vd->simNode()]);
-			cx_Sol.V(vd->simNode()) = cx_double(sol_V[vd->simNode()], sol_D[vd->simNode()]);
+			sol_S_complex(vd->simNode()) = CPS::Complex(sol_P[vd->simNode()], sol_Q[vd->simNode()]);
+			sol_V_complex(vd->simNode()) = CPS::Complex(sol_V[vd->simNode()], sol_D[vd->simNode()]);
 		}
 	
 		
@@ -438,8 +429,8 @@ void NRpolarSolver::generate_initial_solution(bool keep_last_solution) {
 	sol_complex_initialized = true;
 	mLog.info() << "#### Initial solution: " << std::endl;
 	mLog.info() << "P\t\tQ\t\tV\t\tD" << std::endl;
-	for (uint i = 0; i < sol_length; i++) {
-		mLog.info() << sol_P[i] << "\t" << sol_Q[i] << "\t" << sol_V[i] << "\t" << sol_D[i] << endl;
+	for (UInt i = 0; i < sol_length; i++) {
+		mLog.info() << sol_P[i] << "\t" << sol_Q[i] << "\t" << sol_V[i] << "\t" << sol_D[i] << std::endl;
 	}
 }
 
@@ -449,7 +440,7 @@ void NRpolarSolver::generate_initial_solution(bool keep_last_solution) {
 * at row i and column j
 */
 double NRpolarSolver::G(int i, int j) {
-	//cx_double com = (cx_double) (Y.coeff(i, j));
+	//Complex com = (Complex) (Y.coeff(i, j));
 	return Y.coeff(i, j).real();
 }
 
@@ -458,7 +449,7 @@ double NRpolarSolver::G(int i, int j) {
 * at row i and column j
 */
 double NRpolarSolver::B(int i, int j) {
-	//cx_double com = (cx_double) (Y.coeff(i, j));
+	//Complex com = (Complex) (Y.coeff(i, j));
 	return Y.coeff(i, j).imag();
 }
 
@@ -466,23 +457,23 @@ double NRpolarSolver::B(int i, int j) {
 /*//////////////////////////////////////////////////////////////////////////
     * Calculate the jacobian of the circuit
     */
-void NRpolarSolver::Jacobian(mat &J, vec &V, vec &D, uint npq, uint npv) {
+void NRpolarSolver::Jacobian(Matrix &J, Vector &V, Vector &D, UInt npq, UInt npv) {
     //matrix(rows, cols)
-    uint npqpv = npq + npv;
+    UInt npqpv = npq + npv;
     double val;
-    uint k, j;
-    uint da, db;
+    UInt k, j;
+    UInt da, db;
 
     J.setZero();
 
     //J1 
-    for (uint a = 0; a < npqpv; a++) { //rows
+    for (UInt a = 0; a < npqpv; a++) { //rows
         k = PQPV[a];
         //diagonal
         J(a, a) = -Q(k) - B(k, k) * V.coeff(k) * V.coeff(k);
 
         //non diagonal elements
-        for (uint b = 0; b < npqpv; b++) {
+        for (UInt b = 0; b < npqpv; b++) {
             if (b != a) {
                 j = PQPV[b];
                 val = V.coeff(k) * V.coeff(j)
@@ -497,7 +488,7 @@ void NRpolarSolver::Jacobian(mat &J, vec &V, vec &D, uint npq, uint npv) {
     //J2
     da = 0;
     db = npqpv;
-    for (uint a = 0; a < npqpv; a++) { //rows
+    for (UInt a = 0; a < npqpv; a++) { //rows
         k = PQPV[a];
         //diagonal
         //std::cout << "J2D:" << (a + da) << "," << (a + db) << std::endl;
@@ -505,7 +496,7 @@ void NRpolarSolver::Jacobian(mat &J, vec &V, vec &D, uint npq, uint npv) {
             J(a + da, a + db) = P(k) + G(k, k) * V.coeff(k) * V.coeff(k);
 
         //non diagonal elements
-        for (uint b = 0; b < npq; b++) {
+        for (UInt b = 0; b < npq; b++) {
             if (b != a) {
                 j = PQPV[b];
                 val = V.coeff(k) * V.coeff(j)
@@ -522,14 +513,14 @@ void NRpolarSolver::Jacobian(mat &J, vec &V, vec &D, uint npq, uint npv) {
     //J3
     da = npqpv;
     db = 0;
-    for (uint a = 0; a < npq; a++) { //rows
+    for (UInt a = 0; a < npq; a++) { //rows
         k = PQPV[a];
         //diagonal
         //std::cout << "J3:" << (a + da) << "," << (a + db) << std::endl;
         J(a + da, a + db) = P(k) - G(k, k) * V.coeff(k) * V.coeff(k);
 
         //non diagonal elements
-        for (uint b = 0; b < npqpv; b++) {
+        for (UInt b = 0; b < npqpv; b++) {
             if (b != a) {
                 j = PQPV[b];
                 val = V.coeff(k) * V.coeff(j)
@@ -545,14 +536,14 @@ void NRpolarSolver::Jacobian(mat &J, vec &V, vec &D, uint npq, uint npv) {
     //J4
     da = npqpv;
     db = npqpv;
-    for (uint a = 0; a < npq; a++) { //rows
+    for (UInt a = 0; a < npq; a++) { //rows
         k = PQPV[a];
         //diagonal
         //std::cout << "J4:" << (a + da) << "," << (a + db) << std::endl;
         J(a + da, a + db) = Q(k) - B(k, k) * V.coeff(k) * V.coeff(k);
 
         //non diagonal elements
-        for (uint b = 0; b < npq; b++) {
+        for (UInt b = 0; b < npq; b++) {
             if (b != a) {
                 j = PQPV[b];
                 val = V.coeff(k) * V.coeff(j)
@@ -642,17 +633,17 @@ double NRpolarSolver::solve3rdDegreePolynomial(
 }
     
 
-double NRpolarSolver::mu(mat &J, mat &J2, vec &F, vec &dV, vec &dD, vec & dx, uint npq, uint npv){
+double NRpolarSolver::mu(Matrix &J, Matrix &J2, Vector &F, Vector &dV, Vector &dD, Vector & dx, UInt npq, UInt npv){
         
                 
     Jacobian(J2, dV, dD, npq, npv);               
         
-    vec a = F;
+    Vector a = F;
         
-    vec b = J * (dx);        
+    Vector b = J * (dx);        
         
-    vec c(2*npq+npv); //= dx. * b * 0.5;
-    for (uint i=0;i<(2*npq+npv); i++) //this loop is because EIGEN does not want to perform this simple element wise vector multiplication...
+    Vector c(2*npq+npv); //= dx. * b * 0.5;
+    for (UInt i=0;i<(2*npq+npv); i++) //this loop is because EIGEN does not want to perform this simple element wise vector multiplication...
         c(i) = dx.coeff(i) * b.coeff(i) * 0.5;
                     
     double g0 = -1* a.dot(b);
@@ -669,13 +660,13 @@ double NRpolarSolver::mu(mat &J, mat &J2, vec &F, vec &dV, vec &dD, vec & dx, ui
 /*//////////////////////////////////////////////////////////////////////////
     * Calculate the power increments
     */
-void NRpolarSolver::get_power_inc(vec& PQinc, uint npq, uint npv) {
+void NRpolarSolver::get_power_inc(Vector& PQinc, UInt npq, UInt npv) {
 
-    uint npqpv = npq + npv;
-    uint k;
+    UInt npqpv = npq + npv;
+    UInt k;
     PQinc.setZero();
 
-    for (uint a = 0; a < npqpv; a++) {
+    for (UInt a = 0; a < npqpv; a++) {
         //For PQ and PV buses; calculate incP
         k = PQPV[a];
         PQinc(a) = Pesp.coeff(k) - P(k);
@@ -687,9 +678,9 @@ void NRpolarSolver::get_power_inc(vec& PQinc, uint npq, uint npv) {
 }
 
 
-bool NRpolarSolver::converged(const vec& PQinc, uint npqpvpq) const
+bool NRpolarSolver::converged(const Vector& PQinc, UInt npqpvpq) const
 {
-    for (uint k = 0; k < npqpvpq; k++)
+    for (UInt k = 0; k < npqpvpq; k++)
         if (abs(PQinc.coeff(k)) > tolerance)
             return false;
 
@@ -697,12 +688,12 @@ bool NRpolarSolver::converged(const vec& PQinc, uint npqpvpq) const
 }
     
     
-void NRpolarSolver::get_increments(vec X, vec &incV, vec &incD, uint npq, uint npv){
+void NRpolarSolver::get_increments(Vector X, Vector &incV, Vector &incD, UInt npq, UInt npv){
     
-    uint npqpv = npq + npv;
-    uint k;
+    UInt npqpv = npq + npv;
+    UInt k;
 
-    for (uint a = 0; a < npqpv; a++) {
+    for (UInt a = 0; a < npqpv; a++) {
         k = PQPV[a];
         incD(k) = X.coeff(a);
 
@@ -713,12 +704,12 @@ void NRpolarSolver::get_increments(vec X, vec &incV, vec &incD, uint npq, uint n
 }
 
 
-void NRpolarSolver::update_solution(vec X, uint npq, uint npv) {
+void NRpolarSolver::update_solution(Vector X, UInt npq, UInt npv) {
 
-    uint npqpv = npq + npv;
-    uint k;
+    UInt npqpv = npq + npv;
+    UInt k;
 
-    for (uint a = 0; a < npqpv; a++) {
+    for (UInt a = 0; a < npqpv; a++) {
         k = PQPV[a];
         sol_D(k) += X.coeff(a);
 
@@ -727,9 +718,9 @@ void NRpolarSolver::update_solution(vec X, uint npq, uint npv) {
     }
 
     //Correct for PV buses
-    for (uint i = npq; i < npq + npv; i++) {
+    for (UInt i = npq; i < npq + npv; i++) {
         k = PQPV[i];
-        cx_double v = sol_Vcx(k);
+        Complex v = sol_Vcx(k);
         // v *= Model.buses[k].v_set_point / abs(v);
         sol_V(k) = abs(v);
         sol_D(k) = arg(v);
@@ -740,17 +731,17 @@ void NRpolarSolver::update_solution(vec X, uint npq, uint npv) {
 void NRpolarSolver::powerFlow()
 {
 
-	uint npq = PQBusIndices.size();
-	uint npv = PVBusIndices.size();
-    uint npqpvpq = 2 * npq + npv;
+	UInt npq = PQBusIndices.size();
+	UInt npv = PVBusIndices.size();
+    UInt npqpvpq = 2 * npq + npv;
 
     //System : J*X = K
-    mat J(npqpvpq, npqpvpq);
-    mat J2(npqpvpq, npqpvpq);
-    vec K(npqpvpq);
-    vec X(npqpvpq);
-    vec incV(sol_length);
-    vec incD(sol_length);
+    Matrix J(npqpvpq, npqpvpq);
+    Matrix J2(npqpvpq, npqpvpq);
+    Vector K(npqpvpq);
+    Vector X(npqpvpq);
+    Vector incV(sol_length);
+    Vector incD(sol_length);
         
     // First shot: Perhaps the model already converged?
 
@@ -760,7 +751,7 @@ void NRpolarSolver::powerFlow()
     Iterations = 0;
     for (unsigned i = 0; i < maxIterations && ! didConverge; ++i) {
         Jacobian(J, sol_V, sol_D, npq, npv);
-        Eigen::FullPivLU<mat>lu(J); //Full pivot LU
+        Eigen::FullPivLU<Matrix>lu(J); //Full pivot LU
         X = lu.solve(K);
         get_increments(X, incV, incD, npq, npv);
             
@@ -787,8 +778,8 @@ void NRpolarSolver::powerFlow()
 		mLog.info() << "Not converged within "<< Iterations<<" iterations." << std::endl;
 		mLog.info() << "Result at the last step: " << std::endl;
 		mLog.info() << "P\t\tQ\t\tV\t\tD" << std::endl;
-		for (uint i = 0; i < sol_length; i++) {
-			mLog.info() << sol_P[i] << "\t" << sol_Q[i] << "\t" << sol_V[i] << "\t" << sol_D[i] << endl;
+		for (UInt i = 0; i < sol_length; i++) {
+			mLog.info() << sol_P[i] << "\t" << sol_Q[i] << "\t" << sol_V[i] << "\t" << sol_D[i] << std::endl;
 		}
 
 
@@ -797,18 +788,18 @@ void NRpolarSolver::powerFlow()
 		mLog.info() << "converged in " << Iterations << " iterations." << std::endl;
 		mLog.info() << "Solution: "<<std::endl;
 		mLog.info() << "P\t\tQ\t\tV\t\tD" << std::endl;
-		for (uint i = 0; i < sol_length; i++) {
-			mLog.info() << sol_P[i] << "\t" << sol_Q[i] << "\t" << sol_V[i] << "\t" << sol_D[i] << endl;
+		for (UInt i = 0; i < sol_length; i++) {
+			mLog.info() << sol_P[i] << "\t" << sol_Q[i] << "\t" << sol_V[i] << "\t" << sol_D[i] << std::endl;
 		}
 		
     }
 }
     
-void NRpolarSolver::set_solution(solution sol_) {
+void NRpolarSolver::set_solution() {
 
-    for (uint i = 0; i < sol_.Lenght; i++) {
-        cx_Sol.S(i) = cx_double(sol_P.coeff(i), sol_Q.coeff(i));
-        cx_Sol.V(i) = cx_double(sol_V.coeff(i)*cos(sol_D.coeff(i)), sol_V.coeff(i)*sin(sol_D.coeff(i)));
+    for (UInt i = 0; i < sol_length; i++) {
+        sol_S_complex(i) = CPS::Complex(sol_P.coeff(i), sol_Q.coeff(i));
+        sol_V_complex(i) = CPS::Complex(sol_V.coeff(i)*cos(sol_D.coeff(i)), sol_V.coeff(i)*sin(sol_D.coeff(i)));
     }
 
 /* update V to each node*/
@@ -818,7 +809,7 @@ void NRpolarSolver::set_solution(solution sol_) {
 		CPS::Real baseVoltage_;
 			
 		for (auto comp : SysTopology.mComponentsAtNode[node]) {
-			if (std::shared_ptr<CPS::Static::Ph1::Transformer> trans = dynamic_pointer_cast<CPS::Static::Ph1::Transformer>(comp)) {
+			if (std::shared_ptr<CPS::Static::Ph1::Transformer> trans = std::dynamic_pointer_cast<CPS::Static::Ph1::Transformer>(comp)) {
 				if (trans->terminal(0)->node()->name() == node->name())
 					baseVoltage_ = trans->attribute<CPS::Real>("base_Voltage_End1")->get();
 				else if (trans->terminal(1)->node()->name() == node->name()) 
@@ -827,11 +818,11 @@ void NRpolarSolver::set_solution(solution sol_) {
 					mLog.info() << "unable to get base voltage at " << node->name() << std::endl;
 					
 			}
-			if (std::shared_ptr<CPS::Static::Ph1::PiLine> line = dynamic_pointer_cast<CPS::Static::Ph1::PiLine>(comp)) {
+			if (std::shared_ptr<CPS::Static::Ph1::PiLine> line = std::dynamic_pointer_cast<CPS::Static::Ph1::PiLine>(comp)) {
 				baseVoltage_ = line->attribute<CPS::Real>("base_Voltage")->get();
 			}
 		}
-		node->setInitialVoltage(cx_Sol.V(node->simNode())*baseVoltage_);
+		node->setInitialVoltage(sol_V_complex(node->simNode())*baseVoltage_);
 	}
 }
     
@@ -862,8 +853,6 @@ void NRpolarSolver::compose_Y() {
 	int n = SysTopology.mNodes.size();
 	if (n > 0) {
 		Y = CPS::SparseMatrixComp(n, n);
-
-		double vbase;
 
 		for (auto line : Lines) {
 			line->setPerUnitSystem(Sbase, SysTopology.mSystemOmega);
@@ -897,7 +886,7 @@ Real NRpolarSolver::step(Real time) {
 	*/
 	NRP_initialize();
 	powerFlow();
-	set_solution(Sol);
+	set_solution();
 
 	return time + mTimeStep;
 
