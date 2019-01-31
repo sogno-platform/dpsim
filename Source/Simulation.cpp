@@ -1,4 +1,4 @@
-/**
+﻿/**
  * @author Markus Mirz <mmirz@eonerc.rwth-aachen.de>
  * @copyright 2017-2018, Institute for Automation of Complex Power Systems, EONERC
  *
@@ -20,6 +20,7 @@
 
 #include <dpsim/Simulation.h>
 #include <dpsim/MNASolver.h>
+#include <dpsim/NRPSolver.h>
 
 #ifdef WITH_CIM
   #include <cps/CIM/Reader.h>
@@ -62,6 +63,14 @@ Simulation::Simulation(String name, SystemTopology system,
 		else
 			mSolver = std::make_shared<MnaSolver<Real>>(name, system, timeStep,
 				domain, logLevel, steadyStateInit);
+		break;
+	case Solver::Type::NRP:
+		if (domain == Domain::Static)
+			mSolver = std::make_shared<NRpolarSolver>(name, system, timeStep,
+				domain, logLevel);
+		else
+			mSolver = std::make_shared<NRpolarSolver>(name, system, timeStep,
+				domain, logLevel);
 		break;
 
 #ifdef WITH_SUNDIALS
