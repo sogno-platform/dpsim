@@ -40,6 +40,8 @@ namespace DPsim {
     class ODEintSolver : public Solver {
 
     protected:
+        /// Pointer to current Component
+        CPS::ODEintInterface::Ptr mComponent;
         /// Constant time step
         Real mTimestep;
         ///Problem Size
@@ -57,7 +59,7 @@ namespace DPsim {
         ///static pointer to current object; only one instance currently allowed
         inline static ODEintSolver *self = nullptr;
         /// State space of the System and corresponding static wrapper
-        static void StateSpaceWrapper(  std::vector<double> y, std::vector<double> ydot, double t);
+        static void StateSpaceWrapper( const std::vector<double> y, std::vector<double> ydot, double t);
 
 
     public:

@@ -26,7 +26,7 @@
 using namespace DPsim;
 
 ODEintSolver::ODEintSolver(String name, CPS::ODEintInterface::Ptr comp, Real dt, Real t0) :
-        mTimestep(dt) {
+        mComponent(comp), mTimestep(dt){
         times.push_back(t0);
         self = this; // sets static pointer to current object
         ProbDim = comp->num_states();
@@ -45,14 +45,19 @@ ODEintSolver::ODEintSolver(String name, CPS::ODEintInterface::Ptr comp, Real dt,
 
 Real ODEintSolver::step(Real time) {
 
+    mComponent->pre_step(); ///write inital values into the mState Vector
+    curSolution.assign(mComponent->state_vector(), mComponent->state_vector()+ProbDim);
     Real NextTime = time + mTimestep;
-    std::cout<<"Current Time "<<time<<std::endl;
+
+    std::cout<<"Current Time "<<NextTime<<std::endl;
+
     stepper.do_step(&ODEintSolver::StateSpaceWrapper,curSolution, time, mTimestep); ///solve ODE for time + mTimestep TODO: implement sysfunc
+    mComponent->set_state_vector(curSolution);///Writes the current solution back into the component
     solution.push_back(curSolution); /// Logs current solution
     times.push_back(time); ///Logs current time
 
     // TODO: add proper logging
-
+    mComponent->post_step();
     return NextTime;
 }
 
