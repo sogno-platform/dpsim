@@ -24,7 +24,8 @@ RUN dnf -y install \
 	graphviz \
 	pandoc \
 	python3-pip \
-	pkg-config
+	pkg-config \
+	gsl-devel
 
 # Dependencies
 RUN dnf --refresh -y install \
