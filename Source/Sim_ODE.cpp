@@ -24,10 +24,6 @@
    #include <cps/CIM/Reader.h>
  #endif
 
- #ifdef WITH_SUNDIALS
-   #include <dpsim/DAESolver.h>
- #endif
-
  #include <dpsim/Sim_ODE.h>
 
  //using namespace CPS;
@@ -37,16 +33,16 @@
    CPS::SystemTopology system,
    Real timeStep, Real finalTime,
    std::vector<std::shared_ptr<ODESolver> > ODESolverList,
-   Domain domain, Solver::Type solverType,
-   Logger::Level logLevel) :
+   CPS::Domain domain, Solver::Type solverType,
+   CPS::Logger::Level logLevel) :
    Simulation(name, system, timeStep, finalTime, domain, solverType, logLevel),
    mODESolverList(ODESolverList){}
 
  Sim_ODE::Sim_ODE(String name,
    CPS::SystemTopology system,
    Real timeStep, Real finalTime,
-   Domain domain, Solver::Type solverType,
-   Logger::Level logLevel) :
+   CPS::Domain domain, Solver::Type solverType,
+   CPS::Logger::Level logLevel) :
    Simulation(name, system, timeStep, finalTime, domain, solverType, logLevel){
    }
 
