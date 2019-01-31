@@ -24,8 +24,7 @@ RUN dnf -y install \
 	graphviz \
 	pandoc \
 	python3-pip \
-	pkg-config \
-	gsl-devel
+	pkg-config
 
 # Dependencies
 RUN dnf --refresh -y install \
@@ -35,7 +34,8 @@ RUN dnf --refresh -y install \
 	graphviz-devel \
 	sundials-devel \
 	libvillas-devel \
-	libcimpp16v29a
+	libcimpp16v29a \
+	gsl-devel
 
 # Install some debuginfos
 RUN dnf -y debuginfo-install \
