@@ -35,6 +35,7 @@ RUN dnf --refresh -y install \
 	sundials-devel \
 	libvillas-devel \
 	libcimpp16v29a \
+	villas-node \
 	gsl-devel
 
 # Install some debuginfos
