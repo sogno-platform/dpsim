@@ -57,6 +57,8 @@ namespace DPsim {
 		UInt mNumNetSimNodes = 0;
 		/// Number of simulation virtual nodes
 		UInt mNumVirtualSimNodes = 0;
+		/// Number of harmonic nodes
+		UInt mNumHarmSimNodes = 0;
 		/// Flag to activate power flow based initialization.
 		/// If this is false, all voltages are initialized with zero.
 		Bool mPowerflowInitialization;
@@ -75,9 +77,9 @@ namespace DPsim {
 		/// System matrix A that is modified by matrix stamps
 		std::bitset<SWITCH_NUM> mCurrentSwitchStatus;
 		/// Temporary system matrix, i.e. for initialization
-		Matrix mTmpSystemMatrix;
+		Matrix mNoSwitchSystemMatrix;
 		/// LU decomposition of system matrix A
-		CPS::LUFactorized mTmpLuFactorization;
+		CPS::LUFactorized mNoSwitchLuFacorization;
 		/// Source vector of known quantities
 		Matrix mRightSideVector;
 		/// Solution vector of unknown quantities
@@ -182,9 +184,17 @@ namespace DPsim {
 			}
 		}
 		// #### Getter ####
+		///
 		Matrix& leftSideVector() { return mLeftSideVector; }
+		///
 		Matrix& rightSideVector() { return mRightSideVector; }
-		Matrix& systemMatrix() { return mTmpSystemMatrix; }
+		///
+		Matrix& systemMatrix() {
+			if (mSwitchedMatrices.size() > 0)
+				return mSwitchedMatrices[mCurrentSwitchStatus];
+			else
+				return mNoSwitchSystemMatrix;
+		}
 	};
 
 
