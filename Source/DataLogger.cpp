@@ -170,8 +170,8 @@ void DataLogger::addAttribute(const String &name, CPS::Attribute<Real>::Ptr attr
 void DataLogger::addAttribute(const String &name, CPS::Attribute<Complex>::Ptr attr) {
 	auto attrComp = std::static_pointer_cast<CPS::ComplexAttribute>(attr);
 
-	mAttributes[name + ".real"] = CPS::ComplexAttribute::real(attrComp);
-	mAttributes[name + ".imag"] = CPS::ComplexAttribute::imag(attrComp);
+	mAttributes[name + ".real"] = attrComp->real();
+	mAttributes[name + ".imag"] = attrComp->imag();
 }
 
 void DataLogger::addAttribute(const String &name, CPS::Attribute<MatrixVar<Real>>::Ptr attr) {

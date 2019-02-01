@@ -67,8 +67,8 @@ int main(int argc, char *argv[]) {
 	for (auto n : sys.mNodes) {
 		auto v = n->attributeComplex("v");
 
-		intf.addExport(CPS::ComplexAttribute::mag(v),   o+0);
-		intf.addExport(CPS::ComplexAttribute::phase(v), o+1);
+		intf.addExport(v->mag(),   o+0);
+		intf.addExport(v->phase(), o+1);
 
 		o += 2;
 	}
