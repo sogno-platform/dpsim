@@ -20,6 +20,7 @@
 
 #include "cps/CIM/Reader.h"
 #include <DPsim.h>
+#include "cps/loadProfileReader.h"
 
 using namespace std;
 using namespace DPsim;
@@ -38,6 +39,12 @@ int main(int argc, char** argv){
 		String path("Examples/CIM/CIGRE_MV_NoTap/");
 	#endif
 
+	#ifdef _WIN32
+		String loadProfilePath("..\\..\\..\\..\\dpsim\\Examples\\CSV\\CIGRE_MV_NoTap\\");
+	#elif defined(__linux__) || defined(__APPLE__)
+		String loadProfilePath("Examples/CSV/CIGRE_MV_NoTap/");
+	#endif
+
 	std::list<string> filenames = {
 	path + "Rootnet_FULL_NE_06J16h_DI.xml",
 	path + "Rootnet_FULL_NE_06J16h_EQ.xml",
@@ -49,6 +56,7 @@ int main(int argc, char** argv){
 
     CIM::Reader reader(simName, Logger::Level::DEBUG, Logger::Level::NONE);
     SystemTopology system = reader.loadCIM(system_freq, filenames, CPS::Domain::Static);
+	loadProfileAssigner(loadProfilePath, system);
 
 	auto logger = DPsim::DataLogger::make(simName);
 	for (auto node : system.mNodes)
