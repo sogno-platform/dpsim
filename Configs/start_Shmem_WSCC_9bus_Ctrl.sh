@@ -47,6 +47,7 @@ sleep 2
 if true; then
 	VILLAS_LOG_PREFIX="[Pipe] " \
 	villas-pipe Configs/Shmem_WSCC-9bus_Ctrl.conf dpsim1
+	#villas-node Configs/Shmem_WSCC-9bus_Ctrl.conf
 else
 	VILLAS_LOG_PREFIX="[Node] " \
 	villas-node /projects/reserve/Shmem_WSCC-9bus_Ctrl.conf & VN=$!
