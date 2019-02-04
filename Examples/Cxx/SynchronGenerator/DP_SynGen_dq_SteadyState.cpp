@@ -69,7 +69,18 @@ int main(int argc, char* argv[]) {
 	auto n1 = Node::make("n1", PhaseType::ABC, initVoltN1);
 
 	// Components
-	auto gen = Ph3::SynchronGeneratorDQ::make("DP_SynGen_dq_SteadyState_SynGen");
+	std::shared_ptr<Ph3::SynchronGeneratorDQ> gen;
+	if (argc < 2) {
+		std::cerr << "usage: DP_SynGen_dq_SteadyState <0|1>" << std::endl;
+		std::cerr << "(0: internal trapezoidal solver, 1: ARKode solver)" << std::endl;
+		std::exit(1);
+	}
+	if (atoi(argv[1]) == 1) {
+		gen = Ph3::SynchronGeneratorDQODE::make("DP_SynGen_dq_SteadyState_SynGen");
+	} else {
+		gen = Ph3::SynchronGeneratorDQTrapez::make("DP_SynGen_dq_SteadyState_SynGen");
+	}
+
 	gen->setFundamentalParametersPU(nomPower, nomPhPhVoltRMS, nomFreq, poleNum, nomFieldCurr,
 		Rs, Ll, Lmd, Lmq, Rfd, Llfd, Rkd, Llkd, Rkq1, Llkq1, Rkq2, Llkq2, H,
 		initActivePower, initReactivePower, initTerminalVolt, initVoltAngle, fieldVoltage, initMechPower);
