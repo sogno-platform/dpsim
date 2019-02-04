@@ -108,6 +108,9 @@ if(WITH_CIM)
 		CIM/WSCC-9bus_CIM_mult.cpp
 		CIM/WSCC-9bus_CIM_Dyn.cpp
 		CIM/WSCC-9bus_CIM_Dyn_Switch.cpp
+
+		# powerflow example
+		CIM/CIGRE_MV_PowerFlowTest.cpp
 	)
 endif()
 

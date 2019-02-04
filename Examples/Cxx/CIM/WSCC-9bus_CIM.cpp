@@ -42,7 +42,7 @@ int main(int argc, char *argv[]) {
 
 	String simName = "WSCC-9bus";
 
-	CIM::Reader reader(simName, Logger::Level::DEBUG, Logger::Level::DEBUG);
+	CIM::Reader reader(simName, Logger::Level::DEBUG, Logger::Level::NONE);
 	SystemTopology sys = reader.loadCIM(60, filenames);
 
 	Simulation sim(simName, sys, 0.0001, 0.1,

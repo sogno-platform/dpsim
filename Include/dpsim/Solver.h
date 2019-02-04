@@ -1,4 +1,4 @@
-/** Simulation
+﻿/** Simulation
  *
  * @author Markus Mirz <mmirz@eonerc.rwth-aachen.de>
  * @copyright 2017-2018, Institute for Automation of Complex Power Systems, EONERC
@@ -46,7 +46,7 @@ namespace DPsim {
 
 		virtual ~Solver() { }
 
-		enum class Type { MNA, DAE };
+		enum class Type { MNA, DAE, NRP };
 
 		virtual CPS::Task::List getTasks() = 0;
 		/// Log results

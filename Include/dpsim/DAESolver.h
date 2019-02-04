@@ -39,7 +39,6 @@
 #include <sundials/sundials_types.h>
 #include <nvector/nvector_serial.h>
 
-using namespace CPS;
 
 namespace DPsim {
 
@@ -47,17 +46,17 @@ namespace DPsim {
 	class DAESolver : public Solver {
 	protected:
 		// General simulation parameters
-		SystemTopology mSystem;
+        CPS::SystemTopology mSystem;
 		/// Offsets vector for adding new equations to the residual vector
 		std::vector<Int> mOffsets;
 		/// Constant time step
 		Real mTimestep;
 		/// Number of equations in problem
 		Int mNEQ;
-		/// Components of the solver
-		Component::List mComponents;
-		///
-		Node<Real>::List mNodes;
+		/// Components of the Problem
+        CPS::Component::List mComponents;
+		/// Nodes of the Problem
+        CPS::Node<Complex>::List mNodes;
 
 		// IDA simulation variables
 		/// Memory block allocated by IDA
@@ -76,8 +75,9 @@ namespace DPsim {
 		SUNMatrix A = NULL;
 		/// Linear solver object
 		SUNLinearSolver LS = NULL;
-
-		std::vector<DAEInterface::ResFn> mResidualFunctions;
+        long int interalSteps = 0;
+        long int resEval=0;
+        std::vector<CPS::DAEInterface::ResFn> mResidualFunctions;
 
 		/// Residual Function of entire System
 		static int residualFunctionWrapper(realtype ttime, N_Vector state, N_Vector dstate_dt, N_Vector resid, void *user_data);
@@ -85,7 +85,7 @@ namespace DPsim {
 
 	public:
 		/// Create solve object with given parameters
-		DAESolver(String name, SystemTopology system, Real dt, Real t0);
+        DAESolver(String name, CPS::SystemTopology system, Real dt, Real t0);
 		/// Deallocate all memory
 		~DAESolver();
 		/// Initialize Components & Nodes with inital values
