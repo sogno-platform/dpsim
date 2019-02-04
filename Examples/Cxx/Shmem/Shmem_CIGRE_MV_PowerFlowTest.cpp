@@ -51,13 +51,6 @@ int main(int argc, char** argv){
     CIM::Reader reader(simName, Logger::Level::DEBUG, Logger::Level::NONE);
     SystemTopology sys = reader.loadCIM(system_freq, filenames, CPS::Domain::Static);
 
-	/*
-	auto logger = DPsim::DataLogger::make(simName);
-	for (auto node : sys.mNodes)
-	{
-		logger->addAttribute(node->name(), node->attribute("v"));
-	}*/
-
 	RealTimeSimulation sim(simName, sys, args.timeStep, args.duration, args.solver.domain, args.solver.type, args.logLevel);
 
 	// Create shmem interface
@@ -90,8 +83,8 @@ int main(int argc, char** argv){
 	}
 
 	sim.addInterface(&intf, false, false);
-	//sim.addLogger(logger);
-	sim.run();
+
+	sim.run(std::chrono::seconds(5));
 
 	return 0;
 }
