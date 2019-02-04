@@ -45,8 +45,7 @@ void MnaSolver<VarType>::initialize(CPS::SystemTopology system) {
 	// The system topology is prepared and we create the MNA matrices.
 	createEmptyVectors();
 	createEmptySystemMatrix();
-	addAttribute<Matrix>("b", &mRightSideVector, Flags::read);
-	addAttribute<Matrix>("x", &mLeftSideVector, Flags::read);
+	addAttribute<Matrix>("left_vector", &mLeftSideVector, Flags::read);
 
 	// TODO: Move to base solver class?
 	// This intialization according to power flow information is not MNA specific.
@@ -62,14 +61,14 @@ void MnaSolver<VarType>::initialize(CPS::SystemTopology system) {
 		comp->initialize(mSystem.mSystemOmega, mTimeStep);
 	// Initialize MNA specific parts of components.
 	for (auto comp : mPowerComponents) {
-		comp->mnaInitialize(mSystem.mSystemOmega, mTimeStep, attribute<Matrix>("x"));
-		const Matrix& stamp = comp->template attribute<Matrix>("b")->get();
+		comp->mnaInitialize(mSystem.mSystemOmega, mTimeStep, attribute<Matrix>("left_vector"));
+		const Matrix& stamp = comp->template attribute<Matrix>("right_vector")->get();
 		if (stamp.size() != 0) {
 			mRightVectorStamps.push_back(&stamp);
 		}
 	}
 	for (auto comp : mSwitches)
-		comp->mnaInitialize(mSystem.mSystemOmega, mTimeStep, attribute<Matrix>("x"));
+		comp->mnaInitialize(mSystem.mSystemOmega, mTimeStep, attribute<Matrix>("left_vector"));
 
 	// This steady state initialization is MNA specific and runs a simulation
 	// before the actual simulation executed by the user.
