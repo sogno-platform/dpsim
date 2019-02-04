@@ -64,7 +64,7 @@ int main(int argc, char** argv){
 		logger->addAttribute(node->name(), node->attribute("v"));
 	}
 
-	Simulation sim(simName, system, 0.001, 0.1, Domain::Static, Solver::Type::NRP, Logger::Level::DEBUG, true);
+	Simulation sim(simName, system, 1, 120, Domain::Static, Solver::Type::NRP, Logger::Level::DEBUG, true);
 
 	std::cout << "test";
 
