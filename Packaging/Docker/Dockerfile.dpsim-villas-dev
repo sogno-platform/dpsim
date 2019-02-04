@@ -1,0 +1,121 @@
+# Dockerfile for VILLASnode development.
+#
+# This Dockerfile builds an image which contains all library dependencies
+# and tools to build VILLASnode.
+# However, VILLASnode itself it not part of the image.
+#
+# This image can be used for developing VILLASnode
+# by running:
+#   make docker-dev
+#
+# @author Steffen Vogel <stvogel@eonerc.rwth-aachen.de>
+# @copyright 2014-2019, Institute for Automation of Complex Power Systems, EONERC
+# @license GNU General Public License (version 3)
+#
+# VILLASnode
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+###################################################################################
+
+FROM dpsim-dev:latest
+
+ARG GIT_REV=unknown
+ARG GIT_BRANCH=unknown
+ARG VERSION=unknown
+ARG VARIANT=unknown
+
+# Some of the dependencies are only available in our own repo
+ADD https://packages.fein-aachen.org/fedora/fein.repo /etc/yum.repos.d/
+
+# Toolchain
+RUN dnf -y install \
+	gcc gcc-c++ \
+	pkgconfig cmake make ninja-build \
+	texinfo git curl tar \
+	protobuf-compiler protobuf-c-compiler
+
+# Several tools only needed for developement and testing
+RUN dnf -y install \
+	doxygen dia graphviz \
+	openssh-clients \
+	rpmdevtools rpm-build \
+	jq nmap-ncat \
+	iproute \
+	python-pip \
+	valgrind gdb gdb-gdbserver \
+	xmlto dblatex rubygem-asciidoctor \
+	psmisc procps-ng \
+	rabbitmq-server mosquitto
+
+# Tools for debugging, coverage, profiling
+RUN pip install \
+	gcovr \
+	protobuf
+
+# Dependencies
+RUN dnf -y install \
+	openssl-devel \
+	protobuf-devel \
+	protobuf-c-devel \
+	libuuid-devel \
+	libconfig-devel \
+	libnl3-devel \
+	libcurl-devel \
+	jansson-devel \
+	libwebsockets-devel \
+	zeromq-devel \
+	nanomsg \
+	libiec61850 \
+	librabbitmq-devel \
+	mosquitto-devel \
+	comedilib-devel \
+	libibverbs-devel \
+	librdmacm-devel \
+	re-devel \
+	uldaq-devel
+
+# Build & Install Criterion
+RUN cd /tmp && \
+	git clone --recursive https://github.com/Snaipe/Criterion && \
+	mkdir -p Criterion/build && cd Criterion/build && \
+	cmake -DCMAKE_INSTALL_LIBDIR=/usr/local/lib64 .. && make -j$(nproc) install && \
+	rm -rf /tmp/*
+
+# Workaround for libnl3's search path for netem distributions
+RUN ln -s /usr/lib64/tc /usr/lib/tc
+
+# Expose ports for HTTP and WebSocket frontend
+EXPOSE 80
+EXPOSE 443
+
+ENV LD_LIBRARY_PATH /usr/local/lib:/usr/local/lib64
+
+WORKDIR /villas
+ENTRYPOINT bash
+
+LABEL \
+	org.label-schema.schema-version="1.0" \
+	org.label-schema.name="VILLASnode" \
+	org.label-schema.license="GPL-3.0" \
+	org.label-schema.vcs-ref="$GIT_REV" \
+	org.label-schema.vcs-branch="$GIT_BRANCH" \
+	org.label-schema.version="$VERSION" \
+	org.label-schema.variant="$VARIANT" \
+	org.label-schema.vendor="Institute for Automation of Complex Power Systems, RWTH Aachen University" \
+	org.label-schema.author.name="Steffen Vogel" \
+	org.label-schema.author.email="stvogel@eonerc.rwth-aachen.de" \
+	org.label-schema.description="A image containing all build-time dependencies for VILLASnode based on Fedora" \
+	org.label-schema.url="http://fein-aachen.org/projects/villas-framework/" \
+	org.label-schema.vcs-url="https://git.rwth-aachen.de/VILLASframework/VILLASnode" \
+	org.label-schema.usage="https://villas.fein-aachen.org/doc/node-installation.html#node-installation-docker"
