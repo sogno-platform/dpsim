@@ -54,9 +54,9 @@ int main(int argc, char** argv){
 	String simName = "CIGRE-MV-NoTap";
 	CPS::Real system_freq = 50;
 
-    CIM::Reader reader(simName, Logger::Level::DEBUG, Logger::Level::NONE);
+    CIM::Reader reader(simName, Logger::Level::INFO, Logger::Level::NONE);
     SystemTopology system = reader.loadCIM(system_freq, filenames, CPS::Domain::Static);
-	loadProfileAssigner(loadProfilePath, system);
+	loadProfileAssigner(simName, loadProfilePath, system, Logger::Level::INFO);
 
 	auto logger = DPsim::DataLogger::make(simName);
 	for (auto node : system.mNodes)
@@ -64,9 +64,7 @@ int main(int argc, char** argv){
 		logger->addAttribute(node->name(), node->attribute("v"));
 	}
 
-	Simulation sim(simName, system, 1, 120, Domain::Static, Solver::Type::NRP, Logger::Level::DEBUG, true);
-
-	std::cout << "test";
+	Simulation sim(simName, system, 1, 120, Domain::Static, Solver::Type::NRP, Logger::Level::NONE, true);
 
 	sim.addLogger(logger);
 	sim.run();
