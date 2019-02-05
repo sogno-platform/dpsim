@@ -12,6 +12,7 @@
    Examples
    Install
    Build
+   Real-time
    Reference
    License <Copying>
    Changelog

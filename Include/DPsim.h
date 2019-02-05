@@ -25,10 +25,6 @@
 #include <dpsim/SequentialScheduler.h>
 #include <dpsim/ThreadLevelScheduler.h>
 
-#ifdef WITH_SUNDIALS
-  #include <dpsim/Sim_ODE.h>
-#endif
-
 #ifndef _MSC_VER
   #include <dpsim/RealTimeSimulation.h>
 #endif

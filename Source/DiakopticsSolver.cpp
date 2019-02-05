@@ -142,7 +142,6 @@ void DiakopticsSolver<VarType>::createMatrices() {
 	mYinv = Matrix::Zero(totalSize, totalSize);
 
 	mRightSideVector = Matrix::Zero(totalSize, 1);
-	addAttribute<Matrix>("b", &mRightSideVector, Flags::read);
 	mLeftSideVector = Matrix::Zero(totalSize, 1);
 	addAttribute<Matrix>("x", &mLeftSideVector, Flags::read);
 	mOrigLeftSideVector = Matrix::Zero(totalSize, 1);
@@ -179,7 +178,7 @@ void DiakopticsSolver<VarType>::initComponents() {
 		// Initialize MNA specific parts of components.
 		for (auto comp : mSubnets[net].components) {
 			comp->mnaInitialize(2 * PI * mSystemFrequency, mTimeStep, attribute<Matrix>("x"));
-			const Matrix& stamp = comp->template attribute<Matrix>("b")->get();
+			const Matrix& stamp = comp->template attribute<Matrix>("right_vector")->get();
 			if (stamp.size() != 0) {
 				mSubnets[net].rightVectorStamps.push_back(&stamp);
 			}

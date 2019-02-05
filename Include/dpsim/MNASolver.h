@@ -184,14 +184,14 @@ namespace DPsim {
 			SolveTask(MnaSolver<VarType>& solver, Bool steadyStateInit) :
 				Task(solver.mName + ".Solve"), mSolver(solver), mSteadyStateInit(steadyStateInit) {
 				for (auto it : solver.mPowerComponents) {
-					if (it->template attribute<Matrix>("b")->get().size() != 0) {
-						mAttributeDependencies.push_back(it->attribute("b"));
+					if (it->template attribute<Matrix>("right_vector")->get().size() != 0) {
+						mAttributeDependencies.push_back(it->attribute("right_vector"));
 					}
 				}
 				for (auto node : solver.mNodes) {
 					mModifiedAttributes.push_back(node->attribute("v"));
 				}
-				mModifiedAttributes.push_back(solver.attribute("x"));
+				mModifiedAttributes.push_back(solver.attribute("left_vector"));
 			}
 
 			void execute(Real time, Int timeStepCount);
@@ -205,7 +205,7 @@ namespace DPsim {
 		public:
 			LogTask(MnaSolver<VarType>& solver) :
 				Task(solver.mName + ".Log"), mSolver(solver) {
-				mAttributeDependencies.push_back(solver.attribute("x"));
+				mAttributeDependencies.push_back(solver.attribute("left_vector"));
 				mModifiedAttributes.push_back(Scheduler::external);
 			}
 
