@@ -56,7 +56,8 @@ int main(int argc, char** argv){
 
     CIM::Reader reader(simName, Logger::Level::INFO, Logger::Level::NONE);
     SystemTopology system = reader.loadCIM(system_freq, filenames, CPS::Domain::Static);
-	loadProfileAssigner(simName, loadProfilePath, system, Logger::Level::INFO);
+	loadProfileAssigner assigner(simName, loadProfilePath, Logger::Level::INFO);
+	assigner.assign(1, 2, 120, system);
 
 	auto logger = DPsim::DataLogger::make(simName);
 	for (auto node : system.mNodes)
@@ -64,7 +65,7 @@ int main(int argc, char** argv){
 		logger->addAttribute(node->name(), node->attribute("v"));
 	}
 
-	Simulation sim(simName, system, 1, 120, Domain::Static, Solver::Type::NRP, Logger::Level::NONE, true);
+	Simulation sim(simName, system, 1, 60, Domain::Static, Solver::Type::NRP, Logger::Level::INFO, true);
 
 	sim.addLogger(logger);
 	sim.run();
