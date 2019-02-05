@@ -57,6 +57,7 @@ namespace DPsim {
 		DataLogger mRightVectorLog;
 
 		std::vector<Subnet> mSubnets;
+		std::unordered_map<typename CPS::Node<VarType>::Ptr, Subnet*> mNodeSubnetMap;
 		typename CPS::PowerComponent<VarType>::List mTearComponents;
 		CPS::SignalComponent::List mSignalComponents;
 
@@ -71,8 +72,10 @@ namespace DPsim {
 		Matrix mTearTopology;
 		Matrix mRemovedImpedance;
 		CPS::LUFactorized mNetToRemovedImpedance;
+		// TODO better names
 		Matrix mIPsi;
 		Matrix mIPsiMapped;
+		Matrix mEPsi;
 
 		void init(const CPS::SystemTopology& system);
 
@@ -87,7 +90,7 @@ namespace DPsim {
 		void initComponents();
 
 		void initMatrices();
-		void applyTearComponentStamp(std::unordered_map<typename CPS::Node<VarType>::Ptr, Subnet*>& subnetMap, UInt compIdx);
+		void applyTearComponentStamp(UInt compIdx);
 
 		void log(Real time);
 
