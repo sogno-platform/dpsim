@@ -1,4 +1,4 @@
-/*!
+﻿/*!
  * \file Solver_NRpolar.h
  * \author Santiago Peñate Vera
  *
@@ -45,7 +45,6 @@ namespace DPsim {
 			std::copy(index_vector.begin(), index_vector.end(), std::ostream_iterator<int>(result, " "));
 			return result.str().c_str();
 		};
-
     public:
 		// General simulation settings
 		/// System time step is constant for NRP solver
