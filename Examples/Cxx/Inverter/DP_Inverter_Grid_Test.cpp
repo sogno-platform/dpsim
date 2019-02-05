@@ -29,6 +29,7 @@ int main(int argc, char* argv[]) {
 	Real timeStep = 0.0001;
 	Real finalTime = 0.1;
 	String simName = "DP_Inverter_Grid_Test";
+	Logger::setLogDir("logs/"+simName);
 
 	// Nodes
 	auto n1 = Node::make("n1");
@@ -36,10 +37,11 @@ int main(int argc, char* argv[]) {
 	auto n3 = Node::make("n3");
 	auto n4 = Node::make("n4");
 	auto n5 = Node::make("n5");
+	auto n6 = Node::make("n6");
 
 	// Components
-	auto cs = CurrentSource::make("cs");
-	cs->setParameters(Complex(10, 0));
+	auto inv = VoltageSource::make("inv", Logger::Level::DEBUG);
+	inv->setParameters(Complex(200, 0));
 	auto r1 = Resistor::make("r1");
 	r1->setParameters(1);
 	auto l1 = Resistor::make("l1");
@@ -54,7 +56,7 @@ int main(int argc, char* argv[]) {
 	grid->setParameters(Complex(230, 0));
 
 	// Topology
-	cs->connect({ Node::GND, n1 });
+	inv->connect({ Node::GND, n1 });
 	r1->connect({ n1, n2 });
 	l1->connect({ n2, n3 });
 	r2->connect({ n3, n4 });
@@ -63,7 +65,7 @@ int main(int argc, char* argv[]) {
 	grid->connect({ Node::GND, n6 });
 
 	// Define system topology
-	auto sys = SystemTopology(50, SystemNodeList{n1, n2, n3, n4, n5, n6}, SystemComponentList{cs, r1, l1, r2, l2, c1, grid});
+	auto sys = SystemTopology(50, SystemNodeList{n1, n2, n3, n4, n5, n6}, SystemComponentList{inv, r1, l1, r2, l2, c1, grid});
 
 	// Logging
 	auto logger = DataLogger::make(simName);
