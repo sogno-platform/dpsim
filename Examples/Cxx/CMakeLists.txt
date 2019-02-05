@@ -110,6 +110,7 @@ if(WITH_CIM)
 
 		# powerflow example
 		CIM/CIGRE_MV_PowerFlowTest.cpp
+		CIM/CIGRE_MV_PowerFlowTest_LoadProfiles.cpp
 	)
 endif()
 
