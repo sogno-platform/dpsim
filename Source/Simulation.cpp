@@ -1,4 +1,4 @@
-﻿/**
+/**
  * @author Markus Mirz <mmirz@eonerc.rwth-aachen.de>
  * @copyright 2017-2018, Institute for Automation of Complex Power Systems, EONERC
  *
@@ -18,6 +18,9 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *********************************************************************************/
 
+#include <chrono>
+
+#include <dpsim/SequentialScheduler.h>
 #include <dpsim/Simulation.h>
 #include <dpsim/MNASolver.h>
 #include <dpsim/NRPSolver.h>
@@ -26,8 +29,14 @@
   #include <cps/CIM/Reader.h>
 #endif
 
+#ifdef WITH_GRAPHVIZ
+  #include <cps/Graph.h>
+#endif
+
 #ifdef WITH_SUNDIALS
+  #include <cps/Solver/ODEInterface.h>
   #include <dpsim/DAESolver.h>
+  #include <dpsim/ODESolver.h>
 #endif
 
 using namespace CPS;
@@ -35,61 +44,186 @@ using namespace DPsim;
 
 Simulation::Simulation(String name,
 	Real timeStep, Real finalTime,
-	Domain domain, Solver::Type solverType,
+	Domain domain,
 	Logger::Level logLevel) :
 	mLog(name, logLevel),
 	mName(name),
 	mFinalTime(finalTime),
+	mDomain(domain),
 	mTimeStep(timeStep),
 	mLogLevel(logLevel)
 {
 	addAttribute<String>("name", &mName, Flags::read);
 	addAttribute<Real>("final_time", &mFinalTime, Flags::read);
+	Eigen::setNbThreads(1);
 }
 
 Simulation::Simulation(String name, SystemTopology system,
 	Real timeStep, Real finalTime,
 	Domain domain, Solver::Type solverType,
 	Logger::Level logLevel,
-	Bool steadyStateInit) :
+	Bool steadyStateInit,
+	Bool splitSubnets) :
 	Simulation(name, timeStep, finalTime,
-		domain, solverType, logLevel) {
+		domain, logLevel) {
 
-	switch (solverType) {
-	case Solver::Type::MNA:
-		if (domain == Domain::DP)
-			mSolver = std::make_shared<MnaSolver<Complex>>(name, system, timeStep,
-				domain, logLevel, steadyStateInit);
-		else
-			mSolver = std::make_shared<MnaSolver<Real>>(name, system, timeStep,
-				domain, logLevel, steadyStateInit);
+	switch (domain) {
+	case Domain::DP:
+		createSolvers<Complex>(system, solverType, steadyStateInit, splitSubnets);
 		break;
-	case Solver::Type::NRP:
-		if (domain == Domain::Static)
-			mSolver = std::make_shared<NRpolarSolver>(name, system, timeStep,
-				domain, logLevel);
-		else
-			mSolver = std::make_shared<NRpolarSolver>(name, system, timeStep,
-				domain, logLevel);
+	case Domain::EMT:
+		createSolvers<Real>(system, solverType, steadyStateInit, splitSubnets);
 		break;
-
-#ifdef WITH_SUNDIALS
-	case Solver::Type::DAE:
-		mSolver = std::make_shared<DAESolver>(name, system, timeStep, 0.0);
+	case Domain::Static:
+		mSolvers.push_back(std::make_shared<NRpolarSolver>(name, system, timeStep, domain, logLevel));
 		break;
-#endif /* WITH_SUNDIALS */
-
-	default:
-		throw UnsupportedSolverException();
 	}
 }
 
 Simulation::~Simulation() {
-
 }
 
-void Simulation::sync()
-{
+template <typename VarType>
+void Simulation::createSolvers(const SystemTopology& system, Solver::Type solverType, Bool steadyStateInit, Bool splitSubnets) {
+	std::unordered_map<typename Node<VarType>::Ptr, int> subnet;
+	int numberSubnets = checkTopologySubnets<VarType>(system, subnet);
+	if (numberSubnets == 1 || !splitSubnets) {
+		switch (solverType) {
+			case Solver::Type::MNA:
+				mSolvers.push_back(std::make_shared<MnaSolver<VarType>>(mName, system, mTimeStep,
+					mDomain, mLogLevel, steadyStateInit));
+				break;
+#ifdef WITH_SUNDIALS
+			case Solver::Type::DAE:
+				mSolvers.push_back(std::make_shared<DAESolver>(mName, system, mTimeStep, 0.0));
+				break;
+#endif /* WITH_SUNDIALS */
+			default:
+				throw UnsupportedSolverException();
+		}
+	} else {
+		std::vector<Component::List> components(numberSubnets);
+		std::vector<TopologicalNode::List> nodes(numberSubnets);
+
+		// Split nodes into subnet groups
+		for (auto node : system.mNodes) {
+			auto pnode = std::dynamic_pointer_cast<Node<VarType>>(node);
+			if (!pnode || node->isGround())
+				continue;
+
+			nodes[subnet[pnode]].push_back(node);
+		}
+
+		// Split components into subnet groups
+		for (auto comp : system.mComponents) {
+			auto pcomp = std::dynamic_pointer_cast<PowerComponent<VarType>>(comp);
+			if (!pcomp) {
+				// TODO this should only be signal components.
+				// Proper solution would be to pass them to a different "solver"
+				// since they are actually independent of which solver we use
+				// for the electric part.
+				// Just adding them to an arbitrary solver for now has the same effect.
+				components[0].push_back(comp);
+				continue;
+			}
+			for (UInt nodeIdx = 0; nodeIdx < pcomp->terminalNumber(); nodeIdx++) {
+				if (!pcomp->node(nodeIdx)->isGround()) {
+					components[subnet[pcomp->node(nodeIdx)]].push_back(comp);
+					break;
+				}
+			}
+		}
+
+		for (int currentNet = 0; currentNet < numberSubnets; currentNet++) {
+			SystemTopology partSys(system.mSystemFrequency, nodes[currentNet], components[currentNet]);
+			String copySuffix = "_" + std::to_string(currentNet);
+			// TODO in the future, here we could possibly even use different
+			// solvers for different subnets if deemed useful
+			switch (solverType) {
+				case Solver::Type::MNA:
+					mSolvers.push_back(std::make_shared<MnaSolver<VarType>>(mName + copySuffix, partSys, mTimeStep,
+						mDomain, mLogLevel, steadyStateInit));
+					break;
+#ifdef WITH_SUNDIALS
+				case Solver::Type::DAE:
+					mSolvers.push_back(std::make_shared<DAESolver>(mName + copySuffix, partSys, mTimeStep, 0.0));
+					break;
+#endif /* WITH_SUNDIALS */
+				default:
+					throw UnsupportedSolverException();
+			}
+		}
+	}
+#ifdef WITH_SUNDIALS
+	for (auto comp : system.mComponents) {
+		auto odeComp = std::dynamic_pointer_cast<ODEInterface>(comp);
+		if (odeComp) {
+			// TODO explicit / implicit integration
+			auto odeSolver = std::make_shared<ODESolver>(odeComp->attribute<String>("name")->get() + "_ODE", odeComp, false, mTimeStep);
+			mSolvers.push_back(odeSolver);
+		}
+	}
+#endif /* WITH_SUNDIALS */
+}
+
+template <typename VarType>
+int Simulation::checkTopologySubnets(const SystemTopology& system, std::unordered_map<typename Node<VarType>::Ptr, int>& subnet) {
+	std::unordered_map<typename Node<VarType>::Ptr, typename Node<VarType>::List> neighbours;
+
+	for (auto comp : system.mComponents) {
+		auto pcomp = std::dynamic_pointer_cast<PowerComponent<VarType>>(comp);
+		if (!pcomp)
+			continue;
+		for (UInt nodeIdx1 = 0; nodeIdx1 < pcomp->terminalNumberConnected(); nodeIdx1++) {
+			for (UInt nodeIdx2 = 0; nodeIdx2 < nodeIdx1; nodeIdx2++) {
+				auto node1 = pcomp->node(nodeIdx1);
+				auto node2 = pcomp->node(nodeIdx2);
+				if (node1->isGround() || node2->isGround())
+					continue;
+				neighbours[node1].push_back(node2);
+				neighbours[node2].push_back(node1);
+			}
+		}
+	}
+
+	int currentNet = 0;
+	size_t totalNodes = system.mNodes.size();
+	for (auto tnode : system.mNodes) {
+		auto node = std::dynamic_pointer_cast<Node<VarType>>(tnode);
+		if (!node || tnode->isGround()) {
+			totalNodes--;
+		}
+	}
+
+	while (subnet.size() != totalNodes) {
+		std::list<typename Node<VarType>::Ptr> nextSet;
+
+		for (auto tnode : system.mNodes) {
+			auto node = std::dynamic_pointer_cast<Node<VarType>>(tnode);
+			if (!node || tnode->isGround())
+				continue;
+
+			if (subnet.find(node) == subnet.end()) {
+				nextSet.push_back(node);
+				break;
+			}
+		}
+		while (!nextSet.empty()) {
+			auto node = nextSet.front();
+			nextSet.pop_front();
+
+			subnet[node] = currentNet;
+			for (auto neighbour : neighbours[node]) {
+				if (subnet.find(neighbour) == subnet.end())
+					nextSet.push_back(neighbour);
+			}
+		}
+		currentNet++;
+	}
+	return currentNet;
+}
+
+void Simulation::sync() {
 #ifdef WITH_SHMEM
 	// We send initial state over all interfaces
 	for (auto ifm : mInterfaces) {
@@ -107,7 +241,59 @@ void Simulation::sync()
 #endif
 }
 
+void Simulation::prepSchedule() {
+	mTasks.clear();
+	mTaskOutEdges.clear();
+	mTaskInEdges.clear();
+	for (auto solver : mSolvers) {
+		for (auto t : solver->getTasks()) {
+			mTasks.push_back(t);
+		}
+	}
+#ifdef WITH_SHMEM
+	for (auto intfm : mInterfaces) {
+		for (auto t : intfm.interface->getTasks()) {
+			mTasks.push_back(t);
+		}
+	}
+#endif
+	for (auto logger : mLoggers) {
+		mTasks.push_back(logger->getTask());
+	}
+	if (!mScheduler) {
+		mScheduler = std::make_shared<SequentialScheduler>();
+	}
+	mScheduler->resolveDeps(mTasks, mTaskInEdges, mTaskOutEdges);
+}
+
+void Simulation::schedule() {
+	mLog.info() << "Scheduling tasks." << std::endl;
+	prepSchedule();
+	mScheduler->createSchedule(mTasks, mTaskInEdges, mTaskOutEdges);
+}
+
+#ifdef WITH_GRAPHVIZ
+void Simulation::renderDependencyGraph(std::ostream &os) {
+	if (mTasks.size() == 0)
+		prepSchedule();
+
+	Graph::Graph g("dependencies", Graph::Type::directed);
+	for (auto task : mTasks) {
+		g.addNode(task->toString());
+	}
+	for (auto from : mTasks) {
+		for (auto to : mTaskOutEdges[from]) {
+			g.addEdge("", g.node(from->toString()), g.node(to->toString()));
+		}
+	}
+
+	g.render(os, "dot", "svg");
+}
+#endif
+
 void Simulation::run() {
+	schedule();
+
 	mLog.info() << "Opening interfaces." << std::endl;
 
 #ifdef WITH_SHMEM
@@ -123,47 +309,31 @@ void Simulation::run() {
 		step();
 	}
 
+	mScheduler->stop();
+
 #ifdef WITH_SHMEM
 	for (auto ifm : mInterfaces)
 		ifm.interface->close();
 #endif
 
 	for (auto lg : mLoggers)
-		lg.logger->flush();
+		lg->close();
 
 	mLog.info() << "Simulation finished." << std::endl;
+	//mScheduler->getMeasurements();
 }
 
 Real Simulation::step() {
-	Real nextTime;
-
-#ifdef WITH_SHMEM
-	for (auto ifm : mInterfaces) {
-		if (mTimeStepCount % ifm.downsampling == 0)
-			ifm.interface->readValues(ifm.sync);
-	}
-#endif
-
+	auto start = std::chrono::steady_clock::now();
 	mEvents.handleEvents(mTime);
 
-	nextTime = mSolver->step(mTime);
-	mSolver->log(mTime);
+	mScheduler->step(mTime, mTimeStepCount);
 
-#ifdef WITH_SHMEM
-	for (auto ifm : mInterfaces) {
-		if (mTimeStepCount % ifm.downsampling == 0)
-			ifm.interface->writeValues();
-	}
-#endif
-
-	for (auto lg : mLoggers) {
-		if (mTimeStepCount % lg.downsampling == 0) {
-			lg.logger->log(mTime);
-        }
-	}
-
-	mTime = nextTime;
+	mTime += mTimeStep;
 	mTimeStepCount++;
 
+	auto end = std::chrono::steady_clock::now();
+	std::chrono::duration<double> diff = end-start;
+	mStepTimes.push_back(diff.count());
 	return mTime;
 }

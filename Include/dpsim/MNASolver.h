@@ -29,6 +29,7 @@
 
 #include <dpsim/Solver.h>
 #include <dpsim/DataLogger.h>
+#include <cps/AttributeList.h>
 #include <cps/Solver/MNASwitchInterface.h>
 #include <cps/SignalComponent.h>
 #include <cps/PowerComponent.h>
@@ -38,7 +39,7 @@
 namespace DPsim {
 	/// Solver class using Modified Nodal Analysis (MNA).
 	template <typename VarType>
-	class MnaSolver : public Solver {
+	class MnaSolver : public Solver, public CPS::AttributeList {
 	protected:
 		// General simulation settings
 		/// System time step is constant for MNA solver
@@ -80,6 +81,8 @@ namespace DPsim {
 		CPS::LUFactorized mTmpLuFactorization;
 		/// Source vector of known quantities
 		Matrix mRightSideVector;
+		/// List of all right side vector contributions
+		std::vector<const Matrix*> mRightVectorStamps;
 		/// Solution vector of unknown quantities
 		Matrix mLeftSideVector;
 		/// Switch to trigger steady-state initialization
@@ -100,6 +103,8 @@ namespace DPsim {
 		Int mLastLogTimeStep = 0;
 		/// Down sampling rate for log
 		Int mDownSampleRate = 1;
+		/// Name for displaying
+		String mName;
 		/// Simulation log level
 		CPS::Logger::Level mLogLevel;
 		/// Simulation logger
@@ -117,8 +122,6 @@ namespace DPsim {
 		void initialize(CPS::SystemTopology system);
 		/// Identify Nodes and PowerComponents and SignalComponents
 		void identifyTopologyObjects();
-		///
-		void sortExecutionPriority();
 		/// Assign simulation node index according to index in the vector.
 		void assignSimNodes();
 		/// Creates virtual nodes inside components.
@@ -130,8 +133,6 @@ namespace DPsim {
 		void createEmptyVectors();
 		/// Create system matrix
 		void createEmptySystemMatrix();
-		/// Solve system matrices
-		void solve();
 		///
 		void updateSwitchStatus();
 	public:
@@ -145,6 +146,7 @@ namespace DPsim {
 			mDomain(domain),
 			mSteadyStateInit(steadyStateInit),
 			mDownSampleRate(downSampleRate),
+			mName(name),
 			mLogLevel(logLevel),
 			mLog(name + "_MNA", logLevel),
 			mLeftVectorLog(name + "_LeftVector", logLevel != CPS::Logger::Level::NONE),
@@ -168,23 +170,50 @@ namespace DPsim {
 		///
 		virtual ~MnaSolver() { };
 
-		/// Solve system A * x = z for x and current time
-		Real step(Real time);
 		/// Log left and right vector values for each simulation step
-		void log(Real time) {
-			if (mDomain == CPS::Domain::EMT) {
-				mLeftVectorLog.logEMTNodeValues(time, leftSideVector());
-				mRightVectorLog.logEMTNodeValues(time, rightSideVector());
-			}
-			else {
-				mLeftVectorLog.logPhasorNodeValues(time, leftSideVector());
-				mRightVectorLog.logPhasorNodeValues(time, rightSideVector());
-			}
-		}
+		void log(Real time);
 		// #### Getter ####
 		Matrix& leftSideVector() { return mLeftSideVector; }
 		Matrix& rightSideVector() { return mRightSideVector; }
 		Matrix& systemMatrix() { return mTmpSystemMatrix; }
+
+		CPS::Task::List getTasks();
+
+		class SolveTask : public CPS::Task {
+		public:
+			SolveTask(MnaSolver<VarType>& solver, Bool steadyStateInit) :
+				Task(solver.mName + ".Solve"), mSolver(solver), mSteadyStateInit(steadyStateInit) {
+				for (auto it : solver.mPowerComponents) {
+					if (it->template attribute<Matrix>("right_vector")->get().size() != 0) {
+						mAttributeDependencies.push_back(it->attribute("right_vector"));
+					}
+				}
+				for (auto node : solver.mNodes) {
+					mModifiedAttributes.push_back(node->attribute("v"));
+				}
+				mModifiedAttributes.push_back(solver.attribute("left_vector"));
+			}
+
+			void execute(Real time, Int timeStepCount);
+
+		private:
+			MnaSolver<VarType>& mSolver;
+			Bool mSteadyStateInit;
+		};
+
+		class LogTask : public CPS::Task {
+		public:
+			LogTask(MnaSolver<VarType>& solver) :
+				Task(solver.mName + ".Log"), mSolver(solver) {
+				mAttributeDependencies.push_back(solver.attribute("left_vector"));
+				mModifiedAttributes.push_back(Scheduler::external);
+			}
+
+			void execute(Real time, Int timeStepCount);
+
+		private:
+			MnaSolver<VarType>& mSolver;
+		};
 	};
 
 

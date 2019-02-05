@@ -3,7 +3,7 @@ set(LIBRARIES "dpsim")
 if (NOT WIN32)
 	# needed so CIMParser and arabica (which are first compiled into static libs)
 	# can be included in the .so
-	set(CMAKE_CXX_FLAGS "-fPIC")
+	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fPIC")
 endif()
 
 # targets
@@ -105,6 +105,7 @@ if(WITH_CIM)
 	set(CIM_SOURCES
 		
 		CIM/WSCC-9bus_CIM.cpp
+		CIM/WSCC-9bus_CIM_mult.cpp
 		CIM/WSCC-9bus_CIM_Dyn.cpp
 		CIM/WSCC-9bus_CIM_Dyn_Switch.cpp
 
@@ -124,6 +125,11 @@ endif()
 if(WITH_PYTHON)
 	list(APPEND LIBRARIES ${PYTHON_LIBRARIES})
 	list(APPEND INCLUDE_DIRS ${PYTHON_INCLUDE_DIRS})
+endif()
+
+if(WITH_OPENMP)
+	list(APPEND DPSIM_CXX_FLAGS ${OpenMP_CXX_FLAGS})
+	list(APPEND LIBRARIES ${OpenMP_CXX_FLAGS})
 endif()
 
 foreach(SOURCE ${CIRCUIT_SOURCES} ${SYNCGEN_SOURCES} ${VARFREQ_SOURCES} ${SHMEM_SOURCES} ${RT_SOURCES} ${CIM_SOURCES} ${CIM_SOURCES_POSIX} ${CIM_SHMEM_SOURCES} ${DAE_SOURCES})

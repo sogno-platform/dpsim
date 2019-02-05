@@ -31,8 +31,18 @@
 #include <dpsim/Python/Component.h>
 #include <dpsim/Python/Interface.h>
 #include <dpsim/RealTimeSimulation.h>
+#include <dpsim/SequentialScheduler.h>
+#include <dpsim/ThreadLevelScheduler.h>
+#include <dpsim/ThreadListScheduler.h>
 #include <cps/DP/DP_Ph1_Switch.h>
 
+#ifdef WITH_OPENMP
+  #include <dpsim/OpenMPLevelScheduler.h>
+#endif
+
+#ifdef WITH_SHMEM
+  #include <dpsim/PthreadPoolScheduler.h>
+#endif
 using namespace DPsim;
 using namespace CPS;
 
@@ -46,6 +56,9 @@ void Python::Simulation::newState(Python::Simulation *self, Simulation::State ne
 void Python::Simulation::threadFunction(Python::Simulation *self)
 {
 	Real time, finalTime;
+
+	self->sim->schedule();
+
 	Timer timer(Timer::Flags::fail_on_overrun);
 
 #ifdef WITH_SHMEM
@@ -115,11 +128,7 @@ void Python::Simulation::threadFunction(Python::Simulation *self)
 		}
 	}
 
-	{
-		std::unique_lock<std::mutex> lk(*self->mut);
-		newState(self, State::done);
-		self->cond->notify_one();
-	}
+	self->sim->scheduler()->stop();
 
 #ifdef WITH_SHMEM
 	for (auto ifm : self->sim->interfaces())
@@ -127,7 +136,13 @@ void Python::Simulation::threadFunction(Python::Simulation *self)
 #endif
 
 	for (auto lg : self->sim->loggers())
-		lg.logger->flush();
+		lg->close();
+
+	{
+		std::unique_lock<std::mutex> lk(*self->mut);
+		newState(self, State::done);
+		self->cond->notify_one();
+	}
 }
 
 PyObject* Python::Simulation::newfunc(PyTypeObject* subtype, PyObject *args, PyObject *kwds)
@@ -154,10 +169,10 @@ PyObject* Python::Simulation::newfunc(PyTypeObject* subtype, PyObject *args, PyO
 
 int Python::Simulation::init(Simulation* self, PyObject *args, PyObject *kwds)
 {
-	static const char *kwlist[] = {"name", "system", "timestep", "duration", "start_time", "start_time_us", "sim_type", "solver_type", "single_stepping", "rt", "rt_factor", "start_sync", "init_steady_state", "log_level", "fail_on_overrun", nullptr};
+	static const char *kwlist[] = {"name", "system", "timestep", "duration", "start_time", "start_time_us", "sim_type", "solver_type", "single_stepping", "rt", "rt_factor", "start_sync", "init_steady_state", "log_level", "fail_on_overrun", "split_subnets", nullptr};
 	double timestep = 1e-3, duration = DBL_MAX, rtFactor = 1;
 	const char *name = nullptr;
-	int t = 0, s = 0, rt = 0, ss = 0, st = 0, initSteadyState = 0;
+	int t = 0, s = 0, rt = 0, ss = 0, st = 0, initSteadyState = 0, splitSubnets = 1;
 	int failOnOverrun = 0;
 
 	CPS::Logger::Level logLevel = CPS::Logger::Level::INFO;
@@ -168,8 +183,8 @@ int Python::Simulation::init(Simulation* self, PyObject *args, PyObject *kwds)
 	enum Solver::Type solverType;
 	enum Domain domain;
 
-	if (!PyArg_ParseTupleAndKeywords(args, kwds, "sO|ddkkiippdppip", (char **) kwlist,
-		&name, &self->pySys, &timestep, &duration, &startTime, &startTimeUs, &s, &t, &ss, &rt, &rtFactor, &st, &initSteadyState, &logLevel, &failOnOverrun)) {
+	if (!PyArg_ParseTupleAndKeywords(args, kwds, "sO|ddkkiippdppipp", (char **) kwlist,
+		&name, &self->pySys, &timestep, &duration, &startTime, &startTimeUs, &s, &t, &ss, &rt, &rtFactor, &st, &initSteadyState, &logLevel, &failOnOverrun, &splitSubnets)) {
 		return -1;
 	}
 
@@ -212,7 +227,7 @@ int Python::Simulation::init(Simulation* self, PyObject *args, PyObject *kwds)
 		self->sim = std::make_shared<DPsim::RealTimeSimulation>(name, *self->pySys->sys, timestep, duration, domain, solverType, logLevel, initSteadyState);
 	}
 	else {
-		self->sim = std::make_shared<DPsim::Simulation>(name, *self->pySys->sys, timestep, duration, domain, solverType, logLevel, initSteadyState);
+		self->sim = std::make_shared<DPsim::Simulation>(name, *self->pySys->sys, timestep, duration, domain, solverType, logLevel, initSteadyState, splitSubnets);
 	}
 	self->channel = new EventChannel();
 
@@ -347,26 +362,24 @@ fail:
 }
 
 const char* Python::Simulation::docAddInterface =
-"add_interface(intf)\n"
+"add_interface(intf,sync_start=True)\n"
 "Add an external interface to the simulation. "
 "Before each timestep, values are read from this interface and results are written to this interface afterwards. "
 "See the documentation of `Interface` for more details.\n"
 "\n"
-":param intf: The `Interface` to be added.";
+":param intf: The `Interface` to be added.\n"
+":param sync_start: Whether to use the interface to synchronize at the start of the simulation.";
 PyObject* Python::Simulation::addInterface(Simulation* self, PyObject* args, PyObject *kwargs)
 {
 #ifdef WITH_SHMEM
 	PyObject* pyObj;
 	Python::Interface* pyIntf;
-	int sync = 1, start_sync = -1;
+	int start_sync = 1;
 
-	const char *kwlist[] = {"intf", "sync", "sync_start", nullptr};
+	const char *kwlist[] = {"intf", "sync_start", nullptr};
 
-	if (!PyArg_ParseTupleAndKeywords(args, kwargs, "O|pp", (char **) kwlist, &pyObj, &sync, &start_sync))
+	if (!PyArg_ParseTupleAndKeywords(args, kwargs, "O|p", (char **) kwlist, &pyObj, &start_sync))
 		return nullptr;
-
-	if (start_sync < 0)
-		start_sync = sync;
 
 	if (!PyObject_TypeCheck(pyObj, &Python::Interface::type)) {
 		PyErr_SetString(PyExc_TypeError, "Argument must be dpsim.Interface");
@@ -374,7 +387,7 @@ PyObject* Python::Simulation::addInterface(Simulation* self, PyObject* args, PyO
 	}
 
 	pyIntf = (Python::Interface*) pyObj;
-	self->sim->addInterface(pyIntf->intf.get(), sync, start_sync);
+	self->sim->addInterface(pyIntf->intf.get(), start_sync);
 	Py_INCREF(pyObj);
 
 	self->refs.push_back(pyObj);
@@ -387,15 +400,14 @@ PyObject* Python::Simulation::addInterface(Simulation* self, PyObject* args, PyO
 }
 
 const char *Python::Simulation::docAddLogger =
-"add_logger(logger, down_sampling=1)";
+"add_logger(logger)";
 PyObject* Python::Simulation::addLogger(Simulation *self, PyObject *args, PyObject *kwargs)
 {
-	int downsampling = 1;
 	PyObject *pyObj;
 
-	const char *kwlist[] = {"logger", "down_sampling", nullptr};
+	const char *kwlist[] = {"logger", nullptr};
 
-	if (!PyArg_ParseTupleAndKeywords(args, kwargs, "O|i", (char **) kwlist, &pyObj, &downsampling))
+	if (!PyArg_ParseTupleAndKeywords(args, kwargs, "O", (char **) kwlist, &pyObj))
 		return nullptr;
 
 	if (!PyObject_TypeCheck(pyObj, &Python::Logger::type)) {
@@ -405,7 +417,7 @@ PyObject* Python::Simulation::addLogger(Simulation *self, PyObject *args, PyObje
 
 	Python::Logger *pyLogger = (Python::Logger *) pyObj;
 
-	self->sim->addLogger(pyLogger->logger, downsampling);
+	self->sim->addLogger(pyLogger->logger);
 
 	Py_RETURN_NONE;
 }
@@ -501,7 +513,7 @@ PyObject* Python::Simulation::step(Simulation *self, PyObject *args)
 		return nullptr;
 	}
 
-	while (self->state == State::running)
+	while (self->state == State::starting || self->state == State::resuming || self->state == State::running)
 		self->cond->wait(lk);
 
 	Py_RETURN_NONE;
@@ -516,8 +528,7 @@ PyObject* Python::Simulation::stop(Simulation *self, PyObject *args)
 	std::unique_lock<std::mutex> lk(*self->mut);
 
 	if (self->state != State::running && self->state != State::paused) {
-		PyErr_SetString(PyExc_SystemError, "Simulation currently not running");
-		return nullptr;
+		Py_RETURN_NONE;
 	}
 
 	newState(self, Simulation::State::stopping);
@@ -554,6 +565,73 @@ PyObject * Python::Simulation::removeEventFD(Simulation *self, PyObject *args) {
 
 	Py_RETURN_NONE;
 }
+
+const char *Python::Simulation::docSetScheduler =
+"set_scheduler(scheduler,...)\n"
+"Set the scheduler to be used for parallel simulation, as well as "
+"additional scheduler-specific parameters.\n";
+PyObject* Python::Simulation::setScheduler(Simulation *self, PyObject *args, PyObject *kwargs)
+{
+	const char *outMeasurementFile = "";
+	const char *inMeasurementFile = "";
+	const char *schedName = nullptr;
+	int threads = -1;
+	bool useConditionVariable = false;
+	bool sortTaskTypes = false;
+
+	const char *kwlist[] = {"scheduler", "threads", "out_measurement_file", "in_measurement_file", "use_condition_variable", "sort_task_types", nullptr};
+
+	if (!PyArg_ParseTupleAndKeywords(args, kwargs, "s|issbb", (char **) kwlist, &schedName, &threads, &outMeasurementFile, &inMeasurementFile, &useConditionVariable, &sortTaskTypes))
+		return nullptr;
+
+	if (!strcmp(schedName, "sequential")) {
+		self->sim->setScheduler(std::make_shared<SequentialScheduler>(outMeasurementFile));
+	} else if (!strcmp(schedName, "omp_level")) {
+#ifdef WITH_OPENMP
+		self->sim->setScheduler(std::make_shared<OpenMPLevelScheduler>(threads, outMeasurementFile));
+#else
+		PyErr_SetString(PyExc_NotImplementedError, "not implemented on this platform");
+		return nullptr;
+#endif
+	} else if (!strcmp(schedName, "pthread_pool")) {
+#ifdef WITH_SHMEM
+		if (threads <= 0)
+			threads = 1;
+		self->sim->setScheduler(std::make_shared<PthreadPoolScheduler>(threads));
+#else
+		PyErr_SetString(PyExc_NotImplementedError, "not implemented on this platform");
+		return nullptr;
+#endif
+	} else if (!strcmp(schedName, "thread_level")) {
+		// TODO sensible default (`nproc`?)
+		if (threads <= 0)
+			threads = 1;
+		self->sim->setScheduler(std::make_shared<ThreadLevelScheduler>(threads, outMeasurementFile, inMeasurementFile, useConditionVariable, sortTaskTypes));
+	} else if (!strcmp(schedName, "thread_list")) {
+		if (threads <= 0)
+			threads = 1;
+		self->sim->setScheduler(std::make_shared<ThreadListScheduler>(threads, outMeasurementFile, inMeasurementFile, useConditionVariable));
+	} else {
+		PyErr_SetString(PyExc_ValueError, "invalid scheduler");
+		return nullptr;
+	}
+
+	Py_RETURN_NONE;
+}
+
+#ifdef WITH_GRAPHVIZ
+const char *Python::Simulation::docReprSVG =
+"_repr_svg_()\n"
+"Return a SVG graph rendering of the task dependency graph\n";
+PyObject* Python::Simulation::reprSVG(Simulation *self, PyObject *args)
+{
+	std::stringstream ss;
+
+	self->sim->renderDependencyGraph(ss);
+
+	return PyUnicode_FromString(ss.str().c_str());
+}
+#endif
 
 const char *Python::Simulation::docState =
 "state\n"
@@ -596,12 +674,28 @@ PyObject* Python::Simulation::finalTime(Simulation *self, void *ctx)
 	return Py_BuildValue("f", self->sim->finalTime());
 }
 
+PyObject* Python::Simulation::avgStepTime(Simulation *self, void *ctx)
+{
+	std::unique_lock<std::mutex> lk(*self->mut);
+
+	Real tot = 0;
+	for (auto meas : self->sim->stepTimes()) {
+		tot += meas;
+	}
+	Real avg = tot / self->sim->stepTimes().size();
+
+	return Py_BuildValue("f", avg);
+}
+
+// TODO: for everything but state, we could use read-only Attributes and a getattro
+// implementation that locks the mutex before access
 PyGetSetDef Python::Simulation::getset[] = {
 	{(char *) "state",      (getter) Python::Simulation::getState, nullptr, (char *) Python::Simulation::docState, nullptr},
 	{(char *) "name",       (getter) Python::Simulation::name,  nullptr, (char *) Python::Simulation::docName, nullptr},
 	{(char *) "steps",      (getter) Python::Simulation::steps, nullptr, nullptr, nullptr},
 	{(char *) "time",       (getter) Python::Simulation::time,  nullptr, nullptr, nullptr},
 	{(char *) "final_time", (getter) Python::Simulation::finalTime, nullptr, nullptr, nullptr},
+	{(char *) "avg_step_time", (getter) Python::Simulation::avgStepTime, nullptr, nullptr, nullptr},
 	{nullptr, nullptr, nullptr, nullptr, nullptr}
 };
 
@@ -615,6 +709,10 @@ PyMethodDef Python::Simulation::methods[] = {
 	{"stop",          (PyCFunction) Python::Simulation::stop, METH_NOARGS,  (char *) Python::Simulation::docStop},
 	{"add_eventfd",   (PyCFunction) Python::Simulation::addEventFD, METH_VARARGS, (char *) Python::Simulation::docAddEventFD},
 	{"remove_eventfd",(PyCFunction) Python::Simulation::removeEventFD, METH_VARARGS, (char *) Python::Simulation::docRemoveEventFD},
+	{"set_scheduler", (PyCFunction) Python::Simulation::setScheduler, METH_VARARGS | METH_KEYWORDS, (char*) Python::Simulation::docSetScheduler},
+#ifdef WITH_GRAPHVIZ
+	{"_repr_svg_",    (PyCFunction) Python::Simulation::reprSVG, METH_NOARGS, (char*) Python::Simulation::docReprSVG},
+#endif
 	{nullptr, nullptr, 0, nullptr}
 };
 

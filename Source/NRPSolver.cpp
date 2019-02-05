@@ -1,4 +1,4 @@
-﻿/*
+/*
 * This Source Code Form is subject to the terms of the Mozilla Public
 * License, v. 2.0. If a copy of the MPL was not distributed with this
 * file, You can obtain one at http://mozilla.org/MPL/2.0/.
@@ -64,6 +64,7 @@ CPS::Complex NRpolarSolver::sol_Vcx(UInt k) {
     * constructor
     */
 NRpolarSolver::NRpolarSolver(CPS::String simName, CPS::SystemTopology & sysTopology, CPS::Real timeStep, CPS::Domain domain,CPS::Logger::Level logLevel) :
+	mName(simName),
 	mLogLevel(logLevel),
 	mLog(simName + "_PF", logLevel)
 {
@@ -110,7 +111,7 @@ void NRpolarSolver::NRP_initialize(){
 	BUSES.insert(
 		BUSES.end(),
 		PVBusIndices.begin(),
-		PVBusIndices.end());		
+		PVBusIndices.end());
 	mLog.info() << "Buses: " << logVector(BUSES) << std::endl;
 
 	PQPV.reserve(
@@ -164,7 +165,7 @@ bool NRpolarSolver::checks() const
 }
 
 // Calculate the slack bus power
-void NRpolarSolver::calculate_slack_power() {        
+void NRpolarSolver::calculate_slack_power() {
     for (auto k: slackBusIndex) {
         CPS::Complex I(0.0, 0.0);
         for (UInt j = 0; j < SysTopology.mNodes.size(); j++) {
@@ -229,7 +230,7 @@ void NRpolarSolver::setSbase() {
 	{
 		mLog.warn() << "No suitable quantity found for setting Sbase. Using 100kVA." << std::endl;
 		Sbase = 100000;
-	}			
+	}
 	mLog.info() << "Base power= " << Sbase << " VA." << std::endl;
 }
 
@@ -255,7 +256,7 @@ void NRpolarSolver::setVDNode(CPS::String name) {
 		throw std::invalid_argument("Invalid slack bus, no external grid or synchronous generator attached");
 		break;
 	}
-		
+
 }
 
 void NRpolarSolver::modifyPowerFlowBusComponent(CPS::String name,CPS::PowerflowBusType powerFlowBusType) {
@@ -299,7 +300,7 @@ void NRpolarSolver::determinePowerFlowBusType() {
 				}
 			}
 			else if (std::shared_ptr<CPS::Static::Ph1::SynchronGenerator> gen = std::dynamic_pointer_cast<CPS::Static::Ph1::SynchronGenerator>(comp)) {
-				    
+
 				if (gen->mPowerflowBusType == CPS::PowerflowBusType::PV) {
 					connectedPV = true;
 				}
@@ -400,8 +401,8 @@ void NRpolarSolver::generate_initial_solution(bool keep_last_solution) {
 			sol_S_complex(vd->simNode()) = CPS::Complex(sol_P[vd->simNode()], sol_Q[vd->simNode()]);
 			sol_V_complex(vd->simNode()) = CPS::Complex(sol_V[vd->simNode()], sol_D[vd->simNode()]);
 		}
-	
-		
+
+
 
 
 	sol_initialized = true;
@@ -445,7 +446,7 @@ void NRpolarSolver::Jacobian(Matrix &J, Vector &V, Vector &D, UInt npq, UInt npv
 
     J.setZero();
 
-    //J1 
+    //J1
     for (UInt a = 0; a < npqpv; a++) { //rows
         k = PQPV[a];
         //diagonal
@@ -538,10 +539,10 @@ void NRpolarSolver::Jacobian(Matrix &J, Vector &V, Vector &D, UInt npq, UInt npv
 
 
 }
-    
-    
+
+
 /*
-     
+
     def mu(Ybus, J, F, dV, dx, pvpq, pq):
 """
 Calculate the Iwamoto acceleration parameter as described in:
@@ -585,7 +586,7 @@ g3 = 2.0 * c.dot(c)
 roots = np.roots([g3, g2, g1, g0])
 # three solutions are provided, the first two are complex, only the real solution is valid
 return roots[2].real
-     
+
     */
 
 
@@ -610,31 +611,31 @@ double NRpolarSolver::solve3rdDegreePolynomial(
 
     return x;
 }
-    
+
 
 double NRpolarSolver::mu(Matrix &J, Matrix &J2, Vector &F, Vector &dV, Vector &dD, Vector & dx, UInt npq, UInt npv){
-        
-                
-    Jacobian(J2, dV, dD, npq, npv);               
-        
+
+
+    Jacobian(J2, dV, dD, npq, npv);
+
     Vector a = F;
-        
-    Vector b = J * (dx);        
-        
+
+    Vector b = J * (dx);
+
     Vector c(2*npq+npv); //= dx. * b * 0.5;
     for (UInt i=0;i<(2*npq+npv); i++) //this loop is because EIGEN does not want to perform this simple element wise vector multiplication...
         c(i) = dx.coeff(i) * b.coeff(i) * 0.5;
-                    
+
     double g0 = -1* a.dot(b);
     double g1 = b.dot(b) + 2 * a.dot(c);
     double g2 = -3.0 * b.dot(c);
     double g3 = 2.0 * c.dot(c);
-           
+
     double sol = solve3rdDegreePolynomial(g3, g2, g1, g0, 1.0);
-    return sol;         
+    return sol;
 }
-    
-    
+
+
 
 /*//////////////////////////////////////////////////////////////////////////
     * Calculate the power increments
@@ -665,10 +666,10 @@ bool NRpolarSolver::converged(const Vector& PQinc, UInt npqpvpq) const
 
     return true;
 }
-    
-    
+
+
 void NRpolarSolver::get_increments(Vector X, Vector &incV, Vector &incD, UInt npq, UInt npv){
-    
+
     UInt npqpv = npq + npv;
     UInt k;
 
@@ -679,7 +680,7 @@ void NRpolarSolver::get_increments(Vector X, Vector &incV, Vector &incD, UInt np
         if (a < npq)
             incV(k) = X.coeff(a + npqpv);
     }
-    
+
 }
 
 
@@ -706,7 +707,7 @@ void NRpolarSolver::update_solution(Vector X, UInt npq, UInt npv) {
     }
 }
 
-    
+
 void NRpolarSolver::powerFlow()
 {
 
@@ -721,7 +722,7 @@ void NRpolarSolver::powerFlow()
     Vector X(npqpvpq);
     Vector incV(sol_length);
     Vector incD(sol_length);
-        
+
     // First shot: Perhaps the model already converged?
 
     get_power_inc(K, npq, npv);
@@ -733,9 +734,9 @@ void NRpolarSolver::powerFlow()
         Eigen::FullPivLU<Matrix>lu(J); //Full pivot LU
         X = lu.solve(K);
         get_increments(X, incV, incD, npq, npv);
-            
+
         auto mu_ = mu(J, J2, K, incV, incD, X, npq, npv);
-            
+
         //upgrade the solution
         update_solution(X * mu_, npq, npv);
 
@@ -748,9 +749,9 @@ void NRpolarSolver::powerFlow()
 
 
     }
-        
+
     //Calculate the reactive power for the PV buses:
-    calculate_Q(npq, npv);	
+    calculate_Q(npq, npv);
 
     if (! didConverge) {
 		calculate_slack_power();
@@ -770,10 +771,10 @@ void NRpolarSolver::powerFlow()
 		for (UInt i = 0; i < sol_length; i++) {
 			mLog.info() << sol_P[i] << "\t" << sol_Q[i] << "\t" << sol_V[i] << "\t" << sol_D[i] << std::endl;
 		}
-		
+
     }
 }
-    
+
 void NRpolarSolver::set_solution() {
 
     for (UInt i = 0; i < sol_length; i++) {
@@ -785,17 +786,17 @@ void NRpolarSolver::set_solution() {
 /* a base voltage attribute is missing in TopologicalNode class */
 
 	for (auto node : SysTopology.mNodes) {
-		CPS::Real baseVoltage_;
-			
+		CPS::Real baseVoltage_ = 0;
+
 		for (auto comp : SysTopology.mComponentsAtNode[node]) {
 			if (std::shared_ptr<CPS::Static::Ph1::Transformer> trans = std::dynamic_pointer_cast<CPS::Static::Ph1::Transformer>(comp)) {
 				if (trans->terminal(0)->node()->name() == node->name())
 					baseVoltage_ = trans->attribute<CPS::Real>("base_Voltage_End1")->get();
-				else if (trans->terminal(1)->node()->name() == node->name()) 
+				else if (trans->terminal(1)->node()->name() == node->name())
 					baseVoltage_ = trans->attribute<CPS::Real>("base_Voltage_End2")->get();
 				else
 					mLog.info() << "unable to get base voltage at " << node->name() << std::endl;
-					
+
 			}
 			if (std::shared_ptr<CPS::Static::Ph1::PiLine> line = std::dynamic_pointer_cast<CPS::Static::Ph1::PiLine>(comp)) {
 				baseVoltage_ = line->attribute<CPS::Real>("base_Voltage")->get();
@@ -804,13 +805,13 @@ void NRpolarSolver::set_solution() {
 		node->setInitialVoltage(sol_V_complex(node->simNode())*baseVoltage_);
 	}
 }
-    
+
 
 /*This function updates the solver solution object power values using the
     * circuit's own solution power values. this is specially usefull when updating
     * the circuit power values while keeping the previous voltage solution
     */
-void NRpolarSolver::update_solution_power_from_circuit(){    
+void NRpolarSolver::update_solution_power_from_circuit(){
     Pesp = sol_P;
     Qesp = sol_Q;
 }
@@ -848,14 +849,13 @@ void NRpolarSolver::compose_Y() {
 			shunt->setPerUnitSystem(std::abs(shunt->node(0)->initialSingleVoltage()), Sbase, SysTopology.mSystemOmega);
 			shunt->pfApplyAdmittanceMatrixStamp(Y);
 		}
-		    
+
 		}
 	if(Lines.empty() && Transformers.empty()) {
 		throw std::invalid_argument("There are no bus");
 	}
 }
 
-	
 Real NRpolarSolver::step(Real time) {
 	/*
 	if switch triggered:
@@ -869,3 +869,10 @@ Real NRpolarSolver::step(Real time) {
 
 }
 
+void NRpolarSolver::SolveTask::execute(Real time, Int timeStepCount) {
+	mSolver.step(time);
+}
+
+Task::List NRpolarSolver::getTasks() {
+	return Task::List{std::make_shared<SolveTask>(*this)};
+}

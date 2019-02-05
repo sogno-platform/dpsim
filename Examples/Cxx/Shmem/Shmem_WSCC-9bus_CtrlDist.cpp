@@ -70,8 +70,8 @@ int main(int argc, char *argv[]) {
 		conf.samplelen = 64;
 		conf.queuelen = 1024;
 		conf.polling = false;
-		Interface intf1(out, in, &conf);
-		sim.addInterface(&intf1, false, true);
+		Interface intf1(out, in, &conf, false);
+		sim.addInterface(&intf1);
 
 		// Create shmem interface 2
 		String in2  = "/villas-dpsim1";
@@ -80,24 +80,23 @@ int main(int argc, char *argv[]) {
 		conf2.samplelen = 64;
 		conf2.queuelen = 1024;
 		conf2.polling = false;
-		Interface intf2(out2, in2, &conf2);
-		sim.addInterface(&intf2, false, false);
+		Interface intf2(out2, in2, &conf2, false);
+		sim.addInterface(&intf2, false);
 
 		// Controllers and filter
-		std::vector<Real> coefficients_profile = std::vector(2000, 1./2000);
+		std::vector<Real> coefficients_profile = std::vector<Real>(2000, 1./2000);
 
 		auto filtP_profile = FIRFilter::make("filter_p_profile", coefficients_profile, 0, Logger::Level::INFO);
 		filtP_profile->setPriority(1);
-		filtP_profile->setConnection(load_profile->attribute<Real>("power_active"));
-		filtP_profile->attribute<Real>("input")->set(0.);
+		load_profile->setAttributeRef("power_active", filtP_profile->attribute<Real>("output"));
 		sys.mComponents.push_back(filtP_profile);
 
 		// Register interface current source and voltage drop
-		intf1.addImport(ecs->attribute<Complex>("I_ref"), 0);
+		ecs->setAttributeRef("I_ref", intf1.importComplex(0));
 		intf1.addExport(ecs->attribute<Complex>("v_comp"), 0);
 
 		// TODO: gain by 20e8
-		intf2.addImport(filtP_profile->attribute<Real>("input"), 0);
+		filtP_profile->setInput(intf2.importReal(0));
 
 		// Register exportable node voltages
 		for (auto n : sys.mNodes) {
@@ -135,11 +134,10 @@ int main(int argc, char *argv[]) {
 		load->connect({ n1 });
 
 		// Controllers and filter
-		std::vector<Real> coefficients = std::vector(100, 1./100);
+		std::vector<Real> coefficients = std::vector<Real>(100, 1./100);
 		auto filtP = FIRFilter::make("filter_p", coefficients, 0, Logger::Level::INFO);
 		filtP->setPriority(1);
-		filtP->setConnection(load->attribute<Real>("active_power"));
-		filtP->attribute<Real>("input")->set(0.);
+		load->setAttributeRef("active_power", filtP->attribute<Real>("output"));
 
 		auto sys = SystemTopology(args.sysFreq, SystemNodeList{n1}, SystemComponentList{evs, load, filtP});
 		RealTimeSimulation sim(args.name + "_2", sys, args.timeStep, args.duration);
@@ -151,8 +149,8 @@ int main(int argc, char *argv[]) {
 		conf1.samplelen = 64;
 		conf1.queuelen = 1024;
 		conf1.polling = false;
-		Interface intf1(out1, in1, &conf1);
-		sim.addInterface(&intf1, false, true);
+		Interface intf1(out1, in1, &conf1, false);
+		sim.addInterface(&intf1);
 
 		// Create shmem interface 2
 		String in2  = "/villas-dpsim2";
@@ -161,17 +159,17 @@ int main(int argc, char *argv[]) {
 		conf2.samplelen = 64;
 		conf2.queuelen = 1024;
 		conf2.polling = false;
-		Interface intf2(out2, in2, &conf2);
-		sim.addInterface(&intf2, false, false);
+		Interface intf2(out2, in2, &conf2, false);
+		sim.addInterface(&intf2, false);
 
 		// Register voltage source reference and current flowing through source
 		// multiply with -1 to consider passive sign convention
-		intf1.addImport(evs->attribute<Complex>("V_ref"), 0);
+		evs->setAttributeRef("V_ref", intf1.importComplex(0));
 		// TODO: invalid sign
 		intf1.addExport(evs->attribute<Complex>("i_comp"), 0);
 
 		// Register controllable load
-		intf2.addImport(filtP->attribute<Real>("input"), 0);
+		filtP->setInput(intf2.importReal(0));
 		intf2.addExport(load->attribute<Real>("power_active"), 0);
 		intf2.addExport(load->attribute<Complex>("v_comp"), 1);
 		intf2.addExport(load->attribute<Complex>("i_comp"), 2);

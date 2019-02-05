@@ -1,6 +1,6 @@
-﻿/** Simulation
+/** Scheduler that dynamically distributes tasks to a pool of POSIX threads.
  *
- * @author Markus Mirz <mmirz@eonerc.rwth-aachen.de>
+ * @author Georg Reinke <georg.reinke@rwth-aachen.de>
  * @copyright 2017-2018, Institute for Automation of Complex Power Systems, EONERC
  *
  * DPsim
@@ -21,35 +21,35 @@
 
 #pragma once
 
-#include <iostream>
-#include <vector>
-#include <list>
+#include <dpsim/Scheduler.h>
 
-#include <dpsim/Definitions.h>
-#include <dpsim/Config.h>
-#include <cps/Logger.h>
-#include <cps/SystemTopology.h>
-#include <cps/Task.h>
+#include <villas/queue_signalled.h>
+
+#include <vector>
 
 namespace DPsim {
-	/// Holds switching time and which system should be activated.
-	struct SwitchConfiguration {
-		Real switchTime;
-		UInt systemIndex;
-	};
-
-	/// Base class for more specific solvers such as MNA, ODE or IDA.
-	class Solver {
+	class PthreadPoolScheduler : public Scheduler {
 	public:
-		typedef std::shared_ptr<Solver> Ptr;
-		typedef std::vector<Ptr> List;
+		PthreadPoolScheduler(size_t poolSize);
+		~PthreadPoolScheduler();
 
-		virtual ~Solver() { }
+		void createSchedule(const CPS::Task::List& tasks, const Edges& inEdges, const Edges& outEdges);
+		void step(Real time, Int timeStepCount);
+		void getMeasurements();
 
-		enum class Type { MNA, DAE, NRP };
+	private:
+		static void* poolThreadFunction(void* data);
 
-		virtual CPS::Task::List getTasks() = 0;
-		/// Log results
-		virtual void log(Real time) { };
+		std::vector<pthread_t> mThreads;
+
+		CPS::Task::List mTasks;
+		Edges mInEdges;
+		Edges mOutEdges;
+
+		struct queue_signalled mOutQueue;
+		struct queue_signalled mDoneQueue;
+
+		Real mTime;
+		Int mTimeStepCount;
 	};
-}
+};

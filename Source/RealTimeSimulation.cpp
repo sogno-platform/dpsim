@@ -41,8 +41,7 @@ void RealTimeSimulation::run(const Timer::StartClock::duration &startIn)
 
 void RealTimeSimulation::run(const Timer::StartClock::time_point &startAt)
 {
-	auto startAtDur = startAt.time_since_epoch();
-	auto startAtNSecs = std::chrono::duration_cast<std::chrono::nanoseconds>(startAtDur);
+	schedule();
 
 	mLog.info() << "Opening interfaces." << std::endl;
 
@@ -76,7 +75,7 @@ void RealTimeSimulation::run(const Timer::StartClock::time_point &startAt)
 #endif
 
 	for (auto lg : mLoggers)
-		lg.logger->flush();
+		lg->close();
 
 	mTimer.stop();
 }

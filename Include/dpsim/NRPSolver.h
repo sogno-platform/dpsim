@@ -1,4 +1,4 @@
-﻿/*!
+/*!
  * \file Solver_NRpolar.h
  * \author Santiago Peñate Vera
  *
@@ -16,6 +16,7 @@
 #include <cmath>
 
 #include <dpsim/Solver.h>
+#include <dpsim/Scheduler.h>
 #include "cps/SystemTopology.h"
 #include "cps/Components.h"
 #include "cps/Component.h"
@@ -33,7 +34,7 @@ namespace DPsim {
     class NRpolarSolver: public Solver
     {
 	protected:
-
+		CPS::String mName;
 		/// Simulation log level
 		CPS::Logger::Level mLogLevel;
 		/// Simulation logger
@@ -60,7 +61,7 @@ namespace DPsim {
 
 		//solutions
 		CPS::UInt sol_length;
-		/// Complex solution 
+		/// Complex solution
 		CPS::VectorComp sol_S_complex;
 		CPS::VectorComp sol_V_complex;
 
@@ -95,7 +96,7 @@ namespace DPsim {
 
 		// Constructor
 		NRpolarSolver(CPS::String simName,
-			CPS::SystemTopology & sysTopology, 
+			CPS::SystemTopology & sysTopology,
 			Real timeStep,
 			CPS::Domain domain,
 			CPS::Logger::Level logLevel);
@@ -143,6 +144,9 @@ namespace DPsim {
 
 		Real step(Real time);
 
+		CPS::Task::List getTasks();
+
+
     private:
 		CPS::SystemTopology SysTopology;
 
@@ -151,14 +155,14 @@ namespace DPsim {
         std::vector<int> PQPV;
 
         std::vector<int> LastPQ;
-        
+
         std::vector<int> LastPV;
 
 		//******* vectors of node indices for pf calculation ********
 		std::vector<CPS::UInt> PQBusIndices;
 		std::vector<CPS::UInt> PVBusIndices;
 		std::vector<CPS::UInt> slackBusIndex;
-		
+
 		//******* vectors of nodes for pf calculation ********
 		CPS::TopologicalNode::List PQBuses;
 		CPS::TopologicalNode::List PVBuses;
@@ -177,7 +181,7 @@ namespace DPsim {
 		CPS::Vector Qesp;
 
 		void Jacobian(CPS::Matrix &J, CPS::Vector &V, CPS::Vector &D, CPS::UInt npq, CPS::UInt npv); //calculate the jacobian, J is passed by reference
-        
+
 		double mu(CPS::Matrix &J, CPS::Matrix &J2, CPS::Vector &F, CPS::Vector &dV, CPS::Vector &dD, CPS::Vector & dx, CPS::UInt npq, CPS::UInt npv);
 
 		void get_power_inc(CPS::Vector &PQinc, CPS::UInt npq, CPS::UInt npv); //PQinc is passed by reference
@@ -189,11 +193,11 @@ namespace DPsim {
 		double P(CPS::UInt k);
 
 		void update_solution(CPS::Vector X, CPS::UInt npq, CPS::UInt npv);
-        
+
 		void get_increments(CPS::Vector X, CPS::Vector &incV, CPS::Vector &incD, CPS::UInt npq, CPS::UInt npv);
 
-		void calculate_slack_power(); //calculate the slack bus power        
-				      
+		void calculate_slack_power(); //calculate the slack bus power
+
 		/*
 		* Composes the circuit admittance matrix
 		*/
@@ -217,8 +221,20 @@ namespace DPsim {
 
 
 		void correct_PVbuses_violating_Q(CPS::UInt &npq, CPS::UInt &npv, CPS::Matrix &J, CPS::Vector &K, CPS::Vector &X);
-        
 
+		// TODO proper tasking system integration for parallelism
+		class SolveTask : public CPS::Task {
+		public:
+			SolveTask(NRpolarSolver& solver) :
+				Task(solver.mName + ".Solve"), mSolver(solver) {
+				mModifiedAttributes.push_back(Scheduler::external);
+			}
+
+			void execute(Real time, Int timeStepCount);
+
+		private:
+			NRpolarSolver& mSolver;
+		};
     };
 
 

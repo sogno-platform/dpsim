@@ -28,7 +28,7 @@ int main(int argc, char* argv[]) {
 	// Define simulation parameters
 	Real timeStep = 0.0005;
 	Real finalTime = 0.1;
-	String name = "DP_SynGen_TrStab_Step";
+	String name = "DP_SynGen_TrStab_LoadStep";
 	// Define machine parameters in per unit
 	Real nomPower = 555e6;
 	Real nomPhPhVoltRMS = 24e3;
@@ -51,12 +51,12 @@ int main(int argc, char* argv[]) {
 	auto n1 = Node::make("n1", PhaseType::Single, std::vector<Complex>{ initVoltage });
 
 	// Components
-	auto gen = Ph1::SynchronGeneratorTrStab::make("DP_SynGen_TrStab_Step_SynGen");
+	auto gen = Ph1::SynchronGeneratorTrStab::make("DP_SynGen_TrStab_LoadStep_SynGen");
 	gen->setFundamentalParametersPU(nomPower, nomPhPhVoltRMS, nomFreq, Ll, Lmd, Llfd, H);
 	gen->connect({n1});
 	gen->setInitialValues(initElecPower, mechPower);
 
-	auto load = Ph1::Switch::make("DP_SynGen_TrStab_Step_StepLoad");
+	auto load = Ph1::Switch::make("DP_SynGen_TrStab_LoadStep_StepLoad");
 	load->setParameters(Rload, RloadStep);
 	load->connect({Node::GND, n1});
 	load->open();

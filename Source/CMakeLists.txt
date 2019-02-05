@@ -7,6 +7,11 @@ set(SOURCES
 	Timer.cpp
 	Event.cpp
 	DataLogger.cpp
+	Scheduler.cpp
+	SequentialScheduler.cpp
+	ThreadScheduler.cpp
+	ThreadLevelScheduler.cpp
+	ThreadListScheduler.cpp
 )
 
 list(APPEND LIBRARIES cps)
@@ -23,7 +28,6 @@ if(WITH_SUNDIALS)
 	list(APPEND SOURCES DAESolver.cpp)
 	#For ODE-Solver class:
     list(APPEND SOURCES ODESolver.cpp)
-	list(APPEND SOURCES Sim_ODE.cpp)
 	list(APPEND INCLUDE_DIRS ${SUNDIALS_INCLUDE_DIRS})
 	list(APPEND LIBRARIES ${SUNDIALS_LIBRARIES})
 endif()
@@ -43,10 +47,20 @@ endif()
 if(WITH_SHMEM)
 	list(APPEND SOURCES
 		Interface.cpp
+		PthreadPoolScheduler.cpp
 	)
 
-	list(APPEND LIBRARIES ${VILLASNODE_LIBRARIES})
+	list(APPEND LIBRARIES ${VILLASNODE_LIBRARIES} pthread)
 	list(APPEND INCLUDE_DIRS ${VILLASNODE_INCLUDE_DIRS})
+endif()
+
+if(WITH_OPENMP)
+	list(APPEND SOURCES
+		OpenMPLevelScheduler.cpp
+	)
+
+	list(APPEND DPSIM_CXX_FLAGS ${OpenMP_CXX_FLAGS})
+	list(APPEND LIBRARIES ${OpenMP_CXX_FLAGS})
 endif()
 
 add_library(dpsim)

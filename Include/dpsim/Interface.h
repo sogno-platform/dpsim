@@ -30,7 +30,9 @@
 
 #include <dpsim/Config.h>
 #include <dpsim/Definitions.h>
+#include <dpsim/Scheduler.h>
 #include <cps/Attribute.h>
+#include <cps/Task.h>
 #include <cps/PtrFactory.h>
 
 namespace DPsim {
@@ -52,7 +54,15 @@ namespace DPsim {
 		typedef struct ::shmem_int ShmemInterface;
 
 	protected:
+		// Using std::function / lambda makes the other template code nicer, but from
+		// the outside, only the attribute-based functions should be used to
+		// guarantee proper scheduling
+
+		void addImport(std::function<void(Sample*)> l) { mImports.push_back(l); }
+		void addExport(std::function<void(Sample*)> l) { mExports.push_back(l); }
+
 		std::vector<std::function<void(Sample*)>> mExports, mImports;
+		CPS::AttributeBase::List mExportAttrs, mImportAttrs;
 
 		ShmemInterface mShmem;
 		Sample *mLastSample;
@@ -62,33 +72,65 @@ namespace DPsim {
 		String mRName, mWName;
 		Config mConf;
 
+		/// Is this interface used for synchorinzation?
+		bool mSync;
+		/// Downsampling
+		UInt mDownsampling;
+
 	public:
 
-		/** Create a Interface using the given shmem object names.
-		 *
-		 * @param wname The name of the POSIX shmem object where samples will be written to.
-		 * @param rname The name of the POSIX shmem object where samples will be read from.
-		 */
-		Interface(const String &wn, const String &rn) :
-			mOpened(false),
-			mRName(rn),
-			mWName(wn)
-		{
-			mConf.queuelen = 512;
-			mConf.samplelen = 64;
-			mConf.polling = 0;
-		}
+		class PreStep : public CPS::Task {
+		public:
+			PreStep(Interface& intf) :
+				Task(intf.mRName + ".Read"), mIntf(intf) {
+				for (auto attr : intf.mImportAttrs) {
+					mModifiedAttributes.push_back(attr);
+				}
+			}
+
+			void execute(Real time, Int timeStepCount);
+
+		private:
+			Interface& mIntf;
+		};
+
+		class PostStep : public CPS::Task {
+		public:
+			PostStep(Interface& intf) :
+				Task(intf.mWName + ".Write"), mIntf(intf) {
+				for (auto attr : intf.mExportAttrs) {
+					mAttributeDependencies.push_back(attr);
+				}
+				mModifiedAttributes.push_back(Scheduler::external);
+			}
+
+			void execute(Real time, Int timeStepCount);
+
+		private:
+			Interface& mIntf;
+		};
 
 		/** Create a Interface with a specific configuration for the output queue.
 		 *
-		 * @param conf The configuration object for the output queue (see VILLASnode's documentation).
+		 * @param wname The name of the POSIX shmem object where samples will be written to.
+		 * @param rname The name of the POSIX shmem object where samples will be read from.
+		 * @param conf The configuration object for the output queue (see VILLASnode's documentation), or nullptr for sensible defaults.
 		 */
-		Interface(const String &wn, const String &rn, Config *conf) :
+		Interface(const String &wn, const String &rn, Config *conf = nullptr, Bool sync = true, UInt downsampling = 1) :
 			mOpened(false),
 			mRName(rn),
 			mWName(wn),
-			mConf(*conf)
-		{ }
+			mSync(sync),
+			mDownsampling(downsampling)
+		{
+			if (conf != nullptr) {
+				mConf = *conf;
+			} else {
+				mConf.queuelen = 512;
+				mConf.samplelen = 64;
+				mConf.polling = 0;
+			}
+		}
 
 		~Interface() {
 			if (mOpened)
@@ -98,13 +140,11 @@ namespace DPsim {
 		void open();
 		void close();
 
-		void addImport(std::function<void(Sample*)> l) { mImports.push_back(l); }
-		void addExport(std::function<void(Sample*)> l) { mExports.push_back(l); }
-
-		void addImport(CPS::Attribute<Int>::Ptr attr, Int idx);
-		void addImport(CPS::Attribute<Real>::Ptr attr, Int idx);
-		void addImport(CPS::Attribute<Bool>::Ptr attr, Int idx);
-		void addImport(CPS::Attribute<Complex>::Ptr attr, Int idx);
+		CPS::Attribute<Int>::Ptr importInt(Int idx);
+		CPS::Attribute<Real>::Ptr importReal(Int idx);
+		CPS::Attribute<Bool>::Ptr importBool(Int idx);
+		CPS::Attribute<Complex>::Ptr importComplex(Int idx);
+		CPS::Attribute<Complex>::Ptr importComplexMagPhase(Int idx);
 
 		void addExport(CPS::Attribute<Int>::Ptr attr, Int idx);
 		void addExport(CPS::Attribute<Real>::Ptr attr, Int idx);
@@ -121,6 +161,8 @@ namespace DPsim {
 		 * calculate needed voltages.
 		 */
 		void writeValues();
+
+		CPS::Task::List getTasks();
 	};
 }
 

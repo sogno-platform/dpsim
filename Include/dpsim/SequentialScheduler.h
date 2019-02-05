@@ -1,6 +1,6 @@
-﻿/** Simulation
+/** Simple non-parallel task scheduler
  *
- * @author Markus Mirz <mmirz@eonerc.rwth-aachen.de>
+ * @author Georg Reinke <georg.reinke@rwth-aachen.de>
  * @copyright 2017-2018, Institute for Automation of Complex Power Systems, EONERC
  *
  * DPsim
@@ -21,35 +21,26 @@
 
 #pragma once
 
-#include <iostream>
-#include <vector>
-#include <list>
+#include <dpsim/Scheduler.h>
 
-#include <dpsim/Definitions.h>
-#include <dpsim/Config.h>
-#include <cps/Logger.h>
-#include <cps/SystemTopology.h>
-#include <cps/Task.h>
+#include <chrono>
+#include <typeinfo>
+#include <unordered_map>
+#include <vector>
 
 namespace DPsim {
-	/// Holds switching time and which system should be activated.
-	struct SwitchConfiguration {
-		Real switchTime;
-		UInt systemIndex;
-	};
-
-	/// Base class for more specific solvers such as MNA, ODE or IDA.
-	class Solver {
+	class SequentialScheduler : public Scheduler {
 	public:
-		typedef std::shared_ptr<Solver> Ptr;
-		typedef std::vector<Ptr> List;
+		SequentialScheduler(String outMeasurementFile = String()) : mOutMeasurementFile(outMeasurementFile) { }
+		void createSchedule(const CPS::Task::List& tasks, const Edges& inEdges, const Edges& outEdges);
+		void step(Real time, Int timeStepCount);
+		void stop();
 
-		virtual ~Solver() { }
+	private:
+		CPS::Task::List mSchedule;
 
-		enum class Type { MNA, DAE, NRP };
-
-		virtual CPS::Task::List getTasks() = 0;
-		/// Log results
-		virtual void log(Real time) { };
+		std::unordered_map<size_t, std::vector<std::chrono::nanoseconds>> mMeasurements;
+		std::vector<std::chrono::nanoseconds> mStepMeasurements;
+		CPS::String mOutMeasurementFile;
 	};
 }

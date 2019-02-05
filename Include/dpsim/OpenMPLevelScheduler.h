@@ -1,6 +1,6 @@
-﻿/** Simulation
+/** Level scheduler using OpenMP
  *
- * @author Markus Mirz <mmirz@eonerc.rwth-aachen.de>
+ * @author Georg Reinke <georg.reinke@rwth-aachen.de>
  * @copyright 2017-2018, Institute for Automation of Complex Power Systems, EONERC
  *
  * DPsim
@@ -21,35 +21,21 @@
 
 #pragma once
 
-#include <iostream>
-#include <vector>
-#include <list>
+#include <dpsim/Scheduler.h>
 
-#include <dpsim/Definitions.h>
-#include <dpsim/Config.h>
-#include <cps/Logger.h>
-#include <cps/SystemTopology.h>
-#include <cps/Task.h>
+#include <vector>
 
 namespace DPsim {
-	/// Holds switching time and which system should be activated.
-	struct SwitchConfiguration {
-		Real switchTime;
-		UInt systemIndex;
-	};
-
-	/// Base class for more specific solvers such as MNA, ODE or IDA.
-	class Solver {
+	class OpenMPLevelScheduler : public Scheduler {
 	public:
-		typedef std::shared_ptr<Solver> Ptr;
-		typedef std::vector<Ptr> List;
+		OpenMPLevelScheduler(Int threads = -1, String outMeasurementFile = String());
+		void createSchedule(const CPS::Task::List& tasks, const Edges& inEdges, const Edges& outEdges);
+		void step(Real time, Int timeStepCount);
+		void stop();
 
-		virtual ~Solver() { }
-
-		enum class Type { MNA, DAE, NRP };
-
-		virtual CPS::Task::List getTasks() = 0;
-		/// Log results
-		virtual void log(Real time) { };
+	private:
+		Int mNumThreads;
+		String mOutMeasurementFile;
+		std::vector<CPS::Task::List> mLevels;
 	};
-}
+};

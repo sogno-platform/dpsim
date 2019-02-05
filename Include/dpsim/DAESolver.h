@@ -1,5 +1,5 @@
 /** DAE Solver
- * 
+ *
  * @file
  * @author Markus Mirz <mmirz@eonerc.rwth-aachen.de>
  * @author Steffen Vogel <stvogel@eonerc.rwth-aachen.de>
@@ -64,9 +64,9 @@ namespace DPsim {
 		/// Vector of problem variables
 		N_Vector state = NULL;
 		/// Derivates of the state vector with respect to time
-		N_Vector dstate_dt = NULL; 
+		N_Vector dstate_dt = NULL;
 		/// Time IDA reached while solving
-		realtype tret; 
+		realtype tret;
 		/// Scalar absolute tolerance
 		realtype abstol;
 		/// Relative tolerance
@@ -82,7 +82,7 @@ namespace DPsim {
 		/// Residual Function of entire System
 		static int residualFunctionWrapper(realtype ttime, N_Vector state, N_Vector dstate_dt, N_Vector resid, void *user_data);
 		int residualFunction(realtype ttime, N_Vector state, N_Vector dstate_dt, N_Vector resid);
-	
+
 	public:
 		/// Create solve object with given parameters
         DAESolver(String name, CPS::SystemTopology system, Real dt, Real t0);
@@ -92,5 +92,7 @@ namespace DPsim {
 		void initialize(Real t0);
 		/// Solve system for the current time
 		Real step(Real time);
+
+		CPS::Task::List getTasks();
 	};
 }

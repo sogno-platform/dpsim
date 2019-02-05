@@ -48,11 +48,6 @@ namespace Python {
 
 		CPS::Component::Ptr comp;
 
-		// List of additional objects that aren't directly used from Simulation
-		// methods, but that a reference has be kept to to avoid them from being
-		// freed (e.g. Interfaces).
-		std::vector<PyObject*> refs;
-
 		static void init(Component* self);
 
 		static PyObject* newfunc(PyTypeObject* type, PyObject *args, PyObject *kwds);

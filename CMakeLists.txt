@@ -8,7 +8,11 @@ else()
 endif()
 
 # Enable C++11 support
-set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD 11)
+if(CMAKE_CXX_COMPILER_ID STREQUAL Intel)
+	# needed by icc, but for some reason not added by CMake
+	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
+endif()
 add_definitions(-D_SILENCE_ALL_CXX17_DEPRECATION_WARNINGS)
 
 set(CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/CMake;${PROJECT_SOURCE_DIR}/Dependencies/libcps/CMake")
@@ -47,6 +51,7 @@ find_package(PythonInterp 3.6)
 find_package(PythonLibs 3.6)
 find_package(Sundials)
 find_package(VILLASnode)
+find_package(OpenMP)
 find_package(GSL)
 
 if(PythonInterp_FOUND AND PythonLibs_FOUND)
@@ -68,6 +73,7 @@ option(WITH_SHMEM    "Enable shared memory interface"       ${VILLASnode_FOUND})
 option(WITH_RT	     "Enable real-time features"            ${Linux_FOUND})
 option(WITH_PYTHON   "Enable Python support"                ${Python_FOUND})
 option(WITH_CIM      "Enable support for parsing CIM files" ${CIMpp_FOUND})
+option(WITH_OPENMP   "Enable OpenMP-based parallelisation"  ${OPENMP_FOUND})
 
 configure_file(
 	${CMAKE_CURRENT_SOURCE_DIR}/Include/dpsim/Config.h.in

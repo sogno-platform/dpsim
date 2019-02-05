@@ -26,9 +26,11 @@
 #include <fstream>
 
 #include <dpsim/Definitions.h>
+#include <dpsim/Scheduler.h>
 #include <cps/PtrFactory.h>
 #include <cps/Attribute.h>
 #include <cps/Node.h>
+#include <cps/Task.h>
 
 namespace DPsim {
 
@@ -36,7 +38,9 @@ namespace DPsim {
 
 	protected:
 		std::ofstream mLogFile;
+		String mName;
 		Bool mEnabled;
+		UInt mDownsampling;
 
 		std::map<String, CPS::AttributeBase::Ptr> mAttributes;
 
@@ -45,12 +49,14 @@ namespace DPsim {
 		void logDataLine(Real time, const MatrixComp& data);
 
 	public:
-		using Ptr = std::shared_ptr<DataLogger>;
+		typedef std::shared_ptr<DataLogger> Ptr;
+		typedef std::vector<DataLogger::Ptr> List;
 
-		DataLogger(String name, Bool enabled = true);
+		DataLogger(Bool enabled = true);
+		DataLogger(String name, Bool enabled = true, UInt downsampling = 1);
 		~DataLogger();
 
-		void flush();
+		void close();
 
 		void logPhasorNodeValues(Real time, const Matrix& data);
 		void logEMTNodeValues(Real time, const Matrix& data);
@@ -69,7 +75,25 @@ namespace DPsim {
 			addAttribute(node->name() + ".voltage", node->attributeMatrix("voltage"));
 		}
 
-		void log(Real time);
+		void log(Real time, Int timeStepCount);
+
+		CPS::Task::Ptr getTask();
+
+		class Step : public CPS::Task {
+		public:
+			Step(DataLogger& logger) :
+				Task(logger.mName + ".Write"), mLogger(logger) {
+				for (auto attr : logger.mAttributes) {
+					mAttributeDependencies.push_back(attr.second);
+				}
+				mModifiedAttributes.push_back(Scheduler::external);
+			}
+
+			void execute(Real time, Int timeStepCount);
+
+		private:
+			DataLogger& mLogger;
+		};
 	};
 }
 

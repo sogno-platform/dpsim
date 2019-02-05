@@ -37,6 +37,7 @@
 #cmakedefine WITH_CIM
 #cmakedefine WITH_PYTHON
 #cmakedefine WITH_SUNDIALS
+#cmakedefine WITH_OPENMP
 
 #cmakedefine HAVE_TIMERFD
 #cmakedefine HAVE_PIPE
