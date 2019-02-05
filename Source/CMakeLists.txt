@@ -2,6 +2,7 @@ set(SOURCES
 	Simulation.cpp
 	RealTimeSimulation.cpp
 	MNASolver.cpp
+	NRPSolver.cpp
 	Utils.cpp
 	Timer.cpp
 	Event.cpp
@@ -30,6 +31,11 @@ if(WITH_SUNDIALS)
     list(APPEND SOURCES ODESolver.cpp)
 	list(APPEND INCLUDE_DIRS ${SUNDIALS_INCLUDE_DIRS})
 	list(APPEND LIBRARIES ${SUNDIALS_LIBRARIES})
+endif()
+
+if(WITH_GSL)
+	list(APPEND INCLUDE_DIRS ${GSL_INCLUDE_DIRS})
+	list(APPEND LIBRARIES ${GSL_LIBRARIES})
 endif()
 
 if(WITH_PYTHON)

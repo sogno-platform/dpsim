@@ -13,7 +13,7 @@ def test_IdealVS_R_1_cpp():
         path = PATH + "/../../../build/Examples/Cxx/Debug/DP_" + name + '.exe'
 
     subprocess.run(path, shell=True, check=True)
-    results = rt.read_timeseries_dpsim('Logs/DP_' + name + '_LeftVector.csv')
+    results = rt.read_timeseries_dpsim('logs/DP_' + name + '_LeftVector.csv')
     #expected = rt.read_timeseries_dpsim_real(PATH + '/../../Results/Simulink/Circuits/SL_' + name + '.csv')
 
     err = 0

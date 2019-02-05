@@ -24,6 +24,7 @@
 #include <dpsim/Simulation.h>
 #include <dpsim/DiakopticsSolver.h>
 #include <dpsim/MNASolver.h>
+#include <dpsim/NRPSolver.h>
 
 #ifdef WITH_CIM
   #include <cps/CIM/Reader.h>
@@ -68,14 +69,20 @@ Simulation::Simulation(String name, SystemTopology system,
 	Simulation(name, timeStep, finalTime,
 		domain, logLevel) {
 
-	if (domain == Domain::DP)
+	switch (domain) {
+	case Domain::DP:
 		createSolvers<Complex>(system, solverType, steadyStateInit, splitSubnets, tearComponents);
-	else
+		break;
+	case Domain::EMT:
 		createSolvers<Real>(system, solverType, steadyStateInit, splitSubnets, tearComponents);
+		break;
+	case Domain::Static:
+		mSolvers.push_back(std::make_shared<NRpolarSolver>(name, system, timeStep, domain, logLevel));
+		break;
+	}
 }
 
 Simulation::~Simulation() {
-
 }
 
 template <typename VarType>
