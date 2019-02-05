@@ -101,8 +101,8 @@ namespace DPsim {
 			SubnetSolveTask(DiakopticsSolver<VarType>& solver, UInt net) :
 				Task(solver.mName + ".SubnetSolve_" + std::to_string(net)), mSolver(solver), mSubnet(solver.mSubnets[net]) {
 				for (auto it : mSubnet.components) {
-					if (it->template attribute<Matrix>("b")->get().size() != 0) {
-						mAttributeDependencies.push_back(it->attribute("b"));
+					if (it->template attribute<Matrix>("right_vector")->get().size() != 0) {
+						mAttributeDependencies.push_back(it->attribute("right_vector"));
 					}
 				}
 				mModifiedAttributes.push_back(solver.attribute("xOld"));
