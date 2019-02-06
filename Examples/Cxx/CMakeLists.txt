@@ -91,6 +91,7 @@ if(WITH_SHMEM)
 		Shmem/ShmemControllableFiltSource.cpp
 		Shmem/ShmemRealTime.cpp
 		Shmem/Shmem_CIGRE_MV_PowerFlowTest.cpp
+		Shmem/Shmem_CIGRE_MV_PowerFlowTest_LoadProfiles.cpp
 	)
 endif()
 
