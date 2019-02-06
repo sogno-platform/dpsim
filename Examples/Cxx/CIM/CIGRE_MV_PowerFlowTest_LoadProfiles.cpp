@@ -39,17 +39,24 @@ int main(int argc, char** argv){
 		String path("Examples/CIM/CIGRE_MV_NoTap/");
 	#endif
 
+	#ifdef _WIN32
+		String loadProfilePath("..\\..\\..\\..\\dpsim\\Examples\\CSV\\CIGRE_MV_NoTap\\");
+	#elif defined(__linux__) || defined(__APPLE__)
+		String loadProfilePath("Examples/CSV/CIGRE_MV_NoTap/");
+	#endif
+
 	std::list<string> filenames = {
 	path + "Rootnet_FULL_NE_06J16h_DI.xml",
 	path + "Rootnet_FULL_NE_06J16h_EQ.xml",
 	path + "Rootnet_FULL_NE_06J16h_SV.xml",
 	path + "Rootnet_FULL_NE_06J16h_TP.xml"
 	};
-	String simName = "CIGRE-MV-NoTap";
+	String simName = "CIGRE-MV-NoTap-LoadProfiles";
 	CPS::Real system_freq = 50;
 
     CIM::Reader reader(simName, Logger::Level::INFO, Logger::Level::NONE);
     SystemTopology system = reader.loadCIM(system_freq, filenames, CPS::Domain::Static);
+	loadProfileAssigner(simName, loadProfilePath, system, Logger::Level::INFO);
 
 	auto logger = DPsim::DataLogger::make(simName);
 	for (auto node : system.mNodes)
