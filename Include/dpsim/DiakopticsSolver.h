@@ -44,6 +44,8 @@ namespace DPsim {
 			CPS::LUFactorized luFactorization;
 			/// List of all right side vector contributions
 			std::vector<const Matrix*> rightVectorStamps;
+			/// Left-side vector of the subnet AFTER complete step
+			CPS::Attribute<Matrix>::Ptr leftVector;
 		};
 
 		String mName;
@@ -123,7 +125,9 @@ namespace DPsim {
 			SolveTask(DiakopticsSolver<VarType>& solver) :
 				Task(solver.mName + ".Solve"), mSolver(solver) {
 				mAttributeDependencies.push_back(solver.attribute("xOld"));
-				mModifiedAttributes.push_back(solver.attribute("x"));
+				for (auto& net : solver.mSubnets) {
+					mModifiedAttributes.push_back(net.leftVector);
+				}
 			}
 
 			void execute(Real time, Int timeStepCount);
@@ -136,7 +140,9 @@ namespace DPsim {
 		public:
 			LogTask(DiakopticsSolver<VarType>& solver) :
 				Task(solver.mName + ".Log"), mSolver(solver) {
-				mAttributeDependencies.push_back(solver.attribute("x"));
+				for (auto& net : solver.mSubnets) {
+					mAttributeDependencies.push_back(net.leftVector);
+				}
 				mModifiedAttributes.push_back(Scheduler::external);
 			}
 

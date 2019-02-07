@@ -21,6 +21,7 @@
 
 #include <dpsim/DiakopticsSolver.h>
 
+#include <cps/MathUtils.h>
 #include <cps/Solver/MNATearInterface.h>
 #include <dpsim/Definitions.h>
 #include <dpsim/Simulation.h>
@@ -86,10 +87,22 @@ void DiakopticsSolver<VarType>::initSubnets(const std::vector<SystemTopology>& s
 		}
 	}
 
-	for (auto comp : mTearComponents) {
+	for (UInt idx = 0; idx < mTearComponents.size(); idx++) {
+		auto comp = mTearComponents[idx];
 		auto tComp = std::dynamic_pointer_cast<MNATearInterface>(comp);
 		if (!tComp)
 			throw SystemError("Unsupported component type for diakoptics");
+
+		if (comp->hasVirtualNodes()) {
+			for (UInt node = 0; node < comp->virtualNodesNumber(); node++) {
+				// sim node number doesn't matter here because it shouldn't be used anyway
+				comp->setVirtualNodeAt(std::make_shared<CPS::Node<VarType>>(node), node);
+			}
+		}
+		tComp->mnaTearSetIdx(idx);
+		comp->initializeFromPowerflow(mSystemFrequency);
+		tComp->mnaTearInitialize(2 * PI * mSystemFrequency, mTimeStep);
+
 		for (auto gndComp : tComp->mnaTearGroundComponents()) {
 			auto pComp = std::dynamic_pointer_cast<PowerComponent<VarType>>(gndComp);
 			Subnet* net = nullptr;
@@ -170,10 +183,17 @@ void DiakopticsSolver<VarType>::createMatrices() {
 
 	mRightSideVector = Matrix::Zero(totalSize, 1);
 	mLeftSideVector = Matrix::Zero(totalSize, 1);
-	addAttribute<Matrix>("x", &mLeftSideVector, Flags::read);
 	mOrigLeftSideVector = Matrix::Zero(totalSize, 1);
 	addAttribute<Matrix>("xOld", &mOrigLeftSideVector, Flags::read);
 	mIPsiMapped = Matrix::Zero(totalSize, 1);
+
+	for (auto& net : mSubnets) {
+		// The subnets' components expect to be passed a left-side vector matching
+		// the size of the subnet, so we have to create separate vectors here and
+		// copy the solution there
+		net.leftVector = Attribute<Matrix>::make(Flags::read | Flags::write);
+		net.leftVector->set(Matrix::Zero(net.sysSize, 1));
+	}
 
 	createTearMatrices(totalSize);
 }
@@ -206,8 +226,7 @@ void DiakopticsSolver<VarType>::initComponents() {
 
 		// Initialize MNA specific parts of components.
 		for (auto comp : mSubnets[net].components) {
-			// XXX separate leftVector attributes for each subnet
-			comp->mnaInitialize(2 * PI * mSystemFrequency, mTimeStep, attribute<Matrix>("x"));
+			comp->mnaInitialize(2 * PI * mSystemFrequency, mTimeStep, mSubnets[net].leftVector);
 			const Matrix& stamp = comp->template attribute<Matrix>("right_vector")->get();
 			if (stamp.size() != 0) {
 				mSubnets[net].rightVectorStamps.push_back(&stamp);
@@ -217,12 +236,6 @@ void DiakopticsSolver<VarType>::initComponents() {
 	// Initialize signal components.
 	for (auto comp : mSignalComponents)
 		comp->initialize(2 * PI * mSystemFrequency, mTimeStep);
-
-	for (auto comp : mTearComponents) {
-		comp->initializeFromPowerflow(mSystemFrequency);
-		auto tComp = std::dynamic_pointer_cast<MNATearInterface>(comp);
-		tComp->mnaTearInitialize(2 * PI * mSystemFrequency, mTimeStep);
-	}
 }
 
 template <typename VarType>
@@ -315,7 +328,7 @@ void DiakopticsSolver<VarType>::SubnetSolveTask::execute(Real time, Int timeStep
 	rBlock.setZero();
 
 	for (auto stamp : mSubnet.rightVectorStamps)
-		rBlock += stamp->block(mSubnet.sysOff, 0, mSubnet.sysSize, 1);
+		rBlock += *stamp;
 
 	auto lBlock = mSolver.mOrigLeftSideVector.block(mSubnet.sysOff, 0, mSubnet.sysSize, 1);
 	lBlock = mSubnet.luFactorization.solve(rBlock);
@@ -323,6 +336,7 @@ void DiakopticsSolver<VarType>::SubnetSolveTask::execute(Real time, Int timeStep
 
 template <typename VarType>
 void DiakopticsSolver<VarType>::SolveTask::execute(Real time, Int timeStepCount) {
+	mSolver.mEPsi.setZero();
 	for (auto comp : mSolver.mTearComponents) {
 		auto tComp = std::dynamic_pointer_cast<MNATearInterface>(comp);
 		tComp->mnaTearApplyVoltageStamp(mSolver.mEPsi);
@@ -331,15 +345,21 @@ void DiakopticsSolver<VarType>::SolveTask::execute(Real time, Int timeStepCount)
 	mSolver.mIPsi = mSolver.mNetToRemovedImpedance.solve(mSolver.mEPsi);
 	mSolver.mIPsiMapped = mSolver.mTearTopology * mSolver.mIPsi;
 	mSolver.mLeftSideVector = mSolver.mOrigLeftSideVector;
-	// TODO parallelize as well?
+	// TODO parallelize as well? would also enable to parallelize subnet components better
 	for (auto& net : mSolver.mSubnets) {
 		auto lBlock = mSolver.mLeftSideVector.block(net.sysOff, 0, net.sysSize, 1);
 		auto rBlock = mSolver.mIPsiMapped.block(net.sysOff, 0, net.sysSize, 1);
 		lBlock += net.luFactorization.solve(rBlock);
+		*net.leftVector = lBlock;
 	}
-	for (auto comp : mSolver.mTearComponents) {
+	// pass the voltages and current of the solution to the torn components
+	mSolver.mEPsi = -mSolver.mTearTopology.transpose() * mSolver.mLeftSideVector;
+	for (UInt compIdx = 0; compIdx < mSolver.mTearComponents.size(); compIdx++) {
+		auto comp = mSolver.mTearComponents[compIdx];
 		auto tComp = std::dynamic_pointer_cast<MNATearInterface>(comp);
-		tComp->mnaTearPostStep(mSolver.mLeftSideVector);
+		Complex voltage = Math::complexFromVectorElement(mSolver.mEPsi, compIdx);
+		Complex current = Math::complexFromVectorElement(mSolver.mIPsi, compIdx);
+		tComp->mnaTearPostStep(voltage, current);
 	}
 }
 
