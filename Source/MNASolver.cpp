@@ -211,8 +211,8 @@ void MnaSolver<Real>::createEmptyVectors() {
 
 template<>
 void MnaSolver<Complex>::createEmptyVectors() {
-	mRightSideVector = Matrix::Zero(2 * mNumSimNodes, 1);
-	mLeftSideVector = Matrix::Zero(2 * mNumSimNodes, 1);
+	mRightSideVector = Matrix::Zero(2 * (mNumSimNodes + mNumHarmSimNodes), 1);
+	mLeftSideVector = Matrix::Zero(2 * (mNumSimNodes + mNumHarmSimNodes), 1);
 }
 
 template<>
