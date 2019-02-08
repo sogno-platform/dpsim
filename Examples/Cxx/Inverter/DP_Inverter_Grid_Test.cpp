@@ -27,50 +27,81 @@ using namespace CPS::DP::Ph1;
 int main(int argc, char* argv[]) {
 	// Define simulation scenario
 	Real timeStep = 0.0001;
-	Real finalTime = 0.1;
+	Real finalTime = 0.001;
 	String simName = "DP_Inverter_Grid_Test";
 	Logger::setLogDir("logs/"+simName);
 
+	Matrix frequencies(12,1);
+	frequencies << 19750, 19850, 19950, 20050, 20150, 20250,
+		39750, 39850, 39950, 40050, 40150, 40250;
+
 	// Nodes
 	auto n1 = Node::make("n1");
+	n1->initialize(50, frequencies);
 	auto n2 = Node::make("n2");
+	n2->initialize(50, frequencies);
 	auto n3 = Node::make("n3");
+	n3->initialize(50, frequencies);
 	auto n4 = Node::make("n4");
+	n4->initialize(50, frequencies);
 	auto n5 = Node::make("n5");
-	auto n6 = Node::make("n6");
+	n5->initialize(50, frequencies);
 
 	// Components
-	auto inv = VoltageSource::make("inv", Logger::Level::DEBUG);
-	inv->setParameters(Complex(200, 0));
-	auto r1 = Resistor::make("r1");
-	r1->setParameters(1);
-	auto l1 = Resistor::make("l1");
-	l1->setParameters(1);
-	auto r2 = Resistor::make("r2");
-	r2->setParameters(1);
-	auto l2 = Resistor::make("l2");
-	l2->setParameters(1);
-	auto c1 = Resistor::make("c1");
-	c1->setParameters(1);
-	auto grid = VoltageSource::make("grid");
+	auto inv = Inverter::make("inv", Logger::Level::DEBUG);
+	//inv->setParameters(Complex(200, 0));
+	inv->setParameters(360, 0.87);
+	inv->initialize(50, frequencies);
+	auto r1 = Resistor::make("r1", Logger::Level::DEBUG);
+	r1->setParameters(0.1);
+	r1->initialize(50, frequencies);
+	auto l1 = Inductor::make("l1", Logger::Level::DEBUG);
+	l1->setParameters(600e-6);
+	l1->initialize(50, frequencies);
+	auto r2 = Resistor::make("r2", Logger::Level::DEBUG);
+	Real r2g = 0.1+0.001;
+	r2->setParameters(r2g);
+	r2->initialize(50, frequencies);
+	auto l2 = Inductor::make("l2", Logger::Level::DEBUG);
+	Real l2g = 150e-6+0.001/(2.*PI*50.);
+	l2->setParameters(l2g);
+	l2->initialize(50, frequencies);
+	auto c1 = Capacitor::make("c1", Logger::Level::DEBUG);
+	c1->setParameters(10e-6);
+	c1->initialize(50, frequencies);
+	auto rc = Capacitor::make("rc", Logger::Level::DEBUG);
+	rc->setParameters(1e-6);
+	rc->initialize(50, frequencies);
+	auto grid = VoltageSource::make("grid", Logger::Level::DEBUG);
 	grid->setParameters(Complex(230, 0));
+	grid->initialize(50, frequencies);
 
 	// Topology
-	inv->connect({ Node::GND, n1 });
+	//inv->connect({ Node::GND, n1 });
+	inv->connect({ n1 });
 	r1->connect({ n1, n2 });
 	l1->connect({ n2, n3 });
-	r2->connect({ n3, n4 });
-	l2->connect({ n5, n6 });
 	c1->connect({ Node::GND, n3 });
-	grid->connect({ Node::GND, n6 });
+	rc->connect({ Node::GND, n3 });
+	r2->connect({ n3, n4 });
+	l2->connect({ n4, n5 });
+	grid->connect({ Node::GND, n5 });
 
 	// Define system topology
-	auto sys = SystemTopology(50, SystemNodeList{n1, n2, n3, n4, n5, n6}, SystemComponentList{inv, r1, l1, r2, l2, c1, grid});
+	auto sys = SystemTopology(50, frequencies,
+		SystemNodeList{ n1, n2, n3, n4, n5 },
+		SystemComponentList{ inv, r1, l1, r2, l2, c1, rc, grid });
 
 	// Logging
 	auto logger = DataLogger::make(simName);
-	logger->addAttribute("v1", n1->attribute("v"));
-	logger->addAttribute("i10", r1->attribute("i_intf"));
+	logger->addAttribute("v1", n1->attributeMatrix<Complex>("v")->coeff(0,0));
+	logger->addAttribute("v2", n2->attributeMatrix<Complex>("v")->coeff(0,0));
+	logger->addAttribute("v3", n3->attributeMatrix<Complex>("v")->coeff(0,0));
+	logger->addAttribute("v4", n4->attributeMatrix<Complex>("v")->coeff(0,0));
+	logger->addAttribute("v5", n5->attributeMatrix<Complex>("v")->coeff(0,0));
+
+	logger->addAttribute("i12", r1->attributeMatrix<Complex>("i_intf")->coeff(0,0));
+	logger->addAttribute("i34", r2->attributeMatrix<Complex>("i_intf")->coeff(0,0));
 
 	Simulation sim(simName, sys, timeStep, finalTime);
 	sim.addLogger(logger);
