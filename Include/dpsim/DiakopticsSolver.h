@@ -86,6 +86,8 @@ namespace DPsim {
 		void assignSimNodes(int net);
 		void setSubnetSize(int net, UInt nodes);
 
+		void setLogColumns();
+
 		void createMatrices();
 		void createTearMatrices(UInt totalSize);
 
