@@ -69,7 +69,7 @@ void DataLogger::setColumnNames(std::vector<String> names) {
 void DataLogger::logDataLine(Real time, Real data) {
 	if (!mEnabled)
 		return;
-		
+
 	mLogFile << std::scientific << std::right << std::setw(14) << time;
 	mLogFile << ", " << std::right << std::setw(13) << data;
 	mLogFile << '\n';
@@ -102,9 +102,9 @@ void DataLogger::logPhasorNodeValues(Real time, const Matrix& data) {
 		for (Int i = 0; i < data.rows(); i++) {
 			std::stringstream name;
 			if (i < data.rows() / 2)
-				name << "node" << std::setfill('0') << std::setw(5) << i << "_re";
+				name << "node" << std::setfill('0') << std::setw(5) << i << ".re";
 			else
-				name << "node" << std::setfill('0') << std::setw(5) << (i - data.rows() / 2) << "_im";
+				name << "node" << std::setfill('0') << std::setw(5) << (i - data.rows() / 2) << ".im";
 			names.push_back(name.str());
 		}
 		setColumnNames(names);
@@ -150,8 +150,8 @@ void DataLogger::addAttribute(const String &name, CPS::Attribute<Real>::Ptr attr
 void DataLogger::addAttribute(const String &name, CPS::Attribute<Complex>::Ptr attr) {
 	auto attrComp = std::static_pointer_cast<CPS::ComplexAttribute>(attr);
 
-	mAttributes[name + ".real"] = attrComp->real();
-	mAttributes[name + ".imag"] = attrComp->imag();
+	mAttributes[name + ".re"] = attrComp->real();
+	mAttributes[name + ".im"] = attrComp->imag();
 }
 
 void DataLogger::addAttribute(const String &name, CPS::Attribute<MatrixVar<Real>>::Ptr attr) {
@@ -180,7 +180,7 @@ void DataLogger::addAttribute(const String &name, CPS::Attribute<MatrixVar<Compl
 	const MatrixVar<Complex> &m = attr->get();
 
 	auto attrMat = std::static_pointer_cast<CPS::MatrixAttribute<Complex>>(attr);
-	
+
 	if (m.rows() == 1 && m.cols() == 1) {
 		addAttribute(name, attrMat->coeff(0, 0));
 	}
@@ -192,7 +192,7 @@ void DataLogger::addAttribute(const String &name, CPS::Attribute<MatrixVar<Compl
 	else {
 		for (UInt k = 0; k < m.rows(); k++) {
 			for (UInt l = 0; l < m.cols(); l++) {
-				addAttribute(name + "(" + std::to_string(k) + ", " + std::to_string(l) + ")", attrMat->coeff(k, l));
+				addAttribute(name + "(" + std::to_string(k) + "," + std::to_string(l) + ")", attrMat->coeff(k, l));
 			}
 		}
 	}
