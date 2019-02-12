@@ -112,7 +112,7 @@ namespace DPsim {
 						mAttributeDependencies.push_back(it->attribute("right_vector"));
 					}
 				}
-				mModifiedAttributes.push_back(solver.attribute("xOld"));
+				mModifiedAttributes.push_back(solver.attribute("old_left_vector"));
 			}
 
 			void execute(Real time, Int timeStepCount);
@@ -122,14 +122,44 @@ namespace DPsim {
 			Subnet& mSubnet;
 		};
 
+		// TODO better name
+		class PreSolveTask : public CPS::Task {
+		public:
+			PreSolveTask(DiakopticsSolver<VarType>& solver) :
+				Task(solver.mName + ".PreSolve"), mSolver(solver) {
+				mAttributeDependencies.push_back(solver.attribute("old_left_vector"));
+				mModifiedAttributes.push_back(solver.attribute("mapped_tear_currents"));
+			}
+
+			void execute(Real time, Int timeStepCount);
+
+		private:
+			DiakopticsSolver<VarType>& mSolver;
+		};
+
 		class SolveTask : public CPS::Task {
 		public:
-			SolveTask(DiakopticsSolver<VarType>& solver) :
-				Task(solver.mName + ".Solve"), mSolver(solver) {
-				mAttributeDependencies.push_back(solver.attribute("xOld"));
+			SolveTask(DiakopticsSolver<VarType>& solver, UInt net) :
+				Task(solver.mName + ".Solve_" + std::to_string(net)), mSolver(solver), mSubnet(solver.mSubnets[net]) {
+				mAttributeDependencies.push_back(solver.attribute("mapped_tear_currents"));
+				mModifiedAttributes.push_back(mSubnet.leftVector);
+			}
+
+			void execute(Real time, Int timeStepCount);
+
+		private:
+			DiakopticsSolver<VarType>& mSolver;
+			Subnet& mSubnet;
+		};
+
+		class PostSolveTask : public CPS::Task {
+		public:
+			PostSolveTask(DiakopticsSolver<VarType>& solver) :
+				Task(solver.mName + ".PostSolve"), mSolver(solver) {
 				for (auto& net : solver.mSubnets) {
-					mModifiedAttributes.push_back(net.leftVector);
+					mAttributeDependencies.push_back(net.leftVector);
 				}
+				mModifiedAttributes.push_back(Scheduler::external);
 			}
 
 			void execute(Real time, Int timeStepCount);

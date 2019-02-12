@@ -209,8 +209,9 @@ void DiakopticsSolver<VarType>::createMatrices() {
 	mRightSideVector = Matrix::Zero(totalSize, 1);
 	mLeftSideVector = Matrix::Zero(totalSize, 1);
 	mOrigLeftSideVector = Matrix::Zero(totalSize, 1);
-	addAttribute<Matrix>("xOld", &mOrigLeftSideVector, Flags::read);
+	addAttribute<Matrix>("old_left_vector", &mOrigLeftSideVector, Flags::read);
 	mIPsiMapped = Matrix::Zero(totalSize, 1);
+	addAttribute<Matrix>("mapped_tear_currents", &mIPsiMapped, Flags::read);
 
 	for (auto& net : mSubnets) {
 		// The subnets' components expect to be passed a left-side vector matching
@@ -334,6 +335,7 @@ Task::List DiakopticsSolver<VarType>::getTasks() {
 			}
 		}
 		l.push_back(std::make_shared<SubnetSolveTask>(*this, net));
+		l.push_back(std::make_shared<SolveTask>(*this, net));
 	}
 
 	for (auto comp : mSignalComponents) {
@@ -341,7 +343,8 @@ Task::List DiakopticsSolver<VarType>::getTasks() {
 			l.push_back(task);
 		}
 	}
-	l.push_back(std::make_shared<SolveTask>(*this));
+	l.push_back(std::make_shared<PreSolveTask>(*this));
+	l.push_back(std::make_shared<PostSolveTask>(*this));
 	l.push_back(std::make_shared<LogTask>(*this));
 
 	return l;
@@ -360,7 +363,7 @@ void DiakopticsSolver<VarType>::SubnetSolveTask::execute(Real time, Int timeStep
 }
 
 template <typename VarType>
-void DiakopticsSolver<VarType>::SolveTask::execute(Real time, Int timeStepCount) {
+void DiakopticsSolver<VarType>::PreSolveTask::execute(Real time, Int timeStepCount) {
 	mSolver.mEPsi.setZero();
 	for (auto comp : mSolver.mTearComponents) {
 		auto tComp = std::dynamic_pointer_cast<MNATearInterface>(comp);
@@ -370,13 +373,18 @@ void DiakopticsSolver<VarType>::SolveTask::execute(Real time, Int timeStepCount)
 	mSolver.mIPsi = mSolver.mNetToRemovedImpedance.solve(mSolver.mEPsi);
 	mSolver.mIPsiMapped = mSolver.mTearTopology * mSolver.mIPsi;
 	mSolver.mLeftSideVector = mSolver.mOrigLeftSideVector;
-	// TODO parallelize as well? would also enable to parallelize subnet components better
-	for (auto& net : mSolver.mSubnets) {
-		auto lBlock = mSolver.mLeftSideVector.block(net.sysOff, 0, net.sysSize, 1);
-		auto rBlock = mSolver.mIPsiMapped.block(net.sysOff, 0, net.sysSize, 1);
-		lBlock += net.luFactorization.solve(rBlock);
-		*net.leftVector = lBlock;
-	}
+}
+
+template <typename VarType>
+void DiakopticsSolver<VarType>::SolveTask::execute(Real time, Int timeStepCount) {
+	auto lBlock = mSolver.mLeftSideVector.block(mSubnet.sysOff, 0, mSubnet.sysSize, 1);
+	auto rBlock = mSolver.mIPsiMapped.block(mSubnet.sysOff, 0, mSubnet.sysSize, 1);
+	lBlock += mSubnet.luFactorization.solve(rBlock);
+	*mSubnet.leftVector = lBlock;
+}
+
+template <typename VarType>
+void DiakopticsSolver<VarType>::PostSolveTask::execute(Real time, Int timeStepCount) {
 	// pass the voltages and current of the solution to the torn components
 	mSolver.mEPsi = -mSolver.mTearTopology.transpose() * mSolver.mLeftSideVector;
 	for (UInt compIdx = 0; compIdx < mSolver.mTearComponents.size(); compIdx++) {
