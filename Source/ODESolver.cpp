@@ -194,7 +194,7 @@ Real ODESolver::step(Real initial_time) {
 		return 1;
 
 	// Print statistics:
-	std::cout << "Number Computing Steps: "<< nst << " Number Error-Test-Fails: " << netf << std::endl;
+	//std::cout << "Number Computing Steps: "<< nst << " Number Error-Test-Fails: " << netf << std::endl;
 	return Tf;
 }
 
