@@ -63,21 +63,27 @@ namespace DPsim {
 		typename CPS::PowerComponent<VarType>::List mTearComponents;
 		CPS::SignalComponent::List mSignalComponents;
 
+		Matrix mRightSideVector;
+		Matrix mLeftSideVector;
 		/// Complete matrix in block form
 		Matrix mSystemMatrix;
-		/// XXX shouldn't be explicitly calculated
-		Matrix mYinv;
-		Matrix mRightSideVector;
+		/// Inverse of the complete system matrix (only used for initialization)
+		Matrix mSystemInverse;
 		/// Solutions of the split systems
 		Matrix mOrigLeftSideVector;
-		Matrix mLeftSideVector;
+		/// Topology of the network removal
 		Matrix mTearTopology;
-		Matrix mRemovedImpedance;
-		CPS::LUFactorized mNetToRemovedImpedance;
-		// TODO better names
-		Matrix mIPsi;
-		Matrix mIPsiMapped;
-		Matrix mEPsi;
+		/// Impedance of the removed network
+		Matrix mTearImpedance;
+		/// (Factorization of the) impedance matrix for the removed network, including
+		/// the influence of other subnets
+		CPS::LUFactorized mTotalTearImpedance;
+		/// Currents through the removed network
+		Matrix mTearCurrents;
+		/// Currents through the removed network (as "seen" from the other subnets)
+		Matrix mMappedTearCurrents;
+		/// Voltages across the removed network
+		Matrix mTearVoltages;
 
 		void init(const CPS::SystemTopology& system);
 

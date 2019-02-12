@@ -204,14 +204,14 @@ template <typename VarType>
 void DiakopticsSolver<VarType>::createMatrices() {
 	UInt totalSize = mSubnets.back().sysOff + mSubnets.back().sysSize;
 	mSystemMatrix = Matrix::Zero(totalSize, totalSize);
-	mYinv = Matrix::Zero(totalSize, totalSize);
+	mSystemInverse = Matrix::Zero(totalSize, totalSize);
 
 	mRightSideVector = Matrix::Zero(totalSize, 1);
 	mLeftSideVector = Matrix::Zero(totalSize, 1);
 	mOrigLeftSideVector = Matrix::Zero(totalSize, 1);
 	addAttribute<Matrix>("old_left_vector", &mOrigLeftSideVector, Flags::read);
-	mIPsiMapped = Matrix::Zero(totalSize, 1);
-	addAttribute<Matrix>("mapped_tear_currents", &mIPsiMapped, Flags::read);
+	mMappedTearCurrents = Matrix::Zero(totalSize, 1);
+	addAttribute<Matrix>("mapped_tear_currents", &mMappedTearCurrents, Flags::read);
 
 	for (auto& net : mSubnets) {
 		// The subnets' components expect to be passed a left-side vector matching
@@ -227,17 +227,17 @@ void DiakopticsSolver<VarType>::createMatrices() {
 template <>
 void DiakopticsSolver<Real>::createTearMatrices(UInt totalSize) {
 	mTearTopology = Matrix::Zero(totalSize, mTearComponents.size());
-	mRemovedImpedance = Matrix::Zero(mTearComponents.size(), mTearComponents.size());
-	mIPsi = Matrix::Zero(mTearComponents.size(), 1);
-	mEPsi = Matrix::Zero(mTearComponents.size(), 1);
+	mTearImpedance = Matrix::Zero(mTearComponents.size(), mTearComponents.size());
+	mTearCurrents = Matrix::Zero(mTearComponents.size(), 1);
+	mTearVoltages = Matrix::Zero(mTearComponents.size(), 1);
 }
 
 template <>
 void DiakopticsSolver<Complex>::createTearMatrices(UInt totalSize) {
 	mTearTopology = Matrix::Zero(totalSize, 2*mTearComponents.size());
-	mRemovedImpedance = Matrix::Zero(2*mTearComponents.size(), 2*mTearComponents.size());
-	mIPsi = Matrix::Zero(2*mTearComponents.size(), 1);
-	mEPsi = Matrix::Zero(2*mTearComponents.size(), 1);
+	mTearImpedance = Matrix::Zero(2*mTearComponents.size(), 2*mTearComponents.size());
+	mTearCurrents = Matrix::Zero(2*mTearComponents.size(), 1);
+	mTearVoltages = Matrix::Zero(2*mTearComponents.size(), 1);
 }
 
 template <typename VarType>
@@ -289,13 +289,13 @@ void DiakopticsSolver<VarType>::initMatrices() {
 		applyTearComponentStamp(compIdx);
 	}
 	mLog.debug() << "Topology matrix: \n" << mTearTopology << std::endl;
-	mLog.debug() << "Removed impedance matrix: \n" << mRemovedImpedance << std::endl;
+	mLog.debug() << "Removed impedance matrix: \n" << mTearImpedance << std::endl;
 	// TODO this can be sped up as well by using the block diagonal form of Yinv
 	for (auto& net : mSubnets) {
-		mYinv.block(net.sysOff, net.sysOff, net.sysSize, net.sysSize) = net.luFactorization.inverse();
+		mSystemInverse.block(net.sysOff, net.sysOff, net.sysSize, net.sysSize) = net.luFactorization.inverse();
 	}
-	mNetToRemovedImpedance = Eigen::PartialPivLU<Matrix>(mRemovedImpedance + mTearTopology.transpose() * mYinv * mTearTopology);
-	mLog.debug() << "Net to removed impedance matrix decomposition: \n" << mNetToRemovedImpedance.matrixLU() << std::endl;
+	mTotalTearImpedance = Eigen::PartialPivLU<Matrix>(mTearImpedance + mTearTopology.transpose() * mSystemInverse * mTearTopology);
+	mLog.debug() << "Total removed impedance matrix LU decomposition: \n" << mTotalTearImpedance.matrixLU() << std::endl;
 }
 
 template <>
@@ -305,7 +305,7 @@ void DiakopticsSolver<Real>::applyTearComponentStamp(UInt compIdx) {
 	mTearTopology(mNodeSubnetMap[comp->node(1)]->sysOff + comp->node(1)->simNode(), compIdx) = -1;
 
 	auto tearComp = std::dynamic_pointer_cast<MNATearInterface>(comp);
-	tearComp->mnaTearApplyMatrixStamp(mRemovedImpedance);
+	tearComp->mnaTearApplyMatrixStamp(mTearImpedance);
 }
 
 template <>
@@ -321,7 +321,7 @@ void DiakopticsSolver<Complex>::applyTearComponentStamp(UInt compIdx) {
 	mTearTopology(net2->sysOff + net2->sysSize/2 + comp->node(1)->simNode(), mTearComponents.size() + compIdx) = -1;
 
 	auto tearComp = std::dynamic_pointer_cast<MNATearInterface>(comp);
-	tearComp->mnaTearApplyMatrixStamp(mRemovedImpedance);
+	tearComp->mnaTearApplyMatrixStamp(mTearImpedance);
 }
 
 template <typename VarType>
@@ -364,21 +364,21 @@ void DiakopticsSolver<VarType>::SubnetSolveTask::execute(Real time, Int timeStep
 
 template <typename VarType>
 void DiakopticsSolver<VarType>::PreSolveTask::execute(Real time, Int timeStepCount) {
-	mSolver.mEPsi.setZero();
+	mSolver.mTearVoltages.setZero();
 	for (auto comp : mSolver.mTearComponents) {
 		auto tComp = std::dynamic_pointer_cast<MNATearInterface>(comp);
-		tComp->mnaTearApplyVoltageStamp(mSolver.mEPsi);
+		tComp->mnaTearApplyVoltageStamp(mSolver.mTearVoltages);
 	}
-	mSolver.mEPsi -= mSolver.mTearTopology.transpose() * mSolver.mOrigLeftSideVector;
-	mSolver.mIPsi = mSolver.mNetToRemovedImpedance.solve(mSolver.mEPsi);
-	mSolver.mIPsiMapped = mSolver.mTearTopology * mSolver.mIPsi;
+	mSolver.mTearVoltages -= mSolver.mTearTopology.transpose() * mSolver.mOrigLeftSideVector;
+	mSolver.mTearCurrents = mSolver.mTotalTearImpedance.solve(mSolver.mTearVoltages);
+	mSolver.mMappedTearCurrents = mSolver.mTearTopology * mSolver.mTearCurrents;
 	mSolver.mLeftSideVector = mSolver.mOrigLeftSideVector;
 }
 
 template <typename VarType>
 void DiakopticsSolver<VarType>::SolveTask::execute(Real time, Int timeStepCount) {
 	auto lBlock = mSolver.mLeftSideVector.block(mSubnet.sysOff, 0, mSubnet.sysSize, 1);
-	auto rBlock = mSolver.mIPsiMapped.block(mSubnet.sysOff, 0, mSubnet.sysSize, 1);
+	auto rBlock = mSolver.mMappedTearCurrents.block(mSubnet.sysOff, 0, mSubnet.sysSize, 1);
 	lBlock += mSubnet.luFactorization.solve(rBlock);
 	*mSubnet.leftVector = lBlock;
 }
@@ -386,12 +386,12 @@ void DiakopticsSolver<VarType>::SolveTask::execute(Real time, Int timeStepCount)
 template <typename VarType>
 void DiakopticsSolver<VarType>::PostSolveTask::execute(Real time, Int timeStepCount) {
 	// pass the voltages and current of the solution to the torn components
-	mSolver.mEPsi = -mSolver.mTearTopology.transpose() * mSolver.mLeftSideVector;
+	mSolver.mTearVoltages = -mSolver.mTearTopology.transpose() * mSolver.mLeftSideVector;
 	for (UInt compIdx = 0; compIdx < mSolver.mTearComponents.size(); compIdx++) {
 		auto comp = mSolver.mTearComponents[compIdx];
 		auto tComp = std::dynamic_pointer_cast<MNATearInterface>(comp);
-		Complex voltage = Math::complexFromVectorElement(mSolver.mEPsi, compIdx);
-		Complex current = Math::complexFromVectorElement(mSolver.mIPsi, compIdx);
+		Complex voltage = Math::complexFromVectorElement(mSolver.mTearVoltages, compIdx);
+		Complex current = Math::complexFromVectorElement(mSolver.mTearCurrents, compIdx);
 		tComp->mnaTearPostStep(voltage, current);
 	}
 }
