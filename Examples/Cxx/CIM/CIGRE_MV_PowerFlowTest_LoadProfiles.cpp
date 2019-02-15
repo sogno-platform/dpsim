@@ -57,7 +57,7 @@ int main(int argc, char** argv){
     CIM::Reader reader(simName, Logger::Level::INFO, Logger::Level::NONE);
     SystemTopology system = reader.loadCIM(system_freq, filenames, CPS::Domain::Static);
 	loadProfileAssigner assigner(simName, loadProfilePath, Logger::Level::INFO);
-	assigner.assign(1, 2, 120, system);
+	assigner.assign(1, 2, 120, system, loadProfileAssigner::Mode::AUTO);
 
 	auto logger = DPsim::DataLogger::make(simName);
 	for (auto node : system.mNodes)
