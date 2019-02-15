@@ -1,4 +1,4 @@
-﻿/*!
+/*!
  * \file Solver_NRpolar.h
  * \author Santiago Peñate Vera
  *
@@ -86,7 +86,6 @@ namespace DPsim {
 		///Imaginary part of Y
 		CPS::Real B(int i, int j);
 
-
 		// solver settings
 		double tolerance=10e-9;
 		/// Maximum number of iterations
@@ -154,17 +153,17 @@ namespace DPsim {
         
         std::vector<int> LastPV;
 
-		//******* vectors of node indices for pf calculation ********
+		// #### vectors of node indices for pf calculation ####
 		std::vector<CPS::UInt> PQBusIndices;
 		std::vector<CPS::UInt> PVBusIndices;
 		std::vector<CPS::UInt> slackBusIndex;
 		
-		//******* vectors of nodes for pf calculation ********
+		// #### vectors of nodes for pf calculation ####
 		CPS::TopologicalNode::List PQBuses;
 		CPS::TopologicalNode::List PVBuses;
 		CPS::TopologicalNode::List slackBus;
 
-        /****** vectors of components ******/
+        // #### vectors of components ####
 		std::vector<std::shared_ptr<CPS::Static::Ph1::Transformer>> Transformers;
 		std::vector<std::shared_ptr<CPS::Static::Ph1::SynchronGenerator>> SynchronGenerators;
 		std::vector<std::shared_ptr<CPS::Static::Ph1::Load>> Loads;
@@ -217,6 +216,8 @@ namespace DPsim {
 
 
 		void correct_PVbuses_violating_Q(CPS::UInt &npq, CPS::UInt &npv, CPS::Matrix &J, CPS::Vector &K, CPS::Vector &X);
+
+		void calculate_branch_current();
         
 
     };

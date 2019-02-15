@@ -56,16 +56,21 @@ int main(int argc, char** argv){
 
     CIM::Reader reader(simName, Logger::Level::INFO, Logger::Level::NONE);
     SystemTopology system = reader.loadCIM(system_freq, filenames, CPS::Domain::Static);
-	loadProfileAssigner(simName, loadProfilePath, system, Logger::Level::INFO);
+	loadProfileAssigner Assigner(simName, loadProfilePath, Logger::Level::INFO);
+	Assigner.assign(1, 1, 60, system);
 
 	auto logger = DPsim::DataLogger::make(simName);
 	for (auto node : system.mNodes)
 	{
 		logger->addAttribute(node->name(), node->attribute("v"));
+		for (auto comp : system.mComponentsAtNode[node]) {
+			if (std::shared_ptr<CPS::Static::Ph1::PiLine> line = std::dynamic_pointer_cast<CPS::Static::Ph1::PiLine>(comp)) {
+				logger->addAttribute(line->name()+".From"+line->node(0)->name(),line->attribute<Complex>("current"));
+			}
+		}
 	}
 
-	Simulation sim(simName, system, 1, 120, Domain::Static, Solver::Type::NRP, Logger::Level::NONE, true);
-
+	Simulation sim(simName, system, 1, 60, Domain::Static, Solver::Type::NRP, Logger::Level::NONE, true);
 	sim.addLogger(logger);
 	sim.run();
 

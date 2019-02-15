@@ -740,13 +740,11 @@ void NRpolarSolver::powerFlow()
         //upgrade the solution
         update_solution(X * mu_, npq, npv);
 
-
         //Calculate the increment of power for the new iteration
         get_power_inc(K, npq, npv);
 
         didConverge = converged(K, npqpvpq);
         Iterations = i;
-
 
     }
         
@@ -771,7 +769,6 @@ void NRpolarSolver::powerFlow()
 		for (UInt i = 0; i < sol_length; i++) {
 			mLog.info() << sol_P[i] << "\t" << sol_Q[i] << "\t" << sol_V[i] << "\t" << sol_D[i] << std::endl;
 		}
-		
     }
 }
     
@@ -804,6 +801,7 @@ void NRpolarSolver::set_solution() {
 		}
 		std::dynamic_pointer_cast<CPS::Node<CPS::Complex>>(node)->updateVoltage(sol_V_complex(node->simNode())*baseVoltage_);
 	}
+		calculate_branch_current();
 }
     
 
@@ -853,6 +851,16 @@ void NRpolarSolver::compose_Y() {
 		}
 	if(Lines.empty() && Transformers.empty()) {
 		throw std::invalid_argument("There are no bus");
+	}
+}
+
+void NRpolarSolver::calculate_branch_current() {
+	for (auto &line : Lines) {
+
+		/// I_ij=Y_ij*(V_i-V_j), also note that in Y matrix the ij element is negative
+		Complex current = -Y.coeff(line->simNode(0), line->simNode(1)) *
+			(sol_V_complex(line->simNode(0)) - sol_V_complex(line->simNode(1)));
+		line->updateCurrent(current);
 	}
 }
 
