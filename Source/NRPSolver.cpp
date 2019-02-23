@@ -871,7 +871,6 @@ void NRpolarSolver::calculate_branch_flow() {
 	for (auto line : Lines) {
 		/// S_out=U*conj(I)
 		Complex power_out_0 = (sol_V_complex(line->simNode(0)))*std::conj(line->branchCurrentPU());
-		Complex power_in_1 = (sol_V_complex(line->simNode(1)))*std::conj(line->branchCurrentPU());
 		line->updateBranchPowerFlow(power_out_0);
 	}
 }
