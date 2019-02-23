@@ -780,7 +780,7 @@ void NRpolarSolver::set_solution() {
     }
 
 /* update V to each node*/
-/* a base voltage attribute is missing in TopologicalNode class */
+/* base voltage is based on component */
 
 	for (auto node : SysTopology.mNodes) {
 		CPS::Real baseVoltage_;
@@ -802,6 +802,8 @@ void NRpolarSolver::set_solution() {
 		std::dynamic_pointer_cast<CPS::Node<CPS::Complex>>(node)->updateVoltage(sol_V_complex(node->simNode())*baseVoltage_);
 	}
 		calculate_branch_current();
+		calculate_branch_flow();
+		calculate_nodal_injection();
 }
     
 
@@ -855,16 +857,42 @@ void NRpolarSolver::compose_Y() {
 }
 
 void NRpolarSolver::calculate_branch_current() {
-	for (auto &line : Lines) {
 
-		/// I_ij=Y_ij*(V_i-V_j), also note that in Y matrix the ij element is negative
-		Complex current = -Y.coeff(line->simNode(0), line->simNode(1)) *
-			(sol_V_complex(line->simNode(0)) - sol_V_complex(line->simNode(1)));
-		line->updateCurrent(current);
+	for (auto line : Lines) {
+		VectorComp v(2);
+		v(0) = sol_V_complex.coeff(line->node(0)->simNode());
+		v(1) = sol_V_complex.coeff(line->node(1)->simNode());
+		VectorComp current = line->Y_element() *v;
+		line->updateCurrent(current.coeff(0));
 	}
 }
 
-	
+void NRpolarSolver::calculate_branch_flow() {
+	for (auto line : Lines) {
+		/// S_out=U*conj(I)
+		Complex power_out_0 = (sol_V_complex(line->simNode(0)))*std::conj(line->branchCurrentPU());
+		Complex power_in_1 = (sol_V_complex(line->simNode(1)))*std::conj(line->branchCurrentPU());
+		line->updateBranchPowerFlow(power_out_0);
+	}
+}
+
+// this is to store nodal power injection in first line or transformer (in case no line is connected)
+// lower level classes (Node, Terminal) can stay unchanged
+void NRpolarSolver::calculate_nodal_injection() {
+
+	for (auto node : SysTopology.mNodes) {
+		for (auto comp : SysTopology.mComponentsAtNode[node]) {
+			if (std::shared_ptr<CPS::Static::Ph1::PiLine> line = std::dynamic_pointer_cast<CPS::Static::Ph1::PiLine>(comp)) {
+				line->storeNodalInjection(sol_S_complex.coeff(node->simNode()));
+				break;
+			}
+			else if (std::shared_ptr<CPS::Static::Ph1::Transformer> trafo = std::dynamic_pointer_cast<CPS::Static::Ph1::Transformer>(comp)) {
+				trafo->storeNodalInjection(sol_S_complex.coeff(node->simNode()));
+				break;
+			}
+		}
+	}
+}
 Real NRpolarSolver::step(Real time) {
 	/*
 	if switch triggered:

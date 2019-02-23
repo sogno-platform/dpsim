@@ -218,8 +218,10 @@ namespace DPsim {
 		void correct_PVbuses_violating_Q(CPS::UInt &npq, CPS::UInt &npv, CPS::Matrix &J, CPS::Vector &K, CPS::Vector &X);
 
 		void calculate_branch_current();
-        
 
+		void calculate_branch_flow();
+        
+		void calculate_nodal_injection();
     };
 
 

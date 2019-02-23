@@ -45,7 +45,7 @@ int main(int argc, char** argv){
 		String loadProfilePath("Examples/CSV/CIGRE_MV_NoTap/");
 	#endif
 	std::map<String,String> assignList = {
-	// load mRID, file name (.csv only)
+	// {load mRID, file name} (csv file only)
 	{"LOAD-H-1", "Load_H_1"},
 	{"LOAD-H-3", "Load_H_3"},
 	{"LOAD-H-4", "Load_H_4"},
@@ -76,21 +76,41 @@ int main(int argc, char** argv){
 
     CIM::Reader reader(simName, Logger::Level::INFO, Logger::Level::NONE);
     SystemTopology system = reader.loadCIM(system_freq, filenames, CPS::Domain::Static);
-	loadProfileAssigner assigner(simName, loadProfilePath, assignList, Logger::Level::INFO);
-	assigner.assign(1, 1, 3600, system, loadProfileAssigner::Mode::MANUAL);
+	//loadProfileAssigner assigner(simName, loadProfilePath, assignList, Logger::Level::INFO);
+	//assigner.assign(1, 1, 3600, system, loadProfileAssigner::Mode::MANUAL);
 
 	auto logger = DPsim::DataLogger::make(simName);
 	for (auto node : system.mNodes)
 	{
 		logger->addAttribute(node->name(), node->attribute("v"));
+		std::list<std::shared_ptr<CPS::Static::Ph1::PiLine>> lines;
 		for (auto comp : system.mComponentsAtNode[node]) {
 			if (std::shared_ptr<CPS::Static::Ph1::PiLine> line = std::dynamic_pointer_cast<CPS::Static::Ph1::PiLine>(comp)) {
-				logger->addAttribute(line->name()+".From"+line->node(0)->name(),line->attribute<Complex>("current"));
+				logger->addAttribute(line->name() + "." + line->node(0)->name() + ".I", line->attribute<Complex>("current"));
+				logger->addAttribute(line->name() + "." + line->node(0)->name() + ".P", line->attribute<Real>("p_branch"));
+				logger->addAttribute(line->name() + "." + line->node(0)->name() + ".Q", line->attribute<Real>("q_branch"));
+				lines.push_back(line);
+			}
+		}
+		if (!lines.empty()) {
+		logger->addAttribute(node->name() + ".Pinj", lines.front()->attribute<Real>("p_inj"));
+		logger->addAttribute(node->name() + ".Qinj", lines.front()->attribute<Real>("q_inj"));
+		}
+		else
+		{
+			for (auto comp : system.mComponentsAtNode[node]) {
+				if (std::shared_ptr<CPS::Static::Ph1::Transformer> trafo = std::dynamic_pointer_cast<CPS::Static::Ph1::Transformer>(comp)) {
+					logger->addAttribute(node->name() + ".Pinj", trafo->attribute<Real>("p_inj"));
+					logger->addAttribute(node->name() + ".Qinj", trafo->attribute<Real>("q_inj"));
+					break;
+				}
+
 			}
 		}
 	}
 
-	Simulation sim(simName, system, 1, 60, Domain::Static, Solver::Type::NRP, Logger::Level::NONE, true);
+	Simulation sim(simName, system, 1, 60, Domain::Static, Solver::Type::NRP, Logger::Level::INFO, true);
+	
 	sim.addLogger(logger);
 	sim.run();
 
