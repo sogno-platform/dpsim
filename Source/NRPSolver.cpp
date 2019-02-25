@@ -801,7 +801,6 @@ void NRpolarSolver::set_solution() {
 		}
 		std::dynamic_pointer_cast<CPS::Node<CPS::Complex>>(node)->updateVoltage(sol_V_complex(node->simNode())*baseVoltage_);
 	}
-		calculate_branch_current();
 		calculate_branch_flow();
 		calculate_nodal_injection();
 }
@@ -856,38 +855,50 @@ void NRpolarSolver::compose_Y() {
 	}
 }
 
-void NRpolarSolver::calculate_branch_current() {
+void NRpolarSolver::calculate_branch_flow() {
 
 	for (auto line : Lines) {
 		VectorComp v(2);
 		v(0) = sol_V_complex.coeff(line->node(0)->simNode());
 		v(1) = sol_V_complex.coeff(line->node(1)->simNode());
-		VectorComp current = line->Y_element() *v;
-		line->updateCurrent(current.coeff(0));
+		/// I = Y * V
+		VectorComp current = line->Y_element() * v;
+		/// pf on branch [S_01; S_10] = [V_0 * conj(I_0); V_1 * conj(I_1)]
+		VectorComp flow_on_branch = v.array()*current.conjugate().array();
+		line->updateBranchFlow(current,flow_on_branch);
 	}
-}
+	for (auto trafo : Transformers) {
+		VectorComp v(2);
+		v(0) = sol_V_complex.coeff(trafo->node(0)->simNode());
+		v(1) = sol_V_complex.coeff(trafo->node(1)->simNode());
+		/// I = Y * V
+		VectorComp current = trafo->Y_element() * v;
+		/// pf on branch [S_01; S_10] = [V_0 * conj(I_0); V_1 * conj(I_1)]
+		VectorComp flow_on_branch = v.array()*current.conjugate().array();
+		trafo->updateBranchFlow(current, flow_on_branch);
+	}
 
-void NRpolarSolver::calculate_branch_flow() {
-	for (auto line : Lines) {
-		/// S_out=U*conj(I)
-		Complex power_out_0 = (sol_V_complex(line->simNode(0)))*std::conj(line->branchCurrentPU());
-		line->updateBranchPowerFlow(power_out_0);
-	}
 }
 
 // this is to store nodal power injection in first line or transformer (in case no line is connected)
-// lower level classes (Node, Terminal) can stay unchanged
+// so that lower level classes (Node, TopologicalTerminal) can stay untouched
 void NRpolarSolver::calculate_nodal_injection() {
 
 	for (auto node : SysTopology.mNodes) {
+		std::list<std::shared_ptr<CPS::Static::Ph1::PiLine>> lines;
 		for (auto comp : SysTopology.mComponentsAtNode[node]) {
 			if (std::shared_ptr<CPS::Static::Ph1::PiLine> line = std::dynamic_pointer_cast<CPS::Static::Ph1::PiLine>(comp)) {
 				line->storeNodalInjection(sol_S_complex.coeff(node->simNode()));
+				lines.push_back(line);
 				break;
 			}
-			else if (std::shared_ptr<CPS::Static::Ph1::Transformer> trafo = std::dynamic_pointer_cast<CPS::Static::Ph1::Transformer>(comp)) {
-				trafo->storeNodalInjection(sol_S_complex.coeff(node->simNode()));
-				break;
+		}
+		if (lines.empty()) {
+			for (auto comp : SysTopology.mComponentsAtNode[node]) {
+				if (std::shared_ptr<CPS::Static::Ph1::Transformer> trafo = std::dynamic_pointer_cast<CPS::Static::Ph1::Transformer>(comp)) {
+					trafo->storeNodalInjection(sol_S_complex.coeff(node->simNode()));
+					break;
+				}
 			}
 		}
 	}

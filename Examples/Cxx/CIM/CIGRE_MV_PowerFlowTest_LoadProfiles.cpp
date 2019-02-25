@@ -76,6 +76,7 @@ int main(int argc, char** argv){
 
     CIM::Reader reader(simName, Logger::Level::INFO, Logger::Level::NONE);
     SystemTopology system = reader.loadCIM(system_freq, filenames, CPS::Domain::Static);
+	//load profile assigner
 	//loadProfileAssigner assigner(simName, loadProfilePath, assignList, Logger::Level::INFO);
 	//assigner.assign(1, 1, 3600, system, loadProfileAssigner::Mode::MANUAL);
 
@@ -85,13 +86,39 @@ int main(int argc, char** argv){
 		logger->addAttribute(node->name(), node->attribute("v"));
 		std::list<std::shared_ptr<CPS::Static::Ph1::PiLine>> lines;
 		for (auto comp : system.mComponentsAtNode[node]) {
-			if (std::shared_ptr<CPS::Static::Ph1::PiLine> line = std::dynamic_pointer_cast<CPS::Static::Ph1::PiLine>(comp)) {
-				logger->addAttribute(line->name() + "." + line->node(0)->name() + ".I", line->attribute<Complex>("current"));
-				logger->addAttribute(line->name() + "." + line->node(0)->name() + ".P", line->attribute<Real>("p_branch"));
-				logger->addAttribute(line->name() + "." + line->node(0)->name() + ".Q", line->attribute<Real>("q_branch"));
+			if (std::shared_ptr<CPS::Static::Ph1::PiLine> line =
+				std::dynamic_pointer_cast<CPS::Static::Ph1::PiLine>(comp))
+			{
+				String current=(node->name() == line->node(0)->name()) ? ("current") : ("current_1");
+				String p_branch = (node->name() == line->node(0)->name()) ? ("p_branch") : ("p_branch_1");
+				String q_branch = (node->name() == line->node(0)->name()) ? ("q_branch") : ("q_branch_1");
+
+				logger->addAttribute(line->name() + "." + node->name() + ".I", line->attribute<Complex>(current));
+				logger->addAttribute(line->name() + "." + node->name() + ".P", line->attribute<Real>(p_branch));
+				logger->addAttribute(line->name() + "." + node->name() + ".Q", line->attribute<Real>(q_branch));
 				lines.push_back(line);
 			}
+			else if (std::shared_ptr<CPS::Static::Ph1::externalGridInjection> extnet =
+				std::dynamic_pointer_cast<CPS::Static::Ph1::externalGridInjection>(comp))
+			{
+				logger->addAttribute(node->name() + ".Pinj", extnet->attribute<Real>("p_inj"));
+				logger->addAttribute(node->name() + ".Qinj", extnet->attribute<Real>("q_inj"));
+			}
+			else if (std::shared_ptr<CPS::Static::Ph1::Transformer> trafo =
+				std::dynamic_pointer_cast<CPS::Static::Ph1::Transformer>(comp))
+			{
+				String current = (node->name() == trafo->node(0)->name()) ? ("current") : ("current_1");
+				String p_branch = (node->name() == trafo->node(0)->name()) ? ("p_branch") : ("p_branch_1");
+				String q_branch = (node->name() == trafo->node(0)->name()) ? ("q_branch") : ("q_branch_1");
+
+				logger->addAttribute(trafo->name() + "." + node->name() + ".I", trafo->attribute<Complex>(current));
+				logger->addAttribute(trafo->name() + "." + node->name() + ".P", trafo->attribute<Real>(p_branch));
+				logger->addAttribute(trafo->name() + "." + node->name() + ".Q", trafo->attribute<Real>(q_branch));
+
+			}
 		}
+		// get nodal injection from specific line or transformer
+		// (the first line obj connected to the node or, if none, the first trafo)
 		if (!lines.empty()) {
 		logger->addAttribute(node->name() + ".Pinj", lines.front()->attribute<Real>("p_inj"));
 		logger->addAttribute(node->name() + ".Qinj", lines.front()->attribute<Real>("q_inj"));
@@ -99,7 +126,9 @@ int main(int argc, char** argv){
 		else
 		{
 			for (auto comp : system.mComponentsAtNode[node]) {
-				if (std::shared_ptr<CPS::Static::Ph1::Transformer> trafo = std::dynamic_pointer_cast<CPS::Static::Ph1::Transformer>(comp)) {
+				if (std::shared_ptr<CPS::Static::Ph1::Transformer> trafo =
+					std::dynamic_pointer_cast<CPS::Static::Ph1::Transformer>(comp))
+				{
 					logger->addAttribute(node->name() + ".Pinj", trafo->attribute<Real>("p_inj"));
 					logger->addAttribute(node->name() + ".Qinj", trafo->attribute<Real>("q_inj"));
 					break;
