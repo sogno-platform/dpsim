@@ -1,9 +1,9 @@
-﻿/*!
- * \file Solver_NRpolar.h
- * \author Santiago Peñate Vera
+﻿/*
+ * Authors: Santiago Peñate Vera, Jan Dinkelbach
  *
  * Created on 25 of January of 2015, 23:05
  * Copyright (C) 2015 Santiago Peñate Vera
+ * Copyright (C) 2019 Jan Dinkelbach
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
