@@ -128,7 +128,7 @@ namespace DPsim {
 		*/
 		virtual void NRP_initialize();
 
-		virtual void powerFlow();
+		virtual Bool powerFlow(Bool with_iwamoto = false);
 
         void determinePowerFlowBusType();
 
@@ -189,7 +189,7 @@ namespace DPsim {
 
 		void update_solution(CPS::Vector X, CPS::UInt npq, CPS::UInt npv);
         
-		void get_increments(CPS::Vector X, CPS::Vector &incV, CPS::Vector &incD, CPS::UInt npq, CPS::UInt npv);
+		void get_increments(const CPS::Vector& X, CPS::Vector &incV, CPS::Vector &incD, CPS::UInt npq, CPS::UInt npv);
 
 		void calculate_slack_power(); //calculate the slack bus power        
 				      
@@ -202,7 +202,7 @@ namespace DPsim {
 
 		void generate_initial_solution(bool keep_last_solution=false);
 
-		void set_solution();
+		void set_solution(CPS::Bool didConverge);
 		void calculate_flows();
 
 		/* TODO: Z matrix composition to be fixed after moving from Circuit to Solver_NRpolar
