@@ -4,6 +4,10 @@ if (NOT WIN32)
 	# needed so CIMParser and arabica (which are first compiled into static libs)
 	# can be included in the .so
 	set(CMAKE_CXX_FLAGS "-fPIC")
+
+	if(CXX_SUPPORTS_PROF AND WITH_PROFILING)
+       set(CMAKE_CXX_FLAGS "-fPIC -O0 -pg")
+	endif() 
 endif()
 
 # targets
