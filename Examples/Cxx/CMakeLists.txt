@@ -56,6 +56,7 @@ set(SYNCGEN_SOURCES
 if(WITH_SUNDIALS)
 	list(APPEND SYNCGEN_SOURCES
 		SynchronGenerator/DP_SynGen_dq_ThreePhFault.cpp
+		SynchronGenerator/DP_Multimachine_DQ_Parallel.cpp
 	)
 endif()
 
