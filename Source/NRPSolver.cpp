@@ -89,9 +89,9 @@ NRpolarSolver::NRpolarSolver(CPS::String simName, CPS::SystemTopology & sysTopol
 	determinePowerFlowBusType();
 }
 
-void NRpolarSolver::NRP_initialize(){
+void NRpolarSolver::NRP_initialize(Real time){
 
-	generate_initial_solution();
+	generate_initial_solution(time);
 	
 	mLog.info() << "#### NEWTON-RAPHSON POLAR SOLVER " << std::endl;
 
@@ -345,7 +345,7 @@ void NRpolarSolver::determinePowerFlowBusType() {
 
 
 // this could be integrated into the function that determines node type (PV,PQ)
-void NRpolarSolver::generate_initial_solution(bool keep_last_solution) {
+void NRpolarSolver::generate_initial_solution(Real time, bool keep_last_solution) {
 	resize_sol(SysTopology.mNodes.size());
 	resize_complex_sol(SysTopology.mNodes.size());
 
@@ -359,7 +359,7 @@ void NRpolarSolver::generate_initial_solution(bool keep_last_solution) {
 
 			if (std::shared_ptr<CPS::Static::Ph1::Load> load = std::dynamic_pointer_cast<CPS::Static::Ph1::Load>(comp)) {
 				if (load->use_profile) {
-					load->updatePQ();
+					load->updatePQ(time);
 				}
 				sol_P(pq->simNode()) -= load->mPQ->attribute<CPS::Real>("P")->get() / Sbase;
 				sol_Q(pq->simNode()) -= load->mPQ->attribute<CPS::Real>("Q")->get() / Sbase;
@@ -627,8 +627,10 @@ double NRpolarSolver::mu(Matrix &J, Matrix &J2, Vector &F, Vector &dV, Vector &d
     Vector b = J * (dx);        
         
     Vector c(2*npq+npv); //= dx. * b * 0.5;
-    for (UInt i=0;i<(2*npq+npv); i++) //this loop is because EIGEN does not want to perform this simple element wise vector multiplication...
-        c(i) = dx.coeff(i) * b.coeff(i) * 0.5;
+    //for (UInt i=0;i<(2*npq+npv); i++) //this loop is because EIGEN does not want to perform this simple element wise vector multiplication...
+    //    c(i) = dx.coeff(i) * b.coeff(i) * 0.5;
+	Vector temp_c = J2 * (dx);
+	c = dx.cwiseProduct(temp_c)*0.5;
                     
     double g0 = -1* a.dot(b);
     double g1 = b.dot(b) + 2 * a.dot(c);
@@ -779,11 +781,6 @@ void NRpolarSolver::set_solution(Bool didConverge) {
 		for (UInt i = 0; i < sol_length; i++) {
 			mLog.info() << sol_P[i] << "\t" << sol_Q[i] << "\t" << sol_V[i] << "\t" << sol_D[i] << std::endl;
 		}
-/*
-		mLog.info() << " #### DEBUG Jacobian Matrix ####" << std::endl;
-		mLog.info() << J << std::endl;
-		mLog.info() << "#### DEBUG Jacobian Matrix ####" << std::endl;
-*/
     }
     for (UInt i = 0; i < sol_length; i++) {
         sol_S_complex(i) = CPS::Complex(sol_P.coeff(i), sol_Q.coeff(i));
@@ -920,7 +917,7 @@ Real NRpolarSolver::step(Real time) {
 		compose_Y()
 	*/
 	//consider keep_last_solution after the first TimeStep to save time
-	NRP_initialize();
+	NRP_initialize(time);
 	Bool converged = powerFlow();
 	if (converged) {
 		set_solution(converged);

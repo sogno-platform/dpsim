@@ -120,6 +120,8 @@ if(WITH_CIM)
 		CIM/CIGRE_MV_PowerFlowTest_LoadProfiles.cpp
 
 		CIM/IEEE_LV_PowerFlowTest.cpp
+		CIM/IEEE_LV_PowerFlowTest_LP.cpp
+
 	)
 endif()
 

@@ -126,7 +126,7 @@ namespace DPsim {
 		*
 		* \sa Solver_State
 		*/
-		virtual void NRP_initialize();
+		virtual void NRP_initialize(CPS::Real time);
 
 		virtual Bool powerFlow(Bool with_iwamoto = false);
 
@@ -200,7 +200,7 @@ namespace DPsim {
 
 		void compile();
 
-		void generate_initial_solution(bool keep_last_solution=false);
+		void generate_initial_solution(CPS::Real time, bool keep_last_solution = false);
 
 		void set_solution(CPS::Bool didConverge);
 		void calculate_flows();
