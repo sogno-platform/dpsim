@@ -58,7 +58,7 @@ int main(int argc, char** argv){
     CIM::Reader reader(simName, Logger::Level::DEBUG, Logger::Level::NONE);
     SystemTopology sys = reader.loadCIM(system_freq, filenames, CPS::Domain::Static);
 	loadProfileAssigner Assigner(simName, loadProfilePath, Logger::Level::INFO);
-	Assigner.assign(1, 1, 60, sys, loadProfileAssigner::Mode::AUTO);
+	Assigner.assign(sys, 1, 1, 60, loadProfileAssigner::Mode::AUTO);
 
 	RealTimeSimulation sim(simName, sys, args.timeStep, args.duration, args.solver.domain, args.solver.type, args.logLevel);
 
