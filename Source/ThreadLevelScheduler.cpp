@@ -68,7 +68,16 @@ void ThreadLevelScheduler::createSchedule(const Task::List& tasks, const Edges& 
 void ThreadLevelScheduler::sortTasksByType(Task::List::iterator begin, CPS::Task::List::iterator end) {
 	auto cmp = [](const Task::Ptr& p1, const Task::Ptr& p2) -> bool {
 		// TODO: according to the standard, the ordering may change between invocations
+		// clang complains here for some reason that the expressions in the typeid
+		// might be evaluated (which is the whole point)
+#ifdef __clang__
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wpotentially-evaluated-expression"
+#endif
 		return typeid(*p1).before(typeid(*p2));
+#ifdef __clang__
+#pragma clang diagnostic pop
+#endif
 	};
 	std::sort(begin, end, cmp);
 }

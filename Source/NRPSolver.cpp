@@ -238,14 +238,11 @@ void NRpolarSolver::setSbase() {
 // set a node to VD using its name
 void NRpolarSolver::setVDNode(CPS::String name) {
 
-	switch (externalGrids.empty())
-	{
-	case false:
+	if (!externalGrids.empty()) {
 		if (externalGrids[0]->node(0)->name() == name) {
 			externalGrids[0]->modifyPowerFlowBusType(CPS::PowerflowBusType::VD);
-			break;
 		}
-	case true:
+	} else {
 		for (auto gen : SynchronGenerators) {
 			if (gen->node(0)->name() == name)
 			{
@@ -254,7 +251,6 @@ void NRpolarSolver::setVDNode(CPS::String name) {
 			}
 		}
 		throw std::invalid_argument("Invalid slack bus, no external grid or synchronous generator attached");
-		break;
 	}
 
 }
