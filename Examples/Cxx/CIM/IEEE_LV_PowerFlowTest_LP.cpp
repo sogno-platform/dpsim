@@ -21,7 +21,6 @@
 #include "cps/CIM/Reader.h"
 #include <DPsim.h>
 #include "cps/loadProfileReader.h"
-#include "gsl.h"
 
 using namespace std;
 using namespace DPsim;
