@@ -21,6 +21,8 @@
 #include "cps/CIM/Reader.h"
 #include <DPsim.h>
 #include "cps/loadProfileReader.h"
+#include <iostream>
+#include <fstream>
 
 using namespace std;
 using namespace DPsim;
@@ -70,7 +72,11 @@ int main(int argc, char** argv){
 	String out = "/dpsim1-villas";
 	Interface intf(out, in, &conf);
 
-	// Register exportable node voltages
+	ofstream villas_conf;
+    villas_conf.open ("villas_sent_data.conf");
+ 
+    // Register exportable node voltages
+	string list_varnames[sys.mNodes.size()*2];
 	UInt o = 0;
 	for (auto n : sys.mNodes) {
 		UInt i;
@@ -83,12 +89,20 @@ int main(int argc, char** argv){
 		auto v = n_stat->attributeMatrix<Complex>("v");
 		auto v0 = v->coeffComplex(0,0);
 
-		std::cout << "Signal " << (i*2)+0 << ": Mag  " << n->name() << std::endl;
+        std::cout << "Signal " << (i*2)+0 << ": Mag  " << n->name() << std::endl;
 		std::cout << "Signal " << (i*2)+1 << ": Phas " << n->name() << std::endl;
 
 		intf.addExport(v0->mag(),   (i*2)+0); o++;
 		intf.addExport(v0->phase(), (i*2)+1); o++;
+
+		list_varnames[(i*2)+0] = n->name() + ".V.mag";
+		list_varnames[(i*2)+1] = n->name() + ".V.phase";
 	}
+
+    for (auto varname : list_varnames) { 
+        villas_conf << varname << std::endl;
+	}
+    villas_conf.close();
 
 	sim.addInterface(&intf, false, false);
 
