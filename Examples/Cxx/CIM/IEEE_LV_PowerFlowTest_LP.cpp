@@ -52,7 +52,7 @@ int main(int argc, char** argv){
 	path + "Rootnet_FULL_NE_13J16h_SV.xml",
 	path + "Rootnet_FULL_NE_13J16h_TP.xml"
 	};
-	String simName = "CIGRE-LV-reduced";
+	String simName = "IEEE-LV-reduced";
 	CPS::Real system_freq = 50;
 
 	/*
@@ -65,7 +65,7 @@ int main(int argc, char** argv){
 		string load_number;
 		for (auto &c : filename) {
 			if (isdigit(c)) {
-				load_number.append(to_string(c));
+				load_number += c;
 			}
 		}
 		assignList.insert(std::pair<string,string>("PQ"+load_number,"Load_profile_"+load_number));
