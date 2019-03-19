@@ -1,4 +1,4 @@
-/** Simulation
+/** MNASolver
  *
  * @author Markus Mirz <mmirz@eonerc.rwth-aachen.de>
  * @copyright 2017-2018, Institute for Automation of Complex Power Systems, EONERC

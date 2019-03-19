@@ -193,8 +193,12 @@ Real ODESolver::step(Real initial_time) {
 	if(check_flag(&mFlag, "ARKodeGetNumErrTestFails", 1))
 		return 1;
 
+	ARKodeFree(&mArkode_mem);
+	SUNLinSolFree(LS);
+	SUNMatDestroy(A);
+
 	// Print statistics:
-	std::cout << "Number Computing Steps: "<< nst << " Number Error-Test-Fails: " << netf << std::endl;
+	//std::cout << "Number Computing Steps: "<< nst << " Number Error-Test-Fails: " << netf << std::endl;
 	return Tf;
 }
 
@@ -236,8 +240,5 @@ int ODESolver::check_flag(void *flagvalue, const std::string funcname, int opt){
 }
 
 ODESolver::~ODESolver() {
-	ARKodeFree(&mArkode_mem);
 	N_VDestroy(mStates);
-  SUNLinSolFree(LS);
-	SUNMatDestroy(A);
 }

@@ -109,10 +109,10 @@ namespace DPsim {
 			CPS::Logger::Level logLevel = CPS::Logger::Level::INFO);
 
 		template <typename VarType>
-		void createSolvers(const CPS::SystemTopology& system, Solver::Type solverType, Bool steadyStateInit, Bool splitSubnets);
+		void createSolvers(const CPS::SystemTopology& system, Solver::Type solverType, Bool steadyStateInit, Bool splitSubnets, const CPS::Component::List& tearComponents);
 
 		template <typename VarType>
-		int checkTopologySubnets(const CPS::SystemTopology& system, std::unordered_map<typename CPS::Node<VarType>::Ptr, int>& subnet);
+		static int checkTopologySubnets(const CPS::SystemTopology& system, std::unordered_map<typename CPS::Node<VarType>::Ptr, int>& subnet);
 
 		void prepSchedule();
 	public:
@@ -123,7 +123,8 @@ namespace DPsim {
 			Solver::Type solverType = Solver::Type::MNA,
 			CPS::Logger::Level logLevel = CPS::Logger::Level::INFO,
 			Bool steadyStateInit = false,
-			Bool splitSubnets = true);
+			Bool splitSubnets = true,
+			CPS::Component::List tearComponents = CPS::Component::List());
 		/// Desctructor
 		virtual ~Simulation();
 
@@ -138,6 +139,9 @@ namespace DPsim {
 #ifdef WITH_GRAPHVIZ
 		void renderDependencyGraph(std::ostream& os);
 #endif
+
+		template <typename VarType>
+		static void splitSubnets(const CPS::SystemTopology& system, std::vector<CPS::SystemTopology>& splitSystems);
 
 		/// Schedule an event in the simulation
 		void addEvent(Event::Ptr e) {

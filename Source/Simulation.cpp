@@ -22,6 +22,7 @@
 
 #include <dpsim/SequentialScheduler.h>
 #include <dpsim/Simulation.h>
+#include <dpsim/DiakopticsSolver.h>
 #include <dpsim/MNASolver.h>
 #include <dpsim/NRPSolver.h>
 
@@ -63,16 +64,17 @@ Simulation::Simulation(String name, SystemTopology system,
 	Domain domain, Solver::Type solverType,
 	Logger::Level logLevel,
 	Bool steadyStateInit,
-	Bool splitSubnets) :
+	Bool splitSubnets,
+	Component::List tearComponents) :
 	Simulation(name, timeStep, finalTime,
 		domain, logLevel) {
 
 	switch (domain) {
 	case Domain::DP:
-		createSolvers<Complex>(system, solverType, steadyStateInit, splitSubnets);
+		createSolvers<Complex>(system, solverType, steadyStateInit, splitSubnets, tearComponents);
 		break;
 	case Domain::EMT:
-		createSolvers<Real>(system, solverType, steadyStateInit, splitSubnets);
+		createSolvers<Real>(system, solverType, steadyStateInit, splitSubnets, tearComponents);
 		break;
 	case Domain::Static:
 		mSolvers.push_back(std::make_shared<NRpolarSolver>(name, system, timeStep, domain, logLevel));
@@ -84,23 +86,11 @@ Simulation::~Simulation() {
 }
 
 template <typename VarType>
-void Simulation::createSolvers(const SystemTopology& system, Solver::Type solverType, Bool steadyStateInit, Bool splitSubnets) {
+void Simulation::splitSubnets(const SystemTopology& system, std::vector<SystemTopology>& splitSystems) {
 	std::unordered_map<typename Node<VarType>::Ptr, int> subnet;
 	int numberSubnets = checkTopologySubnets<VarType>(system, subnet);
-	if (numberSubnets == 1 || !splitSubnets) {
-		switch (solverType) {
-			case Solver::Type::MNA:
-				mSolvers.push_back(std::make_shared<MnaSolver<VarType>>(mName, system, mTimeStep,
-					mDomain, mLogLevel, steadyStateInit));
-				break;
-#ifdef WITH_SUNDIALS
-			case Solver::Type::DAE:
-				mSolvers.push_back(std::make_shared<DAESolver>(mName, system, mTimeStep, 0.0));
-				break;
-#endif /* WITH_SUNDIALS */
-			default:
-				throw UnsupportedSolverException();
-		}
+	if (numberSubnets == 1) {
+		splitSystems.push_back(system);
 	} else {
 		std::vector<Component::List> components(numberSubnets);
 		std::vector<TopologicalNode::List> nodes(numberSubnets);
@@ -133,27 +123,48 @@ void Simulation::createSolvers(const SystemTopology& system, Solver::Type solver
 				}
 			}
 		}
-
 		for (int currentNet = 0; currentNet < numberSubnets; currentNet++) {
-			SystemTopology partSys(system.mSystemFrequency, nodes[currentNet], components[currentNet]);
-			String copySuffix = "_" + std::to_string(currentNet);
-			// TODO in the future, here we could possibly even use different
-			// solvers for different subnets if deemed useful
-			switch (solverType) {
-				case Solver::Type::MNA:
-					mSolvers.push_back(std::make_shared<MnaSolver<VarType>>(mName + copySuffix, partSys, mTimeStep,
-						mDomain, mLogLevel, steadyStateInit));
-					break;
-#ifdef WITH_SUNDIALS
-				case Solver::Type::DAE:
-					mSolvers.push_back(std::make_shared<DAESolver>(mName + copySuffix, partSys, mTimeStep, 0.0));
-					break;
-#endif /* WITH_SUNDIALS */
-				default:
-					throw UnsupportedSolverException();
-			}
+			splitSystems.emplace_back(system.mSystemFrequency, nodes[currentNet], components[currentNet]);
 		}
 	}
+}
+
+template <typename VarType>
+void Simulation::createSolvers(const CPS::SystemTopology& system, Solver::Type solverType, Bool steadyStateInit, Bool doSplitSubnets, const Component::List& tearComponents) {
+	std::vector<SystemTopology> subnets;
+	if (doSplitSubnets && tearComponents.size() == 0)
+		splitSubnets<VarType>(system, subnets);
+	else
+		subnets.push_back(system);
+
+	for (UInt net = 0; net < subnets.size(); net++) {
+		String copySuffix;
+	   	if (subnets.size() > 1)
+			copySuffix = "_" + std::to_string(net);
+
+		// TODO in the future, here we could possibly even use different
+		// solvers for different subnets if deemed useful
+		Solver::Ptr solver;
+		switch (solverType) {
+			case Solver::Type::MNA:
+				if (tearComponents.size() > 0) {
+					solver = std::make_shared<DiakopticsSolver<VarType>>(mName, subnets[net], tearComponents, mTimeStep, mLogLevel);
+				} else {
+					solver = std::make_shared<MnaSolver<VarType>>(mName + copySuffix, subnets[net], mTimeStep,
+						mDomain, mLogLevel, steadyStateInit);
+				}
+				break;
+#ifdef WITH_SUNDIALS
+			case Solver::Type::DAE:
+				solver = std::make_shared<DAESolver>(mName + copySuffix, subnets[net], mTimeStep, 0.0);
+				break;
+#endif /* WITH_SUNDIALS */
+			default:
+				throw UnsupportedSolverException();
+		}
+		mSolvers.push_back(solver);
+	}
+
 #ifdef WITH_SUNDIALS
 	for (auto comp : system.mComponents) {
 		auto odeComp = std::dynamic_pointer_cast<ODEInterface>(comp);
