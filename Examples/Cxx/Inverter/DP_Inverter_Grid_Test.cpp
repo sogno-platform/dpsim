@@ -73,7 +73,7 @@ int main(int argc, char* argv[]) {
 	rc->setParameters(1e-6);
 	rc->initialize(50, frequencies);
 	auto grid = VoltageSource::make("grid", Logger::Level::DEBUG);
-	grid->setParameters(Complex(0, -220));
+	grid->setParameters(Complex(0, -311.1270));
 	grid->initialize(50, frequencies);
 
 	// Topology
