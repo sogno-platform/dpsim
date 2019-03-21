@@ -374,7 +374,7 @@ void MnaSolver<VarType>::SolveTask::execute(Real time, Int timeStepCount) {
 	if (mSolver.mSwitchedMatrices.size() > 0 && !mSteadyStateInit)
 		mSolver.mLeftSideVector = mSolver.mLuFactorizations[mSolver.mCurrentSwitchStatus].solve(mSolver.mRightSideVector);
 	else
-		mSolver.mLeftSideVector = mSolver.mNoSwitchSystemMatrix.solve(mSolver.mRightSideVector);
+		mSolver.mLeftSideVector = mSolver.mNoSwitchLuFacorization.solve(mSolver.mRightSideVector);
 
 	// TODO split into separate task? (dependent on x, updating all v attributes)
 	for (UInt nodeIdx = 0; nodeIdx < mSolver.mNumNetNodes; nodeIdx++)
