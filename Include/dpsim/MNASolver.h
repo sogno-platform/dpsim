@@ -58,6 +58,8 @@ namespace DPsim {
 		UInt mNumNetSimNodes = 0;
 		/// Number of simulation virtual nodes
 		UInt mNumVirtualSimNodes = 0;
+		/// Number of harmonic nodes
+		UInt mNumHarmSimNodes = 0;
 		/// Flag to activate power flow based initialization.
 		/// If this is false, all voltages are initialized with zero.
 		Bool mPowerflowInitialization;
@@ -76,9 +78,9 @@ namespace DPsim {
 		/// System matrix A that is modified by matrix stamps
 		std::bitset<SWITCH_NUM> mCurrentSwitchStatus;
 		/// Temporary system matrix, i.e. for initialization
-		Matrix mTmpSystemMatrix;
+		Matrix mNoSwitchSystemMatrix;
 		/// LU decomposition of system matrix A
-		CPS::LUFactorized mTmpLuFactorization;
+		CPS::LUFactorized mNoSwitchLuFacorization;
 		/// Source vector of known quantities
 		Matrix mRightSideVector;
 		/// List of all right side vector contributions
@@ -173,12 +175,21 @@ namespace DPsim {
 		/// Log left and right vector values for each simulation step
 		void log(Real time);
 		// #### Getter ####
+		///
 		Matrix& leftSideVector() { return mLeftSideVector; }
+		///
 		Matrix& rightSideVector() { return mRightSideVector; }
-		Matrix& systemMatrix() { return mTmpSystemMatrix; }
-
+		///
 		CPS::Task::List getTasks();
+		///
+		Matrix& systemMatrix() {
+			if (mSwitchedMatrices.size() > 0)
+				return mSwitchedMatrices[mCurrentSwitchStatus];
+			else
+				return mNoSwitchSystemMatrix;
+		}
 
+		///
 		class SolveTask : public CPS::Task {
 		public:
 			SolveTask(MnaSolver<VarType>& solver, Bool steadyStateInit) :
@@ -201,6 +212,7 @@ namespace DPsim {
 			Bool mSteadyStateInit;
 		};
 
+		///
 		class LogTask : public CPS::Task {
 		public:
 			LogTask(MnaSolver<VarType>& solver) :
@@ -215,6 +227,4 @@ namespace DPsim {
 			MnaSolver<VarType>& mSolver;
 		};
 	};
-
-
 }

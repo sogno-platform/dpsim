@@ -29,6 +29,9 @@ int main(int argc, char* argv[]) {
 	Real timeStep = 0.0005;
 	Real finalTime = 0.03;
 	String name = "DP_SynGen_TrStab_SteadyState";
+	Logger::setLogDir("logs/"+name);
+	std::cout << std::getenv("CPS_LOG_DIR");
+
 	// Define machine parameters in per unit
 	Real nomPower = 555e6;
 	Real nomPhPhVoltRMS = 24e3;
