@@ -21,6 +21,10 @@
 
 #pragma once
 
+#if defined(__GNUC__) && !defined(__clang__)
+  #include <cxxabi.h>
+#endif
+
 #include <list>
 
 #include <dpsim/Timer.h>
@@ -84,5 +88,36 @@ public:
 
 	std::map<String, Real> options;
 };
+
+namespace Utils {
+
+template<typename T>
+static CPS::String type(const CPS::String &stripPrefix = "CPS::") {
+	Int status = 1;
+	const char *mangled, *unmangled;
+
+	mangled = typeid(T).name();
+
+#ifdef _MSC_VER
+	return CPS::String(mangled);
+#else
+	unmangled = abi::__cxa_demangle(mangled, NULL, NULL, &status);
+
+	if (status)
+		return mangled;
+	else {
+		CPS::String type = unmangled;
+
+		delete unmangled;
+
+		if (type.find(stripPrefix) == 0)
+			type = type.substr(stripPrefix.size());
+
+		return type;
+	}
+#endif
+}
+
+}
 
 }
