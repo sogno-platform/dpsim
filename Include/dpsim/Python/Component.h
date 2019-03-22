@@ -120,10 +120,10 @@ namespace Python {
 		{
 			std::stringstream doc;
 
-			T comp("uid", "name");
+			//T comp("uid", "name");
 
-			doc << comp.type() << "(name, nodes, **attributes)" << std::endl
-			    << "Construct a new component with a given name and list of nodes." << std::endl;
+			//doc << comp.type() << "(name, nodes, **attributes)" << std::endl
+			//    << "Construct a new component with a given name and list of nodes." << std::endl;
 #if 0
 			    << comp.description() << std::endl
 			    << std::endl;
