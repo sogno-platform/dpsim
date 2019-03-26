@@ -27,9 +27,11 @@ using namespace CPS::DP::Ph3;
 
 int main(int argc, char* argv[]) {
 	// Define simulation parameters
-	Real timeStep = 0.0005;
-	Real finalTime = 0.03;
-	String name = "DP_SynGen_dq_SteadyState";
+	Real timeStep = 0.00005; //initial: 0.00005
+	Real finalTime = 0.1;
+	String simName = "DP_SynGenDq7odtrapez_ThreePhFault";
+	Logger::setLogDir("logs/"+simName);
+	std::cout << std::getenv("CPS_LOG_DIR");
 
 	// Define machine parameters in per unit
 	Real nomPower = 555e6;
@@ -53,13 +55,14 @@ int main(int argc, char* argv[]) {
 	// Initialization parameters
 	Real initActivePower = 300e6;
 	Real initReactivePower = 0;
-	Real initMechPower = 300e6;
 	Real initTerminalVolt = 24000 / sqrt(3) * sqrt(2);
 	Real initVoltAngle = -PI / 2;
 	Real fieldVoltage = 7.0821;
-
+	Real mechPower = 300e6;
 	// Define grid parameters
 	Real Rload = 1.92;
+	Real BreakerOpen = 1e6;
+	Real BreakerClosed = 1e-6;
 
 	// Nodes
 	std::vector<Complex> initVoltN1 = std::vector<Complex>({
@@ -69,33 +72,35 @@ int main(int argc, char* argv[]) {
 	auto n1 = Node::make("n1", PhaseType::ABC, initVoltN1);
 
 	// Components
-	std::shared_ptr<Ph3::SynchronGeneratorDQ> gen;
-	if (argc < 2) {
-		std::cerr << "usage: DP_SynGen_dq_SteadyState <0|1>" << std::endl;
-		std::cerr << "(0: internal trapezoidal solver, 1: ARKode solver)" << std::endl;
-		std::exit(1);
-	}
-	if (atoi(argv[1]) == 1) {
-		gen = Ph3::SynchronGeneratorDQODE::make("DP_SynGen_dq_SteadyState_SynGen");
-	} else {
-		gen = Ph3::SynchronGeneratorDQTrapez::make("DP_SynGen_dq_SteadyState_SynGen");
-	}
-
+	auto gen = Ph3::SynchronGeneratorDQTrapez::make("DP_SynGen_dq_ThreePhFault_SynGen");
 	gen->setFundamentalParametersPU(nomPower, nomPhPhVoltRMS, nomFreq, poleNum, nomFieldCurr,
 		Rs, Ll, Lmd, Lmq, Rfd, Llfd, Rkd, Llkd, Rkq1, Llkq1, Rkq2, Llkq2, H,
-		initActivePower, initReactivePower, initTerminalVolt, initVoltAngle, fieldVoltage, initMechPower);
-	gen->connect({n1});
+		initActivePower, initReactivePower, initTerminalVolt, initVoltAngle, fieldVoltage, mechPower);
 
 	auto res = Ph3::SeriesResistor::make("R_load");
 	res->setParameters(Rload);
+
+	auto fault = Ph3::SeriesSwitch::make("Br_fault");
+	fault->setParameters(BreakerOpen, BreakerClosed);
+	fault->open();
+
+	// Connections
+	gen->connect({n1});
 	res->connect({Node::GND, n1});
+	fault->connect({Node::GND, n1});
+
+	// Logging
+	auto logger = DataLogger::make(simName);
+	logger->addAttribute("v1", n1->attribute("v"));
 
 	// System
-	auto sys = SystemTopology(60, SystemNodeList{n1}, SystemComponentList{gen, res});
+	auto sys = SystemTopology(60, SystemNodeList{n1}, SystemComponentList{gen, res, fault});
+	Simulation sim(simName, sys, timeStep, finalTime, Domain::DP, Solver::Type::MNA, Logger::Level::INFO);
+	sim.addLogger(logger);
 
-	// Simulation
-	Simulation sim(name, sys, timeStep, finalTime,
-		Domain::DP, Solver::Type::MNA, Logger::Level::INFO);
+	// Events
+	auto sw1 = SwitchEvent::make(0.05, fault, true);
+	sim.addEvent(sw1);
 
 	sim.run();
 

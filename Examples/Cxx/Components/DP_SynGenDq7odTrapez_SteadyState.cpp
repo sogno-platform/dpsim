@@ -27,9 +27,12 @@ using namespace CPS::DP::Ph3;
 
 int main(int argc, char* argv[]) {
 	// Define simulation parameters
-	Real timeStep = 0.00005; //initial: 0.00005
-	Real finalTime = 0.1;
-	String simName = "DP_SynchronGenerator_dq_ThreePhFault";
+	Real timeStep = 0.0005;
+	Real finalTime = 0.03;
+	String name = "DP_SynGenDq7odTrapez_SteadyState";
+	Logger::setLogDir("logs/"+name);
+	std::cout << std::getenv("CPS_LOG_DIR");
+
 	// Define machine parameters in per unit
 	Real nomPower = 555e6;
 	Real nomPhPhVoltRMS = 24e3;
@@ -52,14 +55,13 @@ int main(int argc, char* argv[]) {
 	// Initialization parameters
 	Real initActivePower = 300e6;
 	Real initReactivePower = 0;
+	Real initMechPower = 300e6;
 	Real initTerminalVolt = 24000 / sqrt(3) * sqrt(2);
 	Real initVoltAngle = -PI / 2;
 	Real fieldVoltage = 7.0821;
-	Real mechPower = 300e6;
+
 	// Define grid parameters
 	Real Rload = 1.92;
-	Real BreakerOpen = 1e6;
-	Real BreakerClosed = 1e-6;
 
 	// Nodes
 	std::vector<Complex> initVoltN1 = std::vector<Complex>({
@@ -69,30 +71,22 @@ int main(int argc, char* argv[]) {
 	auto n1 = Node::make("n1", PhaseType::ABC, initVoltN1);
 
 	// Components
-	auto gen = Ph3::SynchronGeneratorDQTrapez::make("DP_SynGen_dq_ThreePhFault_SynGen");
+	std::shared_ptr<Ph3::SynchronGeneratorDQ> gen = Ph3::SynchronGeneratorDQTrapez::make("DP_SynGen_dq_SteadyState_SynGen");
 	gen->setFundamentalParametersPU(nomPower, nomPhPhVoltRMS, nomFreq, poleNum, nomFieldCurr,
 		Rs, Ll, Lmd, Lmq, Rfd, Llfd, Rkd, Llkd, Rkq1, Llkq1, Rkq2, Llkq2, H,
-		initActivePower, initReactivePower, initTerminalVolt, initVoltAngle, fieldVoltage, mechPower);
+		initActivePower, initReactivePower, initTerminalVolt, initVoltAngle, fieldVoltage, initMechPower);
+	gen->connect({n1});
 
 	auto res = Ph3::SeriesResistor::make("R_load");
 	res->setParameters(Rload);
-
-	auto fault = Ph3::SeriesSwitch::make("Br_fault");
-	fault->setParameters(BreakerOpen, BreakerClosed);
-	fault->open();
-
-	// Connections
-	gen->connect({n1});
 	res->connect({Node::GND, n1});
-	fault->connect({Node::GND, n1});
 
 	// System
-	auto sys = SystemTopology(60, SystemNodeList{n1}, SystemComponentList{gen, res, fault});
-	Simulation sim(simName, sys, timeStep, finalTime, Domain::DP, Solver::Type::MNA, Logger::Level::INFO);
+	auto sys = SystemTopology(60, SystemNodeList{n1}, SystemComponentList{gen, res});
 
-	// Events
-	auto sw1 = SwitchEvent::make(0.05, fault, true);
-	sim.addEvent(sw1);
+	// Simulation
+	Simulation sim(name, sys, timeStep, finalTime,
+		Domain::DP, Solver::Type::MNA, Logger::Level::INFO);
 
 	sim.run();
 
