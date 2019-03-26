@@ -37,10 +37,11 @@ set(CIRCUIT_SOURCES
 	#VariableTimeStep/RXLine_LoadStep_FreqStep_1.cpp	
 )
 
-set(SYNCGEN_SOURCES
-	Components/DP_SynGen_dq_SteadyState.cpp
-	Components/DP_SynGen_TrStab_SteadyState.cpp
-	Components/DP_SynGen_TrStab_LoadStep.cpp
+set(SYNCGEN_SOURCES	
+	Components/DP_SynGenDq7odTrapez_SteadyState.cpp
+	Components/DP_SynGenDq7odTrapez_ThreePhFault.cpp
+	Components/DP_SynGenTrStab_SteadyState.cpp
+	Components/DP_SynGenTrStab_LoadStep.cpp
 )
 
 set(INVERTER_SOURCES
@@ -49,7 +50,8 @@ set(INVERTER_SOURCES
 
 if(WITH_SUNDIALS)
 	list(APPEND SYNCGEN_SOURCES
-		Components/DP_SynGen_dq_ThreePhFault.cpp
+		Components/DP_SynGenDq7odODE_SteadyState.cpp
+		Components/DP_SynGenDq7odODE_ThreePhFault.cpp
 		Components/DP_Multimachine_DQ_Parallel.cpp
 	)
 endif()
