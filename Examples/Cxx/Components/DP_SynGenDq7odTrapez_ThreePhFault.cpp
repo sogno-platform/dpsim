@@ -28,10 +28,9 @@ using namespace CPS::DP::Ph3;
 int main(int argc, char* argv[]) {
 	// Define simulation parameters
 	Real timeStep = 0.00005; //initial: 0.00005
-	Real finalTime = 0.1;
-	String simName = "DP_SynGenDq7odtrapez_ThreePhFault";
+	Real finalTime = 0.3;
+	String simName = "DP_SynGenDq7odTrapez_ThreePhFault";
 	Logger::setLogDir("logs/"+simName);
-	std::cout << std::getenv("CPS_LOG_DIR");
 
 	// Define machine parameters in per unit
 	Real nomPower = 555e6;
@@ -62,7 +61,7 @@ int main(int argc, char* argv[]) {
 	// Define grid parameters
 	Real Rload = 1.92;
 	Real BreakerOpen = 1e6;
-	Real BreakerClosed = 1e-6;
+	Real BreakerClosed = 0.001;
 
 	// Nodes
 	std::vector<Complex> initVoltN1 = std::vector<Complex>({
@@ -92,6 +91,8 @@ int main(int argc, char* argv[]) {
 	// Logging
 	auto logger = DataLogger::make(simName);
 	logger->addAttribute("v1", n1->attribute("v"));
+	logger->addAttribute("i_gen", gen->attribute("i_intf"));
+	logger->addAttribute("i_load", res->attribute("i_intf"));
 
 	// System
 	auto sys = SystemTopology(60, SystemNodeList{n1}, SystemComponentList{gen, res, fault});
@@ -99,8 +100,10 @@ int main(int argc, char* argv[]) {
 	sim.addLogger(logger);
 
 	// Events
-	auto sw1 = SwitchEvent::make(0.05, fault, true);
+	auto sw1 = SwitchEvent::make(0.1, fault, true);
 	sim.addEvent(sw1);
+	auto sw2 = SwitchEvent::make(0.2, fault, false);
+	sim.addEvent(sw2);
 
 	sim.run();
 
