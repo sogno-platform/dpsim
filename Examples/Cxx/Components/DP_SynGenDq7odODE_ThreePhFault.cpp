@@ -28,7 +28,7 @@ using namespace CPS::DP::Ph3;
 int main(int argc, char* argv[]) {
 	// Define simulation parameters
 	Real timeStep = 0.00005; //initial: 0.00005
-	Real finalTime = 0.1;
+	Real finalTime = 0.5;
 	String simName = "DP_SynGenDq7odODE_ThreePhFault";
 	Logger::setLogDir("logs/"+simName);
 
@@ -61,7 +61,7 @@ int main(int argc, char* argv[]) {
 	// Define grid parameters
 	Real Rload = 1.92;
 	Real BreakerOpen = 1e6;
-	Real BreakerClosed = 1e-6;
+	Real BreakerClosed = 0.001;
 
 	// Nodes
 	std::vector<Complex> initVoltN1 = std::vector<Complex>({
@@ -100,8 +100,10 @@ int main(int argc, char* argv[]) {
 	sim.addLogger(logger);
 
 	// Events
-	auto sw1 = SwitchEvent::make(0.05, fault, true);
+	auto sw1 = SwitchEvent::make(0.1, fault, true);
 	sim.addEvent(sw1);
+	auto sw2 = SwitchEvent::make(0.2, fault, false);
+	sim.addEvent(sw2);
 
 	sim.run();
 
