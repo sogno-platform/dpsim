@@ -34,7 +34,7 @@ TIME=$(date -d "+10 seconds" +%Y%m%dT%H%M%S) #-Iseconds
 echo "Start simulation at: $TIME"
 
 # Simulation params
-OPTS="--timestep 1 --duration $((30)) --system-freq 50 --start-at $TIME --solver-domain STATIC --solver-type NRP"
+OPTS="--timestep 1 --duration $((60)) --system-freq 50 --start-at $TIME --solver-domain STATIC --solver-type NRP"
 echo "Simulation params: $OPTS"
 
 CPS_LOG_PREFIX="[Sys ] " \

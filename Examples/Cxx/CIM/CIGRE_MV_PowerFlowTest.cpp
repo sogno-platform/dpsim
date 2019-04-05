@@ -54,7 +54,7 @@ int main(int argc, char** argv){
 	auto logger = DPsim::DataLogger::make(simName);
 	for (auto node : system.mNodes)
 	{
-		logger->addAttribute(node->name(), node->attribute("v"));
+		logger->addAttribute(node->name() + ".V", node->attribute("v"));
 	}
 
 	Simulation sim(simName, system, 1, 120, Domain::Static, Solver::Type::NRP, Logger::Level::NONE, true);
