@@ -27,8 +27,8 @@ using namespace CPS::DP::Ph3;
 
 int main(int argc, char* argv[]) {
 	// Define simulation parameters
-	Real timeStep = 0.00005; //initial: 0.00005
-	Real finalTime = 0.5;
+	Real timeStep = 0.00005;
+	Real finalTime = 0.3;
 	String simName = "DP_SynGenDq7odODE_ThreePhFault";
 	Logger::setLogDir("logs/"+simName);
 
