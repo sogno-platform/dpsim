@@ -34,7 +34,7 @@
 #include <cps/SignalComponent.h>
 #include <cps/PowerComponent.h>
 
-#define SWITCH_NUM 32
+#define SWITCH_NUM 16
 
 namespace DPsim {
 	/// Solver class using Modified Nodal Analysis (MNA).
@@ -111,6 +111,7 @@ namespace DPsim {
 		CPS::Logger::Level mLogLevel;
 		/// Simulation logger
 		CPS::Logger mLog;
+		std::shared_ptr<spdlog::logger> mSLog;
 		/// Left side vector logger
 		DataLogger mLeftVectorLog;
 		/// Right side vector logger
@@ -143,19 +144,7 @@ namespace DPsim {
 			Real timeStep,
 			CPS::Domain domain = CPS::Domain::DP,
 			CPS::Logger::Level logLevel = CPS::Logger::Level::INFO,
-			Bool steadyStateInit = false, Int downSampleRate = 1) :
-			mTimeStep(timeStep),
-			mDomain(domain),
-			mSteadyStateInit(steadyStateInit),
-			mDownSampleRate(downSampleRate),
-			mName(name),
-			mLogLevel(logLevel),
-			mLog(name + "_MNA", logLevel),
-			mLeftVectorLog(name + "_LeftVector", logLevel != CPS::Logger::Level::NONE),
-			mRightVectorLog(name + "_RightVector", logLevel != CPS::Logger::Level::NONE),
-			mInitLeftVectorLog(name + "_InitLeftVector", logLevel != CPS::Logger::Level::NONE),
-			mInitRightVectorLog(name + "_InitRightVector", logLevel != CPS::Logger::Level::NONE)
-		{ }
+			Bool steadyStateInit = false, Int downSampleRate = 1);
 
 		/// Constructor to be used in simulation examples.
 		MnaSolver(String name, CPS::SystemTopology system,
