@@ -11,12 +11,12 @@ You can read them online or :doc:`install </Install>` DPsim and execute them int
    :glob:
    :titlesonly:
 
-   Notebooks/Quickstart Guide
-   Notebooks/DP_Basics
-   Notebooks/Features/*
-   Notebooks/Circuits/*
-   Notebooks/Components/*
-   Notebooks/Grids/*
+   Examples/Notebooks/Quickstart Guide
+   Examples/Notebooks/DP_Basics
+   Examples/Notebooks/Features/*
+   Examples/Notebooks/Circuits/*
+   Examples/Notebooks/Components/*
+   Examples/Notebooks/Grids/*
 
 
 Links
