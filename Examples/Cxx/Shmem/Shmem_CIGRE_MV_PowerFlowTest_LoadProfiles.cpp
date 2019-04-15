@@ -74,7 +74,7 @@ int main(int argc, char** argv){
 
 	ofstream villas_conf;
     villas_conf.open ("villas_sent_data.conf");
- 
+
     // Register exportable node voltages
 	string list_varnames[sys.mNodes.size()*2];
 	UInt o = 0;
@@ -99,12 +99,12 @@ int main(int argc, char** argv){
 		list_varnames[(i*2)+1] = n->name() + ".V.phase";
 	}
 
-    for (auto varname : list_varnames) { 
+    for (auto varname : list_varnames) {
         villas_conf << varname << std::endl;
 	}
     villas_conf.close();
 
-	sim.addInterface(&intf, false, false);
+	sim.addInterface(&intf, false);
 
 	sim.run(std::chrono::seconds(5));
 

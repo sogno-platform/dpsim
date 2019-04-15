@@ -82,7 +82,7 @@ int main(int argc, char** argv){
 		intf.addExport(v0->phase(), (i*2)+1); o++;
 	}
 
-	sim.addInterface(&intf, false, false);
+	sim.addInterface(&intf, false);
 
 	sim.run(std::chrono::seconds(5));
 
