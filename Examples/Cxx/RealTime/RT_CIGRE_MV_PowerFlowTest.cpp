@@ -20,7 +20,6 @@
 
 #include "cps/CIM/Reader.h"
 #include <DPsim.h>
-#include "cps/loadProfileReader.h"
 
 using namespace std;
 using namespace DPsim;
@@ -45,19 +44,19 @@ int main(int argc, char** argv){
 	path + "Rootnet_FULL_NE_06J16h_SV.xml",
 	path + "Rootnet_FULL_NE_06J16h_TP.xml"
 	};
-	String simName = "CIGRE-MV-NoTap";
+	String simName = "RT_CIGRE-MV-NoTap";
 	CPS::Real system_freq = 50;
 
-    CIM::Reader reader(simName, Logger::Level::INFO, Logger::Level::NONE);
+    CIM::Reader reader(simName, Logger::Level::DEBUG, Logger::Level::NONE);
     SystemTopology system = reader.loadCIM(system_freq, filenames, CPS::Domain::Static);
 
 	auto logger = DPsim::DataLogger::make(simName);
 	for (auto node : system.mNodes)
 	{
-		logger->addAttribute(node->name() + ".V", node->attribute("v"));
+		logger->addAttribute(node->name(), node->attribute("v"));
 	}
 
-	Simulation sim(simName, system, 1, 120, Domain::Static, Solver::Type::NRP, Logger::Level::NONE, true);
+	RealTimeSimulation sim(simName, system, 1, 30, Domain::Static, Solver::Type::NRP, Logger::Level::DEBUG, true);
 
 	sim.addLogger(logger);
 	sim.run();

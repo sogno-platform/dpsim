@@ -60,8 +60,8 @@ void RealTimeSimulation::run(const Timer::StartClock::time_point &startAt)
 
 	// main loop
 	do {
-		step();
 		mTimer.sleep();
+		step();
 
 		if (mTimer.ticks() == 1)
 			mLog.info() << "Simulation started." << std::endl;

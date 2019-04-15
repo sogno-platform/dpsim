@@ -1,8 +1,15 @@
 /*
-* This Source Code Form is subject to the terms of the Mozilla Public
-* License, v. 2.0. If a copy of the MPL was not distributed with this
-* file, You can obtain one at http://mozilla.org/MPL/2.0/.
-*/
+ * Authors: Santiago Peñate Vera, Jan Dinkelbach
+ *
+ * Created on 25 of January of 2015, 23:05
+ * Copyright (C) 2015 Santiago Peñate Vera
+ * Copyright (C) 2019 Jan Dinkelbach
+ *
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ */
+
 
 #include "dpsim/NRPSolver.h"
 
@@ -92,9 +99,8 @@ NRpolarSolver::NRpolarSolver(CPS::String simName, CPS::SystemTopology & sysTopol
 
 void NRpolarSolver::NRP_initialize(){
 
-	if (!sol_initialized) {
-		generate_initial_solution();
-	}
+	generate_initial_solution();
+
 	mLog.info() << "#### NEWTON-RAPHSON POLAR SOLVER " << std::endl;
 
 	mLog.info() << "#### Admittance Matrix: " <<std::endl
@@ -354,9 +360,11 @@ void NRpolarSolver::generate_initial_solution(bool keep_last_solution) {
 		for (auto comp : SysTopology.mComponentsAtNode[pq]) {
 
 			if (std::shared_ptr<CPS::Static::Ph1::Load> load = std::dynamic_pointer_cast<CPS::Static::Ph1::Load>(comp)) {
-
-				sol_P(pq->simNode()) -= load->mPQ->attribute<CPS::Real>("P_set")->get() / Sbase;
-				sol_Q(pq->simNode()) -= load->mPQ->attribute<CPS::Real>("Q_set")->get() / Sbase;
+				if (load->use_profile) {
+					load->updatePQ();
+				}
+				sol_P(pq->simNode()) -= load->mPQ->attribute<CPS::Real>("P")->get() / Sbase;
+				sol_Q(pq->simNode()) -= load->mPQ->attribute<CPS::Real>("Q")->get() / Sbase;
 
 				sol_S_complex(pq->simNode()) = CPS::Complex(sol_P[pq->simNode()], sol_Q[pq->simNode()]);
 
@@ -798,7 +806,7 @@ void NRpolarSolver::set_solution() {
 				baseVoltage_ = line->attribute<CPS::Real>("base_Voltage")->get();
 			}
 		}
-		node->setInitialVoltage(sol_V_complex(node->simNode())*baseVoltage_);
+		std::dynamic_pointer_cast<CPS::Node<CPS::Complex>>(node)->updateVoltage(sol_V_complex(node->simNode())*baseVoltage_);
 	}
 }
 

@@ -20,7 +20,6 @@
 
 #include "cps/CIM/Reader.h"
 #include <DPsim.h>
-#include "cps/loadProfileReader.h"
 
 using namespace std;
 using namespace DPsim;
@@ -32,6 +31,7 @@ using namespace CPS::CIM;
  * This example runs the powerflow for the CIGRE MV benchmark system (neglecting the tap changers of the transformers)
  */
 int main(int argc, char** argv){
+	CommandLineArgs args(argc, argv);
 
 	#ifdef _WIN32
 		String path("..\\..\\..\\..\\dpsim\\Examples\\CIM\\CIGRE_MV_NoTap\\");
@@ -45,22 +45,46 @@ int main(int argc, char** argv){
 	path + "Rootnet_FULL_NE_06J16h_SV.xml",
 	path + "Rootnet_FULL_NE_06J16h_TP.xml"
 	};
-	String simName = "CIGRE-MV-NoTap";
+	String simName = "Shmem_CIGRE-MV-NoTap";
 	CPS::Real system_freq = 50;
 
-    CIM::Reader reader(simName, Logger::Level::INFO, Logger::Level::NONE);
-    SystemTopology system = reader.loadCIM(system_freq, filenames, CPS::Domain::Static);
+    CIM::Reader reader(simName, Logger::Level::DEBUG, Logger::Level::NONE);
+    SystemTopology sys = reader.loadCIM(system_freq, filenames, CPS::Domain::Static);
 
-	auto logger = DPsim::DataLogger::make(simName);
-	for (auto node : system.mNodes)
-	{
-		logger->addAttribute(node->name() + ".V", node->attribute("v"));
+	RealTimeSimulation sim(simName, sys, args.timeStep, args.duration, args.solver.domain, args.solver.type, args.logLevel);
+
+	// Create shmem interface
+	Interface::Config conf;
+	conf.samplelen = 64;
+	conf.queuelen = 1024;
+	conf.polling = false;
+	String in  = "/villas-dpsim1";
+	String out = "/dpsim1-villas";
+	Interface intf(out, in, &conf);
+
+	// Register exportable node voltages
+	UInt o = 0;
+	for (auto n : sys.mNodes) {
+		UInt i;
+		if (sscanf(n->name().c_str(), "N%u", &i) != 1) {
+			std::cerr << "Failed to determine bus no of bus: " << n->name() << std::endl;
+			continue;
+		}
+
+		auto n_stat = std::dynamic_pointer_cast<CPS::Static::Node>(n);
+		auto v = n_stat->attributeMatrix<Complex>("v");
+		auto v0 = v->coeffComplex(0,0);
+
+		std::cout << "Signal " << (i*2)+0 << ": Mag  " << n->name() << std::endl;
+		std::cout << "Signal " << (i*2)+1 << ": Phas " << n->name() << std::endl;
+
+		intf.addExport(v0->mag(),   (i*2)+0); o++;
+		intf.addExport(v0->phase(), (i*2)+1); o++;
 	}
 
-	Simulation sim(simName, system, 1, 120, Domain::Static, Solver::Type::NRP, Logger::Level::NONE, true);
+	sim.addInterface(&intf, false, false);
 
-	sim.addLogger(logger);
-	sim.run();
+	sim.run(std::chrono::seconds(5));
 
 	return 0;
 }
