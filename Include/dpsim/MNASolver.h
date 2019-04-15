@@ -77,8 +77,6 @@ namespace DPsim {
 		// #### MNA specific attributes ####
 		/// System matrix A that is modified by matrix stamps
 		std::bitset<SWITCH_NUM> mCurrentSwitchStatus;
-		/// Temporary system matrix, i.e. for initialization
-		Matrix mNoSwitchSystemMatrix;
 		/// LU decomposition of system matrix A
 		CPS::LUFactorized mNoSwitchLuFacorization;
 		/// Source vector of known quantities

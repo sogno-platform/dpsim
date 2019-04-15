@@ -73,7 +73,7 @@ void MnaSolver<VarType>::initialize(CPS::SystemTopology system) {
 
 	// TODO: Move to base solver class?
 	// This intialization according to power flow information is not MNA specific.
-	mLog.info() << "Initialize power flow" << std::endl;
+	mSLog->info("Initialize power flow");
 	for (auto comp : mPowerComponents) {
 		auto pComp = std::dynamic_pointer_cast<PowerComponent<VarType>>(comp);
 		if (!pComp)	continue;
