@@ -45,7 +45,7 @@ MnaSolver<VarType>::MnaSolver(String name,
 	mInitRightVectorLog(name + "_InitRightVector", logLevel != CPS::Logger::Level::NONE) {
 
 	// Logging
-	mSLog = Logger::get(name);
+	mSLog = Logger::get(name + "_MNA");
 	mSLog->set_pattern("[%L] %v");
 	mSLog->set_level(Logger::cpsLogLevelToSpd(logLevel));
 }
@@ -57,6 +57,9 @@ void MnaSolver<VarType>::initialize(CPS::SystemTopology system) {
 
 	if (mSystem.mComponents.size() == 0)
 		throw SolverException(); // Otherwise LU decomposition will fail
+
+	for (auto comp : system.mComponents)
+		mSLog->info("Added {:s} '{:s}' to simulation.", comp->type(), comp->name());
 
 	// We need to differentiate between power and signal components and
 	// ground nodes should be ignored.
@@ -110,14 +113,16 @@ void MnaSolver<VarType>::initialize(CPS::SystemTopology system) {
 		for (auto comp : mPowerComponents) {
 			comp->mnaApplySystemMatrixStamp(mSwitchedMatrices[std::bitset<SWITCH_NUM>(0)]);
 			auto idObj = std::dynamic_pointer_cast<IdentifiedObject>(comp);
-			mLog.debug() << "Stamping " << idObj->type() << " " << idObj->name()
-						<< " into system matrix: \n" << mSwitchedMatrices[std::bitset<SWITCH_NUM>(0)] << std::endl;
+
+			mSLog->debug("Stamping {:s} {:s} into system matrix: \n{:s}",
+				idObj->type(), idObj->name(), Logger::matrixCompToString(mSwitchedMatrices[std::bitset<SWITCH_NUM>(0)]));
 		}
 		for (auto comp : mSwitches) {
 			comp->mnaApplySystemMatrixStamp(mSwitchedMatrices[std::bitset<SWITCH_NUM>(0)]);
 			auto idObj = std::dynamic_pointer_cast<IdentifiedObject>(comp);
-			mLog.debug() << "Stamping " << idObj->type() << " " << idObj->name()
-				<< " into system matrix: \n" << mSwitchedMatrices[std::bitset<SWITCH_NUM>(0)] << std::endl;
+
+			mSLog->debug("Stamping {:s} {:s} into system matrix: \n{:s}",
+				idObj->type(), idObj->name(), Logger::matrixCompToString(mSwitchedMatrices[std::bitset<SWITCH_NUM>(0)]));
 		}
 
 		mLuFactorizations[std::bitset<SWITCH_NUM>(0)] = Eigen::PartialPivLU<Matrix>(mSwitchedMatrices[std::bitset<SWITCH_NUM>(0)]);
@@ -140,27 +145,23 @@ void MnaSolver<VarType>::initialize(CPS::SystemTopology system) {
 	for (auto comp : mPowerComponents) {
 		comp->mnaApplyRightSideVectorStamp(mRightSideVector);
 		auto idObj = std::dynamic_pointer_cast<IdentifiedObject>(comp);
-		//mLog.debug() << "Stamping " << idObj->type() << " " << idObj->name()
-		//	<< " into source vector: \n" << mRightSideVector << std::endl;
+
+		mSLog->debug("Stamping {:s} {:s} into source vector: \n{:s}",
+			idObj->type(), idObj->name(), Logger::matrixCompToString(mRightSideVector));
 	}
 
-	// Logging
-	for (auto comp : system.mComponents)
-		mSLog->info("Added {:s} '{:s}' to simulation.", comp->type(), comp->name());
-
-
-	mLog.info() << "System matrix: \n" << mSwitchedMatrices[std::bitset<SWITCH_NUM>(0)] << std::endl;
-	mLog.info() << "LU decomposition: \n" << mLuFactorizations[std::bitset<SWITCH_NUM>(0)].matrixLU() << std::endl;
-	mLog.info() << "Right side vector: \n" << mRightSideVector << std::endl;
+	mSLog->info("System matrix: \n{:s}", Logger::matrixCompToString(mSwitchedMatrices[std::bitset<SWITCH_NUM>(0)]));
+	mSLog->info("LU decomposition: \n{:s}", Logger::matrixCompToString(mLuFactorizations[std::bitset<SWITCH_NUM>(0)].matrixLU()));
+	mSLog->info("Right side vector: \n{:s}", Logger::matrixCompToString(mRightSideVector));
 
 	for (auto sys : mSwitchedMatrices) {
-		mLog.info() << "Switching System matrix "
-					<< sys.first << ": \n" << sys.second << std::endl;
-		mLog.info() << "LU Factorization for System Matrix "
-					<< sys.first << ": \n" << mLuFactorizations[sys.first].matrixLU() << std::endl;
+		//mSLog->info("Switching System matrix {:s} \n{:s}",
+		//	sys.first, Logger::matrixCompToString(sys.second));
+		//mSLog->info("LU Factorization for System Matrix {:s} \n{:s}",
+		//	sys.first, Logger::matrixCompToString(mLuFactorizations[sys.first].matrixLU()));
 	}
 
-	mLog.info() << "Initial switch status: " << mCurrentSwitchStatus << std::endl;
+	mSLog->info("Initial switch status: {:s}", mCurrentSwitchStatus.to_string());
 }
 
 template <typename VarType>
@@ -181,7 +182,7 @@ void MnaSolver<VarType>::identifyTopologyObjects() {
 	}
 
 	for (UInt i = 0; i < mNodes.size(); i++)
-		mLog.info() << "Found node " << mNodes[i]->name() << std::endl;
+		mSLog->info("Found node {:s}", mNodes[i]->name());;
 
 	for (auto comp : mSystem.mComponents) {
 		auto swComp = std::dynamic_pointer_cast<CPS::MNASwitchInterface>(comp);
@@ -214,9 +215,9 @@ void MnaSolver<VarType>::assignSimNodes() {
 	mNumVirtualSimNodes = mNumSimNodes - mNumNetSimNodes;
 	mNumHarmSimNodes = mSystem.mHarmonics.size() * mNumSimNodes;
 
-	mLog.info() << "Number of network simulation nodes: " << mNumNetSimNodes << std::endl;
-	mLog.info() << "Number of simulation nodes: " << mNumSimNodes << std::endl;
-	mLog.info() << "Number of harmonic simulation nodes: " << mNumHarmSimNodes << std::endl;
+	mSLog->info("Number of network simulation nodes: {:d}", mNumNetSimNodes);
+	mSLog->info("Number of simulation nodes: {:d}", mNumSimNodes);
+	mSLog->info("Number of harmonic simulation nodes: {:d}", mNumHarmSimNodes);
 }
 
 template<>
@@ -266,8 +267,7 @@ void MnaSolver<VarType>::createVirtualNodes() {
 				mNodes.push_back(std::make_shared<CPS::Node<VarType>>(virtualNode));
 				pComp->setVirtualNodeAt(mNodes[virtualNode], node);
 
-				mLog.info() << "Created virtual node" << node << " = " << virtualNode
-					<< " for " << pComp->name() << std::endl;
+				mSLog->info("Created virtual node {:d} = {:d} for {:s}", node, virtualNode, pComp->name());
 			}
 		}
 	}
@@ -275,8 +275,8 @@ void MnaSolver<VarType>::createVirtualNodes() {
 	mNumNodes = (UInt) mNodes.size();
 	mNumVirtualNodes = mNumNodes - mNumNetNodes;
 
-	mLog.info() << "Number of network nodes: " << mNumNetNodes << std::endl;
-	mLog.info() << "Number of nodes: " << mNumNodes << std::endl;
+	mSLog->info("Number of network nodes: {:d}", mNumNetNodes);
+	mSLog->info("Number of nodes: {:d}", mNumNodes);
 }
 
 template <typename VarType>
@@ -348,8 +348,7 @@ void MnaSolver<VarType>::steadyStateInitialization() {
 			break;
 	}
 
-	mLog.info() << "Max difference: " << maxDiff << " or "
-		<< maxDiff / max << "% at time " << time << std::endl;
+	mSLog->info("Max difference: {:d} or {:d}% at time {:d}", maxDiff, maxDiff / max, time);
 
 	// Reset system for actual simulation
 	mRightSideVector.setZero();

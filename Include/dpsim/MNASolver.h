@@ -77,8 +77,6 @@ namespace DPsim {
 		// #### MNA specific attributes ####
 		/// System matrix A that is modified by matrix stamps
 		std::bitset<SWITCH_NUM> mCurrentSwitchStatus;
-		/// LU decomposition of system matrix A
-		CPS::LUFactorized mNoSwitchLuFacorization;
 		/// Source vector of known quantities
 		Matrix mRightSideVector;
 		/// List of all right side vector contributions
@@ -170,10 +168,7 @@ namespace DPsim {
 		CPS::Task::List getTasks();
 		///
 		Matrix& systemMatrix() {
-			if (mSwitchedMatrices.size() > 0)
-				return mSwitchedMatrices[mCurrentSwitchStatus];
-			else
-				return mNoSwitchSystemMatrix;
+			return mSwitchedMatrices[mCurrentSwitchStatus];
 		}
 
 		///
