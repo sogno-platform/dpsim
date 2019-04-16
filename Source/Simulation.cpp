@@ -57,7 +57,13 @@ Simulation::Simulation(String name,
 	addAttribute<String>("name", &mName, Flags::read);
 	addAttribute<Real>("final_time", &mFinalTime, Flags::read);
 	Eigen::setNbThreads(1);
+
+	// Logging
+	mSLog = Logger::get(name);
+	mSLog->set_pattern("[%L] %v");
+	mSLog->set_level(Logger::cpsLogLevelToSpd(logLevel));
 }
+
 
 Simulation::Simulation(String name, SystemTopology system,
 	Real timeStep, Real finalTime,
@@ -278,7 +284,7 @@ void Simulation::prepSchedule() {
 }
 
 void Simulation::schedule() {
-	mLog.info() << "Scheduling tasks." << std::endl;
+	std::cout << Logger::prefix() << "Scheduling tasks." << std::endl;
 	prepSchedule();
 	mScheduler->createSchedule(mTasks, mTaskInEdges, mTaskOutEdges);
 }
@@ -305,16 +311,16 @@ void Simulation::renderDependencyGraph(std::ostream &os) {
 void Simulation::run() {
 	schedule();
 
-	mLog.info() << "Opening interfaces." << std::endl;
-
 #ifdef WITH_SHMEM
+	std::cout << Logger::prefix() << "Opening interfaces." << std::endl;
+
 	for (auto ifm : mInterfaces)
 		ifm.interface->open();
-#endif
 
 	sync();
+#endif
 
-	mLog.info() << "Start simulation." << std::endl;
+	std::cout << Logger::prefix() << "Start simulation." << std::endl;
 
 	while (mTime < mFinalTime) {
 		step();
@@ -330,7 +336,7 @@ void Simulation::run() {
 	for (auto lg : mLoggers)
 		lg->close();
 
-	mLog.info() << "Simulation finished." << std::endl;
+	std::cout << Logger::prefix() << "Simulation finished." << std::endl;
 	//mScheduler->getMeasurements();
 }
 

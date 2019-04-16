@@ -53,6 +53,7 @@ namespace DPsim {
 	protected:
 		/// Simulation logger
 		CPS::Logger mLog;
+		std::shared_ptr<spdlog::logger> mSLog;
 		/// Simulation name
 		String mName;
 		/// Final time of the simulation
