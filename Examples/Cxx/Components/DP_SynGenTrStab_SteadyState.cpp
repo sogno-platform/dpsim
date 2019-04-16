@@ -27,8 +27,11 @@ using namespace CPS::DP::Ph1;
 int main(int argc, char* argv[]) {
 	// Define simulation parameters
 	Real timeStep = 0.0005;
-	Real finalTime = 0.1;
-	String name = "DP_SynGen_TrStab_Step";
+	Real finalTime = 0.03;
+	String name = "DP_SynGen_TrStab_SteadyState";
+	Logger::setLogDir("logs/"+name);
+	std::cout << std::getenv("CPS_LOG_DIR");
+
 	// Define machine parameters in per unit
 	Real nomPower = 555e6;
 	Real nomPhPhVoltRMS = 24e3;
@@ -45,37 +48,26 @@ int main(int argc, char* argv[]) {
 	Real mechPower = 300e6;
 	// Define grid parameters
 	Real Rload = 1.92;
-	Real RloadStep = 0.7;
 
 	// Nodes
 	auto n1 = Node::make("n1", PhaseType::Single, std::vector<Complex>{ initVoltage });
 
 	// Components
-	auto gen = Ph1::SynchronGeneratorTrStab::make("DP_SynGen_TrStab_Step_SynGen");
+	auto gen = Ph1::SynchronGeneratorTrStab::make("DP_SynGen_TrStab_StState_SynGen", Logger::Level::DEBUG);
 	gen->setFundamentalParametersPU(nomPower, nomPhPhVoltRMS, nomFreq, Ll, Lmd, Llfd, H);
-	gen->connect({n1});
+   	gen->connect({n1});
 	gen->setInitialValues(initElecPower, mechPower);
 
-	auto load = Ph1::Switch::make("DP_SynGen_TrStab_Step_StepLoad");
-	load->setParameters(Rload, RloadStep);
-	load->connect({Node::GND, n1});
-	load->open();
+	auto res = Ph1::Resistor::make("DP_SynGen_TrStab_StState_Rl", Logger::Level::DEBUG);
+	res->setParameters(Rload);
+	res->connect({Node::GND, n1});
 
 	// System
-	auto sys = SystemTopology(60, SystemNodeList{n1}, SystemComponentList{gen, load});
+	auto sys = SystemTopology(60, SystemNodeList{n1}, SystemComponentList{gen, res});
 
 	// Simulation
-	auto logger = DataLogger::make(name);//added
-	logger->addAttribute("Current", gen->attribute("i_intf")); //Added
-	
 	Simulation sim(name, sys, timeStep, finalTime,
 		Domain::DP, Solver::Type::MNA, Logger::Level::INFO);
-
-	sim.addLogger(logger);//added
-	// Events
-	auto sw1 = SwitchEvent::make(0.05, load, true);
-
-	sim.addEvent(sw1);
 
 	sim.run();
 

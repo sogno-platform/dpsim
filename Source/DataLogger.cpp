@@ -27,8 +27,17 @@ namespace fs = std::experimental::filesystem;
 
 using namespace DPsim;
 
-DataLogger::DataLogger(String name, Bool enabled) :
-	mEnabled(enabled) {
+DataLogger::DataLogger(Bool enabled) :
+	mLogFile(),
+	mEnabled(enabled),
+	mDownsampling(1) {
+	mLogFile.setstate(std::ios_base::badbit);
+}
+
+DataLogger::DataLogger(String name, Bool enabled, UInt downsampling) :
+	mName(name),
+	mEnabled(enabled),
+	mDownsampling(downsampling) {
 	if (!mEnabled)
 		return;
 
@@ -52,8 +61,8 @@ DataLogger::~DataLogger() {
 		mLogFile.close();
 }
 
-void DataLogger::flush() {
-	mLogFile.flush();
+void DataLogger::close() {
+	mLogFile.close();
 }
 
 void DataLogger::setColumnNames(std::vector<String> names) {
@@ -125,7 +134,10 @@ void DataLogger::logEMTNodeValues(Real time, const Matrix& data) {
 	logDataLine(time, data);
 }
 
-void DataLogger::log(Real time) {
+void DataLogger::log(Real time, Int timeStepCount) {
+	if (!mEnabled || !(timeStepCount % mDownsampling == 0))
+		return;
+
 	if (mLogFile.tellp() == std::ofstream::pos_type(0)) {
 		mLogFile << std::right << std::setw(14) << "time";
 		for (auto it : mAttributes)
@@ -137,6 +149,14 @@ void DataLogger::log(Real time) {
 	for (auto it : mAttributes)
 		mLogFile << ", " << std::right << std::setw(13) << it.second->toString();
 	mLogFile << '\n';
+}
+
+void DataLogger::Step::execute(Real time, Int timeStepCount) {
+	mLogger.log(time, timeStepCount);
+}
+
+CPS::Task::Ptr DataLogger::getTask() {
+	return std::make_shared<DataLogger::Step>(*this);
 }
 
 void DataLogger::addAttribute(const String &name, CPS::Attribute<Int>::Ptr attr) {

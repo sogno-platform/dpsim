@@ -40,21 +40,14 @@ PyObject* Python::Component::newfunc(PyTypeObject* type, PyObject *args, PyObjec
 void Python::Component::init(Component* self)
 {
 	new (&self->comp) CPS::Component::Ptr(nullptr);
-	new (&self->refs) std::vector<PyObject *>();
 }
 
 void Python::Component::dealloc(Python::Component* self)
 {
-	for (auto it : self->refs) {
-		Py_DECREF(it);
-	}
-
 	// This is a workaround for a compiler bug: https://stackoverflow.com/a/42647153/8178705
 	using Ptr = CPS::Component::Ptr;
-	using PyObjectsList = std::vector<PyObject *>;
 
 	self->comp.~Ptr();
-	self->refs.~PyObjectsList();
 
 	Py_TYPE(self)->tp_free((PyObject*)self);
 }

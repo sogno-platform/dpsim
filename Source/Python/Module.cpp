@@ -65,7 +65,10 @@ static PyMethodDef dpsimModuleMethods[] = {
 	Component::constructorDef<CPS::DP::Ph1::VoltageSourceNorton>("_dp_ph1_VoltageSourceNorton"),
 	Component::constructorDef<CPS::DP::Ph3::SeriesResistor>("_dp_ph3_SeriesResistor"),
 	Component::constructorDef<CPS::DP::Ph3::SeriesSwitch>("_dp_ph3_SeriesSwitch"),
-	Component::constructorDef<CPS::DP::Ph3::SynchronGeneratorDQ>("_dp_ph3_SynchronGeneratorDQ"),
+	Component::constructorDef<CPS::DP::Ph3::SynchronGeneratorDQTrapez>("_dp_ph3_SynchronGeneratorDQTrapez"),
+#ifdef WITH_SUNDIALS
+	Component::constructorDef<CPS::DP::Ph3::SynchronGeneratorDQODE>("_dp_ph3_SynchronGeneratorDQODE"),
+#endif
 	Component::constructorDef<CPS::EMT::Ph1::Capacitor>("_emt_ph1_Capacitor"),
 	Component::constructorDef<CPS::EMT::Ph1::CurrentSource>("_emt_ph1_CurrentSource"),
 	Component::constructorDef<CPS::EMT::Ph1::Inductor>("_emt_ph1_Inductor"),
@@ -105,6 +108,7 @@ PyMODINIT_FUNC PyInit__dpsim(void) {
 	if (!m)
 		return nullptr;
 
+	PyModule_AddStringConstant(m, "__version__", DPSIM_RELEASE);
 	Py_INCREF(&Simulation::type);
 	PyModule_AddObject(m, "Simulation", (PyObject*) &Simulation::type);
 	Py_INCREF(&SystemTopology::type);

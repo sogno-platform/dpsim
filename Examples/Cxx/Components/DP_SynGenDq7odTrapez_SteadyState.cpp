@@ -29,7 +29,9 @@ int main(int argc, char* argv[]) {
 	// Define simulation parameters
 	Real timeStep = 0.0005;
 	Real finalTime = 0.03;
-	String name = "DP_SynGen_dq_SteadyState";
+	String name = "DP_SynGenDq7odTrapez_SteadyState";
+	Logger::setLogDir("logs/"+name);
+	std::cout << std::getenv("CPS_LOG_DIR");
 
 	// Define machine parameters in per unit
 	Real nomPower = 555e6;
@@ -69,7 +71,7 @@ int main(int argc, char* argv[]) {
 	auto n1 = Node::make("n1", PhaseType::ABC, initVoltN1);
 
 	// Components
-	auto gen = Ph3::SynchronGeneratorDQ::make("DP_SynGen_dq_SteadyState_SynGen");
+	std::shared_ptr<Ph3::SynchronGeneratorDQ> gen = Ph3::SynchronGeneratorDQTrapez::make("DP_SynGen_dq_SteadyState_SynGen");
 	gen->setFundamentalParametersPU(nomPower, nomPhPhVoltRMS, nomFreq, poleNum, nomFieldCurr,
 		Rs, Ll, Lmd, Lmq, Rfd, Llfd, Rkd, Llkd, Rkq1, Llkq1, Rkq2, Llkq2, H,
 		initActivePower, initReactivePower, initTerminalVolt, initVoltAngle, fieldVoltage, initMechPower);

@@ -19,17 +19,47 @@
  *********************************************************************************/
 
 #include <dpsim/MNASolver.h>
+#include <dpsim/SequentialScheduler.h>
 
 using namespace DPsim;
 using namespace CPS;
 
+namespace DPsim {
+
+template <typename VarType>
+MnaSolver<VarType>::MnaSolver(String name,
+	Real timeStep,
+	CPS::Domain domain,
+	CPS::Logger::Level logLevel,
+	Bool steadyStateInit, Int downSampleRate) :
+	mTimeStep(timeStep),
+	mDomain(domain),
+	mSteadyStateInit(steadyStateInit),
+	mDownSampleRate(downSampleRate),
+	mName(name),
+	mLogLevel(logLevel),
+	mLog(name + "_MNA", logLevel),
+	mLeftVectorLog(name + "_LeftVector", logLevel != CPS::Logger::Level::NONE),
+	mRightVectorLog(name + "_RightVector", logLevel != CPS::Logger::Level::NONE),
+	mInitLeftVectorLog(name + "_InitLeftVector", logLevel != CPS::Logger::Level::NONE),
+	mInitRightVectorLog(name + "_InitRightVector", logLevel != CPS::Logger::Level::NONE) {
+
+	// Logging
+	mSLog = Logger::get(name + "_MNA");
+	mSLog->set_pattern("[%L] %v");
+	mSLog->set_level(Logger::cpsLogLevelToSpd(logLevel));
+}
+
 template <typename VarType>
 void MnaSolver<VarType>::initialize(CPS::SystemTopology system) {
-	mLog.info() << "#### Start Initialization ####" << std::endl;
+	mSLog->info("#### Start Initialization ####");
 	mSystem = system;
 
 	if (mSystem.mComponents.size() == 0)
 		throw SolverException(); // Otherwise LU decomposition will fail
+
+	for (auto comp : system.mComponents)
+		mSLog->info("Added {:s} '{:s}' to simulation.", comp->type(), comp->name());
 
 	// We need to differentiate between power and signal components and
 	// ground nodes should be ignored.
@@ -39,17 +69,14 @@ void MnaSolver<VarType>::initialize(CPS::SystemTopology system) {
 	createVirtualNodes();
 	assignSimNodes();
 
-	// For the power components the step order should not be important
-	// but signal components need to be executed following the connections.
-	sortExecutionPriority();
-
 	// The system topology is prepared and we create the MNA matrices.
 	createEmptyVectors();
 	createEmptySystemMatrix();
+	addAttribute<Matrix>("left_vector", &mLeftSideVector, Flags::read);
 
 	// TODO: Move to base solver class?
 	// This intialization according to power flow information is not MNA specific.
-	mLog.info() << "Initialize power flow" << std::endl;
+	mSLog->info("Initialize power flow");
 	for (auto comp : mPowerComponents) {
 		auto pComp = std::dynamic_pointer_cast<PowerComponent<VarType>>(comp);
 		if (!pComp)	continue;
@@ -58,76 +85,83 @@ void MnaSolver<VarType>::initialize(CPS::SystemTopology system) {
 
 	// Initialize signal components.
 	for (auto comp : mSignalComponents)
-		comp->initialize();
+		comp->initialize(mSystem.mSystemOmega, mTimeStep);
 	// Initialize MNA specific parts of components.
-	for (auto comp : mPowerComponents)
-		comp->mnaInitialize(mSystem.mSystemOmega, mTimeStep);
+	for (auto comp : mPowerComponents) {
+		comp->mnaInitialize(mSystem.mSystemOmega, mTimeStep, attribute<Matrix>("left_vector"));
+		const Matrix& stamp = comp->template attribute<Matrix>("right_vector")->get();
+		if (stamp.size() != 0) {
+			mRightVectorStamps.push_back(&stamp);
+		}
+	}
 	for (auto comp : mSwitches)
-		comp->mnaInitialize(mSystem.mSystemOmega, mTimeStep);
+		comp->mnaInitialize(mSystem.mSystemOmega, mTimeStep, attribute<Matrix>("left_vector"));
 
 	// This steady state initialization is MNA specific and runs a simulation
 	// before the actual simulation executed by the user.
 	if (mSteadyStateInit && mDomain == CPS::Domain::DP) {
-		mLog.info() << "Run steady-state initialization." << std::endl;
+		mSLog->info("Run steady-state initialization.");
 		steadyStateInitialization();
-		mLog.info() << "Finished steady-state initialization." << std::endl;
+		mSLog->info("Finished steady-state initialization.");
 	}
 
 	for (auto comp : mSystem.mComponents)
 		comp->setBehaviour(Component::Behaviour::Simulation);
 
-	// Create initial system matrix
-	for (auto comp : mPowerComponents) {
-		comp->mnaApplySystemMatrixStamp(mNoSwitchSystemMatrix);
-		auto idObj = std::dynamic_pointer_cast<IdentifiedObject>(comp);
-		mLog.debug() << "Stamping " << idObj->type() << " " << idObj->name()
-					<< " into system matrix: \n" << mNoSwitchSystemMatrix << std::endl;
-	}
-	for (auto comp : mSwitches) {
-		comp->mnaApplySystemMatrixStamp(mNoSwitchSystemMatrix);
-		auto idObj = std::dynamic_pointer_cast<IdentifiedObject>(comp);
-		mLog.debug() << "Stamping " << idObj->type() << " " << idObj->name()
-			<< " into system matrix: \n" << mNoSwitchSystemMatrix << std::endl;
-	}
+	if (mSwitches.size() < 1) {
+		// Create system matrix if no switches were added
+		for (auto comp : mPowerComponents) {
+			comp->mnaApplySystemMatrixStamp(mSwitchedMatrices[std::bitset<SWITCH_NUM>(0)]);
+			auto idObj = std::dynamic_pointer_cast<IdentifiedObject>(comp);
 
-	// Compute LU-factorization for system matrix
-	mNoSwitchLuFacorization = Eigen::PartialPivLU<Matrix>(mNoSwitchSystemMatrix);
+			mSLog->debug("Stamping {:s} {:s} into system matrix: \n{:s}",
+				idObj->type(), idObj->name(), Logger::matrixCompToString(mSwitchedMatrices[std::bitset<SWITCH_NUM>(0)]));
+		}
+		for (auto comp : mSwitches) {
+			comp->mnaApplySystemMatrixStamp(mSwitchedMatrices[std::bitset<SWITCH_NUM>(0)]);
+			auto idObj = std::dynamic_pointer_cast<IdentifiedObject>(comp);
 
-	// Generate switching state dependent matrix
-	for (auto& sys : mSwitchedMatrices) {
-		for (auto comp : mPowerComponents)
-			comp->mnaApplySystemMatrixStamp(sys.second);
-		for (UInt i = 0; i < mSwitches.size(); i++)
-			mSwitches[i]->mnaApplySwitchSystemMatrixStamp(sys.second, sys.first[i]);
+			mSLog->debug("Stamping {:s} {:s} into system matrix: \n{:s}",
+				idObj->type(), idObj->name(), Logger::matrixCompToString(mSwitchedMatrices[std::bitset<SWITCH_NUM>(0)]));
+		}
 
-		mLuFactorizations[sys.first] = Eigen::PartialPivLU<Matrix>(sys.second);
+		mLuFactorizations[std::bitset<SWITCH_NUM>(0)] = Eigen::PartialPivLU<Matrix>(mSwitchedMatrices[std::bitset<SWITCH_NUM>(0)]);
 	}
-	updateSwitchStatus();
+	else {
+		// Generate switching state dependent system matrices
+		for (auto& sys : mSwitchedMatrices) {
+			for (auto comp : mPowerComponents)
+				comp->mnaApplySystemMatrixStamp(sys.second);
+			for (UInt i = 0; i < mSwitches.size(); i++)
+				mSwitches[i]->mnaApplySwitchSystemMatrixStamp(sys.second, sys.first[i]);
+
+			// Compute LU-factorization for system matrix
+			mLuFactorizations[sys.first] = Eigen::PartialPivLU<Matrix>(sys.second);
+		}
+		updateSwitchStatus();
+	}
 
 	// Initialize source vector for debugging
 	for (auto comp : mPowerComponents) {
 		comp->mnaApplyRightSideVectorStamp(mRightSideVector);
 		auto idObj = std::dynamic_pointer_cast<IdentifiedObject>(comp);
-		mLog.debug() << "Stamping " << idObj->type() << " " << idObj->name()
-			<< " into source vector: \n" << mRightSideVector << std::endl;
+
+		mSLog->debug("Stamping {:s} {:s} into source vector: \n{:s}",
+			idObj->type(), idObj->name(), Logger::matrixCompToString(mRightSideVector));
 	}
 
-	// Logging
-	for (auto comp : system.mComponents)
-		mLog.info() << "Added " << comp->type() << " '" << comp->name() << "' to simulation." << std::endl;
-
-	mLog.info() << "System matrix: \n" << mNoSwitchSystemMatrix << std::endl;
-	mLog.info() << "LU decomposition: \n" << mNoSwitchLuFacorization.matrixLU() << std::endl;
-	mLog.info() << "Right side vector: \n" << mRightSideVector << std::endl;
+	mSLog->info("System matrix: \n{:s}", Logger::matrixCompToString(mSwitchedMatrices[std::bitset<SWITCH_NUM>(0)]));
+	mSLog->info("LU decomposition: \n{:s}", Logger::matrixCompToString(mLuFactorizations[std::bitset<SWITCH_NUM>(0)].matrixLU()));
+	mSLog->info("Right side vector: \n{:s}", Logger::matrixCompToString(mRightSideVector));
 
 	for (auto sys : mSwitchedMatrices) {
-		mLog.info() << "Switching System matrix "
-					<< sys.first << ": \n" << sys.second << std::endl;
-		mLog.info() << "LU Factorization for System Matrix "
-					<< sys.first << ": \n" << mLuFactorizations[sys.first].matrixLU() << std::endl;
+		//mSLog->info("Switching System matrix {:s} \n{:s}",
+		//	sys.first, Logger::matrixCompToString(sys.second));
+		//mSLog->info("LU Factorization for System Matrix {:s} \n{:s}",
+		//	sys.first, Logger::matrixCompToString(mLuFactorizations[sys.first].matrixLU()));
 	}
 
-	mLog.info() << "Initial switch status: " << mCurrentSwitchStatus << std::endl;
+	mSLog->info("Initial switch status: {:s}", mCurrentSwitchStatus.to_string());
 }
 
 template <typename VarType>
@@ -148,7 +182,7 @@ void MnaSolver<VarType>::identifyTopologyObjects() {
 	}
 
 	for (UInt i = 0; i < mNodes.size(); i++)
-		mLog.info() << "Found node " << mNodes[i]->name() << std::endl;
+		mSLog->info("Found node {:s}", mNodes[i]->name());;
 
 	for (auto comp : mSystem.mComponents) {
 		auto swComp = std::dynamic_pointer_cast<CPS::MNASwitchInterface>(comp);
@@ -160,15 +194,6 @@ void MnaSolver<VarType>::identifyTopologyObjects() {
 		auto sigComp = std::dynamic_pointer_cast<CPS::SignalComponent>(comp);
 		if (sigComp) mSignalComponents.push_back(sigComp);
 	}
-}
-
-template <typename VarType>
-void MnaSolver<VarType>::sortExecutionPriority() {
-	// Sort SignalComponents according to execution priority.
-	// Components with a higher priority number should come first.
-	std::sort(mSignalComponents.begin(), mSignalComponents.end(), [] (const auto& lhs, const auto& rhs) -> bool {
-		return lhs->priority() > rhs->priority();
-	});
 }
 
 template <typename VarType>
@@ -190,17 +215,9 @@ void MnaSolver<VarType>::assignSimNodes() {
 	mNumVirtualSimNodes = mNumSimNodes - mNumNetSimNodes;
 	mNumHarmSimNodes = mSystem.mHarmonics.size() * mNumSimNodes;
 
-	mLog.info() << "Number of network simulation nodes: " << mNumNetSimNodes << std::endl;
-	mLog.info() << "Number of simulation nodes: " << mNumSimNodes << std::endl;
-	mLog.info() << "Number of harmonic simulation nodes: " << mNumHarmSimNodes << std::endl;
-}
-
-template <typename VarType>
-void MnaSolver<VarType>::solve()  {
-	if (mSwitchedMatrices.size() > 0)
-		mLeftSideVector = mLuFactorizations[mCurrentSwitchStatus].solve(mRightSideVector);
-	else
-		mLeftSideVector = mNoSwitchLuFacorization.solve(mRightSideVector);
+	mSLog->info("Number of network simulation nodes: {:d}", mNumNetSimNodes);
+	mSLog->info("Number of simulation nodes: {:d}", mNumSimNodes);
+	mSLog->info("Number of harmonic simulation nodes: {:d}", mNumHarmSimNodes);
 }
 
 template<>
@@ -217,23 +234,19 @@ void MnaSolver<Complex>::createEmptyVectors() {
 
 template<>
 void MnaSolver<Real>::createEmptySystemMatrix() {
-	mNoSwitchSystemMatrix = Matrix::Zero(mNumSimNodes, mNumSimNodes);
-
 	if (mSwitches.size() > SWITCH_NUM)
 		throw SystemError("Too many Switches.");
 
-	for (UInt i = 0; i < mSwitches.size() * 2; i++)
+	for (UInt i = 0; i < std::pow(2,mSwitches.size()); i++)
 		mSwitchedMatrices[std::bitset<SWITCH_NUM>(i)] = Matrix::Zero(mNumSimNodes, mNumSimNodes);
 }
 
 template<>
 void MnaSolver<Complex>::createEmptySystemMatrix() {
-	mNoSwitchSystemMatrix = Matrix::Zero(2 * (mNumSimNodes + mNumHarmSimNodes), 2 * (mNumSimNodes + mNumHarmSimNodes));
-
 	if (mSwitches.size() > SWITCH_NUM)
 		throw SystemError("Too many Switches.");
 
-	for (UInt i = 0; i < mSwitches.size() * 2; i++)
+	for (UInt i = 0; i < std::pow(2,mSwitches.size()); i++)
 		mSwitchedMatrices[std::bitset<SWITCH_NUM>(i)] = Matrix::Zero(2 * mNumSimNodes, 2 * mNumSimNodes);
 }
 
@@ -254,8 +267,7 @@ void MnaSolver<VarType>::createVirtualNodes() {
 				mNodes.push_back(std::make_shared<CPS::Node<VarType>>(virtualNode));
 				pComp->setVirtualNodeAt(mNodes[virtualNode], node);
 
-				mLog.info() << "Created virtual node" << node << " = " << virtualNode
-					<< " for " << pComp->name() << std::endl;
+				mSLog->info("Created virtual node {:d} = {:d} for {:s}", node, virtualNode, pComp->name());
 			}
 		}
 	}
@@ -263,12 +275,13 @@ void MnaSolver<VarType>::createVirtualNodes() {
 	mNumNodes = (UInt) mNodes.size();
 	mNumVirtualNodes = mNumNodes - mNumNetNodes;
 
-	mLog.info() << "Number of network nodes: " << mNumNetNodes << std::endl;
-	mLog.info() << "Number of nodes: " << mNumNodes << std::endl;
+	mSLog->info("Number of network nodes: {:d}", mNumNetNodes);
+	mSLog->info("Number of nodes: {:d}", mNumNodes);
 }
 
 template <typename VarType>
 void MnaSolver<VarType>::steadyStateInitialization() {
+	Int timeStepCount = 0;
 	Real time = 0;
 	Real eps = 0.0001;
 	Real maxDiff, max;
@@ -278,31 +291,35 @@ void MnaSolver<VarType>::steadyStateInitialization() {
 	for (auto comp : mSystem.mComponents)
 		comp->setBehaviour(Component::Behaviour::Initialization);
 
-	// Create system matrix
-	for (auto comp : mPowerComponents)
-		comp->mnaApplySystemMatrixStamp(mNoSwitchSystemMatrix);
-	for (auto comp : mSwitches)
-		comp->mnaApplySystemMatrixStamp(mNoSwitchSystemMatrix);
+	updateSwitchStatus();
 
-	// Compute LU-factorization for system matrix
-	mNoSwitchLuFacorization = Eigen::PartialPivLU<Matrix>(mNoSwitchSystemMatrix);
+	// Use sequential scheduler
+	SequentialScheduler sched;
+	CPS::Task::List tasks;
+	Scheduler::Edges inEdges, outEdges;
+
+	for (auto comp : mPowerComponents) {
+		for (auto task : comp->mnaTasks()) {
+			tasks.push_back(task);
+		}
+	}
+
+	// TODO signal components should be moved out of MNA solver
+	for (auto comp : mSignalComponents) {
+		for (auto task : comp->getTasks()) {
+			tasks.push_back(task);
+		}
+	}
+	tasks.push_back(std::make_shared<MnaSolver<VarType>::SolveTask>(*this, true));
+
+	sched.resolveDeps(tasks, inEdges, outEdges);
+	sched.createSchedule(tasks, inEdges, outEdges);
 
 	while (time < 10) {
 		// Reset source vector
 		mRightSideVector.setZero();
 
-		// First, step signal components and then power components
-		for (auto comp : mSignalComponents)
-			comp->step(time);
-		for (auto comp : mPowerComponents)
-			comp->mnaStep(mNoSwitchSystemMatrix, mRightSideVector, mLeftSideVector, time);
-
-		// Solve MNA system
-		mLeftSideVector = mNoSwitchLuFacorization.solve(mRightSideVector);
-
-		// Some components need to update internal states
-		for (auto comp : mPowerComponents)
-			comp->mnaPostStep(mRightSideVector, mLeftSideVector, time);
+		sched.step(time, timeStepCount);
 
 		// TODO Try to avoid this step.
 		for (UInt nodeIdx = 0; nodeIdx < mNumNetNodes; nodeIdx++)
@@ -319,6 +336,7 @@ void MnaSolver<VarType>::steadyStateInitialization() {
 
 		// Calculate new simulation time
 		time = time + mTimeStep;
+		timeStepCount++;
 
 		// Calculate difference
 		diff = prevLeftSideVector - mLeftSideVector;
@@ -330,43 +348,74 @@ void MnaSolver<VarType>::steadyStateInitialization() {
 			break;
 	}
 
-	mLog.info() << "Max difference: " << maxDiff << " or "
-		<< maxDiff / max << "% at time " << time << std::endl;
+	mSLog->info("Max difference: {:d} or {:d}% at time {:d}", maxDiff, maxDiff / max, time);
 
 	// Reset system for actual simulation
-	mNoSwitchSystemMatrix.setZero();
 	mRightSideVector.setZero();
 }
 
 template <typename VarType>
-Real MnaSolver<VarType>::step(Real time) {
+Task::List MnaSolver<VarType>::getTasks() {
+	Task::List l;
+
+	for (auto comp : mPowerComponents) {
+		for (auto task : comp->mnaTasks()) {
+			l.push_back(task);
+		}
+	}
+
+	// TODO signal components should be moved out of MNA solver
+	for (auto comp : mSignalComponents) {
+		for (auto task : comp->getTasks()) {
+			l.push_back(task);
+		}
+	}
+	l.push_back(std::make_shared<MnaSolver<VarType>::SolveTask>(*this, false));
+	l.push_back(std::make_shared<MnaSolver<VarType>::LogTask>(*this));
+
+	return l;
+}
+
+template <typename VarType>
+void MnaSolver<VarType>::SolveTask::execute(Real time, Int timeStepCount) {
 	// Reset source vector
-	mRightSideVector.setZero();
+	mSolver.mRightSideVector.setZero();
 
-	// First, step signal components and then power components
-	for (auto comp : mSignalComponents)
-		comp->step(time);
-	for (auto comp : mPowerComponents)
-		comp->mnaStep(mNoSwitchSystemMatrix, mRightSideVector, mLeftSideVector, time);
-	for (auto comp : mSwitches)
-		comp->mnaStep(mNoSwitchSystemMatrix, mRightSideVector, mLeftSideVector, time);
+	// Add together the right side vector (computed by the components'
+	// pre-step tasks)
+	for (auto stamp : mSolver.mRightVectorStamps)
+		mSolver.mRightSideVector += *stamp;
 
-	// Solve MNA system
-	solve();
+	if (mSolver.mSwitchedMatrices.size() > 0 && !mSteadyStateInit)
+		mSolver.mLeftSideVector = mSolver.mLuFactorizations[mSolver.mCurrentSwitchStatus].solve(mSolver.mRightSideVector);
 
-	// Some components need to update internal states
-	for (auto comp : mPowerComponents)
-		comp->mnaPostStep(mRightSideVector, mLeftSideVector, time);
+	// TODO split into separate task? (dependent on x, updating all v attributes)
+	for (UInt nodeIdx = 0; nodeIdx < mSolver.mNumNetNodes; nodeIdx++)
+		mSolver.mNodes[nodeIdx]->mnaUpdateVoltage(mSolver.mLeftSideVector);
 
-	// TODO Try to avoid this step.
-	for (UInt nodeIdx = 0; nodeIdx < mNumNetNodes; nodeIdx++)
-		mNodes[nodeIdx]->mnaUpdateVoltage(mLeftSideVector);
+	if (!mSteadyStateInit)
+		mSolver.updateSwitchStatus();
 
-	updateSwitchStatus();
-	mLog.debug() << "Switch status is " << mCurrentSwitchStatus << " for " << time << std::endl;
+	// Components' states will be updated by the post-step tasks
+}
 
-	// Calculate new simulation time
-	return time + mTimeStep;
+template <typename VarType>
+void MnaSolver<VarType>::log(Real time) {
+	if (mDomain == CPS::Domain::EMT) {
+		mLeftVectorLog.logEMTNodeValues(time, leftSideVector());
+		mRightVectorLog.logEMTNodeValues(time, rightSideVector());
+	}
+	else {
+		mLeftVectorLog.logPhasorNodeValues(time, leftSideVector());
+		mRightVectorLog.logPhasorNodeValues(time, rightSideVector());
+	}
+}
+
+template <typename VarType>
+void MnaSolver<VarType>::LogTask::execute(Real time, Int timeStepCount) {
+	mSolver.log(time);
+}
+
 }
 
 template class DPsim::MnaSolver<Real>;

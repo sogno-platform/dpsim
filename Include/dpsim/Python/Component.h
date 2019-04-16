@@ -48,11 +48,6 @@ namespace Python {
 
 		CPS::Component::Ptr comp;
 
-		// List of additional objects that aren't directly used from Simulation
-		// methods, but that a reference has be kept to to avoid them from being
-		// freed (e.g. Interfaces).
-		std::vector<PyObject*> refs;
-
 		static void init(Component* self);
 
 		static PyObject* newfunc(PyTypeObject* type, PyObject *args, PyObject *kwds);
@@ -125,10 +120,10 @@ namespace Python {
 		{
 			std::stringstream doc;
 
-			T comp("uid", "name");
+			//T comp("uid", "name");
 
-			doc << comp.type() << "(name, nodes, **attributes)" << std::endl
-			    << "Construct a new component with a given name and list of nodes." << std::endl;
+			//doc << comp.type() << "(name, nodes, **attributes)" << std::endl
+			//    << "Construct a new component with a given name and list of nodes." << std::endl;
 #if 0
 			    << comp.description() << std::endl
 			    << std::endl;

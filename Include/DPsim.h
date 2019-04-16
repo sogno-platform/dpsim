@@ -22,10 +22,8 @@
 #include <dpsim/Config.h>
 #include <dpsim/Utils.h>
 #include <dpsim/Simulation.h>
-
-#ifdef WITH_SUNDIALS
-  #include <dpsim/Sim_ODE.h>
-#endif
+#include <dpsim/SequentialScheduler.h>
+#include <dpsim/ThreadLevelScheduler.h>
 
 #ifndef _MSC_VER
   #include <dpsim/RealTimeSimulation.h>
@@ -36,13 +34,18 @@
 
 #ifdef WITH_SHMEM
   #include <dpsim/Interface.h>
+  #include <dpsim/PthreadPoolScheduler.h>
 #endif
 
 #ifdef WITH_CIM
   #include <cps/CIM/Reader.h>
 #endif
 
-namespace DPsim{
+#ifdef WITH_OPENMP
+  #include <dpsim/OpenMPLevelScheduler.h>
+#endif
+
+namespace DPsim {
 	// #### CPS for users ####
 	using SystemTopology = CPS::SystemTopology;
 	using SystemNodeList = CPS::TopologicalNode::List;

@@ -28,7 +28,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 ###################################################################################
 
-FROM dpsim-dev:latest
+FROM rwthacs/dpsim-no-villas-dev:latest
 
 ARG GIT_REV=unknown
 ARG GIT_BRANCH=unknown

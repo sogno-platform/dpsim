@@ -30,6 +30,7 @@ int main(int argc, char* argv[]) {
 	Real timeStep = 0.0001;
 	Real finalTime = 0.1;
 	String simName = "DP_CS_R1";
+	Logger::setLogDir("logs/"+simName);
 
 	// Nodes
 	auto n1 = Node::make("n1");
@@ -53,7 +54,7 @@ int main(int argc, char* argv[]) {
 	logger->addAttribute("v1", n1->attribute("v"));
 	logger->addAttribute("i10", r1->attribute("i_intf"));
 
-	Simulation sim(simName, sys, timeStep, finalTime);
+	Simulation sim(simName, sys, timeStep, finalTime, Domain::DP, Solver::Type::MNA, Logger::Level::DEBUG);
 	sim.addLogger(logger);
 
 	sim.run();

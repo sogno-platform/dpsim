@@ -15,11 +15,10 @@ def is_interactive():
     return not hasattr(main, '__file__')
 
 def is_ipython():
-    if 'ipykernel' in sys.modules:
-        return 'notebook'
-    elif 'IPython' in sys.modules:
-        return 'terminal'
-    else:
+    try:
+        get_ipython()
+        return True
+    except:
         return False
 
 class Simulation(_dpsim.Simulation):
@@ -53,7 +52,7 @@ class Simulation(_dpsim.Simulation):
 
         self.add_eventfd(self._event_socks[1].fileno())
 
-        self._events.add_callback(self.running, self, event=Event.running)
+        self._events.add_callback(self.starting, self, event=Event.starting)
         self._events.add_callback(self.stopped, self, event=Event.stopped)
         self._events.add_callback(self.stopped, self, event=Event.done)
         self._events.add_callback(self.overrun, self, event=Event.overrun)
@@ -61,13 +60,10 @@ class Simulation(_dpsim.Simulation):
         if pbar:
             self.show_progressbar()
 
-    def __del__(self):
-        self.remove_eventfd(self._event_socks[0].fileno())
-
     def add_callback(self, cb, *args, event=None):
         self._events.add_callback(cb, *args, event=event)
 
-    def running(self, *args):
+    def starting(self, *args):
         LOGGER.info("Started simulation!")
 
         self._start_time = time.time()
@@ -83,6 +79,9 @@ class Simulation(_dpsim.Simulation):
         if self._pbar_tui:
             self._pbar_tui.finish()
 
+        self._pbar_task.cancel()
+        self.remove_eventfd(self._event_socks[0].fileno())
+        self._events.close()
         LOGGER.info('Finished simulation!')
 
     def overrun(self, *args):
@@ -134,7 +133,7 @@ class Simulation(_dpsim.Simulation):
         await self._events.wait(Event.done)
 
     async def wait(self, evt=None):
-        await self._events.wait(evt)
+        return await self._events.wait(evt)
 
     def wait_until(self, evt=None):
         return self._loop.run_until_complete(self._events.wait(evt))

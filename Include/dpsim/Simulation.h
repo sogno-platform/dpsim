@@ -30,6 +30,7 @@
 #include <dpsim/DataLogger.h>
 #include <dpsim/Solver.h>
 #include <dpsim/Event.h>
+#include <dpsim/Scheduler.h>
 #include <cps/Definitions.h>
 #include <cps/PowerComponent.h>
 #include <cps/Logger.h>
@@ -52,10 +53,13 @@ namespace DPsim {
 	protected:
 		/// Simulation logger
 		CPS::Logger mLog;
+		std::shared_ptr<spdlog::logger> mSLog;
 		/// Simulation name
 		String mName;
 		/// Final time of the simulation
 		Real mFinalTime;
+		///
+		CPS::Domain mDomain;
 		/// Time variable that is incremented at every step
 		Real mTime = 0;
 		/// Simulation timestep
@@ -65,22 +69,24 @@ namespace DPsim {
 		/// Simulation log level
 		CPS::Logger::Level mLogLevel;
 		///
-		Solver::Type mSolverType;
-		///
-		std::shared_ptr<Solver> mSolver;
+		Solver::List mSolvers;
 		/// The simulation event queue
 		EventQueue mEvents;
+		/// Scheduler used for task scheduling
+		std::shared_ptr<Scheduler> mScheduler;
+		/// List of all tasks to be scheduled
+		CPS::Task::List mTasks;
+		/// Task dependencies as incoming / outgoing edges
+		Scheduler::Edges mTaskInEdges, mTaskOutEdges;
+		/// (Real) time needed for the timesteps
+		std::vector<Real> mStepTimes;
 
 #ifdef WITH_SHMEM
 		struct InterfaceMapping {
 			/// A pointer to the external interface
 			Interface *interface;
-			/// Is this interface used for synchorinzation?
-			bool sync;
 			/// Is this interface used for synchronization of the simulation start?
 			bool syncStart;
-			/// Downsampling
-			UInt downsampling;
 		};
 
 		/// Vector of Interfaces
@@ -95,15 +101,21 @@ namespace DPsim {
 		};
 
 		/// The data loggers
-		std::vector<LoggerMapping> mLoggers;
+		DataLogger::List mLoggers;
 
 		/// Creates system matrix according to
 		Simulation(String name,
 			Real timeStep, Real finalTime,
 			CPS::Domain domain = CPS::Domain::DP,
-			Solver::Type solverType = Solver::Type::MNA,
 			CPS::Logger::Level logLevel = CPS::Logger::Level::INFO);
 
+		template <typename VarType>
+		void createSolvers(const CPS::SystemTopology& system, Solver::Type solverType, Bool steadyStateInit, Bool splitSubnets, const CPS::Component::List& tearComponents);
+
+		template <typename VarType>
+		static int checkTopologySubnets(const CPS::SystemTopology& system, std::unordered_map<typename CPS::Node<VarType>::Ptr, int>& subnet);
+
+		void prepSchedule();
 	public:
 		/// Creates system matrix according to a given System topology
 		Simulation(String name, CPS::SystemTopology system,
@@ -111,7 +123,9 @@ namespace DPsim {
 			CPS::Domain domain = CPS::Domain::DP,
 			Solver::Type solverType = Solver::Type::MNA,
 			CPS::Logger::Level logLevel = CPS::Logger::Level::INFO,
-			Bool steadyStateInit = false);
+			Bool steadyStateInit = false,
+			Bool splitSubnets = true,
+			CPS::Component::List tearComponents = CPS::Component::List());
 		/// Desctructor
 		virtual ~Simulation();
 
@@ -121,25 +135,32 @@ namespace DPsim {
 		virtual Real step();
 		/// Synchronize simulation with remotes by exchanging intial state over interfaces
 		void sync();
+		/// Create the schedule for the independent tasks
+		void schedule();
+#ifdef WITH_GRAPHVIZ
+		void renderDependencyGraph(std::ostream& os);
+#endif
+
+		template <typename VarType>
+		static void splitSubnets(const CPS::SystemTopology& system, std::vector<CPS::SystemTopology>& splitSystems);
 
 		/// Schedule an event in the simulation
 		void addEvent(Event::Ptr e) {
 			mEvents.addEvent(e);
 		}
 #ifdef WITH_SHMEM
-		///
-		void addInterface(Interface *eint, Bool sync, Bool syncStart, UInt downsampling = 1) {
-			mInterfaces.push_back({eint, sync, syncStart, downsampling});
-		}
-
-		void addInterface(Interface *eint, Bool sync = true) {
-			addInterface(eint, sync, sync);
+		void addInterface(Interface *eint, Bool syncStart = true) {
+			mInterfaces.push_back({eint, syncStart});
 		}
 
 		std::vector<InterfaceMapping> & interfaces() { return mInterfaces; }
 #endif
-		void addLogger(DataLogger::Ptr logger, UInt downsampling = 1) {
-			mLoggers.push_back({logger, downsampling});
+		void addLogger(DataLogger::Ptr logger) {
+			mLoggers.push_back(logger);
+		}
+
+		void setScheduler(std::shared_ptr<Scheduler> scheduler) {
+			mScheduler = scheduler;
 		}
 
 		// #### Getter ####
@@ -148,7 +169,9 @@ namespace DPsim {
 		Real finalTime() const { return mFinalTime; }
 		Int timeStepCount() const { return mTimeStepCount; }
 		Real timeStep() const { return mTimeStep; }
-		std::vector<LoggerMapping> & loggers() { return mLoggers; }
+		DataLogger::List& loggers() { return mLoggers; }
+		std::shared_ptr<Scheduler> scheduler() { return mScheduler; }
+		std::vector<Real>& stepTimes() { return mStepTimes; }
 	};
 
 }

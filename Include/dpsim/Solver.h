@@ -29,6 +29,7 @@
 #include <dpsim/Config.h>
 #include <cps/Logger.h>
 #include <cps/SystemTopology.h>
+#include <cps/Task.h>
 
 namespace DPsim {
 	/// Holds switching time and which system should be activated.
@@ -40,12 +41,14 @@ namespace DPsim {
 	/// Base class for more specific solvers such as MNA, ODE or IDA.
 	class Solver {
 	public:
+		typedef std::shared_ptr<Solver> Ptr;
+		typedef std::vector<Ptr> List;
+
 		virtual ~Solver() { }
 
 		enum class Type { MNA, DAE, NRP };
 
-		/// Solve system A * x = z for x and current time
-		virtual Real step(Real time) = 0;
+		virtual CPS::Task::List getTasks() = 0;
 		/// Log results
 		virtual void log(Real time) { };
 	};

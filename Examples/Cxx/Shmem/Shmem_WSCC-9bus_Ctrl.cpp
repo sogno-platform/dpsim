@@ -67,19 +67,18 @@ int main(int argc, char *argv[]) {
 	sys.mComponents.push_back(load);
 
 	// Controllers and filter
-	std::vector<Real> coefficients_profile = std::vector(2000, 1./2000);
-	std::vector<Real> coefficients = std::vector(100, 1./100);
+	std::vector<Real> coefficients_profile = std::vector<Real>(2000, 1./2000);
+	std::vector<Real> coefficients = std::vector<Real>(100, 1./100);
 
 	auto filtP_profile = FIRFilter::make("filter_p_profile", coefficients_profile, 0, Logger::Level::INFO);
 	filtP_profile->setPriority(1);
-	filtP_profile->setConnection(load_profile->attribute<Real>("P"));
-	filtP_profile->attribute<Real>("input")->set(0.);
+	load_profile->setAttributeRef("P", filtP_profile->attribute<Real>("output"));
+
 	sys.mComponents.push_back(filtP_profile);
 
 	auto filtP = FIRFilter::make("filter_p", coefficients, 0, Logger::Level::INFO);
 	filtP->setPriority(1);
-	filtP->setConnection(load->attribute<Real>("P"));
-	filtP->attribute<Real>("input")->set(0.);
+	load->setAttributeRef("P", filtP->attribute<Real>("output"));
 	sys.mComponents.push_back(filtP);
 
 	RealTimeSimulation sim(simName, sys, args.timeStep, args.duration, args.solver.domain, args.solver.type, args.logLevel, true);
@@ -91,7 +90,7 @@ int main(int argc, char *argv[]) {
 	conf.polling = false;
 	String in  = "/villas-dpsim1";
 	String out = "/dpsim1-villas";
-	Interface intf(out, in, &conf);
+	Interface intf(out, in, &conf, false);
 
 	// Register exportable node voltages
 	UInt o = 0;
@@ -115,17 +114,14 @@ int main(int argc, char *argv[]) {
 		intf.addExport(v0->phase(), (i*2)+1); o++;
 	}
 
-	// Register controllable load
-	//intf.addImport(load->attribute<Real>("power_active"), 0);
-	intf.addImport(filtP->attribute<Real>("input"), 0);
-
-	// TODO gain by 10e8
-	intf.addImport(filtP_profile->attribute<Real>("input"), 1);
+	// TODO gain by 20e8
+	filtP->setInput(intf.importReal(0));
+	filtP_profile->setInput(intf.importReal(1));
 
 	intf.addExport(load->attribute<Real>("P"), o++);
 	intf.addExport(load_profile->attribute<Real>("P"), o++);
 
-	sim.addInterface(&intf, false, false);
+	sim.addInterface(&intf, false);
 	sim.run();
 
 	return 0;

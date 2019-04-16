@@ -64,11 +64,12 @@ int main(int argc, char *argv[]) {
 
 	// Register exportable node voltages
 	UInt o = 0;
-	for (UInt nodeIdx = 0; nodeIdx < sys.mNodes.size(); nodeIdx++) {
-		auto v = sys.node<CPS::DP::Node>(nodeIdx)->attributeMatrix<Complex>("v");
-		CPS::ComplexAttribute::Ptr v0 = v->coeffComplex(0,0);
-		intf.addExport(v0->mag(), o+0);
-		intf.addExport(v0->phase(), o+1);
+	for (auto n : sys.mNodes) {
+		auto v = n->attributeComplex("v");
+
+		intf.addExport(v->mag(),   o+0);
+		intf.addExport(v->phase(), o+1);
+
 		o += 2;
 	}
 

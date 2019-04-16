@@ -109,6 +109,7 @@ namespace Python {
 		static PyObject* stop(Simulation *self, PyObject *args);
 		static PyObject* addEventFD(Simulation *self, PyObject *args);
 		static PyObject* removeEventFD(Simulation *self, PyObject *args);
+		static PyObject* setScheduler(Simulation *self, PyObject *args, PyObject *kwargs);
 
 		// Getters
 		static PyObject* getState(Simulation *self, void *ctx);
@@ -116,6 +117,7 @@ namespace Python {
 		static PyObject* steps(Simulation *self, void *ctx);
 		static PyObject* time(Simulation *self, void *ctx);
 		static PyObject* finalTime(Simulation *self, void *ctx);
+		static PyObject* avgStepTime(Simulation *self, void *ctx);
 
 		static const char *doc;
 		static const char *docStart;
@@ -127,11 +129,17 @@ namespace Python {
 		static const char *docAddLogger;
 		static const char *docAddEventFD;
 		static const char *docRemoveEventFD;
+		static const char *docSetScheduler;
 		static const char *docState;
 		static const char *docName;
 		static PyMethodDef methods[];
 		static PyGetSetDef getset[];
 		static PyTypeObject type;
+
+#ifdef WITH_GRAPHVIZ
+		static const char *docReprSVG;
+		static PyObject* reprSVG(Simulation* self, PyObject* args);
+#endif
 	};
 }
 }

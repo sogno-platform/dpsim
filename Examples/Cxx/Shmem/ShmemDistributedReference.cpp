@@ -37,8 +37,8 @@ int main(int argc, char* argv[])
 	auto vs = VoltageSourceNorton::make("v_s");
 	auto l1 = Inductor::make("l_1");
 	auto r1 = Resistor::make("r_1");
-	auto r2A = Resistor::make("r_2");
-	auto r2B = Resistor::make("r_2");
+	auto r2A = Resistor::make("r_2A");
+	auto r2B = Resistor::make("r_2B");
 	auto sw = Ph1::Switch::make("sw");
 
 	// Parameters
@@ -61,7 +61,7 @@ int main(int argc, char* argv[])
 
 	auto sys = SystemTopology(50, nodes, SystemComponentList{vs, l1, r1, sw, r2A, r2B});
 
-	auto sim = Simulation("ShmemDistributedRef", sys, 0.001, 20);
+	Simulation sim("ShmemDistributedRef", sys, 0.001, 20);
 
 	auto evt = SwitchEvent::make(10, sw, true);
 

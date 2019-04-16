@@ -19,6 +19,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *********************************************************************************/
 
+#include <cps/DP/DP_Ph1_PiLine.h>
+#include <cps/Signal/DecouplingLine.h>
 #include <dpsim/Python/SystemTopology.h>
 #include <dpsim/Python/Component.h>
 #include <dpsim/Python/Node.h>
@@ -26,6 +28,47 @@
 #include "structmember.h"
 
 using namespace DPsim;
+
+void Python::SystemTopology::addCppComponent(CPS::Component::Ptr comp) {
+	Python::Component* pyComp = PyObject_New(Python::Component, &Python::Component::type);
+	new (&pyComp->comp) CPS::Component::Ptr(nullptr);
+	pyComp->comp = comp;
+
+	PyDict_SetItemString(pyComponentDict, comp->name().c_str(), (PyObject*) pyComp);
+	Py_DECREF(pyComp);
+}
+
+void Python::SystemTopology::addCppNode(CPS::TopologicalNode::Ptr node) {
+	auto emtNode = std::dynamic_pointer_cast<CPS::Node<CPS::Real>>(node);
+	if (emtNode) {
+		Python::Node<CPS::Real>* pyNode = PyObject_New(Python::Node<CPS::Real>, &Python::Node<CPS::Real>::type);
+		new (&pyNode->node) CPS::Node<CPS::Real>::Ptr(nullptr);
+		pyNode->node = emtNode;
+
+		PyDict_SetItemString(pyNodeDict, node->name().c_str(), (PyObject*) pyNode);
+		Py_DECREF(pyNode);
+	}
+	auto dpNode = std::dynamic_pointer_cast<CPS::Node<CPS::Complex>>(node);
+	if (dpNode) {
+		Python::Node<CPS::Complex>* pyNode = PyObject_New(Python::Node<CPS::Complex>, &Python::Node<CPS::Complex>::type);
+		new (&pyNode->node) CPS::Node<CPS::Complex>::Ptr(nullptr);
+		pyNode->node = dpNode;
+
+		PyDict_SetItemString(pyNodeDict, node->name().c_str(), (PyObject*) pyNode);
+		Py_DECREF(pyNode);
+	}
+}
+
+void Python::SystemTopology::updateDicts() {
+	for (auto node : sys->mNodes) {
+		if (!PyObject_HasAttrString(pyNodeDict, node->name().c_str()))
+			addCppNode(node);
+	}
+	for (auto comp : sys->mComponents) {
+		if (!PyObject_HasAttrString(pyComponentDict, comp->name().c_str()))
+			addCppComponent(comp);
+	}
+}
 
 const char *Python::SystemTopology::docAddComponent =
 "add_component(comp)\n"
@@ -58,7 +101,6 @@ PyObject* Python::SystemTopology::addComponent(SystemTopology *self, PyObject *a
 	PyDict_SetItem(self->pyComponentDict, pyName, pyObj);
 
 	Py_DECREF(pyName);
-	Py_DECREF(pyObj);
 
 	Py_RETURN_NONE;
 }
@@ -101,11 +143,131 @@ PyObject* Python::SystemTopology::addNode(SystemTopology *self, PyObject *args)
 	PyDict_SetItem(self->pyNodeDict, pyName, pyObj);
 
 	Py_DECREF(pyName);
-	Py_DECREF(pyObj);
 
 	Py_RETURN_NONE;
 }
 
+const char *Python::SystemTopology::docAutoDecouple =
+"auto_decouple(timestep, threshold=1)\n"
+"Automatically replace suitable transmission lines with decoupling lines in order "
+"to speed up the simulation.\n"
+"\n"
+":param timestep: Timestep to be used for the simulation.\n"
+":param threshold: Maximum ratio of resistance to surge impedance for a decoupling line. "
+"Passing higher values leads to more lines being considered for decoupling, possibly at the "
+"cost of simulation accuracy.\n";
+PyObject* Python::SystemTopology::autoDecouple(SystemTopology* self, PyObject* args)
+{
+	double timestep, threshold = 1;
+
+	if (!PyArg_ParseTuple(args, "d|d", &timestep, &threshold))
+		return nullptr;
+
+	CPS::Component::List newComponents;
+	for (auto it = self->sys->mComponents.begin(); it != self->sys->mComponents.end(); ) {
+		auto line = std::dynamic_pointer_cast<CPS::DP::Ph1::PiLine>(*it);
+		if (line) {
+			using Real = CPS::Real;
+
+			Real delay = sqrt(line->attribute<Real>("L_series")->get() * line->attribute<Real>("C_parallel")->get());
+			Real surgeImpedance = sqrt(line->attribute<Real>("L_series")->get() / line->attribute<Real>("C_parallel")->get());
+			Real ratio = line->attribute<Real>("R_series")->get() / surgeImpedance;
+
+			//std::cout << line->name() << " delay " << delay << " ratio " << ratio << std::endl;
+			if (delay >= timestep && ratio < threshold) {
+				auto decoupledLine = CPS::Signal::DecouplingLine::make(line->name(), line->node(0), line->node(1), line->attribute<Real>("R_series")->get(), line->attribute<Real>("L_series")->get(), line->attribute<Real>("C_parallel")->get(), CPS::Logger::Level::NONE);
+				newComponents.push_back(decoupledLine);
+				for (auto comp : decoupledLine->getLineComponents())
+					newComponents.push_back(comp);
+
+				PyDict_DelItemString(self->pyComponentDict, line->name().c_str());
+				it = self->sys->mComponents.erase(it);
+				continue;
+			}
+		}
+		++it;
+	}
+
+	self->sys->addComponents(newComponents);
+	self->updateDicts();
+	Py_RETURN_NONE;
+}
+
+const char *Python::SystemTopology::docRemoveComponent =
+"remove_component(id)\n"
+"Remove the component with the given name\n";
+PyObject* Python::SystemTopology::removeComponent(SystemTopology *self, PyObject *args)
+{
+	const char* name;
+
+	if (!PyArg_ParseTuple(args, "s", &name))
+		return nullptr;
+
+	for (auto it = self->sys->mComponents.begin(); it != self->sys->mComponents.end(); ++it) {
+		if ((*it)->name() == name) {
+			self->sys->mComponents.erase(it);
+
+			PyDict_DelItemString(self->pyComponentDict, name);
+			Py_RETURN_NONE;
+		}
+	}
+
+	PyErr_SetString(PyExc_AttributeError, "No component with that name");
+	return nullptr;
+}
+
+const char *Python::SystemTopology::docAddDecouplingLine =
+"add_decoupling_line(name, node1, node2, resistance, inductance, capacitance, log_level=0)\n";
+PyObject* Python::SystemTopology::addDecouplingLine(SystemTopology *self, PyObject *args)
+{
+	PyObject *pyObj1, *pyObj2;
+	double resistance, inductance, capacitance;
+	int logLevel = 0;
+	const char* name;
+
+	if (!PyArg_ParseTuple(args, "sOOddd|i", &name, &pyObj1, &pyObj2, &resistance, &inductance, &capacitance, &logLevel))
+		return nullptr;
+
+	Python::Node<CPS::Complex> *pyNode1, *pyNode2;
+	if (PyObject_TypeCheck(pyObj1, &Python::Node<CPS::Complex>::type)) {
+		pyNode1 = (Python::Node<CPS::Complex>*) pyObj1;
+	}
+	else {
+		PyErr_SetString(PyExc_TypeError, "First argument must be dpsim.Node");
+		return nullptr;
+	}
+
+	if (PyObject_TypeCheck(pyObj2, &Python::Node<CPS::Complex>::type)) {
+		pyNode2 = (Python::Node<CPS::Complex>*) pyObj2;
+	}
+	else {
+		PyErr_SetString(PyExc_TypeError, "First argument must be dpsim.Node");
+		return nullptr;
+	}
+
+	auto line = CPS::Signal::DecouplingLine::make(name, pyNode1->node, pyNode2->node, resistance, inductance, capacitance, CPS::Logger::Level(logLevel));
+	self->sys->addComponent(line);
+	self->sys->addComponents(line->getLineComponents());
+	self->updateDicts();
+
+	Py_RETURN_NONE;
+}
+
+const char *Python::SystemTopology::docMultiply =
+"multiply(n)\n"
+"Add n copies of the topology (all components, nodes and their connections) "
+"to itself.\n";
+PyObject* Python::SystemTopology::multiply(SystemTopology *self, PyObject *args) {
+	int n;
+
+	if (!PyArg_ParseTuple(args, "i", &n))
+		return nullptr;
+
+	self->sys->multiply(n);
+	self->updateDicts();
+
+	Py_RETURN_NONE;
+}
 
 #ifdef WITH_GRAPHVIZ
 const char *Python::SystemTopology::docReprSVG =
@@ -248,6 +410,10 @@ PyMemberDef Python::SystemTopology::members[] = {
 PyMethodDef Python::SystemTopology::methods[] = {
 	{"add_component", (PyCFunction) Python::SystemTopology::addComponent, METH_VARARGS, Python::SystemTopology::docAddComponent},
 	{"add_node",      (PyCFunction) Python::SystemTopology::addNode, METH_VARARGS, Python::SystemTopology::docAddNode},
+	{"add_decoupling_line", (PyCFunction) Python::SystemTopology::addDecouplingLine, METH_VARARGS, Python::SystemTopology::docAddDecouplingLine},
+	{"auto_decouple", (PyCFunction) Python::SystemTopology::autoDecouple, METH_VARARGS, Python::SystemTopology::docAutoDecouple},
+	{"multiply",      (PyCFunction) Python::SystemTopology::multiply, METH_VARARGS, Python::SystemTopology::docMultiply},
+	{"remove_component", (PyCFunction) Python::SystemTopology::removeComponent, METH_VARARGS, Python::SystemTopology::docRemoveComponent},
 #ifdef WITH_GRAPHVIZ
 	{"_repr_svg_",    (PyCFunction) Python::SystemTopology::reprSVG, METH_NOARGS, Python::SystemTopology::docReprSVG},
 #endif

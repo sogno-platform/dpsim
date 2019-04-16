@@ -149,34 +149,54 @@ void Interface::writeValues() {
 	}
 }
 
-void Interface::addImport(Attribute<Int>::Ptr attr, Int idx) {
+void Interface::PreStep::execute(Real time, Int timeStepCount) {
+	if (timeStepCount % mIntf.mDownsampling == 0)
+		mIntf.readValues(mIntf.mSync);
+}
+
+void Interface::PostStep::execute(Real time, Int timeStepCount) {
+	if (timeStepCount % mIntf.mDownsampling == 0)
+		mIntf.writeValues();
+}
+
+Attribute<Int>::Ptr Interface::importInt(Int idx) {
+	Attribute<Int>::Ptr attr = Attribute<Int>::make(Flags::read | Flags::write);
 	addImport([attr, idx](Sample *smp) {
 		if (idx >= smp->length)
 			throw std::length_error("incomplete data received from interface");
 
 		attr->set(smp->data[idx].i);
 	});
+	mImportAttrs.push_back(attr);
+	return attr;
 }
 
-void Interface::addImport(Attribute<Real>::Ptr attr, Int idx) {
+Attribute<Real>::Ptr Interface::importReal(Int idx) {
+	Attribute<Real>::Ptr attr = Attribute<Real>::make(Flags::read | Flags::write);
 	addImport([attr, idx](Sample *smp) {
 		if (idx >= smp->length)
 			throw std::length_error("incomplete data received from interface");
 
 		attr->set(smp->data[idx].f);
 	});
+	mImportAttrs.push_back(attr);
+	return attr;
 }
 
-void Interface::addImport(Attribute<Bool>::Ptr attr, Int idx) {
+Attribute<Bool>::Ptr Interface::importBool(Int idx) {
+	Attribute<Bool>::Ptr attr = Attribute<Bool>::make(Flags::read | Flags::write);
 	addImport([attr, idx](Sample *smp) {
 		if (idx >= smp->length)
 			throw std::length_error("incomplete data received from interface");
 
 		attr->set(smp->data[idx].b);
 	});
+	mImportAttrs.push_back(attr);
+	return attr;
 }
 
-void Interface::addImport(Attribute<Complex>::Ptr attr, Int idx) {
+Attribute<Complex>::Ptr Interface::importComplex(Int idx) {
+	Attribute<Complex>::Ptr attr = Attribute<Complex>::make(Flags::read | Flags::write);
 	addImport([attr, idx](Sample *smp) {
 		if (idx >= smp->length)
 			throw std::length_error("incomplete data received from interface");
@@ -186,6 +206,23 @@ void Interface::addImport(Attribute<Complex>::Ptr attr, Int idx) {
 
 		attr->set(y);
 	});
+	mImportAttrs.push_back(attr);
+	return attr;
+}
+
+Attribute<Complex>::Ptr Interface::importComplexMagPhase(Int idx) {
+	Attribute<Complex>::Ptr attr = Attribute<Complex>::make(Flags::read | Flags::write);
+	addImport([attr, idx](Sample *smp) {
+		if (idx >= smp->length)
+			throw std::length_error("incomplete data received from interface");
+
+		auto *z = reinterpret_cast<float*>(&smp->data[idx].z);
+		auto  y = std::polar(z[0], z[1]);
+
+		attr->set(y);
+	});
+	mImportAttrs.push_back(attr);
+	return attr;
 }
 
 void Interface::addExport(Attribute<Int>::Ptr attr, Int idx) {
@@ -233,5 +270,12 @@ void Interface::addExport(Attribute<Complex>::Ptr attr, Int idx) {
 
 		z[0] = y.real();
 		z[1] = y.imag();
+	});
+}
+
+Task::List Interface::getTasks() {
+	return Task::List({
+		std::make_shared<Interface::PreStep>(*this),
+		std::make_shared<Interface::PostStep>(*this)
 	});
 }
