@@ -57,8 +57,8 @@ DPsim::CommandLineArgs::CommandLineArgs(int argc, char *argv[],
 		{ "log-level",		required_argument,	0, 'l', "(NONE|INFO|DEBUG|WARN|ERROR)", "Logging level" },
 		{ "start-at",		required_argument,	0, 'a', "ISO8601", "Start time of real-time simulation" },
 		{ "start-in",		required_argument,	0, 'i', "SECS", "" },
-		{ "solver-domain",	required_argument,	0, 'D', "(DP|EMT)", "Domain of solver" },
-		{ "solver-type",	required_argument,	0, 'T', "(MNA)", "Type of solver" },
+		{ "solver-domain",	required_argument,	0, 'D', "(STATIC|DP|EMT)", "Domain of solver" },
+		{ "solver-type",	required_argument,	0, 'T', "(NRP|MNA)", "Type of solver" },
 		{ "option",		required_argument,	0, 'o', "KEY=VALUE", "User-definable options" },
 		{ "name",		required_argument,	0, 'n', "NAME", "Name of log files" },
 		{ 0 }
@@ -151,8 +151,10 @@ DPsim::CommandLineArgs::CommandLineArgs(int argc, char *argv[],
 					solver.domain = Domain::DP;
 				else if (arg == "EMT")
 					solver.domain = Domain::EMT;
+				else if (arg == "STATIC")
+					solver.domain = Domain::Static;
 				else
-					throw std::invalid_argument("Invalid value for --solver-domain: must be a string of DP, EMT");
+					throw std::invalid_argument("Invalid value for --solver-domain: must be a string of STATIC, DP, EMT");
 				break;
 			}
 
@@ -161,8 +163,10 @@ DPsim::CommandLineArgs::CommandLineArgs(int argc, char *argv[],
 
 				if (arg == "MNA")
 					solver.type = Solver::Type::MNA;
+				else if (arg == "NRP")
+					solver.type = Solver::Type::NRP;
 				else
-					throw std::invalid_argument("Invalid value for --solver-type: must be a string of MNA");
+					throw std::invalid_argument("Invalid value for --solver-type: must be a string of NRP or MNA");
 				break;
 			}
 

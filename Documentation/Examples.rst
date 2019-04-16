@@ -25,6 +25,6 @@ Links
 More examples can be found in the DPsim repository.
 Apart from the `Jupyter notebooks`_, there are pure `Python`_ and `C++`_ examples available. 
 
-.. _Jupyter notebooks: https://git.rwth-aachen.de/acs/core/simulation/dpsim/tree/development/Examples/Cxx 
+.. _Jupyter notebooks: https://git.rwth-aachen.de/acs/core/simulation/dpsim/tree/development/Examples/Notebooks
 .. _Python: https://git.rwth-aachen.de/acs/core/simulation/dpsim/tree/development/Examples/Python
-.. _C++: https://git.rwth-aachen.de/acs/core/simulation/dpsim/tree/development/Examples/Notebooks
+.. _C++: https://git.rwth-aachen.de/acs/core/simulation/dpsim/tree/development/Examples/Cxx

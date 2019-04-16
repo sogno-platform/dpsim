@@ -67,6 +67,7 @@ if(WITH_RT)
 	set(RT_SOURCES
 		RealTime/RT_DP_CS_R_1.cpp
 		RealTime/RT_DP_ResVS_RL1.cpp
+		RealTime/RT_CIGRE_MV_PowerFlowTest.cpp
 	)
 endif()
 
@@ -82,6 +83,8 @@ if(WITH_SHMEM)
 		Shmem/ShmemControllableSource.cpp
 		Shmem/ShmemControllableFiltSource.cpp
 		Shmem/ShmemRealTime.cpp
+		Shmem/Shmem_CIGRE_MV_PowerFlowTest.cpp
+		Shmem/Shmem_CIGRE_MV_PowerFlowTest_LoadProfiles.cpp
 	)
 endif()
 
@@ -104,6 +107,7 @@ if(WITH_CIM)
 
 		# powerflow example
 		CIM/CIGRE_MV_PowerFlowTest.cpp
+		CIM/CIGRE_MV_PowerFlowTest_LoadProfiles.cpp
 	)
 endif()
 
