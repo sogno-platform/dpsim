@@ -26,14 +26,13 @@ using namespace CPS::DP::Ph1;
 
 int main(int argc, char* argv[]) {
 	// Define simulation scenario
-	Real timeStep = 0.00001;
+	Real timeStep = 0.000001;
 	Real finalTime = 0.1;
 	String simName = "DP_Inverter_Grid_Test";
 	Logger::setLogDir("logs/"+simName);
 
-	Matrix frequencies(12,1);
-	frequencies << 19750, 19850, 19950, 20050, 20150, 20250,
-		39750, 39850, 39950, 40050, 40150, 40250;
+	Matrix frequencies(4,1);
+	frequencies << 19850, 19950, 20050, 20150;
 
 	// Nodes
 	auto n1 = Node::make("n1");
@@ -50,7 +49,7 @@ int main(int argc, char* argv[]) {
 	// Components
 	auto inv = Inverter::make("inv", Logger::Level::DEBUG);
 	//inv->setParameters(Complex(200, 0));
-	inv->setParameters(360, 0.87);
+	inv->setParameters(2, 3, 360, 0.87);
 	inv->initialize(50, frequencies);
 	auto r1 = Resistor::make("r1", Logger::Level::DEBUG);
 	r1->setParameters(0.1);
@@ -99,14 +98,6 @@ int main(int argc, char* argv[]) {
 	logger->addAttribute("v1_2", n1->attributeMatrix<Complex>("v")->coeff(0,2));
 	logger->addAttribute("v1_3", n1->attributeMatrix<Complex>("v")->coeff(0,3));
 	logger->addAttribute("v1_4", n1->attributeMatrix<Complex>("v")->coeff(0,4));
-	logger->addAttribute("v1_5", n1->attributeMatrix<Complex>("v")->coeff(0,5));
-	logger->addAttribute("v1_6", n1->attributeMatrix<Complex>("v")->coeff(0,6));
-	logger->addAttribute("v1_7", n1->attributeMatrix<Complex>("v")->coeff(0,7));
-	logger->addAttribute("v1_8", n1->attributeMatrix<Complex>("v")->coeff(0,8));
-	logger->addAttribute("v1_9", n1->attributeMatrix<Complex>("v")->coeff(0,9));
-	logger->addAttribute("v1_10", n1->attributeMatrix<Complex>("v")->coeff(0,10));
-	logger->addAttribute("v1_11", n1->attributeMatrix<Complex>("v")->coeff(0,11));
-	logger->addAttribute("v1_12", n1->attributeMatrix<Complex>("v")->coeff(0,12));
 
 	logger->addAttribute("v2", n2->attributeMatrix<Complex>("v")->coeff(0,0));
 
@@ -115,14 +106,6 @@ int main(int argc, char* argv[]) {
 	logger->addAttribute("v3_2", n3->attributeMatrix<Complex>("v")->coeff(0,2));
 	logger->addAttribute("v3_3", n3->attributeMatrix<Complex>("v")->coeff(0,3));
 	logger->addAttribute("v3_4", n3->attributeMatrix<Complex>("v")->coeff(0,4));
-	logger->addAttribute("v3_5", n3->attributeMatrix<Complex>("v")->coeff(0,5));
-	logger->addAttribute("v3_6", n3->attributeMatrix<Complex>("v")->coeff(0,6));
-	logger->addAttribute("v3_7", n3->attributeMatrix<Complex>("v")->coeff(0,7));
-	logger->addAttribute("v3_8", n3->attributeMatrix<Complex>("v")->coeff(0,8));
-	logger->addAttribute("v3_9", n3->attributeMatrix<Complex>("v")->coeff(0,9));
-	logger->addAttribute("v3_10", n3->attributeMatrix<Complex>("v")->coeff(0,10));
-	logger->addAttribute("v3_11", n3->attributeMatrix<Complex>("v")->coeff(0,11));
-	logger->addAttribute("v3_12", n3->attributeMatrix<Complex>("v")->coeff(0,12));
 
 	logger->addAttribute("v4", n4->attributeMatrix<Complex>("v")->coeff(0,0));
 	logger->addAttribute("v5", n5->attributeMatrix<Complex>("v")->coeff(0,0));
@@ -130,7 +113,7 @@ int main(int argc, char* argv[]) {
 	logger->addAttribute("i12", r1->attributeMatrix<Complex>("i_intf")->coeff(0,0));
 	logger->addAttribute("i34", r2->attributeMatrix<Complex>("i_intf")->coeff(0,0));
 
-	Simulation sim(simName, sys, timeStep, finalTime);
+	Simulation sim(simName, sys, timeStep, finalTime, Domain::DP, Solver::Type::MNA, Logger::Level::INFO);
 	sim.addLogger(logger);
 
 	sim.run();
