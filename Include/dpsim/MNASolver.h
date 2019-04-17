@@ -109,16 +109,16 @@ namespace DPsim {
 		CPS::Logger mLog;
 		std::shared_ptr<spdlog::logger> mSLog;
 		/// Left side vector logger
-		DataLogger mLeftVectorLog;
+		std::shared_ptr<DataLogger> mLeftVectorLog;
 		/// Right side vector logger
-		DataLogger mRightVectorLog;
-		/// Left side vector logger for initialization
-		DataLogger mInitLeftVectorLog;
-		/// Right side vector logger for initialization
-		DataLogger mInitRightVectorLog;
+		std::shared_ptr<DataLogger> mRightVectorLog;
 
 		/// TODO: check that every system matrix has the same dimensions
 		void initialize(CPS::SystemTopology system);
+		/// Initialization of individual components
+		void initializeComponents();
+		/// Initialization of system matrices and source vector
+		void initializeSystem();
 		/// Identify Nodes and PowerComponents and SignalComponents
 		void identifyTopologyObjects();
 		/// Assign simulation node index according to index in the vector.
@@ -134,6 +134,8 @@ namespace DPsim {
 		void createEmptySystemMatrix();
 		///
 		void updateSwitchStatus();
+		/// Logging of system matrices and source vector
+		void logSystemMatrices();
 	public:
 		/// This constructor should not be called by users.
 		MnaSolver(String name,

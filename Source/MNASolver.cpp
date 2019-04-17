@@ -37,17 +37,15 @@ MnaSolver<VarType>::MnaSolver(String name,
 	mSteadyStateInit(steadyStateInit),
 	mDownSampleRate(downSampleRate),
 	mName(name),
-	mLogLevel(logLevel),
-	mLog(name + "_MNA", logLevel),
-	mLeftVectorLog(name + "_LeftVector", logLevel != CPS::Logger::Level::NONE),
-	mRightVectorLog(name + "_RightVector", logLevel != CPS::Logger::Level::NONE),
-	mInitLeftVectorLog(name + "_InitLeftVector", logLevel != CPS::Logger::Level::NONE),
-	mInitRightVectorLog(name + "_InitRightVector", logLevel != CPS::Logger::Level::NONE) {
+	mLogLevel(logLevel) {
 
 	// Logging
 	mSLog = Logger::get(name + "_MNA");
 	mSLog->set_pattern("[%L] %v");
 	mSLog->set_level(Logger::cpsLogLevelToSpd(logLevel));
+
+	mLeftVectorLog = std::make_shared<DataLogger>(name + "_LeftVector", logLevel != CPS::Logger::Level::NONE);
+	mRightVectorLog = std::make_shared<DataLogger>(name + "_RightVector", logLevel != CPS::Logger::Level::NONE);
 }
 
 template <typename VarType>
@@ -55,8 +53,9 @@ void MnaSolver<VarType>::initialize(CPS::SystemTopology system) {
 	mSLog->info("#### Start Initialization ####");
 	mSystem = system;
 
+	// Otherwise LU decomposition will fail
 	if (mSystem.mComponents.size() == 0)
-		throw SolverException(); // Otherwise LU decomposition will fail
+		throw SolverException();
 
 	for (auto comp : system.mComponents)
 		mSLog->info("Added {:s} '{:s}' to simulation.", comp->type(), comp->name());
@@ -72,8 +71,30 @@ void MnaSolver<VarType>::initialize(CPS::SystemTopology system) {
 	// The system topology is prepared and we create the MNA matrices.
 	createEmptyVectors();
 	createEmptySystemMatrix();
+	// Register attribute for solution vector
 	addAttribute<Matrix>("left_vector", &mLeftSideVector, Flags::read);
 
+	// Initialize components from powerflow solution and
+	// calculate mna specific initialization values.
+	initializeComponents();
+
+	// This steady state initialization is MNA specific and runs a simulation
+	// before the actual simulation executed by the user.
+	if (mSteadyStateInit && mDomain == CPS::Domain::DP)
+		steadyStateInitialization();
+
+	// Some components feature a different behaviour for simulation and initialization
+	for (auto comp : mSystem.mComponents)
+		comp->setBehaviour(Component::Behaviour::Simulation);
+
+	// Initialize system matrices and source vector.
+	initializeSystem();
+
+	logSystemMatrices();
+}
+
+template <typename VarType>
+void MnaSolver<VarType>::initializeComponents() {
 	// TODO: Move to base solver class?
 	// This intialization according to power flow information is not MNA specific.
 	mSLog->info("Initialize power flow");
@@ -96,18 +117,10 @@ void MnaSolver<VarType>::initialize(CPS::SystemTopology system) {
 	}
 	for (auto comp : mSwitches)
 		comp->mnaInitialize(mSystem.mSystemOmega, mTimeStep, attribute<Matrix>("left_vector"));
+}
 
-	// This steady state initialization is MNA specific and runs a simulation
-	// before the actual simulation executed by the user.
-	if (mSteadyStateInit && mDomain == CPS::Domain::DP) {
-		mSLog->info("Run steady-state initialization.");
-		steadyStateInitialization();
-		mSLog->info("Finished steady-state initialization.");
-	}
-
-	for (auto comp : mSystem.mComponents)
-		comp->setBehaviour(Component::Behaviour::Simulation);
-
+template <typename VarType>
+void MnaSolver<VarType>::initializeSystem() {
 	if (mSwitches.size() < 1) {
 		// Create system matrix if no switches were added
 		for (auto comp : mPowerComponents) {
@@ -115,14 +128,14 @@ void MnaSolver<VarType>::initialize(CPS::SystemTopology system) {
 			auto idObj = std::dynamic_pointer_cast<IdentifiedObject>(comp);
 
 			mSLog->debug("Stamping {:s} {:s} into system matrix: \n{:s}",
-				idObj->type(), idObj->name(), Logger::matrixCompToString(mSwitchedMatrices[std::bitset<SWITCH_NUM>(0)]));
+				idObj->type(), idObj->name(), Logger::matrixToString(mSwitchedMatrices[std::bitset<SWITCH_NUM>(0)]));
 		}
 		for (auto comp : mSwitches) {
 			comp->mnaApplySystemMatrixStamp(mSwitchedMatrices[std::bitset<SWITCH_NUM>(0)]);
 			auto idObj = std::dynamic_pointer_cast<IdentifiedObject>(comp);
 
 			mSLog->debug("Stamping {:s} {:s} into system matrix: \n{:s}",
-				idObj->type(), idObj->name(), Logger::matrixCompToString(mSwitchedMatrices[std::bitset<SWITCH_NUM>(0)]));
+				idObj->type(), idObj->name(), Logger::matrixToString(mSwitchedMatrices[std::bitset<SWITCH_NUM>(0)]));
 		}
 
 		mLuFactorizations[std::bitset<SWITCH_NUM>(0)] = Eigen::PartialPivLU<Matrix>(mSwitchedMatrices[std::bitset<SWITCH_NUM>(0)]);
@@ -149,19 +162,6 @@ void MnaSolver<VarType>::initialize(CPS::SystemTopology system) {
 		mSLog->debug("Stamping {:s} {:s} into source vector: \n{:s}",
 			idObj->type(), idObj->name(), Logger::matrixCompToString(mRightSideVector));
 	}
-
-	mSLog->info("System matrix: \n{:s}", Logger::matrixCompToString(mSwitchedMatrices[std::bitset<SWITCH_NUM>(0)]));
-	mSLog->info("LU decomposition: \n{:s}", Logger::matrixCompToString(mLuFactorizations[std::bitset<SWITCH_NUM>(0)].matrixLU()));
-	mSLog->info("Right side vector: \n{:s}", Logger::matrixCompToString(mRightSideVector));
-
-	for (auto sys : mSwitchedMatrices) {
-		//mSLog->info("Switching System matrix {:s} \n{:s}",
-		//	sys.first, Logger::matrixCompToString(sys.second));
-		//mSLog->info("LU Factorization for System Matrix {:s} \n{:s}",
-		//	sys.first, Logger::matrixCompToString(mLuFactorizations[sys.first].matrixLU()));
-	}
-
-	mSLog->info("Initial switch status: {:s}", mCurrentSwitchStatus.to_string());
 }
 
 template <typename VarType>
@@ -247,7 +247,7 @@ void MnaSolver<Complex>::createEmptySystemMatrix() {
 		throw SystemError("Too many Switches.");
 
 	for (UInt i = 0; i < std::pow(2,mSwitches.size()); i++)
-		mSwitchedMatrices[std::bitset<SWITCH_NUM>(i)] = Matrix::Zero(2 * mNumSimNodes, 2 * mNumSimNodes);
+		mSwitchedMatrices[std::bitset<SWITCH_NUM>(i)] = Matrix::Zero(2 * (mNumSimNodes + mNumHarmSimNodes), 2 * (mNumSimNodes + mNumHarmSimNodes));
 }
 
 template <typename VarType>
@@ -281,6 +281,11 @@ void MnaSolver<VarType>::createVirtualNodes() {
 
 template <typename VarType>
 void MnaSolver<VarType>::steadyStateInitialization() {
+	mSLog->info("Run steady-state initialization.");
+
+	DataLogger initLeftVectorLog(mName + "_InitLeftVector", mLogLevel != CPS::Logger::Level::NONE);
+	DataLogger initRightVectorLog(mName + "_InitRightVector", mLogLevel != CPS::Logger::Level::NONE);
+
 	Int timeStepCount = 0;
 	Real time = 0;
 	Real eps = 0.0001;
@@ -326,12 +331,12 @@ void MnaSolver<VarType>::steadyStateInitialization() {
 			mNodes[nodeIdx]->mnaUpdateVoltage(mLeftSideVector);
 
 		if (mDomain == CPS::Domain::EMT) {
-			mInitLeftVectorLog.logEMTNodeValues(time, leftSideVector());
-			mInitRightVectorLog.logEMTNodeValues(time, rightSideVector());
+			initLeftVectorLog.logEMTNodeValues(time, leftSideVector());
+			initRightVectorLog.logEMTNodeValues(time, rightSideVector());
 		}
 		else {
-			mInitLeftVectorLog.logPhasorNodeValues(time, leftSideVector());
-			mInitRightVectorLog.logPhasorNodeValues(time, rightSideVector());
+			initLeftVectorLog.logPhasorNodeValues(time, leftSideVector());
+			initRightVectorLog.logPhasorNodeValues(time, rightSideVector());
 		}
 
 		// Calculate new simulation time
@@ -352,6 +357,8 @@ void MnaSolver<VarType>::steadyStateInitialization() {
 
 	// Reset system for actual simulation
 	mRightSideVector.setZero();
+
+	mSLog->info("Finished steady-state initialization.");
 }
 
 template <typename VarType>
@@ -401,14 +408,38 @@ void MnaSolver<VarType>::SolveTask::execute(Real time, Int timeStepCount) {
 
 template <typename VarType>
 void MnaSolver<VarType>::log(Real time) {
+	if (mLogLevel == Logger::Level::NONE)
+		return;
+
 	if (mDomain == CPS::Domain::EMT) {
-		mLeftVectorLog.logEMTNodeValues(time, leftSideVector());
-		mRightVectorLog.logEMTNodeValues(time, rightSideVector());
+		mLeftVectorLog->logEMTNodeValues(time, leftSideVector());
+		mRightVectorLog->logEMTNodeValues(time, rightSideVector());
 	}
 	else {
-		mLeftVectorLog.logPhasorNodeValues(time, leftSideVector());
-		mRightVectorLog.logPhasorNodeValues(time, rightSideVector());
+		mLeftVectorLog->logPhasorNodeValues(time, leftSideVector());
+		mRightVectorLog->logPhasorNodeValues(time, rightSideVector());
 	}
+}
+
+template <typename VarType>
+void MnaSolver<VarType>::logSystemMatrices() {
+	if (mSwitches.size() < 1) {
+		mSLog->info("System matrix: \n{:s}",
+			Logger::matrixToString(mSwitchedMatrices[std::bitset<SWITCH_NUM>(0)]));
+		mSLog->info("LU decomposition: \n{:s}",
+			Logger::matrixToString(mLuFactorizations[std::bitset<SWITCH_NUM>(0)].matrixLU()));
+	}
+	else {
+		mSLog->info("Initial switch status: {:s}", mCurrentSwitchStatus.to_string());
+
+		for (auto sys : mSwitchedMatrices) {
+			mSLog->info("Switching System matrix {:s} \n{:s}",
+				sys.first.to_string(), Logger::matrixToString(sys.second));
+			mSLog->info("LU Factorization for System Matrix {:s} \n{:s}",
+				sys.first.to_string(), Logger::matrixToString(mLuFactorizations[sys.first].matrixLU()));
+		}
+	}
+	mSLog->info("Right side vector: \n{:s}", Logger::matrixToString(mRightSideVector));
 }
 
 template <typename VarType>
