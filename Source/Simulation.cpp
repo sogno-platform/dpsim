@@ -43,17 +43,9 @@
 using namespace CPS;
 using namespace DPsim;
 
-Simulation::Simulation(String name,
-	Real timeStep, Real finalTime,
-	Domain domain,
-	Logger::Level logLevel) :
-	mLog(name, logLevel),
-	mName(name),
-	mFinalTime(finalTime),
-	mDomain(domain),
-	mTimeStep(timeStep),
-	mLogLevel(logLevel)
-{
+Simulation::Simulation(String name,	Logger::Level logLevel) :
+	mName(name), mLogLevel(logLevel) {
+
 	addAttribute<String>("name", &mName, Flags::read);
 	addAttribute<Real>("final_time", &mFinalTime, Flags::read);
 	Eigen::setNbThreads(1);
@@ -64,7 +56,6 @@ Simulation::Simulation(String name,
 	mSLog->set_level(Logger::cpsLogLevelToSpd(logLevel));
 }
 
-
 Simulation::Simulation(String name, SystemTopology system,
 	Real timeStep, Real finalTime,
 	Domain domain, Solver::Type solverType,
@@ -72,8 +63,11 @@ Simulation::Simulation(String name, SystemTopology system,
 	Bool steadyStateInit,
 	Bool splitSubnets,
 	Component::List tearComponents) :
-	Simulation(name, timeStep, finalTime,
-		domain, logLevel) {
+	Simulation(name, logLevel) {
+
+	mTimeStep = timeStep;
+	mFinalTime = finalTime;
+	mDomain = domain;
 
 	switch (domain) {
 	case Domain::DP:
@@ -88,7 +82,19 @@ Simulation::Simulation(String name, SystemTopology system,
 	}
 }
 
-Simulation::~Simulation() {
+void Simulation::initialize() {
+
+	switch (mDomain) {
+	case Domain::DP:
+		createSolvers<Complex>(mSystem, mSolverType, mSteadyStateInit, mSplitSubnets, mTearComponents);
+		break;
+	case Domain::EMT:
+		createSolvers<Real>(mSystem, mSolverType, mSteadyStateInit, mSplitSubnets, mTearComponents);
+		break;
+	case Domain::Static:
+		mSolvers.push_back(std::make_shared<NRpolarSolver>(mName, mSystem, mTimeStep, mDomain, mLogLevel));
+		break;
+	}
 }
 
 template <typename VarType>
