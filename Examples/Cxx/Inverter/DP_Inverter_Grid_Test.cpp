@@ -31,8 +31,8 @@ int main(int argc, char* argv[]) {
 	String simName = "DP_Inverter_Grid_Test";
 	Logger::setLogDir("logs/"+simName);
 
-	Matrix frequencies(4,1);
-	frequencies << 19850, 19950, 20050, 20150;
+	Matrix frequencies(5,1);
+	frequencies << 50, 19850, 19950, 20050, 20150;
 
 	// Nodes
 	auto n1 = Node::make("n1");
