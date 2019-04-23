@@ -50,7 +50,7 @@ MnaSolver<VarType>::MnaSolver(String name,
 
 template <typename VarType>
 void MnaSolver<VarType>::initialize(CPS::SystemTopology system) {
-	mSLog->info("#### Start Initialization ####");
+	mSLog->info("---- Start initialization ----");
 	mSystem = system;
 
 	// Otherwise LU decomposition will fail
@@ -91,6 +91,7 @@ void MnaSolver<VarType>::initialize(CPS::SystemTopology system) {
 	initializeSystem();
 
 	logSystemMatrices();
+	mSLog->info("---- Initialization finished ----");
 }
 
 template <typename VarType>
@@ -213,7 +214,7 @@ void MnaSolver<VarType>::assignSimNodes() {
 	// Total number of network nodes is simNodeIdx + 1
 	mNumSimNodes = simNodeIdx;
 	mNumVirtualSimNodes = mNumSimNodes - mNumNetSimNodes;
-	mNumHarmSimNodes = mSystem.mHarmonics.size() * mNumSimNodes;
+	mNumHarmSimNodes = mSystem.mFrequencies.size() * mNumSimNodes;
 
 	mSLog->info("Number of network simulation nodes: {:d}", mNumNetSimNodes);
 	mSLog->info("Number of simulation nodes: {:d}", mNumSimNodes);
