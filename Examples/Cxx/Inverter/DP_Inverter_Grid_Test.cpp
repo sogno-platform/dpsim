@@ -31,49 +31,37 @@ int main(int argc, char* argv[]) {
 	String simName = "DP_Inverter_Grid_Test";
 	Logger::setLogDir("logs/"+simName);
 
+	// Set system frequencies
 	Matrix frequencies(5,1);
 	frequencies << 50, 19850, 19950, 20050, 20150;
 
 	// Nodes
 	auto n1 = Node::make("n1");
-	n1->initialize(50, frequencies);
 	auto n2 = Node::make("n2");
-	n2->initialize(50, frequencies);
 	auto n3 = Node::make("n3");
-	n3->initialize(50, frequencies);
 	auto n4 = Node::make("n4");
-	n4->initialize(50, frequencies);
 	auto n5 = Node::make("n5");
-	n5->initialize(50, frequencies);
 
 	// Components
 	auto inv = Inverter::make("inv", Logger::Level::DEBUG);
 	//inv->setParameters(Complex(200, 0));
 	inv->setParameters(2, 3, 360, 0.87);
-	inv->initialize(50, frequencies);
 	auto r1 = Resistor::make("r1", Logger::Level::DEBUG);
 	r1->setParameters(0.1);
-	r1->initialize(50, frequencies);
 	auto l1 = Inductor::make("l1", Logger::Level::DEBUG);
 	l1->setParameters(600e-6);
-	l1->initialize(50, frequencies);
 	auto r2 = Resistor::make("r2", Logger::Level::DEBUG);
 	Real r2g = 0.1+0.001;
 	r2->setParameters(r2g);
-	r2->initialize(50, frequencies);
 	auto l2 = Inductor::make("l2", Logger::Level::DEBUG);
 	Real l2g = 150e-6+0.001/(2.*PI*50.);
 	l2->setParameters(l2g);
-	l2->initialize(50, frequencies);
 	auto c1 = Capacitor::make("c1", Logger::Level::DEBUG);
 	c1->setParameters(10e-6);
-	c1->initialize(50, frequencies);
 	auto rc = Capacitor::make("rc", Logger::Level::DEBUG);
 	rc->setParameters(1e-6);
-	rc->initialize(50, frequencies);
 	auto grid = VoltageSource::make("grid", Logger::Level::DEBUG);
 	grid->setParameters(Complex(0, -311.1270));
-	grid->initialize(50, frequencies);
 
 	// Topology
 	//inv->connect({ Node::GND, n1 });
