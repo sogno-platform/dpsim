@@ -26,14 +26,16 @@ using namespace CPS::DP::Ph1;
 
 int main(int argc, char* argv[]) {
 	// Define simulation scenario
-	Real timeStep = 0.000001;
-	Real finalTime = 0.1;
+	Real timeStep = 0.00001;
+	Real finalTime = 0.05;
 	String simName = "DP_Inverter_Grid_Test";
 	Logger::setLogDir("logs/"+simName);
 
 	// Set system frequencies
 	Matrix frequencies(5,1);
 	frequencies << 50, 19850, 19950, 20050, 20150;
+	//Matrix frequencies(1,1);
+	//frequencies << 50;
 
 	// Nodes
 	auto n1 = Node::make("n1");
@@ -44,23 +46,24 @@ int main(int argc, char* argv[]) {
 
 	// Components
 	auto inv = Inverter::make("inv", Logger::Level::DEBUG);
-	//inv->setParameters(Complex(200, 0));
 	inv->setParameters(2, 3, 360, 0.87);
-	auto r1 = Resistor::make("r1", Logger::Level::DEBUG);
+	//auto inv = VoltageSource::make("inv", Logger::Level::INFO);
+	//inv->setParameters(Complex(0, -200));
+	auto r1 = Resistor::make("r1", Logger::Level::INFO);
 	r1->setParameters(0.1);
-	auto l1 = Inductor::make("l1", Logger::Level::DEBUG);
+	auto l1 = Inductor::make("l1", Logger::Level::INFO);
 	l1->setParameters(600e-6);
-	auto r2 = Resistor::make("r2", Logger::Level::DEBUG);
+	auto r2 = Resistor::make("r2", Logger::Level::INFO);
 	Real r2g = 0.1+0.001;
 	r2->setParameters(r2g);
-	auto l2 = Inductor::make("l2", Logger::Level::DEBUG);
+	auto l2 = Inductor::make("l2", Logger::Level::INFO);
 	Real l2g = 150e-6+0.001/(2.*PI*50.);
 	l2->setParameters(l2g);
-	auto c1 = Capacitor::make("c1", Logger::Level::DEBUG);
+	auto c1 = Capacitor::make("c1", Logger::Level::INFO);
 	c1->setParameters(10e-6);
-	auto rc = Capacitor::make("rc", Logger::Level::DEBUG);
+	auto rc = Capacitor::make("rc", Logger::Level::INFO);
 	rc->setParameters(1e-6);
-	auto grid = VoltageSource::make("grid", Logger::Level::DEBUG);
+	auto grid = VoltageSource::make("grid", Logger::Level::INFO);
 	grid->setParameters(Complex(0, -311.1270));
 
 	// Topology
@@ -97,7 +100,6 @@ int main(int argc, char* argv[]) {
 
 	logger->addAttribute("v4", n4->attributeMatrix<Complex>("v")->coeff(0,0));
 	logger->addAttribute("v5", n5->attributeMatrix<Complex>("v")->coeff(0,0));
-
 	logger->addAttribute("i12", r1->attributeMatrix<Complex>("i_intf")->coeff(0,0));
 	logger->addAttribute("i34", r2->attributeMatrix<Complex>("i_intf")->coeff(0,0));
 
