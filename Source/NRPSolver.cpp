@@ -806,7 +806,7 @@ void NRpolarSolver::set_solution() {
 				baseVoltage_ = line->attribute<CPS::Real>("base_Voltage")->get();
 			}
 		}
-		std::dynamic_pointer_cast<CPS::Node<CPS::Complex>>(node)->updateVoltage(sol_V_complex(node->simNode())*baseVoltage_);
+		std::dynamic_pointer_cast<CPS::Node<CPS::Complex>>(node)->setVoltage(sol_V_complex(node->simNode())*baseVoltage_);
 	}
 }
 
