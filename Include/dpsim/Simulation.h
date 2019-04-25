@@ -87,6 +87,8 @@ namespace DPsim {
 		Bool mSplitSubnets = false;
 		///
 		CPS::Component::List mTearComponents = CPS::Component::List();
+		///
+		Bool mHarmParallel = false;
 
 		// #### Task dependencies und scheduling ####
 		/// Scheduler used for task scheduling
@@ -171,6 +173,8 @@ namespace DPsim {
 		void setScheduler(std::shared_ptr<Scheduler> scheduler) {
 			mScheduler = scheduler;
 		}
+		///
+		void doHarmonicParallelization(Bool parallel) { mHarmParallel = parallel; }
 
 		// #### Simulation Control ####
 		/// Create solver instances etc.

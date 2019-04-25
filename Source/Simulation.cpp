@@ -163,7 +163,7 @@ void Simulation::createSolvers(const CPS::SystemTopology& system, Solver::Type s
 					solver = std::make_shared<DiakopticsSolver<VarType>>(mName, subnets[net], tearComponents, mTimeStep, mLogLevel);
 				} else {
 					solver = std::make_shared<MnaSolver<VarType>>(mName + copySuffix, subnets[net], mTimeStep,
-						mDomain, mLogLevel, steadyStateInit);
+						mDomain, mLogLevel, steadyStateInit, mHarmParallel);
 				}
 				break;
 #ifdef WITH_SUNDIALS

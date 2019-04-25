@@ -79,16 +79,23 @@ namespace DPsim {
 		std::bitset<SWITCH_NUM> mCurrentSwitchStatus;
 		/// Source vector of known quantities
 		Matrix mRightSideVector;
+		std::vector<Matrix> mRightSideVectorHarm;
 		/// List of all right side vector contributions
 		std::vector<const Matrix*> mRightVectorStamps;
 		/// Solution vector of unknown quantities
 		Matrix mLeftSideVector;
+		std::vector<Matrix> mLeftSideVectorHarm;
+		std::vector< CPS::Attribute<Matrix>::Ptr > mLeftVectorHarmAttributes;
 		/// Switch to trigger steady-state initialization
 		Bool mSteadyStateInit = false;
 		/// Map of system matrices where the key is the bitset describing the switch states
 		std::unordered_map< std::bitset<SWITCH_NUM>, Matrix > mSwitchedMatrices;
+		std::unordered_map< std::bitset<SWITCH_NUM>, std::vector<Matrix> > mSwitchedMatricesHarm;
 		/// Map of LU factorizations related to the system matrices
 		std::unordered_map< std::bitset<SWITCH_NUM>, CPS::LUFactorized > mLuFactorizations;
+		std::unordered_map< std::bitset<SWITCH_NUM>, std::vector<CPS::LUFactorized> > mLuFactorizationsHarm;
+		///
+		Bool mHarmParallel = false;
 
 		// #### Attributes related to switching ####
 		/// Index of the next switching event
@@ -150,9 +157,11 @@ namespace DPsim {
 			CPS::Domain domain = CPS::Domain::DP,
 			CPS::Logger::Level logLevel = CPS::Logger::Level::INFO,
 			Bool steadyStateInit = false,
-			Int downSampleRate = 1)
+			Int downSampleRate = 1,
+			Bool harmParallel = false)
 			: MnaSolver(name, timeStep, domain,
 			logLevel, steadyStateInit, downSampleRate) {
+			mHarmParallel = harmParallel;
 			initialize(system);
 		}
 
