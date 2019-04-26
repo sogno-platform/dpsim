@@ -32,6 +32,7 @@ RealTimeSimulation::RealTimeSimulation(String name, SystemTopology system, Real 
 {
 	addAttribute<Real>("time_step", &mTimeStep, Flags::read);
 	addAttribute<Int >("overruns", nullptr, [=](){ return mTimer.overruns(); }, Flags::read);
+	//addAttribute<Int >("overruns", nullptr, nullptr, Flags::read);
 }
 
 void RealTimeSimulation::run(const Timer::StartClock::duration &startIn)
