@@ -196,23 +196,31 @@ void DataLogger::addAttribute(const String &name, CPS::Attribute<MatrixVar<Real>
 	}
 }
 
-void DataLogger::addAttribute(const String &name, CPS::Attribute<MatrixVar<Complex>>::Ptr attr) {
+void DataLogger::addAttribute(const String &name, CPS::MatrixCompAttribute::Ptr attr, UInt rowsMax, UInt colsMax) {
 	const MatrixVar<Complex> &m = attr->get();
-
-	auto attrMat = std::static_pointer_cast<CPS::MatrixAttribute<Complex>>(attr);
+	auto attrMat = std::static_pointer_cast<CPS::MatrixCompAttribute>(attr);
+	if (rowsMax == 0 || rowsMax > m.rows()) rowsMax = m.rows();
+	if (colsMax == 0 || colsMax > m.cols()) colsMax = m.cols();
 
 	if (m.rows() == 1 && m.cols() == 1) {
-		addAttribute(name, attrMat->coeff(0, 0));
+		//addAttribute(name, attrMat->coeff(0, 0));
+		mAttributes[name + ".re"] = attrMat->coeffReal(0,0);
+		mAttributes[name + ".im"] = attrMat->coeffImag(0,0);
 	}
 	else if (m.cols() == 1) {
-		for (UInt k = 0; k < m.rows(); k++) {
-			addAttribute(name + "(" + std::to_string(k) + ")", attrMat->coeff(k, 0));
+		for (UInt k = 0; k < rowsMax; k++) {
+			//addAttribute(name + "(" + std::to_string(k) + ")", attrMat->coeff(k, 0));
+			mAttributes[name + "_" + std::to_string(k) + ".re"] = attrMat->coeffReal(k,0);
+			mAttributes[name + "_" + std::to_string(k) + ".im"] = attrMat->coeffImag(k,0);
 		}
 	}
 	else {
-		for (UInt k = 0; k < m.rows(); k++) {
-			for (UInt l = 0; l < m.cols(); l++) {
-				addAttribute(name + "(" + std::to_string(k) + "," + std::to_string(l) + ")", attrMat->coeff(k, l));
+		for (UInt k = 0; k < rowsMax; k++) {
+			for (UInt l = 0; l < colsMax; l++) {
+				mAttributes[name + "_" + std::to_string(k) + "_" + std::to_string(l)
+					+ ".re"] = attrMat->coeffReal(k,l);
+				mAttributes[name + "_" + std::to_string(k) + "_" + std::to_string(l)
+					+ ".im"] = attrMat->coeffImag(k,l);
 			}
 		}
 	}
@@ -243,11 +251,6 @@ void DataLogger::addAttribute(const String &name, CPS::AttributeBase::Ptr attr) 
 		return;
 	}
 
-	auto compMatAttr = std::dynamic_pointer_cast<CPS::Attribute<MatrixVar<Complex>>>(attr);
-	if (compMatAttr) {
-		addAttribute(name, compMatAttr);
-		return;
-	}
-
 	throw CPS::InvalidAttributeException();
 }
+
