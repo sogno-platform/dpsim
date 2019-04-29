@@ -148,8 +148,7 @@ namespace DPsim {
 		MnaSolver(String name,
 			Real timeStep,
 			CPS::Domain domain = CPS::Domain::DP,
-			CPS::Logger::Level logLevel = CPS::Logger::Level::INFO,
-			Bool steadyStateInit = false, Int downSampleRate = 1);
+			CPS::Logger::Level logLevel = CPS::Logger::Level::INFO);
 
 		/// Constructor to be used in simulation examples.
 		MnaSolver(String name, CPS::SystemTopology system,
@@ -158,13 +157,7 @@ namespace DPsim {
 			CPS::Logger::Level logLevel = CPS::Logger::Level::INFO,
 			Bool steadyStateInit = false,
 			Int downSampleRate = 1,
-			Bool harmParallel = false)
-			: MnaSolver(name, timeStep, domain,
-			logLevel, steadyStateInit, downSampleRate) {
-			mHarmParallel = harmParallel;
-			initialize(system);
-		}
-
+			Bool harmParallel = false);
 		///
 		virtual ~MnaSolver() { };
 
@@ -196,6 +189,30 @@ namespace DPsim {
 					mModifiedAttributes.push_back(node->attribute("v"));
 				}
 				mModifiedAttributes.push_back(solver.attribute("left_vector"));
+			}
+
+			void execute(Real time, Int timeStepCount);
+
+		private:
+			MnaSolver<VarType>& mSolver;
+			Bool mSteadyStateInit;
+		};
+		///
+		class SolveTaskHarm : public CPS::Task {
+		public:
+			SolveTaskHarm(MnaSolver<VarType>& solver, Bool steadyStateInit) :
+				Task(solver.mName + ".Solve"), mSolver(solver), mSteadyStateInit(steadyStateInit) {
+				for (auto it : solver.mPowerComponents) {
+					if (it->template attribute<Matrix>("right_vector")->get().size() != 0) {
+						mAttributeDependencies.push_back(it->attribute("right_vector"));
+					}
+				}
+				for (auto node : solver.mNodes) {
+					mModifiedAttributes.push_back(node->attribute("v"));
+				}
+				for(Int freq = 0; freq < solver.mSystem.mFrequencies.size(); freq++) {
+					mModifiedAttributes.push_back(solver.attribute("left_vector_"+std::to_string(freq)));
+				}
 			}
 
 			void execute(Real time, Int timeStepCount);

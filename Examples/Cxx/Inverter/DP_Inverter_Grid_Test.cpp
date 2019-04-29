@@ -27,7 +27,7 @@ using namespace CPS::DP::Ph1;
 int main(int argc, char* argv[]) {
 	// Define simulation scenario
 	Real timeStep = 0.000001;
-	Real finalTime = 0.1;
+	Real finalTime = 0.01;
 	String simName = "DP_Inverter_Grid_Test";
 	Logger::setLogDir("logs/"+simName);
 
@@ -82,7 +82,13 @@ int main(int argc, char* argv[]) {
 		SystemNodeList{ n1, n2, n3, n4, n5 },
 		SystemComponentList{ inv, r1, l1, r2, l2, c1, rc, grid });
 
-	Simulation sim(simName, sys, timeStep, finalTime, Domain::DP, Solver::Type::MNA, Logger::Level::INFO);
+	//Simulation sim(simName, sys, timeStep, finalTime, Domain::DP, Solver::Type::MNA, Logger::Level::INFO);
+	Simulation sim(simName, Logger::Level::INFO);
+	sim.setSystem(sys);
+	sim.setTimeStep(timeStep);
+	sim.setFinalTime(finalTime);
+	sim.doHarmonicParallelization(true);
+	sim.initialize();
 
 	// Logging
 	auto logger = DataLogger::make(simName);
@@ -93,7 +99,6 @@ int main(int argc, char* argv[]) {
 	logger->addAttribute("v5", n5->attributeMatrixComp("v"), 1, 1);
 	logger->addAttribute("i12", r1->attributeMatrixComp("i_intf"), 1, 1);
 	logger->addAttribute("i34", r2->attributeMatrixComp("i_intf"), 1, 1);
-
 	sim.addLogger(logger);
 
 	sim.run();

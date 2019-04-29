@@ -95,6 +95,8 @@ void Simulation::initialize() {
 		mSolvers.push_back(std::make_shared<NRpolarSolver>(mName, mSystem, mTimeStep, mDomain, mLogLevel));
 		break;
 	}
+
+	mInitialized = true;
 }
 
 template <typename VarType>
@@ -142,7 +144,8 @@ void Simulation::splitSubnets(const SystemTopology& system, std::vector<SystemTo
 }
 
 template <typename VarType>
-void Simulation::createSolvers(const CPS::SystemTopology& system, Solver::Type solverType, Bool steadyStateInit, Bool doSplitSubnets, const Component::List& tearComponents) {
+void Simulation::createSolvers(const CPS::SystemTopology& system, Solver::Type solverType,
+	Bool steadyStateInit, Bool doSplitSubnets, const Component::List& tearComponents) {
 	std::vector<SystemTopology> subnets;
 	if (doSplitSubnets && tearComponents.size() == 0)
 		splitSubnets<VarType>(system, subnets);
@@ -160,10 +163,11 @@ void Simulation::createSolvers(const CPS::SystemTopology& system, Solver::Type s
 		switch (solverType) {
 			case Solver::Type::MNA:
 				if (tearComponents.size() > 0) {
-					solver = std::make_shared<DiakopticsSolver<VarType>>(mName, subnets[net], tearComponents, mTimeStep, mLogLevel);
+					solver = std::make_shared<DiakopticsSolver<VarType>>(mName,
+						subnets[net], tearComponents, mTimeStep, mLogLevel);
 				} else {
-					solver = std::make_shared<MnaSolver<VarType>>(mName + copySuffix, subnets[net], mTimeStep,
-						mDomain, mLogLevel, steadyStateInit, mHarmParallel);
+					solver = std::make_shared<MnaSolver<VarType>>(mName + copySuffix,
+						subnets[net], mTimeStep, mDomain, mLogLevel, steadyStateInit, mDownSampleRate, mHarmParallel);
 				}
 				break;
 #ifdef WITH_SUNDIALS
@@ -182,7 +186,8 @@ void Simulation::createSolvers(const CPS::SystemTopology& system, Solver::Type s
 		auto odeComp = std::dynamic_pointer_cast<ODEInterface>(comp);
 		if (odeComp) {
 			// TODO explicit / implicit integration
-			auto odeSolver = std::make_shared<ODESolver>(odeComp->attribute<String>("name")->get() + "_ODE", odeComp, false, mTimeStep);
+			auto odeSolver = std::make_shared<ODESolver>(
+				odeComp->attribute<String>("name")->get() + "_ODE", odeComp, false, mTimeStep);
 			mSolvers.push_back(odeSolver);
 		}
 	}
@@ -315,6 +320,8 @@ void Simulation::renderDependencyGraph(std::ostream &os) {
 #endif
 
 void Simulation::run() {
+	if (!mInitialized)
+		initialize();
 	schedule();
 
 #ifdef WITH_SHMEM
