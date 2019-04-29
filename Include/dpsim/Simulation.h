@@ -89,6 +89,10 @@ namespace DPsim {
 		CPS::Component::List mTearComponents = CPS::Component::List();
 		///
 		Bool mHarmParallel = false;
+		///
+		Bool mInitialized = false;
+		///
+		Int mDownSampleRate = 1;
 
 		// #### Task dependencies und scheduling ####
 		/// Scheduler used for task scheduling
