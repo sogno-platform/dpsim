@@ -38,7 +38,6 @@ set(CIRCUIT_SOURCES
 )
 
 set(SYNCGEN_SOURCES
-	Components/DP_SynGen_dq_SteadyState.cpp
 	Components/DP_SynGen_TrStab_SteadyState.cpp
 	Components/DP_SynGen_TrStab_LoadStep.cpp
 )
@@ -47,10 +46,9 @@ if(WITH_SUNDIALS)
 	list(APPEND SYNCGEN_SOURCES
 		Components/DP_SynGen_dq_ThreePhFault.cpp
 		Components/DP_Multimachine_DQ_Parallel.cpp
+		Components/DP_SynGen_dq_SteadyState.cpp
 	)
-endif()
 
-if(WITH_SUNDIALS)
 	set(DAE_SOURCES
 		DAE/DAE_DP_test.cpp
 	)
