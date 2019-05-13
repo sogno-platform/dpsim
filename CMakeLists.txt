@@ -67,7 +67,7 @@ option(BUILD_SHARED_LIBS "Build shared library" OFF)
 option(BUILD_EXAMPLES "Build C++ examples" ON)
 option(COMPARE_REFERENCE "Download reference results and compare" OFF)
 
-option(WITH_GSL "Enable GSL"         ${GSL_FOUND})
+option(WITH_GSL      "Enable GSL"                           ${GSL_FOUND})
 option(WITH_SUNDIALS "Enable sundials solver suite"         ${Sundials_FOUND})
 option(WITH_SHMEM    "Enable shared memory interface"       ${VILLASnode_FOUND})
 option(WITH_RT	     "Enable real-time features"            ${Linux_FOUND})
