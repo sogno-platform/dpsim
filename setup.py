@@ -8,13 +8,17 @@ from setuptools import setup, find_packages, Extension
 from setuptools.command.build_ext import build_ext
 from distutils.version import LooseVersion
 
+
 class CMakeExtension(Extension):
     def __init__(self, name, sourcedir=''):
-        Extension.__init__(self, name, sources = [])
+        Extension.__init__(self, name, sources=[])
         self.sourcedir = os.path.abspath(sourcedir)
 
+
 class CMakeBuild(build_ext):
-    user_options = build_ext.user_options + [("cmake-defines=", "C", "additional defines passed to CMake")]
+    user_options = build_ext.user_options + [
+        ('cmake-defines=', 'C', 'additional defines passed to CMake')
+    ]
 
     def initialize_options(self):
         super().initialize_options()
@@ -32,7 +36,8 @@ class CMakeBuild(build_ext):
                                ', '.join(e.name for e in self.extensions))
 
         if platform.system() == 'Windows':
-            cmake_version = LooseVersion(re.search(r'version\s*([\d.]+)', out.decode()).group(1))
+            cmake_version = LooseVersion(re.search(r'version\s*([\d.]+)',
+                out.decode()).group(1))
             if cmake_version < '3.1.0':
                 raise RuntimeError('CMake >= 3.1.0 is required on Windows')
 
@@ -66,19 +71,22 @@ class CMakeBuild(build_ext):
                 build_args = []
 
         env = os.environ.copy()
-        cmake_args.append('-DCMAKE_CXX_FLAGS={} -DVERSION_INFO=\'{}\''.format(env.get('CXXFLAGS', ''), self.distribution.get_version()))
+        cmake_args.append('-DCMAKE_CXX_FLAGS={} -DVERSION_INFO=\'{}\''
+                .format(env.get('CXXFLAGS', ''), self.distribution.get_version()))
 
         if not os.path.exists(self.build_temp):
             os.makedirs(self.build_temp)
 
         cmake_args += ['-D' + d for d in self.cmake_defines]
-        subprocess.check_call(['cmake', ext.sourcedir] + cmake_args, cwd = self.build_temp, env = env)
-        subprocess.check_call(['cmake', '--build', '.'] + build_args, cwd = self.build_temp)
+        subprocess.check_call(['cmake', ext.sourcedir] + cmake_args, cwd=self.build_temp, env=env)
+        subprocess.check_call(['cmake', '--build', '.'] + build_args, cwd=self.build_temp)
+
 
 def cleanhtml(raw_html):
     cleanr = re.compile('<.*?>')
     cleantext = re.sub(cleanr, '', raw_html)
     return cleantext
+
 
 def read(fname):
     dname = os.path.dirname(__file__)
@@ -96,21 +104,22 @@ def read(fname):
             return sanatized
 
 setup(
-    name = 'dpsim',
-    version = '1.0.0',
-    author = 'Markus Mirz, Steffen Vogel',
-    author_email = 'acs-software@eonerc.rwth-aachen.de',
-    description = 'A real-time simulator that operates in the dynamic phasor as well as electromagentic transient domain',
-    license = 'GPL-3.0',
-    keywords = 'simulation power system real-time',
-    url = 'https://www.fein-aachen.org/projects/dpsim/',
-    packages = find_packages('Source/Python'),
-    package_dir = {
+    name='dpsim',
+    version='1.0.0',
+    author='Markus Mirz, Steffen Vogel',
+    author_email='acs-software@eonerc.rwth-aachen.de',
+    description='A real-time simulator that operates in the dynamic phasor as'
+                ' well as electromagentic transient domain',
+    license='GPL-3.0',
+    keywords='simulation power system real-time',
+    url='https://www.fein-aachen.org/projects/dpsim/',
+    packages=find_packages('Source/Python'),
+    package_dir={
         'dpsim': 'Source/Python/dpsim',
         'villas': 'Source/Python/villas'
     },
-    long_description = read('README.md'),
-    classifiers = [
+    long_description=read('README.md'),
+    classifiers=[
         'Development Status :: 4 - Beta',
         'Topic :: Scientific/Engineering',
         'License :: OSI Approved :: GNU General Public License v3 or later (GPLv3+)',
@@ -120,12 +129,12 @@ setup(
         'Programming Language :: Python :: 3.6',
         'Programming Language :: Python :: Implementation :: CPython'
     ],
-    install_requires = [
+    install_requires=[
         'villas-dataprocessing>=0.2',
         'progressbar2',
         'ipywidgets'
     ],
-    setup_requires = [
+    setup_requires=[
         'm2r',
         'pytest-runner',
         'wheel'
@@ -134,11 +143,11 @@ setup(
         'pytest',
         'pyyaml'
     ],
-    ext_modules = [
+    ext_modules=[
         CMakeExtension('_dpsim')
     ],
-    cmdclass = {
+    cmdclass={
         'build_ext': CMakeBuild
     },
-    zip_safe = False
+    zip_safe=False
 )
