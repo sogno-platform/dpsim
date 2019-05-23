@@ -51,7 +51,7 @@ test:pytest:
   variables:
     PYTHONPATH: "build/Source/Python:Source/Python"
   script:
-    - pytest -v
+    - pytest -sv
   image: ${DOCKER_IMAGE_DEV}:${DOCKER_TAG_DEV}
   dependencies:
     - build:linux
