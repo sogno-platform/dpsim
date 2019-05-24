@@ -93,17 +93,44 @@ CMake for Linux
 
 The most recent list of requirements can be found in the Dockerfiles. 
 
-1. Make sure that the required dependencies are installed.    
+1. Make sure that the required dependencies are installed.
 
    **Note:** There are currently no Debian packages for `villas-node` and `libcimpp16v29a`.
-   If you want to use these optional feature, you have to build them.
+   If you want to use these optional feature, you have to build them manually.
+
+    # Install Sundials
+    $ git clone --branch v3.1.1 https://github.com/LLNL/sundials.git
+    $ mkdir sundials/build
+    $ pushd sundials/build
+    $ cmake .. \
+        -DBUILD_SHARED_LIBS=ON \
+        -DBUILD_STATIC_LIBS=OFF \
+        -DEXAMPLES_ENABLE_C=OFF
+    $ make -j$(nproc) install
+    $ popd
+
+
+    # Install CIM++
+    $ git clone --recursive https://github.com/RWTH-ACS/libcimpp.git
+    $ mkdir libcimpp/build
+    $ pushd libcimpp/build
+    $ cmake .. \
+        -DUSE_CIM_VERSION=IEC61970_16v29a \
+        -DBUILD_SHARED_LIBS=ON \
+        -DCMAKE_POSITION_INDEPENDENT_CODE=ON
+    $ make -j$(nproc) install
 
 2. Fetch sources::
 
-    $ git clone --recurse-submodules git@git.rwth-aachen.de:acs/core/simulation/dpsim.git
-    $ cd dpsim
+    $ git clone https://git.rwth-aachen.de/acs/public/simulation/dpsim.git
+	$ cd dpsim
+    $ git submodule update --init Dependencies/libcps
 
-3. Building the libraries and the Python package works like in Docker.
+3. Compile::.
+
+    $ mkdir build
+    $ cmake ..
+    $ make
 
 4. To install the generated Python module to your system::
 
