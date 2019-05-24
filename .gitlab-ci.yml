@@ -31,7 +31,6 @@ docker:
 build:linux:
   stage: build
   script:
-    - ls -l /usr/share/cmake/Modules/
     - mkdir -p build
     - cd build
     - cmake ..
