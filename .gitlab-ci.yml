@@ -21,7 +21,7 @@ stages:
 docker:
   stage: prepare
   script:
-    - docker build --no-cache
+    - docker build
         --file Packaging/Docker/Dockerfile.dev
         --tag ${DOCKER_IMAGE_DEV}:${DOCKER_TAG_DEV}
         --tag ${DOCKER_IMAGE_DEV}:latest .
@@ -31,6 +31,7 @@ docker:
 build:linux:
   stage: build
   script:
+    - ls -l /usr/share/cmake/Modules/
     - mkdir -p build
     - cd build
     - cmake ..
