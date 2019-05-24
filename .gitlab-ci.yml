@@ -21,7 +21,7 @@ stages:
 docker:
   stage: prepare
   script:
-    - docker build
+    - docker build --no-cache
         --file Packaging/Docker/Dockerfile.dev
         --tag ${DOCKER_IMAGE_DEV}:${DOCKER_TAG_DEV}
         --tag ${DOCKER_IMAGE_DEV}:latest .
