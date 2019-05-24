@@ -140,16 +140,16 @@ namespace DPsim {
 		void open();
 		void close();
 
-		CPS::Attribute<Int>::Ptr importInt(Int idx);
-		CPS::Attribute<Real>::Ptr importReal(Int idx);
-		CPS::Attribute<Bool>::Ptr importBool(Int idx);
-		CPS::Attribute<Complex>::Ptr importComplex(Int idx);
-		CPS::Attribute<Complex>::Ptr importComplexMagPhase(Int idx);
+		CPS::Attribute<Int>::Ptr importInt(UInt idx);
+		CPS::Attribute<Real>::Ptr importReal(UInt idx);
+		CPS::Attribute<Bool>::Ptr importBool(UInt idx);
+		CPS::Attribute<Complex>::Ptr importComplex(UInt idx);
+		CPS::Attribute<Complex>::Ptr importComplexMagPhase(UInt idx);
 
-		void addExport(CPS::Attribute<Int>::Ptr attr, Int idx);
-		void addExport(CPS::Attribute<Real>::Ptr attr, Int idx);
-		void addExport(CPS::Attribute<Bool>::Ptr attr, Int idx);
-		void addExport(CPS::Attribute<Complex>::Ptr attr, Int idx);
+		void addExport(CPS::Attribute<Int>::Ptr attr, UInt idx);
+		void addExport(CPS::Attribute<Real>::Ptr attr, UInt idx);
+		void addExport(CPS::Attribute<Bool>::Ptr attr, UInt idx);
+		void addExport(CPS::Attribute<Complex>::Ptr attr, UInt idx);
 
 		/** Read data for a timestep from the interface and passes the values
 		 * to all registered current / voltage sources.
