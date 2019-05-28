@@ -159,7 +159,7 @@ void Interface::PostStep::execute(Real time, Int timeStepCount) {
 		mIntf.writeValues();
 }
 
-Attribute<Int>::Ptr Interface::importInt(Int idx) {
+Attribute<Int>::Ptr Interface::importInt(UInt idx) {
 	Attribute<Int>::Ptr attr = Attribute<Int>::make(Flags::read | Flags::write);
 	addImport([attr, idx](Sample *smp) {
 		if (idx >= smp->length)
@@ -171,7 +171,7 @@ Attribute<Int>::Ptr Interface::importInt(Int idx) {
 	return attr;
 }
 
-Attribute<Real>::Ptr Interface::importReal(Int idx) {
+Attribute<Real>::Ptr Interface::importReal(UInt idx) {
 	Attribute<Real>::Ptr attr = Attribute<Real>::make(Flags::read | Flags::write);
 	addImport([attr, idx](Sample *smp) {
 		if (idx >= smp->length)
@@ -183,7 +183,7 @@ Attribute<Real>::Ptr Interface::importReal(Int idx) {
 	return attr;
 }
 
-Attribute<Bool>::Ptr Interface::importBool(Int idx) {
+Attribute<Bool>::Ptr Interface::importBool(UInt idx) {
 	Attribute<Bool>::Ptr attr = Attribute<Bool>::make(Flags::read | Flags::write);
 	addImport([attr, idx](Sample *smp) {
 		if (idx >= smp->length)
@@ -195,7 +195,7 @@ Attribute<Bool>::Ptr Interface::importBool(Int idx) {
 	return attr;
 }
 
-Attribute<Complex>::Ptr Interface::importComplex(Int idx) {
+Attribute<Complex>::Ptr Interface::importComplex(UInt idx) {
 	Attribute<Complex>::Ptr attr = Attribute<Complex>::make(Flags::read | Flags::write);
 	addImport([attr, idx](Sample *smp) {
 		if (idx >= smp->length)
@@ -210,7 +210,7 @@ Attribute<Complex>::Ptr Interface::importComplex(Int idx) {
 	return attr;
 }
 
-Attribute<Complex>::Ptr Interface::importComplexMagPhase(Int idx) {
+Attribute<Complex>::Ptr Interface::importComplexMagPhase(UInt idx) {
 	Attribute<Complex>::Ptr attr = Attribute<Complex>::make(Flags::read | Flags::write);
 	addImport([attr, idx](Sample *smp) {
 		if (idx >= smp->length)
@@ -225,7 +225,7 @@ Attribute<Complex>::Ptr Interface::importComplexMagPhase(Int idx) {
 	return attr;
 }
 
-void Interface::addExport(Attribute<Int>::Ptr attr, Int idx) {
+void Interface::addExport(Attribute<Int>::Ptr attr, UInt idx) {
 	addExport([attr, idx](Sample *smp) {
 		if (idx >= smp->capacity)
 			throw std::out_of_range("not enough space in allocated sample");
@@ -236,7 +236,7 @@ void Interface::addExport(Attribute<Int>::Ptr attr, Int idx) {
 	});
 }
 
-void Interface::addExport(Attribute<Real>::Ptr attr, Int idx) {
+void Interface::addExport(Attribute<Real>::Ptr attr, UInt idx) {
 	addExport([attr, idx](Sample *smp) {
 		if (idx >= smp->capacity)
 			throw std::out_of_range("not enough space in allocated sample");
@@ -247,7 +247,7 @@ void Interface::addExport(Attribute<Real>::Ptr attr, Int idx) {
 	});
 }
 
-void Interface::addExport(Attribute<Bool>::Ptr attr, Int idx) {
+void Interface::addExport(Attribute<Bool>::Ptr attr, UInt idx) {
 	addExport([attr, idx](Sample *smp) {
 		if (idx >= smp->capacity)
 			throw std::out_of_range("not enough space in allocated sample");
@@ -258,7 +258,7 @@ void Interface::addExport(Attribute<Bool>::Ptr attr, Int idx) {
 	});
 }
 
-void Interface::addExport(Attribute<Complex>::Ptr attr, Int idx) {
+void Interface::addExport(Attribute<Complex>::Ptr attr, UInt idx) {
 	addExport([attr, idx](Sample *smp) {
 		if (idx >= smp->capacity)
 			throw std::out_of_range("not enough space in allocated sample");

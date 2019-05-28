@@ -16,12 +16,8 @@ To get started, we recommend the `Redhat Real-time Tuning Guide <https://access.
 A `PREEMPT_RT patched Linux <https://rt.wiki.kernel.org/index.php/Main_Page>`__ kernel is recommended.
 Precompiled kernels for Fedora can be found here: http://ccrma.stanford.edu/planetccrma/software/
 
-
-1. Tune overall system performance for real-time:
-2. Install a ``PREEMPT_RT`` patched Linux kernel.
-3. Use the ``tuned`` tool for improving general real-time performance.
-    * Please adjust the setting ``isolated_cpucores`` according to your hardware.
-    * Enable the ``realtime`` tuned profile by running:
+Use the *tuned* tool for improving general real-time performance.
+Please adjust the setting ``isolated_cpucores`` according to your hardware and enable the ``realtime`` profile as follows:
 
 .. code:: bash
 
@@ -34,11 +30,11 @@ Precompiled kernels for Fedora can be found here: http://ccrma.stanford.edu/plan
 Running a real-time simulation
 ------------------------------
 
-As a reference, Real-time simulation examples are provided here: https://git.rwth-aachen.de/acs/public/simulation/dpsim/tree/development/Examples/Cxx/RealTime
+As a reference, real-time simulation examples are provided here: https://git.rwth-aachen.de/acs/public/simulation/dpsim/tree/development/Examples/Cxx/RealTime
 
-In order to start a real-time simulation, the simulation process must be started in a special way in order to change the execution priority, scheduler and CPU affinity.
+In order to run a real-time simulation, the simulation process must be started in a special way in order to change the execution priority, scheduler and CPU affinity.
 For this purpose the ``chrt`` and ``taskset`` commands are used.
-In the following example, we pin the execution of the simulation to CPU cores 6-7 which have been reserved previously by tuned's real-time profile (see above).
+In the following example, we pin the execution of the simulation to CPU cores 6-7 which have been reserved previously by the tuned real-time profile (see above).
 
 .. code:: bash
 
@@ -48,18 +44,18 @@ In the following example, we pin the execution of the simulation to CPU cores 6-
 
 More details:
 
-1. `chrt man-page <http://man7.org/linux/man-pages/man1/chrt.1.html>`__
-2. `taskset man-page <http://man7.org/linux/man-pages/man1/taskset.1.html>`__
+- `chrt man-page <http://man7.org/linux/man-pages/man1/chrt.1.html>`__
+- `taskset man-page <http://man7.org/linux/man-pages/man1/taskset.1.html>`__
 
 Recommended Hardware
 --------------------
 
 This are some proposals for the selection of appropriate server hardware:
 
--  Server-grade CPU: Intel Xeon
+-  Server-grade CPU, e.g. Intel Xeon  
 
-   -  A multi-core system enables true parallel execution of several decoupled systems.
-
--  Server-grade network cards: Intel PRO/1000
+   -  A multi-core system enables true parallel execution of several decoupled systems
+   
+-  Server-grade network cards, e.g. Intel PRO/1000  
 
    -  These allow offloading of UDP checksumming to the hardware

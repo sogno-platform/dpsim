@@ -54,10 +54,9 @@ if(WITH_SUNDIALS)
 		Components/DP_SynGenDq7odODE_SteadyState.cpp
 		Components/DP_SynGenDq7odODE_ThreePhFault.cpp
 		Components/DP_Multimachine_DQ_Parallel.cpp
+		Components/DP_SynGen_dq_SteadyState.cpp
 	)
-endif()
 
-if(WITH_SUNDIALS)
 	set(DAE_SOURCES
 		DAE/DAE_DP_test.cpp
 	)

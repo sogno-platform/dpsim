@@ -51,7 +51,14 @@ test:pytest:
   variables:
     PYTHONPATH: "build/Source/Python:Source/Python"
   script:
-    - pytest -v
+    - pytest -v Examples/Cxx/test_Circuits.yml
+    - pytest -v Examples/Cxx/test_RealTime.yml
+    #- pytest -v Examples/Cxx/test_Shmem.yml
+    - pytest -v Examples/Python/Base
+    - pytest -v Examples/Python/Circuits
+    - pytest -v Examples/Python/RealTime
+    #- pytest -v Examples/Python/Shmem
+
   image: ${DOCKER_IMAGE_DEV}:${DOCKER_TAG_DEV}
   dependencies:
     - build:linux
