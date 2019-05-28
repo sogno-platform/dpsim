@@ -1,8 +1,24 @@
 Installation
 ============
 
+Docker
+------
+
+First, you need to install `Docker <https://docs.docker.com/install/>`_.
+
+Then, pull the latest DPsim image
+
+.. code-block:: bash
+
+	docker pull rwthacs/dpsim
+
+and follow the `instructions <https://cloud.docker.com/u/rwthacs/repository/docker/rwthacs/dpsim>`_ on Docker Hub to run the container.
+
+Python
+------
+
 Prerequisites
--------------
+^^^^^^^^^^^^^
 
 First, you need to make sure that Python is installed and your version is compatible.
 Currently, DPsim is built for **Python 3.6**. 
@@ -26,10 +42,16 @@ In case it is not activated, run:
 	
 
 PyPI Package Installation
--------------------------
+^^^^^^^^^^^^^^^^^^^^^^^^^
 
 Then, DPsim can be easily installed as a Python module by running:
 
 .. code-block:: bash
 
 	pip install dpsim
+
+
+From Source
+-----------
+
+To build and install DPsim from the source files, please refer to the section :doc:`Build </Build>`.
