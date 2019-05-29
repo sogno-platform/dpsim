@@ -47,6 +47,7 @@ set(SYNCGEN_SOURCES
 
 set(INVERTER_SOURCES
 	Inverter/DP_Inverter_Grid_Test.cpp
+	Inverter/DP_Inverter_Grid_Test_Parallel.cpp
 )
 
 if(WITH_SUNDIALS)
@@ -54,7 +55,6 @@ if(WITH_SUNDIALS)
 		Components/DP_SynGenDq7odODE_SteadyState.cpp
 		Components/DP_SynGenDq7odODE_ThreePhFault.cpp
 		Components/DP_Multimachine_DQ_Parallel.cpp
-		Components/DP_SynGen_dq_SteadyState.cpp
 	)
 
 	set(DAE_SOURCES
