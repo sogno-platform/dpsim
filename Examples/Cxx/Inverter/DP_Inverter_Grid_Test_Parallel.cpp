@@ -28,7 +28,7 @@ int main(int argc, char* argv[]) {
 	// Define simulation scenario
 	Real timeStep = 0.000001;
 	Real finalTime = 0.1;
-	String simName = "DP_Inverter_Grid_Test";
+	String simName = "DP_Inverter_Grid_Test_Parallel";
 	Logger::setLogDir("logs/"+simName);
 
 	// Set system frequencies
@@ -87,7 +87,7 @@ int main(int argc, char* argv[]) {
 	sim.setSystem(sys);
 	sim.setTimeStep(timeStep);
 	sim.setFinalTime(finalTime);
-	sim.doHarmonicParallelization(false);
+	sim.doHarmonicParallelization(true);
 	sim.initialize();
 
 	// Logging
