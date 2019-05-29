@@ -103,5 +103,11 @@ int main(int argc, char* argv[]) {
 
 	sim.run();
 
+	Real tot = 0;
+	for (auto meas : sim.stepTimes()) {
+		tot += meas;
+	}
+	std::cout << tot / sim.stepTimes().size() << std::endl;
+
 	return 0;
 }
