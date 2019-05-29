@@ -200,8 +200,8 @@ namespace DPsim {
 		///
 		class SolveTaskHarm : public CPS::Task {
 		public:
-			SolveTaskHarm(MnaSolver<VarType>& solver, Bool steadyStateInit) :
-				Task(solver.mName + ".Solve"), mSolver(solver), mSteadyStateInit(steadyStateInit) {
+			SolveTaskHarm(MnaSolver<VarType>& solver, Bool steadyStateInit, UInt freqIdx) :
+				Task(solver.mName + ".Solve"), mSolver(solver), mSteadyStateInit(steadyStateInit), mFreqIdx(freqIdx) {
 				for (auto it : solver.mPowerComponents) {
 					if (it->template attribute<Matrix>("right_vector")->get().size() != 0) {
 						mAttributeDependencies.push_back(it->attribute("right_vector"));
@@ -220,6 +220,7 @@ namespace DPsim {
 		private:
 			MnaSolver<VarType>& mSolver;
 			Bool mSteadyStateInit;
+			UInt mFreqIdx;
 		};
 
 		///

@@ -476,7 +476,8 @@ Task::List MnaSolver<VarType>::getTasks() {
 		}
 	}
 	if (mHarmParallel) {
-		l.push_back(std::make_shared<MnaSolver<VarType>::SolveTaskHarm>(*this, false));
+		for (UInt i = 0; i < mSystem.mFrequencies.size(); i++)
+			l.push_back(std::make_shared<MnaSolver<VarType>::SolveTaskHarm>(*this, false, i));
 	} else {
 		l.push_back(std::make_shared<MnaSolver<VarType>::SolveTask>(*this, false));
 		l.push_back(std::make_shared<MnaSolver<VarType>::LogTask>(*this));
@@ -509,18 +510,15 @@ void MnaSolver<VarType>::SolveTask::execute(Real time, Int timeStepCount) {
 
 template <typename VarType>
 void MnaSolver<VarType>::SolveTaskHarm::execute(Real time, Int timeStepCount) {
-	for (UInt i = 0; i < mSolver.mRightSideVectorHarm.size(); i++)
-		mSolver.mRightSideVectorHarm[i].setZero();
+	mSolver.mRightSideVectorHarm[mFreqIdx].setZero();
 
 	// Add together the right side vector (computed by the components'
 	// pre-step tasks)
-	for (UInt i = 0; i < mSolver.mRightSideVectorHarm.size(); i++)
-		for (auto stamp : mSolver.mRightVectorStamps)
-			mSolver.mRightSideVectorHarm[i] += stamp->col(i);
+	for (auto stamp : mSolver.mRightVectorStamps)
+		mSolver.mRightSideVectorHarm[mFreqIdx] += stamp->col(mFreqIdx);
 
-	for (UInt i = 0; i < mSolver.mRightSideVectorHarm.size(); i++)
-		mSolver.mLeftSideVectorHarm[i] =
-			mSolver.mLuFactorizationsHarm[mSolver.mCurrentSwitchStatus][i].solve(mSolver.mRightSideVectorHarm[i]);
+	mSolver.mLeftSideVectorHarm[mFreqIdx] =
+		mSolver.mLuFactorizationsHarm[mSolver.mCurrentSwitchStatus][mFreqIdx].solve(mSolver.mRightSideVectorHarm[mFreqIdx]);
 }
 
 template <typename VarType>
