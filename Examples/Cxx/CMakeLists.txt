@@ -89,16 +89,22 @@ if(WITH_CIM)
 		)
 	endif()
 
-	set(CIM_SOURCES
-		
+	set(CIM_SOURCES		
 		CIM/WSCC-9bus_CIM.cpp
-		CIM/WSCC-9bus_CIM_mult.cpp
 		CIM/WSCC-9bus_CIM_Dyn.cpp
 		CIM/WSCC-9bus_CIM_Dyn_Switch.cpp
 
 		# powerflow example
 		CIM/CIGRE_MV_PowerFlowTest.cpp
 		CIM/CIGRE_MV_PowerFlowTest_LoadProfiles.cpp
+	)
+
+	
+endif()
+
+if(WITH_CIM AND WITH_OPENMP)
+	set(CIM_OPENMP_SOURCES
+		CIM/WSCC-9bus_CIM_mult.cpp
 	)
 endif()
 

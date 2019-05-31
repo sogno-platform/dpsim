@@ -50,7 +50,11 @@ add_subdirectory(Dependencies/libcps)
 find_package(PythonInterp 3.6)
 find_package(PythonLibs 3.6)
 find_package(Sundials)
-find_package(OpenMP)
+
+if (NOT WIN32)
+	find_package(OpenMP)
+endif()
+
 find_package(GSL)
 
 option(WITH_VILLAS "Build with VILLAS Interface" OFF)
