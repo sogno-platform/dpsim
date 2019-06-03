@@ -27,7 +27,7 @@ using namespace CPS::DP::Ph1;
 int main(int argc, char* argv[]) {
 	// Define simulation scenario
 	Real timeStep = 0.000001;
-	Real finalTime = 0.1;
+	Real finalTime = 0.01;
 	String simName = "DP_Inverter_Grid_Test_Parallel";
 	Logger::setLogDir("logs/"+simName);
 
@@ -44,26 +44,28 @@ int main(int argc, char* argv[]) {
 	auto n4 = Node::make("n4");
 	auto n5 = Node::make("n5");
 
+	Logger::Level level = Logger::Level::NONE;
+
 	// Components
-	auto inv = Inverter::make("inv", Logger::Level::DEBUG);
+	auto inv = Inverter::make("inv", level);
 	inv->setParameters(2, 3, 360, 0.87);
 	//auto inv = VoltageSource::make("inv", Logger::Level::INFO);
 	//inv->setParameters(Complex(0, -200));
-	auto r1 = Resistor::make("r1", Logger::Level::INFO);
+	auto r1 = Resistor::make("r1", level);
 	r1->setParameters(0.1);
-	auto l1 = Inductor::make("l1", Logger::Level::INFO);
+	auto l1 = Inductor::make("l1", level);
 	l1->setParameters(600e-6);
-	auto r2 = Resistor::make("r2", Logger::Level::INFO);
+	auto r2 = Resistor::make("r2", level);
 	Real r2g = 0.1+0.001;
 	r2->setParameters(r2g);
-	auto l2 = Inductor::make("l2", Logger::Level::INFO);
+	auto l2 = Inductor::make("l2", level);
 	Real l2g = 150e-6+0.001/(2.*PI*50.);
 	l2->setParameters(l2g);
-	auto c1 = Capacitor::make("c1", Logger::Level::INFO);
+	auto c1 = Capacitor::make("c1", level);
 	c1->setParameters(10e-6);
-	auto rc = Capacitor::make("rc", Logger::Level::INFO);
+	auto rc = Capacitor::make("rc", level);
 	rc->setParameters(1e-6);
-	auto grid = VoltageSource::make("grid", Logger::Level::INFO);
+	auto grid = VoltageSource::make("grid", level);
 	grid->setParameters(Complex(0, -311.1270));
 
 	// Topology
@@ -83,7 +85,7 @@ int main(int argc, char* argv[]) {
 		SystemComponentList{ inv, r1, l1, r2, l2, c1, rc, grid });
 
 	//Simulation sim(simName, sys, timeStep, finalTime, Domain::DP, Solver::Type::MNA, Logger::Level::INFO);
-	Simulation sim(simName, Logger::Level::INFO);
+	Simulation sim(simName, level);
 	sim.setSystem(sys);
 	sim.setTimeStep(timeStep);
 	sim.setFinalTime(finalTime);
