@@ -37,6 +37,8 @@ int main(int argc, char* argv[]) {
 	//Matrix frequencies(1,1);
 	//frequencies << 50;
 
+	auto scheduler = std::make_shared<ThreadLevelScheduler>(4);
+
 	// Nodes
 	auto n1 = Node::make("n1");
 	auto n2 = Node::make("n2");
@@ -91,6 +93,7 @@ int main(int argc, char* argv[]) {
 	sim.setFinalTime(finalTime);
 	sim.doHarmonicParallelization(true);
 	sim.initialize();
+	sim.setScheduler(scheduler);
 
 	// Logging
 	auto logger = DataLogger::make(simName);
