@@ -6,6 +6,7 @@ dist/
 _dpsim.pyd
 _dpsim.pdb
 .pytest_cache/
+logs/
 
 # Folders
 Libraries/
