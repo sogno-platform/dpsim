@@ -27,7 +27,7 @@ using namespace CPS::DP::Ph1;
 int main(int argc, char* argv[]) {
 	// Define simulation scenario
 	Real timeStep = 0.000001;
-	Real finalTime = 0.01;
+	Real finalTime = 0.05;
 	String simName = "DP_Inverter_Grid_Test_Parallel";
 	Logger::setLogDir("logs/"+simName);
 
