@@ -108,9 +108,10 @@ int main(int argc, char* argv[]) {
 
 	sim.run();
 
-	auto spdStepTimeLog = Logger::create("step_times.csv");
+	auto spdStepTimeLog = Logger::create("step_times");
 	Logger::setLogPattern(spdStepTimeLog, "%v");
 	Logger::setLogLevel(spdStepTimeLog, Logger::Level::INFO);
+	spdStepTimeLog->info("steptime_inv_parallel");
 
 	Real tot = 0;
 	for (auto meas : sim.stepTimes()) {
