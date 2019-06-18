@@ -1,4 +1,6 @@
 import csv
+import pandas
+import numpy
 
 import matplotlib.pyplot as plt
 
@@ -7,19 +9,24 @@ class Measurement:
         generated with the same, otherwise fixed settings.
     """
 
-    def __init__(self, instance, xaxis, xlabel, data, name=None, sigma=None):
+    def __init__(self, xaxis, xlabel, data, ylabel, name=None, instance=None, sigma=None):
         self.instance = instance
         self.xaxis = xaxis
         self.xlabel = xlabel
         self.data = data
+        self.ylabel = ylabel
+
         if sigma:
             self.sigma = sigma
         else:
             self.sigma = {}
+
         if name:
             self.name = name
-        else:
+        elif self.instance:
             self.name = self.instance.name
+        else:
+            self.name = ''
 
     @staticmethod
     def read_csv(filename):
@@ -42,6 +49,22 @@ class Measurement:
                     else:
                         data[k].append(float(v))
             return Measurement(None, xaxis, xlabel, data, filename.rstrip('.csv'), sigma)
+
+    @staticmethod
+    def read_timestep_csv(filename):       
+        pd_df = pandas.read_csv(filename)
+        pd_df.rename(columns=lambda x: x.strip(), inplace=True)
+        column_names = list(pd_df.columns.values)
+
+        measurements = {}
+        for column in column_names:
+            data = pd_df[column].values
+            xaxis = numpy.arange(data.shape[0])
+            xlabel = 'timestep'
+            ylabel = column    
+            measurements[column] = Measurement(xaxis, xlabel, data, ylabel)
+        
+        return measurements  
 
     def speedup(self, old, name):
         if self.xaxis != old.xaxis:
