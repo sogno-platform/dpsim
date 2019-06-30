@@ -80,6 +80,8 @@ Simulation::Simulation(String name, SystemTopology system,
 		mSolvers.push_back(std::make_shared<NRpolarSolver>(name, system, timeStep, domain, logLevel));
 		break;
 	}
+
+	mInitialized = true;
 }
 
 void Simulation::initialize() {
