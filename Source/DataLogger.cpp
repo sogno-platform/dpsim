@@ -174,10 +174,10 @@ void DataLogger::addAttribute(const String &name, CPS::Attribute<Complex>::Ptr a
 	mAttributes[name + ".im"] = attrComp->imag();
 }
 
-void DataLogger::addAttribute(const String &name, CPS::Attribute<MatrixVar<Real>>::Ptr attr) {
-	const MatrixVar<Real> &m = attr->get();
+void DataLogger::addAttribute(const String &name, CPS::MatrixRealAttribute::Ptr attr) {
+	const Matrix &m = attr->get();
 
-	auto attrMat = std::static_pointer_cast<CPS::MatrixAttribute<Real>>(attr);
+	auto attrMat = std::static_pointer_cast<CPS::MatrixRealAttribute>(attr);
 
 	if (m.rows() == 1 && m.cols() == 1) {
 		addAttribute(name, attrMat->coeff(0, 0));

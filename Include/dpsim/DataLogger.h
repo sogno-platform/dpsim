@@ -67,7 +67,7 @@ namespace DPsim {
 		void addAttribute(const String &name, CPS::Attribute<Int>::Ptr attr);
 		void addAttribute(const String &name, CPS::Attribute<Real>::Ptr attr);
 		void addAttribute(const String &name, CPS::Attribute<Complex>::Ptr attr);
-		void addAttribute(const String &name, CPS::Attribute<MatrixVar<Real>>::Ptr attr);
+		void addAttribute(const String &name, CPS::MatrixRealAttribute::Ptr attr);
 		void addAttribute(const String &name, CPS::MatrixCompAttribute::Ptr attr, UInt rowsMax = 0, UInt colsMax = 0);
 
 		template<typename VarType>
