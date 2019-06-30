@@ -104,7 +104,7 @@ int main(int argc, char* argv[]) {
 	logger->addAttribute("v5", n5->attributeMatrixComp("v"), 1, 1);
 	logger->addAttribute("i12", r1->attributeMatrixComp("i_intf"), 1, 1);
 	logger->addAttribute("i34", r2->attributeMatrixComp("i_intf"), 1, 1);
-	sim.addLogger(logger);
+	//sim.addLogger(logger);
 
 	sim.run();
 

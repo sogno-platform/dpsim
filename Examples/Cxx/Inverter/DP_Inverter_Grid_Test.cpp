@@ -37,6 +37,8 @@ int main(int argc, char* argv[]) {
 	//Matrix frequencies(1,1);
 	//frequencies << 50;
 
+	auto scheduler = std::make_shared<ThreadLevelScheduler>(4);
+
 	// Nodes
 	auto n1 = Node::make("n1");
 	auto n2 = Node::make("n2");
@@ -101,7 +103,7 @@ int main(int argc, char* argv[]) {
 	logger->addAttribute("v5", n5->attributeMatrixComp("v"), 1, 1);
 	logger->addAttribute("i12", r1->attributeMatrixComp("i_intf"), 1, 1);
 	logger->addAttribute("i34", r2->attributeMatrixComp("i_intf"), 1, 1);
-	sim.addLogger(logger);
+	//sim.addLogger(logger);
 
 	sim.run();
 
