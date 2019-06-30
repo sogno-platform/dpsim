@@ -27,8 +27,8 @@ using namespace CPS::DP::Ph1;
 
 int main(int argc, char* argv[]) {
 	// Define simulation scenario
-	Real timeStep = 0.01;
-	Real finalTime = 0.02;
+	Real timeStep = 0.002;
+	Real finalTime = 0.2;
 	String simName = "DP_VS_RL_f500_ph500";
 	Logger::setLogDir("logs/"+simName);
 
