@@ -4,6 +4,10 @@ if (NOT WIN32)
 	# needed so CIMParser and arabica (which are first compiled into static libs)
 	# can be included in the .so
 	set(CMAKE_CXX_FLAGS "-fPIC")
+
+	if(CXX_SUPPORTS_PROF AND WITH_PROFILING)
+       set(CMAKE_CXX_FLAGS "-fPIC -O0 -pg")
+	endif() 
 endif()
 
 # targets
@@ -114,6 +118,10 @@ if(WITH_CIM)
 		# powerflow example
 		CIM/CIGRE_MV_PowerFlowTest.cpp
 		CIM/CIGRE_MV_PowerFlowTest_LoadProfiles.cpp
+
+		CIM/IEEE_LV_PowerFlowTest.cpp
+		CIM/IEEE_LV_PowerFlowTest_LP.cpp
+
 	)
 endif()
 

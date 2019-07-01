@@ -26,9 +26,14 @@ if(MSVC)
 	endif()
 else()
 	check_cxx_compiler_flag("-Wall -Werror" CXX_SUPPORTS_WERROR)
+	check_cxx_compiler_flag("-pg" CXX_SUPPORTS_PROF)
 
 	if(CXX_SUPPORTS_WERROR)
 		set(DPSIM_CXX_FLAGS -Wall -Werror)
+	endif()
+
+	if(CXX_SUPPORTS_PROF AND WITH_PROFILING)
+        set(DPSIM_CXX_FLAGS ${DPSIM_CXX_FLAGS} -O0 -pg)
 	endif()
 endif()
 
@@ -61,6 +66,7 @@ endif()
 option(BUILD_SHARED_LIBS "Build shared library" OFF)
 option(BUILD_EXAMPLES "Build C++ examples" ON)
 option(COMPARE_REFERENCE "Download reference results and compare" OFF)
+option(WITH_PROFILING "Output of profiling information" OFF})
 
 option(WITH_GSL "Enable GSL"         ${GSL_FOUND})
 option(WITH_SUNDIALS "Enable sundials solver suite"         ${Sundials_FOUND})
