@@ -45,7 +45,7 @@ int main(int argc, char** argv){
 		String loadProfilePath("Examples/CSV/CIGRE_MV_NoTap/");
 	#endif
 	std::map<String,String> assignList = {
-	// {load mRID, file name} (csv file only)
+	// {load mRID, file name}
 	{"LOAD-H-1", "Load_H_1"},
 	{"LOAD-H-3", "Load_H_3"},
 	{"LOAD-H-4", "Load_H_4"},
@@ -76,9 +76,9 @@ int main(int argc, char** argv){
 
     CIM::Reader reader(simName, Logger::Level::INFO, Logger::Level::NONE);
     SystemTopology system = reader.loadCIM(system_freq, filenames, CPS::Domain::Static);
-	//load profile assigner
-	loadProfileAssigner assigner(simName, loadProfilePath, assignList, Logger::Level::INFO);
-	assigner.assign(system, 0, 1.5, 15, loadProfileAssigner::Mode::MANUAL);
+	//load profile lpreader
+	loadProfileReader lpreader(simName, loadProfilePath, assignList, Logger::Level::INFO);
+	lpreader.assign(system, 0, 1.5, 15, loadProfileReader::Mode::MANUAL);
 
 	auto logger = DPsim::DataLogger::make(simName);
 	for (auto node : system.mNodes)
