@@ -176,7 +176,6 @@ void DataLogger::addAttribute(const String &name, CPS::Attribute<Complex>::Ptr a
 
 void DataLogger::addAttribute(const String &name, CPS::MatrixRealAttribute::Ptr attr) {
 	const Matrix &m = attr->get();
-
 	auto attrMat = std::static_pointer_cast<CPS::MatrixRealAttribute>(attr);
 
 	if (m.rows() == 1 && m.cols() == 1) {
@@ -245,9 +244,29 @@ void DataLogger::addAttribute(const String &name, CPS::AttributeBase::Ptr attr) 
 		return;
 	}
 
+	//auto realMatAttr = std::dynamic_pointer_cast<CPS::Attribute<MatrixVar<Real>>>(attr);
+	//if (realMatAttr) {
+	//	addAttribute(name, realMatAttr);
+	//	return;
+	//}
+
 	auto realMatAttr = std::dynamic_pointer_cast<CPS::Attribute<MatrixVar<Real>>>(attr);
 	if (realMatAttr) {
-		addAttribute(name, realMatAttr);
+		auto realMatAttrCast = std::static_pointer_cast<CPS::MatrixRealAttribute>(attr);
+		addAttribute(name, realMatAttrCast);
+		return;
+	}
+
+	//auto compMatAttr = std::dynamic_pointer_cast<CPS::Attribute<MatrixVar<Complex>>>(attr);
+	//if (compMatAttr) {
+	//	addAttribute(name, compMatAttr);
+	//	return;
+	//}
+
+	auto compMatAttr = std::dynamic_pointer_cast<CPS::Attribute<MatrixVar<Complex>>>(attr);
+	if (compMatAttr) {
+		auto compMatAttrCast = std::static_pointer_cast<CPS::MatrixCompAttribute>(attr);
+		addAttribute(name, compMatAttrCast);
 		return;
 	}
 
