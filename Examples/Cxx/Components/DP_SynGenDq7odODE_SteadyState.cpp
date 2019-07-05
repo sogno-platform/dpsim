@@ -31,7 +31,6 @@ int main(int argc, char* argv[]) {
 	Real finalTime = 0.03;
 	String simName = "DP_SynGenDq7odODE_SteadyState";
 	Logger::setLogDir("logs/"+simName);
-	std::cout << std::getenv("CPS_LOG_DIR");
 
 	// Define machine parameters in per unit
 	Real nomPower = 555e6;
