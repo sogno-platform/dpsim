@@ -18,6 +18,13 @@ set(CIRCUIT_SOURCES
 	Circuits/DP_VS_CS_R4.cpp
 	Circuits/DP_VS_R2L3.cpp
 
+	DP_Basics/DP_VS_RL_f60.cpp
+	DP_Basics/DP_VS_RL_f60_largeTs.cpp
+	DP_Basics/DP_VS_RL_f60_vlargeTs.cpp
+	DP_Basics/DP_VS_RL_f500.cpp
+	DP_Basics/DP_VS_RL_f500_largeTs.cpp
+	DP_Basics/DP_VS_RL_f500_ph500.cpp
+
 	#Circuits/DP_VS_PiLine_R.cpp
 	#Circuits/DP_VS_Trafo_R.cpp
 	#Circuits/DP_ResVS_RL_Switch.cpp
@@ -31,6 +38,10 @@ set(CIRCUIT_SOURCES
 	Circuits/EMT_VS_R2L3.cpp
 	Circuits/EMT_VS_CS_R4_AC.cpp
 	Circuits/EMT_VS_CS_R4_DC.cpp	
+
+	DP_Basics/EMT_VS_RL_f60.cpp
+	DP_Basics/EMT_VS_RL_f60_largeTs.cpp
+	DP_Basics/EMT_VS_RL_f500.cpp
 	
 	#Circuits/EMT_ResVS_RL_Switch.cpp
 
@@ -48,6 +59,7 @@ set(SYNCGEN_SOURCES
 set(INVERTER_SOURCES
 	Inverter/DP_Inverter_Grid_Test.cpp
 	Inverter/DP_Inverter_Grid_Test_Parallel.cpp
+	Inverter/DP_Vsrc_Grid_Parallel.cpp
 )
 
 if(WITH_SUNDIALS)
