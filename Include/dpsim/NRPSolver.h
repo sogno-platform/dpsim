@@ -87,7 +87,6 @@ namespace DPsim {
 		///Imaginary part of Y
 		CPS::Real B(int i, int j);
 
-
 		// solver settings
 		double tolerance=10e-9;
 		/// Maximum number of iterations
@@ -128,9 +127,9 @@ namespace DPsim {
 		*
 		* \sa Solver_State
 		*/
-		virtual void NRP_initialize();
+		virtual void NRP_initialize(CPS::Real time);
 
-		virtual void powerFlow();
+		virtual Bool powerFlow(Bool with_iwamoto = false);
 
         void determinePowerFlowBusType();
 
@@ -158,17 +157,17 @@ namespace DPsim {
 
         std::vector<int> LastPV;
 
-		//******* vectors of node indices for pf calculation ********
+		// #### vectors of node indices for pf calculation ####
 		std::vector<CPS::UInt> PQBusIndices;
 		std::vector<CPS::UInt> PVBusIndices;
 		std::vector<CPS::UInt> slackBusIndex;
 
-		//******* vectors of nodes for pf calculation ********
+		// #### vectors of nodes for pf calculation ####
 		CPS::TopologicalNode::List PQBuses;
 		CPS::TopologicalNode::List PVBuses;
 		CPS::TopologicalNode::List slackBus;
 
-        /****** vectors of components ******/
+        // #### vectors of components ####
 		std::vector<std::shared_ptr<CPS::Static::Ph1::Transformer>> Transformers;
 		std::vector<std::shared_ptr<CPS::Static::Ph1::SynchronGenerator>> SynchronGenerators;
 		std::vector<std::shared_ptr<CPS::Static::Ph1::Load>> Loads;
@@ -194,7 +193,7 @@ namespace DPsim {
 
 		void update_solution(CPS::Vector X, CPS::UInt npq, CPS::UInt npv);
 
-		void get_increments(CPS::Vector X, CPS::Vector &incV, CPS::Vector &incD, CPS::UInt npq, CPS::UInt npv);
+		void get_increments(const CPS::Vector& X, CPS::Vector &incV, CPS::Vector &incD, CPS::UInt npq, CPS::UInt npv);
 
 		void calculate_slack_power(); //calculate the slack bus power
 
@@ -205,9 +204,9 @@ namespace DPsim {
 
 		void compile();
 
-		void generate_initial_solution(bool keep_last_solution=false);
+		void generate_initial_solution(CPS::Real time, bool keep_last_solution = false);
 
-		void set_solution();
+		void set_solution(CPS::Bool didConverge);
 		void calculate_flows();
 
 		/* TODO: Z matrix composition to be fixed after moving from Circuit to Solver_NRpolar
@@ -222,19 +221,9 @@ namespace DPsim {
 
 		void correct_PVbuses_violating_Q(CPS::UInt &npq, CPS::UInt &npv, CPS::Matrix &J, CPS::Vector &K, CPS::Vector &X);
 
-		// TODO proper tasking system integration for parallelism
-		class SolveTask : public CPS::Task {
-		public:
-			SolveTask(NRpolarSolver& solver) :
-				Task(solver.mName + ".Solve"), mSolver(solver) {
-				mModifiedAttributes.push_back(Scheduler::external);
-			}
+		void calculate_branch_flow();
 
-			void execute(Real time, Int timeStepCount);
-
-		private:
-			NRpolarSolver& mSolver;
-		};
+		void calculate_nodal_injection();
     };
 
 
