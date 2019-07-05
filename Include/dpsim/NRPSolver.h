@@ -224,6 +224,21 @@ namespace DPsim {
 		void calculate_branch_flow();
 
 		void calculate_nodal_injection();
+
+		// TODO proper tasking system integration for parallelism
+		class SolveTask : public CPS::Task {
+		public:
+			SolveTask(NRpolarSolver& solver) :
+				Task(solver.mName + ".Solve"), mSolver(solver) {
+				mModifiedAttributes.push_back(Scheduler::external);
+			}
+
+			void execute(Real time, Int timeStepCount);
+
+		private:
+			NRpolarSolver& mSolver;
+		};
+
     };
 
 
