@@ -24,6 +24,7 @@
 #include <cps/Task.h>
 
 #include <dpsim/Definitions.h>
+#include <cps/Logger.h>
 
 #include <atomic>
 #include <chrono>
@@ -41,7 +42,17 @@ namespace DPsim {
 		typedef std::unordered_map<CPS::Task::Ptr, std::deque<CPS::Task::Ptr>> Edges;
 		typedef std::chrono::steady_clock::duration TaskTime;
 
-		Scheduler() : mRoot(std::make_shared<Root>()) { }
+		///
+		Scheduler(CPS::Logger::Level logLevel = CPS::Logger::Level::NONE) : 
+			mRoot(std::make_shared<Root>()) {
+			
+			// Logging
+			mLogLevel = logLevel; 
+			mSLog = CPS::Logger::get("scheduler");
+			CPS::Logger::setLogPattern(mSLog, "[%L] %v");
+			CPS::Logger::setLogLevel(mSLog, logLevel);
+		}
+		///
 		virtual ~Scheduler() { }
 
 		// Interface functions
@@ -80,6 +91,10 @@ namespace DPsim {
 		CPS::Task::Ptr mRoot;
 
 	private:
+		/// Log level
+		CPS::Logger::Level mLogLevel;
+		/// Logger
+		std::shared_ptr<spdlog::logger> mSLog;
 		// TODO more sophisticated measurement method might be necessary for
 		// longer simulations (risk of high memory requirements and integer
 		// overflow)

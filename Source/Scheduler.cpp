@@ -149,7 +149,7 @@ void Scheduler::topologicalSort(const Task::List& tasks, const Edges& inEdges, c
 		if (!visited.count(t)) {
 			// don't put unneeded tasks in the schedule, but process them as usual
 			// so the cycle check still works
-			//std::cout << "Dropping " << t->toString() << std::endl;
+			mSLog->info("Dropping {:s}", t->toString());
 		} else if (t != mRoot) {
 			sortedTasks.push_back(t);
 		}
