@@ -142,20 +142,26 @@ void MnaSolver<Complex>::initializeComponents() {
 	// This intialization according to power flow information is not MNA specific.
 	mSLog->info("-- Initialize components from power flow");
 
+	// Initialize nodes
+	for (UInt nodeIdx = 0; nodeIdx < mNodes.size(); nodeIdx++)
+		mNodes[nodeIdx]->initialize(mSystem.mFrequencies);
+
+	// Initialize power components with frequencies and from powerflow results
 	for (auto comp : mPowerComponents) {
+		comp->initialize(mSystem.mFrequencies);
 		auto pComp = std::dynamic_pointer_cast<PowerComponent<Complex>>(comp);
 		if (!pComp)	continue;
 		pComp->initializeFromPowerflow(mSystem.mSystemFrequency);
 	}
 
+	// Initialize signal components.
+	for (auto comp : mSignalComponents)
+		comp->initialize(mSystem.mSystemOmega, mTimeStep);
+
 	mSLog->info("-- Initialize MNA properties of components");
 	if (mHarmParallel) {
-		// Initialize signal components.
-		for (auto comp : mSignalComponents)
-			comp->initialize(mSystem.mSystemOmega, mTimeStep);
-		// Initialize power components.
+		// Initialize MNA specific parts of components.
 		for (auto comp : mPowerComponents) {
-			comp->initialize(mSystem.mFrequencies);
 			// Initialize MNA specific parts of components.
 			comp->mnaInitializeHarm(mSystem.mSystemOmega, mTimeStep, mLeftVectorHarmAttributes);
 			const Matrix& stamp = comp->template attribute<Matrix>("right_vector")->get();
@@ -163,17 +169,12 @@ void MnaSolver<Complex>::initializeComponents() {
 		}
 		// Initialize nodes
 		for (UInt nodeIdx = 0; nodeIdx < mNodes.size(); nodeIdx++) {
-			mNodes[nodeIdx]->initialize(mSystem.mFrequencies);
 			mNodes[nodeIdx]->mnaInitializeHarm(mLeftVectorHarmAttributes);
 		}
 	}
-	else {
-		// Initialize signal components.
-		for (auto comp : mSignalComponents)
-			comp->initialize(mSystem.mSystemOmega, mTimeStep);
+	else {		
 		// Initialize MNA specific parts of components.
 		for (auto comp : mPowerComponents) {
-			comp->initialize(mSystem.mFrequencies);
 			comp->mnaInitialize(mSystem.mSystemOmega, mTimeStep, attribute<Matrix>("left_vector"));
 			const Matrix& stamp = comp->template attribute<Matrix>("right_vector")->get();
 			if (stamp.size() != 0) {
@@ -182,15 +183,24 @@ void MnaSolver<Complex>::initializeComponents() {
 		}
 		for (auto comp : mSwitches)
 			comp->mnaInitialize(mSystem.mSystemOmega, mTimeStep, attribute<Matrix>("left_vector"));
-		// Initialize nodes
-		for (UInt nodeIdx = 0; nodeIdx < mNodes.size(); nodeIdx++)
-			mNodes[nodeIdx]->initialize(mSystem.mFrequencies);
 	}
 }
 
 template <typename VarType>
 void MnaSolver<VarType>::initializeSystem() {
 	mSLog->info("-- Initialize MNA system matrices and source vector");
+	mRightSideVector.setZero();
+
+	if (mHarmParallel) {
+		for (UInt i = 0; i < std::pow(2,mSwitches.size()); i++) {
+			for(Int freq = 0; freq < mSystem.mFrequencies.size(); freq++)
+				mSwitchedMatricesHarm[std::bitset<SWITCH_NUM>(i)][freq].setZero();
+		}
+	}
+	else {
+		for (UInt i = 0; i < std::pow(2,mSwitches.size()); i++)
+			mSwitchedMatrices[std::bitset<SWITCH_NUM>(i)].setZero();
+	}
 
 	if (mHarmParallel) {
 		for(Int freq = 0; freq < mSystem.mFrequencies.size(); freq++) {
@@ -262,7 +272,10 @@ void MnaSolver<VarType>::identifyTopologyObjects() {
 
 	for (auto comp : mSystem.mComponents) {
 		auto swComp = std::dynamic_pointer_cast<CPS::MNASwitchInterface>(comp);
-		if (swComp) mSwitches.push_back(swComp);
+		if (swComp) { 
+			mSwitches.push_back(swComp);
+			continue;
+		}
 
 		auto mnaComp = std::dynamic_pointer_cast<CPS::MNAInterface>(comp);
 		if (mnaComp) mPowerComponents.push_back(mnaComp);
@@ -391,6 +404,9 @@ void MnaSolver<VarType>::steadyStateInitialization() {
 	for (auto comp : mSystem.mComponents)
 		comp->setBehaviour(Component::Behaviour::Initialization);
 
+	initializeSystem();
+	logSystemMatrices();
+
 	updateSwitchStatus();
 
 	// Use sequential scheduler
@@ -398,12 +414,15 @@ void MnaSolver<VarType>::steadyStateInitialization() {
 	CPS::Task::List tasks;
 	Scheduler::Edges inEdges, outEdges;
 
+	for (auto node : mNodes) {
+		for (auto task : node->mnaTasks())
+			tasks.push_back(task);
+	}
 	for (auto comp : mPowerComponents) {
 		for (auto task : comp->mnaTasks()) {
 			tasks.push_back(task);
 		}
 	}
-
 	// TODO signal components should be moved out of MNA solver
 	for (auto comp : mSignalComponents) {
 		for (auto task : comp->getTasks()) {
@@ -420,10 +439,6 @@ void MnaSolver<VarType>::steadyStateInitialization() {
 		mRightSideVector.setZero();
 
 		sched.step(time, timeStepCount);
-
-		// TODO Try to avoid this step.
-		for (UInt nodeIdx = 0; nodeIdx < mNumNetNodes; nodeIdx++)
-			mNodes[nodeIdx]->mnaUpdateVoltage(mLeftSideVector);
 
 		if (mDomain == CPS::Domain::EMT) {
 			initLeftVectorLog.logEMTNodeValues(time, leftSideVector());
@@ -448,7 +463,7 @@ void MnaSolver<VarType>::steadyStateInitialization() {
 			break;
 	}
 
-	mSLog->info("Max difference: {:d} or {:d}% at time {:d}", maxDiff, maxDiff / max, time);
+	mSLog->info("Max difference: {:f} or {:f}% at time {:f}", maxDiff, maxDiff / max, time);
 
 	// Reset system for actual simulation
 	mRightSideVector.setZero();
@@ -495,7 +510,7 @@ void MnaSolver<VarType>::SolveTask::execute(Real time, Int timeStepCount) {
 	for (auto stamp : mSolver.mRightVectorStamps)
 		mSolver.mRightSideVector += *stamp;
 
-	if (mSolver.mSwitchedMatrices.size() > 0 && !mSteadyStateInit)
+	if (mSolver.mSwitchedMatrices.size() > 0)
 		mSolver.mLeftSideVector = mSolver.mLuFactorizations[mSolver.mCurrentSwitchStatus].solve(mSolver.mRightSideVector);
 
 	// TODO split into separate task? (dependent on x, updating all v attributes)
