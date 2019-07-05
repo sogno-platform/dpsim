@@ -20,7 +20,7 @@
 
 #include "cps/CIM/Reader.h"
 #include <DPsim.h>
-#include "cps/loadProfileReader.h"
+#include "cps/LoadProfileReader.h"
 
 using namespace std;
 using namespace DPsim;
@@ -77,8 +77,8 @@ int main(int argc, char** argv){
     CIM::Reader reader(simName, Logger::Level::INFO, Logger::Level::NONE);
     SystemTopology system = reader.loadCIM(system_freq, filenames, CPS::Domain::Static);
 	//load profile lpreader
-	loadProfileReader lpreader(simName, loadProfilePath, assignList, Logger::Level::INFO);
-	lpreader.assign(system, 0, 1.5, 15, loadProfileReader::Mode::MANUAL);
+	LoadProfileReader lpreader(simName, loadProfilePath, assignList, Logger::Level::INFO);
+	lpreader.assign(system, 0, 1.5, 15, LoadProfileReader::Mode::MANUAL);
 
 	auto logger = DPsim::DataLogger::make(simName);
 	for (auto node : system.mNodes)
@@ -139,7 +139,7 @@ int main(int argc, char** argv){
 	}
 
 	Simulation sim(simName, system, 1.5, 15, Domain::Static, Solver::Type::NRP, Logger::Level::INFO, true);
-	
+
 	sim.addLogger(logger);
 	sim.run();
 
