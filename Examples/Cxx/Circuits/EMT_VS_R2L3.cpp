@@ -30,6 +30,7 @@ int main(int argc, char* argv[]) {
 	Real timeStep = 0.00001;
 	Real finalTime = 0.1;
 	String simName = "EMT_VS_R2L3";
+	Logger::setLogDir("logs/"+simName);
 
 	// Nodes
 	auto n1 = Node::make("n1");
