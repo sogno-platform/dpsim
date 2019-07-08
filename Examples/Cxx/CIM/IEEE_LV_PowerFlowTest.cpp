@@ -34,18 +34,18 @@ using namespace CPS::CIM;
 int main(int argc, char** argv){
 
 	#ifdef _WIN32
-		String path("..\\..\\..\\..\\dpsim\\Examples\\CIM\\CIGRE_MV_NoTap\\");
+		String path("..\\..\\..\\..\\dpsim\\Examples\\CIM\\IEEE_EU_LV_reduced\\");
 	#elif defined(__linux__) || defined(__APPLE__)
-		String path("Examples/CIM/CIGRE_MV_NoTap/");
+		String path("Examples/CIM/IEEE_EU_LV_reduced/");
 	#endif
 
 	std::list<string> filenames = {
-	path + "Rootnet_FULL_NE_06J16h_DI.xml",
-	path + "Rootnet_FULL_NE_06J16h_EQ.xml",
-	path + "Rootnet_FULL_NE_06J16h_SV.xml",
-	path + "Rootnet_FULL_NE_06J16h_TP.xml"
+	path + "Rootnet_FULL_NE_13J16h_DI.xml",
+	path + "Rootnet_FULL_NE_13J16h_EQ.xml",
+	path + "Rootnet_FULL_NE_13J16h_SV.xml",
+	path + "Rootnet_FULL_NE_13J16h_TP.xml"
 	};
-	String simName = "CIGRE-MV-NoTap";
+	String simName = "CIGRE-LV-reduced";
 	CPS::Real system_freq = 50;
 
     CIM::Reader reader(simName, Logger::Level::INFO, Logger::Level::NONE);
@@ -54,10 +54,10 @@ int main(int argc, char** argv){
 	auto logger = DPsim::DataLogger::make(simName);
 	for (auto node : system.mNodes)
 	{
-		logger->addAttribute(node->name() + ".V", node->attribute("v"));
+		logger->addAttribute(node->name(), node->attribute("v"));
 	}
 
-	Simulation sim(simName, system, 1, 120, Domain::Static, Solver::Type::NRP, Logger::Level::NONE, true);
+	Simulation sim(simName, system, 1, 5, Domain::Static, Solver::Type::NRP, Logger::Level::INFO, true);
 
 	sim.addLogger(logger);
 	sim.run();

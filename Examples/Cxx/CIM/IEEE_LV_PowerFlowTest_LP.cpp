@@ -29,35 +29,62 @@ using namespace CPS::CIM;
 
 
 /*
- * This example runs the powerflow for the CIGRE MV benchmark system (neglecting the tap changers of the transformers)
+ * This example runs the powerflow for the IEEE LV EU benchmark system
  */
+
 int main(int argc, char** argv){
 
 	#ifdef _WIN32
-		String path("..\\..\\..\\..\\dpsim\\Examples\\CIM\\CIGRE_MV_NoTap\\");
+		String path("..\\..\\..\\..\\dpsim\\Examples\\CIM\\IEEE_EU_LV_reduced\\");
 	#elif defined(__linux__) || defined(__APPLE__)
-		String path("Examples/CIM/CIGRE_MV_NoTap/");
+		String path("Examples/CIM/IEEE_EU_LV_reduced/");
+	#endif
+
+	#ifdef _WIN32
+			String loadProfilePath("..\\..\\..\\..\\SimulationData\\Load\\IEEE_European_LV_TestFeeder_v2_Profiles\\csv\\");
+	#elif defined(__linux__) || defined(__APPLE__)
+			String loadProfilePath("../SimulationData/Load/IEEE_European_LV_TestFeeder_v2_Profiles/csv/");
 	#endif
 
 	std::list<string> filenames = {
-	path + "Rootnet_FULL_NE_06J16h_DI.xml",
-	path + "Rootnet_FULL_NE_06J16h_EQ.xml",
-	path + "Rootnet_FULL_NE_06J16h_SV.xml",
-	path + "Rootnet_FULL_NE_06J16h_TP.xml"
+	path + "Rootnet_FULL_NE_13J16h_DI.xml",
+	path + "Rootnet_FULL_NE_13J16h_EQ.xml",
+	path + "Rootnet_FULL_NE_13J16h_SV.xml",
+	path + "Rootnet_FULL_NE_13J16h_TP.xml"
 	};
-	String simName = "CIGRE-MV-NoTap";
+	String simName = "IEEE-LV-reduced";
 	CPS::Real system_freq = 50;
+
+	/*
+		create assign list
+	*/
+	std::map<String, String> assignList;
+	for (const auto & entry : std::experimental::filesystem::directory_iterator(loadProfilePath))
+	{
+		string filename = entry.path().filename().string();
+		string load_number;
+		for (auto &c : filename) {
+			if (isdigit(c)) {
+				load_number += c;
+			}
+		}
+		assignList.insert(std::pair<string,string>("PQ"+load_number,"Load_profile_"+load_number));
+	}
 
     CIM::Reader reader(simName, Logger::Level::INFO, Logger::Level::NONE);
     SystemTopology system = reader.loadCIM(system_freq, filenames, CPS::Domain::Static);
 
+	//load profile lpreader
+	LoadProfileReader lpreader(simName, loadProfilePath, assignList, Logger::Level::INFO);
+	lpreader.assign(system, 1, 1, 30, LoadProfileReader::Mode::MANUAL, LoadProfileReader::DataFormat::HHMMSS);
+
 	auto logger = DPsim::DataLogger::make(simName);
 	for (auto node : system.mNodes)
 	{
-		logger->addAttribute(node->name() + ".V", node->attribute("v"));
+		logger->addAttribute(node->name(), node->attribute("v"));
 	}
 
-	Simulation sim(simName, system, 1, 120, Domain::Static, Solver::Type::NRP, Logger::Level::NONE, true);
+	Simulation sim(simName, system, 1, 30, Domain::Static, Solver::Type::NRP, Logger::Level::INFO, true);
 
 	sim.addLogger(logger);
 	sim.run();
