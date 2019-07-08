@@ -54,7 +54,7 @@ DPsim::CommandLineArgs::CommandLineArgs(int argc, char *argv[],
 		{ "duration",		required_argument,	0, 'd', "SECS", "Simulation duration" },
 		{ "system-freq",	required_argument,	0, 'f', "HZ", "System Frequency" },
 		{ "scenario",		required_argument,	0, 's', "NUM", "Scenario selection" },
-		{ "log-level",		required_argument,	0, 'l', "(NONE|INFO|DEBUG|WARN|ERROR)", "Logging level" },
+		{ "log-level",		required_argument,	0, 'l', "(NONE|INFO|DEBUG|WARN|ERR)", "Logging level" },
 		{ "start-at",		required_argument,	0, 'a', "ISO8601", "Start time of real-time simulation" },
 		{ "start-in",		required_argument,	0, 'i', "SECS", "" },
 		{ "solver-domain",	required_argument,	0, 'D', "(STATIC|DP|EMT)", "Domain of solver" },
@@ -133,14 +133,14 @@ DPsim::CommandLineArgs::CommandLineArgs(int argc, char *argv[],
 					logLevel = Logger::Level::DEBUG;
 				else if (arg == "INFO")
 					logLevel = Logger::Level::INFO;
-				else if (arg == "ERROR")
-					logLevel = Logger::Level::ERROR;
+				else if (arg == "ERR")
+					logLevel = Logger::Level::ERR;
 				else if (arg == "WARN")
 					logLevel = Logger::Level::WARN;
 				else if (arg == "NONE")
 					logLevel = Logger::Level::NONE;
 				else
-					throw std::invalid_argument("Invalid value for --log-level: must be a string of DEBUG, INFO, ERROR, WARN or NONE");
+					throw std::invalid_argument("Invalid value for --log-level: must be a string of DEBUG, INFO, ERR, WARN or NONE");
 				break;
 			}
 

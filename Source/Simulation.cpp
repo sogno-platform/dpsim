@@ -43,20 +43,17 @@
 using namespace CPS;
 using namespace DPsim;
 
-Simulation::Simulation(String name,
-	Real timeStep, Real finalTime,
-	Domain domain,
-	Logger::Level logLevel) :
-	mLog(name, logLevel),
-	mName(name),
-	mFinalTime(finalTime),
-	mDomain(domain),
-	mTimeStep(timeStep),
-	mLogLevel(logLevel)
-{
+Simulation::Simulation(String name,	Logger::Level logLevel) :
+	mName(name), mLogLevel(logLevel) {
+
 	addAttribute<String>("name", &mName, Flags::read);
 	addAttribute<Real>("final_time", &mFinalTime, Flags::read);
 	Eigen::setNbThreads(1);
+
+	// Logging
+	mSLog = Logger::get(name);
+	mSLog->set_pattern("[%L] %v");
+	mSLog->set_level(Logger::cpsLogLevelToSpd(logLevel));
 }
 
 Simulation::Simulation(String name, SystemTopology system,
@@ -66,8 +63,11 @@ Simulation::Simulation(String name, SystemTopology system,
 	Bool steadyStateInit,
 	Bool splitSubnets,
 	Component::List tearComponents) :
-	Simulation(name, timeStep, finalTime,
-		domain, logLevel) {
+	Simulation(name, logLevel) {
+
+	mTimeStep = timeStep;
+	mFinalTime = finalTime;
+	mDomain = domain;
 
 	switch (domain) {
 	case Domain::DP:
@@ -80,9 +80,25 @@ Simulation::Simulation(String name, SystemTopology system,
 		mSolvers.push_back(std::make_shared<NRpolarSolver>(name, system, timeStep, domain, logLevel));
 		break;
 	}
+
+	mInitialized = true;
 }
 
-Simulation::~Simulation() {
+void Simulation::initialize() {
+
+	switch (mDomain) {
+	case Domain::DP:
+		createSolvers<Complex>(mSystem, mSolverType, mSteadyStateInit, mSplitSubnets, mTearComponents);
+		break;
+	case Domain::EMT:
+		createSolvers<Real>(mSystem, mSolverType, mSteadyStateInit, mSplitSubnets, mTearComponents);
+		break;
+	case Domain::Static:
+		mSolvers.push_back(std::make_shared<NRpolarSolver>(mName, mSystem, mTimeStep, mDomain, mLogLevel));
+		break;
+	}
+
+	mInitialized = true;
 }
 
 template <typename VarType>
@@ -130,7 +146,8 @@ void Simulation::splitSubnets(const SystemTopology& system, std::vector<SystemTo
 }
 
 template <typename VarType>
-void Simulation::createSolvers(const CPS::SystemTopology& system, Solver::Type solverType, Bool steadyStateInit, Bool doSplitSubnets, const Component::List& tearComponents) {
+void Simulation::createSolvers(const CPS::SystemTopology& system, Solver::Type solverType,
+	Bool steadyStateInit, Bool doSplitSubnets, const Component::List& tearComponents) {
 	std::vector<SystemTopology> subnets;
 	if (doSplitSubnets && tearComponents.size() == 0)
 		splitSubnets<VarType>(system, subnets);
@@ -148,10 +165,11 @@ void Simulation::createSolvers(const CPS::SystemTopology& system, Solver::Type s
 		switch (solverType) {
 			case Solver::Type::MNA:
 				if (tearComponents.size() > 0) {
-					solver = std::make_shared<DiakopticsSolver<VarType>>(mName, subnets[net], tearComponents, mTimeStep, mLogLevel);
+					solver = std::make_shared<DiakopticsSolver<VarType>>(mName,
+						subnets[net], tearComponents, mTimeStep, mLogLevel);
 				} else {
-					solver = std::make_shared<MnaSolver<VarType>>(mName + copySuffix, subnets[net], mTimeStep,
-						mDomain, mLogLevel, steadyStateInit);
+					solver = std::make_shared<MnaSolver<VarType>>(mName + copySuffix,
+						subnets[net], mTimeStep, mDomain, mLogLevel, steadyStateInit, mDownSampleRate, mHarmParallel);
 				}
 				break;
 #ifdef WITH_SUNDIALS
@@ -170,7 +188,8 @@ void Simulation::createSolvers(const CPS::SystemTopology& system, Solver::Type s
 		auto odeComp = std::dynamic_pointer_cast<ODEInterface>(comp);
 		if (odeComp) {
 			// TODO explicit / implicit integration
-			auto odeSolver = std::make_shared<ODESolver>(odeComp->attribute<String>("name")->get() + "_ODE", odeComp, false, mTimeStep);
+			auto odeSolver = std::make_shared<ODESolver>(
+				odeComp->attribute<String>("name")->get() + "_ODE", odeComp, false, mTimeStep);
 			mSolvers.push_back(odeSolver);
 		}
 	}
@@ -278,7 +297,7 @@ void Simulation::prepSchedule() {
 }
 
 void Simulation::schedule() {
-	mLog.info() << "Scheduling tasks." << std::endl;
+	std::cout << Logger::prefix() << "Scheduling tasks." << std::endl;
 	prepSchedule();
 	mScheduler->createSchedule(mTasks, mTaskInEdges, mTaskOutEdges);
 }
@@ -303,18 +322,20 @@ void Simulation::renderDependencyGraph(std::ostream &os) {
 #endif
 
 void Simulation::run() {
+	if (!mInitialized)
+		initialize();
 	schedule();
 
-	mLog.info() << "Opening interfaces." << std::endl;
-
 #ifdef WITH_SHMEM
+	std::cout << Logger::prefix() << "Opening interfaces." << std::endl;
+
 	for (auto ifm : mInterfaces)
 		ifm.interface->open();
-#endif
 
 	sync();
+#endif
 
-	mLog.info() << "Start simulation." << std::endl;
+	std::cout << Logger::prefix() << "Start simulation." << std::endl;
 
 	while (mTime < mFinalTime) {
 		step();
@@ -330,7 +351,7 @@ void Simulation::run() {
 	for (auto lg : mLoggers)
 		lg->close();
 
-	mLog.info() << "Simulation finished." << std::endl;
+	std::cout << Logger::prefix() << "Simulation finished." << std::endl;
 	//mScheduler->getMeasurements();
 }
 
