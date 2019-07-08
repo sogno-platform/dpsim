@@ -108,9 +108,7 @@ int main(int argc, char* argv[]) {
 
 	sim.run();
 
-	auto spdStepTimeLog = Logger::create("step_times");
-	Logger::setLogPattern(spdStepTimeLog, "%v");
-	Logger::setLogLevel(spdStepTimeLog, Logger::Level::INFO);
+	auto spdStepTimeLog = Logger::get("step_times", Logger::Level::INFO);
 	spdStepTimeLog->info("steptime");
 
 	Real tot = 0;
