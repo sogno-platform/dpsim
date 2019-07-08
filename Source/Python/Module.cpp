@@ -47,7 +47,7 @@ using namespace DPsim::Python;
 static PyMethodDef dpsimModuleMethods[] = {
 	{ "load_cim",               (PyCFunction) LoadCim,       METH_VARARGS | METH_KEYWORDS, DPsim::Python::DocLoadCim },
 
-	// Component constructors
+	// Dynamic Phasor (DP)
 	Component::constructorDef<CPS::DP::Ph1::Capacitor>("_dp_ph1_Capacitor"),
 	Component::constructorDef<CPS::DP::Ph1::CurrentSource>("_dp_ph1_CurrentSource"),
 	Component::constructorDef<CPS::DP::Ph1::Inductor>("_dp_ph1_Inductor"),
@@ -69,6 +69,8 @@ static PyMethodDef dpsimModuleMethods[] = {
 #ifdef WITH_SUNDIALS
 	Component::constructorDef<CPS::DP::Ph3::SynchronGeneratorDQODE>("_dp_ph3_SynchronGeneratorDQODE"),
 #endif
+
+	// Electro Magnetic Transients (EMT)
 	Component::constructorDef<CPS::EMT::Ph1::Capacitor>("_emt_ph1_Capacitor"),
 	Component::constructorDef<CPS::EMT::Ph1::CurrentSource>("_emt_ph1_CurrentSource"),
 	Component::constructorDef<CPS::EMT::Ph1::Inductor>("_emt_ph1_Inductor"),
@@ -76,6 +78,17 @@ static PyMethodDef dpsimModuleMethods[] = {
 	Component::constructorDef<CPS::EMT::Ph1::VoltageSource>("_emt_ph1_VoltageSource"),
 	Component::constructorDef<CPS::EMT::Ph1::VoltageSourceFreq>("_emt_ph1_VoltageSourceFreq"),
 	Component::constructorDef<CPS::EMT::Ph1::VoltageSourceNorton>("_emt_ph1_VoltageSourceNorton"),
+
+	// Static Phasor (SP)
+	Component::constructorDef<CPS::Static::Line_Pi>("_sp_ph1_Line_Pi"),
+	Component::constructorDef<CPS::Static::VD>("_sp_ph1_VD"),
+	Component::constructorDef<CPS::Static::Load>("_sp_ph1_Load"),
+	Component::constructorDef<CPS::Static::NetworkInjection>("_sp_ph1_NetworkInjection"),
+	Component::constructorDef<CPS::Static::PV>("_sp_ph1_PV"),
+	Component::constructorDef<CPS::Static::Transformer>("_sp_ph1_Transformer"),
+	Component::constructorDef<CPS::Static::Shunt>("_sp_ph1_Shunt"),
+	Component::constructorDef<CPS::Static::SynchronGenerator>("_sp_ph1_SynchronGenerator"),
+	Component::constructorDef<CPS::Static::PQ>("_sp_ph1_PQ"),
 
 	{ nullptr }
 };
