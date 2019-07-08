@@ -59,7 +59,7 @@ int main(int argc, char** argv){
 		create assign list
 	*/
 	std::map<String, String> assignList;
-	for (const auto & entry : filesystem::directory_iterator(loadProfilePath))
+	for (const auto & entry : std::experimental::filesystem::directory_iterator(loadProfilePath))
 	{
 		string filename = entry.path().filename().string();
 		string load_number;
@@ -75,8 +75,8 @@ int main(int argc, char** argv){
     SystemTopology system = reader.loadCIM(system_freq, filenames, CPS::Domain::Static);
 
 	//load profile lpreader
-	loadProfileReader lpreader(simName, loadProfilePath, assignList, Logger::Level::INFO);
-	lpreader.assign(system, 1, 1, 30, loadProfileReader::Mode::MANUAL, loadProfileReader::DataFormat::HHMMSS);
+	LoadProfileReader lpreader(simName, loadProfilePath, assignList, Logger::Level::INFO);
+	lpreader.assign(system, 1, 1, 30, LoadProfileReader::Mode::MANUAL, LoadProfileReader::DataFormat::HHMMSS);
 
 	auto logger = DPsim::DataLogger::make(simName);
 	for (auto node : system.mNodes)
