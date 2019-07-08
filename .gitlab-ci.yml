@@ -27,6 +27,7 @@ docker:
         --tag ${DOCKER_IMAGE_DEV}:latest .
   tags:
     - shell
+    - linux
 
 build:linux:
   stage: build
@@ -110,6 +111,7 @@ build:docker:
         --tag ${DOCKER_IMAGE}:latest .
   tags:
     - shell
+    - linux
   only:
     - tags
 
@@ -139,6 +141,7 @@ deploy:docker:
     - build:docker
   tags:
     - shell
+    - linux
   only:
     - tags
 
@@ -158,6 +161,7 @@ deploy:docs:
     - fein-deploy
   tags:
     - shell
+    - linux
 
 deploy:packages:
   stage: deploy
@@ -173,6 +177,7 @@ deploy:packages:
     - fein-deploy
   tags:
     - shell
+    - linux
 
 # We run the windows build at last as it takes ages to finish
 #build:windows:
