@@ -37,6 +37,7 @@
 #include <cps/PowerComponent.h>
 #include <cps/Attribute.h>
 
+#include <dpsim/Utils.h>
 #include <dpsim/Python/Node.h>
 #include <dpsim/Python/Utils.h>
 
@@ -120,26 +121,8 @@ namespace Python {
 		{
 			std::stringstream doc;
 
-			T comp("uid", "name");
-
-			doc << comp.type() << "(name, nodes, **attributes)" << std::endl
+			doc << Utils::type<T>() << "(name, nodes, **attributes)" << std::endl
 			    << "Construct a new component with a given name and list of nodes." << std::endl;
-#if 0
-			    << comp.description() << std::endl
-			    << std::endl;
-
-			for (auto& it : comp.attributes()) {
-				auto name = it.first;
-				auto attr = it.second;
-
-				if (!(attr->flags() & CPS::Flags::write))
-					continue;
-
-				doc << ":param " << name << ": " << attr->description() << std::endl;
-			}
-
-			    << ":returns: A new `Component` representing this " << comp.type() << "." << std::endl;
-#endif
 
 			auto docstr = new CPS::String(doc.str());
 
