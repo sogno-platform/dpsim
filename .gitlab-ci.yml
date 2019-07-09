@@ -118,9 +118,9 @@ build:docker:
 test:jupyter:
   stage: test
   script:
-    - cd build
-    - cmake ..
-    - make -j32 notebooks
+    - jupyter nbconvert --to notebook --execute Examples/Notebooks/Quickstart\ Guide.ipynb
+    - jupyter nbconvert --to notebook --execute Examples/Notebooks/CS_R2CL.ipynb
+    - jupyter nbconvert --to notebook --execute Examples/Notebooks/WSCC_9-bus_dyn_switch.ipynb
   image: ${DOCKER_IMAGE_DEV}:${DOCKER_TAG}
   dependencies:
     - build:linux
