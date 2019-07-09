@@ -125,6 +125,11 @@ class JupyterNotebookExport(pytest.Item):
         writer.write(body, resources, notebook_name=self.name)
 
     def repr_failure(self, excinfo):
+        from nbconvert.preprocessors import CellExecutionError
+
+        if isinstance(excinfo.value, CellExecutionError):
+            return self._repr_failure_py(excinfo, style="no")
+
         return self._repr_failure_py(excinfo, style="short")
 
     def reportinfo(self):
