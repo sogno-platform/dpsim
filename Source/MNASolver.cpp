@@ -33,9 +33,7 @@ MnaSolver<VarType>::MnaSolver(String name,
 	mName(name), mLogLevel(logLevel) {
 
 	// MNA global logging
-	mSLog = Logger::get(name + "_MNA");
-	mSLog->set_pattern("[%L] %v");
-	mSLog->set_level(Logger::cpsLogLevelToSpd(logLevel));
+	mSLog = Logger::get(name + "_MNA", logLevel);
 	// Raw source and solution vector logging
 	mLeftVectorLog = std::make_shared<DataLogger>(name + "_LeftVector", logLevel != CPS::Logger::Level::NONE);
 	mRightVectorLog = std::make_shared<DataLogger>(name + "_RightVector", logLevel != CPS::Logger::Level::NONE);
@@ -172,7 +170,7 @@ void MnaSolver<Complex>::initializeComponents() {
 			mNodes[nodeIdx]->mnaInitializeHarm(mLeftVectorHarmAttributes);
 		}
 	}
-	else {		
+	else {
 		// Initialize MNA specific parts of components.
 		for (auto comp : mPowerComponents) {
 			comp->mnaInitialize(mSystem.mSystemOmega, mTimeStep, attribute<Matrix>("left_vector"));
@@ -272,7 +270,7 @@ void MnaSolver<VarType>::identifyTopologyObjects() {
 
 	for (auto comp : mSystem.mComponents) {
 		auto swComp = std::dynamic_pointer_cast<CPS::MNASwitchInterface>(comp);
-		if (swComp) { 
+		if (swComp) {
 			mSwitches.push_back(swComp);
 			continue;
 		}
