@@ -83,13 +83,8 @@ if(WITH_CIM)
 	list(APPEND LIBRARIES ${CIMPP_LIBRARIES})
 	list(APPEND INCLUDE_DIRS ${CIMPP_INCLUDE_DIRS})
 
-	if (NOT WIN32)
-		set(CIM_SOURCES_POSIX
-			CIM/dpsim-cim.cpp
-		)
-	endif()
-
-	set(CIM_SOURCES		
+	set(CIM_SOURCES
+		CIM/dpsim-cim.cpp	
 		CIM/WSCC-9bus_CIM.cpp
 		CIM/WSCC-9bus_CIM_Dyn.cpp
 		CIM/WSCC-9bus_CIM_Dyn_Switch.cpp
@@ -100,10 +95,7 @@ if(WITH_CIM)
 
 		CIM/IEEE_LV_PowerFlowTest.cpp
 		CIM/IEEE_LV_PowerFlowTest_LP.cpp
-
 	)
-
-	
 endif()
 
 if(WITH_CIM AND WITH_OPENMP)
