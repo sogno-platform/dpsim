@@ -85,10 +85,7 @@ class JupyterNotebook(pytest.File):
 
         nb = nbformat.read(self.fspath, as_version=nbformat.NO_CONVERT)
 
-        spec = {}
-        for cell in nb.cells:
-            if 'test' in cell.metadata:
-                spec = { **spec, **cell.metadata['test'] }
+        spec = nb.metadata['tests'] if 'tests' in nb.metadata else {}
 
         yield JupyterNotebookExport(nb, self, spec)
 
