@@ -1,6 +1,6 @@
-ShmemExample:
-  xfail: true
-  cmd: build/Examples/Cxx/ShmemExample
+#ShmemExample:
+#  xfail: true
+#  cmd: build/Examples/Cxx/ShmemExample
 
 ShmemDistributedReference:
   cmd: build/Examples/Cxx/ShmemDistributedReference

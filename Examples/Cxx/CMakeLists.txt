@@ -12,10 +12,18 @@ set(CIRCUIT_SOURCES
 	Circuits/DP_VS_R1.cpp
 	Circuits/DP_CS_R1.cpp
 	Circuits/DP_VS_RL1.cpp
+	Circuits/DP_VS_RL2.cpp
 	Circuits/DP_VS_RC1.cpp	
 	Circuits/DP_CS_R2CL.cpp
 	Circuits/DP_VS_CS_R4.cpp
 	Circuits/DP_VS_R2L3.cpp
+
+	DP_Basics/DP_VS_RL_f60.cpp
+	DP_Basics/DP_VS_RL_f60_largeTs.cpp
+	DP_Basics/DP_VS_RL_f60_vlargeTs.cpp
+	DP_Basics/DP_VS_RL_f500.cpp
+	DP_Basics/DP_VS_RL_f500_largeTs.cpp
+	DP_Basics/DP_VS_RL_f500_ph500.cpp
 
 	#Circuits/DP_VS_PiLine_R.cpp
 	#Circuits/DP_VS_Trafo_R.cpp
@@ -30,6 +38,10 @@ set(CIRCUIT_SOURCES
 	Circuits/EMT_VS_R2L3.cpp
 	Circuits/EMT_VS_CS_R4_AC.cpp
 	Circuits/EMT_VS_CS_R4_DC.cpp	
+
+	DP_Basics/EMT_VS_RL_f60.cpp
+	DP_Basics/EMT_VS_RL_f60_largeTs.cpp
+	DP_Basics/EMT_VS_RL_f500.cpp
 	
 	#Circuits/EMT_ResVS_RL_Switch.cpp
 
@@ -37,16 +49,24 @@ set(CIRCUIT_SOURCES
 	#VariableTimeStep/RXLine_LoadStep_FreqStep_1.cpp	
 )
 
-set(SYNCGEN_SOURCES
-	Components/DP_SynGen_TrStab_SteadyState.cpp
-	Components/DP_SynGen_TrStab_LoadStep.cpp
+set(SYNCGEN_SOURCES	
+	Components/DP_SynGenDq7odTrapez_SteadyState.cpp
+	Components/DP_SynGenDq7odTrapez_ThreePhFault.cpp
+	Components/DP_SynGenTrStab_SteadyState.cpp
+	Components/DP_SynGenTrStab_LoadStep.cpp
+)
+
+set(INVERTER_SOURCES
+	Inverter/DP_Inverter_Grid_Test.cpp
+	Inverter/DP_Inverter_Grid_Test_Parallel.cpp
+	Inverter/DP_Vsrc_Grid_Parallel.cpp
 )
 
 if(WITH_SUNDIALS)
 	list(APPEND SYNCGEN_SOURCES
-		Components/DP_SynGen_dq_ThreePhFault.cpp
+		Components/DP_SynGenDq7odODE_SteadyState.cpp
+		Components/DP_SynGenDq7odODE_ThreePhFault.cpp
 		Components/DP_Multimachine_DQ_Parallel.cpp
-		Components/DP_SynGen_dq_SteadyState.cpp
 	)
 
 	set(DAE_SOURCES
@@ -122,7 +142,7 @@ if(WITH_OPENMP)
 	list(APPEND LIBRARIES ${OpenMP_CXX_FLAGS})
 endif()
 
-foreach(SOURCE ${CIRCUIT_SOURCES} ${SYNCGEN_SOURCES} ${VARFREQ_SOURCES} ${SHMEM_SOURCES} ${RT_SOURCES} ${CIM_SOURCES} ${CIM_SOURCES_POSIX} ${CIM_SHMEM_SOURCES} ${DAE_SOURCES})
+foreach(SOURCE ${CIRCUIT_SOURCES} ${SYNCGEN_SOURCES} ${VARFREQ_SOURCES} ${SHMEM_SOURCES} ${RT_SOURCES} ${CIM_SOURCES} ${CIM_SOURCES_POSIX} ${CIM_SHMEM_SOURCES} ${DAE_SOURCES} ${INVERTER_SOURCES})
 	get_filename_component(TARGET ${SOURCE} NAME_WE)
 
 	add_executable(${TARGET} ${SOURCE})

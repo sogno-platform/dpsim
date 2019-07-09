@@ -32,6 +32,7 @@ RealTimeSimulation::RealTimeSimulation(String name, SystemTopology system, Real 
 {
 	addAttribute<Real>("time_step", &mTimeStep, Flags::read);
 	addAttribute<Int >("overruns", nullptr, [=](){ return mTimer.overruns(); }, Flags::read);
+	//addAttribute<Int >("overruns", nullptr, nullptr, Flags::read);
 }
 
 void RealTimeSimulation::run(const Timer::StartClock::duration &startIn)
@@ -43,7 +44,7 @@ void RealTimeSimulation::run(const Timer::StartClock::time_point &startAt)
 {
 	schedule();
 
-	mLog.info() << "Opening interfaces." << std::endl;
+	std::cout << Logger::prefix() << "Opening interfaces." << std::endl;
 
 #ifdef WITH_SHMEM
 	for (auto ifm : mInterfaces)
@@ -52,7 +53,7 @@ void RealTimeSimulation::run(const Timer::StartClock::time_point &startAt)
 
 	sync();
 
-	mLog.info() << "Starting simulation at " << startAt << " (delta_T = " << startAt - Timer::StartClock::now() << " seconds)" << std::endl;
+	std::cout << Logger::prefix() << "Starting simulation at " << startAt << " (delta_T = " << startAt - Timer::StartClock::now() << " seconds)" << std::endl;
 
 	mTimer.setStartTime(startAt);
 	mTimer.setInterval(mTimeStep);
@@ -64,10 +65,10 @@ void RealTimeSimulation::run(const Timer::StartClock::time_point &startAt)
 		step();
 
 		if (mTimer.ticks() == 1)
-			mLog.info() << "Simulation started." << std::endl;
+			std::cout << Logger::prefix() << "Simulation started." << std::endl;
 	} while (mTime < mFinalTime);
 
-	mLog.info() << "Simulation finished." << std::endl;
+	std::cout << Logger::prefix() << "Simulation finished." << std::endl;
 
 #ifdef WITH_SHMEM
 	for (auto ifm : mInterfaces)

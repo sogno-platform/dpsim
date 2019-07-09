@@ -41,26 +41,45 @@ int main(int argc, char *argv[]) {
 	};
 
 	String simName = "WSCC-9bus_dyn_switch";
+	Logger::setLogDir("logs/"+simName);	
 
-	CIMReader reader(simName, Logger::Level::DEBUG, Logger::Level::DEBUG);
+	CPS::CIM::Reader reader(simName, Logger::Level::DEBUG, Logger::Level::INFO);
 	SystemTopology sys = reader.loadCIM(60, filenames);
 
 	// Extend topology with switch
-	auto sw = Ph1::Switch::make("DP_SynGen_TrStab_Step_StepLoad");
+	auto sw = Ph1::Switch::make("StepLoad", Logger::Level::INFO);
 	sw->setParameters(1e9, 0.1);
-	sw->connect({ Node::GND, sys.node<Node>("BUS9") });
+	sw->connect({ Node::GND, sys.node<Node>("BUS6") });
 	sw->open();
 	sys.addComponent(sw);
 
-	Simulation sim(simName, sys, 0.0001, 0.1,
-		Domain::DP, Solver::Type::MNA, Logger::Level::DEBUG, true);
+	// Logging
+	auto logger = DataLogger::make(simName);
+	logger->addAttribute("v1", sys.node<Node>("BUS1")->attribute("v"));
+	logger->addAttribute("v2", sys.node<Node>("BUS2")->attribute("v"));
+	logger->addAttribute("v3", sys.node<Node>("BUS3")->attribute("v"));
+	logger->addAttribute("v4", sys.node<Node>("BUS4")->attribute("v"));
+	logger->addAttribute("v5", sys.node<Node>("BUS5")->attribute("v"));
+	logger->addAttribute("v6", sys.node<Node>("BUS6")->attribute("v"));
+	logger->addAttribute("v7", sys.node<Node>("BUS7")->attribute("v"));
+	logger->addAttribute("v8", sys.node<Node>("BUS8")->attribute("v"));
+	logger->addAttribute("v9", sys.node<Node>("BUS9")->attribute("v"));
+	logger->addAttribute("wr_1", sys.component<Ph1::SynchronGeneratorTrStab>("GEN1")->attribute("w_r"));
+	logger->addAttribute("wr_2", sys.component<Ph1::SynchronGeneratorTrStab>("GEN2")->attribute("w_r"));
+	logger->addAttribute("wr_3", sys.component<Ph1::SynchronGeneratorTrStab>("GEN3")->attribute("w_r"));
 
-	auto swEvent1 = SwitchEvent::make(0.05, sw, true);
-	auto swEvent2 = SwitchEvent::make(0.07, sw, false);
+	sys.component<Ph1::SynchronGeneratorTrStab>("GEN3")->attribute<Real>("inertia")->set(
+		sys.component<Ph1::SynchronGeneratorTrStab>("GEN3")->attribute<Real>("inertia")->get()*2);
+
+	Simulation sim(simName, sys, 0.0001, 2,
+		Domain::DP, Solver::Type::MNA, Logger::Level::INFO, true);
+
+	auto swEvent1 = SwitchEvent::make(0.2, sw, true);
+	//auto swEvent2 = SwitchEvent::make(0.07, sw, false);
 
 	sim.addEvent(swEvent1);
-	sim.addEvent(swEvent2);
-
+	//sim.addEvent(swEvent2);
+	sim.addLogger(logger);
 	sim.run();
 
 	return 0;
