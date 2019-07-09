@@ -115,7 +115,7 @@ build:docker:
   only:
     - tags
 
-test:jpuyter:
+test:jupyter:
   stage: test
   variables:
     PYTHONPATH: "build/Source/Python:Source/Python"
