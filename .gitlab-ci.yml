@@ -117,6 +117,8 @@ build:docker:
 
 test:jupyter:
   stage: test
+  variables:
+    PYTHONPATH: "build/Source/Python:Source/Python"
   script:
     - jupyter nbconvert --to notebook --execute Examples/Notebooks/Quickstart\ Guide.ipynb
     - jupyter nbconvert --to notebook --execute Examples/Notebooks/CS_R2CL.ipynb
