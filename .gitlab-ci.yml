@@ -161,7 +161,6 @@ deploy:docs:
     - development
   tags:
     - fein-deploy
-  tags:
     - shell
     - linux
 
@@ -177,7 +176,6 @@ deploy:packages:
     - tags
   tags:
     - fein-deploy
-  tags:
     - shell
     - linux
 
