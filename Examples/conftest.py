@@ -5,6 +5,14 @@ import pytest
 def pytest_collect_file(parent, path):
     if path.ext == ".yml" and path.basename.startswith("test_") and os.name == 'posix':
         return YamlFile(path, parent)
+    if path.ext == '.ipynb':
+        return JupyterNotebook(path, parent)
+
+def parse_test_params(item, spec):
+    if 'skip' in spec and spec['skip']:
+        item.add_marker(pytest.mark.skip)
+    if 'xfail' in spec and spec['xfail']:
+        item.add_marker(pytest.mark.xfail)
 
 class YamlFile(pytest.File):
     def collect(self):
@@ -46,10 +54,7 @@ class YamlItem(pytest.Item):
         else:
             self.cwd = os.path.realpath(os.path.dirname(__file__) + '/..')
 
-        if 'skip' in spec and spec['skip']:
-            self.add_marker(pytest.mark.skip)
-        if 'xfail' in spec and spec['xfail']:
-            self.add_marker(pytest.mark.xfail)
+        parse_test_params(self, spec)
 
         if 'cmd' in spec:
             self.cmd = spec['cmd']
@@ -69,3 +74,58 @@ class YamlItem(pytest.Item):
 
     def reportinfo(self):
         return self.fspath, 0, "yaml: %s" % self.name
+
+
+class JupyterNotebook(pytest.File):
+    def collect(self):
+        """
+        See https://nbconvert.readthedocs.io/en/latest/nbconvert_library.html
+        """
+        import nbformat
+
+        nb = nbformat.read(self.fspath, as_version=nbformat.NO_CONVERT)
+
+        spec = {}
+        for cell in nb.cells:
+            if 'test' in cell.metadata:
+                spec = { **spec, **cell.metadata['test'] }
+
+        yield JupyterNotebookExport(nb, self, spec)
+
+class JupyterNotebookExport(pytest.Item):
+
+    def __init__(self, nb, parent, spec):
+        self.base = os.path.basename(parent.name)
+        self.name = os.path.splitext(self.base)[0]
+        self.builddir = os.path.splitext(parent.name)[0]
+        super(JupyterNotebookExport, self).__init__(self.name, parent)
+
+        self.nb = nb
+
+        parse_test_params(self, spec)
+
+    def runtest(self):
+        from traitlets.config import Config
+        from nbconvert import HTMLExporter
+        from nbconvert.writers import FilesWriter
+
+        c = Config()
+        c.FilesWriter.build_directory = 'outputs/' + self.builddir
+        c.HTMLExporter.preprocessors = [
+            'nbconvert.preprocessors.ExecutePreprocessor',
+            'nbconvert.preprocessors.ExtractOutputPreprocessor'
+        ]
+        exporter = HTMLExporter(config=c)
+
+        os.makedirs(c.FilesWriter.build_directory, exist_ok=True)
+
+        (body, resources) = exporter.from_notebook_node(self.nb)
+
+        writer = FilesWriter(config=c)
+        writer.write(body, resources, notebook_name=self.name)
+
+    def repr_failure(self, excinfo):
+        return self._repr_failure_py(excinfo, style="short")
+
+    def reportinfo(self):
+        return self.fspath, 0, "nbconvert: %s" % self.name

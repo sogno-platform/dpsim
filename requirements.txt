@@ -8,6 +8,8 @@ wheel
 
 pytest
 pyyaml
+nbconvert
+nbformat
 
 villas-dataprocessing>=0.2.2
 progressbar2
