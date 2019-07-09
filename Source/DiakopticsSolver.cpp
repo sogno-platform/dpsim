@@ -359,6 +359,7 @@ void DiakopticsSolver<VarType>::SubnetSolveTask::execute(Real time, Int timeStep
 		rBlock += *stamp;
 
 	auto lBlock = mSolver.mOrigLeftSideVector.block(mSubnet.sysOff, 0, mSubnet.sysSize, 1);
+	// Solve Y' * v' = I
 	lBlock = mSubnet.luFactorization.solve(rBlock);
 }
 
@@ -369,8 +370,11 @@ void DiakopticsSolver<VarType>::PreSolveTask::execute(Real time, Int timeStepCou
 		auto tComp = std::dynamic_pointer_cast<MNATearInterface>(comp);
 		tComp->mnaTearApplyVoltageStamp(mSolver.mTearVoltages);
 	}
+	// -C^T * v'
 	mSolver.mTearVoltages -= mSolver.mTearTopology.transpose() * mSolver.mOrigLeftSideVector;
+	// Solve Z' * i = E - C^T * v'
 	mSolver.mTearCurrents = mSolver.mTotalTearImpedance.solve(mSolver.mTearVoltages);
+	// C * i
 	mSolver.mMappedTearCurrents = mSolver.mTearTopology * mSolver.mTearCurrents;
 	mSolver.mLeftSideVector = mSolver.mOrigLeftSideVector;
 }
@@ -379,6 +383,8 @@ template <typename VarType>
 void DiakopticsSolver<VarType>::SolveTask::execute(Real time, Int timeStepCount) {
 	auto lBlock = mSolver.mLeftSideVector.block(mSubnet.sysOff, 0, mSubnet.sysSize, 1);
 	auto rBlock = mSolver.mMappedTearCurrents.block(mSubnet.sysOff, 0, mSubnet.sysSize, 1);
+	// Solve Y' * x = C * i
+	// v = v' + x
 	lBlock += mSubnet.luFactorization.solve(rBlock);
 	*mSubnet.leftVector = lBlock;
 }

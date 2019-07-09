@@ -28,7 +28,9 @@ int main(int argc, char* argv[]) {
 	// Define simulation parameters
 	Real timeStep = 0.0005;
 	Real finalTime = 0.1;
-	String name = "DP_SynGen_TrStab_LoadStep";
+	String simName = "DP_SynGen_TrStab_LoadStep";
+	Logger::setLogDir("logs/"+simName);
+
 	// Define machine parameters in per unit
 	Real nomPower = 555e6;
 	Real nomPhPhVoltRMS = 24e3;
@@ -51,12 +53,12 @@ int main(int argc, char* argv[]) {
 	auto n1 = Node::make("n1", PhaseType::Single, std::vector<Complex>{ initVoltage });
 
 	// Components
-	auto gen = Ph1::SynchronGeneratorTrStab::make("DP_SynGen_TrStab_LoadStep_SynGen");
+	auto gen = Ph1::SynchronGeneratorTrStab::make("SynGen", Logger::Level::DEBUG);
 	gen->setFundamentalParametersPU(nomPower, nomPhPhVoltRMS, nomFreq, Ll, Lmd, Llfd, H);
 	gen->connect({n1});
 	gen->setInitialValues(initElecPower, mechPower);
 
-	auto load = Ph1::Switch::make("DP_SynGen_TrStab_LoadStep_StepLoad");
+	auto load = Ph1::Switch::make("StepLoad", Logger::Level::DEBUG);
 	load->setParameters(Rload, RloadStep);
 	load->connect({Node::GND, n1});
 	load->open();
@@ -64,14 +66,17 @@ int main(int argc, char* argv[]) {
 	// System
 	auto sys = SystemTopology(60, SystemNodeList{n1}, SystemComponentList{gen, load});
 
-	// Simulation
-	auto logger = DataLogger::make(name);//added
-	logger->addAttribute("Current", gen->attribute("i_intf")); //Added
+	// Logging
+	auto logger = DataLogger::make(simName);
+	logger->addAttribute("v1", n1->attributeMatrixComp("v"));
+	logger->addAttribute("i_gen", gen->attributeMatrixComp("i_intf"));
+	logger->addAttribute("i_load", load->attributeMatrixComp("i_intf"));
+	logger->addAttribute("wr_gen", gen->attribute("w_r"));
 	
-	Simulation sim(name, sys, timeStep, finalTime,
+	Simulation sim(simName, sys, timeStep, finalTime,
 		Domain::DP, Solver::Type::MNA, Logger::Level::INFO);
 
-	sim.addLogger(logger);//added
+	sim.addLogger(logger);
 	// Events
 	auto sw1 = SwitchEvent::make(0.05, load, true);
 

@@ -24,7 +24,7 @@
 #include <DPsim.h>
 
 using namespace DPsim;
-using namespace CPS;
+using namespace CPS::DP;
 
 int main(int argc, char *argv[]) {
 #ifdef _WIN32
@@ -41,12 +41,30 @@ int main(int argc, char *argv[]) {
 	};
 
 	String simName = "WSCC-9bus_dyn";
+	Logger::setLogDir("logs/"+simName);	
 
-	CIM::Reader reader(simName, Logger::Level::DEBUG, Logger::Level::DEBUG);
+	CPS::CIM::Reader reader(simName, Logger::Level::DEBUG, Logger::Level::DEBUG);
 	SystemTopology sys = reader.loadCIM(60, filenames);
 
-	Simulation sim(simName, sys, 0.0001, 0.1,
-		Domain::DP, Solver::Type::MNA, Logger::Level::DEBUG, true);
+	// Logging
+	auto logger = DataLogger::make(simName);
+	logger->addAttribute("v1", sys.node<Node>("BUS1")->attribute("v"));
+	logger->addAttribute("v2", sys.node<Node>("BUS2")->attribute("v"));
+	logger->addAttribute("v3", sys.node<Node>("BUS3")->attribute("v"));
+	logger->addAttribute("v4", sys.node<Node>("BUS4")->attribute("v"));
+	logger->addAttribute("v5", sys.node<Node>("BUS5")->attribute("v"));
+	logger->addAttribute("v6", sys.node<Node>("BUS6")->attribute("v"));
+	logger->addAttribute("v7", sys.node<Node>("BUS7")->attribute("v"));
+	logger->addAttribute("v8", sys.node<Node>("BUS8")->attribute("v"));
+	logger->addAttribute("v9", sys.node<Node>("BUS9")->attribute("v"));
+	logger->addAttribute("wr_1", sys.component<Ph1::SynchronGeneratorTrStab>("GEN1")->attribute("w_r"));
+	logger->addAttribute("wr_2", sys.component<Ph1::SynchronGeneratorTrStab>("GEN2")->attribute("w_r"));
+	logger->addAttribute("wr_3", sys.component<Ph1::SynchronGeneratorTrStab>("GEN3")->attribute("w_r"));
+
+	Simulation sim(simName, sys, 0.0001, 2,
+		Domain::DP, Solver::Type::MNA, Logger::Level::INFO, true);
+	
+	sim.addLogger(logger);
 	sim.run();
 
 	return 0;

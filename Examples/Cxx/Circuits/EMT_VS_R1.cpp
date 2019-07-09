@@ -31,38 +31,28 @@ int main(int argc, char* argv[]) {
 	Real timeStep = 0.0001;
 	Real finalTime = 0.1;
 	String simName = "EMT_VS_R1";
+	Logger::setLogDir("logs/"+simName);
 
 	// Nodes
 	auto n1 = Node::make("n1");
-	auto n2 = Node::make("n2");
-	auto n3 = Node::make("n3");
 
 	// Components
-	auto vin = VoltageSource::make("v_in");
-	vin->setParameters(10);
-	auto r1 = Resistor::make("r_1");
-	r1->setParameters(5);
-	auto r2 = Resistor::make("r_2");
-	r2->setParameters(10);
-	auto r3 = Resistor::make("r_3");
-	r3->setParameters(2);
+	auto vs = VoltageSource::make("v_1");
+	vs->setParameters(Complex(10, 0), 50);
+	auto r = Resistor::make("r_1");
+	r->setParameters(1);
 
 	// Topology
-	vin->connect({ n1, n2 });
-	r1->connect({ n1, Node::GND });
-	r2->connect({ n2, Node::GND });
-	r3->connect({ n2, Node::GND });
+	vs->connect({Node::GND, n1});
+	r->connect({n1, Node::GND});
 
-	// Define system topology
-	SystemTopology system(50, SystemNodeList{n1, n2, n3, Node::GND}, SystemComponentList{vin, r1, r2, r3});
+	auto sys = SystemTopology(50, SystemNodeList{n1}, SystemComponentList{vs, r});
 
 	// Logging
 	auto logger = DataLogger::make(simName);
 	logger->addAttribute("v1", n1->attribute("v"));
-	logger->addAttribute("v2", n2->attribute("v"));
-	logger->addAttribute("v3", n3->attribute("v"));
 
-	Simulation sim(simName, system, timeStep, finalTime, Domain::EMT);
+	Simulation sim(simName, sys, timeStep, finalTime, Domain::EMT);
 	sim.addLogger(logger);
 
 	sim.run();

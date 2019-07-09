@@ -64,12 +64,12 @@ void Python::Simulation::threadFunction(Python::Simulation *self)
 #ifdef WITH_SHMEM
 	for (auto ifm : self->sim->interfaces())
 		ifm.interface->open();
-#endif
 
 	// optional start synchronization
 	if (self->startSync) {
 		self->sim->sync();
 	}
+#endif
 
 	if (self->realTime) {
 		timer.setStartTime(self->startTime);
