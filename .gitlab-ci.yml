@@ -52,6 +52,7 @@ test:pytest:
   variables:
     PYTHONPATH: "build/Source/Python:Source/Python"
   script:
+    - pytest -v Examples/CIM/test_CIM.yml
     - pytest -v Examples/Cxx/test_Circuits.yml
     - pytest -v Examples/Cxx/test_RealTime.yml
     #- pytest -v Examples/Cxx/test_Shmem.yml
