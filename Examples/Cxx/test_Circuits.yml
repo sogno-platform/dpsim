@@ -1,17 +1,5 @@
-DP_IdealVS_R_1:
-  cmd: build/Examples/Cxx/DP_VS_R1
-#
-#DP_IdealVS_RXLine_1:
-#  cmd: build/Examples/Cxx/DP_IdealVS_RXLine1
-#
-#DP_IdealVS_Trafo_1:
-#  cmd: build/Examples/Cxx/DP_IdealVS_Trafo_1
-#
-#DP_ResVS_RL_Switch_1:
-#  cmd: build/Examples/Cxx/DP_ResVS_RL_Switch_1
-#
-#EMT_IdealVS_R_1:
-#  cmd: build/Examples/Cxx/EMT_IdealVS_R_1
-#
-#EMT_ResVS_RXLine_Switch_1:
-#  cmd: build/Examples/Cxx/EMT_ResVS_RL_Switch_1
+DP_VS_RL1:
+  cmd: build/Examples/Cxx/DP_VS_RL1
+
+EMT_VS_RL1:
+  cmd: build/Examples/Cxx/EMT_VS_RL1

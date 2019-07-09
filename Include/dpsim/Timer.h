@@ -79,7 +79,7 @@ namespace DPsim {
 		void sleep();
 
 		// Getter
-		long long overruns() {
+		const long long& overruns() {
 			return mOverruns;
 		}
 

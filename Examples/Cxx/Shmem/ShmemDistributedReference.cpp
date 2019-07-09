@@ -37,8 +37,8 @@ int main(int argc, char* argv[])
 	auto vs = VoltageSourceNorton::make("v_s");
 	auto l1 = Inductor::make("l_1");
 	auto r1 = Resistor::make("r_1");
-	auto r2A = Resistor::make("r_2");
-	auto r2B = Resistor::make("r_2");
+	auto r2A = Resistor::make("r_2A");
+	auto r2B = Resistor::make("r_2B");
 	auto sw = Ph1::Switch::make("sw");
 
 	// Parameters

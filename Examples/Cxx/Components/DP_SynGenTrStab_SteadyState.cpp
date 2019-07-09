@@ -28,7 +28,9 @@ int main(int argc, char* argv[]) {
 	// Define simulation parameters
 	Real timeStep = 0.0005;
 	Real finalTime = 0.03;
-	String name = "DP_SynGen_TrStab_SteadyState";
+	String simName = "DP_SynGen_TrStab_SteadyState";
+	Logger::setLogDir("logs/"+simName);
+
 	// Define machine parameters in per unit
 	Real nomPower = 555e6;
 	Real nomPhPhVoltRMS = 24e3;
@@ -50,22 +52,30 @@ int main(int argc, char* argv[]) {
 	auto n1 = Node::make("n1", PhaseType::Single, std::vector<Complex>{ initVoltage });
 
 	// Components
-	auto gen = Ph1::SynchronGeneratorTrStab::make("DP_SynGen_TrStab_StState_SynGen", Logger::Level::DEBUG);
+	auto gen = Ph1::SynchronGeneratorTrStab::make("SynGen", Logger::Level::DEBUG);
 	gen->setFundamentalParametersPU(nomPower, nomPhPhVoltRMS, nomFreq, Ll, Lmd, Llfd, H);
    	gen->connect({n1});
 	gen->setInitialValues(initElecPower, mechPower);
 
-	auto res = Ph1::Resistor::make("DP_SynGen_TrStab_StState_Rl", Logger::Level::DEBUG);
+	auto res = Ph1::Resistor::make("Rl", Logger::Level::DEBUG);
 	res->setParameters(Rload);
 	res->connect({Node::GND, n1});
+
+		// Logging
+	auto logger = DataLogger::make(simName);
+	logger->addAttribute("v1", n1->attributeMatrixComp("v"));
+	logger->addAttribute("i_gen", gen->attributeMatrixComp("i_intf"));
+	logger->addAttribute("i_load", res->attributeMatrixComp("i_intf"));
+	logger->addAttribute("wr_gen", gen->attribute("w_r"));
 
 	// System
 	auto sys = SystemTopology(60, SystemNodeList{n1}, SystemComponentList{gen, res});
 
 	// Simulation
-	Simulation sim(name, sys, timeStep, finalTime,
+	Simulation sim(simName, sys, timeStep, finalTime,
 		Domain::DP, Solver::Type::MNA, Logger::Level::INFO);
 
+	sim.addLogger(logger);
 	sim.run();
 
 	return 0;

@@ -31,7 +31,11 @@
 namespace DPsim {
 	class SequentialScheduler : public Scheduler {
 	public:
-		SequentialScheduler(String outMeasurementFile = String()) : mOutMeasurementFile(outMeasurementFile) { }
+		SequentialScheduler(String outMeasurementFile = String(), 
+			CPS::Logger::Level logLevel = CPS::Logger::Level::INFO) 
+			: Scheduler(logLevel),
+			mOutMeasurementFile(outMeasurementFile) { }
+
 		void createSchedule(const CPS::Task::List& tasks, const Edges& inEdges, const Edges& outEdges);
 		void step(Real time, Int timeStepCount);
 		void stop();
