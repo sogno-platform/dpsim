@@ -50,18 +50,20 @@ void multiply_connected(SystemTopology& sys, int copies, Real resistance, Real i
 }
 
 int main(int argc, char *argv[]) {
-#ifdef _WIN32
-	String path("..\\..\\..\\..\\dpsim\\Examples\\CIM\\WSCC-09_RX\\");
-#elif defined(__linux__) || defined(__APPLE__)
-	String path("Examples/CIM/WSCC-09_RX/");
-#endif
 
-	std::list<String> filenames = {
-		path + "WSCC-09_RX_DI.xml",
-		path + "WSCC-09_RX_EQ.xml",
-		path + "WSCC-09_RX_SV.xml",
-		path + "WSCC-09_RX_TP.xml"
-	};
+	// Find CIM files
+	std::list<fs::path> filenames;
+	if (argc <= 1) {
+		filenames = Utils::findFiles({
+			"WSCC-09_RX_DI.xml",
+			"WSCC-09_RX_EQ.xml",
+			"WSCC-09_RX_SV.xml",
+			"WSCC-09_RX_TP.xml"
+		}, "Examples/CIM/WSCC-09_RX", "CIMPATH");
+	}
+	else {
+		filenames = std::list<fs::path>(argv + 1, argv + argc);
+	}
 
 	String simName = "WSCC-9bus";
 

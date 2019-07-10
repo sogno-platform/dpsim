@@ -37,15 +37,19 @@ int main(int argc, char *argv[]) {
 	CommandLineArgs args(argc, argv, "Shmem_WSCC-9bus_CtrlDist", 0.001, 20, 60);
 
 	if (args.scenario == 0) {
-
-		// Specify CIM files
-		String path("Examples/CIM/WSCC-09_RX/");
-		std::list<String> filenames = {
-			path + "WSCC-09_RX_DI.xml",
-			path + "WSCC-09_RX_EQ.xml",
-			path + "WSCC-09_RX_SV.xml",
-			path + "WSCC-09_RX_TP.xml"
-		};
+		// Find CIM files
+		std::list<fs::path> filenames;
+		if (argc <= 1) {
+			filenames = Utils::findFiles({
+				"WSCC-09_RX_DI.xml",
+				"WSCC-09_RX_EQ.xml",
+				"WSCC-09_RX_SV.xml",
+				"WSCC-09_RX_TP.xml"
+			}, "Examples/CIM/WSCC-09_RX", "CIMPATH");
+		}
+		else {
+			filenames = args.filenames;
+		}
 
 		CIM::Reader reader(args.name, Logger::Level::INFO, Logger::Level::INFO);
 		SystemTopology sys = reader.loadCIM(args.sysFreq, filenames);
