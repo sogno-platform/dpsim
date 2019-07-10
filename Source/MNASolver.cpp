@@ -115,9 +115,9 @@ void MnaSolver<Real>::initializeComponents() {
 	mSLog->info("-- Initialize components from power flow");
 	for (auto comp : mPowerComponents) {
 		auto pComp = std::dynamic_pointer_cast<PowerComponent<Complex>>(comp);
-		if (!pComp)	continue;
-		pComp->initializeFromPowerflow(mSystem.mSystemFrequency);
+		if (!pComp)	continue;		
 		pComp->initialize(mSystem.mFrequencies);
+		pComp->initializeFromPowerflow(mSystem.mSystemFrequency);
 	}
 
 	// Initialize signal components.
@@ -149,8 +149,8 @@ void MnaSolver<Complex>::initializeComponents() {
 	for (auto comp : mPowerComponents) {
 		auto pComp = std::dynamic_pointer_cast<PowerComponent<Complex>>(comp);
 		if (!pComp)	continue;
-		pComp->initializeFromPowerflow(mSystem.mSystemFrequency);
 		pComp->initialize(mSystem.mFrequencies);
+		pComp->initializeFromPowerflow(mSystem.mSystemFrequency);
 	}
 
 	// Initialize signal components.
