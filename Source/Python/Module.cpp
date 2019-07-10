@@ -61,7 +61,7 @@ static PyMethodDef dpsimModuleMethods[] = {
 	Component::constructorDef<CPS::DP::Ph1::SynchronGeneratorTrStab>("_dp_ph1_SynchronGeneratorTrStab"),
 	Component::constructorDef<CPS::DP::Ph1::Transformer>("_dp_ph1_Transformer"),
 	Component::constructorDef<CPS::DP::Ph1::VoltageSource>("_dp_ph1_VoltageSource"),
-	Component::constructorDef<CPS::DP::Ph1::VoltageSourceFreq>("_dp_ph1_VoltageSourceFreq"),
+	Component::constructorDef<CPS::DP::Ph1::VoltageSourceRamp>("_dp_ph1_VoltageSourceRamp"),
 	Component::constructorDef<CPS::DP::Ph1::VoltageSourceNorton>("_dp_ph1_VoltageSourceNorton"),
 	Component::constructorDef<CPS::DP::Ph3::SeriesResistor>("_dp_ph3_SeriesResistor"),
 	Component::constructorDef<CPS::DP::Ph3::SeriesSwitch>("_dp_ph3_SeriesSwitch"),
@@ -76,7 +76,7 @@ static PyMethodDef dpsimModuleMethods[] = {
 	Component::constructorDef<CPS::EMT::Ph1::Inductor>("_emt_ph1_Inductor"),
 	Component::constructorDef<CPS::EMT::Ph1::Resistor>("_emt_ph1_Resistor"),
 	Component::constructorDef<CPS::EMT::Ph1::VoltageSource>("_emt_ph1_VoltageSource"),
-	Component::constructorDef<CPS::EMT::Ph1::VoltageSourceFreq>("_emt_ph1_VoltageSourceFreq"),
+	Component::constructorDef<CPS::EMT::Ph1::VoltageSourceRamp>("_emt_ph1_VoltageSourceRamp"),
 	Component::constructorDef<CPS::EMT::Ph1::VoltageSourceNorton>("_emt_ph1_VoltageSourceNorton"),
 
 	// Static Phasor (SP)

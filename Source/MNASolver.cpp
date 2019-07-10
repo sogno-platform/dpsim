@@ -114,8 +114,9 @@ void MnaSolver<Real>::initializeComponents() {
 	// This intialization according to power flow information is not MNA specific.
 	mSLog->info("-- Initialize components from power flow");
 	for (auto comp : mPowerComponents) {
-		auto pComp = std::dynamic_pointer_cast<PowerComponent<Real>>(comp);
-		if (!pComp)	continue;
+		auto pComp = std::dynamic_pointer_cast<PowerComponent<Complex>>(comp);
+		if (!pComp)	continue;		
+		pComp->initialize(mSystem.mFrequencies);
 		pComp->initializeFromPowerflow(mSystem.mSystemFrequency);
 	}
 
@@ -146,9 +147,9 @@ void MnaSolver<Complex>::initializeComponents() {
 
 	// Initialize power components with frequencies and from powerflow results
 	for (auto comp : mPowerComponents) {
-		comp->initialize(mSystem.mFrequencies);
 		auto pComp = std::dynamic_pointer_cast<PowerComponent<Complex>>(comp);
 		if (!pComp)	continue;
+		pComp->initialize(mSystem.mFrequencies);
 		pComp->initializeFromPowerflow(mSystem.mSystemFrequency);
 	}
 
