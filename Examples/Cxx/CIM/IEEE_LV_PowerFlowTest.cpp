@@ -33,18 +33,20 @@ using namespace CPS::CIM;
  */
 int main(int argc, char** argv){
 
-	#ifdef _WIN32
-		String path("..\\..\\..\\..\\dpsim\\Examples\\CIM\\IEEE_EU_LV_reduced\\");
-	#elif defined(__linux__) || defined(__APPLE__)
-		String path("Examples/CIM/IEEE_EU_LV_reduced/");
-	#endif
+	// Find CIM files
+	std::list<fs::path> filenames;
+	if (argc <= 1) {
+		filenames = DPsim::Utils::findFiles({
+			"Rootnet_FULL_NE_06J16h_DI.xml",
+			"Rootnet_FULL_NE_06J16h_EQ.xml",
+			"Rootnet_FULL_NE_06J16h_SV.xml",
+			"Rootnet_FULL_NE_06J16h_TP.xml"
+		}, "Examples/CIM/IEEE_EU_LV_reduced", "CIMPATH");
+	}
+	else {
+		filenames = std::list<fs::path>(argv + 1, argv + argc);
+	}
 
-	std::list<string> filenames = {
-	path + "Rootnet_FULL_NE_13J16h_DI.xml",
-	path + "Rootnet_FULL_NE_13J16h_EQ.xml",
-	path + "Rootnet_FULL_NE_13J16h_SV.xml",
-	path + "Rootnet_FULL_NE_13J16h_TP.xml"
-	};
 	String simName = "CIGRE-LV-reduced";
 	CPS::Real system_freq = 50;
 

@@ -78,7 +78,6 @@ if(WITH_RT)
 	set(RT_SOURCES
 		RealTime/RT_DP_CS_R_1.cpp
 		RealTime/RT_DP_ResVS_RL1.cpp
-		RealTime/RT_CIGRE_MV_PowerFlowTest.cpp
 	)
 endif()
 
@@ -116,6 +115,13 @@ if(WITH_CIM)
 		CIM/IEEE_LV_PowerFlowTest.cpp
 		CIM/IEEE_LV_PowerFlowTest_LP.cpp
 	)
+
+	if(WITH_RT)
+		list(APPEND RT_SOURCES
+			# The Loadflow example needs CIM++ and RT
+			RealTime/RT_CIGRE_MV_PowerFlowTest.cpp
+		)
+	endif()
 endif()
 
 if(WITH_CIM AND WITH_OPENMP)

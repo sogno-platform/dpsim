@@ -141,7 +141,9 @@ setup(
     ],
     tests_require=[
         'pytest',
-        'pyyaml'
+        'pyyaml',
+        'nbconvert',
+        'nbformat'
     ],
     ext_modules=[
         CMakeExtension('_dpsim')

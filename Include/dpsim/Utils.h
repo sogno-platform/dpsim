@@ -25,11 +25,16 @@
   #include <cxxabi.h>
 #endif
 
+#include <cstdlib>
 #include <list>
+#include <vector>
+#include <experimental/filesystem>
 
 #include <dpsim/Timer.h>
 #include <dpsim/Solver.h>
 #include <cps/Logger.h>
+
+namespace fs = std::experimental::filesystem;
 
 namespace DPsim {
 
@@ -118,6 +123,11 @@ static CPS::String type(const CPS::String &stripPrefix = "CPS::") {
 #endif
 }
 
-}
+std::vector<std::string> tokenize(std::string s, char delimiter);
 
+fs::path findFile(const fs::path &name, const fs::path &hint = fs::path(), const std::string &useEnv = std::string());
+
+std::list<fs::path> findFiles(std::list<fs::path> filennames, const fs::path &hint, const std::string &useEnv = std::string());
+
+}
 }

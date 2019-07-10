@@ -37,23 +37,25 @@ int main(int argc, char** argv){
 	CommandLineArgs args(argc, argv);
 
 	#ifdef _WIN32
-		String path("..\\..\\..\\..\\dpsim\\Examples\\CIM\\CIGRE_MV_NoTap\\");
-	#elif defined(__linux__) || defined(__APPLE__)
-		String path("Examples/CIM/CIGRE_MV_NoTap/");
-	#endif
-
-	#ifdef _WIN32
 		String loadProfilePath("..\\..\\..\\..\\dpsim\\Examples\\CSV\\CIGRE_MV_NoTap\\");
 	#elif defined(__linux__) || defined(__APPLE__)
 		String loadProfilePath("Examples/CSV/CIGRE_MV_NoTap/");
 	#endif
 
-	std::list<string> filenames = {
-	path + "Rootnet_FULL_NE_06J16h_DI.xml",
-	path + "Rootnet_FULL_NE_06J16h_EQ.xml",
-	path + "Rootnet_FULL_NE_06J16h_SV.xml",
-	path + "Rootnet_FULL_NE_06J16h_TP.xml"
-	};
+	// Find CIM files
+	std::list<fs::path> filenames;
+	if (argc <= 1) {
+		filenames = Utils::findFiles({
+			"Rootnet_FULL_NE_06J16h_DI.xml",
+			"Rootnet_FULL_NE_06J16h_EQ.xml",
+			"Rootnet_FULL_NE_06J16h_SV.xml",
+			"Rootnet_FULL_NE_06J16h_TP.xml"
+		}, "Examples/CIM/CIGRE_MV_NoTap", "CIMPATH");
+	}
+	else {
+		filenames = args.filenames;
+	}
+
 	String simName = "Shmem_CIGRE-MV-NoTap";
 	CPS::Real system_freq = 50;
 

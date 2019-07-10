@@ -3,6 +3,7 @@ build/
 build_*/
 build-*/
 dist/
+outputs/
 _dpsim.pyd
 _dpsim.pdb
 .pytest_cache/

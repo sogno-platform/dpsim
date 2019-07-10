@@ -25,6 +25,7 @@
 #include <dpsim/Utils.h>
 
 using namespace DPsim;
+using namespace DPsim::Utils;
 using namespace CPS;
 
 #ifdef HAVE_GETOPT
@@ -33,7 +34,7 @@ using namespace CPS;
   #include <dpsim/Compat/getopt.h>
 #endif
 
-DPsim::CommandLineArgs::CommandLineArgs(int argc, char *argv[],
+CommandLineArgs::CommandLineArgs(int argc, char *argv[],
 		String nm,
 		Real dt,
 		Real d,
@@ -214,7 +215,7 @@ DPsim::CommandLineArgs::CommandLineArgs(int argc, char *argv[],
 		positional.push_back(argv[optind++]);
 }
 
-void DPsim::CommandLineArgs::showUsage() {
+void CommandLineArgs::showUsage() {
 	std::cout << "Usage: " << mProgramName << " [OPTIONS] [FILES]" << std::endl;
 	std::cout << std::endl;
 	std::cout << " Available options:" << std::endl;
@@ -238,9 +239,85 @@ void DPsim::CommandLineArgs::showUsage() {
 	showCopyright();
 }
 
-void DPsim::CommandLineArgs::showCopyright() {
+void CommandLineArgs::showCopyright() {
 	std::cout << "DPsim " << DPSIM_VERSION << "-" << DPSIM_RELEASE << std::endl;
 	std::cout << " Copyright 2017-2018, Institute for Automation of Complex Power Systems, EONERC" << std::endl;
 	std::cout << " Markus Mirz <MMirz@eonerc.rwth-aachen.de>" << std::endl;
 	std::cout << " Steffen Vogel <StVogel@eonerc.rwth-aachen.de>" << std::endl;
+}
+
+std::vector<std::string> DPsim::Utils::tokenize(std::string s, char delimiter) {
+	std::vector<std::string> tokens;
+
+	size_t lastPos = 0;
+	size_t curentPos;
+
+	while ((curentPos = s.find(delimiter, lastPos)) != std::string::npos) {
+		const size_t tokenLength = curentPos - lastPos;
+		tokens.push_back(s.substr(lastPos, tokenLength));
+
+		/* Advance in string */
+		lastPos = curentPos + 1;
+	}
+
+	/* Check if there's a last token behind the last delimiter. */
+	if (lastPos != s.length()) {
+		const size_t lastTokenLength = s.length() - lastPos;
+		tokens.push_back(s.substr(lastPos, lastTokenLength));
+	}
+
+	return tokens;
+}
+
+fs::path DPsim::Utils::findFile(const fs::path &name, const fs::path &hint, const std::string &useEnv) {
+#ifdef _WIN32
+	char sep = ';';
+#else
+	char sep = ':';
+#endif
+
+	std::vector<fs::path> searchPaths = {
+		fs::current_path()
+	};
+
+	if (!hint.empty()) {
+		searchPaths.push_back(hint);
+	}
+
+	if (!useEnv.empty() && getenv(useEnv.c_str())) {
+		std::vector<std::string> envPaths = tokenize(getenv(useEnv.c_str()), sep);
+
+		for (std::string envPath : envPaths) {
+			searchPaths.emplace_back(envPath);
+		}
+	}
+
+	for (auto searchPath : searchPaths) {
+		fs::path fullPath;
+
+		if (searchPath.is_relative())
+			fullPath /= fs::current_path();
+
+		fullPath /= searchPath;
+		fullPath /= name;
+
+		if (fs::exists(fullPath)) {
+			return fs::absolute(fullPath);
+		}
+	}
+
+	throw std::runtime_error(fmt::format("File not found: {}", name.native()));
+}
+
+std::list<fs::path> DPsim::Utils::findFiles(std::list<fs::path> filennames, const fs::path &hint, const std::string &useEnv) {
+
+	std::list<fs::path> foundnames;
+
+	for (auto filename : filennames) {
+		auto foundname = findFile(filename, hint, useEnv);
+
+		foundnames.emplace_back(foundname);
+	}
+
+	return foundnames;
 }

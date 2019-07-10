@@ -34,12 +34,6 @@ using namespace CPS::CIM;
 int main(int argc, char** argv){
 
 	#ifdef _WIN32
-		String path("..\\..\\..\\..\\dpsim\\Examples\\CIM\\CIGRE_MV_NoTap\\");
-	#elif defined(__linux__) || defined(__APPLE__)
-		String path("Examples/CIM/CIGRE_MV_NoTap/");
-	#endif
-
-	#ifdef _WIN32
 		String loadProfilePath("..\\..\\..\\..\\dpsim\\Examples\\CSV\\CIGRE_MV_NoTap\\");
 	#elif defined(__linux__) || defined(__APPLE__)
 		String loadProfilePath("Examples/CSV/CIGRE_MV_NoTap/");
@@ -65,12 +59,20 @@ int main(int argc, char** argv){
 	{"LOAD-I-13", "Load_I_13"},
 	{"LOAD-I-14", "Load_I_14"}};
 
-	std::list<string> filenames = {
-	path + "Rootnet_FULL_NE_06J16h_DI.xml",
-	path + "Rootnet_FULL_NE_06J16h_EQ.xml",
-	path + "Rootnet_FULL_NE_06J16h_SV.xml",
-	path + "Rootnet_FULL_NE_06J16h_TP.xml"
-	};
+	// Find CIM files
+	std::list<fs::path> filenames;
+	if (argc <= 1) {
+		filenames = DPsim::Utils::findFiles({
+			"Rootnet_FULL_NE_06J16h_DI.xml",
+			"Rootnet_FULL_NE_06J16h_EQ.xml",
+			"Rootnet_FULL_NE_06J16h_SV.xml",
+			"Rootnet_FULL_NE_06J16h_TP.xml"
+		}, "Examples/CIM/CIGRE_MV_NoTap", "CIMPATH");
+	}
+	else {
+		filenames = std::list<fs::path>(argv + 1, argv + argc);
+	}
+
 	String simName = "CIGRE-MV-NoTap-LoadProfiles";
 	CPS::Real system_freq = 50;
 
