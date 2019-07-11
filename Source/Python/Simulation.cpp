@@ -175,7 +175,7 @@ int Python::Simulation::init(Simulation* self, PyObject *args, PyObject *kwds)
 	int t = 0, s = 0, rt = 0, ss = 0, st = 0, initSteadyState = 0, splitSubnets = 1;
 	int failOnOverrun = 0;
 
-	CPS::Logger::Level logLevel = CPS::Logger::Level::INFO;
+	CPS::Logger::Level logLevel = CPS::Logger::Level::info;
 
 	unsigned long startTime = -1;
 	unsigned long startTimeUs = 0;

@@ -39,8 +39,8 @@ DiakopticsSolver<VarType>::DiakopticsSolver(String name, SystemTopology system, 
 	mTimeStep(timeStep),
 	mSystemFrequency(system.mSystemFrequency),
 	mLog(name + "_Diakoptics", logLevel),
-	mLeftVectorLog(name + "_LeftVector", logLevel != Logger::Level::NONE),
-	mRightVectorLog(name + "_RightVector", logLevel != Logger::Level::NONE) {
+	mLeftVectorLog(name + "_LeftVector", logLevel != Logger::Level::off),
+	mRightVectorLog(name + "_RightVector", logLevel != Logger::Level::off) {
 	for (auto comp : tearComponents) {
 		auto pcomp = std::dynamic_pointer_cast<PowerComponent<VarType>>(comp);
 		if (pcomp)
@@ -140,8 +140,7 @@ void DiakopticsSolver<VarType>::createVirtualNodes(int net) {
 				mSubnets[net].nodes.push_back(std::make_shared<CPS::Node<VarType>>(virtualNode));
 				pComp->setVirtualNodeAt(mSubnets[net].nodes[virtualNode], node);
 
-				mLog.info() << "Created virtual node" << node << " = " << virtualNode
-					<< " for " << pComp->name() << std::endl;
+				mSLog->info("Created virtual node{} = {} for {}", node, virtualNode, pComp->name());
 			}
 		}
 	}

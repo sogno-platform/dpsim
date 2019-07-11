@@ -86,7 +86,7 @@ int main(int argc, char* argv[]) {
 
 	// Simulation
 	Simulation sim(name, sys, timeStep, finalTime,
-		Domain::DP, Solver::Type::MNA, Logger::Level::INFO);
+		Domain::DP, Solver::Type::MNA, Logger::Level::info);
 
 	sim.run();
 

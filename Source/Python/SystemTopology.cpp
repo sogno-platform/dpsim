@@ -175,7 +175,7 @@ PyObject* Python::SystemTopology::autoDecouple(SystemTopology* self, PyObject* a
 
 			//std::cout << line->name() << " delay " << delay << " ratio " << ratio << std::endl;
 			if (delay >= timestep && ratio < threshold) {
-				auto decoupledLine = CPS::Signal::DecouplingLine::make(line->name(), line->node(0), line->node(1), line->attribute<Real>("R_series")->get(), line->attribute<Real>("L_series")->get(), line->attribute<Real>("C_parallel")->get(), CPS::Logger::Level::NONE);
+				auto decoupledLine = CPS::Signal::DecouplingLine::make(line->name(), line->node(0), line->node(1), line->attribute<Real>("R_series")->get(), line->attribute<Real>("L_series")->get(), line->attribute<Real>("C_parallel")->get(), CPS::Logger::Level::off);
 				newComponents.push_back(decoupledLine);
 				for (auto comp : decoupledLine->getLineComponents())
 					newComponents.push_back(comp);

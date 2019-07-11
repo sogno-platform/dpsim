@@ -43,7 +43,7 @@ namespace DPsim {
 			Real timeStep, Real finalTime,
 			CPS::Domain domain = CPS::Domain::DP,
 			Solver::Type solverType = Solver::Type::MNA,
-			CPS::Logger::Level logLevel = CPS::Logger::Level::INFO,
+			CPS::Logger::Level logLevel = CPS::Logger::Level::info,
 			Bool steadyStateInit = false);
 
 		/** Perform the main simulation loop in real time.

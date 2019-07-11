@@ -45,7 +45,7 @@ int main(int argc, char *argv[]) {
 	String simName = "WSCC-9bus_dyn";
 	Logger::setLogDir("logs/"+simName);
 
-	CPS::CIM::Reader reader(simName, Logger::Level::DEBUG, Logger::Level::DEBUG);
+	CPS::CIM::Reader reader(simName, Logger::Level::debug, Logger::Level::debug);
 	SystemTopology sys = reader.loadCIM(60, filenames);
 
 	// Logging
@@ -64,7 +64,7 @@ int main(int argc, char *argv[]) {
 	logger->addAttribute("wr_3", sys.component<Ph1::SynchronGeneratorTrStab>("GEN3")->attribute("w_r"));
 
 	Simulation sim(simName, sys, 0.0001, 2,
-		Domain::DP, Solver::Type::MNA, Logger::Level::INFO, true);
+		Domain::DP, Solver::Type::MNA, Logger::Level::info, true);
 
 	sim.addLogger(logger);
 	sim.run();

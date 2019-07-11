@@ -35,8 +35,8 @@ MnaSolver<VarType>::MnaSolver(String name,
 	// MNA global logging
 	mSLog = Logger::get(name + "_MNA", logLevel);
 	// Raw source and solution vector logging
-	mLeftVectorLog = std::make_shared<DataLogger>(name + "_LeftVector", logLevel != CPS::Logger::Level::NONE);
-	mRightVectorLog = std::make_shared<DataLogger>(name + "_RightVector", logLevel != CPS::Logger::Level::NONE);
+	mLeftVectorLog = std::make_shared<DataLogger>(name + "_LeftVector", logLevel != CPS::Logger::Level::off);
+	mRightVectorLog = std::make_shared<DataLogger>(name + "_RightVector", logLevel != CPS::Logger::Level::off);
 }
 
 template <typename VarType>
@@ -115,7 +115,7 @@ void MnaSolver<Real>::initializeComponents() {
 	mSLog->info("-- Initialize components from power flow");
 	for (auto comp : mPowerComponents) {
 		auto pComp = std::dynamic_pointer_cast<PowerComponent<Complex>>(comp);
-		if (!pComp)	continue;		
+		if (!pComp)	continue;
 		pComp->initialize(mSystem.mFrequencies);
 		pComp->initializeFromPowerflow(mSystem.mSystemFrequency);
 	}
@@ -390,8 +390,8 @@ template <typename VarType>
 void MnaSolver<VarType>::steadyStateInitialization() {
 	mSLog->info("--- Run steady-state initialization ---");
 
-	DataLogger initLeftVectorLog(mName + "_InitLeftVector", mLogLevel != CPS::Logger::Level::NONE);
-	DataLogger initRightVectorLog(mName + "_InitRightVector", mLogLevel != CPS::Logger::Level::NONE);
+	DataLogger initLeftVectorLog(mName + "_InitLeftVector", mLogLevel != CPS::Logger::Level::off);
+	DataLogger initRightVectorLog(mName + "_InitRightVector", mLogLevel != CPS::Logger::Level::off);
 
 	Int timeStepCount = 0;
 	Real time = 0;
@@ -537,7 +537,7 @@ void MnaSolver<VarType>::SolveTaskHarm::execute(Real time, Int timeStepCount) {
 
 template <typename VarType>
 void MnaSolver<VarType>::log(Real time) {
-	if (mLogLevel == Logger::Level::NONE)
+	if (mLogLevel == Logger::Level::off)
 		return;
 
 	if (mDomain == CPS::Domain::EMT) {

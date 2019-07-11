@@ -40,7 +40,7 @@ int main(int argc, char* argv[]) {
 	// Components
 	auto vs = VoltageSource::make("vs");
 	vs->setParameters(10);
-	auto r1 = Resistor::make("r_1", Logger::Level::DEBUG);
+	auto r1 = Resistor::make("r_1", Logger::Level::debug);
 	r1->setParameters(1);
 	auto r2 = Resistor::make("r_2");
 	r2->setParameters(1);

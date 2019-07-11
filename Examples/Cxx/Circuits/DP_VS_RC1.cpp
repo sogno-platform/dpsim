@@ -37,11 +37,11 @@ int main(int argc, char* argv[]) {
 	auto n2 = Node::make("n2");
 
 	// Components
-	auto vs = VoltageSource::make("vs", Logger::Level::DEBUG);
+	auto vs = VoltageSource::make("vs", Logger::Level::debug);
 	vs->setParameters(Complex(10, 0));
-	auto r1 = Resistor::make("r_1", Logger::Level::DEBUG);
+	auto r1 = Resistor::make("r_1", Logger::Level::debug);
 	r1->setParameters(1);
-	auto c1 = Capacitor::make("c_1", Logger::Level::DEBUG);
+	auto c1 = Capacitor::make("c_1", Logger::Level::debug);
 	c1->setParameters(0.001);
 
 	// Topology

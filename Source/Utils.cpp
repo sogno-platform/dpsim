@@ -131,15 +131,15 @@ CommandLineArgs::CommandLineArgs(int argc, char *argv[],
 				String arg = optarg;
 
 				if (arg == "DEBUG")
-					logLevel = Logger::Level::DEBUG;
+					logLevel = Logger::Level::debug;
 				else if (arg == "INFO")
-					logLevel = Logger::Level::INFO;
+					logLevel = Logger::Level::info;
 				else if (arg == "ERR")
-					logLevel = Logger::Level::ERR;
+					logLevel = Logger::Level::error;
 				else if (arg == "WARN")
-					logLevel = Logger::Level::WARN;
+					logLevel = Logger::Level::warn;
 				else if (arg == "NONE")
-					logLevel = Logger::Level::NONE;
+					logLevel = Logger::Level::off;
 				else
 					throw std::invalid_argument("Invalid value for --log-level: must be a string of DEBUG, INFO, ERR, WARN or NONE");
 				break;

@@ -77,7 +77,7 @@ int main(int argc, char* argv[]) {
 		initActivePower, initReactivePower, initTerminalVolt, initVoltAngle, fieldVoltage, initMechPower);
 	gen->connect({n1});
 
-	auto res = Ph3::SeriesResistor::make("R_load", Logger::Level::INFO);
+	auto res = Ph3::SeriesResistor::make("R_load", Logger::Level::info);
 	res->setParameters(Rload);
 	res->connect({Node::GND, n1});
 
@@ -90,7 +90,7 @@ int main(int argc, char* argv[]) {
 	logger->addAttribute("i_load", res->attribute("i_intf"));
 
 	// Simulation
-	Simulation sim(simName, sys, timeStep, finalTime, Domain::DP, Solver::Type::MNA, Logger::Level::INFO);
+	Simulation sim(simName, sys, timeStep, finalTime, Domain::DP, Solver::Type::MNA, Logger::Level::info);
 	sim.addLogger(logger);
 	sim.run();
 

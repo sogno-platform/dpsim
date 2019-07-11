@@ -148,13 +148,13 @@ namespace DPsim {
 		MnaSolver(String name,
 			Real timeStep,
 			CPS::Domain domain = CPS::Domain::DP,
-			CPS::Logger::Level logLevel = CPS::Logger::Level::INFO);
+			CPS::Logger::Level logLevel = CPS::Logger::Level::info);
 
 		/// Constructor to be used in simulation examples.
 		MnaSolver(String name, CPS::SystemTopology system,
 			Real timeStep,
 			CPS::Domain domain = CPS::Domain::DP,
-			CPS::Logger::Level logLevel = CPS::Logger::Level::INFO,
+			CPS::Logger::Level logLevel = CPS::Logger::Level::info,
 			Bool steadyStateInit = false,
 			Int downSampleRate = 1,
 			Bool harmParallel = false);

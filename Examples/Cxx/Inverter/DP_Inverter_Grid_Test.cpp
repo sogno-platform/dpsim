@@ -46,12 +46,12 @@ int main(int argc, char* argv[]) {
 	auto n4 = Node::make("n4");
 	auto n5 = Node::make("n5");
 
-	Logger::Level level = Logger::Level::NONE;
+	Logger::Level level = Logger::Level::off;
 
 	// Components
 	auto inv = Inverter::make("inv", level);
 	inv->setParameters(2, 3, 360, 0.87);
-	//auto inv = VoltageSource::make("inv", Logger::Level::INFO);
+	//auto inv = VoltageSource::make("inv", Logger::Level::info);
 	//inv->setParameters(Complex(0, -200));
 	auto r1 = Resistor::make("r1", level);
 	r1->setParameters(0.1);
@@ -86,7 +86,7 @@ int main(int argc, char* argv[]) {
 		SystemNodeList{ n1, n2, n3, n4, n5 },
 		SystemComponentList{ inv, r1, l1, r2, l2, c1, rc, grid });
 
-	//Simulation sim(simName, sys, timeStep, finalTime, Domain::DP, Solver::Type::MNA, Logger::Level::INFO);
+	//Simulation sim(simName, sys, timeStep, finalTime, Domain::DP, Solver::Type::MNA, Logger::Level::info);
 	Simulation sim(simName, level);
 	sim.setSystem(sys);
 	sim.setTimeStep(timeStep);
@@ -107,7 +107,7 @@ int main(int argc, char* argv[]) {
 
 	sim.run();
 
-	auto spdStepTimeLog = Logger::get("step_times", Logger::Level::INFO);
+	auto spdStepTimeLog = Logger::get("step_times", Logger::Level::info);
 	spdStepTimeLog->info("steptime_inv");
 
 	Real tot = 0;

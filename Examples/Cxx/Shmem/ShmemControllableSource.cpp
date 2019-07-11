@@ -58,7 +58,7 @@ int main(int argc, char *argv[]) {
 
 	auto sys = SystemTopology(50, SystemNodeList{n1}, SystemComponentList{ecs, r1});
 	RealTimeSimulation sim(simName, sys, timeStep, finalTime,
-		Domain::DP, Solver::Type::MNA, Logger::Level::INFO);
+		Domain::DP, Solver::Type::MNA, Logger::Level::info);
 
 	sim.addInterface(&intf);
 	sim.run();
