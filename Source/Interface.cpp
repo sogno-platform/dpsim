@@ -46,6 +46,7 @@ void Interface::open() {
 
 	if (shmem_int_alloc(&mShmem, &mLastSample, 1) < 0) {
 		std::cout << Logger::prefix() << "Failed to allocate single sample from pool" << std::endl;
+		close();
 		std::exit(1);
 	}
 
@@ -80,6 +81,7 @@ void Interface::readValues(bool blocking) {
 		}
 		if (ret < 0) {
 			std::cerr << Logger::prefix() << "Fatal error: failed to read sample from interface" << std::endl;
+			close();
 			std::exit(1);
 		}
 
@@ -95,6 +97,7 @@ void Interface::readValues(bool blocking) {
 		 * we're not leaking memory from the queue pool */
 		if (sample)
 			sample_decref(sample);
+
 		throw exc;
 	}
 }
@@ -105,8 +108,9 @@ void Interface::writeValues() {
 	bool done = false;
 	try {
 		if (shmem_int_alloc(&mShmem, &sample, 1) < 1) {
-			std::cerr << Logger::prefix() << "Fatal error: pool underrun in: " << mWName << " <->" << mRName;
+			std::cerr << Logger::prefix() << "Fatal error: pool underrun in: " << mWName << " <-> " << mRName;
 			std::cerr << " at sequence no " << mSequence << std::endl;
+			close();
 			std::exit(1);
 		}
 
@@ -115,6 +119,7 @@ void Interface::writeValues() {
 		}
 
 		sample->sequence = mSequence++;
+		sample->flags |= SAMPLE_HAS_DATA;
 		clock_gettime(CLOCK_REALTIME, &sample->ts.origin);
 		done = true;
 
@@ -139,38 +144,59 @@ void Interface::writeValues() {
 
 		if (ret < 0)
 			std::cerr << Logger::prefix() << "Failed to write samples to interface" << std::endl;
+
 		/* Don't throw here, because we managed to send something */
 	}
 }
 
-void Interface::addImport(Attribute<Int>::Ptr attr, Int idx) {
+void Interface::PreStep::execute(Real time, Int timeStepCount) {
+	if (timeStepCount % mIntf.mDownsampling == 0)
+		mIntf.readValues(mIntf.mSync);
+}
+
+void Interface::PostStep::execute(Real time, Int timeStepCount) {
+	if (timeStepCount % mIntf.mDownsampling == 0)
+		mIntf.writeValues();
+}
+
+Attribute<Int>::Ptr Interface::importInt(UInt idx) {
+	Attribute<Int>::Ptr attr = Attribute<Int>::make(Flags::read | Flags::write);
 	addImport([attr, idx](Sample *smp) {
 		if (idx >= smp->length)
 			throw std::length_error("incomplete data received from interface");
 
 		attr->set(smp->data[idx].i);
 	});
+	mImportAttrs.push_back(attr);
+	return attr;
 }
 
-void Interface::addImport(Attribute<Real>::Ptr attr, Int idx) {
+Attribute<Real>::Ptr Interface::importReal(UInt idx) {
+	Attribute<Real>::Ptr attr = Attribute<Real>::make(Flags::read | Flags::write);
 	addImport([attr, idx](Sample *smp) {
 		if (idx >= smp->length)
 			throw std::length_error("incomplete data received from interface");
 
 		attr->set(smp->data[idx].f);
 	});
+	mImportAttrs.push_back(attr);
+	return attr;
 }
 
-void Interface::addImport(Attribute<Bool>::Ptr attr, Int idx) {
+Attribute<Bool>::Ptr Interface::importBool(UInt idx) {
+	Attribute<Bool>::Ptr attr = Attribute<Bool>::make(Flags::read | Flags::write);
 	addImport([attr, idx](Sample *smp) {
 		if (idx >= smp->length)
 			throw std::length_error("incomplete data received from interface");
 
 		attr->set(smp->data[idx].b);
 	});
+	mImportAttrs.push_back(attr);
+	return attr;
 }
 
-void Interface::addImport(Attribute<Complex>::Ptr attr, Int idx) {
+Attribute<Complex>::Ptr Interface::importComplex(UInt idx) {
+	Attribute<Complex>::Ptr attr = Attribute<Complex>::make(Flags::read | Flags::write);
 	addImport([attr, idx](Sample *smp) {
 		if (idx >= smp->length)
 			throw std::length_error("incomplete data received from interface");
@@ -180,9 +206,26 @@ void Interface::addImport(Attribute<Complex>::Ptr attr, Int idx) {
 
 		attr->set(y);
 	});
+	mImportAttrs.push_back(attr);
+	return attr;
 }
 
-void Interface::addExport(Attribute<Int>::Ptr attr, Int idx) {
+Attribute<Complex>::Ptr Interface::importComplexMagPhase(UInt idx) {
+	Attribute<Complex>::Ptr attr = Attribute<Complex>::make(Flags::read | Flags::write);
+	addImport([attr, idx](Sample *smp) {
+		if (idx >= smp->length)
+			throw std::length_error("incomplete data received from interface");
+
+		auto *z = reinterpret_cast<float*>(&smp->data[idx].z);
+		auto  y = std::polar(z[0], z[1]);
+
+		attr->set(y);
+	});
+	mImportAttrs.push_back(attr);
+	return attr;
+}
+
+void Interface::addExport(Attribute<Int>::Ptr attr, UInt idx) {
 	addExport([attr, idx](Sample *smp) {
 		if (idx >= smp->capacity)
 			throw std::out_of_range("not enough space in allocated sample");
@@ -193,7 +236,7 @@ void Interface::addExport(Attribute<Int>::Ptr attr, Int idx) {
 	});
 }
 
-void Interface::addExport(Attribute<Real>::Ptr attr, Int idx) {
+void Interface::addExport(Attribute<Real>::Ptr attr, UInt idx) {
 	addExport([attr, idx](Sample *smp) {
 		if (idx >= smp->capacity)
 			throw std::out_of_range("not enough space in allocated sample");
@@ -204,7 +247,7 @@ void Interface::addExport(Attribute<Real>::Ptr attr, Int idx) {
 	});
 }
 
-void Interface::addExport(Attribute<Bool>::Ptr attr, Int idx) {
+void Interface::addExport(Attribute<Bool>::Ptr attr, UInt idx) {
 	addExport([attr, idx](Sample *smp) {
 		if (idx >= smp->capacity)
 			throw std::out_of_range("not enough space in allocated sample");
@@ -215,7 +258,7 @@ void Interface::addExport(Attribute<Bool>::Ptr attr, Int idx) {
 	});
 }
 
-void Interface::addExport(Attribute<Complex>::Ptr attr, Int idx) {
+void Interface::addExport(Attribute<Complex>::Ptr attr, UInt idx) {
 	addExport([attr, idx](Sample *smp) {
 		if (idx >= smp->capacity)
 			throw std::out_of_range("not enough space in allocated sample");
@@ -227,5 +270,12 @@ void Interface::addExport(Attribute<Complex>::Ptr attr, Int idx) {
 
 		z[0] = y.real();
 		z[1] = y.imag();
+	});
+}
+
+Task::List Interface::getTasks() {
+	return Task::List({
+		std::make_shared<Interface::PreStep>(*this),
+		std::make_shared<Interface::PostStep>(*this)
 	});
 }

@@ -36,6 +36,9 @@ int main(int argc, char *argv[]) {
 	SystemTopology sys = reader.loadCIM(args.sysFreq, args.positional, args.solver.domain);
 
 	Simulation sim(simName, sys, args.timeStep, args.duration, args.solver.domain, args.solver.type);
+
+	// ToDO: add DataLoggers
+
 	sim.run();
 
 	return 0;

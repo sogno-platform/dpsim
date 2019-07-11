@@ -44,10 +44,21 @@ namespace Python {
 		PyObject *pyNodeDict;
 		PyObject *pyComponentDict;
 
+		// Helper functions to update the python dicts after a C++ method
+		// adds components or nodes.
+		void addCppComponent(CPS::Component::Ptr comp);
+		void addCppNode(CPS::TopologicalNode::Ptr node);
+		void updateDicts();
+
 		static PyObject* addComponent(SystemTopology *self, PyObject *args);
 		static PyObject* addNode(SystemTopology *self, PyObject *args);
+		static PyObject* addDecouplingLine(SystemTopology *self, PyObject *args);
+		static PyObject* autoDecouple(SystemTopology *self, PyObject *args);
+		static PyObject* multiply(SystemTopology *self, PyObject *args);
+		static PyObject* removeComponent(SystemTopology *self, PyObject *args);
 #ifdef WITH_GRAPHVIZ
 		static PyObject* reprSVG(SystemTopology *self, PyObject *args);
+		static const char *docReprSVG;
 #endif
 
 		// The Python API has no notion of C++ classes and methods, so the methods
@@ -63,7 +74,10 @@ namespace Python {
 		static const char *docComponents;
 		static const char *docAddComponent;
 		static const char *docAddNode;
-		static const char *docReprSVG;
+		static const char *docAddDecouplingLine;
+		static const char *docAutoDecouple;
+		static const char *docRemoveComponent;
+		static const char *docMultiply;
 		static PyTypeObject type;
 		static PyMethodDef methods[];
 		static PyMemberDef members[];

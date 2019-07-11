@@ -116,6 +116,18 @@ void Python::Node<VarType>::dealloc(Python::Node<VarType> *self)
 }
 
 template<typename VarType>
+const char* Python::Node<VarType>::docInitialVoltage =
+"initial_voltage\n"
+"Return the initial voltage at this node.\n";
+template<typename VarType>
+PyObject* Python::Node<VarType>::initialVoltage(PyObject *self, PyObject *args) {
+	Python::Node<VarType>* pyNode = (Python::Node<VarType>*) self;
+	CPS::Complex v = pyNode->node->initialSingleVoltage();
+
+	return PyComplex_FromDoubles(v.real(), v.imag());
+}
+
+template<typename VarType>
 const char * Python::Node<VarType>::docGND =
 "GND\n"
 "Get a reference of the global ground node.\n";
@@ -136,6 +148,7 @@ PyObject * Python::Node<VarType>::gnd(PyObject *self, PyObject *args) {
 
 template<typename VarType>
 PyMethodDef Python::Node<VarType>::methods[] = {
+	{"initial_voltage", (PyCFunction) Python::Node<VarType>::initialVoltage, METH_NOARGS, (char*) Python::Node<VarType>::docInitialVoltage},
 	{"GND", (PyCFunction) Python::Node<VarType>::gnd, METH_NOARGS | METH_STATIC, (char *) Python::Node<VarType>::docGND},
 	{nullptr, nullptr, 0, nullptr}
 };

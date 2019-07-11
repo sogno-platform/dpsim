@@ -8,8 +8,10 @@ wheel
 
 pytest
 pyyaml
+nbconvert
+nbformat
 
-villas-dataprocessing>=0.2.2
+villas-dataprocessing>=0.2.3
 progressbar2
 ipywidgets
 jupyter

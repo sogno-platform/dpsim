@@ -51,7 +51,7 @@ int main(int argc, char *argv[])
 		out = "/villas1-out";
 	}
 
-	auto intf = Interface(in, out, &conf);
+	Interface intf(in, out, &conf);
 
 	if (String(argv[1]) == "0") {
 		// Nodes
@@ -80,7 +80,7 @@ int main(int argc, char *argv[])
 		comps = SystemComponentList{evs, vs, l1, r1};
 		nodes = SystemNodeList{Node::GND, n1, n2, n3};
 
-		intf.addImport(evs->attribute<Complex>("V_ref"), 0);
+		evs->setAttributeRef("V_ref", intf.importComplex(0));
 		intf.addExport(evs->attribute<Complex>("i_comp"), 0);
 	}
 	else if (String(argv[1]) == "1") {
@@ -109,7 +109,7 @@ int main(int argc, char *argv[])
 		comps = SystemComponentList{ecs, sw, r2A, r2B};
 		nodes = SystemNodeList{Node::GND, n4, n5};
 
-		intf.addImport(ecs->attribute<Complex>("I_ref"), 0);
+		ecs->setAttributeRef("I_ref", intf.importComplex(0));
 		intf.addExport(ecs->attribute<Complex>("v_comp"), 0);
 	}
 	else {
@@ -122,7 +122,7 @@ int main(int argc, char *argv[])
 
 	auto sys = SystemTopology(50, nodes, comps);
 
-	auto sim = RealTimeSimulation(simName + argv[1], sys, timeStep, 20);
+	RealTimeSimulation sim(simName + argv[1], sys, timeStep, 20);
 	sim.addInterface(&intf);
 
 	if (String(argv[1]) == "1") {

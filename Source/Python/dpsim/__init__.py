@@ -23,12 +23,7 @@ from _dpsim import load_cim
 
 from .Simulation import Simulation, RealTimeSimulation
 from .EventChannel import EventChannel
-
-# Try to shmem load interface on supported platforms
-try:
-    from _dpsim import Interface
-finally:
-    from .Interface import Interface
+from .Interface import Interface
 
 def __get_module(parts):
     full_name = ".".join(parts)

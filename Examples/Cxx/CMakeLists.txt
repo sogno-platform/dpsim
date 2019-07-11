@@ -3,7 +3,7 @@ set(LIBRARIES "dpsim")
 if (NOT WIN32)
 	# needed so CIMParser and arabica (which are first compiled into static libs)
 	# can be included in the .so
-	set(CMAKE_CXX_FLAGS "-fPIC")
+	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fPIC")
 endif()
 
 # targets
@@ -12,15 +12,23 @@ set(CIRCUIT_SOURCES
 	Circuits/DP_VS_R1.cpp
 	Circuits/DP_CS_R1.cpp
 	Circuits/DP_VS_RL1.cpp
+	Circuits/DP_VS_RL2.cpp
 	Circuits/DP_VS_RC1.cpp	
 	Circuits/DP_CS_R2CL.cpp
 	Circuits/DP_VS_CS_R4.cpp
 	Circuits/DP_VS_R2L3.cpp
 
+	DP_Basics/DP_VS_RL_f60.cpp
+	DP_Basics/DP_VS_RL_f60_largeTs.cpp
+	DP_Basics/DP_VS_RL_f60_vlargeTs.cpp
+	DP_Basics/DP_VS_RL_f500.cpp
+	DP_Basics/DP_VS_RL_f500_largeTs.cpp
+	DP_Basics/DP_VS_RL_f500_ph500.cpp
+
 	#Circuits/DP_VS_PiLine_R.cpp
 	#Circuits/DP_VS_Trafo_R.cpp
-	#Circuits/DP_ResVS_RL_Switch.cpp	
-
+	#Circuits/DP_ResVS_RL_Switch.cpp
+	
 	# EMT examples
 	Circuits/EMT_VS_R1.cpp
 	Circuits/EMT_VS_RC1.cpp
@@ -30,36 +38,37 @@ set(CIRCUIT_SOURCES
 	Circuits/EMT_VS_R2L3.cpp
 	Circuits/EMT_VS_CS_R4_AC.cpp
 	Circuits/EMT_VS_CS_R4_DC.cpp	
+
+	DP_Basics/EMT_VS_RL_f60.cpp
+	DP_Basics/EMT_VS_RL_f60_largeTs.cpp
+	DP_Basics/EMT_VS_RL_f500.cpp
 	
 	#Circuits/EMT_ResVS_RL_Switch.cpp
+
+	# EMT and DP studies
+	#VariableTimeStep/RXLine_LoadStep_FreqStep_1.cpp	
 )
 
-set(SYNCGEN_SOURCES
-	SynchronGenerator/DP_SynGen_dq_SteadyState.cpp
-	SynchronGenerator/DP_SynGen_dq_ThreePhFault.cpp
-	SynchronGenerator/DP_SynGen_TrStab_SteadyState.cpp
-	SynchronGenerator/DP_SynGen_TrStab_LoadStep.cpp
-	#SynchronGenerator/DP_SynchronGenerator_BalancedResLoad.cpp
-	#SynchronGenerator/DP_SynchronGenerator_ExciterAndTurbine.cpp
-	#SynchronGenerator/DP_SynchronGenerator_SimpThreePhaseFault.cpp
-	#SynchronGenerator/DP_SynchronGenerator_ThreePhaseFault.cpp
-	#SynchronGenerator/DP_SynchronGenerator_VBR.cpp
-	#SynchronGenerator/DP_SynchronGenerator_Simplified_ThreePhaseFault.cpp
-	#SynchronGenerator/EMT_SynchronGenerator_BalancedResLoad.cpp
-	#SynchronGenerator/EMT_SynchronGenerator_ExciterAndTurbine.cpp
-	#SynchronGenerator/EMT_SynchronGenerator_PhaseToPhaseFault.cpp
-	#SynchronGenerator/EMT_SynchronGenerator_ThreePhaseFault.cpp
-	#SynchronGenerator/EMT_SynchronGenerator_VBR_ThreePhaseFault.cpp
-	#SynchronGenerator/EMT_SynchronGenerator_Simplified_ThreePhaseFault.cpp
-	#SynchronGenerator/EMT_Multimachine.cpp
+set(SYNCGEN_SOURCES	
+	Components/DP_SynGenDq7odTrapez_SteadyState.cpp
+	Components/DP_SynGenDq7odTrapez_ThreePhFault.cpp
+	Components/DP_SynGenTrStab_SteadyState.cpp
+	Components/DP_SynGenTrStab_LoadStep.cpp
 )
 
-set(VARFREQ_SOURCES
-	#VariableTimeStep/RXLine_LoadStep_FreqStep_1.cpp
-	#VariableTimeStep/RXLine_LoadStep_FreqStep_2.cpp
+set(INVERTER_SOURCES
+	Inverter/DP_Inverter_Grid_Test.cpp
+	Inverter/DP_Inverter_Grid_Test_Parallel.cpp
+	Inverter/DP_Vsrc_Grid_Parallel.cpp
 )
 
 if(WITH_SUNDIALS)
+	list(APPEND SYNCGEN_SOURCES
+		Components/DP_SynGenDq7odODE_SteadyState.cpp
+		Components/DP_SynGenDq7odODE_ThreePhFault.cpp
+		Components/DP_Multimachine_DQ_Parallel.cpp
+	)
+
 	set(DAE_SOURCES
 		DAE/DAE_DP_test.cpp
 	)
@@ -84,6 +93,8 @@ if(WITH_SHMEM)
 		Shmem/ShmemControllableSource.cpp
 		Shmem/ShmemControllableFiltSource.cpp
 		Shmem/ShmemRealTime.cpp
+		Shmem/Shmem_CIGRE_MV_PowerFlowTest.cpp
+		Shmem/Shmem_CIGRE_MV_PowerFlowTest_LoadProfiles.cpp
 	)
 endif()
 
@@ -91,17 +102,31 @@ if(WITH_CIM)
 	list(APPEND LIBRARIES ${CIMPP_LIBRARIES})
 	list(APPEND INCLUDE_DIRS ${CIMPP_INCLUDE_DIRS})
 
-	if (NOT WIN32)
-		set(CIM_SOURCES_POSIX
-			CIM/dpsim-cim.cpp
-		)
-	endif()
-
 	set(CIM_SOURCES
-		
+		CIM/dpsim-cim.cpp	
 		CIM/WSCC-9bus_CIM.cpp
 		CIM/WSCC-9bus_CIM_Dyn.cpp
 		CIM/WSCC-9bus_CIM_Dyn_Switch.cpp
+
+		# powerflow example
+		CIM/CIGRE_MV_PowerFlowTest.cpp
+		CIM/CIGRE_MV_PowerFlowTest_LoadProfiles.cpp
+
+		CIM/IEEE_LV_PowerFlowTest.cpp
+		CIM/IEEE_LV_PowerFlowTest_LP.cpp
+	)
+
+	if(WITH_RT)
+		list(APPEND RT_SOURCES
+			# The Loadflow example needs CIM++ and RT
+			RealTime/RT_CIGRE_MV_PowerFlowTest.cpp
+		)
+	endif()
+endif()
+
+if(WITH_CIM AND WITH_OPENMP)
+	set(CIM_OPENMP_SOURCES
+		CIM/WSCC-9bus_CIM_mult.cpp
 	)
 endif()
 
@@ -118,7 +143,12 @@ if(WITH_PYTHON)
 	list(APPEND INCLUDE_DIRS ${PYTHON_INCLUDE_DIRS})
 endif()
 
-foreach(SOURCE ${CIRCUIT_SOURCES} ${SYNCGEN_SOURCES} ${VARFREQ_SOURCES} ${SHMEM_SOURCES} ${RT_SOURCES} ${CIM_SOURCES} ${CIM_SOURCES_POSIX} ${CIM_SHMEM_SOURCES} ${DAE_SOURCES})
+if(WITH_OPENMP)
+	list(APPEND DPSIM_CXX_FLAGS ${OpenMP_CXX_FLAGS})
+	list(APPEND LIBRARIES ${OpenMP_CXX_FLAGS})
+endif()
+
+foreach(SOURCE ${CIRCUIT_SOURCES} ${SYNCGEN_SOURCES} ${VARFREQ_SOURCES} ${SHMEM_SOURCES} ${RT_SOURCES} ${CIM_SOURCES} ${CIM_SOURCES_POSIX} ${CIM_SHMEM_SOURCES} ${DAE_SOURCES} ${INVERTER_SOURCES})
 	get_filename_component(TARGET ${SOURCE} NAME_WE)
 
 	add_executable(${TARGET} ${SOURCE})
@@ -127,4 +157,3 @@ foreach(SOURCE ${CIRCUIT_SOURCES} ${SYNCGEN_SOURCES} ${VARFREQ_SOURCES} ${SHMEM_
 	target_include_directories(${TARGET} PRIVATE ${INCLUDE_DIRS})
 	target_compile_options(${TARGET} PUBLIC ${DPSIM_CXX_FLAGS})
 endforeach()
-

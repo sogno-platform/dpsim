@@ -18,7 +18,7 @@ if(WITH_PYTHON)
 			"${BINARY_BUILD_DIR}/conf.py"
 			@ONLY
 		)
-		
+
 		# Copy figures into Sphinx working directory
 		add_custom_target(copy_imgs
 			COMMAND
@@ -30,6 +30,18 @@ if(WITH_PYTHON)
 					"${CMAKE_CURRENT_SOURCE_DIR}/images/eonerc_logo.png"
 					"${CMAKE_CURRENT_BINARY_DIR}/html/images/"
 			COMMENT "Copying figures to Sphinx output dir"
+		)
+
+		# Copy figures into Sphinx working directory
+		add_custom_target(copy_notebooks
+			COMMAND
+				${CMAKE_COMMAND} -E make_directory
+					"${CMAKE_CURRENT_SOURCE_DIR}/Notebooks/"
+			COMMAND
+				${CMAKE_COMMAND} -E copy_directory					
+					"${CMAKE_SOURCE_DIR}/Examples/Notebooks/"
+					"${CMAKE_CURRENT_SOURCE_DIR}/Notebooks/"
+			COMMENT "Copying notebooks to Sphinx output dir"
 		)
 
 		# We add the path of the freshly build dpsim.so module to Python path here
@@ -47,6 +59,7 @@ if(WITH_PYTHON)
 				${CMAKE_CURRENT_SOURCE_DIR}/README.md
 				dpsim_python
 				copy_imgs
+				copy_notebooks
 		)
 
 		add_custom_command(

@@ -17,7 +17,6 @@ stages:
   - generate
   - deploy
   #- post-all
-  - trigger
 
 docker:
   stage: prepare
@@ -28,6 +27,7 @@ docker:
         --tag ${DOCKER_IMAGE_DEV}:latest .
   tags:
     - shell
+    - linux
 
 build:linux:
   stage: build
@@ -52,7 +52,14 @@ test:pytest:
   variables:
     PYTHONPATH: "build/Source/Python:Source/Python"
   script:
-    - pytest -v
+    - pytest -v Examples/CIM/test_CIM.yml
+    - pytest -v Examples/Cxx/test_Circuits.yml
+    - pytest -v Examples/Cxx/test_RealTime.yml
+    #- pytest -v Examples/Cxx/test_Shmem.yml
+    - pytest -v Examples/Python/Base
+    - pytest -v Examples/Python/Circuits
+    - pytest -v Examples/Python/RealTime
+    #- pytest -v Examples/Python/Shmem
   image: ${DOCKER_IMAGE_DEV}:${DOCKER_TAG_DEV}
   dependencies:
     - build:linux
@@ -104,23 +111,24 @@ build:docker:
         --tag ${DOCKER_IMAGE}:latest .
   tags:
     - shell
+    - linux
   only:
     - tags
 
 test:jupyter:
   stage: test
+  variables:
+    PYTHONPATH: "build/Source/Python:Source/Python"
   script:
-    - cd build
-    - cmake ..
-    - make -j32 notebooks
-  image: ${DOCKER_IMAGE_DEV}:${DOCKER_TAG}
+    - pytest -v Examples/Notebooks
+  image: ${DOCKER_IMAGE_DEV}:${DOCKER_TAG_DEV}
   dependencies:
     - build:linux
-  artifacts:
-    paths:
-      - build/Examples/Notebooks/
   tags:
     - docker
+  artifacts:
+    paths:
+      - outputs/Examples/Notebooks/
 
 deploy:docker:
   stage: deploy
@@ -133,6 +141,7 @@ deploy:docker:
     - build:docker
   tags:
     - shell
+    - linux
   only:
     - tags
 
@@ -150,8 +159,8 @@ deploy:docs:
     - development
   tags:
     - fein-deploy
-  tags:
     - shell
+    - linux
 
 deploy:packages:
   stage: deploy
@@ -165,8 +174,8 @@ deploy:packages:
     - tags
   tags:
     - fein-deploy
-  tags:
     - shell
+    - linux
 
 # We run the windows build at last as it takes ages to finish
 #build:windows:
@@ -179,13 +188,3 @@ deploy:packages:
 #    - cmake --build .
 #  tags:
 #    - windows
-
-trigger:jupyter:
-  stage: trigger
-  only:
-    - tags
-  script:
-    - curl -X POST
-           -F token=e9751bbb33e68c8206046d0062b5ff
-           -F ref=kubernetes
-            https://git.rwth-aachen.de/api/v4/projects/13613/trigger/pipeline

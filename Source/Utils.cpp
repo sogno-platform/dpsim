@@ -25,6 +25,7 @@
 #include <dpsim/Utils.h>
 
 using namespace DPsim;
+using namespace DPsim::Utils;
 using namespace CPS;
 
 #ifdef HAVE_GETOPT
@@ -33,7 +34,7 @@ using namespace CPS;
   #include <dpsim/Compat/getopt.h>
 #endif
 
-DPsim::CommandLineArgs::CommandLineArgs(int argc, char *argv[],
+CommandLineArgs::CommandLineArgs(int argc, char *argv[],
 		String nm,
 		Real dt,
 		Real d,
@@ -54,11 +55,11 @@ DPsim::CommandLineArgs::CommandLineArgs(int argc, char *argv[],
 		{ "duration",		required_argument,	0, 'd', "SECS", "Simulation duration" },
 		{ "system-freq",	required_argument,	0, 'f', "HZ", "System Frequency" },
 		{ "scenario",		required_argument,	0, 's', "NUM", "Scenario selection" },
-		{ "log-level",		required_argument,	0, 'l', "(NONE|INFO|DEBUG|WARN|ERROR)", "Logging level" },
+		{ "log-level",		required_argument,	0, 'l', "(NONE|INFO|DEBUG|WARN|ERR)", "Logging level" },
 		{ "start-at",		required_argument,	0, 'a', "ISO8601", "Start time of real-time simulation" },
 		{ "start-in",		required_argument,	0, 'i', "SECS", "" },
-		{ "solver-domain",	required_argument,	0, 'D', "(DP|EMT)", "Domain of solver" },
-		{ "solver-type",	required_argument,	0, 'T', "(MNA)", "Type of solver" },
+		{ "solver-domain",	required_argument,	0, 'D', "(STATIC|DP|EMT)", "Domain of solver" },
+		{ "solver-type",	required_argument,	0, 'T', "(NRP|MNA)", "Type of solver" },
 		{ "option",		required_argument,	0, 'o', "KEY=VALUE", "User-definable options" },
 		{ "name",		required_argument,	0, 'n', "NAME", "Name of log files" },
 		{ 0 }
@@ -133,14 +134,14 @@ DPsim::CommandLineArgs::CommandLineArgs(int argc, char *argv[],
 					logLevel = Logger::Level::DEBUG;
 				else if (arg == "INFO")
 					logLevel = Logger::Level::INFO;
-				else if (arg == "ERROR")
-					logLevel = Logger::Level::ERROR;
+				else if (arg == "ERR")
+					logLevel = Logger::Level::ERR;
 				else if (arg == "WARN")
 					logLevel = Logger::Level::WARN;
 				else if (arg == "NONE")
 					logLevel = Logger::Level::NONE;
 				else
-					throw std::invalid_argument("Invalid value for --log-level: must be a string of DEBUG, INFO, ERROR, WARN or NONE");
+					throw std::invalid_argument("Invalid value for --log-level: must be a string of DEBUG, INFO, ERR, WARN or NONE");
 				break;
 			}
 
@@ -151,8 +152,10 @@ DPsim::CommandLineArgs::CommandLineArgs(int argc, char *argv[],
 					solver.domain = Domain::DP;
 				else if (arg == "EMT")
 					solver.domain = Domain::EMT;
+				else if (arg == "STATIC")
+					solver.domain = Domain::Static;
 				else
-					throw std::invalid_argument("Invalid value for --solver-domain: must be a string of DP, EMT");
+					throw std::invalid_argument("Invalid value for --solver-domain: must be a string of STATIC, DP, EMT");
 				break;
 			}
 
@@ -161,8 +164,10 @@ DPsim::CommandLineArgs::CommandLineArgs(int argc, char *argv[],
 
 				if (arg == "MNA")
 					solver.type = Solver::Type::MNA;
+				else if (arg == "NRP")
+					solver.type = Solver::Type::NRP;
 				else
-					throw std::invalid_argument("Invalid value for --solver-type: must be a string of MNA");
+					throw std::invalid_argument("Invalid value for --solver-type: must be a string of NRP or MNA");
 				break;
 			}
 
@@ -210,7 +215,7 @@ DPsim::CommandLineArgs::CommandLineArgs(int argc, char *argv[],
 		positional.push_back(argv[optind++]);
 }
 
-void DPsim::CommandLineArgs::showUsage() {
+void CommandLineArgs::showUsage() {
 	std::cout << "Usage: " << mProgramName << " [OPTIONS] [FILES]" << std::endl;
 	std::cout << std::endl;
 	std::cout << " Available options:" << std::endl;
@@ -234,9 +239,85 @@ void DPsim::CommandLineArgs::showUsage() {
 	showCopyright();
 }
 
-void DPsim::CommandLineArgs::showCopyright() {
+void CommandLineArgs::showCopyright() {
 	std::cout << "DPsim " << DPSIM_VERSION << "-" << DPSIM_RELEASE << std::endl;
 	std::cout << " Copyright 2017-2018, Institute for Automation of Complex Power Systems, EONERC" << std::endl;
 	std::cout << " Markus Mirz <MMirz@eonerc.rwth-aachen.de>" << std::endl;
 	std::cout << " Steffen Vogel <StVogel@eonerc.rwth-aachen.de>" << std::endl;
+}
+
+std::vector<std::string> DPsim::Utils::tokenize(std::string s, char delimiter) {
+	std::vector<std::string> tokens;
+
+	size_t lastPos = 0;
+	size_t curentPos;
+
+	while ((curentPos = s.find(delimiter, lastPos)) != std::string::npos) {
+		const size_t tokenLength = curentPos - lastPos;
+		tokens.push_back(s.substr(lastPos, tokenLength));
+
+		/* Advance in string */
+		lastPos = curentPos + 1;
+	}
+
+	/* Check if there's a last token behind the last delimiter. */
+	if (lastPos != s.length()) {
+		const size_t lastTokenLength = s.length() - lastPos;
+		tokens.push_back(s.substr(lastPos, lastTokenLength));
+	}
+
+	return tokens;
+}
+
+fs::path DPsim::Utils::findFile(const fs::path &name, const fs::path &hint, const std::string &useEnv) {
+#ifdef _WIN32
+	char sep = ';';
+#else
+	char sep = ':';
+#endif
+
+	std::vector<fs::path> searchPaths = {
+		fs::current_path()
+	};
+
+	if (!hint.empty()) {
+		searchPaths.push_back(hint);
+	}
+
+	if (!useEnv.empty() && getenv(useEnv.c_str())) {
+		std::vector<std::string> envPaths = tokenize(getenv(useEnv.c_str()), sep);
+
+		for (std::string envPath : envPaths) {
+			searchPaths.emplace_back(envPath);
+		}
+	}
+
+	for (auto searchPath : searchPaths) {
+		fs::path fullPath;
+
+		if (searchPath.is_relative())
+			fullPath /= fs::current_path();
+
+		fullPath /= searchPath;
+		fullPath /= name;
+
+		if (fs::exists(fullPath)) {
+			return fs::absolute(fullPath);
+		}
+	}
+
+	throw std::runtime_error(fmt::format("File not found: {}", name.native()));
+}
+
+std::list<fs::path> DPsim::Utils::findFiles(std::list<fs::path> filennames, const fs::path &hint, const std::string &useEnv) {
+
+	std::list<fs::path> foundnames;
+
+	for (auto filename : filennames) {
+		auto foundname = findFile(filename, hint, useEnv);
+
+		foundnames.emplace_back(foundname);
+	}
+
+	return foundnames;
 }

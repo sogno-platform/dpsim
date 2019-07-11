@@ -22,6 +22,8 @@
 #include <dpsim/Config.h>
 #include <dpsim/Utils.h>
 #include <dpsim/Simulation.h>
+#include <dpsim/SequentialScheduler.h>
+#include <dpsim/ThreadLevelScheduler.h>
 
 #ifndef _MSC_VER
   #include <dpsim/RealTimeSimulation.h>
@@ -32,10 +34,15 @@
 
 #ifdef WITH_SHMEM
   #include <dpsim/Interface.h>
+  #include <dpsim/PthreadPoolScheduler.h>
 #endif
 
 #ifdef WITH_CIM
   #include <cps/CIM/Reader.h>
+#endif
+
+#ifdef WITH_OPENMP
+  #include <dpsim/OpenMPLevelScheduler.h>
 #endif
 
 namespace DPsim {

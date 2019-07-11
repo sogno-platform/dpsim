@@ -53,12 +53,12 @@ int main(int argc, char *argv[]) {
 	ecs->connect({ Node::GND, n1 });
 	r1->connect({ Node::GND, n1 });
 
-	intf.addImport(ecs->attribute<Complex>("I_ref"), 0);
+	ecs->setAttributeRef("I_ref", intf.importComplex(0));
 	intf.addExport(ecs->attribute<Complex>("v_comp"), 0);
 
 	auto sys = SystemTopology(50, SystemNodeList{n1}, SystemComponentList{ecs, r1});
-	auto sim = RealTimeSimulation(simName, sys, timeStep, finalTime,
-	Domain::DP, Solver::Type::MNA, Logger::Level::INFO);
+	RealTimeSimulation sim(simName, sys, timeStep, finalTime,
+		Domain::DP, Solver::Type::MNA, Logger::Level::INFO);
 
 	sim.addInterface(&intf);
 	sim.run();

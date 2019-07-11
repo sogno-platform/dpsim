@@ -21,10 +21,13 @@ class EventChannel(object):
 
         self._last = Event.unknown
 
-        self._loop.create_task(self.__task())
+        self._read_task = self._loop.create_task(self.__task())
 
     def add_callback(self, cb, *args, event = None):
         self._callbacks.append((event, cb, args))
+
+    def close(self):
+        self._read_task.cancel()
 
     async def wait(self, evt):
         if evt == None:

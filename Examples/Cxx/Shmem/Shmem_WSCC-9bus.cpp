@@ -26,28 +26,21 @@
 #include <DPsim.h>
 
 using namespace DPsim;
-using namespace CPS;
+using namespace CPS::DP;
 using namespace CPS::DP::Ph1;
 
 int main(int argc, char *argv[]) {
 
-	// Specify CIM files
-#ifdef _WIN32
-	String path("Examples\\CIM\\WSCC-09_RX\\");
-#elif defined(__linux__) || defined(__APPLE__)
-	String path("Examples/CIM/WSCC-09_RX/");
-#endif
-
-	std::list<String> filenames = {
-		path + "WSCC-09_RX_DI.xml",
-		path + "WSCC-09_RX_EQ.xml",
-		path + "WSCC-09_RX_SV.xml",
-		path + "WSCC-09_RX_TP.xml"
-	};
+	std::list<String> filenames = Utils::findFiles({
+		"WSCC-09_RX_DI.xml",
+		"WSCC-09_RX_EQ.xml",
+		"WSCC-09_RX_SV.xml",
+		"WSCC-09_RX_TP.xml"
+	}, "Examples/CIM/WSCC-09_RX", "CIMPATH");
 
 	String simName = "Shmem_WSCC-9bus";
 
-	CIM::Reader reader(simName, Logger::Level::INFO, Logger::Level::INFO);
+	CIMReader reader(simName, Logger::Level::INFO, Logger::Level::INFO);
 	SystemTopology sys = reader.loadCIM(60, filenames);
 
 	RealTimeSimulation sim(simName, sys, 0.001, 120,
@@ -72,10 +65,6 @@ int main(int argc, char *argv[]) {
 
 		o += 2;
 	}
-
-	// TODO
-	// Extend system with controllable load
-	// Register controllable load
 
 	sim.addInterface(&intf);
 	sim.run();
