@@ -108,13 +108,6 @@ namespace DPsim {
 		Int mLastLogTimeStep = 0;
 		/// Down sampling rate for log
 		Int mDownSampleRate = 1;
-		/// Name for displaying
-		String mName;
-		/// Simulation log level
-		CPS::Logger::Level mLogLevel;
-		/// Simulation logger
-		CPS::Logger mLog;
-		std::shared_ptr<spdlog::logger> mSLog;
 		/// Left side vector logger
 		std::shared_ptr<DataLogger> mLeftVectorLog;
 		/// Right side vector logger

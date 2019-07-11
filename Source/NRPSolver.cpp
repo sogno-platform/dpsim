@@ -71,10 +71,10 @@ CPS::Complex NRpolarSolver::sol_Vcx(UInt k) {
     * constructor
     */
 NRpolarSolver::NRpolarSolver(CPS::String simName, CPS::SystemTopology & sysTopology, CPS::Real timeStep, CPS::Domain domain,CPS::Logger::Level logLevel) :
-	mName(simName),
-	mLogLevel(logLevel),
-	mLog(simName + "_PF", logLevel)
+	Solver(simName, logLevel)
 {
+	mSLog = Logger::get(simName + "_PF", logLevel);
+
 	SysTopology = sysTopology;
 	mTimeStep = timeStep;
 
@@ -140,7 +140,7 @@ void NRpolarSolver::NRP_initialize(Real time){
 		LastPQ.end(),
 		PQBusIndices.begin(),
 		PQBusIndices.end());
-	mSLog->info("PQ: {}",, logVector(LastPQ));
+	mSLog->info("PQ: {}", logVector(LastPQ));
 
 	LastPV.reserve(PVBusIndices.size());
 	LastPV.insert(

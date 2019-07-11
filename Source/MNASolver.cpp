@@ -29,11 +29,9 @@ namespace DPsim {
 template <typename VarType>
 MnaSolver<VarType>::MnaSolver(String name,
 	Real timeStep, CPS::Domain domain, CPS::Logger::Level logLevel) :
-	mTimeStep(timeStep), mDomain(domain),
-	mName(name), mLogLevel(logLevel) {
+	Solver(name, logLevel),
+	mTimeStep(timeStep), mDomain(domain) {
 
-	// MNA global logging
-	mSLog = Logger::get(name + "_MNA", logLevel);
 	// Raw source and solution vector logging
 	mLeftVectorLog = std::make_shared<DataLogger>(name + "_LeftVector", logLevel != CPS::Logger::Level::off);
 	mRightVectorLog = std::make_shared<DataLogger>(name + "_RightVector", logLevel != CPS::Logger::Level::off);

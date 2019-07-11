@@ -135,7 +135,7 @@ CommandLineArgs::CommandLineArgs(int argc, char *argv[],
 				else if (arg == "INFO")
 					logLevel = Logger::Level::info;
 				else if (arg == "ERR")
-					logLevel = Logger::Level::error;
+					logLevel = Logger::Level::err;
 				else if (arg == "WARN")
 					logLevel = Logger::Level::warn;
 				else if (arg == "NONE")

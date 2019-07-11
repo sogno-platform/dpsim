@@ -48,9 +48,7 @@ namespace DPsim {
 
 			// Logging
 			mLogLevel = logLevel;
-			mSLog = CPS::Logger::get("scheduler");
-			CPS::Logger::setLogPattern(mSLog, "[%L] %v");
-			CPS::Logger::setLogLevel(mSLog, logLevel);
+			mSLog = CPS::Logger::get("scheduler", logLevel);
 		}
 		///
 		virtual ~Scheduler() { }
@@ -94,7 +92,7 @@ namespace DPsim {
 		/// Log level
 		CPS::Logger::Level mLogLevel;
 		/// Logger
-		std::shared_ptr<spdlog::logger> mSLog;
+		CPS::Logger::Log mSLog;
 		// TODO more sophisticated measurement method might be necessary for
 		// longer simulations (risk of high memory requirements and integer
 		// overflow)

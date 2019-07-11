@@ -68,7 +68,7 @@ namespace DPsim {
 
 		// #### Logging ####
 		/// Simulation logger
-		std::shared_ptr<spdlog::logger> mSLog;
+		CPS::Logger::Log mSLog;
 		/// Simulation log level
 		CPS::Logger::Level mLogLevel;
 		/// (Real) time needed for the timesteps

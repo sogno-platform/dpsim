@@ -24,10 +24,12 @@
 #include <cps/PowerComponent.h>
 
 using namespace DPsim;
-//using namespace CPS;
 
-ODESolver::ODESolver(String name, CPS::ODEInterface::Ptr comp, bool implicit_integration, Real timestep)
-	: mName(name), mComponent(comp), mImplicitIntegration(implicit_integration), mTimestep(timestep) {
+ODESolver::ODESolver(String name, CPS::ODEInterface::Ptr comp, bool implicit_integration, Real timestep) :
+	Solver(name, CPS::Logger::Level::info),
+	mComponent(comp),
+	mImplicitIntegration(implicit_integration),
+	mTimestep(timestep) {
 	mProbDim = mComponent->attribute<Matrix>("ode_pre_state")->get().rows();
 	initialize();
 }
