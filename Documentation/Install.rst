@@ -1,18 +1,22 @@
 Installation
 ============
 
+DPsim is a Python module / C++ library for complex power system
+simulation. As a Python module, the easiest way to get to know DPsim is
+via `Jupyter Notebooks <https://jupyter-notebook-beginner-guide.readthedocs.io/en/latest/>`__.
+
 Docker
 ------
 
-First, you need to install `Docker <https://docs.docker.com/install/>`_.
+1. First, you need to install `Docker <https://docs.docker.com/install/>`_.
 
-Then, pull the latest DPsim image
+2. To start a Jupyter session, run a DPsim Docker container
 
-.. code-block:: bash
+::
 
-	docker pull rwthacs/dpsim
+   $ docker run -p 8888:8888 rwthacs/dpsim
 
-and follow the `instructions <https://cloud.docker.com/u/rwthacs/repository/docker/rwthacs/dpsim>`_ on Docker Hub to run the container.
+And access the session by opening the following link: http://localhost:8888/lab/tree/Index.ipynb?token=3adaa57df44cea75e60c0169e1b2a98ae8f7de130481b5bc
 
 Python
 ------
