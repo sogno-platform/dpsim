@@ -48,6 +48,8 @@ Simulation::Simulation(String name,	Logger::Level logLevel) :
 
 	addAttribute<String>("name", &mName, Flags::read);
 	addAttribute<Real>("final_time", &mFinalTime, Flags::read|Flags::write);
+	addAttribute<Bool>("steady_state_init", &mSteadyStateInit, Flags::read|Flags::write);
+	addAttribute<Bool>("split_subnets", &mSplitSubnets, Flags::read|Flags::write);
 	Eigen::setNbThreads(1);
 
 	// Logging
