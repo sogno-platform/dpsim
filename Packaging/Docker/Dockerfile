@@ -36,3 +36,4 @@ ADD requirements.txt .
 RUN pip3 install -r requirements.txt
 
 CMD python3
+CMD [ "jupyter", "lab", "--ip=0.0.0.0", "--allow-root", "--no-browser", "--LabApp.token=3adaa57df44cea75e60c0169e1b2a98ae8f7de130481b5bc" ]
