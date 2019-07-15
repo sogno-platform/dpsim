@@ -264,14 +264,14 @@ void Simulation::sync() {
 		ifm.interface->writeValues();
 	}
 
-	std::cout << Logger::prefix() << "Waiting for start synchronization on " << mInterfaces.size() << " interfaces" << std::endl;
+	mSLog->info("Waiting for start synchronization on {} interfaces", mInterfaces.size());
 
 	// Blocking wait for interfaces
 	for (auto ifm : mInterfaces) {
 		ifm.interface->readValues(ifm.syncStart);
 	}
 
-	std::cout << Logger::prefix() << "Synchronized simulation start with remotes" << std::endl;
+	mSLog->info("Synchronized simulation start with remotes");
 #endif
 }
 
@@ -301,15 +301,14 @@ void Simulation::prepSchedule() {
 }
 
 void Simulation::schedule() {
-	std::cout << Logger::prefix() << "Scheduling tasks." << std::endl;
+	mSLog->info("Scheduling tasks.");
 	prepSchedule();
 	mScheduler->createSchedule(mTasks, mTaskInEdges, mTaskOutEdges);
 }
 
 #ifdef WITH_GRAPHVIZ
 void Simulation::renderDependencyGraph(std::ostream &os) {
-	if (mTasks.size() == 0)
-		prepSchedule();
+	initialize();
 
 	Graph::Graph g("dependencies", Graph::Type::directed);
 	for (auto task : mTasks) {
@@ -326,10 +325,10 @@ void Simulation::renderDependencyGraph(std::ostream &os) {
 #endif
 
 void Simulation::run() {
-		initialize();
+	initialize();
 
 #ifdef WITH_SHMEM
-	std::cout << Logger::prefix() << "Opening interfaces." << std::endl;
+	mSLog->info("Opening interfaces.");
 
 	for (auto ifm : mInterfaces)
 		ifm.interface->open();
@@ -337,7 +336,7 @@ void Simulation::run() {
 	sync();
 #endif
 
-	std::cout << Logger::prefix() << "Start simulation." << std::endl;
+	mSLog->info("Start simulation.");
 
 	while (mTime < mFinalTime) {
 		step();
@@ -353,7 +352,7 @@ void Simulation::run() {
 	for (auto lg : mLoggers)
 		lg->close();
 
-	std::cout << Logger::prefix() << "Simulation finished." << std::endl;
+	mSLog->info("Simulation finished.");
 	//mScheduler->getMeasurements();
 }
 
