@@ -191,6 +191,8 @@ namespace DPsim {
 		void sync();
 		/// Create the schedule for the independent tasks
 		void schedule();
+		/// Reset internal state of simulation
+		void reset();
 
 		///
 		template <typename VarType>

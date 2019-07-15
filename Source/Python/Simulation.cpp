@@ -57,7 +57,7 @@ void Python::Simulation::threadFunction(Python::Simulation *self)
 {
 	Real time, finalTime;
 
-	self->sim->schedule();
+	self->sim->initialize();
 
 	Timer timer(Timer::Flags::fail_on_overrun);
 
@@ -488,11 +488,18 @@ PyObject* Python::Simulation::start(Simulation *self, PyObject *args)
 		newState(self, Simulation::State::starting);
 		self->cond->notify_one();
 
+		if (self->thread) {
+			if (self->thread->joinable())
+				self->thread->join();
+
+			delete self->thread;
+		}
+
 		self->thread = new std::thread(Python::Simulation::threadFunction, self);
 	}
 
 	while (self->state != State::running)
-		self->cond->wait(lk);
+	 	self->cond->wait(lk);
 
 	Py_RETURN_NONE;
 }
@@ -511,6 +518,13 @@ PyObject* Python::Simulation::step(Simulation *self, PyObject *args)
 	if (self->state == State::stopped) {
 		newState(self, State::starting);
 		self->cond->notify_one();
+
+		if (self->thread) {
+			if (self->thread->joinable())
+				self->thread->join();
+
+			delete self->thread;
+		}
 
 		self->thread = new std::thread(threadFunction, self);
 	}
@@ -550,6 +564,24 @@ PyObject* Python::Simulation::stop(Simulation *self, PyObject *args)
 
 	while (self->state != Simulation::State::stopped)
 		self->cond->wait(lk);
+
+	Py_RETURN_NONE;
+}
+
+const char *Python::Simulation::docReset =
+"reset()\n"
+"Reset the simulation and the internal state of the components.";
+PyObject* Python::Simulation::reset(Simulation *self, PyObject *args)
+{
+	std::unique_lock<std::mutex> lk(*self->mut);
+
+	if (self->state != State::done && self->state != State::stopped) {
+		PyErr_SetString(PyExc_SystemError, "Simulation can only be resetted from done or stopped state");
+		return nullptr;
+	}
+
+	self->sim->reset();
+	newState(self, Simulation::State::stopped);
 
 	Py_RETURN_NONE;
 }
@@ -731,6 +763,7 @@ PyMethodDef Python::Simulation::methods[] = {
 	{"add_event",     (PyCFunction) Python::Simulation::addEvent, METH_VARARGS, (char *) docAddEvent},
 	{"pause",         (PyCFunction) Python::Simulation::pause, METH_NOARGS, (char *) Python::Simulation::docPause},
 	{"start",         (PyCFunction) Python::Simulation::start, METH_NOARGS, (char *) Python::Simulation::docStart},
+	{"reset",         (PyCFunction) Python::Simulation::reset, METH_NOARGS, (char *) Python::Simulation::docReset},
 	{"step",          (PyCFunction) Python::Simulation::step, METH_NOARGS,  (char *) Python::Simulation::docStep},
 	{"stop",          (PyCFunction) Python::Simulation::stop, METH_NOARGS,  (char *) Python::Simulation::docStop},
 	{"add_eventfd",   (PyCFunction) Python::Simulation::addEventFD, METH_VARARGS, (char *) Python::Simulation::docAddEventFD},

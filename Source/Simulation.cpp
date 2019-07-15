@@ -70,23 +70,20 @@ Simulation::Simulation(String name, SystemTopology system,
 	mTimeStep = timeStep;
 	mFinalTime = finalTime;
 	mDomain = domain;
+	mSystem = system;
+	mSolverType = solverType;
+	mSteadyStateInit = steadyStateInit;
+	mSplitSubnets = splitSubnets;
+	mTearComponents = tearComponents;
 
-	switch (domain) {
-	case Domain::DP:
-		createSolvers<Complex>(system, solverType, steadyStateInit, splitSubnets, tearComponents);
-		break;
-	case Domain::EMT:
-		createSolvers<Real>(system, solverType, steadyStateInit, splitSubnets, tearComponents);
-		break;
-	case Domain::Static:
-		mSolvers.push_back(std::make_shared<NRpolarSolver>(name, system, timeStep, domain, logLevel));
-		break;
-	}
-
-	mInitialized = true;
+	mInitialized = false;
 }
 
 void Simulation::initialize() {
+	if (mInitialized)
+		return;
+
+	mSolvers.clear();
 
 	switch (mDomain) {
 	case Domain::DP:
@@ -99,6 +96,11 @@ void Simulation::initialize() {
 		mSolvers.push_back(std::make_shared<NRpolarSolver>(mName, mSystem, mTimeStep, mDomain, mLogLevel));
 		break;
 	}
+
+	mTime = 0;
+	mTimeStepCount = 0;
+
+	schedule();
 
 	mInitialized = true;
 }
@@ -324,9 +326,7 @@ void Simulation::renderDependencyGraph(std::ostream &os) {
 #endif
 
 void Simulation::run() {
-	if (!mInitialized)
 		initialize();
-	schedule();
 
 #ifdef WITH_SHMEM
 	std::cout << Logger::prefix() << "Opening interfaces." << std::endl;
@@ -370,4 +370,16 @@ Real Simulation::step() {
 	std::chrono::duration<double> diff = end-start;
 	mStepTimes.push_back(diff.count());
 	return mTime;
+}
+
+void Simulation::reset() {
+
+	// Resets component states
+	mSystem.reset();
+
+	for (auto l : mLoggers)
+		l->reopen();
+
+	// Force reinitialization for next run
+	mInitialized = false;
 }
