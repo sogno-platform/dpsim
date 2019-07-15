@@ -701,6 +701,18 @@ PyObject* Python::Simulation::avgStepTime(Simulation *self, void *ctx)
 	return Py_BuildValue("f", avg);
 }
 
+int Python::Simulation::setFinalTime(Simulation *self, PyObject *val, void *ctx)
+{
+	std::unique_lock<std::mutex> lk(*self->mut);
+
+	if (val == nullptr)
+		return -1;
+
+	self->sim->attribute<Real>("final_time")->fromPyObject(val);
+
+	return 0;
+}
+
 // TODO: for everything but state, we could use read-only Attributes and a getattro
 // implementation that locks the mutex before access
 PyGetSetDef Python::Simulation::getset[] = {
@@ -708,7 +720,7 @@ PyGetSetDef Python::Simulation::getset[] = {
 	{(char *) "name",       (getter) Python::Simulation::name,  nullptr, (char *) Python::Simulation::docName, nullptr},
 	{(char *) "steps",      (getter) Python::Simulation::steps, nullptr, nullptr, nullptr},
 	{(char *) "time",       (getter) Python::Simulation::time,  nullptr, nullptr, nullptr},
-	{(char *) "final_time", (getter) Python::Simulation::finalTime, nullptr, nullptr, nullptr},
+	{(char *) "final_time", (getter) Python::Simulation::finalTime, (setter) Python::Simulation::setFinalTime, nullptr, nullptr},
 	{(char *) "avg_step_time", (getter) Python::Simulation::avgStepTime, nullptr, nullptr, nullptr},
 	{nullptr, nullptr, nullptr, nullptr, nullptr}
 };

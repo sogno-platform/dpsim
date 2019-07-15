@@ -111,6 +111,9 @@ namespace Python {
 		static PyObject* removeEventFD(Simulation *self, PyObject *args);
 		static PyObject* setScheduler(Simulation *self, PyObject *args, PyObject *kwargs);
 
+		// Setters
+		static int setFinalTime(Simulation *self, PyObject *val, void *ctx);
+
 		// Getters
 		static PyObject* getState(Simulation *self, void *ctx);
 		static PyObject* name(Simulation *self, void *ctx);

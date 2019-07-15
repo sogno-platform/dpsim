@@ -47,7 +47,7 @@ Simulation::Simulation(String name,	Logger::Level logLevel) :
 	mName(name), mLogLevel(logLevel) {
 
 	addAttribute<String>("name", &mName, Flags::read);
-	addAttribute<Real>("final_time", &mFinalTime, Flags::read);
+	addAttribute<Real>("final_time", &mFinalTime, Flags::read|Flags::write);
 	Eigen::setNbThreads(1);
 
 	// Logging
