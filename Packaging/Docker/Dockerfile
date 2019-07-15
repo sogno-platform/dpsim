@@ -35,4 +35,14 @@ RUN dnf -y install /tmp/*.rpm
 ADD requirements.txt .
 RUN pip3 install -r requirements.txt
 
-CMD python3
+RUN mkdir dpsim
+COPY --from=builder /dpsim/Examples /dpsim/
+RUN find /dpsim \
+	-name conftest.py -o \
+	-name "*.yml" -o \
+	-name CMakeLists.txt \
+	-exec rm {} \;
+
+WORKDIR /dpsim
+EXPOSE 8888
+CMD [ "jupyter", "lab", "--ip=0.0.0.0", "--allow-root", "--no-browser", "--LabApp.token=3adaa57df44cea75e60c0169e1b2a98ae8f7de130481b5bc" ]
