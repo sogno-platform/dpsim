@@ -19,8 +19,6 @@
  *********************************************************************************/
 
 #include <iomanip>
-#include <experimental/filesystem>
-namespace fs = std::experimental::filesystem;
 
 #include <dpsim/DataLogger.h>
 #include <cps/Logger.h>
@@ -41,24 +39,21 @@ DataLogger::DataLogger(String name, Bool enabled, UInt downsampling) :
 	if (!mEnabled)
 		return;
 
-	String filename = CPS::Logger::logDir() + "/" + name + ".csv";
+	mFilename = CPS::Logger::logDir() + "/" + name + ".csv";
 
-	fs::path p = filename;
+	if (mFilename.has_parent_path() && !fs::exists(mFilename.parent_path()))
+		fs::create_directory(mFilename.parent_path());
 
-	if (p.has_parent_path() && !fs::exists(p.parent_path()))
-		fs::create_directory(p.parent_path());
-
-	mLogFile = std::ofstream(filename);
-	if (!mLogFile.is_open()) {
-		// TODO: replace by exception
-		std::cerr << "Cannot open log file " << filename << std::endl;
-		mEnabled = false;
-	}
+	open();
 }
 
-DataLogger::~DataLogger() {
-	if (mLogFile.is_open())
-		mLogFile.close();
+void DataLogger::open() {
+	mLogFile = std::ofstream(mFilename, std::ios_base::out|std::ios_base::trunc);
+	if (!mLogFile.is_open()) {
+		// TODO: replace by exception
+		std::cerr << "Cannot open log file " << mFilename << std::endl;
+		mEnabled = false;
+	}
 }
 
 void DataLogger::close() {

@@ -35,6 +35,12 @@ RUN dnf -y install /tmp/*.rpm
 ADD requirements.txt .
 RUN pip3 install -r requirements.txt
 
+# Activate Jupyter extensions
+RUN dnf -y --refresh install npm
+RUN jupyter nbextension enable --py widgetsnbextension
+RUN jupyter labextension install @jupyter-widgets/jupyterlab-manager
+
+# Copy Example materials
 RUN mkdir dpsim
 COPY --from=builder /dpsim/Examples /dpsim/
 RUN find /dpsim \

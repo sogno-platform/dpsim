@@ -57,7 +57,7 @@ void Python::Simulation::threadFunction(Python::Simulation *self)
 {
 	Real time, finalTime;
 
-	self->sim->schedule();
+	self->sim->initialize();
 
 	Timer timer(Timer::Flags::fail_on_overrun);
 
@@ -488,11 +488,18 @@ PyObject* Python::Simulation::start(Simulation *self, PyObject *args)
 		newState(self, Simulation::State::starting);
 		self->cond->notify_one();
 
+		if (self->thread) {
+			if (self->thread->joinable())
+				self->thread->join();
+
+			delete self->thread;
+		}
+
 		self->thread = new std::thread(Python::Simulation::threadFunction, self);
 	}
 
 	while (self->state != State::running)
-		self->cond->wait(lk);
+	 	self->cond->wait(lk);
 
 	Py_RETURN_NONE;
 }
@@ -511,6 +518,13 @@ PyObject* Python::Simulation::step(Simulation *self, PyObject *args)
 	if (self->state == State::stopped) {
 		newState(self, State::starting);
 		self->cond->notify_one();
+
+		if (self->thread) {
+			if (self->thread->joinable())
+				self->thread->join();
+
+			delete self->thread;
+		}
 
 		self->thread = new std::thread(threadFunction, self);
 	}
@@ -550,6 +564,24 @@ PyObject* Python::Simulation::stop(Simulation *self, PyObject *args)
 
 	while (self->state != Simulation::State::stopped)
 		self->cond->wait(lk);
+
+	Py_RETURN_NONE;
+}
+
+const char *Python::Simulation::docReset =
+"reset()\n"
+"Reset the simulation and the internal state of the components.";
+PyObject* Python::Simulation::reset(Simulation *self, PyObject *args)
+{
+	std::unique_lock<std::mutex> lk(*self->mut);
+
+	if (self->state != State::done && self->state != State::stopped) {
+		PyErr_SetString(PyExc_SystemError, "Simulation can only be resetted from done or stopped state");
+		return nullptr;
+	}
+
+	self->sim->reset();
+	newState(self, Simulation::State::stopped);
 
 	Py_RETURN_NONE;
 }
@@ -701,6 +733,18 @@ PyObject* Python::Simulation::avgStepTime(Simulation *self, void *ctx)
 	return Py_BuildValue("f", avg);
 }
 
+int Python::Simulation::setFinalTime(Simulation *self, PyObject *val, void *ctx)
+{
+	std::unique_lock<std::mutex> lk(*self->mut);
+
+	if (val == nullptr)
+		return -1;
+
+	self->sim->attribute<Real>("final_time")->fromPyObject(val);
+
+	return 0;
+}
+
 // TODO: for everything but state, we could use read-only Attributes and a getattro
 // implementation that locks the mutex before access
 PyGetSetDef Python::Simulation::getset[] = {
@@ -708,7 +752,7 @@ PyGetSetDef Python::Simulation::getset[] = {
 	{(char *) "name",       (getter) Python::Simulation::name,  nullptr, (char *) Python::Simulation::docName, nullptr},
 	{(char *) "steps",      (getter) Python::Simulation::steps, nullptr, nullptr, nullptr},
 	{(char *) "time",       (getter) Python::Simulation::time,  nullptr, nullptr, nullptr},
-	{(char *) "final_time", (getter) Python::Simulation::finalTime, nullptr, nullptr, nullptr},
+	{(char *) "final_time", (getter) Python::Simulation::finalTime, (setter) Python::Simulation::setFinalTime, nullptr, nullptr},
 	{(char *) "avg_step_time", (getter) Python::Simulation::avgStepTime, nullptr, nullptr, nullptr},
 	{nullptr, nullptr, nullptr, nullptr, nullptr}
 };
@@ -719,6 +763,7 @@ PyMethodDef Python::Simulation::methods[] = {
 	{"add_event",     (PyCFunction) Python::Simulation::addEvent, METH_VARARGS, (char *) docAddEvent},
 	{"pause",         (PyCFunction) Python::Simulation::pause, METH_NOARGS, (char *) Python::Simulation::docPause},
 	{"start",         (PyCFunction) Python::Simulation::start, METH_NOARGS, (char *) Python::Simulation::docStart},
+	{"reset",         (PyCFunction) Python::Simulation::reset, METH_NOARGS, (char *) Python::Simulation::docReset},
 	{"step",          (PyCFunction) Python::Simulation::step, METH_NOARGS,  (char *) Python::Simulation::docStep},
 	{"stop",          (PyCFunction) Python::Simulation::stop, METH_NOARGS,  (char *) Python::Simulation::docStop},
 	{"add_eventfd",   (PyCFunction) Python::Simulation::addEventFD, METH_VARARGS, (char *) Python::Simulation::docAddEventFD},

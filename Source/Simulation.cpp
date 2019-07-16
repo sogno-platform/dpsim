@@ -47,7 +47,9 @@ Simulation::Simulation(String name,	Logger::Level logLevel) :
 	mName(name), mLogLevel(logLevel) {
 
 	addAttribute<String>("name", &mName, Flags::read);
-	addAttribute<Real>("final_time", &mFinalTime, Flags::read);
+	addAttribute<Real>("final_time", &mFinalTime, Flags::read|Flags::write);
+	addAttribute<Bool>("steady_state_init", &mSteadyStateInit, Flags::read|Flags::write);
+	addAttribute<Bool>("split_subnets", &mSplitSubnets, Flags::read|Flags::write);
 	Eigen::setNbThreads(1);
 
 	// Logging
@@ -68,23 +70,20 @@ Simulation::Simulation(String name, SystemTopology system,
 	mTimeStep = timeStep;
 	mFinalTime = finalTime;
 	mDomain = domain;
+	mSystem = system;
+	mSolverType = solverType;
+	mSteadyStateInit = steadyStateInit;
+	mSplitSubnets = splitSubnets;
+	mTearComponents = tearComponents;
 
-	switch (domain) {
-	case Domain::DP:
-		createSolvers<Complex>(system, solverType, steadyStateInit, splitSubnets, tearComponents);
-		break;
-	case Domain::EMT:
-		createSolvers<Real>(system, solverType, steadyStateInit, splitSubnets, tearComponents);
-		break;
-	case Domain::Static:
-		mSolvers.push_back(std::make_shared<NRpolarSolver>(name, system, timeStep, domain, logLevel));
-		break;
-	}
-
-	mInitialized = true;
+	mInitialized = false;
 }
 
 void Simulation::initialize() {
+	if (mInitialized)
+		return;
+
+	mSolvers.clear();
 
 	switch (mDomain) {
 	case Domain::DP:
@@ -97,6 +96,11 @@ void Simulation::initialize() {
 		mSolvers.push_back(std::make_shared<NRpolarSolver>(mName, mSystem, mTimeStep, mDomain, mLogLevel));
 		break;
 	}
+
+	mTime = 0;
+	mTimeStepCount = 0;
+
+	schedule();
 
 	mInitialized = true;
 }
@@ -260,14 +264,14 @@ void Simulation::sync() {
 		ifm.interface->writeValues();
 	}
 
-	std::cout << Logger::prefix() << "Waiting for start synchronization on " << mInterfaces.size() << " interfaces" << std::endl;
+	mSLog->info("Waiting for start synchronization on {} interfaces", mInterfaces.size());
 
 	// Blocking wait for interfaces
 	for (auto ifm : mInterfaces) {
 		ifm.interface->readValues(ifm.syncStart);
 	}
 
-	std::cout << Logger::prefix() << "Synchronized simulation start with remotes" << std::endl;
+	mSLog->info("Synchronized simulation start with remotes");
 #endif
 }
 
@@ -297,15 +301,14 @@ void Simulation::prepSchedule() {
 }
 
 void Simulation::schedule() {
-	std::cout << Logger::prefix() << "Scheduling tasks." << std::endl;
+	mSLog->info("Scheduling tasks.");
 	prepSchedule();
 	mScheduler->createSchedule(mTasks, mTaskInEdges, mTaskOutEdges);
 }
 
 #ifdef WITH_GRAPHVIZ
 void Simulation::renderDependencyGraph(std::ostream &os) {
-	if (mTasks.size() == 0)
-		prepSchedule();
+	initialize();
 
 	Graph::Graph g("dependencies", Graph::Type::directed);
 	for (auto task : mTasks) {
@@ -322,12 +325,10 @@ void Simulation::renderDependencyGraph(std::ostream &os) {
 #endif
 
 void Simulation::run() {
-	if (!mInitialized)
-		initialize();
-	schedule();
+	initialize();
 
 #ifdef WITH_SHMEM
-	std::cout << Logger::prefix() << "Opening interfaces." << std::endl;
+	mSLog->info("Opening interfaces.");
 
 	for (auto ifm : mInterfaces)
 		ifm.interface->open();
@@ -335,7 +336,7 @@ void Simulation::run() {
 	sync();
 #endif
 
-	std::cout << Logger::prefix() << "Start simulation." << std::endl;
+	mSLog->info("Start simulation.");
 
 	while (mTime < mFinalTime) {
 		step();
@@ -351,7 +352,7 @@ void Simulation::run() {
 	for (auto lg : mLoggers)
 		lg->close();
 
-	std::cout << Logger::prefix() << "Simulation finished." << std::endl;
+	mSLog->info("Simulation finished.");
 	//mScheduler->getMeasurements();
 }
 
@@ -368,4 +369,16 @@ Real Simulation::step() {
 	std::chrono::duration<double> diff = end-start;
 	mStepTimes.push_back(diff.count());
 	return mTime;
+}
+
+void Simulation::reset() {
+
+	// Resets component states
+	mSystem.reset();
+
+	for (auto l : mLoggers)
+		l->reopen();
+
+	// Force reinitialization for next run
+	mInitialized = false;
 }
