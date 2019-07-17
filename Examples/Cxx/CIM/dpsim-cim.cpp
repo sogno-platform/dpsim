@@ -33,7 +33,7 @@ int main(int argc, char *argv[]) {
 	String simName = "dpsim";
 
 	CIMReader reader(simName);
-	SystemTopology sys = reader.loadCIM(args.sysFreq, args.positional, args.solver.domain);
+	SystemTopology sys = reader.loadCIM(args.sysFreq, args.positonalPaths(), args.solver.domain);
 
 	Simulation sim(simName, sys, args.timeStep, args.duration, args.solver.domain, args.solver.type);
 
