@@ -50,8 +50,8 @@ build:linux:
 build:windows:
   stage: build
   script:
-    - mkdir build
-    - cd build
+    - New-Item -ItemType Directory -Force -Path build
+    - Set-Location -Path build
     # 64 Bit Graphviz Builds for Windows:
     # https://ci.appveyor.com/project/ellson/graphviz-pl238/
     - cmake .. -DGraphviz_ROOT="C:/Program Files/Graphviz 2.41.20190716.1839"
