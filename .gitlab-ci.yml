@@ -56,7 +56,6 @@ build:windows:
     - cmake --build .
   tags:
     - win10
-  when: manual
   cache:
     paths:
       - build
