@@ -47,6 +47,21 @@ build:linux:
   tags:
     - docker
 
+build:windows:
+  stage: build
+  script:
+    - mkdir build
+    - cd build
+    - cmake ..
+    - cmake --build .
+  tags:
+    - win10
+  when: manual
+  cache:
+    paths:
+      - build
+    key: build-win10
+
 test:pytest:
   stage: test
   variables:
