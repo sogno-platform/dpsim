@@ -56,6 +56,8 @@ Simulation::Simulation(String name,	Logger::Level logLevel) :
 	mSLog = Logger::get(name);
 	mSLog->set_pattern("[%L] %v");
 	mSLog->set_level(Logger::cpsLogLevelToSpd(logLevel));
+
+	mInitialized = false;
 }
 
 Simulation::Simulation(String name, SystemTopology system,
