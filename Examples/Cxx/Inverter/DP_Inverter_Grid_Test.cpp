@@ -46,7 +46,7 @@ int main(int argc, char* argv[]) {
 	auto n4 = Node::make("n4");
 	auto n5 = Node::make("n5");
 
-	Logger::Level level = Logger::Level::NONE;
+	Logger::Level level = Logger::Level::INFO;
 
 	// Components
 	auto inv = Inverter::make("inv", level);
@@ -86,14 +86,15 @@ int main(int argc, char* argv[]) {
 		SystemNodeList{ n1, n2, n3, n4, n5 },
 		SystemComponentList{ inv, r1, l1, r2, l2, c1, rc, grid });
 
+
+
 	//Simulation sim(simName, sys, timeStep, finalTime, Domain::DP, Solver::Type::MNA, Logger::Level::INFO);
 	Simulation sim(simName, level);
 	sim.setSystem(sys);
 	sim.setTimeStep(timeStep);
 	sim.setFinalTime(finalTime);
 	sim.doHarmonicParallelization(false);
-	sim.initialize();
-
+	
 	// Logging
 	auto logger = DataLogger::make(simName);
 	logger->addAttribute("v1", n1->attributeMatrixComp("v"), 1, 5);
@@ -108,6 +109,7 @@ int main(int argc, char* argv[]) {
 	sim.run();
 
 	auto spdStepTimeLog = Logger::get("step_times", Logger::Level::INFO);
+	Logger::setLogPattern(spdStepTimeLog, "%v");
 	spdStepTimeLog->info("steptime_inv");
 
 	Real tot = 0;
