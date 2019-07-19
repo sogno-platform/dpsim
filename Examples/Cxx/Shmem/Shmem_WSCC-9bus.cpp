@@ -40,11 +40,11 @@ int main(int argc, char *argv[]) {
 
 	String simName = "Shmem_WSCC-9bus";
 
-	CIMReader reader(simName, Logger::Level::INFO, Logger::Level::INFO);
+	CIMReader reader(simName, Logger::Level::info, Logger::Level::info);
 	SystemTopology sys = reader.loadCIM(60, filenames);
 
 	RealTimeSimulation sim(simName, sys, 0.001, 120,
-		Domain::DP, Solver::Type::MNA, Logger::Level::DEBUG, true);
+		Domain::DP, Solver::Type::MNA, Logger::Level::debug, true);
 
 	// Create shmem interface
 	Interface::Config conf;

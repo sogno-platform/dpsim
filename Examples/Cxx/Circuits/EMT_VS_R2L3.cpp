@@ -39,17 +39,17 @@ int main(int argc, char* argv[]) {
 	auto n4 = Node::make("n4");
 
 	// Components
-	auto vs = VoltageSource::make("vs", Logger::Level::DEBUG);
+	auto vs = VoltageSource::make("vs", Logger::Level::debug);
 	vs->setParameters(10, 50);
-	auto r1 = Resistor::make("r_1", Logger::Level::DEBUG);
+	auto r1 = Resistor::make("r_1", Logger::Level::debug);
 	r1->setParameters(1);
-	auto l1 = Inductor::make("l_1", Logger::Level::DEBUG);
+	auto l1 = Inductor::make("l_1", Logger::Level::debug);
 	l1->setParameters(0.02);
-	auto l2 = Inductor::make("l_2", Logger::Level::DEBUG);
+	auto l2 = Inductor::make("l_2", Logger::Level::debug);
 	l2->setParameters(0.1);
-	auto l3 = Inductor::make("l_3", Logger::Level::DEBUG);
+	auto l3 = Inductor::make("l_3", Logger::Level::debug);
 	l3->setParameters(0.05);
-	auto r2 = Resistor::make("r_2", Logger::Level::DEBUG);
+	auto r2 = Resistor::make("r_2", Logger::Level::debug);
 	r2->setParameters(2);
 
 	// Topology

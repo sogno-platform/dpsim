@@ -81,7 +81,7 @@ int main(int argc, char* argv[]) {
 	String mGeneratorName = "DP_VBR_" + std::to_string(dt);
 	Component::Ptr gen = SynchronGeneratorVBRNew::make(mGeneratorName, 0, 1, 2,
 		nomPower, nomPhPhVoltRMS, nomFreq, poleNum, nomFieldCurr,
-		Rs, Ll, Lmd, Lmd0, Lmq, Lmq0, Rfd, Llfd, Rkd, Llkd, Rkq1, Llkq1, Rkq2, Llkq2, H, Logger::Level::INFO);
+		Rs, Ll, Lmd, Lmd0, Lmq, Lmq0, Rfd, Llfd, Rkd, Llkd, Rkq1, Llkq1, Rkq2, Llkq2, H, Logger::Level::info);
 
 	Real loadRes = 1.92;
 
@@ -101,7 +101,7 @@ int main(int argc, char* argv[]) {
 	SystemComponentList compsBreakerOn = { gen, r1,	r2, r3, rBreaker1, rBreaker2, rBreaker3, };
 
 	String mSimulationName = "DP_SynchronGenerator_VBR_" + std::to_string(dt);
-	SynGenSimulation sim(mSimulationName, comps, om, dt, tf, Logger::Level::INFO, SimulationType::DP, downSampling);
+	SynGenSimulation sim(mSimulationName, comps, om, dt, tf, Logger::Level::info, SimulationType::DP, downSampling);
 	sim.setNumericalMethod(NumericalMethod::Trapezoidal_flux);
 	sim.addSystemTopology(compsBreakerOn);
 	sim.switchSystemMatrix(0);

@@ -39,9 +39,9 @@ int main(int argc, char* argv[]) {
 
 	// Components
 	auto vs = VoltageSource::make("vs");
-	vs->setParameters(Complex(230, 0));	
+	vs->setParameters(Complex(230, 0));
 	auto rline = Resistor::make("r_line");
-	rline->setParameters(1);	
+	rline->setParameters(1);
 	auto lline = Inductor::make("l_line");
 	lline->setParameters(0.02);
 	auto rload = Resistor::make("r_load");
@@ -54,8 +54,8 @@ int main(int argc, char* argv[]) {
 	rload->connect({ n3, Node::GND });
 
 	// Define system topology
-	auto sys = SystemTopology(500, 
-		SystemNodeList{n1, n2, n3}, 
+	auto sys = SystemTopology(500,
+		SystemNodeList{n1, n2, n3},
 		SystemComponentList{vs, rline, lline, rload});
 
 	// Logger
@@ -65,7 +65,7 @@ int main(int argc, char* argv[]) {
 	logger->addAttribute("v3", n3->attributeMatrixComp("v"));
 	logger->addAttribute("i_line", rline->attributeMatrixComp("i_intf"));
 
-	Simulation sim(simName, Logger::Level::INFO);
+	Simulation sim(simName, Logger::Level::info);
 	sim.setSystem(sys);
 	sim.setTimeStep(timeStep);
 	sim.setFinalTime(finalTime);

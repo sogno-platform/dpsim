@@ -31,8 +31,8 @@
 namespace DPsim {
 	class SequentialScheduler : public Scheduler {
 	public:
-		SequentialScheduler(String outMeasurementFile = String(), 
-			CPS::Logger::Level logLevel = CPS::Logger::Level::INFO) 
+		SequentialScheduler(String outMeasurementFile = String(),
+			CPS::Logger::Level logLevel = CPS::Logger::Level::info)
 			: Scheduler(logLevel),
 			mOutMeasurementFile(outMeasurementFile) { }
 

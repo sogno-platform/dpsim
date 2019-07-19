@@ -51,7 +51,7 @@ PyObject* Python::LoadCim(PyObject* self, PyObject* args, PyObject *kwargs) {
 	PyObject *filenames;
 	PyBytesObject *filename;
 	std::list<String> cimFiles;
-	int logLevel = (int) CPS::Logger::Level::INFO;
+	int logLevel = (int) CPS::Logger::Level::info;
 	const char *name;
 
 	const char *kwlist[] = {"name", "files", "frequency", "log_level", nullptr};

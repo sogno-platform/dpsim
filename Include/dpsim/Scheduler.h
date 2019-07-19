@@ -43,14 +43,13 @@ namespace DPsim {
 		typedef std::chrono::steady_clock::duration TaskTime;
 
 		///
-		Scheduler(CPS::Logger::Level logLevel = CPS::Logger::Level::NONE) : 
+		Scheduler(CPS::Logger::Level logLevel = CPS::Logger::Level::off) :
 			mRoot(std::make_shared<Root>()) {
-			
+
 			// Logging
-			mLogLevel = logLevel; 
-			mSLog = CPS::Logger::get("scheduler");
-			CPS::Logger::setLogPattern(mSLog, "[%L] %v");
-			CPS::Logger::setLogLevel(mSLog, logLevel);
+			mLogLevel = logLevel;
+			mSLog = CPS::Logger::get("scheduler", logLevel);
+			mSLog->set_pattern("[%L] %v");
 		}
 		///
 		virtual ~Scheduler() { }
@@ -94,7 +93,7 @@ namespace DPsim {
 		/// Log level
 		CPS::Logger::Level mLogLevel;
 		/// Logger
-		std::shared_ptr<spdlog::logger> mSLog;
+		CPS::Logger::Log mSLog;
 		// TODO more sophisticated measurement method might be necessary for
 		// longer simulations (risk of high memory requirements and integer
 		// overflow)

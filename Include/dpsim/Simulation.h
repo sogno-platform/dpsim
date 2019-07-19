@@ -68,7 +68,7 @@ namespace DPsim {
 
 		// #### Logging ####
 		/// Simulation logger
-		std::shared_ptr<spdlog::logger> mSLog;
+		CPS::Logger::Log mSLog;
 		/// Simulation log level
 		CPS::Logger::Level mLogLevel;
 		/// (Real) time needed for the timesteps
@@ -128,7 +128,7 @@ namespace DPsim {
 		Simulation(String name,
 			Real timeStep, Real finalTime,
 			CPS::Domain domain = CPS::Domain::DP,
-			CPS::Logger::Level logLevel = CPS::Logger::Level::INFO);
+			CPS::Logger::Level logLevel = CPS::Logger::Level::info);
 
 		template <typename VarType>
 		void createSolvers(const CPS::SystemTopology& system, Solver::Type solverType, Bool steadyStateInit, Bool splitSubnets, const CPS::Component::List& tearComponents);
@@ -139,14 +139,14 @@ namespace DPsim {
 		void prepSchedule();
 	public:
 		/// Creates simulation with name and log level
-		Simulation(String name, CPS::Logger::Level logLevel = CPS::Logger::Level::INFO);
+		Simulation(String name, CPS::Logger::Level logLevel = CPS::Logger::Level::info);
 
 		/// Creates system matrix according to a given System topology
 		Simulation(String name, CPS::SystemTopology system,
 			Real timeStep, Real finalTime,
 			CPS::Domain domain = CPS::Domain::DP,
 			Solver::Type solverType = Solver::Type::MNA,
-			CPS::Logger::Level logLevel = CPS::Logger::Level::INFO,
+			CPS::Logger::Level logLevel = CPS::Logger::Level::info,
 			Bool steadyStateInit = false,
 			Bool splitSubnets = true,
 			CPS::Component::List tearComponents = CPS::Component::List());

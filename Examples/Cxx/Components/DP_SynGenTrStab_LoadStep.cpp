@@ -53,12 +53,12 @@ int main(int argc, char* argv[]) {
 	auto n1 = Node::make("n1", PhaseType::Single, std::vector<Complex>{ initVoltage });
 
 	// Components
-	auto gen = Ph1::SynchronGeneratorTrStab::make("SynGen", Logger::Level::DEBUG);
+	auto gen = Ph1::SynchronGeneratorTrStab::make("SynGen", Logger::Level::debug);
 	gen->setFundamentalParametersPU(nomPower, nomPhPhVoltRMS, nomFreq, Ll, Lmd, Llfd, H);
 	gen->connect({n1});
 	gen->setInitialValues(initElecPower, mechPower);
 
-	auto load = Ph1::Switch::make("StepLoad", Logger::Level::DEBUG);
+	auto load = Ph1::Switch::make("StepLoad", Logger::Level::debug);
 	load->setParameters(Rload, RloadStep);
 	load->connect({Node::GND, n1});
 	load->open();
@@ -72,9 +72,9 @@ int main(int argc, char* argv[]) {
 	logger->addAttribute("i_gen", gen->attributeMatrixComp("i_intf"));
 	logger->addAttribute("i_load", load->attributeMatrixComp("i_intf"));
 	logger->addAttribute("wr_gen", gen->attribute("w_r"));
-	
+
 	Simulation sim(simName, sys, timeStep, finalTime,
-		Domain::DP, Solver::Type::MNA, Logger::Level::INFO);
+		Domain::DP, Solver::Type::MNA, Logger::Level::info);
 
 	sim.addLogger(logger);
 	// Events

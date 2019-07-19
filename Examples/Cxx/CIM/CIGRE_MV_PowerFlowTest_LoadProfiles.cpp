@@ -76,10 +76,10 @@ int main(int argc, char** argv){
 	String simName = "CIGRE-MV-NoTap-LoadProfiles";
 	CPS::Real system_freq = 50;
 
-    CIM::Reader reader(simName, Logger::Level::INFO, Logger::Level::NONE);
+    CIM::Reader reader(simName, Logger::Level::info, Logger::Level::off);
     SystemTopology system = reader.loadCIM(system_freq, filenames, CPS::Domain::Static);
 	//load profile lpreader
-	LoadProfileReader lpreader(simName, loadProfilePath, assignList, Logger::Level::INFO);
+	LoadProfileReader lpreader(simName, loadProfilePath, assignList, Logger::Level::info);
 	lpreader.assign(system, 0, 1.5, 15, LoadProfileReader::Mode::MANUAL);
 
 	auto logger = DPsim::DataLogger::make(simName);
@@ -140,7 +140,7 @@ int main(int argc, char** argv){
 		}
 	}
 
-	Simulation sim(simName, system, 1.5, 15, Domain::Static, Solver::Type::NRP, Logger::Level::INFO, true);
+	Simulation sim(simName, system, 1.5, 15, Domain::Static, Solver::Type::NRP, Logger::Level::info, true);
 
 	sim.addLogger(logger);
 	sim.run();

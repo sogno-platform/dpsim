@@ -50,7 +50,7 @@ int main(int argc, char** argv){
 	String simName = "CIGRE-LV-reduced";
 	CPS::Real system_freq = 50;
 
-    CIM::Reader reader(simName, Logger::Level::INFO, Logger::Level::NONE);
+    CIM::Reader reader(simName, Logger::Level::info, Logger::Level::off);
     SystemTopology system = reader.loadCIM(system_freq, filenames, CPS::Domain::Static);
 
 	auto logger = DPsim::DataLogger::make(simName);
@@ -59,7 +59,7 @@ int main(int argc, char** argv){
 		logger->addAttribute(node->name(), node->attribute("v"));
 	}
 
-	Simulation sim(simName, system, 1, 5, Domain::Static, Solver::Type::NRP, Logger::Level::INFO, true);
+	Simulation sim(simName, system, 1, 5, Domain::Static, Solver::Type::NRP, Logger::Level::info, true);
 
 	sim.addLogger(logger);
 	sim.run();

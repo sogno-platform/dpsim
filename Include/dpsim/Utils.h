@@ -61,7 +61,7 @@ public:
 		Real d = 1,
 		Real sf = 50,
 		Int s = -1,
-		CPS::Logger::Level ll = CPS::Logger::Level::INFO,
+		CPS::Logger::Level ll = CPS::Logger::Level::info,
 		Bool ss = false,
 		Bool b = false,
 		CPS::Domain sd = CPS::Domain::DP,

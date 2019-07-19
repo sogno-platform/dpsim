@@ -108,13 +108,6 @@ namespace DPsim {
 		Int mLastLogTimeStep = 0;
 		/// Down sampling rate for log
 		Int mDownSampleRate = 1;
-		/// Name for displaying
-		String mName;
-		/// Simulation log level
-		CPS::Logger::Level mLogLevel;
-		/// Simulation logger
-		CPS::Logger mLog;
-		std::shared_ptr<spdlog::logger> mSLog;
 		/// Left side vector logger
 		std::shared_ptr<DataLogger> mLeftVectorLog;
 		/// Right side vector logger
@@ -148,13 +141,13 @@ namespace DPsim {
 		MnaSolver(String name,
 			Real timeStep,
 			CPS::Domain domain = CPS::Domain::DP,
-			CPS::Logger::Level logLevel = CPS::Logger::Level::INFO);
+			CPS::Logger::Level logLevel = CPS::Logger::Level::info);
 
 		/// Constructor to be used in simulation examples.
 		MnaSolver(String name, CPS::SystemTopology system,
 			Real timeStep,
 			CPS::Domain domain = CPS::Domain::DP,
-			CPS::Logger::Level logLevel = CPS::Logger::Level::INFO,
+			CPS::Logger::Level logLevel = CPS::Logger::Level::info,
 			Bool steadyStateInit = false,
 			Int downSampleRate = 1,
 			Bool harmParallel = false);

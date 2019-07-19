@@ -51,7 +51,7 @@ int main(int argc, char *argv[]) {
 
 	String simName = "Shmem_WSCC-9bus_Ctrl";
 
-	CIM::Reader reader(simName, Logger::Level::INFO, Logger::Level::INFO);
+	CIM::Reader reader(simName, Logger::Level::info, Logger::Level::info);
 	SystemTopology sys = reader.loadCIM(60, filenames);
 
 	// Extend system with controllable load (Profile)
@@ -70,13 +70,13 @@ int main(int argc, char *argv[]) {
 	std::vector<Real> coefficients_profile = std::vector<Real>(2000, 1./2000);
 	std::vector<Real> coefficients = std::vector<Real>(100, 1./100);
 
-	auto filtP_profile = FIRFilter::make("filter_p_profile", coefficients_profile, 0, Logger::Level::INFO);
+	auto filtP_profile = FIRFilter::make("filter_p_profile", coefficients_profile, 0, Logger::Level::info);
 	filtP_profile->setPriority(1);
 	load_profile->setAttributeRef("P", filtP_profile->attribute<Real>("output"));
 
 	sys.mComponents.push_back(filtP_profile);
 
-	auto filtP = FIRFilter::make("filter_p", coefficients, 0, Logger::Level::INFO);
+	auto filtP = FIRFilter::make("filter_p", coefficients, 0, Logger::Level::info);
 	filtP->setPriority(1);
 	load->setAttributeRef("P", filtP->attribute<Real>("output"));
 	sys.mComponents.push_back(filtP);
