@@ -246,7 +246,7 @@ void CommandLineArgs::showCopyright() {
 	std::cout << " Steffen Vogel <StVogel@eonerc.rwth-aachen.de>" << std::endl;
 }
 
-std::list<fs::path> CommandLineArgs::positonalPaths() const {
+std::list<fs::path> CommandLineArgs::positionalPaths() const {
 	std::list<fs::path> paths;
 
 	for (auto p : positional) {
