@@ -35,4 +35,20 @@ RUN dnf -y install /tmp/*.rpm
 ADD requirements.txt .
 RUN pip3 install -r requirements.txt
 
-CMD python3
+# Activate Jupyter extensions
+RUN dnf -y --refresh install npm
+RUN jupyter nbextension enable --py widgetsnbextension
+RUN jupyter labextension install @jupyter-widgets/jupyterlab-manager
+
+# Copy Example materials
+RUN mkdir dpsim
+COPY --from=builder /dpsim/Examples /dpsim/
+RUN find /dpsim \
+	-name conftest.py -o \
+	-name "*.yml" -o \
+	-name CMakeLists.txt \
+	-exec rm {} \;
+
+WORKDIR /dpsim
+EXPOSE 8888
+CMD [ "jupyter", "lab", "--ip=0.0.0.0", "--allow-root", "--no-browser", "--LabApp.token=3adaa57df44cea75e60c0169e1b2a98ae8f7de130481b5bc" ]

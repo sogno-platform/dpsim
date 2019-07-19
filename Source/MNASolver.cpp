@@ -108,19 +108,17 @@ void MnaSolver<VarType>::initialize(CPS::SystemTopology system) {
 
 template <>
 void MnaSolver<Real>::initializeComponents() {
-	// TODO: Move to base solver class?
-	// This intialization according to power flow information is not MNA specific.
 	mSLog->info("-- Initialize components from power flow");
 	for (auto comp : mPowerComponents) {
-		auto pComp = std::dynamic_pointer_cast<PowerComponent<Complex>>(comp);
+		auto pComp = std::dynamic_pointer_cast<PowerComponent<Real>>(comp);
 		if (!pComp)	continue;
-		pComp->initialize(mSystem.mFrequencies);
 		pComp->initializeFromPowerflow(mSystem.mSystemFrequency);
 	}
 
 	// Initialize signal components.
 	for (auto comp : mSignalComponents)
 		comp->initialize(mSystem.mSystemOmega, mTimeStep);
+
 	// Initialize MNA specific parts of components.
 	for (auto comp : mPowerComponents) {
 		comp->mnaInitialize(mSystem.mSystemOmega, mTimeStep, attribute<Matrix>("left_vector"));
@@ -135,19 +133,12 @@ void MnaSolver<Real>::initializeComponents() {
 
 template <>
 void MnaSolver<Complex>::initializeComponents() {
-	// TODO: Move to base solver class?
-	// This intialization according to power flow information is not MNA specific.
 	mSLog->info("-- Initialize components from power flow");
-
-	// Initialize nodes
-	for (UInt nodeIdx = 0; nodeIdx < mNodes.size(); nodeIdx++)
-		mNodes[nodeIdx]->initialize(mSystem.mFrequencies);
 
 	// Initialize power components with frequencies and from powerflow results
 	for (auto comp : mPowerComponents) {
 		auto pComp = std::dynamic_pointer_cast<PowerComponent<Complex>>(comp);
 		if (!pComp)	continue;
-		pComp->initialize(mSystem.mFrequencies);
 		pComp->initializeFromPowerflow(mSystem.mSystemFrequency);
 	}
 

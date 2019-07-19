@@ -24,6 +24,8 @@
 #include <map>
 #include <iostream>
 #include <fstream>
+#include <experimental/filesystem>
+namespace fs = std::experimental::filesystem;
 
 #include <dpsim/Definitions.h>
 #include <dpsim/Scheduler.h>
@@ -41,6 +43,7 @@ namespace DPsim {
 		String mName;
 		Bool mEnabled;
 		UInt mDownsampling;
+		fs::path mFilename;
 
 		std::map<String, CPS::AttributeBase::Ptr> mAttributes;
 
@@ -54,9 +57,13 @@ namespace DPsim {
 
 		DataLogger(Bool enabled = true);
 		DataLogger(String name, Bool enabled = true, UInt downsampling = 1);
-		~DataLogger();
 
+		void open();
 		void close();
+		void reopen() {
+			close();
+			open();
+		}
 
 		void logPhasorNodeValues(Real time, const Matrix& data);
 		void logEMTNodeValues(Real time, const Matrix& data);
