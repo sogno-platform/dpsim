@@ -385,7 +385,7 @@ void MnaSolver<VarType>::steadyStateInitialization() {
 	Int timeStepCount = 0;
 	Real time = 0;
 	Real eps = 0.0001;
-	Real maxDiff, max;
+	Real maxDiff = 0, max = 0;
 	Matrix diff;
 	Matrix prevLeftSideVector = Matrix::Zero(2 * mNumNodes, 1);
 

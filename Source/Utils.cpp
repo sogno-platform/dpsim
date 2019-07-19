@@ -246,6 +246,16 @@ void CommandLineArgs::showCopyright() {
 	std::cout << " Steffen Vogel <StVogel@eonerc.rwth-aachen.de>" << std::endl;
 }
 
+std::list<fs::path> CommandLineArgs::positionalPaths() const {
+	std::list<fs::path> paths;
+
+	for (auto p : positional) {
+		paths.emplace_back(p);
+	}
+
+	return paths;
+}
+
 std::vector<std::string> DPsim::Utils::tokenize(std::string s, char delimiter) {
 	std::vector<std::string> tokens;
 
@@ -306,7 +316,7 @@ fs::path DPsim::Utils::findFile(const fs::path &name, const fs::path &hint, cons
 		}
 	}
 
-	throw std::runtime_error(fmt::format("File not found: {}", name.native()));
+	throw std::runtime_error(fmt::format("File not found: {}", name.string()));
 }
 
 std::list<fs::path> DPsim::Utils::findFiles(std::list<fs::path> filennames, const fs::path &hint, const std::string &useEnv) {

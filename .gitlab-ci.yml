@@ -47,6 +47,22 @@ build:linux:
   tags:
     - docker
 
+build:windows:
+  stage: build
+  script:
+    - New-Item -ItemType Directory -Force -Path build
+    - Set-Location -Path build
+    # 64 Bit Graphviz Builds for Windows:
+    # https://ci.appveyor.com/project/ellson/graphviz-pl238/
+    - cmake .. -DGraphviz_ROOT="C:/Program Files/Graphviz 2.41.20190716.1839"
+    - cmake --build . -j 24
+  tags:
+    - win10
+  cache:
+    paths:
+      - build
+    key: build-win10
+
 test:pytest:
   stage: test
   variables:

@@ -50,7 +50,7 @@ PyObject* Python::LoadCim(PyObject* self, PyObject* args, PyObject *kwargs) {
 	CPS::Real frequency = 50;
 	PyObject *filenames;
 	PyBytesObject *filename;
-	std::list<String> cimFiles;
+	std::list<fs::path> cimFiles;
 	int logLevel = (int) CPS::Logger::Level::info;
 	const char *name;
 
@@ -65,7 +65,7 @@ PyObject* Python::LoadCim(PyObject* self, PyObject* args, PyObject *kwargs) {
 				PyErr_SetString(PyExc_TypeError, "First argument must be filename or list of filenames");
 				return nullptr;
 			}
-			cimFiles.push_back(PyBytes_AsString((PyObject*) filename));
+			cimFiles.emplace_back(PyBytes_AsString((PyObject*) filename));
 			Py_DECREF(filename);
 		}
 	}

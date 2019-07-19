@@ -90,6 +90,7 @@ public:
 	DPsim::Timer::StartClock::time_point startTime;
 
 	std::list<String> positional;
+	std::list<fs::path> positionalPaths() const;
 
 	std::map<String, Real> options;
 };
