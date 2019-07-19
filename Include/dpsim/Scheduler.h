@@ -49,7 +49,7 @@ namespace DPsim {
 			// Logging
 			mLogLevel = logLevel;
 			mSLog = CPS::Logger::get("scheduler", logLevel);
-			mSLog->set_level("[%L] %v");
+			mSLog->set_pattern("[%L] %v");
 		}
 		///
 		virtual ~Scheduler() { }
