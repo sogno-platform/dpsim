@@ -1,5 +1,5 @@
 /** DAE Solver
- * 
+ *
  * @file
  * @author Markus Mirz <mmirz@eonerc.rwth-aachen.de>
  * @author Steffen Vogel <stvogel@eonerc.rwth-aachen.de>
@@ -29,7 +29,6 @@
 
 #include <dpsim/Solver.h>
 #include <cps/SystemTopology.h>
-#include <cps/Logger.h>
 #include <cps/Solver/ODEintInterface.h>
 
 #include <boost/numeric/odeint/stepper/runge_kutta4.hpp> //ODEInt Runge-Kutta stepper

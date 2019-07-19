@@ -41,7 +41,7 @@ void multiply_connected(SystemTopology& sys, int copies, Real resistance, Real i
 		// "close the ring" by adding another line
 		int nlines = copies == 1 ? 1 : copies+1;
 		for (int i = 0; i < nlines; i++) {
-			auto line = Signal::DecouplingLine::make("dline" + orig_node + std::to_string(i), sys.node<Node<Complex>>(nodeNames[i]), sys.node<Node<Complex>>(nodeNames[i+1]), resistance, inductance, capacitance, Logger::Level::DEBUG);
+			auto line = Signal::DecouplingLine::make("dline" + orig_node + std::to_string(i), sys.node<Node<Complex>>(nodeNames[i]), sys.node<Node<Complex>>(nodeNames[i+1]), resistance, inductance, capacitance, Logger::Level::debug);
 			sys.addComponent(line);
 			sys.addComponents(line->getLineComponents());
 			counter++;
@@ -67,13 +67,13 @@ int main(int argc, char *argv[]) {
 
 	String simName = "WSCC-9bus";
 
-	CIM::Reader reader(simName, Logger::Level::NONE, Logger::Level::NONE);
+	CIM::Reader reader(simName, Logger::Level::off, Logger::Level::off);
 	SystemTopology sys = reader.loadCIM(60, filenames);
 
 	multiply_connected(sys, 15, 12.5, 0.16, 1e-6);
 	//sys.printGraph(sys.topologyGraph());
 	Simulation sim(simName, sys, 0.0001, 0.5,
-		Domain::DP, Solver::Type::MNA, Logger::Level::NONE, false);
+		Domain::DP, Solver::Type::MNA, Logger::Level::off, false);
 	sim.setScheduler(std::make_shared<OpenMPLevelScheduler>(4));
 	//std::ofstream of("graph.svg");
 	//sim.renderDependencyGraph(of);

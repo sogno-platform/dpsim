@@ -60,7 +60,7 @@ int main(int argc, char* argv[]) {
 	String simName = "EMT_ResVS_RxLine_Switch1_" + std::to_string(timeStep);
 
 	Simulation sim(simName, system1, timeStep, finalTime,
-		Domain::EMT, Solver::Type::MNA, Logger::Level::INFO);
+		Domain::EMT, Solver::Type::MNA, Logger::Level::info);
 	sim.addSystemTopology(system2);
 	sim.setSwitchTime(0.1, 1);
 

@@ -71,7 +71,7 @@ int main(int argc, char* argv[]) {
 	auto n1 = Node::make("n1", PhaseType::ABC, initVoltN1);
 
 	// Components
-	auto gen = Ph3::SynchronGeneratorDQODE::make("DP_SynGen", Logger::Level::DEBUG);
+	auto gen = Ph3::SynchronGeneratorDQODE::make("DP_SynGen", Logger::Level::debug);
 	gen->setFundamentalParametersPU(nomPower, nomPhPhVoltRMS, nomFreq, poleNum, nomFieldCurr,
 		Rs, Ll, Lmd, Lmq, Rfd, Llfd, Rkd, Llkd, Rkq1, Llkq1, Rkq2, Llkq2, H,
 		initActivePower, initReactivePower, initTerminalVolt, initVoltAngle, fieldVoltage, mechPower);
@@ -98,10 +98,10 @@ int main(int argc, char* argv[]) {
 	logger->addAttribute("i_load", res->attributeMatrixComp("i_intf"));
 	logger->addAttribute("wr_gen", gen->attribute("w_r"));
 
-	// System	
+	// System
 	auto sys = SystemTopology(60, SystemNodeList{n1}, SystemComponentList{gen, res, fault});
-	Simulation sim(simName, sys, timeStep, finalTime, Domain::DP, Solver::Type::MNA, Logger::Level::INFO);
-	//Simulation sim(simName, Logger::Level::INFO);
+	Simulation sim(simName, sys, timeStep, finalTime, Domain::DP, Solver::Type::MNA, Logger::Level::info);
+	//Simulation sim(simName, Logger::Level::info);
 	//im.setSystem(sys);
 	//im.setTimeStep(timeStep);
 	//im.setFinalTime(finalTime);

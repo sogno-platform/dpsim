@@ -53,9 +53,8 @@ Simulation::Simulation(String name,	Logger::Level logLevel) :
 	Eigen::setNbThreads(1);
 
 	// Logging
-	mSLog = Logger::get(name);
+	mSLog = Logger::get(name, logLevel);
 	mSLog->set_pattern("[%L] %v");
-	mSLog->set_level(Logger::cpsLogLevelToSpd(logLevel));
 
 	mInitialized = false;
 }
