@@ -77,89 +77,40 @@ NRpolarSolver::NRpolarSolver(CPS::String simName, CPS::SystemTopology & sysTopol
 {
 	SysTopology = sysTopology;
 	mTimeStep = timeStep;
-
-	for (auto comp : SysTopology.mComponents) {
-		if (std::shared_ptr<CPS::Static::Ph1::SynchronGenerator> gen = std::dynamic_pointer_cast<CPS::Static::Ph1::SynchronGenerator>(comp))
-			SynchronGenerators.push_back(gen);
-		else if (std::shared_ptr<CPS::Static::Ph1::Load> load = std::dynamic_pointer_cast<CPS::Static::Ph1::Load>(comp))
-			Loads.push_back(load);
-		else if (std::shared_ptr<CPS::Static::Ph1::Transformer> trafo = std::dynamic_pointer_cast<CPS::Static::Ph1::Transformer>(comp))
-			Transformers.push_back(trafo);
-		else if (std::shared_ptr<CPS::Static::Ph1::PiLine> line = std::dynamic_pointer_cast<CPS::Static::Ph1::PiLine>(comp))
-			Lines.push_back(line);
-		else if (std::shared_ptr<CPS::Static::Ph1::externalGridInjection> extnet = std::dynamic_pointer_cast<CPS::Static::Ph1::externalGridInjection>(comp))
-			externalGrids.push_back(extnet);
-	}
-
-	setSbase();
-
-	compose_Y();
-	determinePowerFlowBusType();
+    initialize();
 }
 
-void NRpolarSolver::NRP_initialize(Real time){
+void NRpolarSolver::initialize(){
+	mLog.info() << "#### INIT OF NEWTON-RAPHSON POLAR SOLVER " << std::endl;
 
-	generate_initial_solution(time);
+    for (auto comp : SysTopology.mComponents) {
+        if (std::shared_ptr<CPS::Static::Ph1::SynchronGenerator> gen = std::dynamic_pointer_cast<CPS::Static::Ph1::SynchronGenerator>(comp))
+            SynchronGenerators.push_back(gen);
+        else if (std::shared_ptr<CPS::Static::Ph1::Load> load = std::dynamic_pointer_cast<CPS::Static::Ph1::Load>(comp))
+            Loads.push_back(load);
+        else if (std::shared_ptr<CPS::Static::Ph1::Transformer> trafo = std::dynamic_pointer_cast<CPS::Static::Ph1::Transformer>(comp))
+            Transformers.push_back(trafo);
+        else if (std::shared_ptr<CPS::Static::Ph1::PiLine> line = std::dynamic_pointer_cast<CPS::Static::Ph1::PiLine>(comp))
+            Lines.push_back(line);
+        else if (std::shared_ptr<CPS::Static::Ph1::externalGridInjection> extnet = std::dynamic_pointer_cast<CPS::Static::Ph1::externalGridInjection>(comp))
+            externalGrids.push_back(extnet);
+    }
 
-	mLog.info() << "#### NEWTON-RAPHSON POLAR SOLVER " << std::endl;
+    initComponents();
+    setSbase();
+    determinePowerFlowBusType();
+    compose_Y();
 
-/*	print addmittance matrix for debug only
-	mLog.info() << "#### Admittance Matrix: " <<std::endl
-		<< Eigen::Matrix<CPS::Complex,Eigen::Dynamic,Eigen::Dynamic>(Y) << std::endl;
-*/
-
-	mLog.info() << "#### Create index vectors for power flow solver:" << std::endl;
-	BUSES.reserve(
-		PQBusIndices.size() + PVBusIndices.size()
-	);
-	BUSES.insert(
-		BUSES.end(),
-		PQBusIndices.begin(),
-		PQBusIndices.end());
-	BUSES.insert(
-		BUSES.end(),
-		PVBusIndices.begin(),
-		PVBusIndices.end());
-	mLog.info() << "Buses: " << logVector(BUSES) << std::endl;
-
-	PQPV.reserve(
-		2 * PQBusIndices.size()
-		+ PVBusIndices.size());
-	PQPV.insert(
-		PQPV.end(),
-		PQBusIndices.begin(),
-		PQBusIndices.end());
-	PQPV.insert(
-		PQPV.end(),
-		PVBusIndices.begin(),
-		PVBusIndices.end());
-	mLog.info() << "PQPV: " << logVector(PQPV) << std::endl;
-
-	LastPQ.reserve(PQBusIndices.size());
-	LastPQ.insert(
-		LastPQ.end(),
-		PQBusIndices.begin(),
-		PQBusIndices.end());
-	mLog.info() << "PQ: " << logVector(LastPQ) << std::endl;
-
-	LastPV.reserve(PVBusIndices.size());
-	LastPV.insert(
-		LastPV.end(),
-		PVBusIndices.begin(),
-		PVBusIndices.end());
-	mLog.info() << "PV: " << logVector(LastPV) << std::endl;
-
-	/*uInt to int*/
-	std::vector<int>slackBusIndex_ = std::vector<int>(slackBusIndex.begin(), slackBusIndex.end());
-	mLog.info() << "VD: " << logVector(slackBusIndex_) << std::endl;
-
-	Pesp = sol_P;
-	Qesp = sol_Q;
-
-	if (!checks()) {
+	if (!check_grid()) {
 		throw std::invalid_argument(
 			"The grid failed the solver compatibility test.");
 	}
+}
+
+void NRpolarSolver::initComponents(){
+    for (auto comp : SysTopology.mComponents) {
+        std::dynamic_pointer_cast<PowerComponent<Complex>>(comp)->updateSimNodes();
+    }
 }
 
 NRpolarSolver::~NRpolarSolver() noexcept
@@ -167,7 +118,7 @@ NRpolarSolver::~NRpolarSolver() noexcept
 }
 
 
-bool NRpolarSolver::checks() const
+bool NRpolarSolver::check_grid() const
 {
     return slackBusIndex.size() <= 1;
 }
@@ -270,13 +221,8 @@ void NRpolarSolver::modifyPowerFlowBusComponent(CPS::String name,CPS::PowerflowB
 				extnet->modifyPowerFlowBusType(powerFlowBusType);
 			else if(std::shared_ptr<CPS::Static::Ph1::SynchronGenerator> gen = std::dynamic_pointer_cast<CPS::Static::Ph1::SynchronGenerator>(comp))
 				gen->modifyPowerFlowBusType(powerFlowBusType);
-
 		}
-
 	}
-
-
-
 };
 
 // determines power flow bus type for each node according to the components attached to it.
@@ -340,10 +286,49 @@ void NRpolarSolver::determinePowerFlowBusType() {
 			ss << "Node>>" << node->name() << ": combination of connected components is invalid";
 			throw std::invalid_argument(ss.str());
 		}
-
-
 	}
 
+	// Create index vectors which are used by the solver
+    mLog.info() << "#### Create index vectors for power flow solver:" << std::endl;
+
+    BUSES.reserve(PQBusIndices.size() + PVBusIndices.size());
+    BUSES.insert(
+            BUSES.end(),
+            PQBusIndices.begin(),
+            PQBusIndices.end());
+    BUSES.insert(
+            BUSES.end(),
+            PVBusIndices.begin(),
+            PVBusIndices.end());
+    mLog.info() << "Buses: " << logVector(BUSES) << std::endl;
+
+    PQPV.reserve(2 * PQBusIndices.size() + PVBusIndices.size());
+    PQPV.insert(
+            PQPV.end(),
+            PQBusIndices.begin(),
+            PQBusIndices.end());
+    PQPV.insert(
+            PQPV.end(),
+            PVBusIndices.begin(),
+            PVBusIndices.end());
+    mLog.info() << "PQPV: " << logVector(PQPV) << std::endl;
+
+    LastPQ.reserve(PQBusIndices.size());
+    LastPQ.insert(
+            LastPQ.end(),
+            PQBusIndices.begin(),
+            PQBusIndices.end());
+    mLog.info() << "PQ: " << logVector(LastPQ) << std::endl;
+
+    LastPV.reserve(PVBusIndices.size());
+    LastPV.insert(
+            LastPV.end(),
+            PVBusIndices.begin(),
+            PVBusIndices.end());
+    mLog.info() << "PV: " << logVector(LastPV) << std::endl;
+
+    std::vector<int>slackBusIndex_ = std::vector<int>(slackBusIndex.begin(), slackBusIndex.end());
+    mLog.info() << "VD: " << logVector(slackBusIndex_) << std::endl;
 }
 
 
@@ -408,11 +393,11 @@ void NRpolarSolver::generate_initial_solution(Real time, bool keep_last_solution
 			sol_V_complex(vd->simNode()) = CPS::Complex(sol_V[vd->simNode()], sol_D[vd->simNode()]);
 		}
 
-
-
-
 	sol_initialized = true;
 	sol_complex_initialized = true;
+
+    Pesp = sol_P;
+    Qesp = sol_Q;
 /*
 	mLog.info() << "#### Initial solution: " << std::endl;
 	mLog.info() << "P\t\tQ\t\tV\t\tD" << std::endl;
@@ -921,7 +906,8 @@ Real NRpolarSolver::step(Real time) {
 		compose_Y()
 	*/
 	//consider keep_last_solution after the first TimeStep to save time
-	NRP_initialize(time);
+    generate_initial_solution(time);
+
 	Bool converged = powerFlow();
 	if (converged) {
 		set_solution(converged);
