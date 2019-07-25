@@ -37,17 +37,17 @@ int main(int argc, char** argv){
 	std::list<fs::path> filenames;
 	if (argc <= 1) {
 		filenames = DPsim::Utils::findFiles({
-			"Rootnet_FULL_NE_06J16h_DI.xml",
-			"Rootnet_FULL_NE_06J16h_EQ.xml",
-			"Rootnet_FULL_NE_06J16h_SV.xml",
-			"Rootnet_FULL_NE_06J16h_TP.xml"
+			"Rootnet_FULL_NE_13J16h_DI.xml",
+			"Rootnet_FULL_NE_13J16h_EQ.xml",
+			"Rootnet_FULL_NE_13J16h_SV.xml",
+			"Rootnet_FULL_NE_13J16h_TP.xml"
 		}, "Examples/CIM/IEEE_EU_LV_reduced", "CIMPATH");
 	}
 	else {
 		filenames = std::list<fs::path>(argv + 1, argv + argc);
 	}
 
-	String simName = "CIGRE-LV-reduced";
+	String simName = "IEEE_EU_LV_reduced";
 	CPS::Real system_freq = 50;
 
     CIM::Reader reader(simName, Logger::Level::info, Logger::Level::off);
