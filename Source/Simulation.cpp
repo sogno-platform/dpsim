@@ -94,7 +94,7 @@ void Simulation::initialize() {
 	case Domain::EMT:
 		createSolvers<Real>(mSystem, mSolverType, mSteadyStateInit, mSplitSubnets, mTearComponents);
 		break;
-	case Domain::Static:
+	case Domain::SP:
 		mSolvers.push_back(std::make_shared<NRpolarSolver>(mName, mSystem, mTimeStep, mDomain, mLogLevel));
 		break;
 	}

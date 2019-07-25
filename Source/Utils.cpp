@@ -58,7 +58,7 @@ CommandLineArgs::CommandLineArgs(int argc, char *argv[],
 		{ "log-level",		required_argument,	0, 'l', "(NONE|INFO|DEBUG|WARN|ERR)", "Logging level" },
 		{ "start-at",		required_argument,	0, 'a', "ISO8601", "Start time of real-time simulation" },
 		{ "start-in",		required_argument,	0, 'i', "SECS", "" },
-		{ "solver-domain",	required_argument,	0, 'D', "(STATIC|DP|EMT)", "Domain of solver" },
+		{ "solver-domain",	required_argument,	0, 'D', "(SP|DP|EMT)", "Domain of solver" },
 		{ "solver-type",	required_argument,	0, 'T', "(NRP|MNA)", "Type of solver" },
 		{ "option",		required_argument,	0, 'o', "KEY=VALUE", "User-definable options" },
 		{ "name",		required_argument,	0, 'n', "NAME", "Name of log files" },
@@ -152,10 +152,10 @@ CommandLineArgs::CommandLineArgs(int argc, char *argv[],
 					solver.domain = Domain::DP;
 				else if (arg == "EMT")
 					solver.domain = Domain::EMT;
-				else if (arg == "STATIC")
-					solver.domain = Domain::Static;
+				else if (arg == "SP")
+					solver.domain = Domain::SP;
 				else
-					throw std::invalid_argument("Invalid value for --solver-domain: must be a string of STATIC, DP, EMT");
+					throw std::invalid_argument("Invalid value for --solver-domain: must be a string of SP, DP, EMT");
 				break;
 			}
 

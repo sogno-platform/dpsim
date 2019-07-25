@@ -168,12 +168,12 @@ namespace DPsim {
 		CPS::TopologicalNode::List slackBus;
 
         // #### vectors of components ####
-		std::vector<std::shared_ptr<CPS::Static::Ph1::Transformer>> Transformers;
-		std::vector<std::shared_ptr<CPS::Static::Ph1::SynchronGenerator>> SynchronGenerators;
-		std::vector<std::shared_ptr<CPS::Static::Ph1::Load>> Loads;
-		std::vector<std::shared_ptr<CPS::Static::Ph1::PiLine>> Lines;
-		std::vector<std::shared_ptr<CPS::Static::Ph1::Shunt>> Shunts;
-		std::vector<std::shared_ptr<CPS::Static::Ph1::externalGridInjection>> externalGrids;
+		std::vector<std::shared_ptr<CPS::SP::Ph1::Transformer>> Transformers;
+		std::vector<std::shared_ptr<CPS::SP::Ph1::SynchronGenerator>> SynchronGenerators;
+		std::vector<std::shared_ptr<CPS::SP::Ph1::Load>> Loads;
+		std::vector<std::shared_ptr<CPS::SP::Ph1::PiLine>> Lines;
+		std::vector<std::shared_ptr<CPS::SP::Ph1::Shunt>> Shunts;
+		std::vector<std::shared_ptr<CPS::SP::Ph1::externalGridInjection>> externalGrids;
 
 		CPS::Vector Pesp;
 

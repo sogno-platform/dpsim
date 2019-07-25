@@ -80,15 +80,15 @@ static PyMethodDef dpsimModuleMethods[] = {
 	Component::constructorDef<CPS::EMT::Ph1::VoltageSourceNorton>("_emt_ph1_VoltageSourceNorton"),
 
 	// Static Phasor (SP)
-	Component::constructorDef<CPS::Static::Ph1::PiLine>("_sp_ph1_PiLine"),
-	Component::constructorDef<CPS::Static::Ph1::VD>("_sp_ph1_VD"),
-	Component::constructorDef<CPS::Static::Ph1::Load>("_sp_ph1_Load"),
-	Component::constructorDef<CPS::Static::Ph1::externalGridInjection>("_sp_ph1_externalGridInjection"),
-	Component::constructorDef<CPS::Static::Ph1::PV>("_sp_ph1_PV"),
-	Component::constructorDef<CPS::Static::Ph1::Transformer>("_sp_ph1_Transformer"),
-	Component::constructorDef<CPS::Static::Ph1::Shunt>("_sp_ph1_Shunt"),
-	Component::constructorDef<CPS::Static::Ph1::SynchronGenerator>("_sp_ph1_SynchronGenerator"),
-	Component::constructorDef<CPS::Static::Ph1::PQ>("_sp_ph1_PQ"),
+	Component::constructorDef<CPS::SP::Ph1::PiLine>("_sp_ph1_PiLine"),
+	Component::constructorDef<CPS::SP::Ph1::VDNode>("_sp_ph1_VD"),
+	Component::constructorDef<CPS::SP::Ph1::Load>("_sp_ph1_Load"),
+	Component::constructorDef<CPS::SP::Ph1::externalGridInjection>("_sp_ph1_externalGridInjection"),
+	Component::constructorDef<CPS::SP::Ph1::PVNode>("_sp_ph1_PV"),
+	Component::constructorDef<CPS::SP::Ph1::Transformer>("_sp_ph1_Transformer"),
+	Component::constructorDef<CPS::SP::Ph1::Shunt>("_sp_ph1_Shunt"),
+	Component::constructorDef<CPS::SP::Ph1::SynchronGenerator>("_sp_ph1_SynchronGenerator"),
+	Component::constructorDef<CPS::SP::Ph1::PQNode>("_sp_ph1_PQ"),
 
 	{ nullptr }
 };

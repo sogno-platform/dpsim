@@ -77,7 +77,7 @@ int main(int argc, char** argv){
 	CPS::Real system_freq = 50;
 
     CIM::Reader reader(simName, Logger::Level::INFO, Logger::Level::NONE);
-    SystemTopology system = reader.loadCIM(system_freq, filenames, CPS::Domain::Static);
+    SystemTopology system = reader.loadCIM(system_freq, filenames, CPS::Domain::SP);
 	//load profile lpreader
 	LoadProfileReader lpreader(simName, loadProfilePath, assignList, Logger::Level::INFO);
 	lpreader.assign(system, 0, 1.5, 15, LoadProfileReader::Mode::MANUAL);
@@ -86,10 +86,10 @@ int main(int argc, char** argv){
 	for (auto node : system.mNodes)
 	{
 		logger->addAttribute(node->name(), node->attribute("v"));
-		std::list<std::shared_ptr<CPS::Static::Ph1::PiLine>> lines;
+		std::list<std::shared_ptr<CPS::SP::Ph1::PiLine>> lines;
 		for (auto comp : system.mComponentsAtNode[node]) {
-			if (std::shared_ptr<CPS::Static::Ph1::PiLine> line =
-				std::dynamic_pointer_cast<CPS::Static::Ph1::PiLine>(comp))
+			if (std::shared_ptr<CPS::SP::Ph1::PiLine> line =
+				std::dynamic_pointer_cast<CPS::SP::Ph1::PiLine>(comp))
 			{
 				String current=(node->name() == line->node(0)->name()) ? ("current") : ("current_1");
 				String p_branch = (node->name() == line->node(0)->name()) ? ("p_branch") : ("p_branch_1");
@@ -100,14 +100,14 @@ int main(int argc, char** argv){
 				logger->addAttribute(line->name() + "." + node->name() + ".Q", line->attribute<Real>(q_branch));
 				lines.push_back(line);
 			}
-			else if (std::shared_ptr<CPS::Static::Ph1::externalGridInjection> extnet =
-				std::dynamic_pointer_cast<CPS::Static::Ph1::externalGridInjection>(comp))
+			else if (std::shared_ptr<CPS::SP::Ph1::externalGridInjection> extnet =
+				std::dynamic_pointer_cast<CPS::SP::Ph1::externalGridInjection>(comp))
 			{
 				logger->addAttribute(node->name() + ".Pinj", extnet->attribute<Real>("p_inj"));
 				logger->addAttribute(node->name() + ".Qinj", extnet->attribute<Real>("q_inj"));
 			}
-			else if (std::shared_ptr<CPS::Static::Ph1::Transformer> trafo =
-				std::dynamic_pointer_cast<CPS::Static::Ph1::Transformer>(comp))
+			else if (std::shared_ptr<CPS::SP::Ph1::Transformer> trafo =
+				std::dynamic_pointer_cast<CPS::SP::Ph1::Transformer>(comp))
 			{
 				String current = (node->name() == trafo->node(0)->name()) ? ("current") : ("current_1");
 				String p_branch = (node->name() == trafo->node(0)->name()) ? ("p_branch") : ("p_branch_1");
@@ -128,8 +128,8 @@ int main(int argc, char** argv){
 		else
 		{
 			for (auto comp : system.mComponentsAtNode[node]) {
-				if (std::shared_ptr<CPS::Static::Ph1::Transformer> trafo =
-					std::dynamic_pointer_cast<CPS::Static::Ph1::Transformer>(comp))
+				if (std::shared_ptr<CPS::SP::Ph1::Transformer> trafo =
+					std::dynamic_pointer_cast<CPS::SP::Ph1::Transformer>(comp))
 				{
 					logger->addAttribute(node->name() + ".Pinj", trafo->attribute<Real>("p_inj"));
 					logger->addAttribute(node->name() + ".Qinj", trafo->attribute<Real>("q_inj"));
@@ -140,7 +140,7 @@ int main(int argc, char** argv){
 		}
 	}
 
-	Simulation sim(simName, system, 1.5, 15, Domain::Static, Solver::Type::NRP, Logger::Level::INFO, true);
+	Simulation sim(simName, system, 1.5, 15, Domain::SP, Solver::Type::NRP, Logger::Level::INFO, true);
 
 	sim.addLogger(logger);
 	sim.run();
