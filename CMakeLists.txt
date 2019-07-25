@@ -70,24 +70,18 @@ if("${CMAKE_SYSTEM}" MATCHES "Linux")
 	set(Linux_FOUND ON)
 endif()
 
-if(WIN32)
-	set(OPENMP_FOUND OFF)
-endif()
-
 # Options
-include(CMakeDependentOption)
-
 option(BUILD_SHARED_LIBS "Build shared library" OFF)
 option(BUILD_EXAMPLES "Build C++ examples" ON)
 option(COMPARE_REFERENCE "Download reference results and compare" OFF)
 
-cmake_dependent_option(WITH_GSL			"Enable GSL"        					ON "GSL_FOUND"			OFF)
-cmake_dependent_option(WITH_SUNDIALS	"Enable sundials solver suite"			ON "Sundials_FOUND"		OFF)
-cmake_dependent_option(WITH_SHMEM		"Enable shared memory interface"		ON "VILLASnode_FOUND"	OFF)
-cmake_dependent_option(WITH_RT			"Enable real-time features"				ON "Linux_FOUND"		OFF)
-cmake_dependent_option(WITH_PYTHON		"Enable Python support"					ON "Python_FOUND"		OFF)
-cmake_dependent_option(WITH_CIM			"Enable support for parsing CIM files"	ON "CIMpp_FOUND"		OFF)
-cmake_dependent_option(WITH_OPENMP		"Enable OpenMP-based parallelisation"	ON "OPENMP_FOUND"		OFF)
+option(WITH_GSL      "Enable GSL"                           ${GSL_FOUND})
+option(WITH_SUNDIALS "Enable sundials solver suite"         ${Sundials_FOUND})
+option(WITH_SHMEM    "Enable shared memory interface"       ${VILLASnode_FOUND})
+option(WITH_RT	     "Enable real-time features"            ${Linux_FOUND})
+option(WITH_PYTHON   "Enable Python support"                ${Python_FOUND})
+option(WITH_CIM      "Enable support for parsing CIM files" ${CIMpp_FOUND})
+option(WITH_OPENMP   "Enable OpenMP-based parallelisation"  ${OPENMP_FOUND})
 
 configure_file(
 	${CMAKE_CURRENT_SOURCE_DIR}/Include/dpsim/Config.h.in
