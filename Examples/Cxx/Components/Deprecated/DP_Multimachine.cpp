@@ -86,13 +86,13 @@ int main(int argc, char* argv[]) {
 	String mGeneratorName = "DP_VBR_1" + std::to_string(dt);
 	Component::Ptr gen = SynchronGeneratorVBRNew::make(mGeneratorName, 0, 1, 2,
 			nomPower, nomPhPhVoltRMS, nomFreq, poleNum, nomFieldCurr,
-			Rs, Ll, Lmd, Lmd0, Lmq, Lmq0, Rfd, Llfd, Rkd, Llkd, Rkq1, Llkq1, Rkq2, Llkq2, H, Logger::Level::INFO);
+			Rs, Ll, Lmd, Lmd0, Lmq, Lmq0, Rfd, Llfd, Rkd, Llkd, Rkq1, Llkq1, Rkq2, Llkq2, H, Logger::Level::info);
 
 	// Declare circuit components
 	String mGeneratorName2 = "DP_VBR_2" + std::to_string(dt);
 	Component::Ptr gen2 = SynchronGeneratorVBRNew::make(mGeneratorName2, 12, 13, 14,
 			nomPower, nomPhPhVoltRMS, nomFreq, poleNum, nomFieldCurr,
-			Rs, Ll, Lmd, Lmd0, Lmq, Lmq0, Rfd, Llfd, Rkd, Llkd, Rkq1, Llkq1, Rkq2, Llkq2, H, Logger::Level::INFO);
+			Rs, Ll, Lmd, Lmd0, Lmq, Lmq0, Rfd, Llfd, Rkd, Llkd, Rkq1, Llkq1, Rkq2, Llkq2, H, Logger::Level::info);
 
 	Real loadRes = 24e3*24e3 / 600e6;
 	Real lineRes = 0.032;
@@ -149,7 +149,7 @@ int main(int argc, char* argv[]) {
 			Res12, Res22, Res32, rBreaker1, rBreaker2, rBreaker3, };
 
 	String mSimulationName = "DP_SynchronGenerator_VBR_Multimachine" + std::to_string(dt);
-	SynGenSimulation sim(mSimulationName, comps, om, dt, tf, Logger::Level::INFO, SimulationType::DP, downSampling);
+	SynGenSimulation sim(mSimulationName, comps, om, dt, tf, Logger::Level::info, SimulationType::DP, downSampling);
 	sim.setNumericalMethod(NumericalMethod::Trapezoidal_flux);
 	sim.addSystemTopology(compsBreakerOn);
 	sim.switchSystemMatrix(0);

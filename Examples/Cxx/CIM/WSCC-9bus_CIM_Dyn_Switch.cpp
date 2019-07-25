@@ -45,11 +45,11 @@ int main(int argc, char *argv[]) {
 	String simName = "WSCC-9bus_dyn_switch";
 	Logger::setLogDir("logs/"+simName);
 
-	CPS::CIM::Reader reader(simName, Logger::Level::DEBUG, Logger::Level::INFO);
+	CPS::CIM::Reader reader(simName, Logger::Level::debug, Logger::Level::info);
 	SystemTopology sys = reader.loadCIM(60, filenames);
 
 	// Extend topology with switch
-	auto sw = Ph1::Switch::make("StepLoad", Logger::Level::INFO);
+	auto sw = Ph1::Switch::make("StepLoad", Logger::Level::info);
 	sw->setParameters(1e9, 0.1);
 	sw->connect({ Node::GND, sys.node<Node>("BUS6") });
 	sw->open();
@@ -74,7 +74,7 @@ int main(int argc, char *argv[]) {
 		sys.component<Ph1::SynchronGeneratorTrStab>("GEN3")->attribute<Real>("inertia")->get()*2);
 
 	Simulation sim(simName, sys, 0.0001, 2,
-		Domain::DP, Solver::Type::MNA, Logger::Level::INFO, true);
+		Domain::DP, Solver::Type::MNA, Logger::Level::info, true);
 
 	auto swEvent1 = SwitchEvent::make(0.2, sw, true);
 	//auto swEvent2 = SwitchEvent::make(0.07, sw, false);

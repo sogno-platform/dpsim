@@ -42,7 +42,7 @@ int main(int argc, char* argv[]) {
 	vs->setParameters(10);
 	auto r1 = Resistor::make("r_1");
 	r1->setParameters(1);
-	auto r2 = Resistor::make("r_2", Logger::Level::DEBUG);
+	auto r2 = Resistor::make("r_2", Logger::Level::debug);
 	r2->setParameters(1);
 	auto r3 = Resistor::make("r_3");
 	r3->setParameters(10);

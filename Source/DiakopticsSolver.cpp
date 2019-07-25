@@ -35,12 +35,12 @@ namespace DPsim {
 
 template <typename VarType>
 DiakopticsSolver<VarType>::DiakopticsSolver(String name, SystemTopology system, Component::List tearComponents, Real timeStep, Logger::Level logLevel) :
-	mName(name),
+	Solver(name, logLevel),
 	mTimeStep(timeStep),
 	mSystemFrequency(system.mSystemFrequency),
-	mLog(name + "_Diakoptics", logLevel),
-	mLeftVectorLog(name + "_LeftVector", logLevel != Logger::Level::NONE),
-	mRightVectorLog(name + "_RightVector", logLevel != Logger::Level::NONE) {
+	mLeftVectorLog(name + "_LeftVector", logLevel != Logger::Level::off),
+	mRightVectorLog(name + "_RightVector", logLevel != Logger::Level::off) {
+
 	for (auto comp : tearComponents) {
 		auto pcomp = std::dynamic_pointer_cast<PowerComponent<VarType>>(comp);
 		if (pcomp)
@@ -140,8 +140,7 @@ void DiakopticsSolver<VarType>::createVirtualNodes(int net) {
 				mSubnets[net].nodes.push_back(std::make_shared<CPS::Node<VarType>>(virtualNode));
 				pComp->setVirtualNodeAt(mSubnets[net].nodes[virtualNode], node);
 
-				mLog.info() << "Created virtual node" << node << " = " << virtualNode
-					<< " for " << pComp->name() << std::endl;
+				mSLog->info("Created virtual node{} = {} for {}", node, virtualNode, pComp->name());
 			}
 		}
 	}
@@ -277,25 +276,25 @@ void DiakopticsSolver<VarType>::initMatrices() {
 		}
 		auto block = mSystemMatrix.block(net.sysOff, net.sysOff, net.sysSize, net.sysSize);
 		block = partSys;
-		mLog.debug() << "Block: \n" << block;
+		mSLog->debug("Block: {}", block);
 		net.luFactorization = Eigen::PartialPivLU<Matrix>(partSys);
-		mLog.debug() << "Factorization: \n" << net.luFactorization.matrixLU() << std::endl;
+		mSLog->debug("Factorization: {}", net.luFactorization.matrixLU());
 	}
-	mLog.debug() << "Complete system matrix:\n" << mSystemMatrix;
+	mSLog->debug("Complete system matrix: {}", mSystemMatrix);
 
 
 	// initialize tear topology matrix and impedance matrix of removed network
 	for (UInt compIdx = 0; compIdx < mTearComponents.size(); compIdx++) {
 		applyTearComponentStamp(compIdx);
 	}
-	mLog.debug() << "Topology matrix: \n" << mTearTopology << std::endl;
-	mLog.debug() << "Removed impedance matrix: \n" << mTearImpedance << std::endl;
+	mSLog->debug("Topology matrix: {}", mTearTopology);
+	mSLog->debug("Removed impedance matrix: {}", mTearImpedance);
 	// TODO this can be sped up as well by using the block diagonal form of Yinv
 	for (auto& net : mSubnets) {
 		mSystemInverse.block(net.sysOff, net.sysOff, net.sysSize, net.sysSize) = net.luFactorization.inverse();
 	}
 	mTotalTearImpedance = Eigen::PartialPivLU<Matrix>(mTearImpedance + mTearTopology.transpose() * mSystemInverse * mTearTopology);
-	mLog.debug() << "Total removed impedance matrix LU decomposition: \n" << mTotalTearImpedance.matrixLU() << std::endl;
+	mSLog->debug("Total removed impedance matrix LU decomposition: {}", mTotalTearImpedance.matrixLU());
 }
 
 template <>

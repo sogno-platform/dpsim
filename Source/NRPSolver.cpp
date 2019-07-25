@@ -71,17 +71,17 @@ CPS::Complex NRpolarSolver::sol_Vcx(UInt k) {
     * constructor
     */
 NRpolarSolver::NRpolarSolver(CPS::String simName, CPS::SystemTopology & sysTopology, CPS::Real timeStep, CPS::Domain domain,CPS::Logger::Level logLevel) :
-	mName(simName),
-	mLogLevel(logLevel),
-	mLog(simName + "_PF", logLevel)
+	Solver(simName, logLevel)
 {
+	mSLog = Logger::get(simName + "_PF", logLevel);
+
 	SysTopology = sysTopology;
 	mTimeStep = timeStep;
     initialize();
 }
 
 void NRpolarSolver::initialize(){
-	mLog.info() << "#### INIT OF NEWTON-RAPHSON POLAR SOLVER " << std::endl;
+	mSLog->info("#### INIT OF NEWTON-RAPHSON POLAR SOLVER ");
 
     for (auto comp : SysTopology.mComponents) {
         if (std::shared_ptr<CPS::Static::Ph1::SynchronGenerator> gen = std::dynamic_pointer_cast<CPS::Static::Ph1::SynchronGenerator>(comp))
@@ -187,10 +187,10 @@ void NRpolarSolver::setSbase() {
         Sbase = pow(10, 1 + floor(log10(maxPower)));
 	else
 	{
-		mLog.warn() << "No suitable quantity found for setting Sbase. Using 100kVA." << std::endl;
+		mSLog->warn("No suitable quantity found for setting Sbase. Using 100kVA.");
 		Sbase = 100000;
 	}
-	mLog.info() << "Base power= " << Sbase << " VA." << std::endl;
+	mSLog->info("Base power = {} VA", Sbase);
 }
 
 
@@ -289,7 +289,7 @@ void NRpolarSolver::determinePowerFlowBusType() {
 	}
 
 	// Create index vectors which are used by the solver
-    mLog.info() << "#### Create index vectors for power flow solver:" << std::endl;
+    mSLog->info("#### Create index vectors for power flow solver:");
 
     BUSES.reserve(PQBusIndices.size() + PVBusIndices.size());
     BUSES.insert(
@@ -300,7 +300,7 @@ void NRpolarSolver::determinePowerFlowBusType() {
             BUSES.end(),
             PVBusIndices.begin(),
             PVBusIndices.end());
-    mLog.info() << "Buses: " << logVector(BUSES) << std::endl;
+    mSLog->info("Buses: {}", logVector(BUSES));
 
     PQPV.reserve(2 * PQBusIndices.size() + PVBusIndices.size());
     PQPV.insert(
@@ -311,24 +311,24 @@ void NRpolarSolver::determinePowerFlowBusType() {
             PQPV.end(),
             PVBusIndices.begin(),
             PVBusIndices.end());
-    mLog.info() << "PQPV: " << logVector(PQPV) << std::endl;
+    mSLog->info("PQPV: {}", logVector(PQPV));
 
     LastPQ.reserve(PQBusIndices.size());
     LastPQ.insert(
             LastPQ.end(),
             PQBusIndices.begin(),
             PQBusIndices.end());
-    mLog.info() << "PQ: " << logVector(LastPQ) << std::endl;
+    mSLog->info("PQ: {}", logVector(LastPQ));
 
     LastPV.reserve(PVBusIndices.size());
     LastPV.insert(
             LastPV.end(),
             PVBusIndices.begin(),
             PVBusIndices.end());
-    mLog.info() << "PV: " << logVector(LastPV) << std::endl;
+    mSLog->info("PV: {}", logVector(LastPV));
 
     std::vector<int>slackBusIndex_ = std::vector<int>(slackBusIndex.begin(), slackBusIndex.end());
-    mLog.info() << "VD: " << logVector(slackBusIndex_) << std::endl;
+    mSLog->info("VD: {}", logVector(slackBusIndex_));
 }
 
 
@@ -399,10 +399,10 @@ void NRpolarSolver::generate_initial_solution(Real time, bool keep_last_solution
     Pesp = sol_P;
     Qesp = sol_Q;
 /*
-	mLog.info() << "#### Initial solution: " << std::endl;
-	mLog.info() << "P\t\tQ\t\tV\t\tD" << std::endl;
+	mSLog->info("#### Initial solution: ");
+	mSLog->info("P\t\tQ\t\tV\t\tD");
 	for (UInt i = 0; i < sol_length; i++) {
-		mLog.info() << sol_P[i] << "\t" << sol_Q[i] << "\t" << sol_V[i] << "\t" << sol_D[i] << std::endl;
+		mSLog->info("{}\t{}\t{}\t{}", sol_P[i], sol_Q[i], sol_V[i], sol_D[i]);
 	}
 */
 }
@@ -760,15 +760,15 @@ void NRpolarSolver::set_solution(Bool didConverge) {
 
 
     if (! didConverge) {
-		mLog.info() << "Not converged within "<< Iterations<<" iterations." << std::endl;
+		mSLog->info("Not converged within {} iterations", Iterations);
     }
 	else {
 		calculate_slack_power();
-		mLog.info() << "converged in " << Iterations << " iterations." << std::endl;
-		mLog.info() << "Solution: "<<std::endl;
-		mLog.info() << "P\t\tQ\t\tV\t\tD" << std::endl;
+		mSLog->info("converged in {} iterations",Iterations);
+		mSLog->info("Solution: ");
+		mSLog->info("P\t\tQ\t\tV\t\tD");
 		for (UInt i = 0; i < sol_length; i++) {
-			mLog.info() << sol_P[i] << "\t" << sol_Q[i] << "\t" << sol_V[i] << "\t" << sol_D[i] << std::endl;
+			mSLog->info("{}\t{}\t{}\t{}", sol_P[i], sol_Q[i], sol_V[i], sol_D[i]);
 		}
     }
     for (UInt i = 0; i < sol_length; i++) {
@@ -789,7 +789,7 @@ void NRpolarSolver::set_solution(Bool didConverge) {
 				else if (trans->terminal(1)->node()->name() == node->name())
 					baseVoltage_ = trans->attribute<CPS::Real>("base_Voltage_End2")->get();
 				else
-					mLog.info() << "unable to get base voltage at " << node->name() << std::endl;
+					mSLog->info("Unable to get base voltage at {}", node->name());
 
 			}
 			if (std::shared_ptr<CPS::Static::Ph1::PiLine> line = std::dynamic_pointer_cast<CPS::Static::Ph1::PiLine>(comp)) {
@@ -835,7 +835,7 @@ void NRpolarSolver::compose_Y() {
 		for(auto trans:Transformers) {
 			//to check if this transformer could be ignored
 			if (trans->attribute("R") == 0 && trans->attribute("L") == 0) {
-				mLog.info() << trans->type() << " " << trans->name() << " ignored for R = 0 and L = 0" << std::endl;
+				mSLog->info("{} {} ignored for R = 0 and L = 0",trans->type(), trans->name());
 				continue;
 			}
 			trans->setPerUnitSystem(Sbase, SysTopology.mSystemOmega);

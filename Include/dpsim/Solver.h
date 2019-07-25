@@ -40,9 +40,25 @@ namespace DPsim {
 
 	/// Base class for more specific solvers such as MNA, ODE or IDA.
 	class Solver {
+	protected:
+		/// Name for displaying
+		String mName;
+		///
+		CPS::Logger::Level mLogLevel;
+		///
+		CPS::Logger::Log mSLog;
+
 	public:
 		typedef std::shared_ptr<Solver> Ptr;
 		typedef std::vector<Ptr> List;
+
+		Solver(String name, CPS::Logger::Level logLevel) :
+			mName(name),
+			mLogLevel(logLevel) {
+
+			// Solver global logging
+			mSLog = CPS::Logger::get(name + "_Solver", logLevel);
+		}
 
 		virtual ~Solver() { }
 

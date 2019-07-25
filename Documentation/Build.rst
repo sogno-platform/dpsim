@@ -64,10 +64,10 @@ C++
 - Install `Doxygen`_ or use the Docker image.
 - Generate the C++ documentation by running Doxygen via CMake:::
 
-      $ mkdir -p build
-      $ cd build
-      $ cmake ..
-      $ make docs_cxx
+    $ mkdir -p build
+    $ cd build
+    $ cmake ..
+    $ make docs_cxx
 
 - The resulting documentation will be generated in ``Documentation/html/Cxx``
 
@@ -85,7 +85,7 @@ Docker
 
 2. To build the Python package run::
 
-    $ python3 setup.py bdist
+    $ python3 setup.py bdist_wheel
 
 
 CMake for Linux
@@ -130,11 +130,11 @@ The most recent list of requirements can be found in the Dockerfiles.
 
     $ mkdir build
     $ cmake ..
-    $ make
+    $ make -j$(nproc)
 
 4. To install the generated Python module to your system::
 
-    $ make install
+    $ sudo make install
 
 CMake for Windows
 ^^^^^^^^^^^^^^^^^
@@ -148,16 +148,16 @@ CMake for Windows
    
 2. Fetch sources::
 
-      $ git clone --recursive git@git.rwth-aachen.de:acs/core/simulation/dpsim.git
-      $ cd dpsim
+    $ git clone --recursive git@git.rwth-aachen.de:acs/core/simulation/dpsim.git
+    $ cd dpsim
 
 3. Open a windows command prompt and navigate into the new DPsim folder.
 
 4. Generate a Visual Studio project with CMake and use it to build the project::
 
-      $ mkdir build
-      $ cd build
-      $ cmake -G "Visual Studio 15 2017 Win64" ..
+    $ mkdir build
+    $ cd build
+    $ cmake -G "Visual Studio 15 2017 Win64" ..
 
 5. Open Visual Studio and load the Visual Studio project from the build directory within the DPsim folder.
 
@@ -167,7 +167,7 @@ CMake for Windows
 
 7. To build the Python package run::
 
-    $ python3 setup.py bdist
+    $ python3 setup.py bdist_wheel
  
 8. To install the Python package use Visual Studio and the Release configuration to build the DPsim Python module and then build the INSTALL project.
 
@@ -176,6 +176,30 @@ CMake for Windows
 .. _`Git for Windows`: https://git-scm.com/download/win
 .. _VILLASnode: https://git.rwth-aachen.de/VILLASframework/VILLASnode
 .. _DPsim: https://git.rwth-aachen.de/acs/core/simulation/dpsim
+
+CMake for macOS
+^^^^^^^^^^^^^^^
+
+1. Make sure that the required dependecies are installed::
+
+    $ /usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
+    $ brew install gcc9 git cmake graphviz python3 gsl eigen spdlog
+    $ sudo pip3 install numpy
+
+2. Fetch sources::
+
+    $ git clone --recursive git@git.rwth-aachen.de:acs/core/simulation/dpsim.git
+    $ cd dpsim
+
+3. Compile::.
+
+    $ mkdir build
+    $ cmake ..
+    $ make -j$(sysctl -n hw.ncpu)
+
+4. To install the generated Python module to your system::
+
+    $ sudo make install
 
 Operating System Optimizations
 ------------------------------

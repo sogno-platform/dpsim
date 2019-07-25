@@ -20,10 +20,7 @@
 #include "cps/SystemTopology.h"
 #include "cps/Components.h"
 #include "cps/Component.h"
-#include <cps/Logger.h>
 #include <iterator>
-
-
 
 namespace DPsim {
 
@@ -34,11 +31,6 @@ namespace DPsim {
     class NRpolarSolver: public Solver
     {
 	protected:
-		CPS::String mName;
-		/// Simulation log level
-		CPS::Logger::Level mLogLevel;
-		/// Simulation logger
-		CPS::Logger mLog;
 		/// Logging for integer vectors
 		CPS::String logVector(std::vector<int> index_vector)
 		{

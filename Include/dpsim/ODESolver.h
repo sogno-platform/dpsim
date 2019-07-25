@@ -26,7 +26,6 @@
 #include <dpsim/Solver.h>
 
 #include <cps/Solver/ODEInterface.h>
-#include <cps/Logger.h>
 
 #include <arkode/arkode.h>              // prototypes for ARKode fcts., consts. and includes sundials_types.h
 #include <nvector/nvector_serial.h>     // access to serial N_Vector
@@ -40,8 +39,6 @@ namespace DPsim {
 	/// Solver class for ODE (Ordinary Differential Equation) systems
 	class ODESolver: public Solver {
 	protected:
-		std::string mName;
-
 		/// Component to simulate, possible specialized component needed
 		CPS::ODEInterface::Ptr mComponent;
 

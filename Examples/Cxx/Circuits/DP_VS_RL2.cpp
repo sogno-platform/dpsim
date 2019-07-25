@@ -42,7 +42,7 @@ int main(int argc, char* argv[]) {
 	vs->setParameters(Complex(1000, 0));
 	vs->connect(Node::List{ Node::GND, n1 });
 
-	auto l_line = Inductor::make("l_line", Logger::Level::DEBUG);
+	auto l_line = Inductor::make("l_line", Logger::Level::debug);
 	l_line->setParameters(0.1);
 	l_line->connect(Node::List{ n1, n2 });
 
@@ -63,7 +63,7 @@ int main(int argc, char* argv[]) {
 	logger->addAttribute("v2", n2->attribute("v"));
 	logger->addAttribute("i12", r_load->attribute("i_intf"));
 
-	Simulation sim(simName, sys, timeStep, finalTime, Domain::DP, Solver::Type::MNA, Logger::Level::DEBUG);
+	Simulation sim(simName, sys, timeStep, finalTime, Domain::DP, Solver::Type::MNA, Logger::Level::debug);
 	sim.addLogger(logger);
 
 	sim.run();

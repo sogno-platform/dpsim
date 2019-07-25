@@ -60,7 +60,7 @@ int main(int argc, char* argv[]) {
 	// Declare circuit components
 	Component::Ptr gen = SynchronGeneratorVBR::make(mGeneratorName, 0, 1, 2,
 		nomPower, nomPhPhVoltRMS, nomFreq, poleNum, nomFieldCurr,
-		Rs, Ll, Lmd, Lmd0, Lmq, Lmq0, Rfd, Llfd, Rkd, Llkd, Rkq1, Llkq1, Rkq2, Llkq2, H, Logger::Level::INFO);
+		Rs, Ll, Lmd, Lmd0, Lmq, Lmq0, Rfd, Llfd, Rkd, Llkd, Rkq1, Llkq1, Rkq2, Llkq2, H, Logger::Level::info);
 
 	Real loadRes = 1.92;
 	Component::Ptr r1 = Resistor::make("r1", 0, DEPRECATEDGND, loadRes);

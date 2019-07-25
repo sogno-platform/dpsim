@@ -84,7 +84,7 @@ void Timer::sleep() {
 	mTicks += ticks;
 
 	if (overruns > 0) {
-		//mLog.Log(Logger::Level::WARN) << "Timer overrun of "<< overruns << " timesteps at " << mTime << std::endl;
+		//mSLog->warn("Timer overrun of {} timesteps at {}", overruns, mTime);
 		if (mFlags & Flags::fail_on_overrun)
 			throw OverrunException{overruns};
 	}
