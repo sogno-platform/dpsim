@@ -49,7 +49,7 @@ int main(int argc, char** argv){
 
 	CPS::Real system_freq = 50;
 
-    CIM::Reader reader(simName, Logger::Level::DEBUG, Logger::Level::NONE);
+    CIM::Reader reader(simName, Logger::Level::debug, Logger::Level::off);
     SystemTopology sys = reader.loadCIM(system_freq, filenames, CPS::Domain::SP);
 
 	RealTimeSimulation sim(simName, sys, args.timeStep, args.duration, args.solver.domain, args.solver.type, args.logLevel);

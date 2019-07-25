@@ -30,8 +30,9 @@ using namespace CPS;
 //#define NVECTOR_DATA(vec) NV_DATA_S (vec) // Returns pointer to the first element of array vec
 
 DAESolver::DAESolver(String name, CPS::SystemTopology system, Real dt, Real t0) :
-        mSystem(system),
-        mTimestep(dt) {
+	Solver(name, CPS::Logger::Level::info),
+	mSystem(system),
+	mTimestep(dt) {
 
     // Defines offset vector of the residual which is composed as follows:
     // mOffset[0] = # nodal voltage equations

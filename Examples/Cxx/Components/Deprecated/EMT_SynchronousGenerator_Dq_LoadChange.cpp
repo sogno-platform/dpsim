@@ -72,7 +72,7 @@ int main(int argc, char* argv[]) {
 		// Declare circuit components
 		Component::Ptr gen = SynchronGenerator::make(mGeneratorName, 0, 1, 2,
 			nomPower, nomPhPhVoltRMS, nomFreq, poleNum, nomFieldCurr,
-			Rs, Ll, Lmd, Lmd0, Lmq, Lmq0, Rfd, Llfd, Rkd, Llkd, Rkq1, Llkq1, Rkq2, Llkq2, H, Ra, Logger::Level::INFO);
+			Rs, Ll, Lmd, Lmd0, Lmq, Lmq0, Rfd, Llfd, Rkd, Llkd, Rkq1, Llkq1, Rkq2, Llkq2, H, Ra, Logger::Level::info);
 
 		Real loadRes = 1.92;
 		Component::Ptr r1 = Resistor::make("r1", 0, GND, loadRes);
@@ -90,7 +90,7 @@ int main(int argc, char* argv[]) {
 		SystemComponentList compsBreakerOn = { gen, rBreaker1, rBreaker2, rBreaker3, r1, r2, r3 };
 
 		String mSimulationName = "EMT_SynchronGenerator_Dq_" + std::to_string(i);
-		SynGenSimulation sim(mSimulationName, comps, om, dt, tf, Logger::Level::INFO, SimulationType::EMT, downSampling);
+		SynGenSimulation sim(mSimulationName, comps, om, dt, tf, Logger::Level::info, SimulationType::EMT, downSampling);
 		sim.setNumericalMethod(NumericalMethod::Trapezoidal_flux);
 		sim.addSystemTopology(compsBreakerOn);
 		sim.switchSystemMatrix(0);

@@ -52,7 +52,6 @@ namespace DPsim {
 		Real mTimeStep;
 		Real mSystemFrequency;
 
-		CPS::Logger mLog;
 		/// Left side vector logger
 		DataLogger mLeftVectorLog;
 		/// Right side vector logger

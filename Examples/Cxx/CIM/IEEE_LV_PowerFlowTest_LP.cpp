@@ -73,11 +73,11 @@ int main(int argc, char** argv){
 		assignList.insert(std::pair<string,string>("PQ"+load_number,"Load_profile_"+load_number));
 	}
 
-    CIM::Reader reader(simName, Logger::Level::INFO, Logger::Level::NONE);
+    CIM::Reader reader(simName, Logger::Level::info, Logger::Level::off);
     SystemTopology system = reader.loadCIM(system_freq, filenames, CPS::Domain::SP);
 
 	//load profile lpreader
-	LoadProfileReader lpreader(simName, loadProfilePath, assignList, Logger::Level::INFO);
+	LoadProfileReader lpreader(simName, loadProfilePath, assignList, Logger::Level::info);
 	lpreader.assign(system, 1, 1, 30, LoadProfileReader::Mode::MANUAL, LoadProfileReader::DataFormat::HHMMSS);
 
 	auto logger = DPsim::DataLogger::make(simName);
@@ -86,7 +86,7 @@ int main(int argc, char** argv){
 		logger->addAttribute(node->name(), node->attribute("v"));
 	}
 
-	Simulation sim(simName, system, 1, 30, Domain::SP, Solver::Type::NRP, Logger::Level::INFO, true);
+	Simulation sim(simName, system, 1, 30, Domain::SP, Solver::Type::NRP, Logger::Level::info, true);
 
 	sim.addLogger(logger);
 	sim.run();

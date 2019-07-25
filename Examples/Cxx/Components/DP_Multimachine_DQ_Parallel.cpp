@@ -104,7 +104,7 @@ double doSim(std::shared_ptr<Scheduler> scheduler, int generators) {
 
 	// Simulation
 	Simulation sim(name, sys, timeStep, finalTime,
-		Domain::DP, Solver::Type::MNA, Logger::Level::NONE);
+		Domain::DP, Solver::Type::MNA, Logger::Level::off);
 
 	sim.setScheduler(scheduler);
 	sim.run();

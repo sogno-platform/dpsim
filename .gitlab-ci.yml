@@ -47,6 +47,42 @@ build:linux:
   tags:
     - docker
 
+build:windows:
+  stage: build
+  script:
+    - New-Item -ItemType Directory -Force -Path build
+    - Set-Location -Path build
+    # 64 Bit Graphviz Builds for Windows:
+    # https://ci.appveyor.com/project/ellson/graphviz-pl238/
+    - cmake .. -DGraphviz_ROOT="C:/Program Files/Graphviz 2.41.20190716.1839"
+    - cmake --build . -j 24
+  tags:
+    - win10
+  cache:
+    paths:
+      - build
+    key: build-win10
+
+build:macos:
+  stage: build
+  script:
+    - mkdir -p build
+    - cd build
+    - cmake -DCMAKE_C_COMPILER=/usr/local/bin/gcc-9
+            -DCMAKE_CXX_COMPILER=/usr/local/bin/g++-9
+            -DWITH_CIM_SUBMODULE=ON 
+            -DWITH_SUNDIALS=OFF ..
+    - make -j $(sysctl -n hw.ncpu)
+  cache:
+    paths:
+      - build
+    key: build-macos
+  artifacts:
+    paths:
+      - build
+  tags:
+    - mac
+
 test:pytest:
   stage: test
   variables:
@@ -69,8 +105,8 @@ test:pytest:
 generate:docs:
   stage: generate
   script:
-    - make -C build docs
-    - make -C build docs_cxx
+    - make -j$(nproc) -C build docs
+    - make -j$(nproc) -C build docs_cxx
   image: ${DOCKER_IMAGE_DEV}:${DOCKER_TAG_DEV}
   dependencies:
     - build:linux
@@ -84,7 +120,7 @@ generate:docs:
 generate:packages:
   stage: generate
   script:
-    - make -C build package
+    - make -j$(nproc) -C build package
   only:
     - tags
   tags:

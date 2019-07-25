@@ -29,14 +29,12 @@ namespace DPsim {
 template <typename VarType>
 MnaSolver<VarType>::MnaSolver(String name,
 	Real timeStep, CPS::Domain domain, CPS::Logger::Level logLevel) :
-	mTimeStep(timeStep), mDomain(domain),
-	mName(name), mLogLevel(logLevel) {
+	Solver(name, logLevel),
+	mTimeStep(timeStep), mDomain(domain) {
 
-	// MNA global logging
-	mSLog = Logger::get(name + "_MNA", logLevel);
 	// Raw source and solution vector logging
-	mLeftVectorLog = std::make_shared<DataLogger>(name + "_LeftVector", logLevel != CPS::Logger::Level::NONE);
-	mRightVectorLog = std::make_shared<DataLogger>(name + "_RightVector", logLevel != CPS::Logger::Level::NONE);
+	mLeftVectorLog = std::make_shared<DataLogger>(name + "_LeftVector", logLevel != CPS::Logger::Level::off);
+	mRightVectorLog = std::make_shared<DataLogger>(name + "_RightVector", logLevel != CPS::Logger::Level::off);
 }
 
 template <typename VarType>
@@ -381,13 +379,13 @@ template <typename VarType>
 void MnaSolver<VarType>::steadyStateInitialization() {
 	mSLog->info("--- Run steady-state initialization ---");
 
-	DataLogger initLeftVectorLog(mName + "_InitLeftVector", mLogLevel != CPS::Logger::Level::NONE);
-	DataLogger initRightVectorLog(mName + "_InitRightVector", mLogLevel != CPS::Logger::Level::NONE);
+	DataLogger initLeftVectorLog(mName + "_InitLeftVector", mLogLevel != CPS::Logger::Level::off);
+	DataLogger initRightVectorLog(mName + "_InitRightVector", mLogLevel != CPS::Logger::Level::off);
 
 	Int timeStepCount = 0;
 	Real time = 0;
 	Real eps = 0.0001;
-	Real maxDiff, max;
+	Real maxDiff = 0, max = 0;
 	Matrix diff;
 	Matrix prevLeftSideVector = Matrix::Zero(2 * mNumNodes, 1);
 
@@ -528,7 +526,7 @@ void MnaSolver<VarType>::SolveTaskHarm::execute(Real time, Int timeStepCount) {
 
 template <typename VarType>
 void MnaSolver<VarType>::log(Real time) {
-	if (mLogLevel == Logger::Level::NONE)
+	if (mLogLevel == Logger::Level::off)
 		return;
 
 	if (mDomain == CPS::Domain::EMT) {

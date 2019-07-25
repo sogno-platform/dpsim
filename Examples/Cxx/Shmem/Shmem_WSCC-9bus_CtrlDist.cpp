@@ -51,21 +51,21 @@ int main(int argc, char *argv[]) {
 			filenames = args.filenames;
 		}
 
-		CIM::Reader reader(args.name, Logger::Level::INFO, Logger::Level::INFO);
+		CIM::Reader reader(args.name, Logger::Level::info, Logger::Level::info);
 		SystemTopology sys = reader.loadCIM(args.sysFreq, filenames);
 
 		// Extend system with controllable load (Profile)
-		auto load_profile = PQLoadCS::make("load_cs_profile", 0, 0, 230000, Logger::Level::INFO);
+		auto load_profile = PQLoadCS::make("load_cs_profile", 0, 0, 230000, Logger::Level::info);
 		load_profile->connect({ sys.node<DP::Node>("BUS7") });
 		sys.mComponents.push_back(load_profile);
 
 		// Extend system with controllable load
-		auto ecs = CurrentSource::make("i_intf", Complex(0, 0), Logger::Level::DEBUG);
+		auto ecs = CurrentSource::make("i_intf", Complex(0, 0), Logger::Level::debug);
 		ecs->connect({ sys.node<DP::Node>("BUS4"), DP::Node::GND });
 		sys.mComponents.push_back(ecs);
 
 		RealTimeSimulation sim(args.name + "_1", sys, args.timeStep, args.duration,
-			Domain::DP, Solver::Type::MNA, Logger::Level::DEBUG, true);
+			Domain::DP, Solver::Type::MNA, Logger::Level::debug, true);
 
 		// Create shmem interface and add it to simulation
 		String in  = "/dpsim10";
@@ -90,7 +90,7 @@ int main(int argc, char *argv[]) {
 		// Controllers and filter
 		std::vector<Real> coefficients_profile = std::vector<Real>(2000, 1./2000);
 
-		auto filtP_profile = FIRFilter::make("filter_p_profile", coefficients_profile, 0, Logger::Level::INFO);
+		auto filtP_profile = FIRFilter::make("filter_p_profile", coefficients_profile, 0, Logger::Level::info);
 		filtP_profile->setPriority(1);
 		load_profile->setAttributeRef("power_active", filtP_profile->attribute<Real>("output"));
 		sys.mComponents.push_back(filtP_profile);
@@ -129,7 +129,7 @@ int main(int argc, char *argv[]) {
 		auto n1 = DP::Node::make("n1", PhaseType::Single, std::vector<Complex>({Complex(02.180675e+05, -1.583367e+04)}));
 
 		// Add interface voltage source
-		auto evs = VoltageSource::make("v_intf", Logger::Level::DEBUG);
+		auto evs = VoltageSource::make("v_intf", Logger::Level::debug);
 		evs->setParameters(Complex(0, 0));
 		evs->connect({ DP::Node::GND, n1 });
 
@@ -139,7 +139,7 @@ int main(int argc, char *argv[]) {
 
 		// Controllers and filter
 		std::vector<Real> coefficients = std::vector<Real>(100, 1./100);
-		auto filtP = FIRFilter::make("filter_p", coefficients, 0, Logger::Level::INFO);
+		auto filtP = FIRFilter::make("filter_p", coefficients, 0, Logger::Level::info);
 		filtP->setPriority(1);
 		load->setAttributeRef("active_power", filtP->attribute<Real>("output"));
 

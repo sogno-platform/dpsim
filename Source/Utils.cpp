@@ -131,15 +131,15 @@ CommandLineArgs::CommandLineArgs(int argc, char *argv[],
 				String arg = optarg;
 
 				if (arg == "DEBUG")
-					logLevel = Logger::Level::DEBUG;
+					logLevel = Logger::Level::debug;
 				else if (arg == "INFO")
-					logLevel = Logger::Level::INFO;
+					logLevel = Logger::Level::info;
 				else if (arg == "ERR")
-					logLevel = Logger::Level::ERR;
+					logLevel = Logger::Level::err;
 				else if (arg == "WARN")
-					logLevel = Logger::Level::WARN;
+					logLevel = Logger::Level::warn;
 				else if (arg == "NONE")
-					logLevel = Logger::Level::NONE;
+					logLevel = Logger::Level::off;
 				else
 					throw std::invalid_argument("Invalid value for --log-level: must be a string of DEBUG, INFO, ERR, WARN or NONE");
 				break;
@@ -246,6 +246,16 @@ void CommandLineArgs::showCopyright() {
 	std::cout << " Steffen Vogel <StVogel@eonerc.rwth-aachen.de>" << std::endl;
 }
 
+std::list<fs::path> CommandLineArgs::positionalPaths() const {
+	std::list<fs::path> paths;
+
+	for (auto p : positional) {
+		paths.emplace_back(p);
+	}
+
+	return paths;
+}
+
 std::vector<std::string> DPsim::Utils::tokenize(std::string s, char delimiter) {
 	std::vector<std::string> tokens;
 
@@ -306,7 +316,7 @@ fs::path DPsim::Utils::findFile(const fs::path &name, const fs::path &hint, cons
 		}
 	}
 
-	throw std::runtime_error(fmt::format("File not found: {}", name.native()));
+	throw std::runtime_error(fmt::format("File not found: {}", name.string()));
 }
 
 std::list<fs::path> DPsim::Utils::findFiles(std::list<fs::path> filennames, const fs::path &hint, const std::string &useEnv) {

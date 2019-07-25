@@ -70,10 +70,6 @@ if("${CMAKE_SYSTEM}" MATCHES "Linux")
 	set(Linux_FOUND ON)
 endif()
 
-if(WIN32)
-	set(OPENMP_FOUND OFF)
-endif()
-
 # Options
 option(BUILD_SHARED_LIBS "Build shared library" OFF)
 option(BUILD_EXAMPLES "Build C++ examples" ON)

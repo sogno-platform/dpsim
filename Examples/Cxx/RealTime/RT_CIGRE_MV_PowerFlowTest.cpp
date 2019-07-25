@@ -49,7 +49,7 @@ int main(int argc, char** argv){
 	String simName = "RT_CIGRE-MV-NoTap";
 	CPS::Real system_freq = 50;
 
-    CIM::Reader reader(simName, Logger::Level::DEBUG, Logger::Level::NONE);
+    CIM::Reader reader(simName, Logger::Level::debug, Logger::Level::off);
     SystemTopology system = reader.loadCIM(system_freq, filenames, CPS::Domain::SP);
 
 	auto logger = DPsim::DataLogger::make(simName);
@@ -58,7 +58,7 @@ int main(int argc, char** argv){
 		logger->addAttribute(node->name(), node->attribute("v"));
 	}
 
-	RealTimeSimulation sim(simName, system, 1, 30, Domain::SP, Solver::Type::NRP, Logger::Level::DEBUG, true);
+	RealTimeSimulation sim(simName, system, 1, 30, Domain::SP, Solver::Type::NRP, Logger::Level::debug, true);
 
 	sim.addLogger(logger);
 	sim.run();

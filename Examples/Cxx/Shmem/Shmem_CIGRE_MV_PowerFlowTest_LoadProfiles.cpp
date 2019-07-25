@@ -59,9 +59,9 @@ int main(int argc, char** argv){
 	String simName = "Shmem_CIGRE-MV-NoTap";
 	CPS::Real system_freq = 50;
 
-    CIM::Reader reader(simName, Logger::Level::DEBUG, Logger::Level::NONE);
+    CIM::Reader reader(simName, Logger::Level::debug, Logger::Level::off);
     SystemTopology sys = reader.loadCIM(system_freq, filenames, CPS::Domain::SP);
-	loadProfileReader lpreader(simName, loadProfilePath, Logger::Level::INFO);
+	loadProfileReader lpreader(simName, loadProfilePath, Logger::Level::info);
 	lpreader.assign(sys, 1, 1, 60, loadProfileReader::Mode::AUTO);
 
 	RealTimeSimulation sim(simName, sys, args.timeStep, args.duration, args.solver.domain, args.solver.type, args.logLevel);

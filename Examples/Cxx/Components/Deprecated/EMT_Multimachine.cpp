@@ -80,13 +80,13 @@ int main(int argc, char* argv[]) {
 	String mGeneratorName = "EMT_VBR_1" + std::to_string(dt);
 	Component::Ptr gen = SynchronGeneratorVBR::make(mGeneratorName, 0, 1, 2,
 		nomPower, nomPhPhVoltRMS, nomFreq, poleNum, nomFieldCurr,
-		Rs, Ll, Lmd, Lmd0, Lmq, Lmq0, Rfd, Llfd, Rkd, Llkd, Rkq1, Llkq1, Rkq2, Llkq2, H, Logger::Level::INFO);
+		Rs, Ll, Lmd, Lmd0, Lmq, Lmq0, Rfd, Llfd, Rkd, Llkd, Rkq1, Llkq1, Rkq2, Llkq2, H, Logger::Level::info);
 
 	// Declare circuit components
 	String mGeneratorName2 = "EMT_VBR_2" + std::to_string(dt);
 	Component::Ptr gen2 = SynchronGeneratorVBR::make(mGeneratorName2, 12, 13, 14,
 		nomPower, nomPhPhVoltRMS, nomFreq, poleNum, nomFieldCurr,
-		Rs, Ll, Lmd, Lmd0, Lmq, Lmq0, Rfd, Llfd, Rkd, Llkd, Rkq1, Llkq1, Rkq2, Llkq2, H, Logger::Level::INFO);
+		Rs, Ll, Lmd, Lmd0, Lmq, Lmq0, Rfd, Llfd, Rkd, Llkd, Rkq1, Llkq1, Rkq2, Llkq2, H, Logger::Level::info);
 
 	Real loadRes = 0.96;
 	Real lineRes = 0.032;
@@ -144,7 +144,7 @@ int main(int argc, char* argv[]) {
 		Res12, Res22, Res32, rBreaker1, rBreaker2, rBreaker3, };
 
 	String mSimulationName = "EMT_SynchronGenerator_VBR_Multimachine" + std::to_string(dt);
-	Simulation sim(mSimulationName, system, dt, tf, Domain::EMT, Solver::Type::MNA, Logger::Level::INFO);
+	Simulation sim(mSimulationName, system, dt, tf, Domain::EMT, Solver::Type::MNA, Logger::Level::info);
 	sim.addSystemTopology(compsBreakerOn);
 
 	// Initialize generator

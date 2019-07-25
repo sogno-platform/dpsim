@@ -45,7 +45,7 @@ int main(int argc, char *argv[]) {
 	String simName = "WSCC-9bus";
 	Logger::setLogDir("logs/"+simName);
 
-	CPS::CIM::Reader reader(simName, Logger::Level::DEBUG, Logger::Level::NONE);
+	CPS::CIM::Reader reader(simName, Logger::Level::debug, Logger::Level::off);
 	SystemTopology sys = reader.loadCIM(60, filenames);
 
 	// Logging
@@ -61,7 +61,7 @@ int main(int argc, char *argv[]) {
 	logger->addAttribute("v9", sys.node<Node>("BUS9")->attribute("v"));
 
 	Simulation sim(simName, sys, 0.0001, 0.1,
-		Domain::DP, Solver::Type::MNA, Logger::Level::INFO, true);
+		Domain::DP, Solver::Type::MNA, Logger::Level::info, true);
 
 	sim.addLogger(logger);
 	sim.run();
