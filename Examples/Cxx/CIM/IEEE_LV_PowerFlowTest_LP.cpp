@@ -74,7 +74,7 @@ int main(int argc, char** argv){
 	}
 
     CIM::Reader reader(simName, Logger::Level::info, Logger::Level::off);
-    SystemTopology system = reader.loadCIM(system_freq, filenames, CPS::Domain::Static);
+    SystemTopology system = reader.loadCIM(system_freq, filenames, CPS::Domain::SP);
 
 	//load profile lpreader
 	LoadProfileReader lpreader(simName, loadProfilePath, assignList, Logger::Level::info);
@@ -86,7 +86,7 @@ int main(int argc, char** argv){
 		logger->addAttribute(node->name(), node->attribute("v"));
 	}
 
-	Simulation sim(simName, system, 1, 30, Domain::Static, Solver::Type::NRP, Logger::Level::info, true);
+	Simulation sim(simName, system, 1, 30, Domain::SP, Solver::Type::NRP, Logger::Level::info, true);
 
 	sim.addLogger(logger);
 	sim.run();

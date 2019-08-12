@@ -62,6 +62,8 @@ namespace DPsim {
 		CPS::Vector sol_Q;
 		CPS::Vector sol_V;
 		CPS::Vector sol_D;
+        CPS::Vector Pesp;
+        CPS::Vector Qesp;
 		CPS::Real sol_Vi(CPS::UInt k);
 		CPS::Real sol_Vr(CPS::UInt k);
 		CPS::Complex sol_Vcx(CPS::UInt k);
@@ -119,7 +121,7 @@ namespace DPsim {
 		*
 		* \sa Solver_State
 		*/
-		virtual void NRP_initialize(CPS::Real time);
+		virtual void initialize();
 
 		virtual Bool powerFlow(Bool with_iwamoto = false);
 
@@ -141,12 +143,10 @@ namespace DPsim {
     private:
 		CPS::SystemTopology SysTopology;
 
+        // #### vectors of indices the solver operates on ####
         std::vector<int> BUSES;
-
         std::vector<int> PQPV;
-
         std::vector<int> LastPQ;
-
         std::vector<int> LastPV;
 
 		// #### vectors of node indices for pf calculation ####
@@ -160,16 +160,12 @@ namespace DPsim {
 		CPS::TopologicalNode::List slackBus;
 
         // #### vectors of components ####
-		std::vector<std::shared_ptr<CPS::Static::Ph1::Transformer>> Transformers;
-		std::vector<std::shared_ptr<CPS::Static::Ph1::SynchronGenerator>> SynchronGenerators;
-		std::vector<std::shared_ptr<CPS::Static::Ph1::Load>> Loads;
-		std::vector<std::shared_ptr<CPS::Static::Ph1::PiLine>> Lines;
-		std::vector<std::shared_ptr<CPS::Static::Ph1::Shunt>> Shunts;
-		std::vector<std::shared_ptr<CPS::Static::Ph1::externalGridInjection>> externalGrids;
-
-		CPS::Vector Pesp;
-
-		CPS::Vector Qesp;
+		std::vector<std::shared_ptr<CPS::SP::Ph1::Transformer>> Transformers;
+		std::vector<std::shared_ptr<CPS::SP::Ph1::SynchronGenerator>> SynchronGenerators;
+		std::vector<std::shared_ptr<CPS::SP::Ph1::Load>> Loads;
+		std::vector<std::shared_ptr<CPS::SP::Ph1::PiLine>> Lines;
+		std::vector<std::shared_ptr<CPS::SP::Ph1::Shunt>> Shunts;
+		std::vector<std::shared_ptr<CPS::SP::Ph1::externalGridInjection>> externalGrids;
 
 		void Jacobian(CPS::Matrix &J, CPS::Vector &V, CPS::Vector &D, CPS::UInt npq, CPS::UInt npv); //calculate the jacobian, J is passed by reference
 
@@ -196,6 +192,8 @@ namespace DPsim {
 
 		void compile();
 
+        void initComponents();
+
 		void generate_initial_solution(CPS::Real time, bool keep_last_solution = false);
 
 		void set_solution(CPS::Bool didConverge);
@@ -208,7 +206,7 @@ namespace DPsim {
 		//void compose_Z();
 
 		//! \brief Checks whether the solver can work on the given model
-		bool checks() const;
+		bool check_grid() const;
 
 
 		void correct_PVbuses_violating_Q(CPS::UInt &npq, CPS::UInt &npv, CPS::Matrix &J, CPS::Vector &K, CPS::Vector &X);

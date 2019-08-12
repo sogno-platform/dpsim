@@ -206,7 +206,7 @@ int Python::Simulation::init(Simulation* self, PyObject *args, PyObject *kwds)
 	switch (s) {
 		case 0: domain = Domain::DP; break;
 		case 1: domain = Domain::EMT; break;
-		case 2: domain = Domain::Static; break;
+		case 2: domain = Domain::SP; break;
 		default:
 			PyErr_SetString(PyExc_TypeError, "Invalid sim_type argument (must be one of 0, 1, 2)");
 			return -1;
