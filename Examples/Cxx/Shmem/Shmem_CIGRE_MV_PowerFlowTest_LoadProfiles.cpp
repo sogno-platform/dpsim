@@ -60,7 +60,7 @@ int main(int argc, char** argv){
 	CPS::Real system_freq = 50;
 
     CIM::Reader reader(simName, Logger::Level::debug, Logger::Level::off);
-    SystemTopology sys = reader.loadCIM(system_freq, filenames, CPS::Domain::Static);
+    SystemTopology sys = reader.loadCIM(system_freq, filenames, CPS::Domain::SP);
 	loadProfileReader lpreader(simName, loadProfilePath, Logger::Level::info);
 	lpreader.assign(sys, 1, 1, 60, loadProfileReader::Mode::AUTO);
 
@@ -88,7 +88,7 @@ int main(int argc, char** argv){
 			continue;
 		}
 
-		auto n_stat = std::dynamic_pointer_cast<CPS::Static::Node>(n);
+		auto n_stat = std::dynamic_pointer_cast<CPS::SP::Node>(n);
 		auto v = n_stat->attributeMatrix<Complex>("v");
 		auto v0 = v->coeffComplex(0,0);
 
