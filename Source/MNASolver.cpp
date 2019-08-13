@@ -360,10 +360,17 @@ void MnaSolver<VarType>::createVirtualNodes() {
 		if (pComp->hasVirtualNodes()) {
 			for (UInt node = 0; node < pComp->virtualNodesNumber(); node++) {
 				virtualNode++;
-				mNodes.push_back(std::make_shared<CPS::Node<VarType>>(virtualNode));
-				pComp->setVirtualNodeAt(mNodes[virtualNode], node);
-
-				mSLog->info("Created virtual node {:d} = {:d} for {:s}", node, virtualNode, pComp->name());
+				mNodes.push_back(pComp->virtualNode(node));
+				if (pComp->virtualNode(node)->phaseType() != PhaseType::ABC) {
+					pComp->virtualNode(node)->setSimNode(0, virtualNode);
+					mSLog->info("Assigned index {} to virtual node {} for {}", virtualNode, node, pComp->name());
+				}
+				else {
+					for (UInt phase = 0; phase < 3; phase++) {
+						pComp->virtualNode(node)->setSimNode(phase, virtualNode);
+						mSLog->info("Assigned index {} to virtual node {} for {}", virtualNode, node, pComp->name());
+					}
+				}
 			}
 		}
 	}

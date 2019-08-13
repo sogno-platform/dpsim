@@ -39,7 +39,10 @@ namespace DPsim {
 
 	class Scheduler {
 	public:
+		/// Edges describe the dependency from the first task to a list of other tasks
+		/// or the other way around.
 		typedef std::unordered_map<CPS::Task::Ptr, std::deque<CPS::Task::Ptr>> Edges;
+		/// Time measurement for the task execution
 		typedef std::chrono::steady_clock::duration TaskTime;
 
 		///
@@ -54,17 +57,17 @@ namespace DPsim {
 		///
 		virtual ~Scheduler() { }
 
-		// Interface functions
+		// #### Interface functions ####
 
-		// Creates the schedule for the given dependency graph
+		/// Creates the schedule for the given dependency graph
 		virtual void createSchedule(const CPS::Task::List& tasks, const Edges& inEdges, const Edges& outEdges) = 0;
-		// Performs a single simulation step
+		/// Performs a single simulation step
 		virtual void step(Real time, Int timeStepCount) = 0;
-		// Called on simulation stop to reliably clean up e.g. running helper threads
+		/// Called on simulation stop to reliably clean up e.g. running helper threads
 		virtual void stop() {}
 
-		// Helper function that resolves the task-attribute dependencies to task-task dependencies
-		// and inserts a root task
+		/// Helper function that resolves the task-attribute dependencies to task-task dependencies
+		/// and inserts a root task
 		void resolveDeps(CPS::Task::List& tasks, Edges& inEdges, Edges& outEdges);
 
 		// Special attribute that can be returned in the modified attributes of a task
@@ -74,17 +77,19 @@ namespace DPsim {
 		static CPS::AttributeBase::Ptr external;
 
 	protected:
-		// Simple topological sort, filtering out tasks that do not need to be executed.
+		/// Simple topological sort, filtering out tasks that do not need to be executed.
 		void topologicalSort(const CPS::Task::List& tasks, const Edges& inEdges, const Edges& outEdges, CPS::Task::List& sortedTasks);
-		// Separate topologically sorted list of tasks into levels which can be
-		// executed in parallel
+		/// Separate topologically sorted list of tasks into levels which can be
+		/// executed in parallel
 		static void levelSchedule(const CPS::Task::List& tasks, const Edges& inEdges, const Edges& outEdges, std::vector<CPS::Task::List>& levels);
 
 		void initMeasurements(const CPS::Task::List& tasks);
-		// Not thread-safe for multiple calls with same task, but should only
-		// be called once for each task in each step anyway
+		/// Not thread-safe for multiple calls with same task, but should only
+		/// be called once for each task in each step anyway
 		void updateMeasurement(CPS::Task* task, TaskTime time);
+		/// Write measurement data to file
 		void writeMeasurements(CPS::String filename);
+		/// Read measurement data from file to use it for the scheduling
 		void readMeasurements(CPS::String filename, std::unordered_map<CPS::String, TaskTime::rep>& measurements);
 
 		CPS::Task::Ptr mRoot;
@@ -99,6 +104,8 @@ namespace DPsim {
 		// overflow)
 		std::unordered_map<CPS::Task*, std::vector<TaskTime>> mMeasurements;
 
+		/// Root task that has a dependency on the external attribute
+		/// which means that it should not be removed from the task graph
 		class Root : public CPS::Task {
 		public:
 			Root() : Task("Root") {
@@ -111,9 +118,15 @@ namespace DPsim {
 		};
 	};
 
+	/// A barrier is used to synchronize threads. Threads running into the barrier
+	/// have to wait until the barrier state is released when a defined number
+	/// of threads reaches the barrier.
 	class Barrier {
 	public:
+		/// Constructor without parameters is forbidden.
 		Barrier() = delete;
+		/// Limit sets the number of threads that need to reach the barrier
+		/// to release it.
 		Barrier(Int limit, Bool useCondition = false) :
 			mLimit(limit), mCount(0), mGeneration(0), mUseCondition(useCondition) {}
 
@@ -174,8 +187,11 @@ namespace DPsim {
 		}
 
 	private:
+		/// Barrier limit which has to be reached before the barrier is released.
 		Int mLimit;
+		/// Barrier counter which is tested against limit
 		std::atomic<Int> mCount;
+		/// Allows multiple use of the barrier
 		std::atomic<Int> mGeneration;
 		Bool mUseCondition;
 
