@@ -9,39 +9,18 @@ endif()
 # targets
 set(CIRCUIT_SOURCES
 	# Dynamic phasor examples
-	Circuits/DP_VS_R1.cpp
-	Circuits/DP_CS_R1.cpp
 	Circuits/DP_VS_RL1.cpp
-	Circuits/DP_VS_RL2.cpp
-	Circuits/DP_VS_RC1.cpp	
-	Circuits/DP_CS_R2CL.cpp
-	Circuits/DP_VS_CS_R4.cpp
-	Circuits/DP_VS_R2L3.cpp
-
-	DP_Basics/DP_VS_RL_f60.cpp
-	DP_Basics/DP_VS_RL_f60_largeTs.cpp
-	DP_Basics/DP_VS_RL_f60_vlargeTs.cpp
-	DP_Basics/DP_VS_RL_f500.cpp
-	DP_Basics/DP_VS_RL_f500_largeTs.cpp
-	DP_Basics/DP_VS_RL_f500_ph500.cpp
-
+	Circuits/DP_Circuits.cpp
+	Circuits/DP_Basics_DP_Sims.cpp
+	
 	#Circuits/DP_VS_PiLine_R.cpp
 	#Circuits/DP_VS_Trafo_R.cpp
 	#Circuits/DP_ResVS_RL_Switch.cpp
 	
-	# EMT examples
-	Circuits/EMT_VS_R1.cpp
-	Circuits/EMT_VS_RC1.cpp
-	Circuits/EMT_CS_R1.cpp
+	# EMT examples	
 	Circuits/EMT_VS_RL1.cpp
-	Circuits/EMT_CS_R2CL.cpp
-	Circuits/EMT_VS_R2L3.cpp
-	Circuits/EMT_VS_CS_R4_AC.cpp
-	Circuits/EMT_VS_CS_R4_DC.cpp	
-
-	DP_Basics/EMT_VS_RL_f60.cpp
-	DP_Basics/EMT_VS_RL_f60_largeTs.cpp
-	DP_Basics/EMT_VS_RL_f500.cpp
+	Circuits/EMT_Circuits.cpp
+	Circuits/DP_Basics_EMT_Sims.cpp
 	
 	#Circuits/EMT_ResVS_RL_Switch.cpp
 
@@ -76,8 +55,8 @@ endif()
 
 if(WITH_RT)
 	set(RT_SOURCES
-		RealTime/RT_DP_CS_R_1.cpp
-		RealTime/RT_DP_ResVS_RL1.cpp
+		RealTime/RT_DP_CS_R1.cpp
+		RealTime/RT_DP_VS_RL2.cpp
 	)
 endif()
 

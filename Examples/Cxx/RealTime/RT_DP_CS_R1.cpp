@@ -27,46 +27,33 @@ using namespace CPS::DP::Ph1;
 
 int main(int argc, char* argv[]) {
 	// Define simulation scenario
-	Real timeStep = 0.0001;
-	Real finalTime = 0.1;
-	String simName = "DP_VS_RL2";
+	Real timeStep = 0.001;
+	Real finalTime = 5;
+	String simName = "RT_DP_CS_R1";
 	Logger::setLogDir("logs/"+simName);
 
 	// Nodes
 	auto n1 = Node::make("n1");
-	auto n2 = Node::make("n2");
-	auto n3 = Node::make("n3");
 
 	// Components
-	auto vs = VoltageSource::make("vs");
-	vs->setParameters(Complex(1000, 0));
-	vs->connect(Node::List{ Node::GND, n1 });
+	auto cs = CurrentSource::make("cs");
+	cs->setParameters(Complex(10, 0));
+	auto r1 = Resistor::make("r_1");
+	r1->setParameters(1);
 
-	auto l_line = Inductor::make("l_line", Logger::Level::debug);
-	l_line->setParameters(0.1);
-	l_line->connect(Node::List{ n1, n2 });
-
-	auto r_line = Resistor::make("r_line");
-	r_line->setParameters(1);
-	r_line->connect(Node::List{ n2, n3 });
-
-	auto r_load = Resistor::make("r_load");
-	r_load->setParameters(100);
-	r_load->connect(Node::List{ n3, Node::GND });
+	// Connections
+	cs->connect({ Node::GND, n1 });
+	r1->connect({ Node::GND, n1 });
 
 	// Define system topology
-	auto sys = SystemTopology(50, SystemNodeList{n1, n2, n3}, SystemComponentList{vs, l_line, r_line, r_load});
+	auto sys = SystemTopology(50,
+		SystemNodeList{Node::GND, n1},
+		SystemComponentList{cs, r1});
 
-	// Logger
-	auto logger = DataLogger::make(simName);
-	logger->addAttribute("v1", n1->attribute("v"));
-	logger->addAttribute("v2", n2->attribute("v"));
-	logger->addAttribute("i12", r_load->attribute("i_intf"));
-
-	Simulation sim(simName, sys, timeStep, finalTime, Domain::DP, Solver::Type::MNA, Logger::Level::debug);
-	sim.addLogger(logger);
-
+	RealTimeSimulation sim(simName, sys, timeStep, finalTime);
 	sim.run();
+
+	sim.logStepTimes(simName + "step_times");
 
 	return 0;
 }

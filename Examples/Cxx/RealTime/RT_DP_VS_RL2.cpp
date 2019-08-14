@@ -22,38 +22,44 @@
 #include <DPsim.h>
 
 using namespace DPsim;
-using namespace CPS::EMT;
-using namespace CPS::EMT::Ph1;
+using namespace CPS::DP;
+using namespace CPS::DP::Ph1;
 
 int main(int argc, char* argv[]) {
-	// Define simulation scenario
 	Real timeStep = 0.0001;
-	Real finalTime = 0.1;
-	String simName = "EMT_CS_R_1";
+	Real finalTime = 1;
+	String simName = "RT_DP_VS_RL2";
 	Logger::setLogDir("logs/"+simName);
 
 	// Nodes
 	auto n1 = Node::make("n1");
+	auto n2 = Node::make("n2");
+	auto n3 = Node::make("n3");
 
 	// Components
-	auto cs = CurrentSource::make("cs");
-	cs->setParameters(Complex(10, 0), 50);
-	cs->connect(Node::List{ Node::GND, n1 });
-	auto r1 = Resistor::make("r_1");
-	r1->setParameters(1);
-	r1->connect({ Node::GND, n1 });
+	auto vs = VoltageSource::make("v_s");
+	vs->setParameters(Complex(1000, 0));
+	auto rl = Resistor::make("r_line");
+	rl->setParameters(1);
+	auto ll = Inductor::make("l_line");
+	ll->setParameters(0.01);
+	auto rL = Resistor::make("r_load");
+	rL->setParameters(100);
 
-	// Define system topology
-	auto sys = SystemTopology(50, SystemNodeList{n1}, SystemComponentList{cs, r1});
+	// Connections
+	vs->connect({ Node::GND, n1 });
+	rl->connect({ n1, n2 });
+	ll->connect({ n2, n3 });
+	rL->connect({ Node::GND, n3 });
 
-	// Logging
-	auto logger = DataLogger::make(simName);
-	logger->addAttribute("v1", n1->attribute("v"));
+	auto sys = SystemTopology(50,
+		SystemNodeList{Node::GND, n1, n2, n3},
+		SystemComponentList{vs, rl, ll, rL});
 
-	Simulation sim(simName, sys, timeStep, finalTime, Domain::EMT);
-	sim.addLogger(logger);
+	RealTimeSimulation sim(simName, sys, timeStep, finalTime);
 
-	sim.run();
+	auto startIn = std::chrono::seconds(5);
+	sim.run(startIn);
 
 	return 0;
 }

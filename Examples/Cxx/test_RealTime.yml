@@ -1,2 +1,2 @@
 RT_DP_ResVS_RL1:
-  cmd: build/Examples/Cxx/RT_DP_ResVS_RL1
+  cmd: build/Examples/Cxx/RT_DP_VS_RL2
