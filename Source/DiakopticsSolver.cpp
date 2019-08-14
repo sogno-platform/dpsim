@@ -143,6 +143,24 @@ void DiakopticsSolver<VarType>::createVirtualNodes(int net) {
 				mSLog->info("Created virtual node{} = {} for {}", node, virtualNode, pComp->name());
 			}
 		}
+
+		if (pComp->hasVirtualNodes()) {
+			for (UInt node = 0; node < pComp->virtualNodesNumber(); node++) {
+				virtualNode++;
+				mSubnets[net].nodes.push_back(pComp->virtualNode(node));
+
+				pComp->virtualNode(node)->setSimNode(0, virtualNode);
+				mSLog->info("Assigned index {} to virtual node {} for {}", virtualNode, node, pComp->name());
+
+				if (pComp->virtualNode(node)->phaseType() == CPS::PhaseType::ABC) {
+					for (UInt phase = 1; phase < 3; phase++) {
+						virtualNode++;
+						pComp->virtualNode(node)->setSimNode(phase, virtualNode);
+						mSLog->info("Assigned index {} to virtual node {} for {}", virtualNode, node, pComp->name());
+					}
+				}
+			}
+		}
 	}
 }
 
