@@ -361,12 +361,13 @@ void MnaSolver<VarType>::createVirtualNodes() {
 			for (UInt node = 0; node < pComp->virtualNodesNumber(); node++) {
 				virtualNode++;
 				mNodes.push_back(pComp->virtualNode(node));
-				if (pComp->virtualNode(node)->phaseType() != PhaseType::ABC) {
-					pComp->virtualNode(node)->setSimNode(0, virtualNode);
-					mSLog->info("Assigned index {} to virtual node {} for {}", virtualNode, node, pComp->name());
-				}
-				else {
-					for (UInt phase = 0; phase < 3; phase++) {
+
+				pComp->virtualNode(node)->setSimNode(0, virtualNode);
+				mSLog->info("Assigned index {} to virtual node {} for {}", virtualNode, node, pComp->name());
+
+				if (pComp->virtualNode(node)->phaseType() == CPS::PhaseType::ABC) {
+					for (UInt phase = 1; phase < 3; phase++) {
+						virtualNode++;
 						pComp->virtualNode(node)->setSimNode(phase, virtualNode);
 						mSLog->info("Assigned index {} to virtual node {} for {}", virtualNode, node, pComp->name());
 					}
