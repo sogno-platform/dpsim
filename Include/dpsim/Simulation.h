@@ -205,6 +205,9 @@ namespace DPsim {
 		void addLogger(DataLogger::Ptr logger) {
 			mLoggers.push_back(logger);
 		}
+		/// Write step time measurements to log file
+		void logStepTimes(String logName);
+
 #ifdef WITH_SHMEM
 		///
 		void addInterface(Interface *eint, Bool syncStart = true) {

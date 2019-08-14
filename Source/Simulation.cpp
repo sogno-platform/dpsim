@@ -329,7 +329,7 @@ void Simulation::run() {
 	initialize();
 
 #ifdef WITH_SHMEM
-	mSLog->info("Opening interfaces.");
+	std::cout << Logger::prefix() << "Opening interfaces." << std::endl;
 
 	for (auto ifm : mInterfaces)
 		ifm.interface->open();
@@ -337,11 +337,13 @@ void Simulation::run() {
 	sync();
 #endif
 
-	mSLog->info("Start simulation.");
+	std::cout << Logger::prefix() << "Start simulation." << std::endl;
 
 	while (mTime < mFinalTime) {
 		step();
 	}
+
+	std::cout << Logger::prefix() << "Simulation finished." << std::endl;
 
 	mScheduler->stop();
 
@@ -353,7 +355,6 @@ void Simulation::run() {
 	for (auto lg : mLoggers)
 		lg->close();
 
-	mSLog->info("Simulation finished.");
 	//mScheduler->getMeasurements();
 }
 
@@ -382,4 +383,17 @@ void Simulation::reset() {
 
 	// Force reinitialization for next run
 	mInitialized = false;
+}
+
+void Simulation::logStepTimes(String logName) {
+	auto stepTimeLog = Logger::get(logName, Logger::Level::info);
+	Logger::setLogPattern(stepTimeLog, "%v");
+	stepTimeLog->info("step_time");
+
+	Real stepTimeSum = 0;
+	for (auto meas : mStepTimes) {
+		stepTimeSum += meas;
+		stepTimeLog->info("{:f}", meas);
+	}
+	std::cout << "Average step time: " << stepTimeSum / mStepTimes.size() << std::endl;
 }
