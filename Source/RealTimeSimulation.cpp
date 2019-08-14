@@ -28,32 +28,31 @@ RealTimeSimulation::RealTimeSimulation(String name, SystemTopology system, Real 
 		Domain domain, Solver::Type type, Logger::Level logLevel, Bool steadyStateInit)
 	: Simulation(name, system, timeStep, finalTime, domain, type, logLevel, steadyStateInit),
 	mTimeStep(timeStep),
-	mTimer()
-{
+	mTimer() {
+
 	addAttribute<Real>("time_step", &mTimeStep, Flags::read);
 	addAttribute<Int >("overruns", nullptr, [=](){ return mTimer.overruns(); }, Flags::read);
 	//addAttribute<Int >("overruns", nullptr, nullptr, Flags::read);
 }
 
-void RealTimeSimulation::run(const Timer::StartClock::duration &startIn)
-{
+void RealTimeSimulation::run(const Timer::StartClock::duration &startIn) {
 	run(Timer::StartClock::now() + startIn);
 }
 
-void RealTimeSimulation::run(const Timer::StartClock::time_point &startAt)
-{
-	schedule();
-
-	std::cout << Logger::prefix() << "Opening interfaces." << std::endl;
+void RealTimeSimulation::run(const Timer::StartClock::time_point &startAt) {
+	initialize();
 
 #ifdef WITH_SHMEM
+	std::cout << Logger::prefix() << "Opening interfaces." << std::endl;
+
 	for (auto ifm : mInterfaces)
 		ifm.interface->open();
-#endif
 
 	sync();
+#endif
 
-	std::cout << Logger::prefix() << "Starting simulation at " << startAt << " (delta_T = " << startAt - Timer::StartClock::now() << " seconds)" << std::endl;
+	std::cout << Logger::prefix() << "Start simulation at " << startAt
+		<< " (delta_T = " << startAt - Timer::StartClock::now() << ")." << std::endl;
 
 	mTimer.setStartTime(startAt);
 	mTimer.setInterval(mTimeStep);
@@ -69,6 +68,8 @@ void RealTimeSimulation::run(const Timer::StartClock::time_point &startAt)
 	} while (mTime < mFinalTime);
 
 	std::cout << Logger::prefix() << "Simulation finished." << std::endl;
+
+	mScheduler->stop();
 
 #ifdef WITH_SHMEM
 	for (auto ifm : mInterfaces)
