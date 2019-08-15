@@ -92,31 +92,10 @@ int main(int argc, char* argv[]) {
 	sim.setTimeStep(timeStep);
 	sim.setFinalTime(finalTime);
 	sim.doHarmonicParallelization(true);
-	sim.initialize();
 	sim.setScheduler(scheduler);
 
-	// Logging
-	auto logger = DataLogger::make(simName);
-	logger->addAttribute("v1", n1->attributeMatrixComp("v"), 1, 5);
-	logger->addAttribute("v2", n2->attributeMatrixComp("v"), 1, 1);
-	logger->addAttribute("v3", n3->attributeMatrixComp("v"), 1, 5);
-	logger->addAttribute("v4", n4->attributeMatrixComp("v"), 1, 1);
-	logger->addAttribute("v5", n5->attributeMatrixComp("v"), 1, 1);
-	logger->addAttribute("i12", r1->attributeMatrixComp("i_intf"), 1, 1);
-	logger->addAttribute("i34", r2->attributeMatrixComp("i_intf"), 1, 1);
-	//sim.addLogger(logger);
-
 	sim.run();
-
-	auto spdStepTimeLog = Logger::get("step_times", Logger::Level::info);
-	spdStepTimeLog->info("steptime_inv_parallel");
-
-	Real tot = 0;
-	for (auto meas : sim.stepTimes()) {
-		tot += meas;
-		spdStepTimeLog->info("{:f}", meas);
-	}
-	std::cout << tot / sim.stepTimes().size() << std::endl;
+	sim.logStepTimes(simName + "_step_times");
 
 	return 0;
 }

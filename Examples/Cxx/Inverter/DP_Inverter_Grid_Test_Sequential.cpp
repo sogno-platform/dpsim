@@ -28,14 +28,14 @@ int main(int argc, char* argv[]) {
 	// Define simulation scenario
 	Real timeStep = 0.000001;
 	Real finalTime = 0.05;
-	String simName = "DP_Inverter_Grid_Test";
+	String simName = "DP_Inverter_Grid_Test_Sequential";
 	Logger::setLogDir("logs/"+simName);
 
 	// Set system frequencies
 	Matrix frequencies(5,1);
 	frequencies << 50, 19850, 19950, 20050, 20150;
-	//Matrix frequencies(1,1);
-	//frequencies << 50;
+
+	auto scheduler = std::make_shared<ThreadLevelScheduler>(4);
 
 	// Nodes
 	auto n1 = Node::make("n1");
@@ -49,8 +49,6 @@ int main(int argc, char* argv[]) {
 	// Components
 	auto inv = Inverter::make("inv", level);
 	inv->setParameters(2, 3, 360, 0.87);
-	//auto inv = VoltageSource::make("inv", Logger::Level::info);
-	//inv->setParameters(Complex(0, -200));
 	auto r1 = Resistor::make("r1", level);
 	r1->setParameters(0.1);
 	auto l1 = Inductor::make("l1", level);
@@ -69,7 +67,6 @@ int main(int argc, char* argv[]) {
 	grid->setParameters(Complex(0, -311.1270));
 
 	// Topology
-	//inv->connect({ Node::GND, n1 });
 	inv->connect({ n1 });
 	r1->connect({ n1, n2 });
 	l1->connect({ n2, n3 });
@@ -89,17 +86,7 @@ int main(int argc, char* argv[]) {
 	sim.setTimeStep(timeStep);
 	sim.setFinalTime(finalTime);
 	sim.doHarmonicParallelization(false);
-
-	// Logging
-	auto logger = DataLogger::make(simName);
-	logger->addAttribute("v1", n1->attributeMatrixComp("v"), 1, 5);
-	logger->addAttribute("v2", n2->attributeMatrixComp("v"), 1, 1);
-	logger->addAttribute("v3", n3->attributeMatrixComp("v"), 1, 5);
-	logger->addAttribute("v4", n4->attributeMatrixComp("v"), 1, 1);
-	logger->addAttribute("v5", n5->attributeMatrixComp("v"), 1, 1);
-	logger->addAttribute("i12", r1->attributeMatrixComp("i_intf"), 1, 1);
-	logger->addAttribute("i34", r2->attributeMatrixComp("i_intf"), 1, 1);
-	sim.addLogger(logger);
+	sim.setScheduler(scheduler);
 
 	sim.run();
 	sim.logStepTimes(simName + "_step_times");

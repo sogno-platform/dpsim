@@ -63,7 +63,7 @@ void RT_DP_CS_R1() {
 	sim.setFinalTime(finalTime);
 
 	sim.run();
-	sim.logStepTimes(simName + "step_times");
+	sim.logStepTimes(simName + "_step_times");
 }
 
 void Ref_DP_CS_R1() {
@@ -96,5 +96,5 @@ void Ref_DP_CS_R1() {
 	sim.setFinalTime(finalTime);
 
 	sim.run();
-	sim.logStepTimes(simName + "step_times");
+	sim.logStepTimes(simName + "_step_times");
 }
