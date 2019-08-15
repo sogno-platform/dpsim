@@ -34,10 +34,11 @@ namespace DPsim {
 	class RealTimeSimulation : public Simulation {
 
 	protected:
-		Real mTimeStep;
 		Timer mTimer;
 
 	public:
+		/// Standard constructor
+		RealTimeSimulation(String name, CPS::Logger::Level logLevel = CPS::Logger::Level::info);
 		/// Creates system matrix according to a given System topology
 		RealTimeSimulation(String name, CPS::SystemTopology system,
 			Real timeStep, Real finalTime,

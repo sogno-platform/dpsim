@@ -47,6 +47,7 @@ Simulation::Simulation(String name,	Logger::Level logLevel) :
 	mName(name), mLogLevel(logLevel) {
 
 	addAttribute<String>("name", &mName, Flags::read);
+	addAttribute<Real>("time_step", &mTimeStep, Flags::read);
 	addAttribute<Real>("final_time", &mFinalTime, Flags::read|Flags::write);
 	addAttribute<Bool>("steady_state_init", &mSteadyStateInit, Flags::read|Flags::write);
 	addAttribute<Bool>("split_subnets", &mSplitSubnets, Flags::read|Flags::write);
