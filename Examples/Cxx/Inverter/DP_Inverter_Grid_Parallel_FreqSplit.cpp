@@ -28,16 +28,14 @@ int main(int argc, char* argv[]) {
 	// Define simulation scenario
 	Real timeStep = 0.000001;
 	Real finalTime = 0.05;
-	String simName = "DP_Inverter_Grid_Test_Parallel";
+	String simName = "DP_Inverter_Grid_Parallel_FreqSplit";
 	Logger::setLogDir("logs/"+simName);
 
 	// Set system frequencies
 	Matrix frequencies(5,1);
 	frequencies << 50, 19850, 19950, 20050, 20150;
-	//Matrix frequencies(1,1);
-	//frequencies << 50;
 
-	auto scheduler = std::make_shared<ThreadLevelScheduler>(4);
+	auto scheduler = std::make_shared<ThreadLevelScheduler>(6);
 
 	// Nodes
 	auto n1 = Node::make("n1");
@@ -51,8 +49,6 @@ int main(int argc, char* argv[]) {
 	// Components
 	auto inv = Inverter::make("inv", level);
 	inv->setParameters(2, 3, 360, 0.87);
-	//auto inv = VoltageSource::make("inv", Logger::Level::info);
-	//inv->setParameters(Complex(0, -200));
 	auto r1 = Resistor::make("r1", level);
 	r1->setParameters(0.1);
 	auto l1 = Inductor::make("l1", level);
@@ -71,7 +67,6 @@ int main(int argc, char* argv[]) {
 	grid->setParameters(Complex(0, -311.1270));
 
 	// Topology
-	//inv->connect({ Node::GND, n1 });
 	inv->connect({ n1 });
 	r1->connect({ n1, n2 });
 	l1->connect({ n2, n3 });
@@ -86,7 +81,6 @@ int main(int argc, char* argv[]) {
 		SystemNodeList{ n1, n2, n3, n4, n5 },
 		SystemComponentList{ inv, r1, l1, r2, l2, c1, rc, grid });
 
-	//Simulation sim(simName, sys, timeStep, finalTime, Domain::DP, Solver::Type::MNA, Logger::Level::info);
 	Simulation sim(simName, level);
 	sim.setSystem(sys);
 	sim.setTimeStep(timeStep);

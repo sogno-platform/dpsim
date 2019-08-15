@@ -37,8 +37,10 @@ set(SYNCGEN_SOURCES
 
 set(INVERTER_SOURCES
 	Inverter/DP_Inverter_Grid_Test.cpp
-	Inverter/DP_Inverter_Grid_Test_Sequential.cpp
-	Inverter/DP_Inverter_Grid_Test_Parallel.cpp
+	Inverter/DP_Inverter_Grid_Parallel_FreqSplit.cpp
+	Inverter/DP_Inverter_Grid_Parallel.cpp
+	Inverter/DP_Inverter_Grid_Sequential_FreqSplit.cpp
+	Inverter/DP_Inverter_Grid_Sequential.cpp
 	Inverter/DP_Vsrc_Grid_Parallel.cpp
 )
 
