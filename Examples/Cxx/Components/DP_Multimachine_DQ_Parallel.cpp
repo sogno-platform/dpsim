@@ -77,7 +77,7 @@ double doSim(std::shared_ptr<Scheduler> scheduler, int generators) {
 		nodes.push_back(node);
 
 		auto gen = Ph3::SynchronGeneratorDQODE::make("Gen" + std::to_string(i));
-		gen->setFundamentalParametersPU(nomPower, nomPhPhVoltRMS, nomFreq, poleNum, nomFieldCurr,
+		gen->setParametersFundamentalPerUnit(nomPower, nomPhPhVoltRMS, nomFreq, poleNum, nomFieldCurr,
 			Rs, Ll, Lmd, Lmq, Rfd, Llfd, Rkd, Llkd, Rkq1, Llkq1, Rkq2, Llkq2, H,
 			initActivePower, initReactivePower, initTerminalVolt, initVoltAngle, fieldVoltage, initMechPower);
 		gen->connect({node});

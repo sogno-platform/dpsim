@@ -72,7 +72,7 @@ int main(int argc, char* argv[]) {
 
 	// Components
 	auto gen = Ph3::SynchronGeneratorDQTrapez::make("DP_SynGen_dq_ThreePhFault_SynGen");
-	gen->setFundamentalParametersPU(nomPower, nomPhPhVoltRMS, nomFreq, poleNum, nomFieldCurr,
+	gen->setParametersFundamentalPerUnit(nomPower, nomPhPhVoltRMS, nomFreq, poleNum, nomFieldCurr,
 		Rs, Ll, Lmd, Lmq, Rfd, Llfd, Rkd, Llkd, Rkq1, Llkq1, Rkq2, Llkq2, H,
 		initActivePower, initReactivePower, initTerminalVolt, initVoltAngle, fieldVoltage, mechPower);
 
