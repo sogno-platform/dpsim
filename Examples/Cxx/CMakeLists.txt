@@ -11,8 +11,7 @@ set(CIRCUIT_SOURCES
 	# Dynamic phasor examples
 	Circuits/DP_VS_RL1.cpp
 	Circuits/DP_Circuits.cpp
-	Circuits/DP_Basics_DP_Sims.cpp
-	
+	Circuits/DP_Basics_DP_Sims.cpp	
 	#Circuits/DP_VS_PiLine_R.cpp
 	#Circuits/DP_VS_Trafo_R.cpp
 	#Circuits/DP_ResVS_RL_Switch.cpp
@@ -20,12 +19,11 @@ set(CIRCUIT_SOURCES
 	# EMT examples	
 	Circuits/EMT_VS_RL1.cpp
 	Circuits/EMT_Circuits.cpp
-	Circuits/DP_Basics_EMT_Sims.cpp
-	
+	Circuits/DP_Basics_EMT_Sims.cpp	
 	#Circuits/EMT_ResVS_RL_Switch.cpp
 
 	# EMT and DP studies
-	#VariableTimeStep/RXLine_LoadStep_FreqStep_1.cpp	
+	#VariableTimeStep/RXLine_LoadStep_FreqStep_1.cpp		
 )
 
 set(SYNCGEN_SOURCES	
@@ -36,12 +34,11 @@ set(SYNCGEN_SOURCES
 )
 
 set(INVERTER_SOURCES
-	Inverter/DP_Inverter_Grid_Test.cpp
-	Inverter/DP_Inverter_Grid_Parallel_FreqSplit.cpp
-	Inverter/DP_Inverter_Grid_Parallel.cpp
-	Inverter/DP_Inverter_Grid_Sequential_FreqSplit.cpp
-	Inverter/DP_Inverter_Grid_Sequential.cpp
-	Inverter/DP_Vsrc_Grid_Parallel.cpp
+	Components/DP_Inverter_Grid.cpp
+	Components/DP_Inverter_Grid_Parallel_FreqSplit.cpp
+	Components/DP_Inverter_Grid_Parallel.cpp
+	Components/DP_Inverter_Grid_Sequential_FreqSplit.cpp
+	Components/DP_Inverter_Grid_Sequential.cpp
 )
 
 if(WITH_SUNDIALS)
@@ -49,6 +46,7 @@ if(WITH_SUNDIALS)
 		Components/DP_SynGenDq7odODE_SteadyState.cpp
 		Components/DP_SynGenDq7odODE_ThreePhFault.cpp
 		Components/DP_Multimachine_DQ_Parallel.cpp
+		Components/DP_EMT_SynGenDq7odODE_SteadyState.cpp
 	)
 
 	set(DAE_SOURCES
