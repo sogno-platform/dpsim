@@ -178,13 +178,15 @@ void DataLogger::addAttribute(const String &name, CPS::MatrixRealAttribute::Ptr 
 	}
 	else if (m.cols() == 1) {
 		for (UInt k = 0; k < m.rows(); k++) {
-			addAttribute(name + "(" + std::to_string(k) + ")", attrMat->coeff(k, 0));
+			addAttribute(name + "_" + std::to_string(k),
+				attrMat->coeff(k, 0));
 		}
 	}
 	else {
 		for (UInt k = 0; k < m.rows(); k++) {
 			for (UInt l = 0; l < m.cols(); l++) {
-				addAttribute(name + "(" + std::to_string(k) + ", " + std::to_string(l) + ")", attrMat->coeff(k, l));
+				addAttribute(name + "_" + std::to_string(k) + "_" + std::to_string(l) + "_",
+					attrMat->coeff(k, l));
 			}
 		}
 	}
