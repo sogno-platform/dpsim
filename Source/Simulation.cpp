@@ -338,7 +338,7 @@ void Simulation::run() {
 	sync();
 #endif
 
-	std::cout << Logger::prefix() << "Start simulation." << std::endl;
+	std::cout << Logger::prefix() << "Start simulation: " << mName << std::endl;
 
 	while (mTime < mFinalTime) {
 		step();

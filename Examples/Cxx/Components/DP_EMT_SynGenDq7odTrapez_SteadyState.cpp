@@ -23,8 +23,8 @@
 
 using namespace DPsim;
 
-void DP_SynGenDq7odTrapez_SteadyState(Real timeStep, Real finalTime);
-void EMT_SynGenDq7odTrapez_SteadyState(Real timeStep, Real finalTime);
+void DP_SynGenDq7odTrapez_SteadyState(Real timeStep, Real finalTime, String extension = "");
+void EMT_SynGenDq7odTrapez_SteadyState(Real timeStep, Real finalTime, String extension = "");
 
 // Define machine parameters in per unit
 Real nomPower = 555e6;
@@ -67,15 +67,22 @@ auto initVoltN1 = std::vector<Complex>({
 		initTerminalVolt * sin(initVoltAngle + 2 * PI / 3)) });
 
 int main(int argc, char* argv[]) {
-	Real timeStep = 0.0005;
-	Real finalTime = 0.03;
 
+	Real finalTime = 0.3;
+	Real timeStep = 0.00005;
 	DP_SynGenDq7odTrapez_SteadyState(timeStep, finalTime);
 	EMT_SynGenDq7odTrapez_SteadyState(timeStep, finalTime);
+
+	UInt maxStepIdx = 10;
+	for (UInt stepIdx = 1; stepIdx <= maxStepIdx; stepIdx++) {
+		timeStep = stepIdx * 0.0001;
+		DP_SynGenDq7odTrapez_SteadyState(timeStep, finalTime, "_" + std::to_string(timeStep));
+		EMT_SynGenDq7odTrapez_SteadyState(timeStep, finalTime, "_" + std::to_string(timeStep));
+	}
 }
 
-void DP_SynGenDq7odTrapez_SteadyState(Real timeStep, Real finalTime) {
-	String simName = "DP_SynGenDq7odTrapez_SteadyState";
+void DP_SynGenDq7odTrapez_SteadyState(Real timeStep, Real finalTime, String extension) {
+	String simName = "DP_SynGenDq7odTrapez_SteadyState" + extension;
 	Logger::setLogDir("logs/"+simName);
 
 	// Nodes
@@ -111,8 +118,8 @@ void DP_SynGenDq7odTrapez_SteadyState(Real timeStep, Real finalTime) {
 	sim.run();
 }
 
-void EMT_SynGenDq7odTrapez_SteadyState(Real timeStep, Real finalTime) {
-	String simName = "EMT_SynGenDq7odTrapez_SteadyState";
+void EMT_SynGenDq7odTrapez_SteadyState(Real timeStep, Real finalTime, String extension) {
+	String simName = "EMT_SynGenDq7odTrapez_SteadyState" + extension;
 	Logger::setLogDir("logs/"+simName);
 
 	// Nodes

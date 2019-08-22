@@ -91,9 +91,6 @@ int main(int argc, char* argv[]) {
 
 	// Logging
 	auto logger = DataLogger::make(simName);
-	//logger->addAttribute("v1", n1->attribute("v"));
-	//logger->addAttribute("i_gen", gen->attribute("i_intf"));
-	//logger->addAttribute("i_load", res->attribute("i_intf"));
 	logger->addAttribute("v1", n1->attributeMatrixComp("v"));
 	logger->addAttribute("i_gen", gen->attributeMatrixComp("i_intf"));
 	logger->addAttribute("i_load", res->attributeMatrixComp("i_intf"));

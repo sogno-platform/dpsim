@@ -69,8 +69,8 @@ auto initVoltN1 = std::vector<Complex>({
 		initTerminalVolt * sin(initVoltAngle + 2 * PI / 3)) });
 
 int main(int argc, char* argv[]) {
-	Real timeStep = 0.0005;
-	Real finalTime = 0.03;
+	Real timeStep = 0.00005;
+	Real finalTime = 0.3;
 
 	DP_SynGenDq7odTrapez_ThreePhFault(timeStep, finalTime);
 	EMT_SynGenDq7odTrapez_ThreePhFault(timeStep, finalTime);
@@ -85,9 +85,11 @@ void DP_SynGenDq7odTrapez_ThreePhFault(Real timeStep, Real finalTime) {
 
 	// Components
 	auto gen = CPS::DP::Ph3::SynchronGeneratorDQTrapez::make("SynGen");
-	gen->setParametersFundamentalPerUnit(nomPower, nomPhPhVoltRMS, nomFreq, poleNum, nomFieldCurr,
+	gen->setParametersFundamentalPerUnit(
+		nomPower, nomPhPhVoltRMS, nomFreq, poleNum, nomFieldCurr,
 		Rs, Ll, Lmd, Lmq, Rfd, Llfd, Rkd, Llkd, Rkq1, Llkq1, Rkq2, Llkq2, H,
-		initActivePower, initReactivePower, initTerminalVolt, initVoltAngle, fieldVoltage, initMechPower);
+		initActivePower, initReactivePower, initTerminalVolt,
+		initVoltAngle, fieldVoltage, initMechPower);
 
 	auto res = CPS::DP::Ph3::SeriesResistor::make("R_load", Logger::Level::info);
 	res->setParameters(Rload);
@@ -101,12 +103,13 @@ void DP_SynGenDq7odTrapez_ThreePhFault(Real timeStep, Real finalTime) {
 	res->connect({CPS::DP::Node::GND, n1});
 	fault->connect({CPS::DP::Node::GND, n1});
 
-	auto sys = SystemTopology(60, SystemNodeList{n1}, SystemComponentList{gen, res});
+	auto sys = SystemTopology(60, SystemNodeList{n1}, SystemComponentList{gen, res, fault});
 
 	// Logging
 	auto logger = DataLogger::make(simName);
 	logger->addAttribute("v1", n1->attribute("v"));
-	logger->addAttribute("i_load", res->attribute("i_intf"));
+	logger->addAttribute("i_gen", gen->attribute("i_intf"));
+	logger->addAttribute("wr_gen", gen->attribute("w_r"));
 
 	Simulation sim(simName, Logger::Level::info);
 	sim.setSystem(sys);
@@ -114,6 +117,12 @@ void DP_SynGenDq7odTrapez_ThreePhFault(Real timeStep, Real finalTime) {
 	sim.setFinalTime(finalTime);
 	sim.setDomain(Domain::DP);
 	sim.addLogger(logger);
+
+	// Events
+	auto sw1 = SwitchEvent::make(0.1, fault, true);
+	sim.addEvent(sw1);
+	auto sw2 = SwitchEvent::make(0.2, fault, false);
+	sim.addEvent(sw2);
 
 	sim.run();
 }
@@ -129,7 +138,8 @@ void EMT_SynGenDq7odTrapez_ThreePhFault(Real timeStep, Real finalTime) {
 	auto gen = CPS::EMT::Ph3::SynchronGeneratorDQTrapez::make("SynGen");
 	gen->setParametersFundamentalPerUnit(nomPower, nomPhPhVoltRMS, nomFreq, poleNum, nomFieldCurr,
 		Rs, Ll, Lmd, Lmq, Rfd, Llfd, Rkd, Llkd, Rkq1, Llkq1, Rkq2, Llkq2, H,
-		initActivePower, initReactivePower, initTerminalVolt, initVoltAngle, fieldVoltage, initMechPower);
+		initActivePower, initReactivePower, initTerminalVolt,
+		initVoltAngle, fieldVoltage, initMechPower);
 
 	auto res = CPS::EMT::Ph3::SeriesResistor::make("R_load", Logger::Level::info);
 	res->setParameters(Rload);
@@ -143,12 +153,13 @@ void EMT_SynGenDq7odTrapez_ThreePhFault(Real timeStep, Real finalTime) {
 	res->connect({CPS::EMT::Node::GND, n1});
 	fault->connect({CPS::EMT::Node::GND, n1});
 
-	auto sys = SystemTopology(60, SystemNodeList{n1}, SystemComponentList{gen, res});
+	auto sys = SystemTopology(60, SystemNodeList{n1}, SystemComponentList{gen, res, fault});
 
 	// Logging
 	auto logger = DataLogger::make(simName);
 	logger->addAttribute("v1", n1->attribute("v"));
-	logger->addAttribute("i_load", res->attribute("i_intf"));
+	logger->addAttribute("i_gen", gen->attribute("i_intf"));
+	logger->addAttribute("wr_gen", gen->attribute("w_r"));
 
 	Simulation sim(simName, Logger::Level::info);
 	sim.setSystem(sys);
@@ -156,6 +167,12 @@ void EMT_SynGenDq7odTrapez_ThreePhFault(Real timeStep, Real finalTime) {
 	sim.setFinalTime(finalTime);
 	sim.setDomain(Domain::EMT);
 	sim.addLogger(logger);
+
+	// Events
+	auto sw1 = SwitchEvent::make(0.1, fault, true);
+	sim.addEvent(sw1);
+	auto sw2 = SwitchEvent::make(0.2, fault, false);
+	sim.addEvent(sw2);
 
 	sim.run();
 }
