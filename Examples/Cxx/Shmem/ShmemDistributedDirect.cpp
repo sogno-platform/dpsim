@@ -73,7 +73,7 @@ int main(int argc, char *argv[]) {
 		r01->connect({ n1, n2 });
 
 		evs->setAttributeRef("V_ref", intf.importComplex(0));
-		intf.addExport(evs->attribute<Complex>("i_comp"), 0);
+		intf.exportComplex(evs->attributeMatrixComp("i_intf")->coeff(0,0), 0);
 
 		auto sys = SystemTopology(50, SystemNodeList{n1, n2}, SystemComponentList{evs, vs1, r01});
 		Simulation sim("ShmemDistributedDirect_1", sys, timeStep, 0.1);
@@ -98,7 +98,7 @@ int main(int argc, char *argv[]) {
 		//auto r01 = Resistor::make("r_0_1", 0, 1, 1);
 
 		ecs->setAttributeRef("I_ref", intf.importComplex(0));
-		intf.addExport(ecs->attributeMatrixComp("i_intf")->coeff(0, 0), 0);
+		intf.exportComplex(ecs->attributeMatrixComp("i_intf")->coeff(0, 0), 0);
 
 		auto sys = SystemTopology(50, SystemNodeList{n1}, SystemComponentList{ecs, rgnd0});
 		Simulation sim("ShmemDistributedDirect_2", sys, timeStep, 0.1);

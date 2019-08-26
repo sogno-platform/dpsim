@@ -45,7 +45,7 @@ int main(int argc, char *argv[]) {
 	r1->connect({ Node::GND, n1 });
 
 	ecs->setAttributeRef("I_ref", intf.importComplex(0));
-	intf.addExport(ecs->attributeMatrixComp("v_intf")->coeff(0, 0), 0);
+	intf.exportComplex(ecs->attributeMatrixComp("v_intf")->coeff(0, 0), 0);
 
 	auto sys = SystemTopology(50, SystemNodeList{n1}, SystemComponentList{ecs, r1});
 	RealTimeSimulation sim(simName, sys, timeStep, finalTime,

@@ -43,7 +43,7 @@ int main(int argc, char** argv) {
 		}, "Examples/CIM/CIGRE_MV_NoTap", "CIMPATH");
 	}
 	else {
-		filenames = args.positionalPaths()
+		filenames = args.positionalPaths();
 	}
 
 	String simName = "Shmem_CIGRE_MV_PowerFlowTest";

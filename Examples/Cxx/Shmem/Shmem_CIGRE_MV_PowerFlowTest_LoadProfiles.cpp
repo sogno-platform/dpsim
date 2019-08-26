@@ -20,7 +20,7 @@
 
 #include <cps/CIM/Reader.h>
 #include <DPsim.h>
-#include <cps/loadProfileReader.h>
+#include <cps/LoadProfileReader.h>
 #include <iostream>
 #include <fstream>
 
@@ -45,7 +45,7 @@ int main(int argc, char** argv){
 	// Find CIM files
 	std::list<fs::path> filenames;
 	if (argc <= 1) {
-		filenames = Utils::findFiles({
+		filenames = DPsim::Utils::findFiles({
 			"Rootnet_FULL_NE_06J16h_DI.xml",
 			"Rootnet_FULL_NE_06J16h_EQ.xml",
 			"Rootnet_FULL_NE_06J16h_SV.xml",
