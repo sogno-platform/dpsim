@@ -27,20 +27,11 @@ using namespace CPS::DP;
 using namespace CPS::DP::Ph1;
 
 int main(int argc, char *argv[]) {
-
-	Interface::Config conf;
-	conf.samplelen = 64;
-	conf.queuelen = 1024;
-	conf.polling = false;
-
-	String in  = "/dpsim10";
-	String out = "/dpsim01";
-
 	Real timeStep = 0.001;
 	Real finalTime = 10;
 	String simName = "ShmemControllableSource";
 
-	Interface intf(out, in, &conf);
+	Interface intf("/dpsim01", "/dpsim10");
 
 	// Controllers and filter
 	std::vector<Real> coefficients = { -0.0024229,-0.0020832,0.0067703,0.016732,
@@ -52,9 +43,6 @@ int main(int argc, char *argv[]) {
 
 	auto filtP = FIRFilter::make("filter_p", coefficients, 10, Logger::Level::debug);
 	auto filtQ = FIRFilter::make("filter_q", coefficients, 0, Logger::Level::debug);
-
-	filtP->setPriority(1);
-	filtQ->setPriority(1);
 
 	// Nodes
 	auto n1 = Node::make("n1");

@@ -34,11 +34,6 @@ int main(int argc, char *argv[]) {
 	// Here, the two instances directly communicate with each other without using
 	// VILLASnode in between.
 
-	Interface::Config conf;
-	conf.samplelen = 4;
-	conf.queuelen = 1024;
-	conf.polling = false;
-
 	if (argc < 2) {
 		std::cerr << "not enough arguments (either 0 or 1 for the test number)" << std::endl;
 		std::exit(1);
@@ -55,9 +50,9 @@ int main(int argc, char *argv[]) {
 		out = "/dpsim10";
 	}
 
-	Interface intf(in, out, &conf);
+	Interface intf(in, out);
 
-	Real timeStep = 0.000150;
+	Real timeStep = 0.001;
 
 	if (String(argv[1]) == "0") {
 		// Nodes
@@ -78,7 +73,7 @@ int main(int argc, char *argv[]) {
 		r01->connect({ n1, n2 });
 
 		evs->setAttributeRef("V_ref", intf.importComplex(0));
-		intf.addExport(evs->attribute<Complex>("i_comp"), 0);
+		intf.exportComplex(evs->attributeMatrixComp("i_intf")->coeff(0,0), 0);
 
 		auto sys = SystemTopology(50, SystemNodeList{n1, n2}, SystemComponentList{evs, vs1, r01});
 		Simulation sim("ShmemDistributedDirect_1", sys, timeStep, 0.1);
@@ -103,8 +98,7 @@ int main(int argc, char *argv[]) {
 		//auto r01 = Resistor::make("r_0_1", 0, 1, 1);
 
 		ecs->setAttributeRef("I_ref", intf.importComplex(0));
-		intf.addExport(ecs->attribute<Complex>("v_comp"), 0);
-		//intf.addImport(ecs_switch->attribute('CurrentRef'), 1);
+		intf.exportComplex(ecs->attributeMatrixComp("i_intf")->coeff(0, 0), 0);
 
 		auto sys = SystemTopology(50, SystemNodeList{n1}, SystemComponentList{ecs, rgnd0});
 		Simulation sim("ShmemDistributedDirect_2", sys, timeStep, 0.1);

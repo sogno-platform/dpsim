@@ -76,6 +76,23 @@ namespace DPsim {
 		// TODO is it really fine to use nullptr or should we create a special sentinel attribute?
 		static CPS::AttributeBase::Ptr external;
 
+		TaskTime getAveragedMeasurement(CPS::Task::Ptr task) {
+			return getAveragedMeasurement(task.get());
+		}
+
+		/// Root task that has a dependency on the external attribute
+		/// which means that it should not be removed from the task graph
+		class Root : public CPS::Task {
+		public:
+			Root() : Task("Root") {
+				mAttributeDependencies.push_back(external);
+			}
+
+			void execute(Real time, Int timeStepCount) {
+				throw SchedulingException();
+			}
+		};
+
 	protected:
 		/// Simple topological sort, filtering out tasks that do not need to be executed.
 		void topologicalSort(const CPS::Task::List& tasks, const Edges& inEdges, const Edges& outEdges, CPS::Task::List& sortedTasks);
@@ -91,7 +108,10 @@ namespace DPsim {
 		void writeMeasurements(CPS::String filename);
 		/// Read measurement data from file to use it for the scheduling
 		void readMeasurements(CPS::String filename, std::unordered_map<CPS::String, TaskTime::rep>& measurements);
+		///
+		TaskTime getAveragedMeasurement(CPS::Task* task);
 
+		///
 		CPS::Task::Ptr mRoot;
 
 	private:
@@ -103,19 +123,6 @@ namespace DPsim {
 		// longer simulations (risk of high memory requirements and integer
 		// overflow)
 		std::unordered_map<CPS::Task*, std::vector<TaskTime>> mMeasurements;
-
-		/// Root task that has a dependency on the external attribute
-		/// which means that it should not be removed from the task graph
-		class Root : public CPS::Task {
-		public:
-			Root() : Task("Root") {
-				mAttributeDependencies.push_back(external);
-			}
-
-			void execute(Real time, Int timeStepCount) {
-				throw SchedulingException();
-			}
-		};
 	};
 
 	/// A barrier is used to synchronize threads. Threads running into the barrier

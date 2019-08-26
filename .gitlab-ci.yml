@@ -25,6 +25,13 @@ docker:
         --file Packaging/Docker/Dockerfile.dev
         --tag ${DOCKER_IMAGE_DEV}:${DOCKER_TAG_DEV}
         --tag ${DOCKER_IMAGE_DEV}:latest .
+# build dedicated jupyter image in the future
+#    - docker build
+#        --file Packaging/Docker/Dockerfile.jupyter
+#        --build-arg DOCKER_IMAGE=${DOCKER_IMAGE_DEV}
+#        --build-arg DOCKER_TAG=${DOCKER_TAG_DEV}
+#        --tag ${DOCKER_IMAGE_DEV}-jupyter:${DOCKER_TAG_DEV}
+#        --tag ${DOCKER_IMAGE_DEV}-jupyter:latest .
   tags:
     - shell
     - linux
@@ -201,9 +208,9 @@ deploy:docs:
 deploy:packages:
   stage: deploy
   script:
-    - rsync ${RSYNC_OPTS} build/*.rpm ${DEPLOY_USER}@${DEPLOY_HOST}:/var/www/packages/redhat/x86_64
+    - rsync ${RSYNC_OPTS} build/*.rpm ${DEPLOY_USER}@${DEPLOY_HOST}:/var/www/packages/fedora/29/x86_64
     - rsync ${RSYNC_OPTS} build/*.tar.gz ${DEPLOY_USER}@${DEPLOY_HOST}:/var/www/dpsim/src
-    - ssh ${DEPLOY_USER}@${DEPLOY_HOST} createrepo /var/www/packages/redhat
+    - ssh ${DEPLOY_USER}@${DEPLOY_HOST} createrepo /var/www/packages/fedora/29
   dependencies:
     - generate:packages
   only:

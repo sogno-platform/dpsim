@@ -40,7 +40,7 @@ int main(int argc, char *argv[]) {
 		// Find CIM files
 		std::list<fs::path> filenames;
 		if (argc <= 1) {
-			filenames = Utils::findFiles({
+			filenames = DPsim::Utils::findFiles({
 				"WSCC-09_RX_DI.xml",
 				"WSCC-09_RX_EQ.xml",
 				"WSCC-09_RX_SV.xml",
@@ -48,7 +48,7 @@ int main(int argc, char *argv[]) {
 			}, "Examples/CIM/WSCC-09_RX", "CIMPATH");
 		}
 		else {
-			filenames = args.filenames;
+			filenames = args.positionalPaths();
 		}
 
 		CIM::Reader reader(args.name, Logger::Level::info, Logger::Level::info);
@@ -67,37 +67,21 @@ int main(int argc, char *argv[]) {
 		RealTimeSimulation sim(args.name + "_1", sys, args.timeStep, args.duration,
 			Domain::DP, Solver::Type::MNA, Logger::Level::debug, true);
 
-		// Create shmem interface and add it to simulation
-		String in  = "/dpsim10";
-		String out = "/dpsim01";
-		Interface::Config conf;
-		conf.samplelen = 64;
-		conf.queuelen = 1024;
-		conf.polling = false;
-		Interface intf1(out, in, &conf, false);
+		Interface intf1("/dpsim01", "/dpsim10", nullptr, false);
+		Interface intf2("/dpsim1-villas", "/villas-dpsim1", nullptr, false);
 		sim.addInterface(&intf1);
-
-		// Create shmem interface 2
-		String in2  = "/villas-dpsim1";
-		String out2 = "/dpsim1-villas";
-		Interface::Config conf2;
-		conf2.samplelen = 64;
-		conf2.queuelen = 1024;
-		conf2.polling = false;
-		Interface intf2(out2, in2, &conf2, false);
 		sim.addInterface(&intf2, false);
 
 		// Controllers and filter
 		std::vector<Real> coefficients_profile = std::vector<Real>(2000, 1./2000);
 
 		auto filtP_profile = FIRFilter::make("filter_p_profile", coefficients_profile, 0, Logger::Level::info);
-		filtP_profile->setPriority(1);
 		load_profile->setAttributeRef("power_active", filtP_profile->attribute<Real>("output"));
 		sys.mComponents.push_back(filtP_profile);
 
 		// Register interface current source and voltage drop
 		ecs->setAttributeRef("I_ref", intf1.importComplex(0));
-		intf1.addExport(ecs->attribute<Complex>("v_comp"), 0);
+		intf1.exportComplex(ecs->attributeMatrixComp("v_intf")->coeff(0, 0), 0);
 
 		// TODO: gain by 20e8
 		filtP_profile->setInput(intf2.importReal(0));
@@ -117,8 +101,8 @@ int main(int argc, char *argv[]) {
 			std::cout << "Signal " << (i*2)+0 << ": Mag " << n->name() << std::endl;
 			std::cout << "Signal " << (i*2)+1 << ": Phas " << n->name() << std::endl;
 
-			intf2.addExport(v->mag(),   (i*2)+0);
-			intf2.addExport(v->phase(), (i*2)+1);
+			intf2.exportReal(v->mag(),   (i*2)+0);
+			intf2.exportReal(v->phase(), (i*2)+1);
 		}
 
 		sim.run(args.startTime);
@@ -140,43 +124,28 @@ int main(int argc, char *argv[]) {
 		// Controllers and filter
 		std::vector<Real> coefficients = std::vector<Real>(100, 1./100);
 		auto filtP = FIRFilter::make("filter_p", coefficients, 0, Logger::Level::info);
-		filtP->setPriority(1);
 		load->setAttributeRef("active_power", filtP->attribute<Real>("output"));
 
 		auto sys = SystemTopology(args.sysFreq, SystemNodeList{n1}, SystemComponentList{evs, load, filtP});
 		RealTimeSimulation sim(args.name + "_2", sys, args.timeStep, args.duration);
 
-		// Create shmem interface 1
-		String in1  = "/dpsim01";
-		String out1 = "/dpsim10";
-		Interface::Config conf1;
-		conf1.samplelen = 64;
-		conf1.queuelen = 1024;
-		conf1.polling = false;
-		Interface intf1(out1, in1, &conf1, false);
+		Interface intf1("/dpsim10", "/dpsim01", nullptr, false);
 		sim.addInterface(&intf1);
 
-		// Create shmem interface 2
-		String in2  = "/villas-dpsim2";
-		String out2 = "/dpsim2-villas";
-		Interface::Config conf2;
-		conf2.samplelen = 64;
-		conf2.queuelen = 1024;
-		conf2.polling = false;
-		Interface intf2(out2, in2, &conf2, false);
+		Interface intf2("/dpsim2-villas", "/villas-dpsim2", nullptr, false);
 		sim.addInterface(&intf2, false);
 
 		// Register voltage source reference and current flowing through source
 		// multiply with -1 to consider passive sign convention
 		evs->setAttributeRef("V_ref", intf1.importComplex(0));
 		// TODO: invalid sign
-		intf1.addExport(evs->attribute<Complex>("i_comp"), 0);
+		intf1.exportComplex(evs->attributeMatrixComp("i_intf")->coeff(0, 0), 0);
 
 		// Register controllable load
 		filtP->setInput(intf2.importReal(0));
-		intf2.addExport(load->attribute<Real>("power_active"), 0);
-		intf2.addExport(load->attribute<Complex>("v_comp"), 1);
-		intf2.addExport(load->attribute<Complex>("i_comp"), 2);
+		intf2.exportReal(load->attribute<Real>("power_active"), 0);
+		intf2.exportComplex(load->attributeMatrixComp("v_intf")->coeff(0, 0), 1);
+		intf2.exportComplex(load->attributeMatrixComp("i_intf")->coeff(0, 0), 2);
 
 		sim.run(args.startTime);
 	}

@@ -40,7 +40,7 @@ endif()
 
 if(WITH_PYTHON)
 	list(APPEND INCLUDE_DIRS ${PYTHON_INCLUDE_DIRS})
-	list(APPEND LIBRARIES ${PYTHON_LIBRARIES})
+	#list(APPEND LIBRARIES ${PYTHON_LIBRARIES})
 
 	add_subdirectory(Python)
 endif()

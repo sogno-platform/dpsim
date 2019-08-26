@@ -18,9 +18,9 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *********************************************************************************/
 
-#include "cps/CIM/Reader.h"
+#include <cps/CIM/Reader.h>
 #include <DPsim.h>
-#include "cps/loadProfileReader.h"
+#include <cps/LoadProfileReader.h>
 #include <iostream>
 #include <fstream>
 
@@ -45,7 +45,7 @@ int main(int argc, char** argv){
 	// Find CIM files
 	std::list<fs::path> filenames;
 	if (argc <= 1) {
-		filenames = Utils::findFiles({
+		filenames = DPsim::Utils::findFiles({
 			"Rootnet_FULL_NE_06J16h_DI.xml",
 			"Rootnet_FULL_NE_06J16h_EQ.xml",
 			"Rootnet_FULL_NE_06J16h_SV.xml",
@@ -53,7 +53,7 @@ int main(int argc, char** argv){
 		}, "Examples/CIM/CIGRE_MV_NoTap", "CIMPATH");
 	}
 	else {
-		filenames = args.filenames;
+		filenames = args.positionalPaths();
 	}
 
 	String simName = "Shmem_CIGRE-MV-NoTap";
@@ -61,19 +61,11 @@ int main(int argc, char** argv){
 
     CIM::Reader reader(simName, Logger::Level::debug, Logger::Level::off);
     SystemTopology sys = reader.loadCIM(system_freq, filenames, CPS::Domain::SP);
-	loadProfileReader lpreader(simName, loadProfilePath, Logger::Level::info);
-	lpreader.assign(sys, 1, 1, 60, loadProfileReader::Mode::AUTO);
+	LoadProfileReader lpreader(simName, loadProfilePath, Logger::Level::info);
+	lpreader.assign(sys, 1, 1, 60, LoadProfileReader::Mode::AUTO);
 
 	RealTimeSimulation sim(simName, sys, args.timeStep, args.duration, args.solver.domain, args.solver.type, args.logLevel);
-
-	// Create shmem interface
-	Interface::Config conf;
-	conf.samplelen = 64;
-	conf.queuelen = 1024;
-	conf.polling = false;
-	String in  = "/villas-dpsim1";
-	String out = "/dpsim1-villas";
-	Interface intf(out, in, &conf);
+	Interface intf("/dpsim1-villas", "/villas-dpsim1");
 
 	ofstream villas_conf;
     villas_conf.open ("villas_sent_data.conf");
@@ -89,14 +81,13 @@ int main(int argc, char** argv){
 		}
 
 		auto n_stat = std::dynamic_pointer_cast<CPS::SP::Node>(n);
-		auto v = n_stat->attributeMatrix<Complex>("v");
-		auto v0 = v->coeffComplex(0,0);
+		auto v = n_stat->attributeMatrixComp("v")->coeff(0, 0);
 
         std::cout << "Signal " << (i*2)+0 << ": Mag  " << n->name() << std::endl;
 		std::cout << "Signal " << (i*2)+1 << ": Phas " << n->name() << std::endl;
 
-		intf.addExport(v0->mag(),   (i*2)+0); o++;
-		intf.addExport(v0->phase(), (i*2)+1); o++;
+		intf.exportReal(v->mag(),   (i*2)+0); o++;
+		intf.exportReal(v->phase(), (i*2)+1); o++;
 
 		list_varnames[(i*2)+0] = n->name() + ".V.mag";
 		list_varnames[(i*2)+1] = n->name() + ".V.phase";

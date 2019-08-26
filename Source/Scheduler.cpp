@@ -46,14 +46,7 @@ void Scheduler::writeMeasurements(String filename) {
 	std::ofstream os(filename);
 	std::unordered_map<String, TaskTime> averages;
 	for (auto& pair : mMeasurements) {
-		TaskTime avg(0), tot(0);
-
-		for (TaskTime time : pair.second) {
-			tot += time;
-		}
-		if (!pair.second.empty())
-			avg = tot / pair.second.size();
-		averages[pair.first->toString()] = avg;
+		averages[pair.first->toString()] = getAveragedMeasurement(pair.first);
 	}
 	// TODO think of nicer output format
 	for (auto pair : averages) {
@@ -80,6 +73,20 @@ void Scheduler::readMeasurements(String filename, std::unordered_map<String, Tas
 		measurements[line.substr(0, idx)] = std::stol(line.substr(idx+1));
 	}
 }
+
+Scheduler::TaskTime Scheduler::getAveragedMeasurement(CPS::Task* task) {
+	TaskTime avg(0), tot(0);
+
+	for (TaskTime time : mMeasurements[task]) {
+		tot += time;
+	}
+
+	if (!mMeasurements[task].empty())
+		avg = tot / mMeasurements[task].size();
+
+	return avg;
+}
+
 
 void Scheduler::resolveDeps(Task::List& tasks, Edges& inEdges, Edges& outEdges) {
 	// Create graph (list of out/in edges for each node) from attribute dependencies

@@ -19,14 +19,15 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *********************************************************************************/
 
+#include <fstream>
+
 #include <DPsim.h>
 
 using namespace DPsim;
 using namespace CPS::DP;
 using namespace CPS::DP::Ph1;
 
-int main(int argc, char* argv[])
-{
+int main(int argc, char* argv[]) {
 	// Very simple test circuit. Just a few resistors and an inductance.
 	// Voltage is read from VILLASnode and current through everything is written back.
 
@@ -59,15 +60,24 @@ int main(int argc, char* argv[])
 
 	auto sys = SystemTopology(50, SystemNodeList{Node::GND, n1, n2, n3, n4}, SystemComponentList{evs, rs, rl, ll, rL});
 
-	Interface intf("/villas1-in", "/villas1-out");
-	evs->setAttributeRef("V_ref", intf.importComplex(0));
-	intf.addExport(evs->attribute<Complex>("i_comp"), 0);
-
 	Real timeStep = 0.001;
-	Simulation sim("ShmemExample", sys, timeStep, 0.3);
+
+#ifdef REALTIME
+	RealTimeSimulation sim("ShmemRealtimeExample", sys, timeStep, 1.0);
+	Interface intf("/villas1-in", "/villas1-out", nullptr, false);
+#else
+	Simulation sim("ShmemExample", sys, timeStep, 1.0);
+	Interface intf("/villas1-in", "/villas1-out");
+#endif
+
+	evs->setAttributeRef("V_ref", intf.importComplex(0));
+	intf.exportComplex(evs->attributeMatrixComp("i_intf")->coeff(0, 0), 0);
 
 	sim.addInterface(&intf);
 	sim.run();
+
+	std::ofstream of("task_dependencies.svg");
+	sim.dependencyGraph().render(of);
 
 	return 0;
 }

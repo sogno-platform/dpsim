@@ -146,10 +146,10 @@ namespace DPsim {
 		CPS::Attribute<Complex>::Ptr importComplex(UInt idx);
 		CPS::Attribute<Complex>::Ptr importComplexMagPhase(UInt idx);
 
-		void addExport(CPS::Attribute<Int>::Ptr attr, UInt idx);
-		void addExport(CPS::Attribute<Real>::Ptr attr, UInt idx);
-		void addExport(CPS::Attribute<Bool>::Ptr attr, UInt idx);
-		void addExport(CPS::Attribute<Complex>::Ptr attr, UInt idx);
+		void exportInt(CPS::Attribute<Int>::Ptr attr, UInt idx);
+		void exportReal(CPS::Attribute<Real>::Ptr attr, UInt idx);
+		void exportBool(CPS::Attribute<Bool>::Ptr attr, UInt idx);
+		void exportComplex(CPS::Attribute<Complex>::Ptr attr, UInt idx);
 
 		/** Read data for a timestep from the interface and passes the values
 		 * to all registered current / voltage sources.

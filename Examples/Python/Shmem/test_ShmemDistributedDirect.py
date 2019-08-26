@@ -15,7 +15,7 @@ class Left(threading.Thread):
 
         intf = dpsim.open_interface('/dpsim12', '/dpsim21', samplelen = 2)
         intf.import_attribute(evs, 'V_ref', 1, 0, 1)
-        intf.export_attribute(evs, 'i_comp', 1, 0, 1)
+        intf.export_attribute(evs, 'i_intf', 1, 0, 1)
 
         sys = dpsim.SystemTopology(50, [gnd, n1, n2], [evs, vs, l1])
 
@@ -37,7 +37,7 @@ class Right(threading.Thread):
 
         intf = dpsim.open_interface('/dpsim21', '/dpsim12', samplelen = 2)
         intf.import_attribute(ecs, 'I_ref', 1, 0, 1)
-        intf.export_attribute(r1, 'v_comp', 1, 0, 1)
+        intf.export_attribute(r1, 'v_intf', 1, 0, 1)
 
         sys = dpsim.SystemTopology(50, [gnd, n3], [ecs, r1])
 
@@ -54,5 +54,5 @@ def test_ShmemDistributedDirect():
     left_thread.start()
     right_thread.start()
 
-    left_thread.join();
+    left_thread.join()
     right_thread.join()

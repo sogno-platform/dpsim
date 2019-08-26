@@ -92,7 +92,6 @@ if(WITH_SHMEM)
 		Shmem/ShmemDistributedVillas.cpp
 		Shmem/ShmemControllableSource.cpp
 		Shmem/ShmemControllableFiltSource.cpp
-		Shmem/ShmemRealTime.cpp
 		Shmem/Shmem_CIGRE_MV_PowerFlowTest.cpp
 		Shmem/Shmem_CIGRE_MV_PowerFlowTest_LoadProfiles.cpp
 	)
@@ -139,7 +138,7 @@ if(WITH_CIM AND WITH_SHMEM)
 endif()
 
 if(WITH_PYTHON)
-	list(APPEND LIBRARIES ${PYTHON_LIBRARIES})
+	#list(APPEND LIBRARIES ${PYTHON_LIBRARIES})
 	list(APPEND INCLUDE_DIRS ${PYTHON_INCLUDE_DIRS})
 endif()
 
@@ -157,3 +156,11 @@ foreach(SOURCE ${CIRCUIT_SOURCES} ${SYNCGEN_SOURCES} ${VARFREQ_SOURCES} ${SHMEM_
 	target_include_directories(${TARGET} PRIVATE ${INCLUDE_DIRS})
 	target_compile_options(${TARGET} PUBLIC ${DPSIM_CXX_FLAGS})
 endforeach()
+
+if(WITH_SHMEM)
+	add_executable(ShmemRealtimeExample Shmem/ShmemExample.cpp)
+	target_link_libraries(ShmemRealtimeExample ${LIBRARIES})
+	target_include_directories(ShmemRealtimeExample PRIVATE ${INCLUDE_DIRS})	
+	target_compile_definitions(ShmemRealtimeExample PUBLIC REALTIME)
+endif()
+

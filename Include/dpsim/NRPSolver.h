@@ -1,4 +1,5 @@
-/*
+/**
+ *
  * Authors: Santiago Peñate Vera, Jan Dinkelbach
  *
  * Created on 25 of January of 2015, 23:05
@@ -8,19 +9,17 @@
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
- */
+ *********************************************************************************/
 
-#ifndef SOLVER_NRPOLAR_H
-#define	SOLVER_NRPOLAR_H
+#pragma once
 
 #include <cmath>
 
 #include <dpsim/Solver.h>
 #include <dpsim/Scheduler.h>
-#include "cps/SystemTopology.h"
-#include "cps/Components.h"
-#include "cps/Component.h"
-#include <iterator>
+#include <cps/SystemTopology.h>
+#include <cps/Components.h>
+#include <cps/Component.h>
 
 namespace DPsim {
 
@@ -28,8 +27,7 @@ namespace DPsim {
      * \brief This class implements the Nerwton-Raphson method of load flow
      *  analysis using polar coordinates.
      */
-    class NRpolarSolver: public Solver
-    {
+    class NRpolarSolver: public Solver {
 	protected:
 		/// Logging for integer vectors
 		CPS::String logVector(std::vector<int> index_vector)
@@ -139,6 +137,19 @@ namespace DPsim {
 
 		CPS::Task::List getTasks();
 
+		// TODO proper tasking system integration for parallelism
+		class SolveTask : public CPS::Task {
+		public:
+			SolveTask(NRpolarSolver& solver) :
+				Task(solver.mName + ".Solve"), mSolver(solver) {
+				mModifiedAttributes.push_back(Scheduler::external);
+			}
+
+			void execute(Real time, Int timeStepCount);
+
+		private:
+			NRpolarSolver& mSolver;
+		};
 
     private:
 		CPS::SystemTopology SysTopology;
@@ -214,27 +225,5 @@ namespace DPsim {
 		void calculate_branch_flow();
 
 		void calculate_nodal_injection();
-
-		// TODO proper tasking system integration for parallelism
-		class SolveTask : public CPS::Task {
-		public:
-			SolveTask(NRpolarSolver& solver) :
-				Task(solver.mName + ".Solve"), mSolver(solver) {
-				mModifiedAttributes.push_back(Scheduler::external);
-			}
-
-			void execute(Real time, Int timeStepCount);
-
-		private:
-			NRpolarSolver& mSolver;
-		};
-
     };
-
-
-
-
-
-#endif	/* SOLVER_NRPOLAR_H */
-
 }
