@@ -79,7 +79,7 @@ class CMakeBuild(build_ext):
 
         cmake_args += ['-D' + d for d in self.cmake_defines]
         subprocess.check_call(['cmake', ext.sourcedir] + cmake_args, cwd=self.build_temp, env=env)
-        subprocess.check_call(['cmake', '--build', '.'] + build_args, cwd=self.build_temp)
+        subprocess.check_call(['cmake', '--build', '.', '--target', 'dpsim_python'] + build_args, cwd=self.build_temp)
 
 
 def cleanhtml(raw_html):
