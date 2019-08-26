@@ -25,7 +25,7 @@ Prerequisites
 ^^^^^^^^^^^^^
 
 First, you need to make sure that Python is installed and your version is compatible.
-Currently, DPsim is built for **Python 3.6**. 
+Currently, DPsim is built for **Python 3.5, 3.6 and 3.7**. 
 An easy way to install Python and all required packages is the `Anaconda distribution <https://www.anaconda.com/>`_.
 
 To get started, install the latest installer for Python 3.x from the `downloads section <https://www.anaconda.com/download/>`_.
@@ -45,15 +45,20 @@ In case it is not activated, run:
 	activate dpsim
 	
 
-PyPI Package Installation
-^^^^^^^^^^^^^^^^^^^^^^^^^
+Pip Package Installation
+^^^^^^^^^^^^^^^^^^^^^^^^
 
-Then, DPsim can be easily installed as a Python module by running:
+Then, DPsim can be easily installed as a Python module by running for the latest stable release:
 
 .. code-block:: bash
 
 	pip install dpsim
 
+or for the latest nightly version:
+
+.. code-block:: bash
+
+	pip install --extra-index-url https://packages.fein-aachen.org/python/simple dpsim
 
 From Source
 -----------
