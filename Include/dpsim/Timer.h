@@ -21,9 +21,9 @@
 
 #pragma once
 
-#include <dpsim/Config.h>
-
 #include <chrono>
+
+#include <dpsim/Config.h>
 
 namespace DPsim {
 
