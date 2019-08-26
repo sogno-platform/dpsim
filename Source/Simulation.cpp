@@ -51,6 +51,8 @@ Simulation::Simulation(String name,	Logger::Level logLevel) :
 	addAttribute<Real>("final_time", &mFinalTime, Flags::read|Flags::write);
 	addAttribute<Bool>("steady_state_init", &mSteadyStateInit, Flags::read|Flags::write);
 	addAttribute<Bool>("split_subnets", &mSplitSubnets, Flags::read|Flags::write);
+	addAttribute<Real>("time_step", &mTimeStep, Flags::read);
+
 	Eigen::setNbThreads(1);
 
 	// Logging
@@ -309,12 +311,112 @@ void Simulation::schedule() {
 }
 
 #ifdef WITH_GRAPHVIZ
-void Simulation::renderDependencyGraph(std::ostream &os) {
-	initialize();
+Graph::Graph Simulation::dependencyGraph() {
+	if (!mInitialized)
+		initialize();
+
+	std::map<CPS::Task::Ptr, Scheduler::TaskTime> avgTimes;
+	std::map<CPS::Task::Ptr, String> fillColors;
+
+	/* The main SolveTasks of each Solver usually takes the
+	 * largest amount of computing time. We exclude it from
+	 * coloring for improving the spread of the color range
+	 * for the remaining tasks.
+	 */
+// 	auto isSolveTask = [](Task::Ptr task) -> Bool {
+// 		const std::vector<std::type_index> ignoreTasks = {
+// #ifdef WITH_SUNDIALS
+// 			std::type_index(typeid(ODESolver::SolveTask)),
+// #endif
+// 			std::type_index(typeid(MnaSolver<Real>::SolveTask)),
+// 			std::type_index(typeid(MnaSolver<Complex>::SolveTask)),
+// 			std::type_index(typeid(DiakopticsSolver<Real>::SubnetSolveTask)),
+// 			std::type_index(typeid(DiakopticsSolver<Complex>::SubnetSolveTask)),
+// 			std::type_index(typeid(DiakopticsSolver<Real>::SolveTask)),
+// 			std::type_index(typeid(DiakopticsSolver<Complex>::SolveTask)),
+// 			std::type_index(typeid(NRpolarSolver::SolveTask))
+// 		};
+
+// 		return std::find(ignoreTasks.begin(), ignoreTasks.end(), std::type_index(typeid(*task.get()))) != ignoreTasks.end();
+// 	};
+
+	// auto isIgnoredTask = [&isSolveTask](Task::Ptr task) -> Bool {
+	// 	return typeid(*task.get()) == typeid(Interface::PreStep) || sSolveTask(task);
+	// };
+
+	// auto isRootTask = [](Task::Ptr task) -> Bool {
+	// 	return typeid(*task.get()) == typeid(Scheduler::Root);
+	// };
+
+	auto isScheduled = [this](Task::Ptr task) -> Bool {
+		return ! mTaskOutEdges[task].empty();
+	};
+
+	auto getColor = [](Task::Ptr task) -> String {
+		static std::map<std::type_index, String> colorMap;
+		auto tid = std::type_index(typeid(*task.get()));
+
+		if (colorMap.find(tid) != colorMap.end()) {
+			colorMap[tid] = String("/paired9/") + std::to_string(1 + colorMap.size() % 9);
+		}
+
+		return colorMap[tid];
+	};
+
+	auto avgTimeWorst = Scheduler::TaskTime::min();
+	for (auto task : mTasks) {
+		avgTimes[task] = mScheduler->getAveragedMeasurement(task);
+
+		if (avgTimes[task] > avgTimeWorst)
+			avgTimeWorst = avgTimes[task];
+	}
+
+	// TODO: For level-based Scheduler's we might want to
+	//       maintain the level structure by setting the respective
+	//       Graphviz 'rank' attributes and group each level into sub-graph
 
 	Graph::Graph g("dependencies", Graph::Type::directed);
 	for (auto task : mTasks) {
-		g.addNode(task->toString());
+		String name = task->toString();
+		String type = CPS::Utils::className(task.get(), "DPsim::");
+
+		auto *n = g.addNode(name);
+
+		std::stringstream label;
+
+		label << "<B>" << Utils::encodeXml(name) << "</B><BR/>";
+		label << "<FONT POINT-SIZE=\"10\" COLOR=\"gray28\">"
+		      << Utils::encodeXml(type) << "<BR/>";
+
+		if (isScheduled(task))
+			label << "Avg. time: " << avgTimes[task].count() << "ns<BR/>";
+		else
+			label << "Unscheduled" << "<BR/>";
+
+		label <<"</FONT>";
+
+		n->set("color", getColor(task));
+		n->set("label", label.str(), true);
+		n->set("style", "rounded,filled,bold");
+		n->set("shape", "rectangle");
+
+		// if (isSolveTask(task)) {
+		// 	n->set("fillcolor", "orange");
+		// }
+		// if (isRootTask(task)) {
+		// 	n->set("fillcolor", "springgreen1");
+		// }
+		if (isScheduled(task)) {
+			if (avgTimeWorst > Scheduler::TaskTime(0)) {
+				auto grad = (float) avgTimes[task].count() / avgTimeWorst.count();
+				n->set("fillcolor", CPS::Utils::Rgb::gradient(grad).hex());
+				mSLog->info("{} {}", task->toString(), CPS::Utils::Rgb::gradient(grad).hex());
+			}
+		}
+		else {
+			n->set("fillcolor", "white");
+		}
+
 	}
 	for (auto from : mTasks) {
 		for (auto to : mTaskOutEdges[from]) {
@@ -322,12 +424,14 @@ void Simulation::renderDependencyGraph(std::ostream &os) {
 		}
 	}
 
-	g.render(os, "dot", "svg");
+	g.set("splines", "ortho");
+	return g;
 }
 #endif
 
 void Simulation::run() {
-	initialize();
+	if (!mInitialized)
+		initialize();
 
 #ifdef WITH_SHMEM
 	mSLog->info("Opening interfaces.");
@@ -355,7 +459,6 @@ void Simulation::run() {
 		lg->close();
 
 	mSLog->info("Simulation finished.");
-	//mScheduler->getMeasurements();
 }
 
 Real Simulation::step() {
