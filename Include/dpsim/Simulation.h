@@ -21,21 +21,21 @@
 
 #pragma once
 
-#include <iostream>
 #include <vector>
-#include <list>
-#include <cstdint>
 
 #include <dpsim/Config.h>
 #include <dpsim/DataLogger.h>
 #include <dpsim/Solver.h>
-#include <dpsim/Event.h>
 #include <dpsim/Scheduler.h>
+#include <dpsim/Event.h>
 #include <cps/Definitions.h>
-#include <cps/PowerComponent.h>
 #include <cps/Logger.h>
 #include <cps/SystemTopology.h>
 #include <cps/Node.h>
+
+#ifdef WITH_GRAPHVIZ
+  #include <cps/Graph.h>
+#endif
 
 #ifdef WITH_SHMEM
   #include <dpsim/Interface.h>
@@ -215,7 +215,7 @@ namespace DPsim {
 #endif
 #ifdef WITH_GRAPHVIZ
 		///
-		void renderDependencyGraph(std::ostream& os);
+		CPS::Graph::Graph dependencyGraph();
 #endif
 
 		// #### Getter ####
@@ -228,5 +228,4 @@ namespace DPsim {
 		std::shared_ptr<Scheduler> scheduler() { return mScheduler; }
 		std::vector<Real>& stepTimes() { return mStepTimes; }
 	};
-
 }

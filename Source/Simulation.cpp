@@ -19,19 +19,20 @@
  *********************************************************************************/
 
 #include <chrono>
+#include <iomanip>
+#include <algorithm>
+#include <typeindex>
 
 #include <dpsim/SequentialScheduler.h>
 #include <dpsim/Simulation.h>
-#include <dpsim/DiakopticsSolver.h>
+#include <dpsim/Utils.h>
+#include <cps/Utils.h>
 #include <dpsim/MNASolver.h>
 #include <dpsim/NRPSolver.h>
+#include <dpsim/DiakopticsSolver.h>
 
 #ifdef WITH_CIM
   #include <cps/CIM/Reader.h>
-#endif
-
-#ifdef WITH_GRAPHVIZ
-  #include <cps/Graph.h>
 #endif
 
 #ifdef WITH_SUNDIALS
