@@ -1,61 +1,62 @@
 #!/bin/bash
 set -e -x
 
-VILLAS_VERSION=0.8.0
+case $(uname -s) in
+	Darwin)
+		PLATFORM=macOS
+		REQUIREMENTS="delocate"
+		VERSIONS="cp37"
+		CMAKE_OPTS_BASE="-DCMAKE_BUILD_PARALLEL_LEVEL=$(sysctl -n hw.ncpu)"
+		;;
 
-# Set up DPsim dependencies
-curl https://packages.fein-aachen.org/redhat/fein.repo > /etc/yum.repos.d/fein.repo
+	Linux)
+		PLATFORM=Linux
+		REQUIREMENTS="" # Are bundled in Manylinux image
+		#PYDIRS=(/opt/python/{cp36,cp37}-*)
+		PYDIRS=(/opt/python/cp37-*)
+		CMAKE_OPTS_BASE="-DCMAKE_BUILD_PARALLEL_LEVEL=$(nproc) \
+						 -DWITH_EIGEN_SUBMODULE=ON \
+						 -DWITH_CIM_SUBMODULE=ON \
+                    	 -DWITH_SPDLOG_SUBMODULE=ON"
+		;;
 
-# Enable Extra Packages for Enterprise Linux (EPEL) repo
-yum -y install epel-release
-
-# Toolchain
-yum -y install \
-	devtoolset-7-toolchain \
-	pkgconfig make cmake3 \
-	git tar \
-	expat-devel \
-	graphviz-devel \
-	sundials-devel \
-	gsl-devel \
-    libxml2-devel \
-	# libvillas-devel-${VILLAS_VERSION} \
-	# villas-node-${VILLAS_VERSION}
-
-# rm -rf spdlog
-# git clone --recursive https://github.com/gabime/spdlog.git
-# mkdir -p spdlog/build
-# pushd spdlog/build
-# cmake ..
-# make -j$(nproc) install
-# popd
-
-# Make cmake3 the default
-update-alternatives --install /usr/bin/cmake cmake /usr/bin/cmake3 1
+	MINGW*)
+		PLATFORM=Windows
+		;;
+esac
 
 # Compile wheels
-for PYDIR in /opt/python/{cp35,cp36,cp37}-*; do
+for PYDIR in ${PYDIRS}; do
 	LIB=(${PYDIR}/lib/python*)
 	INC=(${PYDIR}/include/python*)
-	EXC=${PYDIR}/bin/python3
-    
-	export CMAKE_OPTS="-DWITH_EIGEN_SUBMODULE=ON \
+	EXC=(${PYDIR}/bin/python*)
+
+	# CMAKE_OPTS is used by our setup.py script
+	export CMAKE_OPTS="-DCMAKE_BUILD_PARALLEL_LEVEL=$(nproc) \
+					   -DWITH_EIGEN_SUBMODULE=ON \
 					   -DWITH_CIM_SUBMODULE=ON \
+					   -DWITH_SPDLOG_SUBMODULE=ON \
 					   -DPYTHON_EXECUTABLE=${EXC} \
-					   -DPYTHON_INCLUDE_DIR=${INC} \
+					   -DPYTHON_INCLUDE_DIRS=${INC} \
 					   -DPYTHON_LIBRARY=${LIB}"
 
-    "${PYDIR}/bin/pip" install -r /dpsim/requirements.txt
-    "${PYDIR}/bin/pip" wheel /dpsim/ -w wheelhouse/
+   "${PYDIR}/bin/pip" install --requirement requirements.txt
+   "${PYDIR}/bin/pip" wheel . --wheel-dir boilerhouse --no-deps
+   #"${PYDIR}/bin/python" ./setup.py bdist_wheel
 done
 
-# Bundle external shared libraries into the wheels
-for whl in wheelhouse/*.whl; do
-    auditwheel repair "$whl" --plat $PLAT -w /dpsim/
-done
-
-# Install packages and test
-for PYDIR in /opt/python/{cp35,cp36,cp37}-*; do
-    "${PYDIR}/bin/pip" install python-manylinux-demo --no-index -f /io/wheelhouse
-    (cd "$HOME"; "${PYDIR}/bin/nosetests" pymanylinuxdemo)
-done
+# Fixup wheels by including external libs
+if [ ${PLATFORM} == "Linux" ]; then
+	# Bundle external shared libraries into the wheels
+	for WHEEL in boilerhouse/*.whl; do
+		auditwheel show "${WHEEL}"
+    	auditwheel repair "${WHEEL}" --plat ${PLAT} --wheel-dir wheelhouse
+	done
+elif [ ${PLATFORM} == "macOS" ]; then
+	for WHEEL in boilerhouse/*.whl; do
+		delocate-listdeps --all --depending ${WHEEL}
+		delocate-wheel -w wheelhouse -v ${WHEEL}
+	done
+elif [ ${PLATFORM} == "Windows" ]; then
+	# Nothing to do here yet.
+fi
