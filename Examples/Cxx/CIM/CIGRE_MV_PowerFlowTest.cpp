@@ -18,9 +18,9 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *********************************************************************************/
 
-#include "cps/CIM/Reader.h"
+#include <cps/CIM/Reader.h>
 #include <DPsim.h>
-#include "cps/LoadProfileReader.h"
+#include <cps/LoadProfileReader.h>
 
 using namespace std;
 using namespace DPsim;
