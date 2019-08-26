@@ -1,5 +1,7 @@
 FROM fedora:29
 
+ARG VILLAS_VERSION=0.8.0
+
 LABEL \
 	org.label-schema.schema-version = "1.0" \
 	org.label-schema.name = "DPsim" \
@@ -34,9 +36,9 @@ RUN dnf --refresh -y install \
 	spdlog-devel \
 	graphviz-devel \
 	sundials-devel \
-	libvillas-devel \
 	libcimpp16v29a \
-	villas-node \
+	libvillas-devel-${VILLAS_VERSION} \
+	villas-node-${VILLAS_VERSION} \
 	gsl-devel
 
 # Install some debuginfos
