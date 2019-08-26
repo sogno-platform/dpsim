@@ -81,6 +81,11 @@ class CMakeBuild(build_ext):
 
         if env.get('CMAKE_OPTS'):
             cmake_args += env.get('CMAKE_OPTS').split(' ')
+
+        print(' '.join(['cmake'] + cmake_args + [ext.sourcedir]))
+        subprocess.check_call(['cmake'] + cmake_args + [ext.sourcedir], cwd=self.build_temp, env=env)
+
+        print(' '.join(['cmake', '--build', '.', '--target', 'dpsim_python'] + build_args))
         subprocess.check_call(['cmake', '--build', '.', '--target', 'dpsim_python'] + build_args, cwd=self.build_temp)
 
 
