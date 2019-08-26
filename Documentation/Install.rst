@@ -21,11 +21,13 @@ And access the session by opening the following link: http://localhost:8888/lab/
 Python
 ------
 
+**Currently, the DPsim Python packages are broken. Until we have updated the packages, please use the docker installation.** 
+
 Prerequisites
 ^^^^^^^^^^^^^
 
 First, you need to make sure that Python is installed and your version is compatible.
-Currently, DPsim is built for **Python 3.5, 3.6 and 3.7**. 
+DPsim is built for **Python 3.5, 3.6 and 3.7**. 
 An easy way to install Python and all required packages is the `Anaconda distribution <https://www.anaconda.com/>`_.
 
 To get started, install the latest installer for Python 3.x from the `downloads section <https://www.anaconda.com/download/>`_.
