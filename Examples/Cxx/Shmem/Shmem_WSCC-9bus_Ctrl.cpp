@@ -38,7 +38,7 @@ int main(int argc, char *argv[]) {
 	// Find CIM files
 	std::list<fs::path> filenames;
 	if (argc <= 1) {
-		filenames = Utils::findFiles({
+		filenames = DPsim::Utils::findFiles({
 			"WSCC-09_RX_DI.xml",
 			"WSCC-09_RX_EQ.xml",
 			"WSCC-09_RX_SV.xml",
@@ -46,7 +46,7 @@ int main(int argc, char *argv[]) {
 		}, "Examples/CIM/WSCC-09_RX", "CIMPATH");
 	}
 	else {
-		filenames = args.filenames;
+		filenames = args.positionalPaths();
 	}
 
 	String simName = "Shmem_WSCC-9bus_Ctrl";
@@ -71,26 +71,17 @@ int main(int argc, char *argv[]) {
 	std::vector<Real> coefficients = std::vector<Real>(100, 1./100);
 
 	auto filtP_profile = FIRFilter::make("filter_p_profile", coefficients_profile, 0, Logger::Level::info);
-	filtP_profile->setPriority(1);
 	load_profile->setAttributeRef("P", filtP_profile->attribute<Real>("output"));
 
 	sys.mComponents.push_back(filtP_profile);
 
 	auto filtP = FIRFilter::make("filter_p", coefficients, 0, Logger::Level::info);
-	filtP->setPriority(1);
 	load->setAttributeRef("P", filtP->attribute<Real>("output"));
 	sys.mComponents.push_back(filtP);
 
 	RealTimeSimulation sim(simName, sys, args.timeStep, args.duration, args.solver.domain, args.solver.type, args.logLevel, true);
 
-	// Create shmem interface
-	Interface::Config conf;
-	conf.samplelen = 64;
-	conf.queuelen = 1024;
-	conf.polling = false;
-	String in  = "/villas-dpsim1";
-	String out = "/dpsim1-villas";
-	Interface intf(out, in, &conf, false);
+	Interface intf("/dpsim1-villas", "/villas-dpsim1", nullptr, false);
 
 	// Register exportable node voltages
 	UInt o = 0;
@@ -104,22 +95,21 @@ int main(int argc, char *argv[]) {
 		i--;
 
 		auto n_dp = std::dynamic_pointer_cast<CPS::DP::Node>(n);
-		auto v = n_dp->attributeMatrix<Complex>("v");
-		auto v0 = v->coeffComplex(0,0);
+		auto v = n_dp->attributeMatrixComp("v")->coeff(0, 0);
 
 		std::cout << "Signal " << (i*2)+0 << ": Mag  " << n->name() << std::endl;
 		std::cout << "Signal " << (i*2)+1 << ": Phas " << n->name() << std::endl;
 
-		intf.addExport(v0->mag(),   (i*2)+0); o++;
-		intf.addExport(v0->phase(), (i*2)+1); o++;
+		intf.exportReal(v->mag(),   (i*2)+0); o++;
+		intf.exportReal(v->phase(), (i*2)+1); o++;
 	}
 
 	// TODO gain by 20e8
 	filtP->setInput(intf.importReal(0));
 	filtP_profile->setInput(intf.importReal(1));
 
-	intf.addExport(load->attribute<Real>("P"), o++);
-	intf.addExport(load_profile->attribute<Real>("P"), o++);
+	intf.exportReal(load->attribute<Real>("P"), o++);
+	intf.exportReal(load_profile->attribute<Real>("P"), o++);
 
 	sim.addInterface(&intf, false);
 	sim.run();

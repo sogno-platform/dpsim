@@ -25,15 +25,9 @@ using namespace DPsim;
 using namespace CPS::DP;
 using namespace CPS::DP::Ph1;
 
-int main(int argc, char *argv[])
-{
+int main(int argc, char *argv[]) {
 	SystemComponentList comps, comps2;
 	SystemNodeList nodes;
-
-	Interface::Config conf;
-	conf.samplelen = 4;
-	conf.queuelen = 1024;
-	conf.polling = true;
 
 	if (argc < 2) {
 		std::cerr << "Not enough arguments (either 0 or 1 for the test number)" << std::endl;
@@ -51,7 +45,7 @@ int main(int argc, char *argv[])
 		out = "/villas1-out";
 	}
 
-	Interface intf(in, out, &conf);
+	Interface intf(in, out, nullptr);
 
 	if (String(argv[1]) == "0") {
 		// Nodes
@@ -81,7 +75,8 @@ int main(int argc, char *argv[])
 		nodes = SystemNodeList{Node::GND, n1, n2, n3};
 
 		evs->setAttributeRef("V_ref", intf.importComplex(0));
-		intf.addExport(evs->attribute<Complex>("i_comp"), 0);
+		intf.addExport(evs->attributeMatrixCompl("i_intf")->coeff(0, 0), 0);
+
 	}
 	else if (String(argv[1]) == "1") {
 		// Nodes
@@ -110,7 +105,7 @@ int main(int argc, char *argv[])
 		nodes = SystemNodeList{Node::GND, n4, n5};
 
 		ecs->setAttributeRef("I_ref", intf.importComplex(0));
-		intf.addExport(ecs->attribute<Complex>("v_comp"), 0);
+		intf.addExport(ecs->aattributeMatrixCompl("v_intf")->coeff(0, 0), 0);
 	}
 	else {
 		std::cerr << "invalid test number" << std::endl;

@@ -26,20 +26,11 @@ using namespace CPS::DP;
 using namespace CPS::DP::Ph1;
 
 int main(int argc, char *argv[]) {
-
-	Interface::Config conf;
-	conf.samplelen = 64;
-	conf.queuelen = 1024;
-	conf.polling = false;
-
-	String in  = "/dpsim10";
-	String out = "/dpsim01";
-
 	Real timeStep = 0.001;
 	Real finalTime = 10;
 	String simName = "ShmemControllableSource";
 
-	Interface intf(out, in, &conf);
+	Interface intf("/dpsim01", "/dpsim10");
 
 	// Nodes
 	auto n1 = Node::make("n1");
@@ -54,7 +45,7 @@ int main(int argc, char *argv[]) {
 	r1->connect({ Node::GND, n1 });
 
 	ecs->setAttributeRef("I_ref", intf.importComplex(0));
-	intf.addExport(ecs->attribute<Complex>("v_comp"), 0);
+	intf.addExport(ecs->attributeMatrixComp("v_intf")->coeff(0, 0), 0);
 
 	auto sys = SystemTopology(50, SystemNodeList{n1}, SystemComponentList{ecs, r1});
 	RealTimeSimulation sim(simName, sys, timeStep, finalTime,

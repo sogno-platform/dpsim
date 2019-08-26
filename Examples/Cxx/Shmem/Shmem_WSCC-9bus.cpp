@@ -31,7 +31,7 @@ using namespace CPS::DP::Ph1;
 
 int main(int argc, char *argv[]) {
 
-	std::list<String> filenames = Utils::findFiles({
+	std::list<fs::path> filenames = DPsim::Utils::findFiles({
 		"WSCC-09_RX_DI.xml",
 		"WSCC-09_RX_EQ.xml",
 		"WSCC-09_RX_SV.xml",
@@ -46,22 +46,15 @@ int main(int argc, char *argv[]) {
 	RealTimeSimulation sim(simName, sys, 0.001, 120,
 		Domain::DP, Solver::Type::MNA, Logger::Level::debug, true);
 
-	// Create shmem interface
-	Interface::Config conf;
-	conf.samplelen = 64;
-	conf.queuelen = 1024;
-	conf.polling = false;
-	String in  = "/villas-dpsim";
-	String out = "/dpsim-villas";
-	Interface intf(out, in, &conf);
+	Interface intf("/dpsim-villas", "/villas-dpsim");
 
 	// Register exportable node voltages
 	UInt o = 0;
 	for (auto n : sys.mNodes) {
 		auto v = n->attributeComplex("v");
 
-		intf.addExport(v->mag(),   o+0);
-		intf.addExport(v->phase(), o+1);
+		intf.exportReal(v->mag(),   o+0);
+		intf.exportReal(v->phase(), o+1);
 
 		o += 2;
 	}
