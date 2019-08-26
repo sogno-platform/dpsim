@@ -1,0 +1,8 @@
+ipywidgets
+jupyter
+jupyter_contrib_nbextensions
+jupyterlab_widgets
+
+nbconvert
+nbformat
+jupyter_client

@@ -36,7 +36,7 @@ RUN dnf --refresh -y install \
 	spdlog-devel \
 	graphviz-devel \
 	sundials-devel \
-	libcimpp16v29a \
+	libcimpp16v29a \	
 	libvillas-devel-${VILLAS_VERSION} \
 	villas-node-${VILLAS_VERSION} \
 	gsl-devel
@@ -50,7 +50,9 @@ ENV LD_LIBRARY_PATH /usr/local/lib64
 ADD requirements.txt .
 RUN pip3 install -r requirements.txt
 
+# Remove this part in the future and use dedicated jupyter Dockerfile
 # Activate Jupyter extensions
+RUN pip3 install -r requirements-jupyter.txt
 RUN dnf -y --refresh install npm
 RUN jupyter nbextension enable --py widgetsnbextension
 RUN jupyter labextension install @jupyter-widgets/jupyterlab-manager
