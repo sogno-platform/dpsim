@@ -51,8 +51,9 @@ void PthreadPoolScheduler::createSchedule(const Task::List& tasks, const Edges& 
 
 	// TODO Wastes memory, but guarantees that the writes always succeed.
 	// Figure out a smarter way to do this.
-	queue_signalled_init(&mOutQueue, tasks.size(), &memory_heap, QUEUE_SIGNALLED_POLLING);
-	queue_signalled_init(&mDoneQueue, tasks.size(), &memory_heap, QUEUE_SIGNALLED_POLLING);
+	queue_signalled_init(&mOutQueue, tasks.size(), &memory_heap, QueueSignalledMode::POLLING);
+	queue_signalled_init(&mDoneQueue, tasks.size(), &memory_heap, QueueSignalledMode::POLLING);
+
 	for (size_t i = 0; i < mThreads.size(); i++) {
 		if (pthread_create(&mThreads[i], NULL, poolThreadFunction, this))
 			throw SchedulingException();
@@ -130,7 +131,4 @@ void* PthreadPoolScheduler::poolThreadFunction(void* data) {
 	}
 	//std::cout << "worker exiting" << std::endl;
 	return nullptr;
-}
-
-void PthreadPoolScheduler::getMeasurements() {
 }
