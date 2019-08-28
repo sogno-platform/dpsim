@@ -12,7 +12,7 @@ set(CIRCUIT_SOURCES
 	Circuits/DP_VS_RL1.cpp
 	Circuits/DP_Circuits.cpp
 	Circuits/DP_Basics_DP_Sims.cpp	
-	#Circuits/DP_VS_PiLine_R.cpp
+	Circuits/DP_PiLine.cpp
 	#Circuits/DP_VS_Trafo_R.cpp
 	#Circuits/DP_ResVS_RL_Switch.cpp
 	
