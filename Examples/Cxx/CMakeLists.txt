@@ -97,7 +97,9 @@ if(WITH_CIM)
 		CIM/IEEE_LV_PowerFlowTest.cpp
 		CIM/IEEE_LV_PowerFlowTest_LP.cpp
 
-		CIM/WSCC-9bus_CIM_mult.cpp
+		CIM/WSCC_9bus_mult_decoupled.cpp
+		CIM/WSCC_9bus_mult_coupled.cpp
+		CIM/WSCC_9bus_mult_diakoptics.cpp
 	)
 
 	if(WITH_RT)
