@@ -1,0 +1,14 @@
+# rwthacs/dpsim-dev is built by dpsim-git/Packaging/Docker/Dockerfile.dev
+ARG DOCKER_IMAGE=rwthacs/dpsim
+ARG DOCKER_TAG=latest
+FROM ${DOCKER_IMAGE}:${DOCKER_TAG}
+
+ADD requirements-jupyter.txt .
+RUN pip3 install -r requirements-jupyter.txt
+
+# Activate Jupyter extensions
+RUN dnf -y --refresh install npm
+RUN jupyter nbextension enable --py widgetsnbextension
+RUN jupyter labextension install @jupyter-widgets/jupyterlab-manager
+
+EXPOSE 8888

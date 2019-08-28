@@ -35,7 +35,6 @@ namespace DPsim {
 
 		void createSchedule(const CPS::Task::List& tasks, const Edges& inEdges, const Edges& outEdges);
 		void step(Real time, Int timeStepCount);
-		void getMeasurements();
 
 	private:
 		static void* poolThreadFunction(void* data);

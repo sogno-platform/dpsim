@@ -673,7 +673,8 @@ PyObject* Python::Simulation::reprSVG(Simulation *self, PyObject *args)
 {
 	std::stringstream ss;
 
-	self->sim->renderDependencyGraph(ss);
+	self->sim->dependencyGraph().render(ss);
+
 
 	return PyUnicode_FromString(ss.str().c_str());
 }

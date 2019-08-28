@@ -256,6 +256,23 @@ std::list<fs::path> CommandLineArgs::positionalPaths() const {
 	return paths;
 }
 
+String DPsim::Utils::encodeXml(String& data) {
+    String buffer;
+    buffer.reserve(data.size());
+    for (size_t pos = 0; pos != data.size(); ++pos) {
+        switch(data[pos]) {
+            case '&':  buffer.append("&amp;");       break;
+            case '\"': buffer.append("&quot;");      break;
+            case '\'': buffer.append("&apos;");      break;
+            case '<':  buffer.append("&lt;");        break;
+            case '>':  buffer.append("&gt;");        break;
+            default:   buffer.append(&data[pos], 1); break;
+        }
+    }
+
+    return buffer;
+}
+
 std::vector<std::string> DPsim::Utils::tokenize(std::string s, char delimiter) {
 	std::vector<std::string> tokens;
 

@@ -23,12 +23,6 @@ if(WITH_SHMEM)
 	target_sources(dpsim_python PUBLIC Interface.cpp)
 endif()
 
-if(APPLE)
-	set(INSTALL_RPATH "@loader_path")
-else(UNIX)
-	set(INSTALL_RPATH "\$ORIGIN")
-endif()
-
 target_link_libraries(dpsim_python dpsim cps ${LIBRARIES} ${WIN_LIBRARIES})
 target_include_directories(dpsim_python PRIVATE ${INCLUDE_DIRS})
 target_compile_options(dpsim_python PUBLIC ${DPSIM_CXX_FLAGS})
@@ -38,7 +32,7 @@ set_target_properties(dpsim_python
 		OUTPUT_NAME "_dpsim"
 		SUFFIX ${PYTHON_EXT_SUFFIX}
 		PREFIX ""
-		INSTALL_RPATH ${INSTALL_RPATH}
+		BUILD_WITH_INSTALL_RPATH ON
 )
 
 # Install native extension

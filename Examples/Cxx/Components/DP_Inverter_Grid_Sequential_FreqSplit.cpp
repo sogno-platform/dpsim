@@ -19,6 +19,7 @@
  *********************************************************************************/
 
 #include <DPsim.h>
+#include <dpsim/ThreadLevelScheduler.h>
 
 using namespace DPsim;
 using namespace CPS::DP;

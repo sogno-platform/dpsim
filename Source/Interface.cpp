@@ -119,7 +119,7 @@ void Interface::writeValues() {
 		}
 
 		sample->sequence = mSequence++;
-		sample->flags |= SAMPLE_HAS_DATA;
+		sample->flags |= (int) SampleFlags::HAS_DATA;
 		clock_gettime(CLOCK_REALTIME, &sample->ts.origin);
 		done = true;
 
@@ -225,7 +225,7 @@ Attribute<Complex>::Ptr Interface::importComplexMagPhase(UInt idx) {
 	return attr;
 }
 
-void Interface::addExport(Attribute<Int>::Ptr attr, UInt idx) {
+void Interface::exportInt(Attribute<Int>::Ptr attr, UInt idx) {
 	addExport([attr, idx](Sample *smp) {
 		if (idx >= smp->capacity)
 			throw std::out_of_range("not enough space in allocated sample");
@@ -234,9 +234,10 @@ void Interface::addExport(Attribute<Int>::Ptr attr, UInt idx) {
 
 		smp->data[idx].i = attr->get();
 	});
+	mExportAttrs.push_back(attr);
 }
 
-void Interface::addExport(Attribute<Real>::Ptr attr, UInt idx) {
+void Interface::exportReal(Attribute<Real>::Ptr attr, UInt idx) {
 	addExport([attr, idx](Sample *smp) {
 		if (idx >= smp->capacity)
 			throw std::out_of_range("not enough space in allocated sample");
@@ -245,9 +246,10 @@ void Interface::addExport(Attribute<Real>::Ptr attr, UInt idx) {
 
 		smp->data[idx].f = attr->get();
 	});
+	mExportAttrs.push_back(attr);
 }
 
-void Interface::addExport(Attribute<Bool>::Ptr attr, UInt idx) {
+void Interface::exportBool(Attribute<Bool>::Ptr attr, UInt idx) {
 	addExport([attr, idx](Sample *smp) {
 		if (idx >= smp->capacity)
 			throw std::out_of_range("not enough space in allocated sample");
@@ -256,9 +258,10 @@ void Interface::addExport(Attribute<Bool>::Ptr attr, UInt idx) {
 
 		smp->data[idx].b = attr->get();;
 	});
+	mExportAttrs.push_back(attr);
 }
 
-void Interface::addExport(Attribute<Complex>::Ptr attr, UInt idx) {
+void Interface::exportComplex(Attribute<Complex>::Ptr attr, UInt idx) {
 	addExport([attr, idx](Sample *smp) {
 		if (idx >= smp->capacity)
 			throw std::out_of_range("not enough space in allocated sample");
@@ -271,6 +274,7 @@ void Interface::addExport(Attribute<Complex>::Ptr attr, UInt idx) {
 		z[0] = y.real();
 		z[1] = y.imag();
 	});
+	mExportAttrs.push_back(attr);
 }
 
 Task::List Interface::getTasks() {

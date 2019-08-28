@@ -31,17 +31,22 @@ void multiply_connected(SystemTopology& sys, int copies, Real resistance, Real i
 	sys.multiply(copies);
 	int counter = 0;
 	std::vector<String> nodes = {"BUS5", "BUS8", "BUS6"};
+
 	for (auto orig_node : nodes) {
 		std::vector<String> nodeNames{orig_node};
-		for (int i = 2; i < copies+2; i++) {
+		for (int i = 2; i <= copies+1; i++) {
 			nodeNames.push_back(orig_node + "_" + std::to_string(i));
 		}
 		nodeNames.push_back(orig_node);
 		// if only a single copy is added, it doesn't really make sense to
 		// "close the ring" by adding another line
 		int nlines = copies == 1 ? 1 : copies+1;
+
 		for (int i = 0; i < nlines; i++) {
-			auto line = Signal::DecouplingLine::make("dline" + orig_node + std::to_string(i), sys.node<Node<Complex>>(nodeNames[i]), sys.node<Node<Complex>>(nodeNames[i+1]), resistance, inductance, capacitance, Logger::Level::debug);
+			auto line = Signal::DecouplingLine::make("dline_" + orig_node + "_" + std::to_string(i),
+				sys.node<Node<Complex>>(nodeNames[i]),
+				sys.node<Node<Complex>>(nodeNames[i+1]),
+				resistance, inductance, capacitance, Logger::Level::debug);
 			sys.addComponent(line);
 			sys.addComponents(line->getLineComponents());
 			counter++;
@@ -112,12 +117,17 @@ int main(int argc, char *argv[]) {
 	SystemTopology sys = reader.loadCIM(60, filenames);
 
 	multiply_connected(sys, 15, 12.5, 0.16, 1e-6);
-	//sys.printGraph(sys.topologyGraph());
+
 	Simulation sim(simName, sys, 0.0001, 0.5,
 		Domain::DP, Solver::Type::MNA, Logger::Level::off, false);
 	sim.setScheduler(std::make_shared<OpenMPLevelScheduler>(4));
-	//std::ofstream of("graph.svg");
-	//sim.renderDependencyGraph(of);
+
+	//std::ofstream of1("topology_graph.svg");
+	//sys.topologyGraph().render(of1));
+
+	//std::ofstream of2("dependency_graph.svg");
+	//sim.dependencyGraph().render(of2);
+
 	sim.run();
 
 	return 0;
