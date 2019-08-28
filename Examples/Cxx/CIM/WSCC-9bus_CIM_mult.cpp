@@ -97,6 +97,46 @@ void multiply_decoupled(SystemTopology& sys, int copies, Real resistance, Real i
 	}
 }
 
+PowerComponent<Complex>::List multiply_diakoptics(SystemTopology& sys, int copies, Real resistance, Real inductance, Real capacitance, UInt splits = 0) {
+
+    sys.multiply(copies);
+	int counter = 0;
+    std::vector<String> nodes = {"BUS5", "BUS8", "BUS6"};
+
+    PowerComponent<Complex>::List tear_components;
+    UInt splitEvery;
+
+	if (splits > 0)
+        splitEvery = UInt(copies+1 / splits);
+    else
+        splitEvery = 1;
+
+    for (auto orig_node : nodes) {
+		std::vector<String> nodeNames{orig_node};
+    	for (int i = 2; i < copies+2; i++) {
+			nodeNames.push_back(orig_node + "_" + std::to_string(i));
+		}
+		nodeNames.push_back(orig_node);
+
+		int nlines = copies == 1 ? 1 : copies+1;
+        for (int i = 0; i < nlines; i++) {
+
+            auto line = DP::Ph1::PiLine::make("line" + std::to_string(counter));
+            line->setParameters(resistance, inductance, capacitance);
+
+            line->connect({sys.node<DP::Node>(nodeNames[i]), sys.node<DP::Node>(nodeNames[i+1])});
+
+			if (i % splitEvery == 0)
+                tear_components.push_back(line);
+            else
+                sys.addComponent(line);
+
+            counter += 1;
+		}
+	}
+	return tear_components;
+}
+
 int main(int argc, char *argv[]) {
 
 	// Find CIM files
