@@ -96,6 +96,8 @@ if(WITH_CIM)
 
 		CIM/IEEE_LV_PowerFlowTest.cpp
 		CIM/IEEE_LV_PowerFlowTest_LP.cpp
+
+		CIM/WSCC-9bus_CIM_mult.cpp
 	)
 
 	if(WITH_RT)
@@ -104,12 +106,6 @@ if(WITH_CIM)
 			RealTime/RT_CIGRE_MV_PowerFlowTest.cpp
 		)
 	endif()
-endif()
-
-if(WITH_CIM AND WITH_OPENMP)
-	set(CIM_OPENMP_SOURCES
-		CIM/WSCC-9bus_CIM_mult.cpp
-	)
 endif()
 
 if(WITH_CIM AND WITH_SHMEM)

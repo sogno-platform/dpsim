@@ -23,6 +23,7 @@
 #include <fstream>
 
 #include <DPsim.h>
+#include <dpsim/ThreadLevelScheduler.h>
 
 using namespace DPsim;
 using namespace CPS;
@@ -38,14 +39,14 @@ void multiply_connected(SystemTopology& sys, int copies, Real resistance, Real i
 			nodeNames.push_back(orig_node + "_" + std::to_string(i));
 		}
 		nodeNames.push_back(orig_node);
-		// if only a single copy is added, it doesn't really make sense to
+		// if only a single copy is added, it does not really make sense to
 		// "close the ring" by adding another line
 		int nlines = copies == 1 ? 1 : copies+1;
 
 		for (int i = 0; i < nlines; i++) {
 			auto line = Signal::DecouplingLine::make("dline_" + orig_node + "_" + std::to_string(i),
-				sys.node<Node<Complex>>(nodeNames[i]),
-				sys.node<Node<Complex>>(nodeNames[i+1]),
+				sys.node<DP::Node>(nodeNames[i]),
+				sys.node<DP::Node>(nodeNames[i+1]),
 				resistance, inductance, capacitance, Logger::Level::debug);
 			sys.addComponent(line);
 			sys.addComponents(line->getLineComponents());
@@ -54,7 +55,7 @@ void multiply_connected(SystemTopology& sys, int copies, Real resistance, Real i
 	}
 }
 
-void multiply_connected(SystemTopology& sys, int copies, Real resistance, Real inductance, Real capacitance) {
+void multiply_decoupled(SystemTopology& sys, int copies, Real resistance, Real inductance, Real capacitance) {
 	sys.multiply(copies);
 	int counter = 0;
     std::vector<String> nodes = {"BUS5", "BUS8", "BUS6"};
@@ -66,33 +67,34 @@ void multiply_connected(SystemTopology& sys, int copies, Real resistance, Real i
 		}
 		nodeNames.push_back(orig_node);
 
-        // if only a single copy is added, it doesn't really make sense to
+        // if only a single copy is added, it does not really make sense to
 		// "close the ring" by adding another line
 		int nlines = copies == 1 ? 1 : copies+1;
 		for (int i = 0; i < nlines; i++) {
             // TODO lumped resistance?
-            auto rl_node = std::make_shared<DP::Node>('N_add_' + std::to_string(counter));
-            auto res = DP::Ph1::Resistor::make('R_' + std::to_string(counter));
+            auto rl_node = std::make_shared<DP::Node>("N_add_" + std::to_string(counter));
+            auto res = DP::Ph1::Resistor::make("R_" + std::to_string(counter));
             res->setParameters(resistance);
-            auto ind = DP::Ph1::Inductor::make('L_' + std::to_string(counter));
+            auto ind = DP::Ph1::Inductor::make("L_" + std::to_string(counter));
             ind->setParameters(inductance);
-            auto cap1 = DP::Ph1::Capacitor::make('C1_' + std::to_string(counter));
+            auto cap1 = DP::Ph1::Capacitor::make("C1_" + std::to_string(counter));
             cap1->setParameters(capacitance / 2.);
-            auto cap2 = DP::Ph1::Capacitor::make('C2_' + std::to_string(counter));
+            auto cap2 = DP::Ph1::Capacitor::make("C2_" + std::to_string(counter));
             cap2->setParameters(capacitance / 2.);
 
             sys.addNode(rl_node);
-            res->connect(sys.node(node_names[i]), rl_node);
-            ind->connect(rl_node, sys.node(node_names[i+1]));
-            cap1->connect(sys.node(node_names[i]), gnd]);
-            cap2->connect(sys.node(node_names[i+1]), gnd]);
-            counter += 1
+            res->connect({sys.node<DP::Node>(nodeNames[i]), rl_node});
+            ind->connect({rl_node, sys.node<DP::Node>(nodeNames[i+1])});
+            cap1->connect({sys.node<DP::Node>(nodeNames[i]), DP::Node::GND});
+            cap2->connect({sys.node<DP::Node>(nodeNames[i+1]), DP::Node::GND});
+            counter += 1;
 
             sys.addComponent(res);
             sys.addComponent(ind);
             sys.addComponent(cap1);
             sys.addComponent(cap2);
 		}
+	}
 }
 
 int main(int argc, char *argv[]) {
@@ -100,7 +102,7 @@ int main(int argc, char *argv[]) {
 	// Find CIM files
 	std::list<fs::path> filenames;
 	if (argc <= 1) {
-		filenames = Utils::findFiles({
+		filenames = DPsim::Utils::findFiles({
 			"WSCC-09_RX_DI.xml",
 			"WSCC-09_RX_EQ.xml",
 			"WSCC-09_RX_SV.xml",
