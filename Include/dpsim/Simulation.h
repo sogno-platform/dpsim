@@ -81,18 +81,26 @@ namespace DPsim {
 		Solver::Type mSolverType = Solver::Type::MNA;
 		///
 		Solver::List mSolvers;
-		///
+		/// Determines if steady-state initialization
+		/// should be executed prior to the simulation.
+		/// By default the initialization is disabled.
 		Bool mSteadyStateInit = false;
-		///
-		Bool mSplitSubnets = false;
-		///
+		/// Determines if the network should be split
+		/// into subnetworks at decoupling lines.
+		/// If the system is split, each subsystem is
+		/// solved by a dedicated MNA solver.
+		Bool mSplitSubnets = true;
+		/// If tearing components exist, the Diakoptics
+		/// solver is selected automatically.
 		CPS::Component::List mTearComponents = CPS::Component::List();
-		///
+		/// Determines if the system matrix is split into
+		/// several smaller matrices, one for each frequency.
+		/// This can only be done if the network is composed
+		/// of linear components that do no create cross
+		/// frequency coupling.
 		Bool mHarmParallel = false;
 		///
 		Bool mInitialized = false;
-		///
-		Int mDownSampleRate = 1;
 
 		// #### Task dependencies und scheduling ####
 		/// Scheduler used for task scheduling
