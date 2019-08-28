@@ -49,6 +49,47 @@ void multiply_connected(SystemTopology& sys, int copies, Real resistance, Real i
 	}
 }
 
+void multiply_connected(SystemTopology& sys, int copies, Real resistance, Real inductance, Real capacitance) {
+	sys.multiply(copies);
+	int counter = 0;
+    std::vector<String> nodes = {"BUS5", "BUS8", "BUS6"};
+
+	for (auto orig_node : nodes) {
+		std::vector<String> nodeNames{orig_node};
+    	for (int i = 2; i < copies+2; i++) {
+			nodeNames.push_back(orig_node + "_" + std::to_string(i));
+		}
+		nodeNames.push_back(orig_node);
+
+        // if only a single copy is added, it doesn't really make sense to
+		// "close the ring" by adding another line
+		int nlines = copies == 1 ? 1 : copies+1;
+		for (int i = 0; i < nlines; i++) {
+            // TODO lumped resistance?
+            auto rl_node = std::make_shared<DP::Node>('N_add_' + std::to_string(counter));
+            auto res = DP::Ph1::Resistor::make('R_' + std::to_string(counter));
+            res->setParameters(resistance);
+            auto ind = DP::Ph1::Inductor::make('L_' + std::to_string(counter));
+            ind->setParameters(inductance);
+            auto cap1 = DP::Ph1::Capacitor::make('C1_' + std::to_string(counter));
+            cap1->setParameters(capacitance / 2.);
+            auto cap2 = DP::Ph1::Capacitor::make('C2_' + std::to_string(counter));
+            cap2->setParameters(capacitance / 2.);
+
+            sys.addNode(rl_node);
+            res->connect(sys.node(node_names[i]), rl_node);
+            ind->connect(rl_node, sys.node(node_names[i+1]));
+            cap1->connect(sys.node(node_names[i]), gnd]);
+            cap2->connect(sys.node(node_names[i+1]), gnd]);
+            counter += 1
+
+            sys.addComponent(res);
+            sys.addComponent(ind);
+            sys.addComponent(cap1);
+            sys.addComponent(cap2);
+		}
+}
+
 int main(int argc, char *argv[]) {
 
 	// Find CIM files
