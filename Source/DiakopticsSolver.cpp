@@ -1,5 +1,5 @@
-/** Diakoptics solver
- *
+/**
+ * @file
  * @author Georg Reinke <georg.reinke@rwth-aachen.de>
  * @copyright 2017-2019, Institute for Automation of Complex Power Systems, EONERC
  *
@@ -34,12 +34,14 @@ using namespace DPsim;
 namespace DPsim {
 
 template <typename VarType>
-DiakopticsSolver<VarType>::DiakopticsSolver(String name, SystemTopology system, Component::List tearComponents, Real timeStep, Logger::Level logLevel) :
-	Solver(name, logLevel),
-	mTimeStep(timeStep),
-	mSystemFrequency(system.mSystemFrequency),
-	mLeftVectorLog(name + "_LeftVector", logLevel != Logger::Level::off),
-	mRightVectorLog(name + "_RightVector", logLevel != Logger::Level::off) {
+DiakopticsSolver<VarType>::DiakopticsSolver(String name,
+	SystemTopology system, Component::List tearComponents,
+	Real timeStep, Logger::Level logLevel) :
+	Solver(name, logLevel),	mTimeStep(timeStep) {
+
+	// Raw source and solution vector logging
+	mLeftVectorLog = std::make_shared<DataLogger>(name + "_LeftVector", logLevel != CPS::Logger::Level::off);
+	mRightVectorLog = std::make_shared<DataLogger>(name + "_RightVector", logLevel != CPS::Logger::Level::off);
 
 	for (auto comp : tearComponents) {
 		auto pcomp = std::dynamic_pointer_cast<PowerComponent<VarType>>(comp);
@@ -50,10 +52,11 @@ DiakopticsSolver<VarType>::DiakopticsSolver(String name, SystemTopology system, 
 }
 
 template <typename VarType>
-void DiakopticsSolver<VarType>::init(const SystemTopology& system) {
+void DiakopticsSolver<VarType>::init(SystemTopology& system) {
 	std::vector<SystemTopology> subnets;
+	mSystemFrequency = system.mSystemFrequency;
 
-	Simulation::splitSubnets<VarType>(system, subnets);
+	system.splitSubnets<VarType>(subnets);
 	initSubnets(subnets);
 	setLogColumns();
 	createMatrices();
@@ -65,13 +68,14 @@ template <typename VarType>
 void DiakopticsSolver<VarType>::initSubnets(const std::vector<SystemTopology>& subnets) {
 	mSubnets.resize(subnets.size());
 	for (UInt i = 0; i < subnets.size(); i++) {
+		// Add nodes to the list and ignore ground nodes.
 		for (auto baseNode : subnets[i].mNodes) {
-			// Add nodes to the list and ignore ground nodes.
 			if (!baseNode->isGround()) {
 				auto node = std::dynamic_pointer_cast< CPS::Node<VarType> >(baseNode);
 				mSubnets[i].nodes.push_back(node);
 			}
 		}
+
 		for (auto comp : subnets[i].mComponents) {
 			// TODO switches
 			auto mnaComp = std::dynamic_pointer_cast<CPS::MNAInterface>(comp);
@@ -84,6 +88,7 @@ void DiakopticsSolver<VarType>::initSubnets(const std::vector<SystemTopology>& s
 		}
 	}
 
+	// Create map that relates nodes to subnetworks
 	for (auto& net : mSubnets) {
 		for (auto& node : net.nodes) {
 			mNodeSubnetMap[node] = &net;
@@ -99,6 +104,7 @@ void DiakopticsSolver<VarType>::initSubnets(const std::vector<SystemTopology>& s
 		if (comp->hasVirtualNodes()) {
 			for (UInt node = 0; node < comp->virtualNodesNumber(); node++) {
 				// sim node number doesn't matter here because it shouldn't be used anyway
+				// TODO adapt this to new concept
 				comp->setVirtualNodeAt(std::make_shared<CPS::Node<VarType>>(node), node);
 			}
 		}
@@ -121,14 +127,16 @@ void DiakopticsSolver<VarType>::initSubnets(const std::vector<SystemTopology>& s
 	}
 
 	for (UInt i = 0; i < subnets.size(); i++) {
-		createVirtualNodes(i);
+		collectVirtualNodes(i);
 		assignSimNodes(i);
 	}
 }
 
 template <typename VarType>
-void DiakopticsSolver<VarType>::createVirtualNodes(int net) {
-	UInt virtualNode = mSubnets[net].nodes.size() - 1;
+void DiakopticsSolver<VarType>::collectVirtualNodes(int net) {
+	mSubnets[net].mVirtualNodeNum = 0;
+	mSubnets[net].mRealNetNodeNum = mSubnets[net].nodes.size();
+
 	for (auto comp : mSubnets[net].components) {
 		auto pComp = std::dynamic_pointer_cast<PowerComponent<VarType>>(comp);
 		if (!pComp)
@@ -136,32 +144,13 @@ void DiakopticsSolver<VarType>::createVirtualNodes(int net) {
 
 		if (pComp->hasVirtualNodes()) {
 			for (UInt node = 0; node < pComp->virtualNodesNumber(); node++) {
-				virtualNode++;
-				mSubnets[net].nodes.push_back(std::make_shared<CPS::Node<VarType>>(virtualNode));
-				pComp->setVirtualNodeAt(mSubnets[net].nodes[virtualNode], node);
-
-				mSLog->info("Created virtual node{} = {} for {}", node, virtualNode, pComp->name());
-			}
-		}
-
-		if (pComp->hasVirtualNodes()) {
-			for (UInt node = 0; node < pComp->virtualNodesNumber(); node++) {
-				virtualNode++;
+				mSubnets[net].mVirtualNodeNum++;
 				mSubnets[net].nodes.push_back(pComp->virtualNode(node));
-
-				pComp->virtualNode(node)->setSimNode(0, virtualNode);
-				mSLog->info("Assigned index {} to virtual node {} for {}", virtualNode, node, pComp->name());
-
-				if (pComp->virtualNode(node)->phaseType() == CPS::PhaseType::ABC) {
-					for (UInt phase = 1; phase < 3; phase++) {
-						virtualNode++;
-						pComp->virtualNode(node)->setSimNode(phase, virtualNode);
-						mSLog->info("Assigned index {} to virtual node {} for {}", virtualNode, node, pComp->name());
-					}
-				}
 			}
 		}
 	}
+	mSLog->info("Subnet {} has {} real network nodes.", net, mSubnets[net].mRealNetNodeNum);
+	mSLog->info("Subnet {} has {} virtual nodes.", net, mSubnets[net].mVirtualNodeNum);
 }
 
 template <typename VarType>
@@ -169,16 +158,22 @@ void DiakopticsSolver<VarType>::assignSimNodes(int net) {
 	UInt simNodeIdx = 0;
 	for (UInt idx = 0; idx < mSubnets[net].nodes.size(); idx++) {
 		auto& node = mSubnets[net].nodes[idx];
+
 		node->setSimNode(0, simNodeIdx);
+		mSLog->info("Assigned index {} to node {}", simNodeIdx, node->name());
 		simNodeIdx++;
+
 		if (node->phaseType() == CPS::PhaseType::ABC) {
 			node->setSimNode(1, simNodeIdx);
+			mSLog->info("Assigned index {} to node {} phase B", simNodeIdx, node->name());
 			simNodeIdx++;
 			node->setSimNode(2, simNodeIdx);
+			mSLog->info("Assigned index {} to node {} phase C", simNodeIdx, node->name());
 			simNodeIdx++;
 		}
 	}
 	setSubnetSize(net, simNodeIdx);
+
 	if (net == 0)
 		mSubnets[net].sysOff = 0;
 	else
@@ -213,8 +208,8 @@ void DiakopticsSolver<Complex>::setLogColumns() {
 			names.push_back(name.str());
 		}
 	}
-	mLeftVectorLog.setColumnNames(names);
-	mRightVectorLog.setColumnNames(names);
+	mLeftVectorLog->setColumnNames(names);
+	mRightVectorLog->setColumnNames(names);
 }
 
 template <typename VarType>
@@ -421,14 +416,14 @@ void DiakopticsSolver<VarType>::PostSolveTask::execute(Real time, Int timeStepCo
 
 template <>
 void DiakopticsSolver<Real>::log(Real time) {
-	mLeftVectorLog.logEMTNodeValues(time, mLeftSideVector);
-	mRightVectorLog.logEMTNodeValues(time, mRightSideVector);
+	mLeftVectorLog->logEMTNodeValues(time, mLeftSideVector);
+	mRightVectorLog->logEMTNodeValues(time, mRightSideVector);
 }
 
 template <>
 void DiakopticsSolver<Complex>::log(Real time) {
-	mLeftVectorLog.logPhasorNodeValues(time, mLeftSideVector);
-	mRightVectorLog.logPhasorNodeValues(time, mRightSideVector);
+	mLeftVectorLog->logPhasorNodeValues(time, mLeftSideVector);
+	mRightVectorLog->logPhasorNodeValues(time, mRightSideVector);
 }
 
 template <typename VarType>
