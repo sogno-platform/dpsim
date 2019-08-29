@@ -139,10 +139,7 @@ namespace DPsim {
 			CPS::Logger::Level logLevel = CPS::Logger::Level::info);
 
 		template <typename VarType>
-		void createSolvers(const CPS::SystemTopology& system, Solver::Type solverType, Bool steadyStateInit, Bool splitSubnets, const CPS::Component::List& tearComponents);
-
-		template <typename VarType>
-		static int checkTopologySubnets(const CPS::SystemTopology& system, std::unordered_map<typename CPS::Node<VarType>::Ptr, int>& subnet);
+		void createSolvers(CPS::SystemTopology& system, CPS::Component::List& tearComponents);
 
 		void prepSchedule();
 	public:
@@ -202,9 +199,6 @@ namespace DPsim {
 		/// Reset internal state of simulation
 		void reset();
 
-		///
-		template <typename VarType>
-		static void splitSubnets(const CPS::SystemTopology& system, std::vector<CPS::SystemTopology>& splitSystems);
 		/// Schedule an event in the simulation
 		void addEvent(Event::Ptr e) {
 			mEvents.addEvent(e);
