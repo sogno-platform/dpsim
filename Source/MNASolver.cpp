@@ -247,7 +247,7 @@ void MnaSolver<VarType>::identifyTopologyObjects() {
 	}
 
 	for (UInt i = 0; i < mNodes.size(); i++)
-		mSLog->info("Found node {:s}", mNodes[i]->name());;
+		mSLog->info("Added node {:s}", mNodes[i]->name());;
 
 	for (auto comp : mSystem.mComponents) {
 		auto swComp = std::dynamic_pointer_cast<CPS::MNASwitchInterface>(comp);
