@@ -20,7 +20,6 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *********************************************************************************/
 
-#include <iostream>
 #include <stdexcept>
 
 #include <dpsim/Interface.h>
@@ -32,20 +31,22 @@
 using namespace CPS;
 using namespace DPsim;
 
-void Interface::open() {
-	std::cout << Logger::prefix() << "Opening interface: " <<  mWName << " <-> " << mRName << std::endl;
+void Interface::open(CPS::Logger::Log log) {
+	mLog = log;
+
+	mLog->info("Opening interface: {} <-> {}", mWName, mRName);
 
 	if (shmem_int_open(mWName.c_str(), mRName.c_str(), &mShmem, &mConf) < 0) {
-		std::perror("Failed to open/map shared memory object");
+		mLog->error("Failed to open/map shared memory object");
 		std::exit(1);
 	}
 
-	std::cout << Logger::prefix() << "Opened interface: " <<  mWName << " <-> " << mRName << std::endl;
+	mLog->info("Opened interface: {} <-> {}", mWName, mRName);
 
 	mSequence = 0;
 
 	if (shmem_int_alloc(&mShmem, &mLastSample, 1) < 0) {
-		std::cout << Logger::prefix() << "Failed to allocate single sample from pool" << std::endl;
+		mLog->info("Failed to allocate single sample from pool");
 		close();
 		std::exit(1);
 	}
@@ -80,7 +81,7 @@ void Interface::readValues(bool blocking) {
 				ret = shmem_int_read(&mShmem, &sample, 1);
 		}
 		if (ret < 0) {
-			std::cerr << Logger::prefix() << "Fatal error: failed to read sample from interface" << std::endl;
+			mLog->error("Fatal error: failed to read sample from interface");
 			close();
 			std::exit(1);
 		}
@@ -108,8 +109,7 @@ void Interface::writeValues() {
 	bool done = false;
 	try {
 		if (shmem_int_alloc(&mShmem, &sample, 1) < 1) {
-			std::cerr << Logger::prefix() << "Fatal error: pool underrun in: " << mWName << " <-> " << mRName;
-			std::cerr << " at sequence no " << mSequence << std::endl;
+			mLog->error("Fatal error: pool underrun in: {} <-> {} at sequence no {}", mWName, mRName, mSequence);
 			close();
 			std::exit(1);
 		}
@@ -127,7 +127,7 @@ void Interface::writeValues() {
 			ret = shmem_int_write(&mShmem, &sample, 1);
 		} while (ret == 0);
 		if (ret < 0)
-			std::cerr << Logger::prefix() << "Failed to write samples to interface" << std::endl;
+			mLog->error("Failed to write samples to interface");
 
 		sample_copy(mLastSample, sample);
 	}
@@ -143,7 +143,7 @@ void Interface::writeValues() {
 			ret = shmem_int_write(&mShmem, &sample, 1);
 
 		if (ret < 0)
-			std::cerr << Logger::prefix() << "Failed to write samples to interface" << std::endl;
+			mLog->error("Failed to write samples to interface");
 
 		/* Don't throw here, because we managed to send something */
 	}
