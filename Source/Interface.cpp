@@ -232,7 +232,7 @@ void Interface::exportInt(Attribute<Int>::Ptr attr, UInt idx) {
 		if (idx >= smp->length)
 			smp->length = idx + 1;
 
-		smp->data[idx].i = attr->get();
+		smp->data[idx].i = attr->getByValue();
 	});
 	mExportAttrs.push_back(attr);
 }
@@ -244,7 +244,7 @@ void Interface::exportReal(Attribute<Real>::Ptr attr, UInt idx) {
 		if (idx >= smp->length)
 			smp->length = idx + 1;
 
-		smp->data[idx].f = attr->get();
+		smp->data[idx].f = attr->getByValue();
 	});
 	mExportAttrs.push_back(attr);
 }
@@ -256,7 +256,7 @@ void Interface::exportBool(Attribute<Bool>::Ptr attr, UInt idx) {
 		if (idx >= smp->length)
 			smp->length = idx + 1;
 
-		smp->data[idx].b = attr->get();;
+		smp->data[idx].b = attr->getByValue();
 	});
 	mExportAttrs.push_back(attr);
 }
@@ -268,7 +268,7 @@ void Interface::exportComplex(Attribute<Complex>::Ptr attr, UInt idx) {
 		if (idx >= smp->length)
 			smp->length = idx + 1;
 
-		auto  y = attr->get();;
+		auto  y = attr->getByValue();
 		auto *z = reinterpret_cast<float*>(&smp->data[idx].z);
 
 		z[0] = y.real();
