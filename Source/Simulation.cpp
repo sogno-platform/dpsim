@@ -23,6 +23,8 @@
 #include <algorithm>
 #include <typeindex>
 
+#include <spdlog/sinks/stdout_color_sinks.h>
+
 #include <dpsim/SequentialScheduler.h>
 #include <dpsim/Simulation.h>
 #include <dpsim/Utils.h>
@@ -58,6 +60,10 @@ Simulation::Simulation(String name,	Logger::Level logLevel) :
 	// Logging
 	mSLog = Logger::get(name, logLevel);
 	mSLog->set_pattern("[%L] %v");
+
+	mCLog = spdlog::stderr_color_mt(name + "_console");
+	mCLog->set_level(logLevel);
+	mCLog->set_pattern(fmt::format("{}[%T.%f %n %^%l%$] %v", CPS::Logger::prefix()));
 
 	mInitialized = false;
 }
@@ -275,6 +281,10 @@ void Simulation::sync() {
 		ifm.interface->readValues(ifm.syncStart);
 	}
 
+	for (auto ifm : mInterfaces) {
+		ifm.interface->writeValues();
+	}
+
 	mSLog->info("Synchronized simulation start with remotes");
 #endif
 }
@@ -434,15 +444,15 @@ void Simulation::run() {
 		initialize();
 
 #ifdef WITH_SHMEM
-	mSLog->info("Opening interfaces.");
+	mCLog->info("Opening interfaces.");
 
 	for (auto ifm : mInterfaces)
-		ifm.interface->open();
+		ifm.interface->open(mCLog);
 
 	sync();
 #endif
 
-	mSLog->info("Start simulation.");
+	mCLog->info("Start simulation.");
 
 	while (mTime < mFinalTime) {
 		step();
@@ -458,7 +468,7 @@ void Simulation::run() {
 	for (auto lg : mLoggers)
 		lg->close();
 
-	mSLog->info("Simulation finished.");
+	mCLog->info("Simulation finished.");
 }
 
 Real Simulation::step() {

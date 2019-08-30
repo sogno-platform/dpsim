@@ -34,6 +34,7 @@
 #include <cps/Attribute.h>
 #include <cps/Task.h>
 #include <cps/PtrFactory.h>
+#include <cps/Logger.h>
 
 namespace DPsim {
 
@@ -71,6 +72,8 @@ namespace DPsim {
 		int mSequence;
 		String mRName, mWName;
 		Config mConf;
+
+		CPS::Logger::Log mLog;
 
 		/// Is this interface used for synchorinzation?
 		bool mSync;
@@ -137,7 +140,7 @@ namespace DPsim {
 				close();
 		}
 
-		void open();
+		void open(CPS::Logger::Log log);
 		void close();
 
 		CPS::Attribute<Int>::Ptr importInt(UInt idx);

@@ -56,11 +56,7 @@ if (NOT WIN32)
 endif()
 
 find_package(GSL)
-
-option(WITH_VILLAS "Build with VILLAS Interface" OFF)
-if (WITH_VILLAS)
-	find_package(VILLASnode)
-endif()
+find_package(VILLASnode)
 
 if(PythonInterp_FOUND AND PythonLibs_FOUND)
 	set(Python_FOUND ON)
