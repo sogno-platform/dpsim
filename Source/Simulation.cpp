@@ -281,6 +281,10 @@ void Simulation::sync() {
 		ifm.interface->readValues(ifm.syncStart);
 	}
 
+	for (auto ifm : mInterfaces) {
+		ifm.interface->writeValues();
+	}
+
 	mSLog->info("Synchronized simulation start with remotes");
 #endif
 }
