@@ -24,6 +24,7 @@
 
 #include <DPsim.h>
 #include <dpsim/ThreadLevelScheduler.h>
+#include <dpsim/OpenMPLevelScheduler.h>
 
 using namespace DPsim;
 using namespace CPS;
