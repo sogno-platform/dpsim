@@ -412,6 +412,13 @@ void DiakopticsSolver<VarType>::PostSolveTask::execute(Real time, Int timeStepCo
 		Complex current = Math::complexFromVectorElement(mSolver.mTearCurrents, compIdx);
 		tComp->mnaTearPostStep(voltage, current);
 	}
+
+	// TODO split into separate task? (dependent on x, updating all v attributes)
+	for (UInt net = 0; net < mSolver.mSubnets.size(); net++) {
+		for (UInt node = 0; node < mSolver.mSubnets[net].mRealNetNodeNum; node++) {
+			mSolver.mSubnets[net].nodes[node]->mnaUpdateVoltage(*(mSolver.mSubnets[net].leftVector));
+		}
+	}
 }
 
 template <>
