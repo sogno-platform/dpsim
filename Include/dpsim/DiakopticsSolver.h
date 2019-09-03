@@ -57,6 +57,8 @@ namespace DPsim {
 		String mName;
 		Real mTimeStep;
 		Real mSystemFrequency;
+		/// System list
+		CPS::SystemTopology mSystem;
 
 		/// Left side vector logger
 		std::shared_ptr<DataLogger> mLeftVectorLog;

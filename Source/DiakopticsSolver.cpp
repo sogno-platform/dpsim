@@ -54,6 +54,7 @@ DiakopticsSolver<VarType>::DiakopticsSolver(String name,
 template <typename VarType>
 void DiakopticsSolver<VarType>::init(SystemTopology& system) {
 	std::vector<SystemTopology> subnets;
+	mSystem = system;
 	mSystemFrequency = system.mSystemFrequency;
 
 	system.splitSubnets<VarType>(subnets);
@@ -257,14 +258,13 @@ void DiakopticsSolver<VarType>::initComponents() {
 	for (UInt net = 0; net < mSubnets.size(); net++) {
 		for (auto comp : mSubnets[net].components) {
 			auto pComp = std::dynamic_pointer_cast<PowerComponent<VarType>>(comp);
-			if (!pComp)
-				continue;
-			pComp->initializeFromPowerflow(mSystemFrequency);
+			if (!pComp) continue;
+			pComp->initializeFromPowerflow(mSystem.mSystemFrequency);
 		}
 
 		// Initialize MNA specific parts of components.
 		for (auto comp : mSubnets[net].components) {
-			comp->mnaInitialize(2 * PI * mSystemFrequency, mTimeStep, mSubnets[net].leftVector);
+			comp->mnaInitialize(mSystem.mSystemOmega, mTimeStep, mSubnets[net].leftVector);
 			const Matrix& stamp = comp->template attribute<Matrix>("right_vector")->get();
 			if (stamp.size() != 0) {
 				mSubnets[net].rightVectorStamps.push_back(&stamp);
@@ -273,7 +273,7 @@ void DiakopticsSolver<VarType>::initComponents() {
 	}
 	// Initialize signal components.
 	for (auto comp : mSignalComponents)
-		comp->initialize(2 * PI * mSystemFrequency, mTimeStep);
+		comp->initialize(mSystem.mSystemOmega, mTimeStep);
 }
 
 template <typename VarType>
@@ -289,25 +289,34 @@ void DiakopticsSolver<VarType>::initMatrices() {
 		}
 		auto block = mSystemMatrix.block(net.sysOff, net.sysOff, net.sysSize, net.sysSize);
 		block = partSys;
-		mSLog->debug("Block: {}", block);
+		mSLog->info("Block: \n{}", block);
 		net.luFactorization = Eigen::PartialPivLU<Matrix>(partSys);
-		mSLog->debug("Factorization: {}", net.luFactorization.matrixLU());
+		mSLog->info("Factorization: \n{}", net.luFactorization.matrixLU());
 	}
-	mSLog->debug("Complete system matrix: {}", mSystemMatrix);
-
+	mSLog->info("Complete system matrix: \n{}", mSystemMatrix);
 
 	// initialize tear topology matrix and impedance matrix of removed network
 	for (UInt compIdx = 0; compIdx < mTearComponents.size(); compIdx++) {
 		applyTearComponentStamp(compIdx);
 	}
-	mSLog->debug("Topology matrix: {}", mTearTopology);
-	mSLog->debug("Removed impedance matrix: {}", mTearImpedance);
+	mSLog->info("Topology matrix: \n{}", mTearTopology);
+	mSLog->info("Removed impedance matrix: \n{}", mTearImpedance);
 	// TODO this can be sped up as well by using the block diagonal form of Yinv
 	for (auto& net : mSubnets) {
 		mSystemInverse.block(net.sysOff, net.sysOff, net.sysSize, net.sysSize) = net.luFactorization.inverse();
 	}
 	mTotalTearImpedance = Eigen::PartialPivLU<Matrix>(mTearImpedance + mTearTopology.transpose() * mSystemInverse * mTearTopology);
-	mSLog->debug("Total removed impedance matrix LU decomposition: {}", mTotalTearImpedance.matrixLU());
+	mSLog->info("Total removed impedance matrix LU decomposition: \n{}", mTotalTearImpedance.matrixLU());
+
+	// Compute subnet right side (source) vectors for debugging
+	for (auto& net : mSubnets) {
+		Matrix rInit = Matrix::Zero(net.sysSize, 1);
+
+		for (auto comp : net.components) {
+			comp->mnaApplyRightSideVectorStamp(rInit);
+		}
+		mSLog->info("Source block: \n{}", rInit);
+	}
 }
 
 template <>
@@ -341,6 +350,11 @@ Task::List DiakopticsSolver<VarType>::getTasks() {
 	Task::List l;
 
 	for (UInt net = 0; net < mSubnets.size(); net++) {
+		for (auto node : mSubnets[net].nodes) {
+			for (auto task : node->mnaTasks())
+				l.push_back(task);
+		}
+
 		for (auto comp : mSubnets[net].components) {
 			for (auto task : comp->mnaTasks()) {
 				l.push_back(task);
