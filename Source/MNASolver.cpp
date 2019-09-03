@@ -555,10 +555,8 @@ void MnaSolver<VarType>::logSystemMatrices() {
 	}
 	else {
 		if (mSwitches.size() < 1) {
-			mSLog->info("System matrix: \n{:s}",
-				Logger::matrixToString(mSwitchedMatrices[std::bitset<SWITCH_NUM>(0)]));
-			mSLog->info("LU decomposition: \n{:s}",
-				Logger::matrixToString(mLuFactorizations[std::bitset<SWITCH_NUM>(0)].matrixLU()));
+			mSLog->info("System matrix: \n{}", mSwitchedMatrices[std::bitset<SWITCH_NUM>(0)]);
+			mSLog->info("LU decomposition: \n{}",	mLuFactorizations[std::bitset<SWITCH_NUM>(0)].matrixLU());
 		}
 		else {
 			mSLog->info("Initial switch status: {:s}", mCurrentSwitchStatus.to_string());
@@ -570,7 +568,7 @@ void MnaSolver<VarType>::logSystemMatrices() {
 					sys.first.to_string(), Logger::matrixToString(mLuFactorizations[sys.first].matrixLU()));
 			}
 		}
-		mSLog->info("Right side vector: \n{:s}", Logger::matrixToString(mRightSideVector));
+		mSLog->info("Right side vector: \n{}", mRightSideVector);
 	}
 }
 
