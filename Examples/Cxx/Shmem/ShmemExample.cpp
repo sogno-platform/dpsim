@@ -30,6 +30,9 @@ using namespace CPS::DP::Ph1;
 int main(int argc, char* argv[]) {
 	// Very simple test circuit. Just a few resistors and an inductance.
 	// Voltage is read from VILLASnode and current through everything is written back.
+	String simName = "Shmem_Example";
+	Logger::setLogDir("logs/"+simName);
+	Real timeStep = 0.001;
 
 	// Nodes
 	auto n1 = Node::make("n1");
@@ -39,10 +42,15 @@ int main(int argc, char* argv[]) {
 
 	// Components
 	auto evs = VoltageSource::make("v_s");
+	evs->setParameters(Complex(0, 0));
 	auto rs =  Resistor::make("r_s");
+	rs->setParameters(1);
 	auto rl =  Resistor::make("r_line");
+	rl->setParameters(1);
 	auto ll =  Inductor::make("l_line");
+	ll->setParameters(1);
 	auto rL =  Resistor::make("r_load");
+	rL->setParameters(1000);
 
 	// Topology
 	evs->connect({ Node::GND, n1 });
@@ -51,33 +59,35 @@ int main(int argc, char* argv[]) {
 	ll->connect({ n3, n4 });
 	rL->connect({ n4, Node::GND });
 
-	// Parameters
-	evs->setParameters(Complex(0, 0));
-	rs->setParameters(1);
-	rl->setParameters(1);
-	ll->setParameters(1);
-	rL->setParameters(1000);
-
-	auto sys = SystemTopology(50, SystemNodeList{Node::GND, n1, n2, n3, n4}, SystemComponentList{evs, rs, rl, ll, rL});
-
-	Real timeStep = 0.001;
+	auto sys = SystemTopology(50,
+		SystemNodeList{Node::GND, n1, n2, n3, n4},
+		SystemComponentList{evs, rs, rl, ll, rL});
 
 #ifdef REALTIME
-	RealTimeSimulation sim("ShmemRealtimeExample", sys, timeStep, 1.0);
+	RealTimeSimulation sim(simName, sys, timeStep, 1.0);
 	Interface intf("/villas1-in", "/villas1-out", nullptr, false);
 #else
-	Simulation sim("ShmemExample", sys, timeStep, 1.0);
+	Simulation sim(simName, sys, timeStep, 1.0);
 	Interface intf("/villas1-in", "/villas1-out");
 #endif
 
+	// Interface
 	evs->setAttributeRef("V_ref", intf.importComplex(0));
 	intf.exportComplex(evs->attributeMatrixComp("i_intf")->coeff(0, 0), 0);
-
 	sim.addInterface(&intf);
+
+	// Logger
+	auto logger = DataLogger::make(simName);
+	logger->addAttribute("v1", n1->attribute("v"));
+	logger->addAttribute("v2", n2->attribute("v"));
+	logger->addAttribute("v3", n3->attribute("v"));
+	logger->addAttribute("v4", n4->attribute("v"));
+	logger->addAttribute("V_ref", evs->attribute("V_ref"));
+	logger->addAttribute("i_evs", evs->attributeMatrixComp("i_intf"), 1, 1);
+	sim.addLogger(logger);
+
 	sim.run();
 
-	std::ofstream of("task_dependencies.svg");
-	sim.dependencyGraph().render(of);
-
-	return 0;
+	//std::ofstream of("task_dependencies.svg");
+	//sim.dependencyGraph().render(of);
 }
