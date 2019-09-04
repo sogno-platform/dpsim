@@ -67,8 +67,6 @@ namespace DPsim {
 		CPS::SystemTopology mSystem;
 
 		// #### Logging ####
-		/// Simulation logger
-		CPS::Logger::Log mSLog;
 		/// Simulation log level
 		CPS::Logger::Level mLogLevel;
 		/// (Real) time needed for the timesteps
@@ -143,6 +141,11 @@ namespace DPsim {
 
 		void prepSchedule();
 	public:
+		/// Simulation logger
+		CPS::Logger::Log mSLog;
+		/// Simulation logger (console)
+		CPS::Logger::Log mCLog;
+
 		/// Creates simulation with name and log level
 		Simulation(String name, CPS::Logger::Level logLevel = CPS::Logger::Level::info);
 
