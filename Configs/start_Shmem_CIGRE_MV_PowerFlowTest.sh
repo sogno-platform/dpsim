@@ -34,11 +34,11 @@ TIME=$(date -d "+10 seconds" +%Y%m%dT%H%M%S) #-Iseconds
 echo "Start simulation at: $TIME"
 
 # Simulation params
-OPTS="--timestep 1 --duration $((30)) --system-freq 50 --start-at $TIME --solver-domain STATIC --solver-type NRP"
+OPTS="--timestep 1 --duration $((5)) --system-freq 50 --start-at $TIME --solver-domain SP --solver-type NRP"
 echo "Simulation params: $OPTS"
 
 CPS_LOG_PREFIX="[Sys ] " \
-build/Examples/Cxx/Shmem_CIGRE_MV_PowerFlowTest $OPTS & P1=$!
+build/Examples/Cxx/Shmem_CIGRE_MV_PowerFlowTest $(pwd)/Examples/CIM/CIGRE_MV_NoTap/*.xml $OPTS & P1=$!
 
 CHILDS=$P1
 
