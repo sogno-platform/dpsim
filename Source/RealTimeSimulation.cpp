@@ -40,9 +40,9 @@ void RealTimeSimulation::run(const Timer::StartClock::duration &startIn)
 	run(Timer::StartClock::now() + startIn);
 }
 
-void RealTimeSimulation::run(const Timer::StartClock::time_point &startAt)
-{
-	schedule();
+void RealTimeSimulation::run(const Timer::StartClock::time_point &startAt) {
+	if (!mInitialized)
+		initialize();
 
 	mCLog->info("Opening interfaces.");
 
