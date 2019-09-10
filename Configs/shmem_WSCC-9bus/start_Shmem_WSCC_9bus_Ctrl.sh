@@ -30,11 +30,11 @@ trap _kill SIGKILL
 CHILDS=""
 
 # Start time
-TIME=$(date -d "+10 seconds" +%Y%m%dT%H%M%S) #-Iseconds
+TIME=$(date -d "+20 seconds" +%Y%m%dT%H%M%S) #-Iseconds
 echo "Start simulation at: $TIME"
 
 # Simulation params
-OPTS="--timestep 0.001 --duration $((60)) --system-freq 60 --start-at $TIME"
+OPTS="--timestep 0.001 --duration 60 --system-freq 60 --start-in 5 Examples/CIM/WSCC-09_RX/*.xml"
 echo "Simulation params: $OPTS"
 
 CPS_LOG_PREFIX="[Sys ] " \
@@ -44,13 +44,12 @@ CHILDS=$P1
 
 sleep 2
 
-if true; then
+if false; then
 	VILLAS_LOG_PREFIX="[Pipe] " \
-	#villas-pipe Configs/Shmem_WSCC-9bus_Ctrl.conf dpsim1
-	villas-node Configs/Shmem_WSCC-9bus_Ctrl.conf
+	villas-pipe Configs/shmem_WSCC-9bus/Shmem_WSCC-9bus_Ctrl.conf dpsim1
 else
 	VILLAS_LOG_PREFIX="[Node] " \
-	villas-node /projects/reserve/Shmem_WSCC-9bus_Ctrl.conf & VN=$!
+	villas-node Configs/shmem_WSCC-9bus/Shmem_WSCC-9bus_Ctrl.conf & VN=$!
 fi
 
 # Wait until all child processed finished

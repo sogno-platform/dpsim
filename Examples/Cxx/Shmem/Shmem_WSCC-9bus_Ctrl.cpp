@@ -83,6 +83,8 @@ int main(int argc, char *argv[]) {
 
 	Interface intf("/dpsim1-villas", "/villas-dpsim1", nullptr, false);
 
+	auto logger = DataLogger::make(simName);
+
 	// Register exportable node voltages
 	UInt o = 0;
 	for (auto n : sys.mNodes) {
@@ -102,7 +104,12 @@ int main(int argc, char *argv[]) {
 
 		intf.exportReal(v->mag(),   (i*2)+0); o++;
 		intf.exportReal(v->phase(), (i*2)+1); o++;
+
+		logger->addAttribute(fmt::format("mag_{}", i), v->mag());
+		logger->addAttribute(fmt::format("phase_{}", i), v->phase());
 	}
+
+	logger->addAttribute("v3", sys.node<Node>("BUS3")->attribute("v"));
 
 	// TODO gain by 20e8
 	filtP->setInput(intf.importReal(0));
@@ -112,7 +119,8 @@ int main(int argc, char *argv[]) {
 	intf.exportReal(load_profile->attribute<Real>("P"), o++);
 
 	sim.addInterface(&intf, false);
-	sim.run();
+	sim.addLogger(logger);
+	sim.run(args.startTime);
 
 	return 0;
 }
