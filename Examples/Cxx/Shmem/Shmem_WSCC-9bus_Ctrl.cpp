@@ -26,8 +26,6 @@
 #include <DPsim.h>
 
 using namespace DPsim;
-using namespace CPS;
-using namespace CPS::DP;
 using namespace CPS::DP::Ph1;
 using namespace CPS::Signal;
 
@@ -50,19 +48,20 @@ int main(int argc, char *argv[]) {
 	}
 
 	String simName = "Shmem_WSCC-9bus_Ctrl";
+	Logger::setLogDir("logs/"+simName);
 
-	CIM::Reader reader(simName, Logger::Level::info, Logger::Level::info);
+	CPS::CIM::Reader reader(simName, Logger::Level::info, Logger::Level::info);
 	SystemTopology sys = reader.loadCIM(60, filenames);
 
 	// Extend system with controllable load (Profile)
 	auto load_profile = PQLoadCS::make("load_cs_profile");
-	load_profile->connect({ sys.node<DP::Node>("BUS7") });
+	load_profile->connect({ sys.node<CPS::DP::Node>("BUS7") });
 	load_profile->setParameters(0, 0, 230000);
 	sys.mComponents.push_back(load_profile);
 
 	// Extend system with controllable load
 	auto load = PQLoadCS::make("load_cs");
-	load->connect({ sys.node<DP::Node>("BUS4") });
+	load->connect({ sys.node<CPS::DP::Node>("BUS4") });
 	load->setParameters(0, 0, 230000);
 	sys.mComponents.push_back(load);
 
@@ -79,7 +78,7 @@ int main(int argc, char *argv[]) {
 	load->setAttributeRef("P", filtP->attribute<Real>("output"));
 	sys.mComponents.push_back(filtP);
 
-	RealTimeSimulation sim(simName, sys, args.timeStep, args.duration, args.solver.domain, args.solver.type, args.logLevel, true);
+	RealTimeSimulation sim(simName, sys, args.timeStep, args.duration, Domain::DP, Solver::Type::MNA, Logger::Level::info, true);
 
 	Interface intf("/dpsim1-villas", "/villas-dpsim1", nullptr, false);
 
@@ -109,7 +108,7 @@ int main(int argc, char *argv[]) {
 		logger->addAttribute(fmt::format("phase_{}", i), v->phase());
 	}
 
-	logger->addAttribute("v3", sys.node<Node>("BUS3")->attribute("v"));
+	logger->addAttribute("v3", sys.node<CPS::DP::Node>("BUS3")->attribute("v"));
 
 	// TODO gain by 20e8
 	filtP->setInput(intf.importReal(0));
