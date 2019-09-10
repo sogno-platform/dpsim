@@ -125,7 +125,54 @@ void simPiLine() {
 	sim.run();
 }
 
+void simPiLineDiakoptics() {
+	Real timeStep = 0.00005;
+	Real finalTime = 0.1;
+	String simName = "DP_PiLine_Diakoptics";
+	Logger::setLogDir("logs/"+simName);
+
+	// Nodes
+	auto n1 = Node::make("n1");
+	auto n2 = Node::make("n2");
+
+	// Components
+	auto vs = Ph1::VoltageSource::make("v_1");
+	vs->setParameters(CPS::Math::polar(100000, -PI/2.));
+
+	// R=5, X=50 (L=0.16), B=0.003 (C=1e-6)
+	auto line = Ph1::PiLine::make("Line");
+	line->setParameters(5, 0.16, 1e-6);
+
+	auto load = Ph1::Resistor::make("R_load");
+	load->setParameters(10000);
+
+	// Topology
+	vs->connect({ Node::GND, n1 });
+	line->connect({ n1, n2 });
+	load->connect({ n2, Node::GND });
+
+	auto sys = SystemTopology(50,
+		SystemNodeList{n1, n2},
+		SystemComponentList{vs, load});
+	sys.addTearComponent(line);
+
+	// Logging
+	auto logger = DataLogger::make(simName);
+	logger->addAttribute("v1", n1->attribute("v"));
+	logger->addAttribute("v2", n2->attribute("v"));
+
+	Simulation sim(simName);
+	sim.setSystem(sys);
+	sim.setTearingComponents(sys.mTearComponents);
+	sim.setTimeStep(timeStep);
+	sim.setFinalTime(finalTime);
+	sim.addLogger(logger);
+
+	sim.run();
+}
+
 int main(int argc, char* argv[]) {
 	simElements();
 	simPiLine();
+	simPiLineDiakoptics();
 }
