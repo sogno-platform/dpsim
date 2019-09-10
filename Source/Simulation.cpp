@@ -369,8 +369,6 @@ void Simulation::run() {
 		step();
 	}
 
-	std::cout << Logger::prefix() << "Simulation finished." << std::endl;
-
 	mScheduler->stop();
 
 #ifdef WITH_SHMEM
