@@ -40,6 +40,8 @@ namespace DPsim {
 			CPS::MNAInterface::List components;
 			/// Size in system matrix (i.e. including virtual nodes)
 			UInt sysSize;
+			/// Offset for the imaginary part
+			UInt mCmplOff;
 			/// Number of real network nodes
 			UInt mRealNetNodeNum;
 			/// Number of virtual network nodes

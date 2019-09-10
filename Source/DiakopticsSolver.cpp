@@ -184,11 +184,13 @@ void DiakopticsSolver<VarType>::assignSimNodes(int net) {
 template<>
 void DiakopticsSolver<Real>::setSubnetSize(int net, UInt nodes) {
 	mSubnets[net].sysSize = nodes;
+	mSubnets[net].mCmplOff = 0;
 }
 
 template<>
 void DiakopticsSolver<Complex>::setSubnetSize(int net, UInt nodes) {
 	mSubnets[net].sysSize = 2 * nodes;
+	mSubnets[net].mCmplOff = nodes;
 }
 
 template<>
@@ -202,7 +204,7 @@ void DiakopticsSolver<Complex>::setLogColumns() {
 	for (auto& subnet : mSubnets) {
 		for (UInt i = subnet.sysOff; i < subnet.sysOff + subnet.sysSize; i++) {
 			std::stringstream name;
-			if (i < subnet.sysOff + subnet.sysSize / 2)
+			if (i < subnet.sysOff + subnet.mCmplOff)
 				name << "node" << std::setfill('0') << std::setw(5) << i - subnet.sysOff / 2 << ".real";
 			else
 				name << "node" << std::setfill('0') << std::setw(5) << i - (subnet.sysOff + subnet.sysSize) / 2 << ".imag";
@@ -337,9 +339,9 @@ void DiakopticsSolver<Complex>::applyTearComponentStamp(UInt compIdx) {
 	auto net2 = mNodeSubnetMap[comp->node(1)];
 
 	mTearTopology(net1->sysOff + comp->node(0)->simNode(), compIdx) = 1;
-	mTearTopology(net1->sysOff + net1->sysSize/2 + comp->node(0)->simNode(), mTearComponents.size() + compIdx) = 1;
+	mTearTopology(net1->sysOff + net1->mCmplOff + comp->node(0)->simNode(), mTearComponents.size() + compIdx) = 1;
 	mTearTopology(net2->sysOff + comp->node(1)->simNode(), compIdx) = -1;
-	mTearTopology(net2->sysOff + net2->sysSize/2 + comp->node(1)->simNode(), mTearComponents.size() + compIdx) = -1;
+	mTearTopology(net2->sysOff + net2->mCmplOff + comp->node(1)->simNode(), mTearComponents.size() + compIdx) = -1;
 
 	auto tearComp = std::dynamic_pointer_cast<MNATearInterface>(comp);
 	tearComp->mnaTearApplyMatrixStamp(mTearImpedance);
