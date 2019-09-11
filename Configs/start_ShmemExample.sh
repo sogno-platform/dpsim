@@ -1,7 +1,7 @@
 #!/bin/bash
 
 INPUT=$(mktemp)
-OUTPUT=$(mktemp)
+OUTPUT="logs/Shmem_Example/villas-pipe-out.log"
 CONFIG=$(mktemp)
 
 cat > ${CONFIG} <<EOF
@@ -31,6 +31,12 @@ nodes = {
         type = "file"
 
         uri = "${INPUT}"
+
+        in = {
+            signals = (
+                { name = "V_ref", type = "complex" }
+            )
+        }
     }
 
     output = {
@@ -53,15 +59,13 @@ paths = (
 EOF
 
 for i in $(seq 0 499); do
-    echo "0.$(( 1000000 * $i  ))($i) 5" >> ${INPUT}
+    echo "0.$(( 1000000 * $i  ))($i) 5+0i" >> ${INPUT}
 done
 
 for i in $(seq 500 1000); do
-    echo "0.$(( 1000000 * $i  ))($i) 10" >> ${INPUT}
+    echo "0.$(( 1000000 * $i  ))($i) 10+0i" >> ${INPUT}
 done
 
 villas-node ${CONFIG}
 
-cat ${OUTPUT}
-
-rm ${INPUT} ${OUTPUT} ${CONFIG}
+rm ${INPUT} ${CONFIG}
