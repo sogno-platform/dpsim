@@ -50,18 +50,18 @@ int main(int argc, char *argv[]) {
 	String simName = "Shmem_WSCC-9bus_Ctrl";
 	Logger::setLogDir("logs/"+simName);
 
-	CPS::CIM::Reader reader(simName, Logger::Level::info, Logger::Level::info);
+	CPS::CIM::Reader reader(simName, Logger::Level::info, Logger::Level::off);
 	SystemTopology sys = reader.loadCIM(60, filenames);
 
 	// Extend system with controllable load (Profile)
 	auto load_profile = PQLoadCS::make("load_cs_profile");
-	load_profile->connect({ sys.node<CPS::DP::Node>("BUS7") });
+	load_profile->connect({ sys.node<CPS::DP::Node>("BUS6") });
 	load_profile->setParameters(0, 0, 230000);
 	sys.mComponents.push_back(load_profile);
 
 	// Extend system with controllable load
 	auto load = PQLoadCS::make("load_cs");
-	load->connect({ sys.node<CPS::DP::Node>("BUS4") });
+	load->connect({ sys.node<CPS::DP::Node>("BUS5") });
 	load->setParameters(0, 0, 230000);
 	sys.mComponents.push_back(load);
 
@@ -69,16 +69,16 @@ int main(int argc, char *argv[]) {
 	std::vector<Real> coefficients_profile = std::vector<Real>(2000, 1./2000);
 	std::vector<Real> coefficients = std::vector<Real>(100, 1./100);
 
-	auto filtP_profile = FIRFilter::make("filter_p_profile", coefficients_profile, 0, Logger::Level::info);
+	auto filtP_profile = FIRFilter::make("filter_p_profile", coefficients_profile, 0, Logger::Level::off);
 	load_profile->setAttributeRef("P", filtP_profile->attribute<Real>("output"));
 
 	sys.mComponents.push_back(filtP_profile);
 
-	auto filtP = FIRFilter::make("filter_p", coefficients, 0, Logger::Level::info);
+	auto filtP = FIRFilter::make("filter_p", coefficients, 0, Logger::Level::off);
 	load->setAttributeRef("P", filtP->attribute<Real>("output"));
 	sys.mComponents.push_back(filtP);
 
-	RealTimeSimulation sim(simName, sys, args.timeStep, args.duration, Domain::DP, Solver::Type::MNA, Logger::Level::info, true);
+	RealTimeSimulation sim(simName, sys, args.timeStep, args.duration, Domain::DP, Solver::Type::MNA, Logger::Level::off, true);
 
 	Interface intf("/dpsim1-villas", "/villas-dpsim1", nullptr, false);
 

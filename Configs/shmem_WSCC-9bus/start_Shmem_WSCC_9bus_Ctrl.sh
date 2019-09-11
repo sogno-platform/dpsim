@@ -34,7 +34,7 @@ TIME=$(date -d "+20 seconds" +%Y%m%dT%H%M%S) #-Iseconds
 echo "Start simulation at: $TIME"
 
 # Simulation params
-OPTS="--timestep 0.001 --duration 60 --system-freq 60 --start-in 5 Examples/CIM/WSCC-09_RX/*.xml"
+OPTS="--timestep 0.001 --duration 3600 --start-in 5 Examples/CIM/WSCC-09_RX/*.xml"
 echo "Simulation params: $OPTS"
 
 CPS_LOG_PREFIX="[Sys ] " \
