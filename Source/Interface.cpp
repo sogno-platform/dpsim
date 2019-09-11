@@ -21,12 +21,13 @@
  *********************************************************************************/
 
 #include <stdexcept>
+#include <cstdio>
+#include <cstdlib>
+
+#include <spdlog/sinks/stdout_color_sinks.h>
 
 #include <dpsim/Interface.h>
 #include <cps/Logger.h>
-
-#include <cstdio>
-#include <cstdlib>
 
 using namespace CPS;
 using namespace DPsim;
@@ -162,9 +163,11 @@ void Interface::PostStep::execute(Real time, Int timeStepCount) {
 Attribute<Int>::Ptr Interface::importInt(UInt idx) {
 	Attribute<Int>::Ptr attr = Attribute<Int>::make(Flags::read | Flags::write);
 	addImport([attr, idx](Sample *smp) {
-		if (idx >= smp->length)
-			throw std::length_error("incomplete data received from interface");
-
+		if (idx >= smp->length) {
+			auto mCLog = spdlog::stderr_color_mt("interface_console");
+			mCLog->error("incomplete data received from interface");
+			return;
+		}
 		attr->set(smp->data[idx].i);
 	});
 	mImportAttrs.push_back(attr);
@@ -174,9 +177,11 @@ Attribute<Int>::Ptr Interface::importInt(UInt idx) {
 Attribute<Real>::Ptr Interface::importReal(UInt idx) {
 	Attribute<Real>::Ptr attr = Attribute<Real>::make(Flags::read | Flags::write);
 	addImport([attr, idx](Sample *smp) {
-		if (idx >= smp->length)
-			throw std::length_error("incomplete data received from interface");
-
+		if (idx >= smp->length) {
+			auto mCLog = spdlog::stderr_color_mt("interface_console");
+			mCLog->error("incomplete data received from interface");
+			return;
+		}
 		attr->set(smp->data[idx].f);
 	});
 	mImportAttrs.push_back(attr);
@@ -186,9 +191,11 @@ Attribute<Real>::Ptr Interface::importReal(UInt idx) {
 Attribute<Bool>::Ptr Interface::importBool(UInt idx) {
 	Attribute<Bool>::Ptr attr = Attribute<Bool>::make(Flags::read | Flags::write);
 	addImport([attr, idx](Sample *smp) {
-		if (idx >= smp->length)
-			throw std::length_error("incomplete data received from interface");
-
+		if (idx >= smp->length) {
+			auto mCLog = spdlog::stderr_color_mt("interface_console");
+			mCLog->error("incomplete data received from interface");
+			return;
+		}
 		attr->set(smp->data[idx].b);
 	});
 	mImportAttrs.push_back(attr);
@@ -198,9 +205,11 @@ Attribute<Bool>::Ptr Interface::importBool(UInt idx) {
 Attribute<Complex>::Ptr Interface::importComplex(UInt idx) {
 	Attribute<Complex>::Ptr attr = Attribute<Complex>::make(Flags::read | Flags::write);
 	addImport([attr, idx](Sample *smp) {
-		if (idx >= smp->length)
-			throw std::length_error("incomplete data received from interface");
-
+		if (idx >= smp->length) {
+			auto mCLog = spdlog::stderr_color_mt("interface_console");
+			mCLog->error("incomplete data received from interface");
+			return;
+		}
 		auto *z = reinterpret_cast<float*>(&smp->data[idx].z);
 		auto  y = Complex(z[0], z[1]);
 
@@ -213,9 +222,11 @@ Attribute<Complex>::Ptr Interface::importComplex(UInt idx) {
 Attribute<Complex>::Ptr Interface::importComplexMagPhase(UInt idx) {
 	Attribute<Complex>::Ptr attr = Attribute<Complex>::make(Flags::read | Flags::write);
 	addImport([attr, idx](Sample *smp) {
-		if (idx >= smp->length)
-			throw std::length_error("incomplete data received from interface");
-
+		if (idx >= smp->length) {
+			auto mCLog = spdlog::stderr_color_mt("interface_console");
+			mCLog->error("incomplete data received from interface");
+			return;
+		}
 		auto *z = reinterpret_cast<float*>(&smp->data[idx].z);
 		auto  y = std::polar(z[0], z[1]);
 

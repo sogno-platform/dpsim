@@ -26,8 +26,6 @@
 #include <DPsim.h>
 
 using namespace DPsim;
-using namespace CPS;
-using namespace CPS::DP;
 using namespace CPS::DP::Ph1;
 using namespace CPS::Signal;
 
@@ -50,19 +48,20 @@ int main(int argc, char *argv[]) {
 	}
 
 	String simName = "Shmem_WSCC-9bus_Ctrl";
+	Logger::setLogDir("logs/"+simName);
 
-	CIM::Reader reader(simName, Logger::Level::info, Logger::Level::info);
+	CPS::CIM::Reader reader(simName, Logger::Level::info, Logger::Level::off);
 	SystemTopology sys = reader.loadCIM(60, filenames);
 
 	// Extend system with controllable load (Profile)
 	auto load_profile = PQLoadCS::make("load_cs_profile");
-	load_profile->connect({ sys.node<DP::Node>("BUS7") });
+	load_profile->connect({ sys.node<CPS::DP::Node>("BUS6") });
 	load_profile->setParameters(0, 0, 230000);
 	sys.mComponents.push_back(load_profile);
 
 	// Extend system with controllable load
 	auto load = PQLoadCS::make("load_cs");
-	load->connect({ sys.node<DP::Node>("BUS4") });
+	load->connect({ sys.node<CPS::DP::Node>("BUS5") });
 	load->setParameters(0, 0, 230000);
 	sys.mComponents.push_back(load);
 
@@ -70,18 +69,20 @@ int main(int argc, char *argv[]) {
 	std::vector<Real> coefficients_profile = std::vector<Real>(2000, 1./2000);
 	std::vector<Real> coefficients = std::vector<Real>(100, 1./100);
 
-	auto filtP_profile = FIRFilter::make("filter_p_profile", coefficients_profile, 0, Logger::Level::info);
+	auto filtP_profile = FIRFilter::make("filter_p_profile", coefficients_profile, 0, Logger::Level::off);
 	load_profile->setAttributeRef("P", filtP_profile->attribute<Real>("output"));
 
 	sys.mComponents.push_back(filtP_profile);
 
-	auto filtP = FIRFilter::make("filter_p", coefficients, 0, Logger::Level::info);
+	auto filtP = FIRFilter::make("filter_p", coefficients, 0, Logger::Level::off);
 	load->setAttributeRef("P", filtP->attribute<Real>("output"));
 	sys.mComponents.push_back(filtP);
 
-	RealTimeSimulation sim(simName, sys, args.timeStep, args.duration, args.solver.domain, args.solver.type, args.logLevel, true);
+	RealTimeSimulation sim(simName, sys, args.timeStep, args.duration, Domain::DP, Solver::Type::MNA, Logger::Level::off, true);
 
 	Interface intf("/dpsim1-villas", "/villas-dpsim1", nullptr, false);
+
+	auto logger = DataLogger::make(simName);
 
 	// Register exportable node voltages
 	UInt o = 0;
@@ -102,7 +103,12 @@ int main(int argc, char *argv[]) {
 
 		intf.exportReal(v->mag(),   (i*2)+0); o++;
 		intf.exportReal(v->phase(), (i*2)+1); o++;
+
+		logger->addAttribute(fmt::format("mag_{}", i), v->mag());
+		logger->addAttribute(fmt::format("phase_{}", i), v->phase());
 	}
+
+	logger->addAttribute("v3", sys.node<CPS::DP::Node>("BUS3")->attribute("v"));
 
 	// TODO gain by 20e8
 	filtP->setInput(intf.importReal(0));
@@ -112,7 +118,8 @@ int main(int argc, char *argv[]) {
 	intf.exportReal(load_profile->attribute<Real>("P"), o++);
 
 	sim.addInterface(&intf, false);
-	sim.run();
+	sim.addLogger(logger);
+	sim.run(args.startTime);
 
 	return 0;
 }
