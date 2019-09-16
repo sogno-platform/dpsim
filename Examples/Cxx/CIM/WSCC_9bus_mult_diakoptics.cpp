@@ -28,7 +28,7 @@
 using namespace DPsim;
 using namespace CPS;
 
-Component::List multiply_diakoptics(SystemTopology& sys, int copies,
+Component::List multiply_diakoptics(SystemTopology& sys, Int copies,
 	Real resistance, Real inductance, Real capacitance, UInt splits = 0) {
 
     sys.multiply(copies);
@@ -52,10 +52,8 @@ Component::List multiply_diakoptics(SystemTopology& sys, int copies,
 
 		int nlines = copies == 1 ? 1 : copies+1;
         for (int i = 0; i < nlines; i++) {
-
             auto line = DP::Ph1::PiLine::make("line" + std::to_string(counter));
             line->setParameters(resistance, inductance, capacitance);
-
             line->connect({sys.node<DP::Node>(nodeNames[i]), sys.node<DP::Node>(nodeNames[i+1])});
 
 			if (i % splitEvery == 0)
@@ -69,24 +67,29 @@ Component::List multiply_diakoptics(SystemTopology& sys, int copies,
 	return tear_components;
 }
 
-void simulateDiakoptics(std::list<fs::path> filenames) {
-	String simName = "WSCC_9bus_diakoptics";
+void simulateDiakoptics(std::list<fs::path> filenames, 
+	Int copies, Int threads, UInt splits = 0) {
+
+	String simName = "WSCC_9bus_diakoptics_" + std::to_string(copies) + "_" + std::to_string(threads)+ "_" + std::to_string(splits);
 	Logger::setLogDir("logs/"+simName);
 
 	CIM::Reader reader(simName, Logger::Level::off, Logger::Level::off);
 	SystemTopology sys = reader.loadCIM(60, filenames);
 
-	Component::List tearComps = multiply_diakoptics(sys, 3, 12.5, 0.16, 1e-6);
+	if (copies > 0)
+		Component::List tearComps = multiply_diakoptics(sys, copies, 12.5, 0.16, 1e-6, splits);
 
-	Simulation sim(simName, Logger::Level::info);
+	Simulation sim(simName, Logger::Level::off);
 	sim.setSystem(sys);
 	sim.setTimeStep(0.0001);
 	sim.setFinalTime(0.5);
 	sim.setDomain(Domain::DP);
-	sim.setTearingComponents(sys.mTearComponents);
-	sim.setScheduler(std::make_shared<OpenMPLevelScheduler>(4));
-
+	sim.setScheduler(std::make_shared<OpenMPLevelScheduler>(threads));
+	if (copies > 0)
+		sim.setTearingComponents(sys.mTearComponents);
+	
 	sim.run();
+	sim.logStepTimes(simName + "_step_times");
 }
 
 int main(int argc, char *argv[]) {
@@ -103,5 +106,10 @@ int main(int argc, char *argv[]) {
 		filenames = std::list<fs::path>(argv + 1, argv + argc);
 	}
 
-	simulateDiakoptics(filenames);
+	for (Int copies = 0; copies < 20; copies++) {
+		for (Int splits = 0; splits < 20; splits++) {
+			for (Int threads = 1; threads < 10; threads++)
+				simulateDiakoptics(filenames, copies, threads, splits);
+		}
+	}
 }

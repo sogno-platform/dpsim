@@ -50,7 +50,7 @@ void multiply_decoupled(SystemTopology& sys, int copies,
 				"dline_" + orig_node + "_" + std::to_string(i),
 				sys.node<DP::Node>(nodeNames[i]),
 				sys.node<DP::Node>(nodeNames[i+1]),
-				resistance, inductance, capacitance, Logger::Level::off);
+				resistance, inductance, capacitance, Logger::Level::info);
 			sys.addComponent(line);
 			sys.addComponents(line->getLineComponents());
 			counter++;
@@ -58,29 +58,31 @@ void multiply_decoupled(SystemTopology& sys, int copies,
 	}
 }
 
-void simulateDecoupled(std::list<fs::path> filenames) {
-	String simName = "WSCC_9bus_decoupled";
+void simulateDecoupled(std::list<fs::path> filenames, Int copies, Int threads) {
+	String simName = "WSCC_9bus_decoupled_" + std::to_string(copies) + "_" + std::to_string(threads);
 	Logger::setLogDir("logs/"+simName);
 
 	CIM::Reader reader(simName, Logger::Level::off, Logger::Level::off);
 	SystemTopology sys = reader.loadCIM(60, filenames);
 
-	multiply_decoupled(sys, 3, 12.5, 0.16, 1e-6);
+	if (copies > 0)
+		multiply_decoupled(sys, copies, 12.5, 0.16, 1e-6);
 
-	Simulation sim(simName, Logger::Level::info);
+	Simulation sim(simName, Logger::Level::off);
 	sim.setSystem(sys);
 	sim.setTimeStep(0.0001);
 	sim.setFinalTime(0.5);
 	sim.setDomain(Domain::DP);
-	sim.setScheduler(std::make_shared<OpenMPLevelScheduler>(4));
+	sim.setScheduler(std::make_shared<OpenMPLevelScheduler>(threads));
 
 	//std::ofstream of1("topology_graph.svg");
 	//sys.topologyGraph().render(of1));
 
 	//std::ofstream of2("dependency_graph.svg");
 	//sim.dependencyGraph().render(of2);
-
+		
 	sim.run();
+	sim.logStepTimes(simName + "_step_times");
 }
 
 int main(int argc, char *argv[]) {
@@ -97,5 +99,9 @@ int main(int argc, char *argv[]) {
 		filenames = std::list<fs::path>(argv + 1, argv + argc);
 	}
 
-	simulateDecoupled(filenames);
+	for (Int copies = 0; copies < 20; copies++) {
+		for (Int threads = 1; threads < 10; threads++) {
+			simulateDecoupled(filenames, copies, threads);
+		}
+	}
 }

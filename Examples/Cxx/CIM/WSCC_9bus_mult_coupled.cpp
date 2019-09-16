@@ -68,27 +68,56 @@ void multiply_connected(SystemTopology& sys, int copies,
             sys.addComponent(ind);
             sys.addComponent(cap1);
             sys.addComponent(cap2);
+
+			// TODO use line model
+			//auto line = DP::Ph1::PiLine::make("line" + std::to_string(counter));
+            //line->setParameters(resistance, inductance, capacitance);
+            //line->connect({sys.node<DP::Node>(nodeNames[i]), sys.node<DP::Node>(nodeNames[i+1])});
 		}
 	}
 }
 
-void simulateCoupled(std::list<fs::path> filenames) {
-	String simName = "WSCC_9bus_coupled";
+void simulateCoupled(std::list<fs::path> filenames, Int copies, Int threads) {
+	String simName = "WSCC_9bus_coupled_" + std::to_string(copies) + "_" + std::to_string(threads);
 	Logger::setLogDir("logs/"+simName);
 
 	CIM::Reader reader(simName, Logger::Level::off, Logger::Level::off);
 	SystemTopology sys = reader.loadCIM(60, filenames);
 
-	multiply_connected(sys, 3, 12.5, 0.16, 1e-6);
+	if (copies > 0)
+		multiply_connected(sys, copies, 12.5, 0.16, 1e-6);
 
-	Simulation sim(simName, Logger::Level::info);
+	Simulation sim(simName, Logger::Level::off);
 	sim.setSystem(sys);
 	sim.setTimeStep(0.0001);
 	sim.setFinalTime(0.5);
 	sim.setDomain(Domain::DP);
-	sim.setScheduler(std::make_shared<OpenMPLevelScheduler>(4));
+	sim.setScheduler(std::make_shared<OpenMPLevelScheduler>(threads));
+
+	// Logging
+	//auto logger = DataLogger::make(simName);
+	//logger->addAttribute("v1", sys.node<DP::Node>("BUS1")->attribute("v"));
+	//logger->addAttribute("v2", sys.node<DP::Node>("BUS2")->attribute("v"));
+	//logger->addAttribute("v3", sys.node<DP::Node>("BUS3")->attribute("v"));
+	//logger->addAttribute("v4", sys.node<DP::Node>("BUS4")->attribute("v"));
+	//logger->addAttribute("v5", sys.node<DP::Node>("BUS5")->attribute("v"));
+	//logger->addAttribute("v6", sys.node<DP::Node>("BUS6")->attribute("v"));
+	//logger->addAttribute("v7", sys.node<DP::Node>("BUS7")->attribute("v"));
+	//logger->addAttribute("v8", sys.node<DP::Node>("BUS8")->attribute("v"));
+	//logger->addAttribute("v9", sys.node<DP::Node>("BUS9")->attribute("v"));
+	//logger->addAttribute("v1_2", sys.node<DP::Node>("BUS1_2")->attribute("v"));
+	//logger->addAttribute("v2_2", sys.node<DP::Node>("BUS2_2")->attribute("v"));
+	//logger->addAttribute("v3_2", sys.node<DP::Node>("BUS3_2")->attribute("v"));
+	//logger->addAttribute("v4_2", sys.node<DP::Node>("BUS4_2")->attribute("v"));
+	//logger->addAttribute("v5_2", sys.node<DP::Node>("BUS5_2")->attribute("v"));
+	//logger->addAttribute("v6_2", sys.node<DP::Node>("BUS6_2")->attribute("v"));
+	//logger->addAttribute("v7_2", sys.node<DP::Node>("BUS7_2")->attribute("v"));
+	//logger->addAttribute("v8_2", sys.node<DP::Node>("BUS8_2")->attribute("v"));
+	//logger->addAttribute("v9_2", sys.node<DP::Node>("BUS9_2")->attribute("v"));
+	//sim.addLogger(logger);
 
 	sim.run();
+	sim.logStepTimes(simName + "_step_times");
 }
 
 int main(int argc, char *argv[]) {
@@ -105,5 +134,9 @@ int main(int argc, char *argv[]) {
 		filenames = std::list<fs::path>(argv + 1, argv + argc);
 	}
 
-	simulateCoupled(filenames);
+	for (Int copies = 0; copies < 20; copies++) {
+		for (Int threads = 1; threads < 10; threads++) {
+			simulateCoupled(filenames, copies, threads);
+		}
+	}	
 }
