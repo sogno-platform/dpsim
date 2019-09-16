@@ -62,7 +62,7 @@ Simulation::Simulation(String name,	Logger::Level logLevel) :
 	mSLog = Logger::get(name, logLevel);
 	mSLog->set_pattern("[%L] %v");
 
-	mCLog = spdlog::stderr_color_mt(name + "_console");
+	mCLog = spdlog::stdout_color_mt(name + "_console");
 	mCLog->set_level(logLevel);
 	mCLog->set_pattern(fmt::format("{}[%T.%f %n %^%l%$] %v", CPS::Logger::prefix()));
 
