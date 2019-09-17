@@ -253,7 +253,7 @@ void DP_VS_R2L3_Diakoptics() {
 }
 
 int main(int argc, char* argv[]) {
-	//DP_VS_CS_R4();
+	DP_VS_CS_R4();
 	DP_VS_CS_R4_Diakoptics();
 	DP_VS_R2L3();
 	DP_VS_R2L3_Diakoptics();
