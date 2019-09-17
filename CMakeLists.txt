@@ -107,6 +107,11 @@ if(COMPARE_REFERENCE)
 	)
 endif()
 
+message("Compiler Release Flags:")
+message(${CMAKE_CXX_FLAGS_RELEASE})
+message("Compiler Debug Flags:")
+message(${CMAKE_CXX_FLAGS_DEBUG})
+
 if(TOPLEVEL_PROJECT)
 	# Show feature summary
 	include(FeatureSummary)
