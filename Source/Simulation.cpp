@@ -23,8 +23,6 @@
 #include <algorithm>
 #include <typeindex>
 
-#include <spdlog/sinks/stdout_color_sinks.h>
-
 #include <dpsim/SequentialScheduler.h>
 #include <dpsim/Simulation.h>
 #include <dpsim/Utils.h>
@@ -32,6 +30,8 @@
 #include <dpsim/MNASolver.h>
 #include <dpsim/NRPSolver.h>
 #include <dpsim/DiakopticsSolver.h>
+
+#include <spdlog/sinks/stdout_color_sinks.h>
 
 #ifdef WITH_CIM
   #include <cps/CIM/Reader.h>

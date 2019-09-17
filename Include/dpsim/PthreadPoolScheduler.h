@@ -21,6 +21,7 @@
 
 #pragma once
 
+#include <cps/Logger.h>
 #include <dpsim/Scheduler.h>
 
 #include <villas/queue_signalled.h>

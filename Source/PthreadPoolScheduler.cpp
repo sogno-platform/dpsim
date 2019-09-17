@@ -19,6 +19,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *********************************************************************************/
 
+#include <cps/Logger.h>
 #include <dpsim/PthreadPoolScheduler.h>
 
 #include <iostream>
