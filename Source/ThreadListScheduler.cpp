@@ -86,7 +86,7 @@ void ThreadListScheduler::createSchedule(const Task::List& tasks, const Edges& i
 		queue.pop();
 
 		auto minIt = std::min_element(totalTimes.begin(), totalTimes.end());
-		size_t minIdx = minIt - totalTimes.begin();
+		Int minIdx = static_cast<UInt>(minIt - totalTimes.begin());
 		scheduleTask(minIdx, task);
 		totalTimes[minIdx] += measurements.at(task->toString());
 

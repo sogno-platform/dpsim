@@ -128,7 +128,7 @@ void ThreadLevelScheduler::scheduleLevel(const Task::List& tasks, const std::uno
 		std::vector<TaskTime::rep> totalTimes(mNumThreads, 0);
 		for (auto task : tasksSorted) {
 			auto minIt = std::min_element(totalTimes.begin(), totalTimes.end());
-			size_t minIdx = minIt - totalTimes.begin();
+			Int minIdx = static_cast<UInt>(minIt - totalTimes.begin());
 			scheduleTask(minIdx, task);
 			totalTimes[minIdx] += measurements.at(task->toString());
 		}

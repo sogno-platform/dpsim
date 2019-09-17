@@ -128,7 +128,7 @@ void DiakopticsSolver<VarType>::initSubnets(const std::vector<SystemTopology>& s
 
 template <typename VarType>
 void DiakopticsSolver<VarType>::createVirtualNodes(int net) {
-	UInt virtualNode = mSubnets[net].nodes.size() - 1;
+	UInt virtualNode = static_cast<UInt>(mSubnets[net].nodes.size() - 1);
 	for (auto comp : mSubnets[net].components) {
 		auto pComp = std::dynamic_pointer_cast<PowerComponent<VarType>>(comp);
 		if (!pComp)

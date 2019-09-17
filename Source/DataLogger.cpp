@@ -193,8 +193,8 @@ void DataLogger::addAttribute(const String &name, CPS::MatrixRealAttribute::Ptr 
 void DataLogger::addAttribute(const String &name, CPS::MatrixCompAttribute::Ptr attr, UInt rowsMax, UInt colsMax) {
 	const MatrixVar<Complex> &m = attr->get();
 	auto attrMat = std::static_pointer_cast<CPS::MatrixCompAttribute>(attr);
-	if (rowsMax == 0 || rowsMax > m.rows()) rowsMax = m.rows();
-	if (colsMax == 0 || colsMax > m.cols()) colsMax = m.cols();
+	if (rowsMax == 0 || rowsMax > m.rows()) rowsMax = static_cast<UInt>(m.rows());
+	if (colsMax == 0 || colsMax > m.cols()) colsMax = static_cast<UInt>(m.cols());
 
 	if (m.rows() == 1 && m.cols() == 1) {
 		//addAttribute(name, attrMat->coeff(0, 0));

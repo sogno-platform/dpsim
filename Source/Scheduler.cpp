@@ -64,7 +64,7 @@ void Scheduler::readMeasurements(String filename, std::unordered_map<String, Tas
 	while (fs.good()) {
 		std::string line;
 		std::getline(fs, line);
-		int idx = line.find(',');
+		int idx = static_cast<UInt>(line.find(','));
 		if (idx == -1) {
 			if (line.empty())
 				continue;

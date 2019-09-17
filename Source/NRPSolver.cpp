@@ -335,8 +335,8 @@ void NRpolarSolver::determinePowerFlowBusType() {
 
 // this could be integrated into the function that determines node type (PV,PQ)
 void NRpolarSolver::generate_initial_solution(Real time, bool keep_last_solution) {
-	resize_sol(SysTopology.mNodes.size());
-	resize_complex_sol(SysTopology.mNodes.size());
+	resize_sol(static_cast<Int>(SysTopology.mNodes.size()));
+	resize_complex_sol(static_cast<Int>(SysTopology.mNodes.size()));
 
 	for (auto pq : PQBuses) {
 		if (!keep_last_solution) {
@@ -705,8 +705,8 @@ void NRpolarSolver::update_solution(Vector X, UInt npq, UInt npv) {
 Bool NRpolarSolver::powerFlow(Bool with_iwamoto)
 {
 
-	UInt npq = PQBusIndices.size();
-	UInt npv = PVBusIndices.size();
+	UInt npq = static_cast<UInt>(PQBusIndices.size());
+	UInt npv = static_cast<UInt>(PVBusIndices.size());
     UInt npqpvpq = 2 * npq + npv;
 
     //System : J*X = K
@@ -824,7 +824,7 @@ void NRpolarSolver::update_solution_power_from_circuit(){
 * branc elements Y_element matrices created as sparse matrices.
 */
 void NRpolarSolver::compose_Y() {
-	int n = SysTopology.mNodes.size();
+	UInt n = static_cast<UInt>(SysTopology.mNodes.size());
 	if (n > 0) {
 		Y = CPS::SparseMatrixComp(n, n);
 
