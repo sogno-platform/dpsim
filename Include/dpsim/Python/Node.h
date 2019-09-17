@@ -68,8 +68,8 @@ namespace Python {
 	PyObject *Node<VarType>::Py_GND = NULL;
 
 #ifdef _WIN32
-	template PyTypeObject Node<CPS::Real>::type;
-	template PyTypeObject Node<CPS::Complex>::type;
+	//template PyTypeObject Node<CPS::Real>::type;
+	//template PyTypeObject Node<CPS::Complex>::type;
 #else
 	extern template PyTypeObject Node<CPS::Real>::type;
 	extern template PyTypeObject Node<CPS::Complex>::type;
