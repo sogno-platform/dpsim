@@ -135,8 +135,8 @@ int main(int argc, char *argv[]) {
 	}
 
 	for (Int copies = 0; copies < 20; copies++) {
-		for (Int threads = 1; threads < 10; threads++) {
+		for (Int threads = 1; threads <= 12; threads++)
 			simulateCoupled(filenames, copies, threads);
 		}
-	}	
+	//simulateCoupled(filenames, 0, 8);
 }

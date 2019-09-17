@@ -108,7 +108,7 @@ int main(int argc, char *argv[]) {
 
 	for (Int copies = 0; copies < 20; copies++) {
 		for (Int splits = 0; splits < 20; splits++) {
-			for (Int threads = 1; threads < 10; threads++)
+			for (Int threads = 1; threads <= 12; threads++)
 				simulateDiakoptics(filenames, copies, threads, splits);
 		}
 	}
