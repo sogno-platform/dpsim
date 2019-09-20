@@ -84,7 +84,8 @@ void simulateDiakoptics(std::list<fs::path> filenames,
 	sim.setTimeStep(0.0001);
 	sim.setFinalTime(0.5);
 	sim.setDomain(Domain::DP);
-	sim.setScheduler(std::make_shared<OpenMPLevelScheduler>(threads));
+	if (threads > 0)
+		sim.setScheduler(std::make_shared<OpenMPLevelScheduler>(threads));
 	if (copies > 0)
 		sim.setTearingComponents(sys.mTearComponents);
 	
@@ -106,10 +107,11 @@ int main(int argc, char *argv[]) {
 		filenames = std::list<fs::path>(argv + 1, argv + argc);
 	}
 
-	for (Int copies = 0; copies < 20; copies++) {
-		for (Int splits = 0; splits < 20; splits++) {
-			for (Int threads = 1; threads <= 12; threads++)
+	for (Int copies = 0; copies < 10; copies++) {
+		for (Int threads = 0; threads <= 12; threads = threads+2) {
+			for (Int splits = 0; splits < copies; splits++)
 				simulateDiakoptics(filenames, copies, threads, splits);
 		}
 	}
+	//simulateDiakoptics(filenames, 10, 1, 0);
 }

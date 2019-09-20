@@ -73,7 +73,8 @@ void simulateDecoupled(std::list<fs::path> filenames, Int copies, Int threads) {
 	sim.setTimeStep(0.0001);
 	sim.setFinalTime(0.5);
 	sim.setDomain(Domain::DP);
-	sim.setScheduler(std::make_shared<OpenMPLevelScheduler>(threads));
+	if (threads > 0)
+		sim.setScheduler(std::make_shared<OpenMPLevelScheduler>(threads));
 
 	//std::ofstream of1("topology_graph.svg");
 	//sys.topologyGraph().render(of1));
@@ -100,8 +101,7 @@ int main(int argc, char *argv[]) {
 	}
 
 	for (Int copies = 0; copies < 20; copies++) {
-		for (Int threads = 1; threads <= 12; threads++) {
+		for (Int threads = 0; threads <= 12; threads = threads+2)
 			simulateDecoupled(filenames, copies, threads);
-		}
 	}
 }
