@@ -53,9 +53,9 @@ void ThreadLevelScheduler::createSchedule(const Task::List& tasks, const Edges& 
 			if (mSortTaskTypes)
 				sortTasksByType(levels[level].begin(), levels[level].end());
 			// Distribute tasks of one level evenly between threads
-			for (int thread = 0; thread < mNumThreads; thread++) {
-				int start = levels[level].size() * thread / mNumThreads;
-				int end = levels[level].size() * (thread + 1) / mNumThreads;
+			for (Int thread = 0; thread < mNumThreads; thread++) {
+				Int start = static_cast<Int>(levels[level].size()) * thread / mNumThreads;
+				Int end = static_cast<Int>(levels[level].size()) * (thread + 1) / mNumThreads;
 				for (int idx = start; idx != end; idx++)
 					scheduleTask(thread, levels[level][idx]);
 			}
@@ -128,7 +128,7 @@ void ThreadLevelScheduler::scheduleLevel(const Task::List& tasks, const std::uno
 		std::vector<TaskTime::rep> totalTimes(mNumThreads, 0);
 		for (auto task : tasksSorted) {
 			auto minIt = std::min_element(totalTimes.begin(), totalTimes.end());
-			size_t minIdx = minIt - totalTimes.begin();
+			Int minIdx = static_cast<UInt>(minIt - totalTimes.begin());
 			scheduleTask(minIdx, task);
 			totalTimes[minIdx] += measurements.at(task->toString());
 		}

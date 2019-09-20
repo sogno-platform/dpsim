@@ -238,10 +238,19 @@ int Python::Simulation::init(Simulation* self, PyObject *args, PyObject *kwds)
 	Py_INCREF(self->pySys);
 
 	if (self->realTime) {
-		self->sim = std::make_shared<DPsim::RealTimeSimulation>(name, *self->pySys->sys, timestep, duration, domain, solverType, logLevel, initSteadyState);
+		self->sim = std::make_shared<DPsim::RealTimeSimulation>(name, *self->pySys->sys, timestep, duration,
+			domain, solverType, logLevel, initSteadyState);
 	}
 	else {
-		self->sim = std::make_shared<DPsim::Simulation>(name, *self->pySys->sys, timestep, duration, domain, solverType, logLevel, initSteadyState, splitSubnets, tearComponents);
+		self->sim = std::make_shared<DPsim::Simulation>(name, logLevel);
+		self->sim->setSystem(*self->pySys->sys);
+		self->sim->setTimeStep(timestep);
+		self->sim->setFinalTime(duration);
+		self->sim->setDomain(domain);
+		self->sim->setSolverType(solverType);
+		self->sim->doSteadyStateInit(initSteadyState);
+		self->sim->doSplitSubnets(splitSubnets);
+		self->sim->setTearingComponents(tearComponents);
 	}
 	self->channel = new EventChannel();
 

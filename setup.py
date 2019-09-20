@@ -117,6 +117,7 @@ setup(
     author_email='acs-software@eonerc.rwth-aachen.de',
     description='A real-time simulator that operates in the dynamic phasor as'
                 ' well as electromagentic transient domain',
+    long_description_content_type='text/markdown',
     license='GPL-3.0',
     keywords='simulation power system real-time',
     url='https://www.fein-aachen.org/projects/dpsim/',
