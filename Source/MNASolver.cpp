@@ -51,9 +51,8 @@ MnaSolver<VarType>::MnaSolver(String name, CPS::SystemTopology system,
 
 template <typename VarType>
 void MnaSolver<VarType>::initialize(CPS::SystemTopology system) {
-	mSLog->info("Create solver with domain {}", static_cast<Int>(mDomain));
+	mSLog->info("Solver domain {}", static_cast<Int>(mDomain));
 	mSLog->info("---- Start initialization ----");
-
 	mSLog->info("-- Process system components");
 	mSystem = system;
 	for (auto comp : mSystem.mComponents)
@@ -105,6 +104,8 @@ void MnaSolver<VarType>::initialize(CPS::SystemTopology system) {
 	mSLog->info("--- Initialization finished ---");
 	mSLog->info("--- Initial system matrices and vectors ---");
 	logSystemMatrices();
+
+	mSLog->flush();
 }
 
 template <>
