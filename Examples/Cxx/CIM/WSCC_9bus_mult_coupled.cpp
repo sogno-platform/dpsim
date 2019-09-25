@@ -77,8 +77,9 @@ void multiply_connected(SystemTopology& sys, int copies,
 	}
 }
 
-void simulateCoupled(std::list<fs::path> filenames, Int copies, Int threads) {
-	String simName = "WSCC_9bus_coupled_" + std::to_string(copies) + "_" + std::to_string(threads);
+void simulateCoupled(std::list<fs::path> filenames, Int copies, Int threads, Int seq = 0) {
+	String simName = "WSCC_9bus_coupled_" + std::to_string(copies)
+		+ "_" + std::to_string(threads) + "_" + std::to_string(seq);
 	Logger::setLogDir("logs/"+simName);
 
 	CIM::Reader reader(simName, Logger::Level::off, Logger::Level::off);
@@ -97,24 +98,17 @@ void simulateCoupled(std::list<fs::path> filenames, Int copies, Int threads) {
 
 	// Logging
 	//auto logger = DataLogger::make(simName);
-	//logger->addAttribute("v1", sys.node<DP::Node>("BUS1")->attribute("v"));
-	//logger->addAttribute("v2", sys.node<DP::Node>("BUS2")->attribute("v"));
-	//logger->addAttribute("v3", sys.node<DP::Node>("BUS3")->attribute("v"));
-	//logger->addAttribute("v4", sys.node<DP::Node>("BUS4")->attribute("v"));
-	//logger->addAttribute("v5", sys.node<DP::Node>("BUS5")->attribute("v"));
-	//logger->addAttribute("v6", sys.node<DP::Node>("BUS6")->attribute("v"));
-	//logger->addAttribute("v7", sys.node<DP::Node>("BUS7")->attribute("v"));
-	//logger->addAttribute("v8", sys.node<DP::Node>("BUS8")->attribute("v"));
-	//logger->addAttribute("v9", sys.node<DP::Node>("BUS9")->attribute("v"));
-	//logger->addAttribute("v1_2", sys.node<DP::Node>("BUS1_2")->attribute("v"));
-	//logger->addAttribute("v2_2", sys.node<DP::Node>("BUS2_2")->attribute("v"));
-	//logger->addAttribute("v3_2", sys.node<DP::Node>("BUS3_2")->attribute("v"));
-	//logger->addAttribute("v4_2", sys.node<DP::Node>("BUS4_2")->attribute("v"));
-	//logger->addAttribute("v5_2", sys.node<DP::Node>("BUS5_2")->attribute("v"));
-	//logger->addAttribute("v6_2", sys.node<DP::Node>("BUS6_2")->attribute("v"));
-	//logger->addAttribute("v7_2", sys.node<DP::Node>("BUS7_2")->attribute("v"));
-	//logger->addAttribute("v8_2", sys.node<DP::Node>("BUS8_2")->attribute("v"));
-	//logger->addAttribute("v9_2", sys.node<DP::Node>("BUS9_2")->attribute("v"));
+	//for (Int cop = 1; cop <= copies; cop++) {
+	//	for (Int bus  = 1; bus <= 9; bus++) {
+	//		String attrName = "v" + std::to_string(bus) + "_" + std::to_string(cop);
+	//		String nodeName = "BUS" + std::to_string(bus) + "_" + std::to_string(cop);
+	//		if (cop == 1) {
+	//			attrName = "v" + std::to_string(bus);
+	//			nodeName = "BUS" + std::to_string(bus);
+	//		}
+	//		logger->addAttribute(attrName, sys.node<DP::Node>(nodeName)->attribute("v"));
+	//	}
+	//}
 	//sim.addLogger(logger);
 
 	sim.run();
@@ -122,22 +116,24 @@ void simulateCoupled(std::list<fs::path> filenames, Int copies, Int threads) {
 }
 
 int main(int argc, char *argv[]) {
-	std::list<fs::path> filenames;
-	if (argc <= 1) {
-		filenames = DPsim::Utils::findFiles({
-			"WSCC-09_RX_DI.xml",
-			"WSCC-09_RX_EQ.xml",
-			"WSCC-09_RX_SV.xml",
-			"WSCC-09_RX_TP.xml"
-		}, "Examples/CIM/WSCC-09_RX", "CIMPATH");
-	}
-	else {
-		filenames = std::list<fs::path>(argv + 1, argv + argc);
-	}
+	CommandLineArgs args(argc, argv);
 
-	for (Int copies = 0; copies < 20; copies++) {
-		for (Int threads = 0; threads <= 12; threads = threads+2)
-			simulateCoupled(filenames, copies, threads);
-	}
-	//simulateCoupled(filenames, 0, 0);
+	std::list<fs::path> filenames;
+	filenames = DPsim::Utils::findFiles({
+		"WSCC-09_RX_DI.xml",
+		"WSCC-09_RX_EQ.xml",
+		"WSCC-09_RX_SV.xml",
+		"WSCC-09_RX_TP.xml"
+	}, "Examples/CIM/WSCC-09_RX", "CIMPATH");
+
+	//for (Int copies = 0; copies < 20; copies++) {
+	//	for (Int threads = 0; threads <= 12; threads = threads+2)
+	//		simulateCoupled(filenames, copies, threads);
+	//}
+
+	std::cout << "Simulate with " << Int(args.options["copies"]) << " copies, "
+		<< Int(args.options["threads"]) << " threads, sequence number "
+		<< Int(args.options["seq"]) << std::endl;
+	simulateCoupled(filenames, Int(args.options["copies"]),
+		Int(args.options["threads"]), Int(args.options["seq"]));
 }

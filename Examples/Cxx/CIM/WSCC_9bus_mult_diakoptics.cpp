@@ -34,9 +34,8 @@ Component::List multiply_diakoptics(SystemTopology& sys, Int copies,
     sys.multiply(copies);
 	int counter = 0;
     std::vector<String> nodes = {"BUS5", "BUS8", "BUS6"};
-
     Component::List tear_components;
-    UInt splitEvery;
+    UInt splitEvery = 0;
 
 	if (splits > 0)
         splitEvery = UInt(copies+1 / splits);
@@ -67,10 +66,12 @@ Component::List multiply_diakoptics(SystemTopology& sys, Int copies,
 	return tear_components;
 }
 
-void simulateDiakoptics(std::list<fs::path> filenames, 
-	Int copies, Int threads, UInt splits = 0) {
+void simulateDiakoptics(std::list<fs::path> filenames,
+	Int copies, Int threads, UInt splits = 0, Int seq = 0) {
 
-	String simName = "WSCC_9bus_diakoptics_" + std::to_string(copies) + "_" + std::to_string(threads)+ "_" + std::to_string(splits);
+	String simName = "WSCC_9bus_diakoptics_" + std::to_string(copies)
+		+ "_" + std::to_string(threads) + "_" + std::to_string(splits)
+		+ "_" + std::to_string(seq);
 	Logger::setLogDir("logs/"+simName);
 
 	CIM::Reader reader(simName, Logger::Level::off, Logger::Level::off);
@@ -88,30 +89,49 @@ void simulateDiakoptics(std::list<fs::path> filenames,
 		sim.setScheduler(std::make_shared<OpenMPLevelScheduler>(threads));
 	if (copies > 0)
 		sim.setTearingComponents(sys.mTearComponents);
-	
+
+	// Logging
+	//auto logger = DataLogger::make(simName);
+	//for (Int cop = 1; cop <= copies; cop++) {
+	//	for (Int bus  = 1; bus <= 9; bus++) {
+	//		String attrName = "v" + std::to_string(bus) + "_" + std::to_string(cop);
+	//		String nodeName = "BUS" + std::to_string(bus) + "_" + std::to_string(cop);
+	//		if (cop == 1) {
+	//			attrName = "v" + std::to_string(bus);
+	//			nodeName = "BUS" + std::to_string(bus);
+	//		}
+	//		logger->addAttribute(attrName, sys.node<DP::Node>(nodeName)->attribute("v"));
+	//	}
+	//}
+	//sim.addLogger(logger);
+
 	sim.run();
 	sim.logStepTimes(simName + "_step_times");
 }
 
 int main(int argc, char *argv[]) {
-	std::list<fs::path> filenames;
-	if (argc <= 1) {
-		filenames = DPsim::Utils::findFiles({
-			"WSCC-09_RX_DI.xml",
-			"WSCC-09_RX_EQ.xml",
-			"WSCC-09_RX_SV.xml",
-			"WSCC-09_RX_TP.xml"
-		}, "Examples/CIM/WSCC-09_RX", "CIMPATH");
-	}
-	else {
-		filenames = std::list<fs::path>(argv + 1, argv + argc);
-	}
+	CommandLineArgs args(argc, argv);
 
-	for (Int copies = 0; copies < 10; copies++) {
-		for (Int threads = 0; threads <= 12; threads = threads+2) {
-			for (Int splits = 0; splits < copies; splits++)
-				simulateDiakoptics(filenames, copies, threads, splits);
-		}
-	}
-	//simulateDiakoptics(filenames, 10, 1, 0);
+	std::list<fs::path> filenames;
+	filenames = DPsim::Utils::findFiles({
+		"WSCC-09_RX_DI.xml",
+		"WSCC-09_RX_EQ.xml",
+		"WSCC-09_RX_SV.xml",
+		"WSCC-09_RX_TP.xml"
+	}, "Examples/CIM/WSCC-09_RX", "CIMPATH");
+
+	//for (Int copies = 0; copies < 10; copies++) {
+	//	for (Int threads = 0; threads <= 12; threads = threads+2) {
+	//		for (Int splits = 0; splits < copies; splits++)
+	//			simulateDiakoptics(filenames, copies, threads, splits);
+	//	}
+	//}
+	//simulateDiakoptics(filenames, 19, 8, 0);
+
+	std::cout << "Simulate with " << Int(args.options["copies"]) << " copies, "
+		<< Int(args.options["threads"]) << " threads, "
+		<< UInt(args.options["splits"]) << " splits, sequence number "
+		<< Int(args.options["seq"]) << std::endl;
+	simulateDiakoptics(filenames, Int(args.options["copies"]),
+		Int(args.options["threads"]), UInt(args.options["splits"]), Int(args.options["seq"]));
 }

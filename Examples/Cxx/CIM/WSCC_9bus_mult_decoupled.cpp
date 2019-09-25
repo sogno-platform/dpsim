@@ -58,8 +58,9 @@ void multiply_decoupled(SystemTopology& sys, int copies,
 	}
 }
 
-void simulateDecoupled(std::list<fs::path> filenames, Int copies, Int threads) {
-	String simName = "WSCC_9bus_decoupled_" + std::to_string(copies) + "_" + std::to_string(threads);
+void simulateDecoupled(std::list<fs::path> filenames, Int copies, Int threads, Int seq = 0) {
+	String simName = "WSCC_9bus_decoupled_" + std::to_string(copies)
+		+ "_" + std::to_string(threads) + "_" + std::to_string(seq);
 	Logger::setLogDir("logs/"+simName);
 
 	CIM::Reader reader(simName, Logger::Level::off, Logger::Level::off);
@@ -76,32 +77,47 @@ void simulateDecoupled(std::list<fs::path> filenames, Int copies, Int threads) {
 	if (threads > 0)
 		sim.setScheduler(std::make_shared<OpenMPLevelScheduler>(threads));
 
+	// Logging
+	//auto logger = DataLogger::make(simName);
+	//for (Int cop = 1; cop <= copies; cop++) {
+	//	for (Int bus  = 1; bus <= 9; bus++) {
+	//		String attrName = "v" + std::to_string(bus) + "_" + std::to_string(cop);
+	//		String nodeName = "BUS" + std::to_string(bus) + "_" + std::to_string(cop);
+	//		if (cop == 1) {
+	//			attrName = "v" + std::to_string(bus);
+	//			nodeName = "BUS" + std::to_string(bus);
+	//		}
+	//		logger->addAttribute(attrName, sys.node<DP::Node>(nodeName)->attribute("v"));
+	//	}
+	//}
+	//sim.addLogger(logger);
+
 	//std::ofstream of1("topology_graph.svg");
 	//sys.topologyGraph().render(of1));
 
-	//std::ofstream of2("dependency_graph.svg");
-	//sim.dependencyGraph().render(of2);
-		
 	sim.run();
 	sim.logStepTimes(simName + "_step_times");
 }
 
 int main(int argc, char *argv[]) {
-	std::list<fs::path> filenames;
-	if (argc <= 1) {
-		filenames = DPsim::Utils::findFiles({
-			"WSCC-09_RX_DI.xml",
-			"WSCC-09_RX_EQ.xml",
-			"WSCC-09_RX_SV.xml",
-			"WSCC-09_RX_TP.xml"
-		}, "Examples/CIM/WSCC-09_RX", "CIMPATH");
-	}
-	else {
-		filenames = std::list<fs::path>(argv + 1, argv + argc);
-	}
+	CommandLineArgs args(argc, argv);
 
-	for (Int copies = 0; copies < 20; copies++) {
-		for (Int threads = 0; threads <= 12; threads = threads+2)
-			simulateDecoupled(filenames, copies, threads);
-	}
+	std::list<fs::path> filenames;
+	filenames = DPsim::Utils::findFiles({
+		"WSCC-09_RX_DI.xml",
+		"WSCC-09_RX_EQ.xml",
+		"WSCC-09_RX_SV.xml",
+		"WSCC-09_RX_TP.xml"
+	}, "Examples/CIM/WSCC-09_RX", "CIMPATH");
+
+	//for (Int copies = 0; copies < 10; copies++) {
+	//	for (Int threads = 0; threads <= 12; threads = threads+2)
+	//		simulateDecoupled(filenames, copies, threads);
+	//}
+	//simulateDecoupled(filenames, 19, 8);
+	std::cout << "Simulate with " << Int(args.options["copies"]) << " copies, "
+		<< Int(args.options["threads"]) << " threads, sequence number "
+		<< Int(args.options["seq"]) << std::endl;
+	simulateDecoupled(filenames, Int(args.options["copies"]),
+		Int(args.options["threads"]), Int(args.options["seq"]));
 }
