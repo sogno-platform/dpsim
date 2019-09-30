@@ -29,18 +29,20 @@ using namespace DPsim;
 using namespace CPS;
 
 Component::List multiply_diakoptics(SystemTopology& sys, Int copies,
-	Real resistance, Real inductance, Real capacitance, UInt splits = 0) {
+	Real resistance, Real inductance, Real capacitance, Int splits = 0) {
 
     sys.multiply(copies);
 	int counter = 0;
     std::vector<String> nodes = {"BUS5", "BUS8", "BUS6"};
     Component::List tear_components;
-    UInt splitEvery = 0;
+    Int splitEvery = 0;
 
-	if (splits > 0)
-        splitEvery = UInt(copies+1 / splits);
-    else
-        splitEvery = 1;
+	if ((splits == 0) || (splits == copies+1)) {
+		splitEvery = 1;
+	} else {
+		splitEvery = Int( std::round( (copies+1) / splits) );
+	}
+	//std::cout << "split every: " << splitEvery << std::endl;
 
     for (auto orig_node : nodes) {
 		std::vector<String> nodeNames{orig_node};
@@ -55,8 +57,11 @@ Component::List multiply_diakoptics(SystemTopology& sys, Int copies,
             line->setParameters(resistance, inductance, capacitance);
             line->connect({sys.node<DP::Node>(nodeNames[i]), sys.node<DP::Node>(nodeNames[i+1])});
 
-			if (i % splitEvery == 0)
+			if (i % splitEvery == 0) {
                 sys.addTearComponent(line);
+				//std::cout 	<< "add tear line between node " << sys.node<DP::Node>(nodeNames[i])->name()
+				//			<< " and node " << sys.node<DP::Node>(nodeNames[i+1])->name() << std::endl;
+			}
             else
                 sys.addComponent(line);
 
