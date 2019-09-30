@@ -8,6 +8,7 @@ _dpsim.pyd
 _dpsim.pdb
 .pytest_cache/
 logs/
+logs_*/
 wheelhouse/
 *.csv
 
