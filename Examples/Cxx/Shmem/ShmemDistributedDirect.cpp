@@ -48,68 +48,107 @@ int main(int argc, char *argv[]) {
 	else if (String(argv[1]) == "1") {
 		in  = "/dpsim01";
 		out = "/dpsim10";
-	}
-
-	Interface intf(in, out);
-
-	Real timeStep = 0.001;
-
-	if (String(argv[1]) == "0") {
-		// Nodes
-		auto n1 = Node::make("n1");
-		auto n2 = Node::make("n2");
-
-		// Components
-		auto evs = VoltageSource::make("v_intf", Logger::Level::debug);
-		auto vs1 = VoltageSource::make("vs_1", Logger::Level::debug);
-		auto r01 = Resistor::make("r_0_1", Logger::Level::debug);
-
-		evs->setParameters(Complex(5, 0));
-		vs1->setParameters(Complex(10, 0));
-		r01->setParameters(1);
-
-		evs->connect({ Node::GND, n2 });
-		vs1->connect({ Node::GND, n1 });
-		r01->connect({ n1, n2 });
-
-		evs->setAttributeRef("V_ref", intf.importComplex(0));
-		intf.exportComplex(evs->attributeMatrixComp("i_intf")->coeff(0,0), 0);
-
-		auto sys = SystemTopology(50, SystemNodeList{n1, n2}, SystemComponentList{evs, vs1, r01});
-		Simulation sim("ShmemDistributedDirect_1", sys, timeStep, 0.1);
-
-		sim.addInterface(&intf);
-		sim.run();
-	}
-	else if (String(argv[1]) == "1") {
-		// Nodes
-		auto n1 = Node::make("n1");
-
-		// Components
-		auto ecs = CurrentSource::make("i_intf", Logger::Level::debug);
-		ecs->setParameters(Complex(5, 0));
-		auto rgnd0 = Resistor::make("r_gnd_0", Logger::Level::debug);
-		rgnd0->setParameters(1);
-
-		ecs->connect({ Node::GND, n1 });
-		rgnd0->connect({ Node::GND, n1 });
-
-		//auto ecs_switch = CurrentSource::make("i_switch", GND, 1, Complex(0, 0));
-		//auto r01 = Resistor::make("r_0_1", 0, 1, 1);
-
-		ecs->setAttributeRef("I_ref", intf.importComplex(0));
-		intf.exportComplex(ecs->attributeMatrixComp("i_intf")->coeff(0, 0), 0);
-
-		auto sys = SystemTopology(50, SystemNodeList{n1}, SystemComponentList{ecs, rgnd0});
-		Simulation sim("ShmemDistributedDirect_2", sys, timeStep, 0.1);
-
-		sim.addInterface(&intf);
-		sim.run();
-	}
-	else {
+	} else {
 		std::cerr << "invalid test number" << std::endl;
 		std::exit(1);
 	}
 
-	return 0;
+	Real timeStep = 0.001;
+	Real finalTime = 0.1;
+
+	if (String(argv[1]) == "0") {
+		String simName = "ShmemDistributedDirect_1";
+		Logger::setLogDir("logs/"+simName);
+
+		// Nodes
+		auto n1 = Node::make("n1", PhaseType::Single, std::vector<Complex>{ 10 });
+		auto n2 = Node::make("n2", PhaseType::Single, std::vector<Complex>{ 5 });
+
+		// Components
+		auto evs = VoltageSource::make("v_intf", Logger::Level::debug);
+		evs->setParameters(Complex(5, 0));
+		auto vs1 = VoltageSource::make("vs_1", Logger::Level::debug);
+		vs1->setParameters(Complex(10, 0));
+		auto r12 = Resistor::make("r_12", Logger::Level::debug);
+		r12->setParameters(1);
+
+		// Connections
+		evs->connect({ Node::GND, n2 });
+		vs1->connect({ Node::GND, n1 });
+		r12->connect({ n1, n2 });
+
+		auto sys = SystemTopology(50,
+			SystemNodeList{ n1, n2 },
+			SystemComponentList{ evs, vs1, r12 });
+
+		Simulation sim(simName);
+		sim.setSystem(sys);
+		sim.setTimeStep(timeStep);
+		sim.setFinalTime(finalTime);
+
+		// Logging
+		auto logger = DataLogger::make(simName);
+		logger->addAttribute("v1", n1->attribute("v"));
+		logger->addAttribute("v2", n2->attribute("v"));
+		logger->addAttribute("r12", r12->attribute("i_intf"));
+		logger->addAttribute("ievs", evs->attribute("i_intf"));
+		logger->addAttribute("vevs", evs->attribute("v_intf"));
+		sim.addLogger(logger);
+
+		// Map attributes to interface entries
+		Interface intf(in, out);
+		evs->setAttributeRef("V_ref", intf.importComplex(0));
+		auto evsAttrMinus = evs->attributeMatrixComp("i_intf")->coeff(0,0);
+		intf.exportComplex(evsAttrMinus, 0);
+		sim.addInterface(&intf);
+
+		MatrixComp initialEvsCurrent = MatrixComp::Zero(1,1);
+		initialEvsCurrent(0,0) = Complex(5,0);
+		evs->setIntfCurrent(initialEvsCurrent);
+
+		sim.run();
+	}
+	else if (String(argv[1]) == "1") {
+		String simName = "ShmemDistributedDirect_2";
+		Logger::setLogDir("logs/"+simName);
+
+		// Nodes
+		auto n2 = Node::make("n2", PhaseType::Single, std::vector<Complex>{ 5 });
+
+		// Components
+		auto ecs = CurrentSource::make("i_intf", Logger::Level::debug);
+		ecs->setParameters(Complex(5, 0));
+		auto r02 = Resistor::make("r_02", Logger::Level::debug);
+		r02->setParameters(1);
+
+		// Connections
+		ecs->connect({ Node::GND, n2 });
+		r02->connect({ Node::GND, n2 });
+
+		auto sys = SystemTopology(50,
+			SystemNodeList{ n2 },
+			SystemComponentList{ ecs, r02 });
+
+		Simulation sim(simName);
+		sim.setSystem(sys);
+		sim.setTimeStep(timeStep);
+		sim.setFinalTime(finalTime);
+
+		// Logging
+		auto logger = DataLogger::make(simName);
+		logger->addAttribute("v2", n2->attribute("v"));
+		logger->addAttribute("r02", r02->attribute("i_intf"));
+		logger->addAttribute("vecs", ecs->attribute("v_intf"));
+		logger->addAttribute("iecs", ecs->attribute("i_intf"));
+		sim.addLogger(logger);
+
+		// Map attributes to interface entries
+		Interface intf(in, out);
+		ecs->setAttributeRef("I_ref", intf.importComplex(0));
+		//intf.exportComplex(ecs->attributeMatrixComp("v_intf")->coeff(0, 0), 0);
+		intf.exportComplex(ecs->attributeMatrixComp("v_intf")->coeff(0, 0)->scale(Complex(-1.,0)), 0);
+		sim.addInterface(&intf);
+
+		sim.run();
+	}
 }
