@@ -22,9 +22,6 @@
 
 using namespace DPsim;
 
-void DP_SynGenDq7odODE_ThreePhFault(Real timeStep, Real finalTime, Real loadStep, String extension = "");
-void EMT_SynGenDq7odODE_ThreePhFault(Real timeStep, Real finalTime, Real loadStep, String extension = "");
-
 // Define machine parameters in per unit
 Real nomPower = 555e6;
 Real nomPhPhVoltRMS = 24e3;
@@ -67,30 +64,7 @@ auto initVoltN1 = std::vector<Complex>({
 	Complex(initTerminalVolt * cos(initVoltAngle + 2 * PI / 3),
 		initTerminalVolt * sin(initVoltAngle + 2 * PI / 3)) });
 
-int main(int argc, char* argv[]) {
-
-	Real finalTime = 0.3;
-	Real timeStep = 0.00005;
-	Real loadStep = BreakerClosed;
-	DP_SynGenDq7odODE_ThreePhFault(timeStep, finalTime, loadStep);
-	EMT_SynGenDq7odODE_ThreePhFault(timeStep, finalTime, loadStep);
-
-	UInt maxTimeStepIdx = 10;
-	UInt maxLoadStepIdx = 6;
-	for (UInt loadStepIdx = 0; loadStepIdx <= maxLoadStepIdx; loadStepIdx++) {
-		loadStep = 0.001 * std::pow(10, loadStepIdx);
-
-		for (UInt stepIdx = 1; stepIdx <= maxTimeStepIdx; stepIdx++) {
-			timeStep = stepIdx * 0.0001;
-			DP_SynGenDq7odODE_ThreePhFault(timeStep, finalTime, loadStep,
-				"_" + std::to_string(timeStep) + "_L" + std::to_string(loadStepIdx));
-			EMT_SynGenDq7odODE_ThreePhFault(timeStep, finalTime, loadStep,
-				"_" + std::to_string(timeStep) + "_L" + std::to_string(loadStepIdx));
-		}
-	}
-}
-
-void DP_SynGenDq7odODE_ThreePhFault(Real timeStep, Real finalTime, Real loadStep, String extension) {
+void DP_SynGenDq7odODE_ThreePhFault(Real timeStep, Real finalTime, String extension = "") {
 	String simName = "DP_SynGenDq7odODE_ThreePhFault" + extension;
 	Logger::setLogDir("logs/"+simName);
 
@@ -109,7 +83,7 @@ void DP_SynGenDq7odODE_ThreePhFault(Real timeStep, Real finalTime, Real loadStep
 	res->setParameters(Rload);
 
 	auto fault = CPS::DP::Ph3::SeriesSwitch::make("Br_fault");
-	fault->setParameters(BreakerOpen, loadStep);
+	fault->setParameters(BreakerOpen, BreakerClosed);
 	fault->open();
 
 	// Connections
@@ -141,7 +115,7 @@ void DP_SynGenDq7odODE_ThreePhFault(Real timeStep, Real finalTime, Real loadStep
 	sim.run();
 }
 
-void EMT_SynGenDq7odODE_ThreePhFault(Real timeStep, Real finalTime, Real loadStep, String extension) {
+void EMT_SynGenDq7odODE_ThreePhFault(Real timeStep, Real finalTime, String extension = "") {
 	String simName = "EMT_SynGenDq7odODE_ThreePhFault" + extension;
 	Logger::setLogDir("logs/"+simName);
 
@@ -160,7 +134,7 @@ void EMT_SynGenDq7odODE_ThreePhFault(Real timeStep, Real finalTime, Real loadSte
 	res->setParameters(Rload);
 
 	auto fault = CPS::EMT::Ph3::SeriesSwitch::make("Br_fault");
-	fault->setParameters(BreakerOpen, loadStep);
+	fault->setParameters(BreakerOpen, BreakerClosed);
 	fault->open();
 
 	// Connections
@@ -190,4 +164,130 @@ void EMT_SynGenDq7odODE_ThreePhFault(Real timeStep, Real finalTime, Real loadSte
 	sim.addEvent(sw2);
 
 	sim.run();
+}
+
+void DP_SynGenDq7odODE_LoadStep(Real timeStep, Real finalTime, Real breakerClosed, String extension = "") {
+	String simName = "DP_SynGenDq7odODE" + extension;
+	Logger::setLogDir("logs/"+simName);
+
+	// Nodes
+	auto n1 = CPS::DP::Node::make("n1", PhaseType::ABC, initVoltN1);
+
+	// Components
+	auto gen = CPS::DP::Ph3::SynchronGeneratorDQODE::make("SynGen");
+	gen->setParametersFundamentalPerUnit(
+		nomPower, nomPhPhVoltRMS, nomFreq, poleNum, nomFieldCurr,
+		Rs, Ll, Lmd, Lmq, Rfd, Llfd, Rkd, Llkd, Rkq1, Llkq1, Rkq2, Llkq2, H,
+		initActivePower, initReactivePower, initTerminalVolt,
+		initVoltAngle, fieldVoltage, initMechPower);
+
+	auto res = CPS::DP::Ph3::SeriesResistor::make("R_load");
+	res->setParameters(Rload);
+
+	auto fault = CPS::DP::Ph3::SeriesSwitch::make("Br_fault");
+	fault->setParameters(BreakerOpen, breakerClosed);
+	fault->open();
+
+	// Connections
+	gen->connect({n1});
+	res->connect({CPS::DP::Node::GND, n1});
+	fault->connect({CPS::DP::Node::GND, n1});
+
+	auto sys = SystemTopology(60, SystemNodeList{n1}, SystemComponentList{gen, res, fault});
+
+	// Logging
+	auto logger = DataLogger::make(simName);
+	logger->addAttribute("v1", n1->attribute("v"));
+	logger->addAttribute("i_gen", gen->attribute("i_intf"));
+	logger->addAttribute("wr_gen", gen->attribute("w_r"));
+
+	Simulation sim(simName, Logger::Level::info);
+	sim.setSystem(sys);
+	sim.setTimeStep(timeStep);
+	sim.setFinalTime(finalTime);
+	sim.setDomain(Domain::DP);
+	sim.addLogger(logger);
+
+	// Events
+	auto sw1 = SwitchEvent::make(0.1, fault, true);
+	sim.addEvent(sw1);
+	auto sw2 = SwitchEvent::make(0.2, fault, false);
+	sim.addEvent(sw2);
+
+	sim.run();
+}
+
+void EMT_SynGenDq7odODE_LoadStep(Real timeStep, Real finalTime, Real breakerClosed, String extension = "") {
+	String simName = "EMT_SynGenDq7odODE" + extension;
+	Logger::setLogDir("logs/"+simName);
+
+	// Nodes
+	auto n1 = CPS::EMT::Node::make("n1", PhaseType::ABC, initVoltN1);
+
+	// Components
+	auto gen = CPS::EMT::Ph3::SynchronGeneratorDQODE::make("SynGen");
+	gen->setParametersFundamentalPerUnit(
+		nomPower, nomPhPhVoltRMS, nomFreq, poleNum, nomFieldCurr,
+		Rs, Ll, Lmd, Lmq, Rfd, Llfd, Rkd, Llkd, Rkq1, Llkq1, Rkq2, Llkq2, H,
+		initActivePower, initReactivePower, initTerminalVolt,
+		initVoltAngle, fieldVoltage, initMechPower);
+
+	auto res = CPS::EMT::Ph3::SeriesResistor::make("R_load");
+	res->setParameters(Rload);
+
+	auto fault = CPS::EMT::Ph3::SeriesSwitch::make("Br_fault");
+	fault->setParameters(BreakerOpen, breakerClosed);
+	fault->open();
+
+	// Connections
+	gen->connect({n1});
+	res->connect({CPS::EMT::Node::GND, n1});
+	fault->connect({CPS::EMT::Node::GND, n1});
+
+	auto sys = SystemTopology(60, SystemNodeList{n1}, SystemComponentList{gen, res, fault});
+
+		// Logging
+	auto logger = DataLogger::make(simName);
+	logger->addAttribute("v1", n1->attribute("v"));
+	logger->addAttribute("i_gen", gen->attribute("i_intf"));
+	logger->addAttribute("wr_gen", gen->attribute("w_r"));
+
+	Simulation sim(simName, Logger::Level::info);
+	sim.setSystem(sys);
+	sim.setTimeStep(timeStep);
+	sim.setFinalTime(finalTime);
+	sim.setDomain(Domain::EMT);
+	sim.addLogger(logger);
+
+	// Events
+	auto sw1 = SwitchEvent::make(0.1, fault, true);
+	sim.addEvent(sw1);
+	auto sw2 = SwitchEvent::make(0.2, fault, false);
+	sim.addEvent(sw2);
+
+	sim.run();
+}
+
+int main(int argc, char* argv[]) {
+
+	Real finalTime = 0.3;
+	Real timeStep = 0.00005;
+	DP_SynGenDq7odODE_ThreePhFault(timeStep, finalTime);
+	EMT_SynGenDq7odODE_ThreePhFault(timeStep, finalTime);
+
+	Real breakerOpenR = BreakerOpen;
+	UInt maxTimeStepIdx = 20;
+	UInt maxLoadStepIdx = 10;
+	for (UInt loadStepIdx = 1; loadStepIdx <= maxLoadStepIdx; loadStepIdx++) {
+		breakerOpenR = Rload * loadStepIdx;
+
+		for (UInt stepIdx = 1; stepIdx <= maxTimeStepIdx; stepIdx++) {
+			timeStep = stepIdx * 0.00005;
+
+			DP_SynGenDq7odODE_LoadStep(timeStep, finalTime, breakerOpenR,
+			"_T" + std::to_string(stepIdx) + "_L" + std::to_string(loadStepIdx));
+			EMT_SynGenDq7odODE_LoadStep(timeStep, finalTime, breakerOpenR,
+			"_T" + std::to_string(stepIdx) + "_L" + std::to_string(loadStepIdx));
+		}
+	}
 }
