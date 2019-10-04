@@ -25,7 +25,7 @@ set(CIRCUIT_SOURCES
 	#Circuits/EMT_ResVS_RL_Switch.cpp
 
 	# EMT and DP studies
-	#VariableTimeStep/RXLine_LoadStep_FreqStep_1.cpp
+	Circuits/RL_SourceStep.cpp
 )
 
 set(SYNCGEN_SOURCES	
