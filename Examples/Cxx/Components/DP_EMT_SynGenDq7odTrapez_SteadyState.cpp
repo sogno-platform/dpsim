@@ -23,9 +23,6 @@
 
 using namespace DPsim;
 
-void DP_SynGenDq7odTrapez_SteadyState(Real timeStep, Real finalTime, String extension = "");
-void EMT_SynGenDq7odTrapez_SteadyState(Real timeStep, Real finalTime, String extension = "");
-
 // Define machine parameters in per unit
 Real nomPower = 555e6;
 Real nomPhPhVoltRMS = 24e3;
@@ -66,23 +63,8 @@ auto initVoltN1 = std::vector<Complex>({
 	Complex(initTerminalVolt * cos(initVoltAngle + 2 * PI / 3),
 		initTerminalVolt * sin(initVoltAngle + 2 * PI / 3)) });
 
-int main(int argc, char* argv[]) {
-
-	Real finalTime = 0.3;
-	Real timeStep = 0.00005;
-	DP_SynGenDq7odTrapez_SteadyState(timeStep, finalTime);
-	EMT_SynGenDq7odTrapez_SteadyState(timeStep, finalTime);
-
-	UInt maxStepIdx = 10;
-	for (UInt stepIdx = 1; stepIdx <= maxStepIdx; stepIdx++) {
-		timeStep = stepIdx * 0.0001;
-		DP_SynGenDq7odTrapez_SteadyState(timeStep, finalTime, "_" + std::to_string(timeStep));
-		EMT_SynGenDq7odTrapez_SteadyState(timeStep, finalTime, "_" + std::to_string(timeStep));
-	}
-}
-
-void DP_SynGenDq7odTrapez_SteadyState(Real timeStep, Real finalTime, String extension) {
-	String simName = "DP_SynGenDq7odTrapez_SteadyState" + extension;
+void DP_SynGenDq7odTrapez_SteadyState(Real timeStep, Real finalTime) {
+	String simName = "DP_SynGenDq7odTrapez_SteadyState";
 	Logger::setLogDir("logs/"+simName);
 
 	// Nodes
@@ -118,8 +100,8 @@ void DP_SynGenDq7odTrapez_SteadyState(Real timeStep, Real finalTime, String exte
 	sim.run();
 }
 
-void EMT_SynGenDq7odTrapez_SteadyState(Real timeStep, Real finalTime, String extension) {
-	String simName = "EMT_SynGenDq7odTrapez_SteadyState" + extension;
+void EMT_SynGenDq7odTrapez_SteadyState(Real timeStep, Real finalTime) {
+	String simName = "EMT_SynGenDq7odTrapez_SteadyState";
 	Logger::setLogDir("logs/"+simName);
 
 	// Nodes
@@ -153,4 +135,12 @@ void EMT_SynGenDq7odTrapez_SteadyState(Real timeStep, Real finalTime, String ext
 	sim.addLogger(logger);
 
 	sim.run();
+}
+
+int main(int argc, char* argv[]) {
+
+	Real finalTime = 0.3;
+	Real timeStep = 0.00005;
+	DP_SynGenDq7odTrapez_SteadyState(timeStep, finalTime);
+	EMT_SynGenDq7odTrapez_SteadyState(timeStep, finalTime);
 }
