@@ -115,7 +115,8 @@ void doSim(int threads, int generators, int repNumber) {
 	auto sys = SystemTopology(60, nodes, components);
 
 	// Scheduler
-	auto sched = std::make_shared<ThreadLevelScheduler>(threads);
+	if (threads >= 0)
+		auto sched = std::make_shared<ThreadLevelScheduler>(threads);
 
 	// Logging
 	//auto logger = DataLogger::make(name);
@@ -128,24 +129,18 @@ void doSim(int threads, int generators, int repNumber) {
 	sim.setTimeStep(timeStep);
 	sim.setFinalTime(finalTime);
 	sim.setDomain(Domain::DP);
-	sim.setScheduler(sched);
+	if (threads >= 0)
+		sim.setScheduler(sched);
 
 	sim.run();
 	sim.logStepTimes(name + "_step_times");
 }
 
 int main(int argc, char* argv[]) {
-	int reps = 2;
-	std::vector<int> threads_choices = {1,2,4};
+	CommandLineArgs args(argc, argv);
 
-	for (int generators = 1; generators <= 4; generators++) {
-		std::cout << "generator no.: " << generators << std::endl;
-
-		for (auto threads : threads_choices) {
-			std::cout << "thread_level with " << threads << " threads" << std::endl;
-
-			for (int rep = 0; rep < reps; rep++)
-				doSim(threads, generators, rep);
-		}
-	}
+	std::cout << "Simulate with " << Int(args.options["gen"]) << " generators, "
+		<< Int(args.options["threads"]) << " threads, sequence number "
+		<< Int(args.options["seq"]) << std::endl;
+	doSim(args.options["threads"], Int(args.options["gen"], Int(args.options["seq"]);
 }
