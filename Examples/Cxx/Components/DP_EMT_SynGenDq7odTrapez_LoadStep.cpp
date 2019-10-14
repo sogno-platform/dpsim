@@ -1,4 +1,5 @@
-/**
+/** SynGenDPBalancedResLoad Example
+ *
  * @author Markus Mirz <mmirz@eonerc.rwth-aachen.de>
  * @copyright 2017-2018, Institute for Automation of Complex Power Systems, EONERC
  *
@@ -52,6 +53,8 @@ Real fieldVoltage = 7.0821;
 // Define grid parameters
 // resistance for 300 MW output
 Real Rload = 1.92;
+Real BreakerOpen = 1e6;
+Real BreakerClosed = 0.001;
 
 // Initial node voltage
 auto initVoltN1 = std::vector<Complex>({
@@ -62,35 +65,40 @@ auto initVoltN1 = std::vector<Complex>({
 	Complex(initTerminalVolt * cos(initVoltAngle + 2 * PI / 3),
 		initTerminalVolt * sin(initVoltAngle + 2 * PI / 3)) });
 
-
-void DP_SynGenDq7odODE_SteadyState(Real timeStep, Real finalTime) {
-	String simName = "DP_SynGenDq7odODE_SteadyState";
+void DP_SynGenDq7odTrapez_LoadStep(Real timeStep, Real finalTime, Real breakerClosed, String extension = "") {
+	String simName = "DP_SynGenDq7odTrapez" + extension;
 	Logger::setLogDir("logs/"+simName);
 
 	// Nodes
 	auto n1 = CPS::DP::Node::make("n1", PhaseType::ABC, initVoltN1);
 
 	// Components
-	auto gen = CPS::DP::Ph3::SynchronGeneratorDQODE::make("SynGen");
+	auto gen = CPS::DP::Ph3::SynchronGeneratorDQTrapez::make("SynGen");
 	gen->setParametersFundamentalPerUnit(
 		nomPower, nomPhPhVoltRMS, nomFreq, poleNum, nomFieldCurr,
 		Rs, Ll, Lmd, Lmq, Rfd, Llfd, Rkd, Llkd, Rkq1, Llkq1, Rkq2, Llkq2, H,
 		initActivePower, initReactivePower, initTerminalVolt,
 		initVoltAngle, fieldVoltage, initMechPower);
 
-	auto res = CPS::DP::Ph3::SeriesResistor::make("R_load");
+	auto res = CPS::DP::Ph3::SeriesResistor::make("R_load", Logger::Level::info);
 	res->setParameters(Rload);
+
+	auto fault = CPS::DP::Ph3::SeriesSwitch::make("Br_fault");
+	fault->setParameters(BreakerOpen, breakerClosed);
+	fault->open();
 
 	// Connections
 	gen->connect({n1});
 	res->connect({CPS::DP::Node::GND, n1});
+	fault->connect({CPS::DP::Node::GND, n1});
 
-	auto sys = SystemTopology(60, SystemNodeList{n1}, SystemComponentList{gen, res});
+	auto sys = SystemTopology(60, SystemNodeList{n1}, SystemComponentList{gen, res, fault});
 
 	// Logging
 	auto logger = DataLogger::make(simName);
 	logger->addAttribute("v1", n1->attribute("v"));
-	logger->addAttribute("i_load", res->attribute("i_intf"));
+	logger->addAttribute("i_gen", gen->attribute("i_intf"));
+	logger->addAttribute("wr_gen", gen->attribute("w_r"));
 
 	Simulation sim(simName, Logger::Level::info);
 	sim.setSystem(sys);
@@ -99,37 +107,50 @@ void DP_SynGenDq7odODE_SteadyState(Real timeStep, Real finalTime) {
 	sim.setDomain(Domain::DP);
 	sim.addLogger(logger);
 
+	// Events
+	if (breakerClosed > 0.0001) {
+		auto sw1 = SwitchEvent::make(0.1, fault, true);
+		sim.addEvent(sw1);
+		auto sw2 = SwitchEvent::make(0.2, fault, false);
+		sim.addEvent(sw2);
+	}
+
 	sim.run();
 }
 
-void EMT_SynGenDq7odODE_SteadyState(Real timeStep, Real finalTime) {
-	String simName = "EMT_SynGenDq7odODE_SteadyState";
+void EMT_SynGenDq7odTrapez_LoadStep(Real timeStep, Real finalTime, Real breakerClosed, String extension = "") {
+	String simName = "EMT_SynGenDq7odTrapez" + extension;
 	Logger::setLogDir("logs/"+simName);
 
 	// Nodes
 	auto n1 = CPS::EMT::Node::make("n1", PhaseType::ABC, initVoltN1);
 
 	// Components
-	auto gen = CPS::EMT::Ph3::SynchronGeneratorDQODE::make("SynGen");
-	gen->setParametersFundamentalPerUnit(
-		nomPower, nomPhPhVoltRMS, nomFreq, poleNum, nomFieldCurr,
+	auto gen = CPS::EMT::Ph3::SynchronGeneratorDQTrapez::make("SynGen");
+	gen->setParametersFundamentalPerUnit(nomPower, nomPhPhVoltRMS, nomFreq, poleNum, nomFieldCurr,
 		Rs, Ll, Lmd, Lmq, Rfd, Llfd, Rkd, Llkd, Rkq1, Llkq1, Rkq2, Llkq2, H,
 		initActivePower, initReactivePower, initTerminalVolt,
 		initVoltAngle, fieldVoltage, initMechPower);
 
-	auto res = CPS::EMT::Ph3::SeriesResistor::make("R_load");
+	auto res = CPS::EMT::Ph3::SeriesResistor::make("R_load", Logger::Level::info);
 	res->setParameters(Rload);
+
+	auto fault = CPS::EMT::Ph3::SeriesSwitch::make("Br_fault");
+	fault->setParameters(BreakerOpen, breakerClosed);
+	fault->open();
 
 	// Connections
 	gen->connect({n1});
 	res->connect({CPS::EMT::Node::GND, n1});
+	fault->connect({CPS::EMT::Node::GND, n1});
 
-	auto sys = SystemTopology(60, SystemNodeList{n1}, SystemComponentList{gen, res});
+	auto sys = SystemTopology(60, SystemNodeList{n1}, SystemComponentList{gen, res, fault});
 
 	// Logging
 	auto logger = DataLogger::make(simName);
 	logger->addAttribute("v1", n1->attribute("v"));
-	logger->addAttribute("i_load", res->attribute("i_intf"));
+	logger->addAttribute("i_gen", gen->attribute("i_intf"));
+	logger->addAttribute("wr_gen", gen->attribute("w_r"));
 
 	Simulation sim(simName, Logger::Level::info);
 	sim.setSystem(sys);
@@ -138,13 +159,34 @@ void EMT_SynGenDq7odODE_SteadyState(Real timeStep, Real finalTime) {
 	sim.setDomain(Domain::EMT);
 	sim.addLogger(logger);
 
+	// Events
+	if (breakerClosed > 0.0001) {
+		auto sw1 = SwitchEvent::make(0.1, fault, true);
+		sim.addEvent(sw1);
+		auto sw2 = SwitchEvent::make(0.2, fault, false);
+		sim.addEvent(sw2);
+	}
+
 	sim.run();
 }
 
 int main(int argc, char* argv[]) {
-
-	Real finalTime = 0.3;
 	Real timeStep = 0.00005;
-	DP_SynGenDq7odODE_SteadyState(timeStep, finalTime);
-	EMT_SynGenDq7odODE_SteadyState(timeStep, finalTime);
+	Real finalTime = 0.3;
+	Real breakerOpenR = BreakerOpen;
+	UInt maxTimeStepIdx = 20;
+	UInt maxLoadStepIdx = 10;
+
+	for (UInt loadStepIdx = 0; loadStepIdx <= maxLoadStepIdx; loadStepIdx++) {
+		breakerOpenR = Rload * loadStepIdx;
+
+		for (UInt stepIdx = 1; stepIdx <= maxTimeStepIdx; stepIdx++) {
+			timeStep = stepIdx * 0.00005;
+
+			DP_SynGenDq7odTrapez_LoadStep(timeStep, finalTime, breakerOpenR,
+				"_T" + std::to_string(stepIdx) + "_L" + std::to_string(loadStepIdx));
+			EMT_SynGenDq7odTrapez_LoadStep(timeStep, finalTime, breakerOpenR,
+				"_T" + std::to_string(stepIdx) + "_L" + std::to_string(loadStepIdx));
+		}
+	}
 }

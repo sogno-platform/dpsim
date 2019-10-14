@@ -23,9 +23,6 @@
 
 using namespace DPsim;
 
-void DP_SynGenDq7odTrapez_ThreePhFault(Real timeStep, Real finalTime);
-void EMT_SynGenDq7odTrapez_ThreePhFault(Real timeStep, Real finalTime);
-
 // Define machine parameters in per unit
 Real nomPower = 555e6;
 Real nomPhPhVoltRMS = 24e3;
@@ -67,14 +64,6 @@ auto initVoltN1 = std::vector<Complex>({
 		initTerminalVolt * sin(initVoltAngle - 2 * PI / 3)),
 	Complex(initTerminalVolt * cos(initVoltAngle + 2 * PI / 3),
 		initTerminalVolt * sin(initVoltAngle + 2 * PI / 3)) });
-
-int main(int argc, char* argv[]) {
-	Real timeStep = 0.00005;
-	Real finalTime = 0.3;
-
-	DP_SynGenDq7odTrapez_ThreePhFault(timeStep, finalTime);
-	EMT_SynGenDq7odTrapez_ThreePhFault(timeStep, finalTime);
-}
 
 void DP_SynGenDq7odTrapez_ThreePhFault(Real timeStep, Real finalTime) {
 	String simName = "DP_SynGenDq7odTrapez_ThreePhFault";
@@ -175,4 +164,11 @@ void EMT_SynGenDq7odTrapez_ThreePhFault(Real timeStep, Real finalTime) {
 	sim.addEvent(sw2);
 
 	sim.run();
+}
+
+int main(int argc, char* argv[]) {
+	Real timeStep = 0.00005;
+	Real finalTime = 0.3;
+	DP_SynGenDq7odTrapez_ThreePhFault(timeStep, finalTime);
+	EMT_SynGenDq7odTrapez_ThreePhFault(timeStep, finalTime);
 }

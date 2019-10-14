@@ -25,7 +25,7 @@ set(CIRCUIT_SOURCES
 	#Circuits/EMT_ResVS_RL_Switch.cpp
 
 	# EMT and DP studies
-	#VariableTimeStep/RXLine_LoadStep_FreqStep_1.cpp
+	Circuits/DP_EMT_RL_SourceStep.cpp
 )
 
 set(SYNCGEN_SOURCES	
@@ -35,6 +35,7 @@ set(SYNCGEN_SOURCES
 	Components/DP_SynGenTrStab_LoadStep.cpp
 	Components/DP_EMT_SynGenDq7odTrapez_SteadyState.cpp
 	Components/DP_EMT_SynGenDq7odTrapez_ThreePhFault.cpp
+	Components/DP_EMT_SynGenDq7odTrapez_LoadStep.cpp
 )
 
 set(INVERTER_SOURCES
@@ -52,6 +53,7 @@ if(WITH_SUNDIALS)
 		Components/DP_Multimachine_DQ_Parallel.cpp
 		Components/DP_EMT_SynGenDq7odODE_SteadyState.cpp
 		Components/DP_EMT_SynGenDq7odODE_ThreePhFault.cpp
+		Components/DP_EMT_SynGenDq7odODE_LoadStep.cpp
 	)
 
 	set(DAE_SOURCES

@@ -22,9 +22,6 @@
 
 using namespace DPsim;
 
-void DP_SynGenDq7odODE_ThreePhFault(Real timeStep, Real finalTime, Real loadStep, String extension = "");
-void EMT_SynGenDq7odODE_ThreePhFault(Real timeStep, Real finalTime, Real loadStep, String extension = "");
-
 // Define machine parameters in per unit
 Real nomPower = 555e6;
 Real nomPhPhVoltRMS = 24e3;
@@ -67,30 +64,7 @@ auto initVoltN1 = std::vector<Complex>({
 	Complex(initTerminalVolt * cos(initVoltAngle + 2 * PI / 3),
 		initTerminalVolt * sin(initVoltAngle + 2 * PI / 3)) });
 
-int main(int argc, char* argv[]) {
-
-	Real finalTime = 0.3;
-	Real timeStep = 0.00005;
-	Real loadStep = BreakerClosed;
-	DP_SynGenDq7odODE_ThreePhFault(timeStep, finalTime, loadStep);
-	EMT_SynGenDq7odODE_ThreePhFault(timeStep, finalTime, loadStep);
-
-	UInt maxTimeStepIdx = 10;
-	UInt maxLoadStepIdx = 6;
-	for (UInt loadStepIdx = 0; loadStepIdx <= maxLoadStepIdx; loadStepIdx++) {
-		loadStep = 0.001 * std::pow(10, loadStepIdx);
-
-		for (UInt stepIdx = 1; stepIdx <= maxTimeStepIdx; stepIdx++) {
-			timeStep = stepIdx * 0.0001;
-			DP_SynGenDq7odODE_ThreePhFault(timeStep, finalTime, loadStep,
-				"_" + std::to_string(timeStep) + "_L" + std::to_string(loadStepIdx));
-			EMT_SynGenDq7odODE_ThreePhFault(timeStep, finalTime, loadStep,
-				"_" + std::to_string(timeStep) + "_L" + std::to_string(loadStepIdx));
-		}
-	}
-}
-
-void DP_SynGenDq7odODE_ThreePhFault(Real timeStep, Real finalTime, Real loadStep, String extension) {
+void DP_SynGenDq7odODE_ThreePhFault(Real timeStep, Real finalTime, String extension = "") {
 	String simName = "DP_SynGenDq7odODE_ThreePhFault" + extension;
 	Logger::setLogDir("logs/"+simName);
 
@@ -109,7 +83,7 @@ void DP_SynGenDq7odODE_ThreePhFault(Real timeStep, Real finalTime, Real loadStep
 	res->setParameters(Rload);
 
 	auto fault = CPS::DP::Ph3::SeriesSwitch::make("Br_fault");
-	fault->setParameters(BreakerOpen, loadStep);
+	fault->setParameters(BreakerOpen, BreakerClosed);
 	fault->open();
 
 	// Connections
@@ -141,7 +115,7 @@ void DP_SynGenDq7odODE_ThreePhFault(Real timeStep, Real finalTime, Real loadStep
 	sim.run();
 }
 
-void EMT_SynGenDq7odODE_ThreePhFault(Real timeStep, Real finalTime, Real loadStep, String extension) {
+void EMT_SynGenDq7odODE_ThreePhFault(Real timeStep, Real finalTime, String extension = "") {
 	String simName = "EMT_SynGenDq7odODE_ThreePhFault" + extension;
 	Logger::setLogDir("logs/"+simName);
 
@@ -160,7 +134,7 @@ void EMT_SynGenDq7odODE_ThreePhFault(Real timeStep, Real finalTime, Real loadSte
 	res->setParameters(Rload);
 
 	auto fault = CPS::EMT::Ph3::SeriesSwitch::make("Br_fault");
-	fault->setParameters(BreakerOpen, loadStep);
+	fault->setParameters(BreakerOpen, BreakerClosed);
 	fault->open();
 
 	// Connections
@@ -190,4 +164,12 @@ void EMT_SynGenDq7odODE_ThreePhFault(Real timeStep, Real finalTime, Real loadSte
 	sim.addEvent(sw2);
 
 	sim.run();
+}
+
+int main(int argc, char* argv[]) {
+
+	Real finalTime = 0.3;
+	Real timeStep = 0.00005;
+	DP_SynGenDq7odODE_ThreePhFault(timeStep, finalTime);
+	EMT_SynGenDq7odODE_ThreePhFault(timeStep, finalTime);
 }
