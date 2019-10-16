@@ -49,12 +49,19 @@ static void DP_RL_SourceStep(Real timeStep, Real finalTime,
 
 	auto sys = SystemTopology(50,
 		SystemNodeList{ n1, n2, n3 },
-		SystemComponentList{ vs, r, l });
+		SystemComponentList{ vs, r, l, sw });
+
+	auto logger = DataLogger::make(simName);
+	logger->addAttribute("v1", n1->attributeMatrixComp("v"));
+	logger->addAttribute("v2", n2->attributeMatrixComp("v"));
+	logger->addAttribute("v3", n3->attributeMatrixComp("v"));
+	logger->addAttribute("i_r", r->attributeMatrixComp("i_intf"));
 
 	Simulation sim(simName);
 	sim.setSystem(sys);
 	sim.setTimeStep(timeStep);
 	sim.setFinalTime(finalTime);
+	sim.addLogger(logger);
 
 	sim.run();
 }
@@ -84,13 +91,20 @@ static void EMT_RL_SourceStep(Real timeStep, Real finalTime,
 
 	auto sys = SystemTopology(50,
 		SystemNodeList{ n1, n2, n3 },
-		SystemComponentList{ vs, r, l });
+		SystemComponentList{ vs, r, l, sw });
+
+	auto logger = DataLogger::make(simName);
+	logger->addAttribute("v1", n1->attributeMatrixReal("v"));
+	logger->addAttribute("v2", n2->attributeMatrixReal("v"));
+	logger->addAttribute("v3", n3->attributeMatrixReal("v"));
+	logger->addAttribute("i_r", r->attributeMatrixReal("i_intf"));
 
 	Simulation sim(simName);
 	sim.setSystem(sys);
 	sim.setDomain(CPS::Domain::EMT);
 	sim.setTimeStep(timeStep);
 	sim.setFinalTime(finalTime);
+	sim.addLogger(logger);
 
 	sim.run();
 }
@@ -127,7 +141,7 @@ int main(int argc, char* argv[]) {
 				"_T" + std::to_string(stepIdx) + "_F" + std::to_string(freqStepIdx));
 		}
 	}
-
+	/*
 	for (UInt stepIdx = 40; stepIdx <= 400; stepIdx = stepIdx+20) {
 	timeStep = stepIdx * 0.00005;
 
@@ -150,4 +164,5 @@ int main(int argc, char* argv[]) {
 				"_T" + std::to_string(stepIdx) + "_F" + std::to_string(freqStepIdx));
 		}
 	}
+	*/
 }
