@@ -26,17 +26,23 @@ using namespace CPS::DP;
 using namespace CPS::DP::Ph1;
 
 int main(int argc, char* argv[]) {
+	CommandLineArgs args(argc, argv);
+	std::cout 	<< "Simulate with " << Int(args.options["threads"]) << " threads, sequence "
+				<< Int(args.options["seq"]) << std::endl;
+
 	// Define simulation scenario
 	Real timeStep = 0.000001;
 	Real finalTime = 0.05;
-	String simName = "DP_Inverter_Grid_Parallel";
+	String simName = "DP_Inverter_Grid_Parallel_t" + std::to_string(Int(args.options["threads"])) + "_s" + std::to_string(Int(args.options["seq"]));
 	Logger::setLogDir("logs/"+simName);
 
 	// Set system frequencies
 	Matrix frequencies(5,1);
 	frequencies << 50, 19850, 19950, 20050, 20150;
+	//Matrix frequencies(9,1);
+	//frequencies << 50, 19850, 19950, 20050, 20150, 39750, 39950, 40050, 40250;
 
-	auto scheduler = std::make_shared<ThreadLevelScheduler>(6);
+	auto scheduler = std::make_shared<ThreadLevelScheduler>(Int(args.options["threads"]));
 
 	// Nodes
 	auto n1 = Node::make("n1");
@@ -91,6 +97,4 @@ int main(int argc, char* argv[]) {
 
 	sim.run();
 	sim.logStepTimes(simName + "_step_times");
-
-	return 0;
 }
