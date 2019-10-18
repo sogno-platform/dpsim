@@ -63,27 +63,27 @@ void doSim(int threads, int generators, int repNumber) {
 	Real fieldVoltage = 7.0821;
 
 	// Define grid parameters
-	Real Rload = 0.96;
-	Real Rline = 0.032;
-	Real Rsnub = 25;
+	Real Rload = 1.92;
+	Real Rline = 1e6;
+	Real Rcenter = 1e6;
 
-	auto initVoltN1 = std::vector<Complex>({
+	auto initVoltGen = std::vector<Complex>({
 		Complex(initTerminalVolt * cos(initVoltAngle),
 			initTerminalVolt * sin(initVoltAngle)),
 		Complex(initTerminalVolt * cos(initVoltAngle - 2 * PI / 3),
 			initTerminalVolt * sin(initVoltAngle - 2 * PI / 3)),
 		Complex(initTerminalVolt * cos(initVoltAngle + 2 * PI / 3),
 			initTerminalVolt * sin(initVoltAngle + 2 * PI / 3)) });
-	auto n_load = Node::make("n3", PhaseType::ABC);
+	auto nodeCenter = Node::make("n_center", PhaseType::ABC);
 
-	SystemNodeList nodes({n_load});
+	SystemNodeList nodes({nodeCenter});
 	SystemComponentList components;
 
 	for (int i = 0; i < generators; i++) {
-		auto node = Node::make("n" + std::to_string(i), PhaseType::ABC, initVoltN1);
+		auto node = Node::make("n_" + std::to_string(i), PhaseType::ABC, initVoltGen);
 		nodes.push_back(node);
 
-		auto gen = Ph3::SynchronGeneratorDQTrapez::make("Gen" + std::to_string(i));
+		auto gen = Ph3::SynchronGeneratorDQODE::make("Gen" + std::to_string(i));
 		gen->setParametersFundamentalPerUnit(
 			nomPower, nomPhPhVoltRMS, nomFreq, poleNum, nomFieldCurr,
 			Rs, Ll, Lmd, Lmq, Rfd, Llfd, Rkd, Llkd, Rkq1, Llkq1, Rkq2, Llkq2, H,
@@ -93,30 +93,26 @@ void doSim(int threads, int generators, int repNumber) {
 		auto line = Ph3::SeriesResistor::make("R_line" + std::to_string(i));
 		line->setParameters(Rline);
 
-		auto snub = Ph3::SeriesResistor::make("R_snub" + std::to_string(i));
-		snub->setParameters(Rsnub);
+		auto genLoad = Ph3::SeriesResistor::make("R_gen_load" + std::to_string(i));
+		genLoad->setParameters(Rload);
 
 		// Connections
 		gen->connect({node});
-		line->connect({node, n_load});
-		snub->connect({node, Node::GND});
+		line->connect({node, nodeCenter});
+		genLoad->connect({node, Node::GND});
 
 		components.push_back(gen);
 		components.push_back(line);
-		components.push_back(snub);
+		components.push_back(genLoad);
 	}
 
-	auto load = Ph3::SeriesResistor::make("R_load");
-	load->setParameters(Rload);
-	load->connect({n_load, Node::GND});
-	components.push_back(load);
+	auto centerLoad = Ph3::SeriesResistor::make("R_center");
+	centerLoad->setParameters(Rcenter);
+	centerLoad->connect({nodeCenter, Node::GND});
+	components.push_back(centerLoad);
 
 	// System
 	auto sys = SystemTopology(60, nodes, components);
-
-	// Scheduler
-	if (threads >= 0)
-		auto sched = std::make_shared<ThreadLevelScheduler>(threads);
 
 	// Logging
 	//auto logger = DataLogger::make(name);
@@ -129,8 +125,11 @@ void doSim(int threads, int generators, int repNumber) {
 	sim.setTimeStep(timeStep);
 	sim.setFinalTime(finalTime);
 	sim.setDomain(Domain::DP);
-	if (threads >= 0)
+	if (threads > 0) {
+		// Scheduler
+		auto sched = std::make_shared<ThreadLevelScheduler>(threads);
 		sim.setScheduler(sched);
+	}
 
 	sim.run();
 	sim.logStepTimes(name + "_step_times");
@@ -142,5 +141,5 @@ int main(int argc, char* argv[]) {
 	std::cout << "Simulate with " << Int(args.options["gen"]) << " generators, "
 		<< Int(args.options["threads"]) << " threads, sequence number "
 		<< Int(args.options["seq"]) << std::endl;
-	doSim(args.options["threads"], Int(args.options["gen"], Int(args.options["seq"]);
+	doSim(Int(args.options["threads"]), Int(args.options["gen"]), Int(args.options["seq"]));
 }
