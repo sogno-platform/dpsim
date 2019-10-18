@@ -141,7 +141,7 @@ int main(int argc, char* argv[]) {
 				"_T" + std::to_string(stepIdx) + "_F" + std::to_string(freqStepIdx));
 		}
 	}
-	/*
+
 	for (UInt stepIdx = 40; stepIdx <= 400; stepIdx = stepIdx+20) {
 	timeStep = stepIdx * 0.00005;
 
@@ -164,5 +164,4 @@ int main(int argc, char* argv[]) {
 				"_T" + std::to_string(stepIdx) + "_F" + std::to_string(freqStepIdx));
 		}
 	}
-	*/
 }
