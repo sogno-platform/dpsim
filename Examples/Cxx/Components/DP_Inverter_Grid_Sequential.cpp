@@ -35,10 +35,10 @@ int main(int argc, char* argv[]) {
 	Logger::setLogDir("logs/"+simName);
 
 	// Set system frequencies
-	Matrix frequencies(5,1);
-	frequencies << 50, 19850, 19950, 20050, 20150;
-	//Matrix frequencies(9,1);
-	//frequencies << 50, 19850, 19950, 20050, 20150, 39750, 39950, 40050, 40250;
+	//Matrix frequencies(5,1);
+	//frequencies << 50, 19850, 19950, 20050, 20150;
+	Matrix frequencies(9,1);
+	frequencies << 50, 19850, 19950, 20050, 20150, 39750, 39950, 40050, 40250;
 
 	// Nodes
 	auto n1 = Node::make("n1");
@@ -51,7 +51,9 @@ int main(int argc, char* argv[]) {
 
 	// Components
 	auto inv = Inverter::make("inv", level);
-	inv->setParameters(2, 3, 360, 0.87);
+	inv->setParameters( std::vector<CPS::Int>{2,2,2,2,4,4,4,4},
+						std::vector<CPS::Int>{-3,-1,1,3,-5,-1,1,5},
+						360, 0.87, 0);
 	auto r1 = Resistor::make("r1", level);
 	r1->setParameters(0.1);
 	auto l1 = Inductor::make("l1", level);

@@ -35,14 +35,13 @@ int main(int argc, char* argv[]) {
 	Real finalTime = 0.05;
 	String simName = "DP_Inverter_Grid_Parallel_t" + std::to_string(Int(args.options["threads"])) + "_s" + std::to_string(Int(args.options["seq"]));
 	Logger::setLogDir("logs/"+simName);
+	Int threads = Int(args.options["threads"]);
 
 	// Set system frequencies
-	Matrix frequencies(5,1);
-	frequencies << 50, 19850, 19950, 20050, 20150;
-	//Matrix frequencies(9,1);
-	//frequencies << 50, 19850, 19950, 20050, 20150, 39750, 39950, 40050, 40250;
-
-	auto scheduler = std::make_shared<ThreadLevelScheduler>(Int(args.options["threads"]));
+	//Matrix frequencies(5,1);
+	//frequencies << 50, 19850, 19950, 20050, 20150;
+	Matrix frequencies(9,1);
+	frequencies << 50, 19850, 19950, 20050, 20150, 39750, 39950, 40050, 40250;
 
 	// Nodes
 	auto n1 = Node::make("n1");
@@ -55,7 +54,9 @@ int main(int argc, char* argv[]) {
 
 	// Components
 	auto inv = Inverter::make("inv", level);
-	inv->setParameters(2, 3, 360, 0.87);
+	inv->setParameters( std::vector<CPS::Int>{2,2,2,2,4,4,4,4},
+						std::vector<CPS::Int>{-3,-1,1,3,-5,-1,1,5},
+						360, 0.87, 0);
 	auto r1 = Resistor::make("r1", level);
 	r1->setParameters(0.1);
 	auto l1 = Inductor::make("l1", level);
@@ -93,7 +94,10 @@ int main(int argc, char* argv[]) {
 	sim.setTimeStep(timeStep);
 	sim.setFinalTime(finalTime);
 	sim.doHarmonicParallelization(false);
-	sim.setScheduler(scheduler);
+	if (threads > 0) {
+		auto scheduler = std::make_shared<ThreadLevelScheduler>(threads);
+		sim.setScheduler(scheduler);
+	}
 
 	sim.run();
 	sim.logStepTimes(simName + "_step_times");

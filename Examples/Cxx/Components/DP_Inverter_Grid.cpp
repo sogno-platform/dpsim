@@ -33,10 +33,12 @@ int main(int argc, char* argv[]) {
 	Logger::setLogDir("logs/"+simName);
 
 	// Set system frequencies
-	Matrix frequencies(5,1);
-	frequencies << 50, 19850, 19950, 20050, 20150;
 	//Matrix frequencies(1,1);
 	//frequencies << 50;
+	//Matrix frequencies(5,1);
+	//frequencies << 50, 19850, 19950, 20050, 20150;
+	Matrix frequencies(9,1);
+	frequencies << 50, 19850, 19950, 20050, 20150, 39750, 39950, 40050, 40250;
 
 	// Nodes
 	auto n1 = Node::make("n1");
@@ -45,11 +47,13 @@ int main(int argc, char* argv[]) {
 	auto n4 = Node::make("n4");
 	auto n5 = Node::make("n5");
 
-	Logger::Level level = Logger::Level::off;
+	Logger::Level level = Logger::Level::info;
 
 	// Components
 	auto inv = Inverter::make("inv", level);
-	inv->setParameters(2, 3, 360, 0.87);
+	inv->setParameters( std::vector<CPS::Int>{2,2,2,2,4,4,4,4},
+						std::vector<CPS::Int>{-3,-1,1,3,-5,-1,1,5},
+						360, 0.87, 0);
 	//auto inv = VoltageSource::make("inv", Logger::Level::info);
 	//inv->setParameters(Complex(0, -200));
 	auto r1 = Resistor::make("r1", level);
@@ -60,7 +64,7 @@ int main(int argc, char* argv[]) {
 	Real r2g = 0.1+0.001;
 	r2->setParameters(r2g);
 	auto l2 = Inductor::make("l2", level);
-	Real l2g = 150e-6+0.001/(2.*PI*50.);
+	Real l2g = 150e-6 + 0.001/(2.*PI*50.);
 	l2->setParameters(l2g);
 	auto c1 = Capacitor::make("c1", level);
 	c1->setParameters(10e-6);
@@ -93,9 +97,9 @@ int main(int argc, char* argv[]) {
 
 	// Logging
 	auto logger = DataLogger::make(simName);
-	logger->addAttribute("v1", n1->attributeMatrixComp("v"), 1, 5);
+	logger->addAttribute("v1", n1->attributeMatrixComp("v"), 1, 9);
 	logger->addAttribute("v2", n2->attributeMatrixComp("v"), 1, 1);
-	logger->addAttribute("v3", n3->attributeMatrixComp("v"), 1, 5);
+	logger->addAttribute("v3", n3->attributeMatrixComp("v"), 1, 9);
 	logger->addAttribute("v4", n4->attributeMatrixComp("v"), 1, 1);
 	logger->addAttribute("v5", n5->attributeMatrixComp("v"), 1, 1);
 	logger->addAttribute("i12", r1->attributeMatrixComp("i_intf"), 1, 1);
@@ -103,7 +107,4 @@ int main(int argc, char* argv[]) {
 	sim.addLogger(logger);
 
 	sim.run();
-	sim.logStepTimes(simName + "_step_times");
-
-	return 0;
 }
