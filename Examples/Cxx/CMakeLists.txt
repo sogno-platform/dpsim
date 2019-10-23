@@ -41,9 +41,7 @@ set(SYNCGEN_SOURCES
 set(INVERTER_SOURCES
 	Components/DP_Inverter_Grid.cpp
 	Components/DP_Inverter_Grid_Parallel_FreqSplit.cpp
-	Components/DP_Inverter_Grid_Parallel.cpp
-	Components/DP_Inverter_Grid_Sequential_FreqSplit.cpp
-	Components/DP_Inverter_Grid_Sequential.cpp
+	Components/DP_Inverter_Grid_Sequential_FreqSplit.cpp	
 )
 
 if(WITH_SUNDIALS)

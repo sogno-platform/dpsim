@@ -14,13 +14,3 @@ do
         sudo taskset --all-tasks --cpu-list 12-23 chrt --fifo 99 build/Examples/Cxx/DP_Inverter_Grid_Parallel -othreads=$j -oseq=$k
     done
 done
-
-for (( k = 1; k <= 10; k++ ))
-do
-    sudo taskset --all-tasks --cpu-list 12-23 chrt --fifo 99 build/Examples/Cxx/DP_Inverter_Grid_Sequential_FreqSplit -oseq=$k
-done
-
-for (( k = 1; k <= 10; k++ ))
-do
-    sudo taskset --all-tasks --cpu-list 12-23 chrt --fifo 99 build/Examples/Cxx/DP_Inverter_Grid_Sequential -oseq=$k
-done
