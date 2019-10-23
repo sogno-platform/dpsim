@@ -178,7 +178,8 @@ int main(int argc, char* argv[]) {
 	UInt maxLoadStepIdx = 10;
 
 	for (UInt loadStepIdx = 0; loadStepIdx <= maxLoadStepIdx; loadStepIdx++) {
-		breakerOpenR = Rload * loadStepIdx;
+		if (loadStepIdx == 0) breakerOpenR = 0;
+		else breakerOpenR = Rload / loadStepIdx;
 
 		for (UInt stepIdx = 1; stepIdx <= maxTimeStepIdx; stepIdx++) {
 			timeStep = stepIdx * 0.00005;
