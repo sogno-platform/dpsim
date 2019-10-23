@@ -143,7 +143,7 @@ int main(int argc, char* argv[]) {
 	}
 
 	for (UInt stepIdx = 40; stepIdx <= 400; stepIdx = stepIdx+20) {
-	timeStep = stepIdx * 0.00005;
+		timeStep = stepIdx * 0.00005;
 
 		EMT_RL_SourceStep(timeStep, finalTime, 0, 0, stepTime, "_T" + std::to_string(stepIdx));
 		DP_RL_SourceStep(timeStep, finalTime, 0, 0, stepTime, "_T" + std::to_string(stepIdx));
