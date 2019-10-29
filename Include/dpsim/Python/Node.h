@@ -50,11 +50,13 @@ namespace Python {
 		static void dealloc(Node<VarType> *self);
 
 		static PyObject* initialVoltage(PyObject *self, PyObject *args);
-		static PyObject * gnd(PyObject *self, PyObject *args);
+		static PyObject* voltage(PyObject *self, PyObject *args);
+		static PyObject* gnd(PyObject *self, PyObject *args);
 
 		static const char *name;
 		static const char *doc;
 		static const char *docInitialVoltage;
+		static const char *docVoltage;
 		static const char *docGND;
 		static PyMethodDef methods[];
 		static PyTypeObject type;
@@ -68,8 +70,8 @@ namespace Python {
 	PyObject *Node<VarType>::Py_GND = NULL;
 
 #ifdef _WIN32
-	template PyTypeObject Node<CPS::Real>::type;
-	template PyTypeObject Node<CPS::Complex>::type;
+	//template PyTypeObject Node<CPS::Real>::type;
+	//template PyTypeObject Node<CPS::Complex>::type;
 #else
 	extern template PyTypeObject Node<CPS::Real>::type;
 	extern template PyTypeObject Node<CPS::Complex>::type;

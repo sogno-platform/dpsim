@@ -169,25 +169,30 @@ PyObject* Python::Simulation::newfunc(PyTypeObject* subtype, PyObject *args, PyO
 
 int Python::Simulation::init(Simulation* self, PyObject *args, PyObject *kwds)
 {
-	static const char *kwlist[] = {"name", "system", "timestep", "duration", "start_time", "start_time_us", "sim_type", "solver_type", "single_stepping", "rt", "rt_factor", "start_sync", "init_steady_state", "log_level", "fail_on_overrun", "split_subnets", "tear_components", nullptr};
+	static const char *kwlist[] = {"name", "system", "timestep", "duration",
+	"start_time", "start_time_us", "sim_type", "solver_type", "single_stepping",
+	"rt", "rt_factor", "start_sync", "init_steady_state", "log_level",
+	"fail_on_overrun", "split_subnets", "tear_components", nullptr};
 	double timestep = 1e-3, duration = DBL_MAX, rtFactor = 1;
 	const char *name = nullptr;
-	int t = 0, s = 0, rt = 0, ss = 0, st = 0, initSteadyState = 0, splitSubnets = 1;
+	int t = 0, s = 0, rt = 0, ss = 0, st = 0, log_level = 2, initSteadyState = 0, splitSubnets = 1;
 	int failOnOverrun = 0;
-
-	CPS::Logger::Level logLevel = CPS::Logger::Level::info;
 
 	unsigned long startTime = -1;
 	unsigned long startTimeUs = 0;
 
 	enum Solver::Type solverType;
 	enum Domain domain;
+	CPS::Logger::Level logLevel = CPS::Logger::Level::info;
 
 	CPS::Component::List tearComponents;
 	PyObject* pyTearComponents = nullptr;
 
 	if (!PyArg_ParseTupleAndKeywords(args, kwds, "sO|ddkkiippdppippO", (char **) kwlist,
-		&name, &self->pySys, &timestep, &duration, &startTime, &startTimeUs, &s, &t, &ss, &rt, &rtFactor, &st, &initSteadyState, &logLevel, &failOnOverrun, &splitSubnets, &pyTearComponents)) {
+		&name, &self->pySys, &timestep, &duration,
+		&startTime, &startTimeUs, &s, &t, &ss,
+		&rt, &rtFactor, &st, &initSteadyState, &log_level,
+		&failOnOverrun, &splitSubnets, &pyTearComponents)) {
 		return -1;
 	}
 
@@ -203,6 +208,7 @@ int Python::Simulation::init(Simulation* self, PyObject *args, PyObject *kwds)
 	}
 	else
 		self->startTime = Timer::StartClock::now();
+
 	switch (s) {
 		case 0: domain = Domain::DP; break;
 		case 1: domain = Domain::EMT; break;
@@ -218,6 +224,17 @@ int Python::Simulation::init(Simulation* self, PyObject *args, PyObject *kwds)
 		case 2: solverType = DPsim::Solver::Type::NRP; break;
 		default:
 			PyErr_SetString(PyExc_TypeError, "Invalid solver_type argument (must be one of 0, 1, 2)");
+			return -1;
+	}
+
+	switch (log_level) {
+		case 0: logLevel = CPS::Logger::Level::trace; break;
+		case 1: logLevel = CPS::Logger::Level::debug; break;
+		case 2: logLevel = CPS::Logger::Level::info; break;
+		case 3: logLevel = CPS::Logger::Level::warn; break;
+		case 4: logLevel = CPS::Logger::Level::err; break;
+		default:
+			PyErr_SetString(PyExc_TypeError, "Invalid log_level argument (must be one of 0, 1, 2, 3, 4)");
 			return -1;
 	}
 
@@ -238,10 +255,20 @@ int Python::Simulation::init(Simulation* self, PyObject *args, PyObject *kwds)
 	Py_INCREF(self->pySys);
 
 	if (self->realTime) {
-		self->sim = std::make_shared<DPsim::RealTimeSimulation>(name, *self->pySys->sys, timestep, duration, domain, solverType, logLevel, initSteadyState);
+		self->sim = std::make_shared<DPsim::RealTimeSimulation>(name,
+			*self->pySys->sys, timestep, duration,
+			domain, solverType, logLevel, initSteadyState);
 	}
 	else {
-		self->sim = std::make_shared<DPsim::Simulation>(name, *self->pySys->sys, timestep, duration, domain, solverType, logLevel, initSteadyState, splitSubnets, tearComponents);
+		self->sim = std::make_shared<DPsim::Simulation>(name, logLevel);
+		self->sim->setSystem(*self->pySys->sys);
+		self->sim->setTimeStep(timestep);
+		self->sim->setFinalTime(duration);
+		self->sim->setDomain(domain);
+		self->sim->setSolverType(solverType);
+		self->sim->doSteadyStateInit(initSteadyState);
+		self->sim->doSplitSubnets(splitSubnets);
+		self->sim->setTearingComponents(tearComponents);
 	}
 	self->channel = new EventChannel();
 

@@ -15,7 +15,7 @@ Alternatively, the image can be pulled from DockerHub like so::
 
 To run Jupyter lab notebooks from the dpsim repository, call::
 
-    $ git clone --recurse-submodules git@git.rwth-aachen.de:acs/core/simulation/dpsim.git
+    $ git clone --recurse-submodules git@git.rwth-aachen.de:acs/public/simulation/dpsim.git
     $ cd dpsim
     $ docker run -it -p 8888:8888 -v $(pwd):/dpsim --privileged rwthacs/dpsim-dev bash
 

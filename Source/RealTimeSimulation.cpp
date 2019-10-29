@@ -45,7 +45,8 @@ void RealTimeSimulation::run(const Timer::StartClock::duration &startIn) {
 }
 
 void RealTimeSimulation::run(const Timer::StartClock::time_point &startAt) {
-	initialize();
+	if (!mInitialized)
+		initialize();
 
 #ifdef WITH_SHMEM
 	mCLog->info("Opening interfaces.");

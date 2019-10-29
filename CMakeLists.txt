@@ -22,6 +22,8 @@ set(PROJECT_COPYRIGHT "2017, Institute for Automation of Complex Power Systems, 
 
 include(CheckCXXCompilerFlag)
 if(MSVC)	
+	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /EHsc")
+
 	check_cxx_compiler_flag("/W4 /WX" CXX_SUPPORTS_WERROR)
 
 	if(CXX_SUPPORTS_WERROR)

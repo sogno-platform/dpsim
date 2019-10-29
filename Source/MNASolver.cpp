@@ -44,7 +44,6 @@ void MnaSolver<VarType>::setSystem(CPS::SystemTopology system) {
 template <typename VarType>
 void MnaSolver<VarType>::initialize() {
 	mSLog->info("---- Start initialization ----");
-
 	mSLog->info("-- Process system components");
 	for (auto comp : mSystem.mComponents)
 		mSLog->info("Added {:s} '{:s}' to simulation.", comp->type(), comp->name());
@@ -95,6 +94,8 @@ void MnaSolver<VarType>::initialize() {
 	mSLog->info("--- Initialization finished ---");
 	mSLog->info("--- Initial system matrices and vectors ---");
 	logSystemMatrices();
+
+	mSLog->flush();
 }
 
 template <>
@@ -281,7 +282,7 @@ void MnaSolver<VarType>::assignSimNodes() {
 	// Total number of network nodes is simNodeIdx + 1
 	mNumSimNodes = simNodeIdx;
 	mNumVirtualSimNodes = mNumSimNodes - mNumNetSimNodes;
-	mNumHarmSimNodes = (mSystem.mFrequencies.size()-1) * mNumSimNodes;
+	mNumHarmSimNodes = static_cast<UInt>(mSystem.mFrequencies.size()-1) * mNumSimNodes;
 
 	mSLog->info("Assigned simulation nodes to topology nodes:");
 	mSLog->info("Number of network simulation nodes: {:d}", mNumNetSimNodes);

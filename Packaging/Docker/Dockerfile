@@ -35,7 +35,10 @@ RUN dnf -y install /tmp/*.rpm
 ADD requirements.txt .
 RUN pip3 install -r requirements.txt
 
+# Remove this part in the future and use dedicated jupyter Dockerfile
 # Activate Jupyter extensions
+ADD requirements-jupyter.txt .
+RUN pip3 install -r requirements-jupyter.txt
 RUN dnf -y --refresh install npm
 RUN jupyter nbextension enable --py widgetsnbextension
 RUN jupyter labextension install @jupyter-widgets/jupyterlab-manager

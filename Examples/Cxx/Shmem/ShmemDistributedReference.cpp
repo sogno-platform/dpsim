@@ -25,49 +25,45 @@ using namespace DPsim;
 using namespace CPS::DP;
 using namespace CPS::DP::Ph1;
 
-int main(int argc, char* argv[])
-{
+int main(int argc, char* argv[]) {
+	String simName = "ShmemDistributedRef";
+	Logger::setLogDir("logs/"+simName);
+	Real timeStep = 0.001;
+	Real finalTime = 0.1;
+
 	// Nodes
-	auto n1 = Node::make("n1");
-	auto n2 = Node::make("n2");
-	auto n3 = Node::make("n3");
-	auto n4 = Node::make("n4");
+	auto n1 = Node::make("n1", PhaseType::Single, std::vector<Complex>{ 10 });
+	auto n2 = Node::make("n2", PhaseType::Single, std::vector<Complex>{ 5 });
 
 	// Components
-	auto vs = VoltageSourceNorton::make("v_s");
-	auto l1 = Inductor::make("l_1");
-	auto r1 = Resistor::make("r_1");
-	auto r2A = Resistor::make("r_2A");
-	auto r2B = Resistor::make("r_2B");
-	auto sw = Ph1::Switch::make("sw");
+	auto vs1 = VoltageSource::make("vs_1", Logger::Level::debug);
+	vs1->setParameters(Complex(10, 0));
+	auto r12 = Resistor::make("r_12", Logger::Level::debug);
+	r12->setParameters(1);
+	auto r02 = Resistor::make("r_02", Logger::Level::debug);
+	r02->setParameters(1);
 
-	// Parameters
-	vs->setParameters(Complex(10000, 0), 1);
-	l1->setParameters(0.1);
-	r1->setParameters(1);
-	r2A->setParameters(10);
-	r2B->setParameters(8);
-	sw->setParameters(1e9, 0.1, false);
+	// Connections
+	vs1->connect({ Node::GND, n1 });
+	r12->connect({ n1, n2 });
+	r02->connect({ Node::GND, n2 });
 
-	// Topology
-	vs->connect({ Node::GND, n1 });
-	l1->connect({ n1, n2 });
-	r1->connect({ n2, n3 });
-	r2A->connect({ n3, Node::GND });
-	sw->connect({ n3, n4 });
-	r2B->connect({ n4, Node::GND });
+	auto sys = SystemTopology(50,
+		SystemNodeList{ n1, n2 },
+		SystemComponentList{ vs1, r12, r02 });
 
-	auto nodes = SystemNodeList{Node::GND, n1, n2, n3, n4};
+	// Logging
+	auto logger = DataLogger::make(simName);
+	logger->addAttribute("v1", n1->attribute("v"));
+	logger->addAttribute("v2", n2->attribute("v"));
+	logger->addAttribute("r12", r12->attribute("i_intf"));
+	logger->addAttribute("r02", r02->attribute("i_intf"));
 
-	auto sys = SystemTopology(50, nodes, SystemComponentList{vs, l1, r1, sw, r2A, r2B});
-
-	Simulation sim("ShmemDistributedRef", sys, 0.001, 20);
-
-	auto evt = SwitchEvent::make(10, sw, true);
-
-	sim.addEvent(evt);
+	Simulation sim(simName);
+	sim.setSystem(sys);
+	sim.setTimeStep(timeStep);
+	sim.setFinalTime(finalTime);
+	sim.addLogger(logger);
 
 	sim.run();
-
-	return 0;
 }
