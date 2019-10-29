@@ -72,7 +72,7 @@ int main(int argc, char* argv[]) {
 
 	// Components
 	auto gen = Ph3::SynchronGeneratorDQTrapez::make("DP_SynGen_dq_ThreePhFault_SynGen");
-	gen->setFundamentalParametersPU(nomPower, nomPhPhVoltRMS, nomFreq, poleNum, nomFieldCurr,
+	gen->setParametersFundamentalPerUnit(nomPower, nomPhPhVoltRMS, nomFreq, poleNum, nomFieldCurr,
 		Rs, Ll, Lmd, Lmq, Rfd, Llfd, Rkd, Llkd, Rkq1, Llkq1, Rkq2, Llkq2, H,
 		initActivePower, initReactivePower, initTerminalVolt, initVoltAngle, fieldVoltage, mechPower);
 
@@ -92,7 +92,6 @@ int main(int argc, char* argv[]) {
 	auto logger = DataLogger::make(simName);
 	logger->addAttribute("v1", n1->attribute("v"));
 	logger->addAttribute("i_gen", gen->attribute("i_intf"));
-	logger->addAttribute("i_load", res->attribute("i_intf"));
 
 	// System
 	auto sys = SystemTopology(60, SystemNodeList{n1}, SystemComponentList{gen, res, fault});

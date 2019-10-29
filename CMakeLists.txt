@@ -53,9 +53,7 @@ find_package(PythonInterp 3.6)
 find_package(PythonLibs 3.6)
 find_package(Sundials)
 
-if (NOT WIN32)
-	find_package(OpenMP)
-endif()
+find_package(OpenMP)
 
 find_package(GSL)
 find_package(VILLASnode)
@@ -110,6 +108,11 @@ if(COMPARE_REFERENCE)
 	  INSTALL_COMMAND	""
 	)
 endif()
+
+message("Compiler Release Flags:")
+message(${CMAKE_CXX_FLAGS_RELEASE})
+message("Compiler Debug Flags:")
+message(${CMAKE_CXX_FLAGS_DEBUG})
 
 if(TOPLEVEL_PROJECT)
 	# Show feature summary

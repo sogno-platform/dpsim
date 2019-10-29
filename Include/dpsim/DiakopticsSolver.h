@@ -34,10 +34,18 @@ namespace DPsim {
 	class DiakopticsSolver : public Solver, public CPS::AttributeList {
 	private:
 		struct Subnet {
+			/// Nodes assigned to this subnetwork
 			typename CPS::Node<VarType>::List nodes;
+			/// Components assigned to this subnetwork
 			CPS::MNAInterface::List components;
 			/// Size in system matrix (i.e. including virtual nodes)
 			UInt sysSize;
+			/// Offset for the imaginary part
+			UInt mCmplOff;
+			/// Number of real network nodes
+			UInt mRealNetNodeNum;
+			/// Number of virtual network nodes
+			UInt mVirtualNodeNum;
 			/// Offset of block in system matrix
 			UInt sysOff;
 			/// Factorization of the subnet's block
@@ -51,11 +59,13 @@ namespace DPsim {
 		String mName;
 		Real mTimeStep;
 		Real mSystemFrequency;
+		/// System list
+		CPS::SystemTopology mSystem;
 
 		/// Left side vector logger
-		DataLogger mLeftVectorLog;
+		std::shared_ptr<DataLogger> mLeftVectorLog;
 		/// Right side vector logger
-		DataLogger mRightVectorLog;
+		std::shared_ptr<DataLogger> mRightVectorLog;
 
 		std::vector<Subnet> mSubnets;
 		std::unordered_map<typename CPS::Node<VarType>::Ptr, Subnet*> mNodeSubnetMap;
@@ -84,10 +94,10 @@ namespace DPsim {
 		/// Voltages across the removed network
 		Matrix mTearVoltages;
 
-		void init(const CPS::SystemTopology& system);
+		void init(CPS::SystemTopology& system);
 
 		void initSubnets(const std::vector<CPS::SystemTopology>& subnets);
-		void createVirtualNodes(int net);
+		void collectVirtualNodes(int net);
 		void assignSimNodes(int net);
 		void setSubnetSize(int net, UInt nodes);
 

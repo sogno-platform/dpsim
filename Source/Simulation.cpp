@@ -23,8 +23,6 @@
 #include <algorithm>
 #include <typeindex>
 
-#include <spdlog/sinks/stdout_color_sinks.h>
-
 #include <dpsim/SequentialScheduler.h>
 #include <dpsim/Simulation.h>
 #include <dpsim/Utils.h>
@@ -32,6 +30,8 @@
 #include <dpsim/MNASolver.h>
 #include <dpsim/NRPSolver.h>
 #include <dpsim/DiakopticsSolver.h>
+
+#include <spdlog/sinks/stdout_color_sinks.h>
 
 #ifdef WITH_CIM
   #include <cps/CIM/Reader.h>
@@ -50,6 +50,7 @@ Simulation::Simulation(String name,	Logger::Level logLevel) :
 	mName(name), mLogLevel(logLevel) {
 
 	addAttribute<String>("name", &mName, Flags::read);
+	addAttribute<Real>("time_step", &mTimeStep, Flags::read);
 	addAttribute<Real>("final_time", &mFinalTime, Flags::read|Flags::write);
 	addAttribute<Bool>("steady_state_init", &mSteadyStateInit, Flags::read|Flags::write);
 	addAttribute<Bool>("split_subnets", &mSplitSubnets, Flags::read|Flags::write);
@@ -61,7 +62,7 @@ Simulation::Simulation(String name,	Logger::Level logLevel) :
 	mSLog = Logger::get(name, logLevel);
 	mSLog->set_pattern("[%L] %v");
 
-	mCLog = spdlog::stderr_color_mt(name + "_console");
+	mCLog = spdlog::stdout_color_mt(name + "_console");
 	mCLog->set_level(logLevel);
 	mCLog->set_pattern(fmt::format("{}[%T.%f %n %^%l%$] %v", CPS::Logger::prefix()));
 
@@ -97,10 +98,10 @@ void Simulation::initialize() {
 
 	switch (mDomain) {
 	case Domain::DP:
-		createSolvers<Complex>(mSystem, mSolverType, mSteadyStateInit, mSplitSubnets, mTearComponents);
+		createSolvers<Complex>(mSystem, mTearComponents);
 		break;
 	case Domain::EMT:
-		createSolvers<Real>(mSystem, mSolverType, mSteadyStateInit, mSplitSubnets, mTearComponents);
+		createSolvers<Real>(mSystem, mTearComponents);
 		break;
 	case Domain::SP:
 		mSolvers.push_back(std::make_shared<NRpolarSolver>(mName, mSystem, mTimeStep, mDomain, mLogLevel));
@@ -116,55 +117,15 @@ void Simulation::initialize() {
 }
 
 template <typename VarType>
-void Simulation::splitSubnets(const SystemTopology& system, std::vector<SystemTopology>& splitSystems) {
-	std::unordered_map<typename Node<VarType>::Ptr, int> subnet;
-	int numberSubnets = checkTopologySubnets<VarType>(system, subnet);
-	if (numberSubnets == 1) {
-		splitSystems.push_back(system);
-	} else {
-		std::vector<Component::List> components(numberSubnets);
-		std::vector<TopologicalNode::List> nodes(numberSubnets);
+void Simulation::createSolvers(
+	CPS::SystemTopology& system,
+	Component::List& tearComponents) {
 
-		// Split nodes into subnet groups
-		for (auto node : system.mNodes) {
-			auto pnode = std::dynamic_pointer_cast<Node<VarType>>(node);
-			if (!pnode || node->isGround())
-				continue;
-
-			nodes[subnet[pnode]].push_back(node);
-		}
-
-		// Split components into subnet groups
-		for (auto comp : system.mComponents) {
-			auto pcomp = std::dynamic_pointer_cast<PowerComponent<VarType>>(comp);
-			if (!pcomp) {
-				// TODO this should only be signal components.
-				// Proper solution would be to pass them to a different "solver"
-				// since they are actually independent of which solver we use
-				// for the electric part.
-				// Just adding them to an arbitrary solver for now has the same effect.
-				components[0].push_back(comp);
-				continue;
-			}
-			for (UInt nodeIdx = 0; nodeIdx < pcomp->terminalNumber(); nodeIdx++) {
-				if (!pcomp->node(nodeIdx)->isGround()) {
-					components[subnet[pcomp->node(nodeIdx)]].push_back(comp);
-					break;
-				}
-			}
-		}
-		for (int currentNet = 0; currentNet < numberSubnets; currentNet++) {
-			splitSystems.emplace_back(system.mSystemFrequency, nodes[currentNet], components[currentNet]);
-		}
-	}
-}
-
-template <typename VarType>
-void Simulation::createSolvers(const CPS::SystemTopology& system, Solver::Type solverType,
-	Bool steadyStateInit, Bool doSplitSubnets, const Component::List& tearComponents) {
 	std::vector<SystemTopology> subnets;
-	if (doSplitSubnets && tearComponents.size() == 0)
-		splitSubnets<VarType>(system, subnets);
+	// The Diakoptics solver splits the system at a later point.
+	// That is why the system is not split here if tear components exist.
+	if (mSplitSubnets && tearComponents.size() == 0)
+		system.splitSubnets<VarType>(subnets);
 	else
 		subnets.push_back(system);
 
@@ -176,14 +137,19 @@ void Simulation::createSolvers(const CPS::SystemTopology& system, Solver::Type s
 		// TODO in the future, here we could possibly even use different
 		// solvers for different subnets if deemed useful
 		Solver::Ptr solver;
-		switch (solverType) {
+		switch (mSolverType) {
 			case Solver::Type::MNA:
 				if (tearComponents.size() > 0) {
 					solver = std::make_shared<DiakopticsSolver<VarType>>(mName,
 						subnets[net], tearComponents, mTimeStep, mLogLevel);
 				} else {
-					solver = std::make_shared<MnaSolver<VarType>>(mName + copySuffix,
-						subnets[net], mTimeStep, mDomain, mLogLevel, steadyStateInit, mDownSampleRate, mHarmParallel);
+					solver = std::make_shared<MnaSolver<VarType>>(
+						mName + copySuffix, mDomain, mLogLevel);
+					solver->setTimeStep(mTimeStep);
+					solver->doSteadyStateInitialization(mSteadyStateInit);
+					solver->doFrequencyParallelization(mHarmParallel);
+					solver->setSystem(subnets[net]);
+					solver->initialize();
 				}
 				break;
 #ifdef WITH_SUNDIALS
@@ -197,6 +163,8 @@ void Simulation::createSolvers(const CPS::SystemTopology& system, Solver::Type s
 		mSolvers.push_back(solver);
 	}
 
+	// Some components require a dedicated ODE solver.
+	// This solver is independet of the system solver.
 #ifdef WITH_SUNDIALS
 	for (auto comp : system.mComponents) {
 		auto odeComp = std::dynamic_pointer_cast<ODEInterface>(comp);
@@ -208,63 +176,6 @@ void Simulation::createSolvers(const CPS::SystemTopology& system, Solver::Type s
 		}
 	}
 #endif /* WITH_SUNDIALS */
-}
-
-template <typename VarType>
-int Simulation::checkTopologySubnets(const SystemTopology& system, std::unordered_map<typename Node<VarType>::Ptr, int>& subnet) {
-	std::unordered_map<typename Node<VarType>::Ptr, typename Node<VarType>::List> neighbours;
-
-	for (auto comp : system.mComponents) {
-		auto pcomp = std::dynamic_pointer_cast<PowerComponent<VarType>>(comp);
-		if (!pcomp)
-			continue;
-		for (UInt nodeIdx1 = 0; nodeIdx1 < pcomp->terminalNumberConnected(); nodeIdx1++) {
-			for (UInt nodeIdx2 = 0; nodeIdx2 < nodeIdx1; nodeIdx2++) {
-				auto node1 = pcomp->node(nodeIdx1);
-				auto node2 = pcomp->node(nodeIdx2);
-				if (node1->isGround() || node2->isGround())
-					continue;
-				neighbours[node1].push_back(node2);
-				neighbours[node2].push_back(node1);
-			}
-		}
-	}
-
-	int currentNet = 0;
-	size_t totalNodes = system.mNodes.size();
-	for (auto tnode : system.mNodes) {
-		auto node = std::dynamic_pointer_cast<Node<VarType>>(tnode);
-		if (!node || tnode->isGround()) {
-			totalNodes--;
-		}
-	}
-
-	while (subnet.size() != totalNodes) {
-		std::list<typename Node<VarType>::Ptr> nextSet;
-
-		for (auto tnode : system.mNodes) {
-			auto node = std::dynamic_pointer_cast<Node<VarType>>(tnode);
-			if (!node || tnode->isGround())
-				continue;
-
-			if (subnet.find(node) == subnet.end()) {
-				nextSet.push_back(node);
-				break;
-			}
-		}
-		while (!nextSet.empty()) {
-			auto node = nextSet.front();
-			nextSet.pop_front();
-
-			subnet[node] = currentNet;
-			for (auto neighbour : neighbours[node]) {
-				if (subnet.find(neighbour) == subnet.end())
-					nextSet.push_back(neighbour);
-			}
-		}
-		currentNet++;
-	}
-	return currentNet;
 }
 
 void Simulation::sync() {
@@ -452,7 +363,7 @@ void Simulation::run() {
 	sync();
 #endif
 
-	mCLog->info("Start simulation.");
+	mCLog->info("Start simulation: {}", mName);
 
 	while (mTime < mFinalTime) {
 		step();
@@ -496,4 +407,17 @@ void Simulation::reset() {
 
 	// Force reinitialization for next run
 	mInitialized = false;
+}
+
+void Simulation::logStepTimes(String logName) {
+	auto stepTimeLog = Logger::get(logName, Logger::Level::info);
+	Logger::setLogPattern(stepTimeLog, "%v");
+	stepTimeLog->info("step_time");
+
+	Real stepTimeSum = 0;
+	for (auto meas : mStepTimes) {
+		stepTimeSum += meas;
+		stepTimeLog->info("{:f}", meas);
+	}
+	std::cout << "Average step time: " << stepTimeSum / mStepTimes.size() << std::endl;
 }

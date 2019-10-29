@@ -79,18 +79,26 @@ namespace DPsim {
 		Solver::Type mSolverType = Solver::Type::MNA;
 		///
 		Solver::List mSolvers;
-		///
+		/// Determines if steady-state initialization
+		/// should be executed prior to the simulation.
+		/// By default the initialization is disabled.
 		Bool mSteadyStateInit = false;
-		///
-		Bool mSplitSubnets = false;
-		///
+		/// Determines if the network should be split
+		/// into subnetworks at decoupling lines.
+		/// If the system is split, each subsystem is
+		/// solved by a dedicated MNA solver.
+		Bool mSplitSubnets = true;
+		/// If tearing components exist, the Diakoptics
+		/// solver is selected automatically.
 		CPS::Component::List mTearComponents = CPS::Component::List();
-		///
+		/// Determines if the system matrix is split into
+		/// several smaller matrices, one for each frequency.
+		/// This can only be done if the network is composed
+		/// of linear components that do no create cross
+		/// frequency coupling.
 		Bool mHarmParallel = false;
 		///
 		Bool mInitialized = false;
-		///
-		Int mDownSampleRate = 1;
 
 		// #### Task dependencies und scheduling ####
 		/// Scheduler used for task scheduling
@@ -129,10 +137,7 @@ namespace DPsim {
 			CPS::Logger::Level logLevel = CPS::Logger::Level::info);
 
 		template <typename VarType>
-		void createSolvers(const CPS::SystemTopology& system, Solver::Type solverType, Bool steadyStateInit, Bool splitSubnets, const CPS::Component::List& tearComponents);
-
-		template <typename VarType>
-		static int checkTopologySubnets(const CPS::SystemTopology& system, std::unordered_map<typename CPS::Node<VarType>::Ptr, int>& subnet);
+		void createSolvers(CPS::SystemTopology& system, CPS::Component::List& tearComponents);
 
 		void prepSchedule();
 	public:
@@ -197,9 +202,6 @@ namespace DPsim {
 		/// Reset internal state of simulation
 		void reset();
 
-		///
-		template <typename VarType>
-		static void splitSubnets(const CPS::SystemTopology& system, std::vector<CPS::SystemTopology>& splitSystems);
 		/// Schedule an event in the simulation
 		void addEvent(Event::Ptr e) {
 			mEvents.addEvent(e);
@@ -208,6 +210,9 @@ namespace DPsim {
 		void addLogger(DataLogger::Ptr logger) {
 			mLoggers.push_back(logger);
 		}
+		/// Write step time measurements to log file
+		void logStepTimes(String logName);
+
 #ifdef WITH_SHMEM
 		///
 		void addInterface(Interface *eint, Bool syncStart = true) {

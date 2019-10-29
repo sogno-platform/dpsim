@@ -24,19 +24,23 @@
 using namespace CPS;
 using namespace DPsim;
 
-RealTimeSimulation::RealTimeSimulation(String name, SystemTopology system, Real timeStep, Real finalTime,
-		Domain domain, Solver::Type type, Logger::Level logLevel, Bool steadyStateInit)
-	: Simulation(name, system, timeStep, finalTime, domain, type, logLevel, steadyStateInit),
-	mTimeStep(timeStep),
-	mTimer()
-{
-	addAttribute<Real>("time_step", &mTimeStep, Flags::read);
+RealTimeSimulation::RealTimeSimulation(String name, Logger::Level logLevel)
+	: Simulation(name, logLevel), mTimer() {
+
 	addAttribute<Int >("overruns", nullptr, [=](){ return mTimer.overruns(); }, Flags::read);
 	//addAttribute<Int >("overruns", nullptr, nullptr, Flags::read);
 }
 
-void RealTimeSimulation::run(const Timer::StartClock::duration &startIn)
-{
+RealTimeSimulation::RealTimeSimulation(String name, SystemTopology system, Real timeStep, Real finalTime,
+		Domain domain, Solver::Type type, Logger::Level logLevel, Bool steadyStateInit)
+	: Simulation(name, system, timeStep, finalTime, domain, type, logLevel, steadyStateInit),
+	mTimer() {
+
+	addAttribute<Int >("overruns", nullptr, [=](){ return mTimer.overruns(); }, Flags::read);
+	//addAttribute<Int >("overruns", nullptr, nullptr, Flags::read);
+}
+
+void RealTimeSimulation::run(const Timer::StartClock::duration &startIn) {
 	run(Timer::StartClock::now() + startIn);
 }
 
@@ -44,9 +48,9 @@ void RealTimeSimulation::run(const Timer::StartClock::time_point &startAt) {
 	if (!mInitialized)
 		initialize();
 
+#ifdef WITH_SHMEM
 	mCLog->info("Opening interfaces.");
 
-#ifdef WITH_SHMEM
 	for (auto ifm : mInterfaces)
 		ifm.interface->open(mCLog);
 
@@ -69,6 +73,8 @@ void RealTimeSimulation::run(const Timer::StartClock::time_point &startAt) {
 	} while (mTime < mFinalTime);
 
 	mCLog->info("Simulation finished.");
+
+	mScheduler->stop();
 
 #ifdef WITH_SHMEM
 	for (auto ifm : mInterfaces)

@@ -72,7 +72,8 @@ int main(int argc, char* argv[]) {
 
 	// Components
 	auto gen = Ph3::SynchronGeneratorDQODE::make("DP_SynGen", Logger::Level::debug);
-	gen->setFundamentalParametersPU(nomPower, nomPhPhVoltRMS, nomFreq, poleNum, nomFieldCurr,
+	gen->setParametersFundamentalPerUnit(
+		nomPower, nomPhPhVoltRMS, nomFreq, poleNum, nomFieldCurr,
 		Rs, Ll, Lmd, Lmq, Rfd, Llfd, Rkd, Llkd, Rkq1, Llkq1, Rkq2, Llkq2, H,
 		initActivePower, initReactivePower, initTerminalVolt, initVoltAngle, fieldVoltage, mechPower);
 
@@ -90,9 +91,6 @@ int main(int argc, char* argv[]) {
 
 	// Logging
 	auto logger = DataLogger::make(simName);
-	//logger->addAttribute("v1", n1->attribute("v"));
-	//logger->addAttribute("i_gen", gen->attribute("i_intf"));
-	//logger->addAttribute("i_load", res->attribute("i_intf"));
 	logger->addAttribute("v1", n1->attributeMatrixComp("v"));
 	logger->addAttribute("i_gen", gen->attributeMatrixComp("i_intf"));
 	logger->addAttribute("i_load", res->attributeMatrixComp("i_intf"));

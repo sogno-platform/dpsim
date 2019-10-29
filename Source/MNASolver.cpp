@@ -28,9 +28,8 @@ namespace DPsim {
 
 template <typename VarType>
 MnaSolver<VarType>::MnaSolver(String name,
-	Real timeStep, CPS::Domain domain, CPS::Logger::Level logLevel) :
-	Solver(name, logLevel),
-	mTimeStep(timeStep), mDomain(domain) {
+	CPS::Domain domain, CPS::Logger::Level logLevel) :
+	Solver(name, logLevel), mDomain(domain) {
 
 	// Raw source and solution vector logging
 	mLeftVectorLog = std::make_shared<DataLogger>(name + "_LeftVector", logLevel != CPS::Logger::Level::off);
@@ -38,23 +37,14 @@ MnaSolver<VarType>::MnaSolver(String name,
 }
 
 template <typename VarType>
-MnaSolver<VarType>::MnaSolver(String name, CPS::SystemTopology system,
-	Real timeStep, CPS::Domain domain,
-	CPS::Logger::Level logLevel, Bool steadyStateInit,
-	Int downSampleRate, Bool harmParallel) :
-	MnaSolver(name, timeStep, domain, logLevel) {
-	mSteadyStateInit = steadyStateInit;
-	mDownSampleRate = downSampleRate;
-	mHarmParallel = harmParallel;
-	initialize(system);
+void MnaSolver<VarType>::setSystem(CPS::SystemTopology system) {
+	mSystem = system;
 }
 
 template <typename VarType>
-void MnaSolver<VarType>::initialize(CPS::SystemTopology system) {
-	mSLog->info("Solver domain {}", static_cast<Int>(mDomain));
+void MnaSolver<VarType>::initialize() {
 	mSLog->info("---- Start initialization ----");
 	mSLog->info("-- Process system components");
-	mSystem = system;
 	for (auto comp : mSystem.mComponents)
 		mSLog->info("Added {:s} '{:s}' to simulation.", comp->type(), comp->name());
 
@@ -74,7 +64,7 @@ void MnaSolver<VarType>::initialize(CPS::SystemTopology system) {
 	createEmptyVectors();
 	createEmptySystemMatrix();
 	// Register attribute for solution vector
-	if (mHarmParallel) {
+	if (mFrequencyParallel) {
 		mSLog->info("Computing network harmonics in parallel.");
 		for(Int freq = 0; freq < mSystem.mFrequencies.size(); freq++) {
 			addAttribute<Matrix>("left_vector_"+std::to_string(freq), mLeftSideVectorHarm.data()+freq, Flags::read);
@@ -149,7 +139,7 @@ void MnaSolver<Complex>::initializeComponents() {
 		comp->initialize(mSystem.mSystemOmega, mTimeStep);
 
 	mSLog->info("-- Initialize MNA properties of components");
-	if (mHarmParallel) {
+	if (mFrequencyParallel) {
 		// Initialize MNA specific parts of components.
 		for (auto comp : mPowerComponents) {
 			// Initialize MNA specific parts of components.
@@ -181,7 +171,7 @@ void MnaSolver<VarType>::initializeSystem() {
 	mSLog->info("-- Initialize MNA system matrices and source vector");
 	mRightSideVector.setZero();
 
-	if (mHarmParallel) {
+	if (mFrequencyParallel) {
 		for (UInt i = 0; i < std::pow(2,mSwitches.size()); i++) {
 			for(Int freq = 0; freq < mSystem.mFrequencies.size(); freq++)
 				mSwitchedMatricesHarm[std::bitset<SWITCH_NUM>(i)][freq].setZero();
@@ -192,7 +182,7 @@ void MnaSolver<VarType>::initializeSystem() {
 			mSwitchedMatrices[std::bitset<SWITCH_NUM>(i)].setZero();
 	}
 
-	if (mHarmParallel) {
+	if (mFrequencyParallel) {
 		for(Int freq = 0; freq < mSystem.mFrequencies.size(); freq++) {
 			// Create system matrix if no switches were added
 			for (auto comp : mPowerComponents)
@@ -258,7 +248,7 @@ void MnaSolver<VarType>::identifyTopologyObjects() {
 	}
 
 	for (UInt i = 0; i < mNodes.size(); i++)
-		mSLog->info("Found node {:s}", mNodes[i]->name());;
+		mSLog->info("Added node {:s}", mNodes[i]->name());;
 
 	for (auto comp : mSystem.mComponents) {
 		auto swComp = std::dynamic_pointer_cast<CPS::MNASwitchInterface>(comp);
@@ -308,7 +298,7 @@ void MnaSolver<Real>::createEmptyVectors() {
 
 template<>
 void MnaSolver<Complex>::createEmptyVectors() {
-	if (mHarmParallel) {
+	if (mFrequencyParallel) {
 		for(Int freq = 0; freq < mSystem.mFrequencies.size(); freq++) {
 			mRightSideVectorHarm.push_back(Matrix::Zero(2*(mNumSimNodes), 1));
 			mLeftSideVectorHarm.push_back(Matrix::Zero(2*(mNumSimNodes), 1));
@@ -334,7 +324,7 @@ void MnaSolver<Complex>::createEmptySystemMatrix() {
 	if (mSwitches.size() > SWITCH_NUM)
 		throw SystemError("Too many Switches.");
 
-	if (mHarmParallel) {
+	if (mFrequencyParallel) {
 		for (UInt i = 0; i < std::pow(2,mSwitches.size()); i++) {
 			for(Int freq = 0; freq < mSystem.mFrequencies.size(); freq++) {
 				mSwitchedMatricesHarm[std::bitset<SWITCH_NUM>(i)].push_back(
@@ -488,7 +478,7 @@ Task::List MnaSolver<VarType>::getTasks() {
 			l.push_back(task);
 		}
 	}
-	if (mHarmParallel) {
+	if (mFrequencyParallel) {
 		for (UInt i = 0; i < mSystem.mFrequencies.size(); i++)
 			l.push_back(std::make_shared<MnaSolver<VarType>::SolveTaskHarm>(*this, false, i));
 	} else {
@@ -551,7 +541,7 @@ void MnaSolver<VarType>::log(Real time) {
 
 template <typename VarType>
 void MnaSolver<VarType>::logSystemMatrices() {
-	if (mHarmParallel) {
+	if (mFrequencyParallel) {
 		for (UInt i = 0; i < mSwitchedMatricesHarm[std::bitset<SWITCH_NUM>(0)].size(); i++) {
 			mSLog->info("System matrix for frequency: {:d} \n{:s}", i,
 				Logger::matrixToString(mSwitchedMatricesHarm[std::bitset<SWITCH_NUM>(0)][i]));
@@ -566,10 +556,8 @@ void MnaSolver<VarType>::logSystemMatrices() {
 	}
 	else {
 		if (mSwitches.size() < 1) {
-			mSLog->info("System matrix: \n{:s}",
-				Logger::matrixToString(mSwitchedMatrices[std::bitset<SWITCH_NUM>(0)]));
-			mSLog->info("LU decomposition: \n{:s}",
-				Logger::matrixToString(mLuFactorizations[std::bitset<SWITCH_NUM>(0)].matrixLU()));
+			mSLog->info("System matrix: \n{}", mSwitchedMatrices[std::bitset<SWITCH_NUM>(0)]);
+			mSLog->info("LU decomposition: \n{}",	mLuFactorizations[std::bitset<SWITCH_NUM>(0)].matrixLU());
 		}
 		else {
 			mSLog->info("Initial switch status: {:s}", mCurrentSwitchStatus.to_string());
@@ -581,7 +569,7 @@ void MnaSolver<VarType>::logSystemMatrices() {
 					sys.first.to_string(), Logger::matrixToString(mLuFactorizations[sys.first].matrixLU()));
 			}
 		}
-		mSLog->info("Right side vector: \n{:s}", Logger::matrixToString(mRightSideVector));
+		mSLog->info("Right side vector: \n{}", mRightSideVector);
 	}
 }
 

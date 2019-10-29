@@ -47,6 +47,12 @@ namespace DPsim {
 		CPS::Logger::Level mLogLevel;
 		///
 		CPS::Logger::Log mSLog;
+		/// Time step for fixed step solvers
+		Real mTimeStep;
+		///
+		Bool mFrequencyParallel = false;
+		/// Switch to trigger steady-state initialization
+		Bool mSteadyStateInit = false;
 
 	public:
 		typedef std::shared_ptr<Solver> Ptr;
@@ -67,5 +73,23 @@ namespace DPsim {
 		virtual CPS::Task::List getTasks() = 0;
 		/// Log results
 		virtual void log(Real time) { };
+
+		// #### Solver settings ####
+		///
+		void setTimeStep(Real timeStep) {
+			mTimeStep = timeStep;
+		}
+		///
+		void doFrequencyParallelization(Bool freqParallel) {
+			mFrequencyParallel = freqParallel;
+		}
+		///
+		void doSteadyStateInitialization(Bool steadyStateInit) {
+			mSteadyStateInit = steadyStateInit;
+		}
+		///
+		virtual void setSystem(CPS::SystemTopology system) {}
+		///
+		virtual void initialize() {}
 	};
 }

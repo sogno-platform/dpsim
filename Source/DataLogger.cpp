@@ -100,16 +100,26 @@ void DataLogger::logDataLine(Real time, const MatrixComp& data) {
 	mLogFile << '\n';
 }
 
-void DataLogger::logPhasorNodeValues(Real time, const Matrix& data) {
+void DataLogger::logPhasorNodeValues(Real time, const Matrix& data, Int freqNum) {
 	if (mLogFile.tellp() == std::ofstream::pos_type(0)) {
 		std::vector<String> names;
-		for (Int i = 0; i < data.rows(); i++) {
-			std::stringstream name;
-			if (i < data.rows() / 2)
-				name << "node" << std::setfill('0') << std::setw(5) << i << ".re";
-			else
-				name << "node" << std::setfill('0') << std::setw(5) << (i - data.rows() / 2) << ".im";
-			names.push_back(name.str());
+
+		Int harmonicOffset = data.rows() / freqNum;
+		Int complexOffset = harmonicOffset / 2;
+
+		for (Int freq = 0; freq < freqNum; freq++) {
+			for (Int node = 0; node < complexOffset; node++) {
+				std::stringstream name;
+				name << "n" << std::setfill('0') << std::setw(5) << node
+						<< "f" << std::setfill('0') << std::setw(2) << freq << ".re";
+				names.push_back(name.str());
+			}
+			for (Int node = 0; node < complexOffset; node++) {
+				std::stringstream name;
+				name << "n" << std::setfill('0') << std::setw(5) << node
+						<< "f" << std::setfill('0') << std::setw(2) << freq << ".im";
+				names.push_back(name.str());
+			}
 		}
 		setColumnNames(names);
 	}
@@ -178,13 +188,15 @@ void DataLogger::addAttribute(const String &name, CPS::MatrixRealAttribute::Ptr 
 	}
 	else if (m.cols() == 1) {
 		for (UInt k = 0; k < m.rows(); k++) {
-			addAttribute(name + "(" + std::to_string(k) + ")", attrMat->coeff(k, 0));
+			addAttribute(name + "_" + std::to_string(k),
+				attrMat->coeff(k, 0));
 		}
 	}
 	else {
 		for (UInt k = 0; k < m.rows(); k++) {
 			for (UInt l = 0; l < m.cols(); l++) {
-				addAttribute(name + "(" + std::to_string(k) + ", " + std::to_string(l) + ")", attrMat->coeff(k, l));
+				addAttribute(name + "_" + std::to_string(k) + "_" + std::to_string(l) + "_",
+					attrMat->coeff(k, l));
 			}
 		}
 	}

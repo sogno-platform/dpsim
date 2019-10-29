@@ -42,8 +42,7 @@ namespace DPsim {
 	class MnaSolver : public Solver, public CPS::AttributeList {
 	protected:
 		// General simulation settings
-		/// System time step is constant for MNA solver
-		Real mTimeStep;
+
 		/// Simulation domain, which can be dynamic phasor (DP) or EMT
 		CPS::Domain mDomain;
 		/// Number of nodes
@@ -86,16 +85,14 @@ namespace DPsim {
 		Matrix mLeftSideVector;
 		std::vector<Matrix> mLeftSideVectorHarm;
 		std::vector< CPS::Attribute<Matrix>::Ptr > mLeftVectorHarmAttributes;
-		/// Switch to trigger steady-state initialization
-		Bool mSteadyStateInit = false;
+
 		/// Map of system matrices where the key is the bitset describing the switch states
 		std::unordered_map< std::bitset<SWITCH_NUM>, Matrix > mSwitchedMatrices;
 		std::unordered_map< std::bitset<SWITCH_NUM>, std::vector<Matrix> > mSwitchedMatricesHarm;
 		/// Map of LU factorizations related to the system matrices
 		std::unordered_map< std::bitset<SWITCH_NUM>, CPS::LUFactorized > mLuFactorizations;
 		std::unordered_map< std::bitset<SWITCH_NUM>, std::vector<CPS::LUFactorized> > mLuFactorizationsHarm;
-		///
-		Bool mHarmParallel = false;
+
 
 		// #### Attributes related to switching ####
 		/// Index of the next switching event
@@ -106,15 +103,11 @@ namespace DPsim {
 		// #### Attributes related to logging ####
 		/// Last simulation time step when log was updated
 		Int mLastLogTimeStep = 0;
-		/// Down sampling rate for log
-		Int mDownSampleRate = 1;
 		/// Left side vector logger
 		std::shared_ptr<DataLogger> mLeftVectorLog;
 		/// Right side vector logger
 		std::shared_ptr<DataLogger> mRightVectorLog;
 
-		/// TODO: check that every system matrix has the same dimensions
-		void initialize(CPS::SystemTopology system);
 		/// Initialization of individual components
 		void initializeComponents();
 		/// Initialization of system matrices and source vector
@@ -139,23 +132,19 @@ namespace DPsim {
 	public:
 		/// This constructor should not be called by users.
 		MnaSolver(String name,
-			Real timeStep,
 			CPS::Domain domain = CPS::Domain::DP,
 			CPS::Logger::Level logLevel = CPS::Logger::Level::info);
 
-		/// Constructor to be used in simulation examples.
-		MnaSolver(String name, CPS::SystemTopology system,
-			Real timeStep,
-			CPS::Domain domain = CPS::Domain::DP,
-			CPS::Logger::Level logLevel = CPS::Logger::Level::info,
-			Bool steadyStateInit = false,
-			Int downSampleRate = 1,
-			Bool harmParallel = false);
 		///
 		virtual ~MnaSolver() { };
 
+		///
+		void setSystem(CPS::SystemTopology system);
+		/// TODO: check that every system matrix has the same dimensions
+		void initialize();
 		/// Log left and right vector values for each simulation step
 		void log(Real time);
+
 		// #### Getter ####
 		///
 		Matrix& leftSideVector() { return mLeftSideVector; }

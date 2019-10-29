@@ -25,16 +25,16 @@
 
 #include <vector>
 
-#include <villas/sample.h>
-#include <villas/shmem.h>
-
+#include <cps/Logger.h>
 #include <dpsim/Config.h>
 #include <dpsim/Definitions.h>
 #include <dpsim/Scheduler.h>
 #include <cps/Attribute.h>
 #include <cps/Task.h>
 #include <cps/PtrFactory.h>
-#include <cps/Logger.h>
+
+#include <villas/sample.h>
+#include <villas/shmem.h>
 
 namespace DPsim {
 

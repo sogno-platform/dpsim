@@ -9,44 +9,23 @@ endif()
 # targets
 set(CIRCUIT_SOURCES
 	# Dynamic phasor examples
-	Circuits/DP_VS_R1.cpp
-	Circuits/DP_CS_R1.cpp
 	Circuits/DP_VS_RL1.cpp
-	Circuits/DP_VS_RL2.cpp
-	Circuits/DP_VS_RC1.cpp	
-	Circuits/DP_CS_R2CL.cpp
-	Circuits/DP_VS_CS_R4.cpp
-	Circuits/DP_VS_R2L3.cpp
-
-	DP_Basics/DP_VS_RL_f60.cpp
-	DP_Basics/DP_VS_RL_f60_largeTs.cpp
-	DP_Basics/DP_VS_RL_f60_vlargeTs.cpp
-	DP_Basics/DP_VS_RL_f500.cpp
-	DP_Basics/DP_VS_RL_f500_largeTs.cpp
-	DP_Basics/DP_VS_RL_f500_ph500.cpp
-
-	#Circuits/DP_VS_PiLine_R.cpp
+	Circuits/DP_Circuits.cpp
+	Circuits/DP_Basics_DP_Sims.cpp	
+	Circuits/DP_PiLine.cpp
+	Circuits/DP_DecouplingLine.cpp
+	Circuits/DP_Diakoptics.cpp
 	#Circuits/DP_VS_Trafo_R.cpp
 	#Circuits/DP_ResVS_RL_Switch.cpp
 	
-	# EMT examples
-	Circuits/EMT_VS_R1.cpp
-	Circuits/EMT_VS_RC1.cpp
-	Circuits/EMT_CS_R1.cpp
+	# EMT examples	
 	Circuits/EMT_VS_RL1.cpp
-	Circuits/EMT_CS_R2CL.cpp
-	Circuits/EMT_VS_R2L3.cpp
-	Circuits/EMT_VS_CS_R4_AC.cpp
-	Circuits/EMT_VS_CS_R4_DC.cpp	
-
-	DP_Basics/EMT_VS_RL_f60.cpp
-	DP_Basics/EMT_VS_RL_f60_largeTs.cpp
-	DP_Basics/EMT_VS_RL_f500.cpp
-	
+	Circuits/EMT_Circuits.cpp
+	Circuits/DP_Basics_EMT_Sims.cpp	
 	#Circuits/EMT_ResVS_RL_Switch.cpp
 
 	# EMT and DP studies
-	#VariableTimeStep/RXLine_LoadStep_FreqStep_1.cpp	
+	Circuits/DP_EMT_RL_SourceStep.cpp
 )
 
 set(SYNCGEN_SOURCES	
@@ -54,12 +33,15 @@ set(SYNCGEN_SOURCES
 	Components/DP_SynGenDq7odTrapez_ThreePhFault.cpp
 	Components/DP_SynGenTrStab_SteadyState.cpp
 	Components/DP_SynGenTrStab_LoadStep.cpp
+	Components/DP_EMT_SynGenDq7odTrapez_SteadyState.cpp
+	Components/DP_EMT_SynGenDq7odTrapez_ThreePhFault.cpp
+	Components/DP_EMT_SynGenDq7odTrapez_LoadStep.cpp
 )
 
 set(INVERTER_SOURCES
-	Inverter/DP_Inverter_Grid_Test.cpp
-	Inverter/DP_Inverter_Grid_Test_Parallel.cpp
-	Inverter/DP_Vsrc_Grid_Parallel.cpp
+	Components/DP_Inverter_Grid.cpp
+	Components/DP_Inverter_Grid_Parallel_FreqSplit.cpp
+	Components/DP_Inverter_Grid_Sequential_FreqSplit.cpp	
 )
 
 if(WITH_SUNDIALS)
@@ -67,6 +49,9 @@ if(WITH_SUNDIALS)
 		Components/DP_SynGenDq7odODE_SteadyState.cpp
 		Components/DP_SynGenDq7odODE_ThreePhFault.cpp
 		Components/DP_Multimachine_DQ_Parallel.cpp
+		Components/DP_EMT_SynGenDq7odODE_SteadyState.cpp
+		Components/DP_EMT_SynGenDq7odODE_ThreePhFault.cpp
+		Components/DP_EMT_SynGenDq7odODE_LoadStep.cpp
 	)
 
 	set(DAE_SOURCES
@@ -76,8 +61,8 @@ endif()
 
 if(WITH_RT)
 	set(RT_SOURCES
-		RealTime/RT_DP_CS_R_1.cpp
-		RealTime/RT_DP_ResVS_RL1.cpp
+		RealTime/RT_DP_CS_R1.cpp
+		RealTime/RT_DP_VS_RL2.cpp
 	)
 endif()
 
@@ -113,6 +98,10 @@ if(WITH_CIM)
 
 		CIM/IEEE_LV_PowerFlowTest.cpp
 		CIM/IEEE_LV_PowerFlowTest_LP.cpp
+
+		CIM/WSCC_9bus_mult_decoupled.cpp
+		CIM/WSCC_9bus_mult_coupled.cpp
+		CIM/WSCC_9bus_mult_diakoptics.cpp
 	)
 
 	if(WITH_RT)
@@ -121,12 +110,6 @@ if(WITH_CIM)
 			RealTime/RT_CIGRE_MV_PowerFlowTest.cpp
 		)
 	endif()
-endif()
-
-if(WITH_CIM AND WITH_OPENMP)
-	set(CIM_OPENMP_SOURCES
-		CIM/WSCC-9bus_CIM_mult.cpp
-	)
 endif()
 
 if(WITH_CIM AND WITH_SHMEM)

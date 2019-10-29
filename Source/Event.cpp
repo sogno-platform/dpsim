@@ -33,7 +33,7 @@ void EventQueue::handleEvents(Real currentTime) {
 
 	while (!mEvents.empty()) {
 		e = mEvents.top();
-		if (e->mTime > currentTime)
+		if (e->mTime >= currentTime)
 			break;
 
 		e->execute();

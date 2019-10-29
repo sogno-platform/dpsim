@@ -26,11 +26,14 @@ using namespace DPsim;
 using namespace CPS::DP;
 using namespace CPS::DP::Ph3;
 
-double doSim(std::shared_ptr<Scheduler> scheduler, int generators) {
+void doSim(int threads, int generators, int repNumber) {
 	// Define simulation parameters
 	Real timeStep = 0.00005;
 	Real finalTime = 0.3;
-	String name = "DP_Multimachine_DQ";
+	String name = "DP_Multimachine_th" + std::to_string(threads)
+		+ "_gen" + std::to_string(generators)
+		+ "_rep" + std::to_string(repNumber);
+	Logger::setLogDir("logs/"+name);
 
 	// Define machine parameters in per unit
 	Real nomPower = 555e6;
@@ -60,82 +63,83 @@ double doSim(std::shared_ptr<Scheduler> scheduler, int generators) {
 	Real fieldVoltage = 7.0821;
 
 	// Define grid parameters
-	Real Rload = 0.96;
-	Real Rline = 0.032;
-	Real Rsnub = 25;
+	Real Rload = 1.92;
+	Real Rline = 1e6;
+	Real Rcenter = 1e6;
 
-	std::vector<Complex> initVoltN1 = std::vector<Complex>({
-		Complex(initTerminalVolt * cos(initVoltAngle), initTerminalVolt * sin(initVoltAngle)),
-		Complex(initTerminalVolt * cos(initVoltAngle - 2 * PI / 3), initTerminalVolt * sin(initVoltAngle - 2 * PI / 3)),
-		Complex(initTerminalVolt * cos(initVoltAngle + 2 * PI / 3), initTerminalVolt * sin(initVoltAngle + 2 * PI / 3)) });
-	auto n_load = Node::make("n3", PhaseType::ABC);
+	auto initVoltGen = std::vector<Complex>({
+		Complex(initTerminalVolt * cos(initVoltAngle),
+			initTerminalVolt * sin(initVoltAngle)),
+		Complex(initTerminalVolt * cos(initVoltAngle - 2 * PI / 3),
+			initTerminalVolt * sin(initVoltAngle - 2 * PI / 3)),
+		Complex(initTerminalVolt * cos(initVoltAngle + 2 * PI / 3),
+			initTerminalVolt * sin(initVoltAngle + 2 * PI / 3)) });
+	auto nodeCenter = Node::make("n_center", PhaseType::ABC);
 
-	SystemNodeList nodes({n_load});
+	SystemNodeList nodes({nodeCenter});
 	SystemComponentList components;
 
 	for (int i = 0; i < generators; i++) {
-		auto node = Node::make("n" + std::to_string(i), PhaseType::ABC, initVoltN1);
+		auto node = Node::make("n_" + std::to_string(i), PhaseType::ABC, initVoltGen);
 		nodes.push_back(node);
 
 		auto gen = Ph3::SynchronGeneratorDQODE::make("Gen" + std::to_string(i));
-		gen->setFundamentalParametersPU(nomPower, nomPhPhVoltRMS, nomFreq, poleNum, nomFieldCurr,
+		gen->setParametersFundamentalPerUnit(
+			nomPower, nomPhPhVoltRMS, nomFreq, poleNum, nomFieldCurr,
 			Rs, Ll, Lmd, Lmq, Rfd, Llfd, Rkd, Llkd, Rkq1, Llkq1, Rkq2, Llkq2, H,
-			initActivePower, initReactivePower, initTerminalVolt, initVoltAngle, fieldVoltage, initMechPower);
-		gen->connect({node});
-		components.push_back(gen);
+			initActivePower, initReactivePower, initTerminalVolt,
+			initVoltAngle, fieldVoltage, initMechPower);
 
 		auto line = Ph3::SeriesResistor::make("R_line" + std::to_string(i));
 		line->setParameters(Rline);
-		line->connect({node, n_load});
-		components.push_back(line);
 
-		auto snub = Ph3::SeriesResistor::make("R_snub" + std::to_string(i));
-		snub->setParameters(Rsnub);
-		snub->connect({node, Node::GND});
-		components.push_back(snub);
+		auto genLoad = Ph3::SeriesResistor::make("R_gen_load" + std::to_string(i));
+		genLoad->setParameters(Rload);
+
+		// Connections
+		gen->connect({node});
+		line->connect({node, nodeCenter});
+		genLoad->connect({node, Node::GND});
+
+		components.push_back(gen);
+		components.push_back(line);
+		components.push_back(genLoad);
 	}
 
-	auto load = Ph3::SeriesResistor::make("R_load");
-	load->setParameters(Rload);
-	load->connect({n_load, Node::GND});
-	components.push_back(load);
+	auto centerLoad = Ph3::SeriesResistor::make("R_center");
+	centerLoad->setParameters(Rcenter);
+	centerLoad->connect({nodeCenter, Node::GND});
+	components.push_back(centerLoad);
 
 	// System
 	auto sys = SystemTopology(60, nodes, components);
 
+	// Logging
+	//auto logger = DataLogger::make(name);
+	//logger->addAttribute("v1", n1->attribute("v"));
+	//logger->addAttribute("i_load", res->attribute("i_intf"));
+
 	// Simulation
-	Simulation sim(name, sys, timeStep, finalTime,
-		Domain::DP, Solver::Type::MNA, Logger::Level::off);
-
-	sim.setScheduler(scheduler);
-	sim.run();
-
-	Real tot = 0;
-	for (auto meas : sim.stepTimes()) {
-		tot += meas;
+	Simulation sim(name, Logger::Level::off);
+	sim.setSystem(sys);
+	sim.setTimeStep(timeStep);
+	sim.setFinalTime(finalTime);
+	sim.setDomain(Domain::DP);
+	if (threads > 0) {
+		// Scheduler
+		auto sched = std::make_shared<ThreadLevelScheduler>(threads);
+		sim.setScheduler(sched);
 	}
-	return tot / sim.stepTimes().size();
+
+	sim.run();
+	sim.logStepTimes(name + "_step_times");
 }
 
 int main(int argc, char* argv[]) {
-	int reps = 50;
-	std::vector<int> threads_choices = {1};
-	std::cout << "generators";
-	for (auto threads : threads_choices) {
-		std::cout << ", thread_level" << threads;
-	}
-	std::cout << std::endl;
-	for (int generators = 1; generators < 20; generators++) {
-		std::cout << generators;
-		for (auto threads : threads_choices) {
-			Real tot = 0;
-			for (int rep = 0; rep < reps; rep++) {
-				auto sched = std::make_shared<ThreadLevelScheduler>(threads);
-				tot += doSim(sched, generators);
-			}
-			Real avg = tot / reps;
-			std::cout << "," << avg;
-		}
-		std::cout << std::endl;
-	}
+	CommandLineArgs args(argc, argv);
+
+	std::cout << "Simulate with " << Int(args.options["gen"]) << " generators, "
+		<< Int(args.options["threads"]) << " threads, sequence number "
+		<< Int(args.options["seq"]) << std::endl;
+	doSim(Int(args.options["threads"]), Int(args.options["gen"]), Int(args.options["seq"]));
 }
