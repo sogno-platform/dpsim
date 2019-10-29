@@ -198,8 +198,7 @@ deploy:docs:
     - generate:docs
   only:
     - tags
-    - master
-    - development
+    - deploy
   tags:
     - fein-deploy
     - shell
