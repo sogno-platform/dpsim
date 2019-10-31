@@ -73,12 +73,13 @@ void DP_SynGenDq7odTrapez_LoadStep(Real timeStep, Real finalTime, Real breakerCl
 	auto n1 = CPS::DP::Node::make("n1", PhaseType::ABC, initVoltN1);
 
 	// Components
-	auto gen = CPS::DP::Ph3::SynchronGeneratorDQTrapez::make("SynGen");
+	auto gen = CPS::DP::Ph3::SynchronGeneratorDQTrapez::make("SynGen", CPS::Logger::Level::info);
 	gen->setParametersFundamentalPerUnit(
 		nomPower, nomPhPhVoltRMS, nomFreq, poleNum, nomFieldCurr,
 		Rs, Ll, Lmd, Lmq, Rfd, Llfd, Rkd, Llkd, Rkq1, Llkq1, Rkq2, Llkq2, H,
 		initActivePower, initReactivePower, initTerminalVolt,
 		initVoltAngle, fieldVoltage, initMechPower);
+	gen->setMultisamplingRate(1);
 
 	auto res = CPS::DP::Ph3::SeriesResistor::make("R_load", Logger::Level::info);
 	res->setParameters(Rload);
