@@ -11,6 +11,9 @@ logs/
 logs_*/
 wheelhouse/
 *.csv
+*.pdf
+*.svg
+*.png
 
 # Folders
 Libraries/
