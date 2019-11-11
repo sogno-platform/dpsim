@@ -69,5 +69,10 @@ int main(int argc, char *argv[]) {
 	sim.addLogger(logger);
 	sim.run();
 
+	//std::ofstream ofTopo("topology_graph.svg");
+	//sys.topologyGraph().render(ofTopo);
+	//std::ofstream ofDep("task_dependencies.svg");
+	//sim.dependencyGraph().render(ofDep);
+
 	return 0;
 }
