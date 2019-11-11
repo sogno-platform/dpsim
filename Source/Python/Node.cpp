@@ -159,10 +159,30 @@ PyObject * Python::Node<VarType>::gnd(PyObject *self, PyObject *args) {
 }
 
 template<typename VarType>
+const char* Python::Node<VarType>::docSetInitialVoltage =
+"set_initial_voltage\n"
+"Set the initial voltage at this node.\n";
+template<typename VarType>
+void Python::Node<VarType>::setInitialVoltage(PyObject *self, PyObject *args, PyObject *kwds) {
+
+	Py_complex initVoltage;
+	CPS::Int phaseIndex;
+
+	static const char *kwlist[] = {"voltage", "index", nullptr};
+
+	if (!PyArg_ParseTupleAndKeywords(args, kwds, "Di", (char **) kwlist, &initVoltage, &phaseIndex))
+		return;
+
+	Python::Node<VarType>* pyNode = (Python::Node<VarType>*) self;
+	pyNode->node->setInitialVoltage(CPS::Complex(initVoltage.real,initVoltage.imag), phaseIndex);
+}
+
+template<typename VarType>
 PyMethodDef Python::Node<VarType>::methods[] = {
 	{"initial_voltage", (PyCFunction) Python::Node<VarType>::initialVoltage, METH_NOARGS, (char*) Python::Node<VarType>::docInitialVoltage},
 	{"voltage", (PyCFunction) Python::Node<VarType>::voltage, METH_NOARGS, (char*) Python::Node<VarType>::docVoltage},
 	{"GND", (PyCFunction) Python::Node<VarType>::gnd, METH_NOARGS | METH_STATIC, (char *) Python::Node<VarType>::docGND},
+	{"set_initial_voltage", (PyCFunction) Python::Node<VarType>::setInitialVoltage, METH_VARARGS | METH_KEYWORDS, (char *) Python::Node<VarType>::docSetInitialVoltage},
 	{nullptr, nullptr, 0, nullptr}
 };
 
