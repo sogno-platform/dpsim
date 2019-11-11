@@ -53,11 +53,14 @@ namespace Python {
 		static PyObject* voltage(PyObject *self, PyObject *args);
 		static PyObject* gnd(PyObject *self, PyObject *args);
 
+		static void setInitialVoltage(PyObject *self, PyObject *args, PyObject *kwds);
+
 		static const char *name;
 		static const char *doc;
 		static const char *docInitialVoltage;
 		static const char *docVoltage;
 		static const char *docGND;
+		static const char *docSetInitialVoltage;
 		static PyMethodDef methods[];
 		static PyTypeObject type;
 
