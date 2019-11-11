@@ -27,20 +27,20 @@ using namespace CPS::EMT::Ph1;
 
 int main(int argc, char* argv[]) {
 	// Define simulation scenario
-	Real timeStep = 1e-3;
-	Real finalTime = 1e-2;
+	Real timeStep = 1e-4;
+	Real finalTime = 1e-3;
 	String simName = "EMT_CS_RL1";
 	Logger::setLogDir("logs/"+simName);
 
 	// Nodes
-	auto n1 = Node::make("n1");
+	auto n1 = Node::make("n1", PhaseType::Single, std::vector<Complex>{ 2 });
 
 	// Components
-	auto cs = CurrentSource::make("cs");
+	auto cs = CurrentSource::make("cs", Logger::Level::info);
 	cs->setParameters(Complex(10, 0), 0);
 	auto r1 = Resistor::make("r_1");
 	r1->setParameters(0.2);
-	auto l1 = Inductor::make("l_1");
+	auto l1 = Inductor::make("l_1", Logger::Level::info);
 	l1->setParameters(0.001);
 
 	// Topology
@@ -49,7 +49,7 @@ int main(int argc, char* argv[]) {
 	l1->connect(Node::List{ n1, Node::GND });
 
 	// Define system topology
-	auto sys = SystemTopology(0, SystemNodeList{n1}, SystemComponentList{cs, r1, l1});
+	auto sys = SystemTopology(50, SystemNodeList{n1}, SystemComponentList{cs, r1, l1});
 
 	// Logger
 	auto logger = DataLogger::make(simName);
