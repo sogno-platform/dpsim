@@ -163,7 +163,7 @@ const char* Python::Node<VarType>::docSetInitialVoltage =
 "set_initial_voltage\n"
 "Set the initial voltage at this node.\n";
 template<typename VarType>
-void Python::Node<VarType>::setInitialVoltage(PyObject *self, PyObject *args, PyObject *kwds) {
+PyObject* Python::Node<VarType>::setInitialVoltage(PyObject *self, PyObject *args, PyObject *kwds) {
 
 	Py_complex initVoltage;
 	CPS::Int phaseIndex;
@@ -171,10 +171,12 @@ void Python::Node<VarType>::setInitialVoltage(PyObject *self, PyObject *args, Py
 	static const char *kwlist[] = {"voltage", "index", nullptr};
 
 	if (!PyArg_ParseTupleAndKeywords(args, kwds, "Di", (char **) kwlist, &initVoltage, &phaseIndex))
-		return;
+		Py_RETURN_NONE;
 
 	Python::Node<VarType>* pyNode = (Python::Node<VarType>*) self;
 	pyNode->node->setInitialVoltage(CPS::Complex(initVoltage.real,initVoltage.imag), phaseIndex);
+
+	Py_RETURN_NONE;
 }
 
 template<typename VarType>

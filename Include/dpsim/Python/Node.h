@@ -53,7 +53,7 @@ namespace Python {
 		static PyObject* voltage(PyObject *self, PyObject *args);
 		static PyObject* gnd(PyObject *self, PyObject *args);
 
-		static void setInitialVoltage(PyObject *self, PyObject *args, PyObject *kwds);
+		static PyObject* setInitialVoltage(PyObject *self, PyObject *args, PyObject *kwds);
 
 		static const char *name;
 		static const char *doc;
