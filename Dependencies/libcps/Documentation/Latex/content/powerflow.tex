@@ -1,0 +1,189 @@
+\chapter{Powerflow}
+
+\section{Theoretical Background}
+
+\subsection{Introduction}
+The power flow problem is a well known problem in the field of power systems engineering, where voltage magnitudes and angles for one set of buses are calculated. The solution is obtained from a given set of voltage magnitudes and power levels for a specific model of the network configuration. The power flow solution exhibits the voltages and angles at all buses and real and reactive flows can be deduced from the same. 
+
+\subsection{Power System Model}
+Power systems are modeled as a network of buses (nodes) and branches (lines). To a network bus components such a generator, load, and transmission substation can be connected. Each bus in the power network is fully described by the following four electrical quantities:
+\begin{itemize}
+	\item $\vert V_{k} \vert$: the voltage magnitude 
+	\item $\theta_{k}$: the voltage phase angle
+	\item $P_{k}$: the active power
+	\item $Q_{k}$: the reactive power  
+\end{itemize}
+There are three types of networks buses: VD bus, PV bus and PQ bus. Depending on the type of the bus, two of the four electrical quantities are specified as shown in Table \ref{Tab:Network_bus_type}.
+
+\begin{table}[]
+\centering
+\begin{tabular}{cccc} 
+\hline
+ \textbf{Bus Type}         	&\textbf{ Known }                                        	& \textbf{Unknown}                 \\ \hline
+ $VD$              		& $\vert \underbar{V}_{k} \vert, \theta_{k}$   				& $P_{k}, Q_{k}$            \\
+ $PV$               		&  $P_{k}, \vert \underbar{V}_{k} \vert$          			& $Q_{k}, \theta_{k}$    \\
+ $PQ$              			& $P_{k}, Q_{k}$                             				& $\vert \underbar{V}_{k} \vert, \theta_{k}$ \\
+\hline
+\end{tabular}
+\caption{Network bus types. $k$: index of the bus}
+\label{Tab:Network_bus_type}
+\end{table}
+
+\subsection{Single Phase Power Flow Problem}
+The powerflow problem can be expressed by the goal to bring a mismatch function $\vec{f}$ to zero. The value of the mismatch function depends on a solution vector  $\vec{x}$:
+
+\begin{align}
+	\vec{f}(\vec{x}) = 0
+	\label{equation:Target_equation}
+ \end{align}
+
+
+\noindent As $\vec{f} (\vec{x})$ will be nonlinear, the equation system will be solved with Newton-Raphson using:
+\begin{align}
+   - \textbf{J} (\vec{x}) \Delta \vec{x} = \vec{f} (\vec{x})
+   \label{equation:NR_formula}
+\end{align}
+
+where $\Delta \vec{x}$ is the correction of the solution vector and $\textbf{J} (\vec{x})$ is the Jacobian matrix. The solution vector  $\vec{x}$ represents the voltage  $\vec{V}$ by polar or cartesian quantities. The mismatch function  $\vec{f}$ will either represent the power mismatch $\Delta \vec{S}$ in terms of  
+
+\begin{align*}
+	\left [ \begin{array}{c} \Delta \vec{P} \\ \Delta \vec{Q}  \end{array} \right ]
+ \end{align*}
+
+\noindent or the current mismatch $\Delta \vec{I}$ in terms of  
+
+\begin{align*}
+	\left [ \begin{array}{c} \Delta \vec{I_{real}} \\ \Delta \vec{I_{imag}}  \end{array} \right ]
+\end{align*}
+
+\noindent where the vectors split the complex quantities into real and imaginary parts. Futhermore, the solution vector $\vec{x}$ will represent either $\vec{V}$ either by polar coordinates 
+
+\begin{align*}
+	\left [ \begin{array}{c} \vec{\delta} \\ \vert \vec{V} \vert  \end{array} \right ]
+\end{align*}
+
+\noindent or rectangular coordinates
+
+\begin{align*}
+	\left [ \begin{array}{c} \vec{V_{real}} \\ \vec{V_{imag}}  \end{array} \right ].
+\end{align*}
+
+\noindent This results in four different formulations of the powerflow problem:
+
+\begin{enumerate}
+	\item Powerflow problem with power mismatch function and polar coordinates
+	\item Powerflow problem with power mismatch function and rectangular coordinates
+	\item Powerflow problem with current mismatch function and polar coordinates
+	\item Powerflow problem with current mismatch function and rectangular coordinates  
+\end{enumerate}
+
+\noindent To solve the problem using \ref{equation:NR_formula}, we need to formulate $\textbf{J} (\vec{x})$ and $\vec{f} (\vec{x})$ for each powerflow problem formulation.
+
+\subsubsection{Powerflow Problem with Power Mismatch Function and Polar Coordinates}
+\paragraph{Formulation of Mismatch Function}\mbox{}\\
+
+\noindent The injected power at a node $k$ is given by:
+\begin{align}
+	\label{Equation:Complex_Power}
+   \underbar{S}_{k} = \underbar{V}_{k} \underbar{I} _{k}^{*}
+\end{align}
+The current injection into any bus $k$ may be expressed as:
+\begin{align}
+	\label{Equation:Current_Injection}
+   \underbar{I}_{k} = \sum_{j=1}^{N} \underbar{Y}_{kj} \underbar{V}_{j}
+\end{align}
+Substitution of eq. (\ref{Equation:Current_Injection}) into eq. (\ref{Equation:Complex_Power}) yields:
+\begin{align}
+	\label{Equation:Complex_Power2}
+   \underbar{S}_{k} = \underbar{V}_{k} \left ( \sum_{j=1}^{N} \underbar{Y}_{kj} \underbar{V}_{j} \right )^{*}
+   = \underbar{V}_{k} \sum_{j=1}^{N} \underbar{Y}_{kj}^{*} \underbar{V}_{j} ^{*}
+\end{align}
+We may define $G_{kj}$ and $B_{kj}$ as the real and imaginary parts of the admittance matrix element $\underbar{Y}_{kj}$ respectively, so that $\underbar{Y}_{kj} = G_{kj} + jB_{kj}$. Then we may rewritte eq. (\ref{Equation:Complex_Power2}) as
+\begin{align}
+   \underbar{S}_{k} &= \underbar{V}_{k} \sum_{j=1}^{N} \underbar{Y}_{kj}^{*} \underbar{V}_{j}^{*}  \nonumber \\
+   							   &= \vert \underbar{V}_{k} \vert \angle \theta_{k} \sum_{j=1}^{N} (G_{kj} + jB_{kj})^{*} ( \vert \underbar{V}_{j} \vert \angle \theta_{j})^{*} \nonumber \\
+   							   &= \vert \underbar{V}_{k} \vert \angle \theta_{k} \sum_{j=1}^{N} (G_{kj} - jB_{kj}) ( \vert \underbar{V}_{j} \vert \angle  - \theta_{j})  \nonumber  \\
+   							   &= \sum_{j=1} ^{N} \vert \underbar{V}_{k} \vert \angle \theta_{k} ( \vert \underbar{V}_{j} \vert \angle - \theta_{j})  (G_{kj} - jB_{kj})  \nonumber \\
+   							   &= \sum_{j=1} ^{N} \left ( \vert \underbar{V}_{k} \vert \vert \underbar{V}_{j} \vert \angle (\theta_{k} - \theta_{j}) \right )  (G_{kj} - jB_{kj})   \nonumber \\
+   							   &= \sum_{j=1} ^{N} \vert \underbar{V}_{k} \vert \vert \underbar{V}_{j} \vert  \left ( cos(\theta_{k} - \theta_{j}) + jsin(\theta_{k} - \theta_{j}) \right )  (G_{kj} - 				 									jB_{kj})  \label{Equation:Complex_Power3}
+\end{align}
+If we now perform the algebraic multiplication of the two terms inside the parentheses of \ref{Equation:Complex_Power3}, and the collect real and imaginary parts, and recall that $\underbar{S}_{k} = P_{k} + jQ_{k}$, we can express \ref{Equation:Complex_Power3} as two equations: one for the real part, $P_{k}$, and one for the imaginary part, $Q_{k}$, according to:
+\begin{align}
+	{P}_{k} = \sum_{j=1}^{N} \vert \underbar{V}_{k} \vert \vert \underbar{V}_{j} \vert \left ( G_{kj}cos(\theta_{k} - \theta_{j}) + B_{kj} sin(\theta_{k} - \theta_{j}) \right )  \label{Equation:Powerflow_equation_1} \\
+	{Q}_{k} = \sum_{j=1}^{N} \vert \underbar{V}_{k} \vert \vert \underbar{V}_{j} \vert \left ( G_{kj}sin(\theta_{k} - \theta_{j}) - B_{kj} cos(\theta_{k} - \theta_{j}) \right ) \label{Equation:Powerflow_equation_2}
+\end{align}
+The equations (\ref{Equation:Powerflow_equation_1}) and (\ref{Equation:Powerflow_equation_2}) are called the power flow equations, and they form the fundamental building block from which we solve the power flow problem. 
+
+We consider a power system network having $N$ buses. We assume one VD bus, $N_{PV}-1$ PV buses and $N-N_{PV}$ PQ buses. We assume that the VD bus is numbered bus $1$, the PV buses are numbered $2,...,N_{PV}$, and the PQ buses are numbered $N_{PV}+1,...,N$. We define the vector of unknown as the composite vector of unknown angles $\vec{\theta}$ and voltage magnitudes $\vert  \vec{\underline{V}} \vert$:
+\begin{align}
+\vec{x} = \left [ \begin{array}{c} \vec{\theta} \\ \vert  \vec{\underline{V}} \vert \\ \end{array} \right ]
+			 = \left[ \begin{array}{c} \theta_{2} \\ \theta_{3} \\ \vdots \\ \theta_{N} \\ \vert \underline{ V}_{N_{PV+1}} \vert \\ \vert \underline{ V}_{N_{PV+2}} \vert \\ \vdots \\ \vert \underline{ V_{N} } \vert \end{array} \right]
+ \label{Equation:Solution_vector}
+\end{align}
+The right-hand sides of equations (\ref{Equation:Powerflow_equation_1}) and (\ref{Equation:Powerflow_equation_2}) depend on the elements of the unknown vector $\vec{x}$. Expressing this dependency more explicitly, we rewrite these equations as:
+\begin{align}
+P_{k} = P_{k} (\vec{x}) \Rightarrow P_{k}(\vec{x}) - P_{k} &= 0 \quad \quad k = 2,...,N \\
+Q_{k} = Q_{k} (\vec{x}) \Rightarrow Q_{k} (\vec{x}) - Q_{k} &= 0 \quad \quad k = N_{PV}+1,...,N 
+\end{align}
+We now define the mismatch vector $\vec{f} (\vec{x})$ as:
+\begin{align*}
+\vec{f} (\vec{x}) = \left [ \begin{array}{c} f_{1}(\vec{x})  \\ \vdots \\ f_{N-1}(\vec{x}) \\ ------ \\ f_{N}(\vec{x}) \\ \vdots \\ f_{2N-N_{PV} -1}(\vec{x}) \end{array} \right ] 
+				 = \left [ \begin{array}{c} P_{2}(\vec{x}) - P_{2}  \\ \vdots \\ P_{N}(\vec{x}) - P_{N} \\ --------- \\ Q_{N_{PV}+1}(\vec{x}) - Q_{N_{PV}+1} \\ \vdots \\ Q_{N}(\vec{x}) - Q_{N} 			                   \end{array} \right]
+				 = \left [ \begin{array}{c} \Delta P_{2} \\ \vdots \\ \Delta P_{N} \\ ------ \\ \Delta Q_{N_{PV}+1} \\ \vdots \\ \Delta Q_{N} \end{array} \right ]
+				 = \vec{0}
+\end{align*}
+That is a system of nonlinear equations. This nonlinearity comes from the fact that $P_{k}$ and $Q_{k}$ have terms containing products of some of the unknowns and also terms containing trigonometric functions of some the unknowns. 
+
+\paragraph{Formulation of Jacobian} \mbox{}\\
+
+\noindent As discussed in the previous section the powerflow problem will be solved using  the Newton-Raphson method. Here, the Jacobian matrix is obtained by taking all first-order partial derivates of the power mismatch functions with respect to the voltage angles $\theta_{k}$ and magnitudes $\vert \underline{V}_{k} \vert$ as:
+\begin{align}
+	J_{jk}^{P \theta} &= \frac{\partial P_{j} (\vec{x} ) } {\partial \theta_{k}} = \vert \underline{V}_{j} \vert \vert \underline{V}_{k} \vert \left ( G_{jk} sin(\theta_{j} - \theta_{k}) - 																B_{jk} cos(\theta_{j} - \theta_{k} ) \right ) \\
+	J_{jj}^{P \theta} &= \frac{\partial P_{j}(\vec{x})}{\partial \theta_{j}} = -Q_{j} (\vec{x} ) - B_{jj} \vert V_{j} \vert ^{2} \\
+	J_{jk}^{Q \theta} &= \frac{\partial Q_{j}(\vec{x})}{\partial \theta_{k}} = - \vert \underline{V}_{j} \vert \vert \underline{V}_{k} \vert \left ( G_{jk} cos(\theta_{j} - \theta_{k}) + 																B_{jk} sin(\theta_{j} - \theta_{k}) \right ) \\
+	 J_{jj}^{Q \theta} &= \frac{\partial Q_{j}(\vec{x})}{\partial \theta_{k}} = P_{j} (\vec{x} ) - G_{jj} \vert V_{j} \vert ^{2} \\
+	 J_{jk}^{PV} &= \frac{\partial P_{j} (\vec{x} ) } {\partial \vert \underline{V}_{k} \vert } = \vert \underline{V}_{j} \vert \left ( G_{jk} cos(\theta_{j} - \theta_{k}) + 																B_{jk} sin(\theta_{j} - \theta_{k}) \right ) \\
+	 J_{jj}^{PV} &= \frac{\partial P_{j}(\vec{x})}{\partial \vert \underline{V}_{j} \vert } = \frac{P_{j} (\vec{x} )}{\vert \underline{V}_{j} \vert}  + G_{jj} \vert V_{j} \vert \\
+	 J_{jk}^{QV} &= \frac{\partial Q_{j} (\vec{x} ) } {\partial \vert \underline{V}_{k} \vert } = \vert \underline{V}_{j} \vert \left ( G_{jk} sin(\theta_{j} - \theta_{k}) + 																B_{jk} cos(\theta_{j} - \theta_{k}) \right ) \\
+	 J_{jj}^{QV} &= \frac{\partial Q_{j}(\vec{x})}{\partial \vert \underline{V}_{j} \vert } = \frac{Q_{j} (\vec{x} )}{\vert \underline{V}_{j} \vert}  - B_{jj} \vert V_{j} \vert \\
+\end{align}
+The linear system of Equation (\ref{Equation:Solution_vector}) that is solved in every Newton interation can be wirtten in matrix form as follows:
+
+\begin{align*}
+- \left [ \begin{array}{cccccc} \frac{\partial \Delta P_{2} }{\partial \theta_{2}} & \cdots & \frac{\partial \Delta P_{2} }{\partial \theta_{N}}   &    
+			\frac{\partial \Delta P_{2} }{\partial \vert \underline{V}_{N_{G+1}} \vert}    &   \cdots   &    \frac{\partial \Delta P_{2} }{\partial \vert \underline{V}_{N} \vert}	\\
+			\vdots & \ddots & \vdots   &  \vdots  &   \ddots   &   \vdots	\\ 
+			 \frac{\partial \Delta P_{N} }{\partial \theta_{2}} & \cdots & \frac{\partial \Delta P_{N}}{\partial \theta_{N}}   &    
+			\frac{\partial \Delta P_{N}}{\partial \vert \underline{V}_{N_{G+1}} \vert }    &   \cdots   &    \frac{\partial \Delta P_{N}}{\partial \vert \underline{V}_{N} \vert} \\
+			 \frac{\partial \Delta Q_{N_{G+1}} }{\partial \theta_{2}} & \cdots & \frac{\partial \Delta Q_{N_{G+1}} }{\partial \theta_{N}}   &    
+			\frac{\partial \Delta Q_{N_{G+1}} }{\partial \vert \underline{V}_{N_{G+1}} \vert }    &   \cdots   &    \frac{\partial \Delta Q_{N_{G+1}} }{\partial \vert \underline{V}_{N} \vert}	\\
+			\vdots & \ddots & \vdots   &  \vdots  &   \ddots   &   \vdots	\\ 
+			 \frac{\partial \Delta Q_{N}}{\partial \theta_{2}} & \cdots & \frac{\partial \Delta Q_{N}}{\partial \theta_{N}}   &    
+			\frac{\partial \Delta Q_{N}}{\partial \vert \underline{V}_{N_{G+1}} \vert }  &   \cdots   &    \frac{\partial \Delta Q_{N}}{\partial \vert \underline{V}_{N} \vert}
+			\end{array} \right ]
+\left [ \begin{array}{c} \Delta \theta_{2} \\ \vdots  \\ \Delta \theta_{N}  \\   \Delta \vert \underline{V}_{N_{G+1}} \vert \\ \vdots \\ \Delta \vert \underline{V}_{N} \vert \end{array}  \right ]
+= \left [ \begin{array}{c} \Delta P_{2} \\ \vdots  \\ \Delta P_{N}  \\  \Delta Q_{N_{G+1}} \\ \vdots \\ \Delta Q_{N} \end{array}  \right ]
+\end{align*}
+
+\paragraph{Solution of the Problem} \mbox{}\\
+
+\noindent The solution update formula is given by:
+\begin{align}
+	\vec{x}^{(i+1)} = \vec{x}^{(i)} + \Delta \vec{x}^{(i)} = \vec{x}^{(i)} - \textbf{J}^{-1} \vec{f} (\vec{x}^{(i)})
+	\label{Equation:update_formula}
+\end{align}
+To sum up, the NR algorithm, for application to the power flow problem is:
+\begin{enumerate}
+	\item Set the iteration counter to $i=1$. Use the initial solution $V_{i} = 1 \angle 0^{\circ}$
+	\item Compute the mismatch vector $\vec{f}({\vec{x}})$ using the power flow equations
+	\item Perform the following stopping criterion tests:
+		\begin{itemize}
+			\item If $\vert \Delta P_{i} \vert < \epsilon_{P}$ for all type PQ and PV buses and
+			\item If $\vert \Delta Q_{i} \vert < \epsilon_{Q}$ for all type PQ, \\
+			Then go to step 6 \\
+			Otherwise, go to step 4.
+		\end{itemize}
+	\item Evaluate the Jacobian matrix $\textbf{J}^{(i)}$ and compute $\Delta \vec{x}^{(i)}$ with (\ref{equation:NR_formula}).
+	\item Compute the update solution vector $\vec{x}^{(i+1)}$ with (\ref{Equation:update_formula}). Return to step 3.
+	\item Stop.
+\end{enumerate}

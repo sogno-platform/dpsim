@@ -47,6 +47,19 @@ check_symbol_exists(getopt_long getopt.h HAVE_GETOPT)
 include(GetVersion)
 GetVersion(${PROJECT_SOURCE_DIR} "DPSIM")
 
+find_package(Eigen3 3.0 REQUIRED)
+option(SPDLOG_BUILD_TESTING "Build spdlog tests" OFF)
+option(SPDLOG_BUILD_BENCH "Build spdlog benchmarks" OFF)
+option(SPDLOG_BUILD_EXAMPLES "Build spdlog examples" OFF)
+# Workaround for spdlog in Windows
+# A custom FindSpdlog does not work currently
+option(WITH_SPDLOG_SUBMODULE "Build with Spdlog as submodule" OFF)
+if (WITH_SPDLOG_SUBMODULE OR WIN32)	
+	set(SPDLOG_INCLUDE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/Dependencies/spdlog/include)
+else()
+	find_package(spdlog REQUIRED)
+endif()
+find_package(CIMpp)
 add_subdirectory(Dependencies/libcps)
 
 find_package(PythonInterp 3.6)
