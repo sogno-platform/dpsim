@@ -1,0 +1,292 @@
+\section{Induction Machine}
+
+The model is according to Krause et al. "Analysis of electric machinery and drive systems" (2013). 
+
+\subsection{Equations in Machine Variables}
+
+\subsubsection{Voltage Equations}
+\begin{flushleft}
+The stator and rotor voltages of a three-phase induction machine can be described by
+
+\begin{align*}
+\mathbf{v_{abcs}} = \mathbf{r_s} \mathbf{i_{abcs}} + \frac{d}{dt} \mathbf{\lambda_{abcs}} \\
+\mathbf{v_{abcr}'} = \mathbf{r_r'} \mathbf{i_{abcr}'} + \frac{d}{dt} \mathbf{\lambda_{abcr}'} \\
+\end{align*}
+
+with
+
+\begin{align*}
+\mathbf{r_s} =
+\begin{bmatrix}
+r_s & 0 & 0 \\
+0 & r_s & 0 \\
+0 & 0 & r_s \\
+\end{bmatrix}
+\end{align*}
+
+and 
+
+\begin{align*}
+\mathbf{r_r'} =
+\begin{bmatrix}
+r_r' & 0 & 0 \\
+0 & r_r' & 0 \\
+0 & 0 & r_r' \\
+\end{bmatrix}.
+\end{align*}
+
+The subscript s denotes stator quantities while the subscript r stands for rotor quantities. All rotor quanities are referred to the stator windings taking the turn ratio into account and consequently are being marked by ' sign.
+
+\subsubsection{Flux Linkage Equations}
+The flux linkages of stator and rotor are derived from the currents by
+
+\begin{align*}
+\begin{bmatrix}
+\mathbf{\lambda_{abcs}} \\
+\mathbf{\lambda_{abcr}'}
+\end{bmatrix}
+=
+\begin{bmatrix}
+\mathbf{L_s} & \mathbf{L_{sr}'} \\
+(\mathbf{L_{sr}'})^T & \mathbf{L_r'} \\
+\end{bmatrix}
+\begin{bmatrix}
+\mathbf{i_{abcs}} \\
+\mathbf{i_{abcr'}}
+\end{bmatrix}
+\end{align*}
+
+with 
+
+\begin{align*}
+\mathbf{L_s} =
+\begin{bmatrix}
+L_{ls} + L_{ms} & -\frac{1}{2}L_{ms} & -\frac{1}{2}L_{ms} \\
+-\frac{1}{2}L_{ms} & L_{ls} + L_{ms} & -\frac{1}{2}L_{ms} \\
+-\frac{1}{2}L_{ms} & -\frac{1}{2}L_{ms} & L_{ls} + L_{ms} \\
+\end{bmatrix} \\
+\mathbf{L_r}' =
+\begin{bmatrix}
+L_{lr}' + L_{ms} & -\frac{1}{2}L_{ms} & -\frac{1}{2}L_{ms} \\
+-\frac{1}{2}L_{ms} & L_{lr}' + L_{ms} & -\frac{1}{2}L_{ms} \\
+-\frac{1}{2}L_{ms} & -\frac{1}{2}L_{ms} & L_{lr}' + L_{ms} \\
+\end{bmatrix}
+\end{align*}
+
+and
+
+\begin{align*}
+\mathbf{L_{sr}}' = L_{ms}
+\begin{bmatrix}
+cos \theta_r & cos(\theta_r+\frac{2\pi}{3}) & cos(\theta_r-\frac{2\pi}{3}) \\
+cos(\theta_r-\frac{2\pi}{3}) & cos \theta_r & cos(\theta_r+\frac{2\pi}{3}) \\
+cos(\theta_r+\frac{2\pi}{3}) & cos(\theta_r-\frac{2\pi}{3}) & cos \theta_r \\
+\end{bmatrix}.
+\end{align*}
+
+\subsubsection{Electromechanical Equations}
+The angle $\theta_r$, which appears in the expression for $L_{sr}$, is the electrical angular displacement, which is related to the actual angular displacement of the rotor $\theta_{rm}$ by taking the number of pole pairs $p$ into account:
+
+\begin{align*}
+\theta_r = p\theta_{rm}
+\end{align*}
+
+The produced electromagnetic torque can be calculated from
+
+\begin{align*}
+T_e = pi_{abcs}^T\frac{\partial}{\partial \theta_r}[L_{sr}']i_{abcr}'
+\end{align*}
+
+which is in expanded form
+
+\begin{align*}
+T_e = & -pL_{ms}([i_{as}(i_{ar}'-\frac{1}{2}i_{br}'-\frac{1}{2}i_{cr}')+i_{bs}(-\frac{1}{2}i_{ar}'+i_{br}'-\frac{1}{2}i_{cr}')+i_{cs}(-\frac{1}{2}i_{ar}'-\frac{1}{2}i_{br}'+i_{cr}')]sin \theta_r \\
+& + \frac{\sqrt{3}}{2}[i_{as}(i_{br}'-i_{cr}')+i_{bs}(i_{cr}'-i_{ar}')+i_{cs}(i_{ar}'-i_{br}')]cos \theta_r).
+\end{align*}
+
+The rotor speed can finally be derived in the presence of the load torque $T_L$ from 
+
+\begin{align*}
+T_e = \frac{J}{p}\frac{d}{dt}\omega_r + T_L.
+\end{align*}
+
+\newpage
+\subsection{Equations in Arbitrary Reference Frame}
+\subsubsection{Transformation of Variables}
+To transform the variables of the stator and rotor circuits to the common arbitrary reference frame, transformation matrices are to be applied for stator and rotor variables. For the stator circuits, the variables are changed by 
+
+\begin{align*}
+\mathbf{f_{qd0s}} = \mathbf{K_{s}}\mathbf{f_{abcs}}
+\end{align*}
+
+with
+
+\begin{align*}
+\mathbf{K_{s}} = \frac{2}{3}
+\begin{bmatrix}
+cos \theta & cos(\theta-\frac{2\pi}{3}) & cos(\theta+\frac{2\pi}{3}) \\
+sin \theta & sin(\theta-\frac{2\pi}{3}) & sin(\theta+\frac{2\pi}{3}) \\
+\frac{1}{2} & \frac{1}{2}  & \frac{1}{2} \\
+\end{bmatrix}. \\
+\end{align*}
+
+$\theta$ can be interpreted as the angular position of the arbitrary reference frame relative to the stationary stator circuits, see Figure \ref{fig:TransformationStator}. $\theta$ is derived from the predefined angular velocity of the reference frame using
+
+\begin{align*}
+\frac{d\theta}{dt} = \omega
+\end{align*}
+
+and assuming any initial angular position 
+
+\begin{align*}
+\theta(t=0) = \theta_{0}.
+\end{align*}
+
+\begin{figure}[h]
+	\centering
+	\includegraphics[scale=0.5]{img/TransformationStatorVariables.PNG} 
+	\caption{Transformation of stator variables to arbitrary reference frame (from Krause et al.)}
+	\label{fig:TransformationStator}
+\end{figure}
+
+\newpage
+The variables of the rotor circuits are transformed with
+
+\begin{align*}
+\mathbf{f_{qd0r}'} = \mathbf{K_{r}}\mathbf{f_{abcr}'}
+\end{align*}
+
+being
+
+\begin{align*}
+\mathbf{K_{r}} = \frac{2}{3}
+\begin{bmatrix}
+cos \beta & cos(\beta-\frac{2\pi}{3}) & cos(\beta+\frac{2\pi}{3}) \\
+sin \beta & sin(\beta-\frac{2\pi}{3}) & sin(\beta+\frac{2\pi}{3}) \\
+\frac{1}{2} & \frac{1}{2}  & \frac{1}{2} \\
+\end{bmatrix}.
+\end{align*}
+
+$\beta$ is defined by
+
+\begin{align*}
+\beta = \theta - \theta_{r}. 
+\end{align*}
+
+$\theta_{r}$ is the electrical angular displacement of the rotor, which can be derived from
+
+\begin{align*}
+\frac{d\theta_{r}}{dt} = \omega_{r}.
+\end{align*}
+
+Consequently, $\beta$ can be interpreted as the angle between the arbitrary reference frame and the electrical angular displacement of the rotor, see Figure \ref{fig:TransformationRotor}.
+
+\begin{figure}[h]
+	\centering
+	\includegraphics[scale=0.5]{img/TransformationRotorVariables.PNG} 
+	\caption{Transformation of rotor variables to arbitrary reference frame (from Krause et al.}
+	\label{fig:TransformationRotor}
+\end{figure}
+
+\newpage
+\subsubsection{Voltage Equations}
+
+The transformation of both stator and rotor variables to the arbitrary reference frame yields
+
+\begin{align*}
+\mathbf{v_{qd0s}} &= \mathbf{r_s} \mathbf{i_{qd0s}} + \omega\mathbf{\lambda_{dqs}} + \frac{d}{dt} \mathbf{\lambda_{qd0s}} \\
+\mathbf{v_{qd0r}'} &= \mathbf{r_r'} \mathbf{i_{qd0r}'} + (\omega-\omega_{r})\mathbf{\lambda_{dqr}'} + \frac{d}{dt} \mathbf{\lambda_{qd0r}'} \\
+\end{align*}
+
+where
+
+\begin{align*}
+\mathbf{\lambda_{dqs}}^T = 
+\begin{bmatrix}
+\lambda_{ds} & -\lambda_{qs} & 0 \\
+\end{bmatrix}
+\end{align*}
+
+and
+
+\begin{align*}
+\mathbf{\lambda_{dqr}'}^T = 
+\begin{bmatrix}
+\lambda_{dr}' & -\lambda_{qr}' & 0 \\
+\end{bmatrix}.
+\end{align*}
+
+\subsubsection{Flux Linkage Equations}
+The flux linkage equations after variable transformation to the arbitrary reference frame are
+
+\begin{align*}
+\begin{bmatrix}
+\mathbf{\lambda_{qd0s}} \\
+\mathbf{\lambda_{qd0r}'}
+\end{bmatrix}
+=
+\begin{bmatrix}
+\mathbf{K_s}\mathbf{L_s}\mathbf{K_s^{-1}} & \mathbf{K_s}\mathbf{L_{sr}'}\mathbf{K_r^{-1}} \\
+\mathbf{K_r}(\mathbf{L_{sr}'})^T\mathbf{K_s^{-1}} & \mathbf{K_r}\mathbf{L_r'}\mathbf{K_r^{-1}} \\
+\end{bmatrix}
+\begin{bmatrix}
+\mathbf{i_{qd0s}} \\
+\mathbf{i_{qd0r'}}
+\end{bmatrix}
+\end{align*}
+
+The transformation of $L_{s}$ and $L_{r}'$ yields
+
+\begin{align*}
+\mathbf{K_s}\mathbf{L_s}\mathbf{K_s^{-1}} =
+\begin{bmatrix}
+L_{ls} + L_{M} & 0 & 0 \\
+0 & L_{ls} + L_{M} & 0 \\
+0 & 0 & L_{ls} \\
+\end{bmatrix} \\
+\mathbf{K_r}\mathbf{L_r'}\mathbf{K_r^{-1}} =
+\begin{bmatrix}
+L_{lr}' + L_{M} & 0 & 0 \\
+0 & L_{lr}' + L_{M} & 0 \\
+0 & 0 & L_{lr}' \\
+\end{bmatrix}
+\end{align*}
+
+with
+
+\begin{align*}
+L_{M} = \frac{3}{2}L_{ms}.
+\end{align*}
+
+Furthermore, it can be shown that
+
+\begin{align*}
+\mathbf{K_s}\mathbf{L_{sr}'}\mathbf{K_r^{-1}} = \mathbf{K_r}(\mathbf{L_{sr}'})^T\mathbf{K_s^{-1}} =
+\begin{bmatrix}
+L_{M} & 0 & 0 \\
+0 & L_{M} & 0 \\
+0 & 0 & 0 \\
+\end{bmatrix}.
+\end{align*}
+
+\subsubsection{Electromechanical Equations}
+The produced electromagnetic torque in the arbitrary reference frame is
+
+\begin{align*}
+T_e = \frac{3}{2}pL_M(i_{qs}i_{dr}'-i_{ds}i_{qr}').
+\end{align*}
+
+Then, the electrical angular velocity $\omega_r$ can be derived from 
+
+\begin{align*}
+\frac{d}{dt}\omega_r = \frac{p}{J}(T_e - T_L).
+\end{align*}
+
+The actual rotor speed $\omega_{rm}$ is calculated from the electrical angular velocity $\omega_r$ using
+
+\begin{align*}
+\omega_r = p\omega_{rm}.
+\end{align*}
+
+
+\end{flushleft}

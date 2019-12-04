@@ -1,0 +1,846 @@
+\chapter{Appendix}
+
+\section{Implementatory Aspects}
+
+\begin{itemize}
+	\item Pre-Step
+	\begin{itemize}
+		\item To calculate from the solutions of $k$ (e.g. $V_L(k)$ and $I_L(k)$), values required for $k+1$ (e.g. $A_L(k+1)$)
+	\end{itemize}
+	\item Step
+	\begin{itemize}
+		\item Calculate the system solution for $k+1$
+	\end{itemize}
+	\item Post-Step
+	\begin{itemize}
+		\item To deduce from the $k+1$ solution (e.g. $V_L(k+1)$) further $k+1$ quantities (e.g. $I_L(k+1)$)
+		\item Note: no update of $A_L$ yet, as it remains set to the value on which the $k+1$ solution is based
+	\end{itemize}
+\end{itemize}
+
+\section{Per Unit System}
+The per unit system is defined by the power rating $S_{base}$, voltage $V_{base}$ and nominal frequency $f_{base}$. It should be noted that the power rating could be defined for three-phase or single-phase and the voltage could be peak or RMS and phase-to-neutral or phase-to-phase.
+
+Here we assume that the power rating is three-phase and the voltage is a phase-to-phase RMS value. Then, the per unit system is calculated as follows. 
+\begin{equation}
+    \omega_{base} = 2\pi \cdot f_{base}
+\end{equation}
+\begin{equation}
+    I_{base} = \frac{S_{base}}{\sqrt{3} \cdot V_{base}}
+\end{equation}
+\begin{equation}
+    Z_{base} = \frac{V_{base}^2}{S_{base}}
+\end{equation}
+\begin{equation}
+    L_{base} = \frac{V_{base}^2}{\omega_{base} \cdot S_{base}} = \frac{Z_{base}}{\omega_{base}} 
+\end{equation}
+\begin{equation}
+    C_{base} = \frac{S_{base}}{\omega_{base} \cdot V_{base}^2} = \frac{1}{\omega_{base} \cdot Z_{base}} 
+\end{equation}
+\begin{equation}
+    \Psi_{base} = L_{base} \cdot I_{base}
+\end{equation}
+
+\section{Common Reference-Frames}
+\subsection{dq-Transform}
+Variables referred to rotating reference frame.
+\subsection{$\alpha\beta$-Transform}
+Variables referred to stationary reference frame.
+\subsection{Symmetrical Components}
+Asymmetrical set of phasors expressed as linear combination of symmetrical set of phasors.  
+
+\subsubsection{Calculation of impedances in symetrical components}
+In case of a symmetrical series impedance :
+\begin{equation}
+    Z_{0} = A + 2B
+\end{equation}
+\begin{equation}
+    Z_{1} = Z_{2} = A - B
+\end{equation}
+
+For a symmetrical parallel admittance where $A$ is the admittance to ground and $B$ is the admittance between lines:
+\begin{equation}
+    Y_{0} = A
+\end{equation}
+\begin{equation}
+    Y_{1} = Y_{2} = A + 3B
+\end{equation}
+
+\section{Synchronous Machine Prerequisites}
+
+\subsection{Magnetic Circuits}
+ 
+Considering the magnetic circuit of figure \ref{fig:MagneticCircuit} with two magnetically coupled windings with number of turns $N_1$ and $N_2$, resistance $r_1$ and $r_2$ and currents $i_1$ and $i_2$ respectively, the flux linkage with the respective windings, produced by the total effect of both currents are given by equations \ref{eq:FluxLinkage1} and \ref{eq:FluxLinkage2}.
+
+\begin{equation} \label{eq:FluxLinkage1}
+	\lambda_1 = N_1(\Phi_{l1} + \Phi_{m1} + \Phi_{m2})
+\end{equation}
+\begin{equation} \label{eq:FluxLinkage2}
+	\lambda_2 = N_2(\Phi_{l2} + \Phi_{m2} + \Phi_{m1})
+\end{equation}
+\\
+where
+
+$\Phi_{m1}$ is the mutual flux linking both windings due to current $i_1$;
+
+$\Phi_{m2}$ is the mutual flux linking both windings due to current $i_2$;
+
+$\Phi_{l1}$ is the leakage flux linking winding 1 only;
+
+$\Phi_{l2}$ is the leakage flux linking winding 2 only.
+
+\begin{figure}[h]
+	\centering
+	\includegraphics[scale=0.6]{img/MagneticCircuit.png} 
+	\caption{Magnetically coupled circuit}
+	\label{fig:MagneticCircuit}
+\end{figure}
+
+The flux linkage can also be expressed in terms of self and mutual inductance as in equation \ref{eq:FluxLinkageInductances}
+
+\begin{equation} \label{eq:FluxLinkageInductances}
+	\begin{bmatrix}
+		\lambda_1\\
+		\lambda_2
+	\end{bmatrix}
+		=
+	\begin{bmatrix}
+		L_{11} & L_{12}\\
+		L_{21} & L_{22}
+	\end{bmatrix}
+		\cdot
+	\begin{bmatrix}
+		i_1\\
+		i_2		
+	\end{bmatrix}
+\end{equation}
+\\
+where $L_{11}$ and $L_{22}$ are the self inductances of windings 1 and 2 respectively and defined as the flux linkage per unit current in the same winding. $L_{12}$ and $L_{21}$ are the mutual inductance between two windings, defined as the flux linkage with one winding per unit current in the other winding.
+
+\begin{equation}
+	L_{11} = \frac{N_1(\Phi_{m1} + \Phi_{l1})}{i_1}
+\end{equation}
+\begin{equation}
+	L_{22} =  \frac{N_2(\Phi_{m2} + \Phi_{l2})}{i_2}
+\end{equation}
+
+\begin{equation}
+	L_{12} = \frac{N_1 \Phi_{m2}}{i_2}
+\end{equation}
+\begin{equation}
+	L_{21} = \frac{N_2 \Phi_{m1}}{i_1}
+\end{equation}
+
+The mutual fluxes $\Phi_{m1}$ and $\Phi_{m2}$ can be defined as in equations \ref{eq:MutualFlux1} and \ref{eq:MutualFlux2}, where $\Re_m$ is the reluctance of the path of the magnetizing fluxes. 
+
+\begin{equation} \label{eq:MutualFlux1}
+	\Phi_{m1} = \frac{N_1 i_1}{\Re_m} 
+\end{equation} 
+\begin{equation} \label{eq:MutualFlux2}
+	\Phi_{m2} = \frac{N_2 i_2}{\Re_m} 
+\end{equation}
+
+From these equations, it is possible to see that
+
+\begin{equation}
+	L_{12}=L_{21}= \frac{N_1 N_2}{\Re_m}
+\end{equation}
+
+The terminal voltages $e_1$ and $e_2$ are defined as following:
+
+\begin{equation} \label{eq:VoltageEquation1}
+	e_1 = \frac{d \lambda_1}{d t} + r_1 i_1
+\end{equation}
+\begin{equation} \label{eq:VoltageEquation2}
+	e_2 = \frac{d \lambda_2}{d t} + r_2 i_2
+\end{equation}
+
+Equations \ref{eq:FluxLinkageInductances}, \ref{eq:VoltageEquation1} and \ref{eq:VoltageEquation2} give the performance of the magnetically coupled circuit.
+
+\subsection{Stator and Rotor inductances}
+
+
+We can derive the equations of the synchronous machine similarly to the equations of the magnetic circuit.
+
+The flux linkage for stator phase windings a, b and c are given by
+\begin{equation} \label{eq:FluxStator}
+	\begin{bmatrix}
+		\lambda_a \\
+		\lambda_b \\
+		\lambda_c
+	\end{bmatrix}
+	=
+	\begin{bmatrix}
+		-l_{aa} & -l_{ab} & -l_{ca} & l_{afd} & l_{akd} & l_{akq1} & l_{akq2} \\  
+		-l_{ab} & -l_{bb} & -l_{bc} & l_{bfd} & l_{bkd} & l_{bkq1} & l_{bkq2} \\  
+		-l_{ca} & -l_{bc} & -l_{cc} & l_{cfd} & l_{ckd} & l_{ckq1} & l_{ckq2} \\  
+	\end{bmatrix}
+	\begin{bmatrix}
+		i_a \\
+		i_b \\
+		i_c \\
+		i_{fd} \\
+		i_{kd} \\
+		i_{kq1} \\
+		i_{kq2} \\
+	\end{bmatrix}
+\end{equation}
+
+where
+
+$l_{aa}$, $l_{bb}$ and $l_{cc}$ are the self-inductances of the stator windings;
+
+$l_{ab}$, $l_{bc}$ and $l_{ca}$ are the mutual inductances between the stator windings;
+
+$l_{akq1}$, $l_{akq2}$, $l_{afd}$ and $l_{akd}$ are the mutual inductances between stator and rotor windings;
+
+$i_a$, $i_b$ and $i_c$ are the instantaneous stator currents in phases a, b and c;
+
+$i_{kq1}$, $i_{kq2}$, $i_{fd}$ and $i_{kd}$ are the field and amortisseur circuit currents.
+ 
+
+
+where $R_a$ is the armature resistance per phase.
+
+It is important to notice that the inductances are time-varying. They vary with the rotor position, due to the variation in the reluctance of the magnetic flux path (non-uniform air gap). 
+
+The permeance of the magnetic flux path $P$ (inverse of the reluctance $\Re$) in function of the rotor position $\alpha$ can be writen as
+
+\begin{equation}
+	P = P_0 + P_2 \cos 2 \alpha
+\end{equation}
+
+Inductance is directly proportional to permeance and the relative position between the phase a and the rotor is $\theta$. Therefore, we can write the self-inductance $l_{aa}$ as in equation \ref{eq:SelfInductanceA}. Knowing that the windings of phases b and c are identical to phase a and displaced from it by  $120^{\circ}$ and $240^{\circ}$ respectively, we can also determine the self-inductances $l_{bb}$ and $l_{cc}$. A more detailed derivation of the self-inductances is in \cite{kundur1994power}.
+
+\begin{equation} \label{eq:SelfInductanceA}
+	l_{aa} = L_{aa0} + L_{aa2} \cos 2 \theta
+\end{equation}
+\begin{equation} \label{eq:SelfInductanceB}
+	l_{bb} = L_{aa0} + L_{aa2} \cos 2 (\theta - \frac{2 \pi}{3})
+\end{equation}
+\begin{equation} \label{eq:SelfInductanceC}
+	l_{cc} = L_{aa0} + L_{aa2} \cos 2 (\theta + \frac{2 \pi}{3})
+\end{equation}
+
+The mutual inductance between two stator windings can be deduced evaluating the flux linking one phase due to the current in the other phase. The mutual inductance will also have a second harmonic variation due to the non-uniform air gap.
+
+\begin{equation} \label{eq:MutualInductanceAB}
+	l_{ab} = -L_{ab0} - L_{aa2} \cos (2 \theta + \frac{\pi}{3})
+\end{equation}
+\begin{equation} \label{eq:MutualInductanceBC}
+	l_{bc} = -L_{ab0} - L_{aa2} \cos (2 \theta - \pi)
+\end{equation}
+\begin{equation} \label{eq:MutualInductanceCA}
+	l_{ca} = - L_{ab0} - L_{aa2} \cos (2 \theta - \frac{\pi}{3})
+\end{equation}
+
+The rotor circuits see a constant reluctance. The variation in time for the mutual inductances between rotor and stator are due to their relative position. The inductance is maximum when stator and rotor are lined up and zero when they are displaced by $90^{\circ}$.
+
+
+\begin{equation}
+	l_{afd} = L_{afd} \cos \theta
+\end{equation}
+\begin{equation}
+	l_{akd} = L_{akd} \cos \theta
+\end{equation}
+\begin{equation}
+	l_{akq1} = - L_{akq1} \sin \theta
+\end{equation}
+\begin{equation}
+	l_{akq2} = - L_{akq2} \sin \theta
+\end{equation}
+
+
+Similarly, the mutual inductances between phase b and rotor windings and phase c and rotor windings are defined as
+
+\begin{equation}
+	l_{bfd} = L_{afd} \cos (\theta - \dfrac{2 \pi}{3})
+\end{equation}
+\begin{equation}
+	l_{bkd} = L_{akd} \cos (\theta - \dfrac{2 \pi}{3})
+\end{equation}
+\begin{equation}
+	l_{bkq1} = - L_{akq1} \sin (\theta - \dfrac{2 \pi}{3})
+\end{equation}
+\begin{equation}
+	l_{bkq2} = - L_{akq2} \sin (\theta - \dfrac{2 \pi}{3})
+\end{equation}
+
+\begin{equation}
+	l_{cfd} = L_{afd} \cos (\theta + \dfrac{2 \pi}{3})
+\end{equation}
+\begin{equation}
+	l_{ckd} = L_{akd} \cos (\theta + \dfrac{2 \pi}{3})
+\end{equation}
+\begin{equation}
+	l_{ckq1} = - L_{akq1} \sin (\theta + \dfrac{2 \pi}{3})
+\end{equation}
+\begin{equation}
+	l_{ckq2} = - L_{akq2} \sin (\theta + \dfrac{2 \pi}{3})
+\end{equation}
+
+The self-inductances of the rotor circuit and the mutual inductance between rotor windings do not vary with the rotor position, since the rotos circuits see constant reluctance. Therefore, the flux linkage for the rotor windings are given by
+
+\begin{equation} \label{eq:FluxRotor}
+	\begin{bmatrix}
+		\lambda_{fd} \\
+		\lambda_{kd} \\		
+		\lambda_{kq1} \\
+		\lambda_{kq2} \\
+
+	\end{bmatrix}
+	=
+	\begin{bmatrix}
+		-l_{afd} & -l_{bfd} & -l_{cfd} & L_{fd} & L_{fdkd} & 0 & 0 \\
+		-l_{akd} & -l_{bkd} & -l_{ckd} & L_{fdkd} & L_{kd} & 0 & 0  \\  	
+		-l_{akq1} & -l_{bkq1} & -l_{ckq1} & 0 & 0 & L_{kq1} & L_{kq1kq2} \\  
+		-l_{akq2} & -l_{bkq2} & -l_{ckq2} & 0 & 0 & L_{kq1kq2} & L_{kq2} \\
+		
+	\end{bmatrix}
+	\begin{bmatrix}
+		i_a \\
+		i_b \\
+		i_c \\
+		i_{fd} \\
+		i_{kd} \\
+		i_{kq1} \\
+		i_{kq2} \\
+	\end{bmatrix}
+\end{equation}
+
+
+\section{TODO: Voltage behind reactance}
+
+The equations for stator flux linkage may be written as:
+
+\begin{equation}
+\lambda_{q} = L_{ls} i_q + \lambda_{mq}
+\end{equation}
+
+\begin{equation}
+\lambda_{d} = L_{ls} i_q + \lambda_{md}
+\end{equation}
+
+And the equations for rotor flux linkages may be written as:
+
+\begin{equation} \label{eq:fluxLinkage_kq1}
+\lambda_{kq1} = L_{lkq1} i_{kq1} + \lambda_{mq}
+\end{equation}
+\begin{equation} \label{eq:fluxLinkage_kq2}
+\lambda_{kq2} = L_{lkq2} i_{kq2} + \lambda_{mq}
+\end{equation}
+\begin{equation} \label{eq:fluxLinkage_fd}
+\lambda_{fd} = L_{lfd} i_{fd} + \lambda_{md}
+\end{equation}
+\begin{equation} \label{eq:fluxLinkage_kd}
+\lambda_{kd} = L_{lkd} i_{kd} + \lambda_{md}
+\end{equation}
+
+where the  q- and d- magnetizing flux linkages are:
+
+\begin{equation} \label{eq:q_mag_flux_linkage}
+\lambda_{mq} = L_{mq} (i_q + i_{kq1} + i_{kq1} )
+\end{equation}
+\begin{equation} \label{eq:d_mag_flux_linkage}
+\lambda_{md} = L_{md} (i_d + i_{kfd} + i_{kd} )
+\end{equation}
+
+In order to represent the stator voltage equations in a voltage behind reactance form, the magnetizing flux linkages are expressend in terms of rotor flux linkages. Solving equations \ref{eq:fluxLinkage_kq1} - \ref{eq:fluxLinkage_kd} for currents and substituting into equations \ref{eq:q_mag_flux_linkage} and \ref{eq:d_mag_flux_linkage} yields:
+
+\begin{equation} 
+\lambda_{mq}  \left( \frac{1}{L_{mq}} + \frac{1}{L_{lkq1}} + \frac{1}{L_{lkq2}} \right)=  i_q + \frac{\lambda_{kq1}}{L_{lkq1}} +\frac{\lambda_{kq2}}{L_{lkq2}}
+\end{equation}
+\begin{equation}
+\lambda_{md} \left( \frac{1}{L_{md}} + \frac{1}{L_{fd}} + \frac{1}{L_{kd}} \right) = i_d +\frac{\lambda_{fd}}{L_{lfd}} + \frac{\lambda_{kd}}{L_{lkd}}
+\end{equation}
+
+Defining:
+
+\begin{equation}
+L_{mq}^{''} = \left( \frac{1}{L_{mq}} + \frac{1}{L_{lkq1}} + \frac{1}{L_{llkq2}} \right)^{-1}
+\end{equation}
+\begin{equation}
+L_{md}^{''} = \left( \frac{1}{L_{md}} + \frac{1}{L_{lfd}} + \frac{1}{L_{lkd}} \right)^{-1}
+\end{equation}
+
+
+The stator flux linkage can then be expressed as:
+
+\begin{equation}
+\lambda_{q} = L_{q}^{"} i_q + \lambda_{q}^{"}
+\end{equation}
+\begin{equation}
+\lambda_{d} = L_{d}^{"} i_d + \lambda_{d}^{"}
+\end{equation}
+
+Where $ L_{q}^{"}$ and $ L_{d}^{"}$ are the subtransient inductances and $ \lambda_{q}^{"}$ and $\lambda_{d}^{"}$ are the subtransient flux linkages given by:
+
+\begin{equation}
+L_q^" = L_{ls} + L_{mq}^"
+\end{equation}
+\begin{equation}
+L_d^" = L_{ls} + L_{md}^"
+\end{equation}
+
+\begin{equation}
+\lambda_q^{''} = L_{mq}^{''}\left( \frac{\lambda_{kq1}}{L_{lkq1}} + \frac{\lambda_{kq2}}{L_{lkq2}} \right)
+\end{equation}
+\begin{equation}
+\lambda_d^{''} = L_{md}^{''}\left( \frac{\lambda_{fd}}{L_{lfd}} + \frac{\lambda_{kd}}{L_{lkd}} \right)
+\end{equation}
+
+We can now right the stator voltage equations as following:
+
+\begin{equation}
+v_q = r_s i_q + \omega_r (L_d^" i_d + \lambda_d^") + \frac{d}{dt} (L_q^" i_q + \lambda_q^")
+\end{equation}
+
+\begin{equation}
+v_d = r_s i_d - \omega_r (L_q^" i_q + \lambda_q^") + \frac{d}{dt} (L_d^" i_d + \lambda_d^")
+\end{equation}
+
+We can calculate the terms $\frac{d \lambda_q^"}{dt}$ and  $\frac{d \lambda_d^"}{dt}$ as following:
+
+\begin{align}
+\begin{split}
+\frac{d \lambda_q^"}{dt} &= L_{mq}^" \left[ \frac{1}{L_{lkq1}} \frac{d \lambda_{kq1}}{dt} + \frac{1}{L_{lkq2}} \frac{d \lambda_{kq2}}{dt} \right] \\
+&=- L_{mq}^" \left[ \frac{r_{kq1} i_{kq1}}{L_{lkq1}} + \frac{r_{kq2} i_{kq2}}{L_{lkq2}} \right] \\
+&=- L_{mq}^" \left[  \frac{r_{kq1}}{L_{lkq1}} \cdot \frac{\lambda_{kq1} - \lambda_{mq}}{L_{lkq1}} + \frac{r_{kq2}}{L_{lkq2}} \cdot \frac{\lambda_{kq2} - \lambda_{mq}}{L_{lkq2}} \right] \\
+&=- L_{mq}^" \left[  \frac{r_{kq1}}{L_{lkq1}^2} ( \lambda_{kq1} - L_{mq}^" i_q - \lambda_q^") + \frac{r_{kq2}}{L_{lkq2}^2} \cdot (\lambda_{kq2}- L_{mq}^" i_q - \lambda_q^"  ) \right]
+\end{split}
+\end{align}
+
+\begin{align}
+\begin{split}
+\frac{d \lambda_q^"}{dt} &= L_{md}^" \left[ \frac{1}{L_{lfd}} \frac{d \lambda_{fd}}{dt} + \frac{1}{L_{lkd}} \frac{d \lambda_{kd}}{dt} \right] \\
+&= L_{md}^" \left[ \frac{v_{fd} - r_{fd} i_{fd}}{L_{lfd}} - \frac{r_{kd} i_{kd}}{L_{lkd}} \right] \\
+&= L_{md}^" \left[  \frac{v_{fd}}{L_{lfd}} - \frac{r_{fd}}{L_{lfd}} \cdot \frac{\lambda_{fd} - \lambda_{md}}{L_{lfd}} - \frac{r_{kd}}{L_{lkd}} \cdot \frac{\lambda_{kd} - \lambda_{md}}{L_{lkd}} \right] \\
+&= L_{md}^" \left[  \frac{v_{fd}}{L_{lfd}} - \frac{r_{fd}}{L_{lfd}^2} ( \lambda_{fd} - L_{md}^" i_d - \lambda_d^") - \frac{r_{kd}}{L_{ld}^2} \cdot (\lambda_{kd}- L_{md}^" i_d - \lambda_d^"  ) \right]
+\end{split}
+\end{align}
+
+Now we can write the voltage-behind-reactanace form of the stator voltage equations as:
+
+\begin{equation}
+v_q = r_q^" i_q + \omega_r L_d^" i_d + \frac{d}{dt} L_q^" i_q + e_q^"
+\end{equation} 
+
+\begin{equation}
+v_d = r_d^" i_d - \omega_r L_q^" i_q + \frac{d}{dt} L_d^" i_d + e_d^"
+\end{equation} 
+
+where:
+
+\begin{equation}
+e_q^" = \omega_r \lambda_d^" + \frac{L_{mq}^" r_{kq1}}{ L_{lkq1}^2} (\lambda_q^" - \lambda_{kq1}) + \frac{L_{mq}^" r_{kq2}}{L_{lkq2}^2} (\lambda_q^" - \lambda_{kq2})
+\end{equation}
+
+\begin{equation}
+e_d^" = - \omega_r \lambda_q^" + \frac{L_{md}^" r_{kd}}{ L_{lkd}^2} (\lambda_d^" - \lambda_{kd}) + \frac{L_{md}^" r_{fd}}{L_{lfd}^2} (\lambda_d^" - \lambda_{fd}) + v_{fd} \frac{L_{md}}{L_{lfd}}
+\end{equation}
+
+\begin{equation}
+r_q^" = r_s + L_{mq}^2 \left( \frac{r_{kq1}}{L_{lkq1}^2} + \frac{r_{kq2}}{L_{lkq2}^2} \right)
+\end{equation}
+
+\begin{equation}
+r_d^" = r_s + L_{md}^2 \left( \frac{r_{fd}}{L_{lfd}^2} + \frac{r_{kd}}{L_{lkd}^2} \right)
+\end{equation}
+
+Applying Park's transformation:
+
+\begin{equation} \label{eq:StatorVol}
+ \mathbf{v}_{abc} =  \mathbf{r}_{abc}^" (\theta_r) \mathbf{i}_{abc} + \frac{d}{dt} [ \mathbf{L}_{abc}^" (\theta_r)  \mathbf{i}_{abc} ] +  \mathbf{e}_{abc}^"
+\end{equation}
+
+where
+\begin{equation}
+ \mathbf{r}_{abc}^"(\theta_r) = 
+\begin{bmatrix}
+r_S^"(2 \theta_r) & r_M^" \left( 2 \theta_r - \dfrac{2 \pi}{3} \right) & r_M^" \left( 2 \theta_r +  \dfrac{2 \pi}{3} \right) \\
+r_M^" \left( 2 \theta_r - \dfrac{2 \pi}{3} \right) & r_S^" \left( 2 \theta_r - \dfrac{4 \pi}{3} \right) & r_M^"(2 \theta_r) \\
+r_M^" \left( 2 \theta_r + \dfrac{2 \pi}{3} \right) & r_M^"(2 \theta_r) & r_S^" \left( 2 \theta_r + \dfrac{4 \pi}{3} \right)
+\end{bmatrix}
+\end{equation}
+
+\begin{equation}
+r_S(\cdot) = r_s + r_a - r_b \cos (\cdot)
+\end{equation}
+
+\begin{equation}
+r_M(\cdot) = - \frac{r_a}{2} - r_b \cos (\cdot)
+\end{equation}
+
+\begin{equation}
+r_a = \frac{r_d^" + r_q^"}{3} - \frac{2}{3}r_s
+\end{equation}
+
+\begin{equation}
+r_b = \frac{r_d^" - r_q^"}{3}
+\end{equation}
+
+\begin{equation}
+ \mathbf{L}_{abc}^"(\theta_r) = 
+\begin{bmatrix}
+L_S^"(2 \theta_r) & L_M^" \left( 2 \theta_r - \dfrac{2 \pi}{3} \right) & L_M^" \left( 2 \theta_r +  \dfrac{2 \pi}{3} \right) \\
+L_M^" \left( 2 \theta_r - \dfrac{2 \pi}{3} \right) & L_S^" \left( 2 \theta_r - \dfrac{4 \pi}{3} \right) & L_M^"(2 \theta_r) \\
+L_M^" \left( 2 \theta_r + \dfrac{2 \pi}{3} \right) & L_M^"(2 \theta_r) & L_S^" \left( 2 \theta_r + \dfrac{4 \pi}{3} \right)
+\end{bmatrix}
+\end{equation}
+
+
+\begin{equation}
+L_S(\cdot) = L_s + L_a - L_b \cos (\cdot)
+\end{equation}
+
+\begin{equation}
+L_M(\cdot) = - \frac{L_a}{2} - L_b \cos (\cdot)
+\end{equation}
+
+\begin{equation}
+L_a = \frac{L_d^" + L_q^"}{3}
+\end{equation}
+
+\begin{equation}
+L_b = \frac{L_d^" - L_q^"}{3}
+\end{equation}
+
+The rotor voltage equations are:
+
+\begin{equation}
+\frac{d \lambda_{kq1}}{dt}  = - \frac{r_{kq1}}{L_{lkq1}} (\lambda_{kq1} - \lambda_{mq})
+\end{equation}
+\begin{equation}
+\frac{d \lambda_{kq2}}{dt}  = - \frac{r_{kq2}}{L_{lkq2}} (\lambda_{kq2} - \lambda_{mq})
+\end{equation}
+\begin{equation}
+\frac{d \lambda_{kd}}{dt}  = - \frac{r_{kd}}{L_{lkd}} (\lambda_{kd} - \lambda_{md})
+\end{equation}
+\begin{equation}
+\frac{d \lambda_{fd}}{dt}  = - \frac{r_{fd}}{L_{lfd}} (\lambda_{fd} - \lambda_{md}) + v_{fd}
+\end{equation}
+
+The stator voltage equations \ref{eq:StatorVol} together with the rotor voltage equations define the voltage-behind-reactance model.
+
+\subsection{Calculations without using matrix equations}
+To calculate the inverse of the matrix $L$ we can separate the equation \ref{eq:flux} in 3 equations as following:
+\begin{equation}
+  \begin{bmatrix}
+    \lambda_{q} \\
+    \lambda_{kq1} \\
+    \lambda_{kq2} \\
+  \end{bmatrix}
+=
+  \begin{bmatrix}
+	L_{ls} + L_{mq} & L_{mq} & L_{mq} \\
+	L_{mq} & L_{lkq1'} + L_{mq} & L_{mq} \\
+	L_{mq} & L_{mq} & L_{lkq1'} + L_{mq} \\
+  \end{bmatrix}
+\cdot
+  \begin{bmatrix}
+    i_{q} \\
+    i_{kq1} \\
+    i_{kq2} \\
+  \end{bmatrix}
+\end{equation}
+
+\begin{equation}
+  \begin{bmatrix}
+    \lambda_{d} \\
+    \lambda_{fd} \\
+    \lambda_{kd} \\
+  \end{bmatrix}
+=
+  \begin{bmatrix}
+	L_{ls} + L_{md} & L_{md} & L_{md} \\
+	L_{md} & L_{lfd'} + L_{md} & L_{md} \\
+	L_{md} & L_{mq} & L_{lkd'} + L_{md} \\
+  \end{bmatrix}
+\cdot
+  \begin{bmatrix}
+    i_{d} \\
+    i_{fd} \\
+    i_{kd} \\
+  \end{bmatrix}
+\end{equation}
+
+\begin{equation}
+  \lambda_{0} = L_{ls} i_0
+\end{equation}
+
+Therefore:
+
+\begin{equation}
+  \begin{bmatrix}
+    i_{q} \\
+    i_{kq1} \\
+    i_{kq2} \\
+  \end{bmatrix}
+=
+\mathbf{L}_q^{-1}
+\cdot
+  \begin{bmatrix}
+    \lambda_{q} \\
+    \lambda_{kq1} \\
+    \lambda_{kq2} \\
+  \end{bmatrix}
+\end{equation}
+
+\begin{equation}
+  \begin{bmatrix}
+    \lambda_{d} \\
+    \lambda_{fd} \\
+    \lambda_{kd} \\
+  \end{bmatrix}
+=
+\mathbf{L}_d^{-1}
+\cdot
+  \begin{bmatrix}
+    i_{d} \\
+    i_{fd} \\
+    i_{kd} \\
+  \end{bmatrix}
+\end{equation}
+
+
+\begin{equation}
+  i_0  =\dfrac{1}{ L_{ls}} \lambda_{0}
+\end{equation}
+
+where
+
+\begin{align}
+\mathbf{L}_q^{-1} =
+\dfrac{
+\begin{bmatrix}
+	L_{lkq1'} L_{lkq2'} + L_{mq}(L_{lkq1'} + L_{lkq2'}) & - L_{mq} L_{lkq2'} & -L_{mq} L_{lkq1'} \\
+	- L_{mq} L_{lkq2'} & L_{ls} L_{lkq2'} + L_{mq}(L_{ls'} + L_{lkq2'}) & - L_{mq} L_{ls} \\
+	-L_{mq} L_{lkq1'} &- L_{mq} L_{ls} &L_{ls} L_{lkq1'} + L_{mq}(L_{ls'} + L_{lkq1'}) \\
+  \end{bmatrix}
+}
+{det(\mathbf{L}_q)}
+\end{align}
+
+and
+
+\begin{align}
+\mathbf{L}_d^{-1} =
+\dfrac{
+\begin{bmatrix}
+	L_{lfd'} L_{lkd'} + L_{md}(L_{lfd'} + L_{lkd'}) & - L_{md} L_{lkd'} & -L_{md} L_{lfd'} \\
+	- L_{md} L_{lkd'} & L_{ls} L_{lkd'} + L_{md}(L_{ls'} + L_{lkd'}) & - L_{md} L_{ls} \\
+	-L_{md} L_{lfd'} &- L_{md} L_{ls} &L_{ls} L_{lfd'} + L_{md}(L_{ls'} + L_{lfd'}) \\
+  \end{bmatrix}
+}
+{det(\mathbf{L}_d)}
+\end{align}
+
+\subsection{Trapezoidal Rule: Flux as state}
+The standard state variable form $ \dot{x} = Ax + Bu $ can be integrated using trapezoidal rule as following:
+
+\begin{equation}
+x(k+1) = x(k) + \frac{\Delta t}{2} [Ax(k+1) + Bu(k+1) + Ax(k) + Bu(k)]
+\end{equation}
+
+\begin{equation}
+[I - \frac{\Delta t}{2} A]x(k+1)  = [I + \frac{\Delta t}{2} A] x(k) + \frac{\Delta t}{2} [Bu(k+1) + Bu(k)]
+\end{equation}
+
+\begin{equation}
+x(k+1)  = [I - \frac{\Delta t}{2} A]^{-1}[I + \frac{\Delta t}{2} A] x(k) + [I - \frac{\Delta t}{2} A]^{-1}\frac{\Delta t}{2} [Bu(k+1) + Bu(k)]
+\end{equation}
+
+The state space model with flux as variable can be rewritten as:
+\begin{equation}
+  \frac{d}{dt}
+  \begin{bmatrix}
+    \boldsymbol{\lambda}_{qd0s} \\
+    \boldsymbol{\lambda}_{qdr}'
+  \end{bmatrix}
+  =
+  \begin{bmatrix}
+    \mathbf{v}_{qd0s} \\
+    \mathbf{v}_{qdr}'
+  \end{bmatrix}
+  - \mathbf{R}'
+  \begin{bmatrix}
+    \mathbf{L}_{qdss} & \mathbf{L}_{qdsr}' \\
+    \mathbf{L}_{qdrs}' & \mathbf{L}_{rr}'    
+  \end{bmatrix}^{-1}
+  \begin{bmatrix}
+    \boldsymbol{\lambda}_{qd0s} \\
+    \boldsymbol{\lambda}_{qdr}
+  \end{bmatrix}
+  +  
+  \begin{bmatrix}
+    \mathbf{\Omega} & 0 \\
+    0 & 0 
+  \end{bmatrix}
+  \begin{bmatrix}
+    \boldsymbol{\lambda}_{qd0s} \\
+    \boldsymbol{\lambda}_{qdr}'
+  \end{bmatrix}
+\end{equation}
+%
+
+where
+
+\begin{equation}
+\Omega =
+\begin{bmatrix}
+0 & -\omega_r \\
+\omega_r & 0
+\end{bmatrix}
+\end{equation}
+
+This equation is now written in the form $\dot{x} = Ax + Bu$, where:
+
+\begin{equation}
+A = -\mathbf{R}'
+\begin{bmatrix}
+    \mathbf{L}_{qdss} & \mathbf{L}_{qdsr}' \\
+    \mathbf{L}_{qdrs}' & \mathbf{L}_{rr}' 
+\end{bmatrix}^{-1}
++
+  \begin{bmatrix}
+    \mathbf{\Omega} & 0 \\
+    0 & 0 
+  \end{bmatrix}
+\end{equation}
+
+and
+
+\begin{equation}
+B = I
+\end{equation}
+
+To solve this equation, we use $\omega$ and the voltage from the last time step.
+Once we have found the fluxes at step $k+1$, we can calculate the currents and $\omega$ at this time step.
+
+\subsection{Trapezoidal Rule PSCAD}
+
+The machine model is given by the following equations
+
+\begin{equation}
+\frac{d}{dt}
+\begin{bmatrix}
+i_d \\
+i_{fd} \\
+i_{kd}
+\end{bmatrix}
+=
+L_D^{-1} \cdot
+\begin{bmatrix}
+\omega \cdot \lambda_q + R_s \cdot i_d \\
+- R_{fd} \cdot i_{fd} \\
+- R_{kd} \cdot i_{kd} \\
+\end{bmatrix}
++
+L_D^{-1} \cdot
+\begin{bmatrix}
+U_d \\
+U_{fd}\\
+U_{kd}
+\end{bmatrix}
+\end{equation}
+
+\begin{equation}
+\frac{d}{dt}
+\begin{bmatrix}
+i_q \\
+i_{kq1} \\
+i_{kq2}
+\end{bmatrix}
+=
+L_Q^{-1} \cdot
+\begin{bmatrix}
+- \omega \cdot \lambda_d + R_s \cdot i_q \\
+- R_{kq1} \cdot i_{kq1} \\
+- R_{kq2} \cdot i_{kq2} \\
+\end{bmatrix}
++
+L_Q^{-1} \cdot
+\begin{bmatrix}
+U_q \\
+U_{kq1}\\
+U_{kq2}
+\end{bmatrix}
+\end{equation}
+%
+We can write these formulas in the form $\dot{x} = Ax + Bu + C$:
+
+\begin{equation}
+\frac{d}{dt}
+\begin{bmatrix}
+i_d \\
+i_{fd} \\
+i_{kd}
+\end{bmatrix}
+=
+L_D^{-1} \cdot
+\begin{bmatrix}
+R_s & 0 & 0 \\
+0 & -R_{fd} & 0 \\
+0 & 0 & -R_{kd} 
+\end{bmatrix}
+\begin{bmatrix}
+i_d \\
+i_{fd} \\
+i_{kd}
+\end{bmatrix}
++
+L_D^{-1} \cdot
+\begin{bmatrix}
+U_d \\
+U_{fd}\\
+U_{kd}
+\end{bmatrix}
++
+L_D^{-1} \cdot
+\begin{bmatrix}
+\omega \cdot \lambda_q \\
+0 \\
+0 \\
+\end{bmatrix}
+\end{equation}
+
+\begin{equation}
+\frac{d}{dt}
+\begin{bmatrix}
+i_q \\
+i_{kq1} \\
+i_{kq2}
+\end{bmatrix}
+=
+L_Q^{-1} \cdot
+\begin{bmatrix}
+R_s & 0 & 0 \\
+0 & -R_{kq1} & 0 \\
+0 & 0 & -R_{kq2} 
+\end{bmatrix}
+\begin{bmatrix}
+i_q \\
+i_{kq1} \\
+i_{kq2}
+\end{bmatrix}
++
+L_Q^{-1} \cdot
+\begin{bmatrix}
+U_q \\
+U_{kq1}\\
+U_{kq2}
+\end{bmatrix}
++
+L_Q^{-1} \cdot
+\begin{bmatrix}
+-\omega \cdot \lambda_d \\
+0 \\
+0 \\
+\end{bmatrix}
+\end{equation}
+
+The state at $k+1$ can be determined using the following equation:
+
+\begin{equation}
+x(k+1)  = [I - \frac{\Delta t}{2} A]^{-1}[I + \frac{\Delta t}{2} A] x(k) + [I - \frac{\Delta t}{2} A]^{-1}\frac{\Delta t}{2} [Bu(k+1) + Bu(k)] + [I - \frac{\Delta t}{2} A]^{-1} \Delta t C
+\end{equation}

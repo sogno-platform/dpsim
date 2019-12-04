@@ -1,0 +1,130 @@
+\chapter{Single Phase Components}
+
+\section{Network}
+
+\subsection{PI-Line}
+\includegraphics{pi_line}
+\subsubsection{steady-state}
+\begin{equation}
+	I_1 = \frac{V_1 - V_2}{R+jX} + V_1  \frac{G+jB}{2}
+\end{equation}
+\begin{equation}
+	I_2 = - \frac{V_1 - V_2}{R+jX} + V_2  \frac{G+jB}{2}
+\end{equation}
+
+\subsubsection{transient}
+\begin{align}
+	v &= v_1 - v_2 \\
+	i_1 &=  i_{rx} + i_{1ad} \\
+	i_2 &= - i_{rx} + i_{2ad}
+\end{align}
+
+\begin{align}
+	i_{1ad} &= \frac{C}{2} \frac{dv_1}{dt} + \frac{G}{2} v_1 \\
+	i_{2ad} &= \frac{C}{2} \frac{dv_2}{dt} + \frac{G}{2} v_2
+\end{align}
+
+\begin{equation}
+	v = L \frac{di_{rx}}{dt} + R i_{rx}
+\end{equation}
+
+\subsection{Transformer}
+\includegraphics{singleph_transformer}
+
+\begin{tabular}{ l l }
+  $R_{Cu}$ & Kupferverluste \\
+  4 & 5 \\
+  7 & 8 \\
+\end{tabular}
+
+\begin{align}
+Z &= \frac{U_{kr(1)} \cdot U_{r1}^2}{S_r \cdot 100} \\
+R_{Cu} &= \frac{U_{R1(1)} \cdot U_{r1}^2}{S_r \cdot 100} \\
+X &= \sqrt{Z^2-R^2} \\
+Y_{Fe} &= P_{Fe}/U_{r1}^2 \\
+Y_0 &= \frac{I_0 \cdot S_r}{100 \cdot U_{r1}^2} \\
+Y &= Y_{Fe} - j \sqrt{Y_0^2-Y_{Fe}^2} 
+\end{align}
+
+\subsubsection{steady-state}
+For steady-state simulations a RX-line model is used in combination with an ideal transformer.
+
+
+\section{Generation}
+
+\subsection{Slack Node}
+The slack node represents the rest of the grid with higher voltage levels. It is assumed that the slack node is an infinite source of power.
+\subsubsection{steady-state}
+\begin{equation}
+	V = V_{nom}(cos(\varphi_v)+jsin(\varphi_v))
+\end{equation}
+
+\subsubsection{Dynamic Phasors}
+\begin{equation}
+	V = V_{nom}(cos(\varphi_v)+jsin(\varphi_v))
+\end{equation}
+
+\subsubsection{transient}
+\begin{equation}
+	v = V_{nom} \cdot cos(\omega t + \varphi_v) 
+\end{equation}
+
+\subsection{Solar Generator}
+
+\subsubsection{steady-state}
+The model is according to the paper "A novel model for photovoltaic array performance prediction" by Wei Zhou et al. 
+\begin{align}
+	I_{sc} &= I_{sc0} \frac{irrad}{G_r} \alpha \\
+    V_{oc} &= \frac{V_{oc0} \cdot \left( \frac{T_r}{T_{abs}} \right)^\gamma}{1 + \beta \cdot log \left(\frac{G_r}{irrad} \right) } \\
+    v_{oc} &= \frac{V_{oc} \cdot q}{n \cdot k \cdot T_{abs}} \\
+    FF_0 &= \frac{v_{oc} - log(v_{oc} + 0.72)}{1 + v_{oc}} \\
+    FF &= FF_0 \cdot \left( 1 - \frac{R_s}{V_{oc} \cdot I_{sc}} \right) \\
+    P_{module} &= FF \cdot V_{oc} \cdot I_{sc} \\
+    P &= \frac{P_{module}}{1000} \cdot N_s \cdot N_p \\
+    P_{rel} &= P/P_0 \\
+\end{align}
+
+\subsection{Wind Generator}
+\subsubsection{steady-state}
+
+wind speed calculation according to "Regenerative Energiesysteme" by Volker Quaschning:
+\begin{align}
+	v_{turbine} = v_{0} \cdot \frac{log \left( \frac{h_{turbine}-d_0}{z_0} \right) } {log \left( \frac{h_0-d_0} {z0} \right)}
+\end{align}
+
+Polynomial coefficients:
+\begin{align}
+	a &= -(2*P0)/(v_r - v_s)^3 \\
+	b &= (3*(P0*v_r + P0*v_s))/(v_r - v_s)^3 \\
+	c &= -(6*P0*v_r*v_s)/(v_r - v_s)^3 \\
+	d &= (v_s^2*(3*P0*v_r - P0*v_s))/((v_r - v_s)*(v_r^2 - 2*v_r*v_s + v_s^2)) \\
+\end{align}
+
+
+\section{Loads}
+
+\subsection{Constant PQ Load}
+
+\subsubsection{steady-state}
+
+\subsection{Impedance Load}
+
+\begin{equation}
+	Z = V_{nom}^2 \cdot \frac{P_{nom}-jQ_{nom}}{P_{nom}^2+Q_{nom}^2}
+\end{equation}
+
+\subsubsection{steady-state}
+\begin{equation}
+	V = Z \cdot I
+\end{equation}
+
+\subsubsection{Dynamic Phasors}
+\begin{align}
+	\Re(V) &= \frac{\Im(Z)}{\omega} \cdot \Re \left(\frac{di}{dt} \right) - \Im(Z) \cdot \Im(I) + \Re(Z) \cdot \Im(I) \\
+    \Im(V) &=\frac{\Im(Z)}{\omega} \cdot \Im \left(\frac{di}{dt} \right) + \Im(Z) \cdot \Re(I) + \Re(Z) \cdot \Im(I)
+\end{align}
+
+\subsubsection{transient}
+\begin{equation}
+	 v = \frac{\Im(Z)}{\omega} \cdot \Re \left(\frac{di}{dt} \right) + \Re(Z) \cdot \Re(I)
+\end{equation}

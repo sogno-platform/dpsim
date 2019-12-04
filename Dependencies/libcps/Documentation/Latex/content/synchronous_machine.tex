@@ -1,0 +1,384 @@
+\section{Synchronous Machine}
+
+\subsection{Synchronous Machine Basic Equations}
+
+\begin{figure}
+	\centering
+	\includegraphics[scale=0.8]{img/synchronous_machine_dq_frame} 
+	\caption{Schematic diagram of a synchronous machine}
+	\label{fig:syn_machine_dq_frame}
+\end{figure}
+
+\begin{figure}
+	\centering
+	\includegraphics[scale=0.5]{img/stator_rotor_circuits} 
+	\caption{Stator and rotor circuits of a synchronous machine}
+	\label{fig:	stator_rotor_circuits}
+\end{figure}
+
+The equations of the stator and rotor voltages are
+
+\begin{equation} 
+	\mathbf{v}_{abcs} = \mathbf{R}_s \mathbf{i}_{abcs} + \frac{d}{dt} \boldsymbol{\lambda}_{abcs}
+	\label{eq:voltage_stator}
+\end{equation}
+
+\begin{equation} 
+	\mathbf{v}_{dqr} = \mathbf{R}_r \mathbf{i}_{dqr} + \frac{d}{dt} \boldsymbol{\lambda}_{dqr}
+	\label{eq:voltage_rotor}
+\end{equation}
+%
+where
+%
+\begin{align}
+  \mathbf{v}_{abcs} &= 
+  \begin{pmatrix}
+    v_{as} & v_{bs} & v_{cs}
+  \end{pmatrix}^T \\
+  %  
+  \mathbf{v}_{dqr} &= 
+  \begin{pmatrix}
+    v_{fd} & v_{kd} & v_{kq1} & v_{kq2}
+  \end{pmatrix}^T \\
+  %
+  \mathbf{i}_{abcs} &= 
+  \begin{pmatrix}
+    i_{as} & i_{bs} & i_{cs}
+  \end{pmatrix}^T \\
+  %  
+  \mathbf{i}_{dqr} &= 
+  \begin{pmatrix}
+    i_{fd} & i_{kd} & i_{kq1} & i_{kq2}
+  \end{pmatrix}^T \\
+  %
+  \boldsymbol{\lambda}_{abcs} &= 
+  \begin{pmatrix}
+    \lambda_{as} & \lambda_{bs} & \lambda_{cs}
+  \end{pmatrix}^T \\
+  %  
+  \boldsymbol{\lambda}_{dqr} &= 
+  \begin{pmatrix}
+    \lambda_{fd} & \lambda_{kd} & \lambda_{kq1} & \lambda_{kq2}
+  \end{pmatrix}^T \\
+  %
+  \mathbf{R}_s &= diag
+  \begin{bmatrix}
+    R_s & R_s & R_s 
+  \end{bmatrix} \\
+  %
+  \mathbf{R}_r &= diag
+  \begin{bmatrix}
+    R_{fd} & R_{kd} & R_{kq1} & R_{kq2}
+  \end{bmatrix}
+\end{align}
+%
+The flux linkage equations are defined as
+%
+\begin{equation} 
+	\begin{bmatrix}
+		\boldsymbol{\lambda}_{abcs} \\
+		\boldsymbol{\lambda}_{dqr}
+	\end{bmatrix}
+	=
+	\begin{bmatrix}
+		\mathbf{L}_s & \mathbf{L}_{rs} \\
+		{(\mathbf{L}_{rs})}^{T} & \mathbf{L}_r
+	\end{bmatrix}
+	\begin{bmatrix}
+		\mathbf{i}_{abcs} \\
+		\mathbf{i}_{dqr}
+  \end{bmatrix}
+  \label{eq:stator_rotor_fluxes}
+\end{equation}
+%
+The inductance matrices are varying with the rotor position $\theta_r$ which varies with time. The details of these matrices are presented in \cite{krause2002} Section 3.3.
+
+The mechanical equations are:
+%
+\begin{align}
+\frac{d\theta_r}{dt} &= \omega_r \label{eq:d_theta} \\
+\frac{d\omega_r}{dt} &= \frac{P}{2J} (T_e-T_m) \label{eq:d_omega}
+\end{align}
+%
+where $\theta_r$ is the rotor position, $\omega_r$ is the angular electrical speed, $P$ is the number of poles, $J$ is the moment of inertia, $T_m$ and $T_e$ are the mechanical and electrical torque, respectively. Motor convention is used for all models. 
+
+\subsection{Steady-State}
+
+
+\subsection{Classical dq-Reference Frame Model}
+
+It is common practice to refer the rotor variables to the stator windings or express all machine variables in per unit. Here, we decided to use per unit values. For stator referred variables, the base quantities are chosen as follows:
+%
+\begin{itemize}
+  \item $v_{s base}$ peak value of rated line-to-neutral voltage in V  
+  \item $i_{s base}$ peak value of rated line current in A
+  \item $f_{base}$ rated frequency in Hz
+\end{itemize}
+%
+A detailed discussion can be found in \cite{kundur1994power} Section 3.4.
+In general, this model is mostly based on \cite{kundur1994power} and \cite{krause2002}. 
+
+\subsubsection{dq-Transform}
+To remove the variation with time from the inductance matrices, the dq-reference frame model transforms the stator variables in to the rotating reference frame of the rotor. 
+This is achieved using Park's variant of the dq-transform:
+%
+\begin{equation}
+\mathbf{K_s} = \frac{2}{3}
+ \begin{bmatrix} 
+  \cos \theta_r & \cos(\theta_r-\frac{2\pi}{3}) & \cos(\theta_r+\frac{2\pi}{3}) \\
+  -\sin \theta_r & -\sin(\theta_r-\frac{2\pi}{3}) & -\sin(\theta_r+\frac{2\pi}{3}) \\
+  \frac{1}{2} & \frac{1}{2} & \frac{1}{2}
+ \end{bmatrix}
+\end{equation}
+%
+where $\theta_r$ is the rotor angle.
+Note that this variant of the dq-transform has the scaling factor $\frac{2}{3}$, which ensures an equal length of the q-axis maximum current and stator reference frame peak current \cite{kundur1994power}.
+The inverse transformation is given by
+%
+\begin{equation}
+(\mathbf{K_s})^{-1} = 
+ \begin{bmatrix} 
+  \cos \theta & -\sin \theta & 1 \\
+  \cos(\theta-\frac{2\pi}{3}) & -\sin(\theta-\frac{2\pi}{3}) & 1 \\
+  \cos(\theta+\frac{2\pi}{3}) & -\sin(\theta+\frac{2\pi}{3}) & 1
+ \end{bmatrix}
+\end{equation}
+
+\subsubsection{Equations in Rotor Reference Frame}
+This section depicts the synchronous generator equations in terms of per unit values in the rotor reference frame. Due to the transform of the stator variables to the rotor reference frame, the stator equations change, whereas the rotor equations remain the same.
+%
+\begin{equation}
+  \begin{bmatrix}
+    \mathbf{v}_{dq0s} \\
+    \mathbf{v}_{dqr}
+  \end{bmatrix}
+  =  
+  \mathbf{R}_{sr}  
+  \begin{bmatrix}
+    \mathbf{i}_{dq0s} \\
+    \mathbf{i}_{dqr}
+  \end{bmatrix}
+  +
+  \frac{d}{dt}
+  \begin{bmatrix}
+    \boldsymbol{\lambda}_{dq0s} \\
+    \boldsymbol{\lambda}_{dqr}
+  \end{bmatrix}
+  + \omega_r
+  \begin{bmatrix}
+    \boldsymbol{\lambda}_{qds} \\
+    0
+  \end{bmatrix}
+\end{equation}
+%
+where
+%
+\begin{align}
+  \mathbf{v}_{dq0s} &= 
+  \begin{pmatrix}
+    v_{ds} & v_{qs} & v_{0s}
+  \end{pmatrix}^T \\
+  %
+  \mathbf{i}_{dq0s} &= 
+  \begin{pmatrix}
+    i_{ds} & i_{qs} & i_{0s}
+  \end{pmatrix}^T \\  
+  %
+  \boldsymbol{\lambda}_{dq0s} &= 
+  \begin{pmatrix}
+    \lambda_{ds} & \lambda_{qs} & \lambda_{0s}
+  \end{pmatrix}^T \\
+  %
+  \mathbf{R}_{sr} &= diag
+  \begin{bmatrix}
+    R_s & R_s & R_s & R_{fd} & R_{kd} & R_{kq1} & R_{kq2} 
+  \end{bmatrix} \\
+  %
+  \boldsymbol{\lambda}_{dqs} &= 
+  \begin{pmatrix}
+    -\lambda_{qs} & \lambda_{ds} & 0
+  \end{pmatrix}^T
+\end{align}
+%
+The flux linkages are:
+%
+\begin{equation}
+  \begin{pmatrix}
+    \boldsymbol{\lambda}_{dq0s} \\
+    \boldsymbol{\lambda}_{dqr}
+  \end{pmatrix}
+  =
+  \begin{bmatrix}
+    \mathbf{L}_{dqss} & \mathbf{L}_{dqsr} \\
+    \mathbf{L}_{dqrs} & \mathbf{L}_{dqrr}    
+  \end{bmatrix}
+  \begin{pmatrix}
+    \mathbf{i}_{dq0s} \\
+    \mathbf{i}_{dqr}
+  \end{pmatrix}
+  \label{eq:flux}
+\end{equation}
+%
+where
+%
+\begin{align}
+  \mathbf{L}_{dqss} &= 
+  \begin{bmatrix}
+    L_{d} & 0 & 0 \\
+    0 & L_{q} & 0 \\
+    0 & 0 & L_{ls}
+  \end{bmatrix} \\
+  %  
+  \mathbf{L}_{dqsr} &= 
+  \begin{bmatrix}
+    L_{md} & L_{md} & 0 & 0 \\
+    0 & 0 & L_{mq} & L_{mq} \\
+    0 & 0 & 0 & 0
+  \end{bmatrix} \\
+  %
+  \mathbf{L}_{dqrs} &=
+  \begin{bmatrix}
+    L_{md} & 0 & 0 \\
+    L_{md} & 0 & 0 \\
+    0 & L_{mq} & 0 \\
+    0 & L_{mq} & 0 
+  \end{bmatrix} \\
+  %
+  \mathbf{L}_{rr} &=
+  \begin{bmatrix}    
+    L_{fd} & L_{md} & 0 & 0  \\
+    L_{md} & L_{kd} & 0 & 0  \\
+    0 & 0 & L_{kq1} & L_{mq} \\
+    0 & 0 & L_{mq} & L_{kq2}
+  \end{bmatrix} \\
+  %
+\end{align}
+%
+with 
+%
+\begin{align}
+  L_{d} &= L_{ls} + L_{md} \\
+  L_{q} &= L_{ls} + L_{mq} \\   
+  L_{fd} &= L_{lfd} + L_{md} \\
+  L_{kd} &= L_{lkd} + L_{md} \\
+  L_{kq1} &= L_{lkq1} + L_{mq} \\
+  L_{kq2} &= L_{lkq2} + L_{mq}
+\end{align}
+
+The mechanical equations in per unit become:
+%
+\begin{align}
+T_e &= \lambda_{qs} i_{ds} - \lambda_{ds} i_{qs} \\
+\frac{d\theta_r}{dt} &= \omega_r \label{eq:d_theta} \\
+\frac{d\omega_r}{dt} &= \omega_{b} \frac{1}{2H} (T_m-T_e)
+\end{align}
+%
+
+
+\subsubsection{Simulation Model}
+For the simulation model, the fluxes are chosen as state variables. As proposed in \cite{krause2002} Section 5.11, the d- and q-axis magnetizing flux linkages are defined as new states
+%
+\begin{align}
+  \lambda_{md} &= L_{md} \left( i_{ds} + i_{fd} + i_{kd} \right) \\
+  \lambda_{mq} &= L_{mq} \left( i_{qs} + i_{kq1} + i_{kq2} \right) \\  
+\end{align}
+%
+Therefore, the flux Equations
+%
+\begin{align}
+  \lambda_{ds} &= L_{ls} i_{ds} + L_{md} \left( i_{ds} + i_{fd} + i_{kd} \right) \\
+  \lambda_{qs} &= L_{ls} i_{qs} + L_{mq} \left( i_{qs} + i_{kq1} + i_{kq2} \right) \\
+  \lambda_{0s} &= L_{ls} i_{0s} \\
+  \lambda_{fd} &= L_{ls} i_{fd} + L_{md} \left( i_{ds} + i_{fd} + i_{kd} \right) \\
+  \lambda_{kd} &= L_{ls} i_{kd} + L_{md} \left( i_{ds} + i_{fd} + i_{kd} \right) \\
+  \lambda_{kq1} &= L_{ls} i_{kq1} + L_{mq} \left( i_{qs} + i_{kq1} + i_{kq2} \right) \\
+  \lambda_{kq2} &= L_{ls} i_{kq2} + L_{mq} \left( i_{qs} + i_{kq1} + i_{kq2} \right) \\
+\end{align}
+%
+become
+%
+\begin{align}
+  \lambda_{ds} &= L_{ls} i_{ds} + \lambda_{md} \\
+  \lambda_{qs} &= L_{ls} i_{qs} + \lambda_{mq} \\
+  \lambda_{0s} &= L_{ls} i_{0s} \\
+  \lambda_{fd} &= L_{lfd} i_{fd} + \lambda_{md} \\
+  \lambda_{kd} &= L_{lkd} i_{kd} + \lambda_{md} \\
+  \lambda_{kq1} &= L_{lkq1} i_{kq1} + \lambda_{mq} \\
+  \lambda_{kq2} &= L_{lkq2} i_{kq2} + \lambda_{mq}
+\end{align}
+%
+Now, the winding currents can be expressed as follows
+\begin{align}
+  i_{ds} &= \frac{\lambda_{ds} - \lambda_{md}}{L_{ls}} \\
+  i_{qs} &= \frac{\lambda_{qs} - \lambda_{mq}}{L_{ls}} \\
+  i_{0s} &= \frac{\lambda_{0s}}{L_{ls}} \\
+  i_{fd} &= \frac{\lambda_{fd} - \lambda_{md}}{L_{lfd}} \\
+  i_{kd} &= \frac{\lambda_{kd} - \lambda_{md}}{L_{lkd}} \\
+  i_{kq1} &= \frac{\lambda_{kq1} - \lambda_{mq}}{L_{lkq1}} \\
+  i_{kq2} &= \frac{\lambda_{kq2} - \lambda_{mq}}{L_{lkq2}}
+\end{align}
+%
+Substituting the current equations into the voltage equations yields the state equations
+%
+\begin{align}
+  \frac{d}{dt} \lambda_{ds} &= v_{ds} + \omega_r \lambda_{qs} + \frac{R_s}{L_{ls}} \left( \lambda_{md} - \lambda_{ds} \right) \\
+  \frac{d}{dt} \lambda_{qs} &= v_{qs} - \omega_r \lambda_{ds} + \frac{R_s}{L_{ls}} \left( \lambda_{mq} - \lambda_{qs} \right) \\
+  \frac{d}{dt} \lambda_{0s} &= v_{0s} - \frac{R_s}{L_{ls}} \lambda_{0s} \\
+  \frac{d}{dt} \lambda_{fd} &= v_{fd} + \frac{R_{fd}}{L_{lfd}} \left( \lambda_{md} - \lambda_{fd} \right) \\
+  \frac{d}{dt} \lambda_{kd} &= \frac{R_{kd}}{L_{lkd}} \left( \lambda_{md} - \lambda_{kd} \right) \\
+  \frac{d}{dt} \lambda_{kq1} &= \frac{R_{kq1}}{L_{lkq1}} \left( \lambda_{mq} - \lambda_{kq1} \right) \\
+  \frac{d}{dt} \lambda_{kq2} &= \frac{R_{kq2}}{L_{lkq2}} \left( \lambda_{mq} - \lambda_{kq2} \right)
+\end{align}
+%
+To complete the state model, the magnetizing flux linkages are expressed in terms of winding flux linkages
+%
+\begin{align}
+  \lambda_{md} &=  L_{ad} \left( \frac{\lambda_{ds}}{L_{ls}} + \frac{\lambda_{fd}}{L_{lfd}} + \frac{\lambda_{kd}}{L_{lkd}} \right) \\
+  \lambda_{mq} &=  L_{aq} \left( \frac{\lambda_{qs}}{L_{ls}} + \frac{\lambda_{kq1}}{L_{lkq1}} + \frac{\lambda_{kq2}}{L_{lkq2}} \right) \\
+\end{align}
+%
+where
+%
+\begin{align}
+  \L_{ad} &=  \left( \frac{1}{L_{md}} + \frac{1}{L_{ls}} + \frac{1}{L_{lfd}} + \frac{1}{L_{lkd}} \right) \\
+  \L_{aq} &=  \left( \frac{1}{L_{mq}} + \frac{1}{L_{ls}} + \frac{1}{L_{lkq1}} + \frac{1}{L_{lkq2}} \right) \\
+\end{align}
+
+\subsection{3rd Order Dynamic Phasor Model}
+
+In this section, the 3rd order model is used according to \cite{eremia_2013}.
+The model formulates the generator equations in the dq reference frame rotating with the rotor speed $\omega_{r}$.
+Since the dq transformation already results in a corresponding frequency shift, the model considers the DP of the DC component stated as $\langle x \rangle _{0}$.
+The resulting equations are the following:
+
+\begin{align}
+  \langle u_{d} \rangle _{0} &= - \omega_{0} \langle \Psi_{q} \rangle _{0} \\
+  \langle u_{q} \rangle _{0} &= \omega_{0} \langle \Psi_{d} \rangle _{0} \\
+  \langle u_{fd} \rangle _{0} &= R_{fd} i_{fd} + \frac{d\langle \Psi_{fd} \rangle _{0}}{dt}
+\end{align}
+
+\begin{align}
+  \langle \Psi_{d} \rangle _{0} &= - L_{d} \langle i_{d} \rangle _{0} + L_{md} \langle i_{fd} \rangle _{0} \\
+  \langle \Psi_{q} \rangle _{0} &= - L_{q} \langle i_{q} \rangle _{0} \\
+  \langle \Psi_{fd} \rangle _{0} &= - L_{md} \langle i_{d} \rangle _{0} + L_{fd} \langle i_{fd} \rangle _{0}
+\end{align}
+
+\begin{align}
+  \langle T_{e} \rangle _{0} &= \langle \Psi_{d} \rangle _{0} \langle i_{q} \rangle _{0} - \langle \Psi_{q} \rangle _{0} \langle i_{d} \rangle _{0} \\
+  \frac{d}{dt}\langle \omega_{m} \rangle _{0} &= \frac{1}{2H}(\langle T_{m} \rangle _{0} - \langle T_{e} \rangle _{0})
+\end{align}
+
+An appropriate interface is required to transform the quantities of the synchronous generator represented in the dq reference frame rotating with the rotor speed $\omega_{r}$ to the quantities of the grid simulation represented by the first order DP, which involves a frequency shift of $\omega_{0}$.
+For example, the first order DP of the stator current can be calculated by
+
+\begin{equation}
+  \langle i \rangle _{1} = (\langle i_{d} \rangle _{0} + j \langle i_{q} \rangle _{0})e^{j(\theta_{r}-\omega_{0}t)}
+\end{equation}
+
+\subsection{Transient Stability Model}
+\begin{equation}
+  X'_{d} = \omega_{0} \left( L_d - \frac{L^2_{md}}{L_f} \right)
+\end{equation}
+
+
+

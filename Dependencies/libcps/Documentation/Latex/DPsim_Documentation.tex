@@ -1,0 +1,54 @@
+ %----------------------------------------------------------
+% Packages and other configurations
+%----------------------------------------------------------
+
+\documentclass{report}
+
+\usepackage{graphicx} % Needed to insert images into the document
+\graphicspath{{img/}} % Sets the default location of pictures
+
+\usepackage{amsmath}
+
+\usepackage{hyperref}
+
+\usepackage{xcolor}
+
+\newcommand{\todo}[1]{\textcolor{red}{[TODO: #1]}}
+
+\title{Documentation of the Dynamic Phasor Simulator - DPsim}
+\author{Markus Mirz, Jan Dinkelbach, Viviane Sapucaia, Antonello Monti}
+
+\begin{document}
+
+\maketitle
+
+\tableofcontents
+
+%----------------------------------------------------------
+% Content
+%----------------------------------------------------------
+
+\include{content/introduction} 
+\include{content/dynamic_phasors}
+\include{content/nodal_analysis}
+\include{content/powerflow}
+
+\chapter{Models}
+\include{content/branches}
+\include{content/synchronous_machine}
+\include{content/induction_machine}
+\include{content/power_converters}
+
+\include{content/appendix}
+
+%----------------------------------------------------------
+% Bibliography
+%----------------------------------------------------------
+\bibliographystyle{ieeetr} 
+\bibliography{bibliography}
+
+%----------------------------------------------------------
+% End
+%----------------------------------------------------------
+
+\end{document}
