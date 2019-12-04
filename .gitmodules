@@ -5,10 +5,10 @@
 	path = Examples/CIM/grid-data
 	url = ../../grid-data/cim-grid-data.git
 [submodule "Dependencies/eigen"]
-	path = /Dependencies/eigen
+	path = Dependencies/eigen
 	url = https://github.com/eigenteam/eigen-git-mirror
 [submodule "Dependencies/libcimpp"]
-	path = /Dependencies/libcimpp
+	path = Dependencies/libcimpp
 	url = https://github.com/RWTH-ACS/libcimpp
 [submodule "Dependencies/spdlog"]
 	path = Dependencies/spdlog
