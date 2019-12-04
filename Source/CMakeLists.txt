@@ -2,7 +2,8 @@ set(SOURCES
 	Simulation.cpp
 	RealTimeSimulation.cpp
 	MNASolver.cpp
-	NRPSolver.cpp
+	PFSolver.cpp
+	PFSolverPowerPolar.cpp
 	Utils.cpp
 	Timer.cpp
 	Event.cpp

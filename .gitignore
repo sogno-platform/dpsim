@@ -14,6 +14,7 @@ wheelhouse/
 *.pdf
 *.svg
 *.png
+Examples/Notebooks/Grids/reference-results/
 
 # Folders
 Libraries/

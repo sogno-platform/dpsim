@@ -18,9 +18,9 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *********************************************************************************/
 
-#include <cps/CIM/Reader.h>
+#include "cps/CIM/Reader.h"
 #include <DPsim.h>
-#include <cps/LoadProfileReader.h>
+#include "cps/LoadProfileReader.h"
 
 using namespace std;
 using namespace DPsim;
@@ -36,18 +36,15 @@ int main(int argc, char** argv){
 	// Find CIM files
 	std::list<fs::path> filenames;
 	if (argc <= 1) {
-		  filenames = DPsim::Utils::findFiles({
-                        "Rootnet_FULL_NE_13J16h_DI.xml",
-                        "Rootnet_FULL_NE_13J16h_EQ.xml",
-                        "Rootnet_FULL_NE_13J16h_SV.xml",
-                        "Rootnet_FULL_NE_13J16h_TP.xml"
-                }, "Examples/CIM/IEEE_EU_LV_reduced", "CIMPATH");
+		filenames = DPsim::Utils::findFiles({
+		"case300.xml"
+		}, "Examples/CIM/grid-data/Matpower_cases", "CIMPATH");
 	}
 	else {
 		filenames = std::list<fs::path>(argv + 1, argv + argc);
 	}
 
-	String simName = "IEEE_EU_LV_reduced";
+	String simName = "case300";
 	CPS::Real system_freq = 50;
 
     CIM::Reader reader(simName, Logger::Level::info, Logger::Level::off);

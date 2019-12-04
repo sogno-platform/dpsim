@@ -28,7 +28,7 @@
 #include <dpsim/Utils.h>
 #include <cps/Utils.h>
 #include <dpsim/MNASolver.h>
-#include <dpsim/NRPSolver.h>
+#include <dpsim/PFSolverPowerPolar.h>
 #include <dpsim/DiakopticsSolver.h>
 
 #include <spdlog/sinks/stdout_color_sinks.h>
@@ -104,7 +104,7 @@ void Simulation::initialize() {
 		createSolvers<Real>(mSystem, mTearComponents);
 		break;
 	case Domain::SP:
-		mSolvers.push_back(std::make_shared<NRpolarSolver>(mName, mSystem, mTimeStep, mDomain, mLogLevel));
+		mSolvers.push_back(std::make_shared<PFSolverPowerPolar>(mName, mSystem, mTimeStep, mLogLevel));
 		break;
 	}
 

@@ -1,3 +1,6 @@
 [submodule "Dependencies/libcps"]
 	path = Dependencies/libcps
 	url = ../cpowersystems.git
+[submodule "Examples/CIM/grid-data"]
+	path = Examples/CIM/grid-data
+	url = ../../grid-data/cim-grid-data.git
