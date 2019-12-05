@@ -20,7 +20,7 @@
 
 #include <cps/CIM/Reader.h>
 #include <DPsim.h>
-#include <cps/LoadProfileReader.h>
+#include <cps/CSVReader.h>
 #include <iostream>
 #include <fstream>
 
@@ -37,32 +37,49 @@ int main(int argc, char** argv){
 	CommandLineArgs args(argc, argv);
 
 	#ifdef _WIN32
-		String loadProfilePath("..\\..\\..\\..\\dpsim\\Examples\\CSV\\CIGRE_MV_NoTap\\");
+		String loadProfilePath("..\\..\\..\\..\\..\\sogno-grid-data-public\\Load_Data\\CIGRE_MV_NoTap\\");
 	#elif defined(__linux__) || defined(__APPLE__)
-		String loadProfilePath("Examples/CSV/CIGRE_MV_NoTap/");
+		String loadProfilePath("../sogno-grid-data-public/Load_Data/CIGRE_MV_NoTap/");
 	#endif
+
+	std::map<String,String> assignList = {
+	// {load mRID, file name}
+	{"LOAD-H-1", "Load_H_1"},
+	{"LOAD-H-3", "Load_H_3"},
+	{"LOAD-H-4", "Load_H_4"},
+	{"LOAD-H-5", "Load_H_5"},
+	{"LOAD-H-6", "Load_H_6"},
+	{"LOAD-H-8", "Load_H_8"},
+	{"LOAD-H-10", "Load_H_10"},
+	{"LOAD-H-11", "Load_H_11"},
+	{"LOAD-H-12", "Load_H_12"},
+	{"LOAD-H-14", "Load_H_14"},
+	{"LOAD-I-1", "Load_I_1"},
+	{"LOAD-I-3", "Load_I_3"},
+	{"LOAD-I-7", "Load_I_7"},
+	{"LOAD-I-9", "Load_I_9"},
+	{"LOAD-I-10", "Load_I_10"},
+	{"LOAD-I-12", "Load_I_12"},
+	{"LOAD-I-13", "Load_I_13"},
+	{"LOAD-I-14", "Load_I_14"}};
 
 	// Find CIM files
 	std::list<fs::path> filenames;
-	if (argc <= 1) {
-		filenames = DPsim::Utils::findFiles({
-			"Rootnet_FULL_NE_06J16h_DI.xml",
-			"Rootnet_FULL_NE_06J16h_EQ.xml",
-			"Rootnet_FULL_NE_06J16h_SV.xml",
-			"Rootnet_FULL_NE_06J16h_TP.xml"
-		}, "Examples/CIM/CIGRE_MV_NoTap", "CIMPATH");
-	}
-	else {
-		filenames = args.positionalPaths();
-	}
+	filenames = DPsim::Utils::findFiles({
+		"Rootnet_FULL_NE_06J16h_DI.xml",
+		"Rootnet_FULL_NE_06J16h_EQ.xml",
+		"Rootnet_FULL_NE_06J16h_SV.xml",
+		"Rootnet_FULL_NE_06J16h_TP.xml"
+	}, "Examples/CIM/CIGRE_MV_NoTap", "CIMPATH");
 
 	String simName = "Shmem_CIGRE-MV-NoTap";
 	CPS::Real system_freq = 50;
 
     CIM::Reader reader(simName, Logger::Level::debug, Logger::Level::off);
     SystemTopology sys = reader.loadCIM(system_freq, filenames, CPS::Domain::SP);
-	LoadProfileReader lpreader(simName, loadProfilePath, Logger::Level::info);
-	lpreader.assign(sys, 1, 1, 60, LoadProfileReader::Mode::AUTO);
+
+	CSVReader csvreader(simName, loadProfilePath, assignList, Logger::Level::info);
+	csvreader.assignLoadProfile(sys, 1, 1, 60, CSVReader::Mode::MANUAL);
 
 	RealTimeSimulation sim(simName, sys, args.timeStep, args.duration, args.solver.domain, args.solver.type, args.logLevel);
 	Interface intf("/dpsim1-villas", "/villas-dpsim1");

@@ -355,10 +355,10 @@ void CSVReader::assignLoadProfileDP(std::vector<std::shared_ptr<CPS::DP::Ph1::Av
 
 
 
-LoadProfile CSVReader::readLoadProfile(std::experimental::filesystem::path file,
+PowerProfile CSVReader::readLoadProfile(std::experimental::filesystem::path file,
 	Real start_time, Real time_step, Real end_time, CSVReader::DataFormat format) {
 
-	LoadProfile load_profile;
+	PowerProfile load_profile;
 	std::ifstream csvfile(file);
 	bool need_that_conversion = (format == DataFormat::HHMMSS) ? true : false;
 	bool data_with_weighting_factor = false;
@@ -393,14 +393,14 @@ LoadProfile CSVReader::readLoadProfile(std::experimental::filesystem::path file,
 		CPS::Real currentTime = (need_that_conversion) ? time_format_convert((*loop).get(0)) : std::stod((*loop).get(0));
 		if (data_with_weighting_factor) {
 			Real wf = std::stod((*loop).get(1));
-			load_profile.data_WF.insert(std::pair<Real, Real>(currentTime, wf));
+			load_profile.weightingFactors.insert(std::pair<Real, Real>(currentTime, wf));
 		}
 		else {
 		PQData pq;
 		// multiplied by 1000 due to unit conversion (kw to w)
 		pq.p = std::stod((*loop).get(1)) * 1000;
 		pq.q = std::stod((*loop).get(2)) * 1000;
-		load_profile.data_PQ.insert(std::pair<Real,PQData>(currentTime,pq));
+		load_profile.pqData.insert(std::pair<Real,PQData>(currentTime,pq));
 		}
 
 		if (end_time > 0 && currentTime > end_time)
@@ -412,14 +412,14 @@ LoadProfile CSVReader::readLoadProfile(std::experimental::filesystem::path file,
 	}
 
 	for (auto x : times) {
-		if (load_profile.data_PQ.find(x) == load_profile.data_PQ.end()) {
+		if (load_profile.pqData.find(x) == load_profile.pqData.end()) {
 			if (data_with_weighting_factor) {
-				Real y = interpol_linear(load_profile.data_WF, x);
-				load_profile.data_WF.insert(std::pair<Real, Real>(x, y));
+				Real y = interpol_linear(load_profile.weightingFactors, x);
+				load_profile.weightingFactors.insert(std::pair<Real, Real>(x, y));
 			}
 			else {
-				PQData y = interpol_linear(load_profile.data_PQ, x);
-				load_profile.data_PQ.insert(std::pair<Real,PQData>(x,y));
+				PQData y = interpol_linear(load_profile.pqData, x);
+				load_profile.pqData.insert(std::pair<Real,PQData>(x,y));
 			}
 		}
 	}
@@ -527,14 +527,14 @@ void CSVReader::assignLoadProfile(CPS::SystemTopology& sys, Real start_time, Rea
 	}
 }
 
-CPS::PQData CSVReader::interpol_linear(std::map<CPS::Real, CPS::PQData>& data_PQ, CPS::Real x) {
-	std::map <Real, PQData>::const_iterator entry = data_PQ.upper_bound(x);
+CPS::PQData CSVReader::interpol_linear(std::map<CPS::Real, CPS::PQData>& pqData, CPS::Real x) {
+	std::map <Real, PQData>::const_iterator entry = pqData.upper_bound(x);
 	PQData y;
 
-	if (entry == data_PQ.end()) {
+	if (entry == pqData.end()) {
 		return (--entry)->second;
 	}
-	if (entry == data_PQ.begin()) {
+	if (entry == pqData.begin()) {
 		return entry->second;
 	}
 	std::map <Real, PQData>::const_iterator prev = entry;
@@ -547,14 +547,14 @@ CPS::PQData CSVReader::interpol_linear(std::map<CPS::Real, CPS::PQData>& data_PQ
 	return y;
 }
 
-CPS::Real CSVReader::interpol_linear(std::map<CPS::Real, CPS::Real>& data_wf, CPS::Real x) {
-	std::map <Real, Real>::const_iterator entry = data_wf.upper_bound(x);
+CPS::Real CSVReader::interpol_linear(std::map<CPS::Real, CPS::Real>& weightingFactors, CPS::Real x) {
+	std::map <Real, Real>::const_iterator entry = weightingFactors.upper_bound(x);
 	CPS::Real y;
 
-	if (entry == data_wf.end()) {
+	if (entry == weightingFactors.end()) {
 		return (--entry)->second;
 	}
-	if (entry == data_wf.begin()) {
+	if (entry == weightingFactors.begin()) {
 		return entry->second;
 	}
 	std::map <Real, Real>::const_iterator prev = entry;
