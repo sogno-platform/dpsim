@@ -15,6 +15,7 @@ wheelhouse/
 *.svg
 *.png
 Examples/Notebooks/Grids/reference-results/
+villas_sent_data.conf
 
 # Folders
 Libraries/

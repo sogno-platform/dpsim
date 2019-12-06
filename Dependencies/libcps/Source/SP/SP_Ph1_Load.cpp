@@ -97,14 +97,14 @@ void SP::Ph1::Load::modifyPowerFlowBusType(PowerflowBusType powerflowBusType) {
 
 void SP::Ph1::Load::updatePQ(Real time) {
 	if (mLoadProfile.weightingFactors.empty()) {
-		mPQ->attribute<Real>("P")->set(mLoadProfile.pqData.find(time)->second.p);
-		mPQ->attribute<Real>("Q")->set(mLoadProfile.pqData.find(time)->second.q);
+		this->attribute<Real>("P")->set(mLoadProfile.pqData.find(time)->second.p);
+		this->attribute<Real>("Q")->set(mLoadProfile.pqData.find(time)->second.q);
 	} else {
 		Real wf = mLoadProfile.weightingFactors.find(time)->second;
-		Real P_new = mPQ->attribute<Real>("P_nom")->get()*wf;
-		Real Q_new = mPQ->attribute<Real>("Q_nom")->get()*wf;
-		mPQ->attribute<Real>("P")->set(P_new);
-		mPQ->attribute<Real>("Q")->set(Q_new);
+		Real P_new = this->attribute<Real>("P_nom")->get()*wf;
+		Real Q_new = this->attribute<Real>("Q_nom")->get()*wf;
+		this->attribute<Real>("P")->set(P_new);
+		this->attribute<Real>("Q")->set(Q_new);
 	}
 };
 

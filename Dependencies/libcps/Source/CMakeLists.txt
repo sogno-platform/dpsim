@@ -15,7 +15,7 @@ add_library(cps STATIC
 	Component.cpp
 	PowerComponent.cpp
 	SystemTopology.cpp
-	#CSVReader.cpp
+	CSVReader.cpp
 )
 
 list(APPEND SOURCES

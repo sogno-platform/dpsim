@@ -20,7 +20,7 @@
 
 #include <cps/CIM/Reader.h>
 #include <DPsim.h>
-#include <cps/LoadProfileReader.h>
+#include <cps/CSVReader.h>
 
 using namespace std;
 using namespace DPsim;
@@ -34,10 +34,11 @@ using namespace CPS::CIM;
 int main(int argc, char** argv){
 
 	#ifdef _WIN32
-		String loadProfilePath("..\\..\\..\\..\\dpsim\\Examples\\CSV\\CIGRE_MV_NoTap\\");
+		String loadProfilePath("..\\..\\..\\..\\..\\sogno-grid-data-public\\Load_Data\\CIGRE_MV_NoTap\\");
 	#elif defined(__linux__) || defined(__APPLE__)
-		String loadProfilePath("Examples/CSV/CIGRE_MV_NoTap/");
+		String loadProfilePath("../sogno-grid-data-public/Load_Data/CIGRE_MV_NoTap/");
 	#endif
+	
 	std::map<String,String> assignList = {
 	// {load mRID, file name}
 	{"LOAD-H-1", "Load_H_1"},
@@ -78,9 +79,9 @@ int main(int argc, char** argv){
 
     CIM::Reader reader(simName, Logger::Level::info, Logger::Level::off);
     SystemTopology system = reader.loadCIM(system_freq, filenames, CPS::Domain::SP);
-	//load profile lpreader
-	LoadProfileReader lpreader(simName, loadProfilePath, assignList, Logger::Level::info);
-	lpreader.assign(system, 0, 1.5, 15, LoadProfileReader::Mode::MANUAL);
+	
+	CSVReader csvreader(simName, loadProfilePath, assignList, Logger::Level::info);
+	csvreader.assignLoadProfile(system, 0, 1.5, 15, CSVReader::Mode::MANUAL);
 
 	auto logger = DPsim::DataLogger::make(simName);
 	for (auto node : system.mNodes)

@@ -41,6 +41,7 @@ void PFSolverPowerPolar::generateInitialSolution(Real time, bool keep_last_solut
 			if (std::shared_ptr<CPS::SP::Ph1::Load> load = std::dynamic_pointer_cast<CPS::SP::Ph1::Load>(comp)) {
 				if (load->use_profile) {
 					load->updatePQ(time);
+                    load->calculatePerUnitParameters(mBaseApparentPower, mSystem.mSystemOmega);
 				}
 				sol_P(pq->simNode()) -= load->attribute<CPS::Real>("P_pu")->get();
 				sol_Q(pq->simNode()) -= load->attribute<CPS::Real>("Q_pu")->get();

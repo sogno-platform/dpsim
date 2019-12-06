@@ -20,7 +20,6 @@
 
 #include <cps/CIM/Reader.h>
 #include <DPsim.h>
-#include <cps/LoadProfileReader.h>
 
 using namespace std;
 using namespace DPsim;

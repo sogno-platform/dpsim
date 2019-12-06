@@ -63,9 +63,13 @@ namespace CPS {
 		*/
 		enum class DataFormat { HHMMSS, SECONDS, HOURS, MINUTES };
 
+		///
 		CSVReader(String name, std::list<std::experimental::filesystem::path> path, Logger::Level logLevel);
+		///
 		CSVReader(String name, String path, Logger::Level logLevel);
+		///
 		CSVReader(String name, std::list<std::experimental::filesystem::path> path, std::map<String, String>& assignList, Logger::Level logLevel);
+		///
 		CSVReader(String name, String path, std::map<String, String>& assignList, Logger::Level logLevel);
 
 		///	convert HH:MM:SS format timestamp into total seconds.
@@ -94,7 +98,7 @@ namespace CPS {
 
 		/// TODO : deprecate in the future
 		/// read in load profile with time stamp format specified
-		LoadProfile readLoadProfile(std::experimental::filesystem::path file,
+		PowerProfile readLoadProfile(std::experimental::filesystem::path file,
 			Real start_time = -1, Real time_step = 1, Real end_time = -1,
 			CSVReader::DataFormat format = CSVReader::DataFormat::SECONDS);
 		///

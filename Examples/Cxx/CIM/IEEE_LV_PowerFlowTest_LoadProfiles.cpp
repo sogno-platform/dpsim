@@ -20,7 +20,7 @@
 
 #include <cps/CIM/Reader.h>
 #include <DPsim.h>
-#include <cps/LoadProfileReader.h>
+#include <cps/CSVReader.h>
 
 using namespace std;
 using namespace DPsim;
@@ -77,8 +77,8 @@ int main(int argc, char** argv){
     SystemTopology system = reader.loadCIM(system_freq, filenames, CPS::Domain::SP);
 
 	//load profile lpreader
-	LoadProfileReader lpreader(simName, loadProfilePath, assignList, Logger::Level::info);
-	lpreader.assign(system, 1, 1, 30, LoadProfileReader::Mode::MANUAL, LoadProfileReader::DataFormat::HHMMSS);
+	CSVReader csvreader(simName, loadProfilePath, assignList, Logger::Level::info);
+	csvreader.assignLoadProfile(system, 1, 1, 30, CSVReader::Mode::MANUAL, CSVReader::DataFormat::HHMMSS);
 
 	auto logger = DPsim::DataLogger::make(simName);
 	for (auto node : system.mNodes)

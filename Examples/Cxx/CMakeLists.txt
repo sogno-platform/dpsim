@@ -79,7 +79,7 @@ if(WITH_SHMEM)
 		Shmem/ShmemControllableSource.cpp
 		Shmem/ShmemControllableFiltSource.cpp
 		Shmem/Shmem_CIGRE_MV_PowerFlowTest.cpp
-		#Shmem/Shmem_CIGRE_MV_PowerFlowTest_LoadProfiles.cpp
+		Shmem/Shmem_CIGRE_MV_PowerFlowTest_LoadProfiles.cpp
 	)
 endif()
 
@@ -97,15 +97,15 @@ if(WITH_CIM)
 		CIM/Slack_Trafo_Load.cpp
 		CIM/Slack_TrafoTapChanger_Load.cpp
 		CIM/CIGRE_MV_PowerFlowTest.cpp
-		#CIM/CIGRE_MV_PowerFlowTest_LoadProfiles.cpp
+		CIM/CIGRE_MV_PowerFlowTest_LoadProfiles.cpp
 
 		CIM/IEEE_LV_PowerFlowTest.cpp
-		#CIM/IEEE_LV_PowerFlowTest_LP.cpp
+		CIM/IEEE_LV_PowerFlowTest_LoadProfiles.cpp
+		
 		CIM/case145.cpp
 		CIM/case300.cpp
 		CIM/case9.cpp
-		CIM/case14.cpp
-		CIM/LV_SOGNO.cpp
+		CIM/case14.cpp		
 
 		CIM/WSCC_9bus_mult_decoupled.cpp
 		CIM/WSCC_9bus_mult_coupled.cpp
