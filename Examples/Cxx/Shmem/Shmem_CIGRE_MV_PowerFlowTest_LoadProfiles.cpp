@@ -79,7 +79,7 @@ int main(int argc, char** argv){
     SystemTopology sys = reader.loadCIM(system_freq, filenames, CPS::Domain::SP);
 
 	CSVReader csvreader(simName, loadProfilePath, assignList, Logger::Level::info);
-	csvreader.assignLoadProfile(sys, 1, 1, 60, CSVReader::Mode::MANUAL);
+	csvreader.assignLoadProfile(sys, 1, 1, args.duration, CSVReader::Mode::MANUAL);
 
 	RealTimeSimulation sim(simName, sys, args.timeStep, args.duration, args.solver.domain, args.solver.type, args.logLevel);
 	Interface intf("/dpsim1-villas", "/villas-dpsim1");
