@@ -23,9 +23,6 @@
 
 #include <cps/PowerComponent.h>
 #include <cps/Solver/PFSolverInterfaceBus.h>
-#include <cps/SP/SP_Ph1_PVNode.h>
-#include <cps/SP/SP_Ph1_PQNode.h>
-#include <cps/SP/SP_Ph1_VDNode.h>
 
 
 namespace CPS {
@@ -33,32 +30,52 @@ namespace CPS {
 namespace SP {
 namespace Ph1 {
 
-        class SynchronGenerator : public PowerComponent<Complex>,
-        public SharedFactory<SynchronGenerator>, public PFSolverInterfaceBus {
-	    private:
-		    Real mRatedU;
-		    Real mRatedS;
+        class SynchronGenerator : 
+			public PowerComponent<Complex>,
+			public SharedFactory<SynchronGenerator>,
+			public PFSolverInterfaceBus {
+	    private:			
+			/// Rate apparent power [VA]
+		    Real mRatedApparentPower;
+			/// Rated voltage [V]
+		    Real mRatedVoltage;
+
+			/// Active power set point of the machine [W]
+			Real mSetPointActivePower;
+			/// Voltage set point of the machine [V]
+			Real mSetPointVoltage;
+			/// Maximum reactive power [VAr]
+			Real mMaximumReactivePower;
+
+			/// Base apparent power[VA]
+			Real mBaseApparentPower;
+			/// Base omega [1/s]
+			Real mBaseOmega;
+			/// Base voltage [V]
+			Real mBaseVoltage;
+			/// Active power set point of the machine [pu]
+			Real mSetPointActivePowerPerUnit;
+			/// Voltage set point of the machine [pu]
+			Real mSetPointVoltagePerUnit;
+
 
         public:
-			using PowerComponent<Complex>::PowerComponent;
+			/// Defines UID, name and logging level
+			SynchronGenerator(String uid, String name, Logger::Level logLevel = Logger::Level::off);
+			/// Defines name and logging level
+			SynchronGenerator(String name, Logger::Level logLevel = Logger::Level::off)
+				: SynchronGenerator(name, name, logLevel) { }
+			/// Setter for synchronous generator parameters
+			void setParameters(Real ratedApparentPower, Real ratedVoltage, Real setPointActivePower, Real setPointVoltage, Real maximumReactivePower, PowerflowBusType powerflowBusType);
 
-            /// Defines UID, name, component parameters and logging level
-			SynchronGenerator(String uid, String name,
-				PowerflowBusType powerflowBusType,
-				Logger::Level logLevel = Logger::Level::off);
-
-			SynchronGenerator(String uid, String name, Real power,
-				Real voltageSetPoint,PowerflowBusType powerflowBusType,
-				Logger::Level logLevel = Logger::Level::off);
-
-			SynchronGenerator(String uid, String name, Real power, Real maxQ, Real voltageSetPoint,
-				Real ratedU, Real ratedS, PowerflowBusType powerflowBusType,
-				Logger::Level logLevel = Logger::Level::off);
-
-            // #### Powerflow section ####
+			// #### Powerflow section ####
+			/// Set base voltage
+			void setBaseVoltage(Real baseVoltage);
+			/// Initializes component from power flow data
+			void calculatePerUnitParameters(Real baseApparentPower, Real baseOmega);
             /// Modify powerflow bus type
 			void modifyPowerFlowBusType(PowerflowBusType powerflowBusType) override;
-			};
+		};
 }
 }
 }

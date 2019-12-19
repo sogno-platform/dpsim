@@ -90,6 +90,9 @@ void PFSolver::initializeComponents(){
 	for(auto load : mLoads) {
 		load->calculatePerUnitParameters(mBaseApparentPower, mSystem.mSystemOmega);
 	}
+	for(auto gen : mSynchronGenerators) {
+		gen->calculatePerUnitParameters(mBaseApparentPower, mSystem.mSystemOmega);
+	}
 	
 }
 
@@ -97,8 +100,8 @@ void PFSolver::setBaseApparentPower() {
 	Real maxPower = 0.;
 	if (!mSynchronGenerators.empty()) {
 		for (auto gen : mSynchronGenerators)
-			if (std::abs(gen->mPV->attribute<Real>("P_set")->get()) > maxPower)
-				maxPower = std::abs(gen->mPV->attribute<Real>("P_set")->get());
+			if (std::abs(gen->attribute<Real>("P_set")->get()) > maxPower)
+				maxPower = std::abs(gen->attribute<Real>("P_set")->get());
 	}
 	else if (!mTransformers.empty()) {
 		for (auto trafo : mTransformers)

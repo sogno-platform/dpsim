@@ -314,6 +314,19 @@ Component::Ptr Reader::mapEnergyConsumer(EnergyConsumer* consumer) {
 	}
 	else if (mDomain == Domain::SP) {
 		auto load = std::make_shared<SP::Ph1::Load>(consumer->mRID, consumer->name, mComponentLogLevel);
+
+		// TODO: Use EnergyConsumer.P and EnergyConsumer.Q if available, overwrite if existent SvPowerFlow data
+		/*
+		Real p = 0;
+		Real q = 0;
+		if (consumer->p.value){
+			p = unitValue(consumer->p.value,UnitMultiplier::M);
+		}
+		if (consumer->q.value){
+			q = unitValue(consumer->q.value,UnitMultiplier::M);
+		}*/
+
+		// P and Q values will be set according to SvPowerFlow data
 		load->setParameters(0, 0, 0);
 		load->modifyPowerFlowBusType(PowerflowBusType::PQ); // for powerflow solver set as PQ component as default
 		return load;
@@ -551,28 +564,39 @@ Component::Ptr Reader::mapSynchronousMachine(SynchronousMachine* machine) {
 				for (auto syncGen : genUnit->RotatingMachine)
 				{
                     if (syncGen->mRID == machine->mRID){
-					try{
-						mSLog->info("    InitialP={}", (float)genUnit->initialP.value);
-						//mSLog->info("InitialP {}", genUnit->initialP.value);
-					}catch(ReadingUninitializedField* e){
-						genUnit->initialP.value = 0 ;
-						std::cerr << "Uninitalized InitialP for GeneratingUnit " <<  genUnit->name << ".Setting default value of " << genUnit->initialP.value << std::endl;
-					}	
-					
-					try{
-						mSLog->info("    maxQ={}", (float)machine->maxQ.value);
-					}catch(ReadingUninitializedField* e){
-						machine->maxQ.value = 1e12;
-						std::cerr << "Uninitalized maxQ for GeneratingUnit " <<  genUnit->name << ".Setting default value of " << machine->maxQ.value << std::endl;
-					}	
 
-                        return std::make_shared<SP::Ph1::SynchronGenerator>
-                                (machine->mRID, machine->name, unitValue(genUnit->initialP.value, UnitMultiplier::M),
-                                unitValue(machine->maxQ.value, UnitMultiplier::M),
-                                unitValue(machine->RegulatingControl->targetValue.value, UnitMultiplier::k),
-                                unitValue(machine->ratedU.value, UnitMultiplier::k),
-                                unitValue(machine->ratedS.value, UnitMultiplier::M),
-							    PowerflowBusType::PV, mComponentLogLevel);
+						// Check whether relevant input data are set, otherwise set default values
+						Real setPointActivePower = 0;
+						Real setPointVoltage = 0;
+						Real maximumReactivePower = 1e12;
+						try{							
+							setPointActivePower = unitValue(genUnit->initialP.value, UnitMultiplier::M);
+							mSLog->info("    setPointActivePower={}", setPointActivePower);
+						}catch(ReadingUninitializedField* e){
+							std::cerr << "Uninitalized setPointActivePower for GeneratingUnit " << machine->name << ". Using default value of " << setPointActivePower << std::endl;
+						}	
+						if (machine->RegulatingControl) {							
+							setPointVoltage = unitValue(machine->RegulatingControl->targetValue.value, UnitMultiplier::k);
+							mSLog->info("    setPointVoltage={}", setPointVoltage);
+						} else {
+							std::cerr << "Uninitalized setPointVoltage for GeneratingUnit " <<  machine->name << ". Using default value of " << setPointVoltage << std::endl;
+						}	
+						try{							
+							maximumReactivePower = unitValue(machine->maxQ.value, UnitMultiplier::M);
+							mSLog->info("    maximumReactivePower={}", maximumReactivePower);
+						}catch(ReadingUninitializedField* e){
+							std::cerr << "Uninitalized maximumReactivePower for GeneratingUnit " <<  machine->name << ". Using default value of " << maximumReactivePower << std::endl;
+						}
+
+						auto gen = std::make_shared<SP::Ph1::SynchronGenerator>(machine->mRID, machine->name, mComponentLogLevel);
+							gen->setParameters(unitValue(machine->ratedS.value, UnitMultiplier::M),
+									unitValue(machine->ratedU.value, UnitMultiplier::k),
+									setPointActivePower,
+									setPointVoltage,
+									maximumReactivePower,
+									PowerflowBusType::PV);
+							gen->setBaseVoltage(unitValue(machine->ratedU.value, UnitMultiplier::k));
+						return gen;
 					}
 				}
 
@@ -580,7 +604,7 @@ Component::Ptr Reader::mapSynchronousMachine(SynchronousMachine* machine) {
 
 		}
 		mSLog->info("no corresponding initial power for {}", machine->name);
-		return std::make_shared<SP::Ph1::SynchronGenerator>(machine->mRID, machine->name,PowerflowBusType::PV, mComponentLogLevel);
+		return std::make_shared<SP::Ph1::SynchronGenerator>(machine->mRID, machine->name, mComponentLogLevel);
 	}
     else {
         return std::make_shared<DP::Ph1::SynchronGeneratorIdeal>(machine->mRID, machine->name, mComponentLogLevel);
