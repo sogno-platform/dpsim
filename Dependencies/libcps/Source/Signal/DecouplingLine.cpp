@@ -1,8 +1,5 @@
-/** Signalling part of a decoupling transmission line
- *
- * @file
- * @author Georg Reinke <georg.reinke@rwth-aachen.de>
- * @copyright 2017-2018, Institute for Automation of Complex Power Systems, EONERC
+/**
+ * @copyright 2017 Institute for Automation of Complex Power Systems, EONERC
  *
  * CPowerSystems
  *
@@ -30,6 +27,7 @@ DecouplingLine::DecouplingLine(String name, Node<Complex>::Ptr node1, Node<Compl
 	Real resistance, Real inductance, Real capacitance, Logger::Level logLevel) :
 	SignalComponent(name, name, logLevel),
 	mResistance(resistance), mInductance(inductance), mCapacitance(capacitance) {
+
 	addAttribute<Matrix>("states", &mStates);
 	addAttribute<Complex>("i_src1", &mSrcCur1Ref, Flags::read);
 	addAttribute<Complex>("i_src2", &mSrcCur2Ref, Flags::read);

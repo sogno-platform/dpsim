@@ -111,8 +111,8 @@ list(APPEND SOURCES
 	SP/SP_Ph3_VoltageSource.cpp
 	SP/SP_Ph3_ControlledVoltageSource.cpp
 
-
 	Signal/DecouplingLine.cpp
+	Signal/DecouplingLineEMT.cpp
 	Signal/Exciter.cpp
 	Signal/FIRFilter.cpp
 	Signal/TurbineGovernor.cpp

@@ -1,7 +1,5 @@
 /**
- * @file
- * @author Markus Mirz <mmirz@eonerc.rwth-aachen.de>
- * @copyright 2017-2019, Institute for Automation of Complex Power Systems, EONERC
+ * @copyright 2017 Institute for Automation of Complex Power Systems, EONERC
  *
  * DPsim
  *
@@ -133,7 +131,6 @@ void simDecoupling() {
 }
 
 void simDecouplingEMT() {
-	/*
 	Real timeStep = 0.00005;
 	Real finalTime = 0.1;
 	String simName = "EMT_Decoupling_Wave";
@@ -145,15 +142,14 @@ void simDecouplingEMT() {
 
 	// Components
 	auto vs = CPS::EMT::Ph1::VoltageSource::make("v_1");
-	vs->setParameters(CPS::Math::polar(100000, -PI/2.));
+	vs->setParameters(CPS::Math::polar(100000, -PI/2.), 50);
 
 
 	Real resistance = 5;
 	Real inductance = 0.16;
 	Real capacitance = 1.0e-6;
-	auto dline = CPS::Signal::DecouplingLine::make("dline",
-		n1, n2, resistance, inductance, capacitance,
-		Logger::Level::debug);
+	auto dline = CPS::Signal::DecouplingLineEMT::make("dline", Logger::Level::debug);
+	dline->setParameters(n1, n2, resistance, inductance, capacitance);
 
 	auto load = CPS::EMT::Ph1::Resistor::make("R_load");
 	load->setParameters(10000);
@@ -173,6 +169,8 @@ void simDecouplingEMT() {
 	logger->addAttribute("v2", n2->attribute("v"));
 	logger->addAttribute("i1", vs->attribute("i_intf"));
 	logger->addAttribute("i2", load->attribute("i_intf"));
+	logger->addAttribute("i_src1", dline->attribute("i_src1"));
+	logger->addAttribute("i_src2", dline->attribute("i_src2"));
 
 	Simulation sim(simName);
 	sim.setSystem(sys);
@@ -182,7 +180,6 @@ void simDecouplingEMT() {
 	sim.addLogger(logger);
 
 	sim.run();
-	*/
 }
 
 int main(int argc, char* argv[]) {
