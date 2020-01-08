@@ -80,7 +80,7 @@ void DecouplingLineEMT::initialize(Real omega, Real timeStep) {
 	mSLog->info("initial voltages: v_k {} v_m {}", volt1, volt2);
 	mSLog->info("initial currents: i_km {} i_mk {}", cur1, cur2);
 
-	// Resize ring buffers
+	// Resize ring buffers and initialize
 	mVolt1.resize(mBufSize, volt1.real());
 	mVolt2.resize(mBufSize, volt2.real());
 	mCur1.resize(mBufSize, cur1.real());
@@ -104,16 +104,16 @@ void DecouplingLineEMT::step(Real time, Int timeStepCount) {
 	if (timeStepCount == 0) {
 		// initialization
 		mSrcCur1Ref = cur1 - volt1 / (mSurgeImpedance + mResistance / 4);
-		mSrcCur1Ref = cur2 - volt2 / (mSurgeImpedance + mResistance / 4);
+		mSrcCur2Ref = cur2 - volt2 / (mSurgeImpedance + mResistance / 4);
 	} else {
 		// Update currents
 		mSrcCur1Ref = -mSurgeImpedance / denom * (volt2 + (mSurgeImpedance - mResistance/4) * cur2)
 			-mResistance/4 / denom * (volt1 + (mSurgeImpedance - mResistance/4) * cur1);
-		mSrcCur1Ref = -mSurgeImpedance / denom * (volt1 + (mSurgeImpedance - mResistance/4) * cur1)
+		mSrcCur2Ref = -mSurgeImpedance / denom * (volt1 + (mSurgeImpedance - mResistance/4) * cur1)
 			-mResistance/4 / denom * (volt2 + (mSurgeImpedance - mResistance/4) * cur2);
 	}
 	mSrcCur1->set(mSrcCur1Ref);
-	mSrcCur2->set(mSrcCur1Ref);
+	mSrcCur2->set(mSrcCur2Ref);
 }
 
 void DecouplingLineEMT::PreStep::execute(Real time, Int timeStepCount) {

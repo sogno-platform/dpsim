@@ -43,7 +43,7 @@ namespace Signal {
 		Complex mSrcCur1Ref;
 		Complex mSrcCur2Ref;
 
-		// TODO also EMT support?
+		std::shared_ptr<DP::Node> mNode1, mNode2;
 		std::shared_ptr<DP::Ph1::Resistor> mRes1, mRes2;
 		std::shared_ptr<DP::Ph1::CurrentSource> mSrc1, mSrc2;
 		Attribute<Complex>::Ptr mSrcCur1, mSrcCur2;
@@ -64,6 +64,9 @@ namespace Signal {
 		DecouplingLine(String name, Node<Complex>::Ptr node1, Node<Complex>::Ptr node2,
 			Real resistance, Real inductance, Real capacitance, Logger::Level logLevel = Logger::Level::info);
 
+		DecouplingLine(String name, Logger::Level logLevel = Logger::Level::info);
+
+		void setParameters(Node<Complex>::Ptr node1, Node<Complex>::Ptr node2, Real resistance, Real inductance, Real capacitance);
 		void initialize(Real omega, Real timeStep);
 		void step(Real time, Int timeStepCount);
 		void postStep();

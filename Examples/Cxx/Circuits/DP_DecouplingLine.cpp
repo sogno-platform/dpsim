@@ -90,15 +90,14 @@ void simDecoupling() {
 	auto n2 = Node::make("n2");
 
 	// Components
-	auto vs = Ph1::VoltageSource::make("v_1");
-	vs->setParameters(CPS::Math::polar(100000, -PI/2.));
+	auto vs = Ph1::VoltageSource::make("Vsrc");
+	vs->setParameters(CPS::Math::polar(100000, 0));
 
 	Real resistance = 5;
 	Real inductance = 0.16;
 	Real capacitance = 1.0e-6;
-	auto dline = CPS::Signal::DecouplingLine::make("dline",
-		n1, n2, resistance, inductance, capacitance,
-		Logger::Level::debug);
+	auto dline = CPS::Signal::DecouplingLine::make("DecLine", Logger::Level::debug);
+	dline->setParameters(n1, n2, resistance, inductance, capacitance);
 
 	auto load = Ph1::Resistor::make("R_load");
 	load->setParameters(10000);
@@ -141,14 +140,13 @@ void simDecouplingEMT() {
 	auto n2 = CPS::EMT::Node::make("n2");
 
 	// Components
-	auto vs = CPS::EMT::Ph1::VoltageSource::make("v_1");
-	vs->setParameters(CPS::Math::polar(100000, -PI/2.), 50);
-
+	auto vs = CPS::EMT::Ph1::VoltageSource::make("Vsrc_emt");
+	vs->setParameters(CPS::Math::polar(100000, 0), 50);
 
 	Real resistance = 5;
 	Real inductance = 0.16;
 	Real capacitance = 1.0e-6;
-	auto dline = CPS::Signal::DecouplingLineEMT::make("dline", Logger::Level::debug);
+	auto dline = CPS::Signal::DecouplingLineEMT::make("DecLine_emt", Logger::Level::debug);
 	dline->setParameters(n1, n2, resistance, inductance, capacitance);
 
 	auto load = CPS::EMT::Ph1::Resistor::make("R_load");
