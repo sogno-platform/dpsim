@@ -177,7 +177,12 @@ void PFSolver::determinePFBusType() {
 			mVDBusIndices.push_back(node->simNode());
 			mVDBuses.push_back(node);
 			mSLog->info("Note: node with uuid {} set as VD bus. Both VD and PV type components were connected.", node->attribute<String>("uid")->get());
-		}
+		} // VD, PV and PQ type component connect -> set as VD bus
+		else if (connectedPV && connectedPQ && connectedVD) {
+			mVDBusIndices.push_back(node->simNode());
+			mVDBuses.push_back(node);
+			mSLog->info("Note: node with uuid {} set as VD bus. VD, PV and PQ type components were connected.", node->attribute<String>("uid")->get());
+		} 
 		else {
 			std::stringstream ss;
 			ss << "Node>>" << node->name() << ": combination of connected components is invalid";
