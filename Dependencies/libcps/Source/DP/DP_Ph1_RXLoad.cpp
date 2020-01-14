@@ -50,8 +50,12 @@ DP::Ph1::RXLoad::RXLoad(String name,
 }
 
 PowerComponent<Complex>::Ptr DP::Ph1::RXLoad::clone(String name) {
+	// TODO: Is this change is needed when "everything set by initializePOwerflow"??
 	// everything set by initializeFromPowerflow
-	return RXLoad::make(name, mLogLevel);
+	//return RXLoad::make(name, mLogLevel);
+	auto copy = RXLoad::make(name, mLogLevel);
+	copy->setParameters(mActivePower, mReactivePower, mNomVoltage);
+	return copy;
 }
 
 void DP::Ph1::RXLoad::initialize(Matrix frequencies) {
@@ -112,6 +116,14 @@ void DP::Ph1::RXLoad::initializeFromPowerflow(Real frequency) {
 		Logger::phasorToString(mIntfCurrent(0,0)),
 		Logger::phasorToString(initialSingleVoltage(0)));
 }
+
+void DP::Ph1::RXLoad::setParameters(Real activePower, Real reactivePower, Real volt){
+	mActivePower = activePower;
+	mReactivePower = reactivePower;
+	mPower = { mActivePower, mReactivePower};
+	mNomVoltage = volt;
+}
+
 
 void DP::Ph1::RXLoad::mnaInitialize(Real omega, Real timeStep, Attribute<Matrix>::Ptr leftVector) {
 	MNAInterface::mnaInitialize(omega, timeStep);
