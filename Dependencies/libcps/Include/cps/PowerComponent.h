@@ -51,6 +51,9 @@ namespace CPS {
 		/// "Cached" flags for whether the connected nodes are grounded
 		std::vector<bool> mSimNodeIsGround;
 
+		/// Flag indicating that parameters are set via setParameters() function
+		bool parametersSet = false;
+
 	public:
 		typedef VarType Type;
 		typedef std::shared_ptr<PowerComponent<VarType>> Ptr;

@@ -32,6 +32,7 @@ DP::Ph1::RXLoad::RXLoad(String uid, String name,
 	addAttribute<Real>("P", &mActivePower, Flags::read | Flags::write);
 	addAttribute<Real>("Q", &mReactivePower, Flags::read | Flags::write);
 	addAttribute<Real>("V_nom", &mNomVoltage, Flags::read | Flags::write);
+
 }
 
 DP::Ph1::RXLoad::RXLoad(String name,
@@ -64,11 +65,12 @@ void DP::Ph1::RXLoad::initialize(Matrix frequencies) {
 
 void DP::Ph1::RXLoad::initializeFromPowerflow(Real frequency) {
 	checkForUnconnectedTerminals();
-
-	mActivePower = mTerminals[0]->singleActivePower();
-	mReactivePower = mTerminals[0]->singleReactivePower();
-	mPower = { mActivePower, mReactivePower };
-	mNomVoltage = std::abs(mTerminals[0]->initialSingleVoltage());
+	if(!parametersSet){
+		mActivePower = mTerminals[0]->singleActivePower();
+		mReactivePower = mTerminals[0]->singleReactivePower();
+		mPower = { mActivePower, mReactivePower };
+		mNomVoltage = std::abs(mTerminals[0]->initialSingleVoltage());
+	}
 
 	if (mActivePower != 0) {
 		mResistance = std::pow(mNomVoltage, 2) / mActivePower;
@@ -122,6 +124,8 @@ void DP::Ph1::RXLoad::setParameters(Real activePower, Real reactivePower, Real v
 	mReactivePower = reactivePower;
 	mPower = { mActivePower, mReactivePower};
 	mNomVoltage = volt;
+
+	parametersSet = true;
 }
 
 
