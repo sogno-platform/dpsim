@@ -33,6 +33,7 @@ SP::Ph1::ControlledVoltageSource::ControlledVoltageSource(String uid, String nam
 
 void SP::Ph1::ControlledVoltageSource::setParameters(MatrixComp voltageRef) {
 	mIntfVoltage = voltageRef;
+	parametersSet = true;
 }
 
 PowerComponent<Complex>::Ptr SP::Ph1::ControlledVoltageSource::clone(String name) {

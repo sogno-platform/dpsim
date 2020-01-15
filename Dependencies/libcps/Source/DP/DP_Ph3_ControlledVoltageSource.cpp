@@ -35,6 +35,7 @@ DP::Ph3::ControlledVoltageSource::ControlledVoltageSource(String uid, String nam
 
 void DP::Ph3::ControlledVoltageSource::setParameters(MatrixComp voltageRefABC) {
 	mIntfVoltage = voltageRefABC;
+	parametersSet = true;
 }
 
 PowerComponent<Complex>::Ptr DP::Ph3::ControlledVoltageSource::clone(String name) {

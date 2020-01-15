@@ -92,6 +92,8 @@ void SP::Ph1::AvVoltageSourceInverterDQ::setParameters(Real sysOmega, Complex sy
 	mPFAvVoltageSourceInverter = SP::Ph1::Load::make(mName + "_pf", mName + "_pf", mLogLevel);
 	mPFAvVoltageSourceInverter->setParameters(mPref, mQref, 0);
 	mPFAvVoltageSourceInverter->modifyPowerFlowBusType(PowerflowBusType::PQ);
+
+	parametersSet = true;
 }
 
 

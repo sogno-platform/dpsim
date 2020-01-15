@@ -53,6 +53,8 @@ void EMT::Ph3::Transformer::setParameters(Real ratioAbs, Real ratioPhase,
 		setVirtualNodeNumber(3);
 	else
 		setVirtualNodeNumber(2);
+
+	parametersSet = true;
 }
 
 void EMT::Ph3::Transformer::initialize(Matrix frequencies) {

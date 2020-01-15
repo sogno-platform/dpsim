@@ -45,6 +45,7 @@ SP::Ph1::externalGridInjection::externalGridInjection(String uid, String name,
 
 void SP::Ph1::externalGridInjection::setParameters(Real vSetPointPerUnit) {
 	attribute<Real>("V_set_pu")->set(vSetPointPerUnit);
+	parametersSet = true;
 }
 
 void SP::Ph1::externalGridInjection::modifyPowerFlowBusType(PowerflowBusType powerflowBusType) {
@@ -61,6 +62,7 @@ void SP::Ph1::externalGridInjection::updatePowerInjection(Complex powerInj) {
 void SP::Ph1::externalGridInjection::setParameters(Complex voltageRef, Real srcFreq) {
 	attribute<Complex>("V_ref")->set(voltageRef);
 	attribute<Real>("f_src")->set(srcFreq);
+	parametersSet = true;
 }
 
 PowerComponent<Complex>::Ptr SP::Ph1::externalGridInjection::clone(String name) {

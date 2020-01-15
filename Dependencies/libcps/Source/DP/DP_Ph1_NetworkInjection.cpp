@@ -53,6 +53,8 @@ void DP::Ph1::NetworkInjection::initialize(Matrix frequencies) {
 void DP::Ph1::NetworkInjection::setParameters(Complex voltageRef, Real srcFreq) {
 	attribute<Complex>("V_ref")->set(voltageRef);
 	attribute<Real>("f_src")->set(srcFreq);
+
+	parametersSet = true;
 }
 
 void DP::Ph1::NetworkInjection::initializeFromPowerflow(Real frequency) {

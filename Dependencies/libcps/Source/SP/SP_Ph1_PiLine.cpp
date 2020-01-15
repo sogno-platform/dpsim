@@ -73,6 +73,8 @@ void SP::Ph1::PiLine::setParameters(Real resistance, Real inductance, Real capac
     }
     mSLog->info("Suceptance={} [S] Conductance={} [S]", mNominalOmega*mParallelCap, mParallelCond);
 	mSLog->flush();
+	parametersSet = true;
+
 }
 
 PowerComponent<Complex>::Ptr SP::Ph1::PiLine::clone(String name) {

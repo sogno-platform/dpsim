@@ -59,6 +59,8 @@ void DP::Ph1::PQLoadCS::setParameters(Real activePower, Real reactivePower, Real
 	attribute<Real>("P")->set(activePower);
 	attribute<Real>("Q")->set(reactivePower);
 	attribute<Real>("V_nom")->set(nomVolt);
+
+	parametersSet = true;
 }
 
 PowerComponent<Complex>::Ptr DP::Ph1::PQLoadCS::clone(String name) {
@@ -74,7 +76,7 @@ void DP::Ph1::PQLoadCS::initializeFromPowerflow(Real frequency) {
 	mReactivePower = attribute<Real>("Q");
 	mNomVoltage = attribute<Real>("V_nom");
 	// Get power from Terminals if it was not set previously.
-	if (mActivePower->get() == 0 && mReactivePower->get() == 0) {
+	if (mActivePower->get() == 0 && mReactivePower->get() == 0 && !parametersSet) {
 		mActivePower->set(mTerminals[0]->singleActivePower());
 		mReactivePower->set(mTerminals[0]->singleReactivePower());
 		mNomVoltage->set(std::abs(mTerminals[0]->initialSingleVoltage()));
