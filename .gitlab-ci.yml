@@ -70,25 +70,25 @@ build:windows:
       - build
     key: build-win10
 
-build:macos:
-  stage: build
-  script:
-    - mkdir -p build
-    - cd build
-    - cmake -DCMAKE_C_COMPILER=/usr/local/bin/gcc-9
-            -DCMAKE_CXX_COMPILER=/usr/local/bin/g++-9
-            -DWITH_CIM_SUBMODULE=ON 
-            -DWITH_SUNDIALS=OFF ..
-    - make -j $(sysctl -n hw.ncpu)
-  cache:
-    paths:
-      - build
-    key: build-macos
-  artifacts:
-    paths:
-      - build
-  tags:
-    - mac
+#build:macos:
+#  stage: build
+#  script:
+#    - mkdir -p build
+#    - cd build
+#    - cmake -DCMAKE_C_COMPILER=/usr/local/bin/gcc-9
+#            -DCMAKE_CXX_COMPILER=/usr/local/bin/g++-9
+#            -DWITH_CIM_SUBMODULE=ON 
+#            -DWITH_SUNDIALS=OFF ..
+#    - make -j $(sysctl -n hw.ncpu)
+#  cache:
+#    paths:
+#      - build
+#    key: build-macos
+#  artifacts:
+#    paths:
+#      - build
+#  tags:
+#    - mac
 
 test:pytest:
   stage: test
