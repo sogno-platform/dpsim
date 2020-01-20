@@ -49,6 +49,8 @@ void DP::Ph1::Transformer::setParameters(Real ratioAbs, Real ratioPhase,
 		setVirtualNodeNumber(3);
 	else
 		setVirtualNodeNumber(2);
+
+	parametersSet = true;
 }
 
 void DP::Ph1::Transformer::initialize(Matrix frequencies) {

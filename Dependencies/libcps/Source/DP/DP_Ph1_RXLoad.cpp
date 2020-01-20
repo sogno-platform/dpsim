@@ -32,6 +32,7 @@ DP::Ph1::RXLoad::RXLoad(String uid, String name,
 	addAttribute<Real>("P", &mActivePower, Flags::read | Flags::write);
 	addAttribute<Real>("Q", &mReactivePower, Flags::read | Flags::write);
 	addAttribute<Real>("V_nom", &mNomVoltage, Flags::read | Flags::write);
+
 }
 
 DP::Ph1::RXLoad::RXLoad(String name,
@@ -50,8 +51,12 @@ DP::Ph1::RXLoad::RXLoad(String name,
 }
 
 PowerComponent<Complex>::Ptr DP::Ph1::RXLoad::clone(String name) {
+	// TODO: Is this change is needed when "everything set by initializePOwerflow"??
 	// everything set by initializeFromPowerflow
-	return RXLoad::make(name, mLogLevel);
+	//return RXLoad::make(name, mLogLevel);
+	auto copy = RXLoad::make(name, mLogLevel);
+	copy->setParameters(mActivePower, mReactivePower, mNomVoltage);
+	return copy;
 }
 
 void DP::Ph1::RXLoad::initialize(Matrix frequencies) {
@@ -60,11 +65,12 @@ void DP::Ph1::RXLoad::initialize(Matrix frequencies) {
 
 void DP::Ph1::RXLoad::initializeFromPowerflow(Real frequency) {
 	checkForUnconnectedTerminals();
-
-	mActivePower = mTerminals[0]->singleActivePower();
-	mReactivePower = mTerminals[0]->singleReactivePower();
-	mPower = { mActivePower, mReactivePower };
-	mNomVoltage = std::abs(mTerminals[0]->initialSingleVoltage());
+	if(!parametersSet){
+		mActivePower = mTerminals[0]->singleActivePower();
+		mReactivePower = mTerminals[0]->singleReactivePower();
+		mPower = { mActivePower, mReactivePower };
+		mNomVoltage = std::abs(mTerminals[0]->initialSingleVoltage());
+	}
 
 	if (mActivePower != 0) {
 		mResistance = std::pow(mNomVoltage, 2) / mActivePower;
@@ -112,6 +118,16 @@ void DP::Ph1::RXLoad::initializeFromPowerflow(Real frequency) {
 		Logger::phasorToString(mIntfCurrent(0,0)),
 		Logger::phasorToString(initialSingleVoltage(0)));
 }
+
+void DP::Ph1::RXLoad::setParameters(Real activePower, Real reactivePower, Real volt){
+	mActivePower = activePower;
+	mReactivePower = reactivePower;
+	mPower = { mActivePower, mReactivePower};
+	mNomVoltage = volt;
+
+	parametersSet = true;
+}
+
 
 void DP::Ph1::RXLoad::mnaInitialize(Real omega, Real timeStep, Attribute<Matrix>::Ptr leftVector) {
 	MNAInterface::mnaInitialize(omega, timeStep);

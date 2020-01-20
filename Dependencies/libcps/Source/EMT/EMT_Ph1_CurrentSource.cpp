@@ -42,6 +42,8 @@ PowerComponent<Real>::Ptr EMT::Ph1::CurrentSource::clone(String name) {
 void EMT::Ph1::CurrentSource::setParameters(Complex currentRef, Real srcFreq) {
 	attribute<Complex>("I_ref")->set(currentRef);
 	attribute<Real>("f_src")->set(srcFreq);
+	
+	parametersSet = true;
 }
 
 void EMT::Ph1::CurrentSource::mnaInitialize(Real omega, Real timeStep, Attribute<Matrix>::Ptr leftVector) {

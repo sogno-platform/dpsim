@@ -86,6 +86,8 @@ namespace Ph1 {
 		void initialize(Matrix frequencies);
 		/// Initializes component from power flow data
 		void initializeFromPowerflow(Real frequency);
+		/// Sets model specific parameters
+		void setParameters(Real activePower, Real ReactivePower, Real volt);
 
 		// #### MNA section ####
 		/// Initializes internal variables of the component

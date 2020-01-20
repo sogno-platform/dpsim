@@ -39,6 +39,8 @@ void EMT::Ph3::VoltageSourceNorton::setParameters(Complex voltageRef, Real srcFr
 	Base::Ph1::VoltageSource::setParameters(voltageRef, srcFreq);
 	mResistance = resistance;
 	mConductance = 1. / mResistance;
+
+	parametersSet = true;
 }
 
 PowerComponent<Real>::Ptr EMT::Ph3::VoltageSourceNorton::clone(String name) {

@@ -36,6 +36,8 @@ EMT::Ph3::ControlledVoltageSource::ControlledVoltageSource(String uid, String na
 
 void EMT::Ph3::ControlledVoltageSource::setParameters(Matrix voltageRefABC) {
 	mIntfVoltage = voltageRefABC;
+
+	parametersSet = true;
 }
 
 PowerComponent<Real>::Ptr EMT::Ph3::ControlledVoltageSource::clone(String name) {

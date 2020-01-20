@@ -89,6 +89,8 @@ void DP::Ph1::AvVoltageSourceInverterDQ::setParameters(Real sysOmega, Complex sy
 	mCf = Cf;
 	mRf = Rf;
 	mRc = Rc;
+
+	parametersSet = true;
 }
 
 

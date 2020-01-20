@@ -36,6 +36,8 @@ EMT::Ph1::VoltageSource::VoltageSource(String uid, String name,	Logger::Level lo
 void EMT::Ph1::VoltageSource::setParameters(Complex voltageRef, Real srcFreq) {
 	attribute<Complex>("V_ref")->set(voltageRef);
 	attribute<Real>("f_src")->set(srcFreq);
+
+	parametersSet = true;
 }
 
 PowerComponent<Real>::Ptr EMT::Ph1::VoltageSource::clone(String name) {

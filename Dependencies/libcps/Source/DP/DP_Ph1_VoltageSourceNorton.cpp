@@ -44,6 +44,8 @@ void DP::Ph1::VoltageSourceNorton::setParameters(Complex voltage, Real srcFreq, 
 	mResistance = resistance;
 	mConductance = 1. / mResistance;
 	mEquivCurrent = mVoltageRef / mResistance;
+
+	parametersSet = true;
 }
 
 void DP::Ph1::VoltageSourceNorton::mnaInitialize(Real omega, Real timeStep, Attribute<Matrix>::Ptr leftVector) {

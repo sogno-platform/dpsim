@@ -96,6 +96,8 @@ void EMT::Ph3::AvVoltageSourceInverterDQ::setParameters(Real sysOmega, Complex s
 	mRf = Rf;
 	mRc = Rc;
 
+	parametersSet = true;
+
 }
 
 PowerComponent<Real>::Ptr EMT::Ph3::AvVoltageSourceInverterDQ::clone(String name) {

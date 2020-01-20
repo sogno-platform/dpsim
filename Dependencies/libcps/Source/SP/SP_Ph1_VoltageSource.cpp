@@ -41,6 +41,7 @@ PowerComponent<Complex>::Ptr SP::Ph1::VoltageSource::clone(String name) {
 
 void SP::Ph1::VoltageSource::setParameters(Complex voltageRef) {
 	attribute<Complex>("V_ref")->set(voltageRef);
+	parametersSet = true;
 }
 
 void SP::Ph1::VoltageSource::initializeFromPowerflow(Real frequency) {

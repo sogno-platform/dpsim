@@ -47,6 +47,8 @@ PowerComponent<Real>::Ptr EMT::Ph3::NetworkInjection::clone(String name) {
 void EMT::Ph3::NetworkInjection::setParameters(MatrixComp voltageRef, Real srcFreq) {
 	attribute<MatrixComp>("V_ref")->set(voltageRef);
 	attribute<Real>("f_src")->set(srcFreq);
+
+	parametersSet = true;
 }
 
 void EMT::Ph3::NetworkInjection::initializeFromPowerflow(Real frequency) {

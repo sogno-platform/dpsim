@@ -74,6 +74,8 @@ void EMT::Ph3::AvVoltSourceInverterStateSpace::setParameters(Real sysOmega, Comp
 	// init with nodes at nominal voltage and branches have zero current flow.
 	Real srcFreq = 2. * M_PI * sysOmega;
 	Base::Ph1::VoltageSource::setParameters(sysVoltNom, srcFreq);
+
+	parametersSet = true;
 }
 
 void EMT::Ph3::AvVoltSourceInverterStateSpace::initializeStates(Real omega, Real timeStep,

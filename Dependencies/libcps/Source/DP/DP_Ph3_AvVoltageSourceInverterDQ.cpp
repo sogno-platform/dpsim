@@ -89,6 +89,8 @@ void DP::Ph3::AvVoltageSourceInverterDQ::setParameters(Real sysOmega, Complex sy
 	mRf = Rf;
 	mRc = Rc;
 
+	parametersSet = true;
+
 }
 
 void DP::Ph3::AvVoltageSourceInverterDQ::addMonitoredNodes( std::shared_ptr<Capacitor> cap, std::shared_ptr<Inductor> inductor) {
