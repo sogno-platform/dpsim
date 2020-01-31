@@ -23,64 +23,69 @@
 
 using namespace CPS;
 
-SP::Ph1::SynchronGenerator::SynchronGenerator(String uid, String name,
-	PowerflowBusType powerflowBusType,
-	Logger::Level logLevel) : PowerComponent<Complex>(uid, name, logLevel) {
+SP::Ph1::SynchronGenerator::SynchronGenerator(String uid, String name, Logger::Level logLevel)
+ : PowerComponent<Complex>(uid, name, logLevel) {
+
+    mSLog->info("Create {} of type {}", name, this->type());
+    mSLog->flush();
 
     setTerminalNumber(1);
-
-	mPowerflowBusType = powerflowBusType;
-    mSLog->info("Create {} of type {}", name, this->type());
+    
+    addAttribute<Real>("P_set", &mSetPointActivePower, Flags::read | Flags::write);
+    addAttribute<Real>("V_set", &mSetPointVoltage, Flags::read | Flags::write);
+    addAttribute<Real>("P_set_pu", &mSetPointActivePowerPerUnit, Flags::read | Flags::write);
+    addAttribute<Real>("V_set_pu", &mSetPointVoltagePerUnit, Flags::read | Flags::write);
 };
 
-SP::Ph1::SynchronGenerator::SynchronGenerator(String uid, String name, Real power, Real maxQ,
-    Real vSetPoint, Real ratedU, Real ratedS, PowerflowBusType powerflowBusType, Logger::Level logLevel)
-	: SynchronGenerator(uid, name, powerflowBusType, logLevel){
-    mRatedS = ratedS;
-    mRatedU = ratedU;
+void SP::Ph1::SynchronGenerator::setParameters(Real ratedApparentPower, Real ratedVoltage, Real setPointActivePower, Real setPointVoltage, Real maximumReactivePower, PowerflowBusType powerflowBusType) {
+	mRatedApparentPower = ratedApparentPower;
+    mRatedVoltage = ratedVoltage;
+    mSetPointActivePower = setPointActivePower;
+    mSetPointVoltage = setPointVoltage;
+    mMaximumReactivePower = maximumReactivePower;
+    mPowerflowBusType = powerflowBusType;
 
-    switch (powerflowBusType)
-    {
-        case CPS::PowerflowBusType::PV:
-            mSLog->info("Create PVNode as member of {}.", name);
-            mPV = std::make_shared<PVNode>(uid, name, power, vSetPoint, maxQ, ratedU, ratedS, logLevel);
-            mSLog->info("Power={} [W] Voltage={} [pu]", power, vSetPoint / ratedU);
-            break;
-        case CPS::PowerflowBusType::PQ:
-            mSLog->info("Setting Synchronous Generator as PQNode is currently not supported.");
-            break;
-        case CPS::PowerflowBusType::VD:
-            mSLog->info("Create VDNode as member of {}.", name);
-            mVD = std::make_shared<VDNode>(uid, name, vSetPoint / ratedU, logLevel);
-            mSLog->info("Power={} [W] Voltage={} [pu]", power, vSetPoint);
-            break;
-        default:
-            throw std::invalid_argument(" Invalid power flow bus type ");
-            break;
-    }
-};
+	mSLog->info("Rated Apparent Power={} [VA] Rated Voltage={} [V]", mRatedApparentPower, mRatedVoltage);
+    mSLog->info("Active Power Set Point={} [W] Voltage Set Point={} [V]", mSetPointActivePower, mSetPointVoltage);
+    mSLog->info("Maximum Reactive Power={} [VAr]", mMaximumReactivePower);
+	mSLog->flush();
+}
 
+// #### Powerflow section ####
+void SP::Ph1::SynchronGenerator::setBaseVoltage(Real baseVoltage) {
+    mBaseVoltage = baseVoltage;
+}
+
+void SP::Ph1::SynchronGenerator::calculatePerUnitParameters(Real baseApparentPower, Real baseOmega) {
+	mSLog->info("#### Calculate Per Unit Parameters for {}", mName); 
+	mBaseApparentPower = baseApparentPower;
+	mBaseOmega = baseOmega;
+    mSLog->info("Base Power={} [VA]  Base Omega={} [1/s]", mBaseApparentPower, mBaseOmega);
+
+	mSetPointActivePowerPerUnit = mSetPointActivePower/mBaseApparentPower;
+	mSetPointVoltagePerUnit = mSetPointVoltage/mBaseVoltage;
+	mSLog->info("Active Power Set Point={} [pu] Voltage Set Point={} [pu]", mSetPointActivePowerPerUnit, mSetPointVoltagePerUnit);
+	mSLog->flush();
+}
 
 void SP::Ph1::SynchronGenerator::modifyPowerFlowBusType(PowerflowBusType powerflowBusType) {
-
-    mPowerflowBusType = powerflowBusType;
     switch (powerflowBusType)
     {
     case CPS::PowerflowBusType::PV:
+        mPowerflowBusType = powerflowBusType;
         break;
     case CPS::PowerflowBusType::PQ:
-        mSLog->info(" Setting Synchronous Generator as PQNode is currently not supported.");
+        throw std::invalid_argument("Setting Synchronous Generator as PQNode is currently not supported.");
         break;
     case CPS::PowerflowBusType::VD:
-        mVD = std::make_shared<VDNode>(mUID, mName, mPV->attribute<Real>("V_set_pu")->get(), mLogLevel);
+        mPowerflowBusType = powerflowBusType;
         break;
     case CPS::PowerflowBusType::None:
-        break;
+		break;
     default:
         throw std::invalid_argument(" Invalid power flow bus type ");
         break;
     }
-
 }
 
 

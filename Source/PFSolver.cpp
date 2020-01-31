@@ -90,6 +90,9 @@ void PFSolver::initializeComponents(){
 	for(auto load : mLoads) {
 		load->calculatePerUnitParameters(mBaseApparentPower, mSystem.mSystemOmega);
 	}
+	for(auto gen : mSynchronGenerators) {
+		gen->calculatePerUnitParameters(mBaseApparentPower, mSystem.mSystemOmega);
+	}
 	
 }
 
@@ -97,8 +100,8 @@ void PFSolver::setBaseApparentPower() {
 	Real maxPower = 0.;
 	if (!mSynchronGenerators.empty()) {
 		for (auto gen : mSynchronGenerators)
-			if (std::abs(gen->mPV->attribute<Real>("P_set")->get()) > maxPower)
-				maxPower = std::abs(gen->mPV->attribute<Real>("P_set")->get());
+			if (std::abs(gen->attribute<Real>("P_set")->get()) > maxPower)
+				maxPower = std::abs(gen->attribute<Real>("P_set")->get());
 	}
 	else if (!mTransformers.empty()) {
 		for (auto trafo : mTransformers)
@@ -164,11 +167,22 @@ void PFSolver::determinePFBusType() {
 		else if (connectedPV && connectedPQ && !connectedVD) {
 			mPVBusIndices.push_back(node->simNode());
 			mPVBuses.push_back(node);
+			mSLog->info("Note: node with uuid {} set as PV bus. Both PV and PQ type components were connected.", node->attribute<String>("uid")->get());	
 		} // only VD type component connected -> set as VD bus
 		else if (!connectedPV && !connectedPQ && connectedVD) {
 			mVDBusIndices.push_back(node->simNode());
 			mVDBuses.push_back(node);
-		}
+		} // VD and PV type component connect -> set as VD bus
+		else if (connectedPV && !connectedPQ && connectedVD) {
+			mVDBusIndices.push_back(node->simNode());
+			mVDBuses.push_back(node);
+			mSLog->info("Note: node with uuid {} set as VD bus. Both VD and PV type components were connected.", node->attribute<String>("uid")->get());
+		} // VD, PV and PQ type component connect -> set as VD bus
+		else if (connectedPV && connectedPQ && connectedVD) {
+			mVDBusIndices.push_back(node->simNode());
+			mVDBuses.push_back(node);
+			mSLog->info("Note: node with uuid {} set as VD bus. VD, PV and PQ type components were connected.", node->attribute<String>("uid")->get());
+		} 
 		else {
 			std::stringstream ss;
 			ss << "Node>>" << node->name() << ": combination of connected components is invalid";

@@ -31,6 +31,17 @@ void PFSolverPowerPolar::generateInitialSolution(Real time, bool keep_last_solut
 	resize_sol(mSystem.mNodes.size());
 	resize_complex_sol(mSystem.mNodes.size());
 
+    // update all components for the new time
+    for (auto comp : mSystem.mComponents) {
+        if (std::shared_ptr<CPS::SP::Ph1::Load> load = std::dynamic_pointer_cast<CPS::SP::Ph1::Load>(comp)) {
+            if (load->use_profile) {
+                load->updatePQ(time);
+                load->calculatePerUnitParameters(mBaseApparentPower, mSystem.mSystemOmega);
+            }
+        }
+    }
+
+    // set initial solution for the new time
 	for (auto pq : mPQBuses) {
 		if (!keep_last_solution) {
 			sol_V(pq->simNode()) = 1.0;
@@ -38,16 +49,11 @@ void PFSolverPowerPolar::generateInitialSolution(Real time, bool keep_last_solut
 			sol_V_complex(pq->simNode()) = CPS::Complex(sol_V[pq->simNode()], sol_D[pq->simNode()]);
 		}
 		for (auto comp : mSystem.mComponentsAtNode[pq]) {
-			if (std::shared_ptr<CPS::SP::Ph1::Load> load = std::dynamic_pointer_cast<CPS::SP::Ph1::Load>(comp)) {
-				if (load->use_profile) {
-					load->updatePQ(time);
-                    load->calculatePerUnitParameters(mBaseApparentPower, mSystem.mSystemOmega);
-				}
-				sol_P(pq->simNode()) -= load->attribute<CPS::Real>("P_pu")->get();
-				sol_Q(pq->simNode()) -= load->attribute<CPS::Real>("Q_pu")->get();
-				sol_S_complex(pq->simNode()) = CPS::Complex(sol_P[pq->simNode()], sol_Q[pq->simNode()]);
-
-			}
+            if (std::shared_ptr<CPS::SP::Ph1::Load> load = std::dynamic_pointer_cast<CPS::SP::Ph1::Load>(comp)) {
+                sol_P(pq->simNode()) -= load->attribute<CPS::Real>("P_pu")->get();
+                sol_Q(pq->simNode()) -= load->attribute<CPS::Real>("Q_pu")->get();
+            }
+            sol_S_complex(pq->simNode()) = CPS::Complex(sol_P[pq->simNode()], sol_Q[pq->simNode()]);
 		}
 	}
 
@@ -58,8 +64,8 @@ void PFSolverPowerPolar::generateInitialSolution(Real time, bool keep_last_solut
 		}
 		for (auto comp : mSystem.mComponentsAtNode[pv]) {
 			if (std::shared_ptr<CPS::SP::Ph1::SynchronGenerator> gen = std::dynamic_pointer_cast<CPS::SP::Ph1::SynchronGenerator>(comp)) {
-				sol_P(pv->simNode()) += gen->mPV->attribute<CPS::Real>("P_set")->get() / mBaseApparentPower;
-				sol_V(pv->simNode()) = gen->mPV->attribute<CPS::Real>("V_set_pu")->get();
+				sol_P(pv->simNode()) += gen->attribute<CPS::Real>("P_set_pu")->get();
+				sol_V(pv->simNode()) = gen->attribute<CPS::Real>("V_set_pu")->get();
 			}
             else if (std::shared_ptr<CPS::SP::Ph1::Load> load = std::dynamic_pointer_cast<CPS::SP::Ph1::Load>(comp)) {
 				sol_P(pv->simNode()) -= load->attribute<CPS::Real>("P_pu")->get();
@@ -87,7 +93,7 @@ void PFSolverPowerPolar::generateInitialSolution(Real time, bool keep_last_solut
             for (auto gen : mSynchronGenerators)
             {
                 if (gen->node(0)->simNode() == vd->simNode())
-                    sol_V(vd->simNode()) = gen->mVD->attribute<CPS::Real>("V_set_pu")->get();
+                    sol_V(vd->simNode()) = gen->attribute<CPS::Real>("V_set_pu")->get();
             }
         }
 
