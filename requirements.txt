@@ -9,5 +9,5 @@ wheel
 pytest
 pyyaml
 
-villas-dataprocessing>=0.2.3
+villas-dataprocessing>=0.2.5
 progressbar2

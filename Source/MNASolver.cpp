@@ -225,7 +225,7 @@ void MnaSolver<VarType>::initializeSystem() {
 			auto idObj = std::dynamic_pointer_cast<IdentifiedObject>(comp);
 
 			mSLog->debug("Stamping {:s} {:s} into source vector: \n{:s}",
-				idObj->type(), idObj->name(), Logger::matrixCompToString(mRightSideVector));
+				idObj->type(), idObj->name(), Logger::matrixToString(mRightSideVector));
 		}
 	}
 }
