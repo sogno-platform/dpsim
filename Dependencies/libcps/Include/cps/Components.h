@@ -112,6 +112,7 @@
 #include <cps/EMT/EMT_Ph3_Switch.h>
 
 #include <cps/Signal/DecouplingLine.h>
+#include <cps/Signal/DecouplingLineEMT.h>
 #include <cps/Signal/Exciter.h>
 #include <cps/Signal/TurbineGovernor.h>
 #include <cps/Signal/FIRFilter.h>

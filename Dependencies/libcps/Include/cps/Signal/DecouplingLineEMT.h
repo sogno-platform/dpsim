@@ -1,8 +1,5 @@
-/** Signalling part of a decoupling transmission line
- *
- * @file
- * @author Georg Reinke <georg.reinke@rwth-aachen.de>
- * @copyright 2017-2018, Institute for Automation of Complex Power Systems, EONERC
+/**
+ * @copyright 2017 Institute for Automation of Complex Power Systems, EONERC
  *
  * CPowerSystems
  *
@@ -24,49 +21,47 @@
 
 #include <vector>
 
-#include <cps/DP/DP_Ph1_CurrentSource.h>
-#include <cps/DP/DP_Ph1_Resistor.h>
-#include <cps/PowerComponent.h>
+#include <cps/EMT/EMT_Ph1_CurrentSource.h>
+#include <cps/EMT/EMT_Ph1_Resistor.h>
 #include <cps/SignalComponent.h>
 #include <cps/Task.h>
 
 namespace CPS {
 namespace Signal {
-	class DecouplingLine :
+	class DecouplingLineEMT :
 		public SignalComponent,
-		public SharedFactory<DecouplingLine> {
+		public SharedFactory<DecouplingLineEMT> {
 	protected:
 		Real mDelay;
 		Real mResistance;
-		Real mInductance, mCapacitance;
+		Real mInductance;
+		Real mCapacitance;
 		Real mSurgeImpedance;
-		Complex mSrcCur1Ref;
-		Complex mSrcCur2Ref;
+		Real mSrcCur1Ref;
+		Real mSrcCur2Ref;
 
-		std::shared_ptr<DP::Node> mNode1, mNode2;
-		std::shared_ptr<DP::Ph1::Resistor> mRes1, mRes2;
-		std::shared_ptr<DP::Ph1::CurrentSource> mSrc1, mSrc2;
+		std::shared_ptr<EMT::Node> mNode1, mNode2;
+		std::shared_ptr<EMT::Ph1::Resistor> mRes1, mRes2;
+		std::shared_ptr<EMT::Ph1::CurrentSource> mSrc1, mSrc2;
 		Attribute<Complex>::Ptr mSrcCur1, mSrcCur2;
 
 		// Ringbuffers for the values of previous timesteps
 		// TODO make these matrix attributes
-		std::vector<Complex> mVolt1, mVolt2, mCur1, mCur2;
+		std::vector<Real> mVolt1, mVolt2, mCur1, mCur2;
 		// workaround for dependency analysis as long as the states aren't attributes
 		Matrix mStates;
 		UInt mBufIdx = 0;
 		UInt mBufSize;
 		Real mAlpha;
 
-		Complex interpolate(std::vector<Complex>& data);
+		Real interpolate(std::vector<Real>& data);
 	public:
-		typedef std::shared_ptr<DecouplingLine> Ptr;
+		typedef std::shared_ptr<DecouplingLineEMT> Ptr;
 
-		DecouplingLine(String name, Node<Complex>::Ptr node1, Node<Complex>::Ptr node2,
-			Real resistance, Real inductance, Real capacitance, Logger::Level logLevel = Logger::Level::info);
+		DecouplingLineEMT(String name, Logger::Level logLevel = Logger::Level::info);
 
-		DecouplingLine(String name, Logger::Level logLevel = Logger::Level::info);
-
-		void setParameters(Node<Complex>::Ptr node1, Node<Complex>::Ptr node2, Real resistance, Real inductance, Real capacitance);
+		void setParameters(Node<Real>::Ptr node1, Node<Real>::Ptr node2,
+			Real resistance, Real inductance, Real capacitance);
 		void initialize(Real omega, Real timeStep);
 		void step(Real time, Int timeStepCount);
 		void postStep();
@@ -75,7 +70,7 @@ namespace Signal {
 
 		class PreStep : public Task {
 		public:
-			PreStep(DecouplingLine& line) :
+			PreStep(DecouplingLineEMT& line) :
 				Task(line.mName + ".MnaPreStep"), mLine(line) {
 				mPrevStepDependencies.push_back(mLine.attribute("states"));
 				mModifiedAttributes.push_back(mLine.mSrc1->attribute("I_ref"));
@@ -85,24 +80,24 @@ namespace Signal {
 			void execute(Real time, Int timeStepCount);
 
 		private:
-			DecouplingLine& mLine;
+			DecouplingLineEMT& mLine;
 		};
 
 		class PostStep : public Task {
 		public:
-			PostStep(DecouplingLine& line) :
+			PostStep(DecouplingLineEMT& line) :
 				Task(line.mName + ".PostStep"), mLine(line) {
 				mAttributeDependencies.push_back(mLine.mRes1->attribute("v_intf"));
 				mAttributeDependencies.push_back(mLine.mRes1->attribute("i_intf"));
 				mAttributeDependencies.push_back(mLine.mRes2->attribute("v_intf"));
 				mAttributeDependencies.push_back(mLine.mRes2->attribute("i_intf"));
 				mModifiedAttributes.push_back(mLine.attribute("states"));
-				}
+			}
 
 			void execute(Real time, Int timeStepCount);
 
 		private:
-			DecouplingLine& mLine;
+			DecouplingLineEMT& mLine;
 		};
 	};
 }

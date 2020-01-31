@@ -1,8 +1,5 @@
-/** Signalling part of a decoupling transmission line
- *
- * @file
- * @author Georg Reinke <georg.reinke@rwth-aachen.de>
- * @copyright 2017-2018, Institute for Automation of Complex Power Systems, EONERC
+/**
+ * @copyright 2017 Institute for Automation of Complex Power Systems, EONERC
  *
  * CPowerSystems
  *
@@ -30,6 +27,7 @@ DecouplingLine::DecouplingLine(String name, Node<Complex>::Ptr node1, Node<Compl
 	Real resistance, Real inductance, Real capacitance, Logger::Level logLevel) :
 	SignalComponent(name, name, logLevel),
 	mResistance(resistance), mInductance(inductance), mCapacitance(capacitance) {
+
 	addAttribute<Matrix>("states", &mStates);
 	addAttribute<Complex>("i_src1", &mSrcCur1Ref, Flags::read);
 	addAttribute<Complex>("i_src2", &mSrcCur2Ref, Flags::read);
@@ -56,6 +54,46 @@ DecouplingLine::DecouplingLine(String name, Node<Complex>::Ptr node1, Node<Compl
 	mSrcCur2 = mSrc2->attributeComplex("I_ref");
 }
 
+DecouplingLine::DecouplingLine(String name, Logger::Level logLevel) :
+	SignalComponent(name, name, logLevel) {
+
+	addAttribute<Matrix>("states", &mStates);
+	addAttribute<Complex>("i_src1", &mSrcCur1Ref, Flags::read);
+	addAttribute<Complex>("i_src2", &mSrcCur2Ref, Flags::read);
+
+	mRes1 = Resistor::make(name + "_r1", logLevel);
+	mRes2 = Resistor::make(name + "_r2", logLevel);
+	mSrc1 = CurrentSource::make(name + "_i1", logLevel);
+	mSrc2 = CurrentSource::make(name + "_i2", logLevel);
+
+	mSrcCur1 = mSrc1->attributeComplex("I_ref");
+	mSrcCur2 = mSrc2->attributeComplex("I_ref");
+}
+
+void DecouplingLine::setParameters(Node<Complex>::Ptr node1, Node<Complex>::Ptr node2,
+	Real resistance, Real inductance, Real capacitance) {
+
+	mResistance = resistance;
+	mInductance = inductance;
+	mCapacitance = capacitance;
+	mNode1 = node1;
+	mNode2 = node2;
+
+	mSurgeImpedance = sqrt(inductance / capacitance);
+	mDelay = sqrt(inductance * capacitance);
+	mSLog->info("surge impedance: {}", mSurgeImpedance);
+	mSLog->info("delay: {}", mDelay);
+
+	mRes1->setParameters(mSurgeImpedance + resistance / 4);
+	mRes1->connect({node1, Node<Complex>::GND});
+	mRes2->setParameters(mSurgeImpedance + resistance / 4);
+	mRes2->connect({node2, Node<Complex>::GND});
+	mSrc1->setParameters(0);
+	mSrc1->connect({node1, Node<Complex>::GND});
+	mSrc2->setParameters(0);
+	mSrc2->connect({node2, Node<Complex>::GND});
+}
+
 void DecouplingLine::initialize(Real omega, Real timeStep) {
 	if (mDelay < timeStep)
 		throw SystemError("Timestep too large for decoupling");
@@ -64,14 +102,16 @@ void DecouplingLine::initialize(Real omega, Real timeStep) {
 	mAlpha = 1 - (mBufSize - mDelay / timeStep);
 	mSLog->info("bufsize {} alpha {}", mBufSize, mAlpha);
 
-	Complex volt1 = mRes1->initialSingleVoltage(0);
-	Complex volt2 = mRes2->initialSingleVoltage(0);
+	Complex volt1 = mNode1->initialSingleVoltage();
+	Complex volt2 = mNode2->initialSingleVoltage();
 	// TODO different initialization for lumped resistance?
 	Complex initAdmittance = 1. / Complex(mResistance, omega * mInductance) + Complex(0, omega * mCapacitance / 2);
 	Complex cur1 = volt1 * initAdmittance - volt2 / Complex(mResistance, omega * mInductance);
 	Complex cur2 = volt2 * initAdmittance - volt1 / Complex(mResistance, omega * mInductance);
 	mSLog->info("initial voltages: v_k {} v_m {}", volt1, volt2);
 	mSLog->info("initial currents: i_km {} i_mk {}", cur1, cur2);
+
+	// Resize ring buffers and initialize
 	mVolt1.resize(mBufSize, volt1);
 	mVolt2.resize(mBufSize, volt2);
 	mCur1.resize(mBufSize, cur1);
@@ -94,17 +134,19 @@ void DecouplingLine::step(Real time, Int timeStepCount) {
 	if (timeStepCount == 0) {
 		// bit of a hack for proper initialization
 		mSrcCur1Ref = cur1 - volt1 / (mSurgeImpedance + mResistance / 4);
-		mSrcCur1Ref = cur2 - volt2 / (mSurgeImpedance + mResistance / 4);
+		mSrcCur2Ref = cur2 - volt2 / (mSurgeImpedance + mResistance / 4);
 	} else {
 		// Update currents
 		Real denom = (mSurgeImpedance + mResistance/4) * (mSurgeImpedance + mResistance/4);
 		mSrcCur1Ref = -mSurgeImpedance / denom * (volt2 + (mSurgeImpedance - mResistance/4) * cur2)
 			- mResistance/4 / denom * (volt1 + (mSurgeImpedance - mResistance/4) * cur1);
-		mSrcCur1Ref = -mSurgeImpedance / denom * (volt1 + (mSurgeImpedance - mResistance/4) * cur1)
+		mSrcCur2Ref = -mSurgeImpedance / denom * (volt1 + (mSurgeImpedance - mResistance/4) * cur1)
 			- mResistance/4 / denom * (volt2 + (mSurgeImpedance - mResistance/4) * cur2);
+		mSrcCur1Ref = mSrcCur1Ref * Complex(cos(-2.*PI*50*mDelay),sin(-2.*PI*50*mDelay));
+		mSrcCur2Ref = mSrcCur2Ref * Complex(cos(-2.*PI*50*mDelay),sin(-2.*PI*50*mDelay));
 	}
 	mSrcCur1->set(mSrcCur1Ref);
-	mSrcCur2->set(mSrcCur1Ref);
+	mSrcCur2->set(mSrcCur2Ref);
 }
 
 void DecouplingLine::PreStep::execute(Real time, Int timeStepCount) {
