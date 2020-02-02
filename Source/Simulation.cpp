@@ -229,6 +229,7 @@ void Simulation::schedule() {
 	mSLog->info("Scheduling tasks.");
 	prepSchedule();
 	mScheduler->createSchedule(mTasks, mTaskInEdges, mTaskOutEdges);
+	mSLog->info("Scheduling done.");
 }
 
 #ifdef WITH_GRAPHVIZ
