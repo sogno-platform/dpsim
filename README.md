@@ -1,7 +1,7 @@
 # <img src="Documentation/images/dpsim.png" width=40 /> DPsim
 
-[![build status](https://git.rwth-aachen.de/acs/core/simulation/dpsim/badges/master/build.svg)](https://git.rwth-aachen.de/acs/core/simulation/dpsim/commits/master)
-[![coverage report](https://git.rwth-aachen.de/acs/core/simulation/dpsim/badges/master/coverage.svg)](https://git.rwth-aachen.de/acs/core/simulation/dpsim/commits/master)
+[![build status](https://git.rwth-aachen.de/acs/public/simulation/dpsim/badges/master/build.svg)](https://git.rwth-aachen.de/acs/core/simulation/dpsim/commits/master)
+[![coverage report](https://git.rwth-aachen.de/acs/public/simulation/dpsim/badges/master/coverage.svg)](https://git.rwth-aachen.de/acs/core/simulation/dpsim/commits/master)
 
 DPsim is a solver library for power system simulation.
 
@@ -54,8 +54,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 For other licensing options please consult [Prof. Antonello Monti](mailto:amonti@eonerc.rwth-aachen.de).
 
 ## Contact
-
-[![EONERC ACS Logo](https://www.fein-aachen.org/img/logos/eonerc.png)](http://www.acs.eonerc.rwth-aachen.de)
 
 - Markus Mirz <mmirz@eonerc.rwth-aachen.de>
 - Steffen Vogel <stvogel@eonerc.rwth-aachen.de>

@@ -36,7 +36,7 @@ int main(int argc, char *argv[]) {
 			"WSCC-09_RX_EQ.xml",
 			"WSCC-09_RX_SV.xml",
 			"WSCC-09_RX_TP.xml"
-		}, "Examples/CIM/WSCC-09_RX_Dyn", "CIMPATH");
+		}, "Examples/CIM/grid-data/WSCC-09/WSCC-09_RX_Dyn", "CIMPATH");
 	}
 	else {
 		filenames = std::list<fs::path>(argv + 1, argv + argc);

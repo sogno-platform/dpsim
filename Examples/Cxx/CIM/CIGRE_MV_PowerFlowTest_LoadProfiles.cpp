@@ -68,7 +68,7 @@ int main(int argc, char** argv){
 			"Rootnet_FULL_NE_06J16h_EQ.xml",
 			"Rootnet_FULL_NE_06J16h_SV.xml",
 			"Rootnet_FULL_NE_06J16h_TP.xml"
-		}, "Examples/CIM/CIGRE_MV_NoTap", "CIMPATH");
+		}, "Examples/CIM/grid-data/CIGRE_MV/NEPLAN/CIGRE_MV_no_tapchanger_With_LoadFlow_Results", "CIMPATH");
 	}
 	else {
 		filenames = std::list<fs::path>(argv + 1, argv + argc);
