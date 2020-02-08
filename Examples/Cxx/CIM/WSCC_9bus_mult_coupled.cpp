@@ -124,7 +124,7 @@ int main(int argc, char *argv[]) {
 		"WSCC-09_RX_EQ.xml",
 		"WSCC-09_RX_SV.xml",
 		"WSCC-09_RX_TP.xml"
-	}, "Examples/CIM/WSCC-09_RX", "CIMPATH");
+	}, "Examples/CIM/grid-data/WSCC-09/WSCC-09_RX", "CIMPATH");
 
 	//for (Int copies = 0; copies < 20; copies++) {
 	//	for (Int threads = 0; threads <= 12; threads = threads+2)
