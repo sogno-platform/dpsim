@@ -98,7 +98,6 @@ if(DOXYGEN_FOUND)
 		COMMAND
 			${CMAKE_COMMAND} -E copy
 				"${CMAKE_CURRENT_SOURCE_DIR}/images/dpsim.png"
-				"${CMAKE_CURRENT_SOURCE_DIR}/images/eonerc_logo.png"
 				"${CMAKE_CURRENT_BINARY_DIR}/Cxx/html/images/"
 		COMMENT "Copy figures to Doxygen output dir"
 	)
