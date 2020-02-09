@@ -18,7 +18,7 @@ It is helpful to understand the general structure of the C++ DPsim core componen
 
 ## Copyright
 
-2017, Institute for Automation of Complex Power Systems, EONERC, RWTH Aachen University
+2017-2020, Institute for Automation of Complex Power Systems, EONERC, RWTH Aachen University
 
 ## License
 

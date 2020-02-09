@@ -18,7 +18,10 @@ add_definitions(-D_SILENCE_ALL_CXX17_DEPRECATION_WARNINGS)
 set(CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/CMake;${PROJECT_SOURCE_DIR}/Dependencies/libcps/CMake")
 
 set(PROJECT_AUTHOR "Institute for Automation of Complex Power Systems, RWTH Aachen University")
-set(PROJECT_COPYRIGHT "2017, Institute for Automation of Complex Power Systems, RWTH Aachen University")
+set(PROJECT_COPYRIGHT "2017-2020, Institute for Automation of Complex Power Systems, RWTH Aachen University")
+set(PROJECT_DESCRIPTION "C++ Power System Simulation Library")
+set(PROJECT_HOMEPAGE_URL "http://www.fein-aachen.org/projects/dpsim/")
+set(PROJECT_VCS_URL "https://git.rwth-aachen.org/acs/public/simulation/dpsim")
 
 include(CheckCXXCompilerFlag)
 if(MSVC)	
