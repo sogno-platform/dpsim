@@ -6,6 +6,9 @@
 DPsim
 ======
 
+.. meta::
+   :generator: GitLab Pages
+
 DPsim is a solver library for power system simulation.
 
 - It supports both the electro-magnetic transient (EMT) and dynamic phasor (DP) domain.

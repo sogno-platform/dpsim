@@ -89,24 +89,24 @@ build:windows:
 #  tags:
 #    - mac
 
-test:pytest:
-  stage: test
-  variables:
-    PYTHONPATH: "build/Source/Python:Source/Python"
-  script:
-    - pytest -v Examples/CIM/test_CIM.yml
-    - pytest -v Examples/Cxx/test_Circuits.yml
-    - pytest -v Examples/Cxx/test_RealTime.yml
-    #- pytest -v Examples/Cxx/test_Shmem.yml
-    - pytest -v Examples/Python/Base
-    - pytest -v Examples/Python/Circuits
-    - pytest -v Examples/Python/RealTime
-    #- pytest -v Examples/Python/Shmem
-  image: ${DOCKER_IMAGE_DEV}:${DOCKER_TAG_DEV}
-  dependencies:
-    - build:linux
-  tags:
-    - docker
+#test:pytest:
+#  stage: test
+#  variables:
+#    PYTHONPATH: "build/Source/Python:Source/Python"
+#  script:
+#    - pytest -v Examples/CIM/test_CIM.yml
+#    - pytest -v Examples/Cxx/test_Circuits.yml
+#    - pytest -v Examples/Cxx/test_RealTime.yml
+#    #- pytest -v Examples/Cxx/test_Shmem.yml
+#    - pytest -v Examples/Python/Base
+#    - pytest -v Examples/Python/Circuits
+#    - pytest -v Examples/Python/RealTime
+#    #- pytest -v Examples/Python/Shmem
+#  image: ${DOCKER_IMAGE_DEV}:${DOCKER_TAG_DEV}
+#  dependencies:
+#    - build:linux
+#  tags:
+#    - docker
 
 generate:docs:
   stage: generate
@@ -172,6 +172,24 @@ test:jupyter:
     paths:
       - outputs/Examples/Notebooks/
 
+# Stage deploy
+##############################################################################
+pages:
+  stage: deploy
+  script:
+    - cp -r build/Documentation/html/. public
+    - cp -r build/Documentation/Cxx/html/. public/cxx
+  artifacts:
+    paths:
+      - public
+  dependencies:
+    - generate:docs
+  only:
+    - master
+  tags:
+    - shell
+    - linux
+
 deploy:docker:
   stage: deploy
   script:
@@ -186,22 +204,6 @@ deploy:docker:
     - linux
   only:
     - tags
-
-deploy:docs:
-  stage: deploy
-  script:
-    - ssh ${DEPLOY_USER}@${DEPLOY_HOST} mkdir -p ${DEPLOY_PATH}/doc/${CI_BUILD_REF_NAME}/{sphinx,doxygen}
-    - rsync ${RSYNC_OPTS} --delete build/Documentation/html/ ${DEPLOY_USER}@${DEPLOY_HOST}:${DEPLOY_PATH}/doc/${CI_BUILD_REF_NAME}/sphinx
-    - rsync ${RSYNC_OPTS} --delete build/Documentation/Cxx/html/ ${DEPLOY_USER}@${DEPLOY_HOST}:${DEPLOY_PATH}/doc/${CI_BUILD_REF_NAME}/doxygen
-  dependencies:
-    - generate:docs
-  only:
-    - tags
-    - deploy
-  tags:
-    - fein-deploy
-    - shell
-    - linux
 
 deploy:packages:
   stage: deploy
