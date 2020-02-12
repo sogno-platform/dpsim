@@ -1,7 +1,7 @@
 # <img src="Documentation/images/dpsim.png" width=40 /> DPsim
 
-[![build status](https://git.rwth-aachen.de/acs/public/simulation/dpsim/badges/master/build.svg)](https://git.rwth-aachen.de/acs/core/simulation/dpsim/commits/master)
-[![coverage report](https://git.rwth-aachen.de/acs/public/simulation/dpsim/badges/master/coverage.svg)](https://git.rwth-aachen.de/acs/core/simulation/dpsim/commits/master)
+[![build status](https://git.rwth-aachen.de/acs/public/simulation/dpsim/badges/master/build.svg)](https://git.rwth-aachen.de/acs/public/simulation/dpsim/commits/master)
+[![coverage report](https://git.rwth-aachen.de/acs/public/simulation/dpsim/badges/master/coverage.svg)](https://git.rwth-aachen.de/acs/public/simulation/dpsim/commits/master)
 
 DPsim is a solver library for power system simulation.
 
@@ -9,23 +9,23 @@ DPsim is a solver library for power system simulation.
 - It provides a Python module which can be embedded in any Python 3 application / scripts.
 - It is implemented in highly-efficient C++ code.
 - It supports real-time execution with time-steps up to 50 uS.
-- It can load models in the [Common Information Model (CIM)](https://en.wikipedia.org/wiki/Common_Information_Model_%28electricity%29) XML format.
+- It can load models in the IEC61970 Common Information Model (CIM) XML format.
 - It can be interfaced to a variety of protocols and interfaces via [VILLASnode](http://www.fein-aachen.org/projects/villas-framework/).
 
 ## Installation
-If you just want to use DPsim for simulations, take a look at the [installation instructions](https://dpsim.fein-aachen.org/doc/master/sphinx/Install.html).
+If you just want to use DPsim for simulations, take a look at the [installation instructions](https://acs.pages.rwth-aachen.de/public/simulation/dpsim/Install.html).
 
-If you would like to modify / extend DPsim or build it for a specific platform, take a look at the [build instructions](https://dpsim.fein-aachen.org/doc/master/sphinx/Build.html).
+If you would like to modify / extend DPsim or build it for a specific platform, take a look at the [build instructions](https://acs.pages.rwth-aachen.de/public/simulation/dpsim/Build.html).
 
 ## Usage
 DPsim is a Python extension module which is implemented in optimized native C++ code. 
-Users can control and script the simulation with Python scripts. Checkout the [Examples](https://dpsim.fein-aachen.org/doc/master/sphinx/Examples.html).
+Users can control and script the simulation with Python scripts. Checkout the [Examples](https://acs.pages.rwth-aachen.de/public/simulation/dpsim/Examples.html).
 
 ## Documentation
 
-The [user documentation](http://dpsim.fein-aachen.org/doc/master/sphinx/) has examples, build / installation instructions and covers the Python API.
+The [user documentation](https://acs.pages.rwth-aachen.de/public/simulation/dpsim/about.html) has examples, build / installation instructions and covers the Python API.
 
-The C++ [developer documentation](http://dpsim.fein-aachen.org/doc/master/doxygen/) only includes automatically generated content using Doxygen.
+The C++ [developer documentation](https://acs.pages.rwth-aachen.de/public/simulation/dpsim/cxx/index.html) only includes automatically generated content using Doxygen.
 It is helpful to understand the general structure of the C++ DPsim core components.
 
 ## Copyright
@@ -34,7 +34,7 @@ It is helpful to understand the general structure of the C++ DPsim core componen
 
 ## License
 
-This project is released under the terms of the [GPL version 3](https://dpsim.fein-aachen.org/doc/master/sphinx/Copying.html).
+This project is released under the terms of the [GPL version 3](https://git.rwth-aachen.de/acs/public/simulation/dpsim/blob/master/COPYING.md).
 
 ```
 This program is free software: you can redistribute it and/or modify

@@ -48,7 +48,7 @@ templates_path = ['@CMAKE_CURRENT_SOURCE_DIR@/_templates']
 source_suffix = '.rst'
 
 # The master toctree document.
-master_doc = 'Index'
+master_doc = 'about'
 
 # General information about the project.
 project = '@PROJECT_NAME@'
