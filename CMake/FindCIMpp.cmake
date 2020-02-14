@@ -1,5 +1,5 @@
 set(CIMPP_DIR Dependencies/libcimpp)
-option(WITH_CIM_SUBMODULE "Build with CIMpp as submodule" OFF)
+option(WITH_CIM_SUBMODULE "Build with CIMpp as submodule" ON)
 
 set(CIM_VERSION "16v29a")	
 set(USE_CIM_VERSION "IEC61970_16v29a")

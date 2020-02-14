@@ -57,7 +57,7 @@ option(SPDLOG_BUILD_BENCH "Build spdlog benchmarks" OFF)
 option(SPDLOG_BUILD_EXAMPLES "Build spdlog examples" OFF)
 # Workaround for spdlog in Windows
 # A custom FindSpdlog does not work currently
-option(WITH_SPDLOG_SUBMODULE "Build with Spdlog as submodule" OFF)
+option(WITH_SPDLOG_SUBMODULE "Build with Spdlog as submodule" ON)
 if (WITH_SPDLOG_SUBMODULE OR WIN32)	
 	set(SPDLOG_INCLUDE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/Dependencies/spdlog/include)
 else()
@@ -94,7 +94,7 @@ cmake_dependent_option(WITH_GSL			"Enable GSL"        					ON "GSL_FOUND"			OFF)
 cmake_dependent_option(WITH_SUNDIALS	"Enable sundials solver suite"			ON "Sundials_FOUND"		OFF)
 cmake_dependent_option(WITH_SHMEM		"Enable shared memory interface"		ON "VILLASnode_FOUND"	OFF)
 cmake_dependent_option(WITH_RT			"Enable real-time features"				ON "Linux_FOUND"		OFF)
-cmake_dependent_option(WITH_PYTHON		"Enable Python support"					ON "Python_FOUND"		OFF)
+cmake_dependent_option(WITH_PYTHON		"Enable Python support"					OFF "Python_FOUND"		OFF)
 cmake_dependent_option(WITH_CIM			"Enable support for parsing CIM files"	ON "CIMpp_FOUND"		OFF)
 cmake_dependent_option(WITH_OPENMP		"Enable OpenMP-based parallelisation"	ON "OPENMP_FOUND"		OFF)
 
