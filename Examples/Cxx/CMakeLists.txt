@@ -105,7 +105,8 @@ if(WITH_CIM)
 		CIM/case145.cpp
 		CIM/case300.cpp
 		CIM/case9.cpp
-		CIM/case14.cpp		
+		CIM/case14.cpp
+		CIM/powerflow-cim.cpp
 
 		CIM/WSCC_9bus_mult_decoupled.cpp
 		CIM/WSCC_9bus_mult_coupled.cpp
