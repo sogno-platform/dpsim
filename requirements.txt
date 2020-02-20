@@ -1,12 +1,9 @@
 sphinx
 nbsphinx
-breathe
 sphinx_rtd_theme
 
-m2r
 pytest-runner
 wheel
-
 pytest
 pyyaml
 
