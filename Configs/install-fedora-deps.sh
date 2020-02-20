@@ -17,7 +17,6 @@ dnf --refresh -y install \
 	python3-devel \
 	eigen3-devel \
     libxml2-devel \
-    expat-devel \
 	spdlog-devel \
 	graphviz-devel \
 	sundials-devel \
