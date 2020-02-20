@@ -12,6 +12,8 @@ LABEL \
 	org.label-schema.url = "http://fein-aachen.org/projects/dpsim/" \
 	org.label-schema.vcs-url = "https://git.rwth-aachen.de/acs/core/simulation/DPsim"
 
+ADD https://packages.fein-aachen.org/fedora/fein.repo /etc/yum.repos.d/
+
 RUN dnf -y update
 
 # Toolchain
@@ -34,6 +36,9 @@ RUN dnf --refresh -y install \
 	spdlog-devel \
 	graphviz-devel \
 	sundials-devel \
+	libcimpp16v29a \	
+	libvillas-devel-${VILLAS_VERSION} \
+	villas-node-${VILLAS_VERSION} \
 	gsl-devel
 
 # Install some debuginfos
@@ -52,29 +57,5 @@ RUN pip3 install -r requirements-jupyter.txt
 RUN dnf -y --refresh install npm
 RUN jupyter nbextension enable --py widgetsnbextension
 RUN jupyter labextension install @jupyter-widgets/jupyterlab-manager
-
-# VILLAS dependencies
-RUN dnf -y install \
-    openssl-devel \
-    libuuid-devel \
-    libconfig-devel \
-    libnl3-devel \
-    libcurl-devel \
-    jansson-devel \
-    libwebsockets-devel \
-    mosquitto-devel
-
-# FEIN libraries
-RUN cd /tmp && \
-	git clone --recurse-submodules https://github.com/CIM-IEC/libcimpp.git && \
-	mkdir -p libcimpp/build && cd libcimpp/build && \
-	cmake -DCMAKE_INSTALL_LIBDIR=/usr/local/lib64 -DUSE_CIM_VERSION=IEC61970_16v29a -DBUILD_SHARED_LIBS=ON -DBUILD_ARABICA_EXAMPLES=OFF -DARABICA_XML_BACKEND=USE_EXPAT .. && make -j$(nproc) install && \
-	rm -rf /tmp/libcimpp
-
-RUN cd /tmp && \
-	git clone --recurse-submodules https://git.rwth-aachen.de/acs/public/villas/node.git villasnode && \
-	mkdir -p villasnode/build && cd villasnode/build && \
-	cmake -DWITH_NODE_ETHERCAT=OFF -DCMAKE_INSTALL_LIBDIR=/usr/local/lib64 .. && make -j$(nproc) install && \
-	rm -rf /tmp/villasnode
 
 EXPOSE 8888
