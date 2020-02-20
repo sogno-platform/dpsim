@@ -6,7 +6,7 @@
 	url = https://github.com/eigenteam/eigen-git-mirror
 [submodule "Dependencies/libcimpp"]
 	path = Dependencies/libcimpp
-	url = https://github.com/RWTH-ACS/libcimpp
+	url = https://github.com/CIM-IEC/libcimpp.git
 [submodule "Dependencies/spdlog"]
 	path = Dependencies/spdlog
 	url = https://github.com/gabime/spdlog
