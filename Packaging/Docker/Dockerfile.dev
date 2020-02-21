@@ -10,7 +10,7 @@ LABEL \
 	org.label-schema.author.name = "Steffen Vogel" \
 	org.label-schema.author.email = "stvogel@eonerc.rwth-aachen.de" \
 	org.label-schema.url = "http://fein-aachen.org/projects/dpsim/" \
-	org.label-schema.vcs-url = "https://git.rwth-aachen.de/acs/core/simulation/DPsim"
+	org.label-schema.vcs-url = "https://git.rwth-aachen.de/acs/public/simulation/dpsim"
 
 RUN dnf -y update
 
@@ -40,18 +40,8 @@ RUN dnf --refresh -y install \
 RUN dnf -y debuginfo-install \
 	python3
 
+# CIMpp and VILLAS are installed here
 ENV LD_LIBRARY_PATH /usr/local/lib64
-
-ADD requirements.txt .
-RUN pip3 install -r requirements.txt
-
-# Remove this part in the future and use dedicated jupyter Dockerfile
-# Activate Jupyter extensions
-ADD requirements-jupyter.txt .
-RUN pip3 install -r requirements-jupyter.txt
-RUN dnf -y --refresh install npm
-RUN jupyter nbextension enable --py widgetsnbextension
-RUN jupyter labextension install @jupyter-widgets/jupyterlab-manager
 
 # VILLAS dependencies
 RUN dnf -y install \
@@ -64,17 +54,30 @@ RUN dnf -y install \
     libwebsockets-devel \
     mosquitto-devel
 
-# FEIN libraries
+# Install CIMpp from source
 RUN cd /tmp && \
 	git clone --recurse-submodules https://github.com/CIM-IEC/libcimpp.git && \
 	mkdir -p libcimpp/build && cd libcimpp/build && \
 	cmake -DCMAKE_INSTALL_LIBDIR=/usr/local/lib64 -DUSE_CIM_VERSION=IEC61970_16v29a -DBUILD_SHARED_LIBS=ON -DBUILD_ARABICA_EXAMPLES=OFF .. && make -j$(nproc) install && \
 	rm -rf /tmp/libcimpp
 
+# Install VILLAS from source
 RUN cd /tmp && \
 	git clone --recurse-submodules https://git.rwth-aachen.de/acs/public/villas/node.git villasnode && \
 	mkdir -p villasnode/build && cd villasnode/build && \
 	cmake -DWITH_NODE_ETHERCAT=OFF -DCMAKE_INSTALL_LIBDIR=/usr/local/lib64 .. && make -j$(nproc) install && \
 	rm -rf /tmp/villasnode
+
+# Python dependencies
+ADD requirements.txt .
+RUN pip3 install -r requirements.txt
+
+# Remove this part in the future and use dedicated jupyter Dockerfile
+# Activate Jupyter extensions
+ADD requirements-jupyter.txt .
+RUN pip3 install -r requirements-jupyter.txt
+RUN dnf -y --refresh install npm
+RUN jupyter nbextension enable --py widgetsnbextension
+RUN jupyter labextension install @jupyter-widgets/jupyterlab-manager
 
 EXPOSE 8888
