@@ -185,7 +185,7 @@ pages:
   dependencies:
     - generate:docs
   only:
-    - master
+    - deploy
   tags:
     - shell
     - linux
