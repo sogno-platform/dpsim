@@ -1,7 +1,5 @@
 /**
- * @file
- * @Junjie Zhang <junjie.zhang@eonerc.rwth-aachen.de>
- * @copyright 2017-2019, Institute for Automation of Complex Power Systems, EONERC
+ * @copyright 2017, Institute for Automation of Complex Power Systems, EONERC
  *
  * CPowerSystems
  *
@@ -24,7 +22,7 @@
 #include <cps/PowerComponent.h>
 #include <cps/Solver/MNAInterface.h>
 #include <cps/Definitions.h>
-#include <cps/DP/DP_Ph3_SeriesResistor.h>
+#include <cps/DP/DP_Ph3_Resistor.h>
 #include <cps/DP/DP_Ph3_Inductor.h>
 #include <cps/DP/DP_Ph3_Capacitor.h>
 #include <cps/DP/DP_Ph3_ControlledVoltageSource.h>
@@ -51,7 +49,7 @@ namespace CPS {
 				/// Inner voltage source that represents the AvVoltageSourceInverterDQ
 				std::shared_ptr<ControlledVoltageSource> mSubCtrledVoltageSource;
 				/// get "measurements" from other components
-				std::shared_ptr<SeriesResistor> mSubResistorF;
+				std::shared_ptr<Resistor> mSubResistorF;
 				std::shared_ptr<Capacitor> mCapacitorF;
 				std::shared_ptr<Inductor> mInductorF;
 
@@ -60,11 +58,10 @@ namespace CPS {
 				Real mQref;
 
 				/// filter paramter
-				Real mLf;
-				Real mCf;
-				Real mRf;
-
-				Real mRc;
+				Matrix mLf;
+				Matrix mCf;
+				Matrix mRf;
+				Matrix mRc;
 
 				/// PLL
 				Real mOmegaN;
@@ -136,8 +133,8 @@ namespace CPS {
 				void updateStates();
 
 				void setParameters(Real sysOmega, Complex sysVoltNom, Real Pref, Real Qref, Real Kp_pll, Real Ki_pll,
-					Real Kp_powerCtrl, Real Ki_powerCtrl, Real Kp_currCtrl, Real Ki_currCtrl, Real Lf, Real Cf,
-					Real Rf, Real Rc);
+					Real Kp_powerCtrl, Real Ki_powerCtrl, Real Kp_currCtrl, Real Ki_currCtrl, Matrix Lf, Matrix Cf,
+					Matrix Rf, Matrix Rc);
 
 				void setControllerParameters(Real Kp_pll, Real Ki_pll,
 					Real Kp_powerCtrl, Real Ki_powerCtrl, Real Kp_currCtrl, Real Ki_currCtrl);

@@ -30,6 +30,7 @@
 #include <cps/Attribute.h>
 #include <cps/Logger.h>
 #include <cps/Base/Base_Ph1_Switch.h>
+#include <cps/Base/Base_Ph3_Switch.h>
 #include <cps/PtrFactory.h>
 
 namespace DPsim {
@@ -104,6 +105,30 @@ namespace DPsim {
 				mSwitch->open();
 		}
 	};
+
+	class SwitchEvent3Ph : public Event, public SharedFactory<SwitchEvent3Ph> {
+
+	protected:
+		std::shared_ptr<CPS::Base::Ph3::Switch> mSwitch;
+		CPS::Bool mNewState;
+
+	public:
+		using SharedFactory<SwitchEvent3Ph>::make;
+
+		SwitchEvent3Ph(CPS::Real t, std::shared_ptr<CPS::Base::Ph3::Switch> sw, CPS::Bool state) :
+			Event(t),
+			mSwitch(sw),
+			mNewState(state)
+		{ }
+
+		void execute() {
+			if (mNewState)
+				mSwitch->closeSwitch();
+			else
+				mSwitch->openSwitch();
+		}
+	};
+
 
 	class EventQueue {
 

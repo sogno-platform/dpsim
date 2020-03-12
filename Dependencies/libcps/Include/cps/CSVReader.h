@@ -1,9 +1,5 @@
 /**
- *
- * @file
- * @author  Jan Dinkelbach <jdinkelbach@eonerc.rwth-aachen.de>
- * 			Junjie Zhang <junjie.zhang@eonerc.rwth-aachen.de>
- * @copyright 2019, Institute for Automation of Complex Power Systems, EONERC
+ * @copyright 2017, Institute for Automation of Complex Power Systems, EONERC
  *
  * CPowerSystems
  *

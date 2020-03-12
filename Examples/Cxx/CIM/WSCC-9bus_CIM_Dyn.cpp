@@ -63,9 +63,13 @@ int main(int argc, char *argv[]) {
 	logger->addAttribute("wr_2", sys.component<Ph1::SynchronGeneratorTrStab>("GEN2")->attribute("w_r"));
 	logger->addAttribute("wr_3", sys.component<Ph1::SynchronGeneratorTrStab>("GEN3")->attribute("w_r"));
 
-	Simulation sim(simName, sys, 0.0001, 2,
-		Domain::DP, Solver::Type::MNA, Logger::Level::info, true);
-
+	Simulation sim(simName, Logger::Level::info);
+	sim.setSystem(sys);
+	sim.setDomain(Domain::DP);
+	sim.setTimeStep(0.0001);
+	sim.setFinalTime(2);
+	sim.doSteadyStateInit(true);
+	sim.doHarmonicParallelization(false);
 	sim.addLogger(logger);
 	sim.run();
 

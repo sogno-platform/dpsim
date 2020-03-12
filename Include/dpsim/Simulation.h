@@ -66,6 +66,7 @@ namespace DPsim {
 		/// System list
 		CPS::SystemTopology mSystem;
 
+
 		// #### Logging ####
 		/// Simulation log level
 		CPS::Logger::Level mLogLevel;
@@ -79,6 +80,8 @@ namespace DPsim {
 		Solver::Type mSolverType = Solver::Type::MNA;
 		///
 		Solver::List mSolvers;
+		///
+		Bool mPowerFlowInit = false;
 		/// Determines if steady-state initialization
 		/// should be executed prior to the simulation.
 		/// By default the initialization is disabled.
@@ -155,6 +158,7 @@ namespace DPsim {
 			CPS::Domain domain = CPS::Domain::DP,
 			Solver::Type solverType = Solver::Type::MNA,
 			CPS::Logger::Level logLevel = CPS::Logger::Level::info,
+			Bool powerFlowInit = false,
 			Bool steadyStateInit = false,
 			Bool splitSubnets = true,
 			CPS::Component::List tearComponents = CPS::Component::List());
@@ -175,6 +179,8 @@ namespace DPsim {
 		void setSolverType(Solver::Type solverType = Solver::Type::MNA) { mSolverType = solverType; }
 		///
 		void doSteadyStateInit(Bool steadyStateInit = false) { mSteadyStateInit = steadyStateInit; }
+		///
+		void doPowerFlowInit(Bool powerFlowInit) { mPowerFlowInit = powerFlowInit; }
 		///
 		void doSplitSubnets(Bool splitSubnets = true) { mSplitSubnets = splitSubnets; }
 		///

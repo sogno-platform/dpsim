@@ -1,8 +1,5 @@
 /**
- * @file
- * @author Markus Mirz <mmirz@eonerc.rwth-aachen.de>
- *         Junjie Zhang <junjie.zhang@eonerc.rwth-aachen.de>
- * @copyright 2017-2018, Institute for Automation of Complex Power Systems, EONERC
+ * @copyright 2017, Institute for Automation of Complex Power Systems, EONERC
  *
  * CPowerSystems
  *
@@ -28,10 +25,11 @@ using namespace CPS;
 
 EMT::Ph3::Capacitor::Capacitor(String uid, String name, Logger::Level logLevel)
 	: PowerComponent<Real>(uid, name, logLevel) {
+	mPhaseType = PhaseType::ABC;
+	setTerminalNumber(2);
 	mEquivCurrent = Matrix::Zero(3, 1);
 	mIntfVoltage = Matrix::Zero(3, 1);
 	mIntfCurrent = Matrix::Zero(3, 1);
-	setTerminalNumber(2);
 
 	addAttribute<Matrix>("C", &mCapacitance, Flags::read | Flags::write);
 }

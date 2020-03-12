@@ -1,7 +1,5 @@
 /**
- * @file
- * @author Junjie Zhang <junjie.zhang@eonerc.rwth-aachen.de>
- * @copyright 2017-2019, Institute for Automation of Complex Power Systems, EONERC
+ * @copyright 2017, Institute for Automation of Complex Power Systems, EONERC
  *
  * CPowerSystems
  *
@@ -25,10 +23,10 @@ using namespace CPS;
 
 SP::Ph3::Inductor::Inductor(String uid, String name, Logger::Level logLevel)
 	: PowerComponent<Complex>(uid, name, logLevel) {
+	mPhaseType = PhaseType::ABC;
+	setTerminalNumber(2);
 	mIntfVoltage = MatrixComp::Zero(3, 1);
 	mIntfCurrent = MatrixComp::Zero(3, 1);
-	setTerminalNumber(2);
-
 	addAttribute<Matrix>("L", &mInductance, Flags::read | Flags::write);
 }
 
@@ -42,11 +40,12 @@ void SP::Ph3::Inductor::initializeFromPowerflow(Real frequency) {
 	checkForUnconnectedTerminals();
 
 	Real omega = 2 * PI * frequency;
-	mSusceptance = MatrixComp::Zero(3, 3);
-	mSusceptance <<
-		Complex(0, -1 / omega / mInductance(0, 0)), Complex(0, -1 / omega / mInductance(0, 1)), Complex(0, -1 / omega / mInductance(0, 2)),
-		Complex(0, -1 / omega / mInductance(1, 0)), Complex(0, -1 / omega / mInductance(1, 1)), Complex(0, -1 / omega / mInductance(1, 2)),
-		Complex(0, -1 / omega / mInductance(2, 0)), Complex(0, -1 / omega / mInductance(2, 1)), Complex(0, -1 / omega / mInductance(2, 2));
+	MatrixComp reactance = MatrixComp::Zero(3, 3);
+	reactance <<
+		Complex(0, omega * mInductance(0, 0)), Complex(0, omega * mInductance(0, 1)), Complex(0, omega * mInductance(0, 2)),
+		Complex(0, omega * mInductance(1, 0)), Complex(0, omega * mInductance(1, 1)), Complex(0, omega * mInductance(1, 2)),
+		Complex(0, omega * mInductance(2, 0)), Complex(0, omega * mInductance(2, 1)), Complex(0, omega * mInductance(2, 2));
+	mSusceptance = reactance.inverse();
 
 	// IntfVoltage initialization for each phase
 	mIntfVoltage(0, 0) = initialSingleVoltage(1) - initialSingleVoltage(0);

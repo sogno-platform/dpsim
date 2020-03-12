@@ -1,4 +1,4 @@
-/** Reference Circuits
+/**
  *
  * @author Jan Dinkelbach <jdinkelbach@eonerc.rwth-aachen.de>
  * @copyright 2019, Institute for Automation of Complex Power Systems, EONERC

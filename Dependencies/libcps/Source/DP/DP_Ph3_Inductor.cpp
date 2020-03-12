@@ -1,8 +1,5 @@
 /**
- * @file
- * @author Markus Mirz <mmirz@eonerc.rwth-aachen.de>
- *         Junjie Zhang <junjie.zhang@eonerc.rwth-aachen.de>
- * @copyright 2017-2019, Institute for Automation of Complex Power Systems, EONERC
+ * @copyright 2017, Institute for Automation of Complex Power Systems, EONERC
  *
  * CPowerSystems
  *
@@ -27,12 +24,13 @@ using namespace CPS;
 
 DP::Ph3::Inductor::Inductor(String uid, String name, Logger::Level logLevel)
 	: PowerComponent<Complex>(uid, name, logLevel) {
+	mPhaseType = PhaseType::ABC;
+	setTerminalNumber(2);
 	mEquivCurrent = MatrixComp::Zero(3,1);
 	mIntfVoltage = MatrixComp::Zero(3,1);
 	mIntfCurrent = MatrixComp::Zero(3,1);
-	setTerminalNumber(2);
 
-	addAttribute<Real>("L", &mInductance, Flags::read | Flags::write);
+	addAttribute<Matrix>("L", &mInductance, Flags::read | Flags::write);
 }
 
 PowerComponent<Complex>::Ptr DP::Ph3::Inductor::clone(String name) {
@@ -45,10 +43,13 @@ void DP::Ph3::Inductor::initializeFromPowerflow(Real frequency) {
 	checkForUnconnectedTerminals();
 
 	Real omega = 2 * PI * frequency;
-	MatrixComp impedance = Matrix::Zero(3,1);
-     impedance<<
-     Complex( 0, omega * mInductance ), Complex(0, omega * mInductance), Complex(0, omega * mInductance);
 
+	 MatrixComp reactance = MatrixComp::Zero(3, 3);
+	 reactance <<
+		 Complex(0, omega * mInductance(0, 0)), Complex(0, omega * mInductance(0, 1)), Complex(0, omega * mInductance(0, 2)),
+		 Complex(0, omega * mInductance(1, 0)), Complex(0, omega * mInductance(1, 1)), Complex(0, omega * mInductance(1, 2)),
+		 Complex(0, omega * mInductance(2, 0)), Complex(0, omega * mInductance(2, 1)), Complex(0, omega * mInductance(2, 2));
+	 MatrixComp susceptance = reactance.inverse();
 	 // IntfVoltage initialization for each phase
 	 mIntfVoltage(0, 0) = initialSingleVoltage(1) - initialSingleVoltage(0);
 	 Real voltMag = Math::abs(mIntfVoltage(0, 0));
@@ -60,7 +61,7 @@ void DP::Ph3::Inductor::initializeFromPowerflow(Real frequency) {
 		 voltMag*cos(voltPhase + 2. / 3.*M_PI),
 		 voltMag*sin(voltPhase + 2. / 3.*M_PI));
 
-	 mIntfCurrent = impedance.cwiseInverse().cwiseProduct(mIntfVoltage);
+	 mIntfCurrent = susceptance * mIntfVoltage;
 
 	//TODO
 	 mSLog->info( "--- Initialize according to power flow ---" );
@@ -77,27 +78,24 @@ void DP::Ph3::Inductor::initializeFromPowerflow(Real frequency) {
 }
 
 void DP::Ph3::Inductor::initVars(Real omega, Real timeStep) {
-	Real a = timeStep / (2. * mInductance);
+	Matrix a = timeStep / 2. * mInductance.inverse();
 	Real b = timeStep * omega / 2.;
 
-	Real equivCondReal = a / (1. + b * b);
-	Real equivCondImag =  -a * b / (Real(1.) + b * b);
-	mEquivCond = Matrix::Zero(3, 1);
-	mEquivCond << Complex(equivCondReal, equivCondImag),
-		Complex(equivCondReal, equivCondImag),
-		Complex(equivCondReal, equivCondImag);
-
+	Matrix equivCondReal = a / (1. + b * b);
+	Matrix equivCondImag =  -a * b / (Real(1.) + b * b);
+	mEquivCond = MatrixComp::Zero(3, 3);
+	mEquivCond <<
+		Complex(equivCondReal(0, 0), equivCondImag(0, 0)), Complex(equivCondReal(0, 1), equivCondImag(0, 1)), Complex(equivCondReal(0, 2), equivCondImag(0, 2)),
+		Complex(equivCondReal(1, 0), equivCondImag(1, 0)), Complex(equivCondReal(1, 1), equivCondImag(1, 1)), Complex(equivCondReal(1, 2), equivCondImag(1, 2)),
+		Complex(equivCondReal(2, 0), equivCondImag(2, 0)), Complex(equivCondReal(2, 1), equivCondImag(2, 1)), Complex(equivCondReal(2, 2), equivCondImag(2, 2));
 
 	Real preCurrFracReal = (1. - b * b) / (1. + b * b);
 	Real preCurrFracImag =  (-2. * b) / (1. + b * b);
-	mPrevCurrFac = Matrix::Zero(3, 1);
-	mPrevCurrFac << Complex(preCurrFracReal, preCurrFracImag),
-		Complex(preCurrFracReal, preCurrFracImag),
-		Complex(preCurrFracReal, preCurrFracImag);
+	mPrevCurrFac = Complex(preCurrFracReal, preCurrFracImag);
 
 
 	// TODO: check if this is correct or if it should be only computed before the step
-	mEquivCurrent = mEquivCond .cwiseProduct( mIntfVoltage) + mPrevCurrFac.cwiseProduct( mIntfCurrent);
+	mEquivCurrent = mEquivCond * mIntfVoltage + mPrevCurrFac * mIntfCurrent;
 	// no need to update this now
 	//mIntfCurrent = mEquivCond.cwiseProduct(mIntfVoltage) + mEquivCurrent;
 }
@@ -117,25 +115,49 @@ void DP::Ph3::Inductor::mnaInitialize(Real omega, Real timeStep, Attribute<Matri
 }
 
 void DP::Ph3::Inductor::mnaApplySystemMatrixStamp(Matrix& systemMatrix) {
+
 	if (terminalNotGrounded(0)) {
 		Math::addToMatrixElement(systemMatrix, simNode(0, 0), simNode(0, 0), mEquivCond(0, 0));
-		Math::addToMatrixElement(systemMatrix, simNode(0, 1), simNode(0, 1), mEquivCond(1, 0));
-		Math::addToMatrixElement(systemMatrix, simNode(0, 2), simNode(0, 2), mEquivCond(2, 0));
+		Math::addToMatrixElement(systemMatrix, simNode(0, 0), simNode(0, 1), mEquivCond(0, 1));
+		Math::addToMatrixElement(systemMatrix, simNode(0, 0), simNode(0, 2), mEquivCond(0, 2));
+		Math::addToMatrixElement(systemMatrix, simNode(0, 1), simNode(0, 0), mEquivCond(1, 0));
+		Math::addToMatrixElement(systemMatrix, simNode(0, 1), simNode(0, 1), mEquivCond(1, 1));
+		Math::addToMatrixElement(systemMatrix, simNode(0, 1), simNode(0, 2), mEquivCond(1, 2));
+		Math::addToMatrixElement(systemMatrix, simNode(0, 2), simNode(0, 0), mEquivCond(2, 0));
+		Math::addToMatrixElement(systemMatrix, simNode(0, 2), simNode(0, 1), mEquivCond(2, 1));
+		Math::addToMatrixElement(systemMatrix, simNode(0, 2), simNode(0, 2), mEquivCond(2, 2));
 	}
 	if (terminalNotGrounded(1)) {
 		Math::addToMatrixElement(systemMatrix, simNode(1, 0), simNode(1, 0), mEquivCond(0, 0));
-		Math::addToMatrixElement(systemMatrix, simNode(1, 1), simNode(1, 1), mEquivCond(1, 0));
-		Math::addToMatrixElement(systemMatrix, simNode(1, 2), simNode(1, 2), mEquivCond(2, 0));
+		Math::addToMatrixElement(systemMatrix, simNode(1, 0), simNode(1, 1), mEquivCond(0, 1));
+		Math::addToMatrixElement(systemMatrix, simNode(1, 0), simNode(1, 2), mEquivCond(0, 2));
+		Math::addToMatrixElement(systemMatrix, simNode(1, 1), simNode(1, 0), mEquivCond(1, 0));
+		Math::addToMatrixElement(systemMatrix, simNode(1, 1), simNode(1, 1), mEquivCond(1, 1));
+		Math::addToMatrixElement(systemMatrix, simNode(1, 1), simNode(1, 2), mEquivCond(1, 2));
+		Math::addToMatrixElement(systemMatrix, simNode(1, 2), simNode(1, 0), mEquivCond(2, 0));
+		Math::addToMatrixElement(systemMatrix, simNode(1, 2), simNode(1, 1), mEquivCond(2, 1));
+		Math::addToMatrixElement(systemMatrix, simNode(1, 2), simNode(1, 2), mEquivCond(2, 2));
 	}
 	if (terminalNotGrounded(0) && terminalNotGrounded(1)) {
 		Math::addToMatrixElement(systemMatrix, simNode(0, 0), simNode(1, 0), -mEquivCond(0, 0));
+		Math::addToMatrixElement(systemMatrix, simNode(0, 0), simNode(1, 1), -mEquivCond(0, 1));
+		Math::addToMatrixElement(systemMatrix, simNode(0, 0), simNode(1, 2), -mEquivCond(0, 2));
+		Math::addToMatrixElement(systemMatrix, simNode(0, 1), simNode(1, 0), -mEquivCond(1, 0));
+		Math::addToMatrixElement(systemMatrix, simNode(0, 1), simNode(1, 1), -mEquivCond(1, 1));
+		Math::addToMatrixElement(systemMatrix, simNode(0, 1), simNode(1, 2), -mEquivCond(1, 2));
+		Math::addToMatrixElement(systemMatrix, simNode(0, 2), simNode(1, 0), -mEquivCond(2, 0));
+		Math::addToMatrixElement(systemMatrix, simNode(0, 2), simNode(1, 1), -mEquivCond(2, 1));
+		Math::addToMatrixElement(systemMatrix, simNode(0, 2), simNode(1, 2), -mEquivCond(2, 2));
+
 		Math::addToMatrixElement(systemMatrix, simNode(1, 0), simNode(0, 0), -mEquivCond(0, 0));
-
-		Math::addToMatrixElement(systemMatrix, simNode(0, 1), simNode(1, 1), -mEquivCond(1, 0));
-		Math::addToMatrixElement(systemMatrix, simNode(1, 1), simNode(0, 1), -mEquivCond(1, 0));
-
-		Math::addToMatrixElement(systemMatrix, simNode(0, 2), simNode(1, 2), -mEquivCond(2, 0));
-		Math::addToMatrixElement(systemMatrix, simNode(1, 2), simNode(0, 2), -mEquivCond(2, 0));
+		Math::addToMatrixElement(systemMatrix, simNode(1, 0), simNode(0, 1), -mEquivCond(0, 1));
+		Math::addToMatrixElement(systemMatrix, simNode(1, 0), simNode(0, 2), -mEquivCond(0, 2));
+		Math::addToMatrixElement(systemMatrix, simNode(1, 1), simNode(0, 0), -mEquivCond(1, 0));
+		Math::addToMatrixElement(systemMatrix, simNode(1, 1), simNode(0, 1), -mEquivCond(1, 1));
+		Math::addToMatrixElement(systemMatrix, simNode(1, 1), simNode(0, 2), -mEquivCond(1, 2));
+		Math::addToMatrixElement(systemMatrix, simNode(1, 2), simNode(0, 0), -mEquivCond(2, 0));
+		Math::addToMatrixElement(systemMatrix, simNode(1, 2), simNode(0, 1), -mEquivCond(2, 1));
+		Math::addToMatrixElement(systemMatrix, simNode(1, 2), simNode(0, 2), -mEquivCond(2, 2));
 	}
 
 
@@ -151,7 +173,7 @@ void DP::Ph3::Inductor::mnaApplySystemMatrixStamp(Matrix& systemMatrix) {
 void DP::Ph3::Inductor::mnaApplyRightSideVectorStamp(Matrix& rightVector) {
 
 	// Calculate equivalent current source for next time step
-	mEquivCurrent = mEquivCond.cwiseProduct(mIntfVoltage) + mPrevCurrFac.cwiseProduct(mIntfCurrent);
+	mEquivCurrent = mEquivCond * mIntfVoltage + mPrevCurrFac * mIntfCurrent;
 
 	if (terminalNotGrounded(0)) {
 		Math::setVectorElement(rightVector, simNode(0, 0), mEquivCurrent(0, 0));
@@ -190,7 +212,7 @@ void DP::Ph3::Inductor::mnaUpdateVoltage(const Matrix& leftVector) {
 }
 
 void DP::Ph3::Inductor::mnaUpdateCurrent(const Matrix& leftVector) {
-	mIntfCurrent = mEquivCond .cwiseProduct(mIntfVoltage) + mEquivCurrent;
+	mIntfCurrent = mEquivCond * mIntfVoltage + mEquivCurrent;
 }
 
 void DP::Ph3::Inductor::mnaTearInitialize(Real omega, Real timeStep) {

@@ -90,6 +90,7 @@ PowerComponent<Complex>::Ptr SP::Ph1::Transformer::clone(String name) {
 // #### Powerflow section ####
 void SP::Ph1::Transformer::setBaseVoltage(Real baseVoltage) {
 	// Note: to be consistent set base voltage to higher voltage (and impedance values must be referred to high voltage side)
+	// TODO: use attribute setter for setting base voltage
     mBaseVoltage = baseVoltage;
 }
 

@@ -45,6 +45,7 @@
 #include <cps/SP/SP_Ph3_Resistor.h>
 #include <cps/SP/SP_Ph3_VoltageSource.h>
 #include <cps/SP/SP_Ph3_ControlledVoltageSource.h>
+#include <cps/SP/SP_Ph3_Transformer.h>
 
 #include <cps/DP/DP_Ph1_Capacitor.h>
 #include <cps/DP/DP_Ph1_CurrentSource.h>
@@ -71,6 +72,7 @@
 #include <cps/DP/DP_Ph3_Inductor.h>
 #include <cps/DP/DP_Ph3_VoltageSource.h>
 #include <cps/DP/DP_Ph3_SeriesResistor.h>
+#include <cps/DP/DP_Ph3_Resistor.h>
 #include <cps/DP/DP_Ph3_SeriesSwitch.h>
 #include <cps/DP/DP_Ph3_SynchronGeneratorDQTrapez.h>
 #ifdef WITH_SUNDIALS

@@ -1,7 +1,5 @@
 /**
- * @file
- * @author Markus Mirz <mmirz@eonerc.rwth-aachen.de>
- * @copyright 2017-2018, Institute for Automation of Complex Power Systems, EONERC
+ * @copyright 2017, Institute for Automation of Complex Power Systems, EONERC
  *
  * CPowerSystems
  *
@@ -25,24 +23,24 @@
 #include <cps/Solver/MNAInterface.h>
 #include <cps/Definitions.h>
 #include <cps/Logger.h>
-#include <cps/Base/Base_Ph1_Resistor.h>
+#include <cps/Base/Base_Ph3_Resistor.h>
 
 namespace CPS {
 namespace DP {
 namespace Ph3 {
 	///
-	class SeriesResistor :
-		public Base::Ph1::Resistor,
+	class Resistor :
+		public Base::Ph3::Resistor,
 		public MNAInterface,
 		public PowerComponent<Complex>,
-		public SharedFactory<SeriesResistor> {
+		public SharedFactory<Resistor> {
 
 	public:
 			/// Defines UID, name and logging level
-		SeriesResistor(String uid, String name,	Logger::Level logLevel = Logger::Level::off);
+		Resistor(String uid, String name,	Logger::Level logLevel = Logger::Level::off);
 			/// Defines name and logging level
-		SeriesResistor(String name,	Logger::Level logLevel = Logger::Level::off)
-			: SeriesResistor(name, name, logLevel) { }
+		Resistor(String name,	Logger::Level logLevel = Logger::Level::off)
+			: Resistor(name, name, logLevel) { }
 
 		PowerComponent<Complex>::Ptr clone(String name);
 
@@ -63,7 +61,7 @@ namespace Ph3 {
 
 		class MnaPostStep : public Task {
 		public:
-			MnaPostStep(SeriesResistor& resistor, Attribute<Matrix>::Ptr leftSideVector) :
+			MnaPostStep(Resistor& resistor, Attribute<Matrix>::Ptr leftSideVector) :
 				Task(resistor.mName + ".MnaPostStep"), mResistor(resistor), mLeftVector(leftSideVector)
 			{
 				mAttributeDependencies.push_back(mLeftVector);
@@ -74,7 +72,7 @@ namespace Ph3 {
 			void execute(Real time, Int timeStepCount);
 
 		private:
-			SeriesResistor& mResistor;
+			Resistor& mResistor;
 			Attribute<Matrix>::Ptr mLeftVector;
 		};
 	};
