@@ -56,13 +56,13 @@ void SP::Ph1::PiLine::setParameters(Real resistance, Real inductance, Real capac
 	mSeriesInd = inductance;
 	mSLog->info("Resistance={} [Ohm] Inductance={} [H]", mSeriesRes, mNominalOmega*mSeriesInd);
 
-    if(capacitance >= 0){
+    if(capacitance > 0){
         mParallelCap = capacitance;
     }else{
         mParallelCap = 1e-12;
         mSLog->warn("Zero value for Capacitance, setting default value of C={} [F]", mParallelCap);
     }
-    if(conductance >= 0){
+    if(conductance > 0){
         mParallelCond = conductance;
     }else{
         if (mBehaviour == Behaviour::Initialization)

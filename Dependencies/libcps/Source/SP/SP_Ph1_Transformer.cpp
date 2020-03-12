@@ -122,12 +122,17 @@ void SP::Ph1::Transformer::calculatePerUnitParameters(Real baseApparentPower, Re
 	
 	// set snubber resistance
 	if (mBehaviour == Behaviour::Initialization) {
-		Real snubberResistance = 1e6;
+		Real snubberResistance = 1e3;
 		mSubSnubResistor = std::make_shared<SP::Ph1::Resistor>(mUID + "_snub_res", mName + "_snub_res", mLogLevel);
 		mSubSnubResistor->setParameters(snubberResistance);
 		mSubSnubResistor->connect({ node(1), SP::Node::GND });
 		mSubSnubResistor->initializeFromPowerflow(mBaseOmega);
 	}
+	if (mSubSnubResistor) {
+		mSubSnubResistor->setBaseVoltage(mBaseVoltage);
+		mSubSnubResistor->calculatePerUnitParameters(baseApparentPower);
+	}
+
 	mSLog->info("Leakage Impedance Per Unit={} [Ohm] ", mLeakagePerUnit);
 }
 
@@ -159,9 +164,6 @@ void SP::Ph1::Transformer::pfApplyAdmittanceMatrixStamp(SparseMatrixCompRow & Y)
 	Y.coeffRef(this->simNode(0), this->simNode(1)) += mY_element.coeff(0, 1);
 	Y.coeffRef(this->simNode(1), this->simNode(1)) += mY_element.coeff(1, 1);
 	Y.coeffRef(this->simNode(1), this->simNode(0)) += mY_element.coeff(1, 0);
-
-	if(mSubSnubResistor)
-		mSubSnubResistor->pfApplyAdmittanceMatrixStamp(Y);
 
 	mSLog->info("#### Y matrix stamping: {}", mY_element);
 }

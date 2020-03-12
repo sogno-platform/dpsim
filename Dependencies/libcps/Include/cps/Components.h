@@ -31,6 +31,7 @@
 #include <cps/SP/SP_Ph1_PiLine.h>
 #include <cps/SP/SP_Ph1_Shunt.h>
 #include <cps/SP/SP_Ph1_Transformer.h>
+#include <cps/SP/SP_Ph1_SolidStateTransformer.h>
 #include <cps/SP/SP_Ph1_Load.h>
 #include <cps/SP/SP_Ph1_SynchronGenerator.h>
 #include <cps/SP/SP_Ph1_PQNode.h>

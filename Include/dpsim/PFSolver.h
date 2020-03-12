@@ -72,6 +72,8 @@ namespace DPsim {
         CPS::SystemTopology mSystem;
         /// Vector of transformer components
         std::vector<std::shared_ptr<CPS::SP::Ph1::Transformer>> mTransformers;
+        /// Vector of solid state transformer components
+        std::vector<std::shared_ptr<CPS::SP::Ph1::SolidStateTransformer>> mSolidStateTransformers;
         /// Vector of synchronous generator components
         std::vector<std::shared_ptr<CPS::SP::Ph1::SynchronGenerator>> mSynchronGenerators;
         /// Vector of load components

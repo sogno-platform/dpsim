@@ -23,9 +23,6 @@
 
 #include <cps/PowerComponent.h>
 #include <cps/Solver/PFSolverInterfaceBus.h>
-#include <cps/SP/SP_Ph1_PVNode.h>
-#include <cps/SP/SP_Ph1_PQNode.h>
-#include <cps/SP/SP_Ph1_VDNode.h>
 #include <cps/Solver/MNAInterface.h>
 #include <cps/Solver/DAEInterface.h>
 
