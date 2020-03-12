@@ -49,6 +49,9 @@ void PFSolver::initialize(){
             mExternalGrids.push_back(extnet);
 		else if (std::shared_ptr<CPS::SP::Ph1::Shunt> shunt = std::dynamic_pointer_cast<CPS::SP::Ph1::Shunt>(comp))
             mShunts.push_back(shunt);
+		else if(std::shared_ptr<CPS::SP::Ph1::SolidStateTransformer> sst = std::dynamic_pointer_cast<CPS::SP::Ph1::SolidStateTransformer>(comp)){
+			mSolidStateTransformers.push_back(sst);
+		}
     }
 
 	setBaseApparentPower();
@@ -92,6 +95,9 @@ void PFSolver::initializeComponents(){
 	}
 	for(auto gen : mSynchronGenerators) {
 		gen->calculatePerUnitParameters(mBaseApparentPower, mSystem.mSystemOmega);
+	}
+	for(auto sst : mSolidStateTransformers){
+		sst->calculatePerUnitParameters(mBaseApparentPower, mSystem.mSystemOmega);
 	}
 	
 }
@@ -147,6 +153,10 @@ void PFSolver::determinePFBusType() {
 				if (extnet->mPowerflowBusType == CPS::PowerflowBusType::VD) {
 					connectedVD = true;
 				}
+				else if (extnet->mPowerflowBusType == CPS::PowerflowBusType::PV) {
+					connectedPV = true;
+				}
+
 			}
 		}
 

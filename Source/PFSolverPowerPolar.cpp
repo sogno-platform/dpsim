@@ -53,6 +53,11 @@ void PFSolverPowerPolar::generateInitialSolution(Real time, bool keep_last_solut
                 sol_P(pq->simNode()) -= load->attribute<CPS::Real>("P_pu")->get();
                 sol_Q(pq->simNode()) -= load->attribute<CPS::Real>("Q_pu")->get();
             }
+            else if(std::shared_ptr<CPS::SP::Ph1::SolidStateTransformer> sst = 
+                std::dynamic_pointer_cast<CPS::SP::Ph1::SolidStateTransformer>(comp)){
+                    sol_P(pq->simNode()) -= sst->getNodalInjection(pq).real();
+                    sol_Q(pq->simNode()) -= sst->getNodalInjection(pq).imag();
+                }
             sol_S_complex(pq->simNode()) = CPS::Complex(sol_P[pq->simNode()], sol_Q[pq->simNode()]);
 		}
 	}
@@ -69,6 +74,11 @@ void PFSolverPowerPolar::generateInitialSolution(Real time, bool keep_last_solut
 			}
             else if (std::shared_ptr<CPS::SP::Ph1::Load> load = std::dynamic_pointer_cast<CPS::SP::Ph1::Load>(comp)) {
 				sol_P(pv->simNode()) -= load->attribute<CPS::Real>("P_pu")->get();
+			}
+            else if (std::shared_ptr<CPS::SP::Ph1::externalGridInjection> extnet =
+				std::dynamic_pointer_cast<CPS::SP::Ph1::externalGridInjection>(comp)) {
+				sol_P(pv->simNode()) += extnet->attribute<CPS::Real>("p_inj")->get() / mBaseApparentPower;
+				sol_V(pv->simNode()) = extnet->attribute<CPS::Real>("V_set_pu")->get();
 			}
 			sol_S_complex(pv->simNode()) = CPS::Complex(sol_P[pv->simNode()], sol_Q[pv->simNode()]);
 			sol_V_complex(pv->simNode()) = CPS::Complex(sol_V[pv->simNode()], sol_D[pv->simNode()]);
@@ -369,8 +379,12 @@ void PFSolverPowerPolar::calculatePAndQAtSlackBus() {
         S = sol_Vcx(k) * conj(I);
         sol_P(k) = S.real();
         sol_Q(k) = S.imag();
-        for(auto extnet : mExternalGrids)
-			extnet->updatePowerInjection(S*mBaseApparentPower);
+        for(auto extnet : mExternalGrids){
+            if(extnet->mPowerflowBusType==CPS::PowerflowBusType::VD){
+			    extnet->updatePowerInjection(S*mBaseApparentPower);
+                break;
+            }
+        }
     }
 }
 
