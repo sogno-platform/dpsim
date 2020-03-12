@@ -15,15 +15,18 @@ set(CIRCUIT_SOURCES
 	Circuits/DP_PiLine.cpp
 	Circuits/DP_DecouplingLine.cpp
 	Circuits/DP_Diakoptics.cpp
-	#Circuits/DP_VS_Trafo_R.cpp
-	#Circuits/DP_ResVS_RL_Switch.cpp
+	Circuits/DP_VSI.cpp
 	
-	# EMT examples	
+	# EMT examples
 	Circuits/EMT_CS_RL1.cpp
 	Circuits/EMT_VS_RL1.cpp
 	Circuits/EMT_Circuits.cpp
 	Circuits/DP_Basics_EMT_Sims.cpp	
 	#Circuits/EMT_ResVS_RL_Switch.cpp
+	Circuits/EMT_VSI.cpp
+	
+	# Static Phasor examples
+	Circuits/SP_Circuits.cpp
 
 	# EMT and DP studies
 	Circuits/DP_EMT_RL_SourceStep.cpp
@@ -92,13 +95,12 @@ if(WITH_CIM)
 		CIM/WSCC-9bus_CIM.cpp
 		CIM/WSCC-9bus_CIM_Dyn.cpp
 		CIM/WSCC-9bus_CIM_Dyn_Switch.cpp
-
-		# powerflow example		
+		
+		# PF(Power Flow) example		
 		CIM/Slack_Trafo_Load.cpp
 		CIM/Slack_TrafoTapChanger_Load.cpp
 		CIM/CIGRE_MV_PowerFlowTest.cpp
 		CIM/CIGRE_MV_PowerFlowTest_LoadProfiles.cpp
-
 		CIM/IEEE_LV_PowerFlowTest.cpp
 		CIM/IEEE_LV_PowerFlowTest_LoadProfiles.cpp
 		

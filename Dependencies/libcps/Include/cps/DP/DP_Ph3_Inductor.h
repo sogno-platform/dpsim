@@ -23,7 +23,7 @@
 
 #include <cps/PowerComponent.h>
 #include <cps/Solver/MNATearInterface.h>
-#include <cps/Base/Base_Ph1_Inductor.h>
+#include <cps/Base/Base_Ph3_Inductor.h>
 
 namespace CPS {
 namespace DP {
@@ -36,7 +36,7 @@ namespace Ph3 {
 	/// The resistance is constant for a defined time step and system
 	/// frequency and the current source changes for each iteration.
 	class Inductor :
-		public Base::Ph1::Inductor,
+		public Base::Ph3::Inductor,
 		public MNATearInterface,
 		public PowerComponent<Complex>,
 		public SharedFactory<Inductor> {
@@ -46,7 +46,7 @@ namespace Ph3 {
 		/// Equivalent conductance [S]
 		MatrixComp mEquivCond;
 		/// Coefficient in front of previous current value
-		MatrixComp mPrevCurrFac;
+		Complex mPrevCurrFac;
 
 		void initVars(Real omega, Real timeStep);
 	public:

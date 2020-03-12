@@ -22,11 +22,11 @@
 #include <cps/PowerComponent.h>
 #include <cps/Solver/MNAInterface.h>
 #include <cps/Base/Base_Ph3_PiLine.h>
-#include <cps/EMT/EMT_Ph3_Inductor.h>
-#include <cps/EMT/EMT_Ph3_Resistor.h>
+#include <cps/SP/SP_Ph3_Inductor.h>
+#include <cps/SP/SP_Ph3_Resistor.h>
 
 namespace CPS {
-namespace EMT {
+namespace SP {
 namespace Ph3 {
 
 	class RxLine :

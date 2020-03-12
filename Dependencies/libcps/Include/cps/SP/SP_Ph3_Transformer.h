@@ -21,12 +21,12 @@
 
 #include <cps/PowerComponent.h>
 #include <cps/Solver/MNAInterface.h>
-#include <cps/EMT/EMT_Ph3_RxLine.h>
-#include <cps/EMT/EMT_Ph3_Inductor.h>
+#include <cps/SP/SP_Ph3_RxLine.h>
+#include <cps/SP/SP_Ph3_Inductor.h>
 #include <cps/Base/Base_Ph3_Transformer.h>
 
 namespace CPS {
-	namespace EMT {
+	namespace SP {
 		namespace Ph3 {
 			/// Transformer that includes an inductance and resistance
 			class Transformer :
@@ -36,10 +36,10 @@ namespace CPS {
 				public Base::Ph3::Transformer {
 			private:
 				/// Internal inductor to model losses
-				std::shared_ptr<EMT::Ph3::Inductor> mSubInductor;
+				std::shared_ptr<SP::Ph3::Inductor> mSubInductor;
 				/// Internal parallel resistance as snubber
-				std::shared_ptr<EMT::Ph3::Resistor> mSubSnubResistor;
-				std::shared_ptr<EMT::Ph3::Resistor> mSubResistor;
+				std::shared_ptr<SP::Ph3::Resistor> mSubSnubResistor;
+				std::shared_ptr<SP::Ph3::Resistor> mSubResistor;
 			public:
 				/// Defines UID, name and logging level
 				Transformer(String uid, String name,

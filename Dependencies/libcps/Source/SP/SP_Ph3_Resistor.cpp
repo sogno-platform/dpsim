@@ -1,7 +1,5 @@
 /**
- * @file
- * @author Junjie Zhang <junjie.zhang@eonerc.rwth-aachen.de>
- * @copyright 2017-2019, Institute for Automation of Complex Power Systems, EONERC
+ * @copyright 2017, Institute for Automation of Complex Power Systems, EONERC
  *
  * CPowerSystems
  *
@@ -27,10 +25,10 @@ using namespace CPS;
 SP::Ph3::Resistor::Resistor(String uid, String name,
 	Logger::Level logLevel)
 	: PowerComponent<Complex>(uid, name, logLevel) {
+	mPhaseType = PhaseType::ABC;
 	setTerminalNumber(2);
 	mIntfVoltage = MatrixComp::Zero(3, 1);
 	mIntfCurrent = MatrixComp::Zero(3, 1);
-
 	addAttribute<Matrix>("R", &mResistance, Flags::read | Flags::write);
 }
 
@@ -54,9 +52,9 @@ void SP::Ph3::Resistor::initializeFromPowerflow(Real frequency) {
 	mConductance = mResistance.inverse();
 	mIntfCurrent = mConductance * mIntfVoltage;
 
-	mSLog->info("Node 1 : {} <{}", Logger::phasorToString(initialVoltage(0)(0, 0)));
-	mSLog->info("Node 2 : {} <{}", Logger::phasorToString(initialVoltage(1)(0, 0)));
-	mSLog->info("initialize {} {} voltage to {} <{} and current to {} <{}",
+	mSLog->info("Node 1 : {}", Logger::phasorToString(initialVoltage(0)(0, 0)));
+	mSLog->info("Node 2 : {}", Logger::phasorToString(initialVoltage(1)(0, 0)));
+	mSLog->info("initialize {} {} voltage to {} and current to {}",
 		this->type(), this->name(),
 		Logger::phasorToString(mIntfVoltage(0, 0)),
 		Logger::phasorToString(mIntfCurrent(0, 0)));

@@ -73,6 +73,7 @@ Simulation::Simulation(String name, SystemTopology system,
 	Real timeStep, Real finalTime,
 	Domain domain, Solver::Type solverType,
 	Logger::Level logLevel,
+	Bool powerFlowInit,
 	Bool steadyStateInit,
 	Bool splitSubnets,
 	Component::List tearComponents) :
@@ -83,6 +84,7 @@ Simulation::Simulation(String name, SystemTopology system,
 	mDomain = domain;
 	mSystem = system;
 	mSolverType = solverType;
+	mPowerFlowInit = powerFlowInit;
 	mSteadyStateInit = steadyStateInit;
 	mSplitSubnets = splitSubnets;
 	mTearComponents = tearComponents;
@@ -104,7 +106,10 @@ void Simulation::initialize() {
 		createSolvers<Real>(mSystem, mTearComponents);
 		break;
 	case Domain::SP:
-		mSolvers.push_back(std::make_shared<PFSolverPowerPolar>(mName, mSystem, mTimeStep, mLogLevel));
+		if(mSolverType==Solver::Type::MNA)
+			createSolvers<Complex>(mSystem, mTearComponents);
+		else
+			mSolvers.push_back(std::make_shared<PFSolverPowerPolar>(mName, mSystem, mTimeStep, mLogLevel));
 		break;
 	}
 

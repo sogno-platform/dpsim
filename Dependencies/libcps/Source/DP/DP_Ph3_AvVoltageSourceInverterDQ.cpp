@@ -1,7 +1,5 @@
 /**
- * @file
- * @author  Junjie Zhang <junjie.zhang@rwth-aachen.de>
- * @copyright 2017-2019, Institute for Automation of Complex Power Systems, EONERC
+ * @copyright 2017, Institute for Automation of Complex Power Systems, EONERC
  *
  * CPowerSystems
  *
@@ -59,8 +57,8 @@ DP::Ph3::AvVoltageSourceInverterDQ::AvVoltageSourceInverterDQ(String uid, String
 }
 
 void DP::Ph3::AvVoltageSourceInverterDQ::setParameters(Real sysOmega, Complex sysVoltNom, Real Pref, Real Qref, Real Kp_pll, Real Ki_pll,
-	Real Kp_powerCtrl, Real Ki_powerCtrl, Real Kp_currCtrl, Real Ki_currCtrl, Real Lf, Real Cf,
-	Real Rf, Real Rc) {
+	Real Kp_powerCtrl, Real Ki_powerCtrl, Real Kp_currCtrl, Real Ki_currCtrl, Matrix Lf, Matrix Cf,
+	Matrix Rf, Matrix Rc) {
 	mPref = Pref;
 	mQref = Qref;
 
@@ -412,7 +410,7 @@ void DP::Ph3::AvVoltageSourceInverterDQ::initializeFromPowerflow(Real frequency)
 	mSubCtrledVoltageSource->setParameters(mIntfVoltage);
 	mSubCtrledVoltageSource->initializeFromPowerflow(frequency);
 
-	mSubResistorF = DP::Ph3::SeriesResistor::make(mName + "_resF", mLogLevel);
+	mSubResistorF = DP::Ph3::Resistor::make(mName + "_resF", mLogLevel);
 	mSubResistorF->connect({ mVirtualNodes[1] , terminal(0)->node() });
 	mSubResistorF->setParameters(mRf);
 	mSubResistorF->initializeFromPowerflow(frequency);

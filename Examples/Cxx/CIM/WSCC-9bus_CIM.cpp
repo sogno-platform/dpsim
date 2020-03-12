@@ -60,8 +60,15 @@ int main(int argc, char *argv[]) {
 	logger->addAttribute("v8", sys.node<Node>("BUS8")->attribute("v"));
 	logger->addAttribute("v9", sys.node<Node>("BUS9")->attribute("v"));
 
-	Simulation sim(simName, sys, 0.0001, 0.1,
-		Domain::DP, Solver::Type::MNA, Logger::Level::info, true);
+	Simulation sim(simName, Logger::Level::info);
+	sim.setSystem(sys);
+	sim.setDomain(Domain::DP);
+	sim.setTimeStep(0.0001);
+	sim.setFinalTime(0.1);
+	sim.doSteadyStateInit(true);
+	sim.doHarmonicParallelization(false);
+	sim.addLogger(logger);
+	sim.run();
 
 	sim.addLogger(logger);
 	sim.run();

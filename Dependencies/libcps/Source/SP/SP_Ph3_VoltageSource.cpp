@@ -1,7 +1,5 @@
 /**
- * @file
- * @author Junjie Zhang <junjie.zhang@eonerc.rwth-aachen.de>
- * @copyright 2017-2019, Institute for Automation of Complex Power Systems, EONERC
+ * @copyright 2017, Institute for Automation of Complex Power Systems, EONERC
  *
  * CPowerSystems
  *
@@ -27,7 +25,8 @@ using namespace CPS;
 
 SP::Ph3::VoltageSource::VoltageSource(String uid, String name, Logger::Level logLevel)
 	: PowerComponent<Complex>(uid, name, logLevel) {
-	setVirtualNodeNumber(3);
+	mPhaseType = PhaseType::ABC;
+	setVirtualNodeNumber(1);
 	setTerminalNumber(2);
 	mIntfVoltage = MatrixComp::Zero(3, 1);
 	mIntfCurrent = MatrixComp::Zero(3, 1);
@@ -78,24 +77,24 @@ void SP::Ph3::VoltageSource::mnaInitialize(Real omega, Real timeStep, Attribute<
 
 void SP::Ph3::VoltageSource::mnaApplySystemMatrixStamp(Matrix& systemMatrix) {
 	if (terminalNotGrounded(0)) {
-		Math::addToMatrixElement(systemMatrix, simNode(0, 0), mVirtualNodes[0]->simNode(), Complex(-1, 0));
-		Math::addToMatrixElement(systemMatrix, mVirtualNodes[0]->simNode(), simNode(0, 0), Complex(-1, 0));
+		Math::addToMatrixElement(systemMatrix, simNode(0, 0), mVirtualNodes[0]->simNode(PhaseType::A), Complex(-1, 0));
+		Math::addToMatrixElement(systemMatrix, mVirtualNodes[0]->simNode(PhaseType::A), simNode(0, 0), Complex(-1, 0));
 
-		Math::addToMatrixElement(systemMatrix, simNode(0, 1), mVirtualNodes[1]->simNode(), Complex(-1, 0));
-		Math::addToMatrixElement(systemMatrix, mVirtualNodes[1]->simNode(), simNode(0, 1), Complex(-1, 0));
+		Math::addToMatrixElement(systemMatrix, simNode(0, 1), mVirtualNodes[0]->simNode(PhaseType::B), Complex(-1, 0));
+		Math::addToMatrixElement(systemMatrix, mVirtualNodes[0]->simNode(PhaseType::B), simNode(0, 1), Complex(-1, 0));
 
-		Math::addToMatrixElement(systemMatrix, simNode(0, 2), mVirtualNodes[2]->simNode(), Complex(-1, 0));
-		Math::addToMatrixElement(systemMatrix, mVirtualNodes[2]->simNode(), simNode(0, 2), -Complex(-1, 0));
+		Math::addToMatrixElement(systemMatrix, simNode(0, 2), mVirtualNodes[0]->simNode(PhaseType::C), Complex(-1, 0));
+		Math::addToMatrixElement(systemMatrix, mVirtualNodes[0]->simNode(PhaseType::C), simNode(0, 2), -Complex(-1, 0));
 	}
 	if (terminalNotGrounded(1)) {
-		Math::addToMatrixElement(systemMatrix, simNode(1, 0), mVirtualNodes[0]->simNode(), Complex(1, 0));
-		Math::addToMatrixElement(systemMatrix, mVirtualNodes[0]->simNode(), simNode(1, 0), Complex(1, 0));
+		Math::addToMatrixElement(systemMatrix, simNode(1, 0), mVirtualNodes[0]->simNode(PhaseType::A), Complex(1, 0));
+		Math::addToMatrixElement(systemMatrix, mVirtualNodes[0]->simNode(PhaseType::A), simNode(1, 0), Complex(1, 0));
 
-		Math::addToMatrixElement(systemMatrix, simNode(1, 1), mVirtualNodes[1]->simNode(), Complex(1, 0));
-		Math::addToMatrixElement(systemMatrix, mVirtualNodes[1]->simNode(), simNode(1, 1), Complex(1, 0));
+		Math::addToMatrixElement(systemMatrix, simNode(1, 1), mVirtualNodes[0]->simNode(PhaseType::B), Complex(1, 0));
+		Math::addToMatrixElement(systemMatrix, mVirtualNodes[0]->simNode(PhaseType::B), simNode(1, 1), Complex(1, 0));
 
-		Math::addToMatrixElement(systemMatrix, simNode(1, 2), mVirtualNodes[2]->simNode(), Complex(1, 0));
-		Math::addToMatrixElement(systemMatrix, mVirtualNodes[2]->simNode(), simNode(1, 2), Complex(1, 0));
+		Math::addToMatrixElement(systemMatrix, simNode(1, 2), mVirtualNodes[0]->simNode(PhaseType::C), Complex(1, 0));
+		Math::addToMatrixElement(systemMatrix, mVirtualNodes[0]->simNode(PhaseType::C), simNode(1, 2), Complex(1, 0));
 	}
 
 /*
@@ -112,9 +111,9 @@ void SP::Ph3::VoltageSource::mnaApplySystemMatrixStamp(Matrix& systemMatrix) {
 }
 
 void SP::Ph3::VoltageSource::mnaApplyRightSideVectorStamp(Matrix& rightVector) {
-	Math::setVectorElement(rightVector, mVirtualNodes[0]->simNode(), mIntfVoltage(0, 0));
-	Math::setVectorElement(rightVector, mVirtualNodes[1]->simNode(), mIntfVoltage(1, 0));
-	Math::setVectorElement(rightVector, mVirtualNodes[2]->simNode(), mIntfVoltage(2, 0));
+	Math::setVectorElement(rightVector, mVirtualNodes[0]->simNode(PhaseType::A), mIntfVoltage(0, 0));
+	Math::setVectorElement(rightVector, mVirtualNodes[0]->simNode(PhaseType::B), mIntfVoltage(1, 0));
+	Math::setVectorElement(rightVector, mVirtualNodes[0]->simNode(PhaseType::C), mIntfVoltage(2, 0));
 
 	//mLog.debug() << "Add " << mIntfVoltage(0,0) << " to source vector " << mVirtualNodes[0]->simNode() << std::endl;
 }
@@ -139,9 +138,9 @@ void SP::Ph3::VoltageSource::MnaPostStep::execute(Real time, Int timeStepCount) 
 }
 
 void SP::Ph3::VoltageSource::mnaUpdateCurrent(const Matrix& leftVector) {
-	mIntfCurrent(0, 0) = Math::complexFromVectorElement(leftVector, mVirtualNodes[0]->simNode());
-	mIntfCurrent(1, 0) = Math::realFromVectorElement(leftVector, mVirtualNodes[1]->simNode());
-	mIntfCurrent(2, 0) = Math::realFromVectorElement(leftVector, mVirtualNodes[2]->simNode());
+	mIntfCurrent(0, 0) = Math::complexFromVectorElement(leftVector, mVirtualNodes[0]->simNode(PhaseType::A));
+	mIntfCurrent(1, 0) = Math::realFromVectorElement(leftVector, mVirtualNodes[0]->simNode(PhaseType::B));
+	mIntfCurrent(2, 0) = Math::realFromVectorElement(leftVector, mVirtualNodes[0]->simNode(PhaseType::C));
 }
 
 void SP::Ph3::VoltageSource::daeResidual(double ttime, const double state[], const double dstate_dt[], double resid[], std::vector<int>& off) {
