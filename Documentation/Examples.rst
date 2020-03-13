@@ -6,6 +6,7 @@ Jupyter Notebooks
 
 The following examples have been provided as Jupyter Notebooks.
 You can read them online or :doc:`install </Install>` DPsim and execute them interactively on your local machine.
+Notebooks including the results can be found in a dedicated `Github repository <https://github.com/DPsim-Simulator/DPsim-Notebooks>`__.
 
 .. toctree::
    :glob:
