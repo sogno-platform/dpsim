@@ -66,7 +66,7 @@ namespace Signal {
 		void step(Real time, Int timeStepCount);
 		void postStep();
 		Task::List getTasks();
-		Component::List getLineComponents();
+		IdentifiedObject::List getLineComponents();
 
 		class PreStep : public Task {
 		public:

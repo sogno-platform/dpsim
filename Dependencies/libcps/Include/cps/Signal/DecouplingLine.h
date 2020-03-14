@@ -1,8 +1,5 @@
-/** Signalling part of a decoupling transmission line
- *
- * @file
- * @author Georg Reinke <georg.reinke@rwth-aachen.de>
- * @copyright 2017-2018, Institute for Automation of Complex Power Systems, EONERC
+/**
+ * @copyright 2017, Institute for Automation of Complex Power Systems, EONERC
  *
  * CPowerSystems
  *
@@ -71,7 +68,7 @@ namespace Signal {
 		void step(Real time, Int timeStepCount);
 		void postStep();
 		Task::List getTasks();
-		Component::List getLineComponents();
+		IdentifiedObject::List getLineComponents();
 
 		class PreStep : public Task {
 		public:

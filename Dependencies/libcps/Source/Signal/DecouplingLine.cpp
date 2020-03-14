@@ -173,6 +173,6 @@ Task::List DecouplingLine::getTasks() {
 	return Task::List({std::make_shared<PreStep>(*this), std::make_shared<PostStep>(*this)});
 }
 
-Component::List DecouplingLine::getLineComponents() {
-	return Component::List({mRes1, mRes2, mSrc1, mSrc2});
+IdentifiedObject::List DecouplingLine::getLineComponents() {
+	return IdentifiedObject::List({mRes1, mRes2, mSrc1, mSrc2});
 }
