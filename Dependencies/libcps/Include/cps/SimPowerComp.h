@@ -1,7 +1,5 @@
 /**
- * @file
- * @author Markus Mirz <mmirz@eonerc.rwth-aachen.de>
- * @copyright 2017-2018, Institute for Automation of Complex Power Systems, EONERC
+ * @copyright 2017, Institute for Automation of Complex Power Systems, EONERC
  *
  * CPowerSystems
  *
@@ -21,9 +19,9 @@
 
 #pragma once
 
-#include <cps/TopologicalComponent.h>
-#include <cps/Terminal.h>
-#include <cps/Node.h>
+#include <cps/TopologicalPowerComp.h>
+#include <cps/SimTerminal.h>
+#include <cps/SimNode.h>
 
 namespace CPS {
 	/// Base class for all components that are transmitting power.

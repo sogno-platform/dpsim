@@ -21,7 +21,7 @@
 
 #pragma once
 
-#include <cps/PowerComponent.h>
+#include <cps/SimPowerComp.h>
 #include <cps/Solver/MNASwitchInterface.h>
 #include <cps/Definitions.h>
 #include <cps/Logger.h>

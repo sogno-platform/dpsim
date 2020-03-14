@@ -31,7 +31,7 @@ namespace fs = std::experimental::filesystem;
 #include <dpsim/Scheduler.h>
 #include <cps/PtrFactory.h>
 #include <cps/Attribute.h>
-#include <cps/Node.h>
+#include <cps/SimNode.h>
 #include <cps/Task.h>
 
 namespace DPsim {

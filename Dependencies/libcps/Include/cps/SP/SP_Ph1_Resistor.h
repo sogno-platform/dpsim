@@ -19,7 +19,7 @@
 
 #pragma once
 
-#include <cps/PowerComponent.h>
+#include <cps/SimPowerComp.h>
 #include <cps/Solver/MNATearInterface.h>
 #include <cps/Solver/PFSolverInterfaceBranch.h>
 #include <cps/Definitions.h>
@@ -36,7 +36,7 @@ namespace CPS {
 				public PowerComponent<Complex>,
 				public SharedFactory<Resistor>,
 	 			public PFSolverInterfaceBranch {
-			
+
 			private:
 				/// base apparent power[VA]
 				Real mBaseApparentPower;

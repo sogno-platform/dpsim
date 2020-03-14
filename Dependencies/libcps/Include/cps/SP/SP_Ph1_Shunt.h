@@ -20,7 +20,7 @@
  *********************************************************************************/
 
 #pragma once
-#include <cps/PowerComponent.h>
+#include <cps/SimPowerComp.h>
 #include <cps/Solver/PFSolverInterfaceBranch.h>
 
 namespace CPS {
@@ -66,7 +66,7 @@ namespace SP {namespace Ph1 {
 		// #### General ####
 		/// Set shunt specific parameters
 		void setParameters(Real conductance, Real susceptance);
-		
+
 		// #### Powerflow section ####
 		/// Set base voltage
 		void setBaseVoltage(Real baseVoltage);

@@ -21,7 +21,7 @@
 
 #pragma once
 
-#include <cps/PowerComponent.h>
+#include <cps/SimPowerComp.h>
 #include <cps/Solver/MNATearInterface.h>
 #include <cps/Solver/PFSolverInterfaceBranch.h>
 #include <cps/Base/Base_Ph1_PiLine.h>
@@ -117,7 +117,7 @@ namespace Ph1 {
 		/// Set base voltage
 		void setBaseVoltage(Real baseVoltage);
 		/// Initializes component from power flow data
-		void calculatePerUnitParameters(Real baseApparentPower, Real baseOmega);	
+		void calculatePerUnitParameters(Real baseApparentPower, Real baseOmega);
 		/// Stamps admittance matrix
 		void pfApplyAdmittanceMatrixStamp(SparseMatrixCompRow & Y) override;
 		/// updates branch current and power flow, input pu value, update with real value

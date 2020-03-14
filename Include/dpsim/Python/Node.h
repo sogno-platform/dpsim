@@ -30,7 +30,7 @@
   #include <Python.h>
 #endif
 
-#include <cps/Node.h>
+#include <cps/SimNode.h>
 
 namespace DPsim {
 namespace Python {

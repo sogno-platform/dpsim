@@ -19,32 +19,32 @@
 
 #pragma once
 
-#include <cps/SimPowerComp.h>
-#include "cps/Solver/PFSolverInterfaceBus.h"
-#include <cps/SP/SP_Ph1_PQNode.h>
-#include <cps/SP/SP_Ph1_PVNode.h>
-#include <cps/SP/SP_Ph1_VDNode.h>
-
+#include <cps/IdentifiedObject.h>
+#include <cps/MathUtils.h>
+#include <cps/PtrFactory.h>
 
 namespace CPS {
-
-namespace SP { namespace Ph1 {
-	class VoltageSourceInverter :
-		public PowerComponent<Complex>, public SharedFactory<VoltageSourceInverter>, public PFSolverInterfaceBus {
+	/// Base class for all signal type components
+	/// that have only unidirectional connections
+	class TopologicalSignalComp : public IdentifiedObject {
+	protected:
+		/// Component logger
+		Logger::Log mSLog;
+		/// Component logger control for internal variables
+		Logger::Level mLogLevel;
 	public:
+		typedef std::shared_ptr<TopologicalSignalComp> Ptr;
+		typedef std::vector<Ptr> List;
 
-		VoltageSourceInverter(String uid, String name, Real power, Real reactivePower,
-			PowerflowBusType powerflowBusType = PowerflowBusType::PQ,
-			Logger::Level logLevel = Logger::Level::off);
-
-		VoltageSourceInverter(String uid, String name,
-			PowerflowBusType powerflowBusType = PowerflowBusType::PQ,
-			Logger::Level logLevel = Logger::Level::off);
-
-		// #### Powerflow section ####
-		/// Modify powerflow bus type
-		void modifyPowerFlowBusType(PowerflowBusType powerflowBusType) override;
+		///
+		TopologicalSignalComp(String uid, String name, Logger::Level logLevel = Logger::Level::off)
+			: IdentifiedObject(uid, name), mLogLevel(logLevel) {
+			mSLog = Logger::get(name, logLevel);
+		}
+		///
+		TopologicalSignalComp(String name, Logger::Level logLevel = Logger::Level::off)
+			: TopologicalSignalComp(name, name, logLevel) { }
+		///
+		virtual ~TopologicalSignalComp() { }
 	};
-}
-}
 }

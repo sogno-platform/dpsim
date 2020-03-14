@@ -21,7 +21,7 @@
 
 #pragma once
 
-#include <cps/PowerComponent.h>
+#include <cps/SimPowerComp.h>
 #include <cps/Solver/PFSolverInterfaceBus.h>
 #include <cps/SP/SP_Ph1_PVNode.h>
 #include <cps/SP/SP_Ph1_PQNode.h>
@@ -104,7 +104,7 @@ namespace SP { namespace Ph1 {
 
         // #### Powerflow section ####
 		/// Initializes component from power flow data
-		void calculatePerUnitParameters(Real baseApparentPower, Real baseOmega);		
+		void calculatePerUnitParameters(Real baseApparentPower, Real baseOmega);
         /// Modify powerflow bus type
 		void modifyPowerFlowBusType(PowerflowBusType powerflowBusType) override;
 

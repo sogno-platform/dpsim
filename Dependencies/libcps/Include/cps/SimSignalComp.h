@@ -19,22 +19,16 @@
 
 #pragma once
 
-#include <cps/IdentifiedObject.h>
-#include <cps/MathUtils.h>
-#include <cps/PtrFactory.h>
 #include <cps/Task.h>
+#include <cps/TopologicalSignalComp.h>
 
 namespace CPS {
 	/// Base class for all signal type components
 	/// that have only unidirectional connections
-	class SignalComponent : public IdentifiedObject {
+	class SignalComponent : public TopologicalSignalComp {
 	public:
 		enum Behaviour { Initialization, Simulation };
 	protected:
-		/// Component logger
-		Logger::Log mSLog;
-		/// Component logger control for internal variables
-		Logger::Level mLogLevel;
 		/// Determine state of the simulation, e.g. to implement
 		/// special behavior for components during initialization
 		Bool mBehaviour = Behaviour::Simulation;
@@ -44,9 +38,7 @@ namespace CPS {
 
 		///
 		SignalComponent(String uid, String name, Logger::Level logLevel = Logger::Level::off)
-			: IdentifiedObject(uid, name), mLogLevel(logLevel) {
-			mSLog = Logger::get(name, logLevel);
-		}
+			: TopologicalSignalComp(uid, name, logLevel) { }
 		///
 		SignalComponent(String name, Logger::Level logLevel = Logger::Level::off)
 			: SignalComponent(name, name, logLevel) { }

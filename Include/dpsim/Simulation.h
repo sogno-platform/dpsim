@@ -31,7 +31,7 @@
 #include <cps/Definitions.h>
 #include <cps/Logger.h>
 #include <cps/SystemTopology.h>
-#include <cps/Node.h>
+#include <cps/SimNode.h>
 
 #ifdef WITH_GRAPHVIZ
   #include <cps/Graph.h>

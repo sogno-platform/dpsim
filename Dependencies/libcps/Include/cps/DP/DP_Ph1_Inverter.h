@@ -23,7 +23,7 @@
 
 #include <map>
 
-#include <cps/PowerComponent.h>
+#include <cps/SimPowerComp.h>
 #include <cps/Solver/MNAInterface.h>
 
 namespace CPS {

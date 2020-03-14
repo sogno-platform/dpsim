@@ -23,10 +23,10 @@
 #include <list>
 #include <experimental/filesystem>
 #include <cps/Definitions.h>
-#include <cps/PowerComponent.h>
+#include <cps/SimPowerComp.h>
 #include <cps/Components.h>
-#include <cps/Node.h>
-#include <cps/Terminal.h>
+#include <cps/SimNode.h>
+#include <cps/SimTerminal.h>
 #include <cps/Logger.h>
 #include <cps/SystemTopology.h>
 

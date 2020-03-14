@@ -29,8 +29,8 @@
 #include <dpsim/DataLogger.h>
 #include <cps/AttributeList.h>
 #include <cps/Solver/MNASwitchInterface.h>
-#include <cps/SignalComponent.h>
-#include <cps/PowerComponent.h>
+#include <cps/SimSignalComp.h>
+#include <cps/SimPowerComp.h>
 
 #define SWITCH_NUM 16
 

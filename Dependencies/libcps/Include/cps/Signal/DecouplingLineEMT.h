@@ -23,7 +23,7 @@
 
 #include <cps/EMT/EMT_Ph1_CurrentSource.h>
 #include <cps/EMT/EMT_Ph1_Resistor.h>
-#include <cps/SignalComponent.h>
+#include <cps/SimSignalComp.h>
 #include <cps/Task.h>
 
 namespace CPS {

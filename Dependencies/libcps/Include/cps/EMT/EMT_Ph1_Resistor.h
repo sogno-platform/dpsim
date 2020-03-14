@@ -24,7 +24,7 @@
 
 #include <iostream>
 
-#include <cps/PowerComponent.h>
+#include <cps/SimPowerComp.h>
 #include <cps/Solver/MNAInterface.h>
 #include <cps/Base/Base_Ph1_Resistor.h>
 

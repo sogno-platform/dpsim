@@ -21,7 +21,7 @@
 #pragma once
 
 #include <cps/Base/Base_Ph1_VoltageSource.h>
-#include <cps/PowerComponent.h>
+#include <cps/SimPowerComp.h>
 #include <cps/Solver/MNAInterface.h>
 
 namespace CPS {

@@ -34,7 +34,7 @@
 #include <vector>
 #include <memory>
 
-#include <cps/PowerComponent.h>
+#include <cps/SimPowerComp.h>
 #include <cps/Attribute.h>
 
 #include <dpsim/Utils.h>

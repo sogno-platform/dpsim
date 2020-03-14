@@ -19,7 +19,7 @@
 
 #pragma once
 
-#include <cps/PowerComponent.h>
+#include <cps/SimPowerComp.h>
 #include <cps/Solver/MNAInterface.h>
 #include <cps/EMT/EMT_Ph3_RxLine.h>
 #include <cps/EMT/EMT_Ph3_Inductor.h>

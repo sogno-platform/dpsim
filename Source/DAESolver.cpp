@@ -21,7 +21,7 @@
  *********************************************************************************/
 
 #include <dpsim/DAESolver.h>
-#include <cps/PowerComponent.h>
+#include <cps/SimPowerComp.h>
 #include <cps/Solver/MNAInterface.h>
 
 using namespace DPsim;

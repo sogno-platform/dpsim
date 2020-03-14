@@ -21,7 +21,7 @@
 
 #pragma once
 
-#include <cps/PowerComponent.h>
+#include <cps/SimPowerComp.h>
 #include <cps/Solver/MNAInterface.h>
 #include <cps/SP/SP_Ph1_Load.h>
 
@@ -29,10 +29,10 @@
 namespace CPS {
 namespace SP { namespace Ph1 {
     /* \brief Ideal solid state transformer
-    * Modelled as two loads at each side. 
-    * Demands Pref, Q1 from side 1, and generate Pref, Q2 to side 2. 
+    * Modelled as two loads at each side.
+    * Demands Pref, Q1 from side 1, and generate Pref, Q2 to side 2.
     * Depends on the actual condition, values can be negative
-    */ 
+    */
 	class SolidStateTransformer :
 		public PowerComponent<Complex>,
 		public SharedFactory<SolidStateTransformer>,
@@ -66,7 +66,7 @@ namespace SP { namespace Ph1 {
     Real mQ1ref_perUnit;
     /// Reactive power at secondary side [p.u.]
     Real mQ2ref_perUnit;
-    
+
     public:
     ///
     SolidStateTransformer(String uid, String name, Logger::Level logLevel = Logger::Level::off);

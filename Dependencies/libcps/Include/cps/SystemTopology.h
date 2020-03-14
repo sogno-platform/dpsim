@@ -24,9 +24,9 @@
 #include <vector>
 #include <algorithm>
 
-#include <cps/TopologicalComponent.h>
-#include <cps/PowerComponent.h>
-#include <cps/Node.h>
+#include <cps/TopologicalPowerComp.h>
+#include <cps/SimPowerComp.h>
+#include <cps/SimNode.h>
 
 #ifdef WITH_GRAPHVIZ
   #include <cps/Graph.h>

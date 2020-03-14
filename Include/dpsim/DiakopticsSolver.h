@@ -23,7 +23,7 @@
 
 #include <cps/AttributeList.h>
 #include <cps/Solver/MNAInterface.h>
-#include <cps/SignalComponent.h>
+#include <cps/SimSignalComp.h>
 #include <dpsim/DataLogger.h>
 #include <dpsim/Solver.h>
 

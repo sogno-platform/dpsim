@@ -1,6 +1,5 @@
 /**
- * @author Markus Mirz <mmirz@eonerc.rwth-aachen.de>
- * @copyright 2017-2018, Institute for Automation of Complex Power Systems, EONERC
+ * @copyright 2017, Institute for Automation of Complex Power Systems, EONERC
  *
  * CPowerSystems
  *
@@ -23,25 +22,25 @@
 using namespace CPS;
 
 TopologicalNode::TopologicalNode(String uid, String name,
-	PhaseType phaseType, std::vector<Complex> initialVoltage) 
+	PhaseType phaseType, std::vector<Complex> initialVoltage)
 	: IdentifiedObject(uid, name) {
 
 	mPhaseType = phaseType;
-	if (phaseType == PhaseType::ABC) {				
+	if (phaseType == PhaseType::ABC) {
 		//mSimNode = simNode;
-		mInitialVoltage = MatrixComp::Zero(3, 1);						
+		mInitialVoltage = MatrixComp::Zero(3, 1);
 		mInitialVoltage << initialVoltage[0], initialVoltage[1], initialVoltage[2];
 	}
 	else {
 		//mSimNode = { simNode[0] };
-		mInitialVoltage = MatrixComp::Zero(1, 1);				
+		mInitialVoltage = MatrixComp::Zero(1, 1);
 		mInitialVoltage << initialVoltage[0];
 	}
 
-	addAttribute<MatrixComp>("voltage_init", &mInitialVoltage, Flags::read);			
+	addAttribute<MatrixComp>("voltage_init", &mInitialVoltage, Flags::read);
 }
 
-Complex TopologicalNode::initialSingleVoltage(PhaseType phaseType) {		
+Complex TopologicalNode::initialSingleVoltage(PhaseType phaseType) {
 	if (phaseType == PhaseType::B)
 		return mInitialVoltage(1,0);
 	else if (phaseType == PhaseType::C)

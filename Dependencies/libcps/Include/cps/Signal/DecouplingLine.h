@@ -23,8 +23,8 @@
 
 #include <cps/DP/DP_Ph1_CurrentSource.h>
 #include <cps/DP/DP_Ph1_Resistor.h>
-#include <cps/PowerComponent.h>
-#include <cps/SignalComponent.h>
+#include <cps/SimPowerComp.h>
+#include <cps/SimSignalComp.h>
 #include <cps/Task.h>
 
 namespace CPS {
