@@ -84,8 +84,8 @@ void MnaSolver<VarType>::initialize() {
 
 	// Some components feature a different behaviour for simulation and initialization
 	for (auto comp : mSystem.mComponents) {
-		auto powerComp = std::dynamic_pointer_cast<CPS::TopologicalComponent>(comp);
-		if (powerComp) powerComp->setBehaviour(TopologicalComponent::Behaviour::Simulation);
+		auto powerComp = std::dynamic_pointer_cast<CPS::TopologicalPowerComp>(comp);
+		if (powerComp) powerComp->setBehaviour(TopologicalPowerComp::Behaviour::Simulation);
 
 		auto sigComp = std::dynamic_pointer_cast<CPS::SimSignalComp>(comp);
 		if (sigComp) sigComp->setBehaviour(SimSignalComp::Behaviour::Simulation);
@@ -394,8 +394,8 @@ void MnaSolver<VarType>::steadyStateInitialization() {
 	Matrix prevLeftSideVector = Matrix::Zero(2 * mNumNodes, 1);
 
 	for (auto comp : mSystem.mComponents) {
-		auto powerComp = std::dynamic_pointer_cast<CPS::TopologicalComponent>(comp);
-		if (powerComp) powerComp->setBehaviour(TopologicalComponent::Behaviour::Initialization);
+		auto powerComp = std::dynamic_pointer_cast<CPS::TopologicalPowerComp>(comp);
+		if (powerComp) powerComp->setBehaviour(TopologicalPowerComp::Behaviour::Initialization);
 
 		auto sigComp = std::dynamic_pointer_cast<CPS::SimSignalComp>(comp);
 		if (sigComp) sigComp->setBehaviour(SimSignalComp::Behaviour::Initialization);

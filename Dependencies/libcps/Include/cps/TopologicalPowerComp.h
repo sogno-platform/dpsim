@@ -32,7 +32,7 @@
 namespace CPS {
 	/// Base class for all electrical components that are
 	/// connected to nodes via terminals
-	class TopologicalComponent : public IdentifiedObject {
+	class TopologicalPowerComp : public IdentifiedObject {
 	public:
 		enum Behaviour { Initialization, Simulation };
 	protected:
@@ -49,19 +49,19 @@ namespace CPS {
 		Bool mBehaviour = Behaviour::Simulation;
 
 	public:
-		typedef std::shared_ptr<TopologicalComponent> Ptr;
+		typedef std::shared_ptr<TopologicalPowerComp> Ptr;
 		typedef std::vector<Ptr> List;
 
 		/// Basic constructor that takes UID, name and log level
-		TopologicalComponent(String uid, String name, Logger::Level logLevel = Logger::Level::off)
+		TopologicalPowerComp(String uid, String name, Logger::Level logLevel = Logger::Level::off)
 			: IdentifiedObject(uid, name), mLogLevel(logLevel) {
 			mSLog = Logger::get(name, logLevel);
 		}
 		/// Basic constructor that takes name and log level and sets the UID to name as well
-		TopologicalComponent(String name, Logger::Level logLevel = Logger::Level::off)
-			: TopologicalComponent(name, name, logLevel) { }
+		TopologicalPowerComp(String name, Logger::Level logLevel = Logger::Level::off)
+			: TopologicalPowerComp(name, name, logLevel) { }
 		/// Destructor - does not do anything
-		virtual ~TopologicalComponent() { }
+		virtual ~TopologicalPowerComp() { }
 
 		/// Returns nodes connected to this component
 		virtual TopologicalNode::List topologicalNodes() = 0;

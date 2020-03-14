@@ -247,9 +247,9 @@ Graph::Graph SystemTopology::topologyGraph() {
 		if (!comp) // TODO: this is a bug in the CIM::Reader!
 			continue;
 
-		TopologicalComponent::Ptr topoComp;
+		TopologicalPowerComp::Ptr topoComp;
 
-		if (!(topoComp = std::dynamic_pointer_cast<TopologicalComponent>(comp)))
+		if (!(topoComp = std::dynamic_pointer_cast<TopologicalPowerComp>(comp)))
 			continue;
 
 		c = g.addNode(topoComp->uid());

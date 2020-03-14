@@ -85,7 +85,7 @@ Real Reader::unitValue(Real value, UnitMultiplier mult) {
 	return value;
 }
 
-TopologicalComponent::Ptr Reader::mapComponent(BaseClass* obj) {
+TopologicalPowerComp::Ptr Reader::mapComponent(BaseClass* obj) {
 	if (ACLineSegment *line = dynamic_cast<ACLineSegment*>(obj))
 		return mapACLineSegment(line);
 	if (EnergyConsumer *consumer = dynamic_cast<EnergyConsumer*>(obj))
@@ -166,7 +166,7 @@ void Reader::parseFiles() {
 
 				// Check if object is already in equipment list
 				if (mPowerflowEquipment.find(idObj->mRID) == mPowerflowEquipment.end()) {
-					TopologicalComponent::Ptr comp = mapComponent(obj);
+					TopologicalPowerComp::Ptr comp = mapComponent(obj);
 					if (comp)
 						mPowerflowEquipment.insert(std::make_pair(comp->uid(), comp));
 				}
@@ -269,7 +269,7 @@ SystemTopology Reader::systemTopology() {
 				TopologicalNode::Ptr node=term->topologicalNodes();
 			//TopologicalNode::Ptr node = powercomp->topologicalTerminals().back()->topologicalNodes();
 			if (system.mComponentsAtNode.find(node) == system.mComponentsAtNode.end()) {
-				TopologicalComponent::List complist;
+				TopologicalPowerComp::List complist;
 				complist.push_back(powercomp);
 				system.mComponentsAtNode.insert(std::make_pair(node, complist));
 			}
@@ -299,7 +299,7 @@ Matrix::Index Reader::mapTopologicalNode(String mrid) {
 	return search->second->matrixNodeIndex();
 }
 
-TopologicalComponent::Ptr Reader::mapEnergyConsumer(EnergyConsumer* consumer) {
+TopologicalPowerComp::Ptr Reader::mapEnergyConsumer(EnergyConsumer* consumer) {
 	mSLog->info("    Found EnergyConsumer {}", consumer->name);
 	if (mDomain == Domain::EMT) {
 		if (mPhase == PhaseType::ABC) {
@@ -335,7 +335,7 @@ TopologicalComponent::Ptr Reader::mapEnergyConsumer(EnergyConsumer* consumer) {
 	}
 }
 
-TopologicalComponent::Ptr Reader::mapACLineSegment(ACLineSegment* line) {
+TopologicalPowerComp::Ptr Reader::mapACLineSegment(ACLineSegment* line) {
 	mSLog->info("    Found ACLineSegment {} r={} x={} bch={} gch={}", line->name,
 		(float) line->r.value,
 		(float) line->x.value,
@@ -405,7 +405,7 @@ TopologicalComponent::Ptr Reader::mapACLineSegment(ACLineSegment* line) {
 
 }
 
-TopologicalComponent::Ptr Reader::mapPowerTransformer(PowerTransformer* trans) {
+TopologicalPowerComp::Ptr Reader::mapPowerTransformer(PowerTransformer* trans) {
 	if (trans->PowerTransformerEnd.size() != 2) {
 		mSLog->warn("PowerTransformer {} does not have exactly two windings, ignoring", trans->name);
 		return nullptr;
@@ -525,7 +525,7 @@ TopologicalComponent::Ptr Reader::mapPowerTransformer(PowerTransformer* trans) {
 	}
 }
 
-TopologicalComponent::Ptr Reader::mapSynchronousMachine(SynchronousMachine* machine) {
+TopologicalPowerComp::Ptr Reader::mapSynchronousMachine(SynchronousMachine* machine) {
 	mSLog->info("    Found  Synchronous machine {}", machine->name);
 
 	if (mGeneratorType == GeneratorType::Transient) {
@@ -610,7 +610,7 @@ TopologicalComponent::Ptr Reader::mapSynchronousMachine(SynchronousMachine* mach
     }
 }
 
-TopologicalComponent::Ptr Reader::mapExternalNetworkInjection(ExternalNetworkInjection* extnet) {
+TopologicalPowerComp::Ptr Reader::mapExternalNetworkInjection(ExternalNetworkInjection* extnet) {
 	mSLog->info("Found External Network Injection {}", extnet->name);
 	if (mDomain == Domain::EMT) {
 		if (mPhase == PhaseType::ABC) {
@@ -633,7 +633,7 @@ TopologicalComponent::Ptr Reader::mapExternalNetworkInjection(ExternalNetworkInj
 		return nullptr; // DP network injection not considered yet
 }
 
-TopologicalComponent::Ptr Reader::mapEquivalentShunt(EquivalentShunt* shunt){
+TopologicalPowerComp::Ptr Reader::mapEquivalentShunt(EquivalentShunt* shunt){
 	mSLog->info("Found shunt {}", shunt->name);
 
 	Real baseVoltage = 0;
@@ -732,7 +732,7 @@ void Reader::processTopologicalNode(IEC61970::Base::Topology::TopologicalNode* t
 			// Insert Equipment if it does not exist in the map and add reference to Terminal.
 			// This could be optimized because the Equipment is searched twice.
 			if (mPowerflowEquipment.find(equipment->mRID) == mPowerflowEquipment.end()) {
-				TopologicalComponent::Ptr comp = mapComponent(equipment);
+				TopologicalPowerComp::Ptr comp = mapComponent(equipment);
 				if (comp) {
 					mPowerflowEquipment.insert(std::make_pair(equipment->mRID, comp));
 				} else {

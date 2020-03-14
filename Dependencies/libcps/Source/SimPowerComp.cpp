@@ -23,7 +23,7 @@ using namespace CPS;
 
 template <typename VarType>
 SimPowerComp<VarType>::SimPowerComp(String uid, String name, Logger::Level logLevel)
-	: TopologicalComponent(uid, name, logLevel) {
+	: TopologicalPowerComp(uid, name, logLevel) {
 	addAttribute<MatrixVar<VarType>>("v_intf", &mIntfVoltage, Flags::read);
 	addAttribute<MatrixVar<VarType>>("i_intf", &mIntfCurrent, Flags::read);
 	mTerminals.clear();

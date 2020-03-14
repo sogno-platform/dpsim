@@ -97,7 +97,7 @@ namespace CIM {
 		/// as given in the component constructors (0 for the first node, -1 or GND for ground).
 		std::map<String, TopologicalNode::Ptr> mPowerflowNodes;
 		/// Maps the RID of a ConductingEquipment to a PowerflowEquipment
-		std::map<String, TopologicalComponent::Ptr> mPowerflowEquipment;
+		std::map<String, TopologicalPowerComp::Ptr> mPowerflowEquipment;
 		/// Maps the RID of a Terminal to a PowerflowTerminal
 		std::map<String, TopologicalTerminal::Ptr> mPowerflowTerminals;
 		///
@@ -129,28 +129,28 @@ namespace CIM {
 		/// Returns simulation node index which belongs to mRID.
 		Matrix::Index mapTopologicalNode(String mrid);
 		/// Maps CIM components to CPowerSystem components.
-		TopologicalComponent::Ptr mapComponent(BaseClass* obj);
+		TopologicalPowerComp::Ptr mapComponent(BaseClass* obj);
 		/// Returns an RX-Line.
 		/// The voltage should be given in kV and the angle in degree.
 		/// TODO: Introduce different models such as PI and wave model.
-		TopologicalComponent::Ptr mapACLineSegment(IEC61970::Base::Wires::ACLineSegment* line);
+		TopologicalPowerComp::Ptr mapACLineSegment(IEC61970::Base::Wires::ACLineSegment* line);
 		/// Returns a transformer, either ideal or with RL elements to model losses.
-		TopologicalComponent::Ptr mapPowerTransformer(IEC61970::Base::Wires::PowerTransformer *trans);
+		TopologicalPowerComp::Ptr mapPowerTransformer(IEC61970::Base::Wires::PowerTransformer *trans);
 		/// Returns an IdealVoltageSource with voltage setting according to load flow data
 		/// at machine terminals. The voltage should be given in kV and the angle in degree.
 		/// TODO: Introduce real synchronous generator models here.
-		TopologicalComponent::Ptr mapSynchronousMachine(IEC61970::Base::Wires::SynchronousMachine* machine);
+		TopologicalPowerComp::Ptr mapSynchronousMachine(IEC61970::Base::Wires::SynchronousMachine* machine);
 		/// Returns an PQload with voltage setting according to load flow data.
 		/// Currently the only option is to create an RL-load.
 		/// The voltage should be given in kV and the angle in degree.
 		/// TODO: Introduce real PQload model here.
-		TopologicalComponent::Ptr mapEnergyConsumer(IEC61970::Base::Wires::EnergyConsumer* consumer);
+		TopologicalPowerComp::Ptr mapEnergyConsumer(IEC61970::Base::Wires::EnergyConsumer* consumer);
 		/// Adds CIM files to list of files to be parsed.
 
 		/// Returns an external grid injection.
-		TopologicalComponent::Ptr mapExternalNetworkInjection(IEC61970::Base::Wires::ExternalNetworkInjection* extnet);
+		TopologicalPowerComp::Ptr mapExternalNetworkInjection(IEC61970::Base::Wires::ExternalNetworkInjection* extnet);
 		/// Returns a shunt
-		TopologicalComponent::Ptr mapEquivalentShunt(IEC61970::Base::Equivalents::EquivalentShunt *shunt);
+		TopologicalPowerComp::Ptr mapEquivalentShunt(IEC61970::Base::Equivalents::EquivalentShunt *shunt);
 	public:
 		///
 		enum GeneratorType{Static, Transient};

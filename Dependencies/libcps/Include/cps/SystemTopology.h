@@ -47,7 +47,7 @@ namespace CPS {
 		/// by a solver to split the network into subnetworks
 		IdentifiedObject::List mTearComponents;
 		/// Map of network components connected to network nodes
-		std::map<TopologicalNode::Ptr, TopologicalComponent::List> mComponentsAtNode;
+		std::map<TopologicalNode::Ptr, TopologicalPowerComp::List> mComponentsAtNode;
 
 		// #### Deprecated ####
 		// Better use mFrequencies
