@@ -129,11 +129,11 @@ PyObject* Python::LoadCim(PyObject* self, PyObject* args, PyObject *kwargs) {
 			return nullptr;
 		}
 
-		auto dpNode = std::dynamic_pointer_cast<CPS::Node<CPS::Complex>>(node);
+		auto dpNode = std::dynamic_pointer_cast<CPS::SimNode<CPS::Complex>>(node);
 		if (dpNode) {
 			Python::Node<CPS::Complex> *pyNode = PyObject_New(Python::Node<CPS::Complex>, &Python::Node<CPS::Complex>::type);
 
-			using SharedNodePtr = std::shared_ptr<CPS::Node<CPS::Complex>>;
+			using SharedNodePtr = std::shared_ptr<CPS::SimNode<CPS::Complex>>;
 			new (&pyNode->node) SharedNodePtr();
 
 			pyNode->node = dpNode;
@@ -142,11 +142,11 @@ PyObject* Python::LoadCim(PyObject* self, PyObject* args, PyObject *kwargs) {
 			continue;
 		}
 
-		auto emtNode = std::dynamic_pointer_cast<CPS::Node<CPS::Real>>(node);
+		auto emtNode = std::dynamic_pointer_cast<CPS::SimNode<CPS::Real>>(node);
 		if (emtNode) {
 			Python::Node<CPS::Real> *pyNode = PyObject_New(Python::Node<CPS::Real>, &Python::Node<CPS::Real>::type);
 
-			using SharedNodePtr = std::shared_ptr<CPS::Node<CPS::Real>>;
+			using SharedNodePtr = std::shared_ptr<CPS::SimNode<CPS::Real>>;
 			new (&pyNode->node) SharedNodePtr();
 
 			pyNode->node = emtNode;

@@ -63,7 +63,7 @@ namespace DPsim {
 		/// System list
 		CPS::SystemTopology mSystem;
 		///
-		typename CPS::Node<VarType>::List mNodes;
+		typename CPS::SimNode<VarType>::List mNodes;
 		///
 		CPS::MNAInterface::List mMNAComponents;
 		///

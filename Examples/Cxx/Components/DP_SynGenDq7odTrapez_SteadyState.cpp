@@ -68,7 +68,7 @@ int main(int argc, char* argv[]) {
 		Complex(initTerminalVolt * cos(initVoltAngle), initTerminalVolt * sin(initVoltAngle)),
 		Complex(initTerminalVolt * cos(initVoltAngle - 2 * PI / 3), initTerminalVolt * sin(initVoltAngle - 2 * PI / 3)),
 		Complex(initTerminalVolt * cos(initVoltAngle + 2 * PI / 3), initTerminalVolt * sin(initVoltAngle + 2 * PI / 3)) });
-	auto n1 = Node::make("n1", PhaseType::ABC, initVoltN1);
+	auto n1 = SimNode::make("n1", PhaseType::ABC, initVoltN1);
 
 	// Components
 	std::shared_ptr<Ph3::SynchronGeneratorDQ> gen = Ph3::SynchronGeneratorDQTrapez::make("DP_SynGen_dq_SteadyState_SynGen");
@@ -79,7 +79,7 @@ int main(int argc, char* argv[]) {
 
 	auto res = Ph3::SeriesResistor::make("R_load");
 	res->setParameters(Rload);
-	res->connect({Node::GND, n1});
+	res->connect({SimNode::GND, n1});
 
 	// System
 	auto sys = SystemTopology(60, SystemNodeList{n1}, SystemComponentList{gen, res});

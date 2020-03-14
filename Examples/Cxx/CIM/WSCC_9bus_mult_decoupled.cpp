@@ -48,8 +48,8 @@ void multiply_decoupled(SystemTopology& sys, int copies,
 		for (int i = 0; i < nlines; i++) {
 			auto line = Signal::DecouplingLine::make(
 				"dline_" + orig_node + "_" + std::to_string(i),
-				sys.node<DP::Node>(nodeNames[i]),
-				sys.node<DP::Node>(nodeNames[i+1]),
+				sys.node<DP::SimNode>(nodeNames[i]),
+				sys.node<DP::SimNode>(nodeNames[i+1]),
 				resistance, inductance, capacitance, Logger::Level::info);
 			sys.addComponent(line);
 			sys.addComponents(line->getLineComponents());
@@ -87,7 +87,7 @@ void simulateDecoupled(std::list<fs::path> filenames, Int copies, Int threads, I
 	//			attrName = "v" + std::to_string(bus);
 	//			nodeName = "BUS" + std::to_string(bus);
 	//		}
-	//		logger->addAttribute(attrName, sys.node<DP::Node>(nodeName)->attribute("v"));
+	//		logger->addAttribute(attrName, sys.node<DP::SimNode>(nodeName)->attribute("v"));
 	//	}
 	//}
 	//sim.addLogger(logger);

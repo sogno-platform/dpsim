@@ -33,7 +33,7 @@ int main(int argc, char* argv[]) {
 	Logger::setLogDir("logs/"+simName);
 
 	// Nodes
-	auto n1 = Node::make("n1", PhaseType::Single, std::vector<Complex>{ 2 });
+	auto n1 = SimNode::make("n1", PhaseType::Single, std::vector<Complex>{ 2 });
 
 	// Components
 	auto cs = CurrentSource::make("cs", Logger::Level::info);
@@ -44,9 +44,9 @@ int main(int argc, char* argv[]) {
 	l1->setParameters(0.001);
 
 	// Topology
-	cs->connect(Node::List{ Node::GND, n1 });
-	r1->connect(Node::List{ n1, Node::GND });
-	l1->connect(Node::List{ n1, Node::GND });
+	cs->connect(SimNode::List{ SimNode::GND, n1 });
+	r1->connect(SimNode::List{ n1, SimNode::GND });
+	l1->connect(SimNode::List{ n1, SimNode::GND });
 
 	// Define system topology
 	auto sys = SystemTopology(50, SystemNodeList{n1}, SystemComponentList{cs, r1, l1});

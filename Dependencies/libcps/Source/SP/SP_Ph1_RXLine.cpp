@@ -178,7 +178,7 @@ void SP::Ph1::RXLine::initializeFromPowerflow(Real frequency) {
 
 	mInitialResistor = std::make_shared<SP::Ph1::Resistor>(mName + "_snubber_res", mLogLevel);
 	mInitialResistor->setParameters(1e6);
-	mInitialResistor->connect({ Node::GND, mTerminals[1]->node() });
+	mInitialResistor->connect({ SimNode::GND, mTerminals[1]->node() });
 	mInitialResistor->initializeFromPowerflow(frequency);
 
 	mSLog->info(

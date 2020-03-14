@@ -35,10 +35,10 @@ int main(int argc, char* argv[]) {
 	Real timeStep = 0.001;
 
 	// Nodes
-	auto n1 = Node::make("n1");
-	auto n2 = Node::make("n2");
-	auto n3 = Node::make("n3");
-	auto n4 = Node::make("n4");
+	auto n1 = SimNode::make("n1");
+	auto n2 = SimNode::make("n2");
+	auto n3 = SimNode::make("n3");
+	auto n4 = SimNode::make("n4");
 
 	// Components
 	auto evs = VoltageSource::make("v_s");
@@ -53,14 +53,14 @@ int main(int argc, char* argv[]) {
 	rL->setParameters(1000);
 
 	// Topology
-	evs->connect({ Node::GND, n1 });
+	evs->connect({ SimNode::GND, n1 });
 	rs->connect({ n1, n2 });
 	rl->connect({ n2, n3 });
 	ll->connect({ n3, n4 });
-	rL->connect({ n4, Node::GND });
+	rL->connect({ n4, SimNode::GND });
 
 	auto sys = SystemTopology(50,
-		SystemNodeList{Node::GND, n1, n2, n3, n4},
+		SystemNodeList{SimNode::GND, n1, n2, n3, n4},
 		SystemComponentList{evs, rs, rl, ll, rL});
 
 #ifdef REALTIME

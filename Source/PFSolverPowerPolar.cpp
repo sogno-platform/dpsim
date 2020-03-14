@@ -24,7 +24,7 @@ using namespace DPsim;
 using namespace CPS;
 
 
-PFSolverPowerPolar::PFSolverPowerPolar(CPS::String name, CPS::SystemTopology system, CPS::Real timeStep, CPS::Logger::Level logLevel) 
+PFSolverPowerPolar::PFSolverPowerPolar(CPS::String name, CPS::SystemTopology system, CPS::Real timeStep, CPS::Logger::Level logLevel)
     : PFSolver(name, system, timeStep, logLevel){ }
 
 void PFSolverPowerPolar::generateInitialSolution(Real time, bool keep_last_solution) {
@@ -53,7 +53,7 @@ void PFSolverPowerPolar::generateInitialSolution(Real time, bool keep_last_solut
                 sol_P(pq->matrixNodeIndex()) -= load->attribute<CPS::Real>("P_pu")->get();
                 sol_Q(pq->matrixNodeIndex()) -= load->attribute<CPS::Real>("Q_pu")->get();
             }
-            else if(std::shared_ptr<CPS::SP::Ph1::SolidStateTransformer> sst = 
+            else if(std::shared_ptr<CPS::SP::Ph1::SolidStateTransformer> sst =
                 std::dynamic_pointer_cast<CPS::SP::Ph1::SolidStateTransformer>(comp)){
                     sol_P(pq->matrixNodeIndex()) -= sst->getNodalInjection(pq).real();
                     sol_Q(pq->matrixNodeIndex()) -= sst->getNodalInjection(pq).imag();
@@ -136,7 +136,7 @@ void PFSolverPowerPolar::calculateMismatch() {
         mF(a) = Pesp.coeff(k) - P(k);
 
         //only for PQ buses calculate reactive power mismatch
-        if (a < mNumPQBuses) 
+        if (a < mNumPQBuses)
             mF(a + npqpv) = Qesp.coeff(k) - Q(k);
     }
 }
@@ -299,7 +299,7 @@ void PFSolverPowerPolar::setSolution() {
 				baseVoltage_ = line->attribute<CPS::Real>("base_Voltage")->get();
 			}
 		}
-		std::dynamic_pointer_cast<CPS::Node<CPS::Complex>>(node)->setVoltage(sol_V_complex(node->matrixNodeIndex())*baseVoltage_);
+		std::dynamic_pointer_cast<CPS::SimNode<CPS::Complex>>(node)->setVoltage(sol_V_complex(node->matrixNodeIndex())*baseVoltage_);
 	}
     calculateBranchFlow();
     calculateNodalInjection();
@@ -328,7 +328,7 @@ void PFSolverPowerPolar::calculateBranchFlow() {
 	}
 }
 
-void PFSolverPowerPolar::calculateNodalInjection() {    
+void PFSolverPowerPolar::calculateNodalInjection() {
 	for (auto node : mSystem.mNodes) {
 		std::list<std::shared_ptr<CPS::SP::Ph1::PiLine>> lines;
 		for (auto comp : mSystem.mComponentsAtNode[node]) {

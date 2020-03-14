@@ -124,12 +124,12 @@ void SimPowerComp<VarType>::setVirtualNodeNumber(UInt num) {
 
 	for (UInt idx = 0; idx < mNumVirtualNodes; idx++) {
 		String nodeName = mName + "_vnode_" + std::to_string(idx);
-		setVirtualNodeAt(std::make_shared<Node<VarType>>(nodeName, mPhaseType), idx);
+		setVirtualNodeAt(std::make_shared<SimNode<VarType>>(nodeName, mPhaseType), idx);
 	}
 }
 
 template <typename VarType>
-void SimPowerComp<VarType>::setVirtualNodeAt(typename Node<VarType>::Ptr virtualNode, UInt nodeNum) {
+void SimPowerComp<VarType>::setVirtualNodeAt(typename SimNode<VarType>::Ptr virtualNode, UInt nodeNum) {
 	if (mNumVirtualNodes <= nodeNum) {
 		mSLog->error("Virtual Node position number too large for Component {} - Ignoring", mName);
 	}
@@ -139,7 +139,7 @@ void SimPowerComp<VarType>::setVirtualNodeAt(typename Node<VarType>::Ptr virtual
 }
 
 template <typename VarType>
-typename Node<VarType>::Ptr SimPowerComp<VarType>::virtualNode(UInt index) {
+typename SimNode<VarType>::Ptr SimPowerComp<VarType>::virtualNode(UInt index) {
 	if (index >= mVirtualNodes.size()) {
 		throw SystemError("Node not available for " + mUID);
 	}
@@ -148,7 +148,7 @@ typename Node<VarType>::Ptr SimPowerComp<VarType>::virtualNode(UInt index) {
 
 // #### Other functions ####
 template<typename VarType>
-void SimPowerComp<VarType>::connect(typename Node<VarType>::List nodes) {
+void SimPowerComp<VarType>::connect(typename SimNode<VarType>::List nodes) {
 	if (mNumTerminals < nodes.size()) {
 		mSLog->error("Number of Nodes is too large for Component {} - Ignoring", mName);
 		return;

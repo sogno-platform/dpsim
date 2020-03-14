@@ -100,10 +100,10 @@ namespace CPS {
 
 		/// Adds node and initializes frequencies
 		void addNode(TopologicalNode::Ptr topNode) {
-			auto nodeComplex = std::dynamic_pointer_cast<Node<Complex>>(topNode);
+			auto nodeComplex = std::dynamic_pointer_cast<SimNode<Complex>>(topNode);
 			if (nodeComplex) nodeComplex->initialize(mFrequencies);
 
-			auto nodeReal = std::dynamic_pointer_cast<Node<Real>>(topNode);
+			auto nodeReal = std::dynamic_pointer_cast<SimNode<Real>>(topNode);
 			if (nodeReal) nodeReal->initialize(mFrequencies);
 
 			mNodes.push_back(topNode);
@@ -111,10 +111,10 @@ namespace CPS {
 
 		/// Adds node at specified position and initializes frequencies
 		void addNodeAt(TopologicalNode::Ptr topNode, UInt index) {
-			auto node = std::dynamic_pointer_cast<Node<Complex>>(topNode);
+			auto node = std::dynamic_pointer_cast<SimNode<Complex>>(topNode);
 			if (node) node->initialize(mFrequencies);
 
-			auto nodeReal = std::dynamic_pointer_cast<Node<Real>>(topNode);
+			auto nodeReal = std::dynamic_pointer_cast<SimNode<Real>>(topNode);
 			if (nodeReal) nodeReal->initialize(mFrequencies);
 
 			if (index > mNodes.capacity())
@@ -215,7 +215,7 @@ namespace CPS {
 
 		///
 		template <typename VarType>
-		int checkTopologySubnets(std::unordered_map<typename CPS::Node<VarType>::Ptr, int>& subnet);
+		int checkTopologySubnets(std::unordered_map<typename CPS::SimNode<VarType>::Ptr, int>& subnet);
 
 		///
 		template <typename VarType>

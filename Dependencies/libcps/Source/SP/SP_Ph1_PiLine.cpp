@@ -195,24 +195,24 @@ void SP::Ph1::PiLine::initializeFromPowerflow(Real frequency) {
 	if (mParallelCond >= 0) {
 		mSubParallelResistor0 = std::make_shared<SP::Ph1::Resistor>(mName + "_con0", Logger::Level::off);
 		mSubParallelResistor0->setParameters(2. / mParallelCond);
-		mSubParallelResistor0->connect(Node::List{ Node::GND, mTerminals[0]->node() });
+		mSubParallelResistor0->connect(SimNode::List{ SimNode::GND, mTerminals[0]->node() });
 		mSubParallelResistor0->initializeFromPowerflow(frequency);
 
 		mSubParallelResistor1 = std::make_shared<SP::Ph1::Resistor>(mName + "_con1", Logger::Level::off);
 		mSubParallelResistor1->setParameters(2. / mParallelCond);
-		mSubParallelResistor1->connect(Node::List{ Node::GND, mTerminals[1]->node() });
+		mSubParallelResistor1->connect(SimNode::List{ SimNode::GND, mTerminals[1]->node() });
 		mSubParallelResistor1->initializeFromPowerflow(frequency);
 	}
 
 	if (mParallelCap >= 0) {
 		mSubParallelCapacitor0 = std::make_shared<SP::Ph1::Capacitor>(mName + "_cap0", Logger::Level::off);
 		mSubParallelCapacitor0->setParameters(mParallelCap / 2.);
-		mSubParallelCapacitor0->connect(Node::List{ Node::GND, mTerminals[0]->node() });
+		mSubParallelCapacitor0->connect(SimNode::List{ SimNode::GND, mTerminals[0]->node() });
 		mSubParallelCapacitor0->initializeFromPowerflow(frequency);
 
 		mSubParallelCapacitor1 = std::make_shared<SP::Ph1::Capacitor>(mName + "_cap1", Logger::Level::off);
 		mSubParallelCapacitor1->setParameters(mParallelCap / 2.);
-		mSubParallelCapacitor1->connect(Node::List{ Node::GND, mTerminals[1]->node() });
+		mSubParallelCapacitor1->connect(SimNode::List{ SimNode::GND, mTerminals[1]->node() });
 		mSubParallelCapacitor1->initializeFromPowerflow(frequency);
 	}
 

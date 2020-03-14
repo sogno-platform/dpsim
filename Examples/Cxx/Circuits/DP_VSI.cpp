@@ -32,13 +32,13 @@ void DP_Ph1_VSI2_4bus_SampleGrid() {
 	Real Vnom = 3300.;
 
 	// Nodes
-	auto n1 = Node::make("n1");
-	auto n2 = Node::make("n2");
-	auto n3 = Node::make("n3");
-	auto n4 = Node::make("n4");
-	auto n5 = Node::make("n5");
-	auto n6 = Node::make("n6");
-	auto n7 = Node::make("n7");
+	auto n1 = SimNode::make("n1");
+	auto n2 = SimNode::make("n2");
+	auto n3 = SimNode::make("n3");
+	auto n4 = SimNode::make("n4");
+	auto n5 = SimNode::make("n5");
+	auto n6 = SimNode::make("n6");
+	auto n7 = SimNode::make("n7");
 
 	// Components
 	auto vsi = Ph1::AvVoltageSourceInverterDQ::make("vsi", Logger::Level::debug);
@@ -90,23 +90,23 @@ void DP_Ph1_VSI2_4bus_SampleGrid() {
 		lf_param, cf_param, rf_param, rc_param);
 
 	// 4Bus case study
-	vs->connect(Node::List{ Node::GND, n5 });
+	vs->connect(SimNode::List{ SimNode::GND, n5 });
 
-	vsi->connect(Node::List{ n1 });
-	piline->connect(Node::List{ n5, n1 });
+	vsi->connect(SimNode::List{ n1 });
+	piline->connect(SimNode::List{ n5, n1 });
 
-	rline2->connect(Node::List{ n1, n2 });
+	rline2->connect(SimNode::List{ n1, n2 });
 
-	rload->connect(Node::List{ n2, n6 });
-	Lload->connect(Node::List{ n6, Node::GND });
+	rload->connect(SimNode::List{ n2, n6 });
+	Lload->connect(SimNode::List{ n6, SimNode::GND });
 
-	rline3->connect(Node::List{ n2, n3 });
+	rline3->connect(SimNode::List{ n2, n3 });
 
-	vsi2->connect(Node::List{ n3 });
+	vsi2->connect(SimNode::List{ n3 });
 
-	rline4->connect(Node::List{ n3, n4 });
-	rload2->connect(Node::List{ n4, n7 });
-	Lload2->connect(Node::List{ n7, Node::GND });
+	rline4->connect(SimNode::List{ n3, n4 });
+	rload2->connect(SimNode::List{ n4, n7 });
+	Lload2->connect(SimNode::List{ n7, SimNode::GND });
 
 
 	auto sys = SystemTopology(50, SystemNodeList{ n1, n2, n3, n4, n5, n6, n7 },

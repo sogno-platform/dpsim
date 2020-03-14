@@ -86,7 +86,7 @@ void EMT::Ph3::RxLine::initializeFromPowerflow(Real frequency) {
 		0, 1e6, 0,
 		0, 0, 1e6;
 	mInitialResistor->setParameters(defaultSnubRes);
-	mInitialResistor->connect({ Node::GND, mTerminals[1]->node() });
+	mInitialResistor->connect({ SimNode::GND, mTerminals[1]->node() });
 	mInitialResistor->initializeFromPowerflow(frequency);
 
 	mSLog->info(

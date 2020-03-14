@@ -54,7 +54,7 @@ DAESolver::DAESolver(String name, CPS::SystemTopology system, Real dt, Real t0) 
     for (auto baseNode : mSystem.mNodes) {
         // Add nodes to the list and ignore ground nodes.
         if (!baseNode->isGround()) {
-            auto node = std::dynamic_pointer_cast<CPS::Node<Complex>>(baseNode);
+            auto node = std::dynamic_pointer_cast<CPS::SimNode<Complex>>(baseNode);
             mNodes.push_back(node);
             std::cout <<"Added Node"<<std::endl;
         }

@@ -39,7 +39,7 @@ DecouplingLineEMT::DecouplingLineEMT(String name, Logger::Level logLevel) :
 	mSrcCur2 = mSrc2->attributeComplex("I_ref");
 }
 
-void DecouplingLineEMT::setParameters(Node<Real>::Ptr node1, Node<Real>::Ptr node2,
+void DecouplingLineEMT::setParameters(SimNode<Real>::Ptr node1, SimNode<Real>::Ptr node2,
 	Real resistance, Real inductance, Real capacitance) {
 
 	mResistance = resistance;
@@ -54,13 +54,13 @@ void DecouplingLineEMT::setParameters(Node<Real>::Ptr node1, Node<Real>::Ptr nod
 	mSLog->info("delay: {}", mDelay);
 
 	mRes1->setParameters(mSurgeImpedance + mResistance / 4);
-	mRes1->connect({node1, Node<Real>::GND});
+	mRes1->connect({node1, SimNode<Real>::GND});
 	mRes2->setParameters(mSurgeImpedance + mResistance / 4);
-	mRes2->connect({node2, Node<Real>::GND});
+	mRes2->connect({node2, SimNode<Real>::GND});
 	mSrc1->setParameters(0);
-	mSrc1->connect({node1, Node<Real>::GND});
+	mSrc1->connect({node1, SimNode<Real>::GND});
 	mSrc2->setParameters(0);
-	mSrc2->connect({node2, Node<Real>::GND});
+	mSrc2->connect({node2, SimNode<Real>::GND});
 }
 
 void DecouplingLineEMT::initialize(Real omega, Real timeStep) {

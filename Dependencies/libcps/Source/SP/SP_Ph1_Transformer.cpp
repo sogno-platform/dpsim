@@ -125,7 +125,7 @@ void SP::Ph1::Transformer::calculatePerUnitParameters(Real baseApparentPower, Re
 		Real snubberResistance = 1e3;
 		mSubSnubResistor = std::make_shared<SP::Ph1::Resistor>(mUID + "_snub_res", mName + "_snub_res", mLogLevel);
 		mSubSnubResistor->setParameters(snubberResistance);
-		mSubSnubResistor->connect({ node(1), SP::Node::GND });
+		mSubSnubResistor->connect({ node(1), SP::SimNode::GND });
 		mSubSnubResistor->initializeFromPowerflow(mBaseOmega);
 	}
 	if (mSubSnubResistor) {
@@ -234,7 +234,7 @@ void SP::Ph1::Transformer::initializeFromPowerflow(Real frequency) {
 	// Create parallel sub components
 	mSubSnubResistor = std::make_shared<SP::Ph1::Resistor>(mUID + "_snub_res", mName + "_snub_res", Logger::Level::off);
 	mSubSnubResistor->setParameters(snubberResistance);
-	mSubSnubResistor->connect({ node(1), SP::Node::GND });
+	mSubSnubResistor->connect({ node(1), SP::SimNode::GND });
 	mSubSnubResistor->initializeFromPowerflow(frequency);
 
 	mSLog->info(

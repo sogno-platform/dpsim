@@ -39,19 +39,19 @@ void Python::SystemTopology::addCppComponent(CPS::IdentifiedObject::Ptr comp) {
 }
 
 void Python::SystemTopology::addCppNode(CPS::TopologicalNode::Ptr node) {
-	auto emtNode = std::dynamic_pointer_cast<CPS::Node<CPS::Real>>(node);
+	auto emtNode = std::dynamic_pointer_cast<CPS::SimNode<CPS::Real>>(node);
 	if (emtNode) {
 		Python::Node<CPS::Real>* pyNode = PyObject_New(Python::Node<CPS::Real>, &Python::Node<CPS::Real>::type);
-		new (&pyNode->node) CPS::Node<CPS::Real>::Ptr(nullptr);
+		new (&pyNode->node) CPS::SimNode<CPS::Real>::Ptr(nullptr);
 		pyNode->node = emtNode;
 
 		PyDict_SetItemString(pyNodeDict, node->name().c_str(), (PyObject*) pyNode);
 		Py_DECREF(pyNode);
 	}
-	auto dpNode = std::dynamic_pointer_cast<CPS::Node<CPS::Complex>>(node);
+	auto dpNode = std::dynamic_pointer_cast<CPS::SimNode<CPS::Complex>>(node);
 	if (dpNode) {
 		Python::Node<CPS::Complex>* pyNode = PyObject_New(Python::Node<CPS::Complex>, &Python::Node<CPS::Complex>::type);
-		new (&pyNode->node) CPS::Node<CPS::Complex>::Ptr(nullptr);
+		new (&pyNode->node) CPS::SimNode<CPS::Complex>::Ptr(nullptr);
 		pyNode->node = dpNode;
 
 		PyDict_SetItemString(pyNodeDict, node->name().c_str(), (PyObject*) pyNode);

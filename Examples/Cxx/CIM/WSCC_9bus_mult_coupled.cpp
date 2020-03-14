@@ -47,7 +47,7 @@ void multiply_connected(SystemTopology& sys, int copies,
 		int nlines = copies == 1 ? 1 : copies+1;
 		for (int i = 0; i < nlines; i++) {
             // TODO lumped resistance?
-            auto rl_node = std::make_shared<DP::Node>("N_add_" + std::to_string(counter));
+            auto rl_node = std::make_shared<DP::SimNode>("N_add_" + std::to_string(counter));
             auto res = DP::Ph1::Resistor::make("R_" + std::to_string(counter));
             res->setParameters(resistance);
             auto ind = DP::Ph1::Inductor::make("L_" + std::to_string(counter));
@@ -58,10 +58,10 @@ void multiply_connected(SystemTopology& sys, int copies,
             cap2->setParameters(capacitance / 2.);
 
             sys.addNode(rl_node);
-            res->connect({sys.node<DP::Node>(nodeNames[i]), rl_node});
-            ind->connect({rl_node, sys.node<DP::Node>(nodeNames[i+1])});
-            cap1->connect({sys.node<DP::Node>(nodeNames[i]), DP::Node::GND});
-            cap2->connect({sys.node<DP::Node>(nodeNames[i+1]), DP::Node::GND});
+            res->connect({sys.node<DP::SimNode>(nodeNames[i]), rl_node});
+            ind->connect({rl_node, sys.node<DP::SimNode>(nodeNames[i+1])});
+            cap1->connect({sys.node<DP::SimNode>(nodeNames[i]), DP::SimNode::GND});
+            cap2->connect({sys.node<DP::SimNode>(nodeNames[i+1]), DP::SimNode::GND});
             counter += 1;
 
             sys.addComponent(res);
@@ -72,7 +72,7 @@ void multiply_connected(SystemTopology& sys, int copies,
 			// TODO use line model
 			//auto line = DP::Ph1::PiLine::make("line" + std::to_string(counter));
             //line->setParameters(resistance, inductance, capacitance);
-            //line->connect({sys.node<DP::Node>(nodeNames[i]), sys.node<DP::Node>(nodeNames[i+1])});
+            //line->connect({sys.node<DP::SimNode>(nodeNames[i]), sys.node<DP::SimNode>(nodeNames[i+1])});
 		}
 	}
 }
@@ -106,7 +106,7 @@ void simulateCoupled(std::list<fs::path> filenames, Int copies, Int threads, Int
 	//			attrName = "v" + std::to_string(bus);
 	//			nodeName = "BUS" + std::to_string(bus);
 	//		}
-	//		logger->addAttribute(attrName, sys.node<DP::Node>(nodeName)->attribute("v"));
+	//		logger->addAttribute(attrName, sys.node<DP::SimNode>(nodeName)->attribute("v"));
 	//	}
 	//}
 	//sim.addLogger(logger);

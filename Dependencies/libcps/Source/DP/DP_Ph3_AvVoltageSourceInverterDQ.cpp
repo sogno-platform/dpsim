@@ -405,7 +405,7 @@ void DP::Ph3::AvVoltageSourceInverterDQ::initializeFromPowerflow(Real frequency)
 
 	// Create sub voltage source for emf
 	mSubCtrledVoltageSource = DP::Ph3::ControlledVoltageSource::make(mName + "_src", mLogLevel);
-	mSubCtrledVoltageSource->connect({ Node::GND, mVirtualNodes[1] });
+	mSubCtrledVoltageSource->connect({ SimNode::GND, mVirtualNodes[1] });
 	mSubCtrledVoltageSource->setVirtualNodeAt(mVirtualNodes[0], 0);
 	mSubCtrledVoltageSource->setParameters(mIntfVoltage);
 	mSubCtrledVoltageSource->initializeFromPowerflow(frequency);

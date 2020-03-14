@@ -149,7 +149,7 @@ void DP::Ph1::SynchronGeneratorTrStab::initializeFromPowerflow(Real frequency) {
 	// Create sub voltage source for emf
 	mSubVoltageSource = DP::Ph1::VoltageSource::make(mName + "_src", mLogLevel);
 	mSubVoltageSource->setParameters(mEp);
-	mSubVoltageSource->connect({Node::GND, mVirtualNodes[0]});
+	mSubVoltageSource->connect({SimNode::GND, mVirtualNodes[0]});
 	mSubVoltageSource->setVirtualNodeAt(mVirtualNodes[1], 0);
 	mSubVoltageSource->initialize(mFrequencies);
 	mSubVoltageSource->initializeFromPowerflow(frequency);

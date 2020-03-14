@@ -27,9 +27,9 @@ using namespace CPS::DP::Ph1;
 
 int main(int argc, char* argv[]) {
 	// Nodes
-	auto n1 = Node::make("n1");
-	auto n2 = Node::make("n2");
-	auto n3 = Node::make("n3");
+	auto n1 = SimNode::make("n1");
+	auto n2 = SimNode::make("n2");
+	auto n3 = SimNode::make("n3");
 
 	// Components
 	auto vs = VoltageSourceNorton::make("v_s");

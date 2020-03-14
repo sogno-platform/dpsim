@@ -32,8 +32,8 @@ int main(int argc, char* argv[]) {
 	Logger::setLogDir("logs/"+simName);
 
 	// Nodes
-	auto n1 = Node::make("n1");
-	auto n2 = Node::make("n2");
+	auto n1 = SimNode::make("n1");
+	auto n2 = SimNode::make("n2");
 
 	// Components
 	auto vs = VoltageSource::make("vs");
@@ -44,9 +44,9 @@ int main(int argc, char* argv[]) {
 	l1->setParameters(0.02);
 
 	// Connections
-	vs->connect(Node::List{ Node::GND, n1 });
-	r1->connect(Node::List{ n1, n2 });
-	l1->connect(Node::List{ n2, Node::GND });
+	vs->connect(SimNode::List{ SimNode::GND, n1 });
+	r1->connect(SimNode::List{ n1, n2 });
+	l1->connect(SimNode::List{ n2, SimNode::GND });
 
 	// Define system topology
 	auto sys = SystemTopology(50,

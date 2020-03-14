@@ -29,9 +29,9 @@ void simElements() {
 	Logger::setLogDir("logs/"+simName);
 
 	// Nodes
-	auto n1 = Node::make("n1");
-	auto n2 = Node::make("n2");
-	auto vn1 = Node::make("vn1");
+	auto n1 = SimNode::make("n1");
+	auto n2 = SimNode::make("n2");
+	auto vn1 = SimNode::make("vn1");
 
 	// Components
 	auto vs = Ph1::VoltageSource::make("v_1");
@@ -53,12 +53,12 @@ void simElements() {
 	load->setParameters(10000);
 
 	// Topology
-	vs->connect({ Node::GND, n1 });
+	vs->connect({ SimNode::GND, n1 });
 	res->connect({n1, vn1});
 	ind->connect({vn1, n2});
-	cap1->connect({n1, Node::GND});
-	cap2->connect({n2, Node::GND});
-	load->connect({ n2, Node::GND });
+	cap1->connect({n1, SimNode::GND});
+	cap2->connect({n2, SimNode::GND});
+	load->connect({ n2, SimNode::GND });
 
 	auto sys = SystemTopology(50,
 		SystemNodeList{n1, n2, vn1},
@@ -86,8 +86,8 @@ void simPiLine() {
 	Logger::setLogDir("logs/"+simName);
 
 	// Nodes
-	auto n1 = Node::make("n1");
-	auto n2 = Node::make("n2");
+	auto n1 = SimNode::make("n1");
+	auto n2 = SimNode::make("n2");
 
 	// Components
 	auto vs = Ph1::VoltageSource::make("v_1");
@@ -101,9 +101,9 @@ void simPiLine() {
 	load->setParameters(10000);
 
 	// Topology
-	vs->connect({ Node::GND, n1 });
+	vs->connect({ SimNode::GND, n1 });
 	line->connect({ n1, n2 });
-	load->connect({ n2, Node::GND });
+	load->connect({ n2, SimNode::GND });
 
 	auto sys = SystemTopology(50,
 		SystemNodeList{n1, n2},
@@ -130,8 +130,8 @@ void simPiLineDiakoptics() {
 	Logger::setLogDir("logs/"+simName);
 
 	// Nodes
-	auto n1 = Node::make("n1");
-	auto n2 = Node::make("n2");
+	auto n1 = SimNode::make("n1");
+	auto n2 = SimNode::make("n2");
 
 	// Components
 	auto vs = Ph1::VoltageSource::make("v_1");
@@ -145,9 +145,9 @@ void simPiLineDiakoptics() {
 	load->setParameters(10000);
 
 	// Topology
-	vs->connect({ Node::GND, n1 });
+	vs->connect({ SimNode::GND, n1 });
 	line->connect({ n1, n2 });
-	load->connect({ n2, Node::GND });
+	load->connect({ n2, SimNode::GND });
 
 	auto sys = SystemTopology(50,
 		SystemNodeList{n1, n2},

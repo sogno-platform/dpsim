@@ -29,9 +29,9 @@ static void DP_RL_SourceStep(Real timeStep, Real finalTime,
 	String simName = "DP_RL_SourceStep" + extension;
 	Logger::setLogDir("logs/"+simName);
 
-	auto n1 = DP::Node::make("n1");
-	auto n2 = DP::Node::make("n2");
-	auto n3 = DP::Node::make("n3");
+	auto n1 = DP::SimNode::make("n1");
+	auto n2 = DP::SimNode::make("n2");
+	auto n3 = DP::SimNode::make("n3");
 
 	auto vs = std::make_shared<DP::Ph1::VoltageSourceRamp>("v_s");
 	vs->setParameters(1000, voltageStep, 0, 2*PI*freqStep, stepTime, 0);
@@ -42,10 +42,10 @@ static void DP_RL_SourceStep(Real timeStep, Real finalTime,
 	auto sw = DP::Ph1::Resistor::make("r_load");
 	sw->setParameters(100);
 
-	vs->connect({DP::Node::GND, n1});
+	vs->connect({DP::SimNode::GND, n1});
 	r->connect({n1, n2});
 	l->connect({n2, n3});
-	sw->connect({DP::Node::GND, n3});
+	sw->connect({DP::SimNode::GND, n3});
 
 	auto sys = SystemTopology(50,
 		SystemNodeList{ n1, n2, n3 },
@@ -71,9 +71,9 @@ static void EMT_RL_SourceStep(Real timeStep, Real finalTime,
 	String simName = "EMT_RL_SourceStep" + extension;
 	Logger::setLogDir("logs/"+simName);
 
-	auto n1 = EMT::Node::make("n1");
-	auto n2 = EMT::Node::make("n2");
-	auto n3 = EMT::Node::make("n3");
+	auto n1 = EMT::SimNode::make("n1");
+	auto n2 = EMT::SimNode::make("n2");
+	auto n3 = EMT::SimNode::make("n3");
 
 	auto vs = std::make_shared<EMT::Ph1::VoltageSourceRamp>("v_s");
 	vs->setParameters(1000, voltageStep, 2*PI*50, 2*PI*freqStep, stepTime, 0);
@@ -84,10 +84,10 @@ static void EMT_RL_SourceStep(Real timeStep, Real finalTime,
 	auto sw = EMT::Ph1::Resistor::make("r_load");
 	sw->setParameters(100);
 
-	vs->connect({EMT::Node::GND, n1});
+	vs->connect({EMT::SimNode::GND, n1});
 	r->connect({n1, n2});
 	l->connect({n2, n3});
-	sw->connect({EMT::Node::GND, n3});
+	sw->connect({EMT::SimNode::GND, n3});
 
 	auto sys = SystemTopology(50,
 		SystemNodeList{ n1, n2, n3 },

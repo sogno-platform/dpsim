@@ -56,7 +56,7 @@ namespace DPsim {
 		/// Components of the Problem
         CPS::IdentifiedObject::List mComponents;
 		/// Nodes of the Problem
-        CPS::Node<Complex>::List mNodes;
+        CPS::SimNode<Complex>::List mNodes;
 
 		// IDA simulation variables
 		/// Memory block allocated by IDA

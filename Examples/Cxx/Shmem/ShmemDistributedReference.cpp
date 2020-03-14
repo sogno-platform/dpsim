@@ -32,8 +32,8 @@ int main(int argc, char* argv[]) {
 	Real finalTime = 0.1;
 
 	// Nodes
-	auto n1 = Node::make("n1", PhaseType::Single, std::vector<Complex>{ 10 });
-	auto n2 = Node::make("n2", PhaseType::Single, std::vector<Complex>{ 5 });
+	auto n1 = SimNode::make("n1", PhaseType::Single, std::vector<Complex>{ 10 });
+	auto n2 = SimNode::make("n2", PhaseType::Single, std::vector<Complex>{ 5 });
 
 	// Components
 	auto vs1 = VoltageSource::make("vs_1", Logger::Level::debug);
@@ -44,9 +44,9 @@ int main(int argc, char* argv[]) {
 	r02->setParameters(1);
 
 	// Connections
-	vs1->connect({ Node::GND, n1 });
+	vs1->connect({ SimNode::GND, n1 });
 	r12->connect({ n1, n2 });
-	r02->connect({ Node::GND, n2 });
+	r02->connect({ SimNode::GND, n2 });
 
 	auto sys = SystemTopology(50,
 		SystemNodeList{ n1, n2 },

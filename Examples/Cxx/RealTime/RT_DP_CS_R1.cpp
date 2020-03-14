@@ -40,7 +40,7 @@ void RT_DP_CS_R1() {
 	Logger::setLogDir("logs/"+simName);
 
 	// Nodes
-	auto n1 = Node::make("n1");
+	auto n1 = SimNode::make("n1");
 
 	// Components
 	auto cs = CurrentSource::make("cs");
@@ -49,12 +49,12 @@ void RT_DP_CS_R1() {
 	r1->setParameters(1);
 
 	// Connections
-	cs->connect({ Node::GND, n1 });
-	r1->connect({ Node::GND, n1 });
+	cs->connect({ SimNode::GND, n1 });
+	r1->connect({ SimNode::GND, n1 });
 
 	// Define system topology
 	auto sys = SystemTopology(50,
-		SystemNodeList{Node::GND, n1},
+		SystemNodeList{SimNode::GND, n1},
 		SystemComponentList{cs, r1});
 
 	RealTimeSimulation sim(simName, Logger::Level::off);
@@ -73,7 +73,7 @@ void Ref_DP_CS_R1() {
 	Logger::setLogDir("logs/"+simName);
 
 	// Nodes
-	auto n1 = Node::make("n1");
+	auto n1 = SimNode::make("n1");
 
 	// Components
 	auto cs = CurrentSource::make("cs");
@@ -82,12 +82,12 @@ void Ref_DP_CS_R1() {
 	r1->setParameters(1);
 
 	// Connections
-	cs->connect({ Node::GND, n1 });
-	r1->connect({ Node::GND, n1 });
+	cs->connect({ SimNode::GND, n1 });
+	r1->connect({ SimNode::GND, n1 });
 
 	// Define system topology
 	auto sys = SystemTopology(50,
-		SystemNodeList{Node::GND, n1},
+		SystemNodeList{SimNode::GND, n1},
 		SystemComponentList{cs, r1});
 
 	Simulation sim(simName, Logger::Level::off);

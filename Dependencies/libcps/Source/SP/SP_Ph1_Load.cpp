@@ -125,7 +125,7 @@ void SP::Ph1::Load::initializeFromPowerflow(Real frequency) {
 		mConductance = 1.0 / mResistance;
 		mSubResistor = std::make_shared<SP::Ph1::Resistor>(mUID + "_res", mName + "_res", Logger::Level::off);
 		mSubResistor->setParameters(mResistance);
-		mSubResistor->connect({ Node::GND, mTerminals[0]->node() });
+		mSubResistor->connect({ SimNode::GND, mTerminals[0]->node() });
 		mSubResistor->initialize(mFrequencies);
 		mSubResistor->initializeFromPowerflow(frequency);
 	}
@@ -140,14 +140,14 @@ void SP::Ph1::Load::initializeFromPowerflow(Real frequency) {
 		mInductance = mReactance / (2 * PI * frequency);
 		mSubInductor = std::make_shared<SP::Ph1::Inductor>(mUID + "_res", mName + "_ind", Logger::Level::off);
 		mSubInductor->setParameters(mInductance);
-		mSubInductor->connect({ Node::GND, mTerminals[0]->node() });
+		mSubInductor->connect({ SimNode::GND, mTerminals[0]->node() });
 		mSubInductor->initialize(mFrequencies);
 		mSubInductor->initializeFromPowerflow(frequency);
 	} else if (mReactance < 0) {
 		mCapacitance = -1 / (2 * PI * frequency) / mReactance;
 		mSubCapacitor = std::make_shared<SP::Ph1::Capacitor>(mUID + "_res", mName + "_cap", Logger::Level::off);
 		mSubCapacitor->setParameters(mCapacitance);
-		mSubCapacitor->connect({ Node::GND, mTerminals[0]->node() });
+		mSubCapacitor->connect({ SimNode::GND, mTerminals[0]->node() });
 		mSubCapacitor->initialize(mFrequencies);
 		mSubCapacitor->initializeFromPowerflow(frequency);
 	}

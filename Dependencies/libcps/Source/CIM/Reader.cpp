@@ -674,13 +674,13 @@ void Reader::writeSvVoltageFromStaticSysTopology(SystemTopology& sysStatic, Syst
 	for (; nodeDyn != sysDynamic.mNodes.end() && nodeSt != sysStatic.mNodes.end(); ++nodeDyn, ++nodeSt) {
 		if ((*nodeDyn)->name() == (*nodeSt)->name()) {
 			(*nodeDyn)->setInitialVoltage(
-				std::dynamic_pointer_cast<CPS::Node<CPS::Complex>>((*nodeSt))->singleVoltage());
+				std::dynamic_pointer_cast<CPS::SimNode<CPS::Complex>>((*nodeSt))->singleVoltage());
 		}
 		else {
 			for (auto node : sysStatic.mNodes) {
 				if ((*nodeDyn)->name() == node->name())
 					(*nodeDyn)->setInitialVoltage(
-						std::dynamic_pointer_cast<CPS::Node<CPS::Complex>>(node)->singleVoltage());
+						std::dynamic_pointer_cast<CPS::SimNode<CPS::Complex>>(node)->singleVoltage());
 			}
 		}
 	}
@@ -690,7 +690,7 @@ void Reader::writeSvVoltageFromStaticSysTopology(SystemTopology& sysStatic, Syst
 			for (auto node : sysStatic.mNodes) {
 				if ((*nodeDyn)->name() == node->name())
 					(*nodeDyn)->setInitialVoltage(
-						std::dynamic_pointer_cast<CPS::Node<CPS::Complex>>(node)->singleVoltage());
+						std::dynamic_pointer_cast<CPS::SimNode<CPS::Complex>>(node)->singleVoltage());
 			}
 		}
 	}
@@ -701,7 +701,7 @@ template<typename VarType>
 void Reader::processTopologicalNode(IEC61970::Base::Topology::TopologicalNode* topNode) {
 	// Add this node to global node list and assign simulation node incrementally.
 	int matrixNodeIndex = Int(mPowerflowNodes.size());
-	mPowerflowNodes[topNode->mRID] = Node<VarType>::make(topNode->mRID, topNode->name, matrixNodeIndex, mPhase);
+	mPowerflowNodes[topNode->mRID] = SimNode<VarType>::make(topNode->mRID, topNode->name, matrixNodeIndex, mPhase);
 
 	if (mPhase == PhaseType::ABC) {
 		mSLog->info("TopologicalNode {} phase A as simulation node {} ", topNode->mRID, mPowerflowNodes[topNode->mRID]->matrixNodeIndex(PhaseType::A));
@@ -716,7 +716,7 @@ void Reader::processTopologicalNode(IEC61970::Base::Topology::TopologicalNode* t
 		// This could be optimized because the Terminal is searched twice.
 		auto cpsTerm = Terminal<VarType>::make(term->mRID);
 		mPowerflowTerminals.insert(std::make_pair(term->mRID, cpsTerm));
-		cpsTerm->setNode(std::dynamic_pointer_cast<Node<VarType>>(mPowerflowNodes[topNode->mRID]));
+		cpsTerm->setNode(std::dynamic_pointer_cast<SimNode<VarType>>(mPowerflowNodes[topNode->mRID]));
 
 		if (!term->sequenceNumber.initialized)
 			term->sequenceNumber = 1;

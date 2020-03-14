@@ -32,7 +32,7 @@ namespace CPS {
 		/// List of Terminals
 		typename Terminal<VarType>::List mTerminals;
 		/// List of virtual nodes
-		typename Node<VarType>::List mVirtualNodes;
+		typename SimNode<VarType>::List mVirtualNodes;
 		/// Voltage between terminals
 		MatrixVar<VarType> mIntfVoltage;
 		/// Current through component
@@ -100,7 +100,7 @@ namespace CPS {
 		/// Returns the actual number of Nodes / Terminals that are already set to valid Nodes.
 		UInt nodeNumber();
 		/// Get pointer to node
-		typename Node<VarType>::Ptr node(UInt index) {
+		typename SimNode<VarType>::Ptr node(UInt index) {
 			if (index >= mTerminals.size()) {
 				throw SystemError("Node not available for " + mUID);
 			}
@@ -123,9 +123,9 @@ namespace CPS {
 		/// Returns true if virtual node number is greater than zero.
 		Bool hasVirtualNodes() { return mNumVirtualNodes > 0; }
 		///
-		typename Node<VarType>::List& virtualNodes() { return mVirtualNodes; }
+		typename SimNode<VarType>::List& virtualNodes() { return mVirtualNodes; }
 		/// Get pointer to virtual node
-		typename Node<VarType>::Ptr virtualNode(UInt index);
+		typename SimNode<VarType>::Ptr virtualNode(UInt index);
 		/// Get vector of simulation node numbers from virtual Node
 		std::vector<UInt> virtualMatrixNodeIndices(UInt index) { return virtualNode(index)->matrixNodeIndices(); }
 		/// Get simulation node number from virtual node
@@ -149,9 +149,9 @@ namespace CPS {
 		///
 		void setVirtualNodeNumber(UInt num);
 		/// Sets the virtual node at index nodeNum.
-		void setVirtualNodeAt(typename Node<VarType>::Ptr virtualNode, UInt nodeNum);
+		void setVirtualNodeAt(typename SimNode<VarType>::Ptr virtualNode, UInt nodeNum);
 		/// Sets all nodes and checks for nominal number of Nodes for this Component.
-		void connect(typename Node<VarType>::List nodes);
+		void connect(typename SimNode<VarType>::List nodes);
 
 		// #### Calculations ####
 		/// Initialize components with correct network frequencies

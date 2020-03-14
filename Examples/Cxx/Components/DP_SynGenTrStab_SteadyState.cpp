@@ -49,7 +49,7 @@ int main(int argc, char* argv[]) {
 	Real Rload = 1.92;
 
 	// Nodes
-	auto n1 = Node::make("n1", PhaseType::Single, std::vector<Complex>{ initVoltage });
+	auto n1 = SimNode::make("n1", PhaseType::Single, std::vector<Complex>{ initVoltage });
 
 	// Components
 	auto gen = Ph1::SynchronGeneratorTrStab::make("SynGen", Logger::Level::debug);
@@ -59,7 +59,7 @@ int main(int argc, char* argv[]) {
 
 	auto res = Ph1::Resistor::make("Rl", Logger::Level::debug);
 	res->setParameters(Rload);
-	res->connect({Node::GND, n1});
+	res->connect({SimNode::GND, n1});
 
 		// Logging
 	auto logger = DataLogger::make(simName);

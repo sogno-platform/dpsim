@@ -35,7 +35,7 @@ namespace DPsim {
 	private:
 		struct Subnet {
 			/// Nodes assigned to this subnetwork
-			typename CPS::Node<VarType>::List nodes;
+			typename CPS::SimNode<VarType>::List nodes;
 			/// Components assigned to this subnetwork
 			CPS::MNAInterface::List components;
 			/// Size in system matrix (i.e. including virtual nodes)
@@ -68,7 +68,7 @@ namespace DPsim {
 		std::shared_ptr<DataLogger> mRightVectorLog;
 
 		std::vector<Subnet> mSubnets;
-		std::unordered_map<typename CPS::Node<VarType>::Ptr, Subnet*> mNodeSubnetMap;
+		std::unordered_map<typename CPS::SimNode<VarType>::Ptr, Subnet*> mNodeSubnetMap;
 		typename CPS::SimPowerComp<VarType>::List mTearComponents;
 		CPS::SimSignalComp::List mSimSignalComps;
 

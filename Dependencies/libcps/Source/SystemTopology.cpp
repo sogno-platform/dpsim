@@ -28,17 +28,17 @@ using namespace CPS;
 
 template<typename VarType>
 void SystemTopology::multiplyPowerComps(Int numberCopies) {
-	typename Node<VarType>::List newNodes;
+	typename SimNode<VarType>::List newNodes;
 	typename SimPowerComp<VarType>::List newComponents;
 
 	for (int copy = 0; copy < numberCopies; copy++) {
-		std::unordered_map<typename Node<VarType>::Ptr, typename Node<VarType>::Ptr> nodeMap;
+		std::unordered_map<typename SimNode<VarType>::Ptr, typename SimNode<VarType>::Ptr> nodeMap;
 		String copySuffix = "_" + std::to_string(copy+2);
 
 		// copy nodes
-		typename Node<VarType>::Ptr nodePtr;
+		typename SimNode<VarType>::Ptr nodePtr;
 		for (size_t nNode = 0; nNode < mNodes.size(); nNode++) {
-			auto nodePtr = this->node<Node<VarType>>(static_cast<UInt>(nNode));
+			auto nodePtr = this->node<SimNode<VarType>>(static_cast<UInt>(nNode));
 			if (!nodePtr)
 				continue;
 
@@ -46,7 +46,7 @@ void SystemTopology::multiplyPowerComps(Int numberCopies) {
 			if (nodePtr->isGround()) {
 				nodeMap[nodePtr] = nodePtr;
 			} else {
-				auto nodeCpy = Node<VarType>::make(nodePtr->name() + copySuffix, nodePtr->phaseType());
+				auto nodeCpy = SimNode<VarType>::make(nodePtr->name() + copySuffix, nodePtr->phaseType());
 				nodeCpy->setInitialVoltage(nodePtr->initialVoltage());
 				nodeMap[nodePtr] = nodeCpy;
 				newNodes.push_back(nodeCpy);
@@ -63,7 +63,7 @@ void SystemTopology::multiplyPowerComps(Int numberCopies) {
 				throw SystemError("copy() not implemented for " + comp->name());
 
 			// map the nodes to their new copies, creating new terminals
-			typename Node<VarType>::List nodeCopies;
+			typename SimNode<VarType>::List nodeCopies;
 			for (UInt nNode = 0; nNode < comp->terminalNumber(); nNode++) {
 				nodeCopies.push_back(nodeMap[comp->node(nNode)]);
 			}
@@ -96,7 +96,7 @@ void SystemTopology::reset() {
 
 template <typename VarType>
 void SystemTopology::splitSubnets(std::vector<SystemTopology>& splitSystems) {
-	std::unordered_map<typename Node<VarType>::Ptr, int> subnet;
+	std::unordered_map<typename SimNode<VarType>::Ptr, int> subnet;
 	int numberSubnets = checkTopologySubnets<VarType>(subnet);
 	if (numberSubnets == 1) {
 		splitSystems.push_back(*this);
@@ -106,7 +106,7 @@ void SystemTopology::splitSubnets(std::vector<SystemTopology>& splitSystems) {
 
 		// Split nodes into subnet groups
 		for (auto node : mNodes) {
-			auto pnode = std::dynamic_pointer_cast<Node<VarType>>(node);
+			auto pnode = std::dynamic_pointer_cast<SimNode<VarType>>(node);
 			if (!pnode || node->isGround())
 				continue;
 
@@ -140,8 +140,8 @@ void SystemTopology::splitSubnets(std::vector<SystemTopology>& splitSystems) {
 }
 
 template <typename VarType>
-int SystemTopology::checkTopologySubnets(std::unordered_map<typename Node<VarType>::Ptr, int>& subnet) {
-	std::unordered_map<typename Node<VarType>::Ptr, typename Node<VarType>::List> neighbours;
+int SystemTopology::checkTopologySubnets(std::unordered_map<typename SimNode<VarType>::Ptr, int>& subnet) {
+	std::unordered_map<typename SimNode<VarType>::Ptr, typename SimNode<VarType>::List> neighbours;
 
 	for (auto comp : mComponents) {
 		auto pcomp = std::dynamic_pointer_cast<SimPowerComp<VarType>>(comp);
@@ -164,17 +164,17 @@ int SystemTopology::checkTopologySubnets(std::unordered_map<typename Node<VarTyp
 	int currentNet = 0;
 	size_t totalNodes = mNodes.size();
 	for (auto tnode : mNodes) {
-		auto node = std::dynamic_pointer_cast<Node<VarType>>(tnode);
+		auto node = std::dynamic_pointer_cast<SimNode<VarType>>(tnode);
 		if (!node || tnode->isGround()) {
 			totalNodes--;
 		}
 	}
 
 	while (subnet.size() != totalNodes) {
-		std::list<typename Node<VarType>::Ptr> nextSet;
+		std::list<typename SimNode<VarType>::Ptr> nextSet;
 
 		for (auto tnode : mNodes) {
-			auto node = std::dynamic_pointer_cast<Node<VarType>>(tnode);
+			auto node = std::dynamic_pointer_cast<SimNode<VarType>>(tnode);
 			if (!node || tnode->isGround())
 				continue;
 
@@ -299,7 +299,7 @@ Graph::Graph SystemTopology::topologyGraph() {
 #endif
 
 // Explicit instantiation of template functions to be able to keep the definition in the cpp
-template int SystemTopology::checkTopologySubnets<Real>(std::unordered_map<typename CPS::Node<Real>::Ptr, int>& subnet);
-template int SystemTopology::checkTopologySubnets<Complex>(std::unordered_map<typename CPS::Node<Complex>::Ptr, int>& subnet);
+template int SystemTopology::checkTopologySubnets<Real>(std::unordered_map<typename CPS::SimNode<Real>::Ptr, int>& subnet);
+template int SystemTopology::checkTopologySubnets<Complex>(std::unordered_map<typename CPS::SimNode<Complex>::Ptr, int>& subnet);
 template void SystemTopology::splitSubnets<Real>(std::vector<CPS::SystemTopology>& splitSystems);
 template void SystemTopology::splitSubnets<Complex>(std::vector<CPS::SystemTopology>& splitSystems);

@@ -28,7 +28,7 @@ namespace CPS {
 	class Terminal : public TopologicalTerminal, public SharedFactory<Terminal<VarType>> {
 	protected:
 		MatrixVar<VarType> mCurrent;
-		std::weak_ptr<Node<VarType>> mNode;
+		std::weak_ptr<SimNode<VarType>> mNode;
 
 	public:
 		typedef std::shared_ptr<Terminal<VarType>> Ptr;
@@ -38,11 +38,11 @@ namespace CPS {
 		///
 		Terminal(String uid, String name) : TopologicalTerminal(uid, name) { }
 		///
-		typename Node<VarType>::Ptr node() {
+		typename SimNode<VarType>::Ptr node() {
 			return mNode.lock();
 		}
 		///
-		void setNode(typename Node<VarType>::Ptr node) {
+		void setNode(typename SimNode<VarType>::Ptr node) {
 			mNode = node;
 			setPhaseType(node->phaseType());
 		}

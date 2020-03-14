@@ -29,15 +29,15 @@ void EMT_CS_R1() {
 	Logger::setLogDir("logs/"+simName);
 
 	// Nodes
-	auto n1 = Node::make("n1");
+	auto n1 = SimNode::make("n1");
 
 	// Components
 	auto cs = Ph1::CurrentSource::make("cs");
 	cs->setParameters(Complex(10, 0), 50);
-	cs->connect(Node::List{ Node::GND, n1 });
+	cs->connect(SimNode::List{ SimNode::GND, n1 });
 	auto r1 = Ph1::Resistor::make("r_1");
 	r1->setParameters(1);
-	r1->connect({ Node::GND, n1 });
+	r1->connect({ SimNode::GND, n1 });
 
 	auto sys = SystemTopology(50, SystemNodeList{n1}, SystemComponentList{cs, r1});
 
@@ -58,7 +58,7 @@ void EMT_VS_R1() {
 	Logger::setLogDir("logs/"+simName);
 
 	// Nodes
-	auto n1 = Node::make("n1");
+	auto n1 = SimNode::make("n1");
 
 	// Components
 	auto vs = Ph1::VoltageSource::make("v_1");
@@ -67,8 +67,8 @@ void EMT_VS_R1() {
 	r->setParameters(1);
 
 	// Topology
-	vs->connect({Node::GND, n1});
-	r->connect({n1, Node::GND});
+	vs->connect({SimNode::GND, n1});
+	r->connect({n1, SimNode::GND});
 
 	auto sys = SystemTopology(50, SystemNodeList{n1}, SystemComponentList{vs, r});
 
@@ -89,25 +89,25 @@ void EMT_CS_R2CL() {
 	Logger::setLogDir("logs/"+simName);
 
 	// Nodes
-	auto n1 = Node::make("n1");
-	auto n2 = Node::make("n2");
+	auto n1 = SimNode::make("n1");
+	auto n2 = SimNode::make("n2");
 
 	// Components
 	auto cs = Ph1::CurrentSource::make("cs");
 	cs->setParameters(10, 50);
-	cs->connect(Node::List{ Node::GND, n1 });
+	cs->connect(SimNode::List{ SimNode::GND, n1 });
 	auto r1 = Ph1::Resistor::make("r_1");
 	r1->setParameters(1);
-	r1->connect(Node::List{ n1, Node::GND });
+	r1->connect(SimNode::List{ n1, SimNode::GND });
 	auto c1 = Ph1::Capacitor::make("c_1");
 	c1->setParameters(0.001);
-	c1->connect(Node::List{ n1, n2 });
+	c1->connect(SimNode::List{ n1, n2 });
 	auto l1 = Ph1::Inductor::make("l_1");
 	l1->setParameters(0.001);
-	l1->connect(Node::List{ n2, Node::GND });
+	l1->connect(SimNode::List{ n2, SimNode::GND });
 	auto r2 = Ph1::Resistor::make("r_2");
 	r2->setParameters(1);
-	r2->connect(Node::List{ n2, Node::GND });
+	r2->connect(SimNode::List{ n2, SimNode::GND });
 
 	auto sys = SystemTopology(50, SystemNodeList{n1, n2}, SystemComponentList{cs, r1, c1, l1, r2});
 
@@ -131,9 +131,9 @@ void EMT_VS_CS_R4_AC() {
 	Logger::setLogDir("logs/"+simName);
 
 	// Nodes
-	auto n1 = Node::make("n1");
-	auto n2 = Node::make("n2");
-	auto n3 = Node::make("n3");
+	auto n1 = SimNode::make("n1");
+	auto n2 = SimNode::make("n2");
+	auto n3 = SimNode::make("n3");
 
 	// Components
 	auto vs = Ph1::VoltageSource::make("vs");
@@ -150,12 +150,12 @@ void EMT_VS_CS_R4_AC() {
 	cs->setParameters(1, 50);
 
 	// Topology
-	vs->connect(Node::List{ Node::GND, n1 });
-	r1->connect(Node::List{ n1, n2 });
-	r2->connect(Node::List{ n2, Node::GND });
-	r3->connect(Node::List{ n2, n3 });
-	r4->connect(Node::List{ n3, Node::GND });
-	cs->connect(Node::List{ Node::GND, n3 });
+	vs->connect(SimNode::List{ SimNode::GND, n1 });
+	r1->connect(SimNode::List{ n1, n2 });
+	r2->connect(SimNode::List{ n2, SimNode::GND });
+	r3->connect(SimNode::List{ n2, n3 });
+	r4->connect(SimNode::List{ n3, SimNode::GND });
+	cs->connect(SimNode::List{ SimNode::GND, n3 });
 
 	auto sys = SystemTopology(50, SystemNodeList{n1, n2, n3}, SystemComponentList{vs, r1, r2, r3, r4, cs});
 
@@ -180,9 +180,9 @@ void EMT_VS_CS_R4_DC() {
 	Logger::setLogDir("logs/"+simName);
 
 	// Nodes
-	auto n1 = Node::make("n1");
-	auto n2 = Node::make("n2");
-	auto n3 = Node::make("n3");
+	auto n1 = SimNode::make("n1");
+	auto n2 = SimNode::make("n2");
+	auto n3 = SimNode::make("n3");
 
 	// Components
 	auto vs = Ph1::VoltageSource::make("vs");
@@ -199,12 +199,12 @@ void EMT_VS_CS_R4_DC() {
 	cs->setParameters(1);
 
 	// Topology
-	vs->connect(Node::List{ Node::GND, n1 });
-	r1->connect(Node::List{ n1, n2 });
-	r2->connect(Node::List{ n2, Node::GND });
-	r3->connect(Node::List{ n2, n3 });
-	r4->connect(Node::List{ n3, Node::GND });
-	cs->connect(Node::List{ Node::GND, n3 });
+	vs->connect(SimNode::List{ SimNode::GND, n1 });
+	r1->connect(SimNode::List{ n1, n2 });
+	r2->connect(SimNode::List{ n2, SimNode::GND });
+	r3->connect(SimNode::List{ n2, n3 });
+	r4->connect(SimNode::List{ n3, SimNode::GND });
+	cs->connect(SimNode::List{ SimNode::GND, n3 });
 
 	auto sys = SystemTopology(50, SystemNodeList{n1, n2, n3}, SystemComponentList{vs, r1, r2, r3, r4, cs});
 
@@ -227,10 +227,10 @@ void EMT_VS_R2L3() {
 	Logger::setLogDir("logs/"+simName);
 
 	// Nodes
-	auto n1 = Node::make("n1");
-	auto n2 = Node::make("n2");
-	auto n3 = Node::make("n3");
-	auto n4 = Node::make("n4");
+	auto n1 = SimNode::make("n1");
+	auto n2 = SimNode::make("n2");
+	auto n3 = SimNode::make("n3");
+	auto n4 = SimNode::make("n4");
 
 	// Components
 	auto vs = Ph1::VoltageSource::make("vs", Logger::Level::debug);
@@ -247,12 +247,12 @@ void EMT_VS_R2L3() {
 	r2->setParameters(2);
 
 	// Topology
-	vs->connect(Node::List{ Node::GND, n1 });
-	r1->connect(Node::List{ n1, n2 });
-	l1->connect(Node::List{ n2, n3 });
-	l2->connect(Node::List{ n3, Node::GND });
-	l3->connect(Node::List{ n3, n4 });
-	r2->connect(Node::List{ n4, Node::GND });
+	vs->connect(SimNode::List{ SimNode::GND, n1 });
+	r1->connect(SimNode::List{ n1, n2 });
+	l1->connect(SimNode::List{ n2, n3 });
+	l2->connect(SimNode::List{ n3, SimNode::GND });
+	l3->connect(SimNode::List{ n3, n4 });
+	r2->connect(SimNode::List{ n4, SimNode::GND });
 
 	auto sys = SystemTopology(50, SystemNodeList{n1, n2, n3, n4}, SystemComponentList{vs, r1, l1, l2, l3, r2});
 
@@ -278,8 +278,8 @@ void EMT_VS_RC1() {
 	Logger::setLogDir("logs/"+simName);
 
 	// Nodes
-	auto n1 = Node::make("n1");
-	auto n2 = Node::make("n2");
+	auto n1 = SimNode::make("n1");
+	auto n2 = SimNode::make("n2");
 
 	// Components
 	auto vs = Ph1::VoltageSource::make("vs");
@@ -290,9 +290,9 @@ void EMT_VS_RC1() {
 	c1->setParameters(0.001);
 
 	// Topology
-	vs->connect({ Node::GND, n1 });
+	vs->connect({ SimNode::GND, n1 });
 	r1->connect({ n1, n2 });
-	c1->connect({ n2, Node::GND });
+	c1->connect({ n2, SimNode::GND });
 
 	auto sys = SystemTopology(50, SystemNodeList{n1, n2}, SystemComponentList{vs, r1, c1});
 
@@ -316,10 +316,10 @@ void EMT_Ph3_VS_R2L3() {
 	Logger::setLogDir("logs/" + simName);
 
 	// Nodes
-	auto n1 = Node::make("n1", PhaseType::ABC);
-	auto n2 = Node::make("n2", PhaseType::ABC);
-	auto n3 = Node::make("n3", PhaseType::ABC);
-	auto n4 = Node::make("n4", PhaseType::ABC);
+	auto n1 = SimNode::make("n1", PhaseType::ABC);
+	auto n2 = SimNode::make("n2", PhaseType::ABC);
+	auto n3 = SimNode::make("n3", PhaseType::ABC);
+	auto n4 = SimNode::make("n4", PhaseType::ABC);
 
 	// Components
 	auto vs = Ph3::VoltageSource::make("vs");
@@ -351,12 +351,12 @@ void EMT_Ph3_VS_R2L3() {
 	r2->setParameters(2 * r1_param);
 
 	// Topology
-	vs->connect(Node::List{ Node::GND, n1 });
-	r1->connect(Node::List{ n1, n2 });
-	l1->connect(Node::List{ n2, n3 });
-	l2->connect(Node::List{ n3, Node::GND });
-	l3->connect(Node::List{ n3, n4 });
-	r2->connect(Node::List{ n4, Node::GND });
+	vs->connect(SimNode::List{ SimNode::GND, n1 });
+	r1->connect(SimNode::List{ n1, n2 });
+	l1->connect(SimNode::List{ n2, n3 });
+	l2->connect(SimNode::List{ n3, SimNode::GND });
+	l3->connect(SimNode::List{ n3, n4 });
+	r2->connect(SimNode::List{ n4, SimNode::GND });
 
 	// Define system topology
 	auto sys = SystemTopology(50, SystemNodeList{n1, n2, n3, n4}, SystemComponentList{vs, r1, l1, l2, l3, r2});
@@ -388,8 +388,8 @@ void EMT_Ph3_VS_RC1() {
 	Logger::setLogDir("logs/" + simName);
 
 	// Nodes
-	auto n1 = Node::make("n1", PhaseType::ABC);
-	auto n2 = Node::make("n2", PhaseType::ABC);
+	auto n1 = SimNode::make("n1", PhaseType::ABC);
+	auto n2 = SimNode::make("n2", PhaseType::ABC);
 
 	// Components
 	auto vs = Ph3::VoltageSource::make("vs");
@@ -411,9 +411,9 @@ void EMT_Ph3_VS_RC1() {
 	c1->setParameters(c_param);
 
 	// Topology
-	vs->connect({ Node::GND, n1 });
+	vs->connect({ SimNode::GND, n1 });
 	r1->connect({ n1, n2 });
-	c1->connect({ n2, Node::GND });
+	c1->connect({ n2, SimNode::GND });
 
 	// Define system topology
 	auto sys = SystemTopology(50, SystemNodeList{n1, n2}, SystemComponentList{vs, r1, c1});

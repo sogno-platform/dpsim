@@ -30,9 +30,9 @@ void DP_VS_CS_R4() {
 	Logger::setLogDir("logs/"+simName);
 
 	// Nodes
-	auto n1 = Node::make("n1");
-	auto n2 = Node::make("n2");
-	auto n3 = Node::make("n3");
+	auto n1 = SimNode::make("n1");
+	auto n2 = SimNode::make("n2");
+	auto n3 = SimNode::make("n3");
 
 	// Components
 	auto vs = VoltageSource::make("vs");
@@ -49,12 +49,12 @@ void DP_VS_CS_R4() {
 	cs->setParameters(1);
 
 	// Topology
-	vs->connect(Node::List{ Node::GND, n1 });
-	r1->connect(Node::List{ n1, n2 });
-	r2->connect(Node::List{ n2, Node::GND });
-	r3->connect(Node::List{ n2, n3 });
-	r4->connect(Node::List{ n3, Node::GND });
-	cs->connect(Node::List{ Node::GND, n3 });
+	vs->connect(SimNode::List{ SimNode::GND, n1 });
+	r1->connect(SimNode::List{ n1, n2 });
+	r2->connect(SimNode::List{ n2, SimNode::GND });
+	r3->connect(SimNode::List{ n2, n3 });
+	r4->connect(SimNode::List{ n3, SimNode::GND });
+	cs->connect(SimNode::List{ SimNode::GND, n3 });
 
 	// Define system topology
 	auto sys = SystemTopology(50,
@@ -86,9 +86,9 @@ void DP_VS_CS_R4_Diakoptics() {
 	Logger::setLogDir("logs/"+simName);
 
 	// Nodes
-	auto n1 = Node::make("n1");
-	auto n2 = Node::make("n2");
-	auto n3 = Node::make("n3");
+	auto n1 = SimNode::make("n1");
+	auto n2 = SimNode::make("n2");
+	auto n3 = SimNode::make("n3");
 
 	// Components
 	auto vs = VoltageSource::make("vs");
@@ -105,12 +105,12 @@ void DP_VS_CS_R4_Diakoptics() {
 	cs->setParameters(1);
 
 	// Topology
-	vs->connect(Node::List{ Node::GND, n1 });
-	r1->connect(Node::List{ n1, n2 });
-	r2->connect(Node::List{ n2, Node::GND });
-	r3->connect(Node::List{ n2, n3 });
-	r4->connect(Node::List{ n3, Node::GND });
-	cs->connect(Node::List{ Node::GND, n3 });
+	vs->connect(SimNode::List{ SimNode::GND, n1 });
+	r1->connect(SimNode::List{ n1, n2 });
+	r2->connect(SimNode::List{ n2, SimNode::GND });
+	r3->connect(SimNode::List{ n2, n3 });
+	r4->connect(SimNode::List{ n3, SimNode::GND });
+	cs->connect(SimNode::List{ SimNode::GND, n3 });
 
 	// Define system topology
 	auto sys = SystemTopology(50,
@@ -143,10 +143,10 @@ void DP_VS_R2L3() {
 	Logger::setLogDir("logs/"+simName);
 
 	// Nodes
-	auto n1 = Node::make("n1");
-	auto n2 = Node::make("n2");
-	auto n3 = Node::make("n3");
-	auto n4 = Node::make("n4");
+	auto n1 = SimNode::make("n1");
+	auto n2 = SimNode::make("n2");
+	auto n3 = SimNode::make("n3");
+	auto n4 = SimNode::make("n4");
 
 	// Components
 	auto vs = VoltageSource::make("vs");
@@ -163,12 +163,12 @@ void DP_VS_R2L3() {
 	r2->setParameters(2);
 
 	// Topology
-	vs->connect(Node::List{ Node::GND, n1 });
-	r1->connect(Node::List{ n1, n2 });
-	l1->connect(Node::List{ n2, n3 });
-	l2->connect(Node::List{ n3, Node::GND });
-	l3->connect(Node::List{ n3, n4 });
-	r2->connect(Node::List{ n4, Node::GND });
+	vs->connect(SimNode::List{ SimNode::GND, n1 });
+	r1->connect(SimNode::List{ n1, n2 });
+	l1->connect(SimNode::List{ n2, n3 });
+	l2->connect(SimNode::List{ n3, SimNode::GND });
+	l3->connect(SimNode::List{ n3, n4 });
+	r2->connect(SimNode::List{ n4, SimNode::GND });
 
 	auto sys = SystemTopology(50,
 		SystemNodeList{n1, n2, n3, n4},
@@ -199,10 +199,10 @@ void DP_VS_R2L3_Diakoptics() {
 	Logger::setLogDir("logs/"+simName);
 
 	// Nodes
-	auto n1 = Node::make("n1");
-	auto n2 = Node::make("n2");
-	auto n3 = Node::make("n3");
-	auto n4 = Node::make("n4");
+	auto n1 = SimNode::make("n1");
+	auto n2 = SimNode::make("n2");
+	auto n3 = SimNode::make("n3");
+	auto n4 = SimNode::make("n4");
 
 	// Components
 	auto vs = VoltageSource::make("vs");
@@ -219,12 +219,12 @@ void DP_VS_R2L3_Diakoptics() {
 	r2->setParameters(2);
 
 	// Topology
-	vs->connect(Node::List{ Node::GND, n1 });
-	r1->connect(Node::List{ n1, n2 });
-	l1->connect(Node::List{ n2, n3 });
-	l2->connect(Node::List{ n3, Node::GND });
-	l3->connect(Node::List{ n3, n4 });
-	r2->connect(Node::List{ n4, Node::GND });
+	vs->connect(SimNode::List{ SimNode::GND, n1 });
+	r1->connect(SimNode::List{ n1, n2 });
+	l1->connect(SimNode::List{ n2, n3 });
+	l2->connect(SimNode::List{ n3, SimNode::GND });
+	l3->connect(SimNode::List{ n3, n4 });
+	r2->connect(SimNode::List{ n4, SimNode::GND });
 
 	auto sys = SystemTopology(50,
 		SystemNodeList{n1, n2, n3, n4},

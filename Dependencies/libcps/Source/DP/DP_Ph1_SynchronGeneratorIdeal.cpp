@@ -55,7 +55,7 @@ void DP::Ph1::SynchronGeneratorIdeal::initializeFromPowerflow(Real frequency) {
 
 	mSubVoltageSource = DP::Ph1::VoltageSource::make(mName + "_src", mLogLevel);
 	mSubVoltageSource->setParameters(0);
-	mSubVoltageSource->connect({ Node::GND, node(0) });
+	mSubVoltageSource->connect({ SimNode::GND, node(0) });
 	mSubVoltageSource->setVirtualNodeAt(mVirtualNodes[0], 0);
 	mSubVoltageSource->initialize(mFrequencies);
 	mSubVoltageSource->initializeFromPowerflow(frequency);

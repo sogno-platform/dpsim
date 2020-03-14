@@ -77,7 +77,7 @@ void DP::Ph1::RXLoad::initializeFromPowerflow(Real frequency) {
 		mConductance = 1.0 / mResistance;
 		mSubResistor = std::make_shared<DP::Ph1::Resistor>(mName + "_res", mLogLevel);
 		mSubResistor->setParameters(mResistance);
-		mSubResistor->connect({ Node::GND, mTerminals[0]->node() });
+		mSubResistor->connect({ SimNode::GND, mTerminals[0]->node() });
 		mSubResistor->initialize(mFrequencies);
 		mSubResistor->initializeFromPowerflow(frequency);
 	}
@@ -92,7 +92,7 @@ void DP::Ph1::RXLoad::initializeFromPowerflow(Real frequency) {
 
 		mSubInductor = std::make_shared<DP::Ph1::Inductor>(mName + "_ind", mLogLevel);
 		mSubInductor->setParameters(mInductance);
-		mSubInductor->connect({ Node::GND, mTerminals[0]->node() });
+		mSubInductor->connect({ SimNode::GND, mTerminals[0]->node() });
 		mSubInductor->initialize(mFrequencies);
 		mSubInductor->initializeFromPowerflow(frequency);
 	} else if (mReactance < 0) {
@@ -100,7 +100,7 @@ void DP::Ph1::RXLoad::initializeFromPowerflow(Real frequency) {
 
 		mSubCapacitor = std::make_shared<DP::Ph1::Capacitor>(mName + "_cap", mLogLevel);
 		mSubCapacitor->setParameters(mCapacitance);
-		mSubCapacitor->connect({ Node::GND, mTerminals[0]->node() });
+		mSubCapacitor->connect({ SimNode::GND, mTerminals[0]->node() });
 		mSubCapacitor->initialize(mFrequencies);
 		mSubCapacitor->initializeFromPowerflow(frequency);
 	}

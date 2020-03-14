@@ -78,7 +78,7 @@ namespace DPsim {
 		void addAttribute(const String &name, CPS::MatrixCompAttribute::Ptr attr, UInt rowsMax = 0, UInt colsMax = 0);
 
 		template<typename VarType>
-		void addNode(typename CPS::Node<VarType>::Ptr node) {
+		void addNode(typename CPS::SimNode<VarType>::Ptr node) {
 			addAttribute(node->name() + ".voltage", node->attributeMatrix("voltage"));
 		}
 

@@ -93,7 +93,7 @@ void DP::Ph1::PQLoadCS::initializeFromPowerflow(Real frequency) {
 	mSubCurrentSource->setParameters(current);
 	mCurrentSourceRef = mSubCurrentSource->attribute<Complex>("I_ref");
 	// A positive power should result in a positive current to ground.
-	mSubCurrentSource->connect({ mTerminals[0]->node(), Node::GND });
+	mSubCurrentSource->connect({ mTerminals[0]->node(), SimNode::GND });
 	mSubCurrentSource->initializeFromPowerflow(frequency);
 	updateIntfValues();
 

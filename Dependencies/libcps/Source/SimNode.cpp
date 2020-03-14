@@ -22,7 +22,7 @@
 using namespace CPS;
 
 template <typename VarType>
-Node<VarType>::Node(String name, String uid,
+SimNode<VarType>::SimNode(String name, String uid,
 	std::vector<UInt> matrixNodeIndex, PhaseType phaseType, std::vector<Complex> initialVoltage)
 	: TopologicalNode(uid, name, phaseType, initialVoltage) {
 
@@ -39,15 +39,15 @@ Node<VarType>::Node(String name, String uid,
 }
 
 template <typename VarType>
-Node<VarType>::Node(PhaseType phaseType)
-	: Node("gnd", "gnd", { 0, 0, 0 }, phaseType, { 0, 0, 0 }) {
+SimNode<VarType>::SimNode(PhaseType phaseType)
+	: SimNode("gnd", "gnd", { 0, 0, 0 }, phaseType, { 0, 0, 0 }) {
 		mIsGround = true;
 		mInitialVoltage = MatrixComp::Zero(3, 1);
 		mVoltage = MatrixVar<VarType>::Zero(3, 1);
 }
 
 template <typename VarType>
-void Node<VarType>::initialize(Matrix frequencies) {
+void SimNode<VarType>::initialize(Matrix frequencies) {
 	mFrequencies = frequencies;
 	mNumFreqs = static_cast<UInt>(mFrequencies.size());
 	Matrix::Index rowNum = phaseType() == PhaseType::ABC ? 3 : 1;
@@ -55,7 +55,7 @@ void Node<VarType>::initialize(Matrix frequencies) {
 }
 
 template <typename VarType>
-VarType Node<VarType>::singleVoltage(PhaseType phaseType) {
+VarType SimNode<VarType>::singleVoltage(PhaseType phaseType) {
 	if (phaseType == PhaseType::B)
 		return mVoltage(1,0);
 	else if (phaseType == PhaseType::C)
@@ -65,12 +65,12 @@ VarType Node<VarType>::singleVoltage(PhaseType phaseType) {
 }
 
 template<>
-void Node<Complex>::setVoltage(Complex newVoltage) {
+void SimNode<Complex>::setVoltage(Complex newVoltage) {
 	mVoltage(0, 0) = newVoltage;
 }
 
 template<>
-void Node<Real>::mnaUpdateVoltage(Matrix& leftVector) {
+void SimNode<Real>::mnaUpdateVoltage(Matrix& leftVector) {
 	if (mMatrixNodeIndex[0] >= 0) mVoltage(0,0) = Math::realFromVectorElement(leftVector, mMatrixNodeIndex[0]);
 	if (mPhaseType == PhaseType::ABC) {
 		if (mMatrixNodeIndex[1] >= 0) mVoltage(1,0) = Math::realFromVectorElement(leftVector, mMatrixNodeIndex[1]);
@@ -79,7 +79,7 @@ void Node<Real>::mnaUpdateVoltage(Matrix& leftVector) {
 }
 
 template<>
-void Node<Complex>::mnaUpdateVoltage(Matrix& leftVector) {
+void SimNode<Complex>::mnaUpdateVoltage(Matrix& leftVector) {
 	for (UInt freq = 0; freq < mNumFreqs; freq++) {
 			if (mMatrixNodeIndex[0] >= 0) mVoltage(0,freq) = Math::complexFromVectorElement(leftVector, mMatrixNodeIndex[0], mNumFreqs, freq);
 		if (mPhaseType == PhaseType::ABC) {
@@ -90,10 +90,10 @@ void Node<Complex>::mnaUpdateVoltage(Matrix& leftVector) {
 }
 
 template<>
-void Node<Real>::mnaUpdateVoltageHarm(const Matrix& leftVector, Int freqIdx) { }
+void SimNode<Real>::mnaUpdateVoltageHarm(const Matrix& leftVector, Int freqIdx) { }
 
 template<>
-void Node<Complex>::mnaUpdateVoltageHarm(const Matrix& leftVector, Int freqIdx) {
+void SimNode<Complex>::mnaUpdateVoltageHarm(const Matrix& leftVector, Int freqIdx) {
 	if (mMatrixNodeIndex[0] >= 0) mVoltage(0,freqIdx) = Math::complexFromVectorElement(leftVector, mMatrixNodeIndex[0]);
 	if (mPhaseType == PhaseType::ABC) {
 		if (mMatrixNodeIndex[1] >= 0) mVoltage(1,freqIdx) = Math::complexFromVectorElement(leftVector, mMatrixNodeIndex[1]);
@@ -102,25 +102,25 @@ void Node<Complex>::mnaUpdateVoltageHarm(const Matrix& leftVector, Int freqIdx) 
 }
 
 template <>
-void Node<Real>::mnaInitializeHarm(std::vector<Attribute<Matrix>::Ptr> leftVectors) { }
+void SimNode<Real>::mnaInitializeHarm(std::vector<Attribute<Matrix>::Ptr> leftVectors) { }
 
 template <>
-void Node<Complex>::mnaInitializeHarm(std::vector<Attribute<Matrix>::Ptr> leftVectors) {
+void SimNode<Complex>::mnaInitializeHarm(std::vector<Attribute<Matrix>::Ptr> leftVectors) {
 	mMnaTasks = {
 		std::make_shared<MnaPostStepHarm>(*this, leftVectors)
 	};
 }
 
 template <>
-void Node<Complex>::MnaPostStepHarm::execute(Real time, Int timeStepCount) {
+void SimNode<Complex>::MnaPostStepHarm::execute(Real time, Int timeStepCount) {
 	for (UInt freq = 0; freq < mNode.mNumFreqs; freq++)
 		mNode.mnaUpdateVoltageHarm(*mLeftVectors[freq], freq);
 }
 
 template <>
-void Node<Real>::MnaPostStepHarm::execute(Real time, Int timeStepCount) {
+void SimNode<Real>::MnaPostStepHarm::execute(Real time, Int timeStepCount) {
 
 }
 
-template class CPS::Node<Real>;
-template class CPS::Node<Complex>;
+template class CPS::SimNode<Real>;
+template class CPS::SimNode<Complex>;

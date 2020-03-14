@@ -95,7 +95,7 @@ void EMT::Ph3::RXLoad::initializeFromPowerflow(Real frequency) {
 		mConductance = mResistance.inverse();
 		mSubResistor = std::make_shared<EMT::Ph3::Resistor>(mName + "_res", mLogLevel);
 		mSubResistor->setParameters(mResistance);
-		mSubResistor->connect({ Node::GND, mTerminals[0]->node() });
+		mSubResistor->connect({ SimNode::GND, mTerminals[0]->node() });
 		mSubResistor->initialize(mFrequencies);
 		mSubResistor->initializeFromPowerflow(frequency);
 	}
@@ -110,7 +110,7 @@ void EMT::Ph3::RXLoad::initializeFromPowerflow(Real frequency) {
 
 		mSubInductor = std::make_shared<EMT::Ph3::Inductor>(mName + "_ind", mLogLevel);
 		mSubInductor->setParameters(mInductance);
-		mSubInductor->connect({ Node::GND, mTerminals[0]->node() });
+		mSubInductor->connect({ SimNode::GND, mTerminals[0]->node() });
 		mSubInductor->initialize(mFrequencies);
 		mSubInductor->initializeFromPowerflow(frequency);
 	}
@@ -119,7 +119,7 @@ void EMT::Ph3::RXLoad::initializeFromPowerflow(Real frequency) {
 
 		mSubCapacitor = std::make_shared<EMT::Ph3::Capacitor>(mName + "_cap", mLogLevel);
 		mSubCapacitor->setParameters(mCapacitance);
-		mSubCapacitor->connect({ Node::GND, mTerminals[0]->node() });
+		mSubCapacitor->connect({ SimNode::GND, mTerminals[0]->node() });
 		mSubCapacitor->initialize(mFrequencies);
 		mSubCapacitor->initializeFromPowerflow(frequency);
 	}

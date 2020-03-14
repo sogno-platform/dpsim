@@ -245,7 +245,7 @@ void MnaSolver<VarType>::identifyTopologyObjects() {
 	for (auto baseNode : mSystem.mNodes) {
 		// Add nodes to the list and ignore ground nodes.
 		if (!baseNode->isGround()) {
-			auto node = std::dynamic_pointer_cast< CPS::Node<VarType> >(baseNode);
+			auto node = std::dynamic_pointer_cast< CPS::SimNode<VarType> >(baseNode);
 			mNodes.push_back( node );
 		}
 	}

@@ -120,7 +120,7 @@ void EMT::Ph3::Transformer::initializeFromPowerflow(Real frequency) {
 	// Create parallel sub components
 	mSubSnubResistor = std::make_shared<EMT::Ph3::Resistor>(mName + "_snub_res", mLogLevel);
 	mSubSnubResistor->setParameters(snubberResistance);
-	mSubSnubResistor->connect({ node(1), EMT::Node::GND });
+	mSubSnubResistor->connect({ node(1), EMT::SimNode::GND });
 	mSubSnubResistor->initialize(mFrequencies);
 	mSubSnubResistor->initializeFromPowerflow(frequency);
 

@@ -102,7 +102,7 @@ void DP::Ph1::Transformer::initializeFromPowerflow(Real frequency) {
 	// Create parallel sub components
 	mSubSnubResistor = std::make_shared<DP::Ph1::Resistor>(mName + "_snub_res", mLogLevel);
 	mSubSnubResistor->setParameters(snubberResistance);
-	mSubSnubResistor->connect({ node(1), DP::Node::GND });
+	mSubSnubResistor->connect({ node(1), DP::SimNode::GND });
 	mSubSnubResistor->initialize(mFrequencies);
 	mSubSnubResistor->initializeFromPowerflow(frequency);
 

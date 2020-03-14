@@ -354,11 +354,11 @@ void DP::Ph1::AvVoltageSourceInverterDQ::initializeFromPowerflow(Real frequency)
 	mSubCtrledVoltageSource->setParameters(mIntfVoltage);
 
 	//
-	mSubCtrledVoltageSource->connect({ Node::GND, mVirtualNodes[1] });
+	mSubCtrledVoltageSource->connect({ SimNode::GND, mVirtualNodes[1] });
 	mSubCtrledVoltageSource->setVirtualNodeAt(mVirtualNodes[0], 0);
 	mSubResistorF->connect({ mVirtualNodes[1], mVirtualNodes[2] });
 	mSubInductorF->connect({ mVirtualNodes[2], mVirtualNodes[3] });
-	mSubCapacitorF->connect({ mVirtualNodes[3], Node::GND });
+	mSubCapacitorF->connect({ mVirtualNodes[3], SimNode::GND });
 	mSubResistorC->connect({ mVirtualNodes[3], mTerminals[0]->node() });
 
 	//

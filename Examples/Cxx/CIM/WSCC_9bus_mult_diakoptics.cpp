@@ -54,12 +54,12 @@ IdentifiedObject::List multiply_diakoptics(SystemTopology& sys, Int copies,
         for (int i = 0; i < nlines; i++) {
             auto line = DP::Ph1::PiLine::make("line" + std::to_string(counter));
             line->setParameters(resistance, inductance, capacitance);
-            line->connect({sys.node<DP::Node>(nodeNames[i]), sys.node<DP::Node>(nodeNames[i+1])});
+            line->connect({sys.node<DP::SimNode>(nodeNames[i]), sys.node<DP::SimNode>(nodeNames[i+1])});
 
 			if (i % splitEvery == 0) {
                 sys.addTearComponent(line);
-				//std::cout 	<< "add tear line between node " << sys.node<DP::Node>(nodeNames[i])->name()
-				//			<< " and node " << sys.node<DP::Node>(nodeNames[i+1])->name() << std::endl;
+				//std::cout 	<< "add tear line between node " << sys.node<DP::SimNode>(nodeNames[i])->name()
+				//			<< " and node " << sys.node<DP::SimNode>(nodeNames[i+1])->name() << std::endl;
 			}
             else
                 sys.addComponent(line);
@@ -104,7 +104,7 @@ void simulateDiakoptics(std::list<fs::path> filenames,
 	//			attrName = "v" + std::to_string(bus);
 	//			nodeName = "BUS" + std::to_string(bus);
 	//		}
-	//		logger->addAttribute(attrName, sys.node<DP::Node>(nodeName)->attribute("v"));
+	//		logger->addAttribute(attrName, sys.node<DP::SimNode>(nodeName)->attribute("v"));
 	//	}
 	//}
 	//sim.addLogger(logger);

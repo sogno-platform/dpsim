@@ -55,13 +55,13 @@ int main(int argc, char *argv[]) {
 
 	// Extend system with controllable load (Profile)
 	auto load_profile = PQLoadCS::make("load_cs_profile");
-	load_profile->connect({ sys.node<CPS::DP::Node>("BUS6") });
+	load_profile->connect({ sys.node<CPS::DP::SimNode>("BUS6") });
 	load_profile->setParameters(0, 0, 230000);
 	sys.mComponents.push_back(load_profile);
 
 	// Extend system with controllable load
 	auto load = PQLoadCS::make("load_cs");
-	load->connect({ sys.node<CPS::DP::Node>("BUS5") });
+	load->connect({ sys.node<CPS::DP::SimNode>("BUS5") });
 	load->setParameters(0, 0, 230000);
 	sys.mComponents.push_back(load);
 
@@ -95,7 +95,7 @@ int main(int argc, char *argv[]) {
 
 		i--;
 
-		auto n_dp = std::dynamic_pointer_cast<CPS::DP::Node>(n);
+		auto n_dp = std::dynamic_pointer_cast<CPS::DP::SimNode>(n);
 		auto v = n_dp->attributeMatrixComp("v")->coeff(0, 0);
 
 		std::cout << "Signal " << (i*2)+0 << ": Mag  " << n->name() << std::endl;
@@ -108,7 +108,7 @@ int main(int argc, char *argv[]) {
 		logger->addAttribute(fmt::format("phase_{}", i), v->phase());
 	}
 
-	logger->addAttribute("v3", sys.node<CPS::DP::Node>("BUS3")->attribute("v"));
+	logger->addAttribute("v3", sys.node<CPS::DP::SimNode>("BUS3")->attribute("v"));
 
 	// TODO gain by 20e8
 	filtP->setInput(intf.importReal(0));

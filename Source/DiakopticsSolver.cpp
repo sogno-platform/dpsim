@@ -72,7 +72,7 @@ void DiakopticsSolver<VarType>::initSubnets(const std::vector<SystemTopology>& s
 		// Add nodes to the list and ignore ground nodes.
 		for (auto baseNode : subnets[i].mNodes) {
 			if (!baseNode->isGround()) {
-				auto node = std::dynamic_pointer_cast< CPS::Node<VarType> >(baseNode);
+				auto node = std::dynamic_pointer_cast< CPS::SimNode<VarType> >(baseNode);
 				mSubnets[i].nodes.push_back(node);
 			}
 		}
@@ -106,7 +106,7 @@ void DiakopticsSolver<VarType>::initSubnets(const std::vector<SystemTopology>& s
 			for (UInt node = 0; node < comp->virtualNodesNumber(); node++) {
 				// sim node number doesn't matter here because it shouldn't be used anyway
 				// TODO adapt this to new concept
-				comp->setVirtualNodeAt(std::make_shared<CPS::Node<VarType>>(node), node);
+				comp->setVirtualNodeAt(std::make_shared<CPS::SimNode<VarType>>(node), node);
 			}
 		}
 		tComp->mnaTearSetIdx(idx);
