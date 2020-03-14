@@ -185,7 +185,7 @@ int Python::Simulation::init(Simulation* self, PyObject *args, PyObject *kwds)
 	enum Domain domain;
 	CPS::Logger::Level logLevel = CPS::Logger::Level::info;
 
-	CPS::Component::List tearComponents;
+	CPS::IdentifiedObject::List tearComponents;
 	PyObject* pyTearComponents = nullptr;
 
 	if (!PyArg_ParseTupleAndKeywords(args, kwds, "sO|ddkkiippdppippO", (char **) kwlist,

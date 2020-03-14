@@ -29,9 +29,9 @@
 
 using namespace DPsim;
 
-void Python::SystemTopology::addCppComponent(CPS::Component::Ptr comp) {
+void Python::SystemTopology::addCppComponent(CPS::IdentifiedObject::Ptr comp) {
 	Python::Component* pyComp = PyObject_New(Python::Component, &Python::Component::type);
-	new (&pyComp->comp) CPS::Component::Ptr(nullptr);
+	new (&pyComp->comp) CPS::IdentifiedObject::Ptr(nullptr);
 	pyComp->comp = comp;
 
 	PyDict_SetItemString(pyComponentDict, comp->name().c_str(), (PyObject*) pyComp);
@@ -163,7 +163,7 @@ PyObject* Python::SystemTopology::autoDecouple(SystemTopology* self, PyObject* a
 	if (!PyArg_ParseTuple(args, "d|d", &timestep, &threshold))
 		return nullptr;
 
-	CPS::Component::List newComponents;
+	CPS::IdentifiedObject::List newComponents;
 	for (auto it = self->sys->mComponents.begin(); it != self->sys->mComponents.end(); ) {
 		auto line = std::dynamic_pointer_cast<CPS::DP::Ph1::PiLine>(*it);
 		if (line) {
@@ -316,7 +316,7 @@ int Python::SystemTopology::init(Python::SystemTopology *self, PyObject *args, P
 		return -1;
 	}
 
-	CPS::Component::List compList;
+	CPS::IdentifiedObject::List compList;
 	CPS::TopologicalNode::List nodeList;
 
 	if (pyNodeList) {

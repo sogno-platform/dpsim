@@ -46,7 +46,7 @@ namespace Python {
 
 		// Helper functions to update the python dicts after a C++ method
 		// adds components or nodes.
-		void addCppComponent(CPS::Component::Ptr comp);
+		void addCppComponent(CPS::IdentifiedObject::Ptr comp);
 		void addCppNode(CPS::TopologicalNode::Ptr node);
 		void updateDicts();
 

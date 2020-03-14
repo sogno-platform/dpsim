@@ -47,7 +47,7 @@ namespace Python {
 	struct Component {
 		PyObject_HEAD
 
-		CPS::Component::Ptr comp;
+		CPS::IdentifiedObject::Ptr comp;
 
 		static void init(Component* self);
 
@@ -146,6 +146,6 @@ namespace Python {
 		static PyTypeObject type;
 	};
 
-	CPS::Component::List compsFromPython(PyObject* list);
+	CPS::IdentifiedObject::List compsFromPython(PyObject* list);
 }
 }
