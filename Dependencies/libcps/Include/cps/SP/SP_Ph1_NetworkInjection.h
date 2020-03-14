@@ -21,7 +21,7 @@
 
 #pragma once
 
-#include <cps/PowerComponent.h>
+#include <cps/SimPowerComp.h>
 #include <cps/Solver/PFSolverInterfaceBus.h>
 #include <cps/Solver/MNAInterface.h>
 #include <cps/Solver/DAEInterface.h>
@@ -31,7 +31,7 @@ namespace SP {
 namespace Ph1 {
 	///
     class externalGridInjection:
-		public PowerComponent<Complex>,
+		public SimPowerComp<Complex>,
 		public SharedFactory<externalGridInjection>,
 		public PFSolverInterfaceBus,
 		public MNAInterface,
@@ -73,8 +73,8 @@ namespace Ph1 {
 		void setSourceValue(Complex voltage);
 		///
 		void initialize(Matrix frequencies);
-		/// 		
-		PowerComponent<Complex>::Ptr clone(String name);
+		///
+		SimPowerComp<Complex>::Ptr clone(String name);
 
         // #### Powerflow section ####
 		/// Set parameters relevant for powerflow solver
@@ -83,7 +83,7 @@ namespace Ph1 {
 		void modifyPowerFlowBusType(PowerflowBusType powerflowBusType) override;
 		/// Update power injection
 		void updatePowerInjection(Complex powerInj);
-		
+
 		// #### MNA Section ####
 		/// Set parameters relevant for MNA solver
 		void setParameters(Complex voltageRef, Real srcFreq = -1);
@@ -129,7 +129,7 @@ namespace Ph1 {
 		void daeResidual(double ttime, const double state[], const double dstate_dt[], double resid[], std::vector<int>& off);
 		///Voltage Getter
 		Complex daeInitialize();
-	
+
 
 };
 }

@@ -25,7 +25,7 @@ using namespace CPS;
 
 DP::Ph1::PQLoadCS::PQLoadCS(String uid, String name,
 	Logger::Level logLevel)
-	: PowerComponent<Complex>(uid, name, logLevel) {
+	: SimPowerComp<Complex>(uid, name, logLevel) {
 	setTerminalNumber(1);
 	mIntfVoltage = MatrixComp::Zero(1, 1);
 	mIntfCurrent = MatrixComp::Zero(1, 1);
@@ -63,7 +63,7 @@ void DP::Ph1::PQLoadCS::setParameters(Real activePower, Real reactivePower, Real
 	parametersSet = true;
 }
 
-PowerComponent<Complex>::Ptr DP::Ph1::PQLoadCS::clone(String name) {
+SimPowerComp<Complex>::Ptr DP::Ph1::PQLoadCS::clone(String name) {
 	auto copy = PQLoadCS::make(name, mLogLevel);
 	copy->setParameters(attribute<Real>("P")->get(), attribute<Real>("Q")->get(), attribute<Real>("V_nom")->get());
 	return copy;
@@ -93,7 +93,7 @@ void DP::Ph1::PQLoadCS::initializeFromPowerflow(Real frequency) {
 	mSubCurrentSource->setParameters(current);
 	mCurrentSourceRef = mSubCurrentSource->attribute<Complex>("I_ref");
 	// A positive power should result in a positive current to ground.
-	mSubCurrentSource->connect({ mTerminals[0]->node(), Node::GND });
+	mSubCurrentSource->connect({ mTerminals[0]->node(), SimNode::GND });
 	mSubCurrentSource->initializeFromPowerflow(frequency);
 	updateIntfValues();
 
@@ -112,7 +112,7 @@ void DP::Ph1::PQLoadCS::initializeFromPowerflow(Real frequency) {
 
 void DP::Ph1::PQLoadCS::mnaInitialize(Real omega, Real timeStep, Attribute<Matrix>::Ptr leftVector) {
 	MNAInterface::mnaInitialize(omega, timeStep);
-	updateSimNodes();
+	updateMatrixNodeIndices();
 	mSubCurrentSource->mnaInitialize(omega, timeStep, leftVector);
 	setAttributeRef("right_vector", mSubCurrentSource->attribute("right_vector"));
 	mMnaTasks.push_back(std::make_shared<MnaPreStep>(*this));

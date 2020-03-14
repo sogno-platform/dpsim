@@ -25,7 +25,7 @@ using namespace CPS;
 using namespace CPS::DP::Ph1;
 
 DP::Ph1::Capacitor::Capacitor(String uid, String name, Logger::Level logLevel)
-	: PowerComponent<Complex>(uid, name, logLevel) {
+	: SimPowerComp<Complex>(uid, name, logLevel) {
 	mEquivCurrent = { 0, 0 };
 	mIntfVoltage = MatrixComp::Zero(1,1);
 	mIntfCurrent = MatrixComp::Zero(1,1);
@@ -34,14 +34,14 @@ DP::Ph1::Capacitor::Capacitor(String uid, String name, Logger::Level logLevel)
 	addAttribute<Real>("C", &mCapacitance, Flags::read | Flags::write);
 }
 
-PowerComponent<Complex>::Ptr DP::Ph1::Capacitor::clone(String name) {
+SimPowerComp<Complex>::Ptr DP::Ph1::Capacitor::clone(String name) {
 	auto copy = Capacitor::make(name, mLogLevel);
 	copy->setParameters(mCapacitance);
 	return copy;
 }
 
 void DP::Ph1::Capacitor::initialize(Matrix frequencies) {
-	PowerComponent<Complex>::initialize(frequencies);
+	SimPowerComp<Complex>::initialize(frequencies);
 
 	mEquivCurrent = MatrixComp::Zero(mNumFreqs, 1);
 	mEquivCond = MatrixComp::Zero(mNumFreqs, 1);
@@ -71,7 +71,7 @@ void DP::Ph1::Capacitor::initializeFromPowerflow(Real frequency) {
 
 void DP::Ph1::Capacitor::mnaInitialize(Real omega, Real timeStep, Attribute<Matrix>::Ptr leftVector) {
 	MNAInterface::mnaInitialize(omega, timeStep);
-	updateSimNodes();
+	updateMatrixNodeIndices();
 
 	Real equivCondReal = 2.0 * mCapacitance / timeStep;
 	Real prevVoltCoeffReal = 2.0 * mCapacitance / timeStep;
@@ -103,7 +103,7 @@ void DP::Ph1::Capacitor::mnaInitialize(Real omega, Real timeStep, Attribute<Matr
 
 void DP::Ph1::Capacitor::mnaInitializeHarm(Real omega, Real timeStep, std::vector<Attribute<Matrix>::Ptr> leftVectors) {
 	MNAInterface::mnaInitialize(omega, timeStep);
-	updateSimNodes();
+	updateMatrixNodeIndices();
 
 	Real equivCondReal = 2.0 * mCapacitance / timeStep;
 	Real prevVoltCoeffReal = 2.0 * mCapacitance / timeStep;
@@ -126,52 +126,52 @@ void DP::Ph1::Capacitor::mnaInitializeHarm(Real omega, Real timeStep, std::vecto
 void DP::Ph1::Capacitor::mnaApplySystemMatrixStamp(Matrix& systemMatrix) {
 	for (UInt freq = 0; freq < mNumFreqs; freq++) {
 		if (terminalNotGrounded(0))
-			Math::addToMatrixElement(systemMatrix, simNode(0), simNode(0), mEquivCond(freq,0), mNumFreqs, freq);
+			Math::addToMatrixElement(systemMatrix, matrixNodeIndex(0), matrixNodeIndex(0), mEquivCond(freq,0), mNumFreqs, freq);
 		if (terminalNotGrounded(1))
-			Math::addToMatrixElement(systemMatrix, simNode(1), simNode(1), mEquivCond(freq,0), mNumFreqs, freq);
+			Math::addToMatrixElement(systemMatrix, matrixNodeIndex(1), matrixNodeIndex(1), mEquivCond(freq,0), mNumFreqs, freq);
 		if (terminalNotGrounded(0) && terminalNotGrounded(1)) {
-			Math::addToMatrixElement(systemMatrix, simNode(0), simNode(1), -mEquivCond(freq,0), mNumFreqs, freq);
-			Math::addToMatrixElement(systemMatrix, simNode(1), simNode(0), -mEquivCond(freq,0), mNumFreqs, freq);
+			Math::addToMatrixElement(systemMatrix, matrixNodeIndex(0), matrixNodeIndex(1), -mEquivCond(freq,0), mNumFreqs, freq);
+			Math::addToMatrixElement(systemMatrix, matrixNodeIndex(1), matrixNodeIndex(0), -mEquivCond(freq,0), mNumFreqs, freq);
 		}
 
 		mSLog->info("-- Stamp frequency {:d} ---", freq);
 		if (terminalNotGrounded(0))
 			mSLog->info("Add {:e}+j{:e} to system at ({:d},{:d})",
-			mEquivCond(freq,0).real(), mEquivCond(freq,0).imag(), simNode(0), simNode(0));
+			mEquivCond(freq,0).real(), mEquivCond(freq,0).imag(), matrixNodeIndex(0), matrixNodeIndex(0));
 		if (terminalNotGrounded(1))
 			mSLog->info("Add {:e}+j{:e} to system at ({:d},{:d})",
-			mEquivCond(freq,0).real(), mEquivCond(freq,0).imag(), simNode(1), simNode(1));
+			mEquivCond(freq,0).real(), mEquivCond(freq,0).imag(), matrixNodeIndex(1), matrixNodeIndex(1));
 		if (terminalNotGrounded(0) && terminalNotGrounded(1)) {
 			mSLog->info("Add {:e}+j{:e} to system at ({:d},{:d})",
-			-mEquivCond(freq,0).real(), -mEquivCond(freq,0).imag(), simNode(0), simNode(1));
+			-mEquivCond(freq,0).real(), -mEquivCond(freq,0).imag(), matrixNodeIndex(0), matrixNodeIndex(1));
 			mSLog->info("Add {:e}+j{:e} to system at ({:d},{:d})",
-			-mEquivCond(freq,0).real(), -mEquivCond(freq,0).imag(), simNode(1), simNode(0));
+			-mEquivCond(freq,0).real(), -mEquivCond(freq,0).imag(), matrixNodeIndex(1), matrixNodeIndex(0));
 		}
 	}
 }
 
 void DP::Ph1::Capacitor::mnaApplySystemMatrixStampHarm(Matrix& systemMatrix, Int freqIdx) {
 	if (terminalNotGrounded(0))
-		Math::addToMatrixElement(systemMatrix, simNode(0), simNode(0), mEquivCond(freqIdx,0));
+		Math::addToMatrixElement(systemMatrix, matrixNodeIndex(0), matrixNodeIndex(0), mEquivCond(freqIdx,0));
 	if (terminalNotGrounded(1))
-		Math::addToMatrixElement(systemMatrix, simNode(1), simNode(1), mEquivCond(freqIdx,0));
+		Math::addToMatrixElement(systemMatrix, matrixNodeIndex(1), matrixNodeIndex(1), mEquivCond(freqIdx,0));
 	if (terminalNotGrounded(0) && terminalNotGrounded(1)) {
-		Math::addToMatrixElement(systemMatrix, simNode(0), simNode(1), -mEquivCond(freqIdx,0));
-		Math::addToMatrixElement(systemMatrix, simNode(1), simNode(0), -mEquivCond(freqIdx,0));
+		Math::addToMatrixElement(systemMatrix, matrixNodeIndex(0), matrixNodeIndex(1), -mEquivCond(freqIdx,0));
+		Math::addToMatrixElement(systemMatrix, matrixNodeIndex(1), matrixNodeIndex(0), -mEquivCond(freqIdx,0));
 	}
 
 	mSLog->info("-- Stamp frequency {:d} ---", freqIdx);
 	if (terminalNotGrounded(0))
 		mSLog->info("Add {:e}+j{:e} to system at ({:d},{:d})",
-		mEquivCond(freqIdx,0).real(), mEquivCond(freqIdx,0).imag(), simNode(0), simNode(0));
+		mEquivCond(freqIdx,0).real(), mEquivCond(freqIdx,0).imag(), matrixNodeIndex(0), matrixNodeIndex(0));
 	if (terminalNotGrounded(1))
 		mSLog->info("Add {:e}+j{:e} to system at ({:d},{:d})",
-		mEquivCond(freqIdx,0).real(), mEquivCond(freqIdx,0).imag(), simNode(1), simNode(1));
+		mEquivCond(freqIdx,0).real(), mEquivCond(freqIdx,0).imag(), matrixNodeIndex(1), matrixNodeIndex(1));
 	if (terminalNotGrounded(0) && terminalNotGrounded(1)) {
 		mSLog->info("Add {:e}+j{:e} to system at ({:d},{:d})",
-		-mEquivCond(freqIdx,0).real(), -mEquivCond(freqIdx,0).imag(), simNode(0), simNode(1));
+		-mEquivCond(freqIdx,0).real(), -mEquivCond(freqIdx,0).imag(), matrixNodeIndex(0), matrixNodeIndex(1));
 		mSLog->info("Add {:e}+j{:e} to system at ({:d},{:d})",
-		-mEquivCond(freqIdx,0).real(), -mEquivCond(freqIdx,0).imag(), simNode(1), simNode(0));
+		-mEquivCond(freqIdx,0).real(), -mEquivCond(freqIdx,0).imag(), matrixNodeIndex(1), matrixNodeIndex(0));
 	}
 }
 
@@ -183,18 +183,18 @@ void DP::Ph1::Capacitor::mnaApplyRightSideVectorStamp(Matrix& rightVector) {
 			+ -mPrevVoltCoeff(freq,0) * mIntfVoltage(0,freq);
 
 		if (terminalNotGrounded(0))
-			Math::setVectorElement(rightVector, simNode(0), mEquivCurrent(freq,0), mNumFreqs, freq);
+			Math::setVectorElement(rightVector, matrixNodeIndex(0), mEquivCurrent(freq,0), mNumFreqs, freq);
 		if (terminalNotGrounded(1))
-			Math::setVectorElement(rightVector, simNode(1), -mEquivCurrent(freq,0), mNumFreqs, freq);
+			Math::setVectorElement(rightVector, matrixNodeIndex(1), -mEquivCurrent(freq,0), mNumFreqs, freq);
 
 		SPDLOG_LOGGER_DEBUG(mSLog, "MNA EquivCurrent {:f}+j{:f}",
 			mEquivCurrent(freq,0).real(), mEquivCurrent(freq,0).imag());
 		if (terminalNotGrounded(0))
 			SPDLOG_LOGGER_DEBUG(mSLog, "Add {:f}+j{:f} to source vector at {:d}",
-				mEquivCurrent(freq,0).real(), mEquivCurrent(freq,0).imag(), simNode(0));
+				mEquivCurrent(freq,0).real(), mEquivCurrent(freq,0).imag(), matrixNodeIndex(0));
 		if (terminalNotGrounded(1))
 			SPDLOG_LOGGER_DEBUG(mSLog, "Add {:f}+j{:f} to source vector at {:d}",
-				-mEquivCurrent(freq,0).real(), -mEquivCurrent(freq,0).imag(), simNode(1));
+				-mEquivCurrent(freq,0).real(), -mEquivCurrent(freq,0).imag(), matrixNodeIndex(1));
 	}
 }
 
@@ -206,9 +206,9 @@ void DP::Ph1::Capacitor::mnaApplyRightSideVectorStampHarm(Matrix& rightVector) {
 			+ -mPrevVoltCoeff(freq,0) * mIntfVoltage(0,freq);
 
 		if (terminalNotGrounded(0))
-			Math::setVectorElement(rightVector, simNode(0), mEquivCurrent(freq,0), 1, 0, freq);
+			Math::setVectorElement(rightVector, matrixNodeIndex(0), mEquivCurrent(freq,0), 1, 0, freq);
 		if (terminalNotGrounded(1))
-			Math::setVectorElement(rightVector, simNode(1), -mEquivCurrent(freq,0), 1, 0, freq);
+			Math::setVectorElement(rightVector, matrixNodeIndex(1), -mEquivCurrent(freq,0), 1, 0, freq);
 	}
 }
 
@@ -219,9 +219,9 @@ void DP::Ph1::Capacitor::mnaApplyRightSideVectorStampHarm(Matrix& rightVector, I
 			+ -mPrevVoltCoeff(freq,0) * mIntfVoltage(0,freq);
 
 		if (terminalNotGrounded(0))
-			Math::setVectorElement(rightVector, simNode(0), mEquivCurrent(freq,0));
+			Math::setVectorElement(rightVector, matrixNodeIndex(0), mEquivCurrent(freq,0));
 		if (terminalNotGrounded(1))
-			Math::setVectorElement(rightVector, simNode(1), -mEquivCurrent(freq,0));
+			Math::setVectorElement(rightVector, matrixNodeIndex(1), -mEquivCurrent(freq,0));
 }
 
 void DP::Ph1::Capacitor::MnaPreStep::execute(Real time, Int timeStepCount) {
@@ -248,9 +248,9 @@ void DP::Ph1::Capacitor::mnaUpdateVoltage(const Matrix& leftVector) {
 	for (UInt freq = 0; freq < mNumFreqs; freq++) {
 		mIntfVoltage(0,freq) = 0;
 		if (terminalNotGrounded(1))
-			mIntfVoltage(0,freq) = Math::complexFromVectorElement(leftVector, simNode(1), mNumFreqs, freq);
+			mIntfVoltage(0,freq) = Math::complexFromVectorElement(leftVector, matrixNodeIndex(1), mNumFreqs, freq);
 		if (terminalNotGrounded(0))
-			mIntfVoltage(0,freq) = mIntfVoltage(0,freq) - Math::complexFromVectorElement(leftVector, simNode(0), mNumFreqs, freq);
+			mIntfVoltage(0,freq) = mIntfVoltage(0,freq) - Math::complexFromVectorElement(leftVector, matrixNodeIndex(0), mNumFreqs, freq);
 
 		SPDLOG_LOGGER_DEBUG(mSLog, "Voltage {:e}<{:e}", std::abs(mIntfVoltage(0,freq)), std::arg(mIntfVoltage(0,freq)));
 	}
@@ -260,9 +260,9 @@ void DP::Ph1::Capacitor::mnaUpdateVoltageHarm(const Matrix& leftVector, Int freq
 	// v1 - v0
 	mIntfVoltage(0,freqIdx) = 0;
 	if (terminalNotGrounded(1))
-		mIntfVoltage(0,freqIdx) = Math::complexFromVectorElement(leftVector, simNode(1));
+		mIntfVoltage(0,freqIdx) = Math::complexFromVectorElement(leftVector, matrixNodeIndex(1));
 	if (terminalNotGrounded(0))
-		mIntfVoltage(0,freqIdx) = mIntfVoltage(0,freqIdx) - Math::complexFromVectorElement(leftVector, simNode(0));
+		mIntfVoltage(0,freqIdx) = mIntfVoltage(0,freqIdx) - Math::complexFromVectorElement(leftVector, matrixNodeIndex(0));
 
 	SPDLOG_LOGGER_DEBUG(mSLog, "Voltage {:s}", Logger::phasorToString(mIntfVoltage(0,freqIdx)));
 }

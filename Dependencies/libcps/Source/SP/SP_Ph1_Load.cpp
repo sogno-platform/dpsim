@@ -27,7 +27,7 @@ using namespace CPS;
 // please note that P,Q values can not be passed inside constructor since P,Q are currently read from the terminal,
 // and these values are not yet assigned to the terminals when this constructor was called in reader.
 SP::Ph1::Load::Load(String uid, String name, Logger::Level logLevel)
-	: PowerComponent<Complex>(uid, name, logLevel) {
+	: SimPowerComp<Complex>(uid, name, logLevel) {
 
 	mSLog->info("Create {} of type {}", mName, this->type());
 	mSLog->flush();
@@ -56,7 +56,7 @@ void SP::Ph1::Load::setParameters(Real activePower, Real reactivePower, Real nom
 }
 
 
-PowerComponent<Complex>::Ptr SP::Ph1::Load::clone(String name) {
+SimPowerComp<Complex>::Ptr SP::Ph1::Load::clone(String name) {
 	// everything set by initializeFromPowerflow
 	return Load::make(name, mLogLevel);
 }
@@ -64,7 +64,7 @@ PowerComponent<Complex>::Ptr SP::Ph1::Load::clone(String name) {
 
  // #### Powerflow section ####
 void SP::Ph1::Load::calculatePerUnitParameters(Real baseApparentPower, Real baseOmega) {
-	mSLog->info("#### Calculate Per Unit Parameters for {}", mName); 
+	mSLog->info("#### Calculate Per Unit Parameters for {}", mName);
 	mBaseApparentPower = baseApparentPower;
 	mBaseOmega = baseOmega;
     mSLog->info("Base Power={} [VA]  Base Omega={} [1/s]", mBaseApparentPower, mBaseOmega);
@@ -73,7 +73,7 @@ void SP::Ph1::Load::calculatePerUnitParameters(Real baseApparentPower, Real base
 	mReactivePowerPerUnit = mReactivePower/mBaseApparentPower;
 	mSLog->info("Active Power={} [pu] Reactive Power={} [pu]", mActivePowerPerUnit, mReactivePowerPerUnit);
 	mSLog->flush();
-}	
+}
 
 
 void SP::Ph1::Load::modifyPowerFlowBusType(PowerflowBusType powerflowBusType) {
@@ -125,7 +125,7 @@ void SP::Ph1::Load::initializeFromPowerflow(Real frequency) {
 		mConductance = 1.0 / mResistance;
 		mSubResistor = std::make_shared<SP::Ph1::Resistor>(mUID + "_res", mName + "_res", Logger::Level::off);
 		mSubResistor->setParameters(mResistance);
-		mSubResistor->connect({ Node::GND, mTerminals[0]->node() });
+		mSubResistor->connect({ SimNode::GND, mTerminals[0]->node() });
 		mSubResistor->initialize(mFrequencies);
 		mSubResistor->initializeFromPowerflow(frequency);
 	}
@@ -140,14 +140,14 @@ void SP::Ph1::Load::initializeFromPowerflow(Real frequency) {
 		mInductance = mReactance / (2 * PI * frequency);
 		mSubInductor = std::make_shared<SP::Ph1::Inductor>(mUID + "_res", mName + "_ind", Logger::Level::off);
 		mSubInductor->setParameters(mInductance);
-		mSubInductor->connect({ Node::GND, mTerminals[0]->node() });
+		mSubInductor->connect({ SimNode::GND, mTerminals[0]->node() });
 		mSubInductor->initialize(mFrequencies);
 		mSubInductor->initializeFromPowerflow(frequency);
 	} else if (mReactance < 0) {
 		mCapacitance = -1 / (2 * PI * frequency) / mReactance;
 		mSubCapacitor = std::make_shared<SP::Ph1::Capacitor>(mUID + "_res", mName + "_cap", Logger::Level::off);
 		mSubCapacitor->setParameters(mCapacitance);
-		mSubCapacitor->connect({ Node::GND, mTerminals[0]->node() });
+		mSubCapacitor->connect({ SimNode::GND, mTerminals[0]->node() });
 		mSubCapacitor->initialize(mFrequencies);
 		mSubCapacitor->initializeFromPowerflow(frequency);
 	}
@@ -174,7 +174,7 @@ void SP::Ph1::Load::initializeFromPowerflow(Real frequency) {
 // #### MNA section ####
 void SP::Ph1::Load::mnaInitialize(Real omega, Real timeStep, Attribute<Matrix>::Ptr leftVector) {
 	MNAInterface::mnaInitialize(omega, timeStep);
-	updateSimNodes();
+	updateMatrixNodeIndices();
 	mRightVector = Matrix::Zero(leftVector->get().rows(), 1);
 	if (mSubResistor) {
 		mSubResistor->mnaInitialize(omega, timeStep, leftVector);
@@ -215,7 +215,7 @@ void SP::Ph1::Load::MnaPostStep::execute(Real time, Int timeStepCount) {
 
 
 void SP::Ph1::Load::mnaUpdateVoltage(const Matrix& leftVector) {
-	mIntfVoltage(0, 0) = Math::complexFromVectorElement(leftVector, simNode(0));
+	mIntfVoltage(0, 0) = Math::complexFromVectorElement(leftVector, matrixNodeIndex(0));
 }
 
 

@@ -21,7 +21,7 @@
 
 #pragma once
 
-#include <cps/PowerComponent.h>
+#include <cps/SimPowerComp.h>
 #include <cps/Solver/MNAInterface.h>
 #include <cps/Solver/DAEInterface.h>
 
@@ -37,7 +37,7 @@ namespace Ph3 {
 	/// positve and for the equation of node k as negative. Moreover
 	/// a new equation ej - ek = V is added to the problem.
 	class VoltageSource :
-		public PowerComponent<Complex>,
+		public SimPowerComp<Complex>,
 		public MNAInterface,
 		public DAEInterface,
 		public SharedFactory<VoltageSource> {
@@ -55,7 +55,7 @@ namespace Ph3 {
 		VoltageSource(String name,
 			Complex voltage, Logger::Level logLevel = Logger::Level::off);
 
-		PowerComponent<Complex>::Ptr clone(String name);
+		SimPowerComp<Complex>::Ptr clone(String name);
 
 		void setParameters(Complex voltageRef);
 		// #### General ####

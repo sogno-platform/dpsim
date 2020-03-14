@@ -22,7 +22,7 @@
 
 #pragma once
 
-#include <cps/PowerComponent.h>
+#include <cps/SimPowerComp.h>
 #include <cps/Solver/MNAInterface.h>
 #include <cps/Base/Base_SynchronGenerator.h>
 #include <cps/Signal/Exciter.h>
@@ -39,7 +39,7 @@ namespace Ph3 {
 	/// descriptive names in order to shorten formulas and increase the readability
 
 	class SynchronGeneratorVBRStandalone:
-		public PowerComponent<Real>,
+		public SimPowerComp<Real>,
 		public MNAInterface,
 		public Base::SynchronGenerator,
 		public SharedFactory<SynchronGeneratorVBRStandalone> {

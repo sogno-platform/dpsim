@@ -19,7 +19,7 @@
 
 #pragma once
 
-#include <cps/PowerComponent.h>
+#include <cps/SimPowerComp.h>
 #include <cps/Solver/MNAInterface.h>
 #include <cps/Definitions.h>
 #include <cps/EMT/EMT_Ph3_Resistor.h>
@@ -39,7 +39,7 @@ namespace CPS {
 				- filter stamped into the global admittance matrix
 			*/
 			class AvVoltageSourceInverterDQ :
-				public PowerComponent<Real>,
+				public SimPowerComp<Real>,
 				public MNAInterface,
 				public SharedFactory<AvVoltageSourceInverterDQ> {
 			protected:
@@ -48,7 +48,7 @@ namespace CPS {
 				Complex mVoltNom;
 				/// in case variable time step simulation should be developed in the future
 				Real mTimeStep;
-				/// if SteadyStateInit is enabled, the system's sychronous frame will start from a certain angle 
+				/// if SteadyStateInit is enabled, the system's sychronous frame will start from a certain angle
 				Real mThetaSInit = 0;
 				/// Inner voltage source that represents the AvVoltageSourceInverterDQ
 				std::shared_ptr<EMT::Ph3::ControlledVoltageSource> mSubCtrledVoltageSource;
@@ -143,7 +143,7 @@ namespace CPS {
 				AvVoltageSourceInverterDQ(String name,
 					Logger::Level logLevel = Logger::Level::off) :AvVoltageSourceInverterDQ(name, name, logLevel) {}
 				///
-				PowerComponent<Real>::Ptr clone(String copySuffix);
+				SimPowerComp<Real>::Ptr clone(String copySuffix);
 				///
 				void updateMonitoredValues(const Matrix& leftVector, Real time);
 				///

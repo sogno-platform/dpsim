@@ -24,7 +24,7 @@ using namespace CPS;
 
 DP::Ph1::RXLoad::RXLoad(String uid, String name,
 	Logger::Level logLevel)
-	: PowerComponent<Complex>(uid, name, logLevel) {
+	: SimPowerComp<Complex>(uid, name, logLevel) {
 	setTerminalNumber(1);
 	mIntfVoltage = MatrixComp::Zero(1, 1);
 	mIntfCurrent = MatrixComp::Zero(1, 1);
@@ -50,7 +50,7 @@ DP::Ph1::RXLoad::RXLoad(String name,
 	mNomVoltage = volt;
 }
 
-PowerComponent<Complex>::Ptr DP::Ph1::RXLoad::clone(String name) {
+SimPowerComp<Complex>::Ptr DP::Ph1::RXLoad::clone(String name) {
 	// TODO: Is this change is needed when "everything set by initializePOwerflow"??
 	// everything set by initializeFromPowerflow
 	//return RXLoad::make(name, mLogLevel);
@@ -60,7 +60,7 @@ PowerComponent<Complex>::Ptr DP::Ph1::RXLoad::clone(String name) {
 }
 
 void DP::Ph1::RXLoad::initialize(Matrix frequencies) {
-	PowerComponent<Complex>::initialize(frequencies);
+	SimPowerComp<Complex>::initialize(frequencies);
 }
 
 void DP::Ph1::RXLoad::initializeFromPowerflow(Real frequency) {
@@ -77,7 +77,7 @@ void DP::Ph1::RXLoad::initializeFromPowerflow(Real frequency) {
 		mConductance = 1.0 / mResistance;
 		mSubResistor = std::make_shared<DP::Ph1::Resistor>(mName + "_res", mLogLevel);
 		mSubResistor->setParameters(mResistance);
-		mSubResistor->connect({ Node::GND, mTerminals[0]->node() });
+		mSubResistor->connect({ SimNode::GND, mTerminals[0]->node() });
 		mSubResistor->initialize(mFrequencies);
 		mSubResistor->initializeFromPowerflow(frequency);
 	}
@@ -92,7 +92,7 @@ void DP::Ph1::RXLoad::initializeFromPowerflow(Real frequency) {
 
 		mSubInductor = std::make_shared<DP::Ph1::Inductor>(mName + "_ind", mLogLevel);
 		mSubInductor->setParameters(mInductance);
-		mSubInductor->connect({ Node::GND, mTerminals[0]->node() });
+		mSubInductor->connect({ SimNode::GND, mTerminals[0]->node() });
 		mSubInductor->initialize(mFrequencies);
 		mSubInductor->initializeFromPowerflow(frequency);
 	} else if (mReactance < 0) {
@@ -100,7 +100,7 @@ void DP::Ph1::RXLoad::initializeFromPowerflow(Real frequency) {
 
 		mSubCapacitor = std::make_shared<DP::Ph1::Capacitor>(mName + "_cap", mLogLevel);
 		mSubCapacitor->setParameters(mCapacitance);
-		mSubCapacitor->connect({ Node::GND, mTerminals[0]->node() });
+		mSubCapacitor->connect({ SimNode::GND, mTerminals[0]->node() });
 		mSubCapacitor->initialize(mFrequencies);
 		mSubCapacitor->initializeFromPowerflow(frequency);
 	}
@@ -131,7 +131,7 @@ void DP::Ph1::RXLoad::setParameters(Real activePower, Real reactivePower, Real v
 
 void DP::Ph1::RXLoad::mnaInitialize(Real omega, Real timeStep, Attribute<Matrix>::Ptr leftVector) {
 	MNAInterface::mnaInitialize(omega, timeStep);
-	updateSimNodes();
+	updateMatrixNodeIndices();
 	mRightVector = Matrix::Zero(leftVector->get().rows(), 1);
 	if (mSubResistor) {
 		mSubResistor->mnaInitialize(omega, timeStep, leftVector);
@@ -183,7 +183,7 @@ void DP::Ph1::RXLoad::MnaPostStep::execute(Real time, Int timeStepCount) {
 }
 
 void DP::Ph1::RXLoad::mnaUpdateVoltage(const Matrix& leftVector) {
-	mIntfVoltage(0, 0) = Math::complexFromVectorElement(leftVector, simNode(0));
+	mIntfVoltage(0, 0) = Math::complexFromVectorElement(leftVector, matrixNodeIndex(0));
 }
 
 void DP::Ph1::RXLoad::mnaUpdateCurrent(const Matrix& leftVector) {

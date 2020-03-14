@@ -21,7 +21,7 @@
 #pragma once
 
 
-#include <cps/PowerComponent.h>
+#include <cps/SimPowerComp.h>
 #include <cps/Solver/MNAInterface.h>
 #include <cps/Base/Base_Ph3_Capacitor.h>
 
@@ -38,7 +38,7 @@ namespace Ph3 {
 	class Capacitor :
 		public Base::Ph3::Capacitor,
 		public MNAInterface,
-		public PowerComponent<Complex>,
+		public SimPowerComp<Complex>,
 		public SharedFactory<Capacitor> {
 	protected:
 		/// DC equivalent current source [A]
@@ -57,7 +57,7 @@ namespace Ph3 {
 		Capacitor(String name, Logger::Level logLevel = Logger::Level::off)
 			: Capacitor(name, name, logLevel) { }
 
-		PowerComponent<Complex>::Ptr clone(String name);
+		SimPowerComp<Complex>::Ptr clone(String name);
 
 		// #### General ####
 		/// Initializes component from power flow data

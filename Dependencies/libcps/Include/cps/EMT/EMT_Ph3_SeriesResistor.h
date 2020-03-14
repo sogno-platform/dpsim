@@ -21,7 +21,7 @@
 
 #pragma once
 
-#include <cps/PowerComponent.h>
+#include <cps/SimPowerComp.h>
 #include <cps/Solver/MNAInterface.h>
 #include <cps/Base/Base_Ph1_Resistor.h>
 
@@ -35,7 +35,7 @@ namespace Ph3 {
 	class SeriesResistor :
 		public Base::Ph1::Resistor,
 		public MNAInterface,
-		public PowerComponent<Real>,
+		public SimPowerComp<Real>,
 		public SharedFactory<SeriesResistor> {
 
 	public:
@@ -47,7 +47,7 @@ namespace Ph3 {
 
 		// #### General ####
 		/// Return new instance with the same parameters
-		PowerComponent<Real>::Ptr clone(String name);
+		SimPowerComp<Real>::Ptr clone(String name);
 		/// Initializes states from power flow data
 		void initializeFromPowerflow(Real frequency);
 

@@ -21,7 +21,7 @@
 
 #pragma once
 
-#include <cps/PowerComponent.h>
+#include <cps/SimPowerComp.h>
 #include <cps/Solver/PFSolverInterfaceBus.h>
 #include <cps/SP/SP_Ph1_PVNode.h>
 #include <cps/SP/SP_Ph1_PQNode.h>
@@ -35,7 +35,7 @@
 namespace CPS {
 namespace SP { namespace Ph1 {
 	class Load :
-		public PowerComponent<Complex>,
+		public SimPowerComp<Complex>,
 		public SharedFactory<Load>,
 		public PFSolverInterfaceBus,
 		public MNAInterface{
@@ -90,7 +90,7 @@ namespace SP { namespace Ph1 {
 		///
 		void setParameters(Real activePower, Real reactivePower, Real nominalVoltage);
 		///
-		PowerComponent<Complex>::Ptr clone(String name);
+		SimPowerComp<Complex>::Ptr clone(String name);
 
 		// #### General ####
 		/// Initializes component from power flow data
@@ -104,7 +104,7 @@ namespace SP { namespace Ph1 {
 
         // #### Powerflow section ####
 		/// Initializes component from power flow data
-		void calculatePerUnitParameters(Real baseApparentPower, Real baseOmega);		
+		void calculatePerUnitParameters(Real baseApparentPower, Real baseOmega);
         /// Modify powerflow bus type
 		void modifyPowerFlowBusType(PowerflowBusType powerflowBusType) override;
 

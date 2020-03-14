@@ -24,7 +24,7 @@
 using namespace CPS;
 
 EMT::Ph3::PiLine::PiLine(String uid, String name, Logger::Level logLevel)
-	: PowerComponent<Real>(uid, name, logLevel) {
+	: SimPowerComp<Real>(uid, name, logLevel) {
 	mPhaseType = PhaseType::ABC;
 	setVirtualNodeNumber(1);
 	setTerminalNumber(2);
@@ -37,14 +37,14 @@ EMT::Ph3::PiLine::PiLine(String uid, String name, Logger::Level logLevel)
 	addAttribute<Matrix>("G_parallel", &mParallelCond, Flags::read | Flags::write);
 }
 
-PowerComponent<Real>::Ptr EMT::Ph3::PiLine::clone(String name) {
+SimPowerComp<Real>::Ptr EMT::Ph3::PiLine::clone(String name) {
 	auto copy = PiLine::make(name, mLogLevel);
 	copy->setParameters(mSeriesRes, mSeriesInd, mParallelCap, mParallelCond);
 	return copy;
 }
 
 void EMT::Ph3::PiLine::initialize(Matrix frequencies) {
-	PowerComponent<Real>::initialize(frequencies);
+	SimPowerComp<Real>::initialize(frequencies);
 }
 
 void EMT::Ph3::PiLine::initializeFromPowerflow(Real frequency) {
@@ -101,13 +101,13 @@ void EMT::Ph3::PiLine::initializeFromPowerflow(Real frequency) {
 	if (mParallelCond(0,0) > 0) {
 		mSubParallelResistor0 = std::make_shared<EMT::Ph3::Resistor>(mName + "_con0", mLogLevel);
 		mSubParallelResistor0->setParameters(2. * mParallelCond.inverse());
-		mSubParallelResistor0->connect(Node::List{ Node::GND, mTerminals[0]->node() });
+		mSubParallelResistor0->connect(SimNode::List{ SimNode::GND, mTerminals[0]->node() });
 		mSubParallelResistor0->initialize(mFrequencies);
 		mSubParallelResistor0->initializeFromPowerflow(frequency);
 
 		mSubParallelResistor1 = std::make_shared<EMT::Ph3::Resistor>(mName + "_con1", mLogLevel);
 		mSubParallelResistor1->setParameters(2. * mParallelCond.inverse());
-		mSubParallelResistor1->connect(Node::List{ Node::GND, mTerminals[1]->node() });
+		mSubParallelResistor1->connect(SimNode::List{ SimNode::GND, mTerminals[1]->node() });
 		mSubParallelResistor1->initialize(mFrequencies);
 		mSubParallelResistor1->initializeFromPowerflow(frequency);
 	}
@@ -115,13 +115,13 @@ void EMT::Ph3::PiLine::initializeFromPowerflow(Real frequency) {
 	if (mParallelCap(0,0) > 0) {
 		mSubParallelCapacitor0 = std::make_shared<EMT::Ph3::Capacitor>(mName + "_cap0", mLogLevel);
 		mSubParallelCapacitor0->setParameters(mParallelCap / 2.);
-		mSubParallelCapacitor0->connect(Node::List{ Node::GND, mTerminals[0]->node() });
+		mSubParallelCapacitor0->connect(SimNode::List{ SimNode::GND, mTerminals[0]->node() });
 		mSubParallelCapacitor0->initialize(mFrequencies);
 		mSubParallelCapacitor0->initializeFromPowerflow(frequency);
 
 		mSubParallelCapacitor1 = std::make_shared<EMT::Ph3::Capacitor>(mName + "_cap1", mLogLevel);
 		mSubParallelCapacitor1->setParameters(mParallelCap / 2.);
-		mSubParallelCapacitor1->connect(Node::List{ Node::GND, mTerminals[1]->node() });
+		mSubParallelCapacitor1->connect(SimNode::List{ SimNode::GND, mTerminals[1]->node() });
 		mSubParallelCapacitor1->initialize(mFrequencies);
 		mSubParallelCapacitor1->initializeFromPowerflow(frequency);
 	}
@@ -156,7 +156,7 @@ void EMT::Ph3::PiLine::initializeFromPowerflow(Real frequency) {
 
 void EMT::Ph3::PiLine::mnaInitialize(Real omega, Real timeStep, Attribute<Matrix>::Ptr leftVector) {
 	MNAInterface::mnaInitialize(omega, timeStep);
-	updateSimNodes();
+	updateMatrixNodeIndices();
 	MNAInterface::List subComps({ mSubSeriesResistor, mSubSeriesInductor });
 
 	mSubSeriesResistor->mnaInitialize(omega, timeStep, leftVector);
@@ -218,14 +218,14 @@ void EMT::Ph3::PiLine::mnaUpdateVoltage(const Matrix& leftVector) {
 	// v1 - v0
 	mIntfVoltage = Matrix::Zero(3, 1);
 	if (terminalNotGrounded(1)) {
-		mIntfVoltage(0, 0) = Math::realFromVectorElement(leftVector, simNode(1, 0));
-		mIntfVoltage(1, 0) = Math::realFromVectorElement(leftVector, simNode(1, 1));
-		mIntfVoltage(2, 0) = Math::realFromVectorElement(leftVector, simNode(1, 2));
+		mIntfVoltage(0, 0) = Math::realFromVectorElement(leftVector, matrixNodeIndex(1, 0));
+		mIntfVoltage(1, 0) = Math::realFromVectorElement(leftVector, matrixNodeIndex(1, 1));
+		mIntfVoltage(2, 0) = Math::realFromVectorElement(leftVector, matrixNodeIndex(1, 2));
 	}
 	if (terminalNotGrounded(0)) {
-		mIntfVoltage(0, 0) = mIntfVoltage(0, 0) - Math::realFromVectorElement(leftVector, simNode(0, 0));
-		mIntfVoltage(1, 0) = mIntfVoltage(1, 0) - Math::realFromVectorElement(leftVector, simNode(0, 1));
-		mIntfVoltage(2, 0) = mIntfVoltage(2, 0) - Math::realFromVectorElement(leftVector, simNode(0, 2));
+		mIntfVoltage(0, 0) = mIntfVoltage(0, 0) - Math::realFromVectorElement(leftVector, matrixNodeIndex(0, 0));
+		mIntfVoltage(1, 0) = mIntfVoltage(1, 0) - Math::realFromVectorElement(leftVector, matrixNodeIndex(0, 1));
+		mIntfVoltage(2, 0) = mIntfVoltage(2, 0) - Math::realFromVectorElement(leftVector, matrixNodeIndex(0, 2));
 	}
 }
 

@@ -19,7 +19,7 @@
 #pragma once
 
 
-#include <cps/PowerComponent.h>
+#include <cps/SimPowerComp.h>
 #include <cps/Solver/MNAInterface.h>
 #include <cps/Definitions.h>
 #include <cps/DP/DP_Ph1_Resistor.h>
@@ -32,12 +32,12 @@ namespace CPS {
 namespace DP {
 namespace Ph1 {
 	/*
-		 Average voltage source inverter 
+		 Average voltage source inverter
 		 - modelled in dq
 		 - with interface to DP grid
 	*/
 	class AvVoltageSourceInverterDQ :
-		public PowerComponent<Complex>,
+		public SimPowerComp<Complex>,
 		public MNAInterface,
 		public SharedFactory<AvVoltageSourceInverterDQ> {
 	protected:
@@ -45,7 +45,7 @@ namespace Ph1 {
 		Complex mVoltNom;
 		/// in case variable time step simulation should be developed in the future
 		Real mTimeStep;
-		/// if SteadyStateInit is enabled, the system's sychronous frame will start from a certain angle 
+		/// if SteadyStateInit is enabled, the system's sychronous frame will start from a certain angle
 		Real mThetaSInit = 0;
 		/// Inner voltage source that represents the AvVoltageSourceInverterDQ
 		std::shared_ptr<DP::Ph1::ControlledVoltageSource> mSubCtrledVoltageSource;
@@ -151,7 +151,7 @@ namespace Ph1 {
 		AvVoltageSourceInverterDQ(String name,
 			Logger::Level logLevel = Logger::Level::off) :AvVoltageSourceInverterDQ(name, name, logLevel) {}
 		///
-		PowerComponent<Complex>::Ptr clone(String copySuffix);
+		SimPowerComp<Complex>::Ptr clone(String copySuffix);
 		/// add measurements for Vcabc and Ifabc
 		//void addMonitoredNodes( std::shared_ptr<Capacitor> cap);
 		///

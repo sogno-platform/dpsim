@@ -66,7 +66,7 @@ int main(int argc, char** argv) {
 			continue;
 		}
 
-		auto n_stat = std::dynamic_pointer_cast<CPS::SP::Node>(n);
+		auto n_stat = std::dynamic_pointer_cast<CPS::SP::SimNode>(n);
 		auto v = n_stat->attributeMatrixComp("v")->coeff(0, 0);
 
 		std::cout << "Signal " << (i*2)+0 << ": Mag  " << n->name() << std::endl;

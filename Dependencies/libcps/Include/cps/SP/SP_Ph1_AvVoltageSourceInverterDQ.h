@@ -19,7 +19,7 @@
 #pragma once
 
 
-#include <cps/PowerComponent.h>
+#include <cps/SimPowerComp.h>
 #include <cps/Solver/MNAInterface.h>
 #include <cps/Definitions.h>
 #include <cps/SP/SP_Ph1_Resistor.h>
@@ -38,7 +38,7 @@ namespace CPS {
 				 - with interface to SP grid
 			*/
 			class AvVoltageSourceInverterDQ :
-				public PowerComponent<Complex>,
+				public SimPowerComp<Complex>,
 				public MNAInterface,
 				public PFSolverInterfaceBus,
 				public SharedFactory<AvVoltageSourceInverterDQ> {
@@ -47,7 +47,7 @@ namespace CPS {
 
 				/// in case variable time step simulation should be developed in the future
 				Real mTimeStep;
-				/// if SteadyStateInit is enabled, the system's sychronous frame will start from a certain angle 
+				/// if SteadyStateInit is enabled, the system's sychronous frame will start from a certain angle
 				Real mThetaSInit = 0;
 				/// Inner voltage source that represents the AvVoltageSourceInverterDQ
 				std::shared_ptr<SP::Ph1::ControlledVoltageSource> mSubCtrledVoltageSource;
@@ -147,7 +147,7 @@ namespace CPS {
 				///
 				std::shared_ptr<SP::Ph1::Load> mPFAvVoltageSourceInverter;
 				///
-				std::vector<PQData> mLoadProfile;			
+				std::vector<PQData> mLoadProfile;
 				// #### constructors ####
 				///
 				AvVoltageSourceInverterDQ(String uid, String name, Logger::Level logLevel = Logger::Level::off);
@@ -155,7 +155,7 @@ namespace CPS {
 				AvVoltageSourceInverterDQ(String name,
 					Logger::Level logLevel = Logger::Level::off) :AvVoltageSourceInverterDQ(name, name, logLevel) {}
 				///
-				PowerComponent<Complex>::Ptr clone(String copySuffix);
+				SimPowerComp<Complex>::Ptr clone(String copySuffix);
 				/// add measurements for Vcabc and Ifabc
 				//void addMonitoredNodes( std::shared_ptr<Capacitor> cap);
 				///
@@ -295,7 +295,7 @@ namespace CPS {
 					AvVoltageSourceInverterDQ& mAvVoltageSourceInverterDQ;
 					Attribute<Matrix>::Ptr mLeftVector;
 				};
-				
+
 				class PowerFlowStep: public CPS::Task {
 					public:
 					PowerFlowStep(AvVoltageSourceInverterDQ& AvVoltageSourceInverterDQ) :

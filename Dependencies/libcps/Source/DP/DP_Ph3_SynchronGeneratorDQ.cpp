@@ -29,7 +29,7 @@ using namespace CPS;
 using namespace std;
 
 DP::Ph3::SynchronGeneratorDQ::SynchronGeneratorDQ(String uid, String name, Logger::Level logLevel)
-	: PowerComponent<Complex>(uid, name, logLevel) {
+	: SimPowerComp<Complex>(uid, name, logLevel) {
 	mPhaseType = PhaseType::ABC;
 	setTerminalNumber(1);
 	mIntfVoltage = MatrixComp::Zero(3,1);
@@ -60,7 +60,7 @@ void DP::Ph3::SynchronGeneratorDQ::setParametersFundamentalPerUnit(
 }
 
 void DP::Ph3::SynchronGeneratorDQ::initialize(Matrix frequencies) {
-	PowerComponent<Complex>::initialize(frequencies);
+	SimPowerComp<Complex>::initialize(frequencies);
 	mSystemOmega = frequencies(0,0);
 
 	// #### Compensation ####
@@ -98,12 +98,12 @@ void DP::Ph3::SynchronGeneratorDQ::mnaApplySystemMatrixStamp(Matrix& systemMatri
 	Real conductance = 1. / mRcomp;
 
 	if (terminalNotGrounded(0)) {
-		Math::addToMatrixElement(systemMatrix, simNodes(0)[0], simNodes(0)[0], Complex(conductance, 0));
-		Math::addToMatrixElement(systemMatrix, simNodes(0)[1], simNodes(0)[1], Complex(conductance, 0));
-		Math::addToMatrixElement(systemMatrix, simNodes(0)[2], simNodes(0)[2], Complex(conductance, 0));
-		mSLog->info("Add {} to {}, {}", conductance, simNodes(0)[0], simNodes(0)[0]);
-		mSLog->info("Add {} to {}, {}", conductance, simNodes(0)[1], simNodes(0)[1]);
-		mSLog->info("Add {} to {}, {}", conductance, simNodes(0)[2], simNodes(0)[2]);
+		Math::addToMatrixElement(systemMatrix, matrixNodeIndices(0)[0], matrixNodeIndices(0)[0], Complex(conductance, 0));
+		Math::addToMatrixElement(systemMatrix, matrixNodeIndices(0)[1], matrixNodeIndices(0)[1], Complex(conductance, 0));
+		Math::addToMatrixElement(systemMatrix, matrixNodeIndices(0)[2], matrixNodeIndices(0)[2], Complex(conductance, 0));
+		mSLog->info("Add {} to {}, {}", conductance, matrixNodeIndices(0)[0], matrixNodeIndices(0)[0]);
+		mSLog->info("Add {} to {}, {}", conductance, matrixNodeIndices(0)[1], matrixNodeIndices(0)[1]);
+		mSLog->info("Add {} to {}, {}", conductance, matrixNodeIndices(0)[2], matrixNodeIndices(0)[2]);
 	}
 }
 
@@ -115,16 +115,16 @@ void DP::Ph3::SynchronGeneratorDQ::mnaApplyRightSideVectorStamp(Matrix& rightVec
 	// Therefore, the generator is interfaced as a consumer but since the currents are reversed the equations
 	// are in generator mode.
 	if (terminalNotGrounded(0)) {
-		Math::setVectorElement(rightVector, simNode(0,0), -mIntfCurrent(0,0) + mCompensationCurrent(0,0));
-		Math::setVectorElement(rightVector, simNode(0,1), -mIntfCurrent(1,0) + mCompensationCurrent(1,0));
-		Math::setVectorElement(rightVector, simNode(0,2), -mIntfCurrent(2,0) + mCompensationCurrent(2,0));
+		Math::setVectorElement(rightVector, matrixNodeIndex(0,0), -mIntfCurrent(0,0) + mCompensationCurrent(0,0));
+		Math::setVectorElement(rightVector, matrixNodeIndex(0,1), -mIntfCurrent(1,0) + mCompensationCurrent(1,0));
+		Math::setVectorElement(rightVector, matrixNodeIndex(0,2), -mIntfCurrent(2,0) + mCompensationCurrent(2,0));
 	}
 }
 
 void DP::Ph3::SynchronGeneratorDQ::mnaUpdateVoltage(const Matrix& leftVector) {
-	mIntfVoltage(0,0) = Math::complexFromVectorElement(leftVector, simNode(0,0));
-	mIntfVoltage(1,0) = Math::complexFromVectorElement(leftVector, simNode(0,1));
-	mIntfVoltage(2,0) = Math::complexFromVectorElement(leftVector, simNode(0,2));
+	mIntfVoltage(0,0) = Math::complexFromVectorElement(leftVector, matrixNodeIndex(0,0));
+	mIntfVoltage(1,0) = Math::complexFromVectorElement(leftVector, matrixNodeIndex(0,1));
+	mIntfVoltage(2,0) = Math::complexFromVectorElement(leftVector, matrixNodeIndex(0,2));
 }
 
 void DP::Ph3::SynchronGeneratorDQ::MnaPostStep::execute(Real time, Int timeStepCount) {

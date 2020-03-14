@@ -25,7 +25,7 @@ using namespace CPS;
 using namespace CPS::DP::Ph3;
 
 DP::Ph3::Capacitor::Capacitor(String uid, String name, Logger::Level logLevel)
-	: PowerComponent<Complex>(uid, name, logLevel) {
+	: SimPowerComp<Complex>(uid, name, logLevel) {
 	mPhaseType = PhaseType::ABC;
 	setTerminalNumber(2);
 	mEquivCurrent = MatrixComp::Zero(3,1);
@@ -35,7 +35,7 @@ DP::Ph3::Capacitor::Capacitor(String uid, String name, Logger::Level logLevel)
 	addAttribute<Matrix>("C", &mCapacitance, Flags::read | Flags::write);
 }
 
-PowerComponent<Complex>::Ptr DP::Ph3::Capacitor::clone(String name) {
+SimPowerComp<Complex>::Ptr DP::Ph3::Capacitor::clone(String name) {
 	auto copy = Capacitor::make(name, mLogLevel);
 	copy->setParameters(mCapacitance);
 	return copy;
@@ -110,7 +110,7 @@ void DP::Ph3::Capacitor::initVars(Real omega, Real timeStep) {
 }
 
 void DP::Ph3::Capacitor::mnaInitialize(Real omega, Real timeStep, Attribute<Matrix>::Ptr leftVector) {
-	updateSimNodes();
+	updateMatrixNodeIndices();
 	initVars(omega, timeStep);
 	//Matrix equivCondReal = 2.0 * mCapacitance / timeStep;
 	//Matrix equivCondImag = omega * mCapacitance;
@@ -147,66 +147,66 @@ void DP::Ph3::Capacitor::mnaInitialize(Real omega, Real timeStep, Attribute<Matr
 void DP::Ph3::Capacitor::mnaApplySystemMatrixStamp(Matrix& systemMatrix) {
 
 	if (terminalNotGrounded(0)) {
-		Math::addToMatrixElement(systemMatrix, simNode(0, 0), simNode(0, 0), mEquivCond(0, 0));
-		Math::addToMatrixElement(systemMatrix, simNode(0, 0), simNode(0, 1), mEquivCond(0, 1));
-		Math::addToMatrixElement(systemMatrix, simNode(0, 0), simNode(0, 2), mEquivCond(0, 2));
-		Math::addToMatrixElement(systemMatrix, simNode(0, 1), simNode(0, 0), mEquivCond(1, 0));
-		Math::addToMatrixElement(systemMatrix, simNode(0, 1), simNode(0, 1), mEquivCond(1, 1));
-		Math::addToMatrixElement(systemMatrix, simNode(0, 1), simNode(0, 2), mEquivCond(1, 2));
-		Math::addToMatrixElement(systemMatrix, simNode(0, 2), simNode(0, 0), mEquivCond(2, 0));
-		Math::addToMatrixElement(systemMatrix, simNode(0, 2), simNode(0, 1), mEquivCond(2, 1));
-		Math::addToMatrixElement(systemMatrix, simNode(0, 2), simNode(0, 2), mEquivCond(2, 2));
+		Math::addToMatrixElement(systemMatrix, matrixNodeIndex(0, 0), matrixNodeIndex(0, 0), mEquivCond(0, 0));
+		Math::addToMatrixElement(systemMatrix, matrixNodeIndex(0, 0), matrixNodeIndex(0, 1), mEquivCond(0, 1));
+		Math::addToMatrixElement(systemMatrix, matrixNodeIndex(0, 0), matrixNodeIndex(0, 2), mEquivCond(0, 2));
+		Math::addToMatrixElement(systemMatrix, matrixNodeIndex(0, 1), matrixNodeIndex(0, 0), mEquivCond(1, 0));
+		Math::addToMatrixElement(systemMatrix, matrixNodeIndex(0, 1), matrixNodeIndex(0, 1), mEquivCond(1, 1));
+		Math::addToMatrixElement(systemMatrix, matrixNodeIndex(0, 1), matrixNodeIndex(0, 2), mEquivCond(1, 2));
+		Math::addToMatrixElement(systemMatrix, matrixNodeIndex(0, 2), matrixNodeIndex(0, 0), mEquivCond(2, 0));
+		Math::addToMatrixElement(systemMatrix, matrixNodeIndex(0, 2), matrixNodeIndex(0, 1), mEquivCond(2, 1));
+		Math::addToMatrixElement(systemMatrix, matrixNodeIndex(0, 2), matrixNodeIndex(0, 2), mEquivCond(2, 2));
 	}
 	if (terminalNotGrounded(1)) {
-		Math::addToMatrixElement(systemMatrix, simNode(1, 0), simNode(1, 0), mEquivCond(0, 0));
-		Math::addToMatrixElement(systemMatrix, simNode(1, 0), simNode(1, 1), mEquivCond(0, 1));
-		Math::addToMatrixElement(systemMatrix, simNode(1, 0), simNode(1, 2), mEquivCond(0, 2));
-		Math::addToMatrixElement(systemMatrix, simNode(1, 1), simNode(1, 0), mEquivCond(1, 0));
-		Math::addToMatrixElement(systemMatrix, simNode(1, 1), simNode(1, 1), mEquivCond(1, 1));
-		Math::addToMatrixElement(systemMatrix, simNode(1, 1), simNode(1, 2), mEquivCond(1, 2));
-		Math::addToMatrixElement(systemMatrix, simNode(1, 2), simNode(1, 0), mEquivCond(2, 0));
-		Math::addToMatrixElement(systemMatrix, simNode(1, 2), simNode(1, 1), mEquivCond(2, 1));
-		Math::addToMatrixElement(systemMatrix, simNode(1, 2), simNode(1, 2), mEquivCond(2, 2));
+		Math::addToMatrixElement(systemMatrix, matrixNodeIndex(1, 0), matrixNodeIndex(1, 0), mEquivCond(0, 0));
+		Math::addToMatrixElement(systemMatrix, matrixNodeIndex(1, 0), matrixNodeIndex(1, 1), mEquivCond(0, 1));
+		Math::addToMatrixElement(systemMatrix, matrixNodeIndex(1, 0), matrixNodeIndex(1, 2), mEquivCond(0, 2));
+		Math::addToMatrixElement(systemMatrix, matrixNodeIndex(1, 1), matrixNodeIndex(1, 0), mEquivCond(1, 0));
+		Math::addToMatrixElement(systemMatrix, matrixNodeIndex(1, 1), matrixNodeIndex(1, 1), mEquivCond(1, 1));
+		Math::addToMatrixElement(systemMatrix, matrixNodeIndex(1, 1), matrixNodeIndex(1, 2), mEquivCond(1, 2));
+		Math::addToMatrixElement(systemMatrix, matrixNodeIndex(1, 2), matrixNodeIndex(1, 0), mEquivCond(2, 0));
+		Math::addToMatrixElement(systemMatrix, matrixNodeIndex(1, 2), matrixNodeIndex(1, 1), mEquivCond(2, 1));
+		Math::addToMatrixElement(systemMatrix, matrixNodeIndex(1, 2), matrixNodeIndex(1, 2), mEquivCond(2, 2));
 	}
 	if (terminalNotGrounded(0) && terminalNotGrounded(1)) {
-		Math::addToMatrixElement(systemMatrix, simNode(0, 0), simNode(1, 0), -mEquivCond(0, 0));
-		Math::addToMatrixElement(systemMatrix, simNode(0, 0), simNode(1, 1), -mEquivCond(0, 1));
-		Math::addToMatrixElement(systemMatrix, simNode(0, 0), simNode(1, 2), -mEquivCond(0, 2));
-		Math::addToMatrixElement(systemMatrix, simNode(0, 1), simNode(1, 0), -mEquivCond(1, 0));
-		Math::addToMatrixElement(systemMatrix, simNode(0, 1), simNode(1, 1), -mEquivCond(1, 1));
-		Math::addToMatrixElement(systemMatrix, simNode(0, 1), simNode(1, 2), -mEquivCond(1, 2));
-		Math::addToMatrixElement(systemMatrix, simNode(0, 2), simNode(1, 0), -mEquivCond(2, 0));
-		Math::addToMatrixElement(systemMatrix, simNode(0, 2), simNode(1, 1), -mEquivCond(2, 1));
-		Math::addToMatrixElement(systemMatrix, simNode(0, 2), simNode(1, 2), -mEquivCond(2, 2));
+		Math::addToMatrixElement(systemMatrix, matrixNodeIndex(0, 0), matrixNodeIndex(1, 0), -mEquivCond(0, 0));
+		Math::addToMatrixElement(systemMatrix, matrixNodeIndex(0, 0), matrixNodeIndex(1, 1), -mEquivCond(0, 1));
+		Math::addToMatrixElement(systemMatrix, matrixNodeIndex(0, 0), matrixNodeIndex(1, 2), -mEquivCond(0, 2));
+		Math::addToMatrixElement(systemMatrix, matrixNodeIndex(0, 1), matrixNodeIndex(1, 0), -mEquivCond(1, 0));
+		Math::addToMatrixElement(systemMatrix, matrixNodeIndex(0, 1), matrixNodeIndex(1, 1), -mEquivCond(1, 1));
+		Math::addToMatrixElement(systemMatrix, matrixNodeIndex(0, 1), matrixNodeIndex(1, 2), -mEquivCond(1, 2));
+		Math::addToMatrixElement(systemMatrix, matrixNodeIndex(0, 2), matrixNodeIndex(1, 0), -mEquivCond(2, 0));
+		Math::addToMatrixElement(systemMatrix, matrixNodeIndex(0, 2), matrixNodeIndex(1, 1), -mEquivCond(2, 1));
+		Math::addToMatrixElement(systemMatrix, matrixNodeIndex(0, 2), matrixNodeIndex(1, 2), -mEquivCond(2, 2));
 
-		Math::addToMatrixElement(systemMatrix, simNode(1, 0), simNode(0, 0), -mEquivCond(0, 0));
-		Math::addToMatrixElement(systemMatrix, simNode(1, 0), simNode(0, 1), -mEquivCond(0, 1));
-		Math::addToMatrixElement(systemMatrix, simNode(1, 0), simNode(0, 2), -mEquivCond(0, 2));
-		Math::addToMatrixElement(systemMatrix, simNode(1, 1), simNode(0, 0), -mEquivCond(1, 0));
-		Math::addToMatrixElement(systemMatrix, simNode(1, 1), simNode(0, 1), -mEquivCond(1, 1));
-		Math::addToMatrixElement(systemMatrix, simNode(1, 1), simNode(0, 2), -mEquivCond(1, 2));
-		Math::addToMatrixElement(systemMatrix, simNode(1, 2), simNode(0, 0), -mEquivCond(2, 0));
-		Math::addToMatrixElement(systemMatrix, simNode(1, 2), simNode(0, 1), -mEquivCond(2, 1));
-		Math::addToMatrixElement(systemMatrix, simNode(1, 2), simNode(0, 2), -mEquivCond(2, 2));
+		Math::addToMatrixElement(systemMatrix, matrixNodeIndex(1, 0), matrixNodeIndex(0, 0), -mEquivCond(0, 0));
+		Math::addToMatrixElement(systemMatrix, matrixNodeIndex(1, 0), matrixNodeIndex(0, 1), -mEquivCond(0, 1));
+		Math::addToMatrixElement(systemMatrix, matrixNodeIndex(1, 0), matrixNodeIndex(0, 2), -mEquivCond(0, 2));
+		Math::addToMatrixElement(systemMatrix, matrixNodeIndex(1, 1), matrixNodeIndex(0, 0), -mEquivCond(1, 0));
+		Math::addToMatrixElement(systemMatrix, matrixNodeIndex(1, 1), matrixNodeIndex(0, 1), -mEquivCond(1, 1));
+		Math::addToMatrixElement(systemMatrix, matrixNodeIndex(1, 1), matrixNodeIndex(0, 2), -mEquivCond(1, 2));
+		Math::addToMatrixElement(systemMatrix, matrixNodeIndex(1, 2), matrixNodeIndex(0, 0), -mEquivCond(2, 0));
+		Math::addToMatrixElement(systemMatrix, matrixNodeIndex(1, 2), matrixNodeIndex(0, 1), -mEquivCond(2, 1));
+		Math::addToMatrixElement(systemMatrix, matrixNodeIndex(1, 2), matrixNodeIndex(0, 2), -mEquivCond(2, 2));
 	}/*
 	mLog.debug() << "\n--- Apply system matrix stamp ---" << std::endl;
 	if (terminalNotGrounded(0)) {
-		mLog.debug() << "Add " << mEquivCond(0, 0) << " to " << simNode(0, 0) << "," << simNode(0, 0) << std::endl;
-		mLog.debug() << "Add " << mEquivCond(1, 0) << " to " << simNode(0, 1) << "," << simNode(0, 1) << std::endl;
-		mLog.debug() << "Add " << mEquivCond(2, 0) << " to " << simNode(0, 2) << "," << simNode(0, 2) << std::endl;
+		mLog.debug() << "Add " << mEquivCond(0, 0) << " to " << matrixNodeIndex(0, 0) << "," << matrixNodeIndex(0, 0) << std::endl;
+		mLog.debug() << "Add " << mEquivCond(1, 0) << " to " << matrixNodeIndex(0, 1) << "," << matrixNodeIndex(0, 1) << std::endl;
+		mLog.debug() << "Add " << mEquivCond(2, 0) << " to " << matrixNodeIndex(0, 2) << "," << matrixNodeIndex(0, 2) << std::endl;
 	}
 	if (terminalNotGrounded(1)) {
-		mLog.debug() << "Add " << mEquivCond(0, 0) << " to " << simNode(1, 0) << "," << simNode(1, 0) << std::endl;
-		mLog.debug() << "Add " << mEquivCond(0, 1) << " to " << simNode(1, 1) << "," << simNode(1, 1) << std::endl;
-		mLog.debug() << "Add " << mEquivCond(0, 2) << " to " << simNode(1, 2) << "," << simNode(1, 2) << std::endl;
+		mLog.debug() << "Add " << mEquivCond(0, 0) << " to " << matrixNodeIndex(1, 0) << "," << matrixNodeIndex(1, 0) << std::endl;
+		mLog.debug() << "Add " << mEquivCond(0, 1) << " to " << matrixNodeIndex(1, 1) << "," << matrixNodeIndex(1, 1) << std::endl;
+		mLog.debug() << "Add " << mEquivCond(0, 2) << " to " << matrixNodeIndex(1, 2) << "," << matrixNodeIndex(1, 2) << std::endl;
 	}
 	if (terminalNotGrounded(0) && terminalNotGrounded(1)) {
-		mLog.debug() << "Add " << -mEquivCond(0, 0) << " to " << simNode(0, 0) << "," << simNode(1, 0) << std::endl
-			<< "Add " << -mEquivCond(0, 0) << " to " << simNode(1, 0) << "," << simNode(0, 0) << std::endl;
-		mLog.debug() << "Add " << -mEquivCond(1, 0) << " to " << simNode(0, 1) << "," << simNode(1, 1) << std::endl
-			<< "Add " << -mEquivCond(1, 0) << " to " << simNode(1, 1) << "," << simNode(0, 1) << std::endl;
-		mLog.debug() << "Add " << -mEquivCond(2, 0) << " to " << simNode(0, 2) << "," << simNode(1, 2) << std::endl
-			<< "Add " << -mEquivCond(2, 0) << " to " << simNode(1, 2) << "," << simNode(0, 2) << std::endl;
+		mLog.debug() << "Add " << -mEquivCond(0, 0) << " to " << matrixNodeIndex(0, 0) << "," << matrixNodeIndex(1, 0) << std::endl
+			<< "Add " << -mEquivCond(0, 0) << " to " << matrixNodeIndex(1, 0) << "," << matrixNodeIndex(0, 0) << std::endl;
+		mLog.debug() << "Add " << -mEquivCond(1, 0) << " to " << matrixNodeIndex(0, 1) << "," << matrixNodeIndex(1, 1) << std::endl
+			<< "Add " << -mEquivCond(1, 0) << " to " << matrixNodeIndex(1, 1) << "," << matrixNodeIndex(0, 1) << std::endl;
+		mLog.debug() << "Add " << -mEquivCond(2, 0) << " to " << matrixNodeIndex(0, 2) << "," << matrixNodeIndex(1, 2) << std::endl
+			<< "Add " << -mEquivCond(2, 0) << " to " << matrixNodeIndex(1, 2) << "," << matrixNodeIndex(0, 2) << std::endl;
 	}*/
 }
 
@@ -217,14 +217,14 @@ void DP::Ph3::Capacitor::mnaApplyRightSideVectorStamp(Matrix& rightVector) {
 	mEquivCurrent = -mIntfCurrent + -mPrevVoltCoeff * mIntfVoltage;
 
 	if (terminalNotGrounded(0)) {
-		Math::setVectorElement(rightVector, simNode(0, 0), mEquivCurrent(0, 0));
-		Math::setVectorElement(rightVector, simNode(0, 1), mEquivCurrent(1, 0));
-		Math::setVectorElement(rightVector, simNode(0, 2), mEquivCurrent(2, 0));
+		Math::setVectorElement(rightVector, matrixNodeIndex(0, 0), mEquivCurrent(0, 0));
+		Math::setVectorElement(rightVector, matrixNodeIndex(0, 1), mEquivCurrent(1, 0));
+		Math::setVectorElement(rightVector, matrixNodeIndex(0, 2), mEquivCurrent(2, 0));
 	}
 	if (terminalNotGrounded(1)) {
-		Math::setVectorElement(rightVector, simNode(1, 0), -mEquivCurrent(0, 0));
-		Math::setVectorElement(rightVector, simNode(1, 1), -mEquivCurrent(1, 0));
-		Math::setVectorElement(rightVector, simNode(1, 2), -mEquivCurrent(2, 0));
+		Math::setVectorElement(rightVector, matrixNodeIndex(1, 0), -mEquivCurrent(0, 0));
+		Math::setVectorElement(rightVector, matrixNodeIndex(1, 1), -mEquivCurrent(1, 0));
+		Math::setVectorElement(rightVector, matrixNodeIndex(1, 2), -mEquivCurrent(2, 0));
 	}
 }
 
@@ -241,14 +241,14 @@ void DP::Ph3::Capacitor::mnaUpdateVoltage(const Matrix& leftVector) {
 	// v1 - v0
 	mIntfVoltage = Matrix::Zero(3, 1);
 	if (terminalNotGrounded(1)) {
-		mIntfVoltage(0, 0) = Math::complexFromVectorElement(leftVector, simNode(1, 0));
-		mIntfVoltage(1, 0) = Math::complexFromVectorElement(leftVector, simNode(1, 1));
-		mIntfVoltage(2, 0) = Math::complexFromVectorElement(leftVector, simNode(1, 2));
+		mIntfVoltage(0, 0) = Math::complexFromVectorElement(leftVector, matrixNodeIndex(1, 0));
+		mIntfVoltage(1, 0) = Math::complexFromVectorElement(leftVector, matrixNodeIndex(1, 1));
+		mIntfVoltage(2, 0) = Math::complexFromVectorElement(leftVector, matrixNodeIndex(1, 2));
 	}
 	if (terminalNotGrounded(0)) {
-		mIntfVoltage(0, 0) = mIntfVoltage(0, 0) - Math::complexFromVectorElement(leftVector, simNode(0, 0));
-		mIntfVoltage(1, 0) = mIntfVoltage(1, 0) - Math::complexFromVectorElement(leftVector, simNode(0, 1));
-		mIntfVoltage(2, 0) = mIntfVoltage(2, 0) - Math::complexFromVectorElement(leftVector, simNode(0, 2));
+		mIntfVoltage(0, 0) = mIntfVoltage(0, 0) - Math::complexFromVectorElement(leftVector, matrixNodeIndex(0, 0));
+		mIntfVoltage(1, 0) = mIntfVoltage(1, 0) - Math::complexFromVectorElement(leftVector, matrixNodeIndex(0, 1));
+		mIntfVoltage(2, 0) = mIntfVoltage(2, 0) - Math::complexFromVectorElement(leftVector, matrixNodeIndex(0, 2));
 	}
 }
 

@@ -135,56 +135,56 @@ void DP::Ph3::SynchronGeneratorVBR::mnaStep(Matrix& systemMatrix, Matrix& rightV
 
 	// Update current source accordingly
 	if ( terminalNotGrounded(0) ) {
-		Math::addToVectorElement(rightVector, simNode(0), Complex(mISourceEq(0), mISourceEq(3)));
+		Math::addToVectorElement(rightVector, matrixNodeIndex(0), Complex(mISourceEq(0), mISourceEq(3)));
 	}
 	if ( terminalNotGrounded(1) ) {
-		Math::addToVectorElement(rightVector, simNode(1), Complex(mISourceEq(1), mISourceEq(4)));
+		Math::addToVectorElement(rightVector, matrixNodeIndex(1), Complex(mISourceEq(1), mISourceEq(4)));
 	}
-	if ( simNode(2) >= 0) {
-		Math::addToVectorElement(rightVector, simNode(2), Complex(mISourceEq(2), mISourceEq(5)));
+	if ( matrixNodeIndex(2) >= 0) {
+		Math::addToVectorElement(rightVector, matrixNodeIndex(2), Complex(mISourceEq(2), mISourceEq(5)));
 	}
 
 	//Update Equivalent Resistance
 	Int systemSize = systemMatrix.rows();
-	Math::addToMatrixElement(systemMatrix, simNode(0), simNode(0), mConductanceMat(0, 0));
-	Math::addToMatrixElement(systemMatrix, simNode(0), simNode(1), mConductanceMat(0, 1));
-	Math::addToMatrixElement(systemMatrix, simNode(0), simNode(2), mConductanceMat(0, 2));
-	Math::addToMatrixElement(systemMatrix, simNode(1), simNode(0), mConductanceMat(1, 0));
-	Math::addToMatrixElement(systemMatrix, simNode(1), simNode(1), mConductanceMat(1, 1));
-	Math::addToMatrixElement(systemMatrix, simNode(1), simNode(2), mConductanceMat(1, 2));
-	Math::addToMatrixElement(systemMatrix, simNode(2), simNode(0), mConductanceMat(2, 0));
-	Math::addToMatrixElement(systemMatrix, simNode(2), simNode(1), mConductanceMat(2, 1));
-	Math::addToMatrixElement(systemMatrix, simNode(2), simNode(2), mConductanceMat(2, 2));
+	Math::addToMatrixElement(systemMatrix, matrixNodeIndex(0), matrixNodeIndex(0), mConductanceMat(0, 0));
+	Math::addToMatrixElement(systemMatrix, matrixNodeIndex(0), matrixNodeIndex(1), mConductanceMat(0, 1));
+	Math::addToMatrixElement(systemMatrix, matrixNodeIndex(0), matrixNodeIndex(2), mConductanceMat(0, 2));
+	Math::addToMatrixElement(systemMatrix, matrixNodeIndex(1), matrixNodeIndex(0), mConductanceMat(1, 0));
+	Math::addToMatrixElement(systemMatrix, matrixNodeIndex(1), matrixNodeIndex(1), mConductanceMat(1, 1));
+	Math::addToMatrixElement(systemMatrix, matrixNodeIndex(1), matrixNodeIndex(2), mConductanceMat(1, 2));
+	Math::addToMatrixElement(systemMatrix, matrixNodeIndex(2), matrixNodeIndex(0), mConductanceMat(2, 0));
+	Math::addToMatrixElement(systemMatrix, matrixNodeIndex(2), matrixNodeIndex(1), mConductanceMat(2, 1));
+	Math::addToMatrixElement(systemMatrix, matrixNodeIndex(2), matrixNodeIndex(2), mConductanceMat(2, 2));
 
-	Math::addToMatrixElement(systemMatrix, simNode(0) + systemSize, simNode(0), mConductanceMat(3, 0));
-	Math::addToMatrixElement(systemMatrix, simNode(0) + systemSize, simNode(1), mConductanceMat(3, 1));
-	Math::addToMatrixElement(systemMatrix, simNode(0) + systemSize, simNode(2), mConductanceMat(3, 2));
-	Math::addToMatrixElement(systemMatrix, simNode(1) + systemSize, simNode(0), mConductanceMat(4, 0));
-	Math::addToMatrixElement(systemMatrix, simNode(1) + systemSize, simNode(1), mConductanceMat(4, 1));
-	Math::addToMatrixElement(systemMatrix, simNode(1) + systemSize, simNode(2), mConductanceMat(4, 2));
-	Math::addToMatrixElement(systemMatrix, simNode(2) + systemSize, simNode(0), mConductanceMat(5, 0));
-	Math::addToMatrixElement(systemMatrix, simNode(2) + systemSize, simNode(1), mConductanceMat(5, 1));
-	Math::addToMatrixElement(systemMatrix, simNode(2) + systemSize, simNode(2), mConductanceMat(5, 2));
+	Math::addToMatrixElement(systemMatrix, matrixNodeIndex(0) + systemSize, matrixNodeIndex(0), mConductanceMat(3, 0));
+	Math::addToMatrixElement(systemMatrix, matrixNodeIndex(0) + systemSize, matrixNodeIndex(1), mConductanceMat(3, 1));
+	Math::addToMatrixElement(systemMatrix, matrixNodeIndex(0) + systemSize, matrixNodeIndex(2), mConductanceMat(3, 2));
+	Math::addToMatrixElement(systemMatrix, matrixNodeIndex(1) + systemSize, matrixNodeIndex(0), mConductanceMat(4, 0));
+	Math::addToMatrixElement(systemMatrix, matrixNodeIndex(1) + systemSize, matrixNodeIndex(1), mConductanceMat(4, 1));
+	Math::addToMatrixElement(systemMatrix, matrixNodeIndex(1) + systemSize, matrixNodeIndex(2), mConductanceMat(4, 2));
+	Math::addToMatrixElement(systemMatrix, matrixNodeIndex(2) + systemSize, matrixNodeIndex(0), mConductanceMat(5, 0));
+	Math::addToMatrixElement(systemMatrix, matrixNodeIndex(2) + systemSize, matrixNodeIndex(1), mConductanceMat(5, 1));
+	Math::addToMatrixElement(systemMatrix, matrixNodeIndex(2) + systemSize, matrixNodeIndex(2), mConductanceMat(5, 2));
 
-	Math::addToMatrixElement(systemMatrix, simNode(0), simNode(0) + systemSize, mConductanceMat(0, 3));
-	Math::addToMatrixElement(systemMatrix, simNode(0), simNode(1) + systemSize, mConductanceMat(0, 4));
-	Math::addToMatrixElement(systemMatrix, simNode(0), simNode(2) + systemSize, mConductanceMat(0, 5));
-	Math::addToMatrixElement(systemMatrix, simNode(1), simNode(0) + systemSize, mConductanceMat(1, 3));
-	Math::addToMatrixElement(systemMatrix, simNode(1), simNode(1) + systemSize, mConductanceMat(1, 4));
-	Math::addToMatrixElement(systemMatrix, simNode(1), simNode(2) + systemSize, mConductanceMat(1, 5));
-	Math::addToMatrixElement(systemMatrix, simNode(2), simNode(0) + systemSize, mConductanceMat(2, 3));
-	Math::addToMatrixElement(systemMatrix, simNode(2), simNode(1) + systemSize, mConductanceMat(2, 4));
-	Math::addToMatrixElement(systemMatrix, simNode(2), simNode(2) + systemSize, mConductanceMat(2, 5));
+	Math::addToMatrixElement(systemMatrix, matrixNodeIndex(0), matrixNodeIndex(0) + systemSize, mConductanceMat(0, 3));
+	Math::addToMatrixElement(systemMatrix, matrixNodeIndex(0), matrixNodeIndex(1) + systemSize, mConductanceMat(0, 4));
+	Math::addToMatrixElement(systemMatrix, matrixNodeIndex(0), matrixNodeIndex(2) + systemSize, mConductanceMat(0, 5));
+	Math::addToMatrixElement(systemMatrix, matrixNodeIndex(1), matrixNodeIndex(0) + systemSize, mConductanceMat(1, 3));
+	Math::addToMatrixElement(systemMatrix, matrixNodeIndex(1), matrixNodeIndex(1) + systemSize, mConductanceMat(1, 4));
+	Math::addToMatrixElement(systemMatrix, matrixNodeIndex(1), matrixNodeIndex(2) + systemSize, mConductanceMat(1, 5));
+	Math::addToMatrixElement(systemMatrix, matrixNodeIndex(2), matrixNodeIndex(0) + systemSize, mConductanceMat(2, 3));
+	Math::addToMatrixElement(systemMatrix, matrixNodeIndex(2), matrixNodeIndex(1) + systemSize, mConductanceMat(2, 4));
+	Math::addToMatrixElement(systemMatrix, matrixNodeIndex(2), matrixNodeIndex(2) + systemSize, mConductanceMat(2, 5));
 
-	Math::addToMatrixElement(systemMatrix, simNode(0) + systemSize, simNode(0) + systemSize, mConductanceMat(3, 3));
-	Math::addToMatrixElement(systemMatrix, simNode(0) + systemSize, simNode(1) + systemSize, mConductanceMat(3, 4));
-	Math::addToMatrixElement(systemMatrix, simNode(0) + systemSize, simNode(2) + systemSize, mConductanceMat(3, 5));
-	Math::addToMatrixElement(systemMatrix, simNode(1) + systemSize, simNode(0) + systemSize, mConductanceMat(4, 3));
-	Math::addToMatrixElement(systemMatrix, simNode(1) + systemSize, simNode(1) + systemSize, mConductanceMat(4, 4));
-	Math::addToMatrixElement(systemMatrix, simNode(1) + systemSize, simNode(2) + systemSize, mConductanceMat(4, 5));
-	Math::addToMatrixElement(systemMatrix, simNode(2) + systemSize, simNode(0) + systemSize, mConductanceMat(5, 3));
-	Math::addToMatrixElement(systemMatrix, simNode(2) + systemSize, simNode(1) + systemSize, mConductanceMat(5, 4));
-	Math::addToMatrixElement(systemMatrix, simNode(2) + systemSize, simNode(2) + systemSize, mConductanceMat(5, 5));
+	Math::addToMatrixElement(systemMatrix, matrixNodeIndex(0) + systemSize, matrixNodeIndex(0) + systemSize, mConductanceMat(3, 3));
+	Math::addToMatrixElement(systemMatrix, matrixNodeIndex(0) + systemSize, matrixNodeIndex(1) + systemSize, mConductanceMat(3, 4));
+	Math::addToMatrixElement(systemMatrix, matrixNodeIndex(0) + systemSize, matrixNodeIndex(2) + systemSize, mConductanceMat(3, 5));
+	Math::addToMatrixElement(systemMatrix, matrixNodeIndex(1) + systemSize, matrixNodeIndex(0) + systemSize, mConductanceMat(4, 3));
+	Math::addToMatrixElement(systemMatrix, matrixNodeIndex(1) + systemSize, matrixNodeIndex(1) + systemSize, mConductanceMat(4, 4));
+	Math::addToMatrixElement(systemMatrix, matrixNodeIndex(1) + systemSize, matrixNodeIndex(2) + systemSize, mConductanceMat(4, 5));
+	Math::addToMatrixElement(systemMatrix, matrixNodeIndex(2) + systemSize, matrixNodeIndex(0) + systemSize, mConductanceMat(5, 3));
+	Math::addToMatrixElement(systemMatrix, matrixNodeIndex(2) + systemSize, matrixNodeIndex(1) + systemSize, mConductanceMat(5, 4));
+	Math::addToMatrixElement(systemMatrix, matrixNodeIndex(2) + systemSize, matrixNodeIndex(2) + systemSize, mConductanceMat(5, 5));
 
 	// TODO find solution without SystemModel
 	// system.updateLuFactored();
@@ -237,24 +237,24 @@ void DP::Ph3::SynchronGeneratorVBR::mnaPostStep(Matrix& rightVector, Matrix& lef
 	Real dt = mSystemTimeStep;
 
 	if ( terminalNotGrounded(0) ) {
-		mVaRe = Math::complexFromVectorElement(leftVector, simNode(0)).real();
-		mVaIm = Math::complexFromVectorElement(leftVector, simNode(0)).imag();
+		mVaRe = Math::complexFromVectorElement(leftVector, matrixNodeIndex(0)).real();
+		mVaIm = Math::complexFromVectorElement(leftVector, matrixNodeIndex(0)).imag();
 	}
 	else {
 		mVaRe = 0;
 		mVaIm = 0;
 	}
 	if ( terminalNotGrounded(1) ) {
-		mVbRe = Math::complexFromVectorElement(leftVector, simNode(1)).real();
-		mVbIm = Math::complexFromVectorElement(leftVector, simNode(1)).imag();
+		mVbRe = Math::complexFromVectorElement(leftVector, matrixNodeIndex(1)).real();
+		mVbIm = Math::complexFromVectorElement(leftVector, matrixNodeIndex(1)).imag();
 	}
 	else {
 		mVbRe = 0;
 		mVbIm = 0;
 	}
-	if ( simNode(2) >= 0) {
-		mVcRe = Math::complexFromVectorElement(leftVector, simNode(2)).real();
-		mVcIm = Math::complexFromVectorElement(leftVector, simNode(2)).imag();
+	if ( matrixNodeIndex(2) >= 0) {
+		mVcRe = Math::complexFromVectorElement(leftVector, matrixNodeIndex(2)).real();
+		mVcIm = Math::complexFromVectorElement(leftVector, matrixNodeIndex(2)).imag();
 	}
 	else {
 		mVcRe = 0;

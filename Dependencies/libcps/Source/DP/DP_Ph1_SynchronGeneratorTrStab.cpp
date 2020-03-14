@@ -22,7 +22,7 @@
 using namespace CPS;
 
 DP::Ph1::SynchronGeneratorTrStab::SynchronGeneratorTrStab(String uid, String name, Logger::Level logLevel)
-	: PowerComponent<Complex>(uid, name, logLevel) {
+	: SimPowerComp<Complex>(uid, name, logLevel) {
 	setVirtualNodeNumber(2);
 	setTerminalNumber(1);
 	mIntfVoltage = MatrixComp::Zero(1, 1);
@@ -39,7 +39,7 @@ DP::Ph1::SynchronGeneratorTrStab::SynchronGeneratorTrStab(String uid, String nam
 	mStates = Matrix::Zero(10,1);
 }
 
-PowerComponent<Complex>::Ptr DP::Ph1::SynchronGeneratorTrStab::clone(String name) {
+SimPowerComp<Complex>::Ptr DP::Ph1::SynchronGeneratorTrStab::clone(String name) {
 	auto copy = SynchronGeneratorTrStab::make(name, mLogLevel);
 	copy->setStandardParametersPU(mNomPower, mNomVolt, mNomFreq, mXpd / mBase_Z, mInertia);
 	return copy;
@@ -113,7 +113,7 @@ void DP::Ph1::SynchronGeneratorTrStab::setInitialValues(Complex elecPower, Real 
 }
 
 void DP::Ph1::SynchronGeneratorTrStab::initialize(Matrix frequencies) {
-	PowerComponent<Complex>::initialize(frequencies);
+	SimPowerComp<Complex>::initialize(frequencies);
 }
 
 void DP::Ph1::SynchronGeneratorTrStab::initializeFromPowerflow(Real frequency) {
@@ -149,7 +149,7 @@ void DP::Ph1::SynchronGeneratorTrStab::initializeFromPowerflow(Real frequency) {
 	// Create sub voltage source for emf
 	mSubVoltageSource = DP::Ph1::VoltageSource::make(mName + "_src", mLogLevel);
 	mSubVoltageSource->setParameters(mEp);
-	mSubVoltageSource->connect({Node::GND, mVirtualNodes[0]});
+	mSubVoltageSource->connect({SimNode::GND, mVirtualNodes[0]});
 	mSubVoltageSource->setVirtualNodeAt(mVirtualNodes[1], 0);
 	mSubVoltageSource->initialize(mFrequencies);
 	mSubVoltageSource->initializeFromPowerflow(frequency);
@@ -200,7 +200,7 @@ void DP::Ph1::SynchronGeneratorTrStab::step(Real time) {
 
 void DP::Ph1::SynchronGeneratorTrStab::mnaInitialize(Real omega, Real timeStep, Attribute<Matrix>::Ptr leftVector) {
 	MNAInterface::mnaInitialize(omega, timeStep);
-	updateSimNodes();
+	updateMatrixNodeIndices();
 
 	mSubVoltageSource->mnaInitialize(omega, timeStep, leftVector);
 	mSubInductor->mnaInitialize(omega, timeStep, leftVector);
@@ -244,6 +244,6 @@ void DP::Ph1::SynchronGeneratorTrStab::MnaPostStep::execute(Real time, Int timeS
 }
 
 void DP::Ph1::SynchronGeneratorTrStab::mnaUpdateVoltage(const Matrix& leftVector) {
-	SPDLOG_LOGGER_DEBUG(mSLog, "Read voltage from {:d}", simNode(0));
-	mIntfVoltage(0,0) = Math::complexFromVectorElement(leftVector, simNode(0));
+	SPDLOG_LOGGER_DEBUG(mSLog, "Read voltage from {:d}", matrixNodeIndex(0));
+	mIntfVoltage(0,0) = Math::complexFromVectorElement(leftVector, matrixNodeIndex(0));
 }

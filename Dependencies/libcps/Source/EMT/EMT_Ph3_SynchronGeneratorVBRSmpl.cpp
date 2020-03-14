@@ -124,13 +124,13 @@ void EMT::Ph3::SynchronGeneratorVBRSmpl::mnaStep(Matrix& systemMatrix, Matrix& r
 
 	// Update current source accordingly
 	if ( terminalNotGrounded(0) ) {
-		Math::addToVectorElement(rightVector, simNode(0), -mIa*mBase_i);
+		Math::addToVectorElement(rightVector, matrixNodeIndex(0), -mIa*mBase_i);
 	}
 	if ( terminalNotGrounded(1) ) {
-		Math::addToVectorElement(rightVector, simNode(1), -mIb*mBase_i);
+		Math::addToVectorElement(rightVector, matrixNodeIndex(1), -mIb*mBase_i);
 	}
-	if ( simNode(2) >= 0) {
-		Math::addToVectorElement(rightVector, simNode(2), -mIc*mBase_i);
+	if ( matrixNodeIndex(2) >= 0) {
+		Math::addToVectorElement(rightVector, matrixNodeIndex(2), -mIc*mBase_i);
 	}
 
 	if (mLogLevel != Logger::Level::off) {

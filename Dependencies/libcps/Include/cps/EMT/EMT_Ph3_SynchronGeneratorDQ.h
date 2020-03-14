@@ -21,7 +21,7 @@
 
 #pragma once
 
-#include <cps/PowerComponent.h>
+#include <cps/SimPowerComp.h>
 #include <cps/Solver/MNAInterface.h>
 #include <cps/Base/Base_SynchronGenerator.h>
 
@@ -32,7 +32,7 @@ namespace Ph3 {
 	class SynchronGeneratorDQ :
 		public Base::SynchronGenerator,
 		public MNAInterface,
-		public PowerComponent<Real> {
+		public SimPowerComp<Real> {
 	protected:
 		/// Compensation current source set point
 		Matrix mCompensationCurrent;

@@ -22,7 +22,7 @@
 using namespace CPS;
 
 SP::Ph1::ControlledVoltageSource::ControlledVoltageSource(String uid, String name, Logger::Level logLevel)
-	: PowerComponent<Complex>(uid, name, logLevel) {
+	: SimPowerComp<Complex>(uid, name, logLevel) {
 	setVirtualNodeNumber(1);
 	setTerminalNumber(2);
 	mIntfVoltage = MatrixComp::Zero(1, 1);
@@ -34,7 +34,7 @@ void SP::Ph1::ControlledVoltageSource::setParameters(MatrixComp voltageRef) {
 	parametersSet = true;
 }
 
-PowerComponent<Complex>::Ptr SP::Ph1::ControlledVoltageSource::clone(String name) {
+SimPowerComp<Complex>::Ptr SP::Ph1::ControlledVoltageSource::clone(String name) {
 	auto copy = ControlledVoltageSource::make(name, mLogLevel);
 	copy->setParameters(attribute<Matrix>("v_intf")->get());
 	return copy;
@@ -42,7 +42,7 @@ PowerComponent<Complex>::Ptr SP::Ph1::ControlledVoltageSource::clone(String name
 
 
 void SP::Ph1::ControlledVoltageSource::mnaInitialize(Real omega, Real timeStep, Attribute<Matrix>::Ptr leftVector) {
-	updateSimNodes();
+	updateMatrixNodeIndices();
 	mMnaTasks.push_back(std::make_shared<MnaPreStep>(*this));
 	mMnaTasks.push_back(std::make_shared<MnaPostStep>(*this, leftVector));
 	mRightVector = Matrix::Zero(leftVector->get().rows(), 1);
@@ -50,28 +50,28 @@ void SP::Ph1::ControlledVoltageSource::mnaInitialize(Real omega, Real timeStep, 
 
 void SP::Ph1::ControlledVoltageSource::mnaApplySystemMatrixStamp(Matrix& systemMatrix) {
 	if (terminalNotGrounded(0)) {
-		Math::addToMatrixElement(systemMatrix, simNode(0), mVirtualNodes[0]->simNode(), Complex(-1, 0));
-		Math::addToMatrixElement(systemMatrix, mVirtualNodes[0]->simNode(), simNode(0), Complex(-1, 0));
+		Math::addToMatrixElement(systemMatrix, matrixNodeIndex(0), mVirtualNodes[0]->matrixNodeIndex(), Complex(-1, 0));
+		Math::addToMatrixElement(systemMatrix, mVirtualNodes[0]->matrixNodeIndex(), matrixNodeIndex(0), Complex(-1, 0));
 	}
 	if (terminalNotGrounded(1)) {
-		Math::addToMatrixElement(systemMatrix, simNode(1), mVirtualNodes[0]->simNode(), Complex(1, 0));
-		Math::addToMatrixElement(systemMatrix, mVirtualNodes[0]->simNode(), simNode(1), Complex(1, 0));
+		Math::addToMatrixElement(systemMatrix, matrixNodeIndex(1), mVirtualNodes[0]->matrixNodeIndex(), Complex(1, 0));
+		Math::addToMatrixElement(systemMatrix, mVirtualNodes[0]->matrixNodeIndex(), matrixNodeIndex(1), Complex(1, 0));
 	}
 /*
 	if (terminalNotGrounded(0)) {
-		mLog.debug() << "Add " << -1 << " to " << simNode(0) << "," << mVirtualNodes[0]->simNode() << std::endl;
-		mLog.debug() << "Add " << -1 << " to " << mVirtualNodes[0]->simNode() << "," << simNode(0) << std::endl;
+		mLog.debug() << "Add " << -1 << " to " << matrixNodeIndex(0) << "," << mVirtualNodes[0]->matrixNodeIndex() << std::endl;
+		mLog.debug() << "Add " << -1 << " to " << mVirtualNodes[0]->matrixNodeIndex() << "," << matrixNodeIndex(0) << std::endl;
 	}
 	if (terminalNotGrounded(1)) {
-		mLog.debug() << "Add " << 1 << " to " << simNode(1) << "," << mVirtualNodes[0]->simNode() << std::endl;
-		mLog.debug() << "Add " << 1 << " to " << mVirtualNodes[0]->simNode() << "," << simNode(1) << std::endl;
+		mLog.debug() << "Add " << 1 << " to " << matrixNodeIndex(1) << "," << mVirtualNodes[0]->matrixNodeIndex() << std::endl;
+		mLog.debug() << "Add " << 1 << " to " << mVirtualNodes[0]->matrixNodeIndex() << "," << matrixNodeIndex(1) << std::endl;
 	}*/
 }
 
 void SP::Ph1::ControlledVoltageSource::mnaApplyRightSideVectorStamp(Matrix& rightVector) {
-	Math::setVectorElement(rightVector, mVirtualNodes[0]->simNode(), mIntfVoltage(0, 0));
+	Math::setVectorElement(rightVector, mVirtualNodes[0]->matrixNodeIndex(), mIntfVoltage(0, 0));
 	mSLog->debug( "Add {:s} to source vector at {:d}",
-		Logger::complexToString(mIntfVoltage(0, 0)), mVirtualNodes[0]->simNode());
+		Logger::complexToString(mIntfVoltage(0, 0)), mVirtualNodes[0]->matrixNodeIndex());
 
 }
 
@@ -86,5 +86,5 @@ void SP::Ph1::ControlledVoltageSource::MnaPostStep::execute(Real time, Int timeS
 }
 
 void SP::Ph1::ControlledVoltageSource::mnaUpdateCurrent(const Matrix& leftVector) {
-	mIntfCurrent(0, 0) = Math::complexFromVectorElement(leftVector, mVirtualNodes[0]->simNode());
+	mIntfCurrent(0, 0) = Math::complexFromVectorElement(leftVector, mVirtualNodes[0]->matrixNodeIndex());
 }

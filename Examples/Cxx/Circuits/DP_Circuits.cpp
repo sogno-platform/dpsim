@@ -29,7 +29,7 @@ void DP_CS_R1() {
 	Logger::setLogDir("logs/"+simName);
 
 	// Nodes
-	auto n1 = Node::make("n1");
+	auto n1 = SimNode::make("n1");
 
 	// Components
 	auto cs = Ph1::CurrentSource::make("cs");
@@ -38,8 +38,8 @@ void DP_CS_R1() {
 	r1->setParameters(1);
 
 	// Topology
-	cs->connect({ Node::GND, n1 });
-	r1->connect({ Node::GND, n1 });
+	cs->connect({ SimNode::GND, n1 });
+	r1->connect({ SimNode::GND, n1 });
 
 	auto sys = SystemTopology(50, SystemNodeList{n1}, SystemComponentList{cs, r1});
 
@@ -61,7 +61,7 @@ void DP_VS_R1() {
 	Logger::setLogDir("logs/"+simName);
 
 	// Nodes
-	auto n1 = Node::make("n1");
+	auto n1 = SimNode::make("n1");
 
 	// Components
 	auto vs = Ph1::VoltageSource::make("v_1");
@@ -70,8 +70,8 @@ void DP_VS_R1() {
 	r->setParameters(1);
 
 	// Topology
-	vs->connect({Node::GND, n1});
-	r->connect({n1, Node::GND});
+	vs->connect({SimNode::GND, n1});
+	r->connect({n1, SimNode::GND});
 
 	auto sys = SystemTopology(50, SystemNodeList{n1}, SystemComponentList{vs, r});
 
@@ -92,8 +92,8 @@ void DP_CS_R2CL() {
 	Logger::setLogDir("logs/"+simName);
 
 	// Nodes
-	auto n1 = Node::make("n1");
-	auto n2 = Node::make("n2");
+	auto n1 = SimNode::make("n1");
+	auto n2 = SimNode::make("n2");
 
 	// Components
 	auto cs = Ph1::CurrentSource::make("cs");
@@ -108,11 +108,11 @@ void DP_CS_R2CL() {
 	r2->setParameters(1);
 
 	// Topology
-	cs->connect({ Node::GND, n1 });
-	r1->connect({ n1, Node::GND });
+	cs->connect({ SimNode::GND, n1 });
+	r1->connect({ n1, SimNode::GND });
 	c1->connect({ n1, n2 });
-	l1->connect({ n2, Node::GND });
-	r2->connect({ n2, Node::GND });
+	l1->connect({ n2, SimNode::GND });
+	r2->connect({ n2, SimNode::GND });
 
 	auto sys = SystemTopology(50, SystemNodeList{n1, n2}, SystemComponentList{cs, r1, c1, l1, r2});
 
@@ -136,9 +136,9 @@ void DP_VS_CS_R4() {
 	Logger::setLogDir("logs/"+simName);
 
 	// Nodes
-	auto n1 = Node::make("n1");
-	auto n2 = Node::make("n2");
-	auto n3 = Node::make("n3");
+	auto n1 = SimNode::make("n1");
+	auto n2 = SimNode::make("n2");
+	auto n3 = SimNode::make("n3");
 
 	// Components
 	auto vs = Ph1::VoltageSource::make("vs");
@@ -155,12 +155,12 @@ void DP_VS_CS_R4() {
 	cs->setParameters(1);
 
 	// Topology
-	vs->connect(Node::List{ Node::GND, n1 });
-	r1->connect(Node::List{ n1, n2 });
-	r2->connect(Node::List{ n2, Node::GND });
-	r3->connect(Node::List{ n2, n3 });
-	r4->connect(Node::List{ n3, Node::GND });
-	cs->connect(Node::List{ Node::GND, n3 });
+	vs->connect(SimNode::List{ SimNode::GND, n1 });
+	r1->connect(SimNode::List{ n1, n2 });
+	r2->connect(SimNode::List{ n2, SimNode::GND });
+	r3->connect(SimNode::List{ n2, n3 });
+	r4->connect(SimNode::List{ n3, SimNode::GND });
+	cs->connect(SimNode::List{ SimNode::GND, n3 });
 
 	// Define system topology
 	auto sys = SystemTopology(50, SystemNodeList{n1, n2, n3}, SystemComponentList{vs, r1, r2, r3, r4, cs});
@@ -186,10 +186,10 @@ void DP_VS_R2L3() {
 	Logger::setLogDir("logs/"+simName);
 
 	// Nodes
-	auto n1 = Node::make("n1");
-	auto n2 = Node::make("n2");
-	auto n3 = Node::make("n3");
-	auto n4 = Node::make("n4");
+	auto n1 = SimNode::make("n1");
+	auto n2 = SimNode::make("n2");
+	auto n3 = SimNode::make("n3");
+	auto n4 = SimNode::make("n4");
 
 	// Components
 	auto vs = Ph1::VoltageSource::make("vs");
@@ -206,12 +206,12 @@ void DP_VS_R2L3() {
 	r2->setParameters(2);
 
 	// Topology
-	vs->connect(Node::List{ Node::GND, n1 });
-	r1->connect(Node::List{ n1, n2 });
-	l1->connect(Node::List{ n2, n3 });
-	l2->connect(Node::List{ n3, Node::GND });
-	l3->connect(Node::List{ n3, n4 });
-	r2->connect(Node::List{ n4, Node::GND });
+	vs->connect(SimNode::List{ SimNode::GND, n1 });
+	r1->connect(SimNode::List{ n1, n2 });
+	l1->connect(SimNode::List{ n2, n3 });
+	l2->connect(SimNode::List{ n3, SimNode::GND });
+	l3->connect(SimNode::List{ n3, n4 });
+	r2->connect(SimNode::List{ n4, SimNode::GND });
 
 	auto sys = SystemTopology(50, SystemNodeList{n1, n2, n3, n4}, SystemComponentList{vs, r1, l1, l2, l3, r2});
 
@@ -237,8 +237,8 @@ void DP_VS_RC1() {
 	Logger::setLogDir("logs/"+simName);
 
 	// Nodes
-	auto n1 = Node::make("n1");
-	auto n2 = Node::make("n2");
+	auto n1 = SimNode::make("n1");
+	auto n2 = SimNode::make("n2");
 
 	// Components
 	auto vs = Ph1::VoltageSource::make("vs", Logger::Level::debug);
@@ -249,9 +249,9 @@ void DP_VS_RC1() {
 	c1->setParameters(0.001);
 
 	// Topology
-	vs->connect({ Node::GND, n1 });
+	vs->connect({ SimNode::GND, n1 });
 	r1->connect({ n1, n2 });
-	c1->connect({ n2, Node::GND });
+	c1->connect({ n2, SimNode::GND });
 
 	auto sys = SystemTopology(50, SystemNodeList{n1, n2}, SystemComponentList{vs, r1, c1});
 
@@ -274,9 +274,9 @@ void DP_VS_RL2() {
 	Logger::setLogDir("logs/"+simName);
 
 	// Nodes
-	auto n1 = Node::make("n1");
-	auto n2 = Node::make("n2");
-	auto n3 = Node::make("n3");
+	auto n1 = SimNode::make("n1");
+	auto n2 = SimNode::make("n2");
+	auto n3 = SimNode::make("n3");
 
 	// Components
 	auto vs = Ph1::VoltageSource::make("v_s");
@@ -289,10 +289,10 @@ void DP_VS_RL2() {
 	rL->setParameters(100);
 
 	// Topology
-	vs->connect({ Node::GND, n1 });
+	vs->connect({ SimNode::GND, n1 });
 	rl->connect({ n1, n2 });
 	ll->connect({ n2, n3 });
-	rL->connect({ Node::GND, n3 });
+	rL->connect({ SimNode::GND, n3 });
 
 	// Define system topology
 	auto sys = SystemTopology(50, SystemNodeList{n1, n2, n3}, SystemComponentList{vs, rl, ll, rL});
@@ -317,10 +317,10 @@ void DP_Ph3_VS_R2L3() {
 	Logger::setLogDir("logs/" + simName);
 
 	// Nodes
-	auto n1 = Node::make("n1", PhaseType::ABC);
-	auto n2 = Node::make("n2", PhaseType::ABC);
-	auto n3 = Node::make("n3", PhaseType::ABC);
-	auto n4 = Node::make("n4", PhaseType::ABC);
+	auto n1 = SimNode::make("n1", PhaseType::ABC);
+	auto n2 = SimNode::make("n2", PhaseType::ABC);
+	auto n3 = SimNode::make("n3", PhaseType::ABC);
+	auto n4 = SimNode::make("n4", PhaseType::ABC);
 
 	// Components
 	auto vs = Ph3::VoltageSource::make("vs");
@@ -347,12 +347,12 @@ void DP_Ph3_VS_R2L3() {
 	r2->setParameters(2 * r1_param);
 
 	// Topology
-	vs->connect(Node::List{ Node::GND, n1 });
-	r1->connect(Node::List{ n1, n2 });
-	l1->connect(Node::List{ n2, n3 });
-	l2->connect(Node::List{ n3, Node::GND });
-	l3->connect(Node::List{ n3, n4 });
-	r2->connect(Node::List{ n4, Node::GND });
+	vs->connect(SimNode::List{ SimNode::GND, n1 });
+	r1->connect(SimNode::List{ n1, n2 });
+	l1->connect(SimNode::List{ n2, n3 });
+	l2->connect(SimNode::List{ n3, SimNode::GND });
+	l3->connect(SimNode::List{ n3, n4 });
+	r2->connect(SimNode::List{ n4, SimNode::GND });
 
 	auto sys = SystemTopology(50, SystemNodeList{n1, n2, n3, n4}, SystemComponentList{vs, r1, l1, l2, l3, r2});
 
@@ -383,8 +383,8 @@ void DP_Ph3_VS_RC1() {
 	Logger::setLogDir("logs/" + simName);
 
 	// Nodes
-	auto n1 = Node::make("n1", PhaseType::ABC);
-	auto n2 = Node::make("n2", PhaseType::ABC);
+	auto n1 = SimNode::make("n1", PhaseType::ABC);
+	auto n2 = SimNode::make("n2", PhaseType::ABC);
 
 	// Components
 	auto vs = Ph3::VoltageSource::make("vs");
@@ -405,9 +405,9 @@ void DP_Ph3_VS_RC1() {
 	c1->setParameters(c_param);
 
 	// Topology
-	vs->connect({ Node::GND, n1 });
+	vs->connect({ SimNode::GND, n1 });
 	r1->connect({ n1, n2 });
-	c1->connect({ n2, Node::GND });
+	c1->connect({ n2, SimNode::GND });
 
 	auto sys = SystemTopology(50, SystemNodeList{n1, n2}, SystemComponentList{vs, r1, c1});
 

@@ -1,7 +1,5 @@
 /**
- * @file
- * @author Markus Mirz <mmirz@eonerc.rwth-aachen.de>
- * @copyright 2017-2018, Institute for Automation of Complex Power Systems, EONERC
+ * @copyright 2017, Institute for Automation of Complex Power Systems, EONERC
  *
  * CPowerSystems
  *
@@ -27,12 +25,12 @@
 namespace CPS {
 
 	template <typename VarType>
-	class Node : 	public TopologicalNode,
-					public std::enable_shared_from_this<Node<VarType>>,
-					public SharedFactory<Node<VarType>> {
+	class SimNode : public TopologicalNode,
+					public std::enable_shared_from_this<SimNode<VarType>>,
+					public SharedFactory<SimNode<VarType>> {
 	protected:
 		///
-		std::vector<UInt> mSimNode = { 0 };
+		std::vector<UInt> mMatrixNodeIndex = { 0 };
 		/// List of considered network harmonics
 		Matrix mFrequencies;
 		/// Number of harmonics
@@ -43,68 +41,68 @@ namespace CPS {
 		Task::List mMnaTasks;
 	public:
 		typedef VarType Type;
-		typedef std::shared_ptr<Node<VarType>> Ptr;
+		typedef std::shared_ptr<SimNode<VarType>> Ptr;
 		typedef std::vector<Ptr> List;
 		///
 		static Ptr GND;
 
 		/// This very general constructor is used by other constructors.
-		Node(String name, String uid, std::vector<UInt> simNode,
+		SimNode(String name, String uid, std::vector<UInt> matrixNodeIndex,
 			PhaseType phaseType, std::vector<Complex> initialVoltage);
 		/// Create ground node if no parameters are given.
-		Node(PhaseType phaseType = PhaseType::Single);
+		SimNode(PhaseType phaseType = PhaseType::Single);
 		/// Create named node and optionally assigns an initial voltage.
 		/// This should be the constructor called by users in examples.
-		Node(String name, PhaseType phaseType = PhaseType::Single,
+		SimNode(String name, PhaseType phaseType = PhaseType::Single,
 			std::vector<Complex> initialVoltage = { 0, 0, 0 })
-			: Node(name, name, { 0, 0, 0 }, phaseType, initialVoltage) { }
+			: SimNode(name, name, { 0, 0, 0 }, phaseType, initialVoltage) { }
 		/// Create node with name and node number.
 		/// This is mostly used by functions.
-		Node(String uid, String name, UInt simNode,
+		SimNode(String uid, String name, UInt matrixNodeIndex,
 			PhaseType phaseType = PhaseType::Single, std::vector<Complex> initialVoltage = { 0, 0, 0 })
-			: Node(uid, name, { simNode, simNode + 1, simNode + 2 }, phaseType, initialVoltage) {}
+			: SimNode(uid, name, { matrixNodeIndex, matrixNodeIndex + 1, matrixNodeIndex + 2 }, phaseType, initialVoltage) {}
 		/// Create node with default name and node number.
 		/// This is mostly used by functions.
-		Node(UInt simNode, PhaseType phaseType = PhaseType::Single)
-			: Node("N" + std::to_string(simNode), "N" + std::to_string(simNode), simNode, phaseType) { }
+		SimNode(UInt matrixNodeIndex, PhaseType phaseType = PhaseType::Single)
+			: SimNode("N" + std::to_string(matrixNodeIndex), "N" + std::to_string(matrixNodeIndex), matrixNodeIndex, phaseType) { }
 
 		/// Initialize state matrices with size according to phase type and frequency number
 		void initialize(Matrix frequencies);
 		/// Returns matrix index for specified phase
-		UInt simNode(PhaseType phaseType = PhaseType::Single) {
+		UInt matrixNodeIndex(PhaseType phaseType = PhaseType::Single) {
 			if ((phaseType == PhaseType::A || phaseType == PhaseType::Single)
 				&& (mPhaseType == PhaseType::Single
 				|| mPhaseType == PhaseType::A
 				|| mPhaseType == PhaseType::ABC))
-				return mSimNode[0];
+				return mMatrixNodeIndex[0];
 			else if (phaseType == PhaseType::B
 				&& (mPhaseType == PhaseType::B
 				|| mPhaseType == PhaseType::ABC))
-				return mSimNode[1];
+				return mMatrixNodeIndex[1];
 			else if (phaseType == PhaseType::C
 				&& (mPhaseType == PhaseType::C
 				|| mPhaseType == PhaseType::ABC))
-				return mSimNode[2];
+				return mMatrixNodeIndex[2];
 			else
 				return 0;
 		}
 		/// Returns all matrix indices
-		std::vector<UInt> simNodes() {
+		std::vector<UInt> matrixNodeIndices() {
 			if (mPhaseType == PhaseType::B)
-				return { mSimNode[1] };
+				return { mMatrixNodeIndex[1] };
 			else if (mPhaseType == PhaseType::C)
-				return { mSimNode[2] };
+				return { mMatrixNodeIndex[2] };
 			else if (mPhaseType == PhaseType::ABC)
-				return mSimNode;
+				return mMatrixNodeIndex;
 			else // phaseType == PhaseType::Single || mPhaseType == PhaseType::A
-				return { mSimNode[0] };
+				return { mMatrixNodeIndex[0] };
 		}
 		///
 		VarType singleVoltage(PhaseType phaseType = PhaseType::Single);
 		///
 		MatrixVar<VarType> voltage() { return mVoltage; }
 		///
-		void setSimNode(UInt phase, UInt simNode) { mSimNode[phase] = simNode; }
+		void setMatrixNodeIndex(UInt phase, UInt matrixNodeIndex) { mMatrixNodeIndex[phase] = matrixNodeIndex; }
 		///
 		void setVoltage(VarType newVoltage) { }
 
@@ -122,7 +120,7 @@ namespace CPS {
 		///
 		class MnaPostStepHarm : public Task {
 		public:
-			MnaPostStepHarm(Node& node, std::vector<Attribute<Matrix>::Ptr> leftVectors) :
+			MnaPostStepHarm(SimNode& node, std::vector<Attribute<Matrix>::Ptr> leftVectors) :
 				Task(node.mName + ".MnaPostStepHarm"),
 				mNode(node), mLeftVectors(leftVectors) {
 				for (UInt i = 0; i < mLeftVectors.size(); i++)
@@ -131,33 +129,33 @@ namespace CPS {
 			}
 			void execute(Real time, Int timeStepCount);
 		private:
-			Node& mNode;
+			SimNode& mNode;
 			std::vector< Attribute<Matrix>::Ptr > mLeftVectors;
 		};
 	};
 
 	namespace SP {
-		typedef CPS::Node<Complex> Node;
+		typedef CPS::SimNode<Complex> SimNode;
 	}
 	namespace DP {
-		typedef CPS::Node<Complex> Node;
+		typedef CPS::SimNode<Complex> SimNode;
 	}
 	namespace EMT {
-		typedef CPS::Node<Real> Node;
+		typedef CPS::SimNode<Real> SimNode;
 	}
 
 	template<typename VarType>
-	typename Node<VarType>::Ptr Node<VarType>::GND = Node<VarType>::make();
+	typename SimNode<VarType>::Ptr SimNode<VarType>::GND = SimNode<VarType>::make();
 
 	template<>
-	void Node<Real>::mnaUpdateVoltage(Matrix& leftVector);
+	void SimNode<Real>::mnaUpdateVoltage(Matrix& leftVector);
 
 	template<>
-	void Node<Complex>::mnaUpdateVoltage(Matrix& leftVector);
+	void SimNode<Complex>::mnaUpdateVoltage(Matrix& leftVector);
 
 	template<>
-	void Node<Complex>::mnaInitializeHarm(std::vector<Attribute<Matrix>::Ptr> leftVector);
+	void SimNode<Complex>::mnaInitializeHarm(std::vector<Attribute<Matrix>::Ptr> leftVector);
 
 	template<>
-	void Node<Complex>::setVoltage(Complex newVoltage);
+	void SimNode<Complex>::setVoltage(Complex newVoltage);
 }

@@ -1,6 +1,5 @@
 /**
- * @author Markus Mirz <mmirz@eonerc.rwth-aachen.de>
- * @copyright 2017-2018, Institute for Automation of Complex Power Systems, EONERC
+ * @copyright 2017, Institute for Automation of Complex Power Systems, EONERC
  *
  * CPowerSystems
  *
@@ -86,7 +85,7 @@ Real Reader::unitValue(Real value, UnitMultiplier mult) {
 	return value;
 }
 
-Component::Ptr Reader::mapComponent(BaseClass* obj) {
+TopologicalPowerComp::Ptr Reader::mapComponent(BaseClass* obj) {
 	if (ACLineSegment *line = dynamic_cast<ACLineSegment*>(obj))
 		return mapACLineSegment(line);
 	if (EnergyConsumer *consumer = dynamic_cast<EnergyConsumer*>(obj))
@@ -167,7 +166,7 @@ void Reader::parseFiles() {
 
 				// Check if object is already in equipment list
 				if (mPowerflowEquipment.find(idObj->mRID) == mPowerflowEquipment.end()) {
-					Component::Ptr comp = mapComponent(obj);
+					TopologicalPowerComp::Ptr comp = mapComponent(obj);
 					if (comp)
 						mPowerflowEquipment.insert(std::make_pair(comp->uid(), comp));
 				}
@@ -180,13 +179,13 @@ void Reader::parseFiles() {
 		auto c = pfe.second;
 
 		if (mDomain == Domain::EMT) {
-			if(PowerComponent<Real>::Ptr powercomp = std::dynamic_pointer_cast<PowerComponent<Real>>(c)) {
+			if(SimPowerComp<Real>::Ptr powercomp = std::dynamic_pointer_cast<SimPowerComp<Real>>(c)) {
 				if (powercomp->terminalNumberConnected() < powercomp->terminalNumber())
 					throw InvalidTopology();
 			}
 		}
 		else {
-			if(PowerComponent<Complex>::Ptr powercomp = std::dynamic_pointer_cast<PowerComponent<Complex>>(c)) {
+			if(SimPowerComp<Complex>::Ptr powercomp = std::dynamic_pointer_cast<SimPowerComp<Complex>>(c)) {
 				if (powercomp->terminalNumberConnected() < powercomp->terminalNumber())
 					throw InvalidTopology();
 			}
@@ -226,21 +225,21 @@ void Reader::processSvVoltage(SvVoltage* volt) {
 			" missing from mTopNodes, ignoring", node->mRID);
 		return;
 	}
-	
+
 	Real voltageAbs = Reader::unitValue(volt->v.value, UnitMultiplier::k);
 
 	try{
 		mSLog->info("    Angle={}", (float)volt->angle.value);
 	}catch(ReadingUninitializedField* e ){
 		volt->angle.value = 0;
-		std::cerr<< "Uninitialized Angle for SVVoltage at " << volt->TopologicalNode->name << ".Setting default value of " << volt->angle.value << std::endl;		
+		std::cerr<< "Uninitialized Angle for SVVoltage at " << volt->TopologicalNode->name << ".Setting default value of " << volt->angle.value << std::endl;
 	}
 	Real voltagePhase = volt->angle.value * PI / 180;
 	mPowerflowNodes[node->mRID]->setInitialVoltage(std::polar<Real>(voltageAbs, voltagePhase));
-	 
-	mSLog->info("Node {} SimNode {}: {} V, {} deg",
+
+	mSLog->info("Node {} MatrixNodeIndex {}: {} V, {} deg",
 		mPowerflowNodes[node->mRID]->uid(),
-		mPowerflowNodes[node->mRID]->simNode(),
+		mPowerflowNodes[node->mRID]->matrixNodeIndex(),
 		std::abs(mPowerflowNodes[node->mRID]->initialSingleVoltage()),
 		std::arg(mPowerflowNodes[node->mRID]->initialSingleVoltage())*180/PI
 	);
@@ -265,12 +264,12 @@ SystemTopology Reader::systemTopology() {
 	for (auto comp : mPowerflowEquipment) {
 		system.addComponent(comp.second);
 		// TODO support Real
-		if (PowerComponent<Complex>::Ptr powercomp = std::dynamic_pointer_cast<PowerComponent<Complex>>(comp.second)) {
+		if (SimPowerComp<Complex>::Ptr powercomp = std::dynamic_pointer_cast<SimPowerComp<Complex>>(comp.second)) {
 			for (auto term : powercomp->topologicalTerminals()) {
 				TopologicalNode::Ptr node=term->topologicalNodes();
 			//TopologicalNode::Ptr node = powercomp->topologicalTerminals().back()->topologicalNodes();
 			if (system.mComponentsAtNode.find(node) == system.mComponentsAtNode.end()) {
-				Component::List complist;
+				TopologicalPowerComp::List complist;
 				complist.push_back(powercomp);
 				system.mComponentsAtNode.insert(std::make_pair(node, complist));
 			}
@@ -285,8 +284,8 @@ SystemTopology Reader::systemTopology() {
 
 	for (auto node : mPowerflowNodes) {
 		// The index of the node in the list should not matter anymore
-		//system.mNodes[node.second->simNode()] = node.second;
-		system.addNodeAt(node.second, node.second->simNode());
+		//system.mNodes[node.second->matrixNodeIndex()] = node.second;
+		system.addNodeAt(node.second, node.second->matrixNodeIndex());
 	}
 
 	return system;
@@ -297,10 +296,10 @@ Matrix::Index Reader::mapTopologicalNode(String mrid) {
 	if (search == mPowerflowNodes.end()) {
 		return -1;
 	}
-	return search->second->simNode();
+	return search->second->matrixNodeIndex();
 }
 
-Component::Ptr Reader::mapEnergyConsumer(EnergyConsumer* consumer) {
+TopologicalPowerComp::Ptr Reader::mapEnergyConsumer(EnergyConsumer* consumer) {
 	mSLog->info("    Found EnergyConsumer {}", consumer->name);
 	if (mDomain == Domain::EMT) {
 		if (mPhase == PhaseType::ABC) {
@@ -336,7 +335,7 @@ Component::Ptr Reader::mapEnergyConsumer(EnergyConsumer* consumer) {
 	}
 }
 
-Component::Ptr Reader::mapACLineSegment(ACLineSegment* line) {
+TopologicalPowerComp::Ptr Reader::mapACLineSegment(ACLineSegment* line) {
 	mSLog->info("    Found ACLineSegment {} r={} x={} bch={} gch={}", line->name,
 		(float) line->r.value,
 		(float) line->x.value,
@@ -406,7 +405,7 @@ Component::Ptr Reader::mapACLineSegment(ACLineSegment* line) {
 
 }
 
-Component::Ptr Reader::mapPowerTransformer(PowerTransformer* trans) {
+TopologicalPowerComp::Ptr Reader::mapPowerTransformer(PowerTransformer* trans) {
 	if (trans->PowerTransformerEnd.size() != 2) {
 		mSLog->warn("PowerTransformer {} does not have exactly two windings, ignoring", trans->name);
 		return nullptr;
@@ -526,7 +525,7 @@ Component::Ptr Reader::mapPowerTransformer(PowerTransformer* trans) {
 	}
 }
 
-Component::Ptr Reader::mapSynchronousMachine(SynchronousMachine* machine) {
+TopologicalPowerComp::Ptr Reader::mapSynchronousMachine(SynchronousMachine* machine) {
 	mSLog->info("    Found  Synchronous machine {}", machine->name);
 
 	if (mGeneratorType == GeneratorType::Transient) {
@@ -542,9 +541,9 @@ Component::Ptr Reader::mapSynchronousMachine(SynchronousMachine* machine) {
 				if (genDyn->SynchronousMachine->mRID == machine->mRID) {
 					directTransientReactance = genDyn->xDirectTrans.value;
 					inertiaCoefficient = genDyn->inertia.value;
-					
+
 					ratedPower = unitValue(machine->ratedS.value, UnitMultiplier::M);
-					
+
 					ratedVoltage = unitValue(machine->ratedU.value, UnitMultiplier::k);
 					auto gen = DP::Ph1::SynchronGeneratorTrStab::make(machine->mRID, machine->name, mComponentLogLevel);
 					gen->setStandardParametersPU(ratedPower, ratedVoltage, mFrequency,
@@ -569,19 +568,19 @@ Component::Ptr Reader::mapSynchronousMachine(SynchronousMachine* machine) {
 						Real setPointActivePower = 0;
 						Real setPointVoltage = 0;
 						Real maximumReactivePower = 1e12;
-						try{							
+						try{
 							setPointActivePower = unitValue(genUnit->initialP.value, UnitMultiplier::M);
 							mSLog->info("    setPointActivePower={}", setPointActivePower);
 						}catch(ReadingUninitializedField* e){
 							std::cerr << "Uninitalized setPointActivePower for GeneratingUnit " << machine->name << ". Using default value of " << setPointActivePower << std::endl;
-						}	
-						if (machine->RegulatingControl) {							
+						}
+						if (machine->RegulatingControl) {
 							setPointVoltage = unitValue(machine->RegulatingControl->targetValue.value, UnitMultiplier::k);
 							mSLog->info("    setPointVoltage={}", setPointVoltage);
 						} else {
 							std::cerr << "Uninitalized setPointVoltage for GeneratingUnit " <<  machine->name << ". Using default value of " << setPointVoltage << std::endl;
-						}	
-						try{							
+						}
+						try{
 							maximumReactivePower = unitValue(machine->maxQ.value, UnitMultiplier::M);
 							mSLog->info("    maximumReactivePower={}", maximumReactivePower);
 						}catch(ReadingUninitializedField* e){
@@ -611,7 +610,7 @@ Component::Ptr Reader::mapSynchronousMachine(SynchronousMachine* machine) {
     }
 }
 
-Component::Ptr Reader::mapExternalNetworkInjection(ExternalNetworkInjection* extnet) {
+TopologicalPowerComp::Ptr Reader::mapExternalNetworkInjection(ExternalNetworkInjection* extnet) {
 	mSLog->info("Found External Network Injection {}", extnet->name);
 	if (mDomain == Domain::EMT) {
 		if (mPhase == PhaseType::ABC) {
@@ -625,16 +624,16 @@ Component::Ptr Reader::mapExternalNetworkInjection(ExternalNetworkInjection* ext
 		auto cpsextnet = std::make_shared<SP::Ph1::externalGridInjection>(extnet->mRID, extnet->name, mComponentLogLevel);
 		cpsextnet->modifyPowerFlowBusType(PowerflowBusType::VD); // for powerflow solver set as VD component as default
 		if(extnet->RegulatingControl){
-			mSLog->info("       Voltage set-point={}", (float) extnet->RegulatingControl->targetValue);			
-			cpsextnet->setParameters(extnet->RegulatingControl->targetValue); // assumes that value is specified in CIM data in per unit			
-		} else 
-			mSLog->info("       No voltage set-point defined.");			
+			mSLog->info("       Voltage set-point={}", (float) extnet->RegulatingControl->targetValue);
+			cpsextnet->setParameters(extnet->RegulatingControl->targetValue); // assumes that value is specified in CIM data in per unit
+		} else
+			mSLog->info("       No voltage set-point defined.");
 		return cpsextnet;
-	} else 
+	} else
 		return nullptr; // DP network injection not considered yet
 }
 
-Component::Ptr Reader::mapEquivalentShunt(EquivalentShunt* shunt){
+TopologicalPowerComp::Ptr Reader::mapEquivalentShunt(EquivalentShunt* shunt){
 	mSLog->info("Found shunt {}", shunt->name);
 
 	Real baseVoltage = 0;
@@ -675,13 +674,13 @@ void Reader::writeSvVoltageFromStaticSysTopology(SystemTopology& sysStatic, Syst
 	for (; nodeDyn != sysDynamic.mNodes.end() && nodeSt != sysStatic.mNodes.end(); ++nodeDyn, ++nodeSt) {
 		if ((*nodeDyn)->name() == (*nodeSt)->name()) {
 			(*nodeDyn)->setInitialVoltage(
-				std::dynamic_pointer_cast<CPS::Node<CPS::Complex>>((*nodeSt))->singleVoltage());
+				std::dynamic_pointer_cast<CPS::SimNode<CPS::Complex>>((*nodeSt))->singleVoltage());
 		}
 		else {
 			for (auto node : sysStatic.mNodes) {
 				if ((*nodeDyn)->name() == node->name())
 					(*nodeDyn)->setInitialVoltage(
-						std::dynamic_pointer_cast<CPS::Node<CPS::Complex>>(node)->singleVoltage());
+						std::dynamic_pointer_cast<CPS::SimNode<CPS::Complex>>(node)->singleVoltage());
 			}
 		}
 	}
@@ -691,7 +690,7 @@ void Reader::writeSvVoltageFromStaticSysTopology(SystemTopology& sysStatic, Syst
 			for (auto node : sysStatic.mNodes) {
 				if ((*nodeDyn)->name() == node->name())
 					(*nodeDyn)->setInitialVoltage(
-						std::dynamic_pointer_cast<CPS::Node<CPS::Complex>>(node)->singleVoltage());
+						std::dynamic_pointer_cast<CPS::SimNode<CPS::Complex>>(node)->singleVoltage());
 			}
 		}
 	}
@@ -701,23 +700,23 @@ void Reader::writeSvVoltageFromStaticSysTopology(SystemTopology& sysStatic, Syst
 template<typename VarType>
 void Reader::processTopologicalNode(IEC61970::Base::Topology::TopologicalNode* topNode) {
 	// Add this node to global node list and assign simulation node incrementally.
-	int simNode = Int(mPowerflowNodes.size());
-	mPowerflowNodes[topNode->mRID] = Node<VarType>::make(topNode->mRID, topNode->name, simNode, mPhase);
+	int matrixNodeIndex = Int(mPowerflowNodes.size());
+	mPowerflowNodes[topNode->mRID] = SimNode<VarType>::make(topNode->mRID, topNode->name, matrixNodeIndex, mPhase);
 
 	if (mPhase == PhaseType::ABC) {
-		mSLog->info("TopologicalNode {} phase A as simulation node {} ", topNode->mRID, mPowerflowNodes[topNode->mRID]->simNode(PhaseType::A));
-		mSLog->info("TopologicalNode {} phase B as simulation node {}", topNode->mRID, mPowerflowNodes[topNode->mRID]->simNode(PhaseType::B));
-		mSLog->info("TopologicalNode {} phase C as simulation node {}", topNode->mRID, mPowerflowNodes[topNode->mRID]->simNode(PhaseType::C));
+		mSLog->info("TopologicalNode {} phase A as simulation node {} ", topNode->mRID, mPowerflowNodes[topNode->mRID]->matrixNodeIndex(PhaseType::A));
+		mSLog->info("TopologicalNode {} phase B as simulation node {}", topNode->mRID, mPowerflowNodes[topNode->mRID]->matrixNodeIndex(PhaseType::B));
+		mSLog->info("TopologicalNode {} phase C as simulation node {}", topNode->mRID, mPowerflowNodes[topNode->mRID]->matrixNodeIndex(PhaseType::C));
 	}
 	else
-		mSLog->info("TopologicalNode {} as simulation node {}", topNode->mRID, mPowerflowNodes[topNode->mRID]->simNode());
+		mSLog->info("TopologicalNode {} as simulation node {}", topNode->mRID, mPowerflowNodes[topNode->mRID]->matrixNodeIndex());
 
 	for (auto term : topNode->Terminal) {
 		// Insert Terminal if it does not exist in the map and add reference to node.
 		// This could be optimized because the Terminal is searched twice.
-		auto cpsTerm = Terminal<VarType>::make(term->mRID);
+		auto cpsTerm = SimTerminal<VarType>::make(term->mRID);
 		mPowerflowTerminals.insert(std::make_pair(term->mRID, cpsTerm));
-		cpsTerm->setNode(std::dynamic_pointer_cast<Node<VarType>>(mPowerflowNodes[topNode->mRID]));
+		cpsTerm->setNode(std::dynamic_pointer_cast<SimNode<VarType>>(mPowerflowNodes[topNode->mRID]));
 
 		if (!term->sequenceNumber.initialized)
 			term->sequenceNumber = 1;
@@ -733,7 +732,7 @@ void Reader::processTopologicalNode(IEC61970::Base::Topology::TopologicalNode* t
 			// Insert Equipment if it does not exist in the map and add reference to Terminal.
 			// This could be optimized because the Equipment is searched twice.
 			if (mPowerflowEquipment.find(equipment->mRID) == mPowerflowEquipment.end()) {
-				Component::Ptr comp = mapComponent(equipment);
+				TopologicalPowerComp::Ptr comp = mapComponent(equipment);
 				if (comp) {
 					mPowerflowEquipment.insert(std::make_pair(equipment->mRID, comp));
 				} else {
@@ -743,8 +742,8 @@ void Reader::processTopologicalNode(IEC61970::Base::Topology::TopologicalNode* t
 			}
 
 			auto pfEquipment = mPowerflowEquipment.at(equipment->mRID);
-			std::dynamic_pointer_cast<PowerComponent<VarType>>(pfEquipment)->setTerminalAt(
-				std::dynamic_pointer_cast<Terminal<VarType>>(mPowerflowTerminals[term->mRID]), term->sequenceNumber-1);
+			std::dynamic_pointer_cast<SimPowerComp<VarType>>(pfEquipment)->setTerminalAt(
+				std::dynamic_pointer_cast<SimTerminal<VarType>>(mPowerflowTerminals[term->mRID]), term->sequenceNumber-1);
 
 			mSLog->info("        Added Terminal {} to Equipment {}", term->mRID, equipment->mRID);
 		}

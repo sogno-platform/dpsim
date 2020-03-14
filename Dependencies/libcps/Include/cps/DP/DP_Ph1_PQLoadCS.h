@@ -22,7 +22,7 @@
 
 #pragma once
 
-#include <cps/PowerComponent.h>
+#include <cps/SimPowerComp.h>
 #include <cps/Solver/MNAInterface.h>
 #include <cps/DP/DP_Ph1_CurrentSource.h>
 #include <cps/Base/Base_Ph1_PQLoad.h>
@@ -34,7 +34,7 @@ namespace Ph1 {
 	/// TODO: read from CSV files
 	/// \brief PQ-load represented by a current source
 	class PQLoadCS :
-		public PowerComponent<Complex>,
+		public SimPowerComp<Complex>,
 		public MNAInterface,
 		public SharedFactory<PQLoadCS> {
 	protected:
@@ -63,7 +63,7 @@ namespace Ph1 {
 			Logger::Level logLevel = Logger::Level::off);
 
 		void setParameters(Real activePower, Real reactivePower, Real nomVolt);
-		PowerComponent<Complex>::Ptr clone(String name);
+		SimPowerComp<Complex>::Ptr clone(String name);
 
 		// #### General ####
 		/// Initializes component from power flow data

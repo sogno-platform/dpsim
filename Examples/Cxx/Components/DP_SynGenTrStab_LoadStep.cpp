@@ -50,7 +50,7 @@ int main(int argc, char* argv[]) {
 	Real RloadStep = 0.7;
 
 	// Nodes
-	auto n1 = Node::make("n1", PhaseType::Single, std::vector<Complex>{ initVoltage });
+	auto n1 = SimNode::make("n1", PhaseType::Single, std::vector<Complex>{ initVoltage });
 
 	// Components
 	auto gen = Ph1::SynchronGeneratorTrStab::make("SynGen", Logger::Level::debug);
@@ -60,7 +60,7 @@ int main(int argc, char* argv[]) {
 
 	auto load = Ph1::Switch::make("StepLoad", Logger::Level::debug);
 	load->setParameters(Rload, RloadStep);
-	load->connect({Node::GND, n1});
+	load->connect({SimNode::GND, n1});
 	load->open();
 
 	// System

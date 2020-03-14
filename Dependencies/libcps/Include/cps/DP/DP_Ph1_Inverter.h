@@ -23,7 +23,7 @@
 
 #include <map>
 
-#include <cps/PowerComponent.h>
+#include <cps/SimPowerComp.h>
 #include <cps/Solver/MNAInterface.h>
 
 namespace CPS {
@@ -33,7 +33,7 @@ namespace Ph1 {
 	///
 	/// add more explanation here regarding bessel function model
 	class Inverter :
-		public PowerComponent<Complex>,
+		public SimPowerComp<Complex>,
 		public MNAInterface,
 		public SharedFactory<Inverter> {
 	protected:

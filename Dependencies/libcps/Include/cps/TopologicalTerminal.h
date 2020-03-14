@@ -1,7 +1,5 @@
 /**
- * @file
- * @author Markus Mirz <mmirz@eonerc.rwth-aachen.de>
- * @copyright 2017-2018, Institute for Automation of Complex Power Systems, EONERC
+ * @copyright 2017, Institute for Automation of Complex Power Systems, EONERC
  *
  * CPowerSystems
  *
@@ -66,8 +64,8 @@ namespace CPS {
 		///
 		MatrixComp initialVoltage();
 		///
-		UInt simNode() { return topologicalNodes()->simNode(mPhaseType); }
+		UInt matrixNodeIndex() { return topologicalNodes()->matrixNodeIndex(mPhaseType); }
 		///
-		std::vector<UInt> simNodes() { return topologicalNodes()->simNodes(); }
+		std::vector<UInt> matrixNodeIndices() { return topologicalNodes()->matrixNodeIndices(); }
 	};
 }

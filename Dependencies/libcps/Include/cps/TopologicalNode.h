@@ -1,7 +1,5 @@
 /**
- * @file
- * @author Markus Mirz <mmirz@eonerc.rwth-aachen.de>
- * @copyright 2017-2018, Institute for Automation of Complex Power Systems, EONERC
+ * @copyright 2017, Institute for Automation of Complex Power Systems, EONERC
  *
  * CPowerSystems
  *
@@ -60,10 +58,10 @@ namespace CPS {
 		///
 		PhaseType phaseType() { return mPhaseType; }
 		///
-		virtual UInt simNode(PhaseType phaseType = PhaseType::Single) = 0;
+		virtual UInt matrixNodeIndex(PhaseType phaseType = PhaseType::Single) = 0;
 		///
-		virtual std::vector<UInt> simNodes() = 0;
+		virtual std::vector<UInt> matrixNodeIndices() = 0;
 		///
-		virtual void setSimNode(UInt phase, UInt simNode) = 0;
+		virtual void setMatrixNodeIndex(UInt phase, UInt matrixNodeIndex) = 0;
 	};
 }

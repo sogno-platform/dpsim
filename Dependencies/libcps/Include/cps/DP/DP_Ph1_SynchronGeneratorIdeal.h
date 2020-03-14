@@ -21,7 +21,7 @@
 
 #pragma once
 
-#include <cps/PowerComponent.h>
+#include <cps/SimPowerComp.h>
 #include <cps/Solver/MNAInterface.h>
 #include <cps/DP/DP_Ph1_VoltageSource.h>
 
@@ -30,7 +30,7 @@ namespace DP {
 namespace Ph1 {
 	/// Ideal voltage source representing a synchronous generator
 	class SynchronGeneratorIdeal :
-		public PowerComponent<Complex>,
+		public SimPowerComp<Complex>,
 		public MNAInterface,
 		public SharedFactory<SynchronGeneratorIdeal> {
 	private:
@@ -46,7 +46,7 @@ namespace Ph1 {
 		SynchronGeneratorIdeal(String name,
 			Logger::Level logLevel = Logger::Level::off);
 
-		PowerComponent<Complex>::Ptr clone(String name);
+		SimPowerComp<Complex>::Ptr clone(String name);
 
 		// #### General ####
 		///

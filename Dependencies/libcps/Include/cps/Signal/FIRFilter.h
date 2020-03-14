@@ -24,14 +24,14 @@
 
 #include <vector>
 
-#include <cps/PowerComponent.h>
-#include <cps/SignalComponent.h>
+#include <cps/SimPowerComp.h>
+#include <cps/SimSignalComp.h>
 #include <cps/Task.h>
 
 namespace CPS {
 namespace Signal {
 	class FIRFilter :
-		public SignalComponent,
+		public SimSignalComp,
 		public SharedFactory<FIRFilter> {
 	protected:
 		std::vector<Real> mSignal;

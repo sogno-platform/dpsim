@@ -21,14 +21,14 @@
 
 #pragma once
 
-#include <cps/PowerComponent.h>
+#include <cps/SimPowerComp.h>
 
 
 namespace CPS {
 namespace SP {
 namespace Ph1 {
 
-	class PQNode: public PowerComponent<Complex>, public SharedFactory<PQNode>{
+	class PQNode: public SimPowerComp<Complex>, public SharedFactory<PQNode>{
 	private:
 		Real mPowerNom;
 		Real mReactivePowerNom;

@@ -1,7 +1,5 @@
 /**
- * @file
- * @author Markus Mirz <mmirz@eonerc.rwth-aachen.de>
- * @copyright 2017-2018, Institute for Automation of Complex Power Systems, EONERC
+ * @copyright 2017, Institute for Automation of Complex Power Systems, EONERC
  *
  * CPowerSystems
  *
@@ -28,32 +26,48 @@
 
 #include <cps/Logger.h>
 #include <cps/IdentifiedObject.h>
+#include <cps/TopologicalTerminal.h>
+#include <cps/TopologicalNode.h>
 
 namespace CPS {
-	/// Base class of all objects running internal calculations and
-	/// having states or measurements.
-	class Component : public IdentifiedObject {
+	/// Base class for all electrical components that are
+	/// connected to nodes via terminals
+	class TopologicalPowerComp : public IdentifiedObject {
 	public:
 		enum Behaviour { Initialization, Simulation };
-
 	protected:
+		/// Determines the number of Terminals which can be connected to network Nodes
+		UInt mNumTerminals = 0;
+		/// Determines the number of virtual or internal Nodes
+		UInt mNumVirtualNodes = 0;
 		/// Component logger
 		Logger::Log mSLog;
 		/// Component logger control for internal variables
 		Logger::Level mLogLevel;
-		///
+		/// Determine state of the simulation, e.g. to implement
+		/// special behavior for components during initialization
 		Bool mBehaviour = Behaviour::Simulation;
+
 	public:
-		typedef std::shared_ptr<Component> Ptr;
+		typedef std::shared_ptr<TopologicalPowerComp> Ptr;
 		typedef std::vector<Ptr> List;
 
 		/// Basic constructor that takes UID, name and log level
-		Component(String uid, String name, Logger::Level logLevel = Logger::Level::off);
+		TopologicalPowerComp(String uid, String name, Logger::Level logLevel = Logger::Level::off)
+			: IdentifiedObject(uid, name), mLogLevel(logLevel) {
+			mSLog = Logger::get(name, logLevel);
+		}
 		/// Basic constructor that takes name and log level and sets the UID to name as well
-		Component(String name, Logger::Level logLevel = Logger::Level::off);
+		TopologicalPowerComp(String name, Logger::Level logLevel = Logger::Level::off)
+			: TopologicalPowerComp(name, name, logLevel) { }
 		/// Destructor - does not do anything
-		virtual ~Component() { }
-		///
+		virtual ~TopologicalPowerComp() { }
+
+		/// Returns nodes connected to this component
+		virtual TopologicalNode::List topologicalNodes() = 0;
+		/// Returns terminal that are part of the component
+		virtual TopologicalTerminal::List topologicalTerminals() = 0;
+		/// Set behavior of component, e.g. initialization
 		void setBehaviour(Behaviour behaviour) { mBehaviour = behaviour; }
 	};
 }

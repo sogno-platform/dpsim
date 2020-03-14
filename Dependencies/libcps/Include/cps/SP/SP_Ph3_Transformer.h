@@ -19,7 +19,7 @@
 
 #pragma once
 
-#include <cps/PowerComponent.h>
+#include <cps/SimPowerComp.h>
 #include <cps/Solver/MNAInterface.h>
 #include <cps/SP/SP_Ph3_RxLine.h>
 #include <cps/SP/SP_Ph3_Inductor.h>
@@ -30,7 +30,7 @@ namespace CPS {
 		namespace Ph3 {
 			/// Transformer that includes an inductance and resistance
 			class Transformer :
-				public PowerComponent<Real>,
+				public SimPowerComp<Real>,
 				public MNAInterface,
 				public SharedFactory<Transformer>,
 				public Base::Ph3::Transformer {
@@ -48,7 +48,7 @@ namespace CPS {
 				Transformer(String name, Logger::Level logLevel = Logger::Level::off)
 					: Transformer(name, name, logLevel) { }
 
-				PowerComponent<Real>::Ptr clone(String name);
+				SimPowerComp<Real>::Ptr clone(String name);
 
 				// #### General ####
 				/// Defines component parameters

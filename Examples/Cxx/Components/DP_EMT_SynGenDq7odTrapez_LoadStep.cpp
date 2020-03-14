@@ -70,7 +70,7 @@ void DP_SynGenDq7odTrapez_LoadStep(Real timeStep, Real finalTime, Real breakerCl
 	Logger::setLogDir("logs/"+simName);
 
 	// Nodes
-	auto n1 = CPS::DP::Node::make("n1", PhaseType::ABC, initVoltN1);
+	auto n1 = CPS::DP::SimNode::make("n1", PhaseType::ABC, initVoltN1);
 
 	// Components
 	auto gen = CPS::DP::Ph3::SynchronGeneratorDQTrapez::make("SynGen", CPS::Logger::Level::info);
@@ -90,8 +90,8 @@ void DP_SynGenDq7odTrapez_LoadStep(Real timeStep, Real finalTime, Real breakerCl
 
 	// Connections
 	gen->connect({n1});
-	res->connect({CPS::DP::Node::GND, n1});
-	fault->connect({CPS::DP::Node::GND, n1});
+	res->connect({CPS::DP::SimNode::GND, n1});
+	fault->connect({CPS::DP::SimNode::GND, n1});
 
 	auto sys = SystemTopology(60, SystemNodeList{n1}, SystemComponentList{gen, res, fault});
 
@@ -124,7 +124,7 @@ void EMT_SynGenDq7odTrapez_LoadStep(Real timeStep, Real finalTime, Real breakerC
 	Logger::setLogDir("logs/"+simName);
 
 	// Nodes
-	auto n1 = CPS::EMT::Node::make("n1", PhaseType::ABC, initVoltN1);
+	auto n1 = CPS::EMT::SimNode::make("n1", PhaseType::ABC, initVoltN1);
 
 	// Components
 	auto gen = CPS::EMT::Ph3::SynchronGeneratorDQTrapez::make("SynGen");
@@ -142,8 +142,8 @@ void EMT_SynGenDq7odTrapez_LoadStep(Real timeStep, Real finalTime, Real breakerC
 
 	// Connections
 	gen->connect({n1});
-	res->connect({CPS::EMT::Node::GND, n1});
-	fault->connect({CPS::EMT::Node::GND, n1});
+	res->connect({CPS::EMT::SimNode::GND, n1});
+	fault->connect({CPS::EMT::SimNode::GND, n1});
 
 	auto sys = SystemTopology(60, SystemNodeList{n1}, SystemComponentList{gen, res, fault});
 

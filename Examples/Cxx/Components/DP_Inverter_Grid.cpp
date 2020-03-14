@@ -41,11 +41,11 @@ int main(int argc, char* argv[]) {
 	frequencies << 50, 19850, 19950, 20050, 20150, 39750, 39950, 40050, 40250;
 
 	// Nodes
-	auto n1 = Node::make("n1");
-	auto n2 = Node::make("n2");
-	auto n3 = Node::make("n3");
-	auto n4 = Node::make("n4");
-	auto n5 = Node::make("n5");
+	auto n1 = SimNode::make("n1");
+	auto n2 = SimNode::make("n2");
+	auto n3 = SimNode::make("n3");
+	auto n4 = SimNode::make("n4");
+	auto n5 = SimNode::make("n5");
 
 	Logger::Level level = Logger::Level::info;
 
@@ -74,15 +74,15 @@ int main(int argc, char* argv[]) {
 	grid->setParameters(Complex(0, -311.1270));
 
 	// Topology
-	//inv->connect({ Node::GND, n1 });
+	//inv->connect({ SimNode::GND, n1 });
 	inv->connect({ n1 });
 	r1->connect({ n1, n2 });
 	l1->connect({ n2, n3 });
-	c1->connect({ Node::GND, n3 });
-	rc->connect({ Node::GND, n3 });
+	c1->connect({ SimNode::GND, n3 });
+	rc->connect({ SimNode::GND, n3 });
 	r2->connect({ n3, n4 });
 	l2->connect({ n4, n5 });
-	grid->connect({ Node::GND, n5 });
+	grid->connect({ SimNode::GND, n5 });
 
 	// Define system topology
 	auto sys = SystemTopology(50, frequencies,

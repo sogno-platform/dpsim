@@ -23,13 +23,13 @@
 
 #include <cps/EMT/EMT_Ph1_CurrentSource.h>
 #include <cps/EMT/EMT_Ph1_Resistor.h>
-#include <cps/SignalComponent.h>
+#include <cps/SimSignalComp.h>
 #include <cps/Task.h>
 
 namespace CPS {
 namespace Signal {
 	class DecouplingLineEMT :
-		public SignalComponent,
+		public SimSignalComp,
 		public SharedFactory<DecouplingLineEMT> {
 	protected:
 		Real mDelay;
@@ -40,7 +40,7 @@ namespace Signal {
 		Real mSrcCur1Ref;
 		Real mSrcCur2Ref;
 
-		std::shared_ptr<EMT::Node> mNode1, mNode2;
+		std::shared_ptr<EMT::SimNode> mNode1, mNode2;
 		std::shared_ptr<EMT::Ph1::Resistor> mRes1, mRes2;
 		std::shared_ptr<EMT::Ph1::CurrentSource> mSrc1, mSrc2;
 		Attribute<Complex>::Ptr mSrcCur1, mSrcCur2;
@@ -60,13 +60,13 @@ namespace Signal {
 
 		DecouplingLineEMT(String name, Logger::Level logLevel = Logger::Level::info);
 
-		void setParameters(Node<Real>::Ptr node1, Node<Real>::Ptr node2,
+		void setParameters(SimNode<Real>::Ptr node1, SimNode<Real>::Ptr node2,
 			Real resistance, Real inductance, Real capacitance);
 		void initialize(Real omega, Real timeStep);
 		void step(Real time, Int timeStepCount);
 		void postStep();
 		Task::List getTasks();
-		Component::List getLineComponents();
+		IdentifiedObject::List getLineComponents();
 
 		class PreStep : public Task {
 		public:

@@ -28,9 +28,9 @@ using namespace CPS::DP::Ph1;
 
 int main(int argc, char* argv[]) {
 	// Nodes
-	auto n1 = Node::make("n1");
-	auto n2 = Node::make("n2");
-	auto n3 = Node::make("n3");
+	auto n1 = SimNode::make("n1");
+	auto n2 = SimNode::make("n2");
+	auto n3 = SimNode::make("n3");
 
 	// Components
 	auto v1 = VoltageSource::make("v_1");
@@ -40,11 +40,11 @@ int main(int argc, char* argv[]) {
 	auto r1 = Resistor::make("r_1");
 
 	// Topology
-	v1->connect({ Node::GND, n1 });
+	v1->connect({ SimNode::GND, n1 });
 //	l1->connect({ n1, n2 });
-//	r2->connect({ n2, Node::GND });
+//	r2->connect({ n2, SimNode::GND });
 	t1->connect({ n1, n2 });
-	r1->connect({ n2, Node::GND });
+	r1->connect({ n2, SimNode::GND });
 
 	// Parameters
 	v1->setParameters(CPS::Math::polarDeg(100., 0 * -90.));
@@ -54,7 +54,7 @@ int main(int argc, char* argv[]) {
 	r1->setParameters(1);
 
 	// Define system topology
-	SystemTopology system(50, SystemNodeList{n1, n2, n3, Node::GND}, SystemComponentList{v1, t1, r1});
+	SystemTopology system(50, SystemNodeList{n1, n2, n3, SimNode::GND}, SystemComponentList{v1, t1, r1});
 
 	// Define simulation scenario
 	Real timeStep = 0.00005;

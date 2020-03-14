@@ -24,7 +24,7 @@
 using namespace CPS;
 
 EMT::Ph3::SeriesSwitch::SeriesSwitch(String uid, String name, Logger::Level logLevel)
-	: PowerComponent<Real>(uid, name, logLevel) {
+	: SimPowerComp<Real>(uid, name, logLevel) {
 	mPhaseType = PhaseType::ABC;
 	setTerminalNumber(2);
 
@@ -33,7 +33,7 @@ EMT::Ph3::SeriesSwitch::SeriesSwitch(String uid, String name, Logger::Level logL
 	addAttribute<Bool>("is_closed", &mIsClosed, Flags::read | Flags::write);
 }
 
-PowerComponent<Real>::Ptr EMT::Ph3::SeriesSwitch::clone(String name) {
+SimPowerComp<Real>::Ptr EMT::Ph3::SeriesSwitch::clone(String name) {
 	auto copy = SeriesSwitch::make(name, mLogLevel);
 	copy->setParameters(mOpenResistance, mClosedResistance);
 	return copy;
@@ -66,7 +66,7 @@ void EMT::Ph3::SeriesSwitch::initializeFromPowerflow(Real frequency) {
 
 void EMT::Ph3::SeriesSwitch::mnaInitialize(Real omega, Real timeStep, Attribute<Matrix>::Ptr leftVector) {
 	MNAInterface::mnaInitialize(omega, timeStep);
-	updateSimNodes();
+	updateMatrixNodeIndices();
 
 	mMnaTasks.push_back(std::make_shared<MnaPostStep>(*this, leftVector));
 }
@@ -78,22 +78,22 @@ void EMT::Ph3::SeriesSwitch::mnaApplySystemMatrixStamp(Matrix& systemMatrix) {
 
 	// Set diagonal entries
 	if (terminalNotGrounded(0))
-		Math::addToMatrixElement(systemMatrix, simNodes(0), simNodes(0), conductance);
+		Math::addToMatrixElement(systemMatrix, matrixNodeIndices(0), matrixNodeIndices(0), conductance);
 	if (terminalNotGrounded(1))
-		Math::addToMatrixElement(systemMatrix, simNodes(1), simNodes(1), conductance);
+		Math::addToMatrixElement(systemMatrix, matrixNodeIndices(1), matrixNodeIndices(1), conductance);
 	// Set off diagonal entries
 	if (terminalNotGrounded(0) && terminalNotGrounded(1)) {
-		Math::addToMatrixElement(systemMatrix, simNodes(0), simNodes(1), -conductance);
-		Math::addToMatrixElement(systemMatrix, simNodes(1), simNodes(0), -conductance);
+		Math::addToMatrixElement(systemMatrix, matrixNodeIndices(0), matrixNodeIndices(1), -conductance);
+		Math::addToMatrixElement(systemMatrix, matrixNodeIndices(1), matrixNodeIndices(0), -conductance);
 	}
 
 	if (terminalNotGrounded(0))
-		mSLog->info("Add {} to {}, {}", conductance, simNodes(0)[0], simNodes(0)[0]);
+		mSLog->info("Add {} to {}, {}", conductance, matrixNodeIndices(0)[0], matrixNodeIndices(0)[0]);
 	if (terminalNotGrounded(1))
-		mSLog->info("Add {} to {}, {}", conductance, simNodes(1)[0], simNodes(1)[0]);
+		mSLog->info("Add {} to {}, {}", conductance, matrixNodeIndices(1)[0], matrixNodeIndices(1)[0]);
 	if (terminalNotGrounded(0) && terminalNotGrounded(1)) {
-		mSLog->info("Add {} to {}, {}", -conductance, simNodes(0)[0], simNodes(1)[0]);
-		mSLog->info("Add {} to {}, {}", -conductance, simNodes(1)[0], simNodes(0)[0]);
+		mSLog->info("Add {} to {}, {}", -conductance, matrixNodeIndices(0)[0], matrixNodeIndices(1)[0]);
+		mSLog->info("Add {} to {}, {}", -conductance, matrixNodeIndices(1)[0], matrixNodeIndices(0)[0]);
 	}
 }
 
@@ -104,22 +104,22 @@ void EMT::Ph3::SeriesSwitch::mnaApplySwitchSystemMatrixStamp(Matrix& systemMatri
 
 	// Set diagonal entries
 	if (terminalNotGrounded(0))
-		Math::addToMatrixElement(systemMatrix, simNodes(0), simNodes(0), conductance);
+		Math::addToMatrixElement(systemMatrix, matrixNodeIndices(0), matrixNodeIndices(0), conductance);
 	if (terminalNotGrounded(1))
-		Math::addToMatrixElement(systemMatrix, simNodes(1), simNodes(1), conductance);
+		Math::addToMatrixElement(systemMatrix, matrixNodeIndices(1), matrixNodeIndices(1), conductance);
 	// Set off diagonal entries
 	if (terminalNotGrounded(0) && terminalNotGrounded(1)) {
-		Math::addToMatrixElement(systemMatrix, simNodes(0), simNodes(1), -conductance);
-		Math::addToMatrixElement(systemMatrix, simNodes(1), simNodes(0), -conductance);
+		Math::addToMatrixElement(systemMatrix, matrixNodeIndices(0), matrixNodeIndices(1), -conductance);
+		Math::addToMatrixElement(systemMatrix, matrixNodeIndices(1), matrixNodeIndices(0), -conductance);
 	}
 
 	if (terminalNotGrounded(0))
-		mSLog->info("Add {} to {}, {}", conductance, simNodes(0)[0], simNodes(0)[0]);
+		mSLog->info("Add {} to {}, {}", conductance, matrixNodeIndices(0)[0], matrixNodeIndices(0)[0]);
 	if (terminalNotGrounded(1))
-		mSLog->info("Add {} to {}, {}", conductance, simNodes(1)[0], simNodes(1)[0]);
+		mSLog->info("Add {} to {}, {}", conductance, matrixNodeIndices(1)[0], matrixNodeIndices(1)[0]);
 	if (terminalNotGrounded(0) && terminalNotGrounded(1)) {
-		mSLog->info("Add {} to {}, {}", -conductance, simNodes(0)[0], simNodes(1)[0]);
-		mSLog->info("Add {} to {}, {}", -conductance, simNodes(1)[0], simNodes(0)[0]);
+		mSLog->info("Add {} to {}, {}", -conductance, matrixNodeIndices(0)[0], matrixNodeIndices(1)[0]);
+		mSLog->info("Add {} to {}, {}", -conductance, matrixNodeIndices(1)[0], matrixNodeIndices(0)[0]);
 	}
 }
 
@@ -132,14 +132,14 @@ void EMT::Ph3::SeriesSwitch::mnaUpdateVoltage(const Matrix& leftVector) {
 	// Voltage across component is defined as V1 - V0
 	mIntfVoltage = Matrix::Zero(3,1);
 	if (terminalNotGrounded(1)) {
-		mIntfVoltage(0,0) = Math::realFromVectorElement(leftVector, simNode(1,0));
-		mIntfVoltage(1,0) = Math::realFromVectorElement(leftVector, simNode(1,1));
-		mIntfVoltage(2,0) = Math::realFromVectorElement(leftVector, simNode(1,2));
+		mIntfVoltage(0,0) = Math::realFromVectorElement(leftVector, matrixNodeIndex(1,0));
+		mIntfVoltage(1,0) = Math::realFromVectorElement(leftVector, matrixNodeIndex(1,1));
+		mIntfVoltage(2,0) = Math::realFromVectorElement(leftVector, matrixNodeIndex(1,2));
 	}
 	if (terminalNotGrounded(0)) {
-		mIntfVoltage(0,0) = mIntfVoltage(0,0) - Math::realFromVectorElement(leftVector, simNode(0,0));
-		mIntfVoltage(1,0) = mIntfVoltage(1,0) - Math::realFromVectorElement(leftVector, simNode(0,1));
-		mIntfVoltage(2,0) = mIntfVoltage(2,0) - Math::realFromVectorElement(leftVector, simNode(0,2));
+		mIntfVoltage(0,0) = mIntfVoltage(0,0) - Math::realFromVectorElement(leftVector, matrixNodeIndex(0,0));
+		mIntfVoltage(1,0) = mIntfVoltage(1,0) - Math::realFromVectorElement(leftVector, matrixNodeIndex(0,1));
+		mIntfVoltage(2,0) = mIntfVoltage(2,0) - Math::realFromVectorElement(leftVector, matrixNodeIndex(0,2));
 	}
 
 	SPDLOG_LOGGER_DEBUG(mSLog, "Voltage A: {}", mIntfVoltage(0,0));

@@ -19,7 +19,7 @@
 #pragma once
 
 
-#include <cps/PowerComponent.h>
+#include <cps/SimPowerComp.h>
 #include <cps/Solver/MNAInterface.h>
 
 namespace CPS {
@@ -27,7 +27,7 @@ namespace CPS {
 		namespace Ph3 {
             class ControlledVoltageSource :
 				public MNAInterface,
-				public PowerComponent<Real>,
+				public SimPowerComp<Real>,
 				public SharedFactory<ControlledVoltageSource> {
 			protected:
 				void updateVoltage(Real time);
@@ -41,7 +41,7 @@ namespace CPS {
 
 				void setParameters(Matrix voltageRefABC);
 
-				PowerComponent<Real>::Ptr clone(String name);
+				SimPowerComp<Real>::Ptr clone(String name);
 				// #### General ####
 				/// Initializes component from power flow data
 				void initializeFromPowerflow(Real frequency) { }

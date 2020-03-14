@@ -26,7 +26,7 @@
 using namespace CPS;
 
 DP::Ph3::AvVoltageSourceInverterDQ::AvVoltageSourceInverterDQ(String uid, String name, Logger::Level logLevel)
-	:PowerComponent<Complex>(uid, name, logLevel) {
+	:SimPowerComp<Complex>(uid, name, logLevel) {
 	mPhaseType = PhaseType::ABC;
 	setVirtualNodeNumber(2);
 	setTerminalNumber(1);
@@ -107,9 +107,9 @@ void DP::Ph3::AvVoltageSourceInverterDQ::initialize(Matrix frequencies) {
 
 void DP::Ph3::AvVoltageSourceInverterDQ::updateMonitoredValues(const Matrix& leftVector, Real time) {
 	MatrixComp VcDP = MatrixComp::Zero(3, 1);
-	VcDP(0, 0) = Math::complexFromVectorElement(leftVector, mCapacitorF->simNode(0, 0));
-	VcDP(1, 0) = Math::complexFromVectorElement(leftVector, mCapacitorF->simNode(0, 1));
-	VcDP(2, 0) = Math::complexFromVectorElement(leftVector, mCapacitorF->simNode(0, 2));
+	VcDP(0, 0) = Math::complexFromVectorElement(leftVector, mCapacitorF->matrixNodeIndex(0, 0));
+	VcDP(1, 0) = Math::complexFromVectorElement(leftVector, mCapacitorF->matrixNodeIndex(0, 1));
+	VcDP(2, 0) = Math::complexFromVectorElement(leftVector, mCapacitorF->matrixNodeIndex(0, 2));
 
 	mVcabc <<
 		VcDP(0, 0).real() * cos(mOmegaN * time) - VcDP(0, 0).imag() * sin(mOmegaN * time),
@@ -405,7 +405,7 @@ void DP::Ph3::AvVoltageSourceInverterDQ::initializeFromPowerflow(Real frequency)
 
 	// Create sub voltage source for emf
 	mSubCtrledVoltageSource = DP::Ph3::ControlledVoltageSource::make(mName + "_src", mLogLevel);
-	mSubCtrledVoltageSource->connect({ Node::GND, mVirtualNodes[1] });
+	mSubCtrledVoltageSource->connect({ SimNode::GND, mVirtualNodes[1] });
 	mSubCtrledVoltageSource->setVirtualNodeAt(mVirtualNodes[0], 0);
 	mSubCtrledVoltageSource->setParameters(mIntfVoltage);
 	mSubCtrledVoltageSource->initializeFromPowerflow(frequency);

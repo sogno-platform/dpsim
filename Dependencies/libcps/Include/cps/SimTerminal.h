@@ -1,8 +1,5 @@
-/** Base component
- *
- * @file
- * @author Markus Mirz <mmirz@eonerc.rwth-aachen.de>
- * @copyright 2017-2018, Institute for Automation of Complex Power Systems, EONERC
+/**
+ * @copyright 2017, Institute for Automation of Complex Power Systems, EONERC
  *
  * CPowerSystems
  *
@@ -23,29 +20,31 @@
 #pragma once
 
 #include <cps/TopologicalTerminal.h>
-#include <cps/Node.h>
+#include <cps/SimNode.h>
 
 namespace CPS {
 
 	template <typename VarType>
-	class Terminal : public TopologicalTerminal, public SharedFactory<Terminal<VarType>> {
+	class SimTerminal :
+		public TopologicalTerminal,
+		public SharedFactory<SimTerminal<VarType>> {
 	protected:
 		MatrixVar<VarType> mCurrent;
-		std::weak_ptr<Node<VarType>> mNode;
+		std::weak_ptr<SimNode<VarType>> mNode;
 
 	public:
-		typedef std::shared_ptr<Terminal<VarType>> Ptr;
+		typedef std::shared_ptr<SimTerminal<VarType>> Ptr;
 		typedef std::vector<Ptr> List;
 		///
-		Terminal(String name) : TopologicalTerminal(name, name) { }
+		SimTerminal(String name) : TopologicalTerminal(name, name) { }
 		///
-		Terminal(String uid, String name) : TopologicalTerminal(uid, name) { }
+		SimTerminal(String uid, String name) : TopologicalTerminal(uid, name) { }
 		///
-		typename Node<VarType>::Ptr node() {
+		typename SimNode<VarType>::Ptr node() {
 			return mNode.lock();
 		}
 		///
-		void setNode(typename Node<VarType>::Ptr node) {
+		void setNode(typename SimNode<VarType>::Ptr node) {
 			mNode = node;
 			setPhaseType(node->phaseType());
 		}

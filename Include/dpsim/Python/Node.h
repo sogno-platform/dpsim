@@ -30,7 +30,7 @@
   #include <Python.h>
 #endif
 
-#include <cps/Node.h>
+#include <cps/SimNode.h>
 
 namespace DPsim {
 namespace Python {
@@ -39,7 +39,7 @@ namespace Python {
 	struct Node {
 		PyObject_HEAD
 
-		typename CPS::Node<VarType>::Ptr node;
+		typename CPS::SimNode<VarType>::Ptr node;
 
 		// The Python API has no notion of C++ classes and methods, so the methods
 		// that can be called from Python are static.
@@ -66,7 +66,7 @@ namespace Python {
 
 		static PyObject *Py_GND;
 
-		static typename CPS::Node<VarType>::List fromPython(PyObject* list);
+		static typename CPS::SimNode<VarType>::List fromPython(PyObject* list);
 	};
 
 	template<typename VarType>

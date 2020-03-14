@@ -21,7 +21,7 @@
 
 #pragma once
 
-#include <cps/PowerComponent.h>
+#include <cps/SimPowerComp.h>
 #include <cps/Solver/MNAInterface.h>
 #include <cps/DP/DP_Ph1_RxLine.h>
 #include <cps/DP/DP_Ph1_Inductor.h>
@@ -32,7 +32,7 @@ namespace DP {
 namespace Ph1 {
 	/// Transformer that includes an inductance and resistance
 	class Transformer :
-		public PowerComponent<Complex>,
+		public SimPowerComp<Complex>,
 		public MNAInterface,
 		public SharedFactory<Transformer>,
 		public Base::Ph1::Transformer {
@@ -50,7 +50,7 @@ namespace Ph1 {
 		Transformer(String name, Logger::Level logLevel = Logger::Level::off)
 			: Transformer(name, name, logLevel) { }
 
-		PowerComponent<Complex>::Ptr clone(String name);
+		SimPowerComp<Complex>::Ptr clone(String name);
 
 		// #### General ####
 		/// Defines component parameters

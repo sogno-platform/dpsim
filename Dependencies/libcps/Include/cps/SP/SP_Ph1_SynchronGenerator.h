@@ -21,7 +21,7 @@
 
 #pragma once
 
-#include <cps/PowerComponent.h>
+#include <cps/SimPowerComp.h>
 #include <cps/Solver/PFSolverInterfaceBus.h>
 
 
@@ -30,11 +30,11 @@ namespace CPS {
 namespace SP {
 namespace Ph1 {
 
-        class SynchronGenerator : 
-			public PowerComponent<Complex>,
+        class SynchronGenerator :
+			public SimPowerComp<Complex>,
 			public SharedFactory<SynchronGenerator>,
 			public PFSolverInterfaceBus {
-	    private:			
+	    private:
 			/// Rate apparent power [VA]
 		    Real mRatedApparentPower;
 			/// Rated voltage [V]

@@ -1,7 +1,5 @@
 /**
- * @file
- * @author Markus Mirz <mmirz@eonerc.rwth-aachen.de>
- * @copyright 2017-2018, Institute for Automation of Complex Power Systems, EONERC
+ * @copyright 2017, Institute for Automation of Complex Power Systems, EONERC
  *
  * CPowerSystems
  *
@@ -25,10 +23,10 @@
 #include <list>
 #include <experimental/filesystem>
 #include <cps/Definitions.h>
-#include <cps/PowerComponent.h>
+#include <cps/SimPowerComp.h>
 #include <cps/Components.h>
-#include <cps/Node.h>
-#include <cps/Terminal.h>
+#include <cps/SimNode.h>
+#include <cps/SimTerminal.h>
 #include <cps/Logger.h>
 #include <cps/SystemTopology.h>
 
@@ -83,7 +81,7 @@ namespace CIM {
 		/// Model from CIM++
 		CIMModel *mModel;
 		/// All components after mapping
-		Component::List mComponents;
+		IdentifiedObject::List mComponents;
 		/// System frequency (has to be given to convert between reactances
 		/// in CIM and inductances used inside the simulation)
 		Real mFrequency;
@@ -99,7 +97,7 @@ namespace CIM {
 		/// as given in the component constructors (0 for the first node, -1 or GND for ground).
 		std::map<String, TopologicalNode::Ptr> mPowerflowNodes;
 		/// Maps the RID of a ConductingEquipment to a PowerflowEquipment
-		std::map<String, Component::Ptr> mPowerflowEquipment;
+		std::map<String, TopologicalPowerComp::Ptr> mPowerflowEquipment;
 		/// Maps the RID of a Terminal to a PowerflowTerminal
 		std::map<String, TopologicalTerminal::Ptr> mPowerflowTerminals;
 		///
@@ -131,28 +129,28 @@ namespace CIM {
 		/// Returns simulation node index which belongs to mRID.
 		Matrix::Index mapTopologicalNode(String mrid);
 		/// Maps CIM components to CPowerSystem components.
-		Component::Ptr mapComponent(BaseClass* obj);
+		TopologicalPowerComp::Ptr mapComponent(BaseClass* obj);
 		/// Returns an RX-Line.
 		/// The voltage should be given in kV and the angle in degree.
 		/// TODO: Introduce different models such as PI and wave model.
-		Component::Ptr mapACLineSegment(IEC61970::Base::Wires::ACLineSegment* line);
+		TopologicalPowerComp::Ptr mapACLineSegment(IEC61970::Base::Wires::ACLineSegment* line);
 		/// Returns a transformer, either ideal or with RL elements to model losses.
-		Component::Ptr mapPowerTransformer(IEC61970::Base::Wires::PowerTransformer *trans);
+		TopologicalPowerComp::Ptr mapPowerTransformer(IEC61970::Base::Wires::PowerTransformer *trans);
 		/// Returns an IdealVoltageSource with voltage setting according to load flow data
 		/// at machine terminals. The voltage should be given in kV and the angle in degree.
 		/// TODO: Introduce real synchronous generator models here.
-		Component::Ptr mapSynchronousMachine(IEC61970::Base::Wires::SynchronousMachine* machine);
+		TopologicalPowerComp::Ptr mapSynchronousMachine(IEC61970::Base::Wires::SynchronousMachine* machine);
 		/// Returns an PQload with voltage setting according to load flow data.
 		/// Currently the only option is to create an RL-load.
 		/// The voltage should be given in kV and the angle in degree.
 		/// TODO: Introduce real PQload model here.
-		Component::Ptr mapEnergyConsumer(IEC61970::Base::Wires::EnergyConsumer* consumer);
+		TopologicalPowerComp::Ptr mapEnergyConsumer(IEC61970::Base::Wires::EnergyConsumer* consumer);
 		/// Adds CIM files to list of files to be parsed.
 
 		/// Returns an external grid injection.
-		Component::Ptr mapExternalNetworkInjection(IEC61970::Base::Wires::ExternalNetworkInjection* extnet);
+		TopologicalPowerComp::Ptr mapExternalNetworkInjection(IEC61970::Base::Wires::ExternalNetworkInjection* extnet);
 		/// Returns a shunt
-		Component::Ptr mapEquivalentShunt(IEC61970::Base::Equivalents::EquivalentShunt *shunt);
+		TopologicalPowerComp::Ptr mapEquivalentShunt(IEC61970::Base::Equivalents::EquivalentShunt *shunt);
 	public:
 		///
 		enum GeneratorType{Static, Transient};

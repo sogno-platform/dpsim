@@ -41,13 +41,13 @@ void EMT::Ph3::SynchronGeneratorDQSmpl::mnaApplySystemMatrixStamp(Matrix& system
 
 	// Set diagonal entries
 	if ( terminalNotGrounded(0) ) {
-		Math::addToMatrixElement(systemMatrix, simNode(0), simNode(0), 1 / mRa);
+		Math::addToMatrixElement(systemMatrix, matrixNodeIndex(0), matrixNodeIndex(0), 1 / mRa);
 	}
 	if ( terminalNotGrounded(1) ) {
-		Math::addToMatrixElement(systemMatrix, simNode(1), simNode(1), 1 / mRa);
+		Math::addToMatrixElement(systemMatrix, matrixNodeIndex(1), matrixNodeIndex(1), 1 / mRa);
 	}
-	if ( simNode(2) >= 0) {
-		Math::addToMatrixElement(systemMatrix, simNode(2), simNode(2), 1 / mRa);
+	if ( matrixNodeIndex(2) >= 0) {
+		Math::addToMatrixElement(systemMatrix, matrixNodeIndex(2), matrixNodeIndex(2), 1 / mRa);
 	}
 }
 
@@ -120,13 +120,13 @@ void EMT::Ph3::SynchronGeneratorDQSmpl::mnaStep(Matrix& systemMatrix, Matrix& ri
 
 	// Update current source accordingly
 	if ( terminalNotGrounded(0) ) {
-		Math::addToVectorElement(rightVector, simNode(0), mIa + mVa / mRa);
+		Math::addToVectorElement(rightVector, matrixNodeIndex(0), mIa + mVa / mRa);
 	}
 	if ( terminalNotGrounded(1) ) {
-		Math::addToVectorElement(rightVector, simNode(1), mIb + mVb / mRa);
+		Math::addToVectorElement(rightVector, matrixNodeIndex(1), mIb + mVb / mRa);
 	}
-	if ( simNode(2) >= 0) {
-		Math::addToVectorElement(rightVector, simNode(2), mIc + mVc / mRa);
+	if ( matrixNodeIndex(2) >= 0) {
+		Math::addToVectorElement(rightVector, matrixNodeIndex(2), mIc + mVc / mRa);
 	}
 
 	if (mLogLevel != Logger::Level::off) {
@@ -214,21 +214,21 @@ void EMT::Ph3::SynchronGeneratorDQSmpl::stepInPerUnit(Real om, Real dt, Real tim
 
 void EMT::Ph3::SynchronGeneratorDQSmpl::mnaPostStep(Matrix& rightVector, Matrix& leftVector, Real time) {
 	if ( terminalNotGrounded(0) ) {
-		mVa = Math::realFromVectorElement(leftVector, simNode(0));
+		mVa = Math::realFromVectorElement(leftVector, matrixNodeIndex(0));
 	}
 	else {
 		mVa = 0;
 	}
 
 	if ( terminalNotGrounded(1) ) {
-		mVb = Math::realFromVectorElement(leftVector, simNode(1));
+		mVb = Math::realFromVectorElement(leftVector, matrixNodeIndex(1));
 	}
 	else {
 		mVb = 0;
 	}
 
-	if ( simNode(2) >= 0) {
-		mVc = Math::realFromVectorElement(leftVector, simNode(2));
+	if ( matrixNodeIndex(2) >= 0) {
+		mVc = Math::realFromVectorElement(leftVector, matrixNodeIndex(2));
 	}
 	else {
 		mVc = 0;

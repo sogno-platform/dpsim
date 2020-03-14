@@ -22,7 +22,7 @@
 using namespace CPS;
 
 DP::Ph1::ControlledVoltageSource::ControlledVoltageSource(String uid, String name, Logger::Level logLevel)
-	: PowerComponent<Complex>(uid, name, logLevel) {
+	: SimPowerComp<Complex>(uid, name, logLevel) {
 	setVirtualNodeNumber(1);
 	setTerminalNumber(2);
 	mIntfVoltage = MatrixComp::Zero(1, 1);
@@ -34,7 +34,7 @@ void DP::Ph1::ControlledVoltageSource::setParameters(MatrixComp voltageRefABC) {
 	parametersSet = true;
 }
 
-PowerComponent<Complex>::Ptr DP::Ph1::ControlledVoltageSource::clone(String name) {
+SimPowerComp<Complex>::Ptr DP::Ph1::ControlledVoltageSource::clone(String name) {
 	auto copy = ControlledVoltageSource::make(name, mLogLevel);
 	copy->setParameters(attribute<MatrixComp>("v_intf")->get());
 	return copy;
@@ -55,7 +55,7 @@ void DP::Ph1::ControlledVoltageSource::mnaInitialize(Real omega, Real timeStep, 
 	checkForUnconnectedTerminals();
 
 	MNAInterface::mnaInitialize(omega, timeStep);
-	updateSimNodes();
+	updateMatrixNodeIndices();
 
 	mMnaTasks.push_back(std::make_shared<MnaPreStep>(*this));
 	mMnaTasks.push_back(std::make_shared<MnaPostStep>(*this, leftVector));
@@ -65,30 +65,30 @@ void DP::Ph1::ControlledVoltageSource::mnaInitialize(Real omega, Real timeStep, 
 void DP::Ph1::ControlledVoltageSource::mnaApplySystemMatrixStamp(Matrix& systemMatrix) {
 	for (UInt freq = 0; freq < mNumFreqs; freq++) {
 		if (terminalNotGrounded(0)) {
-			Math::setMatrixElement(systemMatrix, mVirtualNodes[0]->simNode(), simNode(0), Complex(-1, 0), mNumFreqs, freq);
-			Math::setMatrixElement(systemMatrix, simNode(0), mVirtualNodes[0]->simNode(), Complex(-1, 0), mNumFreqs, freq);
+			Math::setMatrixElement(systemMatrix, mVirtualNodes[0]->matrixNodeIndex(), matrixNodeIndex(0), Complex(-1, 0), mNumFreqs, freq);
+			Math::setMatrixElement(systemMatrix, matrixNodeIndex(0), mVirtualNodes[0]->matrixNodeIndex(), Complex(-1, 0), mNumFreqs, freq);
 		}
 		if (terminalNotGrounded(1)) {
-			Math::setMatrixElement(systemMatrix, mVirtualNodes[0]->simNode(), simNode(1), Complex(1, 0), mNumFreqs, freq);
-			Math::setMatrixElement(systemMatrix, simNode(1), mVirtualNodes[0]->simNode(), Complex(1, 0), mNumFreqs, freq);
+			Math::setMatrixElement(systemMatrix, mVirtualNodes[0]->matrixNodeIndex(), matrixNodeIndex(1), Complex(1, 0), mNumFreqs, freq);
+			Math::setMatrixElement(systemMatrix, matrixNodeIndex(1), mVirtualNodes[0]->matrixNodeIndex(), Complex(1, 0), mNumFreqs, freq);
 		}
 
 		mSLog->info("-- Stamp frequency {:d} ---", freq);
 		if (terminalNotGrounded(0)) {
-			mSLog->info("Add {:f} to system at ({:d},{:d})", -1., simNode(0), mVirtualNodes[0]->simNode());
-			mSLog->info("Add {:f} to system at ({:d},{:d})", -1., mVirtualNodes[0]->simNode(), simNode(0));
+			mSLog->info("Add {:f} to system at ({:d},{:d})", -1., matrixNodeIndex(0), mVirtualNodes[0]->matrixNodeIndex());
+			mSLog->info("Add {:f} to system at ({:d},{:d})", -1., mVirtualNodes[0]->matrixNodeIndex(), matrixNodeIndex(0));
 		}
 		if (terminalNotGrounded(1)) {
-			mSLog->info("Add {:f} to system at ({:d},{:d})", 1., mVirtualNodes[0]->simNode(), simNode(1));
-			mSLog->info("Add {:f} to system at ({:d},{:d})", 1., simNode(1), mVirtualNodes[0]->simNode());
+			mSLog->info("Add {:f} to system at ({:d},{:d})", 1., mVirtualNodes[0]->matrixNodeIndex(), matrixNodeIndex(1));
+			mSLog->info("Add {:f} to system at ({:d},{:d})", 1., matrixNodeIndex(1), mVirtualNodes[0]->matrixNodeIndex());
 		}
 	}
 }
 
 void DP::Ph1::ControlledVoltageSource::mnaApplyRightSideVectorStamp(Matrix& rightVector) {
-	Math::setVectorElement(rightVector, mVirtualNodes[0]->simNode(), mIntfVoltage(0, 0), mNumFreqs);
+	Math::setVectorElement(rightVector, mVirtualNodes[0]->matrixNodeIndex(), mIntfVoltage(0, 0), mNumFreqs);
 	SPDLOG_LOGGER_DEBUG(mSLog, "Add {:s} to source vector at {:d}",
-		Logger::complexToString(mIntfVoltage(0, 0)), mVirtualNodes[0]->simNode());
+		Logger::complexToString(mIntfVoltage(0, 0)), mVirtualNodes[0]->matrixNodeIndex());
 }
 
 void DP::Ph1::ControlledVoltageSource::MnaPreStep::execute(Real time, Int timeStepCount) {
@@ -101,6 +101,6 @@ void DP::Ph1::ControlledVoltageSource::MnaPostStep::execute(Real time, Int timeS
 
 void DP::Ph1::ControlledVoltageSource::mnaUpdateCurrent(const Matrix& leftVector) {
 	for (UInt freq = 0; freq < mNumFreqs; freq++) {
-		mIntfCurrent(0, freq) = Math::complexFromVectorElement(leftVector, mVirtualNodes[0]->simNode(), mNumFreqs, freq);
+		mIntfCurrent(0, freq) = Math::complexFromVectorElement(leftVector, mVirtualNodes[0]->matrixNodeIndex(), mNumFreqs, freq);
 	}
 }

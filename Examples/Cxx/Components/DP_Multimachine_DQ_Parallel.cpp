@@ -74,13 +74,13 @@ void doSim(int threads, int generators, int repNumber) {
 			initTerminalVolt * sin(initVoltAngle - 2 * PI / 3)),
 		Complex(initTerminalVolt * cos(initVoltAngle + 2 * PI / 3),
 			initTerminalVolt * sin(initVoltAngle + 2 * PI / 3)) });
-	auto nodeCenter = Node::make("n_center", PhaseType::ABC);
+	auto nodeCenter = SimNode::make("n_center", PhaseType::ABC);
 
 	SystemNodeList nodes({nodeCenter});
 	SystemComponentList components;
 
 	for (int i = 0; i < generators; i++) {
-		auto node = Node::make("n_" + std::to_string(i), PhaseType::ABC, initVoltGen);
+		auto node = SimNode::make("n_" + std::to_string(i), PhaseType::ABC, initVoltGen);
 		nodes.push_back(node);
 
 		auto gen = Ph3::SynchronGeneratorDQODE::make("Gen" + std::to_string(i));
@@ -99,7 +99,7 @@ void doSim(int threads, int generators, int repNumber) {
 		// Connections
 		gen->connect({node});
 		line->connect({node, nodeCenter});
-		genLoad->connect({node, Node::GND});
+		genLoad->connect({node, SimNode::GND});
 
 		components.push_back(gen);
 		components.push_back(line);
@@ -108,7 +108,7 @@ void doSim(int threads, int generators, int repNumber) {
 
 	auto centerLoad = Ph3::SeriesResistor::make("R_center");
 	centerLoad->setParameters(Rcenter);
-	centerLoad->connect({nodeCenter, Node::GND});
+	centerLoad->connect({nodeCenter, SimNode::GND});
 	components.push_back(centerLoad);
 
 	// System

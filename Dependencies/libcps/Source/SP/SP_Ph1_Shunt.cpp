@@ -24,7 +24,7 @@
 using namespace CPS;
 
 SP::Ph1::Shunt::Shunt(String uid, String name, Logger::Level logLevel)
-	: PowerComponent<Complex>(uid, name, logLevel) {
+	: SimPowerComp<Complex>(uid, name, logLevel) {
 
 	mSLog->info("Create {} of type {}", this->type(), name);
 	setTerminalNumber(1);
@@ -57,7 +57,7 @@ void SP::Ph1::Shunt::calculatePerUnitParameters(Real baseApparentPower, Real bas
 	mBaseImpedance = (mBaseVoltage * mBaseVoltage) / mBaseApparentPower;
 	mBaseAdmittance = 1.0 / mBaseImpedance;
 	mSLog->info("Base Voltage={} [V]  Base Admittance={} [S]", mBaseVoltage, mBaseAdmittance);
-	
+
 	mConductancePerUnit = mConductance / mBaseAdmittance;
 	mSusceptancePerUnit = mSusceptance / mBaseAdmittance;
 	mSLog->info("Susceptance={} [pu] Conductance={} [pu]", mSusceptancePerUnit, mConductancePerUnit);
@@ -65,7 +65,7 @@ void SP::Ph1::Shunt::calculatePerUnitParameters(Real baseApparentPower, Real bas
 
 
 void SP::Ph1::Shunt::pfApplyAdmittanceMatrixStamp(SparseMatrixCompRow & Y) {
-	int bus1 = this->simNode(0);
+	int bus1 = this->matrixNodeIndex(0);
 	Complex Y_element = Complex(mConductancePerUnit, mSusceptancePerUnit);
 
 	if (std::isinf(Y_element.real()) || std::isinf(Y_element.imag())) {

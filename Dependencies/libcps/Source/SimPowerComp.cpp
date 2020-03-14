@@ -1,7 +1,5 @@
 /**
- * @file
- * @author Markus Mirz <mmirz@eonerc.rwth-aachen.de>
- * @copyright 2017-2018, Institute for Automation of Complex Power Systems, EONERC
+ * @copyright 2017, Institute for Automation of Complex Power Systems, EONERC
  *
  * CPowerSystems
  *
@@ -19,13 +17,13 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *********************************************************************************/
 
-#include <cps/PowerComponent.h>
+#include <cps/SimPowerComp.h>
 
 using namespace CPS;
 
 template <typename VarType>
-PowerComponent<VarType>::PowerComponent(String uid, String name, Logger::Level logLevel)
-	: TopologicalComponent(uid, name, logLevel) {
+SimPowerComp<VarType>::SimPowerComp(String uid, String name, Logger::Level logLevel)
+	: TopologicalPowerComp(uid, name, logLevel) {
 	addAttribute<MatrixVar<VarType>>("v_intf", &mIntfVoltage, Flags::read);
 	addAttribute<MatrixVar<VarType>>("i_intf", &mIntfCurrent, Flags::read);
 	mTerminals.clear();
@@ -33,24 +31,24 @@ PowerComponent<VarType>::PowerComponent(String uid, String name, Logger::Level l
 
 // #### Terminals ####
 template <typename VarType>
-UInt PowerComponent<VarType>::terminalNumberConnected() {
+UInt SimPowerComp<VarType>::terminalNumberConnected() {
 	return (UInt)(mNumTerminals - std::count(mTerminals.begin(), mTerminals.end(), nullptr));
 }
 
 template <typename VarType>
-Bool PowerComponent<VarType>::hasUnconnectedTerminals() {
+Bool SimPowerComp<VarType>::hasUnconnectedTerminals() {
 	return (std::count(mTerminals.begin(), mTerminals.end(), nullptr) > 0);
 }
 
 template <typename VarType>
-void PowerComponent<VarType>::checkForUnconnectedTerminals() {
+void SimPowerComp<VarType>::checkForUnconnectedTerminals() {
 	if ( hasUnconnectedTerminals() ) {
 		throw SystemError("Found unconnected Terminals for " + mUID);
 	}
 }
 
 template <typename VarType>
-typename Terminal<VarType>::Ptr PowerComponent<VarType>::terminal(UInt index) {
+typename SimTerminal<VarType>::Ptr SimPowerComp<VarType>::terminal(UInt index) {
 	if (index >= mTerminals.size()) {
 		throw SystemError("Terminal not available for " + mUID);
 	}
@@ -58,24 +56,24 @@ typename Terminal<VarType>::Ptr PowerComponent<VarType>::terminal(UInt index) {
 }
 
 template <typename VarType>
-TopologicalTerminal::List PowerComponent<VarType>::topologicalTerminals() {
+TopologicalTerminal::List SimPowerComp<VarType>::topologicalTerminals() {
 	TopologicalTerminal::List terminals;
-	for (typename Terminal<VarType>::Ptr term : mTerminals) {
+	for (typename SimTerminal<VarType>::Ptr term : mTerminals) {
 		terminals.push_back(term);
 	}
 	return terminals;
 }
 
 template <typename VarType>
-void PowerComponent<VarType>::setTerminalNumber(UInt num) {
+void SimPowerComp<VarType>::setTerminalNumber(UInt num) {
 	mNumTerminals = num;
 	mTerminals.resize(mNumTerminals, nullptr);
-	mSimNodes.resize(3*num);
-	mSimNodeIsGround.resize(num);
+	mMatrixNodeIndices.resize(3*num);
+	mMatrixNodeIndexIsGround.resize(num);
 }
 
 template <typename VarType>
-void PowerComponent<VarType>::setTerminals(typename Terminal<VarType>::List terminals) {
+void SimPowerComp<VarType>::setTerminals(typename SimTerminal<VarType>::List terminals) {
 	if (mNumTerminals < terminals.size()) {
 		mSLog->error("Number of Terminals is too large for Component {} - Ignoring", mName);
 		return;
@@ -84,35 +82,35 @@ void PowerComponent<VarType>::setTerminals(typename Terminal<VarType>::List term
 }
 
 template <typename VarType>
-void PowerComponent<VarType>::setTerminalAt(typename Terminal<VarType>::Ptr terminal, UInt terminalPosition) {
+void SimPowerComp<VarType>::setTerminalAt(typename SimTerminal<VarType>::Ptr terminal, UInt terminalPosition) {
 	if (mNumTerminals <= terminalPosition) {
 		mSLog->error("Terminal position number too large for Component {} - Ignoring", mName);
 		return;
 	}
 	mTerminals[terminalPosition] = terminal;
-	mSLog->info("Set Terminal at position {} to Node {}, simulation node {}", terminalPosition, mTerminals[terminalPosition]->node()->name(), mTerminals[terminalPosition]->simNode());
+	mSLog->info("Set Terminal at position {} to Node {}, simulation node {}", terminalPosition, mTerminals[terminalPosition]->node()->name(), mTerminals[terminalPosition]->matrixNodeIndex());
 }
 
 template <typename VarType>
-void PowerComponent<VarType>::updateSimNodes() {
+void SimPowerComp<VarType>::updateMatrixNodeIndices() {
 	for (UInt nodeIdx = 0; nodeIdx < mNumTerminals; nodeIdx++) {
-		mSimNodes[3*nodeIdx] = node(nodeIdx)->simNode(PhaseType::A);
-		mSimNodes[3*nodeIdx+1] = node(nodeIdx)->simNode(PhaseType::B);
-		mSimNodes[3*nodeIdx+2] = node(nodeIdx)->simNode(PhaseType::C);
-		mSimNodeIsGround[nodeIdx] = node(nodeIdx)->isGround();
+		mMatrixNodeIndices[3*nodeIdx] = node(nodeIdx)->matrixNodeIndex(PhaseType::A);
+		mMatrixNodeIndices[3*nodeIdx+1] = node(nodeIdx)->matrixNodeIndex(PhaseType::B);
+		mMatrixNodeIndices[3*nodeIdx+2] = node(nodeIdx)->matrixNodeIndex(PhaseType::C);
+		mMatrixNodeIndexIsGround[nodeIdx] = node(nodeIdx)->isGround();
 	}
 }
 
 // #### Nodes ####
 template <typename VarType>
-UInt PowerComponent<VarType>::nodeNumber() {
+UInt SimPowerComp<VarType>::nodeNumber() {
 	return static_cast<UInt>(std::count(mTerminals.begin(), mTerminals.end(), nullptr));
 }
 
 template <typename VarType>
-TopologicalNode::List PowerComponent<VarType>::topologicalNodes() {
+TopologicalNode::List SimPowerComp<VarType>::topologicalNodes() {
 	TopologicalNode::List nodes;
-	for (typename Terminal<VarType>::Ptr term : mTerminals) {
+	for (typename SimTerminal<VarType>::Ptr term : mTerminals) {
 		nodes.push_back(term->node());
 	}
 	return nodes;
@@ -120,28 +118,28 @@ TopologicalNode::List PowerComponent<VarType>::topologicalNodes() {
 
 // #### Virtual Nodes ####
 template <typename VarType>
-void PowerComponent<VarType>::setVirtualNodeNumber(UInt num) {
+void SimPowerComp<VarType>::setVirtualNodeNumber(UInt num) {
 	mNumVirtualNodes = num;
 	mVirtualNodes.resize(mNumVirtualNodes, nullptr);
 
 	for (UInt idx = 0; idx < mNumVirtualNodes; idx++) {
 		String nodeName = mName + "_vnode_" + std::to_string(idx);
-		setVirtualNodeAt(std::make_shared<Node<VarType>>(nodeName, mPhaseType), idx);
+		setVirtualNodeAt(std::make_shared<SimNode<VarType>>(nodeName, mPhaseType), idx);
 	}
 }
 
 template <typename VarType>
-void PowerComponent<VarType>::setVirtualNodeAt(typename Node<VarType>::Ptr virtualNode, UInt nodeNum) {
+void SimPowerComp<VarType>::setVirtualNodeAt(typename SimNode<VarType>::Ptr virtualNode, UInt nodeNum) {
 	if (mNumVirtualNodes <= nodeNum) {
 		mSLog->error("Virtual Node position number too large for Component {} - Ignoring", mName);
 	}
 	mVirtualNodes[nodeNum] = virtualNode;
 	mSLog->info("Set virtual Node at position {} to Node {}, simulation node {}",
-		nodeNum, mVirtualNodes[nodeNum]->name(), mVirtualNodes[nodeNum]->simNode());
+		nodeNum, mVirtualNodes[nodeNum]->name(), mVirtualNodes[nodeNum]->matrixNodeIndex());
 }
 
 template <typename VarType>
-typename Node<VarType>::Ptr PowerComponent<VarType>::virtualNode(UInt index) {
+typename SimNode<VarType>::Ptr SimPowerComp<VarType>::virtualNode(UInt index) {
 	if (index >= mVirtualNodes.size()) {
 		throw SystemError("Node not available for " + mUID);
 	}
@@ -150,21 +148,21 @@ typename Node<VarType>::Ptr PowerComponent<VarType>::virtualNode(UInt index) {
 
 // #### Other functions ####
 template<typename VarType>
-void PowerComponent<VarType>::connect(typename Node<VarType>::List nodes) {
+void SimPowerComp<VarType>::connect(typename SimNode<VarType>::List nodes) {
 	if (mNumTerminals < nodes.size()) {
 		mSLog->error("Number of Nodes is too large for Component {} - Ignoring", mName);
 		return;
 	}
 	for (UInt i = 0; i < nodes.size(); i++) {
 		String name = mName + "_T" + std::to_string(i);
-		typename Terminal<VarType>::Ptr terminal = Terminal<VarType>::make(name);
+		typename SimTerminal<VarType>::Ptr terminal = SimTerminal<VarType>::make(name);
 		terminal->setNode(nodes[i]);
 		setTerminalAt(terminal, i);
 	}
 }
 
 template<typename VarType>
-void PowerComponent<VarType>::initialize(Matrix frequencies) {
+void SimPowerComp<VarType>::initialize(Matrix frequencies) {
 	mFrequencies = frequencies;
 	mNumFreqs = static_cast<UInt>(mFrequencies.size());
 
@@ -182,5 +180,5 @@ void PowerComponent<VarType>::initialize(Matrix frequencies) {
 }
 
 // Declare specializations to move definitions to .cpp
-template class CPS::PowerComponent<Real>;
-template class CPS::PowerComponent<Complex>;
+template class CPS::SimPowerComp<Real>;
+template class CPS::SimPowerComp<Complex>;

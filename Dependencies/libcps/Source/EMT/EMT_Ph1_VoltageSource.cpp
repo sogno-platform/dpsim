@@ -23,7 +23,7 @@
 using namespace CPS;
 
 EMT::Ph1::VoltageSource::VoltageSource(String uid, String name,	Logger::Level logLevel)
-	: PowerComponent<Real>(uid, name, logLevel) {
+	: SimPowerComp<Real>(uid, name, logLevel) {
 	setVirtualNodeNumber(1);
 	setTerminalNumber(2);
 	mIntfVoltage = Matrix::Zero(1,1);
@@ -40,7 +40,7 @@ void EMT::Ph1::VoltageSource::setParameters(Complex voltageRef, Real srcFreq) {
 	parametersSet = true;
 }
 
-PowerComponent<Real>::Ptr EMT::Ph1::VoltageSource::clone(String name) {
+SimPowerComp<Real>::Ptr EMT::Ph1::VoltageSource::clone(String name) {
 	auto copy = VoltageSource::make(name, mLogLevel);
 	copy->setParameters(attribute<Complex>("V_ref")->get(), attribute<Real>("f_src")->get());
 	return copy;
@@ -48,7 +48,7 @@ PowerComponent<Real>::Ptr EMT::Ph1::VoltageSource::clone(String name) {
 
 void EMT::Ph1::VoltageSource::mnaInitialize(Real omega, Real timeStep, Attribute<Matrix>::Ptr leftVector) {
 	MNAInterface::mnaInitialize(omega, timeStep);
-	updateSimNodes();
+	updateMatrixNodeIndices();
 
 	mVoltageRef = attribute<Complex>("V_ref");
 	mSrcFreq = attribute<Real>("f_src");
@@ -60,26 +60,26 @@ void EMT::Ph1::VoltageSource::mnaInitialize(Real omega, Real timeStep, Attribute
 
 void EMT::Ph1::VoltageSource::mnaApplySystemMatrixStamp(Matrix& systemMatrix) {
 	if (terminalNotGrounded(0)) {
-		Math::addToMatrixElement(systemMatrix, simNode(0), mVirtualNodes[0]->simNode(), -1);
-		Math::addToMatrixElement(systemMatrix, mVirtualNodes[0]->simNode(), simNode(0), -1);
+		Math::addToMatrixElement(systemMatrix, matrixNodeIndex(0), mVirtualNodes[0]->matrixNodeIndex(), -1);
+		Math::addToMatrixElement(systemMatrix, mVirtualNodes[0]->matrixNodeIndex(), matrixNodeIndex(0), -1);
 	}
 	if (terminalNotGrounded(1)) {
-		Math::addToMatrixElement(systemMatrix, simNode(1), mVirtualNodes[0]->simNode(), 1);
-		Math::addToMatrixElement(systemMatrix, mVirtualNodes[0]->simNode(), simNode(1), 1);
+		Math::addToMatrixElement(systemMatrix, matrixNodeIndex(1), mVirtualNodes[0]->matrixNodeIndex(), 1);
+		Math::addToMatrixElement(systemMatrix, mVirtualNodes[0]->matrixNodeIndex(), matrixNodeIndex(1), 1);
 	}
 
 	if (terminalNotGrounded(0)) {
-		mSLog->info("Add {:f} to system at ({:d},{:d})", -1, simNode(0), mVirtualNodes[0]->simNode());
-		mSLog->info("Add {:f} to system at ({:d},{:d})", -1, mVirtualNodes[0]->simNode(), simNode(0));
+		mSLog->info("Add {:f} to system at ({:d},{:d})", -1, matrixNodeIndex(0), mVirtualNodes[0]->matrixNodeIndex());
+		mSLog->info("Add {:f} to system at ({:d},{:d})", -1, mVirtualNodes[0]->matrixNodeIndex(), matrixNodeIndex(0));
 	}
 	if (terminalNotGrounded(1)) {
-		mSLog->info("Add {:f} to system at ({:d},{:d})", 1, simNode(1), mVirtualNodes[0]->simNode());
-		mSLog->info("Add {:f} to system at ({:d},{:d})", 1, mVirtualNodes[0]->simNode(), simNode(1));
+		mSLog->info("Add {:f} to system at ({:d},{:d})", 1, matrixNodeIndex(1), mVirtualNodes[0]->matrixNodeIndex());
+		mSLog->info("Add {:f} to system at ({:d},{:d})", 1, mVirtualNodes[0]->matrixNodeIndex(), matrixNodeIndex(1));
 	}
 }
 
 void EMT::Ph1::VoltageSource::mnaApplyRightSideVectorStamp(Matrix& rightVector) {
-	Math::setVectorElement(rightVector, mVirtualNodes[0]->simNode(), mIntfVoltage(0,0));
+	Math::setVectorElement(rightVector, mVirtualNodes[0]->matrixNodeIndex(), mIntfVoltage(0,0));
 }
 
 void EMT::Ph1::VoltageSource::updateVoltage(Real time) {
@@ -101,5 +101,5 @@ void EMT::Ph1::VoltageSource::MnaPostStep::execute(Real time, Int timeStepCount)
 }
 
 void EMT::Ph1::VoltageSource::mnaUpdateCurrent(const Matrix& leftVector) {
-	mIntfCurrent(0,0) = Math::realFromVectorElement(leftVector, mVirtualNodes[0]->simNode());
+	mIntfCurrent(0,0) = Math::realFromVectorElement(leftVector, mVirtualNodes[0]->matrixNodeIndex());
 }

@@ -21,7 +21,7 @@
 
 #pragma once
 
-#include <cps/PowerComponent.h>
+#include <cps/SimPowerComp.h>
 #include <cps/Solver/MNASwitchInterface.h>
 #include <cps/Definitions.h>
 #include <cps/Logger.h>
@@ -38,7 +38,7 @@ namespace Ph3 {
 	/// only in series.
 	class SeriesSwitch :
 		public Base::Ph1::Switch,
-		public PowerComponent<Complex>,
+		public SimPowerComp<Complex>,
 		public SharedFactory<SeriesSwitch>,
 		public MNASwitchInterface {
 	protected:

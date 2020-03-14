@@ -24,7 +24,7 @@
 using namespace CPS;
 
 EMT::Ph3::Switch::Switch(String uid, String name, Logger::Level logLevel)
-	: PowerComponent<Real>(uid, name, logLevel) {
+	: SimPowerComp<Real>(uid, name, logLevel) {
 	setTerminalNumber(2);
 	mIntfVoltage = Matrix::Zero(1,1);
 	mIntfCurrent = Matrix::Zero(1,1);
@@ -34,7 +34,7 @@ EMT::Ph3::Switch::Switch(String uid, String name, Logger::Level logLevel)
 	addAttribute<Bool>("is_closed", &mSwitchClosed, Flags::read | Flags::write);
 }
 
-PowerComponent<Real>::Ptr EMT::Ph3::Switch::clone(String name) {
+SimPowerComp<Real>::Ptr EMT::Ph3::Switch::clone(String name) {
 	auto copy = Switch::make(name, mLogLevel);
 	copy->setParameters(mOpenResistance, mClosedResistance, mSwitchClosed);
 	return copy;
@@ -65,12 +65,12 @@ void EMT::Ph3::Switch::initializeFromPowerflow(Real frequency) {
 }
 
 void EMT::Ph3::Switch::initialize(Matrix frequencies) {
-	PowerComponent<Real>::initialize(frequencies);
+	SimPowerComp<Real>::initialize(frequencies);
 }
 
 void EMT::Ph3::Switch::mnaInitialize(Real omega, Real timeStep, Attribute<Matrix>::Ptr leftVector) {
 	MNAInterface::mnaInitialize(omega, timeStep);
-	updateSimNodes();
+	updateMatrixNodeIndices();
 
 	mMnaTasks.push_back(std::make_shared<MnaPostStep>(*this, leftVector));
 }
@@ -82,50 +82,50 @@ void EMT::Ph3::Switch::mnaApplySystemMatrixStamp(Matrix& systemMatrix) {
 	// Set diagonal entries
 	if (terminalNotGrounded(0)) {
 		// set upper left block, 3x3 entries
-		Math::addToMatrixElement(systemMatrix, simNode(0, 0), simNode(0, 0), conductance(0, 0));
-		Math::addToMatrixElement(systemMatrix, simNode(0, 0), simNode(0, 1), conductance(0, 1));
-		Math::addToMatrixElement(systemMatrix, simNode(0, 0), simNode(0, 2), conductance(0, 2));
-		Math::addToMatrixElement(systemMatrix, simNode(0, 1), simNode(0, 0), conductance(1, 0));
-		Math::addToMatrixElement(systemMatrix, simNode(0, 1), simNode(0, 1), conductance(1, 1));
-		Math::addToMatrixElement(systemMatrix, simNode(0, 1), simNode(0, 2), conductance(1, 2));
-		Math::addToMatrixElement(systemMatrix, simNode(0, 2), simNode(0, 0), conductance(2, 0));
-		Math::addToMatrixElement(systemMatrix, simNode(0, 2), simNode(0, 1), conductance(2, 1));
-		Math::addToMatrixElement(systemMatrix, simNode(0, 2), simNode(0, 2), conductance(2, 2));
+		Math::addToMatrixElement(systemMatrix, matrixNodeIndex(0, 0), matrixNodeIndex(0, 0), conductance(0, 0));
+		Math::addToMatrixElement(systemMatrix, matrixNodeIndex(0, 0), matrixNodeIndex(0, 1), conductance(0, 1));
+		Math::addToMatrixElement(systemMatrix, matrixNodeIndex(0, 0), matrixNodeIndex(0, 2), conductance(0, 2));
+		Math::addToMatrixElement(systemMatrix, matrixNodeIndex(0, 1), matrixNodeIndex(0, 0), conductance(1, 0));
+		Math::addToMatrixElement(systemMatrix, matrixNodeIndex(0, 1), matrixNodeIndex(0, 1), conductance(1, 1));
+		Math::addToMatrixElement(systemMatrix, matrixNodeIndex(0, 1), matrixNodeIndex(0, 2), conductance(1, 2));
+		Math::addToMatrixElement(systemMatrix, matrixNodeIndex(0, 2), matrixNodeIndex(0, 0), conductance(2, 0));
+		Math::addToMatrixElement(systemMatrix, matrixNodeIndex(0, 2), matrixNodeIndex(0, 1), conductance(2, 1));
+		Math::addToMatrixElement(systemMatrix, matrixNodeIndex(0, 2), matrixNodeIndex(0, 2), conductance(2, 2));
 	}
 	if (terminalNotGrounded(1)) {
 		// set buttom right block, 3x3 entries
-		Math::addToMatrixElement(systemMatrix, simNode(1, 0), simNode(1, 0), conductance(0, 0));
-		Math::addToMatrixElement(systemMatrix, simNode(1, 0), simNode(1, 1), conductance(0, 1));
-		Math::addToMatrixElement(systemMatrix, simNode(1, 0), simNode(1, 2), conductance(0, 2));
-		Math::addToMatrixElement(systemMatrix, simNode(1, 1), simNode(1, 0), conductance(1, 0));
-		Math::addToMatrixElement(systemMatrix, simNode(1, 1), simNode(1, 1), conductance(1, 1));
-		Math::addToMatrixElement(systemMatrix, simNode(1, 1), simNode(1, 2), conductance(1, 2));
-		Math::addToMatrixElement(systemMatrix, simNode(1, 2), simNode(1, 0), conductance(2, 0));
-		Math::addToMatrixElement(systemMatrix, simNode(1, 2), simNode(1, 1), conductance(2, 1));
-		Math::addToMatrixElement(systemMatrix, simNode(1, 2), simNode(1, 2), conductance(2, 2));
+		Math::addToMatrixElement(systemMatrix, matrixNodeIndex(1, 0), matrixNodeIndex(1, 0), conductance(0, 0));
+		Math::addToMatrixElement(systemMatrix, matrixNodeIndex(1, 0), matrixNodeIndex(1, 1), conductance(0, 1));
+		Math::addToMatrixElement(systemMatrix, matrixNodeIndex(1, 0), matrixNodeIndex(1, 2), conductance(0, 2));
+		Math::addToMatrixElement(systemMatrix, matrixNodeIndex(1, 1), matrixNodeIndex(1, 0), conductance(1, 0));
+		Math::addToMatrixElement(systemMatrix, matrixNodeIndex(1, 1), matrixNodeIndex(1, 1), conductance(1, 1));
+		Math::addToMatrixElement(systemMatrix, matrixNodeIndex(1, 1), matrixNodeIndex(1, 2), conductance(1, 2));
+		Math::addToMatrixElement(systemMatrix, matrixNodeIndex(1, 2), matrixNodeIndex(1, 0), conductance(2, 0));
+		Math::addToMatrixElement(systemMatrix, matrixNodeIndex(1, 2), matrixNodeIndex(1, 1), conductance(2, 1));
+		Math::addToMatrixElement(systemMatrix, matrixNodeIndex(1, 2), matrixNodeIndex(1, 2), conductance(2, 2));
 	}
 	// Set off diagonal blocks, 2x3x3 entries
 	if (terminalNotGrounded(0) && terminalNotGrounded(1)) {
-		Math::addToMatrixElement(systemMatrix, simNode(0, 0), simNode(1, 0), -conductance(0, 0));
-		Math::addToMatrixElement(systemMatrix, simNode(0, 0), simNode(1, 1), -conductance(0, 1));
-		Math::addToMatrixElement(systemMatrix, simNode(0, 0), simNode(1, 2), -conductance(0, 2));
-		Math::addToMatrixElement(systemMatrix, simNode(0, 1), simNode(1, 0), -conductance(1, 0));
-		Math::addToMatrixElement(systemMatrix, simNode(0, 1), simNode(1, 1), -conductance(1, 1));
-		Math::addToMatrixElement(systemMatrix, simNode(0, 1), simNode(1, 2), -conductance(1, 2));
-		Math::addToMatrixElement(systemMatrix, simNode(0, 2), simNode(1, 0), -conductance(2, 0));
-		Math::addToMatrixElement(systemMatrix, simNode(0, 2), simNode(1, 1), -conductance(2, 1));
-		Math::addToMatrixElement(systemMatrix, simNode(0, 2), simNode(1, 2), -conductance(2, 2));
+		Math::addToMatrixElement(systemMatrix, matrixNodeIndex(0, 0), matrixNodeIndex(1, 0), -conductance(0, 0));
+		Math::addToMatrixElement(systemMatrix, matrixNodeIndex(0, 0), matrixNodeIndex(1, 1), -conductance(0, 1));
+		Math::addToMatrixElement(systemMatrix, matrixNodeIndex(0, 0), matrixNodeIndex(1, 2), -conductance(0, 2));
+		Math::addToMatrixElement(systemMatrix, matrixNodeIndex(0, 1), matrixNodeIndex(1, 0), -conductance(1, 0));
+		Math::addToMatrixElement(systemMatrix, matrixNodeIndex(0, 1), matrixNodeIndex(1, 1), -conductance(1, 1));
+		Math::addToMatrixElement(systemMatrix, matrixNodeIndex(0, 1), matrixNodeIndex(1, 2), -conductance(1, 2));
+		Math::addToMatrixElement(systemMatrix, matrixNodeIndex(0, 2), matrixNodeIndex(1, 0), -conductance(2, 0));
+		Math::addToMatrixElement(systemMatrix, matrixNodeIndex(0, 2), matrixNodeIndex(1, 1), -conductance(2, 1));
+		Math::addToMatrixElement(systemMatrix, matrixNodeIndex(0, 2), matrixNodeIndex(1, 2), -conductance(2, 2));
 
 
-		Math::addToMatrixElement(systemMatrix, simNode(1, 0), simNode(0, 0), -conductance(0, 0));
-		Math::addToMatrixElement(systemMatrix, simNode(1, 0), simNode(0, 1), -conductance(0, 1));
-		Math::addToMatrixElement(systemMatrix, simNode(1, 0), simNode(0, 2), -conductance(0, 2));
-		Math::addToMatrixElement(systemMatrix, simNode(1, 1), simNode(0, 0), -conductance(1, 0));
-		Math::addToMatrixElement(systemMatrix, simNode(1, 1), simNode(0, 1), -conductance(1, 1));
-		Math::addToMatrixElement(systemMatrix, simNode(1, 1), simNode(0, 2), -conductance(1, 2));
-		Math::addToMatrixElement(systemMatrix, simNode(1, 2), simNode(0, 0), -conductance(2, 0));
-		Math::addToMatrixElement(systemMatrix, simNode(1, 2), simNode(0, 1), -conductance(2, 1));
-		Math::addToMatrixElement(systemMatrix, simNode(1, 2), simNode(0, 2), -conductance(2, 2));
+		Math::addToMatrixElement(systemMatrix, matrixNodeIndex(1, 0), matrixNodeIndex(0, 0), -conductance(0, 0));
+		Math::addToMatrixElement(systemMatrix, matrixNodeIndex(1, 0), matrixNodeIndex(0, 1), -conductance(0, 1));
+		Math::addToMatrixElement(systemMatrix, matrixNodeIndex(1, 0), matrixNodeIndex(0, 2), -conductance(0, 2));
+		Math::addToMatrixElement(systemMatrix, matrixNodeIndex(1, 1), matrixNodeIndex(0, 0), -conductance(1, 0));
+		Math::addToMatrixElement(systemMatrix, matrixNodeIndex(1, 1), matrixNodeIndex(0, 1), -conductance(1, 1));
+		Math::addToMatrixElement(systemMatrix, matrixNodeIndex(1, 1), matrixNodeIndex(0, 2), -conductance(1, 2));
+		Math::addToMatrixElement(systemMatrix, matrixNodeIndex(1, 2), matrixNodeIndex(0, 0), -conductance(2, 0));
+		Math::addToMatrixElement(systemMatrix, matrixNodeIndex(1, 2), matrixNodeIndex(0, 1), -conductance(2, 1));
+		Math::addToMatrixElement(systemMatrix, matrixNodeIndex(1, 2), matrixNodeIndex(0, 2), -conductance(2, 2));
 	}
 	mSLog->info(
 		"\nConductance matrix: {:s}",
@@ -139,50 +139,50 @@ void EMT::Ph3::Switch::mnaApplySwitchSystemMatrixStamp(Matrix& systemMatrix, Boo
 	// Set diagonal entries
 	if (terminalNotGrounded(0)) {
 		// set upper left block, 3x3 entries
-		Math::addToMatrixElement(systemMatrix, simNode(0, 0), simNode(0, 0), conductance(0, 0));
-		Math::addToMatrixElement(systemMatrix, simNode(0, 0), simNode(0, 1), conductance(0, 1));
-		Math::addToMatrixElement(systemMatrix, simNode(0, 0), simNode(0, 2), conductance(0, 2));
-		Math::addToMatrixElement(systemMatrix, simNode(0, 1), simNode(0, 0), conductance(1, 0));
-		Math::addToMatrixElement(systemMatrix, simNode(0, 1), simNode(0, 1), conductance(1, 1));
-		Math::addToMatrixElement(systemMatrix, simNode(0, 1), simNode(0, 2), conductance(1, 2));
-		Math::addToMatrixElement(systemMatrix, simNode(0, 2), simNode(0, 0), conductance(2, 0));
-		Math::addToMatrixElement(systemMatrix, simNode(0, 2), simNode(0, 1), conductance(2, 1));
-		Math::addToMatrixElement(systemMatrix, simNode(0, 2), simNode(0, 2), conductance(2, 2));
+		Math::addToMatrixElement(systemMatrix, matrixNodeIndex(0, 0), matrixNodeIndex(0, 0), conductance(0, 0));
+		Math::addToMatrixElement(systemMatrix, matrixNodeIndex(0, 0), matrixNodeIndex(0, 1), conductance(0, 1));
+		Math::addToMatrixElement(systemMatrix, matrixNodeIndex(0, 0), matrixNodeIndex(0, 2), conductance(0, 2));
+		Math::addToMatrixElement(systemMatrix, matrixNodeIndex(0, 1), matrixNodeIndex(0, 0), conductance(1, 0));
+		Math::addToMatrixElement(systemMatrix, matrixNodeIndex(0, 1), matrixNodeIndex(0, 1), conductance(1, 1));
+		Math::addToMatrixElement(systemMatrix, matrixNodeIndex(0, 1), matrixNodeIndex(0, 2), conductance(1, 2));
+		Math::addToMatrixElement(systemMatrix, matrixNodeIndex(0, 2), matrixNodeIndex(0, 0), conductance(2, 0));
+		Math::addToMatrixElement(systemMatrix, matrixNodeIndex(0, 2), matrixNodeIndex(0, 1), conductance(2, 1));
+		Math::addToMatrixElement(systemMatrix, matrixNodeIndex(0, 2), matrixNodeIndex(0, 2), conductance(2, 2));
 	}
 	if (terminalNotGrounded(1)) {
 		// set buttom right block, 3x3 entries
-		Math::addToMatrixElement(systemMatrix, simNode(1, 0), simNode(1, 0), conductance(0, 0));
-		Math::addToMatrixElement(systemMatrix, simNode(1, 0), simNode(1, 1), conductance(0, 1));
-		Math::addToMatrixElement(systemMatrix, simNode(1, 0), simNode(1, 2), conductance(0, 2));
-		Math::addToMatrixElement(systemMatrix, simNode(1, 1), simNode(1, 0), conductance(1, 0));
-		Math::addToMatrixElement(systemMatrix, simNode(1, 1), simNode(1, 1), conductance(1, 1));
-		Math::addToMatrixElement(systemMatrix, simNode(1, 1), simNode(1, 2), conductance(1, 2));
-		Math::addToMatrixElement(systemMatrix, simNode(1, 2), simNode(1, 0), conductance(2, 0));
-		Math::addToMatrixElement(systemMatrix, simNode(1, 2), simNode(1, 1), conductance(2, 1));
-		Math::addToMatrixElement(systemMatrix, simNode(1, 2), simNode(1, 2), conductance(2, 2));
+		Math::addToMatrixElement(systemMatrix, matrixNodeIndex(1, 0), matrixNodeIndex(1, 0), conductance(0, 0));
+		Math::addToMatrixElement(systemMatrix, matrixNodeIndex(1, 0), matrixNodeIndex(1, 1), conductance(0, 1));
+		Math::addToMatrixElement(systemMatrix, matrixNodeIndex(1, 0), matrixNodeIndex(1, 2), conductance(0, 2));
+		Math::addToMatrixElement(systemMatrix, matrixNodeIndex(1, 1), matrixNodeIndex(1, 0), conductance(1, 0));
+		Math::addToMatrixElement(systemMatrix, matrixNodeIndex(1, 1), matrixNodeIndex(1, 1), conductance(1, 1));
+		Math::addToMatrixElement(systemMatrix, matrixNodeIndex(1, 1), matrixNodeIndex(1, 2), conductance(1, 2));
+		Math::addToMatrixElement(systemMatrix, matrixNodeIndex(1, 2), matrixNodeIndex(1, 0), conductance(2, 0));
+		Math::addToMatrixElement(systemMatrix, matrixNodeIndex(1, 2), matrixNodeIndex(1, 1), conductance(2, 1));
+		Math::addToMatrixElement(systemMatrix, matrixNodeIndex(1, 2), matrixNodeIndex(1, 2), conductance(2, 2));
 	}
 	// Set off diagonal blocks, 2x3x3 entries
 	if (terminalNotGrounded(0) && terminalNotGrounded(1)) {
-		Math::addToMatrixElement(systemMatrix, simNode(0, 0), simNode(1, 0), -conductance(0, 0));
-		Math::addToMatrixElement(systemMatrix, simNode(0, 0), simNode(1, 1), -conductance(0, 1));
-		Math::addToMatrixElement(systemMatrix, simNode(0, 0), simNode(1, 2), -conductance(0, 2));
-		Math::addToMatrixElement(systemMatrix, simNode(0, 1), simNode(1, 0), -conductance(1, 0));
-		Math::addToMatrixElement(systemMatrix, simNode(0, 1), simNode(1, 1), -conductance(1, 1));
-		Math::addToMatrixElement(systemMatrix, simNode(0, 1), simNode(1, 2), -conductance(1, 2));
-		Math::addToMatrixElement(systemMatrix, simNode(0, 2), simNode(1, 0), -conductance(2, 0));
-		Math::addToMatrixElement(systemMatrix, simNode(0, 2), simNode(1, 1), -conductance(2, 1));
-		Math::addToMatrixElement(systemMatrix, simNode(0, 2), simNode(1, 2), -conductance(2, 2));
+		Math::addToMatrixElement(systemMatrix, matrixNodeIndex(0, 0), matrixNodeIndex(1, 0), -conductance(0, 0));
+		Math::addToMatrixElement(systemMatrix, matrixNodeIndex(0, 0), matrixNodeIndex(1, 1), -conductance(0, 1));
+		Math::addToMatrixElement(systemMatrix, matrixNodeIndex(0, 0), matrixNodeIndex(1, 2), -conductance(0, 2));
+		Math::addToMatrixElement(systemMatrix, matrixNodeIndex(0, 1), matrixNodeIndex(1, 0), -conductance(1, 0));
+		Math::addToMatrixElement(systemMatrix, matrixNodeIndex(0, 1), matrixNodeIndex(1, 1), -conductance(1, 1));
+		Math::addToMatrixElement(systemMatrix, matrixNodeIndex(0, 1), matrixNodeIndex(1, 2), -conductance(1, 2));
+		Math::addToMatrixElement(systemMatrix, matrixNodeIndex(0, 2), matrixNodeIndex(1, 0), -conductance(2, 0));
+		Math::addToMatrixElement(systemMatrix, matrixNodeIndex(0, 2), matrixNodeIndex(1, 1), -conductance(2, 1));
+		Math::addToMatrixElement(systemMatrix, matrixNodeIndex(0, 2), matrixNodeIndex(1, 2), -conductance(2, 2));
 
 
-		Math::addToMatrixElement(systemMatrix, simNode(1, 0), simNode(0, 0), -conductance(0, 0));
-		Math::addToMatrixElement(systemMatrix, simNode(1, 0), simNode(0, 1), -conductance(0, 1));
-		Math::addToMatrixElement(systemMatrix, simNode(1, 0), simNode(0, 2), -conductance(0, 2));
-		Math::addToMatrixElement(systemMatrix, simNode(1, 1), simNode(0, 0), -conductance(1, 0));
-		Math::addToMatrixElement(systemMatrix, simNode(1, 1), simNode(0, 1), -conductance(1, 1));
-		Math::addToMatrixElement(systemMatrix, simNode(1, 1), simNode(0, 2), -conductance(1, 2));
-		Math::addToMatrixElement(systemMatrix, simNode(1, 2), simNode(0, 0), -conductance(2, 0));
-		Math::addToMatrixElement(systemMatrix, simNode(1, 2), simNode(0, 1), -conductance(2, 1));
-		Math::addToMatrixElement(systemMatrix, simNode(1, 2), simNode(0, 2), -conductance(2, 2));
+		Math::addToMatrixElement(systemMatrix, matrixNodeIndex(1, 0), matrixNodeIndex(0, 0), -conductance(0, 0));
+		Math::addToMatrixElement(systemMatrix, matrixNodeIndex(1, 0), matrixNodeIndex(0, 1), -conductance(0, 1));
+		Math::addToMatrixElement(systemMatrix, matrixNodeIndex(1, 0), matrixNodeIndex(0, 2), -conductance(0, 2));
+		Math::addToMatrixElement(systemMatrix, matrixNodeIndex(1, 1), matrixNodeIndex(0, 0), -conductance(1, 0));
+		Math::addToMatrixElement(systemMatrix, matrixNodeIndex(1, 1), matrixNodeIndex(0, 1), -conductance(1, 1));
+		Math::addToMatrixElement(systemMatrix, matrixNodeIndex(1, 1), matrixNodeIndex(0, 2), -conductance(1, 2));
+		Math::addToMatrixElement(systemMatrix, matrixNodeIndex(1, 2), matrixNodeIndex(0, 0), -conductance(2, 0));
+		Math::addToMatrixElement(systemMatrix, matrixNodeIndex(1, 2), matrixNodeIndex(0, 1), -conductance(2, 1));
+		Math::addToMatrixElement(systemMatrix, matrixNodeIndex(1, 2), matrixNodeIndex(0, 2), -conductance(2, 2));
 	}
 
 	mSLog->info(
@@ -201,14 +201,14 @@ void EMT::Ph3::Switch::mnaUpdateVoltage(const Matrix& leftVector) {
 	// Voltage across component is defined as V1 - V0
 	mIntfVoltage = Matrix::Zero(3, 1);
 	if (terminalNotGrounded(1)) {
-		mIntfVoltage(0, 0) = Math::realFromVectorElement(leftVector, simNode(1, 0));
-		mIntfVoltage(1, 0) = Math::realFromVectorElement(leftVector, simNode(1, 1));
-		mIntfVoltage(2, 0) = Math::realFromVectorElement(leftVector, simNode(1, 2));
+		mIntfVoltage(0, 0) = Math::realFromVectorElement(leftVector, matrixNodeIndex(1, 0));
+		mIntfVoltage(1, 0) = Math::realFromVectorElement(leftVector, matrixNodeIndex(1, 1));
+		mIntfVoltage(2, 0) = Math::realFromVectorElement(leftVector, matrixNodeIndex(1, 2));
 	}
 	if (terminalNotGrounded(0)) {
-		mIntfVoltage(0, 0) = mIntfVoltage(0, 0) - Math::realFromVectorElement(leftVector, simNode(0, 0));
-		mIntfVoltage(1, 0) = mIntfVoltage(1, 0) - Math::realFromVectorElement(leftVector, simNode(0, 1));
-		mIntfVoltage(2, 0) = mIntfVoltage(2, 0) - Math::realFromVectorElement(leftVector, simNode(0, 2));
+		mIntfVoltage(0, 0) = mIntfVoltage(0, 0) - Math::realFromVectorElement(leftVector, matrixNodeIndex(0, 0));
+		mIntfVoltage(1, 0) = mIntfVoltage(1, 0) - Math::realFromVectorElement(leftVector, matrixNodeIndex(0, 1));
+		mIntfVoltage(2, 0) = mIntfVoltage(2, 0) - Math::realFromVectorElement(leftVector, matrixNodeIndex(0, 2));
 	}
 }
 

@@ -20,14 +20,14 @@
  *********************************************************************************/
 
 #pragma once
-#include <cps/PowerComponent.h>
+#include <cps/SimPowerComp.h>
 #include <cps/Solver/PFSolverInterfaceBranch.h>
 
 namespace CPS {
 
 namespace SP {namespace Ph1 {
 
-	class Shunt : public PowerComponent<Complex>, public SharedFactory<Shunt>, public PFSolverInterfaceBranch {
+	class Shunt : public SimPowerComp<Complex>, public SharedFactory<Shunt>, public PFSolverInterfaceBranch {
 
 	private:
 		/// Conductance [S]
@@ -66,7 +66,7 @@ namespace SP {namespace Ph1 {
 		// #### General ####
 		/// Set shunt specific parameters
 		void setParameters(Real conductance, Real susceptance);
-		
+
 		// #### Powerflow section ####
 		/// Set base voltage
 		void setBaseVoltage(Real baseVoltage);

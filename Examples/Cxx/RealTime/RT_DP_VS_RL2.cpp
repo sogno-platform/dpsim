@@ -32,9 +32,9 @@ int main(int argc, char* argv[]) {
 	Logger::setLogDir("logs/"+simName);
 
 	// Nodes
-	auto n1 = Node::make("n1");
-	auto n2 = Node::make("n2");
-	auto n3 = Node::make("n3");
+	auto n1 = SimNode::make("n1");
+	auto n2 = SimNode::make("n2");
+	auto n3 = SimNode::make("n3");
 
 	// Components
 	auto vs = VoltageSource::make("v_s");
@@ -47,13 +47,13 @@ int main(int argc, char* argv[]) {
 	rL->setParameters(100);
 
 	// Connections
-	vs->connect({ Node::GND, n1 });
+	vs->connect({ SimNode::GND, n1 });
 	rl->connect({ n1, n2 });
 	ll->connect({ n2, n3 });
-	rL->connect({ Node::GND, n3 });
+	rL->connect({ SimNode::GND, n3 });
 
 	auto sys = SystemTopology(50,
-		SystemNodeList{Node::GND, n1, n2, n3},
+		SystemNodeList{SimNode::GND, n1, n2, n3},
 		SystemComponentList{vs, rl, ll, rL});
 
 	RealTimeSimulation sim(simName, sys, timeStep, finalTime);

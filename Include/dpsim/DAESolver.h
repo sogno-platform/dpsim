@@ -54,9 +54,9 @@ namespace DPsim {
 		/// Number of equations in problem
 		Int mNEQ;
 		/// Components of the Problem
-        CPS::Component::List mComponents;
+        CPS::IdentifiedObject::List mComponents;
 		/// Nodes of the Problem
-        CPS::Node<Complex>::List mNodes;
+        CPS::SimNode<Complex>::List mNodes;
 
 		// IDA simulation variables
 		/// Memory block allocated by IDA

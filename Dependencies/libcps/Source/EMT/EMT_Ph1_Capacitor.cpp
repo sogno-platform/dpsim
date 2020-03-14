@@ -24,7 +24,7 @@
 using namespace CPS;
 
 EMT::Ph1::Capacitor::Capacitor(String uid, String name,	Logger::Level logLevel)
-	: PowerComponent<Real>(uid, name, logLevel) {
+	: SimPowerComp<Real>(uid, name, logLevel) {
 	mEquivCurrent = 0;
 	mIntfVoltage = Matrix::Zero(1,1);
 	mIntfCurrent = Matrix::Zero(1,1);
@@ -33,7 +33,7 @@ EMT::Ph1::Capacitor::Capacitor(String uid, String name,	Logger::Level logLevel)
 	addAttribute<Real>("C", &mCapacitance, Flags::read | Flags::write);
 }
 
-PowerComponent<Real>::Ptr EMT::Ph1::Capacitor::clone(String name) {
+SimPowerComp<Real>::Ptr EMT::Ph1::Capacitor::clone(String name) {
 	auto copy = Capacitor::make(name, mLogLevel);
 	copy->setParameters(mCapacitance);
 	return copy;
@@ -62,7 +62,7 @@ void EMT::Ph1::Capacitor::initializeFromPowerflow(Real frequency) {
 
 void EMT::Ph1::Capacitor::mnaInitialize(Real omega, Real timeStep, Attribute<Matrix>::Ptr leftVector) {
 	MNAInterface::mnaInitialize(omega, timeStep);
-	updateSimNodes();
+	updateMatrixNodeIndices();
 
 	mEquivCond = (2.0 * mCapacitance) / timeStep;
 	// Update internal state
@@ -75,21 +75,21 @@ void EMT::Ph1::Capacitor::mnaInitialize(Real omega, Real timeStep, Attribute<Mat
 
 void EMT::Ph1::Capacitor::mnaApplySystemMatrixStamp(Matrix& systemMatrix) {
 	if (terminalNotGrounded(0))
-		Math::addToMatrixElement(systemMatrix, simNode(0), simNode(0), mEquivCond);
+		Math::addToMatrixElement(systemMatrix, matrixNodeIndex(0), matrixNodeIndex(0), mEquivCond);
 	if (terminalNotGrounded(1))
-		Math::addToMatrixElement(systemMatrix, simNode(1), simNode(1), mEquivCond);
+		Math::addToMatrixElement(systemMatrix, matrixNodeIndex(1), matrixNodeIndex(1), mEquivCond);
 	if (terminalNotGrounded(0) && terminalNotGrounded(1)) {
-		Math::addToMatrixElement(systemMatrix, simNode(0), simNode(1), -mEquivCond);
-		Math::addToMatrixElement(systemMatrix, simNode(1), simNode(0), -mEquivCond);
+		Math::addToMatrixElement(systemMatrix, matrixNodeIndex(0), matrixNodeIndex(1), -mEquivCond);
+		Math::addToMatrixElement(systemMatrix, matrixNodeIndex(1), matrixNodeIndex(0), -mEquivCond);
 	}
 }
 
 void EMT::Ph1::Capacitor::mnaApplyRightSideVectorStamp(Matrix& rightVector) {
 	mEquivCurrent = -mIntfCurrent(0,0) + -mEquivCond * mIntfVoltage(0,0);
 	if (terminalNotGrounded(0))
-		Math::setVectorElement(rightVector, simNode(0), mEquivCurrent);
+		Math::setVectorElement(rightVector, matrixNodeIndex(0), mEquivCurrent);
 	if (terminalNotGrounded(1))
-		Math::setVectorElement(rightVector, simNode(1), -mEquivCurrent);
+		Math::setVectorElement(rightVector, matrixNodeIndex(1), -mEquivCurrent);
 }
 
 void EMT::Ph1::Capacitor::MnaPreStep::execute(Real time, Int timeStepCount) {
@@ -105,9 +105,9 @@ void EMT::Ph1::Capacitor::mnaUpdateVoltage(const Matrix& leftVector) {
 	// v1 - v0
 	mIntfVoltage(0,0) = 0;
 	if (terminalNotGrounded(1))
-		mIntfVoltage(0,0) = Math::realFromVectorElement(leftVector, simNode(1));
+		mIntfVoltage(0,0) = Math::realFromVectorElement(leftVector, matrixNodeIndex(1));
 	if (terminalNotGrounded(0))
-		mIntfVoltage(0,0) = mIntfVoltage(0,0) - Math::realFromVectorElement(leftVector, simNode(0));
+		mIntfVoltage(0,0) = mIntfVoltage(0,0) - Math::realFromVectorElement(leftVector, matrixNodeIndex(0));
 }
 
 void EMT::Ph1::Capacitor::mnaUpdateCurrent(const Matrix& leftVector) {

@@ -24,7 +24,7 @@
 using namespace CPS;
 
 EMT::Ph1::CurrentSource::CurrentSource(String uid, String name,	Logger::Level logLevel)
-	: PowerComponent<Real>(uid, name, logLevel) {
+	: SimPowerComp<Real>(uid, name, logLevel) {
 	setTerminalNumber(2);
 	mIntfVoltage = Matrix::Zero(1,1);
 	mIntfCurrent = Matrix::Zero(1,1);
@@ -33,7 +33,7 @@ EMT::Ph1::CurrentSource::CurrentSource(String uid, String name,	Logger::Level lo
 	addAttribute<Real>("f_src", Flags::read | Flags::write);
 }
 
-PowerComponent<Real>::Ptr EMT::Ph1::CurrentSource::clone(String name) {
+SimPowerComp<Real>::Ptr EMT::Ph1::CurrentSource::clone(String name) {
 	auto copy = CurrentSource::make(name, mLogLevel);
 	copy->setParameters(attribute<Complex>("I_ref")->get(), attribute<Real>("f_src")->get());
 	return copy;
@@ -42,13 +42,13 @@ PowerComponent<Real>::Ptr EMT::Ph1::CurrentSource::clone(String name) {
 void EMT::Ph1::CurrentSource::setParameters(Complex currentRef, Real srcFreq) {
 	attribute<Complex>("I_ref")->set(currentRef);
 	attribute<Real>("f_src")->set(srcFreq);
-	
+
 	parametersSet = true;
 }
 
 void EMT::Ph1::CurrentSource::mnaInitialize(Real omega, Real timeStep, Attribute<Matrix>::Ptr leftVector) {
 	MNAInterface::mnaInitialize(omega, timeStep);
-	updateSimNodes();
+	updateMatrixNodeIndices();
 
 	mCurrentRef = attribute<Complex>("I_ref");
 	mSrcFreq = attribute<Real>("f_src");
@@ -60,10 +60,10 @@ void EMT::Ph1::CurrentSource::mnaInitialize(Real omega, Real timeStep, Attribute
 
 void EMT::Ph1::CurrentSource::mnaApplyRightSideVectorStamp(Matrix& rightVector) {
 	if (terminalNotGrounded(0))
-		Math::setVectorElement(rightVector, simNode(0), -mIntfCurrent(0,0));
+		Math::setVectorElement(rightVector, matrixNodeIndex(0), -mIntfCurrent(0,0));
 
 	if (terminalNotGrounded(1))
-		Math::setVectorElement(rightVector, simNode(1), mIntfCurrent(0,0));
+		Math::setVectorElement(rightVector, matrixNodeIndex(1), mIntfCurrent(0,0));
 }
 
 void EMT::Ph1::CurrentSource::updateState(Real time) {
@@ -87,7 +87,7 @@ void EMT::Ph1::CurrentSource::MnaPostStep::execute(Real time, Int timeStepCount)
 void EMT::Ph1::CurrentSource::mnaUpdateVoltage(const Matrix& leftVector) {
 	mIntfVoltage(0,0) = 0;
 	if (terminalNotGrounded(0))
-		mIntfVoltage(0,0) = Math::realFromVectorElement(leftVector, simNode(0));
+		mIntfVoltage(0,0) = Math::realFromVectorElement(leftVector, matrixNodeIndex(0));
 	if (terminalNotGrounded(1))
-		mIntfVoltage(0,0) = mIntfVoltage(0,0) - Math::realFromVectorElement(leftVector, simNode(1));
+		mIntfVoltage(0,0) = mIntfVoltage(0,0) - Math::realFromVectorElement(leftVector, matrixNodeIndex(1));
 }

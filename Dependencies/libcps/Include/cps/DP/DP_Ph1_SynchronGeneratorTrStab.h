@@ -21,7 +21,7 @@
 
 #pragma once
 
-#include <cps/PowerComponent.h>
+#include <cps/SimPowerComp.h>
 #include <cps/Solver/MNAInterface.h>
 #include <cps/Base/Base_SynchronGenerator.h>
 #include <cps/DP/DP_Ph1_VoltageSource.h>
@@ -36,7 +36,7 @@ namespace Ph1 {
 	class SynchronGeneratorTrStab :
 		public Base::SynchronGenerator,
 		public MNAInterface,
-		public PowerComponent<Complex>,
+		public SimPowerComp<Complex>,
 		public SharedFactory<SynchronGeneratorTrStab> {
 	protected:
 		// #### Model specific variables ####
@@ -65,7 +65,7 @@ namespace Ph1 {
 		SynchronGeneratorTrStab(String name, Logger::Level logLevel = Logger::Level::off)
 			: SynchronGeneratorTrStab(name, name, logLevel) { }
 
-		PowerComponent<Complex>::Ptr clone(String name);
+		SimPowerComp<Complex>::Ptr clone(String name);
 
 		// #### General Functions ####
 		///

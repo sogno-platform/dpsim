@@ -40,9 +40,9 @@ void EMT_VS_RL_f60_largeTs() {
 	Logger::setLogDir("logs/"+simName);
 
 	// Nodes
-	auto n1 = Node::make("n1");
-	auto n2 = Node::make("n2");
-	auto n3 = Node::make("n3");
+	auto n1 = SimNode::make("n1");
+	auto n2 = SimNode::make("n2");
+	auto n3 = SimNode::make("n3");
 
 	// Components
 	auto vs = VoltageSource::make("vs");
@@ -55,10 +55,10 @@ void EMT_VS_RL_f60_largeTs() {
 	rload->setParameters(10);
 
 	// Connections
-	vs->connect({ Node::GND, n1 });
+	vs->connect({ SimNode::GND, n1 });
 	rline->connect({ n1, n2 });
 	lline->connect({ n2, n3 });
-	rload->connect({ n3, Node::GND });
+	rload->connect({ n3, SimNode::GND });
 
 	// Define system topology
 	auto sys = SystemTopology(50,
@@ -91,9 +91,9 @@ void EMT_VS_RL_f60() {
 	Logger::setLogDir("logs/"+simName);
 
 	// Nodes
-	auto n1 = Node::make("n1");
-	auto n2 = Node::make("n2");
-	auto n3 = Node::make("n3");
+	auto n1 = SimNode::make("n1");
+	auto n2 = SimNode::make("n2");
+	auto n3 = SimNode::make("n3");
 
 	// Components
 	auto vs = VoltageSource::make("vs");
@@ -106,10 +106,10 @@ void EMT_VS_RL_f60() {
 	rload->setParameters(10);
 
 	// Connections
-	vs->connect({ Node::GND, n1 });
+	vs->connect({ SimNode::GND, n1 });
 	rline->connect({ n1, n2 });
 	lline->connect({ n2, n3 });
-	rload->connect({ n3, Node::GND });
+	rload->connect({ n3, SimNode::GND });
 
 	// Define system topology
 	auto sys = SystemTopology(50,
@@ -142,9 +142,9 @@ void EMT_VS_RL_f500() {
 	Logger::setLogDir("logs/"+simName);
 
 	// Nodes
-	auto n1 = Node::make("n1");
-	auto n2 = Node::make("n2");
-	auto n3 = Node::make("n3");
+	auto n1 = SimNode::make("n1");
+	auto n2 = SimNode::make("n2");
+	auto n3 = SimNode::make("n3");
 
 	// Components
 	auto vs = VoltageSource::make("vs");
@@ -157,10 +157,10 @@ void EMT_VS_RL_f500() {
 	rload->setParameters(10);
 
 	// Connections
-	vs->connect({ Node::GND, n1 });
+	vs->connect({ SimNode::GND, n1 });
 	rline->connect({ n1, n2 });
 	lline->connect({ n2, n3 });
-	rload->connect({ n3, Node::GND });
+	rload->connect({ n3, SimNode::GND });
 
 	// Define system topology
 	auto sys = SystemTopology(50,

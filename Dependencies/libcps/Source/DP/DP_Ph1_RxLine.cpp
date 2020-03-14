@@ -23,7 +23,7 @@
 using namespace CPS;
 
 DP::Ph1::RxLine::RxLine(String uid, String name, Logger::Level logLevel)
-	: PowerComponent<Complex>(uid, name, logLevel) {
+	: SimPowerComp<Complex>(uid, name, logLevel) {
 	setVirtualNodeNumber(1);
 	setTerminalNumber(2);
 	mIntfVoltage = MatrixComp::Zero(1, 1);
@@ -33,7 +33,7 @@ DP::Ph1::RxLine::RxLine(String uid, String name, Logger::Level logLevel)
 	addAttribute<Real>("L", &mSeriesInd, Flags::read | Flags::write);
 }
 
-PowerComponent<Complex>::Ptr DP::Ph1::RxLine::clone(String name) {
+SimPowerComp<Complex>::Ptr DP::Ph1::RxLine::clone(String name) {
 	auto copy = RxLine::make(name, mLogLevel);
 	copy->setParameters(mSeriesRes, mSeriesInd);
 	return copy;
@@ -60,7 +60,7 @@ void DP::Ph1::RxLine::initializeFromPowerflow(Real frequency) {
 
 	mInitialResistor = std::make_shared<DP::Ph1::Resistor>(mName + "_snubber_res", mLogLevel);
 	mInitialResistor->setParameters(1e6);
-	mInitialResistor->connect({ Node::GND, mTerminals[1]->node() });
+	mInitialResistor->connect({ SimNode::GND, mTerminals[1]->node() });
 	mInitialResistor->initializeFromPowerflow(frequency);
 
 	mSLog->info(
@@ -78,7 +78,7 @@ void DP::Ph1::RxLine::initializeFromPowerflow(Real frequency) {
 
 void DP::Ph1::RxLine::mnaInitialize(Real omega, Real timeStep, Attribute<Matrix>::Ptr leftVector) {
 	MNAInterface::mnaInitialize(omega, timeStep);
-	updateSimNodes();
+	updateMatrixNodeIndices();
 	mSubInductor->mnaInitialize(omega, timeStep, leftVector);
 	mSubResistor->mnaInitialize(omega, timeStep, leftVector);
 	mInitialResistor->mnaInitialize(omega, timeStep, leftVector);
@@ -120,9 +120,9 @@ void DP::Ph1::RxLine::MnaPostStep::execute(Real time, Int timeStepCount) {
 void DP::Ph1::RxLine::mnaUpdateVoltage(const Matrix& leftVector) {
 	mIntfVoltage(0, 0) = 0;
 	if (terminalNotGrounded(1))
-		mIntfVoltage(0,0) = Math::complexFromVectorElement(leftVector, simNode(1));
+		mIntfVoltage(0,0) = Math::complexFromVectorElement(leftVector, matrixNodeIndex(1));
 	if (terminalNotGrounded(0))
-		mIntfVoltage(0,0) = mIntfVoltage(0,0) - Math::complexFromVectorElement(leftVector, simNode(0));
+		mIntfVoltage(0,0) = mIntfVoltage(0,0) - Math::complexFromVectorElement(leftVector, matrixNodeIndex(0));
 }
 
 void DP::Ph1::RxLine::mnaUpdateCurrent(const Matrix& leftVector) {

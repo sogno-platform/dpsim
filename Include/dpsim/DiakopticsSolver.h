@@ -23,7 +23,7 @@
 
 #include <cps/AttributeList.h>
 #include <cps/Solver/MNAInterface.h>
-#include <cps/SignalComponent.h>
+#include <cps/SimSignalComp.h>
 #include <dpsim/DataLogger.h>
 #include <dpsim/Solver.h>
 
@@ -35,7 +35,7 @@ namespace DPsim {
 	private:
 		struct Subnet {
 			/// Nodes assigned to this subnetwork
-			typename CPS::Node<VarType>::List nodes;
+			typename CPS::SimNode<VarType>::List nodes;
 			/// Components assigned to this subnetwork
 			CPS::MNAInterface::List components;
 			/// Size in system matrix (i.e. including virtual nodes)
@@ -68,9 +68,9 @@ namespace DPsim {
 		std::shared_ptr<DataLogger> mRightVectorLog;
 
 		std::vector<Subnet> mSubnets;
-		std::unordered_map<typename CPS::Node<VarType>::Ptr, Subnet*> mNodeSubnetMap;
-		typename CPS::PowerComponent<VarType>::List mTearComponents;
-		CPS::SignalComponent::List mSignalComponents;
+		std::unordered_map<typename CPS::SimNode<VarType>::Ptr, Subnet*> mNodeSubnetMap;
+		typename CPS::SimPowerComp<VarType>::List mTearComponents;
+		CPS::SimSignalComp::List mSimSignalComps;
 
 		Matrix mRightSideVector;
 		Matrix mLeftSideVector;
@@ -98,7 +98,7 @@ namespace DPsim {
 
 		void initSubnets(const std::vector<CPS::SystemTopology>& subnets);
 		void collectVirtualNodes(int net);
-		void assignSimNodes(int net);
+		void assignMatrixNodeIndices(int net);
 		void setSubnetSize(int net, UInt nodes);
 
 		void setLogColumns();
@@ -114,7 +114,7 @@ namespace DPsim {
 		void log(Real time);
 
 	public:
-		DiakopticsSolver(String name, CPS::SystemTopology system, CPS::Component::List tearComponents, Real timeStep, CPS::Logger::Level logLevel);
+		DiakopticsSolver(String name, CPS::SystemTopology system, CPS::IdentifiedObject::List tearComponents, Real timeStep, CPS::Logger::Level logLevel);
 
 		CPS::Task::List getTasks();
 

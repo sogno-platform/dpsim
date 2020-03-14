@@ -22,7 +22,7 @@
 
 #pragma once
 
-#include <cps/PowerComponent.h>
+#include <cps/SimPowerComp.h>
 #include <cps/Solver/MNAInterface.h>
 #include <cps/EMT/EMT_Ph1_VoltageSource.h>
 
@@ -30,7 +30,7 @@ namespace CPS {
 namespace EMT {
 namespace Ph1 {
 	class VoltageSourceRamp :
-		public PowerComponent<Real>,
+		public SimPowerComp<Real>,
 		public MNAInterface,
 		public SharedFactory<VoltageSourceRamp> {
 	protected:
@@ -55,7 +55,7 @@ namespace Ph1 {
 		VoltageSourceRamp(String name, Logger::Level logLevel = Logger::Level::off)
 			: VoltageSourceRamp(name, name, logLevel) { }
 
-		PowerComponent<Real>::Ptr clone(String name);
+		SimPowerComp<Real>::Ptr clone(String name);
 
 		// #### General ####
 		/// Initializes component from power flow data

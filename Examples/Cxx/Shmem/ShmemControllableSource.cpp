@@ -33,7 +33,7 @@ int main(int argc, char *argv[]) {
 	Interface intf("/dpsim01", "/dpsim10");
 
 	// Nodes
-	auto n1 = Node::make("n1");
+	auto n1 = SimNode::make("n1");
 
 	// Components
 	auto ecs = CurrentSource::make("v_intf");
@@ -41,8 +41,8 @@ int main(int argc, char *argv[]) {
 	auto r1 = Resistor::make("r_1");
 	r1->setParameters(1);
 
-	ecs->connect({ Node::GND, n1 });
-	r1->connect({ Node::GND, n1 });
+	ecs->connect({ SimNode::GND, n1 });
+	r1->connect({ SimNode::GND, n1 });
 
 	ecs->setAttributeRef("I_ref", intf.importComplex(0));
 	intf.exportComplex(ecs->attributeMatrixComp("v_intf")->coeff(0, 0), 0);

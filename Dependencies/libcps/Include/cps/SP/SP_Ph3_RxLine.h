@@ -19,7 +19,7 @@
 
 #pragma once
 
-#include <cps/PowerComponent.h>
+#include <cps/SimPowerComp.h>
 #include <cps/Solver/MNAInterface.h>
 #include <cps/Base/Base_Ph3_PiLine.h>
 #include <cps/SP/SP_Ph3_Inductor.h>
@@ -30,7 +30,7 @@ namespace SP {
 namespace Ph3 {
 
 	class RxLine :
-		public PowerComponent<Real>,
+		public SimPowerComp<Real>,
 		public MNAInterface,
 		public Base::Ph3::PiLine,
 		public SharedFactory<RxLine> {
@@ -53,7 +53,7 @@ namespace Ph3 {
 		RxLine(String name, Logger::Level logLevel = Logger::Level::off)
 			: RxLine(name, name, logLevel) { }
 
-		PowerComponent<Real>::Ptr clone(String name);
+		SimPowerComp<Real>::Ptr clone(String name);
 
 		// #### General ####
 		/// Initializes component from power flow data

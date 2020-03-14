@@ -1,7 +1,5 @@
-/** MNASolver
- *
- * @author Markus Mirz <mmirz@eonerc.rwth-aachen.de>
- * @copyright 2017-2018, Institute for Automation of Complex Power Systems, EONERC
+/**
+ * @copyright 2017, Institute for Automation of Complex Power Systems, EONERC
  *
  * DPsim
  *
@@ -31,8 +29,8 @@
 #include <dpsim/DataLogger.h>
 #include <cps/AttributeList.h>
 #include <cps/Solver/MNASwitchInterface.h>
-#include <cps/SignalComponent.h>
-#include <cps/PowerComponent.h>
+#include <cps/SimSignalComp.h>
+#include <cps/SimPowerComp.h>
 
 #define SWITCH_NUM 16
 
@@ -52,26 +50,26 @@ namespace DPsim {
 		/// Number of virtual nodes
 		UInt mNumVirtualNodes = 0;
 		/// Number of simulation nodes
-		UInt mNumSimNodes = 0;
+		UInt mNumMatrixNodeIndices = 0;
 		/// Number of simulation network nodes
-		UInt mNumNetSimNodes = 0;
+		UInt mNumNetMatrixNodeIndices = 0;
 		/// Number of simulation virtual nodes
-		UInt mNumVirtualSimNodes = 0;
+		UInt mNumVirtualMatrixNodeIndices = 0;
 		/// Number of harmonic nodes
-		UInt mNumHarmSimNodes = 0;
+		UInt mNumHarmMatrixNodeIndices = 0;
 		/// Flag to activate power flow based initialization.
 		/// If this is false, all voltages are initialized with zero.
 		Bool mPowerflowInitialization;
 		/// System list
 		CPS::SystemTopology mSystem;
 		///
-		typename CPS::Node<VarType>::List mNodes;
+		typename CPS::SimNode<VarType>::List mNodes;
 		///
-		CPS::MNAInterface::List mPowerComponents;
+		CPS::MNAInterface::List mMNAComponents;
 		///
 		CPS::MNASwitchInterface::List mSwitches;
 		///
-		CPS::SignalComponent::List mSignalComponents;
+		CPS::SimSignalComp::List mSimSignalComps;
 
 		// #### MNA specific attributes ####
 		/// System matrix A that is modified by matrix stamps
@@ -112,10 +110,10 @@ namespace DPsim {
 		void initializeComponents();
 		/// Initialization of system matrices and source vector
 		void initializeSystem();
-		/// Identify Nodes and PowerComponents and SignalComponents
+		/// Identify Nodes and SimPowerComps and SimSignalComps
 		void identifyTopologyObjects();
 		/// Assign simulation node index according to index in the vector.
-		void assignSimNodes();
+		void assignMatrixNodeIndices();
 		/// Creates virtual nodes inside components.
 		/// The MNA algorithm handles these nodes in the same way as network nodes.
 		void createVirtualNodes();
@@ -162,7 +160,7 @@ namespace DPsim {
 		public:
 			SolveTask(MnaSolver<VarType>& solver, Bool steadyStateInit) :
 				Task(solver.mName + ".Solve"), mSolver(solver), mSteadyStateInit(steadyStateInit) {
-				for (auto it : solver.mPowerComponents) {
+				for (auto it : solver.mMNAComponents) {
 					if (it->template attribute<Matrix>("right_vector")->get().size() != 0) {
 						mAttributeDependencies.push_back(it->attribute("right_vector"));
 					}
@@ -184,7 +182,7 @@ namespace DPsim {
 		public:
 			SolveTaskHarm(MnaSolver<VarType>& solver, Bool steadyStateInit, UInt freqIdx) :
 				Task(solver.mName + ".Solve"), mSolver(solver), mSteadyStateInit(steadyStateInit), mFreqIdx(freqIdx) {
-				for (auto it : solver.mPowerComponents) {
+				for (auto it : solver.mMNAComponents) {
 					if (it->template attribute<Matrix>("right_vector")->get().size() != 0) {
 						mAttributeDependencies.push_back(it->attribute("right_vector"));
 					}

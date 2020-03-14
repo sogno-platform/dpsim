@@ -21,7 +21,7 @@
 #pragma once
 
 #include <cps/Base/Base_Ph1_VoltageSource.h>
-#include <cps/PowerComponent.h>
+#include <cps/SimPowerComp.h>
 #include <cps/Solver/MNAInterface.h>
 
 namespace CPS {
@@ -30,7 +30,7 @@ namespace CPS {
 			/// \brief Voltage source with Norton equivalent model
 			class VoltageSourceNorton :
 				public MNAInterface,
-				public PowerComponent<Real>,
+				public SimPowerComp<Real>,
 				public Base::Ph1::VoltageSource,
 				public SharedFactory<VoltageSourceNorton> {
 			protected:
@@ -56,7 +56,7 @@ namespace CPS {
 				///
 				void setVoltageRef(Complex voltage) { mVoltageRef = voltage; }
 
-				PowerComponent<Real>::Ptr clone(String name);
+				SimPowerComp<Real>::Ptr clone(String name);
 				/// Initializes component from power flow data
 				void initializeFromPowerflow(Real frequency) { }
 

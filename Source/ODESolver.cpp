@@ -21,7 +21,7 @@
  *********************************************************************************/
 
 #include <dpsim/ODESolver.h>
-#include <cps/PowerComponent.h>
+#include <cps/SimPowerComp.h>
 
 using namespace DPsim;
 

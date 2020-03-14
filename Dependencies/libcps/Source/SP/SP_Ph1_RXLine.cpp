@@ -24,7 +24,7 @@ using namespace CPS;
 SP::Ph1::RXLine::RXLine(String uid, String name, Real baseVoltage,
 	Real resistance, Real inductance,
 	Logger::Level logLevel)
-	: PowerComponent<Complex>(uid, name, logLevel) {
+	: SimPowerComp<Complex>(uid, name, logLevel) {
 
 	setTerminalNumber(2);
 
@@ -52,7 +52,7 @@ SP::Ph1::RXLine::RXLine(String uid, String name, Real baseVoltage,
 }
 
 SP::Ph1::RXLine::RXLine(String uid, String name, Logger::Level logLevel)
-	: PowerComponent<Complex>(uid, name, logLevel) {
+	: SimPowerComp<Complex>(uid, name, logLevel) {
 	setVirtualNodeNumber(1);
 	setTerminalNumber(2);
 	mIntfVoltage = MatrixComp::Zero(1, 1);
@@ -86,9 +86,9 @@ void SP::Ph1::RXLine::setPerUnitSystem(Real baseApparentPower, Real baseOmega) {
 }
 
 void SP::Ph1::RXLine::pfApplyAdmittanceMatrixStamp(SparseMatrixCompRow & Y) {
-	updateSimNodes();
-	int bus1 = this->simNode(0);
-	int bus2 = this->simNode(1);
+	updateMatrixNodeIndices();
+	int bus1 = this->matrixNodeIndex(0);
+	int bus2 = this->matrixNodeIndex(1);
 
 	//dimension check
 	/* TODO: FIX
@@ -151,7 +151,7 @@ MatrixComp SP::Ph1::RXLine::Y_element() {
 }
 
 
-PowerComponent<Complex>::Ptr SP::Ph1::RXLine::clone(String name) {
+SimPowerComp<Complex>::Ptr SP::Ph1::RXLine::clone(String name) {
 	auto copy = RXLine::make(name, mLogLevel);
 	copy->setParameters(mSeriesRes, mSeriesInd);
 	return copy;
@@ -178,7 +178,7 @@ void SP::Ph1::RXLine::initializeFromPowerflow(Real frequency) {
 
 	mInitialResistor = std::make_shared<SP::Ph1::Resistor>(mName + "_snubber_res", mLogLevel);
 	mInitialResistor->setParameters(1e6);
-	mInitialResistor->connect({ Node::GND, mTerminals[1]->node() });
+	mInitialResistor->connect({ SimNode::GND, mTerminals[1]->node() });
 	mInitialResistor->initializeFromPowerflow(frequency);
 
 	mSLog->info(
@@ -196,7 +196,7 @@ void SP::Ph1::RXLine::initializeFromPowerflow(Real frequency) {
 
 void SP::Ph1::RXLine::mnaInitialize(Real omega, Real timeStep, Attribute<Matrix>::Ptr leftVector) {
 	MNAInterface::mnaInitialize(omega, timeStep);
-	updateSimNodes();
+	updateMatrixNodeIndices();
 	mSubInductor->mnaInitialize(omega, timeStep, leftVector);
 	mSubResistor->mnaInitialize(omega, timeStep, leftVector);
 	mInitialResistor->mnaInitialize(omega, timeStep, leftVector);
@@ -234,9 +234,9 @@ void SP::Ph1::RXLine::MnaPostStep::execute(Real time, Int timeStepCount) {
 void SP::Ph1::RXLine::mnaUpdateVoltage(const Matrix& leftVector) {
 	mIntfVoltage(0, 0) = 0;
 	if (terminalNotGrounded(1))
-		mIntfVoltage(0, 0) = Math::complexFromVectorElement(leftVector, simNode(1));
+		mIntfVoltage(0, 0) = Math::complexFromVectorElement(leftVector, matrixNodeIndex(1));
 	if (terminalNotGrounded(0))
-		mIntfVoltage(0, 0) = mIntfVoltage(0, 0) - Math::complexFromVectorElement(leftVector, simNode(0));
+		mIntfVoltage(0, 0) = mIntfVoltage(0, 0) - Math::complexFromVectorElement(leftVector, matrixNodeIndex(0));
 }
 
 void SP::Ph1::RXLine::mnaUpdateCurrent(const Matrix& leftVector) {

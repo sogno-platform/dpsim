@@ -19,7 +19,7 @@
 
 #pragma once
 
-#include <cps/PowerComponent.h>
+#include <cps/SimPowerComp.h>
 #include "cps/Solver/PFSolverInterfaceBus.h"
 #include <cps/SP/SP_Ph1_PQNode.h>
 #include <cps/SP/SP_Ph1_PVNode.h>
@@ -30,7 +30,7 @@ namespace CPS {
 
 namespace SP { namespace Ph1 {
 	class VoltageSourceInverter :
-		public PowerComponent<Complex>, public SharedFactory<VoltageSourceInverter>, public PFSolverInterfaceBus {
+		public SimPowerComp<Complex>, public SharedFactory<VoltageSourceInverter>, public PFSolverInterfaceBus {
 	public:
 
 		VoltageSourceInverter(String uid, String name, Real power, Real reactivePower,

@@ -25,7 +25,7 @@
 using namespace CPS;
 
 EMT::Ph3::RxLine::RxLine(String uid, String name, Logger::Level logLevel)
-	: PowerComponent<Real>(uid, name, logLevel) {
+	: SimPowerComp<Real>(uid, name, logLevel) {
 	mPhaseType = PhaseType::ABC;
 	setVirtualNodeNumber(1);
 	setTerminalNumber(2);
@@ -36,7 +36,7 @@ EMT::Ph3::RxLine::RxLine(String uid, String name, Logger::Level logLevel)
 	addAttribute<Matrix>("L", &mSeriesInd, Flags::read | Flags::write);
 }
 
-PowerComponent<Real>::Ptr EMT::Ph3::RxLine::clone(String name) {
+SimPowerComp<Real>::Ptr EMT::Ph3::RxLine::clone(String name) {
 	auto copy = RxLine::make(name, mLogLevel);
 	copy->setParameters(mSeriesRes, mSeriesInd);
 	return copy;
@@ -86,7 +86,7 @@ void EMT::Ph3::RxLine::initializeFromPowerflow(Real frequency) {
 		0, 1e6, 0,
 		0, 0, 1e6;
 	mInitialResistor->setParameters(defaultSnubRes);
-	mInitialResistor->connect({ Node::GND, mTerminals[1]->node() });
+	mInitialResistor->connect({ SimNode::GND, mTerminals[1]->node() });
 	mInitialResistor->initializeFromPowerflow(frequency);
 
 	mSLog->info(
@@ -104,7 +104,7 @@ void EMT::Ph3::RxLine::initializeFromPowerflow(Real frequency) {
 
 void EMT::Ph3::RxLine::mnaInitialize(Real omega, Real timeStep, Attribute<Matrix>::Ptr leftVector) {
 	MNAInterface::mnaInitialize(omega, timeStep);
-	updateSimNodes();
+	updateMatrixNodeIndices();
 	mSubInductor->mnaInitialize(omega, timeStep, leftVector);
 	mSubResistor->mnaInitialize(omega, timeStep, leftVector);
 	mInitialResistor->mnaInitialize(omega, timeStep, leftVector);
@@ -147,14 +147,14 @@ void EMT::Ph3::RxLine::mnaUpdateVoltage(const Matrix& leftVector) {
 	// v1 - v0
 	mIntfVoltage = Matrix::Zero(3, 1);
 	if (terminalNotGrounded(1)) {
-		mIntfVoltage(0, 0) = Math::realFromVectorElement(leftVector, simNode(1, 0));
-		mIntfVoltage(1, 0) = Math::realFromVectorElement(leftVector, simNode(1, 1));
-		mIntfVoltage(2, 0) = Math::realFromVectorElement(leftVector, simNode(1, 2));
+		mIntfVoltage(0, 0) = Math::realFromVectorElement(leftVector, matrixNodeIndex(1, 0));
+		mIntfVoltage(1, 0) = Math::realFromVectorElement(leftVector, matrixNodeIndex(1, 1));
+		mIntfVoltage(2, 0) = Math::realFromVectorElement(leftVector, matrixNodeIndex(1, 2));
 	}
 	if (terminalNotGrounded(0)) {
-		mIntfVoltage(0, 0) = mIntfVoltage(0, 0) - Math::realFromVectorElement(leftVector, simNode(0, 0));
-		mIntfVoltage(1, 0) = mIntfVoltage(1, 0) - Math::realFromVectorElement(leftVector, simNode(0, 1));
-		mIntfVoltage(2, 0) = mIntfVoltage(2, 0) - Math::realFromVectorElement(leftVector, simNode(0, 2));
+		mIntfVoltage(0, 0) = mIntfVoltage(0, 0) - Math::realFromVectorElement(leftVector, matrixNodeIndex(0, 0));
+		mIntfVoltage(1, 0) = mIntfVoltage(1, 0) - Math::realFromVectorElement(leftVector, matrixNodeIndex(0, 1));
+		mIntfVoltage(2, 0) = mIntfVoltage(2, 0) - Math::realFromVectorElement(leftVector, matrixNodeIndex(0, 2));
 	}
 }
 

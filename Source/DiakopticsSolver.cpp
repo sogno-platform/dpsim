@@ -35,7 +35,7 @@ namespace DPsim {
 
 template <typename VarType>
 DiakopticsSolver<VarType>::DiakopticsSolver(String name,
-	SystemTopology system, Component::List tearComponents,
+	SystemTopology system, IdentifiedObject::List tearComponents,
 	Real timeStep, Logger::Level logLevel) :
 	Solver(name, logLevel),	mTimeStep(timeStep) {
 
@@ -44,7 +44,7 @@ DiakopticsSolver<VarType>::DiakopticsSolver(String name,
 	mRightVectorLog = std::make_shared<DataLogger>(name + "_RightVector", logLevel != CPS::Logger::Level::off);
 
 	for (auto comp : tearComponents) {
-		auto pcomp = std::dynamic_pointer_cast<PowerComponent<VarType>>(comp);
+		auto pcomp = std::dynamic_pointer_cast<SimPowerComp<VarType>>(comp);
 		if (pcomp)
 			mTearComponents.push_back(pcomp);
 	}
@@ -72,7 +72,7 @@ void DiakopticsSolver<VarType>::initSubnets(const std::vector<SystemTopology>& s
 		// Add nodes to the list and ignore ground nodes.
 		for (auto baseNode : subnets[i].mNodes) {
 			if (!baseNode->isGround()) {
-				auto node = std::dynamic_pointer_cast< CPS::Node<VarType> >(baseNode);
+				auto node = std::dynamic_pointer_cast< CPS::SimNode<VarType> >(baseNode);
 				mSubnets[i].nodes.push_back(node);
 			}
 		}
@@ -83,9 +83,9 @@ void DiakopticsSolver<VarType>::initSubnets(const std::vector<SystemTopology>& s
 			if (mnaComp)
 				mSubnets[i].components.push_back(mnaComp);
 
-			auto sigComp = std::dynamic_pointer_cast<CPS::SignalComponent>(comp);
+			auto sigComp = std::dynamic_pointer_cast<CPS::SimSignalComp>(comp);
 			if (sigComp)
-				mSignalComponents.push_back(sigComp);
+				mSimSignalComps.push_back(sigComp);
 		}
 	}
 
@@ -106,7 +106,7 @@ void DiakopticsSolver<VarType>::initSubnets(const std::vector<SystemTopology>& s
 			for (UInt node = 0; node < comp->virtualNodesNumber(); node++) {
 				// sim node number doesn't matter here because it shouldn't be used anyway
 				// TODO adapt this to new concept
-				comp->setVirtualNodeAt(std::make_shared<CPS::Node<VarType>>(node), node);
+				comp->setVirtualNodeAt(std::make_shared<CPS::SimNode<VarType>>(node), node);
 			}
 		}
 		tComp->mnaTearSetIdx(idx);
@@ -114,7 +114,7 @@ void DiakopticsSolver<VarType>::initSubnets(const std::vector<SystemTopology>& s
 		tComp->mnaTearInitialize(2 * PI * mSystemFrequency, mTimeStep);
 
 		for (auto gndComp : tComp->mnaTearGroundComponents()) {
-			auto pComp = std::dynamic_pointer_cast<PowerComponent<VarType>>(gndComp);
+			auto pComp = std::dynamic_pointer_cast<SimPowerComp<VarType>>(gndComp);
 			Subnet* net = nullptr;
 			if (pComp->node(0)->isGround()) {
 				net = mNodeSubnetMap[pComp->node(1)];
@@ -129,7 +129,7 @@ void DiakopticsSolver<VarType>::initSubnets(const std::vector<SystemTopology>& s
 
 	for (UInt i = 0; i < subnets.size(); i++) {
 		collectVirtualNodes(i);
-		assignSimNodes(i);
+		assignMatrixNodeIndices(i);
 	}
 }
 
@@ -139,7 +139,7 @@ void DiakopticsSolver<VarType>::collectVirtualNodes(int net) {
 	mSubnets[net].mRealNetNodeNum = static_cast<UInt>(mSubnets[net].nodes.size());
 
 	for (auto comp : mSubnets[net].components) {
-		auto pComp = std::dynamic_pointer_cast<PowerComponent<VarType>>(comp);
+		auto pComp = std::dynamic_pointer_cast<SimPowerComp<VarType>>(comp);
 		if (!pComp)
 			continue;
 
@@ -155,25 +155,25 @@ void DiakopticsSolver<VarType>::collectVirtualNodes(int net) {
 }
 
 template <typename VarType>
-void DiakopticsSolver<VarType>::assignSimNodes(int net) {
-	UInt simNodeIdx = 0;
+void DiakopticsSolver<VarType>::assignMatrixNodeIndices(int net) {
+	UInt matrixNodeIndexIdx = 0;
 	for (UInt idx = 0; idx < mSubnets[net].nodes.size(); idx++) {
 		auto& node = mSubnets[net].nodes[idx];
 
-		node->setSimNode(0, simNodeIdx);
-		mSLog->info("Assigned index {} to node {}", simNodeIdx, node->name());
-		simNodeIdx++;
+		node->setMatrixNodeIndex(0, matrixNodeIndexIdx);
+		mSLog->info("Assigned index {} to node {}", matrixNodeIndexIdx, node->name());
+		matrixNodeIndexIdx++;
 
 		if (node->phaseType() == CPS::PhaseType::ABC) {
-			node->setSimNode(1, simNodeIdx);
-			mSLog->info("Assigned index {} to node {} phase B", simNodeIdx, node->name());
-			simNodeIdx++;
-			node->setSimNode(2, simNodeIdx);
-			mSLog->info("Assigned index {} to node {} phase C", simNodeIdx, node->name());
-			simNodeIdx++;
+			node->setMatrixNodeIndex(1, matrixNodeIndexIdx);
+			mSLog->info("Assigned index {} to node {} phase B", matrixNodeIndexIdx, node->name());
+			matrixNodeIndexIdx++;
+			node->setMatrixNodeIndex(2, matrixNodeIndexIdx);
+			mSLog->info("Assigned index {} to node {} phase C", matrixNodeIndexIdx, node->name());
+			matrixNodeIndexIdx++;
 		}
 	}
-	setSubnetSize(net, simNodeIdx);
+	setSubnetSize(net, matrixNodeIndexIdx);
 
 	if (net == 0)
 		mSubnets[net].sysOff = 0;
@@ -259,7 +259,7 @@ template <typename VarType>
 void DiakopticsSolver<VarType>::initComponents() {
 	for (UInt net = 0; net < mSubnets.size(); net++) {
 		for (auto comp : mSubnets[net].components) {
-			auto pComp = std::dynamic_pointer_cast<PowerComponent<VarType>>(comp);
+			auto pComp = std::dynamic_pointer_cast<SimPowerComp<VarType>>(comp);
 			if (!pComp) continue;
 			pComp->initializeFromPowerflow(mSystem.mSystemFrequency);
 		}
@@ -274,7 +274,7 @@ void DiakopticsSolver<VarType>::initComponents() {
 		}
 	}
 	// Initialize signal components.
-	for (auto comp : mSignalComponents)
+	for (auto comp : mSimSignalComps)
 		comp->initialize(mSystem.mSystemOmega, mTimeStep);
 }
 
@@ -324,8 +324,8 @@ void DiakopticsSolver<VarType>::initMatrices() {
 template <>
 void DiakopticsSolver<Real>::applyTearComponentStamp(UInt compIdx) {
 	auto comp = mTearComponents[compIdx];
-	mTearTopology(mNodeSubnetMap[comp->node(0)]->sysOff + comp->node(0)->simNode(), compIdx) = 1;
-	mTearTopology(mNodeSubnetMap[comp->node(1)]->sysOff + comp->node(1)->simNode(), compIdx) = -1;
+	mTearTopology(mNodeSubnetMap[comp->node(0)]->sysOff + comp->node(0)->matrixNodeIndex(), compIdx) = 1;
+	mTearTopology(mNodeSubnetMap[comp->node(1)]->sysOff + comp->node(1)->matrixNodeIndex(), compIdx) = -1;
 
 	auto tearComp = std::dynamic_pointer_cast<MNATearInterface>(comp);
 	tearComp->mnaTearApplyMatrixStamp(mTearImpedance);
@@ -338,10 +338,10 @@ void DiakopticsSolver<Complex>::applyTearComponentStamp(UInt compIdx) {
 	auto net1 = mNodeSubnetMap[comp->node(0)];
 	auto net2 = mNodeSubnetMap[comp->node(1)];
 
-	mTearTopology(net1->sysOff + comp->node(0)->simNode(), compIdx) = 1;
-	mTearTopology(net1->sysOff + net1->mCmplOff + comp->node(0)->simNode(), mTearComponents.size() + compIdx) = 1;
-	mTearTopology(net2->sysOff + comp->node(1)->simNode(), compIdx) = -1;
-	mTearTopology(net2->sysOff + net2->mCmplOff + comp->node(1)->simNode(), mTearComponents.size() + compIdx) = -1;
+	mTearTopology(net1->sysOff + comp->node(0)->matrixNodeIndex(), compIdx) = 1;
+	mTearTopology(net1->sysOff + net1->mCmplOff + comp->node(0)->matrixNodeIndex(), mTearComponents.size() + compIdx) = 1;
+	mTearTopology(net2->sysOff + comp->node(1)->matrixNodeIndex(), compIdx) = -1;
+	mTearTopology(net2->sysOff + net2->mCmplOff + comp->node(1)->matrixNodeIndex(), mTearComponents.size() + compIdx) = -1;
 
 	auto tearComp = std::dynamic_pointer_cast<MNATearInterface>(comp);
 	tearComp->mnaTearApplyMatrixStamp(mTearImpedance);
@@ -366,7 +366,7 @@ Task::List DiakopticsSolver<VarType>::getTasks() {
 		l.push_back(std::make_shared<SolveTask>(*this, net));
 	}
 
-	for (auto comp : mSignalComponents) {
+	for (auto comp : mSimSignalComps) {
 		for (auto task : comp->getTasks()) {
 			l.push_back(task);
 		}

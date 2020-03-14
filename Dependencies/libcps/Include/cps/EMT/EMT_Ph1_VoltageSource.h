@@ -22,7 +22,7 @@
 
 #pragma once
 
-#include <cps/PowerComponent.h>
+#include <cps/SimPowerComp.h>
 #include <cps/Solver/MNAInterface.h>
 
 namespace CPS {
@@ -38,7 +38,7 @@ namespace Ph1 {
 	/// a new equation ej - ek = V is added to the problem.
 	class VoltageSource :
 		public MNAInterface,
-		public PowerComponent<Real>,
+		public SimPowerComp<Real>,
 		public SharedFactory<VoltageSource> {
 	protected:
 		void updateVoltage(Real time);
@@ -54,7 +54,7 @@ namespace Ph1 {
 
 		void setParameters(Complex voltageRef, Real srcFreq = -1);
 
-		PowerComponent<Real>::Ptr clone(String name);
+		SimPowerComp<Real>::Ptr clone(String name);
 		// #### General ####
 		/// Initializes component from power flow data
 		void initializeFromPowerflow(Real frequency) { }

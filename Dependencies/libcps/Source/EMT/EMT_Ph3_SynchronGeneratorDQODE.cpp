@@ -33,7 +33,7 @@ EMT::Ph3::SynchronGeneratorDQODE::SynchronGeneratorDQODE(String name, Logger::Le
 
 void EMT::Ph3::SynchronGeneratorDQODE::mnaInitialize(Real omega, Real timeStep, Attribute<Matrix>::Ptr leftVector) {
 	MNAInterface::mnaInitialize(omega, timeStep);
-	updateSimNodes();
+	updateMatrixNodeIndices();
 
 	mDim = mNumDampingWindings + 7;
 	mOdePreState = Matrix::Zero(mDim, 1);

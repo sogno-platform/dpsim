@@ -20,13 +20,13 @@
  *********************************************************************************/
 
 #pragma once
-#include <cps/PowerComponent.h>
+#include <cps/SimPowerComp.h>
 
 namespace CPS {
 namespace SP {
 namespace Ph1 {
 
-    class PVNode: public PowerComponent<Complex>, public SharedFactory<PVNode> {
+    class PVNode: public SimPowerComp<Complex>, public SharedFactory<PVNode> {
     private:
 		Real mVoltageSetPoint;
 		Real mPowerSetPoint;

@@ -1,8 +1,5 @@
-/** Signalling part of a decoupling transmission line
- *
- * @file
- * @author Georg Reinke <georg.reinke@rwth-aachen.de>
- * @copyright 2017-2018, Institute for Automation of Complex Power Systems, EONERC
+/**
+ * @copyright 2017, Institute for Automation of Complex Power Systems, EONERC
  *
  * CPowerSystems
  *
@@ -26,14 +23,14 @@
 
 #include <cps/DP/DP_Ph1_CurrentSource.h>
 #include <cps/DP/DP_Ph1_Resistor.h>
-#include <cps/PowerComponent.h>
-#include <cps/SignalComponent.h>
+#include <cps/SimPowerComp.h>
+#include <cps/SimSignalComp.h>
 #include <cps/Task.h>
 
 namespace CPS {
 namespace Signal {
 	class DecouplingLine :
-		public SignalComponent,
+		public SimSignalComp,
 		public SharedFactory<DecouplingLine> {
 	protected:
 		Real mDelay;
@@ -43,7 +40,7 @@ namespace Signal {
 		Complex mSrcCur1Ref;
 		Complex mSrcCur2Ref;
 
-		std::shared_ptr<DP::Node> mNode1, mNode2;
+		std::shared_ptr<DP::SimNode> mNode1, mNode2;
 		std::shared_ptr<DP::Ph1::Resistor> mRes1, mRes2;
 		std::shared_ptr<DP::Ph1::CurrentSource> mSrc1, mSrc2;
 		Attribute<Complex>::Ptr mSrcCur1, mSrcCur2;
@@ -61,17 +58,17 @@ namespace Signal {
 	public:
 		typedef std::shared_ptr<DecouplingLine> Ptr;
 
-		DecouplingLine(String name, Node<Complex>::Ptr node1, Node<Complex>::Ptr node2,
+		DecouplingLine(String name, SimNode<Complex>::Ptr node1, SimNode<Complex>::Ptr node2,
 			Real resistance, Real inductance, Real capacitance, Logger::Level logLevel = Logger::Level::info);
 
 		DecouplingLine(String name, Logger::Level logLevel = Logger::Level::info);
 
-		void setParameters(Node<Complex>::Ptr node1, Node<Complex>::Ptr node2, Real resistance, Real inductance, Real capacitance);
+		void setParameters(SimNode<Complex>::Ptr node1, SimNode<Complex>::Ptr node2, Real resistance, Real inductance, Real capacitance);
 		void initialize(Real omega, Real timeStep);
 		void step(Real time, Int timeStepCount);
 		void postStep();
 		Task::List getTasks();
-		Component::List getLineComponents();
+		IdentifiedObject::List getLineComponents();
 
 		class PreStep : public Task {
 		public:

@@ -19,7 +19,7 @@
 
 #pragma once
 
-#include <cps/PowerComponent.h>
+#include <cps/SimPowerComp.h>
 #include <cps/Solver/MNAInterface.h>
 #include <cps/Base/Base_Ph3_PiLine.h>
 #include <cps/EMT/EMT_Ph3_Resistor.h>
@@ -34,7 +34,7 @@ namespace Ph3 {
 	/// This model consists sub components to represent the
 	/// RLC elements of a PI-line.
 	class PiLine :
-		public PowerComponent<Real>,
+		public SimPowerComp<Real>,
 		public MNAInterface,
 		public Base::Ph3::PiLine,
 		public SharedFactory<PiLine> {
@@ -60,7 +60,7 @@ namespace Ph3 {
 		PiLine(String name, Logger::Level logLevel = Logger::Level::off)
 			: PiLine(name, name, logLevel) { }
 
-		PowerComponent<Real>::Ptr clone(String copySuffix);
+		SimPowerComp<Real>::Ptr clone(String copySuffix);
 
 		// #### General ####
 		///

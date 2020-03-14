@@ -22,8 +22,8 @@
 #pragma once
 
 #include <cps/Config.h>
-#include <cps/Terminal.h>
-#include <cps/Node.h>
+#include <cps/SimTerminal.h>
+#include <cps/SimNode.h>
 #include <cps/Logger.h>
 #include <cps/Definitions.h>
 #include <cps/MathUtils.h>

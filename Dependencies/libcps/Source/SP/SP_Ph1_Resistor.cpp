@@ -24,7 +24,7 @@ using namespace CPS;
 
 SP::Ph1::Resistor::Resistor(String uid, String name,
 	Logger::Level logLevel)
-	: PowerComponent<Complex>(uid, name, logLevel) {
+	: SimPowerComp<Complex>(uid, name, logLevel) {
 	setTerminalNumber(2);
 	mIntfVoltage = MatrixComp::Zero(1, 1);
 	mIntfCurrent = MatrixComp::Zero(1, 1);
@@ -32,7 +32,7 @@ SP::Ph1::Resistor::Resistor(String uid, String name,
 	addAttribute<Real>("R", &mResistance, Flags::read | Flags::write);
 }
 
-PowerComponent<Complex>::Ptr SP::Ph1::Resistor::clone(String name) {
+SimPowerComp<Complex>::Ptr SP::Ph1::Resistor::clone(String name) {
 	auto copy = Resistor::make(name, mLogLevel);
 	copy->setParameters(mResistance);
 	return copy;
@@ -43,7 +43,7 @@ void SP::Ph1::Resistor::setBaseVoltage(Real baseVoltage){
 }
 
 void SP::Ph1::Resistor::calculatePerUnitParameters(Real baseApparentPower){
-	mSLog->info("#### Calculate Per Unit Parameters for {}", mName);    
+	mSLog->info("#### Calculate Per Unit Parameters for {}", mName);
     mBaseApparentPower = baseApparentPower;
 	mSLog->info("Base Power={} [VA]", baseApparentPower);
 
@@ -58,7 +58,7 @@ void SP::Ph1::Resistor::calculatePerUnitParameters(Real baseApparentPower){
 }
 
 void SP::Ph1::Resistor::pfApplyAdmittanceMatrixStamp(SparseMatrixCompRow & Y) {
-		int bus1 = this->simNode(0);
+		int bus1 = this->matrixNodeIndex(0);
 		Complex Y_element = Complex(mConductancePerUnit, 0);
 
 	if (std::isinf(Y_element.real()) || std::isinf(Y_element.imag())) {
@@ -94,7 +94,7 @@ void SP::Ph1::Resistor::initializeFromPowerflow(Real frequency) {
 }
 
 void SP::Ph1::Resistor::mnaInitialize(Real omega, Real timeStep, Attribute<Matrix>::Ptr leftVector) {
-	updateSimNodes();
+	updateMatrixNodeIndices();
 	mMnaTasks.push_back(std::make_shared<MnaPostStep>(*this, leftVector));
 
 	mSLog->info(
@@ -109,27 +109,27 @@ void SP::Ph1::Resistor::mnaInitialize(Real omega, Real timeStep, Attribute<Matri
 void SP::Ph1::Resistor::mnaApplySystemMatrixStamp(Matrix& systemMatrix) {
 	// Set diagonal entries
 	if (terminalNotGrounded(0))
-		Math::addToMatrixElement(systemMatrix, simNodes(0), simNodes(0), mConductance);
+		Math::addToMatrixElement(systemMatrix, matrixNodeIndices(0), matrixNodeIndices(0), mConductance);
 	if (terminalNotGrounded(1))
-		Math::addToMatrixElement(systemMatrix, simNodes(1), simNodes(1), mConductance);
+		Math::addToMatrixElement(systemMatrix, matrixNodeIndices(1), matrixNodeIndices(1), mConductance);
 	// Set off diagonal entries
 	if (terminalNotGrounded(0) && terminalNotGrounded(1)) {
-		Math::addToMatrixElement(systemMatrix, simNodes(0), simNodes(1), -mConductance);
-		Math::addToMatrixElement(systemMatrix, simNodes(1), simNodes(0), -mConductance);
+		Math::addToMatrixElement(systemMatrix, matrixNodeIndices(0), matrixNodeIndices(1), -mConductance);
+		Math::addToMatrixElement(systemMatrix, matrixNodeIndices(1), matrixNodeIndices(0), -mConductance);
 	}
 
 	mSLog->info("-- Matrix Stamp ---");
 	if (terminalNotGrounded(0))
 		mSLog->info("Add {:e} to system at ({:d},{:d})",
-			mConductance, simNode(0), simNode(0));
+			mConductance, matrixNodeIndex(0), matrixNodeIndex(0));
 	if (terminalNotGrounded(1))
 		mSLog->info("Add {:e} to system at ({:d},{:d})",
-			mConductance, simNode(1), simNode(1));
+			mConductance, matrixNodeIndex(1), matrixNodeIndex(1));
 	if (terminalNotGrounded(0) && terminalNotGrounded(1)) {
 		mSLog->info("Add {:e} to system at ({:d},{:d})",
-			-mConductance, simNode(0), simNode(1));
+			-mConductance, matrixNodeIndex(0), matrixNodeIndex(1));
 		mSLog->info("Add {:e} to system at ({:d},{:d})",
-			-mConductance, simNode(1), simNode(0));
+			-mConductance, matrixNodeIndex(1), matrixNodeIndex(0));
 	}
 }
 
@@ -142,10 +142,10 @@ void SP::Ph1::Resistor::mnaUpdateVoltage(const Matrix& leftVector) {
 	// Voltage across component is defined as V1 - V0
 	mIntfVoltage = MatrixComp::Zero(1, 1);
 	if (terminalNotGrounded(1)) {
-		mIntfVoltage(0, 0) = Math::complexFromVectorElement(leftVector, simNode(1));
+		mIntfVoltage(0, 0) = Math::complexFromVectorElement(leftVector, matrixNodeIndex(1));
 	}
 	if (terminalNotGrounded(0)) {
-		mIntfVoltage(0, 0) = mIntfVoltage(0, 0) - Math::complexFromVectorElement(leftVector, simNode(0));
+		mIntfVoltage(0, 0) = mIntfVoltage(0, 0) - Math::complexFromVectorElement(leftVector, matrixNodeIndex(0));
 	}
 
 	//mLog.debug() << "Voltage A: " << std::abs(mIntfVoltage(0, 0))

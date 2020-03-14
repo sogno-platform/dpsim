@@ -21,7 +21,7 @@
 
 #pragma once
 
-#include <cps/PowerComponent.h>
+#include <cps/SimPowerComp.h>
 #include <cps/Base/Base_Ph1_VoltageSource.h>
 #include <cps/Solver/MNAInterface.h>
 
@@ -34,7 +34,7 @@ namespace Ph1 {
 	/// which is transformed to a current source with
 	/// a parallel resistance using the Norton equivalent.
 	class VoltageSourceNorton :
-		public PowerComponent<Complex>,
+		public SimPowerComp<Complex>,
 		public Base::Ph1::VoltageSource,
 		public MNAInterface,
 		public SharedFactory<VoltageSourceNorton> {
@@ -57,7 +57,7 @@ namespace Ph1 {
 		VoltageSourceNorton(String name, Logger::Level logLevel = Logger::Level::off)
 			: VoltageSourceNorton(name, name, logLevel) { }
 
-		PowerComponent<Complex>::Ptr clone(String name);
+		SimPowerComp<Complex>::Ptr clone(String name);
 
 		// #### General ####
 		/// Initializes component from power flow data

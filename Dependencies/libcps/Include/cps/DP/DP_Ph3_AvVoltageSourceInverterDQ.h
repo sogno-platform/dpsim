@@ -19,7 +19,7 @@
 #pragma once
 
 
-#include <cps/PowerComponent.h>
+#include <cps/SimPowerComp.h>
 #include <cps/Solver/MNAInterface.h>
 #include <cps/Definitions.h>
 #include <cps/DP/DP_Ph3_Resistor.h>
@@ -39,7 +39,7 @@ namespace CPS {
 				- filter stamped into the global admittance matrix
 			*/
 			class AvVoltageSourceInverterDQ :
-				public PowerComponent<Complex>,
+				public SimPowerComp<Complex>,
 				public MNAInterface,
 				public SharedFactory<AvVoltageSourceInverterDQ> {
 			protected:

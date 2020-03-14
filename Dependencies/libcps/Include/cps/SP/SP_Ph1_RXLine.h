@@ -19,7 +19,7 @@
 
 #pragma once
 
-#include <cps/PowerComponent.h>
+#include <cps/SimPowerComp.h>
 #include "cps/Solver/PFSolverInterfaceBranch.h"
 #include <cps/Base/Base_Ph1_PiLine.h>
 #include <cps/SP/SP_Ph1_Inductor.h>
@@ -30,7 +30,7 @@ namespace SP {
 namespace Ph1 {
 
 	class RXLine :
-		public PowerComponent<Complex>,
+		public SimPowerComp<Complex>,
 		public SharedFactory<RXLine>,
 		public PFSolverInterfaceBranch,
 		public Base::Ph1::PiLine,
@@ -87,7 +87,7 @@ namespace Ph1 {
 		/// nodal reactive power injection
 		Real mReactivePowerInjection;
 
-		
+
 		/// Inductance submodel
 		std::shared_ptr<Inductor> mSubInductor;
 		/// Resistor submodel
@@ -133,7 +133,7 @@ namespace Ph1 {
 		// #### MNA Section ####
 
 
-		PowerComponent<Complex>::Ptr clone(String name);
+		SimPowerComp<Complex>::Ptr clone(String name);
 
 		// #### General ####
 		/// Initializes component from power flow data

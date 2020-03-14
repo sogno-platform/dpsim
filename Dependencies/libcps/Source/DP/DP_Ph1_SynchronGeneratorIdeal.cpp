@@ -26,7 +26,7 @@ using namespace CPS;
 
 DP::Ph1::SynchronGeneratorIdeal::SynchronGeneratorIdeal(String uid, String name,
 	Logger::Level logLevel)
-	: PowerComponent<Complex>(uid, name, logLevel) {
+	: SimPowerComp<Complex>(uid, name, logLevel) {
 	setVirtualNodeNumber(1);
 	setTerminalNumber(1);
 	mIntfVoltage = MatrixComp::Zero(1,1);
@@ -39,12 +39,12 @@ DP::Ph1::SynchronGeneratorIdeal::SynchronGeneratorIdeal(String name,
 	Logger::Level logLevel)
 	: SynchronGeneratorIdeal(name, name, logLevel) { }
 
-PowerComponent<Complex>::Ptr DP::Ph1::SynchronGeneratorIdeal::clone(String name) {
+SimPowerComp<Complex>::Ptr DP::Ph1::SynchronGeneratorIdeal::clone(String name) {
 	return SynchronGeneratorIdeal::make(name, mLogLevel);
 }
 
 void DP::Ph1::SynchronGeneratorIdeal::initialize(Matrix frequencies) {
-	PowerComponent<Complex>::initialize(frequencies);
+	SimPowerComp<Complex>::initialize(frequencies);
 }
 
 void DP::Ph1::SynchronGeneratorIdeal::initializeFromPowerflow(Real frequency) {
@@ -55,7 +55,7 @@ void DP::Ph1::SynchronGeneratorIdeal::initializeFromPowerflow(Real frequency) {
 
 	mSubVoltageSource = DP::Ph1::VoltageSource::make(mName + "_src", mLogLevel);
 	mSubVoltageSource->setParameters(0);
-	mSubVoltageSource->connect({ Node::GND, node(0) });
+	mSubVoltageSource->connect({ SimNode::GND, node(0) });
 	mSubVoltageSource->setVirtualNodeAt(mVirtualNodes[0], 0);
 	mSubVoltageSource->initialize(mFrequencies);
 	mSubVoltageSource->initializeFromPowerflow(frequency);
@@ -73,7 +73,7 @@ void DP::Ph1::SynchronGeneratorIdeal::initializeFromPowerflow(Real frequency) {
 
 void DP::Ph1::SynchronGeneratorIdeal::mnaInitialize(Real omega, Real timeStep, Attribute<Matrix>::Ptr leftVector) {
 	MNAInterface::mnaInitialize(omega, timeStep);
-	updateSimNodes();
+	updateMatrixNodeIndices();
 	mSubVoltageSource->mnaInitialize(omega, timeStep, leftVector);
 	// since there is no additional behaviour, just use the tasks and right-vector from the voltage source
 	setAttributeRef("right_vector", mSubVoltageSource->attribute("right_vector"));

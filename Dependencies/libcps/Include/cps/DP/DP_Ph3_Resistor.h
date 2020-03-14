@@ -19,7 +19,7 @@
 
 #pragma once
 
-#include <cps/PowerComponent.h>
+#include <cps/SimPowerComp.h>
 #include <cps/Solver/MNAInterface.h>
 #include <cps/Definitions.h>
 #include <cps/Logger.h>
@@ -32,7 +32,7 @@ namespace Ph3 {
 	class Resistor :
 		public Base::Ph3::Resistor,
 		public MNAInterface,
-		public PowerComponent<Complex>,
+		public SimPowerComp<Complex>,
 		public SharedFactory<Resistor> {
 
 	public:
@@ -42,7 +42,7 @@ namespace Ph3 {
 		Resistor(String name,	Logger::Level logLevel = Logger::Level::off)
 			: Resistor(name, name, logLevel) { }
 
-		PowerComponent<Complex>::Ptr clone(String name);
+		SimPowerComp<Complex>::Ptr clone(String name);
 
 		// #### General ####
 		///

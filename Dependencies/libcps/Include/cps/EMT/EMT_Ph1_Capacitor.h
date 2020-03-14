@@ -22,7 +22,7 @@
 
 #pragma once
 
-#include <cps/PowerComponent.h>
+#include <cps/SimPowerComp.h>
 #include <cps/Solver/MNAInterface.h>
 #include <cps/Base/Base_Ph1_Capacitor.h>
 
@@ -39,7 +39,7 @@ namespace Ph1 {
 	class Capacitor :
 		public Base::Ph1::Capacitor,
 		public MNAInterface,
-		public PowerComponent<Real>,
+		public SimPowerComp<Real>,
 		public SharedFactory<Capacitor> {
 	protected:
 		/// DC equivalent current source [A]
@@ -53,7 +53,7 @@ namespace Ph1 {
 		Capacitor(String name, Logger::Level logLevel = Logger::Level::off)
 			: Capacitor(name, name, logLevel) { }
 
-		PowerComponent<Real>::Ptr clone(String name);
+		SimPowerComp<Real>::Ptr clone(String name);
 
 		// #### General ####
 		/// Initializes component from power flow data

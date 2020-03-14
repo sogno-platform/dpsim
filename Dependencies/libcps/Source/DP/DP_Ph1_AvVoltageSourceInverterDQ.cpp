@@ -23,7 +23,7 @@ using namespace CPS;
 
 
 DP::Ph1::AvVoltageSourceInverterDQ::AvVoltageSourceInverterDQ(String uid, String name, Logger::Level logLevel)
-	:PowerComponent<Complex>(uid, name, logLevel) {
+	:SimPowerComp<Complex>(uid, name, logLevel) {
 	setVirtualNodeNumber(4);
 	setTerminalNumber(1);
 	mIntfVoltage = MatrixComp::Zero(1, 1);
@@ -92,7 +92,7 @@ void DP::Ph1::AvVoltageSourceInverterDQ::setParameters(Real sysOmega, Complex sy
 }
 
 
-PowerComponent<Complex>::Ptr DP::Ph1::AvVoltageSourceInverterDQ::clone(String name) {
+SimPowerComp<Complex>::Ptr DP::Ph1::AvVoltageSourceInverterDQ::clone(String name) {
 	auto copy = AvVoltageSourceInverterDQ::make(name, mLogLevel);
 	copy->setParameters(mOmegaN, mVoltNom, mPref, mQref, mKpPLL, mKiPLL,
 		mKpPowerCtrld, mKiPowerCtrld, mKpCurrCtrld, mKiCurrCtrld, mLf, mCf,
@@ -128,7 +128,7 @@ void DP::Ph1::AvVoltageSourceInverterDQ::updateMonitoredValues(const Matrix& lef
 	MatrixComp IgDP = MatrixComp::Zero(1, 1);
 
 	// minus sign before currents due to the connection
-	VcDP(0, 0) = Math::complexFromVectorElement(leftVector, mSubCapacitorF->simNode(0));
+	VcDP(0, 0) = Math::complexFromVectorElement(leftVector, mSubCapacitorF->matrixNodeIndex(0));
 	IfDP(0, 0) = -1. * mSubResistorF->attribute<MatrixComp>("i_intf")->get()(0, 0);
 	IgDP(0, 0) = -1. * mSubResistorC->attribute<MatrixComp>("i_intf")->get()(0, 0);
 
@@ -243,12 +243,12 @@ void DP::Ph1::AvVoltageSourceInverterDQ::updatePowerGeneration() {
 			mPref = (*mCurrentLoad).p * -1;
 			// Q_load is not updated
 			mQref = (*mCurrentLoad).q * -1;
-			
+
 			++mCurrentLoad;
 		}
 		return;
 	}
-	
+
 	if (mCurrentPower != mGenProfile->end()) {
 		mPref = *mCurrentPower;
 		++mCurrentPower;
@@ -338,7 +338,7 @@ void DP::Ph1::AvVoltageSourceInverterDQ::initializeFromPowerflow(Real frequency)
 		mVirtualNodes[2]->setInitialVoltage(mIntfVoltage(0, 0));
 		mVirtualNodes[3]->setInitialVoltage(mIntfVoltage(0, 0));
 	}*/
-	
+
 	// Create sub components
 	mSubResistorF = DP::Ph1::Resistor::make(mName + "_resF", mLogLevel);
 	mSubResistorC = DP::Ph1::Resistor::make(mName + "_resC", mLogLevel);
@@ -354,11 +354,11 @@ void DP::Ph1::AvVoltageSourceInverterDQ::initializeFromPowerflow(Real frequency)
 	mSubCtrledVoltageSource->setParameters(mIntfVoltage);
 
 	//
-	mSubCtrledVoltageSource->connect({ Node::GND, mVirtualNodes[1] });
+	mSubCtrledVoltageSource->connect({ SimNode::GND, mVirtualNodes[1] });
 	mSubCtrledVoltageSource->setVirtualNodeAt(mVirtualNodes[0], 0);
 	mSubResistorF->connect({ mVirtualNodes[1], mVirtualNodes[2] });
 	mSubInductorF->connect({ mVirtualNodes[2], mVirtualNodes[3] });
-	mSubCapacitorF->connect({ mVirtualNodes[3], Node::GND });
+	mSubCapacitorF->connect({ mVirtualNodes[3], SimNode::GND });
 	mSubResistorC->connect({ mVirtualNodes[3], mTerminals[0]->node() });
 
 	//
@@ -384,12 +384,12 @@ void DP::Ph1::AvVoltageSourceInverterDQ::initializeFromPowerflow(Real frequency)
 		Logger::phasorToString(mIntfVoltage(0, 0)),
 		Logger::phasorToString(mIntfCurrent(0, 0)),
 		Logger::phasorToString(initialSingleVoltage(0)),
-		mTerminals[0]->node()->name(), mTerminals[0]->node()->simNode());
+		mTerminals[0]->node()->name(), mTerminals[0]->node()->matrixNodeIndex());
 }
 
 void DP::Ph1::AvVoltageSourceInverterDQ::mnaInitialize(Real omega, Real timeStep, Attribute<Matrix>::Ptr leftVector) {
 	MNAInterface::mnaInitialize(omega, timeStep);
-	updateSimNodes();
+	updateMatrixNodeIndices();
 	if (mGenProfile)
 		mCurrentPower = mGenProfile->begin();
 	if(!mLoadProfile.empty())

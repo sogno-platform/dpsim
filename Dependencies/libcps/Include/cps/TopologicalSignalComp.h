@@ -1,7 +1,5 @@
 /**
- * @file
- * @author Markus Mirz <mmirz@eonerc.rwth-aachen.de>
- * @copyright 2017-2018, Institute for Automation of Complex Power Systems, EONERC
+ * @copyright 2017, Institute for Automation of Complex Power Systems, EONERC
  *
  * CPowerSystems
  *
@@ -21,31 +19,32 @@
 
 #pragma once
 
-#include <cps/Component.h>
+#include <cps/IdentifiedObject.h>
 #include <cps/MathUtils.h>
 #include <cps/PtrFactory.h>
-#include <cps/Task.h>
 
 namespace CPS {
-	///
-	class SignalComponent : public Component {
+	/// Base class for all signal type components
+	/// that have only unidirectional connections
+	class TopologicalSignalComp : public IdentifiedObject {
 	protected:
+		/// Component logger
+		Logger::Log mSLog;
+		/// Component logger control for internal variables
+		Logger::Level mLogLevel;
 	public:
-		typedef std::shared_ptr<SignalComponent> Ptr;
+		typedef std::shared_ptr<TopologicalSignalComp> Ptr;
 		typedef std::vector<Ptr> List;
 
-		SignalComponent(String uid, String name, Logger::Level logLevel = Logger::Level::off)
-			: Component(uid, name, logLevel) { }
-
-		SignalComponent(String name, Logger::Level logLevel = Logger::Level::off)
-			: SignalComponent(name, name, logLevel) { }
-
-		virtual ~SignalComponent() { }
-		virtual void initialize(Real timeStep) { }
-		// XXX
-		virtual void initialize(Real omega, Real timeStep) { initialize(timeStep); }
-		virtual Task::List getTasks() {
-			return Task::List();
+		///
+		TopologicalSignalComp(String uid, String name, Logger::Level logLevel = Logger::Level::off)
+			: IdentifiedObject(uid, name), mLogLevel(logLevel) {
+			mSLog = Logger::get(name, logLevel);
 		}
+		///
+		TopologicalSignalComp(String name, Logger::Level logLevel = Logger::Level::off)
+			: TopologicalSignalComp(name, name, logLevel) { }
+		///
+		virtual ~TopologicalSignalComp() { }
 	};
 }

@@ -26,7 +26,7 @@
 using namespace CPS;
 
 EMT::Ph3::AvVoltageSourceInverterDQ::AvVoltageSourceInverterDQ(String uid, String name, Logger::Level logLevel)
-	:PowerComponent<Real>(uid,name,logLevel){
+	:SimPowerComp<Real>(uid,name,logLevel){
 	mPhaseType = PhaseType::ABC;
 	setVirtualNodeNumber(4);
 	setTerminalNumber(1);
@@ -98,7 +98,7 @@ void EMT::Ph3::AvVoltageSourceInverterDQ::setParameters(Real sysOmega, Complex s
 
 }
 
-PowerComponent<Real>::Ptr EMT::Ph3::AvVoltageSourceInverterDQ::clone(String name) {
+SimPowerComp<Real>::Ptr EMT::Ph3::AvVoltageSourceInverterDQ::clone(String name) {
 	auto copy = AvVoltageSourceInverterDQ::make(name, mLogLevel);
 	copy->setParameters(mOmegaN, mVoltNom, mPref, mQref, mKpPLL, mKiPLL,
 		mKpPowerCtrld, mKiPowerCtrld, mKpCurrCtrld, mKiCurrCtrld, mLf, mCf,
@@ -109,18 +109,18 @@ PowerComponent<Real>::Ptr EMT::Ph3::AvVoltageSourceInverterDQ::clone(String name
 
 void EMT::Ph3::AvVoltageSourceInverterDQ::updateMonitoredValues(const Matrix& leftVector, Real time) {
 
-	mVcabc(0, 0) = Math::realFromVectorElement(leftVector, mSubCapacitorF->simNode(0, 0));
-	mVcabc(1, 0) = Math::realFromVectorElement(leftVector, mSubCapacitorF->simNode(0, 1));
-	mVcabc(2, 0) = Math::realFromVectorElement(leftVector, mSubCapacitorF->simNode(0, 2));
+	mVcabc(0, 0) = Math::realFromVectorElement(leftVector, mSubCapacitorF->matrixNodeIndex(0, 0));
+	mVcabc(1, 0) = Math::realFromVectorElement(leftVector, mSubCapacitorF->matrixNodeIndex(0, 1));
+	mVcabc(2, 0) = Math::realFromVectorElement(leftVector, mSubCapacitorF->matrixNodeIndex(0, 2));
 
 	mIfabc = -1 * mSubResistorF->attribute<Matrix>("i_intf")->get();
 	mIgabc = -1. * mSubResistorC->attribute<Matrix>("i_intf")->get();
 	mIfdq = parkTransform(mThetaSInit + mThetaPLL, mIfabc(0, 0), mIfabc(1, 0), mIfabc(2, 0));
 	mIgdq = parkTransform(mThetaSInit + mThetaPLL, mIgabc(0, 0), mIgabc(1, 0), mIgabc(2, 0));
 	mVcdq = parkTransform(mThetaSInit + mThetaPLL, mVcabc(0, 0), mVcabc(1, 0), mVcabc(2, 0));
-	mIntfVoltage(0, 0) = Math::realFromVectorElement(leftVector, mTerminals[0]->simNodes()[0]);
-	mIntfVoltage(1, 0) = Math::realFromVectorElement(leftVector, mTerminals[0]->simNodes()[1]);
-	mIntfVoltage(2, 0) = Math::realFromVectorElement(leftVector, mTerminals[0]->simNodes()[2]);
+	mIntfVoltage(0, 0) = Math::realFromVectorElement(leftVector, mTerminals[0]->matrixNodeIndices()[0]);
+	mIntfVoltage(1, 0) = Math::realFromVectorElement(leftVector, mTerminals[0]->matrixNodeIndices()[1]);
+	mIntfVoltage(2, 0) = Math::realFromVectorElement(leftVector, mTerminals[0]->matrixNodeIndices()[2]);
 
 	updateLinearizedModel();
 }
@@ -417,11 +417,11 @@ void EMT::Ph3::AvVoltageSourceInverterDQ::initializeFromPowerflow(Real frequency
 	mSubCtrledVoltageSource->setParameters(vsInit.real());
 
 	//
-	mSubCtrledVoltageSource->connect({ Node::GND, mVirtualNodes[1] });
+	mSubCtrledVoltageSource->connect({ SimNode::GND, mVirtualNodes[1] });
 	mSubCtrledVoltageSource->setVirtualNodeAt(mVirtualNodes[0], 0);
 	mSubResistorF->connect({ mVirtualNodes[1], mVirtualNodes[2] });
 	mSubInductorF->connect({ mVirtualNodes[2], mVirtualNodes[3] });
-	mSubCapacitorF->connect({ mVirtualNodes[3], Node::GND });
+	mSubCapacitorF->connect({ mVirtualNodes[3], SimNode::GND });
 	mSubResistorC->connect({ mVirtualNodes[3], mTerminals[0]->node() });
 
 	//
@@ -447,12 +447,12 @@ void EMT::Ph3::AvVoltageSourceInverterDQ::initializeFromPowerflow(Real frequency
 		Logger::phasorToString(mIntfVoltage(0, 0)),
 		Logger::phasorToString(mIntfCurrent(0, 0)),
 		Logger::phasorToString(initialSingleVoltage(0)),
-		mTerminals[0]->node()->name(), mTerminals[0]->node()->simNode());
+		mTerminals[0]->node()->name(), mTerminals[0]->node()->matrixNodeIndex());
 }
 
 void EMT::Ph3::AvVoltageSourceInverterDQ::mnaInitialize(Real omega, Real timeStep, Attribute<Matrix>::Ptr leftVector) {
 	MNAInterface::mnaInitialize(omega, timeStep);
-	updateSimNodes();
+	updateMatrixNodeIndices();
 	if (mGenProfile)
 		mCurrentPower = mGenProfile->begin();
 
@@ -511,7 +511,7 @@ void EMT::Ph3::AvVoltageSourceInverterDQ::updateSetPoint(Real time) {
 }
 
 void EMT::Ph3::AvVoltageSourceInverterDQ::MnaPreStep::execute(Real time, Int timeStepCount) {
-	// update voltage of subVoltage source 
+	// update voltage of subVoltage source
 	mAvVoltageSourceInverterDQ.mSubCtrledVoltageSource->setParameters(mAvVoltageSourceInverterDQ.mVsabc);
 }
 

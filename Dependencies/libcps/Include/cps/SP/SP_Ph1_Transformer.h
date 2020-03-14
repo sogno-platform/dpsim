@@ -16,7 +16,7 @@
  *********************************************************************************/
 
 #pragma once
-#include <cps/PowerComponent.h>
+#include <cps/SimPowerComp.h>
 #include <cps/Solver/PFSolverInterfaceBranch.h>
 #include <cps/Solver/MNAInterface.h>
 #include <cps/SP/SP_Ph1_Resistor.h>
@@ -29,7 +29,7 @@ namespace CPS {
 namespace SP { namespace Ph1 {
 	/// Transformer that includes an inductance and resistance
 	class Transformer :
-		public PowerComponent<Complex>,
+		public SimPowerComp<Complex>,
 		public SharedFactory<Transformer>,
 		public PFSolverInterfaceBranch,
 		public MNAInterface,
@@ -125,7 +125,7 @@ namespace SP { namespace Ph1 {
 		Transformer(String name, Logger::Level logLevel = Logger::Level::off)
 			: Transformer(name, name, logLevel) { }
 
-		PowerComponent<Complex>::Ptr clone(String name);
+		SimPowerComp<Complex>::Ptr clone(String name);
 
 		// #### General ####
 		/// Set transformer specific parameters
@@ -137,7 +137,7 @@ namespace SP { namespace Ph1 {
 		/// Set base voltage
 		void setBaseVoltage(Real baseVoltage);
 		/// Initializes component from power flow data
-		void calculatePerUnitParameters(Real baseApparentPower, Real baseOmega);	
+		void calculatePerUnitParameters(Real baseApparentPower, Real baseOmega);
 		/// Stamps admittance matrix
 		void pfApplyAdmittanceMatrixStamp(SparseMatrixCompRow & Y) override;
 		/// updates branch current and power flow, input pu value, update with real value

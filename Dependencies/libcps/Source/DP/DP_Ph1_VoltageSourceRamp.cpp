@@ -24,7 +24,7 @@ using namespace CPS;
 
 DP::Ph1::VoltageSourceRamp::VoltageSourceRamp(String uid, String name,
 	Logger::Level logLevel)
-	: PowerComponent<Complex>(uid, name, logLevel) {
+	: SimPowerComp<Complex>(uid, name, logLevel) {
 	setVirtualNodeNumber(1);
 	setTerminalNumber(2);
 	mIntfVoltage = MatrixComp::Zero(1,1);
@@ -34,7 +34,7 @@ DP::Ph1::VoltageSourceRamp::VoltageSourceRamp(String uid, String name,
 	addAttribute<Real>("f_src", &mSrcFreq, Flags::read | Flags::write);
 }
 
-PowerComponent<Complex>::Ptr DP::Ph1::VoltageSourceRamp::clone(String name) {
+SimPowerComp<Complex>::Ptr DP::Ph1::VoltageSourceRamp::clone(String name) {
 	auto copy = VoltageSourceRamp::make(name, mLogLevel);
 	copy->setParameters(mVoltageRef, mAddVoltage, mSrcFreq, mAddSrcFreq, mSwitchTime, mRampTime);
 	return copy;
@@ -53,7 +53,7 @@ void DP::Ph1::VoltageSourceRamp::setParameters(Complex voltage, Complex addVolta
 }
 
 void DP::Ph1::VoltageSourceRamp::initialize(Matrix frequencies) {
-	PowerComponent<Complex>::initialize(frequencies);
+	SimPowerComp<Complex>::initialize(frequencies);
 
 	if (mVoltageRef == Complex(0, 0))
 		mVoltageRef = initialSingleVoltage(1) - initialSingleVoltage(0);
@@ -71,7 +71,7 @@ void DP::Ph1::VoltageSourceRamp::initializeFromPowerflow(Real frequency) {
 
 void DP::Ph1::VoltageSourceRamp::mnaInitialize(Real omega, Real timeStep, Attribute<Matrix>::Ptr leftVector) {
 	MNAInterface::mnaInitialize(omega, timeStep);
-	updateSimNodes();
+	updateMatrixNodeIndices();
 	mSubVoltageSource->mnaInitialize(omega, timeStep, leftVector);
 	// only need a new MnaPreStep that updates the reference voltage of mSubVoltageSource;
 	// its own tasks then do the rest

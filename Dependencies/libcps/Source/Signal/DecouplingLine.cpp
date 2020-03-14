@@ -23,9 +23,9 @@ using namespace CPS;
 using namespace CPS::DP::Ph1;
 using namespace CPS::Signal;
 
-DecouplingLine::DecouplingLine(String name, Node<Complex>::Ptr node1, Node<Complex>::Ptr node2,
+DecouplingLine::DecouplingLine(String name, SimNode<Complex>::Ptr node1, SimNode<Complex>::Ptr node2,
 	Real resistance, Real inductance, Real capacitance, Logger::Level logLevel) :
-	SignalComponent(name, name, logLevel),
+	SimSignalComp(name, name, logLevel),
 	mResistance(resistance), mInductance(inductance), mCapacitance(capacitance) {
 
 	addAttribute<Matrix>("states", &mStates);
@@ -39,23 +39,23 @@ DecouplingLine::DecouplingLine(String name, Node<Complex>::Ptr node1, Node<Compl
 
 	mRes1 = Resistor::make(name + "_r1", logLevel);
 	mRes1->setParameters(mSurgeImpedance + resistance / 4);
-	mRes1->connect({node1, Node<Complex>::GND});
+	mRes1->connect({node1, SimNode<Complex>::GND});
 	mRes2 = Resistor::make(name + "_r2", logLevel);
 	mRes2->setParameters(mSurgeImpedance + resistance / 4);
-	mRes2->connect({node2, Node<Complex>::GND});
+	mRes2->connect({node2, SimNode<Complex>::GND});
 
 	mSrc1 = CurrentSource::make(name + "_i1", logLevel);
 	mSrc1->setParameters(0);
-	mSrc1->connect({node1, Node<Complex>::GND});
+	mSrc1->connect({node1, SimNode<Complex>::GND});
 	mSrcCur1 = mSrc1->attributeComplex("I_ref");
 	mSrc2 = CurrentSource::make(name + "_i2", logLevel);
 	mSrc2->setParameters(0);
-	mSrc2->connect({node2, Node<Complex>::GND});
+	mSrc2->connect({node2, SimNode<Complex>::GND});
 	mSrcCur2 = mSrc2->attributeComplex("I_ref");
 }
 
 DecouplingLine::DecouplingLine(String name, Logger::Level logLevel) :
-	SignalComponent(name, name, logLevel) {
+	SimSignalComp(name, name, logLevel) {
 
 	addAttribute<Matrix>("states", &mStates);
 	addAttribute<Complex>("i_src1", &mSrcCur1Ref, Flags::read);
@@ -70,7 +70,7 @@ DecouplingLine::DecouplingLine(String name, Logger::Level logLevel) :
 	mSrcCur2 = mSrc2->attributeComplex("I_ref");
 }
 
-void DecouplingLine::setParameters(Node<Complex>::Ptr node1, Node<Complex>::Ptr node2,
+void DecouplingLine::setParameters(SimNode<Complex>::Ptr node1, SimNode<Complex>::Ptr node2,
 	Real resistance, Real inductance, Real capacitance) {
 
 	mResistance = resistance;
@@ -85,13 +85,13 @@ void DecouplingLine::setParameters(Node<Complex>::Ptr node1, Node<Complex>::Ptr 
 	mSLog->info("delay: {}", mDelay);
 
 	mRes1->setParameters(mSurgeImpedance + resistance / 4);
-	mRes1->connect({node1, Node<Complex>::GND});
+	mRes1->connect({node1, SimNode<Complex>::GND});
 	mRes2->setParameters(mSurgeImpedance + resistance / 4);
-	mRes2->connect({node2, Node<Complex>::GND});
+	mRes2->connect({node2, SimNode<Complex>::GND});
 	mSrc1->setParameters(0);
-	mSrc1->connect({node1, Node<Complex>::GND});
+	mSrc1->connect({node1, SimNode<Complex>::GND});
 	mSrc2->setParameters(0);
-	mSrc2->connect({node2, Node<Complex>::GND});
+	mSrc2->connect({node2, SimNode<Complex>::GND});
 }
 
 void DecouplingLine::initialize(Real omega, Real timeStep) {
@@ -173,6 +173,6 @@ Task::List DecouplingLine::getTasks() {
 	return Task::List({std::make_shared<PreStep>(*this), std::make_shared<PostStep>(*this)});
 }
 
-Component::List DecouplingLine::getLineComponents() {
-	return Component::List({mRes1, mRes2, mSrc1, mSrc2});
+IdentifiedObject::List DecouplingLine::getLineComponents() {
+	return IdentifiedObject::List({mRes1, mRes2, mSrc1, mSrc2});
 }

@@ -25,17 +25,17 @@ using namespace CPS;
 
 
 SP::Ph1::externalGridInjection::externalGridInjection(String uid, String name,
-    Logger::Level logLevel) : PowerComponent<Complex>(uid, name, logLevel) {
+    Logger::Level logLevel) : SimPowerComp<Complex>(uid, name, logLevel) {
 	setVirtualNodeNumber(1);
 	setTerminalNumber(1);
 	mIntfVoltage = MatrixComp::Zero(1, 1);
 	mIntfCurrent = MatrixComp::Zero(1, 1);
-    
+
     addAttribute<Real>("V_set", &mVoltageSetPoint, Flags::read | Flags::write);
     addAttribute<Real>("V_set_pu", &mVoltageSetPointPerUnit, Flags::read | Flags::write);
 	addAttribute<Real>("p_inj", &mActivePowerInjection, Flags::read | Flags::write);
 	addAttribute<Real>("q_inj", &mReactivePowerInjection, Flags::read | Flags::write);
-	
+
 	// MNA attributes
 	addAttribute<Complex>("V_ref", Flags::read | Flags::write);
 	addAttribute<Real>("f_src", Flags::read | Flags::write);
@@ -65,7 +65,7 @@ void SP::Ph1::externalGridInjection::setParameters(Complex voltageRef, Real srcF
 	parametersSet = true;
 }
 
-PowerComponent<Complex>::Ptr SP::Ph1::externalGridInjection::clone(String name) {
+SimPowerComp<Complex>::Ptr SP::Ph1::externalGridInjection::clone(String name) {
 	auto copy = externalGridInjection::make(name, mLogLevel);
 	copy->setParameters(attribute<Complex>("V_ref")->get());
 	return copy;
@@ -100,7 +100,7 @@ void SP::Ph1::externalGridInjection::initializeFromPowerflow(Real frequency) {
 
 void SP::Ph1::externalGridInjection::mnaInitialize(Real omega, Real timeStep, Attribute<Matrix>::Ptr leftVector) {
 	MNAInterface::mnaInitialize(omega, timeStep);
-	updateSimNodes();
+	updateMatrixNodeIndices();
 
 	mIntfVoltage(0, 0) = mVoltageRef->get();
 	mMnaTasks.push_back(std::make_shared<MnaPreStep>(*this));
@@ -109,19 +109,19 @@ void SP::Ph1::externalGridInjection::mnaInitialize(Real omega, Real timeStep, At
 }
 
 void SP::Ph1::externalGridInjection::mnaApplySystemMatrixStamp(Matrix& systemMatrix) {
-	Math::setMatrixElement(systemMatrix, mVirtualNodes[0]->simNode(), simNode(0), Complex(1, 0));
-	Math::setMatrixElement(systemMatrix, simNode(0), mVirtualNodes[0]->simNode(), Complex(1, 0));
+	Math::setMatrixElement(systemMatrix, mVirtualNodes[0]->matrixNodeIndex(), matrixNodeIndex(0), Complex(1, 0));
+	Math::setMatrixElement(systemMatrix, matrixNodeIndex(0), mVirtualNodes[0]->matrixNodeIndex(), Complex(1, 0));
 	mSLog->info("-- Matrix Stamp ---");
-	mSLog->info("Add {:f} to system at ({:d},{:d})", 1., simNode(0), mVirtualNodes[0]->simNode());
-	mSLog->info("Add {:f} to system at ({:d},{:d})", 1., mVirtualNodes[0]->simNode(), simNode(0));
+	mSLog->info("Add {:f} to system at ({:d},{:d})", 1., matrixNodeIndex(0), mVirtualNodes[0]->matrixNodeIndex());
+	mSLog->info("Add {:f} to system at ({:d},{:d})", 1., mVirtualNodes[0]->matrixNodeIndex(), matrixNodeIndex(0));
 }
 
 
 void SP::Ph1::externalGridInjection::mnaApplyRightSideVectorStamp(Matrix& rightVector) {
 	// TODO: Is this correct with two nodes not gnd?
-	Math::setVectorElement(rightVector, mVirtualNodes[0]->simNode(), mIntfVoltage(0, 0));
+	Math::setVectorElement(rightVector, mVirtualNodes[0]->matrixNodeIndex(), mIntfVoltage(0, 0));
 	SPDLOG_LOGGER_DEBUG(mSLog, "Add {:s} to source vector at {:d}",
-		Logger::complexToString(mIntfVoltage(0, 0)), mVirtualNodes[0]->simNode());
+		Logger::complexToString(mIntfVoltage(0, 0)), mVirtualNodes[0]->matrixNodeIndex());
 }
 
 void SP::Ph1::externalGridInjection::updateVoltage(Real time) {
@@ -146,7 +146,7 @@ void SP::Ph1::externalGridInjection::MnaPostStep::execute(Real time, Int timeSte
 }
 
 void SP::Ph1::externalGridInjection::mnaUpdateCurrent(const Matrix& leftVector) {
-	mIntfCurrent(0, 0) = Math::complexFromVectorElement(leftVector, mVirtualNodes[0]->simNode());
+	mIntfCurrent(0, 0) = Math::complexFromVectorElement(leftVector, mVirtualNodes[0]->matrixNodeIndex());
 }
 
 void SP::Ph1::externalGridInjection::daeResidual(double ttime, const double state[], const double dstate_dt[], double resid[], std::vector<int>& off) {
@@ -162,8 +162,8 @@ void SP::Ph1::externalGridInjection::daeResidual(double ttime, const double stat
 		state[m]=componentm_inductance
 	*/
 
-	int Pos1 = simNode(0);
-	int Pos2 = simNode(1);
+	int Pos1 = matrixNodeIndex(0);
+	int Pos2 = matrixNodeIndex(1);
 	int c_offset = off[0] + off[1]; //current offset for component
 	int n_offset_1 = c_offset + Pos1 + 1;// current offset for first nodal equation
 	int n_offset_2 = c_offset + Pos2 + 1;// current offset for second nodal equation

@@ -25,7 +25,7 @@ using namespace CPS;
 
 
 SP::Ph1::VDNode::VDNode(String uid, String name,
-	Logger::Level logLevel) : PowerComponent<Complex>(uid, name, logLevel) {
+	Logger::Level logLevel) : SimPowerComp<Complex>(uid, name, logLevel) {
 
 	addAttribute<Real>("Delta_set", &mDeltaSetPoint, Flags::read | Flags::write);
 	addAttribute<Real>("V_set_pu", &mVoltageSetPointPerUnit, Flags::read | Flags::write);

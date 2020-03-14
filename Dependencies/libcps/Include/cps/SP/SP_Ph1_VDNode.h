@@ -21,13 +21,13 @@
 
 #pragma once
 
-#include <cps/PowerComponent.h>
+#include <cps/SimPowerComp.h>
 
 namespace CPS {
 namespace SP {
 namespace Ph1 {
 
-class VDNode : public PowerComponent<Complex>, public SharedFactory<VDNode>{
+class VDNode : public SimPowerComp<Complex>, public SharedFactory<VDNode>{
     private:
         Real mDeltaSetPoint;
         Real mVoltageSetPointPerUnit;

@@ -1,7 +1,5 @@
 /**
- * @file
- * @author Markus Mirz <mmirz@eonerc.rwth-aachen.de>
- * @copyright 2017-2018, Institute for Automation of Complex Power Systems, EONERC
+ * @copyright 2017, Institute for Automation of Complex Power Systems, EONERC
  *
  * CPowerSystems
  *
@@ -21,20 +19,20 @@
 
 #pragma once
 
-#include <cps/TopologicalComponent.h>
-#include <cps/Terminal.h>
-#include <cps/Node.h>
+#include <cps/TopologicalPowerComp.h>
+#include <cps/SimTerminal.h>
+#include <cps/SimNode.h>
 
 namespace CPS {
 	/// Base class for all components that are transmitting power.
 	template <typename VarType>
-	class PowerComponent : public TopologicalComponent {
+	class SimPowerComp : public TopologicalPowerComp {
 
 	protected:
 		/// List of Terminals
-		typename Terminal<VarType>::List mTerminals;
+		typename SimTerminal<VarType>::List mTerminals;
 		/// List of virtual nodes
-		typename Node<VarType>::List mVirtualNodes;
+		typename SimNode<VarType>::List mVirtualNodes;
 		/// Voltage between terminals
 		MatrixVar<VarType> mIntfVoltage;
 		/// Current through component
@@ -47,25 +45,25 @@ namespace CPS {
 		PhaseType mPhaseType = PhaseType::Single;
 
 		/// "Cached" list of simulation nodes (to avoid shared_ptr accesses during simulation)
-		std::vector<UInt> mSimNodes;
+		std::vector<UInt> mMatrixNodeIndices;
 		/// "Cached" flags for whether the connected nodes are grounded
-		std::vector<bool> mSimNodeIsGround;
+		std::vector<bool> mMatrixNodeIndexIsGround;
 
 		/// Flag indicating that parameters are set via setParameters() function
 		bool parametersSet = false;
 
 	public:
 		typedef VarType Type;
-		typedef std::shared_ptr<PowerComponent<VarType>> Ptr;
+		typedef std::shared_ptr<SimPowerComp<VarType>> Ptr;
 		typedef std::vector<Ptr> List;
 
 		/// Basic constructor that takes UID, name and log level
-		PowerComponent(String uid, String name, Logger::Level logLevel = Logger::Level::off);
+		SimPowerComp(String uid, String name, Logger::Level logLevel = Logger::Level::off);
 		/// Basic constructor that takes name and log level and sets the UID to name as well
-		PowerComponent(String name, Logger::Level logLevel = Logger::Level::off)
-			: PowerComponent(name, name, logLevel) { }
+		SimPowerComp(String name, Logger::Level logLevel = Logger::Level::off)
+			: SimPowerComp(name, name, logLevel) { }
 		/// Destructor - does not do anything
-		virtual ~PowerComponent() { }
+		virtual ~SimPowerComp() { }
 
 		/// Returns a modified copy of the component with the given suffix added to the name and without
 		/// connected nodes / terminals
@@ -82,40 +80,40 @@ namespace CPS {
 		///
 		void checkForUnconnectedTerminals();
 		/// Return list of Terminal pointers
-		typename Terminal<VarType>::List terminals() { return mTerminals; }
+		typename SimTerminal<VarType>::List terminals() { return mTerminals; }
 		/// Get pointer to Terminal
-		typename Terminal<VarType>::Ptr terminal(UInt index);
+		typename SimTerminal<VarType>::Ptr terminal(UInt index);
 		/// Returns the list of terminals as TopologicalTerminal pointers
 		TopologicalTerminal::List topologicalTerminals();
 		///
 		void setTerminalNumber(UInt num);
 		/// Sets all Terminals of the component and checks if the number of Terminals is too large
 		/// fir this component type.
-		void setTerminals(typename Terminal<VarType>::List terminals);
+		void setTerminals(typename SimTerminal<VarType>::List terminals);
 		/// Sets Terminal at index terminalPosition.
-		void setTerminalAt(typename Terminal<VarType>::Ptr terminal, UInt terminalPosition);
+		void setTerminalAt(typename SimTerminal<VarType>::Ptr terminal, UInt terminalPosition);
 
-		/// Update the "cached" mSimNodes and mSimNodeIsGround members
-		void updateSimNodes();
+		/// Update the "cached" mMatrixNodeIndices and mMatrixNodeIndexIsGround members
+		void updateMatrixNodeIndices();
 
 		// #### Nodes ####
 		/// Returns the actual number of Nodes / Terminals that are already set to valid Nodes.
 		UInt nodeNumber();
 		/// Get pointer to node
-		typename Node<VarType>::Ptr node(UInt index) {
+		typename SimNode<VarType>::Ptr node(UInt index) {
 			if (index >= mTerminals.size()) {
 				throw SystemError("Node not available for " + mUID);
 			}
 			return mTerminals[index]->node();
 		};
-		UInt simNode(UInt nodeIndex) {
-			return mSimNodes[nodeIndex * 3];
+		UInt matrixNodeIndex(UInt nodeIndex) {
+			return mMatrixNodeIndices[nodeIndex * 3];
 		}
-		UInt simNode(UInt nodeIndex, UInt phaseIndex) {
-			return mSimNodes[nodeIndex * 3 + phaseIndex];
+		UInt matrixNodeIndex(UInt nodeIndex, UInt phaseIndex) {
+			return mMatrixNodeIndices[nodeIndex * 3 + phaseIndex];
 		}
-		/// TODO replace with access to mSimNodes
-		std::vector<UInt> simNodes(UInt index) { return node(index)->simNodes(); }
+		/// TODO replace with access to mMatrixNodeIndices
+		std::vector<UInt> matrixNodeIndices(UInt index) { return node(index)->matrixNodeIndices(); }
 		/// Get nodes as base type TopologicalNode
 		TopologicalNode::List topologicalNodes();
 
@@ -125,13 +123,13 @@ namespace CPS {
 		/// Returns true if virtual node number is greater than zero.
 		Bool hasVirtualNodes() { return mNumVirtualNodes > 0; }
 		///
-		typename Node<VarType>::List& virtualNodes() { return mVirtualNodes; }
+		typename SimNode<VarType>::List& virtualNodes() { return mVirtualNodes; }
 		/// Get pointer to virtual node
-		typename Node<VarType>::Ptr virtualNode(UInt index);
+		typename SimNode<VarType>::Ptr virtualNode(UInt index);
 		/// Get vector of simulation node numbers from virtual Node
-		std::vector<UInt> virtualSimNodes(UInt index) { return virtualNode(index)->simNodes(); }
+		std::vector<UInt> virtualMatrixNodeIndices(UInt index) { return virtualNode(index)->matrixNodeIndices(); }
 		/// Get simulation node number from virtual node
-		UInt virtualSimNode(UInt nodeIndex, UInt phaseIndex = 0) { return virtualSimNodes(nodeIndex)[phaseIndex]; }
+		UInt virtualSimNode(UInt nodeIndex, UInt phaseIndex = 0) { return virtualMatrixNodeIndices(nodeIndex)[phaseIndex]; }
 
 		// #### States ####
 		const MatrixVar<VarType>& intfCurrent() { return mIntfCurrent; }
@@ -142,7 +140,7 @@ namespace CPS {
 		///
 		Complex initialSingleVoltage(UInt index) { return mTerminals[index]->initialSingleVoltage(); }
 		///
-		Bool terminalNotGrounded(UInt index) { return !mSimNodeIsGround[index]; }
+		Bool terminalNotGrounded(UInt index) { return !mMatrixNodeIndexIsGround[index]; }
 
 		// #### Setters ####
 		void setIntfCurrent(MatrixVar<VarType> current) { mIntfCurrent = current; }
@@ -151,9 +149,9 @@ namespace CPS {
 		///
 		void setVirtualNodeNumber(UInt num);
 		/// Sets the virtual node at index nodeNum.
-		void setVirtualNodeAt(typename Node<VarType>::Ptr virtualNode, UInt nodeNum);
+		void setVirtualNodeAt(typename SimNode<VarType>::Ptr virtualNode, UInt nodeNum);
 		/// Sets all nodes and checks for nominal number of Nodes for this Component.
-		void connect(typename Node<VarType>::List nodes);
+		void connect(typename SimNode<VarType>::List nodes);
 
 		// #### Calculations ####
 		/// Initialize components with correct network frequencies

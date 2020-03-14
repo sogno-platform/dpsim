@@ -24,8 +24,8 @@
 using namespace CPS;
 
 SP::Ph1::PiLine::PiLine(String uid, String name, Logger::Level logLevel)
-	: PowerComponent<Complex>(uid, name, logLevel) {
-	
+	: SimPowerComp<Complex>(uid, name, logLevel) {
+
 	mSLog->info("Create {} {}", this->type(), name);
 	mSLog->flush();
 
@@ -77,7 +77,7 @@ void SP::Ph1::PiLine::setParameters(Real resistance, Real inductance, Real capac
 
 }
 
-PowerComponent<Complex>::Ptr SP::Ph1::PiLine::clone(String name) {
+SimPowerComp<Complex>::Ptr SP::Ph1::PiLine::clone(String name) {
 	auto copy = PiLine::make(name, mLogLevel);
 	copy->setParameters(mBaseVoltage, mSeriesRes, mSeriesInd, mParallelCap, mParallelCond);
 	return copy;
@@ -89,7 +89,7 @@ void SP::Ph1::PiLine::setBaseVoltage(Real baseVoltage) {
 }
 
 void SP::Ph1::PiLine::calculatePerUnitParameters(Real baseApparentPower, Real baseOmega) {
-    mSLog->info("#### Calculate Per Unit Parameters for {}", mName); 
+    mSLog->info("#### Calculate Per Unit Parameters for {}", mName);
 	mBaseApparentPower = baseApparentPower;
 	mBaseOmega = baseOmega;
     mSLog->info("Base Power={} [VA]  Base Omega={} [1/s]", baseApparentPower, baseOmega);
@@ -112,8 +112,8 @@ void SP::Ph1::PiLine::calculatePerUnitParameters(Real baseApparentPower, Real ba
 }
 
 void SP::Ph1::PiLine::pfApplyAdmittanceMatrixStamp(SparseMatrixCompRow & Y) {
-	int bus1 = this->simNode(0);
-	int bus2 = this->simNode(1);
+	int bus1 = this->matrixNodeIndex(0);
+	int bus2 = this->matrixNodeIndex(1);
 
 	//create the element admittance matrix
 	Complex y = Complex(1, 0) / Complex(mSeriesResPerUnit, 1. * mSeriesIndPerUnit);
@@ -195,24 +195,24 @@ void SP::Ph1::PiLine::initializeFromPowerflow(Real frequency) {
 	if (mParallelCond >= 0) {
 		mSubParallelResistor0 = std::make_shared<SP::Ph1::Resistor>(mName + "_con0", Logger::Level::off);
 		mSubParallelResistor0->setParameters(2. / mParallelCond);
-		mSubParallelResistor0->connect(Node::List{ Node::GND, mTerminals[0]->node() });
+		mSubParallelResistor0->connect(SimNode::List{ SimNode::GND, mTerminals[0]->node() });
 		mSubParallelResistor0->initializeFromPowerflow(frequency);
 
 		mSubParallelResistor1 = std::make_shared<SP::Ph1::Resistor>(mName + "_con1", Logger::Level::off);
 		mSubParallelResistor1->setParameters(2. / mParallelCond);
-		mSubParallelResistor1->connect(Node::List{ Node::GND, mTerminals[1]->node() });
+		mSubParallelResistor1->connect(SimNode::List{ SimNode::GND, mTerminals[1]->node() });
 		mSubParallelResistor1->initializeFromPowerflow(frequency);
 	}
 
 	if (mParallelCap >= 0) {
 		mSubParallelCapacitor0 = std::make_shared<SP::Ph1::Capacitor>(mName + "_cap0", Logger::Level::off);
 		mSubParallelCapacitor0->setParameters(mParallelCap / 2.);
-		mSubParallelCapacitor0->connect(Node::List{ Node::GND, mTerminals[0]->node() });
+		mSubParallelCapacitor0->connect(SimNode::List{ SimNode::GND, mTerminals[0]->node() });
 		mSubParallelCapacitor0->initializeFromPowerflow(frequency);
 
 		mSubParallelCapacitor1 = std::make_shared<SP::Ph1::Capacitor>(mName + "_cap1", Logger::Level::off);
 		mSubParallelCapacitor1->setParameters(mParallelCap / 2.);
-		mSubParallelCapacitor1->connect(Node::List{ Node::GND, mTerminals[1]->node() });
+		mSubParallelCapacitor1->connect(SimNode::List{ SimNode::GND, mTerminals[1]->node() });
 		mSubParallelCapacitor1->initializeFromPowerflow(frequency);
 	}
 
@@ -233,7 +233,7 @@ void SP::Ph1::PiLine::initializeFromPowerflow(Real frequency) {
 
 void SP::Ph1::PiLine::mnaInitialize(Real omega, Real timeStep, Attribute<Matrix>::Ptr leftVector) {
 	MNAInterface::mnaInitialize(omega, timeStep);
-	updateSimNodes();
+	updateMatrixNodeIndices();
 	MNAInterface::List subComps({ mSubSeriesResistor, mSubSeriesInductor });
 
 	mSubSeriesResistor->mnaInitialize(omega, timeStep, leftVector);
@@ -280,9 +280,9 @@ void SP::Ph1::PiLine::MnaPostStep::execute(Real time, Int timeStepCount) {
 void SP::Ph1::PiLine::mnaUpdateVoltage(const Matrix& leftVector) {
 	mIntfVoltage(0, 0) = 0;
 	if (terminalNotGrounded(1))
-		mIntfVoltage(0, 0) = Math::complexFromVectorElement(leftVector, simNode(1));
+		mIntfVoltage(0, 0) = Math::complexFromVectorElement(leftVector, matrixNodeIndex(1));
 	if (terminalNotGrounded(0))
-		mIntfVoltage(0, 0) = mIntfVoltage(0, 0) - Math::complexFromVectorElement(leftVector, simNode(0));
+		mIntfVoltage(0, 0) = mIntfVoltage(0, 0) - Math::complexFromVectorElement(leftVector, matrixNodeIndex(0));
 }
 
 void SP::Ph1::PiLine::mnaUpdateCurrent(const Matrix& leftVector) {

@@ -45,7 +45,7 @@ int main(int argc, char *argv[]) {
 	auto filtQ = FIRFilter::make("filter_q", coefficients, 0, Logger::Level::debug);
 
 	// Nodes
-	auto n1 = Node::make("n1");
+	auto n1 = SimNode::make("n1");
 
 	// Components
 	auto ecs = CurrentSource::make("v_intf");
@@ -55,8 +55,8 @@ int main(int argc, char *argv[]) {
 	auto load = PQLoadCS::make("load_cs");
 	load->setParameters(10., 0., 10.);
 
-	ecs->connect({ Node::GND, n1 });
-	r1->connect({ Node::GND, n1 });
+	ecs->connect({ SimNode::GND, n1 });
+	r1->connect({ SimNode::GND, n1 });
 	load->connect({ n1 });
 
 	load->setAttributeRef("power_active", filtP->attribute<Real>("output"));

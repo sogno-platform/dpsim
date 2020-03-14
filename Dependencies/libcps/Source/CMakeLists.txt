@@ -8,12 +8,11 @@ endif()
 add_library(cps STATIC
 	Logger.cpp
 	MathUtils.cpp
-	Attribute.cpp
-	Node.cpp
+	Attribute.cpp	
 	TopologicalNode.cpp
 	TopologicalTerminal.cpp
-	Component.cpp
-	PowerComponent.cpp
+	SimNode.cpp
+	SimPowerComp.cpp
 	SystemTopology.cpp
 	CSVReader.cpp
 )

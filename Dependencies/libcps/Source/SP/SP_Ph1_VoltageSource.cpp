@@ -22,7 +22,7 @@
 using namespace CPS;
 
 SP::Ph1::VoltageSource::VoltageSource(String uid, String name, Logger::Level logLevel)
-	: PowerComponent<Complex>(uid, name, logLevel) {
+	: SimPowerComp<Complex>(uid, name, logLevel) {
 	setVirtualNodeNumber(1);
 	setTerminalNumber(2);
 	mIntfVoltage = MatrixComp::Zero(1, 1);
@@ -31,7 +31,7 @@ SP::Ph1::VoltageSource::VoltageSource(String uid, String name, Logger::Level log
 	addAttribute<Complex>("V_ref", Flags::read | Flags::write);
 }
 
-PowerComponent<Complex>::Ptr SP::Ph1::VoltageSource::clone(String name) {
+SimPowerComp<Complex>::Ptr SP::Ph1::VoltageSource::clone(String name) {
 	auto copy = VoltageSource::make(name, mLogLevel);
 	copy->setParameters(attribute<Complex>("V_ref")->get());
 	return copy;
@@ -53,7 +53,7 @@ void SP::Ph1::VoltageSource::initializeFromPowerflow(Real frequency) {
 }
 
 void SP::Ph1::VoltageSource::mnaInitialize(Real omega, Real timeStep, Attribute<Matrix>::Ptr leftVector) {
-	updateSimNodes();
+	updateMatrixNodeIndices();
 	mIntfVoltage(0, 0) = mVoltageRef->get();
 
 	mMnaTasks.push_back(std::make_shared<MnaPreStep>(*this));
@@ -63,19 +63,19 @@ void SP::Ph1::VoltageSource::mnaInitialize(Real omega, Real timeStep, Attribute<
 
 void SP::Ph1::VoltageSource::mnaApplySystemMatrixStamp(Matrix& systemMatrix) {
 	if (terminalNotGrounded(0)) {
-		Math::addToMatrixElement(systemMatrix, simNode(0), mVirtualNodes[0]->simNode(), Complex(-1, 0));
-		Math::addToMatrixElement(systemMatrix, mVirtualNodes[0]->simNode(), simNode(0), Complex(-1, 0));
+		Math::addToMatrixElement(systemMatrix, matrixNodeIndex(0), mVirtualNodes[0]->matrixNodeIndex(), Complex(-1, 0));
+		Math::addToMatrixElement(systemMatrix, mVirtualNodes[0]->matrixNodeIndex(), matrixNodeIndex(0), Complex(-1, 0));
 
 	}
 	if (terminalNotGrounded(1)) {
-		Math::addToMatrixElement(systemMatrix, simNode(1), mVirtualNodes[0]->simNode(), Complex(1, 0));
-		Math::addToMatrixElement(systemMatrix, mVirtualNodes[0]->simNode(), simNode(1), Complex(1, 0));
+		Math::addToMatrixElement(systemMatrix, matrixNodeIndex(1), mVirtualNodes[0]->matrixNodeIndex(), Complex(1, 0));
+		Math::addToMatrixElement(systemMatrix, mVirtualNodes[0]->matrixNodeIndex(), matrixNodeIndex(1), Complex(1, 0));
 	}
 
 }
 
 void SP::Ph1::VoltageSource::mnaApplyRightSideVectorStamp(Matrix& rightVector) {
-	Math::setVectorElement(rightVector, mVirtualNodes[0]->simNode(), mIntfVoltage(0, 0));
+	Math::setVectorElement(rightVector, mVirtualNodes[0]->matrixNodeIndex(), mIntfVoltage(0, 0));
 
 }
 
@@ -95,7 +95,7 @@ void SP::Ph1::VoltageSource::MnaPostStep::execute(Real time, Int timeStepCount) 
 }
 
 void SP::Ph1::VoltageSource::mnaUpdateCurrent(const Matrix& leftVector) {
-	mIntfCurrent(0, 0) = Math::complexFromVectorElement(leftVector, mVirtualNodes[0]->simNode());
+	mIntfCurrent(0, 0) = Math::complexFromVectorElement(leftVector, mVirtualNodes[0]->matrixNodeIndex());
 }
 
 void SP::Ph1::VoltageSource::daeResidual(double ttime, const double state[], const double dstate_dt[], double resid[], std::vector<int>& off) {
@@ -111,8 +111,8 @@ void SP::Ph1::VoltageSource::daeResidual(double ttime, const double state[], con
 		state[m]=componentm_inductance
 	*/
 
-	//int Pos1 = simNode(0);
-	//int Pos2 = simNode(1);
+	//int Pos1 = matrixNodeIndex(0);
+	//int Pos2 = matrixNodeIndex(1);
 	//int c_offset = off[0] + off[1]; //current offset for component
 	//int n_offset_1 = c_offset + Pos1 + 1;// current offset for first nodal equation
 	//int n_offset_2 = c_offset + Pos2 + 1;// current offset for second nodal equation

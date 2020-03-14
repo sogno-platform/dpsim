@@ -26,7 +26,7 @@ using namespace CPS;
 
 EMT::Ph3::RXLoad::RXLoad(String uid, String name,
 	Logger::Level logLevel)
-	: PowerComponent<Real>(uid, name, logLevel) {
+	: SimPowerComp<Real>(uid, name, logLevel) {
 	mPhaseType = PhaseType::ABC;
 	setTerminalNumber(1);
 	mIntfVoltage = Matrix::Zero(3, 1);
@@ -58,13 +58,13 @@ EMT::Ph3::RXLoad::RXLoad(String name,
 	initPowerFromTerminal = false;
 }
 
-PowerComponent<Real>::Ptr EMT::Ph3::RXLoad::clone(String name) {
+SimPowerComp<Real>::Ptr EMT::Ph3::RXLoad::clone(String name) {
 	// everything set by initializeFromPowerflow
 	return RXLoad::make(name, mLogLevel);
 }
 
 void EMT::Ph3::RXLoad::initialize(Matrix frequencies) {
-	PowerComponent<Real>::initialize(frequencies);
+	SimPowerComp<Real>::initialize(frequencies);
 }
 
 void EMT::Ph3::RXLoad::initializeFromPowerflow(Real frequency) {
@@ -95,7 +95,7 @@ void EMT::Ph3::RXLoad::initializeFromPowerflow(Real frequency) {
 		mConductance = mResistance.inverse();
 		mSubResistor = std::make_shared<EMT::Ph3::Resistor>(mName + "_res", mLogLevel);
 		mSubResistor->setParameters(mResistance);
-		mSubResistor->connect({ Node::GND, mTerminals[0]->node() });
+		mSubResistor->connect({ SimNode::GND, mTerminals[0]->node() });
 		mSubResistor->initialize(mFrequencies);
 		mSubResistor->initializeFromPowerflow(frequency);
 	}
@@ -110,7 +110,7 @@ void EMT::Ph3::RXLoad::initializeFromPowerflow(Real frequency) {
 
 		mSubInductor = std::make_shared<EMT::Ph3::Inductor>(mName + "_ind", mLogLevel);
 		mSubInductor->setParameters(mInductance);
-		mSubInductor->connect({ Node::GND, mTerminals[0]->node() });
+		mSubInductor->connect({ SimNode::GND, mTerminals[0]->node() });
 		mSubInductor->initialize(mFrequencies);
 		mSubInductor->initializeFromPowerflow(frequency);
 	}
@@ -119,7 +119,7 @@ void EMT::Ph3::RXLoad::initializeFromPowerflow(Real frequency) {
 
 		mSubCapacitor = std::make_shared<EMT::Ph3::Capacitor>(mName + "_cap", mLogLevel);
 		mSubCapacitor->setParameters(mCapacitance);
-		mSubCapacitor->connect({ Node::GND, mTerminals[0]->node() });
+		mSubCapacitor->connect({ SimNode::GND, mTerminals[0]->node() });
 		mSubCapacitor->initialize(mFrequencies);
 		mSubCapacitor->initializeFromPowerflow(frequency);
 	}
@@ -152,7 +152,7 @@ void EMT::Ph3::RXLoad::initializeFromPowerflow(Real frequency) {
 
 void EMT::Ph3::RXLoad::mnaInitialize(Real omega, Real timeStep, Attribute<Matrix>::Ptr leftVector) {
 	MNAInterface::mnaInitialize(omega, timeStep);
-	updateSimNodes();
+	updateMatrixNodeIndices();
 	mRightVector = Matrix::Zero(leftVector->get().rows(), 1);
 	if (mSubResistor) {
 		mSubResistor->mnaInitialize(omega, timeStep, leftVector);
@@ -207,14 +207,14 @@ void EMT::Ph3::RXLoad::mnaUpdateVoltage(const Matrix& leftVector) {
 	// v1 - v0
 	mIntfVoltage = Matrix::Zero(3, 1);
 	if (terminalNotGrounded(1)) {
-		mIntfVoltage(0, 0) = Math::realFromVectorElement(leftVector, simNode(1, 0));
-		mIntfVoltage(1, 0) = Math::realFromVectorElement(leftVector, simNode(1, 1));
-		mIntfVoltage(2, 0) = Math::realFromVectorElement(leftVector, simNode(1, 2));
+		mIntfVoltage(0, 0) = Math::realFromVectorElement(leftVector, matrixNodeIndex(1, 0));
+		mIntfVoltage(1, 0) = Math::realFromVectorElement(leftVector, matrixNodeIndex(1, 1));
+		mIntfVoltage(2, 0) = Math::realFromVectorElement(leftVector, matrixNodeIndex(1, 2));
 	}
 	if (terminalNotGrounded(0)) {
-		mIntfVoltage(0, 0) = mIntfVoltage(0, 0) - Math::realFromVectorElement(leftVector, simNode(0, 0));
-		mIntfVoltage(1, 0) = mIntfVoltage(1, 0) - Math::realFromVectorElement(leftVector, simNode(0, 1));
-		mIntfVoltage(2, 0) = mIntfVoltage(2, 0) - Math::realFromVectorElement(leftVector, simNode(0, 2));
+		mIntfVoltage(0, 0) = mIntfVoltage(0, 0) - Math::realFromVectorElement(leftVector, matrixNodeIndex(0, 0));
+		mIntfVoltage(1, 0) = mIntfVoltage(1, 0) - Math::realFromVectorElement(leftVector, matrixNodeIndex(0, 1));
+		mIntfVoltage(2, 0) = mIntfVoltage(2, 0) - Math::realFromVectorElement(leftVector, matrixNodeIndex(0, 2));
 	}
 }
 

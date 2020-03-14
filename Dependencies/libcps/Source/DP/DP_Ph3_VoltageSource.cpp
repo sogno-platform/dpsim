@@ -23,7 +23,7 @@ using namespace CPS;
 
 
 DP::Ph3::VoltageSource::VoltageSource(String uid, String name, Logger::Level logLevel)
-	: PowerComponent<Complex>(uid, name, logLevel) {
+	: SimPowerComp<Complex>(uid, name, logLevel) {
 	mPhaseType = PhaseType::ABC;
 	setVirtualNodeNumber(1);
 	setTerminalNumber(2);
@@ -33,7 +33,7 @@ DP::Ph3::VoltageSource::VoltageSource(String uid, String name, Logger::Level log
 	addAttribute<Complex>("V_ref", Flags::read | Flags::write);
 }
 
-PowerComponent<Complex>::Ptr DP::Ph3::VoltageSource::clone(String name) {
+SimPowerComp<Complex>::Ptr DP::Ph3::VoltageSource::clone(String name) {
 	auto copy = VoltageSource::make(name, mLogLevel);
 	copy->setParameters(attribute<Complex>("V_ref")->get());
 	return copy;
@@ -61,7 +61,7 @@ void DP::Ph3::VoltageSource::initializeFromPowerflow(Real frequency) {
 }
 
 void DP::Ph3::VoltageSource::mnaInitialize(Real omega, Real timeStep, Attribute<Matrix>::Ptr leftVector) {
-	updateSimNodes();
+	updateMatrixNodeIndices();
 	mIntfVoltage(0, 0) = mVoltageRef->get();
 	mIntfVoltage(1, 0) = Complex(Math::abs(mVoltageRef->get()) * cos(Math::phase(mVoltageRef->get()) - 2. / 3. * M_PI),
 								 Math::abs(mVoltageRef->get()) * sin(Math::phase(mVoltageRef->get()) - 2. / 3. * M_PI));
@@ -75,45 +75,45 @@ void DP::Ph3::VoltageSource::mnaInitialize(Real omega, Real timeStep, Attribute<
 
 void DP::Ph3::VoltageSource::mnaApplySystemMatrixStamp(Matrix& systemMatrix) {
 	if (terminalNotGrounded(0)) {
-		Math::addToMatrixElement(systemMatrix, simNode(0, 0), mVirtualNodes[0]->simNode(PhaseType::A), Complex(-1, 0));
-		Math::addToMatrixElement(systemMatrix, mVirtualNodes[0]->simNode(PhaseType::A), simNode(0, 0), Complex(-1, 0));
+		Math::addToMatrixElement(systemMatrix, matrixNodeIndex(0, 0), mVirtualNodes[0]->matrixNodeIndex(PhaseType::A), Complex(-1, 0));
+		Math::addToMatrixElement(systemMatrix, mVirtualNodes[0]->matrixNodeIndex(PhaseType::A), matrixNodeIndex(0, 0), Complex(-1, 0));
 
-		Math::addToMatrixElement(systemMatrix, simNode(0, 1), mVirtualNodes[0]->simNode(PhaseType::B), Complex(-1, 0));
-		Math::addToMatrixElement(systemMatrix, mVirtualNodes[0]->simNode(PhaseType::B), simNode(0, 1), Complex(-1, 0));
+		Math::addToMatrixElement(systemMatrix, matrixNodeIndex(0, 1), mVirtualNodes[0]->matrixNodeIndex(PhaseType::B), Complex(-1, 0));
+		Math::addToMatrixElement(systemMatrix, mVirtualNodes[0]->matrixNodeIndex(PhaseType::B), matrixNodeIndex(0, 1), Complex(-1, 0));
 
-		Math::addToMatrixElement(systemMatrix, simNode(0, 2), mVirtualNodes[0]->simNode(PhaseType::C), Complex(-1, 0));
-		Math::addToMatrixElement(systemMatrix, mVirtualNodes[0]->simNode(PhaseType::C), simNode(0, 2), -Complex(-1, 0));
+		Math::addToMatrixElement(systemMatrix, matrixNodeIndex(0, 2), mVirtualNodes[0]->matrixNodeIndex(PhaseType::C), Complex(-1, 0));
+		Math::addToMatrixElement(systemMatrix, mVirtualNodes[0]->matrixNodeIndex(PhaseType::C), matrixNodeIndex(0, 2), -Complex(-1, 0));
 	}
 	if (terminalNotGrounded(1)) {
-		Math::addToMatrixElement(systemMatrix, simNode(1, 0), mVirtualNodes[0]->simNode(PhaseType::A), Complex(1, 0));
-		Math::addToMatrixElement(systemMatrix, mVirtualNodes[0]->simNode(PhaseType::A), simNode(1, 0), Complex(1, 0));
+		Math::addToMatrixElement(systemMatrix, matrixNodeIndex(1, 0), mVirtualNodes[0]->matrixNodeIndex(PhaseType::A), Complex(1, 0));
+		Math::addToMatrixElement(systemMatrix, mVirtualNodes[0]->matrixNodeIndex(PhaseType::A), matrixNodeIndex(1, 0), Complex(1, 0));
 
-		Math::addToMatrixElement(systemMatrix, simNode(1, 1), mVirtualNodes[0]->simNode(PhaseType::B), Complex(1, 0));
-		Math::addToMatrixElement(systemMatrix, mVirtualNodes[0]->simNode(PhaseType::B), simNode(1, 1), Complex(1, 0));
+		Math::addToMatrixElement(systemMatrix, matrixNodeIndex(1, 1), mVirtualNodes[0]->matrixNodeIndex(PhaseType::B), Complex(1, 0));
+		Math::addToMatrixElement(systemMatrix, mVirtualNodes[0]->matrixNodeIndex(PhaseType::B), matrixNodeIndex(1, 1), Complex(1, 0));
 
-		Math::addToMatrixElement(systemMatrix, simNode(1, 2), mVirtualNodes[0]->simNode(PhaseType::C), Complex(1, 0));
-		Math::addToMatrixElement(systemMatrix, mVirtualNodes[0]->simNode(PhaseType::C), simNode(1, 2), Complex(1, 0));
+		Math::addToMatrixElement(systemMatrix, matrixNodeIndex(1, 2), mVirtualNodes[0]->matrixNodeIndex(PhaseType::C), Complex(1, 0));
+		Math::addToMatrixElement(systemMatrix, mVirtualNodes[0]->matrixNodeIndex(PhaseType::C), matrixNodeIndex(1, 2), Complex(1, 0));
 	}
 
 
 
 	// mLog.info() << "--- System matrix stamp ---" << std::endl;
 	// if (terminalNotGrounded(0)) {
-	// 	mLog.info() << "Add " << Complex(-1, 0) << " to " << simNode(0) << "," << mVirtualNodes[0]->simNode(PhaseType::A) << std::endl;
-	// 	mLog.info() << "Add " << Complex(-1, 0) << " to " << mVirtualNodes[0]->simNode(PhaseType::A) << "," << simNode(0) << std::endl;
+	// 	mLog.info() << "Add " << Complex(-1, 0) << " to " << matrixNodeIndex(0) << "," << mVirtualNodes[0]->matrixNodeIndex(PhaseType::A) << std::endl;
+	// 	mLog.info() << "Add " << Complex(-1, 0) << " to " << mVirtualNodes[0]->matrixNodeIndex(PhaseType::A) << "," << matrixNodeIndex(0) << std::endl;
 	// }
 	// if (terminalNotGrounded(1)) {
-	// 	mLog.info() << "Add " << Complex(1, 0) << " to " << mVirtualNodes[0]->simNode(PhaseType::A) << "," << simNode(1) << std::endl;
-	// 	mLog.info() << "Add " << Complex(1, 0) << " to " << simNode(1) << "," << mVirtualNodes[0]->simNode(PhaseType::A) << std::endl;
+	// 	mLog.info() << "Add " << Complex(1, 0) << " to " << mVirtualNodes[0]->matrixNodeIndex(PhaseType::A) << "," << matrixNodeIndex(1) << std::endl;
+	// 	mLog.info() << "Add " << Complex(1, 0) << " to " << matrixNodeIndex(1) << "," << mVirtualNodes[0]->matrixNodeIndex(PhaseType::A) << std::endl;
 	// }
 }
 
 void DP::Ph3::VoltageSource::mnaApplyRightSideVectorStamp(Matrix& rightVector) {
-	Math::setVectorElement(rightVector, mVirtualNodes[0]->simNode(PhaseType::A), mIntfVoltage(0, 0));
-	Math::setVectorElement(rightVector, mVirtualNodes[0]->simNode(PhaseType::B), mIntfVoltage(1, 0));
-	Math::setVectorElement(rightVector, mVirtualNodes[0]->simNode(PhaseType::C), mIntfVoltage(2, 0));
+	Math::setVectorElement(rightVector, mVirtualNodes[0]->matrixNodeIndex(PhaseType::A), mIntfVoltage(0, 0));
+	Math::setVectorElement(rightVector, mVirtualNodes[0]->matrixNodeIndex(PhaseType::B), mIntfVoltage(1, 0));
+	Math::setVectorElement(rightVector, mVirtualNodes[0]->matrixNodeIndex(PhaseType::C), mIntfVoltage(2, 0));
 
-	//mLog.debug() << "Add " << mIntfVoltage(0,0) << " to source vector " << mVirtualNodes[0]->simNode(PhaseType::A) << std::endl;
+	//mLog.debug() << "Add " << mIntfVoltage(0,0) << " to source vector " << mVirtualNodes[0]->matrixNodeIndex(PhaseType::A) << std::endl;
 }
 
 void DP::Ph3::VoltageSource::updateVoltage(Real time) {
@@ -135,9 +135,9 @@ void DP::Ph3::VoltageSource::MnaPostStep::execute(Real time, Int timeStepCount) 
 }
 
 void DP::Ph3::VoltageSource::mnaUpdateCurrent(const Matrix& leftVector) {
-	mIntfCurrent(0, 0) = Math::complexFromVectorElement(leftVector, mVirtualNodes[0]->simNode(PhaseType::A));
-	mIntfCurrent(1, 0) = Math::complexFromVectorElement(leftVector, mVirtualNodes[0]->simNode(PhaseType::B));
-	mIntfCurrent(2, 0) = Math::complexFromVectorElement(leftVector, mVirtualNodes[0]->simNode(PhaseType::C));
+	mIntfCurrent(0, 0) = Math::complexFromVectorElement(leftVector, mVirtualNodes[0]->matrixNodeIndex(PhaseType::A));
+	mIntfCurrent(1, 0) = Math::complexFromVectorElement(leftVector, mVirtualNodes[0]->matrixNodeIndex(PhaseType::B));
+	mIntfCurrent(2, 0) = Math::complexFromVectorElement(leftVector, mVirtualNodes[0]->matrixNodeIndex(PhaseType::C));
 }
 
 void DP::Ph3::VoltageSource::daeResidual(double ttime, const double state[], const double dstate_dt[], double resid[], std::vector<int>& off) {
@@ -153,8 +153,8 @@ void DP::Ph3::VoltageSource::daeResidual(double ttime, const double state[], con
 		state[m]=componentm_inductance
 	*/
 
-	//int Pos1 = simNode(0);
-	//int Pos2 = simNode(1);
+	//int Pos1 = matrixNodeIndex(0);
+	//int Pos2 = matrixNodeIndex(1);
 	//int c_offset = off[0] + off[1]; //current offset for component
 	//int n_offset_1 = c_offset + Pos1 + 1;// current offset for first nodal equation
 	//int n_offset_2 = c_offset + Pos2 + 1;// current offset for second nodal equation

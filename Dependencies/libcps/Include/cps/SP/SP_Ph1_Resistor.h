@@ -19,7 +19,7 @@
 
 #pragma once
 
-#include <cps/PowerComponent.h>
+#include <cps/SimPowerComp.h>
 #include <cps/Solver/MNATearInterface.h>
 #include <cps/Solver/PFSolverInterfaceBranch.h>
 #include <cps/Definitions.h>
@@ -33,10 +33,10 @@ namespace CPS {
 			class Resistor :
 				public Base::Ph1::Resistor,
 				public MNATearInterface,
-				public PowerComponent<Complex>,
+				public SimPowerComp<Complex>,
 				public SharedFactory<Resistor>,
 	 			public PFSolverInterfaceBranch {
-			
+
 			private:
 				/// base apparent power[VA]
 				Real mBaseApparentPower;
@@ -62,7 +62,7 @@ namespace CPS {
 				Resistor(String name, Logger::Level logLevel = Logger::Level::off)
 					: Resistor(name, name, logLevel) { }
 
-				PowerComponent<Complex>::Ptr clone(String name);
+				SimPowerComp<Complex>::Ptr clone(String name);
 
 				// #### General ####
 				/// Initializes component from power flow data
