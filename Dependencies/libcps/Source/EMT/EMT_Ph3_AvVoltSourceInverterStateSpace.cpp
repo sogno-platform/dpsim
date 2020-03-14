@@ -299,38 +299,38 @@ void EMT::Ph3::AvVoltSourceInverterStateSpace::mnaInitialize(Real omega, Real ti
 void EMT::Ph3::AvVoltSourceInverterStateSpace::mnaApplySystemMatrixStamp(Matrix& systemMatrix) {
 	// Apply matrix stamp for equivalent resistance
 	if (terminalNotGrounded(0)) {
-		Math::addToMatrixElement(systemMatrix, simNode(0, 0), simNode(0, 0), mYc);
-		Math::addToMatrixElement(systemMatrix, simNode(0, 1), simNode(0, 1), mYc);
-		Math::addToMatrixElement(systemMatrix, simNode(0, 2), simNode(0, 2), mYc);
+		Math::addToMatrixElement(systemMatrix, matrixNodeIndex(0, 0), matrixNodeIndex(0, 0), mYc);
+		Math::addToMatrixElement(systemMatrix, matrixNodeIndex(0, 1), matrixNodeIndex(0, 1), mYc);
+		Math::addToMatrixElement(systemMatrix, matrixNodeIndex(0, 2), matrixNodeIndex(0, 2), mYc);
 	}
 	if (terminalNotGrounded(1)) {
-		Math::addToMatrixElement(systemMatrix, simNode(1, 0), simNode(1, 0), mYc);
-		Math::addToMatrixElement(systemMatrix, simNode(1, 1), simNode(1, 1), mYc);
-		Math::addToMatrixElement(systemMatrix, simNode(1, 2), simNode(1, 2), mYc);
+		Math::addToMatrixElement(systemMatrix, matrixNodeIndex(1, 0), matrixNodeIndex(1, 0), mYc);
+		Math::addToMatrixElement(systemMatrix, matrixNodeIndex(1, 1), matrixNodeIndex(1, 1), mYc);
+		Math::addToMatrixElement(systemMatrix, matrixNodeIndex(1, 2), matrixNodeIndex(1, 2), mYc);
 	}
 	if (terminalNotGrounded(0) && terminalNotGrounded(1)) {
-		Math::addToMatrixElement(systemMatrix, simNode(0, 0), simNode(1, 0), -mYc);
-		Math::addToMatrixElement(systemMatrix, simNode(1, 0), simNode(0, 0), -mYc);
+		Math::addToMatrixElement(systemMatrix, matrixNodeIndex(0, 0), matrixNodeIndex(1, 0), -mYc);
+		Math::addToMatrixElement(systemMatrix, matrixNodeIndex(1, 0), matrixNodeIndex(0, 0), -mYc);
 
-		Math::addToMatrixElement(systemMatrix, simNode(0, 1), simNode(1, 1), -mYc);
-		Math::addToMatrixElement(systemMatrix, simNode(1, 1), simNode(0, 1), -mYc);
+		Math::addToMatrixElement(systemMatrix, matrixNodeIndex(0, 1), matrixNodeIndex(1, 1), -mYc);
+		Math::addToMatrixElement(systemMatrix, matrixNodeIndex(1, 1), matrixNodeIndex(0, 1), -mYc);
 
-		Math::addToMatrixElement(systemMatrix, simNode(0, 2), simNode(1, 2), -mYc);
-		Math::addToMatrixElement(systemMatrix, simNode(1, 2), simNode(0, 2), -mYc);
+		Math::addToMatrixElement(systemMatrix, matrixNodeIndex(0, 2), matrixNodeIndex(1, 2), -mYc);
+		Math::addToMatrixElement(systemMatrix, matrixNodeIndex(1, 2), matrixNodeIndex(0, 2), -mYc);
 	}
 }
 
 void EMT::Ph3::AvVoltSourceInverterStateSpace::mnaApplyRightSideVectorStamp(Matrix& rightVector) {
 	// Apply matrix stamp for equivalent current source
 	if (terminalNotGrounded(0)) {
-		Math::setVectorElement(rightVector, simNode(0, 0), -mEquivCurrent(0, 0));
-		Math::setVectorElement(rightVector, simNode(0, 1), -mEquivCurrent(1, 0));
-		Math::setVectorElement(rightVector, simNode(0, 2), -mEquivCurrent(2, 0));
+		Math::setVectorElement(rightVector, matrixNodeIndex(0, 0), -mEquivCurrent(0, 0));
+		Math::setVectorElement(rightVector, matrixNodeIndex(0, 1), -mEquivCurrent(1, 0));
+		Math::setVectorElement(rightVector, matrixNodeIndex(0, 2), -mEquivCurrent(2, 0));
 	}
 	if (terminalNotGrounded(1)) {
-		Math::setVectorElement(rightVector, simNode(1, 0), mEquivCurrent(0, 0));
-		Math::setVectorElement(rightVector, simNode(1, 1), mEquivCurrent(1, 0));
-		Math::setVectorElement(rightVector, simNode(1, 2), mEquivCurrent(2, 0));
+		Math::setVectorElement(rightVector, matrixNodeIndex(1, 0), mEquivCurrent(0, 0));
+		Math::setVectorElement(rightVector, matrixNodeIndex(1, 1), mEquivCurrent(1, 0));
+		Math::setVectorElement(rightVector, matrixNodeIndex(1, 2), mEquivCurrent(2, 0));
 	}
 }
 
@@ -348,14 +348,14 @@ void EMT::Ph3::AvVoltSourceInverterStateSpace::MnaPostStep::execute(Real time, I
 
 void EMT::Ph3::AvVoltSourceInverterStateSpace::mnaUpdateVoltage(const Matrix& leftVector) {
 	if (terminalNotGrounded(1)) {
-		mIntfVoltage(0, 0) = Math::realFromVectorElement(leftVector, simNode(1, 0));
-		mIntfVoltage(1, 0) = Math::realFromVectorElement(leftVector, simNode(1, 1));
-		mIntfVoltage(2, 0) = Math::realFromVectorElement(leftVector, simNode(1, 2));
+		mIntfVoltage(0, 0) = Math::realFromVectorElement(leftVector, matrixNodeIndex(1, 0));
+		mIntfVoltage(1, 0) = Math::realFromVectorElement(leftVector, matrixNodeIndex(1, 1));
+		mIntfVoltage(2, 0) = Math::realFromVectorElement(leftVector, matrixNodeIndex(1, 2));
 	}
 	if (terminalNotGrounded(0)) {
-		mIntfVoltage(0, 0) = mIntfVoltage(0, 0) - Math::realFromVectorElement(leftVector, simNode(0, 0));
-		mIntfVoltage(1, 0) = mIntfVoltage(1, 0) - Math::realFromVectorElement(leftVector, simNode(0, 1));
-		mIntfVoltage(2, 0) = mIntfVoltage(2, 0) - Math::realFromVectorElement(leftVector, simNode(0, 2));
+		mIntfVoltage(0, 0) = mIntfVoltage(0, 0) - Math::realFromVectorElement(leftVector, matrixNodeIndex(0, 0));
+		mIntfVoltage(1, 0) = mIntfVoltage(1, 0) - Math::realFromVectorElement(leftVector, matrixNodeIndex(0, 1));
+		mIntfVoltage(2, 0) = mIntfVoltage(2, 0) - Math::realFromVectorElement(leftVector, matrixNodeIndex(0, 2));
 	}
 }
 

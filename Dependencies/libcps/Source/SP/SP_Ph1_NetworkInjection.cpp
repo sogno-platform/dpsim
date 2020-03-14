@@ -109,19 +109,19 @@ void SP::Ph1::externalGridInjection::mnaInitialize(Real omega, Real timeStep, At
 }
 
 void SP::Ph1::externalGridInjection::mnaApplySystemMatrixStamp(Matrix& systemMatrix) {
-	Math::setMatrixElement(systemMatrix, mVirtualNodes[0]->simNode(), simNode(0), Complex(1, 0));
-	Math::setMatrixElement(systemMatrix, simNode(0), mVirtualNodes[0]->simNode(), Complex(1, 0));
+	Math::setMatrixElement(systemMatrix, mVirtualNodes[0]->matrixNodeIndex(), matrixNodeIndex(0), Complex(1, 0));
+	Math::setMatrixElement(systemMatrix, matrixNodeIndex(0), mVirtualNodes[0]->matrixNodeIndex(), Complex(1, 0));
 	mSLog->info("-- Matrix Stamp ---");
-	mSLog->info("Add {:f} to system at ({:d},{:d})", 1., simNode(0), mVirtualNodes[0]->simNode());
-	mSLog->info("Add {:f} to system at ({:d},{:d})", 1., mVirtualNodes[0]->simNode(), simNode(0));
+	mSLog->info("Add {:f} to system at ({:d},{:d})", 1., matrixNodeIndex(0), mVirtualNodes[0]->matrixNodeIndex());
+	mSLog->info("Add {:f} to system at ({:d},{:d})", 1., mVirtualNodes[0]->matrixNodeIndex(), matrixNodeIndex(0));
 }
 
 
 void SP::Ph1::externalGridInjection::mnaApplyRightSideVectorStamp(Matrix& rightVector) {
 	// TODO: Is this correct with two nodes not gnd?
-	Math::setVectorElement(rightVector, mVirtualNodes[0]->simNode(), mIntfVoltage(0, 0));
+	Math::setVectorElement(rightVector, mVirtualNodes[0]->matrixNodeIndex(), mIntfVoltage(0, 0));
 	SPDLOG_LOGGER_DEBUG(mSLog, "Add {:s} to source vector at {:d}",
-		Logger::complexToString(mIntfVoltage(0, 0)), mVirtualNodes[0]->simNode());
+		Logger::complexToString(mIntfVoltage(0, 0)), mVirtualNodes[0]->matrixNodeIndex());
 }
 
 void SP::Ph1::externalGridInjection::updateVoltage(Real time) {
@@ -146,7 +146,7 @@ void SP::Ph1::externalGridInjection::MnaPostStep::execute(Real time, Int timeSte
 }
 
 void SP::Ph1::externalGridInjection::mnaUpdateCurrent(const Matrix& leftVector) {
-	mIntfCurrent(0, 0) = Math::complexFromVectorElement(leftVector, mVirtualNodes[0]->simNode());
+	mIntfCurrent(0, 0) = Math::complexFromVectorElement(leftVector, mVirtualNodes[0]->matrixNodeIndex());
 }
 
 void SP::Ph1::externalGridInjection::daeResidual(double ttime, const double state[], const double dstate_dt[], double resid[], std::vector<int>& off) {
@@ -162,8 +162,8 @@ void SP::Ph1::externalGridInjection::daeResidual(double ttime, const double stat
 		state[m]=componentm_inductance
 	*/
 
-	int Pos1 = simNode(0);
-	int Pos2 = simNode(1);
+	int Pos1 = matrixNodeIndex(0);
+	int Pos2 = matrixNodeIndex(1);
 	int c_offset = off[0] + off[1]; //current offset for component
 	int n_offset_1 = c_offset + Pos1 + 1;// current offset for first nodal equation
 	int n_offset_2 = c_offset + Pos2 + 1;// current offset for second nodal equation

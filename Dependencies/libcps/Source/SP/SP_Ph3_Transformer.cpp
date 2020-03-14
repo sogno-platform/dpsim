@@ -157,29 +157,29 @@ void EMT::Ph3::Transformer::mnaInitialize(Real omega, Real timeStep, Attribute<M
 	mSLog->info(
 		"\nTerminal 0 connected to {:s} = sim node {:d}"
 		"\nTerminal 1 connected to {:s} = sim node {:d}",
-		mTerminals[0]->node()->name(), mTerminals[0]->node()->simNode(),
-		mTerminals[1]->node()->name(), mTerminals[1]->node()->simNode());
+		mTerminals[0]->node()->name(), mTerminals[0]->node()->matrixNodeIndex(),
+		mTerminals[1]->node()->name(), mTerminals[1]->node()->matrixNodeIndex());
 }
 
 void EMT::Ph3::Transformer::mnaApplySystemMatrixStamp(Matrix& systemMatrix) {
 	// Ideal transformer equations
 	if (terminalNotGrounded(0)) {
-		Math::setMatrixElement(systemMatrix, mVirtualNodes[0]->simNode(PhaseType::A), mVirtualNodes[1]->simNode(PhaseType::A), -1.);
-		Math::setMatrixElement(systemMatrix, mVirtualNodes[0]->simNode(PhaseType::B), mVirtualNodes[1]->simNode(PhaseType::B), -1.);
-		Math::setMatrixElement(systemMatrix, mVirtualNodes[0]->simNode(PhaseType::C), mVirtualNodes[1]->simNode(PhaseType::C), -1.);
+		Math::setMatrixElement(systemMatrix, mVirtualNodes[0]->matrixNodeIndex(PhaseType::A), mVirtualNodes[1]->matrixNodeIndex(PhaseType::A), -1.);
+		Math::setMatrixElement(systemMatrix, mVirtualNodes[0]->matrixNodeIndex(PhaseType::B), mVirtualNodes[1]->matrixNodeIndex(PhaseType::B), -1.);
+		Math::setMatrixElement(systemMatrix, mVirtualNodes[0]->matrixNodeIndex(PhaseType::C), mVirtualNodes[1]->matrixNodeIndex(PhaseType::C), -1.);
 
-		Math::setMatrixElement(systemMatrix, mVirtualNodes[1]->simNode(PhaseType::A), mVirtualNodes[0]->simNode(PhaseType::A), 1.);
-		Math::setMatrixElement(systemMatrix, mVirtualNodes[1]->simNode(PhaseType::B), mVirtualNodes[0]->simNode(PhaseType::B), 1.);
-		Math::setMatrixElement(systemMatrix, mVirtualNodes[1]->simNode(PhaseType::C), mVirtualNodes[0]->simNode(PhaseType::C), 1.);
+		Math::setMatrixElement(systemMatrix, mVirtualNodes[1]->matrixNodeIndex(PhaseType::A), mVirtualNodes[0]->matrixNodeIndex(PhaseType::A), 1.);
+		Math::setMatrixElement(systemMatrix, mVirtualNodes[1]->matrixNodeIndex(PhaseType::B), mVirtualNodes[0]->matrixNodeIndex(PhaseType::B), 1.);
+		Math::setMatrixElement(systemMatrix, mVirtualNodes[1]->matrixNodeIndex(PhaseType::C), mVirtualNodes[0]->matrixNodeIndex(PhaseType::C), 1.);
 
 	}
 	if (terminalNotGrounded(1)) {
-		Math::setMatrixElement(systemMatrix, simNode(1, 0), mVirtualNodes[1]->simNode(PhaseType::A), mRatio.real());
-		Math::setMatrixElement(systemMatrix, simNode(1, 1), mVirtualNodes[1]->simNode(PhaseType::B), mRatio.real());
-		Math::setMatrixElement(systemMatrix, simNode(1, 2), mVirtualNodes[1]->simNode(PhaseType::C), mRatio.real());
-		Math::setMatrixElement(systemMatrix, mVirtualNodes[1]->simNode(PhaseType::A), simNode(1, 0), -mRatio.real());
-		Math::setMatrixElement(systemMatrix, mVirtualNodes[1]->simNode(PhaseType::B), simNode(1, 1), -mRatio.real());
-		Math::setMatrixElement(systemMatrix, mVirtualNodes[1]->simNode(PhaseType::C), simNode(1, 2), -mRatio.real());
+		Math::setMatrixElement(systemMatrix, matrixNodeIndex(1, 0), mVirtualNodes[1]->matrixNodeIndex(PhaseType::A), mRatio.real());
+		Math::setMatrixElement(systemMatrix, matrixNodeIndex(1, 1), mVirtualNodes[1]->matrixNodeIndex(PhaseType::B), mRatio.real());
+		Math::setMatrixElement(systemMatrix, matrixNodeIndex(1, 2), mVirtualNodes[1]->matrixNodeIndex(PhaseType::C), mRatio.real());
+		Math::setMatrixElement(systemMatrix, mVirtualNodes[1]->matrixNodeIndex(PhaseType::A), matrixNodeIndex(1, 0), -mRatio.real());
+		Math::setMatrixElement(systemMatrix, mVirtualNodes[1]->matrixNodeIndex(PhaseType::B), matrixNodeIndex(1, 1), -mRatio.real());
+		Math::setMatrixElement(systemMatrix, mVirtualNodes[1]->matrixNodeIndex(PhaseType::C), matrixNodeIndex(1, 2), -mRatio.real());
 	}
 
 	// Add inductive part to system matrix
@@ -192,33 +192,33 @@ void EMT::Ph3::Transformer::mnaApplySystemMatrixStamp(Matrix& systemMatrix) {
 
 	if (terminalNotGrounded(0)) {
 		mSLog->info("Add {:s} to system at ({:d},{:d})", Logger::complexToString(Complex(-1.0, 0)),
-			mVirtualNodes[0]->simNode(PhaseType::A), mVirtualNodes[1]->simNode(PhaseType::A));
+			mVirtualNodes[0]->matrixNodeIndex(PhaseType::A), mVirtualNodes[1]->matrixNodeIndex(PhaseType::A));
 		mSLog->info("Add {:s} to system at ({:d},{:d})", Logger::complexToString(Complex(-1.0, 0)),
-			mVirtualNodes[0]->simNode(PhaseType::B), mVirtualNodes[1]->simNode(PhaseType::B));
+			mVirtualNodes[0]->matrixNodeIndex(PhaseType::B), mVirtualNodes[1]->matrixNodeIndex(PhaseType::B));
 		mSLog->info("Add {:s} to system at ({:d},{:d})", Logger::complexToString(Complex(-1.0, 0)),
-			mVirtualNodes[0]->simNode(PhaseType::C), mVirtualNodes[1]->simNode(PhaseType::C));
+			mVirtualNodes[0]->matrixNodeIndex(PhaseType::C), mVirtualNodes[1]->matrixNodeIndex(PhaseType::C));
 
 		mSLog->info("Add {:s} to system at ({:d},{:d})", Logger::complexToString(Complex(1.0, 0)),
-			mVirtualNodes[1]->simNode(PhaseType::A), mVirtualNodes[0]->simNode(PhaseType::A));
+			mVirtualNodes[1]->matrixNodeIndex(PhaseType::A), mVirtualNodes[0]->matrixNodeIndex(PhaseType::A));
 		mSLog->info("Add {:s} to system at ({:d},{:d})", Logger::complexToString(Complex(1.0, 0)),
-			mVirtualNodes[1]->simNode(PhaseType::B), mVirtualNodes[0]->simNode(PhaseType::B));
+			mVirtualNodes[1]->matrixNodeIndex(PhaseType::B), mVirtualNodes[0]->matrixNodeIndex(PhaseType::B));
 		mSLog->info("Add {:s} to system at ({:d},{:d})", Logger::complexToString(Complex(1.0, 0)),
-			mVirtualNodes[1]->simNode(PhaseType::C), mVirtualNodes[0]->simNode(PhaseType::C));
+			mVirtualNodes[1]->matrixNodeIndex(PhaseType::C), mVirtualNodes[0]->matrixNodeIndex(PhaseType::C));
 	}
 	if (terminalNotGrounded(1)) {
 		mSLog->info("Add {:s} to system at ({:d},{:d})", Logger::complexToString(mRatio),
-			simNode(1, 0), mVirtualNodes[1]->simNode(PhaseType::A));
+			matrixNodeIndex(1, 0), mVirtualNodes[1]->matrixNodeIndex(PhaseType::A));
 		mSLog->info("Add {:s} to system at ({:d},{:d})", Logger::complexToString(mRatio),
-			simNode(1, 1), mVirtualNodes[1]->simNode(PhaseType::B));
+			matrixNodeIndex(1, 1), mVirtualNodes[1]->matrixNodeIndex(PhaseType::B));
 		mSLog->info("Add {:s} to system at ({:d},{:d})", Logger::complexToString(mRatio),
-			simNode(1, 2), mVirtualNodes[1]->simNode(PhaseType::C));
+			matrixNodeIndex(1, 2), mVirtualNodes[1]->matrixNodeIndex(PhaseType::C));
 
 		mSLog->info("Add {:s} to system at ({:d},{:d})", Logger::complexToString(-mRatio),
-			mVirtualNodes[1]->simNode(PhaseType::A), simNode(1, 0));
+			mVirtualNodes[1]->matrixNodeIndex(PhaseType::A), matrixNodeIndex(1, 0));
 		mSLog->info("Add {:s} to system at ({:d},{:d})", Logger::complexToString(-mRatio),
-			mVirtualNodes[1]->simNode(PhaseType::B), simNode(1, 1));
+			mVirtualNodes[1]->matrixNodeIndex(PhaseType::B), matrixNodeIndex(1, 1));
 		mSLog->info("Add {:s} to system at ({:d},{:d})", Logger::complexToString(-mRatio),
-			mVirtualNodes[1]->simNode(PhaseType::C), simNode(1, 2));
+			mVirtualNodes[1]->matrixNodeIndex(PhaseType::C), matrixNodeIndex(1, 2));
 	}
 }
 
@@ -243,14 +243,14 @@ void EMT::Ph3::Transformer::mnaUpdateVoltage(const Matrix& leftVector) {
 	// v1 - v0
 	mIntfVoltage = Matrix::Zero(3, 1);
 	if (terminalNotGrounded(1)) {
-		mIntfVoltage(0, 0) = Math::realFromVectorElement(leftVector, simNode(1, 0));
-		mIntfVoltage(1, 0) = Math::realFromVectorElement(leftVector, simNode(1, 1));
-		mIntfVoltage(2, 0) = Math::realFromVectorElement(leftVector, simNode(1, 2));
+		mIntfVoltage(0, 0) = Math::realFromVectorElement(leftVector, matrixNodeIndex(1, 0));
+		mIntfVoltage(1, 0) = Math::realFromVectorElement(leftVector, matrixNodeIndex(1, 1));
+		mIntfVoltage(2, 0) = Math::realFromVectorElement(leftVector, matrixNodeIndex(1, 2));
 	}
 	if (terminalNotGrounded(0)) {
-		mIntfVoltage(0, 0) = mIntfVoltage(0, 0) - Math::realFromVectorElement(leftVector, simNode(0, 0));
-		mIntfVoltage(1, 0) = mIntfVoltage(1, 0) - Math::realFromVectorElement(leftVector, simNode(0, 1));
-		mIntfVoltage(2, 0) = mIntfVoltage(2, 0) - Math::realFromVectorElement(leftVector, simNode(0, 2));
+		mIntfVoltage(0, 0) = mIntfVoltage(0, 0) - Math::realFromVectorElement(leftVector, matrixNodeIndex(0, 0));
+		mIntfVoltage(1, 0) = mIntfVoltage(1, 0) - Math::realFromVectorElement(leftVector, matrixNodeIndex(0, 1));
+		mIntfVoltage(2, 0) = mIntfVoltage(2, 0) - Math::realFromVectorElement(leftVector, matrixNodeIndex(0, 2));
 	}
 }
 

@@ -163,33 +163,33 @@ void PFSolver::determinePFBusType() {
 		// determine powerflow bus types according connected type of connected components
 		// only PQ type component connected -> set as PQ bus
 		if (!connectedPV && connectedPQ && !connectedVD) {
-			mPQBusIndices.push_back(node->simNode());
+			mPQBusIndices.push_back(node->matrixNodeIndex());
 			mPQBuses.push_back(node);
 		} // no component connected -> set as PQ bus (P & Q will be zero)
 		else if (!connectedPV && !connectedPQ && !connectedVD) {
-			mPQBusIndices.push_back(node->simNode());
+			mPQBusIndices.push_back(node->matrixNodeIndex());
 			mPQBuses.push_back(node);
 		} // only PV type component connected -> set as PV bus
 		else if (connectedPV && !connectedPQ && !connectedVD) {
-			mPVBusIndices.push_back(node->simNode());
+			mPVBusIndices.push_back(node->matrixNodeIndex());
 			mPVBuses.push_back(node);
 		} // PV and PQ type component connected -> set as PV bus (TODO: bus type should be modifiable by user afterwards)
 		else if (connectedPV && connectedPQ && !connectedVD) {
-			mPVBusIndices.push_back(node->simNode());
+			mPVBusIndices.push_back(node->matrixNodeIndex());
 			mPVBuses.push_back(node);
 			mSLog->info("Note: node with uuid {} set as PV bus. Both PV and PQ type components were connected.", node->attribute<String>("uid")->get());
 		} // only VD type component connected -> set as VD bus
 		else if (!connectedPV && !connectedPQ && connectedVD) {
-			mVDBusIndices.push_back(node->simNode());
+			mVDBusIndices.push_back(node->matrixNodeIndex());
 			mVDBuses.push_back(node);
 		} // VD and PV type component connect -> set as VD bus
 		else if (connectedPV && !connectedPQ && connectedVD) {
-			mVDBusIndices.push_back(node->simNode());
+			mVDBusIndices.push_back(node->matrixNodeIndex());
 			mVDBuses.push_back(node);
 			mSLog->info("Note: node with uuid {} set as VD bus. Both VD and PV type components were connected.", node->attribute<String>("uid")->get());
 		} // VD, PV and PQ type component connect -> set as VD bus
 		else if (connectedPV && connectedPQ && connectedVD) {
-			mVDBusIndices.push_back(node->simNode());
+			mVDBusIndices.push_back(node->matrixNodeIndex());
 			mVDBuses.push_back(node);
 			mSLog->info("Note: node with uuid {} set as VD bus. VD, PV and PQ type components were connected.", node->attribute<String>("uid")->get());
 		}

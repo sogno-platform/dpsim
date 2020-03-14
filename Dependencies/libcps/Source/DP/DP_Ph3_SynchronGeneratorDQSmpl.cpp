@@ -43,13 +43,13 @@ void DP::Ph3::SynchronGeneratorDQSmpl::mnaApplySystemMatrixStamp(Matrix& systemM
 
 	// Set diagonal entries
 	if ( terminalNotGrounded(0) ) {
-		Math::addToMatrixElement(systemMatrix, simNode(0), simNode(0), Complex(mConductance, 0));
+		Math::addToMatrixElement(systemMatrix, matrixNodeIndex(0), matrixNodeIndex(0), Complex(mConductance, 0));
 	}
 	if ( terminalNotGrounded(1) ) {
-		Math::addToMatrixElement(systemMatrix, simNode(1), simNode(1), Complex(mConductance, 0));
+		Math::addToMatrixElement(systemMatrix, matrixNodeIndex(1), matrixNodeIndex(1), Complex(mConductance, 0));
 	}
-	if ( simNode(2) >= 0) {
-		Math::addToMatrixElement(systemMatrix, simNode(2), simNode(2), Complex(mConductance, 0));
+	if ( matrixNodeIndex(2) >= 0) {
+		Math::addToMatrixElement(systemMatrix, matrixNodeIndex(2), matrixNodeIndex(2), Complex(mConductance, 0));
 	}
 }
 
@@ -112,13 +112,13 @@ void DP::Ph3::SynchronGeneratorDQSmpl::mnaStep(Matrix& systemMatrix, Matrix& rig
 	stepInPerUnit(mSystemOmega, mSystemTimeStep, time, mNumericalMethod);
 
 	if ( terminalNotGrounded(0) ) {
-		Math::addToVectorElement(rightVector, simNode(0), Complex(mIaRe + mVaRe / mRa, mIaIm + mVaIm / mRa));
+		Math::addToVectorElement(rightVector, matrixNodeIndex(0), Complex(mIaRe + mVaRe / mRa, mIaIm + mVaIm / mRa));
 	}
 	if ( terminalNotGrounded(1) ) {
-		Math::addToVectorElement(rightVector, simNode(1), Complex(mIbRe + mVbRe / mRa, mIbIm + mVbIm / mRa));
+		Math::addToVectorElement(rightVector, matrixNodeIndex(1), Complex(mIbRe + mVbRe / mRa, mIbIm + mVbIm / mRa));
 	}
-	if ( simNode(2) >= 0) {
-		Math::addToVectorElement(rightVector, simNode(2), Complex(mIcRe + mVcRe / mRa, mIcIm + mVcIm / mRa));
+	if ( matrixNodeIndex(2) >= 0) {
+		Math::addToVectorElement(rightVector, matrixNodeIndex(2), Complex(mIcRe + mVcRe / mRa, mIcIm + mVcIm / mRa));
 	}
 
 	if (mLogLevel != Logger::Level::off) {
@@ -190,24 +190,24 @@ void DP::Ph3::SynchronGeneratorDQSmpl::stepInPerUnit(Real om, Real dt, Real time
 
 void DP::Ph3::SynchronGeneratorDQSmpl::mnaPostStep(Matrix& rightVector, Matrix& leftVector, Real time) {
 	if ( terminalNotGrounded(0) ) {
-		mVaRe = Math::complexFromVectorElement(leftVector, simNode(0)).real();
-		mVaIm = Math::complexFromVectorElement(leftVector, simNode(0)).imag();
+		mVaRe = Math::complexFromVectorElement(leftVector, matrixNodeIndex(0)).real();
+		mVaIm = Math::complexFromVectorElement(leftVector, matrixNodeIndex(0)).imag();
 	}
 	else {
 		mVaRe = 0;
 		mVaIm = 0;
 	}
 	if ( terminalNotGrounded(1) ) {
-		mVbRe = Math::complexFromVectorElement(leftVector, simNode(1)).real();
-		mVbIm = Math::complexFromVectorElement(leftVector, simNode(1)).imag();
+		mVbRe = Math::complexFromVectorElement(leftVector, matrixNodeIndex(1)).real();
+		mVbIm = Math::complexFromVectorElement(leftVector, matrixNodeIndex(1)).imag();
 	}
 	else {
 		mVbRe = 0;
 		mVbIm = 0;
 	}
-	if ( simNode(2) >= 0) {
-		mVcRe = Math::complexFromVectorElement(leftVector, simNode(2)).real();
-		mVcIm = Math::complexFromVectorElement(leftVector, simNode(2)).imag();
+	if ( matrixNodeIndex(2) >= 0) {
+		mVcRe = Math::complexFromVectorElement(leftVector, matrixNodeIndex(2)).real();
+		mVcIm = Math::complexFromVectorElement(leftVector, matrixNodeIndex(2)).imag();
 	}
 	else {
 		mVcRe = 0;

@@ -65,22 +65,22 @@ void DP::Ph3::SeriesSwitch::mnaApplySystemMatrixStamp(Matrix& systemMatrix) {
 
 	// Set diagonal entries
 	if (terminalNotGrounded(0))
-		Math::addToMatrixElement(systemMatrix, simNodes(0), simNodes(0), conductance);
+		Math::addToMatrixElement(systemMatrix, matrixNodeIndices(0), matrixNodeIndices(0), conductance);
 	if (terminalNotGrounded(1))
-		Math::addToMatrixElement(systemMatrix, simNodes(1), simNodes(1), conductance);
+		Math::addToMatrixElement(systemMatrix, matrixNodeIndices(1), matrixNodeIndices(1), conductance);
 	// Set off diagonal entries
 	if (terminalNotGrounded(0) && terminalNotGrounded(1)) {
-		Math::addToMatrixElement(systemMatrix, simNodes(0), simNodes(1), -conductance);
-		Math::addToMatrixElement(systemMatrix, simNodes(1), simNodes(0), -conductance);
+		Math::addToMatrixElement(systemMatrix, matrixNodeIndices(0), matrixNodeIndices(1), -conductance);
+		Math::addToMatrixElement(systemMatrix, matrixNodeIndices(1), matrixNodeIndices(0), -conductance);
 	}
 
 	if (terminalNotGrounded(0))
-		mSLog->info("Add {} to {}, {}", conductance, simNodes(0)[0], simNodes(0)[0]);
+		mSLog->info("Add {} to {}, {}", conductance, matrixNodeIndices(0)[0], matrixNodeIndices(0)[0]);
 	if (terminalNotGrounded(1))
-		mSLog->info("Add {} to {}, {}", conductance, simNodes(1)[0], simNodes(1)[0]);
+		mSLog->info("Add {} to {}, {}", conductance, matrixNodeIndices(1)[0], matrixNodeIndices(1)[0]);
 	if (terminalNotGrounded(0) && terminalNotGrounded(1)) {
-		mSLog->info("Add {} to {}, {}", -conductance, simNodes(0)[0], simNodes(1)[0]);
-		mSLog->info("Add {} to {}, {}", -conductance, simNodes(1)[0], simNodes(0)[0]);
+		mSLog->info("Add {} to {}, {}", -conductance, matrixNodeIndices(0)[0], matrixNodeIndices(1)[0]);
+		mSLog->info("Add {} to {}, {}", -conductance, matrixNodeIndices(1)[0], matrixNodeIndices(0)[0]);
 	}
 }
 
@@ -91,22 +91,22 @@ void DP::Ph3::SeriesSwitch::mnaApplySwitchSystemMatrixStamp(Matrix& systemMatrix
 
 	// Set diagonal entries
 	if (terminalNotGrounded(0))
-		Math::addToMatrixElement(systemMatrix, simNodes(0), simNodes(0), conductance);
+		Math::addToMatrixElement(systemMatrix, matrixNodeIndices(0), matrixNodeIndices(0), conductance);
 	if (terminalNotGrounded(1))
-		Math::addToMatrixElement(systemMatrix, simNodes(1), simNodes(1), conductance);
+		Math::addToMatrixElement(systemMatrix, matrixNodeIndices(1), matrixNodeIndices(1), conductance);
 	// Set off diagonal entries
 	if (terminalNotGrounded(0) && terminalNotGrounded(1)) {
-		Math::addToMatrixElement(systemMatrix, simNodes(0), simNodes(1), -conductance);
-		Math::addToMatrixElement(systemMatrix, simNodes(1), simNodes(0), -conductance);
+		Math::addToMatrixElement(systemMatrix, matrixNodeIndices(0), matrixNodeIndices(1), -conductance);
+		Math::addToMatrixElement(systemMatrix, matrixNodeIndices(1), matrixNodeIndices(0), -conductance);
 	}
 
 	if (terminalNotGrounded(0))
-		mSLog->info("Add {} to {}, {}", conductance, simNodes(0)[0], simNodes(0)[0]);
+		mSLog->info("Add {} to {}, {}", conductance, matrixNodeIndices(0)[0], matrixNodeIndices(0)[0]);
 	if (terminalNotGrounded(1))
-		mSLog->info("Add {} to {}, {}", conductance, simNodes(1)[0], simNodes(1)[0]);
+		mSLog->info("Add {} to {}, {}", conductance, matrixNodeIndices(1)[0], matrixNodeIndices(1)[0]);
 	if (terminalNotGrounded(0) && terminalNotGrounded(1)) {
-		mSLog->info("Add {} to {}, {}", -conductance, simNodes(0)[0], simNodes(1)[0]);
-		mSLog->info("Add {} to {}, {}", -conductance, simNodes(1)[0], simNodes(0)[0]);
+		mSLog->info("Add {} to {}, {}", -conductance, matrixNodeIndices(0)[0], matrixNodeIndices(1)[0]);
+		mSLog->info("Add {} to {}, {}", -conductance, matrixNodeIndices(1)[0], matrixNodeIndices(0)[0]);
 	}
 }
 
@@ -119,14 +119,14 @@ void DP::Ph3::SeriesSwitch::mnaUpdateVoltage(const Matrix& leftVector) {
 	// Voltage across component is defined as V1 - V0
 	mIntfVoltage = MatrixComp::Zero(3,1);
 	if (terminalNotGrounded(1)) {
-		mIntfVoltage(0,0) = Math::complexFromVectorElement(leftVector, simNode(1,0));
-		mIntfVoltage(1,0) = Math::complexFromVectorElement(leftVector, simNode(1,1));
-		mIntfVoltage(2,0) = Math::complexFromVectorElement(leftVector, simNode(1,2));
+		mIntfVoltage(0,0) = Math::complexFromVectorElement(leftVector, matrixNodeIndex(1,0));
+		mIntfVoltage(1,0) = Math::complexFromVectorElement(leftVector, matrixNodeIndex(1,1));
+		mIntfVoltage(2,0) = Math::complexFromVectorElement(leftVector, matrixNodeIndex(1,2));
 	}
 	if (terminalNotGrounded(0)) {
-		mIntfVoltage(0,0) = mIntfVoltage(0,0) - Math::complexFromVectorElement(leftVector, simNode(0,0));
-		mIntfVoltage(1,0) = mIntfVoltage(1,0) - Math::complexFromVectorElement(leftVector, simNode(0,1));
-		mIntfVoltage(2,0) = mIntfVoltage(2,0) - Math::complexFromVectorElement(leftVector, simNode(0,2));
+		mIntfVoltage(0,0) = mIntfVoltage(0,0) - Math::complexFromVectorElement(leftVector, matrixNodeIndex(0,0));
+		mIntfVoltage(1,0) = mIntfVoltage(1,0) - Math::complexFromVectorElement(leftVector, matrixNodeIndex(0,1));
+		mIntfVoltage(2,0) = mIntfVoltage(2,0) - Math::complexFromVectorElement(leftVector, matrixNodeIndex(0,2));
 	}
 
 	SPDLOG_LOGGER_DEBUG(mSLog, "Voltage A: {} < {}", std::abs(mIntfVoltage(0,0)), std::arg(mIntfVoltage(0,0)));

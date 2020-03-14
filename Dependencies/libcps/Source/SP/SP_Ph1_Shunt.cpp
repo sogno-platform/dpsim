@@ -65,7 +65,7 @@ void SP::Ph1::Shunt::calculatePerUnitParameters(Real baseApparentPower, Real bas
 
 
 void SP::Ph1::Shunt::pfApplyAdmittanceMatrixStamp(SparseMatrixCompRow & Y) {
-	int bus1 = this->simNode(0);
+	int bus1 = this->matrixNodeIndex(0);
 	Complex Y_element = Complex(mConductancePerUnit, mSusceptancePerUnit);
 
 	if (std::isinf(Y_element.real()) || std::isinf(Y_element.imag())) {

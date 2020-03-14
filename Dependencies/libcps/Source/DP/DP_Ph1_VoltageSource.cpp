@@ -93,60 +93,60 @@ void DP::Ph1::VoltageSource::mnaInitializeHarm(Real omega, Real timeStep, std::v
 void DP::Ph1::VoltageSource::mnaApplySystemMatrixStamp(Matrix& systemMatrix) {
 	for (UInt freq = 0; freq < mNumFreqs; freq++) {
 		if (terminalNotGrounded(0)) {
-			Math::setMatrixElement(systemMatrix, mVirtualNodes[0]->simNode(), simNode(0), Complex(-1, 0), mNumFreqs, freq);
-			Math::setMatrixElement(systemMatrix, simNode(0), mVirtualNodes[0]->simNode(), Complex(-1, 0), mNumFreqs, freq);
+			Math::setMatrixElement(systemMatrix, mVirtualNodes[0]->matrixNodeIndex(), matrixNodeIndex(0), Complex(-1, 0), mNumFreqs, freq);
+			Math::setMatrixElement(systemMatrix, matrixNodeIndex(0), mVirtualNodes[0]->matrixNodeIndex(), Complex(-1, 0), mNumFreqs, freq);
 		}
 		if (terminalNotGrounded(1)) {
-			Math::setMatrixElement(systemMatrix, mVirtualNodes[0]->simNode(), simNode(1), Complex(1, 0), mNumFreqs, freq);
-			Math::setMatrixElement(systemMatrix, simNode(1), mVirtualNodes[0]->simNode(), Complex(1, 0), mNumFreqs, freq);
+			Math::setMatrixElement(systemMatrix, mVirtualNodes[0]->matrixNodeIndex(), matrixNodeIndex(1), Complex(1, 0), mNumFreqs, freq);
+			Math::setMatrixElement(systemMatrix, matrixNodeIndex(1), mVirtualNodes[0]->matrixNodeIndex(), Complex(1, 0), mNumFreqs, freq);
 		}
 
 		mSLog->info("-- Stamp frequency {:d} ---", freq);
 		if (terminalNotGrounded(0)) {
-			mSLog->info("Add {:f} to system at ({:d},{:d})", -1., simNode(0), mVirtualNodes[0]->simNode());
-			mSLog->info("Add {:f} to system at ({:d},{:d})", -1., mVirtualNodes[0]->simNode(), simNode(0));
+			mSLog->info("Add {:f} to system at ({:d},{:d})", -1., matrixNodeIndex(0), mVirtualNodes[0]->matrixNodeIndex());
+			mSLog->info("Add {:f} to system at ({:d},{:d})", -1., mVirtualNodes[0]->matrixNodeIndex(), matrixNodeIndex(0));
 		}
 		if (terminalNotGrounded(1)) {
-			mSLog->info("Add {:f} to system at ({:d},{:d})", 1., mVirtualNodes[0]->simNode(), simNode(1));
-			mSLog->info("Add {:f} to system at ({:d},{:d})", 1., simNode(1), mVirtualNodes[0]->simNode());
+			mSLog->info("Add {:f} to system at ({:d},{:d})", 1., mVirtualNodes[0]->matrixNodeIndex(), matrixNodeIndex(1));
+			mSLog->info("Add {:f} to system at ({:d},{:d})", 1., matrixNodeIndex(1), mVirtualNodes[0]->matrixNodeIndex());
 		}
 	}
 }
 
 void DP::Ph1::VoltageSource::mnaApplySystemMatrixStampHarm(Matrix& systemMatrix, Int freqIdx) {
 	if (terminalNotGrounded(0)) {
-		Math::setMatrixElement(systemMatrix, mVirtualNodes[0]->simNode(), simNode(0), Complex(-1, 0));
-		Math::setMatrixElement(systemMatrix, simNode(0), mVirtualNodes[0]->simNode(), Complex(-1, 0));
+		Math::setMatrixElement(systemMatrix, mVirtualNodes[0]->matrixNodeIndex(), matrixNodeIndex(0), Complex(-1, 0));
+		Math::setMatrixElement(systemMatrix, matrixNodeIndex(0), mVirtualNodes[0]->matrixNodeIndex(), Complex(-1, 0));
 	}
 	if (terminalNotGrounded(1)) {
-		Math::setMatrixElement(systemMatrix, mVirtualNodes[0]->simNode(), simNode(1), Complex(1, 0));
-		Math::setMatrixElement(systemMatrix, simNode(1), mVirtualNodes[0]->simNode(), Complex(1, 0));
+		Math::setMatrixElement(systemMatrix, mVirtualNodes[0]->matrixNodeIndex(), matrixNodeIndex(1), Complex(1, 0));
+		Math::setMatrixElement(systemMatrix, matrixNodeIndex(1), mVirtualNodes[0]->matrixNodeIndex(), Complex(1, 0));
 	}
 
 	mSLog->info("-- Stamp frequency {:d} ---", freqIdx);
 	if (terminalNotGrounded(0)) {
-		mSLog->info("Add {:f} to system at ({:d},{:d})", -1., simNode(0), mVirtualNodes[0]->simNode());
-		mSLog->info("Add {:f} to system at ({:d},{:d})", -1., mVirtualNodes[0]->simNode(), simNode(0));
+		mSLog->info("Add {:f} to system at ({:d},{:d})", -1., matrixNodeIndex(0), mVirtualNodes[0]->matrixNodeIndex());
+		mSLog->info("Add {:f} to system at ({:d},{:d})", -1., mVirtualNodes[0]->matrixNodeIndex(), matrixNodeIndex(0));
 	}
 	if (terminalNotGrounded(1)) {
-		mSLog->info("Add {:f} to system at ({:d},{:d})", 1., mVirtualNodes[0]->simNode(), simNode(1));
-		mSLog->info("Add {:f} to system at ({:d},{:d})", 1., simNode(1), mVirtualNodes[0]->simNode());
+		mSLog->info("Add {:f} to system at ({:d},{:d})", 1., mVirtualNodes[0]->matrixNodeIndex(), matrixNodeIndex(1));
+		mSLog->info("Add {:f} to system at ({:d},{:d})", 1., matrixNodeIndex(1), mVirtualNodes[0]->matrixNodeIndex());
 	}
 }
 
 void DP::Ph1::VoltageSource::mnaApplyRightSideVectorStamp(Matrix& rightVector) {
 	// TODO: Is this correct with two nodes not gnd?
-	Math::setVectorElement(rightVector, mVirtualNodes[0]->simNode(), mIntfVoltage(0,0), mNumFreqs);
+	Math::setVectorElement(rightVector, mVirtualNodes[0]->matrixNodeIndex(), mIntfVoltage(0,0), mNumFreqs);
 	SPDLOG_LOGGER_DEBUG(mSLog, "Add {:s} to source vector at {:d}",
-		Logger::complexToString(mIntfVoltage(0,0)), mVirtualNodes[0]->simNode());
+		Logger::complexToString(mIntfVoltage(0,0)), mVirtualNodes[0]->matrixNodeIndex());
 }
 
 void DP::Ph1::VoltageSource::mnaApplyRightSideVectorStampHarm(Matrix& rightVector) {
 	for (UInt freq = 0; freq < mNumFreqs; freq++) {
 		// TODO: Is this correct with two nodes not gnd?
-		Math::setVectorElement(rightVector, mVirtualNodes[0]->simNode(), mIntfVoltage(0,freq), 1, 0, freq);
+		Math::setVectorElement(rightVector, mVirtualNodes[0]->matrixNodeIndex(), mIntfVoltage(0,freq), 1, 0, freq);
 		SPDLOG_LOGGER_DEBUG(mSLog, "Add {:s} to source vector at {:d}",
-			Logger::complexToString(mIntfVoltage(0,freq)), mVirtualNodes[0]->simNode());
+			Logger::complexToString(mIntfVoltage(0,freq)), mVirtualNodes[0]->matrixNodeIndex());
 	}
 }
 
@@ -181,7 +181,7 @@ void DP::Ph1::VoltageSource::MnaPostStepHarm::execute(Real time, Int timeStepCou
 
 void DP::Ph1::VoltageSource::mnaUpdateCurrent(const Matrix& leftVector) {
 	for (UInt freq = 0; freq < mNumFreqs; freq++) {
-		mIntfCurrent(0,freq) = Math::complexFromVectorElement(leftVector, mVirtualNodes[0]->simNode(), mNumFreqs, freq);
+		mIntfCurrent(0,freq) = Math::complexFromVectorElement(leftVector, mVirtualNodes[0]->matrixNodeIndex(), mNumFreqs, freq);
 	}
 }
 
@@ -198,8 +198,8 @@ void DP::Ph1::VoltageSource::daeResidual(double ttime, const double state[], con
 		state[m]=componentm_inductance
 	*/
 
-    int Pos1 = simNode(0);
-    int Pos2 = simNode(1);
+    int Pos1 = matrixNodeIndex(0);
+    int Pos2 = matrixNodeIndex(1);
 	int c_offset = off[0]+off[1]; //current offset for component
 	int n_offset_1 = c_offset + Pos1 +1;// current offset for first nodal equation
 	int n_offset_2 = c_offset + Pos2 +1;// current offset for second nodal equation

@@ -73,29 +73,29 @@ void SP::Ph1::Inductor::mnaInitialize(Real omega, Real timeStep, Attribute<Matri
 
 void SP::Ph1::Inductor::mnaApplySystemMatrixStamp(Matrix& systemMatrix) {
 	if (terminalNotGrounded(0)) {
-		Math::addToMatrixElement(systemMatrix, simNode(0), simNode(0), mSusceptance);
+		Math::addToMatrixElement(systemMatrix, matrixNodeIndex(0), matrixNodeIndex(0), mSusceptance);
 	}
 	if (terminalNotGrounded(1)) {
-		Math::addToMatrixElement(systemMatrix, simNode(1), simNode(1), mSusceptance);
+		Math::addToMatrixElement(systemMatrix, matrixNodeIndex(1), matrixNodeIndex(1), mSusceptance);
 	}
 	if (terminalNotGrounded(0) && terminalNotGrounded(1)) {
-		Math::addToMatrixElement(systemMatrix, simNode(0), simNode(1), -mSusceptance);
-		Math::addToMatrixElement(systemMatrix, simNode(1), simNode(0), -mSusceptance);
+		Math::addToMatrixElement(systemMatrix, matrixNodeIndex(0), matrixNodeIndex(1), -mSusceptance);
+		Math::addToMatrixElement(systemMatrix, matrixNodeIndex(1), matrixNodeIndex(0), -mSusceptance);
 
 	}
 
 	mSLog->info("-- Matrix Stamp ---");
 	if (terminalNotGrounded(0))
 		mSLog->info("Add {:e}+j{:e} to system at ({:d},{:d})",
-			mSusceptance.real(), mSusceptance.imag(), simNode(0), simNode(0));
+			mSusceptance.real(), mSusceptance.imag(), matrixNodeIndex(0), matrixNodeIndex(0));
 	if (terminalNotGrounded(1))
 		mSLog->info("Add {:e}+j{:e} to system at ({:d},{:d})",
-			mSusceptance.real(), mSusceptance.imag(), simNode(1), simNode(1));
+			mSusceptance.real(), mSusceptance.imag(), matrixNodeIndex(1), matrixNodeIndex(1));
 	if (terminalNotGrounded(0) && terminalNotGrounded(1)) {
 		mSLog->info("Add {:e}+j{:e} to system at ({:d},{:d})",
-			-mSusceptance.real(), -mSusceptance.imag(), simNode(0), simNode(1));
+			-mSusceptance.real(), -mSusceptance.imag(), matrixNodeIndex(0), matrixNodeIndex(1));
 		mSLog->info("Add {:e}+j{:e} to system at ({:d},{:d})",
-			-mSusceptance.real(), -mSusceptance.imag(), simNode(1), simNode(0));
+			-mSusceptance.real(), -mSusceptance.imag(), matrixNodeIndex(1), matrixNodeIndex(0));
 	}
 }
 
@@ -108,10 +108,10 @@ void SP::Ph1::Inductor::mnaUpdateVoltage(const Matrix& leftVector) {
 	// v1 - v0
 	mIntfVoltage = Matrix::Zero(3, 1);
 	if (terminalNotGrounded(1)) {
-		mIntfVoltage(0, 0) = Math::complexFromVectorElement(leftVector, simNode(1));
+		mIntfVoltage(0, 0) = Math::complexFromVectorElement(leftVector, matrixNodeIndex(1));
 	}
 	if (terminalNotGrounded(0)) {
-		mIntfVoltage(0, 0) = mIntfVoltage(0, 0) - Math::complexFromVectorElement(leftVector, simNode(0));
+		mIntfVoltage(0, 0) = mIntfVoltage(0, 0) - Math::complexFromVectorElement(leftVector, matrixNodeIndex(0));
 	}
 }
 

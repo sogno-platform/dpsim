@@ -109,18 +109,18 @@ SimPowerComp<Real>::Ptr EMT::Ph3::AvVoltageSourceInverterDQ::clone(String name) 
 
 void EMT::Ph3::AvVoltageSourceInverterDQ::updateMonitoredValues(const Matrix& leftVector, Real time) {
 
-	mVcabc(0, 0) = Math::realFromVectorElement(leftVector, mSubCapacitorF->simNode(0, 0));
-	mVcabc(1, 0) = Math::realFromVectorElement(leftVector, mSubCapacitorF->simNode(0, 1));
-	mVcabc(2, 0) = Math::realFromVectorElement(leftVector, mSubCapacitorF->simNode(0, 2));
+	mVcabc(0, 0) = Math::realFromVectorElement(leftVector, mSubCapacitorF->matrixNodeIndex(0, 0));
+	mVcabc(1, 0) = Math::realFromVectorElement(leftVector, mSubCapacitorF->matrixNodeIndex(0, 1));
+	mVcabc(2, 0) = Math::realFromVectorElement(leftVector, mSubCapacitorF->matrixNodeIndex(0, 2));
 
 	mIfabc = -1 * mSubResistorF->attribute<Matrix>("i_intf")->get();
 	mIgabc = -1. * mSubResistorC->attribute<Matrix>("i_intf")->get();
 	mIfdq = parkTransform(mThetaSInit + mThetaPLL, mIfabc(0, 0), mIfabc(1, 0), mIfabc(2, 0));
 	mIgdq = parkTransform(mThetaSInit + mThetaPLL, mIgabc(0, 0), mIgabc(1, 0), mIgabc(2, 0));
 	mVcdq = parkTransform(mThetaSInit + mThetaPLL, mVcabc(0, 0), mVcabc(1, 0), mVcabc(2, 0));
-	mIntfVoltage(0, 0) = Math::realFromVectorElement(leftVector, mTerminals[0]->simNodes()[0]);
-	mIntfVoltage(1, 0) = Math::realFromVectorElement(leftVector, mTerminals[0]->simNodes()[1]);
-	mIntfVoltage(2, 0) = Math::realFromVectorElement(leftVector, mTerminals[0]->simNodes()[2]);
+	mIntfVoltage(0, 0) = Math::realFromVectorElement(leftVector, mTerminals[0]->matrixNodeIndices()[0]);
+	mIntfVoltage(1, 0) = Math::realFromVectorElement(leftVector, mTerminals[0]->matrixNodeIndices()[1]);
+	mIntfVoltage(2, 0) = Math::realFromVectorElement(leftVector, mTerminals[0]->matrixNodeIndices()[2]);
 
 	updateLinearizedModel();
 }
@@ -447,7 +447,7 @@ void EMT::Ph3::AvVoltageSourceInverterDQ::initializeFromPowerflow(Real frequency
 		Logger::phasorToString(mIntfVoltage(0, 0)),
 		Logger::phasorToString(mIntfCurrent(0, 0)),
 		Logger::phasorToString(initialSingleVoltage(0)),
-		mTerminals[0]->node()->name(), mTerminals[0]->node()->simNode());
+		mTerminals[0]->node()->name(), mTerminals[0]->node()->matrixNodeIndex());
 }
 
 void EMT::Ph3::AvVoltageSourceInverterDQ::mnaInitialize(Real omega, Real timeStep, Attribute<Matrix>::Ptr leftVector) {

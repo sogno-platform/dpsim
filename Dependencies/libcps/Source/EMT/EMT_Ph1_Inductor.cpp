@@ -74,12 +74,12 @@ void EMT::Ph1::Inductor::mnaInitialize(Real omega, Real timeStep, Attribute<Matr
 
 void EMT::Ph1::Inductor::mnaApplySystemMatrixStamp(Matrix& systemMatrix) {
 	if (terminalNotGrounded(0))
-		Math::addToMatrixElement(systemMatrix, simNode(0), simNode(0), mEquivCond);
+		Math::addToMatrixElement(systemMatrix, matrixNodeIndex(0), matrixNodeIndex(0), mEquivCond);
 	if (terminalNotGrounded(1))
-		Math::addToMatrixElement(systemMatrix, simNode(1), simNode(1), mEquivCond);
+		Math::addToMatrixElement(systemMatrix, matrixNodeIndex(1), matrixNodeIndex(1), mEquivCond);
 	if (terminalNotGrounded(0) && terminalNotGrounded(1)) {
-		Math::addToMatrixElement(systemMatrix, simNode(0), simNode(1), -mEquivCond);
-		Math::addToMatrixElement(systemMatrix, simNode(1), simNode(0), -mEquivCond);
+		Math::addToMatrixElement(systemMatrix, matrixNodeIndex(0), matrixNodeIndex(1), -mEquivCond);
+		Math::addToMatrixElement(systemMatrix, matrixNodeIndex(1), matrixNodeIndex(0), -mEquivCond);
 	}
 }
 
@@ -87,9 +87,9 @@ void EMT::Ph1::Inductor::mnaApplyRightSideVectorStamp(Matrix& rightVector) {
 	// Update internal state
 	mEquivCurrent = mEquivCond * mIntfVoltage(0,0) + mIntfCurrent(0,0);
 	if (terminalNotGrounded(0))
-		Math::setVectorElement(rightVector, simNode(0), mEquivCurrent);
+		Math::setVectorElement(rightVector, matrixNodeIndex(0), mEquivCurrent);
 	if (terminalNotGrounded(1))
-		Math::setVectorElement(rightVector, simNode(1), -mEquivCurrent);
+		Math::setVectorElement(rightVector, matrixNodeIndex(1), -mEquivCurrent);
 }
 
 void EMT::Ph1::Inductor::MnaPreStep::execute(Real time, Int timeStepCount) {
@@ -105,9 +105,9 @@ void EMT::Ph1::Inductor::mnaUpdateVoltage(const Matrix& leftVector) {
 	// v1 - v0
 	mIntfVoltage(0,0) = 0;
 	if (terminalNotGrounded(1))
-		mIntfVoltage(0,0) = Math::realFromVectorElement(leftVector, simNode(1));
+		mIntfVoltage(0,0) = Math::realFromVectorElement(leftVector, matrixNodeIndex(1));
 	if (terminalNotGrounded(0))
-		mIntfVoltage(0,0) = mIntfVoltage(0,0) - Math::realFromVectorElement(leftVector, simNode(0));
+		mIntfVoltage(0,0) = mIntfVoltage(0,0) - Math::realFromVectorElement(leftVector, matrixNodeIndex(0));
 }
 
 void EMT::Ph1::Inductor::mnaUpdateCurrent(const Matrix& leftVector) {

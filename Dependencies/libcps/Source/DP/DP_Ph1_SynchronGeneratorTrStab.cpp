@@ -244,6 +244,6 @@ void DP::Ph1::SynchronGeneratorTrStab::MnaPostStep::execute(Real time, Int timeS
 }
 
 void DP::Ph1::SynchronGeneratorTrStab::mnaUpdateVoltage(const Matrix& leftVector) {
-	SPDLOG_LOGGER_DEBUG(mSLog, "Read voltage from {:d}", simNode(0));
-	mIntfVoltage(0,0) = Math::complexFromVectorElement(leftVector, simNode(0));
+	SPDLOG_LOGGER_DEBUG(mSLog, "Read voltage from {:d}", matrixNodeIndex(0));
+	mIntfVoltage(0,0) = Math::complexFromVectorElement(leftVector, matrixNodeIndex(0));
 }

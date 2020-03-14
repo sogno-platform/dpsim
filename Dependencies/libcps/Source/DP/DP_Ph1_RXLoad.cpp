@@ -183,7 +183,7 @@ void DP::Ph1::RXLoad::MnaPostStep::execute(Real time, Int timeStepCount) {
 }
 
 void DP::Ph1::RXLoad::mnaUpdateVoltage(const Matrix& leftVector) {
-	mIntfVoltage(0, 0) = Math::complexFromVectorElement(leftVector, simNode(0));
+	mIntfVoltage(0, 0) = Math::complexFromVectorElement(leftVector, matrixNodeIndex(0));
 }
 
 void DP::Ph1::RXLoad::mnaUpdateCurrent(const Matrix& leftVector) {

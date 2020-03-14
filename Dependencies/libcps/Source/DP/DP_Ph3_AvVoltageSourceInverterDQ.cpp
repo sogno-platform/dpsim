@@ -107,9 +107,9 @@ void DP::Ph3::AvVoltageSourceInverterDQ::initialize(Matrix frequencies) {
 
 void DP::Ph3::AvVoltageSourceInverterDQ::updateMonitoredValues(const Matrix& leftVector, Real time) {
 	MatrixComp VcDP = MatrixComp::Zero(3, 1);
-	VcDP(0, 0) = Math::complexFromVectorElement(leftVector, mCapacitorF->simNode(0, 0));
-	VcDP(1, 0) = Math::complexFromVectorElement(leftVector, mCapacitorF->simNode(0, 1));
-	VcDP(2, 0) = Math::complexFromVectorElement(leftVector, mCapacitorF->simNode(0, 2));
+	VcDP(0, 0) = Math::complexFromVectorElement(leftVector, mCapacitorF->matrixNodeIndex(0, 0));
+	VcDP(1, 0) = Math::complexFromVectorElement(leftVector, mCapacitorF->matrixNodeIndex(0, 1));
+	VcDP(2, 0) = Math::complexFromVectorElement(leftVector, mCapacitorF->matrixNodeIndex(0, 2));
 
 	mVcabc <<
 		VcDP(0, 0).real() * cos(mOmegaN * time) - VcDP(0, 0).imag() * sin(mOmegaN * time),

@@ -106,14 +106,14 @@ namespace CPS {
 			}
 			return mTerminals[index]->node();
 		};
-		UInt simNode(UInt nodeIndex) {
+		UInt matrixNodeIndex(UInt nodeIndex) {
 			return mSimNodes[nodeIndex * 3];
 		}
-		UInt simNode(UInt nodeIndex, UInt phaseIndex) {
+		UInt matrixNodeIndex(UInt nodeIndex, UInt phaseIndex) {
 			return mSimNodes[nodeIndex * 3 + phaseIndex];
 		}
 		/// TODO replace with access to mSimNodes
-		std::vector<UInt> simNodes(UInt index) { return node(index)->simNodes(); }
+		std::vector<UInt> matrixNodeIndices(UInt index) { return node(index)->matrixNodeIndices(); }
 		/// Get nodes as base type TopologicalNode
 		TopologicalNode::List topologicalNodes();
 
@@ -127,7 +127,7 @@ namespace CPS {
 		/// Get pointer to virtual node
 		typename Node<VarType>::Ptr virtualNode(UInt index);
 		/// Get vector of simulation node numbers from virtual Node
-		std::vector<UInt> virtualSimNodes(UInt index) { return virtualNode(index)->simNodes(); }
+		std::vector<UInt> virtualSimNodes(UInt index) { return virtualNode(index)->matrixNodeIndices(); }
 		/// Get simulation node number from virtual node
 		UInt virtualSimNode(UInt nodeIndex, UInt phaseIndex = 0) { return virtualSimNodes(nodeIndex)[phaseIndex]; }
 

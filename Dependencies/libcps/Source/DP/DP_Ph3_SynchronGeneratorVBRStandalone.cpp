@@ -181,13 +181,13 @@ void DP::Ph3::SynchronGeneratorVBRStandalone::mnaStep(Matrix& systemMatrix, Matr
 
 	// Update current source accordingly
 	if ( terminalNotGrounded(0) ) {
-		Math::addToVectorElement(rightVector, simNode(0), Complex(-mIaRe*mBase_I,  -mIaIm*mBase_i));
+		Math::addToVectorElement(rightVector, matrixNodeIndex(0), Complex(-mIaRe*mBase_I,  -mIaIm*mBase_i));
 	}
 	if ( terminalNotGrounded(1) ) {
-		Math::addToVectorElement(rightVector, simNode(1), Complex(-mIbRe*mBase_I,  -mIbIm*mBase_i));
+		Math::addToVectorElement(rightVector, matrixNodeIndex(1), Complex(-mIbRe*mBase_I,  -mIbIm*mBase_i));
 	}
-	if ( simNode(2) >= 0) {
-		Math::addToVectorElement(rightVector, simNode(2), Complex(-mIcRe*mBase_I,  -mIcIm*mBase_i));
+	if ( matrixNodeIndex(2) >= 0) {
+		Math::addToVectorElement(rightVector, matrixNodeIndex(2), Complex(-mIcRe*mBase_I,  -mIcIm*mBase_i));
 	}
 
 	if (mLogLevel != Logger::Level::off) {

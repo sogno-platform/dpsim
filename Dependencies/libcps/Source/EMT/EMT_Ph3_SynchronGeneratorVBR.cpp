@@ -137,25 +137,25 @@ void EMT::Ph3::SynchronGeneratorVBR::mnaStep(Matrix& systemMatrix, Matrix& right
 	stepInPerUnit(mSystemOmega, mSystemTimeStep, time, mNumericalMethod);
 
 	if ( terminalNotGrounded(0) ) {
-		Math::addToVectorElement(rightVector, simNode(0), mISourceEq(0));
+		Math::addToVectorElement(rightVector, matrixNodeIndex(0), mISourceEq(0));
 	}
 	if ( terminalNotGrounded(1) ) {
-		Math::addToVectorElement(rightVector, simNode(1), mISourceEq(1));
+		Math::addToVectorElement(rightVector, matrixNodeIndex(1), mISourceEq(1));
 	}
-	if ( simNode(2) >= 0) {
-		Math::addToVectorElement(rightVector, simNode(2), mISourceEq(2));
+	if ( matrixNodeIndex(2) >= 0) {
+		Math::addToVectorElement(rightVector, matrixNodeIndex(2), mISourceEq(2));
 	}
 
 	//Update Equivalent Resistance
-	Math::addToMatrixElement(systemMatrix, simNode(0), simNode(0), mConductanceMat(0, 0));
-	Math::addToMatrixElement(systemMatrix, simNode(0), simNode(1), mConductanceMat(0, 1));
-	Math::addToMatrixElement(systemMatrix, simNode(0), simNode(2), mConductanceMat(0, 2));
-	Math::addToMatrixElement(systemMatrix, simNode(1), simNode(0), mConductanceMat(1, 0));
-	Math::addToMatrixElement(systemMatrix, simNode(1), simNode(1), mConductanceMat(1, 1));
-	Math::addToMatrixElement(systemMatrix, simNode(1), simNode(2), mConductanceMat(1, 2));
-	Math::addToMatrixElement(systemMatrix, simNode(2), simNode(0), mConductanceMat(2, 0));
-	Math::addToMatrixElement(systemMatrix, simNode(2), simNode(1), mConductanceMat(2, 1));
-	Math::addToMatrixElement(systemMatrix, simNode(2), simNode(2), mConductanceMat(2, 2));
+	Math::addToMatrixElement(systemMatrix, matrixNodeIndex(0), matrixNodeIndex(0), mConductanceMat(0, 0));
+	Math::addToMatrixElement(systemMatrix, matrixNodeIndex(0), matrixNodeIndex(1), mConductanceMat(0, 1));
+	Math::addToMatrixElement(systemMatrix, matrixNodeIndex(0), matrixNodeIndex(2), mConductanceMat(0, 2));
+	Math::addToMatrixElement(systemMatrix, matrixNodeIndex(1), matrixNodeIndex(0), mConductanceMat(1, 0));
+	Math::addToMatrixElement(systemMatrix, matrixNodeIndex(1), matrixNodeIndex(1), mConductanceMat(1, 1));
+	Math::addToMatrixElement(systemMatrix, matrixNodeIndex(1), matrixNodeIndex(2), mConductanceMat(1, 2));
+	Math::addToMatrixElement(systemMatrix, matrixNodeIndex(2), matrixNodeIndex(0), mConductanceMat(2, 0));
+	Math::addToMatrixElement(systemMatrix, matrixNodeIndex(2), matrixNodeIndex(1), mConductanceMat(2, 1));
+	Math::addToMatrixElement(systemMatrix, matrixNodeIndex(2), matrixNodeIndex(2), mConductanceMat(2, 2));
 
 	// TODO find alternative way to do this
 	//system.updateLuFactored();
@@ -212,19 +212,19 @@ void EMT::Ph3::SynchronGeneratorVBR::stepInPerUnit(Real om, Real dt, Real time, 
 
 void EMT::Ph3::SynchronGeneratorVBR::mnaPostStep(Matrix& rightVector, Matrix& leftVector, Real time) {
 	if ( terminalNotGrounded(0) ) {
-		mVa = Math::realFromVectorElement(leftVector, simNode(0)) / mBase_V;
+		mVa = Math::realFromVectorElement(leftVector, matrixNodeIndex(0)) / mBase_V;
 	}
 	else {
 		mVa = 0;
 	}
 	if ( terminalNotGrounded(1) ) {
-		mVb = Math::realFromVectorElement(leftVector, simNode(1)) / mBase_V;
+		mVb = Math::realFromVectorElement(leftVector, matrixNodeIndex(1)) / mBase_V;
 	}
 	else {
 		mVb = 0;
 	}
-	if ( simNode(2) >= 0) {
-		mVc = Math::realFromVectorElement(leftVector, simNode(2)) / mBase_V;
+	if ( matrixNodeIndex(2) >= 0) {
+		mVc = Math::realFromVectorElement(leftVector, matrixNodeIndex(2)) / mBase_V;
 	}
 	else {
 		mVc = 0;

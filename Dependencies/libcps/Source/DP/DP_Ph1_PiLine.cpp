@@ -181,9 +181,9 @@ void DP::Ph1::PiLine::MnaPostStep::execute(Real time, Int timeStepCount) {
 void DP::Ph1::PiLine::mnaUpdateVoltage(const Matrix& leftVector) {
 	mIntfVoltage(0, 0) = 0;
 	if (terminalNotGrounded(1))
-		mIntfVoltage(0,0) = Math::complexFromVectorElement(leftVector, simNode(1));
+		mIntfVoltage(0,0) = Math::complexFromVectorElement(leftVector, matrixNodeIndex(1));
 	if (terminalNotGrounded(0))
-		mIntfVoltage(0,0) = mIntfVoltage(0,0) - Math::complexFromVectorElement(leftVector, simNode(0));
+		mIntfVoltage(0,0) = mIntfVoltage(0,0) - Math::complexFromVectorElement(leftVector, matrixNodeIndex(0));
 }
 
 void DP::Ph1::PiLine::mnaUpdateCurrent(const Matrix& leftVector) {

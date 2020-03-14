@@ -93,12 +93,12 @@ void EMT::Ph3::SynchronGeneratorDQ::mnaApplySystemMatrixStamp(Matrix& systemMatr
 	Real conductance = 1. / mRcomp;
 
 	if (terminalNotGrounded(0)) {
-		Math::addToMatrixElement(systemMatrix, simNode(0,0), simNode(0,0), conductance);
-		Math::addToMatrixElement(systemMatrix, simNode(0,1), simNode(0,1), conductance);
-		Math::addToMatrixElement(systemMatrix, simNode(0,2), simNode(0,2), conductance);
-		mSLog->info("Add {} to {}, {}", conductance, simNode(0,0), simNode(0,0));
-		mSLog->info("Add {} to {}, {}", conductance, simNode(0,1), simNode(0,1));
-		mSLog->info("Add {} to {}, {}", conductance, simNode(0,2), simNode(0,2));
+		Math::addToMatrixElement(systemMatrix, matrixNodeIndex(0,0), matrixNodeIndex(0,0), conductance);
+		Math::addToMatrixElement(systemMatrix, matrixNodeIndex(0,1), matrixNodeIndex(0,1), conductance);
+		Math::addToMatrixElement(systemMatrix, matrixNodeIndex(0,2), matrixNodeIndex(0,2), conductance);
+		mSLog->info("Add {} to {}, {}", conductance, matrixNodeIndex(0,0), matrixNodeIndex(0,0));
+		mSLog->info("Add {} to {}, {}", conductance, matrixNodeIndex(0,1), matrixNodeIndex(0,1));
+		mSLog->info("Add {} to {}, {}", conductance, matrixNodeIndex(0,2), matrixNodeIndex(0,2));
 	}
 }
 
@@ -110,16 +110,16 @@ void EMT::Ph3::SynchronGeneratorDQ::mnaApplyRightSideVectorStamp(Matrix& rightVe
 	// Therefore, the generator is interfaced as a consumer but since the currents are reversed the equations
 	// are in generator mode.
 	if (terminalNotGrounded(0)) {
-		Math::setVectorElement(rightVector, simNode(0,0), -mIntfCurrent(0,0) + mCompensationCurrent(0,0));
-		Math::setVectorElement(rightVector, simNode(0,1), -mIntfCurrent(1,0) + mCompensationCurrent(1,0));
-		Math::setVectorElement(rightVector, simNode(0,2), -mIntfCurrent(2,0) + mCompensationCurrent(2,0));
+		Math::setVectorElement(rightVector, matrixNodeIndex(0,0), -mIntfCurrent(0,0) + mCompensationCurrent(0,0));
+		Math::setVectorElement(rightVector, matrixNodeIndex(0,1), -mIntfCurrent(1,0) + mCompensationCurrent(1,0));
+		Math::setVectorElement(rightVector, matrixNodeIndex(0,2), -mIntfCurrent(2,0) + mCompensationCurrent(2,0));
 	}
 }
 
 void EMT::Ph3::SynchronGeneratorDQ::mnaUpdateVoltage(const Matrix& leftVector) {
-	mIntfVoltage(0,0) = Math::realFromVectorElement(leftVector, simNode(0,0));
-	mIntfVoltage(1,0) = Math::realFromVectorElement(leftVector, simNode(0,1));
-	mIntfVoltage(2,0) = Math::realFromVectorElement(leftVector, simNode(0,2));
+	mIntfVoltage(0,0) = Math::realFromVectorElement(leftVector, matrixNodeIndex(0,0));
+	mIntfVoltage(1,0) = Math::realFromVectorElement(leftVector, matrixNodeIndex(0,1));
+	mIntfVoltage(2,0) = Math::realFromVectorElement(leftVector, matrixNodeIndex(0,2));
 }
 
 void EMT::Ph3::SynchronGeneratorDQ::MnaPostStep::execute(Real time, Int timeStepCount) {

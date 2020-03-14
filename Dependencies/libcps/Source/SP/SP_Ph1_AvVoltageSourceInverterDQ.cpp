@@ -120,7 +120,7 @@ void SP::Ph1::AvVoltageSourceInverterDQ::updateMonitoredValues(const Matrix& lef
 	MatrixComp IgSP = MatrixComp::Zero(1, 1);
 
 	// minus sign before currents due to the connection
-	VcSP(0, 0) = Math::complexFromVectorElement(leftVector, mSubCapacitorF->simNode(0));
+	VcSP(0, 0) = Math::complexFromVectorElement(leftVector, mSubCapacitorF->matrixNodeIndex(0));
 	IfSP(0, 0) = -1. * mSubResistorF->attribute<MatrixComp>("i_intf")->get()(0, 0);
 	IgSP(0, 0) = -1. * mSubResistorC->attribute<MatrixComp>("i_intf")->get()(0, 0);
 
@@ -366,7 +366,7 @@ void SP::Ph1::AvVoltageSourceInverterDQ::initializeFromPowerflow(Real frequency)
 		Logger::phasorToString(mIntfVoltage(0, 0)),
 		Logger::phasorToString(mIntfCurrent(0, 0)),
 		Logger::phasorToString(initialSingleVoltage(0)),
-		mTerminals[0]->node()->name(), mTerminals[0]->node()->simNode());
+		mTerminals[0]->node()->name(), mTerminals[0]->node()->matrixNodeIndex());
 }
 
 void SP::Ph1::AvVoltageSourceInverterDQ::mnaInitialize(Real omega, Real timeStep, Attribute<Matrix>::Ptr leftVector) {

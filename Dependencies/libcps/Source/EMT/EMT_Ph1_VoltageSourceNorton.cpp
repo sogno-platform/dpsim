@@ -60,21 +60,21 @@ void EMT::Ph1::VoltageSourceNorton::mnaInitialize(Real omega, Real timeStep, Att
 void EMT::Ph1::VoltageSourceNorton::mnaApplySystemMatrixStamp(Matrix& systemMatrix) {
 	// Apply matrix stamp for equivalent resistance
 	if (terminalNotGrounded(0))
-		Math::addToMatrixElement(systemMatrix, simNode(0), simNode(0), mConductance);
+		Math::addToMatrixElement(systemMatrix, matrixNodeIndex(0), matrixNodeIndex(0), mConductance);
 	if (terminalNotGrounded(1))
-		Math::addToMatrixElement(systemMatrix, simNode(1), simNode(1), mConductance);
+		Math::addToMatrixElement(systemMatrix, matrixNodeIndex(1), matrixNodeIndex(1), mConductance);
 	if (terminalNotGrounded(0) && terminalNotGrounded(1)) {
-		Math::addToMatrixElement(systemMatrix, simNode(0), simNode(1), -mConductance);
-		Math::addToMatrixElement(systemMatrix, simNode(1), simNode(0), -mConductance);
+		Math::addToMatrixElement(systemMatrix, matrixNodeIndex(0), matrixNodeIndex(1), -mConductance);
+		Math::addToMatrixElement(systemMatrix, matrixNodeIndex(1), matrixNodeIndex(0), -mConductance);
 	}
 }
 
 void EMT::Ph1::VoltageSourceNorton::mnaApplyRightSideVectorStamp(Matrix& rightVector) {
 	// Apply matrix stamp for equivalent current source
 	if (terminalNotGrounded(0))
-		Math::setVectorElement(rightVector, simNode(0), -mEquivCurrent);
+		Math::setVectorElement(rightVector, matrixNodeIndex(0), -mEquivCurrent);
 	if (terminalNotGrounded(1))
-		Math::setVectorElement(rightVector, simNode(1), mEquivCurrent);
+		Math::setVectorElement(rightVector, matrixNodeIndex(1), mEquivCurrent);
 }
 
 void EMT::Ph1::VoltageSourceNorton::updateState(Real time) {
@@ -98,9 +98,9 @@ void EMT::Ph1::VoltageSourceNorton::MnaPostStep::execute(Real time, Int timeStep
 void EMT::Ph1::VoltageSourceNorton::mnaUpdateVoltage(const Matrix& leftVector) {
 	// Calculate v1 - v0
 	if (terminalNotGrounded(1))
-		mIntfVoltage(0,0) = Math::realFromVectorElement(leftVector, simNode(1));
+		mIntfVoltage(0,0) = Math::realFromVectorElement(leftVector, matrixNodeIndex(1));
 	if (terminalNotGrounded(0))
-		mIntfVoltage(0,0) = mIntfVoltage(0,0) - Math::realFromVectorElement(leftVector, simNode(0));
+		mIntfVoltage(0,0) = mIntfVoltage(0,0) - Math::realFromVectorElement(leftVector, matrixNodeIndex(0));
 }
 
 void EMT::Ph1::VoltageSourceNorton::mnaUpdateCurrent(const Matrix& leftVector) {

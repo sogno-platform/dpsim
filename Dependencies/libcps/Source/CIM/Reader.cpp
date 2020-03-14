@@ -239,7 +239,7 @@ void Reader::processSvVoltage(SvVoltage* volt) {
 
 	mSLog->info("Node {} SimNode {}: {} V, {} deg",
 		mPowerflowNodes[node->mRID]->uid(),
-		mPowerflowNodes[node->mRID]->simNode(),
+		mPowerflowNodes[node->mRID]->matrixNodeIndex(),
 		std::abs(mPowerflowNodes[node->mRID]->initialSingleVoltage()),
 		std::arg(mPowerflowNodes[node->mRID]->initialSingleVoltage())*180/PI
 	);
@@ -284,8 +284,8 @@ SystemTopology Reader::systemTopology() {
 
 	for (auto node : mPowerflowNodes) {
 		// The index of the node in the list should not matter anymore
-		//system.mNodes[node.second->simNode()] = node.second;
-		system.addNodeAt(node.second, node.second->simNode());
+		//system.mNodes[node.second->matrixNodeIndex()] = node.second;
+		system.addNodeAt(node.second, node.second->matrixNodeIndex());
 	}
 
 	return system;
@@ -296,7 +296,7 @@ Matrix::Index Reader::mapTopologicalNode(String mrid) {
 	if (search == mPowerflowNodes.end()) {
 		return -1;
 	}
-	return search->second->simNode();
+	return search->second->matrixNodeIndex();
 }
 
 TopologicalComponent::Ptr Reader::mapEnergyConsumer(EnergyConsumer* consumer) {
@@ -704,12 +704,12 @@ void Reader::processTopologicalNode(IEC61970::Base::Topology::TopologicalNode* t
 	mPowerflowNodes[topNode->mRID] = Node<VarType>::make(topNode->mRID, topNode->name, simNode, mPhase);
 
 	if (mPhase == PhaseType::ABC) {
-		mSLog->info("TopologicalNode {} phase A as simulation node {} ", topNode->mRID, mPowerflowNodes[topNode->mRID]->simNode(PhaseType::A));
-		mSLog->info("TopologicalNode {} phase B as simulation node {}", topNode->mRID, mPowerflowNodes[topNode->mRID]->simNode(PhaseType::B));
-		mSLog->info("TopologicalNode {} phase C as simulation node {}", topNode->mRID, mPowerflowNodes[topNode->mRID]->simNode(PhaseType::C));
+		mSLog->info("TopologicalNode {} phase A as simulation node {} ", topNode->mRID, mPowerflowNodes[topNode->mRID]->matrixNodeIndex(PhaseType::A));
+		mSLog->info("TopologicalNode {} phase B as simulation node {}", topNode->mRID, mPowerflowNodes[topNode->mRID]->matrixNodeIndex(PhaseType::B));
+		mSLog->info("TopologicalNode {} phase C as simulation node {}", topNode->mRID, mPowerflowNodes[topNode->mRID]->matrixNodeIndex(PhaseType::C));
 	}
 	else
-		mSLog->info("TopologicalNode {} as simulation node {}", topNode->mRID, mPowerflowNodes[topNode->mRID]->simNode());
+		mSLog->info("TopologicalNode {} as simulation node {}", topNode->mRID, mPowerflowNodes[topNode->mRID]->matrixNodeIndex());
 
 	for (auto term : topNode->Terminal) {
 		// Insert Terminal if it does not exist in the map and add reference to node.

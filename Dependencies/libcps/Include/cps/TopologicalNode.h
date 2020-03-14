@@ -58,9 +58,9 @@ namespace CPS {
 		///
 		PhaseType phaseType() { return mPhaseType; }
 		///
-		virtual UInt simNode(PhaseType phaseType = PhaseType::Single) = 0;
+		virtual UInt matrixNodeIndex(PhaseType phaseType = PhaseType::Single) = 0;
 		///
-		virtual std::vector<UInt> simNodes() = 0;
+		virtual std::vector<UInt> matrixNodeIndices() = 0;
 		///
 		virtual void setSimNode(UInt phase, UInt simNode) = 0;
 	};

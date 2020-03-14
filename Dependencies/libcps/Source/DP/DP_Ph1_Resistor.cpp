@@ -81,23 +81,23 @@ void DP::Ph1::Resistor::mnaApplySystemMatrixStamp(Matrix& systemMatrix) {
 	for (UInt freq = 0; freq < mNumFreqs; freq++) {
 		// Set diagonal entries
 		if (terminalNotGrounded(0))
-			Math::addToMatrixElement(systemMatrix, simNode(0), simNode(0), conductance, mNumFreqs, freq);
+			Math::addToMatrixElement(systemMatrix, matrixNodeIndex(0), matrixNodeIndex(0), conductance, mNumFreqs, freq);
 		if (terminalNotGrounded(1))
 		// Set off diagonal entries
-			Math::addToMatrixElement(systemMatrix, simNode(1), simNode(1), conductance, mNumFreqs, freq);
+			Math::addToMatrixElement(systemMatrix, matrixNodeIndex(1), matrixNodeIndex(1), conductance, mNumFreqs, freq);
 		if (terminalNotGrounded(0) && terminalNotGrounded(1)) {
-			Math::addToMatrixElement(systemMatrix, simNode(0), simNode(1), -conductance, mNumFreqs, freq);
-			Math::addToMatrixElement(systemMatrix, simNode(1), simNode(0), -conductance, mNumFreqs, freq);
+			Math::addToMatrixElement(systemMatrix, matrixNodeIndex(0), matrixNodeIndex(1), -conductance, mNumFreqs, freq);
+			Math::addToMatrixElement(systemMatrix, matrixNodeIndex(1), matrixNodeIndex(0), -conductance, mNumFreqs, freq);
 		}
 
 		mSLog->info("-- Stamp frequency {:d} ---", freq);
 		if (terminalNotGrounded(0))
-			mSLog->info("Add {:s} to system at ({:d},{:d})", Logger::complexToString(conductance), simNode(0), simNode(0));
+			mSLog->info("Add {:s} to system at ({:d},{:d})", Logger::complexToString(conductance), matrixNodeIndex(0), matrixNodeIndex(0));
 		if (terminalNotGrounded(1))
-			mSLog->info("Add {:s} to system at ({:d},{:d})", Logger::complexToString(conductance), simNode(1), simNode(1));
+			mSLog->info("Add {:s} to system at ({:d},{:d})", Logger::complexToString(conductance), matrixNodeIndex(1), matrixNodeIndex(1));
 		if (terminalNotGrounded(0) && terminalNotGrounded(1)) {
-			mSLog->info("Add {:s} to system at ({:d},{:d})", Logger::complexToString(-conductance), simNode(0), simNode(1));
-			mSLog->info("Add {:s} to system at ({:d},{:d})", Logger::complexToString(-conductance), simNode(1), simNode(0));
+			mSLog->info("Add {:s} to system at ({:d},{:d})", Logger::complexToString(-conductance), matrixNodeIndex(0), matrixNodeIndex(1));
+			mSLog->info("Add {:s} to system at ({:d},{:d})", Logger::complexToString(-conductance), matrixNodeIndex(1), matrixNodeIndex(0));
 		}
 	}
 }
@@ -106,23 +106,23 @@ void DP::Ph1::Resistor::mnaApplySystemMatrixStampHarm(Matrix& systemMatrix, Int 
 	Complex conductance = Complex(1. / mResistance, 0);
 	// Set diagonal entries
 	if (terminalNotGrounded(0))
-		Math::addToMatrixElement(systemMatrix, simNode(0), simNode(0), conductance);
+		Math::addToMatrixElement(systemMatrix, matrixNodeIndex(0), matrixNodeIndex(0), conductance);
 	if (terminalNotGrounded(1))
-		Math::addToMatrixElement(systemMatrix, simNode(1), simNode(1), conductance);
+		Math::addToMatrixElement(systemMatrix, matrixNodeIndex(1), matrixNodeIndex(1), conductance);
 	// Set off diagonal entries
 	if (terminalNotGrounded(0) && terminalNotGrounded(1)) {
-		Math::addToMatrixElement(systemMatrix, simNode(0), simNode(1), -conductance);
-		Math::addToMatrixElement(systemMatrix, simNode(1), simNode(0), -conductance);
+		Math::addToMatrixElement(systemMatrix, matrixNodeIndex(0), matrixNodeIndex(1), -conductance);
+		Math::addToMatrixElement(systemMatrix, matrixNodeIndex(1), matrixNodeIndex(0), -conductance);
 	}
 
 	mSLog->info("-- Stamp for frequency {:f} ---", mFrequencies(freqIdx,0));
 	if (terminalNotGrounded(0))
-		mSLog->info("Add {:s} to system at ({:d},{:d})", Logger::complexToString(conductance), simNode(0), simNode(0));
+		mSLog->info("Add {:s} to system at ({:d},{:d})", Logger::complexToString(conductance), matrixNodeIndex(0), matrixNodeIndex(0));
 	if (terminalNotGrounded(1))
-		mSLog->info("Add {:s} to system at ({:d},{:d})", Logger::complexToString(conductance), simNode(1), simNode(1));
+		mSLog->info("Add {:s} to system at ({:d},{:d})", Logger::complexToString(conductance), matrixNodeIndex(1), matrixNodeIndex(1));
 	if (terminalNotGrounded(0)  &&  terminalNotGrounded(1)) {
-		mSLog->info("Add {:s} to system at ({:d},{:d})", Logger::complexToString(-conductance), simNode(0), simNode(1));
-		mSLog->info("Add {:s} to system at ({:d},{:d})", Logger::complexToString(-conductance), simNode(1), simNode(0));
+		mSLog->info("Add {:s} to system at ({:d},{:d})", Logger::complexToString(-conductance), matrixNodeIndex(0), matrixNodeIndex(1));
+		mSLog->info("Add {:s} to system at ({:d},{:d})", Logger::complexToString(-conductance), matrixNodeIndex(1), matrixNodeIndex(0));
 	}
 }
 
@@ -142,9 +142,9 @@ void DP::Ph1::Resistor::mnaUpdateVoltage(const Matrix& leftVector) {
 	for (UInt freq = 0; freq < mNumFreqs; freq++) {
 		mIntfVoltage(0,freq) = 0;
 		if (terminalNotGrounded(1))
-			mIntfVoltage(0,freq) = Math::complexFromVectorElement(leftVector, simNode(1), mNumFreqs, freq);
+			mIntfVoltage(0,freq) = Math::complexFromVectorElement(leftVector, matrixNodeIndex(1), mNumFreqs, freq);
 		if (terminalNotGrounded(0))
-			mIntfVoltage(0,freq) = mIntfVoltage(0,freq) - Math::complexFromVectorElement(leftVector, simNode(0), mNumFreqs, freq);
+			mIntfVoltage(0,freq) = mIntfVoltage(0,freq) - Math::complexFromVectorElement(leftVector, matrixNodeIndex(0), mNumFreqs, freq);
 
 		SPDLOG_LOGGER_DEBUG(mSLog, "Voltage {:s}", Logger::phasorToString(mIntfVoltage(0,freq)));
 	}
@@ -161,9 +161,9 @@ void DP::Ph1::Resistor::mnaUpdateVoltageHarm(const Matrix& leftVector, Int freqI
 	// v1 - v0
 	mIntfVoltage(0,freqIdx) = 0;
 	if (terminalNotGrounded(1))
-		mIntfVoltage(0,freqIdx) = Math::complexFromVectorElement(leftVector, simNode(1));
+		mIntfVoltage(0,freqIdx) = Math::complexFromVectorElement(leftVector, matrixNodeIndex(1));
 	if (terminalNotGrounded(0))
-		mIntfVoltage(0,freqIdx) = mIntfVoltage(0,freqIdx) - Math::complexFromVectorElement(leftVector, simNode(0));
+		mIntfVoltage(0,freqIdx) = mIntfVoltage(0,freqIdx) - Math::complexFromVectorElement(leftVector, matrixNodeIndex(0));
 
 	SPDLOG_LOGGER_DEBUG(mSLog, "Voltage {:s}", Logger::phasorToString(mIntfVoltage(0,freqIdx)));
 }
@@ -197,8 +197,8 @@ void DP::Ph1::Resistor::daeResidual(double ttime, const double state[], const do
 	// state[x+1] = nodal_equation_2
 	// ...
 
-    int Pos1 = simNode(0);
-    int Pos2 = simNode(1);
+    int Pos1 = matrixNodeIndex(0);
+    int Pos2 = matrixNodeIndex(1);
 	int c_offset = off[0]+off[1]; //current offset for component
 	int n_offset_1 = c_offset + Pos1 + 1;// current offset for first nodal equation
 	int n_offset_2 = c_offset + Pos2 + 1;// current offset for second nodal equation

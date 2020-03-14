@@ -76,23 +76,23 @@ void DP::Ph1::Switch::mnaApplySystemMatrixStamp(Matrix& systemMatrix) {
 
 	// Set diagonal entries
 	if (terminalNotGrounded(0))
-		Math::addToMatrixElement(systemMatrix, simNode(0), simNode(0), conductance);
+		Math::addToMatrixElement(systemMatrix, matrixNodeIndex(0), matrixNodeIndex(0), conductance);
 	if (terminalNotGrounded(1))
-		Math::addToMatrixElement(systemMatrix, simNode(1), simNode(1), conductance);
+		Math::addToMatrixElement(systemMatrix, matrixNodeIndex(1), matrixNodeIndex(1), conductance);
 	// Set off diagonal entries
 	if (terminalNotGrounded(0) && terminalNotGrounded(1)) {
-		Math::addToMatrixElement(systemMatrix, simNode(0), simNode(1), -conductance);
-		Math::addToMatrixElement(systemMatrix, simNode(1), simNode(0), -conductance);
+		Math::addToMatrixElement(systemMatrix, matrixNodeIndex(0), matrixNodeIndex(1), -conductance);
+		Math::addToMatrixElement(systemMatrix, matrixNodeIndex(1), matrixNodeIndex(0), -conductance);
 	}
 
 	mSLog->info("-- Stamp ---");
 	if (terminalNotGrounded(0))
-		mSLog->info("Add {:s} to system at ({:d},{:d})", Logger::complexToString(conductance), simNode(0), simNode(0));
+		mSLog->info("Add {:s} to system at ({:d},{:d})", Logger::complexToString(conductance), matrixNodeIndex(0), matrixNodeIndex(0));
 	if (terminalNotGrounded(1))
-		mSLog->info("Add {:s} to system at ({:d},{:d})", Logger::complexToString(conductance), simNode(1), simNode(1));
+		mSLog->info("Add {:s} to system at ({:d},{:d})", Logger::complexToString(conductance), matrixNodeIndex(1), matrixNodeIndex(1));
 	if (terminalNotGrounded(0) && terminalNotGrounded(1)) {
-		mSLog->info("Add {:s} to system at ({:d},{:d})", Logger::complexToString(-conductance), simNode(0), simNode(1));
-		mSLog->info("Add {:s} to system at ({:d},{:d})", Logger::complexToString(-conductance), simNode(1), simNode(0));
+		mSLog->info("Add {:s} to system at ({:d},{:d})", Logger::complexToString(-conductance), matrixNodeIndex(0), matrixNodeIndex(1));
+		mSLog->info("Add {:s} to system at ({:d},{:d})", Logger::complexToString(-conductance), matrixNodeIndex(1), matrixNodeIndex(0));
 	}
 }
 
@@ -103,24 +103,24 @@ void DP::Ph1::Switch::mnaApplySwitchSystemMatrixStamp(Matrix& systemMatrix, Bool
 
 	// Set diagonal entries
 	if (terminalNotGrounded(0))
-		Math::addToMatrixElement(systemMatrix, simNode(0), simNode(0), conductance);
+		Math::addToMatrixElement(systemMatrix, matrixNodeIndex(0), matrixNodeIndex(0), conductance);
 	if (terminalNotGrounded(1))
-		Math::addToMatrixElement(systemMatrix, simNode(1), simNode(1), conductance);
+		Math::addToMatrixElement(systemMatrix, matrixNodeIndex(1), matrixNodeIndex(1), conductance);
 
 	// Set off diagonal entries
 	if (terminalNotGrounded(0) && terminalNotGrounded(1)) {
-		Math::addToMatrixElement(systemMatrix, simNode(0), simNode(1), -conductance);
-		Math::addToMatrixElement(systemMatrix, simNode(1), simNode(0), -conductance);
+		Math::addToMatrixElement(systemMatrix, matrixNodeIndex(0), matrixNodeIndex(1), -conductance);
+		Math::addToMatrixElement(systemMatrix, matrixNodeIndex(1), matrixNodeIndex(0), -conductance);
 	}
 
 	mSLog->info("-- Stamp ---");
 	if (terminalNotGrounded(0))
-		mSLog->info("Add {:s} to system at ({:d},{:d})", Logger::complexToString(conductance), simNode(0), simNode(0));
+		mSLog->info("Add {:s} to system at ({:d},{:d})", Logger::complexToString(conductance), matrixNodeIndex(0), matrixNodeIndex(0));
 	if (terminalNotGrounded(1))
-		mSLog->info("Add {:s} to system at ({:d},{:d})", Logger::complexToString(conductance), simNode(1), simNode(1));
+		mSLog->info("Add {:s} to system at ({:d},{:d})", Logger::complexToString(conductance), matrixNodeIndex(1), matrixNodeIndex(1));
 	if (terminalNotGrounded(0) && terminalNotGrounded(1)) {
-		mSLog->info("Add {:s} to system at ({:d},{:d})", Logger::complexToString(-conductance), simNode(0), simNode(1));
-		mSLog->info("Add {:s} to system at ({:d},{:d})", Logger::complexToString(-conductance), simNode(1), simNode(0));
+		mSLog->info("Add {:s} to system at ({:d},{:d})", Logger::complexToString(-conductance), matrixNodeIndex(0), matrixNodeIndex(1));
+		mSLog->info("Add {:s} to system at ({:d},{:d})", Logger::complexToString(-conductance), matrixNodeIndex(1), matrixNodeIndex(0));
 	}
 }
 
@@ -134,8 +134,8 @@ void DP::Ph1::Switch::MnaPostStep::execute(Real time, Int timeStepCount) {
 void DP::Ph1::Switch::mnaUpdateVoltage(const Matrix& leftVector) {
 	// Voltage across component is defined as V1 - V0
 	mIntfVoltage(0, 0) = 0;
-	if (terminalNotGrounded(1)) mIntfVoltage(0,0) = Math::complexFromVectorElement(leftVector, simNode(1,0));
-	if (terminalNotGrounded(0)) mIntfVoltage(0,0) = mIntfVoltage(0,0) - Math::complexFromVectorElement(leftVector, simNode(0));
+	if (terminalNotGrounded(1)) mIntfVoltage(0,0) = Math::complexFromVectorElement(leftVector, matrixNodeIndex(1,0));
+	if (terminalNotGrounded(0)) mIntfVoltage(0,0) = mIntfVoltage(0,0) - Math::complexFromVectorElement(leftVector, matrixNodeIndex(0));
 }
 
 void DP::Ph1::Switch::mnaUpdateCurrent(const Matrix& leftVector) {

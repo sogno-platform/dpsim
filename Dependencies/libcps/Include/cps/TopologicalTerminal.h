@@ -64,8 +64,8 @@ namespace CPS {
 		///
 		MatrixComp initialVoltage();
 		///
-		UInt simNode() { return topologicalNodes()->simNode(mPhaseType); }
+		UInt matrixNodeIndex() { return topologicalNodes()->matrixNodeIndex(mPhaseType); }
 		///
-		std::vector<UInt> simNodes() { return topologicalNodes()->simNodes(); }
+		std::vector<UInt> matrixNodeIndices() { return topologicalNodes()->matrixNodeIndices(); }
 	};
 }

@@ -69,7 +69,7 @@ namespace CPS {
 		/// Initialize state matrices with size according to phase type and frequency number
 		void initialize(Matrix frequencies);
 		/// Returns matrix index for specified phase
-		UInt simNode(PhaseType phaseType = PhaseType::Single) {
+		UInt matrixNodeIndex(PhaseType phaseType = PhaseType::Single) {
 			if ((phaseType == PhaseType::A || phaseType == PhaseType::Single)
 				&& (mPhaseType == PhaseType::Single
 				|| mPhaseType == PhaseType::A
@@ -87,7 +87,7 @@ namespace CPS {
 				return 0;
 		}
 		/// Returns all matrix indices
-		std::vector<UInt> simNodes() {
+		std::vector<UInt> matrixNodeIndices() {
 			if (mPhaseType == PhaseType::B)
 				return { mSimNode[1] };
 			else if (mPhaseType == PhaseType::C)

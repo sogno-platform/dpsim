@@ -87,8 +87,8 @@ void SP::Ph1::RXLine::setPerUnitSystem(Real baseApparentPower, Real baseOmega) {
 
 void SP::Ph1::RXLine::pfApplyAdmittanceMatrixStamp(SparseMatrixCompRow & Y) {
 	updateSimNodes();
-	int bus1 = this->simNode(0);
-	int bus2 = this->simNode(1);
+	int bus1 = this->matrixNodeIndex(0);
+	int bus2 = this->matrixNodeIndex(1);
 
 	//dimension check
 	/* TODO: FIX
@@ -234,9 +234,9 @@ void SP::Ph1::RXLine::MnaPostStep::execute(Real time, Int timeStepCount) {
 void SP::Ph1::RXLine::mnaUpdateVoltage(const Matrix& leftVector) {
 	mIntfVoltage(0, 0) = 0;
 	if (terminalNotGrounded(1))
-		mIntfVoltage(0, 0) = Math::complexFromVectorElement(leftVector, simNode(1));
+		mIntfVoltage(0, 0) = Math::complexFromVectorElement(leftVector, matrixNodeIndex(1));
 	if (terminalNotGrounded(0))
-		mIntfVoltage(0, 0) = mIntfVoltage(0, 0) - Math::complexFromVectorElement(leftVector, simNode(0));
+		mIntfVoltage(0, 0) = mIntfVoltage(0, 0) - Math::complexFromVectorElement(leftVector, matrixNodeIndex(0));
 }
 
 void SP::Ph1::RXLine::mnaUpdateCurrent(const Matrix& leftVector) {

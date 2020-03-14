@@ -206,7 +206,7 @@ void EMT::Ph3::SynchronGeneratorDQSmplCompSource::mnaPostStep(Matrix& rightVecto
 	else {
 		mIb = 0;
 	}
-	if ( simNode(2) >= 0) {
+	if ( matrixNodeIndex(2) >= 0) {
 		mIc = vc.current();
 	}
 	else {

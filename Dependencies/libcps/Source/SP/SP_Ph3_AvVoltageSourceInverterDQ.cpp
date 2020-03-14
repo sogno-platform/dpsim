@@ -94,9 +94,9 @@ void SP::Ph3::AvVoltageSourceInverterDQ::addMonitoredNodes(std::shared_ptr<Resis
 
 void SP::Ph3::AvVoltageSourceInverterDQ::updateMonitoredValues(const Matrix& leftVector, Real time) {
 	MatrixComp VcSP = MatrixComp::Zero(3, 1);
-	VcSP(0, 0) = Math::complexFromVectorElement(leftVector, mCapacitorF->simNode(0, 0));
-	VcSP(1, 0) = Math::complexFromVectorElement(leftVector, mCapacitorF->simNode(0, 1));
-	VcSP(2, 0) = Math::complexFromVectorElement(leftVector, mCapacitorF->simNode(0, 2));
+	VcSP(0, 0) = Math::complexFromVectorElement(leftVector, mCapacitorF->matrixNodeIndex(0, 0));
+	VcSP(1, 0) = Math::complexFromVectorElement(leftVector, mCapacitorF->matrixNodeIndex(0, 1));
+	VcSP(2, 0) = Math::complexFromVectorElement(leftVector, mCapacitorF->matrixNodeIndex(0, 2));
 
 	mVcabc <<
 		VcSP(0, 0).real() * cos(mOmegaN * time) - VcSP(0, 0).imag() * sin(mOmegaN * time),

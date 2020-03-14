@@ -88,15 +88,15 @@ void SimPowerComp<VarType>::setTerminalAt(typename Terminal<VarType>::Ptr termin
 		return;
 	}
 	mTerminals[terminalPosition] = terminal;
-	mSLog->info("Set Terminal at position {} to Node {}, simulation node {}", terminalPosition, mTerminals[terminalPosition]->node()->name(), mTerminals[terminalPosition]->simNode());
+	mSLog->info("Set Terminal at position {} to Node {}, simulation node {}", terminalPosition, mTerminals[terminalPosition]->node()->name(), mTerminals[terminalPosition]->matrixNodeIndex());
 }
 
 template <typename VarType>
 void SimPowerComp<VarType>::updateSimNodes() {
 	for (UInt nodeIdx = 0; nodeIdx < mNumTerminals; nodeIdx++) {
-		mSimNodes[3*nodeIdx] = node(nodeIdx)->simNode(PhaseType::A);
-		mSimNodes[3*nodeIdx+1] = node(nodeIdx)->simNode(PhaseType::B);
-		mSimNodes[3*nodeIdx+2] = node(nodeIdx)->simNode(PhaseType::C);
+		mSimNodes[3*nodeIdx] = node(nodeIdx)->matrixNodeIndex(PhaseType::A);
+		mSimNodes[3*nodeIdx+1] = node(nodeIdx)->matrixNodeIndex(PhaseType::B);
+		mSimNodes[3*nodeIdx+2] = node(nodeIdx)->matrixNodeIndex(PhaseType::C);
 		mSimNodeIsGround[nodeIdx] = node(nodeIdx)->isGround();
 	}
 }
@@ -135,7 +135,7 @@ void SimPowerComp<VarType>::setVirtualNodeAt(typename Node<VarType>::Ptr virtual
 	}
 	mVirtualNodes[nodeNum] = virtualNode;
 	mSLog->info("Set virtual Node at position {} to Node {}, simulation node {}",
-		nodeNum, mVirtualNodes[nodeNum]->name(), mVirtualNodes[nodeNum]->simNode());
+		nodeNum, mVirtualNodes[nodeNum]->name(), mVirtualNodes[nodeNum]->matrixNodeIndex());
 }
 
 template <typename VarType>

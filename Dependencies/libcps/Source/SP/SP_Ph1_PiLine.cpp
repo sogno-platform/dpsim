@@ -112,8 +112,8 @@ void SP::Ph1::PiLine::calculatePerUnitParameters(Real baseApparentPower, Real ba
 }
 
 void SP::Ph1::PiLine::pfApplyAdmittanceMatrixStamp(SparseMatrixCompRow & Y) {
-	int bus1 = this->simNode(0);
-	int bus2 = this->simNode(1);
+	int bus1 = this->matrixNodeIndex(0);
+	int bus2 = this->matrixNodeIndex(1);
 
 	//create the element admittance matrix
 	Complex y = Complex(1, 0) / Complex(mSeriesResPerUnit, 1. * mSeriesIndPerUnit);
@@ -280,9 +280,9 @@ void SP::Ph1::PiLine::MnaPostStep::execute(Real time, Int timeStepCount) {
 void SP::Ph1::PiLine::mnaUpdateVoltage(const Matrix& leftVector) {
 	mIntfVoltage(0, 0) = 0;
 	if (terminalNotGrounded(1))
-		mIntfVoltage(0, 0) = Math::complexFromVectorElement(leftVector, simNode(1));
+		mIntfVoltage(0, 0) = Math::complexFromVectorElement(leftVector, matrixNodeIndex(1));
 	if (terminalNotGrounded(0))
-		mIntfVoltage(0, 0) = mIntfVoltage(0, 0) - Math::complexFromVectorElement(leftVector, simNode(0));
+		mIntfVoltage(0, 0) = mIntfVoltage(0, 0) - Math::complexFromVectorElement(leftVector, matrixNodeIndex(0));
 }
 
 void SP::Ph1::PiLine::mnaUpdateCurrent(const Matrix& leftVector) {

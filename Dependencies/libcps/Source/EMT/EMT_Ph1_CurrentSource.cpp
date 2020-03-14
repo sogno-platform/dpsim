@@ -60,10 +60,10 @@ void EMT::Ph1::CurrentSource::mnaInitialize(Real omega, Real timeStep, Attribute
 
 void EMT::Ph1::CurrentSource::mnaApplyRightSideVectorStamp(Matrix& rightVector) {
 	if (terminalNotGrounded(0))
-		Math::setVectorElement(rightVector, simNode(0), -mIntfCurrent(0,0));
+		Math::setVectorElement(rightVector, matrixNodeIndex(0), -mIntfCurrent(0,0));
 
 	if (terminalNotGrounded(1))
-		Math::setVectorElement(rightVector, simNode(1), mIntfCurrent(0,0));
+		Math::setVectorElement(rightVector, matrixNodeIndex(1), mIntfCurrent(0,0));
 }
 
 void EMT::Ph1::CurrentSource::updateState(Real time) {
@@ -87,7 +87,7 @@ void EMT::Ph1::CurrentSource::MnaPostStep::execute(Real time, Int timeStepCount)
 void EMT::Ph1::CurrentSource::mnaUpdateVoltage(const Matrix& leftVector) {
 	mIntfVoltage(0,0) = 0;
 	if (terminalNotGrounded(0))
-		mIntfVoltage(0,0) = Math::realFromVectorElement(leftVector, simNode(0));
+		mIntfVoltage(0,0) = Math::realFromVectorElement(leftVector, matrixNodeIndex(0));
 	if (terminalNotGrounded(1))
-		mIntfVoltage(0,0) = mIntfVoltage(0,0) - Math::realFromVectorElement(leftVector, simNode(1));
+		mIntfVoltage(0,0) = mIntfVoltage(0,0) - Math::realFromVectorElement(leftVector, matrixNodeIndex(1));
 }

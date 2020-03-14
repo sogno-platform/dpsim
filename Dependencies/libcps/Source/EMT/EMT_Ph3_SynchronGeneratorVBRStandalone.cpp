@@ -161,13 +161,13 @@ void EMT::Ph3::SynchronGeneratorVBRStandalone::mnaStep(Matrix& systemMatrix, Mat
 
 	// Update current source accordingly
 	if ( terminalNotGrounded(0) ) {
-		Math::addToVectorElement(rightVector, simNode(0), -mIa*mBase_i);
+		Math::addToVectorElement(rightVector, matrixNodeIndex(0), -mIa*mBase_i);
 	}
 	if ( terminalNotGrounded(1) ) {
-		Math::addToVectorElement(rightVector, simNode(1), -mIb*mBase_i);
+		Math::addToVectorElement(rightVector, matrixNodeIndex(1), -mIb*mBase_i);
 	}
-	if ( simNode(2) >= 0) {
-		Math::addToVectorElement(rightVector, simNode(2), -mIc*mBase_i);
+	if ( matrixNodeIndex(2) >= 0) {
+		Math::addToVectorElement(rightVector, matrixNodeIndex(2), -mIc*mBase_i);
 	}
 
 	if (mLogLevel != Logger::Level::off) {
@@ -322,19 +322,19 @@ void EMT::Ph3::SynchronGeneratorVBRStandalone::stepInPerUnit(Real om, Real dt, R
 
 void EMT::Ph3::SynchronGeneratorVBRStandalone::mnaPostStep(Matrix& rightVector, Matrix& leftVector, Real time) {
 	if ( terminalNotGrounded(0) ) {
-		mVa = Math::realFromVectorElement(leftVector, simNode(0));
+		mVa = Math::realFromVectorElement(leftVector, matrixNodeIndex(0));
 	}
 	else {
 		mVa = 0;
 	}
 	if ( terminalNotGrounded(1) ) {
-		mVb = Math::realFromVectorElement(leftVector, simNode(1));
+		mVb = Math::realFromVectorElement(leftVector, matrixNodeIndex(1));
 	}
 	else {
 		mVb = 0;
 	}
-	if ( simNode(2) >= 0) {
-		mVc = Math::realFromVectorElement(leftVector, simNode(2));
+	if ( matrixNodeIndex(2) >= 0) {
+		mVc = Math::realFromVectorElement(leftVector, matrixNodeIndex(2));
 	}
 	else {
 		mVc = 0;

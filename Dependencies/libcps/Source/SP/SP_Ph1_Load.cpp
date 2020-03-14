@@ -215,7 +215,7 @@ void SP::Ph1::Load::MnaPostStep::execute(Real time, Int timeStepCount) {
 
 
 void SP::Ph1::Load::mnaUpdateVoltage(const Matrix& leftVector) {
-	mIntfVoltage(0, 0) = Math::complexFromVectorElement(leftVector, simNode(0));
+	mIntfVoltage(0, 0) = Math::complexFromVectorElement(leftVector, matrixNodeIndex(0));
 }
 
 
