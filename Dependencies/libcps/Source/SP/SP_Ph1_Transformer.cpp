@@ -200,7 +200,7 @@ void SP::Ph1::Transformer::initializeFromPowerflow(Real frequency) {
 	// Switch terminals if transformer is connected the other way around.
 	if (Math::abs(mRatio) < 1.) {
 		mRatio = 1. / mRatio;
-		std::shared_ptr<Terminal<Complex>> tmp = mTerminals[0];
+		std::shared_ptr<SimTerminal<Complex>> tmp = mTerminals[0];
 		mTerminals[0] = mTerminals[1];
 		mTerminals[1] = tmp;
 	}

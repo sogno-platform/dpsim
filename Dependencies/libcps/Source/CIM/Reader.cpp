@@ -714,7 +714,7 @@ void Reader::processTopologicalNode(IEC61970::Base::Topology::TopologicalNode* t
 	for (auto term : topNode->Terminal) {
 		// Insert Terminal if it does not exist in the map and add reference to node.
 		// This could be optimized because the Terminal is searched twice.
-		auto cpsTerm = Terminal<VarType>::make(term->mRID);
+		auto cpsTerm = SimTerminal<VarType>::make(term->mRID);
 		mPowerflowTerminals.insert(std::make_pair(term->mRID, cpsTerm));
 		cpsTerm->setNode(std::dynamic_pointer_cast<SimNode<VarType>>(mPowerflowNodes[topNode->mRID]));
 
@@ -743,7 +743,7 @@ void Reader::processTopologicalNode(IEC61970::Base::Topology::TopologicalNode* t
 
 			auto pfEquipment = mPowerflowEquipment.at(equipment->mRID);
 			std::dynamic_pointer_cast<SimPowerComp<VarType>>(pfEquipment)->setTerminalAt(
-				std::dynamic_pointer_cast<Terminal<VarType>>(mPowerflowTerminals[term->mRID]), term->sequenceNumber-1);
+				std::dynamic_pointer_cast<SimTerminal<VarType>>(mPowerflowTerminals[term->mRID]), term->sequenceNumber-1);
 
 			mSLog->info("        Added Terminal {} to Equipment {}", term->mRID, equipment->mRID);
 		}

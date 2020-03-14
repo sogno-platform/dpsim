@@ -30,7 +30,7 @@ namespace CPS {
 
 	protected:
 		/// List of Terminals
-		typename Terminal<VarType>::List mTerminals;
+		typename SimTerminal<VarType>::List mTerminals;
 		/// List of virtual nodes
 		typename SimNode<VarType>::List mVirtualNodes;
 		/// Voltage between terminals
@@ -80,18 +80,18 @@ namespace CPS {
 		///
 		void checkForUnconnectedTerminals();
 		/// Return list of Terminal pointers
-		typename Terminal<VarType>::List terminals() { return mTerminals; }
+		typename SimTerminal<VarType>::List terminals() { return mTerminals; }
 		/// Get pointer to Terminal
-		typename Terminal<VarType>::Ptr terminal(UInt index);
+		typename SimTerminal<VarType>::Ptr terminal(UInt index);
 		/// Returns the list of terminals as TopologicalTerminal pointers
 		TopologicalTerminal::List topologicalTerminals();
 		///
 		void setTerminalNumber(UInt num);
 		/// Sets all Terminals of the component and checks if the number of Terminals is too large
 		/// fir this component type.
-		void setTerminals(typename Terminal<VarType>::List terminals);
+		void setTerminals(typename SimTerminal<VarType>::List terminals);
 		/// Sets Terminal at index terminalPosition.
-		void setTerminalAt(typename Terminal<VarType>::Ptr terminal, UInt terminalPosition);
+		void setTerminalAt(typename SimTerminal<VarType>::Ptr terminal, UInt terminalPosition);
 
 		/// Update the "cached" mMatrixNodeIndices and mMatrixNodeIndexIsGround members
 		void updateMatrixNodeIndices();

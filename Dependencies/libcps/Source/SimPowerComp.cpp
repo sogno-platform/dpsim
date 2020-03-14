@@ -48,7 +48,7 @@ void SimPowerComp<VarType>::checkForUnconnectedTerminals() {
 }
 
 template <typename VarType>
-typename Terminal<VarType>::Ptr SimPowerComp<VarType>::terminal(UInt index) {
+typename SimTerminal<VarType>::Ptr SimPowerComp<VarType>::terminal(UInt index) {
 	if (index >= mTerminals.size()) {
 		throw SystemError("Terminal not available for " + mUID);
 	}
@@ -58,7 +58,7 @@ typename Terminal<VarType>::Ptr SimPowerComp<VarType>::terminal(UInt index) {
 template <typename VarType>
 TopologicalTerminal::List SimPowerComp<VarType>::topologicalTerminals() {
 	TopologicalTerminal::List terminals;
-	for (typename Terminal<VarType>::Ptr term : mTerminals) {
+	for (typename SimTerminal<VarType>::Ptr term : mTerminals) {
 		terminals.push_back(term);
 	}
 	return terminals;
@@ -73,7 +73,7 @@ void SimPowerComp<VarType>::setTerminalNumber(UInt num) {
 }
 
 template <typename VarType>
-void SimPowerComp<VarType>::setTerminals(typename Terminal<VarType>::List terminals) {
+void SimPowerComp<VarType>::setTerminals(typename SimTerminal<VarType>::List terminals) {
 	if (mNumTerminals < terminals.size()) {
 		mSLog->error("Number of Terminals is too large for Component {} - Ignoring", mName);
 		return;
@@ -82,7 +82,7 @@ void SimPowerComp<VarType>::setTerminals(typename Terminal<VarType>::List termin
 }
 
 template <typename VarType>
-void SimPowerComp<VarType>::setTerminalAt(typename Terminal<VarType>::Ptr terminal, UInt terminalPosition) {
+void SimPowerComp<VarType>::setTerminalAt(typename SimTerminal<VarType>::Ptr terminal, UInt terminalPosition) {
 	if (mNumTerminals <= terminalPosition) {
 		mSLog->error("Terminal position number too large for Component {} - Ignoring", mName);
 		return;
@@ -110,7 +110,7 @@ UInt SimPowerComp<VarType>::nodeNumber() {
 template <typename VarType>
 TopologicalNode::List SimPowerComp<VarType>::topologicalNodes() {
 	TopologicalNode::List nodes;
-	for (typename Terminal<VarType>::Ptr term : mTerminals) {
+	for (typename SimTerminal<VarType>::Ptr term : mTerminals) {
 		nodes.push_back(term->node());
 	}
 	return nodes;
@@ -155,7 +155,7 @@ void SimPowerComp<VarType>::connect(typename SimNode<VarType>::List nodes) {
 	}
 	for (UInt i = 0; i < nodes.size(); i++) {
 		String name = mName + "_T" + std::to_string(i);
-		typename Terminal<VarType>::Ptr terminal = Terminal<VarType>::make(name);
+		typename SimTerminal<VarType>::Ptr terminal = SimTerminal<VarType>::make(name);
 		terminal->setNode(nodes[i]);
 		setTerminalAt(terminal, i);
 	}

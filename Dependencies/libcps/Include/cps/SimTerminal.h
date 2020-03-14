@@ -25,18 +25,20 @@
 namespace CPS {
 
 	template <typename VarType>
-	class Terminal : public TopologicalTerminal, public SharedFactory<Terminal<VarType>> {
+	class SimTerminal :
+		public TopologicalTerminal,
+		public SharedFactory<SimTerminal<VarType>> {
 	protected:
 		MatrixVar<VarType> mCurrent;
 		std::weak_ptr<SimNode<VarType>> mNode;
 
 	public:
-		typedef std::shared_ptr<Terminal<VarType>> Ptr;
+		typedef std::shared_ptr<SimTerminal<VarType>> Ptr;
 		typedef std::vector<Ptr> List;
 		///
-		Terminal(String name) : TopologicalTerminal(name, name) { }
+		SimTerminal(String name) : TopologicalTerminal(name, name) { }
 		///
-		Terminal(String uid, String name) : TopologicalTerminal(uid, name) { }
+		SimTerminal(String uid, String name) : TopologicalTerminal(uid, name) { }
 		///
 		typename SimNode<VarType>::Ptr node() {
 			return mNode.lock();
