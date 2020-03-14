@@ -75,7 +75,7 @@ void EMT::Ph3::NetworkInjection::initializeFromPowerflow(Real frequency) {
 
 void EMT::Ph3::NetworkInjection::mnaInitialize(Real omega, Real timeStep, Attribute<Matrix>::Ptr leftVector) {
 	MNAInterface::mnaInitialize(omega, timeStep);
-	updateSimNodes();
+	updateMatrixNodeIndices();
 
 	mIntfVoltage = mVoltageRef->get().real();
 	mMnaTasks.push_back(std::make_shared<MnaPreStep>(*this));
@@ -85,7 +85,7 @@ void EMT::Ph3::NetworkInjection::mnaInitialize(Real omega, Real timeStep, Attrib
 
 //void EMT::Ph3::NetworkInjection::mnaInitializeHarm(Real omega, Real timeStep, std::vector<Attribute<Matrix>::Ptr> leftVectors) {
 //	MNAInterface::mnaInitialize(omega, timeStep);
-//	updateSimNodes();
+//	updateMatrixNodeIndices();
 //
 //	mIntfVoltage(0, 0) = mVoltageRef->get();
 //

@@ -86,7 +86,7 @@ void SP::Ph1::RXLine::setPerUnitSystem(Real baseApparentPower, Real baseOmega) {
 }
 
 void SP::Ph1::RXLine::pfApplyAdmittanceMatrixStamp(SparseMatrixCompRow & Y) {
-	updateSimNodes();
+	updateMatrixNodeIndices();
 	int bus1 = this->matrixNodeIndex(0);
 	int bus2 = this->matrixNodeIndex(1);
 
@@ -196,7 +196,7 @@ void SP::Ph1::RXLine::initializeFromPowerflow(Real frequency) {
 
 void SP::Ph1::RXLine::mnaInitialize(Real omega, Real timeStep, Attribute<Matrix>::Ptr leftVector) {
 	MNAInterface::mnaInitialize(omega, timeStep);
-	updateSimNodes();
+	updateMatrixNodeIndices();
 	mSubInductor->mnaInitialize(omega, timeStep, leftVector);
 	mSubResistor->mnaInitialize(omega, timeStep, leftVector);
 	mInitialResistor->mnaInitialize(omega, timeStep, leftVector);

@@ -141,7 +141,7 @@ void EMT::Ph3::Transformer::initializeFromPowerflow(Real frequency) {
 
 void EMT::Ph3::Transformer::mnaInitialize(Real omega, Real timeStep, Attribute<Matrix>::Ptr leftVector) {
 	MNAInterface::mnaInitialize(omega, timeStep);
-	updateSimNodes();
+	updateMatrixNodeIndices();
 
 	mRightVector = Matrix::Zero(leftVector->get().rows(), 1);
 	auto subComponents = MNAInterface::List({ mSubInductor, mSubSnubResistor });

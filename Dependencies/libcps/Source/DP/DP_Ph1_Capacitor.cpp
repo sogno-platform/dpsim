@@ -71,7 +71,7 @@ void DP::Ph1::Capacitor::initializeFromPowerflow(Real frequency) {
 
 void DP::Ph1::Capacitor::mnaInitialize(Real omega, Real timeStep, Attribute<Matrix>::Ptr leftVector) {
 	MNAInterface::mnaInitialize(omega, timeStep);
-	updateSimNodes();
+	updateMatrixNodeIndices();
 
 	Real equivCondReal = 2.0 * mCapacitance / timeStep;
 	Real prevVoltCoeffReal = 2.0 * mCapacitance / timeStep;
@@ -103,7 +103,7 @@ void DP::Ph1::Capacitor::mnaInitialize(Real omega, Real timeStep, Attribute<Matr
 
 void DP::Ph1::Capacitor::mnaInitializeHarm(Real omega, Real timeStep, std::vector<Attribute<Matrix>::Ptr> leftVectors) {
 	MNAInterface::mnaInitialize(omega, timeStep);
-	updateSimNodes();
+	updateMatrixNodeIndices();
 
 	Real equivCondReal = 2.0 * mCapacitance / timeStep;
 	Real prevVoltCoeffReal = 2.0 * mCapacitance / timeStep;

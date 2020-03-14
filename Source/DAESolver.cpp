@@ -65,17 +65,17 @@ DAESolver::DAESolver(String name, CPS::SystemTopology system, Real dt, Real t0) 
     std::cout<<"Number of Eqn. "<<mNEQ<<std::endl;
 
     std::cout <<"Processing Nodes"<<std::endl;
-    UInt simNodeIdx = 0;
+    UInt matrixNodeIndexIdx = 0;
 
     for (UInt idx = 0; idx < mNodes.size(); idx++) {
 
-        mNodes[idx]->setSimNode(0, simNodeIdx);
-        simNodeIdx++;
+        mNodes[idx]->setMatrixNodeIndex(0, matrixNodeIndexIdx);
+        matrixNodeIndexIdx++;
         if (mNodes[idx]->phaseType() == PhaseType::ABC) {
-            mNodes[idx]->setSimNode(1, simNodeIdx);
-            simNodeIdx++;
-            mNodes[idx]->setSimNode(2, simNodeIdx);
-            simNodeIdx++;
+            mNodes[idx]->setMatrixNodeIndex(1, matrixNodeIndexIdx);
+            matrixNodeIndexIdx++;
+            mNodes[idx]->setMatrixNodeIndex(2, matrixNodeIndexIdx);
+            matrixNodeIndexIdx++;
         }
     }
 

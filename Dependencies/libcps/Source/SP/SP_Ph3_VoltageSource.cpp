@@ -63,7 +63,7 @@ void SP::Ph3::VoltageSource::initializeFromPowerflow(Real frequency) {
 }
 
 void SP::Ph3::VoltageSource::mnaInitialize(Real omega, Real timeStep, Attribute<Matrix>::Ptr leftVector) {
-	updateSimNodes();
+	updateMatrixNodeIndices();
 	mIntfVoltage(0, 0) = mVoltageRef->get();
 	mIntfVoltage(1, 0) = Complex(Math::abs(mVoltageRef->get()) * cos(Math::phase(mVoltageRef->get()) - 2. / 3. * M_PI),
 		Math::abs(mVoltageRef->get()) * sin(Math::phase(mVoltageRef->get()) - 2. / 3. * M_PI));

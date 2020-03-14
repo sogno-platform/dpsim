@@ -48,7 +48,7 @@ void EMT::Ph1::CurrentSource::setParameters(Complex currentRef, Real srcFreq) {
 
 void EMT::Ph1::CurrentSource::mnaInitialize(Real omega, Real timeStep, Attribute<Matrix>::Ptr leftVector) {
 	MNAInterface::mnaInitialize(omega, timeStep);
-	updateSimNodes();
+	updateMatrixNodeIndices();
 
 	mCurrentRef = attribute<Complex>("I_ref");
 	mSrcFreq = attribute<Real>("f_src");

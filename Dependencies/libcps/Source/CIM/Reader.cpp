@@ -237,7 +237,7 @@ void Reader::processSvVoltage(SvVoltage* volt) {
 	Real voltagePhase = volt->angle.value * PI / 180;
 	mPowerflowNodes[node->mRID]->setInitialVoltage(std::polar<Real>(voltageAbs, voltagePhase));
 
-	mSLog->info("Node {} SimNode {}: {} V, {} deg",
+	mSLog->info("Node {} MatrixNodeIndex {}: {} V, {} deg",
 		mPowerflowNodes[node->mRID]->uid(),
 		mPowerflowNodes[node->mRID]->matrixNodeIndex(),
 		std::abs(mPowerflowNodes[node->mRID]->initialSingleVoltage()),
@@ -700,8 +700,8 @@ void Reader::writeSvVoltageFromStaticSysTopology(SystemTopology& sysStatic, Syst
 template<typename VarType>
 void Reader::processTopologicalNode(IEC61970::Base::Topology::TopologicalNode* topNode) {
 	// Add this node to global node list and assign simulation node incrementally.
-	int simNode = Int(mPowerflowNodes.size());
-	mPowerflowNodes[topNode->mRID] = Node<VarType>::make(topNode->mRID, topNode->name, simNode, mPhase);
+	int matrixNodeIndex = Int(mPowerflowNodes.size());
+	mPowerflowNodes[topNode->mRID] = Node<VarType>::make(topNode->mRID, topNode->name, matrixNodeIndex, mPhase);
 
 	if (mPhase == PhaseType::ABC) {
 		mSLog->info("TopologicalNode {} phase A as simulation node {} ", topNode->mRID, mPowerflowNodes[topNode->mRID]->matrixNodeIndex(PhaseType::A));

@@ -69,7 +69,7 @@ void SP::Ph3::Capacitor::initializeFromPowerflow(Real frequency) {
 
 
 void SP::Ph3::Capacitor::mnaInitialize(Real omega, Real timeStep, Attribute<Matrix>::Ptr leftVector) {
-	updateSimNodes();
+	updateMatrixNodeIndices();
 	// TODO add updated logger
 	/*mLog.info() << "\n--- MNA Initialization ---" << std::endl
 		<< "Initial voltage " << Math::abs(mIntfVoltage(0, 0))

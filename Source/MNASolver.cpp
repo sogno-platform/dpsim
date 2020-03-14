@@ -57,7 +57,7 @@ void MnaSolver<VarType>::initialize() {
 	identifyTopologyObjects();
 	// These steps complete the network information.
 	createVirtualNodes();
-	assignSimNodes();
+	assignMatrixNodeIndices();
 
 	mSLog->info("-- Create empty MNA system matrices and vectors");
 	// The system topology is prepared and we create the MNA matrices.
@@ -269,47 +269,47 @@ void MnaSolver<VarType>::identifyTopologyObjects() {
 }
 
 template <typename VarType>
-void MnaSolver<VarType>::assignSimNodes() {
-	UInt simNodeIdx = 0;
+void MnaSolver<VarType>::assignMatrixNodeIndices() {
+	UInt matrixNodeIndexIdx = 0;
 	for (UInt idx = 0; idx < mNodes.size(); idx++) {
-		mNodes[idx]->setSimNode(0, simNodeIdx);
-		simNodeIdx++;
+		mNodes[idx]->setMatrixNodeIndex(0, matrixNodeIndexIdx);
+		matrixNodeIndexIdx++;
 		if (mNodes[idx]->phaseType() == CPS::PhaseType::ABC) {
-			mNodes[idx]->setSimNode(1, simNodeIdx);
-			simNodeIdx++;
-			mNodes[idx]->setSimNode(2, simNodeIdx);
-			simNodeIdx++;
+			mNodes[idx]->setMatrixNodeIndex(1, matrixNodeIndexIdx);
+			matrixNodeIndexIdx++;
+			mNodes[idx]->setMatrixNodeIndex(2, matrixNodeIndexIdx);
+			matrixNodeIndexIdx++;
 		}
-		if (idx == mNumNetNodes-1) mNumNetSimNodes = simNodeIdx;
+		if (idx == mNumNetNodes-1) mNumNetMatrixNodeIndices = matrixNodeIndexIdx;
 	}
-	// Total number of network nodes is simNodeIdx + 1
-	mNumSimNodes = simNodeIdx;
-	mNumVirtualSimNodes = mNumSimNodes - mNumNetSimNodes;
-	mNumHarmSimNodes = static_cast<UInt>(mSystem.mFrequencies.size()-1) * mNumSimNodes;
+	// Total number of network nodes is matrixNodeIndexIdx + 1
+	mNumMatrixNodeIndices = matrixNodeIndexIdx;
+	mNumVirtualMatrixNodeIndices = mNumMatrixNodeIndices - mNumNetMatrixNodeIndices;
+	mNumHarmMatrixNodeIndices = static_cast<UInt>(mSystem.mFrequencies.size()-1) * mNumMatrixNodeIndices;
 
 	mSLog->info("Assigned simulation nodes to topology nodes:");
-	mSLog->info("Number of network simulation nodes: {:d}", mNumNetSimNodes);
-	mSLog->info("Number of simulation nodes: {:d}", mNumSimNodes);
-	mSLog->info("Number of harmonic simulation nodes: {:d}", mNumHarmSimNodes);
+	mSLog->info("Number of network simulation nodes: {:d}", mNumNetMatrixNodeIndices);
+	mSLog->info("Number of simulation nodes: {:d}", mNumMatrixNodeIndices);
+	mSLog->info("Number of harmonic simulation nodes: {:d}", mNumHarmMatrixNodeIndices);
 }
 
 template<>
 void MnaSolver<Real>::createEmptyVectors() {
-	mRightSideVector = Matrix::Zero(mNumSimNodes, 1);
-	mLeftSideVector = Matrix::Zero(mNumSimNodes, 1);
+	mRightSideVector = Matrix::Zero(mNumMatrixNodeIndices, 1);
+	mLeftSideVector = Matrix::Zero(mNumMatrixNodeIndices, 1);
 }
 
 template<>
 void MnaSolver<Complex>::createEmptyVectors() {
 	if (mFrequencyParallel) {
 		for(Int freq = 0; freq < mSystem.mFrequencies.size(); freq++) {
-			mRightSideVectorHarm.push_back(Matrix::Zero(2*(mNumSimNodes), 1));
-			mLeftSideVectorHarm.push_back(Matrix::Zero(2*(mNumSimNodes), 1));
+			mRightSideVectorHarm.push_back(Matrix::Zero(2*(mNumMatrixNodeIndices), 1));
+			mLeftSideVectorHarm.push_back(Matrix::Zero(2*(mNumMatrixNodeIndices), 1));
 		}
 	}
 	else {
-		mRightSideVector = Matrix::Zero(2*(mNumSimNodes + mNumHarmSimNodes), 1);
-		mLeftSideVector = Matrix::Zero(2*(mNumSimNodes + mNumHarmSimNodes), 1);
+		mRightSideVector = Matrix::Zero(2*(mNumMatrixNodeIndices + mNumHarmMatrixNodeIndices), 1);
+		mLeftSideVector = Matrix::Zero(2*(mNumMatrixNodeIndices + mNumHarmMatrixNodeIndices), 1);
 	}
 }
 
@@ -319,7 +319,7 @@ void MnaSolver<Real>::createEmptySystemMatrix() {
 		throw SystemError("Too many Switches.");
 
 	for (UInt i = 0; i < std::pow(2,mSwitches.size()); i++)
-		mSwitchedMatrices[std::bitset<SWITCH_NUM>(i)] = Matrix::Zero(mNumSimNodes, mNumSimNodes);
+		mSwitchedMatrices[std::bitset<SWITCH_NUM>(i)] = Matrix::Zero(mNumMatrixNodeIndices, mNumMatrixNodeIndices);
 }
 
 template<>
@@ -331,13 +331,13 @@ void MnaSolver<Complex>::createEmptySystemMatrix() {
 		for (UInt i = 0; i < std::pow(2,mSwitches.size()); i++) {
 			for(Int freq = 0; freq < mSystem.mFrequencies.size(); freq++) {
 				mSwitchedMatricesHarm[std::bitset<SWITCH_NUM>(i)].push_back(
-					Matrix::Zero(2*(mNumSimNodes), 2*(mNumSimNodes)));
+					Matrix::Zero(2*(mNumMatrixNodeIndices), 2*(mNumMatrixNodeIndices)));
 			}
 		}
 	}
 	else {
 		for (UInt i = 0; i < std::pow(2,mSwitches.size()); i++)
-			mSwitchedMatrices[std::bitset<SWITCH_NUM>(i)] = Matrix::Zero(2*(mNumSimNodes + mNumHarmSimNodes), 2*(mNumSimNodes + mNumHarmSimNodes));
+			mSwitchedMatrices[std::bitset<SWITCH_NUM>(i)] = Matrix::Zero(2*(mNumMatrixNodeIndices + mNumHarmMatrixNodeIndices), 2*(mNumMatrixNodeIndices + mNumHarmMatrixNodeIndices));
 	}
 }
 
@@ -357,13 +357,13 @@ void MnaSolver<VarType>::createVirtualNodes() {
 				virtualNode++;
 				mNodes.push_back(pComp->virtualNode(node));
 
-				pComp->virtualNode(node)->setSimNode(0, virtualNode);
+				pComp->virtualNode(node)->setMatrixNodeIndex(0, virtualNode);
 				mSLog->info("Assigned index {} to virtual node {} for {}", virtualNode, node, pComp->name());
 
 				if (pComp->virtualNode(node)->phaseType() == CPS::PhaseType::ABC) {
 					for (UInt phase = 1; phase < 3; phase++) {
 						virtualNode++;
-						pComp->virtualNode(node)->setSimNode(phase, virtualNode);
+						pComp->virtualNode(node)->setMatrixNodeIndex(phase, virtualNode);
 						mSLog->info("Assigned index {} to virtual node {} for {}", virtualNode, node, pComp->name());
 					}
 				}

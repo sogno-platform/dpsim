@@ -129,7 +129,7 @@ void DiakopticsSolver<VarType>::initSubnets(const std::vector<SystemTopology>& s
 
 	for (UInt i = 0; i < subnets.size(); i++) {
 		collectVirtualNodes(i);
-		assignSimNodes(i);
+		assignMatrixNodeIndices(i);
 	}
 }
 
@@ -155,25 +155,25 @@ void DiakopticsSolver<VarType>::collectVirtualNodes(int net) {
 }
 
 template <typename VarType>
-void DiakopticsSolver<VarType>::assignSimNodes(int net) {
-	UInt simNodeIdx = 0;
+void DiakopticsSolver<VarType>::assignMatrixNodeIndices(int net) {
+	UInt matrixNodeIndexIdx = 0;
 	for (UInt idx = 0; idx < mSubnets[net].nodes.size(); idx++) {
 		auto& node = mSubnets[net].nodes[idx];
 
-		node->setSimNode(0, simNodeIdx);
-		mSLog->info("Assigned index {} to node {}", simNodeIdx, node->name());
-		simNodeIdx++;
+		node->setMatrixNodeIndex(0, matrixNodeIndexIdx);
+		mSLog->info("Assigned index {} to node {}", matrixNodeIndexIdx, node->name());
+		matrixNodeIndexIdx++;
 
 		if (node->phaseType() == CPS::PhaseType::ABC) {
-			node->setSimNode(1, simNodeIdx);
-			mSLog->info("Assigned index {} to node {} phase B", simNodeIdx, node->name());
-			simNodeIdx++;
-			node->setSimNode(2, simNodeIdx);
-			mSLog->info("Assigned index {} to node {} phase C", simNodeIdx, node->name());
-			simNodeIdx++;
+			node->setMatrixNodeIndex(1, matrixNodeIndexIdx);
+			mSLog->info("Assigned index {} to node {} phase B", matrixNodeIndexIdx, node->name());
+			matrixNodeIndexIdx++;
+			node->setMatrixNodeIndex(2, matrixNodeIndexIdx);
+			mSLog->info("Assigned index {} to node {} phase C", matrixNodeIndexIdx, node->name());
+			matrixNodeIndexIdx++;
 		}
 	}
-	setSubnetSize(net, simNodeIdx);
+	setSubnetSize(net, matrixNodeIndexIdx);
 
 	if (net == 0)
 		mSubnets[net].sysOff = 0;

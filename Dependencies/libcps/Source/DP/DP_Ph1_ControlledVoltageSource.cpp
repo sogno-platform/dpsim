@@ -55,7 +55,7 @@ void DP::Ph1::ControlledVoltageSource::mnaInitialize(Real omega, Real timeStep, 
 	checkForUnconnectedTerminals();
 
 	MNAInterface::mnaInitialize(omega, timeStep);
-	updateSimNodes();
+	updateMatrixNodeIndices();
 
 	mMnaTasks.push_back(std::make_shared<MnaPreStep>(*this));
 	mMnaTasks.push_back(std::make_shared<MnaPostStep>(*this, leftVector));

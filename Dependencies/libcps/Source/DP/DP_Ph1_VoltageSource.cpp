@@ -71,7 +71,7 @@ void DP::Ph1::VoltageSource::initializeFromPowerflow(Real frequency) {
 
 void DP::Ph1::VoltageSource::mnaInitialize(Real omega, Real timeStep, Attribute<Matrix>::Ptr leftVector) {
 	MNAInterface::mnaInitialize(omega, timeStep);
-	updateSimNodes();
+	updateMatrixNodeIndices();
 
 	mIntfVoltage(0,0) = mVoltageRef->get();
 	mMnaTasks.push_back(std::make_shared<MnaPreStep>(*this));
@@ -81,7 +81,7 @@ void DP::Ph1::VoltageSource::mnaInitialize(Real omega, Real timeStep, Attribute<
 
 void DP::Ph1::VoltageSource::mnaInitializeHarm(Real omega, Real timeStep, std::vector<Attribute<Matrix>::Ptr> leftVectors) {
 	MNAInterface::mnaInitialize(omega, timeStep);
-	updateSimNodes();
+	updateMatrixNodeIndices();
 
 	mIntfVoltage(0,0) = mVoltageRef->get();
 

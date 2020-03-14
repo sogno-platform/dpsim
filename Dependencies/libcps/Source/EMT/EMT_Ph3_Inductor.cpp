@@ -75,7 +75,7 @@ void EMT::Ph3::Inductor::initializeFromPowerflow(Real frequency) {
 void EMT::Ph3::Inductor::mnaInitialize(Real omega, Real timeStep, Attribute<Matrix>::Ptr leftVector) {
 	MNAInterface::mnaInitialize(omega, timeStep);
 
-	updateSimNodes();
+	updateMatrixNodeIndices();
 	mEquivCond = timeStep / 2 * mInductance.inverse();
 	// Update internal state
 	mEquivCurrent = mEquivCond * mIntfVoltage + mIntfCurrent;

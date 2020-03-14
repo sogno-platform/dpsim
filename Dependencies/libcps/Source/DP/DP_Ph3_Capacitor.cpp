@@ -110,7 +110,7 @@ void DP::Ph3::Capacitor::initVars(Real omega, Real timeStep) {
 }
 
 void DP::Ph3::Capacitor::mnaInitialize(Real omega, Real timeStep, Attribute<Matrix>::Ptr leftVector) {
-	updateSimNodes();
+	updateMatrixNodeIndices();
 	initVars(omega, timeStep);
 	//Matrix equivCondReal = 2.0 * mCapacitance / timeStep;
 	//Matrix equivCondImag = omega * mCapacitance;

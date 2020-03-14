@@ -51,7 +51,7 @@ SimPowerComp<Real>::Ptr EMT::Ph3::VoltageSource::clone(String name) {
 void EMT::Ph3::VoltageSource::mnaInitialize(Real omega, Real timeStep, Attribute<Matrix>::Ptr leftVector) {
 	MNAInterface::mnaInitialize(omega, timeStep);
 
-	updateSimNodes();
+	updateMatrixNodeIndices();
 	mVoltageRef = attribute<Complex>("V_ref");
 	mSrcFreq = attribute<Real>("f_src");
 	mIntfVoltage(0, 0) = Math::abs(mVoltageRef->get()) * cos(Math::phase(mVoltageRef->get()));

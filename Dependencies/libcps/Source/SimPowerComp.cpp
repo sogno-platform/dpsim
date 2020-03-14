@@ -68,8 +68,8 @@ template <typename VarType>
 void SimPowerComp<VarType>::setTerminalNumber(UInt num) {
 	mNumTerminals = num;
 	mTerminals.resize(mNumTerminals, nullptr);
-	mSimNodes.resize(3*num);
-	mSimNodeIsGround.resize(num);
+	mMatrixNodeIndices.resize(3*num);
+	mMatrixNodeIndexIsGround.resize(num);
 }
 
 template <typename VarType>
@@ -92,12 +92,12 @@ void SimPowerComp<VarType>::setTerminalAt(typename Terminal<VarType>::Ptr termin
 }
 
 template <typename VarType>
-void SimPowerComp<VarType>::updateSimNodes() {
+void SimPowerComp<VarType>::updateMatrixNodeIndices() {
 	for (UInt nodeIdx = 0; nodeIdx < mNumTerminals; nodeIdx++) {
-		mSimNodes[3*nodeIdx] = node(nodeIdx)->matrixNodeIndex(PhaseType::A);
-		mSimNodes[3*nodeIdx+1] = node(nodeIdx)->matrixNodeIndex(PhaseType::B);
-		mSimNodes[3*nodeIdx+2] = node(nodeIdx)->matrixNodeIndex(PhaseType::C);
-		mSimNodeIsGround[nodeIdx] = node(nodeIdx)->isGround();
+		mMatrixNodeIndices[3*nodeIdx] = node(nodeIdx)->matrixNodeIndex(PhaseType::A);
+		mMatrixNodeIndices[3*nodeIdx+1] = node(nodeIdx)->matrixNodeIndex(PhaseType::B);
+		mMatrixNodeIndices[3*nodeIdx+2] = node(nodeIdx)->matrixNodeIndex(PhaseType::C);
+		mMatrixNodeIndexIsGround[nodeIdx] = node(nodeIdx)->isGround();
 	}
 }
 

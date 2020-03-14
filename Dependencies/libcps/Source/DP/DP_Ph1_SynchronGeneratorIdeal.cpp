@@ -73,7 +73,7 @@ void DP::Ph1::SynchronGeneratorIdeal::initializeFromPowerflow(Real frequency) {
 
 void DP::Ph1::SynchronGeneratorIdeal::mnaInitialize(Real omega, Real timeStep, Attribute<Matrix>::Ptr leftVector) {
 	MNAInterface::mnaInitialize(omega, timeStep);
-	updateSimNodes();
+	updateMatrixNodeIndices();
 	mSubVoltageSource->mnaInitialize(omega, timeStep, leftVector);
 	// since there is no additional behaviour, just use the tasks and right-vector from the voltage source
 	setAttributeRef("right_vector", mSubVoltageSource->attribute("right_vector"));

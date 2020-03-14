@@ -285,7 +285,7 @@ Matrix EMT::Ph3::AvVoltSourceInverterStateSpace::getInverseParkTransformMatrix(R
 
 void EMT::Ph3::AvVoltSourceInverterStateSpace::mnaInitialize(Real omega, Real timeStep,
 	Attribute<Matrix>::Ptr leftVector){
-	updateSimNodes();
+	updateMatrixNodeIndices();
 	Complex voltageRef = attribute<Complex>("V_ref")->get();
 	mIntfVoltage(0, 0) = voltageRef.real() * cos(Math::phase(voltageRef));
 	mIntfVoltage(1, 0) = voltageRef.real() * cos(Math::phase(voltageRef) - 2. / 3. * M_PI);

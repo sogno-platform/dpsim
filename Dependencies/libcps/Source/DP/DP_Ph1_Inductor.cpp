@@ -89,7 +89,7 @@ void DP::Ph1::Inductor::initVars(Real timeStep) {
 
 void DP::Ph1::Inductor::mnaInitialize(Real omega, Real timeStep, Attribute<Matrix>::Ptr leftVector) {
 	MNAInterface::mnaInitialize(omega, timeStep);
-	updateSimNodes();
+	updateMatrixNodeIndices();
 
 	initVars(timeStep);
 
@@ -110,7 +110,7 @@ void DP::Ph1::Inductor::mnaInitialize(Real omega, Real timeStep, Attribute<Matri
 
 void DP::Ph1::Inductor::mnaInitializeHarm(Real omega, Real timeStep, std::vector<Attribute<Matrix>::Ptr> leftVectors) {
 	MNAInterface::mnaInitialize(omega, timeStep);
-	updateSimNodes();
+	updateMatrixNodeIndices();
 
 	initVars(timeStep);
 

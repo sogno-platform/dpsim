@@ -70,7 +70,7 @@ void DP::Ph1::CurrentSource::initializeFromPowerflow(Real frequency) {
 
 void DP::Ph1::CurrentSource::mnaInitialize(Real omega, Real timeStep, Attribute<Matrix>::Ptr leftVector) {
 	MNAInterface::mnaInitialize(omega, timeStep);
-	updateSimNodes();
+	updateMatrixNodeIndices();
 
 	mCurrentRef = attribute<Complex>("I_ref");
 	mIntfCurrent(0,0) = mCurrentRef->get();

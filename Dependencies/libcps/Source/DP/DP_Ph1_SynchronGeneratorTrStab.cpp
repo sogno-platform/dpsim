@@ -200,7 +200,7 @@ void DP::Ph1::SynchronGeneratorTrStab::step(Real time) {
 
 void DP::Ph1::SynchronGeneratorTrStab::mnaInitialize(Real omega, Real timeStep, Attribute<Matrix>::Ptr leftVector) {
 	MNAInterface::mnaInitialize(omega, timeStep);
-	updateSimNodes();
+	updateMatrixNodeIndices();
 
 	mSubVoltageSource->mnaInitialize(omega, timeStep, leftVector);
 	mSubInductor->mnaInitialize(omega, timeStep, leftVector);

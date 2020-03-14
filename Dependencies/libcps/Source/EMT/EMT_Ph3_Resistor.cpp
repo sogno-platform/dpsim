@@ -69,7 +69,7 @@ void EMT::Ph3::Resistor::initializeFromPowerflow(Real frequency) {
 void EMT::Ph3::Resistor::mnaInitialize(Real omega, Real timeStep, Attribute<Matrix>::Ptr leftVector) {
 	MNAInterface::mnaInitialize(omega, timeStep);
 
-	updateSimNodes();
+	updateMatrixNodeIndices();
 	mMnaTasks.push_back(std::make_shared<MnaPostStep>(*this, leftVector));
 }
 

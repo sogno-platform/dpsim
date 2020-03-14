@@ -98,7 +98,7 @@ namespace DPsim {
 
 		void initSubnets(const std::vector<CPS::SystemTopology>& subnets);
 		void collectVirtualNodes(int net);
-		void assignSimNodes(int net);
+		void assignMatrixNodeIndices(int net);
 		void setSubnetSize(int net, UInt nodes);
 
 		void setLogColumns();

@@ -59,7 +59,7 @@ void SP::Ph1::Capacitor::initializeFromPowerflow(Real frequency) {
 
 
 void SP::Ph1::Capacitor::mnaInitialize(Real omega, Real timeStep, Attribute<Matrix>::Ptr leftVector) {
-	updateSimNodes();
+	updateMatrixNodeIndices();
 
 	mRightVector = Matrix::Zero(leftVector->get().rows(), 1);
 	mMnaTasks.push_back(std::make_shared<MnaPostStep>(*this, leftVector));

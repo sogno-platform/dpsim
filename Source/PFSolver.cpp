@@ -66,7 +66,7 @@ void PFSolver::initialize(){
 
 void PFSolver::initializeComponents(){
     for (auto comp : mSystem.mComponents) {
-        std::dynamic_pointer_cast<SimPowerComp<Complex>>(comp)->updateSimNodes();
+        std::dynamic_pointer_cast<SimPowerComp<Complex>>(comp)->updateMatrixNodeIndices();
     }
 
 	mSLog->info("-- Initialize components from terminals or nodes of topology");

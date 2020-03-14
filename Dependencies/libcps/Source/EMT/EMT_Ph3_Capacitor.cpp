@@ -73,7 +73,7 @@ void EMT::Ph3::Capacitor::initializeFromPowerflow(Real frequency) {
 
 void EMT::Ph3::Capacitor::mnaInitialize(Real omega, Real timeStep, Attribute<Matrix>::Ptr leftVector) {
 	MNAInterface::mnaInitialize(omega, timeStep);
-	updateSimNodes();
+	updateMatrixNodeIndices();
 	mEquivCond = (2.0 * mCapacitance) / timeStep;
 	// Update internal state
 	mEquivCurrent = - mIntfCurrent + - mEquivCond * mIntfVoltage;

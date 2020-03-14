@@ -23,15 +23,15 @@ using namespace CPS;
 
 template <typename VarType>
 Node<VarType>::Node(String name, String uid,
-	std::vector<UInt> simNode, PhaseType phaseType, std::vector<Complex> initialVoltage)
+	std::vector<UInt> matrixNodeIndex, PhaseType phaseType, std::vector<Complex> initialVoltage)
 	: TopologicalNode(uid, name, phaseType, initialVoltage) {
 
 	if (phaseType == PhaseType::ABC) {
-		mSimNode = simNode;
+		mMatrixNodeIndex = matrixNodeIndex;
 		mVoltage = MatrixVar<VarType>::Zero(3, 1);
 	}
 	else {
-		mSimNode[0] = simNode[0];
+		mMatrixNodeIndex[0] = matrixNodeIndex[0];
 		mVoltage = MatrixVar<VarType>::Zero(1, 1);
 	}
 
@@ -71,20 +71,20 @@ void Node<Complex>::setVoltage(Complex newVoltage) {
 
 template<>
 void Node<Real>::mnaUpdateVoltage(Matrix& leftVector) {
-	if (mSimNode[0] >= 0) mVoltage(0,0) = Math::realFromVectorElement(leftVector, mSimNode[0]);
+	if (mMatrixNodeIndex[0] >= 0) mVoltage(0,0) = Math::realFromVectorElement(leftVector, mMatrixNodeIndex[0]);
 	if (mPhaseType == PhaseType::ABC) {
-		if (mSimNode[1] >= 0) mVoltage(1,0) = Math::realFromVectorElement(leftVector, mSimNode[1]);
-		if (mSimNode[2] >= 0) mVoltage(2,0) = Math::realFromVectorElement(leftVector, mSimNode[2]);
+		if (mMatrixNodeIndex[1] >= 0) mVoltage(1,0) = Math::realFromVectorElement(leftVector, mMatrixNodeIndex[1]);
+		if (mMatrixNodeIndex[2] >= 0) mVoltage(2,0) = Math::realFromVectorElement(leftVector, mMatrixNodeIndex[2]);
 	}
 }
 
 template<>
 void Node<Complex>::mnaUpdateVoltage(Matrix& leftVector) {
 	for (UInt freq = 0; freq < mNumFreqs; freq++) {
-			if (mSimNode[0] >= 0) mVoltage(0,freq) = Math::complexFromVectorElement(leftVector, mSimNode[0], mNumFreqs, freq);
+			if (mMatrixNodeIndex[0] >= 0) mVoltage(0,freq) = Math::complexFromVectorElement(leftVector, mMatrixNodeIndex[0], mNumFreqs, freq);
 		if (mPhaseType == PhaseType::ABC) {
-			if (mSimNode[1] >= 0) mVoltage(1,freq) = Math::complexFromVectorElement(leftVector, mSimNode[1], mNumFreqs, freq);
-			if (mSimNode[2] >= 0) mVoltage(2,freq) = Math::complexFromVectorElement(leftVector, mSimNode[2], mNumFreqs, freq);
+			if (mMatrixNodeIndex[1] >= 0) mVoltage(1,freq) = Math::complexFromVectorElement(leftVector, mMatrixNodeIndex[1], mNumFreqs, freq);
+			if (mMatrixNodeIndex[2] >= 0) mVoltage(2,freq) = Math::complexFromVectorElement(leftVector, mMatrixNodeIndex[2], mNumFreqs, freq);
 		}
 	}
 }
@@ -94,10 +94,10 @@ void Node<Real>::mnaUpdateVoltageHarm(const Matrix& leftVector, Int freqIdx) { }
 
 template<>
 void Node<Complex>::mnaUpdateVoltageHarm(const Matrix& leftVector, Int freqIdx) {
-	if (mSimNode[0] >= 0) mVoltage(0,freqIdx) = Math::complexFromVectorElement(leftVector, mSimNode[0]);
+	if (mMatrixNodeIndex[0] >= 0) mVoltage(0,freqIdx) = Math::complexFromVectorElement(leftVector, mMatrixNodeIndex[0]);
 	if (mPhaseType == PhaseType::ABC) {
-		if (mSimNode[1] >= 0) mVoltage(1,freqIdx) = Math::complexFromVectorElement(leftVector, mSimNode[1]);
-		if (mSimNode[2] >= 0) mVoltage(2,freqIdx) = Math::complexFromVectorElement(leftVector, mSimNode[2]);
+		if (mMatrixNodeIndex[1] >= 0) mVoltage(1,freqIdx) = Math::complexFromVectorElement(leftVector, mMatrixNodeIndex[1]);
+		if (mMatrixNodeIndex[2] >= 0) mVoltage(2,freqIdx) = Math::complexFromVectorElement(leftVector, mMatrixNodeIndex[2]);
 	}
 }
 

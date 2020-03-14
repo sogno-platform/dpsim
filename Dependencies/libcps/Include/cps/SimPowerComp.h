@@ -45,9 +45,9 @@ namespace CPS {
 		PhaseType mPhaseType = PhaseType::Single;
 
 		/// "Cached" list of simulation nodes (to avoid shared_ptr accesses during simulation)
-		std::vector<UInt> mSimNodes;
+		std::vector<UInt> mMatrixNodeIndices;
 		/// "Cached" flags for whether the connected nodes are grounded
-		std::vector<bool> mSimNodeIsGround;
+		std::vector<bool> mMatrixNodeIndexIsGround;
 
 		/// Flag indicating that parameters are set via setParameters() function
 		bool parametersSet = false;
@@ -93,8 +93,8 @@ namespace CPS {
 		/// Sets Terminal at index terminalPosition.
 		void setTerminalAt(typename Terminal<VarType>::Ptr terminal, UInt terminalPosition);
 
-		/// Update the "cached" mSimNodes and mSimNodeIsGround members
-		void updateSimNodes();
+		/// Update the "cached" mMatrixNodeIndices and mMatrixNodeIndexIsGround members
+		void updateMatrixNodeIndices();
 
 		// #### Nodes ####
 		/// Returns the actual number of Nodes / Terminals that are already set to valid Nodes.
@@ -107,12 +107,12 @@ namespace CPS {
 			return mTerminals[index]->node();
 		};
 		UInt matrixNodeIndex(UInt nodeIndex) {
-			return mSimNodes[nodeIndex * 3];
+			return mMatrixNodeIndices[nodeIndex * 3];
 		}
 		UInt matrixNodeIndex(UInt nodeIndex, UInt phaseIndex) {
-			return mSimNodes[nodeIndex * 3 + phaseIndex];
+			return mMatrixNodeIndices[nodeIndex * 3 + phaseIndex];
 		}
-		/// TODO replace with access to mSimNodes
+		/// TODO replace with access to mMatrixNodeIndices
 		std::vector<UInt> matrixNodeIndices(UInt index) { return node(index)->matrixNodeIndices(); }
 		/// Get nodes as base type TopologicalNode
 		TopologicalNode::List topologicalNodes();
@@ -127,9 +127,9 @@ namespace CPS {
 		/// Get pointer to virtual node
 		typename Node<VarType>::Ptr virtualNode(UInt index);
 		/// Get vector of simulation node numbers from virtual Node
-		std::vector<UInt> virtualSimNodes(UInt index) { return virtualNode(index)->matrixNodeIndices(); }
+		std::vector<UInt> virtualMatrixNodeIndices(UInt index) { return virtualNode(index)->matrixNodeIndices(); }
 		/// Get simulation node number from virtual node
-		UInt virtualSimNode(UInt nodeIndex, UInt phaseIndex = 0) { return virtualSimNodes(nodeIndex)[phaseIndex]; }
+		UInt virtualSimNode(UInt nodeIndex, UInt phaseIndex = 0) { return virtualMatrixNodeIndices(nodeIndex)[phaseIndex]; }
 
 		// #### States ####
 		const MatrixVar<VarType>& intfCurrent() { return mIntfCurrent; }
@@ -140,7 +140,7 @@ namespace CPS {
 		///
 		Complex initialSingleVoltage(UInt index) { return mTerminals[index]->initialSingleVoltage(); }
 		///
-		Bool terminalNotGrounded(UInt index) { return !mSimNodeIsGround[index]; }
+		Bool terminalNotGrounded(UInt index) { return !mMatrixNodeIndexIsGround[index]; }
 
 		// #### Setters ####
 		void setIntfCurrent(MatrixVar<VarType> current) { mIntfCurrent = current; }

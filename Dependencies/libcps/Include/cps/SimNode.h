@@ -30,7 +30,7 @@ namespace CPS {
 					public SharedFactory<Node<VarType>> {
 	protected:
 		///
-		std::vector<UInt> mSimNode = { 0 };
+		std::vector<UInt> mMatrixNodeIndex = { 0 };
 		/// List of considered network harmonics
 		Matrix mFrequencies;
 		/// Number of harmonics
@@ -47,7 +47,7 @@ namespace CPS {
 		static Ptr GND;
 
 		/// This very general constructor is used by other constructors.
-		Node(String name, String uid, std::vector<UInt> simNode,
+		Node(String name, String uid, std::vector<UInt> matrixNodeIndex,
 			PhaseType phaseType, std::vector<Complex> initialVoltage);
 		/// Create ground node if no parameters are given.
 		Node(PhaseType phaseType = PhaseType::Single);
@@ -58,13 +58,13 @@ namespace CPS {
 			: Node(name, name, { 0, 0, 0 }, phaseType, initialVoltage) { }
 		/// Create node with name and node number.
 		/// This is mostly used by functions.
-		Node(String uid, String name, UInt simNode,
+		Node(String uid, String name, UInt matrixNodeIndex,
 			PhaseType phaseType = PhaseType::Single, std::vector<Complex> initialVoltage = { 0, 0, 0 })
-			: Node(uid, name, { simNode, simNode + 1, simNode + 2 }, phaseType, initialVoltage) {}
+			: Node(uid, name, { matrixNodeIndex, matrixNodeIndex + 1, matrixNodeIndex + 2 }, phaseType, initialVoltage) {}
 		/// Create node with default name and node number.
 		/// This is mostly used by functions.
-		Node(UInt simNode, PhaseType phaseType = PhaseType::Single)
-			: Node("N" + std::to_string(simNode), "N" + std::to_string(simNode), simNode, phaseType) { }
+		Node(UInt matrixNodeIndex, PhaseType phaseType = PhaseType::Single)
+			: Node("N" + std::to_string(matrixNodeIndex), "N" + std::to_string(matrixNodeIndex), matrixNodeIndex, phaseType) { }
 
 		/// Initialize state matrices with size according to phase type and frequency number
 		void initialize(Matrix frequencies);
@@ -74,35 +74,35 @@ namespace CPS {
 				&& (mPhaseType == PhaseType::Single
 				|| mPhaseType == PhaseType::A
 				|| mPhaseType == PhaseType::ABC))
-				return mSimNode[0];
+				return mMatrixNodeIndex[0];
 			else if (phaseType == PhaseType::B
 				&& (mPhaseType == PhaseType::B
 				|| mPhaseType == PhaseType::ABC))
-				return mSimNode[1];
+				return mMatrixNodeIndex[1];
 			else if (phaseType == PhaseType::C
 				&& (mPhaseType == PhaseType::C
 				|| mPhaseType == PhaseType::ABC))
-				return mSimNode[2];
+				return mMatrixNodeIndex[2];
 			else
 				return 0;
 		}
 		/// Returns all matrix indices
 		std::vector<UInt> matrixNodeIndices() {
 			if (mPhaseType == PhaseType::B)
-				return { mSimNode[1] };
+				return { mMatrixNodeIndex[1] };
 			else if (mPhaseType == PhaseType::C)
-				return { mSimNode[2] };
+				return { mMatrixNodeIndex[2] };
 			else if (mPhaseType == PhaseType::ABC)
-				return mSimNode;
+				return mMatrixNodeIndex;
 			else // phaseType == PhaseType::Single || mPhaseType == PhaseType::A
-				return { mSimNode[0] };
+				return { mMatrixNodeIndex[0] };
 		}
 		///
 		VarType singleVoltage(PhaseType phaseType = PhaseType::Single);
 		///
 		MatrixVar<VarType> voltage() { return mVoltage; }
 		///
-		void setSimNode(UInt phase, UInt simNode) { mSimNode[phase] = simNode; }
+		void setMatrixNodeIndex(UInt phase, UInt matrixNodeIndex) { mMatrixNodeIndex[phase] = matrixNodeIndex; }
 		///
 		void setVoltage(VarType newVoltage) { }
 

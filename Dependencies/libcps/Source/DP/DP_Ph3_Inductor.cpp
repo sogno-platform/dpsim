@@ -101,7 +101,7 @@ void DP::Ph3::Inductor::initVars(Real omega, Real timeStep) {
 }
 
 void DP::Ph3::Inductor::mnaInitialize(Real omega, Real timeStep, Attribute<Matrix>::Ptr leftVector) {
-	updateSimNodes();
+	updateMatrixNodeIndices();
 	initVars(omega, timeStep);
 
 	mSLog->info(  "Initial voltage {}",  Math::abs(mIntfVoltage(0,0)));

@@ -70,7 +70,7 @@ void SP::Ph3::Inductor::initializeFromPowerflow(Real frequency) {
 }
 
 void SP::Ph3::Inductor::mnaInitialize(Real omega, Real timeStep, Attribute<Matrix>::Ptr leftVector) {
-	updateSimNodes();
+	updateMatrixNodeIndices();
 // TODO
 /*
 	mLog.info() << "Initial voltage " << Math::abs(mIntfVoltage(0, 0))

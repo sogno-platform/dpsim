@@ -112,7 +112,7 @@ void DP::Ph1::PQLoadCS::initializeFromPowerflow(Real frequency) {
 
 void DP::Ph1::PQLoadCS::mnaInitialize(Real omega, Real timeStep, Attribute<Matrix>::Ptr leftVector) {
 	MNAInterface::mnaInitialize(omega, timeStep);
-	updateSimNodes();
+	updateMatrixNodeIndices();
 	mSubCurrentSource->mnaInitialize(omega, timeStep, leftVector);
 	setAttributeRef("right_vector", mSubCurrentSource->attribute("right_vector"));
 	mMnaTasks.push_back(std::make_shared<MnaPreStep>(*this));

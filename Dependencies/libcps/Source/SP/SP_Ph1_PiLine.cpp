@@ -233,7 +233,7 @@ void SP::Ph1::PiLine::initializeFromPowerflow(Real frequency) {
 
 void SP::Ph1::PiLine::mnaInitialize(Real omega, Real timeStep, Attribute<Matrix>::Ptr leftVector) {
 	MNAInterface::mnaInitialize(omega, timeStep);
-	updateSimNodes();
+	updateMatrixNodeIndices();
 	MNAInterface::List subComps({ mSubSeriesResistor, mSubSeriesInductor });
 
 	mSubSeriesResistor->mnaInitialize(omega, timeStep, leftVector);

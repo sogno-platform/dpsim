@@ -68,7 +68,7 @@ void EMT::Ph1::VoltageSourceRamp::initialize(Matrix frequencies) {
 
 void EMT::Ph1::VoltageSourceRamp::mnaInitialize(Real omega, Real timeStep, Attribute<Matrix>::Ptr leftVector) {
 	MNAInterface::mnaInitialize(omega, timeStep);
-	updateSimNodes();
+	updateMatrixNodeIndices();
 
 	mSubVoltageSource->mnaInitialize(omega, timeStep, leftVector);
 	// only need a new MnaPreStep that updates the reference voltage of mSubVoltageSource;

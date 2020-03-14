@@ -100,7 +100,7 @@ void SP::Ph1::externalGridInjection::initializeFromPowerflow(Real frequency) {
 
 void SP::Ph1::externalGridInjection::mnaInitialize(Real omega, Real timeStep, Attribute<Matrix>::Ptr leftVector) {
 	MNAInterface::mnaInitialize(omega, timeStep);
-	updateSimNodes();
+	updateMatrixNodeIndices();
 
 	mIntfVoltage(0, 0) = mVoltageRef->get();
 	mMnaTasks.push_back(std::make_shared<MnaPreStep>(*this));

@@ -50,7 +50,7 @@ void DP::Ph1::VoltageSourceNorton::setParameters(Complex voltage, Real srcFreq, 
 
 void DP::Ph1::VoltageSourceNorton::mnaInitialize(Real omega, Real timeStep, Attribute<Matrix>::Ptr leftVector) {
 	MNAInterface::mnaInitialize(omega, timeStep);
-	updateSimNodes();
+	updateMatrixNodeIndices();
 
 	mIntfVoltage(0, 0) = attributeComplex("V_ref")->get();
 	mRightVector = Matrix::Zero(leftVector->get().rows(), 1);

@@ -33,7 +33,7 @@ DP::Ph3::SynchronGeneratorDQTrapez::SynchronGeneratorDQTrapez(String name, Logge
 
 void DP::Ph3::SynchronGeneratorDQTrapez::mnaInitialize(Real omega, Real timeStep, Attribute<Matrix>::Ptr leftVector) {
 	MNAInterface::mnaInitialize(omega, timeStep);
-	updateSimNodes();
+	updateMatrixNodeIndices();
 	mTimeStep = timeStep;
 
 	mRightVector = Matrix::Zero(leftVector->get().rows(), 1);

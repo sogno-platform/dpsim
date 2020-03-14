@@ -62,6 +62,6 @@ namespace CPS {
 		///
 		virtual std::vector<UInt> matrixNodeIndices() = 0;
 		///
-		virtual void setSimNode(UInt phase, UInt simNode) = 0;
+		virtual void setMatrixNodeIndex(UInt phase, UInt matrixNodeIndex) = 0;
 	};
 }

@@ -50,13 +50,13 @@ namespace DPsim {
 		/// Number of virtual nodes
 		UInt mNumVirtualNodes = 0;
 		/// Number of simulation nodes
-		UInt mNumSimNodes = 0;
+		UInt mNumMatrixNodeIndices = 0;
 		/// Number of simulation network nodes
-		UInt mNumNetSimNodes = 0;
+		UInt mNumNetMatrixNodeIndices = 0;
 		/// Number of simulation virtual nodes
-		UInt mNumVirtualSimNodes = 0;
+		UInt mNumVirtualMatrixNodeIndices = 0;
 		/// Number of harmonic nodes
-		UInt mNumHarmSimNodes = 0;
+		UInt mNumHarmMatrixNodeIndices = 0;
 		/// Flag to activate power flow based initialization.
 		/// If this is false, all voltages are initialized with zero.
 		Bool mPowerflowInitialization;
@@ -113,7 +113,7 @@ namespace DPsim {
 		/// Identify Nodes and SimPowerComps and SimSignalComps
 		void identifyTopologyObjects();
 		/// Assign simulation node index according to index in the vector.
-		void assignSimNodes();
+		void assignMatrixNodeIndices();
 		/// Creates virtual nodes inside components.
 		/// The MNA algorithm handles these nodes in the same way as network nodes.
 		void createVirtualNodes();

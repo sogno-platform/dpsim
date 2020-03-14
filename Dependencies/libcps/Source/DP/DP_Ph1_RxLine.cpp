@@ -78,7 +78,7 @@ void DP::Ph1::RxLine::initializeFromPowerflow(Real frequency) {
 
 void DP::Ph1::RxLine::mnaInitialize(Real omega, Real timeStep, Attribute<Matrix>::Ptr leftVector) {
 	MNAInterface::mnaInitialize(omega, timeStep);
-	updateSimNodes();
+	updateMatrixNodeIndices();
 	mSubInductor->mnaInitialize(omega, timeStep, leftVector);
 	mSubResistor->mnaInitialize(omega, timeStep, leftVector);
 	mInitialResistor->mnaInitialize(omega, timeStep, leftVector);
