@@ -27,25 +27,43 @@
 #include <cps/Task.h>
 
 namespace CPS {
-	///
-	class SignalComponent : public Component {
+	/// Base class for all signal type components
+	/// that have only unidirectional connections
+	class SignalComponent : public IdentifiedObject {
+	public:
+		enum Behaviour { Initialization, Simulation };
 	protected:
+		/// Component logger
+		Logger::Log mSLog;
+		/// Component logger control for internal variables
+		Logger::Level mLogLevel;
+		/// Determine state of the simulation, e.g. to implement
+		/// special behavior for components during initialization
+		Bool mBehaviour = Behaviour::Simulation;
 	public:
 		typedef std::shared_ptr<SignalComponent> Ptr;
 		typedef std::vector<Ptr> List;
 
+		///
 		SignalComponent(String uid, String name, Logger::Level logLevel = Logger::Level::off)
-			: Component(uid, name, logLevel) { }
-
+			: IdentifiedObject(uid, name), mLogLevel(logLevel) {
+			mSLog = Logger::get(name, logLevel);
+		}
+		///
 		SignalComponent(String name, Logger::Level logLevel = Logger::Level::off)
 			: SignalComponent(name, name, logLevel) { }
-
+		///
 		virtual ~SignalComponent() { }
+
+		///
 		virtual void initialize(Real timeStep) { }
-		// XXX
+		///
 		virtual void initialize(Real omega, Real timeStep) { initialize(timeStep); }
+		///
 		virtual Task::List getTasks() {
 			return Task::List();
 		}
+		/// Set behavior of component, e.g. initialization
+		void setBehaviour(Behaviour behaviour) { mBehaviour = behaviour; }
 	};
 }
