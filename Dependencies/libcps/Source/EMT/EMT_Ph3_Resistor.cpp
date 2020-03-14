@@ -26,7 +26,7 @@ using namespace CPS;
 
 
 EMT::Ph3::Resistor::Resistor(String uid, String name, Logger::Level logLevel)
-	: PowerComponent<Real>(uid, name, logLevel) {
+	: SimPowerComp<Real>(uid, name, logLevel) {
 	mPhaseType = PhaseType::ABC;
 	setTerminalNumber(2);
 	mIntfVoltage = Matrix::Zero(3, 1);
@@ -35,7 +35,7 @@ EMT::Ph3::Resistor::Resistor(String uid, String name, Logger::Level logLevel)
 	addAttribute<Matrix>("R", &mResistance, Flags::read | Flags::write);
 }
 
-PowerComponent<Real>::Ptr EMT::Ph3::Resistor::clone(String name) {
+SimPowerComp<Real>::Ptr EMT::Ph3::Resistor::clone(String name) {
 	auto copy = Resistor::make(name, mLogLevel);
 	copy->setParameters(mResistance);
 	return copy;
@@ -127,7 +127,7 @@ void EMT::Ph3::Resistor::mnaApplySystemMatrixStamp(Matrix& systemMatrix) {
 		"\nConductance matrix: {:s}",
 		Logger::matrixToString(mConductance));
 }
- 
+
 void EMT::Ph3::Resistor::MnaPostStep::execute(Real time, Int timeStepCount) {
 	mResistor.mnaUpdateVoltage(*mLeftVector);
 	mResistor.mnaUpdateCurrent(*mLeftVector);

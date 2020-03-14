@@ -24,7 +24,7 @@
 using namespace CPS;
 
 SP::Ph1::Shunt::Shunt(String uid, String name, Logger::Level logLevel)
-	: PowerComponent<Complex>(uid, name, logLevel) {
+	: SimPowerComp<Complex>(uid, name, logLevel) {
 
 	mSLog->info("Create {} of type {}", this->type(), name);
 	setTerminalNumber(1);
@@ -57,7 +57,7 @@ void SP::Ph1::Shunt::calculatePerUnitParameters(Real baseApparentPower, Real bas
 	mBaseImpedance = (mBaseVoltage * mBaseVoltage) / mBaseApparentPower;
 	mBaseAdmittance = 1.0 / mBaseImpedance;
 	mSLog->info("Base Voltage={} [V]  Base Admittance={} [S]", mBaseVoltage, mBaseAdmittance);
-	
+
 	mConductancePerUnit = mConductance / mBaseAdmittance;
 	mSusceptancePerUnit = mSusceptance / mBaseAdmittance;
 	mSLog->info("Susceptance={} [pu] Conductance={} [pu]", mSusceptancePerUnit, mConductancePerUnit);

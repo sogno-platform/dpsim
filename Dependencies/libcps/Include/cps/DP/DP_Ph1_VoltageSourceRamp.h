@@ -29,7 +29,7 @@ namespace CPS {
 namespace DP {
 namespace Ph1 {
 	class VoltageSourceRamp :
-		public PowerComponent<Complex>,
+		public SimPowerComp<Complex>,
 		public MNAInterface,
 		public SharedFactory<VoltageSourceRamp> {
 	protected:
@@ -56,7 +56,7 @@ namespace Ph1 {
 		VoltageSourceRamp(String name, Logger::Level logLevel = Logger::Level::off)
 			: VoltageSourceRamp(name, name, logLevel) { }
 
-		PowerComponent<Complex>::Ptr clone(String name);
+		SimPowerComp<Complex>::Ptr clone(String name);
 
 		// #### General ####
 		/// Initializes component from power flow data

@@ -24,7 +24,7 @@
 using namespace CPS;
 
 EMT::Ph3::PiLine::PiLine(String uid, String name, Logger::Level logLevel)
-	: PowerComponent<Real>(uid, name, logLevel) {
+	: SimPowerComp<Real>(uid, name, logLevel) {
 	mPhaseType = PhaseType::ABC;
 	setVirtualNodeNumber(1);
 	setTerminalNumber(2);
@@ -37,14 +37,14 @@ EMT::Ph3::PiLine::PiLine(String uid, String name, Logger::Level logLevel)
 	addAttribute<Matrix>("G_parallel", &mParallelCond, Flags::read | Flags::write);
 }
 
-PowerComponent<Real>::Ptr EMT::Ph3::PiLine::clone(String name) {
+SimPowerComp<Real>::Ptr EMT::Ph3::PiLine::clone(String name) {
 	auto copy = PiLine::make(name, mLogLevel);
 	copy->setParameters(mSeriesRes, mSeriesInd, mParallelCap, mParallelCond);
 	return copy;
 }
 
 void EMT::Ph3::PiLine::initialize(Matrix frequencies) {
-	PowerComponent<Real>::initialize(frequencies);
+	SimPowerComp<Real>::initialize(frequencies);
 }
 
 void EMT::Ph3::PiLine::initializeFromPowerflow(Real frequency) {

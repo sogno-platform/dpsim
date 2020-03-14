@@ -24,7 +24,7 @@ using namespace CPS;
 
 SP::Ph3::Resistor::Resistor(String uid, String name,
 	Logger::Level logLevel)
-	: PowerComponent<Complex>(uid, name, logLevel) {
+	: SimPowerComp<Complex>(uid, name, logLevel) {
 	mPhaseType = PhaseType::ABC;
 	setTerminalNumber(2);
 	mIntfVoltage = MatrixComp::Zero(3, 1);
@@ -32,7 +32,7 @@ SP::Ph3::Resistor::Resistor(String uid, String name,
 	addAttribute<Matrix>("R", &mResistance, Flags::read | Flags::write);
 }
 
-PowerComponent<Complex>::Ptr SP::Ph3::Resistor::clone(String name) {
+SimPowerComp<Complex>::Ptr SP::Ph3::Resistor::clone(String name) {
 	auto copy = Resistor::make(name, mLogLevel);
 	copy->setParameters(mResistance);
 	return copy;

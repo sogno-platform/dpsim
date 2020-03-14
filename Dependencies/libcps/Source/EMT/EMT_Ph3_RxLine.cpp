@@ -25,7 +25,7 @@
 using namespace CPS;
 
 EMT::Ph3::RxLine::RxLine(String uid, String name, Logger::Level logLevel)
-	: PowerComponent<Real>(uid, name, logLevel) {
+	: SimPowerComp<Real>(uid, name, logLevel) {
 	mPhaseType = PhaseType::ABC;
 	setVirtualNodeNumber(1);
 	setTerminalNumber(2);
@@ -36,7 +36,7 @@ EMT::Ph3::RxLine::RxLine(String uid, String name, Logger::Level logLevel)
 	addAttribute<Matrix>("L", &mSeriesInd, Flags::read | Flags::write);
 }
 
-PowerComponent<Real>::Ptr EMT::Ph3::RxLine::clone(String name) {
+SimPowerComp<Real>::Ptr EMT::Ph3::RxLine::clone(String name) {
 	auto copy = RxLine::make(name, mLogLevel);
 	copy->setParameters(mSeriesRes, mSeriesInd);
 	return copy;

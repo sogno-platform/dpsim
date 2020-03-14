@@ -35,7 +35,7 @@ namespace CPS {
 			/// TODO: currently modelled as an impedance, which obviously doesn't have a constant power characteristic
 			/// Model as current source and read from CSV files
 			class RXLoad :
-				public PowerComponent<Real>,
+				public SimPowerComp<Real>,
 				public MNAInterface,
 				public SharedFactory<RXLoad> {
 			protected:
@@ -81,7 +81,7 @@ namespace CPS {
 					Matrix activePower, Matrix reactivePower, Real volt,
 					Logger::Level logLevel = Logger::Level::off);
 
-				PowerComponent<Real>::Ptr clone(String name);
+				SimPowerComp<Real>::Ptr clone(String name);
 
 				// #### General ####
 				///

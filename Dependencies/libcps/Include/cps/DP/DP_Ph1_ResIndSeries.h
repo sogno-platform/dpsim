@@ -30,7 +30,7 @@ namespace Ph1 {
 	/// \brief resistor inductor series element
 	class ResIndSeries :
 		public MNATearInterface,
-		public PowerComponent<Complex>,
+		public SimPowerComp<Complex>,
 		public SharedFactory<ResIndSeries> {
 	protected:
 		/// Inductance [H]
@@ -59,7 +59,7 @@ namespace Ph1 {
 			mInductance = inductance;
 		}
 		/// Return new instance with the same parameters
-		PowerComponent<Complex>::Ptr clone(String name);
+		SimPowerComp<Complex>::Ptr clone(String name);
 		/// Initializes state variables considering the number of frequencies
 		void initialize(Matrix frequencies);
 		/// Initializes states from power flow data

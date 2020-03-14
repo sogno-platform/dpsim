@@ -24,7 +24,7 @@
 using namespace CPS;
 
 EMT::Ph3::Switch::Switch(String uid, String name, Logger::Level logLevel)
-	: PowerComponent<Real>(uid, name, logLevel) {
+	: SimPowerComp<Real>(uid, name, logLevel) {
 	setTerminalNumber(2);
 	mIntfVoltage = Matrix::Zero(1,1);
 	mIntfCurrent = Matrix::Zero(1,1);
@@ -34,7 +34,7 @@ EMT::Ph3::Switch::Switch(String uid, String name, Logger::Level logLevel)
 	addAttribute<Bool>("is_closed", &mSwitchClosed, Flags::read | Flags::write);
 }
 
-PowerComponent<Real>::Ptr EMT::Ph3::Switch::clone(String name) {
+SimPowerComp<Real>::Ptr EMT::Ph3::Switch::clone(String name) {
 	auto copy = Switch::make(name, mLogLevel);
 	copy->setParameters(mOpenResistance, mClosedResistance, mSwitchClosed);
 	return copy;
@@ -65,7 +65,7 @@ void EMT::Ph3::Switch::initializeFromPowerflow(Real frequency) {
 }
 
 void EMT::Ph3::Switch::initialize(Matrix frequencies) {
-	PowerComponent<Real>::initialize(frequencies);
+	SimPowerComp<Real>::initialize(frequencies);
 }
 
 void EMT::Ph3::Switch::mnaInitialize(Real omega, Real timeStep, Attribute<Matrix>::Ptr leftVector) {

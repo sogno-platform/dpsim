@@ -29,7 +29,7 @@ namespace CPS {
 namespace SP { namespace Ph1 {
 	/// Transformer that includes an inductance and resistance
 	class Transformer :
-		public PowerComponent<Complex>,
+		public SimPowerComp<Complex>,
 		public SharedFactory<Transformer>,
 		public PFSolverInterfaceBranch,
 		public MNAInterface,
@@ -125,7 +125,7 @@ namespace SP { namespace Ph1 {
 		Transformer(String name, Logger::Level logLevel = Logger::Level::off)
 			: Transformer(name, name, logLevel) { }
 
-		PowerComponent<Complex>::Ptr clone(String name);
+		SimPowerComp<Complex>::Ptr clone(String name);
 
 		// #### General ####
 		/// Set transformer specific parameters

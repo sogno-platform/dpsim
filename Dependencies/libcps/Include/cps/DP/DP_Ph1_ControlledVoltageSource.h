@@ -26,7 +26,7 @@ namespace CPS {
 		namespace Ph1 {
 			class ControlledVoltageSource :
 				public MNAInterface,
-				public PowerComponent<Complex>,
+				public SimPowerComp<Complex>,
 				public SharedFactory<ControlledVoltageSource> {
 			protected:
 				void updateVoltage(Real time);
@@ -40,7 +40,7 @@ namespace CPS {
 
 				void setParameters(MatrixComp voltageRefABC);
 
-				PowerComponent<Complex>::Ptr clone(String name);
+				SimPowerComp<Complex>::Ptr clone(String name);
 				// #### General ####
 				///
 				void initialize(Matrix frequencies);

@@ -24,7 +24,7 @@ using namespace CPS;
 SP::Ph1::RXLine::RXLine(String uid, String name, Real baseVoltage,
 	Real resistance, Real inductance,
 	Logger::Level logLevel)
-	: PowerComponent<Complex>(uid, name, logLevel) {
+	: SimPowerComp<Complex>(uid, name, logLevel) {
 
 	setTerminalNumber(2);
 
@@ -52,7 +52,7 @@ SP::Ph1::RXLine::RXLine(String uid, String name, Real baseVoltage,
 }
 
 SP::Ph1::RXLine::RXLine(String uid, String name, Logger::Level logLevel)
-	: PowerComponent<Complex>(uid, name, logLevel) {
+	: SimPowerComp<Complex>(uid, name, logLevel) {
 	setVirtualNodeNumber(1);
 	setTerminalNumber(2);
 	mIntfVoltage = MatrixComp::Zero(1, 1);
@@ -151,7 +151,7 @@ MatrixComp SP::Ph1::RXLine::Y_element() {
 }
 
 
-PowerComponent<Complex>::Ptr SP::Ph1::RXLine::clone(String name) {
+SimPowerComp<Complex>::Ptr SP::Ph1::RXLine::clone(String name) {
 	auto copy = RXLine::make(name, mLogLevel);
 	copy->setParameters(mSeriesRes, mSeriesInd);
 	return copy;

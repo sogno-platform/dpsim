@@ -23,7 +23,7 @@
 using namespace CPS;
 
 EMT::Ph1::VoltageSourceNorton::VoltageSourceNorton(String uid, String name, Logger::Level logLevel)
-	: PowerComponent<Real>(uid, name, logLevel) {
+	: SimPowerComp<Real>(uid, name, logLevel) {
 	setTerminalNumber(2);
 	mIntfVoltage = Matrix::Zero(1,1);
 	mIntfCurrent = Matrix::Zero(1,1);
@@ -32,7 +32,7 @@ EMT::Ph1::VoltageSourceNorton::VoltageSourceNorton(String uid, String name, Logg
 	addAttribute<Real>("R", &mResistance, Flags::read | Flags::write);
 }
 
-PowerComponent<Real>::Ptr EMT::Ph1::VoltageSourceNorton::clone(String name) {
+SimPowerComp<Real>::Ptr EMT::Ph1::VoltageSourceNorton::clone(String name) {
 	auto copy = VoltageSourceNorton::make(name, mLogLevel);
 	copy->setParameters(mVoltageRef, mSrcFreq, mResistance);
 	return copy;

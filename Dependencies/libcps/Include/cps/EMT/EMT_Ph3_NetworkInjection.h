@@ -34,7 +34,7 @@ namespace CPS {
 			/// positve and for the equation of node k as negative. Moreover
 			/// a new equation ej - ek = V is added to the problem.
 			class NetworkInjection :
-				public PowerComponent<Real>,
+				public SimPowerComp<Real>,
 				public MNAInterface,
 				public SharedFactory<NetworkInjection> {
 			private:
@@ -54,7 +54,7 @@ namespace CPS {
 				NetworkInjection(String name,
 					Complex voltage, Logger::Level logLevel = Logger::Level::off);
 				///
-				PowerComponent<Real>::Ptr clone(String name);
+				SimPowerComp<Real>::Ptr clone(String name);
 
 				// #### General ####
 				/// Initializes component from power flow data

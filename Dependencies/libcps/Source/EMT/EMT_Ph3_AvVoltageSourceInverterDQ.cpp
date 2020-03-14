@@ -26,7 +26,7 @@
 using namespace CPS;
 
 EMT::Ph3::AvVoltageSourceInverterDQ::AvVoltageSourceInverterDQ(String uid, String name, Logger::Level logLevel)
-	:PowerComponent<Real>(uid,name,logLevel){
+	:SimPowerComp<Real>(uid,name,logLevel){
 	mPhaseType = PhaseType::ABC;
 	setVirtualNodeNumber(4);
 	setTerminalNumber(1);
@@ -98,7 +98,7 @@ void EMT::Ph3::AvVoltageSourceInverterDQ::setParameters(Real sysOmega, Complex s
 
 }
 
-PowerComponent<Real>::Ptr EMT::Ph3::AvVoltageSourceInverterDQ::clone(String name) {
+SimPowerComp<Real>::Ptr EMT::Ph3::AvVoltageSourceInverterDQ::clone(String name) {
 	auto copy = AvVoltageSourceInverterDQ::make(name, mLogLevel);
 	copy->setParameters(mOmegaN, mVoltNom, mPref, mQref, mKpPLL, mKiPLL,
 		mKpPowerCtrld, mKiPowerCtrld, mKpCurrCtrld, mKiCurrCtrld, mLf, mCf,
@@ -511,7 +511,7 @@ void EMT::Ph3::AvVoltageSourceInverterDQ::updateSetPoint(Real time) {
 }
 
 void EMT::Ph3::AvVoltageSourceInverterDQ::MnaPreStep::execute(Real time, Int timeStepCount) {
-	// update voltage of subVoltage source 
+	// update voltage of subVoltage source
 	mAvVoltageSourceInverterDQ.mSubCtrledVoltageSource->setParameters(mAvVoltageSourceInverterDQ.mVsabc);
 }
 

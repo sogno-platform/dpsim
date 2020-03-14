@@ -23,7 +23,7 @@ using namespace CPS;
 
 
 DP::Ph1::AvVoltageSourceInverterDQ::AvVoltageSourceInverterDQ(String uid, String name, Logger::Level logLevel)
-	:PowerComponent<Complex>(uid, name, logLevel) {
+	:SimPowerComp<Complex>(uid, name, logLevel) {
 	setVirtualNodeNumber(4);
 	setTerminalNumber(1);
 	mIntfVoltage = MatrixComp::Zero(1, 1);
@@ -92,7 +92,7 @@ void DP::Ph1::AvVoltageSourceInverterDQ::setParameters(Real sysOmega, Complex sy
 }
 
 
-PowerComponent<Complex>::Ptr DP::Ph1::AvVoltageSourceInverterDQ::clone(String name) {
+SimPowerComp<Complex>::Ptr DP::Ph1::AvVoltageSourceInverterDQ::clone(String name) {
 	auto copy = AvVoltageSourceInverterDQ::make(name, mLogLevel);
 	copy->setParameters(mOmegaN, mVoltNom, mPref, mQref, mKpPLL, mKiPLL,
 		mKpPowerCtrld, mKiPowerCtrld, mKpCurrCtrld, mKiCurrCtrld, mLf, mCf,
@@ -243,12 +243,12 @@ void DP::Ph1::AvVoltageSourceInverterDQ::updatePowerGeneration() {
 			mPref = (*mCurrentLoad).p * -1;
 			// Q_load is not updated
 			mQref = (*mCurrentLoad).q * -1;
-			
+
 			++mCurrentLoad;
 		}
 		return;
 	}
-	
+
 	if (mCurrentPower != mGenProfile->end()) {
 		mPref = *mCurrentPower;
 		++mCurrentPower;
@@ -338,7 +338,7 @@ void DP::Ph1::AvVoltageSourceInverterDQ::initializeFromPowerflow(Real frequency)
 		mVirtualNodes[2]->setInitialVoltage(mIntfVoltage(0, 0));
 		mVirtualNodes[3]->setInitialVoltage(mIntfVoltage(0, 0));
 	}*/
-	
+
 	// Create sub components
 	mSubResistorF = DP::Ph1::Resistor::make(mName + "_resF", mLogLevel);
 	mSubResistorC = DP::Ph1::Resistor::make(mName + "_resC", mLogLevel);

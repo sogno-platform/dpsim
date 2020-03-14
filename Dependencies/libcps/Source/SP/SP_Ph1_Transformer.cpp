@@ -25,7 +25,7 @@ using namespace CPS;
 
 // #### General ####
 SP::Ph1::Transformer::Transformer(String uid, String name, Logger::Level logLevel)
-	: PowerComponent<Complex>(uid, name, logLevel) {
+	: SimPowerComp<Complex>(uid, name, logLevel) {
 
 	mSLog->info("Create {} {}", this->type(), name);
 	mIntfVoltage = MatrixComp::Zero(1, 1);
@@ -52,7 +52,7 @@ SP::Ph1::Transformer::Transformer(String uid, String name, Logger::Level logLeve
 }
 
 
-void SP::Ph1::Transformer::setParameters(Real nomVoltageEnd1, Real nomVoltageEnd2, Real ratedPower, Real ratioAbs, 
+void SP::Ph1::Transformer::setParameters(Real nomVoltageEnd1, Real nomVoltageEnd2, Real ratedPower, Real ratioAbs,
 	Real ratioPhase, Real resistance, Real inductance, Real omega) {
 	// Note: to be consistent impedance values must be referred to high voltage side (and base voltage set to higher voltage)
     mNominalVoltageEnd1 = nomVoltageEnd1;
@@ -79,7 +79,7 @@ void SP::Ph1::Transformer::setParameters(Real nomVoltageEnd1, Real nomVoltageEnd
 }
 
 
-PowerComponent<Complex>::Ptr SP::Ph1::Transformer::clone(String name) {
+SimPowerComp<Complex>::Ptr SP::Ph1::Transformer::clone(String name) {
 	auto copy = Transformer::make(name, mLogLevel);
 	copy->setParameters(mNominalVoltageEnd1, mNominalVoltageEnd2, mRatedPower,
 		std::abs(mRatio), std::arg(mRatio), mResistance, mInductance, mNominalOmega);
@@ -96,7 +96,7 @@ void SP::Ph1::Transformer::setBaseVoltage(Real baseVoltage) {
 
 
 void SP::Ph1::Transformer::calculatePerUnitParameters(Real baseApparentPower, Real baseOmega) {
-	mSLog->info("#### Calculate Per Unit Parameters for {}", mName);    
+	mSLog->info("#### Calculate Per Unit Parameters for {}", mName);
     mBaseApparentPower = baseApparentPower;
 	mBaseOmega = baseOmega;
     mSLog->info("Base Power={} [VA]  Base Omega={} [1/s]", baseApparentPower, baseOmega);
@@ -119,7 +119,7 @@ void SP::Ph1::Transformer::calculatePerUnitParameters(Real baseApparentPower, Re
 
     mRatioAbsPerUnit = mRatioAbs / mNominalVoltageEnd1 * mNominalVoltageEnd2;
     mSLog->info("Tap Ratio={} [pu]", mRatioAbsPerUnit);
-	
+
 	// set snubber resistance
 	if (mBehaviour == Behaviour::Initialization) {
 		Real snubberResistance = 1e3;

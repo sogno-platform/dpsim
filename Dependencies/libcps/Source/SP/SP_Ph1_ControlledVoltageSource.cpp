@@ -22,7 +22,7 @@
 using namespace CPS;
 
 SP::Ph1::ControlledVoltageSource::ControlledVoltageSource(String uid, String name, Logger::Level logLevel)
-	: PowerComponent<Complex>(uid, name, logLevel) {
+	: SimPowerComp<Complex>(uid, name, logLevel) {
 	setVirtualNodeNumber(1);
 	setTerminalNumber(2);
 	mIntfVoltage = MatrixComp::Zero(1, 1);
@@ -34,7 +34,7 @@ void SP::Ph1::ControlledVoltageSource::setParameters(MatrixComp voltageRef) {
 	parametersSet = true;
 }
 
-PowerComponent<Complex>::Ptr SP::Ph1::ControlledVoltageSource::clone(String name) {
+SimPowerComp<Complex>::Ptr SP::Ph1::ControlledVoltageSource::clone(String name) {
 	auto copy = ControlledVoltageSource::make(name, mLogLevel);
 	copy->setParameters(attribute<Matrix>("v_intf")->get());
 	return copy;

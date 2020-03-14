@@ -26,7 +26,7 @@ using namespace CPS;
 
 EMT::Ph3::RXLoad::RXLoad(String uid, String name,
 	Logger::Level logLevel)
-	: PowerComponent<Real>(uid, name, logLevel) {
+	: SimPowerComp<Real>(uid, name, logLevel) {
 	mPhaseType = PhaseType::ABC;
 	setTerminalNumber(1);
 	mIntfVoltage = Matrix::Zero(3, 1);
@@ -58,13 +58,13 @@ EMT::Ph3::RXLoad::RXLoad(String name,
 	initPowerFromTerminal = false;
 }
 
-PowerComponent<Real>::Ptr EMT::Ph3::RXLoad::clone(String name) {
+SimPowerComp<Real>::Ptr EMT::Ph3::RXLoad::clone(String name) {
 	// everything set by initializeFromPowerflow
 	return RXLoad::make(name, mLogLevel);
 }
 
 void EMT::Ph3::RXLoad::initialize(Matrix frequencies) {
-	PowerComponent<Real>::initialize(frequencies);
+	SimPowerComp<Real>::initialize(frequencies);
 }
 
 void EMT::Ph3::RXLoad::initializeFromPowerflow(Real frequency) {

@@ -24,8 +24,8 @@
 using namespace CPS;
 
 SP::Ph1::PiLine::PiLine(String uid, String name, Logger::Level logLevel)
-	: PowerComponent<Complex>(uid, name, logLevel) {
-	
+	: SimPowerComp<Complex>(uid, name, logLevel) {
+
 	mSLog->info("Create {} {}", this->type(), name);
 	mSLog->flush();
 
@@ -77,7 +77,7 @@ void SP::Ph1::PiLine::setParameters(Real resistance, Real inductance, Real capac
 
 }
 
-PowerComponent<Complex>::Ptr SP::Ph1::PiLine::clone(String name) {
+SimPowerComp<Complex>::Ptr SP::Ph1::PiLine::clone(String name) {
 	auto copy = PiLine::make(name, mLogLevel);
 	copy->setParameters(mBaseVoltage, mSeriesRes, mSeriesInd, mParallelCap, mParallelCond);
 	return copy;
@@ -89,7 +89,7 @@ void SP::Ph1::PiLine::setBaseVoltage(Real baseVoltage) {
 }
 
 void SP::Ph1::PiLine::calculatePerUnitParameters(Real baseApparentPower, Real baseOmega) {
-    mSLog->info("#### Calculate Per Unit Parameters for {}", mName); 
+    mSLog->info("#### Calculate Per Unit Parameters for {}", mName);
 	mBaseApparentPower = baseApparentPower;
 	mBaseOmega = baseOmega;
     mSLog->info("Base Power={} [VA]  Base Omega={} [1/s]", baseApparentPower, baseOmega);

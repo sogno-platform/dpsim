@@ -31,7 +31,7 @@ namespace SP {
 namespace Ph1 {
 	///
     class externalGridInjection:
-		public PowerComponent<Complex>,
+		public SimPowerComp<Complex>,
 		public SharedFactory<externalGridInjection>,
 		public PFSolverInterfaceBus,
 		public MNAInterface,
@@ -74,7 +74,7 @@ namespace Ph1 {
 		///
 		void initialize(Matrix frequencies);
 		///
-		PowerComponent<Complex>::Ptr clone(String name);
+		SimPowerComp<Complex>::Ptr clone(String name);
 
         // #### Powerflow section ####
 		/// Set parameters relevant for powerflow solver

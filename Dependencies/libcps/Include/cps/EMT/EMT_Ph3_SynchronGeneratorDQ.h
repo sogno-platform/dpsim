@@ -32,7 +32,7 @@ namespace Ph3 {
 	class SynchronGeneratorDQ :
 		public Base::SynchronGenerator,
 		public MNAInterface,
-		public PowerComponent<Real> {
+		public SimPowerComp<Real> {
 	protected:
 		/// Compensation current source set point
 		Matrix mCompensationCurrent;

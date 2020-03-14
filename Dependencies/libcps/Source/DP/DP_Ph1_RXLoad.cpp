@@ -24,7 +24,7 @@ using namespace CPS;
 
 DP::Ph1::RXLoad::RXLoad(String uid, String name,
 	Logger::Level logLevel)
-	: PowerComponent<Complex>(uid, name, logLevel) {
+	: SimPowerComp<Complex>(uid, name, logLevel) {
 	setTerminalNumber(1);
 	mIntfVoltage = MatrixComp::Zero(1, 1);
 	mIntfCurrent = MatrixComp::Zero(1, 1);
@@ -50,7 +50,7 @@ DP::Ph1::RXLoad::RXLoad(String name,
 	mNomVoltage = volt;
 }
 
-PowerComponent<Complex>::Ptr DP::Ph1::RXLoad::clone(String name) {
+SimPowerComp<Complex>::Ptr DP::Ph1::RXLoad::clone(String name) {
 	// TODO: Is this change is needed when "everything set by initializePOwerflow"??
 	// everything set by initializeFromPowerflow
 	//return RXLoad::make(name, mLogLevel);
@@ -60,7 +60,7 @@ PowerComponent<Complex>::Ptr DP::Ph1::RXLoad::clone(String name) {
 }
 
 void DP::Ph1::RXLoad::initialize(Matrix frequencies) {
-	PowerComponent<Complex>::initialize(frequencies);
+	SimPowerComp<Complex>::initialize(frequencies);
 }
 
 void DP::Ph1::RXLoad::initializeFromPowerflow(Real frequency) {

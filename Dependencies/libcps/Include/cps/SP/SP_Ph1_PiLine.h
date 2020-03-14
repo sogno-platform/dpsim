@@ -33,7 +33,7 @@ namespace CPS {
 namespace SP {
 namespace Ph1 {
 	class PiLine :
-	 public PowerComponent<Complex>,
+	 public SimPowerComp<Complex>,
 	 public MNATearInterface,
 	 public SharedFactory<PiLine>,
 	 public Base::Ph1::PiLine,
@@ -107,7 +107,7 @@ namespace Ph1 {
 		PiLine(String name, Logger::Level logLevel = Logger::Level::off)
 			: PiLine(name, name, logLevel) { }
 		///
-		PowerComponent<Complex>::Ptr clone(String copySuffix);
+		SimPowerComp<Complex>::Ptr clone(String copySuffix);
 		///
 		void setParameters(Real resistance, Real inductance, Real capacitance = -1, Real conductance = -1, Real omega = -1);
 		/// Initializes component from power flow data

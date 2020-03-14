@@ -26,7 +26,7 @@
 using namespace CPS;
 
 DP::Ph3::AvVoltageSourceInverterDQ::AvVoltageSourceInverterDQ(String uid, String name, Logger::Level logLevel)
-	:PowerComponent<Complex>(uid, name, logLevel) {
+	:SimPowerComp<Complex>(uid, name, logLevel) {
 	mPhaseType = PhaseType::ABC;
 	setVirtualNodeNumber(2);
 	setTerminalNumber(1);

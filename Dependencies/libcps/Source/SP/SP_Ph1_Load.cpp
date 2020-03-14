@@ -27,7 +27,7 @@ using namespace CPS;
 // please note that P,Q values can not be passed inside constructor since P,Q are currently read from the terminal,
 // and these values are not yet assigned to the terminals when this constructor was called in reader.
 SP::Ph1::Load::Load(String uid, String name, Logger::Level logLevel)
-	: PowerComponent<Complex>(uid, name, logLevel) {
+	: SimPowerComp<Complex>(uid, name, logLevel) {
 
 	mSLog->info("Create {} of type {}", mName, this->type());
 	mSLog->flush();
@@ -56,7 +56,7 @@ void SP::Ph1::Load::setParameters(Real activePower, Real reactivePower, Real nom
 }
 
 
-PowerComponent<Complex>::Ptr SP::Ph1::Load::clone(String name) {
+SimPowerComp<Complex>::Ptr SP::Ph1::Load::clone(String name) {
 	// everything set by initializeFromPowerflow
 	return Load::make(name, mLogLevel);
 }
@@ -64,7 +64,7 @@ PowerComponent<Complex>::Ptr SP::Ph1::Load::clone(String name) {
 
  // #### Powerflow section ####
 void SP::Ph1::Load::calculatePerUnitParameters(Real baseApparentPower, Real baseOmega) {
-	mSLog->info("#### Calculate Per Unit Parameters for {}", mName); 
+	mSLog->info("#### Calculate Per Unit Parameters for {}", mName);
 	mBaseApparentPower = baseApparentPower;
 	mBaseOmega = baseOmega;
     mSLog->info("Base Power={} [VA]  Base Omega={} [1/s]", mBaseApparentPower, mBaseOmega);
@@ -73,7 +73,7 @@ void SP::Ph1::Load::calculatePerUnitParameters(Real baseApparentPower, Real base
 	mReactivePowerPerUnit = mReactivePower/mBaseApparentPower;
 	mSLog->info("Active Power={} [pu] Reactive Power={} [pu]", mActivePowerPerUnit, mReactivePowerPerUnit);
 	mSLog->flush();
-}	
+}
 
 
 void SP::Ph1::Load::modifyPowerFlowBusType(PowerflowBusType powerflowBusType) {

@@ -24,7 +24,7 @@
 using namespace CPS;
 
 EMT::Ph3::Inductor::Inductor(String uid, String name, Logger::Level logLevel)
-	: PowerComponent<Real>(uid, name, logLevel) {
+	: SimPowerComp<Real>(uid, name, logLevel) {
 	mPhaseType = PhaseType::ABC;
 	setTerminalNumber(2);
 	mEquivCurrent = Matrix::Zero(3, 1);
@@ -34,7 +34,7 @@ EMT::Ph3::Inductor::Inductor(String uid, String name, Logger::Level logLevel)
 	addAttribute<Matrix>("L", &mInductance, Flags::read | Flags::write);
 }
 
-PowerComponent<Real>::Ptr EMT::Ph3::Inductor::clone(String name) {
+SimPowerComp<Real>::Ptr EMT::Ph3::Inductor::clone(String name) {
 	auto copy = Inductor::make(name, mLogLevel);
 	copy->setParameters(mInductance);
 	return copy;

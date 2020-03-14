@@ -44,7 +44,7 @@ DiakopticsSolver<VarType>::DiakopticsSolver(String name,
 	mRightVectorLog = std::make_shared<DataLogger>(name + "_RightVector", logLevel != CPS::Logger::Level::off);
 
 	for (auto comp : tearComponents) {
-		auto pcomp = std::dynamic_pointer_cast<PowerComponent<VarType>>(comp);
+		auto pcomp = std::dynamic_pointer_cast<SimPowerComp<VarType>>(comp);
 		if (pcomp)
 			mTearComponents.push_back(pcomp);
 	}
@@ -114,7 +114,7 @@ void DiakopticsSolver<VarType>::initSubnets(const std::vector<SystemTopology>& s
 		tComp->mnaTearInitialize(2 * PI * mSystemFrequency, mTimeStep);
 
 		for (auto gndComp : tComp->mnaTearGroundComponents()) {
-			auto pComp = std::dynamic_pointer_cast<PowerComponent<VarType>>(gndComp);
+			auto pComp = std::dynamic_pointer_cast<SimPowerComp<VarType>>(gndComp);
 			Subnet* net = nullptr;
 			if (pComp->node(0)->isGround()) {
 				net = mNodeSubnetMap[pComp->node(1)];
@@ -139,7 +139,7 @@ void DiakopticsSolver<VarType>::collectVirtualNodes(int net) {
 	mSubnets[net].mRealNetNodeNum = static_cast<UInt>(mSubnets[net].nodes.size());
 
 	for (auto comp : mSubnets[net].components) {
-		auto pComp = std::dynamic_pointer_cast<PowerComponent<VarType>>(comp);
+		auto pComp = std::dynamic_pointer_cast<SimPowerComp<VarType>>(comp);
 		if (!pComp)
 			continue;
 
@@ -259,7 +259,7 @@ template <typename VarType>
 void DiakopticsSolver<VarType>::initComponents() {
 	for (UInt net = 0; net < mSubnets.size(); net++) {
 		for (auto comp : mSubnets[net].components) {
-			auto pComp = std::dynamic_pointer_cast<PowerComponent<VarType>>(comp);
+			auto pComp = std::dynamic_pointer_cast<SimPowerComp<VarType>>(comp);
 			if (!pComp) continue;
 			pComp->initializeFromPowerflow(mSystem.mSystemFrequency);
 		}

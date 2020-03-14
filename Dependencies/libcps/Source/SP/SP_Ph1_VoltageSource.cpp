@@ -22,7 +22,7 @@
 using namespace CPS;
 
 SP::Ph1::VoltageSource::VoltageSource(String uid, String name, Logger::Level logLevel)
-	: PowerComponent<Complex>(uid, name, logLevel) {
+	: SimPowerComp<Complex>(uid, name, logLevel) {
 	setVirtualNodeNumber(1);
 	setTerminalNumber(2);
 	mIntfVoltage = MatrixComp::Zero(1, 1);
@@ -31,7 +31,7 @@ SP::Ph1::VoltageSource::VoltageSource(String uid, String name, Logger::Level log
 	addAttribute<Complex>("V_ref", Flags::read | Flags::write);
 }
 
-PowerComponent<Complex>::Ptr SP::Ph1::VoltageSource::clone(String name) {
+SimPowerComp<Complex>::Ptr SP::Ph1::VoltageSource::clone(String name) {
 	auto copy = VoltageSource::make(name, mLogLevel);
 	copy->setParameters(attribute<Complex>("V_ref")->get());
 	return copy;

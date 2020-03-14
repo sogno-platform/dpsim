@@ -37,7 +37,7 @@ namespace Ph1 {
 	/// from zero is added on top of the system frequency.
 	class CurrentSource :
 		public MNAInterface,
-		public PowerComponent<Complex>,
+		public SimPowerComp<Complex>,
 		public SharedFactory<CurrentSource> {
 	protected:
 		Attribute<Complex>::Ptr mCurrentRef;
@@ -53,7 +53,7 @@ namespace Ph1 {
 
 		void setParameters(Complex current);
 
-		PowerComponent<Complex>::Ptr clone(String copySuffix);
+		SimPowerComp<Complex>::Ptr clone(String copySuffix);
 
 		// #### General ####
 		/// Initializes component from power flow data

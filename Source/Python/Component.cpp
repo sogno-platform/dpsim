@@ -154,8 +154,8 @@ PyObject* Python::Component::connect(Component* self, PyObject* args)
 		return nullptr;
 
 	try {
-		using EMTComponent = CPS::PowerComponent<CPS::Real>;
-		using DPComponent = CPS::PowerComponent<CPS::Complex>;
+		using EMTComponent = CPS::SimPowerComp<CPS::Real>;
+		using DPComponent = CPS::SimPowerComp<CPS::Complex>;
 
 		if (auto emtComp = std::dynamic_pointer_cast<EMTComponent>(self->comp)) {
 			auto nodes = Python::Node<CPS::Real>::fromPython(pyNodes);

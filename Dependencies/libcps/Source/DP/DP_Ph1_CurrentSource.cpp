@@ -24,7 +24,7 @@
 using namespace CPS;
 
 DP::Ph1::CurrentSource::CurrentSource(String uid, String name, Logger::Level logLevel)
-	: PowerComponent<Complex>(uid, name, logLevel) {
+	: SimPowerComp<Complex>(uid, name, logLevel) {
 	setTerminalNumber(2);
 	mIntfVoltage = MatrixComp::Zero(1,1);
 	mIntfCurrent = MatrixComp::Zero(1,1);
@@ -42,7 +42,7 @@ void DP::Ph1::CurrentSource::setParameters(Complex current) {
 	parametersSet = true;
 }
 
-PowerComponent<Complex>::Ptr DP::Ph1::CurrentSource::clone(String name) {
+SimPowerComp<Complex>::Ptr DP::Ph1::CurrentSource::clone(String name) {
 	auto copy = CurrentSource::make(name, mLogLevel);
 	copy->setParameters(attribute<Complex>("I_ref")->get());
 	return copy;

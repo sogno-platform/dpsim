@@ -30,7 +30,7 @@ namespace Ph3 {
 	/// average inverter model with LC filter
 	class AvVoltSourceInverterStateSpace :
 		public MNAInterface,
-		public PowerComponent<Real>,
+		public SimPowerComp<Real>,
 		public Base::Ph1::VoltageSource,
 		public SharedFactory<AvVoltSourceInverterStateSpace> {
 	protected:

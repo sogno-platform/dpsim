@@ -23,7 +23,7 @@
 using namespace CPS;
 
 DP::Ph1::VoltageSource::VoltageSource(String uid, String name, Logger::Level logLevel)
-	: PowerComponent<Complex>(uid, name, logLevel) {
+	: SimPowerComp<Complex>(uid, name, logLevel) {
 	setVirtualNodeNumber(1);
 	setTerminalNumber(2);
 	mIntfVoltage = MatrixComp::Zero(1,1);
@@ -33,14 +33,14 @@ DP::Ph1::VoltageSource::VoltageSource(String uid, String name, Logger::Level log
 	addAttribute<Real>("f_src", Flags::read | Flags::write);
 }
 
-PowerComponent<Complex>::Ptr DP::Ph1::VoltageSource::clone(String name) {
+SimPowerComp<Complex>::Ptr DP::Ph1::VoltageSource::clone(String name) {
 	auto copy = VoltageSource::make(name, mLogLevel);
 	copy->setParameters(attribute<Complex>("V_ref")->get());
 	return copy;
 }
 
 void DP::Ph1::VoltageSource::initialize(Matrix frequencies) {
-	PowerComponent<Complex>::initialize(frequencies);
+	SimPowerComp<Complex>::initialize(frequencies);
 }
 
 void DP::Ph1::VoltageSource::setParameters(Complex voltageRef, Real srcFreq) {

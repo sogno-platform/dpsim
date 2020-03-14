@@ -35,7 +35,7 @@ namespace Ph1 {
 	class Resistor :
 		public Base::Ph1::Resistor,
 		public MNAInterface,
-		public PowerComponent<Real>,
+		public SimPowerComp<Real>,
 		public SharedFactory<Resistor> {
 	protected:
 	public:
@@ -45,7 +45,7 @@ namespace Ph1 {
 		Resistor(String name, Logger::Level logLevel = Logger::Level::off)
 			: Resistor(name, name, logLevel) { }
 
-		PowerComponent<Real>::Ptr clone(String name);
+		SimPowerComp<Real>::Ptr clone(String name);
 
 		// #### General ####
 		/// Initializes component from power flow data

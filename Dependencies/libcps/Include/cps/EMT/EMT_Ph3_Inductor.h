@@ -38,7 +38,7 @@ namespace CPS {
 			class Inductor :
 				public Base::Ph3::Inductor,
 				public MNAInterface,
-				public PowerComponent<Real>,
+				public SimPowerComp<Real>,
 				public SharedFactory<Inductor> {
 			protected:
 				/// DC equivalent current source [A]
@@ -52,7 +52,7 @@ namespace CPS {
 				Inductor(String name, Logger::Level logLevel = Logger::Level::off)
 					: Inductor(name, name, logLevel) { }
 
-				PowerComponent<Real>::Ptr clone(String name);
+				SimPowerComp<Real>::Ptr clone(String name);
 
 				// #### General ####
 				/// Initializes component from power flow data

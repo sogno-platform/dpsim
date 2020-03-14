@@ -29,7 +29,7 @@ using namespace CPS;
 template<typename VarType>
 void SystemTopology::multiplyPowerComps(Int numberCopies) {
 	typename Node<VarType>::List newNodes;
-	typename PowerComponent<VarType>::List newComponents;
+	typename SimPowerComp<VarType>::List newComponents;
 
 	for (int copy = 0; copy < numberCopies; copy++) {
 		std::unordered_map<typename Node<VarType>::Ptr, typename Node<VarType>::Ptr> nodeMap;
@@ -55,7 +55,7 @@ void SystemTopology::multiplyPowerComps(Int numberCopies) {
 
 		// copy components
 		for (auto genComp : mComponents) {
-			auto comp = std::dynamic_pointer_cast<PowerComponent<VarType>>(genComp);
+			auto comp = std::dynamic_pointer_cast<SimPowerComp<VarType>>(genComp);
 			if (!comp)
 				continue;
 			auto copy = comp->clone(comp->name() + copySuffix);
@@ -83,7 +83,7 @@ void SystemTopology::multiplyPowerComps(Int numberCopies) {
 }
 
 void SystemTopology::multiply(Int numCopies) {
-	// PowerComponents should be all EMT or all DP anyway, but this way we don't have to look
+	// SimPowerComps should be all EMT or all DP anyway, but this way we don't have to look
 	multiplyPowerComps<Real>(numCopies);
 	multiplyPowerComps<Complex>(numCopies);
 }
@@ -115,7 +115,7 @@ void SystemTopology::splitSubnets(std::vector<SystemTopology>& splitSystems) {
 
 		// Split components into subnet groups
 		for (auto comp : mComponents) {
-			auto pcomp = std::dynamic_pointer_cast<PowerComponent<VarType>>(comp);
+			auto pcomp = std::dynamic_pointer_cast<SimPowerComp<VarType>>(comp);
 			if (!pcomp) {
 				// TODO this should only be signal components.
 				// Proper solution would be to pass them to a different "solver"
@@ -144,7 +144,7 @@ int SystemTopology::checkTopologySubnets(std::unordered_map<typename Node<VarTyp
 	std::unordered_map<typename Node<VarType>::Ptr, typename Node<VarType>::List> neighbours;
 
 	for (auto comp : mComponents) {
-		auto pcomp = std::dynamic_pointer_cast<PowerComponent<VarType>>(comp);
+		auto pcomp = std::dynamic_pointer_cast<SimPowerComp<VarType>>(comp);
 		if (!pcomp)
 			continue;
 

@@ -35,7 +35,7 @@ namespace Ph1 {
 	/// TODO: currently modelled as an impedance, which obviously doesn't have a constant power characteristic
 	/// Model as current source and read from CSV files
 	class RXLoad :
-		public PowerComponent<Complex>,
+		public SimPowerComp<Complex>,
 		public MNAInterface,
 		public SharedFactory<RXLoad> {
 	protected:
@@ -79,7 +79,7 @@ namespace Ph1 {
 			Real activePower, Real reactivePower, Real volt,
 			Logger::Level logLevel = Logger::Level::off);
 
-		PowerComponent<Complex>::Ptr clone(String name);
+		SimPowerComp<Complex>::Ptr clone(String name);
 
 		// #### General ####
 		///

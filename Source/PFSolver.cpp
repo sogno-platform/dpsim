@@ -55,7 +55,7 @@ void PFSolver::initialize(){
     }
 
 	setBaseApparentPower();
-    initializeComponents();      
+    initializeComponents();
     determinePFBusType();
     composeAdmittanceMatrix();
 
@@ -66,12 +66,12 @@ void PFSolver::initialize(){
 
 void PFSolver::initializeComponents(){
     for (auto comp : mSystem.mComponents) {
-        std::dynamic_pointer_cast<PowerComponent<Complex>>(comp)->updateSimNodes();
+        std::dynamic_pointer_cast<SimPowerComp<Complex>>(comp)->updateSimNodes();
     }
 
 	mSLog->info("-- Initialize components from terminals or nodes of topology");
 	for (auto comp : mSystem.mComponents) {
-		auto pComp = std::dynamic_pointer_cast<PowerComponent<Complex>>(comp);
+		auto pComp = std::dynamic_pointer_cast<SimPowerComp<Complex>>(comp);
 		if (!pComp)	continue;
 		pComp->initializeFromPowerflow(mSystem.mSystemFrequency);
 	}
@@ -99,7 +99,7 @@ void PFSolver::initializeComponents(){
 	for(auto sst : mSolidStateTransformers){
 		sst->calculatePerUnitParameters(mBaseApparentPower, mSystem.mSystemOmega);
 	}
-	
+
 }
 
 void PFSolver::setBaseApparentPower() {
@@ -119,7 +119,7 @@ void PFSolver::setBaseApparentPower() {
 	else
 	{
 		mBaseApparentPower = 100000000;
-		mSLog->warn("No suitable quantity found for setting mBaseApparentPower. Using {} VA.", mBaseApparentPower);		
+		mSLog->warn("No suitable quantity found for setting mBaseApparentPower. Using {} VA.", mBaseApparentPower);
 	}
 	mSLog->info("Base power = {} VA", mBaseApparentPower);
 }
@@ -130,7 +130,7 @@ void PFSolver::determinePFBusType() {
 	mVDBusIndices.clear();
 
     // Determine powerflow bus type of each node through analysis of system topology
-	for (auto node : mSystem.mNodes) {    
+	for (auto node : mSystem.mNodes) {
 		bool connectedPV = false;
 		bool connectedPQ = false;
 		bool connectedVD = false;
@@ -162,7 +162,7 @@ void PFSolver::determinePFBusType() {
 
 		// determine powerflow bus types according connected type of connected components
 		// only PQ type component connected -> set as PQ bus
-		if (!connectedPV && connectedPQ && !connectedVD) { 
+		if (!connectedPV && connectedPQ && !connectedVD) {
 			mPQBusIndices.push_back(node->simNode());
 			mPQBuses.push_back(node);
 		} // no component connected -> set as PQ bus (P & Q will be zero)
@@ -177,7 +177,7 @@ void PFSolver::determinePFBusType() {
 		else if (connectedPV && connectedPQ && !connectedVD) {
 			mPVBusIndices.push_back(node->simNode());
 			mPVBuses.push_back(node);
-			mSLog->info("Note: node with uuid {} set as PV bus. Both PV and PQ type components were connected.", node->attribute<String>("uid")->get());	
+			mSLog->info("Note: node with uuid {} set as PV bus. Both PV and PQ type components were connected.", node->attribute<String>("uid")->get());
 		} // only VD type component connected -> set as VD bus
 		else if (!connectedPV && !connectedPQ && connectedVD) {
 			mVDBusIndices.push_back(node->simNode());
@@ -192,7 +192,7 @@ void PFSolver::determinePFBusType() {
 			mVDBusIndices.push_back(node->simNode());
 			mVDBuses.push_back(node);
 			mSLog->info("Note: node with uuid {} set as VD bus. VD, PV and PQ type components were connected.", node->attribute<String>("uid")->get());
-		} 
+		}
 		else {
 			std::stringstream ss;
 			ss << "Node>>" << node->name() << ": combination of connected components is invalid";
@@ -265,7 +265,7 @@ void PFSolver::composeAdmittanceMatrix() {
 	}
 	if(mLines.empty() && mTransformers.empty()) {
 		throw std::invalid_argument("There are no bus");
-	}	
+	}
 }
 
 CPS::Real PFSolver::G(int i, int j) {
@@ -294,14 +294,14 @@ Bool PFSolver::solvePowerflow() {
 
     mIterations = 0;
     for (unsigned i = 1; i < mMaxIterations && !isConverged; ++i) {
-		
+
         calculateJacobian();
 		auto sparseJ = mJ.sparseView();
 
 		// Solve system mJ*mX = mF
         Eigen::SparseLU<SparseMatrix>lu(sparseJ);
 
-		mX = lu.solve(mF);	/* code */	        
+		mX = lu.solve(mF);	/* code */
 
 		// Calculate new solution based on mX increments obtained from equation system
 		updateSolution();

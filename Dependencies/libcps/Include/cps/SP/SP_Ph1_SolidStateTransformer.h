@@ -34,7 +34,7 @@ namespace SP { namespace Ph1 {
     * Depends on the actual condition, values can be negative
     */
 	class SolidStateTransformer :
-		public PowerComponent<Complex>,
+		public SimPowerComp<Complex>,
 		public SharedFactory<SolidStateTransformer>,
 		public MNAInterface{
 	private:
@@ -74,7 +74,7 @@ namespace SP { namespace Ph1 {
     SolidStateTransformer(String name, Logger::Level logLevel = Logger::Level::off)
     :SolidStateTransformer(name, name, logLevel) {};
     ///
-    PowerComponent<Complex>::Ptr clone(String name);
+    SimPowerComp<Complex>::Ptr clone(String name);
 
     // #### Power Flow Section ####
     /// Initializes component

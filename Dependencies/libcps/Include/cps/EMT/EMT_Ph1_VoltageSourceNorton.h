@@ -30,7 +30,7 @@ namespace EMT {
 namespace Ph1 {
 	/// Voltage source as Norton equivalent
 	class VoltageSourceNorton :
-		public PowerComponent<Real>,
+		public SimPowerComp<Real>,
 		public MNAInterface,
 		public Base::Ph1::VoltageSource,
 		public SharedFactory<VoltageSourceNorton> {
@@ -52,7 +52,7 @@ namespace Ph1 {
 		VoltageSourceNorton(String name, Logger::Level logLevel = Logger::Level::off)
 			: VoltageSourceNorton(name, name, logLevel) { }
 
-		PowerComponent<Real>::Ptr clone(String name);
+		SimPowerComp<Real>::Ptr clone(String name);
 
 		// #### General ####
 		/// Initializes component from power flow data

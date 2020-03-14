@@ -26,7 +26,7 @@ namespace CPS {
 		namespace Ph3 {
 			class ControlledVoltageSource :
 				public MNAInterface,
-				public PowerComponent<Complex>,
+				public SimPowerComp<Complex>,
 				public SharedFactory<ControlledVoltageSource> {
 			protected:
 				void updateVoltage(Real time);
@@ -40,7 +40,7 @@ namespace CPS {
 
 				void setParameters(MatrixComp voltageRefABC);
 
-				PowerComponent<Complex>::Ptr clone(String name);
+				SimPowerComp<Complex>::Ptr clone(String name);
 				// #### General ####
 				/// Initializes component from power flow data
 				void initializeFromPowerflow(Real frequency) { }

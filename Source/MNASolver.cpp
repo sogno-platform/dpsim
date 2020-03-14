@@ -105,7 +105,7 @@ template <>
 void MnaSolver<Real>::initializeComponents() {
 	mSLog->info("-- Initialize components from power flow");
 	for (auto comp : mMNAComponents) {
-		auto pComp = std::dynamic_pointer_cast<PowerComponent<Real>>(comp);
+		auto pComp = std::dynamic_pointer_cast<SimPowerComp<Real>>(comp);
 		if (!pComp)	continue;
 		pComp->initializeFromPowerflow(mSystem.mSystemFrequency);
 	}
@@ -132,7 +132,7 @@ void MnaSolver<Complex>::initializeComponents() {
 
 	// Initialize power components with frequencies and from powerflow results
 	for (auto comp : mMNAComponents) {
-		auto pComp = std::dynamic_pointer_cast<PowerComponent<Complex>>(comp);
+		auto pComp = std::dynamic_pointer_cast<SimPowerComp<Complex>>(comp);
 		if (!pComp)	continue;
 		pComp->initializeFromPowerflow(mSystem.mSystemFrequency);
 	}
@@ -349,7 +349,7 @@ void MnaSolver<VarType>::createVirtualNodes() {
 	UInt virtualNode = mNumNetNodes - 1;
 	// Check if component requires virtual node and if so set one
 	for (auto comp : mMNAComponents) {
-		auto pComp = std::dynamic_pointer_cast<PowerComponent<VarType>>(comp);
+		auto pComp = std::dynamic_pointer_cast<SimPowerComp<VarType>>(comp);
 		if (!pComp)	continue;
 
 		if (pComp->hasVirtualNodes()) {

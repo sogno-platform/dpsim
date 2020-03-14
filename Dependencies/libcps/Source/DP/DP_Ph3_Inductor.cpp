@@ -23,7 +23,7 @@ using namespace CPS;
 
 
 DP::Ph3::Inductor::Inductor(String uid, String name, Logger::Level logLevel)
-	: PowerComponent<Complex>(uid, name, logLevel) {
+	: SimPowerComp<Complex>(uid, name, logLevel) {
 	mPhaseType = PhaseType::ABC;
 	setTerminalNumber(2);
 	mEquivCurrent = MatrixComp::Zero(3,1);
@@ -33,7 +33,7 @@ DP::Ph3::Inductor::Inductor(String uid, String name, Logger::Level logLevel)
 	addAttribute<Matrix>("L", &mInductance, Flags::read | Flags::write);
 }
 
-PowerComponent<Complex>::Ptr DP::Ph3::Inductor::clone(String name) {
+SimPowerComp<Complex>::Ptr DP::Ph3::Inductor::clone(String name) {
 	auto copy = Inductor::make(name, mLogLevel);
 	copy->setParameters(mInductance);
 	return copy;

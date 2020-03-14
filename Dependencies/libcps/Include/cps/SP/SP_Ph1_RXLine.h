@@ -30,7 +30,7 @@ namespace SP {
 namespace Ph1 {
 
 	class RXLine :
-		public PowerComponent<Complex>,
+		public SimPowerComp<Complex>,
 		public SharedFactory<RXLine>,
 		public PFSolverInterfaceBranch,
 		public Base::Ph1::PiLine,
@@ -133,7 +133,7 @@ namespace Ph1 {
 		// #### MNA Section ####
 
 
-		PowerComponent<Complex>::Ptr clone(String name);
+		SimPowerComp<Complex>::Ptr clone(String name);
 
 		// #### General ####
 		/// Initializes component from power flow data

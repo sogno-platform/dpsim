@@ -25,7 +25,7 @@ using namespace CPS;
 using namespace CPS::DP::Ph3;
 
 DP::Ph3::Capacitor::Capacitor(String uid, String name, Logger::Level logLevel)
-	: PowerComponent<Complex>(uid, name, logLevel) {
+	: SimPowerComp<Complex>(uid, name, logLevel) {
 	mPhaseType = PhaseType::ABC;
 	setTerminalNumber(2);
 	mEquivCurrent = MatrixComp::Zero(3,1);
@@ -35,7 +35,7 @@ DP::Ph3::Capacitor::Capacitor(String uid, String name, Logger::Level logLevel)
 	addAttribute<Matrix>("C", &mCapacitance, Flags::read | Flags::write);
 }
 
-PowerComponent<Complex>::Ptr DP::Ph3::Capacitor::clone(String name) {
+SimPowerComp<Complex>::Ptr DP::Ph3::Capacitor::clone(String name) {
 	auto copy = Capacitor::make(name, mLogLevel);
 	copy->setParameters(mCapacitance);
 	return copy;

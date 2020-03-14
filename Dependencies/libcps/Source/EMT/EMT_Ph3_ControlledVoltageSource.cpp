@@ -24,7 +24,7 @@ using namespace CPS;
 
 
 EMT::Ph3::ControlledVoltageSource::ControlledVoltageSource(String uid, String name, Logger::Level logLevel)
-	: PowerComponent<Real>(uid, name, logLevel) {
+	: SimPowerComp<Real>(uid, name, logLevel) {
 	setVirtualNodeNumber(3);
 	setTerminalNumber(2);
 	mIntfVoltage = Matrix::Zero(3, 1);
@@ -38,7 +38,7 @@ void EMT::Ph3::ControlledVoltageSource::setParameters(Matrix voltageRefABC) {
 	parametersSet = true;
 }
 
-PowerComponent<Real>::Ptr EMT::Ph3::ControlledVoltageSource::clone(String name) {
+SimPowerComp<Real>::Ptr EMT::Ph3::ControlledVoltageSource::clone(String name) {
 	auto copy = ControlledVoltageSource::make(name, mLogLevel);
 	copy->setParameters(attribute<Matrix>("v_intf")->get());
 	return copy;

@@ -24,7 +24,7 @@
 using namespace CPS;
 
 EMT::Ph3::SeriesSwitch::SeriesSwitch(String uid, String name, Logger::Level logLevel)
-	: PowerComponent<Real>(uid, name, logLevel) {
+	: SimPowerComp<Real>(uid, name, logLevel) {
 	mPhaseType = PhaseType::ABC;
 	setTerminalNumber(2);
 
@@ -33,7 +33,7 @@ EMT::Ph3::SeriesSwitch::SeriesSwitch(String uid, String name, Logger::Level logL
 	addAttribute<Bool>("is_closed", &mIsClosed, Flags::read | Flags::write);
 }
 
-PowerComponent<Real>::Ptr EMT::Ph3::SeriesSwitch::clone(String name) {
+SimPowerComp<Real>::Ptr EMT::Ph3::SeriesSwitch::clone(String name) {
 	auto copy = SeriesSwitch::make(name, mLogLevel);
 	copy->setParameters(mOpenResistance, mClosedResistance);
 	return copy;

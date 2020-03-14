@@ -131,10 +131,10 @@ namespace CPS {
 
 		/// Adds component and initializes frequencies
 		void addComponent(IdentifiedObject::Ptr component) {
-			auto powerCompComplex = std::dynamic_pointer_cast<PowerComponent<Complex>>(component);
+			auto powerCompComplex = std::dynamic_pointer_cast<SimPowerComp<Complex>>(component);
 			if (powerCompComplex) powerCompComplex->initialize(mFrequencies);
 
-			auto powerCompReal = std::dynamic_pointer_cast<PowerComponent<Real>>(component);
+			auto powerCompReal = std::dynamic_pointer_cast<SimPowerComp<Real>>(component);
 			if (powerCompReal) powerCompReal->initialize(mFrequencies);
 
 			mComponents.push_back(component);
@@ -148,10 +148,10 @@ namespace CPS {
 
 		/// Adds component and initializes frequencies
 		void addTearComponent(IdentifiedObject::Ptr component) {
-			auto powerCompComplex = std::dynamic_pointer_cast<PowerComponent<Complex>>(component);
+			auto powerCompComplex = std::dynamic_pointer_cast<SimPowerComp<Complex>>(component);
 			if (powerCompComplex) powerCompComplex->initialize(mFrequencies);
 
-			auto powerCompReal = std::dynamic_pointer_cast<PowerComponent<Real>>(component);
+			auto powerCompReal = std::dynamic_pointer_cast<SimPowerComp<Real>>(component);
 			if (powerCompReal) powerCompReal->initialize(mFrequencies);
 
 			mTearComponents.push_back(component);

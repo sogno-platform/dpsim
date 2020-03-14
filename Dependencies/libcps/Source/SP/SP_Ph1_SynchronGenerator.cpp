@@ -24,13 +24,13 @@
 using namespace CPS;
 
 SP::Ph1::SynchronGenerator::SynchronGenerator(String uid, String name, Logger::Level logLevel)
- : PowerComponent<Complex>(uid, name, logLevel) {
+ : SimPowerComp<Complex>(uid, name, logLevel) {
 
     mSLog->info("Create {} of type {}", name, this->type());
     mSLog->flush();
 
     setTerminalNumber(1);
-    
+
     addAttribute<Real>("P_set", &mSetPointActivePower, Flags::read | Flags::write);
     addAttribute<Real>("V_set", &mSetPointVoltage, Flags::read | Flags::write);
     addAttribute<Real>("P_set_pu", &mSetPointActivePowerPerUnit, Flags::read | Flags::write);
@@ -57,7 +57,7 @@ void SP::Ph1::SynchronGenerator::setBaseVoltage(Real baseVoltage) {
 }
 
 void SP::Ph1::SynchronGenerator::calculatePerUnitParameters(Real baseApparentPower, Real baseOmega) {
-	mSLog->info("#### Calculate Per Unit Parameters for {}", mName); 
+	mSLog->info("#### Calculate Per Unit Parameters for {}", mName);
 	mBaseApparentPower = baseApparentPower;
 	mBaseOmega = baseOmega;
     mSLog->info("Base Power={} [VA]  Base Omega={} [1/s]", mBaseApparentPower, mBaseOmega);

@@ -27,7 +27,7 @@ namespace CPS {
 
 namespace SP {namespace Ph1 {
 
-	class Shunt : public PowerComponent<Complex>, public SharedFactory<Shunt>, public PFSolverInterfaceBranch {
+	class Shunt : public SimPowerComp<Complex>, public SharedFactory<Shunt>, public PFSolverInterfaceBranch {
 
 	private:
 		/// Conductance [S]

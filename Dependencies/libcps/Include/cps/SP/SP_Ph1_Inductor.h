@@ -37,7 +37,7 @@ namespace CPS {
 			class Inductor :
 				public Base::Ph1::Inductor,
 				public MNATearInterface,
-				public PowerComponent<Complex>,
+				public SimPowerComp<Complex>,
 				public SharedFactory<Inductor> {
 			protected:
 				/// susceptance [S]
@@ -50,7 +50,7 @@ namespace CPS {
 				Inductor(String name, Logger::Level logLevel = Logger::Level::off)
 					: Inductor(name, name, logLevel) { }
 
-				PowerComponent<Complex>::Ptr clone(String name);
+				SimPowerComp<Complex>::Ptr clone(String name);
 
 				// #### General ####
 				/// Initializes component from power flow data

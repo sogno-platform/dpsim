@@ -36,7 +36,7 @@ namespace Ph1 {
 	/// This model consists sub components to represent the
 	/// RLC elements of a PI-line.
 	class PiLine :
-		public PowerComponent<Complex>,
+		public SimPowerComp<Complex>,
 		public MNATearInterface,
 		public Base::Ph1::PiLine,
 		public SharedFactory<PiLine> {
@@ -61,7 +61,7 @@ namespace Ph1 {
 		PiLine(String name, Logger::Level logLevel = Logger::Level::off)
 			: PiLine(name, name, logLevel) { }
 
-		PowerComponent<Complex>::Ptr clone(String copySuffix);
+		SimPowerComp<Complex>::Ptr clone(String copySuffix);
 
 		// #### General ####
 		///

@@ -24,7 +24,7 @@
 using namespace CPS;
 
 SP::Ph1::SolidStateTransformer::SolidStateTransformer(String uid, String name, Logger::Level logLevel)
-	: PowerComponent<Complex>(uid, name, logLevel) {
+	: SimPowerComp<Complex>(uid, name, logLevel) {
 	mSLog->info("Create {} of type {}", mName, this->type());
 	mSLog->flush();
 	mIntfVoltage = MatrixComp::Zero(1, 1);
@@ -36,7 +36,7 @@ SP::Ph1::SolidStateTransformer::SolidStateTransformer(String uid, String name, L
 	addAttribute<Real>("Q2_ref", &mQ2ref, Flags::read | Flags::write);
 };
 
-PowerComponent<Complex>::Ptr SP::Ph1::SolidStateTransformer::clone(String name) {
+SimPowerComp<Complex>::Ptr SP::Ph1::SolidStateTransformer::clone(String name) {
 	// everything set by initializeFromPowerflow
 	return SolidStateTransformer::make(name, mLogLevel);
 }
@@ -112,7 +112,7 @@ Complex SP::Ph1::SolidStateTransformer::getNodalInjection(CPS::TopologicalNode::
         return Complex(mP2_perUnit, mQ2ref_perUnit);
     }
     else{
-        throw std::invalid_argument("Failed to process nodal power injection of Solid State Transformer" 
+        throw std::invalid_argument("Failed to process nodal power injection of Solid State Transformer"
         + this->name());
     }
 }

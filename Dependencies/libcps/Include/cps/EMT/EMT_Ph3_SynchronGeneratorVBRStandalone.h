@@ -39,7 +39,7 @@ namespace Ph3 {
 	/// descriptive names in order to shorten formulas and increase the readability
 
 	class SynchronGeneratorVBRStandalone:
-		public PowerComponent<Real>,
+		public SimPowerComp<Real>,
 		public MNAInterface,
 		public Base::SynchronGenerator,
 		public SharedFactory<SynchronGeneratorVBRStandalone> {

@@ -23,7 +23,7 @@ using namespace CPS;
 
 DP::Ph3::SeriesResistor::SeriesResistor(String uid, String name,
 	Logger::Level logLevel)
-	: PowerComponent<Complex>(uid, name, logLevel) {
+	: SimPowerComp<Complex>(uid, name, logLevel) {
 	mPhaseType = PhaseType::ABC;
 	setTerminalNumber(2);
 	mIntfVoltage = MatrixComp::Zero(3,1);
@@ -32,14 +32,14 @@ DP::Ph3::SeriesResistor::SeriesResistor(String uid, String name,
 	addAttribute<Real>("R", &mResistance, Flags::read | Flags::write);
 }
 
-PowerComponent<Complex>::Ptr DP::Ph3::SeriesResistor::clone(String name) {
+SimPowerComp<Complex>::Ptr DP::Ph3::SeriesResistor::clone(String name) {
 	auto copy = SeriesResistor::make(name, mLogLevel);
 	copy->setParameters(mResistance);
 	return copy;
 }
 
 void DP::Ph3::SeriesResistor::initialize(Matrix frequencies) {
-	PowerComponent<Complex>::initialize(frequencies);
+	SimPowerComp<Complex>::initialize(frequencies);
 }
 
 void DP::Ph3::SeriesResistor::initializeFromPowerflow(Real frequency) {

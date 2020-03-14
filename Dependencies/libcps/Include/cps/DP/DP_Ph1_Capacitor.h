@@ -38,7 +38,7 @@ namespace Ph1 {
 	class Capacitor :
 		public Base::Ph1::Capacitor,
 		public MNAInterface,
-		public PowerComponent<Complex>,
+		public SimPowerComp<Complex>,
 		public SharedFactory<Capacitor> {
 	protected:
 		/// DC equivalent current source for harmonics [A]
@@ -54,7 +54,7 @@ namespace Ph1 {
 		Capacitor(String name, Logger::Level logLevel = Logger::Level::off)
 			: Capacitor(name, name, logLevel) { }
 
-		PowerComponent<Complex>::Ptr clone(String name);
+		SimPowerComp<Complex>::Ptr clone(String name);
 
 		// #### General ####
 		/// Initializes component from power flow data

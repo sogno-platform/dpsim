@@ -33,7 +33,7 @@ namespace CPS {
 			class Resistor :
 				public Base::Ph1::Resistor,
 				public MNATearInterface,
-				public PowerComponent<Complex>,
+				public SimPowerComp<Complex>,
 				public SharedFactory<Resistor>,
 	 			public PFSolverInterfaceBranch {
 
@@ -62,7 +62,7 @@ namespace CPS {
 				Resistor(String name, Logger::Level logLevel = Logger::Level::off)
 					: Resistor(name, name, logLevel) { }
 
-				PowerComponent<Complex>::Ptr clone(String name);
+				SimPowerComp<Complex>::Ptr clone(String name);
 
 				// #### General ####
 				/// Initializes component from power flow data

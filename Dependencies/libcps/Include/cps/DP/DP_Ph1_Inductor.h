@@ -38,7 +38,7 @@ namespace Ph1 {
 	class Inductor :
 		public Base::Ph1::Inductor,
 		public MNATearInterface,
-		public PowerComponent<Complex>,
+		public SimPowerComp<Complex>,
 		public SharedFactory<Inductor> {
 	protected:
 		/// DC equivalent current source for harmonics [A]
@@ -58,7 +58,7 @@ namespace Ph1 {
 
 		// #### General ####
 		/// Return new instance with the same parameters
-		PowerComponent<Complex>::Ptr clone(String name);
+		SimPowerComp<Complex>::Ptr clone(String name);
 		/// Initializes state variables considering the number of frequencies
 		void initialize(Matrix frequencies);
 		/// Initializes states from power flow data

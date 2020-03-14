@@ -25,7 +25,7 @@ using namespace CPS;
 
 DP::Ph1::PQLoadCS::PQLoadCS(String uid, String name,
 	Logger::Level logLevel)
-	: PowerComponent<Complex>(uid, name, logLevel) {
+	: SimPowerComp<Complex>(uid, name, logLevel) {
 	setTerminalNumber(1);
 	mIntfVoltage = MatrixComp::Zero(1, 1);
 	mIntfCurrent = MatrixComp::Zero(1, 1);
@@ -63,7 +63,7 @@ void DP::Ph1::PQLoadCS::setParameters(Real activePower, Real reactivePower, Real
 	parametersSet = true;
 }
 
-PowerComponent<Complex>::Ptr DP::Ph1::PQLoadCS::clone(String name) {
+SimPowerComp<Complex>::Ptr DP::Ph1::PQLoadCS::clone(String name) {
 	auto copy = PQLoadCS::make(name, mLogLevel);
 	copy->setParameters(attribute<Real>("P")->get(), attribute<Real>("Q")->get(), attribute<Real>("V_nom")->get());
 	return copy;

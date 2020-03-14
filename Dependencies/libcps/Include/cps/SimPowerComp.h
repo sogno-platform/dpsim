@@ -26,7 +26,7 @@
 namespace CPS {
 	/// Base class for all components that are transmitting power.
 	template <typename VarType>
-	class PowerComponent : public TopologicalComponent {
+	class SimPowerComp : public TopologicalComponent {
 
 	protected:
 		/// List of Terminals
@@ -54,16 +54,16 @@ namespace CPS {
 
 	public:
 		typedef VarType Type;
-		typedef std::shared_ptr<PowerComponent<VarType>> Ptr;
+		typedef std::shared_ptr<SimPowerComp<VarType>> Ptr;
 		typedef std::vector<Ptr> List;
 
 		/// Basic constructor that takes UID, name and log level
-		PowerComponent(String uid, String name, Logger::Level logLevel = Logger::Level::off);
+		SimPowerComp(String uid, String name, Logger::Level logLevel = Logger::Level::off);
 		/// Basic constructor that takes name and log level and sets the UID to name as well
-		PowerComponent(String name, Logger::Level logLevel = Logger::Level::off)
-			: PowerComponent(name, name, logLevel) { }
+		SimPowerComp(String name, Logger::Level logLevel = Logger::Level::off)
+			: SimPowerComp(name, name, logLevel) { }
 		/// Destructor - does not do anything
-		virtual ~PowerComponent() { }
+		virtual ~SimPowerComp() { }
 
 		/// Returns a modified copy of the component with the given suffix added to the name and without
 		/// connected nodes / terminals

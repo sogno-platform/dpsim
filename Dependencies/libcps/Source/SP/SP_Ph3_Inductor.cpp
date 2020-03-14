@@ -22,7 +22,7 @@
 using namespace CPS;
 
 SP::Ph3::Inductor::Inductor(String uid, String name, Logger::Level logLevel)
-	: PowerComponent<Complex>(uid, name, logLevel) {
+	: SimPowerComp<Complex>(uid, name, logLevel) {
 	mPhaseType = PhaseType::ABC;
 	setTerminalNumber(2);
 	mIntfVoltage = MatrixComp::Zero(3, 1);
@@ -30,7 +30,7 @@ SP::Ph3::Inductor::Inductor(String uid, String name, Logger::Level logLevel)
 	addAttribute<Matrix>("L", &mInductance, Flags::read | Flags::write);
 }
 
-PowerComponent<Complex>::Ptr SP::Ph3::Inductor::clone(String name) {
+SimPowerComp<Complex>::Ptr SP::Ph3::Inductor::clone(String name) {
 	auto copy = Inductor::make(name, mLogLevel);
 	copy->setParameters(mInductance);
 	return copy;
@@ -71,7 +71,7 @@ void SP::Ph3::Inductor::initializeFromPowerflow(Real frequency) {
 
 void SP::Ph3::Inductor::mnaInitialize(Real omega, Real timeStep, Attribute<Matrix>::Ptr leftVector) {
 	updateSimNodes();
-// TODO 
+// TODO
 /*
 	mLog.info() << "Initial voltage " << Math::abs(mIntfVoltage(0, 0))
 		<< "<" << Math::phaseDeg(mIntfVoltage(0, 0)) << std::endl

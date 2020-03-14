@@ -24,7 +24,7 @@
 using namespace CPS;
 
 EMT::Ph3::NetworkInjection::NetworkInjection(String uid, String name, Logger::Level logLevel)
-	: PowerComponent<Real>(uid, name, logLevel) {
+	: SimPowerComp<Real>(uid, name, logLevel) {
 	mPhaseType = PhaseType::ABC;
 	setVirtualNodeNumber(1);
 	setTerminalNumber(1);
@@ -35,7 +35,7 @@ EMT::Ph3::NetworkInjection::NetworkInjection(String uid, String name, Logger::Le
 	addAttribute<Real>("f_src", Flags::read | Flags::write);
 }
 
-PowerComponent<Real>::Ptr EMT::Ph3::NetworkInjection::clone(String name) {
+SimPowerComp<Real>::Ptr EMT::Ph3::NetworkInjection::clone(String name) {
 	auto copy = NetworkInjection::make(name, mLogLevel);
 	copy->setParameters(attribute<MatrixComp>("V_ref")->get());
 	return copy;

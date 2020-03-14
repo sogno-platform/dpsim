@@ -29,7 +29,7 @@ using namespace CPS;
 using namespace std;
 
 DP::Ph3::SynchronGeneratorDQ::SynchronGeneratorDQ(String uid, String name, Logger::Level logLevel)
-	: PowerComponent<Complex>(uid, name, logLevel) {
+	: SimPowerComp<Complex>(uid, name, logLevel) {
 	mPhaseType = PhaseType::ABC;
 	setTerminalNumber(1);
 	mIntfVoltage = MatrixComp::Zero(3,1);
@@ -60,7 +60,7 @@ void DP::Ph3::SynchronGeneratorDQ::setParametersFundamentalPerUnit(
 }
 
 void DP::Ph3::SynchronGeneratorDQ::initialize(Matrix frequencies) {
-	PowerComponent<Complex>::initialize(frequencies);
+	SimPowerComp<Complex>::initialize(frequencies);
 	mSystemOmega = frequencies(0,0);
 
 	// #### Compensation ####

@@ -40,7 +40,7 @@ namespace CPS {
 				- filter stamped into the global admittance matrix
 			*/
 			class AvVoltageSourceInverterDQ :
-				public PowerComponent<Complex>,
+				public SimPowerComp<Complex>,
 				public MNAInterface,
 				public SharedFactory<AvVoltageSourceInverterDQ> {
 			protected:

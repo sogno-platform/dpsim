@@ -26,7 +26,7 @@ using namespace CPS;
 using namespace std;
 
 DP::Ph1::Inverter::Inverter(String uid, String name, Logger::Level logLevel)
-	: PowerComponent<Complex>(uid, name, logLevel) {
+	: SimPowerComp<Complex>(uid, name, logLevel) {
 	setTerminalNumber(1);
 	setVirtualNodeNumber(1);
 	mIntfVoltage = MatrixComp::Zero(1,1);
@@ -61,7 +61,7 @@ void DP::Ph1::Inverter::generateFrequencies() {
 }
 
 void DP::Ph1::Inverter::initialize(Matrix frequencies) {
-	PowerComponent<Complex>::initialize(frequencies);
+	SimPowerComp<Complex>::initialize(frequencies);
 
 	mSLog->info("\n--- Initialization ---");
 

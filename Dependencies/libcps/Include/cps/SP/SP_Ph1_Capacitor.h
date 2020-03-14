@@ -29,7 +29,7 @@ namespace CPS {
 			class Capacitor :
 				public Base::Ph1::Capacitor,
 				public MNAInterface,
-				public PowerComponent<Complex>,
+				public SimPowerComp<Complex>,
 				public SharedFactory<Capacitor> {
 			protected:
 				/// Equivalent conductance [S]
@@ -42,7 +42,7 @@ namespace CPS {
 				Capacitor(String name, Logger::Level logLevel = Logger::Level::off)
 					: Capacitor(name, name, logLevel) { }
 
-				PowerComponent<Complex>::Ptr clone(String name);
+				SimPowerComp<Complex>::Ptr clone(String name);
 
 				// #### General ####
 				/// Initializes component from power flow data

@@ -38,7 +38,7 @@ namespace CPS {
 				 - with interface to SP grid
 			*/
 			class AvVoltageSourceInverterDQ :
-				public PowerComponent<Complex>,
+				public SimPowerComp<Complex>,
 				public MNAInterface,
 				public PFSolverInterfaceBus,
 				public SharedFactory<AvVoltageSourceInverterDQ> {
@@ -155,7 +155,7 @@ namespace CPS {
 				AvVoltageSourceInverterDQ(String name,
 					Logger::Level logLevel = Logger::Level::off) :AvVoltageSourceInverterDQ(name, name, logLevel) {}
 				///
-				PowerComponent<Complex>::Ptr clone(String copySuffix);
+				SimPowerComp<Complex>::Ptr clone(String copySuffix);
 				/// add measurements for Vcabc and Ifabc
 				//void addMonitoredNodes( std::shared_ptr<Capacitor> cap);
 				///

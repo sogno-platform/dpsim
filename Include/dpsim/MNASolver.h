@@ -110,7 +110,7 @@ namespace DPsim {
 		void initializeComponents();
 		/// Initialization of system matrices and source vector
 		void initializeSystem();
-		/// Identify Nodes and PowerComponents and SimSignalComps
+		/// Identify Nodes and SimPowerComps and SimSignalComps
 		void identifyTopologyObjects();
 		/// Assign simulation node index according to index in the vector.
 		void assignSimNodes();

@@ -36,7 +36,7 @@ namespace Ph1 {
 	/// Each state has a specific resistance value.
 	class Switch :
 		public Base::Ph1::Switch,
-		public PowerComponent<Complex>,
+		public SimPowerComp<Complex>,
 		public SharedFactory<Switch>,
 		public MNASwitchInterface {
 	protected:
@@ -47,7 +47,7 @@ namespace Ph1 {
 		Switch(String name, Logger::Level logLevel = Logger::Level::off)
 			: Switch(name, name, logLevel) { }
 
-		PowerComponent<Complex>::Ptr clone(String name);
+		SimPowerComp<Complex>::Ptr clone(String name);
 
 		// #### General ####
 		///

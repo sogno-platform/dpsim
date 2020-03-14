@@ -25,7 +25,7 @@ using namespace CPS;
 
 
 EMT::Ph3::SynchronGeneratorDQ::SynchronGeneratorDQ(String uid, String name, Logger::Level logLevel)
-	: PowerComponent<Real>(uid, name, logLevel) {
+	: SimPowerComp<Real>(uid, name, logLevel) {
 	mPhaseType = PhaseType::ABC;
 	setTerminalNumber(1);
 	mIntfVoltage = Matrix::Zero(3,1);
@@ -56,7 +56,7 @@ void EMT::Ph3::SynchronGeneratorDQ::setParametersFundamentalPerUnit(
 }
 
 void EMT::Ph3::SynchronGeneratorDQ::initialize(Matrix frequencies) {
-	PowerComponent<Real>::initialize(frequencies);
+	SimPowerComp<Real>::initialize(frequencies);
 
 	// #### Compensation ####
 	mCompensationOn = false;

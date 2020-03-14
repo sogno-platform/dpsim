@@ -24,7 +24,7 @@ using namespace CPS;
 
 DP::Ph1::Transformer::Transformer(String uid, String name,
 	Logger::Level logLevel)
-	: PowerComponent<Complex>(uid, name, logLevel) {
+	: SimPowerComp<Complex>(uid, name, logLevel) {
 	setTerminalNumber(2);
 	setVirtualNodeNumber(1);
 	mIntfVoltage = MatrixComp::Zero(1,1);
@@ -35,7 +35,7 @@ DP::Ph1::Transformer::Transformer(String uid, String name,
 	addAttribute<Real>("L", &mInductance, Flags::write | Flags::read);
 }
 
-PowerComponent<Complex>::Ptr DP::Ph1::Transformer::clone(String name) {
+SimPowerComp<Complex>::Ptr DP::Ph1::Transformer::clone(String name) {
 	auto copy = Transformer::make(name, mLogLevel);
 	copy->setParameters(std::abs(mRatio), std::arg(mRatio), mResistance, mInductance);
 	return copy;
@@ -54,7 +54,7 @@ void DP::Ph1::Transformer::setParameters(Real ratioAbs, Real ratioPhase,
 }
 
 void DP::Ph1::Transformer::initialize(Matrix frequencies) {
-	PowerComponent<Complex>::initialize(frequencies);
+	SimPowerComp<Complex>::initialize(frequencies);
 }
 
 void DP::Ph1::Transformer::initializeFromPowerflow(Real frequency) {

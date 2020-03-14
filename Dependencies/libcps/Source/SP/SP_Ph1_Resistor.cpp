@@ -24,7 +24,7 @@ using namespace CPS;
 
 SP::Ph1::Resistor::Resistor(String uid, String name,
 	Logger::Level logLevel)
-	: PowerComponent<Complex>(uid, name, logLevel) {
+	: SimPowerComp<Complex>(uid, name, logLevel) {
 	setTerminalNumber(2);
 	mIntfVoltage = MatrixComp::Zero(1, 1);
 	mIntfCurrent = MatrixComp::Zero(1, 1);
@@ -32,7 +32,7 @@ SP::Ph1::Resistor::Resistor(String uid, String name,
 	addAttribute<Real>("R", &mResistance, Flags::read | Flags::write);
 }
 
-PowerComponent<Complex>::Ptr SP::Ph1::Resistor::clone(String name) {
+SimPowerComp<Complex>::Ptr SP::Ph1::Resistor::clone(String name) {
 	auto copy = Resistor::make(name, mLogLevel);
 	copy->setParameters(mResistance);
 	return copy;
@@ -43,7 +43,7 @@ void SP::Ph1::Resistor::setBaseVoltage(Real baseVoltage){
 }
 
 void SP::Ph1::Resistor::calculatePerUnitParameters(Real baseApparentPower){
-	mSLog->info("#### Calculate Per Unit Parameters for {}", mName);    
+	mSLog->info("#### Calculate Per Unit Parameters for {}", mName);
     mBaseApparentPower = baseApparentPower;
 	mSLog->info("Base Power={} [VA]", baseApparentPower);
 

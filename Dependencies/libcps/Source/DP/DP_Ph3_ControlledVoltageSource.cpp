@@ -22,7 +22,7 @@
 using namespace CPS;
 
 DP::Ph3::ControlledVoltageSource::ControlledVoltageSource(String uid, String name, Logger::Level logLevel)
-	: PowerComponent<Complex>(uid, name, logLevel) {
+	: SimPowerComp<Complex>(uid, name, logLevel) {
 	mPhaseType = PhaseType::ABC;
 	setVirtualNodeNumber(1);
 	setTerminalNumber(2);
@@ -36,7 +36,7 @@ void DP::Ph3::ControlledVoltageSource::setParameters(MatrixComp voltageRefABC) {
 	parametersSet = true;
 }
 
-PowerComponent<Complex>::Ptr DP::Ph3::ControlledVoltageSource::clone(String name) {
+SimPowerComp<Complex>::Ptr DP::Ph3::ControlledVoltageSource::clone(String name) {
 	auto copy = ControlledVoltageSource::make(name, mLogLevel);
 	copy->setParameters(attribute<Matrix>("v_intf")->get());
 	return copy;

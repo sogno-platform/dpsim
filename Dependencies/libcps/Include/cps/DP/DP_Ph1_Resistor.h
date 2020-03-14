@@ -34,7 +34,7 @@ namespace Ph1 {
 		public Base::Ph1::Resistor,
 		public MNATearInterface,
 		public DAEInterface,
-		public PowerComponent<Complex>,
+		public SimPowerComp<Complex>,
 		public SharedFactory<Resistor> {
 	public:
 		/// Defines UID, name and logging level
@@ -43,7 +43,7 @@ namespace Ph1 {
 		Resistor(String name, Logger::Level logLevel = Logger::Level::off)
 			: Resistor(name, name, logLevel) { }
 
-		PowerComponent<Complex>::Ptr clone(String name);
+		SimPowerComp<Complex>::Ptr clone(String name);
 
 		// #### General ####
 		/// Initialize components with correct network frequencies

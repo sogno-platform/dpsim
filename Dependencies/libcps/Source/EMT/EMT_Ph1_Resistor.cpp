@@ -23,7 +23,7 @@
 using namespace CPS;
 
 EMT::Ph1::Resistor::Resistor(String uid, String name, Logger::Level logLevel)
-	: PowerComponent<Real>(uid, name, logLevel) {
+	: SimPowerComp<Real>(uid, name, logLevel) {
 	setTerminalNumber(2);
 	mIntfVoltage = Matrix::Zero(1,1);
 	mIntfCurrent = Matrix::Zero(1,1);
@@ -31,7 +31,7 @@ EMT::Ph1::Resistor::Resistor(String uid, String name, Logger::Level logLevel)
 	addAttribute<Real>("R", &mResistance, Flags::read | Flags::write);
 }
 
-PowerComponent<Real>::Ptr EMT::Ph1::Resistor::clone(String name) {
+SimPowerComp<Real>::Ptr EMT::Ph1::Resistor::clone(String name) {
 	auto copy = Resistor::make(name, mLogLevel);
 	copy->setParameters(mResistance);
 	return copy;

@@ -23,7 +23,7 @@
 using namespace CPS;
 
 EMT::Ph1::VoltageSource::VoltageSource(String uid, String name,	Logger::Level logLevel)
-	: PowerComponent<Real>(uid, name, logLevel) {
+	: SimPowerComp<Real>(uid, name, logLevel) {
 	setVirtualNodeNumber(1);
 	setTerminalNumber(2);
 	mIntfVoltage = Matrix::Zero(1,1);
@@ -40,7 +40,7 @@ void EMT::Ph1::VoltageSource::setParameters(Complex voltageRef, Real srcFreq) {
 	parametersSet = true;
 }
 
-PowerComponent<Real>::Ptr EMT::Ph1::VoltageSource::clone(String name) {
+SimPowerComp<Real>::Ptr EMT::Ph1::VoltageSource::clone(String name) {
 	auto copy = VoltageSource::make(name, mLogLevel);
 	copy->setParameters(attribute<Complex>("V_ref")->get(), attribute<Real>("f_src")->get());
 	return copy;

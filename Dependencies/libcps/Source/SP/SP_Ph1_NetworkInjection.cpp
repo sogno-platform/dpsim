@@ -25,17 +25,17 @@ using namespace CPS;
 
 
 SP::Ph1::externalGridInjection::externalGridInjection(String uid, String name,
-    Logger::Level logLevel) : PowerComponent<Complex>(uid, name, logLevel) {
+    Logger::Level logLevel) : SimPowerComp<Complex>(uid, name, logLevel) {
 	setVirtualNodeNumber(1);
 	setTerminalNumber(1);
 	mIntfVoltage = MatrixComp::Zero(1, 1);
 	mIntfCurrent = MatrixComp::Zero(1, 1);
-    
+
     addAttribute<Real>("V_set", &mVoltageSetPoint, Flags::read | Flags::write);
     addAttribute<Real>("V_set_pu", &mVoltageSetPointPerUnit, Flags::read | Flags::write);
 	addAttribute<Real>("p_inj", &mActivePowerInjection, Flags::read | Flags::write);
 	addAttribute<Real>("q_inj", &mReactivePowerInjection, Flags::read | Flags::write);
-	
+
 	// MNA attributes
 	addAttribute<Complex>("V_ref", Flags::read | Flags::write);
 	addAttribute<Real>("f_src", Flags::read | Flags::write);
@@ -65,7 +65,7 @@ void SP::Ph1::externalGridInjection::setParameters(Complex voltageRef, Real srcF
 	parametersSet = true;
 }
 
-PowerComponent<Complex>::Ptr SP::Ph1::externalGridInjection::clone(String name) {
+SimPowerComp<Complex>::Ptr SP::Ph1::externalGridInjection::clone(String name) {
 	auto copy = externalGridInjection::make(name, mLogLevel);
 	copy->setParameters(attribute<Complex>("V_ref")->get());
 	return copy;

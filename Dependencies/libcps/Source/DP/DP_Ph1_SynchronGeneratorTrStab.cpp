@@ -22,7 +22,7 @@
 using namespace CPS;
 
 DP::Ph1::SynchronGeneratorTrStab::SynchronGeneratorTrStab(String uid, String name, Logger::Level logLevel)
-	: PowerComponent<Complex>(uid, name, logLevel) {
+	: SimPowerComp<Complex>(uid, name, logLevel) {
 	setVirtualNodeNumber(2);
 	setTerminalNumber(1);
 	mIntfVoltage = MatrixComp::Zero(1, 1);
@@ -39,7 +39,7 @@ DP::Ph1::SynchronGeneratorTrStab::SynchronGeneratorTrStab(String uid, String nam
 	mStates = Matrix::Zero(10,1);
 }
 
-PowerComponent<Complex>::Ptr DP::Ph1::SynchronGeneratorTrStab::clone(String name) {
+SimPowerComp<Complex>::Ptr DP::Ph1::SynchronGeneratorTrStab::clone(String name) {
 	auto copy = SynchronGeneratorTrStab::make(name, mLogLevel);
 	copy->setStandardParametersPU(mNomPower, mNomVolt, mNomFreq, mXpd / mBase_Z, mInertia);
 	return copy;
@@ -113,7 +113,7 @@ void DP::Ph1::SynchronGeneratorTrStab::setInitialValues(Complex elecPower, Real 
 }
 
 void DP::Ph1::SynchronGeneratorTrStab::initialize(Matrix frequencies) {
-	PowerComponent<Complex>::initialize(frequencies);
+	SimPowerComp<Complex>::initialize(frequencies);
 }
 
 void DP::Ph1::SynchronGeneratorTrStab::initializeFromPowerflow(Real frequency) {

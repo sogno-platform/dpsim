@@ -40,7 +40,7 @@ namespace Ph3 {
 	/// parameter names include underscores and typical variables names found in literature instead of
 	/// descriptive names in order to shorten formulas and increase the readability
 	class SynchronGeneratorVBR :
-		public PowerComponent<Real>,
+		public SimPowerComp<Real>,
 		public MNAInterface,
 		public Base::SynchronGenerator,
 		public SharedFactory<SynchronGeneratorVBR> {

@@ -112,7 +112,7 @@ void DAESolver::initialize(Real t0) {
 
 
     for (IdentifiedObject::Ptr comp : mComponents) {
-        auto emtComp = std::dynamic_pointer_cast<PowerComponent<Complex> >(comp);
+        auto emtComp = std::dynamic_pointer_cast<SimPowerComp<Complex> >(comp);
         if (emtComp) {
             emtComp->initializeFromPowerflow(mSystem.mSystemFrequency);// Set initial values of all components
         }

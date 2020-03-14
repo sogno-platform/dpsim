@@ -36,7 +36,7 @@ namespace Ph3 {
 	/// same for all phases and only in series.
 	class SeriesSwitch :
 		public Base::Ph1::Switch,
-		public PowerComponent<Real>,
+		public SimPowerComp<Real>,
 		public SharedFactory<SeriesSwitch>,
 		public MNASwitchInterface {
 	protected:
@@ -49,7 +49,7 @@ namespace Ph3 {
 
 		// #### General ####
 		/// Return new instance with the same parameters
-		PowerComponent<Real>::Ptr clone(String name);
+		SimPowerComp<Real>::Ptr clone(String name);
 		/// Initializes states from power flow data
 		void initializeFromPowerflow(Real frequency);
 

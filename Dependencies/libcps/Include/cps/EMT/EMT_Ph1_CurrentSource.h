@@ -35,7 +35,7 @@ namespace Ph1 {
 	/// node1 and into node2.
 	class CurrentSource :
 		public MNAInterface,
-		public PowerComponent<Real>,
+		public SimPowerComp<Real>,
 		public SharedFactory<CurrentSource> {
 	private:
 		Attribute<Complex>::Ptr mCurrentRef;
@@ -48,7 +48,7 @@ namespace Ph1 {
 		CurrentSource(String name, Logger::Level logLevel = Logger::Level::off)
 			: CurrentSource(name, name, logLevel) { }
 
-		PowerComponent<Real>::Ptr clone(String name);
+		SimPowerComp<Real>::Ptr clone(String name);
 
 		void setParameters(Complex currentRef, Real srcFreq = -1);
 		// #### General ####

@@ -39,7 +39,7 @@ namespace CPS {
 				- filter stamped into the global admittance matrix
 			*/
 			class AvVoltageSourceInverterDQ :
-				public PowerComponent<Real>,
+				public SimPowerComp<Real>,
 				public MNAInterface,
 				public SharedFactory<AvVoltageSourceInverterDQ> {
 			protected:
@@ -143,7 +143,7 @@ namespace CPS {
 				AvVoltageSourceInverterDQ(String name,
 					Logger::Level logLevel = Logger::Level::off) :AvVoltageSourceInverterDQ(name, name, logLevel) {}
 				///
-				PowerComponent<Real>::Ptr clone(String copySuffix);
+				SimPowerComp<Real>::Ptr clone(String copySuffix);
 				///
 				void updateMonitoredValues(const Matrix& leftVector, Real time);
 				///

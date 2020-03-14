@@ -31,7 +31,7 @@ namespace Ph3 {
 class Resistor :
 	public Base::Ph3::Resistor,
 	public MNAInterface,
-	public PowerComponent<Real>,
+	public SimPowerComp<Real>,
 	public SharedFactory<Resistor> {
 protected:
 public:
@@ -43,7 +43,7 @@ public:
 
 		// #### General ####
 		///
-		PowerComponent<Real>::Ptr clone(String name);
+		SimPowerComp<Real>::Ptr clone(String name);
 		/// Initializes component from power flow data
 		void initializeFromPowerflow(Real frequency);
 		/// enable DP to EMT bach transformation

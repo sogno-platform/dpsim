@@ -35,7 +35,7 @@
 namespace CPS {
 namespace SP { namespace Ph1 {
 	class Load :
-		public PowerComponent<Complex>,
+		public SimPowerComp<Complex>,
 		public SharedFactory<Load>,
 		public PFSolverInterfaceBus,
 		public MNAInterface{
@@ -90,7 +90,7 @@ namespace SP { namespace Ph1 {
 		///
 		void setParameters(Real activePower, Real reactivePower, Real nominalVoltage);
 		///
-		PowerComponent<Complex>::Ptr clone(String name);
+		SimPowerComp<Complex>::Ptr clone(String name);
 
 		// #### General ####
 		/// Initializes component from power flow data

@@ -23,7 +23,7 @@
 using namespace CPS;
 
 DP::Ph1::Switch::Switch(String uid, String name, Logger::Level logLevel)
-	: PowerComponent<Complex>(uid, name, logLevel) {
+	: SimPowerComp<Complex>(uid, name, logLevel) {
 	setTerminalNumber(2);
 	mIntfVoltage = MatrixComp::Zero(1,1);
 	mIntfCurrent = MatrixComp::Zero(1,1);
@@ -33,7 +33,7 @@ DP::Ph1::Switch::Switch(String uid, String name, Logger::Level logLevel)
 	addAttribute<Bool>("is_closed", &mIsClosed, Flags::read | Flags::write);
 }
 
-PowerComponent<Complex>::Ptr DP::Ph1::Switch::clone(String name) {
+SimPowerComp<Complex>::Ptr DP::Ph1::Switch::clone(String name) {
 	auto copy = Switch::make(name, mLogLevel);
 	copy->setParameters(mOpenResistance, mClosedResistance, mIsClosed);
 	return copy;
@@ -60,7 +60,7 @@ void DP::Ph1::Switch::initializeFromPowerflow(Real frequency) {
 }
 
 void DP::Ph1::Switch::initialize(Matrix frequencies) {
-	PowerComponent<Complex>::initialize(frequencies);
+	SimPowerComp<Complex>::initialize(frequencies);
 }
 
 void DP::Ph1::Switch::mnaInitialize(Real omega, Real timeStep, Attribute<Matrix>::Ptr leftVector) {

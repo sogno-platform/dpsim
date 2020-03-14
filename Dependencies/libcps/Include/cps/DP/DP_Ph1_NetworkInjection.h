@@ -35,7 +35,7 @@ namespace Ph1 {
 	/// positve and for the equation of node k as negative. Moreover
 	/// a new equation ej - ek = V is added to the problem.
 	class NetworkInjection :
-		public PowerComponent<Complex>,
+		public SimPowerComp<Complex>,
 		public MNAInterface,
 		public DAEInterface,
 		public SharedFactory<NetworkInjection> {
@@ -56,7 +56,7 @@ namespace Ph1 {
 		NetworkInjection(String name,
 			Complex voltage, Logger::Level logLevel = Logger::Level::off);
 		///
-		PowerComponent<Complex>::Ptr clone(String name);
+		SimPowerComp<Complex>::Ptr clone(String name);
 
 		// #### General ####
 		/// Initializes component from power flow data

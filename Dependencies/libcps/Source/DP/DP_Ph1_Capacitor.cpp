@@ -25,7 +25,7 @@ using namespace CPS;
 using namespace CPS::DP::Ph1;
 
 DP::Ph1::Capacitor::Capacitor(String uid, String name, Logger::Level logLevel)
-	: PowerComponent<Complex>(uid, name, logLevel) {
+	: SimPowerComp<Complex>(uid, name, logLevel) {
 	mEquivCurrent = { 0, 0 };
 	mIntfVoltage = MatrixComp::Zero(1,1);
 	mIntfCurrent = MatrixComp::Zero(1,1);
@@ -34,14 +34,14 @@ DP::Ph1::Capacitor::Capacitor(String uid, String name, Logger::Level logLevel)
 	addAttribute<Real>("C", &mCapacitance, Flags::read | Flags::write);
 }
 
-PowerComponent<Complex>::Ptr DP::Ph1::Capacitor::clone(String name) {
+SimPowerComp<Complex>::Ptr DP::Ph1::Capacitor::clone(String name) {
 	auto copy = Capacitor::make(name, mLogLevel);
 	copy->setParameters(mCapacitance);
 	return copy;
 }
 
 void DP::Ph1::Capacitor::initialize(Matrix frequencies) {
-	PowerComponent<Complex>::initialize(frequencies);
+	SimPowerComp<Complex>::initialize(frequencies);
 
 	mEquivCurrent = MatrixComp::Zero(mNumFreqs, 1);
 	mEquivCond = MatrixComp::Zero(mNumFreqs, 1);

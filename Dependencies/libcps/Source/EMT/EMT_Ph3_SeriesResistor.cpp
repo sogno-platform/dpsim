@@ -25,7 +25,7 @@ using namespace CPS;
 
 EMT::Ph3::SeriesResistor::SeriesResistor(String uid, String name,
 	Logger::Level logLevel)
-	: PowerComponent<Real>(uid, name, logLevel) {
+	: SimPowerComp<Real>(uid, name, logLevel) {
 
 	mPhaseType = PhaseType::ABC;
 	setTerminalNumber(2);
@@ -33,7 +33,7 @@ EMT::Ph3::SeriesResistor::SeriesResistor(String uid, String name,
 	addAttribute<Real>("R", &mResistance, Flags::read | Flags::write);
 }
 
-PowerComponent<Real>::Ptr EMT::Ph3::SeriesResistor::clone(String name) {
+SimPowerComp<Real>::Ptr EMT::Ph3::SeriesResistor::clone(String name) {
 	auto copy = SeriesResistor::make(name, mLogLevel);
 	copy->setParameters(mResistance);
 	return copy;

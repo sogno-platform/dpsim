@@ -25,7 +25,7 @@ using namespace CPS;
 
 EMT::Ph1::VoltageSourceRamp::VoltageSourceRamp(String uid, String name,
 	Logger::Level logLevel)
-	: PowerComponent<Real>(uid, name, logLevel) {
+	: SimPowerComp<Real>(uid, name, logLevel) {
 	setVirtualNodeNumber(1);
 	setTerminalNumber(2);
 	mIntfVoltage = Matrix::Zero(1,1);
@@ -35,7 +35,7 @@ EMT::Ph1::VoltageSourceRamp::VoltageSourceRamp(String uid, String name,
 	addAttribute<Real>("f_src", &mSrcFreq, Flags::read | Flags::write);
 }
 
-PowerComponent<Real>::Ptr EMT::Ph1::VoltageSourceRamp::clone(String name) {
+SimPowerComp<Real>::Ptr EMT::Ph1::VoltageSourceRamp::clone(String name) {
 	auto copy = VoltageSourceRamp::make(name, mLogLevel);
 	copy->setParameters(mVoltageRef, mAddVoltage, mSrcFreq, mAddSrcFreq, mSwitchTime, mRampTime);
 	return copy;
@@ -49,12 +49,12 @@ void EMT::Ph1::VoltageSourceRamp::setParameters(Complex voltage, Complex addVolt
 	mAddSrcFreq = addSrcFreq;
 	mSwitchTime = switchTime;
 	mRampTime = rampTime;
-	
+
 	parametersSet = true;
 }
 
 void EMT::Ph1::VoltageSourceRamp::initialize(Matrix frequencies) {
-	PowerComponent<Real>::initialize(frequencies);
+	SimPowerComp<Real>::initialize(frequencies);
 
 	if (mVoltageRef == Complex(0, 0))
 		mVoltageRef = initialSingleVoltage(1) - initialSingleVoltage(0);

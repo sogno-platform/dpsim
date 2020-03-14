@@ -34,7 +34,7 @@ namespace Ph3 {
 	class SeriesResistor :
 		public Base::Ph1::Resistor,
 		public MNAInterface,
-		public PowerComponent<Complex>,
+		public SimPowerComp<Complex>,
 		public SharedFactory<SeriesResistor> {
 
 	public:
@@ -44,7 +44,7 @@ namespace Ph3 {
 		SeriesResistor(String name,	Logger::Level logLevel = Logger::Level::off)
 			: SeriesResistor(name, name, logLevel) { }
 
-		PowerComponent<Complex>::Ptr clone(String name);
+		SimPowerComp<Complex>::Ptr clone(String name);
 
 		// #### General ####
 		///

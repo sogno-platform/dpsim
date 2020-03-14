@@ -24,7 +24,7 @@
 using namespace CPS;
 
 EMT::Ph1::CurrentSource::CurrentSource(String uid, String name,	Logger::Level logLevel)
-	: PowerComponent<Real>(uid, name, logLevel) {
+	: SimPowerComp<Real>(uid, name, logLevel) {
 	setTerminalNumber(2);
 	mIntfVoltage = Matrix::Zero(1,1);
 	mIntfCurrent = Matrix::Zero(1,1);
@@ -33,7 +33,7 @@ EMT::Ph1::CurrentSource::CurrentSource(String uid, String name,	Logger::Level lo
 	addAttribute<Real>("f_src", Flags::read | Flags::write);
 }
 
-PowerComponent<Real>::Ptr EMT::Ph1::CurrentSource::clone(String name) {
+SimPowerComp<Real>::Ptr EMT::Ph1::CurrentSource::clone(String name) {
 	auto copy = CurrentSource::make(name, mLogLevel);
 	copy->setParameters(attribute<Complex>("I_ref")->get(), attribute<Real>("f_src")->get());
 	return copy;
@@ -42,7 +42,7 @@ PowerComponent<Real>::Ptr EMT::Ph1::CurrentSource::clone(String name) {
 void EMT::Ph1::CurrentSource::setParameters(Complex currentRef, Real srcFreq) {
 	attribute<Complex>("I_ref")->set(currentRef);
 	attribute<Real>("f_src")->set(srcFreq);
-	
+
 	parametersSet = true;
 }
 

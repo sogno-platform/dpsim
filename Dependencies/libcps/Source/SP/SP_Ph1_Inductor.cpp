@@ -22,7 +22,7 @@
 using namespace CPS;
 
 SP::Ph1::Inductor::Inductor(String uid, String name, Logger::Level logLevel)
-	: PowerComponent<Complex>(uid, name, logLevel) {
+	: SimPowerComp<Complex>(uid, name, logLevel) {
 	mIntfVoltage = MatrixComp::Zero(1, 1);
 	mIntfCurrent = MatrixComp::Zero(1, 1);
 	setTerminalNumber(2);
@@ -30,7 +30,7 @@ SP::Ph1::Inductor::Inductor(String uid, String name, Logger::Level logLevel)
 	addAttribute<Real>("L", &mInductance, Flags::read | Flags::write);
 }
 
-PowerComponent<Complex>::Ptr SP::Ph1::Inductor::clone(String name) {
+SimPowerComp<Complex>::Ptr SP::Ph1::Inductor::clone(String name) {
 	auto copy = Inductor::make(name, mLogLevel);
 	copy->setParameters(mInductance);
 	return copy;

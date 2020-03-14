@@ -25,7 +25,7 @@ using namespace CPS;
 
 EMT::Ph3::Transformer::Transformer(String uid, String name,
 	Logger::Level logLevel)
-	: PowerComponent<Real>(uid, name, logLevel) {
+	: SimPowerComp<Real>(uid, name, logLevel) {
 	mPhaseType = PhaseType::ABC;
 	setTerminalNumber(2);
 	setVirtualNodeNumber(1);
@@ -37,7 +37,7 @@ EMT::Ph3::Transformer::Transformer(String uid, String name,
 	addAttribute<Matrix>("L", &mInductance, Flags::write | Flags::read);
 }
 
-PowerComponent<Real>::Ptr EMT::Ph3::Transformer::clone(String name) {
+SimPowerComp<Real>::Ptr EMT::Ph3::Transformer::clone(String name) {
 	auto copy = Transformer::make(name, mLogLevel);
 	copy->setParameters(std::abs(mRatio), std::arg(mRatio), mResistance, mInductance);
 	return copy;
@@ -54,7 +54,7 @@ void EMT::Ph3::Transformer::setParameters(Real ratioAbs, Real ratioPhase,
 }
 
 void EMT::Ph3::Transformer::initialize(Matrix frequencies) {
-	PowerComponent<Real>::initialize(frequencies);
+	SimPowerComp<Real>::initialize(frequencies);
 }
 
 void EMT::Ph3::Transformer::initializeFromPowerflow(Real frequency) {
