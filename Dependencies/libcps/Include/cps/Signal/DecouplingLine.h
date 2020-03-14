@@ -30,7 +30,7 @@
 namespace CPS {
 namespace Signal {
 	class DecouplingLine :
-		public SignalComponent,
+		public SimSignalComp,
 		public SharedFactory<DecouplingLine> {
 	protected:
 		Real mDelay;

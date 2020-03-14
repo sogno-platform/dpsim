@@ -83,9 +83,9 @@ void DiakopticsSolver<VarType>::initSubnets(const std::vector<SystemTopology>& s
 			if (mnaComp)
 				mSubnets[i].components.push_back(mnaComp);
 
-			auto sigComp = std::dynamic_pointer_cast<CPS::SignalComponent>(comp);
+			auto sigComp = std::dynamic_pointer_cast<CPS::SimSignalComp>(comp);
 			if (sigComp)
-				mSignalComponents.push_back(sigComp);
+				mSimSignalComps.push_back(sigComp);
 		}
 	}
 
@@ -274,7 +274,7 @@ void DiakopticsSolver<VarType>::initComponents() {
 		}
 	}
 	// Initialize signal components.
-	for (auto comp : mSignalComponents)
+	for (auto comp : mSimSignalComps)
 		comp->initialize(mSystem.mSystemOmega, mTimeStep);
 }
 
@@ -366,7 +366,7 @@ Task::List DiakopticsSolver<VarType>::getTasks() {
 		l.push_back(std::make_shared<SolveTask>(*this, net));
 	}
 
-	for (auto comp : mSignalComponents) {
+	for (auto comp : mSimSignalComps) {
 		for (auto task : comp->getTasks()) {
 			l.push_back(task);
 		}

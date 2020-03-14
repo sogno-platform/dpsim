@@ -26,7 +26,7 @@ using namespace CPS;
 using namespace CPS::Signal;
 
 FIRFilter::FIRFilter(String uid, String name, Logger::Level logLevel) :
-	SignalComponent(name, name, logLevel),
+	SimSignalComp(name, name, logLevel),
 	mCurrentIdx(0),
 	mInitSample(0.0) {
 

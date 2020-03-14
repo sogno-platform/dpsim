@@ -24,7 +24,7 @@ using namespace CPS::EMT::Ph1;
 using namespace CPS::Signal;
 
 DecouplingLineEMT::DecouplingLineEMT(String name, Logger::Level logLevel) :
-	SignalComponent(name, name, logLevel) {
+	SimSignalComp(name, name, logLevel) {
 
 	addAttribute<Matrix>("states", &mStates);
 	addAttribute<Real>("i_src1", &mSrcCur1Ref, Flags::read);

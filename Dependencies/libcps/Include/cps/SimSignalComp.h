@@ -25,7 +25,7 @@
 namespace CPS {
 	/// Base class for all signal type components
 	/// that have only unidirectional connections
-	class SignalComponent : public TopologicalSignalComp {
+	class SimSignalComp : public TopologicalSignalComp {
 	public:
 		enum Behaviour { Initialization, Simulation };
 	protected:
@@ -33,17 +33,17 @@ namespace CPS {
 		/// special behavior for components during initialization
 		Bool mBehaviour = Behaviour::Simulation;
 	public:
-		typedef std::shared_ptr<SignalComponent> Ptr;
+		typedef std::shared_ptr<SimSignalComp> Ptr;
 		typedef std::vector<Ptr> List;
 
 		///
-		SignalComponent(String uid, String name, Logger::Level logLevel = Logger::Level::off)
+		SimSignalComp(String uid, String name, Logger::Level logLevel = Logger::Level::off)
 			: TopologicalSignalComp(uid, name, logLevel) { }
 		///
-		SignalComponent(String name, Logger::Level logLevel = Logger::Level::off)
-			: SignalComponent(name, name, logLevel) { }
+		SimSignalComp(String name, Logger::Level logLevel = Logger::Level::off)
+			: SimSignalComp(name, name, logLevel) { }
 		///
-		virtual ~SignalComponent() { }
+		virtual ~SimSignalComp() { }
 
 		///
 		virtual void initialize(Real timeStep) { }

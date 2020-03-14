@@ -70,7 +70,7 @@ namespace DPsim {
 		std::vector<Subnet> mSubnets;
 		std::unordered_map<typename CPS::Node<VarType>::Ptr, Subnet*> mNodeSubnetMap;
 		typename CPS::PowerComponent<VarType>::List mTearComponents;
-		CPS::SignalComponent::List mSignalComponents;
+		CPS::SimSignalComp::List mSimSignalComps;
 
 		Matrix mRightSideVector;
 		Matrix mLeftSideVector;

@@ -69,7 +69,7 @@ namespace DPsim {
 		///
 		CPS::MNASwitchInterface::List mSwitches;
 		///
-		CPS::SignalComponent::List mSignalComponents;
+		CPS::SimSignalComp::List mSimSignalComps;
 
 		// #### MNA specific attributes ####
 		/// System matrix A that is modified by matrix stamps
@@ -110,7 +110,7 @@ namespace DPsim {
 		void initializeComponents();
 		/// Initialization of system matrices and source vector
 		void initializeSystem();
-		/// Identify Nodes and PowerComponents and SignalComponents
+		/// Identify Nodes and PowerComponents and SimSignalComps
 		void identifyTopologyObjects();
 		/// Assign simulation node index according to index in the vector.
 		void assignSimNodes();

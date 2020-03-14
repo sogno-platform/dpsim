@@ -25,7 +25,7 @@ using namespace CPS::Signal;
 
 DecouplingLine::DecouplingLine(String name, Node<Complex>::Ptr node1, Node<Complex>::Ptr node2,
 	Real resistance, Real inductance, Real capacitance, Logger::Level logLevel) :
-	SignalComponent(name, name, logLevel),
+	SimSignalComp(name, name, logLevel),
 	mResistance(resistance), mInductance(inductance), mCapacitance(capacitance) {
 
 	addAttribute<Matrix>("states", &mStates);
@@ -55,7 +55,7 @@ DecouplingLine::DecouplingLine(String name, Node<Complex>::Ptr node1, Node<Compl
 }
 
 DecouplingLine::DecouplingLine(String name, Logger::Level logLevel) :
-	SignalComponent(name, name, logLevel) {
+	SimSignalComp(name, name, logLevel) {
 
 	addAttribute<Matrix>("states", &mStates);
 	addAttribute<Complex>("i_src1", &mSrcCur1Ref, Flags::read);

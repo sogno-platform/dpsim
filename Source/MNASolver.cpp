@@ -87,8 +87,8 @@ void MnaSolver<VarType>::initialize() {
 		auto powerComp = std::dynamic_pointer_cast<CPS::TopologicalComponent>(comp);
 		if (powerComp) powerComp->setBehaviour(TopologicalComponent::Behaviour::Simulation);
 
-		auto sigComp = std::dynamic_pointer_cast<CPS::SignalComponent>(comp);
-		if (sigComp) sigComp->setBehaviour(SignalComponent::Behaviour::Simulation);
+		auto sigComp = std::dynamic_pointer_cast<CPS::SimSignalComp>(comp);
+		if (sigComp) sigComp->setBehaviour(SimSignalComp::Behaviour::Simulation);
 	}
 
 	// Initialize system matrices and source vector.
@@ -111,7 +111,7 @@ void MnaSolver<Real>::initializeComponents() {
 	}
 
 	// Initialize signal components.
-	for (auto comp : mSignalComponents)
+	for (auto comp : mSimSignalComps)
 		comp->initialize(mSystem.mSystemOmega, mTimeStep);
 
 	// Initialize MNA specific parts of components.
@@ -138,7 +138,7 @@ void MnaSolver<Complex>::initializeComponents() {
 	}
 
 	// Initialize signal components.
-	for (auto comp : mSignalComponents)
+	for (auto comp : mSimSignalComps)
 		comp->initialize(mSystem.mSystemOmega, mTimeStep);
 
 	mSLog->info("-- Initialize MNA properties of components");
@@ -263,8 +263,8 @@ void MnaSolver<VarType>::identifyTopologyObjects() {
 		auto mnaComp = std::dynamic_pointer_cast<CPS::MNAInterface>(comp);
 		if (mnaComp) mMNAComponents.push_back(mnaComp);
 
-		auto sigComp = std::dynamic_pointer_cast<CPS::SignalComponent>(comp);
-		if (sigComp) mSignalComponents.push_back(sigComp);
+		auto sigComp = std::dynamic_pointer_cast<CPS::SimSignalComp>(comp);
+		if (sigComp) mSimSignalComps.push_back(sigComp);
 	}
 }
 
@@ -397,8 +397,8 @@ void MnaSolver<VarType>::steadyStateInitialization() {
 		auto powerComp = std::dynamic_pointer_cast<CPS::TopologicalComponent>(comp);
 		if (powerComp) powerComp->setBehaviour(TopologicalComponent::Behaviour::Initialization);
 
-		auto sigComp = std::dynamic_pointer_cast<CPS::SignalComponent>(comp);
-		if (sigComp) sigComp->setBehaviour(SignalComponent::Behaviour::Initialization);
+		auto sigComp = std::dynamic_pointer_cast<CPS::SimSignalComp>(comp);
+		if (sigComp) sigComp->setBehaviour(SimSignalComp::Behaviour::Initialization);
 	}
 
 	initializeSystem();
@@ -421,7 +421,7 @@ void MnaSolver<VarType>::steadyStateInitialization() {
 		}
 	}
 	// TODO signal components should be moved out of MNA solver
-	for (auto comp : mSignalComponents) {
+	for (auto comp : mSimSignalComps) {
 		for (auto task : comp->getTasks()) {
 			tasks.push_back(task);
 		}
@@ -482,7 +482,7 @@ Task::List MnaSolver<VarType>::getTasks() {
 			l.push_back(task);
 	}
 	// TODO signal components should be moved out of MNA solver
-	for (auto comp : mSignalComponents) {
+	for (auto comp : mSimSignalComps) {
 		for (auto task : comp->getTasks()) {
 			l.push_back(task);
 		}

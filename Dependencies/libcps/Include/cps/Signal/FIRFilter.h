@@ -31,7 +31,7 @@
 namespace CPS {
 namespace Signal {
 	class FIRFilter :
-		public SignalComponent,
+		public SimSignalComp,
 		public SharedFactory<FIRFilter> {
 	protected:
 		std::vector<Real> mSignal;
