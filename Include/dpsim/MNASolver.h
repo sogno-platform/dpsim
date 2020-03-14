@@ -1,7 +1,5 @@
-/** MNASolver
- *
- * @author Markus Mirz <mmirz@eonerc.rwth-aachen.de>
- * @copyright 2017-2018, Institute for Automation of Complex Power Systems, EONERC
+/**
+ * @copyright 2017, Institute for Automation of Complex Power Systems, EONERC
  *
  * DPsim
  *
@@ -67,7 +65,7 @@ namespace DPsim {
 		///
 		typename CPS::Node<VarType>::List mNodes;
 		///
-		CPS::MNAInterface::List mPowerComponents;
+		CPS::MNAInterface::List mMNAComponents;
 		///
 		CPS::MNASwitchInterface::List mSwitches;
 		///
@@ -162,7 +160,7 @@ namespace DPsim {
 		public:
 			SolveTask(MnaSolver<VarType>& solver, Bool steadyStateInit) :
 				Task(solver.mName + ".Solve"), mSolver(solver), mSteadyStateInit(steadyStateInit) {
-				for (auto it : solver.mPowerComponents) {
+				for (auto it : solver.mMNAComponents) {
 					if (it->template attribute<Matrix>("right_vector")->get().size() != 0) {
 						mAttributeDependencies.push_back(it->attribute("right_vector"));
 					}
@@ -184,7 +182,7 @@ namespace DPsim {
 		public:
 			SolveTaskHarm(MnaSolver<VarType>& solver, Bool steadyStateInit, UInt freqIdx) :
 				Task(solver.mName + ".Solve"), mSolver(solver), mSteadyStateInit(steadyStateInit), mFreqIdx(freqIdx) {
-				for (auto it : solver.mPowerComponents) {
+				for (auto it : solver.mMNAComponents) {
 					if (it->template attribute<Matrix>("right_vector")->get().size() != 0) {
 						mAttributeDependencies.push_back(it->attribute("right_vector"));
 					}

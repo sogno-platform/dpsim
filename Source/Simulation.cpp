@@ -76,7 +76,7 @@ Simulation::Simulation(String name, SystemTopology system,
 	Bool powerFlowInit,
 	Bool steadyStateInit,
 	Bool splitSubnets,
-	Component::List tearComponents) :
+	IdentifiedObject::List tearComponents) :
 	Simulation(name, logLevel) {
 
 	mTimeStep = timeStep;
@@ -124,7 +124,7 @@ void Simulation::initialize() {
 template <typename VarType>
 void Simulation::createSolvers(
 	CPS::SystemTopology& system,
-	Component::List& tearComponents) {
+	IdentifiedObject::List& tearComponents) {
 
 	std::vector<SystemTopology> subnets;
 	// The Diakoptics solver splits the system at a later point.

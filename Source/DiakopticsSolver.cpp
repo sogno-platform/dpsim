@@ -35,7 +35,7 @@ namespace DPsim {
 
 template <typename VarType>
 DiakopticsSolver<VarType>::DiakopticsSolver(String name,
-	SystemTopology system, Component::List tearComponents,
+	SystemTopology system, IdentifiedObject::List tearComponents,
 	Real timeStep, Logger::Level logLevel) :
 	Solver(name, logLevel),	mTimeStep(timeStep) {
 

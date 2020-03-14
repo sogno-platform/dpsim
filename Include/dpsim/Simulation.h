@@ -93,7 +93,7 @@ namespace DPsim {
 		Bool mSplitSubnets = true;
 		/// If tearing components exist, the Diakoptics
 		/// solver is selected automatically.
-		CPS::Component::List mTearComponents = CPS::Component::List();
+		CPS::IdentifiedObject::List mTearComponents = CPS::IdentifiedObject::List();
 		/// Determines if the system matrix is split into
 		/// several smaller matrices, one for each frequency.
 		/// This can only be done if the network is composed
@@ -140,7 +140,7 @@ namespace DPsim {
 			CPS::Logger::Level logLevel = CPS::Logger::Level::info);
 
 		template <typename VarType>
-		void createSolvers(CPS::SystemTopology& system, CPS::Component::List& tearComponents);
+		void createSolvers(CPS::SystemTopology& system, CPS::IdentifiedObject::List& tearComponents);
 
 		void prepSchedule();
 	public:
@@ -161,7 +161,7 @@ namespace DPsim {
 			Bool powerFlowInit = false,
 			Bool steadyStateInit = false,
 			Bool splitSubnets = true,
-			CPS::Component::List tearComponents = CPS::Component::List());
+			CPS::IdentifiedObject::List tearComponents = CPS::IdentifiedObject::List());
 
 		/// Desctructor
 		virtual ~Simulation() { }
@@ -184,7 +184,7 @@ namespace DPsim {
 		///
 		void doSplitSubnets(Bool splitSubnets = true) { mSplitSubnets = splitSubnets; }
 		///
-		void setTearingComponents(CPS::Component::List tearComponents = CPS::Component::List()) {
+		void setTearingComponents(CPS::IdentifiedObject::List tearComponents = CPS::IdentifiedObject::List()) {
 			mTearComponents = tearComponents;
 		}
 		/// Set the scheduling method

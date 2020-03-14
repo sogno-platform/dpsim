@@ -1,6 +1,5 @@
 /**
- * @author Markus Mirz <mmirz@eonerc.rwth-aachen.de>
- * @copyright 2017-2018, Institute for Automation of Complex Power Systems, EONERC
+ * @copyright 2017, Institute for Automation of Complex Power Systems, EONERC
  *
  * CPowerSystems
  *
@@ -102,7 +101,7 @@ void SystemTopology::splitSubnets(std::vector<SystemTopology>& splitSystems) {
 	if (numberSubnets == 1) {
 		splitSystems.push_back(*this);
 	} else {
-		std::vector<Component::List> components(numberSubnets);
+		std::vector<IdentifiedObject::List> components(numberSubnets);
 		std::vector<TopologicalNode::List> nodes(numberSubnets);
 
 		// Split nodes into subnet groups

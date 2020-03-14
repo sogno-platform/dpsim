@@ -42,7 +42,7 @@ DAESolver::DAESolver(String name, CPS::SystemTopology system, Real dt, Real t0) 
     mOffsets.push_back(0);
 
     // Set initial values of all required variables and create IDA solver environment
-    for(Component::Ptr comp : mSystem.mComponents) {
+    for(IdentifiedObject::Ptr comp : mSystem.mComponents) {
         auto daeComp = std::dynamic_pointer_cast<DAEInterface>(comp);
         std::cout <<"Added Comp"<<std::endl;
         if (!daeComp)
@@ -111,7 +111,7 @@ void DAESolver::initialize(Real t0) {
 
 
 
-    for (Component::Ptr comp : mComponents) {
+    for (IdentifiedObject::Ptr comp : mComponents) {
         auto emtComp = std::dynamic_pointer_cast<PowerComponent<Complex> >(comp);
         if (emtComp) {
             emtComp->initializeFromPowerflow(mSystem.mSystemFrequency);// Set initial values of all components

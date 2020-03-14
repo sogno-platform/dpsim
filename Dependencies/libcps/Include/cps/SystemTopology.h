@@ -24,7 +24,6 @@
 #include <vector>
 #include <algorithm>
 
-#include <cps/PowerComponent.h>
 #include <cps/TopologicalComponent.h>
 #include <cps/PowerComponent.h>
 #include <cps/Node.h>
@@ -43,12 +42,12 @@ namespace CPS {
 		/// List of network nodes
 		TopologicalNode::List mNodes;
 		/// List of network components
-		Component::List mComponents;
+		IdentifiedObject::List mComponents;
 		/// List of tearing components could be used
 		/// by a solver to split the network into subnetworks
-		Component::List mTearComponents;
+		IdentifiedObject::List mTearComponents;
 		/// Map of network components connected to network nodes
-		std::map<TopologicalNode::Ptr, Component::List> mComponentsAtNode;
+		std::map<TopologicalNode::Ptr, TopologicalComponent::List> mComponentsAtNode;
 
 		// #### Deprecated ####
 		// Better use mFrequencies
@@ -74,20 +73,20 @@ namespace CPS {
 
 		/// This constructor requires a search for all nodes
 		/// which is not implemented yet!
-		SystemTopology(Real frequency, Component::List components)
+		SystemTopology(Real frequency, IdentifiedObject::List components)
 		: SystemTopology(frequency) {
 			mComponents = components;
 		}
 
 		/// Standard constructor for single frequency simulations
-		SystemTopology(Real frequency, TopologicalNode::List nodes, Component::List components)
+		SystemTopology(Real frequency, TopologicalNode::List nodes, IdentifiedObject::List components)
 		: SystemTopology(frequency) {
 			addNodes(nodes);
 			addComponents(components);
 		}
 
 		/// Standard constructor for multi frequency simulations
-		SystemTopology(Real frequency, Matrix frequencies, TopologicalNode::List nodes, Component::List components)
+		SystemTopology(Real frequency, Matrix frequencies, TopologicalNode::List nodes, IdentifiedObject::List components)
 		: SystemTopology(frequency) {
 			mFrequencies = frequencies;
 			addNodes(nodes);
@@ -131,7 +130,7 @@ namespace CPS {
 		}
 
 		/// Adds component and initializes frequencies
-		void addComponent(Component::Ptr component) {
+		void addComponent(IdentifiedObject::Ptr component) {
 			auto powerCompComplex = std::dynamic_pointer_cast<PowerComponent<Complex>>(component);
 			if (powerCompComplex) powerCompComplex->initialize(mFrequencies);
 
@@ -142,13 +141,13 @@ namespace CPS {
 		}
 
 		/// Add multiple components
-		void addComponents(Component::List components) {
+		void addComponents(IdentifiedObject::List components) {
 			for (auto comp : components)
 				addComponent(comp);
 		}
 
 		/// Adds component and initializes frequencies
-		void addTearComponent(Component::Ptr component) {
+		void addTearComponent(IdentifiedObject::Ptr component) {
 			auto powerCompComplex = std::dynamic_pointer_cast<PowerComponent<Complex>>(component);
 			if (powerCompComplex) powerCompComplex->initialize(mFrequencies);
 
@@ -159,7 +158,7 @@ namespace CPS {
 		}
 
 		/// Add multiple components
-		void addTearComponents(Component::List components) {
+		void addTearComponents(IdentifiedObject::List components) {
 			for (auto comp : components)
 				addTearComponent(comp);
 		}

@@ -114,7 +114,7 @@ namespace DPsim {
 		void log(Real time);
 
 	public:
-		DiakopticsSolver(String name, CPS::SystemTopology system, CPS::Component::List tearComponents, Real timeStep, CPS::Logger::Level logLevel);
+		DiakopticsSolver(String name, CPS::SystemTopology system, CPS::IdentifiedObject::List tearComponents, Real timeStep, CPS::Logger::Level logLevel);
 
 		CPS::Task::List getTasks();
 
