@@ -1,6 +1,5 @@
-/** PFSolver
- * @author Jan Dinkelbach <jdinkelbach@eonerc.rwth-aachen.de>
- * @copyright 2019, Institute for Automation of Complex Power Systems, EONERC
+/**
+ * @copyright 2017, Institute for Automation of Complex Power Systems, EONERC
  *
  * DPsim
  *
@@ -27,7 +26,6 @@
 #include <dpsim/Scheduler.h>
 #include "cps/SystemTopology.h"
 #include "cps/Components.h"
-#include "cps/Component.h"
 
 namespace DPsim {
     /// Solver class using the nonlinear powerflow (PF) formulation.
@@ -61,7 +59,7 @@ namespace DPsim {
         /// Admittance matrix
         CPS::SparseMatrixCompRow mY;
 
-        /// Jacobian matrix 
+        /// Jacobian matrix
         CPS::Matrix mJ;
         /// Solution vector
         CPS::Vector mX;
@@ -95,7 +93,7 @@ namespace DPsim {
 		CPS::Real mBaseApparentPower;
         /// Convergence flag
         CPS::Bool isConverged = false;
-        /// Flag whether solution vectors are initialized 
+        /// Flag whether solution vectors are initialized
         CPS::Bool solutionInitialized = false;
         /// Flag whether complex solution vectors are initialized
         CPS::Bool solutionComplexInitialized = false;
@@ -110,7 +108,7 @@ namespace DPsim {
         virtual void updateSolution() = 0;
         /// Set final solution
         virtual void setSolution() = 0;
-        
+
         /// Initialization of the solver
         void initialize();
         /// Initialization of individual components
@@ -146,7 +144,7 @@ namespace DPsim {
 			CPS::Logger::Level logLevel);
 		///
 		virtual ~PFSolver() { };
-        
+
         /// Set a node to VD using its name
         void setVDNode(CPS::String name);
         /// Allows to modify the powerflow bus type of a specific component

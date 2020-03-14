@@ -1,6 +1,5 @@
 /**
- * @author Markus Mirz <mmirz@eonerc.rwth-aachen.de>
- * @copyright 2017-2018, Institute for Automation of Complex Power Systems, EONERC
+ * @copyright 2017, Institute for Automation of Complex Power Systems, EONERC
  *
  * DPsim
  *
@@ -28,13 +27,13 @@
 using namespace DPsim;
 using namespace CPS;
 
-Component::List multiply_diakoptics(SystemTopology& sys, Int copies,
+IdentifiedObject::List multiply_diakoptics(SystemTopology& sys, Int copies,
 	Real resistance, Real inductance, Real capacitance, Int splits = 0) {
 
     sys.multiply(copies);
 	int counter = 0;
     std::vector<String> nodes = {"BUS5", "BUS8", "BUS6"};
-    Component::List tear_components;
+    IdentifiedObject::List tear_components;
     Int splitEvery = 0;
 
 	if ((splits == 0) || (splits == copies+1)) {
@@ -83,7 +82,7 @@ void simulateDiakoptics(std::list<fs::path> filenames,
 	SystemTopology sys = reader.loadCIM(60, filenames);
 
 	if (copies > 0)
-		Component::List tearComps = multiply_diakoptics(sys, copies, 12.5, 0.16, 1e-6, splits);
+		IdentifiedObject::List tearComps = multiply_diakoptics(sys, copies, 12.5, 0.16, 1e-6, splits);
 
 	Simulation sim(simName, Logger::Level::off);
 	sim.setSystem(sys);

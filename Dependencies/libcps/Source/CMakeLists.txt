@@ -12,7 +12,6 @@ add_library(cps STATIC
 	Node.cpp
 	TopologicalNode.cpp
 	TopologicalTerminal.cpp
-	Component.cpp
 	PowerComponent.cpp
 	SystemTopology.cpp
 	CSVReader.cpp
