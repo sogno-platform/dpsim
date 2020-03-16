@@ -13,19 +13,19 @@ DPsim is a solver library for power system simulation.
 - It can be interfaced to a variety of protocols and interfaces via [VILLASnode](http://www.fein-aachen.org/projects/villas-framework/).
 
 ## Installation
-If you just want to use DPsim for simulations, take a look at the [installation instructions](https://acs.pages.rwth-aachen.de/public/simulation/dpsim/dpsim-docs/Install.html).
+If you just want to use DPsim for simulations, take a look at the [installation instructions](https://acs.pages.rwth-aachen.de/public/simulation/dpsim/dpsim/Install.html).
 
-If you would like to modify / extend DPsim or build it for a specific platform, take a look at the [build instructions](https://acs.pages.rwth-aachen.de/public/simulation/dpsim/dpsim-docs/Build.html).
+If you would like to modify / extend DPsim or build it for a specific platform, take a look at the [build instructions](https://acs.pages.rwth-aachen.de/public/simulation/dpsim/dpsim/Build.html).
 
 ## Usage
 DPsim is a Python extension module which is implemented in optimized native C++ code. 
-Users can control and script the simulation with Python scripts. Checkout the [Examples](https://acs.pages.rwth-aachen.de/public/simulation/dpsim/dpsim-docs/Examples.html).
+Users can control and script the simulation with Python scripts. Checkout the [Examples](https://acs.pages.rwth-aachen.de/public/simulation/dpsim/dpsim/Examples.html).
 
 ## Documentation
 
-The [user documentation](https://acs.pages.rwth-aachen.de/public/simulation/dpsim/dpsim-docs/about.html) has examples, build / installation instructions and covers the Python API.
+The [user documentation](https://acs.pages.rwth-aachen.de/public/simulation/dpsim/dpsim/about.html) has examples, build / installation instructions and covers the Python API.
 
-The C++ [developer documentation](https://acs.pages.rwth-aachen.de/public/simulation/dpsim/dpsim-docs/cxx/index.html) only includes automatically generated content using Doxygen.
+The C++ [developer documentation](https://acs.pages.rwth-aachen.de/public/simulation/dpsim/dpsim/cxx/index.html) only includes automatically generated content using Doxygen.
 It is helpful to understand the general structure of the C++ DPsim core components.
 
 ## Copyright
