@@ -1,7 +1,7 @@
 # <img src="Documentation/images/dpsim.png" width=40 /> DPsim
 
-[![pipeline status](https://git.rwth-aachen.de/acs/public/simulation/dpsim/badges/master/pipeline.svg)](https://git.rwth-aachen.de/acs/public/simulation/dpsim/commits/master)
-[![coverage report](https://git.rwth-aachen.de/acs/public/simulation/dpsim/badges/master/coverage.svg)](https://git.rwth-aachen.de/acs/public/simulation/dpsim/commits/master)
+[![pipeline status](https://git.rwth-aachen.de/acs/public/simulation/dpsim/dpsim/badges/master/pipeline.svg)](https://git.rwth-aachen.de/acs/public/simulation/dpsim/dpsim/commits/master)
+[![coverage report](https://git.rwth-aachen.de/acs/public/simulation/dpsim/dpsim/badges/master/coverage.svg)](https://git.rwth-aachen.de/acs/public/simulation/dpsim/dpsim/commits/master)
 
 DPsim is a solver library for power system simulation.
 
@@ -13,19 +13,19 @@ DPsim is a solver library for power system simulation.
 - It can be interfaced to a variety of protocols and interfaces via [VILLASnode](http://www.fein-aachen.org/projects/villas-framework/).
 
 ## Installation
-If you just want to use DPsim for simulations, take a look at the [installation instructions](https://acs.pages.rwth-aachen.de/public/simulation/dpsim/Install.html).
+If you just want to use DPsim for simulations, take a look at the [installation instructions](https://acs.pages.rwth-aachen.de/public/simulation/dpsim/dpsim-docs/Install.html).
 
-If you would like to modify / extend DPsim or build it for a specific platform, take a look at the [build instructions](https://acs.pages.rwth-aachen.de/public/simulation/dpsim/Build.html).
+If you would like to modify / extend DPsim or build it for a specific platform, take a look at the [build instructions](https://acs.pages.rwth-aachen.de/public/simulation/dpsim/dpsim-docs/Build.html).
 
 ## Usage
 DPsim is a Python extension module which is implemented in optimized native C++ code. 
-Users can control and script the simulation with Python scripts. Checkout the [Examples](https://acs.pages.rwth-aachen.de/public/simulation/dpsim/Examples.html).
+Users can control and script the simulation with Python scripts. Checkout the [Examples](https://acs.pages.rwth-aachen.de/public/simulation/dpsim/dpsim-docs/Examples.html).
 
 ## Documentation
 
-The [user documentation](https://acs.pages.rwth-aachen.de/public/simulation/dpsim/about.html) has examples, build / installation instructions and covers the Python API.
+The [user documentation](https://acs.pages.rwth-aachen.de/public/simulation/dpsim/dpsim-docs/about.html) has examples, build / installation instructions and covers the Python API.
 
-The C++ [developer documentation](https://acs.pages.rwth-aachen.de/public/simulation/dpsim/cxx/index.html) only includes automatically generated content using Doxygen.
+The C++ [developer documentation](https://acs.pages.rwth-aachen.de/public/simulation/dpsim/dpsim-docs/cxx/index.html) only includes automatically generated content using Doxygen.
 It is helpful to understand the general structure of the C++ DPsim core components.
 
 ## Copyright
@@ -34,7 +34,7 @@ It is helpful to understand the general structure of the C++ DPsim core componen
 
 ## License
 
-This project is released under the terms of the [GPL version 3](https://git.rwth-aachen.de/acs/public/simulation/dpsim/blob/master/COPYING.md).
+This project is released under the terms of the [GPL version 3](https://git.rwth-aachen.de/acs/public/simulation/dpsim/dpsim/blob/master/COPYING.md).
 
 ```
 This program is free software: you can redistribute it and/or modify
