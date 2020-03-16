@@ -16,7 +16,7 @@ endif()
 add_definitions(-D_SILENCE_ALL_CXX17_DEPRECATION_WARNINGS)
 add_definitions(-D_SILENCE_EXPERIMENTAL_FILESYSTEM_DEPRECATION_WARNING)
 
-set(CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/CMake;${PROJECT_SOURCE_DIR}/Dependencies/libcps/CMake")
+set(CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/CMake;${PROJECT_SOURCE_DIR}/models/CMake")
 
 set(PROJECT_AUTHOR "Institute for Automation of Complex Power Systems, RWTH Aachen University")
 set(PROJECT_COPYRIGHT "2017-2020, Institute for Automation of Complex Power Systems, RWTH Aachen University")
@@ -64,7 +64,7 @@ else()
 	find_package(spdlog REQUIRED)
 endif()
 find_package(CIMpp)
-add_subdirectory(Dependencies/libcps)
+add_subdirectory(models)
 
 find_package(PythonInterp 3.6)
 find_package(PythonLibs 3.6)
