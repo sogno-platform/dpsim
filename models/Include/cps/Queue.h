@@ -1,11 +1,8 @@
-/** Bounded MPMC queue
+/**
  *
  * Based on Dmitry Vyukov#s Bounded MPMC queue:
  *	 http://www.1024cores.net/home/lock-free-algorithms/queues/bounded-mpmc-queue
- *
- * @file
- * @author Steffen Vogel <stvogel@eonerc.rwth-aachen.de>
- * @copyright 2018, Institute for Automation of Complex Power Systems, EONERC
+ * @copyright 2017, Institute for Automation of Complex Power Systems, EONERC
  *
  * DPsim
  *

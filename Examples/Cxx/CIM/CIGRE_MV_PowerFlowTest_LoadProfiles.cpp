@@ -1,21 +1,17 @@
-/**
- * @author Jan Dinkelbach <jdinkelbach@eonerc.rwth-aachen.de>
- * @copyright 2019, Institute for Automation of Complex Power Systems, EONERC
- *
+/* Copyright 2017-2020 Institute for Automation of Complex Power Systems,
+ *                     EONERC, RWTH Aachen University
  * DPsim
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * any later version.
- *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
- *
  * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
  *********************************************************************************/
 
 #include <cps/CIM/Reader.h>
@@ -38,7 +34,7 @@ int main(int argc, char** argv){
 	#elif defined(__linux__) || defined(__APPLE__)
 		String loadProfilePath("../sogno-grid-data-public/Load_Data/CIGRE_MV_NoTap/");
 	#endif
-	
+
 	std::map<String,String> assignList = {
 	// {load mRID, file name}
 	{"LOAD-H-1", "Load_H_1"},
@@ -79,7 +75,7 @@ int main(int argc, char** argv){
 
     CIM::Reader reader(simName, Logger::Level::info, Logger::Level::off);
     SystemTopology system = reader.loadCIM(system_freq, filenames, CPS::Domain::SP);
-	
+
 	CSVReader csvreader(simName, loadProfilePath, assignList, Logger::Level::info);
 	csvreader.assignLoadProfile(system, 0, 1.5, 15, CSVReader::Mode::MANUAL);
 

@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 The DPsim Authors. All Rights Reserved.
+ * @copyright 2017, Institute for Automation of Complex Power Systems, EONERC
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
