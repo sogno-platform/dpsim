@@ -117,8 +117,8 @@ generate:docs:
     - build:linux
   artifacts:
     paths:
-      - build/docs/html
-      - build/docs/Cxx/html
+      - build/docs/sphinx/html
+      - build/docs/doxygen/html
   tags:
     - docker
 
