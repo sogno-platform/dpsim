@@ -35,7 +35,7 @@ extensions = [
     'sphinx.ext.autodoc',
 #    'm2r',
 #    'breathe',
-    'nbsphinx'
+#    'nbsphinx'
 ]
 
 # Add any paths that contain templates here, relative to this directory.
@@ -130,7 +130,7 @@ html_static_path = [ ]
 #}
 
 html_context = {
-    'source_url_prefix': "@PROJECT_VCS_URL@/Documentation/",
+    'source_url_prefix': "@PROJECT_VCS_URL@/docs/",
 }
 
 
@@ -194,7 +194,7 @@ default_role = 'any'
 
 # -- Options for Breathe -------------------------------------------
 
-#breathe_projects = { 'dpsim' : '@CMAKE_BINARY_DIR@/Documentation/Cxx/xml' }
+#breathe_projects = { 'dpsim' : '@CMAKE_BINARY_DIR@/docs/Cxx/xml' }
 #breathe_default_project = 'dpsim'
 
 # -- Options for nbsphinx
@@ -206,5 +206,5 @@ nbsphinx_execute = 'never'
 # See: https://pypi.org/project/sphinxcontrib-srclinks/
 
 vcs_url = '@PROJECT_VCS_URL@'
-vcs_doc_path = 'Documentation/'
+vcs_doc_path = 'docs/'
 vcs_branch = '@DPSIM_GIT_BRANCH@'

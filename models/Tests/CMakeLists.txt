@@ -5,7 +5,6 @@ if(WITH_TESTS)
 		FIRFilter.cpp
 		Exciter.cpp
 		TurbineGovernor.cpp
-		DP_Ph1_Inverter_Test.cpp
 	)
 endif()
 
