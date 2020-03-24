@@ -19,30 +19,6 @@ if(WITH_PYTHON)
 			@ONLY
 		)
 
-		# Copy figures into Sphinx working directory
-		add_custom_target(copy_imgs
-			COMMAND
-				${CMAKE_COMMAND} -E make_directory
-					"${CMAKE_CURRENT_BINARY_DIR}/html/images/"
-			COMMAND
-				${CMAKE_COMMAND} -E copy
-					"${CMAKE_CURRENT_SOURCE_DIR}/images/dpsim.png"
-					"${CMAKE_CURRENT_BINARY_DIR}/html/images/"
-			COMMENT "Copying figures to Sphinx output dir"
-		)
-
-		# Copy figures into Sphinx working directory
-		add_custom_target(copy_notebooks
-			COMMAND
-				${CMAKE_COMMAND} -E make_directory
-					"${CMAKE_CURRENT_SOURCE_DIR}/Notebooks/"
-			COMMAND
-				${CMAKE_COMMAND} -E copy_directory
-					"${CMAKE_SOURCE_DIR}/Examples/Notebooks/"
-					"${CMAKE_CURRENT_SOURCE_DIR}/Notebooks/"
-			COMMENT "Copying notebooks to Sphinx output dir"
-		)
-
 		# We add the path of the freshly build dpsim.so module to Python path here
 		add_custom_target(docs
 			COMMAND
@@ -55,10 +31,7 @@ if(WITH_PYTHON)
 					"${SPHINX_HTML_DIR}"
 			COMMENT "Building HTML documentation with Sphinx"
 			DEPENDS
-				${CMAKE_CURRENT_SOURCE_DIR}/README.md
 				dpsim_python
-				copy_imgs
-				copy_notebooks
 		)
 
 	endif()
