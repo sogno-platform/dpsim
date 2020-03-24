@@ -76,7 +76,7 @@ build:windows:
 #    - cd build
 #    - cmake -DCMAKE_C_COMPILER=/usr/local/bin/gcc-9
 #            -DCMAKE_CXX_COMPILER=/usr/local/bin/g++-9
-#            -DWITH_CIM_SUBMODULE=ON 
+#            -DWITH_CIM_SUBMODULE=ON
 #            -DWITH_SUNDIALS=OFF ..
 #    - make -j $(sysctl -n hw.ncpu)
 #  cache:
@@ -118,8 +118,8 @@ generate:docs:
     - build:linux
   artifacts:
     paths:
-      - build/Documentation/html
-      - build/Documentation/Cxx/html
+      - build/docs/html
+      - build/docs/Cxx/html
   tags:
     - docker
 
@@ -142,7 +142,7 @@ generate:packages:
 build:docker:
   stage: build
   script:
-    - docker build 
+    - docker build
         --file Packaging/Docker/Dockerfile
         --build-arg DOCKER_TAG=${DOCKER_TAG}
         --build-arg CI=1
@@ -177,8 +177,8 @@ test:jupyter:
 pages:
   stage: deploy
   script:
-    - cp -r build/Documentation/html/. public
-    - cp -r build/Documentation/Cxx/html/. public/cxx
+    - cp -r build/docs/html/. public
+    - cp -r build/docs/Cxx/html/. public/cxx
   artifacts:
     paths:
       - public

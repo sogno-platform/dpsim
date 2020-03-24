@@ -11,7 +11,7 @@ if(WITH_PYTHON)
 		# HTML output directory
 		set(SPHINX_HTML_DIR "${CMAKE_CURRENT_BINARY_DIR}/html")
 
-		set(SPHINX_TITLE "${PROJECT_NAME} Documentation")
+		set(SPHINX_TITLE "${PROJECT_NAME} docs")
 
 		configure_file(
 			"${CMAKE_CURRENT_SOURCE_DIR}/conf.py.in"
@@ -37,7 +37,7 @@ if(WITH_PYTHON)
 				${CMAKE_COMMAND} -E make_directory
 					"${CMAKE_CURRENT_SOURCE_DIR}/Notebooks/"
 			COMMAND
-				${CMAKE_COMMAND} -E copy_directory					
+				${CMAKE_COMMAND} -E copy_directory
 					"${CMAKE_SOURCE_DIR}/Examples/Notebooks/"
 					"${CMAKE_CURRENT_SOURCE_DIR}/Notebooks/"
 			COMMENT "Copying notebooks to Sphinx output dir"
@@ -61,16 +61,6 @@ if(WITH_PYTHON)
 				copy_notebooks
 		)
 
-		add_custom_command(
-			OUTPUT ${CMAKE_CURRENT_SOURCE_DIR}/README.md
-			DEPENDS ${PROJECT_SOURCE_DIR}/README.md
-			COMMENT Fixing mainpage for Sphinx
-			COMMAND
-				sed -e 's/Documentation\\/images/images/'
-					< ${PROJECT_SOURCE_DIR}/README.md
-					> ${CMAKE_CURRENT_SOURCE_DIR}/README.md
-		)
-
 	endif()
 endif()
 
@@ -84,7 +74,7 @@ if(DOXYGEN_FOUND)
 		"${CMAKE_CURRENT_BINARY_DIR}/Doxyfile"
 		@ONLY
 	)
-	
+
 
 	# HTML output directory
 	set(DOXYGEN_HTML_DIR "${CMAKE_CURRENT_BINARY_DIR}/Cxx")
@@ -108,6 +98,6 @@ if(DOXYGEN_FOUND)
 		COMMENT "Generating API documentation with Doxygen" VERBATIM
 		DEPENDS
 			copy_imgs_cxx
-	)	
+	)
 
 endif(DOXYGEN_FOUND)

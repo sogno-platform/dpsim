@@ -790,7 +790,7 @@ WARN_LOGFILE           =
 # spaces. See also FILE_PATTERNS and EXTENSION_MAPPING
 # Note: If this tag is empty the current directory is searched.
 
-INPUT   = @CMAKE_CURRENT_SOURCE_DIR@/../Documentation/DoxyMain.md \
+INPUT   = @CMAKE_CURRENT_SOURCE_DIR@/../docs/DoxyMain.md \
             @CMAKE_CURRENT_SOURCE_DIR@/../Source \
             @CMAKE_CURRENT_SOURCE_DIR@/../Include \
             @CMAKE_CURRENT_SOURCE_DIR@/../models/Source \
@@ -986,7 +986,7 @@ FILTER_SOURCE_PATTERNS =
 # (index.html). This can be useful if you have a project on for instance GitHub
 # and want to reuse the introduction page also for the doxygen output.
 
-USE_MDFILE_AS_MAINPAGE = @CMAKE_CURRENT_SOURCE_DIR@/../Documentation/DoxyMain.md
+USE_MDFILE_AS_MAINPAGE = @CMAKE_CURRENT_SOURCE_DIR@/../docs/DoxyMain.md
 
 #---------------------------------------------------------------------------
 # Configuration options related to source browsing
@@ -1206,8 +1206,8 @@ HTML_EXTRA_STYLESHEET  =
 # files will be copied as-is; there are no commands or markers available.
 # This tag requires that the tag GENERATE_HTML is set to YES.
 
-HTML_EXTRA_FILES       =                     
-                         
+HTML_EXTRA_FILES       =
+
 
 # The HTML_COLORSTYLE_HUE tag controls the color of the HTML output. Doxygen
 # will adjust the colors in the style sheet and background images according to

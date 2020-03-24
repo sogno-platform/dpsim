@@ -25,7 +25,7 @@ set(PROJECT_HOMEPAGE_URL "http://www.fein-aachen.org/projects/dpsim/")
 set(PROJECT_VCS_URL "https://git.rwth-aachen.org/acs/public/simulation/dpsim")
 
 include(CheckCXXCompilerFlag)
-if(MSVC)	
+if(MSVC)
 	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /EHsc")
 
 	check_cxx_compiler_flag("/W4 /WX" CXX_SUPPORTS_WERROR)
@@ -58,7 +58,7 @@ option(SPDLOG_BUILD_EXAMPLES "Build spdlog examples" OFF)
 # Workaround for spdlog in Windows
 # A custom FindSpdlog does not work currently
 option(WITH_SPDLOG_SUBMODULE "Build with Spdlog as submodule" OFF)
-if (WITH_SPDLOG_SUBMODULE OR WIN32)	
+if (WITH_SPDLOG_SUBMODULE OR WIN32)
 	set(SPDLOG_INCLUDE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/Dependencies/spdlog/include)
 else()
 	find_package(spdlog REQUIRED)
@@ -110,7 +110,7 @@ set(INCLUDE_DIRS
 
 add_subdirectory(Tests)
 add_subdirectory(Source)
-add_subdirectory(Documentation)
+add_subdirectory(docs)
 
 if(BUILD_EXAMPLES)
 	add_subdirectory(Examples)
