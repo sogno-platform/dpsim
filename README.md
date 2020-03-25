@@ -16,6 +16,7 @@ DPsim is a solver library for dynamic power system simulation.
 ## Documentation
 
 The [documentation](https://dpsim.fein-aachen.org/) has build / installation instructions, links to examples and explains the concepts implemented in DPsim as well as its architecture.
+The DPsim [documentation source](https://github.com/dpsim-simulator/docs) repository is maintained on github.
 
 ## License
 
