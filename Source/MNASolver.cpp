@@ -18,6 +18,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *********************************************************************************/
 
+
 #include <dpsim/MNASolver.h>
 #include <dpsim/SequentialScheduler.h>
 
@@ -63,6 +64,7 @@ void MnaSolver<VarType>::initialize() {
 	// The system topology is prepared and we create the MNA matrices.
 	createEmptyVectors();
 	createEmptySystemMatrix();
+	
 	// Register attribute for solution vector
 	if (mFrequencyParallel) {
 		mSLog->info("Computing network harmonics in parallel.");
