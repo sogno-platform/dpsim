@@ -1,6 +1,6 @@
 [submodule "Examples/CIM/grid-data"]
 	path = Examples/CIM/grid-data
-	url = ../../../grid-data/cim-grid-data.git
+	url = https://git.rwth-aachen.de/acs/public/grid-data/cim-grid-data
 [submodule "Dependencies/eigen"]
 	path = Dependencies/eigen
 	url = https://github.com/eigenteam/eigen-git-mirror
