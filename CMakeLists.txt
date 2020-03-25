@@ -1,6 +1,8 @@
 cmake_minimum_required(VERSION 3.5)
 project(DPsim CXX)
 
+cmake_policy(SET CMP0076 NEW)
+
 if(CMAKE_PROJECT_NAME STREQUAL PROJECT_NAME)
 	set(TOPLEVEL_PROJECT ON)
 else()
