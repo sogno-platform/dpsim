@@ -71,6 +71,8 @@ namespace DPsim {
         std::vector<std::shared_ptr<CPS::SP::Ph1::Shunt>> mShunts;
         /// Vector of external grid components
         std::vector<std::shared_ptr<CPS::SP::Ph1::externalGridInjection>> mExternalGrids;
+        /// Vector of average voltage source inverters
+        std::vector<std::shared_ptr<CPS::SP::Ph1::AvVoltageSourceInverterDQ>> mAverageVoltageSourceInverters;
 
         /// Solver tolerance
 		Real mTolerance = 1e-8;

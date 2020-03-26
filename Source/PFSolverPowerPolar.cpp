@@ -27,6 +27,10 @@ void PFSolverPowerPolar::generateInitialSolution(Real time, bool keep_last_solut
                 load->calculatePerUnitParameters(mBaseApparentPower, mSystem.mSystemOmega);
             }
         }
+        else if (std::shared_ptr<CPS::SP::Ph1::AvVoltageSourceInverterDQ> vsi =
+				std::dynamic_pointer_cast<CPS::SP::Ph1::AvVoltageSourceInverterDQ>(comp)) {
+            vsi->updatePQ(time);
+        }
     }
 
     // set initial solution for the new time
@@ -45,7 +49,13 @@ void PFSolverPowerPolar::generateInitialSolution(Real time, bool keep_last_solut
                 std::dynamic_pointer_cast<CPS::SP::Ph1::SolidStateTransformer>(comp)){
                     sol_P(pq->matrixNodeIndex()) -= sst->getNodalInjection(pq).real();
                     sol_Q(pq->matrixNodeIndex()) -= sst->getNodalInjection(pq).imag();
-                }
+            }
+            else if (std::shared_ptr<CPS::SP::Ph1::AvVoltageSourceInverterDQ> vsi =
+				std::dynamic_pointer_cast<CPS::SP::Ph1::AvVoltageSourceInverterDQ>(comp)) {
+                // TODO: add per-unit attributes to VSI and use here
+				sol_P(pq->matrixNodeIndex()) += vsi->attribute<CPS::Real>("P_ref")->get() / mBaseApparentPower;
+				sol_Q(pq->matrixNodeIndex()) += vsi->attribute<CPS::Real>("Q_ref")->get() / mBaseApparentPower;
+			}
             sol_S_complex(pq->matrixNodeIndex()) = CPS::Complex(sol_P[pq->matrixNodeIndex()], sol_Q[pq->matrixNodeIndex()]);
 		}
 	}
@@ -62,6 +72,10 @@ void PFSolverPowerPolar::generateInitialSolution(Real time, bool keep_last_solut
 			}
             else if (std::shared_ptr<CPS::SP::Ph1::Load> load = std::dynamic_pointer_cast<CPS::SP::Ph1::Load>(comp)) {
 				sol_P(pv->matrixNodeIndex()) -= load->attribute<CPS::Real>("P_pu")->get();
+			}
+            else if (std::shared_ptr<CPS::SP::Ph1::AvVoltageSourceInverterDQ> vsi =
+				std::dynamic_pointer_cast<CPS::SP::Ph1::AvVoltageSourceInverterDQ>(comp)) {
+				sol_P(pv->matrixNodeIndex()) += vsi->attribute<CPS::Real>("P_ref")->get() / mBaseApparentPower;
 			}
             else if (std::shared_ptr<CPS::SP::Ph1::externalGridInjection> extnet =
 				std::dynamic_pointer_cast<CPS::SP::Ph1::externalGridInjection>(comp)) {
@@ -275,17 +289,30 @@ void PFSolverPowerPolar::setSolution() {
 	for (auto node : mSystem.mNodes) {
 		CPS::Real baseVoltage_ = 0;
 		for (auto comp : mSystem.mComponentsAtNode[node]) {
-			if (std::shared_ptr<CPS::SP::Ph1::Transformer> trans = std::dynamic_pointer_cast<CPS::SP::Ph1::Transformer>(comp)) {
-				if (trans->terminal(0)->node()->name() == node->name())
-					baseVoltage_ = trans->attribute<CPS::Real>("nominal_voltage_end1")->get();
-				else if (trans->terminal(1)->node()->name() == node->name())
-					baseVoltage_ = trans->attribute<CPS::Real>("nominal_voltage_end2")->get();
-				else
-					mSLog->info("Unable to get base voltage at {}", node->name());
+            if (std::shared_ptr<CPS::SP::Ph1::AvVoltageSourceInverterDQ> vsi = std::dynamic_pointer_cast<CPS::SP::Ph1::AvVoltageSourceInverterDQ>(comp)) {
+				baseVoltage_=Math::abs(vsi->attribute<CPS::Complex>("vnom")->get());
+				break;
 			}
-			if (std::shared_ptr<CPS::SP::Ph1::PiLine> line = std::dynamic_pointer_cast<CPS::SP::Ph1::PiLine>(comp)) {
+            else if (std::shared_ptr<CPS::SP::Ph1::RXLine> rxline = std::dynamic_pointer_cast<CPS::SP::Ph1::RXLine>(comp)) {
+				baseVoltage_ = rxline->attribute<CPS::Real>("base_Voltage")->get();
+                break;
+			}
+            else if (std::shared_ptr<CPS::SP::Ph1::PiLine> line = std::dynamic_pointer_cast<CPS::SP::Ph1::PiLine>(comp)) {
 				baseVoltage_ = line->attribute<CPS::Real>("base_Voltage")->get();
+                break;
 			}
+			else if (std::shared_ptr<CPS::SP::Ph1::Transformer> trans = std::dynamic_pointer_cast<CPS::SP::Ph1::Transformer>(comp)) {
+				if (trans->terminal(0)->node()->name() == node->name()){
+                    baseVoltage_ = trans->attribute<CPS::Real>("nominal_voltage_end1")->get();
+                    break;
+                }
+				else if (trans->terminal(1)->node()->name() == node->name()){
+                    baseVoltage_ = trans->attribute<CPS::Real>("nominal_voltage_end2")->get();				
+                    break;
+                }
+			}
+            else
+                mSLog->warn("Unable to get base voltage at {}", node->name());
 		}
 		std::dynamic_pointer_cast<CPS::SimNode<CPS::Complex>>(node)->setVoltage(sol_V_complex(node->matrixNodeIndex())*baseVoltage_);
 	}

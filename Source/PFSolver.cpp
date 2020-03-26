@@ -37,8 +37,10 @@ void PFSolver::initialize(){
             mExternalGrids.push_back(extnet);
 		else if (std::shared_ptr<CPS::SP::Ph1::Shunt> shunt = std::dynamic_pointer_cast<CPS::SP::Ph1::Shunt>(comp))
             mShunts.push_back(shunt);
-		else if(std::shared_ptr<CPS::SP::Ph1::SolidStateTransformer> sst = std::dynamic_pointer_cast<CPS::SP::Ph1::SolidStateTransformer>(comp)){
+		else if(std::shared_ptr<CPS::SP::Ph1::SolidStateTransformer> sst = std::dynamic_pointer_cast<CPS::SP::Ph1::SolidStateTransformer>(comp))
 			mSolidStateTransformers.push_back(sst);
+		else if (std::shared_ptr<CPS::SP::Ph1::AvVoltageSourceInverterDQ> vsi = std::dynamic_pointer_cast<CPS::SP::Ph1::AvVoltageSourceInverterDQ>(comp)){
+			mAverageVoltageSourceInverters.push_back(vsi);
 		}
     }
 
@@ -144,7 +146,11 @@ void PFSolver::determinePFBusType() {
 				else if (extnet->mPowerflowBusType == CPS::PowerflowBusType::PV) {
 					connectedPV = true;
 				}
-
+			}
+			else if (std::shared_ptr<CPS::SP::Ph1::AvVoltageSourceInverterDQ> vsi = std::dynamic_pointer_cast<CPS::SP::Ph1::AvVoltageSourceInverterDQ>(comp)){
+				if (vsi->mPowerflowBusType == CPS::PowerflowBusType::PQ) {
+					connectedPQ = true;
+				}
 			}
 		}
 
