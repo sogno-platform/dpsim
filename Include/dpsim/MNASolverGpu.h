@@ -25,22 +25,44 @@ namespace DPsim {
 		cusolverDnHandle_t mCusolverHandle;
 		///Stream
 		cudaStream_t mStream;
-		/// Device copy of System-Matrix
-		double *mGpuSystemMatrix;
-		/// Device copy of Right Vector
-		double *mGpuRightVector;
-		/// Device copy if Left Vector
-		double *mGpuLeftVector;
+
+		/// Variables for solving one Equation-system
+		struct GpuData {
+			/// Device copy of System-Matrix
+			double *matrix;
+			/// Device copy of Vector
+			double *rightVector;
+
+			/// Device-Workspace for getrf
+			double *workSpace;
+			/// Pivoting-Sequence
+			int *pivSeq;
+			/// Errorinfo
+			int *errInfo;
+		} mDeviceCopy;
 
 		/// Initialize cuSolver-library
         void initialize();
         /// Allocate Space for Vectors & Matrices on GPU
-        void createEmptyVectors();
-	    void createEmptySystemMatrix();
+        void allocateDeviceMemory();
+		/// Copy Systemmatrix to Device
+		void copySystemMatrixToDevice();
+		/// LU factorization
+		void LUfactorization();
+		
 
 	public:
 		MnaSolverGpu();
 
 		virtual ~MnaSolverGpu();
+
+
+		class SolveTask : public MnaSolver::SolveTask {
+			SolveTask(MnaSolver<VarType>& solver, Bool steadyStateInit) :
+			MnaSolver::SolveTask(MnaSolver<VarType>& solver, Bool steadyStateInit) {
+			}
+
+			void execute(Real time, Int timeStepCount);
+		};
     };
 }
