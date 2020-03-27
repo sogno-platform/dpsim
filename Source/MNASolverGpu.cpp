@@ -6,17 +6,17 @@ using namespace DPsim;
 namespace DPsim {
 
 template <typename VarType>
-MnaSolverGpu<VarType>::MnaSolverGpu() :
-mCusolverHandle(nullptr), mStream(nullptr) {
+MnaSolverGpu<VarType>::MnaSolverGpu(String name,
+	CPS::Domain domain, CPS::Logger::Level logLevel) :
+    MnaSolver<VarType>(name, domain, logLevel),
+    mCusolverHandle(nullptr), mStream(nullptr) {
 
-    mDeviceCopy = {nullptr, nullptr, nullptr, nullptr, nullptr, nullptr};
-    cusolverStatus_t status = CUSOLVER_STATUS_SUCCESS;
-    cudaError_t cudaErrorCode;
+    mDeviceCopy = {};
 
     //TODO Error Checking
-    status = cusolverDnCreate(&mCusolverHandle);
-    cudaErrorCode = cudaStreamCreateWithFlags(&mStream, cudaStreamNonBlocking);
-    status = cusolverDnSetStream(cusolverH, stream);
+    cusolverDnCreate(&mCusolverHandle);
+    cudaStreamCreateWithFlags(&mStream, cudaStreamNonBlocking);
+    cusolverDnSetStream(mCusolverHandle, mStream);
 }
 
 template <typename VarType>
@@ -25,7 +25,7 @@ MnaSolverGpu<VarType>::~MnaSolverGpu() {
     if(mCusolverHandle)
         cusolverDnDestroy(mCusolverHandle);
     if(mStream)
-        cudaStreamDestroy(stream);
+        cudaStreamDestroy(mStream);
 
     //Memory allocated on device
     if(mDeviceCopy.matrix)
@@ -37,14 +37,14 @@ MnaSolverGpu<VarType>::~MnaSolverGpu() {
     if(mDeviceCopy.pivSeq)
         cudaFree(mDeviceCopy.pivSeq);
     if(mDeviceCopy.errInfo)
-        cudaFree(mDevice.errInfo);
+        cudaFree(mDeviceCopy.errInfo);
 
     cudaDeviceReset();
 }
 
 template <typename VarType>
 void MnaSolverGpu<VarType>::initialize() {
-    MnaSolver::initialize();
+    MnaSolver<VarType>::initialize();
 
     allocateDeviceMemory();
     //Copy Systemmatrix to device
@@ -57,55 +57,53 @@ template <typename VarType>
 void MnaSolverGpu<VarType>::allocateDeviceMemory() {
     //TODO Error checking
     //Vectors
-    auto size = sizeof(Real) * mNumSimNodes;
-    cudaError_t stat;
-    stat = cudaMalloc(static_cast<void**>(&mDeviceCopy.leftVector), size);
-    stat = cudaMalloc(static_cast<void**>(&mDeviceCopy.rightVector), size);
+    auto size = sizeof(Real) * this->mNumSimNodes;
+    cudaMalloc((void**)&mDeviceCopy.rightVector, size);
     //Matrix
-    size = sizeof(Real) * mNumSimNodes * mNumSimNodes;
-    stat = cudaMalloc(static_cast<void**>(&mDeviceCopy.matrix), size);
+    size = sizeof(Real) * this->mNumSimNodes * this->mNumSimNodes;
+    cudaMalloc((void**)&mDeviceCopy.matrix, size);
     //Pivoting-Sequence
-    stat = cudaMalloc(static_cast<void**>(&mDeviceCopy.matrix), sizeof(int) * mNumSimNodes);
+    cudaMalloc((void**)&mDeviceCopy.matrix, sizeof(int) * this->mNumSimNodes);
     //Errorcode
-    stat = cudaMalloc(static_cast<void**>(&mDeviceCopy.errInfo), sizeof(int));
+    cudaMalloc((void**)&mDeviceCopy.errInfo, sizeof(int));
 
     //Workspace
     int workSpaceSize = 0;
-    cusolverStatus_t status = cusolverDnDgetrf_bufferSize(
+    cusolverDnDgetrf_bufferSize(
         mCusolverHandle,
-        mNumSimNodes,
-        mNumSimNodes,
+        this->mNumSimNodes,
+        this->mNumSimNodes,
         mDeviceCopy.matrix,
-        mNumSimNodes,
+        this->mNumSimNodes,
         &workSpaceSize);
-    stat = cudaMalloc(&mDeviceCopy.workSpace, workSpaceSize);
+    cudaMalloc((void**)&mDeviceCopy.workSpace, workSpaceSize);
 }
 
 template <typename VarType>
 void MnaSolverGpu<VarType>::copySystemMatrixToDevice() {
     //TODO Error Checking
-    Real *mat = new Real[mNumSimNodes * mNumSimNodes];
-    for(int i = 0; i < mNumSimNodes; i++) {
-        for(int j = 0; j < mNumSimNodes; j++) {
-            mat[i * mNumSimNodes + j] = systemMatrix()(i, j);
+    Real *mat = new Real[this->mNumSimNodes * this->mNumSimNodes];
+    for(UInt i = 0; i < this->mNumSimNodes; i++) {
+        for(UInt j = 0; j < this->mNumSimNodes; j++) {
+            mat[i * this->mNumSimNodes + j] = MnaSolver<VarType>::systemMatrix()(i, j);
         }
     }
-    cudaError_t cudaStat1 = cudaMemcpy(mDeviceCopy.matrix, mat, sizeof(Real) * mNumSimNodes * mNumSimNodes, cudaMemcpyHostToDevice);
+    cudaMemcpy(mDeviceCopy.matrix, mat, sizeof(Real) * this->mNumSimNodes * this->mNumSimNodes, cudaMemcpyHostToDevice);
 }
 
 template <typename VarType>
 void MnaSolverGpu<VarType>::LUfactorization() {
     //TODO Error checking
-    auto status = cusolverDnDgetrf(
+    cusolverDnDgetrf(
         mCusolverHandle,
-        mNumSimNodes,
-        mNumSimNodes,
+        this->mNumSimNodes,
+        this->mNumSimNodes,
         mDeviceCopy.matrix,
-        mNumSimNodes,
+        this->mNumSimNodes,
         mDeviceCopy.workSpace,
         mDeviceCopy.pivSeq,
         mDeviceCopy.errInfo);
-    status = cudaDeviceSynchronize();
+    cudaDeviceSynchronize();
 }
 
 template <typename VarType>
@@ -118,30 +116,31 @@ void MnaSolverGpu<VarType>::SolveTask::execute(Real time, Int timeStepCount) {
 	for (auto stamp : mSolver.mRightVectorStamps)
 		mSolver.mRightSideVector += *stamp;
     //Copy to device
-    double *buffer = new double[mNumSimNodes];
-    for(int i = 0; i < mNumSimNodes; i++) {
+    double *buffer = new double[mSolver.mNumSimNodes];
+    for(UInt i = 0; i < mSolver.mNumSimNodes; i++) {
         buffer[i] = mSolver.mRightSideVector(1, i); //TODO check
     }
-    cudaError_t ec = cudaMemcpy(mDeviceCopy.rightVector, buffer, mNumSimNodes, cudaMemcpyHostToDevice);
+    //cudaError_t ec = 
+    cudaMemcpy(mSolver.mDeviceCopy.rightVector, buffer, mSolver.mNumSimNodes, cudaMemcpyHostToDevice);
 
     // Solve
 	if (mSolver.mSwitchedMatrices.size() > 0) {
-        auto status = cusolverDnDgetrs(
-            mCusolverHandle,
+        cusolverDnDgetrs(
+            mSolver.mCusolverHandle,
             CUBLAS_OP_N,
-            mNumSimNodes,
+            mSolver.mNumSimNodes,
             1, /* nrhs */
-            mDeviceCopy.matrix,
-            mNumSimNodes,
-            mDeviceCopy.pivSeq,
-            mDeviceCopy.rightVector,
-            mNumSimNodes,
-            mDeviceCopy.errInfo);
+            mSolver.mDeviceCopy.matrix,
+            mSolver.mNumSimNodes,
+            mSolver.mDeviceCopy.pivSeq,
+            mSolver.mDeviceCopy.rightVector,
+            mSolver.mNumSimNodes,
+            mSolver.mDeviceCopy.errInfo);
     }
 
     //Copy Leftvector back
-    ec = cudaMemcpy(buffer, mDeviceCopy.rightVector, mNumSimNodes, cudaMemcpyDeviceToHost);
-    for(int i = 0; i < mNumSimNodes; i++) {
+    cudaMemcpy(buffer, mSolver.mDeviceCopy.rightVector, mSolver.mNumSimNodes, cudaMemcpyDeviceToHost);
+    for(UInt i = 0; i < mSolver.mNumSimNodes; i++) {
         mSolver.mLeftSideVector(1, i) = buffer[i]; // TODO check
     }
 

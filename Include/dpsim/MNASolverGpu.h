@@ -20,6 +20,7 @@ namespace DPsim {
 	template <typename VarType>
     class MnaSolverGpu : public MnaSolver<VarType>{
 	protected:
+
 		// #### Attributes required for GPU ####
 		///Sovler-Handle
 		cusolverDnHandle_t mCusolverHandle;
@@ -52,17 +53,33 @@ namespace DPsim {
 		
 
 	public:
-		MnaSolverGpu();
+		MnaSolverGpu(String name,
+			CPS::Domain domain = CPS::Domain::DP,
+			CPS::Logger::Level logLevel = CPS::Logger::Level::info);
 
 		virtual ~MnaSolverGpu();
 
 
-		class SolveTask : public MnaSolver::SolveTask {
-			SolveTask(MnaSolver<VarType>& solver, Bool steadyStateInit) :
-			MnaSolver::SolveTask(MnaSolver<VarType>& solver, Bool steadyStateInit) {
+		class SolveTask : public CPS::Task {
+
+			SolveTask(MnaSolverGpu<VarType>& solver, Bool steadyStateInit) :
+				Task(solver.mName + ".Solve"), mSolver(solver), mSteadyStateInit(steadyStateInit) {
+				for (auto it : solver.mPowerComponents) {
+					if (it->template attribute<Matrix>("right_vector")->get().size() != 0) {
+						mAttributeDependencies.push_back(it->attribute("right_vector"));
+					}
+				}
+				for (auto node : solver.mNodes) {
+					mModifiedAttributes.push_back(node->attribute("v"));
+				}
+				mModifiedAttributes.push_back(solver.attribute("left_vector"));
 			}
 
 			void execute(Real time, Int timeStepCount);
+
+			private:
+				MnaSolverGpu<VarType>& mSolver;
+				Bool mSteadyStateInit;
 		};
     };
 }
