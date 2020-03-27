@@ -48,12 +48,12 @@ elseif("${CMAKE_SYSTEM}" MATCHES "Darwin")
 endif()
 
 include(CMakeDependentOption)
-cmake_dependent_option(WITH_NUMPY    	"Enable NumPy"							ON "NumPy_FOUND"		OFF)
-cmake_dependent_option(WITH_GSL			"Enable GSL"        					ON "GSL_FOUND"			OFF)
-cmake_dependent_option(WITH_SUNDIALS	"Enable sundials solver suite"			ON "Sundials_FOUND"		OFF)
-cmake_dependent_option(WITH_PYTHON		"Enable Python support"					ON "Python_FOUND"		OFF)
-cmake_dependent_option(WITH_CIM			"Enable support for parsing CIM files"	ON "CIMpp_FOUND"		OFF)
-cmake_dependent_option(WITH_GRAPHVIZ	"Enable support for Graphviz Graphs"	ON "Graphviz_FOUND"		OFF)
+cmake_dependent_option(WITH_GSL			"Enable GSL"        					ON "GSL_FOUND"					OFF)
+cmake_dependent_option(WITH_SUNDIALS	"Enable sundials solver suite"			ON "Sundials_FOUND"				OFF)
+cmake_dependent_option(WITH_PYTHON		"Enable Python support"					ON "Python_FOUND"				OFF)
+cmake_dependent_option(WITH_NUMPY    	"Enable NumPy"							ON "NumPy_FOUND;WITH_PYTHON"	OFF)
+cmake_dependent_option(WITH_CIM			"Enable support for parsing CIM files"	ON "CIMpp_FOUND"				OFF)
+cmake_dependent_option(WITH_GRAPHVIZ	"Enable support for Graphviz Graphs"	ON "Graphviz_FOUND"				OFF)
 
 # Show feature summary
 include(FeatureSummary)

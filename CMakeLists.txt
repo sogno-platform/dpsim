@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.5)
-project(DPsim CXX)
+project(DPsim CXX CUDA)
 
 if(CMAKE_PROJECT_NAME STREQUAL PROJECT_NAME)
 	set(TOPLEVEL_PROJECT ON)
@@ -86,17 +86,18 @@ endif()
 # Options
 include(CMakeDependentOption)
 
-option(BUILD_SHARED_LIBS "Build shared library" OFF)
-option(BUILD_EXAMPLES "Build C++ examples" ON)
+option(BUILD_SHARED_LIBS "Build shared library"                   OFF)
+option(BUILD_EXAMPLES    "Build C++ examples"                     ON )
 option(COMPARE_REFERENCE "Download reference results and compare" OFF)
+option(WITH_CUDA         "Enable CUDA-based parallelisation"      ON )
 
-cmake_dependent_option(WITH_GSL			"Enable GSL"        					ON "GSL_FOUND"			OFF)
-cmake_dependent_option(WITH_SUNDIALS	"Enable sundials solver suite"			ON "Sundials_FOUND"		OFF)
-cmake_dependent_option(WITH_SHMEM		"Enable shared memory interface"		ON "VILLASnode_FOUND"	OFF)
-cmake_dependent_option(WITH_RT			"Enable real-time features"				ON "Linux_FOUND"		OFF)
+cmake_dependent_option(WITH_GSL			"Enable GSL"        					ON  "GSL_FOUND"			OFF)
+cmake_dependent_option(WITH_SUNDIALS	"Enable sundials solver suite"			ON  "Sundials_FOUND"	OFF)
+cmake_dependent_option(WITH_SHMEM		"Enable shared memory interface"		ON  "VILLASnode_FOUND"	OFF)
+cmake_dependent_option(WITH_RT			"Enable real-time features"				ON  "Linux_FOUND"		OFF)
 cmake_dependent_option(WITH_PYTHON		"Enable Python support"					OFF "Python_FOUND"		OFF)
-cmake_dependent_option(WITH_CIM			"Enable support for parsing CIM files"	ON "CIMpp_FOUND"		OFF)
-cmake_dependent_option(WITH_OPENMP		"Enable OpenMP-based parallelisation"	ON "OPENMP_FOUND"		OFF)
+cmake_dependent_option(WITH_CIM			"Enable support for parsing CIM files"	ON  "CIMpp_FOUND"		OFF)
+cmake_dependent_option(WITH_OPENMP		"Enable OpenMP-based parallelisation"	ON  "OPENMP_FOUND"		OFF)
 
 configure_file(
 	${CMAKE_CURRENT_SOURCE_DIR}/Include/dpsim/Config.h.in
