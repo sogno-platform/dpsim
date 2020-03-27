@@ -1,1 +1,0 @@
-This project holds the power system models developed in C at ACS.
