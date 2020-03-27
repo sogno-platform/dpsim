@@ -1,14 +1,7 @@
-
-if(NOT WIN32)
-	# we use PyArg_ParseTupleAndKeywords several times, which erroneously accepts
-	# a char* array instead of a const char* array
-	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fPIC")
-endif()
-
 add_library(cps STATIC
 	Logger.cpp
 	MathUtils.cpp
-	Attribute.cpp	
+	Attribute.cpp
 	TopologicalNode.cpp
 	TopologicalTerminal.cpp
 	SimNode.cpp
@@ -17,7 +10,7 @@ add_library(cps STATIC
 	CSVReader.cpp
 )
 
-list(APPEND SOURCES
+list(APPEND CPS_SOURCES
 	Base/Base_SynchronGenerator.cpp
 
 	DP/DP_Ph1_Capacitor.cpp
@@ -52,7 +45,7 @@ list(APPEND SOURCES
 	DP/DP_Ph3_SynchronGeneratorDQTrapez.cpp
 	# DP/DP_Ph3_SynchronGeneratorDQSmpl.cpp
 	# DP/DP_Ph3_SynchronGeneratorVBR.cpp
-	# DP/DP_Ph3_SynchronGeneratorVBRStandalone.cpp	
+	# DP/DP_Ph3_SynchronGeneratorVBRStandalone.cpp
 
 	EMT/EMT_Ph1_Capacitor.cpp
 	EMT/EMT_Ph1_CurrentSource.cpp
@@ -84,7 +77,7 @@ list(APPEND SOURCES
 	# EMT/EMT_Ph3_SynchronGeneratorDQSmpl.cpp
 	# EMT/EMT_Ph3_SynchronGeneratorDQSmplCompSource.cpp
 	# EMT/EMT_Ph3_SynchronGeneratorVBR.cpp
-	# EMT/EMT_Ph3_SynchronGeneratorVBRStandalone.cpp	
+	# EMT/EMT_Ph3_SynchronGeneratorVBRStandalone.cpp
 
 	SP/SP_Ph1_ControlledVoltageSource.cpp
 	SP/SP_Ph1_VoltageSource.cpp
@@ -120,42 +113,42 @@ list(APPEND SOURCES
 )
 
 if(WITH_CIM)
-	list(APPEND SOURCES CIM/Reader.cpp)
+	list(APPEND CPS_SOURCES CIM/Reader.cpp)
 
-	list(APPEND INCLUDE_DIRS ${CIMPP_INCLUDE_DIRS})
-	list(APPEND LIBRARIES ${CIMPP_LIBRARIES})
+	list(APPEND CPS_INCLUDE_DIRS ${CIMPP_INCLUDE_DIRS})
+	list(APPEND CPS_LIBRARIES ${CIMPP_LIBRARIES})
 endif()
 
 if(WITH_PYTHON)
-	list(APPEND INCLUDE_DIRS ${PYTHON_INCLUDE_DIRS})
-	list(APPEND LIBRARIES ${PYTHON_LIBRARIES})
+	list(APPEND CPS_INCLUDE_DIRS ${PYTHON_INCLUDE_DIRS})
+	list(APPEND CPS_LIBRARIES ${PYTHON_LIBRARIES})
 
 if(WITH_NUMPY)
-	list(APPEND SOURCES AttributeNumPy.cpp)
-	list(APPEND INCLUDE_DIRS ${NUMPY_INCLUDE_DIRS})
+	list(APPEND CPS_SOURCES AttributeNumPy.cpp)
+	list(APPEND CPS_INCLUDE_DIRS ${NUMPY_INCLUDE_DIRS})
 endif()
 endif()
 
 if(WITH_GRAPHVIZ)
-	list(APPEND SOURCES Graph.cpp)
+	list(APPEND CPS_SOURCES Graph.cpp)
 
-	list(APPEND INCLUDE_DIRS ${GRAPHVIZ_INCLUDE_DIRS})
-	list(APPEND LIBRARIES ${GRAPHVIZ_LIBRARIES})
+	list(APPEND CPS_INCLUDE_DIRS ${GRAPHVIZ_INCLUDE_DIRS})
+	list(APPEND CPS_LIBRARIES ${GRAPHVIZ_LIBRARIES})
 endif()
 
 if(WITH_SUNDIALS)
-	list(APPEND SOURCES DP/DP_Ph3_SynchronGeneratorDQODE.cpp)
-	list(APPEND SOURCES EMT/EMT_Ph3_SynchronGeneratorDQODE.cpp)
-	list(APPEND INCLUDE_DIRS ${SUNDIALS_INCLUDE_DIRS})
-	list(APPEND LIBRARIES ${SUNDIALS_LIBRARIES})
+	list(APPEND CPS_SOURCES DP/DP_Ph3_SynchronGeneratorDQODE.cpp)
+	list(APPEND CPS_SOURCES EMT/EMT_Ph3_SynchronGeneratorDQODE.cpp)
+	list(APPEND CPS_INCLUDE_DIRS ${SUNDIALS_INCLUDE_DIRS})
+	list(APPEND CPS_LIBRARIES ${SUNDIALS_LIBRARIES})
 endif()
 
 if(WITH_GSL)
-	list(APPEND INCLUDE_DIRS ${GSL_INCLUDE_DIRS})
-	list(APPEND LIBRARIES ${GSL_LIBRARIES})
+	list(APPEND CPS_INCLUDE_DIRS ${GSL_INCLUDE_DIRS})
+	list(APPEND CPS_LIBRARIES ${GSL_LIBRARIES})
 endif()
 
-target_link_libraries(cps PUBLIC ${LIBRARIES})
-target_include_directories(cps PUBLIC ${INCLUDE_DIRS})
-target_sources(cps PRIVATE ${SOURCES})
+target_link_libraries(cps PUBLIC ${CPS_LIBRARIES})
+target_include_directories(cps PUBLIC ${CPS_INCLUDE_DIRS})
+target_sources(cps PRIVATE ${CPS_SOURCES})
 target_compile_options(cps PUBLIC ${CPS_CXX_FLAGS})

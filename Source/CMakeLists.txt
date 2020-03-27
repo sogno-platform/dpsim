@@ -1,4 +1,4 @@
-set(SOURCES
+set(DPSIM_SOURCES
 	Simulation.cpp
 	RealTimeSimulation.cpp
 	MNASolver.cpp
@@ -16,58 +16,54 @@ set(SOURCES
 	DiakopticsSolver.cpp
 )
 
-list(APPEND LIBRARIES cps)
-
-if(NOT WIN32)
-	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fPIC")
-endif()
+list(APPEND DPSIM_LIBRARIES cps)
 
 if(WITH_RT AND HAVE_TIMERFD)
-	list(APPEND LIBRARIES "-lrt")
+	list(APPEND DPSIM_LIBRARIES "-lrt")
 endif()
 
 if(WITH_SUNDIALS)
-	list(APPEND SOURCES DAESolver.cpp)
+	list(APPEND DPSIM_SOURCES DAESolver.cpp)
 	#For ODE-Solver class:
-    list(APPEND SOURCES ODESolver.cpp)
-	list(APPEND INCLUDE_DIRS ${SUNDIALS_INCLUDE_DIRS})
-	list(APPEND LIBRARIES ${SUNDIALS_LIBRARIES})
+    list(APPEND DPSIM_SOURCES ODESolver.cpp)
+	list(APPEND DPSIM_INCLUDE_DIRS ${SUNDIALS_INCLUDE_DIRS})
+	list(APPEND DPSIM_LIBRARIES ${SUNDIALS_LIBRARIES})
 endif()
 
 if(WITH_GSL)
-	list(APPEND INCLUDE_DIRS ${GSL_INCLUDE_DIRS})
-	list(APPEND LIBRARIES ${GSL_LIBRARIES})
+	list(APPEND DPSIM_INCLUDE_DIRS ${GSL_INCLUDE_DIRS})
+	list(APPEND DPSIM_LIBRARIES ${GSL_LIBRARIES})
 endif()
 
 if(WITH_PYTHON)
-	list(APPEND INCLUDE_DIRS ${PYTHON_INCLUDE_DIRS})
-	#list(APPEND LIBRARIES ${PYTHON_LIBRARIES})
+	list(APPEND DPSIM_INCLUDE_DIRS ${PYTHON_INCLUDE_DIRS})
+	#list(APPEND DPSIM_LIBRARIES ${PYTHON_LIBRARIES})
 
 	add_subdirectory(Python)
 endif()
 
 if(WITH_SHMEM)
-	list(APPEND SOURCES
+	list(APPEND DPSIM_SOURCES
 		Interface.cpp
 		PthreadPoolScheduler.cpp
 	)
 
-	list(APPEND LIBRARIES ${VILLASNODE_LIBRARIES} pthread)
-	list(APPEND INCLUDE_DIRS ${VILLASNODE_INCLUDE_DIRS})
+	list(APPEND DPSIM_LIBRARIES ${VILLASNODE_LIBRARIES} pthread)
+	list(APPEND DPSIM_INCLUDE_DIRS ${VILLASNODE_INCLUDE_DIRS})
 endif()
 
 if(WITH_OPENMP)
-	list(APPEND SOURCES
+	list(APPEND DPSIM_SOURCES
 		OpenMPLevelScheduler.cpp
 	)
 
 	list(APPEND DPSIM_CXX_FLAGS ${OpenMP_CXX_FLAGS})
-	list(APPEND LIBRARIES ${OpenMP_CXX_FLAGS})
+	list(APPEND DPSIM_LIBRARIES ${OpenMP_CXX_FLAGS})
 endif()
 
-add_library(dpsim ${SOURCES})
-target_link_libraries(dpsim ${LIBRARIES})
-target_include_directories(dpsim PUBLIC ${INCLUDE_DIRS})
+add_library(dpsim ${DPSIM_SOURCES})
+target_link_libraries(dpsim PUBLIC ${DPSIM_LIBRARIES})
+target_include_directories(dpsim PUBLIC ${DPSIM_INCLUDE_DIRS} ${CPS_LIBRARIES})
 target_compile_options(dpsim PUBLIC ${DPSIM_CXX_FLAGS})
 
 include_directories(${CMAKE_CURRENT_SOURCE_DIR} ${CMAKE_CURRENT_BINARY_DIR})
