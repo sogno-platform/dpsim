@@ -104,6 +104,8 @@ namespace DPsim {
         void initialize();
         /// Initialization of individual components
         void initializeComponents();
+        /// Assignment of matrix indices for nodes
+        void assignMatrixNodeIndices();
         /// Set apparent base power of per-unit system
         void setBaseApparentPower();
         /// Determine bus type for all buses
