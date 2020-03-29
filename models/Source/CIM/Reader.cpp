@@ -613,20 +613,33 @@ TopologicalPowerComp::Ptr Reader::mapExternalNetworkInjection(ExternalNetworkInj
 			return std::make_shared<EMT::Ph3::NetworkInjection>(extnet->mRID, extnet->name, mComponentLogLevel);
 		}
 		else {
-			mSLog->info(" Network Injection for EMT single phase not implemented yet");
+			throw SystemError("Mapping of ExternalNetworkInjection for EMT::Ph1 not existent!");
 			return nullptr;
 		}
 	} else if(mDomain == Domain::SP) {
-		auto cpsextnet = std::make_shared<SP::Ph1::externalGridInjection>(extnet->mRID, extnet->name, mComponentLogLevel);
-		cpsextnet->modifyPowerFlowBusType(PowerflowBusType::VD); // for powerflow solver set as VD component as default
-		if(extnet->RegulatingControl){
-			mSLog->info("       Voltage set-point={}", (float) extnet->RegulatingControl->targetValue);
-			cpsextnet->setParameters(extnet->RegulatingControl->targetValue); // assumes that value is specified in CIM data in per unit
-		} else
-			mSLog->info("       No voltage set-point defined.");
-		return cpsextnet;
-	} else
-		return nullptr; // DP network injection not considered yet
+		if (mPhase == PhaseType::Single) {
+			auto cpsextnet = std::make_shared<SP::Ph1::externalGridInjection>(extnet->mRID, extnet->name, mComponentLogLevel);
+			cpsextnet->modifyPowerFlowBusType(PowerflowBusType::VD); // for powerflow solver set as VD component as default
+			if(extnet->RegulatingControl){
+				mSLog->info("       Voltage set-point={}", (float) extnet->RegulatingControl->targetValue);
+				cpsextnet->setParameters(extnet->RegulatingControl->targetValue); // assumes that value is specified in CIM data in per unit
+			} else
+				mSLog->info("       No voltage set-point defined.");
+			return cpsextnet;
+		}
+		else {
+			throw SystemError("Mapping of ExternalNetworkInjection for SP::Ph3 not existent!");
+			return nullptr;
+		}
+	} else {
+		if (mPhase == PhaseType::Single) {
+			return std::make_shared<DP::Ph1::NetworkInjection>(extnet->mRID, extnet->name, mComponentLogLevel);
+			return nullptr;
+		} else {
+			throw SystemError("Mapping of ExternalNetworkInjection for DP::Ph3 not existent!");
+			return nullptr;
+		}
+	}
 }
 
 TopologicalPowerComp::Ptr Reader::mapEquivalentShunt(EquivalentShunt* shunt){
