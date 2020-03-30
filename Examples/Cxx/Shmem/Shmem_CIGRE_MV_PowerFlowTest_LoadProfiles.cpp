@@ -66,7 +66,7 @@ int main(int argc, char** argv){
 		"Rootnet_FULL_NE_06J16h_EQ.xml",
 		"Rootnet_FULL_NE_06J16h_SV.xml",
 		"Rootnet_FULL_NE_06J16h_TP.xml"
-	}, "Examples/CIM/CIGRE_MV_NoTap", "CIMPATH");
+	}, "Examples/CIM/grid-data/CIGRE_MV/NEPLAN/CIGRE_MV_no_tapchanger_With_LoadFlow_Results", "CIMPATH");
 
 	String simName = "Shmem_CIGRE-MV-NoTap";
 	CPS::Real system_freq = 50;
@@ -75,7 +75,7 @@ int main(int argc, char** argv){
     SystemTopology sys = reader.loadCIM(system_freq, filenames, CPS::Domain::SP);
 
 	CSVReader csvreader(simName, loadProfilePath, assignList, Logger::Level::info);
-	csvreader.assignLoadProfile(sys, 1, 1, args.duration, CSVReader::Mode::MANUAL);
+	csvreader.assignLoadProfile(sys, 0, args.timeStep, args.duration, CSVReader::Mode::MANUAL);
 
 	RealTimeSimulation sim(simName, sys, args.timeStep, args.duration, args.solver.domain, args.solver.type, args.logLevel);
 	Interface intf("/dpsim1-villas", "/villas-dpsim1");

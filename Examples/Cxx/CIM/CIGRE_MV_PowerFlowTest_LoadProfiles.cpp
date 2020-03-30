@@ -58,26 +58,31 @@ int main(int argc, char** argv){
 
 	// Find CIM files
 	std::list<fs::path> filenames;
-	if (argc <= 1) {
-		filenames = DPsim::Utils::findFiles({
-			"Rootnet_FULL_NE_06J16h_DI.xml",
-			"Rootnet_FULL_NE_06J16h_EQ.xml",
-			"Rootnet_FULL_NE_06J16h_SV.xml",
-			"Rootnet_FULL_NE_06J16h_TP.xml"
-		}, "Examples/CIM/grid-data/CIGRE_MV/NEPLAN/CIGRE_MV_no_tapchanger_With_LoadFlow_Results", "CIMPATH");
-	}
-	else {
-		filenames = std::list<fs::path>(argv + 1, argv + argc);
-	}
+	filenames = DPsim::Utils::findFiles({
+		"Rootnet_FULL_NE_06J16h_DI.xml",
+		"Rootnet_FULL_NE_06J16h_EQ.xml",
+		"Rootnet_FULL_NE_06J16h_SV.xml",
+		"Rootnet_FULL_NE_06J16h_TP.xml"
+	}, "Examples/CIM/grid-data/CIGRE_MV/NEPLAN/CIGRE_MV_no_tapchanger_With_LoadFlow_Results", "CIMPATH");
 
 	String simName = "CIGRE-MV-NoTap-LoadProfiles";
 	CPS::Real system_freq = 50;
+
+	CPS::Real time_begin = 0;
+	CPS::Real time_step = 1;
+	CPS::Real time_end = 300;
+
+	if (argc > 1) {
+		CommandLineArgs args(argc, argv);
+		time_step = args.timeStep;
+		time_end = args.duration;
+	}
 
     CIM::Reader reader(simName, Logger::Level::info, Logger::Level::off);
     SystemTopology system = reader.loadCIM(system_freq, filenames, CPS::Domain::SP);
 
 	CSVReader csvreader(simName, loadProfilePath, assignList, Logger::Level::info);
-	csvreader.assignLoadProfile(system, 0, 1.5, 15, CSVReader::Mode::MANUAL);
+	csvreader.assignLoadProfile(system, time_begin, time_step, time_end, CSVReader::Mode::MANUAL);
 
 	auto logger = DPsim::DataLogger::make(simName);
 	for (auto node : system.mNodes)
@@ -137,7 +142,7 @@ int main(int argc, char** argv){
 		}
 	}
 
-	Simulation sim(simName, system, 1.5, 15, Domain::SP, Solver::Type::NRP, Logger::Level::info, true);
+	Simulation sim(simName, system, time_step, time_end, Domain::SP, Solver::Type::NRP, Logger::Level::info, true);
 
 	sim.addLogger(logger);
 	sim.run();
