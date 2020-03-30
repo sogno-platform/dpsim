@@ -83,6 +83,7 @@ find_package(Graphviz)
 
 find_package(PythonInterp 3.6)
 find_package(PythonLibs 3.6)
+find_package(NumPy)
 find_package(VILLASnode)
 
 if(PythonInterp_FOUND AND PythonLibs_FOUND)
@@ -105,6 +106,7 @@ cmake_dependent_option(WITH_SUNDIALS	"Enable sundials solver suite"		ON "Sundial
 cmake_dependent_option(WITH_SHMEM			"Enable shared memory interface"	ON "VILLASnode_FOUND"	OFF)
 cmake_dependent_option(WITH_RT				"Enable real-time features"				ON "Linux_FOUND"			OFF)
 cmake_dependent_option(WITH_PYTHON		"Enable Python support"						ON "Python_FOUND"			OFF)
+cmake_dependent_option(WITH_NUMPY    	"Enable NumPy"										ON "NumPy_FOUND"			OFF)
 cmake_dependent_option(WITH_CIM				"Enable CIM file parsing"					ON "CIMpp_FOUND"			OFF)
 cmake_dependent_option(WITH_OPENMP		"Enable OpenMP parallelisation"		ON "OPENMP_FOUND"			OFF)
 cmake_dependent_option(WITH_GRAPHVIZ	"Enable Graphviz Graphs"					ON "Graphviz_FOUND" 	OFF)
