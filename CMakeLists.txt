@@ -98,7 +98,7 @@ endif()
 
 include(CMakeDependentOption)
 
-option(BUILD_SHARED_LIBS 	"Build shared library" ON)
+option(BUILD_SHARED_LIBS 	"Build shared library" OFF)
 option(BUILD_EXAMPLES 		"Build C++ examples" ON)
 
 cmake_dependent_option(WITH_GSL				"Enable GSL"        							ON "GSL_FOUND"				OFF)
