@@ -6,14 +6,12 @@
 #include <cusolverDn.h>
 
 /**
- * 
  * TODO:
+ * 	|| Test & fix ||
  *    -initialize();
- *    -void setSystem(CPS::SystemTopology system);
- *    -CPS::Task::List getTasks();
- *    -class SolveTask : public CPS::Task
+ * 	  -class SolveTask : public CPS::Task
  * 	  -class LogTask : public CPS::Task
- * 
+ *    -CPS::Task::List getTasks();
  */
 
 namespace DPsim {
@@ -50,7 +48,6 @@ namespace DPsim {
 		void copySystemMatrixToDevice();
 		/// LU factorization
 		void LUfactorization();
-		
 
 	public:
 		MnaSolverGpu(String name,
@@ -59,9 +56,10 @@ namespace DPsim {
 
 		virtual ~MnaSolverGpu();
 
+		CPS::Task::List getTasks();
 
 		class SolveTask : public CPS::Task {
-
+		public:
 			SolveTask(MnaSolverGpu<VarType>& solver, Bool steadyStateInit) :
 				Task(solver.mName + ".Solve"), mSolver(solver), mSteadyStateInit(steadyStateInit) {
 				for (auto it : solver.mPowerComponents) {
@@ -77,9 +75,23 @@ namespace DPsim {
 
 			void execute(Real time, Int timeStepCount);
 
-			private:
-				MnaSolverGpu<VarType>& mSolver;
-				Bool mSteadyStateInit;
+		private:
+			MnaSolverGpu<VarType>& mSolver;
+			Bool mSteadyStateInit;
+		};
+
+		class LogTask : public CPS::Task {
+		public:
+			LogTask(MnaSolverGpu<VarType>& solver) :
+				Task(solver.mName + ".Log"), mSolver(solver) {
+				mAttributeDependencies.push_back(solver.attribute("left_vector"));
+				mModifiedAttributes.push_back(Scheduler::external);
+			}
+
+			void execute(Real time, Int timeStepCount);
+
+		private:
+			MnaSolverGpu<VarType>& mSolver;
 		};
     };
 }

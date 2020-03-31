@@ -1,7 +1,8 @@
 #include <dpsim/MNASolverGpu.h>
-#include <dpsim/Definitions.h>
+#include <dpsim/SequentialScheduler.h>
 
 using namespace DPsim;
+using namespace CPS;
 
 namespace DPsim {
 
@@ -107,6 +108,30 @@ void MnaSolverGpu<VarType>::LUfactorization() {
 }
 
 template <typename VarType>
+Task::List MnaSolverGpu<VarType>::getTasks() {
+    Task::List l;
+
+	for (auto comp : this->mPowerComponents) {
+		for (auto task : comp->mnaTasks()) {
+			l.push_back(task);
+		}
+	}
+	for (auto node : this->mNodes) {
+		for (auto task : node->mnaTasks())
+			l.push_back(task);
+	}
+	// TODO signal components should be moved out of MNA solver
+	for (auto comp : this->mSignalComponents) {
+		for (auto task : comp->getTasks()) {
+			l.push_back(task);
+		}
+	}
+	l.push_back(std::make_shared<MnaSolverGpu<VarType>::SolveTask>(*this, false));
+    l.push_back(std::make_shared<MnaSolverGpu<VarType>::LogTask>(*this));
+	return l;
+}
+
+template <typename VarType>
 void MnaSolverGpu<VarType>::SolveTask::execute(Real time, Int timeStepCount) {
     // Reset source vector
 	mSolver.mRightSideVector.setZero();
@@ -152,6 +177,11 @@ void MnaSolverGpu<VarType>::SolveTask::execute(Real time, Int timeStepCount) {
 		mSolver.updateSwitchStatus();
 
 	// Components' states will be updated by the post-step tasks
+}
+
+template <typename VarType>
+void MnaSolverGpu<VarType>::LogTask::execute(Real time, Int timeStepCount) {
+	mSolver.log(time);
 }
 
 }
