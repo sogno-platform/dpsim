@@ -27,7 +27,7 @@
 #include <dpsim/Simulation.h>
 #include <dpsim/Utils.h>
 #include <cps/Utils.h>
-#include <dpsim/MNASolver.h>
+#include <dpsim/MNASolverGpu.h>
 #include <dpsim/PFSolverPowerPolar.h>
 #include <dpsim/DiakopticsSolver.h>
 
@@ -143,8 +143,13 @@ void Simulation::createSolvers(
 					solver = std::make_shared<DiakopticsSolver<VarType>>(mName,
 						subnets[net], tearComponents, mTimeStep, mLogLevel);
 				} else {
+#ifdef WITH_CUDA
+					solver = std::make_shared<MnaSolverGpu<VarType>>(
+						mName + copySuffix, mDomain, mLogLevel);
+#else
 					solver = std::make_shared<MnaSolver<VarType>>(
 						mName + copySuffix, mDomain, mLogLevel);
+#endif /* WITH_CUDA */
 					solver->setTimeStep(mTimeStep);
 					solver->doSteadyStateInitialization(mSteadyStateInit);
 					solver->doFrequencyParallelization(mHarmParallel);
@@ -157,6 +162,7 @@ void Simulation::createSolvers(
 				solver = std::make_shared<DAESolver>(mName + copySuffix, subnets[net], mTimeStep, 0.0);
 				break;
 #endif /* WITH_SUNDIALS */
+
 			default:
 				throw UnsupportedSolverException();
 		}

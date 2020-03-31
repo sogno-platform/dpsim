@@ -1,10 +1,10 @@
 cmake_minimum_required(VERSION 3.5)
-project(DPsim CXX CUDA)
+project(DPsim CXX)
 
 if(CMAKE_PROJECT_NAME STREQUAL PROJECT_NAME)
 	set(TOPLEVEL_PROJECT ON)
 else()
-		set(TOPLEVEL_PROJECT OFF)
+	set(TOPLEVEL_PROJECT OFF)
 endif()
 
 # Enable C++11 support
@@ -71,6 +71,7 @@ find_package(PythonLibs 3.6)
 find_package(Sundials)
 
 find_package(OpenMP)
+find_package(CUDA)
 
 find_package(GSL)
 find_package(VILLASnode)
@@ -89,7 +90,6 @@ include(CMakeDependentOption)
 option(BUILD_SHARED_LIBS "Build shared library"                   OFF)
 option(BUILD_EXAMPLES    "Build C++ examples"                     ON )
 option(COMPARE_REFERENCE "Download reference results and compare" OFF)
-option(WITH_CUDA         "Enable CUDA-based parallelisation"      ON )
 
 cmake_dependent_option(WITH_GSL			"Enable GSL"        					ON  "GSL_FOUND"			OFF)
 cmake_dependent_option(WITH_SUNDIALS	"Enable sundials solver suite"			ON  "Sundials_FOUND"	OFF)
@@ -98,6 +98,11 @@ cmake_dependent_option(WITH_RT			"Enable real-time features"				ON  "Linux_FOUND
 cmake_dependent_option(WITH_PYTHON		"Enable Python support"					OFF "Python_FOUND"		OFF)
 cmake_dependent_option(WITH_CIM			"Enable support for parsing CIM files"	ON  "CIMpp_FOUND"		OFF)
 cmake_dependent_option(WITH_OPENMP		"Enable OpenMP-based parallelisation"	ON  "OPENMP_FOUND"		OFF)
+cmake_dependent_option(WITH_CUDA		"Enable CUDA-based parallelisation"		ON  "CUDA_FOUND"		OFF)
+
+if(WITH_CUDA)
+	enable_language(CUDA)
+endif()
 
 configure_file(
 	${CMAKE_CURRENT_SOURCE_DIR}/Include/dpsim/Config.h.in
