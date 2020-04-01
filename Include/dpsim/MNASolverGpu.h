@@ -1,12 +1,18 @@
 #pragma once
 
+#include <exception>
+
 #include <dpsim/MNASolver.h>
 
 #include <cuda_runtime.h>
 #include <cusolverDn.h>
 
+#define CUDA_ERROR_HANDLER(func) {cudaError_t error; if((error = func) != cudaSuccess) std::cerr << cudaGetErrorString(error) << std::endl; }
+
 /**
  * TODO:
+ *    -Proper error-handling
+ * 
  * 	|| Test & fix ||
  *    -initialize();
  * 	  -class SolveTask : public CPS::Task

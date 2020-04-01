@@ -27,7 +27,7 @@
 #include <dpsim/Simulation.h>
 #include <dpsim/Utils.h>
 #include <cps/Utils.h>
-#include <dpsim/MNASolverGpu.h>
+#include <dpsim/MNASolver.h>
 #include <dpsim/PFSolverPowerPolar.h>
 #include <dpsim/DiakopticsSolver.h>
 
@@ -41,6 +41,10 @@
   #include <cps/Solver/ODEInterface.h>
   #include <dpsim/DAESolver.h>
   #include <dpsim/ODESolver.h>
+#endif
+
+#ifdef WITH_CUDA
+	#include <dpsim/MNASolverGpu.h>
 #endif
 
 using namespace CPS;
