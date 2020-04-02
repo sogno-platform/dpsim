@@ -1,7 +1,5 @@
 #pragma once
 
-#include <exception>
-
 #include <dpsim/MNASolver.h>
 
 #include <cuda_runtime.h>
@@ -12,12 +10,6 @@
 /**
  * TODO:
  *    -Proper error-handling
- * 
- * 	|| Test & fix ||
- *    -initialize();
- * 	  -class SolveTask : public CPS::Task
- * 	  -class LogTask : public CPS::Task
- *    -CPS::Task::List getTasks();
  */
 
 namespace DPsim {
@@ -26,17 +18,19 @@ namespace DPsim {
 	protected:
 
 		// #### Attributes required for GPU ####
-		///Sovler-Handle
+		/// Solver-Handle
 		cusolverDnHandle_t mCusolverHandle;
-		///Stream
+		/// Stream
 		cudaStream_t mStream;
 
-		/// Variables for solving one Equation-system
+		/// Variables for solving one Equation-system (All pointer are device-pointer)
 		struct GpuData {
 			/// Device copy of System-Matrix
 			double *matrix;
+			/// Size of one dimension
+			UInt size;
 			/// Device copy of Vector
-			double *rightVector;
+			double *vector;
 
 			/// Device-Workspace for getrf
 			double *workSpace;
