@@ -127,6 +127,14 @@ namespace CPS {
 			mComponents.push_back(component);
 		}
 
+		/// Connect component to simNodes
+		template <typename VarType>
+		void connectComponentToNodes(typename SimPowerComp<VarType>::Ptr component, typename SimNode<VarType>::List simNodes) {
+			component->connect(simNodes);
+			for (auto simNode : simNodes)
+				mComponentsAtNode[simNode].push_back(component);
+		}
+
 		/// Add multiple components
 		void addComponents(IdentifiedObject::List components) {
 			for (auto comp : components)
