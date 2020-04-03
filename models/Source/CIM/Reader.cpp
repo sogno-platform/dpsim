@@ -682,14 +682,20 @@ void Reader::writeSvVoltageFromStaticSysTopology(SystemTopology& sysStatic, Syst
 
 	for (; nodeDyn != sysDynamic.mNodes.end() && nodeSt != sysStatic.mNodes.end(); ++nodeDyn, ++nodeSt) {
 		if ((*nodeDyn)->name() == (*nodeSt)->name()) {
-			(*nodeDyn)->setInitialVoltage(
-				std::dynamic_pointer_cast<CPS::SimNode<CPS::Complex>>((*nodeSt))->singleVoltage());
+			mSLog->info("Updating SV info according to powerflow (1st loop):");
+			mSLog->info("Before: Voltage at node {} : {}", std::dynamic_pointer_cast<CPS::SimNode<CPS::Complex>>((*nodeDyn))->name(), std::dynamic_pointer_cast<CPS::SimNode<CPS::Complex>>((*nodeDyn))->initialSingleVoltage());
+			(*nodeDyn)->setInitialVoltage(std::dynamic_pointer_cast<CPS::SimNode<CPS::Complex>>((*nodeSt))->singleVoltage());
+			mSLog->info("Now: Voltage at node {} : {}", std::dynamic_pointer_cast<CPS::SimNode<CPS::Complex>>((*nodeDyn))->name(), std::dynamic_pointer_cast<CPS::SimNode<CPS::Complex>>((*nodeDyn))->initialSingleVoltage());
 		}
 		else {
 			for (auto node : sysStatic.mNodes) {
 				if ((*nodeDyn)->name() == node->name())
-					(*nodeDyn)->setInitialVoltage(
-						std::dynamic_pointer_cast<CPS::SimNode<CPS::Complex>>(node)->singleVoltage());
+				{
+					mSLog->info("Updating SV info according to powerflow (2nd loop):");
+					mSLog->info("Before: Voltage at node {} : {}", std::dynamic_pointer_cast<CPS::SimNode<CPS::Complex>>((*nodeDyn))->name(), std::dynamic_pointer_cast<CPS::SimNode<CPS::Complex>>((*nodeDyn))->initialSingleVoltage());
+					(*nodeDyn)->setInitialVoltage(std::dynamic_pointer_cast<CPS::SimNode<CPS::Complex>>(node)->singleVoltage());
+					mSLog->info("Now: Voltage at node {} : {}", std::dynamic_pointer_cast<CPS::SimNode<CPS::Complex>>((*nodeDyn))->name(), std::dynamic_pointer_cast<CPS::SimNode<CPS::Complex>>((*nodeDyn))->initialSingleVoltage());
+				}					
 			}
 		}
 	}
@@ -698,8 +704,12 @@ void Reader::writeSvVoltageFromStaticSysTopology(SystemTopology& sysStatic, Syst
 		for (; nodeDyn != sysDynamic.mNodes.end(); ++nodeDyn) {
 			for (auto node : sysStatic.mNodes) {
 				if ((*nodeDyn)->name() == node->name())
-					(*nodeDyn)->setInitialVoltage(
-						std::dynamic_pointer_cast<CPS::SimNode<CPS::Complex>>(node)->singleVoltage());
+				{
+					mSLog->info("Updating SV info according to powerflow (3rd loop):");
+					mSLog->info("Before: Voltage at node {} : {}", std::dynamic_pointer_cast<CPS::SimNode<CPS::Complex>>((*nodeDyn))->name(), std::dynamic_pointer_cast<CPS::SimNode<CPS::Complex>>((*nodeDyn))->initialSingleVoltage());
+					(*nodeDyn)->setInitialVoltage(std::dynamic_pointer_cast<CPS::SimNode<CPS::Complex>>(node)->singleVoltage());
+					mSLog->info("Now: Voltage at node {} : {}", std::dynamic_pointer_cast<CPS::SimNode<CPS::Complex>>((*nodeDyn))->name(), std::dynamic_pointer_cast<CPS::SimNode<CPS::Complex>>((*nodeDyn))->initialSingleVoltage());
+				}					
 			}
 		}
 	}
