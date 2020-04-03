@@ -45,6 +45,40 @@ SP::Ph1::AvVoltageSourceInverterDQ::AvVoltageSourceInverterDQ(String uid, String
 	);
 }
 
+SP::Ph1::AvVoltageSourceInverterDQ::AvVoltageSourceInverterDQ(String uid, String name, Logger::Level logLevel, Bool withTrafo) 
+	: SP::Ph1::AvVoltageSourceInverterDQ::AvVoltageSourceInverterDQ(uid, name, logLevel) {
+	if (withTrafo) {
+		setVirtualNodeNumber(5);
+		mConnectionTransformer = SP::Ph1::Transformer::make(mName + "_trans", Logger::Level::debug);
+		mConnectionTransformer->connect({ mVirtualNodes[3], mVirtualNodes[4] });
+	}
+}
+
+void SP::Ph1::AvVoltageSourceInverterDQ::setTransformerParameters(Real nomVoltageEnd1, Real nomVoltageEnd2, Real ratedPower, Real ratioAbs,
+	Real ratioPhase, Real resistance, Real inductance, Real omega) {
+		mConnectionTransformer->setParameters(nomVoltageEnd1, nomVoltageEnd2, ratedPower, ratioAbs, ratioPhase, resistance, inductance, omega);
+		// set base voltage to higher voltage side
+		// TODO: enforce higher voltage as base voltage in transformer model
+		if (nomVoltageEnd1 > nomVoltageEnd2)
+			mConnectionTransformer->setBaseVoltage(nomVoltageEnd1);
+		else
+			mConnectionTransformer->setBaseVoltage(nomVoltageEnd2);		
+};
+
+void SP::Ph1::AvVoltageSourceInverterDQ::setParameters(Real sysOmega, Complex sysVoltNom, Real Pref, Real Qref) {
+	mPref = Pref;
+	mQref = Qref;
+
+	mVoltNom = sysVoltNom;
+	mOmegaN = sysOmega;
+
+	mPFAvVoltageSourceInverter = SP::Ph1::Load::make(mName + "_pf", mName + "_pf", mLogLevel);
+	mPFAvVoltageSourceInverter->setParameters(mPref, mQref, 0);
+	mPFAvVoltageSourceInverter->modifyPowerFlowBusType(PowerflowBusType::PQ);
+
+	parametersSet = true;
+}
+
 void SP::Ph1::AvVoltageSourceInverterDQ::setParameters(Real sysOmega, Complex sysVoltNom, Real Pref, Real Qref, Real Kp_pll, Real Ki_pll,
 	Real Kp_powerCtrl, Real Ki_powerCtrl, Real Kp_currCtrl, Real Ki_currCtrl, Real Lf, Real Cf,
 	Real Rf, Real Rc) {

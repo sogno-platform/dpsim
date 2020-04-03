@@ -16,6 +16,7 @@
 #include <cps/SP/SP_Ph1_Capacitor.h>
 #include <cps/SP/SP_Ph1_ControlledVoltageSource.h>
 #include <cps/SP/SP_Ph1_Load.h>
+#include <cps/SP/SP_Ph1_Transformer.h>
 
 
 namespace CPS {
@@ -136,13 +137,17 @@ namespace CPS {
 				///
 				std::shared_ptr<SP::Ph1::Load> mPFAvVoltageSourceInverter;
 				///
+				std::shared_ptr<SP::Ph1::Transformer> mConnectionTransformer;
+				///
 				std::vector<PQData> mLoadProfile;
 				// #### constructors ####
 				///
-				AvVoltageSourceInverterDQ(String uid, String name, Logger::Level logLevel = Logger::Level::off);
-				///
 				AvVoltageSourceInverterDQ(String name,
 					Logger::Level logLevel = Logger::Level::off) :AvVoltageSourceInverterDQ(name, name, logLevel) {}
+				///
+				AvVoltageSourceInverterDQ(String uid, String name, Logger::Level logLevel = Logger::Level::off);
+				///
+				AvVoltageSourceInverterDQ(String uid, String name, Logger::Level logLevel, Bool withTrafo);
 				///
 				SimPowerComp<Complex>::Ptr clone(String copySuffix);
 				/// add measurements for Vcabc and Ifabc
@@ -159,8 +164,13 @@ namespace CPS {
 					Real Kp_powerCtrl, Real Ki_powerCtrl, Real Kp_currCtrl, Real Ki_currCtrl, Real Lf, Real Cf,
 					Real Rf, Real Rc);
 				///
+				void setParameters(Real sysOmega, Complex sysVoltNom, Real Pref, Real Qref);
+				///
 				void setControllerParameters(Real Kp_pll, Real Ki_pll,
 					Real Kp_powerCtrl, Real Ki_powerCtrl, Real Kp_currCtrl, Real Ki_currCtrl);
+				/// 
+				void setTransformerParameters(Real nomVoltageEnd1, Real nomVoltageEnd2, Real ratedPower, Real ratioAbs,
+					Real ratioPhase, Real resistance, Real inductance, Real omega);
 
 				/// update B,C,D matrices with new theta_pll
 				void updateLinearizedModel();
