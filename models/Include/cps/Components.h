@@ -26,7 +26,6 @@
 #include <cps/SP/SP_Ph1_NetworkInjection.h>
 #include <cps/SP/SP_Ph1_VoltageSource.h>
 
-#include <cps/SP/SP_Ph3_AvVoltageSourceInverterDQ.h>
 #include <cps/SP/SP_Ph3_Capacitor.h>
 #include <cps/SP/SP_Ph3_Inductor.h>
 #include <cps/SP/SP_Ph3_Resistor.h>
@@ -53,7 +52,6 @@
 #include <cps/DP/DP_Ph1_NetworkInjection.h>
 #include <cps/DP/DP_Ph1_AvVoltageSourceInverterDQ.h>
 
-#include <cps/DP/DP_Ph3_AvVoltageSourceInverterDQ.h>
 #include <cps/DP/DP_Ph3_ControlledVoltageSource.h>
 #include <cps/DP/DP_Ph3_Capacitor.h>
 #include <cps/DP/DP_Ph3_Inductor.h>
