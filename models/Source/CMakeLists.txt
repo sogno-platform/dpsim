@@ -33,7 +33,6 @@ list(APPEND CPS_SOURCES
 	DP/DP_Ph1_ControlledVoltageSource.cpp
 	DP/DP_Ph1_NetworkInjection.cpp
 
-	DP/DP_Ph3_AvVoltageSourceInverterDQ.cpp
 	DP/DP_Ph3_ControlledVoltageSource.cpp
 	DP/DP_Ph3_VoltageSource.cpp
 	DP/DP_Ph3_Capacitor.cpp
@@ -98,7 +97,6 @@ list(APPEND CPS_SOURCES
 	SP/SP_Ph1_VDNode.cpp
 	SP/SP_Ph1_NetworkInjection.cpp
 
-	SP/SP_Ph3_AvVoltageSourceInverterDQ.cpp
 	SP/SP_Ph3_Capacitor.cpp
 	SP/SP_Ph3_Inductor.cpp
 	SP/SP_Ph3_Resistor.cpp
