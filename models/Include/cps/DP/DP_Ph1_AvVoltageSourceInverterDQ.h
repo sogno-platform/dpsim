@@ -15,6 +15,7 @@
 #include <cps/DP/DP_Ph1_Inductor.h>
 #include <cps/DP/DP_Ph1_Capacitor.h>
 #include <cps/DP/DP_Ph1_ControlledVoltageSource.h>
+#include <cps/DP/DP_Ph1_Transformer.h>
 #include <cps/PowerProfile.h>
 
 namespace CPS {
@@ -38,6 +39,7 @@ namespace Ph1 {
 		Real mThetaSInit = 0;
 		/// Inner voltage source that represents the AvVoltageSourceInverterDQ
 		std::shared_ptr<DP::Ph1::ControlledVoltageSource> mSubCtrledVoltageSource;
+		
 		/// LC filter as sub-components
 		std::shared_ptr<DP::Ph1::Resistor> mSubResistorF;
 		///
@@ -46,6 +48,7 @@ namespace Ph1 {
 		std::shared_ptr<DP::Ph1::Inductor> mSubInductorF;
 		///
 		std::shared_ptr<DP::Ph1::Resistor> mSubResistorC;
+		
 		///
 		std::vector<Real>* mGenProfile = nullptr;
 		///
@@ -56,12 +59,16 @@ namespace Ph1 {
 		UInt mProfileUndateRate = 1000;
 		///
 		Attribute<Real>::Ptr mQRefInput;
+		
 		///
 		Bool mCtrlOn = true;
 		///
 		Bool mCoveeCtrled=true;
 		///
 		Bool mIsLoad=false;
+		///
+		Bool mWithConnectionTransformer=false;
+
 		// ### parameters ###
 		Real mPref;
 		Real mQref;
@@ -70,8 +77,13 @@ namespace Ph1 {
 		Real mLf;
 		Real mCf;
 		Real mRf;
-
 		Real mRc;
+
+		/// transformer
+		Real mTransformerResistance;
+		Real mTransformerInductance;
+		Real mTransformerRatioAbs;
+		Real mTransformerRatioPhase;
 
 		/// PLL
 		Real mOmegaN;
@@ -131,14 +143,15 @@ namespace Ph1 {
 
 	public:
 		///
-		std::vector<PQData> mLoadProfile;
-
-		// #### constructors ####
+		std::shared_ptr<DP::Ph1::Transformer> mConnectionTransformer;
 		///
-		AvVoltageSourceInverterDQ(String uid, String name, Logger::Level logLevel = Logger::Level::off);
+		std::vector<PQData> mLoadProfile;
+		// #### constructors ####
 		///
 		AvVoltageSourceInverterDQ(String name,
 			Logger::Level logLevel = Logger::Level::off) :AvVoltageSourceInverterDQ(name, name, logLevel) {}
+		///
+		AvVoltageSourceInverterDQ(String uid, String name, Logger::Level logLevel = Logger::Level::off, Bool withTrafo = false);
 		///
 		SimPowerComp<Complex>::Ptr clone(String copySuffix);
 		/// add measurements for Vcabc and Ifabc
@@ -152,11 +165,17 @@ namespace Ph1 {
 		void updateStates();
 		///
 		void setParameters(Real sysOmega, Complex sysVoltNom, Real Pref, Real Qref, Real Kp_pll, Real Ki_pll,
-			Real Kp_powerCtrl, Real Ki_powerCtrl, Real Kp_currCtrl, Real Ki_currCtrl, Real Lf, Real Cf,
+			Real Kp_powerCtrl, Real Ki_powerCtrl, Real Kp_currCtrl, Real Ki_currCtrl, Real Omega_cutoff, Real Lf, Real Cf,
 			Real Rf, Real Rc);
 		///
-		void setControllerParameters(Real Kp_pll, Real Ki_pll,
-			Real Kp_powerCtrl, Real Ki_powerCtrl, Real Kp_currCtrl, Real Ki_currCtrl);
+		void setParameters(Real sysOmega, Complex sysVoltNom, Real Pref, Real Qref);
+		///
+		void setControllerParameters(Real Kp_pll, Real Ki_pll, Real Kp_powerCtrl, Real Ki_powerCtrl, Real Kp_currCtrl, Real Ki_currCtrl, Real Omega_cutoff);
+		///
+		void setFilterParameters(Real Lf, Real Cf, Real Rf, Real Rc);
+		/// 
+		void setTransformerParameters(Real nomVoltageEnd1, Real nomVoltageEnd2, Real ratedPower, Real ratioAbs,
+			Real ratioPhase, Real resistance, Real inductance, Real omega);
 
 		/// update B,C,D matrices with new theta_pll
 		void updateLinearizedModel();
@@ -218,6 +237,7 @@ namespace Ph1 {
 			AddBStep(AvVoltageSourceInverterDQ& AvVoltageSourceInverterDQ) :
 				Task(AvVoltageSourceInverterDQ.mName + ".AddBStep"), mAvVoltageSourceInverterDQ(AvVoltageSourceInverterDQ) {
 				mAttributeDependencies.push_back(AvVoltageSourceInverterDQ.mSubInductorF->attribute("right_vector"));
+				mAttributeDependencies.push_back(AvVoltageSourceInverterDQ.mConnectionTransformer->attribute("right_vector"));
 				mAttributeDependencies.push_back(AvVoltageSourceInverterDQ.mSubCapacitorF->attribute("right_vector"));
 				mAttributeDependencies.push_back(AvVoltageSourceInverterDQ.mSubCtrledVoltageSource->attribute("right_vector"));
 				mModifiedAttributes.push_back(AvVoltageSourceInverterDQ.attribute("right_vector"));
@@ -256,6 +276,7 @@ namespace Ph1 {
 				mAttributeDependencies.push_back(AvVoltageSourceInverterDQ.mSubCtrledVoltageSource->attribute("i_intf"));
 				mAttributeDependencies.push_back(AvVoltageSourceInverterDQ.mSubResistorF->attribute("i_intf"));
 				mAttributeDependencies.push_back(AvVoltageSourceInverterDQ.mSubInductorF->attribute("i_intf"));
+				mAttributeDependencies.push_back(AvVoltageSourceInverterDQ.mConnectionTransformer->attribute("i_intf"));
 				mAttributeDependencies.push_back(AvVoltageSourceInverterDQ.mSubResistorC->attribute("i_intf"));
 				mModifiedAttributes.push_back(AvVoltageSourceInverterDQ.attribute("i_intf"));
 				mModifiedAttributes.push_back(AvVoltageSourceInverterDQ.attribute("v_intf"));
