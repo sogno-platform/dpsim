@@ -32,7 +32,8 @@ namespace CPS {
 		UInt mNumFreqs = 0;
 		///
 		PhaseType mPhaseType = PhaseType::Single;
-
+		/// List of subcomponents
+		typename std::vector<std::shared_ptr<SimPowerComp<VarType>>> mSubComponents;
 		/// "Cached" list of simulation nodes (to avoid shared_ptr accesses during simulation)
 		std::vector<UInt> mMatrixNodeIndices;
 		/// "Cached" flags for whether the connected nodes are grounded
@@ -111,6 +112,10 @@ namespace CPS {
 		UInt virtualNodesNumber() { return mNumVirtualNodes; }
 		/// Returns true if virtual node number is greater than zero.
 		Bool hasVirtualNodes() { return mNumVirtualNodes > 0; }
+		/// Returns true if subcomponents included in this component
+		Bool hasSubComponents() { return mSubComponents.size() > 0; }
+		/// Get list of subcomponents
+		typename SimPowerComp<VarType>::List subComponents() { return mSubComponents; }
 		///
 		typename SimNode<VarType>::List& virtualNodes() { return mVirtualNodes; }
 		/// Get pointer to virtual node

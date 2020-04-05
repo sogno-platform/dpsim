@@ -368,6 +368,26 @@ void MnaSolver<VarType>::createVirtualNodes() {
 				}
 			}
 		}
+
+		if (pComp->hasSubComponents()) {
+			for (auto pSubComp : pComp->subComponents()) {
+				for (UInt node = 0; node < pSubComp->virtualNodesNumber(); node++) {
+					virtualNode++;
+					mNodes.push_back(pSubComp->virtualNode(node));
+
+					pSubComp->virtualNode(node)->setMatrixNodeIndex(0, virtualNode);
+					mSLog->info("Assigned index {} to virtual node {} for {}", virtualNode, node, pSubComp->name());
+
+					if (pSubComp->virtualNode(node)->phaseType() == CPS::PhaseType::ABC) {
+						for (UInt phase = 1; phase < 3; phase++) {
+							virtualNode++;
+							pSubComp->virtualNode(node)->setMatrixNodeIndex(phase, virtualNode);
+							mSLog->info("Assigned index {} to virtual node {} for {}", virtualNode, node, pSubComp->name());
+						}
+					}
+				}
+			}
+		}
 	}
 	// Update node number to create matrices and vectors
 	mNumNodes = (UInt) mNodes.size();
