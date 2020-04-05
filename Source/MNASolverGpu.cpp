@@ -137,17 +137,17 @@ template <typename VarType>
 Task::List MnaSolverGpu<VarType>::getTasks() {
     Task::List l;
 
-	for (const auto &comp : this->mPowerComponents) {
+    for (auto comp : this->mMNAComponents) {
 		for (auto task : comp->mnaTasks()) {
 			l.push_back(task);
 		}
 	}
-	for (const auto &node : this->mNodes) {
+	for (auto node : this->mNodes) {
 		for (auto task : node->mnaTasks())
 			l.push_back(task);
 	}
 	// TODO signal components should be moved out of MNA solver
-	for (const auto &comp : this->mSignalComponents) {
+	for (auto comp : this->mSimSignalComps) {
 		for (auto task : comp->getTasks()) {
 			l.push_back(task);
 		}
