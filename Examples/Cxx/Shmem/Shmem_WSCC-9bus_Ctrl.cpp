@@ -1,23 +1,17 @@
-/** CIM Test
- *
- * @author Markus Mirz <mmirz@eonerc.rwth-aachen.de>
- * @author Steffen Vogel <stvogel@eonerc.rwth-aachen.de>
- * @copyright 2017-2018, Institute for Automation of Complex Power Systems, EONERC
- *
+/* Copyright 2017-2020 Institute for Automation of Complex Power Systems,
+ *                     EONERC, RWTH Aachen University
  * DPsim
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * any later version.
- *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
- *
  * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
  *********************************************************************************/
 
 #include <iostream>
@@ -55,13 +49,13 @@ int main(int argc, char *argv[]) {
 
 	// Extend system with controllable load (Profile)
 	auto load_profile = PQLoadCS::make("load_cs_profile");
-	load_profile->connect({ sys.node<CPS::DP::Node>("BUS6") });
+	load_profile->connect({ sys.node<CPS::DP::SimNode>("BUS6") });
 	load_profile->setParameters(0, 0, 230000);
 	sys.mComponents.push_back(load_profile);
 
 	// Extend system with controllable load
 	auto load = PQLoadCS::make("load_cs");
-	load->connect({ sys.node<CPS::DP::Node>("BUS5") });
+	load->connect({ sys.node<CPS::DP::SimNode>("BUS5") });
 	load->setParameters(0, 0, 230000);
 	sys.mComponents.push_back(load);
 
@@ -95,7 +89,7 @@ int main(int argc, char *argv[]) {
 
 		i--;
 
-		auto n_dp = std::dynamic_pointer_cast<CPS::DP::Node>(n);
+		auto n_dp = std::dynamic_pointer_cast<CPS::DP::SimNode>(n);
 		auto v = n_dp->attributeMatrixComp("v")->coeff(0, 0);
 
 		std::cout << "Signal " << (i*2)+0 << ": Mag  " << n->name() << std::endl;
@@ -108,7 +102,7 @@ int main(int argc, char *argv[]) {
 		logger->addAttribute(fmt::format("phase_{}", i), v->phase());
 	}
 
-	logger->addAttribute("v3", sys.node<CPS::DP::Node>("BUS3")->attribute("v"));
+	logger->addAttribute("v3", sys.node<CPS::DP::SimNode>("BUS3")->attribute("v"));
 
 	// TODO gain by 20e8
 	filtP->setInput(intf.importReal(0));

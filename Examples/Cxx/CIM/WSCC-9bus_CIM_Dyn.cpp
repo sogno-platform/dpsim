@@ -1,21 +1,17 @@
-/**
- * @author Markus Mirz <mmirz@eonerc.rwth-aachen.de>
- * @copyright 2017-2018, Institute for Automation of Complex Power Systems, EONERC
- *
+/* Copyright 2017-2020 Institute for Automation of Complex Power Systems,
+ *                     EONERC, RWTH Aachen University
  * DPsim
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * any later version.
- *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
- *
  * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
  *********************************************************************************/
 
 #include <iostream>
@@ -50,22 +46,26 @@ int main(int argc, char *argv[]) {
 
 	// Logging
 	auto logger = DataLogger::make(simName);
-	logger->addAttribute("v1", sys.node<Node>("BUS1")->attribute("v"));
-	logger->addAttribute("v2", sys.node<Node>("BUS2")->attribute("v"));
-	logger->addAttribute("v3", sys.node<Node>("BUS3")->attribute("v"));
-	logger->addAttribute("v4", sys.node<Node>("BUS4")->attribute("v"));
-	logger->addAttribute("v5", sys.node<Node>("BUS5")->attribute("v"));
-	logger->addAttribute("v6", sys.node<Node>("BUS6")->attribute("v"));
-	logger->addAttribute("v7", sys.node<Node>("BUS7")->attribute("v"));
-	logger->addAttribute("v8", sys.node<Node>("BUS8")->attribute("v"));
-	logger->addAttribute("v9", sys.node<Node>("BUS9")->attribute("v"));
+	logger->addAttribute("v1", sys.node<SimNode>("BUS1")->attribute("v"));
+	logger->addAttribute("v2", sys.node<SimNode>("BUS2")->attribute("v"));
+	logger->addAttribute("v3", sys.node<SimNode>("BUS3")->attribute("v"));
+	logger->addAttribute("v4", sys.node<SimNode>("BUS4")->attribute("v"));
+	logger->addAttribute("v5", sys.node<SimNode>("BUS5")->attribute("v"));
+	logger->addAttribute("v6", sys.node<SimNode>("BUS6")->attribute("v"));
+	logger->addAttribute("v7", sys.node<SimNode>("BUS7")->attribute("v"));
+	logger->addAttribute("v8", sys.node<SimNode>("BUS8")->attribute("v"));
+	logger->addAttribute("v9", sys.node<SimNode>("BUS9")->attribute("v"));
 	logger->addAttribute("wr_1", sys.component<Ph1::SynchronGeneratorTrStab>("GEN1")->attribute("w_r"));
 	logger->addAttribute("wr_2", sys.component<Ph1::SynchronGeneratorTrStab>("GEN2")->attribute("w_r"));
 	logger->addAttribute("wr_3", sys.component<Ph1::SynchronGeneratorTrStab>("GEN3")->attribute("w_r"));
 
-	Simulation sim(simName, sys, 0.0001, 2,
-		Domain::DP, Solver::Type::MNA, Logger::Level::info, true);
-
+	Simulation sim(simName, Logger::Level::info);
+	sim.setSystem(sys);
+	sim.setDomain(Domain::DP);
+	sim.setTimeStep(0.0001);
+	sim.setFinalTime(2);
+	sim.doSteadyStateInit(true);
+	sim.doHarmonicParallelization(false);
 	sim.addLogger(logger);
 	sim.run();
 

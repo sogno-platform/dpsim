@@ -1,22 +1,17 @@
-/** Example of shared memory interface
- *
- * @author Steffen Vogel <stvogel@eonerc.rwth-aachen.de>
- * @copyright 2017-2018, Institute for Automation of Complex Power Systems, EONERC
- *
+/* Copyright 2017-2020 Institute for Automation of Complex Power Systems,
+ *                     EONERC, RWTH Aachen University
  * DPsim
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * any later version.
- *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
- *
  * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
  *********************************************************************************/
 
 #include <fstream>
@@ -35,10 +30,10 @@ int main(int argc, char* argv[]) {
 	Real timeStep = 0.001;
 
 	// Nodes
-	auto n1 = Node::make("n1");
-	auto n2 = Node::make("n2");
-	auto n3 = Node::make("n3");
-	auto n4 = Node::make("n4");
+	auto n1 = SimNode::make("n1");
+	auto n2 = SimNode::make("n2");
+	auto n3 = SimNode::make("n3");
+	auto n4 = SimNode::make("n4");
 
 	// Components
 	auto evs = VoltageSource::make("v_s");
@@ -53,14 +48,14 @@ int main(int argc, char* argv[]) {
 	rL->setParameters(1000);
 
 	// Topology
-	evs->connect({ Node::GND, n1 });
+	evs->connect({ SimNode::GND, n1 });
 	rs->connect({ n1, n2 });
 	rl->connect({ n2, n3 });
 	ll->connect({ n3, n4 });
-	rL->connect({ n4, Node::GND });
+	rL->connect({ n4, SimNode::GND });
 
 	auto sys = SystemTopology(50,
-		SystemNodeList{Node::GND, n1, n2, n3, n4},
+		SystemNodeList{SimNode::GND, n1, n2, n3, n4},
 		SystemComponentList{evs, rs, rl, ll, rL});
 
 #ifdef REALTIME

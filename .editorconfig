@@ -18,5 +18,6 @@ indent_size = 4
 indent_style = spaces
 indent_size = 4
 
-[Dockerfile]
+[{CMakeLists.txt,Dockerfile}]
 indent_style = tab
+indent_size = 2

@@ -1,21 +1,17 @@
-/**
- * @author Jan Dinkelbach <jdinkelbach@eonerc.rwth-aachen.de>
- * @copyright 2019, Institute for Automation of Complex Power Systems, EONERC
- *
+/* Copyright 2017-2020 Institute for Automation of Complex Power Systems,
+ *                     EONERC, RWTH Aachen University
  * DPsim
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * any later version.
- *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
- *
  * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
  *********************************************************************************/
 
 #include <cps/CIM/Reader.h>
@@ -70,7 +66,7 @@ int main(int argc, char** argv){
 		"Rootnet_FULL_NE_06J16h_EQ.xml",
 		"Rootnet_FULL_NE_06J16h_SV.xml",
 		"Rootnet_FULL_NE_06J16h_TP.xml"
-	}, "Examples/CIM/CIGRE_MV_NoTap", "CIMPATH");
+	}, "Examples/CIM/grid-data/CIGRE_MV/NEPLAN/CIGRE_MV_no_tapchanger_With_LoadFlow_Results", "CIMPATH");
 
 	String simName = "Shmem_CIGRE-MV-NoTap";
 	CPS::Real system_freq = 50;
@@ -79,7 +75,7 @@ int main(int argc, char** argv){
     SystemTopology sys = reader.loadCIM(system_freq, filenames, CPS::Domain::SP);
 
 	CSVReader csvreader(simName, loadProfilePath, assignList, Logger::Level::info);
-	csvreader.assignLoadProfile(sys, 1, 1, args.duration, CSVReader::Mode::MANUAL);
+	csvreader.assignLoadProfile(sys, 0, args.timeStep, args.duration, CSVReader::Mode::MANUAL);
 
 	RealTimeSimulation sim(simName, sys, args.timeStep, args.duration, args.solver.domain, args.solver.type, args.logLevel);
 	Interface intf("/dpsim1-villas", "/villas-dpsim1");
@@ -97,7 +93,7 @@ int main(int argc, char** argv){
 			continue;
 		}
 
-		auto n_stat = std::dynamic_pointer_cast<CPS::SP::Node>(n);
+		auto n_stat = std::dynamic_pointer_cast<CPS::SP::SimNode>(n);
 		auto v = n_stat->attributeMatrixComp("v")->coeff(0, 0);
 
         std::cout << "Signal " << (i*2)+0 << ": Mag  " << n->name() << std::endl;

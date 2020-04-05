@@ -1,21 +1,17 @@
-/**
- * @author Jan Dinkelbach <jdinkelbach@eonerc.rwth-aachen.de>
- * @copyright 2019, Institute for Automation of Complex Power Systems, EONERC
- *
+/* Copyright 2017-2020 Institute for Automation of Complex Power Systems,
+ *                     EONERC, RWTH Aachen University
  * DPsim
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * any later version.
- *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
- *
  * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
  *********************************************************************************/
 
 #include <cps/CIM/Reader.h>
@@ -38,7 +34,7 @@ int main(int argc, char** argv){
 	#elif defined(__linux__) || defined(__APPLE__)
 		String loadProfilePath("../sogno-grid-data-public/Load_Data/CIGRE_MV_NoTap/");
 	#endif
-	
+
 	std::map<String,String> assignList = {
 	// {load mRID, file name}
 	{"LOAD-H-1", "Load_H_1"},
@@ -62,26 +58,31 @@ int main(int argc, char** argv){
 
 	// Find CIM files
 	std::list<fs::path> filenames;
-	if (argc <= 1) {
-		filenames = DPsim::Utils::findFiles({
-			"Rootnet_FULL_NE_06J16h_DI.xml",
-			"Rootnet_FULL_NE_06J16h_EQ.xml",
-			"Rootnet_FULL_NE_06J16h_SV.xml",
-			"Rootnet_FULL_NE_06J16h_TP.xml"
-		}, "Examples/CIM/grid-data/CIGRE_MV/NEPLAN/CIGRE_MV_no_tapchanger_With_LoadFlow_Results", "CIMPATH");
-	}
-	else {
-		filenames = std::list<fs::path>(argv + 1, argv + argc);
-	}
+	filenames = DPsim::Utils::findFiles({
+		"Rootnet_FULL_NE_06J16h_DI.xml",
+		"Rootnet_FULL_NE_06J16h_EQ.xml",
+		"Rootnet_FULL_NE_06J16h_SV.xml",
+		"Rootnet_FULL_NE_06J16h_TP.xml"
+	}, "Examples/CIM/grid-data/CIGRE_MV/NEPLAN/CIGRE_MV_no_tapchanger_With_LoadFlow_Results", "CIMPATH");
 
 	String simName = "CIGRE-MV-NoTap-LoadProfiles";
 	CPS::Real system_freq = 50;
 
+	CPS::Real time_begin = 0;
+	CPS::Real time_step = 1;
+	CPS::Real time_end = 300;
+
+	if (argc > 1) {
+		CommandLineArgs args(argc, argv);
+		time_step = args.timeStep;
+		time_end = args.duration;
+	}
+
     CIM::Reader reader(simName, Logger::Level::info, Logger::Level::off);
     SystemTopology system = reader.loadCIM(system_freq, filenames, CPS::Domain::SP);
-	
+
 	CSVReader csvreader(simName, loadProfilePath, assignList, Logger::Level::info);
-	csvreader.assignLoadProfile(system, 0, 1.5, 15, CSVReader::Mode::MANUAL);
+	csvreader.assignLoadProfile(system, time_begin, time_step, time_end, CSVReader::Mode::MANUAL);
 
 	auto logger = DPsim::DataLogger::make(simName);
 	for (auto node : system.mNodes)
@@ -141,7 +142,7 @@ int main(int argc, char** argv){
 		}
 	}
 
-	Simulation sim(simName, system, 1.5, 15, Domain::SP, Solver::Type::NRP, Logger::Level::info, true);
+	Simulation sim(simName, system, time_step, time_end, Domain::SP, Solver::Type::NRP, Logger::Level::info, true);
 
 	sim.addLogger(logger);
 	sim.run();

@@ -1,21 +1,17 @@
-/**
- * @author Markus Mirz <mmirz@eonerc.rwth-aachen.de>
- * @copyright 2017-2018, Institute for Automation of Complex Power Systems, EONERC
- *
+/* Copyright 2017-2020 Institute for Automation of Complex Power Systems,
+ *                     EONERC, RWTH Aachen University
  * DPsim
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * any later version.
- *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
- *
  * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
  *********************************************************************************/
 
 #include <chrono>
@@ -77,9 +73,10 @@ Simulation::Simulation(String name, SystemTopology system,
 	Real timeStep, Real finalTime,
 	Domain domain, Solver::Type solverType,
 	Logger::Level logLevel,
+	Bool powerFlowInit,
 	Bool steadyStateInit,
 	Bool splitSubnets,
-	Component::List tearComponents) :
+	IdentifiedObject::List tearComponents) :
 	Simulation(name, logLevel) {
 
 	mTimeStep = timeStep;
@@ -87,6 +84,7 @@ Simulation::Simulation(String name, SystemTopology system,
 	mDomain = domain;
 	mSystem = system;
 	mSolverType = solverType;
+	mPowerFlowInit = powerFlowInit;
 	mSteadyStateInit = steadyStateInit;
 	mSplitSubnets = splitSubnets;
 	mTearComponents = tearComponents;
@@ -108,7 +106,10 @@ void Simulation::initialize() {
 		createSolvers<Real>(mSystem, mTearComponents);
 		break;
 	case Domain::SP:
-		mSolvers.push_back(std::make_shared<PFSolverPowerPolar>(mName, mSystem, mTimeStep, mLogLevel));
+		if(mSolverType==Solver::Type::MNA)
+			createSolvers<Complex>(mSystem, mTearComponents);
+		else
+			mSolvers.push_back(std::make_shared<PFSolverPowerPolar>(mName, mSystem, mTimeStep, mLogLevel));
 		break;
 	}
 
@@ -123,7 +124,7 @@ void Simulation::initialize() {
 template <typename VarType>
 void Simulation::createSolvers(
 	CPS::SystemTopology& system,
-	Component::List& tearComponents) {
+	IdentifiedObject::List& tearComponents) {
 
 	std::vector<SystemTopology> subnets;
 	// The Diakoptics solver splits the system at a later point.

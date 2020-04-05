@@ -1,22 +1,17 @@
-/** SynGenDPBalancedResLoad Example
- *
- * @author Markus Mirz <mmirz@eonerc.rwth-aachen.de>
- * @copyright 2017-2018, Institute for Automation of Complex Power Systems, EONERC
- *
+/* Copyright 2017-2020 Institute for Automation of Complex Power Systems,
+ *                     EONERC, RWTH Aachen University
  * DPsim
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * any later version.
- *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
- *
  * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
  *********************************************************************************/
 
 #include <DPsim.h>
@@ -74,13 +69,13 @@ void doSim(int threads, int generators, int repNumber) {
 			initTerminalVolt * sin(initVoltAngle - 2 * PI / 3)),
 		Complex(initTerminalVolt * cos(initVoltAngle + 2 * PI / 3),
 			initTerminalVolt * sin(initVoltAngle + 2 * PI / 3)) });
-	auto nodeCenter = Node::make("n_center", PhaseType::ABC);
+	auto nodeCenter = SimNode::make("n_center", PhaseType::ABC);
 
 	SystemNodeList nodes({nodeCenter});
 	SystemComponentList components;
 
 	for (int i = 0; i < generators; i++) {
-		auto node = Node::make("n_" + std::to_string(i), PhaseType::ABC, initVoltGen);
+		auto node = SimNode::make("n_" + std::to_string(i), PhaseType::ABC, initVoltGen);
 		nodes.push_back(node);
 
 		auto gen = Ph3::SynchronGeneratorDQODE::make("Gen" + std::to_string(i));
@@ -99,7 +94,7 @@ void doSim(int threads, int generators, int repNumber) {
 		// Connections
 		gen->connect({node});
 		line->connect({node, nodeCenter});
-		genLoad->connect({node, Node::GND});
+		genLoad->connect({node, SimNode::GND});
 
 		components.push_back(gen);
 		components.push_back(line);
@@ -108,7 +103,7 @@ void doSim(int threads, int generators, int repNumber) {
 
 	auto centerLoad = Ph3::SeriesResistor::make("R_center");
 	centerLoad->setParameters(Rcenter);
-	centerLoad->connect({nodeCenter, Node::GND});
+	centerLoad->connect({nodeCenter, SimNode::GND});
 	components.push_back(centerLoad);
 
 	// System

@@ -1,22 +1,17 @@
-/** Example of shared memory interface
- *
- * @author Steffen Vogel <stvogel@eonerc.rwth-aachen.de>
- * @copyright 2017-2018, Institute for Automation of Complex Power Systems, EONERC
- *
+/* Copyright 2017-2020 Institute for Automation of Complex Power Systems,
+ *                     EONERC, RWTH Aachen University
  * DPsim
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * any later version.
- *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
- *
  * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
  *********************************************************************************/
 
 #include <DPsim.h>
@@ -49,9 +44,9 @@ int main(int argc, char *argv[]) {
 
 	if (String(argv[1]) == "0") {
 		// Nodes
-		auto n1 = Node::make("n1");
-		auto n2 = Node::make("n2");
-		auto n3 = Node::make("n3");
+		auto n1 = SimNode::make("n1");
+		auto n2 = SimNode::make("n2");
+		auto n3 = SimNode::make("n3");
 
 		// Components
 		auto evs = VoltageSource::make("v_t");
@@ -60,8 +55,8 @@ int main(int argc, char *argv[]) {
 		auto r1 = Resistor::make("r_1");
 
 		// Topology
-		evs->connect({ Node::GND, n3 });
-		vs->connect({ Node::GND, n1 });
+		evs->connect({ SimNode::GND, n3 });
+		vs->connect({ SimNode::GND, n1 });
 		l1->connect({ n1, n2 });
 		r1->connect({ n2, n3 });
 
@@ -72,7 +67,7 @@ int main(int argc, char *argv[]) {
 		r1->setParameters(1);
 
 		comps = SystemComponentList{evs, vs, l1, r1};
-		nodes = SystemNodeList{Node::GND, n1, n2, n3};
+		nodes = SystemNodeList{SimNode::GND, n1, n2, n3};
 
 		evs->setAttributeRef("V_ref", intf.importComplex(0));
 		intf.exportComplex(evs->attributeMatrixComp("i_intf")->coeff(0, 0), 0);
@@ -80,8 +75,8 @@ int main(int argc, char *argv[]) {
 	}
 	else if (String(argv[1]) == "1") {
 		// Nodes
-		auto n4 = Node::make("n4");
-		auto n5 = Node::make("n5");
+		auto n4 = SimNode::make("n4");
+		auto n5 = SimNode::make("n5");
 
 		// Components
 		auto ecs = CurrentSource::make("v_s");
@@ -90,10 +85,10 @@ int main(int argc, char *argv[]) {
 		auto sw = Ph1::Switch::make("sw");
 
 		// Topology
-		ecs->connect({ Node::GND, n4 });
-		r2A->connect({ Node::GND, n4 });
+		ecs->connect({ SimNode::GND, n4 });
+		r2A->connect({ SimNode::GND, n4 });
 		sw->connect({ n4, n5 });
-		r2B->connect({ Node::GND, n5 });
+		r2B->connect({ SimNode::GND, n5 });
 
 		// Parameters
 		ecs->setParameters(Complex(0, 0));
@@ -102,7 +97,7 @@ int main(int argc, char *argv[]) {
 		sw->setParameters(1e9, 0.1, false);
 
 		comps = SystemComponentList{ecs, sw, r2A, r2B};
-		nodes = SystemNodeList{Node::GND, n4, n5};
+		nodes = SystemNodeList{SimNode::GND, n4, n5};
 
 		ecs->setAttributeRef("I_ref", intf.importComplex(0));
 		intf.exportComplex(ecs->attributeMatrixComp("v_intf")->coeff(0, 0), 0);

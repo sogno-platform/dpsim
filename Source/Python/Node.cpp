@@ -1,22 +1,17 @@
-/** Python node
- *
- * @author Steffen Vogel <stvogel@eonerc.rwth-aachen.de>
- * @copyright 2018, Institute for Automation of Complex Power Systems, EONERC
- *
+/* Copyright 2017-2020 Institute for Automation of Complex Power Systems,
+ *                     EONERC, RWTH Aachen University
  * DPsim
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * any later version.
- *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
- *
  * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
  *********************************************************************************/
 
 #include <dpsim/Python/Node.h>
@@ -48,9 +43,9 @@ CPS::TopologicalNode::List Python::nodesFromPython(PyObject* list) {
 	}
 
 template<typename VarType>
-typename CPS::Node<VarType>::List Python::Node<VarType>::fromPython(PyObject* list)
+typename CPS::SimNode<VarType>::List Python::Node<VarType>::fromPython(PyObject* list)
 {
-	typename CPS::Node<VarType>::List nodes;
+	typename CPS::SimNode<VarType>::List nodes;
 
 	if (!PyList_Check(list))
 		throw std::invalid_argument("argument is not a list");
@@ -74,7 +69,7 @@ PyObject* Python::Node<VarType>::newfunc(PyTypeObject *type, PyObject *args, PyO
 
 	self = (Python::Node<VarType>*) type->tp_alloc(type, 0);
 	if (self) {
-		using SharedNodePtr = std::shared_ptr<CPS::Node<VarType>>;
+		using SharedNodePtr = std::shared_ptr<CPS::SimNode<VarType>>;
 
 		new (&self->node) SharedNodePtr();
 	}
@@ -94,7 +89,7 @@ int Python::Node<VarType>::init(Python::Node<VarType> *self, PyObject *args, PyO
 		return -1;
 	}
 
-	self->node = std::make_shared<CPS::Node<VarType>>(uid, CPS::PhaseType::Single, std::vector<CPS::Complex>({ initialVoltage }));
+	self->node = std::make_shared<CPS::SimNode<VarType>>(uid, CPS::PhaseType::Single, std::vector<CPS::Complex>({ initialVoltage }));
 
 	return 0;
 };
@@ -107,7 +102,7 @@ void Python::Node<VarType>::dealloc(Python::Node<VarType> *self)
 	// the vectors here to free the associated memory.
 
 	// This is a workaround for a compiler bug: https://stackoverflow.com/a/42647153/8178705
-	using SharedNodePtr = std::shared_ptr<CPS::Node<VarType>>;
+	using SharedNodePtr = std::shared_ptr<CPS::SimNode<VarType>>;
 
 	if (self->node)
 		self->node.~SharedNodePtr();
@@ -148,8 +143,8 @@ PyObject * Python::Node<VarType>::gnd(PyObject *self, PyObject *args) {
 	if (!Py_GND) {
 		Python::Node<VarType> *pyNode = PyObject_New(Node<VarType>, &Python::Node<VarType>::type);
 
-		new (&pyNode->node) typename CPS::Node<VarType>::Ptr(nullptr);
-		pyNode->node = CPS::Node<VarType>::GND;
+		new (&pyNode->node) typename CPS::SimNode<VarType>::Ptr(nullptr);
+		pyNode->node = CPS::SimNode<VarType>::GND;
 
 		Py_GND = (PyObject *) pyNode;
 	}

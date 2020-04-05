@@ -1,22 +1,9 @@
-/**
- * @file
- * @author Steffen Vogel <stvogel@eonerc.rwth-aachen.de>
- * @copyright 2017-2018, Institute for Automation of Complex Power Systems, EONERC
+/* Copyright 2017-2020 Institute for Automation of Complex Power Systems,
+ *                     EONERC, RWTH Aachen University
  *
- * DPsim
- *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at https://mozilla.org/MPL/2.0/.
  *********************************************************************************/
 
 #pragma once
@@ -31,7 +18,7 @@ namespace fs = std::experimental::filesystem;
 #include <dpsim/Scheduler.h>
 #include <cps/PtrFactory.h>
 #include <cps/Attribute.h>
-#include <cps/Node.h>
+#include <cps/SimNode.h>
 #include <cps/Task.h>
 
 namespace DPsim {
@@ -78,7 +65,7 @@ namespace DPsim {
 		void addAttribute(const String &name, CPS::MatrixCompAttribute::Ptr attr, UInt rowsMax = 0, UInt colsMax = 0);
 
 		template<typename VarType>
-		void addNode(typename CPS::Node<VarType>::Ptr node) {
+		void addNode(typename CPS::SimNode<VarType>::Ptr node) {
 			addAttribute(node->name() + ".voltage", node->attributeMatrix("voltage"));
 		}
 

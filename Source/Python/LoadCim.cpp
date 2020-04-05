@@ -1,23 +1,17 @@
-/** Python components
- *
- * @author Georg Reinke <georg.reinke@rwth-aachen.de>
- * @author Steffen Vogel <stvogel@eonerc.rwth-aachen.de>
- * @copyright 2017-2018, Institute for Automation of Complex Power Systems, EONERC
- *
+/* Copyright 2017-2020 Institute for Automation of Complex Power Systems,
+ *                     EONERC, RWTH Aachen University
  * DPsim
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * any later version.
- *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
- *
  * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
  *********************************************************************************/
 
 #include <dpsim/Config.h>
@@ -129,11 +123,11 @@ PyObject* Python::LoadCim(PyObject* self, PyObject* args, PyObject *kwargs) {
 			return nullptr;
 		}
 
-		auto dpNode = std::dynamic_pointer_cast<CPS::Node<CPS::Complex>>(node);
+		auto dpNode = std::dynamic_pointer_cast<CPS::SimNode<CPS::Complex>>(node);
 		if (dpNode) {
 			Python::Node<CPS::Complex> *pyNode = PyObject_New(Python::Node<CPS::Complex>, &Python::Node<CPS::Complex>::type);
 
-			using SharedNodePtr = std::shared_ptr<CPS::Node<CPS::Complex>>;
+			using SharedNodePtr = std::shared_ptr<CPS::SimNode<CPS::Complex>>;
 			new (&pyNode->node) SharedNodePtr();
 
 			pyNode->node = dpNode;
@@ -142,11 +136,11 @@ PyObject* Python::LoadCim(PyObject* self, PyObject* args, PyObject *kwargs) {
 			continue;
 		}
 
-		auto emtNode = std::dynamic_pointer_cast<CPS::Node<CPS::Real>>(node);
+		auto emtNode = std::dynamic_pointer_cast<CPS::SimNode<CPS::Real>>(node);
 		if (emtNode) {
 			Python::Node<CPS::Real> *pyNode = PyObject_New(Python::Node<CPS::Real>, &Python::Node<CPS::Real>::type);
 
-			using SharedNodePtr = std::shared_ptr<CPS::Node<CPS::Real>>;
+			using SharedNodePtr = std::shared_ptr<CPS::SimNode<CPS::Real>>;
 			new (&pyNode->node) SharedNodePtr();
 
 			pyNode->node = emtNode;

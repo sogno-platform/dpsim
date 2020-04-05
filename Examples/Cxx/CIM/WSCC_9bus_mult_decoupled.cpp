@@ -1,21 +1,17 @@
-/**
- * @author Markus Mirz <mmirz@eonerc.rwth-aachen.de>
- * @copyright 2017-2018, Institute for Automation of Complex Power Systems, EONERC
- *
+/* Copyright 2017-2020 Institute for Automation of Complex Power Systems,
+ *                     EONERC, RWTH Aachen University
  * DPsim
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * any later version.
- *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
- *
  * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
  *********************************************************************************/
 
 #include <iostream>
@@ -48,8 +44,8 @@ void multiply_decoupled(SystemTopology& sys, int copies,
 		for (int i = 0; i < nlines; i++) {
 			auto line = Signal::DecouplingLine::make(
 				"dline_" + orig_node + "_" + std::to_string(i),
-				sys.node<DP::Node>(nodeNames[i]),
-				sys.node<DP::Node>(nodeNames[i+1]),
+				sys.node<DP::SimNode>(nodeNames[i]),
+				sys.node<DP::SimNode>(nodeNames[i+1]),
 				resistance, inductance, capacitance, Logger::Level::info);
 			sys.addComponent(line);
 			sys.addComponents(line->getLineComponents());
@@ -87,7 +83,7 @@ void simulateDecoupled(std::list<fs::path> filenames, Int copies, Int threads, I
 	//			attrName = "v" + std::to_string(bus);
 	//			nodeName = "BUS" + std::to_string(bus);
 	//		}
-	//		logger->addAttribute(attrName, sys.node<DP::Node>(nodeName)->attribute("v"));
+	//		logger->addAttribute(attrName, sys.node<DP::SimNode>(nodeName)->attribute("v"));
 	//	}
 	//}
 	//sim.addLogger(logger);

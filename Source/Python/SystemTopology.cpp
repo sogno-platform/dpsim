@@ -1,22 +1,17 @@
-/** Python system tolopogy
- *
- * @author Steffen Vogel <stvogel@eonerc.rwth-aachen.de>
- * @copyright 2018, Institute for Automation of Complex Power Systems, EONERC
- *
+/* Copyright 2017-2020 Institute for Automation of Complex Power Systems,
+ *                     EONERC, RWTH Aachen University
  * DPsim
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * any later version.
- *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
- *
  * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
  *********************************************************************************/
 
 #include <cps/DP/DP_Ph1_PiLine.h>
@@ -29,9 +24,9 @@
 
 using namespace DPsim;
 
-void Python::SystemTopology::addCppComponent(CPS::Component::Ptr comp) {
+void Python::SystemTopology::addCppComponent(CPS::IdentifiedObject::Ptr comp) {
 	Python::Component* pyComp = PyObject_New(Python::Component, &Python::Component::type);
-	new (&pyComp->comp) CPS::Component::Ptr(nullptr);
+	new (&pyComp->comp) CPS::IdentifiedObject::Ptr(nullptr);
 	pyComp->comp = comp;
 
 	PyDict_SetItemString(pyComponentDict, comp->name().c_str(), (PyObject*) pyComp);
@@ -39,19 +34,19 @@ void Python::SystemTopology::addCppComponent(CPS::Component::Ptr comp) {
 }
 
 void Python::SystemTopology::addCppNode(CPS::TopologicalNode::Ptr node) {
-	auto emtNode = std::dynamic_pointer_cast<CPS::Node<CPS::Real>>(node);
+	auto emtNode = std::dynamic_pointer_cast<CPS::SimNode<CPS::Real>>(node);
 	if (emtNode) {
 		Python::Node<CPS::Real>* pyNode = PyObject_New(Python::Node<CPS::Real>, &Python::Node<CPS::Real>::type);
-		new (&pyNode->node) CPS::Node<CPS::Real>::Ptr(nullptr);
+		new (&pyNode->node) CPS::SimNode<CPS::Real>::Ptr(nullptr);
 		pyNode->node = emtNode;
 
 		PyDict_SetItemString(pyNodeDict, node->name().c_str(), (PyObject*) pyNode);
 		Py_DECREF(pyNode);
 	}
-	auto dpNode = std::dynamic_pointer_cast<CPS::Node<CPS::Complex>>(node);
+	auto dpNode = std::dynamic_pointer_cast<CPS::SimNode<CPS::Complex>>(node);
 	if (dpNode) {
 		Python::Node<CPS::Complex>* pyNode = PyObject_New(Python::Node<CPS::Complex>, &Python::Node<CPS::Complex>::type);
-		new (&pyNode->node) CPS::Node<CPS::Complex>::Ptr(nullptr);
+		new (&pyNode->node) CPS::SimNode<CPS::Complex>::Ptr(nullptr);
 		pyNode->node = dpNode;
 
 		PyDict_SetItemString(pyNodeDict, node->name().c_str(), (PyObject*) pyNode);
@@ -163,7 +158,7 @@ PyObject* Python::SystemTopology::autoDecouple(SystemTopology* self, PyObject* a
 	if (!PyArg_ParseTuple(args, "d|d", &timestep, &threshold))
 		return nullptr;
 
-	CPS::Component::List newComponents;
+	CPS::IdentifiedObject::List newComponents;
 	for (auto it = self->sys->mComponents.begin(); it != self->sys->mComponents.end(); ) {
 		auto line = std::dynamic_pointer_cast<CPS::DP::Ph1::PiLine>(*it);
 		if (line) {
@@ -316,7 +311,7 @@ int Python::SystemTopology::init(Python::SystemTopology *self, PyObject *args, P
 		return -1;
 	}
 
-	CPS::Component::List compList;
+	CPS::IdentifiedObject::List compList;
 	CPS::TopologicalNode::List nodeList;
 
 	if (pyNodeList) {

@@ -1,23 +1,9 @@
-/** Event system
+/* Copyright 2017-2020 Institute for Automation of Complex Power Systems,
+ *                     EONERC, RWTH Aachen University
  *
- * @file
- * @author Steffen Vogel <stvogel@eonerc.rwth-aachen.de>
- * @copyright 2018, Institute for Automation of Complex Power Systems, EONERC
- *
- * DPsim
- *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at https://mozilla.org/MPL/2.0/.
  *********************************************************************************/
 
 #pragma once
@@ -30,6 +16,7 @@
 #include <cps/Attribute.h>
 #include <cps/Logger.h>
 #include <cps/Base/Base_Ph1_Switch.h>
+#include <cps/Base/Base_Ph3_Switch.h>
 #include <cps/PtrFactory.h>
 
 namespace DPsim {
@@ -104,6 +91,30 @@ namespace DPsim {
 				mSwitch->open();
 		}
 	};
+
+	class SwitchEvent3Ph : public Event, public SharedFactory<SwitchEvent3Ph> {
+
+	protected:
+		std::shared_ptr<CPS::Base::Ph3::Switch> mSwitch;
+		CPS::Bool mNewState;
+
+	public:
+		using SharedFactory<SwitchEvent3Ph>::make;
+
+		SwitchEvent3Ph(CPS::Real t, std::shared_ptr<CPS::Base::Ph3::Switch> sw, CPS::Bool state) :
+			Event(t),
+			mSwitch(sw),
+			mNewState(state)
+		{ }
+
+		void execute() {
+			if (mNewState)
+				mSwitch->closeSwitch();
+			else
+				mSwitch->openSwitch();
+		}
+	};
+
 
 	class EventQueue {
 

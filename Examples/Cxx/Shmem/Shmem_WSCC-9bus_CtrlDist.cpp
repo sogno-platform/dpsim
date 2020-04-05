@@ -1,23 +1,17 @@
-/** CIM Test
- *
- * @author Markus Mirz <mmirz@eonerc.rwth-aachen.de>
- * @author Steffen Vogel <stvogel@eonerc.rwth-aachen.de>
- * @copyright 2017-2018, Institute for Automation of Complex Power Systems, EONERC
- *
+/* Copyright 2017-2020 Institute for Automation of Complex Power Systems,
+ *                     EONERC, RWTH Aachen University
  * DPsim
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * any later version.
- *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
- *
  * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
  *********************************************************************************/
 
 #include <iostream>
@@ -56,12 +50,12 @@ int main(int argc, char *argv[]) {
 
 		// Extend system with controllable load (Profile)
 		auto load_profile = PQLoadCS::make("load_cs_profile", 0, 0, 230000, Logger::Level::info);
-		load_profile->connect({ sys.node<DP::Node>("BUS7") });
+		load_profile->connect({ sys.node<DP::SimNode>("BUS7") });
 		sys.mComponents.push_back(load_profile);
 
 		// Extend system with controllable load
 		auto ecs = CurrentSource::make("i_intf", Complex(0, 0), Logger::Level::debug);
-		ecs->connect({ sys.node<DP::Node>("BUS4"), DP::Node::GND });
+		ecs->connect({ sys.node<DP::SimNode>("BUS4"), DP::SimNode::GND });
 		sys.mComponents.push_back(ecs);
 
 		RealTimeSimulation sim(args.name + "_1", sys, args.timeStep, args.duration,
@@ -110,12 +104,12 @@ int main(int argc, char *argv[]) {
 
 	if (args.scenario == 1) {
 		// Nodes
-		auto n1 = DP::Node::make("n1", PhaseType::Single, std::vector<Complex>({Complex(02.180675e+05, -1.583367e+04)}));
+		auto n1 = DP::SimNode::make("n1", PhaseType::Single, std::vector<Complex>({Complex(02.180675e+05, -1.583367e+04)}));
 
 		// Add interface voltage source
 		auto evs = VoltageSource::make("v_intf", Logger::Level::debug);
 		evs->setParameters(Complex(0, 0));
-		evs->connect({ DP::Node::GND, n1 });
+		evs->connect({ DP::SimNode::GND, n1 });
 
 		// Extend system with controllable load
 		auto load = PQLoadCS::make("load_cs", 0, 0, 230000);

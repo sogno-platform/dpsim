@@ -1,22 +1,17 @@
-/** SynGenDPBalancedResLoad Example
- *
- * @author Markus Mirz <mmirz@eonerc.rwth-aachen.de>
- * @copyright 2017-2018, Institute for Automation of Complex Power Systems, EONERC
- *
+/* Copyright 2017-2020 Institute for Automation of Complex Power Systems,
+ *                     EONERC, RWTH Aachen University
  * DPsim
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * any later version.
- *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
- *
  * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
  *********************************************************************************/
 
 #include <DPsim.h>
@@ -68,7 +63,7 @@ int main(int argc, char* argv[]) {
 		Complex(initTerminalVolt * cos(initVoltAngle), initTerminalVolt * sin(initVoltAngle)),
 		Complex(initTerminalVolt * cos(initVoltAngle - 2 * PI / 3), initTerminalVolt * sin(initVoltAngle - 2 * PI / 3)),
 		Complex(initTerminalVolt * cos(initVoltAngle + 2 * PI / 3), initTerminalVolt * sin(initVoltAngle + 2 * PI / 3)) });
-	auto n1 = Node::make("n1", PhaseType::ABC, initVoltN1);
+	auto n1 = SimNode::make("n1", PhaseType::ABC, initVoltN1);
 
 	// Components
 	auto gen = Ph3::SynchronGeneratorDQODE::make("DP_SynGen", Logger::Level::debug);
@@ -86,8 +81,8 @@ int main(int argc, char* argv[]) {
 
 	// Connections
 	gen->connect({n1});
-	res->connect({Node::GND, n1});
-	fault->connect({Node::GND, n1});
+	res->connect({SimNode::GND, n1});
+	fault->connect({SimNode::GND, n1});
 
 	// Logging
 	auto logger = DataLogger::make(simName);

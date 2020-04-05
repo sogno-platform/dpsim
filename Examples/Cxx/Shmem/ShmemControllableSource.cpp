@@ -1,22 +1,17 @@
-/** Example of shared memory interface
- *
- * @author Steffen Vogel <stvogel@eonerc.rwth-aachen.de>
- * @copyright 2017-2018, Institute for Automation of Complex Power Systems, EONERC
- *
+/* Copyright 2017-2020 Institute for Automation of Complex Power Systems,
+ *                     EONERC, RWTH Aachen University
  * DPsim
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * any later version.
- *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
- *
  * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
  *********************************************************************************/
 
 #include <DPsim.h>
@@ -33,7 +28,7 @@ int main(int argc, char *argv[]) {
 	Interface intf("/dpsim01", "/dpsim10");
 
 	// Nodes
-	auto n1 = Node::make("n1");
+	auto n1 = SimNode::make("n1");
 
 	// Components
 	auto ecs = CurrentSource::make("v_intf");
@@ -41,8 +36,8 @@ int main(int argc, char *argv[]) {
 	auto r1 = Resistor::make("r_1");
 	r1->setParameters(1);
 
-	ecs->connect({ Node::GND, n1 });
-	r1->connect({ Node::GND, n1 });
+	ecs->connect({ SimNode::GND, n1 });
+	r1->connect({ SimNode::GND, n1 });
 
 	ecs->setAttributeRef("I_ref", intf.importComplex(0));
 	intf.exportComplex(ecs->attributeMatrixComp("v_intf")->coeff(0, 0), 0);

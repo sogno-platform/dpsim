@@ -1,21 +1,9 @@
-/** PFSolver
- * @author Jan Dinkelbach <jdinkelbach@eonerc.rwth-aachen.de>
- * @copyright 2019, Institute for Automation of Complex Power Systems, EONERC
+/* Copyright 2017-2020 Institute for Automation of Complex Power Systems,
+ *                     EONERC, RWTH Aachen University
  *
- * DPsim
- *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at https://mozilla.org/MPL/2.0/.
  *********************************************************************************/
 
 #include <dpsim/PFSolver.h>
@@ -49,10 +37,13 @@ void PFSolver::initialize(){
             mExternalGrids.push_back(extnet);
 		else if (std::shared_ptr<CPS::SP::Ph1::Shunt> shunt = std::dynamic_pointer_cast<CPS::SP::Ph1::Shunt>(comp))
             mShunts.push_back(shunt);
+		else if(std::shared_ptr<CPS::SP::Ph1::SolidStateTransformer> sst = std::dynamic_pointer_cast<CPS::SP::Ph1::SolidStateTransformer>(comp)){
+			mSolidStateTransformers.push_back(sst);
+		}
     }
 
 	setBaseApparentPower();
-    initializeComponents();      
+    initializeComponents();
     determinePFBusType();
     composeAdmittanceMatrix();
 
@@ -63,12 +54,12 @@ void PFSolver::initialize(){
 
 void PFSolver::initializeComponents(){
     for (auto comp : mSystem.mComponents) {
-        std::dynamic_pointer_cast<PowerComponent<Complex>>(comp)->updateSimNodes();
+        std::dynamic_pointer_cast<SimPowerComp<Complex>>(comp)->updateMatrixNodeIndices();
     }
 
 	mSLog->info("-- Initialize components from terminals or nodes of topology");
 	for (auto comp : mSystem.mComponents) {
-		auto pComp = std::dynamic_pointer_cast<PowerComponent<Complex>>(comp);
+		auto pComp = std::dynamic_pointer_cast<SimPowerComp<Complex>>(comp);
 		if (!pComp)	continue;
 		pComp->initializeFromPowerflow(mSystem.mSystemFrequency);
 	}
@@ -93,7 +84,10 @@ void PFSolver::initializeComponents(){
 	for(auto gen : mSynchronGenerators) {
 		gen->calculatePerUnitParameters(mBaseApparentPower, mSystem.mSystemOmega);
 	}
-	
+	for(auto sst : mSolidStateTransformers){
+		sst->calculatePerUnitParameters(mBaseApparentPower, mSystem.mSystemOmega);
+	}
+
 }
 
 void PFSolver::setBaseApparentPower() {
@@ -113,7 +107,7 @@ void PFSolver::setBaseApparentPower() {
 	else
 	{
 		mBaseApparentPower = 100000000;
-		mSLog->warn("No suitable quantity found for setting mBaseApparentPower. Using {} VA.", mBaseApparentPower);		
+		mSLog->warn("No suitable quantity found for setting mBaseApparentPower. Using {} VA.", mBaseApparentPower);
 	}
 	mSLog->info("Base power = {} VA", mBaseApparentPower);
 }
@@ -124,7 +118,7 @@ void PFSolver::determinePFBusType() {
 	mVDBusIndices.clear();
 
     // Determine powerflow bus type of each node through analysis of system topology
-	for (auto node : mSystem.mNodes) {    
+	for (auto node : mSystem.mNodes) {
 		bool connectedPV = false;
 		bool connectedPQ = false;
 		bool connectedVD = false;
@@ -147,42 +141,46 @@ void PFSolver::determinePFBusType() {
 				if (extnet->mPowerflowBusType == CPS::PowerflowBusType::VD) {
 					connectedVD = true;
 				}
+				else if (extnet->mPowerflowBusType == CPS::PowerflowBusType::PV) {
+					connectedPV = true;
+				}
+
 			}
 		}
 
 		// determine powerflow bus types according connected type of connected components
 		// only PQ type component connected -> set as PQ bus
-		if (!connectedPV && connectedPQ && !connectedVD) { 
-			mPQBusIndices.push_back(node->simNode());
+		if (!connectedPV && connectedPQ && !connectedVD) {
+			mPQBusIndices.push_back(node->matrixNodeIndex());
 			mPQBuses.push_back(node);
 		} // no component connected -> set as PQ bus (P & Q will be zero)
 		else if (!connectedPV && !connectedPQ && !connectedVD) {
-			mPQBusIndices.push_back(node->simNode());
+			mPQBusIndices.push_back(node->matrixNodeIndex());
 			mPQBuses.push_back(node);
 		} // only PV type component connected -> set as PV bus
 		else if (connectedPV && !connectedPQ && !connectedVD) {
-			mPVBusIndices.push_back(node->simNode());
+			mPVBusIndices.push_back(node->matrixNodeIndex());
 			mPVBuses.push_back(node);
 		} // PV and PQ type component connected -> set as PV bus (TODO: bus type should be modifiable by user afterwards)
 		else if (connectedPV && connectedPQ && !connectedVD) {
-			mPVBusIndices.push_back(node->simNode());
+			mPVBusIndices.push_back(node->matrixNodeIndex());
 			mPVBuses.push_back(node);
-			mSLog->info("Note: node with uuid {} set as PV bus. Both PV and PQ type components were connected.", node->attribute<String>("uid")->get());	
+			mSLog->info("Note: node with uuid {} set as PV bus. Both PV and PQ type components were connected.", node->attribute<String>("uid")->get());
 		} // only VD type component connected -> set as VD bus
 		else if (!connectedPV && !connectedPQ && connectedVD) {
-			mVDBusIndices.push_back(node->simNode());
+			mVDBusIndices.push_back(node->matrixNodeIndex());
 			mVDBuses.push_back(node);
 		} // VD and PV type component connect -> set as VD bus
 		else if (connectedPV && !connectedPQ && connectedVD) {
-			mVDBusIndices.push_back(node->simNode());
+			mVDBusIndices.push_back(node->matrixNodeIndex());
 			mVDBuses.push_back(node);
 			mSLog->info("Note: node with uuid {} set as VD bus. Both VD and PV type components were connected.", node->attribute<String>("uid")->get());
 		} // VD, PV and PQ type component connect -> set as VD bus
 		else if (connectedPV && connectedPQ && connectedVD) {
-			mVDBusIndices.push_back(node->simNode());
+			mVDBusIndices.push_back(node->matrixNodeIndex());
 			mVDBuses.push_back(node);
 			mSLog->info("Note: node with uuid {} set as VD bus. VD, PV and PQ type components were connected.", node->attribute<String>("uid")->get());
-		} 
+		}
 		else {
 			std::stringstream ss;
 			ss << "Node>>" << node->name() << ": combination of connected components is invalid";
@@ -255,7 +253,7 @@ void PFSolver::composeAdmittanceMatrix() {
 	}
 	if(mLines.empty() && mTransformers.empty()) {
 		throw std::invalid_argument("There are no bus");
-	}	
+	}
 }
 
 CPS::Real PFSolver::G(int i, int j) {
@@ -284,14 +282,14 @@ Bool PFSolver::solvePowerflow() {
 
     mIterations = 0;
     for (unsigned i = 1; i < mMaxIterations && !isConverged; ++i) {
-		
+
         calculateJacobian();
 		auto sparseJ = mJ.sparseView();
 
 		// Solve system mJ*mX = mF
         Eigen::SparseLU<SparseMatrix>lu(sparseJ);
 
-		mX = lu.solve(mF);	/* code */	        
+		mX = lu.solve(mF);	/* code */
 
 		// Calculate new solution based on mX increments obtained from equation system
 		updateSolution();

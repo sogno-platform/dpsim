@@ -1,22 +1,17 @@
-/** SynGenDPBalancedResLoad Example
- *
- * @author Markus Mirz <mmirz@eonerc.rwth-aachen.de>
- * @copyright 2017-2018, Institute for Automation of Complex Power Systems, EONERC
- *
+/* Copyright 2017-2020 Institute for Automation of Complex Power Systems,
+ *                     EONERC, RWTH Aachen University
  * DPsim
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * any later version.
- *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
- *
  * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
  *********************************************************************************/
 
 #include <DPsim.h>
@@ -68,7 +63,7 @@ void DP_SynGenDq7odTrapez_SteadyState(Real timeStep, Real finalTime) {
 	Logger::setLogDir("logs/"+simName);
 
 	// Nodes
-	auto n1 = CPS::DP::Node::make("n1", PhaseType::ABC, initVoltN1);
+	auto n1 = CPS::DP::SimNode::make("n1", PhaseType::ABC, initVoltN1);
 
 	// Components
 	auto gen = CPS::DP::Ph3::SynchronGeneratorDQTrapez::make("SynGen");
@@ -81,7 +76,7 @@ void DP_SynGenDq7odTrapez_SteadyState(Real timeStep, Real finalTime) {
 
 	// Connections
 	gen->connect({n1});
-	res->connect({CPS::DP::Node::GND, n1});
+	res->connect({CPS::DP::SimNode::GND, n1});
 
 	auto sys = SystemTopology(60, SystemNodeList{n1}, SystemComponentList{gen, res});
 
@@ -105,7 +100,7 @@ void EMT_SynGenDq7odTrapez_SteadyState(Real timeStep, Real finalTime) {
 	Logger::setLogDir("logs/"+simName);
 
 	// Nodes
-	auto n1 = CPS::EMT::Node::make("n1", PhaseType::ABC, initVoltN1);
+	auto n1 = CPS::EMT::SimNode::make("n1", PhaseType::ABC, initVoltN1);
 
 	// Components
 	auto gen = CPS::EMT::Ph3::SynchronGeneratorDQTrapez::make("SynGen");
@@ -118,7 +113,7 @@ void EMT_SynGenDq7odTrapez_SteadyState(Real timeStep, Real finalTime) {
 
 	// Connections
 	gen->connect({n1});
-	res->connect({CPS::EMT::Node::GND, n1});
+	res->connect({CPS::EMT::SimNode::GND, n1});
 
 	auto sys = SystemTopology(60, SystemNodeList{n1}, SystemComponentList{gen, res});
 

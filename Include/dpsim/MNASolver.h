@@ -1,22 +1,9 @@
-/** MNASolver
+/* Copyright 2017-2020 Institute for Automation of Complex Power Systems,
+ *                     EONERC, RWTH Aachen University
  *
- * @author Markus Mirz <mmirz@eonerc.rwth-aachen.de>
- * @copyright 2017-2018, Institute for Automation of Complex Power Systems, EONERC
- *
- * DPsim
- *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at https://mozilla.org/MPL/2.0/.
  *********************************************************************************/
 
 #pragma once
@@ -31,8 +18,8 @@
 #include <dpsim/DataLogger.h>
 #include <cps/AttributeList.h>
 #include <cps/Solver/MNASwitchInterface.h>
-#include <cps/SignalComponent.h>
-#include <cps/PowerComponent.h>
+#include <cps/SimSignalComp.h>
+#include <cps/SimPowerComp.h>
 
 #define SWITCH_NUM 16
 
@@ -52,26 +39,26 @@ namespace DPsim {
 		/// Number of virtual nodes
 		UInt mNumVirtualNodes = 0;
 		/// Number of simulation nodes
-		UInt mNumSimNodes = 0;
+		UInt mNumMatrixNodeIndices = 0;
 		/// Number of simulation network nodes
-		UInt mNumNetSimNodes = 0;
+		UInt mNumNetMatrixNodeIndices = 0;
 		/// Number of simulation virtual nodes
-		UInt mNumVirtualSimNodes = 0;
+		UInt mNumVirtualMatrixNodeIndices = 0;
 		/// Number of harmonic nodes
-		UInt mNumHarmSimNodes = 0;
+		UInt mNumHarmMatrixNodeIndices = 0;
 		/// Flag to activate power flow based initialization.
 		/// If this is false, all voltages are initialized with zero.
 		Bool mPowerflowInitialization;
 		/// System list
 		CPS::SystemTopology mSystem;
 		///
-		typename CPS::Node<VarType>::List mNodes;
+		typename CPS::SimNode<VarType>::List mNodes;
 		///
-		CPS::MNAInterface::List mPowerComponents;
+		CPS::MNAInterface::List mMNAComponents;
 		///
 		CPS::MNASwitchInterface::List mSwitches;
 		///
-		CPS::SignalComponent::List mSignalComponents;
+		CPS::SimSignalComp::List mSimSignalComps;
 
 		// #### MNA specific attributes ####
 		/// System matrix A that is modified by matrix stamps
@@ -111,10 +98,10 @@ namespace DPsim {
 		void initializeComponents();
 		/// Initialization of system matrices and source vector
 		void initializeSystem();
-		/// Identify Nodes and PowerComponents and SignalComponents
+		/// Identify Nodes and SimPowerComps and SimSignalComps
 		void identifyTopologyObjects();
 		/// Assign simulation node index according to index in the vector.
-		void assignSimNodes();
+		void assignMatrixNodeIndices();
 		/// Creates virtual nodes inside components.
 		/// The MNA algorithm handles these nodes in the same way as network nodes.
 		void createVirtualNodes();
@@ -161,7 +148,7 @@ namespace DPsim {
 		public:
 			SolveTask(MnaSolver<VarType>& solver, Bool steadyStateInit) :
 				Task(solver.mName + ".Solve"), mSolver(solver), mSteadyStateInit(steadyStateInit) {
-				for (auto it : solver.mPowerComponents) {
+				for (auto it : solver.mMNAComponents) {
 					if (it->template attribute<Matrix>("right_vector")->get().size() != 0) {
 						mAttributeDependencies.push_back(it->attribute("right_vector"));
 					}
@@ -183,7 +170,7 @@ namespace DPsim {
 		public:
 			SolveTaskHarm(MnaSolver<VarType>& solver, Bool steadyStateInit, UInt freqIdx) :
 				Task(solver.mName + ".Solve"), mSolver(solver), mSteadyStateInit(steadyStateInit), mFreqIdx(freqIdx) {
-				for (auto it : solver.mPowerComponents) {
+				for (auto it : solver.mMNAComponents) {
 					if (it->template attribute<Matrix>("right_vector")->get().size() != 0) {
 						mAttributeDependencies.push_back(it->attribute("right_vector"));
 					}

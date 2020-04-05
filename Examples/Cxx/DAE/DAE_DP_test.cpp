@@ -1,22 +1,17 @@
-/** Reference Circuits
- *
- * @author Markus Mirz <mmirz@eonerc.rwth-aachen.de>
- * @copyright 2017-2018, Institute for Automation of Complex Power Systems, EONERC
- *
+/* Copyright 2017-2020 Institute for Automation of Complex Power Systems,
+ *                     EONERC, RWTH Aachen University
  * DPsim
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * any later version.
- *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
- *
  * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
  *********************************************************************************/
 
 #include <DPsim.h>
@@ -30,9 +25,9 @@ int main(int argc, char* argv[])
 	Real timeStep = 0.00005;
 
 	// Nodes
-	auto n1 = Node::make("n1");
-	auto n2 = Node::make("n2");
-    //auto n3 = Node::make("n3");
+	auto n1 = SimNode::make("n1");
+	auto n2 = SimNode::make("n2");
+    //auto n3 = SimNode::make("n3");
 
 	// Components
 	auto vs = VoltageSource::make("v_s");
@@ -41,10 +36,10 @@ int main(int argc, char* argv[])
 	auto rL = Resistor::make("r_load");
 
 	// Topology
-	vs->connect({ Node::GND, n1 });
+	vs->connect({ SimNode::GND, n1 });
 	rl->connect({ n1, n2 });
     //ll->connect({ n2, n3 });
-    rL->connect({ Node::GND, n2 });
+    rL->connect({ SimNode::GND, n2 });
 
 	// Parameters
 	vs->setParameters(Complex(10000, 0));
@@ -54,7 +49,7 @@ int main(int argc, char* argv[])
 
 	String simName = "DAE_DP_test" + std::to_string(timeStep);
 
-    auto sys = SystemTopology(50, SystemNodeList{Node::GND, n1, n2}, SystemComponentList{vs, rl, rL});
+    auto sys = SystemTopology(50, SystemNodeList{SimNode::GND, n1, n2}, SystemComponentList{vs, rl, rL});
 	Simulation sim(simName, sys, timeStep, 1.0, Domain::DP, Solver::Type::DAE);
 
 	sim.run();

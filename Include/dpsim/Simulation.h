@@ -1,22 +1,17 @@
-/**
- * @file
- * @author Markus Mirz <mmirz@eonerc.rwth-aachen.de>
- * @copyright 2017-2018, Institute for Automation of Complex Power Systems, EONERC
- *
+/* Copyright 2017-2020 Institute for Automation of Complex Power Systems,
+ *                     EONERC, RWTH Aachen University
  * DPsim
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * any later version.
- *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
- *
  * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
  *********************************************************************************/
 
 #pragma once
@@ -31,7 +26,7 @@
 #include <cps/Definitions.h>
 #include <cps/Logger.h>
 #include <cps/SystemTopology.h>
-#include <cps/Node.h>
+#include <cps/SimNode.h>
 
 #ifdef WITH_GRAPHVIZ
   #include <cps/Graph.h>
@@ -66,6 +61,7 @@ namespace DPsim {
 		/// System list
 		CPS::SystemTopology mSystem;
 
+
 		// #### Logging ####
 		/// Simulation log level
 		CPS::Logger::Level mLogLevel;
@@ -79,6 +75,8 @@ namespace DPsim {
 		Solver::Type mSolverType = Solver::Type::MNA;
 		///
 		Solver::List mSolvers;
+		///
+		Bool mPowerFlowInit = false;
 		/// Determines if steady-state initialization
 		/// should be executed prior to the simulation.
 		/// By default the initialization is disabled.
@@ -90,7 +88,7 @@ namespace DPsim {
 		Bool mSplitSubnets = true;
 		/// If tearing components exist, the Diakoptics
 		/// solver is selected automatically.
-		CPS::Component::List mTearComponents = CPS::Component::List();
+		CPS::IdentifiedObject::List mTearComponents = CPS::IdentifiedObject::List();
 		/// Determines if the system matrix is split into
 		/// several smaller matrices, one for each frequency.
 		/// This can only be done if the network is composed
@@ -137,7 +135,7 @@ namespace DPsim {
 			CPS::Logger::Level logLevel = CPS::Logger::Level::info);
 
 		template <typename VarType>
-		void createSolvers(CPS::SystemTopology& system, CPS::Component::List& tearComponents);
+		void createSolvers(CPS::SystemTopology& system, CPS::IdentifiedObject::List& tearComponents);
 
 		void prepSchedule();
 	public:
@@ -155,9 +153,10 @@ namespace DPsim {
 			CPS::Domain domain = CPS::Domain::DP,
 			Solver::Type solverType = Solver::Type::MNA,
 			CPS::Logger::Level logLevel = CPS::Logger::Level::info,
+			Bool powerFlowInit = false,
 			Bool steadyStateInit = false,
 			Bool splitSubnets = true,
-			CPS::Component::List tearComponents = CPS::Component::List());
+			CPS::IdentifiedObject::List tearComponents = CPS::IdentifiedObject::List());
 
 		/// Desctructor
 		virtual ~Simulation() { }
@@ -176,9 +175,11 @@ namespace DPsim {
 		///
 		void doSteadyStateInit(Bool steadyStateInit = false) { mSteadyStateInit = steadyStateInit; }
 		///
+		void doPowerFlowInit(Bool powerFlowInit) { mPowerFlowInit = powerFlowInit; }
+		///
 		void doSplitSubnets(Bool splitSubnets = true) { mSplitSubnets = splitSubnets; }
 		///
-		void setTearingComponents(CPS::Component::List tearComponents = CPS::Component::List()) {
+		void setTearingComponents(CPS::IdentifiedObject::List tearComponents = CPS::IdentifiedObject::List()) {
 			mTearComponents = tearComponents;
 		}
 		/// Set the scheduling method

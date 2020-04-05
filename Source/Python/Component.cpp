@@ -1,23 +1,17 @@
-/** Python components
- *
- * @author Georg Reinke <georg.reinke@rwth-aachen.de>
- * @author Steffen Vogel <stvogel@eonerc.rwth-aachen.de>
- * @copyright 2017-2018, Institute for Automation of Complex Power Systems, EONERC
- *
+/* Copyright 2017-2020 Institute for Automation of Complex Power Systems,
+ *                     EONERC, RWTH Aachen University
  * DPsim
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * any later version.
- *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
- *
  * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
  *********************************************************************************/
 
 #include <stdexcept>
@@ -39,13 +33,13 @@ PyObject* Python::Component::newfunc(PyTypeObject* type, PyObject *args, PyObjec
 
 void Python::Component::init(Component* self)
 {
-	new (&self->comp) CPS::Component::Ptr(nullptr);
+	new (&self->comp) CPS::IdentifiedObject::Ptr(nullptr);
 }
 
 void Python::Component::dealloc(Python::Component* self)
 {
 	// This is a workaround for a compiler bug: https://stackoverflow.com/a/42647153/8178705
-	using Ptr = CPS::Component::Ptr;
+	using Ptr = CPS::IdentifiedObject::Ptr;
 
 	self->comp.~Ptr();
 
@@ -126,9 +120,9 @@ int Python::Component::setattro(Python::Component* self, PyObject *name, PyObjec
 	return 0;
 }
 
-CPS::Component::List Python::compsFromPython(PyObject* list)
+CPS::IdentifiedObject::List Python::compsFromPython(PyObject* list)
 {
-	CPS::Component::List comps;
+	CPS::IdentifiedObject::List comps;
 
 	if (!PyList_Check(list))
 		throw std::invalid_argument("argument must be a list");
@@ -154,8 +148,8 @@ PyObject* Python::Component::connect(Component* self, PyObject* args)
 		return nullptr;
 
 	try {
-		using EMTComponent = CPS::PowerComponent<CPS::Real>;
-		using DPComponent = CPS::PowerComponent<CPS::Complex>;
+		using EMTComponent = CPS::SimPowerComp<CPS::Real>;
+		using DPComponent = CPS::SimPowerComp<CPS::Complex>;
 
 		if (auto emtComp = std::dynamic_pointer_cast<EMTComponent>(self->comp)) {
 			auto nodes = Python::Node<CPS::Real>::fromPython(pyNodes);

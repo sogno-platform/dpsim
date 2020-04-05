@@ -1,20 +1,17 @@
-/**
- * @copyright 2017 Institute for Automation of Complex Power Systems, EONERC
- *
+/* Copyright 2017-2020 Institute for Automation of Complex Power Systems,
+ *                     EONERC, RWTH Aachen University
  * DPsim
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * any later version.
- *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
- *
  * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
  *********************************************************************************/
 
 #include <DPsim.h>
@@ -29,9 +26,9 @@ void simElements() {
 	Logger::setLogDir("logs/"+simName);
 
 	// Nodes
-	auto n1 = Node::make("n1");
-	auto n2 = Node::make("n2");
-	auto vn1 = Node::make("vn1");
+	auto n1 = SimNode::make("n1");
+	auto n2 = SimNode::make("n2");
+	auto vn1 = SimNode::make("vn1");
 
 	// Components
 	auto vs = Ph1::VoltageSource::make("v_1");
@@ -53,12 +50,12 @@ void simElements() {
 	load->setParameters(10000);
 
 	// Topology
-	vs->connect({ Node::GND, n1 });
+	vs->connect({ SimNode::GND, n1 });
 	res->connect({n1, vn1});
 	ind->connect({vn1, n2});
-	cap1->connect({n1, Node::GND});
-	cap2->connect({n2, Node::GND});
-	load->connect({ n2, Node::GND });
+	cap1->connect({n1, SimNode::GND});
+	cap2->connect({n2, SimNode::GND});
+	load->connect({ n2, SimNode::GND });
 
 	auto sys = SystemTopology(50,
 		SystemNodeList{n1, n2, vn1},
@@ -86,8 +83,8 @@ void simDecoupling() {
 	Logger::setLogDir("logs/"+simName);
 
 	// Nodes
-	auto n1 = Node::make("n1");
-	auto n2 = Node::make("n2");
+	auto n1 = SimNode::make("n1");
+	auto n2 = SimNode::make("n2");
 
 	// Components
 	auto vs = Ph1::VoltageSource::make("Vsrc");
@@ -103,8 +100,8 @@ void simDecoupling() {
 	load->setParameters(10000);
 
 	// Topology
-	vs->connect({ Node::GND, n1 });
-	load->connect({ n2, Node::GND });
+	vs->connect({ SimNode::GND, n1 });
+	load->connect({ n2, SimNode::GND });
 
 	auto sys = SystemTopology(50,
 		SystemNodeList{n1, n2},
@@ -136,8 +133,8 @@ void simDecouplingEMT() {
 	Logger::setLogDir("logs/"+simName);
 
 	// Nodes
-	auto n1 = CPS::EMT::Node::make("n1");
-	auto n2 = CPS::EMT::Node::make("n2");
+	auto n1 = CPS::EMT::SimNode::make("n1");
+	auto n2 = CPS::EMT::SimNode::make("n2");
 
 	// Components
 	auto vs = CPS::EMT::Ph1::VoltageSource::make("Vsrc_emt");
@@ -153,8 +150,8 @@ void simDecouplingEMT() {
 	load->setParameters(10000);
 
 	// Topology
-	vs->connect({ CPS::EMT::Node::GND, n1 });
-	load->connect({ n2, CPS::EMT::Node::GND });
+	vs->connect({ CPS::EMT::SimNode::GND, n1 });
+	load->connect({ n2, CPS::EMT::SimNode::GND });
 
 	auto sys = SystemTopology(50,
 		SystemNodeList{n1, n2},

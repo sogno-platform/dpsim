@@ -1,21 +1,17 @@
-/**
- * @author Markus Mirz <mmirz@eonerc.rwth-aachen.de>
- * @copyright 2017-2018, Institute for Automation of Complex Power Systems, EONERC
- *
+/* Copyright 2017-2020 Institute for Automation of Complex Power Systems,
+ *                     EONERC, RWTH Aachen University
  * DPsim
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * any later version.
- *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
- *
  * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
  *********************************************************************************/
 
 #include <DPsim.h>
@@ -49,7 +45,7 @@ int main(int argc, char* argv[]) {
 	Real Rload = 1.92;
 
 	// Nodes
-	auto n1 = Node::make("n1", PhaseType::Single, std::vector<Complex>{ initVoltage });
+	auto n1 = SimNode::make("n1", PhaseType::Single, std::vector<Complex>{ initVoltage });
 
 	// Components
 	auto gen = Ph1::SynchronGeneratorTrStab::make("SynGen", Logger::Level::debug);
@@ -59,7 +55,7 @@ int main(int argc, char* argv[]) {
 
 	auto res = Ph1::Resistor::make("Rl", Logger::Level::debug);
 	res->setParameters(Rload);
-	res->connect({Node::GND, n1});
+	res->connect({SimNode::GND, n1});
 
 		// Logging
 	auto logger = DataLogger::make(simName);

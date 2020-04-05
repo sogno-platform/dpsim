@@ -1,22 +1,17 @@
-/** Reference Circuits
- *
- * @author Markus Mirz <mmirz@eonerc.rwth-aachen.de>
- * @copyright 2017-2018, Institute for Automation of Complex Power Systems, EONERC
- *
+/* Copyright 2017-2020 Institute for Automation of Complex Power Systems,
+ *                     EONERC, RWTH Aachen University
  * DPsim
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * any later version.
- *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
- *
  * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
  *********************************************************************************/
 
 #include <DPsim.h>
@@ -48,9 +43,9 @@ void DP_VS_RL_f60_largeTs() {
 	Logger::setLogDir("logs/"+simName);
 
 	// Nodes
-	auto n1 = Node::make("n1");
-	auto n2 = Node::make("n2");
-	auto n3 = Node::make("n3");
+	auto n1 = SimNode::make("n1");
+	auto n2 = SimNode::make("n2");
+	auto n3 = SimNode::make("n3");
 
 	// Components
 	auto vs = VoltageSource::make("vs");
@@ -63,10 +58,10 @@ void DP_VS_RL_f60_largeTs() {
 	rload->setParameters(10);
 
 	// Connections
-	vs->connect({ Node::GND, n1 });
+	vs->connect({ SimNode::GND, n1 });
 	rline->connect({ n1, n2 });
 	lline->connect({ n2, n3 });
-	rload->connect({ n3, Node::GND });
+	rload->connect({ n3, SimNode::GND });
 
 	// Define system topology
 	auto sys = SystemTopology(50,
@@ -98,9 +93,9 @@ void DP_VS_RL_f60_vlargeTs() {
 	Logger::setLogDir("logs/"+simName);
 
 	// Nodes
-	auto n1 = Node::make("n1");
-	auto n2 = Node::make("n2");
-	auto n3 = Node::make("n3");
+	auto n1 = SimNode::make("n1");
+	auto n2 = SimNode::make("n2");
+	auto n3 = SimNode::make("n3");
 
 	// Components
 	auto vs = VoltageSource::make("vs");
@@ -113,10 +108,10 @@ void DP_VS_RL_f60_vlargeTs() {
 	rload->setParameters(10);
 
 	// Connections
-	vs->connect({ Node::GND, n1 });
+	vs->connect({ SimNode::GND, n1 });
 	rline->connect({ n1, n2 });
 	lline->connect({ n2, n3 });
-	rload->connect({ n3, Node::GND });
+	rload->connect({ n3, SimNode::GND });
 
 	// Define system topology
 	auto sys = SystemTopology(50,
@@ -148,9 +143,9 @@ void DP_VS_RL_f60() {
 	Logger::setLogDir("logs/"+simName);
 
 	// Nodes
-	auto n1 = Node::make("n1");
-	auto n2 = Node::make("n2");
-	auto n3 = Node::make("n3");
+	auto n1 = SimNode::make("n1");
+	auto n2 = SimNode::make("n2");
+	auto n3 = SimNode::make("n3");
 
 	// Components
 	auto vs = VoltageSource::make("vs");
@@ -163,10 +158,10 @@ void DP_VS_RL_f60() {
 	rload->setParameters(10);
 
 	// Connections
-	vs->connect({ Node::GND, n1 });
+	vs->connect({ SimNode::GND, n1 });
 	rline->connect({ n1, n2 });
 	lline->connect({ n2, n3 });
-	rload->connect({ n3, Node::GND });
+	rload->connect({ n3, SimNode::GND });
 
 	// Define system topology
 	auto sys = SystemTopology(50,
@@ -198,9 +193,9 @@ void DP_VS_RL_f500_largeTs() {
 	Logger::setLogDir("logs/"+simName);
 
 	// Nodes
-	auto n1 = Node::make("n1");
-	auto n2 = Node::make("n2");
-	auto n3 = Node::make("n3");
+	auto n1 = SimNode::make("n1");
+	auto n2 = SimNode::make("n2");
+	auto n3 = SimNode::make("n3");
 
 	// Components
 	auto vs = VoltageSource::make("vs");
@@ -213,10 +208,10 @@ void DP_VS_RL_f500_largeTs() {
 	rload->setParameters(10);
 
 	// Connections
-	vs->connect({ Node::GND, n1 });
+	vs->connect({ SimNode::GND, n1 });
 	rline->connect({ n1, n2 });
 	lline->connect({ n2, n3 });
-	rload->connect({ n3, Node::GND });
+	rload->connect({ n3, SimNode::GND });
 
 	// Define system topology
 	auto sys = SystemTopology(50,
@@ -248,9 +243,9 @@ void DP_VS_RL_f500_ph500() {
 	Logger::setLogDir("logs/"+simName);
 
 	// Nodes
-	auto n1 = Node::make("n1");
-	auto n2 = Node::make("n2");
-	auto n3 = Node::make("n3");
+	auto n1 = SimNode::make("n1");
+	auto n2 = SimNode::make("n2");
+	auto n3 = SimNode::make("n3");
 
 	// Components
 	auto vs = VoltageSource::make("vs");
@@ -263,10 +258,10 @@ void DP_VS_RL_f500_ph500() {
 	rload->setParameters(10);
 
 	// Connections
-	vs->connect({ Node::GND, n1 });
+	vs->connect({ SimNode::GND, n1 });
 	rline->connect({ n1, n2 });
 	lline->connect({ n2, n3 });
-	rload->connect({ n3, Node::GND });
+	rload->connect({ n3, SimNode::GND });
 
 	// Define system topology
 	auto sys = SystemTopology(500,
@@ -298,9 +293,9 @@ void DP_VS_RL_f500() {
 	Logger::setLogDir("logs/"+simName);
 
 	// Nodes
-	auto n1 = Node::make("n1");
-	auto n2 = Node::make("n2");
-	auto n3 = Node::make("n3");
+	auto n1 = SimNode::make("n1");
+	auto n2 = SimNode::make("n2");
+	auto n3 = SimNode::make("n3");
 
 	// Components
 	auto vs = VoltageSource::make("vs");
@@ -313,10 +308,10 @@ void DP_VS_RL_f500() {
 	rload->setParameters(10);
 
 	// Connections
-	vs->connect({ Node::GND, n1 });
+	vs->connect({ SimNode::GND, n1 });
 	rline->connect({ n1, n2 });
 	lline->connect({ n2, n3 });
-	rload->connect({ n3, Node::GND });
+	rload->connect({ n3, SimNode::GND });
 
 	// Define system topology
 	auto sys = SystemTopology(50,

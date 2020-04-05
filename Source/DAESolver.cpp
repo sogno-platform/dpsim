@@ -1,27 +1,13 @@
-/** DAE Solver
+/* Copyright 2017-2020 Institute for Automation of Complex Power Systems,
+ *                     EONERC, RWTH Aachen University
  *
- * @author Markus Mirz <mmirz@eonerc.rwth-aachen.de>
- * @author Steffen Vogel <stvogel@eonerc.rwth-aachen.de>
- * @copyright 2017-2018, Institute for Automation of Complex Power Systems, EONERC
- *
- * DPsim
- *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at https://mozilla.org/MPL/2.0/.
  *********************************************************************************/
 
 #include <dpsim/DAESolver.h>
-#include <cps/PowerComponent.h>
+#include <cps/SimPowerComp.h>
 #include <cps/Solver/MNAInterface.h>
 
 using namespace DPsim;
@@ -42,7 +28,7 @@ DAESolver::DAESolver(String name, CPS::SystemTopology system, Real dt, Real t0) 
     mOffsets.push_back(0);
 
     // Set initial values of all required variables and create IDA solver environment
-    for(Component::Ptr comp : mSystem.mComponents) {
+    for(IdentifiedObject::Ptr comp : mSystem.mComponents) {
         auto daeComp = std::dynamic_pointer_cast<DAEInterface>(comp);
         std::cout <<"Added Comp"<<std::endl;
         if (!daeComp)
@@ -54,7 +40,7 @@ DAESolver::DAESolver(String name, CPS::SystemTopology system, Real dt, Real t0) 
     for (auto baseNode : mSystem.mNodes) {
         // Add nodes to the list and ignore ground nodes.
         if (!baseNode->isGround()) {
-            auto node = std::dynamic_pointer_cast<CPS::Node<Complex>>(baseNode);
+            auto node = std::dynamic_pointer_cast<CPS::SimNode<Complex>>(baseNode);
             mNodes.push_back(node);
             std::cout <<"Added Node"<<std::endl;
         }
@@ -65,17 +51,17 @@ DAESolver::DAESolver(String name, CPS::SystemTopology system, Real dt, Real t0) 
     std::cout<<"Number of Eqn. "<<mNEQ<<std::endl;
 
     std::cout <<"Processing Nodes"<<std::endl;
-    UInt simNodeIdx = 0;
+    UInt matrixNodeIndexIdx = 0;
 
     for (UInt idx = 0; idx < mNodes.size(); idx++) {
 
-        mNodes[idx]->setSimNode(0, simNodeIdx);
-        simNodeIdx++;
+        mNodes[idx]->setMatrixNodeIndex(0, matrixNodeIndexIdx);
+        matrixNodeIndexIdx++;
         if (mNodes[idx]->phaseType() == PhaseType::ABC) {
-            mNodes[idx]->setSimNode(1, simNodeIdx);
-            simNodeIdx++;
-            mNodes[idx]->setSimNode(2, simNodeIdx);
-            simNodeIdx++;
+            mNodes[idx]->setMatrixNodeIndex(1, matrixNodeIndexIdx);
+            matrixNodeIndexIdx++;
+            mNodes[idx]->setMatrixNodeIndex(2, matrixNodeIndexIdx);
+            matrixNodeIndexIdx++;
         }
     }
 
@@ -111,8 +97,8 @@ void DAESolver::initialize(Real t0) {
 
 
 
-    for (Component::Ptr comp : mComponents) {
-        auto emtComp = std::dynamic_pointer_cast<PowerComponent<Complex> >(comp);
+    for (IdentifiedObject::Ptr comp : mComponents) {
+        auto emtComp = std::dynamic_pointer_cast<SimPowerComp<Complex> >(comp);
         if (emtComp) {
             emtComp->initializeFromPowerflow(mSystem.mSystemFrequency);// Set initial values of all components
         }

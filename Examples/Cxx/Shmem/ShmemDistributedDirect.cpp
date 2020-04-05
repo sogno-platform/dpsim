@@ -1,22 +1,17 @@
-/** Example of shared memory interface
- *
- * @author Steffen Vogel <stvogel@eonerc.rwth-aachen.de>
- * @copyright 2017-2018, Institute for Automation of Complex Power Systems, EONERC
- *
+/* Copyright 2017-2020 Institute for Automation of Complex Power Systems,
+ *                     EONERC, RWTH Aachen University
  * DPsim
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * any later version.
- *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
- *
  * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
  *********************************************************************************/
 
 #include <DPsim.h>
@@ -61,8 +56,8 @@ int main(int argc, char *argv[]) {
 		Logger::setLogDir("logs/"+simName);
 
 		// Nodes
-		auto n1 = Node::make("n1", PhaseType::Single, std::vector<Complex>{ 10 });
-		auto n2 = Node::make("n2", PhaseType::Single, std::vector<Complex>{ 5 });
+		auto n1 = SimNode::make("n1", PhaseType::Single, std::vector<Complex>{ 10 });
+		auto n2 = SimNode::make("n2", PhaseType::Single, std::vector<Complex>{ 5 });
 
 		// Components
 		auto evs = VoltageSource::make("v_intf", Logger::Level::debug);
@@ -73,8 +68,8 @@ int main(int argc, char *argv[]) {
 		r12->setParameters(1);
 
 		// Connections
-		evs->connect({ Node::GND, n2 });
-		vs1->connect({ Node::GND, n1 });
+		evs->connect({ SimNode::GND, n2 });
+		vs1->connect({ SimNode::GND, n1 });
 		r12->connect({ n1, n2 });
 
 		auto sys = SystemTopology(50,
@@ -113,7 +108,7 @@ int main(int argc, char *argv[]) {
 		Logger::setLogDir("logs/"+simName);
 
 		// Nodes
-		auto n2 = Node::make("n2", PhaseType::Single, std::vector<Complex>{ 5 });
+		auto n2 = SimNode::make("n2", PhaseType::Single, std::vector<Complex>{ 5 });
 
 		// Components
 		auto ecs = CurrentSource::make("i_intf", Logger::Level::debug);
@@ -122,8 +117,8 @@ int main(int argc, char *argv[]) {
 		r02->setParameters(1);
 
 		// Connections
-		ecs->connect({ Node::GND, n2 });
-		r02->connect({ Node::GND, n2 });
+		ecs->connect({ SimNode::GND, n2 });
+		r02->connect({ SimNode::GND, n2 });
 
 		auto sys = SystemTopology(50,
 			SystemNodeList{ n2 },

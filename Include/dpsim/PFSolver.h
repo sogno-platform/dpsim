@@ -1,21 +1,9 @@
-/** PFSolver
- * @author Jan Dinkelbach <jdinkelbach@eonerc.rwth-aachen.de>
- * @copyright 2019, Institute for Automation of Complex Power Systems, EONERC
+/* Copyright 2017-2020 Institute for Automation of Complex Power Systems,
+ *                     EONERC, RWTH Aachen University
  *
- * DPsim
- *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at https://mozilla.org/MPL/2.0/.
  *********************************************************************************/
 
 #pragma once
@@ -27,7 +15,6 @@
 #include <dpsim/Scheduler.h>
 #include "cps/SystemTopology.h"
 #include "cps/Components.h"
-#include "cps/Component.h"
 
 namespace DPsim {
     /// Solver class using the nonlinear powerflow (PF) formulation.
@@ -61,7 +48,7 @@ namespace DPsim {
         /// Admittance matrix
         CPS::SparseMatrixCompRow mY;
 
-        /// Jacobian matrix 
+        /// Jacobian matrix
         CPS::Matrix mJ;
         /// Solution vector
         CPS::Vector mX;
@@ -72,6 +59,8 @@ namespace DPsim {
         CPS::SystemTopology mSystem;
         /// Vector of transformer components
         std::vector<std::shared_ptr<CPS::SP::Ph1::Transformer>> mTransformers;
+        /// Vector of solid state transformer components
+        std::vector<std::shared_ptr<CPS::SP::Ph1::SolidStateTransformer>> mSolidStateTransformers;
         /// Vector of synchronous generator components
         std::vector<std::shared_ptr<CPS::SP::Ph1::SynchronGenerator>> mSynchronGenerators;
         /// Vector of load components
@@ -93,7 +82,7 @@ namespace DPsim {
 		CPS::Real mBaseApparentPower;
         /// Convergence flag
         CPS::Bool isConverged = false;
-        /// Flag whether solution vectors are initialized 
+        /// Flag whether solution vectors are initialized
         CPS::Bool solutionInitialized = false;
         /// Flag whether complex solution vectors are initialized
         CPS::Bool solutionComplexInitialized = false;
@@ -108,7 +97,7 @@ namespace DPsim {
         virtual void updateSolution() = 0;
         /// Set final solution
         virtual void setSolution() = 0;
-        
+
         /// Initialization of the solver
         void initialize();
         /// Initialization of individual components
@@ -144,7 +133,7 @@ namespace DPsim {
 			CPS::Logger::Level logLevel);
 		///
 		virtual ~PFSolver() { };
-        
+
         /// Set a node to VD using its name
         void setVDNode(CPS::String name);
         /// Allows to modify the powerflow bus type of a specific component

@@ -1,21 +1,17 @@
-/**
- * @author Markus Mirz <mmirz@eonerc.rwth-aachen.de>
- * @copyright 2017-2018, Institute for Automation of Complex Power Systems, EONERC
- *
+/* Copyright 2017-2020 Institute for Automation of Complex Power Systems,
+ *                     EONERC, RWTH Aachen University
  * DPsim
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * any later version.
- *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
- *
  * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
  *********************************************************************************/
 
 #include <iostream>
@@ -28,13 +24,13 @@
 using namespace DPsim;
 using namespace CPS;
 
-Component::List multiply_diakoptics(SystemTopology& sys, Int copies,
+IdentifiedObject::List multiply_diakoptics(SystemTopology& sys, Int copies,
 	Real resistance, Real inductance, Real capacitance, Int splits = 0) {
 
     sys.multiply(copies);
 	int counter = 0;
     std::vector<String> nodes = {"BUS5", "BUS8", "BUS6"};
-    Component::List tear_components;
+    IdentifiedObject::List tear_components;
     Int splitEvery = 0;
 
 	if ((splits == 0) || (splits == copies+1)) {
@@ -55,12 +51,12 @@ Component::List multiply_diakoptics(SystemTopology& sys, Int copies,
         for (int i = 0; i < nlines; i++) {
             auto line = DP::Ph1::PiLine::make("line" + std::to_string(counter));
             line->setParameters(resistance, inductance, capacitance);
-            line->connect({sys.node<DP::Node>(nodeNames[i]), sys.node<DP::Node>(nodeNames[i+1])});
+            line->connect({sys.node<DP::SimNode>(nodeNames[i]), sys.node<DP::SimNode>(nodeNames[i+1])});
 
 			if (i % splitEvery == 0) {
                 sys.addTearComponent(line);
-				//std::cout 	<< "add tear line between node " << sys.node<DP::Node>(nodeNames[i])->name()
-				//			<< " and node " << sys.node<DP::Node>(nodeNames[i+1])->name() << std::endl;
+				//std::cout 	<< "add tear line between node " << sys.node<DP::SimNode>(nodeNames[i])->name()
+				//			<< " and node " << sys.node<DP::SimNode>(nodeNames[i+1])->name() << std::endl;
 			}
             else
                 sys.addComponent(line);
@@ -83,7 +79,7 @@ void simulateDiakoptics(std::list<fs::path> filenames,
 	SystemTopology sys = reader.loadCIM(60, filenames);
 
 	if (copies > 0)
-		Component::List tearComps = multiply_diakoptics(sys, copies, 12.5, 0.16, 1e-6, splits);
+		IdentifiedObject::List tearComps = multiply_diakoptics(sys, copies, 12.5, 0.16, 1e-6, splits);
 
 	Simulation sim(simName, Logger::Level::off);
 	sim.setSystem(sys);
@@ -105,7 +101,7 @@ void simulateDiakoptics(std::list<fs::path> filenames,
 	//			attrName = "v" + std::to_string(bus);
 	//			nodeName = "BUS" + std::to_string(bus);
 	//		}
-	//		logger->addAttribute(attrName, sys.node<DP::Node>(nodeName)->attribute("v"));
+	//		logger->addAttribute(attrName, sys.node<DP::SimNode>(nodeName)->attribute("v"));
 	//	}
 	//}
 	//sim.addLogger(logger);

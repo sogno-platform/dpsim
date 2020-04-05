@@ -1,21 +1,9 @@
-/**
- * @author Markus Mirz <mmirz@eonerc.rwth-aachen.de>
- * @copyright 2017-2018, Institute for Automation of Complex Power Systems, EONERC
+/* Copyright 2017-2020 Institute for Automation of Complex Power Systems,
+ *                     EONERC, RWTH Aachen University
  *
- * DPsim
- *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at https://mozilla.org/MPL/2.0/.
  *********************************************************************************/
 
 
@@ -58,7 +46,7 @@ void MnaSolver<VarType>::initialize() {
 	identifyTopologyObjects();
 	// These steps complete the network information.
 	createVirtualNodes();
-	assignSimNodes();
+	assignMatrixNodeIndices();
 
 	mSLog->info("-- Create empty MNA system matrices and vectors");
 	// The system topology is prepared and we create the MNA matrices.
@@ -81,14 +69,17 @@ void MnaSolver<VarType>::initialize() {
 	// calculate MNA specific initialization values.
 	initializeComponents();
 
-	// This steady state initialization is MNA specific and runs a simulation
-	// before the actual simulation executed by the user.
-	if (mSteadyStateInit && mDomain == CPS::Domain::DP)
+	if (mSteadyStateInit)
 		steadyStateInitialization();
 
 	// Some components feature a different behaviour for simulation and initialization
-	for (auto comp : mSystem.mComponents)
-		comp->setBehaviour(Component::Behaviour::Simulation);
+	for (auto comp : mSystem.mComponents) {
+		auto powerComp = std::dynamic_pointer_cast<CPS::TopologicalPowerComp>(comp);
+		if (powerComp) powerComp->setBehaviour(TopologicalPowerComp::Behaviour::Simulation);
+
+		auto sigComp = std::dynamic_pointer_cast<CPS::SimSignalComp>(comp);
+		if (sigComp) sigComp->setBehaviour(SimSignalComp::Behaviour::Simulation);
+	}
 
 	// Initialize system matrices and source vector.
 	initializeSystem();
@@ -103,18 +94,18 @@ void MnaSolver<VarType>::initialize() {
 template <>
 void MnaSolver<Real>::initializeComponents() {
 	mSLog->info("-- Initialize components from power flow");
-	for (auto comp : mPowerComponents) {
-		auto pComp = std::dynamic_pointer_cast<PowerComponent<Real>>(comp);
+	for (auto comp : mMNAComponents) {
+		auto pComp = std::dynamic_pointer_cast<SimPowerComp<Real>>(comp);
 		if (!pComp)	continue;
 		pComp->initializeFromPowerflow(mSystem.mSystemFrequency);
 	}
 
 	// Initialize signal components.
-	for (auto comp : mSignalComponents)
+	for (auto comp : mSimSignalComps)
 		comp->initialize(mSystem.mSystemOmega, mTimeStep);
 
 	// Initialize MNA specific parts of components.
-	for (auto comp : mPowerComponents) {
+	for (auto comp : mMNAComponents) {
 		comp->mnaInitialize(mSystem.mSystemOmega, mTimeStep, attribute<Matrix>("left_vector"));
 		const Matrix& stamp = comp->template attribute<Matrix>("right_vector")->get();
 		if (stamp.size() != 0) {
@@ -130,20 +121,20 @@ void MnaSolver<Complex>::initializeComponents() {
 	mSLog->info("-- Initialize components from power flow");
 
 	// Initialize power components with frequencies and from powerflow results
-	for (auto comp : mPowerComponents) {
-		auto pComp = std::dynamic_pointer_cast<PowerComponent<Complex>>(comp);
+	for (auto comp : mMNAComponents) {
+		auto pComp = std::dynamic_pointer_cast<SimPowerComp<Complex>>(comp);
 		if (!pComp)	continue;
 		pComp->initializeFromPowerflow(mSystem.mSystemFrequency);
 	}
 
 	// Initialize signal components.
-	for (auto comp : mSignalComponents)
+	for (auto comp : mSimSignalComps)
 		comp->initialize(mSystem.mSystemOmega, mTimeStep);
 
 	mSLog->info("-- Initialize MNA properties of components");
 	if (mFrequencyParallel) {
 		// Initialize MNA specific parts of components.
-		for (auto comp : mPowerComponents) {
+		for (auto comp : mMNAComponents) {
 			// Initialize MNA specific parts of components.
 			comp->mnaInitializeHarm(mSystem.mSystemOmega, mTimeStep, mLeftVectorHarmAttributes);
 			const Matrix& stamp = comp->template attribute<Matrix>("right_vector")->get();
@@ -156,7 +147,7 @@ void MnaSolver<Complex>::initializeComponents() {
 	}
 	else {
 		// Initialize MNA specific parts of components.
-		for (auto comp : mPowerComponents) {
+		for (auto comp : mMNAComponents) {
 			comp->mnaInitialize(mSystem.mSystemOmega, mTimeStep, attribute<Matrix>("left_vector"));
 			const Matrix& stamp = comp->template attribute<Matrix>("right_vector")->get();
 			if (stamp.size() != 0) {
@@ -187,21 +178,21 @@ void MnaSolver<VarType>::initializeSystem() {
 	if (mFrequencyParallel) {
 		for(Int freq = 0; freq < mSystem.mFrequencies.size(); freq++) {
 			// Create system matrix if no switches were added
-			for (auto comp : mPowerComponents)
+			for (auto comp : mMNAComponents)
 				comp->mnaApplySystemMatrixStampHarm(mSwitchedMatricesHarm[std::bitset<SWITCH_NUM>(0)][freq], freq);
 
 			mLuFactorizationsHarm[std::bitset<SWITCH_NUM>(0)].push_back(
 				Eigen::PartialPivLU<Matrix>(mSwitchedMatricesHarm[std::bitset<SWITCH_NUM>(0)][freq]));
 
 			// Initialize source vector
-			for (auto comp : mPowerComponents)
+			for (auto comp : mMNAComponents)
 				comp->mnaApplyRightSideVectorStampHarm(mRightSideVectorHarm[freq], freq);
 		}
 	}
 	else {
 		if (mSwitches.size() < 1) {
 			// Create system matrix if no switches were added
-			for (auto comp : mPowerComponents) {
+			for (auto comp : mMNAComponents) {
 				comp->mnaApplySystemMatrixStamp(mSwitchedMatrices[std::bitset<SWITCH_NUM>(0)]);
 				auto idObj = std::dynamic_pointer_cast<IdentifiedObject>(comp);
 				mSLog->debug("Stamping {:s} {:s} into system matrix: \n{:s}",
@@ -212,7 +203,7 @@ void MnaSolver<VarType>::initializeSystem() {
 		else {
 			// Generate switching state dependent system matrices
 			for (auto& sys : mSwitchedMatrices) {
-				for (auto comp : mPowerComponents)
+				for (auto comp : mMNAComponents)
 					comp->mnaApplySystemMatrixStamp(sys.second);
 				for (UInt i = 0; i < mSwitches.size(); i++)
 					mSwitches[i]->mnaApplySwitchSystemMatrixStamp(sys.second, sys.first[i]);
@@ -222,7 +213,7 @@ void MnaSolver<VarType>::initializeSystem() {
 			updateSwitchStatus();
 		}
 		// Initialize source vector for debugging
-		for (auto comp : mPowerComponents) {
+		for (auto comp : mMNAComponents) {
 			comp->mnaApplyRightSideVectorStamp(mRightSideVector);
 			auto idObj = std::dynamic_pointer_cast<IdentifiedObject>(comp);
 
@@ -244,7 +235,7 @@ void MnaSolver<VarType>::identifyTopologyObjects() {
 	for (auto baseNode : mSystem.mNodes) {
 		// Add nodes to the list and ignore ground nodes.
 		if (!baseNode->isGround()) {
-			auto node = std::dynamic_pointer_cast< CPS::Node<VarType> >(baseNode);
+			auto node = std::dynamic_pointer_cast< CPS::SimNode<VarType> >(baseNode);
 			mNodes.push_back( node );
 		}
 	}
@@ -260,55 +251,55 @@ void MnaSolver<VarType>::identifyTopologyObjects() {
 		}
 
 		auto mnaComp = std::dynamic_pointer_cast<CPS::MNAInterface>(comp);
-		if (mnaComp) mPowerComponents.push_back(mnaComp);
+		if (mnaComp) mMNAComponents.push_back(mnaComp);
 
-		auto sigComp = std::dynamic_pointer_cast<CPS::SignalComponent>(comp);
-		if (sigComp) mSignalComponents.push_back(sigComp);
+		auto sigComp = std::dynamic_pointer_cast<CPS::SimSignalComp>(comp);
+		if (sigComp) mSimSignalComps.push_back(sigComp);
 	}
 }
 
 template <typename VarType>
-void MnaSolver<VarType>::assignSimNodes() {
-	UInt simNodeIdx = 0;
+void MnaSolver<VarType>::assignMatrixNodeIndices() {
+	UInt matrixNodeIndexIdx = 0;
 	for (UInt idx = 0; idx < mNodes.size(); idx++) {
-		mNodes[idx]->setSimNode(0, simNodeIdx);
-		simNodeIdx++;
+		mNodes[idx]->setMatrixNodeIndex(0, matrixNodeIndexIdx);
+		matrixNodeIndexIdx++;
 		if (mNodes[idx]->phaseType() == CPS::PhaseType::ABC) {
-			mNodes[idx]->setSimNode(1, simNodeIdx);
-			simNodeIdx++;
-			mNodes[idx]->setSimNode(2, simNodeIdx);
-			simNodeIdx++;
+			mNodes[idx]->setMatrixNodeIndex(1, matrixNodeIndexIdx);
+			matrixNodeIndexIdx++;
+			mNodes[idx]->setMatrixNodeIndex(2, matrixNodeIndexIdx);
+			matrixNodeIndexIdx++;
 		}
-		if (idx == mNumNetNodes-1) mNumNetSimNodes = simNodeIdx;
+		if (idx == mNumNetNodes-1) mNumNetMatrixNodeIndices = matrixNodeIndexIdx;
 	}
-	// Total number of network nodes is simNodeIdx + 1
-	mNumSimNodes = simNodeIdx;
-	mNumVirtualSimNodes = mNumSimNodes - mNumNetSimNodes;
-	mNumHarmSimNodes = static_cast<UInt>(mSystem.mFrequencies.size()-1) * mNumSimNodes;
+	// Total number of network nodes is matrixNodeIndexIdx + 1
+	mNumMatrixNodeIndices = matrixNodeIndexIdx;
+	mNumVirtualMatrixNodeIndices = mNumMatrixNodeIndices - mNumNetMatrixNodeIndices;
+	mNumHarmMatrixNodeIndices = static_cast<UInt>(mSystem.mFrequencies.size()-1) * mNumMatrixNodeIndices;
 
 	mSLog->info("Assigned simulation nodes to topology nodes:");
-	mSLog->info("Number of network simulation nodes: {:d}", mNumNetSimNodes);
-	mSLog->info("Number of simulation nodes: {:d}", mNumSimNodes);
-	mSLog->info("Number of harmonic simulation nodes: {:d}", mNumHarmSimNodes);
+	mSLog->info("Number of network simulation nodes: {:d}", mNumNetMatrixNodeIndices);
+	mSLog->info("Number of simulation nodes: {:d}", mNumMatrixNodeIndices);
+	mSLog->info("Number of harmonic simulation nodes: {:d}", mNumHarmMatrixNodeIndices);
 }
 
 template<>
 void MnaSolver<Real>::createEmptyVectors() {
-	mRightSideVector = Matrix::Zero(mNumSimNodes, 1);
-	mLeftSideVector = Matrix::Zero(mNumSimNodes, 1);
+	mRightSideVector = Matrix::Zero(mNumMatrixNodeIndices, 1);
+	mLeftSideVector = Matrix::Zero(mNumMatrixNodeIndices, 1);
 }
 
 template<>
 void MnaSolver<Complex>::createEmptyVectors() {
 	if (mFrequencyParallel) {
 		for(Int freq = 0; freq < mSystem.mFrequencies.size(); freq++) {
-			mRightSideVectorHarm.push_back(Matrix::Zero(2*(mNumSimNodes), 1));
-			mLeftSideVectorHarm.push_back(Matrix::Zero(2*(mNumSimNodes), 1));
+			mRightSideVectorHarm.push_back(Matrix::Zero(2*(mNumMatrixNodeIndices), 1));
+			mLeftSideVectorHarm.push_back(Matrix::Zero(2*(mNumMatrixNodeIndices), 1));
 		}
 	}
 	else {
-		mRightSideVector = Matrix::Zero(2*(mNumSimNodes + mNumHarmSimNodes), 1);
-		mLeftSideVector = Matrix::Zero(2*(mNumSimNodes + mNumHarmSimNodes), 1);
+		mRightSideVector = Matrix::Zero(2*(mNumMatrixNodeIndices + mNumHarmMatrixNodeIndices), 1);
+		mLeftSideVector = Matrix::Zero(2*(mNumMatrixNodeIndices + mNumHarmMatrixNodeIndices), 1);
 	}
 }
 
@@ -318,7 +309,7 @@ void MnaSolver<Real>::createEmptySystemMatrix() {
 		throw SystemError("Too many Switches.");
 
 	for (UInt i = 0; i < std::pow(2,mSwitches.size()); i++)
-		mSwitchedMatrices[std::bitset<SWITCH_NUM>(i)] = Matrix::Zero(mNumSimNodes, mNumSimNodes);
+		mSwitchedMatrices[std::bitset<SWITCH_NUM>(i)] = Matrix::Zero(mNumMatrixNodeIndices, mNumMatrixNodeIndices);
 }
 
 template<>
@@ -330,13 +321,13 @@ void MnaSolver<Complex>::createEmptySystemMatrix() {
 		for (UInt i = 0; i < std::pow(2,mSwitches.size()); i++) {
 			for(Int freq = 0; freq < mSystem.mFrequencies.size(); freq++) {
 				mSwitchedMatricesHarm[std::bitset<SWITCH_NUM>(i)].push_back(
-					Matrix::Zero(2*(mNumSimNodes), 2*(mNumSimNodes)));
+					Matrix::Zero(2*(mNumMatrixNodeIndices), 2*(mNumMatrixNodeIndices)));
 			}
 		}
 	}
 	else {
 		for (UInt i = 0; i < std::pow(2,mSwitches.size()); i++)
-			mSwitchedMatrices[std::bitset<SWITCH_NUM>(i)] = Matrix::Zero(2*(mNumSimNodes + mNumHarmSimNodes), 2*(mNumSimNodes + mNumHarmSimNodes));
+			mSwitchedMatrices[std::bitset<SWITCH_NUM>(i)] = Matrix::Zero(2*(mNumMatrixNodeIndices + mNumHarmMatrixNodeIndices), 2*(mNumMatrixNodeIndices + mNumHarmMatrixNodeIndices));
 	}
 }
 
@@ -347,8 +338,8 @@ void MnaSolver<VarType>::createVirtualNodes() {
 	// virtual nodes are placed after network nodes
 	UInt virtualNode = mNumNetNodes - 1;
 	// Check if component requires virtual node and if so set one
-	for (auto comp : mPowerComponents) {
-		auto pComp = std::dynamic_pointer_cast<PowerComponent<VarType>>(comp);
+	for (auto comp : mMNAComponents) {
+		auto pComp = std::dynamic_pointer_cast<SimPowerComp<VarType>>(comp);
 		if (!pComp)	continue;
 
 		if (pComp->hasVirtualNodes()) {
@@ -356,13 +347,13 @@ void MnaSolver<VarType>::createVirtualNodes() {
 				virtualNode++;
 				mNodes.push_back(pComp->virtualNode(node));
 
-				pComp->virtualNode(node)->setSimNode(0, virtualNode);
+				pComp->virtualNode(node)->setMatrixNodeIndex(0, virtualNode);
 				mSLog->info("Assigned index {} to virtual node {} for {}", virtualNode, node, pComp->name());
 
 				if (pComp->virtualNode(node)->phaseType() == CPS::PhaseType::ABC) {
 					for (UInt phase = 1; phase < 3; phase++) {
 						virtualNode++;
-						pComp->virtualNode(node)->setSimNode(phase, virtualNode);
+						pComp->virtualNode(node)->setMatrixNodeIndex(phase, virtualNode);
 						mSLog->info("Assigned index {} to virtual node {} for {}", virtualNode, node, pComp->name());
 					}
 				}
@@ -392,8 +383,13 @@ void MnaSolver<VarType>::steadyStateInitialization() {
 	Matrix diff = Matrix::Zero(2 * mNumNodes, 1);
 	Matrix prevLeftSideVector = Matrix::Zero(2 * mNumNodes, 1);
 
-	for (auto comp : mSystem.mComponents)
-		comp->setBehaviour(Component::Behaviour::Initialization);
+	for (auto comp : mSystem.mComponents) {
+		auto powerComp = std::dynamic_pointer_cast<CPS::TopologicalPowerComp>(comp);
+		if (powerComp) powerComp->setBehaviour(TopologicalPowerComp::Behaviour::Initialization);
+
+		auto sigComp = std::dynamic_pointer_cast<CPS::SimSignalComp>(comp);
+		if (sigComp) sigComp->setBehaviour(SimSignalComp::Behaviour::Initialization);
+	}
 
 	initializeSystem();
 	logSystemMatrices();
@@ -409,13 +405,13 @@ void MnaSolver<VarType>::steadyStateInitialization() {
 		for (auto task : node->mnaTasks())
 			tasks.push_back(task);
 	}
-	for (auto comp : mPowerComponents) {
+	for (auto comp : mMNAComponents) {
 		for (auto task : comp->mnaTasks()) {
 			tasks.push_back(task);
 		}
 	}
 	// TODO signal components should be moved out of MNA solver
-	for (auto comp : mSignalComponents) {
+	for (auto comp : mSimSignalComps) {
 		for (auto task : comp->getTasks()) {
 			tasks.push_back(task);
 		}
@@ -466,7 +462,7 @@ template <typename VarType>
 Task::List MnaSolver<VarType>::getTasks() {
 	Task::List l;
 
-	for (auto comp : mPowerComponents) {
+	for (auto comp : mMNAComponents) {
 		for (auto task : comp->mnaTasks()) {
 			l.push_back(task);
 		}
@@ -476,7 +472,7 @@ Task::List MnaSolver<VarType>::getTasks() {
 			l.push_back(task);
 	}
 	// TODO signal components should be moved out of MNA solver
-	for (auto comp : mSignalComponents) {
+	for (auto comp : mSimSignalComps) {
 		for (auto task : comp->getTasks()) {
 			l.push_back(task);
 		}

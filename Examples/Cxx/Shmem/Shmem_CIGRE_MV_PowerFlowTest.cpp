@@ -1,21 +1,17 @@
-/**
- * @author Jan Dinkelbach <jdinkelbach@eonerc.rwth-aachen.de>
- * @copyright 2019, Institute for Automation of Complex Power Systems, EONERC
- *
+/* Copyright 2017-2020 Institute for Automation of Complex Power Systems,
+ *                     EONERC, RWTH Aachen University
  * DPsim
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * any later version.
- *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
- *
  * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
  *********************************************************************************/
 
 #include <cps/CIM/Reader.h>
@@ -66,7 +62,7 @@ int main(int argc, char** argv) {
 			continue;
 		}
 
-		auto n_stat = std::dynamic_pointer_cast<CPS::SP::Node>(n);
+		auto n_stat = std::dynamic_pointer_cast<CPS::SP::SimNode>(n);
 		auto v = n_stat->attributeMatrixComp("v")->coeff(0, 0);
 
 		std::cout << "Signal " << (i*2)+0 << ": Mag  " << n->name() << std::endl;

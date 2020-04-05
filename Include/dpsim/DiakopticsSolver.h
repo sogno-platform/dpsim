@@ -1,29 +1,16 @@
-/** Diakoptics solver
+/* Copyright 2017-2020 Institute for Automation of Complex Power Systems,
+ *                     EONERC, RWTH Aachen University
  *
- * @author Georg Reinke <georg.reinke@rwth-aachen.de>
- * @copyright 2017-2019, Institute for Automation of Complex Power Systems, EONERC
- *
- * DPsim
- *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at https://mozilla.org/MPL/2.0/.
  *********************************************************************************/
 
 #pragma once
 
 #include <cps/AttributeList.h>
 #include <cps/Solver/MNAInterface.h>
-#include <cps/SignalComponent.h>
+#include <cps/SimSignalComp.h>
 #include <dpsim/DataLogger.h>
 #include <dpsim/Solver.h>
 
@@ -35,7 +22,7 @@ namespace DPsim {
 	private:
 		struct Subnet {
 			/// Nodes assigned to this subnetwork
-			typename CPS::Node<VarType>::List nodes;
+			typename CPS::SimNode<VarType>::List nodes;
 			/// Components assigned to this subnetwork
 			CPS::MNAInterface::List components;
 			/// Size in system matrix (i.e. including virtual nodes)
@@ -68,9 +55,9 @@ namespace DPsim {
 		std::shared_ptr<DataLogger> mRightVectorLog;
 
 		std::vector<Subnet> mSubnets;
-		std::unordered_map<typename CPS::Node<VarType>::Ptr, Subnet*> mNodeSubnetMap;
-		typename CPS::PowerComponent<VarType>::List mTearComponents;
-		CPS::SignalComponent::List mSignalComponents;
+		std::unordered_map<typename CPS::SimNode<VarType>::Ptr, Subnet*> mNodeSubnetMap;
+		typename CPS::SimPowerComp<VarType>::List mTearComponents;
+		CPS::SimSignalComp::List mSimSignalComps;
 
 		Matrix mRightSideVector;
 		Matrix mLeftSideVector;
@@ -98,7 +85,7 @@ namespace DPsim {
 
 		void initSubnets(const std::vector<CPS::SystemTopology>& subnets);
 		void collectVirtualNodes(int net);
-		void assignSimNodes(int net);
+		void assignMatrixNodeIndices(int net);
 		void setSubnetSize(int net, UInt nodes);
 
 		void setLogColumns();
@@ -114,7 +101,7 @@ namespace DPsim {
 		void log(Real time);
 
 	public:
-		DiakopticsSolver(String name, CPS::SystemTopology system, CPS::Component::List tearComponents, Real timeStep, CPS::Logger::Level logLevel);
+		DiakopticsSolver(String name, CPS::SystemTopology system, CPS::IdentifiedObject::List tearComponents, Real timeStep, CPS::Logger::Level logLevel);
 
 		CPS::Task::List getTasks();
 
