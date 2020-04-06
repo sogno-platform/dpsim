@@ -31,6 +31,7 @@
 
 #ifdef WITH_CIM
   #include <cps/CIM/Reader.h>
+  #include <cps/CIM/Scenarios.h>
 #endif
 
 #ifdef WITH_OPENMP
