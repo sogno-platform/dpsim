@@ -676,7 +676,7 @@ TopologicalPowerComp::Ptr Reader::mapEquivalentShunt(EquivalentShunt* shunt){
 }
 
 
-void Reader::writeSvVoltageFromStaticSysTopology(SystemTopology& sysStatic, SystemTopology& sysDynamic) {
+void Reader::readNodeVoltagesFromStaticSystemTopology(SystemTopology& sysStatic, SystemTopology& sysDynamic) {
 	auto nodeDyn = sysDynamic.mNodes.begin();
 	auto nodeSt = sysStatic.mNodes.begin();
 

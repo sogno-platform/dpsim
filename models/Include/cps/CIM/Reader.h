@@ -166,8 +166,9 @@ namespace CIM {
 		SystemTopology loadCIM(Real systemFrequency, const std::experimental::filesystem::path &filename, Domain domain = Domain::DP, PhaseType phase = PhaseType::Single);
 		/// Parses data from CIM files into the CPS data structure
 		SystemTopology loadCIM(Real systemFrequency, const std::list<std::experimental::filesystem::path> &filenames, Domain domain = Domain::DP, PhaseType phase = PhaseType::Single);
-		/// writing state variable voltage of nodes from the another SystemTopology, which has the same topology but modeled in different domain
-		void writeSvVoltageFromStaticSysTopology(SystemTopology& sysStatic, SystemTopology& sysDynamic);
+
+		/// read node voltages from the corresponding static SystemTopology for initialization
+		void readNodeVoltagesFromStaticSystemTopology(SystemTopology& sysStatic, SystemTopology& sysDynamic);
 
 		// #### shunt component settings ####
 		/// set shunt capacitor value
