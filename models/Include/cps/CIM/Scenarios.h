@@ -16,8 +16,8 @@ namespace CPS {
 namespace CIM {
 namespace Scenarios {
 namespace CIGREMV {
-        // network configuration
-        struct ScenarioConfig {
+
+    struct ScenarioConfig {
         Real systemFrequency = 50;
         Real systemNominalVoltage = 20e3;
         Real penetrationLevel = 1;
@@ -60,37 +60,45 @@ namespace CIGREMV {
     void addInvertersToCIGREMV(SystemTopology& system, CIGREMV::ScenarioConfig conf, Domain domain) {
         // add PVs to network topology
         for (Int n = 3; n <= 11; n++) {	
-        // get connection node
-        typename SimNode<VarType>::Ptr connectionNode;
-        String connectionNodeName = "N" + std::to_string(n);
-        for (auto sysNode : system.mNodes) {
-            if (sysNode->name() == connectionNodeName) {
-                connectionNode = std::dynamic_pointer_cast<SimNode<VarType>>(sysNode);				
-                break;
-            }
-        }
-        // add PV to connection node
-        Real pvActivePower = conf.pvUnitNominalPower*conf.numberPVUnitsPerPlant;
-        Real pvReactivePower = sqrt(std::pow(pvActivePower / conf.pvUnitPowerFactor, 2) - std::pow(pvActivePower, 2));
+            // get connection node
+            typename SimNode<VarType>::Ptr connectionNode = system.node<CPS::SimNode<VarType>>("N" + std::to_string(n));
 
-        // TODO: cast to BaseAverageVoltageSourceInverter and move set functions out of case distinction
-        typename SimPowerComp<VarType>::Ptr pv;
-        if (domain == Domain::SP) {
-            pv = SP::Ph1::AvVoltageSourceInverterDQ::make("pv_" + connectionNode->name(), "pv_" + connectionNode->name(), Logger::Level::debug, true);
-            std::dynamic_pointer_cast<SP::Ph1::AvVoltageSourceInverterDQ>(pv)->setParameters(conf.systemOmega, Complex(conf.pvUnitNominalVoltage, 0), pvActivePower, pvReactivePower);
-            std::dynamic_pointer_cast<SP::Ph1::AvVoltageSourceInverterDQ>(pv)->setTransformerParameters(conf.systemNominalVoltage, conf.pvUnitNominalVoltage, conf.transformerNominalPower, conf.systemNominalVoltage/conf.pvUnitNominalVoltage, 0, 0, conf.transformerInductance, conf.systemOmega);
-        } else if (domain == Domain::DP) {
-            pv = DP::Ph1::AvVoltageSourceInverterDQ::make("pv_" + connectionNode->name(), "pv_" + connectionNode->name(), Logger::Level::debug, true);
-            std::dynamic_pointer_cast<DP::Ph1::AvVoltageSourceInverterDQ>(pv)->setParameters(conf.systemOmega, Complex(conf.pvUnitNominalVoltage, 0), pvActivePower, pvReactivePower);
-            std::dynamic_pointer_cast<DP::Ph1::AvVoltageSourceInverterDQ>(pv)->setControllerParameters(conf.KpPLL, conf.KiPLL, conf.KpPowerCtrl, conf.KiPowerCtrl, conf.KpCurrCtrl, conf.KiCurrCtrl, conf.OmegaCutoff);
-            std::dynamic_pointer_cast<DP::Ph1::AvVoltageSourceInverterDQ>(pv)->setFilterParameters(conf.Lf, conf.Cf, conf.Rf, conf.Rc);
-            std::dynamic_pointer_cast<DP::Ph1::AvVoltageSourceInverterDQ>(pv)->setTransformerParameters(conf.systemNominalVoltage, conf.pvUnitNominalVoltage, conf.transformerNominalPower, conf.systemNominalVoltage/conf.pvUnitNominalVoltage, 0, 0, conf.transformerInductance, conf.systemOmega);
-        }
-        
-        system.addComponent(pv);
-        system.connectComponentToNodes<VarType>(pv, { connectionNode });
+            // add PV to connection node
+            Real pvActivePower = conf.pvUnitNominalPower*conf.numberPVUnitsPerPlant;
+            Real pvReactivePower = sqrt(std::pow(pvActivePower / conf.pvUnitPowerFactor, 2) - std::pow(pvActivePower, 2));
+
+            // TODO: cast to BaseAverageVoltageSourceInverter and move set functions out of case distinction
+            typename SimPowerComp<VarType>::Ptr pv;
+            if (domain == Domain::SP) {
+                pv = SP::Ph1::AvVoltageSourceInverterDQ::make("pv_" + connectionNode->name(), "pv_" + connectionNode->name(), Logger::Level::debug, true);
+                std::dynamic_pointer_cast<SP::Ph1::AvVoltageSourceInverterDQ>(pv)->setParameters(conf.systemOmega, Complex(conf.pvUnitNominalVoltage, 0), pvActivePower, pvReactivePower);
+                std::dynamic_pointer_cast<SP::Ph1::AvVoltageSourceInverterDQ>(pv)->setTransformerParameters(conf.systemNominalVoltage, conf.pvUnitNominalVoltage, conf.transformerNominalPower, conf.systemNominalVoltage/conf.pvUnitNominalVoltage, 0, 0, conf.transformerInductance, conf.systemOmega);
+            } else if (domain == Domain::DP) {
+                pv = DP::Ph1::AvVoltageSourceInverterDQ::make("pv_" + connectionNode->name(), "pv_" + connectionNode->name(), Logger::Level::debug, true);
+                std::dynamic_pointer_cast<DP::Ph1::AvVoltageSourceInverterDQ>(pv)->setParameters(conf.systemOmega, Complex(conf.pvUnitNominalVoltage, 0), pvActivePower, pvReactivePower);
+                std::dynamic_pointer_cast<DP::Ph1::AvVoltageSourceInverterDQ>(pv)->setControllerParameters(conf.KpPLL, conf.KiPLL, conf.KpPowerCtrl, conf.KiPowerCtrl, conf.KpCurrCtrl, conf.KiCurrCtrl, conf.OmegaCutoff);
+                std::dynamic_pointer_cast<DP::Ph1::AvVoltageSourceInverterDQ>(pv)->setFilterParameters(conf.Lf, conf.Cf, conf.Rf, conf.Rc);
+                std::dynamic_pointer_cast<DP::Ph1::AvVoltageSourceInverterDQ>(pv)->setTransformerParameters(conf.systemNominalVoltage, conf.pvUnitNominalVoltage, conf.transformerNominalPower, conf.systemNominalVoltage/conf.pvUnitNominalVoltage, 0, 0, conf.transformerInductance, conf.systemOmega);
+            }
+            
+            system.addComponent(pv);
+            system.connectComponentToNodes<VarType>(pv, { connectionNode });
         }
     }
+
+    template <typename VarType>
+    std::shared_ptr<DPsim::SwitchEvent> createEventAddPowerConsumption(String nodeName, Real eventTime, Real addedPowerAsResistance, SystemTopology& system, Domain domain) {
+        
+        // TODO: make this dependent on the domain parameter     
+        auto loadSwitch = DP::Ph1::Switch::make("Load_Add_Switch_" + nodeName, Logger::Level::debug);
+        loadSwitch->setParameters(1e9, addedPowerAsResistance);
+        loadSwitch->open();
+        system.addComponent(loadSwitch);
+        system.connectComponentToNodes<VarType>(loadSwitch, { CPS::SimNode<VarType>::GND, system.node<CPS::SimNode<VarType>>(nodeName) });
+
+        return DPsim::SwitchEvent::make(eventTime, loadSwitch, true);
+    }
+
 }
 }
 }
