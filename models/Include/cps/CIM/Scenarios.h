@@ -17,7 +17,7 @@ namespace CIM {
 namespace Scenarios {
 namespace CIGREMV {
         // network configuration
-        struct NetworkConfig {
+        struct ScenarioConfig {
         Real systemFrequency = 50;
         Real systemNominalVoltage = 20e3;
         Real penetrationLevel = 1;
@@ -57,7 +57,7 @@ namespace CIGREMV {
     };
 
     template <typename VarType>
-    void addInvertersToCIGREMV(SystemTopology& system, CIGREMV::NetworkConfig conf, Domain domain) {
+    void addInvertersToCIGREMV(SystemTopology& system, CIGREMV::ScenarioConfig conf, Domain domain) {
         // add PVs to network topology
         for (Int n = 3; n <= 11; n++) {	
         // get connection node
