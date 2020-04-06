@@ -33,16 +33,11 @@ MnaSolverGpu<VarType>::~MnaSolverGpu() {
         cudaStreamDestroy(mStream);
 
     //Memory allocated on device
-    if(mDeviceCopy.matrix)
-        cudaFree(mDeviceCopy.matrix);
-    if(mDeviceCopy.vector)
-        cudaFree(mDeviceCopy.vector);
-    if(mDeviceCopy.workSpace)
-        cudaFree(mDeviceCopy.workSpace);
-    if(mDeviceCopy.pivSeq)
-        cudaFree(mDeviceCopy.pivSeq);
-    if(mDeviceCopy.errInfo)
-        cudaFree(mDeviceCopy.errInfo);
+    cudaFree(mDeviceCopy.matrix);
+    cudaFree(mDeviceCopy.vector);
+    cudaFree(mDeviceCopy.workSpace);
+    cudaFree(mDeviceCopy.pivSeq);
+    cudaFree(mDeviceCopy.errInfo);
 
     cudaDeviceReset();
 }
