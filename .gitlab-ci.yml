@@ -39,6 +39,24 @@ build:linux:
   script:
     - mkdir -p build
     - cd build
+    - cmake -DWITH_CUDA=OFF ..
+    - make -j 32
+  image: ${DOCKER_IMAGE_DEV}:${DOCKER_TAG}
+  cache:
+    paths:
+      - build
+    key: build-linux
+  artifacts:
+    paths:
+      - build
+  tags:
+    - docker
+
+build:linux-cuda:
+  stage: build
+  script:
+    - mkdir -p build
+    - cd build
     - cmake ..
     - make -j 32
   image: ${DOCKER_IMAGE_DEV}:${DOCKER_TAG}
