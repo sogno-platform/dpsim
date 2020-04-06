@@ -63,7 +63,7 @@ build:linux-cuda:
   cache:
     paths:
       - build
-    key: build-linux
+    key: build-linux-cuda
   artifacts:
     paths:
       - build
