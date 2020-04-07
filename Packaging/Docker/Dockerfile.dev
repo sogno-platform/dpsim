@@ -36,12 +36,21 @@ RUN dnf --refresh -y install \
 	sundials-devel \
 	gsl-devel
 
+# CUDA dependencies
+RUN dnf -y install https://developer.download.nvidia.com/compute/cuda/repos/fedora29/x86_64/cuda-repo-fedora29-10.2.89-1.x86_64.rpm && \
+    dnf --refresh -y install cuda-compiler-10-2 cuda-libraries-dev-10-2 && \
+    ln -s cuda-10.2 /usr/local/cuda
+
+ENV PATH="/usr/local/cuda/bin:${PATH}"
+ENV LD_LIBRARY_PATH="/usr/local/cuda/lib64:${LD_LIBRARY_PATH}"
+
+
 # Install some debuginfos
 RUN dnf -y debuginfo-install \
 	python3
 
 # CIMpp and VILLAS are installed here
-ENV LD_LIBRARY_PATH /usr/local/lib64
+ENV LD_LIBRARY_PATH="/usr/local/lib64:${LD_LIBRARY_PATH}"
 
 # VILLAS dependencies
 RUN dnf -y install \

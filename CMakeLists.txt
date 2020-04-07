@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.12)
+cmake_minimum_required(VERSION 3.13)
 project(DPsim CXX)
 
 set(PROJECT_AUTHOR "Institute for Automation of Complex Power Systems, RWTH Aachen University")
@@ -78,6 +78,8 @@ find_package(Threads REQUIRED)
 find_package(CIMpp)
 find_package(Sundials)
 find_package(OpenMP)
+find_package(CUDA)
+
 find_package(GSL)
 find_package(Graphviz)
 
@@ -98,18 +100,23 @@ endif()
 
 include(CMakeDependentOption)
 
+option(BUILD_SHARED_LIBS "Build shared library"                   OFF)
+option(BUILD_EXAMPLES    "Build C++ examples"                     ON )
+
+cmake_dependent_option(WITH_GSL			"Enable GSL"        					ON  "GSL_FOUND"			OFF)
+cmake_dependent_option(WITH_SUNDIALS	"Enable sundials solver suite"			ON  "Sundials_FOUND"	OFF)
+cmake_dependent_option(WITH_SHMEM		"Enable shared memory interface"		ON  "VILLASnode_FOUND"	OFF)
+cmake_dependent_option(WITH_RT			"Enable real-time features"				ON  "Linux_FOUND"		OFF)
+cmake_dependent_option(WITH_PYTHON		"Enable Python support"					ON "Python_FOUND"		OFF)
+cmake_dependent_option(WITH_CIM			"Enable support for parsing CIM files"	ON  "CIMpp_FOUND"		OFF)
+cmake_dependent_option(WITH_OPENMP		"Enable OpenMP-based parallelisation"	ON  "OPENMP_FOUND"		OFF)
+cmake_dependent_option(WITH_CUDA		"Enable CUDA-based parallelisation"		ON  "CUDA_FOUND"		OFF)
+
+if(WITH_CUDA)
+	enable_language(CUDA)
+endif()
 option(BUILD_SHARED_LIBS 	"Build shared library" OFF)
 option(BUILD_EXAMPLES 		"Build C++ examples" ON)
-
-cmake_dependent_option(WITH_GSL				"Enable GSL"        							ON "GSL_FOUND"				OFF)
-cmake_dependent_option(WITH_SUNDIALS	"Enable sundials solver suite"		ON "Sundials_FOUND"		OFF)
-cmake_dependent_option(WITH_SHMEM			"Enable shared memory interface"	ON "VILLASnode_FOUND"	OFF)
-cmake_dependent_option(WITH_RT				"Enable real-time features"				ON "Linux_FOUND"			OFF)
-cmake_dependent_option(WITH_PYTHON		"Enable Python support"						ON "Python_FOUND"			OFF)
-cmake_dependent_option(WITH_NUMPY    	"Enable NumPy"										ON "NumPy_FOUND"			OFF)
-cmake_dependent_option(WITH_CIM				"Enable CIM file parsing"					ON "CIMpp_FOUND"			OFF)
-cmake_dependent_option(WITH_OPENMP		"Enable OpenMP parallelisation"		ON "OPENMP_FOUND"			OFF)
-cmake_dependent_option(WITH_GRAPHVIZ	"Enable Graphviz Graphs"					ON "Graphviz_FOUND" 	OFF)
 
 configure_file(
 	${CMAKE_CURRENT_SOURCE_DIR}/Include/dpsim/Config.h.in

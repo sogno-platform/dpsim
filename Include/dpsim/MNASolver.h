@@ -80,7 +80,6 @@ namespace DPsim {
 		std::unordered_map< std::bitset<SWITCH_NUM>, CPS::LUFactorized > mLuFactorizations;
 		std::unordered_map< std::bitset<SWITCH_NUM>, std::vector<CPS::LUFactorized> > mLuFactorizationsHarm;
 
-
 		// #### Attributes related to switching ####
 		/// Index of the next switching event
 		UInt mSwitchTimeIndex = 0;
