@@ -44,6 +44,18 @@ RUN dnf -y install https://developer.download.nvidia.com/compute/cuda/repos/fedo
 ENV PATH="/usr/local/cuda/bin:${PATH}"
 ENV LD_LIBRARY_PATH="/usr/local/cuda/lib64:${LD_LIBRARY_PATH}"
 
+# CUDARPC and dependencies
+RUN dnf install -y make bash git gcc autoconf libtool automake
+RUN dnf install -y ncurses-devel zlib-devel binutils-devel mesa-libGL-devel libvdpau-devel mesa-libEGL-devel openssl-devel rpcbind rpcgen
+ENV LD_LIBRARY_PATH="/usr/local/lib:/usr/local/lib64:${LD_LIBRARY_PATH}"
+# copy gitlab-runner ssh credentials into build container
+COPY --chown=root .ssh /root/.ssh
+RUN git clone --recurse-submodules https://git.rwth-aachen.de/niklas.eiling/cricket.git && \
+    cd cricket && \
+    make -j 32 LOG=INFO
+
+ENV PATH="$PWD/cricket/bin:${PATH}"
+ENV LD_LIBRARY_PATH="$PWD/cricket/bin:${LD_LIBRARY_PATH}"
 
 # Install some debuginfos
 RUN dnf -y debuginfo-install \
