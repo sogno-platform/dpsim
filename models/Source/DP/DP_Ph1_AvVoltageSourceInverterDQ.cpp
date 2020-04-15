@@ -77,53 +77,6 @@ void DP::Ph1::AvVoltageSourceInverterDQ::setParameters(Real sysOmega, Complex sy
 	parametersSet = true;
 }
 
-void DP::Ph1::AvVoltageSourceInverterDQ::setParameters(Real sysOmega, Complex sysVoltNom, Real Pref, Real Qref, Real Kp_pll, Real Ki_pll,
-	Real Kp_powerCtrl, Real Ki_powerCtrl, Real Kp_currCtrl, Real Ki_currCtrl, Real Omega_cutoff, Real Lf, Real Cf,
-	Real Rf, Real Rc) {
-
-	mPref = Pref;
-	mQref = Qref;
-	mVoltNom = sysVoltNom;
-	mOmegaN = sysOmega;
-
-	mSLog->info("General Parameters:");
-	mSLog->info("Nominal Voltage={} [V] Nominal Omega={} [1/s]", mVoltNom, mOmegaN);
-	mSLog->info("Active Power={} [W] Reactive Power={} [VAr]", mPref, mQref);  
-
-	mKpPLL = Kp_pll;
-	mKiPLL = Ki_pll;
-
-	mKiPowerCtrld = Ki_powerCtrl;
-	mKiPowerCtrlq = Ki_powerCtrl;
-
-	mKpPowerCtrld = Kp_powerCtrl;
-	mKpPowerCtrlq = Kp_powerCtrl;
-
-	mKiCurrCtrld = Ki_currCtrl;
-	mKiCurrCtrlq = Ki_currCtrl;
-
-	mKpCurrCtrld = Kp_currCtrl;
-	mKpCurrCtrlq = Kp_currCtrl;
-
-	mOmegaCutoff = Omega_cutoff;
-
-	mSLog->info("Control Parameters:");
-	mSLog->info("PLL: K_i = {}, K_p = {}", mKpPLL, mKiPLL);
-	mSLog->info("Power Loop: K_i = {}, K_p = {}", mKpPowerCtrld, mKiPowerCtrld);
-	mSLog->info("Current Loop: K_i = {}, K_p = {}", mKpCurrCtrld, mKiCurrCtrld);
-
-	mLf = Lf;
-	mCf = Cf;
-	mRf = Rf;
-	mRc = Rc;
-
-	mSLog->info("Filter Parameters:");
-	mSLog->info("Inductance Lf={} [H] Capacitance Cf={} [F]", mLf, mCf);
-	mSLog->info("Resistance Rf={} [H] Resistance Rc={} [F]", mRf, mRc);
-
-	parametersSet = true;
-}
-
 void DP::Ph1::AvVoltageSourceInverterDQ::setControllerParameters(Real Kp_pll, Real Ki_pll, Real Kp_powerCtrl, Real Ki_powerCtrl, Real Kp_currCtrl, Real Ki_currCtrl, Real Omega_cutoff) {
 	mKpPLL = Kp_pll;
 	mKiPLL = Ki_pll;
@@ -162,10 +115,8 @@ void DP::Ph1::AvVoltageSourceInverterDQ::setFilterParameters(Real Lf, Real Cf, R
 
 
 SimPowerComp<Complex>::Ptr DP::Ph1::AvVoltageSourceInverterDQ::clone(String name) {
-	auto copy = AvVoltageSourceInverterDQ::make(name, mLogLevel);
-	copy->setParameters(mOmegaN, mVoltNom, mPref, mQref, mKpPLL, mKiPLL,
-		mKpPowerCtrld, mKiPowerCtrld, mKpCurrCtrld, mKiCurrCtrld, mOmegaCutoff, mLf, mCf,
-		mRf, mRc);
+	auto copy = DP::Ph1::AvVoltageSourceInverterDQ::make(name, mLogLevel);
+	copy->setParameters(mOmegaN, mVoltNom, mPref, mQref);
 	return copy;
 }
 
@@ -437,7 +388,7 @@ void DP::Ph1::AvVoltageSourceInverterDQ::initializeFromPowerflow(Real frequency)
 	mSubCapacitorF->setParameters(mCf);
 	mSubCtrledVoltageSource->setParameters(mIntfVoltage);
 
-	// connect filter subcomponents
+	// connect subcomponents
 	mSubCtrledVoltageSource->connect({ SimNode::GND, mVirtualNodes[1] });
 	mSubCtrledVoltageSource->setVirtualNodeAt(mVirtualNodes[0], 0);
 	mSubResistorF->connect({ mVirtualNodes[1], mVirtualNodes[2] });

@@ -49,6 +49,9 @@ namespace Ph1 {
 		///
 		std::shared_ptr<DP::Ph1::Resistor> mSubResistorC;
 		
+		/// Optional connection transformer as subcomponent
+		std::shared_ptr<DP::Ph1::Transformer> mConnectionTransformer;
+
 		///
 		std::vector<Real>* mGenProfile = nullptr;
 		///
@@ -143,8 +146,6 @@ namespace Ph1 {
 
 	public:
 		///
-		std::shared_ptr<DP::Ph1::Transformer> mConnectionTransformer;
-		///
 		std::vector<PQData> mLoadProfile;
 		// #### constructors ####
 		///
@@ -163,10 +164,7 @@ namespace Ph1 {
 			Attribute<Matrix>::Ptr leftVector);
 		///
 		void updateStates();
-		///
-		void setParameters(Real sysOmega, Complex sysVoltNom, Real Pref, Real Qref, Real Kp_pll, Real Ki_pll,
-			Real Kp_powerCtrl, Real Ki_powerCtrl, Real Kp_currCtrl, Real Ki_currCtrl, Real Omega_cutoff, Real Lf, Real Cf,
-			Real Rf, Real Rc);
+		
 		///
 		void setParameters(Real sysOmega, Complex sysVoltNom, Real Pref, Real Qref);
 		///

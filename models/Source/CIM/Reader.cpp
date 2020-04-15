@@ -634,7 +634,6 @@ TopologicalPowerComp::Ptr Reader::mapExternalNetworkInjection(ExternalNetworkInj
 	} else {
 		if (mPhase == PhaseType::Single) {
 			return std::make_shared<DP::Ph1::NetworkInjection>(extnet->mRID, extnet->name, mComponentLogLevel);
-			return nullptr;
 		} else {
 			throw SystemError("Mapping of ExternalNetworkInjection for DP::Ph3 not existent!");
 			return nullptr;
