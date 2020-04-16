@@ -353,36 +353,34 @@ void MnaSolver<VarType>::createVirtualNodes() {
 
 		if (pComp->hasVirtualNodes()) {
 			for (UInt node = 0; node < pComp->virtualNodesNumber(); node++) {
-				virtualNode++;
-				mNodes.push_back(pComp->virtualNode(node));
-
-				pComp->virtualNode(node)->setMatrixNodeIndex(0, virtualNode);
-				mSLog->info("Assigned index {} to virtual node {} for {}", virtualNode, node, pComp->name());
-
-				if (pComp->virtualNode(node)->phaseType() == CPS::PhaseType::ABC) {
-					for (UInt phase = 1; phase < 3; phase++) {
+					mNodes.push_back(pComp->virtualNode(node));
+					if (pComp->virtualNode(node)->phaseType() != CPS::PhaseType::ABC) {
 						virtualNode++;
-						pComp->virtualNode(node)->setMatrixNodeIndex(phase, virtualNode);
+						pComp->virtualNode(node)->setMatrixNodeIndex(0, virtualNode);
 						mSLog->info("Assigned index {} to virtual node {} for {}", virtualNode, node, pComp->name());
+					} else {					
+						for (UInt phase = 0; phase < 3; phase++) {
+							virtualNode++;
+							pComp->virtualNode(node)->setMatrixNodeIndex(phase, virtualNode);
+							mSLog->info("Assigned index {} to phase {} of virtual node {} for {}", virtualNode, phase, node, pComp->name());
+						}
 					}
 				}
-			}
 		}
 
 		if (pComp->hasSubComponents()) {
 			for (auto pSubComp : pComp->subComponents()) {
 				for (UInt node = 0; node < pSubComp->virtualNodesNumber(); node++) {
-					virtualNode++;
 					mNodes.push_back(pSubComp->virtualNode(node));
-
-					pSubComp->virtualNode(node)->setMatrixNodeIndex(0, virtualNode);
-					mSLog->info("Assigned index {} to virtual node {} for {}", virtualNode, node, pSubComp->name());
-
-					if (pSubComp->virtualNode(node)->phaseType() == CPS::PhaseType::ABC) {
-						for (UInt phase = 1; phase < 3; phase++) {
+					if (pSubComp->virtualNode(node)->phaseType() != CPS::PhaseType::ABC) {
+						virtualNode++;
+						pSubComp->virtualNode(node)->setMatrixNodeIndex(0, virtualNode);
+						mSLog->info("Assigned index {} to virtual node {} for {}", virtualNode, node, pSubComp->name());
+					} else {					
+						for (UInt phase = 0; phase < 3; phase++) {
 							virtualNode++;
 							pSubComp->virtualNode(node)->setMatrixNodeIndex(phase, virtualNode);
-							mSLog->info("Assigned index {} to virtual node {} for {}", virtualNode, node, pSubComp->name());
+							mSLog->info("Assigned index {} to phase {} of virtual node {} for {}", virtualNode, phase, node, pSubComp->name());
 						}
 					}
 				}
