@@ -170,6 +170,9 @@ namespace CIM {
 		/// read node voltages from the corresponding static SystemTopology for initialization
 		void readNodeVoltagesFromStaticSystemTopology(SystemTopology& sysStatic, SystemTopology& sysDynamic);
 
+		///
+		void initDynamicSystemTopologyWithPowerflow(SystemTopology& systemPF, SystemTopology& systemEMT);
+
 		// #### shunt component settings ####
 		/// set shunt capacitor value
 		void setShuntCapacitor(Real v) {
