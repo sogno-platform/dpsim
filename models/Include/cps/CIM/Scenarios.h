@@ -92,18 +92,36 @@ namespace CIGREMV {
         }
     }
 
-    template <typename VarType>
     std::shared_ptr<DPsim::SwitchEvent> createEventAddPowerConsumption(String nodeName, Real eventTime, Real addedPowerAsResistance, SystemTopology& system, Domain domain) {
         
-        // TODO: make this dependent on the domain parameter     
-        auto loadSwitch = DP::Ph1::Switch::make("Load_Add_Switch_" + nodeName, Logger::Level::debug);
-        loadSwitch->setParameters(1e9, addedPowerAsResistance);
-        loadSwitch->open();
-        system.addComponent(loadSwitch);
-        system.connectComponentToNodes<VarType>(loadSwitch, { CPS::SimNode<VarType>::GND, system.node<CPS::SimNode<VarType>>(nodeName) });
-
-        return DPsim::SwitchEvent::make(eventTime, loadSwitch, true);
+        // TODO: use base classes ph1
+        if (domain == CPS::Domain::DP) {
+            auto loadSwitch = DP::Ph1::Switch::make("Load_Add_Switch_" + nodeName, Logger::Level::debug);
+            loadSwitch->setParameters(1e9, addedPowerAsResistance);
+            loadSwitch->open();
+            system.addComponent(loadSwitch);
+            system.connectComponentToNodes<Complex>(loadSwitch, { CPS::SimNode<Complex>::GND, system.node<CPS::SimNode<Complex>>(nodeName) });
+            return DPsim::SwitchEvent::make(eventTime, loadSwitch, true);
+        } else {
+            return nullptr;
+        }
     }
+
+    std::shared_ptr<DPsim::SwitchEvent3Ph> createEventAddPowerConsumption3Ph(String nodeName, Real eventTime, Real addedPowerAsResistance, SystemTopology& system, Domain domain) {
+        
+        // TODO: use base classes ph3
+         if (domain == CPS::Domain::EMT) {
+            auto loadSwitch = EMT::Ph3::Switch::make("Load_Add_Switch_" + nodeName, Logger::Level::debug);
+            loadSwitch->setParameters(Matrix::Identity(3,3)*1e9, Matrix::Identity(3,3)*addedPowerAsResistance);
+            loadSwitch->openSwitch();
+            system.addComponent(loadSwitch);
+            system.connectComponentToNodes<Real>(loadSwitch, { CPS::SimNode<Real>::GND, system.node<CPS::SimNode<Real>>(nodeName) });
+            return DPsim::SwitchEvent3Ph::make(eventTime, loadSwitch, true);
+        } else {
+            return nullptr;
+        }
+    }
+
 
 }
 }
