@@ -21,7 +21,13 @@
 #include <cps/SimSignalComp.h>
 #include <cps/SimPowerComp.h>
 
-#define SWITCH_NUM 16
+/* std::size_t is the largest data type. No container can store
+ * more than std::size_t elements. Define the number of switches
+ * as the log_2 of this value so that we end up with maximally
+ * std::size_t matrices. The overhead of statically defining this
+ * value should be minimal.
+ **/
+#define SWITCH_NUM sizeof(std::size_t)*8
 
 namespace DPsim {
 	/// Solver class using Modified Nodal Analysis (MNA).
