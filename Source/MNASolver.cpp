@@ -358,7 +358,7 @@ void MnaSolver<VarType>::createVirtualNodes() {
 						virtualNode++;
 						pComp->virtualNode(node)->setMatrixNodeIndex(0, virtualNode);
 						mSLog->info("Assigned index {} to virtual node {} for {}", virtualNode, node, pComp->name());
-					} else {					
+					} else {
 						for (UInt phase = 0; phase < 3; phase++) {
 							virtualNode++;
 							pComp->virtualNode(node)->setMatrixNodeIndex(phase, virtualNode);
@@ -376,7 +376,7 @@ void MnaSolver<VarType>::createVirtualNodes() {
 						virtualNode++;
 						pSubComp->virtualNode(node)->setMatrixNodeIndex(0, virtualNode);
 						mSLog->info("Assigned index {} to virtual node {} for {}", virtualNode, node, pSubComp->name());
-					} else {					
+					} else {
 						for (UInt phase = 0; phase < 3; phase++) {
 							virtualNode++;
 							pSubComp->virtualNode(node)->setMatrixNodeIndex(phase, virtualNode);
@@ -402,6 +402,9 @@ void MnaSolver<VarType>::steadyStateInitialization() {
 	DataLogger initLeftVectorLog(mName + "_InitLeftVector", mLogLevel != CPS::Logger::Level::off);
 	DataLogger initRightVectorLog(mName + "_InitRightVector", mLogLevel != CPS::Logger::Level::off);
 
+	// TODO: enable use of timestep distinct from simulation timestep
+	Real initTimeStep = mTimeStep;
+
 	Int timeStepCount = 0;
 	Real time = 0;
 	Real maxDiff = 1.0;
@@ -409,12 +412,14 @@ void MnaSolver<VarType>::steadyStateInitialization() {
 	Matrix diff = Matrix::Zero(2 * mNumNodes, 1);
 	Matrix prevLeftSideVector = Matrix::Zero(2 * mNumNodes, 1);
 
+	mSLog->info("Time step is {:f}s for steady-state initialization", initTimeStep);
+
 	for (auto comp : mSystem.mComponents) {
 		auto powerComp = std::dynamic_pointer_cast<CPS::TopologicalPowerComp>(comp);
-		if (powerComp) powerComp->setBehaviour(TopologicalPowerComp::Behaviour::Initialization);
+		if (powerComp) powerComp->setBehaviour(initBehaviourPowerComps);
 
 		auto sigComp = std::dynamic_pointer_cast<CPS::SimSignalComp>(comp);
-		if (sigComp) sigComp->setBehaviour(SimSignalComp::Behaviour::Initialization);
+		if (sigComp) sigComp->setBehaviour(initBehaviourSignalComps);
 	}
 
 	initializeSystem();
@@ -463,7 +468,7 @@ void MnaSolver<VarType>::steadyStateInitialization() {
 		}
 
 		// Calculate new simulation time
-		time = time + mTimeStep;
+		time = time + initTimeStep;
 		timeStepCount++;
 
 		// Calculate difference
