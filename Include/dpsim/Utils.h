@@ -51,6 +51,7 @@ public:
 		CPS::Logger::Level ll = CPS::Logger::Level::info,
 		Bool ss = false,
 		Bool b = false,
+		Bool si = false,
 		CPS::Domain sd = CPS::Domain::DP,
 		Solver::Type st = Solver::Type::MNA
 	);
@@ -68,6 +69,7 @@ public:
 
 	bool startSynch;
 	bool blocking;
+	bool steadyInit;
 
 	struct {
 		CPS::Domain domain;

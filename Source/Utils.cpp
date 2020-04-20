@@ -30,12 +30,14 @@ CommandLineArgs::CommandLineArgs(int argc, char *argv[],
 		CPS::Logger::Level ll,
 		Bool ss,
 		Bool b,
+		Bool si,
 		CPS::Domain sd,
 		Solver::Type st
 	) :
 	mProgramName(argv[0]),
 	mArguments {
 		{ "start-synch",	no_argument,		0, 'S', NULL, "" },
+		{ "steady-init",	no_argument,		0, 'I', NULL, "" },
 		{ "blocking",		no_argument,		0, 'b', NULL, "" },
 		{ "help",		no_argument,		0, 'h', NULL, "" },
 		{ "timestep",		required_argument,	0, 't', "SECS", "Simulation time-step" },
@@ -59,6 +61,7 @@ CommandLineArgs::CommandLineArgs(int argc, char *argv[],
 	name(nm),
 	startSynch(ss),
 	blocking(b),
+	steadyInit(si),
 	solver{sd, st}
 {
 	std::vector<option> long_options;
@@ -79,6 +82,10 @@ CommandLineArgs::CommandLineArgs(int argc, char *argv[],
 		switch (c) {
 			case 'S':
 				startSynch = true;
+				break;
+
+			case 'I':
+				steadyInit = true;
 				break;
 
 			case 'b':
