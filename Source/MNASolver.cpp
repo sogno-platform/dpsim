@@ -402,11 +402,8 @@ void MnaSolver<VarType>::steadyStateInitialization() {
 	DataLogger initLeftVectorLog(mName + "_InitLeftVector", mLogLevel != CPS::Logger::Level::off);
 	DataLogger initRightVectorLog(mName + "_InitRightVector", mLogLevel != CPS::Logger::Level::off);
 
-	// TODO: only temporarily use simulation behaviour
-	// TopologicalPowerComp::Behaviour initBehaviourPowerComps = TopologicalPowerComp::Behaviour::Initialization;
-	// SimSignalComp::Behaviour initBehaviourSignalComps = SimSignalComp::Behaviour::Initialization;
-	TopologicalPowerComp::Behaviour initBehaviourPowerComps = TopologicalPowerComp::Behaviour::Simulation;
-	SimSignalComp::Behaviour initBehaviourSignalComps = SimSignalComp::Behaviour::Simulation;
+	TopologicalPowerComp::Behaviour initBehaviourPowerComps = TopologicalPowerComp::Behaviour::Initialization;
+	SimSignalComp::Behaviour initBehaviourSignalComps = SimSignalComp::Behaviour::Initialization;
 
 	// TODO: enable use of timestep distinct from simulation timestep
 	Real initTimeStep = mTimeStep;

@@ -162,9 +162,9 @@ void DP::Ph1::AvVoltageSourceInverterDQ::updateMonitoredValues(const Matrix& lef
 		igdq = rotatingFrame2to1(IgDP(0, 0), mThetaPLL, mOmegaN * time);
 	}
 	else {
-		vcdq = rotatingFrame2to1(VcDP(0, 0), mThetaPLL, mThetaSInit + mOmegaN * time );
-		ifdq = rotatingFrame2to1(IfDP(0, 0), mThetaPLL, mThetaSInit + mOmegaN * time);
-		igdq = rotatingFrame2to1(IgDP(0, 0), mThetaPLL, mThetaSInit + mOmegaN * time);
+		vcdq = rotatingFrame2to1(VcDP(0, 0), mThetaPLL, mThetaSInit + mOmegaN * mTimeStep + mOmegaN * time);
+		ifdq = rotatingFrame2to1(IfDP(0, 0), mThetaPLL, mThetaSInit + mOmegaN * mTimeStep + mOmegaN * time);
+		igdq = rotatingFrame2to1(IgDP(0, 0), mThetaPLL, mThetaSInit + mOmegaN * mTimeStep + mOmegaN * time);
 	}
 
 	mVcdq(0, 0) = vcdq.real();
@@ -278,22 +278,18 @@ void DP::Ph1::AvVoltageSourceInverterDQ::updatePowerGeneration() {
 void DP::Ph1::AvVoltageSourceInverterDQ::step(Real time, Int timeStepCount) {
 	Matrix newStates = Matrix::Zero(8, 1);
 	Matrix newU = Matrix::Zero(7, 1);
+
 	if (mBehaviour == Behaviour::Simulation && (mGenProfile || (!mLoadProfile.empty()))) {
 		if(timeStepCount % mProfileUndateRate  == 0)
 			updatePowerGeneration();
 	}
-	//updateSetPoint(time);
-	newU <<
-		mOmegaN, mPref, mQref, mVcdq(0, 0), mVcdq(1, 0), mIfdq(0, 0), mIfdq(1, 0);
 
+	newU << mOmegaN, mPref, mQref, mVcdq(0, 0), mVcdq(1, 0), mIfdq(0, 0), mIfdq(1, 0);
 	newStates = Math::StateSpaceTrapezoidal(mStates, mA, mB, mTimeStep, newU, mU);
 
 	if (mCtrlOn) {
 		// update states
 		mThetaPLL = newStates(0, 0);
-		// update measurements ( for additional loggers)
-		mOmegaInst = (time > 0) ? mThetaPLL / time : 0;
-		mFreqInst = mOmegaInst / 2 / PI;
 		mPhiPLL = newStates(1, 0);
 		mP = newStates(2, 0);
 		mQ = newStates(3, 0);
@@ -302,8 +298,13 @@ void DP::Ph1::AvVoltageSourceInverterDQ::step(Real time, Int timeStepCount) {
 		mGamma_d = newStates(6, 0);
 		mGamma_q = newStates(7, 0);
 
+		// update measurements ( for additional loggers)
+		mOmegaInst = (newStates(0, 0) - mStates(0,0))/mTimeStep;
+		mFreqInst = mOmegaInst / 2 / PI;
+
 		mStates = newStates;
 		mU = newU;
+
 		// new output
 		mVsdq = mC * mStates + mD * mU;
 	}
@@ -488,14 +489,12 @@ void DP::Ph1::AvVoltageSourceInverterDQ::mnaApplyRightSideVectorStamp(Matrix& ri
 
 MatrixComp DP::Ph1::AvVoltageSourceInverterDQ::dqToDP(Real time) {
 	MatrixComp vsDqS(1, 1);;
-	if (mBehaviour == Behaviour::Initialization) {
+	if (mBehaviour == Behaviour::Initialization)
 		vsDqS(0, 0) = rotatingFrame2to1(Complex(mVsdq(0, 0), mVsdq(1, 0)), mOmegaN * time, mThetaPLL);
-	}
 	else
-	{
 		vsDqS(0, 0) = rotatingFrame2to1(Complex(mVsdq(0, 0), mVsdq(1, 0)),
-										mThetaSInit + mOmegaN * time, mThetaPLL);
-	}
+										 mThetaSInit + mOmegaN * mTimeStep + mOmegaN * time, mThetaPLL);
+										 
 	return vsDqS;
 }
 
