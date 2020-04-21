@@ -1,0 +1,99 @@
+FROM centos:8
+
+ARG VILLAS_VERSION=0.8.0
+
+LABEL \
+	org.label-schema.schema-version = "1.0" \
+	org.label-schema.name = "DPsim" \
+	org.label-schema.license = "GPL-3.0" \
+	org.label-schema.vendor = "Institute for Automation of Complex Power Systems, RWTH Aachen University" \
+	org.label-schema.author.name = "Steffen Vogel" \
+	org.label-schema.author.email = "stvogel@eonerc.rwth-aachen.de" \
+	org.label-schema.url = "http://fein-aachen.org/projects/dpsim/" \
+	org.label-schema.vcs-url = "https://git.rwth-aachen.de/acs/public/simulation/dpsim"
+
+RUN dnf -y update && \
+    dnf install -y epel-release dnf-plugins-core && \
+    dnf install -y https://rpms.remirepo.net/enterprise/remi-release-8.rpm && \
+    dnf config-manager --set-enabled PowerTools && \
+    dnf config-manager --set-enabled remi
+
+# Toolchain
+RUN dnf -y install \
+	git clang gdb ccache \
+	redhat-rpm-config \
+	rpmdevtools \
+	make cmake ninja-build \
+	doxygen \
+	graphviz \
+	pandoc \
+	python3-pip \
+	pkg-config
+
+# Dependencies
+RUN dnf --refresh -y install \
+	python3-devel \
+	eigen3-devel \
+	libxml2-devel \
+	graphviz-devel \
+	gsl-devel
+
+# CUDA dependencies
+RUN dnf -y install https://developer.download.nvidia.com/compute/cuda/repos/rhel8/x86_64/cuda-repo-rhel8-10.2.89-1.x86_64.rpm && \
+    dnf --refresh -y install cuda-compiler-10-2 cuda-libraries-dev-10-2 && \
+    ln -s cuda-10.2 /usr/local/cuda
+
+ENV PATH="/usr/local/cuda/bin:${PATH}"
+ENV LD_LIBRARY_PATH="/usr/local/cuda/lib64:${LD_LIBRARY_PATH}"
+
+# CUDARPC and dependencies
+RUN dnf install -y make bash git gcc autoconf libtool automake
+RUN dnf install -y ncurses-devel zlib-devel binutils-devel mesa-libGL-devel libvdpau-devel mesa-libEGL-devel openssl-devel rpcbind rpcgen patchelf
+ENV LD_LIBRARY_PATH="/usr/local/lib:/usr/local/lib64:${LD_LIBRARY_PATH}"
+# copy gitlab-runner ssh credentials into build container
+COPY --chown=root .ssh /root/.ssh
+RUN git clone --recurse-submodules https://git.rwth-aachen.de/niklas.eiling/cricket.git && \
+    cd cricket && \
+    make -j 16 LOG=INFO
+
+ENV PATH="$PWD/cricket/bin:${PATH}"
+ENV LD_LIBRARY_PATH="$PWD/cricket/bin:${LD_LIBRARY_PATH}"
+
+# Install some debuginfos
+RUN dnf -y debuginfo-install \
+	python3
+
+# CIMpp and VILLAS are installed here
+ENV LD_LIBRARY_PATH="/usr/local/lib64:${LD_LIBRARY_PATH}"
+
+# VILLAS dependencies
+RUN dnf -y install \
+    openssl-devel \
+    libuuid-devel \
+    libconfig-devel \
+    libnl3-devel \
+    libcurl-devel \
+    jansson-devel \
+    libwebsockets-devel \
+    mosquitto-devel
+
+# Install CIMpp
+RUN cd /tmp && \
+	git clone --recurse-submodules https://github.com/CIM-IEC/libcimpp.git && \
+	mkdir -p libcimpp/build && cd libcimpp/build && \
+	cmake -DCMAKE_INSTALL_LIBDIR=/usr/local/lib64 -DUSE_CIM_VERSION=IEC61970_16v29a -DBUILD_SHARED_LIBS=ON -DBUILD_ARABICA_EXAMPLES=OFF .. && make -j$(nproc) install && \
+	rm -rf /tmp/libcimpp
+
+# Python dependencies
+ADD requirements.txt .
+RUN pip3 install -r requirements.txt
+
+# Remove this part in the future and use dedicated jupyter Dockerfile
+# Activate Jupyter extensions
+ADD requirements-jupyter.txt .
+RUN pip3 install -r requirements-jupyter.txt
+RUN dnf -y --refresh install npm
+RUN jupyter nbextension enable --py widgetsnbextension
+RUN jupyter labextension install @jupyter-widgets/jupyterlab-manager
+
+EXPOSE 8888

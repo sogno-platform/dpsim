@@ -21,7 +21,7 @@ docker:
   script:
     - cp -r ~/.ssh .
     - docker build
-        --file Packaging/Docker/Dockerfile.dev
+        --file Packaging/Docker/Dockerfile.dev-centos
         --tag ${DOCKER_IMAGE_DEV}:${DOCKER_TAG}
         --tag ${DOCKER_IMAGE_DEV}:latest .
 # build dedicated jupyter image in the future
@@ -58,16 +58,16 @@ build:linux-cuda:
   script:
     - mkdir -p build
     - cd build
-    - cmake ..
+    - cmake -DWITH_SPDLOG_SUBMODULE=ON ..
     - make -j 32
   image: ${DOCKER_IMAGE_DEV}:${DOCKER_TAG}
-  cache:
-    paths:
-      - build
-    key: build-linux-cuda
+#  cache:
+#    paths:
+#      - build
+#    key: build-linux-cuda
   artifacts:
     paths:
-      - build
+     - build
   tags:
     - docker
 
@@ -198,15 +198,37 @@ build:docker:
     CI_DIR: '$CI_BUILDS_DIR/$CI_PROJECT_PATH'
     LDIR: '/cricket/bin'
     TEST_FILES: ''
+    TEST_PARAM: ''
+    REMOTE_LIBS: 'linux-vdso.so.1
+                  librt.so.1
+                  libdl.so.2
+                  libcudart.so.10.2
+                  libcusolver.so.10
+                  libstdc\+\+.so.6
+                  libm.so.6
+                  libgcc_s.so.1
+                  libc.so.6
+                  /lib64/ld-linux-x86-64.so.2
+                  libutil.so.1
+                  libpthread.so.0'
   script:
-    - ls $TEST_BINARY_PATH
-    - ldd $TEST_BINARY_PATH/$TEST_BINARY | sed -n -E -e 's/^\s+\S+ => (\S+) \S+$/\1/p'  | xargs -I % cp % $LDIR
     - echo "$TEST_BINARY_PATH/$TEST_BINARY $TEST_FILES" | tr -d '\n' | xargs -r -d " " -I % cp % $LDIR
+    - echo $REMOTE_LIBS
+    - ldd $LDIR/$TEST_BINARY |
+      sed -n -E -e 's/^\s+\S+ => (\S+) \S+$/\1/p' |
+      grep -Ev "$(echo $REMOTE_LIBS | tr ' ' '|')|not" |
+      xargs -I % cp % $LDIR/
+#- ldd $TEST_BINARY_PATH/$TEST_BINARY |
+#        sed -n -E -e 's/^\s+(\S+) => \S+ \S+$/\1/p' |
+#        sed '/libc.so/d' | sed '/linux-vdso.so/d'  |
+#        xargs -I % patchelf --remove-needed % $LDIR/$TEST_BINARY
     - ssh $GPU_TARGET mkdir -p $RDIR
     - scp -r $LDIR/* $GPU_TARGET:$RDIR/
-    - ssh $GPU_TARGET "LD_LIBRARY_PATH=$RDIR:$${LD_LIBRARY_PATH} LD_PRELOAD=$RDIR/cricket-server.so $RDIR/$TEST_BINARY" &
+    - echo "LD_LIBRARY_PATH=$RDIR:${LD_LIBRARY_PATH} LD_PRELOAD=$RDIR/cricket-server.so $RDIR/$TEST_BINARY"
+    - ssh $GPU_TARGET "LD_LIBRARY_PATH=$RDIR:${LD_LIBRARY_PATH} LD_PRELOAD=$RDIR/cricket-server.so $RDIR/$TEST_BINARY" &
     - sleep 2
-    - PATH=$LDIR:$PATH LD_PRELOAD=$LDIR/libtirpc.so.3:$LDIR/cricket-client.so $LDIR/$TEST_BINARY
+#- PATH=$LDIR:${PATH} cricket info $TEST_BINARY_PATH/$TEST_BINARY
+    - PATH=$LDIR:${PATH} LD_PRELOAD=$LDIR/libtirpc.so.3:$LDIR/cricket-client.so $TEST_BINARY_PATH/$TEST_BINARY $TEST_PARAM
   after_script:
 #- ssh $GPU_TARGET rm -rf $RDIR
     - ssh $GPU_TARGET pkill -fe -2 $RDIR/test_kernel
@@ -219,13 +241,14 @@ build:docker:
 test:cuda:
     extends: .remote-gpu
     variables:
+# Name of the test binary
       TEST_BINARY: 'WSCC_9bus_mult_decoupled'
+# Path where the test binary is located
       TEST_BINARY_PATH: 'build/Examples/Cxx'
-      TEST_FILES: '/usr/local/lib64/libvillas.so.1
-                   Examples/CIM/grid-data/WSCC-09/WSCC-09_RX/WSCC-09_RX_DI.xml
-                   Examples/CIM/grid-data/WSCC-09/WSCC-09_RX/WSCC-09_RX_EQ.xml
-                   Examples/CIM/grid-data/WSCC-09/WSCC-09_RX/WSCC-09_RX_SV.xml
-                   Examples/CIM/grid-data/WSCC-09/WSCC-09_RX/WSCC-09_RX_TP.xml'
+# Additional files that are necessary to run the application on the GPU node
+      TEST_FILE: ''
+# Command line parameters for the test binary
+      TEST_PARAM: ''
 
 # Stage deploy
 ##############################################################################
