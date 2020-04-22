@@ -15,6 +15,8 @@ DP::Ph1::Transformer::Transformer(String uid, String name,
 	: SimPowerComp<Complex>(uid, name, logLevel) {
 	setTerminalNumber(2);
 	setVirtualNodeNumber(1);
+
+	mSLog->info("Create {} {}", this->type(), name);
 	mIntfVoltage = MatrixComp::Zero(1,1);
 	mIntfCurrent = MatrixComp::Zero(1,1);
 
@@ -37,6 +39,9 @@ void DP::Ph1::Transformer::setParameters(Real ratioAbs, Real ratioPhase,
 		setVirtualNodeNumber(3);
 	else
 		setVirtualNodeNumber(2);
+	
+	mSLog->info("Resistance={} [Ohm] Inductance={} [Ohm] (referred to primary side)", resistance, inductance);
+    mSLog->info("Tap Ratio={} [ ] Phase Shift={} [deg]", ratioAbs, ratioPhase);
 
 	parametersSet = true;
 }
@@ -66,6 +71,7 @@ void DP::Ph1::Transformer::initializeFromPowerflow(Real frequency) {
 	// Static calculations from load flow data
 	Real omega = 2.*PI* frequency;
 	Complex impedance = { mResistance, omega * mInductance };
+	mSLog->info("Reactance={} [Ohm] (referred to primary side)", omega * mInductance );
 	mIntfVoltage(0,0) = mVirtualNodes[0]->initialSingleVoltage() - initialSingleVoltage(0);
 	mIntfCurrent(0,0) = mIntfVoltage(0,0) / impedance;
 

@@ -14,6 +14,8 @@ DP::Ph1::RXLoad::RXLoad(String uid, String name,
 	Logger::Level logLevel)
 	: SimPowerComp<Complex>(uid, name, logLevel) {
 	setTerminalNumber(1);
+
+	mSLog->info("Create {} {}", this->type(), name);
 	mIntfVoltage = MatrixComp::Zero(1, 1);
 	mIntfCurrent = MatrixComp::Zero(1, 1);
 
@@ -58,6 +60,9 @@ void DP::Ph1::RXLoad::initializeFromPowerflow(Real frequency) {
 		mReactivePower = mTerminals[0]->singleReactivePower();
 		mPower = { mActivePower, mReactivePower };
 		mNomVoltage = std::abs(mTerminals[0]->initialSingleVoltage());
+
+		mSLog->info("Active Power={} [W] Reactive Power={} [VAr]", mActivePower, mReactivePower);
+		mSLog->info("Nominal Voltage={} [V]", mNomVoltage);
 	}
 
 	if (mActivePower != 0) {
@@ -113,6 +118,8 @@ void DP::Ph1::RXLoad::setParameters(Real activePower, Real reactivePower, Real v
 	mPower = { mActivePower, mReactivePower};
 	mNomVoltage = volt;
 
+	mSLog->info("Active Power={} [W] Reactive Power={} [VAr]", mActivePower, mReactivePower);
+	mSLog->info("Nominal Voltage={} [V]", mNomVoltage);
 	parametersSet = true;
 }
 
