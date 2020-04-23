@@ -213,24 +213,17 @@ build:docker:
                   libpthread.so.0'
   script:
     - echo "$TEST_BINARY_PATH/$TEST_BINARY $TEST_FILES" | tr -d '\n' | xargs -r -d " " -I % cp % $LDIR
-    - echo $REMOTE_LIBS
     - ldd $LDIR/$TEST_BINARY |
       sed -n -E -e 's/^\s+\S+ => (\S+) \S+$/\1/p' |
       grep -Ev "$(echo $REMOTE_LIBS | tr ' ' '|')|not" |
       xargs -I % cp % $LDIR/
-#- ldd $TEST_BINARY_PATH/$TEST_BINARY |
-#        sed -n -E -e 's/^\s+(\S+) => \S+ \S+$/\1/p' |
-#        sed '/libc.so/d' | sed '/linux-vdso.so/d'  |
-#        xargs -I % patchelf --remove-needed % $LDIR/$TEST_BINARY
     - ssh $GPU_TARGET mkdir -p $RDIR
     - scp -r $LDIR/* $GPU_TARGET:$RDIR/
-    - echo "LD_LIBRARY_PATH=$RDIR:${LD_LIBRARY_PATH} LD_PRELOAD=$RDIR/cricket-server.so $RDIR/$TEST_BINARY"
     - ssh $GPU_TARGET "LD_LIBRARY_PATH=$RDIR:${LD_LIBRARY_PATH} LD_PRELOAD=$RDIR/cricket-server.so $RDIR/$TEST_BINARY" &
     - sleep 2
-#- PATH=$LDIR:${PATH} cricket info $TEST_BINARY_PATH/$TEST_BINARY
-    - PATH=$LDIR:${PATH} LD_PRELOAD=$LDIR/libtirpc.so.3:$LDIR/cricket-client.so $TEST_BINARY_PATH/$TEST_BINARY $TEST_PARAM
+    - PATH=$LDIR:${PATH} LD_PRELOAD=$LDIR/cricket-client.so $TEST_BINARY_PATH/$TEST_BINARY $TEST_PARAM
   after_script:
-#- ssh $GPU_TARGET rm -rf $RDIR
+    - ssh $GPU_TARGET rm -rf $RDIR
     - ssh $GPU_TARGET pkill -fe -2 $RDIR/test_kernel
   image: ${DOCKER_IMAGE_DEV}:${DOCKER_TAG}
   dependencies:
