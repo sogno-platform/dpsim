@@ -27,23 +27,28 @@ DP::Ph1::AvVoltageSourceInverterDQ::AvVoltageSourceInverterDQ(String uid, String
 	mIntfVoltage = MatrixComp::Zero(1, 1);
 	mIntfCurrent = MatrixComp::Zero(1, 1);
 
-	addAttribute<Real>("p", &mP, Flags::read | Flags::write);
-	addAttribute<Real>("q", &mQ, Flags::read | Flags::write);
-	addAttribute<Real>("P_ref", &mPref, Flags::read | Flags::write);
-	addAttribute<Real>("Q_ref", &mQref, Flags::read | Flags::write);
+	// state variables
 	addAttribute<Real>("theta", &mThetaPLL, Flags::read | Flags::write);
 	addAttribute<Real>("phipll", &mPhiPLL, Flags::read | Flags::write);
+	addAttribute<Real>("p", &mP, Flags::read | Flags::write);
+	addAttribute<Real>("q", &mQ, Flags::read | Flags::write);
 	addAttribute<Real>("phid", &mPhi_d, Flags::read | Flags::write);
 	addAttribute<Real>("phiq", &mPhi_q, Flags::read | Flags::write);
 	addAttribute<Real>("gammad", &mGamma_d, Flags::read | Flags::write);
 	addAttribute<Real>("gammaq", &mGamma_q, Flags::read | Flags::write);
-	addAttribute<Bool>("ctrl_on", &mCtrlOn, Flags::read | Flags::write);
+
+	// input variables
+	addAttribute<Real>("Omega_nom", &mOmegaN, Flags::read | Flags::write);
+	addAttribute<Real>("P_ref", &mPref, Flags::read | Flags::write);
+	addAttribute<Real>("Q_ref", &mQref, Flags::read | Flags::write);
+	addAttribute<Matrix>("Vcdq", &mVcdq, Flags::read | Flags::write);
+	addAttribute<Matrix>("Ircdq", &mIrcdq, Flags::read | Flags::write);
+
+	// output variables
+	addAttribute<Matrix>("Vsdq", &mVsdq, Flags::read | Flags::write);
 
 	//additional loggers
-	addAttribute<Matrix>("Vsdq", &mVsdq, Flags::read | Flags::write);
-	addAttribute<Matrix>("Vcdq", &mVcdq, Flags::read | Flags::write);
-	addAttribute<Matrix>("igdq", &mIgdq, Flags::read | Flags::write);
-	addAttribute<Matrix>("ifdq", &mIfdq, Flags::read | Flags::write);
+	addAttribute<Bool>("ctrl_on", &mCtrlOn, Flags::read | Flags::write);	
 	addAttribute<Real>("omega", &mOmegaInst, Flags::read | Flags::write);
 	addAttribute<Real>("freq", &mFreqInst, Flags::read | Flags::write);
 }
@@ -190,6 +195,7 @@ void DP::Ph1::AvVoltageSourceInverterDQ::initializeModel(Real omega, Real timeSt
 	mVcdq(1, 0) = mVirtualNodes[4]->initialSingleVoltage().imag();
 	mU = Matrix::Zero(7, 1);
 	mU << mOmegaN, mPref, mQref, mVcdq(0, 0), mVcdq(1, 0), mIrcdq(0, 0), mIrcdq(1, 0);
+	mSLog->info("Initialization of input: \n" + Logger::matrixToString(mU));
 
 	// create ABCD matrices
 	mA = Matrix::Zero(8, 8);
@@ -235,11 +241,17 @@ void DP::Ph1::AvVoltageSourceInverterDQ::initializeModel(Real omega, Real timeSt
 	mGamma_d = 0;
 	mGamma_q = 0;
 
-	mStates = Matrix::Zero(8, 1);
+	mStates = Matrix::Zero(8, 1);		
+
 	mStates <<
 		mThetaPLL, mPhiPLL, mP, mQ, mPhi_d, mPhi_q, mGamma_d, mGamma_q;
+
+	mSLog->info("Initialization of states: \n" + Logger::matrixToString(mStates));
+
 	// initialize output
 	mVsdq = mC * mStates + mD * mU;
+
+	mSLog->info("Initialization of output: \n" + Logger::matrixToString(mVsdq));
 }
 
 void DP::Ph1::AvVoltageSourceInverterDQ::updatePowerGeneration() {
@@ -490,9 +502,7 @@ void DP::Ph1::AvVoltageSourceInverterDQ::updateSetPoint(Real time){
 
 void DP::Ph1::AvVoltageSourceInverterDQ::MnaPreStep::execute(Real time, Int timeStepCount) {
 	if (mAvVoltageSourceInverterDQ.mCtrlOn) {
-		// shift EMT voltage into DP
 		MatrixComp vsDqOmegaS = mAvVoltageSourceInverterDQ.dqToDP(time);
-		// update voltage of subVoltage source
 		mAvVoltageSourceInverterDQ.mSubCtrledVoltageSource->setParameters(vsDqOmegaS);
 	}
 	else
@@ -503,7 +513,6 @@ void DP::Ph1::AvVoltageSourceInverterDQ::MnaPreStep::execute(Real time, Int time
 
 void DP::Ph1::AvVoltageSourceInverterDQ::MnaPostStep::execute(Real time, Int timeStepCount) {
 	mAvVoltageSourceInverterDQ.mnaUpdateCurrent(*mLeftVector);
-	// update Vcabc, Igabc
 	mAvVoltageSourceInverterDQ.updateMonitoredValues(*mLeftVector, time);
 	mAvVoltageSourceInverterDQ.step(time, timeStepCount);
 }
@@ -518,6 +527,9 @@ void DP::Ph1::AvVoltageSourceInverterDQ::AddBStep::execute(Real time, Int timeSt
 }
 
 void DP::Ph1::AvVoltageSourceInverterDQ::mnaUpdateCurrent(const Matrix& leftvector) {
-	mIntfCurrent = mSubResistorC->attribute<MatrixComp>("i_intf")->get();
+	if (mWithConnectionTransformer)
+		mIntfCurrent = mConnectionTransformer->attribute<MatrixComp>("i_intf")->get();
+	else
+		mIntfCurrent = mSubResistorC->attribute<MatrixComp>("i_intf")->get();
 }
 
