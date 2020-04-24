@@ -95,15 +95,17 @@ namespace CIGREMV {
         }
     }
 
-    std::shared_ptr<DPsim::SwitchEvent> createEventAddPowerConsumption(String nodeName, Real eventTime, Real addedPowerAsResistance, SystemTopology& system, Domain domain) {
+    std::shared_ptr<DPsim::SwitchEvent> createEventAddPowerConsumption(String nodeName, Real eventTime, Real additionalActivePower, SystemTopology& system, Domain domain) {
         
         // TODO: use base classes ph1
         if (domain == CPS::Domain::DP) {
             auto loadSwitch = DP::Ph1::Switch::make("Load_Add_Switch_" + nodeName, Logger::Level::debug);
-            loadSwitch->setParameters(1e9, addedPowerAsResistance);
+            auto connectionNode = system.node<CPS::SimNode<Complex>>(nodeName);
+            Real resistance = std::abs(connectionNode->initialSingleVoltage())*std::abs(connectionNode->initialSingleVoltage())/additionalActivePower;
+            loadSwitch->setParameters(1e9, resistance);
             loadSwitch->open();
             system.addComponent(loadSwitch);
-            system.connectComponentToNodes<Complex>(loadSwitch, { CPS::SimNode<Complex>::GND, system.node<CPS::SimNode<Complex>>(nodeName) });
+            system.connectComponentToNodes<Complex>(loadSwitch, { CPS::SimNode<Complex>::GND, connectionNode});
             return DPsim::SwitchEvent::make(eventTime, loadSwitch, true);
         } else {
             return nullptr;
