@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.13)
+cmake_minimum_required(VERSION 3.11)
 project(DPsim CXX)
 
 set(PROJECT_AUTHOR "Institute for Automation of Complex Power Systems, RWTH Aachen University")
@@ -8,9 +8,13 @@ set(PROJECT_HOMEPAGE_URL "https://dpsim.fein-aachen.org/")
 set(PROJECT_VCS_URL "https://git.rwth-aachen.org/acs/public/simulation/dpsim")
 
 # Required for dpsim_python
-cmake_policy(SET CMP0076 NEW)
+if(POLICY CMP0076)
+  cmake_policy(SET CMP0076 NEW)
+endif()
 # Allow setting Graphviz_ROOT for windows builds
-cmake_policy(SET CMP0074 NEW)
+if(WIN32)
+    cmake_policy(SET CMP0074 NEW)
+endif()
 
 if(CMAKE_PROJECT_NAME STREQUAL PROJECT_NAME)
 	set(TOPLEVEL_PROJECT ON)
