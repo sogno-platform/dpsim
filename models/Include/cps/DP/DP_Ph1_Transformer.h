@@ -29,6 +29,9 @@ namespace Ph1 {
 		/// Internal parallel resistance as snubber
 		std::shared_ptr<DP::Ph1::Resistor> mSubSnubResistor;
 		std::shared_ptr<DP::Ph1::Resistor> mSubResistor;
+
+		/// Snubber resistance added on the low voltage side
+		Real mSnubberResistance;
 	public:
 		/// Defines UID, name and logging level
 		Transformer(String uid, String name,

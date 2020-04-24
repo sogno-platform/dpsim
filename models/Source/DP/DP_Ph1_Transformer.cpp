@@ -23,6 +23,7 @@ DP::Ph1::Transformer::Transformer(String uid, String name,
 	addAttribute<Complex>("ratio", &mRatio, Flags::write | Flags::read);
 	addAttribute<Real>("R", &mResistance, Flags::write | Flags::read);
 	addAttribute<Real>("L", &mInductance, Flags::write | Flags::read);
+	addAttribute<Real>("Rsnubber", &mSnubberResistance, Flags::write | Flags::read);
 }
 
 SimPowerComp<Complex>::Ptr DP::Ph1::Transformer::clone(String name) {
@@ -52,9 +53,6 @@ void DP::Ph1::Transformer::initialize(Matrix frequencies) {
 
 void DP::Ph1::Transformer::initializeFromPowerflow(Real frequency) {
 	checkForUnconnectedTerminals();
-
-	// A snubber conductance is added on the low voltage side
-	Real snubberResistance = 1e3;
 
 	// Component parameters are referred to high voltage side.
 	// Switch terminals if transformer is connected the other way around.
@@ -94,11 +92,14 @@ void DP::Ph1::Transformer::initializeFromPowerflow(Real frequency) {
 	mSubInductor->initializeFromPowerflow(frequency);
 
 	// Create parallel sub components
+	// A snubber conductance is added on the low voltage side (resistance approximately scaled with LV side voltage)
+	mSnubberResistance = std::abs(node(1)->initialSingleVoltage())*1e6;
 	mSubSnubResistor = std::make_shared<DP::Ph1::Resistor>(mName + "_snub_res", mLogLevel);
-	mSubSnubResistor->setParameters(snubberResistance);
+	mSubSnubResistor->setParameters(mSnubberResistance);
 	mSubSnubResistor->connect({ node(1), DP::SimNode::GND });
 	mSubSnubResistor->initialize(mFrequencies);
 	mSubSnubResistor->initializeFromPowerflow(frequency);
+	mSLog->info("Snubber Resistance={} [Ohm] (connected to LV side)", mSnubberResistance);
 
 	mSLog->info(
 		"\n--- Initialization from powerflow ---"
