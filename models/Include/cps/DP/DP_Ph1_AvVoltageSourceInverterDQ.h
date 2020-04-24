@@ -137,8 +137,6 @@ namespace Ph1 {
 		Matrix mB;
 		Matrix mC;
 		Matrix mD;
-		/// dq to dynamic phasor
-		MatrixComp dqToDP(Real time);
 
 		// #### solver ####
 		///

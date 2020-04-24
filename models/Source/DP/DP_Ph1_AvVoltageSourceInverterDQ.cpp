@@ -148,24 +148,10 @@ void DP::Ph1::AvVoltageSourceInverterDQ::initialize(Matrix frequencies) {
 }
 
 void DP::Ph1::AvVoltageSourceInverterDQ::updateMonitoredValues(const Matrix& leftVector, Real time) {
-	MatrixComp VcDP = MatrixComp::Zero(1, 1);
-	MatrixComp IrcDP = MatrixComp::Zero(1, 1);
-
-	// minus sign before current due to the connection
-	VcDP(0, 0) = Math::complexFromVectorElement(leftVector, mVirtualNodes[4]->matrixNodeIndex());
-	IrcDP(0, 0) = -1. * mSubResistorC->attribute<MatrixComp>("i_intf")->get()(0, 0);
-
 	Complex vcdq, ircdq;
 
-	// if (mBehaviour == Behaviour::Initialization) {
-	// 	mThetaSInit = mOmegaN * time;
-		vcdq = rotatingFrame2to1(VcDP(0, 0), mThetaPLL, mOmegaN * time);
-		ircdq = rotatingFrame2to1(IrcDP(0, 0), mThetaPLL, mOmegaN * time);
-	// }
-	// else {
-	// 	vcdq = rotatingFrame2to1(VcDP(0, 0), mThetaPLL, mThetaSInit + mOmegaN * mTimeStep + mOmegaN * time);
-	// 	ircdq = rotatingFrame2to1(IgDP(0, 0), mThetaPLL, mThetaSInit + mOmegaN * mTimeStep + mOmegaN * time);
-	// }
+	vcdq = rotatingFrame2to1(Math::complexFromVectorElement(leftVector, mVirtualNodes[4]->matrixNodeIndex()), mThetaPLL, mOmegaN * time);
+	ircdq = rotatingFrame2to1(-1. * mSubResistorC->attribute<MatrixComp>("i_intf")->get()(0, 0), mThetaPLL, mOmegaN * time);
 
 	mVcdq(0, 0) = vcdq.real();
 	mVcdq(1, 0) = vcdq.imag();
@@ -495,17 +481,6 @@ void DP::Ph1::AvVoltageSourceInverterDQ::mnaApplyRightSideVectorStamp(Matrix& ri
 		rightVector += *stamp;
 }
 
-MatrixComp DP::Ph1::AvVoltageSourceInverterDQ::dqToDP(Real time) {
-	MatrixComp vsDqS(1, 1);;
-	if (mBehaviour == Behaviour::Initialization)
-		vsDqS(0, 0) = rotatingFrame2to1(Complex(mVsdq(0, 0), mVsdq(1, 0)), mOmegaN * time, mThetaPLL);
-	else
-		vsDqS(0, 0) = rotatingFrame2to1(Complex(mVsdq(0, 0), mVsdq(1, 0)),
-										 mThetaSInit + mOmegaN * mTimeStep + mOmegaN * time, mThetaPLL);
-										 
-	return vsDqS;
-}
-
 void DP::Ph1::AvVoltageSourceInverterDQ::updateSetPoint(Real time){
 	if(mQRefInput)
 		mQref = mQRefInput->get();
@@ -513,13 +488,12 @@ void DP::Ph1::AvVoltageSourceInverterDQ::updateSetPoint(Real time){
 
 void DP::Ph1::AvVoltageSourceInverterDQ::MnaPreStep::execute(Real time, Int timeStepCount) {
 	if (mAvVoltageSourceInverterDQ.mCtrlOn) {
-		MatrixComp vsDqOmegaS = mAvVoltageSourceInverterDQ.dqToDP(time);
+		MatrixComp vsDqOmegaS = MatrixComp::Zero(1,1);
+		vsDqOmegaS(0,0) = mAvVoltageSourceInverterDQ.rotatingFrame2to1(Complex(mAvVoltageSourceInverterDQ.mVsdq(0, 0), mAvVoltageSourceInverterDQ.mVsdq(1, 0)), mAvVoltageSourceInverterDQ.mOmegaN * time, mAvVoltageSourceInverterDQ.mThetaPLL);
 		mAvVoltageSourceInverterDQ.mSubCtrledVoltageSource->setParameters(vsDqOmegaS);
 	}
 	else
-	{
 		mAvVoltageSourceInverterDQ.mSubCtrledVoltageSource->setParameters(mAvVoltageSourceInverterDQ.mVsdq);
-	}
 }
 
 void DP::Ph1::AvVoltageSourceInverterDQ::MnaPostStep::execute(Real time, Int timeStepCount) {
