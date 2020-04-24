@@ -144,40 +144,33 @@ void DP::Ph1::AvVoltageSourceInverterDQ::initialize(Matrix frequencies) {
 
 void DP::Ph1::AvVoltageSourceInverterDQ::updateMonitoredValues(const Matrix& leftVector, Real time) {
 	MatrixComp VcDP = MatrixComp::Zero(1, 1);
-	MatrixComp IfDP = MatrixComp::Zero(1, 1);
-	MatrixComp IgDP = MatrixComp::Zero(1, 1);
+	MatrixComp IrcDP = MatrixComp::Zero(1, 1);
 
-	// minus sign before currents due to the connection
-	VcDP(0, 0) = Math::complexFromVectorElement(leftVector, mSubCapacitorF->matrixNodeIndex(0));
-	IfDP(0, 0) = -1. * mSubResistorF->attribute<MatrixComp>("i_intf")->get()(0, 0);
-	IgDP(0, 0) = -1. * mSubResistorC->attribute<MatrixComp>("i_intf")->get()(0, 0);
+	// minus sign before current due to the connection
+	VcDP(0, 0) = Math::complexFromVectorElement(leftVector, mVirtualNodes[4]->matrixNodeIndex());
+	IrcDP(0, 0) = -1. * mSubResistorC->attribute<MatrixComp>("i_intf")->get()(0, 0);
 
-	Complex vcdq, ifdq, igdq;
+	Complex vcdq, ircdq;
 
-	if (mBehaviour == Behaviour::Initialization) {
-		mThetaSInit = mOmegaN * time;
-
+	// if (mBehaviour == Behaviour::Initialization) {
+	// 	mThetaSInit = mOmegaN * time;
 		vcdq = rotatingFrame2to1(VcDP(0, 0), mThetaPLL, mOmegaN * time);
-		ifdq = rotatingFrame2to1(IfDP(0, 0), mThetaPLL, mOmegaN * time);
-		igdq = rotatingFrame2to1(IgDP(0, 0), mThetaPLL, mOmegaN * time);
-	}
-	else {
-		vcdq = rotatingFrame2to1(VcDP(0, 0), mThetaPLL, mThetaSInit + mOmegaN * mTimeStep + mOmegaN * time);
-		ifdq = rotatingFrame2to1(IfDP(0, 0), mThetaPLL, mThetaSInit + mOmegaN * mTimeStep + mOmegaN * time);
-		igdq = rotatingFrame2to1(IgDP(0, 0), mThetaPLL, mThetaSInit + mOmegaN * mTimeStep + mOmegaN * time);
-	}
+		ircdq = rotatingFrame2to1(IrcDP(0, 0), mThetaPLL, mOmegaN * time);
+	// }
+	// else {
+	// 	vcdq = rotatingFrame2to1(VcDP(0, 0), mThetaPLL, mThetaSInit + mOmegaN * mTimeStep + mOmegaN * time);
+	// 	ircdq = rotatingFrame2to1(IgDP(0, 0), mThetaPLL, mThetaSInit + mOmegaN * mTimeStep + mOmegaN * time);
+	// }
 
 	mVcdq(0, 0) = vcdq.real();
 	mVcdq(1, 0) = vcdq.imag();
 
-	mIfdq(0, 0) = ifdq.real();
-	mIfdq(1, 0) = ifdq.imag();
+	mIrcdq(0, 0) = ircdq.real();
+	mIrcdq(1, 0) = ircdq.imag();
 
-	mIgdq(0, 0) = igdq.real();
-	mIgdq(1, 0) = igdq.imag();
+	mIntfVoltage(0,0) = Math::complexFromVectorElement(leftVector, mTerminals[0]->node()->matrixNodeIndex());
 
-	mIntfVoltage = mSubCtrledVoltageSource->attribute<MatrixComp>("i_intf")->get();
-	// update B matrices with new Igdq
+	// update B matrices with new ircdq
 	updateLinearizedModel();
 }
 
@@ -188,23 +181,15 @@ void DP::Ph1::AvVoltageSourceInverterDQ::initializeModel(Real omega, Real timeSt
 	mOmegaN = omega;
 	mOmegaCutoff = omega;
 
-	// initialize mInftCurrent
-	// do it here to make sure resistor current is already initialized (initializeFromPowerFlow)
-	mIntfCurrent = mSubResistorC->attribute<MatrixComp>("i_intf")->get();
-
-	//initialize input vector
-	MatrixComp IgDP = - mSubResistorC->attribute<MatrixComp>("i_intf")->get();
-	mIgdq(0, 0) = IgDP(0, 0).real();
-	mIgdq(1, 0) = IgDP(0, 0).imag();
-	MatrixComp IfDP = - mSubResistorF->attribute<MatrixComp>("i_intf")->get();
-	mIfdq(0, 0) = IfDP(0, 0).real();
-	mIfdq(1, 0) = IfDP(0, 0).imag();
-	mVcdq(0, 0) = mVirtualNodes[3]->initialSingleVoltage().real();
-	mVcdq(1, 0) = mVirtualNodes[3]->initialSingleVoltage().imag();
-
+	// initialize current and voltage inputs to state space model
+	// done here to ensure quantites are already initialized by initializeFromPowerFlow
+	MatrixComp Irc = - mSubResistorC->attribute<MatrixComp>("i_intf")->get();
+	mIrcdq(0, 0) = Irc(0, 0).real();
+	mIrcdq(1, 0) = Irc(0, 0).imag();
+	mVcdq(0, 0) = mVirtualNodes[4]->initialSingleVoltage().real();
+	mVcdq(1, 0) = mVirtualNodes[4]->initialSingleVoltage().imag();
 	mU = Matrix::Zero(7, 1);
-	mU <<
-		mOmegaN, mPref, mQref, mVcdq(0, 0), mVcdq(1, 0), mIfdq(0, 0), mIfdq(1, 0);
+	mU << mOmegaN, mPref, mQref, mVcdq(0, 0), mVcdq(1, 0), mIrcdq(0, 0), mIrcdq(1, 0);
 
 	// create ABCD matrices
 	mA = Matrix::Zero(8, 8);
@@ -225,8 +210,8 @@ void DP::Ph1::AvVoltageSourceInverterDQ::initializeModel(Real omega, Real timeSt
 	mB <<
 		1, 0, 0, 0, mKpPLL, 0, 0,
 		0, 0, 0, 0, 1, 0, 0,
-		0, 0, 0, 3. / 2. * mOmegaCutoff * mIgdq(0, 0), 3. / 2. * mOmegaCutoff * mIgdq(1, 0), 0, 0,
-		0, 0, 0, - 3. / 2. * mOmegaCutoff * mIgdq(1, 0), 3. / 2. * mOmegaCutoff * mIgdq(0, 0), 0, 0,
+		0, 0, 0, mOmegaCutoff * mIrcdq(0, 0), mOmegaCutoff * mIrcdq(1, 0), 0, 0,
+		0, 0, 0, - mOmegaCutoff * mIrcdq(1, 0), mOmegaCutoff * mIrcdq(0, 0), 0, 0,
 		0, 1, 0, 0, 0, 0, 0,
 		0, 0, -1, 0, 0, 0, 0,
 		0, mKpPowerCtrld, 0, 0, 0, -1, 0,
@@ -284,7 +269,7 @@ void DP::Ph1::AvVoltageSourceInverterDQ::step(Real time, Int timeStepCount) {
 			updatePowerGeneration();
 	}
 
-	newU << mOmegaN, mPref, mQref, mVcdq(0, 0), mVcdq(1, 0), mIfdq(0, 0), mIfdq(1, 0);
+	newU << mOmegaN, mPref, mQref, mVcdq(0, 0), mVcdq(1, 0), mIrcdq(0, 0), mIrcdq(1, 0);
 	newStates = Math::StateSpaceTrapezoidal(mStates, mA, mB, mTimeStep, newU, mU);
 
 	if (mCtrlOn) {
@@ -326,10 +311,10 @@ void DP::Ph1::AvVoltageSourceInverterDQ::step(Real time, Int timeStepCount) {
 }
 
 void DP::Ph1::AvVoltageSourceInverterDQ::updateLinearizedModel() {
-	mB.coeffRef(2, 3) = 3. / 2. * mOmegaCutoff * mIgdq(0, 0);
-	mB.coeffRef(2, 4) = 3. / 2. * mOmegaCutoff * mIgdq(1, 0);
-	mB.coeffRef(3, 3) = -3. / 2. * mOmegaCutoff * mIgdq(1, 0);
-	mB.coeffRef(3, 4) = 3. / 2. * mOmegaCutoff * mIgdq(0, 0);
+	mB.coeffRef(2, 3) = mOmegaCutoff * mIrcdq(0, 0);
+	mB.coeffRef(2, 4) = mOmegaCutoff * mIrcdq(1, 0);
+	mB.coeffRef(3, 3) = -mOmegaCutoff * mIrcdq(1, 0);
+	mB.coeffRef(3, 4) = mOmegaCutoff * mIrcdq(0, 0);
 }
 
 Complex DP::Ph1::AvVoltageSourceInverterDQ::rotatingFrame2to1(Complex f2, Real theta1, Real theta2) {

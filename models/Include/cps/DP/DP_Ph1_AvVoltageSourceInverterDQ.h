@@ -116,10 +116,10 @@ namespace Ph1 {
 		Real mGamma_d;
 		Real mGamma_q;
 
-		/// measurements
+		/// inputs
 		Matrix mVcdq = Matrix::Zero(2, 1);
-		Matrix mIgdq = Matrix::Zero(2, 1);
-		Matrix mIfdq = Matrix::Zero(2, 1);
+		Matrix mIrcdq = Matrix::Zero(2, 1);
+
 		/// instantaneous omega
 		Real mOmegaInst=0;
 		/// instantaneous frequency
