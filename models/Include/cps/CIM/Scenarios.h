@@ -34,19 +34,22 @@ namespace CIGREMV {
         Int numberPVUnitsPerPlant = numberPVUnits / numberPVPlants;
                 
         // PV controller parameters
-        Real KpPLL = 0.25;
-        Real KiPLL = 2;
-        Real KpPowerCtrl = 0.001;
-        Real KiPowerCtrl = 0.08;
-        Real KpCurrCtrl = 0.3;
-        Real KiCurrCtrl = 10;
+        Real scaling_P = 10.0;
+        Real scaling_I = 1000.0;
+
+        Real KpPLL = 0.25/scaling_P;
+        Real KiPLL = 2/scaling_I;
+        Real KpPowerCtrl = 0.001/scaling_P;
+        Real KiPowerCtrl = 0.08/scaling_I;
+        Real KpCurrCtrl = 0.3/scaling_P;
+        Real KiCurrCtrl = 10/scaling_I;
         Real OmegaCutoff = 2 * PI * systemFrequency;
 
         // PV filter parameters
         Real Lf = 0.002;
         Real Cf = 789.3e-6;
-        Real Rf = 0.01;
-        Real Rc = 0.05;
+        Real Rf = 0.1;
+        Real Rc = 0.1;
 
         // PV connection transformer parameters
         Real transformerNominalPower = 5e6;

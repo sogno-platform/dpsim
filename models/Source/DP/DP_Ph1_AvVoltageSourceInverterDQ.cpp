@@ -231,15 +231,26 @@ void DP::Ph1::AvVoltageSourceInverterDQ::initializeModel(Real omega, Real timeSt
 		0, mKpCurrCtrld*mKpPowerCtrld, 0, 0, 0, -mKpCurrCtrld, 0,
 		0, 0, -mKpCurrCtrlq * mKpPowerCtrlq, 0, 0, 0, -mKpCurrCtrlq;
 
-	// initialize states
-	mThetaPLL = 0;
-	mPhiPLL = 0;
-	mP = 0;
-	mQ = 0;
-	mPhi_d = 0;
-	mPhi_q = 0;
-	mGamma_d = 0;
-	mGamma_q = 0;
+	// initialize states	
+	// mThetaPLL = 0;
+	// mPhiPLL = 0;
+	// mP = mPref;
+	// mQ = mQref;
+	// mPhi_d = 0;
+	// mPhi_q = 0;
+	// mGamma_d = 0;
+	// mGamma_q = 0;
+
+	// use known values with scaled control params
+	Real scaling_I = 1000.0;
+	mThetaPLL = 314.168313-mOmegaN;
+	mPhiPLL = 8e-06;
+	mP = 450000.716605;
+	mQ = -0.577218;
+	mPhi_d = 3854.197405*scaling_I;
+	mPhi_q = -0.003737*scaling_I;
+	mGamma_d = 128.892668*scaling_I;
+	mGamma_q = 23.068682*scaling_I;
 
 	mStates = Matrix::Zero(8, 1);		
 
