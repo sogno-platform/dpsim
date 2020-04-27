@@ -16,23 +16,18 @@
 #include <cps/DP/DP_Ph1_Capacitor.h>
 #include <cps/DP/DP_Ph1_ControlledVoltageSource.h>
 #include <cps/DP/DP_Ph1_Transformer.h>
+#include <cps/Base/Base_AvVoltageSourceInverterDQ.h>
 #include <cps/PowerProfile.h>
 
 namespace CPS {
 namespace DP {
 namespace Ph1 {
-	/*
-		 Average voltage source inverter
-		 - modelled in dq
-		 - with interface to DP grid
-	*/
 	class AvVoltageSourceInverterDQ :
+		public Base::AvVoltageSourceInverterDQ,
 		public SimPowerComp<Complex>,
 		public MNAInterface,
 		public SharedFactory<AvVoltageSourceInverterDQ> {
 	protected:
-		/// nominal voltage of the component
-		Complex mVoltNom;
 		/// in case variable time step simulation should be developed in the future
 		Real mTimeStep;
 		/// if SteadyStateInit is enabled, the system's sychronous frame will start from a certain angle
@@ -72,50 +67,6 @@ namespace Ph1 {
 		///
 		Bool mWithConnectionTransformer=false;
 
-		// ### parameters ###
-		Real mPref;
-		Real mQref;
-
-		/// filter paramter
-		Real mLf;
-		Real mCf;
-		Real mRf;
-		Real mRc;
-
-		/// transformer
-		Real mTransformerResistance;
-		Real mTransformerInductance;
-		Real mTransformerRatioAbs;
-		Real mTransformerRatioPhase;
-
-		/// PLL
-		Real mOmegaN;
-		Real mKiPLL;
-		Real mKpPLL;
-
-		/// Power controller
-		Real mOmegaCutoff;
-		Real mKiPowerCtrld;
-		Real mKiPowerCtrlq;
-		Real mKpPowerCtrld;
-		Real mKpPowerCtrlq;
-
-		/// Current controller
-		Real mKiCurrCtrld;
-		Real mKiCurrCtrlq;
-		Real mKpCurrCtrld;
-		Real mKpCurrCtrlq;
-
-		/// states
-		Real mThetaPLL = 0;
-		Real mPhiPLL;
-		Real mP;
-		Real mQ;
-		Real mPhi_d;
-		Real mPhi_q;
-		Real mGamma_d;
-		Real mGamma_q;
-
 		/// inputs
 		Matrix mVcdq = Matrix::Zero(2, 1);
 		Matrix mIrcdq = Matrix::Zero(2, 1);
@@ -132,11 +83,6 @@ namespace Ph1 {
 		Matrix mStates;
 		/// u_old
 		Matrix mU;
-		/// output
-		Matrix mA;
-		Matrix mB;
-		Matrix mC;
-		Matrix mD;
 
 		// #### solver ####
 		///
@@ -163,18 +109,8 @@ namespace Ph1 {
 		///
 		void updateStates();
 		
-		///
-		void setParameters(Real sysOmega, Complex sysVoltNom, Real Pref, Real Qref);
-		///
-		void setControllerParameters(Real Kp_pll, Real Ki_pll, Real Kp_powerCtrl, Real Ki_powerCtrl, Real Kp_currCtrl, Real Ki_currCtrl, Real Omega_cutoff);
-		///
-		void setFilterParameters(Real Lf, Real Cf, Real Rf, Real Rc);
-		/// 
-		void setTransformerParameters(Real nomVoltageEnd1, Real nomVoltageEnd2, Real ratedPower, Real ratioAbs,
-			Real ratioPhase, Real resistance, Real inductance, Real omega);
-
-		/// update B,C,D matrices with new theta_pll
-		void updateLinearizedModel();
+		/// Update B matrix
+		void updateBMatrixStateSpaceModel();
 		/// convert between two rotating frames
 		Complex rotatingFrame2to1(Complex f, Real theta1, Real theta2);
 		///

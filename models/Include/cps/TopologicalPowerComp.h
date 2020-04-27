@@ -36,6 +36,8 @@ namespace CPS {
 		/// Determine state of the simulation, e.g. to implement
 		/// special behavior for components during initialization
 		Bool mBehaviour = Behaviour::Simulation;
+		/// Flag indicating that parameters are set via setParameters() function
+		bool parametersSet = false;
 
 	public:
 		typedef std::shared_ptr<TopologicalPowerComp> Ptr;

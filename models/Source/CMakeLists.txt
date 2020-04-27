@@ -12,6 +12,7 @@ add_library(cps STATIC
 
 list(APPEND CPS_SOURCES
 	Base/Base_SynchronGenerator.cpp
+	Base/Base_AvVoltageSourceInverterDQ.cpp
 
 	DP/DP_Ph1_Capacitor.cpp
 	DP/DP_Ph1_CurrentSource.cpp
