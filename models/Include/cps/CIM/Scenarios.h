@@ -76,7 +76,7 @@ namespace CIGREMV {
             } else if (domain == Domain::DP) {
                 SimNode<Complex>::Ptr connectionNode = system.node<CPS::SimNode<Complex>>("N" + std::to_string(n));
                 auto pv = DP::Ph1::AvVoltageSourceInverterDQ::make("pv_" + connectionNode->name(), "pv_" + connectionNode->name(), Logger::Level::debug, true);
-                pv->setParameters(scenario.systemOmega, Complex(scenario.pvUnitNominalVoltage, 0), pvActivePower, pvReactivePower);
+                pv->setParameters(scenario.systemOmega, scenario.pvUnitNominalVoltage, pvActivePower, pvReactivePower);
                 pv->setControllerParameters(scenario.KpPLL, scenario.KiPLL, scenario.KpPowerCtrl, scenario.KiPowerCtrl, scenario.KpCurrCtrl, scenario.KiCurrCtrl, scenario.OmegaCutoff);
                 pv->setFilterParameters(scenario.Lf, scenario.Cf, scenario.Rf, scenario.Rc);
                 pv->setTransformerParameters(scenario.systemNominalVoltage, scenario.pvUnitNominalVoltage, scenario.transformerNominalPower, scenario.systemNominalVoltage/scenario.pvUnitNominalVoltage, 0, 0, scenario.transformerInductance, scenario.systemOmega);
@@ -85,7 +85,7 @@ namespace CIGREMV {
             } else if (domain == Domain::EMT) {
                 SimNode<Real>::Ptr connectionNode = system.node<CPS::SimNode<Real>>("N" + std::to_string(n));
                 auto pv = EMT::Ph3::AvVoltageSourceInverterDQ::make("pv_" + connectionNode->name(), "pv_" + connectionNode->name(), Logger::Level::debug, true);
-                pv->setParameters(scenario.systemOmega, Complex(scenario.pvUnitNominalVoltage, 0), pvActivePower, pvReactivePower);
+                pv->setParameters(scenario.systemOmega, scenario.pvUnitNominalVoltage, pvActivePower, pvReactivePower);
                 pv->setControllerParameters(scenario.KpPLL, scenario.KiPLL, scenario.KpPowerCtrl, scenario.KiPowerCtrl, scenario.KpCurrCtrl, scenario.KiCurrCtrl, scenario.OmegaCutoff);
                 pv->setFilterParameters(Matrix::Identity(3,3)*scenario.Lf, Matrix::Identity(3,3)*scenario.Cf, Matrix::Identity(3,3)*scenario.Rf, Matrix::Identity(3,3)*scenario.Rc);
                 pv->setTransformerParameters(scenario.systemNominalVoltage, scenario.pvUnitNominalVoltage, scenario.transformerNominalPower, scenario.systemNominalVoltage/scenario.pvUnitNominalVoltage, 0, Matrix::Zero(3,3), Matrix::Identity(3,3)*scenario.transformerInductance, scenario.systemOmega);
