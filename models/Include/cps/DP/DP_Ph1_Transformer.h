@@ -32,10 +32,13 @@ namespace Ph1 {
 
 		/// Snubber resistance added on the low voltage side
 		Real mSnubberResistance;
+
+		/// Boolean for considering resistive losses with sub resistor
+		Bool mWithResistiveLosses;
 	public:
 		/// Defines UID, name and logging level
 		Transformer(String uid, String name,
-			Logger::Level logLevel = Logger::Level::off);
+			Logger::Level logLevel = Logger::Level::off, Bool withResistiveLosses = false);
 		/// Defines name and logging level
 		Transformer(String name, Logger::Level logLevel = Logger::Level::off)
 			: Transformer(name, name, logLevel) { }
