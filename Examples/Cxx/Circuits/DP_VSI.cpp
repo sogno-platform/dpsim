@@ -81,10 +81,13 @@ void DP_Ph1_VSI2_4bus_SampleGrid() {
 	auto Lload2 = Ph1::Inductor::make("Lload2");
 	Lload2->setParameters(Lload_param_100var_220v);
 
-	vsi->setParameters(2 * M_PI * 50, Complex(Vnom, 0), Pref1, Qref1, 0.25, 2, 0.001, 0.08, 3.77, 1400,
-		lf_param, cf_param, rf_param, rc_param);
-	vsi2->setParameters(2 * M_PI * 50, Complex(Vnom, 0), Pref2, Qref2, 0.25, 2, 0.001, 0.08, 3.77, 1400,
-		lf_param, cf_param, rf_param, rc_param);
+	vsi->setParameters(2 * M_PI * 50, Vnom, Pref1, Qref1);
+	vsi->setControllerParameters(0.25, 2, 0.001, 0.08, 3.77, 1400, 2 * M_PI * 50);
+	vsi->setFilterParameters(lf_param, cf_param, rf_param, rc_param);
+
+	vsi2->setParameters(2 * M_PI * 50, Vnom, Pref2, Qref2);
+	vsi2->setControllerParameters(0.25, 2, 0.001, 0.08, 3.77, 1400, 2 * M_PI * 50);
+	vsi2->setFilterParameters(lf_param, cf_param, rf_param, rc_param);
 
 	// 4Bus case study
 	vs->connect(SimNode::List{ SimNode::GND, n5 });
