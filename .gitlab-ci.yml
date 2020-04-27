@@ -16,15 +16,35 @@ stages:
   - generate
   - deploy
 
-docker:
+docker:fedora:
   stage: prepare
+  needs: []
+  script:
+    - docker build
+        --file Packaging/Docker/Dockerfile.dev
+        --tag ${DOCKER_IMAGE_DEV}:${DOCKER_TAG}
+        --tag ${DOCKER_IMAGE_DEV}:latest .
+  tags:
+    - shell
+    - linux
+
+docker:centos:
+  stage: prepare
+  needs: []
   script:
     - cp -r ~/.ssh .
     - docker build
         --file Packaging/Docker/Dockerfile.dev-centos
-        --tag ${DOCKER_IMAGE_DEV}:${DOCKER_TAG}
-        --tag ${DOCKER_IMAGE_DEV}:latest .
-# build dedicated jupyter image in the future
+        --tag ${DOCKER_IMAGE_DEV}-centos:${DOCKER_TAG}
+        --tag ${DOCKER_IMAGE_DEV}-centos:latest .
+  tags:
+    - shell
+    - linux
+
+docker:jupyter:
+  stage: prepare
+  needs: []
+  script:
     - docker build
        --file Packaging/Docker/Dockerfile.jupyter
        --build-arg DOCKER_IMAGE=${DOCKER_IMAGE_DEV}
@@ -35,8 +55,9 @@ docker:
     - shell
     - linux
 
-.build:linux:
+build:linux:
   stage: build
+  needs: ["docker:fedora"]
   script:
     - mkdir -p build
     - cd build
@@ -55,24 +76,26 @@ docker:
 
 build:linux-cuda:
   stage: build
+  needs: ["docker:centos"]
   script:
     - mkdir -p build
     - cd build
     - cmake -DWITH_SPDLOG_SUBMODULE=ON ..
     - make -j 32
-  image: ${DOCKER_IMAGE_DEV}:${DOCKER_TAG}
-#  cache:
-#    paths:
-#      - build
-#    key: build-linux-cuda
+  image: ${DOCKER_IMAGE_DEV}-centos:${DOCKER_TAG}
+  cache:
+    paths:
+      - build
+    key: build-linux-cuda
   artifacts:
     paths:
      - build
   tags:
     - docker
 
-.build:windows:
+build:windows:
   stage: build
+  needs: []
   script:
     - New-Item -ItemType Directory -Force -Path build
     - Set-Location -Path build
@@ -126,8 +149,9 @@ build:linux-cuda:
 #  tags:
 #    - docker
 
-.generate:docs:
+generate:docs:
   stage: generate
+  needs: ["build:linux"]
   script:
     - make -j$(nproc) -C build docs
     - make -j$(nproc) -C build docs_cxx
@@ -141,8 +165,9 @@ build:linux-cuda:
   tags:
     - docker
 
-.generate:packages:
+generate:packages:
   stage: generate
+  needs: ["build:linux"]
   script:
     - make -j$(nproc) -C build package
   only:
@@ -159,6 +184,7 @@ build:linux-cuda:
 
 build:docker:
   stage: build
+  needs: []
   script:
     - docker build
         --file Packaging/Docker/Dockerfile
@@ -175,8 +201,9 @@ build:docker:
   only:
     - tags
 
-.test:jupyter:
+test:jupyter:
   stage: test
+  needs: ["build:linux"]
   variables:
     PYTHONPATH: "build/Source/Python:Source/Python"
   script:
@@ -192,6 +219,7 @@ build:docker:
 
 .remote-gpu:
   stage: test
+  needs: ["build:linux-cuda"]
   variables:
     GPU_TARGET: 'gitlab-runner@ghost'
     RDIR: '/tmp/gitlab-jobs/$CI_PROJECT_NAME/$CI_JOB_ID'
@@ -225,7 +253,7 @@ build:docker:
   after_script:
     - ssh $GPU_TARGET rm -rf $RDIR
     - ssh $GPU_TARGET pkill -fe -2 $RDIR/test_kernel
-  image: ${DOCKER_IMAGE_DEV}:${DOCKER_TAG}
+  image: ${DOCKER_IMAGE_DEV}-centos:${DOCKER_TAG}
   dependencies:
     - build:linux-cuda
   tags:
@@ -233,6 +261,7 @@ build:docker:
 
 test:cuda:
     extends: .remote-gpu
+    allow_failure: true
     variables:
 # Name of the test binary
       TEST_BINARY: 'WSCC_9bus_mult_decoupled'
@@ -245,8 +274,9 @@ test:cuda:
 
 # Stage deploy
 ##############################################################################
-.pages:
+pages:
   stage: deploy
+  needs: ["generate:docs"]
   script:
     - cp -r build/docs/sphinx/html/. public/sphinx
     - cp -r build/docs/doxygen/html/. public/doxygen
@@ -261,7 +291,7 @@ test:cuda:
     - shell
     - linux
 
-.deploy:docker:
+deploy:docker:
   stage: deploy
   script:
     - docker push ${DOCKER_IMAGE_DEV}:${DOCKER_TAG}
@@ -276,7 +306,7 @@ test:cuda:
   only:
     - tags
 
-.deploy:packages:
+deploy:packages:
   stage: deploy
   script:
     - rsync ${RSYNC_OPTS} build/*.rpm ${DEPLOY_USER}@${DEPLOY_HOST}:/var/www/packages/fedora/29/x86_64
