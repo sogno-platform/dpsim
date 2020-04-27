@@ -69,15 +69,15 @@ void EMT::Ph3::AvVoltageSourceInverterDQ::setTransformerParameters(Real nomVolta
 	mConnectionTransformer->setParameters(mTransformerRatioAbs, mTransformerRatioPhase, mTransformerResistance, mTransformerInductance);
 };
 
-void EMT::Ph3::AvVoltageSourceInverterDQ::setParameters(Real sysOmega, Complex sysVoltNom, Real Pref, Real Qref) {
+void EMT::Ph3::AvVoltageSourceInverterDQ::setParameters(Real sysOmega, Real sysVoltNom, Real Pref, Real Qref) {
 	mPref = Pref;
 	mQref = Qref;
 
-	mVoltNom = sysVoltNom;
+	mVnom = sysVoltNom;
 	mOmegaN = sysOmega;
 
 	mSLog->info("General Parameters:");
-	mSLog->info("Nominal Voltage={} [V] Nominal Omega={} [1/s]", mVoltNom, mOmegaN);
+	mSLog->info("Nominal Voltage={} [V] Nominal Omega={} [1/s]", mVnom, mOmegaN);
 	mSLog->info("Active Power={} [W] Reactive Power={} [VAr]", mPref, mQref);    
 
 	parametersSet = true;
@@ -122,7 +122,7 @@ void EMT::Ph3::AvVoltageSourceInverterDQ::setFilterParameters(Matrix Lf, Matrix 
 
 SimPowerComp<Real>::Ptr EMT::Ph3::AvVoltageSourceInverterDQ::clone(String name) {
 	auto copy = EMT::Ph3::AvVoltageSourceInverterDQ::make(name, mLogLevel);
-	copy->setParameters(mOmegaN, mVoltNom, mPref, mQref);
+	copy->setParameters(mOmegaN, mVnom, mPref, mQref);
 	return copy;
 }
 

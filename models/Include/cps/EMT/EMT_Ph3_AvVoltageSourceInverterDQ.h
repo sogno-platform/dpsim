@@ -32,7 +32,7 @@ namespace Ph3 {
 		public SharedFactory<AvVoltageSourceInverterDQ> {
 	protected:
 		/// nominal voltage of the component
-		Complex mVoltNom;
+		Real mVnom;
 		/// in case variable time step simulation should be developed in the future
 		Real mTimeStep;
 		/// if SteadyStateInit is enabled, the system's sychronous frame will start from a certain angle
@@ -152,7 +152,7 @@ namespace Ph3 {
 		void updateStates();
 
 		///
-		void setParameters(Real sysOmega, Complex sysVoltNom, Real Pref, Real Qref);
+		void setParameters(Real sysOmega, Real sysVoltNom, Real Pref, Real Qref);
 		///
 		void setControllerParameters(Real Kp_pll, Real Ki_pll, Real Kp_powerCtrl, Real Ki_powerCtrl, Real Kp_currCtrl, Real Ki_currCtrl, Real Omega_cutoff);
 		///
