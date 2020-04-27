@@ -52,6 +52,11 @@ void Base::AvVoltageSourceInverterDQ::setParameters(Real sysOmega, Real sysVoltN
 	mSLog->info("Nominal Voltage={} [V] Nominal Omega={} [1/s]", mVnom, mOmegaN);
 	mSLog->info("Active Power={} [W] Reactive Power={} [VAr]", mPref, mQref);    
 
+	// use Pref and Qref as init values for states P and Q
+	// init values for other states remain zero (if not changed using setInitialStateValues)
+	mPInit = Pref;
+	mQInit = Qref;
+
 	parametersSet = true;
 }
 
@@ -119,3 +124,22 @@ void Base::AvVoltageSourceInverterDQ::setFilterParameters(Real Lf, Real Cf, Real
 	mSLog->info("Inductance Lf={} [H] Capacitance Cf={} [F]", mLf, mCf);
 	mSLog->info("Resistance Rf={} [H] Resistance Rc={} [F]", mRf, mRc);
 }
+
+void Base::AvVoltageSourceInverterDQ::setInitialStateValues(Real thetaPLLInit, Real phiPLLInit, Real pInit, Real qInit,
+	Real phi_dInit, Real phi_qInit, Real gamma_dInit, Real gamma_qInit) {
+
+	mThetaPLLInit = thetaPLLInit;
+	mPhiPLLInit = phiPLLInit;
+	mPInit = pInit;
+	mQInit = qInit;
+	mPhi_dInit = phi_dInit;
+	mPhi_qInit = phi_qInit;
+	mGamma_dInit = gamma_dInit;
+	mGamma_qInit = gamma_qInit;
+
+	mSLog->info("Initial State Value Parameters:");
+	mSLog->info("ThetaPLLInit = {}, PhiPLLInit = {}", mThetaPLLInit, mPhiPLLInit);
+	mSLog->info("PInit = {}, QInit = {}", mPInit, mQInit);
+	mSLog->info("Phi_dInit = {}, Phi_qInit = {}", mPhi_dInit, mPhi_qInit);
+	mSLog->info("Gamma_dInit = {}, Gamma_qInit = {}", mGamma_dInit, mGamma_qInit);
+};

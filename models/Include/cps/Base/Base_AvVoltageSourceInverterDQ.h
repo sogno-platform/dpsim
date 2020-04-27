@@ -64,12 +64,28 @@ namespace Base {
 		Real mGamma_d;
 		Real mGamma_q;
 
+		/// initial values for states
+		Real mThetaPLLInit = 0;
+		Real mPhiPLLInit = 0;
+		Real mPInit = 0;
+		Real mQInit = 0;
+		Real mPhi_dInit = 0;
+		Real mPhi_qInit = 0;
+		Real mGamma_dInit = 0;
+		Real mGamma_qInit = 0;
+
 		/// state space matrices
 		Matrix mA = Matrix::Zero(8, 8);
 		Matrix mB = Matrix::Zero(8, 7);
 		Matrix mC = Matrix::Zero(2, 8);
 		Matrix mD = Matrix::Zero(2, 7);
 
+		/// state vector
+		Matrix mStates = Matrix::Zero(8, 1);
+		
+		/// input vector
+		Matrix mU = Matrix::Zero(7, 1);
+		
     public:
 		///
 		AvVoltageSourceInverterDQ(String uid, String name, Logger::Level logLevel = Logger::Level::off);
@@ -83,6 +99,9 @@ namespace Base {
 		/// Setter for optional connection transformer
 		void setTransformerParameters(Real nomVoltageEnd1, Real nomVoltageEnd2, Real ratedPower, Real ratioAbs,
 			Real ratioPhase, Real resistance, Real inductance, Real omega);
+		/// Setter for initial state values
+		void setInitialStateValues(Real thetaPLLInit, Real phiPLLInit, Real pInit, Real qInit,
+			Real phi_dInit, Real phi_qInit, Real gamma_dInit, Real gamma_qInit);
     };
 }
 }

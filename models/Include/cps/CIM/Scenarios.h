@@ -57,6 +57,16 @@ namespace CIGREMV {
 
         // Further parameters
         Real systemOmega = 2 * PI * systemFrequency;
+
+        // Initial state values (use known values with scaled control params)
+        Real thetaPLLInit = 314.168313-systemOmega;
+        Real phiPLLInit = 8e-06;
+        Real pInit = 450000.716605;
+        Real qInit = -0.577218;
+        Real phi_dInit = 3854.197405*scaling_I;
+        Real phi_qInit = -0.003737*scaling_I;
+        Real gamma_dInit = 128.892668*scaling_I;
+        Real gamma_qInit = 23.068682*scaling_I;
     };
 
     void addInvertersToCIGREMV(SystemTopology& system, CIGREMV::ScenarioConfig scenario, Domain domain) {
@@ -80,6 +90,7 @@ namespace CIGREMV {
                 pv->setControllerParameters(scenario.KpPLL, scenario.KiPLL, scenario.KpPowerCtrl, scenario.KiPowerCtrl, scenario.KpCurrCtrl, scenario.KiCurrCtrl, scenario.OmegaCutoff);
                 pv->setFilterParameters(scenario.Lf, scenario.Cf, scenario.Rf, scenario.Rc);
                 pv->setTransformerParameters(scenario.systemNominalVoltage, scenario.pvUnitNominalVoltage, scenario.transformerNominalPower, scenario.systemNominalVoltage/scenario.pvUnitNominalVoltage, 0, 0, scenario.transformerInductance, scenario.systemOmega);
+                pv->setInitialStateValues(scenario.thetaPLLInit, scenario.phiPLLInit, scenario.pInit, scenario.qInit, scenario.phi_dInit, scenario.phi_qInit, scenario.gamma_dInit, scenario.gamma_qInit);
                 system.addComponent(pv);
                 system.connectComponentToNodes<Complex>(pv, { connectionNode });
             } else if (domain == Domain::EMT) {

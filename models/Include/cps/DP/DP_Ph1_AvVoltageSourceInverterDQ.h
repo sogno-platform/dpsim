@@ -79,11 +79,6 @@ namespace Ph1 {
 		/// output
 		Matrix mVsdq = Matrix::Zero(2, 1);
 
-		// #### Matrices ####
-		Matrix mStates;
-		/// u_old
-		Matrix mU;
-
 		// #### solver ####
 		///
 		std::vector<const Matrix*> mRightVectorStamps;

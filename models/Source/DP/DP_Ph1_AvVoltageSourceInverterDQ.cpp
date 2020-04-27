@@ -102,42 +102,28 @@ void DP::Ph1::AvVoltageSourceInverterDQ::initializeModel(Real omega, Real timeSt
 	mVcdq(0, 0) = mVirtualNodes[4]->initialSingleVoltage().real();
 	mVcdq(1, 0) = mVirtualNodes[4]->initialSingleVoltage().imag();
 	mU = Matrix::Zero(7, 1);
+	
+	// update B matrix due to its dependence on Irc
+	updateBMatrixStateSpaceModel();
+
+	// initialization of input
 	mU << mOmegaN, mPref, mQref, mVcdq(0, 0), mVcdq(1, 0), mIrcdq(0, 0), mIrcdq(1, 0);
 	mSLog->info("Initialization of input: \n" + Logger::matrixToString(mU));
 
-	updateBMatrixStateSpaceModel();
-
-	// initialize states	
-	// mThetaPLL = 0;
-	// mPhiPLL = 0;
-	// mP = mPref;
-	// mQ = mQref;
-	// mPhi_d = 0;
-	// mPhi_q = 0;
-	// mGamma_d = 0;
-	// mGamma_q = 0;
-
-	// use known values with scaled control params
-	Real scaling_I = 1000.0;
-	mThetaPLL = 314.168313-mOmegaN;
-	mPhiPLL = 8e-06;
-	mP = 450000.716605;
-	mQ = -0.577218;
-	mPhi_d = 3854.197405*scaling_I;
-	mPhi_q = -0.003737*scaling_I;
-	mGamma_d = 128.892668*scaling_I;
-	mGamma_q = 23.068682*scaling_I;
-
-	mStates = Matrix::Zero(8, 1);		
-
-	mStates <<
-		mThetaPLL, mPhiPLL, mP, mQ, mPhi_d, mPhi_q, mGamma_d, mGamma_q;
-
+	// initialization of states
+	mThetaPLL = mThetaPLLInit;
+	mPhiPLL = mPhiPLLInit;
+	mP = mPInit;
+	mQ = mQInit;
+	mPhi_d = mPhi_dInit;
+	mPhi_q = mPhi_qInit;
+	mGamma_d = mGamma_dInit;
+	mGamma_q = mGamma_qInit;	
+	mStates << mThetaPLL, mPhiPLL, mP, mQ, mPhi_d, mPhi_q, mGamma_d, mGamma_q;
 	mSLog->info("Initialization of states: \n" + Logger::matrixToString(mStates));
 
-	// initialize output
+	// initialization of output
 	mVsdq = mC * mStates + mD * mU;
-
 	mSLog->info("Initialization of output: \n" + Logger::matrixToString(mVsdq));
 }
 
