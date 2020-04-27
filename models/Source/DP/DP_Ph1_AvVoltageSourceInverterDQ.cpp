@@ -11,8 +11,9 @@
 using namespace CPS;
 
 
-DP::Ph1::AvVoltageSourceInverterDQ::AvVoltageSourceInverterDQ(String uid, String name, Logger::Level logLevel, Bool withTrafo)
-	:SimPowerComp<Complex>(uid, name, logLevel) {
+DP::Ph1::AvVoltageSourceInverterDQ::AvVoltageSourceInverterDQ(String uid, String name, Logger::Level logLevel, Bool withTrafo) : 
+	SimPowerComp<Complex>(uid, name, logLevel), 
+	TopologicalPowerComp(uid, name, logLevel) {
 	if (withTrafo) {
 		setVirtualNodeNumber(5);
 		mConnectionTransformer = DP::Ph1::Transformer::make(mName + "_trans", Logger::Level::debug);

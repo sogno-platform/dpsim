@@ -11,7 +11,7 @@
 using namespace CPS;
 
 EMT::Ph3::SynchronGeneratorDQTrapez::SynchronGeneratorDQTrapez(String uid, String name, Logger::Level logLevel)
-	: SynchronGeneratorDQ(uid, name, logLevel) {
+	: SynchronGeneratorDQ(uid, name, logLevel), TopologicalPowerComp(uid, name, logLevel) {
 
 	mNumericalMethod = NumericalMethod::Trapezoidal;
 }

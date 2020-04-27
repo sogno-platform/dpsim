@@ -12,7 +12,7 @@ using namespace CPS;
 
 
 SP::Ph1::PVNode::PVNode(String uid, String name,
-	Logger::Level logLevel) : SimPowerComp<Complex>(uid, name, logLevel) {
+	Logger::Level logLevel) : SimPowerComp<Complex>(uid, name, logLevel), TopologicalPowerComp(uid, name, logLevel)  {
 
 	addAttribute<Real>("P_set", &mPowerSetPoint, Flags::read | Flags::write);
 	addAttribute<Real>("V_set", &mVoltageSetPoint, Flags::read | Flags::write);

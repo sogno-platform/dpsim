@@ -11,11 +11,11 @@
 using namespace CPS;
 
 EMT::Ph3::SynchronGeneratorDQODE::SynchronGeneratorDQODE(String uid, String name, Logger::Level logLevel)
-	: SynchronGeneratorDQ(uid, name, logLevel) {
+	: SynchronGeneratorDQ(uid, name, logLevel), TopologicalPowerComp(uid, name, logLevel) {
 }
 
 EMT::Ph3::SynchronGeneratorDQODE::SynchronGeneratorDQODE(String name, Logger::Level logLevel)
-	: SynchronGeneratorDQ(name, name, logLevel) {
+	: SynchronGeneratorDQ(name, name, logLevel), TopologicalPowerComp(name, name, logLevel) {
 }
 
 void EMT::Ph3::SynchronGeneratorDQODE::mnaInitialize(Real omega, Real timeStep, Attribute<Matrix>::Ptr leftVector) {

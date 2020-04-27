@@ -11,7 +11,7 @@
 using namespace CPS;
 
 SP::Ph1::SynchronGenerator::SynchronGenerator(String uid, String name, Logger::Level logLevel)
- : SimPowerComp<Complex>(uid, name, logLevel) {
+ : SimPowerComp<Complex>(uid, name, logLevel), TopologicalPowerComp(uid, name, logLevel)  {
 
     mSLog->info("Create {} of type {}", name, this->type());
     mSLog->flush();

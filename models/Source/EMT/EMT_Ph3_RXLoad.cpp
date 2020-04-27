@@ -14,7 +14,7 @@ using namespace CPS;
 
 EMT::Ph3::RXLoad::RXLoad(String uid, String name,
 	Logger::Level logLevel)
-	: SimPowerComp<Real>(uid, name, logLevel) {
+	: SimPowerComp<Real>(uid, name, logLevel), TopologicalPowerComp(uid, name, logLevel) {
 	mPhaseType = PhaseType::ABC;
 	setTerminalNumber(1);
 	mIntfVoltage = Matrix::Zero(3, 1);

@@ -15,7 +15,7 @@
 using namespace CPS;
 
 EMT::Ph3::AvVoltageSourceInverterDQ::AvVoltageSourceInverterDQ(String uid, String name, Logger::Level logLevel, Bool withTrafo)
-	:SimPowerComp<Real>(uid,name,logLevel){
+	: SimPowerComp<Real>(uid,name,logLevel), TopologicalPowerComp(uid, name, logLevel){
 	mPhaseType = PhaseType::ABC;
 	if (withTrafo) {
 		setVirtualNodeNumber(5);

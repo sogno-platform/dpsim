@@ -11,11 +11,11 @@
 using namespace CPS;
 
 DP::Ph3::SynchronGeneratorDQTrapez::SynchronGeneratorDQTrapez(String uid, String name, Logger::Level logLevel)
-	: SynchronGeneratorDQ(uid, name, logLevel) {
+	: SynchronGeneratorDQ(uid, name, logLevel), TopologicalPowerComp(uid, name, logLevel) {
 }
 
 DP::Ph3::SynchronGeneratorDQTrapez::SynchronGeneratorDQTrapez(String name, Logger::Level logLevel)
-	: SynchronGeneratorDQ(name, name, logLevel) {
+	: SynchronGeneratorDQ(name, name, logLevel), TopologicalPowerComp(name, name, logLevel) {
 }
 
 void DP::Ph3::SynchronGeneratorDQTrapez::mnaInitialize(Real omega, Real timeStep, Attribute<Matrix>::Ptr leftVector) {
