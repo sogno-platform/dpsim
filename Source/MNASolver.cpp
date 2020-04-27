@@ -52,7 +52,7 @@ void MnaSolver<VarType>::initialize() {
 	// The system topology is prepared and we create the MNA matrices.
 	createEmptyVectors();
 	createEmptySystemMatrix();
-	
+
 	// Register attribute for solution vector
 	if (mFrequencyParallel) {
 		mSLog->info("Computing network harmonics in parallel.");
@@ -165,14 +165,21 @@ void MnaSolver<VarType>::initializeSystem() {
 	mRightSideVector.setZero();
 
 	if (mFrequencyParallel) {
-		for (UInt i = 0; i < std::pow(2,mSwitches.size()); i++) {
-			for(Int freq = 0; freq < mSystem.mFrequencies.size(); freq++)
-				mSwitchedMatricesHarm[std::bitset<SWITCH_NUM>(i)][freq].setZero();
+		/* just a sanity check in case we change the static
+		 * initialization of the switch number in the future */
+		if (mSwitches.size() > sizeof(std::size_t)*8) {
+			throw SystemError("Too many Switches.");
 		}
-	}
-	else {
-		for (UInt i = 0; i < std::pow(2,mSwitches.size()); i++)
+		/* iterate over all possible switch state combinations */
+		for (std::size_t i = 0; i < (1ULL << mSwitches.size()); i++) {
+			for(Int freq = 0; freq < mSystem.mFrequencies.size(); freq++) {
+				mSwitchedMatricesHarm[std::bitset<SWITCH_NUM>(i)][freq].setZero();
+			}
+		}
+	} else {
+		for (std::size_t i = 0; i < (1ULL << mSwitches.size()); i++) {
 			mSwitchedMatrices[std::bitset<SWITCH_NUM>(i)].setZero();
+		}
 	}
 
 	if (mFrequencyParallel) {
@@ -308,8 +315,9 @@ void MnaSolver<Real>::createEmptySystemMatrix() {
 	if (mSwitches.size() > SWITCH_NUM)
 		throw SystemError("Too many Switches.");
 
-	for (UInt i = 0; i < std::pow(2,mSwitches.size()); i++)
+	for (std::size_t i = 0; i < (1ULL << mSwitches.size()); i++) {
 		mSwitchedMatrices[std::bitset<SWITCH_NUM>(i)] = Matrix::Zero(mNumMatrixNodeIndices, mNumMatrixNodeIndices);
+	}
 }
 
 template<>
@@ -326,8 +334,9 @@ void MnaSolver<Complex>::createEmptySystemMatrix() {
 		}
 	}
 	else {
-		for (UInt i = 0; i < std::pow(2,mSwitches.size()); i++)
+		for (std::size_t i = 0; i < (1ULL << mSwitches.size()); i++) {
 			mSwitchedMatrices[std::bitset<SWITCH_NUM>(i)] = Matrix::Zero(2*(mNumMatrixNodeIndices + mNumHarmMatrixNodeIndices), 2*(mNumMatrixNodeIndices + mNumHarmMatrixNodeIndices));
+		}
 	}
 }
 
