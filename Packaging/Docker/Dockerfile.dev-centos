@@ -94,6 +94,4 @@ RUN dnf -y --refresh install npm
 RUN jupyter nbextension enable --py widgetsnbextension
 RUN jupyter labextension install @jupyter-widgets/jupyterlab-manager
 
-COPY --chown=root .ssh /root/.ssh
-
 EXPOSE 8888
