@@ -70,7 +70,7 @@ void DP::Ph1::AvVoltageSourceInverterDQ::initialize(Matrix frequencies) {
 	mIntfCurrent = MatrixComp::Zero(1, mNumFreqs);
 }
 
-void DP::Ph1::AvVoltageSourceInverterDQ::updateMonitoredValues(const Matrix& leftVector, Real time) {
+void DP::Ph1::AvVoltageSourceInverterDQ::updateInputStateSpaceModel(const Matrix& leftVector, Real time) {
 	Complex vcdq, ircdq;
 
 	vcdq = rotatingFrame2to1(Math::complexFromVectorElement(leftVector, mVirtualNodes[4]->matrixNodeIndex()), mThetaPLL, mOmegaN * time);
@@ -88,20 +88,19 @@ void DP::Ph1::AvVoltageSourceInverterDQ::updateMonitoredValues(const Matrix& lef
 }
 
 
-void DP::Ph1::AvVoltageSourceInverterDQ::initializeModel(Real omega, Real timeStep,
+void DP::Ph1::AvVoltageSourceInverterDQ::initializeStateSpaceModel(Real omega, Real timeStep,
 	Attribute<Matrix>::Ptr leftVector) {
 	mTimeStep = timeStep;
 	mOmegaN = omega;
 	mOmegaCutoff = omega;
 
-	// initialize current and voltage inputs to state space model
+	// get current and voltage inputs to state space model
 	// done here to ensure quantites are already initialized by initializeFromPowerFlow
 	MatrixComp Irc = - mSubResistorC->attribute<MatrixComp>("i_intf")->get();
 	mIrcdq(0, 0) = Irc(0, 0).real();
 	mIrcdq(1, 0) = Irc(0, 0).imag();
 	mVcdq(0, 0) = mVirtualNodes[4]->initialSingleVoltage().real();
 	mVcdq(1, 0) = mVirtualNodes[4]->initialSingleVoltage().imag();
-	mU = Matrix::Zero(7, 1);
 	
 	// update B matrix due to its dependence on Irc
 	updateBMatrixStateSpaceModel();
@@ -315,7 +314,7 @@ void DP::Ph1::AvVoltageSourceInverterDQ::mnaInitialize(Real omega, Real timeStep
 	mSubCapacitorF->mnaInitialize(omega, timeStep, leftVector);
 	mSubResistorC->mnaInitialize(omega, timeStep, leftVector);
 	mSubCtrledVoltageSource->mnaInitialize(omega, timeStep, leftVector);
-	initializeModel(omega, timeStep, leftVector);
+	initializeStateSpaceModel(omega, timeStep, leftVector);
 
 	mRightVectorStamps.push_back(&mSubCapacitorF->attribute<Matrix>("right_vector")->get());
 	mRightVectorStamps.push_back(&mSubInductorF->attribute<Matrix>("right_vector")->get());
@@ -375,7 +374,7 @@ void DP::Ph1::AvVoltageSourceInverterDQ::MnaPreStep::execute(Real time, Int time
 
 void DP::Ph1::AvVoltageSourceInverterDQ::MnaPostStep::execute(Real time, Int timeStepCount) {
 	mAvVoltageSourceInverterDQ.mnaUpdateCurrent(*mLeftVector);
-	mAvVoltageSourceInverterDQ.updateMonitoredValues(*mLeftVector, time);
+	mAvVoltageSourceInverterDQ.updateInputStateSpaceModel(*mLeftVector, time);
 	mAvVoltageSourceInverterDQ.step(time, timeStepCount);
 }
 

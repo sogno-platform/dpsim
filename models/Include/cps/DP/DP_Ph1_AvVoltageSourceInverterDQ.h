@@ -28,24 +28,45 @@ namespace Ph1 {
 		public MNAInterface,
 		public SharedFactory<AvVoltageSourceInverterDQ> {
 	protected:
+
+		// ### Subcomponents ###
+		/// Controlled voltage source
+		std::shared_ptr<DP::Ph1::ControlledVoltageSource> mSubCtrledVoltageSource;
+		/// Resistor Rf as part of LCL filter
+		std::shared_ptr<DP::Ph1::Resistor> mSubResistorF;
+		/// Capacitor Cf as part of LCL filter
+		std::shared_ptr<DP::Ph1::Capacitor> mSubCapacitorF;
+		/// Inductor Lf as part of LCL filter
+		std::shared_ptr<DP::Ph1::Inductor> mSubInductorF;
+		/// Resistor Rc as part of LCL filter
+		std::shared_ptr<DP::Ph1::Resistor> mSubResistorC;
+		/// Optional connection transformer
+		std::shared_ptr<DP::Ph1::Transformer> mConnectionTransformer;
+
+		// ### inputs ###
+		///
+		Matrix mVcdq = Matrix::Zero(2, 1);
+		///
+		Matrix mIrcdq = Matrix::Zero(2, 1);
+
+		// ### outputs ###
+		///
+		Matrix mVsdq = Matrix::Zero(2, 1);
+
+		/// instantaneous omega
+		Real mOmegaInst=0;
+		/// instantaneous frequency
+		Real mFreqInst=0;
+		///
+		Bool mCtrlOn = true;
+		///
+		Bool mCoveeCtrled=true;
+		///
+		Bool mIsLoad=false;
+		///
+		Bool mWithConnectionTransformer=false;
 		/// in case variable time step simulation should be developed in the future
 		Real mTimeStep;
-		/// if SteadyStateInit is enabled, the system's sychronous frame will start from a certain angle
-		Real mThetaSInit = 0;
-		/// Inner voltage source that represents the AvVoltageSourceInverterDQ
-		std::shared_ptr<DP::Ph1::ControlledVoltageSource> mSubCtrledVoltageSource;
-		
-		/// LC filter as sub-components
-		std::shared_ptr<DP::Ph1::Resistor> mSubResistorF;
-		///
-		std::shared_ptr<DP::Ph1::Capacitor> mSubCapacitorF;
-		///
-		std::shared_ptr<DP::Ph1::Inductor> mSubInductorF;
-		///
-		std::shared_ptr<DP::Ph1::Resistor> mSubResistorC;
-		
-		/// Optional connection transformer as subcomponent
-		std::shared_ptr<DP::Ph1::Transformer> mConnectionTransformer;
 
 		///
 		std::vector<Real>* mGenProfile = nullptr;
@@ -57,27 +78,6 @@ namespace Ph1 {
 		UInt mProfileUndateRate = 1000;
 		///
 		Attribute<Real>::Ptr mQRefInput;
-		
-		///
-		Bool mCtrlOn = true;
-		///
-		Bool mCoveeCtrled=true;
-		///
-		Bool mIsLoad=false;
-		///
-		Bool mWithConnectionTransformer=false;
-
-		/// inputs
-		Matrix mVcdq = Matrix::Zero(2, 1);
-		Matrix mIrcdq = Matrix::Zero(2, 1);
-
-		/// instantaneous omega
-		Real mOmegaInst=0;
-		/// instantaneous frequency
-		Real mFreqInst=0;
-
-		/// output
-		Matrix mVsdq = Matrix::Zero(2, 1);
 
 		// #### solver ####
 		///
@@ -94,18 +94,16 @@ namespace Ph1 {
 		AvVoltageSourceInverterDQ(String uid, String name, Logger::Level logLevel = Logger::Level::off, Bool withTrafo = false);
 		///
 		SimPowerComp<Complex>::Ptr clone(String copySuffix);
-		/// add measurements for Vcabc and Ifabc
-		//void addMonitoredNodes( std::shared_ptr<Capacitor> cap);
+
 		///
-		void updateMonitoredValues(const Matrix& leftVector, Real time);
+		void initializeStateSpaceModel(Real omega, Real timeStep, Attribute<Matrix>::Ptr leftVector);
 		///
-		void initializeModel(Real omega, Real timeStep,
-			Attribute<Matrix>::Ptr leftVector);
+		void updateInputStateSpaceModel(const Matrix& leftVector, Real time);
 		///
 		void updateStates();
-		
-		/// Update B matrix
+		///
 		void updateBMatrixStateSpaceModel();
+
 		/// convert between two rotating frames
 		Complex rotatingFrame2to1(Complex f, Real theta1, Real theta2);
 		///
