@@ -135,12 +135,16 @@ void EMT::Ph3::RXLoad::initializeFromPowerflow(Real frequency) {
 		"\nTerminal 0 voltage: {:s}"
 		"\nActive Power: {:s}"
 		"\nReactive Power: {:s}"
+		"\nResistance: {:s}"
+		"\nReactance: {:s}"
 		"\n--- Initialization from powerflow finished ---",
 		Logger::matrixToString(mIntfVoltage),
 		Logger::matrixToString(mIntfCurrent),
 		Logger::phasorToString(initialSingleVoltage(0)),
 		Logger::matrixToString(mActivePower),
-		Logger::matrixToString(mReactivePower));
+		Logger::matrixToString(mReactivePower),
+		Logger::matrixToString(mResistance),
+		Logger::matrixToString(mReactance));
 	mSLog->flush();
 
 }
@@ -199,18 +203,10 @@ void EMT::Ph3::RXLoad::MnaPostStep::execute(Real time, Int timeStepCount) {
 }
 
 void EMT::Ph3::RXLoad::mnaUpdateVoltage(const Matrix& leftVector) {
-	// v1 - v0
 	mIntfVoltage = Matrix::Zero(3, 1);
-	if (terminalNotGrounded(1)) {
-		mIntfVoltage(0, 0) = Math::realFromVectorElement(leftVector, matrixNodeIndex(1, 0));
-		mIntfVoltage(1, 0) = Math::realFromVectorElement(leftVector, matrixNodeIndex(1, 1));
-		mIntfVoltage(2, 0) = Math::realFromVectorElement(leftVector, matrixNodeIndex(1, 2));
-	}
-	if (terminalNotGrounded(0)) {
-		mIntfVoltage(0, 0) = mIntfVoltage(0, 0) - Math::realFromVectorElement(leftVector, matrixNodeIndex(0, 0));
-		mIntfVoltage(1, 0) = mIntfVoltage(1, 0) - Math::realFromVectorElement(leftVector, matrixNodeIndex(0, 1));
-		mIntfVoltage(2, 0) = mIntfVoltage(2, 0) - Math::realFromVectorElement(leftVector, matrixNodeIndex(0, 2));
-	}
+	mIntfVoltage(0, 0) = Math::realFromVectorElement(leftVector, matrixNodeIndex(0, 0));
+	mIntfVoltage(1, 0) = Math::realFromVectorElement(leftVector, matrixNodeIndex(0, 1));
+	mIntfVoltage(2, 0) = Math::realFromVectorElement(leftVector, matrixNodeIndex(0, 2));
 }
 
 void EMT::Ph3::RXLoad::mnaUpdateCurrent(const Matrix& leftVector) {
