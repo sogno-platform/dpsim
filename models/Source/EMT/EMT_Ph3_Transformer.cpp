@@ -11,17 +11,24 @@
 using namespace CPS;
 
 EMT::Ph3::Transformer::Transformer(String uid, String name,
-	Logger::Level logLevel)
+	Logger::Level logLevel, Bool withResistiveLosses)
 	: SimPowerComp<Real>(uid, name, logLevel), TopologicalPowerComp(uid, name, logLevel) {
 	mPhaseType = PhaseType::ABC;
+	if (withResistiveLosses) 
+		setVirtualNodeNumber(3);
+	else
+		setVirtualNodeNumber(2);
+
 	setTerminalNumber(2);
-	setVirtualNodeNumber(1);
+
+	mSLog->info("Create {} {}", this->type(), name);
 	mIntfVoltage = Matrix::Zero(3, 1);
 	mIntfCurrent = Matrix::Zero(1, 1);
 
 	addAttribute<Complex>("ratio", &mRatio, Flags::write | Flags::read);
 	addAttribute<Matrix>("R", &mResistance, Flags::write | Flags::read);
 	addAttribute<Matrix>("L", &mInductance, Flags::write | Flags::read);
+	addAttribute<Matrix>("Rsnubber", &mSnubberResistance, Flags::write | Flags::read);
 }
 
 SimPowerComp<Real>::Ptr EMT::Ph3::Transformer::clone(String name) {
@@ -34,11 +41,6 @@ void EMT::Ph3::Transformer::setParameters(Real ratioAbs, Real ratioPhase,
 	Matrix resistance, Matrix inductance) {
 	Base::Ph3::Transformer::setParameters(ratioAbs, ratioPhase, resistance, inductance);
 
-	if (resistance(0, 0) > 0)
-		setVirtualNodeNumber(3);
-	else
-		setVirtualNodeNumber(2);
-
 	parametersSet = true;
 }
 
@@ -48,13 +50,6 @@ void EMT::Ph3::Transformer::initialize(Matrix frequencies) {
 
 void EMT::Ph3::Transformer::initializeFromPowerflow(Real frequency) {
 	checkForUnconnectedTerminals();
-
-	// A snubber conductance is added on the low voltage side
-	Matrix snubberResistance = Matrix::Zero(3, 3);
-	snubberResistance <<
-		1e3, 0, 0,
-		0, 1e3, 0,
-		0, 0, 1e3;
 
 	// Component parameters are referred to high voltage side.
 	// Switch terminals if transformer is connected the other way around.
@@ -105,8 +100,10 @@ void EMT::Ph3::Transformer::initializeFromPowerflow(Real frequency) {
 	mSubInductor->initializeFromPowerflow(frequency);
 
 	// Create parallel sub components
+	// A snubber conductance is added on the low voltage side (resistance approximately scaled with LV side voltage)
+	mSnubberResistance = Matrix::Identity(3,3)*std::abs(node(1)->initialSingleVoltage())*1e6;
 	mSubSnubResistor = std::make_shared<EMT::Ph3::Resistor>(mName + "_snub_res", mLogLevel);
-	mSubSnubResistor->setParameters(snubberResistance);
+	mSubSnubResistor->setParameters(mSnubberResistance);
 	mSubSnubResistor->connect({ node(1), EMT::SimNode::GND });
 	mSubSnubResistor->initialize(mFrequencies);
 	mSubSnubResistor->initializeFromPowerflow(frequency);

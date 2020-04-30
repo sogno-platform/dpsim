@@ -29,10 +29,16 @@ namespace CPS {
 				/// Internal parallel resistance as snubber
 				std::shared_ptr<EMT::Ph3::Resistor> mSubSnubResistor;
 				std::shared_ptr<EMT::Ph3::Resistor> mSubResistor;
+
+				/// Snubber resistance added on the low voltage side
+				Matrix mSnubberResistance;
+
+				/// Boolean for considering resistive losses with sub resistor
+				Bool mWithResistiveLosses;
 			public:
 				/// Defines UID, name and logging level
 				Transformer(String uid, String name,
-					Logger::Level logLevel = Logger::Level::off);
+					Logger::Level logLevel = Logger::Level::off, Bool withResistiveLosses = false);
 				/// Defines name and logging level
 				Transformer(String name, Logger::Level logLevel = Logger::Level::off)
 					: Transformer(name, name, logLevel) { }
