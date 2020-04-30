@@ -17,6 +17,8 @@ EMT::Ph3::PiLine::PiLine(String uid, String name, Logger::Level logLevel)
 	mPhaseType = PhaseType::ABC;
 	setVirtualNodeNumber(1);
 	setTerminalNumber(2);
+
+	mSLog->info("Create {} {}", this->type(), name);
 	mIntfVoltage = Matrix::Zero(3, 1);
 	mIntfCurrent = Matrix::Zero(3, 1);
 
@@ -24,6 +26,7 @@ EMT::Ph3::PiLine::PiLine(String uid, String name, Logger::Level logLevel)
 	addAttribute<Matrix>("L_series", &mSeriesInd, Flags::read | Flags::write);
 	addAttribute<Matrix>("C_parallel", &mParallelCap, Flags::read | Flags::write);
 	addAttribute<Matrix>("G_parallel", &mParallelCond, Flags::read | Flags::write);
+	mSLog->flush();
 }
 
 SimPowerComp<Real>::Ptr EMT::Ph3::PiLine::clone(String name) {
@@ -141,6 +144,7 @@ void EMT::Ph3::PiLine::initializeFromPowerflow(Real frequency) {
 		Logger::phasorToString(initialSingleVoltage(0)),
 		Logger::phasorToString(initialSingleVoltage(1)),
 		Logger::phasorToString(mVirtualNodes[0]->initialSingleVoltage()));
+	mSLog->flush();
 }
 
 void EMT::Ph3::PiLine::mnaInitialize(Real omega, Real timeStep, Attribute<Matrix>::Ptr leftVector) {

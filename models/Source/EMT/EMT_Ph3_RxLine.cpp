@@ -17,11 +17,14 @@ EMT::Ph3::RxLine::RxLine(String uid, String name, Logger::Level logLevel)
 	mPhaseType = PhaseType::ABC;
 	setVirtualNodeNumber(1);
 	setTerminalNumber(2);
+
+	mSLog->info("Create {} {}", this->type(), name);
 	mIntfVoltage = Matrix::Zero(3, 1);
 	mIntfCurrent = Matrix::Zero(3, 1);
 
 	addAttribute<Matrix>("R", &mSeriesRes, Flags::read | Flags::write);
 	addAttribute<Matrix>("L", &mSeriesInd, Flags::read | Flags::write);
+	mSLog->flush();
 }
 
 SimPowerComp<Real>::Ptr EMT::Ph3::RxLine::clone(String name) {

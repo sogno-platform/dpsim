@@ -17,12 +17,15 @@ EMT::Ph3::RXLoad::RXLoad(String uid, String name,
 	: SimPowerComp<Real>(uid, name, logLevel), TopologicalPowerComp(uid, name, logLevel) {
 	mPhaseType = PhaseType::ABC;
 	setTerminalNumber(1);
+
+	mSLog->info("Create {} {}", this->type(), name);
 	mIntfVoltage = Matrix::Zero(3, 1);
 	mIntfCurrent = Matrix::Zero(3, 1);
 
 	addAttribute<Matrix>("P", &mActivePower, Flags::read | Flags::write);
 	addAttribute<Matrix>("Q", &mReactivePower, Flags::read | Flags::write);
 	addAttribute<Real>("V_nom", &mNomVoltage, Flags::read | Flags::write);
+	mSLog->flush();
 }
 
 EMT::Ph3::RXLoad::RXLoad(String name,
@@ -132,10 +135,16 @@ void EMT::Ph3::RXLoad::initializeFromPowerflow(Real frequency) {
 		"\nVoltage across: {:s}"
 		"\nCurrent: {:s}"
 		"\nTerminal 0 voltage: {:s}"
+		"\nActive Power: {:s}"
+		"\nReactive Power: {:s}"
 		"\n--- Initialization from powerflow finished ---",
 		Logger::matrixToString(mIntfVoltage),
 		Logger::matrixToString(mIntfCurrent),
-		Logger::phasorToString(initialSingleVoltage(0)));
+		Logger::phasorToString(initialSingleVoltage(0)),
+		Logger::matrixToString(mActivePower),
+		Logger::matrixToString(mReactivePower));
+	mSLog->flush();
+
 }
 
 void EMT::Ph3::RXLoad::mnaInitialize(Real omega, Real timeStep, Attribute<Matrix>::Ptr leftVector) {

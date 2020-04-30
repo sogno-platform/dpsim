@@ -20,8 +20,11 @@ EMT::Ph3::NetworkInjection::NetworkInjection(String uid, String name, Logger::Le
 	mIntfVoltage = Matrix::Zero(3, 1);
 	mIntfCurrent = Matrix::Zero(3, 1);
 
+	mSLog->info("Create {} {}", this->type(), name);
+
 	addAttribute<MatrixComp>("V_ref", Flags::read | Flags::write);
 	addAttribute<Real>("f_src", Flags::read | Flags::write);
+	mSLog->flush();
 }
 
 SimPowerComp<Real>::Ptr EMT::Ph3::NetworkInjection::clone(String name) {
@@ -58,6 +61,7 @@ void EMT::Ph3::NetworkInjection::initializeFromPowerflow(Real frequency) {
 		"\n--- Initialization from node voltages ---",
 		Logger::matrixCompToString(mVoltageRef->get()),
 		Logger::phasorToString(initialSingleVoltage(0)));
+	mSLog->flush();
 }
 
 // #### MNA functions ####
@@ -99,7 +103,7 @@ void EMT::Ph3::NetworkInjection::mnaApplySystemMatrixStamp(Matrix& systemMatrix)
 	mSLog->info("Add {:f} to system at ({:d},{:d})", 1., matrixNodeIndex(0, 1), mVirtualNodes[0]->matrixNodeIndex(PhaseType::B));
 	mSLog->info("Add {:f} to system at ({:d},{:d})", 1., mVirtualNodes[0]->matrixNodeIndex(PhaseType::C), matrixNodeIndex(0, 2));
 	mSLog->info("Add {:f} to system at ({:d},{:d})", 1., matrixNodeIndex(0, 2), mVirtualNodes[0]->matrixNodeIndex(PhaseType::C));
-
+	mSLog->flush();
 }
 
 //void EMT::Ph3::NetworkInjection::mnaApplySystemMatrixStampHarm(Matrix& systemMatrix, Int freqIdx) {
@@ -123,6 +127,7 @@ void EMT::Ph3::NetworkInjection::mnaApplyRightSideVectorStamp(Matrix& rightVecto
 		mVirtualNodes[0]->matrixNodeIndex(PhaseType::B),
 		mIntfVoltage(2, 0),
 		mVirtualNodes[0]->matrixNodeIndex(PhaseType::C));
+	mSLog->flush();
 }
 
 //void EMT::Ph3::NetworkInjection::mnaApplyRightSideVectorStampHarm(Matrix& rightVector) {
