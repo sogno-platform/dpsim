@@ -98,8 +98,9 @@ namespace CIGREMV {
                 auto pv = EMT::Ph3::AvVoltageSourceInverterDQ::make("pv_" + connectionNode->name(), "pv_" + connectionNode->name(), Logger::Level::debug, true);
                 pv->setParameters(scenario.systemOmega, scenario.pvUnitNominalVoltage, pvActivePower, pvReactivePower);
                 pv->setControllerParameters(scenario.KpPLL, scenario.KiPLL, scenario.KpPowerCtrl, scenario.KiPowerCtrl, scenario.KpCurrCtrl, scenario.KiCurrCtrl, scenario.OmegaCutoff);
-                pv->setFilterParameters(Matrix::Identity(3,3)*scenario.Lf, Matrix::Identity(3,3)*scenario.Cf, Matrix::Identity(3,3)*scenario.Rf, Matrix::Identity(3,3)*scenario.Rc);
-                pv->setTransformerParameters(scenario.systemNominalVoltage, scenario.pvUnitNominalVoltage, scenario.transformerNominalPower, scenario.systemNominalVoltage/scenario.pvUnitNominalVoltage, 0, Matrix::Zero(3,3), Matrix::Identity(3,3)*scenario.transformerInductance, scenario.systemOmega);
+                pv->setFilterParameters(scenario.Lf, scenario.Cf, scenario.Rf, scenario.Rc);
+                pv->setTransformerParameters(scenario.systemNominalVoltage, scenario.pvUnitNominalVoltage, scenario.transformerNominalPower, scenario.systemNominalVoltage/scenario.pvUnitNominalVoltage, 0, 0, scenario.transformerInductance, scenario.systemOmega);
+                pv->setInitialStateValues(scenario.thetaPLLInit, scenario.phiPLLInit, scenario.pInit, scenario.qInit, scenario.phi_dInit, scenario.phi_qInit, scenario.gamma_dInit, scenario.gamma_qInit);
                 system.addComponent(pv);
                 system.connectComponentToNodes<Real>(pv, { connectionNode });
             }
@@ -138,7 +139,7 @@ namespace CIGREMV {
         }
     }
 
-    void logPVAttributes(DPsim::DataLogger::Ptr logger, CPS::SimPowerComp<Complex>::Ptr pv) {
+    void logPVAttributes(DPsim::DataLogger::Ptr logger, CPS::TopologicalPowerComp::Ptr pv) {
         // state variables
         logger->addAttribute(pv->name() + "_state_" + "theta", pv->attribute("theta"));
         logger->addAttribute(pv->name() + "_state_" + "phipll", pv->attribute("phipll"));

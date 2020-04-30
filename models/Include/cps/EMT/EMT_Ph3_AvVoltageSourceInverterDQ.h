@@ -16,123 +16,69 @@
 #include <cps/EMT/EMT_Ph3_Capacitor.h>
 #include <cps/EMT/EMT_Ph3_ControlledVoltageSource.h>
 #include <cps/EMT/EMT_Ph3_Transformer.h>
+#include <cps/Base/Base_AvVoltageSourceInverterDQ.h>
 
 namespace CPS {
 namespace EMT {
 namespace Ph3 {
-	/*
-
-		an Average Voltage Source Inverter model with
-		- controller modeled in state space
-		- filter stamped into the global admittance matrix
-	*/
 	class AvVoltageSourceInverterDQ :
+		public Base::AvVoltageSourceInverterDQ,
 		public SimPowerComp<Real>,
 		public MNAInterface,
 		public SharedFactory<AvVoltageSourceInverterDQ> {
 	protected:
-		/// nominal voltage of the component
-		Real mVnom;
+
+		// ### Subcomponents ###
+		/// Controlled voltage source
+		std::shared_ptr<EMT::Ph3::ControlledVoltageSource> mSubCtrledVoltageSource;
+		/// Resistor Rf as part of LCL filter
+		std::shared_ptr<EMT::Ph3::Resistor> mSubResistorF;
+		/// Capacitor Cf as part of LCL filter
+		std::shared_ptr<EMT::Ph3::Capacitor> mSubCapacitorF;
+		/// Inductor Lf as part of LCL filter
+		std::shared_ptr<EMT::Ph3::Inductor> mSubInductorF;
+		/// Resistor Rc as part of LCL filter
+		std::shared_ptr<EMT::Ph3::Resistor> mSubResistorC;
+		/// Optional connection transformer
+		std::shared_ptr<EMT::Ph3::Transformer> mConnectionTransformer;
+
+		// ### inputs ###
+		///
+		Matrix mVcdq = Matrix::Zero(2, 1);
+		///
+		Matrix mVcabc = Matrix::Zero(3, 1);
+		///
+		Matrix mIrcdq = Matrix::Zero(2, 1);
+		///
+		Matrix mIrcabc = Matrix::Zero(3, 1);
+
+		// ### outputs ###
+		///
+		Matrix mVsdq = Matrix::Zero(2, 1);
+		///
+		Matrix mVsabc = Matrix::Zero(3, 1);
+
 		/// in case variable time step simulation should be developed in the future
 		Real mTimeStep;
-		/// if SteadyStateInit is enabled, the system's sychronous frame will start from a certain angle
-		Real mThetaSInit = 0;
-		/// Inner voltage source that represents the AvVoltageSourceInverterDQ
-		std::shared_ptr<EMT::Ph3::ControlledVoltageSource> mSubCtrledVoltageSource;
+		///
+		Bool mCtrlOn = true;
+		///
+		Bool mWithConnectionTransformer=false;
+		/// instantaneous omega
+		Real mOmegaInst = 0;
+		/// instantaneous frequency
+		Real mFreqInst = 0;
 
-		/// LC filter as sub-components
-		std::shared_ptr<EMT::Ph3::Resistor> mSubResistorF;
-		///
-		std::shared_ptr<EMT::Ph3::Capacitor> mSubCapacitorF;
-		///
-		std::shared_ptr<EMT::Ph3::Inductor> mSubInductorF;
-		///
-		std::shared_ptr<EMT::Ph3::Resistor> mSubResistorC;
-		
-		/// Optional connection transformer as subcomponent
-		std::shared_ptr<EMT::Ph3::Transformer> mConnectionTransformer;
 		///
 		std::vector<Real>* mGenProfile = nullptr;
 		///
 		std::vector<Real>::iterator mCurrentPower;
 		///
 		Attribute<Real>::Ptr mQRefInput;
-		///
-		Bool mCtrlOn = true;
-		///
-		Bool mWithConnectionTransformer=false;
 		
 		// #### solver ####
 		///
 		std::vector<const Matrix*> mRightVectorStamps;
-
-		// ### parameters ###
-		Real mPref;
-		Real mQref;
-
-		/// filter paramter
-		Matrix mLf;
-		Matrix mCf;
-		Matrix mRf;
-		Matrix mRc;
-
-		/// transformer
-		Matrix mTransformerResistance;
-		Matrix mTransformerInductance;
-		Real mTransformerRatioAbs;
-		Real mTransformerRatioPhase;
-
-		/// PLL
-		Real mOmegaN;
-		Real mKiPLL;
-		Real mKpPLL;
-
-		/// Power controller
-		Real mOmegaCutoff;
-		Real mKiPowerCtrld;
-		Real mKiPowerCtrlq;
-		Real mKpPowerCtrld;
-		Real mKpPowerCtrlq;
-
-		/// Current controller
-		Real mKiCurrCtrld;
-		Real mKiCurrCtrlq;
-		Real mKpCurrCtrld;
-		Real mKpCurrCtrlq;
-
-		// states
-		Real mThetaPLL;
-		Real mPhiPLL;
-		Real mP;
-		Real mQ;
-		Real mPhi_d;
-		Real mPhi_q;
-		Real mGamma_d;
-		Real mGamma_q;
-
-		// monitored values
-		/// abc time domain
-		Matrix mIgabc = Matrix::Zero(3, 1);
-		Matrix mVcabc = Matrix::Zero(3, 1);
-		Matrix mIfabc = Matrix::Zero(3, 1);
-		Matrix mVsabc = Matrix::Zero(3, 1);
-		/// dq rotating frame
-		Matrix mIgdq = Matrix::Zero(2, 1);
-		Matrix mIfdq = Matrix::Zero(2, 1);
-		Matrix mVsdq = Matrix::Zero(2, 1);
-		Matrix mVcdq = Matrix::Zero(2, 1);
-		Real mOmegaInst = 0;
-		Real mFreqInst = 0;
-
-		// #### Matrices ####
-		Matrix mStates;
-		// u_old
-		Matrix mU;
-		/// output
-		Matrix mA;
-		Matrix mB;
-		Matrix mC;
-		Matrix mD;
 
 	public:
 		// #### constructors ####
@@ -143,31 +89,25 @@ namespace Ph3 {
 		AvVoltageSourceInverterDQ(String uid, String name, Logger::Level logLevel = Logger::Level::off, Bool withTrafo = false);
 		///
 		SimPowerComp<Real>::Ptr clone(String copySuffix);
+		
 		///
-		void updateMonitoredValues(const Matrix& leftVector, Real time);
+		void initializeStateSpaceModel(Real omega, Real timeStep, Attribute<Matrix>::Ptr leftVector);
 		///
-		void initializeModel(Real omega, Real timeStep,
-			Attribute<Matrix>::Ptr leftVector);
+		void updateInputStateSpaceModel(const Matrix& leftVector, Real time);		
 		///
 		void updateStates();
+		///
+		void updateBMatrixStateSpaceModel();
 
 		///
-		void setParameters(Real sysOmega, Real sysVoltNom, Real Pref, Real Qref);
+		Matrix getParkTransformMatrixPowerInvariant(Real theta);
 		///
-		void setControllerParameters(Real Kp_pll, Real Ki_pll, Real Kp_powerCtrl, Real Ki_powerCtrl, Real Kp_currCtrl, Real Ki_currCtrl, Real Omega_cutoff);
+		Matrix getInverseParkTransformMatrixPowerInvariant(Real theta);
 		///
-		void setFilterParameters(Matrix Lf, Matrix Cf, Matrix Rf, Matrix Rc);
-		/// 
-		void setTransformerParameters(Real nomVoltageEnd1, Real nomVoltageEnd2, Real ratedPower, Real ratioAbs,
-			Real ratioPhase, Matrix resistance, Matrix inductance, Real omega);
+		Matrix parkTransformPowerInvariant(Real theta, Real fa, Real fb, Real fc);
+		///
+		Matrix inverseParkTransformPowerInvariant(Real theta, Real fd, Real fq);
 
-		// update B,C,D matrices with new theta_pll
-		void updateLinearizedModel();
-
-		Matrix getParkTransformMatrix(Real theta);
-		Matrix getInverseParkTransformMatrix(Real theta);
-		Matrix parkTransform(Real theta, Real fa, Real fb, Real fc);
-		Matrix inverseParkTransform(Real theta, Real fd, Real fq);
 		///
 		void step(Real time, Int timeStepCount);
 		///

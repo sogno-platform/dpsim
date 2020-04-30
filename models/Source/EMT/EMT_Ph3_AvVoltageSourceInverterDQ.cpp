@@ -10,8 +10,10 @@
 
 using namespace CPS;
 
-EMT::Ph3::AvVoltageSourceInverterDQ::AvVoltageSourceInverterDQ(String uid, String name, Logger::Level logLevel, Bool withTrafo)
-	: SimPowerComp<Real>(uid,name,logLevel), TopologicalPowerComp(uid, name, logLevel){
+EMT::Ph3::AvVoltageSourceInverterDQ::AvVoltageSourceInverterDQ(String uid, String name, Logger::Level logLevel, Bool withTrafo) : 
+	Base::AvVoltageSourceInverterDQ(uid, name, logLevel),
+	SimPowerComp<Real>(uid,name,logLevel), 
+	TopologicalPowerComp(uid, name, logLevel) {
 	mPhaseType = PhaseType::ABC;
 	if (withTrafo) {
 		setVirtualNodeNumber(5);
@@ -27,94 +29,18 @@ EMT::Ph3::AvVoltageSourceInverterDQ::AvVoltageSourceInverterDQ(String uid, Strin
 	mIntfVoltage = Matrix::Zero(3, 1);
 	mIntfCurrent = Matrix::Zero(3, 1);
 
-	addAttribute<Real>("p", &mP, Flags::read | Flags::write);
-	addAttribute<Real>("q", &mQ, Flags::read | Flags::write);
-	addAttribute<Real>("P_ref", &mPref, Flags::read | Flags::write);
-	addAttribute<Real>("Q_ref", &mQref, Flags::read | Flags::write);
-	addAttribute<Real>("theta", &mThetaPLL, Flags::read | Flags::write);
-	addAttribute<Real>("phipll", &mPhiPLL, Flags::read | Flags::write);
-	addAttribute<Real>("phid", &mPhi_d, Flags::read | Flags::write);
-	addAttribute<Real>("phiq", &mPhi_q, Flags::read | Flags::write);
-	addAttribute<Real>("gammad", &mGamma_d, Flags::read | Flags::write);
-	addAttribute<Real>("gammaq", &mGamma_q, Flags::read | Flags::write);
-	addAttribute<Bool>("ctrl_on", &mCtrlOn, Flags::read | Flags::write);
-
-	//additional loggers
-	addAttribute<Matrix>("Vcabc", &mVcabc, Flags::read | Flags::write);
-	addAttribute<Matrix>("Vsdq", &mVsdq, Flags::read | Flags::write);
+	// additional input variables
 	addAttribute<Matrix>("Vcdq", &mVcdq, Flags::read | Flags::write);
-	addAttribute<Matrix>("ifabc", &mIfabc, Flags::read | Flags::write);
-	addAttribute<Matrix>("igdq", &mIgdq, Flags::read | Flags::write);
-	addAttribute<Matrix>("ifdq", &mIfdq, Flags::read | Flags::write);
+	addAttribute<Matrix>("Ircdq", &mIrcdq, Flags::read | Flags::write);
+
+	// additional output variables
+	addAttribute<Matrix>("Vsdq", &mVsdq, Flags::read | Flags::write);
+
+	// additional variables for logging
 	addAttribute<Real>("omega", &mOmegaInst, Flags::read | Flags::write);
 	addAttribute<Real>("freq", &mFreqInst, Flags::read | Flags::write);
+	addAttribute<Bool>("ctrl_on", &mCtrlOn, Flags::read | Flags::write);
 }
-
-void EMT::Ph3::AvVoltageSourceInverterDQ::setTransformerParameters(Real nomVoltageEnd1, Real nomVoltageEnd2, Real ratedPower, Real ratioAbs,
-	Real ratioPhase, Matrix resistance, Matrix inductance, Real omega) {
-
-	mTransformerResistance = resistance;
-	mTransformerInductance = inductance;
-	mTransformerRatioAbs = ratioAbs;
-	mTransformerRatioPhase = ratioPhase;
-
-	mSLog->info("Connection Transformer Parameters:");
-	mSLog->info("Resistance={} [Ohm] Inductance={} [H]", mTransformerResistance, mTransformerInductance);
-    mSLog->info("Tap Ratio={} [ ] Phase Shift={} [deg]", mTransformerRatioAbs, mTransformerRatioPhase);
-
-	mConnectionTransformer->setParameters(mTransformerRatioAbs, mTransformerRatioPhase, mTransformerResistance, mTransformerInductance);
-};
-
-void EMT::Ph3::AvVoltageSourceInverterDQ::setParameters(Real sysOmega, Real sysVoltNom, Real Pref, Real Qref) {
-	mPref = Pref;
-	mQref = Qref;
-
-	mVnom = sysVoltNom;
-	mOmegaN = sysOmega;
-
-	mSLog->info("General Parameters:");
-	mSLog->info("Nominal Voltage={} [V] Nominal Omega={} [1/s]", mVnom, mOmegaN);
-	mSLog->info("Active Power={} [W] Reactive Power={} [VAr]", mPref, mQref);    
-
-	parametersSet = true;
-}
-
-void EMT::Ph3::AvVoltageSourceInverterDQ::setControllerParameters(Real Kp_pll, Real Ki_pll, Real Kp_powerCtrl, Real Ki_powerCtrl, Real Kp_currCtrl, Real Ki_currCtrl, Real Omega_cutoff) {
-	mKpPLL = Kp_pll;
-	mKiPLL = Ki_pll;
-
-	mKiPowerCtrld = Ki_powerCtrl;
-	mKiPowerCtrlq = Ki_powerCtrl;
-
-	mKpPowerCtrld = Kp_powerCtrl;
-	mKpPowerCtrlq = Kp_powerCtrl;
-
-	mKiCurrCtrld = Ki_currCtrl;
-	mKiCurrCtrlq = Ki_currCtrl;
-
-	mKpCurrCtrld = Kp_currCtrl;
-	mKpCurrCtrlq = Kp_currCtrl;
-
-	mOmegaCutoff = Omega_cutoff;
-
-	mSLog->info("Control Parameters:");
-	mSLog->info("PLL: K_i = {}, K_p = {}", mKpPLL, mKiPLL);
-	mSLog->info("Power Loop: K_i = {}, K_p = {}", mKpPowerCtrld, mKiPowerCtrld);
-	mSLog->info("Current Loop: K_i = {}, K_p = {}", mKpCurrCtrld, mKiCurrCtrld);
-	mSLog->info("Cut-Off Frequency = {}", mOmegaCutoff);
-}
-
-void EMT::Ph3::AvVoltageSourceInverterDQ::setFilterParameters(Matrix Lf, Matrix Cf, Matrix Rf, Matrix Rc) {
-	mLf = Lf;
-	mCf = Cf;
-	mRf = Rf;
-	mRc = Rc;
-
-	mSLog->info("Filter Parameters:");
-	mSLog->info("Inductance Lf={} [H] Capacitance Cf={} [F]", mLf, mCf);
-	mSLog->info("Resistance Rf={} [H] Resistance Rc={} [F]", mRf, mRc);
-}
-
 
 SimPowerComp<Real>::Ptr EMT::Ph3::AvVoltageSourceInverterDQ::clone(String name) {
 	auto copy = EMT::Ph3::AvVoltageSourceInverterDQ::make(name, mLogLevel);
@@ -123,22 +49,21 @@ SimPowerComp<Real>::Ptr EMT::Ph3::AvVoltageSourceInverterDQ::clone(String name) 
 }
 
 
-void EMT::Ph3::AvVoltageSourceInverterDQ::updateMonitoredValues(const Matrix& leftVector, Real time) {
+void EMT::Ph3::AvVoltageSourceInverterDQ::updateInputStateSpaceModel(const Matrix& leftVector, Real time) {
 
 	mVcabc(0, 0) = Math::realFromVectorElement(leftVector, mSubCapacitorF->matrixNodeIndex(0, 0));
 	mVcabc(1, 0) = Math::realFromVectorElement(leftVector, mSubCapacitorF->matrixNodeIndex(0, 1));
 	mVcabc(2, 0) = Math::realFromVectorElement(leftVector, mSubCapacitorF->matrixNodeIndex(0, 2));
+	mVcdq = parkTransformPowerInvariant(mThetaPLL, mVcabc(0, 0) / sqrt(3) * sqrt(2), mVcabc(1, 0) / sqrt(3) * sqrt(2), mVcabc(2, 0) / sqrt(3) * sqrt(2));
 
-	mIfabc = -1 * mSubResistorF->attribute<Matrix>("i_intf")->get();
-	mIgabc = -1. * mSubResistorC->attribute<Matrix>("i_intf")->get();
-	mIfdq = parkTransform(mThetaSInit + mThetaPLL, mIfabc(0, 0), mIfabc(1, 0), mIfabc(2, 0));
-	mIgdq = parkTransform(mThetaSInit + mThetaPLL, mIgabc(0, 0), mIgabc(1, 0), mIgabc(2, 0));
-	mVcdq = parkTransform(mThetaSInit + mThetaPLL, mVcabc(0, 0), mVcabc(1, 0), mVcabc(2, 0));
+	mIrcabc = -1 * mSubResistorC->attribute<Matrix>("i_intf")->get();
+	mIrcdq = parkTransformPowerInvariant(mThetaPLL, mIrcabc(0, 0) * sqrt(2), mIrcabc(1, 0) * sqrt(2), mIrcabc(2, 0) * sqrt(2));
+
 	mIntfVoltage(0, 0) = Math::realFromVectorElement(leftVector, mTerminals[0]->matrixNodeIndices()[0]);
 	mIntfVoltage(1, 0) = Math::realFromVectorElement(leftVector, mTerminals[0]->matrixNodeIndices()[1]);
 	mIntfVoltage(2, 0) = Math::realFromVectorElement(leftVector, mTerminals[0]->matrixNodeIndices()[2]);
 
-	updateLinearizedModel();
+	updateBMatrixStateSpaceModel();
 }
 
 void EMT::Ph3::AvVoltageSourceInverterDQ::addAggregatedGenProfile(std::vector<Real>* genProfile, Real customerNumber) {
@@ -149,77 +74,46 @@ void EMT::Ph3::AvVoltageSourceInverterDQ::addAggregatedGenProfile(std::vector<Re
 
 
 
-void EMT::Ph3::AvVoltageSourceInverterDQ::initializeModel(Real omega, Real timeStep,
-	Attribute<Matrix>::Ptr leftVector) {
+void EMT::Ph3::AvVoltageSourceInverterDQ::initializeStateSpaceModel(Real omega, Real timeStep, Attribute<Matrix>::Ptr leftVector) {
 	mTimeStep = timeStep;
 	mOmegaN = omega;
 	mOmegaCutoff = omega;
-	mThetaPLL = 0;
 
-	// initialize mInftCurrent and mIgabc
-	mIntfCurrent = mSubResistorC->attribute<Matrix>("i_intf")->get();
-	mIfabc = -1 * mSubResistorF->attribute<Matrix>("i_intf")->get();
-	mIgabc = -1. * mSubResistorC->attribute<Matrix>("i_intf")->get();
-	mIfdq = parkTransform(mThetaPLL, mIfabc(0, 0), mIfabc(1, 0), mIfabc(2, 0));
-	mIgdq = parkTransform(mThetaPLL, mIgabc(0, 0), mIgabc(1, 0), mIgabc(2, 0));
-	mVcdq = parkTransform(mThetaPLL, mVcabc(0, 0), mVcabc(1, 0), mVcabc(2, 0));
+	// get current and voltage inputs to state space model
+	// done here to ensure quantites are already initialized by initializeFromPowerFlow
+	mIrcabc = -1 * mSubResistorC->attribute<Matrix>("i_intf")->get();
+	mIrcdq = parkTransformPowerInvariant(mThetaPLL, mIrcabc(0, 0) * sqrt(2), mIrcabc(1, 0) * sqrt(2), mIrcabc(2, 0) * sqrt(2));
 
-	mU = Matrix::Zero(7, 1);
-	mU <<
-		mOmegaN, mPref, mQref, mVcdq(0, 0), mVcdq(1, 0), mIfdq(0, 0), mIfdq(1, 0);
+	MatrixComp initVcComplex = MatrixComp::Zero(3,1);
+	initVcComplex(0, 0) = mVirtualNodes[4]->initialSingleVoltage();
+	initVcComplex(1, 0) = mVirtualNodes[4]->initialSingleVoltage() * SHIFT_TO_PHASE_B;
+	initVcComplex(2, 0) = mVirtualNodes[4]->initialSingleVoltage() * SHIFT_TO_PHASE_C;
+	mVcabc = sqrt(2)*initVcComplex.real();
+	mVcdq = parkTransformPowerInvariant(mThetaPLL, mVcabc(0, 0) / sqrt(3) * sqrt(2), mVcabc(1, 0) / sqrt(3) * sqrt(2), mVcabc(2, 0) / sqrt(3) * sqrt(2));
 
-	// create matrices for state space representation
-	mA = Matrix::Zero(8, 8);
-	mB = Matrix::Zero(8, 7);
-	mC = Matrix::Zero(2, 8);
-	mD = Matrix::Zero(2, 7);
+	updateBMatrixStateSpaceModel();
 
-	mA <<
-		0, mKiPLL, 0, 0, 0, 0, 0, 0,
-		0, 0, 0, 0, 0, 0, 0, 0,
-		0, 0, -mOmegaCutoff, 0, 0, 0, 0, 0,
-		0, 0, 0, -mOmegaCutoff, 0, 0, 0, 0,
-		0, 0, -1, 0, 0, 0, 0, 0,
-		0, 0, 0, 1, 0, 0, 0, 0,
-		0, 0, -mKpPowerCtrld, 0, mKiPowerCtrld, 0, 0, 0,
-		0, 0, 0, mKpPowerCtrlq, 0, mKiPowerCtrlq, 0, 0;
+	// initialization of input
+	mU << mOmegaN, mPref, mQref, mVcdq(0, 0), mVcdq(1, 0), mIrcdq(0, 0), mIrcdq(1, 0);
+	mSLog->info("Initialization of input: \n" + Logger::matrixToString(mU));
 
-	mB <<
-		1, 0, 0, 0, mKpPLL, 0, 0,
-		0, 0, 0, 0, 1, 0, 0,
-		0, 0, 0, 3. / 2. * mOmegaCutoff * mIgdq(0, 0), 3. / 2. * mOmegaCutoff * mIgdq(1, 0), 0, 0,
-		0, 0, 0, -3. / 2. * mOmegaCutoff * mIgdq(1, 0), 3. / 2. * mOmegaCutoff * mIgdq(0, 0), 0, 0,
-		0, 1, 0, 0, 0, 0, 0,
-		0, 0, -1, 0, 0, 0, 0,
-		0, mKpPowerCtrld, 0, 0, 0, -1, 0,
-		0, 0, -mKpPowerCtrlq, 0, 0, 0, -1;
+	// initialization of states
+	mThetaPLL = mThetaPLLInit;
+	mPhiPLL = mPhiPLLInit;
+	mP = mPInit;
+	mQ = mQInit;
+	mPhi_d = mPhi_dInit;
+	mPhi_q = mPhi_qInit;
+	mGamma_d = mGamma_dInit;
+	mGamma_q = mGamma_qInit;	
+	mStates << mThetaPLL, mPhiPLL, mP, mQ, mPhi_d, mPhi_q, mGamma_d, mGamma_q;
+	mSLog->info("Initialization of states: \n" + Logger::matrixToString(mStates));
 
-	mC <<
-		0, 0, -mKpPowerCtrld * mKpCurrCtrld, 0, mKpCurrCtrld* mKiPowerCtrld, 0, mKiCurrCtrld, 0,
-		0, 0, 0, mKpPowerCtrlq* mKpCurrCtrlq, 0, mKpCurrCtrlq* mKiPowerCtrlq, 0, mKiCurrCtrlq;
-
-	mD <<
-		0, mKpCurrCtrld * mKpPowerCtrld, 0, 0, 0, -mKpCurrCtrld, 0,
-		0, 0, -mKpCurrCtrlq * mKpPowerCtrlq, 0, 0, 0, -mKpCurrCtrlq;
-
-
-	mPhiPLL = 0;
-
-	//mP = (3. / 2.  * (Td * mIgabc * Td * mVcabc + Tq * mIgabc * Tq * mVcabc)).coeff(0, 0);
-	//mQ = (3. / 2.  * (Td * mIgabc * Tq * mVcabc - Tq * mIgabc * Td * mVcabc)).coeff(0, 0);
-	mP = 0;
-	mQ = 0;
-	mPhi_d = 0;
-	mPhi_q = 0;
-	mGamma_d = 0;
-	mGamma_q = 0;
-
-	mStates = Matrix::Zero(8, 1);
-	mStates <<
-		mThetaPLL, mPhiPLL, mP, mQ, mPhi_d, mPhi_q, mGamma_d, mGamma_q;
-	// initialize output
+	// initialization of output
 	mVsdq = mC * mStates + mD * mU;
-	mVsabc = inverseParkTransform(mThetaPLL, mVsdq(0, 0), mVsdq(1, 0));
+	mSLog->info("Initialization of output (in dq frame): \n" + Logger::matrixToString(mVsdq));
+	mVsabc =  sqrt(3)/sqrt(2)*inverseParkTransformPowerInvariant(mThetaPLL, mVsdq(0, 0), mVsdq(1, 0));
+	mSLog->info("Initialization of output (in abc frame): \n" + Logger::matrixToString(mVsabc));
 }
 
 void EMT::Ph3::AvVoltageSourceInverterDQ::updatePowerGeneration() {
@@ -239,7 +133,7 @@ void EMT::Ph3::AvVoltageSourceInverterDQ::step(Real time, Int timeStepCount) {
 		}
 		//updateSetPoint(time);
 		newU <<
-			mOmegaN, mPref, mQref, mVcdq(0, 0), mVcdq(1, 0), mIfdq(0, 0), mIfdq(1, 0);
+			mOmegaN, mPref, mQref, mVcdq(0, 0), mVcdq(1, 0), mIrcdq(0, 0), mIrcdq(1, 0);
 
 		newStates = Math::StateSpaceTrapezoidal(mStates, mA, mB, mTimeStep, newU, mU);
 
@@ -263,7 +157,7 @@ void EMT::Ph3::AvVoltageSourceInverterDQ::step(Real time, Int timeStepCount) {
 		mU = newU;
 		// new output
 		mVsdq = mC * mStates + mD * mU;
-		mVsabc = inverseParkTransform(mThetaPLL, mVsdq(0, 0), mVsdq(1, 0));
+		mVsabc =  sqrt(3)/sqrt(2)*inverseParkTransformPowerInvariant(mThetaPLL, mVsdq(0, 0), mVsdq(1, 0));
 	}
 	else
 	{
@@ -278,111 +172,68 @@ void EMT::Ph3::AvVoltageSourceInverterDQ::step(Real time, Int timeStepCount) {
 		mStates(1, 0) = newStates(1, 0);
 		mU = newU;
 		Complex vIntfInit = mVirtualNodes[1]->initialSingleVoltage();
-		mVsabc = inverseParkTransform(mOmegaN * time + Math::phase(vIntfInit), vIntfInit.real(), vIntfInit.imag());
+		mVsabc = sqrt(3)/sqrt(2)*inverseParkTransformPowerInvariant(mOmegaN * time + Math::phase(vIntfInit), vIntfInit.real(), vIntfInit.imag());
 	}
 }
 
-void EMT::Ph3::AvVoltageSourceInverterDQ::updateLinearizedModel() {
-	mB.coeffRef(2, 3) = 3. / 2. * mOmegaCutoff * mIgdq(0, 0);
-	mB.coeffRef(2, 4) = 3. / 2. * mOmegaCutoff * mIgdq(1, 0);
-	mB.coeffRef(3, 3) = -3. / 2. * mOmegaCutoff * mIgdq(1, 0);
-	mB.coeffRef(3, 4) = 3. / 2. * mOmegaCutoff * mIgdq(0, 0);
+void EMT::Ph3::AvVoltageSourceInverterDQ::updateBMatrixStateSpaceModel() {
+	mB.coeffRef(2, 3) = mOmegaCutoff * mIrcdq(0, 0);
+	mB.coeffRef(2, 4) = mOmegaCutoff * mIrcdq(1, 0);
+	mB.coeffRef(3, 3) = -mOmegaCutoff * mIrcdq(1, 0);
+	mB.coeffRef(3, 4) = mOmegaCutoff * mIrcdq(0, 0);
 }
 
 
 
-Matrix EMT::Ph3::AvVoltageSourceInverterDQ::parkTransform(Real theta, Real fa, Real fb, Real fc) {
+Matrix EMT::Ph3::AvVoltageSourceInverterDQ::parkTransformPowerInvariant(Real theta, Real fa, Real fb, Real fc) {
 
-	/// with d-axis starts 90deg behind to phase a
-	//	Matrix Tdq = Matrix::Zero(2, 3);
-//	Tdq <<
-//		2. / 3. * sin(theta), 2. / 3. * sin(theta - 2. * M_PI / 3.), 2. / 3. * sin(theta + 2. * M_PI / 3.),
-//		2. / 3. * cos(theta), 2. / 3. * cos(theta - 2. * M_PI / 3.), 2. / 3. * cos(theta + 2. * M_PI / 3.);
-//
-//	return Tdq;
+	// Calculates fdq = Tdq * fabc
+	// Assumes that d-axis starts aligned with phase a
 
-/// with d-axis starts aligned with phase a
 	Matrix fabc = Matrix::Zero(3, 1);
-	fabc <<
-		fa, fb, fc;
-	Matrix Tdq = Matrix::Zero(2, 3);
-	Tdq <<
-		2. / 3. * cos(theta), 2. / 3. * cos(theta - 2. * M_PI / 3.), 2. / 3. * cos(theta + 2. * M_PI / 3.),
-		-2. / 3. * sin(theta), -2. / 3. * sin(theta - 2. * M_PI / 3.), -2. / 3. * sin(theta + 2. * M_PI / 3.);
+	fabc << fa, fb, fc;
+	Matrix Tdq = getParkTransformMatrixPowerInvariant(theta);
 	Matrix dqvector = Tdq * fabc;
-
 	return dqvector;
-
 }
 
-// fdq = Tdq * fabc
-Matrix EMT::Ph3::AvVoltageSourceInverterDQ::getParkTransformMatrix(Real theta) {
 
-	/// with d-axis starts 90deg behind to phase a
-	//	Matrix Tdq = Matrix::Zero(2, 3);
-//	Tdq <<
-//		2. / 3. * sin(theta), 2. / 3. * sin(theta - 2. * M_PI / 3.), 2. / 3. * sin(theta + 2. * M_PI / 3.),
-//		2. / 3. * cos(theta), 2. / 3. * cos(theta - 2. * M_PI / 3.), 2. / 3. * cos(theta + 2. * M_PI / 3.);
-//
-//	return Tdq;
+Matrix EMT::Ph3::AvVoltageSourceInverterDQ::getParkTransformMatrixPowerInvariant(Real theta) {
 
-/// with d-axis starts aligned with phase a
+	// Return park matrix for theta
+	// Assumes that d-axis starts aligned with phase a
 	Matrix Tdq = Matrix::Zero(2, 3);
+	Real k = sqrt(2. / 3.);
 	Tdq <<
-		2. / 3. * cos(theta), 2. / 3. * cos(theta - 2. * M_PI / 3.), 2. / 3. * cos(theta + 2. * M_PI / 3.),
-		-2. / 3. * sin(theta), -2. / 3. * sin(theta - 2. * M_PI / 3.), -2. / 3. * sin(theta + 2. * M_PI / 3.);
-
+		k * cos(theta), k * cos(theta - 2. * M_PI / 3.), k * cos(theta + 2. * M_PI / 3.),
+		-k * sin(theta), -k * sin(theta - 2. * M_PI / 3.), -k * sin(theta + 2. * M_PI / 3.);
 	return Tdq;
 }
 
-// fabc = Tabc * fdq
-Matrix EMT::Ph3::AvVoltageSourceInverterDQ::inverseParkTransform(Real theta, Real fd, Real fq) {
+Matrix EMT::Ph3::AvVoltageSourceInverterDQ::inverseParkTransformPowerInvariant(Real theta, Real fd, Real fq) {
+	
+	// Calculates fabc = Tabc * fdq
+	// with d-axis starts aligned with phase a
 	Matrix fabc = Matrix::Zero(3, 1);
 	Matrix fdq = Matrix::Zero(2, 1);
-	fdq <<
-		fd, fq;
-
-	/// with d-axis starts 90deg behind to phase a
-	//	Matrix Tabc = Matrix::Zero(3, 2);
-	//	Tabc <<
-	//		sin(theta), cos(theta),
-	//		sin(theta - 2. * M_PI / 3.), cos(theta - 2. * M_PI / 3.),
-	//		sin(theta + 2. * M_PI / 3.), cos(theta + 2. * M_PI / 3.);
-	//
-	//	return Tabc;
-
-
-	/// with d-axis starts aligned with phase a
-	Matrix Tabc = Matrix::Zero(3, 2);
-	Tabc <<
-		cos(theta), -sin(theta),
-		cos(theta - 2. * M_PI / 3.), -sin(theta - 2. * M_PI / 3.),
-		cos(theta + 2. * M_PI / 3.), -sin(theta + 2. * M_PI / 3.);
-
+	fdq << fd, fq;
+	Matrix Tabc = getInverseParkTransformMatrixPowerInvariant(theta);
 	fabc = Tabc * fdq;
 
 	return fabc;
 }
 
 
-Matrix EMT::Ph3::AvVoltageSourceInverterDQ::getInverseParkTransformMatrix(Real theta) {
+Matrix EMT::Ph3::AvVoltageSourceInverterDQ::getInverseParkTransformMatrixPowerInvariant(Real theta) {
 
-/// with d-axis starts 90deg behind to phase a
-//	Matrix Tabc = Matrix::Zero(3, 2);
-//	Tabc <<
-//		sin(theta), cos(theta),
-//		sin(theta - 2. * M_PI / 3.), cos(theta - 2. * M_PI / 3.),
-//		sin(theta + 2. * M_PI / 3.), cos(theta + 2. * M_PI / 3.);
-//
-//	return Tabc;
-
-
-/// with d-axis starts aligned with phase a
+	// Return inverse park matrix for theta
+	/// with d-axis starts aligned with phase a
 	Matrix Tabc = Matrix::Zero(3, 2);
+	Real k = sqrt(2. / 3.);
 	Tabc <<
-		cos(theta), -sin(theta),
-		cos(theta - 2. * M_PI / 3.), -sin(theta - 2. * M_PI / 3.),
-		cos(theta + 2. * M_PI / 3.), -sin(theta + 2. * M_PI / 3.);
+		k * cos(theta), - k * sin(theta),
+		k * cos(theta - 2. * M_PI / 3.), - k * sin(theta - 2. * M_PI / 3.),
+		k * cos(theta + 2. * M_PI / 3.), - k * sin(theta + 2. * M_PI / 3.);
 
 	return Tabc;
 }
@@ -399,7 +250,7 @@ void EMT::Ph3::AvVoltageSourceInverterDQ::initializeFromPowerflow(Real frequency
 	intfVoltageComplex(0, 0) = initialSingleVoltage(0);
 	intfVoltageComplex(1, 0) = intfVoltageComplex(0, 0) * SHIFT_TO_PHASE_B;
 	intfVoltageComplex(2, 0) = intfVoltageComplex(0, 0) * SHIFT_TO_PHASE_C;
-	intfCurrentComplex(0, 0) = -std::conj(Complex(mPref, mQref) / intfVoltageComplex(0, 0));
+	intfCurrentComplex(0, 0) = -std::conj(sqrt(3)*Complex(mPref, mQref) / intfVoltageComplex(0, 0));
 	intfCurrentComplex(1, 0) = intfCurrentComplex(0, 0) * SHIFT_TO_PHASE_B;
 	intfCurrentComplex(2, 0) = intfCurrentComplex(0, 0) * SHIFT_TO_PHASE_C;
 
@@ -408,12 +259,13 @@ void EMT::Ph3::AvVoltageSourceInverterDQ::initializeFromPowerflow(Real frequency
 	if (mWithConnectionTransformer) {		
 		// calculate quantities of low voltage side of transformer (being the interface quantities of the filter, calculations only valid for symmetrical systems)
 		// TODO: check possibility of more accurate solution as current only approximated
-		filterInterfaceInitialVoltage = (intfVoltageComplex - Complex(mTransformerResistance(0, 0), mTransformerInductance(0, 0)*mOmegaN)*intfCurrentComplex) / Complex(mTransformerRatioAbs, mTransformerRatioPhase);
+		filterInterfaceInitialVoltage = (intfVoltageComplex - Complex(mTransformerResistance, mTransformerInductance*mOmegaN)*intfCurrentComplex) / Complex(mTransformerRatioAbs, mTransformerRatioPhase);
 		filterInterfaceInitialCurrent = intfCurrentComplex * Complex(mTransformerRatioAbs, mTransformerRatioPhase);
 
 		// connect and init transformer
 		mVirtualNodes[4]->setInitialVoltage(filterInterfaceInitialVoltage);		
 		mConnectionTransformer->connect({ mTerminals[0]->node(), mVirtualNodes[4] });
+		mConnectionTransformer->setParameters(mTransformerRatioAbs, mTransformerRatioPhase, Matrix::Identity(3,3)*mTransformerResistance, Matrix::Identity(3,3)*mTransformerInductance);
 		mConnectionTransformer->initialize(mFrequencies);
 		mConnectionTransformer->initializeFromPowerflow(frequency);
 	} else {
@@ -423,17 +275,17 @@ void EMT::Ph3::AvVoltageSourceInverterDQ::initializeFromPowerflow(Real frequency
 	}
 
 	// derive initialization quantities of filter (calculations only valid for symmetrical systems)
-	MatrixComp vcInit = filterInterfaceInitialVoltage - filterInterfaceInitialCurrent * Complex(mRc(0, 0), 0);
-	MatrixComp icfInit = vcInit * Complex(0., 2. * PI * frequency * mCf(0, 0));
-	MatrixComp vfInit = vcInit - (filterInterfaceInitialCurrent - icfInit) * Complex(0., 2. * PI * frequency * mLf(0, 0));
-	MatrixComp vsInit = vfInit - (filterInterfaceInitialCurrent - icfInit) * Complex(mRf(0, 0), 0);
+	MatrixComp vcInit = filterInterfaceInitialVoltage - filterInterfaceInitialCurrent * Complex(mRc, 0);
+	MatrixComp icfInit = vcInit * Complex(0., 2. * PI * frequency * mCf);
+	MatrixComp vfInit = vcInit - (filterInterfaceInitialCurrent - icfInit) * Complex(0., 2. * PI * frequency * mLf);
+	MatrixComp vsInit = vfInit - (filterInterfaceInitialCurrent - icfInit) * Complex(mRf, 0);
 	mVirtualNodes[1]->setInitialVoltage(vsInit);
 	mVirtualNodes[2]->setInitialVoltage(vfInit);
 	mVirtualNodes[3]->setInitialVoltage(vcInit);
 
 	// save real interface quantities calculated from complex ones
-	mIntfVoltage = intfVoltageComplex.real();
-	mIntfCurrent = intfCurrentComplex.real();
+	mIntfVoltage = sqrt(2.)*intfVoltageComplex.real();
+	mIntfCurrent = sqrt(2.)*intfCurrentComplex.real();
 
 	// Create sub components
 	mSubResistorF = EMT::Ph3::Resistor::make(mName + "_resF", mLogLevel);
@@ -443,11 +295,11 @@ void EMT::Ph3::AvVoltageSourceInverterDQ::initializeFromPowerflow(Real frequency
 	mSubCtrledVoltageSource = EMT::Ph3::ControlledVoltageSource::make(mName + "_src", mLogLevel);
 
 	// set filter parameters
-	mSubResistorC->setParameters(mRc);
-	mSubResistorF->setParameters(mRf);
-	mSubInductorF->setParameters(mLf);
-	mSubCapacitorF->setParameters(mCf);
-	mSubCtrledVoltageSource->setParameters(vsInit.real());
+	mSubResistorC->setParameters(Matrix::Identity(3,3)*mRc);
+	mSubResistorF->setParameters(Matrix::Identity(3,3)*mRf);
+	mSubInductorF->setParameters(Matrix::Identity(3,3)*mLf);
+	mSubCapacitorF->setParameters(Matrix::Identity(3,3)*mCf);
+	mSubCtrledVoltageSource->setParameters(sqrt(2.)*vsInit.real());
 
 	// connect subcomponents
 	mSubCtrledVoltageSource->connect({ SimNode::GND, mVirtualNodes[1] });
@@ -455,7 +307,6 @@ void EMT::Ph3::AvVoltageSourceInverterDQ::initializeFromPowerflow(Real frequency
 	mSubResistorF->connect({ mVirtualNodes[1], mVirtualNodes[2] });
 	mSubInductorF->connect({ mVirtualNodes[2], mVirtualNodes[3] });
 	mSubCapacitorF->connect({ mVirtualNodes[3], SimNode::GND });
-	mSubResistorC->connect({ mVirtualNodes[3], mTerminals[0]->node() });
 	if (mWithConnectionTransformer)
 		mSubResistorC->connect({ mVirtualNodes[3],  mVirtualNodes[4]});
 	else
@@ -497,12 +348,13 @@ void EMT::Ph3::AvVoltageSourceInverterDQ::mnaInitialize(Real omega, Real timeSte
 		mCurrentPower = mGenProfile->begin();
 
 	MNAInterface::List subComps({ mSubResistorF, mSubInductorF, mSubCapacitorF, mSubResistorC, mSubCtrledVoltageSource });	
-	initializeModel(omega, timeStep, leftVector);
+
 	mSubResistorF->mnaInitialize(omega, timeStep, leftVector);
 	mSubInductorF->mnaInitialize(omega, timeStep, leftVector);
 	mSubCapacitorF->mnaInitialize(omega, timeStep, leftVector);
 	mSubResistorC->mnaInitialize(omega, timeStep, leftVector);
 	mSubCtrledVoltageSource->mnaInitialize(omega, timeStep, leftVector);
+	initializeStateSpaceModel(omega, timeStep, leftVector);
 
 	mRightVectorStamps.push_back(&mSubCapacitorF->attribute<Matrix>("right_vector")->get());
 	mRightVectorStamps.push_back(&mSubInductorF->attribute<Matrix>("right_vector")->get());
@@ -529,7 +381,6 @@ void EMT::Ph3::AvVoltageSourceInverterDQ::mnaInitialize(Real omega, Real timeSte
 
 
 void EMT::Ph3::AvVoltageSourceInverterDQ::mnaApplySystemMatrixStamp(Matrix& systemMatrix) {
-
 	mSubCtrledVoltageSource->mnaApplySystemMatrixStamp(systemMatrix);
 	mSubResistorF->mnaApplySystemMatrixStamp(systemMatrix);
 	mSubInductorF->mnaApplySystemMatrixStamp(systemMatrix);
@@ -548,7 +399,10 @@ void EMT::Ph3::AvVoltageSourceInverterDQ::mnaApplyRightSideVectorStamp(Matrix& r
 
 
 void EMT::Ph3::AvVoltageSourceInverterDQ::mnaUpdateCurrent(const Matrix& leftvector) {
-	mIntfCurrent = mSubResistorC->attribute<Matrix>("i_intf")->get();
+	if (mWithConnectionTransformer)
+		mIntfCurrent = mConnectionTransformer->attribute<Matrix>("i_intf")->get();
+	else 
+		mIntfCurrent = mSubResistorC->attribute<Matrix>("i_intf")->get();
 }
 
 void EMT::Ph3::AvVoltageSourceInverterDQ::updateSetPoint(Real time) {
@@ -557,14 +411,12 @@ void EMT::Ph3::AvVoltageSourceInverterDQ::updateSetPoint(Real time) {
 }
 
 void EMT::Ph3::AvVoltageSourceInverterDQ::MnaPreStep::execute(Real time, Int timeStepCount) {
-	// update voltage of subVoltage source
 	mAvVoltageSourceInverterDQ.mSubCtrledVoltageSource->setParameters(mAvVoltageSourceInverterDQ.mVsabc);
 }
 
 void EMT::Ph3::AvVoltageSourceInverterDQ::MnaPostStep::execute(Real time, Int timeStepCount) {
 	mAvVoltageSourceInverterDQ.mnaUpdateCurrent(*mLeftVector);
-	// update Vcabc, Igabc
-	mAvVoltageSourceInverterDQ.updateMonitoredValues(*mLeftVector, time);
+	mAvVoltageSourceInverterDQ.updateInputStateSpaceModel(*mLeftVector, time);
 	mAvVoltageSourceInverterDQ.step(time, timeStepCount);
 }
 
