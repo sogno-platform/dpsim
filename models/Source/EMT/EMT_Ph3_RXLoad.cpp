@@ -7,8 +7,6 @@
  *********************************************************************************/
 
 #include <cps/EMT/EMT_Ph3_RXLoad.h>
-#define SHIFT_TO_PHASE_B Complex(cos(-2 * M_PI / 3), sin(-2 * M_PI / 3))
-#define SHIFT_TO_PHASE_C Complex(cos(2 * M_PI / 3), sin(2 * M_PI / 3))
 
 using namespace CPS;
 

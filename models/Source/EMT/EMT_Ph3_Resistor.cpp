@@ -10,10 +10,6 @@
 
 using namespace CPS;
 
-#define SHIFT_TO_PHASE_B Complex(cos(-2 * M_PI / 3), sin(-2 * M_PI / 3))
-#define SHIFT_TO_PHASE_C Complex(cos(2 * M_PI / 3), sin(2 * M_PI / 3))
-
-
 EMT::Ph3::Resistor::Resistor(String uid, String name, Logger::Level logLevel)
 	: SimPowerComp<Real>(uid, name, logLevel), TopologicalPowerComp(uid, name, logLevel) {
 	mPhaseType = PhaseType::ABC;
