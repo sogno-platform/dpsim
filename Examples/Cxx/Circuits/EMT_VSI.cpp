@@ -55,32 +55,13 @@ void EMT_Ph3_VSI2_4bus_SampleGrid() {
 	auto trans_DG1 = Ph3::Transformer::make("trans_pv1", Logger::Level::debug);
 	auto trans_DG2 = Ph3::Transformer::make("trans_pv2", Logger::Level::debug);
 
-	Matrix rf_param = Matrix::Zero(3, 3);
-	rf_param <<
-		0.01, 0, 0,
-		0, 0.01, 0,
-		0, 0, 0.01;
+	Real rf_param = 0.01;
+	Real lf_param = 0.928e-3;
+	Real cf_param = 789.3e-6;
+	Real rc_param = 0.5;
 
-	Matrix lf_param = Matrix(3, 3);
-	lf_param <<
-		0.928e-3, 0, 0,
-		0, 0.928e-3, 0,
-		0, 0, 0.928e-3;
-
-	Matrix cf_param = Matrix(3, 3);
-	cf_param <<
-		789.3e-6, 0, 0,
-		0, 789.3e-6, 0,
-		0, 0, 789.3e-6;
-
-	Matrix rc_param = Matrix::Zero(3, 3);
-	rc_param <<
-		0.5, 0, 0,
-		0, 0.5, 0,
-		0, 0, 0.5;
-
-	trans_DG1->setParameters(Vnom_pv / Vnom, 0., rc_param, lf_param*0.01);
-	trans_DG2->setParameters(Vnom_pv / Vnom, 0., rc_param, lf_param * 0.01);
+	trans_DG1->setParameters(Vnom_pv / Vnom, 0., Matrix::Identity(3,3)*rc_param, Matrix::Identity(3,3)*lf_param*0.01);
+	trans_DG2->setParameters(Vnom_pv / Vnom, 0., Matrix::Identity(3,3)*rc_param, Matrix::Identity(3,3)*lf_param * 0.01);
 
 	//trans_inductor->setParameters(lf_param*0.01);
 	auto piline = PiLine::make("piline", Logger::Level::debug);
@@ -90,7 +71,7 @@ void EMT_Ph3_VSI2_4bus_SampleGrid() {
 		0, 0.04, 0,
 		0, 0, 0.04;
 
-	piline->setParameters(rline_param*10, lf_param*0.0001, cf_param);
+	piline->setParameters(rline_param*10, Matrix::Identity(3,3)*lf_param*0.0001, Matrix::Identity(3,3)*cf_param);
 
 	auto rline2 = Resistor::make("rline2", Logger::Level::info);
 	rline2->setParameters(rline_param);
