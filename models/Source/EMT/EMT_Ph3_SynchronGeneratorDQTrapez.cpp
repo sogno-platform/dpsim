@@ -10,6 +10,9 @@
 
 using namespace CPS;
 
+// !!! TODO: 	Adaptions to use in EMT_Ph3 models phase-to-ground peak variables
+// !!! 			with initialization from phase-to-phase RMS variables
+
 EMT::Ph3::SynchronGeneratorDQTrapez::SynchronGeneratorDQTrapez(String uid, String name, Logger::Level logLevel)
 	: SynchronGeneratorDQ(uid, name, logLevel), TopologicalPowerComp(uid, name, logLevel) {
 

@@ -58,7 +58,7 @@ void EMT::Ph3::PiLine::initializeFromPowerflow(Real frequency) {
 		Complex(mSeriesRes(2, 0), omega * mSeriesInd(2, 0)), Complex(mSeriesRes(2, 1), omega * mSeriesInd(2, 1)), Complex(mSeriesRes(2, 2), omega * mSeriesInd(2, 2));
 
 	MatrixComp vInitABC = MatrixComp::Zero(3, 1);
-	vInitABC(0, 0) = initialSingleVoltage(1) - initialSingleVoltage(0);
+	vInitABC(0, 0) = RMS3PH_TO_PEAK1PH * initialSingleVoltage(1) - RMS3PH_TO_PEAK1PH * initialSingleVoltage(0);
 	vInitABC(1, 0) = vInitABC(0, 0) * SHIFT_TO_PHASE_B;
 	vInitABC(2, 0) = vInitABC(0, 0) * SHIFT_TO_PHASE_C;
 	MatrixComp iInit = impedance.inverse() * vInitABC;
@@ -68,11 +68,11 @@ void EMT::Ph3::PiLine::initializeFromPowerflow(Real frequency) {
 	// Initialization of virtual node
 	// Initial voltage of phase B,C is set after A
 	MatrixComp vInitTerm0 = MatrixComp::Zero(3, 1);
-	vInitTerm0(0, 0) = initialSingleVoltage(0);
+	vInitTerm0(0, 0) = RMS3PH_TO_PEAK1PH * initialSingleVoltage(0);
 	vInitTerm0(1, 0) = vInitTerm0(0, 0) * SHIFT_TO_PHASE_B;
 	vInitTerm0(2, 0) = vInitTerm0(0, 0) * SHIFT_TO_PHASE_C;
 
-	mVirtualNodes[0]->setInitialVoltage(vInitTerm0 + mSeriesRes * iInit);
+	mVirtualNodes[0]->setInitialVoltage(PEAK1PH_TO_RMS3PH*(vInitTerm0 + mSeriesRes * iInit));
 
 	// Create series sub components
 	mSubSeriesResistor = std::make_shared<EMT::Ph3::Resistor>(mName + "_res", mLogLevel);
@@ -139,8 +139,8 @@ void EMT::Ph3::PiLine::initializeFromPowerflow(Real frequency) {
 		"\n--- Initialization from powerflow finished ---",
 		Logger::matrixToString(mIntfVoltage),
 		Logger::matrixToString(mIntfCurrent),
-		Logger::phasorToString(initialSingleVoltage(0)),
-		Logger::phasorToString(initialSingleVoltage(1)),
+		Logger::phasorToString(RMS3PH_TO_PEAK1PH * initialSingleVoltage(0)),
+		Logger::phasorToString(RMS3PH_TO_PEAK1PH * initialSingleVoltage(1)),
 		Logger::phasorToString(mVirtualNodes[0]->initialSingleVoltage()));
 	mSLog->flush();
 }

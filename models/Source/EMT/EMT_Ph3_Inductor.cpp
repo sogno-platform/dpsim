@@ -38,7 +38,7 @@ void EMT::Ph3::Inductor::initializeFromPowerflow(Real frequency) {
 		Complex(0, omega * mInductance(2, 0)), Complex(0, omega * mInductance(2, 1)), Complex(0, omega * mInductance(2, 2));
 
 	MatrixComp vInitABC = Matrix::Zero(3, 1);
-	vInitABC(0, 0) = initialSingleVoltage(1) - initialSingleVoltage(0);
+	vInitABC(0, 0) = RMS3PH_TO_PEAK1PH * initialSingleVoltage(1) - RMS3PH_TO_PEAK1PH * initialSingleVoltage(0);
 	vInitABC(1, 0) = vInitABC(0, 0) * SHIFT_TO_PHASE_B;
 	vInitABC(2, 0) = vInitABC(0, 0) * SHIFT_TO_PHASE_C;
 	mIntfVoltage = vInitABC.real();
@@ -55,8 +55,8 @@ void EMT::Ph3::Inductor::initializeFromPowerflow(Real frequency) {
 		"\n--- Initialization from powerflow finished ---",
 		Logger::matrixToString(mIntfVoltage),
 		Logger::matrixToString(mIntfCurrent),
-		Logger::phasorToString(initialSingleVoltage(0)),
-		Logger::phasorToString(initialSingleVoltage(1)));
+		Logger::phasorToString(RMS3PH_TO_PEAK1PH * initialSingleVoltage(0)),
+		Logger::phasorToString(RMS3PH_TO_PEAK1PH * initialSingleVoltage(1)));
 }
 
 void EMT::Ph3::Inductor::mnaInitialize(Real omega, Real timeStep, Attribute<Matrix>::Ptr leftVector) {

@@ -44,6 +44,8 @@
 
 #define SHIFT_TO_PHASE_B Complex(cos(-2 * M_PI / 3), sin(-2 * M_PI / 3))
 #define SHIFT_TO_PHASE_C Complex(cos(2 * M_PI / 3), sin(2 * M_PI / 3))
+#define RMS3PH_TO_PEAK1PH sqrt(2./3.)
+#define PEAK1PH_TO_RMS3PH sqrt(3./2.)
 
 namespace CPS {
 

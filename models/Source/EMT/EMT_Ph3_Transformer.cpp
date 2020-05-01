@@ -72,7 +72,7 @@ void EMT::Ph3::Transformer::initializeFromPowerflow(Real frequency) {
 		Complex(mResistance(2, 0), omega * mInductance(2, 0)), Complex(mResistance(2, 1), omega * mInductance(2, 1)), Complex(mResistance(2, 2), omega * mInductance(2, 2));
 
 	MatrixComp vInitABC = MatrixComp::Zero(3, 1);
-	vInitABC(0, 0) = mVirtualNodes[0]->initialSingleVoltage() - initialSingleVoltage(0);
+	vInitABC(0, 0) = mVirtualNodes[0]->initialSingleVoltage() - RMS3PH_TO_PEAK1PH * initialSingleVoltage(0);
 	vInitABC(1, 0) = vInitABC(0, 0) * SHIFT_TO_PHASE_B;
 	vInitABC(2, 0) = vInitABC(0, 0) * SHIFT_TO_PHASE_C;
 
@@ -118,8 +118,8 @@ void EMT::Ph3::Transformer::initializeFromPowerflow(Real frequency) {
 		"\n--- Initialization from powerflow finished ---",
 		Logger::matrixToString(mIntfVoltage),
 		Logger::matrixToString(mIntfCurrent),
-		Logger::phasorToString(initialSingleVoltage(0)),
-		Logger::phasorToString(initialSingleVoltage(1)),
+		Logger::phasorToString(RMS3PH_TO_PEAK1PH * initialSingleVoltage(0)),
+		Logger::phasorToString(RMS3PH_TO_PEAK1PH * initialSingleVoltage(1)),
 		Logger::phasorToString(mVirtualNodes[0]->initialSingleVoltage()));
 }
 

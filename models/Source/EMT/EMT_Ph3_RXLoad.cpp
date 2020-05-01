@@ -59,28 +59,28 @@ void EMT::Ph3::RXLoad::initialize(Matrix frequencies) {
 void EMT::Ph3::RXLoad::initializeFromPowerflow(Real frequency) {
 	checkForUnconnectedTerminals();
 
-	if (initPowerFromTerminal) {
-	mActivePower = Matrix::Zero(3, 3);
-	mActivePower(0, 0) = mTerminals[0]->singleActivePower();
-	mActivePower(1, 1) = mTerminals[0]->singleActivePower();
-	mActivePower(2, 2) = mTerminals[0]->singleActivePower();
+		if (initPowerFromTerminal) {
+		mActivePower = Matrix::Zero(3, 3);
+		mActivePower(0, 0) = mTerminals[0]->singleActivePower() / 3.;
+		mActivePower(1, 1) = mTerminals[0]->singleActivePower() / 3.;
+		mActivePower(2, 2) = mTerminals[0]->singleActivePower() / 3.;
 
-	mReactivePower = Matrix::Zero(3, 3);
-	mReactivePower(0, 0) = mTerminals[0]->singleReactivePower();
-	mReactivePower(1, 1) = mTerminals[0]->singleReactivePower();
-	mReactivePower(2, 2) = mTerminals[0]->singleReactivePower();
+		mReactivePower = Matrix::Zero(3, 3);
+		mReactivePower(0, 0) = mTerminals[0]->singleReactivePower() / 3.;
+		mReactivePower(1, 1) = mTerminals[0]->singleReactivePower() / 3.;
+		mReactivePower(2, 2) = mTerminals[0]->singleReactivePower() / 3.;
 
-	// complex power
-	mPower = MatrixComp::Zero(3, 3);
-	mPower(0, 0) = { mActivePower(0, 0), mReactivePower(0, 0) };
-	mPower(1, 1) = { mActivePower(1, 1), mReactivePower(1, 1) };
-	mPower(2, 2) = { mActivePower(2, 2), mReactivePower(2, 2) };
+		// complex power
+		mPower = MatrixComp::Zero(3, 3);
+		mPower(0, 0) = { mActivePower(0, 0), mReactivePower(0, 0) };
+		mPower(1, 1) = { mActivePower(1, 1), mReactivePower(1, 1) };
+		mPower(2, 2) = { mActivePower(2, 2), mReactivePower(2, 2) };
 
-	mNomVoltage = std::abs(mTerminals[0]->initialSingleVoltage());
+		mNomVoltage = std::abs(mTerminals[0]->initialSingleVoltage());
 	}
 
 	if (mActivePower(0,0) != 0) {
-		mResistance = std::pow(mNomVoltage, 2) * mActivePower.inverse();
+		mResistance = std::pow(mNomVoltage/sqrt(3), 2) * mActivePower.inverse();
 		mConductance = mResistance.inverse();
 		mSubResistor = std::make_shared<EMT::Ph3::Resistor>(mName + "_res", mLogLevel);
 		mSubResistor->setParameters(mResistance);
@@ -90,7 +90,7 @@ void EMT::Ph3::RXLoad::initializeFromPowerflow(Real frequency) {
 	}
 
 	if (mReactivePower(0, 0) != 0)
-		mReactance = std::pow(mNomVoltage, 2) * mReactivePower.inverse();
+		mReactance = std::pow(mNomVoltage/sqrt(3), 2) * mReactivePower.inverse();
 	else
 		mReactance = Matrix::Zero(0, 0);
 
@@ -114,7 +114,7 @@ void EMT::Ph3::RXLoad::initializeFromPowerflow(Real frequency) {
 	}
 
 	MatrixComp vInitABC = MatrixComp::Zero(3, 1);
-	vInitABC(0, 0) = mTerminals[0]->initialSingleVoltage();
+	vInitABC(0, 0) = RMS3PH_TO_PEAK1PH * mTerminals[0]->initialSingleVoltage();
 	vInitABC(1, 0) = vInitABC(0, 0) * SHIFT_TO_PHASE_B;
 	vInitABC(2, 0) = vInitABC(0, 0) * SHIFT_TO_PHASE_C;
 	mIntfVoltage = vInitABC.real();
@@ -123,6 +123,7 @@ void EMT::Ph3::RXLoad::initializeFromPowerflow(Real frequency) {
 	// v i^T* = S
 	// v^T v i^T* = v^T S
 	// i^T*= (|v|^2)^(-1) v^T S
+
 	Complex v_ = vInitABC(0, 0)*vInitABC(0, 0) + vInitABC(1, 0)*vInitABC(1, 0) + vInitABC(2, 0)*vInitABC(2, 0);
 	MatrixComp rhs_ = Complex(1, 0) / v_ * vInitABC.transpose() * mPower;
 	iInitABC = rhs_.conjugate().transpose();
@@ -140,7 +141,7 @@ void EMT::Ph3::RXLoad::initializeFromPowerflow(Real frequency) {
 		"\n--- Initialization from powerflow finished ---",
 		Logger::matrixToString(mIntfVoltage),
 		Logger::matrixToString(mIntfCurrent),
-		Logger::phasorToString(initialSingleVoltage(0)),
+		Logger::phasorToString(RMS3PH_TO_PEAK1PH * initialSingleVoltage(0)),
 		Logger::matrixToString(mActivePower),
 		Logger::matrixToString(mReactivePower),
 		Logger::matrixToString(mResistance),

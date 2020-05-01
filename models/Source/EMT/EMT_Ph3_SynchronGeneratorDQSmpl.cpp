@@ -10,6 +10,9 @@
 
 using namespace CPS;
 
+// !!! TODO: 	Adaptions to use in EMT_Ph3 models phase-to-ground peak variables
+// !!! 			with initialization from phase-to-phase RMS variables
+
 EMT::Ph3::SynchronGeneratorDQSmpl::SynchronGeneratorDQSmpl(String name,
 	Real nomPower, Real nomVolt, Real nomFreq, Int poleNumber, Real nomFieldCur,
 	Real Rs, Real Ll, Real Lmd, Real Lmd0, Real Lmq, Real Lmq0,

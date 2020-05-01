@@ -10,8 +10,8 @@
 
 #include <cps/SimPowerComp.h>
 #include <cps/Solver/MNAInterface.h>
-#include <cps/EMT/EMT_Ph3_RxLine.h>
 #include <cps/EMT/EMT_Ph3_Inductor.h>
+#include <cps/EMT/EMT_Ph3_Resistor.h>
 #include <cps/Base/Base_Ph3_Transformer.h>
 
 namespace CPS {
