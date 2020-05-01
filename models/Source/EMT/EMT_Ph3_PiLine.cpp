@@ -44,9 +44,9 @@ void EMT::Ph3::PiLine::initializeFromPowerflow(Real frequency) {
 	// avoid problems with floating nodes.
 	Matrix defaultParallelCond = Matrix::Zero(3, 3);
 	defaultParallelCond <<
-		1e-8, 0, 0,
-		0, 1e-8, 0,
-		0, 0, 1e-8;
+		1e-6, 0, 0,
+		0, 1e-6, 0,
+		0, 0, 1e-6;
 	mParallelCond = (mParallelCond(0, 0) > 0) ? mParallelCond : defaultParallelCond;
 
 	// Static calculation
