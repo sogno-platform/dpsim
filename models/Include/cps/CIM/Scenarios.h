@@ -124,12 +124,14 @@ namespace CIGREMV {
         }
     }
 
-    std::shared_ptr<DPsim::SwitchEvent3Ph> createEventAddPowerConsumption3Ph(String nodeName, Real eventTime, Real addedPowerAsResistance, SystemTopology& system, Domain domain) {
+    std::shared_ptr<DPsim::SwitchEvent3Ph> createEventAddPowerConsumption3Ph(String nodeName, Real eventTime, Real additionalActivePower, SystemTopology& system, Domain domain) {
         
         // TODO: use base classes ph3
          if (domain == CPS::Domain::EMT) {
             auto loadSwitch = EMT::Ph3::Switch::make("Load_Add_Switch_" + nodeName, Logger::Level::debug);
-            loadSwitch->setParameters(Matrix::Identity(3,3)*1e9, Matrix::Identity(3,3)*addedPowerAsResistance);
+            auto connectionNode = system.node<CPS::SimNode<Real>>(nodeName);
+            Real resistance = std::abs(connectionNode->initialSingleVoltage())*std::abs(connectionNode->initialSingleVoltage())/additionalActivePower;
+            loadSwitch->setParameters(Matrix::Identity(3,3)*1e9, Matrix::Identity(3,3)*resistance);
             loadSwitch->openSwitch();
             system.addComponent(loadSwitch);
             system.connectComponentToNodes<Real>(loadSwitch, { CPS::SimNode<Real>::GND, system.node<CPS::SimNode<Real>>(nodeName) });
