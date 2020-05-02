@@ -106,10 +106,14 @@ void DP::Ph1::RXLoad::initializeFromPowerflow(Real frequency) {
 		"\nVoltage across: {:s}"
 		"\nCurrent: {:s}"
 		"\nTerminal 0 voltage: {:s}"
+		"\nResistance: {:f}"
+		"\nReactance: {:f}"
 		"\n--- Initialization from powerflow finished ---",
 		Logger::phasorToString(mIntfVoltage(0,0)),
 		Logger::phasorToString(mIntfCurrent(0,0)),
-		Logger::phasorToString(initialSingleVoltage(0)));
+		Logger::phasorToString(initialSingleVoltage(0)),
+		mResistance,
+		mReactance);
 }
 
 void DP::Ph1::RXLoad::setParameters(Real activePower, Real reactivePower, Real volt){

@@ -63,13 +63,18 @@ void EMT::Ph3::Inductor::mnaInitialize(Real omega, Real timeStep, Attribute<Matr
 	MNAInterface::mnaInitialize(omega, timeStep);
 
 	updateMatrixNodeIndices();
-	mEquivCond = timeStep / 2 * mInductance.inverse();
+	mEquivCond = timeStep / 2. * mInductance.inverse();
 	// Update internal state
 	mEquivCurrent = mEquivCond * mIntfVoltage + mIntfCurrent;
 
 	mMnaTasks.push_back(std::make_shared<MnaPreStep>(*this));
 	mMnaTasks.push_back(std::make_shared<MnaPostStep>(*this, leftVector));
 	mRightVector = Matrix::Zero(leftVector->get().rows(), 1);
+
+	mSLog->debug(
+	"\nEquivalent Current (mnaInitialize): {:s}",
+	Logger::matrixToString(mEquivCurrent));
+	mSLog->flush();
 }
 
 void EMT::Ph3::Inductor::mnaApplySystemMatrixStamp(Matrix& systemMatrix) {
@@ -140,8 +145,9 @@ void EMT::Ph3::Inductor::mnaApplyRightSideVectorStamp(Matrix& rightVector) {
 		Math::setVectorElement(rightVector, matrixNodeIndex(1, 2), -mEquivCurrent(2, 0));
 	}
 	mSLog->debug(
-		"\nEquivalent Current: {:s}",
+		"\nEquivalent Current (mnaApplyRightSideVectorStamp): {:s}",
 		Logger::matrixToString(mEquivCurrent));
+	mSLog->flush();
 }
 
 void EMT::Ph3::Inductor::MnaPreStep::execute(Real time, Int timeStepCount) {
