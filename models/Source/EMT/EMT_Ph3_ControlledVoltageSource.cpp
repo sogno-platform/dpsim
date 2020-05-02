@@ -11,9 +11,6 @@
 
 using namespace CPS;
 
-// !!! TODO: 	Adaptions to use in EMT_Ph3 models phase-to-ground peak variables
-// !!! 			with initialization from phase-to-phase RMS variables
-
 EMT::Ph3::ControlledVoltageSource::ControlledVoltageSource(String uid, String name, Logger::Level logLevel)
 	: SimPowerComp<Real>(uid, name, logLevel), TopologicalPowerComp(uid, name, logLevel) {
 	setVirtualNodeNumber(3);
@@ -65,17 +62,6 @@ void EMT::Ph3::ControlledVoltageSource::mnaApplySystemMatrixStamp(Matrix& system
 		Math::addToMatrixElement(systemMatrix, matrixNodeIndex(1, 2), mVirtualNodes[0]->matrixNodeIndex(PhaseType::C), 1);
 		Math::addToMatrixElement(systemMatrix, mVirtualNodes[0]->matrixNodeIndex(PhaseType::C), matrixNodeIndex(1, 2), 1);
 	}
-
-
-
-	// if (terminalNotGrounded(0)) {
-	// 	mLog.debug() << "Add " << -1 << " to " << matrixNodeIndex(0) << "," << mVirtualNodes[0]->matrixNodeIndex() << std::endl;
-	// 	mLog.debug() << "Add " << -1 << " to " << mVirtualNodes[0]->matrixNodeIndex() << "," << matrixNodeIndex(0) << std::endl;
-	// }
-	// if (terminalNotGrounded(1)) {
-	// 	mLog.debug() << "Add " << 1 << " to " << matrixNodeIndex(1) << "," << mVirtualNodes[0]->matrixNodeIndex() << std::endl;
-	// 	mLog.debug() << "Add " << 1 << " to " << mVirtualNodes[0]->matrixNodeIndex() << "," << matrixNodeIndex(1) << std::endl;
-	// }
 }
 
 void EMT::Ph3::ControlledVoltageSource::mnaApplyRightSideVectorStamp(Matrix& rightVector) {
