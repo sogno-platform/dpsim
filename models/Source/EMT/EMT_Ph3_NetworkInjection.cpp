@@ -95,9 +95,10 @@ void EMT::Ph3::NetworkInjection::mnaApplyRightSideVectorStamp(Matrix& rightVecto
 	Math::setVectorElement(rightVector, mVirtualNodes[0]->matrixNodeIndex(PhaseType::A), mIntfVoltage(0, 0));
 	Math::setVectorElement(rightVector, mVirtualNodes[0]->matrixNodeIndex(PhaseType::B), mIntfVoltage(1, 0));
 	Math::setVectorElement(rightVector, mVirtualNodes[0]->matrixNodeIndex(PhaseType::C), mIntfVoltage(2, 0));
-	mSLog->debug("Add phase A {:f} to source vector at {:d}",
-		"Add phase B {:f} to source vector at {:d}",
-		"Add phase C {:f} to source vector at {:d}",
+	mSLog->debug(
+		"\nAdd phase A {:f} to source vector at {:d}"
+		"\nAdd phase B {:f} to source vector at {:d}"
+		"\nAdd phase C {:f} to source vector at {:d}",
 		mIntfVoltage(0, 0),
 		mVirtualNodes[0]->matrixNodeIndex(PhaseType::A),
 		mIntfVoltage(1, 0),
