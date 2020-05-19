@@ -66,6 +66,14 @@ namespace CPS {
 			return ss.str();
 		}
 
+		static String sparseMatrixToString(const SparseMatrix& mat) {
+			return matrixToString(Matrix(mat));
+		}
+
+		static String sparseMatrixCompToString(const SparseMatrixComp& mat) {
+			return matrixCompToString(MatrixComp(mat));
+		}
+
 		static String phasorMatrixToString(const MatrixComp& mat) {
 			std::stringstream ss;
 			ss << std::scientific << Math::abs(mat) << "\n\n" << Math::phase(mat);

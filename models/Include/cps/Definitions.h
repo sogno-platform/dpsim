@@ -63,6 +63,8 @@ namespace CPS {
 	typedef Eigen::Matrix<Real, Eigen::Dynamic, 1> Vector;
 	/// @brief Sparse matrix for real numbers.
 	typedef Eigen::SparseMatrix<Real, Eigen::ColMajor> SparseMatrix;
+	/// @brief Sparse matrix for real numbers (row major).
+	typedef Eigen::SparseMatrix<Real, Eigen::RowMajor> SparseMatrixRow;
 	/// @brief Sparse matrix for complex numbers.
 	typedef Eigen::SparseMatrix<Complex, Eigen::ColMajor> SparseMatrixComp;
 	/// @brief Sparse matrix for complex numbers (row major).
@@ -75,6 +77,8 @@ namespace CPS {
 	typedef Eigen::Matrix<Int, Eigen::Dynamic, Eigen::Dynamic, Eigen::ColMajor> MatrixInt;
 	///
 	typedef Eigen::PartialPivLU<Matrix> LUFactorized;
+	///
+	typedef Eigen::SparseLU<SparseMatrix> LUFactorizedSparse;
 	///
 	typedef Eigen::Matrix<Real, Eigen::Dynamic, 1> Vector;
 	///

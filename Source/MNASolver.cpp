@@ -214,7 +214,13 @@ void MnaSolver<VarType>::initializeSystemWithPrecomputedMatrices() {
 	if (mSwitches.size() < 1) {
 		// Create system matrix if no switches were added
 		for (auto comp : mMNAComponents) {
+#ifdef WITH_SPARSE
+			Matrix mat = Matrix(mSwitchedMatrices[std::bitset<SWITCH_NUM>(0)]);
+			comp->mnaApplySystemMatrixStamp(mat);
+			mSwitchedMatrices[std::bitset<SWITCH_NUM>(0)] = mat.sparseView();
+#else
 			comp->mnaApplySystemMatrixStamp(mSwitchedMatrices[std::bitset<SWITCH_NUM>(0)]);
+#endif
 			auto idObj = std::dynamic_pointer_cast<IdentifiedObject>(comp);
 			mSLog->debug("Stamping {:s} {:s} into system matrix",
 				idObj->type(), idObj->name());
@@ -223,17 +229,38 @@ void MnaSolver<VarType>::initializeSystemWithPrecomputedMatrices() {
 					Logger::matrixToString(mSwitchedMatrices[std::bitset<SWITCH_NUM>(0)]));
 			}
 		}
+#ifdef WITH_SPARSE
+		mLuFactorizations[std::bitset<SWITCH_NUM>(0)].analyzePattern(mSwitchedMatrices[std::bitset<SWITCH_NUM>(0)]);
+		mLuFactorizations[std::bitset<SWITCH_NUM>(0)].factorize(mSwitchedMatrices[std::bitset<SWITCH_NUM>(0)]);
+#else
 		mLuFactorizations[std::bitset<SWITCH_NUM>(0)] = Eigen::PartialPivLU<Matrix>(mSwitchedMatrices[std::bitset<SWITCH_NUM>(0)]);
+#endif
 	}
 	else {
 		// Generate switching state dependent system matrices
 		for (auto& sys : mSwitchedMatrices) {
+#ifdef WITH_SPARSE
+			for (auto comp : mMNAComponents) {
+				Matrix mat = Matrix(sys.second);
+				comp->mnaApplySystemMatrixStamp(mat);
+				sys.second = mat.sparseView();
+			}
+			for (UInt i = 0; i < mSwitches.size(); i++) {
+				Matrix mat = Matrix(sys.second);
+				mSwitches[i]->mnaApplySwitchSystemMatrixStamp(mat, sys.first[i]);
+				sys.second = mat.sparseView();
+			}
+			// Compute LU-factorization for system matrix
+			mLuFactorizations[sys.first].analyzePattern(sys.second);
+			mLuFactorizations[sys.first].factorize(sys.second);
+#else
 			for (auto comp : mMNAComponents)
 				comp->mnaApplySystemMatrixStamp(sys.second);
 			for (UInt i = 0; i < mSwitches.size(); i++)
 				mSwitches[i]->mnaApplySwitchSystemMatrixStamp(sys.second, sys.first[i]);
 			// Compute LU-factorization for system matrix
 			mLuFactorizations[sys.first] = Eigen::PartialPivLU<Matrix>(sys.second);
+#endif
 		}
 		updateSwitchStatus();
 	}
@@ -347,10 +374,17 @@ void MnaSolver<Real>::createEmptySystemMatrix() {
 		throw SystemError("Too many Switches.");
 
 	for (std::size_t i = 0; i < (1ULL << mSwitches.size()); i++) {
+#ifdef WITH_SPARSE
+		mSwitchedMatrices[std::bitset<SWITCH_NUM>(i)].resize(mNumMatrixNodeIndices, mNumMatrixNodeIndices);
+#else
 		mSwitchedMatrices[std::bitset<SWITCH_NUM>(i)] = Matrix::Zero(mNumMatrixNodeIndices, mNumMatrixNodeIndices);
+#endif
 	}
-
+#ifdef WITH_SPARSE
+	mBaseSystemMatrix.resize(mNumMatrixNodeIndices, mNumMatrixNodeIndices);
+#else
 	mBaseSystemMatrix = Matrix::Zero(mNumMatrixNodeIndices, mNumMatrixNodeIndices);
+#endif
 }
 
 template<>
@@ -368,11 +402,18 @@ void MnaSolver<Complex>::createEmptySystemMatrix() {
 	}
 	else {
 		for (std::size_t i = 0; i < (1ULL << mSwitches.size()); i++) {
+#ifdef WITH_SPARSE
+			mSwitchedMatrices[std::bitset<SWITCH_NUM>(i)].resize(2*(mNumMatrixNodeIndices + mNumHarmMatrixNodeIndices), 2*(mNumMatrixNodeIndices + mNumHarmMatrixNodeIndices));
+#else
 			mSwitchedMatrices[std::bitset<SWITCH_NUM>(i)] = Matrix::Zero(2*(mNumMatrixNodeIndices + mNumHarmMatrixNodeIndices), 2*(mNumMatrixNodeIndices + mNumHarmMatrixNodeIndices));
+#endif
 		}
 	}
-
+#ifdef WITH_SPARSE
+	mBaseSystemMatrix.resize(2 * (mNumMatrixNodeIndices + mNumHarmMatrixNodeIndices), 2 * (mNumMatrixNodeIndices + mNumHarmMatrixNodeIndices));
+#else
 	mBaseSystemMatrix = Matrix::Zero(2 * (mNumMatrixNodeIndices + mNumHarmMatrixNodeIndices), 2 * (mNumMatrixNodeIndices + mNumHarmMatrixNodeIndices));
+#endif
 }
 
 template <typename VarType>
@@ -598,8 +639,8 @@ void MnaSolver<VarType>::logSystemMatrices() {
 		for (UInt i = 0; i < mSwitchedMatricesHarm[std::bitset<SWITCH_NUM>(0)].size(); i++) {
 			mSLog->info("System matrix for frequency: {:d} \n{:s}", i,
 				Logger::matrixToString(mSwitchedMatricesHarm[std::bitset<SWITCH_NUM>(0)][i]));
-			mSLog->info("LU decomposition for frequency: {:d} \n{:s}", i,
-				Logger::matrixToString(mLuFactorizationsHarm[std::bitset<SWITCH_NUM>(0)][i].matrixLU()));
+			//mSLog->info("LU decomposition for frequency: {:d} \n{:s}", i,
+			//	Logger::matrixToString(mLuFactorizationsHarm[std::bitset<SWITCH_NUM>(0)][i].matrixLU()));
 		}
 
 		for (UInt i = 0; i < mRightSideVectorHarm.size(); i++)
@@ -610,7 +651,7 @@ void MnaSolver<VarType>::logSystemMatrices() {
 	else {
 		if (mSwitches.size() < 1) {
 			mSLog->info("System matrix: \n{}", mSwitchedMatrices[std::bitset<SWITCH_NUM>(0)]);
-			mSLog->info("LU decomposition: \n{}",	mLuFactorizations[std::bitset<SWITCH_NUM>(0)].matrixLU());
+			//mSLog->info("LU decomposition: \n{}",	mLuFactorizations[std::bitset<SWITCH_NUM>(0)].matrixLU());
 		}
 		else {
 			mSLog->info("Initial switch status: {:s}", mCurrentSwitchStatus.to_string());
@@ -618,8 +659,8 @@ void MnaSolver<VarType>::logSystemMatrices() {
 			for (auto sys : mSwitchedMatrices) {
 				mSLog->info("Switching System matrix {:s} \n{:s}",
 					sys.first.to_string(), Logger::matrixToString(sys.second));
-				mSLog->info("LU Factorization for System Matrix {:s} \n{:s}",
-					sys.first.to_string(), Logger::matrixToString(mLuFactorizations[sys.first].matrixLU()));
+				//mSLog->info("LU Factorization for System Matrix {:s} \n{:s}",
+				//	sys.first.to_string(), Logger::matrixToString(mLuFactorizations[sys.first].matrixLU()));
 			}
 		}
 		mSLog->info("Right side vector: \n{}", mRightSideVector);

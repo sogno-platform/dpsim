@@ -96,8 +96,12 @@ void MnaSolverGpu<VarType>::allocateDeviceMemory() {
 
 template <typename VarType>
 void MnaSolverGpu<VarType>::copySystemMatrixToDevice() {
-    auto *mat = &MnaSolver<VarType>::systemMatrix()(0);
-    CUDA_ERROR_HANDLER(cudaMemcpy(mDeviceCopy.matrix, mat, mDeviceCopy.size * mDeviceCopy.size * sizeof(Real), cudaMemcpyHostToDevice))
+#ifdef WITH_SPARSE
+    auto *data = Matrix(MnaSolver<VarType>::systemMatrix()).data();
+#else
+	auto *data = MnaSolver<VarType>::systemMatrix().data();
+#endif
+    CUDA_ERROR_HANDLER(cudaMemcpy(mDeviceCopy.matrix, data, mDeviceCopy.size * mDeviceCopy.size * sizeof(Real), cudaMemcpyHostToDevice))
 }
 
 template <typename VarType>

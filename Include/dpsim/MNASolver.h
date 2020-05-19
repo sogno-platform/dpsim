@@ -14,6 +14,7 @@
 #include <unordered_map>
 #include <bitset>
 
+#include <dpsim/Config.h>
 #include <dpsim/Solver.h>
 #include <dpsim/DataLogger.h>
 #include <cps/AttributeList.h>
@@ -29,6 +30,12 @@
  * value should be minimal.
  **/
 #define SWITCH_NUM sizeof(std::size_t)*8
+
+#ifdef WITH_SPARSE
+#define MAT_TYPE SparseMatrix
+#else
+#define MAT_TYPE Matrix
+#endif
 
 namespace DPsim {
 	/// Solver class using Modified Nodal Analysis (MNA).
@@ -86,12 +93,16 @@ namespace DPsim {
 		std::vector< CPS::Attribute<Matrix>::Ptr > mLeftVectorHarmAttributes;
 
 		/// Base matrix that includes all static MNA elements to speed up recomputation
-		Matrix mBaseSystemMatrix;
+		MAT_TYPE mBaseSystemMatrix;
 		/// Map of system matrices where the key is the bitset describing the switch states
-		std::unordered_map< std::bitset<SWITCH_NUM>, Matrix > mSwitchedMatrices;
+		std::unordered_map< std::bitset<SWITCH_NUM>, MAT_TYPE > mSwitchedMatrices;
 		std::unordered_map< std::bitset<SWITCH_NUM>, std::vector<Matrix> > mSwitchedMatricesHarm;
+#ifdef WITH_SPARSE
 		/// Map of LU factorizations related to the system matrices
+		std::unordered_map< std::bitset<SWITCH_NUM>, CPS::LUFactorizedSparse > mLuFactorizations;
+#else
 		std::unordered_map< std::bitset<SWITCH_NUM>, CPS::LUFactorized > mLuFactorizations;
+#endif
 		std::unordered_map< std::bitset<SWITCH_NUM>, std::vector<CPS::LUFactorized> > mLuFactorizationsHarm;
 
 		// #### Attributes related to switching ####
@@ -164,7 +175,9 @@ namespace DPsim {
 		///
 		virtual CPS::Task::List getTasks();
 		///
-		Matrix& systemMatrix() { return mSwitchedMatrices[mCurrentSwitchStatus]; }
+		MAT_TYPE& systemMatrix() {
+			return mSwitchedMatrices[mCurrentSwitchStatus];
+		}
 
 		// #### MNA Solver Tasks ####
 		///

@@ -20,6 +20,8 @@ namespace DPsim {
 	using UInt = CPS::UInt;
 	using Matrix = CPS::Matrix;
 	using MatrixComp = CPS::MatrixComp;
+	using SparseMatrix = CPS::SparseMatrixRow;
+	using SparseMatrixComp = CPS::SparseMatrixCompRow;
 
 	template<typename T>
 	using MatrixVar = CPS::MatrixVar<T>;
