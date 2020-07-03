@@ -76,6 +76,8 @@ if (WITH_SPDLOG_SUBMODULE OR WIN32)
 	set(SPDLOG_INCLUDE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/Dependencies/spdlog/include)
 else()
 	find_package(spdlog REQUIRED)
+	find_package(fmt REQUIRED)
+	add_compile_definitions(SPDLOG_FMT_EXTERNAL)
 endif()
 
 find_package(Threads REQUIRED)
@@ -147,9 +149,6 @@ if(WITH_CUDA)
     endif()
     # END OF WORKAROUND
 endif()
-
-option(BUILD_SHARED_LIBS 	"Build shared library" OFF)
-option(BUILD_EXAMPLES 		"Build C++ examples" ON)
 
 configure_file(
 	${CMAKE_CURRENT_SOURCE_DIR}/Include/dpsim/Config.h.in

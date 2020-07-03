@@ -40,19 +40,19 @@ docker:centos:
     - shell
     - linux
 
-docker:jupyter:
-  stage: prepare
-  needs: []
-  script:
-    - docker build
-       --file Packaging/Docker/Dockerfile.jupyter
-       --build-arg DOCKER_IMAGE=${DOCKER_IMAGE_DEV}
-       --build-arg DOCKER_TAG=${DOCKER_TAG}
-       --tag ${DOCKER_IMAGE_DEV}-jupyter:${DOCKER_TAG}
-       --tag ${DOCKER_IMAGE_DEV}-jupyter:latest .
-  tags:
-    - shell
-    - linux
+#docker:jupyter:
+#  stage: prepare
+#  needs: []
+#  script:
+#    - docker build
+#       --file Packaging/Docker/Dockerfile.jupyter
+#       --build-arg DOCKER_IMAGE=${DOCKER_IMAGE_DEV}
+#       --build-arg DOCKER_TAG=${DOCKER_TAG}
+#       --tag ${DOCKER_IMAGE_DEV}-jupyter:${DOCKER_TAG}
+#       --tag ${DOCKER_IMAGE_DEV}-jupyter:latest .
+#  tags:
+#    - shell
+#    - linux
 
 build:linux:
   stage: build
