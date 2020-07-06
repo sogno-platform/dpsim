@@ -77,7 +77,6 @@ if (WITH_SPDLOG_SUBMODULE OR WIN32)
 else()
 	find_package(spdlog REQUIRED)
 	find_package(fmt REQUIRED)
-	add_compile_definitions(SPDLOG_FMT_EXTERNAL)
 endif()
 
 find_package(Threads REQUIRED)

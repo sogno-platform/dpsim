@@ -15,7 +15,7 @@ set(CPS_LIBRARIES
 )
 
 if (NOT (WITH_SPDLOG_SUBMODULE OR WIN32))
-	list(APPEND CPS_LIBRARIES fmt)
+	list(APPEND CPS_LIBRARIES spdlog::spdlog fmt::fmt)
 endif()
 
 if(Linux_FOUND OR MacOS_FOUND)
