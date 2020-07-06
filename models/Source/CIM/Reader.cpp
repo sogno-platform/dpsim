@@ -334,8 +334,16 @@ TopologicalPowerComp::Ptr Reader::mapACLineSegment(ACLineSegment* line) {
 	Real resistance = line->r.value;
 	Real inductance = line->x.value / mOmega;
 
-	Real capacitance = (line->bch.value > 1e-9) ? ( line->bch.value / mOmega ) : -1.;
-	Real conductance = (line->gch.value > 1e-9) ? Real(line->gch.value) : -1.;
+	// By default there is always a small conductance to ground to
+	// avoid problems with floating nodes.
+	Real capacitance = mShuntCapacitorValue;
+	Real conductance = mShuntConductanceValue;
+
+	if(line->bch.value > 1e-9 && !mSetShuntCapacitor)
+		capacitance = Real(line->bch.value / mOmega);
+
+	if(line->gch.value > 1e-9 && !mSetShuntConductance)
+		conductance = Real(line->gch.value);
 
 	Real baseVoltage = 0;
     // first look for baseVolt object to set baseVoltage
@@ -372,8 +380,7 @@ TopologicalPowerComp::Ptr Reader::mapACLineSegment(ACLineSegment* line) {
 			cpsLine->setParameters(res_3ph, ind_3ph, cap_3ph, cond_3ph);
 			return cpsLine;
 		}
-		else
-		{
+		else {
 			mSLog->info("    PiLine for EMT not implemented yet");
 			auto cpsLine = std::make_shared<DP::Ph1::PiLine>(line->mRID, line->name, mComponentLogLevel);
 			cpsLine->setParameters(resistance, inductance, capacitance, conductance);

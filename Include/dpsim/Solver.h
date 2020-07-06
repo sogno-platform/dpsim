@@ -39,6 +39,13 @@ namespace DPsim {
 		///
 		Bool mFrequencyParallel = false;
 		/// Switch to trigger steady-state initialization
+
+		// #### steady state initialization ####
+		/// steady state initialization time limit
+		Real mSteadStIniTimeLimit = 10;
+		/// steady state initialization accuracy limit
+		Real mSteadStIniAccLimit = 0.0001;
+		/// flag to activate steady state initialization
 		Bool mSteadyStateInit = false;
 
 	public:
@@ -70,13 +77,19 @@ namespace DPsim {
 		void doFrequencyParallelization(Bool freqParallel) {
 			mFrequencyParallel = freqParallel;
 		}
-		///
-		void doSteadyStateInitialization(Bool steadyStateInit) {
-			mSteadyStateInit = steadyStateInit;
-		}
+
 		///
 		virtual void setSystem(CPS::SystemTopology system) {}
+
 		///
 		virtual void initialize() {}
+
+		// #### steady state initialization ####
+		/// activate steady state initialization
+		void doSteadyStateInitialization(Bool f) { mSteadyStateInit = f; }
+		/// set steady state initialization time limit
+		void setSteadStIniTimeLimit(Real v) { mSteadStIniTimeLimit = v; }
+		/// set steady state initialization accuracy limit
+		void setSteadStIniAccLimit(Real v) { mSteadStIniAccLimit = v; }
 	};
 }

@@ -36,10 +36,6 @@ void DP::Ph1::PiLine::initialize(Matrix frequencies) {
 void DP::Ph1::PiLine::initializeFromPowerflow(Real frequency) {
 	checkForUnconnectedTerminals();
 
-	// By default there is always a small conductance to ground to
-	// avoid problems with floating nodes.
-	mParallelCond = (mParallelCond >= 0) ? mParallelCond : 1e-6;
-
 	// Static calculation
 	Real omega = 2.*PI * frequency;
 	Complex impedance = { mSeriesRes, omega * mSeriesInd };
@@ -62,6 +58,8 @@ void DP::Ph1::PiLine::initializeFromPowerflow(Real frequency) {
 	mSubSeriesInductor->initialize(mFrequencies);
 	mSubSeriesInductor->initializeFromPowerflow(frequency);
 
+	// By default there is always a small conductance to ground to
+	// avoid problems with floating nodes.
 	// Create parallel sub components
 	if (mParallelCond >= 0) {
 		mSubParallelResistor0 = std::make_shared<DP::Ph1::Resistor>(mName + "_con0", mLogLevel);

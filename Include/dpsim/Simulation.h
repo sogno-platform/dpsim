@@ -77,10 +77,7 @@ namespace DPsim {
 		Solver::List mSolvers;
 		///
 		Bool mPowerFlowInit = false;
-		/// Determines if steady-state initialization
-		/// should be executed prior to the simulation.
-		/// By default the initialization is disabled.
-		Bool mSteadyStateInit = false;
+
 		/// Determines if the network should be split
 		/// into subnetworks at decoupling lines.
 		/// If the system is split, each subsystem is
@@ -97,6 +94,16 @@ namespace DPsim {
 		Bool mHarmParallel = false;
 		///
 		Bool mInitialized = false;
+
+		// #### steady state initialization ####
+		/// steady state initialization time limit
+		Real mSteadStIniTimeLimit = 10;
+		/// steady state initialization accuracy limit
+		Real mSteadStIniAccLimit = 0.0001;
+		/// Determines if steady-state initialization
+		/// should be executed prior to the simulation.
+		/// By default the initialization is disabled.
+		Bool mSteadyStateInit = false;
 
 		// #### Task dependencies und scheduling ####
 		/// Scheduler used for task scheduling
@@ -186,6 +193,15 @@ namespace DPsim {
 		void setScheduler(std::shared_ptr<Scheduler> scheduler) {
 			mScheduler = scheduler;
 		}
+
+		// #### steady state initialization ####
+		/// activate steady state initialization
+		void doSteadyStateInitialization(Bool f) { mSteadyStateInit = f; }
+		/// set steady state initialization time limit
+		void setSteadStIniTimeLimit(Real v) { mSteadStIniTimeLimit = v; }
+		/// set steady state initialization accuracy limit
+		void setSteadStIniAccLimit(Real v) { mSteadStIniAccLimit = v; }
+
 		///
 		void doHarmonicParallelization(Bool parallel) { mHarmParallel = parallel; }
 

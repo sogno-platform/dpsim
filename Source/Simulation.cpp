@@ -158,6 +158,8 @@ void Simulation::createSolvers(
 					solver->setTimeStep(mTimeStep);
 					solver->doSteadyStateInitialization(mSteadyStateInit);
 					solver->doFrequencyParallelization(mHarmParallel);
+					solver->setSteadStIniTimeLimit(mSteadStIniTimeLimit);
+					solver->setSteadStIniAccLimit(mSteadStIniAccLimit);
 					solver->setSystem(subnets[net]);
 					solver->initialize();
 				}
@@ -363,6 +365,7 @@ Graph::Graph Simulation::dependencyGraph() {
 #endif
 
 void Simulation::run() {
+	mCLog->info("Initialize simulation: {}", mName);
 	if (!mInitialized)
 		initialize();
 

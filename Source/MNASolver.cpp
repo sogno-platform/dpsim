@@ -386,7 +386,6 @@ void MnaSolver<VarType>::steadyStateInitialization() {
 
 	Int timeStepCount = 0;
 	Real time = 0;
-	Real eps = 0.0001;
 	Real maxDiff = 1.0;
 	Real max = 1.0;
 	Matrix diff = Matrix::Zero(2 * mNumNodes, 1);
@@ -430,7 +429,7 @@ void MnaSolver<VarType>::steadyStateInitialization() {
 	sched.resolveDeps(tasks, inEdges, outEdges);
 	sched.createSchedule(tasks, inEdges, outEdges);
 
-	while (time < 10) {
+	while (time < mSteadStIniTimeLimit) {
 		// Reset source vector
 		mRightSideVector.setZero();
 
@@ -455,7 +454,7 @@ void MnaSolver<VarType>::steadyStateInitialization() {
 		maxDiff = diff.lpNorm<Eigen::Infinity>();
 		max = mLeftSideVector.lpNorm<Eigen::Infinity>();
 		// If difference is smaller than some epsilon, break
-		if ((maxDiff / max) < eps)
+		if ((maxDiff / max) < mSteadStIniAccLimit)
 			break;
 	}
 

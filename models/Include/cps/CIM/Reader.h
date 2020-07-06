@@ -89,7 +89,16 @@ namespace CIM {
 		std::map<String, TopologicalPowerComp::Ptr> mPowerflowEquipment;
 		/// Maps the RID of a Terminal to a PowerflowTerminal
 		std::map<String, TopologicalTerminal::Ptr> mPowerflowTerminals;
-		///
+
+		// #### shunt component settings ####
+		/// activates global shunt capacitor setting
+		Bool mSetShuntCapacitor = false;
+		/// global shunt capacitor value
+		Real mShuntCapacitorValue = -1;
+		/// activates global shunt resistor setting
+		Bool mSetShuntConductance = false;
+		/// global shunt resistor value
+		Real mShuntConductanceValue = 1e-6;
 
 		// #### General Functions ####
 		/// Resolves unit multipliers.
@@ -152,12 +161,25 @@ namespace CIM {
 			Logger::Level componentLogLevel = Logger::Level::off);
 		///
 		virtual ~Reader();
+
 		/// Parses data from CIM files into the CPS data structure
 		SystemTopology loadCIM(Real systemFrequency, const std::experimental::filesystem::path &filename, Domain domain = Domain::DP, PhaseType phase = PhaseType::Single);
 		/// Parses data from CIM files into the CPS data structure
 		SystemTopology loadCIM(Real systemFrequency, const std::list<std::experimental::filesystem::path> &filenames, Domain domain = Domain::DP, PhaseType phase = PhaseType::Single);
 		/// writing state variable voltage of nodes from the another SystemTopology, which has the same topology but modeled in different domain
 		void writeSvVoltageFromStaticSysTopology(SystemTopology& sysStatic, SystemTopology& sysDynamic);
+
+		// #### shunt component settings ####
+		/// set shunt capacitor value
+		void setShuntCapacitor(Real v) {
+			mShuntCapacitorValue = v;
+			mSetShuntCapacitor = true;
+		}
+		/// set shunt conductance value
+		void setShuntConductance(Real v) {
+			mShuntConductanceValue = v;
+			mSetShuntConductance = true;
+		}
 	};
 }
 }
