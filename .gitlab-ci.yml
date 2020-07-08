@@ -60,7 +60,7 @@ build:linux:
   script:
     - mkdir -p build
     - cd build
-    - cmake -DWITH_CUDA=OFF ..
+    - cmake ..
     - make -j 32
   image: ${DOCKER_IMAGE_DEV}:${DOCKER_TAG}
   cache:
