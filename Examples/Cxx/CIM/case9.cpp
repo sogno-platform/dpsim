@@ -33,7 +33,7 @@ int main(int argc, char** argv){
 	if (argc <= 1) {
 		filenames = DPsim::Utils::findFiles({
 		"case9.xml"
-		}, "Examples/CIM/grid-data/Matpower_cases", "CIMPATH");
+		}, "build/_deps/cim-data-src/Matpower_cases", "CIMPATH");
 	}
 	else {
 		filenames = std::list<fs::path>(argv + 1, argv + argc);

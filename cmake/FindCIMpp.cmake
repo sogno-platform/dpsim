@@ -1,0 +1,21 @@
+set(CIM_VERSION "16v29a")
+set(USE_CIM_VERSION "IEC61970_16v29a")
+
+find_path(CIMPP_INCLUDE_DIR
+	NAMES CIMModel.hpp
+	PATH_SUFFIXES
+		cimpp/${CIM_VERSION}
+		${CIM_VERSION}
+		include/src
+)
+find_library(CIMPP_LIBRARY
+	NAMES cimpp${CIM_VERSION}
+	PATH_SUFFIXES
+		lib/static
+)
+
+include(FindPackageHandleStandardArgs)
+find_package_handle_standard_args(CIMpp DEFAULT_MSG CIMPP_LIBRARY CIMPP_INCLUDE_DIR)
+
+set(CIMPP_LIBRARIES ${CIMPP_LIBRARY} ${ARABICA_LIBRARY})
+set(CIMPP_INCLUDE_DIRS ${CIMPP_INCLUDE_DIR} ${ARABICA_INCLUDE_DIR})

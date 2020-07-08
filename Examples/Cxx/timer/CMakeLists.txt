@@ -1,8 +1,8 @@
-set(TEST_SRCS
+set(TIMER_SRCS
 	Timer.cpp
 )
 
-foreach(SOURCE ${TEST_SRCS})
+foreach(SOURCE ${TIMER_SRCS})
 	get_filename_component(TARGET ${SOURCE} NAME_WE)
 
 	add_executable(${TARGET} ${SOURCE})

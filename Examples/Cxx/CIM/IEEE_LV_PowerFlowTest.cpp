@@ -36,7 +36,7 @@ int main(int argc, char** argv){
                         "Rootnet_FULL_NE_13J16h_EQ.xml",
                         "Rootnet_FULL_NE_13J16h_SV.xml",
                         "Rootnet_FULL_NE_13J16h_TP.xml"
-                }, "Examples/CIM/grid-data/IEEE_EU_LV/IEEE_EU_LV_reduced", "CIMPATH");
+                }, "build/_deps/cim-data-src/IEEE_EU_LV/IEEE_EU_LV_reduced", "CIMPATH");
 	}
 	else {
 		filenames = std::list<fs::path>(argv + 1, argv + argc);

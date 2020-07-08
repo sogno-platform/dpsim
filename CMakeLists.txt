@@ -5,7 +5,7 @@ set(PROJECT_AUTHOR "Institute for Automation of Complex Power Systems, RWTH Aach
 set(PROJECT_COPYRIGHT "2017-2020, Institute for Automation of Complex Power Systems, RWTH Aachen University")
 set(PROJECT_DESCRIPTION "C++ Power System Simulation Library")
 set(PROJECT_HOMEPAGE_URL "https://dpsim.fein-aachen.org/")
-set(PROJECT_VCS_URL "https://git.rwth-aachen.org/acs/public/simulation/dpsim")
+set(PROJECT_VCS_URL "https://github.com/dpsim-simulator/dpsim.git")
 
 # Required for dpsim_python
 if(POLICY CMP0076)
@@ -28,17 +28,19 @@ if(CMAKE_CXX_COMPILER_ID STREQUAL Intel)
 	# needed by icc, but for some reason not added by CMake
 	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
 endif()
-add_definitions(-D_SILENCE_ALL_CXX17_DEPRECATION_WARNINGS)
-add_definitions(-D_SILENCE_EXPERIMENTAL_FILESYSTEM_DEPRECATION_WARNING)
 
 if(NOT WIN32)
 	set(CMAKE_POSITION_INDEPENDENT_CODE ON)
 endif()
 
-set(CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/CMake;${PROJECT_SOURCE_DIR}/models/CMake")
+set(CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/cmake")
 
 include(CheckCXXCompilerFlag)
 if(MSVC)
+	# Silence Visual Studio deprecation warnings
+	add_definitions(-D_SILENCE_ALL_CXX17_DEPRECATION_WARNINGS)
+	add_definitions(-D_SILENCE_EXPERIMENTAL_FILESYSTEM_DEPRECATION_WARNING)
+
 	# Set exception handling for portability
 	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /EHsc")
 
@@ -63,34 +65,41 @@ check_symbol_exists(getopt_long getopt.h HAVE_GETOPT)
 include(GetVersion)
 GetVersion(${PROJECT_SOURCE_DIR} "DPSIM")
 
-find_package(Eigen3 3.0 REQUIRED)
-
-# Workaround for spdlog in Windows
-# A custom FindSpdlog does not work currently
-option(SPDLOG_BUILD_TESTING "Build spdlog tests" OFF)
-option(SPDLOG_BUILD_BENCH "Build spdlog benchmarks" OFF)
-option(SPDLOG_BUILD_EXAMPLES "Build spdlog examples" OFF)
-
+option(WITH_EIGEN_SUBMODULE "Build with Eigen as submodule" OFF)
 option(WITH_SPDLOG_SUBMODULE "Build with Spdlog as submodule" OFF)
+option(WITH_CIM_SUBMODULE "Build with CIMpp as submodule" OFF)
+
+find_package(Threads REQUIRED)
+
+if (WITH_EIGEN_SUBMODULE OR WIN32)
+	include(cmake/GetEigenSubmodule.cmake)
+else()
+	find_package(Eigen3 3.0 REQUIRED)
+endif()
+
 if (WITH_SPDLOG_SUBMODULE OR WIN32)
-	set(SPDLOG_INCLUDE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/Dependencies/spdlog/include)
+	include(cmake/GetSpdlogSubmodule.cmake)
 else()
 	find_package(spdlog REQUIRED)
 	find_package(fmt REQUIRED)
 endif()
 
-find_package(Threads REQUIRED)
-find_package(CIMpp)
+if (WITH_CIM_SUBMODULE OR WIN32)
+	include(cmake/GetCIMppSubmodule.cmake)
+else()
+	find_package(CIMpp)
+endif()
+
 find_package(Sundials)
 find_package(OpenMP)
 find_package(CUDA)
-
 find_package(GSL)
 find_package(Graphviz)
 
 find_package(PythonInterp 3.6)
 find_package(PythonLibs 3.6)
 find_package(NumPy)
+
 find_package(VILLASnode)
 
 if(PythonInterp_FOUND AND PythonLibs_FOUND)
@@ -103,11 +112,11 @@ elseif("${CMAKE_SYSTEM}" MATCHES "Darwin")
 	set(MacOS_FOUND ON)
 endif()
 
+option(BUILD_SHARED_LIBS 	"Build shared library"	OFF)
+option(BUILD_EXAMPLES    	"Build C++ examples"  	ON)
+option(GET_GRID_DATA    	"Download grid data"  	ON)
+
 include(CMakeDependentOption)
-
-option(BUILD_SHARED_LIBS "Build shared library"                   OFF)
-option(BUILD_EXAMPLES    "Build C++ examples"                     ON )
-
 cmake_dependent_option(WITH_GSL				"Enable GSL"        										ON  "GSL_FOUND"					OFF)
 cmake_dependent_option(WITH_SUNDIALS	"Enable sundials solver suite"					ON  "Sundials_FOUND"		OFF)
 cmake_dependent_option(WITH_SHMEM			"Enable shared memory interface"				ON  "VILLASnode_FOUND"	OFF)
@@ -160,17 +169,18 @@ set(DPSIM_INCLUDE_DIRS
 )
 
 add_subdirectory(models)
-add_subdirectory(Tests)
 add_subdirectory(Source)
 add_subdirectory(docs)
+
+if(BUILD_EXAMPLES)
+	add_subdirectory(Examples)
+endif(BUILD_EXAMPLES)
 
 #add_subdirectory(Dependencies/pybind11)
 #pybind11_add_module(dpsimpy Source/pybind/main.cpp)
 #target_link_libraries(dpsimpy PRIVATE dpsim)
 
-if(BUILD_EXAMPLES)
-	add_subdirectory(Examples)
-endif(BUILD_EXAMPLES)
+include(cmake/GetGridData.cmake)
 
 message(VERBOSE "Compiler Release Flags: " 	${CMAKE_CXX_FLAGS_RELEASE})
 message(VERBOSE "Compiler Debug Flags: " 		${CMAKE_CXX_FLAGS_DEBUG})
