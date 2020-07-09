@@ -202,8 +202,12 @@ void MnaSolver<VarType>::initializeSystem() {
 			for (auto comp : mMNAComponents) {
 				comp->mnaApplySystemMatrixStamp(mSwitchedMatrices[std::bitset<SWITCH_NUM>(0)]);
 				auto idObj = std::dynamic_pointer_cast<IdentifiedObject>(comp);
-				mSLog->debug("Stamping {:s} {:s} into system matrix: \n{:s}",
-					idObj->type(), idObj->name(), Logger::matrixToString(mSwitchedMatrices[std::bitset<SWITCH_NUM>(0)]));
+				mSLog->debug("Stamping {:s} {:s} into system matrix",
+					idObj->type(), idObj->name());
+				if (mSLog->should_log(spdlog::level::trace)) {
+					mSLog->trace("\n{:s}",
+						Logger::matrixToString(mSwitchedMatrices[std::bitset<SWITCH_NUM>(0)]));
+				}
 			}
 			mLuFactorizations[std::bitset<SWITCH_NUM>(0)] = Eigen::PartialPivLU<Matrix>(mSwitchedMatrices[std::bitset<SWITCH_NUM>(0)]);
 		}
@@ -224,8 +228,12 @@ void MnaSolver<VarType>::initializeSystem() {
 			comp->mnaApplyRightSideVectorStamp(mRightSideVector);
 			auto idObj = std::dynamic_pointer_cast<IdentifiedObject>(comp);
 
-			mSLog->debug("Stamping {:s} {:s} into source vector: \n{:s}",
-				idObj->type(), idObj->name(), Logger::matrixToString(mRightSideVector));
+			mSLog->debug("Stamping {:s} {:s} into source vector",
+				idObj->type(), idObj->name());
+			if (mSLog->should_log(spdlog::level::trace)) {
+				mSLog->trace("\n{:s}", Logger::matrixToString(mRightSideVector));
+			}
+
 		}
 	}
 }
