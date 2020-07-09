@@ -156,10 +156,10 @@ void Interface::PostStep::execute(Real time, Int timeStepCount) {
 
 Attribute<Int>::Ptr Interface::importInt(UInt idx) {
 	Attribute<Int>::Ptr attr = Attribute<Int>::make(Flags::read | Flags::write);
-	addImport([attr, idx](Sample *smp) {
+	auto& log = mLog;
+	addImport([attr, idx, log](Sample *smp) {
 		if (idx >= smp->length) {
-			auto mCLog = spdlog::stderr_color_mt("interface_console");
-			mCLog->error("incomplete data received from interface");
+			log->error("incomplete data received from interface");
 			return;
 		}
 		attr->set(smp->data[idx].i);
@@ -170,10 +170,10 @@ Attribute<Int>::Ptr Interface::importInt(UInt idx) {
 
 Attribute<Real>::Ptr Interface::importReal(UInt idx) {
 	Attribute<Real>::Ptr attr = Attribute<Real>::make(Flags::read | Flags::write);
-	addImport([attr, idx](Sample *smp) {
+	auto& log = mLog;
+	addImport([attr, idx, log](Sample *smp) {
 		if (idx >= smp->length) {
-			auto mCLog = spdlog::stderr_color_mt("interface_console");
-			mCLog->error("incomplete data received from interface");
+			log->error("incomplete data received from interface");
 			return;
 		}
 		attr->set(smp->data[idx].f);
@@ -184,10 +184,10 @@ Attribute<Real>::Ptr Interface::importReal(UInt idx) {
 
 Attribute<Bool>::Ptr Interface::importBool(UInt idx) {
 	Attribute<Bool>::Ptr attr = Attribute<Bool>::make(Flags::read | Flags::write);
-	addImport([attr, idx](Sample *smp) {
+	auto& log = mLog;
+	addImport([attr, idx, log](Sample *smp) {
 		if (idx >= smp->length) {
-			auto mCLog = spdlog::stderr_color_mt("interface_console");
-			mCLog->error("incomplete data received from interface");
+			log->error("incomplete data received from interface");
 			return;
 		}
 		attr->set(smp->data[idx].b);
@@ -198,10 +198,10 @@ Attribute<Bool>::Ptr Interface::importBool(UInt idx) {
 
 Attribute<Complex>::Ptr Interface::importComplex(UInt idx) {
 	Attribute<Complex>::Ptr attr = Attribute<Complex>::make(Flags::read | Flags::write);
-	addImport([attr, idx](Sample *smp) {
+	auto& log = mLog;
+	addImport([attr, idx, log](Sample *smp) {
 		if (idx >= smp->length) {
-			auto mCLog = spdlog::stderr_color_mt("interface_console");
-			mCLog->error("incomplete data received from interface");
+			log->error("incomplete data received from interface");
 			return;
 		}
 		auto *z = reinterpret_cast<float*>(&smp->data[idx].z);
@@ -215,10 +215,10 @@ Attribute<Complex>::Ptr Interface::importComplex(UInt idx) {
 
 Attribute<Complex>::Ptr Interface::importComplexMagPhase(UInt idx) {
 	Attribute<Complex>::Ptr attr = Attribute<Complex>::make(Flags::read | Flags::write);
-	addImport([attr, idx](Sample *smp) {
+	auto& log = mLog;
+	addImport([attr, idx, log](Sample *smp) {
 		if (idx >= smp->length) {
-			auto mCLog = spdlog::stderr_color_mt("interface_console");
-			mCLog->error("incomplete data received from interface");
+			log->error("incomplete data received from interface");
 			return;
 		}
 		auto *z = reinterpret_cast<float*>(&smp->data[idx].z);

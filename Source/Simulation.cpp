@@ -59,7 +59,7 @@ Simulation::Simulation(String name,	Logger::Level logLevel) :
 	Eigen::setNbThreads(1);
 
 	// Logging
-	log = Logger::get(name, logLevel, logLevel);
+	log = Logger::get(name, logLevel, std::max(Logger::Level::info, logLevel));
 
 	mInitialized = false;
 }
@@ -193,7 +193,7 @@ void Simulation::sync() {
 		ifm.interface->writeValues();
 	}
 
-	mSLog->info("Waiting for start synchronization on {} interfaces", mInterfaces.size());
+	log->info("Waiting for start synchronization on {} interfaces", mInterfaces.size());
 
 	// Blocking wait for interfaces
 	for (auto ifm : mInterfaces) {
@@ -204,7 +204,7 @@ void Simulation::sync() {
 		ifm.interface->writeValues();
 	}
 
-	mSLog->info("Synchronized simulation start with remotes");
+	log->info("Synchronized simulation start with remotes");
 #endif
 }
 
@@ -340,7 +340,7 @@ Graph::Graph Simulation::dependencyGraph() {
 			if (avgTimeWorst > Scheduler::TaskTime(0)) {
 				auto grad = (float) avgTimes[task].count() / avgTimeWorst.count();
 				n->set("fillcolor", CPS::Utils::Rgb::gradient(grad).hex());
-				mSLog->info("{} {}", task->toString(), CPS::Utils::Rgb::gradient(grad).hex());
+				log->info("{} {}", task->toString(), CPS::Utils::Rgb::gradient(grad).hex());
 			}
 		}
 		else {

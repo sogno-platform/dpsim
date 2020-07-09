@@ -16,7 +16,10 @@ using namespace CPS;
 PFSolver::PFSolver(CPS::String name, CPS::SystemTopology system, CPS::Real timeStep, CPS::Logger::Level logLevel) :
 	Solver(name, logLevel)
 {
-	mSLog = Logger::get(name + "_PF", logLevel);
+	/* We also want to set the CLI loglevel according to the logLevel
+	 * std::max(Logger::Level::info, logLevel). But because of excessive
+	 * logging to Level::info that is currently infeasible. */
+	mSLog = Logger::get(name + "_PF", logLevel, Logger::Level::warn);
 	mSystem = system;
 	mTimeStep = timeStep;
     initialize();
