@@ -73,18 +73,18 @@ void multiply_connected(SystemTopology& sys, int copies,
 	}
 }
 
-void simulateCoupled(std::list<fs::path> filenames, Int copies, Int threads, Int seq = 0) {
+void simulateCoupled(std::list<fs::path> filenames, Int copies, Int threads, Int seq = 0, Logger::Level logLevel = Logger::Level::off) {
 	String simName = "WSCC_9bus_coupled_" + std::to_string(copies)
 		+ "_" + std::to_string(threads) + "_" + std::to_string(seq);
 	Logger::setLogDir("logs/"+simName);
 
-	CIM::Reader reader(simName, Logger::Level::off, Logger::Level::off);
+	CIM::Reader reader(simName, logLevel, logLevel);
 	SystemTopology sys = reader.loadCIM(60, filenames);
 
 	if (copies > 0)
 		multiply_connected(sys, copies, 12.5, 0.16, 1e-6);
 
-	Simulation sim(simName, Logger::Level::off);
+	Simulation sim(simName, logLevel);
 	sim.setSystem(sys);
 	sim.setTimeStep(0.0001);
 	sim.setFinalTime(0.5);
@@ -131,5 +131,5 @@ int main(int argc, char *argv[]) {
 		<< Int(args.options["threads"]) << " threads, sequence number "
 		<< Int(args.options["seq"]) << std::endl;
 	simulateCoupled(filenames, Int(args.options["copies"]),
-		Int(args.options["threads"]), Int(args.options["seq"]));
+		Int(args.options["threads"]), Int(args.options["seq"]), args.logLevel);
 }
