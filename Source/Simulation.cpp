@@ -59,12 +59,7 @@ Simulation::Simulation(String name,	Logger::Level logLevel) :
 	Eigen::setNbThreads(1);
 
 	// Logging
-	mSLog = Logger::get(name, logLevel);
-	mSLog->set_pattern("[%L] %v");
-
-	mCLog = spdlog::stdout_color_mt(name + "_console");
-	mCLog->set_level(logLevel);
-	mCLog->set_pattern(fmt::format("{}[%T.%f %n %^%l%$] %v", CPS::Logger::prefix()));
+	log = Logger::get(name, logLevel);
 
 	mInitialized = false;
 }
@@ -239,10 +234,10 @@ void Simulation::prepSchedule() {
 }
 
 void Simulation::schedule() {
-	mSLog->info("Scheduling tasks.");
+	log->info("Scheduling tasks.");
 	prepSchedule();
 	mScheduler->createSchedule(mTasks, mTaskInEdges, mTaskOutEdges);
-	mSLog->info("Scheduling done.");
+	log->info("Scheduling done.");
 }
 
 #ifdef WITH_GRAPHVIZ
@@ -365,20 +360,20 @@ Graph::Graph Simulation::dependencyGraph() {
 #endif
 
 void Simulation::run() {
-	mCLog->info("Initialize simulation: {}", mName);
+	log->info("Initialize simulation: {}", mName);
 	if (!mInitialized)
 		initialize();
 
 #ifdef WITH_SHMEM
-	mCLog->info("Opening interfaces.");
+	log->info("Opening interfaces.");
 
 	for (auto ifm : mInterfaces)
-		ifm.interface->open(mCLog);
+		ifm.interface->open(log);
 
 	sync();
 #endif
 
-	mCLog->info("Start simulation: {}", mName);
+	log->info("Start simulation: {}", mName);
 
 	while (mTime < mFinalTime) {
 		step();
@@ -394,7 +389,7 @@ void Simulation::run() {
 	for (auto lg : mLoggers)
 		lg->close();
 
-	mCLog->info("Simulation finished.");
+	log->info("Simulation finished.");
 }
 
 Real Simulation::step() {
@@ -434,5 +429,5 @@ void Simulation::logStepTimes(String logName) {
 		stepTimeSum += meas;
 		stepTimeLog->info("{:f}", meas);
 	}
-	std::cout << "Average step time: " << stepTimeSum / mStepTimes.size() << std::endl;
+	log->info("Average step time: {:.6f}", stepTimeSum / mStepTimes.size());
 }

@@ -6,13 +6,15 @@
  * file, You can obtain one at https://mozilla.org/MPL/2.0/.
  *********************************************************************************/
 
+#include <memory>
 #include <experimental/filesystem>
 namespace fs = std::experimental::filesystem;
 
 #include <iomanip>
 
 #include <cps/Logger.h>
-#include "spdlog/sinks/null_sink.h"
+#include <spdlog/sinks/null_sink.h>
+#include <spdlog/sinks/stdout_color_sinks.h>
 
 using namespace CPS;
 
@@ -102,10 +104,16 @@ Logger::Log Logger::create(const std::string &name, Level level) {
 	if (p.has_parent_path() && !fs::exists(p.parent_path()))
 		fs::create_directories(p.parent_path());
 
-	auto logger = spdlog::basic_logger_mt(name, filename, true);
+	auto console_sink = std::make_shared<spdlog::sinks::stderr_color_sink_mt>();
+	console_sink->set_level(spdlog::level::info);
+	console_sink->set_pattern(fmt::format("{}[%T.%f %n %^%l%$] %v", CPS::Logger::prefix()));
 
-	logger->set_level(level);
-	logger->set_pattern(prefix() + "[%L] %v");
+	auto file_sink = std::make_shared<spdlog::sinks::basic_file_sink_mt>(filename, true);
+	file_sink->set_level(level);
+	file_sink->set_pattern(prefix() + "[%L] %v");
+
+	spdlog::sinks_init_list sink_list = {console_sink, file_sink};
+	auto logger = std::make_shared<spdlog::logger>(name, sink_list.begin(), sink_list.end());
 
 	return logger;
 }
