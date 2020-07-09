@@ -59,7 +59,7 @@ Simulation::Simulation(String name,	Logger::Level logLevel) :
 	Eigen::setNbThreads(1);
 
 	// Logging
-	log = Logger::get(name, logLevel);
+	log = Logger::get(name, logLevel, logLevel);
 
 	mInitialized = false;
 }

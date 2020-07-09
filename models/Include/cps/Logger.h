@@ -31,7 +31,7 @@ namespace CPS {
 		using Log = std::shared_ptr<spdlog::logger>;
 
 	private:
-		static Log create(const std::string &name, Level logLevel = Level::info);
+		static Log create(const std::string &name, Level filelevel = Level::info, Level clilevel = Level::off);
 
 	public:
 		Logger();
@@ -43,7 +43,7 @@ namespace CPS {
 
 		// #### SPD log wrapper ####
 		///
-		static Log get(const std::string &name, Level logLevel = Level::info);
+		static Log get(const std::string &name, Level filelevel = Level::info, Level clilevel = Level::off);
 		///
 		static void setLogLevel(std::shared_ptr<spdlog::logger> logger, Logger::Level level) {
 			logger->set_level(level);

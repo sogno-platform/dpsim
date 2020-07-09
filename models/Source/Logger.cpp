@@ -82,38 +82,46 @@ String Logger::getCSVLineFromData(Real time, const MatrixComp& data) {
 	return ss.str();
 }
 
-Logger::Log Logger::get(const std::string &name, Level level) {
+Logger::Log Logger::get(const std::string &name, Level filelevel, Level clilevel) {
 	Logger::Log logger = spdlog::get(name);
 
 	if (!logger) {
-		if (level != Logger::Level::off)
-			logger = create(name, level);
-		else
-			logger = spdlog::create<spdlog::sinks::null_sink_st>(name);
+		logger = create(name, filelevel, clilevel);
 	}
 
 	return logger;
 }
 
-Logger::Log Logger::create(const std::string &name, Level level) {
+Logger::Log Logger::create(const std::string &name, Level filelevel, Level clilevel) {
 	String logDir = Logger::logDir();
 	String filename = logDir + "/" + name + ".log";
+	std::vector<spdlog::sink_ptr> sinks;
+	Logger::Log ret;
 
 	// Create log folder if it does not exist
 	fs::path p = filename;
 	if (p.has_parent_path() && !fs::exists(p.parent_path()))
 		fs::create_directories(p.parent_path());
 
-	auto console_sink = std::make_shared<spdlog::sinks::stderr_color_sink_mt>();
-	console_sink->set_level(spdlog::level::info);
-	console_sink->set_pattern(fmt::format("{}[%T.%f %n %^%l%$] %v", CPS::Logger::prefix()));
+	if (clilevel != Logger::Level::off) {
+		auto console_sink = std::make_shared<spdlog::sinks::stderr_color_sink_mt>();
+		console_sink->set_level(clilevel);
+		console_sink->set_pattern(fmt::format("{}[%T.%f %n %^%l%$] %v", CPS::Logger::prefix()));
+		sinks.push_back(console_sink);
+	}
 
-	auto file_sink = std::make_shared<spdlog::sinks::basic_file_sink_mt>(filename, true);
-	file_sink->set_level(level);
-	file_sink->set_pattern(prefix() + "[%L] %v");
+	if (filelevel != Logger::Level::off) {
+		auto file_sink = std::make_shared<spdlog::sinks::basic_file_sink_mt>(filename, true);
+		file_sink->set_level(filelevel);
+		file_sink->set_pattern(prefix() + "[%L] %v");
+		sinks.push_back(file_sink);
+	}
 
-	spdlog::sinks_init_list sink_list = {console_sink, file_sink};
-	auto logger = std::make_shared<spdlog::logger>(name, sink_list.begin(), sink_list.end());
+	if (filelevel == Logger::Level::off && clilevel == Logger::Level::off) {
+		ret = spdlog::create<spdlog::sinks::null_sink_st>(name);
+	} else {
+		ret = std::make_shared<spdlog::logger>(name, begin(sinks), end(sinks));
+	}
 
-	return logger;
+	return ret;
 }
