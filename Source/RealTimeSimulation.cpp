@@ -47,16 +47,16 @@ void RealTimeSimulation::run(const Timer::StartClock::time_point &startAt) {
 		initialize();
 
 #ifdef WITH_SHMEM
-	log->info("Opening interfaces.");
+	mLog->info("Opening interfaces.");
 
 	for (auto ifm : mInterfaces)
-		ifm.interface->open(log);
+		ifm.interface->open(mLog);
 
 	sync();
 #endif
 
 	auto now_time = std::chrono::system_clock::to_time_t(startAt);
-	log->info("Starting simulation at {} (delta_T = {} seconds)",
+	mLog->info("Starting simulation at {} (delta_T = {} seconds)",
 			  std::put_time(std::localtime(&now_time), "%F %T"),
 			  std::chrono::duration_cast<std::chrono::seconds>(startAt - Timer::StartClock::now()).count());
 
@@ -70,10 +70,10 @@ void RealTimeSimulation::run(const Timer::StartClock::time_point &startAt) {
 		step();
 
 		if (mTimer.ticks() == 1)
-			log->info("Simulation started.");
+			mLog->info("Simulation started.");
 	} while (mTime < mFinalTime);
 
-	log->info("Simulation finished.");
+	mLog->info("Simulation finished.");
 
 	mScheduler->stop();
 

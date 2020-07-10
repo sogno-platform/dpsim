@@ -59,7 +59,7 @@ Simulation::Simulation(String name,	Logger::Level logLevel) :
 	Eigen::setNbThreads(1);
 
 	// Logging
-	log = Logger::get(name, logLevel, std::max(Logger::Level::info, logLevel));
+	mLog = Logger::get(name, logLevel, std::max(Logger::Level::info, logLevel));
 
 	mInitialized = false;
 }
@@ -193,7 +193,7 @@ void Simulation::sync() {
 		ifm.interface->writeValues();
 	}
 
-	log->info("Waiting for start synchronization on {} interfaces", mInterfaces.size());
+	mLog->info("Waiting for start synchronization on {} interfaces", mInterfaces.size());
 
 	// Blocking wait for interfaces
 	for (auto ifm : mInterfaces) {
@@ -204,7 +204,7 @@ void Simulation::sync() {
 		ifm.interface->writeValues();
 	}
 
-	log->info("Synchronized simulation start with remotes");
+	mLog->info("Synchronized simulation start with remotes");
 #endif
 }
 
@@ -234,10 +234,10 @@ void Simulation::prepSchedule() {
 }
 
 void Simulation::schedule() {
-	log->info("Scheduling tasks.");
+	mLog->info("Scheduling tasks.");
 	prepSchedule();
 	mScheduler->createSchedule(mTasks, mTaskInEdges, mTaskOutEdges);
-	log->info("Scheduling done.");
+	mLog->info("Scheduling done.");
 }
 
 #ifdef WITH_GRAPHVIZ
@@ -340,7 +340,7 @@ Graph::Graph Simulation::dependencyGraph() {
 			if (avgTimeWorst > Scheduler::TaskTime(0)) {
 				auto grad = (float) avgTimes[task].count() / avgTimeWorst.count();
 				n->set("fillcolor", CPS::Utils::Rgb::gradient(grad).hex());
-				log->info("{} {}", task->toString(), CPS::Utils::Rgb::gradient(grad).hex());
+				mLog->info("{} {}", task->toString(), CPS::Utils::Rgb::gradient(grad).hex());
 			}
 		}
 		else {
@@ -360,20 +360,20 @@ Graph::Graph Simulation::dependencyGraph() {
 #endif
 
 void Simulation::run() {
-	log->info("Initialize simulation: {}", mName);
+	mLog->info("Initialize simulation: {}", mName);
 	if (!mInitialized)
 		initialize();
 
 #ifdef WITH_SHMEM
-	log->info("Opening interfaces.");
+	mLog->info("Opening interfaces.");
 
 	for (auto ifm : mInterfaces)
-		ifm.interface->open(log);
+		ifm.interface->open(mLog);
 
 	sync();
 #endif
 
-	log->info("Start simulation: {}", mName);
+	mLog->info("Start simulation: {}", mName);
 
 	while (mTime < mFinalTime) {
 		step();
@@ -389,7 +389,7 @@ void Simulation::run() {
 	for (auto lg : mLoggers)
 		lg->close();
 
-	log->info("Simulation finished.");
+	mLog->info("Simulation finished.");
 }
 
 Real Simulation::step() {
@@ -429,5 +429,5 @@ void Simulation::logStepTimes(String logName) {
 		stepTimeSum += meas;
 		stepTimeLog->info("{:f}", meas);
 	}
-	log->info("Average step time: {:.6f}", stepTimeSum / mStepTimes.size());
+	mLog->info("Average step time: {:.6f}", stepTimeSum / mStepTimes.size());
 }

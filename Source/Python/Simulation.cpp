@@ -57,7 +57,7 @@ void Python::Simulation::threadFunction(Python::Simulation *self)
 
 #ifdef WITH_SHMEM
 	for (auto ifm : self->sim->interfaces())
-		ifm.interface->open(self->sim->log);
+		ifm.interface->open(self->sim->mLog);
 
 	// optional start synchronization
 	if (self->startSync) {

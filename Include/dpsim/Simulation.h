@@ -147,7 +147,7 @@ namespace DPsim {
 		void prepSchedule();
 	public:
 		/// Simulation logger
-		CPS::Logger::Log log;
+		CPS::Logger::Log mLog;
 
 		/// Creates simulation with name and log level
 		Simulation(String name, CPS::Logger::Level logLevel = CPS::Logger::Level::info);
