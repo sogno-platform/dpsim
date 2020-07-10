@@ -77,11 +77,11 @@ namespace SP { namespace Ph1 {
 		///
 		void setParameters(Real activePower, Real reactivePower, Real nominalVoltage);
 		///
-		SimPowerComp<Complex>::Ptr clone(String name);
+		SimPowerComp<Complex>::Ptr clone(String name) override;
 
 		// #### General ####
 		/// Initializes component from power flow data
-		void initializeFromPowerflow(Real frequency);
+		void initializeFromPowerflow(Real frequency) override;
 		/// Load profile data
 		PowerProfile mLoadProfile;
 		/// Use the assigned load profile
@@ -97,13 +97,13 @@ namespace SP { namespace Ph1 {
 
 		// #### MNA section ####
 		/// Initializes internal variables of the component
-		void mnaInitialize(Real omega, Real timeStep, Attribute<Matrix>::Ptr leftVector);
+		void mnaInitialize(Real omega, Real timeStep, Attribute<Matrix>::Ptr leftVector) override;
 		/// Stamps system matrix
-		void mnaApplySystemMatrixStamp(Matrix& systemMatrix);
+		void mnaApplySystemMatrixStamp(Matrix& systemMatrix) override;
 		/// Updates internal current variable of the component
-		void mnaUpdateCurrent(const Matrix& leftVector);
+		void mnaUpdateCurrent(const Matrix& leftVector) override;
 		/// Updates internal voltage variable of the component
-		void mnaUpdateVoltage(const Matrix& leftVector);
+		void mnaUpdateVoltage(const Matrix& leftVector) override;
 
 		class MnaPostStep : public Task {
 		public:

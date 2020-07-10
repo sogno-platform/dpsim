@@ -55,13 +55,13 @@ namespace Ph1 {
 		externalGridInjection(String name, Logger::Level logLevel = Logger::Level::off)
 			: externalGridInjection(name, name, logLevel) { }
 		/// Initializes component from power flow data
-		void initializeFromPowerflow(Real frequency);
+		void initializeFromPowerflow(Real frequency) override;
 		///
 		void setSourceValue(Complex voltage);
 		///
-		void initialize(Matrix frequencies);
+		void initialize(Matrix frequencies) override;
 		///
-		SimPowerComp<Complex>::Ptr clone(String name);
+		SimPowerComp<Complex>::Ptr clone(String name) override;
 
         // #### Powerflow section ####
 		/// Set parameters relevant for powerflow solver
@@ -75,13 +75,13 @@ namespace Ph1 {
 		/// Set parameters relevant for MNA solver
 		void setParameters(Complex voltageRef, Real srcFreq = -1);
 		/// Initializes internal variables of the component
-		void mnaInitialize(Real omega, Real timeStep, Attribute<Matrix>::Ptr leftVector);
+		void mnaInitialize(Real omega, Real timeStep, Attribute<Matrix>::Ptr leftVector) override;
 		/// Stamps system matrix
-		void mnaApplySystemMatrixStamp(Matrix& systemMatrix);
+		void mnaApplySystemMatrixStamp(Matrix& systemMatrix) override;
 		/// Stamps right side (source) vector
-		void mnaApplyRightSideVectorStamp(Matrix& rightVector);
+		void mnaApplyRightSideVectorStamp(Matrix& rightVector) override;
 		/// Returns current through the component
-		void mnaUpdateCurrent(const Matrix& leftVector);
+		void mnaUpdateCurrent(const Matrix& leftVector) override;
 
 		class MnaPreStep : public Task {
 		public:
@@ -113,9 +113,9 @@ namespace Ph1 {
 
 		// #### DAE Section ####
 		/// Residual function for DAE Solver
-		void daeResidual(double ttime, const double state[], const double dstate_dt[], double resid[], std::vector<int>& off);
+		void daeResidual(double ttime, const double state[], const double dstate_dt[], double resid[], std::vector<int>& off) override;
 		///Voltage Getter
-		Complex daeInitialize();
+		Complex daeInitialize() override;
 
 
 };

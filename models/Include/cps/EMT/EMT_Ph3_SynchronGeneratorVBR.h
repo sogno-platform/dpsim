@@ -192,6 +192,10 @@ namespace Ph3 {
 		/// Function to initialize Governor and Turbine
 		void addGovernor(Real Ta, Real Tb, Real Tc, Real Fa, Real Fb, Real Fc, Real K, Real Tsr, Real Tsm, Real Tm_init, Real PmRef);
 
+		void initialize(Matrix frequencies) override
+		{
+			SimPowerComp<Real>::initialize(frequencies);
+		}
 		/// Initializes states in per unit or stator referred variables depending on the setting of the state type.
 		/// Function parameters have to be given in real units.
 		void initialize(Real om, Real dt,

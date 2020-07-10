@@ -122,21 +122,21 @@ namespace Ph1 {
 		// #### MNA Section ####
 
 
-		SimPowerComp<Complex>::Ptr clone(String name);
+		SimPowerComp<Complex>::Ptr clone(String name) override;
 
 		// #### General ####
 		/// Initializes component from power flow data
-		void initializeFromPowerflow(Real frequency);
+		void initializeFromPowerflow(Real frequency) override;
 
 		// #### MNA section ####
 		/// Initializes internal variables of the component
-		void mnaInitialize(Real omega, Real timeStep, Attribute<Matrix>::Ptr leftVector);
+		void mnaInitialize(Real omega, Real timeStep, Attribute<Matrix>::Ptr leftVector) override;
 		/// Stamps system matrix
-		void mnaApplySystemMatrixStamp(Matrix& systemMatrix);
+		void mnaApplySystemMatrixStamp(Matrix& systemMatrix) override;
 		/// Stamps system matrix
 		void mnaApplyInitialSystemMatrixStamp(Matrix& systemMatrix);
-		void mnaUpdateVoltage(const Matrix& leftVector);
-		void mnaUpdateCurrent(const Matrix& leftVector);
+		void mnaUpdateVoltage(const Matrix& leftVector) override;
+		void mnaUpdateCurrent(const Matrix& leftVector) override;
 
 		class MnaPreStep : public Task {
 		public:

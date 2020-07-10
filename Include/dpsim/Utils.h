@@ -8,7 +8,10 @@
 
 #pragma once
 
-#if defined(__GNUC__) && !defined(__clang__)
+#if defined(__clang__)
+  #include <typeinfo>
+#endif
+#if defined(__GNUC__) || defined(__clang__)
   #include <cxxabi.h>
 #endif
 

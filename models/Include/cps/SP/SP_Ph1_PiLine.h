@@ -94,11 +94,11 @@ namespace Ph1 {
 		PiLine(String name, Logger::Level logLevel = Logger::Level::off)
 			: PiLine(name, name, logLevel) { }
 		///
-		SimPowerComp<Complex>::Ptr clone(String copySuffix);
+		SimPowerComp<Complex>::Ptr clone(String copySuffix) override;
 		///
 		void setParameters(Real resistance, Real inductance, Real capacitance = -1, Real conductance = -1, Real omega = -1);
 		/// Initializes component from power flow data
-		void initializeFromPowerflow(Real frequency);
+		void initializeFromPowerflow(Real frequency) override;
 
 		// #### Powerflow section ####
 		/// Set base voltage
@@ -118,13 +118,13 @@ namespace Ph1 {
 
 		// #### MNA section ####
 		/// Initializes internal variables of the component
-		void mnaInitialize(Real omega, Real timeStep, Attribute<Matrix>::Ptr leftVector);
+		void mnaInitialize(Real omega, Real timeStep, Attribute<Matrix>::Ptr leftVector) override;
 		/// Stamps system matrix
-		void mnaApplySystemMatrixStamp(Matrix& systemMatrix);
+		void mnaApplySystemMatrixStamp(Matrix& systemMatrix) override;
 		/// Updates internal current variable of the component
-		void mnaUpdateCurrent(const Matrix& leftVector);
+		void mnaUpdateCurrent(const Matrix& leftVector) override;
 		/// Updates internal voltage variable of the component
-		void mnaUpdateVoltage(const Matrix& leftVector);
+		void mnaUpdateVoltage(const Matrix& leftVector) override;
 
 		class MnaPostStep : public Task {
 		public:
@@ -143,11 +143,11 @@ namespace Ph1 {
 			Attribute<Matrix>::Ptr mLeftVector;
 		};
 
-		MNAInterface::List mnaTearGroundComponents();
-		void mnaTearInitialize(Real omega, Real timeStep);
-		void mnaTearApplyMatrixStamp(Matrix& tearMatrix);
-		void mnaTearApplyVoltageStamp(Matrix& voltageVector);
-		void mnaTearPostStep(Complex voltage, Complex current);
+		MNAInterface::List mnaTearGroundComponents() override;
+		void mnaTearInitialize(Real omega, Real timeStep) override;
+		void mnaTearApplyMatrixStamp(Matrix& tearMatrix) override;
+		void mnaTearApplyVoltageStamp(Matrix& voltageVector) override;
+		void mnaTearPostStep(Complex voltage, Complex current) override;
 	};
 }
 }

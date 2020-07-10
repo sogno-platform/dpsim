@@ -149,7 +149,7 @@ namespace Ph1 {
 		///
 		AvVoltageSourceInverterDQ(String uid, String name, Logger::Level logLevel, Bool withTrafo);
 		///
-		SimPowerComp<Complex>::Ptr clone(String copySuffix);
+		SimPowerComp<Complex>::Ptr clone(String copySuffix) override;
 		/// add measurements for Vcabc and Ifabc
 		//void addMonitoredNodes( std::shared_ptr<Capacitor> cap);
 		///
@@ -168,7 +168,7 @@ namespace Ph1 {
 		///
 		void setControllerParameters(Real Kp_pll, Real Ki_pll,
 			Real Kp_powerCtrl, Real Ki_powerCtrl, Real Kp_currCtrl, Real Ki_currCtrl);
-		/// 
+		///
 		void setTransformerParameters(Real nomVoltageEnd1, Real nomVoltageEnd2, Real ratedPower, Real ratioAbs,
 			Real ratioPhase, Real resistance, Real inductance, Real omega);
 
@@ -199,7 +199,7 @@ namespace Ph1 {
 
 		//void initialize(Matrix frequencies);
 		///
-		void initializeFromPowerflow(Real frequency);
+		void initializeFromPowerflow(Real frequency) override;
 
 		// #### Powerflow section ####
 			/// Modify powerflow bus type
@@ -213,13 +213,13 @@ namespace Ph1 {
 
 		// #### MNA section ####
 		/// Initializes internal variables of the component
-		void mnaInitialize(Real omega, Real timeStep, Attribute<Matrix>::Ptr leftVector);
+		void mnaInitialize(Real omega, Real timeStep, Attribute<Matrix>::Ptr leftVector) override;
 		/// Stamps system matrix
-		void mnaApplySystemMatrixStamp(Matrix& systemMatrix);
+		void mnaApplySystemMatrixStamp(Matrix& systemMatrix) override;
 		/// Stamps right side (source) vector
-		void mnaApplyRightSideVectorStamp(Matrix& rightVector);
+		void mnaApplyRightSideVectorStamp(Matrix& rightVector) override;
 		/// Returns current through the component
-		void mnaUpdateCurrent(const Matrix& leftVector);
+		void mnaUpdateCurrent(const Matrix& leftVector) override;
 		/// interface with power control service
 		void coveeCtrled(Bool ctrled){mCoveeCtrled=ctrled;};
 		///
@@ -307,7 +307,6 @@ namespace Ph1 {
 		private:
 			AvVoltageSourceInverterDQ& mAvVoltageSourceInverterDQ;
 		};
-
 
 	};
 }

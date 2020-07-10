@@ -8,6 +8,7 @@
 
 #pragma once
 
+#include "cps/Definitions.h"
 #include <cps/SimPowerComp.h>
 #include <cps/Solver/MNAInterface.h>
 #include <cps/Base/Base_SynchronGenerator.h>
@@ -143,6 +144,10 @@ namespace Ph3 {
 		/// Function to initialize Governor and Turbine
 		void addGovernor(Real Ta, Real Tb, Real Tc, Real Fa, Real Fb, Real Fc, Real K, Real Tsr, Real Tsm, Real Tm_init, Real PmRef);
 
+		void initialize(Matrix frequencies) override
+		{
+			SimPowerComp<Real>::initialize(frequencies);
+		}
 		/// Initializes states in per unit or stator referred variables depending on the setting of the state type.
 		/// Function parameters have to be given in real units.
 		void initialize(Real om, Real dt,
@@ -170,7 +175,7 @@ namespace Ph3 {
 		/// to calculate the flux and current from the voltage vector.
 		void mnaStep(Matrix& systemMatrix, Matrix& rightVector, Matrix& leftVector, Real time);
 		///
-		void mnaApplySystemMatrixStamp(Matrix& systemMatrix) { }
+		void mnaApplySystemMatrixStamp(Matrix& systemMatrix) override { }
 		/// Retrieves calculated voltage from simulation for next step
 		void mnaPostStep(Matrix& rightVector, Matrix& leftVector, Real time);
 	};
