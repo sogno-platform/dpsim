@@ -211,7 +211,7 @@ Graph::Graph SystemTopology::topologyGraph() {
 		const char *suffixes[] = { "", "k", "M", "G" };
 
 		int s;
-		for (s = 0; s < 4 && mag > 1000; s++)
+		for (s = 0; s < 3 && mag > 1000; s++)
 			mag *= 1e-3;
 
 		if (node->initialSingleVoltage() != Complex(0, 0)) {
