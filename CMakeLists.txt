@@ -56,6 +56,7 @@ else()
 	endif()
 endif()
 
+
 include(CheckSymbolExists)
 check_symbol_exists(pipe unistd.h HAVE_PIPE)
 check_symbol_exists(timerfd_create sys/timerfd.h HAVE_TIMERFD)
@@ -68,6 +69,7 @@ GetVersion(${PROJECT_SOURCE_DIR} "DPSIM")
 option(WITH_EIGEN_SUBMODULE "Build with Eigen as submodule" OFF)
 option(WITH_SPDLOG_SUBMODULE "Build with Spdlog as submodule" OFF)
 option(WITH_CIM_SUBMODULE "Build with CIMpp as submodule" OFF)
+option(WITH_PROFILING "Add `-pg` profiling flag to compiliation" OFF)
 
 find_package(Threads REQUIRED)
 
@@ -88,6 +90,10 @@ if (WITH_CIM_SUBMODULE OR WIN32)
 	include(cmake/GetCIMppSubmodule.cmake)
 else()
 	find_package(CIMpp)
+endif()
+
+if (WITH_PROFILING)
+	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -pg")
 endif()
 
 find_package(Sundials)
