@@ -56,7 +56,7 @@ void RealTimeSimulation::run(const Timer::StartClock::time_point &startAt) {
 #endif
 
 	auto now_time = std::chrono::system_clock::to_time_t(startAt);
-	log->info("Starting simulation at {} (delta_T = {} seconds)",
+	mLog->info("Starting simulation at {} (delta_T = {} seconds)",
 			  std::put_time(std::localtime(&now_time), "%F %T"),
 			  std::chrono::duration_cast<std::chrono::seconds>(startAt - Timer::StartClock::now()).count());
 

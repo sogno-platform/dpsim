@@ -70,6 +70,8 @@ option(WITH_EIGEN_SUBMODULE "Build with Eigen as submodule" OFF)
 option(WITH_SPDLOG_SUBMODULE "Build with Spdlog as submodule" OFF)
 option(WITH_CIM_SUBMODULE "Build with CIMpp as submodule" OFF)
 option(WITH_PROFILING "Add `-pg` profiling flag to compiliation" OFF)
+option(WITH_ASAN "Adds compiler flags to use the address sanitizer" OFF)
+option(WITH_TSAN "Adds compiler flags to use the thread sanitizer" OFF)
 
 find_package(Threads REQUIRED)
 
@@ -94,6 +96,22 @@ endif()
 
 if (WITH_PROFILING)
 	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -pg")
+endif()
+
+if (WITH_ASAN)
+	if (CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
+	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fsanitize=address -fsanitize=pointer-compare -fsanitize=pointer-subtract -fsanitize-address-use-after-scope")
+	else()
+		message(WARNING "WITH_ASAN is only supported when using GCC")
+	endif()
+endif()
+
+if (WITH_TSAN)
+	if (CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
+	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fsanitize=thread")
+	else()
+		message(WARNING "WITH_TSAN is only supported when using GCC")
+	endif()
 endif()
 
 find_package(Sundials)

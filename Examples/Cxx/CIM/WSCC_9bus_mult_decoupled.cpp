@@ -59,13 +59,13 @@ void simulateDecoupled(std::list<fs::path> filenames, Int copies, Int threads, I
 		+ "_" + std::to_string(threads) + "_" + std::to_string(seq);
 	Logger::setLogDir("logs/"+simName);
 
-	CIM::Reader reader(simName, Logger::Level::off, Logger::Level::off);
+	CIM::Reader reader(simName, Logger::Level::off, Logger::Level::info);
 	SystemTopology sys = reader.loadCIM(60, filenames);
 
 	if (copies > 0)
 		multiply_decoupled(sys, copies, 12.5, 0.16, 1e-6);
 
-	Simulation sim(simName, Logger::Level::off);
+	Simulation sim(simName, Logger::Level::info);
 	sim.setSystem(sys);
 	sim.setTimeStep(0.0001);
 	sim.setFinalTime(0.5);

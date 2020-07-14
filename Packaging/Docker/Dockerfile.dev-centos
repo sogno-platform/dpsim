@@ -17,6 +17,8 @@ RUN dnf -y update && \
     dnf install -y https://rpms.remirepo.net/enterprise/remi-release-8.rpm && \
     dnf config-manager --set-enabled PowerTools && \
     dnf config-manager --set-enabled remi
+# We probably want to remove this once EPEL fixes their repos
+RUN dnf config-manager --enable Devel
 
 # CUDA dependencies
 RUN dnf -y install https://developer.download.nvidia.com/compute/cuda/repos/rhel8/x86_64/cuda-repo-rhel8-10.2.89-1.x86_64.rpm && \
@@ -55,7 +57,7 @@ RUN dnf -y install \
 
 # Dependencies
 RUN dnf --refresh -y install \
-	python3-devel \
+	python36-devel \
 	eigen3-devel \
 	libxml2-devel \
 	graphviz-devel \
@@ -71,6 +73,13 @@ RUN dnf -y install \
     jansson-devel \
     libwebsockets-devel \
     mosquitto-devel
+
+# Profiling dependencies
+RUN dnf -y install \
+    graphviz \
+    libasan \
+    cppcheck
+RUN pip3 install gprof2dot
 
 # Install CIMpp
 RUN cd /tmp && \
