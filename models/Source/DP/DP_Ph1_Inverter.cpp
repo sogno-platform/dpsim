@@ -90,7 +90,7 @@ void DP::Ph1::Inverter::initialize(Matrix frequencies) {
 void DP::Ph1::Inverter::calculatePhasors() {
 	// Compute fundamental content of grid frequency
 	mVfund = mModIdx * mVin;
-	mIntfVoltage(0,0) = std::complex<double>(0, mVfund * -1);
+	mIntfVoltage(0,0) = Complex(0, mVfund * -1);
 
 	// Compute sideband harmonics for even multiplies of carrier frequency m
 	// and odd reference signal multiplies n
@@ -98,7 +98,7 @@ void DP::Ph1::Inverter::calculatePhasors() {
 		Real Jn = besselFirstKind_n_opt(mModHarms[h], mMaxBesselSumIdx, mCarHarms[h]*mModIdx*PI/2.);
 		//mPhasorMags(h, 0) = (4.*mVin/PI) * (Jn/mCarHarms[h]) * cos(mCarHarms[h] * PI/2.);
 		//mIntfVoltage(0, h+1) = mPhasorMags(h, 0) * -1i;
-		mIntfVoltage(0, h+1) = std::complex<double>(0, -1 * (4.*mVin/PI) * (Jn/mCarHarms[h]) * cos(mCarHarms[h] * PI/2.));
+		mIntfVoltage(0, h+1) = Complex(0, -1 * (4.*mVin/PI) * (Jn/mCarHarms[h]) * cos(mCarHarms[h] * PI/2.));
 	}
 
 	SPDLOG_LOGGER_DEBUG(mSLog,
