@@ -11,7 +11,7 @@
 using namespace CPS;
 
 template <typename VarType>
-SimNode<VarType>::SimNode(String name, String uid,
+SimNode<VarType>::SimNode(String uid, String name,
 	std::vector<UInt> matrixNodeIndex, PhaseType phaseType, std::vector<Complex> initialVoltage)
 	: TopologicalNode(uid, name, phaseType, initialVoltage) {
 

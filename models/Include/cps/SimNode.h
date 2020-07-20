@@ -36,7 +36,7 @@ namespace CPS {
 		static Ptr GND;
 
 		/// This very general constructor is used by other constructors.
-		SimNode(String name, String uid, std::vector<UInt> matrixNodeIndex,
+		SimNode(String uid, String name, std::vector<UInt> matrixNodeIndex,
 			PhaseType phaseType, std::vector<Complex> initialVoltage);
 		/// Create ground node if no parameters are given.
 		SimNode(PhaseType phaseType = PhaseType::Single);
