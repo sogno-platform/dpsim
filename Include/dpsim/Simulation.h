@@ -180,8 +180,6 @@ namespace DPsim {
 		///
 		void setSolverType(Solver::Type solverType = Solver::Type::MNA) { mSolverType = solverType; }
 		///
-		void doSteadyStateInit(Bool steadyStateInit = false) { mSteadyStateInit = steadyStateInit; }
-		///
 		void doPowerFlowInit(Bool powerFlowInit) { mPowerFlowInit = powerFlowInit; }
 		///
 		void doSplitSubnets(Bool splitSubnets = true) { mSplitSubnets = splitSubnets; }
@@ -196,7 +194,7 @@ namespace DPsim {
 
 		// #### steady state initialization ####
 		/// activate steady state initialization
-		void doSteadyStateInitialization(Bool f) { mSteadyStateInit = f; }
+		void doSteadyStateInit(Bool f) { mSteadyStateInit = f; }
 		/// set steady state initialization time limit
 		void setSteadStIniTimeLimit(Real v) { mSteadStIniTimeLimit = v; }
 		/// set steady state initialization accuracy limit

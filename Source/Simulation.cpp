@@ -156,7 +156,7 @@ void Simulation::createSolvers(
 						mName + copySuffix, mDomain, mLogLevel);
 #endif /* WITH_CUDA */
 					solver->setTimeStep(mTimeStep);
-					solver->doSteadyStateInitialization(mSteadyStateInit);
+					solver->doSteadyStateInit(mSteadyStateInit);
 					solver->doFrequencyParallelization(mHarmParallel);
 					solver->setSteadStIniTimeLimit(mSteadStIniTimeLimit);
 					solver->setSteadStIniAccLimit(mSteadStIniAccLimit);
