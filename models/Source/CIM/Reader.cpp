@@ -590,7 +590,7 @@ TopologicalPowerComp::Ptr Reader::mapExternalNetworkInjection(ExternalNetworkInj
 	mSLog->info("Found External Network Injection {}", extnet->name);
 
 	Real baseVoltage = determineBaseVoltageAssociatedWithEquipment(extnet);
-	
+
 	if (mDomain == Domain::EMT) {
 		if (mPhase == PhaseType::ABC) {
 			return std::make_shared<EMT::Ph3::NetworkInjection>(extnet->mRID, extnet->name, mComponentLogLevel);
@@ -607,9 +607,9 @@ TopologicalPowerComp::Ptr Reader::mapExternalNetworkInjection(ExternalNetworkInj
 			if(extnet->RegulatingControl){
 				mSLog->info("       Voltage set-point={}", (float) extnet->RegulatingControl->targetValue);
 				cpsextnet->setParameters(extnet->RegulatingControl->targetValue*baseVoltage); // assumes that value is specified in CIM data in per unit
-			} else {				
+			} else {
 				mSLog->info("       No voltage set-point defined. Using 1 per unit.");
-				cpsextnet->setParameters(1.*baseVoltage);			
+				cpsextnet->setParameters(1.*baseVoltage);
 			}
 			return cpsextnet;
 		}
@@ -692,7 +692,7 @@ void Reader::processTopologicalNode(IEC61970::Base::Topology::TopologicalNode* t
 		mSLog->info("TopologicalNode {} phase C as simulation node {}", topNode->mRID, mPowerflowNodes[topNode->mRID]->matrixNodeIndex(PhaseType::C));
 	}
 	else
-		mSLog->info("TopologicalNode {} as simulation node {}", topNode->mRID, mPowerflowNodes[topNode->mRID]->matrixNodeIndex());
+		mSLog->info("TopologicalNode id: {}, name: {} as simulation node {}", topNode->mRID, topNode->name, mPowerflowNodes[topNode->mRID]->matrixNodeIndex());
 
 	for (auto term : topNode->Terminal) {
 		// Insert Terminal if it does not exist in the map and add reference to node.
