@@ -345,29 +345,7 @@ TopologicalPowerComp::Ptr Reader::mapACLineSegment(ACLineSegment* line) {
 	if(line->gch.value > 1e-9 && !mSetShuntConductance)
 		conductance = Real(line->gch.value);
 
-	Real baseVoltage = 0;
-    // first look for baseVolt object to set baseVoltage
-    for (auto obj : mModel->Objects) {
-        if (IEC61970::Base::Core::BaseVoltage* baseVolt = dynamic_cast<IEC61970::Base::Core::BaseVoltage*>(obj)) {
-            for (auto comp : baseVolt->ConductingEquipment) {
-                if (comp->name == line->name) {
-                    baseVoltage = unitValue(baseVolt->nominalVoltage.value,UnitMultiplier::k);
-                }
-            }
-        }
-    }
-    // as second option take baseVoltage of topologicalNode where line is connected to
-    if(baseVoltage == 0){
-        for (auto obj : mModel->Objects) {
-			if (IEC61970::Base::Topology::TopologicalNode* topNode = dynamic_cast<IEC61970::Base::Topology::TopologicalNode*>(obj)) {
-                for (auto term : topNode->Terminal) {
-					if (term->ConductingEquipment->name == line->name) {
-                        baseVoltage = unitValue(topNode->BaseVoltage->nominalVoltage.value,UnitMultiplier::k);
-					}
-				}
-			}
-		}
-    }
+	Real baseVoltage = determineBaseVoltageAssociatedWithEquipment(line);
 
 	if (mDomain == Domain::EMT) {
 		if (mPhase == PhaseType::ABC) {
@@ -610,6 +588,9 @@ TopologicalPowerComp::Ptr Reader::mapSynchronousMachine(SynchronousMachine* mach
 
 TopologicalPowerComp::Ptr Reader::mapExternalNetworkInjection(ExternalNetworkInjection* extnet) {
 	mSLog->info("Found External Network Injection {}", extnet->name);
+
+	Real baseVoltage = determineBaseVoltageAssociatedWithEquipment(extnet);
+	
 	if (mDomain == Domain::EMT) {
 		if (mPhase == PhaseType::ABC) {
 			return std::make_shared<EMT::Ph3::NetworkInjection>(extnet->mRID, extnet->name, mComponentLogLevel);
@@ -622,11 +603,14 @@ TopologicalPowerComp::Ptr Reader::mapExternalNetworkInjection(ExternalNetworkInj
 		if (mPhase == PhaseType::Single) {
 			auto cpsextnet = std::make_shared<SP::Ph1::externalGridInjection>(extnet->mRID, extnet->name, mComponentLogLevel);
 			cpsextnet->modifyPowerFlowBusType(PowerflowBusType::VD); // for powerflow solver set as VD component as default
+			cpsextnet->setBaseVoltage(baseVoltage);
 			if(extnet->RegulatingControl){
 				mSLog->info("       Voltage set-point={}", (float) extnet->RegulatingControl->targetValue);
-				cpsextnet->setParameters(extnet->RegulatingControl->targetValue); // assumes that value is specified in CIM data in per unit
-			} else
-				mSLog->info("       No voltage set-point defined.");
+				cpsextnet->setParameters(extnet->RegulatingControl->targetValue*baseVoltage); // assumes that value is specified in CIM data in per unit
+			} else {				
+				mSLog->info("       No voltage set-point defined. Using 1 per unit.");
+				cpsextnet->setParameters(1.*baseVoltage);			
+			}
 			return cpsextnet;
 		}
 		else {
@@ -646,74 +630,12 @@ TopologicalPowerComp::Ptr Reader::mapExternalNetworkInjection(ExternalNetworkInj
 TopologicalPowerComp::Ptr Reader::mapEquivalentShunt(EquivalentShunt* shunt){
 	mSLog->info("Found shunt {}", shunt->name);
 
-	Real baseVoltage = 0;
-    // first look for baseVolt object to set baseVoltage
-    for (auto obj : mModel->Objects) {
-        if (IEC61970::Base::Core::BaseVoltage* baseVolt = dynamic_cast<IEC61970::Base::Core::BaseVoltage*>(obj)) {
-            for (auto comp : baseVolt->ConductingEquipment) {
-                if (comp->name == shunt->name) {
-                    baseVoltage = unitValue(baseVolt->nominalVoltage.value,UnitMultiplier::k);
-                }
-            }
-        }
-    }
-    // as second option take baseVoltage of topologicalNode where shunt is connected to
-    if(baseVoltage == 0){
-        for (auto obj : mModel->Objects) {
-			if (IEC61970::Base::Topology::TopologicalNode* topNode = dynamic_cast<IEC61970::Base::Topology::TopologicalNode*>(obj)) {
-                for (auto term : topNode->Terminal) {
-					if (term->ConductingEquipment->name == shunt->name) {
-                        baseVoltage = unitValue(topNode->BaseVoltage->nominalVoltage.value,UnitMultiplier::k);
-					}
-				}
-			}
-		}
-    }
+	Real baseVoltage = determineBaseVoltageAssociatedWithEquipment(shunt);
 
 	auto cpsShunt = std::make_shared<SP::Ph1::Shunt>(shunt->mRID, shunt->name, mComponentLogLevel);
 	cpsShunt->setParameters(shunt->g.value, shunt->b.value);
 	cpsShunt->setBaseVoltage(baseVoltage);
 	return cpsShunt;
-}
-
-
-void Reader::readNodeVoltagesFromStaticSystemTopology(SystemTopology& sysStatic, SystemTopology& sysDynamic) {
-	auto nodeDyn = sysDynamic.mNodes.begin();
-	auto nodeSt = sysStatic.mNodes.begin();
-
-	for (; nodeDyn != sysDynamic.mNodes.end() && nodeSt != sysStatic.mNodes.end(); ++nodeDyn, ++nodeSt) {
-		if ((*nodeDyn)->name() == (*nodeSt)->name()) {
-			mSLog->info("Updating SV info according to powerflow (1st loop):");
-			mSLog->info("Before: Voltage at node {} : {}", std::dynamic_pointer_cast<CPS::SimNode<CPS::Complex>>((*nodeDyn))->name(), std::dynamic_pointer_cast<CPS::SimNode<CPS::Complex>>((*nodeDyn))->initialSingleVoltage());
-			(*nodeDyn)->setInitialVoltage(std::dynamic_pointer_cast<CPS::SimNode<CPS::Complex>>((*nodeSt))->singleVoltage());
-			mSLog->info("Now: Voltage at node {} : {}", std::dynamic_pointer_cast<CPS::SimNode<CPS::Complex>>((*nodeDyn))->name(), std::dynamic_pointer_cast<CPS::SimNode<CPS::Complex>>((*nodeDyn))->initialSingleVoltage());
-		}
-		else {
-			for (auto node : sysStatic.mNodes) {
-				if ((*nodeDyn)->name() == node->name())
-				{
-					mSLog->info("Updating SV info according to powerflow (2nd loop):");
-					mSLog->info("Before: Voltage at node {} : {}", std::dynamic_pointer_cast<CPS::SimNode<CPS::Complex>>((*nodeDyn))->name(), std::dynamic_pointer_cast<CPS::SimNode<CPS::Complex>>((*nodeDyn))->initialSingleVoltage());
-					(*nodeDyn)->setInitialVoltage(std::dynamic_pointer_cast<CPS::SimNode<CPS::Complex>>(node)->singleVoltage());
-					mSLog->info("Now: Voltage at node {} : {}", std::dynamic_pointer_cast<CPS::SimNode<CPS::Complex>>((*nodeDyn))->name(), std::dynamic_pointer_cast<CPS::SimNode<CPS::Complex>>((*nodeDyn))->initialSingleVoltage());
-				}					
-			}
-		}
-	}
-	// in case the sysDynamic has more nodes than sysStatic
-	if (nodeDyn != sysDynamic.mNodes.end()) {
-		for (; nodeDyn != sysDynamic.mNodes.end(); ++nodeDyn) {
-			for (auto node : sysStatic.mNodes) {
-				if ((*nodeDyn)->name() == node->name())
-				{
-					mSLog->info("Updating SV info according to powerflow (3rd loop):");
-					mSLog->info("Before: Voltage at node {} : {}", std::dynamic_pointer_cast<CPS::SimNode<CPS::Complex>>((*nodeDyn))->name(), std::dynamic_pointer_cast<CPS::SimNode<CPS::Complex>>((*nodeDyn))->initialSingleVoltage());
-					(*nodeDyn)->setInitialVoltage(std::dynamic_pointer_cast<CPS::SimNode<CPS::Complex>>(node)->singleVoltage());
-					mSLog->info("Now: Voltage at node {} : {}", std::dynamic_pointer_cast<CPS::SimNode<CPS::Complex>>((*nodeDyn))->name(), std::dynamic_pointer_cast<CPS::SimNode<CPS::Complex>>((*nodeDyn))->initialSingleVoltage());
-				}					
-			}
-		}
-	}
 }
 
 void Reader::initDynamicSystemTopologyWithPowerflow(SystemTopology& systemPF, SystemTopology& system) {
@@ -726,6 +648,36 @@ void Reader::initDynamicSystemTopologyWithPowerflow(SystemTopology& systemPF, Sy
 		}
 	}
 }
+
+Real Reader::determineBaseVoltageAssociatedWithEquipment(IEC61970::Base::Core::ConductingEquipment* equipment){
+	Real baseVoltage = 0;
+
+    // first look for baseVolt object to determine baseVoltage
+    for (auto obj : mModel->Objects) {
+        if (IEC61970::Base::Core::BaseVoltage* baseVolt = dynamic_cast<IEC61970::Base::Core::BaseVoltage*>(obj)) {
+            for (auto comp : baseVolt->ConductingEquipment) {
+                if (comp->name == equipment->name) {
+                    baseVoltage = unitValue(baseVolt->nominalVoltage.value,UnitMultiplier::k);
+                }
+            }
+        }
+    }
+    // as second option take baseVoltage of topologicalNode where equipment is connected to
+    if(baseVoltage == 0){
+        for (auto obj : mModel->Objects) {
+			if (IEC61970::Base::Topology::TopologicalNode* topNode = dynamic_cast<IEC61970::Base::Topology::TopologicalNode*>(obj)) {
+                for (auto term : topNode->Terminal) {
+					if (term->ConductingEquipment->name == equipment->name) {
+                        baseVoltage = unitValue(topNode->BaseVoltage->nominalVoltage.value,UnitMultiplier::k);
+					}
+				}
+			}
+		}
+    }
+
+	return baseVoltage;
+}
+
 
 
 template<typename VarType>

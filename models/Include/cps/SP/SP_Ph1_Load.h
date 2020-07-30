@@ -90,7 +90,7 @@ namespace SP { namespace Ph1 {
 		void updatePQ(Real time);
 
         // #### Powerflow section ####
-		/// Initializes component from power flow data
+		/// Calculates component's parameters in specified per-unit system
 		void calculatePerUnitParameters(Real baseApparentPower, Real baseOmega);
         /// Modify powerflow bus type
 		void modifyPowerFlowBusType(PowerflowBusType powerflowBusType) override;

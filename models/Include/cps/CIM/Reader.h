@@ -54,6 +54,9 @@ namespace IEC61970 {
 		namespace Topology {
 			class TopologicalNode;
 		};
+		namespace Core {
+			class ConductingEquipment;
+		};
 	};
 };
 
@@ -143,12 +146,14 @@ namespace CIM {
 		/// The voltage should be given in kV and the angle in degree.
 		/// TODO: Introduce real PQload model here.
 		TopologicalPowerComp::Ptr mapEnergyConsumer(IEC61970::Base::Wires::EnergyConsumer* consumer);
-		/// Adds CIM files to list of files to be parsed.
-
 		/// Returns an external grid injection.
 		TopologicalPowerComp::Ptr mapExternalNetworkInjection(IEC61970::Base::Wires::ExternalNetworkInjection* extnet);
 		/// Returns a shunt
 		TopologicalPowerComp::Ptr mapEquivalentShunt(IEC61970::Base::Equivalents::EquivalentShunt *shunt);
+
+		// #### Helper Functions ####
+		/// Determine base voltage associated with object
+		Real determineBaseVoltageAssociatedWithEquipment(IEC61970::Base::Core::ConductingEquipment* equipment);
 	public:
 		///
 		enum GeneratorType{Static, Transient};
@@ -174,9 +179,6 @@ namespace CIM {
 
 			return loadCIM(systemFrequency, filenames, domain, phase);
 		}
-
-		/// read node voltages from the corresponding static SystemTopology for initialization
-		void readNodeVoltagesFromStaticSystemTopology(SystemTopology& sysStatic, SystemTopology& sysDynamic);
 
 		///
 		void initDynamicSystemTopologyWithPowerflow(SystemTopology& systemPF, SystemTopology& systemEMT);

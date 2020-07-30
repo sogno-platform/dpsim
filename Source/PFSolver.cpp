@@ -78,18 +78,17 @@ void PFSolver::initializeComponents(){
 		auto pComp = std::dynamic_pointer_cast<SimPowerComp<Complex>>(comp);
 		if (!pComp)	continue;
 		if (mPowerFlowInit)
-		pComp->initializeFromPowerflow(mSystem.mSystemFrequency);
+			pComp->initializeFromPowerflow(mSystem.mSystemFrequency);
 	}
 
+	mSLog->info("-- Calculate per unit parameters for all components");
+	for (auto extnet : mExternalGrids) {
+			extnet->calculatePerUnitParameters(mBaseApparentPower, mSystem.mSystemOmega);
+	}
 	for (auto line : mLines) {
 			line->calculatePerUnitParameters(mBaseApparentPower, mSystem.mSystemOmega);
 	}
 	for(auto trans : mTransformers) {
-		//to check if this transformer could be ignored
-		if (trans->attribute("R") == 0 && trans->attribute("L") == 0) {
-			mSLog->info("{} {} ignored for R = 0 and L = 0",trans->type(), trans->name());
-			continue;
-		}
 		trans->calculatePerUnitParameters(mBaseApparentPower, mSystem.mSystemOmega);
 	}
 	for(auto shunt : mShunts) {
@@ -134,6 +133,8 @@ void PFSolver::determinePFBusType() {
 	mPVBusIndices.clear();
 	mVDBusIndices.clear();
 
+	mSLog->info("-- Determine powerflow bus type for each node");
+
     // Determine powerflow bus type of each node through analysis of system topology
 	for (auto node : mSystem.mNodes) {
 		bool connectedPV = false;
@@ -172,35 +173,39 @@ void PFSolver::determinePFBusType() {
 		// determine powerflow bus types according connected type of connected components
 		// only PQ type component connected -> set as PQ bus
 		if (!connectedPV && connectedPQ && !connectedVD) {
+			mSLog->debug("{}: only PQ type component connected -> set as PQ bus", node->name());
 			mPQBusIndices.push_back(node->matrixNodeIndex());
 			mPQBuses.push_back(node);
 		} // no component connected -> set as PQ bus (P & Q will be zero)
 		else if (!connectedPV && !connectedPQ && !connectedVD) {
+			mSLog->debug("{}: no component connected -> set as PQ bus", node->name());
 			mPQBusIndices.push_back(node->matrixNodeIndex());
 			mPQBuses.push_back(node);
 		} // only PV type component connected -> set as PV bus
 		else if (connectedPV && !connectedPQ && !connectedVD) {
+			mSLog->debug("{}: only PV type component connected -> set as PV bus", node->name());
 			mPVBusIndices.push_back(node->matrixNodeIndex());
 			mPVBuses.push_back(node);
 		} // PV and PQ type component connected -> set as PV bus (TODO: bus type should be modifiable by user afterwards)
 		else if (connectedPV && connectedPQ && !connectedVD) {
+			mSLog->debug("{}: PV and PQ type component connected -> set as PV bus", node->name());
 			mPVBusIndices.push_back(node->matrixNodeIndex());
 			mPVBuses.push_back(node);
-			mSLog->info("Note: node with uuid {} set as PV bus. Both PV and PQ type components were connected.", node->attribute<String>("uid")->get());
 		} // only VD type component connected -> set as VD bus
 		else if (!connectedPV && !connectedPQ && connectedVD) {
+			mSLog->debug("{}: only VD type component connected -> set as VD bus", node->name());
 			mVDBusIndices.push_back(node->matrixNodeIndex());
 			mVDBuses.push_back(node);
 		} // VD and PV type component connect -> set as VD bus
 		else if (connectedPV && !connectedPQ && connectedVD) {
+			mSLog->debug("{}: VD and PV type component connect -> set as VD bus", node->name());
 			mVDBusIndices.push_back(node->matrixNodeIndex());
 			mVDBuses.push_back(node);
-			mSLog->info("Note: node with uuid {} set as VD bus. Both VD and PV type components were connected.", node->attribute<String>("uid")->get());
 		} // VD, PV and PQ type component connect -> set as VD bus
 		else if (connectedPV && connectedPQ && connectedVD) {
+			mSLog->debug("{}: VD, PV and PQ type component connect -> set as VD bus", node->name());
 			mVDBusIndices.push_back(node->matrixNodeIndex());
 			mVDBuses.push_back(node);
-			mSLog->info("Note: node with uuid {} set as VD bus. VD, PV and PQ type components were connected.", node->attribute<String>("uid")->get());
 		}
 		else {
 			std::stringstream ss;

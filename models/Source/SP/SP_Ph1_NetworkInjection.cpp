@@ -13,11 +13,14 @@ using namespace CPS;
 
 SP::Ph1::externalGridInjection::externalGridInjection(String uid, String name,
     Logger::Level logLevel) : SimPowerComp<Complex>(uid, name, logLevel) {
-	setVirtualNodeNumber(1);
-	setTerminalNumber(1);
+	
+	mSLog->info("Create {} of type {}", mName, this->type());
+	mSLog->flush();
 	mIntfVoltage = MatrixComp::Zero(1, 1);
 	mIntfCurrent = MatrixComp::Zero(1, 1);
-
+	setVirtualNodeNumber(1);
+	setTerminalNumber(1);
+	
     addAttribute<Real>("V_set", &mVoltageSetPoint, Flags::read | Flags::write);
     addAttribute<Real>("V_set_pu", &mVoltageSetPointPerUnit, Flags::read | Flags::write);
 	addAttribute<Real>("p_inj", &mActivePowerInjection, Flags::read | Flags::write);
@@ -30,9 +33,27 @@ SP::Ph1::externalGridInjection::externalGridInjection(String uid, String name,
 
 // #### Powerflow section ####
 
-void SP::Ph1::externalGridInjection::setParameters(Real vSetPointPerUnit) {
-	attribute<Real>("V_set_pu")->set(vSetPointPerUnit);
+void SP::Ph1::externalGridInjection::setParameters(Real voltageSetPoint) {
+	mVoltageSetPoint = voltageSetPoint;
+
+	mSLog->info("Voltage Set-Point ={} [V]", mVoltageSetPoint);
+	mSLog->flush();
+
 	parametersSet = true;
+}
+
+void SP::Ph1::externalGridInjection::setBaseVoltage(Real baseVoltage) {
+    mBaseVoltage = baseVoltage;
+}
+
+void SP::Ph1::externalGridInjection::calculatePerUnitParameters(Real baseApparentPower, Real baseOmega) {
+    mSLog->info("#### Calculate Per Unit Parameters for {}", mName);
+	mSLog->info("Base Voltage={} [V]", mBaseVoltage);
+
+    mVoltageSetPointPerUnit = mVoltageSetPoint / mBaseVoltage;
+
+	mSLog->info("Voltage Set-Point ={} [pu]", mVoltageSetPointPerUnit);
+	mSLog->flush();
 }
 
 void SP::Ph1::externalGridInjection::modifyPowerFlowBusType(PowerflowBusType powerflowBusType) {

@@ -103,7 +103,7 @@ namespace Ph1 {
 		// #### Powerflow section ####
 		/// Set base voltage
 		void setBaseVoltage(Real baseVoltage);
-		/// Initializes component from power flow data
+		/// Calculates component's parameters in specified per-unit system
 		void calculatePerUnitParameters(Real baseApparentPower, Real baseOmega);
 		/// Stamps admittance matrix
 		void pfApplyAdmittanceMatrixStamp(SparseMatrixCompRow & Y) override;

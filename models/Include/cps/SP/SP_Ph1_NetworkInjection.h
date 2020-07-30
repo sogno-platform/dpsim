@@ -44,6 +44,9 @@ namespace Ph1 {
 		/// Reactive Power Injection [Var]
 		Real mReactivePowerInjection;
 
+		/// Base voltage [V]
+		Real mBaseVoltage;
+
 		/// Voltage set point [pu]
 		Real mVoltageSetPointPerUnit=1.0;
 
@@ -61,11 +64,15 @@ namespace Ph1 {
 		///
 		void initialize(Matrix frequencies) override;
 		///
+		void setParameters(Real vSetPointPerUnit);
+		///
 		SimPowerComp<Complex>::Ptr clone(String name) override;
 
         // #### Powerflow section ####
-		/// Set parameters relevant for powerflow solver
-		void setParameters(Real vSetPointPerUnit);
+		/// Set base voltage
+		void setBaseVoltage(Real baseVoltage);
+		/// Calculates component's parameters in specified per-unit system
+		void calculatePerUnitParameters(Real baseApparentPower, Real baseOmega);
         /// Modify powerflow bus type
 		void modifyPowerFlowBusType(PowerflowBusType powerflowBusType) override;
 		/// Update power injection
