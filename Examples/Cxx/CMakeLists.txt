@@ -16,6 +16,7 @@ set(CIRCUIT_SOURCES
 	Circuits/DP_DecouplingLine.cpp
 	Circuits/DP_Diakoptics.cpp
 	Circuits/DP_VSI.cpp
+	Circuits/PF_Slack_PiLine_PQLoad.cpp
 
 	# EMT examples
 	Circuits/EMT_CS_RL1.cpp
