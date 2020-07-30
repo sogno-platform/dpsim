@@ -71,6 +71,7 @@ namespace CPS {
 		: SystemTopology(frequency) {
 			addNodes(nodes);
 			addComponents(components);
+			componentsAtNodeList();
 		}
 
 		/// Standard constructor for multi frequency simulations
@@ -79,6 +80,7 @@ namespace CPS {
 			mFrequencies = frequencies;
 			addNodes(nodes);
 			addComponents(components);
+			componentsAtNodeList();
 		}
 
 		/// Reset state of components
@@ -145,6 +147,15 @@ namespace CPS {
 			component->connect(simNodes);
 			for (auto simNode : simNodes)
 				mComponentsAtNode[simNode].push_back(component);
+		}
+
+		void componentsAtNodeList() {
+			for (auto comp : mComponents) {
+				auto powerComp = std::dynamic_pointer_cast<TopologicalPowerComp>(comp);
+				if (powerComp)
+					for (auto topoNode : powerComp->topologicalNodes())
+						mComponentsAtNode[topoNode].push_back(powerComp);
+			}
 		}
 
 		/// Add multiple components

@@ -22,7 +22,6 @@ PFSolver::PFSolver(CPS::String name, CPS::SystemTopology system, CPS::Real timeS
 	mSLog = Logger::get(name + "_PF", logLevel, Logger::Level::warn);
 	mSystem = system;
 	mTimeStep = timeStep;
-    initialize();
 }
 
 void PFSolver::initialize(){
@@ -78,6 +77,7 @@ void PFSolver::initializeComponents(){
 	for (auto comp : mSystem.mComponents) {
 		auto pComp = std::dynamic_pointer_cast<SimPowerComp<Complex>>(comp);
 		if (!pComp)	continue;
+		if (mPowerFlowInit)
 		pComp->initializeFromPowerflow(mSystem.mSystemFrequency);
 	}
 

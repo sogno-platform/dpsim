@@ -101,10 +101,7 @@ void Simulation::initialize() {
 		createSolvers<Real>(mSystem, mTearComponents);
 		break;
 	case Domain::SP:
-		if(mSolverType==Solver::Type::MNA)
-			createSolvers<Complex>(mSystem, mTearComponents);
-		else
-			mSolvers.push_back(std::make_shared<PFSolverPowerPolar>(mName, mSystem, mTimeStep, mLogLevel));
+		createSolvers<Complex>(mSystem, mTearComponents);
 		break;
 	}
 
@@ -164,7 +161,11 @@ void Simulation::createSolvers(
 				solver = std::make_shared<DAESolver>(mName + copySuffix, subnets[net], mTimeStep, 0.0);
 				break;
 #endif /* WITH_SUNDIALS */
-
+			case Solver::Type::NRP:
+				solver = std::make_shared<PFSolverPowerPolar>(mName, mSystem, mTimeStep, mLogLevel);
+				solver->doPowerFlowInit(mPowerFlowInit);
+				solver->initialize();
+				break;
 			default:
 				throw UnsupportedSolverException();
 		}
