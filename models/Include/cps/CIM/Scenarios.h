@@ -15,6 +15,46 @@
 namespace CPS {
 namespace CIM {
 namespace Scenarios {
+
+namespace SGIB {
+
+    struct ScenarioConfig {
+        Real systemFrequency = 50;
+        Real systemNominalVoltage = 20e3;
+
+        // Line paramerters
+        Real lineResistance = 0.05;
+	    Real lineInductance = 0.1;
+
+        // PV controller parameters
+        Real KpPLL = 0.25;
+        Real KiPLL = 2;
+        Real KpPowerCtrl = 0.001;
+        Real KiPowerCtrl = 0.08;
+        Real KpCurrCtrl = 0.3;
+        Real KiCurrCtrl = 10;
+        Real OmegaCutoff = 2 * PI * systemFrequency;
+
+        // Nominal generated power values of PV
+        Real pvNominalVoltage = 1500.;
+        Real pvNominalActivePower = 100e3;
+        Real pvNominalReactivePower = 50e3;
+
+        // PV filter parameters
+        Real Lf = 0.002;
+        Real Cf = 789.3e-6;
+        Real Rf = 0.1;
+        Real Rc = 0.1;
+
+        // PV connection transformer parameters
+        Real transformerNominalPower = 5e6;
+        Real transformerInductance = 0.928e-3;
+
+        // Further parameters
+        Real systemOmega = 2 * PI * systemFrequency;
+    };
+}
+
 namespace CIGREMV {
 
     struct ScenarioConfig {
