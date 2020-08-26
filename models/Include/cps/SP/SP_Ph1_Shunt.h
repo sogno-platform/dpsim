@@ -50,6 +50,10 @@ namespace SP {namespace Ph1 {
 		/// Defines UID, name, component parameters and logging level
 		Shunt(String uid, String name, Logger::Level logLevel = Logger::Level::off);
 
+		/// Defines name and logging level
+		Shunt(String name, Logger::Level logLevel = Logger::Level::off)
+			: Shunt(name, name, logLevel) { }
+
 		// #### General ####
 		/// Set shunt specific parameters
 		void setParameters(Real conductance, Real susceptance);

@@ -181,7 +181,7 @@ namespace CIM {
 		}
 
 		///
-		void initDynamicSystemTopologyWithPowerflow(SystemTopology& systemPF, SystemTopology& systemEMT);
+		void initDynamicSystemTopologyWithPowerflow(SystemTopology& systemPF, SystemTopology& system);
 
 		// #### shunt component settings ####
 		/// set shunt capacitor value
