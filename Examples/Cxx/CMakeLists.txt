@@ -109,15 +109,26 @@ if(WITH_CIM)
 		CIM/IEEE_LV_PowerFlowTest.cpp
 		CIM/IEEE_LV_PowerFlowTest_LoadProfiles.cpp
 
+		# Mat2CIM examples
 		CIM/case145.cpp
 		CIM/case300.cpp
 		CIM/case9.cpp
 		CIM/case14.cpp
 		CIM/powerflow-cim.cpp
 
+		# WSCC examples
 		CIM/WSCC_9bus_mult_decoupled.cpp
 		CIM/WSCC_9bus_mult_coupled.cpp
 		CIM/WSCC_9bus_mult_diakoptics.cpp
+
+		# CIGRE MV examples
+		CIM/PF_CIGRE_MV_withDG.cpp
+		CIM/DP_CIGRE_MV_withoutDG.cpp
+		CIM/DP_CIGRE_MV_withDG.cpp
+		CIM/DP_CIGRE_MV_withDG_withLoadStep.cpp
+		CIM/EMT_CIGRE_MV_withoutDG.cpp
+		CIM/EMT_CIGRE_MV_withDG.cpp
+		CIM/EMT_CIGRE_MV_withDG_withLoadStep.cpp
 	)
 
 	if(WITH_RT)
