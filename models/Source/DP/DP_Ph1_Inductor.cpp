@@ -195,17 +195,30 @@ void DP::Ph1::Inductor::mnaApplyRightSideVectorStampHarm(Matrix& rightVector) {
 	}
 }
 
-void DP::Ph1::Inductor::MnaPreStep::execute(Real time, Int timeStepCount) {
-	mInductor.mnaApplyRightSideVectorStamp(mInductor.mRightVector);
+void DP::Ph1::Inductor::mnaAddPreStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes) {
+	// actually depends on L, but then we'd have to modify the system matrix anyway
+	prevStepDependencies.push_back(this->attribute("v_intf"));
+	prevStepDependencies.push_back(this->attribute("i_intf"));
+	modifiedAttributes.push_back(this->attribute("right_vector"));
+}
+
+void DP::Ph1::Inductor::mnaPreStep(Real time, Int timeStepCount) {
+	this->mnaApplyRightSideVectorStamp(this->mRightVector);
+}
+
+void DP::Ph1::Inductor::mnaAddPostStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes, Attribute<Matrix>::Ptr &leftVector) {
+	attributeDependencies.push_back(leftVector);
+	modifiedAttributes.push_back(this->attribute("v_intf"));
+	modifiedAttributes.push_back(this->attribute("i_intf"));
+}
+
+void DP::Ph1::Inductor::mnaPostStep(Real time, Int timeStepCount, Attribute<Matrix>::Ptr &leftVector) {
+	this->mnaUpdateVoltage(*leftVector);
+	this->mnaUpdateCurrent(*leftVector);
 }
 
 void DP::Ph1::Inductor::MnaPreStepHarm::execute(Real time, Int timeStepCount) {
 	mInductor.mnaApplyRightSideVectorStampHarm(mInductor.mRightVector);
-}
-
-void DP::Ph1::Inductor::MnaPostStep::execute(Real time, Int timeStepCount) {
-	mInductor.mnaUpdateVoltage(*mLeftVector);
-	mInductor.mnaUpdateCurrent(*mLeftVector);
 }
 
 void DP::Ph1::Inductor::MnaPostStepHarm::execute(Real time, Int timeStepCount) {

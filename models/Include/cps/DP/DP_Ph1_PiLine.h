@@ -67,27 +67,20 @@ namespace Ph1 {
 		void mnaUpdateCurrent(const Matrix& leftVector);
 		/// Updates internal voltage variable of the component
 		void mnaUpdateVoltage(const Matrix& leftVector);
+		/// MNA pre and post step operations
+		void mnaPreStep(Real time, Int timeStepCount);
+		void mnaPostStep(Real time, Int timeStepCount, Attribute<Matrix>::Ptr &leftVector);
+		/// add MNA pre and post step dependencies
+		void mnaAddPreStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes);
+		void mnaAddPostStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes, Attribute<Matrix>::Ptr &leftVector);
 
 		class MnaPreStep : public Task {
 		public:
 			MnaPreStep(PiLine& line) :
 				Task(line.mName + ".MnaPreStep"), mLine(line) {
-				mAttributeDependencies.push_back(line.mSubSeriesResistor->attribute("right_vector"));
-				mAttributeDependencies.push_back(line.mSubSeriesInductor->attribute("right_vector"));
-				if (line.mParallelCond >= 0) {
-					mAttributeDependencies.push_back(line.mSubParallelResistor0->attribute("right_vector"));
-					mAttributeDependencies.push_back(line.mSubParallelResistor1->attribute("right_vector"));
-				}
-				if (line.mParallelCap >= 0) {
-					mAttributeDependencies.push_back(line.mSubParallelCapacitor0->attribute("right_vector"));
-					mAttributeDependencies.push_back(line.mSubParallelCapacitor1->attribute("right_vector"));
-				}
-
-				mModifiedAttributes.push_back(line.attribute("right_vector"));
+					mLine.mnaAddPreStepDependencies(mPrevStepDependencies, mAttributeDependencies, mModifiedAttributes);
 			}
-
-			void execute(Real time, Int timeStepCount);
-
+			void execute(Real time, Int timeStepCount) { mLine.mnaPreStep(time, timeStepCount); };
 		private:
 			PiLine& mLine;
 		};
@@ -96,14 +89,9 @@ namespace Ph1 {
 		public:
 			MnaPostStep(PiLine& line, Attribute<Matrix>::Ptr leftVector) :
 				Task(line.mName + ".MnaPostStep"), mLine(line), mLeftVector(leftVector) {
-				mAttributeDependencies.push_back(leftVector);
-				mAttributeDependencies.push_back(line.mSubSeriesInductor->attribute("i_intf"));
-				mModifiedAttributes.push_back(line.attribute("i_intf"));
-				mModifiedAttributes.push_back(line.attribute("v_intf"));
+					mLine.mnaAddPostStepDependencies(mPrevStepDependencies, mAttributeDependencies, mModifiedAttributes, mLeftVector);
 			}
-
-			void execute(Real time, Int timeStepCount);
-
+			void execute(Real time, Int timeStepCount) { mLine.mnaPostStep(time, timeStepCount, mLeftVector); };
 		private:
 			PiLine& mLine;
 			Attribute<Matrix>::Ptr mLeftVector;

@@ -114,9 +114,15 @@ void DP::Ph1::Resistor::mnaApplySystemMatrixStampHarm(Matrix& systemMatrix, Int 
 	}
 }
 
-void DP::Ph1::Resistor::MnaPostStep::execute(Real time, Int timeStepCount) {
-	mResistor.mnaUpdateVoltage(*mLeftVector);
-	mResistor.mnaUpdateCurrent(*mLeftVector);
+void DP::Ph1::Resistor::mnaAddPostStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes, Attribute<Matrix>::Ptr &leftVector) {
+	attributeDependencies.push_back(leftVector);
+	modifiedAttributes.push_back(this->attribute("v_intf"));
+	modifiedAttributes.push_back(this->attribute("i_intf"));
+}
+
+void DP::Ph1::Resistor::mnaPostStep(Real time, Int timeStepCount, Attribute<Matrix>::Ptr &leftVector) {
+	this->mnaUpdateVoltage(*leftVector);
+	this->mnaUpdateCurrent(*leftVector);
 }
 
 void DP::Ph1::Resistor::MnaPostStepHarm::execute(Real time, Int timeStepCount) {

@@ -128,11 +128,6 @@ void DP::Ph1::PiLine::mnaInitialize(Real omega, Real timeStep, Attribute<Matrix>
 		subComps.push_back(mSubParallelCapacitor0);
 		subComps.push_back(mSubParallelCapacitor1);
 	}
-	for (auto comp : subComps) {
-		for (auto task : comp->mnaTasks()) {
-			mMnaTasks.push_back(task);
-		}
-	}
 	mMnaTasks.push_back(std::make_shared<MnaPreStep>(*this));
 	mMnaTasks.push_back(std::make_shared<MnaPostStep>(*this, leftVector));
 	mRightVector = Matrix::Zero(leftVector->get().rows(), 1);
@@ -157,13 +152,63 @@ void DP::Ph1::PiLine::mnaApplyRightSideVectorStamp(Matrix& rightVector) {
 		rightVector += *stamp;
 }
 
-void DP::Ph1::PiLine::MnaPreStep::execute(Real time, Int timeStepCount) {
-	mLine.mnaApplyRightSideVectorStamp(mLine.mRightVector);
+void DP::Ph1::PiLine::mnaAddPreStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes) {
+	// add pre-step dependencies of subcomponents
+	this->mSubSeriesInductor->mnaAddPreStepDependencies(prevStepDependencies, attributeDependencies, modifiedAttributes);
+	if (this->mParallelCap >= 0) {
+		this->mSubParallelCapacitor0->mnaAddPreStepDependencies(prevStepDependencies, attributeDependencies, modifiedAttributes);
+		this->mSubParallelCapacitor1->mnaAddPreStepDependencies(prevStepDependencies, attributeDependencies, modifiedAttributes);
+	}
+	// add pre-step dependencies of component itself
+	prevStepDependencies.push_back(this->attribute("i_intf"));
+	prevStepDependencies.push_back(this->attribute("v_intf"));
+	modifiedAttributes.push_back(this->attribute("right_vector"));
 }
 
-void DP::Ph1::PiLine::MnaPostStep::execute(Real time, Int timeStepCount) {
-	mLine.mnaUpdateVoltage(*mLeftVector);
-	mLine.mnaUpdateCurrent(*mLeftVector);
+void DP::Ph1::PiLine::mnaPreStep(Real time, Int timeStepCount) {	
+	// pre-step of subcomponents
+	this->mSubSeriesInductor->mnaPreStep(time, timeStepCount);
+	if (this->mParallelCap >= 0) {
+		this->mSubParallelCapacitor0->mnaPreStep(time, timeStepCount);
+		this->mSubParallelCapacitor1->mnaPreStep(time, timeStepCount);
+	}
+	// pre-step of component itself
+	this->mnaApplyRightSideVectorStamp(this->mRightVector);
+}
+
+void DP::Ph1::PiLine::mnaAddPostStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes, Attribute<Matrix>::Ptr &leftVector) {
+	// add post-step dependencies of subcomponents
+	this->mSubSeriesResistor->mnaAddPostStepDependencies(prevStepDependencies, attributeDependencies, modifiedAttributes, leftVector);
+	this->mSubSeriesInductor->mnaAddPostStepDependencies(prevStepDependencies, attributeDependencies, modifiedAttributes, leftVector);
+	if (this->mParallelCap >= 0) {
+		this->mSubParallelCapacitor0->mnaAddPostStepDependencies(prevStepDependencies, attributeDependencies, modifiedAttributes, leftVector);
+		this->mSubParallelCapacitor1->mnaAddPostStepDependencies(prevStepDependencies, attributeDependencies, modifiedAttributes, leftVector);
+	}
+	if (this->mParallelCond >= 0) {
+		this->mSubParallelResistor0->mnaAddPostStepDependencies(prevStepDependencies, attributeDependencies, modifiedAttributes, leftVector);
+		this->mSubParallelResistor1->mnaAddPostStepDependencies(prevStepDependencies, attributeDependencies, modifiedAttributes, leftVector);
+	}
+	// add post-step dependencies of component itself
+	attributeDependencies.push_back(leftVector);
+	modifiedAttributes.push_back(this->attribute("v_intf"));
+	modifiedAttributes.push_back(this->attribute("i_intf"));
+}
+
+void DP::Ph1::PiLine::mnaPostStep(Real time, Int timeStepCount, Attribute<Matrix>::Ptr &leftVector) {
+	// post-step of subcomponents
+	this->mSubSeriesResistor->mnaPostStep(time, timeStepCount, leftVector);
+	this->mSubSeriesInductor->mnaPostStep(time, timeStepCount, leftVector);
+	if (this->mParallelCap >= 0) {
+		this->mSubParallelCapacitor0->mnaPostStep(time, timeStepCount, leftVector);
+		this->mSubParallelCapacitor1->mnaPostStep(time, timeStepCount, leftVector);
+	}
+	if (this->mParallelCond >= 0) {
+		this->mSubParallelResistor0->mnaPostStep(time, timeStepCount, leftVector);
+		this->mSubParallelResistor1->mnaPostStep(time, timeStepCount, leftVector);
+	}
+	// post-step of component itself
+	this->mnaUpdateVoltage(*leftVector);
+	this->mnaUpdateCurrent(*leftVector);
 }
 
 void DP::Ph1::PiLine::mnaUpdateVoltage(const Matrix& leftVector) {

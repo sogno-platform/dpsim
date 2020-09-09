@@ -66,17 +66,20 @@ namespace Ph1 {
 		/// Update interface current from MNA system result
 		void mnaUpdateCurrent(const Matrix& leftVector);
 		void mnaUpdateCurrentHarm();
+		/// MNA pre and post step operations
+		void mnaPreStep(Real time, Int timeStepCount);
+		void mnaPostStep(Real time, Int timeStepCount, Attribute<Matrix>::Ptr &leftVector);
+		/// add MNA pre and post step dependencies
+		void mnaAddPreStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes);
+		void mnaAddPostStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes, Attribute<Matrix>::Ptr &leftVector);
 
 		class MnaPreStep : public Task {
 		public:
 			MnaPreStep(Capacitor& capacitor)
 				: Task(capacitor.mName + ".MnaPreStep"), mCapacitor(capacitor) {
-				// actually depends on C, but then we'd have to modify the system matrix anyway
-				mModifiedAttributes.push_back(capacitor.attribute("right_vector"));
-				mPrevStepDependencies.push_back(capacitor.attribute("i_intf"));
-				mPrevStepDependencies.push_back(capacitor.attribute("v_intf"));
+					mCapacitor.mnaAddPreStepDependencies(mPrevStepDependencies, mAttributeDependencies, mModifiedAttributes);
 			}
-			void execute(Real time, Int timeStepCount);
+			void execute(Real time, Int timeStepCount) { mCapacitor.mnaPreStep(time, timeStepCount); };
 		private:
 			Capacitor& mCapacitor;
 		};
@@ -85,11 +88,9 @@ namespace Ph1 {
 		public:
 			MnaPostStep(Capacitor& capacitor, Attribute<Matrix>::Ptr leftVector)
 				: Task(capacitor.mName + ".MnaPostStep"), mCapacitor(capacitor), mLeftVector(leftVector) {
-				mAttributeDependencies.push_back(mLeftVector);
-				mModifiedAttributes.push_back(mCapacitor.attribute("v_intf"));
-				mModifiedAttributes.push_back(mCapacitor.attribute("i_intf"));
+					mCapacitor.mnaAddPostStepDependencies(mPrevStepDependencies, mAttributeDependencies, mModifiedAttributes, mLeftVector);
 			}
-			void execute(Real time, Int timeStepCount);
+			void execute(Real time, Int timeStepCount) { mCapacitor.mnaPostStep(time, timeStepCount, mLeftVector); };
 		private:
 			Capacitor& mCapacitor;
 			Attribute<Matrix>::Ptr mLeftVector;

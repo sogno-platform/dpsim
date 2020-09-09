@@ -211,17 +211,30 @@ void DP::Ph1::Capacitor::mnaApplyRightSideVectorStampHarm(Matrix& rightVector, I
 			Math::setVectorElement(rightVector, matrixNodeIndex(1), -mEquivCurrent(freq,0));
 }
 
-void DP::Ph1::Capacitor::MnaPreStep::execute(Real time, Int timeStepCount) {
-	mCapacitor.mnaApplyRightSideVectorStamp(mCapacitor.mRightVector);
+void DP::Ph1::Capacitor::mnaAddPreStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes) {
+	// actually depends on C, but then we'd have to modify the system matrix anyway	
+	prevStepDependencies.push_back(this->attribute("i_intf"));
+	prevStepDependencies.push_back(this->attribute("v_intf"));
+	modifiedAttributes.push_back(this->attribute("right_vector"));
+}
+
+void DP::Ph1::Capacitor::mnaPreStep(Real time, Int timeStepCount) {
+	this->mnaApplyRightSideVectorStamp(this->mRightVector);
+}
+
+void DP::Ph1::Capacitor::mnaAddPostStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes, Attribute<Matrix>::Ptr &leftVector) {
+	attributeDependencies.push_back(leftVector);
+	modifiedAttributes.push_back(this->attribute("v_intf"));
+	modifiedAttributes.push_back(this->attribute("i_intf"));
+}
+
+void DP::Ph1::Capacitor::mnaPostStep(Real time, Int timeStepCount, Attribute<Matrix>::Ptr &leftVector) {
+	this->mnaUpdateVoltage(*leftVector);
+	this->mnaUpdateCurrent(*leftVector);
 }
 
 void DP::Ph1::Capacitor::MnaPreStepHarm::execute(Real time, Int timeStepCount) {
 	mCapacitor.mnaApplyRightSideVectorStampHarm(mCapacitor.mRightVector);
-}
-
-void DP::Ph1::Capacitor::MnaPostStep::execute(Real time, Int timeStepCount) {
-	mCapacitor.mnaUpdateVoltage(*mLeftVector);
-	mCapacitor.mnaUpdateCurrent(*mLeftVector);
 }
 
 void DP::Ph1::Capacitor::MnaPostStepHarm::execute(Real time, Int timeStepCount) {
