@@ -100,12 +100,11 @@ namespace DPsim {
 
 		///
 		CPS::Task::Ptr mRoot;
-
-	private:
 		/// Log level
 		CPS::Logger::Level mLogLevel;
 		/// Logger
 		CPS::Logger::Log mSLog;
+	private:
 		// TODO more sophisticated measurement method might be necessary for
 		// longer simulations (risk of high memory requirements and integer
 		// overflow)

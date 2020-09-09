@@ -23,6 +23,9 @@ void SequentialScheduler::createSchedule(const Task::List& tasks, const Edges& i
 	if (mOutMeasurementFile.size() != 0)
 		Scheduler::initMeasurements(tasks);
 	Scheduler::topologicalSort(tasks, inEdges, outEdges, mSchedule);
+
+	for (auto task : mSchedule)
+        mSLog->info("{}", task->toString());
 }
 
 void SequentialScheduler::step(Real time, Int timeStepCount) {
