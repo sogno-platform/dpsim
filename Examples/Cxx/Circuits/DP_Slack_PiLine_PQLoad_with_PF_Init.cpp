@@ -18,6 +18,7 @@
 
 using namespace DPsim;
 using namespace CPS;
+using namespace CPS::CIM;
 
 int main(int argc, char* argv[]) {
 	
@@ -27,6 +28,7 @@ int main(int argc, char* argv[]) {
 	Real qLoadNom = 50e3;
 	Real lineResistance = 0.05;
 	Real lineInductance = 0.1;
+	Real lineCapacitance = 0.1e-6;
 	Real finalTime = 2.0;
 
 	// ----- POWERFLOW FOR INITIALIZATION -----
@@ -45,7 +47,7 @@ int main(int argc, char* argv[]) {
 	extnetPF->modifyPowerFlowBusType(PowerflowBusType::VD);
 
 	auto linePF = SP::Ph1::PiLine::make("PiLine", Logger::Level::debug);
-	linePF->setParameters(lineResistance, lineInductance, 0);
+	linePF->setParameters(lineResistance, lineInductance, lineCapacitance);
 	linePF->setBaseVoltage(Vnom);
 
 	auto loadPF = SP::Ph1::Shunt::make("Load", Logger::Level::debug);
@@ -90,7 +92,7 @@ int main(int argc, char* argv[]) {
 	extnetDP->setParameters(Complex(Vnom,0));
 
 	auto lineDP = DP::Ph1::PiLine::make("PiLine", Logger::Level::debug);
-	lineDP->setParameters(lineResistance, lineInductance);
+	lineDP->setParameters(lineResistance, lineInductance, lineCapacitance);
 
 	auto loadDP = DP::Ph1::RXLoad::make("Load", Logger::Level::debug);	
 	loadDP->setParameters(pLoadNom, qLoadNom, Vnom);
@@ -113,6 +115,9 @@ int main(int argc, char* argv[]) {
 	loggerDP->addAttribute("v1", n1DP->attribute("v"));
 	loggerDP->addAttribute("v2", n2DP->attribute("v"));
 
+	// load step sized in absolute terms
+	std::shared_ptr<SwitchEvent> loadStepEvent = Scenarios::createEventAddPowerConsumption("n2", 1-timeStepDP, 100e3, systemDP, Domain::DP);
+
 	// Simulation
 	Simulation sim(simNameDP, Logger::Level::debug);
 	sim.setSystem(systemDP);
@@ -121,6 +126,7 @@ int main(int argc, char* argv[]) {
 	sim.setDomain(Domain::DP);
 	sim.doPowerFlowInit(false);
 	sim.addLogger(loggerDP);
+	sim.addEvent(loadStepEvent);
 	sim.run();
 	
 }

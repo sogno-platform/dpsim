@@ -89,10 +89,10 @@ int main(int argc, char** argv){
 	Scenarios::CIGREMV::logPVAttributes(logger, pv);
 
 	// // load step sized relative to nominal load at N11
-	// std::shared_ptr<SwitchEvent> loadStepEvent = Scenarios::CIGREMV::createEventAddPowerConsumption("N11", 2-timeStep, 5*systemPF.component<CPS::SP::Ph1::Load>("LOAD-H-11")->attribute<CPS::Real>("P")->get(), systemDP, Domain::DP);
+	// std::shared_ptr<SwitchEvent> loadStepEvent = Scenarios::createEventAddPowerConsumption("N11", 2-timeStep, 5*systemPF.component<CPS::SP::Ph1::Load>("LOAD-H-11")->attribute<CPS::Real>("P")->get(), systemDP, Domain::DP);
 
 	// load step sized in absolute terms
-	std::shared_ptr<SwitchEvent> loadStepEvent = Scenarios::CIGREMV::createEventAddPowerConsumption("N11", 2-timeStep, 1500.0e3, systemDP, Domain::DP);
+	std::shared_ptr<SwitchEvent> loadStepEvent = Scenarios::createEventAddPowerConsumption("N11", 2-timeStep, 1500.0e3, systemDP, Domain::DP);
 	
 	Simulation sim(simName, systemDP, timeStep, finalTime, Domain::DP, Solver::Type::MNA, Logger::Level::debug, true);
 

@@ -116,7 +116,7 @@ int main(int argc, char* argv[]) {
 	Scenarios::CIGREMV::logPVAttributes(loggerDP, pv);
 
 	// load step sized in absolute terms
-	// std::shared_ptr<SwitchEvent> loadStepEvent = Scenarios::CIGREMV::createEventAddPowerConsumption("n2", 1-timeStepDP, 1000.0e3, systemDP, Domain::DP);
+	// std::shared_ptr<SwitchEvent> loadStepEvent = Scenarios::createEventAddPowerConsumption("n2", 1-timeStepDP, 1000.0e3, systemDP, Domain::DP);
 
 	// Simulation
 	Simulation sim(simNameDP, Logger::Level::debug);

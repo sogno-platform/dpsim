@@ -85,7 +85,7 @@ int main(int argc, char** argv){
 	auto pv = systemEMT.component<CPS::SimPowerComp<Real>>("pv_N11");
 	Scenarios::CIGREMV::logPVAttributes(logger, pv);
 
-	std::shared_ptr<SwitchEvent3Ph> loadStepEvent = Scenarios::CIGREMV::createEventAddPowerConsumption3Ph("N11", 2-timeStep, 1500.0e3, systemEMT, Domain::EMT);
+	std::shared_ptr<SwitchEvent3Ph> loadStepEvent = Scenarios::createEventAddPowerConsumption3Ph("N11", 2-timeStep, 1500.0e3, systemEMT, Domain::EMT);
 	Simulation sim(simName, systemEMT, timeStep, finalTime, Domain::EMT, Solver::Type::MNA, Logger::Level::debug, true);
 	sim.addEvent(loadStepEvent);
 
