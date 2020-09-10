@@ -203,7 +203,7 @@ Graph::Graph SystemTopology::topologyGraph() {
 
 		tooltip << node->uid();
 
-		label << node->name() << "<BR/>";
+		label << "<FONT POINT-SIZE=\"12\"><B>" << node->name() << "</B></FONT><BR/>";
 
 		double phase = 180.0 / M_PI * std::arg(node->initialSingleVoltage());
 		double mag = std::abs(node->initialSingleVoltage());
@@ -248,7 +248,7 @@ Graph::Graph SystemTopology::topologyGraph() {
 
 		std::stringstream label, tooltip;
 
-		label << "<B>" << name << "</B><BR/>";
+		label << "<FONT POINT-SIZE=\"12\"><B>" << name << "</B></FONT><BR/>";
 		label << "<FONT POINT-SIZE=\"10\" COLOR=\"gray28\">" << type << "</FONT>";
 
 		tooltip << "Attributes:";
@@ -284,6 +284,19 @@ Graph::Graph SystemTopology::topologyGraph() {
 	}
 
 	return g;
+}
+
+String SystemTopology::render() {
+	auto graph = this->topologyGraph();
+	std::stringstream ss;
+	graph.render(ss, "neato", "svg");
+
+	return ss.str();
+}
+
+void SystemTopology::renderToFile(String filename) {
+	std::ofstream ofstr(filename);
+	this->topologyGraph().render(ofstr, "neato", "svg");
 }
 #endif
 

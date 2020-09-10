@@ -11,10 +11,8 @@
 using namespace CPS;
 
 
-DP::Ph1::AvVoltageSourceInverterDQ::AvVoltageSourceInverterDQ(String uid, String name, Logger::Level logLevel, Bool withTrafo) : 
-	Base::AvVoltageSourceInverterDQ(uid, name, logLevel), 
-	SimPowerComp<Complex>(uid, name, logLevel), 
-	TopologicalPowerComp(uid, name, logLevel) {
+DP::Ph1::AvVoltageSourceInverterDQ::AvVoltageSourceInverterDQ(String uid, String name, Logger::Level logLevel, Bool withTrafo) :
+	SimPowerComp<Complex>(uid, name, logLevel) {
 	if (withTrafo) {
 		setVirtualNodeNumber(5);
 		mConnectionTransformer = DP::Ph1::Transformer::make(mName + "_trans", Logger::Level::debug);
@@ -22,7 +20,7 @@ DP::Ph1::AvVoltageSourceInverterDQ::AvVoltageSourceInverterDQ(String uid, String
 	} else {
 		setVirtualNodeNumber(4);
 	}
-	mWithConnectionTransformer = withTrafo;	
+	mWithConnectionTransformer = withTrafo;
 	setTerminalNumber(1);
 
 	mSLog->info("Create {} {}", this->type(), name);
@@ -40,6 +38,75 @@ DP::Ph1::AvVoltageSourceInverterDQ::AvVoltageSourceInverterDQ(String uid, String
 	addAttribute<Real>("omega", &mOmegaInst, Flags::read | Flags::write);
 	addAttribute<Real>("freq", &mFreqInst, Flags::read | Flags::write);
 	addAttribute<Bool>("ctrl_on", &mCtrlOn, Flags::read | Flags::write);
+
+	// state variables
+	addAttribute<Real>("theta", &mThetaPLL, Flags::read | Flags::write);
+	addAttribute<Real>("phipll", &mPhiPLL, Flags::read | Flags::write);
+	addAttribute<Real>("p", &mP, Flags::read | Flags::write);
+	addAttribute<Real>("q", &mQ, Flags::read | Flags::write);
+	addAttribute<Real>("phid", &mPhi_d, Flags::read | Flags::write);
+	addAttribute<Real>("phiq", &mPhi_q, Flags::read | Flags::write);
+	addAttribute<Real>("gammad", &mGamma_d, Flags::read | Flags::write);
+	addAttribute<Real>("gammaq", &mGamma_q, Flags::read | Flags::write);
+
+	// input variables
+	addAttribute<Real>("Omega_nom", &mOmegaN, Flags::read | Flags::write);
+	addAttribute<Real>("P_ref", &mPref, Flags::read | Flags::write);
+	addAttribute<Real>("Q_ref", &mQref, Flags::read | Flags::write);
+}
+
+void DP::Ph1::AvVoltageSourceInverterDQ::setParameters(Real sysOmega, Real sysVoltNom, Real Pref, Real Qref) {
+	Base::AvVoltageSourceInverterDQ::setParameters(sysOmega, sysVoltNom, Pref, Qref);
+	parametersSet = true;
+
+	mSLog->info("General Parameters:");
+	mSLog->info("Nominal Voltage={} [V] Nominal Omega={} [1/s]", mVnom, mOmegaN);
+	mSLog->info("Active Power={} [W] Reactive Power={} [VAr]", mPref, mQref);
+}
+
+void DP::Ph1::AvVoltageSourceInverterDQ::setTransformerParameters(Real nomVoltageEnd1, Real nomVoltageEnd2,
+	Real ratedPower, Real ratioAbs,	Real ratioPhase, Real resistance, Real inductance, Real omega) {
+
+	Base::AvVoltageSourceInverterDQ::setTransformerParameters(nomVoltageEnd1, nomVoltageEnd2,
+		ratedPower, ratioAbs, ratioPhase, resistance, inductance, omega);
+
+	mSLog->info("Connection Transformer Parameters:");
+	mSLog->info("Resistance={} [Ohm] Inductance={} [H]", mTransformerResistance, mTransformerInductance);
+    mSLog->info("Tap Ratio={} [ ] Phase Shift={} [deg]", mTransformerRatioAbs, mTransformerRatioPhase);
+}
+
+void DP::Ph1::AvVoltageSourceInverterDQ::setControllerParameters(Real Kp_pll, Real Ki_pll,
+	Real Kp_powerCtrl, Real Ki_powerCtrl, Real Kp_currCtrl, Real Ki_currCtrl, Real Omega_cutoff) {
+
+	Base::AvVoltageSourceInverterDQ::setControllerParameters(Kp_pll, Ki_pll,
+		Kp_powerCtrl, Ki_powerCtrl, Kp_currCtrl, Ki_currCtrl, Omega_cutoff);
+
+	mSLog->info("Control Parameters:");
+	mSLog->info("PLL: K_i = {}, K_p = {}", mKpPLL, mKiPLL);
+	mSLog->info("Power Loop: K_i = {}, K_p = {}", mKpPowerCtrld, mKiPowerCtrld);
+	mSLog->info("Current Loop: K_i = {}, K_p = {}", mKpCurrCtrld, mKiCurrCtrld);
+	mSLog->info("Cut-Off Frequency = {}", mOmegaCutoff);
+}
+
+void DP::Ph1::AvVoltageSourceInverterDQ::setFilterParameters(Real Lf, Real Cf, Real Rf, Real Rc) {
+	Base::AvVoltageSourceInverterDQ::setFilterParameters(Lf, Cf, Rf, Rc);
+
+	mSLog->info("Filter Parameters:");
+	mSLog->info("Inductance Lf={} [H] Capacitance Cf={} [F]", mLf, mCf);
+	mSLog->info("Resistance Rf={} [H] Resistance Rc={} [F]", mRf, mRc);
+}
+
+void DP::Ph1::AvVoltageSourceInverterDQ::setInitialStateValues(Real thetaPLLInit, Real phiPLLInit, Real pInit, Real qInit,
+	Real phi_dInit, Real phi_qInit, Real gamma_dInit, Real gamma_qInit) {
+
+	Base::AvVoltageSourceInverterDQ::setInitialStateValues(thetaPLLInit, phiPLLInit, pInit, qInit,
+		phi_dInit, phi_qInit, gamma_dInit, gamma_qInit);
+
+	mSLog->info("Initial State Value Parameters:");
+	mSLog->info("ThetaPLLInit = {}, PhiPLLInit = {}", mThetaPLLInit, mPhiPLLInit);
+	mSLog->info("PInit = {}, QInit = {}", mPInit, mQInit);
+	mSLog->info("Phi_dInit = {}, Phi_qInit = {}", mPhi_dInit, mPhi_qInit);
+	mSLog->info("Gamma_dInit = {}, Gamma_qInit = {}", mGamma_dInit, mGamma_qInit);
 }
 
 SimPowerComp<Complex>::Ptr DP::Ph1::AvVoltageSourceInverterDQ::clone(String name) {
@@ -101,7 +168,7 @@ void DP::Ph1::AvVoltageSourceInverterDQ::initializeStateSpaceModel(Real omega, R
 	mIrcdq(1, 0) = Irc(0, 0).imag();
 	mVcdq(0, 0) = mVirtualNodes[4]->initialSingleVoltage().real();
 	mVcdq(1, 0) = mVirtualNodes[4]->initialSingleVoltage().imag();
-	
+
 	// update B matrix due to its dependence on Irc
 	updateBMatrixStateSpaceModel();
 
@@ -117,7 +184,7 @@ void DP::Ph1::AvVoltageSourceInverterDQ::initializeStateSpaceModel(Real omega, R
 	mPhi_d = mPhi_dInit;
 	mPhi_q = mPhi_qInit;
 	mGamma_d = mGamma_dInit;
-	mGamma_q = mGamma_qInit;	
+	mGamma_q = mGamma_qInit;
 	mStates << mThetaPLL, mPhiPLL, mP, mQ, mPhi_d, mPhi_q, mGamma_d, mGamma_q;
 	mSLog->info("Initialization of states: \n" + Logger::matrixToString(mStates));
 
@@ -214,18 +281,18 @@ void DP::Ph1::AvVoltageSourceInverterDQ::initializeFromPowerflow(Real frequency)
 	// set initial interface quantities
 	mIntfVoltage(0, 0) = initialSingleVoltage(0);
 	mIntfCurrent(0, 0) = - std::conj(Complex(mPref, mQref) / mIntfVoltage(0,0));
-	
+
 	Complex filterInterfaceInitialVoltage;
 	Complex filterInterfaceInitialCurrent;
 
-	if (mWithConnectionTransformer) {		
+	if (mWithConnectionTransformer) {
 		// calculate quantities of low voltage side of transformer (being the interface quantities of the filter)
 		// TODO: check possibility of more accurate solution as current only approximated
 		filterInterfaceInitialVoltage = (mIntfVoltage(0, 0) - Complex(mTransformerResistance, mTransformerInductance*mOmegaN)*mIntfCurrent(0, 0)) / Complex(mTransformerRatioAbs, mTransformerRatioPhase);
 		filterInterfaceInitialCurrent = mIntfCurrent(0, 0) * Complex(mTransformerRatioAbs, mTransformerRatioPhase);
 
 		// connect and init transformer
-		mVirtualNodes[4]->setInitialVoltage(filterInterfaceInitialVoltage);		
+		mVirtualNodes[4]->setInitialVoltage(filterInterfaceInitialVoltage);
 		mConnectionTransformer->connect({ mTerminals[0]->node(), mVirtualNodes[4] });
 		mConnectionTransformer->setParameters(mTransformerRatioAbs, mTransformerRatioPhase, mTransformerResistance, mTransformerInductance);
 		mConnectionTransformer->initialize(mFrequencies);
@@ -282,7 +349,7 @@ void DP::Ph1::AvVoltageSourceInverterDQ::initializeFromPowerflow(Real frequency)
 	mSubInductorF->initializeFromPowerflow(frequency);
 	mSubCapacitorF->initializeFromPowerflow(frequency);
 	mSubResistorC->initializeFromPowerflow(frequency);
-	
+
 	mSLog->info(
 		"\n--- Initialization from powerflow ---"
 		"\nVoltage across: {:s}"

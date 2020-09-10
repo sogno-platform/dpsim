@@ -12,7 +12,7 @@ using namespace CPS;
 
 DP::Ph3::Resistor::Resistor(String uid, String name,
 	Logger::Level logLevel)
-	: SimPowerComp<Complex>(uid, name, logLevel), TopologicalPowerComp(uid, name, logLevel) {
+	: SimPowerComp<Complex>(uid, name, logLevel) {
 	mPhaseType = PhaseType::ABC;
 	setTerminalNumber(2);
 	mIntfVoltage = MatrixComp::Zero(3,1);

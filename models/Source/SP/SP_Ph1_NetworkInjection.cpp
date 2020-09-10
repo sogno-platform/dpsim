@@ -12,7 +12,7 @@ using namespace CPS;
 
 
 SP::Ph1::externalGridInjection::externalGridInjection(String uid, String name,
-    Logger::Level logLevel) : SimPowerComp<Complex>(uid, name, logLevel), TopologicalPowerComp(uid, name, logLevel)  {
+    Logger::Level logLevel) : SimPowerComp<Complex>(uid, name, logLevel) {
 	setVirtualNodeNumber(1);
 	setTerminalNumber(1);
 	mIntfVoltage = MatrixComp::Zero(1, 1);

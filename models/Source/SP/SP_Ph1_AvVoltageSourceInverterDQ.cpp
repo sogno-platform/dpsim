@@ -11,7 +11,7 @@
 using namespace CPS;
 
 SP::Ph1::AvVoltageSourceInverterDQ::AvVoltageSourceInverterDQ(String uid, String name, Logger::Level logLevel)
-	:SimPowerComp<Complex>(uid, name, logLevel), TopologicalPowerComp(uid, name, logLevel)  {
+	:SimPowerComp<Complex>(uid, name, logLevel) {
 	setVirtualNodeNumber(4);
 	setTerminalNumber(1);
 	mIntfVoltage = MatrixComp::Zero(1, 1);
@@ -45,7 +45,7 @@ SP::Ph1::AvVoltageSourceInverterDQ::AvVoltageSourceInverterDQ(String uid, String
 	);
 }
 
-SP::Ph1::AvVoltageSourceInverterDQ::AvVoltageSourceInverterDQ(String uid, String name, Logger::Level logLevel, Bool withTrafo) 
+SP::Ph1::AvVoltageSourceInverterDQ::AvVoltageSourceInverterDQ(String uid, String name, Logger::Level logLevel, Bool withTrafo)
 	: SP::Ph1::AvVoltageSourceInverterDQ::AvVoltageSourceInverterDQ(uid, name, logLevel) {
 	if (withTrafo) {
 		setVirtualNodeNumber(5);
@@ -62,7 +62,7 @@ void SP::Ph1::AvVoltageSourceInverterDQ::setTransformerParameters(Real nomVoltag
 		if (nomVoltageEnd1 > nomVoltageEnd2)
 			mConnectionTransformer->setBaseVoltage(nomVoltageEnd1);
 		else
-			mConnectionTransformer->setBaseVoltage(nomVoltageEnd2);		
+			mConnectionTransformer->setBaseVoltage(nomVoltageEnd2);
 };
 
 void SP::Ph1::AvVoltageSourceInverterDQ::setParameters(Real sysOmega, Complex sysVoltNom, Real Pref, Real Qref) {

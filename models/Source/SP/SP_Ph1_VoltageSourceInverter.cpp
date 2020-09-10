@@ -11,7 +11,7 @@ using namespace CPS;
 
 SP::Ph1::VoltageSourceInverter::VoltageSourceInverter(String uid, String name,
 	PowerflowBusType powerflowBusType,
-	Logger::Level logLevel) : SimPowerComp<Complex>(uid, name, logLevel), TopologicalPowerComp(uid, name, logLevel)  {
+	Logger::Level logLevel) : SimPowerComp<Complex>(uid, name, logLevel) {
 	mNumTerminals = 1;
 	mTerminals.resize(mNumTerminals, nullptr);
 

@@ -11,7 +11,7 @@
 using namespace CPS;
 
 EMT::Ph3::Resistor::Resistor(String uid, String name, Logger::Level logLevel)
-	: SimPowerComp<Real>(uid, name, logLevel), TopologicalPowerComp(uid, name, logLevel) {
+	: SimPowerComp<Real>(uid, name, logLevel) {
 	mPhaseType = PhaseType::ABC;
 	setTerminalNumber(2);
 	mIntfVoltage = Matrix::Zero(3, 1);

@@ -15,7 +15,7 @@
 namespace CPS {
 	/// Base class for all components that are transmitting power.
 	template <typename VarType>
-	class SimPowerComp : public virtual TopologicalPowerComp {
+	class SimPowerComp : public TopologicalPowerComp {
 
 	protected:
 		/// List of Terminals

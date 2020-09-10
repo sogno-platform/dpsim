@@ -95,15 +95,16 @@ find_package(OpenMP)
 find_package(CUDA)
 find_package(GSL)
 find_package(Graphviz)
-
-find_package(PythonInterp 3.6)
-find_package(PythonLibs 3.6)
-find_package(NumPy)
-
 find_package(VILLASnode)
 
-if(PythonInterp_FOUND AND PythonLibs_FOUND)
-	set(Python_FOUND ON)
+if(NOT PYBIND)
+	find_package(PythonInterp 3.6)
+	find_package(PythonLibs 3.6)
+	find_package(NumPy)
+
+	if(PythonInterp_FOUND AND PythonLibs_FOUND)
+		set(Python_FOUND ON)
+	endif()
 endif()
 
 if("${CMAKE_SYSTEM}" MATCHES "Linux")
@@ -115,6 +116,11 @@ endif()
 option(BUILD_SHARED_LIBS 	"Build shared library"	OFF)
 option(BUILD_EXAMPLES    	"Build C++ examples"  	ON)
 option(GET_GRID_DATA    	"Download grid data"  	ON)
+
+option(PYBIND "Build pybind module" OFF)
+if(PYBIND)
+	set(BUILD_SHARED_LIBS ON)
+endif()
 
 include(CMakeDependentOption)
 cmake_dependent_option(WITH_GSL				"Enable GSL"        										ON  "GSL_FOUND"					OFF)
@@ -176,9 +182,17 @@ if(BUILD_EXAMPLES)
 	add_subdirectory(Examples)
 endif(BUILD_EXAMPLES)
 
-#add_subdirectory(Dependencies/pybind11)
-#pybind11_add_module(dpsimpy Source/pybind/main.cpp)
-#target_link_libraries(dpsimpy PRIVATE dpsim)
+if(PYBIND)
+	if (WITH_PYBIND_SUBMODULE OR WIN32)
+		include(cmake/GetPybindSubmodule.cmake)
+	else()
+		find_package(pybind11)
+	endif()
+
+	set(PYBIND11_CPP_STANDARD -std=c++11)
+	pybind11_add_module(dpsimpy Source/pybind/main.cpp)
+	target_link_libraries(dpsimpy PRIVATE dpsim)
+endif()
 
 include(cmake/GetGridData.cmake)
 

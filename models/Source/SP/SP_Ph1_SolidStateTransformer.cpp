@@ -11,7 +11,7 @@
 using namespace CPS;
 
 SP::Ph1::SolidStateTransformer::SolidStateTransformer(String uid, String name, Logger::Level logLevel)
-	: SimPowerComp<Complex>(uid, name, logLevel), TopologicalPowerComp(uid, name, logLevel)  {
+	: SimPowerComp<Complex>(uid, name, logLevel) {
 	mSLog->info("Create {} of type {}", mName, this->type());
 	mSLog->flush();
 	mIntfVoltage = MatrixComp::Zero(1, 1);

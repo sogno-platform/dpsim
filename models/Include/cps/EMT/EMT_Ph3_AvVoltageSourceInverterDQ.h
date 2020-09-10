@@ -75,25 +75,39 @@ namespace Ph3 {
 		std::vector<Real>::iterator mCurrentPower;
 		///
 		Attribute<Real>::Ptr mQRefInput;
-		
+
 		// #### solver ####
 		///
 		std::vector<const Matrix*> mRightVectorStamps;
 
 	public:
-		// #### constructors ####
 		///
-		AvVoltageSourceInverterDQ(String name,
-			Logger::Level logLevel = Logger::Level::off) :AvVoltageSourceInverterDQ(name, name, logLevel) {}
+		AvVoltageSourceInverterDQ(String name, Logger::Level logLevel = Logger::Level::off)
+			: AvVoltageSourceInverterDQ(name, name, logLevel) {}
 		///
 		AvVoltageSourceInverterDQ(String uid, String name, Logger::Level logLevel = Logger::Level::off, Bool withTrafo = false);
+
+		///
+		void setParameters(Real sysOmega, Real sysVoltNom, Real Pref, Real Qref);
+		///
+		void setTransformerParameters(Real nomVoltageEnd1, Real nomVoltageEnd2,
+			Real ratedPower, Real ratioAbs,	Real ratioPhase, Real resistance, Real inductance, Real omega);
+		///
+		void setControllerParameters(Real Kp_pll, Real Ki_pll, Real Kp_powerCtrl, Real Ki_powerCtrl,
+			Real Kp_currCtrl, Real Ki_currCtrl, Real Omega_cutoff);
+		///
+		void setFilterParameters(Real Lf, Real Cf, Real Rf, Real Rc);
+		///
+		void setInitialStateValues(Real thetaPLLInit, Real phiPLLInit, Real pInit, Real qInit,
+			Real phi_dInit, Real phi_qInit, Real gamma_dInit, Real gamma_qInit);
+
 		///
 		SimPowerComp<Real>::Ptr clone(String copySuffix);
-		
+
 		///
 		void initializeStateSpaceModel(Real omega, Real timeStep, Attribute<Matrix>::Ptr leftVector);
 		///
-		void updateInputStateSpaceModel(const Matrix& leftVector, Real time);		
+		void updateInputStateSpaceModel(const Matrix& leftVector, Real time);
 		///
 		void updateStates();
 		///

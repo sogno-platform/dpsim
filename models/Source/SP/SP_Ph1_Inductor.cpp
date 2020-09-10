@@ -11,7 +11,7 @@
 using namespace CPS;
 
 SP::Ph1::Inductor::Inductor(String uid, String name, Logger::Level logLevel)
-	: SimPowerComp<Complex>(uid, name, logLevel), TopologicalPowerComp(uid, name, logLevel) {
+	: SimPowerComp<Complex>(uid, name, logLevel) {
 	mIntfVoltage = MatrixComp::Zero(1, 1);
 	mIntfCurrent = MatrixComp::Zero(1, 1);
 	setTerminalNumber(2);

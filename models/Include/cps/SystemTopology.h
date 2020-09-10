@@ -14,6 +14,7 @@
 #include <cps/TopologicalPowerComp.h>
 #include <cps/SimPowerComp.h>
 #include <cps/SimNode.h>
+#include <cps/DP/DP_Ph1_Resistor.h>
 
 #ifdef WITH_GRAPHVIZ
   #include <cps/Graph.h>
@@ -127,6 +128,17 @@ namespace CPS {
 			mComponents.push_back(component);
 		}
 
+		/// Adds component and initializes frequencies
+		void addresistor(std::shared_ptr<DP::Ph1::Resistor> component) {
+			auto powerCompComplex = std::dynamic_pointer_cast<SimPowerComp<Complex>>(component);
+			if (powerCompComplex) powerCompComplex->initialize(mFrequencies);
+
+			auto powerCompReal = std::dynamic_pointer_cast<SimPowerComp<Real>>(component);
+			if (powerCompReal) powerCompReal->initialize(mFrequencies);
+
+			mComponents.push_back(component);
+		}
+
 		/// Connect component to simNodes
 		template <typename VarType>
 		void connectComponentToNodes(typename SimPowerComp<VarType>::Ptr component, typename SimNode<VarType>::List simNodes) {
@@ -218,7 +230,8 @@ namespace CPS {
 
 #ifdef WITH_GRAPHVIZ
 		Graph::Graph topologyGraph();
-		void printGraph(Graph::Graph graph);
+		String render();
+		void renderToFile(String filename);
 #endif
 
 	private:

@@ -14,8 +14,7 @@
 namespace CPS {
 namespace Base {
 /// @brief Base model of average inverter
-	class AvVoltageSourceInverterDQ :
-        public virtual TopologicalPowerComp {
+	class AvVoltageSourceInverterDQ {
 	protected:
         /// Complex nominal voltage [V]
 		Real mVnom;
@@ -82,14 +81,11 @@ namespace Base {
 
 		/// state vector
 		Matrix mStates = Matrix::Zero(8, 1);
-		
+
 		/// input vector
 		Matrix mU = Matrix::Zero(7, 1);
-		
-    public:
-		///
-		AvVoltageSourceInverterDQ(String uid, String name, Logger::Level logLevel = Logger::Level::off);
 
+    public:
         /// Setter for general parameters
 		void setParameters(Real sysOmega, Real sysVoltNom, Real Pref, Real Qref);
 		/// Setter for parameters of control loops

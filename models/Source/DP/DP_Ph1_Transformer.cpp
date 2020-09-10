@@ -12,12 +12,12 @@ using namespace CPS;
 
 DP::Ph1::Transformer::Transformer(String uid, String name,
 	Logger::Level logLevel, Bool withResistiveLosses)
-	: SimPowerComp<Complex>(uid, name, logLevel), TopologicalPowerComp(uid, name, logLevel) {
-	if (withResistiveLosses) 
+	: SimPowerComp<Complex>(uid, name, logLevel) {
+	if (withResistiveLosses)
 		setVirtualNodeNumber(3);
 	else
 		setVirtualNodeNumber(2);
-	
+
 	setTerminalNumber(2);
 
 	mSLog->info("Create {} {}", this->type(), name);
@@ -40,7 +40,7 @@ void DP::Ph1::Transformer::setParameters(Real ratioAbs, Real ratioPhase,
 	Real resistance, Real inductance) {
 
 	Base::Ph1::Transformer::setParameters(ratioAbs, ratioPhase, resistance, inductance);
-	
+
 	mSLog->info("Resistance={} [Ohm] Inductance={} [Ohm] (referred to primary side)", resistance, inductance);
     mSLog->info("Tap Ratio={} [ ] Phase Shift={} [deg]", ratioAbs, ratioPhase);
 

@@ -10,24 +10,6 @@
 
 using namespace CPS;
 
-Base::AvVoltageSourceInverterDQ::AvVoltageSourceInverterDQ(String uid, String name, Logger::Level logLevel)
-: TopologicalPowerComp(uid, name, logLevel) {
-    // state variables
-	addAttribute<Real>("theta", &mThetaPLL, Flags::read | Flags::write);
-	addAttribute<Real>("phipll", &mPhiPLL, Flags::read | Flags::write);
-	addAttribute<Real>("p", &mP, Flags::read | Flags::write);
-	addAttribute<Real>("q", &mQ, Flags::read | Flags::write);
-	addAttribute<Real>("phid", &mPhi_d, Flags::read | Flags::write);
-	addAttribute<Real>("phiq", &mPhi_q, Flags::read | Flags::write);
-	addAttribute<Real>("gammad", &mGamma_d, Flags::read | Flags::write);
-	addAttribute<Real>("gammaq", &mGamma_q, Flags::read | Flags::write);
-
-	// input variables
-	addAttribute<Real>("Omega_nom", &mOmegaN, Flags::read | Flags::write);
-	addAttribute<Real>("P_ref", &mPref, Flags::read | Flags::write);
-	addAttribute<Real>("Q_ref", &mQref, Flags::read | Flags::write);
-}
-
 void Base::AvVoltageSourceInverterDQ::setTransformerParameters(Real nomVoltageEnd1, Real nomVoltageEnd2, Real ratedPower, Real ratioAbs,
 	Real ratioPhase, Real resistance, Real inductance, Real omega) {
 
@@ -35,10 +17,6 @@ void Base::AvVoltageSourceInverterDQ::setTransformerParameters(Real nomVoltageEn
 	mTransformerInductance = inductance;
 	mTransformerRatioAbs = ratioAbs;
 	mTransformerRatioPhase = ratioPhase;
-
-	mSLog->info("Connection Transformer Parameters:");
-	mSLog->info("Resistance={} [Ohm] Inductance={} [H]", mTransformerResistance, mTransformerInductance);
-    mSLog->info("Tap Ratio={} [ ] Phase Shift={} [deg]", mTransformerRatioAbs, mTransformerRatioPhase);
 };
 
 void Base::AvVoltageSourceInverterDQ::setParameters(Real sysOmega, Real sysVoltNom, Real Pref, Real Qref) {
@@ -48,41 +26,26 @@ void Base::AvVoltageSourceInverterDQ::setParameters(Real sysOmega, Real sysVoltN
 	mVnom = sysVoltNom;
 	mOmegaN = sysOmega;
 
-	mSLog->info("General Parameters:");
-	mSLog->info("Nominal Voltage={} [V] Nominal Omega={} [1/s]", mVnom, mOmegaN);
-	mSLog->info("Active Power={} [W] Reactive Power={} [VAr]", mPref, mQref);    
-
 	// use Pref and Qref as init values for states P and Q
 	// init values for other states remain zero (if not changed using setInitialStateValues)
 	mPInit = Pref;
 	mQInit = Qref;
-
-	parametersSet = true;
 }
 
-void Base::AvVoltageSourceInverterDQ::setControllerParameters(Real Kp_pll, Real Ki_pll, Real Kp_powerCtrl, Real Ki_powerCtrl, Real Kp_currCtrl, Real Ki_currCtrl, Real Omega_cutoff) {
+void Base::AvVoltageSourceInverterDQ::setControllerParameters(Real Kp_pll, Real Ki_pll,
+	Real Kp_powerCtrl, Real Ki_powerCtrl, Real Kp_currCtrl, Real Ki_currCtrl, Real Omega_cutoff) {
+
 	mKpPLL = Kp_pll;
 	mKiPLL = Ki_pll;
-
 	mKiPowerCtrld = Ki_powerCtrl;
 	mKiPowerCtrlq = Ki_powerCtrl;
-
 	mKpPowerCtrld = Kp_powerCtrl;
 	mKpPowerCtrlq = Kp_powerCtrl;
-
 	mKiCurrCtrld = Ki_currCtrl;
 	mKiCurrCtrlq = Ki_currCtrl;
-
 	mKpCurrCtrld = Kp_currCtrl;
 	mKpCurrCtrlq = Kp_currCtrl;
-
 	mOmegaCutoff = Omega_cutoff;
-
-	mSLog->info("Control Parameters:");
-	mSLog->info("PLL: K_i = {}, K_p = {}", mKpPLL, mKiPLL);
-	mSLog->info("Power Loop: K_i = {}, K_p = {}", mKpPowerCtrld, mKiPowerCtrld);
-	mSLog->info("Current Loop: K_i = {}, K_p = {}", mKpCurrCtrld, mKiCurrCtrld);
-	mSLog->info("Cut-Off Frequency = {}", mOmegaCutoff);
 
     // Set state space matrices using controller parameters
 	mA <<
@@ -119,10 +82,6 @@ void Base::AvVoltageSourceInverterDQ::setFilterParameters(Real Lf, Real Cf, Real
 	mCf = Cf;
 	mRf = Rf;
 	mRc = Rc;
-
-	mSLog->info("Filter Parameters:");
-	mSLog->info("Inductance Lf={} [H] Capacitance Cf={} [F]", mLf, mCf);
-	mSLog->info("Resistance Rf={} [H] Resistance Rc={} [F]", mRf, mRc);
 }
 
 void Base::AvVoltageSourceInverterDQ::setInitialStateValues(Real thetaPLLInit, Real phiPLLInit, Real pInit, Real qInit,
@@ -136,10 +95,4 @@ void Base::AvVoltageSourceInverterDQ::setInitialStateValues(Real thetaPLLInit, R
 	mPhi_qInit = phi_qInit;
 	mGamma_dInit = gamma_dInit;
 	mGamma_qInit = gamma_qInit;
-
-	mSLog->info("Initial State Value Parameters:");
-	mSLog->info("ThetaPLLInit = {}, PhiPLLInit = {}", mThetaPLLInit, mPhiPLLInit);
-	mSLog->info("PInit = {}, QInit = {}", mPInit, mQInit);
-	mSLog->info("Phi_dInit = {}, Phi_qInit = {}", mPhi_dInit, mPhi_qInit);
-	mSLog->info("Gamma_dInit = {}, Gamma_qInit = {}", mGamma_dInit, mGamma_qInit);
-};
+}

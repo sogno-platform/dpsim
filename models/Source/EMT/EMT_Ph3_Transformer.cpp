@@ -12,9 +12,9 @@ using namespace CPS;
 
 EMT::Ph3::Transformer::Transformer(String uid, String name,
 	Logger::Level logLevel, Bool withResistiveLosses)
-	: SimPowerComp<Real>(uid, name, logLevel), TopologicalPowerComp(uid, name, logLevel) {
+	: SimPowerComp<Real>(uid, name, logLevel) {
 	mPhaseType = PhaseType::ABC;
-	if (withResistiveLosses) 
+	if (withResistiveLosses)
 		setVirtualNodeNumber(3);
 	else
 		setVirtualNodeNumber(2);

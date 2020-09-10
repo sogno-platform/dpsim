@@ -12,7 +12,7 @@ using namespace CPS;
 
  SP::Ph1::PQNode::PQNode(String uid, String name,
 	 Logger::Level logLevel)
-	 : SimPowerComp<Complex>(uid, name, logLevel), TopologicalPowerComp(uid, name, logLevel)  {
+	 : SimPowerComp<Complex>(uid, name, logLevel) {
 
 	addAttribute<Real>("P", &mPower, Flags::read | Flags::write);
 	addAttribute<Real>("Q", &mReactivePower, Flags::read | Flags::write);

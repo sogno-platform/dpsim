@@ -14,7 +14,7 @@ using namespace CPS;
 using namespace std;
 
 DP::Ph1::Inverter::Inverter(String uid, String name, Logger::Level logLevel)
-	: SimPowerComp<Complex>(uid, name, logLevel), TopologicalPowerComp(uid, name, logLevel) {
+	: SimPowerComp<Complex>(uid, name, logLevel) {
 	setTerminalNumber(1);
 	setVirtualNodeNumber(1);
 	mIntfVoltage = MatrixComp::Zero(1,1);

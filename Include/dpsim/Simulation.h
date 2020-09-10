@@ -49,7 +49,7 @@ namespace DPsim {
 		/// Simulation name
 		String mName;
 		/// Final time of the simulation
-		Real mFinalTime = 0.1;
+		Real mFinalTime = 0.001;
 		/// Time variable that is incremented at every step
 		Real mTime = 0;
 		/// Simulation timestep

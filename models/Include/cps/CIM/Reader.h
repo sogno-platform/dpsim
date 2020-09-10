@@ -157,7 +157,7 @@ namespace CIM {
 		/// Creates new reader with a name for logging.
 		/// The first log level is for the reader and the second for the generated components.
 		Reader(String name,
-			Logger::Level logLevel = Logger::Level::off,
+			Logger::Level logLevel = Logger::Level::info,
 			Logger::Level componentLogLevel = Logger::Level::off);
 		///
 		virtual ~Reader();
@@ -166,6 +166,14 @@ namespace CIM {
 		SystemTopology loadCIM(Real systemFrequency, const std::experimental::filesystem::path &filename, Domain domain = Domain::DP, PhaseType phase = PhaseType::Single);
 		/// Parses data from CIM files into the CPS data structure
 		SystemTopology loadCIM(Real systemFrequency, const std::list<std::experimental::filesystem::path> &filenames, Domain domain = Domain::DP, PhaseType phase = PhaseType::Single);
+		///
+		SystemTopology loadCIM(Real systemFrequency, const std::list<CPS::String> &filenamesString, Domain domain = Domain::DP, PhaseType phase = PhaseType::Single) {
+			std::list<std::experimental::filesystem::path> filenames;
+			for (auto f : filenamesString)
+				filenames.emplace_back(f);
+
+			return loadCIM(systemFrequency, filenames, domain, phase);
+		}
 
 		/// read node voltages from the corresponding static SystemTopology for initialization
 		void readNodeVoltagesFromStaticSystemTopology(SystemTopology& sysStatic, SystemTopology& sysDynamic);
