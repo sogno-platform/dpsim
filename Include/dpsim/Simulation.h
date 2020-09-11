@@ -178,8 +178,6 @@ namespace DPsim {
 		///
 		void setSolverType(Solver::Type solverType = Solver::Type::MNA) { mSolverType = solverType; }
 		///
-		void doSteadyStateInit(Bool steadyStateInit = false) { mSteadyStateInit = steadyStateInit; }
-		///
 		void doPowerFlowInit(Bool powerFlowInit = true) { mPowerFlowInit = powerFlowInit; }
 		///
 		void doSplitSubnets(Bool splitSubnets = true) { mSplitSubnets = splitSubnets; }
