@@ -1,5 +1,6 @@
 #include <DPsim.h>
 #include <cps/CSVReader.h>
+#include "../Examples.h"
 
 using namespace std;
 using namespace DPsim;
@@ -9,7 +10,7 @@ using namespace CPS::CIM;
 int main(int argc, char** argv){
 
 	// Simulation parameters
-	Scenarios::CIGREMV::ScenarioConfig scenario;
+	Examples::CIGREMV::ScenarioConfig scenario;
 	std::list<fs::path> filenames;
 	Real timeStep;
 	Real finalTime;
@@ -41,7 +42,7 @@ int main(int argc, char** argv){
 	Logger::setLogDir("logs/" + simNamePF);
     CIM::Reader reader(simNamePF, Logger::Level::debug, Logger::Level::debug);
     SystemTopology systemPF = reader.loadCIM(scenario.systemFrequency, filenames, Domain::SP);
-	Scenarios::CIGREMV::addInvertersToCIGREMV(systemPF, scenario, Domain::SP);	 
+	Examples::CIGREMV::addInvertersToCIGREMV(systemPF, scenario, Domain::SP);	 
 
 	// define logging
     auto loggerPF = DPsim::DataLogger::make(simNamePF);
@@ -60,7 +61,7 @@ int main(int argc, char** argv){
 	Logger::setLogDir("logs/" + simName);
 	CIM::Reader reader2(simName, Logger::Level::info, Logger::Level::debug);
     SystemTopology systemDP = reader2.loadCIM(scenario.systemFrequency, filenames, CPS::Domain::DP);
-	Scenarios::CIGREMV::addInvertersToCIGREMV(systemDP, scenario, Domain::DP);
+	Examples::CIGREMV::addInvertersToCIGREMV(systemDP, scenario, Domain::DP);
 	reader.initDynamicSystemTopologyWithPowerflow(systemPF, systemDP);
 
 	auto logger = DPsim::DataLogger::make(simName);
@@ -86,13 +87,13 @@ int main(int argc, char** argv){
 	// log output of PV connected at N11
 	String pv_name = "pv_N11";
 	auto pv = systemDP.component<CPS::SimPowerComp<Complex>>(pv_name);
-	Scenarios::CIGREMV::logPVAttributes(logger, pv);
+	Examples::CIGREMV::logPVAttributes(logger, pv);
 
 	// // load step sized relative to nominal load at N11
-	// std::shared_ptr<SwitchEvent> loadStepEvent = Scenarios::createEventAddPowerConsumption("N11", 2-timeStep, 5*systemPF.component<CPS::SP::Ph1::Load>("LOAD-H-11")->attribute<CPS::Real>("P")->get(), systemDP, Domain::DP);
+	// std::shared_ptr<SwitchEvent> loadStepEvent = Examples::createEventAddPowerConsumption("N11", 2-timeStep, 5*systemPF.component<CPS::SP::Ph1::Load>("LOAD-H-11")->attribute<CPS::Real>("P")->get(), systemDP, Domain::DP);
 
 	// load step sized in absolute terms
-	std::shared_ptr<SwitchEvent> loadStepEvent = Scenarios::createEventAddPowerConsumption("N11", 2-timeStep, 1500.0e3, systemDP, Domain::DP);
+	std::shared_ptr<SwitchEvent> loadStepEvent = Examples::createEventAddPowerConsumption("N11", 2-timeStep, 1500.0e3, systemDP, Domain::DP);
 	
 	Simulation sim(simName, systemDP, timeStep, finalTime, Domain::DP, Solver::Type::MNA, Logger::Level::debug, true);
 

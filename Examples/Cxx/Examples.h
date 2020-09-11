@@ -14,7 +14,7 @@
 
 namespace CPS {
 namespace CIM {
-namespace Scenarios {
+namespace Examples {
 
 namespace SGIB {
 

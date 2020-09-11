@@ -1,6 +1,7 @@
 #include "cps/CIM/Reader.h"
 #include <DPsim.h>
 #include <cps/CSVReader.h>
+#include "../Examples.h"
 
 using namespace std;
 using namespace DPsim;
@@ -28,13 +29,13 @@ int main(int argc, char** argv){
 	Real timeStep = 1;
 	Real finalTime = 2;
 	String simName = "PF_CIGRE_MV_withDG";
-	Scenarios::CIGREMV::ScenarioConfig scenario;
+	Examples::CIGREMV::ScenarioConfig scenario;
 	Logger::setLogDir("logs/" + simName);
 
 	// read original network topology
     CIM::Reader reader(simName, Logger::Level::debug, Logger::Level::debug);
     SystemTopology system = reader.loadCIM(scenario.systemFrequency, filenames, Domain::SP);
-	Scenarios::CIGREMV::addInvertersToCIGREMV(system, scenario, Domain::SP);
+	Examples::CIGREMV::addInvertersToCIGREMV(system, scenario, Domain::SP);
 
     auto loggerPF = DPsim::DataLogger::make(simName);
     for (auto node : system.mNodes)

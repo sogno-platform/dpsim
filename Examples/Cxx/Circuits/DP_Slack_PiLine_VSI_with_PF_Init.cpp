@@ -15,6 +15,7 @@
  *********************************************************************************/
 
 #include <DPsim.h>
+#include "../Examples.h"
 
 using namespace DPsim;
 using namespace CPS;
@@ -22,7 +23,7 @@ using namespace CPS::CIM;
 
 int main(int argc, char* argv[]) {
 
-	Scenarios::SGIB::ScenarioConfig scenario;
+	Examples::SGIB::ScenarioConfig scenario;
 	Real finalTime = 2.0;
 
 	// ----- POWERFLOW FOR INITIALIZATION -----
@@ -113,10 +114,10 @@ int main(int argc, char* argv[]) {
 	loggerDP->addAttribute("v1", n1DP->attribute("v"));
 	loggerDP->addAttribute("v2", n2DP->attribute("v"));
 
-	Scenarios::CIGREMV::logPVAttributes(loggerDP, pv);
+	Examples::CIGREMV::logPVAttributes(loggerDP, pv);
 
 	// load step sized in absolute terms
-	// std::shared_ptr<SwitchEvent> loadStepEvent = Scenarios::createEventAddPowerConsumption("n2", 1-timeStepDP, 1000.0e3, systemDP, Domain::DP);
+	// std::shared_ptr<SwitchEvent> loadStepEvent = Examples::createEventAddPowerConsumption("n2", 1-timeStepDP, 1000.0e3, systemDP, Domain::DP);
 
 	// Simulation
 	Simulation sim(simNameDP, Logger::Level::debug);
