@@ -122,14 +122,18 @@ void DP::Ph1::Transformer::mnaInitialize(Real omega, Real timeStep, Attribute<Ma
 
 	mRightVector = Matrix::Zero(leftVector->get().rows(), 1);
 	auto subComponents = MNAInterface::List({mSubInductor, mSubSnubResistor});
+
 	if (mSubResistor)
 		subComponents.push_back(mSubResistor);
+	
 	for (auto comp : subComponents) {
 		comp->mnaInitialize(omega, timeStep, leftVector);
-		for (auto task : comp->mnaTasks()) {
+
+		for (auto task : comp->mnaTasks())
 			mMnaTasks.push_back(task);
-		}
+		
 	}
+
 	mMnaTasks.push_back(std::make_shared<MnaPreStep>(*this));
 	mMnaTasks.push_back(std::make_shared<MnaPostStep>(*this, leftVector));
 
@@ -177,13 +181,43 @@ void DP::Ph1::Transformer::mnaApplyRightSideVectorStamp(Matrix& rightVector) {
 	mSubInductor->mnaApplyRightSideVectorStamp(rightVector);
 }
 
-void DP::Ph1::Transformer::MnaPreStep::execute(Real time, Int timeStepCount) {
-	mTransformer.mnaApplyRightSideVectorStamp(mTransformer.mRightVector);
+void DP::Ph1::Transformer::mnaAddPreStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes) {
+	// add pre-step dependencies of subcomponents
+	this->mSubInductor->mnaAddPreStepDependencies(prevStepDependencies, attributeDependencies, modifiedAttributes);
+	// add pre-step dependencies of component itself
+	prevStepDependencies.push_back(this->attribute("i_intf"));
+	prevStepDependencies.push_back(this->attribute("v_intf"));
+	modifiedAttributes.push_back(this->attribute("right_vector"));
 }
 
-void DP::Ph1::Transformer::MnaPostStep::execute(Real time, Int timeStepCount) {
-	mTransformer.mnaUpdateVoltage(*mLeftVector);
-	mTransformer.mnaUpdateCurrent(*mLeftVector);
+void DP::Ph1::Transformer::mnaPreStep(Real time, Int timeStepCount) {	
+	// pre-step of subcomponents
+	this->mSubInductor->mnaPreStep(time, timeStepCount);
+	// pre-step of component itself
+	this->mnaApplyRightSideVectorStamp(this->mRightVector);
+}
+
+void DP::Ph1::Transformer::mnaAddPostStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes, Attribute<Matrix>::Ptr &leftVector) {
+	// add post-step dependencies of subcomponents
+	if (mSubResistor)
+		this->mSubResistor->mnaAddPostStepDependencies(prevStepDependencies, attributeDependencies, modifiedAttributes, leftVector);
+	this->mSubInductor->mnaAddPostStepDependencies(prevStepDependencies, attributeDependencies, modifiedAttributes, leftVector);
+	this->mSubSnubResistor->mnaAddPostStepDependencies(prevStepDependencies, attributeDependencies, modifiedAttributes, leftVector);
+	// add post-step dependencies of component itself
+	attributeDependencies.push_back(leftVector);
+	modifiedAttributes.push_back(this->attribute("v_intf"));
+	modifiedAttributes.push_back(this->attribute("i_intf"));
+}
+
+void DP::Ph1::Transformer::mnaPostStep(Real time, Int timeStepCount, Attribute<Matrix>::Ptr &leftVector) {
+	// post-step of subcomponents
+	if (mSubResistor)
+		this->mSubResistor->mnaPostStep(time, timeStepCount, leftVector);
+	this->mSubInductor->mnaPostStep(time, timeStepCount, leftVector);
+	this->mSubSnubResistor->mnaPostStep(time, timeStepCount, leftVector);
+	// post-step of component itself
+	this->mnaUpdateVoltage(*leftVector);
+	this->mnaUpdateCurrent(*leftVector);
 }
 
 void DP::Ph1::Transformer::mnaUpdateCurrent(const Matrix& leftVector) {

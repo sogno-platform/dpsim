@@ -28,8 +28,7 @@ namespace Ph1 {
 		public MNAInterface,
 		public SharedFactory<AvVoltageSourceInverterDQ> {
 	protected:
-
-		// ### Subcomponents ###
+		// ### Electrical Subcomponents ###
 		/// Controlled voltage source
 		std::shared_ptr<DP::Ph1::ControlledVoltageSource> mSubCtrledVoltageSource;
 		/// Resistor Rf as part of LCL filter
@@ -50,15 +49,16 @@ namespace Ph1 {
 		Matrix mIrcdq = Matrix::Zero(2, 1);
 
 		// ### outputs ###
-		///
+		/// Control Output before Transformation Interface
 		Matrix mVsdq = Matrix::Zero(2, 1);
+		/// Control Output before Transformation Interface
+		MatrixComp mControllerOutput = MatrixComp::Zero(1,1);
 
 		/// instantaneous omega
 		Real mOmegaInst=0;
 		/// instantaneous frequency
 		Real mFreqInst=0;
-		///
-		Bool mCtrlOn = true;
+
 		///
 		Bool mCoveeCtrled=true;
 		///
@@ -84,6 +84,9 @@ namespace Ph1 {
 		std::vector<const Matrix*> mRightVectorStamps;
 
 	public:
+		/// Setter for parameters of control loops
+		void setControllerParameters(Real Kp_pll, Real Ki_pll, Real Kp_powerCtrl, Real Ki_powerCtrl, Real Kp_currCtrl, Real Ki_currCtrl, Real Omega_cutoff);
+
 		///
 		std::vector<PQData> mLoadProfile;
 
@@ -98,9 +101,6 @@ namespace Ph1 {
 		///
 		void setTransformerParameters(Real nomVoltageEnd1, Real nomVoltageEnd2,
 			Real ratedPower, Real ratioAbs,	Real ratioPhase, Real resistance, Real inductance, Real omega);
-		///
-		void setControllerParameters(Real Kp_pll, Real Ki_pll, Real Kp_powerCtrl, Real Ki_powerCtrl,
-			Real Kp_currCtrl, Real Ki_currCtrl, Real Omega_cutoff);
 		///
 		void setFilterParameters(Real Lf, Real Cf, Real Rf, Real Rc);
 		///
@@ -138,6 +138,7 @@ namespace Ph1 {
 		void initializeFromPowerflow(Real frequency);
 		// #### interface with villas node ####
 		void ctrlReceiver(Attribute<Real>::Ptr qref);
+
 		// #### MNA section ####
 		/// Initializes internal variables of the component
 		void mnaInitialize(Real omega, Real timeStep, Attribute<Matrix>::Ptr leftVector);
@@ -147,6 +148,17 @@ namespace Ph1 {
 		void mnaApplyRightSideVectorStamp(Matrix& rightVector);
 		/// Returns current through the component
 		void mnaUpdateCurrent(const Matrix& leftVector);
+		/// MNA pre and post step operations
+		void mnaPreStep(Real time, Int timeStepCount);
+		void mnaPostStep(Real time, Int timeStepCount, Attribute<Matrix>::Ptr &leftVector);
+		/// add MNA pre and post step dependencies
+		void mnaAddPreStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes);
+		void mnaAddPostStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes, Attribute<Matrix>::Ptr &leftVector);
+
+		// #### Control section ####
+		void controlStep(Real time, Int timeStepCount);
+		void controlStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes);
+
 		/// interface with power control service
 		void coveeCtrled(Bool ctrled){mCoveeCtrled=ctrled;};
 		///
@@ -156,37 +168,41 @@ namespace Ph1 {
 		///
 		void setProfileUpdateRate(UInt rate){mProfileUndateRate=rate;};
 
-		class MnaPreStep : public CPS::Task {
+		class ControlStep : public CPS::Task {
 		public:
-			MnaPreStep(AvVoltageSourceInverterDQ& AvVoltageSourceInverterDQ) :
-				Task(AvVoltageSourceInverterDQ.mName + ".MnaPreStep"), mAvVoltageSourceInverterDQ(AvVoltageSourceInverterDQ) {
-				//mAttributeDependencies.push_back(AvVoltageSourceInverterDQ.attribute("P_ref"));
-				mPrevStepDependencies.push_back(AvVoltageSourceInverterDQ.attribute("i_intf"));
-				mPrevStepDependencies.push_back(AvVoltageSourceInverterDQ.attribute("v_intf"));
-				mModifiedAttributes.push_back(AvVoltageSourceInverterDQ.mSubCtrledVoltageSource->attribute("v_intf"));
+			ControlStep(AvVoltageSourceInverterDQ& AvVoltageSourceInverterDQ) :
+				Task(AvVoltageSourceInverterDQ.mName + ".ControlStep"), mAvVoltageSourceInverterDQ(AvVoltageSourceInverterDQ) {
+					mAvVoltageSourceInverterDQ.controlStepDependencies(mPrevStepDependencies, mAttributeDependencies, mModifiedAttributes);
 			}
-
-			void execute(Real time, Int timeStepCount);
+			void execute(Real time, Int timeStepCount) { mAvVoltageSourceInverterDQ.controlStep(time, timeStepCount); };
 
 		private:
 			AvVoltageSourceInverterDQ& mAvVoltageSourceInverterDQ;
 		};
 
-		class AddBStep : public Task {
+		class MnaPreStep : public CPS::Task {
 		public:
-			AddBStep(AvVoltageSourceInverterDQ& AvVoltageSourceInverterDQ) :
-				Task(AvVoltageSourceInverterDQ.mName + ".AddBStep"), mAvVoltageSourceInverterDQ(AvVoltageSourceInverterDQ) {
-				mAttributeDependencies.push_back(AvVoltageSourceInverterDQ.mSubInductorF->attribute("right_vector"));
-				mAttributeDependencies.push_back(AvVoltageSourceInverterDQ.mConnectionTransformer->attribute("right_vector"));
-				mAttributeDependencies.push_back(AvVoltageSourceInverterDQ.mSubCapacitorF->attribute("right_vector"));
-				mAttributeDependencies.push_back(AvVoltageSourceInverterDQ.mSubCtrledVoltageSource->attribute("right_vector"));
-				mModifiedAttributes.push_back(AvVoltageSourceInverterDQ.attribute("right_vector"));
+			MnaPreStep(AvVoltageSourceInverterDQ& AvVoltageSourceInverterDQ) :
+				Task(AvVoltageSourceInverterDQ.mName + ".MnaPreStep"), mAvVoltageSourceInverterDQ(AvVoltageSourceInverterDQ) {
+					mAvVoltageSourceInverterDQ.mnaAddPreStepDependencies(mPrevStepDependencies, mAttributeDependencies, mModifiedAttributes);
 			}
-
-			void execute(Real time, Int timeStepCount);
+			void execute(Real time, Int timeStepCount) { mAvVoltageSourceInverterDQ.mnaPreStep(time, timeStepCount); };
 
 		private:
 			AvVoltageSourceInverterDQ& mAvVoltageSourceInverterDQ;
+		};
+
+		class MnaPostStep : public CPS::Task {
+		public:
+			MnaPostStep(AvVoltageSourceInverterDQ& AvVoltageSourceInverterDQ, Attribute<Matrix>::Ptr leftVector) :
+				Task(AvVoltageSourceInverterDQ.mName + ".MnaPostStep"), mAvVoltageSourceInverterDQ(AvVoltageSourceInverterDQ), mLeftVector(leftVector) {
+				mAvVoltageSourceInverterDQ.mnaAddPostStepDependencies(mPrevStepDependencies, mAttributeDependencies, mModifiedAttributes, mLeftVector);
+			}
+			void execute(Real time, Int timeStepCount) { mAvVoltageSourceInverterDQ.mnaPostStep(time, timeStepCount, mLeftVector); };
+
+		private:
+			AvVoltageSourceInverterDQ& mAvVoltageSourceInverterDQ;
+			Attribute<Matrix>::Ptr mLeftVector;
 		};
 
 		class CtrlStep : public Task {
@@ -196,37 +212,9 @@ namespace Ph1 {
 				mAttributeDependencies.push_back(AvVoltageSourceInverterDQ.mQRefInput);
 				mModifiedAttributes.push_back(AvVoltageSourceInverterDQ.attribute("Q_ref"));
 			}
-
 			void execute(Real time, Int timeStepCount);
-
 		private:
 			AvVoltageSourceInverterDQ& mAvVoltageSourceInverterDQ;
-		};
-
-
-
-		class MnaPostStep : public CPS::Task {
-		public:
-			MnaPostStep(AvVoltageSourceInverterDQ& AvVoltageSourceInverterDQ, Attribute<Matrix>::Ptr leftVector) :
-				Task(AvVoltageSourceInverterDQ.mName + ".MnaPostStep"), mAvVoltageSourceInverterDQ(AvVoltageSourceInverterDQ), mLeftVector(leftVector)
-			{
-				mAttributeDependencies.push_back(leftVector);
-				//mAttributeDependencies.push_back(AvVoltageSourceInverterDQ.attribute("Q_ref"));
-				//mAttributeDependencies.push_back(AvVoltageSourceInverterDQ.mQRefInput);
-				mAttributeDependencies.push_back(AvVoltageSourceInverterDQ.mSubCtrledVoltageSource->attribute("i_intf"));
-				mAttributeDependencies.push_back(AvVoltageSourceInverterDQ.mSubResistorF->attribute("i_intf"));
-				mAttributeDependencies.push_back(AvVoltageSourceInverterDQ.mSubInductorF->attribute("i_intf"));
-				mAttributeDependencies.push_back(AvVoltageSourceInverterDQ.mConnectionTransformer->attribute("i_intf"));
-				mAttributeDependencies.push_back(AvVoltageSourceInverterDQ.mSubResistorC->attribute("i_intf"));
-				mModifiedAttributes.push_back(AvVoltageSourceInverterDQ.attribute("i_intf"));
-				mModifiedAttributes.push_back(AvVoltageSourceInverterDQ.attribute("v_intf"));
-			}
-
-			void execute(Real time, Int timeStepCount);
-
-		private:
-			AvVoltageSourceInverterDQ& mAvVoltageSourceInverterDQ;
-			Attribute<Matrix>::Ptr mLeftVector;
 		};
 
 	};

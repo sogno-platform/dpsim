@@ -80,12 +80,22 @@ void DP::Ph1::ControlledVoltageSource::mnaApplyRightSideVectorStamp(Matrix& righ
 		Logger::complexToString(mIntfVoltage(0, 0)), mVirtualNodes[0]->matrixNodeIndex());
 }
 
-void DP::Ph1::ControlledVoltageSource::MnaPreStep::execute(Real time, Int timeStepCount) {
-	mControlledVoltageSource.mnaApplyRightSideVectorStamp(mControlledVoltageSource.mRightVector);
+void DP::Ph1::ControlledVoltageSource::mnaAddPreStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes) {
+	attributeDependencies.push_back(this->attribute("v_intf"));
+	modifiedAttributes.push_back(this->attribute("right_vector"));
 }
 
-void DP::Ph1::ControlledVoltageSource::MnaPostStep::execute(Real time, Int timeStepCount) {
-	mControlledVoltageSource.mnaUpdateCurrent(*mLeftVector);
+void DP::Ph1::ControlledVoltageSource::mnaPreStep(Real time, Int timeStepCount) {
+	this->mnaApplyRightSideVectorStamp(this->mRightVector);
+}
+
+void DP::Ph1::ControlledVoltageSource::mnaAddPostStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes, Attribute<Matrix>::Ptr &leftVector) {
+	attributeDependencies.push_back(leftVector);
+	modifiedAttributes.push_back(this->attribute("i_intf"));
+}
+
+void DP::Ph1::ControlledVoltageSource::mnaPostStep(Real time, Int timeStepCount, Attribute<Matrix>::Ptr &leftVector) {	
+	this->mnaUpdateCurrent(*leftVector);
 }
 
 void DP::Ph1::ControlledVoltageSource::mnaUpdateCurrent(const Matrix& leftVector) {

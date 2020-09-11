@@ -33,11 +33,11 @@ DP::Ph1::AvVoltageSourceInverterDQ::AvVoltageSourceInverterDQ(String uid, String
 
 	// additional output variables
 	addAttribute<Matrix>("Vsdq", &mVsdq, Flags::read | Flags::write);
+	addAttribute<MatrixComp>("controller_output", &mControllerOutput, Flags::read | Flags::write);
 
 	// additional variables for logging
 	addAttribute<Real>("omega", &mOmegaInst, Flags::read | Flags::write);
 	addAttribute<Real>("freq", &mFreqInst, Flags::read | Flags::write);
-	addAttribute<Bool>("ctrl_on", &mCtrlOn, Flags::read | Flags::write);
 
 	// state variables
 	addAttribute<Real>("theta", &mThetaPLL, Flags::read | Flags::write);
@@ -108,6 +108,7 @@ void DP::Ph1::AvVoltageSourceInverterDQ::setInitialStateValues(Real thetaPLLInit
 	mSLog->info("Phi_dInit = {}, Phi_qInit = {}", mPhi_dInit, mPhi_qInit);
 	mSLog->info("Gamma_dInit = {}, Gamma_qInit = {}", mGamma_dInit, mGamma_qInit);
 }
+
 
 SimPowerComp<Complex>::Ptr DP::Ph1::AvVoltageSourceInverterDQ::clone(String name) {
 	auto copy = DP::Ph1::AvVoltageSourceInverterDQ::make(name, mLogLevel);
@@ -223,42 +224,25 @@ void DP::Ph1::AvVoltageSourceInverterDQ::step(Real time, Int timeStepCount) {
 	newU << mOmegaN, mPref, mQref, mVcdq(0, 0), mVcdq(1, 0), mIrcdq(0, 0), mIrcdq(1, 0);
 	newStates = Math::StateSpaceTrapezoidal(mStates, mA, mB, mTimeStep, newU, mU);
 
-	if (mCtrlOn) {
-		// update states
-		mThetaPLL = newStates(0, 0);
-		mPhiPLL = newStates(1, 0);
-		mP = newStates(2, 0);
-		mQ = newStates(3, 0);
-		mPhi_d = newStates(4, 0);
-		mPhi_q = newStates(5, 0);
-		mGamma_d = newStates(6, 0);
-		mGamma_q = newStates(7, 0);
+	// update states
+	mThetaPLL = newStates(0, 0);
+	mPhiPLL = newStates(1, 0);
+	mP = newStates(2, 0);
+	mQ = newStates(3, 0);
+	mPhi_d = newStates(4, 0);
+	mPhi_q = newStates(5, 0);
+	mGamma_d = newStates(6, 0);
+	mGamma_q = newStates(7, 0);
 
-		// update measurements ( for additional loggers)
-		mOmegaInst = (newStates(0, 0) - mStates(0,0))/mTimeStep;
-		mFreqInst = mOmegaInst / 2 / PI;
+	// update measurements ( for additional loggers)
+	mOmegaInst = (newStates(0, 0) - mStates(0,0))/mTimeStep;
+	mFreqInst = mOmegaInst / 2 / PI;
 
-		mStates = newStates;
-		mU = newU;
+	mStates = newStates;
+	mU = newU;
 
-		// new output
-		mVsdq = mC * mStates + mD * mU;
-	}
-	else {
-		mThetaPLL = newStates(0, 0);
-		// update measurements ( for additional loggers)
-		mOmegaInst = (time > 0) ? mThetaPLL / time : 0;
-		mFreqInst = mOmegaInst / 2 / PI;
-		mPhiPLL = newStates(1, 0);
-		mP = newStates(2, 0);
-		mQ = newStates(3, 0);
-		mStates(0, 0) = newStates(0, 0);
-		mStates(1, 0) = newStates(1, 0);
-		mU = newU;
-
-		mVsdq(0, 0) = mVirtualNodes[1]->initialSingleVoltage().real();
-		mVsdq(1, 0) = mVirtualNodes[1]->initialSingleVoltage().imag();
-	}
+	// new output
+	mVsdq = mC * mStates + mD * mU;
 }
 
 void DP::Ph1::AvVoltageSourceInverterDQ::updateBMatrixStateSpaceModel() {
@@ -374,36 +358,32 @@ void DP::Ph1::AvVoltageSourceInverterDQ::mnaInitialize(Real omega, Real timeStep
 	if(!mLoadProfile.empty())
 		mCurrentLoad = mLoadProfile.begin();
 
-	MNAInterface::List subComps({ mSubResistorF, mSubInductorF, mSubCapacitorF, mSubResistorC, mSubCtrledVoltageSource });
-
+	// initialize subcomponents
 	mSubResistorF->mnaInitialize(omega, timeStep, leftVector);
 	mSubInductorF->mnaInitialize(omega, timeStep, leftVector);
 	mSubCapacitorF->mnaInitialize(omega, timeStep, leftVector);
 	mSubResistorC->mnaInitialize(omega, timeStep, leftVector);
 	mSubCtrledVoltageSource->mnaInitialize(omega, timeStep, leftVector);
+	if (mWithConnectionTransformer)
+		mConnectionTransformer->mnaInitialize(omega, timeStep, leftVector);
+
+	// initialize state space controller
 	initializeStateSpaceModel(omega, timeStep, leftVector);
 
+	// collect right side vectors of subcomponents
 	mRightVectorStamps.push_back(&mSubCapacitorF->attribute<Matrix>("right_vector")->get());
 	mRightVectorStamps.push_back(&mSubInductorF->attribute<Matrix>("right_vector")->get());
 	mRightVectorStamps.push_back(&mSubCtrledVoltageSource->attribute<Matrix>("right_vector")->get());
-
-	// add tasks
-	for (auto comp : subComps) {
-		for (auto task : comp->mnaTasks())
-			mMnaTasks.push_back(task);
-	}
-	if (mWithConnectionTransformer) {
-		mConnectionTransformer->mnaInitialize(omega, timeStep, leftVector);
+	if (mWithConnectionTransformer)
 		mRightVectorStamps.push_back(&mConnectionTransformer->attribute<Matrix>("right_vector")->get());
-		for (auto task : mConnectionTransformer->mnaTasks()) {
-			mMnaTasks.push_back(task);
-		}
-	}
+
+	// collect tasks
 	mMnaTasks.push_back(std::make_shared<MnaPreStep>(*this));
-	mMnaTasks.push_back(std::make_shared<AddBStep>(*this));
+	mMnaTasks.push_back(std::make_shared<ControlStep>(*this));
 	if(mCoveeCtrled)
 		mMnaTasks.push_back(std::make_shared<CtrlStep>(*this));
 	mMnaTasks.push_back(std::make_shared<MnaPostStep>(*this, leftVector));
+
 	mRightVector = Matrix::Zero(leftVector->get().rows(), 1);
 }
 
@@ -429,29 +409,73 @@ void DP::Ph1::AvVoltageSourceInverterDQ::updateSetPoint(Real time){
 		mQref = mQRefInput->get();
 }
 
-void DP::Ph1::AvVoltageSourceInverterDQ::MnaPreStep::execute(Real time, Int timeStepCount) {
-	if (mAvVoltageSourceInverterDQ.mCtrlOn) {
-		MatrixComp vsDqOmegaS = MatrixComp::Zero(1,1);
-		vsDqOmegaS(0,0) = mAvVoltageSourceInverterDQ.rotatingFrame2to1(Complex(mAvVoltageSourceInverterDQ.mVsdq(0, 0), mAvVoltageSourceInverterDQ.mVsdq(1, 0)), mAvVoltageSourceInverterDQ.mOmegaN * time, mAvVoltageSourceInverterDQ.mThetaPLL);
-		mAvVoltageSourceInverterDQ.mSubCtrledVoltageSource->setParameters(vsDqOmegaS);
-	}
-	else
-		mAvVoltageSourceInverterDQ.mSubCtrledVoltageSource->setParameters(mAvVoltageSourceInverterDQ.mVsdq);
+void DP::Ph1::AvVoltageSourceInverterDQ::controlStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes) {
+	prevStepDependencies.push_back(this->attribute("i_intf"));
+	prevStepDependencies.push_back(this->attribute("v_intf"));
+	modifiedAttributes.push_back(this->attribute("controller_output"));
 }
 
-void DP::Ph1::AvVoltageSourceInverterDQ::MnaPostStep::execute(Real time, Int timeStepCount) {
-	mAvVoltageSourceInverterDQ.mnaUpdateCurrent(*mLeftVector);
-	mAvVoltageSourceInverterDQ.updateInputStateSpaceModel(*mLeftVector, time);
-	mAvVoltageSourceInverterDQ.step(time, timeStepCount);
+void DP::Ph1::AvVoltageSourceInverterDQ::controlStep(Real time, Int timeStepCount) {	
+	// Transformation interface inverse
+	this->mControllerOutput(0,0) = this->rotatingFrame2to1(Complex(this->mVsdq(0, 0), this->mVsdq(1, 0)), this->mOmegaN * time, this->mThetaPLL);
+}
+
+void DP::Ph1::AvVoltageSourceInverterDQ::mnaAddPreStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes) {
+	// add pre-step dependencies of subcomponents
+	attributeDependencies.push_back(this->attribute("controller_output"));
+	this->mSubCtrledVoltageSource->mnaAddPreStepDependencies(prevStepDependencies, attributeDependencies, modifiedAttributes);
+	this->mSubInductorF->mnaAddPreStepDependencies(prevStepDependencies, attributeDependencies, modifiedAttributes);
+	this->mSubCapacitorF->mnaAddPreStepDependencies(prevStepDependencies, attributeDependencies, modifiedAttributes);
+	// add pre-step dependencies of component itself
+	prevStepDependencies.push_back(this->attribute("i_intf"));
+	prevStepDependencies.push_back(this->attribute("v_intf"));
+	modifiedAttributes.push_back(this->attribute("right_vector"));
+}
+
+void DP::Ph1::AvVoltageSourceInverterDQ::mnaPreStep(Real time, Int timeStepCount) {	
+	// pre-step of subcomponents	
+	if (mWithConnectionTransformer)
+		this->mConnectionTransformer->mnaPreStep(time, timeStepCount);
+	this->mSubCtrledVoltageSource->setParameters(mControllerOutput);
+	this->mSubCtrledVoltageSource->mnaPreStep(time, timeStepCount);
+	this->mSubInductorF->mnaPreStep(time, timeStepCount);
+	this->mSubCapacitorF->mnaPreStep(time, timeStepCount);
+	// pre-step of component itself
+	this->mnaApplyRightSideVectorStamp(this->mRightVector);
+}
+
+void DP::Ph1::AvVoltageSourceInverterDQ::mnaAddPostStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes, Attribute<Matrix>::Ptr &leftVector) {
+	// add post-step dependencies of subcomponents
+	if (mWithConnectionTransformer)
+		this->mConnectionTransformer->mnaAddPostStepDependencies(prevStepDependencies, attributeDependencies, modifiedAttributes, leftVector);
+	this->mSubCtrledVoltageSource->mnaAddPostStepDependencies(prevStepDependencies, attributeDependencies, modifiedAttributes, leftVector);
+	this->mSubResistorF->mnaAddPostStepDependencies(prevStepDependencies, attributeDependencies, modifiedAttributes, leftVector);
+	this->mSubInductorF->mnaAddPostStepDependencies(prevStepDependencies, attributeDependencies, modifiedAttributes, leftVector);
+	this->mSubCapacitorF->mnaAddPostStepDependencies(prevStepDependencies, attributeDependencies, modifiedAttributes, leftVector);
+	this->mSubResistorC->mnaAddPostStepDependencies(prevStepDependencies, attributeDependencies, modifiedAttributes, leftVector);
+	// add post-step dependencies of component itself
+	attributeDependencies.push_back(leftVector);
+	modifiedAttributes.push_back(this->attribute("v_intf"));
+	modifiedAttributes.push_back(this->attribute("i_intf"));
+}
+
+void DP::Ph1::AvVoltageSourceInverterDQ::mnaPostStep(Real time, Int timeStepCount, Attribute<Matrix>::Ptr &leftVector) {
+	// post-step of subcomponents
+	if (mWithConnectionTransformer)
+		this->mConnectionTransformer->mnaPostStep(time, timeStepCount, leftVector);
+	this->mSubCtrledVoltageSource->mnaPostStep(time, timeStepCount, leftVector);
+	this->mSubResistorF->mnaPostStep(time, timeStepCount, leftVector);
+	this->mSubInductorF->mnaPostStep(time, timeStepCount, leftVector);
+	this->mSubCapacitorF->mnaPostStep(time, timeStepCount, leftVector);
+	this->mSubResistorC->mnaPostStep(time, timeStepCount, leftVector);
+	// post-step of component itself
+	this->mnaUpdateCurrent(*leftVector);
+	this->updateInputStateSpaceModel(*leftVector, time);
+	this->step(time, timeStepCount);
 }
 
 void DP::Ph1::AvVoltageSourceInverterDQ::CtrlStep::execute(Real time, Int timeStepCount){
 	mAvVoltageSourceInverterDQ.updateSetPoint(time);
-}
-
-
-void DP::Ph1::AvVoltageSourceInverterDQ::AddBStep::execute(Real time, Int timeStepCount) {
-	mAvVoltageSourceInverterDQ.mnaApplyRightSideVectorStamp(mAvVoltageSourceInverterDQ.mRightVector);
 }
 
 void DP::Ph1::AvVoltageSourceInverterDQ::mnaUpdateCurrent(const Matrix& leftvector) {

@@ -64,20 +64,20 @@ namespace Ph1 {
 		void mnaUpdateCurrent(const Matrix& leftVector);
 		/// Updates internal voltage variable of the component
 		void mnaUpdateVoltage(const Matrix& leftVector);
+		/// MNA pre and post step operations
+		void mnaPreStep(Real time, Int timeStepCount);
+		void mnaPostStep(Real time, Int timeStepCount, Attribute<Matrix>::Ptr &leftVector);
+		/// add MNA pre and post step dependencies
+		void mnaAddPreStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes);
+		void mnaAddPostStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes, Attribute<Matrix>::Ptr &leftVector);
 
 		class MnaPreStep : public Task {
 		public:
 			MnaPreStep(Transformer& transformer) :
 				Task(transformer.mName + ".MnaPreStep"), mTransformer(transformer) {
-				mAttributeDependencies.push_back(transformer.mSubSnubResistor->attribute("right_vector"));
-				mAttributeDependencies.push_back(transformer.mSubInductor->attribute("right_vector"));
-				if (transformer.mSubResistor)
-					mAttributeDependencies.push_back(transformer.mSubResistor->attribute("right_vector"));
-				mModifiedAttributes.push_back(transformer.attribute("right_vector"));
+					mTransformer.mnaAddPreStepDependencies(mPrevStepDependencies, mAttributeDependencies, mModifiedAttributes);
 			}
-
-			void execute(Real time, Int timeStepCount);
-
+			void execute(Real time, Int timeStepCount) { mTransformer.mnaPreStep(time, timeStepCount); };
 		private:
 			Transformer& mTransformer;
 		};
@@ -87,13 +87,9 @@ namespace Ph1 {
 		public:
 			MnaPostStep(Transformer& transformer, Attribute<Matrix>::Ptr leftVector) :
 				Task(transformer.mName + ".MnaPostStep"), mTransformer(transformer), mLeftVector(leftVector) {
-				mAttributeDependencies.push_back(transformer.mSubInductor->attribute("i_intf"));
-				mAttributeDependencies.push_back(leftVector);
-				mModifiedAttributes.push_back(transformer.attribute("i_intf"));
-				mModifiedAttributes.push_back(transformer.attribute("v_intf"));
+					mTransformer.mnaAddPostStepDependencies(mPrevStepDependencies, mAttributeDependencies, mModifiedAttributes, mLeftVector);
 			}
-
-			void execute(Real time, Int timeStepCount);
+			void execute(Real time, Int timeStepCount) { mTransformer.mnaPostStep(time, timeStepCount, mLeftVector); };
 
 		private:
 			Transformer& mTransformer;
