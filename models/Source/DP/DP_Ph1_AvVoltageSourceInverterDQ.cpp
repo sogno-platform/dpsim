@@ -470,8 +470,7 @@ void DP::Ph1::AvVoltageSourceInverterDQ::mnaPostStep(Real time, Int timeStepCoun
 	this->mSubResistorC->mnaPostStep(time, timeStepCount, leftVector);
 	// post-step of component itself
 	this->mnaUpdateCurrent(*leftVector);
-	this->updateInputStateSpaceModel(*leftVector, time);
-	this->step(time, timeStepCount);
+	this->mnaUpdateVoltage(*leftVector);
 }
 
 void DP::Ph1::AvVoltageSourceInverterDQ::CtrlStep::execute(Real time, Int timeStepCount){
@@ -485,3 +484,10 @@ void DP::Ph1::AvVoltageSourceInverterDQ::mnaUpdateCurrent(const Matrix& leftvect
 		mIntfCurrent = mSubResistorC->attribute<MatrixComp>("i_intf")->get();
 }
 
+void DP::Ph1::AvVoltageSourceInverterDQ::mnaUpdateVoltage(const Matrix& leftVector) {
+	mIntfVoltage(0, 0) = 0;
+	if (terminalNotGrounded(1))
+		mIntfVoltage(0,0) = Math::complexFromVectorElement(leftVector, matrixNodeIndex(1));
+	if (terminalNotGrounded(0))
+		mIntfVoltage(0,0) = mIntfVoltage(0,0) - Math::complexFromVectorElement(leftVector, matrixNodeIndex(0));
+}

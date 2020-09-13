@@ -146,8 +146,10 @@ namespace Ph1 {
 		void mnaApplySystemMatrixStamp(Matrix& systemMatrix);
 		/// Stamps right side (source) vector
 		void mnaApplyRightSideVectorStamp(Matrix& rightVector);
-		/// Returns current through the component
+		/// Updates current through the component
 		void mnaUpdateCurrent(const Matrix& leftVector);
+		/// Updates voltage across component
+		void mnaUpdateVoltage(const Matrix& leftVector);
 		/// MNA pre and post step operations
 		void mnaPreStep(Real time, Int timeStepCount);
 		void mnaPostStep(Real time, Int timeStepCount, Attribute<Matrix>::Ptr &leftVector);
