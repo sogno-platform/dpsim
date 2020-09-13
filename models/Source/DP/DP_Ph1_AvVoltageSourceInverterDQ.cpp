@@ -126,10 +126,6 @@ void DP::Ph1::AvVoltageSourceInverterDQ::addAggregatedGenProfile(std::vector<Rea
 	mGenProfile = genProfile;
 }
 
-void DP::Ph1::AvVoltageSourceInverterDQ::ctrlReceiver(Attribute<Real>::Ptr qrefInput){
-	mQRefInput = qrefInput;
-}
-
 void DP::Ph1::AvVoltageSourceInverterDQ::initialize(Matrix frequencies) {
 	mFrequencies = frequencies;
 	mNumFreqs = static_cast<UInt>(mFrequencies.size());
@@ -380,8 +376,6 @@ void DP::Ph1::AvVoltageSourceInverterDQ::mnaInitialize(Real omega, Real timeStep
 	// collect tasks
 	mMnaTasks.push_back(std::make_shared<MnaPreStep>(*this));
 	mMnaTasks.push_back(std::make_shared<ControlStep>(*this));
-	if(mCoveeCtrled)
-		mMnaTasks.push_back(std::make_shared<CtrlStep>(*this));
 	mMnaTasks.push_back(std::make_shared<MnaPostStep>(*this, leftVector));
 
 	mRightVector = Matrix::Zero(leftVector->get().rows(), 1);
@@ -402,11 +396,6 @@ void DP::Ph1::AvVoltageSourceInverterDQ::mnaApplyRightSideVectorStamp(Matrix& ri
 	rightVector.setZero();
 	for (auto stamp : mRightVectorStamps)
 		rightVector += *stamp;
-}
-
-void DP::Ph1::AvVoltageSourceInverterDQ::updateSetPoint(Real time){
-	if(mQRefInput)
-		mQref = mQRefInput->get();
 }
 
 void DP::Ph1::AvVoltageSourceInverterDQ::controlStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes) {
@@ -471,10 +460,6 @@ void DP::Ph1::AvVoltageSourceInverterDQ::mnaPostStep(Real time, Int timeStepCoun
 	// post-step of component itself
 	this->mnaUpdateCurrent(*leftVector);
 	this->mnaUpdateVoltage(*leftVector);
-}
-
-void DP::Ph1::AvVoltageSourceInverterDQ::CtrlStep::execute(Real time, Int timeStepCount){
-	mAvVoltageSourceInverterDQ.updateSetPoint(time);
 }
 
 void DP::Ph1::AvVoltageSourceInverterDQ::mnaUpdateCurrent(const Matrix& leftvector) {

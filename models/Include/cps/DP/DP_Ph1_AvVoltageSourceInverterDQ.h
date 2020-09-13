@@ -60,8 +60,6 @@ namespace Ph1 {
 		Real mFreqInst=0;
 
 		///
-		Bool mCoveeCtrled=true;
-		///
 		Bool mIsLoad=false;
 		///
 		Bool mWithConnectionTransformer=false;
@@ -131,13 +129,9 @@ namespace Ph1 {
 		///
 		void addAggregatedGenProfile(std::vector<Real>* genProfile, Real customerNumber);
 		///
-		void updateSetPoint(Real time);
-		///
 		void initialize(Matrix frequencies);
 		///
 		void initializeFromPowerflow(Real frequency);
-		// #### interface with villas node ####
-		void ctrlReceiver(Attribute<Real>::Ptr qref);
 
 		// #### MNA section ####
 		/// Initializes internal variables of the component
@@ -161,8 +155,6 @@ namespace Ph1 {
 		void controlStep(Real time, Int timeStepCount);
 		void controlStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes);
 
-		/// interface with power control service
-		void coveeCtrled(Bool ctrled){mCoveeCtrled=ctrled;};
 		///
 		void makeLoad(Bool isLoad){mIsLoad=isLoad;};
 		///
@@ -205,18 +197,6 @@ namespace Ph1 {
 		private:
 			AvVoltageSourceInverterDQ& mAvVoltageSourceInverterDQ;
 			Attribute<Matrix>::Ptr mLeftVector;
-		};
-
-		class CtrlStep : public Task {
-		public:
-			CtrlStep(AvVoltageSourceInverterDQ& AvVoltageSourceInverterDQ) :
-				Task(AvVoltageSourceInverterDQ.mName + ".CtrlStep"), mAvVoltageSourceInverterDQ(AvVoltageSourceInverterDQ) {
-				mAttributeDependencies.push_back(AvVoltageSourceInverterDQ.mQRefInput);
-				mModifiedAttributes.push_back(AvVoltageSourceInverterDQ.attribute("Q_ref"));
-			}
-			void execute(Real time, Int timeStepCount);
-		private:
-			AvVoltageSourceInverterDQ& mAvVoltageSourceInverterDQ;
 		};
 
 	};
