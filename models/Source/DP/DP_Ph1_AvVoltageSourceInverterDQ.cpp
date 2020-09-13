@@ -398,7 +398,7 @@ void DP::Ph1::AvVoltageSourceInverterDQ::mnaApplyRightSideVectorStamp(Matrix& ri
 		rightVector += *stamp;
 }
 
-void DP::Ph1::AvVoltageSourceInverterDQ::controlStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes) {
+void DP::Ph1::AvVoltageSourceInverterDQ::addControlStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes) {
 	prevStepDependencies.push_back(this->attribute("i_intf"));
 	prevStepDependencies.push_back(this->attribute("v_intf"));
 	modifiedAttributes.push_back(this->attribute("controller_output"));
