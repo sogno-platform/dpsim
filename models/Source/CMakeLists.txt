@@ -109,6 +109,8 @@ list(APPEND CPS_SOURCES
 	Signal/Exciter.cpp
 	Signal/FIRFilter.cpp
 	Signal/TurbineGovernor.cpp
+	Signal/PLL.cpp
+	Signal/Integrator.cpp
 )
 
 if(WITH_CIM)

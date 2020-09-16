@@ -103,3 +103,4 @@
 #include <cps/Signal/Exciter.h>
 #include <cps/Signal/TurbineGovernor.h>
 #include <cps/Signal/FIRFilter.h>
+#include <cps/Signal/Integrator.h>

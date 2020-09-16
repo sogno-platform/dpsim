@@ -24,10 +24,18 @@ using namespace CPS::CIM;
 int main(int argc, char* argv[]) {
 
 	Examples::SGIB::ScenarioConfig scenario;
-	Real finalTime = 2.0;
+	
+	// Real finalTime = 0.003;
+	Real finalTime = 2;
+	Real timeStep = 0.001;
+	CommandLineArgs args(argc, argv);
+	if (argc > 1) {
+		timeStep = args.timeStep;
+		finalTime = args.duration;
+	}
 
 	// ----- POWERFLOW FOR INITIALIZATION -----
-	Real timeStepPF = 2.0;
+	Real timeStepPF = finalTime;
 	Real finalTimePF = finalTime+timeStepPF;
 	String simNamePF = "DP_Slack_PiLine_VSI_with_PF_Init_PF";
 	Logger::setLogDir("logs/" + simNamePF);
@@ -74,7 +82,7 @@ int main(int argc, char* argv[]) {
 	simPF.run();
 
 	// ----- DYNAMIC SIMULATION -----
-	Real timeStepDP = 0.001;
+	Real timeStepDP = timeStep;
 	Real finalTimeDP = finalTime+timeStepDP;
 	String simNameDP = "DP_Slack_PiLine_VSI_with_PF_Init_DP";
 	Logger::setLogDir("logs/" + simNameDP);
@@ -115,6 +123,8 @@ int main(int argc, char* argv[]) {
 	loggerDP->addAttribute("v2", n2DP->attribute("v"));
 
 	Examples::CIGREMV::logPVAttributes(loggerDP, pv);
+
+	loggerDP->addAttribute("pv_pll_output", pv->attribute("pll_output"));
 
 	// load step sized in absolute terms
 	// std::shared_ptr<SwitchEvent> loadStepEvent = Examples::createEventAddPowerConsumption("n2", 1-timeStepDP, 1000.0e3, systemDP, Domain::DP);

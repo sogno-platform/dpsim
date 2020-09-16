@@ -18,6 +18,7 @@
 #include <cps/DP/DP_Ph1_Transformer.h>
 #include <cps/Base/Base_AvVoltageSourceInverterDQ.h>
 #include <cps/PowerProfile.h>
+#include <cps/Signal/PLL.h>
 
 namespace CPS {
 namespace DP {
@@ -28,6 +29,10 @@ namespace Ph1 {
 		public MNAInterface,
 		public SharedFactory<AvVoltageSourceInverterDQ> {
 	protected:
+		// ### Control Subcomponents ###
+		/// PLL
+		std::shared_ptr<Signal::PLL> mPLL;
+
 		// ### Electrical Subcomponents ###
 		/// Controlled voltage source
 		std::shared_ptr<DP::Ph1::ControlledVoltageSource> mSubCtrledVoltageSource;
@@ -80,9 +85,6 @@ namespace Ph1 {
 		std::vector<const Matrix*> mRightVectorStamps;
 
 	public:
-		/// Setter for parameters of control loops
-		void setControllerParameters(Real Kp_pll, Real Ki_pll, Real Kp_powerCtrl, Real Ki_powerCtrl, Real Kp_currCtrl, Real Ki_currCtrl, Real Omega_cutoff);
-
 		///
 		std::vector<PQData> mLoadProfile;
 
@@ -101,6 +103,8 @@ namespace Ph1 {
 		SimPowerComp<Complex>::Ptr clone(String copySuffix);
 		///
 		void setParameters(Real sysOmega, Real sysVoltNom, Real Pref, Real Qref);
+		/// Setter for parameters of control loops
+		void setControllerParameters(Real Kp_pll, Real Ki_pll, Real Kp_powerCtrl, Real Ki_powerCtrl, Real Kp_currCtrl, Real Ki_currCtrl, Real Omega_cutoff);
 		///
 		void setTransformerParameters(Real nomVoltageEnd1, Real nomVoltageEnd2,
 			Real ratedPower, Real ratioAbs,	Real ratioPhase, Real resistance, Real inductance, Real omega);
@@ -143,8 +147,12 @@ namespace Ph1 {
 		Complex rotatingFrame2to1(Complex f, Real theta1, Real theta2);
 		///
 		void step(Real time, Int timeStepCount);
+		/// Control pre step operations
+		void controlPreStep(Real time, Int timeStepCount);
 		/// Perform step of controller
 		void controlStep(Real time, Int timeStepCount);
+		/// Add control step dependencies
+		void addControlPreStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes);
 		/// Add control step dependencies
 		void addControlStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes);
 
@@ -161,6 +169,18 @@ namespace Ph1 {
 		void setProfileUpdateRate(UInt rate){mProfileUndateRate=rate;};
 		///
 		void updatePowerGeneration();
+
+		class ControlPreStep : public CPS::Task {
+		public:
+			ControlPreStep(AvVoltageSourceInverterDQ& AvVoltageSourceInverterDQ) :
+				Task(AvVoltageSourceInverterDQ.mName + ".ControlPreStep"), mAvVoltageSourceInverterDQ(AvVoltageSourceInverterDQ) {
+					mAvVoltageSourceInverterDQ.addControlPreStepDependencies(mPrevStepDependencies, mAttributeDependencies, mModifiedAttributes);
+			}
+			void execute(Real time, Int timeStepCount) { mAvVoltageSourceInverterDQ.controlPreStep(time, timeStepCount); };
+
+		private:
+			AvVoltageSourceInverterDQ& mAvVoltageSourceInverterDQ;
+		};
 
 		class ControlStep : public CPS::Task {
 		public:
