@@ -14,7 +14,7 @@
 #include <cps/DP/DP_Ph1_Resistor.h>
 #include <cps/DP/DP_Ph1_Inductor.h>
 #include <cps/DP/DP_Ph1_Capacitor.h>
-#include <cps/DP/DP_Ph1_ControlledVoltageSource.h>
+#include <cps/DP/DP_Ph1_VoltageSource.h>
 #include <cps/DP/DP_Ph1_Transformer.h>
 #include <cps/Base/Base_AvVoltageSourceInverterDQ.h>
 #include <cps/PowerProfile.h>
@@ -51,7 +51,7 @@ namespace Ph1 {
 
 		// ### Electrical Subcomponents ###
 		/// Controlled voltage source
-		std::shared_ptr<DP::Ph1::ControlledVoltageSource> mSubCtrledVoltageSource;
+		std::shared_ptr<DP::Ph1::VoltageSource> mSubCtrledVoltageSource;
 		/// Resistor Rf as part of LCL filter
 		std::shared_ptr<DP::Ph1::Resistor> mSubResistorF;
 		/// Capacitor Cf as part of LCL filter
@@ -70,10 +70,10 @@ namespace Ph1 {
 		/// Measured current in local reference frame
 		Matrix mIrcdq = Matrix::Zero(2, 1);
 		// Control outputs
-		/// Control output before transformation interface
+		/// Voltage as control output before transformation interface
 		Matrix mVsdq = Matrix::Zero(2, 1);
-		/// Control output before transformation interface
-		MatrixComp mControllerOutput = MatrixComp::Zero(1,1);
+		/// Voltage as control output after transformation interface
+		MatrixComp mVsref = MatrixComp::Zero(1,1);
 
 		// /// instantaneous omega
 		// Real mOmegaInst=0;

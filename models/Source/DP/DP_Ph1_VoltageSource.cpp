@@ -57,6 +57,17 @@ void DP::Ph1::VoltageSource::initializeFromPowerflow(Real frequency) {
 
 // #### MNA functions ####
 
+void DP::Ph1::VoltageSource::mnaAddPreStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes) {
+	attributeDependencies.push_back(attribute("V_ref"));
+	modifiedAttributes.push_back(attribute("right_vector"));
+	modifiedAttributes.push_back(attribute("v_intf"));
+}
+
+void DP::Ph1::VoltageSource::mnaAddPostStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes, Attribute<Matrix>::Ptr &leftVector) {
+	attributeDependencies.push_back(leftVector);
+	modifiedAttributes.push_back(attribute("i_intf"));
+};
+
 void DP::Ph1::VoltageSource::mnaInitialize(Real omega, Real timeStep, Attribute<Matrix>::Ptr leftVector) {
 	MNAInterface::mnaInitialize(omega, timeStep);
 	updateMatrixNodeIndices();
@@ -149,9 +160,9 @@ void DP::Ph1::VoltageSource::updateVoltage(Real time) {
 	}
 }
 
-void DP::Ph1::VoltageSource::MnaPreStep::execute(Real time, Int timeStepCount) {
-	mVoltageSource.updateVoltage(time);
-	mVoltageSource.mnaApplyRightSideVectorStamp(mVoltageSource.mRightVector);
+void DP::Ph1::VoltageSource::mnaPreStep(Real time, Int timeStepCount) {
+	updateVoltage(time);
+	mnaApplyRightSideVectorStamp(mRightVector);
 }
 
 void DP::Ph1::VoltageSource::MnaPreStepHarm::execute(Real time, Int timeStepCount) {
@@ -159,8 +170,8 @@ void DP::Ph1::VoltageSource::MnaPreStepHarm::execute(Real time, Int timeStepCoun
 	mVoltageSource.mnaApplyRightSideVectorStampHarm(mVoltageSource.mRightVector);
 }
 
-void DP::Ph1::VoltageSource::MnaPostStep::execute(Real time, Int timeStepCount) {
-	mVoltageSource.mnaUpdateCurrent(*mLeftVector);
+void DP::Ph1::VoltageSource::mnaPostStep(Real time, Int timeStepCount, Attribute<Matrix>::Ptr &leftVector) {
+	mnaUpdateCurrent(*leftVector);
 }
 
 void DP::Ph1::VoltageSource::MnaPostStepHarm::execute(Real time, Int timeStepCount) {

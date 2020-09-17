@@ -102,8 +102,7 @@ void PowerControllerVSI::setInitialStateValues(Real thetaPLLInit, Real phiPLLIni
 	mGamma_qInit = gamma_qInit;
 }
 
-void PowerControllerVSI::initializeStateSpaceModel(Real omega, Real timeStep,
-	Attribute<Matrix>::Ptr leftVector) {
+void PowerControllerVSI::initializeStateSpaceModel(Real omega, Real timeStep, Attribute<Matrix>::Ptr leftVector) {
 	mTimeStep = timeStep;
 	mOmegaN = omega;
 	mOmegaCutoff = omega;
@@ -140,11 +139,6 @@ void PowerControllerVSI::signalStep(Real time, Int timeStepCount) {
 	Matrix newStates = Matrix::Zero(8, 1);
 	Matrix newU = Matrix::Zero(7, 1);
 
-	// if (mBehaviour == Behaviour::Simulation && (mGenProfile || (!mLoadProfile.empty()))) {
-	// 	if(timeStepCount % mProfileUndateRate  == 0)
-	// 		updatePowerGeneration();
-	// }
-
 	newU << mOmegaN, mPref, mQref, attribute<Real>("Vc_d")->get(), attribute<Real>("Vc_q")->get(), attribute<Real>("Irc_d")->get(), attribute<Real>("Irc_q")->get();
 
 	newStates = Math::StateSpaceTrapezoidal(mStates, mA, mB, mTimeStep, newU, mU);
@@ -158,10 +152,6 @@ void PowerControllerVSI::signalStep(Real time, Int timeStepCount) {
 	mPhi_q = newStates(5, 0);
 	mGamma_d = newStates(6, 0);
 	mGamma_q = newStates(7, 0);
-
-	// update measurements ( for additional loggers)
-	// mOmegaInst = (newStates(0, 0) - mStates(0,0))/mTimeStep;
-	// mFreqInst = mOmegaInst / 2 / PI;
 
 	mStates = newStates;
 	mU = newU;
