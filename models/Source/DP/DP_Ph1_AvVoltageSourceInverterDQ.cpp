@@ -165,11 +165,7 @@ void DP::Ph1::AvVoltageSourceInverterDQ::setInitialStateValues(Real thetaPLLInit
 }
 
 void DP::Ph1::AvVoltageSourceInverterDQ::initialize(Matrix frequencies) {
-	mFrequencies = frequencies;
-	mNumFreqs = static_cast<UInt>(mFrequencies.size());
-
-	mIntfVoltage = MatrixComp::Zero(1, mNumFreqs);
-	mIntfCurrent = MatrixComp::Zero(1, mNumFreqs);
+	SimPowerComp<Complex>::initialize(frequencies);
 }
 
 
@@ -349,7 +345,7 @@ void DP::Ph1::AvVoltageSourceInverterDQ::addControlStepDependencies(AttributeBas
 void DP::Ph1::AvVoltageSourceInverterDQ::controlStep(Real time, Int timeStepCount) {
 	// Transformation interface forward
 	Complex vcdq, ircdq;
-	vcdq = rotatingFrame2to1(mVirtualNodes[4]->initialSingleVoltage(), mPLL->attribute<Matrix>("output_prev")->get()(0, 0), mOmegaN * time);
+	vcdq = rotatingFrame2to1(mVirtualNodes[4]->singleVoltage(), mPLL->attribute<Matrix>("output_prev")->get()(0, 0), mOmegaN * time);
 	ircdq = rotatingFrame2to1(-1. * mSubResistorC->attribute<MatrixComp>("i_intf")->get()(0, 0), mPLL->attribute<Matrix>("output_prev")->get()(0, 0), mOmegaN * time);
 	mVcdq(0, 0) = vcdq.real();
 	mVcdq(1, 0) = vcdq.imag();
@@ -428,6 +424,7 @@ void DP::Ph1::AvVoltageSourceInverterDQ::mnaUpdateCurrent(const Matrix& leftvect
 }
 
 void DP::Ph1::AvVoltageSourceInverterDQ::mnaUpdateVoltage(const Matrix& leftVector) {
+	mVirtualNodes[4]->mnaUpdateVoltage(leftVector);
 	mIntfVoltage(0, 0) = 0;
 	if (terminalNotGrounded(1))
 		mIntfVoltage(0,0) = Math::complexFromVectorElement(leftVector, matrixNodeIndex(1));

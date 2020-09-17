@@ -97,7 +97,7 @@ namespace CPS {
 
 		// #### MNA Section ####
 		///
-		void mnaUpdateVoltage(Matrix& leftVector);
+		void mnaUpdateVoltage(const Matrix& leftVector);
 		///
 		void mnaInitializeHarm(std::vector<Attribute<Matrix>::Ptr> leftVector);
 		///
@@ -137,10 +137,10 @@ namespace CPS {
 	typename SimNode<VarType>::Ptr SimNode<VarType>::GND = SimNode<VarType>::make();
 
 	template<>
-	void SimNode<Real>::mnaUpdateVoltage(Matrix& leftVector);
+	void SimNode<Real>::mnaUpdateVoltage(const Matrix& leftVector);
 
 	template<>
-	void SimNode<Complex>::mnaUpdateVoltage(Matrix& leftVector);
+	void SimNode<Complex>::mnaUpdateVoltage(const Matrix& leftVector);
 
 	template<>
 	void SimNode<Complex>::mnaInitializeHarm(std::vector<Attribute<Matrix>::Ptr> leftVector);
