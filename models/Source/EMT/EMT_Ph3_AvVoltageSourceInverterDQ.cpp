@@ -56,7 +56,7 @@ EMT::Ph3::AvVoltageSourceInverterDQ::AvVoltageSourceInverterDQ(String uid, Strin
 }
 
 void EMT::Ph3::AvVoltageSourceInverterDQ::setParameters(Real sysOmega, Real sysVoltNom, Real Pref, Real Qref) {
-	Base::AvVoltageSourceInverterDQ::setParameters(sysOmega, sysVoltNom, Pref, Qref);
+	Base::AvVoltageSourceInverterDQWithStateSpace::setParameters(sysOmega, sysVoltNom, Pref, Qref);
 	parametersSet = true;
 
 	mSLog->info("General Parameters:");
@@ -67,7 +67,7 @@ void EMT::Ph3::AvVoltageSourceInverterDQ::setParameters(Real sysOmega, Real sysV
 void EMT::Ph3::AvVoltageSourceInverterDQ::setTransformerParameters(Real nomVoltageEnd1, Real nomVoltageEnd2,
 	Real ratedPower, Real ratioAbs,	Real ratioPhase, Real resistance, Real inductance, Real omega) {
 
-	Base::AvVoltageSourceInverterDQ::setTransformerParameters(nomVoltageEnd1, nomVoltageEnd2,
+	Base::AvVoltageSourceInverterDQWithStateSpace::setTransformerParameters(nomVoltageEnd1, nomVoltageEnd2,
 		ratedPower, ratioAbs, ratioPhase, resistance, inductance, omega);
 
 	mSLog->info("Connection Transformer Parameters:");
@@ -78,7 +78,7 @@ void EMT::Ph3::AvVoltageSourceInverterDQ::setTransformerParameters(Real nomVolta
 void EMT::Ph3::AvVoltageSourceInverterDQ::setControllerParameters(Real Kp_pll, Real Ki_pll,
 	Real Kp_powerCtrl, Real Ki_powerCtrl, Real Kp_currCtrl, Real Ki_currCtrl, Real Omega_cutoff) {
 
-	Base::AvVoltageSourceInverterDQ::setControllerParameters(Kp_pll, Ki_pll,
+	Base::AvVoltageSourceInverterDQWithStateSpace::setControllerParameters(Kp_pll, Ki_pll,
 		Kp_powerCtrl, Ki_powerCtrl, Kp_currCtrl, Ki_currCtrl, Omega_cutoff);
 
 	mSLog->info("Control Parameters:");
@@ -90,7 +90,7 @@ void EMT::Ph3::AvVoltageSourceInverterDQ::setControllerParameters(Real Kp_pll, R
 
 void EMT::Ph3::AvVoltageSourceInverterDQ::setFilterParameters(Real Lf, Real Cf, Real Rf, Real Rc) {
 
-	Base::AvVoltageSourceInverterDQ::setFilterParameters(Lf, Cf, Rf, Rc);
+	Base::AvVoltageSourceInverterDQWithStateSpace::setFilterParameters(Lf, Cf, Rf, Rc);
 
 	mSLog->info("Filter Parameters:");
 	mSLog->info("Inductance Lf={} [H] Capacitance Cf={} [F]", mLf, mCf);
@@ -100,7 +100,7 @@ void EMT::Ph3::AvVoltageSourceInverterDQ::setFilterParameters(Real Lf, Real Cf, 
 void EMT::Ph3::AvVoltageSourceInverterDQ::setInitialStateValues(Real thetaPLLInit, Real phiPLLInit, Real pInit, Real qInit,
 	Real phi_dInit, Real phi_qInit, Real gamma_dInit, Real gamma_qInit) {
 
-	Base::AvVoltageSourceInverterDQ::setInitialStateValues(thetaPLLInit, phiPLLInit, pInit, qInit,
+	Base::AvVoltageSourceInverterDQWithStateSpace::setInitialStateValues(thetaPLLInit, phiPLLInit, pInit, qInit,
 		phi_dInit, phi_qInit, gamma_dInit, gamma_qInit);
 
 	mSLog->info("Initial State Value Parameters:");

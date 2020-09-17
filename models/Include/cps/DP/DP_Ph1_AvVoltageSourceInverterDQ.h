@@ -19,6 +19,7 @@
 #include <cps/Base/Base_AvVoltageSourceInverterDQ.h>
 #include <cps/PowerProfile.h>
 #include <cps/Signal/PLL.h>
+#include <cps/Signal/PowerControllerVSI.h>
 
 namespace CPS {
 namespace DP {
@@ -29,9 +30,24 @@ namespace Ph1 {
 		public MNAInterface,
 		public SharedFactory<AvVoltageSourceInverterDQ> {
 	protected:
+
+		// ### General Parameters ###
+		/// Nominal frequency
+		Real mOmegaN;
+		/// Nominal voltage
+		Real mVnom;
+		/// Simulation step
+		Real mTimeStep;
+		/// Active power reference
+		Real mPref;
+		/// Reactive power reference
+		Real mQref;
+
 		// ### Control Subcomponents ###
 		/// PLL
 		std::shared_ptr<Signal::PLL> mPLL;
+		/// Power Controller
+		std::shared_ptr<Signal::PowerControllerVSI> mPowerControllerVSI;
 
 		// ### Electrical Subcomponents ###
 		/// Controlled voltage source
@@ -47,11 +63,11 @@ namespace Ph1 {
 		/// Optional connection transformer
 		std::shared_ptr<DP::Ph1::Transformer> mConnectionTransformer;
 
-		// ### Inverter Variables ###
+		// ### Inverter Interfacing Variables ###
 		// Control inputs
-		///
+		/// Measured voltage in local reference frame
 		Matrix mVcdq = Matrix::Zero(2, 1);
-		///
+		/// Measured current in local reference frame
 		Matrix mIrcdq = Matrix::Zero(2, 1);
 		// Control outputs
 		/// Control output before transformation interface
@@ -59,35 +75,19 @@ namespace Ph1 {
 		/// Control output before transformation interface
 		MatrixComp mControllerOutput = MatrixComp::Zero(1,1);
 
-		/// instantaneous omega
-		Real mOmegaInst=0;
-		/// instantaneous frequency
-		Real mFreqInst=0;
-		///
-		Bool mIsLoad=false;
-		///
-		Bool mWithConnectionTransformer=false;
-		/// in case variable time step simulation should be developed in the future
-		Real mTimeStep;
-		///
-		std::vector<Real>* mGenProfile = nullptr;
-		///
-		std::vector<Real>::iterator mCurrentPower;
-		///
-		std::vector<PQData>::iterator mCurrentLoad;
-		///
-		UInt mProfileUndateRate = 1000;
-		///
-		Attribute<Real>::Ptr mQRefInput;
+		// /// instantaneous omega
+		// Real mOmegaInst=0;
+		// /// instantaneous frequency
+		// Real mFreqInst=0;
 
+		/// Boolean for connection transformer usage
+		Bool mWithConnectionTransformer=false;
+		
 		// #### solver ####
 		///
 		std::vector<const Matrix*> mRightVectorStamps;
 
 	public:
-		///
-		std::vector<PQData> mLoadProfile;
-
 		/// Defines name amd logging level
 		AvVoltageSourceInverterDQ(String name, Logger::Level logLevel = Logger::Level::off)
 			: AvVoltageSourceInverterDQ(name, name, logLevel) {}
@@ -97,20 +97,18 @@ namespace Ph1 {
 		// #### General ####
 		/// Initializes component from power flow data
 		void initializeFromPowerflow(Real frequency);
-		///
+		/// General initalization
 		void initialize(Matrix frequencies);
-		///
-		SimPowerComp<Complex>::Ptr clone(String copySuffix);
-		///
+		/// Setter for general parameters of inverter
 		void setParameters(Real sysOmega, Real sysVoltNom, Real Pref, Real Qref);
 		/// Setter for parameters of control loops
 		void setControllerParameters(Real Kp_pll, Real Ki_pll, Real Kp_powerCtrl, Real Ki_powerCtrl, Real Kp_currCtrl, Real Ki_currCtrl, Real Omega_cutoff);
-		///
+		/// Setter for parameters of transformer
 		void setTransformerParameters(Real nomVoltageEnd1, Real nomVoltageEnd2,
 			Real ratedPower, Real ratioAbs,	Real ratioPhase, Real resistance, Real inductance, Real omega);
-		///
+		/// Setter for parameters of filter
 		void setFilterParameters(Real Lf, Real Cf, Real Rf, Real Rc);
-		///
+		/// Setter for initial values applied in controllers
 		void setInitialStateValues(Real thetaPLLInit, Real phiPLLInit, Real pInit, Real qInit,
 			Real phi_dInit, Real phi_qInit, Real gamma_dInit, Real gamma_qInit);
 
@@ -135,18 +133,8 @@ namespace Ph1 {
 		void mnaAddPostStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes, Attribute<Matrix>::Ptr &leftVector);
 
 		// #### Control section ####
-		///
-		void initializeStateSpaceModel(Real omega, Real timeStep, Attribute<Matrix>::Ptr leftVector);
-		///
-		void updateInputStateSpaceModel(Real time);
-		///
-		void updateStates();
-		///
-		void updateBMatrixStateSpaceModel();
 		/// convert between two rotating frames
 		Complex rotatingFrame2to1(Complex f, Real theta1, Real theta2);
-		///
-		void step(Real time, Int timeStepCount);
 		/// Control pre step operations
 		void controlPreStep(Real time, Int timeStepCount);
 		/// Perform step of controller
@@ -155,20 +143,6 @@ namespace Ph1 {
 		void addControlPreStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes);
 		/// Add control step dependencies
 		void addControlStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes);
-
-		// #### Profile handling ####
-		///
-		void addGenProfile(std::vector<Real>* genProfile);
-		///
-		void addAggregatedGenProfile(std::vector<Real>* genProfile, Real customerNumber);
-		///
-		void makeLoad(Bool isLoad){mIsLoad=isLoad;};
-		///
-		Bool isLoad(){return mIsLoad;};
-		///
-		void setProfileUpdateRate(UInt rate){mProfileUndateRate=rate;};
-		///
-		void updatePowerGeneration();
 
 		class ControlPreStep : public CPS::Task {
 		public:

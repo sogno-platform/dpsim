@@ -16,13 +16,13 @@
 #include <cps/EMT/EMT_Ph3_Capacitor.h>
 #include <cps/EMT/EMT_Ph3_ControlledVoltageSource.h>
 #include <cps/EMT/EMT_Ph3_Transformer.h>
-#include <cps/Base/Base_AvVoltageSourceInverterDQ.h>
+#include <cps/Base/Base_AvVoltageSourceInverterDQWithStateSpace.h>
 
 namespace CPS {
 namespace EMT {
 namespace Ph3 {
 	class AvVoltageSourceInverterDQ :
-		public Base::AvVoltageSourceInverterDQ,
+		public Base::AvVoltageSourceInverterDQWithStateSpace,
 		public SimPowerComp<Real>,
 		public MNAInterface,
 		public SharedFactory<AvVoltageSourceInverterDQ> {

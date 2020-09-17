@@ -279,64 +279,65 @@ void CSVReader::assignLoadProfileSP(std::vector<std::shared_ptr<CPS::SP::Ph1::Av
 // }
 
 
-void CSVReader::assignLoadProfileDP(std::vector<std::shared_ptr<CPS::DP::Ph1::AvVoltageSourceInverterDQ>>& loads,
- Real start_time, Real time_step, Real end_time, Real scale_factor,
-	CSVReader::Mode mode, CSVReader::DataFormat format) {
+// TODO: profile handling currently not supported by average inverter in DP1ph
+// void CSVReader::assignLoadProfileDP(std::vector<std::shared_ptr<CPS::DP::Ph1::AvVoltageSourceInverterDQ>>& loads,
+//  Real start_time, Real time_step, Real end_time, Real scale_factor,
+// 	CSVReader::Mode mode, CSVReader::DataFormat format) {
 
-	switch (mode) {
-		case CSVReader::Mode::AUTO: {
-			for (auto load : loads) {
-				if(!load->isLoad())
-					continue;
-				String load_name = load->name();
-				for (auto file : mFileList) {
-					String file_name = file.filename().string();
-					/// changing file name and load name to upper case for later matching
-					for (auto & c : load_name) c = toupper(c);
-					for (auto & c : file_name) c = toupper(c);
-					/// strip off all non-alphanumeric characters
-					load_name.erase(remove_if(load_name.begin(), load_name.end(), [](char c) { return !isalnum(c); }), load_name.end());
-					file_name.erase(remove_if(file_name.begin(), file_name.end(), [](char c) { return !isalnum(c); }), file_name.end());
-					if (std::stoi(file_name) == std::stoi(load_name)) {
-						load->mLoadProfile = readLoadProfileDP(file, start_time, time_step, end_time, scale_factor, format);
-						mSLog->info("Assigned {} to {}", file.filename().string(), load->name());
-					}
-				}
-			}
+// 	switch (mode) {
+// 		case CSVReader::Mode::AUTO: {
+// 			for (auto load : loads) {
+// 				if(!load->isLoad())
+// 					continue;
+// 				String load_name = load->name();
+// 				for (auto file : mFileList) {
+// 					String file_name = file.filename().string();
+// 					/// changing file name and load name to upper case for later matching
+// 					for (auto & c : load_name) c = toupper(c);
+// 					for (auto & c : file_name) c = toupper(c);
+// 					/// strip off all non-alphanumeric characters
+// 					load_name.erase(remove_if(load_name.begin(), load_name.end(), [](char c) { return !isalnum(c); }), load_name.end());
+// 					file_name.erase(remove_if(file_name.begin(), file_name.end(), [](char c) { return !isalnum(c); }), file_name.end());
+// 					if (std::stoi(file_name) == std::stoi(load_name)) {
+// 						load->mLoadProfile = readLoadProfileDP(file, start_time, time_step, end_time, scale_factor, format);
+// 						mSLog->info("Assigned {} to {}", file.filename().string(), load->name());
+// 					}
+// 				}
+// 			}
 
-			break;
-		}
-		case CSVReader::Mode::MANUAL: {
-			Int LP_assigned_counter = 0;
-			Int LP_not_assigned_counter = 0;
-			mSLog->info("Assigning load profiles with user defined pattern ...");
-			for (auto load : loads) {
-					std::map<String, String>::iterator file = mAssignPattern.find(load->name());
-					if (file == mAssignPattern.end()) {
+// 			break;
+// 		}
+// 		case CSVReader::Mode::MANUAL: {
+// 			Int LP_assigned_counter = 0;
+// 			Int LP_not_assigned_counter = 0;
+// 			mSLog->info("Assigning load profiles with user defined pattern ...");
+// 			for (auto load : loads) {
+// 					std::map<String, String>::iterator file = mAssignPattern.find(load->name());
+// 					if (file == mAssignPattern.end()) {
 
-						mSLog->info("{} has no profile given.", load->name());
-						LP_not_assigned_counter++;
-						continue;
-					}
-					for(auto path: mFileList){
-						if(path.string().find(file->second)!= std::string::npos){
-							load->mLoadProfile = readLoadProfileDP(path, start_time, time_step, end_time, scale_factor);
-							mSLog->info("Assigned {}.csv to {}", file->second, load->name());
-							LP_assigned_counter++;
-						}
+// 						mSLog->info("{} has no profile given.", load->name());
+// 						LP_not_assigned_counter++;
+// 						continue;
+// 					}
+// 					for(auto path: mFileList){
+// 						if(path.string().find(file->second)!= std::string::npos){
+// 							load->mLoadProfile = readLoadProfileDP(path, start_time, time_step, end_time, scale_factor);
+// 							mSLog->info("Assigned {}.csv to {}", file->second, load->name());
+// 							LP_assigned_counter++;
+// 						}
 
-					}
-			}
-			mSLog->info("Assigned profiles for {} loads, {} not assigned.", LP_assigned_counter, LP_not_assigned_counter);
-			break;
-		}
-		default: {
-			throw std::invalid_argument(
-				"Load profile assign mode error");
-			break;
-		}
-	}
-}
+// 					}
+// 			}
+// 			mSLog->info("Assigned profiles for {} loads, {} not assigned.", LP_assigned_counter, LP_not_assigned_counter);
+// 			break;
+// 		}
+// 		default: {
+// 			throw std::invalid_argument(
+// 				"Load profile assign mode error");
+// 			break;
+// 		}
+// 	}
+// }
 
 
 

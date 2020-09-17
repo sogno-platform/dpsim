@@ -13,6 +13,7 @@ add_library(cps STATIC
 list(APPEND CPS_SOURCES
 	Base/Base_SynchronGenerator.cpp
 	Base/Base_AvVoltageSourceInverterDQ.cpp
+	Base/Base_AvVoltageSourceInverterDQWithStateSpace.cpp
 
 	DP/DP_Ph1_Capacitor.cpp
 	DP/DP_Ph1_CurrentSource.cpp
@@ -111,6 +112,7 @@ list(APPEND CPS_SOURCES
 	Signal/TurbineGovernor.cpp
 	Signal/PLL.cpp
 	Signal/Integrator.cpp
+	Signal/PowerControllerVSI.cpp
 )
 
 if(WITH_CIM)
