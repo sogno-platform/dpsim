@@ -226,11 +226,6 @@ void DP::Ph1::AvVoltageSourceInverterDQ::initializeFromPowerflow(Real frequency)
 	else
 		mSubResistorC->connect({ mVirtualNodes[3],  mTerminals[0]->node()});
 
-	// Initialize control subcomponents
-	Matrix matrixStateInit = Matrix::Zero(2,1);
-	matrixStateInit(0,0) = std::arg(mVirtualNodes[4]->initialSingleVoltage());
-	mPLL->setInitialValues(mVirtualNodes[4]->initialSingleVoltage().imag(), matrixStateInit, Matrix::Zero(2,1));
-
 	// Initialize electrical subcomponents
 	mSubCtrledVoltageSource->initialize(mFrequencies);
 	mSubResistorF->initialize(mFrequencies);
@@ -244,18 +239,19 @@ void DP::Ph1::AvVoltageSourceInverterDQ::initializeFromPowerflow(Real frequency)
 	mSubCapacitorF->initializeFromPowerflow(frequency);
 	mSubResistorC->initializeFromPowerflow(frequency);
 
-	// TODO: check whether interface should be applied here
-	// get current and voltage inputs to state space model
-	// done here to ensure quantites are already initialized by initializeFromPowerFlow
-	mIrcdq(0, 0) = - mSubResistorC->attribute<MatrixComp>("i_intf")->get()(0,0).real();
-	mIrcdq(1, 0) = - mSubResistorC->attribute<MatrixComp>("i_intf")->get()(0,0).imag();
-	if (mWithConnectionTransformer) {
-		mVcdq(0, 0) = mVirtualNodes[4]->initialSingleVoltage().real();
-		mVcdq(1, 0) = mVirtualNodes[4]->initialSingleVoltage().imag();
-	} else {
-		mVcdq(0, 0) = mVirtualNodes[3]->initialSingleVoltage().real();
-		mVcdq(1, 0) = mVirtualNodes[3]->initialSingleVoltage().imag();
-	}
+	// Initialize control subcomponents
+	// current and voltage inputs to PLL and power controller
+	Complex vcdq, ircdq;
+	vcdq = rotatingFrame2to1(mVirtualNodes[4]->initialSingleVoltage(), std::arg(mVirtualNodes[4]->initialSingleVoltage()), 0);
+	ircdq = rotatingFrame2to1(-1. * mSubResistorC->attribute<MatrixComp>("i_intf")->get()(0, 0), std::arg(mVirtualNodes[4]->initialSingleVoltage()), 0);
+	mVcdq(0, 0) = vcdq.real();
+	mVcdq(1, 0) = vcdq.imag();
+	mIrcdq(0, 0) = ircdq.real();
+	mIrcdq(1, 0) = ircdq.imag();
+	// angle input 
+	Matrix matrixStateInit = Matrix::Zero(2,1);
+	matrixStateInit(0,0) = std::arg(mVirtualNodes[4]->initialSingleVoltage());
+	mPLL->setInitialValues(mVcdq(1, 0), matrixStateInit, Matrix::Zero(2,1));
 
 	mSLog->info(
 		"\n--- Initialization from powerflow ---"
