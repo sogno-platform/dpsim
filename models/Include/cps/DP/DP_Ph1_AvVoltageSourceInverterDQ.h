@@ -32,6 +32,8 @@ namespace Ph1 {
 	protected:
 
 		// ### General Parameters ###
+		/// Nominal system angle
+		Real mThetaN = 0;
 		/// Nominal frequency
 		Real mOmegaN;
 		/// Nominal voltage
