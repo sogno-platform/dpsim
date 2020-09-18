@@ -509,6 +509,11 @@ Task::List MnaSolver<VarType>::getTasks() {
 			l.push_back(task);
 		}
 	}
+	for (auto comp : mSwitches) {
+		for (auto task : comp->mnaTasks()) {
+			l.push_back(task);
+		}
+	}
 	for (auto node : mNodes) {
 		for (auto task : node->mnaTasks())
 			l.push_back(task);
