@@ -22,18 +22,27 @@ namespace SGIB {
         Real systemFrequency = 50;
         Real systemNominalVoltage = 20e3;
 
-        // Line paramerters
-        Real lineResistance = 0.05;
+        // Line parameters (R/X = 1)
+        Real lineResistance = 31.4;
 	    Real lineInductance = 0.1;
 
         // PV controller parameters
-        Real KpPLL = 0.25;
-        Real KiPLL = 2;
-        Real KpPowerCtrl = 0.001;
-        Real KiPowerCtrl = 0.08;
-        Real KpCurrCtrl = 0.3;
-        Real KiCurrCtrl = 10;
+        Real scaling_P = 10.0;
+        Real scaling_I = 1000.0;
+
+        Real KpPLL = 0.25/scaling_P;
+        Real KiPLL = 2/scaling_I;
+        Real KpPowerCtrl = 0.001/scaling_P;
+        Real KiPowerCtrl = 0.08/scaling_I;
+        Real KpCurrCtrl = 0.3/scaling_P;
+        Real KiCurrCtrl = 10/scaling_I;
         Real OmegaCutoff = 2 * PI * systemFrequency;
+
+        // Initial state values
+        Real phi_dInit = 823.721*scaling_I;
+        Real phi_qInit = -411.861*scaling_I;
+        Real gamma_dInit = 131.401*scaling_I;
+        Real gamma_qInit = 7.31206*scaling_I;
 
         // Nominal generated power values of PV
         Real pvNominalVoltage = 1500.;
@@ -130,7 +139,7 @@ namespace CIGREMV {
                 pv->setControllerParameters(scenario.KpPLL, scenario.KiPLL, scenario.KpPowerCtrl, scenario.KiPowerCtrl, scenario.KpCurrCtrl, scenario.KiCurrCtrl, scenario.OmegaCutoff);
                 pv->setFilterParameters(scenario.Lf, scenario.Cf, scenario.Rf, scenario.Rc);
                 pv->setTransformerParameters(scenario.systemNominalVoltage, scenario.pvUnitNominalVoltage, scenario.transformerNominalPower, scenario.systemNominalVoltage/scenario.pvUnitNominalVoltage, 0, 0, scenario.transformerInductance, scenario.systemOmega);
-                pv->setInitialStateValues(scenario.thetaPLLInit, scenario.phiPLLInit, scenario.pInit, scenario.qInit, scenario.phi_dInit, scenario.phi_qInit, scenario.gamma_dInit, scenario.gamma_qInit);
+                pv->setInitialStateValues(scenario.pInit, scenario.qInit, scenario.phi_dInit, scenario.phi_qInit, scenario.gamma_dInit, scenario.gamma_qInit);
                 system.addComponent(pv);
                 system.connectComponentToNodes<Complex>(pv, { connectionNode });
             } else if (domain == Domain::EMT) {
@@ -149,8 +158,6 @@ namespace CIGREMV {
 
     void logPVAttributes(DPsim::DataLogger::Ptr logger, CPS::TopologicalPowerComp::Ptr pv) {
         // state variables
-        logger->addAttribute(pv->name() + "_state_" + "theta", pv->attribute("theta"));
-        logger->addAttribute(pv->name() + "_state_" + "phipll", pv->attribute("phipll"));
         logger->addAttribute(pv->name() + "_state_" + "p", pv->attribute("p"));
         logger->addAttribute(pv->name() + "_state_" + "q", pv->attribute("q"));
         logger->addAttribute(pv->name() + "_state_" + "phid", pv->attribute("phid"));
@@ -171,7 +178,7 @@ namespace CIGREMV {
     }	
 
 }
-        std::shared_ptr<DPsim::SwitchEvent> createEventAddPowerConsumption(String nodeName, Real eventTime, Real additionalActivePower, SystemTopology& system, Domain domain) {
+        std::shared_ptr<DPsim::SwitchEvent> createEventAddPowerConsumption(String nodeName, Real eventTime, Real additionalActivePower, SystemTopology& system, Domain domain, DPsim::DataLogger::Ptr logger) {
         
         // TODO: use base classes ph1
         if (domain == CPS::Domain::DP) {
@@ -182,6 +189,7 @@ namespace CIGREMV {
             loadSwitch->open();
             system.addComponent(loadSwitch);
             system.connectComponentToNodes<Complex>(loadSwitch, { CPS::SimNode<Complex>::GND, connectionNode});
+            logger->addAttribute("pv_switchedload_i", loadSwitch->attribute("i_intf"));
             return DPsim::SwitchEvent::make(eventTime, loadSwitch, true);
         } else {
             return nullptr;

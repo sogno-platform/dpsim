@@ -26,7 +26,7 @@ int main(int argc, char* argv[]) {
 	Examples::SGIB::ScenarioConfig scenario;
 	
 	// Real finalTime = 0.003;
-	Real finalTime = 2;
+	Real finalTime = 10;
 	Real timeStep = 0.001;
 	CommandLineArgs args(argc, argv);
 	if (argc > 1) {
@@ -103,7 +103,7 @@ int main(int argc, char* argv[]) {
 	pv->setControllerParameters(scenario.KpPLL, scenario.KiPLL, scenario.KpPowerCtrl, scenario.KiPowerCtrl, scenario.KpCurrCtrl, scenario.KiCurrCtrl, scenario.OmegaCutoff);
 	pv->setFilterParameters(scenario.Lf, scenario.Cf, scenario.Rf, scenario.Rc);
 	pv->setTransformerParameters(scenario.systemNominalVoltage, scenario.pvNominalVoltage, scenario.transformerNominalPower, scenario.systemNominalVoltage/scenario.pvNominalVoltage, 0, 0, scenario.transformerInductance, scenario.systemOmega);
-	pv->setInitialStateValues(0, 0, scenario.pvNominalActivePower, scenario.pvNominalReactivePower, 0, 0, 0, 0);
+	pv->setInitialStateValues(scenario.pvNominalActivePower, scenario.pvNominalReactivePower, scenario.phi_dInit, scenario.phi_qInit, scenario.gamma_dInit, scenario.gamma_qInit);
 
 	// Topology
 	extnetDP->connect({ n1DP });
@@ -127,7 +127,7 @@ int main(int argc, char* argv[]) {
 	loggerDP->addAttribute("pv_pll_output", pv->attribute("pll_output"));
 
 	// load step sized in absolute terms
-	// std::shared_ptr<SwitchEvent> loadStepEvent = Examples::createEventAddPowerConsumption("n2", 1-timeStepDP, 1000.0e3, systemDP, Domain::DP);
+	std::shared_ptr<SwitchEvent> loadStepEvent = Examples::createEventAddPowerConsumption("n2", 1-timeStepDP, 100.0e3, systemDP, Domain::DP, loggerDP);
 
 	// Simulation
 	Simulation sim(simNameDP, Logger::Level::debug);
@@ -135,7 +135,7 @@ int main(int argc, char* argv[]) {
 	sim.setTimeStep(timeStepDP);
 	sim.setFinalTime(finalTimeDP);
 	sim.setDomain(Domain::DP);
-	// sim.addEvent(loadStepEvent);
+	sim.addEvent(loadStepEvent);
 	sim.doPowerFlowInit(false);
 	sim.addLogger(loggerDP);
 	sim.run();

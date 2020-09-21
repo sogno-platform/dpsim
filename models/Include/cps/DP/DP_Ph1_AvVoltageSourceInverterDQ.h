@@ -111,7 +111,7 @@ namespace Ph1 {
 		/// Setter for parameters of filter
 		void setFilterParameters(Real Lf, Real Cf, Real Rf, Real Rc);
 		/// Setter for initial values applied in controllers
-		void setInitialStateValues(Real thetaPLLInit, Real phiPLLInit, Real pInit, Real qInit,
+		void setInitialStateValues(Real pInit, Real qInit,
 			Real phi_dInit, Real phi_qInit, Real gamma_dInit, Real gamma_qInit);
 
 		// #### MNA section ####

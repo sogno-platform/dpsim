@@ -21,36 +21,27 @@ namespace Signal {
 		public SharedFactory<PowerControllerVSI> {
 
 	protected:
+		/// Simulation time step
 		Real mTimeStep;
 
-		/// Complex nominal voltage [V]
-		Real mVnom;
-
-		/// Power parameters
+		// Power parameters
 		Real mPref;
 		Real mQref;
 
-		/// PLL
-		Real mOmegaN;
-		Real mKiPLL;
-		Real mKpPLL;
-
-		/// Power controller
+		// Power controller
 		Real mOmegaCutoff;
 		Real mKiPowerCtrld;
 		Real mKiPowerCtrlq;
 		Real mKpPowerCtrld;
 		Real mKpPowerCtrlq;
 
-		/// Current controller
+		// Current controller
 		Real mKiCurrCtrld;
 		Real mKiCurrCtrlq;
 		Real mKpCurrCtrld;
 		Real mKpCurrCtrlq;
 
-		/// states
-		Real mThetaPLL = 0;
-		Real mPhiPLL;
+		// states
 		Real mP;
 		Real mQ;
 		Real mPhi_d;
@@ -59,8 +50,6 @@ namespace Signal {
 		Real mGamma_q;
 
 		/// initial values for states
-		Real mThetaPLLInit = 0;
-		Real mPhiPLLInit = 0;
 		Real mPInit = 0;
 		Real mQInit = 0;
 		Real mPhi_dInit = 0;
@@ -69,27 +58,26 @@ namespace Signal {
 		Real mGamma_qInit = 0;
 
 		/// state space matrices
-		Matrix mA = Matrix::Zero(8, 8);
-		Matrix mB = Matrix::Zero(8, 7);
-		Matrix mC = Matrix::Zero(2, 8);
-		Matrix mD = Matrix::Zero(2, 7);
+		Matrix mA = Matrix::Zero(6, 6);
+		Matrix mB = Matrix::Zero(6, 6);
+		Matrix mC = Matrix::Zero(2, 6);
+		Matrix mD = Matrix::Zero(2, 6);
 
 		/// state vector
-		Matrix mStates = Matrix::Zero(8, 1);
+		Matrix mStates = Matrix::Zero(6, 1);
 
 		/// input vector
-		Matrix mU = Matrix::Zero(7, 1);
+		Matrix mU = Matrix::Zero(6, 1);
 		
 	public:
 		PowerControllerVSI(String name, Logger::Level logLevel = Logger::Level::off);
 		
 		/// Setter for general parameters
-		void setParameters(Real sysOmega, Real sysVoltNom, Real Pref, Real Qref);
+		void setParameters(Real Pref, Real Qref);
 		/// Setter for parameters of control loops
-		void setControllerParameters(Real Kp_pll, Real Ki_pll, Real Kp_powerCtrl, Real Ki_powerCtrl, Real Kp_currCtrl, Real Ki_currCtrl, Real Omega_cutoff);
+		void setControllerParameters(Real Kp_powerCtrl, Real Ki_powerCtrl, Real Kp_currCtrl, Real Ki_currCtrl, Real Omega_cutoff);
 		/// Setter for initial state values
-		void setInitialStateValues(Real thetaPLLInit, Real phiPLLInit, Real pInit, Real qInit,
-			Real phi_dInit, Real phi_qInit, Real gamma_dInit, Real gamma_qInit);
+		void setInitialStateValues(Real pInit, Real qInit, Real phi_dInit, Real phi_qInit, Real gamma_dInit, Real gamma_qInit);
 
 		///
 		void initializeStateSpaceModel(Real omega, Real timeStep, Attribute<Matrix>::Ptr leftVector);

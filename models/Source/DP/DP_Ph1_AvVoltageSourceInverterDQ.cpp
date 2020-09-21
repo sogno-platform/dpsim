@@ -47,8 +47,6 @@ DP::Ph1::AvVoltageSourceInverterDQ::AvVoltageSourceInverterDQ(String uid, String
 	addAttribute<MatrixComp>("Vsref", &mVsref, Flags::read | Flags::write);
 
 	// state variables
-	addAttribute<Real>("theta", Flags::read | Flags::write);
-	addAttribute<Real>("phipll", Flags::read | Flags::write);
 	addAttribute<Real>("p", Flags::read | Flags::write);
 	addAttribute<Real>("q", Flags::read | Flags::write);
 	addAttribute<Real>("phid", Flags::read | Flags::write);
@@ -84,8 +82,6 @@ DP::Ph1::AvVoltageSourceInverterDQ::AvVoltageSourceInverterDQ(String uid, String
 	mPowerControllerVSI->setAttributeRef("Irc_q", attribute<Real>("Irc_q"));
 	mPowerControllerVSI->setAttributeRef("Vs_d", attribute<Real>("Vs_d"));
 	mPowerControllerVSI->setAttributeRef("Vs_q", attribute<Real>("Vs_q"));
-	setAttributeRef("theta", mPowerControllerVSI->attribute<Real>("theta"));
-	setAttributeRef("phipll", mPowerControllerVSI->attribute<Real>("phipll"));
 	setAttributeRef("p", mPowerControllerVSI->attribute<Real>("p"));
 	setAttributeRef("q", mPowerControllerVSI->attribute<Real>("q"));
 	setAttributeRef("phid", mPowerControllerVSI->attribute<Real>("phid"));
@@ -101,7 +97,7 @@ void DP::Ph1::AvVoltageSourceInverterDQ::setParameters(Real sysOmega, Real sysVo
 	mSLog->info("Nominal Voltage={} [V] Nominal Omega={} [1/s]", sysVoltNom, sysOmega);
 	mSLog->info("Active Power={} [W] Reactive Power={} [VAr]", Pref, Qref);
 
-	mPowerControllerVSI->setParameters(sysOmega, sysVoltNom, Pref, Qref);
+	mPowerControllerVSI->setParameters(Pref, Qref);
 
 	mOmegaN = sysOmega;
 	mVnom = sysVoltNom;
@@ -135,7 +131,7 @@ void DP::Ph1::AvVoltageSourceInverterDQ::setControllerParameters(Real Kp_pll, Re
 	// TODO: add and use Omega_nominal instead of Omega_cutoff
 	mPLL->setParameters(Kp_pll, Ki_pll, Omega_cutoff);
 	mPLL->composeStateSpaceMatrices();
-	mPowerControllerVSI->setControllerParameters(Kp_pll, Ki_pll, Kp_powerCtrl, Ki_powerCtrl, Kp_currCtrl, Ki_currCtrl, Omega_cutoff);
+	mPowerControllerVSI->setControllerParameters(Kp_powerCtrl, Ki_powerCtrl, Kp_currCtrl, Ki_currCtrl, Omega_cutoff);
 }
 
 void DP::Ph1::AvVoltageSourceInverterDQ::setFilterParameters(Real Lf, Real Cf, Real Rf, Real Rc) {
@@ -151,17 +147,15 @@ void DP::Ph1::AvVoltageSourceInverterDQ::setFilterParameters(Real Lf, Real Cf, R
 	mSubCapacitorF->setParameters(mCf);
 }
 
-void DP::Ph1::AvVoltageSourceInverterDQ::setInitialStateValues(Real thetaPLLInit, Real phiPLLInit, Real pInit, Real qInit,
+void DP::Ph1::AvVoltageSourceInverterDQ::setInitialStateValues(Real pInit, Real qInit,
 	Real phi_dInit, Real phi_qInit, Real gamma_dInit, Real gamma_qInit) {
 
 	mSLog->info("Initial State Value Parameters:");
-	mSLog->info("ThetaPLLInit = {}, PhiPLLInit = {}", thetaPLLInit, phiPLLInit);
 	mSLog->info("PInit = {}, QInit = {}", pInit, qInit);
 	mSLog->info("Phi_dInit = {}, Phi_qInit = {}", phi_dInit, phi_qInit);
 	mSLog->info("Gamma_dInit = {}, Gamma_qInit = {}", gamma_dInit, gamma_qInit);
 
-	mPowerControllerVSI->setInitialStateValues(thetaPLLInit, phiPLLInit, pInit, qInit,
-		phi_dInit, phi_qInit, gamma_dInit, gamma_qInit);
+	mPowerControllerVSI->setInitialStateValues(pInit, qInit, phi_dInit, phi_qInit, gamma_dInit, gamma_qInit);
 }
 
 void DP::Ph1::AvVoltageSourceInverterDQ::initialize(Matrix frequencies) {
