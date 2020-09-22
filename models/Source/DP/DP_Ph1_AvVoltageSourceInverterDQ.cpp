@@ -33,7 +33,15 @@ DP::Ph1::AvVoltageSourceInverterDQ::AvVoltageSourceInverterDQ(String uid, String
 	mSubCapacitorF = DP::Ph1::Capacitor::make(mName + "_capF", mLogLevel);
 	mSubInductorF = DP::Ph1::Inductor::make(mName + "_indF", mLogLevel);
 	mSubCtrledVoltageSource = DP::Ph1::VoltageSource::make(mName + "_src", mLogLevel);
+	mSubComponents.push_back(mSubResistorF);
+	mSubComponents.push_back(mSubResistorC);
+	mSubComponents.push_back(mSubCapacitorF);
+	mSubComponents.push_back(mSubInductorF);
 	mSubComponents.push_back(mSubCtrledVoltageSource);
+
+	mSLog->info("Electrical subcomponents: ");
+	for (auto subcomp: mSubComponents)
+		mSLog->info("- {}", subcomp->name());
 
 	// Create control sub components
 	mPLL = Signal::PLL::make(mName + "_PLL", mLogLevel);
@@ -162,11 +170,9 @@ void DP::Ph1::AvVoltageSourceInverterDQ::initializeFromPowerflow(Real frequency)
 		filterInterfaceInitialVoltage = (mIntfVoltage(0, 0) - Complex(mTransformerResistance, mTransformerInductance*mOmegaN)*mIntfCurrent(0, 0)) / Complex(mTransformerRatioAbs, mTransformerRatioPhase);
 		filterInterfaceInitialCurrent = mIntfCurrent(0, 0) * Complex(mTransformerRatioAbs, mTransformerRatioPhase);
 
-		// connect and init transformer
+		// connect transformer
 		mVirtualNodes[3]->setInitialVoltage(filterInterfaceInitialVoltage);
 		mConnectionTransformer->connect({ mTerminals[0]->node(), mVirtualNodes[3] });
-		mConnectionTransformer->initialize(mFrequencies);
-		mConnectionTransformer->initializeFromPowerflow(frequency);
 	} else {
 		// if no transformer used, filter interface equal to inverter interface
 		filterInterfaceInitialVoltage = mIntfVoltage(0, 0);
@@ -197,17 +203,10 @@ void DP::Ph1::AvVoltageSourceInverterDQ::initializeFromPowerflow(Real frequency)
 		mSubResistorC->connect({ mVirtualNodes[2],  mTerminals[0]->node()});
 
 	// Initialize electrical subcomponents
-	mSubCtrledVoltageSource->initialize(mFrequencies);
-	mSubResistorF->initialize(mFrequencies);
-	mSubInductorF->initialize(mFrequencies);
-	mSubCapacitorF->initialize(mFrequencies);
-	mSubResistorC->initialize(mFrequencies);
-
-	mSubCtrledVoltageSource->initializeFromPowerflow(frequency);
-	mSubResistorF->initializeFromPowerflow(frequency);
-	mSubInductorF->initializeFromPowerflow(frequency);
-	mSubCapacitorF->initializeFromPowerflow(frequency);
-	mSubResistorC->initializeFromPowerflow(frequency);
+	for (auto subcomp: mSubComponents) {
+		subcomp->initialize(mFrequencies);
+		subcomp->initializeFromPowerflow(frequency);
+	}
 
 	// Initialize control subcomponents
 	// current and voltage inputs to PLL and power controller
@@ -241,14 +240,10 @@ void DP::Ph1::AvVoltageSourceInverterDQ::mnaInitialize(Real omega, Real timeStep
 	updateMatrixNodeIndices();
 	mTimeStep = timeStep;
 
-	// initialize subcomponents
-	mSubResistorF->mnaInitialize(omega, timeStep, leftVector);
-	mSubInductorF->mnaInitialize(omega, timeStep, leftVector);
-	mSubCapacitorF->mnaInitialize(omega, timeStep, leftVector);
-	mSubResistorC->mnaInitialize(omega, timeStep, leftVector);
-	mSubCtrledVoltageSource->mnaInitialize(omega, timeStep, leftVector);
-	if (mWithConnectionTransformer)
-		mConnectionTransformer->mnaInitialize(omega, timeStep, leftVector);
+	// initialize electrical subcomponents with MNA interface
+	for (auto subcomp: mSubComponents)
+		if (auto mnasubcomp = std::dynamic_pointer_cast<MNAInterface>(subcomp))
+			mnasubcomp->mnaInitialize(omega, timeStep, leftVector);
 
 	// initialize state space controller
 	mPowerControllerVSI->initializeStateSpaceModel(omega, timeStep, leftVector);
@@ -274,13 +269,9 @@ void DP::Ph1::AvVoltageSourceInverterDQ::mnaInitialize(Real omega, Real timeStep
 
 
 void DP::Ph1::AvVoltageSourceInverterDQ::mnaApplySystemMatrixStamp(Matrix& systemMatrix) {
-	mSubCtrledVoltageSource->mnaApplySystemMatrixStamp(systemMatrix);
-	mSubResistorF->mnaApplySystemMatrixStamp(systemMatrix);
-	mSubInductorF->mnaApplySystemMatrixStamp(systemMatrix);
-	mSubCapacitorF->mnaApplySystemMatrixStamp(systemMatrix);
-	mSubResistorC->mnaApplySystemMatrixStamp(systemMatrix);
-	if (mWithConnectionTransformer)
-		mConnectionTransformer->mnaApplySystemMatrixStamp(systemMatrix);
+	for (auto subcomp: mSubComponents)
+		if (auto mnasubcomp = std::dynamic_pointer_cast<MNAInterface>(subcomp))
+			mnasubcomp->mnaApplySystemMatrixStamp(systemMatrix);
 }
 
 void DP::Ph1::AvVoltageSourceInverterDQ::mnaApplyRightSideVectorStamp(Matrix& rightVector) {
