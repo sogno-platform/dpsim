@@ -317,9 +317,9 @@ void DP::Ph1::AvVoltageSourceInverterDQ::controlStep(Real time, Int timeStepCoun
 
 void DP::Ph1::AvVoltageSourceInverterDQ::mnaAddPreStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes) {
 	// add pre-step dependencies of subcomponents
-	mSubCtrledVoltageSource->mnaAddPreStepDependencies(prevStepDependencies, attributeDependencies, modifiedAttributes);
-	mSubInductorF->mnaAddPreStepDependencies(prevStepDependencies, attributeDependencies, modifiedAttributes);
-	mSubCapacitorF->mnaAddPreStepDependencies(prevStepDependencies, attributeDependencies, modifiedAttributes);
+	for (auto subcomp: mSubComponents)
+		if (auto mnasubcomp = std::dynamic_pointer_cast<MNAInterface>(subcomp))
+			mnasubcomp->mnaAddPreStepDependencies(prevStepDependencies, attributeDependencies, modifiedAttributes);
 	// add pre-step dependencies of component itself	
 	prevStepDependencies.push_back(attribute("Vsref"));
 	prevStepDependencies.push_back(attribute("i_intf"));
@@ -333,24 +333,18 @@ void DP::Ph1::AvVoltageSourceInverterDQ::mnaPreStep(Real time, Int timeStepCount
 	// pre-steo of subcomponents - controlled source
 	mSubCtrledVoltageSource->setParameters(mVsref(0,0));
 	// pre-step of subcomponents - others
-	if (mWithConnectionTransformer)
-		mConnectionTransformer->mnaPreStep(time, timeStepCount);	
-	mSubCtrledVoltageSource->mnaPreStep(time, timeStepCount);
-	mSubInductorF->mnaPreStep(time, timeStepCount);
-	mSubCapacitorF->mnaPreStep(time, timeStepCount);
+	for (auto subcomp: mSubComponents)
+		if (auto mnasubcomp = std::dynamic_pointer_cast<MNAInterface>(subcomp))
+			mnasubcomp->mnaPreStep(time, timeStepCount);
 	// pre-step of component itself
 	mnaApplyRightSideVectorStamp(mRightVector);
 }
 
 void DP::Ph1::AvVoltageSourceInverterDQ::mnaAddPostStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes, Attribute<Matrix>::Ptr &leftVector) {
 	// add post-step dependencies of subcomponents
-	if (mWithConnectionTransformer)
-		mConnectionTransformer->mnaAddPostStepDependencies(prevStepDependencies, attributeDependencies, modifiedAttributes, leftVector);
-	mSubCtrledVoltageSource->mnaAddPostStepDependencies(prevStepDependencies, attributeDependencies, modifiedAttributes, leftVector);
-	mSubResistorF->mnaAddPostStepDependencies(prevStepDependencies, attributeDependencies, modifiedAttributes, leftVector);
-	mSubInductorF->mnaAddPostStepDependencies(prevStepDependencies, attributeDependencies, modifiedAttributes, leftVector);
-	mSubCapacitorF->mnaAddPostStepDependencies(prevStepDependencies, attributeDependencies, modifiedAttributes, leftVector);
-	mSubResistorC->mnaAddPostStepDependencies(prevStepDependencies, attributeDependencies, modifiedAttributes, leftVector);
+	for (auto subcomp: mSubComponents)
+		if (auto mnasubcomp = std::dynamic_pointer_cast<MNAInterface>(subcomp))
+			mnasubcomp->mnaAddPostStepDependencies(prevStepDependencies, attributeDependencies, modifiedAttributes, leftVector);
 	// add post-step dependencies of component itself
 	attributeDependencies.push_back(leftVector);
 	modifiedAttributes.push_back(attribute("v_intf"));
@@ -359,13 +353,9 @@ void DP::Ph1::AvVoltageSourceInverterDQ::mnaAddPostStepDependencies(AttributeBas
 
 void DP::Ph1::AvVoltageSourceInverterDQ::mnaPostStep(Real time, Int timeStepCount, Attribute<Matrix>::Ptr &leftVector) {
 	// post-step of subcomponents
-	if (mWithConnectionTransformer)
-		mConnectionTransformer->mnaPostStep(time, timeStepCount, leftVector);
-	mSubCtrledVoltageSource->mnaPostStep(time, timeStepCount, leftVector);
-	mSubResistorF->mnaPostStep(time, timeStepCount, leftVector);
-	mSubInductorF->mnaPostStep(time, timeStepCount, leftVector);
-	mSubCapacitorF->mnaPostStep(time, timeStepCount, leftVector);
-	mSubResistorC->mnaPostStep(time, timeStepCount, leftVector);
+	for (auto subcomp: mSubComponents)
+		if (auto mnasubcomp = std::dynamic_pointer_cast<MNAInterface>(subcomp))
+			mnasubcomp->mnaPostStep(time, timeStepCount, leftVector);
 	// post-step of component itself
 	mnaUpdateCurrent(*leftVector);
 	mnaUpdateVoltage(*leftVector);
