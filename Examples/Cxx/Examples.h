@@ -157,24 +157,26 @@ namespace CIGREMV {
     }
 
     void logPVAttributes(DPsim::DataLogger::Ptr logger, CPS::TopologicalPowerComp::Ptr pv) {
-        // state variables
-        logger->addAttribute(pv->name() + "_state_" + "p", pv->attribute("p"));
-        logger->addAttribute(pv->name() + "_state_" + "q", pv->attribute("q"));
-        logger->addAttribute(pv->name() + "_state_" + "phid", pv->attribute("phid"));
-        logger->addAttribute(pv->name() + "_state_" + "phiq", pv->attribute("phiq"));
-        logger->addAttribute(pv->name() + "_state_" + "gammad", pv->attribute("gammad"));
-        logger->addAttribute(pv->name() + "_state_" + "gammaq", pv->attribute("gammaq"));
 
-        // input variables
-        logger->addAttribute(pv->name() + "_input_" + "Vcdq", pv->attribute("Vcdq"));
-        logger->addAttribute(pv->name() + "_input_" + "Ircdq", pv->attribute("Ircdq"));
-
-        // output variables
-        logger->addAttribute(pv->name() + "_output_" + "Vsdq", pv->attribute("Vsdq"));
+        // power controller
+        std::vector<String> inputNames = {  pv->name() + "_powerctrl_input_pref", pv->name() + "_powerctrl_input_qref",
+                                            pv->name() + "_powerctrl_input_vcd", pv->name() + "_powerctrl_input_vcq",
+                                            pv->name() + "_powerctrl_input_ircd", pv->name() + "_powerctrl_input_ircq"};
+        logger->addAttribute(inputNames, pv->attribute("powerctrl_inputs"));
+        std::vector<String> stateNames = {  pv->name() + "_powerctrl_state_p", pv->name() + "_powerctrl_state_q",
+                                            pv->name() + "_powerctrl_state_phid", pv->name() + "_powerctrl_state_phiq",
+                                            pv->name() + "_powerctrl_state_gammad", pv->name() + "_powerctrl_state_gammaq"};
+        logger->addAttribute(stateNames, pv->attribute("powerctrl_states"));
+        std::vector<String> outputNames = {  pv->name() + "_powerctrl_output_vsd", pv->name() + "_powerctrl_output_vsq"};
+        logger->addAttribute(outputNames, pv->attribute("powerctrl_outputs"));
 
         // interface variables
         logger->addAttribute(pv->name() + "_v_intf", pv->attribute("v_intf"));
         logger->addAttribute(pv->name() + "_i_intf", pv->attribute("i_intf"));
+
+        // additional variables
+        logger->addAttribute(pv->name() + "_pll_output", pv->attribute("pll_output"));
+        logger->addAttribute(pv->name() + "_vsref", pv->attribute("Vsref"));
     }	
 
 }

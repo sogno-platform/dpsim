@@ -64,6 +64,8 @@ namespace DPsim {
 		void addAttribute(const String &name, CPS::MatrixRealAttribute::Ptr attr);
 		void addAttribute(const String &name, CPS::MatrixCompAttribute::Ptr attr, UInt rowsMax = 0, UInt colsMax = 0);
 		void addAttribute(const String &name, const String &attr, CPS::IdentifiedObject::Ptr obj);
+		void addAttribute(const std::vector<String> &name, CPS::AttributeBase::Ptr attr);
+		void addAttribute(const std::vector<String> &name, CPS::MatrixRealAttribute::Ptr attr);
 
 		template<typename VarType>
 		void addNode(typename CPS::SimNode<VarType>::Ptr node) {

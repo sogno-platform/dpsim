@@ -124,8 +124,6 @@ int main(int argc, char* argv[]) {
 
 	Examples::CIGREMV::logPVAttributes(loggerDP, pv);
 
-	loggerDP->addAttribute("pv_pll_output", pv->attribute("pll_output"));
-
 	// load step sized in absolute terms
 	std::shared_ptr<SwitchEvent> loadStepEvent = Examples::createEventAddPowerConsumption("n2", 1-timeStepDP, 100.0e3, systemDP, Domain::DP, loggerDP);
 
