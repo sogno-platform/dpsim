@@ -13,6 +13,8 @@ using namespace CPS::Signal;
 
 PowerControllerVSI::PowerControllerVSI(String name, Logger::Level logLevel) :
 	SimSignalComp(name, name, logLevel) {
+
+	mSLog->info("Create {} {}", type(), name);
 	
 	// attributes of full state space model vectors
 	addAttribute<Matrix>("input_prev", &mInputPrev, Flags::read | Flags::write);
@@ -33,6 +35,9 @@ void PowerControllerVSI::setParameters(Real Pref, Real Qref) {
 	mPref = Pref;
 	mQref = Qref;
 
+	mSLog->info("General Parameters:");
+	mSLog->info("Active Power={} [W] Reactive Power={} [VAr]", mPref, mQref);
+
 	// use Pref and Qref as init values for states P and Q
 	// init values for other states remain zero (if not changed using setInitialStateValues)
 	mPInit = Pref;
@@ -50,6 +55,11 @@ void PowerControllerVSI::setControllerParameters(Real Kp_powerCtrl, Real Ki_powe
 	mKpCurrCtrld = Kp_currCtrl;
 	mKpCurrCtrlq = Kp_currCtrl;
 	mOmegaCutoff = Omega_cutoff;
+
+	mSLog->info("Control Parameters:");
+	mSLog->info("Power Loop: K_i = {}, K_p = {}", Kp_powerCtrl, Ki_powerCtrl);
+	mSLog->info("Current Loop: K_i = {}, K_p = {}", Kp_currCtrl, Ki_currCtrl);
+	mSLog->info("Cut-Off Frequency = {}", Omega_cutoff);
 
     // Set state space matrices using controller parameters
 	mA <<
@@ -75,6 +85,12 @@ void PowerControllerVSI::setControllerParameters(Real Kp_powerCtrl, Real Ki_powe
 	mD <<
 		mKpCurrCtrld*mKpPowerCtrld, 0, 0, 0, -mKpCurrCtrld, 0,
 		0, -mKpCurrCtrlq * mKpPowerCtrlq, 0, 0, 0, -mKpCurrCtrlq;
+
+	mSLog->info("State space matrices:");
+    mSLog->info("A = \n{}", mA);
+    mSLog->info("B = \n{}", mB);
+    mSLog->info("C = \n{}", mC);
+    mSLog->info("D = \n{}", mD);
 }
 
 void PowerControllerVSI::setInitialStateValues(Real pInit, Real qInit,
@@ -86,6 +102,11 @@ void PowerControllerVSI::setInitialStateValues(Real pInit, Real qInit,
 	mPhi_qInit = phi_qInit;
 	mGamma_dInit = gamma_dInit;
 	mGamma_qInit = gamma_qInit;
+
+	mSLog->info("Initial State Value Parameters:");
+	mSLog->info("PInit = {}, QInit = {}", pInit, qInit);
+	mSLog->info("Phi_dInit = {}, Phi_qInit = {}", phi_dInit, phi_qInit);
+	mSLog->info("Gamma_dInit = {}, Gamma_qInit = {}", gamma_dInit, gamma_qInit);
 }
 
 void PowerControllerVSI::initializeStateSpaceModel(Real omega, Real timeStep, Attribute<Matrix>::Ptr leftVector) {
@@ -136,15 +157,15 @@ void PowerControllerVSI::signalStep(Real time, Int timeStepCount) {
 
 	// get current inputs
 	mInputCurr << mPref, mQref, attribute<Real>("Vc_d")->get(), attribute<Real>("Vc_q")->get(), attribute<Real>("Irc_d")->get(), attribute<Real>("Irc_q")->get();
-    mSLog->info("Time {}\n: inputCurr = \n{}\n , inputPrev = \n{}\n , statePrev = \n{}", time, mInputCurr, mInputPrev, mStatePrev);
+    mSLog->debug("Time {}\n: inputCurr = \n{}\n , inputPrev = \n{}\n , statePrev = \n{}", time, mInputCurr, mInputPrev, mStatePrev);
 
 	// calculate new states
 	mStateCurr = Math::StateSpaceTrapezoidal(mStatePrev, mA, mB, mTimeStep, mInputCurr, mInputPrev);
-	mSLog->info("stateCurr = \n {}", mStateCurr);
+	mSLog->debug("stateCurr = \n {}", mStateCurr);
 
 	// calculate new outputs
 	mOutputCurr = mC * mStateCurr + mD * mInputCurr;
-	mSLog->info("Output values: outputCurr = \n{}", mOutputCurr);
+	mSLog->debug("Output values: outputCurr = \n{}", mOutputCurr);
 }
 
 void PowerControllerVSI::updateBMatrixStateSpaceModel() {
