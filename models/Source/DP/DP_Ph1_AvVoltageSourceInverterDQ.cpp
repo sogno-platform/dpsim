@@ -14,11 +14,11 @@ using namespace CPS;
 DP::Ph1::AvVoltageSourceInverterDQ::AvVoltageSourceInverterDQ(String uid, String name, Logger::Level logLevel, Bool withTrafo) :
 	SimPowerComp<Complex>(uid, name, logLevel) {
 	if (withTrafo) {
-		setVirtualNodeNumber(5);
+		setVirtualNodeNumber(4);
 		mConnectionTransformer = DP::Ph1::Transformer::make(mName + "_trans", Logger::Level::debug);
 		mSubComponents.push_back(mConnectionTransformer);
 	} else {
-		setVirtualNodeNumber(4);
+		setVirtualNodeNumber(3);
 	}
 	mWithConnectionTransformer = withTrafo;
 	setTerminalNumber(1);
@@ -33,6 +33,7 @@ DP::Ph1::AvVoltageSourceInverterDQ::AvVoltageSourceInverterDQ(String uid, String
 	mSubCapacitorF = DP::Ph1::Capacitor::make(mName + "_capF", mLogLevel);
 	mSubInductorF = DP::Ph1::Inductor::make(mName + "_indF", mLogLevel);
 	mSubCtrledVoltageSource = DP::Ph1::VoltageSource::make(mName + "_src", mLogLevel);
+	mSubComponents.push_back(mSubCtrledVoltageSource);
 
 	// Create control sub components
 	mPLL = Signal::PLL::make(mName + "_PLL", mLogLevel);
@@ -162,8 +163,8 @@ void DP::Ph1::AvVoltageSourceInverterDQ::initializeFromPowerflow(Real frequency)
 		filterInterfaceInitialCurrent = mIntfCurrent(0, 0) * Complex(mTransformerRatioAbs, mTransformerRatioPhase);
 
 		// connect and init transformer
-		mVirtualNodes[4]->setInitialVoltage(filterInterfaceInitialVoltage);
-		mConnectionTransformer->connect({ mTerminals[0]->node(), mVirtualNodes[4] });
+		mVirtualNodes[3]->setInitialVoltage(filterInterfaceInitialVoltage);
+		mConnectionTransformer->connect({ mTerminals[0]->node(), mVirtualNodes[3] });
 		mConnectionTransformer->initialize(mFrequencies);
 		mConnectionTransformer->initializeFromPowerflow(frequency);
 	} else {
@@ -177,24 +178,23 @@ void DP::Ph1::AvVoltageSourceInverterDQ::initializeFromPowerflow(Real frequency)
 	Complex icfInit = vcInit * Complex(0., 2. * PI * frequency * mCf);
 	Complex vfInit = vcInit - (filterInterfaceInitialCurrent - icfInit) * Complex(0., 2. * PI * frequency * mLf);
 	Complex vsInit = vfInit - (filterInterfaceInitialCurrent - icfInit) * Complex(mRf, 0);
-	mVirtualNodes[1]->setInitialVoltage(vsInit);
-	mVirtualNodes[2]->setInitialVoltage(vfInit);
-	mVirtualNodes[3]->setInitialVoltage(vcInit);
+	mVirtualNodes[0]->setInitialVoltage(vsInit);
+	mVirtualNodes[1]->setInitialVoltage(vfInit);
+	mVirtualNodes[2]->setInitialVoltage(vcInit);
 
 	// Set parameters electrical subcomponents
-	mVsref(0,0) = mVirtualNodes[1]->initialSingleVoltage();
+	mVsref(0,0) = mVirtualNodes[0]->initialSingleVoltage();
 	mSubCtrledVoltageSource->setParameters(mVsref(0,0));
 
 	// Connect electrical subcomponents
-	mSubCtrledVoltageSource->connect({ SimNode::GND, mVirtualNodes[1] });
-	mSubCtrledVoltageSource->setVirtualNodeAt(mVirtualNodes[0], 0);
-	mSubResistorF->connect({ mVirtualNodes[1], mVirtualNodes[2] });
-	mSubInductorF->connect({ mVirtualNodes[2], mVirtualNodes[3] });
-	mSubCapacitorF->connect({ mVirtualNodes[3], SimNode::GND });
+	mSubCtrledVoltageSource->connect({ SimNode::GND, mVirtualNodes[0] });
+	mSubResistorF->connect({ mVirtualNodes[0], mVirtualNodes[1] });
+	mSubInductorF->connect({ mVirtualNodes[1], mVirtualNodes[2] });
+	mSubCapacitorF->connect({ mVirtualNodes[2], SimNode::GND });
 	if (mWithConnectionTransformer)
-		mSubResistorC->connect({ mVirtualNodes[3],  mVirtualNodes[4]});
+		mSubResistorC->connect({ mVirtualNodes[2],  mVirtualNodes[3]});
 	else
-		mSubResistorC->connect({ mVirtualNodes[3],  mTerminals[0]->node()});
+		mSubResistorC->connect({ mVirtualNodes[2],  mTerminals[0]->node()});
 
 	// Initialize electrical subcomponents
 	mSubCtrledVoltageSource->initialize(mFrequencies);
@@ -212,15 +212,15 @@ void DP::Ph1::AvVoltageSourceInverterDQ::initializeFromPowerflow(Real frequency)
 	// Initialize control subcomponents
 	// current and voltage inputs to PLL and power controller
 	Complex vcdq, ircdq;
-	vcdq = rotatingFrame2to1(mVirtualNodes[4]->initialSingleVoltage(), std::arg(mVirtualNodes[4]->initialSingleVoltage()), 0);
-	ircdq = rotatingFrame2to1(-1. * mSubResistorC->attribute<MatrixComp>("i_intf")->get()(0, 0), std::arg(mVirtualNodes[4]->initialSingleVoltage()), 0);
+	vcdq = rotatingFrame2to1(mVirtualNodes[3]->initialSingleVoltage(), std::arg(mVirtualNodes[3]->initialSingleVoltage()), 0);
+	ircdq = rotatingFrame2to1(-1. * mSubResistorC->attribute<MatrixComp>("i_intf")->get()(0, 0), std::arg(mVirtualNodes[3]->initialSingleVoltage()), 0);
 	mVcd = vcdq.real();
 	mVcq = vcdq.imag();
 	mIrcd = ircdq.real();
 	mIrcq = ircdq.imag();
 	// angle input 
 	Matrix matrixStateInit = Matrix::Zero(2,1);
-	matrixStateInit(0,0) = std::arg(mVirtualNodes[4]->initialSingleVoltage());
+	matrixStateInit(0,0) = std::arg(mVirtualNodes[3]->initialSingleVoltage());
 	mPLL->setInitialValues(mVcq, matrixStateInit, Matrix::Zero(2,1));
 
 	mSLog->info(
@@ -314,7 +314,7 @@ void DP::Ph1::AvVoltageSourceInverterDQ::addControlStepDependencies(AttributeBas
 void DP::Ph1::AvVoltageSourceInverterDQ::controlStep(Real time, Int timeStepCount) {
 	// Transformation interface forward
 	Complex vcdq, ircdq;
-	vcdq = rotatingFrame2to1(mVirtualNodes[4]->singleVoltage(), mPLL->attribute<Matrix>("output_prev")->get()(0, 0), mThetaN);
+	vcdq = rotatingFrame2to1(mVirtualNodes[3]->singleVoltage(), mPLL->attribute<Matrix>("output_prev")->get()(0, 0), mThetaN);
 	ircdq = rotatingFrame2to1(-1. * mSubResistorC->attribute<MatrixComp>("i_intf")->get()(0, 0), mPLL->attribute<Matrix>("output_prev")->get()(0, 0), mThetaN);
 	mVcd = vcdq.real();
 	mVcq = vcdq.imag();
@@ -396,7 +396,7 @@ void DP::Ph1::AvVoltageSourceInverterDQ::mnaUpdateCurrent(const Matrix& leftvect
 }
 
 void DP::Ph1::AvVoltageSourceInverterDQ::mnaUpdateVoltage(const Matrix& leftVector) {
-	mVirtualNodes[4]->mnaUpdateVoltage(leftVector);
+	mVirtualNodes[3]->mnaUpdateVoltage(leftVector);
 	mIntfVoltage(0, 0) = 0;
 	if (terminalNotGrounded(1))
 		mIntfVoltage(0,0) = Math::complexFromVectorElement(leftVector, matrixNodeIndex(1));
