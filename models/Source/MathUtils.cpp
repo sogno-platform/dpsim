@@ -144,6 +144,11 @@ void Math::FFT(std::vector<Complex>& samples) {
 			samples[b] = t;
 		}
 	}
+}
 
-
+Complex Math::rotatingFrame2to1(Complex f2, Real theta1, Real theta2) {
+	Real delta = theta2 - theta1;
+	Real f1_real = f2.real() * cos(delta) - f2.imag() * sin(delta);
+	Real f1_imag = f2.real() * sin(delta) + f2.imag() * cos(delta);
+	return Complex(f1_real, f1_imag);
 }

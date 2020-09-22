@@ -147,14 +147,6 @@ void DP::Ph1::AvVoltageSourceInverterDQ::initialize(Matrix frequencies) {
 	SimPowerComp<Complex>::initialize(frequencies);
 }
 
-
-Complex DP::Ph1::AvVoltageSourceInverterDQ::rotatingFrame2to1(Complex f2, Real theta1, Real theta2) {
-	Real delta = theta2 - theta1;
-	Real f1_real = f2.real() * cos(delta) - f2.imag() * sin(delta);
-	Real f1_imag = f2.real() * sin(delta) + f2.imag() * cos(delta);
-	return Complex(f1_real, f1_imag);
-}
-
 void DP::Ph1::AvVoltageSourceInverterDQ::initializeFromPowerflow(Real frequency) {
 	checkForUnconnectedTerminals();
 
@@ -211,8 +203,8 @@ void DP::Ph1::AvVoltageSourceInverterDQ::initializeFromPowerflow(Real frequency)
 	// Initialize control subcomponents
 	// current and voltage inputs to PLL and power controller
 	Complex vcdq, ircdq;
-	vcdq = rotatingFrame2to1(mVirtualNodes[3]->initialSingleVoltage(), std::arg(mVirtualNodes[3]->initialSingleVoltage()), 0);
-	ircdq = rotatingFrame2to1(-1. * mSubResistorC->attribute<MatrixComp>("i_intf")->get()(0, 0), std::arg(mVirtualNodes[3]->initialSingleVoltage()), 0);
+	vcdq = Math::rotatingFrame2to1(mVirtualNodes[3]->initialSingleVoltage(), std::arg(mVirtualNodes[3]->initialSingleVoltage()), 0);
+	ircdq = Math::rotatingFrame2to1(-1. * mSubResistorC->attribute<MatrixComp>("i_intf")->get()(0, 0), std::arg(mVirtualNodes[3]->initialSingleVoltage()), 0);
 	mVcd = vcdq.real();
 	mVcq = vcdq.imag();
 	mIrcd = ircdq.real();
@@ -305,8 +297,8 @@ void DP::Ph1::AvVoltageSourceInverterDQ::addControlStepDependencies(AttributeBas
 void DP::Ph1::AvVoltageSourceInverterDQ::controlStep(Real time, Int timeStepCount) {
 	// Transformation interface forward
 	Complex vcdq, ircdq;
-	vcdq = rotatingFrame2to1(mVirtualNodes[3]->singleVoltage(), mPLL->attribute<Matrix>("output_prev")->get()(0, 0), mThetaN);
-	ircdq = rotatingFrame2to1(-1. * mSubResistorC->attribute<MatrixComp>("i_intf")->get()(0, 0), mPLL->attribute<Matrix>("output_prev")->get()(0, 0), mThetaN);
+	vcdq = Math::rotatingFrame2to1(mVirtualNodes[3]->singleVoltage(), mPLL->attribute<Matrix>("output_prev")->get()(0, 0), mThetaN);
+	ircdq = Math::rotatingFrame2to1(-1. * mSubResistorC->attribute<MatrixComp>("i_intf")->get()(0, 0), mPLL->attribute<Matrix>("output_prev")->get()(0, 0), mThetaN);
 	mVcd = vcdq.real();
 	mVcq = vcdq.imag();
 	mIrcd = ircdq.real();
@@ -317,7 +309,7 @@ void DP::Ph1::AvVoltageSourceInverterDQ::controlStep(Real time, Int timeStepCoun
 	mPowerControllerVSI->signalStep(time, timeStepCount);
 	
 	// Transformation interface backward
-	mVsref(0,0) = rotatingFrame2to1(Complex(mPowerControllerVSI->attribute<Matrix>("output_curr")->get()(0, 0), mPowerControllerVSI->attribute<Matrix>("output_curr")->get()(1, 0)), mThetaN, mPLL->attribute<Matrix>("output_prev")->get()(0, 0));
+	mVsref(0,0) = Math::rotatingFrame2to1(Complex(mPowerControllerVSI->attribute<Matrix>("output_curr")->get()(0, 0), mPowerControllerVSI->attribute<Matrix>("output_curr")->get()(1, 0)), mThetaN, mPLL->attribute<Matrix>("output_prev")->get()(0, 0));
 
 	// Update nominal system angle
 	mThetaN = mThetaN + mTimeStep * mOmegaN;

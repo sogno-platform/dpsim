@@ -132,8 +132,6 @@ namespace Ph1 {
 		void mnaAddPostStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes, Attribute<Matrix>::Ptr &leftVector);
 
 		// #### Control section ####
-		/// convert between two rotating frames
-		Complex rotatingFrame2to1(Complex f, Real theta1, Real theta2);
 		/// Control pre step operations
 		void controlPreStep(Real time, Int timeStepCount);
 		/// Perform step of controller

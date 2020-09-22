@@ -183,5 +183,7 @@ namespace CPS {
 		static Real StateSpaceEuler(Real states, Real A, Real B, Real C, Real dt, Real u);
 
 		static void FFT(std::vector<Complex>& samples);
+
+		static Complex rotatingFrame2to1(Complex f2, Real theta1, Real theta2);
 	};
 }
