@@ -25,8 +25,8 @@ namespace Signal {
 		Real mTimeStep;
 
 		// Power parameters
-		Real mPref;
-		Real mQref;
+		Real mPref = 0;
+		Real mQref = 0;
 
 		// Power controller
 		Real mOmegaCutoff;
@@ -41,14 +41,6 @@ namespace Signal {
 		Real mKpCurrCtrld;
 		Real mKpCurrCtrlq;
 
-		// states
-		Real mP;
-		Real mQ;
-		Real mPhi_d;
-		Real mPhi_q;
-		Real mGamma_d;
-		Real mGamma_q;
-
 		/// initial values for states
 		Real mPInit = 0;
 		Real mQInit = 0;
@@ -57,18 +49,30 @@ namespace Signal {
 		Real mGamma_dInit = 0;
 		Real mGamma_qInit = 0;
 
-		/// state space matrices
+		// input, state and output vectors
+		/// Previous Input
+        Matrix mInputPrev = Matrix::Zero(6,1);
+        /// Current Input
+        Matrix mInputCurr = Matrix::Zero(6,1);
+        /// Previous State
+        Matrix mStatePrev = Matrix::Zero(6,1);
+        /// Current State
+        Matrix mStateCurr = Matrix::Zero(6,1);
+        /// Previous Output
+        Matrix mOutputPrev = Matrix::Zero(2,1);
+        /// Current Output
+        Matrix mOutputCurr = Matrix::Zero(2,1);
+
+		// state space matrices
+		/// matrix A of state space model
 		Matrix mA = Matrix::Zero(6, 6);
+		/// matrix B of state space model
 		Matrix mB = Matrix::Zero(6, 6);
+		/// matrix C of state space model
 		Matrix mC = Matrix::Zero(2, 6);
+		/// matrix D of state space model
 		Matrix mD = Matrix::Zero(2, 6);
 
-		/// state vector
-		Matrix mStates = Matrix::Zero(6, 1);
-
-		/// input vector
-		Matrix mU = Matrix::Zero(6, 1);
-		
 	public:
 		PowerControllerVSI(String name, Logger::Level logLevel = Logger::Level::off);
 		
@@ -79,18 +83,32 @@ namespace Signal {
 		/// Setter for initial state values
 		void setInitialStateValues(Real pInit, Real qInit, Real phi_dInit, Real phi_qInit, Real gamma_dInit, Real gamma_qInit);
 
-		///
+		/// Initialize vectors of state space model
 		void initializeStateSpaceModel(Real omega, Real timeStep, Attribute<Matrix>::Ptr leftVector);
-		///
+		/// Update B matrix due to its dependence on the input
 		void updateBMatrixStateSpaceModel();
 
+		/// pre step operations
+		void signalPreStep(Real time, Int timeStepCount);
+		/// pre step dependencies
+		void signalAddPreStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes);
 		/// step operations
 		void signalStep(Real time, Int timeStepCount);
 		/// add step dependencies
-		void signalAddStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes) {};
+		void signalAddStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes);
 
 		Task::List getTasks();
 
+		class PreStep : public Task {
+        public:
+			PreStep(PowerControllerVSI& powerControllerVSI) :
+                Task(powerControllerVSI.mName + ".PreStep"), mPowerControllerVSI(powerControllerVSI) {
+					mPowerControllerVSI.signalAddPreStepDependencies(mPrevStepDependencies, mAttributeDependencies, mModifiedAttributes);
+			}
+			void execute(Real time, Int timeStepCount) { mPowerControllerVSI.signalPreStep(time, timeStepCount); };
+		private:
+			PowerControllerVSI& mPowerControllerVSI;
+        };
 		class Step : public Task {
 		public:
 			Step(PowerControllerVSI& powerControllerVSI) :

@@ -316,16 +316,19 @@ void DP::Ph1::AvVoltageSourceInverterDQ::mnaApplyRightSideVectorStamp(Matrix& ri
 void DP::Ph1::AvVoltageSourceInverterDQ::addControlPreStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes) {
 	// add pre-step dependencies of subcomponents
 	mPLL->signalAddPreStepDependencies(prevStepDependencies, attributeDependencies, modifiedAttributes);
+	mPowerControllerVSI->signalAddPreStepDependencies(prevStepDependencies, attributeDependencies, modifiedAttributes);
 }
 
 void DP::Ph1::AvVoltageSourceInverterDQ::controlPreStep(Real time, Int timeStepCount) {	
 	// add pre-step of subcomponents
 	mPLL->signalPreStep(time, timeStepCount);
+	mPowerControllerVSI->signalPreStep(time, timeStepCount);
 }
 
 void DP::Ph1::AvVoltageSourceInverterDQ::addControlStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes) {
 	// add step dependencies of subcomponents
 	mPLL->signalAddStepDependencies(prevStepDependencies, attributeDependencies, modifiedAttributes);
+	mPowerControllerVSI->signalAddStepDependencies(prevStepDependencies, attributeDependencies, modifiedAttributes);
 	// add step dependencies of component itself
 	attributeDependencies.push_back(attribute("i_intf"));
 	attributeDependencies.push_back(attribute("v_intf"));
@@ -344,11 +347,10 @@ void DP::Ph1::AvVoltageSourceInverterDQ::controlStep(Real time, Int timeStepCoun
 
 	// add step of subcomponents
 	mPLL->signalStep(time, timeStepCount);
-	mPowerControllerVSI->updateBMatrixStateSpaceModel();
 	mPowerControllerVSI->signalStep(time, timeStepCount);
 	
 	// Transformation interface backward
-	mVsref(0,0) = rotatingFrame2to1(Complex(mVsdq(0, 0), mVsdq(1, 0)), mThetaN, mPLL->attribute<Matrix>("output_prev")->get()(0, 0));
+	mVsref(0,0) = rotatingFrame2to1(Complex(mPowerControllerVSI->attribute<Matrix>("output_curr")->get()(0, 0), mPowerControllerVSI->attribute<Matrix>("output_curr")->get()(1, 0)), mThetaN, mPLL->attribute<Matrix>("output_prev")->get()(0, 0));
 
 	// Update nominal system angle
 	mThetaN = mThetaN + mTimeStep * mOmegaN;
@@ -363,6 +365,7 @@ void DP::Ph1::AvVoltageSourceInverterDQ::mnaAddPreStepDependencies(AttributeBase
 	prevStepDependencies.push_back(attribute("Vsref"));
 	prevStepDependencies.push_back(attribute("i_intf"));
 	prevStepDependencies.push_back(attribute("v_intf"));
+	attributeDependencies.push_back(mPowerControllerVSI->attribute<Matrix>("output_prev"));
 	attributeDependencies.push_back(mPLL->attribute<Matrix>("output_prev"));
 	modifiedAttributes.push_back(attribute("right_vector"));
 }

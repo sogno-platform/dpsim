@@ -13,20 +13,20 @@ using namespace CPS::Signal;
 
 PowerControllerVSI::PowerControllerVSI(String name, Logger::Level logLevel) :
 	SimSignalComp(name, name, logLevel) {
+	
+	// attributes of full state space model vectors
+	addAttribute<Matrix>("input_prev", &mInputPrev, Flags::read | Flags::write);
+    addAttribute<Matrix>("state_prev", &mStatePrev, Flags::read | Flags::write);
+    addAttribute<Matrix>("output_prev", &mOutputPrev, Flags::read | Flags::write);
+    addAttribute<Matrix>("input_curr", &mInputCurr, Flags::read | Flags::write);
+    addAttribute<Matrix>("state_curr", &mStateCurr, Flags::read | Flags::write);
+    addAttribute<Matrix>("output_curr", &mOutputCurr, Flags::read | Flags::write);
 
-	addAttribute<Real>("p", &mP, Flags::read | Flags::write);
-	addAttribute<Real>("q", &mQ, Flags::read | Flags::write);
-	addAttribute<Real>("phid", &mPhi_d, Flags::read | Flags::write);
-	addAttribute<Real>("phiq", &mPhi_q, Flags::read | Flags::write);
-	addAttribute<Real>("gammad", &mGamma_d, Flags::read | Flags::write);
-	addAttribute<Real>("gammaq", &mGamma_q, Flags::read | Flags::write);
-
+	// attributes of input references
 	addAttribute<Real>("Vc_d", Flags::read | Flags::write);
 	addAttribute<Real>("Vc_q", Flags::read | Flags::write);
 	addAttribute<Real>("Irc_d", Flags::read | Flags::write);
 	addAttribute<Real>("Irc_q", Flags::read | Flags::write);
-	addAttribute<Real>("Vs_d", Flags::read | Flags::write);
-	addAttribute<Real>("Vs_q", Flags::read | Flags::write);
 }
 
 void PowerControllerVSI::setParameters(Real Pref, Real Qref) {
@@ -96,60 +96,55 @@ void PowerControllerVSI::initializeStateSpaceModel(Real omega, Real timeStep, At
 	updateBMatrixStateSpaceModel();
 
 	// initialization of input
-	mU << mPref, mQref, attribute<Real>("Vc_d")->get(), attribute<Real>("Vc_q")->get(), attribute<Real>("Irc_d")->get(), attribute<Real>("Irc_q")->get();
-	mSLog->info("Initialization of input: \n" + Logger::matrixToString(mU));
+	mInputCurr << mPref, mQref, attribute<Real>("Vc_d")->get(), attribute<Real>("Vc_q")->get(), attribute<Real>("Irc_d")->get(), attribute<Real>("Irc_q")->get();
+	mSLog->info("Initialization of input: \n" + Logger::matrixToString(mInputCurr));
 
 	// initialization of states
-	mP = mPInit;
-	mQ = mQInit;
-	mPhi_d = mPhi_dInit;
-	mPhi_q = mPhi_qInit;
-	mGamma_d = mGamma_dInit;
-	mGamma_q = mGamma_qInit;
-	mStates << mP, mQ, mPhi_d, mPhi_q, mGamma_d, mGamma_q;
-	
-	mSLog->info("Initialization of states: \n" + Logger::matrixToString(mStates));
+	mStateCurr << mPInit, mQInit, mPhi_dInit, mPhi_qInit, mGamma_dInit, mGamma_qInit;
+	mSLog->info("Initialization of states: \n" + Logger::matrixToString(mStateCurr));
 
 	// initialization of output
-	Matrix vsdq = Matrix::Zero(2, 1);
-	vsdq = mC * mStates + mD * mU;
-	attribute<Real>("Vs_d")->set(vsdq(0,0));
-	attribute<Real>("Vs_q")->set(vsdq(1,0));
-	mSLog->info("Initialization of output: \n" + Logger::matrixToString(vsdq));
+	mOutputCurr = mC * mStateCurr + mD * mInputCurr;
+	mSLog->info("Initialization of output: \n" + Logger::matrixToString(mOutputCurr));
 }
 
+void PowerControllerVSI::signalAddPreStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes) {
+    prevStepDependencies.push_back(attribute("input_curr"));
+	prevStepDependencies.push_back(attribute("output_curr"));
+	modifiedAttributes.push_back(attribute("input_prev"));
+    modifiedAttributes.push_back(attribute("output_prev"));
+};
+
+void PowerControllerVSI::signalPreStep(Real time, Int timeStepCount) {
+    mInputPrev = mInputCurr;
+    mStatePrev = mStateCurr;
+    mOutputPrev = mOutputCurr;
+}
+
+void PowerControllerVSI::signalAddStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes) {
+	attributeDependencies.push_back(attribute("Vc_d"));
+	attributeDependencies.push_back(attribute("Vc_q"));
+	attributeDependencies.push_back(attribute("Irc_d"));
+	attributeDependencies.push_back(attribute("Irc_q"));
+	modifiedAttributes.push_back(attribute("input_curr"));
+    modifiedAttributes.push_back(attribute("output_curr"));
+};
+
 void PowerControllerVSI::signalStep(Real time, Int timeStepCount) {
-	Matrix newStates = Matrix::Zero(6, 1);
-	Matrix newU = Matrix::Zero(6, 1);
+	// update B matrix due to its dependence on Irc
+	updateBMatrixStateSpaceModel();
 
-	newU << mPref, mQref, attribute<Real>("Vc_d")->get(), attribute<Real>("Vc_q")->get(), attribute<Real>("Irc_d")->get(), attribute<Real>("Irc_q")->get();
+	// get current inputs
+	mInputCurr << mPref, mQref, attribute<Real>("Vc_d")->get(), attribute<Real>("Vc_q")->get(), attribute<Real>("Irc_d")->get(), attribute<Real>("Irc_q")->get();
+    mSLog->info("Time {}\n: inputCurr = \n{}\n , inputPrev = \n{}\n , statePrev = \n{}", time, mInputCurr, mInputPrev, mStatePrev);
 
-	mSLog->info("Time {}:", time);
-    mSLog->info("Input values: inputCurr = \n{}\n , inputPrev = \n{}\n , statePrev = \n{}", newU, mU, mStates);
+	// calculate new states
+	mStateCurr = Math::StateSpaceTrapezoidal(mStatePrev, mA, mB, mTimeStep, mInputCurr, mInputPrev);
+	mSLog->info("stateCurr = \n {}", mStateCurr);
 
-	newStates = Math::StateSpaceTrapezoidal(mStates, mA, mB, mTimeStep, newU, mU);
-
-	// update states
-	mP = newStates(0, 0);
-	mQ = newStates(1, 0);
-	mPhi_d = newStates(2, 0);
-	mPhi_q = newStates(3, 0);
-	mGamma_d = newStates(4, 0);
-	mGamma_q = newStates(5, 0);
-
-	mStates = newStates;
-
-	mSLog->info("State values: stateCurr = \n {}", mStates);
-
-	mU = newU;
-
-	// new output
-	Matrix vsdq = Matrix::Zero(2, 1);
-	vsdq = mC * mStates + mD * mU;
-	attribute<Real>("Vs_d")->set(vsdq(0,0));
-	attribute<Real>("Vs_q")->set(vsdq(1,0));
-
-	mSLog->info("Output values: outputCurr = \n{}", vsdq);
+	// calculate new outputs
+	mOutputCurr = mC * mStateCurr + mD * mInputCurr;
+	mSLog->info("Output values: outputCurr = \n{}", mOutputCurr);
 }
 
 void PowerControllerVSI::updateBMatrixStateSpaceModel() {
@@ -160,5 +155,5 @@ void PowerControllerVSI::updateBMatrixStateSpaceModel() {
 }
 
 Task::List PowerControllerVSI::getTasks() {
-	return Task::List({std::make_shared<Step>(*this)});
+	return Task::List({std::make_shared<PreStep>(*this), std::make_shared<Step>(*this)});
 }

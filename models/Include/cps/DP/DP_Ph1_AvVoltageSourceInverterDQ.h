@@ -72,8 +72,6 @@ namespace Ph1 {
 		/// Measured current in local reference frame
 		Matrix mIrcdq = Matrix::Zero(2, 1);
 		// Control outputs
-		/// Voltage as control output before transformation interface
-		Matrix mVsdq = Matrix::Zero(2, 1);
 		/// Voltage as control output after transformation interface
 		MatrixComp mVsref = MatrixComp::Zero(1,1);
 
