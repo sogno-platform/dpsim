@@ -90,7 +90,7 @@ int main(int argc, char** argv){
 	// log output of PV connected at N11
 	String pv_name = "pv_N11";
 	auto pv = systemDP.component<CPS::SimPowerComp<Complex>>(pv_name);
-	Examples::CIGREMV::logPVAttributes(logger, pv);
+	Examples::CIGREMV::logPVDecomposedAttributes(logger, pv);
 
 	Simulation sim(simName, systemDP, timeStep, finalTime, Domain::DP, Solver::Type::MNA, Logger::Level::debug, true);
 
