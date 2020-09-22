@@ -35,59 +35,37 @@ DP::Ph1::AvVoltageSourceInverterDQ::AvVoltageSourceInverterDQ(String uid, String
 	mSubCtrledVoltageSource = DP::Ph1::VoltageSource::make(mName + "_src", mLogLevel);
 
 	// Create control sub components
-	mPLL = Signal::PLL::make("pv_PLL", mLogLevel);
-	mPowerControllerVSI = Signal::PowerControllerVSI::make("pv_PowerControllerVSI", mLogLevel);
+	mPLL = Signal::PLL::make(mName + "_PLL", mLogLevel);
+	mPowerControllerVSI = Signal::PowerControllerVSI::make(mName + "_PowerControllerVSI", mLogLevel);
 
-	// additional input variables
-	addAttribute<Matrix>("Vcdq", &mVcdq, Flags::read | Flags::write);
-	addAttribute<Matrix>("Ircdq", &mIrcdq, Flags::read | Flags::write);
-
-	// additional output variables
-	addAttribute<Matrix>("Vsdq", &mVsdq, Flags::read | Flags::write);
-	addAttribute<MatrixComp>("Vsref", &mVsref, Flags::read | Flags::write);
-
-	// state variables
-	addAttribute<Real>("p", Flags::read | Flags::write);
-	addAttribute<Real>("q", Flags::read | Flags::write);
-	addAttribute<Real>("phid", Flags::read | Flags::write);
-	addAttribute<Real>("phiq", Flags::read | Flags::write);
-	addAttribute<Real>("gammad", Flags::read | Flags::write);
-	addAttribute<Real>("gammaq", Flags::read | Flags::write);
-
-	// input variables
+	// general variables of inverter
 	addAttribute<Real>("Omega_nom", &mOmegaN, Flags::read | Flags::write);
 	addAttribute<Real>("P_ref", &mPref, Flags::read | Flags::write);
 	addAttribute<Real>("Q_ref", &mQref, Flags::read | Flags::write);
 
-	// PLL
-	addAttribute<Matrix>("pll_output", Flags::read | Flags::write);
-
-	// interfacing variabes
+	// interfacing variables
+	addAttribute<Matrix>("Vcdq", &mVcdq, Flags::read | Flags::write);
+	addAttribute<Matrix>("Ircdq", &mIrcdq, Flags::read | Flags::write);
 	addAttribute<Real>("Vc_d", &mVcdq(0, 0), Flags::read | Flags::write);
 	addAttribute<Real>("Vc_q", &mVcdq(1, 0), Flags::read | Flags::write);
 	addAttribute<Real>("Irc_d", &mIrcdq(0, 0), Flags::read | Flags::write);
 	addAttribute<Real>("Irc_q", &mIrcdq(1, 0), Flags::read | Flags::write);
-	addAttribute<Real>("Vs_d", &mVsdq(0, 0), Flags::read | Flags::write);
-	addAttribute<Real>("Vs_q", &mVsdq(1, 0), Flags::read | Flags::write);
+	addAttribute<MatrixComp>("Vsref", &mVsref, Flags::read | Flags::write);
 
-	// Relate component attributes with subcomponents attributes	
 	// PLL
 	mPLL->setAttributeRef("input_ref", attribute<Real>("Vc_q"));
-	setAttributeRef("pll_output", mPLL->attribute<Matrix>("output_curr"));
+	addAttributeRef<Matrix>("pll_output", mPLL->attribute<Matrix>("output_curr"), Flags::read);
 
 	// Power controller
+	// input references
 	mPowerControllerVSI->setAttributeRef("Vc_d", attribute<Real>("Vc_d"));
 	mPowerControllerVSI->setAttributeRef("Vc_q", attribute<Real>("Vc_q"));
 	mPowerControllerVSI->setAttributeRef("Irc_d", attribute<Real>("Irc_d"));
 	mPowerControllerVSI->setAttributeRef("Irc_q", attribute<Real>("Irc_q"));
-	mPowerControllerVSI->setAttributeRef("Vs_d", attribute<Real>("Vs_d"));
-	mPowerControllerVSI->setAttributeRef("Vs_q", attribute<Real>("Vs_q"));
-	setAttributeRef("p", mPowerControllerVSI->attribute<Real>("p"));
-	setAttributeRef("q", mPowerControllerVSI->attribute<Real>("q"));
-	setAttributeRef("phid", mPowerControllerVSI->attribute<Real>("phid"));
-	setAttributeRef("phiq", mPowerControllerVSI->attribute<Real>("phiq"));
-	setAttributeRef("gammad", mPowerControllerVSI->attribute<Real>("gammad"));
-	setAttributeRef("gammaq", mPowerControllerVSI->attribute<Real>("gammaq"));
+	// input, state and output vector for logging
+	addAttributeRef<Matrix>("powerctrl_inputs", mPowerControllerVSI->attribute<Matrix>("input_curr"), Flags::read);
+	addAttributeRef<Matrix>("powerctrl_states", mPowerControllerVSI->attribute<Matrix>("state_curr"), Flags::read);
+	addAttributeRef<Matrix>("powerctrl_outputs", mPowerControllerVSI->attribute<Matrix>("output_curr"), Flags::read);
 }
 
 void DP::Ph1::AvVoltageSourceInverterDQ::setParameters(Real sysOmega, Real sysVoltNom, Real Pref, Real Qref) {

@@ -56,6 +56,12 @@ namespace CPS {
 			return attrPtr;
 		}
 
+		template<typename T, typename... Args>
+		void addAttributeRef(const String& name, std::shared_ptr<AttributeBase> ref, Args&&... args){
+			addAttribute<T>(name, std::forward<Args>(args)...);
+			setAttributeRef(name, ref);
+		}
+
 		void setAttributeRef(const String& name, std::shared_ptr<AttributeBase> ref) {
 			auto attr = attribute(name);
 
