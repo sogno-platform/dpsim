@@ -67,18 +67,17 @@ namespace Ph1 {
 
 		// ### Inverter Interfacing Variables ###
 		// Control inputs
-		/// Measured voltage in local reference frame
-		Matrix mVcdq = Matrix::Zero(2, 1);
-		/// Measured current in local reference frame
-		Matrix mIrcdq = Matrix::Zero(2, 1);
+		/// Measured voltage d-axis in local reference frame
+		Real mVcd = 0;
+		/// Measured voltage q-axis in local reference frame
+		Real mVcq = 0;
+		/// Measured current d-axis in local reference frame
+		Real mIrcd = 0;
+		/// Measured current q-axis in local reference frame
+		Real mIrcq = 0;
 		// Control outputs
 		/// Voltage as control output after transformation interface
 		MatrixComp mVsref = MatrixComp::Zero(1,1);
-
-		// /// instantaneous omega
-		// Real mOmegaInst=0;
-		// /// instantaneous frequency
-		// Real mFreqInst=0;
 
 		/// Boolean for connection transformer usage
 		Bool mWithConnectionTransformer=false;

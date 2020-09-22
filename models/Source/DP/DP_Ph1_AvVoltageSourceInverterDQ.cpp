@@ -44,12 +44,10 @@ DP::Ph1::AvVoltageSourceInverterDQ::AvVoltageSourceInverterDQ(String uid, String
 	addAttribute<Real>("Q_ref", &mQref, Flags::read | Flags::write);
 
 	// interfacing variables
-	addAttribute<Matrix>("Vcdq", &mVcdq, Flags::read | Flags::write);
-	addAttribute<Matrix>("Ircdq", &mIrcdq, Flags::read | Flags::write);
-	addAttribute<Real>("Vc_d", &mVcdq(0, 0), Flags::read | Flags::write);
-	addAttribute<Real>("Vc_q", &mVcdq(1, 0), Flags::read | Flags::write);
-	addAttribute<Real>("Irc_d", &mIrcdq(0, 0), Flags::read | Flags::write);
-	addAttribute<Real>("Irc_q", &mIrcdq(1, 0), Flags::read | Flags::write);
+	addAttribute<Real>("Vc_d", &mVcd, Flags::read | Flags::write);
+	addAttribute<Real>("Vc_q", &mVcq, Flags::read | Flags::write);
+	addAttribute<Real>("Irc_d", &mIrcd, Flags::read | Flags::write);
+	addAttribute<Real>("Irc_q", &mIrcq, Flags::read | Flags::write);
 	addAttribute<MatrixComp>("Vsref", &mVsref, Flags::read | Flags::write);
 
 	// PLL
@@ -216,14 +214,14 @@ void DP::Ph1::AvVoltageSourceInverterDQ::initializeFromPowerflow(Real frequency)
 	Complex vcdq, ircdq;
 	vcdq = rotatingFrame2to1(mVirtualNodes[4]->initialSingleVoltage(), std::arg(mVirtualNodes[4]->initialSingleVoltage()), 0);
 	ircdq = rotatingFrame2to1(-1. * mSubResistorC->attribute<MatrixComp>("i_intf")->get()(0, 0), std::arg(mVirtualNodes[4]->initialSingleVoltage()), 0);
-	mVcdq(0, 0) = vcdq.real();
-	mVcdq(1, 0) = vcdq.imag();
-	mIrcdq(0, 0) = ircdq.real();
-	mIrcdq(1, 0) = ircdq.imag();
+	mVcd = vcdq.real();
+	mVcq = vcdq.imag();
+	mIrcd = ircdq.real();
+	mIrcq = ircdq.imag();
 	// angle input 
 	Matrix matrixStateInit = Matrix::Zero(2,1);
 	matrixStateInit(0,0) = std::arg(mVirtualNodes[4]->initialSingleVoltage());
-	mPLL->setInitialValues(mVcdq(1, 0), matrixStateInit, Matrix::Zero(2,1));
+	mPLL->setInitialValues(mVcq, matrixStateInit, Matrix::Zero(2,1));
 
 	mSLog->info(
 		"\n--- Initialization from powerflow ---"
@@ -318,10 +316,10 @@ void DP::Ph1::AvVoltageSourceInverterDQ::controlStep(Real time, Int timeStepCoun
 	Complex vcdq, ircdq;
 	vcdq = rotatingFrame2to1(mVirtualNodes[4]->singleVoltage(), mPLL->attribute<Matrix>("output_prev")->get()(0, 0), mThetaN);
 	ircdq = rotatingFrame2to1(-1. * mSubResistorC->attribute<MatrixComp>("i_intf")->get()(0, 0), mPLL->attribute<Matrix>("output_prev")->get()(0, 0), mThetaN);
-	mVcdq(0, 0) = vcdq.real();
-	mVcdq(1, 0) = vcdq.imag();
-	mIrcdq(0, 0) = ircdq.real();
-	mIrcdq(1, 0) = ircdq.imag();
+	mVcd = vcdq.real();
+	mVcq = vcdq.imag();
+	mIrcd = ircdq.real();
+	mIrcq = ircdq.imag();
 
 	// add step of subcomponents
 	mPLL->signalStep(time, timeStepCount);
