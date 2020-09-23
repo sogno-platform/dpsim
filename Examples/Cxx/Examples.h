@@ -39,6 +39,8 @@ namespace SGIB {
         Real OmegaCutoff = 2 * PI * systemFrequency;
 
         // Initial state values
+        Real thetaPLLInit = 0; // only for debug
+        Real phiPLLInit = 0; // only for debug
         Real phi_dInit = 823.721*scaling_I;
         Real phi_qInit = -411.861*scaling_I;
         Real gamma_dInit = 131.401*scaling_I;

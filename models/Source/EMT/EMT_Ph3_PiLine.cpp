@@ -154,7 +154,7 @@ void EMT::Ph3::PiLine::mnaInitialize(Real omega, Real timeStep, Attribute<Matrix
 		subComps.push_back(mSubParallelResistor0);
 		subComps.push_back(mSubParallelResistor1);
 	}
-	if (mParallelCap(0,0) >= 0) {
+	if (mParallelCap(0,0) > 0) {
 		mSubParallelCapacitor0->mnaInitialize(omega, timeStep, leftVector);
 		mSubParallelCapacitor1->mnaInitialize(omega, timeStep, leftVector);
 		mRightVectorStamps.push_back(&mSubParallelCapacitor0->attribute<Matrix>("right_vector")->get());
@@ -175,11 +175,11 @@ void EMT::Ph3::PiLine::mnaInitialize(Real omega, Real timeStep, Attribute<Matrix
 void EMT::Ph3::PiLine::mnaApplySystemMatrixStamp(Matrix& systemMatrix) {
 	mSubSeriesResistor->mnaApplySystemMatrixStamp(systemMatrix);
 	mSubSeriesInductor->mnaApplySystemMatrixStamp(systemMatrix);
-	if (mParallelCond(0,0) >= 0) {
+	if (mParallelCond(0,0) > 0) {
 		mSubParallelResistor0->mnaApplySystemMatrixStamp(systemMatrix);
 		mSubParallelResistor1->mnaApplySystemMatrixStamp(systemMatrix);
 	}
-	if (mParallelCap(0,0) >= 0) {
+	if (mParallelCap(0,0) > 0) {
 		mSubParallelCapacitor0->mnaApplySystemMatrixStamp(systemMatrix);
 		mSubParallelCapacitor1->mnaApplySystemMatrixStamp(systemMatrix);
 	}
@@ -218,39 +218,3 @@ void EMT::Ph3::PiLine::mnaUpdateVoltage(const Matrix& leftVector) {
 void EMT::Ph3::PiLine::mnaUpdateCurrent(const Matrix& leftVector) {
 	mIntfCurrent = mSubSeriesInductor->intfCurrent();
 }
-//
-//MNAInterface::List EMT::Ph3::PiLine::mnaTearGroundComponents() {
-//	MNAInterface::List gndComponents;
-//
-//	if (mParallelCond(0,0) > 0) {
-//		gndComponents.push_back(mSubParallelResistor0);
-//		gndComponents.push_back(mSubParallelResistor1);
-//	}
-//
-//	if (mParallelCap(0,0) > 0) {
-//		gndComponents.push_back(mSubParallelCapacitor0);
-//		gndComponents.push_back(mSubParallelCapacitor1);
-//	}
-//
-//	return gndComponents;
-//}
-//
-//void EMT::Ph3::PiLine::mnaTearInitialize(Real omega, Real timeStep) {
-//	mSubSeriesResistor->mnaTearSetIdx(mTearIdx);
-//	mSubSeriesResistor->mnaTearInitialize(omega, timeStep);
-//	mSubSeriesInductor->mnaTearSetIdx(mTearIdx);
-//	mSubSeriesInductor->mnaTearInitialize(omega, timeStep);
-//}
-//
-//void EMT::Ph3::PiLine::mnaTearApplyMatrixStamp(Matrix& tearMatrix) {
-//	mSubSeriesResistor->mnaTearApplyMatrixStamp(tearMatrix);
-//	mSubSeriesInductor->mnaTearApplyMatrixStamp(tearMatrix);
-//}
-//
-//void EMT::Ph3::PiLine::mnaTearApplyVoltageStamp(Matrix& voltageVector) {
-//	mSubSeriesInductor->mnaTearApplyVoltageStamp(voltageVector);
-//}
-//
-//void EMT::Ph3::PiLine::mnaTearPostStep(Complex voltage, Complex current) {
-//	mSubSeriesInductor->mnaTearPostStep(voltage - current * mSeriesRes, current);
-//}

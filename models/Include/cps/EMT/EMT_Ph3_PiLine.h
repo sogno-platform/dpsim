@@ -77,7 +77,7 @@ namespace Ph3 {
 					mAttributeDependencies.push_back(line.mSubParallelResistor0->attribute("right_vector"));
 					mAttributeDependencies.push_back(line.mSubParallelResistor1->attribute("right_vector"));
 				}
-				if (line.mParallelCap(0, 0) >= 0) {
+				if (line.mParallelCap(0, 0) > 0) {
 					mAttributeDependencies.push_back(line.mSubParallelCapacitor0->attribute("right_vector"));
 					mAttributeDependencies.push_back(line.mSubParallelCapacitor1->attribute("right_vector"));
 				}
