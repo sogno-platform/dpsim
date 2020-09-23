@@ -47,6 +47,21 @@ EMT::Ph3::RXLoad::RXLoad(String name,
 	initPowerFromTerminal = false;
 }
 
+void EMT::Ph3::RXLoad::setParameters(Matrix activePower, Matrix reactivePower, Real volt) {
+	mActivePower = activePower;
+	mReactivePower = reactivePower;
+
+	// complex power
+	mPower = MatrixComp::Zero(3, 3);
+	mPower(0, 0) = { mActivePower(0, 0), mReactivePower(0, 0) };
+	mPower(1, 1) = { mActivePower(1, 1), mReactivePower(1, 1) };
+	mPower(2, 2) = { mActivePower(2, 2), mReactivePower(2, 2) };
+
+	mNomVoltage = volt;
+
+	initPowerFromTerminal = false;
+}
+
 SimPowerComp<Real>::Ptr EMT::Ph3::RXLoad::clone(String name) {
 	// everything set by initializeFromNodesAndTerminals
 	return RXLoad::make(name, mLogLevel);
@@ -87,7 +102,7 @@ void EMT::Ph3::RXLoad::initializeFromNodesAndTerminals(Real frequency) {
 	if (mReactivePower(0, 0) != 0)
 		mReactance = std::pow(mNomVoltage/sqrt(3), 2) * mReactivePower.inverse();
 	else
-		mReactance = Matrix::Zero(0, 0);
+		mReactance = Matrix::Zero(1, 1);
 
 	if (mReactance(0,0) > 0) {
 		mInductance = mReactance / (2 * PI * frequency);

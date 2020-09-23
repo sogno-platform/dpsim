@@ -70,6 +70,8 @@ namespace CPS {
 				SimPowerComp<Real>::Ptr clone(String name);
 
 				// #### General ####
+				///
+				void setParameters(Matrix activePower, Matrix reactivePower, Real volt);
 				/// Initializes component from power flow data
 				void initializeFromNodesAndTerminals(Real frequency);
 

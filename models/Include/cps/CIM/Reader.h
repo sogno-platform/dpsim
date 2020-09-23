@@ -178,6 +178,10 @@ namespace CIM {
 
 		///
 		void initDynamicSystemTopologyWithPowerflow(SystemTopology& systemPF, SystemTopology& system);
+		///
+		static Matrix singlePhaseParameterToThreePhase(Real parameter);
+		///
+		static Matrix singlePhasePowerToThreePhase(Real power);
 
 		// #### shunt component settings ####
 		/// set shunt capacitor value

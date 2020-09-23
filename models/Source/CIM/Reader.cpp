@@ -86,7 +86,6 @@ TopologicalPowerComp::Ptr Reader::mapComponent(BaseClass* obj) {
 	return nullptr;
 }
 
-///
 Matrix Reader::singlePhaseParameterToThreePhase(Real parameter) {
 	Matrix param_3ph = Matrix::Zero(3, 3);
 	param_3ph <<
@@ -94,6 +93,15 @@ Matrix Reader::singlePhaseParameterToThreePhase(Real parameter) {
 		0., parameter, 0.,
 		0, 0., parameter;
 	return param_3ph;
+}
+
+Matrix Reader::singlePhasePowerToThreePhase(Real power) {
+	Matrix power_3ph = Matrix::Zero(3, 3);
+	power_3ph <<
+		power/3., 0., 0.,
+		0., power/3., 0.,
+		0, 0., power/3.;
+	return power_3ph;
 }
 
 void Reader::addFiles(const fs::path &filename) {
