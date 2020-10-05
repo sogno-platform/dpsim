@@ -32,7 +32,7 @@ void EMT::Ph1::VoltageSourceNorton::setParameters(Complex voltage, Real srcFreq,
 	mResistance = resistance;
 	mConductance = 1. / mResistance;
 
-	parametersSet = true;
+	mParametersSet = true;
 }
 
 void EMT::Ph1::VoltageSourceNorton::mnaInitialize(Real omega, Real timeStep, Attribute<Matrix>::Ptr leftVector) {

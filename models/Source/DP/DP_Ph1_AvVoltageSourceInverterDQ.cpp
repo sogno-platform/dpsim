@@ -76,7 +76,7 @@ DP::Ph1::AvVoltageSourceInverterDQ::AvVoltageSourceInverterDQ(String uid, String
 }
 
 void DP::Ph1::AvVoltageSourceInverterDQ::setParameters(Real sysOmega, Real sysVoltNom, Real Pref, Real Qref) {
-	parametersSet = true;
+	mParametersSet = true;
 
 	mSLog->info("General Parameters:");
 	mSLog->info("Nominal Voltage={} [V] Nominal Omega={} [1/s]", sysVoltNom, sysOmega);
@@ -209,7 +209,7 @@ void DP::Ph1::AvVoltageSourceInverterDQ::initializeFromPowerflow(Real frequency)
 	mVcq = vcdq.imag();
 	mIrcd = ircdq.real();
 	mIrcq = ircdq.imag();
-	// angle input 
+	// angle input
 	Matrix matrixStateInit = Matrix::Zero(2,1);
 	matrixStateInit(0,0) = std::arg(mVirtualNodes[3]->initialSingleVoltage());
 	mPLL->setInitialValues(mVcq, matrixStateInit, Matrix::Zero(2,1));
@@ -278,7 +278,7 @@ void DP::Ph1::AvVoltageSourceInverterDQ::addControlPreStepDependencies(Attribute
 	mPowerControllerVSI->signalAddPreStepDependencies(prevStepDependencies, attributeDependencies, modifiedAttributes);
 }
 
-void DP::Ph1::AvVoltageSourceInverterDQ::controlPreStep(Real time, Int timeStepCount) {	
+void DP::Ph1::AvVoltageSourceInverterDQ::controlPreStep(Real time, Int timeStepCount) {
 	// add pre-step of subcomponents
 	mPLL->signalPreStep(time, timeStepCount);
 	mPowerControllerVSI->signalPreStep(time, timeStepCount);
@@ -307,7 +307,7 @@ void DP::Ph1::AvVoltageSourceInverterDQ::controlStep(Real time, Int timeStepCoun
 	// add step of subcomponents
 	mPLL->signalStep(time, timeStepCount);
 	mPowerControllerVSI->signalStep(time, timeStepCount);
-	
+
 	// Transformation interface backward
 	mVsref(0,0) = Math::rotatingFrame2to1(Complex(mPowerControllerVSI->attribute<Matrix>("output_curr")->get()(0, 0), mPowerControllerVSI->attribute<Matrix>("output_curr")->get()(1, 0)), mThetaN, mPLL->attribute<Matrix>("output_prev")->get()(0, 0));
 
@@ -320,7 +320,7 @@ void DP::Ph1::AvVoltageSourceInverterDQ::mnaAddPreStepDependencies(AttributeBase
 	for (auto subcomp: mSubComponents)
 		if (auto mnasubcomp = std::dynamic_pointer_cast<MNAInterface>(subcomp))
 			mnasubcomp->mnaAddPreStepDependencies(prevStepDependencies, attributeDependencies, modifiedAttributes);
-	// add pre-step dependencies of component itself	
+	// add pre-step dependencies of component itself
 	prevStepDependencies.push_back(attribute("Vsref"));
 	prevStepDependencies.push_back(attribute("i_intf"));
 	prevStepDependencies.push_back(attribute("v_intf"));
@@ -329,7 +329,7 @@ void DP::Ph1::AvVoltageSourceInverterDQ::mnaAddPreStepDependencies(AttributeBase
 	modifiedAttributes.push_back(attribute("right_vector"));
 }
 
-void DP::Ph1::AvVoltageSourceInverterDQ::mnaPreStep(Real time, Int timeStepCount) {	
+void DP::Ph1::AvVoltageSourceInverterDQ::mnaPreStep(Real time, Int timeStepCount) {
 	// pre-steo of subcomponents - controlled source
 	mSubCtrledVoltageSource->setParameters(mVsref(0,0));
 	// pre-step of subcomponents - others

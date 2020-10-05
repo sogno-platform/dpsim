@@ -20,7 +20,7 @@ DP::Ph1::ControlledVoltageSource::ControlledVoltageSource(String uid, String nam
 
 void DP::Ph1::ControlledVoltageSource::setParameters(MatrixComp voltageRefABC) {
 	mIntfVoltage = voltageRefABC;
-	parametersSet = true;
+	mParametersSet = true;
 }
 
 SimPowerComp<Complex>::Ptr DP::Ph1::ControlledVoltageSource::clone(String name) {

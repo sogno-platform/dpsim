@@ -52,26 +52,29 @@ namespace Ph1 {
 		void mnaUpdateVoltage(const Matrix& leftVector);
 		/// Update interface current from MNA system result
 		void mnaUpdateCurrent(const Matrix& leftVector);
+		/// MNA post step operations
+		void mnaPostStep(Real time, Int timeStepCount, Attribute<Matrix>::Ptr &leftVector);
+		/// Add MNA post step dependencies
+		void mnaAddPostStepDependencies(AttributeBase::List &prevStepDependencies,
+			AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes,
+			Attribute<Matrix>::Ptr &leftVector);
 
 		class MnaPostStep : public Task {
 		public:
 			MnaPostStep(Switch& switchRef, Attribute<Matrix>::Ptr leftSideVector) :
 				Task(switchRef.mName + ".MnaPostStep"), mSwitch(switchRef), mLeftVector(leftSideVector) {
-				mAttributeDependencies.push_back(mLeftVector);
-				mModifiedAttributes.push_back(mSwitch.attribute("v_intf"));
-				mModifiedAttributes.push_back(mSwitch.attribute("i_intf"));
+				mSwitch.mnaAddPostStepDependencies(mPrevStepDependencies, mAttributeDependencies, mModifiedAttributes, mLeftVector);
 			}
-
-			void execute(Real time, Int timeStepCount);
+			void execute(Real time, Int timeStepCount) { mSwitch.mnaPostStep(time, timeStepCount, mLeftVector); }
 
 		private:
 			Switch& mSwitch;
 			Attribute<Matrix>::Ptr mLeftVector;
 		};
 
-		// #### MNA section for switches ####
+		// #### MNA section for switch ####
 		/// Check if switch is closed
-		Bool mnaIsClosed() { return mIsClosed; }
+		Bool mnaIsClosed() { return isClosed(); }
 		/// Stamps system matrix considering the defined switch position
 		void mnaApplySwitchSystemMatrixStamp(Matrix& systemMatrix, Bool closed);
 	};

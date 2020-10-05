@@ -13,14 +13,14 @@ using namespace CPS;
 
 SP::Ph1::externalGridInjection::externalGridInjection(String uid, String name,
     Logger::Level logLevel) : SimPowerComp<Complex>(uid, name, logLevel) {
-	
+
 	mSLog->info("Create {} of type {}", mName, this->type());
 	mSLog->flush();
 	mIntfVoltage = MatrixComp::Zero(1, 1);
 	mIntfCurrent = MatrixComp::Zero(1, 1);
 	setVirtualNodeNumber(1);
 	setTerminalNumber(1);
-	
+
     addAttribute<Real>("V_set", &mVoltageSetPoint, Flags::read | Flags::write);
     addAttribute<Real>("V_set_pu", &mVoltageSetPointPerUnit, Flags::read | Flags::write);
 	addAttribute<Real>("p_inj", &mActivePowerInjection, Flags::read | Flags::write);
@@ -39,7 +39,7 @@ void SP::Ph1::externalGridInjection::setParameters(Real voltageSetPoint) {
 	mSLog->info("Voltage Set-Point ={} [V]", mVoltageSetPoint);
 	mSLog->flush();
 
-	parametersSet = true;
+	mParametersSet = true;
 }
 
 void SP::Ph1::externalGridInjection::setBaseVoltage(Real baseVoltage) {
@@ -70,7 +70,7 @@ void SP::Ph1::externalGridInjection::updatePowerInjection(Complex powerInj) {
 void SP::Ph1::externalGridInjection::setParameters(Complex voltageRef, Real srcFreq) {
 	attribute<Complex>("V_ref")->set(voltageRef);
 	attribute<Real>("f_src")->set(srcFreq);
-	parametersSet = true;
+	mParametersSet = true;
 }
 
 SimPowerComp<Complex>::Ptr SP::Ph1::externalGridInjection::clone(String name) {

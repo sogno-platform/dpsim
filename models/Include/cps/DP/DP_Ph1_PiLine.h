@@ -38,8 +38,9 @@ namespace Ph1 {
 		std::shared_ptr<Capacitor> mSubParallelCapacitor0;
 		/// Parallel resistor submodel at Terminal 1
 		std::shared_ptr<Resistor> mSubParallelResistor1;
-		// Parallel capacitor submodel at Terminal 1
+		/// Parallel capacitor submodel at Terminal 1
 		std::shared_ptr<Capacitor> mSubParallelCapacitor1;
+		/// Right side vectors of subcomponents
 		std::vector<const Matrix*> mRightVectorStamps;
 	public:
 		/// Defines UID, name and logging level

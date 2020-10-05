@@ -29,7 +29,7 @@ void DP::Ph1::Inverter::setParameters(std::vector<Int> carrierHarms, std::vector
 	mModIdx = ratio;
 	mPhaseMod = phase;
 
-	parametersSet= true;
+	mParametersSet= true;
 }
 
 void DP::Ph1::Inverter::initializeFromPowerflow(Real frequency) {

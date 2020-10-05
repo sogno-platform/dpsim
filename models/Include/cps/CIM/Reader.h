@@ -92,6 +92,8 @@ namespace CIM {
 		std::map<String, TopologicalPowerComp::Ptr> mPowerflowEquipment;
 		/// Maps the RID of a Terminal to a PowerflowTerminal
 		std::map<String, TopologicalTerminal::Ptr> mPowerflowTerminals;
+		///
+		Bool mUseProtectionSwitches = false;
 
 		// #### shunt component settings ####
 		/// activates global shunt capacitor setting
@@ -194,6 +196,9 @@ namespace CIM {
 			mShuntConductanceValue = v;
 			mSetShuntConductance = true;
 		}
+
+		/// If set, some components like loads include protection switches
+		void useProtectionSwitches(Bool value = true) { mUseProtectionSwitches = value; }
 	};
 }
 }

@@ -26,7 +26,7 @@ DP::Ph1::CurrentSource::CurrentSource(String name, Complex current, Logger::Leve
 
 void DP::Ph1::CurrentSource::setParameters(Complex current) {
 	attribute<Complex>("I_ref")->set(current);
-	parametersSet = true;
+	mParametersSet = true;
 }
 
 SimPowerComp<Complex>::Ptr DP::Ph1::CurrentSource::clone(String name) {

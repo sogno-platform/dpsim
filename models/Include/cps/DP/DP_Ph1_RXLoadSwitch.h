@@ -8,66 +8,45 @@
 
 #pragma once
 
-#include <cps/SimPowerComp.h>
-#include <cps/Solver/MNAInterface.h>
-#include <cps/DP/DP_Ph1_Capacitor.h>
-#include <cps/DP/DP_Ph1_Inductor.h>
-#include <cps/DP/DP_Ph1_Resistor.h>
+#include <cps/DP/DP_Ph1_RXLoad.h>
+#include <cps/DP/DP_Ph1_Switch.h>
 
 namespace CPS {
 namespace DP {
 namespace Ph1 {
 	/// Constant impedance load model consisting of RLC elements
-	class RXLoad :
+	class RXLoadSwitch :
 		public SimPowerComp<Complex>,
-		public MNAInterface,
-		public SharedFactory<RXLoad> {
+		public MNASwitchInterface,
+		public SharedFactory<RXLoadSwitch> {
 	protected:
-		/// Power [Watt]
-		Complex mPower;
-		/// Active power [Watt]
-		Real mActivePower;
-		/// Reactive power [VAr]
-		Real mReactivePower;
-		/// Nominal voltage [V]
-		Real mNomVoltage;
-		/// Actual voltage [V]
-		Complex mVoltage;
-		/// Actual voltage [V]
-		Complex mCurrent;
-		/// Resistance [Ohm]
-		Real mResistance;
-		/// Reactance [Ohm]
-		Real mReactance;
-		/// Inductance [H]
-		Real mInductance;
-		/// Capacitance [F]
-		Real mCapacitance;
-		/// Internal inductor
-		std::shared_ptr<DP::Ph1::Inductor> mSubInductor;
-		/// Internal capacitor
-		std::shared_ptr<DP::Ph1::Capacitor> mSubCapacitor;
-		/// Internal resistance
-		std::shared_ptr<DP::Ph1::Resistor> mSubResistor;
+		/// Internal RXLoad
+		std::shared_ptr<DP::Ph1::RXLoad> mSubRXLoad;
+		/// Internal protection switch
+		std::shared_ptr<DP::Ph1::Switch> mSubSwitch;
+		/// internal switch is only opened after this time offset
+		Real mSwitchTimeOffset = 1.0;
 		/// Right side vectors of subcomponents
 		std::vector<const Matrix*> mRightVectorStamps;
+
 	public:
 		/// Defines UID, name and logging level
-		RXLoad(String uid, String name,
-			Logger::Level logLevel = Logger::Level::off);
+		RXLoadSwitch(String uid, String name, Logger::Level logLevel = Logger::Level::off);
 		/// Defines name, component parameters and logging level
-		RXLoad(String name,
-			Logger::Level logLevel = Logger::Level::off);
-
-		SimPowerComp<Complex>::Ptr clone(String name);
+		RXLoadSwitch(String name, Logger::Level logLevel = Logger::Level::off);
 
 		// #### General ####
-		/// Initialize components with network frequencies
+		///
 		void initialize(Matrix frequencies);
-		/// Initialize component from power flow data
+		/// Initializes component from power flow data
 		void initializeFromPowerflow(Real frequency);
-		/// Set model specific parameters
-		void setParameters(Real activePower, Real ReactivePower, Real volt);
+		/// Sets model specific parameters
+		void setParameters(Real activePower, Real reactivePower, Real nomVolt,
+			Real openResistance, Real closedResistance, Bool closed = false);
+		/// Sets only switch parameters so that load parameters could be calculated from powerflow
+		void setSwitchParameters(Real openResistance, Real closedResistance, Bool closed = false);
+		/// built-in logic for protection switch
+		void updateSwitchState(Real time);
 
 		// #### MNA section ####
 		/// Initializes internal variables of the component
@@ -77,9 +56,9 @@ namespace Ph1 {
 		/// Stamps right side (source) vector
 		void mnaApplyRightSideVectorStamp(Matrix& rightVector);
 		/// Update interface current from MNA system result
-		void mnaUpdateCurrent(const Matrix& leftVector);
+		void mnaUpdateCurrent(const Matrix& leftVector) { }
 		/// Update interface voltage from MNA system result
-		void mnaUpdateVoltage(const Matrix& leftVector);
+		void mnaUpdateVoltage(const Matrix& leftVector) { }
 		/// MNA pre step operations
 		void mnaPreStep(Real time, Int timeStepCount);
 		/// MNA post step operations
@@ -92,26 +71,31 @@ namespace Ph1 {
 			AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes,
 			Attribute<Matrix>::Ptr &leftVector);
 
+		// #### MNA section for switch ####
+		/// Check if switch is closed
+		Bool mnaIsClosed() { return mSubSwitch->isClosed(); }
+		/// Stamps system matrix considering the defined switch position
+		void mnaApplySwitchSystemMatrixStamp(Matrix& systemMatrix, Bool closed);
+
 		class MnaPreStep : public Task {
 		public:
-			MnaPreStep(RXLoad& load) :
-				Task(load.mName + ".MnaPreStep"), mLoad(load) {
+			MnaPreStep(RXLoadSwitch& load) : Task(load.mName + ".MnaPreStep"), mLoad(load) {
 				mLoad.mnaAddPreStepDependencies(mPrevStepDependencies, mAttributeDependencies, mModifiedAttributes);
 			}
 			void execute(Real time, Int timeStepCount) { mLoad.mnaPreStep(time, timeStepCount); }
 		private:
-			RXLoad& mLoad;
+			RXLoadSwitch& mLoad;
 		};
 
 		class MnaPostStep : public Task {
 		public:
-			MnaPostStep(RXLoad& load, Attribute<Matrix>::Ptr leftVector) :
+			MnaPostStep(RXLoadSwitch& load, Attribute<Matrix>::Ptr leftVector) :
 				Task(load.mName + ".MnaPostStep"), mLoad(load), mLeftVector(leftVector) {
 					mLoad.mnaAddPostStepDependencies(mPrevStepDependencies, mAttributeDependencies, mModifiedAttributes, mLeftVector);
 			}
 			void execute(Real time, Int timeStepCount) { mLoad.mnaPostStep(time, timeStepCount, mLeftVector); }
 		private:
-			RXLoad& mLoad;
+			RXLoadSwitch& mLoad;
 			Attribute<Matrix>::Ptr mLeftVector;
 		};
 	};

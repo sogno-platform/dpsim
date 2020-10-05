@@ -62,7 +62,7 @@ void SP::Ph1::Transformer::setParameters(Real nomVoltageEnd1, Real nomVoltageEnd
 	mSLog->info("Resistance={} [Ohm] Reactance={} [Ohm] (referred to primary side)", mResistance, mReactance);
     mSLog->info("Tap Ratio={} [ ] Phase Shift={} [deg]", mRatioAbs, mRatioPhase);
 
-	parametersSet = true;
+	mParametersSet = true;
 }
 
 

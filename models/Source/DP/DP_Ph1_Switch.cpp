@@ -114,11 +114,6 @@ void DP::Ph1::Switch::mnaApplySwitchSystemMatrixStamp(Matrix& systemMatrix, Bool
 
 void DP::Ph1::Switch::mnaApplyRightSideVectorStamp(Matrix& rightVector) { }
 
-void DP::Ph1::Switch::MnaPostStep::execute(Real time, Int timeStepCount) {
-	mSwitch.mnaUpdateVoltage(*mLeftVector);
-	mSwitch.mnaUpdateCurrent(*mLeftVector);
-}
-
 void DP::Ph1::Switch::mnaUpdateVoltage(const Matrix& leftVector) {
 	// Voltage across component is defined as V1 - V0
 	mIntfVoltage(0, 0) = 0;
@@ -130,4 +125,18 @@ void DP::Ph1::Switch::mnaUpdateCurrent(const Matrix& leftVector) {
 	mIntfCurrent(0,0) = (mIsClosed) ?
 		mIntfVoltage(0,0) / mClosedResistance :
 		mIntfVoltage(0,0) / mOpenResistance;
+}
+
+void DP::Ph1::Switch::mnaAddPostStepDependencies(AttributeBase::List &prevStepDependencies, 
+	AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes, 
+	Attribute<Matrix>::Ptr &leftVector) {
+	
+	attributeDependencies.push_back(leftVector);
+	modifiedAttributes.push_back(attribute("v_intf"));
+	modifiedAttributes.push_back(attribute("i_intf"));
+}
+
+void DP::Ph1::Switch::mnaPostStep(Real time, Int timeStepCount, Attribute<Matrix>::Ptr &leftVector) {
+	mnaUpdateVoltage(*leftVector);
+	mnaUpdateCurrent(*leftVector);
 }

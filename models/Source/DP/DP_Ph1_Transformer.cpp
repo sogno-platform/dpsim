@@ -44,7 +44,7 @@ void DP::Ph1::Transformer::setParameters(Real ratioAbs, Real ratioPhase,
 	mSLog->info("Resistance={} [Ohm] Inductance={} [Ohm] (referred to primary side)", resistance, inductance);
     mSLog->info("Tap Ratio={} [ ] Phase Shift={} [deg]", ratioAbs, ratioPhase);
 
-	parametersSet = true;
+	mParametersSet = true;
 }
 
 void DP::Ph1::Transformer::initialize(Matrix frequencies) {

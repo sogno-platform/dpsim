@@ -29,7 +29,7 @@ void EMT::Ph3::VoltageSourceNorton::setParameters(Complex voltageRef, Real srcFr
 	mResistance = resistance;
 	mConductance = 1. / mResistance;
 
-	parametersSet = true;
+	mParametersSet = true;
 }
 
 SimPowerComp<Real>::Ptr EMT::Ph3::VoltageSourceNorton::clone(String name) {

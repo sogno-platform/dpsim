@@ -38,6 +38,7 @@
 #include <cps/DP/DP_Ph1_Inductor.h>
 #include <cps/DP/DP_Ph1_PiLine.h>
 #include <cps/DP/DP_Ph1_RXLoad.h>
+#include <cps/DP/DP_Ph1_RXLoadSwitch.h>
 #include <cps/DP/DP_Ph1_PQLoadCS.h>
 #include <cps/DP/DP_Ph1_RxLine.h>
 #include <cps/DP/DP_Ph1_Resistor.h>

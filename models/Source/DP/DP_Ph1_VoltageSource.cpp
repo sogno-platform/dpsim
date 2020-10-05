@@ -35,7 +35,7 @@ void DP::Ph1::VoltageSource::setParameters(Complex voltageRef, Real srcFreq) {
 	attribute<Complex>("V_ref")->set(voltageRef);
 	attribute<Real>("f_src")->set(srcFreq);
 
-	parametersSet = true;
+	mParametersSet = true;
 }
 
 void DP::Ph1::VoltageSource::initializeFromPowerflow(Real frequency) {

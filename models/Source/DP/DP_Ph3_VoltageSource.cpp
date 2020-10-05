@@ -30,7 +30,7 @@ SimPowerComp<Complex>::Ptr DP::Ph3::VoltageSource::clone(String name) {
 
 void DP::Ph3::VoltageSource::setParameters(Complex voltageRef) {
 	attribute<Complex>("V_ref")->set(voltageRef);
-	parametersSet = true;
+	mParametersSet = true;
 }
 
 void DP::Ph3::VoltageSource::initializeFromPowerflow(Real frequency) {

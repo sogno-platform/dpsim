@@ -65,7 +65,7 @@ void EMT::Ph3::AvVoltSourceInverterStateSpace::setParameters(Real sysOmega, Comp
 	Real srcFreq = 2. * M_PI * sysOmega;
 	Base::Ph1::VoltageSource::setParameters(sysVoltNom, srcFreq);
 
-	parametersSet = true;
+	mParametersSet = true;
 }
 
 void EMT::Ph3::AvVoltSourceInverterStateSpace::initializeStates(Real omega, Real timeStep,

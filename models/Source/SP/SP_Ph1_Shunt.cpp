@@ -25,7 +25,7 @@ void SP::Ph1::Shunt::setParameters(Real conductance, Real susceptance){
 	mConductance = conductance;
 	mSusceptance = susceptance;
 	mSLog->info("Conductance={} [S] Susceptance={} [Ohm] ", conductance, susceptance);
-	parametersSet = true;
+	mParametersSet = true;
 }
 
 

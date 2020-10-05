@@ -57,7 +57,7 @@ EMT::Ph3::AvVoltageSourceInverterDQ::AvVoltageSourceInverterDQ(String uid, Strin
 
 void EMT::Ph3::AvVoltageSourceInverterDQ::setParameters(Real sysOmega, Real sysVoltNom, Real Pref, Real Qref) {
 	Base::AvVoltageSourceInverterDQWithStateSpace::setParameters(sysOmega, sysVoltNom, Pref, Qref);
-	parametersSet = true;
+	mParametersSet = true;
 
 	mSLog->info("General Parameters:");
 	mSLog->info("Nominal Voltage={} [V] Nominal Omega={} [1/s]", mVnom, mOmegaN);

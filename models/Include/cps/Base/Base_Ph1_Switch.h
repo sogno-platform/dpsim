@@ -29,8 +29,13 @@ namespace Ph1 {
 			mClosedResistance = closedResistance;
 			mIsClosed = closed;
 		}
+
+		/// Close switch
 		void close() { mIsClosed = true; }
+		/// Open switch
 		void open() { mIsClosed = false; }
+		/// Check if switch is closed
+		Bool isClosed() { return mIsClosed; }
 	};
 }
 }

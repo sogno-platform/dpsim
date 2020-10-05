@@ -320,7 +320,10 @@ TopologicalPowerComp::Ptr Reader::mapEnergyConsumer(EnergyConsumer* consumer) {
 		return load;
 	}
 	else {
-		return std::make_shared<DP::Ph1::RXLoad>(consumer->mRID, consumer->name, mComponentLogLevel);
+		if (mUseProtectionSwitches)
+			return std::make_shared<DP::Ph1::RXLoadSwitch>(consumer->mRID, consumer->name, mComponentLogLevel);
+		else
+			return std::make_shared<DP::Ph1::RXLoad>(consumer->mRID, consumer->name, mComponentLogLevel);
 	}
 }
 

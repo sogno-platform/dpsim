@@ -37,7 +37,7 @@ void EMT::Ph1::VoltageSourceRamp::setParameters(Complex voltage, Complex addVolt
 	mSwitchTime = switchTime;
 	mRampTime = rampTime;
 
-	parametersSet = true;
+	mParametersSet = true;
 }
 
 void EMT::Ph1::VoltageSourceRamp::initialize(Matrix frequencies) {

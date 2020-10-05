@@ -39,7 +39,7 @@ void SP::Ph1::Load::setParameters(Real activePower, Real reactivePower, Real nom
 	mSLog->info("Active Power={} [W] Reactive Power={} [VAr]", mActivePower, mReactivePower);
 	mSLog->flush();
 
-	parametersSet = true;
+	mParametersSet = true;
 }
 
 

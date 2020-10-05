@@ -41,7 +41,7 @@ void EMT::Ph3::Transformer::setParameters(Real ratioAbs, Real ratioPhase,
 	Matrix resistance, Matrix inductance) {
 	Base::Ph3::Transformer::setParameters(ratioAbs, ratioPhase, resistance, inductance);
 
-	parametersSet = true;
+	mParametersSet = true;
 }
 
 void EMT::Ph3::Transformer::initialize(Matrix frequencies) {

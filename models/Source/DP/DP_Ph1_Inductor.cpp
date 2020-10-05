@@ -69,7 +69,7 @@ void DP::Ph1::Inductor::initVars(Real timeStep) {
 		Real preCurrFracImag =  (-2. * b) / (1. + b * b);
 		mPrevCurrFac(freq,0) = { preCurrFracReal, preCurrFracImag };
 
-		// TODO: check if this is correct or if it should be only computed before the step
+		// In steady-state, these variables should not change
 		mEquivCurrent(freq,0) = mEquivCond(freq,0) * mIntfVoltage(0,freq) + mPrevCurrFac(freq,0) * mIntfCurrent(0,freq);
 		mIntfCurrent(0,freq) = mEquivCond(freq,0) * mIntfVoltage(0,freq) + mEquivCurrent(freq,0);
 	}

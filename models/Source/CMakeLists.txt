@@ -21,6 +21,7 @@ list(APPEND CPS_SOURCES
 	DP/DP_Ph1_PiLine.cpp
 	DP/DP_Ph1_RxLine.cpp
 	DP/DP_Ph1_RXLoad.cpp
+	DP/DP_Ph1_RXLoadSwitch.cpp
 	DP/DP_Ph1_PQLoadCS.cpp
 	DP/DP_Ph1_Resistor.cpp
 	DP/DP_Ph1_Transformer.cpp

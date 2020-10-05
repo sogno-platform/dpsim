@@ -34,6 +34,8 @@ namespace CPS {
 		std::list<std::experimental::filesystem::path> mFileList;
 		/// assign pattern, used when the MANUAL mode is selected
 		std::map <String, String> mAssignPattern;
+		/// Skip first row if it has no digits at beginning
+		Bool mSkipFirstRow = true;
 
 	public:
 		/// set load profile assigning pattern. AUTO for assigning load profile name (csv file name) to load object with the same name (mName)
@@ -60,6 +62,8 @@ namespace CPS {
 		///	convert HH:MM:SS format timestamp into total seconds.
 		///	e.g.: 00 : 01 : 00 -- > 60.
 		Real time_format_convert(const String& time);
+		/// Skip first row if it has no digits at beginning
+		void doSkipFirstRow(Bool value = true) { mSkipFirstRow = value; }
 
 
 		std::vector<PQData> readLoadProfileDP(std::experimental::filesystem::path file,

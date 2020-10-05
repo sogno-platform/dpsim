@@ -37,7 +37,7 @@ void DP::Ph1::VoltageSourceRamp::setParameters(Complex voltage, Complex addVolta
 	mSwitchTime = switchTime;
 	mRampTime = rampTime;
 
-	parametersSet = true;
+	mParametersSet = true;
 }
 
 void DP::Ph1::VoltageSourceRamp::initialize(Matrix frequencies) {
