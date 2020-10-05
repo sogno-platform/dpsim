@@ -350,7 +350,7 @@ test:examples 2/2:
     - PATH=$LDIR:${PATH} LD_PRELOAD=$LDIR/cricket-client.so $TEST_BINARY_PATH/$TEST_BINARY $TEST_PARAM
   after_script:
     - ssh $GPU_TARGET rm -rf $RDIR
-    - ssh $GPU_TARGET pkill -fe -2 $RDIR/test_kernel
+    - ssh $GPU_TARGET pkill -fe -2 $RDIR/$TEST_BINARY
   image: ${DOCKER_IMAGE_DEV}-centos:${DOCKER_TAG}
   dependencies:
     - build:linux-cuda
