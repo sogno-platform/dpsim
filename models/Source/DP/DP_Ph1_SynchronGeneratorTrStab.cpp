@@ -105,7 +105,6 @@ void DP::Ph1::SynchronGeneratorTrStab::initialize(Matrix frequencies) {
 }
 
 void DP::Ph1::SynchronGeneratorTrStab::initializeFromPowerflow(Real frequency) {
-	checkForUnconnectedTerminals();
 
 	// Initialize omega mech with nominal system frequency
 	mOmMech = mNomOmega;

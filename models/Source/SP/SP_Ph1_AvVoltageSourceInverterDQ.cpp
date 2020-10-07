@@ -330,7 +330,6 @@ Complex SP::Ph1::AvVoltageSourceInverterDQ::rotatingFrame2to1(Complex f2, Real t
 }
 
 void SP::Ph1::AvVoltageSourceInverterDQ::initializeFromPowerflow(Real frequency) {
-	checkForUnconnectedTerminals();
 
 	// set initial voltages
 	//mIntfVoltage(0, 0) = initialSingleVoltage(0);

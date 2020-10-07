@@ -147,7 +147,6 @@ SimPowerComp<Complex>::Ptr SP::Ph1::RXLine::clone(String name) {
 }
 
 void SP::Ph1::RXLine::initializeFromPowerflow(Real frequency) {
-	checkForUnconnectedTerminals();
 
 	mIntfVoltage(0, 0) = initialSingleVoltage(1) - initialSingleVoltage(0);
 	Complex impedance = { mSeriesRes, mSeriesInd * 2. * PI * frequency };

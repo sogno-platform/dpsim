@@ -37,8 +37,8 @@ void SP::Ph1::SolidStateTransformer::setParameters(Real nomV1, Real nomV2, Real 
     mP2 = -1 * std::sqrt(Pref * Pref + Q1ref * Q1ref - Q2ref * Q2ref);
 }
 
-void SP::Ph1::SolidStateTransformer::initializeFromPowerflow(Real frequency){
-    checkForUnconnectedTerminals();
+void SP::Ph1::SolidStateTransformer::initializeFromPowerflow(Real frequency) {
+
     if(std::isinf(mP2)){
         std::stringstream ss;
         ss << "SST >>" << this->name() << ": infinite or nan values. Or initialized before setting parameters.";

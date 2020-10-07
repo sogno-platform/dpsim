@@ -36,7 +36,6 @@ SimPowerComp<Complex>::Ptr DP::Ph1::CurrentSource::clone(String name) {
 }
 
 void DP::Ph1::CurrentSource::initializeFromPowerflow(Real frequency) {
-	checkForUnconnectedTerminals();
 
 	mIntfVoltage(0,0) = initialSingleVoltage(0) - initialSingleVoltage(1);
 	mCurrentRef = attribute<Complex>("I_ref");

@@ -39,7 +39,6 @@ void DP::Ph1::RXLoad::initialize(Matrix frequencies) {
 }
 
 void DP::Ph1::RXLoad::initializeFromPowerflow(Real frequency) {
-	checkForUnconnectedTerminals();
 
 	if(!mParametersSet){
 		setParameters(

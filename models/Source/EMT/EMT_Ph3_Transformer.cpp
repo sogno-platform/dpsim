@@ -49,7 +49,6 @@ void EMT::Ph3::Transformer::initialize(Matrix frequencies) {
 }
 
 void EMT::Ph3::Transformer::initializeFromPowerflow(Real frequency) {
-	checkForUnconnectedTerminals();
 
 	// Component parameters are referred to high voltage side.
 	// Switch terminals if transformer is connected the other way around.

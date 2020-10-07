@@ -303,8 +303,6 @@ Matrix EMT::Ph3::AvVoltageSourceInverterDQ::getInverseParkTransformMatrixPowerIn
 
 void EMT::Ph3::AvVoltageSourceInverterDQ::initializeFromPowerflow(Real frequency) {
 
-	checkForUnconnectedTerminals();
-
 	// use complex interface quantities for initialization calculations
 	MatrixComp intfVoltageComplex = Matrix::Zero(3, 1);
 	MatrixComp intfCurrentComplex = Matrix::Zero(3, 1);

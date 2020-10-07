@@ -36,7 +36,6 @@ void DP::Ph1::PiLine::initialize(Matrix frequencies) {
 }
 
 void DP::Ph1::PiLine::initializeFromPowerflow(Real frequency) {
-	checkForUnconnectedTerminals();
 
 	// Static calculation
 	Real omega = 2.*PI * frequency;
@@ -165,7 +164,7 @@ void DP::Ph1::PiLine::mnaAddPreStepDependencies(AttributeBase::List &prevStepDep
 	modifiedAttributes.push_back(this->attribute("right_vector"));
 }
 
-void DP::Ph1::PiLine::mnaPreStep(Real time, Int timeStepCount) {	
+void DP::Ph1::PiLine::mnaPreStep(Real time, Int timeStepCount) {
 	// pre-step of subcomponents
 	this->mSubSeriesInductor->mnaPreStep(time, timeStepCount);
 	if (this->mParallelCap >= 0) {

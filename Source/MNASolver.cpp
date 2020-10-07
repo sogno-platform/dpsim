@@ -97,6 +97,7 @@ void MnaSolver<Real>::initializeComponents() {
 	for (auto comp : mMNAComponents) {
 		auto pComp = std::dynamic_pointer_cast<SimPowerComp<Real>>(comp);
 		if (!pComp)	continue;
+		pComp->checkForUnconnectedTerminals();
 		pComp->initializeFromPowerflow(mSystem.mSystemFrequency);
 	}
 
@@ -124,6 +125,7 @@ void MnaSolver<Complex>::initializeComponents() {
 	for (auto comp : mMNAComponents) {
 		auto pComp = std::dynamic_pointer_cast<SimPowerComp<Complex>>(comp);
 		if (!pComp)	continue;
+		pComp->checkForUnconnectedTerminals();
 		pComp->initializeFromPowerflow(mSystem.mSystemFrequency);
 	}
 

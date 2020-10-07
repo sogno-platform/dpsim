@@ -16,7 +16,7 @@ DP::Ph1::RXLoadSwitch::RXLoadSwitch(String uid, String name, Logger::Level logLe
 	setVirtualNodeNumber(1);
 	mIntfVoltage = MatrixComp::Zero(1, 1);
 	mIntfCurrent = MatrixComp::Zero(1, 1);
-	
+
 	// Create sub components
 	mSubRXLoad = std::make_shared<DP::Ph1::RXLoad>(mName + "_rxload", mLogLevel);
 	mSubSwitch = std::make_shared<DP::Ph1::Switch>(mName + "_switch", mLogLevel);
@@ -34,13 +34,12 @@ void DP::Ph1::RXLoadSwitch::initialize(Matrix frequencies) {
 }
 
 void DP::Ph1::RXLoadSwitch::initializeFromPowerflow(Real frequency) {
-	checkForUnconnectedTerminals();
 
 	if(!mParametersSet) {
 		// use powerflow results
 		mSubRXLoad->setParameters(
-			mTerminals[0]->singleActivePower(), 
-			mTerminals[0]->singleReactivePower(), 
+			mTerminals[0]->singleActivePower(),
+			mTerminals[0]->singleReactivePower(),
 			std::abs(mTerminals[0]->initialSingleVoltage()));
 	}
 
@@ -120,18 +119,18 @@ void DP::Ph1::RXLoadSwitch::mnaAddPreStepDependencies(AttributeBase::List &prevS
 
 void DP::Ph1::RXLoadSwitch::mnaPreStep(Real time, Int timeStepCount) {
 	mSubRXLoad->mnaPreStep(time, timeStepCount);
-	
+
 	// pre-step of component itself
 	updateSwitchState(time);
 	mnaApplyRightSideVectorStamp(mRightVector);
 }
 
-void DP::Ph1::RXLoadSwitch::mnaAddPostStepDependencies(AttributeBase::List &prevStepDependencies, 
+void DP::Ph1::RXLoadSwitch::mnaAddPostStepDependencies(AttributeBase::List &prevStepDependencies,
 	AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes, Attribute<Matrix>::Ptr &leftVector) {
 	// add post-step dependencies of subcomponents
 	mSubRXLoad->mnaAddPostStepDependencies(prevStepDependencies, attributeDependencies, modifiedAttributes, leftVector);
 	mSubSwitch->mnaAddPostStepDependencies(prevStepDependencies, attributeDependencies, modifiedAttributes, leftVector);
-	
+
 	// add post-step dependencies of component itself
 	attributeDependencies.push_back(leftVector);
 	modifiedAttributes.push_back(attribute("v_intf"));
@@ -142,7 +141,7 @@ void DP::Ph1::RXLoadSwitch::mnaPostStep(Real time, Int timeStepCount, Attribute<
 	// post-step of subcomponents
 	this->mSubRXLoad->mnaPostStep(time, timeStepCount, leftVector);
 	this->mSubSwitch->mnaPostStep(time, timeStepCount, leftVector);
-	
+
 	mIntfVoltage = mSubRXLoad->attributeMatrixComp("v_intf")->get();
 	mIntfCurrent = mSubRXLoad->attributeMatrixComp("i_intf")->get();
 }

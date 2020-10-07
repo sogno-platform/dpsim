@@ -38,7 +38,6 @@ void EMT::Ph3::PiLine::initialize(Matrix frequencies) {
 }
 
 void EMT::Ph3::PiLine::initializeFromPowerflow(Real frequency) {
-	checkForUnconnectedTerminals();
 
 	// By default there is always a small conductance to ground to
 	// avoid problems with floating nodes.

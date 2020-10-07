@@ -36,7 +36,6 @@ void DP::Ph1::Capacitor::initialize(Matrix frequencies) {
 }
 
 void DP::Ph1::Capacitor::initializeFromPowerflow(Real frequency) {
-	checkForUnconnectedTerminals();
 
 	Real omega = 2 * PI * frequency;
 	Complex impedance = { 0, - 1. / (omega * mCapacitance) };
@@ -212,7 +211,7 @@ void DP::Ph1::Capacitor::mnaApplyRightSideVectorStampHarm(Matrix& rightVector, I
 }
 
 void DP::Ph1::Capacitor::mnaAddPreStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes) {
-	// actually depends on C, but then we'd have to modify the system matrix anyway	
+	// actually depends on C, but then we'd have to modify the system matrix anyway
 	prevStepDependencies.push_back(this->attribute("i_intf"));
 	prevStepDependencies.push_back(this->attribute("v_intf"));
 	modifiedAttributes.push_back(this->attribute("right_vector"));

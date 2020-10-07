@@ -35,7 +35,6 @@ void DP::Ph1::SynchronGeneratorIdeal::initialize(Matrix frequencies) {
 }
 
 void DP::Ph1::SynchronGeneratorIdeal::initializeFromPowerflow(Real frequency) {
-	checkForUnconnectedTerminals();
 
 	// maybe not necessary because voltage source is also set up from powerflow
 	mVoltageRef = initialSingleVoltage(0);

@@ -28,7 +28,6 @@ SimPowerComp<Complex>::Ptr DP::Ph1::Switch::clone(String name) {
 }
 
 void DP::Ph1::Switch::initializeFromPowerflow(Real frequency) {
-	checkForUnconnectedTerminals();
 
 	Real impedance = (mIsClosed) ? mClosedResistance : mOpenResistance;
 	mIntfVoltage(0,0) = initialSingleVoltage(1) - initialSingleVoltage(0);
@@ -127,10 +126,10 @@ void DP::Ph1::Switch::mnaUpdateCurrent(const Matrix& leftVector) {
 		mIntfVoltage(0,0) / mOpenResistance;
 }
 
-void DP::Ph1::Switch::mnaAddPostStepDependencies(AttributeBase::List &prevStepDependencies, 
-	AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes, 
+void DP::Ph1::Switch::mnaAddPostStepDependencies(AttributeBase::List &prevStepDependencies,
+	AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes,
 	Attribute<Matrix>::Ptr &leftVector) {
-	
+
 	attributeDependencies.push_back(leftVector);
 	modifiedAttributes.push_back(attribute("v_intf"));
 	modifiedAttributes.push_back(attribute("i_intf"));

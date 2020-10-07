@@ -35,7 +35,6 @@ void SP::Ph3::VoltageSource::setParameters(Complex voltageRef) {
 }
 
 void SP::Ph3::VoltageSource::initializeFromPowerflow(Real frequency) {
-	checkForUnconnectedTerminals();
 
 	mVoltageRef = attribute<Complex>("V_ref");
 

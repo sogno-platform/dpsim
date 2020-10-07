@@ -35,7 +35,6 @@ void DP::Ph1::Inductor::initialize(Matrix frequencies) {
 }
 
 void DP::Ph1::Inductor::initializeFromPowerflow(Real frequency) {
-	checkForUnconnectedTerminals();
 
 	Real omega = 2. * PI * frequency;
 	Complex impedance = { 0, omega * mInductance };

@@ -99,7 +99,6 @@ void SP::Ph1::Load::updatePQ(Real time) {
 
 
 void SP::Ph1::Load::initializeFromPowerflow(Real frequency) {
-	checkForUnconnectedTerminals();
 
 	mActivePower = mTerminals[0]->singleActivePower();
 	mReactivePower = mTerminals[0]->singleReactivePower();

@@ -52,7 +52,6 @@ void DP::Ph1::Transformer::initialize(Matrix frequencies) {
 }
 
 void DP::Ph1::Transformer::initializeFromPowerflow(Real frequency) {
-	checkForUnconnectedTerminals();
 
 	// Component parameters are referred to high voltage side.
 	// Switch terminals if transformer is connected the other way around.
@@ -125,13 +124,13 @@ void DP::Ph1::Transformer::mnaInitialize(Real omega, Real timeStep, Attribute<Ma
 
 	if (mSubResistor)
 		subComponents.push_back(mSubResistor);
-	
+
 	for (auto comp : subComponents) {
 		comp->mnaInitialize(omega, timeStep, leftVector);
 
 		for (auto task : comp->mnaTasks())
 			mMnaTasks.push_back(task);
-		
+
 	}
 
 	mMnaTasks.push_back(std::make_shared<MnaPreStep>(*this));
@@ -190,7 +189,7 @@ void DP::Ph1::Transformer::mnaAddPreStepDependencies(AttributeBase::List &prevSt
 	modifiedAttributes.push_back(this->attribute("right_vector"));
 }
 
-void DP::Ph1::Transformer::mnaPreStep(Real time, Int timeStepCount) {	
+void DP::Ph1::Transformer::mnaPreStep(Real time, Int timeStepCount) {
 	// pre-step of subcomponents
 	this->mSubInductor->mnaPreStep(time, timeStepCount);
 	// pre-step of component itself

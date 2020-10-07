@@ -26,7 +26,6 @@ SimPowerComp<Complex>::Ptr SP::Ph3::Inductor::clone(String name) {
 }
 
 void SP::Ph3::Inductor::initializeFromPowerflow(Real frequency) {
-	checkForUnconnectedTerminals();
 
 	Real omega = 2 * PI * frequency;
 	MatrixComp reactance = MatrixComp::Zero(3, 3);

@@ -28,7 +28,6 @@ SimPowerComp<Real>::Ptr EMT::Ph3::Capacitor::clone(String name) {
 	return copy;
 }
 void EMT::Ph3::Capacitor::initializeFromPowerflow(Real frequency) {
-	checkForUnconnectedTerminals();
 
 	Real omega = 2 * PI * frequency;
 	MatrixComp admittance = MatrixComp::Zero(3, 3);

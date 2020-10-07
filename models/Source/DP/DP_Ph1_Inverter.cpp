@@ -32,10 +32,7 @@ void DP::Ph1::Inverter::setParameters(std::vector<Int> carrierHarms, std::vector
 	mParametersSet= true;
 }
 
-void DP::Ph1::Inverter::initializeFromPowerflow(Real frequency) {
-	checkForUnconnectedTerminals();
-	//mIntfVoltage(0,0) =  initialSingleVoltage(0));
-}
+void DP::Ph1::Inverter::initializeFromPowerflow(Real frequency) { }
 
 void DP::Ph1::Inverter::generateFrequencies() {
 	for (Int m = 2; m <= mMaxCarrierHarm; m = m+2) {

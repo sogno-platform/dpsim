@@ -57,7 +57,6 @@ void EMT::Ph3::RXLoad::initialize(Matrix frequencies) {
 }
 
 void EMT::Ph3::RXLoad::initializeFromPowerflow(Real frequency) {
-	checkForUnconnectedTerminals();
 
 		if (initPowerFromTerminal) {
 		mActivePower = Matrix::Zero(3, 3);

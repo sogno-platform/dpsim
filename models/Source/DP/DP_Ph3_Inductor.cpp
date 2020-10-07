@@ -29,7 +29,6 @@ SimPowerComp<Complex>::Ptr DP::Ph3::Inductor::clone(String name) {
 }
 
 void DP::Ph3::Inductor::initializeFromPowerflow(Real frequency) {
-	checkForUnconnectedTerminals();
 
 	Real omega = 2 * PI * frequency;
 

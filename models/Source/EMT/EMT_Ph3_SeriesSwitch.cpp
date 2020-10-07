@@ -30,7 +30,6 @@ SimPowerComp<Real>::Ptr EMT::Ph3::SeriesSwitch::clone(String name) {
 }
 
 void EMT::Ph3::SeriesSwitch::initializeFromPowerflow(Real frequency) {
-	checkForUnconnectedTerminals();
 
 	Real impedance = (mIsClosed) ? mClosedResistance : mOpenResistance;
 

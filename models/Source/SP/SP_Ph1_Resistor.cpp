@@ -63,7 +63,6 @@ void SP::Ph1::Resistor::pfApplyAdmittanceMatrixStamp(SparseMatrixCompRow & Y) {
 }
 
 void SP::Ph1::Resistor::initializeFromPowerflow(Real frequency) {
-	checkForUnconnectedTerminals();
 
 	mConductance = 1 / mResistance;
 	mIntfVoltage(0, 0) = initialSingleVoltage(1) - initialSingleVoltage(0);

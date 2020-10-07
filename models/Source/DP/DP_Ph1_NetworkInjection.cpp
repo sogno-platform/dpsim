@@ -28,7 +28,6 @@ SimPowerComp<Complex>::Ptr DP::Ph1::NetworkInjection::clone(String name) {
 }
 
 void DP::Ph1::NetworkInjection::initialize(Matrix frequencies) {
-	checkForUnconnectedTerminals();
 
 	mFrequencies = frequencies;
 	mNumFreqs = static_cast<UInt>(mFrequencies.size());

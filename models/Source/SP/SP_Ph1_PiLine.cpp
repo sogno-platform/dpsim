@@ -152,7 +152,6 @@ MatrixComp SP::Ph1::PiLine::Y_element() {
 }
 
 void SP::Ph1::PiLine::initializeFromPowerflow(Real frequency) {
-	checkForUnconnectedTerminals();
 
 	// By default there is always a small conductance to ground to
 	// avoid problems with floating nodes.

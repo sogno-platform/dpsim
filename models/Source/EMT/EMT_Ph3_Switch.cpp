@@ -31,7 +31,6 @@ SimPowerComp<Real>::Ptr EMT::Ph3::Switch::clone(String name) {
 }
 
 void EMT::Ph3::Switch::initializeFromPowerflow(Real frequency) {
-	checkForUnconnectedTerminals();
 
 	Matrix impedance = (mSwitchClosed) ? mClosedResistance : mOpenResistance;
 	MatrixComp vInitABC = MatrixComp::Zero(3, 1);

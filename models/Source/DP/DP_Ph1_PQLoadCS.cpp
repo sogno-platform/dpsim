@@ -57,7 +57,6 @@ SimPowerComp<Complex>::Ptr DP::Ph1::PQLoadCS::clone(String name) {
 }
 
 void DP::Ph1::PQLoadCS::initializeFromPowerflow(Real frequency) {
-	checkForUnconnectedTerminals();
 
 	mActivePower = attribute<Real>("P");
 	mReactivePower = attribute<Real>("Q");

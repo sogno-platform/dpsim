@@ -26,7 +26,6 @@ SimPowerComp<Complex>::Ptr SP::Ph1::Capacitor::clone(String name) {
 }
 
 void SP::Ph1::Capacitor::initializeFromPowerflow(Real frequency) {
-	checkForUnconnectedTerminals();
 
 	Real omega = 2 * PI * frequency;
 	mSusceptance = Complex(0, omega * mCapacitance);

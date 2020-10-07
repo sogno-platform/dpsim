@@ -30,7 +30,6 @@ SimPowerComp<Real>::Ptr EMT::Ph3::SeriesResistor::clone(String name) {
 }
 
 void EMT::Ph3::SeriesResistor::initializeFromPowerflow(Real frequency) {
-	checkForUnconnectedTerminals();
 
 	Complex phasorA = initialSingleVoltage(1) - initialSingleVoltage(0);
 	mIntfVoltage(0,0) = phasorA.real();

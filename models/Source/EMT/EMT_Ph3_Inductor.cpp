@@ -28,7 +28,6 @@ SimPowerComp<Real>::Ptr EMT::Ph3::Inductor::clone(String name) {
 }
 
 void EMT::Ph3::Inductor::initializeFromPowerflow(Real frequency) {
-	checkForUnconnectedTerminals();
 
 	Real omega = 2 * PI * frequency;
 	MatrixComp impedance = MatrixComp::Zero(3, 3);

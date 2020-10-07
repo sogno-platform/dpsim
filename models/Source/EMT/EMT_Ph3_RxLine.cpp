@@ -35,7 +35,7 @@ SimPowerComp<Real>::Ptr EMT::Ph3::RxLine::clone(String name) {
 }
 
 void EMT::Ph3::RxLine::initializeFromPowerflow(Real frequency) {
-	checkForUnconnectedTerminals();
+
 	// Static calculation
 	Real omega = 2. * PI * frequency;
 	MatrixComp impedance = MatrixComp::Zero(3, 3);

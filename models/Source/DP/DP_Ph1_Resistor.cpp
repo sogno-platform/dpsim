@@ -30,7 +30,6 @@ void DP::Ph1::Resistor::initialize(Matrix frequencies) {
 }
 
 void DP::Ph1::Resistor::initializeFromPowerflow(Real frequency) {
-	checkForUnconnectedTerminals();
 
 	Complex impedance = { mResistance, 0 };
 	mIntfVoltage(0,0) = initialSingleVoltage(1) - initialSingleVoltage(0);

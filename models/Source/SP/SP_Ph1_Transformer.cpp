@@ -178,7 +178,6 @@ MatrixComp SP::Ph1::Transformer::Y_element() {
 
 // #### MNA Section ####
 void SP::Ph1::Transformer::initializeFromPowerflow(Real frequency) {
-	checkForUnconnectedTerminals();
 
 	// A snubber conductance is added on the low voltage side
 	Real snubberResistance = 1e3;

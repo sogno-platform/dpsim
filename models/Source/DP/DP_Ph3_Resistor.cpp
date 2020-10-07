@@ -32,7 +32,6 @@ void DP::Ph3::Resistor::initialize(Matrix frequencies) {
 }
 
 void DP::Ph3::Resistor::initializeFromPowerflow(Real frequency) {
-	checkForUnconnectedTerminals();
 
 	Real voltMag = Math::abs(mIntfVoltage(0, 0));
 	Real voltPhase = Math::phase(mIntfVoltage(0, 0));

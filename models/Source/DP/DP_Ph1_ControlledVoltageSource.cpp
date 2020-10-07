@@ -41,7 +41,6 @@ void DP::Ph1::ControlledVoltageSource::initialize(Matrix frequencies) {
 
 
 void DP::Ph1::ControlledVoltageSource::mnaInitialize(Real omega, Real timeStep, Attribute<Matrix>::Ptr leftVector) {
-	checkForUnconnectedTerminals();
 
 	MNAInterface::mnaInitialize(omega, timeStep);
 	updateMatrixNodeIndices();
@@ -94,7 +93,7 @@ void DP::Ph1::ControlledVoltageSource::mnaAddPostStepDependencies(AttributeBase:
 	modifiedAttributes.push_back(this->attribute("i_intf"));
 }
 
-void DP::Ph1::ControlledVoltageSource::mnaPostStep(Real time, Int timeStepCount, Attribute<Matrix>::Ptr &leftVector) {	
+void DP::Ph1::ControlledVoltageSource::mnaPostStep(Real time, Int timeStepCount, Attribute<Matrix>::Ptr &leftVector) {
 	this->mnaUpdateCurrent(*leftVector);
 }
 

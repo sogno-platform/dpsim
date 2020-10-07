@@ -45,7 +45,6 @@ void EMT::Ph3::Transformer::initialize(Matrix frequencies) {
 }
 
 void EMT::Ph3::Transformer::initializeFromPowerflow(Real frequency) {
-	checkForUnconnectedTerminals();
 
 	// A snubber conductance is added on the low voltage side
 	Matrix snubberResistance = Matrix::Zero(3, 3);

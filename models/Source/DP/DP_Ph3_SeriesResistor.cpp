@@ -31,7 +31,7 @@ void DP::Ph3::SeriesResistor::initialize(Matrix frequencies) {
 }
 
 void DP::Ph3::SeriesResistor::initializeFromPowerflow(Real frequency) {
-	checkForUnconnectedTerminals();
+
 	mTerminals[0]->setPhaseType(PhaseType::ABC);
 	mTerminals[1]->setPhaseType(PhaseType::ABC);
 

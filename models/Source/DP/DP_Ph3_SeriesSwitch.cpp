@@ -22,7 +22,6 @@ DP::Ph3::SeriesSwitch::SeriesSwitch(String uid, String name, Logger::Level logLe
 }
 
 void DP::Ph3::SeriesSwitch::initializeFromPowerflow(Real frequency) {
-	checkForUnconnectedTerminals();
 
 	Real impedance = (mIsClosed) ? mClosedResistance : mOpenResistance;
 	mIntfVoltage = initialVoltage(1) - initialVoltage(0);

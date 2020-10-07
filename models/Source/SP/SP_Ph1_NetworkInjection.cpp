@@ -80,7 +80,6 @@ SimPowerComp<Complex>::Ptr SP::Ph1::externalGridInjection::clone(String name) {
 }
 
 void SP::Ph1::externalGridInjection::initialize(Matrix frequencies) {
-	checkForUnconnectedTerminals();
 
 	mFrequencies = frequencies;
 	mNumFreqs = mFrequencies.size();

@@ -148,7 +148,6 @@ void DP::Ph1::AvVoltageSourceInverterDQ::initialize(Matrix frequencies) {
 }
 
 void DP::Ph1::AvVoltageSourceInverterDQ::initializeFromPowerflow(Real frequency) {
-	checkForUnconnectedTerminals();
 
 	// set initial interface quantities
 	mIntfVoltage(0, 0) = initialSingleVoltage(0);
