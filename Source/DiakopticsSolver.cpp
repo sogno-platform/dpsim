@@ -23,7 +23,8 @@ template <typename VarType>
 DiakopticsSolver<VarType>::DiakopticsSolver(String name,
 	SystemTopology system, IdentifiedObject::List tearComponents,
 	Real timeStep, Logger::Level logLevel) :
-	Solver(name, logLevel),	mTimeStep(timeStep) {
+	Solver(name, logLevel) {
+	mTimeStep = timeStep;
 
 	// Raw source and solution vector logging
 	mLeftVectorLog = std::make_shared<DataLogger>(name + "_LeftVector", logLevel != CPS::Logger::Level::off);
