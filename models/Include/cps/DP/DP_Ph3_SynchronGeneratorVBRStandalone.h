@@ -30,16 +30,6 @@ namespace Ph3 {
 		public SharedFactory<SynchronGeneratorVBRStandalone> {
 
 	protected:
-		/// Exciter Model
-		//Signal::Exciter mExciter;
-		/// Determine if Exciter is activated
-		bool mHasExciter = false;
-
-		/// Governor Model
-		//Signal::TurbineGovernor mTurbineGovernor;
-		/// Determine if Turbine and Governor are activated
-		bool mHasTurbineGovernor = false;
-
 		/// d dynamic inductance
 		Real mDLmd;
 		/// q dynamic inductance

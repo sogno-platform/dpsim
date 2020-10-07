@@ -29,11 +29,6 @@ namespace Ph3 {
 		public Base::SynchronGenerator,
 		public SharedFactory<SynchronGeneratorVBRSmpl> {
 	protected:
-
-		/// Exciter Model
-		//Signal::Exciter mExciter;
-		bool mHasExciter = false;
-
 		/// d dynamic inductance
 		Real mDLmd;
 		/// q dynamic inductance

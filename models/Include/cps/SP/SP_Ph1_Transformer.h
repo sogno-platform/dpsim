@@ -25,8 +25,8 @@
 #include <cps/Base/Base_Ph1_Transformer.h>
 
 namespace CPS {
-
-namespace SP { namespace Ph1 {
+namespace SP {
+namespace Ph1 {
 	/// Transformer that includes an inductance and resistance
 	class Transformer :
 		public SimPowerComp<Complex>,
@@ -45,8 +45,6 @@ namespace SP { namespace Ph1 {
 
 		/// Rated Apparent Power [VA]
 		Real mRatedPower = 0;
-		/// Transformer ratio complex
-		Complex mRatio;
         /// Transformer ratio magnitude
 		Real mRatioAbs = 1;
         /// Transformer ratio pase [deg]

@@ -25,10 +25,6 @@ namespace Ph1 {
 		public Base::Ph1::PiLine,
 		public MNAInterface{
 	protected:
-		///resistance in [ohms]
-		Real mSeriesRes;
-		///Conductance of the line in [S]
-		Real mSeriesCond;
 		///Capacitance of the line in [F]
 		Real mCapacitance;
 		///Inductance of the line in [H]

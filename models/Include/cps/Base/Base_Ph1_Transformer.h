@@ -15,7 +15,7 @@ namespace Base {
 namespace Ph1 {
 	class Transformer {
 	protected:
-		/// Transformer ratio
+		/// Complex transformer ratio
 		Complex mRatio;
 		/// Resistance [Ohm]
 		Real mResistance;

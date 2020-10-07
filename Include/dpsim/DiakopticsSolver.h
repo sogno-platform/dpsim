@@ -43,8 +43,7 @@ namespace DPsim {
 			CPS::Attribute<Matrix>::Ptr leftVector;
 		};
 
-		String mName;
-		Real mTimeStep;
+		///
 		Real mSystemFrequency;
 		/// System list
 		CPS::SystemTopology mSystem;

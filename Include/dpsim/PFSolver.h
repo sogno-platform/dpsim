@@ -20,8 +20,6 @@ namespace DPsim {
     /// Solver class using the nonlinear powerflow (PF) formulation.
     class PFSolver: public Solver {
     protected:
-        /// System time step is constant for PF solver
-        Real mTimeStep;
         /// Number of PQ nodes
         UInt mNumPQBuses = 0;
         /// Number of PV nodes

@@ -23,8 +23,6 @@ namespace CPS {
 				public MNATearInterface,
 				public SimPowerComp<Complex>,
 				public SharedFactory<Resistor> {
-			private:
-				Matrix mConductance;
 
 			public:
 				/// Defines UID, name and logging level
