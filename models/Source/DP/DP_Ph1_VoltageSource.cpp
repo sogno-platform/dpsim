@@ -27,10 +27,6 @@ SimPowerComp<Complex>::Ptr DP::Ph1::VoltageSource::clone(String name) {
 	return copy;
 }
 
-void DP::Ph1::VoltageSource::initialize(Matrix frequencies) {
-	SimPowerComp<Complex>::initialize(frequencies);
-}
-
 void DP::Ph1::VoltageSource::setParameters(Complex voltageRef, Real srcFreq) {
 	attribute<Complex>("V_ref")->set(voltageRef);
 	attribute<Real>("f_src")->set(srcFreq);

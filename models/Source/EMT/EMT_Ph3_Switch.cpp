@@ -53,10 +53,6 @@ void EMT::Ph3::Switch::initializeFromPowerflow(Real frequency) {
 		Logger::phasorToString(initialSingleVoltage(1)));
 }
 
-void EMT::Ph3::Switch::initialize(Matrix frequencies) {
-	SimPowerComp<Real>::initialize(frequencies);
-}
-
 void EMT::Ph3::Switch::mnaInitialize(Real omega, Real timeStep, Attribute<Matrix>::Ptr leftVector) {
 	MNAInterface::mnaInitialize(omega, timeStep);
 	updateMatrixNodeIndices();

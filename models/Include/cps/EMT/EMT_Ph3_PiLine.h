@@ -52,8 +52,6 @@ namespace Ph3 {
 		SimPowerComp<Real>::Ptr clone(String copySuffix);
 
 		// #### General ####
-		///
-		void initialize(Matrix frequencies);
 		/// Initializes component from power flow data
 		void initializeFromPowerflow(Real frequency);
 

@@ -62,8 +62,6 @@ namespace Ph1 {
 		SimPowerComp<Complex>::Ptr clone(String name);
 
 		// #### General ####
-		/// Initialize components with network frequencies
-		void initialize(Matrix frequencies);
 		/// Initialize component from power flow data
 		void initializeFromPowerflow(Real frequency);
 		/// Set model specific parameters

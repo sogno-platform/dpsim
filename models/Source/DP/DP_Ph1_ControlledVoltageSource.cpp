@@ -29,17 +29,6 @@ SimPowerComp<Complex>::Ptr DP::Ph1::ControlledVoltageSource::clone(String name) 
 	return copy;
 }
 
-
-void DP::Ph1::ControlledVoltageSource::initialize(Matrix frequencies) {
-
-	mFrequencies = frequencies;
-	mNumFreqs = static_cast<UInt>(mFrequencies.size());
-
-	mIntfVoltage = MatrixComp::Zero(1, mNumFreqs);
-	mIntfCurrent = MatrixComp::Zero(1, mNumFreqs);
-}
-
-
 void DP::Ph1::ControlledVoltageSource::mnaInitialize(Real omega, Real timeStep, Attribute<Matrix>::Ptr leftVector) {
 
 	MNAInterface::mnaInitialize(omega, timeStep);

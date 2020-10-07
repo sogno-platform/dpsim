@@ -44,10 +44,6 @@ void EMT::Ph3::Transformer::setParameters(Real ratioAbs, Real ratioPhase,
 	mParametersSet = true;
 }
 
-void EMT::Ph3::Transformer::initialize(Matrix frequencies) {
-	SimPowerComp<Real>::initialize(frequencies);
-}
-
 void EMT::Ph3::Transformer::initializeFromPowerflow(Real frequency) {
 
 	// Component parameters are referred to high voltage side.

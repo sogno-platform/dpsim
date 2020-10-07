@@ -34,10 +34,6 @@ SimPowerComp<Complex>::Ptr DP::Ph1::RXLoad::clone(String name) {
 	return copy;
 }
 
-void DP::Ph1::RXLoad::initialize(Matrix frequencies) {
-	SimPowerComp<Complex>::initialize(frequencies);
-}
-
 void DP::Ph1::RXLoad::initializeFromPowerflow(Real frequency) {
 
 	if(!mParametersSet){

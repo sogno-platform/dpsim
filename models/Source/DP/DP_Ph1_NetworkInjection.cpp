@@ -27,15 +27,6 @@ SimPowerComp<Complex>::Ptr DP::Ph1::NetworkInjection::clone(String name) {
 	return copy;
 }
 
-void DP::Ph1::NetworkInjection::initialize(Matrix frequencies) {
-
-	mFrequencies = frequencies;
-	mNumFreqs = static_cast<UInt>(mFrequencies.size());
-
-	mIntfVoltage = MatrixComp::Zero(1, mNumFreqs);
-	mIntfCurrent = MatrixComp::Zero(1, mNumFreqs);
-}
-
 void DP::Ph1::NetworkInjection::setParameters(Complex voltageRef, Real srcFreq) {
 	attribute<Complex>("V_ref")->set(voltageRef);
 	attribute<Real>("f_src")->set(srcFreq);

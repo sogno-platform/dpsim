@@ -46,10 +46,6 @@ void DP::Ph1::Switch::initializeFromPowerflow(Real frequency) {
 		Logger::phasorToString(initialSingleVoltage(1)));
 }
 
-void DP::Ph1::Switch::initialize(Matrix frequencies) {
-	SimPowerComp<Complex>::initialize(frequencies);
-}
-
 void DP::Ph1::Switch::mnaInitialize(Real omega, Real timeStep, Attribute<Matrix>::Ptr leftVector) {
 	MNAInterface::mnaInitialize(omega, timeStep);
 	updateMatrixNodeIndices();

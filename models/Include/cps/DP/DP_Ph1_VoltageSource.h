@@ -53,8 +53,6 @@ namespace Ph1 {
 		///
 		void setSourceValue(Complex voltage);
 		///
-		void initialize(Matrix frequencies);
-		///
 		void setParameters(Complex voltageRef, Real srcFreq = -1);
 
 		// #### MNA Section ####
@@ -92,7 +90,7 @@ namespace Ph1 {
 		class MnaPostStep : public Task {
 		public:
 			MnaPostStep(VoltageSource& voltageSource, Attribute<Matrix>::Ptr leftVector) :
-				Task(voltageSource.mName + ".MnaPostStep"),			
+				Task(voltageSource.mName + ".MnaPostStep"),
 				mVoltageSource(voltageSource), mLeftVector(leftVector) {
 					mVoltageSource.mnaAddPostStepDependencies(mPrevStepDependencies, mAttributeDependencies, mModifiedAttributes, mLeftVector);
 			}

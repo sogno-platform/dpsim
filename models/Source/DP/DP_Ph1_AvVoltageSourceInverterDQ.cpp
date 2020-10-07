@@ -143,10 +143,6 @@ void DP::Ph1::AvVoltageSourceInverterDQ::setInitialStateValues(Real pInit, Real 
 	mPowerControllerVSI->setInitialStateValues(pInit, qInit, phi_dInit, phi_qInit, gamma_dInit, gamma_qInit);
 }
 
-void DP::Ph1::AvVoltageSourceInverterDQ::initialize(Matrix frequencies) {
-	SimPowerComp<Complex>::initialize(frequencies);
-}
-
 void DP::Ph1::AvVoltageSourceInverterDQ::initializeFromPowerflow(Real frequency) {
 
 	// set initial interface quantities

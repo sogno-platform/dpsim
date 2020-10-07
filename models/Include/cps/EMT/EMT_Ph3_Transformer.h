@@ -48,8 +48,6 @@ namespace CPS {
 				// #### General ####
 				/// Defines component parameters
 				void setParameters(Real ratioAbs, Real ratioPhase, Matrix resistance, Matrix inductance);
-				///
-				void initialize(Matrix frequencies);
 				/// Initializes component from power flow data
 				void initializeFromPowerflow(Real frequency);
 

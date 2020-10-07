@@ -197,7 +197,6 @@ namespace Ph1 {
 		///
 		void updateSetPoint(Real time);
 
-		//void initialize(Matrix frequencies);
 		///
 		void initializeFromPowerflow(Real frequency) override;
 

@@ -48,8 +48,6 @@ namespace Ph1 {
 		// #### General ####
 		/// Defines component parameters
 		void setParameters(Real ratioAbs, Real ratioPhase, Real resistance, Real inductance);
-		///
-		void initialize(Matrix frequencies);
 		/// Initializes component from power flow data
 		void initializeFromPowerflow(Real frequency);
 

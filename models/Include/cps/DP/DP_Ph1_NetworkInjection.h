@@ -53,8 +53,6 @@ namespace Ph1 {
 		///
 		void setSourceValue(Complex voltage);
 		///
-		void initialize(Matrix frequencies);
-		///
 		void setParameters(Complex voltageRef, Real srcFreq = -1);
 
 		// #### MNA Section ####

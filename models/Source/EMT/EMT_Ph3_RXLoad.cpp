@@ -52,10 +52,6 @@ SimPowerComp<Real>::Ptr EMT::Ph3::RXLoad::clone(String name) {
 	return RXLoad::make(name, mLogLevel);
 }
 
-void EMT::Ph3::RXLoad::initialize(Matrix frequencies) {
-	SimPowerComp<Real>::initialize(frequencies);
-}
-
 void EMT::Ph3::RXLoad::initializeFromPowerflow(Real frequency) {
 
 		if (initPowerFromTerminal) {

@@ -100,10 +100,6 @@ void DP::Ph1::SynchronGeneratorTrStab::setInitialValues(Complex elecPower, Real 
 	mInitMechPower = mechPower;
 }
 
-void DP::Ph1::SynchronGeneratorTrStab::initialize(Matrix frequencies) {
-	SimPowerComp<Complex>::initialize(frequencies);
-}
-
 void DP::Ph1::SynchronGeneratorTrStab::initializeFromPowerflow(Real frequency) {
 
 	// Initialize omega mech with nominal system frequency

@@ -65,13 +65,8 @@ namespace Ph1 {
 			Real Rs, Real Lpd, Real inertiaJ, Real Kd = 0);
 		/// \brief Initializes the machine parameters
 		void setStandardParametersPU(Real nomPower, Real nomVolt, Real nomFreq, Real Xpd, Real inertia);
-		/// Initializes states in per unit or stator referred variables depending on the setting of the state type.
-		/// Function parameters have to be given in Real units.
-		void initialize(Real omega, Real timeStep);
 		///
 		void step(Real time);
-		///
-		void initialize(Matrix frequencies);
 		///
 		void initializeFromPowerflow(Real frequency);
 

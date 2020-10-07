@@ -33,8 +33,6 @@ namespace Ph1 {
 		SimPowerComp<Complex>::Ptr clone(String name);
 
 		// #### General ####
-		/// Initialize components with correct network frequencies
-		void initialize(Matrix frequencies);
 		/// Initializes component from power flow data
 		void initializeFromPowerflow(Real frequency);
 

@@ -81,7 +81,7 @@ namespace Ph1 {
 
 		/// Boolean for connection transformer usage
 		Bool mWithConnectionTransformer=false;
-		
+
 		// #### solver ####
 		///
 		std::vector<const Matrix*> mRightVectorStamps;
@@ -96,8 +96,6 @@ namespace Ph1 {
 		// #### General ####
 		/// Initializes component from power flow data
 		void initializeFromPowerflow(Real frequency);
-		/// General initalization
-		void initialize(Matrix frequencies);
 		/// Setter for general parameters of inverter
 		void setParameters(Real sysOmega, Real sysVoltNom, Real Pref, Real Qref);
 		/// Setter for parameters of control loops

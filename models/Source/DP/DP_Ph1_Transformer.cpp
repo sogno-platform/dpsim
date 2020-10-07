@@ -47,10 +47,6 @@ void DP::Ph1::Transformer::setParameters(Real ratioAbs, Real ratioPhase,
 	mParametersSet = true;
 }
 
-void DP::Ph1::Transformer::initialize(Matrix frequencies) {
-	SimPowerComp<Complex>::initialize(frequencies);
-}
-
 void DP::Ph1::Transformer::initializeFromPowerflow(Real frequency) {
 
 	// Component parameters are referred to high voltage side.

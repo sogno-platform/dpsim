@@ -40,10 +40,6 @@ void EMT::Ph3::Transformer::setParameters(Real ratioAbs, Real ratioPhase,
 		setVirtualNodeNumber(2);
 }
 
-void EMT::Ph3::Transformer::initialize(Matrix frequencies) {
-	SimPowerComp<Real>::initialize(frequencies);
-}
-
 void EMT::Ph3::Transformer::initializeFromPowerflow(Real frequency) {
 
 	// A snubber conductance is added on the low voltage side

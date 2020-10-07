@@ -51,8 +51,6 @@ namespace CPS {
 				///
 				void setSourceValue(MatrixComp voltage);
 				///
-				//void initialize(Matrix frequencies);
-				///
 				void setParameters(MatrixComp voltageRef, Real srcFreq = -1);
 
 				// #### MNA Section ####

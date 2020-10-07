@@ -134,8 +134,6 @@ namespace Ph3 {
 		///
 		void updateSetPoint(Real time);
 		///
-		//void initialize(Matrix frequencies);
-		///
 		void initializeFromPowerflow(Real frequency);
 		// #### interface with villas node ####
 		void ctrlReceiver(Attribute<Real>::Ptr qref);

@@ -36,8 +36,6 @@ namespace Ph1 {
 		RXLoadSwitch(String name, Logger::Level logLevel = Logger::Level::off);
 
 		// #### General ####
-		///
-		void initialize(Matrix frequencies);
 		/// Initializes component from power flow data
 		void initializeFromPowerflow(Real frequency);
 		/// Sets model specific parameters

@@ -31,10 +31,6 @@ SimPowerComp<Complex>::Ptr DP::Ph1::PiLine::clone(String name) {
 	return copy;
 }
 
-void DP::Ph1::PiLine::initialize(Matrix frequencies) {
-	SimPowerComp<Complex>::initialize(frequencies);
-}
-
 void DP::Ph1::PiLine::initializeFromPowerflow(Real frequency) {
 
 	// Static calculation

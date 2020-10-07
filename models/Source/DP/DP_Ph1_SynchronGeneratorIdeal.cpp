@@ -30,10 +30,6 @@ SimPowerComp<Complex>::Ptr DP::Ph1::SynchronGeneratorIdeal::clone(String name) {
 	return SynchronGeneratorIdeal::make(name, mLogLevel);
 }
 
-void DP::Ph1::SynchronGeneratorIdeal::initialize(Matrix frequencies) {
-	SimPowerComp<Complex>::initialize(frequencies);
-}
-
 void DP::Ph1::SynchronGeneratorIdeal::initializeFromPowerflow(Real frequency) {
 
 	// maybe not necessary because voltage source is also set up from powerflow

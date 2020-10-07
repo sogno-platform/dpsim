@@ -79,15 +79,6 @@ SimPowerComp<Complex>::Ptr SP::Ph1::externalGridInjection::clone(String name) {
 	return copy;
 }
 
-void SP::Ph1::externalGridInjection::initialize(Matrix frequencies) {
-
-	mFrequencies = frequencies;
-	mNumFreqs = mFrequencies.size();
-
-	mIntfVoltage = MatrixComp::Zero(1, mNumFreqs);
-	mIntfCurrent = MatrixComp::Zero(1, mNumFreqs);
-}
-
 void SP::Ph1::externalGridInjection::initializeFromPowerflow(Real frequency) {
 	mVoltageRef = attribute<Complex>("V_ref");
 	mSrcFreq = attribute<Real>("f_src");

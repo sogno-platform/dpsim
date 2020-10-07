@@ -33,10 +33,6 @@ SimPowerComp<Real>::Ptr EMT::Ph3::PiLine::clone(String name) {
 	return copy;
 }
 
-void EMT::Ph3::PiLine::initialize(Matrix frequencies) {
-	SimPowerComp<Real>::initialize(frequencies);
-}
-
 void EMT::Ph3::PiLine::initializeFromPowerflow(Real frequency) {
 
 	// By default there is always a small conductance to ground to

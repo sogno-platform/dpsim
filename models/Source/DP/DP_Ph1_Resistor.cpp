@@ -25,10 +25,6 @@ SimPowerComp<Complex>::Ptr DP::Ph1::Resistor::clone(String name) {
 	return copy;
 }
 
-void DP::Ph1::Resistor::initialize(Matrix frequencies) {
-	SimPowerComp<Complex>::initialize(frequencies);
-}
-
 void DP::Ph1::Resistor::initializeFromPowerflow(Real frequency) {
 
 	Complex impedance = { mResistance, 0 };

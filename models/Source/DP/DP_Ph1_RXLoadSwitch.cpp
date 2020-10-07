@@ -29,10 +29,6 @@ DP::Ph1::RXLoadSwitch::RXLoadSwitch(String uid, String name, Logger::Level logLe
 DP::Ph1::RXLoadSwitch::RXLoadSwitch(String name, Logger::Level logLevel)
 	: RXLoadSwitch(name, name, logLevel) { }
 
-void DP::Ph1::RXLoadSwitch::initialize(Matrix frequencies) {
-	SimPowerComp<Complex>::initialize(frequencies);
-}
-
 void DP::Ph1::RXLoadSwitch::initializeFromPowerflow(Real frequency) {
 
 	if(!mParametersSet) {

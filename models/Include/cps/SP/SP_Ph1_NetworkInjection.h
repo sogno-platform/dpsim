@@ -62,8 +62,6 @@ namespace Ph1 {
 		///
 		void setSourceValue(Complex voltage);
 		///
-		void initialize(Matrix frequencies) override;
-		///
 		void setParameters(Real vSetPointPerUnit);
 		///
 		SimPowerComp<Complex>::Ptr clone(String name) override;
