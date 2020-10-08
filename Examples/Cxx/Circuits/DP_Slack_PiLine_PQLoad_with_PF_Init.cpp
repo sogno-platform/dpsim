@@ -107,7 +107,7 @@ int main(int argc, char* argv[]) {
 			SystemNodeList{n1DP, n2DP},
 			SystemComponentList{extnetDP, lineDP, loadDP});
 
-	// Initialization of dynamic topology (actually necessary here? node objects the same)
+	// Initialization of dynamic topology
 	CIM::Reader reader(simNameDP, Logger::Level::debug);
 	reader.initDynamicSystemTopologyWithPowerflow(systemPF, systemDP);			
 

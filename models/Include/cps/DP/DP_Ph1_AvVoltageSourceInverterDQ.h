@@ -17,7 +17,6 @@
 #include <cps/DP/DP_Ph1_VoltageSource.h>
 #include <cps/DP/DP_Ph1_Transformer.h>
 #include <cps/Base/Base_AvVoltageSourceInverterDQ.h>
-#include <cps/PowerProfile.h>
 #include <cps/Signal/PLL.h>
 #include <cps/Signal/PowerControllerVSI.h>
 

@@ -33,7 +33,6 @@ list(APPEND CPS_SOURCES
 	DP/DP_Ph1_SynchronGeneratorTrStab.cpp
 	DP/DP_Ph1_Inverter.cpp
 	DP/DP_Ph1_AvVoltageSourceInverterDQ.cpp
-	DP/DP_Ph1_ControlledVoltageSource.cpp
 	DP/DP_Ph1_NetworkInjection.cpp
 
 	DP/DP_Ph3_ControlledVoltageSource.cpp
