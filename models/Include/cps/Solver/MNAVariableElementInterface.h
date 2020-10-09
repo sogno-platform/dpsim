@@ -1,0 +1,24 @@
+/* Copyright 2017-2020 Institute for Automation of Complex Power Systems,
+ *                     EONERC, RWTH Aachen University
+ *
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at https://mozilla.org/MPL/2.0/.
+ *********************************************************************************/
+
+#pragma once
+
+#include <cps/Config.h>
+#include <cps/Definitions.h>
+
+namespace CPS {
+	/// MNA interface to be used by elements that require recomputing of the system matrix
+	class MNAVariableElementInterface {
+	public:
+		typedef std::shared_ptr<MNAVariableElementInterface> Ptr;
+		typedef std::vector<Ptr> List;
+
+		/// Returns true if one of the element paramters has changed
+		virtual Bool hasParameterChanged() = 0;
+	};
+}
