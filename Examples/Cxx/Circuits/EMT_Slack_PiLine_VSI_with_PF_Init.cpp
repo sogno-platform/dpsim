@@ -101,7 +101,7 @@ int main(int argc, char* argv[]) {
 	pv->setControllerParameters(scenario.KpPLL, scenario.KiPLL, scenario.KpPowerCtrl, scenario.KiPowerCtrl, scenario.KpCurrCtrl, scenario.KiCurrCtrl, scenario.OmegaCutoff);
 	pv->setFilterParameters(scenario.Lf, scenario.Cf, scenario.Rf, scenario.Rc);
 	pv->setTransformerParameters(scenario.systemNominalVoltage, scenario.pvNominalVoltage, scenario.transformerNominalPower, scenario.systemNominalVoltage/scenario.pvNominalVoltage, 0, 0, scenario.transformerInductance, scenario.systemOmega);
-	pv->setInitialStateValues(scenario.thetaPLLInit, scenario.phiPLLInit, scenario.pvNominalActivePower, scenario.pvNominalReactivePower, scenario.phi_dInit, scenario.phi_qInit, scenario.gamma_dInit, scenario.gamma_qInit);
+	pv->setInitialStateValues(scenario.pvNominalActivePower, scenario.pvNominalReactivePower, scenario.phi_dInit, scenario.phi_qInit, scenario.gamma_dInit, scenario.gamma_qInit);
 
 	// Topology
 	extnetEMT->connect({ n1EMT });
@@ -111,7 +111,7 @@ int main(int argc, char* argv[]) {
 			SystemNodeList{n1EMT, n2EMT},
 			SystemComponentList{extnetEMT, lineEMT, pv});
 
-	// Initialization of dynamic topology (actually necessary here? node objects the same)
+	// Initialization of dynamic topology
 	CIM::Reader reader(simNameEMT, Logger::Level::debug);
 	reader.initDynamicSystemTopologyWithPowerflow(systemPF, systemEMT);			
 
