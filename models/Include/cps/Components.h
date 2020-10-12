@@ -52,6 +52,7 @@
 #include <cps/DP/DP_Ph1_Inverter.h>
 #include <cps/DP/DP_Ph1_NetworkInjection.h>
 #include <cps/DP/DP_Ph1_AvVoltageSourceInverterDQ.h>
+#include <cps/DP/DP_Ph1_SVC.h>
 
 #include <cps/DP/DP_Ph3_ControlledVoltageSource.h>
 #include <cps/DP/DP_Ph3_Capacitor.h>
