@@ -105,7 +105,7 @@ int main(int argc, char* argv[]) {
 			SystemNodeList{n1EMT, n2EMT},
 			SystemComponentList{extnetEMT, lineEMT, loadEMT});
 
-	// Initialization of dynamic topology (actually necessary here? node objects the same)
+	// Initialization of dynamic topology
 	CIM::Reader reader(simNameEMT, Logger::Level::debug);
 	reader.initDynamicSystemTopologyWithPowerflow(systemPF, systemEMT);			
 

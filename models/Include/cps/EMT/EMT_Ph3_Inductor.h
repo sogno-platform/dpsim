@@ -56,19 +56,22 @@ namespace CPS {
 				void mnaUpdateVoltage(const Matrix& leftVector);
 				/// Update interface current from MNA system result
 				void mnaUpdateCurrent(const Matrix& leftVector);
+				/// MNA pre step operations
+				void mnaPreStep(Real time, Int timeStepCount);
+				/// MNA post step operations
+				void mnaPostStep(Real time, Int timeStepCount, Attribute<Matrix>::Ptr &leftVector);
+				/// Add MNA pre step dependencies
+				void mnaAddPreStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes);
+				/// Add MNA post step dependencies
+				void mnaAddPostStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes, Attribute<Matrix>::Ptr &leftVector);
 
 				class MnaPreStep : public Task {
 				public:
 					MnaPreStep(Inductor& inductor) :
 						Task(inductor.mName + ".MnaPreStep"), mInductor(inductor) {
-						// actually depends on L, but then we'd have to modify the system matrix anyway
-						mModifiedAttributes.push_back(inductor.attribute("right_vector"));
-						mPrevStepDependencies.push_back(inductor.attribute("i_intf"));
-						mPrevStepDependencies.push_back(inductor.attribute("v_intf"));
+							mInductor.mnaAddPreStepDependencies(mPrevStepDependencies, mAttributeDependencies, mModifiedAttributes);
 					}
-
-					void execute(Real time, Int timeStepCount);
-
+					void execute(Real time, Int timeStepCount) { mInductor.mnaPreStep(time, timeStepCount); };
 				private:
 					Inductor& mInductor;
 				};
@@ -76,14 +79,11 @@ namespace CPS {
 				class MnaPostStep : public Task {
 				public:
 					MnaPostStep(Inductor& inductor, Attribute<Matrix>::Ptr leftVector) :
-						Task(inductor.mName + ".MnaPostStep"), mInductor(inductor), mLeftVector(leftVector) {
-						mAttributeDependencies.push_back(mLeftVector);
-						mModifiedAttributes.push_back(mInductor.attribute("v_intf"));
-						mModifiedAttributes.push_back(mInductor.attribute("i_intf"));
+						Task(inductor.mName + ".MnaPostStep"),
+						mInductor(inductor), mLeftVector(leftVector) {
+							mInductor.mnaAddPostStepDependencies(mPrevStepDependencies, mAttributeDependencies, mModifiedAttributes, mLeftVector);
 					}
-
-					void execute(Real time, Int timeStepCount);
-
+					void execute(Real time, Int timeStepCount) { mInductor.mnaPostStep(time, timeStepCount, mLeftVector); };
 				private:
 					Inductor& mInductor;
 					Attribute<Matrix>::Ptr mLeftVector;

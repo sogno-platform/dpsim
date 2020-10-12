@@ -162,11 +162,6 @@ void EMT::Ph3::PiLine::mnaInitialize(Real omega, Real timeStep, Attribute<Matrix
 		subComps.push_back(mSubParallelCapacitor0);
 		subComps.push_back(mSubParallelCapacitor1);
 	}
-	for (auto comp : subComps) {
-		for (auto task : comp->mnaTasks()) {
-			mMnaTasks.push_back(task);
-		}
-	}
 	mMnaTasks.push_back(std::make_shared<MnaPreStep>(*this));
 	mMnaTasks.push_back(std::make_shared<MnaPostStep>(*this, leftVector));
 	mRightVector = Matrix::Zero(leftVector->get().rows(), 1);
@@ -191,13 +186,68 @@ void EMT::Ph3::PiLine::mnaApplyRightSideVectorStamp(Matrix& rightVector) {
 		rightVector += *stamp;
 }
 
-void EMT::Ph3::PiLine::MnaPreStep::execute(Real time, Int timeStepCount) {
-	mLine.mnaApplyRightSideVectorStamp(mLine.mRightVector);
+void EMT::Ph3::PiLine::mnaAddPreStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes){
+	// add pre-step dependencies of subcomponents
+	mSubSeriesResistor->mnaAddPreStepDependencies(prevStepDependencies, attributeDependencies, modifiedAttributes);
+	mSubSeriesInductor->mnaAddPreStepDependencies(prevStepDependencies, attributeDependencies, modifiedAttributes);
+	if (mParallelCond(0,0) > 0) {
+		mSubParallelResistor0->mnaAddPreStepDependencies(prevStepDependencies, attributeDependencies, modifiedAttributes);
+		mSubParallelResistor1->mnaAddPreStepDependencies(prevStepDependencies, attributeDependencies, modifiedAttributes);
+	}
+	if (mParallelCap(0, 0) > 0) {
+		mSubParallelCapacitor0->mnaAddPreStepDependencies(prevStepDependencies, attributeDependencies, modifiedAttributes);
+		mSubParallelCapacitor1->mnaAddPreStepDependencies(prevStepDependencies, attributeDependencies, modifiedAttributes);
+	}
+	// add pre-step dependencies of component itself
+	prevStepDependencies.push_back(attribute("i_intf"));
+	prevStepDependencies.push_back(attribute("v_intf"));
+	modifiedAttributes.push_back(attribute("right_vector"));
 }
 
-void EMT::Ph3::PiLine::MnaPostStep::execute(Real time, Int timeStepCount) {
-	mLine.mnaUpdateVoltage(*mLeftVector);
-	mLine.mnaUpdateCurrent(*mLeftVector);
+void EMT::Ph3::PiLine::mnaPreStep(Real time, Int timeStepCount) {
+	// pre-step of subcomponents
+	mSubSeriesInductor->mnaPreStep(time, timeStepCount);
+	if (mParallelCap(0, 0) > 0) {
+		mSubParallelCapacitor0->mnaPreStep(time, timeStepCount);
+		mSubParallelCapacitor1->mnaPreStep(time, timeStepCount);
+	}
+	// pre-step of component itself
+	mnaApplyRightSideVectorStamp(mRightVector);
+}
+
+void EMT::Ph3::PiLine::mnaAddPostStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes, Attribute<Matrix>::Ptr &leftVector) {
+	// add post-step dependencies of subcomponents
+	mSubSeriesResistor->mnaAddPostStepDependencies(prevStepDependencies, attributeDependencies, modifiedAttributes, leftVector);
+	mSubSeriesInductor->mnaAddPostStepDependencies(prevStepDependencies, attributeDependencies, modifiedAttributes, leftVector);
+	if (mParallelCap(0, 0) > 0) {
+		mSubParallelCapacitor0->mnaAddPostStepDependencies(prevStepDependencies, attributeDependencies, modifiedAttributes, leftVector);
+		mSubParallelCapacitor1->mnaAddPostStepDependencies(prevStepDependencies, attributeDependencies, modifiedAttributes, leftVector);
+	}
+	if (mParallelCond(0,0) > 0) {
+		mSubParallelResistor0->mnaAddPostStepDependencies(prevStepDependencies, attributeDependencies, modifiedAttributes, leftVector);
+		mSubParallelResistor1->mnaAddPostStepDependencies(prevStepDependencies, attributeDependencies, modifiedAttributes, leftVector);
+	}
+	// add post-step dependencies of component itself
+	attributeDependencies.push_back(leftVector);
+	modifiedAttributes.push_back(attribute("v_intf"));
+	modifiedAttributes.push_back(attribute("i_intf"));
+}
+
+void EMT::Ph3::PiLine::mnaPostStep(Real time, Int timeStepCount, Attribute<Matrix>::Ptr &leftVector) {
+	// post-step of subcomponents
+	mSubSeriesResistor->mnaPostStep(time, timeStepCount, leftVector);
+	mSubSeriesInductor->mnaPostStep(time, timeStepCount, leftVector);
+	if (mParallelCap(0, 0) > 0) {
+		mSubParallelCapacitor0->mnaPostStep(time, timeStepCount, leftVector);
+		mSubParallelCapacitor1->mnaPostStep(time, timeStepCount, leftVector);
+	}
+	if (mParallelCond(0,0) > 0) {
+		mSubParallelResistor0->mnaPostStep(time, timeStepCount, leftVector);
+		mSubParallelResistor1->mnaPostStep(time, timeStepCount, leftVector);
+	}
+	// post-step of component itself
+	mnaUpdateVoltage(*leftVector);
+	mnaUpdateCurrent(*leftVector);
 }
 
 void EMT::Ph3::PiLine::mnaUpdateVoltage(const Matrix& leftVector) {

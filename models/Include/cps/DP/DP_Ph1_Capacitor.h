@@ -66,11 +66,13 @@ namespace Ph1 {
 		/// Update interface current from MNA system result
 		void mnaUpdateCurrent(const Matrix& leftVector);
 		void mnaUpdateCurrentHarm();
-		/// MNA pre and post step operations
+		/// MNA pre step operations
 		void mnaPreStep(Real time, Int timeStepCount);
+		/// MNA post step operations
 		void mnaPostStep(Real time, Int timeStepCount, Attribute<Matrix>::Ptr &leftVector);
-		/// add MNA pre and post step dependencies
+		/// Add MNA pre step dependencies
 		void mnaAddPreStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes);
+		/// Add MNA post step dependencies
 		void mnaAddPostStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes, Attribute<Matrix>::Ptr &leftVector);
 
 		class MnaPreStep : public Task {
