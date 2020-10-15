@@ -18,6 +18,7 @@
 #include <dpsim/DataLogger.h>
 #include <cps/AttributeList.h>
 #include <cps/Solver/MNASwitchInterface.h>
+#include <cps/Solver/MNAVariableElementInterface.h>
 #include <cps/SimSignalComp.h>
 #include <cps/SimPowerComp.h>
 
@@ -57,13 +58,20 @@ namespace DPsim {
 		Bool mPowerflowInitialization;
 		/// System list
 		CPS::SystemTopology mSystem;
-		///
+		/// List of simulation nodes
 		typename CPS::SimNode<VarType>::List mNodes;
-		///
+		/// List of MNA components with static stamp into system matrix
 		CPS::MNAInterface::List mMNAComponents;
-		///
+		/// List of MNA components with extra functionality
+		CPS::MNAInterface::List mMNAComponentsExt;
+		/// List of switches that stamp differently depending on their state
+		/// and indicate the solver to choose a different system matrix
 		CPS::MNASwitchInterface::List mSwitches;
-		///
+		/// List of components that indicate the solver to recompute the system matrix
+		/// depending on their state
+		CPS::MNAVariableElementInterface::List mVariableElements;
+		/// List of signal type components that do not directly interact
+		/// with the MNA solver
 		CPS::SimSignalComp::List mSimSignalComps;
 
 		// #### MNA specific attributes ####
@@ -86,11 +94,22 @@ namespace DPsim {
 		std::unordered_map< std::bitset<SWITCH_NUM>, CPS::LUFactorized > mLuFactorizations;
 		std::unordered_map< std::bitset<SWITCH_NUM>, std::vector<CPS::LUFactorized> > mLuFactorizationsHarm;
 
+		// #### Dynamic matrix recomputation ####
+		/// Base matrix that includes all static MNA elements to speed up recomputation
+		Matrix mBaseSystemMatrix;
+		///
+		Bool mUpdateSysMatrix;
+		///
+		void updateSystemMatrix(Real time);
+
 		// #### Attributes related to switching ####
 		/// Index of the next switching event
 		UInt mSwitchTimeIndex = 0;
 		/// Vector of switch times
 		std::vector<SwitchConfiguration> mSwitchEvents;
+		/// Determines if static precomputed system matrices should be used
+		/// or system matrix is recomputed during simulation
+		Bool mUsePrecomputedMatrices = true;
 
 		// #### Attributes related to logging ####
 		/// Last simulation time step when log was updated
@@ -104,21 +123,29 @@ namespace DPsim {
 		void initializeComponents();
 		/// Initialization of system matrices and source vector
 		void initializeSystem();
+		/// Initialization of system matrices and source vector
+		void initializeSystemWithParallelFrequencies();
+		/// Initialization of system matrices and source vector
+		void initializeSystemWithPrecomputedMatrices();
+		/// Initialization of system matrices and source vector
+		void initializeSystemWithDynamicMatrix();
 		/// Identify Nodes and SimPowerComps and SimSignalComps
 		void identifyTopologyObjects();
 		/// Assign simulation node index according to index in the vector.
 		void assignMatrixNodeIndices();
-		/// Creates virtual nodes inside components.
+		/// Collects virtual nodes inside components.
 		/// The MNA algorithm handles these nodes in the same way as network nodes.
-		void createVirtualNodes();
+		void collectVirtualNodes();
 		// TODO: check if this works with AC sources
 		void steadyStateInitialization();
 		/// Create left and right side vector
 		void createEmptyVectors();
 		/// Create system matrix
 		void createEmptySystemMatrix();
-		///
+		/// Collects the status of switches to select correct system matrix
 		void updateSwitchStatus();
+		/// Collects the status of variable MNA elements to decide if system matrix has to be recomputed
+		void updateVariableElementStatus();
 		/// Logging of system matrices and source vector
 		void logSystemMatrices();
 	public:
