@@ -28,38 +28,36 @@ namespace DPsim {
 	/// Base class for more specific solvers such as MNA, ODE or IDA.
 	class Solver {
 	protected:
-		/// Name for displaying
+		/// Name for logging
 		String mName;
-		///
+		/// Logging level
 		CPS::Logger::Level mLogLevel;
-		///
+		/// Logger
 		CPS::Logger::Log mSLog;
 		/// Time step for fixed step solvers
 		Real mTimeStep;
-		///
+		/// Activates parallelized computation of frequencies
 		Bool mFrequencyParallel = false;
-		/// Switch to trigger steady-state initialization
 
-		// #### steady state initialization ####
+		// #### Initialization ####
 		/// steady state initialization time limit
 		Real mSteadStIniTimeLimit = 10;
 		/// steady state initialization accuracy limit
 		Real mSteadStIniAccLimit = 0.0001;
 		/// Activates steady state initialization
 		Bool mSteadyStateInit = false;
+		/// Determines if solver is in initialization phase, which requires different behavior
+		Bool mIsInInitialization = false;
 		/// Activates powerflow initialization
 		/// If this is false, all voltages are initialized with zero
 		Bool mPowerFlowInit = true;
-		/// Determines if solver is in initialization phase, which requires different behavior
-		Bool mIsInInitialization = false;
 
 	public:
 		typedef std::shared_ptr<Solver> Ptr;
 		typedef std::vector<Ptr> List;
 
 		Solver(String name, CPS::Logger::Level logLevel) :
-			mName(name),
-			mLogLevel(logLevel) {
+			mName(name), mLogLevel(logLevel) {
 
 			// Solver global logging
 			mSLog = CPS::Logger::get(name + "_Solver", logLevel);
@@ -67,13 +65,10 @@ namespace DPsim {
 
 		virtual ~Solver() { }
 
-		enum class Type { MNA, DAE, NRP };
-
-		virtual CPS::Task::List getTasks() = 0;
-		/// Log results
-		virtual void log(Real time) { };
-
 		// #### Solver settings ####
+		/// Solver types:
+		/// Modified Nodal Analysis, Differential Algebraic, Newton Raphson
+		enum class Type { MNA, DAE, NRP };
 		///
 		void setTimeStep(Real timeStep) {
 			mTimeStep = timeStep;
@@ -82,14 +77,12 @@ namespace DPsim {
 		void doFrequencyParallelization(Bool freqParallel) {
 			mFrequencyParallel = freqParallel;
 		}
-
 		///
 		virtual void setSystem(CPS::SystemTopology system) {}
 
+		// #### Initialization ####
 		///
 		virtual void initialize() {}
-
-		// #### steady state initialization ####
 		/// activate steady state initialization
 		void doSteadyStateInit(Bool f) { mSteadyStateInit = f; }
 		/// set steady state initialization time limit
@@ -98,5 +91,11 @@ namespace DPsim {
 		void setSteadStIniAccLimit(Real v) { mSteadStIniAccLimit = v; }
 		/// activate powerflow initialization
 		void doPowerFlowInit(Bool f) { mPowerFlowInit = f; }
+
+		// #### Simulation ####
+		/// Get tasks for scheduler
+		virtual CPS::Task::List getTasks() = 0;
+		/// Log results
+		virtual void log(Real time) { };
 	};
 }
