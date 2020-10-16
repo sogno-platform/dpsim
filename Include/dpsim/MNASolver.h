@@ -60,14 +60,16 @@ namespace DPsim {
 		// #### MNA specific attributes ####
 		/// List of MNA components with static stamp into system matrix
 		CPS::MNAInterface::List mMNAComponents;
-		/// List of MNA components with extra functionality
-		CPS::MNAInterface::List mMNAComponentsExt;
 		/// List of switches that stamp differently depending on their state
 		/// and indicate the solver to choose a different system matrix
 		CPS::MNASwitchInterface::List mSwitches;
+		/// List of MNA components with SwitchInterface
+		CPS::MNAInterface::List mMNACompSwitches;
 		/// List of components that indicate the solver to recompute the system matrix
 		/// depending on their state
 		CPS::MNAVariableElementInterface::List mVariableElements;
+		/// List of MNA components with VariableElementInterface
+		CPS::MNAInterface::List mMNACompVariableElements;
 		/// List of signal type components that do not directly interact
 		/// with the MNA solver
 		CPS::SimSignalComp::List mSimSignalComps;
@@ -83,6 +85,8 @@ namespace DPsim {
 		std::vector<Matrix> mLeftSideVectorHarm;
 		std::vector< CPS::Attribute<Matrix>::Ptr > mLeftVectorHarmAttributes;
 
+		/// Base matrix that includes all static MNA elements to speed up recomputation
+		Matrix mBaseSystemMatrix;
 		/// Map of system matrices where the key is the bitset describing the switch states
 		std::unordered_map< std::bitset<SWITCH_NUM>, Matrix > mSwitchedMatrices;
 		std::unordered_map< std::bitset<SWITCH_NUM>, std::vector<Matrix> > mSwitchedMatricesHarm;
@@ -90,22 +94,13 @@ namespace DPsim {
 		std::unordered_map< std::bitset<SWITCH_NUM>, CPS::LUFactorized > mLuFactorizations;
 		std::unordered_map< std::bitset<SWITCH_NUM>, std::vector<CPS::LUFactorized> > mLuFactorizationsHarm;
 
-		// #### Dynamic matrix recomputation ####
-		/// Base matrix that includes all static MNA elements to speed up recomputation
-		Matrix mBaseSystemMatrix;
-		/// Flag that initiates recomputation of system matrix
-		Bool mUpdateSysMatrix;
-		/// Recomputes systems matrix
-		void updateSystemMatrix(Real time);
-
 		// #### Attributes related to switching ####
 		/// Index of the next switching event
 		UInt mSwitchTimeIndex = 0;
 		/// Vector of switch times
 		std::vector<SwitchConfiguration> mSwitchEvents;
-		/// Determines if static precomputed system matrices should be used
-		/// or system matrix is recomputed during simulation
-		Bool mUsePrecomputedMatrices = true;
+		/// Collects the status of switches to select correct system matrix
+		void updateSwitchStatus();
 
 		// #### Attributes related to logging ####
 		/// Last simulation time step when log was updated
@@ -118,13 +113,11 @@ namespace DPsim {
 		/// Initialization of individual components
 		void initializeComponents();
 		/// Initialization of system matrices and source vector
-		void initializeSystem();
+		virtual void initializeSystem();
 		/// Initialization of system matrices and source vector
 		void initializeSystemWithParallelFrequencies();
 		/// Initialization of system matrices and source vector
 		void initializeSystemWithPrecomputedMatrices();
-		/// Initialization of system matrices and source vector
-		void initializeSystemWithDynamicMatrix();
 		/// Identify Nodes and SimPowerComps and SimSignalComps
 		void identifyTopologyObjects();
 		/// Assign simulation node index according to index in the vector.
@@ -138,16 +131,12 @@ namespace DPsim {
 		void createEmptyVectors();
 		/// Create system matrix
 		void createEmptySystemMatrix();
-		/// Collects the status of switches to select correct system matrix
-		void updateSwitchStatus();
-		/// Collects the status of variable MNA elements to decide if system matrix has to be recomputed
-		void updateVariableElementStatus();
 		/// Logging of system matrices and source vector
 		void logSystemMatrices();
 
 		// #### Scheduler Task Methods ####
 		/// Solves system for single frequency
-		void solve(Real time, Int timeStepCount);
+		virtual void solve(Real time, Int timeStepCount);
 		/// Solves system for multiple frequencies
 		void solveWithHarmonics(Real time, Int timeStepCount, Int freqIdx);
 		/// Logs left and right vector
@@ -173,7 +162,7 @@ namespace DPsim {
 		///
 		Matrix& rightSideVector() { return mRightSideVector; }
 		///
-		CPS::Task::List getTasks();
+		virtual CPS::Task::List getTasks();
 		///
 		Matrix& systemMatrix() { return mSwitchedMatrices[mCurrentSwitchStatus]; }
 
