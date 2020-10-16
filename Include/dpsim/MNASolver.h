@@ -35,8 +35,7 @@ namespace DPsim {
 	template <typename VarType>
 	class MnaSolver : public Solver, public CPS::AttributeList {
 	protected:
-		// General simulation settings
-
+		// #### General simulation settings ####
 		/// Simulation domain, which can be dynamic phasor (DP) or EMT
 		CPS::Domain mDomain;
 		/// Number of nodes
@@ -53,13 +52,12 @@ namespace DPsim {
 		UInt mNumVirtualMatrixNodeIndices = 0;
 		/// Number of harmonic nodes
 		UInt mNumHarmMatrixNodeIndices = 0;
-		/// Flag to activate power flow based initialization.
-		/// If this is false, all voltages are initialized with zero.
-		Bool mPowerflowInitialization;
 		/// System list
 		CPS::SystemTopology mSystem;
 		/// List of simulation nodes
 		typename CPS::SimNode<VarType>::List mNodes;
+
+		// #### MNA specific attributes ####
 		/// List of MNA components with static stamp into system matrix
 		CPS::MNAInterface::List mMNAComponents;
 		/// List of MNA components with extra functionality
@@ -73,8 +71,6 @@ namespace DPsim {
 		/// List of signal type components that do not directly interact
 		/// with the MNA solver
 		CPS::SimSignalComp::List mSimSignalComps;
-
-		// #### MNA specific attributes ####
 		/// System matrix A that is modified by matrix stamps
 		std::bitset<SWITCH_NUM> mCurrentSwitchStatus;
 		/// Source vector of known quantities
@@ -97,9 +93,9 @@ namespace DPsim {
 		// #### Dynamic matrix recomputation ####
 		/// Base matrix that includes all static MNA elements to speed up recomputation
 		Matrix mBaseSystemMatrix;
-		///
+		/// Flag that initiates recomputation of system matrix
 		Bool mUpdateSysMatrix;
-		///
+		/// Recomputes systems matrix
 		void updateSystemMatrix(Real time);
 
 		// #### Attributes related to switching ####
@@ -148,23 +144,30 @@ namespace DPsim {
 		void updateVariableElementStatus();
 		/// Logging of system matrices and source vector
 		void logSystemMatrices();
+
+		// #### Scheduler Task Methods ####
+		/// Solves system for single frequency
+		void solve(Real time, Int timeStepCount);
+		/// Solves system for multiple frequencies
+		void solveWithHarmonics(Real time, Int timeStepCount, Int freqIdx);
+		/// Logs left and right vector
+		void log(Real time, Int timeStepCount);
+
 	public:
-		/// This constructor should not be called by users.
+		/// Constructor should not be called by users but by Simulation
 		MnaSolver(String name,
 			CPS::Domain domain = CPS::Domain::DP,
 			CPS::Logger::Level logLevel = CPS::Logger::Level::info);
 
-		///
+		/// Destructor
 		virtual ~MnaSolver() { };
 
+		/// Calls subroutines to set up everything that is required before simulation
+		void initialize();
+
+		// #### Setter and Getter ####
 		///
 		void setSystem(CPS::SystemTopology system);
-		/// TODO: check that every system matrix has the same dimensions
-		void initialize();
-		/// Log left and right vector values for each simulation step
-		void log(Real time);
-
-		// #### Getter ####
 		///
 		Matrix& leftSideVector() { return mLeftSideVector; }
 		///
@@ -172,19 +175,18 @@ namespace DPsim {
 		///
 		CPS::Task::List getTasks();
 		///
-		Matrix& systemMatrix() {
-			return mSwitchedMatrices[mCurrentSwitchStatus];
-		}
+		Matrix& systemMatrix() { return mSwitchedMatrices[mCurrentSwitchStatus]; }
 
+		// #### MNA Solver Tasks ####
 		///
 		class SolveTask : public CPS::Task {
 		public:
 			SolveTask(MnaSolver<VarType>& solver, Bool steadyStateInit) :
-				Task(solver.mName + ".Solve"), mSolver(solver), mSteadyStateInit(steadyStateInit) {
+				Task(solver.mName + ".Solve"), mSolver(solver) {
+
 				for (auto it : solver.mMNAComponents) {
-					if (it->template attribute<Matrix>("right_vector")->get().size() != 0) {
+					if (it->template attribute<Matrix>("right_vector")->get().size() != 0)
 						mAttributeDependencies.push_back(it->attribute("right_vector"));
-					}
 				}
 				for (auto node : solver.mNodes) {
 					mModifiedAttributes.push_back(node->attribute("v"));
@@ -192,21 +194,21 @@ namespace DPsim {
 				mModifiedAttributes.push_back(solver.attribute("left_vector"));
 			}
 
-			void execute(Real time, Int timeStepCount);
+			void execute(Real time, Int timeStepCount) { mSolver.solve(time, timeStepCount); }
 
 		private:
 			MnaSolver<VarType>& mSolver;
-			Bool mSteadyStateInit;
 		};
+
 		///
 		class SolveTaskHarm : public CPS::Task {
 		public:
 			SolveTaskHarm(MnaSolver<VarType>& solver, Bool steadyStateInit, UInt freqIdx) :
-				Task(solver.mName + ".Solve"), mSolver(solver), mSteadyStateInit(steadyStateInit), mFreqIdx(freqIdx) {
+				Task(solver.mName + ".Solve"), mSolver(solver), mFreqIdx(freqIdx) {
+
 				for (auto it : solver.mMNAComponents) {
-					if (it->template attribute<Matrix>("right_vector")->get().size() != 0) {
+					if (it->template attribute<Matrix>("right_vector")->get().size() != 0)
 						mAttributeDependencies.push_back(it->attribute("right_vector"));
-					}
 				}
 				for (auto node : solver.mNodes) {
 					mModifiedAttributes.push_back(node->attribute("v"));
@@ -216,11 +218,10 @@ namespace DPsim {
 				}
 			}
 
-			void execute(Real time, Int timeStepCount);
+			void execute(Real time, Int timeStepCount) { mSolver.solveWithHarmonics(time, timeStepCount, mFreqIdx); }
 
 		private:
 			MnaSolver<VarType>& mSolver;
-			Bool mSteadyStateInit;
 			UInt mFreqIdx;
 		};
 
@@ -233,7 +234,7 @@ namespace DPsim {
 				mModifiedAttributes.push_back(Scheduler::external);
 			}
 
-			void execute(Real time, Int timeStepCount);
+			void execute(Real time, Int timeStepCount) { mSolver.log(time, timeStepCount); }
 
 		private:
 			MnaSolver<VarType>& mSolver;

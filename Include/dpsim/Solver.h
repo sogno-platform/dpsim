@@ -45,10 +45,13 @@ namespace DPsim {
 		Real mSteadStIniTimeLimit = 10;
 		/// steady state initialization accuracy limit
 		Real mSteadStIniAccLimit = 0.0001;
-		/// flag to activate steady state initialization
+		/// Activates steady state initialization
 		Bool mSteadyStateInit = false;
-		/// flag to activate powerflow initialization
+		/// Activates powerflow initialization
+		/// If this is false, all voltages are initialized with zero
 		Bool mPowerFlowInit = true;
+		/// Determines if solver is in initialization phase, which requires different behavior
+		Bool mIsInInitialization = false;
 
 	public:
 		typedef std::shared_ptr<Solver> Ptr;

@@ -31,6 +31,7 @@ void MnaSolver<VarType>::setSystem(CPS::SystemTopology system) {
 
 template <typename VarType>
 void MnaSolver<VarType>::initialize() {
+	// TODO: check that every system matrix has the same dimensions
 	mSLog->info("---- Start initialization ----");
 
 	mSLog->info("-- Process topology");
@@ -68,8 +69,11 @@ void MnaSolver<VarType>::initialize() {
 	// calculate MNA specific initialization values.
 	initializeComponents();
 
-	if (mSteadyStateInit)
+	if (mSteadyStateInit) {
+		mIsInInitialization = true;
 		steadyStateInitialization();
+	}
+	mIsInInitialization = false;
 
 	// Some components feature a different behaviour for simulation and initialization
 	for (auto comp : mSystem.mComponents) {
@@ -617,52 +621,47 @@ Task::List MnaSolver<VarType>::getTasks() {
 }
 
 template <typename VarType>
-void MnaSolver<VarType>::SolveTask::execute(Real time, Int timeStepCount) {
+void MnaSolver<VarType>::solve(Real time, Int timeStepCount) {
 	// Reset source vector
-	mSolver.mRightSideVector.setZero();
-	mSolver.mUpdateSysMatrix = false;
+	mRightSideVector.setZero();
+	mUpdateSysMatrix = false;
 
 	// Add together the right side vector (computed by the components'
 	// pre-step tasks)
-	for (auto stamp : mSolver.mRightVectorStamps)
-		mSolver.mRightSideVector += *stamp;
+	for (auto stamp : mRightVectorStamps)
+		mRightSideVector += *stamp;
 
-	if (mSolver.mSwitchedMatrices.size() > 0)
-		mSolver.mLeftSideVector = mSolver.mLuFactorizations[mSolver.mCurrentSwitchStatus].solve(mSolver.mRightSideVector);
+	if (mSwitchedMatrices.size() > 0)
+		mLeftSideVector = mLuFactorizations[mCurrentSwitchStatus].solve(mRightSideVector);
 
 	// TODO split into separate task? (dependent on x, updating all v attributes)
-	for (UInt nodeIdx = 0; nodeIdx < mSolver.mNumNetNodes; nodeIdx++)
-		mSolver.mNodes[nodeIdx]->mnaUpdateVoltage(mSolver.mLeftSideVector);
+	for (UInt nodeIdx = 0; nodeIdx < mNumNetNodes; nodeIdx++)
+		mNodes[nodeIdx]->mnaUpdateVoltage(mLeftSideVector);
 
-	if (!mSteadyStateInit)
-		mSolver.updateSwitchStatus();
+	if (!mIsInInitialization) {
+		updateSwitchStatus();
 
-	if ((mSolver.mVariableElements.size() > 0))	{
-
-		mSolver.updateVariableElementStatus();
-		if (mSolver.mUpdateSysMatrix) {
-			mSolver.updateSystemMatrix(time);
-		}
+		updateVariableElementStatus();
+		if (mUpdateSysMatrix)
+			updateSystemMatrix(time);
 	}
 
 	// Components' states will be updated by the post-step tasks
 }
 
 template <typename VarType>
-void MnaSolver<VarType>::SolveTaskHarm::execute(Real time, Int timeStepCount) {
-	mSolver.mRightSideVectorHarm[mFreqIdx].setZero();
+void MnaSolver<VarType>::solveWithHarmonics(Real time, Int timeStepCount, Int freqIdx) {
+	mRightSideVectorHarm[freqIdx].setZero();
 
-	// Add together the right side vector (computed by the components'
-	// pre-step tasks)
-	for (auto stamp : mSolver.mRightVectorStamps)
-		mSolver.mRightSideVectorHarm[mFreqIdx] += stamp->col(mFreqIdx);
+	// Sum of right side vectors (computed by the components' pre-step tasks)
+	for (auto stamp : mRightVectorStamps)
+		mRightSideVectorHarm[freqIdx] += stamp->col(freqIdx);
 
-	mSolver.mLeftSideVectorHarm[mFreqIdx] =
-		mSolver.mLuFactorizationsHarm[mSolver.mCurrentSwitchStatus][mFreqIdx].solve(mSolver.mRightSideVectorHarm[mFreqIdx]);
+	mLeftSideVectorHarm[freqIdx] =	mLuFactorizationsHarm[mCurrentSwitchStatus][freqIdx].solve(mRightSideVectorHarm[freqIdx]);
 }
 
 template <typename VarType>
-void MnaSolver<VarType>::log(Real time) {
+void MnaSolver<VarType>::log(Real time, Int timeStepCount) {
 	if (mLogLevel == Logger::Level::off)
 		return;
 
@@ -708,11 +707,6 @@ void MnaSolver<VarType>::logSystemMatrices() {
 		}
 		mSLog->info("Right side vector: \n{}", mRightSideVector);
 	}
-}
-
-template <typename VarType>
-void MnaSolver<VarType>::LogTask::execute(Real time, Int timeStepCount) {
-	mSolver.log(time);
 }
 
 }
