@@ -48,6 +48,8 @@ namespace DPsim {
 		void copySystemMatrixToDevice();
 		/// LU factorization
 		void LUfactorization();
+		///
+		void solve(Real time, Int timeStepCount);
 
 	public:
 		MnaSolverGpu(String name,
@@ -60,12 +62,12 @@ namespace DPsim {
 
 		class SolveTask : public CPS::Task {
 		public:
-			SolveTask(MnaSolverGpu<VarType>& solver, Bool steadyStateInit) :
-				Task(solver.mName + ".Solve"), mSolver(solver), mSteadyStateInit(steadyStateInit) {
+			SolveTask(MnaSolverGpu<VarType>& solver) :
+				Task(solver.mName + ".Solve"), mSolver(solver) {
+
 				for (auto it : solver.mMNAComponents) {
-					if (it->template attribute<Matrix>("right_vector")->get().size() != 0) {
+					if (it->template attribute<Matrix>("right_vector")->get().size() != 0)
 						mAttributeDependencies.push_back(it->attribute("right_vector"));
-					}
 				}
 				for (auto node : solver.mNodes) {
 					mModifiedAttributes.push_back(node->attribute("v"));
@@ -73,11 +75,10 @@ namespace DPsim {
 				mModifiedAttributes.push_back(solver.attribute("left_vector"));
 			}
 
-			void execute(Real time, Int timeStepCount);
+			void execute(Real time, Int timeStepCount) { mSolver.solve(time, timeStepCount); }
 
 		private:
 			MnaSolverGpu<VarType>& mSolver;
-			Bool mSteadyStateInit;
 		};
 
 		class LogTask : public CPS::Task {
@@ -88,7 +89,7 @@ namespace DPsim {
 				mModifiedAttributes.push_back(Scheduler::external);
 			}
 
-			void execute(Real time, Int timeStepCount);
+			void execute(Real time, Int timeStepCount) { mSolver.log(time, timeStepCount); }
 
 		private:
 			MnaSolverGpu<VarType>& mSolver;

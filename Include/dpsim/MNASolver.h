@@ -181,7 +181,7 @@ namespace DPsim {
 		///
 		class SolveTask : public CPS::Task {
 		public:
-			SolveTask(MnaSolver<VarType>& solver, Bool steadyStateInit) :
+			SolveTask(MnaSolver<VarType>& solver) :
 				Task(solver.mName + ".Solve"), mSolver(solver) {
 
 				for (auto it : solver.mMNAComponents) {
@@ -203,7 +203,7 @@ namespace DPsim {
 		///
 		class SolveTaskHarm : public CPS::Task {
 		public:
-			SolveTaskHarm(MnaSolver<VarType>& solver, Bool steadyStateInit, UInt freqIdx) :
+			SolveTaskHarm(MnaSolver<VarType>& solver, UInt freqIdx) :
 				Task(solver.mName + ".Solve"), mSolver(solver), mFreqIdx(freqIdx) {
 
 				for (auto it : solver.mMNAComponents) {

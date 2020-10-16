@@ -52,7 +52,7 @@ void MnaSolverGpu<VarType>::initialize() {
     allocateDeviceMemory();
     //Copy Systemmatrix to device
     copySystemMatrixToDevice();
-    
+
     // Debug logging, whether LU-factorization and copying was successfull
     /*DPsim::Matrix mat;
     mat.resize(mDeviceCopy.size, mDeviceCopy.size);
@@ -81,7 +81,7 @@ void MnaSolverGpu<VarType>::allocateDeviceMemory() {
     //Workspace
     int workSpaceSize = 0;
     cusolverStatus_t status = CUSOLVER_STATUS_SUCCESS;
-    if((status = 
+    if((status =
         cusolverDnDgetrf_bufferSize(
         mCusolverHandle,
         mDeviceCopy.size,
@@ -118,7 +118,7 @@ void MnaSolverGpu<VarType>::LUfactorization() {
         mDeviceCopy.errInfo);
 
     CUDA_ERROR_HANDLER(cudaDeviceSynchronize())
-    
+
     if(status != CUSOLVER_STATUS_SUCCESS) {
         std::cerr << "cusolverDnDgetrf() failed (calculating LU-factorization)" << std::endl;
     }
@@ -147,65 +147,60 @@ Task::List MnaSolverGpu<VarType>::getTasks() {
 			l.push_back(task);
 		}
 	}
-	l.push_back(std::make_shared<MnaSolverGpu<VarType>::SolveTask>(*this, false));
+	l.push_back(std::make_shared<MnaSolverGpu<VarType>::SolveTask>(*this));
     l.push_back(std::make_shared<MnaSolverGpu<VarType>::LogTask>(*this));
 	return l;
 }
 
 template <typename VarType>
-void MnaSolverGpu<VarType>::SolveTask::execute(Real time, Int timeStepCount) {
+void MnaSolverGpu<VarType>::solve(Real time, Int timeStepCount) {
     // Reset source vector
-	mSolver.mRightSideVector.setZero();
+	this->mRightSideVector.setZero();
 
     // Add together the right side vector (computed by the components'
 	// pre-step tasks)
-	for (const auto &stamp : mSolver.mRightVectorStamps)
-		mSolver.mRightSideVector += *stamp;
+	for (const auto &stamp : this->mRightVectorStamps)
+		this->mRightSideVector += *stamp;
 
     //Copy right vector to device
-    CUDA_ERROR_HANDLER(cudaMemcpy(mSolver.mDeviceCopy.vector, &mSolver.mRightSideVector(0), mSolver.mDeviceCopy.size * sizeof(Real), cudaMemcpyHostToDevice))
+    CUDA_ERROR_HANDLER(cudaMemcpy(mDeviceCopy.vector, &this->mRightSideVector(0), mDeviceCopy.size * sizeof(Real), cudaMemcpyHostToDevice))
 
     // Solve
-	if (mSolver.mSwitchedMatrices.size() > 0) {
+	if (this->mSwitchedMatrices.size() > 0) {
         cusolverStatus_t status = cusolverDnDgetrs(
-            mSolver.mCusolverHandle,
+            mCusolverHandle,
             CUBLAS_OP_N,
-            mSolver.mDeviceCopy.size,
+            mDeviceCopy.size,
             1, /* nrhs */
-            mSolver.mDeviceCopy.matrix,
-            mSolver.mDeviceCopy.size,
-            mSolver.mDeviceCopy.pivSeq,
-            mSolver.mDeviceCopy.vector,
-            mSolver.mDeviceCopy.size,
-            mSolver.mDeviceCopy.errInfo);
+            mDeviceCopy.matrix,
+            mDeviceCopy.size,
+            mDeviceCopy.pivSeq,
+            mDeviceCopy.vector,
+            mDeviceCopy.size,
+            mDeviceCopy.errInfo);
 
         CUDA_ERROR_HANDLER(cudaDeviceSynchronize())
 
         if(status != CUSOLVER_STATUS_SUCCESS)
             std::cerr << "cusolverDnDgetrs() failed (Solving A*x = b)" << std::endl;
         int info;
-        CUDA_ERROR_HANDLER(cudaMemcpy(&info, mSolver.mDeviceCopy.errInfo, sizeof(int), cudaMemcpyDeviceToHost))
+        CUDA_ERROR_HANDLER(cudaMemcpy(&info, mDeviceCopy.errInfo, sizeof(int), cudaMemcpyDeviceToHost))
         if(0 > info) {
             std::cerr << -info << "-th parameter is wrong" << std::endl;
         }
-    }    
+    }
 
     //Copy Solution back
-    CUDA_ERROR_HANDLER(cudaMemcpy(&mSolver.mLeftSideVector(0), mSolver.mDeviceCopy.vector, mSolver.mDeviceCopy.size * sizeof(Real), cudaMemcpyDeviceToHost))
+    CUDA_ERROR_HANDLER(cudaMemcpy(&this->mLeftSideVector(0), mDeviceCopy.vector, mDeviceCopy.size * sizeof(Real), cudaMemcpyDeviceToHost))
 
 	// TODO split into separate task? (dependent on x, updating all v attributes)
-	for (UInt nodeIdx = 0; nodeIdx < mSolver.mNumNetNodes; nodeIdx++)
-		mSolver.mNodes[nodeIdx]->mnaUpdateVoltage(mSolver.mLeftSideVector);
+	for (UInt nodeIdx = 0; nodeIdx < this->mNumNetNodes; nodeIdx++)
+		this->mNodes[nodeIdx]->mnaUpdateVoltage(this->mLeftSideVector);
 
-	if (!mSteadyStateInit)
-		mSolver.updateSwitchStatus();
+	if (!this->mIsInInitialization)
+		this->updateSwitchStatus();
 
 	// Components' states will be updated by the post-step tasks
-}
-
-template <typename VarType>
-void MnaSolverGpu<VarType>::LogTask::execute(Real time, Int timeStepCount) {
-	mSolver.log(time);
 }
 
 }

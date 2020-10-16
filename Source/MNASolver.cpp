@@ -544,7 +544,7 @@ void MnaSolver<VarType>::steadyStateInitialization() {
 			tasks.push_back(task);
 		}
 	}
-	tasks.push_back(std::make_shared<MnaSolver<VarType>::SolveTask>(*this, true));
+	tasks.push_back(std::make_shared<MnaSolver<VarType>::SolveTask>(*this));
 
 	sched.resolveDeps(tasks, inEdges, outEdges);
 	sched.createSchedule(tasks, inEdges, outEdges);
@@ -612,9 +612,9 @@ Task::List MnaSolver<VarType>::getTasks() {
 	}
 	if (mFrequencyParallel) {
 		for (UInt i = 0; i < mSystem.mFrequencies.size(); i++)
-			l.push_back(std::make_shared<MnaSolver<VarType>::SolveTaskHarm>(*this, false, i));
+			l.push_back(std::make_shared<MnaSolver<VarType>::SolveTaskHarm>(*this, i));
 	} else {
-		l.push_back(std::make_shared<MnaSolver<VarType>::SolveTask>(*this, false));
+		l.push_back(std::make_shared<MnaSolver<VarType>::SolveTask>(*this));
 		l.push_back(std::make_shared<MnaSolver<VarType>::LogTask>(*this));
 	}
 	return l;
