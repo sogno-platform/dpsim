@@ -95,7 +95,7 @@ int main(int argc, char* argv[]) {
 	sim.setSystem(sys);
 	sim.setTimeStep(timeStep);
 	sim.setFinalTime(finalTime);
-	sim.doHarmonicParallelization(true);
+	sim.doFrequencyParallelization(true);
 
 	sim.run();
 	sim.logStepTimes(simName + "_step_times");

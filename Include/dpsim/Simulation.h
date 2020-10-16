@@ -40,8 +40,7 @@ namespace DPsim {
 	/// \brief The Simulation holds a SystemTopology and a Solver.
 	///
 	/// Every time step, the Simulation calls the step function of the Solver.
-	class Simulation :
-		public CPS::AttributeList {
+	class Simulation : public CPS::AttributeList {
 	public:
 		typedef std::shared_ptr<Simulation> Ptr;
 
@@ -61,7 +60,6 @@ namespace DPsim {
 		/// System list
 		CPS::SystemTopology mSystem;
 
-
 		// #### Logging ####
 		/// Simulation log level
 		CPS::Logger::Level mLogLevel;
@@ -77,6 +75,8 @@ namespace DPsim {
 		Solver::List mSolvers;
 		///
 		Bool mPowerFlowInit = false;
+		/// Enable recomputation of system matrix during simulation
+		Bool mSystemMatrixRecomputation = false;
 
 		/// Determines if the network should be split
 		/// into subnetworks at decoupling lines.
@@ -91,11 +91,11 @@ namespace DPsim {
 		/// This can only be done if the network is composed
 		/// of linear components that do no create cross
 		/// frequency coupling.
-		Bool mHarmParallel = false;
+		Bool mFreqParallel = false;
 		///
 		Bool mInitialized = false;
 
-		// #### steady state initialization ####
+		// #### Initialization ####
 		/// steady state initialization time limit
 		Real mSteadStIniTimeLimit = 10;
 		/// steady state initialization accuracy limit
@@ -141,10 +141,15 @@ namespace DPsim {
 			CPS::Domain domain = CPS::Domain::DP,
 			CPS::Logger::Level logLevel = CPS::Logger::Level::info);
 
+		/// Create solvers depending on simulation settings
 		template <typename VarType>
-		void createSolvers(CPS::SystemTopology& system, CPS::IdentifiedObject::List& tearComponents);
-
+		void createSolvers();
+		/// Subroutine for MNA only because there are many MNA options
+		template <typename VarType>
+		void createMNASolver();
+		/// Prepare schedule for simulation
 		void prepSchedule();
+
 	public:
 		/// Simulation logger
 		CPS::Logger::Log mLog;
@@ -189,17 +194,18 @@ namespace DPsim {
 		void setScheduler(std::shared_ptr<Scheduler> scheduler) {
 			mScheduler = scheduler;
 		}
+		/// Compute phasors of different frequencies in parallel
+		void doFrequencyParallelization(Bool value) { mFreqParallel = value; }
+		///
+		void doSystemMatrixRecomputation(Bool value) { mSystemMatrixRecomputation = value; }
 
-		// #### steady state initialization ####
+		// #### Initialization ####
 		/// activate steady state initialization
 		void doSteadyStateInit(Bool f) { mSteadyStateInit = f; }
 		/// set steady state initialization time limit
 		void setSteadStIniTimeLimit(Real v) { mSteadStIniTimeLimit = v; }
 		/// set steady state initialization accuracy limit
 		void setSteadStIniAccLimit(Real v) { mSteadStIniAccLimit = v; }
-
-		///
-		void doHarmonicParallelization(Bool parallel) { mHarmParallel = parallel; }
 
 		// #### Simulation Control ####
 		/// Create solver instances etc.

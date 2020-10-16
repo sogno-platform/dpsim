@@ -24,6 +24,7 @@
 #include <dpsim/Utils.h>
 #include <cps/Utils.h>
 #include <dpsim/MNASolver.h>
+#include <dpsim/MNASolverSysRecomp.h>
 #include <dpsim/PFSolverPowerPolar.h>
 #include <dpsim/DiakopticsSolver.h>
 
@@ -94,14 +95,13 @@ void Simulation::initialize() {
 	mSolvers.clear();
 
 	switch (mDomain) {
+	case Domain::SP:
+		// Treat SP as DP
 	case Domain::DP:
-		createSolvers<Complex>(mSystem, mTearComponents);
+		createSolvers<Complex>();
 		break;
 	case Domain::EMT:
-		createSolvers<Real>(mSystem, mTearComponents);
-		break;
-	case Domain::SP:
-		createSolvers<Complex>(mSystem, mTearComponents);
+		createSolvers<Real>();
 		break;
 	}
 
@@ -114,68 +114,32 @@ void Simulation::initialize() {
 }
 
 template <typename VarType>
-void Simulation::createSolvers(
-	CPS::SystemTopology& system,
-	IdentifiedObject::List& tearComponents) {
-
-	std::vector<SystemTopology> subnets;
-	// The Diakoptics solver splits the system at a later point.
-	// That is why the system is not split here if tear components exist.
-	if (mSplitSubnets && tearComponents.size() == 0)
-		system.splitSubnets<VarType>(subnets);
-	else
-		subnets.push_back(system);
-
-	for (UInt net = 0; net < subnets.size(); net++) {
-		String copySuffix;
-	   	if (subnets.size() > 1)
-			copySuffix = "_" + std::to_string(net);
-
-		// TODO in the future, here we could possibly even use different
-		// solvers for different subnets if deemed useful
-		Solver::Ptr solver;
-		switch (mSolverType) {
-			case Solver::Type::MNA:
-				if (tearComponents.size() > 0) {
-					solver = std::make_shared<DiakopticsSolver<VarType>>(mName,
-						subnets[net], tearComponents, mTimeStep, mLogLevel);
-				} else {
-#ifdef WITH_CUDA
-					solver = std::make_shared<MnaSolverGpu<VarType>>(
-						mName + copySuffix, mDomain, mLogLevel);
-#else
-					solver = std::make_shared<MnaSolver<VarType>>(
-						mName + copySuffix, mDomain, mLogLevel);
-#endif /* WITH_CUDA */
-					solver->setTimeStep(mTimeStep);
-					solver->doSteadyStateInit(mSteadyStateInit);
-					solver->doFrequencyParallelization(mHarmParallel);
-					solver->setSteadStIniTimeLimit(mSteadStIniTimeLimit);
-					solver->setSteadStIniAccLimit(mSteadStIniAccLimit);
-					solver->setSystem(subnets[net]);
-					solver->initialize();
-				}
-				break;
+void Simulation::createSolvers() {
+	Solver::Ptr solver;
+	switch (mSolverType) {
+		case Solver::Type::MNA:
+			createMNASolver<VarType>();
+			break;
 #ifdef WITH_SUNDIALS
-			case Solver::Type::DAE:
-				solver = std::make_shared<DAESolver>(mName + copySuffix, subnets[net], mTimeStep, 0.0);
-				break;
+		case Solver::Type::DAE:
+			solver = std::make_shared<DAESolver>(mName, mSystem, mTimeStep, 0.0);
+			mSolvers.push_back(solver);
+			break;
 #endif /* WITH_SUNDIALS */
-			case Solver::Type::NRP:
-				solver = std::make_shared<PFSolverPowerPolar>(mName, mSystem, mTimeStep, mLogLevel);
-				solver->doPowerFlowInit(mPowerFlowInit);
-				solver->initialize();
-				break;
-			default:
-				throw UnsupportedSolverException();
-		}
-		mSolvers.push_back(solver);
+		case Solver::Type::NRP:
+			solver = std::make_shared<PFSolverPowerPolar>(mName, mSystem, mTimeStep, mLogLevel);
+			solver->doPowerFlowInit(mPowerFlowInit);
+			solver->initialize();
+			mSolvers.push_back(solver);
+			break;
+		default:
+			throw UnsupportedSolverException();
 	}
 
 	// Some components require a dedicated ODE solver.
-	// This solver is independet of the system solver.
+	// This solver is independent of the system solver.
 #ifdef WITH_SUNDIALS
-	for (auto comp : system.mComponents) {
+	for (auto comp : mSystem.mComponents) {
 		auto odeComp = std::dynamic_pointer_cast<ODEInterface>(comp);
 		if (odeComp) {
 			// TODO explicit / implicit integration
@@ -185,6 +149,61 @@ void Simulation::createSolvers(
 		}
 	}
 #endif /* WITH_SUNDIALS */
+}
+
+template <typename VarType>
+void Simulation::createMNASolver() {
+	Solver::Ptr solver;
+	std::vector<SystemTopology> subnets;
+	// The Diakoptics solver splits the system at a later point.
+	// That is why the system is not split here if tear components exist.
+	if (mSplitSubnets && mTearComponents.size() == 0)
+		mSystem.splitSubnets<VarType>(subnets);
+	else
+		subnets.push_back(mSystem);
+
+	for (UInt net = 0; net < subnets.size(); net++) {
+		String copySuffix;
+	   	if (subnets.size() > 1)
+			copySuffix = "_" + std::to_string(net);
+
+		// TODO: In the future, here we could possibly even use different
+		// solvers for different subnets if deemed useful
+		if (mTearComponents.size() > 0) {
+			// Tear components available, use diakoptics
+			solver = std::make_shared<DiakopticsSolver<VarType>>(mName,
+				subnets[net], mTearComponents, mTimeStep, mLogLevel);
+		}
+		else if (mSystemMatrixRecomputation) {
+			// Recompute system matrix if switches or other components change
+			solver = std::make_shared<MnaSolverSysRecomp<VarType>>(
+				mName + copySuffix, mDomain, mLogLevel);
+			solver->setTimeStep(mTimeStep);
+			solver->doSteadyStateInit(mSteadyStateInit);
+			solver->setSteadStIniTimeLimit(mSteadStIniTimeLimit);
+			solver->setSteadStIniAccLimit(mSteadStIniAccLimit);
+			solver->setSystem(subnets[net]);
+			solver->initialize();
+		}
+		else {
+			// Default case with precomputed system matrices for different configurations
+#ifdef WITH_CUDA
+			solver = std::make_shared<MnaSolverGpu<VarType>>(
+				mName + copySuffix, mDomain, mLogLevel);
+#else
+			solver = std::make_shared<MnaSolver<VarType>>(
+				mName + copySuffix, mDomain, mLogLevel);
+#endif /* WITH_CUDA */
+			solver->setTimeStep(mTimeStep);
+			solver->doSteadyStateInit(mSteadyStateInit);
+			solver->doFrequencyParallelization(mFreqParallel);
+			solver->setSteadStIniTimeLimit(mSteadStIniTimeLimit);
+			solver->setSteadStIniAccLimit(mSteadStIniAccLimit);
+			solver->setSystem(subnets[net]);
+			solver->initialize();
+		}
+		mSolvers.push_back(solver);
+	}
 }
 
 void Simulation::sync() {

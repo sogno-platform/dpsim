@@ -97,7 +97,7 @@ int main(int argc, char* argv[]) {
 	sim.setSystem(sys);
 	sim.setTimeStep(timeStep);
 	sim.setFinalTime(finalTime);
-	sim.doHarmonicParallelization(true);
+	sim.doFrequencyParallelization(true);
 	if (threads > 0) {
 		auto scheduler = std::make_shared<ThreadLevelScheduler>(threads);
 		sim.setScheduler(scheduler);

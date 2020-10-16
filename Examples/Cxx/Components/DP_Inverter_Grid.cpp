@@ -89,7 +89,7 @@ int main(int argc, char* argv[]) {
 	sim.setSystem(sys);
 	sim.setTimeStep(timeStep);
 	sim.setFinalTime(finalTime);
-	sim.doHarmonicParallelization(false);
+	sim.doFrequencyParallelization(false);
 
 	// Logging
 	auto logger = DataLogger::make(simName);

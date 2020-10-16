@@ -62,7 +62,6 @@ int main(int argc, char *argv[]) {
 	sim.setTimeStep(0.0001);
 	sim.setFinalTime(0.1);
 	sim.doSteadyStateInit(true);
-	sim.doHarmonicParallelization(false);
 	sim.addLogger(logger);
 	sim.run();
 
