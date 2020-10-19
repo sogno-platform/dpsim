@@ -58,7 +58,7 @@ namespace Ph1 {
 		externalGridInjection(String name, Logger::Level logLevel = Logger::Level::off)
 			: externalGridInjection(name, name, logLevel) { }
 		/// Initializes component from power flow data
-		void initializeFromPowerflow(Real frequency) override;
+		void initializeFromNodesAndTerminals(Real frequency) override;
 		///
 		void setSourceValue(Complex voltage);
 		///

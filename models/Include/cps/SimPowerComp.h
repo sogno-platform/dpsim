@@ -148,6 +148,6 @@ namespace CPS {
 		/// Initialize components with correct network frequencies
 		virtual void initialize(Matrix frequencies);
 		/// Initializes Component variables according to power flow data stored in Nodes.
-		virtual void initializeFromPowerflow(Real frequency) { }
+		virtual void initializeFromNodesAndTerminals(Real frequency) { }
 	};
 }

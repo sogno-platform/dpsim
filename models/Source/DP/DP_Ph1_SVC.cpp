@@ -24,7 +24,7 @@ DP::Ph1::SVC::SVC(String uid, String name, Logger::Level logLevel)
 	addAttribute<Real>("ViolationCounter", &mViolationCounter, Flags::read | Flags::write);
 }
 
-void DP::Ph1::SVC::initializeFromPowerflow(Real frequency) {
+void DP::Ph1::SVC::initializeFromNodesAndTerminals(Real frequency) {
 
 	// initial state is both switches are open
 	Real omega = 2. * PI * frequency;
@@ -71,26 +71,26 @@ void DP::Ph1::SVC::initializeFromPowerflow(Real frequency) {
 	mSubInductor->setParameters(LInit);
 	mSubInductor->connect({ SimNode::GND, mVirtualNodes[0] });
 	mSubInductor->initialize(mFrequencies);
-	mSubInductor->initializeFromPowerflow(frequency);
+	mSubInductor->initializeFromNodesAndTerminals(frequency);
 
 	mSubInductorSwitch = std::make_shared<DP::Ph1::Switch>(mName + "_Lswitch", mLogLevel);
 	mSubInductorSwitch->setParameters(mSwitchROpen, mSwitchRClosed, false);
 	mSubInductorSwitch->connect({ mVirtualNodes[0], mTerminals[0]->node() });
 	mSubInductorSwitch->initialize(mFrequencies);
-	mSubInductorSwitch->initializeFromPowerflow(frequency);
+	mSubInductorSwitch->initializeFromNodesAndTerminals(frequency);
 
 	// Capacitor with Switch
 	mSubCapacitor = std::make_shared<DP::Ph1::Capacitor>(mName + "_cap", mLogLevel);
 	mSubCapacitor->setParameters(CInit);
 	mSubCapacitor->connect({ SimNode::GND, mVirtualNodes[1] });
 	mSubCapacitor->initialize(mFrequencies);
-	mSubCapacitor->initializeFromPowerflow(frequency);
+	mSubCapacitor->initializeFromNodesAndTerminals(frequency);
 
 	mSubCapacitorSwitch = std::make_shared<DP::Ph1::Switch>(mName + "_Cswitch", mLogLevel);
 	mSubCapacitorSwitch->setParameters(mSwitchROpen, mSwitchRClosed, false);
 	mSubCapacitorSwitch->connect({ mVirtualNodes[1], mTerminals[0]->node() });
 	mSubCapacitorSwitch->initialize(mFrequencies);
-	mSubCapacitorSwitch->initializeFromPowerflow(frequency);
+	mSubCapacitorSwitch->initializeFromNodesAndTerminals(frequency);
 
 	mSLog->info(
 		"\n--- Initialization from powerflow ---"

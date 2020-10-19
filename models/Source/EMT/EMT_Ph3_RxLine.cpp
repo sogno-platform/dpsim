@@ -34,7 +34,7 @@ SimPowerComp<Real>::Ptr EMT::Ph3::RxLine::clone(String name) {
 	return copy;
 }
 
-void EMT::Ph3::RxLine::initializeFromPowerflow(Real frequency) {
+void EMT::Ph3::RxLine::initializeFromNodesAndTerminals(Real frequency) {
 
 	// Static calculation
 	Real omega = 2. * PI * frequency;
@@ -64,12 +64,12 @@ void EMT::Ph3::RxLine::initializeFromPowerflow(Real frequency) {
 	mSubResistor = std::make_shared<EMT::Ph3::Resistor>(mName + "_res", mLogLevel);
 	mSubResistor->setParameters(mSeriesRes);
 	mSubResistor->connect({ mTerminals[0]->node(), mVirtualNodes[0] });
-	mSubResistor->initializeFromPowerflow(frequency);
+	mSubResistor->initializeFromNodesAndTerminals(frequency);
 
 	mSubInductor = std::make_shared<EMT::Ph3::Inductor>(mName + "_ind", mLogLevel);
 	mSubInductor->setParameters(mSeriesInd);
 	mSubInductor->connect({ mVirtualNodes[0], mTerminals[1]->node() });
-	mSubInductor->initializeFromPowerflow(frequency);
+	mSubInductor->initializeFromNodesAndTerminals(frequency);
 
 	mInitialResistor = std::make_shared<EMT::Ph3::Resistor>(mName + "_snubber_res", mLogLevel);
 	Matrix defaultSnubRes = Matrix::Zero(3, 1);
@@ -79,7 +79,7 @@ void EMT::Ph3::RxLine::initializeFromPowerflow(Real frequency) {
 		0, 0, 1e6;
 	mInitialResistor->setParameters(defaultSnubRes);
 	mInitialResistor->connect({ SimNode::GND, mTerminals[1]->node() });
-	mInitialResistor->initializeFromPowerflow(frequency);
+	mInitialResistor->initializeFromNodesAndTerminals(frequency);
 
 	mSLog->info(
 		"\n--- Initialization from powerflow ---"

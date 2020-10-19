@@ -29,7 +29,7 @@ SimPowerComp<Real>::Ptr EMT::Ph3::SeriesSwitch::clone(String name) {
 	return copy;
 }
 
-void EMT::Ph3::SeriesSwitch::initializeFromPowerflow(Real frequency) {
+void EMT::Ph3::SeriesSwitch::initializeFromNodesAndTerminals(Real frequency) {
 
 	Real impedance = (mIsClosed) ? mClosedResistance : mOpenResistance;
 

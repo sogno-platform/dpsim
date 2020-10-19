@@ -65,7 +65,7 @@ namespace SP { namespace Ph1 {
 
     // #### Power Flow Section ####
     /// Initializes component
-    void initializeFromPowerflow(Real frequency);
+    void initializeFromNodesAndTerminals(Real frequency);
     ///
     void setParameters(Real nomV1, Real nomV2, Real Pref, Real Q1ref, Real Q2ref);
     ///

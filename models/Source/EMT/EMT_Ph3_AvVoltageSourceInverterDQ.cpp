@@ -147,7 +147,7 @@ void EMT::Ph3::AvVoltageSourceInverterDQ::initializeStateSpaceModel(Real omega, 
 	mOmegaCutoff = omega;
 
 	// get current and voltage inputs to state space model
-	// done here to ensure quantites are already initialized by initializeFromPowerFlow
+	// done here to ensure quantites are already initialized by initializeFromNodesAndTerminals
 	mIrcabc = -1 * mSubResistorC->attribute<Matrix>("i_intf")->get();
 	mIrcdq = parkTransformPowerInvariant(mThetaPLL, mIrcabc(0, 0), mIrcabc(1, 0), mIrcabc(2, 0));
 
@@ -301,7 +301,7 @@ Matrix EMT::Ph3::AvVoltageSourceInverterDQ::getInverseParkTransformMatrixPowerIn
 	return Tabc;
 }
 
-void EMT::Ph3::AvVoltageSourceInverterDQ::initializeFromPowerflow(Real frequency) {
+void EMT::Ph3::AvVoltageSourceInverterDQ::initializeFromNodesAndTerminals(Real frequency) {
 
 	// use complex interface quantities for initialization calculations
 	MatrixComp intfVoltageComplex = Matrix::Zero(3, 1);
@@ -328,7 +328,7 @@ void EMT::Ph3::AvVoltageSourceInverterDQ::initializeFromPowerflow(Real frequency
 		mConnectionTransformer->connect({ mTerminals[0]->node(), mVirtualNodes[4] });
 		mConnectionTransformer->setParameters(mTransformerRatioAbs, mTransformerRatioPhase, Matrix::Identity(3,3)*mTransformerResistance, Matrix::Identity(3,3)*mTransformerInductance);
 		mConnectionTransformer->initialize(mFrequencies);
-		mConnectionTransformer->initializeFromPowerflow(frequency);
+		mConnectionTransformer->initializeFromNodesAndTerminals(frequency);
 	} else {
 		// if no transformer used, filter interface equal to inverter interface
 		filterInterfaceInitialVoltage = intfVoltageComplex;
@@ -380,11 +380,11 @@ void EMT::Ph3::AvVoltageSourceInverterDQ::initializeFromPowerflow(Real frequency
 	//mSubCapacitorF->initialize(mFrequencies);
 	//mSubResistorC->initialize(mFrequencies);
 
-	//mSubCtrledVoltageSource->initializeFromPowerflow(frequency);
-	mSubResistorF->initializeFromPowerflow(frequency);
-	mSubInductorF->initializeFromPowerflow(frequency);
-	mSubCapacitorF->initializeFromPowerflow(frequency);
-	mSubResistorC->initializeFromPowerflow(frequency);
+	//mSubCtrledVoltageSource->initializeFromNodesAndTerminals(frequency);
+	mSubResistorF->initializeFromNodesAndTerminals(frequency);
+	mSubInductorF->initializeFromNodesAndTerminals(frequency);
+	mSubCapacitorF->initializeFromNodesAndTerminals(frequency);
+	mSubResistorC->initializeFromNodesAndTerminals(frequency);
 
 	mSLog->info(
 		"\n--- Initialization from powerflow ---"

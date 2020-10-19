@@ -26,7 +26,7 @@ SimPowerComp<Real>::Ptr EMT::Ph3::Resistor::clone(String name) {
 	return copy;
 }
 
-void EMT::Ph3::Resistor::initializeFromPowerflow(Real frequency) {
+void EMT::Ph3::Resistor::initializeFromNodesAndTerminals(Real frequency) {
 
 	// IntfVoltage initialization for each phase
 	MatrixComp vInitABC = Matrix::Zero(3, 1);

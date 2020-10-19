@@ -27,7 +27,7 @@ SimPowerComp<Real>::Ptr EMT::Ph3::Capacitor::clone(String name) {
 	copy->setParameters(mCapacitance);
 	return copy;
 }
-void EMT::Ph3::Capacitor::initializeFromPowerflow(Real frequency) {
+void EMT::Ph3::Capacitor::initializeFromNodesAndTerminals(Real frequency) {
 
 	Real omega = 2 * PI * frequency;
 	MatrixComp admittance = MatrixComp::Zero(3, 3);

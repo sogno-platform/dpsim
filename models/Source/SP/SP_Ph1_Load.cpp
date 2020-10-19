@@ -44,7 +44,7 @@ void SP::Ph1::Load::setParameters(Real activePower, Real reactivePower, Real nom
 
 
 SimPowerComp<Complex>::Ptr SP::Ph1::Load::clone(String name) {
-	// everything set by initializeFromPowerflow
+	// everything set by initializeFromNodesAndTerminals
 	return Load::make(name, mLogLevel);
 }
 
@@ -98,7 +98,7 @@ void SP::Ph1::Load::updatePQ(Real time) {
 };
 
 
-void SP::Ph1::Load::initializeFromPowerflow(Real frequency) {
+void SP::Ph1::Load::initializeFromNodesAndTerminals(Real frequency) {
 
 	mActivePower = mTerminals[0]->singleActivePower();
 	mReactivePower = mTerminals[0]->singleReactivePower();
@@ -113,7 +113,7 @@ void SP::Ph1::Load::initializeFromPowerflow(Real frequency) {
 		mSubResistor->setParameters(mResistance);
 		mSubResistor->connect({ SimNode::GND, mTerminals[0]->node() });
 		mSubResistor->initialize(mFrequencies);
-		mSubResistor->initializeFromPowerflow(frequency);
+		mSubResistor->initializeFromNodesAndTerminals(frequency);
 	}
 
 	if (mReactivePower != 0)
@@ -128,14 +128,14 @@ void SP::Ph1::Load::initializeFromPowerflow(Real frequency) {
 		mSubInductor->setParameters(mInductance);
 		mSubInductor->connect({ SimNode::GND, mTerminals[0]->node() });
 		mSubInductor->initialize(mFrequencies);
-		mSubInductor->initializeFromPowerflow(frequency);
+		mSubInductor->initializeFromNodesAndTerminals(frequency);
 	} else if (mReactance < 0) {
 		mCapacitance = -1 / (2 * PI * frequency) / mReactance;
 		mSubCapacitor = std::make_shared<SP::Ph1::Capacitor>(mUID + "_res", mName + "_cap", Logger::Level::off);
 		mSubCapacitor->setParameters(mCapacitance);
 		mSubCapacitor->connect({ SimNode::GND, mTerminals[0]->node() });
 		mSubCapacitor->initialize(mFrequencies);
-		mSubCapacitor->initializeFromPowerflow(frequency);
+		mSubCapacitor->initializeFromNodesAndTerminals(frequency);
 	}
 
 	mIntfVoltage(0, 0) = mTerminals[0]->initialSingleVoltage();

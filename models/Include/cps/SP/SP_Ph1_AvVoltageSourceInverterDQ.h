@@ -198,7 +198,7 @@ namespace Ph1 {
 		void updateSetPoint(Real time);
 
 		///
-		void initializeFromPowerflow(Real frequency) override;
+		void initializeFromNodesAndTerminals(Real frequency) override;
 
 		// #### Powerflow section ####
 			/// Modify powerflow bus type

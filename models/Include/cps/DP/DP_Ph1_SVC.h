@@ -76,7 +76,7 @@ namespace Ph1 {
 
 		// #### General ####
 		/// Initializes states from power flow data
-		void initializeFromPowerflow(Real frequency);
+		void initializeFromNodesAndTerminals(Real frequency);
 
 		// #### MNA section ####
 		/// Initializes MNA specific variables

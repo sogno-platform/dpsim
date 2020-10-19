@@ -129,7 +129,7 @@ namespace Ph1 {
 		/// Set transformer specific parameters
 		void setParameters(Real nomVoltageEnd1, Real nomVoltageEnd2, Real ratedPower, Real ratioAbs, Real ratioPhase, Real resistance, Real inductance, Real omega);
 		/// Initializes component from power flow data
-		void initializeFromPowerflow(Real frequency) override;
+		void initializeFromNodesAndTerminals(Real frequency) override;
 
 		// #### Powerflow section ####
 		/// Set base voltage

@@ -40,7 +40,7 @@ void EMT::Ph3::Transformer::setParameters(Real ratioAbs, Real ratioPhase,
 		setVirtualNodeNumber(2);
 }
 
-void EMT::Ph3::Transformer::initializeFromPowerflow(Real frequency) {
+void EMT::Ph3::Transformer::initializeFromNodesAndTerminals(Real frequency) {
 
 	// A snubber conductance is added on the low voltage side
 	Matrix snubberResistance = Matrix::Zero(3, 3);
@@ -88,21 +88,21 @@ void EMT::Ph3::Transformer::initializeFromPowerflow(Real frequency) {
 		mSubResistor->setParameters(mResistance);
 		mSubResistor->connect({ node(0), mVirtualNodes[2] });
 		mSubResistor->initialize(mFrequencies);
-		mSubResistor->initializeFromPowerflow(frequency);
+		mSubResistor->initializeFromNodesAndTerminals(frequency);
 		mSubInductor->connect({ mVirtualNodes[2], mVirtualNodes[0] });
 	}
 	else {
 		mSubInductor->connect({ node(0), mVirtualNodes[0] });
 	}
 	mSubInductor->initialize(mFrequencies);
-	mSubInductor->initializeFromPowerflow(frequency);
+	mSubInductor->initializeFromNodesAndTerminals(frequency);
 
 	// Create parallel sub components
 	mSubSnubResistor = std::make_shared<EMT::Ph3::Resistor>(mName + "_snub_res", mLogLevel);
 	mSubSnubResistor->setParameters(snubberResistance);
 	mSubSnubResistor->connect({ node(1), EMT::SimNode::GND });
 	mSubSnubResistor->initialize(mFrequencies);
-	mSubSnubResistor->initializeFromPowerflow(frequency);
+	mSubSnubResistor->initializeFromNodesAndTerminals(frequency);
 
 	mSLog->info(
 		"\n--- Initialization from powerflow ---"

@@ -30,7 +30,7 @@ SimPowerComp<Complex>::Ptr DP::Ph3::Capacitor::clone(String name) {
 	return copy;
 }
 
-void DP::Ph3::Capacitor::initializeFromPowerflow(Real frequency) {
+void DP::Ph3::Capacitor::initializeFromNodesAndTerminals(Real frequency) {
 
 	Real omega = 2 * PI * frequency;
 	MatrixComp susceptance = Matrix::Zero(3, 3);

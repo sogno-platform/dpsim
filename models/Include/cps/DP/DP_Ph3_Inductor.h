@@ -50,7 +50,7 @@ namespace Ph3 {
 
 		// #### General ####
 		/// Initializes component from power flow data
-		void initializeFromPowerflow(Real frequency);
+		void initializeFromNodesAndTerminals(Real frequency);
 		// #### MNA section ####
 		/// Initializes internal variables of the component
 		void mnaInitialize(Real omega, Real timeStep, Attribute<Matrix>::Ptr leftVector);

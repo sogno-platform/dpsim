@@ -28,7 +28,7 @@ SimPowerComp<Complex>::Ptr DP::Ph3::Inductor::clone(String name) {
 	return copy;
 }
 
-void DP::Ph3::Inductor::initializeFromPowerflow(Real frequency) {
+void DP::Ph3::Inductor::initializeFromNodesAndTerminals(Real frequency) {
 
 	Real omega = 2 * PI * frequency;
 

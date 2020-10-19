@@ -101,7 +101,7 @@ void MnaSolver<Real>::initializeComponents() {
 		auto pComp = std::dynamic_pointer_cast<SimPowerComp<Real>>(comp);
 		if (!pComp)	continue;
 		pComp->checkForUnconnectedTerminals();
-		pComp->initializeFromPowerflow(mSystem.mSystemFrequency);
+		pComp->initializeFromNodesAndTerminals(mSystem.mSystemFrequency);
 	}
 
 	// Initialize signal components.
@@ -129,7 +129,7 @@ void MnaSolver<Complex>::initializeComponents() {
 		auto pComp = std::dynamic_pointer_cast<SimPowerComp<Complex>>(comp);
 		if (!pComp)	continue;
 		pComp->checkForUnconnectedTerminals();
-		pComp->initializeFromPowerflow(mSystem.mSystemFrequency);
+		pComp->initializeFromNodesAndTerminals(mSystem.mSystemFrequency);
 	}
 
 	// Initialize signal components.

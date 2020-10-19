@@ -27,7 +27,7 @@ SimPowerComp<Real>::Ptr EMT::Ph3::Inductor::clone(String name) {
 	return copy;
 }
 
-void EMT::Ph3::Inductor::initializeFromPowerflow(Real frequency) {
+void EMT::Ph3::Inductor::initializeFromNodesAndTerminals(Real frequency) {
 
 	Real omega = 2 * PI * frequency;
 	MatrixComp impedance = MatrixComp::Zero(3, 3);

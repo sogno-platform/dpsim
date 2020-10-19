@@ -143,7 +143,7 @@ void DP::Ph1::AvVoltageSourceInverterDQ::setInitialStateValues(Real pInit, Real 
 	mPowerControllerVSI->setInitialStateValues(pInit, qInit, phi_dInit, phi_qInit, gamma_dInit, gamma_qInit);
 }
 
-void DP::Ph1::AvVoltageSourceInverterDQ::initializeFromPowerflow(Real frequency) {
+void DP::Ph1::AvVoltageSourceInverterDQ::initializeFromNodesAndTerminals(Real frequency) {
 
 	// set initial interface quantities
 	mIntfVoltage(0, 0) = initialSingleVoltage(0);
@@ -192,7 +192,7 @@ void DP::Ph1::AvVoltageSourceInverterDQ::initializeFromPowerflow(Real frequency)
 	// Initialize electrical subcomponents
 	for (auto subcomp: mSubComponents) {
 		subcomp->initialize(mFrequencies);
-		subcomp->initializeFromPowerflow(frequency);
+		subcomp->initializeFromNodesAndTerminals(frequency);
 	}
 
 	// Initialize control subcomponents

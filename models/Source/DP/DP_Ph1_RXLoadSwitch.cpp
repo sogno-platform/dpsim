@@ -29,7 +29,7 @@ DP::Ph1::RXLoadSwitch::RXLoadSwitch(String uid, String name, Logger::Level logLe
 DP::Ph1::RXLoadSwitch::RXLoadSwitch(String name, Logger::Level logLevel)
 	: RXLoadSwitch(name, name, logLevel) { }
 
-void DP::Ph1::RXLoadSwitch::initializeFromPowerflow(Real frequency) {
+void DP::Ph1::RXLoadSwitch::initializeFromNodesAndTerminals(Real frequency) {
 
 	if(!mParametersSet) {
 		// use powerflow results
@@ -41,11 +41,11 @@ void DP::Ph1::RXLoadSwitch::initializeFromPowerflow(Real frequency) {
 
 	mSubRXLoad->connect({ virtualNode(0) });
 	mSubRXLoad->initialize(mFrequencies);
-	mSubRXLoad->initializeFromPowerflow(frequency);
+	mSubRXLoad->initializeFromNodesAndTerminals(frequency);
 
 	mSubSwitch->connect({ node(0) });
 	mSubSwitch->initialize(mFrequencies);
-	mSubSwitch->initializeFromPowerflow(frequency);
+	mSubSwitch->initializeFromNodesAndTerminals(frequency);
 
 	mIntfVoltage = mSubRXLoad->attributeMatrixComp("v_intf")->get();
 	mIntfCurrent = mSubRXLoad->attributeMatrixComp("i_intf")->get();

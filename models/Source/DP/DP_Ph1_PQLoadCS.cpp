@@ -56,7 +56,7 @@ SimPowerComp<Complex>::Ptr DP::Ph1::PQLoadCS::clone(String name) {
 	return copy;
 }
 
-void DP::Ph1::PQLoadCS::initializeFromPowerflow(Real frequency) {
+void DP::Ph1::PQLoadCS::initializeFromNodesAndTerminals(Real frequency) {
 
 	mActivePower = attribute<Real>("P");
 	mReactivePower = attribute<Real>("Q");
@@ -80,7 +80,7 @@ void DP::Ph1::PQLoadCS::initializeFromPowerflow(Real frequency) {
 	mCurrentSourceRef = mSubCurrentSource->attribute<Complex>("I_ref");
 	// A positive power should result in a positive current to ground.
 	mSubCurrentSource->connect({ mTerminals[0]->node(), SimNode::GND });
-	mSubCurrentSource->initializeFromPowerflow(frequency);
+	mSubCurrentSource->initializeFromNodesAndTerminals(frequency);
 	updateIntfValues();
 
 	mSLog->info(

@@ -95,7 +95,7 @@ namespace Ph1 {
 
 		// #### General ####
 		/// Initializes component from power flow data
-		void initializeFromPowerflow(Real frequency);
+		void initializeFromNodesAndTerminals(Real frequency);
 		/// Setter for general parameters of inverter
 		void setParameters(Real sysOmega, Real sysVoltNom, Real Pref, Real Qref);
 		/// Setter for parameters of control loops

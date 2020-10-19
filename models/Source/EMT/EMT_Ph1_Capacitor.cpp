@@ -26,7 +26,7 @@ SimPowerComp<Real>::Ptr EMT::Ph1::Capacitor::clone(String name) {
 	return copy;
 }
 
-void EMT::Ph1::Capacitor::initializeFromPowerflow(Real frequency) {
+void EMT::Ph1::Capacitor::initializeFromNodesAndTerminals(Real frequency) {
 
 	Real omega = 2 * PI * frequency;
 	Complex impedance = { 0, - 1. / (omega * mCapacitance) };

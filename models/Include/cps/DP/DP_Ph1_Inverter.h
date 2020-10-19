@@ -123,7 +123,7 @@ namespace Ph1 {
 
 		// #### General ####
 		///
-		void initializeFromPowerflow(Real frequency);
+		void initializeFromNodesAndTerminals(Real frequency);
 		///
 		void initialize(Matrix frequencies);
 		///

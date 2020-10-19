@@ -25,7 +25,7 @@ SimPowerComp<Complex>::Ptr DP::Ph1::Resistor::clone(String name) {
 	return copy;
 }
 
-void DP::Ph1::Resistor::initializeFromPowerflow(Real frequency) {
+void DP::Ph1::Resistor::initializeFromNodesAndTerminals(Real frequency) {
 
 	Complex impedance = { mResistance, 0 };
 	mIntfVoltage(0,0) = initialSingleVoltage(1) - initialSingleVoltage(0);

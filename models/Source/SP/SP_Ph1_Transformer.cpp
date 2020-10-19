@@ -113,7 +113,7 @@ void SP::Ph1::Transformer::calculatePerUnitParameters(Real baseApparentPower, Re
 		mSubSnubResistor = std::make_shared<SP::Ph1::Resistor>(mUID + "_snub_res", mName + "_snub_res", mLogLevel);
 		mSubSnubResistor->setParameters(snubberResistance);
 		mSubSnubResistor->connect({ node(1), SP::SimNode::GND });
-		mSubSnubResistor->initializeFromPowerflow(mBaseOmega);
+		mSubSnubResistor->initializeFromNodesAndTerminals(mBaseOmega);
 	}
 	if (mSubSnubResistor) {
 		mSubSnubResistor->setBaseVoltage(mBaseVoltage);
@@ -177,7 +177,7 @@ MatrixComp SP::Ph1::Transformer::Y_element() {
 
 
 // #### MNA Section ####
-void SP::Ph1::Transformer::initializeFromPowerflow(Real frequency) {
+void SP::Ph1::Transformer::initializeFromNodesAndTerminals(Real frequency) {
 
 	// A snubber conductance is added on the low voltage side
 	Real snubberResistance = 1e3;
@@ -209,19 +209,19 @@ void SP::Ph1::Transformer::initializeFromPowerflow(Real frequency) {
 		mSubResistor = std::make_shared<SP::Ph1::Resistor>(mUID + "_res", mName + "_res", Logger::Level::off);
 		mSubResistor->setParameters(mResistance);
 		mSubResistor->connect({ node(0), mVirtualNodes[2] });
-		mSubResistor->initializeFromPowerflow(frequency);
+		mSubResistor->initializeFromNodesAndTerminals(frequency);
 		mSubInductor->connect({ mVirtualNodes[2], mVirtualNodes[0] });
 	}
 	else {
 		mSubInductor->connect({ node(0), mVirtualNodes[0] });
 	}
-	mSubInductor->initializeFromPowerflow(frequency);
+	mSubInductor->initializeFromNodesAndTerminals(frequency);
 
 	// Create parallel sub components
 	mSubSnubResistor = std::make_shared<SP::Ph1::Resistor>(mUID + "_snub_res", mName + "_snub_res", Logger::Level::off);
 	mSubSnubResistor->setParameters(snubberResistance);
 	mSubSnubResistor->connect({ node(1), SP::SimNode::GND });
-	mSubSnubResistor->initializeFromPowerflow(frequency);
+	mSubSnubResistor->initializeFromNodesAndTerminals(frequency);
 
 	mSLog->info(
 		"\n--- Initialization from powerflow ---"

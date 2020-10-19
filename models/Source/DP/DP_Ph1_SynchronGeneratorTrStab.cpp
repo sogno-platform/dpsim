@@ -100,7 +100,7 @@ void DP::Ph1::SynchronGeneratorTrStab::setInitialValues(Complex elecPower, Real 
 	mInitMechPower = mechPower;
 }
 
-void DP::Ph1::SynchronGeneratorTrStab::initializeFromPowerflow(Real frequency) {
+void DP::Ph1::SynchronGeneratorTrStab::initializeFromNodesAndTerminals(Real frequency) {
 
 	// Initialize omega mech with nominal system frequency
 	mOmMech = mNomOmega;
@@ -135,14 +135,14 @@ void DP::Ph1::SynchronGeneratorTrStab::initializeFromPowerflow(Real frequency) {
 	mSubVoltageSource->connect({SimNode::GND, mVirtualNodes[0]});
 	mSubVoltageSource->setVirtualNodeAt(mVirtualNodes[1], 0);
 	mSubVoltageSource->initialize(mFrequencies);
-	mSubVoltageSource->initializeFromPowerflow(frequency);
+	mSubVoltageSource->initializeFromNodesAndTerminals(frequency);
 
 	// Create sub inductor as Xpd
 	mSubInductor = DP::Ph1::Inductor::make(mName + "_ind", mLogLevel);
 	mSubInductor->setParameters(mLpd);
 	mSubInductor->connect({terminal(0)->node(), mVirtualNodes[0]});
 	mSubInductor->initialize(mFrequencies);
-	mSubInductor->initializeFromPowerflow(frequency);
+	mSubInductor->initializeFromNodesAndTerminals(frequency);
 
 	mSLog->info("\n--- Initialize according to powerflow ---"
 				"\nTerminal 0 voltage: {:e}<{:e}"

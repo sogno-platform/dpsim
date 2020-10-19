@@ -26,7 +26,7 @@ SimPowerComp<Complex>::Ptr DP::Ph3::SeriesResistor::clone(String name) {
 	return copy;
 }
 
-void DP::Ph3::SeriesResistor::initializeFromPowerflow(Real frequency) {
+void DP::Ph3::SeriesResistor::initializeFromNodesAndTerminals(Real frequency) {
 
 	mTerminals[0]->setPhaseType(PhaseType::ABC);
 	mTerminals[1]->setPhaseType(PhaseType::ABC);

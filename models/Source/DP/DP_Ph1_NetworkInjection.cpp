@@ -34,7 +34,7 @@ void DP::Ph1::NetworkInjection::setParameters(Complex voltageRef, Real srcFreq) 
 	mParametersSet = true;
 }
 
-void DP::Ph1::NetworkInjection::initializeFromPowerflow(Real frequency) {
+void DP::Ph1::NetworkInjection::initializeFromNodesAndTerminals(Real frequency) {
 	mVoltageRef = attribute<Complex>("V_ref");
 	mSrcFreq = attribute<Real>("f_src");
 	if (mVoltageRef->get() == Complex(0, 0))

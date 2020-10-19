@@ -79,7 +79,7 @@ SimPowerComp<Complex>::Ptr SP::Ph1::externalGridInjection::clone(String name) {
 	return copy;
 }
 
-void SP::Ph1::externalGridInjection::initializeFromPowerflow(Real frequency) {
+void SP::Ph1::externalGridInjection::initializeFromNodesAndTerminals(Real frequency) {
 	mVoltageRef = attribute<Complex>("V_ref");
 	mSrcFreq = attribute<Real>("f_src");
 	if (mVoltageRef->get() == Complex(0, 0))

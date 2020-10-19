@@ -64,7 +64,7 @@ void PFSolver::assignMatrixNodeIndices() {
 		mSystem.mNodes[idx]->setMatrixNodeIndex(0, matrixNodeIndexIdx);
 		mSLog->info("Node {}: MatrixNodeIndex {}", mSystem.mNodes[idx]->uid(), mSystem.mNodes[idx]->matrixNodeIndex());
 		matrixNodeIndexIdx++;
-	}	
+	}
 	mSLog->info("Number of simulation nodes: {:d}", matrixNodeIndexIdx);
 }
 
@@ -78,7 +78,7 @@ void PFSolver::initializeComponents(){
 		auto pComp = std::dynamic_pointer_cast<SimPowerComp<Complex>>(comp);
 		if (!pComp)	continue;
 		if (mPowerFlowInit)
-			pComp->initializeFromPowerflow(mSystem.mSystemFrequency);
+			pComp->initializeFromNodesAndTerminals(mSystem.mSystemFrequency);
 	}
 
 	mSLog->info("-- Calculate per unit parameters for all components");

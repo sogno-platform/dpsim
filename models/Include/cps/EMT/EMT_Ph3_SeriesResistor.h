@@ -36,7 +36,7 @@ namespace Ph3 {
 		/// Return new instance with the same parameters
 		SimPowerComp<Real>::Ptr clone(String name);
 		/// Initializes states from power flow data
-		void initializeFromPowerflow(Real frequency);
+		void initializeFromNodesAndTerminals(Real frequency);
 
 		// #### MNA section ####
 		/// Initializes MNA specific variables

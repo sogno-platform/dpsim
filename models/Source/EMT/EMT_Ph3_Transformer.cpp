@@ -44,7 +44,7 @@ void EMT::Ph3::Transformer::setParameters(Real ratioAbs, Real ratioPhase,
 	mParametersSet = true;
 }
 
-void EMT::Ph3::Transformer::initializeFromPowerflow(Real frequency) {
+void EMT::Ph3::Transformer::initializeFromNodesAndTerminals(Real frequency) {
 
 	// Component parameters are referred to high voltage side.
 	// Switch terminals if transformer is connected the other way around.
@@ -85,14 +85,14 @@ void EMT::Ph3::Transformer::initializeFromPowerflow(Real frequency) {
 		mSubResistor->setParameters(mResistance);
 		mSubResistor->connect({ node(0), mVirtualNodes[2] });
 		mSubResistor->initialize(mFrequencies);
-		mSubResistor->initializeFromPowerflow(frequency);
+		mSubResistor->initializeFromNodesAndTerminals(frequency);
 		mSubInductor->connect({ mVirtualNodes[2], mVirtualNodes[0] });
 	}
 	else {
 		mSubInductor->connect({ node(0), mVirtualNodes[0] });
 	}
 	mSubInductor->initialize(mFrequencies);
-	mSubInductor->initializeFromPowerflow(frequency);
+	mSubInductor->initializeFromNodesAndTerminals(frequency);
 
 	// Create parallel sub components
 	// A snubber conductance is added on the low voltage side (resistance approximately scaled with LV side voltage)
@@ -101,7 +101,7 @@ void EMT::Ph3::Transformer::initializeFromPowerflow(Real frequency) {
 	mSubSnubResistor->setParameters(mSnubberResistance);
 	mSubSnubResistor->connect({ node(1), EMT::SimNode::GND });
 	mSubSnubResistor->initialize(mFrequencies);
-	mSubSnubResistor->initializeFromPowerflow(frequency);
+	mSubSnubResistor->initializeFromNodesAndTerminals(frequency);
 
 	mSLog->info(
 		"\n--- Initialization from powerflow ---"

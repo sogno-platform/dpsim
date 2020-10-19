@@ -97,7 +97,7 @@ void DiakopticsSolver<VarType>::initSubnets(const std::vector<SystemTopology>& s
 			}
 		}
 		tComp->mnaTearSetIdx(idx);
-		comp->initializeFromPowerflow(mSystemFrequency);
+		comp->initializeFromNodesAndTerminals(mSystemFrequency);
 		tComp->mnaTearInitialize(2 * PI * mSystemFrequency, mTimeStep);
 
 		for (auto gndComp : tComp->mnaTearGroundComponents()) {
@@ -248,7 +248,7 @@ void DiakopticsSolver<VarType>::initComponents() {
 		for (auto comp : mSubnets[net].components) {
 			auto pComp = std::dynamic_pointer_cast<SimPowerComp<VarType>>(comp);
 			if (!pComp) continue;
-			pComp->initializeFromPowerflow(mSystem.mSystemFrequency);
+			pComp->initializeFromNodesAndTerminals(mSystem.mSystemFrequency);
 		}
 
 		// Initialize MNA specific parts of components.

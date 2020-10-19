@@ -62,7 +62,7 @@ void SP::Ph1::Resistor::pfApplyAdmittanceMatrixStamp(SparseMatrixCompRow & Y) {
 	mSLog->info("#### Y matrix stamping: {}", Y_element);
 }
 
-void SP::Ph1::Resistor::initializeFromPowerflow(Real frequency) {
+void SP::Ph1::Resistor::initializeFromNodesAndTerminals(Real frequency) {
 
 	mConductance = 1 / mResistance;
 	mIntfVoltage(0, 0) = initialSingleVoltage(1) - initialSingleVoltage(0);

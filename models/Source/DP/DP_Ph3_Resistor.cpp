@@ -27,7 +27,7 @@ SimPowerComp<Complex>::Ptr DP::Ph3::Resistor::clone(String name) {
 	return copy;
 }
 
-void DP::Ph3::Resistor::initializeFromPowerflow(Real frequency) {
+void DP::Ph3::Resistor::initializeFromNodesAndTerminals(Real frequency) {
 
 	Real voltMag = Math::abs(mIntfVoltage(0, 0));
 	Real voltPhase = Math::phase(mIntfVoltage(0, 0));

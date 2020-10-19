@@ -25,7 +25,7 @@ SimPowerComp<Complex>::Ptr SP::Ph3::Inductor::clone(String name) {
 	return copy;
 }
 
-void SP::Ph3::Inductor::initializeFromPowerflow(Real frequency) {
+void SP::Ph3::Inductor::initializeFromNodesAndTerminals(Real frequency) {
 
 	Real omega = 2 * PI * frequency;
 	MatrixComp reactance = MatrixComp::Zero(3, 3);

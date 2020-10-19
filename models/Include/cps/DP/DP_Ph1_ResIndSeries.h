@@ -50,7 +50,7 @@ namespace Ph1 {
 		/// Initializes state variables considering the number of frequencies
 		void initialize(Matrix frequencies);
 		/// Initializes states from power flow data
-		void initializeFromPowerflow(Real frequency);
+		void initializeFromNodesAndTerminals(Real frequency);
 
 		// #### MNA section ####
 		/// Initializes MNA specific variables

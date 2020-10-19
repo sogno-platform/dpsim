@@ -34,7 +34,7 @@ SimPowerComp<Complex>::Ptr DP::Ph1::RXLoad::clone(String name) {
 	return copy;
 }
 
-void DP::Ph1::RXLoad::initializeFromPowerflow(Real frequency) {
+void DP::Ph1::RXLoad::initializeFromNodesAndTerminals(Real frequency) {
 
 	if(!mParametersSet){
 		setParameters(
@@ -49,7 +49,7 @@ void DP::Ph1::RXLoad::initializeFromPowerflow(Real frequency) {
 		mSubResistor->setParameters(mResistance);
 		mSubResistor->connect({ SimNode::GND, mTerminals[0]->node() });
 		mSubResistor->initialize(mFrequencies);
-		mSubResistor->initializeFromPowerflow(frequency);
+		mSubResistor->initializeFromNodesAndTerminals(frequency);
 	}
 	else {
 		mResistance = 0;
@@ -66,7 +66,7 @@ void DP::Ph1::RXLoad::initializeFromPowerflow(Real frequency) {
 		mSubInductor->setParameters(mInductance);
 		mSubInductor->connect({ SimNode::GND, mTerminals[0]->node() });
 		mSubInductor->initialize(mFrequencies);
-		mSubInductor->initializeFromPowerflow(frequency);
+		mSubInductor->initializeFromNodesAndTerminals(frequency);
 	}
 	else if (mReactance < 0) {
 		mCapacitance = -1. / (2.*PI*frequency) / mReactance;
@@ -74,7 +74,7 @@ void DP::Ph1::RXLoad::initializeFromPowerflow(Real frequency) {
 		mSubCapacitor->setParameters(mCapacitance);
 		mSubCapacitor->connect({ SimNode::GND, mTerminals[0]->node() });
 		mSubCapacitor->initialize(mFrequencies);
-		mSubCapacitor->initializeFromPowerflow(frequency);
+		mSubCapacitor->initializeFromNodesAndTerminals(frequency);
 	}
 
 	mIntfVoltage(0, 0) = mTerminals[0]->initialSingleVoltage();

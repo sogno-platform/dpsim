@@ -48,7 +48,7 @@ namespace Ph1 {
 
 		// #### General ####
 		/// Initializes component from power flow data
-		void initializeFromPowerflow(Real frequency) { }
+		void initializeFromNodesAndTerminals(Real frequency) { }
 		///
 		void setVoltageRef(Complex voltage) { mVoltageRef = voltage; }
 		///

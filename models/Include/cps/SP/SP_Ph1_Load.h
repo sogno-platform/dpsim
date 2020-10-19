@@ -81,7 +81,7 @@ namespace SP { namespace Ph1 {
 
 		// #### General ####
 		/// Initializes component from power flow data
-		void initializeFromPowerflow(Real frequency) override;
+		void initializeFromNodesAndTerminals(Real frequency) override;
 		/// Load profile data
 		PowerProfile mLoadProfile;
 		/// Use the assigned load profile

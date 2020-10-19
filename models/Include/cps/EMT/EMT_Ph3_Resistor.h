@@ -32,7 +32,7 @@ public:
 		///
 		SimPowerComp<Real>::Ptr clone(String name);
 		/// Initializes component from power flow data
-		void initializeFromPowerflow(Real frequency);
+		void initializeFromNodesAndTerminals(Real frequency);
 		/// enable DP to EMT bach transformation
 		void enableBackShift();
 

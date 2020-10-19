@@ -34,7 +34,7 @@ void SP::Ph3::VoltageSource::setParameters(Complex voltageRef) {
 	mParametersSet = true;
 }
 
-void SP::Ph3::VoltageSource::initializeFromPowerflow(Real frequency) {
+void SP::Ph3::VoltageSource::initializeFromNodesAndTerminals(Real frequency) {
 
 	mVoltageRef = attribute<Complex>("V_ref");
 

@@ -31,7 +31,7 @@ SimPowerComp<Complex>::Ptr DP::Ph1::PiLine::clone(String name) {
 	return copy;
 }
 
-void DP::Ph1::PiLine::initializeFromPowerflow(Real frequency) {
+void DP::Ph1::PiLine::initializeFromNodesAndTerminals(Real frequency) {
 
 	// Static calculation
 	Real omega = 2.*PI * frequency;
@@ -47,13 +47,13 @@ void DP::Ph1::PiLine::initializeFromPowerflow(Real frequency) {
 	mSubSeriesResistor->setParameters(mSeriesRes);
 	mSubSeriesResistor->connect({ mTerminals[0]->node(), mVirtualNodes[0] });
 	mSubSeriesResistor->initialize(mFrequencies);
-	mSubSeriesResistor->initializeFromPowerflow(frequency);
+	mSubSeriesResistor->initializeFromNodesAndTerminals(frequency);
 
 	mSubSeriesInductor = std::make_shared<DP::Ph1::Inductor>(mName + "_ind", mLogLevel);
 	mSubSeriesInductor->setParameters(mSeriesInd);
 	mSubSeriesInductor->connect({ mVirtualNodes[0], mTerminals[1]->node() });
 	mSubSeriesInductor->initialize(mFrequencies);
-	mSubSeriesInductor->initializeFromPowerflow(frequency);
+	mSubSeriesInductor->initializeFromNodesAndTerminals(frequency);
 
 	// By default there is always a small conductance to ground to
 	// avoid problems with floating nodes.
@@ -63,13 +63,13 @@ void DP::Ph1::PiLine::initializeFromPowerflow(Real frequency) {
 		mSubParallelResistor0->setParameters(2./mParallelCond);
 		mSubParallelResistor0->connect(SimNode::List{ SimNode::GND, mTerminals[0]->node() });
 		mSubParallelResistor0->initialize(mFrequencies);
-		mSubParallelResistor0->initializeFromPowerflow(frequency);
+		mSubParallelResistor0->initializeFromNodesAndTerminals(frequency);
 
 		mSubParallelResistor1 = std::make_shared<DP::Ph1::Resistor>(mName + "_con1", mLogLevel);
 		mSubParallelResistor1->setParameters(2./mParallelCond);
 		mSubParallelResistor1->connect(SimNode::List{ SimNode::GND, mTerminals[1]->node() });
 		mSubParallelResistor1->initialize(mFrequencies);
-		mSubParallelResistor1->initializeFromPowerflow(frequency);
+		mSubParallelResistor1->initializeFromNodesAndTerminals(frequency);
 	}
 
 	if (mParallelCap >= 0) {
@@ -77,13 +77,13 @@ void DP::Ph1::PiLine::initializeFromPowerflow(Real frequency) {
 		mSubParallelCapacitor0->setParameters(mParallelCap/2.);
 		mSubParallelCapacitor0->connect(SimNode::List{ SimNode::GND, mTerminals[0]->node() });
 		mSubParallelCapacitor0->initialize(mFrequencies);
-		mSubParallelCapacitor0->initializeFromPowerflow(frequency);
+		mSubParallelCapacitor0->initializeFromNodesAndTerminals(frequency);
 
 		mSubParallelCapacitor1 = std::make_shared<DP::Ph1::Capacitor>(mName + "_cap1", mLogLevel);
 		mSubParallelCapacitor1->setParameters(mParallelCap/2.);
 		mSubParallelCapacitor1->connect(SimNode::List{ SimNode::GND, mTerminals[1]->node() });
 		mSubParallelCapacitor1->initialize(mFrequencies);
-		mSubParallelCapacitor1->initializeFromPowerflow(frequency);
+		mSubParallelCapacitor1->initializeFromNodesAndTerminals(frequency);
 	}
 
 	mSLog->info(

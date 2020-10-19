@@ -35,7 +35,7 @@ void DP::Ph1::Capacitor::initialize(Matrix frequencies) {
 	mPrevVoltCoeff = MatrixComp::Zero(mNumFreqs, 1);
 }
 
-void DP::Ph1::Capacitor::initializeFromPowerflow(Real frequency) {
+void DP::Ph1::Capacitor::initializeFromNodesAndTerminals(Real frequency) {
 
 	Real omega = 2 * PI * frequency;
 	Complex impedance = { 0, - 1. / (omega * mCapacitance) };

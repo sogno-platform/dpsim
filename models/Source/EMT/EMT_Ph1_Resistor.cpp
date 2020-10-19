@@ -25,7 +25,7 @@ SimPowerComp<Real>::Ptr EMT::Ph1::Resistor::clone(String name) {
 	return copy;
 }
 
-void EMT::Ph1::Resistor::initializeFromPowerflow(Real frequency) {
+void EMT::Ph1::Resistor::initializeFromNodesAndTerminals(Real frequency) {
 
 	mIntfVoltage(0,0) = (initialSingleVoltage(1) - initialSingleVoltage(0)).real();
 	mIntfCurrent(0,0) = mIntfVoltage(0,0) / mResistance;

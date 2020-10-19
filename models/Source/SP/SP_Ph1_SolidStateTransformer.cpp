@@ -24,7 +24,7 @@ SP::Ph1::SolidStateTransformer::SolidStateTransformer(String uid, String name, L
 };
 
 SimPowerComp<Complex>::Ptr SP::Ph1::SolidStateTransformer::clone(String name) {
-	// everything set by initializeFromPowerflow
+	// everything set by initializeFromNodesAndTerminals
 	return SolidStateTransformer::make(name, mLogLevel);
 }
 
@@ -37,7 +37,7 @@ void SP::Ph1::SolidStateTransformer::setParameters(Real nomV1, Real nomV2, Real 
     mP2 = -1 * std::sqrt(Pref * Pref + Q1ref * Q1ref - Q2ref * Q2ref);
 }
 
-void SP::Ph1::SolidStateTransformer::initializeFromPowerflow(Real frequency) {
+void SP::Ph1::SolidStateTransformer::initializeFromNodesAndTerminals(Real frequency) {
 
     if(std::isinf(mP2)){
         std::stringstream ss;

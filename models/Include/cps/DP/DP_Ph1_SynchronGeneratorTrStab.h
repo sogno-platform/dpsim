@@ -68,7 +68,7 @@ namespace Ph1 {
 		///
 		void step(Real time);
 		///
-		void initializeFromPowerflow(Real frequency);
+		void initializeFromNodesAndTerminals(Real frequency);
 
 		// #### MNA Functions ####
 		/// Initializes variables of component

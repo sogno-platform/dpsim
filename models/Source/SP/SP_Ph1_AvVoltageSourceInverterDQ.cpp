@@ -184,7 +184,7 @@ void SP::Ph1::AvVoltageSourceInverterDQ::initializeModel(Real omega, Real timeSt
 	mOmegaCutoff = omega;
 
 	// initialize mInftCurrent
-	// do it here to make sure resistor current is already initialized (initializeFromPowerFlow)
+	// do it here to make sure resistor current is already initialized (initializeFromNodesAndTerminals)
 	mIntfCurrent = mSubResistorC->attribute<MatrixComp>("i_intf")->get();
 
 	//initialize input vector
@@ -329,7 +329,7 @@ Complex SP::Ph1::AvVoltageSourceInverterDQ::rotatingFrame2to1(Complex f2, Real t
 	return Complex(f1_real, f1_imag);
 }
 
-void SP::Ph1::AvVoltageSourceInverterDQ::initializeFromPowerflow(Real frequency) {
+void SP::Ph1::AvVoltageSourceInverterDQ::initializeFromNodesAndTerminals(Real frequency) {
 
 	// set initial voltages
 	//mIntfVoltage(0, 0) = initialSingleVoltage(0);
@@ -373,11 +373,11 @@ void SP::Ph1::AvVoltageSourceInverterDQ::initializeFromPowerflow(Real frequency)
 	mSubResistorC->connect({ mVirtualNodes[3], mTerminals[0]->node() });
 
 	//
-	mSubResistorF->initializeFromPowerflow(frequency);
-	mSubInductorF->initializeFromPowerflow(frequency);
-	mSubCapacitorF->initializeFromPowerflow(frequency);
-	mSubResistorC->initializeFromPowerflow(frequency);
-	//mSubCtrledVoltageSource->initializeFromPowerflow(frequency);
+	mSubResistorF->initializeFromNodesAndTerminals(frequency);
+	mSubInductorF->initializeFromNodesAndTerminals(frequency);
+	mSubCapacitorF->initializeFromNodesAndTerminals(frequency);
+	mSubResistorC->initializeFromNodesAndTerminals(frequency);
+	//mSubCtrledVoltageSource->initializeFromNodesAndTerminals(frequency);
 	mSLog->info(
 		"\n--- Initialization from powerflow ---"
 		"\nVoltage across: {:s}"

@@ -34,7 +34,7 @@ void DP::Ph1::Inductor::initialize(Matrix frequencies) {
 	mPrevCurrFac = MatrixComp::Zero(mNumFreqs, 1);
 }
 
-void DP::Ph1::Inductor::initializeFromPowerflow(Real frequency) {
+void DP::Ph1::Inductor::initializeFromNodesAndTerminals(Real frequency) {
 
 	Real omega = 2. * PI * frequency;
 	Complex impedance = { 0, omega * mInductance };

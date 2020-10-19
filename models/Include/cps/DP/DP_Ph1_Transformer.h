@@ -49,7 +49,7 @@ namespace Ph1 {
 		/// Defines component parameters
 		void setParameters(Real ratioAbs, Real ratioPhase, Real resistance, Real inductance);
 		/// Initializes component from power flow data
-		void initializeFromPowerflow(Real frequency);
+		void initializeFromNodesAndTerminals(Real frequency);
 
 		// #### MNA section ####
 		/// Initializes internal variables of the component

@@ -29,7 +29,7 @@ SimPowerComp<Complex>::Ptr DP::Ph1::RxLine::clone(String name) {
 	return copy;
 }
 
-void DP::Ph1::RxLine::initializeFromPowerflow(Real frequency) {
+void DP::Ph1::RxLine::initializeFromNodesAndTerminals(Real frequency) {
 
 	mIntfVoltage(0,0) = initialSingleVoltage(1) - initialSingleVoltage(0);
 	Complex impedance = { mSeriesRes, mSeriesInd * 2.*PI * frequency };
@@ -40,17 +40,17 @@ void DP::Ph1::RxLine::initializeFromPowerflow(Real frequency) {
 	mSubResistor = std::make_shared<DP::Ph1::Resistor>(mName + "_res", mLogLevel);
 	mSubResistor->setParameters(mSeriesRes);
 	mSubResistor->connect({ mTerminals[0]->node(), mVirtualNodes[0] });
-	mSubResistor->initializeFromPowerflow(frequency);
+	mSubResistor->initializeFromNodesAndTerminals(frequency);
 
 	mSubInductor = std::make_shared<DP::Ph1::Inductor>(mName + "_ind", mLogLevel);
 	mSubInductor->setParameters(mSeriesInd);
 	mSubInductor->connect({ mVirtualNodes[0], mTerminals[1]->node() });
-	mSubInductor->initializeFromPowerflow(frequency);
+	mSubInductor->initializeFromNodesAndTerminals(frequency);
 
 	mInitialResistor = std::make_shared<DP::Ph1::Resistor>(mName + "_snubber_res", mLogLevel);
 	mInitialResistor->setParameters(1e6);
 	mInitialResistor->connect({ SimNode::GND, mTerminals[1]->node() });
-	mInitialResistor->initializeFromPowerflow(frequency);
+	mInitialResistor->initializeFromNodesAndTerminals(frequency);
 
 	mSLog->info(
 		"\n--- Initialization from powerflow ---"

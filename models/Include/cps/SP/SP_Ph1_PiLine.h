@@ -98,7 +98,7 @@ namespace Ph1 {
 		///
 		void setParameters(Real resistance, Real inductance, Real capacitance = -1, Real conductance = -1, Real omega = -1);
 		/// Initializes component from power flow data
-		void initializeFromPowerflow(Real frequency) override;
+		void initializeFromNodesAndTerminals(Real frequency) override;
 
 		// #### Powerflow section ####
 		/// Set base voltage

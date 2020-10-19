@@ -21,7 +21,7 @@ DP::Ph3::SeriesSwitch::SeriesSwitch(String uid, String name, Logger::Level logLe
 	addAttribute<Bool>("is_closed", &mIsClosed, Flags::read | Flags::write);
 }
 
-void DP::Ph3::SeriesSwitch::initializeFromPowerflow(Real frequency) {
+void DP::Ph3::SeriesSwitch::initializeFromNodesAndTerminals(Real frequency) {
 
 	Real impedance = (mIsClosed) ? mClosedResistance : mOpenResistance;
 	mIntfVoltage = initialVoltage(1) - initialVoltage(0);

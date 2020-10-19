@@ -63,7 +63,7 @@ namespace Ph1 {
 
 		// #### General ####
 		/// Initialize component from power flow data
-		void initializeFromPowerflow(Real frequency);
+		void initializeFromNodesAndTerminals(Real frequency);
 		/// Set model specific parameters
 		void setParameters(Real activePower, Real ReactivePower, Real volt);
 

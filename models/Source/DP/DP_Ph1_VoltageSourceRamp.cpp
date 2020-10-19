@@ -53,8 +53,8 @@ void DP::Ph1::VoltageSourceRamp::initialize(Matrix frequencies) {
 	mSubVoltageSource->initialize(frequencies);
 }
 
-void DP::Ph1::VoltageSourceRamp::initializeFromPowerflow(Real frequency) {
-	mSubVoltageSource->initializeFromPowerflow(frequency);
+void DP::Ph1::VoltageSourceRamp::initializeFromNodesAndTerminals(Real frequency) {
+	mSubVoltageSource->initializeFromNodesAndTerminals(frequency);
 }
 
 void DP::Ph1::VoltageSourceRamp::mnaInitialize(Real omega, Real timeStep, Attribute<Matrix>::Ptr leftVector) {

@@ -27,7 +27,7 @@ SimPowerComp<Complex>::Ptr DP::Ph1::Switch::clone(String name) {
 	return copy;
 }
 
-void DP::Ph1::Switch::initializeFromPowerflow(Real frequency) {
+void DP::Ph1::Switch::initializeFromNodesAndTerminals(Real frequency) {
 
 	Real impedance = (mIsClosed) ? mClosedResistance : mOpenResistance;
 	mIntfVoltage(0,0) = initialSingleVoltage(1) - initialSingleVoltage(0);

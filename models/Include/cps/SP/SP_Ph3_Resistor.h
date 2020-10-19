@@ -35,7 +35,7 @@ namespace CPS {
 
 				// #### General ####
 				/// Initializes component from power flow data
-				void initializeFromPowerflow(Real frequency);
+				void initializeFromNodesAndTerminals(Real frequency);
 
 				// #### MNA section ####
 				///

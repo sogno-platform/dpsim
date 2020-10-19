@@ -30,7 +30,7 @@ SimPowerComp<Complex>::Ptr DP::Ph1::SynchronGeneratorIdeal::clone(String name) {
 	return SynchronGeneratorIdeal::make(name, mLogLevel);
 }
 
-void DP::Ph1::SynchronGeneratorIdeal::initializeFromPowerflow(Real frequency) {
+void DP::Ph1::SynchronGeneratorIdeal::initializeFromNodesAndTerminals(Real frequency) {
 
 	// maybe not necessary because voltage source is also set up from powerflow
 	mVoltageRef = initialSingleVoltage(0);
@@ -40,7 +40,7 @@ void DP::Ph1::SynchronGeneratorIdeal::initializeFromPowerflow(Real frequency) {
 	mSubVoltageSource->connect({ SimNode::GND, node(0) });
 	mSubVoltageSource->setVirtualNodeAt(mVirtualNodes[0], 0);
 	mSubVoltageSource->initialize(mFrequencies);
-	mSubVoltageSource->initializeFromPowerflow(frequency);
+	mSubVoltageSource->initializeFromNodesAndTerminals(frequency);
 
 	mSLog->info(
 		"\n--- Initialization from powerflow ---"
