@@ -273,14 +273,14 @@ void MnaSolver<VarType>::identifyTopologyObjects() {
 		if (swComp) {
 			mSwitches.push_back(swComp);
 			auto mnaComp = std::dynamic_pointer_cast<CPS::MNAInterface>(swComp);
-			if (mnaComp) mMNACompSwitches.push_back(mnaComp);
+			if (mnaComp) mMNAIntfSwitches.push_back(mnaComp);
 		}
 
-		auto varComp = std::dynamic_pointer_cast<CPS::MNAVariableElementInterface>(comp);
+		auto varComp = std::dynamic_pointer_cast<CPS::MNAVariableCompInterface>(comp);
 		if (varComp) {
-			mVariableElements.push_back(varComp);
+			mVariableComps.push_back(varComp);
 			auto mnaComp = std::dynamic_pointer_cast<CPS::MNAInterface>(varComp);
-			if (mnaComp) mMNACompVariableElements.push_back(mnaComp);
+			if (mnaComp) mMNAIntfVariableComps.push_back(mnaComp);
 		}
 
 		if (!(swComp || varComp)) {

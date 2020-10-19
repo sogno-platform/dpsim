@@ -18,7 +18,7 @@
 #include <dpsim/DataLogger.h>
 #include <cps/AttributeList.h>
 #include <cps/Solver/MNASwitchInterface.h>
-#include <cps/Solver/MNAVariableElementInterface.h>
+#include <cps/Solver/MNAVariableCompInterface.h>
 #include <cps/SimSignalComp.h>
 #include <cps/SimPowerComp.h>
 
@@ -64,12 +64,12 @@ namespace DPsim {
 		/// and indicate the solver to choose a different system matrix
 		CPS::MNASwitchInterface::List mSwitches;
 		/// List of MNA components with SwitchInterface
-		CPS::MNAInterface::List mMNACompSwitches;
+		CPS::MNAInterface::List mMNAIntfSwitches;
 		/// List of components that indicate the solver to recompute the system matrix
 		/// depending on their state
-		CPS::MNAVariableElementInterface::List mVariableElements;
-		/// List of MNA components with VariableElementInterface
-		CPS::MNAInterface::List mMNACompVariableElements;
+		CPS::MNAVariableCompInterface::List mVariableComps;
+		/// List of MNA components with VariableCompInterface
+		CPS::MNAInterface::List mMNAIntfVariableComps;
 		/// List of signal type components that do not directly interact
 		/// with the MNA solver
 		CPS::SimSignalComp::List mSimSignalComps;

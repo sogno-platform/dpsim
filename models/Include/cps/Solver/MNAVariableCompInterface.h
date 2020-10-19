@@ -13,9 +13,9 @@
 
 namespace CPS {
 	/// MNA interface to be used by elements that require recomputing of the system matrix
-	class MNAVariableElementInterface {
+	class MNAVariableCompInterface {
 	public:
-		typedef std::shared_ptr<MNAVariableElementInterface> Ptr;
+		typedef std::shared_ptr<MNAVariableCompInterface> Ptr;
 		typedef std::vector<Ptr> List;
 
 		/// Returns true if one of the element paramters has changed

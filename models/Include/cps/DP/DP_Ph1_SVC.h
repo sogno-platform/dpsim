@@ -9,7 +9,7 @@
 #pragma once
 
 #include <cps/Solver/MNAInterface.h>
-#include <cps/Solver/MNAVariableElementInterface.h>
+#include <cps/Solver/MNAVariableCompInterface.h>
 #include <cps/Base/Base_Ph1_SVC.h>
 #include <cps/DP/DP_Ph1_Capacitor.h>
 #include <cps/DP/DP_Ph1_Inductor.h>
@@ -28,7 +28,7 @@ namespace Ph1 {
 	/// frequency and the current source changes for each iteration.
 	class SVC :
 		public Base::Ph1::SVC,
-		public MNAVariableElementInterface,
+		public MNAVariableCompInterface,
 		public SimPowerComp<Complex>,
 		public SharedFactory<SVC> {
 	protected:

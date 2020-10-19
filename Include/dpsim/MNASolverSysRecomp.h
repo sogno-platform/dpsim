@@ -26,7 +26,7 @@ namespace DPsim {
 		/// Recomputes systems matrix
 		void updateSystemMatrix(Real time);
 		/// Collects the status of variable MNA elements to decide if system matrix has to be recomputed
-		void updateVariableElementStatus();
+		void updateVariableCompStatus();
 		/// Initialization of system matrices and source vector
 		void initializeSystemWithDynamicMatrix();
 
