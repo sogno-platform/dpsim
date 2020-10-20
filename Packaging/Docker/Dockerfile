@@ -1,57 +1,32 @@
 # rwthacs/dpsim-dev is built by dpsim-git/Packaging/Docker/Dockerfile.dev
+ARG BUILDER_IMAGE=rwthacs/dpsim-dev
 ARG DOCKER_TAG=latest
 ARG CI
 ARG CI_COMMIT_SHA
 ARG CI_COMMIT_REF_NAME
 ARG CI_COMMIT_TAG
 
-FROM rwthacs/dpsim-dev:${DOCKER_TAG} AS builder
+FROM ${BUILDER_IMAGE}:${DOCKER_TAG}
 
 COPY . /dpsim/
 
-RUN rm -rf /dpsim/build && mkdir /dpsim/build 
+RUN rm -rf /dpsim/build && mkdir /dpsim/build
 WORKDIR /dpsim/build
 
-RUN cmake -DBUILD_EXAMPLES=OFF -DCPACK_GENERATOR=RPM ..
-RUN make -j$(nproc) package
+RUN cmake -DBUILD_EXAMPLES=OFF ..
+RUN make -j$(nproc) install && \
+		ldconfig
 
-FROM fedora:29
+WORKDIR /dpsim
+EXPOSE 8888
+CMD [ "jupyter", "lab", "--ip=0.0.0.0", "--allow-root", "--no-browser", "--LabApp.token=3adaa57df44cea75e60c0169e1b2a98ae8f7de130481b5bc" ]
 
 LABEL \
 	org.label-schema.schema-version = "1.0" \
 	org.label-schema.name = "DPsim" \
 	org.label-schema.license = "GPL-3.0" \
 	org.label-schema.vendor = "Institute for Automation of Complex Power Systems, RWTH Aachen University" \
-	org.label-schema.author.name = "Steffen Vogel" \
-	org.label-schema.author.email = "stvogel@eonerc.rwth-aachen.de" \
+	org.label-schema.author.name = "Markus Mirz" \
+	org.label-schema.author.email = "mmirz@eonerc.rwth-aachen.de" \
 	org.label-schema.url = "http://fein-aachen.org/projects/dpsim/" \
-	org.label-schema.vcs-url = "https://git.rwth-aachen.de/acs/core/simulation/DPsim"
-
-ADD https://packages.fein-aachen.org/fedora/fein.repo /etc/yum.repos.d/
-
-COPY --from=builder /dpsim/build/*.rpm /tmp
-RUN dnf -y install /tmp/*.rpm
-
-ADD requirements.txt .
-RUN pip3 install -r requirements.txt
-
-# Remove this part in the future and use dedicated jupyter Dockerfile
-# Activate Jupyter extensions
-ADD requirements-jupyter.txt .
-RUN pip3 install -r requirements-jupyter.txt
-RUN dnf -y --refresh install npm
-RUN jupyter nbextension enable --py widgetsnbextension
-RUN jupyter labextension install @jupyter-widgets/jupyterlab-manager
-
-# Copy Example materials
-RUN mkdir dpsim
-COPY --from=builder /dpsim/Examples /dpsim/
-RUN find /dpsim \
-	-name conftest.py -o \
-	-name "*.yml" -o \
-	-name CMakeLists.txt \
-	-exec rm {} \;
-
-WORKDIR /dpsim
-EXPOSE 8888
-CMD [ "jupyter", "lab", "--ip=0.0.0.0", "--allow-root", "--no-browser", "--LabApp.token=3adaa57df44cea75e60c0169e1b2a98ae8f7de130481b5bc" ]
+	org.label-schema.vcs-url = "https://git.rwth-aachen.de/acs/public/simulation/dpsim"
