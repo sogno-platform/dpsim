@@ -81,11 +81,15 @@ namespace CPS {
 		}
 
 		static String phasorToString(const Complex& num) {
-			return std::to_string(Math::abs(num)) + "<" + std::to_string(Math::phaseDeg(num));
+			std::stringstream ss;
+			ss << std::defaultfloat << Math::abs(num) << "<" << Math::phaseDeg(num);
+			return ss.str();
 		}
 
 		static String complexToString(const Complex& num) {
-			return std::to_string(num.real()) + "+j" + std::to_string(num.imag());
+			std::stringstream ss;
+			ss << std::defaultfloat << num.real() << "+j" << num.imag();
+			return ss.str();
 		}
 
 		static String getCSVColumnNames(std::vector<String> names);
