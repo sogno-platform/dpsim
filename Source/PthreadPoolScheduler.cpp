@@ -31,7 +31,7 @@ PthreadPoolScheduler::PthreadPoolScheduler(size_t poolSize) {
 
 PthreadPoolScheduler::~PthreadPoolScheduler() {
 	for (size_t i = 0; i < mThreads.size(); i++) {
-		queue_signalled_push(&mOutQueue, nullptr);
+		(void)!queue_signalled_push(&mOutQueue, nullptr);
 	}
 	for (size_t i = 0; i < mThreads.size(); i++) {
 		pthread_join(mThreads[i], nullptr);
@@ -47,8 +47,8 @@ void PthreadPoolScheduler::createSchedule(const Task::List& tasks, const Edges& 
 
 	// TODO Wastes memory, but guarantees that the writes always succeed.
 	// Figure out a smarter way to do this.
-	queue_signalled_init(&mOutQueue, tasks.size(), &memory_heap, QueueSignalledMode::POLLING);
-	queue_signalled_init(&mDoneQueue, tasks.size(), &memory_heap, QueueSignalledMode::POLLING);
+	(void)!queue_signalled_init(&mOutQueue, tasks.size(), &memory_heap, QueueSignalledMode::POLLING);
+	(void)!queue_signalled_init(&mDoneQueue, tasks.size(), &memory_heap, QueueSignalledMode::POLLING);
 
 	for (size_t i = 0; i < mThreads.size(); i++) {
 		if (pthread_create(&mThreads[i], NULL, poolThreadFunction, this))
