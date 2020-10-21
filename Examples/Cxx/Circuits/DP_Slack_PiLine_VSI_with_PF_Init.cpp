@@ -121,6 +121,7 @@ int main(int argc, char* argv[]) {
 	auto loggerDP = DataLogger::make(simNameDP);
 	loggerDP->addAttribute("v1", n1DP->attribute("v"));
 	loggerDP->addAttribute("v2", n2DP->attribute("v"));
+	loggerDP->addAttribute("i12", lineDP->attribute("i_intf"));
 
 	Examples::CIGREMV::logPVDecomposedAttributes(loggerDP, pv);
 

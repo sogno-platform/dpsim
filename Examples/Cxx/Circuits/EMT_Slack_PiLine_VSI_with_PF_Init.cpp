@@ -26,8 +26,8 @@ int main(int argc, char* argv[]) {
 	Examples::SGIB::ScenarioConfig scenario;
 	
 	// Real finalTime = 0.003;
-	Real finalTime = 10;
-	Real timeStep = 0.001;
+	Real finalTime = 2;
+	Real timeStep = 0.0001;
 	CommandLineArgs args(argc, argv);
 	if (argc > 1) {
 		timeStep = args.timeStep;
@@ -119,6 +119,9 @@ int main(int argc, char* argv[]) {
 	auto loggerEMT = DataLogger::make(simNameEMT);
 	loggerEMT->addAttribute("v1", n1EMT->attribute("v"));
 	loggerEMT->addAttribute("v2", n2EMT->attribute("v"));
+	loggerEMT->addAttribute("i12", lineEMT->attribute("i_intf"));
+
+	Examples::CIGREMV::logPVDecomposedAttributes(loggerEMT, pv);
 
 	// load step sized in absolute terms
 	// std::shared_ptr<SwitchEvent> loadStepEvent = Examples::createEventAddPowerConsumption("n2", 1-timeStepEMT, 100e3, systemEMT, Domain::EMT, loggerEMT);

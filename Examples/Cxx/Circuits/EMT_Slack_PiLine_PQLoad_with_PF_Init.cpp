@@ -67,6 +67,7 @@ int main(int argc, char* argv[]) {
 	auto loggerPF = DataLogger::make(simNamePF);
 	loggerPF->addAttribute("v1", n1PF->attribute("v"));
 	loggerPF->addAttribute("v2", n2PF->attribute("v"));
+	loggerPF->addAttribute("i12", linePF->attribute("i_intf"));
 
 	// Simulation
 	Simulation simPF(simNamePF, Logger::Level::debug);
@@ -113,6 +114,7 @@ int main(int argc, char* argv[]) {
 	auto loggerEMT = DataLogger::make(simNameEMT);
 	loggerEMT->addAttribute("v1", n1EMT->attribute("v"));
 	loggerEMT->addAttribute("v2", n2EMT->attribute("v"));
+	loggerEMT->addAttribute("i12", lineEMT->attribute("i_intf"));
 
 	// load step sized in absolute terms
 	// std::shared_ptr<SwitchEvent> loadStepEvent = Examples::createEventAddPowerConsumption("n2", 1-timeStepEMT, 100e3, systemEMT, Domain::EMT, loggerEMT);
