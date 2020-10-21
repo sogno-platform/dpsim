@@ -30,10 +30,18 @@ int main(int argc, char* argv[]) {
 	Real lineResistance = 0.05;
 	Real lineInductance = 0.1;
 	Real lineCapacitance = 0.1e-6;
+	
+	// Simulation parameters
+	Real timeStep = 0.0001;
 	Real finalTime = 2.0;
+	CommandLineArgs args(argc, argv);
+	if (argc > 1) {
+		timeStep = args.timeStep;
+		finalTime = args.duration;
+	}
 
 	// ----- POWERFLOW FOR INITIALIZATION -----
-	Real timeStepPF = 2.0;
+	Real timeStepPF = finalTime;
 	Real finalTimePF = finalTime+timeStepPF;
 	String simNamePF = "EMT_Slack_PiLine_PQLoad_with_PF_Init_PF";
 	Logger::setLogDir("logs/" + simNamePF);
@@ -81,7 +89,7 @@ int main(int argc, char* argv[]) {
 	simPF.run();
 
 	// ----- DYNAMIC SIMULATION -----
-	Real timeStepEMT = 0.0001;
+	Real timeStepEMT = timeStep;
 	Real finalTimeEMT = finalTime+timeStepEMT;
 	String simNameEMT = "EMT_Slack_PiLine_PQLoad_with_PF_Init_EMT";
 	Logger::setLogDir("logs/" + simNameEMT);
@@ -117,7 +125,7 @@ int main(int argc, char* argv[]) {
 	loggerEMT->addAttribute("i12", lineEMT->attribute("i_intf"));
 
 	// load step sized in absolute terms
-	// std::shared_ptr<SwitchEvent> loadStepEvent = Examples::createEventAddPowerConsumption("n2", 1-timeStepEMT, 100e3, systemEMT, Domain::EMT, loggerEMT);
+	std::shared_ptr<SwitchEvent3Ph> loadStepEvent = Examples::createEventAddPowerConsumption3Ph("n2", 0.1-timeStepEMT, 100e3, systemEMT, Domain::EMT, loggerEMT);
 
 	// Simulation
 	Simulation sim(simNameEMT, Logger::Level::debug);
@@ -127,7 +135,7 @@ int main(int argc, char* argv[]) {
 	sim.setDomain(Domain::EMT);
 	sim.doPowerFlowInit(false);
 	sim.addLogger(loggerEMT);
-	// sim.addEvent(loadStepEvent);
+	sim.addEvent(loadStepEvent);
 	sim.run();
 	
 }

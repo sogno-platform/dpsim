@@ -216,14 +216,14 @@ namespace CIGREMV {
             loadSwitch->open();
             system.addComponent(loadSwitch);
             system.connectComponentToNodes<Complex>(loadSwitch, { CPS::SimNode<Complex>::GND, connectionNode});
-            logger->addAttribute("pv_switchedload_i", loadSwitch->attribute("i_intf"));
+            logger->addAttribute("switchedload_i", loadSwitch->attribute("i_intf"));
             return DPsim::SwitchEvent::make(eventTime, loadSwitch, true);
         } else {
             return nullptr;
         }
     }
 
-    std::shared_ptr<DPsim::SwitchEvent3Ph> createEventAddPowerConsumption3Ph(String nodeName, Real eventTime, Real additionalActivePower, SystemTopology& system, Domain domain) {
+    std::shared_ptr<DPsim::SwitchEvent3Ph> createEventAddPowerConsumption3Ph(String nodeName, Real eventTime, Real additionalActivePower, SystemTopology& system, Domain domain, DPsim::DataLogger::Ptr logger) {
         
         // TODO: use base classes ph3
          if (domain == CPS::Domain::EMT) {
@@ -234,6 +234,7 @@ namespace CIGREMV {
             loadSwitch->openSwitch();
             system.addComponent(loadSwitch);
             system.connectComponentToNodes<Real>(loadSwitch, { CPS::SimNode<Real>::GND, system.node<CPS::SimNode<Real>>(nodeName) });
+            logger->addAttribute("switchedload_i", loadSwitch->attribute("i_intf"));
             return DPsim::SwitchEvent3Ph::make(eventTime, loadSwitch, true);
         } else {
             return nullptr;

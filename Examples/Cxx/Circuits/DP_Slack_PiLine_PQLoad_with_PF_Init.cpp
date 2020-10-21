@@ -23,17 +23,25 @@ using namespace CPS::CIM;
 
 int main(int argc, char* argv[]) {
 	
-	// Parameters
+	// Component parameters
 	Real Vnom = 20e3;
 	Real pLoadNom = 100e3;
 	Real qLoadNom = 50e3;
 	Real lineResistance = 0.05;
 	Real lineInductance = 0.1;
 	Real lineCapacitance = 0.1e-6;
+	
+	// Simulation parameters
+	Real timeStep = 0.001;
 	Real finalTime = 2.0;
+	CommandLineArgs args(argc, argv);
+	if (argc > 1) {
+		timeStep = args.timeStep;
+		finalTime = args.duration;
+	}
 
 	// ----- POWERFLOW FOR INITIALIZATION -----
-	Real timeStepPF = 2.0;
+	Real timeStepPF = finalTime;
 	Real finalTimePF = finalTime+timeStepPF;
 	String simNamePF = "DP_Slack_PiLine_PQLoad_with_PF_Init_PF";
 	Logger::setLogDir("logs/" + simNamePF);
@@ -80,7 +88,7 @@ int main(int argc, char* argv[]) {
 	simPF.run();
 
 	// ----- DYNAMIC SIMULATION -----
-	Real timeStepDP = 0.001;
+	Real timeStepDP = timeStep;
 	Real finalTimeDP = finalTime+timeStepDP;
 	String simNameDP = "DP_Slack_PiLine_PQLoad_with_PF_Init_DP";
 	Logger::setLogDir("logs/" + simNameDP);
@@ -115,9 +123,10 @@ int main(int argc, char* argv[]) {
 	auto loggerDP = DataLogger::make(simNameDP);
 	loggerDP->addAttribute("v1", n1DP->attribute("v"));
 	loggerDP->addAttribute("v2", n2DP->attribute("v"));
+	loggerDP->addAttribute("i12", lineDP->attribute("i_intf"));
 
 	// load step sized in absolute terms
-	std::shared_ptr<SwitchEvent> loadStepEvent = Examples::createEventAddPowerConsumption("n2", 1-timeStepDP, 100e3, systemDP, Domain::DP, loggerDP);
+	std::shared_ptr<SwitchEvent> loadStepEvent = Examples::createEventAddPowerConsumption("n2", 0.1-timeStepDP, 100e3, systemDP, Domain::DP, loggerDP);
 
 	// Simulation
 	Simulation sim(simNameDP, Logger::Level::debug);
