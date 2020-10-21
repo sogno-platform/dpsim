@@ -192,5 +192,6 @@ void EMT::Ph3::Inductor::mnaUpdateCurrent(const Matrix& leftVector) {
 		"\nCurrent: {:s}",
 		Logger::matrixToString(mIntfCurrent)
 	);
+	mSLog->flush();
 }
 

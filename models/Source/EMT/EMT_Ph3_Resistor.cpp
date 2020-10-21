@@ -141,6 +141,7 @@ void EMT::Ph3::Resistor::mnaUpdateVoltage(const Matrix& leftVector) {
 		"\nVoltage: {:s}",
 		Logger::matrixToString(mIntfVoltage)
 	);
+	mSLog->flush();
 }
 
 void EMT::Ph3::Resistor::mnaUpdateCurrent(const Matrix& leftVector) {
@@ -149,4 +150,5 @@ void EMT::Ph3::Resistor::mnaUpdateCurrent(const Matrix& leftVector) {
 		"\nCurrent: {:s}",
 		Logger::matrixToString(mIntfCurrent)
 	);
+	mSLog->flush();
 }

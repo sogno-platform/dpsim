@@ -13,16 +13,17 @@ using namespace CPS;
 
 EMT::Ph3::ControlledVoltageSource::ControlledVoltageSource(String uid, String name, Logger::Level logLevel)
 	: SimPowerComp<Real>(uid, name, logLevel) {
-	setVirtualNodeNumber(3);
+	mPhaseType = PhaseType::ABC;
+	setVirtualNodeNumber(1);
 	setTerminalNumber(2);
 	mIntfVoltage = Matrix::Zero(3, 1);
 	mIntfCurrent = Matrix::Zero(3, 1);
 
 }
 
-void EMT::Ph3::ControlledVoltageSource::setParameters(Matrix voltageRefABC) {
+void EMT::Ph3::ControlledVoltageSource::setParameters(const Matrix& voltageRefABC) {
 	mIntfVoltage = voltageRefABC;
-
+	mSLog->info("Reference voltage: {:s}", Logger::matrixToString(mIntfVoltage));
 	mParametersSet = true;
 }
 
@@ -70,13 +71,22 @@ void EMT::Ph3::ControlledVoltageSource::mnaApplyRightSideVectorStamp(Matrix& rig
 	Math::setVectorElement(rightVector, mVirtualNodes[0]->matrixNodeIndex(PhaseType::C), mIntfVoltage(2, 0));
 }
 
-
-void EMT::Ph3::ControlledVoltageSource::MnaPreStep::execute(Real time, Int timeStepCount) {
-	mControlledVoltageSource.mnaApplyRightSideVectorStamp(mControlledVoltageSource.mRightVector);
+void EMT::Ph3::ControlledVoltageSource::mnaAddPreStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes) {
+	attributeDependencies.push_back(attribute("v_intf"));
+	modifiedAttributes.push_back(attribute("right_vector"));
 }
 
-void EMT::Ph3::ControlledVoltageSource::MnaPostStep::execute(Real time, Int timeStepCount) {
-	mControlledVoltageSource.mnaUpdateCurrent(*mLeftVector);
+void EMT::Ph3::ControlledVoltageSource::mnaPreStep(Real time, Int timeStepCount) {
+	mnaApplyRightSideVectorStamp(mRightVector);
+}
+
+void EMT::Ph3::ControlledVoltageSource::mnaAddPostStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes, Attribute<Matrix>::Ptr &leftVector) {
+	attributeDependencies.push_back(leftVector);
+	modifiedAttributes.push_back(attribute("i_intf"));
+};
+
+void EMT::Ph3::ControlledVoltageSource::mnaPostStep(Real time, Int timeStepCount, Attribute<Matrix>::Ptr &leftVector) {
+	mnaUpdateCurrent(*leftVector);
 }
 
 void EMT::Ph3::ControlledVoltageSource::mnaUpdateCurrent(const Matrix& leftVector) {

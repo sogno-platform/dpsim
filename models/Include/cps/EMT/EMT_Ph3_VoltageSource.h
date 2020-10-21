@@ -30,7 +30,9 @@ namespace CPS {
 				void updateVoltage(Real time);
 				void updateVoltage(Matrix vabc);
 
+				/// Magnitude of the sinusoidal voltage (peak-value, phase-to-ground)
 				Attribute<Complex>::Ptr mVoltageRef;
+				/// Frequency of the sinusoidal voltage
 				Attribute<Real>::Ptr mSrcFreq;
 			public:
 				/// Defines UID, name and logging level
@@ -55,33 +57,34 @@ namespace CPS {
 				void mnaApplyRightSideVectorStamp(Matrix& rightVector);
 				/// Returns current through the component
 				void mnaUpdateCurrent(const Matrix& leftVector);
+				/// MNA pre step operations
+				void mnaPreStep(Real time, Int timeStepCount);
+				/// MNA post step operations
+				void mnaPostStep(Real time, Int timeStepCount, Attribute<Matrix>::Ptr &leftVector);
+				/// Add MNA pre step dependencies
+				void mnaAddPreStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes);
+				/// Add MNA post step dependencies
+				void mnaAddPostStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes, Attribute<Matrix>::Ptr &leftVector);
 
-				class MnaPreStep : public CPS::Task {
+				class MnaPreStep : public Task {
 				public:
 					MnaPreStep(VoltageSource& voltageSource) :
 						Task(voltageSource.mName + ".MnaPreStep"), mVoltageSource(voltageSource) {
-						mAttributeDependencies.push_back(voltageSource.attribute("V_ref"));
-						mModifiedAttributes.push_back(mVoltageSource.attribute("right_vector"));
-						mModifiedAttributes.push_back(mVoltageSource.attribute("v_intf"));
-					}
-
-					void execute(Real time, Int timeStepCount);
-
+							mVoltageSource.mnaAddPreStepDependencies(mPrevStepDependencies, mAttributeDependencies, mModifiedAttributes);
+						}
+						void execute(Real time, Int timeStepCount) { mVoltageSource.mnaPreStep(time, timeStepCount); };
 				private:
 					VoltageSource& mVoltageSource;
 				};
 
-				class MnaPostStep : public CPS::Task {
+				class MnaPostStep : public Task {
 				public:
 					MnaPostStep(VoltageSource& voltageSource, Attribute<Matrix>::Ptr leftVector) :
-						Task(voltageSource.mName + ".MnaPostStep"), mVoltageSource(voltageSource), mLeftVector(leftVector)
-					{
-						mAttributeDependencies.push_back(mLeftVector);
-						mModifiedAttributes.push_back(mVoltageSource.attribute("i_intf"));
+						Task(voltageSource.mName + ".MnaPostStep"),			
+						mVoltageSource(voltageSource), mLeftVector(leftVector) {
+							mVoltageSource.mnaAddPostStepDependencies(mPrevStepDependencies, mAttributeDependencies, mModifiedAttributes, mLeftVector);
 					}
-
-					void execute(Real time, Int timeStepCount);
-
+					void execute(Real time, Int timeStepCount)  { mVoltageSource.mnaPostStep(time, timeStepCount, mLeftVector); };
 				private:
 					VoltageSource& mVoltageSource;
 					Attribute<Matrix>::Ptr mLeftVector;

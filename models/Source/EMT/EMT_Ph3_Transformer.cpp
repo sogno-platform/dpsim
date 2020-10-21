@@ -41,6 +41,8 @@ void EMT::Ph3::Transformer::setParameters(Real ratioAbs, Real ratioPhase,
 	Matrix resistance, Matrix inductance) {
 	Base::Ph3::Transformer::setParameters(ratioAbs, ratioPhase, resistance, inductance);
 
+	mSLog->info("Resistance={} [Ohm] Inductance={} [Ohm] (referred to primary side)", resistance, inductance);
+    mSLog->info("Tap Ratio={} [ ] Phase Shift={} [deg]", ratioAbs, ratioPhase);
 	mParametersSet = true;
 }
 
@@ -65,6 +67,7 @@ void EMT::Ph3::Transformer::initializeFromNodesAndTerminals(Real frequency) {
 		Complex(mResistance(0, 0), omega * mInductance(0, 0)), Complex(mResistance(0, 1), omega * mInductance(0, 1)), Complex(mResistance(0, 2), omega * mInductance(0, 2)),
 		Complex(mResistance(1, 0), omega * mInductance(1, 0)), Complex(mResistance(1, 1), omega * mInductance(1, 1)), Complex(mResistance(1, 2), omega * mInductance(1, 2)),
 		Complex(mResistance(2, 0), omega * mInductance(2, 0)), Complex(mResistance(2, 1), omega * mInductance(2, 1)), Complex(mResistance(2, 2), omega * mInductance(2, 2));
+	mSLog->info("Reactance={} [Ohm] (referred to primary side)", Logger::matrixToString(omega * mInductance));
 
 	MatrixComp vInitABC = MatrixComp::Zero(3, 1);
 	vInitABC(0, 0) = mVirtualNodes[0]->initialSingleVoltage() - RMS3PH_TO_PEAK1PH * initialSingleVoltage(0);
@@ -102,6 +105,7 @@ void EMT::Ph3::Transformer::initializeFromNodesAndTerminals(Real frequency) {
 	mSubSnubResistor->connect({ node(1), EMT::SimNode::GND });
 	mSubSnubResistor->initialize(mFrequencies);
 	mSubSnubResistor->initializeFromNodesAndTerminals(frequency);
+	mSLog->info("Snubber Resistance={} [Ohm] (connected to LV side)", Logger::matrixToString(mSnubberResistance));
 
 	mSLog->info(
 		"\n--- Initialization from powerflow ---"
@@ -115,7 +119,7 @@ void EMT::Ph3::Transformer::initializeFromNodesAndTerminals(Real frequency) {
 		Logger::matrixToString(mIntfCurrent),
 		Logger::phasorToString(RMS3PH_TO_PEAK1PH * initialSingleVoltage(0)),
 		Logger::phasorToString(RMS3PH_TO_PEAK1PH * initialSingleVoltage(1)),
-		Logger::phasorToString(mVirtualNodes[0]->initialSingleVoltage()));
+		Logger::phasorToString(RMS3PH_TO_PEAK1PH * mVirtualNodes[0]->initialSingleVoltage()));
 }
 
 void EMT::Ph3::Transformer::mnaInitialize(Real omega, Real timeStep, Attribute<Matrix>::Ptr leftVector) {
@@ -207,13 +211,43 @@ void EMT::Ph3::Transformer::mnaApplyRightSideVectorStamp(Matrix& rightVector) {
 	mSubInductor->mnaApplyRightSideVectorStamp(rightVector);
 }
 
-void EMT::Ph3::Transformer::MnaPreStep::execute(Real time, Int timeStepCount) {
-	mTransformer.mnaApplyRightSideVectorStamp(mTransformer.mRightVector);
+void EMT::Ph3::Transformer::mnaAddPreStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes) {
+	// add pre-step dependencies of subcomponents
+	mSubInductor->mnaAddPreStepDependencies(prevStepDependencies, attributeDependencies, modifiedAttributes);
+	// add pre-step dependencies of component itself
+	prevStepDependencies.push_back(attribute("i_intf"));
+	prevStepDependencies.push_back(attribute("v_intf"));
+	modifiedAttributes.push_back(attribute("right_vector"));
 }
 
-void EMT::Ph3::Transformer::MnaPostStep::execute(Real time, Int timeStepCount) {
-	mTransformer.mnaUpdateVoltage(*mLeftVector);
-	mTransformer.mnaUpdateCurrent(*mLeftVector);
+void EMT::Ph3::Transformer::mnaPreStep(Real time, Int timeStepCount) {	
+	// pre-step of subcomponents
+	mSubInductor->mnaPreStep(time, timeStepCount);
+	// pre-step of component itself
+	mnaApplyRightSideVectorStamp(mRightVector);
+}
+
+void EMT::Ph3::Transformer::mnaAddPostStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes, Attribute<Matrix>::Ptr &leftVector) {
+	// add post-step dependencies of subcomponents
+	if (mSubResistor)
+		mSubResistor->mnaAddPostStepDependencies(prevStepDependencies, attributeDependencies, modifiedAttributes, leftVector);
+	mSubInductor->mnaAddPostStepDependencies(prevStepDependencies, attributeDependencies, modifiedAttributes, leftVector);
+	mSubSnubResistor->mnaAddPostStepDependencies(prevStepDependencies, attributeDependencies, modifiedAttributes, leftVector);
+	// add post-step dependencies of component itself
+	attributeDependencies.push_back(leftVector);
+	modifiedAttributes.push_back(attribute("v_intf"));
+	modifiedAttributes.push_back(attribute("i_intf"));
+}
+
+void EMT::Ph3::Transformer::mnaPostStep(Real time, Int timeStepCount, Attribute<Matrix>::Ptr &leftVector) {
+	// post-step of subcomponents
+	if (mSubResistor)
+		mSubResistor->mnaPostStep(time, timeStepCount, leftVector);
+	mSubInductor->mnaPostStep(time, timeStepCount, leftVector);
+	mSubSnubResistor->mnaPostStep(time, timeStepCount, leftVector);
+	// post-step of component itself
+	mnaUpdateVoltage(*leftVector);
+	mnaUpdateCurrent(*leftVector);
 }
 
 void EMT::Ph3::Transformer::mnaUpdateCurrent(const Matrix& leftVector) {

@@ -11,9 +11,6 @@
 
 using namespace CPS;
 
-// !!! TODO: 	Adaptions to use in EMT_Ph3 models phase-to-ground peak variables
-// !!! 			with initialization from phase-to-phase RMS variables
-
 EMT::Ph3::VoltageSource::VoltageSource(String uid, String name, Logger::Level logLevel)
 	: SimPowerComp<Real>(uid, name, logLevel) {
 	mPhaseType = PhaseType::ABC;
@@ -112,13 +109,24 @@ void EMT::Ph3::VoltageSource::updateVoltage(Matrix vabc) {
 	mIntfVoltage=vabc;
 }
 
-void EMT::Ph3::VoltageSource::MnaPreStep::execute(Real time, Int timeStepCount) {
-	mVoltageSource.updateVoltage(time);
-	mVoltageSource.mnaApplyRightSideVectorStamp(mVoltageSource.mRightVector);
+void EMT::Ph3::VoltageSource::mnaAddPreStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes) {
+	attributeDependencies.push_back(attribute("V_ref"));
+	modifiedAttributes.push_back(attribute("right_vector"));
+	modifiedAttributes.push_back(attribute("v_intf"));
 }
 
-void EMT::Ph3::VoltageSource::MnaPostStep::execute(Real time, Int timeStepCount) {
-	mVoltageSource.mnaUpdateCurrent(*mLeftVector);
+void EMT::Ph3::VoltageSource::mnaPreStep(Real time, Int timeStepCount) {
+	updateVoltage(time);
+	mnaApplyRightSideVectorStamp(mRightVector);
+}
+
+void EMT::Ph3::VoltageSource::mnaAddPostStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes, Attribute<Matrix>::Ptr &leftVector) {
+	attributeDependencies.push_back(leftVector);
+	modifiedAttributes.push_back(attribute("i_intf"));
+};
+
+void EMT::Ph3::VoltageSource::mnaPostStep(Real time, Int timeStepCount, Attribute<Matrix>::Ptr &leftVector) {
+	mnaUpdateCurrent(*leftVector);
 }
 
 void EMT::Ph3::VoltageSource::mnaUpdateCurrent(const Matrix& leftVector) {
