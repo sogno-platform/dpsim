@@ -14,7 +14,7 @@
 #include <cps/EMT/EMT_Ph3_Resistor.h>
 #include <cps/EMT/EMT_Ph3_Inductor.h>
 #include <cps/EMT/EMT_Ph3_Capacitor.h>
-#include <cps/EMT/EMT_Ph3_VoltageSource.h>
+#include <cps/EMT/EMT_Ph3_ControlledVoltageSource.h>
 #include <cps/EMT/EMT_Ph3_Transformer.h>
 #include <cps/Base/Base_AvVoltageSourceInverterDQ.h>
 #include <cps/Signal/PLL.h>
@@ -52,7 +52,7 @@ namespace Ph3 {
 
 		// ### Electrical Subcomponents ###
 		/// Controlled voltage source
-		std::shared_ptr<EMT::Ph3::VoltageSource> mSubCtrledVoltageSource;
+		std::shared_ptr<EMT::Ph3::ControlledVoltageSource> mSubCtrledVoltageSource;
 		/// Resistor Rf as part of LCL filter
 		std::shared_ptr<EMT::Ph3::Resistor> mSubResistorF;
 		/// Capacitor Cf as part of LCL filter
@@ -76,7 +76,7 @@ namespace Ph3 {
 		Real mIrcq = 0;
 		// Control outputs
 		/// Voltage as control output after transformation interface
-		MatrixComp mVsref = MatrixComp::Zero(1,1);
+		Matrix mVsref = Matrix::Zero(3,1);
 
 		/// Boolean for connection transformer usage
 		Bool mWithConnectionTransformer=false;
@@ -112,6 +112,10 @@ namespace Ph3 {
 		Matrix getParkTransformMatrixPowerInvariant(Real theta);
 		///
 		Matrix parkTransformPowerInvariant(Real theta, const Matrix &fabc);
+		///
+		Matrix getInverseParkTransformMatrixPowerInvariant(Real theta);
+		///
+		Matrix inverseParkTransformPowerInvariant(Real theta, const Matrix &fdq);
 
 		// #### MNA section ####
 		/// Initializes internal variables of the component
