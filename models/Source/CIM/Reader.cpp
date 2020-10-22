@@ -575,7 +575,6 @@ TopologicalPowerComp::Ptr Reader::mapSynchronousMachine(CIMPP::SynchronousMachin
 									unitValue(machine->ratedU.value, UnitMultiplier::k),
 									setPointActivePower,
 									setPointVoltage,
-									maximumReactivePower,
 									PowerflowBusType::PV);
 							gen->setBaseVoltage(unitValue(machine->ratedU.value, UnitMultiplier::k));
 						return gen;

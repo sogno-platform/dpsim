@@ -53,7 +53,7 @@ namespace Ph1 {
 			SynchronGenerator(String name, Logger::Level logLevel = Logger::Level::off)
 				: SynchronGenerator(name, name, logLevel) { }
 			/// Setter for synchronous generator parameters
-			void setParameters(Real ratedApparentPower, Real ratedVoltage, Real setPointActivePower, Real setPointVoltage, Real maximumReactivePower, PowerflowBusType powerflowBusType);
+			void setParameters(Real ratedApparentPower, Real ratedVoltage, Real setPointActivePower, Real setPointVoltage, PowerflowBusType powerflowBusType);
 
 			// #### Powerflow section ####
 			/// Set base voltage

@@ -24,17 +24,15 @@ SP::Ph1::SynchronGenerator::SynchronGenerator(String uid, String name, Logger::L
     addAttribute<Real>("V_set_pu", &mSetPointVoltagePerUnit, Flags::read | Flags::write);
 };
 
-void SP::Ph1::SynchronGenerator::setParameters(Real ratedApparentPower, Real ratedVoltage, Real setPointActivePower, Real setPointVoltage, Real maximumReactivePower, PowerflowBusType powerflowBusType) {
+void SP::Ph1::SynchronGenerator::setParameters(Real ratedApparentPower, Real ratedVoltage, Real setPointActivePower, Real setPointVoltage, PowerflowBusType powerflowBusType) {
 	mRatedApparentPower = ratedApparentPower;
     mRatedVoltage = ratedVoltage;
     mSetPointActivePower = setPointActivePower;
     mSetPointVoltage = setPointVoltage;
-    mMaximumReactivePower = maximumReactivePower;
     mPowerflowBusType = powerflowBusType;
 
 	mSLog->info("Rated Apparent Power={} [VA] Rated Voltage={} [V]", mRatedApparentPower, mRatedVoltage);
     mSLog->info("Active Power Set Point={} [W] Voltage Set Point={} [V]", mSetPointActivePower, mSetPointVoltage);
-    mSLog->info("Maximum Reactive Power={} [VAr]", mMaximumReactivePower);
 	mSLog->flush();
 }
 
