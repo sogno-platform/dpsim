@@ -57,20 +57,22 @@ void DP::Ph1::PiLine::initializeFromNodesAndTerminals(Real frequency) {
 
 	// By default there is always a small conductance to ground to
 	// avoid problems with floating nodes.
-	// Create parallel sub components
-	if (mParallelCond >= 0) {
-		mSubParallelResistor0 = std::make_shared<DP::Ph1::Resistor>(mName + "_con0", mLogLevel);
-		mSubParallelResistor0->setParameters(2./mParallelCond);
-		mSubParallelResistor0->connect(SimNode::List{ SimNode::GND, mTerminals[0]->node() });
-		mSubParallelResistor0->initialize(mFrequencies);
-		mSubParallelResistor0->initializeFromNodesAndTerminals(frequency);
+	Real defaultParallelCond = 1e-6;
+	mParallelCond = (mParallelCond > 0) ? mParallelCond : defaultParallelCond;
 
-		mSubParallelResistor1 = std::make_shared<DP::Ph1::Resistor>(mName + "_con1", mLogLevel);
-		mSubParallelResistor1->setParameters(2./mParallelCond);
-		mSubParallelResistor1->connect(SimNode::List{ SimNode::GND, mTerminals[1]->node() });
-		mSubParallelResistor1->initialize(mFrequencies);
-		mSubParallelResistor1->initializeFromNodesAndTerminals(frequency);
-	}
+	// Create parallel sub components
+	mSubParallelResistor0 = std::make_shared<DP::Ph1::Resistor>(mName + "_con0", mLogLevel);
+	mSubParallelResistor0->setParameters(2./mParallelCond);
+	mSubParallelResistor0->connect(SimNode::List{ SimNode::GND, mTerminals[0]->node() });
+	mSubParallelResistor0->initialize(mFrequencies);
+	mSubParallelResistor0->initializeFromNodesAndTerminals(frequency);
+
+	mSubParallelResistor1 = std::make_shared<DP::Ph1::Resistor>(mName + "_con1", mLogLevel);
+	mSubParallelResistor1->setParameters(2./mParallelCond);
+	mSubParallelResistor1->connect(SimNode::List{ SimNode::GND, mTerminals[1]->node() });
+	mSubParallelResistor1->initialize(mFrequencies);
+	mSubParallelResistor1->initializeFromNodesAndTerminals(frequency);
+
 
 	if (mParallelCap >= 0) {
 		mSubParallelCapacitor0 = std::make_shared<DP::Ph1::Capacitor>(mName + "_cap0", mLogLevel);
@@ -109,12 +111,12 @@ void DP::Ph1::PiLine::mnaInitialize(Real omega, Real timeStep, Attribute<Matrix>
 	mSubSeriesResistor->mnaInitialize(omega, timeStep, leftVector);
 	mSubSeriesInductor->mnaInitialize(omega, timeStep, leftVector);
 	mRightVectorStamps.push_back(&mSubSeriesInductor->attribute<Matrix>("right_vector")->get());
-	if (mParallelCond >= 0) {
-		mSubParallelResistor0->mnaInitialize(omega, timeStep, leftVector);
-		mSubParallelResistor1->mnaInitialize(omega, timeStep, leftVector);
-		subComps.push_back(mSubParallelResistor0);
-		subComps.push_back(mSubParallelResistor1);
-	}
+
+	mSubParallelResistor0->mnaInitialize(omega, timeStep, leftVector);
+	mSubParallelResistor1->mnaInitialize(omega, timeStep, leftVector);
+	subComps.push_back(mSubParallelResistor0);
+	subComps.push_back(mSubParallelResistor1);
+
 	if (mParallelCap >= 0) {
 		mSubParallelCapacitor0->mnaInitialize(omega, timeStep, leftVector);
 		mSubParallelCapacitor1->mnaInitialize(omega, timeStep, leftVector);
@@ -131,10 +133,10 @@ void DP::Ph1::PiLine::mnaInitialize(Real omega, Real timeStep, Attribute<Matrix>
 void DP::Ph1::PiLine::mnaApplySystemMatrixStamp(Matrix& systemMatrix) {
 	mSubSeriesResistor->mnaApplySystemMatrixStamp(systemMatrix);
 	mSubSeriesInductor->mnaApplySystemMatrixStamp(systemMatrix);
-	if (mParallelCond >= 0) {
-		mSubParallelResistor0->mnaApplySystemMatrixStamp(systemMatrix);
-		mSubParallelResistor1->mnaApplySystemMatrixStamp(systemMatrix);
-	}
+
+	mSubParallelResistor0->mnaApplySystemMatrixStamp(systemMatrix);
+	mSubParallelResistor1->mnaApplySystemMatrixStamp(systemMatrix);
+
 	if (mParallelCap >= 0) {
 		mSubParallelCapacitor0->mnaApplySystemMatrixStamp(systemMatrix);
 		mSubParallelCapacitor1->mnaApplySystemMatrixStamp(systemMatrix);
@@ -179,10 +181,10 @@ void DP::Ph1::PiLine::mnaAddPostStepDependencies(AttributeBase::List &prevStepDe
 		this->mSubParallelCapacitor0->mnaAddPostStepDependencies(prevStepDependencies, attributeDependencies, modifiedAttributes, leftVector);
 		this->mSubParallelCapacitor1->mnaAddPostStepDependencies(prevStepDependencies, attributeDependencies, modifiedAttributes, leftVector);
 	}
-	if (this->mParallelCond >= 0) {
-		this->mSubParallelResistor0->mnaAddPostStepDependencies(prevStepDependencies, attributeDependencies, modifiedAttributes, leftVector);
-		this->mSubParallelResistor1->mnaAddPostStepDependencies(prevStepDependencies, attributeDependencies, modifiedAttributes, leftVector);
-	}
+
+	this->mSubParallelResistor0->mnaAddPostStepDependencies(prevStepDependencies, attributeDependencies, modifiedAttributes, leftVector);
+	this->mSubParallelResistor1->mnaAddPostStepDependencies(prevStepDependencies, attributeDependencies, modifiedAttributes, leftVector);
+
 	// add post-step dependencies of component itself
 	attributeDependencies.push_back(leftVector);
 	modifiedAttributes.push_back(this->attribute("v_intf"));
@@ -197,10 +199,10 @@ void DP::Ph1::PiLine::mnaPostStep(Real time, Int timeStepCount, Attribute<Matrix
 		this->mSubParallelCapacitor0->mnaPostStep(time, timeStepCount, leftVector);
 		this->mSubParallelCapacitor1->mnaPostStep(time, timeStepCount, leftVector);
 	}
-	if (this->mParallelCond >= 0) {
-		this->mSubParallelResistor0->mnaPostStep(time, timeStepCount, leftVector);
-		this->mSubParallelResistor1->mnaPostStep(time, timeStepCount, leftVector);
-	}
+
+	this->mSubParallelResistor0->mnaPostStep(time, timeStepCount, leftVector);
+	this->mSubParallelResistor1->mnaPostStep(time, timeStepCount, leftVector);
+
 	// post-step of component itself
 	this->mnaUpdateVoltage(*leftVector);
 	this->mnaUpdateCurrent(*leftVector);
@@ -221,10 +223,8 @@ void DP::Ph1::PiLine::mnaUpdateCurrent(const Matrix& leftVector) {
 MNAInterface::List DP::Ph1::PiLine::mnaTearGroundComponents() {
 	MNAInterface::List gndComponents;
 
-	if (mParallelCond >= 0) {
-		gndComponents.push_back(mSubParallelResistor0);
-		gndComponents.push_back(mSubParallelResistor1);
-	}
+	gndComponents.push_back(mSubParallelResistor0);
+	gndComponents.push_back(mSubParallelResistor1);
 
 	if (mParallelCap >= 0) {
 		gndComponents.push_back(mSubParallelCapacitor0);
