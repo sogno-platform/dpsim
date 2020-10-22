@@ -27,6 +27,10 @@ void EMT::Ph3::VoltageSource::setParameters(Complex voltageRef, Real srcFreq) {
 	attribute<Complex>("V_ref")->set(voltageRef);
 	attribute<Real>("f_src")->set(srcFreq);
 
+	mSLog->info("\nVoltage reference phasor [V]: {:s}"
+				"\nFrequency [Hz]: {:s}", 
+				Logger::phasorToString(voltageRef), 
+				Logger::realToString(srcFreq));
 	mParametersSet = true;
 }
 

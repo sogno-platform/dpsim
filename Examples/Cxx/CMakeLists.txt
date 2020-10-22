@@ -31,6 +31,7 @@ set(CIRCUIT_SOURCES
 	Circuits/DP_Basics_EMT_Sims.cpp
 	#Circuits/EMT_ResVS_RL_Switch.cpp
 	Circuits/EMT_VSI.cpp
+	Circuits/EMT_PiLine.cpp
 
 	# Static Phasor examples
 	Circuits/SP_Circuits.cpp
