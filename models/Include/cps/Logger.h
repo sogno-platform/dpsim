@@ -56,13 +56,13 @@ namespace CPS {
 		// #### to string methods ####
 		static String matrixToString(const Matrix& mat) {
 			std::stringstream ss;
-			ss << std::scientific << mat;
+			ss << std::scientific << "\n" << mat;
 			return ss.str();
 		}
 
 		static String matrixCompToString(const MatrixComp& mat) {
 			std::stringstream ss;
-			ss << std::scientific << mat;
+			ss << std::scientific << "\n" << mat;
 			return ss.str();
 		}
 
@@ -89,6 +89,12 @@ namespace CPS {
 		static String complexToString(const Complex& num) {
 			std::stringstream ss;
 			ss << std::defaultfloat << num.real() << "+j" << num.imag();
+			return ss.str();
+		}
+
+		static String realToString(const Real& num) {
+			std::stringstream ss;
+			ss << std::defaultfloat << num;
 			return ss.str();
 		}
 

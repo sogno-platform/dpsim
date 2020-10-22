@@ -43,7 +43,10 @@ void EMT::Ph3::Capacitor::initializeFromNodesAndTerminals(Real frequency) {
 	mIntfVoltage = vInitABC.real();
 	mIntfCurrent = (admittance * vInitABC).real();
 
-
+	mSLog->info("\nCapacitance [F]: {:s}"
+				"\nAdmittance [S]: {:s}",
+				Logger::matrixToString(mCapacitance),
+				Logger::matrixCompToString(admittance));
 	mSLog->info(
 		"\n--- Initialization from powerflow ---"
 		"\nVoltage across: {:s}"
@@ -117,11 +120,11 @@ void EMT::Ph3::Capacitor::mnaApplySystemMatrixStamp(Matrix& systemMatrix) {
 		Math::addToMatrixElement(systemMatrix, matrixNodeIndex(1, 2), matrixNodeIndex(0, 0), -mEquivCond(2, 0));
 		Math::addToMatrixElement(systemMatrix, matrixNodeIndex(1, 2), matrixNodeIndex(0, 1), -mEquivCond(2, 1));
 		Math::addToMatrixElement(systemMatrix, matrixNodeIndex(1, 2), matrixNodeIndex(0, 2), -mEquivCond(2, 2));
-
-		mSLog->info(
+	}
+	
+	mSLog->info(
 			"\nEquivalent Conductance: {:s}",
 			Logger::matrixToString(mEquivCond));
-	}
 }
 
 void EMT::Ph3::Capacitor::mnaApplyRightSideVectorStamp(Matrix& rightVector) {

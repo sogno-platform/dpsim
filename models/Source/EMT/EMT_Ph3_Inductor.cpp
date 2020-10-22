@@ -44,7 +44,10 @@ void EMT::Ph3::Inductor::initializeFromNodesAndTerminals(Real frequency) {
 	MatrixComp admittance = impedance.inverse();
 	mIntfCurrent = (admittance * vInitABC).real();
 
-
+	mSLog->info("\nInductance [H]: {:s}"
+				"\nImpedance [Ohm]: {:s}",
+				Logger::matrixToString(mInductance),
+				Logger::matrixCompToString(impedance));
 	mSLog->info(
 		"\n--- Initialization from powerflow ---"
 		"\nVoltage across: {:s}"

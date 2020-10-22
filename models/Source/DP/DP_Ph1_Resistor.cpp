@@ -31,6 +31,10 @@ void DP::Ph1::Resistor::initializeFromNodesAndTerminals(Real frequency) {
 	mIntfVoltage(0,0) = initialSingleVoltage(1) - initialSingleVoltage(0);
 	mIntfCurrent(0,0) = mIntfVoltage(0,0) / impedance;
 
+	mSLog->info("\nResistance [Ohm]: {:s}"
+				"\nImpedance [Ohm]: {:s}",
+				Logger::realToString(mResistance),
+				Logger::complexToString(impedance));
 	mSLog->info("\n--- Initialization from powerflow ---"
 		"\nVoltage across: {:s}"
 		"\nCurrent: {:s}"

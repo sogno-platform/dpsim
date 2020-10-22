@@ -42,6 +42,10 @@ void DP::Ph1::Capacitor::initializeFromNodesAndTerminals(Real frequency) {
 	mIntfVoltage(0,0) = initialSingleVoltage(1) - initialSingleVoltage(0);
 	mIntfCurrent(0,0) = mIntfVoltage(0,0) / impedance;
 
+	mSLog->info("\nCapacitance [F]: {:s}"
+				"\nImpedance [Ohm]: {:s}",
+				Logger::realToString(mCapacitance),
+				Logger::complexToString(impedance));
 	mSLog->info(
 		"\n--- Initialization from powerflow ---"
 		"\nVoltage across: {:s}"

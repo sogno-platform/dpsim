@@ -37,6 +37,10 @@ void EMT::Ph3::Resistor::initializeFromNodesAndTerminals(Real frequency) {
 	mConductance = mResistance.inverse();
 	mIntfCurrent = (mConductance * vInitABC).real();
 
+	mSLog->info("\nResistance [Ohm]: {:s}"
+				"\nConductance [S]: {:s}", 
+				Logger::matrixToString(mResistance), 
+				Logger::matrixToString(mConductance));
 	mSLog->info(
 		"\n--- Initialization from powerflow ---"
 		"\nVoltage across: {:s}"

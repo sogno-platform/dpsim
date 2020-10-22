@@ -41,6 +41,10 @@ void DP::Ph1::Inductor::initializeFromNodesAndTerminals(Real frequency) {
 	mIntfVoltage(0,0) = initialSingleVoltage(1) - initialSingleVoltage(0);
 	mIntfCurrent(0,0) = mIntfVoltage(0,0) / impedance;
 
+	mSLog->info("\nInductance [H]: {:s}"
+			 	"\nImpedance [Ohm]: {:s}",
+				 Logger::realToString(mInductance),
+				 Logger::complexToString(impedance));
 	mSLog->info(
 		"\n--- Initialization from powerflow ---"
 		"\nVoltage across: {:s}"
