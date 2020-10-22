@@ -4,9 +4,9 @@ import pytest
 
 def pytest_collect_file(parent, path):
     if path.ext == ".yml" and path.basename.startswith("test_") and os.name == 'posix':
-        return YamlFile(path, parent)
+        return YamlFile.from_parent(parent, fspath=path)
     if path.ext == '.ipynb':
-        return JupyterNotebook(path, parent)
+        return JupyterNotebook.from_parent(parent, fspath=path)
 
 def parse_test_params(item, spec):
     if 'skip' in spec and spec['skip']:
@@ -16,18 +16,21 @@ def parse_test_params(item, spec):
 
 class YamlFile(pytest.File):
     def collect(self):
-        import yaml # we need a yaml parser, e.g. PyYAML
+
+        # we need a yaml parser, e.g. PyYAML
+        import yaml
         raw = yaml.safe_load(self.fspath.open())
 
         if not raw:
             return
 
         for name, spec in sorted(raw.items()):
-            yield YamlItem(name, self, spec)
+            yield YamlItem.from_parent(self, name=name, spec=spec)
 
 class YamlItem(pytest.Item):
     def __init__(self, name, parent, spec):
-        super(YamlItem, self).__init__(name, parent)
+        super().__init__(name, parent)
+        self.spec = spec
 
         if 'args' in spec:
             self.args = spec['args']
@@ -85,18 +88,17 @@ class JupyterNotebook(pytest.File):
 
         nb = nbformat.read(self.fspath, as_version=nbformat.NO_CONVERT)
 
+        base = os.path.basename(self.name)
+        name = os.path.splitext(base)[0]
         spec = nb.metadata['tests'] if 'tests' in nb.metadata else {}
 
-        yield JupyterNotebookExport(nb, self, spec)
+        yield JupyterNotebookExport.from_parent(self, name=name, spec=spec, nb=nb)
 
 class JupyterNotebookExport(pytest.Item):
 
-    def __init__(self, nb, parent, spec):
-        self.base = os.path.basename(parent.name)
-        self.name = os.path.splitext(self.base)[0]
+    def __init__(self, name, parent, spec, nb):
+        super().__init__(name, parent)
         self.builddir = os.path.splitext(parent.name)[0]
-        super(JupyterNotebookExport, self).__init__(self.name, parent)
-
         self.nb = nb
 
         parse_test_params(self, spec)
