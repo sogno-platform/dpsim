@@ -59,6 +59,12 @@ void EMT::Ph3::RXLoad::setParameters(Matrix activePower, Matrix reactivePower, R
 
 	mNomVoltage = volt;
 
+	mSLog->info("\nActive Power [W]: {}"
+			"\nReactive Power [VAr]: {}",
+			Logger::matrixToString(mActivePower),
+			Logger::matrixToString(mReactivePower));
+	mSLog->info("Nominal Voltage={} [V]", mNomVoltage);
+
 	initPowerFromTerminal = false;
 }
 
@@ -87,6 +93,12 @@ void EMT::Ph3::RXLoad::initializeFromNodesAndTerminals(Real frequency) {
 		mPower(2, 2) = { mActivePower(2, 2), mReactivePower(2, 2) };
 
 		mNomVoltage = std::abs(mTerminals[0]->initialSingleVoltage());
+
+		mSLog->info("\nActive Power [W]: {}"
+					"\nReactive Power [VAr]: {}",
+					Logger::matrixToString(mActivePower),
+					Logger::matrixToString(mReactivePower));
+		mSLog->info("Nominal Voltage={} [V]", mNomVoltage);
 	}
 
 	if (mActivePower(0,0) != 0) {

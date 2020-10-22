@@ -124,6 +124,7 @@ int main(int argc, char* argv[]) {
 	loggerDP->addAttribute("v1", n1DP->attribute("v"));
 	loggerDP->addAttribute("v2", n2DP->attribute("v"));
 	loggerDP->addAttribute("i12", lineDP->attribute("i_intf"));
+	loggerDP->addAttribute("irx", loadDP->attribute("i_intf"));
 
 	// load step sized in absolute terms
 	std::shared_ptr<SwitchEvent> loadStepEvent = Examples::createEventAddPowerConsumption("n2", 0.1-timeStepDP, 100e3, systemDP, Domain::DP, loggerDP);

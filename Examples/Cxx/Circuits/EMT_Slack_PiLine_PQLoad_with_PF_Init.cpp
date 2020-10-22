@@ -123,6 +123,7 @@ int main(int argc, char* argv[]) {
 	loggerEMT->addAttribute("v1", n1EMT->attribute("v"));
 	loggerEMT->addAttribute("v2", n2EMT->attribute("v"));
 	loggerEMT->addAttribute("i12", lineEMT->attribute("i_intf"));
+	loggerEMT->addAttribute("irx", loadEMT->attribute("i_intf"));
 
 	// load step sized in absolute terms
 	std::shared_ptr<SwitchEvent3Ph> loadStepEvent = Examples::createEventAddPowerConsumption3Ph("n2", 0.1-timeStepEMT, 100e3, systemEMT, Domain::EMT, loggerEMT);
