@@ -37,7 +37,9 @@ void DP::Ph1::VoltageSource::setParameters(Complex voltageRef, Real srcFreq) {
 void DP::Ph1::VoltageSource::initializeFromNodesAndTerminals(Real frequency) {
 	mVoltageRef = attribute<Complex>("V_ref");
 	mSrcFreq = attribute<Real>("f_src");
-	if (!mParametersSet)	
+
+	// TODO: find more explicit way, e.g. make dependend on mParametersSet or other flag
+	if (mVoltageRef->get() == Complex(0, 0))	
 		mVoltageRef->set(initialSingleVoltage(1) - initialSingleVoltage(0));
 
 	mSLog->info(
