@@ -73,9 +73,15 @@ void EMT::Ph3::Inductor::mnaInitialize(Real omega, Real timeStep, Attribute<Matr
 	mMnaTasks.push_back(std::make_shared<MnaPostStep>(*this, leftVector));
 	mRightVector = Matrix::Zero(leftVector->get().rows(), 1);
 
-	mSLog->debug(
-	"\nEquivalent Current (mnaInitialize): {:s}",
-	Logger::matrixToString(mEquivCurrent));
+	mSLog->info(
+		"\n--- MNA initialization ---"
+		"\nInitial voltage {:s}"
+		"\nInitial current {:s}"
+		"\nEquiv. current {:s}"
+		"\n--- MNA initialization finished ---",
+		Logger::matrixToString(mIntfVoltage),
+		Logger::matrixToString(mIntfCurrent),
+		Logger::matrixToString(mEquivCurrent));
 	mSLog->flush();
 }
 
@@ -187,12 +193,16 @@ void EMT::Ph3::Inductor::mnaUpdateVoltage(const Matrix& leftVector) {
 		mIntfVoltage(1, 0) = mIntfVoltage(1, 0) - Math::realFromVectorElement(leftVector, matrixNodeIndex(0, 1));
 		mIntfVoltage(2, 0) = mIntfVoltage(2, 0) - Math::realFromVectorElement(leftVector, matrixNodeIndex(0, 2));
 	}
+	mSLog->debug(
+		"\nUpdate Voltage: {:s}",
+		Logger::matrixToString(mIntfVoltage)
+	);
 }
 
 void EMT::Ph3::Inductor::mnaUpdateCurrent(const Matrix& leftVector) {
 	mIntfCurrent = mEquivCond * mIntfVoltage + mEquivCurrent;
 	mSLog->debug(
-		"\nCurrent: {:s}",
+		"\nUpdate Current: {:s}",
 		Logger::matrixToString(mIntfCurrent)
 	);
 	mSLog->flush();

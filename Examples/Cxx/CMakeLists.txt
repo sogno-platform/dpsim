@@ -20,6 +20,7 @@ set(CIRCUIT_SOURCES
 	Circuits/DP_Slack_PiLine_VSI_with_PF_Init.cpp
 	Circuits/EMT_Slack_PiLine_PQLoad_with_PF_Init.cpp
 	Circuits/EMT_Slack_PiLine_VSI_with_PF_Init.cpp
+	Circuits/EMT_DP_VS_RLC_Circuits.cpp
 
 	# Powerflow examples
 	Circuits/PF_Slack_PiLine_PQLoad.cpp
