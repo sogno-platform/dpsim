@@ -34,7 +34,7 @@ void simElements() {
 
 	// Components
 	auto vs = VoltageSource::make("v_1", Logger::Level::debug);
-	vs->setParameters(CPS::Math::polar(100000, -PI/2.), 50);
+	vs->setParameters(CPS::Math::polar(100000, 0), 50);
 
 	// Parametrization of components
 	Real resistance = 5;
@@ -103,7 +103,7 @@ void simPiLine() {
 
 	// Components
 	auto vs = VoltageSource::make("v_1", Logger::Level::debug);
-	vs->setParameters(CPS::Math::polar(100000, -PI/2.), 50);
+	vs->setParameters(CPS::Math::polar(100000, 0), 50);
 
 	// Parametrization of components
 	Real resistance = 5;

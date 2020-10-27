@@ -32,7 +32,7 @@ void simElements() {
 
 	// Components
 	auto vs = Ph1::VoltageSource::make("v_1");
-	vs->setParameters(CPS::Math::polar(100000, -PI/2.));
+	vs->setParameters(CPS::Math::polar(100000, 0));
 
 	// Parametrization of components
 	Real resistance = 5;
@@ -99,7 +99,7 @@ void simPiLine() {
 
 	// Components
 	auto vs = Ph1::VoltageSource::make("v_1");
-	vs->setParameters(CPS::Math::polar(100000, -PI/2.));
+	vs->setParameters(CPS::Math::polar(100000, 0));
 
 	// Parametrization of components
 	Real resistance = 5;
@@ -149,7 +149,7 @@ void simPiLineDiakoptics() {
 
 	// Components
 	auto vs = Ph1::VoltageSource::make("v_1");
-	vs->setParameters(CPS::Math::polar(100000, -PI/2.));
+	vs->setParameters(CPS::Math::polar(100000, 0));
 
 	// R=5, X=50 (L=0.16), B=0.003 (C=1e-6)
 	auto line = Ph1::PiLine::make("Line");
