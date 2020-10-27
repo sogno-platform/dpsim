@@ -34,7 +34,7 @@ void EMT::Ph3::VoltageSource::setParameters(Complex voltageRef, Real srcFreq) {
 	mParametersSet = true;
 }
 
-void EMT::Ph3::VoltageSource::initializeFromPowerflow(Real frequency) {
+void EMT::Ph3::VoltageSource::initializeFromNodesAndTerminals(Real frequency) {
 	mVoltageRef = attribute<Complex>("V_ref");
 	mSrcFreq = attribute<Real>("f_src");
 
