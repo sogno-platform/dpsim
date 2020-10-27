@@ -34,6 +34,22 @@ void EMT::Ph3::VoltageSource::setParameters(Complex voltageRef, Real srcFreq) {
 	mParametersSet = true;
 }
 
+void EMT::Ph3::VoltageSource::initializeFromPowerflow(Real frequency) {
+	mVoltageRef = attribute<Complex>("V_ref");
+	mSrcFreq = attribute<Real>("f_src");
+
+	if (!mParametersSet) {
+		mVoltageRef->set(initialSingleVoltage(1) - initialSingleVoltage(0));
+		mSrcFreq->set(frequency);
+	}
+
+	mSLog->info("\nVoltage reference phasor [V]: {:s}"
+					"\nFrequency [Hz]: {:s}", 
+					Logger::phasorToString(mVoltageRef->get()), 
+					Logger::realToString(mSrcFreq->get()));
+	mSLog->flush();
+}
+
 SimPowerComp<Real>::Ptr EMT::Ph3::VoltageSource::clone(String name) {
 	auto copy = VoltageSource::make(name, mLogLevel);
 	copy->setParameters(attribute<Complex>("V_ref")->get(), attribute<Real>("f_src")->get());
@@ -45,14 +61,26 @@ void EMT::Ph3::VoltageSource::mnaInitialize(Real omega, Real timeStep, Attribute
 	MNAInterface::mnaInitialize(omega, timeStep);
 
 	updateMatrixNodeIndices();
+
 	mVoltageRef = attribute<Complex>("V_ref");
 	mSrcFreq = attribute<Real>("f_src");
-	mIntfVoltage(0, 0) = Math::abs(mVoltageRef->get()) * cos(Math::phase(mVoltageRef->get()));
-	mIntfVoltage(1, 0) = Math::abs(mVoltageRef->get()) * cos(Math::phase(mVoltageRef->get()) - 2. / 3. * M_PI);
-	mIntfVoltage(2, 0) = Math::abs(mVoltageRef->get()) * cos(Math::phase(mVoltageRef->get()) + 2. / 3. * M_PI);
+
+	mIntfVoltage(0, 0) = RMS3PH_TO_PEAK1PH * Math::abs(mVoltageRef->get()) * cos(Math::phase(mVoltageRef->get()));
+	mIntfVoltage(1, 0) = RMS3PH_TO_PEAK1PH * Math::abs(mVoltageRef->get()) * cos(Math::phase(mVoltageRef->get()) - 2. / 3. * M_PI);
+	mIntfVoltage(2, 0) = RMS3PH_TO_PEAK1PH * Math::abs(mVoltageRef->get()) * cos(Math::phase(mVoltageRef->get()) + 2. / 3. * M_PI);
+
 	mMnaTasks.push_back(std::make_shared<MnaPreStep>(*this));
 	mMnaTasks.push_back(std::make_shared<MnaPostStep>(*this, leftVector));
 	mRightVector = Matrix::Zero(leftVector->get().rows(), 1);
+
+	mSLog->info(
+		"\n--- MNA initialization ---"
+		"\nInitial voltage {:s}"
+		"\nInitial current {:s}"
+		"\n--- MNA initialization finished ---",
+		Logger::matrixToString(mIntfVoltage),
+		Logger::matrixToString(mIntfCurrent));
+	mSLog->flush();
 }
 
 void EMT::Ph3::VoltageSource::mnaApplySystemMatrixStamp(Matrix& systemMatrix) {
@@ -95,18 +123,25 @@ void EMT::Ph3::VoltageSource::mnaApplyRightSideVectorStamp(Matrix& rightVector) 
 }
 
 void EMT::Ph3::VoltageSource::updateVoltage(Real time) {
+
 	Complex voltageRef = mVoltageRef->get();
 	Real srcFreq = mSrcFreq->get();
+	
 	if (srcFreq > 0) {
-		mIntfVoltage(0, 0) = Math::abs(voltageRef) * cos(time * 2. * PI * srcFreq + Math::phase(voltageRef));
-		mIntfVoltage(1, 0) = Math::abs(voltageRef) * cos(time * 2. * PI * srcFreq + Math::phase(voltageRef) - 2. / 3. * M_PI);
-		mIntfVoltage(2, 0) = Math::abs(voltageRef) * cos(time * 2. * PI * srcFreq + Math::phase(voltageRef) + 2. / 3. * M_PI);
+		mIntfVoltage(0, 0) = RMS3PH_TO_PEAK1PH * Math::abs(voltageRef) * cos(time * 2. * PI * srcFreq + Math::phase(voltageRef));
+		mIntfVoltage(1, 0) = RMS3PH_TO_PEAK1PH * Math::abs(voltageRef) * cos(time * 2. * PI * srcFreq + Math::phase(voltageRef) - 2. / 3. * M_PI);
+		mIntfVoltage(2, 0) = RMS3PH_TO_PEAK1PH * Math::abs(voltageRef) * cos(time * 2. * PI * srcFreq + Math::phase(voltageRef) + 2. / 3. * M_PI);
 	}
 	else {
-		mIntfVoltage(0, 0) = voltageRef.real();
-		mIntfVoltage(1, 0) = voltageRef.real();
-		mIntfVoltage(2, 0) = voltageRef.real();
+		mIntfVoltage(0, 0) = RMS3PH_TO_PEAK1PH * voltageRef.real();
+		mIntfVoltage(1, 0) = RMS3PH_TO_PEAK1PH * voltageRef.real();
+		mIntfVoltage(2, 0) = RMS3PH_TO_PEAK1PH * voltageRef.real();
 	}
+
+	mSLog->debug(
+		"\nUpdate Voltage: {:s}",
+		Logger::matrixToString(mIntfVoltage)
+	);
 }
 
 void EMT::Ph3::VoltageSource::updateVoltage(Matrix vabc) {

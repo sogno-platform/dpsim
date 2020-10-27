@@ -46,7 +46,7 @@ namespace CPS {
 				SimPowerComp<Real>::Ptr clone(String name);
 				// #### General ####
 				/// Initializes component from power flow data
-				void initializeFromNodesAndTerminals(Real frequency) { }
+				void initializeFromNodesAndTerminals(Real frequency);
 
 				// #### MNA section ####
 				/// Initializes internal variables of the component
