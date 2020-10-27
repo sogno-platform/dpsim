@@ -37,18 +37,18 @@ void DP::Ph1::VoltageSource::setParameters(Complex voltageRef, Real srcFreq) {
 void DP::Ph1::VoltageSource::initializeFromNodesAndTerminals(Real frequency) {
 	mVoltageRef = attribute<Complex>("V_ref");
 	mSrcFreq = attribute<Real>("f_src");
-	if (mVoltageRef->get() == Complex(0, 0))
+	if (!mParametersSet)	
 		mVoltageRef->set(initialSingleVoltage(1) - initialSingleVoltage(0));
 
 	mSLog->info(
 		"\n--- Initialization from node voltages ---"
-		"\nVoltage across: {:e}<{:e}"
-		"\nTerminal 0 voltage: {:e}<{:e}"
-		"\nTerminal 1 voltage: {:e}<{:e}"
+		"\nVoltage across: {:s}"
+		"\nTerminal 0 voltage: {:s}"
+		"\nTerminal 1 voltage: {:s}"
 		"\n--- Initialization from node voltages ---",
-		std::abs(mVoltageRef->get()), std::arg(mVoltageRef->get()),
-		std::abs(initialSingleVoltage(0)), std::arg(initialSingleVoltage(0)),
-		std::abs(initialSingleVoltage(1)), std::arg(initialSingleVoltage(1)));
+		Logger::phasorToString(mVoltageRef->get()),
+		Logger::phasorToString(initialSingleVoltage(0)),
+		Logger::phasorToString(initialSingleVoltage(1)));
 }
 
 // #### MNA functions ####
@@ -72,6 +72,14 @@ void DP::Ph1::VoltageSource::mnaInitialize(Real omega, Real timeStep, Attribute<
 	mMnaTasks.push_back(std::make_shared<MnaPreStep>(*this));
 	mMnaTasks.push_back(std::make_shared<MnaPostStep>(*this, leftVector));
 	mRightVector = Matrix::Zero(leftVector->get().rows(), 1);
+
+	mSLog->info(
+		"\n--- MNA initialization ---"
+		"\nInitial voltage {:s}"
+		"\nInitial current {:s}"
+		"\n--- MNA initialization finished ---",
+		Logger::phasorToString(mIntfVoltage(0,0)),
+		Logger::phasorToString(mIntfCurrent(0,0)));
 }
 
 void DP::Ph1::VoltageSource::mnaInitializeHarm(Real omega, Real timeStep, std::vector<Attribute<Matrix>::Ptr> leftVectors) {
@@ -154,6 +162,8 @@ void DP::Ph1::VoltageSource::updateVoltage(Real time) {
 			Math::abs(mVoltageRef->get()) * cos(time * 2.*PI*mSrcFreq->get() + Math::phase(mVoltageRef->get())),
 			Math::abs(mVoltageRef->get()) * sin(time * 2.*PI*mSrcFreq->get() + Math::phase(mVoltageRef->get())));
 	}
+
+	mSLog->debug("Update Voltage {:s}", Logger::phasorToString(mIntfVoltage(0,0)));
 }
 
 void DP::Ph1::VoltageSource::mnaPreStep(Real time, Int timeStepCount) {
