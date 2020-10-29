@@ -17,6 +17,7 @@
 #include <DPsim.h>
 
 using namespace DPsim;
+using namespace CPS::CIM;
 using namespace CPS::EMT;
 using namespace CPS::EMT::Ph3;
 
@@ -50,7 +51,7 @@ void EMT_Ph3_VSI2_4bus_SampleGrid() {
 	Real Qref2 = 1000;
 
 	auto vs = VoltageSource::make("vs", Logger::Level::info);
-	vs->setParameters(Complex(Vnom, 0), 50);
+	vs->setParameters(Reader::singlePhaseVariableToThreePhase(Complex(Vnom, 0)), 50);
 	auto vsi2 = AvVoltageSourceInverterDQ::make("vsi2", Logger::Level::debug);
 	auto trans_DG1 = Ph3::Transformer::make("trans_pv1", Logger::Level::debug);
 	auto trans_DG2 = Ph3::Transformer::make("trans_pv2", Logger::Level::debug);
