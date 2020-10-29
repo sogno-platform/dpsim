@@ -214,13 +214,7 @@ void MnaSolver<VarType>::initializeSystemWithPrecomputedMatrices() {
 	if (mSwitches.size() < 1) {
 		// Create system matrix if no switches were added
 		for (auto comp : mMNAComponents) {
-#ifdef WITH_SPARSE
-			Matrix mat = Matrix(mSwitchedMatrices[std::bitset<SWITCH_NUM>(0)]);
-			comp->mnaApplySystemMatrixStamp(mat);
-			mSwitchedMatrices[std::bitset<SWITCH_NUM>(0)] = mat.sparseView();
-#else
 			comp->mnaApplySystemMatrixStamp(mSwitchedMatrices[std::bitset<SWITCH_NUM>(0)]);
-#endif
 			auto idObj = std::dynamic_pointer_cast<IdentifiedObject>(comp);
 			mSLog->debug("Stamping {:s} {:s} into system matrix",
 				idObj->type(), idObj->name());
@@ -239,26 +233,15 @@ void MnaSolver<VarType>::initializeSystemWithPrecomputedMatrices() {
 	else {
 		// Generate switching state dependent system matrices
 		for (auto& sys : mSwitchedMatrices) {
-#ifdef WITH_SPARSE
-			for (auto comp : mMNAComponents) {
-				Matrix mat = Matrix(sys.second);
-				comp->mnaApplySystemMatrixStamp(mat);
-				sys.second = mat.sparseView();
-			}
-			for (UInt i = 0; i < mSwitches.size(); i++) {
-				Matrix mat = Matrix(sys.second);
-				mSwitches[i]->mnaApplySwitchSystemMatrixStamp(mat, sys.first[i]);
-				sys.second = mat.sparseView();
-			}
-			// Compute LU-factorization for system matrix
-			mLuFactorizations[sys.first].analyzePattern(sys.second);
-			mLuFactorizations[sys.first].factorize(sys.second);
-#else
 			for (auto comp : mMNAComponents)
 				comp->mnaApplySystemMatrixStamp(sys.second);
 			for (UInt i = 0; i < mSwitches.size(); i++)
 				mSwitches[i]->mnaApplySwitchSystemMatrixStamp(sys.second, sys.first[i]);
 			// Compute LU-factorization for system matrix
+#ifdef WITH_SPARSE
+			mLuFactorizations[sys.first].analyzePattern(sys.second);
+			mLuFactorizations[sys.first].factorize(sys.second);
+#else
 			mLuFactorizations[sys.first] = Eigen::PartialPivLU<Matrix>(sys.second);
 #endif
 		}
@@ -373,16 +356,15 @@ void MnaSolver<Real>::createEmptySystemMatrix() {
 	if (mSwitches.size() > SWITCH_NUM)
 		throw SystemError("Too many Switches.");
 
-	for (std::size_t i = 0; i < (1ULL << mSwitches.size()); i++) {
 #ifdef WITH_SPARSE
+	for (std::size_t i = 0; i < (1ULL << mSwitches.size()); i++)
 		mSwitchedMatrices[std::bitset<SWITCH_NUM>(i)].resize(mNumMatrixNodeIndices, mNumMatrixNodeIndices);
-#else
-		mSwitchedMatrices[std::bitset<SWITCH_NUM>(i)] = Matrix::Zero(mNumMatrixNodeIndices, mNumMatrixNodeIndices);
-#endif
-	}
-#ifdef WITH_SPARSE
+
 	mBaseSystemMatrix.resize(mNumMatrixNodeIndices, mNumMatrixNodeIndices);
 #else
+	for (std::size_t i = 0; i < (1ULL << mSwitches.size()); i++)
+		mSwitchedMatrices[std::bitset<SWITCH_NUM>(i)] = Matrix::Zero(mNumMatrixNodeIndices, mNumMatrixNodeIndices);
+
 	mBaseSystemMatrix = Matrix::Zero(mNumMatrixNodeIndices, mNumMatrixNodeIndices);
 #endif
 }

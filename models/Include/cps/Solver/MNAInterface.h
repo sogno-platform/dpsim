@@ -30,6 +30,12 @@ namespace CPS {
 		}
 		/// Stamps system matrix
 		virtual void mnaApplySystemMatrixStamp(Matrix& systemMatrix) { }
+		/// Stamps (sparse) system matrix
+		virtual void mnaApplySystemMatrixStamp(SparseMatrixRow& systemMatrix) {
+			Matrix mat = Matrix(systemMatrix);
+			mnaApplySystemMatrixStamp(mat);
+			systemMatrix = mat.sparseView();
+		}
 		/// Stamps right side (source) vector
 		virtual void mnaApplyRightSideVectorStamp(Matrix& rightVector) { }
 		/// Update interface voltage from MNA system result

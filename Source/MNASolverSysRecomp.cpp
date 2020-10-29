@@ -34,13 +34,7 @@ void MnaSolverSysRecomp<VarType>::initializeSystem() {
 		// Do not stamp variable elements yet
 		auto varcomp = std::dynamic_pointer_cast<MNAVariableCompInterface>(comp);
 		if (varcomp) continue;
-#ifdef WITH_SPARSE
-		Matrix mat = Matrix(this->mSwitchedMatrices[std::bitset<SWITCH_NUM>(0)]);
-		comp->mnaApplySystemMatrixStamp(mat);
-		this->mSwitchedMatrices[std::bitset<SWITCH_NUM>(0)] = mat.sparseView();
-#else
-		comp->mnaApplySystemMatrixStamp(this->mSwitchedMatrices[std::bitset<SWITCH_NUM>(0)]);
-#endif
+ 		comp->mnaApplySystemMatrixStamp(this->mSwitchedMatrices[std::bitset<SWITCH_NUM>(0)]);
 		auto idObj = std::dynamic_pointer_cast<IdentifiedObject>(comp);
 	}
 
@@ -51,13 +45,7 @@ void MnaSolverSysRecomp<VarType>::initializeSystem() {
 	// Now stamp variable elements
 	this->mSLog->info("Stamping variable elements");
 	for (auto varElem : this->mMNAIntfVariableComps) {
-#ifdef WITH_SPARSE
-		Matrix mat = Matrix(this->mSwitchedMatrices[std::bitset<SWITCH_NUM>(0)]);
-		varElem->mnaApplySystemMatrixStamp(mat);
-		this->mSwitchedMatrices[std::bitset<SWITCH_NUM>(0)] = mat.sparseView();
-#else
 		varElem->mnaApplySystemMatrixStamp(this->mSwitchedMatrices[std::bitset<SWITCH_NUM>(0)]);
-#endif
 	}
 #ifdef WITH_SPARSE
 	this->mLuFactorizations[std::bitset<SWITCH_NUM>(0)].analyzePattern(this->mSwitchedMatrices[std::bitset<SWITCH_NUM>(0)]);
@@ -92,13 +80,7 @@ void MnaSolverSysRecomp<VarType>::updateSystemMatrix(Real time) {
 
 	// Create system matrix with changed variable elements
 	for (auto comp : this->mMNAIntfVariableComps) {
-#ifdef WITH_SPARSE
-		Matrix mat = Matrix(this->mSwitchedMatrices[std::bitset<SWITCH_NUM>(0)]);
-		comp->mnaApplySystemMatrixStamp(mat);
-		this->mSwitchedMatrices[std::bitset<SWITCH_NUM>(0)] = mat.sparseView();
-#else
 		comp->mnaApplySystemMatrixStamp(this->mSwitchedMatrices[std::bitset<SWITCH_NUM>(0)]);
-#endif
 		auto idObj = std::dynamic_pointer_cast<IdentifiedObject>(comp);
 		this->mSLog->debug("Updating {:s} {:s} in system matrix (variabel component)",
 			idObj->type(), idObj->name());
