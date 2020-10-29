@@ -249,6 +249,9 @@ void MnaSolver<VarType>::initializeSystemWithPrecomputedMatrices() {
 	}
 
 	// Initialize source vector for debugging
+	// CAUTION: this does not always deliver proper source vector initialization
+	// as not full pre-step is executed (not involving necessary electrical or signal 
+	// subcomp updates before right vector calculation)
 	for (auto comp : mMNAComponents) {
 		comp->mnaApplyRightSideVectorStamp(mRightSideVector);
 		auto idObj = std::dynamic_pointer_cast<IdentifiedObject>(comp);

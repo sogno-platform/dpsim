@@ -8,7 +8,7 @@ endif()
 
 # targets
 set(CIRCUIT_SOURCES
-	# Dynamic phasor examples
+	# DP examples
 	Circuits/DP_VS_RL1.cpp
 	Circuits/DP_Circuits.cpp
 	Circuits/DP_Basics_DP_Sims.cpp
@@ -16,10 +16,12 @@ set(CIRCUIT_SOURCES
 	Circuits/DP_DecouplingLine.cpp
 	Circuits/DP_Diakoptics.cpp
 	Circuits/DP_VSI.cpp
+
+	# DP examples with PF initialization
 	Circuits/DP_Slack_PiLine_PQLoad_with_PF_Init.cpp
 	Circuits/DP_Slack_PiLine_VSI_with_PF_Init.cpp
-	Circuits/EMT_Slack_PiLine_PQLoad_with_PF_Init.cpp
-	Circuits/EMT_Slack_PiLine_VSI_with_PF_Init.cpp
+	# Combined EMT and DP examples
+	Circuits/EMT_DP_Slack.cpp
 	Circuits/EMT_DP_VS_RLC_Circuits.cpp
 
 	# Powerflow examples

@@ -12,13 +12,22 @@ using namespace CPS;
 
 DP::Ph1::NetworkInjection::NetworkInjection(String uid, String name, Logger::Level logLevel)
 	: SimPowerComp<Complex>(uid, name, logLevel) {
-	setVirtualNodeNumber(1);
+	setVirtualNodeNumber(0);
 	setTerminalNumber(1);
+
+	mSLog->info("Create {} {}", this->type(), name);
 	mIntfVoltage = MatrixComp::Zero(1,1);
 	mIntfCurrent = MatrixComp::Zero(1,1);
 
-	addAttribute<Complex>("V_ref", Flags::read | Flags::write);
-	addAttribute<Real>("f_src", Flags::read | Flags::write);
+	// Create electrical sub components
+	mSubVoltageSource = std::make_shared<DP::Ph1::VoltageSource>(mName + "_vs", mLogLevel);
+	mSubComponents.push_back(mSubVoltageSource);
+	mSLog->info("Electrical subcomponents: ");
+	for (auto subcomp: mSubComponents)
+		mSLog->info("- {}", subcomp->name());
+
+	addAttributeRef<Complex>("V_ref", mSubVoltageSource->attribute<Complex>("V_ref"), Flags::read | Flags::write);
+	addAttributeRef<Real>("f_src", mSubVoltageSource->attribute<Real>("f_src"), Flags::read | Flags::write);
 }
 
 SimPowerComp<Complex>::Ptr DP::Ph1::NetworkInjection::clone(String name) {
@@ -28,25 +37,26 @@ SimPowerComp<Complex>::Ptr DP::Ph1::NetworkInjection::clone(String name) {
 }
 
 void DP::Ph1::NetworkInjection::setParameters(Complex voltageRef, Real srcFreq) {
-	attribute<Complex>("V_ref")->set(voltageRef);
-	attribute<Real>("f_src")->set(srcFreq);
-
 	mParametersSet = true;
+
+	mSubVoltageSource->attribute<Complex>("V_ref")->set(voltageRef);
+	mSubVoltageSource->attribute<Real>("f_src")->set(srcFreq);
+
+	mSLog->info("\nVoltage Ref={:s} [V]"
+				"\nFrequency={:s} [Hz]", 
+				Logger::phasorToString(voltageRef),
+				Logger::realToString(srcFreq));
 }
 
 void DP::Ph1::NetworkInjection::initializeFromNodesAndTerminals(Real frequency) {
-	mVoltageRef = attribute<Complex>("V_ref");
-	mSrcFreq = attribute<Real>("f_src");
-	if (mVoltageRef->get() == Complex(0, 0))
-		//mVoltageRef->set(Complex(std::abs(initialSingleVoltage(0).real()), std::abs(initialSingleVoltage(0).imag())));
-		mVoltageRef->set(initialSingleVoltage(0));
-	mSLog->info(
-		"\n--- Initialization from node voltages ---"
-		"\nVoltage across: {:e}<{:e}"
-		"\nTerminal 0 voltage: {:e}<{:e}"
-		"\n--- Initialization from node voltages ---",
-		std::abs(mVoltageRef->get()), std::arg(mVoltageRef->get()),
-		std::abs(initialSingleVoltage(0)), std::arg(initialSingleVoltage(0)));
+	// Connect electrical subcomponents
+	mSubVoltageSource->connect({ SimNode::GND, node(0) });
+	
+	// Initialize electrical subcomponents
+	for (auto subcomp: mSubComponents) {
+		subcomp->initialize(mFrequencies);
+		subcomp->initializeFromNodesAndTerminals(frequency);
+	}
 }
 
 // #### MNA functions ####
@@ -55,90 +65,83 @@ void DP::Ph1::NetworkInjection::mnaInitialize(Real omega, Real timeStep, Attribu
 	MNAInterface::mnaInitialize(omega, timeStep);
 	updateMatrixNodeIndices();
 
-	mIntfVoltage(0,0) = mVoltageRef->get();
+	// initialize electrical subcomponents
+	for (auto subcomp: mSubComponents)
+		if (auto mnasubcomp = std::dynamic_pointer_cast<MNAInterface>(subcomp))
+			mnasubcomp->mnaInitialize(omega, timeStep, leftVector);
+
+	// collect right side vectors of subcomponents
+	mRightVectorStamps.push_back(&mSubVoltageSource->attribute<Matrix>("right_vector")->get());
+
+	// collect tasks
 	mMnaTasks.push_back(std::make_shared<MnaPreStep>(*this));
 	mMnaTasks.push_back(std::make_shared<MnaPostStep>(*this, leftVector));
+
 	mRightVector = Matrix::Zero(leftVector->get().rows(), 1);
 }
 
-void DP::Ph1::NetworkInjection::mnaInitializeHarm(Real omega, Real timeStep, std::vector<Attribute<Matrix>::Ptr> leftVectors) {
-	MNAInterface::mnaInitialize(omega, timeStep);
-	updateMatrixNodeIndices();
-
-	mIntfVoltage(0,0) = mVoltageRef->get();
-
-	mMnaTasks.push_back(std::make_shared<MnaPreStepHarm>(*this));
-	mMnaTasks.push_back(std::make_shared<MnaPostStepHarm>(*this, leftVectors));
-	mRightVector = Matrix::Zero(leftVectors[0]->get().rows(), mNumFreqs);
-}
-
 void DP::Ph1::NetworkInjection::mnaApplySystemMatrixStamp(Matrix& systemMatrix) {
-	for (UInt freq = 0; freq < mNumFreqs; freq++) {
-			Math::setMatrixElement(systemMatrix, mVirtualNodes[0]->matrixNodeIndex(), matrixNodeIndex(0), Complex(1, 0), mNumFreqs, freq);
-			Math::setMatrixElement(systemMatrix, matrixNodeIndex(0), mVirtualNodes[0]->matrixNodeIndex(), Complex(1, 0), mNumFreqs, freq);
-		mSLog->info("-- Stamp frequency {:d} ---", freq);
-			mSLog->info("Add {:f} to system at ({:d},{:d})", 1., matrixNodeIndex(0), mVirtualNodes[0]->matrixNodeIndex());
-			mSLog->info("Add {:f} to system at ({:d},{:d})", 1., mVirtualNodes[0]->matrixNodeIndex(), matrixNodeIndex(0));
-	}
-}
-
-void DP::Ph1::NetworkInjection::mnaApplySystemMatrixStampHarm(Matrix& systemMatrix, Int freqIdx) {
-		Math::setMatrixElement(systemMatrix, mVirtualNodes[0]->matrixNodeIndex(), matrixNodeIndex(0), Complex(1, 0));
-		Math::setMatrixElement(systemMatrix, matrixNodeIndex(0), mVirtualNodes[0]->matrixNodeIndex(), Complex(1, 0));
-	mSLog->info("-- Stamp frequency {:d} ---", freqIdx);
-		mSLog->info("Add {:f} to system at ({:d},{:d})", 1., matrixNodeIndex(0), mVirtualNodes[0]->matrixNodeIndex());
-		mSLog->info("Add {:f} to system at ({:d},{:d})", 1., mVirtualNodes[0]->matrixNodeIndex(), matrixNodeIndex(0));
+	for (auto subcomp: mSubComponents)
+		if (auto mnasubcomp = std::dynamic_pointer_cast<MNAInterface>(subcomp))
+			mnasubcomp->mnaApplySystemMatrixStamp(systemMatrix);
 }
 
 void DP::Ph1::NetworkInjection::mnaApplyRightSideVectorStamp(Matrix& rightVector) {
-	// TODO: Is this correct with two nodes not gnd?
-	Math::setVectorElement(rightVector, mVirtualNodes[0]->matrixNodeIndex(), mIntfVoltage(0,0), mNumFreqs);
-	SPDLOG_LOGGER_DEBUG(mSLog, "Add {:s} to source vector at {:d}",
-		Logger::complexToString(mIntfVoltage(0,0)), mVirtualNodes[0]->matrixNodeIndex());
+	rightVector.setZero();
+	for (auto stamp : mRightVectorStamps)
+		rightVector += *stamp;
+
+	mSLog->info("Right Side Vector: {:s}",
+				Logger::matrixToString(rightVector));
 }
 
-void DP::Ph1::NetworkInjection::mnaApplyRightSideVectorStampHarm(Matrix& rightVector) {
-	for (UInt freq = 0; freq < mNumFreqs; freq++) {
-		// TODO: Is this correct with two nodes not gnd?
-		Math::setVectorElement(rightVector, mVirtualNodes[0]->matrixNodeIndex(), mIntfVoltage(0,freq), 1, 0, freq);
-		SPDLOG_LOGGER_DEBUG(mSLog, "Add {:s} to source vector at {:d}",
-			Logger::complexToString(mIntfVoltage(0,freq)), mVirtualNodes[0]->matrixNodeIndex());
-	}
+void DP::Ph1::NetworkInjection::mnaAddPreStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes) {
+	// add pre-step dependencies of subcomponents
+	for (auto subcomp: mSubComponents)
+		if (auto mnasubcomp = std::dynamic_pointer_cast<MNAInterface>(subcomp))
+			mnasubcomp->mnaAddPreStepDependencies(prevStepDependencies, attributeDependencies, modifiedAttributes);
+	// add pre-step dependencies of component itself
+	prevStepDependencies.push_back(attribute("i_intf"));
+	prevStepDependencies.push_back(attribute("v_intf"));
+	modifiedAttributes.push_back(attribute("right_vector"));
 }
 
-void DP::Ph1::NetworkInjection::updateVoltage(Real time) {
-	if (mSrcFreq->get() < 0) {
-		mIntfVoltage(0,0) = mVoltageRef->get();
-	}
-	else {
-		mIntfVoltage(0,0) = Complex(
-			Math::abs(mVoltageRef->get()) * cos(time * 2.*PI*mSrcFreq->get() + Math::phase(mVoltageRef->get())),
-			Math::abs(mVoltageRef->get()) * sin(time * 2.*PI*mSrcFreq->get() + Math::phase(mVoltageRef->get())));
-	}
+void DP::Ph1::NetworkInjection::mnaPreStep(Real time, Int timeStepCount) {
+	// pre-step of subcomponents
+	for (auto subcomp: mSubComponents)
+		if (auto mnasubcomp = std::dynamic_pointer_cast<MNAInterface>(subcomp))
+			mnasubcomp->mnaPreStep(time, timeStepCount);
+	// pre-step of component itself
+	mnaApplyRightSideVectorStamp(mRightVector);
 }
 
-void DP::Ph1::NetworkInjection::MnaPreStep::execute(Real time, Int timeStepCount) {
-	mNetworkInjection.updateVoltage(time);
-	mNetworkInjection.mnaApplyRightSideVectorStamp(mNetworkInjection.mRightVector);
+void DP::Ph1::NetworkInjection::mnaAddPostStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes, Attribute<Matrix>::Ptr &leftVector) {
+	// add post-step dependencies of subcomponents
+	for (auto subcomp: mSubComponents)
+		if (auto mnasubcomp = std::dynamic_pointer_cast<MNAInterface>(subcomp))
+			mnasubcomp->mnaAddPostStepDependencies(prevStepDependencies, attributeDependencies, modifiedAttributes, leftVector);
+	// add post-step dependencies of component itself
+	attributeDependencies.push_back(leftVector);
+	modifiedAttributes.push_back(attribute("v_intf"));
+	modifiedAttributes.push_back(attribute("i_intf"));
 }
 
-void DP::Ph1::NetworkInjection::MnaPreStepHarm::execute(Real time, Int timeStepCount) {
-	mNetworkInjection.updateVoltage(time);
-	mNetworkInjection.mnaApplyRightSideVectorStampHarm(mNetworkInjection.mRightVector);
+void DP::Ph1::NetworkInjection::mnaPostStep(Real time, Int timeStepCount, Attribute<Matrix>::Ptr &leftVector) {
+	// post-step of subcomponents
+	for (auto subcomp: mSubComponents)
+		if (auto mnasubcomp = std::dynamic_pointer_cast<MNAInterface>(subcomp))
+			mnasubcomp->mnaPostStep(time, timeStepCount, leftVector);
+	// post-step of component itself
+	mnaUpdateCurrent(*leftVector);
+	mnaUpdateVoltage(*leftVector);
 }
 
-void DP::Ph1::NetworkInjection::MnaPostStep::execute(Real time, Int timeStepCount) {
-	mNetworkInjection.mnaUpdateCurrent(*mLeftVector);
-}
-
-void DP::Ph1::NetworkInjection::MnaPostStepHarm::execute(Real time, Int timeStepCount) {
-	mNetworkInjection.mnaUpdateCurrent(*mLeftVectors[0]);
+void DP::Ph1::NetworkInjection::mnaUpdateVoltage(const Matrix& leftVector) {
+	mIntfVoltage = mSubVoltageSource->attribute<MatrixComp>("v_intf")->get();
 }
 
 void DP::Ph1::NetworkInjection::mnaUpdateCurrent(const Matrix& leftVector) {
-	for (UInt freq = 0; freq < mNumFreqs; freq++) {
-		mIntfCurrent(0,freq) = Math::complexFromVectorElement(leftVector, mVirtualNodes[0]->matrixNodeIndex(), mNumFreqs, freq);
-	}
+	mIntfCurrent = mSubVoltageSource->attribute<MatrixComp>("i_intf")->get();
 }
 
 void DP::Ph1::NetworkInjection::daeResidual(double ttime, const double state[], const double dstate_dt[], double resid[], std::vector<int>& off){
@@ -167,6 +170,6 @@ void DP::Ph1::NetworkInjection::daeResidual(double ttime, const double state[], 
 }
 
 Complex DP::Ph1::NetworkInjection::daeInitialize() {
-	mIntfVoltage(0,0) = mVoltageRef->get();
-	return mVoltageRef->get();
+	mIntfVoltage(0,0) = mSubVoltageSource->attribute<Complex>("v_intf")->get();
+	return mSubVoltageSource->attribute<Complex>("v_intf")->get();
 }
