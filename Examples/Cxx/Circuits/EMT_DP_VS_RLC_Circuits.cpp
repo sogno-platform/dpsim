@@ -31,7 +31,7 @@ void voltageSourceResistorEMT3ph() {
 
 	// Components
 	auto vs = EMT::Ph3::VoltageSource::make("vs1");
-	vs->setParameters(CPS::Math::polar(100000, -PI/2.), 50);
+	vs->setParameters(Reader::singlePhaseVariableToThreePhase(CPS::Math::polar(100000, 0)), 50);
 
 	auto res = EMT::Ph3::Resistor::make("R1");
 	res->setParameters(Reader::singlePhaseParameterToThreePhase(100));
@@ -70,7 +70,7 @@ void voltageSourceResistorDP1ph() {
 
 	// Components
 	auto vs = DP::Ph1::VoltageSource::make("vs1");
-	vs->setParameters(CPS::Math::polar(100000, -PI/2.));
+	vs->setParameters(CPS::Math::polar(100000, 0));
 
 	auto res = DP::Ph1::Resistor::make("R1");
 	res->setParameters(100);
@@ -110,7 +110,7 @@ void voltageSourceInductorEMT3ph() {
 
 	// Components
 	auto vs = EMT::Ph3::VoltageSource::make("vs1", Logger::Level::debug);
-	vs->setParameters(CPS::Math::polar(100000, 0), 50);
+	vs->setParameters(Reader::singlePhaseVariableToThreePhase(CPS::Math::polar(100000, 0)), 50);
 
 	auto res = EMT::Ph3::Resistor::make("R1");
 	res->setParameters(Reader::singlePhaseParameterToThreePhase(5));
@@ -202,7 +202,7 @@ void voltageSourceCapacitorEMT3ph() {
 
 	// Components
 	auto vs = EMT::Ph3::VoltageSource::make("vs1", Logger::Level::debug);
-	vs->setParameters(CPS::Math::polar(100000, 0), 50);
+	vs->setParameters(Reader::singlePhaseVariableToThreePhase(CPS::Math::polar(100000, 0)), 50);
 
 	auto res = EMT::Ph3::Resistor::make("R1");
 	res->setParameters(Reader::singlePhaseParameterToThreePhase(5));

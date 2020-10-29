@@ -107,7 +107,7 @@ void simElementsEMT3ph() {
 
 	// Components
 	auto vs = EMT::Ph3::VoltageSource::make("vs1");
-	vs->setParameters(CPS::Math::polar(100000, 0), 50);
+	vs->setParameters(Reader::singlePhaseVariableToThreePhase(CPS::Math::polar(100000, 0)), 50);
 
 	auto load = EMT::Ph3::Resistor::make("Rload");
 	load->setParameters(Reader::singlePhaseParameterToThreePhase(10000));

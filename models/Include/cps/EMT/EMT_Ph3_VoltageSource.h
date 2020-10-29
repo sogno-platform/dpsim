@@ -31,7 +31,7 @@ namespace CPS {
 				void updateVoltage(Matrix vabc);
 
 				/// Magnitude of the sinusoidal voltage (peak-value, phase-to-ground)
-				Attribute<Complex>::Ptr mVoltageRef;
+				Attribute<MatrixComp>::Ptr mVoltageRef;
 				/// Frequency of the sinusoidal voltage
 				Attribute<Real>::Ptr mSrcFreq;
 			public:
@@ -41,7 +41,7 @@ namespace CPS {
 				VoltageSource(String name, Logger::Level logLevel = Logger::Level::off)
 					: VoltageSource(name, name, logLevel) { }
 
-				void setParameters(Complex voltageRef, Real srcFreq = -1);
+				void setParameters(MatrixComp voltageRef, Real srcFreq = -1);
 
 				SimPowerComp<Real>::Ptr clone(String name);
 				// #### General ####
