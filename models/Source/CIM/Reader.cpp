@@ -86,6 +86,15 @@ TopologicalPowerComp::Ptr Reader::mapComponent(BaseClass* obj) {
 	return nullptr;
 }
 
+MatrixComp Reader::singlePhaseVariableToThreePhase(Complex var_1ph) {
+	MatrixComp var_3ph = MatrixComp::Zero(3, 1);
+	var_3ph <<
+		var_1ph, 
+		var_1ph * SHIFT_TO_PHASE_B, 
+		var_1ph * SHIFT_TO_PHASE_C;
+	return var_3ph;
+}
+
 Matrix Reader::singlePhaseParameterToThreePhase(Real parameter) {
 	Matrix param_3ph = Matrix::Zero(3, 3);
 	param_3ph <<

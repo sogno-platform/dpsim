@@ -44,20 +44,26 @@ void EMT::Ph3::NetworkInjection::initializeFromNodesAndTerminals(Real frequency)
 	mSrcFreq = attribute<Real>("f_src");
 	mSrcFreq->set(frequency);
 
-	MatrixComp vInitABC = MatrixComp::Zero(3, 1);
-	vInitABC(0, 0) = RMS3PH_TO_PEAK1PH * initialSingleVoltage(0);
-	vInitABC(1, 0) = vInitABC(0, 0) * SHIFT_TO_PHASE_B;
-	vInitABC(2, 0) = vInitABC(0, 0) * SHIFT_TO_PHASE_C;
+	mSLog->info("\n--- Initialization from node voltages ---");
+	// TODO: this approach currently does not work, if voltage ref set from outside without using setParameters,
+	// since mParametersSet remains false then
+	if (!mParametersSet) {
+		MatrixComp vInitABC = MatrixComp::Zero(3, 1);
+		vInitABC(0, 0) = initialSingleVoltage(0);
+		vInitABC(1, 0) = initialSingleVoltage(0) * SHIFT_TO_PHASE_B;
+		vInitABC(2, 0) = initialSingleVoltage(0) * SHIFT_TO_PHASE_C;
+		mVoltageRef->set(vInitABC);
 
-	mVoltageRef->set(vInitABC);
-
-	mSLog->info(
-		"\n--- Initialization from node voltages ---"
-		"\nReference voltage: {:s}"
-		"\nTerminal 0 voltage: {:s}"
-		"\n--- Initialization from node voltages ---",
-		Logger::matrixCompToString(mVoltageRef->get()),
-		Logger::phasorToString(RMS3PH_TO_PEAK1PH * initialSingleVoltage(0)));
+		mSLog->info("\nReference voltage: {:s}"
+					"\nTerminal 0 voltage: {:s}",
+					Logger::matrixCompToString(mVoltageRef->get()),
+					Logger::phasorToString(initialSingleVoltage(0)));
+	} else {
+		mSLog->info("\nInitialization from node voltages omitted (parameter already set)."
+					"\nReference voltage: {:s}",
+					Logger::matrixCompToString(mVoltageRef->get()));
+	}
+	mSLog->info("\n--- Initialization from node voltages ---");
 	mSLog->flush();
 }
 
@@ -111,15 +117,15 @@ void EMT::Ph3::NetworkInjection::mnaApplyRightSideVectorStamp(Matrix& rightVecto
 
 void EMT::Ph3::NetworkInjection::updateVoltage(Real time) {
 	if (mSrcFreq->get() < 0) {
-		mIntfVoltage = mVoltageRef->get().real();
+		mIntfVoltage = RMS3PH_TO_PEAK1PH * mVoltageRef->get().real();
 	}
 	else {
 		mIntfVoltage(0, 0) =
-			Math::abs(mVoltageRef->get()(0, 0)) * cos(time * 2. * PI * mSrcFreq->get() + Math::phase(mVoltageRef->get())(0, 0));
+			RMS3PH_TO_PEAK1PH * Math::abs(mVoltageRef->get()(0, 0)) * cos(time * 2. * PI * mSrcFreq->get() + Math::phase(mVoltageRef->get())(0, 0));
 		mIntfVoltage(1, 0) =
-			Math::abs(mVoltageRef->get()(1, 0)) * cos(time * 2. * PI * mSrcFreq->get() + Math::phase(mVoltageRef->get())(1, 0));
+			RMS3PH_TO_PEAK1PH * Math::abs(mVoltageRef->get()(1, 0)) * cos(time * 2. * PI * mSrcFreq->get() + Math::phase(mVoltageRef->get())(1, 0));
 		mIntfVoltage(2, 0) =
-			Math::abs(mVoltageRef->get()(2, 0)) * cos(time * 2. * PI * mSrcFreq->get() + Math::phase(mVoltageRef->get())(2, 0));
+			RMS3PH_TO_PEAK1PH * Math::abs(mVoltageRef->get()(2, 0)) * cos(time * 2. * PI * mSrcFreq->get() + Math::phase(mVoltageRef->get())(2, 0));
 	}
 }
 

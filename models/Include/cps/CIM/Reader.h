@@ -178,6 +178,8 @@ namespace CIM {
 
 		///
 		void initDynamicSystemTopologyWithPowerflow(SystemTopology& systemPF, SystemTopology& system);
+		/// To convert single phase complex variables (voltages, currents) to symmetrical three phase ones
+		static MatrixComp singlePhaseVariableToThreePhase(Complex var_1ph);
 		///
 		static Matrix singlePhaseParameterToThreePhase(Real parameter);
 		///

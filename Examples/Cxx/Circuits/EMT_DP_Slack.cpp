@@ -17,27 +17,28 @@
 #include <DPsim.h>
 
 using namespace DPsim;
-using namespace CPS::DP;
+using namespace CPS;
+using namespace CPS::CIM;
 
-void simElements() {
+void simElementsDP1ph() {
 	Real timeStep = 0.00005;
 	Real finalTime = 1;
 	String simName = "DP_Slack_Elements";
 	Logger::setLogDir("logs/"+simName);
 
 	// Nodes
-	auto n1 = SimNode::make("n1");
+	auto n1 = SimNode<Complex>::SimNode::make("n1");
 
 	// Components
-	auto vs = Ph1::VoltageSource::make("v_1");
+	auto vs = DP::Ph1::VoltageSource::make("v_1");
 	vs->setParameters(CPS::Math::polar(100000, 0));
 
-	auto load = Ph1::Resistor::make("R_load");
+	auto load = DP::Ph1::Resistor::make("R_load");
 	load->setParameters(10000);
 
 	// Topology
-	vs->connect({ SimNode::GND, n1 });
-	load->connect({ n1, SimNode::GND });
+	vs->connect({ SimNode<Complex>::GND, n1 });
+	load->connect({ n1, SimNode<Complex>::GND });
 
 	auto sys = SystemTopology(50,
 		SystemNodeList{n1},
@@ -57,25 +58,25 @@ void simElements() {
 	sim.run();
 }
 
-void simComponent() {
+void simComponentDP1ph() {
 	Real timeStep = 0.00005;
 	Real finalTime = 1;
 	String simName = "DP_Slack_Component";
 	Logger::setLogDir("logs/"+simName);
 
 	// Nodes
-	auto n1 = SimNode::make("n1");
+	auto n1 = SimNode<Complex>::make("n1");
 
 	// Components
-	auto sl = Ph1::NetworkInjection::make("v_1");
+	auto sl = DP::Ph1::NetworkInjection::make("v_1");
 	sl->setParameters(CPS::Math::polar(100000, 0));
 
-	auto load = Ph1::Resistor::make("R_load");
+	auto load = DP::Ph1::Resistor::make("R_load");
 	load->setParameters(10000);
 
 	// Topology
 	sl->connect({ n1 });
-	load->connect({ n1, SimNode::GND });
+	load->connect({ n1, SimNode<Complex>::GND });
 
 	auto sys = SystemTopology(50,
 		SystemNodeList{n1},
@@ -95,7 +96,88 @@ void simComponent() {
 	sim.run();
 }
 
+void simElementsEMT3ph() {
+	Real timeStep = 0.00005;
+	Real finalTime = 1;
+	String simName = "EMT_Slack_Elements";
+	Logger::setLogDir("logs/"+simName);
+
+	// Nodes
+	auto n1 = SimNode<Real>::make("n1", PhaseType::ABC);
+
+	// Components
+	auto vs = EMT::Ph3::VoltageSource::make("vs1");
+	vs->setParameters(CPS::Math::polar(100000, 0), 50);
+
+	auto load = EMT::Ph3::Resistor::make("Rload");
+	load->setParameters(Reader::singlePhaseParameterToThreePhase(10000));
+
+	// Topology
+	vs->connect({ SimNode<Real>::GND, n1 });
+	load->connect({n1, SimNode<Real>::GND});
+
+	auto sys = SystemTopology(50,
+		SystemNodeList{n1},
+		SystemComponentList{vs, load});
+
+	// Logging
+	auto logger = DataLogger::make(simName);
+	logger->addAttribute("v1", n1->attribute("v"));
+	logger->addAttribute("i1", vs->attribute("i_intf"));
+
+	// Simulation
+	Simulation sim(simName);
+	sim.setSystem(sys);
+	sim.setTimeStep(timeStep);
+	sim.setFinalTime(finalTime);
+	sim.setDomain(Domain::EMT);
+	sim.addLogger(logger);
+	sim.run();
+}
+
+void simComponentEMT3ph() {
+	Real timeStep = 0.00005;
+	Real finalTime = 1;
+	String simName = "EMT_Slack_Component";
+	Logger::setLogDir("logs/"+simName);
+
+	// Nodes
+	auto n1 = SimNode<Real>::make("n1", PhaseType::ABC);
+
+	// Components
+	auto vs = EMT::Ph3::NetworkInjection::make("vs1", Logger::Level::debug);
+	vs->setParameters(Reader::singlePhaseVariableToThreePhase(CPS::Math::polar(100000, 0)), 50);
+
+	auto load = EMT::Ph3::Resistor::make("Rload");
+	load->setParameters(Reader::singlePhaseParameterToThreePhase(10000));
+
+	// Topology
+	vs->connect({ n1 });
+	load->connect({n1, SimNode<Real>::GND});
+
+	auto sys = SystemTopology(50,
+		SystemNodeList{n1},
+		SystemComponentList{vs, load});
+
+	// Logging
+	auto logger = DataLogger::make(simName);
+	logger->addAttribute("v1", n1->attribute("v"));
+	logger->addAttribute("i1", vs->attribute("i_intf"));
+
+	// Simulation
+	Simulation sim(simName);
+	sim.setSystem(sys);
+	sim.setTimeStep(timeStep);
+	sim.setFinalTime(finalTime);
+	sim.setDomain(Domain::EMT);
+	sim.addLogger(logger);
+	sim.run();
+}
+
 int main(int argc, char* argv[]) {
-	simElements();
-    simComponent();
+	simElementsDP1ph();
+    simComponentDP1ph();
+
+	simElementsEMT3ph();
+	simComponentEMT3ph();
 }
