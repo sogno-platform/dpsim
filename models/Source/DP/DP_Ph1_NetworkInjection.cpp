@@ -39,8 +39,7 @@ SimPowerComp<Complex>::Ptr DP::Ph1::NetworkInjection::clone(String name) {
 void DP::Ph1::NetworkInjection::setParameters(Complex voltageRef, Real srcFreq) {
 	mParametersSet = true;
 
-	mSubVoltageSource->attribute<Complex>("V_ref")->set(voltageRef);
-	mSubVoltageSource->attribute<Real>("f_src")->set(srcFreq);
+	mSubVoltageSource->setParameters(voltageRef, srcFreq);
 
 	mSLog->info("\nVoltage Ref={:s} [V]"
 				"\nFrequency={:s} [Hz]", 
@@ -91,7 +90,7 @@ void DP::Ph1::NetworkInjection::mnaApplyRightSideVectorStamp(Matrix& rightVector
 	for (auto stamp : mRightVectorStamps)
 		rightVector += *stamp;
 
-	mSLog->info("Right Side Vector: {:s}",
+	mSLog->debug("Right Side Vector: {:s}",
 				Logger::matrixToString(rightVector));
 }
 

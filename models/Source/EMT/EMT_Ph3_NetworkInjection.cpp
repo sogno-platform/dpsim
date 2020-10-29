@@ -13,16 +13,22 @@ using namespace CPS;
 EMT::Ph3::NetworkInjection::NetworkInjection(String uid, String name, Logger::Level logLevel)
 	: SimPowerComp<Real>(uid, name, logLevel) {
 	mPhaseType = PhaseType::ABC;
-	setVirtualNodeNumber(1);
+	setVirtualNodeNumber(0);
 	setTerminalNumber(1);
 	mIntfVoltage = Matrix::Zero(3, 1);
 	mIntfCurrent = Matrix::Zero(3, 1);
 
 	mSLog->info("Create {} {}", this->type(), name);
 
-	addAttribute<MatrixComp>("V_ref", Flags::read | Flags::write);
-	addAttribute<Real>("f_src", Flags::read | Flags::write);
-	mSLog->flush();
+	// Create electrical sub components
+	mSubVoltageSource = std::make_shared<EMT::Ph3::VoltageSource>(mName + "_vs", mLogLevel);
+	mSubComponents.push_back(mSubVoltageSource);
+	mSLog->info("Electrical subcomponents: ");
+	for (auto subcomp: mSubComponents)
+		mSLog->info("- {}", subcomp->name());
+
+	addAttributeRef<MatrixComp>("V_ref", mSubVoltageSource->attribute<MatrixComp>("V_ref"), Flags::read | Flags::write);
+	addAttributeRef<Real>("f_src", mSubVoltageSource->attribute<Real>("f_src"), Flags::read | Flags::write);
 }
 
 SimPowerComp<Real>::Ptr EMT::Ph3::NetworkInjection::clone(String name) {
@@ -31,40 +37,26 @@ SimPowerComp<Real>::Ptr EMT::Ph3::NetworkInjection::clone(String name) {
 	return copy;
 }
 
-
 void EMT::Ph3::NetworkInjection::setParameters(MatrixComp voltageRef, Real srcFreq) {
-	attribute<MatrixComp>("V_ref")->set(voltageRef);
-	attribute<Real>("f_src")->set(srcFreq);
-
 	mParametersSet = true;
+
+	mSubVoltageSource->setParameters(voltageRef, srcFreq);
+
+	mSLog->info("\nVoltage Ref={:s} [V]"
+				"\nFrequency={:s} [Hz]", 
+				Logger::matrixCompToString(voltageRef),
+				Logger::realToString(srcFreq));
 }
 
 void EMT::Ph3::NetworkInjection::initializeFromNodesAndTerminals(Real frequency) {
-	mVoltageRef = attribute<MatrixComp>("V_ref");
-	mSrcFreq = attribute<Real>("f_src");
-	mSrcFreq->set(frequency);
-
-	mSLog->info("\n--- Initialization from node voltages ---");
-	// TODO: this approach currently does not work, if voltage ref set from outside without using setParameters,
-	// since mParametersSet remains false then
-	if (!mParametersSet) {
-		MatrixComp vInitABC = MatrixComp::Zero(3, 1);
-		vInitABC(0, 0) = initialSingleVoltage(0);
-		vInitABC(1, 0) = initialSingleVoltage(0) * SHIFT_TO_PHASE_B;
-		vInitABC(2, 0) = initialSingleVoltage(0) * SHIFT_TO_PHASE_C;
-		mVoltageRef->set(vInitABC);
-
-		mSLog->info("\nReference voltage: {:s}"
-					"\nTerminal 0 voltage: {:s}",
-					Logger::matrixCompToString(mVoltageRef->get()),
-					Logger::phasorToString(initialSingleVoltage(0)));
-	} else {
-		mSLog->info("\nInitialization from node voltages omitted (parameter already set)."
-					"\nReference voltage: {:s}",
-					Logger::matrixCompToString(mVoltageRef->get()));
+	// Connect electrical subcomponents
+	mSubVoltageSource->connect({ SimNode::GND, node(0) });
+	
+	// Initialize electrical subcomponents
+	for (auto subcomp: mSubComponents) {
+		subcomp->initialize(mFrequencies);
+		subcomp->initializeFromNodesAndTerminals(frequency);
 	}
-	mSLog->info("\n--- Initialization from node voltages ---");
-	mSLog->flush();
 }
 
 // #### MNA functions ####
@@ -73,74 +65,82 @@ void EMT::Ph3::NetworkInjection::mnaInitialize(Real omega, Real timeStep, Attrib
 	MNAInterface::mnaInitialize(omega, timeStep);
 	updateMatrixNodeIndices();
 
-	mIntfVoltage = mVoltageRef->get().real();
+	// initialize electrical subcomponents
+	for (auto subcomp: mSubComponents)
+		if (auto mnasubcomp = std::dynamic_pointer_cast<MNAInterface>(subcomp))
+			mnasubcomp->mnaInitialize(omega, timeStep, leftVector);
+
+	// collect right side vectors of subcomponents
+	mRightVectorStamps.push_back(&mSubVoltageSource->attribute<Matrix>("right_vector")->get());
+
+	// collect tasks
 	mMnaTasks.push_back(std::make_shared<MnaPreStep>(*this));
 	mMnaTasks.push_back(std::make_shared<MnaPostStep>(*this, leftVector));
+
 	mRightVector = Matrix::Zero(leftVector->get().rows(), 1);
 }
 
 void EMT::Ph3::NetworkInjection::mnaApplySystemMatrixStamp(Matrix& systemMatrix) {
-	Math::addToMatrixElement(systemMatrix, mVirtualNodes[0]->matrixNodeIndex(PhaseType::A), matrixNodeIndex(0, 0), 1);
-	Math::addToMatrixElement(systemMatrix, matrixNodeIndex(0, 0), mVirtualNodes[0]->matrixNodeIndex(PhaseType::A), 1);
-	Math::addToMatrixElement(systemMatrix, mVirtualNodes[0]->matrixNodeIndex(PhaseType::B), matrixNodeIndex(0, 1), 1);
-	Math::addToMatrixElement(systemMatrix, matrixNodeIndex(0, 1), mVirtualNodes[0]->matrixNodeIndex(PhaseType::B), 1);
-	Math::addToMatrixElement(systemMatrix, mVirtualNodes[0]->matrixNodeIndex(PhaseType::C), matrixNodeIndex(0, 2), 1);
-	Math::addToMatrixElement(systemMatrix, matrixNodeIndex(0, 2), mVirtualNodes[0]->matrixNodeIndex(PhaseType::C), 1);
-
-	mSLog->info("-- Stamp ---");
-	mSLog->info("Add {:f} to system at ({:d},{:d})", 1., mVirtualNodes[0]->matrixNodeIndex(PhaseType::A), matrixNodeIndex(0, 0));
-	mSLog->info("Add {:f} to system at ({:d},{:d})", 1., matrixNodeIndex(0, 0), mVirtualNodes[0]->matrixNodeIndex(PhaseType::A));
-	mSLog->info("Add {:f} to system at ({:d},{:d})", 1., mVirtualNodes[0]->matrixNodeIndex(PhaseType::B), matrixNodeIndex(0, 1));
-	mSLog->info("Add {:f} to system at ({:d},{:d})", 1., matrixNodeIndex(0, 1), mVirtualNodes[0]->matrixNodeIndex(PhaseType::B));
-	mSLog->info("Add {:f} to system at ({:d},{:d})", 1., mVirtualNodes[0]->matrixNodeIndex(PhaseType::C), matrixNodeIndex(0, 2));
-	mSLog->info("Add {:f} to system at ({:d},{:d})", 1., matrixNodeIndex(0, 2), mVirtualNodes[0]->matrixNodeIndex(PhaseType::C));
-	mSLog->flush();
+	for (auto subcomp: mSubComponents)
+		if (auto mnasubcomp = std::dynamic_pointer_cast<MNAInterface>(subcomp))
+			mnasubcomp->mnaApplySystemMatrixStamp(systemMatrix);
 }
 
 void EMT::Ph3::NetworkInjection::mnaApplyRightSideVectorStamp(Matrix& rightVector) {
-	Math::setVectorElement(rightVector, mVirtualNodes[0]->matrixNodeIndex(PhaseType::A), mIntfVoltage(0, 0));
-	Math::setVectorElement(rightVector, mVirtualNodes[0]->matrixNodeIndex(PhaseType::B), mIntfVoltage(1, 0));
-	Math::setVectorElement(rightVector, mVirtualNodes[0]->matrixNodeIndex(PhaseType::C), mIntfVoltage(2, 0));
-	mSLog->debug(
-		"\nAdd phase A {:f} to source vector at {:d}"
-		"\nAdd phase B {:f} to source vector at {:d}"
-		"\nAdd phase C {:f} to source vector at {:d}",
-		mIntfVoltage(0, 0),
-		mVirtualNodes[0]->matrixNodeIndex(PhaseType::A),
-		mIntfVoltage(1, 0),
-		mVirtualNodes[0]->matrixNodeIndex(PhaseType::B),
-		mIntfVoltage(2, 0),
-		mVirtualNodes[0]->matrixNodeIndex(PhaseType::C));
-	mSLog->flush();
+	rightVector.setZero();
+	for (auto stamp : mRightVectorStamps)
+		rightVector += *stamp;
+
+	mSLog->debug("Right Side Vector: {:s}",
+				Logger::matrixToString(rightVector));
 }
 
 
-void EMT::Ph3::NetworkInjection::updateVoltage(Real time) {
-	if (mSrcFreq->get() < 0) {
-		mIntfVoltage = RMS3PH_TO_PEAK1PH * mVoltageRef->get().real();
-	}
-	else {
-		mIntfVoltage(0, 0) =
-			RMS3PH_TO_PEAK1PH * Math::abs(mVoltageRef->get()(0, 0)) * cos(time * 2. * PI * mSrcFreq->get() + Math::phase(mVoltageRef->get())(0, 0));
-		mIntfVoltage(1, 0) =
-			RMS3PH_TO_PEAK1PH * Math::abs(mVoltageRef->get()(1, 0)) * cos(time * 2. * PI * mSrcFreq->get() + Math::phase(mVoltageRef->get())(1, 0));
-		mIntfVoltage(2, 0) =
-			RMS3PH_TO_PEAK1PH * Math::abs(mVoltageRef->get()(2, 0)) * cos(time * 2. * PI * mSrcFreq->get() + Math::phase(mVoltageRef->get())(2, 0));
-	}
+void EMT::Ph3::NetworkInjection::mnaAddPreStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes) {
+	// add pre-step dependencies of subcomponents
+	for (auto subcomp: mSubComponents)
+		if (auto mnasubcomp = std::dynamic_pointer_cast<MNAInterface>(subcomp))
+			mnasubcomp->mnaAddPreStepDependencies(prevStepDependencies, attributeDependencies, modifiedAttributes);
+	// add pre-step dependencies of component itself
+	prevStepDependencies.push_back(attribute("i_intf"));
+	prevStepDependencies.push_back(attribute("v_intf"));
+	modifiedAttributes.push_back(attribute("right_vector"));
 }
 
-void EMT::Ph3::NetworkInjection::MnaPreStep::execute(Real time, Int timeStepCount) {
-	mNetworkInjection.updateVoltage(time);
-	mNetworkInjection.mnaApplyRightSideVectorStamp(mNetworkInjection.mRightVector);
+void EMT::Ph3::NetworkInjection::mnaPreStep(Real time, Int timeStepCount) {
+	// pre-step of subcomponents
+	for (auto subcomp: mSubComponents)
+		if (auto mnasubcomp = std::dynamic_pointer_cast<MNAInterface>(subcomp))
+			mnasubcomp->mnaPreStep(time, timeStepCount);
+	// pre-step of component itself
+	mnaApplyRightSideVectorStamp(mRightVector);
 }
 
+void EMT::Ph3::NetworkInjection::mnaAddPostStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes, Attribute<Matrix>::Ptr &leftVector) {
+	// add post-step dependencies of subcomponents
+	for (auto subcomp: mSubComponents)
+		if (auto mnasubcomp = std::dynamic_pointer_cast<MNAInterface>(subcomp))
+			mnasubcomp->mnaAddPostStepDependencies(prevStepDependencies, attributeDependencies, modifiedAttributes, leftVector);
+	// add post-step dependencies of component itself
+	attributeDependencies.push_back(leftVector);
+	modifiedAttributes.push_back(attribute("v_intf"));
+	modifiedAttributes.push_back(attribute("i_intf"));
+}
 
-void EMT::Ph3::NetworkInjection::MnaPostStep::execute(Real time, Int timeStepCount) {
-	mNetworkInjection.mnaUpdateCurrent(*mLeftVector);
+void EMT::Ph3::NetworkInjection::mnaPostStep(Real time, Int timeStepCount, Attribute<Matrix>::Ptr &leftVector) {
+	// post-step of subcomponents
+	for (auto subcomp: mSubComponents)
+		if (auto mnasubcomp = std::dynamic_pointer_cast<MNAInterface>(subcomp))
+			mnasubcomp->mnaPostStep(time, timeStepCount, leftVector);
+	// post-step of component itself
+	mnaUpdateCurrent(*leftVector);
+	mnaUpdateVoltage(*leftVector);
+}
+
+void EMT::Ph3::NetworkInjection::mnaUpdateVoltage(const Matrix& leftVector) {
+	mIntfVoltage = mSubVoltageSource->attribute<Matrix>("v_intf")->get();
 }
 
 void EMT::Ph3::NetworkInjection::mnaUpdateCurrent(const Matrix& leftVector) {
-	mIntfCurrent(0, 0) = Math::realFromVectorElement(leftVector, mVirtualNodes[0]->matrixNodeIndex(PhaseType::A));
-	mIntfCurrent(1, 0) = Math::realFromVectorElement(leftVector, mVirtualNodes[0]->matrixNodeIndex(PhaseType::B));
-	mIntfCurrent(2, 0) = Math::realFromVectorElement(leftVector, mVirtualNodes[0]->matrixNodeIndex(PhaseType::C));
+	mIntfCurrent = mSubVoltageSource->attribute<Matrix>("i_intf")->get();
 }
