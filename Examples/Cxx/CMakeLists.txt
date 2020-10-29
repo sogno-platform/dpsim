@@ -36,6 +36,9 @@ set(CIRCUIT_SOURCES
 	Circuits/EMT_VSI.cpp
 	Circuits/EMT_PiLine.cpp
 
+	# EMT examples with PF initialization
+	Circuits/EMT_Slack_PiLine_PQLoad_with_PF_Init.cpp
+	Circuits/EMT_Slack_PiLine_VSI_with_PF_Init.cpp
 	# Static Phasor examples
 	Circuits/SP_Circuits.cpp
 

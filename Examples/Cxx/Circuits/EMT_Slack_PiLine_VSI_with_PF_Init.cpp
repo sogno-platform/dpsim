@@ -132,7 +132,6 @@ int main(int argc, char* argv[]) {
 	sim.setTimeStep(timeStepEMT);
 	sim.setFinalTime(finalTimeEMT);
 	sim.setDomain(Domain::EMT);
-	sim.doPowerFlowInit(false);
 	sim.addLogger(loggerEMT);
 	// sim.addEvent(loadStepEvent);
 	sim.run();
