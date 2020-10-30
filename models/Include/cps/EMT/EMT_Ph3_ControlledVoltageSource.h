@@ -10,17 +10,26 @@
 
 #include <cps/SimPowerComp.h>
 #include <cps/Solver/MNAInterface.h>
+#include <cps/EMT/EMT_Ph3_VoltageSource.h>
 
 namespace CPS {
 	namespace EMT {
 		namespace Ph3 {
+			/// \brief Controlled voltage source
+			///
+			/// This model enables to control an ideal voltage source with a signal reference.
             class ControlledVoltageSource :
 				public MNAInterface,
 				public SimPowerComp<Real>,
 				public SharedFactory<ControlledVoltageSource> {
 			protected:
-				void updateVoltage(Real time);
+				// ### Electrical Subcomponents ###
+				/// Voltage source
+				std::shared_ptr<EMT::Ph3::VoltageSource> mSubVoltageSource;
 
+				// #### solver ####
+				/// Vector to collect subcomponent right vector stamps
+				std::vector<const Matrix*> mRightVectorStamps;
 			public:
 				/// Defines UID, name and logging level
 				ControlledVoltageSource(String uid, String name, Logger::Level logLevel = Logger::Level::off);
@@ -28,12 +37,13 @@ namespace CPS {
 				ControlledVoltageSource(String name, Logger::Level logLevel = Logger::Level::off)
 					: ControlledVoltageSource(name, name, logLevel) { }
 
-				void setParameters(const Matrix& voltageRefABC);
-
 				SimPowerComp<Real>::Ptr clone(String name);
+
+				void updateSignalReference(Real time, Int timeStepCount);
+
 				// #### General ####
 				/// Initializes component from power flow data
-				void initializeFromNodesAndTerminals(Real frequency) { }
+				void initializeFromNodesAndTerminals(Real frequency);
 
 				// #### MNA section ####
 				/// Initializes internal variables of the component
@@ -44,6 +54,8 @@ namespace CPS {
 				void mnaApplyRightSideVectorStamp(Matrix& rightVector);
 				/// Returns current through the component
 				void mnaUpdateCurrent(const Matrix& leftVector);
+				/// Updates voltage across component
+				void mnaUpdateVoltage(const Matrix& leftVector);
 				/// MNA pre step operations
 				void mnaPreStep(Real time, Int timeStepCount);
 				/// MNA post step operations
