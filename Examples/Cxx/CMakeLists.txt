@@ -22,6 +22,7 @@ set(CIRCUIT_SOURCES
 	Circuits/DP_Slack_PiLine_VSI_with_PF_Init.cpp
 	# Combined EMT and DP examples
 	Circuits/EMT_DP_Slack.cpp
+	Circuits/EMT_DP_VS_Init.cpp
 	Circuits/EMT_DP_VS_RLC_Circuits.cpp
 
 	# Powerflow examples
