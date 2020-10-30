@@ -65,8 +65,5 @@ int main(int argc, char *argv[]) {
 	sim.addLogger(logger);
 	sim.run();
 
-	sim.addLogger(logger);
-	sim.run();
-
 	return 0;
 }

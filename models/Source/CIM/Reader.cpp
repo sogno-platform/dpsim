@@ -8,19 +8,15 @@
 
 #include <CIMModel.hpp>
 #include <IEC61970.hpp>
-#include <memory>
 #include <CIMExceptions.hpp>
+#include <memory>
 
 #define READER_CPP
 #include <cps/CIM/Reader.h>
 
 using namespace CPS;
 using namespace CPS::CIM;
-using namespace IEC61970::Base::Core;
-using namespace IEC61970::Base::Domain;
-using namespace IEC61970::Base::Equivalents;
-using namespace IEC61970::Base::Wires;
-using namespace IEC61970::Base::StateVariables;
+using CIMPP::UnitMultiplier;
 
 namespace fs = std::experimental::filesystem;
 
@@ -36,7 +32,7 @@ Reader::~Reader() {
 	delete mModel;
 }
 
-Real Reader::unitValue(Real value, UnitMultiplier mult) {
+Real Reader::unitValue(Real value, CIMPP::UnitMultiplier mult) {
 	switch (mult) {
 	case UnitMultiplier::p:
 		value *= 1e-12;
@@ -75,17 +71,17 @@ Real Reader::unitValue(Real value, UnitMultiplier mult) {
 }
 
 TopologicalPowerComp::Ptr Reader::mapComponent(BaseClass* obj) {
-	if (ACLineSegment *line = dynamic_cast<ACLineSegment*>(obj))
+	if (CIMPP::ACLineSegment *line = dynamic_cast<CIMPP::ACLineSegment*>(obj))
 		return mapACLineSegment(line);
-	if (EnergyConsumer *consumer = dynamic_cast<EnergyConsumer*>(obj))
+	if (CIMPP::EnergyConsumer *consumer = dynamic_cast<CIMPP::EnergyConsumer*>(obj))
 		return mapEnergyConsumer(consumer);
-	if (PowerTransformer *trans = dynamic_cast<PowerTransformer*>(obj))
+	if (CIMPP::PowerTransformer *trans = dynamic_cast<CIMPP::PowerTransformer*>(obj))
 		return mapPowerTransformer(trans);
-	if (SynchronousMachine *syncMachine = dynamic_cast<SynchronousMachine*>(obj))
+	if (CIMPP::SynchronousMachine *syncMachine = dynamic_cast<CIMPP::SynchronousMachine*>(obj))
 		return mapSynchronousMachine(syncMachine);
-	if (ExternalNetworkInjection *extnet = dynamic_cast<ExternalNetworkInjection*>(obj))
+	if (CIMPP::ExternalNetworkInjection *extnet = dynamic_cast<CIMPP::ExternalNetworkInjection*>(obj))
 		return mapExternalNetworkInjection(extnet);
-	if (EquivalentShunt *shunt = dynamic_cast<EquivalentShunt*>(obj))
+	if (CIMPP::EquivalentShunt *shunt = dynamic_cast<CIMPP::EquivalentShunt*>(obj))
 		return mapEquivalentShunt(shunt);
 	return nullptr;
 }
@@ -121,7 +117,7 @@ void Reader::parseFiles() {
 
 	mSLog->info("#### List of TopologicalNodes, associated Terminals and Equipment");
 	for (auto obj : mModel->Objects) {
-		if (IEC61970::Base::Topology::TopologicalNode* topNode = dynamic_cast<IEC61970::Base::Topology::TopologicalNode*>(obj)) {
+		if (CIMPP::TopologicalNode* topNode = dynamic_cast<CIMPP::TopologicalNode*>(obj)) {
 			if (mDomain == Domain::EMT)
 				processTopologicalNode<Real>(topNode);
 			else
@@ -134,11 +130,11 @@ void Reader::parseFiles() {
 	mSLog->info("#### List of Node voltages and Terminal power flow data");
 	for (auto obj : mModel->Objects) {
 		// Check if object is of class SvVoltage
-		if (SvVoltage* volt = dynamic_cast<SvVoltage*>(obj)) {
+		if (CIMPP::SvVoltage* volt = dynamic_cast<CIMPP::SvVoltage*>(obj)) {
 			processSvVoltage(volt);
 		}
 		// Check if object is of class SvPowerFlow
-		else if (SvPowerFlow* flow = dynamic_cast<SvPowerFlow*>(obj)) {
+		else if (CIMPP::SvPowerFlow* flow = dynamic_cast<CIMPP::SvPowerFlow*>(obj)) {
 			processSvPowerFlow(flow);
 		}
 	}
@@ -147,11 +143,11 @@ void Reader::parseFiles() {
 	for (auto obj : mModel->Objects) {
 
 		// Check if object is not TopologicalNode, SvVoltage or SvPowerFlow
-		if (!dynamic_cast<IEC61970::Base::Topology::TopologicalNode*>(obj)
-			&& !dynamic_cast<SvVoltage*>(obj)
-			&& !dynamic_cast<SvPowerFlow*>(obj)) {
+		if (!dynamic_cast<CIMPP::TopologicalNode*>(obj)
+			&& !dynamic_cast<CIMPP::SvVoltage*>(obj)
+			&& !dynamic_cast<CIMPP::SvPowerFlow*>(obj)) {
 
-			if (IEC61970::Base::Core::IdentifiedObject* idObj = dynamic_cast<IEC61970::Base::Core::IdentifiedObject*>(obj)) {
+			if (CIMPP::IdentifiedObject* idObj = dynamic_cast<CIMPP::IdentifiedObject*>(obj)) {
 
 				// Check if object is already in equipment list
 				if (mPowerflowEquipment.find(idObj->mRID) == mPowerflowEquipment.end()) {
@@ -202,8 +198,8 @@ SystemTopology Reader::loadCIM(Real systemFrequency, const std::list<fs::path> &
 	return systemTopology();
 }
 
-void Reader::processSvVoltage(SvVoltage* volt) {
-	IEC61970::Base::Topology::TopologicalNode* node = volt->TopologicalNode;
+void Reader::processSvVoltage(CIMPP::SvVoltage* volt) {
+	CIMPP::TopologicalNode* node = volt->TopologicalNode;
 	if (!node) {
 		mSLog->warn("SvVoltage references missing Topological Node, ignoring");
 		return;
@@ -234,8 +230,8 @@ void Reader::processSvVoltage(SvVoltage* volt) {
 	);
 }
 
-void Reader::processSvPowerFlow(SvPowerFlow* flow) {
-	IEC61970::Base::Core::Terminal* term = flow->Terminal;
+void Reader::processSvPowerFlow(CIMPP::SvPowerFlow* flow) {
+	CIMPP::Terminal* term = flow->Terminal;
 
 	mPowerflowTerminals[term->mRID]->setPower(
 		Complex(Reader::unitValue(flow->p.value, UnitMultiplier::M),
@@ -288,7 +284,7 @@ Matrix::Index Reader::mapTopologicalNode(String mrid) {
 	return search->second->matrixNodeIndex();
 }
 
-TopologicalPowerComp::Ptr Reader::mapEnergyConsumer(EnergyConsumer* consumer) {
+TopologicalPowerComp::Ptr Reader::mapEnergyConsumer(CIMPP::EnergyConsumer* consumer) {
 	mSLog->info("    Found EnergyConsumer {}", consumer->name);
 	if (mDomain == Domain::EMT) {
 		if (mPhase == PhaseType::ABC) {
@@ -327,7 +323,7 @@ TopologicalPowerComp::Ptr Reader::mapEnergyConsumer(EnergyConsumer* consumer) {
 	}
 }
 
-TopologicalPowerComp::Ptr Reader::mapACLineSegment(ACLineSegment* line) {
+TopologicalPowerComp::Ptr Reader::mapACLineSegment(CIMPP::ACLineSegment* line) {
 	mSLog->info("    Found ACLineSegment {} r={} x={} bch={} gch={}", line->name,
 		(float) line->r.value,
 		(float) line->x.value,
@@ -382,7 +378,7 @@ TopologicalPowerComp::Ptr Reader::mapACLineSegment(ACLineSegment* line) {
 
 }
 
-TopologicalPowerComp::Ptr Reader::mapPowerTransformer(PowerTransformer* trans) {
+TopologicalPowerComp::Ptr Reader::mapPowerTransformer(CIMPP::PowerTransformer* trans) {
 	if (trans->PowerTransformerEnd.size() != 2) {
 		mSLog->warn("PowerTransformer {} does not have exactly two windings, ignoring", trans->name);
 		return nullptr;
@@ -390,7 +386,7 @@ TopologicalPowerComp::Ptr Reader::mapPowerTransformer(PowerTransformer* trans) {
 	mSLog->info("Found PowerTransformer {}", trans->name);
 
 	// assign transformer ends
-	PowerTransformerEnd* end1 = nullptr, *end2 = nullptr;
+	CIMPP::PowerTransformerEnd* end1 = nullptr, *end2 = nullptr;
 	for (auto end : trans->PowerTransformerEnd) {
 		if (end->Terminal->sequenceNumber == 1) end1 = end;
 		else if (end->Terminal->sequenceNumber == 2) end2 = end;
@@ -445,7 +441,7 @@ TopologicalPowerComp::Ptr Reader::mapPowerTransformer(PowerTransformer* trans) {
 	// if corresponding SvTapStep available, use instead tap position from there
 	if (end1->RatioTapChanger) {
 		for (auto obj : mModel->Objects) {
-			auto tapStep = dynamic_cast<IEC61970::Base::StateVariables::SvTapStep*>(obj);
+			auto tapStep = dynamic_cast<CIMPP::SvTapStep*>(obj);
 			if (tapStep && tapStep->TapChanger == end1->RatioTapChanger) {
 				ratioAbs = voltageNode1 / voltageNode2 * (1 + (tapStep->position - end1->RatioTapChanger->neutralStep) * end1->RatioTapChanger->stepVoltageIncrement.value / 100);
 			}
@@ -504,7 +500,7 @@ TopologicalPowerComp::Ptr Reader::mapPowerTransformer(PowerTransformer* trans) {
 	}
 }
 
-TopologicalPowerComp::Ptr Reader::mapSynchronousMachine(SynchronousMachine* machine) {
+TopologicalPowerComp::Ptr Reader::mapSynchronousMachine(CIMPP::SynchronousMachine* machine) {
 	mSLog->info("    Found  Synchronous machine {}", machine->name);
 
 	if (mGeneratorType == GeneratorType::Transient) {
@@ -515,8 +511,8 @@ TopologicalPowerComp::Ptr Reader::mapSynchronousMachine(SynchronousMachine* mach
 
 		for (auto obj : mModel->Objects) {
 			// Check if object is not TopologicalNode, SvVoltage or SvPowerFlow
-			if (IEC61970::Dynamics::StandardModels::SynchronousMachineDynamics::SynchronousMachineTimeConstantReactance* genDyn =
-				dynamic_cast<IEC61970::Dynamics::StandardModels::SynchronousMachineDynamics::SynchronousMachineTimeConstantReactance*>(obj)) {
+			if (CIMPP::SynchronousMachineTimeConstantReactance* genDyn =
+				dynamic_cast<CIMPP::SynchronousMachineTimeConstantReactance*>(obj)) {
 				if (genDyn->SynchronousMachine->mRID == machine->mRID) {
 					directTransientReactance = genDyn->xDirectTrans.value;
 					inertiaCoefficient = genDyn->inertia.value;
@@ -535,8 +531,8 @@ TopologicalPowerComp::Ptr Reader::mapSynchronousMachine(SynchronousMachine* mach
 
 	if (mDomain == Domain::SP) {
 		for (auto obj : mModel->Objects) {
-			if (IEC61970::Base::Generation::Production::GeneratingUnit* genUnit
-				= dynamic_cast<IEC61970::Base::Generation::Production::GeneratingUnit*>(obj))
+			if (CIMPP::GeneratingUnit* genUnit
+				= dynamic_cast<CIMPP::GeneratingUnit*>(obj))
 			{
 
 				for (auto syncGen : genUnit->RotatingMachine)
@@ -589,7 +585,7 @@ TopologicalPowerComp::Ptr Reader::mapSynchronousMachine(SynchronousMachine* mach
     }
 }
 
-TopologicalPowerComp::Ptr Reader::mapExternalNetworkInjection(ExternalNetworkInjection* extnet) {
+TopologicalPowerComp::Ptr Reader::mapExternalNetworkInjection(CIMPP::ExternalNetworkInjection* extnet) {
 	mSLog->info("Found External Network Injection {}", extnet->name);
 
 	Real baseVoltage = determineBaseVoltageAssociatedWithEquipment(extnet);
@@ -630,7 +626,7 @@ TopologicalPowerComp::Ptr Reader::mapExternalNetworkInjection(ExternalNetworkInj
 	}
 }
 
-TopologicalPowerComp::Ptr Reader::mapEquivalentShunt(EquivalentShunt* shunt){
+TopologicalPowerComp::Ptr Reader::mapEquivalentShunt(CIMPP::EquivalentShunt* shunt){
 	mSLog->info("Found shunt {}", shunt->name);
 
 	Real baseVoltage = determineBaseVoltageAssociatedWithEquipment(shunt);
@@ -652,12 +648,12 @@ void Reader::initDynamicSystemTopologyWithPowerflow(SystemTopology& systemPF, Sy
 	}
 }
 
-Real Reader::determineBaseVoltageAssociatedWithEquipment(IEC61970::Base::Core::ConductingEquipment* equipment){
+Real Reader::determineBaseVoltageAssociatedWithEquipment(CIMPP::ConductingEquipment* equipment){
 	Real baseVoltage = 0;
 
     // first look for baseVolt object to determine baseVoltage
     for (auto obj : mModel->Objects) {
-        if (IEC61970::Base::Core::BaseVoltage* baseVolt = dynamic_cast<IEC61970::Base::Core::BaseVoltage*>(obj)) {
+        if (CIMPP::BaseVoltage* baseVolt = dynamic_cast<CIMPP::BaseVoltage*>(obj)) {
             for (auto comp : baseVolt->ConductingEquipment) {
                 if (comp->name == equipment->name) {
                     baseVoltage = unitValue(baseVolt->nominalVoltage.value,UnitMultiplier::k);
@@ -668,7 +664,7 @@ Real Reader::determineBaseVoltageAssociatedWithEquipment(IEC61970::Base::Core::C
     // as second option take baseVoltage of topologicalNode where equipment is connected to
     if(baseVoltage == 0){
         for (auto obj : mModel->Objects) {
-			if (IEC61970::Base::Topology::TopologicalNode* topNode = dynamic_cast<IEC61970::Base::Topology::TopologicalNode*>(obj)) {
+			if (CIMPP::TopologicalNode* topNode = dynamic_cast<CIMPP::TopologicalNode*>(obj)) {
                 for (auto term : topNode->Terminal) {
 					if (term->ConductingEquipment->name == equipment->name) {
                         baseVoltage = unitValue(topNode->BaseVoltage->nominalVoltage.value,UnitMultiplier::k);
@@ -684,7 +680,7 @@ Real Reader::determineBaseVoltageAssociatedWithEquipment(IEC61970::Base::Core::C
 
 
 template<typename VarType>
-void Reader::processTopologicalNode(IEC61970::Base::Topology::TopologicalNode* topNode) {
+void Reader::processTopologicalNode(CIMPP::TopologicalNode* topNode) {
 	// Add this node to global node list and assign simulation node incrementally.
 	int matrixNodeIndex = Int(mPowerflowNodes.size());
 	mPowerflowNodes[topNode->mRID] = SimNode<VarType>::make(topNode->mRID, topNode->name, matrixNodeIndex, mPhase);
@@ -710,7 +706,7 @@ void Reader::processTopologicalNode(IEC61970::Base::Topology::TopologicalNode* t
 		mSLog->info("    Terminal {}, sequenceNumber {}", term->mRID, (int) term->sequenceNumber);
 
 		// Try to process Equipment connected to Terminal.
-		IEC61970::Base::Core::ConductingEquipment *equipment = term->ConductingEquipment;
+		CIMPP::ConductingEquipment *equipment = term->ConductingEquipment;
 		if (!equipment) {
 			mSLog->warn("Terminal {} has no Equipment, ignoring!", term->mRID);
 		}
@@ -736,5 +732,5 @@ void Reader::processTopologicalNode(IEC61970::Base::Topology::TopologicalNode* t
 	}
 }
 
-template void Reader::processTopologicalNode<Real>(IEC61970::Base::Topology::TopologicalNode* topNode);
-template void Reader::processTopologicalNode<Complex>(IEC61970::Base::Topology::TopologicalNode* topNode);
+template void Reader::processTopologicalNode<Real>(CIMPP::TopologicalNode* topNode);
+template void Reader::processTopologicalNode<Complex>(CIMPP::TopologicalNode* topNode);

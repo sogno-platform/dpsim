@@ -1,6 +1,7 @@
 FROM fedora:32
 
 ARG VILLAS_VERSION=0.8.0
+ARG CIM_VERSION=IEC61970_16v29a
 
 LABEL \
 	org.label-schema.schema-version = "1.0" \
@@ -82,11 +83,15 @@ RUN dnf -y install \
 	libconfig-devel \
   libnl3-devel
 
+# Python dependencies
+ADD requirements.txt .
+RUN pip3 install -r requirements.txt
+
 # Install CIMpp from source
 RUN cd /tmp && \
 	git clone --recursive https://github.com/CIM-IEC/libcimpp.git && \
 	mkdir -p libcimpp/build && cd libcimpp/build && \
-	cmake -DCMAKE_INSTALL_LIBDIR=/usr/local/lib64 -DUSE_CIM_VERSION=IEC61970_16v29a -DBUILD_SHARED_LIBS=ON -DBUILD_ARABICA_EXAMPLES=OFF .. && make -j$(nproc) install && \
+	cmake -DCMAKE_INSTALL_LIBDIR=/usr/local/lib64 -DUSE_CIM_VERSION=${CIM_VERSION} -DBUILD_SHARED_LIBS=ON -DBUILD_ARABICA_EXAMPLES=OFF .. && make -j$(nproc) install && \
 	rm -rf /tmp/libcimpp
 
 # Install VILLAS from source
@@ -95,10 +100,6 @@ RUN cd /tmp && \
 	mkdir -p villasnode/build && cd villasnode/build && \
 	cmake -DCMAKE_INSTALL_LIBDIR=/usr/local/lib64 .. && make -j$(nproc) install && \
 	rm -rf /tmp/villasnode
-
-# Python dependencies
-ADD requirements.txt .
-RUN pip3 install -r requirements.txt
 
 # Remove this part in the future and use dedicated jupyter Dockerfile
 # Activate Jupyter extensions

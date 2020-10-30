@@ -11,6 +11,7 @@
 #include <map>
 #include <list>
 #include <experimental/filesystem>
+
 #include <cps/Definitions.h>
 #include <cps/SimPowerComp.h>
 #include <cps/Components.h>
@@ -23,42 +24,34 @@
  *
  * DO NOT INCLUDE ANY CIM++ Headers here!
  *
- * CIM++ consists over 600 Headers files.
+ * CIM++ has more than 600 Headers files.
  * Including them here will also include them in <DPsim.h>
  * Which will have a huge impact on compile time!
  *
  * Use forward declarations instead!
  */
 
-#include <IEC61970/Base/Domain/UnitMultiplier.h>
 
 /* Forward declarations */
 class CIMModel;
 class BaseClass;
-namespace IEC61970 {
-	namespace Base {
-		namespace StateVariables {
-			class SvVoltage;
-			class SvPowerFlow;
-		};
-		namespace Wires {
-			class ACLineSegment;
-			class SynchronousMachine;
-			class ExternalNetworkInjection;
-			class EnergyConsumer;
-			class PowerTransformer;
-		};
-		namespace Equivalents {
-			class EquivalentShunt;
-		}
-		namespace Topology {
-			class TopologicalNode;
-		};
-		namespace Core {
-			class ConductingEquipment;
-		};
-	};
+#ifdef CGMES_BUILD
+#include <UnitMultiplier.hpp>
+namespace CIMPP {
+	class SvVoltage;
+	class SvPowerFlow;
+	class ACLineSegment;
+	class SynchronousMachine;
+	class ExternalNetworkInjection;
+	class EnergyConsumer;
+	class PowerTransformer;
+	class EquivalentShunt;
+	class TopologicalNode;
+	class ConductingEquipment;
 };
+#else
+#include <CIMNamespaces.hpp>
+#endif
 
 namespace CPS {
 namespace CIM {
@@ -107,16 +100,16 @@ namespace CIM {
 
 		// #### General Functions ####
 		/// Resolves unit multipliers.
-		static Real unitValue(Real value, IEC61970::Base::Domain::UnitMultiplier mult);
+		static Real unitValue(Real value, CIMPP::UnitMultiplier mult);
 		///
 		Matrix singlePhaseParameterToThreePhase(Real parameter);
 		///
-		void processSvVoltage(IEC61970::Base::StateVariables::SvVoltage* volt);
+		void processSvVoltage(CIMPP::SvVoltage* volt);
 		///
-		void processSvPowerFlow(IEC61970::Base::StateVariables::SvPowerFlow* flow);
+		void processSvPowerFlow(CIMPP::SvPowerFlow* flow);
 		///
 		template<typename VarType>
-		void processTopologicalNode(IEC61970::Base::Topology::TopologicalNode* topNode);
+		void processTopologicalNode(CIMPP::TopologicalNode* topNode);
 		///
 		void addFiles(const std::experimental::filesystem::path &filename);
 		/// Adds CIM files to list of files to be parsed.
@@ -136,26 +129,27 @@ namespace CIM {
 		/// Returns an RX-Line.
 		/// The voltage should be given in kV and the angle in degree.
 		/// TODO: Introduce different models such as PI and wave model.
-		TopologicalPowerComp::Ptr mapACLineSegment(IEC61970::Base::Wires::ACLineSegment* line);
+		TopologicalPowerComp::Ptr mapACLineSegment(CIMPP::ACLineSegment* line);
 		/// Returns a transformer, either ideal or with RL elements to model losses.
-		TopologicalPowerComp::Ptr mapPowerTransformer(IEC61970::Base::Wires::PowerTransformer *trans);
+		TopologicalPowerComp::Ptr mapPowerTransformer(CIMPP::PowerTransformer *trans);
 		/// Returns an IdealVoltageSource with voltage setting according to load flow data
 		/// at machine terminals. The voltage should be given in kV and the angle in degree.
 		/// TODO: Introduce real synchronous generator models here.
-		TopologicalPowerComp::Ptr mapSynchronousMachine(IEC61970::Base::Wires::SynchronousMachine* machine);
+		TopologicalPowerComp::Ptr mapSynchronousMachine(CIMPP::SynchronousMachine* machine);
 		/// Returns an PQload with voltage setting according to load flow data.
 		/// Currently the only option is to create an RL-load.
 		/// The voltage should be given in kV and the angle in degree.
 		/// TODO: Introduce real PQload model here.
-		TopologicalPowerComp::Ptr mapEnergyConsumer(IEC61970::Base::Wires::EnergyConsumer* consumer);
+		TopologicalPowerComp::Ptr mapEnergyConsumer(CIMPP::EnergyConsumer* consumer);
 		/// Returns an external grid injection.
-		TopologicalPowerComp::Ptr mapExternalNetworkInjection(IEC61970::Base::Wires::ExternalNetworkInjection* extnet);
+		TopologicalPowerComp::Ptr mapExternalNetworkInjection(CIMPP::ExternalNetworkInjection* extnet);
 		/// Returns a shunt
-		TopologicalPowerComp::Ptr mapEquivalentShunt(IEC61970::Base::Equivalents::EquivalentShunt *shunt);
+		TopologicalPowerComp::Ptr mapEquivalentShunt(CIMPP::EquivalentShunt *shunt);
 
 		// #### Helper Functions ####
 		/// Determine base voltage associated with object
-		Real determineBaseVoltageAssociatedWithEquipment(IEC61970::Base::Core::ConductingEquipment* equipment);
+		Real determineBaseVoltageAssociatedWithEquipment(CIMPP::ConductingEquipment* equipment);
+
 	public:
 		///
 		enum GeneratorType{Static, Transient};
@@ -203,8 +197,6 @@ namespace CIM {
 }
 }
 
-// Allow inclusion of CIMpp headers only from Reader.cpp
-// For performance reasons
 #if defined(BASECLASS_H) && !defined(READER_CPP)
   #error "Do not include CIMpp headers into CPS/DPsim headers!"
 #endif

@@ -72,6 +72,7 @@ option(WITH_CIM_SUBMODULE "Build with CIMpp as submodule" OFF)
 option(WITH_PROFILING "Add `-pg` profiling flag to compiliation" OFF)
 option(WITH_ASAN "Adds compiler flags to use the address sanitizer" OFF)
 option(WITH_TSAN "Adds compiler flags to use the thread sanitizer" OFF)
+option(CGMES_BUILD "Build with CGMES instead of CIM" OFF)
 
 find_package(Threads REQUIRED)
 
