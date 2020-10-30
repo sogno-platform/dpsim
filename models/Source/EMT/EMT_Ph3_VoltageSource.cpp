@@ -7,6 +7,7 @@
  *********************************************************************************/
 
 #include <cps/EMT/EMT_Ph3_VoltageSource.h>
+#include <cps/CIM/Reader.h>
 
 
 using namespace CPS;
@@ -37,20 +38,17 @@ void EMT::Ph3::VoltageSource::setParameters(MatrixComp voltageRef, Real srcFreq)
 void EMT::Ph3::VoltageSource::initializeFromNodesAndTerminals(Real frequency) {
 	mVoltageRef = attribute<MatrixComp>("V_ref");
 	mSrcFreq = attribute<Real>("f_src");
-	mSrcFreq->set(frequency);
 
 	mSLog->info("\n--- Initialization from node voltages ---");
 	// TODO: this approach currently does not work, if voltage ref set from outside without using setParameters,
 	// since mParametersSet remains false then
 	if (!mParametersSet) {
-		MatrixComp vInitABC = MatrixComp::Zero(3, 1);
-		vInitABC(0, 0) = initialSingleVoltage(1) - initialSingleVoltage(0);
-		vInitABC(1, 0) = (initialSingleVoltage(1) - initialSingleVoltage(0)) * SHIFT_TO_PHASE_B;
-		vInitABC(2, 0) = (initialSingleVoltage(1) - initialSingleVoltage(0)) * SHIFT_TO_PHASE_C;
-		mVoltageRef->set(vInitABC);
+		mVoltageRef->set(CIM::Reader::singlePhaseVariableToThreePhase(initialSingleVoltage(1) - initialSingleVoltage(0)));
+		mSrcFreq->set(frequency);
 
 		mSLog->info("\nReference voltage: {:s}"
-					"\nTerminal 0 voltage: {:s}",
+					"\nTerminal 0 voltage: {:s}"
+					"\nTerminal 1 voltage: {:s}",
 					Logger::matrixCompToString(mVoltageRef->get()),
 					Logger::phasorToString(initialSingleVoltage(0)));
 	} else {

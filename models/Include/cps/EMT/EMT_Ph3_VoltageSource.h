@@ -7,7 +7,6 @@
  *********************************************************************************/
 #pragma once
 
-
 #include <cps/SimPowerComp.h>
 #include <cps/Solver/MNAInterface.h>
 
