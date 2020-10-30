@@ -26,13 +26,8 @@ namespace CPS {
 				public SimPowerComp<Real>,
 				public SharedFactory<VoltageSource> {
 			protected:
+				// Updates voltage according to reference phasor and frequency
 				void updateVoltage(Real time);
-				void updateVoltage(Matrix vabc);
-
-				/// Magnitude of the sinusoidal voltage (peak-value, phase-to-ground)
-				Attribute<MatrixComp>::Ptr mVoltageRef;
-				/// Frequency of the sinusoidal voltage
-				Attribute<Real>::Ptr mSrcFreq;
 			public:
 				/// Defines UID, name and logging level
 				VoltageSource(String uid, String name, Logger::Level logLevel = Logger::Level::off);
@@ -40,12 +35,12 @@ namespace CPS {
 				VoltageSource(String name, Logger::Level logLevel = Logger::Level::off)
 					: VoltageSource(name, name, logLevel) { }
 
-				void setParameters(MatrixComp voltageRef, Real srcFreq = -1);
-
 				SimPowerComp<Real>::Ptr clone(String name);
 				// #### General ####
 				/// Initializes component from power flow data
 				void initializeFromNodesAndTerminals(Real frequency);
+				/// Setter for reference voltage
+				void setParameters(MatrixComp voltageRef, Real srcFreq = -1);
 
 				// #### MNA section ####
 				/// Initializes internal variables of the component

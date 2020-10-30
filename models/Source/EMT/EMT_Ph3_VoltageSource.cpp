@@ -20,7 +20,7 @@ EMT::Ph3::VoltageSource::VoltageSource(String uid, String name, Logger::Level lo
 	mIntfVoltage = Matrix::Zero(3, 1);
 	mIntfCurrent = Matrix::Zero(3, 1);
 
-	addAttribute<MatrixComp>("V_ref", Flags::read | Flags::write);
+	addAttribute<MatrixComp>("V_ref", Flags::read | Flags::write);  // rms-value, phase-to-phase
 	addAttribute<Real>("f_src", Flags::read | Flags::write);
 }
 
@@ -32,29 +32,28 @@ void EMT::Ph3::VoltageSource::setParameters(MatrixComp voltageRef, Real srcFreq)
 				"\nFrequency [Hz]: {:s}", 
 				Logger::matrixCompToString(voltageRef), 
 				Logger::realToString(srcFreq));
+
 	mParametersSet = true;
 }
 
 void EMT::Ph3::VoltageSource::initializeFromNodesAndTerminals(Real frequency) {
-	mVoltageRef = attribute<MatrixComp>("V_ref");
-	mSrcFreq = attribute<Real>("f_src");
 
 	mSLog->info("\n--- Initialization from node voltages ---");
-	// TODO: this approach currently does not work, if voltage ref set from outside without using setParameters,
-	// since mParametersSet remains false then
+	// TODO: this approach currently overwrites voltage reference set from outside, when not using setParameters
 	if (!mParametersSet) {
-		mVoltageRef->set(CIM::Reader::singlePhaseVariableToThreePhase(initialSingleVoltage(1) - initialSingleVoltage(0)));
-		mSrcFreq->set(frequency);
+		attribute<MatrixComp>("V_ref")->set(CIM::Reader::singlePhaseVariableToThreePhase(initialSingleVoltage(1) - initialSingleVoltage(0)));
+		attribute<Real>("f_src")->set(frequency);
 
 		mSLog->info("\nReference voltage: {:s}"
 					"\nTerminal 0 voltage: {:s}"
 					"\nTerminal 1 voltage: {:s}",
-					Logger::matrixCompToString(mVoltageRef->get()),
-					Logger::phasorToString(initialSingleVoltage(0)));
+					Logger::matrixCompToString(attribute<MatrixComp>("V_ref")->get()),
+					Logger::phasorToString(initialSingleVoltage(0)),
+					Logger::phasorToString(initialSingleVoltage(1)));
 	} else {
 		mSLog->info("\nInitialization from node voltages omitted (parameter already set)."
 					"\nReference voltage: {:s}",
-					Logger::matrixCompToString(mVoltageRef->get()));
+					Logger::matrixCompToString(attribute<MatrixComp>("V_ref")->get()));
 	}
 	mSLog->info("\n--- Initialization from node voltages ---");
 	mSLog->flush();
@@ -119,26 +118,22 @@ void EMT::Ph3::VoltageSource::mnaApplyRightSideVectorStamp(Matrix& rightVector) 
 }
 
 void EMT::Ph3::VoltageSource::updateVoltage(Real time) {
-	if (mSrcFreq->get() < 0) {
-		mIntfVoltage = RMS3PH_TO_PEAK1PH * mVoltageRef->get().real();
+	if (attribute<Real>("f_src")->get() < 0) {
+		mIntfVoltage = RMS3PH_TO_PEAK1PH * attribute<MatrixComp>("V_ref")->get().real();
 	}
 	else {
 		mIntfVoltage(0, 0) =
-			RMS3PH_TO_PEAK1PH * Math::abs(mVoltageRef->get()(0, 0)) * cos(time * 2. * PI * mSrcFreq->get() + Math::phase(mVoltageRef->get())(0, 0));
+			RMS3PH_TO_PEAK1PH * Math::abs(attribute<MatrixComp>("V_ref")->get()(0, 0)) * cos(time * 2. * PI * attribute<Real>("f_src")->get() + Math::phase(attribute<MatrixComp>("V_ref")->get())(0, 0));
 		mIntfVoltage(1, 0) =
-			RMS3PH_TO_PEAK1PH * Math::abs(mVoltageRef->get()(1, 0)) * cos(time * 2. * PI * mSrcFreq->get() + Math::phase(mVoltageRef->get())(1, 0));
+			RMS3PH_TO_PEAK1PH * Math::abs(attribute<MatrixComp>("V_ref")->get()(1, 0)) * cos(time * 2. * PI * attribute<Real>("f_src")->get() + Math::phase(attribute<MatrixComp>("V_ref")->get())(1, 0));
 		mIntfVoltage(2, 0) =
-			RMS3PH_TO_PEAK1PH * Math::abs(mVoltageRef->get()(2, 0)) * cos(time * 2. * PI * mSrcFreq->get() + Math::phase(mVoltageRef->get())(2, 0));
+			RMS3PH_TO_PEAK1PH * Math::abs(attribute<MatrixComp>("V_ref")->get()(2, 0)) * cos(time * 2. * PI * attribute<Real>("f_src")->get() + Math::phase(attribute<MatrixComp>("V_ref")->get())(2, 0));
 	}
 
 	mSLog->debug(
 		"\nUpdate Voltage: {:s}",
 		Logger::matrixToString(mIntfVoltage)
 	);
-}
-
-void EMT::Ph3::VoltageSource::updateVoltage(Matrix vabc) {
-	mIntfVoltage=vabc;
 }
 
 void EMT::Ph3::VoltageSource::mnaAddPreStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes) {
