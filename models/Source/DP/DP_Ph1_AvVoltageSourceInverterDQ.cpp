@@ -211,15 +211,23 @@ void DP::Ph1::AvVoltageSourceInverterDQ::initializeFromNodesAndTerminals(Real fr
 
 	mSLog->info(
 		"\n--- Initialization from powerflow ---"
-		"\nVoltage across: {:s}"
-		"\nCurrent: {:s}"
-		"\nTerminal 0 voltage: {:s}"
+		"\nInterface voltage across: {:s}"
+		"\nInterface current: {:s}"
+		"\nTerminal 0 initial voltage: {:s}"
 		"\nTerminal 0 connected to {:s} = sim node {:d}"
-		"\n--- Initialization from powerflow finished ---",
+		"\nVirtual node 0 initial voltage: {:s}"
+		"\nVirtual node 1 initial voltage: {:s}"
+		"\nVirtual node 2 initial voltage: {:s}",
 		Logger::phasorToString(mIntfVoltage(0, 0)),
 		Logger::phasorToString(mIntfCurrent(0, 0)),
 		Logger::phasorToString(initialSingleVoltage(0)),
-		mTerminals[0]->node()->name(), mTerminals[0]->node()->matrixNodeIndex());
+		mTerminals[0]->node()->name(), mTerminals[0]->node()->matrixNodeIndex(),
+		Logger::phasorToString(mVirtualNodes[0]->initialSingleVoltage()),
+		Logger::phasorToString(mVirtualNodes[1]->initialSingleVoltage()),
+		Logger::phasorToString(mVirtualNodes[2]->initialSingleVoltage()));
+		if (mWithConnectionTransformer)
+			mSLog->info("\nVirtual node 3 initial voltage: {:s}", Logger::phasorToString(mVirtualNodes[3]->initialSingleVoltage()));
+		mSLog->info("\n--- Initialization from powerflow finished ---");
 }
 
 void DP::Ph1::AvVoltageSourceInverterDQ::mnaInitialize(Real omega, Real timeStep, Attribute<Matrix>::Ptr leftVector) {

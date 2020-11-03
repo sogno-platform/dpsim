@@ -33,7 +33,7 @@ EMT::Ph3::AvVoltageSourceInverterDQ::AvVoltageSourceInverterDQ(String uid, Strin
 	mSubResistorC = EMT::Ph3::Resistor::make(mName + "_resC", mLogLevel);
 	mSubCapacitorF = EMT::Ph3::Capacitor::make(mName + "_capF", mLogLevel);
 	mSubInductorF = EMT::Ph3::Inductor::make(mName + "_indF", mLogLevel);
-	mSubCtrledVoltageSource = EMT::Ph3::ControlledVoltageSource::make(mName + "_src", mLogLevel);
+	mSubCtrledVoltageSource = EMT::Ph3::VoltageSource::make(mName + "_src", mLogLevel);
 	mSubComponents.push_back(mSubResistorF);
 	mSubComponents.push_back(mSubResistorC);
 	mSubComponents.push_back(mSubCapacitorF);
@@ -188,8 +188,7 @@ void EMT::Ph3::AvVoltageSourceInverterDQ::initializeFromNodesAndTerminals(Real f
 	mIntfCurrent = intfCurrentComplex.real();
 
 	// Initialize controlled source
-	mVsref = vsInit.real();
-	mSubCtrledVoltageSource->setParameters(mVsref);
+	mSubCtrledVoltageSource->setParameters(mVirtualNodes[0]->initialVoltage());
 
 	// Connect electrical subcomponents
 	mSubCtrledVoltageSource->connect({ SimNode::GND, mVirtualNodes[0] });
@@ -228,15 +227,23 @@ void EMT::Ph3::AvVoltageSourceInverterDQ::initializeFromNodesAndTerminals(Real f
 
 	mSLog->info(
 		"\n--- Initialization from powerflow ---"
-		"\nVoltage across: {:s}"
-		"\nCurrent: {:s}"
-		"\nTerminal 0 voltage: {:s}"
+		"\nInterface voltage across: {:s}"
+		"\nInterface current: {:s}"
+		"\nTerminal 0 initial voltage: {:s}"
 		"\nTerminal 0 connected to {:s} = sim node {:d}"
-		"\n--- Initialization from powerflow finished ---",
+		"\nVirtual node 0 initial voltage: {:s}"
+		"\nVirtual node 1 initial voltage: {:s}"
+		"\nVirtual node 2 initial voltage: {:s}",
 		Logger::phasorToString(intfVoltageComplex(0, 0)),
 		Logger::phasorToString(intfCurrentComplex(0, 0)),
-		Logger::phasorToString(RMS3PH_TO_PEAK1PH * initialSingleVoltage(0)),
-		mTerminals[0]->node()->name(), mTerminals[0]->node()->matrixNodeIndex());
+		Logger::phasorToString(initialSingleVoltage(0)),
+		mTerminals[0]->node()->name(), mTerminals[0]->node()->matrixNodeIndex(),
+		Logger::phasorToString(mVirtualNodes[0]->initialSingleVoltage()),
+		Logger::phasorToString(mVirtualNodes[1]->initialSingleVoltage()),
+		Logger::phasorToString(mVirtualNodes[2]->initialSingleVoltage()));
+	if (mWithConnectionTransformer)
+		mSLog->info("\nVirtual node 3 initial voltage: {:s}", Logger::phasorToString(mVirtualNodes[3]->initialSingleVoltage()));
+	mSLog->info("\n--- Initialization from powerflow finished ---");
 }
 
 void EMT::Ph3::AvVoltageSourceInverterDQ::mnaInitialize(Real omega, Real timeStep, Attribute<Matrix>::Ptr leftVector) {
@@ -385,7 +392,7 @@ void EMT::Ph3::AvVoltageSourceInverterDQ::mnaAddPreStepDependencies(AttributeBas
 
 void EMT::Ph3::AvVoltageSourceInverterDQ::mnaPreStep(Real time, Int timeStepCount) {
 	// pre-step of subcomponents - controlled source
-	mSubCtrledVoltageSource->setParameters(mVsref);
+	mSubCtrledVoltageSource->setParameters(PEAK1PH_TO_RMS3PH * mVsref);
 	// pre-step of subcomponents - others
 	for (auto subcomp: mSubComponents)
 		if (auto mnasubcomp = std::dynamic_pointer_cast<MNAInterface>(subcomp))

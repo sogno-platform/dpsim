@@ -27,8 +27,8 @@ namespace SGIB {
 	    Real lineInductance = 0.1;
 
         // PV controller parameters
-        Real scaling_P = 10.0;
-        Real scaling_I = 1000.0;
+        Real scaling_P = 1.0;
+        Real scaling_I = 10.0;
 
         Real KpPLL = 0.25/scaling_P;
         Real KiPLL = 2/scaling_I;

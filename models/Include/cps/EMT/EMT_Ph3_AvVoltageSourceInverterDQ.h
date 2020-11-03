@@ -14,7 +14,7 @@
 #include <cps/EMT/EMT_Ph3_Resistor.h>
 #include <cps/EMT/EMT_Ph3_Inductor.h>
 #include <cps/EMT/EMT_Ph3_Capacitor.h>
-#include <cps/EMT/EMT_Ph3_ControlledVoltageSource.h>
+#include <cps/EMT/EMT_Ph3_VoltageSource.h>
 #include <cps/EMT/EMT_Ph3_Transformer.h>
 #include <cps/Base/Base_AvVoltageSourceInverterDQ.h>
 #include <cps/Signal/PLL.h>
@@ -52,7 +52,7 @@ namespace Ph3 {
 
 		// ### Electrical Subcomponents ###
 		/// Controlled voltage source
-		std::shared_ptr<EMT::Ph3::ControlledVoltageSource> mSubCtrledVoltageSource;
+		std::shared_ptr<EMT::Ph3::VoltageSource> mSubCtrledVoltageSource;
 		/// Resistor Rf as part of LCL filter
 		std::shared_ptr<EMT::Ph3::Resistor> mSubResistorF;
 		/// Capacitor Cf as part of LCL filter

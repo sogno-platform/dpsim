@@ -126,7 +126,7 @@ int main(int argc, char* argv[]) {
 	Examples::CIGREMV::logPVDecomposedAttributes(loggerDP, pv);
 
 	// load step sized in absolute terms
-	std::shared_ptr<SwitchEvent> loadStepEvent = Examples::createEventAddPowerConsumption("n2", 1-timeStepDP, 100.0e3, systemDP, Domain::DP, loggerDP);
+	std::shared_ptr<SwitchEvent> loadStepEvent = Examples::createEventAddPowerConsumption("n2", 3-timeStepDP, 100.0e3, systemDP, Domain::DP, loggerDP);
 
 	// Simulation
 	Simulation sim(simNameDP, Logger::Level::debug);
