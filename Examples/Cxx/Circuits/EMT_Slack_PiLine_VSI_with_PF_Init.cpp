@@ -50,7 +50,7 @@ int main(int argc, char* argv[]) {
 	extnetPF->modifyPowerFlowBusType(PowerflowBusType::VD);
 
 	auto linePF = SP::Ph1::PiLine::make("PiLine", Logger::Level::debug);
-	linePF->setParameters(scenario.lineResistance, scenario.lineInductance, 0);
+	linePF->setParameters(scenario.lineResistance, scenario.lineInductance, scenario.lineCapacitance);
 	linePF->setBaseVoltage(scenario.systemNominalVoltage);
 
 	auto loadPF = SP::Ph1::Load::make("Load", Logger::Level::debug);
@@ -94,7 +94,7 @@ int main(int argc, char* argv[]) {
 	auto extnetEMT = EMT::Ph3::NetworkInjection::make("Slack", Logger::Level::debug);
 
 	auto lineEMT = EMT::Ph3::PiLine::make("PiLine", Logger::Level::debug);
-	lineEMT->setParameters(Reader::singlePhaseParameterToThreePhase(scenario.lineResistance), Reader::singlePhaseParameterToThreePhase(scenario.lineInductance), Reader::singlePhaseParameterToThreePhase(0));
+	lineEMT->setParameters(Reader::singlePhaseParameterToThreePhase(scenario.lineResistance), Reader::singlePhaseParameterToThreePhase(scenario.lineInductance), Reader::singlePhaseParameterToThreePhase(scenario.lineCapacitance));
 
 	auto pv = EMT::Ph3::AvVoltageSourceInverterDQ::make("pv", "pv", Logger::Level::debug, true);
 	pv->setParameters(scenario.systemOmega, scenario.pvNominalVoltage, scenario.pvNominalActivePower, scenario.pvNominalReactivePower);
@@ -124,7 +124,7 @@ int main(int argc, char* argv[]) {
 	Examples::CIGREMV::logPVDecomposedAttributes(loggerEMT, pv);
 
 	// load step sized in absolute terms
-	std::shared_ptr<SwitchEvent3Ph> loadStepEvent = Examples::createEventAddPowerConsumption3Ph("n2", 3-timeStepEMT, 100e3, systemEMT, Domain::EMT, loggerEMT);
+	std::shared_ptr<SwitchEvent3Ph> loadStepEvent = Examples::createEventAddPowerConsumption3Ph("n2", 3-timeStepEMT, 1000e3, systemEMT, Domain::EMT, loggerEMT);
 
 	// Simulation
 	Simulation sim(simNameEMT, Logger::Level::debug);

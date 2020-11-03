@@ -50,7 +50,7 @@ int main(int argc, char* argv[]) {
 	extnetPF->modifyPowerFlowBusType(PowerflowBusType::VD);
 
 	auto linePF = SP::Ph1::PiLine::make("PiLine", Logger::Level::debug);
-	linePF->setParameters(scenario.lineResistance, scenario.lineInductance, 0);
+	linePF->setParameters(scenario.lineResistance, scenario.lineInductance, scenario.lineCapacitance);
 	linePF->setBaseVoltage(scenario.systemNominalVoltage);
 
 	auto loadPF = SP::Ph1::Load::make("Load", Logger::Level::debug);
@@ -95,7 +95,7 @@ int main(int argc, char* argv[]) {
 	extnetDP->setParameters(Complex(scenario.systemNominalVoltage,0));
 
 	auto lineDP = DP::Ph1::PiLine::make("PiLine", Logger::Level::debug);
-	lineDP->setParameters(scenario.lineResistance, scenario.lineInductance);
+	lineDP->setParameters(scenario.lineResistance, scenario.lineInductance, scenario.lineCapacitance);
 
 	
 	auto pv = DP::Ph1::AvVoltageSourceInverterDQ::make("pv", "pv", Logger::Level::debug, true);
@@ -126,7 +126,7 @@ int main(int argc, char* argv[]) {
 	Examples::CIGREMV::logPVDecomposedAttributes(loggerDP, pv);
 
 	// load step sized in absolute terms
-	std::shared_ptr<SwitchEvent> loadStepEvent = Examples::createEventAddPowerConsumption("n2", 3-timeStepDP, 100.0e3, systemDP, Domain::DP, loggerDP);
+	std::shared_ptr<SwitchEvent> loadStepEvent = Examples::createEventAddPowerConsumption("n2", 3-timeStepDP, 1000.0e3, systemDP, Domain::DP, loggerDP);
 
 	// Simulation
 	Simulation sim(simNameDP, Logger::Level::debug);

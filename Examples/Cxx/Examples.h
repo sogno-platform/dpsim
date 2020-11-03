@@ -23,8 +23,10 @@ namespace SGIB {
         Real systemNominalVoltage = 20e3;
 
         // Line parameters (R/X = 1)
-        Real lineResistance = 31.4;
-	    Real lineInductance = 0.1;
+        Real length = 10;
+        Real lineResistance = 0.5 * length;
+	    Real lineInductance = 0.5/314 * length;
+        Real lineCapacitance = 50e-6 * length;
 
         // PV controller parameters
         Real scaling_P = 1.0;
