@@ -129,7 +129,7 @@ int main(int argc, char* argv[]) {
 	loggerEMT->addAttribute("v2", n2EMT->attribute("v"));
 	loggerEMT->addAttribute("i12", lineEMT->attribute("i_intf"));
 
-	Examples::CIGREMV::logPVDecomposedAttributes(loggerEMT, pv);
+	Examples::CIGREMV::logPVAttributes(loggerEMT, pv);
 
 	// load step sized in absolute terms
 	std::shared_ptr<SwitchEvent3Ph> loadStepEvent = Examples::createEventAddPowerConsumption3Ph("n2", 3-timeStepEMT, 1000e3, systemEMT, Domain::EMT, loggerEMT);

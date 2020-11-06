@@ -34,7 +34,7 @@ int main(int argc, char* argv[]) {
 	if (argc > 1) {
 		timeStep = args.timeStep;
 		finalTime = args.duration;
-		
+
 		if (args.name != "dpsim")
 			simName = args.name;
 		if (args.options_bool.find("control") != args.options_bool.end())
@@ -131,7 +131,7 @@ int main(int argc, char* argv[]) {
 	loggerDP->addAttribute("v2", n2DP->attribute("v"));
 	loggerDP->addAttribute("i12", lineDP->attribute("i_intf"));
 
-	Examples::CIGREMV::logPVDecomposedAttributes(loggerDP, pv);
+	Examples::CIGREMV::logPVAttributes(loggerDP, pv);
 
 	// load step sized in absolute terms
 	std::shared_ptr<SwitchEvent> loadStepEvent = Examples::createEventAddPowerConsumption("n2", 3-timeStepDP, 1000.0e3, systemDP, Domain::DP, loggerDP);

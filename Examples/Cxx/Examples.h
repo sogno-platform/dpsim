@@ -160,31 +160,7 @@ namespace CIGREMV {
         }
     }
 
-    // DEPRECATED, use logPVDecomposedAttributes
     void logPVAttributes(DPsim::DataLogger::Ptr logger, CPS::TopologicalPowerComp::Ptr pv) {
-        // state variables
-        logger->addAttribute(pv->name() + "_state_" + "theta", pv->attribute("theta"));
-        logger->addAttribute(pv->name() + "_state_" + "phipll", pv->attribute("phipll"));
-        logger->addAttribute(pv->name() + "_state_" + "p", pv->attribute("p"));
-        logger->addAttribute(pv->name() + "_state_" + "q", pv->attribute("q"));
-        logger->addAttribute(pv->name() + "_state_" + "phid", pv->attribute("phid"));
-        logger->addAttribute(pv->name() + "_state_" + "phiq", pv->attribute("phiq"));
-        logger->addAttribute(pv->name() + "_state_" + "gammad", pv->attribute("gammad"));
-        logger->addAttribute(pv->name() + "_state_" + "gammaq", pv->attribute("gammaq"));
-
-        // input variables
-        logger->addAttribute(pv->name() + "_input_" + "Vcdq", pv->attribute("Vcdq"));
-        logger->addAttribute(pv->name() + "_input_" + "Ircdq", pv->attribute("Ircdq"));
-
-        // output variables
-        logger->addAttribute(pv->name() + "_output_" + "Vsdq", pv->attribute("Vsdq"));
-
-        // interface variables
-        logger->addAttribute(pv->name() + "_v_intf", pv->attribute("v_intf"));
-        logger->addAttribute(pv->name() + "_i_intf", pv->attribute("i_intf"));
-    }
-
-    void logPVDecomposedAttributes(DPsim::DataLogger::Ptr logger, CPS::TopologicalPowerComp::Ptr pv) {
 
         // power controller
         std::vector<String> inputNames = {  pv->name() + "_powerctrl_input_pref", pv->name() + "_powerctrl_input_qref",
