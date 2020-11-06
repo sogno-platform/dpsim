@@ -35,7 +35,9 @@ int main(int argc, char* argv[]) {
 		simName = args.name;
 		timeStep = args.timeStep;
 		finalTime = args.duration;
-		pvWithControl = args.options_bool["control"];
+
+		if (args.options_bool.find("control") != args.options_bool.end())
+			pvWithControl = args.options_bool["control"];
 	}
 
 	// ----- POWERFLOW FOR INITIALIZATION -----
