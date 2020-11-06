@@ -59,6 +59,9 @@ DP::Ph1::AvVoltageSourceInverterDQ::AvVoltageSourceInverterDQ(String uid, String
 	addAttribute<Real>("Irc_q", &mIrcq, Flags::read | Flags::write);
 	addAttribute<MatrixComp>("Vsref", &mVsref, Flags::read | Flags::write);
 
+	// Sub voltage source
+	addAttributeRef<MatrixComp>("Vs", mSubCtrledVoltageSource->attribute<MatrixComp>("v_intf"), Flags::read | Flags::write);
+
 	// PLL
 	mPLL->setAttributeRef("input_ref", attribute<Real>("Vc_q"));
 	addAttributeRef<Matrix>("pll_output", mPLL->attribute<Matrix>("output_curr"), Flags::read);
@@ -334,7 +337,8 @@ void DP::Ph1::AvVoltageSourceInverterDQ::mnaAddPreStepDependencies(AttributeBase
 
 void DP::Ph1::AvVoltageSourceInverterDQ::mnaPreStep(Real time, Int timeStepCount) {
 	// pre-steo of subcomponents - controlled source
-	mSubCtrledVoltageSource->setParameters(mVsref(0,0));
+	if (mWithControl)
+		mSubCtrledVoltageSource->setParameters(mVsref(0,0));
 	// pre-step of subcomponents - others
 	for (auto subcomp: mSubComponents)
 		if (auto mnasubcomp = std::dynamic_pointer_cast<MNAInterface>(subcomp))

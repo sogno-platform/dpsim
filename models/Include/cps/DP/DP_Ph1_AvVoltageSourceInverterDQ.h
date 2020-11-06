@@ -78,8 +78,10 @@ namespace Ph1 {
 		/// Voltage as control output after transformation interface
 		MatrixComp mVsref = MatrixComp::Zero(1,1);
 
-		/// Boolean for connection transformer usage
+		/// Flag for connection transformer usage
 		Bool mWithConnectionTransformer=false;
+		/// Flag for controller usage
+		Bool mWithControl=true;
 
 		// #### solver ####
 		///
@@ -107,6 +109,7 @@ namespace Ph1 {
 		/// Setter for initial values applied in controllers
 		void setInitialStateValues(Real pInit, Real qInit,
 			Real phi_dInit, Real phi_qInit, Real gamma_dInit, Real gamma_qInit);
+		void withControl(Bool controlOn) { mWithControl = controlOn; };
 
 		// #### MNA section ####
 		/// Initializes internal variables of the component
