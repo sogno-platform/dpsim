@@ -32,10 +32,11 @@ int main(int argc, char* argv[]) {
 
 	CommandLineArgs args(argc, argv);
 	if (argc > 1) {
-		simName = args.name;
 		timeStep = args.timeStep;
 		finalTime = args.duration;
 
+		if (args.name != "dpsim")
+			simName = args.name;
 		if (args.options_bool.find("control") != args.options_bool.end())
 			pvWithControl = args.options_bool["control"];
 	}
