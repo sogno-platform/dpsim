@@ -36,7 +36,7 @@ RUN dnf install -y make bash git gcc autoconf libtool automake \
 
 ENV LD_LIBRARY_PATH="/usr/local/lib:/usr/local/lib64:${LD_LIBRARY_PATH}"
 # copy gitlab-runner ssh credentials into build container
-RUN git clone -b 1.0  --depth 1 --recurse-submodules https://git.rwth-aachen.de/niklas.eiling/cricket.git && \
+RUN git clone -b 1.0  --depth 1 --recurse-submodules https://git.rwth-aachen.de/acs/public/virtualization/cricket.git && \
     cd cricket && \
     make -j 16 LOG=INFO
 
