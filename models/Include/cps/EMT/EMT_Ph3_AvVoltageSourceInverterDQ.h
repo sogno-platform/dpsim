@@ -78,8 +78,10 @@ namespace Ph3 {
 		/// Voltage as control output after transformation interface
 		Matrix mVsref = Matrix::Zero(3,1);
 
-		/// Boolean for connection transformer usage
+		/// Flag for connection transformer usage
 		Bool mWithConnectionTransformer=false;
+		/// Flag for controller usage
+		Bool mWithControl=true;
 		
 		// #### solver ####
 		///
@@ -107,6 +109,7 @@ namespace Ph3 {
 		/// Setter for initial values applied in controllers
 		void setInitialStateValues(Real pInit, Real qInit,
 			Real phi_dInit, Real phi_qInit, Real gamma_dInit, Real gamma_qInit);
+		void withControl(Bool controlOn) { mWithControl = controlOn; };
 
 		///
 		Matrix getParkTransformMatrixPowerInvariant(Real theta);

@@ -25,19 +25,23 @@ int main(int argc, char* argv[]) {
 
 	Examples::SGIB::ScenarioConfig scenario;
 	
-	// Real finalTime = 0.003;
 	Real finalTime = 2;
 	Real timeStep = 0.0001;
+	String simName = "EMT_Slack_PiLine_VSI_with_PF_Init";
+	Bool pvWithControl = true;
+
 	CommandLineArgs args(argc, argv);
 	if (argc > 1) {
+		simName = args.name;
 		timeStep = args.timeStep;
 		finalTime = args.duration;
+		pvWithControl = args.options_bool["control"];
 	}
 
 	// ----- POWERFLOW FOR INITIALIZATION -----
 	Real timeStepPF = finalTime;
 	Real finalTimePF = finalTime+timeStepPF;
-	String simNamePF = "EMT_Slack_PiLine_VSI_with_PF_Init_PF";
+	String simNamePF = simName + "_PF";
 	Logger::setLogDir("logs/" + simNamePF);
 
 	// Components
@@ -84,7 +88,7 @@ int main(int argc, char* argv[]) {
 	// ----- DYNAMIC SIMULATION -----
 	Real timeStepEMT = timeStep;
 	Real finalTimeEMT = finalTime+timeStepEMT;
-	String simNameEMT = "EMT_Slack_PiLine_VSI_with_PF_Init_EMT";
+	String simNameEMT = simName + "_EMT";
 	Logger::setLogDir("logs/" + simNameEMT);
 
 	// Components
@@ -102,6 +106,7 @@ int main(int argc, char* argv[]) {
 	pv->setFilterParameters(scenario.Lf, scenario.Cf, scenario.Rf, scenario.Rc);
 	pv->setTransformerParameters(scenario.systemNominalVoltage, scenario.pvNominalVoltage, scenario.transformerNominalPower, scenario.systemNominalVoltage/scenario.pvNominalVoltage, 0, 0, scenario.transformerInductance, scenario.systemOmega);
 	pv->setInitialStateValues(scenario.pvNominalActivePower, scenario.pvNominalReactivePower, scenario.phi_dInit, scenario.phi_qInit, scenario.gamma_dInit, scenario.gamma_qInit);
+	pv->withControl(pvWithControl);
 
 	// Topology
 	extnetEMT->connect({ n1EMT });
