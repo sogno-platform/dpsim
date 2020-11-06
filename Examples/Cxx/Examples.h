@@ -23,30 +23,30 @@ namespace SGIB {
         Real systemNominalVoltage = 20e3;
 
         // Line parameters (R/X = 1)
-        Real length = 10;
+        Real length = 5;
         Real lineResistance = 0.5 * length;
 	    Real lineInductance = 0.5/314 * length;
         Real lineCapacitance = 50e-6 * length;
 
         // PV controller parameters
-        Real scaling_P = 1.0;
-        Real scaling_I = 10.0;
+        Real scaling_P = 1;
+        Real scaling_I = 0.1;
 
-        Real KpPLL = 0.25/scaling_P;
-        Real KiPLL = 2/scaling_I;
-        Real KpPowerCtrl = 0.001/scaling_P;
-        Real KiPowerCtrl = 0.08/scaling_I;
-        Real KpCurrCtrl = 0.3/scaling_P;
-        Real KiCurrCtrl = 10/scaling_I;
+        Real KpPLL = 0.25*scaling_P;
+        Real KiPLL = 2*scaling_I;
+        Real KpPowerCtrl = 0.001*scaling_P;
+        Real KiPowerCtrl = 0.08*scaling_I;
+        Real KpCurrCtrl = 0.3*scaling_P;
+        Real KiCurrCtrl = 10*scaling_I;
         Real OmegaCutoff = 2 * PI * systemFrequency;
 
         // Initial state values
         Real thetaPLLInit = 0; // only for debug
         Real phiPLLInit = 0; // only for debug
-        Real phi_dInit = 823.721*scaling_I;
-        Real phi_qInit = -411.861*scaling_I;
-        Real gamma_dInit = 131.401*scaling_I;
-        Real gamma_qInit = 7.31206*scaling_I;
+        Real phi_dInit = 0;
+        Real phi_qInit = 0;
+        Real gamma_dInit = 0;
+        Real gamma_qInit = 0;
 
         // Nominal generated power values of PV
         Real pvNominalVoltage = 1500.;
@@ -160,6 +160,7 @@ namespace CIGREMV {
         }
     }
 
+    // DEPRECATED, use logPVDecomposedAttributes
     void logPVAttributes(DPsim::DataLogger::Ptr logger, CPS::TopologicalPowerComp::Ptr pv) {
         // state variables
         logger->addAttribute(pv->name() + "_state_" + "theta", pv->attribute("theta"));
@@ -204,6 +205,7 @@ namespace CIGREMV {
         // additional variables
         logger->addAttribute(pv->name() + "_pll_output", pv->attribute("pll_output"));
         logger->addAttribute(pv->name() + "_vsref", pv->attribute("Vsref"));
+        logger->addAttribute(pv->name() + "_vs", pv->attribute("Vs"));
     }	
 
 }
