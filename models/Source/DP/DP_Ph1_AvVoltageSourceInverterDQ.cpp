@@ -111,9 +111,9 @@ void DP::Ph1::AvVoltageSourceInverterDQ::setControllerParameters(Real Kp_pll, Re
 	Real Kp_powerCtrl, Real Ki_powerCtrl, Real Kp_currCtrl, Real Ki_currCtrl, Real Omega_cutoff) {
 
 	mSLog->info("Control Parameters:");
-	mSLog->info("PLL: K_i = {}, K_p = {}, Omega_Nom = {}", Kp_pll, Ki_pll, Omega_cutoff);
-	mSLog->info("Power Loop: K_i = {}, K_p = {}", Kp_powerCtrl, Ki_powerCtrl);
-	mSLog->info("Current Loop: K_i = {}, K_p = {}", Kp_currCtrl, Ki_currCtrl);
+	mSLog->info("PLL: K_p = {}, K_i = {}, Omega_Nom = {}", Kp_pll, Ki_pll, Omega_cutoff);
+	mSLog->info("Power Loop: K_p = {}, K_i = {}", Kp_powerCtrl, Ki_powerCtrl);
+	mSLog->info("Current Loop: K_p = {}, K_i = {}", Kp_currCtrl, Ki_currCtrl);
 	mSLog->info("Cut-Off Frequency = {}", Omega_cutoff);
 
 	// TODO: add and use Omega_nominal instead of Omega_cutoff

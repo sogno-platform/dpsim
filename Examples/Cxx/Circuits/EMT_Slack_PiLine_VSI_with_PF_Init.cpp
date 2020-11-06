@@ -29,6 +29,8 @@ int main(int argc, char* argv[]) {
 	Real timeStep = 0.0001;
 	String simName = "EMT_Slack_PiLine_VSI_with_PF_Init";
 	Bool pvWithControl = true;
+	Real cmdScaleP = 1.0;
+	Real cmdScaleI = 1.0;
 
 	CommandLineArgs args(argc, argv);
 	if (argc > 1) {
@@ -39,6 +41,10 @@ int main(int argc, char* argv[]) {
 			simName = args.name;
 		if (args.options_bool.find("control") != args.options_bool.end())
 			pvWithControl = args.options_bool["control"];
+		if (args.options.find("scale_kp") != args.options.end())
+			cmdScaleI = args.options["scale_kp"];
+		if (args.options.find("scale_ki") != args.options.end())
+			cmdScaleI = args.options["scale_ki"];
 	}
 
 	// ----- POWERFLOW FOR INITIALIZATION -----
@@ -105,7 +111,7 @@ int main(int argc, char* argv[]) {
 
 	auto pv = EMT::Ph3::AvVoltageSourceInverterDQ::make("pv", "pv", Logger::Level::debug, true);
 	pv->setParameters(scenario.systemOmega, scenario.pvNominalVoltage, scenario.pvNominalActivePower, scenario.pvNominalReactivePower);
-	pv->setControllerParameters(scenario.KpPLL, scenario.KiPLL, scenario.KpPowerCtrl, scenario.KiPowerCtrl, scenario.KpCurrCtrl, scenario.KiCurrCtrl, scenario.OmegaCutoff);
+	pv->setControllerParameters(cmdScaleP*scenario.KpPLL, cmdScaleI*scenario.KiPLL, cmdScaleP*scenario.KpPowerCtrl, cmdScaleI*scenario.KiPowerCtrl, cmdScaleP*scenario.KpCurrCtrl, cmdScaleI*scenario.KiCurrCtrl, scenario.OmegaCutoff);
 	pv->setFilterParameters(scenario.Lf, scenario.Cf, scenario.Rf, scenario.Rc);
 	pv->setTransformerParameters(scenario.systemNominalVoltage, scenario.pvNominalVoltage, scenario.transformerNominalPower, scenario.systemNominalVoltage/scenario.pvNominalVoltage, 0, 0, scenario.transformerInductance, scenario.systemOmega);
 	pv->setInitialStateValues(scenario.pvNominalActivePower, scenario.pvNominalReactivePower, scenario.phi_dInit, scenario.phi_qInit, scenario.gamma_dInit, scenario.gamma_qInit);
