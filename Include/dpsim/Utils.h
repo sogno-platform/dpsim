@@ -85,6 +85,7 @@ public:
 	std::list<fs::path> positionalPaths() const;
 
 	std::map<String, Real> options;
+	std::map<String, Bool> options_bool;
 };
 
 namespace Utils {

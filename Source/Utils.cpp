@@ -115,10 +115,31 @@ CommandLineArgs::CommandLineArgs(int argc, char *argv[],
 				auto key = arg.substr(0, p);
 				auto value = arg.substr(p + 1);
 
-				if (p != String::npos)
-					options[key] = std::stod(value);
+				Bool conversion_successful = false;
+				if (p != String::npos) {
+					
+					// try to convert to real number
+					try {
+						options[key] = std::stod(value);
+						conversion_successful = true;
+					}
+					catch (...) {}
+
+					// try to convert to boolean
+					if (value == "true") {
+						options_bool[key] = true;
+						conversion_successful = true;
+					}
+					else if (value == "false") {
+					 	options_bool[key] = false;
+						conversion_successful = true;
+					}
+
+					if (!conversion_successful)
+						std::cerr << "Value " << value << " of option with key " << key << " could to be converted.";
 
 				break;
+				}
 			}
 
 			case 'l': {
