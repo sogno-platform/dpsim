@@ -7,7 +7,7 @@ using namespace CPS;
 namespace DPsim {
 
 template <typename VarType>
-MnaSolverGpu<VarType>::MnaSolverGpu(String name,
+MnaSolverGpuDense<VarType>::MnaSolverGpuDense(String name,
 	CPS::Domain domain, CPS::Logger::Level logLevel) :
     MnaSolver<VarType>(name, domain, logLevel),
     mCusolverHandle(nullptr), mStream(nullptr) {
@@ -25,7 +25,7 @@ MnaSolverGpu<VarType>::MnaSolverGpu(String name,
 }
 
 template <typename VarType>
-MnaSolverGpu<VarType>::~MnaSolverGpu() {
+MnaSolverGpuDense<VarType>::~MnaSolverGpuDense() {
     //Handle & Stream
     if(mCusolverHandle)
         cusolverDnDestroy(mCusolverHandle);
@@ -43,7 +43,7 @@ MnaSolverGpu<VarType>::~MnaSolverGpu() {
 }
 
 template <typename VarType>
-void MnaSolverGpu<VarType>::initialize() {
+void MnaSolverGpuDense<VarType>::initialize() {
     MnaSolver<VarType>::initialize();
 
     mDeviceCopy.size = this->mRightSideVector.rows();
@@ -67,7 +67,7 @@ void MnaSolverGpu<VarType>::initialize() {
 }
 
 template <typename VarType>
-void MnaSolverGpu<VarType>::allocateDeviceMemory() {
+void MnaSolverGpuDense<VarType>::allocateDeviceMemory() {
     //Allocate memory for...
     //Vector
     CUDA_ERROR_HANDLER(cudaMalloc((void**)&mDeviceCopy.vector, mDeviceCopy.size * sizeof(Real)))
@@ -95,7 +95,7 @@ void MnaSolverGpu<VarType>::allocateDeviceMemory() {
 }
 
 template <typename VarType>
-void MnaSolverGpu<VarType>::copySystemMatrixToDevice() {
+void MnaSolverGpuDense<VarType>::copySystemMatrixToDevice() {
 #ifdef WITH_SPARSE
     auto *data = Matrix(MnaSolver<VarType>::systemMatrix()).data();
 #else
@@ -105,7 +105,7 @@ void MnaSolverGpu<VarType>::copySystemMatrixToDevice() {
 }
 
 template <typename VarType>
-void MnaSolverGpu<VarType>::LUfactorization() {
+void MnaSolverGpuDense<VarType>::LUfactorization() {
     //Variables for error-handling
     cusolverStatus_t status = CUSOLVER_STATUS_SUCCESS;
     int info;
@@ -133,7 +133,7 @@ void MnaSolverGpu<VarType>::LUfactorization() {
 }
 
 template <typename VarType>
-Task::List MnaSolverGpu<VarType>::getTasks() {
+Task::List MnaSolverGpuDense<VarType>::getTasks() {
     Task::List l;
 
     for (auto comp : this->mMNAComponents) {
@@ -151,13 +151,13 @@ Task::List MnaSolverGpu<VarType>::getTasks() {
 			l.push_back(task);
 		}
 	}
-	l.push_back(std::make_shared<MnaSolverGpu<VarType>::SolveTask>(*this));
-    l.push_back(std::make_shared<MnaSolverGpu<VarType>::LogTask>(*this));
+	l.push_back(std::make_shared<MnaSolverGpuDense<VarType>::SolveTask>(*this));
+    l.push_back(std::make_shared<MnaSolverGpuDense<VarType>::LogTask>(*this));
 	return l;
 }
 
 template <typename VarType>
-void MnaSolverGpu<VarType>::solve(Real time, Int timeStepCount) {
+void MnaSolverGpuDense<VarType>::solve(Real time, Int timeStepCount) {
     // Reset source vector
 	this->mRightSideVector.setZero();
 
@@ -209,5 +209,5 @@ void MnaSolverGpu<VarType>::solve(Real time, Int timeStepCount) {
 
 }
 
-template class DPsim::MnaSolverGpu<Real>;
-template class DPsim::MnaSolverGpu<Complex>;
+template class DPsim::MnaSolverGpuDense<Real>;
+template class DPsim::MnaSolverGpuDense<Complex>;
