@@ -140,6 +140,8 @@ endif()
 option(BUILD_SHARED_LIBS 	"Build shared library"             	OFF)
 option(BUILD_EXAMPLES    	"Build C++ examples"               	ON )
 option(GET_GRID_DATA     	"Download grid data"               	ON )
+
+# WITH_SPARSE and WITH_CUDA can be combined
 option(WITH_SPARSE       	"Use sparse matrices in MNA-Solver"	ON )
 
 option(PYBIND "Build pybind module" OFF)
@@ -155,7 +157,7 @@ cmake_dependent_option(WITH_RT      	"Enable real-time features"          	ON 	"
 cmake_dependent_option(WITH_PYTHON  	"Enable Python support"              	ON 	"Python_FOUND"    	OFF)
 cmake_dependent_option(WITH_CIM     	"Enable support for parsing CIM"     	ON 	"CIMpp_FOUND"     	OFF)
 cmake_dependent_option(WITH_OPENMP  	"Enable OpenMP-based parallelisation"	ON 	"OPENMP_FOUND"    	OFF)
-cmake_dependent_option(WITH_CUDA    	"Enable CUDA-based parallelisation"  	OFF	"CUDA_FOUND"      	OFF)
+cmake_dependent_option(WITH_CUDA    	"Enable CUDA-based parallelisation"  	ON	"CUDA_FOUND"      	OFF)
 cmake_dependent_option(WITH_GRAPHVIZ	"Enable Graphviz Graphs"             	ON 	"GRAPHVIZ_FOUND"  	OFF)
 
 if(WITH_CUDA)

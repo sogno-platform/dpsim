@@ -41,7 +41,11 @@
 #endif
 
 #ifdef WITH_CUDA
-	#include <dpsim/MNASolverGpu.h>
+#ifdef WITH_SPARSE
+	#include <dpsim/MNASolverGpuSparse.h>
+#else
+	#include <dpsim/MNASolverGpuDense.h>
+#endif
 #endif
 
 using namespace CPS;
@@ -188,8 +192,13 @@ void Simulation::createMNASolver() {
 		else {
 			// Default case with precomputed system matrices for different configurations
 #ifdef WITH_CUDA
-			solver = std::make_shared<MnaSolverGpu<VarType>>(
+#ifdef WITH_SPARSE
+			solver = std::make_shared<MnaSolverGpuSparse<VarType>>(
 				mName + copySuffix, mDomain, mLogLevel);
+#else
+			solver = std::make_shared<MnaSolverGpuDense<VarType>>(
+				mName + copySuffix, mDomain, mLogLevel);
+#endif
 #else
 			solver = std::make_shared<MnaSolver<VarType>>(
 				mName + copySuffix, mDomain, mLogLevel);
