@@ -1,4 +1,4 @@
-#include <dpsim/MNASolverGpu.h>
+#include <dpsim/MNASolverGpuDense.h>
 #include <dpsim/SequentialScheduler.h>
 
 using namespace DPsim;

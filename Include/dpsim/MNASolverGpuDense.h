@@ -7,11 +7,6 @@
 
 #define CUDA_ERROR_HANDLER(func) {cudaError_t error; if((error = func) != cudaSuccess) std::cerr << cudaGetErrorString(error) << std::endl; }
 
-/**
- * TODO:
- *    -Proper error-handling
- */
-
 namespace DPsim {
 	template <typename VarType>
     class MnaSolverGpu : public MnaSolver<VarType>{
