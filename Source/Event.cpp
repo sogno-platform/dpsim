@@ -20,11 +20,14 @@ void EventQueue::handleEvents(Real currentTime) {
 
 	while (!mEvents.empty()) {
 		e = mEvents.top();
-		if (e->mTime >= currentTime)
+		// if current time larger or equal to event time, execute event
+		if ( currentTime > e->mTime || (e->mTime - currentTime) < 1e-12) {
+			e->execute();
+			std::cout << std::scientific << currentTime << ": Handle event time" << std::endl;
+			//std::cout << std::scientific << e->mTime << ": Original event time" << std::endl;
+			mEvents.pop();
+		} else {
 			break;
-
-		e->execute();
-		std::cout << currentTime << ": Handle event" << std::endl;
-		mEvents.pop();
+		}
 	}
 }
