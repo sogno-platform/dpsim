@@ -376,10 +376,7 @@ void DP::Ph1::AvVoltageSourceInverterDQ::mnaUpdateCurrent(const Matrix& leftvect
 }
 
 void DP::Ph1::AvVoltageSourceInverterDQ::mnaUpdateVoltage(const Matrix& leftVector) {
-	mVirtualNodes[3]->mnaUpdateVoltage(leftVector);
-	mIntfVoltage(0, 0) = 0;
-	if (terminalNotGrounded(1))
-		mIntfVoltage(0,0) = Math::complexFromVectorElement(leftVector, matrixNodeIndex(1));
-	if (terminalNotGrounded(0))
-		mIntfVoltage(0,0) = mIntfVoltage(0,0) - Math::complexFromVectorElement(leftVector, matrixNodeIndex(0));
+	for (auto virtualNode : mVirtualNodes)
+		virtualNode->mnaUpdateVoltage(leftVector);
+	mIntfVoltage(0,0) = Math::complexFromVectorElement(leftVector, matrixNodeIndex(0));
 }
