@@ -208,20 +208,20 @@ void Simulation::createMNASolver() {
 
 void Simulation::sync() {
 #ifdef WITH_SHMEM
-	// We send initial state over all interfaces
-	for (auto ifm : mInterfaces) {
-		ifm.interface->writeValues();
-	}
 
-	mLog->info("Waiting for start synchronization on {} interfaces", mInterfaces.size());
-
-	// Blocking wait for interfaces
+	int numOfSyncInterfaces = std::count_if(mInterfaces.begin(), mInterfaces.end(), [](InterfaceMapping ifm) {return ifm.syncStart;});
+	mLog->info("Start synchronization with remotes on {} interfaces", numOfSyncInterfaces);
+	
 	for (auto ifm : mInterfaces) {
-		ifm.interface->readValues(ifm.syncStart);
-	}
+		if(ifm.syncStart) {
+			// Send initial state over interface
+			ifm.interface->writeValues();
 
-	for (auto ifm : mInterfaces) {
-		ifm.interface->writeValues();
+			// Blocking wait for interface
+			ifm.interface->readValues(ifm.syncStart);
+
+			ifm.interface->writeValues();
+		}
 	}
 
 	mLog->info("Synchronized simulation start with remotes");
