@@ -34,9 +34,9 @@ namespace Ph1 {
 		std::vector<const Matrix*> mRightVectorStamps;
 
 	public:
-		/// Defines UID, name, component parameters and logging level
+		/// Defines UID, name and logging level
 		NetworkInjection(String uid, String name, Logger::Level loglevel = Logger::Level::off);
-		/// Defines UID, name, component parameters and logging level
+		/// Defines name and logging level
 		NetworkInjection(String name, Logger::Level logLevel = Logger::Level::off)
 			: NetworkInjection(name, name, logLevel) { }
 		/// Defines name, component parameters and logging level

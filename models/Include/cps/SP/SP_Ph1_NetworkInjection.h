@@ -12,11 +12,14 @@
 #include <cps/Solver/PFSolverInterfaceBus.h>
 #include <cps/Solver/MNAInterface.h>
 #include <cps/Solver/DAEInterface.h>
+#include <cps/SP/SP_Ph1_VoltageSource.h>
 
 namespace CPS {
 namespace SP {
 namespace Ph1 {
+	/// \brief Network injection model
 	///
+	/// This model represents network injections by an ideal voltage source.
     class NetworkInjection:
 		public SimPowerComp<Complex>,
 		public SharedFactory<NetworkInjection>,
@@ -25,14 +28,13 @@ namespace Ph1 {
 		public DAEInterface {
 
     private:
+		// ### Electrical Subcomponents ###
+		/// Voltage source
+		std::shared_ptr<SP::Ph1::VoltageSource> mSubVoltageSource;
 
-		// #### MNA ####
-		///
-		void updateVoltage(Real time);
-		///
-		Attribute<Complex>::Ptr mVoltageRef;
-		///
-		Attribute<Real>::Ptr mSrcFreq;
+		// #### solver ####
+		/// Vector to collect subcomponent right vector stamps
+		std::vector<const Matrix*> mRightVectorStamps;
 
 		// #### Powerflow section ####
 		/// Voltage set point [V]
@@ -51,22 +53,21 @@ namespace Ph1 {
 		Real mVoltageSetPointPerUnit=1.0;
 
     public:
-		// #### General ####
 		/// Defines UID, name and logging level
 		NetworkInjection(String uid, String name, Logger::Level logLevel = Logger::Level::off);
 		/// Defines name and logging level
 		NetworkInjection(String name, Logger::Level logLevel = Logger::Level::off)
 			: NetworkInjection(name, name, logLevel) { }
-		/// Initializes component from power flow data
-		void initializeFromNodesAndTerminals(Real frequency) override;
-		///
-		void setSourceValue(Complex voltage);
-		///
-		void setParameters(Real vSetPointPerUnit);
 		///
 		SimPowerComp<Complex>::Ptr clone(String name) override;
 
+		// #### General ####
+		/// Initializes component from power flow data
+		void initializeFromNodesAndTerminals(Real frequency) override;
+
         // #### Powerflow section ####
+		/// Set parameters relevant for PF solver
+		void setParameters(Real vSetPointPerUnit);
 		/// Set base voltage
 		void setBaseVoltage(Real baseVoltage);
 		/// Calculates component's parameters in specified per-unit system
@@ -87,34 +88,41 @@ namespace Ph1 {
 		void mnaApplyRightSideVectorStamp(Matrix& rightVector) override;
 		/// Returns current through the component
 		void mnaUpdateCurrent(const Matrix& leftVector) override;
+		/// Updates voltage across component
+		void mnaUpdateVoltage(const Matrix& leftVector);
+		/// MNA pre step operations
+		void mnaPreStep(Real time, Int timeStepCount);
+		/// MNA post step operations
+		void mnaPostStep(Real time, Int timeStepCount, Attribute<Matrix>::Ptr &leftVector);
+		/// Add MNA pre step dependencies
+		void mnaAddPreStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes);
+		/// Add MNA post step dependencies
+		void mnaAddPostStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes, Attribute<Matrix>::Ptr &leftVector);
 
-		class MnaPreStep : public Task {
+		class MnaPreStep : public CPS::Task {
 		public:
 			MnaPreStep(NetworkInjection& networkInjection) :
 				Task(networkInjection.mName + ".MnaPreStep"), mNetworkInjection(networkInjection) {
-				mAttributeDependencies.push_back(mNetworkInjection.attribute("V_ref"));
-				mModifiedAttributes.push_back(mNetworkInjection.attribute("right_vector"));
-				mModifiedAttributes.push_back(mNetworkInjection.attribute("v_intf"));
+					mNetworkInjection.mnaAddPreStepDependencies(mPrevStepDependencies, mAttributeDependencies, mModifiedAttributes);
 			}
-			void execute(Real time, Int timeStepCount);
+			void execute(Real time, Int timeStepCount) { mNetworkInjection.mnaPreStep(time, timeStepCount); };
+
 		private:
 			NetworkInjection& mNetworkInjection;
 		};
 
-		class MnaPostStep : public Task {
+		class MnaPostStep : public CPS::Task {
 		public:
 			MnaPostStep(NetworkInjection& networkInjection, Attribute<Matrix>::Ptr leftVector) :
-				Task(networkInjection.mName + ".MnaPostStep"),
-				mNetworkInjection(networkInjection), mLeftVector(leftVector) {
-				mAttributeDependencies.push_back(mLeftVector);
-				mModifiedAttributes.push_back(mNetworkInjection.attribute("i_intf"));
+				Task(networkInjection.mName + ".MnaPostStep"), mNetworkInjection(networkInjection), mLeftVector(leftVector) {
+				mNetworkInjection.mnaAddPostStepDependencies(mPrevStepDependencies, mAttributeDependencies, mModifiedAttributes, mLeftVector);
 			}
-			void execute(Real time, Int timeStepCount);
+			void execute(Real time, Int timeStepCount) { mNetworkInjection.mnaPostStep(time, timeStepCount, mLeftVector); };
+
 		private:
 			NetworkInjection& mNetworkInjection;
 			Attribute<Matrix>::Ptr mLeftVector;
 		};
-
 
 		// #### DAE Section ####
 		/// Residual function for DAE Solver
