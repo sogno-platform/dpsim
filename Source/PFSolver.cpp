@@ -35,7 +35,7 @@ void PFSolver::initialize(){
             mTransformers.push_back(trafo);
         else if (std::shared_ptr<CPS::SP::Ph1::PiLine> line = std::dynamic_pointer_cast<CPS::SP::Ph1::PiLine>(comp))
             mLines.push_back(line);
-        else if (std::shared_ptr<CPS::SP::Ph1::externalGridInjection> extnet = std::dynamic_pointer_cast<CPS::SP::Ph1::externalGridInjection>(comp))
+        else if (std::shared_ptr<CPS::SP::Ph1::NetworkInjection> extnet = std::dynamic_pointer_cast<CPS::SP::Ph1::NetworkInjection>(comp))
             mExternalGrids.push_back(extnet);
 		else if (std::shared_ptr<CPS::SP::Ph1::Shunt> shunt = std::dynamic_pointer_cast<CPS::SP::Ph1::Shunt>(comp))
             mShunts.push_back(shunt);
@@ -155,7 +155,7 @@ void PFSolver::determinePFBusType() {
 					connectedVD = true;
 				}
 			}
-			else if (std::shared_ptr<CPS::SP::Ph1::externalGridInjection> extnet = std::dynamic_pointer_cast<CPS::SP::Ph1::externalGridInjection>(comp)) {
+			else if (std::shared_ptr<CPS::SP::Ph1::NetworkInjection> extnet = std::dynamic_pointer_cast<CPS::SP::Ph1::NetworkInjection>(comp)) {
 				if (extnet->mPowerflowBusType == CPS::PowerflowBusType::VD) {
 					connectedVD = true;
 				}
@@ -250,7 +250,7 @@ void PFSolver::setVDNode(CPS::String name) {
 void PFSolver::modifyPowerFlowBusComponent(CPS::String name, CPS::PowerflowBusType powerFlowBusType) {
 	for (auto comp : mSystem.mComponents) {
 		if (comp->name() == name) {
-			if (std::shared_ptr<CPS::SP::Ph1::externalGridInjection> extnet = std::dynamic_pointer_cast<CPS::SP::Ph1::externalGridInjection>(comp))
+			if (std::shared_ptr<CPS::SP::Ph1::NetworkInjection> extnet = std::dynamic_pointer_cast<CPS::SP::Ph1::NetworkInjection>(comp))
 				extnet->modifyPowerFlowBusType(powerFlowBusType);
 			else if(std::shared_ptr<CPS::SP::Ph1::SynchronGenerator> gen = std::dynamic_pointer_cast<CPS::SP::Ph1::SynchronGenerator>(comp))
 				gen->modifyPowerFlowBusType(powerFlowBusType);

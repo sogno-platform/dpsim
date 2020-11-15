@@ -68,7 +68,7 @@ namespace DPsim {
         /// Vector of shunt components
         std::vector<std::shared_ptr<CPS::SP::Ph1::Shunt>> mShunts;
         /// Vector of external grid components
-        std::vector<std::shared_ptr<CPS::SP::Ph1::externalGridInjection>> mExternalGrids;
+        std::vector<std::shared_ptr<CPS::SP::Ph1::NetworkInjection>> mExternalGrids;
         /// Vector of average voltage source inverters
         std::vector<std::shared_ptr<CPS::SP::Ph1::AvVoltageSourceInverterDQ>> mAverageVoltageSourceInverters;
 

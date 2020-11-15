@@ -616,7 +616,7 @@ TopologicalPowerComp::Ptr Reader::mapExternalNetworkInjection(CIMPP::ExternalNet
 		}
 	} else if(mDomain == Domain::SP) {
 		if (mPhase == PhaseType::Single) {
-			auto cpsextnet = std::make_shared<SP::Ph1::externalGridInjection>(extnet->mRID, extnet->name, mComponentLogLevel);
+			auto cpsextnet = std::make_shared<SP::Ph1::NetworkInjection>(extnet->mRID, extnet->name, mComponentLogLevel);
 			cpsextnet->modifyPowerFlowBusType(PowerflowBusType::VD); // for powerflow solver set as VD component as default
 			cpsextnet->setBaseVoltage(baseVoltage);
 			if(extnet->RegulatingControl){

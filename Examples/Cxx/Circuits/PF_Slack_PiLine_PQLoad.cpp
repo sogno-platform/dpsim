@@ -37,7 +37,7 @@ int main(int argc, char* argv[]) {
 	auto n1 = SimNode<Complex>::make("n1", PhaseType::Single);
 	auto n2 = SimNode<Complex>::make("n2", PhaseType::Single);
 	
-	auto extnetPF = SP::Ph1::externalGridInjection::make("Slack", Logger::Level::debug);
+	auto extnetPF = SP::Ph1::NetworkInjection::make("Slack", Logger::Level::debug);
 	extnetPF->setParameters(Vnom);
 	extnetPF->setBaseVoltage(Vnom);
 	extnetPF->modifyPowerFlowBusType(PowerflowBusType::VD);

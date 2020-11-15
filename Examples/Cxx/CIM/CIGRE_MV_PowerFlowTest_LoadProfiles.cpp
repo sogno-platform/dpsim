@@ -102,8 +102,8 @@ int main(int argc, char** argv){
 				logger->addAttribute(line->name() + "." + node->name() + ".Q", line->attribute<Real>(q_branch));
 				lines.push_back(line);
 			}
-			else if (std::shared_ptr<CPS::SP::Ph1::externalGridInjection> extnet =
-				std::dynamic_pointer_cast<CPS::SP::Ph1::externalGridInjection>(comp))
+			else if (std::shared_ptr<CPS::SP::Ph1::NetworkInjection> extnet =
+				std::dynamic_pointer_cast<CPS::SP::Ph1::NetworkInjection>(comp))
 			{
 				logger->addAttribute(node->name() + ".Pinj", extnet->attribute<Real>("p_inj"));
 				logger->addAttribute(node->name() + ".Qinj", extnet->attribute<Real>("q_inj"));

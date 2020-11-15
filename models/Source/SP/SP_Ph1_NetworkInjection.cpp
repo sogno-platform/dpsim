@@ -11,7 +11,7 @@
 using namespace CPS;
 
 
-SP::Ph1::externalGridInjection::externalGridInjection(String uid, String name,
+SP::Ph1::NetworkInjection::NetworkInjection(String uid, String name,
     Logger::Level logLevel) : SimPowerComp<Complex>(uid, name, logLevel) {
 
 	mSLog->info("Create {} of type {}", mName, this->type());
@@ -33,7 +33,7 @@ SP::Ph1::externalGridInjection::externalGridInjection(String uid, String name,
 
 // #### Powerflow section ####
 
-void SP::Ph1::externalGridInjection::setParameters(Real voltageSetPoint) {
+void SP::Ph1::NetworkInjection::setParameters(Real voltageSetPoint) {
 	mVoltageSetPoint = voltageSetPoint;
 
 	mSLog->info("Voltage Set-Point ={} [V]", mVoltageSetPoint);
@@ -42,11 +42,11 @@ void SP::Ph1::externalGridInjection::setParameters(Real voltageSetPoint) {
 	mParametersSet = true;
 }
 
-void SP::Ph1::externalGridInjection::setBaseVoltage(Real baseVoltage) {
+void SP::Ph1::NetworkInjection::setBaseVoltage(Real baseVoltage) {
     mBaseVoltage = baseVoltage;
 }
 
-void SP::Ph1::externalGridInjection::calculatePerUnitParameters(Real baseApparentPower, Real baseOmega) {
+void SP::Ph1::NetworkInjection::calculatePerUnitParameters(Real baseApparentPower, Real baseOmega) {
     mSLog->info("#### Calculate Per Unit Parameters for {}", mName);
 	mSLog->info("Base Voltage={} [V]", mBaseVoltage);
 
@@ -56,30 +56,30 @@ void SP::Ph1::externalGridInjection::calculatePerUnitParameters(Real baseApparen
 	mSLog->flush();
 }
 
-void SP::Ph1::externalGridInjection::modifyPowerFlowBusType(PowerflowBusType powerflowBusType) {
+void SP::Ph1::NetworkInjection::modifyPowerFlowBusType(PowerflowBusType powerflowBusType) {
 	mPowerflowBusType = powerflowBusType;
 }
 
-void SP::Ph1::externalGridInjection::updatePowerInjection(Complex powerInj) {
+void SP::Ph1::NetworkInjection::updatePowerInjection(Complex powerInj) {
 	mActivePowerInjection = powerInj.real();
 	mReactivePowerInjection = powerInj.imag();
 }
 
 // #### MNA Section ####
 
-void SP::Ph1::externalGridInjection::setParameters(Complex voltageRef, Real srcFreq) {
+void SP::Ph1::NetworkInjection::setParameters(Complex voltageRef, Real srcFreq) {
 	attribute<Complex>("V_ref")->set(voltageRef);
 	attribute<Real>("f_src")->set(srcFreq);
 	mParametersSet = true;
 }
 
-SimPowerComp<Complex>::Ptr SP::Ph1::externalGridInjection::clone(String name) {
-	auto copy = externalGridInjection::make(name, mLogLevel);
+SimPowerComp<Complex>::Ptr SP::Ph1::NetworkInjection::clone(String name) {
+	auto copy = NetworkInjection::make(name, mLogLevel);
 	copy->setParameters(attribute<Complex>("V_ref")->get());
 	return copy;
 }
 
-void SP::Ph1::externalGridInjection::initializeFromNodesAndTerminals(Real frequency) {
+void SP::Ph1::NetworkInjection::initializeFromNodesAndTerminals(Real frequency) {
 	mVoltageRef = attribute<Complex>("V_ref");
 	mSrcFreq = attribute<Real>("f_src");
 	if (mVoltageRef->get() == Complex(0, 0))
@@ -96,7 +96,7 @@ void SP::Ph1::externalGridInjection::initializeFromNodesAndTerminals(Real freque
 
 // #### MNA functions ####
 
-void SP::Ph1::externalGridInjection::mnaInitialize(Real omega, Real timeStep, Attribute<Matrix>::Ptr leftVector) {
+void SP::Ph1::NetworkInjection::mnaInitialize(Real omega, Real timeStep, Attribute<Matrix>::Ptr leftVector) {
 	MNAInterface::mnaInitialize(omega, timeStep);
 	updateMatrixNodeIndices();
 
@@ -106,7 +106,7 @@ void SP::Ph1::externalGridInjection::mnaInitialize(Real omega, Real timeStep, At
 	mRightVector = Matrix::Zero(leftVector->get().rows(), 1);
 }
 
-void SP::Ph1::externalGridInjection::mnaApplySystemMatrixStamp(Matrix& systemMatrix) {
+void SP::Ph1::NetworkInjection::mnaApplySystemMatrixStamp(Matrix& systemMatrix) {
 	Math::setMatrixElement(systemMatrix, mVirtualNodes[0]->matrixNodeIndex(), matrixNodeIndex(0), Complex(1, 0));
 	Math::setMatrixElement(systemMatrix, matrixNodeIndex(0), mVirtualNodes[0]->matrixNodeIndex(), Complex(1, 0));
 	mSLog->info("-- Matrix Stamp ---");
@@ -115,14 +115,14 @@ void SP::Ph1::externalGridInjection::mnaApplySystemMatrixStamp(Matrix& systemMat
 }
 
 
-void SP::Ph1::externalGridInjection::mnaApplyRightSideVectorStamp(Matrix& rightVector) {
+void SP::Ph1::NetworkInjection::mnaApplyRightSideVectorStamp(Matrix& rightVector) {
 	// TODO: Is this correct with two nodes not gnd?
 	Math::setVectorElement(rightVector, mVirtualNodes[0]->matrixNodeIndex(), mIntfVoltage(0, 0));
 	SPDLOG_LOGGER_DEBUG(mSLog, "Add {:s} to source vector at {:d}",
 		Logger::complexToString(mIntfVoltage(0, 0)), mVirtualNodes[0]->matrixNodeIndex());
 }
 
-void SP::Ph1::externalGridInjection::updateVoltage(Real time) {
+void SP::Ph1::NetworkInjection::updateVoltage(Real time) {
 	if (mSrcFreq->get() < 0) {
 		mIntfVoltage(0, 0) = mVoltageRef->get();
 	}
@@ -133,21 +133,21 @@ void SP::Ph1::externalGridInjection::updateVoltage(Real time) {
 	}
 }
 
-void SP::Ph1::externalGridInjection::MnaPreStep::execute(Real time, Int timeStepCount) {
-	mExternalGridInjection.updateVoltage(time);
-	mExternalGridInjection.mnaApplyRightSideVectorStamp(mExternalGridInjection.mRightVector);
+void SP::Ph1::NetworkInjection::MnaPreStep::execute(Real time, Int timeStepCount) {
+	mNetworkInjection.updateVoltage(time);
+	mNetworkInjection.mnaApplyRightSideVectorStamp(mNetworkInjection.mRightVector);
 }
 
 
-void SP::Ph1::externalGridInjection::MnaPostStep::execute(Real time, Int timeStepCount) {
-	mExternalGridInjection.mnaUpdateCurrent(*mLeftVector);
+void SP::Ph1::NetworkInjection::MnaPostStep::execute(Real time, Int timeStepCount) {
+	mNetworkInjection.mnaUpdateCurrent(*mLeftVector);
 }
 
-void SP::Ph1::externalGridInjection::mnaUpdateCurrent(const Matrix& leftVector) {
+void SP::Ph1::NetworkInjection::mnaUpdateCurrent(const Matrix& leftVector) {
 	mIntfCurrent(0, 0) = Math::complexFromVectorElement(leftVector, mVirtualNodes[0]->matrixNodeIndex());
 }
 
-void SP::Ph1::externalGridInjection::daeResidual(double ttime, const double state[], const double dstate_dt[], double resid[], std::vector<int>& off) {
+void SP::Ph1::NetworkInjection::daeResidual(double ttime, const double state[], const double dstate_dt[], double resid[], std::vector<int>& off) {
 	/* new state vector definintion:
 		state[0]=node0_voltage
 		state[1]=node1_voltage
@@ -172,7 +172,7 @@ void SP::Ph1::externalGridInjection::daeResidual(double ttime, const double stat
 	off[1] += 1;
 }
 
-Complex SP::Ph1::externalGridInjection::daeInitialize() {
+Complex SP::Ph1::NetworkInjection::daeInitialize() {
 	mIntfVoltage(0, 0) = mVoltageRef->get();
 	return mVoltageRef->get();
 }

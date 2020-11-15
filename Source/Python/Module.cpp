@@ -88,7 +88,7 @@ static PyMethodDef dpsimModuleMethods[] = {
 	// Component::constructorDef<CPS::EMT::Ph3::SynchronGeneratorVBRStandalone>("_emt_ph3_SynchronGeneratorVBRStandalone"),
 
 	// Static Phasor (SP)
-	Component::constructorDef<CPS::SP::Ph1::externalGridInjection>("_sp_ph1_externalGridInjection"),
+	Component::constructorDef<CPS::SP::Ph1::NetworkInjection>("_sp_ph1_externalGridInjection"),
 	Component::constructorDef<CPS::SP::Ph1::Load>("_sp_ph1_Load"),
 	Component::constructorDef<CPS::SP::Ph1::PiLine>("_sp_ph1_PiLine"),
 	Component::constructorDef<CPS::SP::Ph1::PQNode>("_sp_ph1_PQNode"),

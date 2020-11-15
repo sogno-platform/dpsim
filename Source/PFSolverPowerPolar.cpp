@@ -77,8 +77,8 @@ void PFSolverPowerPolar::generateInitialSolution(Real time, bool keep_last_solut
 				std::dynamic_pointer_cast<CPS::SP::Ph1::AvVoltageSourceInverterDQ>(comp)) {
 				sol_P(pv->matrixNodeIndex()) += vsi->attribute<CPS::Real>("P_ref")->get() / mBaseApparentPower;
 			}
-            else if (std::shared_ptr<CPS::SP::Ph1::externalGridInjection> extnet =
-				std::dynamic_pointer_cast<CPS::SP::Ph1::externalGridInjection>(comp)) {
+            else if (std::shared_ptr<CPS::SP::Ph1::NetworkInjection> extnet =
+				std::dynamic_pointer_cast<CPS::SP::Ph1::NetworkInjection>(comp)) {
 				sol_P(pv->matrixNodeIndex()) += extnet->attribute<CPS::Real>("p_inj")->get() / mBaseApparentPower;
 				sol_V(pv->matrixNodeIndex()) = extnet->attribute<CPS::Real>("V_set_pu")->get();
 			}
@@ -95,7 +95,7 @@ void PFSolverPowerPolar::generateInitialSolution(Real time, bool keep_last_solut
 
         // if external injection at VD bus, reset the voltage to injection's voltage set-point
         for (auto comp : mSystem.mComponentsAtNode[vd]) {
-            if (std::shared_ptr<CPS::SP::Ph1::externalGridInjection> extnet = std::dynamic_pointer_cast<CPS::SP::Ph1::externalGridInjection>(comp)) {
+            if (std::shared_ptr<CPS::SP::Ph1::NetworkInjection> extnet = std::dynamic_pointer_cast<CPS::SP::Ph1::NetworkInjection>(comp)) {
                 sol_V(vd->matrixNodeIndex()) = extnet->attribute<CPS::Real>("V_set_pu")->get();
             }
         }
