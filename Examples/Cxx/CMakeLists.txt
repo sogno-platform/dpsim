@@ -44,7 +44,6 @@ set(CIRCUIT_SOURCES
 
 	# SP examples
 	Circuits/SP_Circuits.cpp
-	Circuits/SP_PiLine.cpp
 
 	# EMT and DP studies
 	Circuits/DP_EMT_RL_SourceStep.cpp
