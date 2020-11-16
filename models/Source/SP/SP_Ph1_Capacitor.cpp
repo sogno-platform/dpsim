@@ -32,6 +32,10 @@ void SP::Ph1::Capacitor::initializeFromNodesAndTerminals(Real frequency) {
 	mIntfVoltage(0, 0) = initialSingleVoltage(1) - initialSingleVoltage(0);
 	mIntfCurrent = mSusceptance * mIntfVoltage;
 
+	mSLog->info("\nCapacitance [F]: {:s}"
+				"\nImpedance [Ohm]: {:s}",
+				Logger::realToString(mCapacitance),
+				Logger::complexToString(1./mSusceptance));
 	mSLog->info(
 		"\n--- Initialization from powerflow ---"
 		"\nVoltage across: {:s}"
@@ -45,6 +49,7 @@ void SP::Ph1::Capacitor::initializeFromNodesAndTerminals(Real frequency) {
 		Logger::phasorToString(initialSingleVoltage(1)));
 }
 
+// #### MNA section ####
 
 void SP::Ph1::Capacitor::mnaInitialize(Real omega, Real timeStep, Attribute<Matrix>::Ptr leftVector) {
 	updateMatrixNodeIndices();
@@ -89,9 +94,15 @@ void SP::Ph1::Capacitor::mnaApplySystemMatrixStamp(Matrix& systemMatrix) {
 	}
 }
 
-void SP::Ph1::Capacitor::MnaPostStep::execute(Real time, Int timeStepCount) {
-	mCapacitor.mnaUpdateVoltage(*mLeftVector);
-	mCapacitor.mnaUpdateCurrent(*mLeftVector);
+void SP::Ph1::Capacitor::mnaAddPostStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes, Attribute<Matrix>::Ptr &leftVector) {
+	attributeDependencies.push_back(leftVector);
+	modifiedAttributes.push_back(this->attribute("v_intf"));
+	modifiedAttributes.push_back(this->attribute("i_intf"));
+}
+
+void SP::Ph1::Capacitor::mnaPostStep(Real time, Int timeStepCount, Attribute<Matrix>::Ptr &leftVector) {
+	this->mnaUpdateVoltage(*leftVector);
+	this->mnaUpdateCurrent(*leftVector);
 }
 
 void SP::Ph1::Capacitor::mnaUpdateVoltage(const Matrix& leftVector) {

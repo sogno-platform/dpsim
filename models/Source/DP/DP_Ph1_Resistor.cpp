@@ -53,6 +53,13 @@ void DP::Ph1::Resistor::mnaInitialize(Real omega, Real timeStep, Attribute<Matri
 	updateMatrixNodeIndices();
 
 	mMnaTasks.push_back(std::make_shared<MnaPostStep>(*this, leftVector));
+	mSLog->info(
+		"\n--- MNA initialization ---"
+		"\nInitial voltage {:s}"
+		"\nInitial current {:s}"
+		"\n--- MNA initialization finished ---",
+		Logger::phasorToString(mIntfVoltage(0, 0)),
+		Logger::phasorToString(mIntfCurrent(0, 0)));
 }
 
 void DP::Ph1::Resistor::mnaInitializeHarm(Real omega, Real timeStep, std::vector<Attribute<Matrix>::Ptr> leftVectors) {

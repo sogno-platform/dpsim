@@ -31,7 +31,11 @@ void SP::Ph1::Inductor::initializeFromNodesAndTerminals(Real frequency) {
 	mSusceptance = Complex(0, -1 / omega / mInductance);
 	mIntfVoltage(0, 0) = initialSingleVoltage(1) - initialSingleVoltage(0);
 	mIntfCurrent = mSusceptance * mIntfVoltage;
-	mSLog->info("--- Initialize according to power flow ---");
+	
+	mSLog->info("\nInductance [H]: {:s}"
+				"\nImpedance [Ohm]: {:s}",
+				Logger::realToString(mInductance),
+				Logger::complexToString(1./mSusceptance));
 	mSLog->info(
 		"\n--- Initialization from powerflow ---"
 		"\nVoltage across: {:s}"
@@ -44,6 +48,8 @@ void SP::Ph1::Inductor::initializeFromNodesAndTerminals(Real frequency) {
 		Logger::phasorToString(initialSingleVoltage(0)),
 		Logger::phasorToString(initialSingleVoltage(1)));
 }
+
+// #### MNA section ####
 
 void SP::Ph1::Inductor::mnaInitialize(Real omega, Real timeStep, Attribute<Matrix>::Ptr leftVector) {
 	updateMatrixNodeIndices();
@@ -87,9 +93,15 @@ void SP::Ph1::Inductor::mnaApplySystemMatrixStamp(Matrix& systemMatrix) {
 	}
 }
 
-void SP::Ph1::Inductor::MnaPostStep::execute(Real time, Int timeStepCount) {
-	mInductor.mnaUpdateVoltage(*mLeftVector);
-	mInductor.mnaUpdateCurrent(*mLeftVector);
+void SP::Ph1::Inductor::mnaAddPostStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes, Attribute<Matrix>::Ptr &leftVector) {
+	attributeDependencies.push_back(leftVector);
+	modifiedAttributes.push_back(this->attribute("v_intf"));
+	modifiedAttributes.push_back(this->attribute("i_intf"));
+}
+
+void SP::Ph1::Inductor::mnaPostStep(Real time, Int timeStepCount, Attribute<Matrix>::Ptr &leftVector) {
+	this->mnaUpdateVoltage(*leftVector);
+	this->mnaUpdateCurrent(*leftVector);
 }
 
 void SP::Ph1::Inductor::mnaUpdateVoltage(const Matrix& leftVector) {
