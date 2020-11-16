@@ -19,6 +19,10 @@
 namespace CPS {
 namespace SP {
 namespace Ph1 {
+	/// \brief PI-line static phasor model
+	///
+	/// For MNA this model consists sub components to represent the
+	/// RLC elements of a PI-line.
 	class PiLine :
 	 public SimPowerComp<Complex>,
 	 public MNATearInterface,
@@ -26,9 +30,6 @@ namespace Ph1 {
 	 public Base::Ph1::PiLine,
 	 public PFSolverInterfaceBranch {
 	protected:
-		/// Nominal omega
-		Real mNominalOmega;
-
 		///base voltage [V]
 		Real mBaseVoltage;
 		///base current [A]
@@ -82,9 +83,9 @@ namespace Ph1 {
 		std::shared_ptr<Capacitor> mSubParallelCapacitor0;
 		/// Parallel resistor submodel at Terminal 1
 		std::shared_ptr<Resistor> mSubParallelResistor1;
-		// Parallel capacitor submodel at Terminal 1
+		/// Parallel capacitor submodel at Terminal 1
 		std::shared_ptr<Capacitor> mSubParallelCapacitor1;
-		///
+		/// Right side vectors of subcomponents
 		std::vector<const Matrix*> mRightVectorStamps;
 	public:
 		// #### General ####
@@ -96,7 +97,7 @@ namespace Ph1 {
 		///
 		SimPowerComp<Complex>::Ptr clone(String copySuffix) override;
 		///
-		void setParameters(Real resistance, Real inductance, Real capacitance = -1, Real conductance = -1, Real omega = -1);
+		void setParameters(Real resistance, Real inductance, Real capacitance = -1, Real conductance = -1);
 		/// Initializes component from power flow data
 		void initializeFromNodesAndTerminals(Real frequency) override;
 
@@ -121,23 +122,24 @@ namespace Ph1 {
 		void mnaInitialize(Real omega, Real timeStep, Attribute<Matrix>::Ptr leftVector) override;
 		/// Stamps system matrix
 		void mnaApplySystemMatrixStamp(Matrix& systemMatrix) override;
+		/// Stamps right side (source) vector
+		void mnaApplyRightSideVectorStamp(Matrix& rightVector);
 		/// Updates internal current variable of the component
 		void mnaUpdateCurrent(const Matrix& leftVector) override;
 		/// Updates internal voltage variable of the component
 		void mnaUpdateVoltage(const Matrix& leftVector) override;
+		/// MNA post-step operations
+		void mnaPostStep(Real time, Int timeStepCount, Attribute<Matrix>::Ptr &leftVector);
+		/// add MNA post-step dependencies
+		void mnaAddPostStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes, Attribute<Matrix>::Ptr &leftVector);
 
 		class MnaPostStep : public Task {
 		public:
 			MnaPostStep(PiLine& line, Attribute<Matrix>::Ptr leftVector) :
 				Task(line.mName + ".MnaPostStep"), mLine(line), mLeftVector(leftVector) {
-				mAttributeDependencies.push_back(leftVector);
-				mAttributeDependencies.push_back(line.mSubSeriesInductor->attribute("i_intf"));
-				mModifiedAttributes.push_back(line.attribute("i_intf"));
-				mModifiedAttributes.push_back(line.attribute("v_intf"));
+					mLine.mnaAddPostStepDependencies(mPrevStepDependencies, mAttributeDependencies, mModifiedAttributes, mLeftVector);
 			}
-
-			void execute(Real time, Int timeStepCount);
-
+			void execute(Real time, Int timeStepCount) { mLine.mnaPostStep(time, timeStepCount, mLeftVector); };
 		private:
 			PiLine& mLine;
 			Attribute<Matrix>::Ptr mLeftVector;

@@ -383,7 +383,7 @@ TopologicalPowerComp::Ptr Reader::mapACLineSegment(CIMPP::ACLineSegment* line) {
 	}
 	else if (mDomain == Domain::SP) {
 		auto cpsLine = std::make_shared<SP::Ph1::PiLine>(line->mRID, line->name, mComponentLogLevel);
-		cpsLine->setParameters(resistance, inductance, capacitance, conductance, mOmega);
+		cpsLine->setParameters(resistance, inductance, capacitance, conductance);
 		cpsLine->setBaseVoltage(baseVoltage);
 		return cpsLine;
 	}
