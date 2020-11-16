@@ -1,21 +1,13 @@
-/*
- * @copyright 2017, Institute for Automation of Complex Power Systems, EONERC
+/* Copyright 2017-2020 Institute for Automation of Complex Power Systems,
+ *                     EONERC, RWTH Aachen University
  *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at https://mozilla.org/MPL/2.0/.
  *********************************************************************************/
 
 #pragma once
+
 #include <cps/SimPowerComp.h>
 #include <cps/Solver/PFSolverInterfaceBranch.h>
 #include <cps/Solver/MNAInterface.h>
@@ -42,6 +34,9 @@ namespace Ph1 {
 		std::shared_ptr<SP::Ph1::Resistor> mSubSnubResistor;
 		///
 		std::shared_ptr<SP::Ph1::Resistor> mSubResistor;
+
+		/// Snubber resistance added on the low voltage side
+		Real mSnubberResistance;
 
 		/// Rated Apparent Power [VA]
 		Real mRatedPower = 0;
@@ -115,10 +110,12 @@ namespace Ph1 {
 		/// nodal reactive power injection
 		Real mReactivePowerInjection;
 
+		/// Boolean for considering resistive losses with sub resistor
+		Bool mWithResistiveLosses;
 	public:
 		/// Defines UID, name and logging level
 		Transformer(String uid, String name,
-			Logger::Level logLevel = Logger::Level::off);
+			Logger::Level logLevel = Logger::Level::off, Bool withResistiveLosses = false);
 		/// Defines name and logging level
 		Transformer(String name, Logger::Level logLevel = Logger::Level::off)
 			: Transformer(name, name, logLevel) { }
@@ -156,18 +153,17 @@ namespace Ph1 {
 		void mnaUpdateCurrent(const Matrix& leftVector) override;
 		/// Updates internal voltage variable of the component
 		void mnaUpdateVoltage(const Matrix& leftVector) override;
-
+		/// MNA post step operations
+		void mnaPostStep(Real time, Int timeStepCount, Attribute<Matrix>::Ptr &leftVector);
+		/// Add MNA post step dependencies
+		void mnaAddPostStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes, Attribute<Matrix>::Ptr &leftVector);
 		class MnaPostStep : public Task {
 		public:
 			MnaPostStep(Transformer& transformer, Attribute<Matrix>::Ptr leftVector) :
 				Task(transformer.mName + ".MnaPostStep"), mTransformer(transformer), mLeftVector(leftVector) {
-				mAttributeDependencies.push_back(transformer.mSubInductor->attribute("i_intf"));
-				mAttributeDependencies.push_back(leftVector);
-				mModifiedAttributes.push_back(transformer.attribute("i_intf"));
-				mModifiedAttributes.push_back(transformer.attribute("v_intf"));
+					mTransformer.mnaAddPostStepDependencies(mPrevStepDependencies, mAttributeDependencies, mModifiedAttributes, mLeftVector);
 			}
-
-			void execute(Real time, Int timeStepCount);
+			void execute(Real time, Int timeStepCount) { mTransformer.mnaPostStep(time, timeStepCount, mLeftVector); };
 
 		private:
 			Transformer& mTransformer;

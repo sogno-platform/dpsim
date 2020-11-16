@@ -11,8 +11,12 @@
 using namespace CPS;
 
 // #### General ####
-SP::Ph1::Transformer::Transformer(String uid, String name, Logger::Level logLevel)
+SP::Ph1::Transformer::Transformer(String uid, String name, Logger::Level logLevel, Bool withResistiveLosses)
 	: SimPowerComp<Complex>(uid, name, logLevel) {
+	if (withResistiveLosses)
+		setVirtualNodeNumber(3);
+	else
+		setVirtualNodeNumber(2);
 
 	mSLog->info("Create {} {}", this->type(), name);
 	mIntfVoltage = MatrixComp::Zero(1, 1);
@@ -54,11 +58,6 @@ void SP::Ph1::Transformer::setParameters(Real nomVoltageEnd1, Real nomVoltageEnd
 	mNominalOmega = omega;
 	mReactance = mNominalOmega * mInductance;
 
-	if (mResistance > 0)
-		setVirtualNodeNumber(3);
-	else
-		setVirtualNodeNumber(2);
-
 	mSLog->info("Resistance={} [Ohm] Reactance={} [Ohm] (referred to primary side)", mResistance, mReactance);
     mSLog->info("Tap Ratio={} [ ] Phase Shift={} [deg]", mRatioAbs, mRatioPhase);
 
@@ -73,14 +72,80 @@ SimPowerComp<Complex>::Ptr SP::Ph1::Transformer::clone(String name) {
 	return copy;
 }
 
+void SP::Ph1::Transformer::initializeFromNodesAndTerminals(Real frequency) {
+	// Component parameters are referred to high voltage side.
+	// Switch terminals if transformer is connected the other way around.
+	if (Math::abs(mRatio) < 1.) {
+		mRatio = 1. / mRatio;
+		std::shared_ptr<SimTerminal<Complex>> tmp = mTerminals[0];
+		mTerminals[0] = mTerminals[1];
+		mTerminals[1] = tmp;
+	}
+
+	// Set initial voltage of virtual node in between
+	mVirtualNodes[0]->setInitialVoltage(initialSingleVoltage(1) * mRatio);
+
+	// Static calculations from load flow data
+	Real omega = 2. * PI * frequency;
+	Complex impedance = { mResistance, omega * mInductance };
+	mSLog->info("Reactance={} [Ohm] (referred to primary side)", omega * mInductance );
+	mIntfVoltage(0, 0) = mVirtualNodes[0]->initialSingleVoltage() - initialSingleVoltage(0);
+	mIntfCurrent(0, 0) = mIntfVoltage(0, 0) / impedance;
+
+	// Create series sub components
+	mSubInductor = std::make_shared<SP::Ph1::Inductor>(mUID + "_ind", mName + "_ind", Logger::Level::off);
+	mSubInductor->setParameters(mInductance);
+
+	if (mNumVirtualNodes == 3) {
+		mVirtualNodes[2]->setInitialVoltage(initialSingleVoltage(0));
+		mSubResistor = std::make_shared<SP::Ph1::Resistor>(mUID + "_res", mName + "_res", Logger::Level::off);
+		mSubResistor->setParameters(mResistance);
+		mSubResistor->connect({ node(0), mVirtualNodes[2] });
+		mSubResistor->initialize(mFrequencies);
+		mSubResistor->initializeFromNodesAndTerminals(frequency);
+		mSubInductor->connect({ mVirtualNodes[2], mVirtualNodes[0] });
+	} else {
+		mSubInductor->connect({ node(0), mVirtualNodes[0] });
+	}
+	mSubInductor->initialize(mFrequencies);
+	mSubInductor->initializeFromNodesAndTerminals(frequency);
+
+	// Create parallel sub components
+	// A snubber conductance is added on the low voltage side (resistance approximately scaled with LV side voltage)
+	if (Math::abs(mRatio) < 1.)
+		mSnubberResistance = std::abs(mNominalVoltageEnd1)*1e6;
+	else 
+		mSnubberResistance = std::abs(mNominalVoltageEnd2)*1e6;
+	mSubSnubResistor = std::make_shared<SP::Ph1::Resistor>(mUID + "_snub_res", mName + "_snub_res", Logger::Level::off);
+	mSubSnubResistor->setParameters(mSnubberResistance);
+	mSubSnubResistor->connect({ node(1), SP::SimNode::GND });
+	mSubSnubResistor->initialize(mFrequencies);
+	mSubSnubResistor->initializeFromNodesAndTerminals(frequency);
+	mSLog->info("Snubber Resistance={} [Ohm] (connected to LV side)", mSnubberResistance);
+
+	mSLog->info(
+		"\n--- Initialization from powerflow ---"
+		"\nVoltage across: {:s}"
+		"\nCurrent: {:s}"
+		"\nTerminal 0 voltage: {:s}"
+		"\nTerminal 1 voltage: {:s}"
+		"\nVirtual Node 1 voltage: {:s}"
+		"\n--- Initialization from powerflow finished ---",
+		Logger::phasorToString(mIntfVoltage(0, 0)),
+		Logger::phasorToString(mIntfCurrent(0, 0)),
+		Logger::phasorToString(initialSingleVoltage(0)),
+		Logger::phasorToString(initialSingleVoltage(1)),
+		Logger::phasorToString(mVirtualNodes[0]->initialSingleVoltage()));
+}
+
 
 // #### Powerflow section ####
+
 void SP::Ph1::Transformer::setBaseVoltage(Real baseVoltage) {
 	// Note: to be consistent set base voltage to higher voltage (and impedance values must be referred to high voltage side)
 	// TODO: use attribute setter for setting base voltage
     mBaseVoltage = baseVoltage;
 }
-
 
 void SP::Ph1::Transformer::calculatePerUnitParameters(Real baseApparentPower, Real baseOmega) {
 	mSLog->info("#### Calculate Per Unit Parameters for {}", mName);
@@ -169,75 +234,11 @@ void SP::Ph1::Transformer::storeNodalInjection(Complex powerInjection) {
 	mStoreNodalPowerInjection = true;
 }
 
-
-// #### Getter ####
 MatrixComp SP::Ph1::Transformer::Y_element() {
 	return mY_element;
 }
 
-
 // #### MNA Section ####
-void SP::Ph1::Transformer::initializeFromNodesAndTerminals(Real frequency) {
-
-	// A snubber conductance is added on the low voltage side
-	Real snubberResistance = 1e3;
-
-	// Component parameters are referred to high voltage side.
-	// Switch terminals if transformer is connected the other way around.
-	if (Math::abs(mRatio) < 1.) {
-		mRatio = 1. / mRatio;
-		std::shared_ptr<SimTerminal<Complex>> tmp = mTerminals[0];
-		mTerminals[0] = mTerminals[1];
-		mTerminals[1] = tmp;
-	}
-
-	// Set initial voltage of virtual node in between
-	mVirtualNodes[0]->setInitialVoltage(initialSingleVoltage(1) * mRatio);
-
-	// Static calculations from load flow data
-	Real omega = 2. * PI * frequency;
-	Complex impedance = { mResistance, omega * mInductance };
-	mIntfVoltage(0, 0) = mVirtualNodes[0]->initialSingleVoltage() - initialSingleVoltage(0);
-	mIntfCurrent(0, 0) = mIntfVoltage(0, 0) / impedance;
-
-	// Create series sub components
-	mSubInductor = std::make_shared<SP::Ph1::Inductor>(mUID + "_ind", mName + "_ind", Logger::Level::off);
-	mSubInductor->setParameters(mInductance);
-
-	if (mNumVirtualNodes == 3) {
-		mVirtualNodes[2]->setInitialVoltage(initialSingleVoltage(0));
-		mSubResistor = std::make_shared<SP::Ph1::Resistor>(mUID + "_res", mName + "_res", Logger::Level::off);
-		mSubResistor->setParameters(mResistance);
-		mSubResistor->connect({ node(0), mVirtualNodes[2] });
-		mSubResistor->initializeFromNodesAndTerminals(frequency);
-		mSubInductor->connect({ mVirtualNodes[2], mVirtualNodes[0] });
-	}
-	else {
-		mSubInductor->connect({ node(0), mVirtualNodes[0] });
-	}
-	mSubInductor->initializeFromNodesAndTerminals(frequency);
-
-	// Create parallel sub components
-	mSubSnubResistor = std::make_shared<SP::Ph1::Resistor>(mUID + "_snub_res", mName + "_snub_res", Logger::Level::off);
-	mSubSnubResistor->setParameters(snubberResistance);
-	mSubSnubResistor->connect({ node(1), SP::SimNode::GND });
-	mSubSnubResistor->initializeFromNodesAndTerminals(frequency);
-
-	mSLog->info(
-		"\n--- Initialization from powerflow ---"
-		"\nVoltage across: {:s}"
-		"\nCurrent: {:s}"
-		"\nTerminal 0 voltage: {:s}"
-		"\nTerminal 1 voltage: {:s}"
-		"\nVirtual Node 1 voltage: {:s}"
-		"\n--- Initialization from powerflow finished ---",
-		Logger::phasorToString(mIntfVoltage(0, 0)),
-		Logger::phasorToString(mIntfCurrent(0, 0)),
-		Logger::phasorToString(initialSingleVoltage(0)),
-		Logger::phasorToString(initialSingleVoltage(1)),
-		Logger::phasorToString(mVirtualNodes[0]->initialSingleVoltage()));
-}
-
 
 void SP::Ph1::Transformer::mnaInitialize(Real omega, Real timeStep, Attribute<Matrix>::Ptr leftVector) {
 	MNAInterface::mnaInitialize(omega, timeStep);
@@ -245,13 +246,16 @@ void SP::Ph1::Transformer::mnaInitialize(Real omega, Real timeStep, Attribute<Ma
 
 	mRightVector = Matrix::Zero(leftVector->get().rows(), 1);
 	auto subComponents = MNAInterface::List({ mSubInductor, mSubSnubResistor });
+
 	if (mSubResistor)
 		subComponents.push_back(mSubResistor);
+
 	for (auto comp : subComponents) {
 		comp->mnaInitialize(omega, timeStep, leftVector);
-		for (auto task : comp->mnaTasks()) {
+
+		for (auto task : comp->mnaTasks())
 			mMnaTasks.push_back(task);
-		}
+
 	}
 	mMnaTasks.push_back(std::make_shared<MnaPostStep>(*this, leftVector));
 
@@ -297,11 +301,28 @@ void SP::Ph1::Transformer::mnaApplySystemMatrixStamp(Matrix& systemMatrix) {
 }
 
 
-void SP::Ph1::Transformer::MnaPostStep::execute(Real time, Int timeStepCount) {
-	mTransformer.mnaUpdateVoltage(*mLeftVector);
-	mTransformer.mnaUpdateCurrent(*mLeftVector);
+void SP::Ph1::Transformer::mnaAddPostStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes, Attribute<Matrix>::Ptr &leftVector) {
+	// add post-step dependencies of subcomponents
+	if (mSubResistor)
+		this->mSubResistor->mnaAddPostStepDependencies(prevStepDependencies, attributeDependencies, modifiedAttributes, leftVector);
+	this->mSubInductor->mnaAddPostStepDependencies(prevStepDependencies, attributeDependencies, modifiedAttributes, leftVector);
+	this->mSubSnubResistor->mnaAddPostStepDependencies(prevStepDependencies, attributeDependencies, modifiedAttributes, leftVector);
+	// add post-step dependencies of component itself
+	attributeDependencies.push_back(leftVector);
+	modifiedAttributes.push_back(this->attribute("v_intf"));
+	modifiedAttributes.push_back(this->attribute("i_intf"));
 }
 
+void SP::Ph1::Transformer::mnaPostStep(Real time, Int timeStepCount, Attribute<Matrix>::Ptr &leftVector) {
+	// post-step of subcomponents
+	if (mSubResistor)
+		this->mSubResistor->mnaPostStep(time, timeStepCount, leftVector);
+	this->mSubInductor->mnaPostStep(time, timeStepCount, leftVector);
+	this->mSubSnubResistor->mnaPostStep(time, timeStepCount, leftVector);
+	// post-step of component itself
+	this->mnaUpdateVoltage(*leftVector);
+	this->mnaUpdateCurrent(*leftVector);
+}
 
 void SP::Ph1::Transformer::mnaUpdateCurrent(const Matrix& leftVector) {
 	mIntfCurrent(0, 0) = mSubInductor->intfCurrent()(0, 0);
@@ -309,14 +330,10 @@ void SP::Ph1::Transformer::mnaUpdateCurrent(const Matrix& leftVector) {
 
 }
 
-
 void SP::Ph1::Transformer::mnaUpdateVoltage(const Matrix& leftVector) {
-	// TODO is this correct?
-	mIntfVoltage(0, 0) = mVirtualNodes[0]->initialSingleVoltage() - initialSingleVoltage(0);
 	// v1 - v0
 	mIntfVoltage(0, 0) = 0;
 	mIntfVoltage(0, 0) = Math::complexFromVectorElement(leftVector, matrixNodeIndex(1));
 	mIntfVoltage(0, 0) = mIntfVoltage(0, 0) - Math::complexFromVectorElement(leftVector, mVirtualNodes[0]->matrixNodeIndex());
 	mSLog->debug("Voltage {:s}", Logger::phasorToString(mIntfVoltage(0, 0)));
-
 }
