@@ -20,10 +20,6 @@ set(CIRCUIT_SOURCES
 	# DP examples with PF initialization
 	Circuits/DP_Slack_PiLine_PQLoad_with_PF_Init.cpp
 	Circuits/DP_Slack_PiLine_VSI_with_PF_Init.cpp
-	# Combined EMT and DP examples
-	Circuits/EMT_DP_SP_Slack.cpp
-	Circuits/EMT_DP_VS_Init.cpp
-	Circuits/EMT_DP_VS_RLC_Circuits.cpp
 
 	# Powerflow examples
 	Circuits/PF_Slack_PiLine_PQLoad.cpp
@@ -45,7 +41,10 @@ set(CIRCUIT_SOURCES
 	# SP examples
 	Circuits/SP_Circuits.cpp
 
-	# EMT and DP studies
+	# Combined EMT/DP/SP examples
+	Circuits/EMT_DP_SP_Slack.cpp
+	Circuits/EMT_DP_VS_Init.cpp
+	Circuits/EMT_DP_SP_VS_RLC.cpp
 	Circuits/DP_EMT_RL_SourceStep.cpp
 )
 

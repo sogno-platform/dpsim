@@ -68,6 +68,8 @@ void SP::Ph1::Resistor::initializeFromNodesAndTerminals(Real frequency) {
 	mIntfVoltage(0, 0) = initialSingleVoltage(1) - initialSingleVoltage(0);
 	mIntfCurrent = mConductance*mIntfVoltage;
 
+	mSLog->info("\nResistance [Ohm]: {:s}",
+				Logger::realToString(mResistance));
 	mSLog->info(
 		"\n--- Initialization from powerflow ---"
 		"\nVoltage across: {:s}"
@@ -95,29 +97,29 @@ void SP::Ph1::Resistor::mnaInitialize(Real omega, Real timeStep, Attribute<Matri
 }
 
 void SP::Ph1::Resistor::mnaApplySystemMatrixStamp(Matrix& systemMatrix) {
-	// Set diagonal entries
-	if (terminalNotGrounded(0))
-		Math::addToMatrixElement(systemMatrix, matrixNodeIndices(0), matrixNodeIndices(0), mConductance);
-	if (terminalNotGrounded(1))
-		Math::addToMatrixElement(systemMatrix, matrixNodeIndices(1), matrixNodeIndices(1), mConductance);
-	// Set off diagonal entries
-	if (terminalNotGrounded(0) && terminalNotGrounded(1)) {
-		Math::addToMatrixElement(systemMatrix, matrixNodeIndices(0), matrixNodeIndices(1), -mConductance);
-		Math::addToMatrixElement(systemMatrix, matrixNodeIndices(1), matrixNodeIndices(0), -mConductance);
-	}
+	Complex conductance = Complex(1. / mResistance, 0);
 
-	mSLog->info("-- Matrix Stamp ---");
-	if (terminalNotGrounded(0))
-		mSLog->info("Add {:e} to system at ({:d},{:d})",
-			mConductance, matrixNodeIndex(0), matrixNodeIndex(0));
-	if (terminalNotGrounded(1))
-		mSLog->info("Add {:e} to system at ({:d},{:d})",
-			mConductance, matrixNodeIndex(1), matrixNodeIndex(1));
-	if (terminalNotGrounded(0) && terminalNotGrounded(1)) {
-		mSLog->info("Add {:e} to system at ({:d},{:d})",
-			-mConductance, matrixNodeIndex(0), matrixNodeIndex(1));
-		mSLog->info("Add {:e} to system at ({:d},{:d})",
-			-mConductance, matrixNodeIndex(1), matrixNodeIndex(0));
+	for (UInt freq = 0; freq < mNumFreqs; freq++) {
+		// Set diagonal entries
+		if (terminalNotGrounded(0))
+			Math::addToMatrixElement(systemMatrix, matrixNodeIndex(0), matrixNodeIndex(0), conductance, mNumFreqs, freq);
+		if (terminalNotGrounded(1))
+		// Set off diagonal entries
+			Math::addToMatrixElement(systemMatrix, matrixNodeIndex(1), matrixNodeIndex(1), conductance, mNumFreqs, freq);
+		if (terminalNotGrounded(0) && terminalNotGrounded(1)) {
+			Math::addToMatrixElement(systemMatrix, matrixNodeIndex(0), matrixNodeIndex(1), -conductance, mNumFreqs, freq);
+			Math::addToMatrixElement(systemMatrix, matrixNodeIndex(1), matrixNodeIndex(0), -conductance, mNumFreqs, freq);
+		}
+
+		mSLog->info("-- Stamp frequency {:d} ---", freq);
+		if (terminalNotGrounded(0))
+			mSLog->info("Add {:s} to system at ({:d},{:d})", Logger::complexToString(conductance), matrixNodeIndex(0), matrixNodeIndex(0));
+		if (terminalNotGrounded(1))
+			mSLog->info("Add {:s} to system at ({:d},{:d})", Logger::complexToString(conductance), matrixNodeIndex(1), matrixNodeIndex(1));
+		if (terminalNotGrounded(0) && terminalNotGrounded(1)) {
+			mSLog->info("Add {:s} to system at ({:d},{:d})", Logger::complexToString(-conductance), matrixNodeIndex(0), matrixNodeIndex(1));
+			mSLog->info("Add {:s} to system at ({:d},{:d})", Logger::complexToString(-conductance), matrixNodeIndex(1), matrixNodeIndex(0));
+		}
 	}
 }
 
