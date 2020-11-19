@@ -47,7 +47,7 @@ set(CIRCUIT_SOURCES
 	Circuits/EMT_DP_VS_Init.cpp
 	Circuits/EMT_DP_SP_VS_RLC.cpp
 	Circuits/DP_EMT_RL_SourceStep.cpp
-	Circuits/DP_SP_Trafo.cpp
+	Circuits/EMT_DP_SP_Trafo.cpp
 )
 
 set(SYNCGEN_SOURCES

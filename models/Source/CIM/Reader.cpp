@@ -493,7 +493,7 @@ TopologicalPowerComp::Ptr Reader::mapPowerTransformer(CIMPP::PowerTransformer* t
 			Matrix inductance_3ph = singlePhaseParameterToThreePhase(inductance);
 			Bool withResistiveLosses = resistance > 0;
 			auto transformer = std::make_shared<EMT::Ph3::Transformer>(trans->mRID, trans->name, mComponentLogLevel, withResistiveLosses);
-			transformer->setParameters(ratioAbs, ratioPhase, resistance_3ph, inductance_3ph);
+			transformer->setParameters(voltageNode1, voltageNode2, ratioAbs, ratioPhase, resistance_3ph, inductance_3ph);
 			return transformer;
 		}
 		else

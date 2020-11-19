@@ -33,16 +33,19 @@ EMT::Ph3::Transformer::Transformer(String uid, String name,
 
 SimPowerComp<Real>::Ptr EMT::Ph3::Transformer::clone(String name) {
 	auto copy = Transformer::make(name, mLogLevel);
-	copy->setParameters(std::abs(mRatio), std::arg(mRatio), mResistance, mInductance);
+	copy->setParameters(mNominalVoltageEnd1, mNominalVoltageEnd2, std::abs(mRatio), std::arg(mRatio), mResistance, mInductance);
 	return copy;
 }
 
-void EMT::Ph3::Transformer::setParameters(Real ratioAbs, Real ratioPhase,
+void EMT::Ph3::Transformer::setParameters(Real nomVoltageEnd1, Real nomVoltageEnd2, Real ratioAbs, Real ratioPhase,
 	Matrix resistance, Matrix inductance) {
-	Base::Ph3::Transformer::setParameters(ratioAbs, ratioPhase, resistance, inductance);
+	
+	Base::Ph3::Transformer::setParameters(nomVoltageEnd1, nomVoltageEnd2, ratioAbs, ratioPhase, resistance, inductance);
+	
+	mSLog->info("Nominal Voltage End 1={} [V] Nominal Voltage End 2={} [V]", mNominalVoltageEnd1, mNominalVoltageEnd2);
+	mSLog->info("Resistance={} [Ohm] Inductance={} [Ohm] (referred to primary side)", mResistance, mInductance);
+    mSLog->info("Tap Ratio={} [ ] Phase Shift={} [deg]", std::abs(mRatio), std::arg(mRatio));
 
-	mSLog->info("Resistance={} [Ohm] Inductance={} [Ohm] (referred to primary side)", resistance, inductance);
-    mSLog->info("Tap Ratio={} [ ] Phase Shift={} [deg]", ratioAbs, ratioPhase);
 	mParametersSet = true;
 }
 
@@ -99,7 +102,8 @@ void EMT::Ph3::Transformer::initializeFromNodesAndTerminals(Real frequency) {
 
 	// Create parallel sub components
 	// A snubber conductance is added on the low voltage side (resistance approximately scaled with LV side voltage)
-	mSnubberResistance = Matrix::Identity(3,3)*std::abs(node(1)->initialSingleVoltage())*1e6;
+	Real snubberResistance = mNominalVoltageEnd1 > mNominalVoltageEnd2 ? std::abs(mNominalVoltageEnd2)*1e6 : std::abs(mNominalVoltageEnd1)*1e6;
+	mSnubberResistance = Matrix::Identity(3,3)*(snubberResistance);
 	mSubSnubResistor = std::make_shared<EMT::Ph3::Resistor>(mName + "_snub_res", mLogLevel);
 	mSubSnubResistor->setParameters(mSnubberResistance);
 	mSubSnubResistor->connect({ node(1), EMT::SimNode::GND });

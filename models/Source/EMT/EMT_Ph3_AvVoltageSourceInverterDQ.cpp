@@ -16,7 +16,7 @@ EMT::Ph3::AvVoltageSourceInverterDQ::AvVoltageSourceInverterDQ(String uid, Strin
 	mPhaseType = PhaseType::ABC;
 	if (withTrafo) {
 		setVirtualNodeNumber(4);
-		mConnectionTransformer = EMT::Ph3::Transformer::make(mName + "_trans", Logger::Level::debug);
+		mConnectionTransformer = EMT::Ph3::Transformer::make(mName + "_trans", mName + "_trans", mLogLevel, false);
 		mSubComponents.push_back(mConnectionTransformer);
 	} else {
 		setVirtualNodeNumber(3);
@@ -96,16 +96,18 @@ void EMT::Ph3::AvVoltageSourceInverterDQ::setParameters(Real sysOmega, Real sysV
 
 void EMT::Ph3::AvVoltageSourceInverterDQ::setTransformerParameters(Real nomVoltageEnd1, Real nomVoltageEnd2,
 	Real ratedPower, Real ratioAbs,	Real ratioPhase, Real resistance, Real inductance, Real omega) {
-
+	
 	Base::AvVoltageSourceInverterDQ::setTransformerParameters(nomVoltageEnd1, nomVoltageEnd2,
-		ratedPower, ratioAbs, ratioPhase, resistance, inductance, omega);
+	ratedPower, ratioAbs, ratioPhase, resistance, inductance, omega);
 
 	mSLog->info("Connection Transformer Parameters:");
+	mSLog->info("Nominal Voltage End 1={} [V] Nominal Voltage End 2={} [V]", mTransformerNominalVoltageEnd1, mTransformerNominalVoltageEnd2);
 	mSLog->info("Resistance={} [Ohm] Inductance={} [H]", mTransformerResistance, mTransformerInductance);
     mSLog->info("Tap Ratio={} [ ] Phase Shift={} [deg]", mTransformerRatioAbs, mTransformerRatioPhase);
 
 	if (mWithConnectionTransformer)
-		mConnectionTransformer->setParameters(mTransformerRatioAbs, mTransformerRatioPhase, CPS::CIM::Reader::singlePhaseParameterToThreePhase(mTransformerResistance), CPS::CIM::Reader::singlePhaseParameterToThreePhase(mTransformerInductance));
+		// TODO: resistive losses neglected so far (mWithResistiveLosses=false)
+		mConnectionTransformer->setParameters(mTransformerNominalVoltageEnd1, mTransformerNominalVoltageEnd2, mTransformerRatioAbs, mTransformerRatioPhase, CPS::CIM::Reader::singlePhaseParameterToThreePhase(mTransformerResistance), CPS::CIM::Reader::singlePhaseParameterToThreePhase(mTransformerInductance));
 }
 
 void EMT::Ph3::AvVoltageSourceInverterDQ::setControllerParameters(Real Kp_pll, Real Ki_pll,

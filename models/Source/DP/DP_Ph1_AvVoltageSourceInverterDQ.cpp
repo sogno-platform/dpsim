@@ -15,7 +15,7 @@ DP::Ph1::AvVoltageSourceInverterDQ::AvVoltageSourceInverterDQ(String uid, String
 	SimPowerComp<Complex>(uid, name, logLevel) {
 	if (withTrafo) {
 		setVirtualNodeNumber(4);
-		mConnectionTransformer = DP::Ph1::Transformer::make(mName + "_trans", Logger::Level::debug);
+		mConnectionTransformer = DP::Ph1::Transformer::make(mName + "_trans", mName + "_trans", mLogLevel, false);
 		mSubComponents.push_back(mConnectionTransformer);
 	} else {
 		setVirtualNodeNumber(3);
@@ -105,6 +105,7 @@ void DP::Ph1::AvVoltageSourceInverterDQ::setTransformerParameters(Real nomVoltag
     mSLog->info("Tap Ratio={} [ ] Phase Shift={} [deg]", mTransformerRatioAbs, mTransformerRatioPhase);
 
 	if (mWithConnectionTransformer)
+		// TODO: resistive losses neglected so far (mWithResistiveLosses=false)
 		mConnectionTransformer->setParameters(mTransformerNominalVoltageEnd1, mTransformerNominalVoltageEnd2, mTransformerRatioAbs, mTransformerRatioPhase, mTransformerResistance, mTransformerInductance);
 }
 
