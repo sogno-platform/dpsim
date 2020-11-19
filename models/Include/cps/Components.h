@@ -31,7 +31,6 @@
 #include <cps/SP/SP_Ph3_Resistor.h>
 #include <cps/SP/SP_Ph3_VoltageSource.h>
 #include <cps/SP/SP_Ph3_ControlledVoltageSource.h>
-#include <cps/SP/SP_Ph3_Transformer.h>
 
 #include <cps/DP/DP_Ph1_Capacitor.h>
 #include <cps/DP/DP_Ph1_CurrentSource.h>
