@@ -45,21 +45,20 @@ SP::Ph1::Transformer::Transformer(String uid, String name, Logger::Level logLeve
 
 void SP::Ph1::Transformer::setParameters(Real nomVoltageEnd1, Real nomVoltageEnd2, Real ratedPower, Real ratioAbs,
 	Real ratioPhase, Real resistance, Real inductance, Real omega) {
+
 	// Note: to be consistent impedance values must be referred to high voltage side (and base voltage set to higher voltage)
-    mNominalVoltageEnd1 = nomVoltageEnd1;
-	mNominalVoltageEnd2 = nomVoltageEnd2;
+	Base::Ph1::Transformer::setParameters(nomVoltageEnd1, nomVoltageEnd2, ratioAbs, ratioPhase, resistance, inductance);
+	
+	mSLog->info("Nominal Voltage End 1={} [V] Nominal Voltage End 2={} [V]", mNominalVoltageEnd1, mNominalVoltageEnd2);
+	mSLog->info("Resistance={} [Ohm] Inductance={} [Ohm] (referred to primary side)", mResistance, mInductance);
+    mSLog->info("Tap Ratio={} [ ] Phase Shift={} [deg]", std::abs(mRatio), std::arg(mRatio));
+
 	mRatedPower = ratedPower;
-	mRatio = Complex(ratioAbs*cos(ratioPhase), ratioAbs*sin(ratioPhase));
-	mRatioAbs = ratioAbs;
-	mRatioPhase = ratioPhase;
-	mResistance = resistance;
-	mInductance = inductance;
+	mRatioAbs = std::abs(mRatio);
+	mRatioPhase = std::arg(mRatio);
 	mConductance = 1 / mResistance;
 	mNominalOmega = omega;
 	mReactance = mNominalOmega * mInductance;
-
-	mSLog->info("Resistance={} [Ohm] Reactance={} [Ohm] (referred to primary side)", mResistance, mReactance);
-    mSLog->info("Tap Ratio={} [ ] Phase Shift={} [deg]", mRatioAbs, mRatioPhase);
 
 	mParametersSet = true;
 }
@@ -111,11 +110,8 @@ void SP::Ph1::Transformer::initializeFromNodesAndTerminals(Real frequency) {
 	mSubInductor->initializeFromNodesAndTerminals(frequency);
 
 	// Create parallel sub components
-	// A snubber conductance is added on the low voltage side (resistance approximately scaled with LV side voltage)
-	if (Math::abs(mRatio) < 1.)
-		mSnubberResistance = std::abs(mNominalVoltageEnd1)*1e6;
-	else 
-		mSnubberResistance = std::abs(mNominalVoltageEnd2)*1e6;
+	// A snubber conductance is added on the low voltage side (resistance scaled with lower voltage side)
+	mSnubberResistance = mNominalVoltageEnd1 > mNominalVoltageEnd2 ? std::abs(mNominalVoltageEnd2)*1e6 : std::abs(mNominalVoltageEnd1)*1e6;
 	mSubSnubResistor = std::make_shared<SP::Ph1::Resistor>(mUID + "_snub_res", mName + "_snub_res", Logger::Level::off);
 	mSubSnubResistor->setParameters(mSnubberResistance);
 	mSubSnubResistor->connect({ node(1), SP::SimNode::GND });

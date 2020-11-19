@@ -41,13 +41,13 @@ set(CIRCUIT_SOURCES
 	# SP examples
 	Circuits/SP_Circuits.cpp
 	Circuits/SP_PiLine.cpp
-	Circuits/SP_Trafo.cpp
 
 	# Combined EMT/DP/SP examples
 	Circuits/EMT_DP_SP_Slack.cpp
 	Circuits/EMT_DP_VS_Init.cpp
 	Circuits/EMT_DP_SP_VS_RLC.cpp
 	Circuits/DP_EMT_RL_SourceStep.cpp
+	Circuits/DP_SP_Trafo.cpp
 )
 
 set(SYNCGEN_SOURCES

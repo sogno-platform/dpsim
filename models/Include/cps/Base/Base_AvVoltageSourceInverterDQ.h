@@ -23,6 +23,8 @@ namespace Base {
 		Real mRc;
 
 		/// transformer
+		Real mTransformerNominalVoltageEnd1;
+		Real mTransformerNominalVoltageEnd2;
 		Real mTransformerResistance;
 		Real mTransformerInductance;
 		Real mTransformerRatioAbs;

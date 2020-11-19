@@ -32,17 +32,18 @@ DP::Ph1::Transformer::Transformer(String uid, String name,
 
 SimPowerComp<Complex>::Ptr DP::Ph1::Transformer::clone(String name) {
 	auto copy = Transformer::make(name, mLogLevel);
-	copy->setParameters(std::abs(mRatio), std::arg(mRatio), mResistance, mInductance);
+	copy->setParameters(mNominalVoltageEnd1, mNominalVoltageEnd2, std::abs(mRatio), std::arg(mRatio), mResistance, mInductance);
 	return copy;
 }
 
-void DP::Ph1::Transformer::setParameters(Real ratioAbs, Real ratioPhase,
+void DP::Ph1::Transformer::setParameters(Real nomVoltageEnd1, Real nomVoltageEnd2, Real ratioAbs, Real ratioPhase,
 	Real resistance, Real inductance) {
 
-	Base::Ph1::Transformer::setParameters(ratioAbs, ratioPhase, resistance, inductance);
-
-	mSLog->info("Resistance={} [Ohm] Inductance={} [Ohm] (referred to primary side)", resistance, inductance);
-    mSLog->info("Tap Ratio={} [ ] Phase Shift={} [deg]", ratioAbs, ratioPhase);
+	Base::Ph1::Transformer::setParameters(nomVoltageEnd1, nomVoltageEnd2, ratioAbs, ratioPhase, resistance, inductance);
+	
+	mSLog->info("Nominal Voltage End 1={} [V] Nominal Voltage End 2={} [V]", mNominalVoltageEnd1, mNominalVoltageEnd2);
+	mSLog->info("Resistance={} [Ohm] Inductance={} [Ohm] (referred to primary side)", mResistance, mInductance);
+    mSLog->info("Tap Ratio={} [ ] Phase Shift={} [deg]", std::abs(mRatio), std::arg(mRatio));
 
 	mParametersSet = true;
 }
@@ -87,8 +88,8 @@ void DP::Ph1::Transformer::initializeFromNodesAndTerminals(Real frequency) {
 	mSubInductor->initializeFromNodesAndTerminals(frequency);
 
 	// Create parallel sub components
-	// A snubber conductance is added on the low voltage side (resistance approximately scaled with LV side voltage)
-	mSnubberResistance = std::abs(node(1)->initialSingleVoltage())*1e6;
+	// A snubber conductance is added on the low voltage side (resistance scaled with lower voltage side)
+	mSnubberResistance = mNominalVoltageEnd1 > mNominalVoltageEnd2 ? std::abs(mNominalVoltageEnd2)*1e6 : std::abs(mNominalVoltageEnd1)*1e6;
 	mSubSnubResistor = std::make_shared<DP::Ph1::Resistor>(mName + "_snub_res", mLogLevel);
 	mSubSnubResistor->setParameters(mSnubberResistance);
 	mSubSnubResistor->connect({ node(1), DP::SimNode::GND });

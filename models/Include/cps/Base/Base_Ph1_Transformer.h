@@ -15,6 +15,10 @@ namespace Base {
 namespace Ph1 {
 	class Transformer {
 	protected:
+		/// Nominal voltage of primary side
+		Real mNominalVoltageEnd1;
+		/// Nominal voltage of secondary side
+		Real mNominalVoltageEnd2;
 		/// Complex transformer ratio
 		Complex mRatio;
 		/// Resistance [Ohm]
@@ -24,7 +28,9 @@ namespace Ph1 {
 
 	public:
 		///
-		void setParameters(Real ratioAbs, Real ratioPhase, Real resistance, Real inductance) {
+		void setParameters(Real nomVoltageEnd1, Real nomVoltageEnd2, Real ratioAbs, Real ratioPhase, Real resistance, Real inductance) {
+			mNominalVoltageEnd1 = nomVoltageEnd1;
+			mNominalVoltageEnd2 = nomVoltageEnd2;
 			mRatio = std::polar<Real>(ratioAbs, ratioPhase);
 			mResistance = resistance;
 			mInductance = inductance;

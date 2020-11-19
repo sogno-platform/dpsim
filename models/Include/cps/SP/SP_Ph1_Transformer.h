@@ -44,10 +44,6 @@ namespace Ph1 {
 		Real mRatioAbs = 1;
         /// Transformer ratio pase [deg]
 		Real mRatioPhase = 0;
-		/// Nominal voltage of primary side
-		Real mNominalVoltageEnd1;
-		/// Nominal voltage of secondary side
-		Real mNominalVoltageEnd2;
 		/// Nominal omega
 		Real mNominalOmega;
 
