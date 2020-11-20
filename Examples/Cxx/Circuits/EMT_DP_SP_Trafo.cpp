@@ -110,7 +110,7 @@ void simTrafoSP1ph() {
 
 	// Parameters
 	vs->setParameters(CPS::Math::polar(voltageHVSide, 0));
-	trafo->setParameters(voltageHVSide, voltageMVSide, 50e6, ratio, 0, trafoResistance, trafoInductance, 2.0*PI*50.0);
+	trafo->setParameters(voltageHVSide, voltageMVSide, ratio, 0, trafoResistance, trafoInductance);
 	loadRes->setParameters(loadResistanceMVSide);
 
 	// Define system topology

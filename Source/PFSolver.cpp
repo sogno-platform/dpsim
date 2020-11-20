@@ -163,11 +163,6 @@ void PFSolver::determinePFBusType() {
 					connectedPV = true;
 				}
 			}
-			else if (std::shared_ptr<CPS::SP::Ph1::AvVoltageSourceInverterDQ> vsi = std::dynamic_pointer_cast<CPS::SP::Ph1::AvVoltageSourceInverterDQ>(comp)){
-				if (vsi->mPowerflowBusType == CPS::PowerflowBusType::PQ) {
-					connectedPQ = true;
-				}
-			}
 		}
 
 		// determine powerflow bus types according connected type of connected components

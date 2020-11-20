@@ -43,8 +43,8 @@ SP::Ph1::Transformer::Transformer(String uid, String name, Logger::Level logLeve
 }
 
 
-void SP::Ph1::Transformer::setParameters(Real nomVoltageEnd1, Real nomVoltageEnd2, Real ratedPower, Real ratioAbs,
-	Real ratioPhase, Real resistance, Real inductance, Real omega) {
+void SP::Ph1::Transformer::setParameters(Real nomVoltageEnd1, Real nomVoltageEnd2, Real ratioAbs,
+	Real ratioPhase, Real resistance, Real inductance) {
 
 	// Note: to be consistent impedance values must be referred to high voltage side (and base voltage set to higher voltage)
 	Base::Ph1::Transformer::setParameters(nomVoltageEnd1, nomVoltageEnd2, ratioAbs, ratioPhase, resistance, inductance);
@@ -53,25 +53,35 @@ void SP::Ph1::Transformer::setParameters(Real nomVoltageEnd1, Real nomVoltageEnd
 	mSLog->info("Resistance={} [Ohm] Inductance={} [Ohm] (referred to primary side)", mResistance, mInductance);
     mSLog->info("Tap Ratio={} [ ] Phase Shift={} [deg]", std::abs(mRatio), std::arg(mRatio));
 
-	mRatedPower = ratedPower;
 	mRatioAbs = std::abs(mRatio);
 	mRatioPhase = std::arg(mRatio);
 	mConductance = 1 / mResistance;
-	mNominalOmega = omega;
-	mReactance = mNominalOmega * mInductance;
 
 	mParametersSet = true;
+}
+
+void SP::Ph1::Transformer::setParameters(Real nomVoltageEnd1, Real nomVoltageEnd2, Real ratedPower, Real ratioAbs,
+	Real ratioPhase, Real resistance, Real inductance) {
+
+	mRatedPower = ratedPower;
+	mSLog->info("Rated Power ={} [W]", mRatedPower);
+
+	SP::Ph1::Transformer::setParameters(nomVoltageEnd1, nomVoltageEnd2, ratioAbs, ratioPhase, resistance, inductance);
 }
 
 
 SimPowerComp<Complex>::Ptr SP::Ph1::Transformer::clone(String name) {
 	auto copy = Transformer::make(name, mLogLevel);
 	copy->setParameters(mNominalVoltageEnd1, mNominalVoltageEnd2, mRatedPower,
-		std::abs(mRatio), std::arg(mRatio), mResistance, mInductance, mNominalOmega);
+		std::abs(mRatio), std::arg(mRatio), mResistance, mInductance);
 	return copy;
 }
 
 void SP::Ph1::Transformer::initializeFromNodesAndTerminals(Real frequency) {
+	mNominalOmega = 2. * PI * frequency;
+	mReactance = mNominalOmega * mInductance;
+	mSLog->info("Reactance={} [Ohm] (referred to primary side)");
+	
 	// Component parameters are referred to high voltage side.
 	// Switch terminals if transformer is connected the other way around.
 	if (Math::abs(mRatio) < 1.) {
@@ -85,9 +95,7 @@ void SP::Ph1::Transformer::initializeFromNodesAndTerminals(Real frequency) {
 	mVirtualNodes[0]->setInitialVoltage(initialSingleVoltage(1) * mRatio);
 
 	// Static calculations from load flow data
-	Real omega = 2. * PI * frequency;
-	Complex impedance = { mResistance, omega * mInductance };
-	mSLog->info("Reactance={} [Ohm] (referred to primary side)", omega * mInductance );
+	Complex impedance = { mResistance, mReactance };
 	mIntfVoltage(0, 0) = mVirtualNodes[0]->initialSingleVoltage() - initialSingleVoltage(0);
 	mIntfCurrent(0, 0) = mIntfVoltage(0, 0) / impedance;
 

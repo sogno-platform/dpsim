@@ -504,7 +504,7 @@ TopologicalPowerComp::Ptr Reader::mapPowerTransformer(CIMPP::PowerTransformer* t
 	}
 	else if (mDomain == Domain::SP) {
 		auto transformer = std::make_shared<SP::Ph1::Transformer>(trans->mRID, trans->name, mComponentLogLevel);
-		transformer->setParameters(voltageNode1, voltageNode2, ratedPower, ratioAbs, ratioPhase, resistance, inductance, mOmega);
+		transformer->setParameters(voltageNode1, voltageNode2, ratedPower, ratioAbs, ratioPhase, resistance, inductance);
 		Real baseVolt = voltageNode1 >= voltageNode2 ? voltageNode1 : voltageNode2;
 		transformer->setBaseVoltage(baseVolt);
 		return transformer;

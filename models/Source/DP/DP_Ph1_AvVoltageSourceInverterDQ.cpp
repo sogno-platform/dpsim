@@ -94,10 +94,10 @@ void DP::Ph1::AvVoltageSourceInverterDQ::setParameters(Real sysOmega, Real sysVo
 }
 
 void DP::Ph1::AvVoltageSourceInverterDQ::setTransformerParameters(Real nomVoltageEnd1, Real nomVoltageEnd2,
-	Real ratedPower, Real ratioAbs,	Real ratioPhase, Real resistance, Real inductance, Real omega) {
+	Real ratioAbs,	Real ratioPhase, Real resistance, Real inductance) {
 
 	Base::AvVoltageSourceInverterDQ::setTransformerParameters(nomVoltageEnd1, nomVoltageEnd2,
-		ratedPower, ratioAbs, ratioPhase, resistance, inductance, omega);
+		ratioAbs, ratioPhase, resistance, inductance);
 
 	mSLog->info("Connection Transformer Parameters:");
 	mSLog->info("Nominal Voltage End 1={} [V] Nominal Voltage End 2={} [V]", mTransformerNominalVoltageEnd1, mTransformerNominalVoltageEnd2);

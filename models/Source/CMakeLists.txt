@@ -90,6 +90,7 @@ list(APPEND CPS_SOURCES
 	SP/SP_Ph1_VoltageSourceInverter.cpp
 	SP/SP_Ph1_PiLine.cpp
 	SP/SP_Ph1_Load.cpp
+	SP/SP_Ph1_Switch.cpp
 	SP/SP_Ph1_Transformer.cpp
 	SP/SP_Ph1_SolidStateTransformer.cpp
 	SP/SP_Ph1_Shunt.cpp

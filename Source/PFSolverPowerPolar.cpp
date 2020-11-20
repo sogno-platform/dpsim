@@ -27,10 +27,6 @@ void PFSolverPowerPolar::generateInitialSolution(Real time, bool keep_last_solut
                 load->calculatePerUnitParameters(mBaseApparentPower, mSystem.mSystemOmega);
             }
         }
-        else if (std::shared_ptr<CPS::SP::Ph1::AvVoltageSourceInverterDQ> vsi =
-				std::dynamic_pointer_cast<CPS::SP::Ph1::AvVoltageSourceInverterDQ>(comp)) {
-            vsi->updatePQ(time);
-        }
     }
 
     // set initial solution for the new time

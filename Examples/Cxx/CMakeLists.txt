@@ -41,6 +41,7 @@ set(CIRCUIT_SOURCES
 	# SP examples
 	Circuits/SP_Circuits.cpp
 	Circuits/SP_PiLine.cpp
+	Circuits/SP_Slack_PiLine_VSI_with_PF_Init.cpp
 
 	# Combined EMT/DP/SP examples
 	Circuits/EMT_DP_SP_Slack.cpp

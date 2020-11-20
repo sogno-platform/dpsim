@@ -98,7 +98,7 @@ void EMT::Ph3::AvVoltageSourceInverterDQ::setTransformerParameters(Real nomVolta
 	Real ratedPower, Real ratioAbs,	Real ratioPhase, Real resistance, Real inductance, Real omega) {
 	
 	Base::AvVoltageSourceInverterDQ::setTransformerParameters(nomVoltageEnd1, nomVoltageEnd2,
-	ratedPower, ratioAbs, ratioPhase, resistance, inductance, omega);
+	ratioAbs, ratioPhase, resistance, inductance);
 
 	mSLog->info("Connection Transformer Parameters:");
 	mSLog->info("Nominal Voltage End 1={} [V] Nominal Voltage End 2={} [V]", mTransformerNominalVoltageEnd1, mTransformerNominalVoltageEnd2);
