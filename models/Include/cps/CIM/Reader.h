@@ -102,8 +102,6 @@ namespace CIM {
 		/// Resolves unit multipliers.
 		static Real unitValue(Real value, CIMPP::UnitMultiplier mult);
 		///
-		Matrix singlePhaseParameterToThreePhase(Real parameter);
-		///
 		void processSvVoltage(CIMPP::SvVoltage* volt);
 		///
 		void processSvPowerFlow(CIMPP::SvPowerFlow* flow);
