@@ -18,7 +18,6 @@
 
 using namespace DPsim;
 using namespace CPS;
-using namespace CPS::CIM;
 
 void voltageSourceResistorEMT3ph() {
 	Real timeStep = 0.00005;
@@ -31,10 +30,10 @@ void voltageSourceResistorEMT3ph() {
 
 	// Components
 	auto vs = EMT::Ph3::VoltageSource::make("vs1");
-	vs->setParameters(Reader::singlePhaseVariableToThreePhase(CPS::Math::polar(100000, 0)), 50);
+	vs->setParameters(CPS::Math::singlePhaseVariableToThreePhase(CPS::Math::polar(100000, 0)), 50);
 
 	auto res = EMT::Ph3::Resistor::make("R1", Logger::Level::debug);
-	res->setParameters(Reader::singlePhaseParameterToThreePhase(100));
+	res->setParameters(CPS::Math::singlePhaseParameterToThreePhase(100));
 
 	// Topology
 	vs->connect({ SimNode<Real>::GND, n1 });
@@ -149,13 +148,13 @@ void voltageSourceInductorEMT3ph() {
 
 	// Components
 	auto vs = EMT::Ph3::VoltageSource::make("vs1", Logger::Level::debug);
-	vs->setParameters(Reader::singlePhaseVariableToThreePhase(CPS::Math::polar(100000, 0)), 50);
+	vs->setParameters(CPS::Math::singlePhaseVariableToThreePhase(CPS::Math::polar(100000, 0)), 50);
 
 	auto res = EMT::Ph3::Resistor::make("R1", Logger::Level::debug);
-	res->setParameters(Reader::singlePhaseParameterToThreePhase(5));
+	res->setParameters(CPS::Math::singlePhaseParameterToThreePhase(5));
 
 	auto ind = EMT::Ph3::Inductor::make("L1", Logger::Level::debug);
-	ind->setParameters(Reader::singlePhaseParameterToThreePhase(0.5));
+	ind->setParameters(CPS::Math::singlePhaseParameterToThreePhase(0.5));
 
 	// Topology
 	vs->connect({ SimNode<Real>::GND, n1 });
@@ -287,13 +286,13 @@ void voltageSourceCapacitorEMT3ph() {
 
 	// Components
 	auto vs = EMT::Ph3::VoltageSource::make("vs1", Logger::Level::debug);
-	vs->setParameters(Reader::singlePhaseVariableToThreePhase(CPS::Math::polar(100000, 0)), 50);
+	vs->setParameters(CPS::Math::singlePhaseVariableToThreePhase(CPS::Math::polar(100000, 0)), 50);
 
 	auto res = EMT::Ph3::Resistor::make("R1", Logger::Level::debug);
-	res->setParameters(Reader::singlePhaseParameterToThreePhase(5));
+	res->setParameters(CPS::Math::singlePhaseParameterToThreePhase(5));
 
 	auto cap = EMT::Ph3::Capacitor::make("C1", Logger::Level::debug);
-	cap->setParameters(Reader::singlePhaseParameterToThreePhase(10e-3));
+	cap->setParameters(CPS::Math::singlePhaseParameterToThreePhase(10e-3));
 
 	// Topology
 	vs->connect({ SimNode<Real>::GND, n1 });

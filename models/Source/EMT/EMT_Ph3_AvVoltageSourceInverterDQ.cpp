@@ -107,7 +107,7 @@ void EMT::Ph3::AvVoltageSourceInverterDQ::setTransformerParameters(Real nomVolta
 
 	if (mWithConnectionTransformer)
 		// TODO: resistive losses neglected so far (mWithResistiveLosses=false)
-		mConnectionTransformer->setParameters(mTransformerNominalVoltageEnd1, mTransformerNominalVoltageEnd2, mTransformerRatioAbs, mTransformerRatioPhase, CPS::CIM::Reader::singlePhaseParameterToThreePhase(mTransformerResistance), CPS::CIM::Reader::singlePhaseParameterToThreePhase(mTransformerInductance));
+		mConnectionTransformer->setParameters(mTransformerNominalVoltageEnd1, mTransformerNominalVoltageEnd2, mTransformerRatioAbs, mTransformerRatioPhase, CPS::Math::singlePhaseParameterToThreePhase(mTransformerResistance), CPS::Math::singlePhaseParameterToThreePhase(mTransformerInductance));
 }
 
 void EMT::Ph3::AvVoltageSourceInverterDQ::setControllerParameters(Real Kp_pll, Real Ki_pll,
@@ -132,10 +132,10 @@ void EMT::Ph3::AvVoltageSourceInverterDQ::setFilterParameters(Real Lf, Real Cf, 
 	mSLog->info("Inductance Lf={} [H] Capacitance Cf={} [F]", mLf, mCf);
 	mSLog->info("Resistance Rf={} [H] Resistance Rc={} [F]", mRf, mRc);
 
-	mSubResistorC->setParameters(CPS::CIM::Reader::singlePhaseParameterToThreePhase(mRc));
-	mSubResistorF->setParameters(CPS::CIM::Reader::singlePhaseParameterToThreePhase(mRf));
-	mSubInductorF->setParameters(CPS::CIM::Reader::singlePhaseParameterToThreePhase(mLf));
-	mSubCapacitorF->setParameters(CPS::CIM::Reader::singlePhaseParameterToThreePhase(mCf));
+	mSubResistorC->setParameters(CPS::Math::singlePhaseParameterToThreePhase(mRc));
+	mSubResistorF->setParameters(CPS::Math::singlePhaseParameterToThreePhase(mRf));
+	mSubInductorF->setParameters(CPS::Math::singlePhaseParameterToThreePhase(mLf));
+	mSubCapacitorF->setParameters(CPS::Math::singlePhaseParameterToThreePhase(mCf));
 }
 
 void EMT::Ph3::AvVoltageSourceInverterDQ::setInitialStateValues(Real pInit, Real qInit,

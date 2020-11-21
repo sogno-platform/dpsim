@@ -19,7 +19,6 @@
 
 using namespace DPsim;
 using namespace CPS;
-using namespace CPS::CIM;
 
 int main(int argc, char* argv[]) {
 	
@@ -101,10 +100,10 @@ int main(int argc, char* argv[]) {
 	auto extnetEMT = EMT::Ph3::NetworkInjection::make("Slack", Logger::Level::debug);
 
 	auto lineEMT = EMT::Ph3::PiLine::make("PiLine", Logger::Level::debug);
-	lineEMT->setParameters(Reader::singlePhaseParameterToThreePhase(lineResistance), Reader::singlePhaseParameterToThreePhase(lineInductance), Reader::singlePhaseParameterToThreePhase(lineCapacitance));
+	lineEMT->setParameters(CPS::Math::singlePhaseParameterToThreePhase(lineResistance), CPS::Math::singlePhaseParameterToThreePhase(lineInductance), CPS::Math::singlePhaseParameterToThreePhase(lineCapacitance));
 
 	auto loadEMT = EMT::Ph3::RXLoad::make("Load", Logger::Level::debug);
-	loadEMT->setParameters(Reader::singlePhasePowerToThreePhase(pLoadNom), Reader::singlePhasePowerToThreePhase(qLoadNom), Vnom);
+	loadEMT->setParameters(CPS::Math::singlePhasePowerToThreePhase(pLoadNom), CPS::Math::singlePhasePowerToThreePhase(qLoadNom), Vnom);
 
 	// Topology
 	extnetEMT->connect({ n1EMT });
@@ -126,7 +125,7 @@ int main(int argc, char* argv[]) {
 	loggerEMT->addAttribute("irx", loadEMT->attribute("i_intf"));
 
 	// load step sized in absolute terms
-	std::shared_ptr<SwitchEvent3Ph> loadStepEvent = Examples::createEventAddPowerConsumption3Ph("n2", 0.1-timeStepEMT, 100e3, systemEMT, Domain::EMT, loggerEMT);
+	std::shared_ptr<SwitchEvent3Ph> loadStepEvent = CIM::Examples::createEventAddPowerConsumption3Ph("n2", 0.1-timeStepEMT, 100e3, systemEMT, Domain::EMT, loggerEMT);
 
 	// Simulation
 	Simulation sim(simNameEMT, Logger::Level::debug);

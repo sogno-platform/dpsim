@@ -90,7 +90,7 @@ void EMT::Ph3::ControlledVoltageSource::updateSignalReference(Real time, Int tim
 	
 	// TODO: currently support only hard-coded sinusoid
 	// later signal components can be used here
-	MatrixComp vrefcos = CIM::Reader::singlePhaseVariableToThreePhase(CPS::Math::polar(100000, 0));
+	MatrixComp vrefcos = CPS::Math::singlePhaseVariableToThreePhase(CPS::Math::polar(100000, 0));
 	Real fref = 50;
 
 	vref(0, 0) = Math::abs(vrefcos(0, 0)) * cos(time * 2. * PI * fref + Math::phase(vrefcos(0, 0)));

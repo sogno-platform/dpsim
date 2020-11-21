@@ -185,5 +185,35 @@ namespace CPS {
 		static void FFT(std::vector<Complex>& samples);
 
 		static Complex rotatingFrame2to1(Complex f2, Real theta1, Real theta2);
+
+		/// To convert single phase complex variables (voltages, currents) to symmetrical three phase ones
+		static MatrixComp singlePhaseVariableToThreePhase(Complex var_1ph) {
+			MatrixComp var_3ph = MatrixComp::Zero(3, 1);
+			var_3ph <<
+				var_1ph, 
+				var_1ph * SHIFT_TO_PHASE_B, 
+				var_1ph * SHIFT_TO_PHASE_C;
+			return var_3ph;
+		}
+
+		/// To convert single phase real variables (voltages, currents) to symmetrical three phase ones 
+		static Matrix singlePhaseParameterToThreePhase(Real parameter) {
+			Matrix param_3ph = Matrix::Zero(3, 3);
+			param_3ph <<
+				parameter, 0., 0.,
+				0., parameter, 0.,
+				0, 0., parameter;
+			return param_3ph;
+		}
+
+		/// To convert single phase power to symmetrical three phase
+		static Matrix singlePhasePowerToThreePhase(Real power) {
+			Matrix power_3ph = Matrix::Zero(3, 3);
+			power_3ph <<
+				power/3., 0., 0.,
+				0., power/3., 0.,
+				0, 0., power/3.;
+			return power_3ph;
+		}
 	};
 }

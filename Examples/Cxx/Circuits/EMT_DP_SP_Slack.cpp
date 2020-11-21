@@ -18,7 +18,6 @@
 
 using namespace DPsim;
 using namespace CPS;
-using namespace CPS::CIM;
 
 void simElementsSP1ph() {
 	Real timeStep = 0.00005;
@@ -183,10 +182,10 @@ void simElementsEMT3ph() {
 
 	// Components
 	auto vs = EMT::Ph3::VoltageSource::make("vs1");
-	vs->setParameters(Reader::singlePhaseVariableToThreePhase(CPS::Math::polar(100000, 0)), 50);
+	vs->setParameters(CPS::Math::singlePhaseVariableToThreePhase(CPS::Math::polar(100000, 0)), 50);
 
 	auto load = EMT::Ph3::Resistor::make("Rload");
-	load->setParameters(Reader::singlePhaseParameterToThreePhase(10000));
+	load->setParameters(CPS::Math::singlePhaseParameterToThreePhase(10000));
 
 	// Topology
 	vs->connect({ SimNode<Real>::GND, n1 });
@@ -222,10 +221,10 @@ void simComponentEMT3ph() {
 
 	// Components
 	auto vs = EMT::Ph3::NetworkInjection::make("vs1", Logger::Level::debug);
-	vs->setParameters(Reader::singlePhaseVariableToThreePhase(CPS::Math::polar(100000, 0)), 50);
+	vs->setParameters(CPS::Math::singlePhaseVariableToThreePhase(CPS::Math::polar(100000, 0)), 50);
 
 	auto load = EMT::Ph3::Resistor::make("Rload");
-	load->setParameters(Reader::singlePhaseParameterToThreePhase(10000));
+	load->setParameters(CPS::Math::singlePhaseParameterToThreePhase(10000));
 
 	// Topology
 	vs->connect({ n1 });

@@ -17,7 +17,6 @@
 #include <DPsim.h>
 
 using namespace DPsim;
-using namespace CPS::CIM;
 using namespace CPS::EMT;
 
 void EMT_CS_R1() {
@@ -321,7 +320,7 @@ void EMT_Ph3_VS_R2L3() {
 
 	// Components
 	auto vs = Ph3::VoltageSource::make("vs");
-	vs->setParameters(Reader::singlePhaseVariableToThreePhase(Complex(10,0)), 50);
+	vs->setParameters(CPS::Math::singlePhaseVariableToThreePhase(Complex(10,0)), 50);
 	auto r1 = Ph3::Resistor::make("r_1");
 	Matrix r1_param = Matrix::Zero(3, 3);
 	r1_param <<
@@ -391,7 +390,7 @@ void EMT_Ph3_VS_RC1() {
 
 	// Components
 	auto vs = Ph3::VoltageSource::make("vs");
-	vs->setParameters(Reader::singlePhaseVariableToThreePhase(Complex(10,0)), 50);
+	vs->setParameters(CPS::Math::singlePhaseVariableToThreePhase(Complex(10,0)), 50);
 	auto r1 = Ph3::Resistor::make("r_1");
 	Matrix r1_param = Matrix::Zero(3, 3);
 	r1_param <<

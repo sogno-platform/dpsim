@@ -19,11 +19,10 @@
 
 using namespace DPsim;
 using namespace CPS;
-using namespace CPS::CIM;
 
 int main(int argc, char* argv[]) {
 
-	Examples::SGIB::ScenarioConfig scenario;
+	CIM::Examples::SGIB::ScenarioConfig scenario;
 	
 	Real finalTime = 2;
 	Real timeStep = 0.0001;
@@ -107,7 +106,7 @@ int main(int argc, char* argv[]) {
 	auto extnetEMT = EMT::Ph3::NetworkInjection::make("Slack", Logger::Level::debug);
 
 	auto lineEMT = EMT::Ph3::PiLine::make("PiLine", Logger::Level::debug);
-	lineEMT->setParameters(Reader::singlePhaseParameterToThreePhase(scenario.lineResistance), Reader::singlePhaseParameterToThreePhase(scenario.lineInductance), Reader::singlePhaseParameterToThreePhase(scenario.lineCapacitance));
+	lineEMT->setParameters(CPS::Math::singlePhaseParameterToThreePhase(scenario.lineResistance), CPS::Math::singlePhaseParameterToThreePhase(scenario.lineInductance), CPS::Math::singlePhaseParameterToThreePhase(scenario.lineCapacitance));
 
 	auto pv = EMT::Ph3::AvVoltageSourceInverterDQ::make("pv", "pv", Logger::Level::debug, true);
 	pv->setParameters(scenario.systemOmega, scenario.pvNominalVoltage, scenario.pvNominalActivePower, scenario.pvNominalReactivePower);
@@ -135,10 +134,10 @@ int main(int argc, char* argv[]) {
 	loggerEMT->addAttribute("v2", n2EMT->attribute("v"));
 	loggerEMT->addAttribute("i12", lineEMT->attribute("i_intf"));
 
-	Examples::CIGREMV::logPVAttributes(loggerEMT, pv);
+	CIM::Examples::CIGREMV::logPVAttributes(loggerEMT, pv);
 
 	// load step sized in absolute terms
-	std::shared_ptr<SwitchEvent3Ph> loadStepEvent = Examples::createEventAddPowerConsumption3Ph("n2", std::round(5.0/timeStep)*timeStep, 10e6, systemEMT, Domain::EMT, loggerEMT);
+	std::shared_ptr<SwitchEvent3Ph> loadStepEvent = CIM::Examples::createEventAddPowerConsumption3Ph("n2", std::round(5.0/timeStep)*timeStep, 10e6, systemEMT, Domain::EMT, loggerEMT);
 
 	// Simulation
 	Simulation sim(simNameEMT, Logger::Level::debug);

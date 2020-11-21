@@ -2,7 +2,6 @@
 
 using namespace DPsim;
 using namespace CPS;
-using namespace CPS::CIM;
 
 void vsSetParamsDP1ph() {
 	Real timeStep = 0.00005;
@@ -49,7 +48,7 @@ void vsSetParamsEMT3ph() {
 
 	// Components
 	auto vs = EMT::Ph3::VoltageSource::make("vs1");
-	vs->setParameters(Reader::singlePhaseVariableToThreePhase(CPS::Math::polar(100000, 0)), 50);
+	vs->setParameters(CPS::Math::singlePhaseVariableToThreePhase(CPS::Math::polar(100000, 0)), 50);
 
 	// Topology
 	vs->connect({ SimNode<Real>::GND, n1 });
@@ -114,7 +113,7 @@ void vsSetAttrEMT3ph() {
 	String simName = "EMT_VS_SetAttr";
 	Logger::setLogDir("logs/"+simName);
 
-    MatrixComp vref = Reader::singlePhaseVariableToThreePhase(CPS::Math::polar(100000, 0));
+    MatrixComp vref = CPS::Math::singlePhaseVariableToThreePhase(CPS::Math::polar(100000, 0));
 
 	// Nodes
 	auto n1 = SimNode<Real>::make("n1", PhaseType::ABC);

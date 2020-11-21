@@ -18,7 +18,6 @@
 
 using namespace DPsim;
 using namespace CPS;
-using namespace CPS::CIM;
 
 void vsEMT3ph() {
 	Real timeStep = 0.00005;
@@ -31,10 +30,10 @@ void vsEMT3ph() {
 
 	// Components
 	auto vs = EMT::Ph3::VoltageSource::make("vs1", Logger::Level::debug);
-	vs->setParameters(Reader::singlePhaseVariableToThreePhase(CPS::Math::polar(100000, 0)), 50);
+	vs->setParameters(CPS::Math::singlePhaseVariableToThreePhase(CPS::Math::polar(100000, 0)), 50);
 
 	auto res = EMT::Ph3::Resistor::make("R1");
-	res->setParameters(Reader::singlePhaseParameterToThreePhase(100));
+	res->setParameters(CPS::Math::singlePhaseParameterToThreePhase(100));
 
 	// Topology
 	vs->connect({ SimNode<Real>::GND, n1 });
@@ -72,7 +71,7 @@ void vsControlledEMT3ph() {
 	auto vs = EMT::Ph3::ControlledVoltageSource::make("vs1", Logger::Level::debug);
 
 	auto res = EMT::Ph3::Resistor::make("R1");
-	res->setParameters(Reader::singlePhaseParameterToThreePhase(100));
+	res->setParameters(CPS::Math::singlePhaseParameterToThreePhase(100));
 
 	// Topology
 	vs->connect({ SimNode<Real>::GND, n1 });

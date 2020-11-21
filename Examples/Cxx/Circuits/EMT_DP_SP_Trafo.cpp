@@ -19,7 +19,6 @@
 
 using namespace DPsim;
 using namespace CPS;
-using namespace CPS::CIM;
 
 void simTrafoElementsSP1ph() {
 	Real timeStep = 0.00005;
@@ -277,11 +276,11 @@ void simTrafoElementsEMT3ph() {
 	loadRes->connect({ n2, SimNode<Real>::GND });
 
 	// Parameters
-	vs->setParameters(Reader::singlePhaseVariableToThreePhase(CPS::Math::polar(100000, 0)), 50);
-	trafoRes->setParameters(Reader::singlePhaseParameterToThreePhase(trafoResistance));
-	trafoInd->setParameters(Reader::singlePhaseParameterToThreePhase(trafoInductance));
-	trafoSnubberRes->setParameters(Reader::singlePhaseParameterToThreePhase(snubberResistanceHVSide));
-	loadRes->setParameters(Reader::singlePhaseParameterToThreePhase(loadResistanceHVSide));
+	vs->setParameters(CPS::Math::singlePhaseVariableToThreePhase(CPS::Math::polar(100000, 0)), 50);
+	trafoRes->setParameters(CPS::Math::singlePhaseParameterToThreePhase(trafoResistance));
+	trafoInd->setParameters(CPS::Math::singlePhaseParameterToThreePhase(trafoInductance));
+	trafoSnubberRes->setParameters(CPS::Math::singlePhaseParameterToThreePhase(snubberResistanceHVSide));
+	loadRes->setParameters(CPS::Math::singlePhaseParameterToThreePhase(loadResistanceHVSide));
 
 	// Define system topology
 	SystemTopology sys(50, SystemNodeList{n1, n2, vn1 }, SystemComponentList{vs, trafoRes, trafoInd, trafoSnubberRes, loadRes});
@@ -331,9 +330,9 @@ void simTrafoEMT3ph() {
 	loadRes->connect({ n2, SimNode<Real>::GND });
 
 	// Parameters
-	vs->setParameters(Reader::singlePhaseVariableToThreePhase(CPS::Math::polar(100000, 0)), 50);
-	trafo->setParameters(voltageHVSide, voltageMVSide, ratio, 0, Reader::singlePhaseParameterToThreePhase(trafoResistance), Reader::singlePhaseParameterToThreePhase(trafoInductance));
-	loadRes->setParameters(Reader::singlePhaseParameterToThreePhase(loadResistanceMVSide));
+	vs->setParameters(CPS::Math::singlePhaseVariableToThreePhase(CPS::Math::polar(100000, 0)), 50);
+	trafo->setParameters(voltageHVSide, voltageMVSide, ratio, 0, CPS::Math::singlePhaseParameterToThreePhase(trafoResistance), CPS::Math::singlePhaseParameterToThreePhase(trafoInductance));
+	loadRes->setParameters(CPS::Math::singlePhaseParameterToThreePhase(loadResistanceMVSide));
 
 	// Define system topology
 	SystemTopology sys(50, SystemNodeList{n1, n2 }, SystemComponentList{vs, trafo, loadRes});

@@ -41,7 +41,7 @@ void EMT::Ph3::VoltageSource::initializeFromNodesAndTerminals(Real frequency) {
 	mSLog->info("\n--- Initialization from node voltages ---");
 	// TODO: this approach currently overwrites voltage reference set from outside, when not using setParameters
 	if (!mParametersSet) {
-		attribute<MatrixComp>("V_ref")->set(CIM::Reader::singlePhaseVariableToThreePhase(initialSingleVoltage(1) - initialSingleVoltage(0)));
+		attribute<MatrixComp>("V_ref")->set(CPS::Math::singlePhaseVariableToThreePhase(initialSingleVoltage(1) - initialSingleVoltage(0)));
 		attribute<Real>("f_src")->set(frequency);
 
 		mSLog->info("\nReference voltage: {:s}"

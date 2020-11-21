@@ -86,33 +86,6 @@ TopologicalPowerComp::Ptr Reader::mapComponent(BaseClass* obj) {
 	return nullptr;
 }
 
-MatrixComp Reader::singlePhaseVariableToThreePhase(Complex var_1ph) {
-	MatrixComp var_3ph = MatrixComp::Zero(3, 1);
-	var_3ph <<
-		var_1ph, 
-		var_1ph * SHIFT_TO_PHASE_B, 
-		var_1ph * SHIFT_TO_PHASE_C;
-	return var_3ph;
-}
-
-Matrix Reader::singlePhaseParameterToThreePhase(Real parameter) {
-	Matrix param_3ph = Matrix::Zero(3, 3);
-	param_3ph <<
-		parameter, 0., 0.,
-		0., parameter, 0.,
-		0, 0., parameter;
-	return param_3ph;
-}
-
-Matrix Reader::singlePhasePowerToThreePhase(Real power) {
-	Matrix power_3ph = Matrix::Zero(3, 3);
-	power_3ph <<
-		power/3., 0., 0.,
-		0., power/3., 0.,
-		0, 0., power/3.;
-	return power_3ph;
-}
-
 void Reader::addFiles(const fs::path &filename) {
 	if (!mModel->addCIMFile(filename.string()))
 		mSLog->error("Failed to read file {}", filename);
@@ -365,10 +338,10 @@ TopologicalPowerComp::Ptr Reader::mapACLineSegment(CIMPP::ACLineSegment* line) {
 
 	if (mDomain == Domain::EMT) {
 		if (mPhase == PhaseType::ABC) {
-			Matrix res_3ph = singlePhaseParameterToThreePhase(resistance);
-			Matrix ind_3ph = singlePhaseParameterToThreePhase(inductance);
-			Matrix cap_3ph = singlePhaseParameterToThreePhase(capacitance);
-			Matrix cond_3ph = singlePhaseParameterToThreePhase(conductance);
+			Matrix res_3ph = CPS::Math::singlePhaseParameterToThreePhase(resistance);
+			Matrix ind_3ph = CPS::Math::singlePhaseParameterToThreePhase(inductance);
+			Matrix cap_3ph = CPS::Math::singlePhaseParameterToThreePhase(capacitance);
+			Matrix cond_3ph = CPS::Math::singlePhaseParameterToThreePhase(conductance);
 
 			auto cpsLine = std::make_shared<EMT::Ph3::PiLine>(line->mRID, line->name, mComponentLogLevel);
 			cpsLine->setParameters(res_3ph, ind_3ph, cap_3ph, cond_3ph);
@@ -489,8 +462,8 @@ TopologicalPowerComp::Ptr Reader::mapPowerTransformer(CIMPP::PowerTransformer* t
 
 	if (mDomain == Domain::EMT) {
 		if (mPhase == PhaseType::ABC) {
-			Matrix resistance_3ph = singlePhaseParameterToThreePhase(resistance);
-			Matrix inductance_3ph = singlePhaseParameterToThreePhase(inductance);
+			Matrix resistance_3ph = CPS::Math::singlePhaseParameterToThreePhase(resistance);
+			Matrix inductance_3ph = CPS::Math::singlePhaseParameterToThreePhase(inductance);
 			Bool withResistiveLosses = resistance > 0;
 			auto transformer = std::make_shared<EMT::Ph3::Transformer>(trans->mRID, trans->name, mComponentLogLevel, withResistiveLosses);
 			transformer->setParameters(voltageNode1, voltageNode2, ratioAbs, ratioPhase, resistance_3ph, inductance_3ph);

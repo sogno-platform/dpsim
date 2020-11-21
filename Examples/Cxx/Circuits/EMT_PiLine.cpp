@@ -17,7 +17,6 @@
 #include <DPsim.h>
 
 using namespace DPsim;
-using namespace CPS::CIM;
 using namespace CPS::EMT;
 using namespace CPS::EMT::Ph3;
 
@@ -34,7 +33,7 @@ void simElements() {
 
 	// Components
 	auto vs = VoltageSource::make("v_1", Logger::Level::debug);
-	vs->setParameters(Reader::singlePhaseVariableToThreePhase(CPS::Math::polar(100000, 0)), 50);
+	vs->setParameters(CPS::Math::singlePhaseVariableToThreePhase(CPS::Math::polar(100000, 0)), 50);
 
 	// Parametrization of components
 	Real resistance = 5;
@@ -43,20 +42,20 @@ void simElements() {
 	Real conductance = 1e-6;
 
 	auto res = Resistor::make("R_line", Logger::Level::debug);
-	res->setParameters(Reader::singlePhaseParameterToThreePhase(resistance));
+	res->setParameters(CPS::Math::singlePhaseParameterToThreePhase(resistance));
 	auto ind = Inductor::make("L_line", Logger::Level::debug);
-	ind->setParameters(Reader::singlePhaseParameterToThreePhase(inductance));
+	ind->setParameters(CPS::Math::singlePhaseParameterToThreePhase(inductance));
 	auto cap1 = Capacitor::make("Cp_1", Logger::Level::debug);
-	cap1->setParameters(Reader::singlePhaseParameterToThreePhase(capacitance/2.));
+	cap1->setParameters(CPS::Math::singlePhaseParameterToThreePhase(capacitance/2.));
 	auto cap2 = Capacitor::make("Cp_2", Logger::Level::debug);
-	cap2->setParameters(Reader::singlePhaseParameterToThreePhase(capacitance/2.));
+	cap2->setParameters(CPS::Math::singlePhaseParameterToThreePhase(capacitance/2.));
 	auto con1 = Resistor::make("Gp_1", Logger::Level::debug);
-	con1->setParameters(Reader::singlePhaseParameterToThreePhase(2./conductance));
+	con1->setParameters(CPS::Math::singlePhaseParameterToThreePhase(2./conductance));
 	auto con2 = Resistor::make("Gp_2", Logger::Level::debug);
-	con2->setParameters(Reader::singlePhaseParameterToThreePhase(2./conductance));
+	con2->setParameters(CPS::Math::singlePhaseParameterToThreePhase(2./conductance));
 
 	auto load = Resistor::make("R_load", Logger::Level::debug);
-	load->setParameters(Reader::singlePhaseParameterToThreePhase(10000));
+	load->setParameters(CPS::Math::singlePhaseParameterToThreePhase(10000));
 
 	// Topology
 	vs->connect({ SimNode::GND, n1 });
@@ -103,7 +102,7 @@ void simPiLine() {
 
 	// Components
 	auto vs = VoltageSource::make("v_1", Logger::Level::debug);
-	vs->setParameters(Reader::singlePhaseVariableToThreePhase(CPS::Math::polar(100000, 0)), 50);
+	vs->setParameters(CPS::Math::singlePhaseVariableToThreePhase(CPS::Math::polar(100000, 0)), 50);
 
 	// Parametrization of components
 	Real resistance = 5;
@@ -112,10 +111,10 @@ void simPiLine() {
 	Real conductance = 1e-6;
 
 	auto line = PiLine::make("Line", Logger::Level::debug);
-	line->setParameters(Reader::singlePhaseParameterToThreePhase(resistance), Reader::singlePhaseParameterToThreePhase(inductance), Reader::singlePhaseParameterToThreePhase(capacitance), Reader::singlePhaseParameterToThreePhase(conductance));
+	line->setParameters(CPS::Math::singlePhaseParameterToThreePhase(resistance), CPS::Math::singlePhaseParameterToThreePhase(inductance), CPS::Math::singlePhaseParameterToThreePhase(capacitance), CPS::Math::singlePhaseParameterToThreePhase(conductance));
 
 	auto load = Resistor::make("R_load", Logger::Level::debug);
-	load->setParameters(Reader::singlePhaseParameterToThreePhase(10000));
+	load->setParameters(CPS::Math::singlePhaseParameterToThreePhase(10000));
 
 	// Topology
 	vs->connect({ SimNode::GND, n1 });

@@ -19,7 +19,6 @@
 
 using namespace DPsim;
 using namespace CPS;
-using namespace CPS::CIM;
 
 int main(int argc, char* argv[]) {
 	
@@ -127,7 +126,7 @@ int main(int argc, char* argv[]) {
 	loggerDP->addAttribute("irx", loadDP->attribute("i_intf"));
 
 	// load step sized in absolute terms
-	std::shared_ptr<SwitchEvent> loadStepEvent = Examples::createEventAddPowerConsumption("n2", 0.1-timeStepDP, 100e3, systemDP, Domain::DP, loggerDP);
+	std::shared_ptr<SwitchEvent> loadStepEvent = CIM::Examples::createEventAddPowerConsumption("n2", 0.1-timeStepDP, 100e3, systemDP, Domain::DP, loggerDP);
 
 	// Simulation
 	Simulation sim(simNameDP, Logger::Level::debug);
