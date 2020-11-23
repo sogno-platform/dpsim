@@ -17,10 +17,12 @@ find_path(CIMPP_INCLUDE_DIR
 	PATH_SUFFIXES
 		cimpp/${CIM_VERSION}
 		${CIM_VERSION}
+		cimpp/${USE_CIM_VERSION}
+		${USE_CIM_VERSION}
 		include/src
 )
 find_library(CIMPP_LIBRARY
-	NAMES cimpp${CIM_VERSION}
+	NAMES cimpp${CIM_VERSION} cimpp${USE_CIM_VERSION}
 	PATH_SUFFIXES
 		lib/static
 )
