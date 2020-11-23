@@ -140,7 +140,7 @@ void DP::Ph1::SynchronGeneratorTrStab::initializeFromNodesAndTerminals(Real freq
 	// Create sub inductor as Xpd
 	mSubInductor = DP::Ph1::Inductor::make(mName + "_ind", mLogLevel);
 	mSubInductor->setParameters(mLpd);
-	mSubInductor->connect({terminal(0)->node(), mVirtualNodes[0]});
+	mSubInductor->connect({mVirtualNodes[0],terminal(0)->node()});
 	mSubInductor->initialize(mFrequencies);
 	mSubInductor->initializeFromNodesAndTerminals(frequency);
 
