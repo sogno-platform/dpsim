@@ -83,7 +83,7 @@ namespace Ph1 {
 		/// Retrieves calculated voltage from simulation for next step
 		void mnaPostStep(Matrix& rightVector, Matrix& leftVector, Real time);
 		///
-		void mnaUpdateCurrent(const Matrix& leftVector) { }
+		void mnaUpdateCurrent(const Matrix& leftVector);
 		///
 		void mnaUpdateVoltage(const Matrix& leftVector);
 

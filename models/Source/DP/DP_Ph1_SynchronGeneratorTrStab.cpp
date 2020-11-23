@@ -222,11 +222,16 @@ void DP::Ph1::SynchronGeneratorTrStab::AddBStep::execute(Real time, Int timeStep
 }
 
 void DP::Ph1::SynchronGeneratorTrStab::MnaPostStep::execute(Real time, Int timeStepCount) {
-	// TODO current update?
 	mGenerator.mnaUpdateVoltage(*mLeftVector);
+	mGenerator.mnaUpdateCurrent(*mLeftVector);
 }
 
 void DP::Ph1::SynchronGeneratorTrStab::mnaUpdateVoltage(const Matrix& leftVector) {
 	SPDLOG_LOGGER_DEBUG(mSLog, "Read voltage from {:d}", matrixNodeIndex(0));
 	mIntfVoltage(0,0) = Math::complexFromVectorElement(leftVector, matrixNodeIndex(0));
+}
+
+void DP::Ph1::SynchronGeneratorTrStab::mnaUpdateCurrent(const Matrix& leftVector) {
+	SPDLOG_LOGGER_DEBUG(mSLog, "Read current from {:d}", matrixNodeIndex(0));
+	mIntfCurrent = mSubInductor->attribute<MatrixComp>("i_intf")->get();
 }
