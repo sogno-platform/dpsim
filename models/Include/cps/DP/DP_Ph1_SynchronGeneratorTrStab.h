@@ -123,6 +123,7 @@ namespace Ph1 {
 			MnaPostStep(SynchronGeneratorTrStab& generator, Attribute<Matrix>::Ptr leftVector) :
 				Task(generator.mName + ".MnaPostStep"), mGenerator(generator), mLeftVector(leftVector) {
 				mAttributeDependencies.push_back(leftVector);
+				mAttributeDependencies.push_back(generator.mSubInductor->attribute("i_intf"));
 				mModifiedAttributes.push_back(generator.attribute("v_intf"));
 			}
 
