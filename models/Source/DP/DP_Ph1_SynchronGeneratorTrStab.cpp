@@ -121,8 +121,10 @@ void DP::Ph1::SynchronGeneratorTrStab::initializeFromNodesAndTerminals(Real freq
 	// The absolute value of Ep is constant, only delta_p changes every step
 	mEp_abs = Math::abs(mEp);
 	mDelta_p = Math::phase(mEp);
-	// Update active electrical power that is compared with the mechanical power
-	mElecActivePower = ( (mEp - mIntfVoltage(0,0)) / mImpedance *  mIntfVoltage(0,0) ).real();
+	// // Update active electrical power that is compared with the mechanical power
+	// mElecActivePower = ( (mEp - mIntfVoltage(0,0)) / mImpedance *  mIntfVoltage(0,0) ).real();
+	// For infinite power bus
+	mElecActivePower = (Math::abs(mEp) * Math::abs(mIntfVoltage(0,0)) / mXpd) * sin(mDelta_p);
 	// Start in steady state so that electrical and mech. power are the same
 	mMechPower = mElecActivePower;
 
@@ -160,9 +162,9 @@ void DP::Ph1::SynchronGeneratorTrStab::initializeFromNodesAndTerminals(Real freq
 void DP::Ph1::SynchronGeneratorTrStab::step(Real time) {
 	// #### Calculations on input of time step k ####
 	// Update electrical power
-	mElecActivePower = ( (mEp - mIntfVoltage(0,0)) / mImpedance *  mIntfVoltage(0,0) ).real();
+	// mElecActivePower = ( (mEp - mIntfVoltage(0,0)) / mImpedance *  mIntfVoltage(0,0) ).real();
 	// For infinite power bus
-	// mElecActivePower = Math::abs(mEp) * Math::abs(mIntfVoltage(0,0)) / mXpd * sin(mDelta_p);
+	mElecActivePower = (Math::abs(mEp) * Math::abs(mIntfVoltage(0,0)) / mXpd )* sin(Math::phase(mEp));
 
 	// #### Calculate state for time step k+1 ####
 	// semi-implicit Euler or symplectic Euler method for mechanical equations
@@ -212,6 +214,7 @@ void DP::Ph1::SynchronGeneratorTrStab::mnaApplyRightSideVectorStamp(Matrix& righ
 
 void DP::Ph1::SynchronGeneratorTrStab::MnaPreStep::execute(Real time, Int timeStepCount) {
 	mGenerator.step(time);
+	//change magnitude of subvoltage source
 	mGenerator.mSubVoltageSource->attribute<Complex>("V_ref")->set(mGenerator.mEp);
 }
 
