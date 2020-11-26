@@ -33,6 +33,7 @@ set(CIRCUIT_SOURCES
 	Circuits/EMT_VSI.cpp
 	Circuits/EMT_PiLine.cpp
 	Circuits/EMT_VS_Controlled.cpp
+	Circuits/DP_1phSynGenTrStab_EMT_3phSynGenDQ7odTrapez_StartofLineFault.cpp
 
 	# EMT examples with PF initialization
 	Circuits/EMT_Slack_PiLine_PQLoad_with_PF_Init.cpp
@@ -59,6 +60,8 @@ set(SYNCGEN_SOURCES
 	Components/DP_EMT_SynGenDq7odTrapez_SteadyState.cpp
 	Components/DP_EMT_SynGenDq7odTrapez_ThreePhFault.cpp
 	Components/DP_EMT_SynGenDq7odTrapez_LoadStep.cpp
+	Components/DP_SP_SynGenTrStab_testModels.cpp
+	Components/DP_SP_SynGenTrStab_testModels_doubleLine.cpp
 )
 
 set(INVERTER_SOURCES
