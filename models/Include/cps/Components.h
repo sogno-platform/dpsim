@@ -26,6 +26,7 @@
 #include <cps/SP/SP_Ph1_VDNode.h>
 #include <cps/SP/SP_Ph1_NetworkInjection.h>
 #include <cps/SP/SP_Ph1_VoltageSource.h>
+#include <cps/SP/SP_Ph1_SynchronGeneratorTrStab.h>
 
 #include <cps/SP/SP_Ph3_Capacitor.h>
 #include <cps/SP/SP_Ph3_Inductor.h>
