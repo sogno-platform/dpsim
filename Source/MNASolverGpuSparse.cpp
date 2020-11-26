@@ -11,7 +11,8 @@ MnaSolverGpuSparse<VarType>::MnaSolverGpuSparse(String name,
 	CPS::Domain domain, CPS::Logger::Level logLevel) :
     MnaSolver<VarType>(name, domain, logLevel),
     mCusparsehandle(nullptr), mSysMat(nullptr),
-	mGpuRhsVec(0), mGpuLhsVec(0), mGpuIntermediateVec(0){
+	mGpuRhsVec(0), mGpuLhsVec(0), mGpuIntermediateVec(0),
+	pBuffer(0){
 
 	//TODO Error-Handling
     cusparseCreate(&mCusparsehandle);
@@ -28,14 +29,14 @@ void MnaSolverGpuSparse<VarType>::initialize() {
 
     int dim = this->mRightSideVector.rows();
 
-    mSysMat = std::unique_ptr<cuda::CudaMatrix>(new cuda::CudaMatrix(this->mSwitchedMatrices[std::bitset<SWITCH_NUM>(0)], dim));
-	mGpuRhsVec = cuda::unique_ptr<double>(dim);
-	mGpuLhsVec = cuda::unique_ptr<double>(dim);
-	mGpuIntermediateVec = cuda::unique_ptr<double>(dim);
+    mSysMat = std::unique_ptr<cuda::CudaMatrix<double, int>>(new cuda::CudaMatrix<double, int>(this->mSwitchedMatrices[std::bitset<SWITCH_NUM>(0)], dim));
+	mGpuRhsVec = cuda::Vector<double>(dim);
+	mGpuLhsVec = cuda::Vector<double>(dim);
+	mGpuIntermediateVec = cuda::Vector<double>(dim);
 
-	//cuda::copybackAndPrint<double>("Mat: ", mSysMat->val, 100);
-    //cuda::copybackAndPrint<int>("Col: ", mSysMat->col, 100);
-    //cuda::copybackAndPrint<int>("Row: ", mSysMat->row, 20);
+	std::cout << this->mSwitchedMatrices[std::bitset<SWITCH_NUM>(0)] << std::endl;
+	const cuda::CudaMatrix<double, int> &x = *mSysMat.get();
+    std::cout << x << std::endl;
 
     //ILU factorization
 	iluPreconditioner();
@@ -45,16 +46,12 @@ template <typename VarType>
 void MnaSolverGpuSparse<VarType>::iluPreconditioner() {
 	cusparseMatDescr_t descr_M = 0;
     csrilu02Info_t info_M  = 0;
-    int pBufferSize_M;
-    int pBufferSize_L;
-    int pBufferSize_U;
-    int pBufferSize;
     int structural_zero;
     int numerical_zero;
 
-	double *d_csrVal = mSysMat->val;
-	int *d_csrRowPtr = mSysMat->row;
-	int *d_csrColInd = mSysMat->col;
+	double *d_csrVal = mSysMat->val.data();
+	int *d_csrRowPtr = mSysMat->row.data();
+	int *d_csrColInd = mSysMat->col.data();
 	int N = this->mRightSideVector.rows();
 	int nnz = mSysMat->non_zero;
 
@@ -89,37 +86,37 @@ void MnaSolverGpuSparse<VarType>::iluPreconditioner() {
     cusparseCreateCsrsv2Info(&info_U);
 
     // step 3: query how much memory used in csrilu02 and csrsv2, and allocate the buffer
+	int pBufferSize_M, pBufferSize_L, pBufferSize_U;
+	int pBufferSize;
     cusparseDcsrilu02_bufferSize(mCusparsehandle, N, nnz, descr_M, d_csrVal, d_csrRowPtr, d_csrColInd, info_M, &pBufferSize_M);
     cusparseDcsrsv2_bufferSize(mCusparsehandle, CUSPARSE_OPERATION_NON_TRANSPOSE, N, nnz, descr_L, d_csrVal, d_csrRowPtr, d_csrColInd, info_L, &pBufferSize_L);
     cusparseDcsrsv2_bufferSize(mCusparsehandle, CUSPARSE_OPERATION_NON_TRANSPOSE, N, nnz, descr_U, d_csrVal, d_csrRowPtr, d_csrColInd, info_U, &pBufferSize_U);
 
 	// Buffer
     pBufferSize = std::max({pBufferSize_M, pBufferSize_L, pBufferSize_U});
-    cudaMalloc((void**)&pBuffer, pBufferSize);
+	pBuffer = cuda::Vector<char>(pBufferSize);
 
     // step 4: perform analysis of incomplete Cholesky on M
     //         perform analysis of triangular solve on L
     //         perform analysis of triangular solve on U
     // The lower(upper) triangular part of M has the same sparsity pattern as L(U),
     // we can do analysis of csrilu0 and csrsv2 simultaneously.
-    cusparseDcsrilu02_analysis(mCusparsehandle, N, nnz, descr_M, d_csrVal, d_csrRowPtr, d_csrColInd, info_M, CUSPARSE_SOLVE_POLICY_NO_LEVEL, pBuffer);
+    cusparseDcsrilu02_analysis(mCusparsehandle, N, nnz, descr_M, d_csrVal, d_csrRowPtr, d_csrColInd, info_M, CUSPARSE_SOLVE_POLICY_NO_LEVEL, pBuffer.data());
     auto status = cusparseXcsrilu02_zeroPivot(mCusparsehandle, info_M, &structural_zero);
     if (CUSPARSE_STATUS_ZERO_PIVOT == status){
         std::cout << "A(" << structural_zero << ',' << structural_zero << ") is missing\n" << std::endl;
     }
-    cusparseDcsrsv2_analysis(mCusparsehandle, CUSPARSE_OPERATION_NON_TRANSPOSE, N, nnz, descr_L, d_csrVal, d_csrRowPtr, d_csrColInd, info_L, CUSPARSE_SOLVE_POLICY_NO_LEVEL, pBuffer);
-    cusparseDcsrsv2_analysis(mCusparsehandle, CUSPARSE_OPERATION_NON_TRANSPOSE, N, nnz, descr_U, d_csrVal, d_csrRowPtr, d_csrColInd, info_U, CUSPARSE_SOLVE_POLICY_USE_LEVEL, pBuffer);
+    cusparseDcsrsv2_analysis(mCusparsehandle, CUSPARSE_OPERATION_NON_TRANSPOSE, N, nnz, descr_L, d_csrVal, d_csrRowPtr, d_csrColInd, info_L, CUSPARSE_SOLVE_POLICY_NO_LEVEL, pBuffer.data());
+    cusparseDcsrsv2_analysis(mCusparsehandle, CUSPARSE_OPERATION_NON_TRANSPOSE, N, nnz, descr_U, d_csrVal, d_csrRowPtr, d_csrColInd, info_U, CUSPARSE_SOLVE_POLICY_USE_LEVEL, pBuffer.data());
 
     // step 5: M = L * U
-    cusparseDcsrilu02(mCusparsehandle, N, nnz, descr_M, d_csrVal, d_csrRowPtr, d_csrColInd, info_M, CUSPARSE_SOLVE_POLICY_NO_LEVEL, pBuffer);
+    cusparseDcsrilu02(mCusparsehandle, N, nnz, descr_M, d_csrVal, d_csrRowPtr, d_csrColInd, info_M, CUSPARSE_SOLVE_POLICY_NO_LEVEL, pBuffer.data());
     status = cusparseXcsrilu02_zeroPivot(mCusparsehandle, info_M, &numerical_zero);
     if (CUSPARSE_STATUS_ZERO_PIVOT == status){
         printf("U(%d,%d) is zero\n", numerical_zero, numerical_zero);
     }
 
-    cuda::copybackAndPrint<double>("LU: ", d_csrVal, 8);
-    cuda::copybackAndPrint<int>("LU: ", d_csrColInd, 8);
-    cuda::copybackAndPrint<int>("LU: ", d_csrRowPtr, 4);
+    std::cout << *mSysMat.get() << std::endl;
 }
 
 template <typename VarType>
@@ -145,6 +142,7 @@ Task::List MnaSolverGpuSparse<VarType>::getTasks() {
     l.push_back(std::make_shared<MnaSolverGpuSparse<VarType>::LogTask>(*this));
 	return l;
 }
+
 template <typename VarType>
 void MnaSolverGpuSparse<VarType>::solve(Real time, Int timeStepCount) {
 	int size = this->mRightSideVector.rows();
@@ -157,22 +155,22 @@ void MnaSolverGpuSparse<VarType>::solve(Real time, Int timeStepCount) {
 		this->mRightSideVector += *stamp;
 
     //Copy right vector to device
-    cudaMemcpy(mGpuRhsVec, &this->mRightSideVector(0), size * sizeof(Real), cudaMemcpyHostToDevice);
+    cudaMemcpy(mGpuRhsVec.data(), &this->mRightSideVector(0), size * sizeof(Real), cudaMemcpyHostToDevice);
 
 	const double alpha = 1.;
     // Solve
 	// step 6: solve L*z = x
     cusparseDcsrsv2_solve(mCusparsehandle, CUSPARSE_OPERATION_NON_TRANSPOSE, size, mSysMat->non_zero, &alpha, descr_L,
-    mSysMat->val, mSysMat->row, mSysMat->col, info_L,
-    mGpuRhsVec, mGpuIntermediateVec, CUSPARSE_SOLVE_POLICY_NO_LEVEL, pBuffer);
+    mSysMat->val.data(), mSysMat->row.data(), mSysMat->col.data(), info_L,
+    mGpuRhsVec.data(), mGpuIntermediateVec.data(), CUSPARSE_SOLVE_POLICY_NO_LEVEL, pBuffer.data());
 
     // step 7: solve U*y = z
     cusparseDcsrsv2_solve(mCusparsehandle, CUSPARSE_OPERATION_NON_TRANSPOSE, size, mSysMat->non_zero, &alpha, descr_U,
-    mSysMat->val, mSysMat->row, mSysMat->col, info_U,
-    mGpuIntermediateVec, mGpuLhsVec, CUSPARSE_SOLVE_POLICY_USE_LEVEL, pBuffer);
+    mSysMat->val.data(), mSysMat->row.data(), mSysMat->col.data(), info_U,
+    mGpuIntermediateVec.data(), mGpuLhsVec.data(), CUSPARSE_SOLVE_POLICY_USE_LEVEL, pBuffer.data());
 
     //Copy Solution back
-    cudaMemcpy(&this->mLeftSideVector(0), mGpuLhsVec, size * sizeof(Real), cudaMemcpyDeviceToHost);
+    cudaMemcpy(&this->mLeftSideVector(0), mGpuLhsVec.data(), size * sizeof(Real), cudaMemcpyDeviceToHost);
 
 	// TODO split into separate task? (dependent on x, updating all v attributes)
 	for (UInt nodeIdx = 0; nodeIdx < this->mNumNetNodes; ++nodeIdx)

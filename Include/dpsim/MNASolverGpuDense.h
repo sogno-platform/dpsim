@@ -9,7 +9,7 @@
 
 namespace DPsim {
 	template <typename VarType>
-    class MnaSolverGpu : public MnaSolver<VarType>{
+    class MnaSolverGpuDense : public MnaSolver<VarType>{
 	protected:
 
 		// #### Attributes required for GPU ####
@@ -47,17 +47,17 @@ namespace DPsim {
 		void solve(Real time, Int timeStepCount);
 
 	public:
-		MnaSolverGpu(String name,
+		MnaSolverGpuDense(String name,
 			CPS::Domain domain = CPS::Domain::DP,
 			CPS::Logger::Level logLevel = CPS::Logger::Level::info);
 
-		virtual ~MnaSolverGpu();
+		virtual ~MnaSolverGpuDense();
 
 		CPS::Task::List getTasks();
 
 		class SolveTask : public CPS::Task {
 		public:
-			SolveTask(MnaSolverGpu<VarType>& solver) :
+			SolveTask(MnaSolverGpuDense<VarType>& solver) :
 				Task(solver.mName + ".Solve"), mSolver(solver) {
 
 				for (auto it : solver.mMNAComponents) {
@@ -73,12 +73,12 @@ namespace DPsim {
 			void execute(Real time, Int timeStepCount) { mSolver.solve(time, timeStepCount); }
 
 		private:
-			MnaSolverGpu<VarType>& mSolver;
+			MnaSolverGpuDense<VarType>& mSolver;
 		};
 
 		class LogTask : public CPS::Task {
 		public:
-			LogTask(MnaSolverGpu<VarType>& solver) :
+			LogTask(MnaSolverGpuDense<VarType>& solver) :
 				Task(solver.mName + ".Log"), mSolver(solver) {
 				mAttributeDependencies.push_back(solver.attribute("left_vector"));
 				mModifiedAttributes.push_back(Scheduler::external);
@@ -87,7 +87,7 @@ namespace DPsim {
 			void execute(Real time, Int timeStepCount) { mSolver.log(time, timeStepCount); }
 
 		private:
-			MnaSolverGpu<VarType>& mSolver;
+			MnaSolverGpuDense<VarType>& mSolver;
 		};
     };
 }

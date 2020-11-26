@@ -1,90 +1,9 @@
 #pragma once
 
 #include <dpsim/MNASolver.h>
-
-#include <cuda_runtime.h>
-#include <cusparse_v2.h>
-
-//Error Handling
-#define CUDA_ENABLE_ERROR_CHECK
-
-#ifdef CUDA_ENABLE_ERROR_CHECK
-#define checkCudaErrors(CUDA_CALL) \
-   {cudaError_t code = (cudaError_t)CUDA_CALL; \
-   if (code != cudaSuccess) { \
-      printf("CUDA Error: %s\n", cudaGetErrorString(code)); \
-   }}
-#else
-#define checkCudaErrors(CUDA_CALL) CUDA_CALL
-#endif
+#include <dpsim/Cuda/CudaUtility.h>
 
 namespace DPsim {
-
-	namespace cuda {
-
-		template <typename T>
-		void copybackAndPrint(const char *msg, T *ptr, int n) {
-			std::vector<T> buffer(n);
-			cudaMemcpy(buffer.data(), ptr, n * sizeof(T), cudaMemcpyDeviceToHost);
-			std::cout << msg;
-			for(T d : buffer) {
-				std::cout << d << ' ';
-			}
-			std::cout << std::endl;
-		}
-
-		struct cuda_delete {
-			void operator()(void *ptr) {
-				cudaFree(ptr);
-			}
-		};
-
-		template<typename T>
-		struct cuda_new {
-			T *operator()(size_t n) {
-				T *ptr;
-				checkCudaErrors(cudaMalloc(&ptr, n * sizeof(T)));
-				return ptr;
-			}
-		};
-
-		template <typename T>
-		struct unique_ptr : public std::unique_ptr<T, cuda_delete> {
-			unique_ptr():
-				std::unique_ptr<T, cuda_delete>() {
-			}
-
-			unique_ptr(size_t n):
-				std::unique_ptr<T, cuda_delete>(cuda_new<T>()(n)) {
-			}
-
-			//"Auto-Dereferencing"
-			operator T*() {
-				return std::unique_ptr<T, cuda_delete>::get();
-			}
-		};
-
-		// Matrix (CSR)
-		struct CudaMatrix {
-			CudaMatrix(const Eigen::SparseMatrix<double, Eigen::RowMajor> &mat, int dim):
-				non_zero(mat.nonZeros()),
-				row(cuda::unique_ptr<int>(dim + 1)),
-				col(cuda::unique_ptr<int>(mat.nonZeros())),
-				val(cuda::unique_ptr<double>(mat.nonZeros())) {
-
-				// Copy Matrix (Host -> Device)
-				cudaMemcpy(row, mat.outerIndexPtr(), (dim + 1) * sizeof(int), cudaMemcpyHostToDevice);
-				cudaMemcpy(col, mat.innerIndexPtr(), non_zero * sizeof(int), cudaMemcpyHostToDevice);
-				cudaMemcpy(val, mat.valuePtr(), non_zero * sizeof(double), cudaMemcpyHostToDevice);
-			}
-
-			//Matrix Data
-			const int non_zero;
-			cuda::unique_ptr<int> row;
-			cuda::unique_ptr<int> col;
-			cuda::unique_ptr<double> val;
-		};
-	}
 
 	template <typename VarType>
     class MnaSolverGpuSparse : public MnaSolver<VarType>{
@@ -95,14 +14,14 @@ namespace DPsim {
 		cusparseHandle_t mCusparsehandle;
 
 		/// Systemmatrix on Device
-		std::unique_ptr<cuda::CudaMatrix> mSysMat;
+		std::unique_ptr<cuda::CudaMatrix<double, int>> mSysMat;
 
 		/// RHS-Vector
-		cuda::unique_ptr<double> mGpuRhsVec;
+		cuda::Vector<double> mGpuRhsVec;
 		/// LHS-Vector
-		cuda::unique_ptr<double> mGpuLhsVec;
+		cuda::Vector<double> mGpuLhsVec;
 		/// Intermediate Vector
-		cuda::unique_ptr<double> mGpuIntermediateVec;
+		cuda::Vector<double> mGpuIntermediateVec;
 
 		/// Initialize cuSparse-library
         void initialize();
@@ -113,7 +32,7 @@ namespace DPsim {
 
 	private:
 		///Required shared Variables
-		void *pBuffer = nullptr;
+		cuda::Vector<char> pBuffer;
 		cusparseMatDescr_t descr_L = nullptr;
     	cusparseMatDescr_t descr_U = nullptr;
 		csrsv2Info_t info_L = nullptr;

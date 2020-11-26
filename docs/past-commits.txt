@@ -2184,6 +2184,9 @@ Former-commit-id: ab23bcf699a914eb703dbcd7d5416f141c970e0b
 
 I, Philipp Fensch hereby sign-off-by all of my past commits to this repo subject to the Developer Certificate of Origin (DCO), Version 1.1. In the past I have used emails: philipp.fensch@rwth-aachen.de
 
+bdb43538965172d06ed4b9e976487e41b4ad8bb9 WIP: MNASolverGpuSparse class
+3f987c997d6f69f1752dad4bc59fc3d0c3fbad0d Adjusted CMake-Files
+e3d7d8e8f39a0c296069d604880b397928b59176 Refactoring for sparse solver
 93bb3631832565468ca71c930a986b71452cfaa9 Added wrapper (SparseMatrixRow -> Matrix) for mnaApplySystemMatrixStamp()
 db688d10606a5c9411487071892180ca8aa89da8 Added option for using sparse matrices in MNA-Solver
 2bc5b080757305fd73d3ff056bb9b79bb2cdada2 Removed nullptr-check, reverted erroneous change in FindCIMpp.cmake
