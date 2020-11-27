@@ -2171,3 +2171,13 @@ fixes #116 and #171
 4df467e14df7bb12c0da1dac7f370fe792eb1bfc use correct minimum cmake version (3.13 instead of 3.12) because Policy CMP0076 requires 3.13 (https://cmake.org/cmake/help/git-stage/policy/CMP0076.html)
 d35e02d2e14939f1e85573f01a4cd9d572a507a6 cuda: use different cache key for build with and without cuda
 f80a1efb52d7cb2cdbe95bdd09831bbc4042d3bc cuda: make CI build with CUDA. Add new CI target that builds dpsim with CUDA support. We have no GPUs in the runners so we need a separate target. Add CUDA dependencies to Dockerfile.dev
+
+I, Felix Wege hereby sign-off-by all of my past commits to this repo subject to the Developer Certificate of Origin (DCO), Version 1.1. In the past I have used emails: fwege@eonerc.rwth-aachen.de
+
+08666bb721cf9301851a2317b1d58a0bb8b7c5f7 use only syncStart interfaces for sync with remote
+bf0424437c0add245351e40789f0a770b305883c made all power components set parametersSet flag
+Former-commit-id: 63ec8a7e63ddb1eb44a110aa9994ff9020029366
+23da7fb85d4311e4a2361e79e946cad395738fa6 added setParameters flag
+Former-commit-id: 379267e96c0060d1414db312e0134ef5e7d3da2b
+b4ce6808d0c316b41011469b9d6573b4743c2167 added setParameters function and new constructor
+Former-commit-id: ab23bcf699a914eb703dbcd7d5416f141c970e0b
