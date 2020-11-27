@@ -2123,3 +2123,51 @@ Former-commit-id: 429f2eb74d44f78dacbb8ee474e6e4777afb7e94
 Former-commit-id: 6edc529f5e0bbb2956583aac47a54920705b3f89
 e3b49c18586863d9f90088b3fbaaf3f6315f3315 added source and docu
 Former-commit-id: 3a76cf8cb488b64f434f9c7dce5654fba911c336
+
+I, Niklas Eiling hereby sign-off-by all of my past commits to this repo subject to the Developer Certificate of Origin (DCO), Version 1.1. In the past I have used emails: niklas.eiling@eonerc.rwth-aachen.de
+
+a1992f5d820088a31ada6d0d4048c52c248f3d53 CI: Update cricket repository URL
+fdbd51d88cfa0c093814f456421a2d32536c8c9d CI: fix remote gpu execution not killing the correct server binary
+instead of always calling kill on test_kernel, we now call kill on the correct binary as set in an inheriting CI job.
+3948a4aaedda61fa912ab3364dc0f247e27a6110 CI: add profiling to gitlab ci
+194520fa5d63de6ef8108bfdcdf1fe65c55f428d add profiling option to CMakeLists.txt
+to use it call cmake with -DWITH_PROFILING=ON
+2a7922f894e193d250842be719efded24dca0c32 make DPsim support clang for compilation
+Add the override keyword to all overridden methods. Add implementation for original function when overloading a virtual function. Add minor other tweaks to make clang happy
+531847a87e9c46e47afa92fdb899496982b5c768 fix buffer overflow in SystemTopology.cpp
+eeef7b7a5ad23bf878deb29c28e194b44cfa9a20 rename log to mLog in Simulation class
+971201170fd3ffca5e69ff7cb5cfdace4e5b0855 make DPsim support clang for compilation
+Add the override keyword to all overridden methods. Add implementation for original function when overloading a virtual function. Add minor other tweaks to make clang happy
+5b1bb131f0091d2c2a90acb90a7f0ce0722b7bcc fix complex assignment in DP_Ph1_Inverter
+fixes two "implicit conversion from _Complex double to double is not permitted in C++" error
+166f730693a01c8fa6d9137b8cf3384ba84ea140 Make logger inititalizations use new cli loglevel parameter
+Simulation, PFSolver, TopologicalPowerComp and TopologicalSignalComp all now also log to stderr by default.
+Enable logging in CIGRE_MV_PowerFlowTest.
+2e0c9eca8552a147eb9ce6d3c0d68abffef42272 make WSCC_9bus honor the -l cli parameter
+a9c51888a42b7e1fb838cfccb0566bfffbaaf292 make default cli log level Level::off
+This avoids the changes to the logger class affecting code that has not yet been adapted
+e39bcc3110b7d88d880650434a42699338e11543 make CPS::Logger log to stderr and file simulatneously
+add both sinks to the CPS::Logger so logging behavior is configured separately from where logging occurs.
+Use a single CPS::Logger instace in DPsim::Simulation
+9fd4885b5e05780c075fffd6a2222c1d33fc2eb2 fix slow stamping of system matrix and source vector
+only convert matrix and vector to string if they are actually logged. Additionally set matrix and vector output to log level "trace".
+This reduces the runtime of the solver initialization by >99% for larger system matrices, e.g., the 9-bus-coupled example.
+1b2644f449888e56d25bfd44168b1b41ea001a70 remove CUDA dependencies from fedora Dockerfile so we only build CUDA when using the dev-centos Dockerfile
+365d88dec1928147441840c484654dd939b9a00d CI: make access to GPU host more secure
+baf12f28573395fce9ca0a9a6c6e3f280a16a002 CI: Cleanup of gitlab-ci.yml. Checkout cricket 1.0 in centos Dockerfile for reproducibility
+759d5650c56217e9ab3f3fbda1482897f3f6e79e CI: cleanup the GPU related part of .gitlab-ci.yml
+c1d9ddc651e0f85c24fb3f0937cd31f7c17f8a61 CI: add Dockerfile.dev-centos that builds dpsim on centos instead of fedora
+this is currently necessary for remote gpu execution
+ac358af3a5d8c74ccd8079b3ad5f43c68ddd3135 CI: prepare remote execution of CUDA in the CI
+cmake now links CUDA applications dynamically to the runtime API
+all cricket dependencies and cricket itself are now installed in Dockerfile.dev
+add new targets to .gitlab-ci.yml for CUDA tests
+4416b48de7c697509cb54be94e380faf355be169 require only cmake 3.11 and make policies requiring a newer version optional
+e7aba8d4b4ad52d73c274788a4a1929eea420e70 MNASolver: Increase maximum switch number to theoretical limit
+The bitset size for the switch state is now sizeof(std::size_t)*8.
+Replace some occurences of UInt with the larger std:size_t and get
+rid of std::pow calls.
+fixes #116 and #171
+4df467e14df7bb12c0da1dac7f370fe792eb1bfc use correct minimum cmake version (3.13 instead of 3.12) because Policy CMP0076 requires 3.13 (https://cmake.org/cmake/help/git-stage/policy/CMP0076.html)
+d35e02d2e14939f1e85573f01a4cd9d572a507a6 cuda: use different cache key for build with and without cuda
+f80a1efb52d7cb2cdbe95bdd09831bbc4042d3bc cuda: make CI build with CUDA. Add new CI target that builds dpsim with CUDA support. We have no GPUs in the runners so we need a separate target. Add CUDA dependencies to Dockerfile.dev
