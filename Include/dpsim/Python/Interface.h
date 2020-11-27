@@ -26,11 +26,13 @@
 
 #include <cps/Config.h>
 #include <cps/Definitions.h>
+#include <dpsim/Interface.h>
+
+#ifdef WITH_SHMEM
+#include <dpsim/InterfaceShmem.h>
+#endif
 
 namespace DPsim {
-#ifdef WITH_SHMEM
-	class Interface;
-#endif
 
 namespace Python {
 
@@ -39,7 +41,7 @@ namespace Python {
 		PyObject_HEAD
 
 #ifdef WITH_SHMEM
-		DPsim::Interface::Config conf;
+		DPsim::InterfaceShmem::Config conf;
 		DPsim::Interface::Ptr intf;
 		const char *wname, *rname;
 		PyObject *pyExports;

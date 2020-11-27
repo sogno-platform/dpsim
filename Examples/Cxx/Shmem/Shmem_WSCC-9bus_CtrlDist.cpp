@@ -18,7 +18,7 @@
 #include <list>
 
 #include <DPsim.h>
-#include <dpsim/Interface.h>
+#include <dpsim/InterfaceShmem.h>
 #include <cps/CIM/Reader.h>
 
 using namespace DPsim;
@@ -61,8 +61,8 @@ int main(int argc, char *argv[]) {
 		RealTimeSimulation sim(args.name + "_1", sys, args.timeStep, args.duration,
 			Domain::DP, Solver::Type::MNA, Logger::Level::debug, true);
 
-		Interface intf1("/dpsim01", "/dpsim10", nullptr, false);
-		Interface intf2("/dpsim1-villas", "/villas-dpsim1", nullptr, false);
+		InterfaceShmem intf1("/dpsim01", "/dpsim10", nullptr, false);
+		InterfaceShmem intf2("/dpsim1-villas", "/villas-dpsim1", nullptr, false);
 		sim.addInterface(&intf1);
 		sim.addInterface(&intf2, false);
 
@@ -123,10 +123,10 @@ int main(int argc, char *argv[]) {
 		auto sys = SystemTopology(args.sysFreq, SystemNodeList{n1}, SystemComponentList{evs, load, filtP});
 		RealTimeSimulation sim(args.name + "_2", sys, args.timeStep, args.duration);
 
-		Interface intf1("/dpsim10", "/dpsim01", nullptr, false);
+		InterfaceShmem intf1("/dpsim10", "/dpsim01", nullptr, false);
 		sim.addInterface(&intf1);
 
-		Interface intf2("/dpsim2-villas", "/villas-dpsim2", nullptr, false);
+		InterfaceShmem intf2("/dpsim2-villas", "/villas-dpsim2", nullptr, false);
 		sim.addInterface(&intf2, false);
 
 		// Register voltage source reference and current flowing through source

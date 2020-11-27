@@ -15,6 +15,7 @@
  *********************************************************************************/
 
 #include <DPsim.h>
+#include <dpsim/InterfaceShmem.h>
 
 using namespace DPsim;
 using namespace CPS::DP;
@@ -25,7 +26,7 @@ int main(int argc, char *argv[]) {
 	Real finalTime = 10;
 	String simName = "ShmemControllableSource";
 
-	Interface intf("/dpsim01", "/dpsim10");
+	InterfaceShmem intf("/dpsim01", "/dpsim10");
 
 	// Nodes
 	auto n1 = SimNode::make("n1");

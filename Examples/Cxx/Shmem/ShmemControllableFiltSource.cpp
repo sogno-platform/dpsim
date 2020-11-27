@@ -15,6 +15,7 @@
  *********************************************************************************/
 
 #include <DPsim.h>
+#include <dpsim/InterfaceShmem.h>
 
 using namespace DPsim;
 using namespace CPS::Signal;
@@ -26,7 +27,7 @@ int main(int argc, char *argv[]) {
 	Real finalTime = 10;
 	String simName = "ShmemControllableSource";
 
-	Interface intf("/dpsim01", "/dpsim10");
+	InterfaceShmem intf("/dpsim01", "/dpsim10");
 
 	// Controllers and filter
 	std::vector<Real> coefficients = { -0.0024229,-0.0020832,0.0067703,0.016732,

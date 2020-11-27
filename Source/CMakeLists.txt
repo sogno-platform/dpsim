@@ -45,7 +45,7 @@ endif()
 
 if(WITH_SHMEM)
 	list(APPEND DPSIM_SOURCES
-		Interface.cpp
+		InterfaceShmem.cpp
 		PthreadPoolScheduler.cpp
 	)
 

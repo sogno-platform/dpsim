@@ -17,6 +17,7 @@
 #include <fstream>
 
 #include <DPsim.h>
+#include <dpsim/InterfaceShmem.h>
 
 using namespace DPsim;
 using namespace CPS::DP;
@@ -60,10 +61,10 @@ int main(int argc, char* argv[]) {
 
 #ifdef REALTIME
 	RealTimeSimulation sim(simName, sys, timeStep, 1.0);
-	Interface intf("/villas1-in", "/villas1-out", nullptr, false);
+	InterfaceShmem intf("/villas1-in", "/villas1-out", nullptr, false);
 #else
 	Simulation sim(simName, sys, timeStep, 1.0);
-	Interface intf("/villas1-in", "/villas1-out");
+	InterfaceShmem intf("/villas1-in", "/villas1-out");
 #endif
 
 	// Interface

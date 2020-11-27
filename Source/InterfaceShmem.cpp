@@ -20,23 +20,23 @@
 
 #include <spdlog/sinks/stdout_color_sinks.h>
 
-#include <dpsim/Interface.h>
+#include <dpsim/InterfaceShmem.h>
 #include <cps/Logger.h>
 
 using namespace CPS;
 using namespace DPsim;
 
-void Interface::open(CPS::Logger::Log log) {
+void InterfaceShmem::open(CPS::Logger::Log log) {
 	mLog = log;
 
-	mLog->info("Opening interface: {} <-> {}", mWName, mRName);
+	mLog->info("Opening InterfaceShmem: {} <-> {}", mWName, mRName);
 
 	if (shmem_int_open(mWName.c_str(), mRName.c_str(), &mShmem, &mConf) < 0) {
 		mLog->error("Failed to open/map shared memory object");
 		std::exit(1);
 	}
 
-	mLog->info("Opened interface: {} <-> {}", mWName, mRName);
+	mLog->info("Opened InterfaceShmem: {} <-> {}", mWName, mRName);
 
 	mSequence = 0;
 
@@ -53,11 +53,11 @@ void Interface::open(CPS::Logger::Log log) {
 	std::memset(&mLastSample->data, 0, mLastSample->capacity * sizeof(float));
 }
 
-void Interface::close() {
+void InterfaceShmem::close() {
 	shmem_int_close(&mShmem);
 }
 
-void Interface::readValues(bool blocking) {
+void InterfaceShmem::readValues(bool blocking) {
 	Sample *sample = nullptr;
 	int ret = 0;
 	try {
@@ -76,7 +76,7 @@ void Interface::readValues(bool blocking) {
 				ret = shmem_int_read(&mShmem, &sample, 1);
 		}
 		if (ret < 0) {
-			mLog->error("Fatal error: failed to read sample from interface");
+			mLog->error("Fatal error: failed to read sample from InterfaceShmem");
 			close();
 			std::exit(1);
 		}
@@ -98,7 +98,7 @@ void Interface::readValues(bool blocking) {
 	}
 }
 
-void Interface::writeValues() {
+void InterfaceShmem::writeValues() {
 	Sample *sample = nullptr;
 	Int ret = 0;
 	bool done = false;
@@ -122,7 +122,7 @@ void Interface::writeValues() {
 			ret = shmem_int_write(&mShmem, &sample, 1);
 		} while (ret == 0);
 		if (ret < 0)
-			mLog->error("Failed to write samples to interface");
+			mLog->error("Failed to write samples to InterfaceShmem");
 
 		sample_copy(mLastSample, sample);
 	}
@@ -138,28 +138,28 @@ void Interface::writeValues() {
 			ret = shmem_int_write(&mShmem, &sample, 1);
 
 		if (ret < 0)
-			mLog->error("Failed to write samples to interface");
+			mLog->error("Failed to write samples to InterfaceShmem");
 
 		/* Don't throw here, because we managed to send something */
 	}
 }
 
-void Interface::PreStep::execute(Real time, Int timeStepCount) {
+void InterfaceShmem::PreStep::execute(Real time, Int timeStepCount) {
 	if (timeStepCount % mIntf.mDownsampling == 0)
 		mIntf.readValues(mIntf.mSync);
 }
 
-void Interface::PostStep::execute(Real time, Int timeStepCount) {
+void InterfaceShmem::PostStep::execute(Real time, Int timeStepCount) {
 	if (timeStepCount % mIntf.mDownsampling == 0)
 		mIntf.writeValues();
 }
 
-Attribute<Int>::Ptr Interface::importInt(UInt idx) {
+Attribute<Int>::Ptr InterfaceShmem::importInt(UInt idx) {
 	Attribute<Int>::Ptr attr = Attribute<Int>::make(Flags::read | Flags::write);
 	auto& log = mLog;
 	addImport([attr, idx, log](Sample *smp) {
 		if (idx >= smp->length) {
-			log->error("incomplete data received from interface");
+			log->error("incomplete data received from InterfaceShmem");
 			return;
 		}
 		attr->set(smp->data[idx].i);
@@ -168,12 +168,12 @@ Attribute<Int>::Ptr Interface::importInt(UInt idx) {
 	return attr;
 }
 
-Attribute<Real>::Ptr Interface::importReal(UInt idx) {
+Attribute<Real>::Ptr InterfaceShmem::importReal(UInt idx) {
 	Attribute<Real>::Ptr attr = Attribute<Real>::make(Flags::read | Flags::write);
 	auto& log = mLog;
 	addImport([attr, idx, log](Sample *smp) {
 		if (idx >= smp->length) {
-			log->error("incomplete data received from interface");
+			log->error("incomplete data received from InterfaceShmem");
 			return;
 		}
 		attr->set(smp->data[idx].f);
@@ -182,12 +182,12 @@ Attribute<Real>::Ptr Interface::importReal(UInt idx) {
 	return attr;
 }
 
-Attribute<Bool>::Ptr Interface::importBool(UInt idx) {
+Attribute<Bool>::Ptr InterfaceShmem::importBool(UInt idx) {
 	Attribute<Bool>::Ptr attr = Attribute<Bool>::make(Flags::read | Flags::write);
 	auto& log = mLog;
 	addImport([attr, idx, log](Sample *smp) {
 		if (idx >= smp->length) {
-			log->error("incomplete data received from interface");
+			log->error("incomplete data received from InterfaceShmem");
 			return;
 		}
 		attr->set(smp->data[idx].b);
@@ -196,12 +196,12 @@ Attribute<Bool>::Ptr Interface::importBool(UInt idx) {
 	return attr;
 }
 
-Attribute<Complex>::Ptr Interface::importComplex(UInt idx) {
+Attribute<Complex>::Ptr InterfaceShmem::importComplex(UInt idx) {
 	Attribute<Complex>::Ptr attr = Attribute<Complex>::make(Flags::read | Flags::write);
 	auto& log = mLog;
 	addImport([attr, idx, log](Sample *smp) {
 		if (idx >= smp->length) {
-			log->error("incomplete data received from interface");
+			log->error("incomplete data received from InterfaceShmem");
 			return;
 		}
 		auto *z = reinterpret_cast<float*>(&smp->data[idx].z);
@@ -213,12 +213,12 @@ Attribute<Complex>::Ptr Interface::importComplex(UInt idx) {
 	return attr;
 }
 
-Attribute<Complex>::Ptr Interface::importComplexMagPhase(UInt idx) {
+Attribute<Complex>::Ptr InterfaceShmem::importComplexMagPhase(UInt idx) {
 	Attribute<Complex>::Ptr attr = Attribute<Complex>::make(Flags::read | Flags::write);
 	auto& log = mLog;
 	addImport([attr, idx, log](Sample *smp) {
 		if (idx >= smp->length) {
-			log->error("incomplete data received from interface");
+			log->error("incomplete data received from InterfaceShmem");
 			return;
 		}
 		auto *z = reinterpret_cast<float*>(&smp->data[idx].z);
@@ -230,7 +230,7 @@ Attribute<Complex>::Ptr Interface::importComplexMagPhase(UInt idx) {
 	return attr;
 }
 
-void Interface::exportInt(Attribute<Int>::Ptr attr, UInt idx) {
+void InterfaceShmem::exportInt(Attribute<Int>::Ptr attr, UInt idx) {
 	addExport([attr, idx](Sample *smp) {
 		if (idx >= smp->capacity)
 			throw std::out_of_range("not enough space in allocated sample");
@@ -242,7 +242,7 @@ void Interface::exportInt(Attribute<Int>::Ptr attr, UInt idx) {
 	mExportAttrs.push_back(attr);
 }
 
-void Interface::exportReal(Attribute<Real>::Ptr attr, UInt idx) {
+void InterfaceShmem::exportReal(Attribute<Real>::Ptr attr, UInt idx) {
 	addExport([attr, idx](Sample *smp) {
 		if (idx >= smp->capacity)
 			throw std::out_of_range("not enough space in allocated sample");
@@ -254,7 +254,7 @@ void Interface::exportReal(Attribute<Real>::Ptr attr, UInt idx) {
 	mExportAttrs.push_back(attr);
 }
 
-void Interface::exportBool(Attribute<Bool>::Ptr attr, UInt idx) {
+void InterfaceShmem::exportBool(Attribute<Bool>::Ptr attr, UInt idx) {
 	addExport([attr, idx](Sample *smp) {
 		if (idx >= smp->capacity)
 			throw std::out_of_range("not enough space in allocated sample");
@@ -266,7 +266,7 @@ void Interface::exportBool(Attribute<Bool>::Ptr attr, UInt idx) {
 	mExportAttrs.push_back(attr);
 }
 
-void Interface::exportComplex(Attribute<Complex>::Ptr attr, UInt idx) {
+void InterfaceShmem::exportComplex(Attribute<Complex>::Ptr attr, UInt idx) {
 	addExport([attr, idx](Sample *smp) {
 		if (idx >= smp->capacity)
 			throw std::out_of_range("not enough space in allocated sample");
@@ -282,9 +282,9 @@ void Interface::exportComplex(Attribute<Complex>::Ptr attr, UInt idx) {
 	mExportAttrs.push_back(attr);
 }
 
-Task::List Interface::getTasks() {
+Task::List InterfaceShmem::getTasks() {
 	return Task::List({
-		std::make_shared<Interface::PreStep>(*this),
-		std::make_shared<Interface::PostStep>(*this)
+		std::make_shared<InterfaceShmem::PreStep>(*this),
+		std::make_shared<InterfaceShmem::PostStep>(*this)
 	});
 }

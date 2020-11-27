@@ -25,10 +25,6 @@
 #include <cps/Components.h>
 #include <cps/Logger.h>
 
-#ifdef WITH_SHMEM
-  #include <dpsim/Interface.h>
-#endif
-
 #ifdef WITH_CIM
   #include <cps/CIM/Reader.h>
 #endif

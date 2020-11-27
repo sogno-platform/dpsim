@@ -18,6 +18,7 @@
 #include <list>
 
 #include <DPsim.h>
+#include <dpsim/InterfaceShmem.h>
 
 using namespace DPsim;
 using namespace CPS::DP::Ph1;
@@ -74,7 +75,7 @@ int main(int argc, char *argv[]) {
 
 	RealTimeSimulation sim(simName, sys, args.timeStep, args.duration, Domain::DP, Solver::Type::MNA, Logger::Level::off, true);
 
-	Interface intf("/dpsim1-villas", "/villas-dpsim1", nullptr, false);
+	InterfaceShmem intf("/dpsim1-villas", "/villas-dpsim1", nullptr, false);
 
 	auto logger = DataLogger::make(simName);
 

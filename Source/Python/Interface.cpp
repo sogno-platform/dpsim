@@ -17,7 +17,7 @@
 #include <dpsim/Config.h>
 
 #ifdef WITH_SHMEM
-  #include <dpsim/Interface.h>
+  #include <dpsim/InterfaceShmem.h>
   #include <cps/AttributeList.h>
 #endif
 
@@ -320,7 +320,7 @@ int Python::Interface::init(Python::Interface *self, PyObject *args, PyObject *k
 		return -1;
 	}
 
-	self->intf = DPsim::Interface::make(self->wname, self->rname, &self->conf);
+	self->intf = DPsim::InterfaceShmem::make(self->wname, self->rname, &self->conf);
 
 	return 0;
 #else

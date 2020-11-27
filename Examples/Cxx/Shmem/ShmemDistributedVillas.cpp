@@ -15,6 +15,7 @@
  *********************************************************************************/
 
 #include <DPsim.h>
+#include <dpsim/InterfaceShmem.h>
 
 using namespace DPsim;
 using namespace CPS::DP;
@@ -40,7 +41,7 @@ int main(int argc, char *argv[]) {
 		out = "/villas1-out";
 	}
 
-	Interface intf(in, out, nullptr);
+	InterfaceShmem intf(in, out, nullptr);
 
 	if (String(argv[1]) == "0") {
 		// Nodes

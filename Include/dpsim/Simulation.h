@@ -27,13 +27,10 @@
 #include <cps/Logger.h>
 #include <cps/SystemTopology.h>
 #include <cps/SimNode.h>
+#include <dpsim/Interface.h>
 
 #ifdef WITH_GRAPHVIZ
   #include <cps/Graph.h>
-#endif
-
-#ifdef WITH_SHMEM
-  #include <dpsim/Interface.h>
 #endif
 
 namespace DPsim {

@@ -18,6 +18,7 @@
 #include <list>
 
 #include <DPsim.h>
+#include <dpsim/InterfaceShmem.h>
 
 using namespace DPsim;
 using namespace CPS::DP;
@@ -40,7 +41,7 @@ int main(int argc, char *argv[]) {
 	RealTimeSimulation sim(simName, sys, 0.001, 120,
 		Domain::DP, Solver::Type::MNA, Logger::Level::debug, true);
 
-	Interface intf("/dpsim-villas", "/villas-dpsim");
+	InterfaceShmem intf("/dpsim-villas", "/villas-dpsim");
 
 	// Register exportable node voltages
 	UInt o = 0;

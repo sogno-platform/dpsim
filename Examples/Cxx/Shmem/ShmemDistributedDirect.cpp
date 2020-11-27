@@ -15,6 +15,7 @@
  *********************************************************************************/
 
 #include <DPsim.h>
+#include <dpsim/InterfaceShmem.h>
 
 using namespace DPsim;
 using namespace CPS::DP;
@@ -91,7 +92,7 @@ int main(int argc, char *argv[]) {
 		sim.addLogger(logger);
 
 		// Map attributes to interface entries
-		Interface intf(in, out);
+		InterfaceShmem intf(in, out);
 		evs->setAttributeRef("V_ref", intf.importComplex(0));
 		auto evsAttrMinus = evs->attributeMatrixComp("i_intf")->coeff(0,0);
 		intf.exportComplex(evsAttrMinus, 0);
@@ -138,7 +139,7 @@ int main(int argc, char *argv[]) {
 		sim.addLogger(logger);
 
 		// Map attributes to interface entries
-		Interface intf(in, out);
+		InterfaceShmem intf(in, out);
 		ecs->setAttributeRef("I_ref", intf.importComplex(0));
 		//intf.exportComplex(ecs->attributeMatrixComp("v_intf")->coeff(0, 0), 0);
 		intf.exportComplex(ecs->attributeMatrixComp("v_intf")->coeff(0, 0)->scale(Complex(-1.,0)), 0);

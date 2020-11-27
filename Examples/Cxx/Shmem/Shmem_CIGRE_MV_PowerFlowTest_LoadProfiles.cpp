@@ -16,6 +16,7 @@
 
 #include <cps/CIM/Reader.h>
 #include <DPsim.h>
+#include <dpsim/InterfaceShmem.h>
 #include <cps/CSVReader.h>
 #include <iostream>
 #include <fstream>
@@ -78,7 +79,7 @@ int main(int argc, char** argv){
 	csvreader.assignLoadProfile(sys, 0, args.timeStep, args.duration, CSVReader::Mode::MANUAL);
 
 	RealTimeSimulation sim(simName, sys, args.timeStep, args.duration, args.solver.domain, args.solver.type, args.logLevel);
-	Interface intf("/dpsim1-villas", "/villas-dpsim1");
+	InterfaceShmem intf("/dpsim1-villas", "/villas-dpsim1");
 
 	ofstream villas_conf;
     villas_conf.open ("villas_sent_data.conf");
