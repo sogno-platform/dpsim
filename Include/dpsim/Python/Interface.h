@@ -14,6 +14,10 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  *********************************************************************************/
 
+// #############################################
+// Do NOT include this header in any MPL2 files
+// #############################################
+
 #pragma once
 
 #ifdef _DEBUG
