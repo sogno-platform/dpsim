@@ -2181,3 +2181,19 @@ Former-commit-id: 63ec8a7e63ddb1eb44a110aa9994ff9020029366
 Former-commit-id: 379267e96c0060d1414db312e0134ef5e7d3da2b
 b4ce6808d0c316b41011469b9d6573b4743c2167 added setParameters function and new constructor
 Former-commit-id: ab23bcf699a914eb703dbcd7d5416f141c970e0b
+
+I, Philipp Fensch hereby sign-off-by all of my past commits to this repo subject to the Developer Certificate of Origin (DCO), Version 1.1. In the past I have used emails: philipp.fensch@rwth-aachen.de
+
+93bb3631832565468ca71c930a986b71452cfaa9 Added wrapper (SparseMatrixRow -> Matrix) for mnaApplySystemMatrixStamp()
+db688d10606a5c9411487071892180ca8aa89da8 Added option for using sparse matrices in MNA-Solver
+2bc5b080757305fd73d3ff056bb9b79bb2cdada2 Removed nullptr-check, reverted erroneous change in FindCIMpp.cmake
+730e4f9568545f53cd3ff5b7d312abab1c52b95f Merged dpsim changes
+5f317866a933b2fc394625caf634d682d1dab089 Fixed & improved readability
+b0988954d62c74105c7167763e3b47900166f356 LU-factorization correct
+7593a9ac4365db541d5fbb6a60d955c8f8853b68 Added LogTask and getTasks()
+393dd5e107c40e54fb4d7f1c78bd1c8464951cf8 Added dependent option WITH_CUDA; now links with cuda-libraries
+99b2ea300ec6d639d7a64fa60346a67c1d17f144 Fixed syntax-errors. Compiles and links now
+a27fe266a8527cb3d366f7e8f6dfd00990307a7d Added CUDA-Option to cmake-files
+bb2f12f018b9c932bd644e01f6d95c73944e19f9 Added SolveTask, LUfactorization(), device-memory-specific code
+b9c62ee4ffcf60d8058eed28fa5940e51029ebc0 Added basic structure for MNASolver on GPU
+56157f4ebdbf3b43faa79ec318dc6894f53795bb Configured CMake
