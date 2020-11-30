@@ -2197,3 +2197,8 @@ a27fe266a8527cb3d366f7e8f6dfd00990307a7d Added CUDA-Option to cmake-files
 bb2f12f018b9c932bd644e01f6d95c73944e19f9 Added SolveTask, LUfactorization(), device-memory-specific code
 b9c62ee4ffcf60d8058eed28fa5940e51029ebc0 Added basic structure for MNASolver on GPU
 56157f4ebdbf3b43faa79ec318dc6894f53795bb Configured CMake
+
+I, Richard Marston hereby sign-off-by all of my past commits to this repo subject to the Developer Certificate of Origin (DCO), Version 1.1. In the past I have used emails: rmarston@eonerc.rwth-aachen.de
+
+9d2747e80b12291b26e175095c8d821572617b49 Install expat dependency and execute setup
+Former-commit-id: c16e0cf2853690cc04fa3a3c901baf8fa5360613
