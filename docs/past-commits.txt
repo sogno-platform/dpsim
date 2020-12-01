@@ -2197,3 +2197,138 @@ a27fe266a8527cb3d366f7e8f6dfd00990307a7d Added CUDA-Option to cmake-files
 bb2f12f018b9c932bd644e01f6d95c73944e19f9 Added SolveTask, LUfactorization(), device-memory-specific code
 b9c62ee4ffcf60d8058eed28fa5940e51029ebc0 Added basic structure for MNASolver on GPU
 56157f4ebdbf3b43faa79ec318dc6894f53795bb Configured CMake
+
+I, Junjie Zhang hereby sign-off-by all of my past commits to this repo subject to the Developer Certificate of Origin (DCO), Version 1.1. In the past I have used emails: junjie.zhang@eonerc.rwth-aachen.de
+
+fefda7bbe9a7ec02bc3cda0b9906828722401b24 minor fix on csv file assign pattern
+Former-commit-id: da0d0a6800f66ac0b0beb09c018d39bc4622dc31
+aa34779c2d6b107672dbf7e37cb50e6e1b4b016f code cleaning, minor fix
+Former-commit-id: 15477e74968edc98fce08193077cf1e4734470bf
+18a6a5029bcce2c09ae5d3b7ace42b7f4ab0cbc2 correct PQ update for loads when load profile consists of weighting factor
+Former-commit-id: 6f3ae83c493b3aa36d1f9ae6c817480a03ba18fc
+927f0121875a7bb0ce48e7660fd68bb995a2c618 adapt changes to CIGRE MV shmem example
+Former-commit-id: 1107f0bc658a4a67ded14a617bfc63825e120d8f
+f266af875f8e4e187c2f3dbb8456f6e063857bd7 remove unused includes
+Former-commit-id: 639798cdee54dfec05e6ea52bb9900820a484a52
+f4df0c9116a7fd2da47a18fbf0da8eed3f698ca8 introduce data structure for load profiles, integrate interpolation, add IEEE LV grid tests
+Former-commit-id: b92f6eefead444fe4c8647e2199b22b7c0de01e5
+2318d3d3943a6c9159e7cbb72da7756d5fed91f2 update NRP solver regarding the application of iwamoto multiplier
+Former-commit-id: 3324dfead8f485d431d684afcdd557a1e1bd0dbd
+93107e8924912e825e9613d070218cba0d023792 add IEEE LV EU pf test
+Former-commit-id: 370d2cc4f0ac4e034cd2a801db61ec0c6e416307
+f600d29cb269c86296090ee3708eba57856317cc add IEEE LV cim files
+Former-commit-id: 55965c175955ae8d2f238bc004b93c80b3f1836d
+98d0f3ff07f0ad9559bc99f3da4c9a34b6f228c5 improve branch power flow calculation, add more datalogging attributes
+Former-commit-id: ba18977b42dc162a11c33a130c2ca11be1d2b5a6
+6b45f27ff41d3cc06012147683b9840cdddffefe update cps to improve datalogging
+Former-commit-id: 63eb708ce6e70b03438cfef48ba666f1eb276029
+70d0b73b74fa09ef4748089ec62579d53d5645e4 remove unused variable
+Former-commit-id: 1e6b618d27775401e601b3807a7ed5c85a16c194
+c45fe41a38daf2709db4c76f778c839563a4b72c add branch power flow, pq nodal injection in csv output
+Former-commit-id: 9880aa39ac39bb5ab9661ce8d81bc3bed66e87d6
+d3174906488acdb84b25ee7e679e30fc644d9df9 add attributes in static comp for pf logging (csv)
+Former-commit-id: 35adba591ad6eda40a4a48bde428a9dc7144310a
+24c52a2cc67424f6022a930812a442fa7bd4e312 new commit from submodules after merge
+Former-commit-id: 89f39b19cd27a9d5c03c0515379a004fcf42897d
+b2208d53d0462a96921f6b8ec829ade43515a744 update shmem test file after merge
+Former-commit-id: fea9f8bb11ec011c946b33e80482d0f6c7ddf9bb
+fe5c49ba85a7e41ac6dc525fe63d1270ce75e5b9 refactor load profile assigner, add manual mode
+Former-commit-id: 74533a3ce228f47dd16840083fd37edf169bbfd8
+0ff8f834cc97ad7e0cc056370ef3a17abc3cdeea fix pipeline
+Former-commit-id: 03eefd6c106179f6f489a27408b3833310503dd0
+a7479c977af91533f79223dbb0b1f9776d7de743 refractoring loadprofile assigner
+Former-commit-id: 4c5c93d71b5bebb04f55072111eb9739e0e58264
+341bed8d89e6c6adf95ecdc0d70a7dd953ecf18b Update Shmem_CIGRE_MV_PowerFlowTest_LoadProfiles.cpp
+Former-commit-id: e594d81ebbc869a8b6ebeeda093cea7c40515f04
+b19bd27bd00c51fcb24184bad315bf8d7e521074 fix pipeline, Update Shmem_CIGRE_MV_PowerFlowTest_LoadProfiles.cpp
+Former-commit-id: ad3f0daf74be4b0024cc4356673cd9d515653dbf
+8b4ed7425ff8143cd006987b5e0f966c161bef31 add branch current update after pf
+Former-commit-id: d39c963010a9a971d2c0ccf6174145eddbef75ac
+62707b85e8f82a10864c775d29661ffe852f6125 assign load profile with certain range and step
+Former-commit-id: 9b0c819b3dcb77d94f89b2794249902b861a0dbe
+23d9692cdb7caa37efcc721b780f0f3e4bd70155 assign load profile with certain range and step
+Former-commit-id: 1223584670e88e42c1ad7c4a6773c7dd2ac1a224
+db993af197623ee91e172575ca27f223b151afa9 add unit conversion for load profiles
+Former-commit-id: 40eac1177e723332cd16428d50a0af317a2cd37a
+1e36a4c6f4a5d9ae579168a2f4964d606cc47614 add load PQ update according to profile
+Former-commit-id: 19a6bfa128e70483047432b97a7f0faa3e49b842
+43bc102ed6fecd78bdac415c7801d31f495b21e9 add load PQ update according to its profile
+Former-commit-id: 7ea40a85d40d11d49ca64f85c8d8b5351f3752ec
+7a554f9760eb22caa39f6f60680c010540786ff6 Update README.MD
+Former-commit-id: 2ca8832a9824ef46ab8d6c5ffd4d9c393bc80b51
+45272be27d2c45bbec8509efc81893088026a1d7 apply update PQ for loads according to its profile
+Former-commit-id: 722bff8209ad2bd325a18a18bbc1018fc9ee3407
+cab751da4143de7582084de9cc6ba1a181391255 Update README.MD
+Former-commit-id: 8f198937bbfd4797df70fc46c6688741e885f886
+79d08d0e6d46a103f202bbdbda83bc029b295317 add csv read-in and load profile assign, add csv examples
+Former-commit-id: 41b72c95b675fd300216fa50b8c354be3965ca27
+afb94ee15b733fb1f937bee08074fa49a06efa6a add csv read-in and load profile assign, add csv examples
+Former-commit-id: b2af41a03f6644925e3afe0700d4f5a5bbd54435
+9460a4f72cf3fc810938a79720469e0526310ab1 cleaned codes
+Former-commit-id: 9feb38d6b60675a7d880dbfa8830190877323a9a
+34f73b3c9bdf685e5f5351a2217e01d8027cc35f cleaned fpotencia, move NRPolarSolverInterface to Solver folder
+Former-commit-id: 856c9c26610d2c4d7220435488d048cd654974e1
+3d25d6c7e4b287665ca1cdb10550b03b14a1cb3f cleanning, following Todo list (submod fPotencia) #1 to #8
+Former-commit-id: 96b8a41abbe837300304ef4f4d732e9830e3605d
+e18d95ad518e9abe8f3356502a08c61eb8fbf92f introduce method to modify pf bus type to specific component in main function, set external grid injection bus as default slack
+Former-commit-id: f060b9cf7e80a292f53a3b25c4202cda24527eb8
+47313abab2487c4777903eff0c7d286d0e50afd9 add base voltage, changed ComponentsAtNode, add modifyPowerflowBusType, changed reader on componentsAtNode
+Former-commit-id: ddf5e146dc8d3984cb5280ef226358dab7ac7ab9
+6a570dc3fe67402b59b17a308b1656868facbf17 improve suppot on MV benchmark grid
+Former-commit-id: 2cd9ffeb742ceb3adb91e6f948732c9a3c9f8511
+9d43b9a3b6a897a22d1e4731ec945470fd696fc4 fix cps reader in order to pass pipeline
+Former-commit-id: bbc0b6b721421ed5722ee2427344f330abeb82c7
+4f022e6fbc8dcd6dfaeeaf451867f09ebacd1082 add external grid injection, add base voltage
+Former-commit-id: 6e229b3c934d562fe72cf70b4fb4201b948b27de
+1f001d71d916c8a2affcc5fd3e49dcddc8ae5c40 fixed slack bus recognization
+Former-commit-id: 33823b92ea0eb1499a3964cb0174c63b582f73a8
+de28b6daa3f87629743622504f2818dfd6354155 small fix with fpotencia csv output
+Former-commit-id: fd3a14e9ca8167ed4dfb30575cc2f7849adf6318
+6a29032f55eaf23eed2971be40cd23769991e878 cleaned codes
+Former-commit-id: ca52d47aa2dacb8f231654bfcbfe2d85da64f080
+7c8d17ce9c575125760d0559d9ed55c7d36456a5 small fix
+Former-commit-id: 59f9f45ec87d46d7593c588d77a125d6e488370a
+879f369114f9ac3e56c277248643af384cbc8155 convergence problem of WSCC-9bus example fixed, add loggers to components
+Former-commit-id: fcef7d905e060307c985d36397f0ed4a03af029e
+eab6e3d60b8a66c9af7e4a2b70c112745f8cb937 add csv export
+Former-commit-id: 97b47fce799cc642e3dcaf27278c5f6f5d3f5240
+18c20bdaa5c44f7550bf0e6bffd26e45772a98d7 fix after merge, pf solver Y_mat and J_mat not working
+Former-commit-id: 9baf1e08b6ae33726afd3d201dfea03e7eb2846c
+c69efbd91159057dbbfdb22c989c21ed15e97c0b small fixes after merge
+Former-commit-id: 7099f2e01f894c68be550d813dd0b36785a011df
+e2c881e92f692f8e079ca6d9e7def411e80ebde1 add ratedU,ratedS, improve and cleaned PV,PQ,VD,Load and SynchronGen; cleaned up codes
+Former-commit-id: a0feb680c208ead10b7bac2f5cc4953d80c84b66
+92f368885779e4155f5653b1adaad473dcdf6e70 remove Model depd and implement PV PQ VD
+Former-commit-id: 13a05972b8cfc2b3b13d7da17b341784086c4596
+f6ba3a93b699cd848e3fcb13f412d6f53f6926c9 corrected PV
+Former-commit-id: 70d2ca7196431c1645385b31145a3766b917ee17
+4bf6d17188ce7cf64ecac1bd27a3bbc1a0afcad9 add PV PQ VD type nodes
+Former-commit-id: 67762d9bf63aa75e74ae4ddbc44ca5d11f4499ff
+c30fec40f0ed73edce79fe78e03f7b3ff8809794 NR Polar solver dependency on CPS
+Former-commit-id: 1ad81bc5bb2a3b43c5200ab6aae59abb28d2fe42
+5569de8c054a89e3d1ee07bc38f62257ccfb5706 repair compose Y related components
+Former-commit-id: 72012ce1a839790be79fb204db59d8545f4f5ecc
+28fc271f52623b63a494e9e77499168818a967c6 delete debug info in fpotencia
+Former-commit-id: f79cc2e7ab33b4b34e90387f0d3c1451b40a1e01
+a6c81078bb1b60029c5da01d14f2e185336d7124 static transformer and shunts
+Former-commit-id: 6a8c4669a5b00686bc68515847a22c98b87ad696
+dd1d98618c2a520cdac2203ae4cb077302268ed9 compose Y with static transformers and shunts
+Former-commit-id: 6ab6a669875cbed2727a252062fe8cdfd840e42e
+84641e5f78fce7e0d3f05b001f3ae501beeb94ee static transformer and shunts
+Former-commit-id: f3ba026b6bfac5004f335fc298879217b4547db3
+7e29c9c492c39bbfd6ce647d3caca0183160c77b update power flow examples
+Former-commit-id: b19126ffe7d6c778497c432235dfa8cf10b91167
+70ab82f75e9d25c4d96aa1a69052ef291a5cd7c6 coding style small fix
+Former-commit-id: 4ea1cd571d02d36c4fd46032179f3843975e40f7
+b31c0395e2fc0392705b9f673d4d02ae05793d38 cmake small fix
+Former-commit-id: db322ff581fdfec6724fdca0559c61f5969a8e70
+d147e0eace303967f4b2bfe622ec1d9910fbd051 remove NRPSolution, fix coding style problem
+Former-commit-id: 29d265ee204ea4fe8db6d85a18802fd64e28a8df
+3f03931bb86419175468017638a47dfb1ac57a5b rename variables and methodes originally form Solution class
+Former-commit-id: cc447e82bec8f6b10ae84626649341cef20ed7de
+5d9c9cc101224e9ee6f89abb40a569c787575120 integrating NRPSolver for powerflow in dpsim, remove fpotencia
+Former-commit-id: 8be8ad0f66de7cbe44cc58b5c73592e98fcd67f1
+7f17976a085a4f3df2550ff11aaf8caf746a615f refactoring NRP solver with step function
+Former-commit-id: ce596664cdfa0c9a5386e05aa8d37ec5796e4ee8
+f6fc52c8aeca4fa9a6b137abe8f093585ad6f844 merge libcps
+Former-commit-id: 8696e16efdd7bdac3907e2f8ef5c94998dbc7420
