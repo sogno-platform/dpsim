@@ -52,6 +52,17 @@ docker:centos:
     - shell
     - linux
 
+docker:metrics:
+  stage: prepare
+  needs: []
+  script:
+    - docker build
+      --file Packaging/Docker/Dockerfile.metrics
+      --tag ${DOCKER_IMAGE_DEV}-metrics:${DOCKER_TAG} .
+  tags:
+    - shell
+    - linux
+
 build:linux:
   stage: build
   needs: ["docker:fedora"]
@@ -108,6 +119,52 @@ build:linux-profiling:
       - build
   tags:
     - docker
+
+.build-solver-benchmark-template:
+  stage: build
+  needs: ["docker:centos"]
+  image: ${DOCKER_IMAGE_DEV}-centos:${DOCKER_TAG}
+  artifacts:
+    paths:
+      - build
+  tags:
+    - docker
+
+build:solver-benchmark 1/3:
+  extends: .build-solver-benchmark-template
+  script:
+    - mkdir -p build
+    - cd build
+    - cmake -DWITH_CUDA=OFF -DWITH_SPARSE=OFF -DWITH_SPDLOG_SUBMODULE=ON ..
+    - make -j $(nproc) WSCC_9bus_mult_coupled
+  cache:
+    paths:
+      - build
+    key: build-solver-benchmark-dense-cpu
+
+build:solver-benchmark 2/3:
+  extends: .build-solver-benchmark-template
+  script:
+    - mkdir -p build
+    - cd build
+    - cmake -DWITH_CUDA=ON -DWITH_SPARSE=OFF -DWITH_SPDLOG_SUBMODULE=ON ..
+    - make -j $(nproc) WSCC_9bus_mult_coupled
+  cache:
+    paths:
+      - build
+    key: build-solver-benchmark-dense-gpu
+  
+build:solver-benchmark 3/3:
+  extends: .build-solver-benchmark-template
+  script:
+    - mkdir -p build
+    - cd build
+    - cmake -DWITH_CUDA=OFF -DWITH_SPARSE=ON -DWITH_SPDLOG_SUBMODULE=ON ..
+    - make -j $(nproc) WSCC_9bus_mult_coupled
+  cache:
+    paths:
+      - build
+    key: build-solver-benchmark-sparse-cpu
 
 build:linux-cuda:
   stage: build
@@ -203,38 +260,9 @@ build:docker:
 #  tags:
 #    - docker
 
-generate:docs:
-  stage: generate
-  needs: ["build:linux"]
-  script:
-    - make -j$(nproc) -C build docs
-    - make -j$(nproc) -C build docs_cxx
-  image: ${DOCKER_IMAGE_DEV}:${DOCKER_TAG}
-  dependencies:
-    - build:linux
-  artifacts:
-    paths:
-      - build/docs/sphinx/html
-      - build/docs/doxygen/html
-  tags:
-    - docker
-
-generate:packages:
-  stage: generate
-  needs: ["build:linux"]
-  script:
-    - make -j$(nproc) -C build package
-  only:
-    - tags
-  tags:
-    - docker
-  image: ${DOCKER_IMAGE_DEV}:${DOCKER_TAG}
-  dependencies:
-    - build:linux
-  artifacts:
-    paths:
-      - build/*.rpm
-      - build/*.tar.gz
+##############################################################################
+# Stage test
+##############################################################################
 
 test:jupyter:
   stage: test
@@ -322,7 +350,7 @@ test:cppcheck 2/2:
       - profiling.png
     expose_as: 'test-examples'
 
-test:examples 1/1:
+test:examples 1/2:
     extends: .test-examples
     variables:
 # Name of the test binary
@@ -342,9 +370,117 @@ test:examples 2/2:
 # Command line parameters for the test binary
       TEST_PARAM: ''
 
+
+.benchmark-script: &benchmark-script |
+    for ((copies=0;copies<=$TEST_NUM_COPIES;copies++))
+    do
+      echo "Running with $copies copies"
+      $TEST_BINARY_PATH/$TEST_BINARY $TEST_PARAM -o copies=$copies 2>&1 | tee output.log
+      cat output.log |
+      sed -n -E -e 's/^.*Average step time. ([0-9]+\.[0-9]+)$/\1/p' |
+      tee -a ${METRICS_ID}-metrics.txt
+    done
+
+.benchmark-step-times:
+  stage: test
+  script:
+    - *benchmark-script
+  image: ${DOCKER_IMAGE_DEV}-centos:${DOCKER_TAG}
+  tags:
+    - docker
+
+test:solver-benchmark 1/3:
+    extends: .benchmark-step-times
+    needs: ["build:solver-benchmark 1/3"]
+    dependencies:
+      - build:solver-benchmark 1/3
+    variables:
+# Metrics-filename
+      METRICS_ID: 'cpu-dense'
+# Name of the test binary
+      TEST_BINARY: 'WSCC_9bus_mult_coupled'
+# Path where the test binary is located
+      TEST_BINARY_PATH: 'build/Examples/Cxx'
+# Up to how many copies should be benchmarked (WSCC_9bus - Example)
+      TEST_NUM_COPIES: 6
+    artifacts:
+      reports:
+          metrics: cpu-dense-metrics.txt
+      paths:
+        - cpu-dense-metrics.txt
+      expose_as: 'step-times-benchmark'
+
+test:solver-benchmark 2/3:
+    extends: .remote-gpu
+    needs: ["build:solver-benchmark 2/3"]
+    dependencies:
+      - build:solver-benchmark 2/3
+    variables:
+# Metrics-filename
+      METRICS_ID: 'gpu-dense'
+# Name of the test binary
+      TEST_BINARY: 'WSCC_9bus_mult_coupled'
+# Path where the test binary is located
+      TEST_BINARY_PATH: 'build/Examples/Cxx'
+# Up to how many copies should be benchmarked (WSCC_9bus - Example)
+      TEST_NUM_COPIES: 6
+    artifacts:
+      reports:
+          metrics: gpu-dense-metrics.txt
+      paths:
+        - gpu-dense-metrics.txt
+      expose_as: 'step-times-benchmark'
+
+test:solver-benchmark 3/3:
+    extends: .benchmark-step-times
+    needs: ["build:solver-benchmark 3/3"]
+    dependencies:
+      - build:solver-benchmark 3/3
+    variables:
+# Metrics-filename
+      METRICS_ID: 'cpu-sparse'
+# Name of the test binary
+      TEST_BINARY: 'WSCC_9bus_mult_coupled'
+# Path where the test binary is located
+      TEST_BINARY_PATH: 'build/Examples/Cxx'
+# Up to how many copies should be benchmarked (WSCC_9bus - Example)
+      TEST_NUM_COPIES: 6
+    artifacts:
+      reports:
+          metrics: cpu-sparse-metrics.txt
+      paths:
+        - cpu-sparse-metrics.txt
+      expose_as: 'step-times-benchmark'
+
+.gpu-init-script: &gpu-init-script |
+    mkdir ~/.ssh &&
+      echo "-----BEGIN OPENSSH PRIVATE KEY-----" > ~/.ssh/id_rsa &&
+      echo $SSH_PRIVATE | sed "s/\S\{64\}/&\n/g" >> ~/.ssh/id_rsa &&
+      echo "-----END OPENSSH PRIVATE KEY-----" >> ~/.ssh/id_rsa &&
+      echo $SSH_PUBLIC > ~/.ssh/id_rsa.pub &&
+      echo $KNOWN_HOSTS > ~/.ssh/known_hosts && chmod 600 ~/.ssh/id_rsa
+    echo "$TEST_BINARY_PATH/$TEST_BINARY $TEST_FILES" | tr -d '\n' | xargs -r -d " " -I % cp % $LDIR
+    ldd $LDIR/$TEST_BINARY |
+      sed -n -E -e 's/^\s+\S+ => (\S+) \S+$/\1/p' |
+      grep -Ev "$(echo $REMOTE_LIBS | tr ' ' '|')|not" |
+      xargs -I % cp % $LDIR/
+    ssh $GPU_TARGET mkdir -p $RDIR
+    scp -r $LDIR/* $GPU_TARGET:$RDIR/
+
+.gpu-run-script: &gpu-run-script |
+    for ((copies=0;copies<=$TEST_NUM_COPIES;copies++))
+    do
+      ssh $GPU_TARGET "LD_LIBRARY_PATH=$RDIR:${LD_LIBRARY_PATH} LD_PRELOAD=$RDIR/cricket-server.so $RDIR/$TEST_BINARY" &
+      sleep 2
+      echo "Running with $copies copies"
+      PATH=$LDIR:${PATH} LD_PRELOAD=$LDIR/cricket-client.so $TEST_BINARY_PATH/$TEST_BINARY $TEST_PARAM -o copies=$copies 2>&1 | tee output.log
+      cat output.log |
+      sed -n -E -e 's/^.*Average step time. ([0-9]+\.[0-9]+)$/\1/p' |
+      tee -a ${METRICS_ID}-metrics.txt
+    done
+
 .remote-gpu:
   stage: test
-  needs: ["build:linux-cuda"]
   variables:
     GPU_TARGET: 'gitlab-runner@ghost'
     RDIR: '/tmp/gitlab-jobs/$CI_PROJECT_NAME/$CI_JOB_ID'
@@ -365,35 +501,24 @@ test:examples 2/2:
                   libutil.so.1
                   libpthread.so.0'
   script:
-    - mkdir ~/.ssh &&
-      echo "-----BEGIN OPENSSH PRIVATE KEY-----" > ~/.ssh/id_rsa &&
-      echo $SSH_PRIVATE | sed "s/\S\{64\}/&\n/g" >> ~/.ssh/id_rsa &&
-      echo "-----END OPENSSH PRIVATE KEY-----" >> ~/.ssh/id_rsa &&
-      echo $SSH_PUBLIC > ~/.ssh/id_rsa.pub &&
-      echo $KNOWN_HOSTS > ~/.ssh/known_hosts && chmod 600 ~/.ssh/id_rsa
-    - echo "$TEST_BINARY_PATH/$TEST_BINARY $TEST_FILES" | tr -d '\n' | xargs -r -d " " -I % cp % $LDIR
-    - ldd $LDIR/$TEST_BINARY |
-      sed -n -E -e 's/^\s+\S+ => (\S+) \S+$/\1/p' |
-      grep -Ev "$(echo $REMOTE_LIBS | tr ' ' '|')|not" |
-      xargs -I % cp % $LDIR/
-    - ssh $GPU_TARGET mkdir -p $RDIR
-    - scp -r $LDIR/* $GPU_TARGET:$RDIR/
-    - ssh $GPU_TARGET "LD_LIBRARY_PATH=$RDIR:${LD_LIBRARY_PATH} LD_PRELOAD=$RDIR/cricket-server.so $RDIR/$TEST_BINARY" &
-    - sleep 2
-    - PATH=$LDIR:${PATH} LD_PRELOAD=$LDIR/cricket-client.so $TEST_BINARY_PATH/$TEST_BINARY $TEST_PARAM
+    - *gpu-init-script
+    - *gpu-run-script
   after_script:
     - ssh $GPU_TARGET rm -rf $RDIR
     - ssh $GPU_TARGET pkill -fe -2 $RDIR/$TEST_BINARY
   image: ${DOCKER_IMAGE_DEV}-centos:${DOCKER_TAG}
-  dependencies:
-    - build:linux-cuda
   tags:
     - docker
 
 test:cuda 1/2:
     extends: .remote-gpu
+    needs: ["build:linux-cuda"]
+    dependencies:
+    - build:linux-cuda
     allow_failure: true
     variables:
+# Metrics-filename
+      METRICS_ID: 'cuda'
 # Name of the test binary
       TEST_BINARY: 'WSCC_9bus_mult_decoupled'
 # Path where the test binary is located
@@ -402,11 +527,24 @@ test:cuda 1/2:
       TEST_FILE: ''
 # Command line parameters for the test binary
       TEST_PARAM: ''
+# Up to how many copies should be benchmarked (WSCC_9bus - Example)
+      TEST_NUM_COPIES: 0
+    artifacts:
+      reports:
+          metrics: cuda-metrics.txt
+      paths:
+        - cuda-metrics.txt
+      expose_as: 'step-times-benchmark'
 
 test:cuda 2/2:
     extends: .remote-gpu
+    needs: ["build:linux-cuda"]
+    dependencies:
+    - build:linux-cuda
     allow_failure: true
     variables:
+# Metrics-filename
+      METRICS_ID: 'cuda'
 # Name of the test binary
       TEST_BINARY: 'WSCC_9bus_mult_coupled'
 # Path where the test binary is located
@@ -415,9 +553,74 @@ test:cuda 2/2:
       TEST_FILE: ''
 # Command line parameters for the test binary
       TEST_PARAM: ''
+# Up to how many copies should be benchmarked (WSCC_9bus - Example)
+      TEST_NUM_COPIES: 0
+    artifacts:
+      reports:
+          metrics: cuda-metrics.txt
+      paths:
+        - cuda-metrics.txt
+      expose_as: 'step-times-benchmark'
 
+
+##############################################################################
+# Stage generate
+##############################################################################
+
+generate:docs:
+  stage: generate
+  needs: ["build:linux"]
+  script:
+    - make -j$(nproc) -C build docs
+    - make -j$(nproc) -C build docs_cxx
+  image: ${DOCKER_IMAGE_DEV}:${DOCKER_TAG}
+  dependencies:
+    - build:linux
+  artifacts:
+    paths:
+      - build/docs/sphinx/html
+      - build/docs/doxygen/html
+  tags:
+    - docker
+
+generate:packages:
+  stage: generate
+  needs: ["build:linux"]
+  script:
+    - make -j$(nproc) -C build package
+  only:
+    - tags
+  tags:
+    - docker
+  image: ${DOCKER_IMAGE_DEV}:${DOCKER_TAG}
+  dependencies:
+    - build:linux
+  artifacts:
+    paths:
+      - build/*.rpm
+      - build/*.tar.gz
+
+generate:metrics:
+  stage: generate
+  needs: ["test:solver-benchmark 1/3", "test:solver-benchmark 2/3", "test:solver-benchmark 3/3"]
+  script:
+    - echo "set terminal svg size 800, 500; set output 'metrics.svg'; set title 'Speed of different Solver-Configurations'; set style data lines; set key outside; set xlabel \"Copies (WSCC-9bus Example)\"; set ylabel \"Average steptime (µs)\"; set xtics 1; set xtics nomirror; set ytics nomirror; set grid; plot \"cpu-dense-metrics.txt\" using (\$1 * 1000000) title \"Solving with CPU and dense matrices\", \"gpu-dense-metrics.txt\" using (\$1 * 1000000) title \"Solving with GPU and dense matrices\", \"cpu-sparse-metrics.txt\" using (\$1 * 1000000) title \"Solving with CPU and sparse matrices\"" > script.p
+    - gnuplot script.p
+  image: ${DOCKER_IMAGE_DEV}-metrics:${DOCKER_TAG}
+  artifacts:
+    reports:
+      metrics: metrics.svg
+    paths:
+      - metrics.svg
+    expose_as: 'WSCC-9bus-benchmark'
+  tags:
+    - docker
+
+
+##############################################################################
 # Stage deploy
 ##############################################################################
+
 pages:
   stage: deploy
   needs: ["generate:docs"]

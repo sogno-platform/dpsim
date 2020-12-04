@@ -1,0 +1,18 @@
+FROM fedora:32
+
+LABEL \
+	org.label-schema.schema-version = "1.0" \
+	org.label-schema.name = "DPsim" \
+	org.label-schema.license = "GPL-3.0" \
+	org.label-schema.vendor = "Institute for Automation of Complex Power Systems, RWTH Aachen University" \
+	org.label-schema.author.name = "Philipp Fensch" \
+	org.label-schema.author.email = "philipp.fensch@rwth-aachen.de" \
+	org.label-schema.url = "http://fein-aachen.org/projects/dpsim/" \
+	org.label-schema.vcs-url = "https://git.rwth-aachen.de/acs/public/simulation/dpsim"
+
+RUN dnf -y update
+
+# Required packages
+RUN dnf --refresh -y install \
+	git \
+	gnuplot
