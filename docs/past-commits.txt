@@ -2628,3 +2628,66 @@ I, Richard Marston hereby sign-off-by all of my past commits to this repo subjec
 
 9d2747e80b12291b26e175095c8d821572617b49 Install expat dependency and execute setup
 Former-commit-id: c16e0cf2853690cc04fa3a3c901baf8fa5360613
+
+I, Henri Lubjuhn hereby sign-off-by all of my past commits to this repo subject to the Developer Certificate of Origin (DCO), Version 1.1. In the past I have used emails: henri.lubjuhn@rwth-aachen.de
+
+3e9a57424db299ddceeb7efe516b9123b5b8f6fd made DAE example executable but does not converge
+Former-commit-id: 6bc414d247cab642b12b26ca9d2726bab9b3d840
+988a03de9df45c495a2d9951a2e2ca47d0c42613 Fixed inital value setting of odeint solver
+Former-commit-id: ad5efd20cb8b8852e546f86c0a3f82b38a4aa0ff
+1a8e0e566523c5efb4716a4df48d9c38b0a3eff1 Continued to fix odeint example problem
+Former-commit-id: a6e47d9393765729bc1d64702652b98655a2af3b
+b229f0f284611a6a289effcab29253e8435ba9d2 Added example program for odeint based on DP_SynGen_dq_ThreePhFault of Arkode
+Former-commit-id: 93abd32d5fdf5f6e835cba6df0e153d6d5fb5b84
+bf4b459bb180d499de65078968f5931dea1cdd8b First implementation of odeint solver class
+Former-commit-id: a91ec0e7ef559a5b1eaadf420c0d0b07e2ae1868
+afeae3ce6f7d525f44f6556988f951b383ededf9 cleaned up code
+Former-commit-id: 9074dc53d74e6802424f2cc3f5dde21261f1edbb
+f10593b3df40ffe05d3a15e38fb9553bded61b7d changed inital value calculation
+Former-commit-id: adec8026f3bbf541577b21912d9b64a52869eef3
+67734a9675f0af7b4d88b16d843d182b72bbbe77  Added inital value correction from ida
+Former-commit-id: a9af2ad6af2790ab0be12b1e01d02760c7a2abbb
+a8a855835ccf66d2640a3ba237b2dfd570d4fdd2  Modified Inital Value calculations
+Former-commit-id: c896810d3fd82627ff87d4ad534cd8eb2d708297
+075f047ee19c74573c5cbbcb8f16c3e44e0eacf3 Added output to DAE Solver for debugging
+Former-commit-id: 2dec32231c6f9e209ed42b7f4d586bd40c1e2f01
+ed4befa021431c96f4aca9ba8a3a523109b0a407 Adapted DAEsolver tonew node/component structure and removed IDA dependency of Simulation file
+Former-commit-id: 60ffbafbef3572541af072626a5893d268f74343
+6386063c89adef8bbc2c65fd830125f6300c7dfd Made Residual function static to enable reference for use in IDA
+Former-commit-id: af31a96c97c6dd2193de3476aa12b5543409be2e
+c958d9279735f1542730c94a94ff7ea6e28a6357 Integrated DAE into Solver structure
+Former-commit-id: 57cae3299755a72141bf8809a19c866874653ea8
+80f8ad36c0c172b69ea94ca234e5f1150e5fded7 Added nodal equations to Set-up
+Former-commit-id: 15e94ec4f1158d8adea1d4064f352d9b95deca18
+9695cd5ed5c9f0823e5d3187af9dd3986b7e61ee Updated offset structure
+Former-commit-id: dd362521cf122d068dfede7421f204019c6c5ed3
+4d7745578519cbef4aa208d68242b5306cfd7695  Minor fixes in Solver
+Former-commit-id: bebe1efe80b21baeb872a26bcfd20eb9e4cb78d4
+679bbf30d9459eb7870cd540d5effd8560fd3480 Continued DAESolver structure
+Former-commit-id: cb072410e49901fca8869c132308bc92d879d105
+15564c78808a797e68d358a8eff962bb91ebce82  Started transforming DAESim. class to DAESolver
+Former-commit-id: 2df5b6057c4107664274a0d30e32151d4e838d89
+86462f5678309ba1c040e4b0611e7f5b22af359f  Fixed comments and corrected new IDA solving structure
+Former-commit-id: fdf3f1ce71cb7e8dbda42d2cac2af17f151bc8ed
+908c01747bc6b111c23ece05281f5d6f4b4730c9 Added short untested program
+Former-commit-id: 49a0ff6acbe94fec209ef584654565e877b33df4
+de992bb2eddd857bf076e5da6e5762225948b35a  Added final steps to complete simulation
+Former-commit-id: be7ecc3eea7e7349876c61fda8112fbe2a3a87e3
+29a6333482d53394fe8aeb52911dae9ef4f9dad9 Added state and derivative initializations and started to set IDA tolerances
+Former-commit-id: 72bc123d55b6197c1a1a9cbbe416cd68d92d4406
+5cbcd3f454e9dbf4121775cb30b9330e052b9ad6  Moved DAESimulation.h to appropriate folder
+Former-commit-id: f2d860bf6a88c4bd8698b45d7d77aeaf753b8b22
+73a85f7c40f1b3b203e93e4af88706649e921e68  Added inheritance from Simulation class and used this to implement state vector creation
+Former-commit-id: 47e3585bf3ed32be12c603917c59fbf34cdc3385
+b2e2446e3e50ec227198cba7c98ccdb23ac918fb Removed unnecessary members provided by future Simulation class and continued State vector/residual creation
+Former-commit-id: b05fed838eb57d0fbd834ed81d6e656c8004e902
+1210720bf264b33e0f37bf8e3ac9a5365d7d5dc3 Added 'DAE' prefix to functions and basic structure for inclusion of node equations into the residual vector
+Former-commit-id: 598c5eac9118a6972328b2d190e5ab2c9b4dae45
+2c721578adb6cd5c76bb58dddc4180a261247297  Added basic IDASolve structure to the DAESimulation class
+Former-commit-id: f3079294def5625799bd14a4e06dbc8414d31b3b
+08d93776139cf459123476d90bdf237100d6a4bc  Added some IDA integration and residual calculation
+Former-commit-id: 2eac7a33a0e6ad3d2ab4f86665cb181b2139e7a0
+c1eb3bbb738c97ae879a91815a19a70f99de2749  Continued expanding the DAESimulation class to eventually allow IDA integration
+Former-commit-id: fc124a1ed7ab6f92ba0fa52b7848ec34aabb363e
+6b635ce37385bf84ad95a466910bca344175cbda Added rough DAE Simulation class based on the previous Simulation class.
+Former-commit-id: d3c8969db9b81b2e73d45bb23eedc4bc9a20bf29
