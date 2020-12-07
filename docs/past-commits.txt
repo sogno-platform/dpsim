@@ -2628,3 +2628,637 @@ I, Richard Marston hereby sign-off-by all of my past commits to this repo subjec
 
 9d2747e80b12291b26e175095c8d821572617b49 Install expat dependency and execute setup
 Former-commit-id: c16e0cf2853690cc04fa3a3c901baf8fa5360613
+
+I, Georg Reinke hereby sign-off-by all of my past commits to this repo subject to the Developer Certificate of Origin (DCO), Version 1.1. In the past I have used emails: georg.reinke@rwth-aachen.de
+
+55ccf4e38b9ae4404ef0a0972c222314f782ed85 fixes for clang
+Former-commit-id: ae0880b27c566d3806bb6de437eb34819bc3e6aa
+72b4a114df340eed704b1e2a193ef860ad50d30d add parallel multimachine benchmark
+Former-commit-id: 500e6609363b12d16591d027f317a853c93842b6
+b946f04abe572dd4dcf34acbd3dcde8c18c81c60 fix memleak in ODESolver
+Former-commit-id: a8c2137f9b72eac0e8faac84c612b31f73392819
+1f6b66824dbfed048f08a260a38be9f4aed26054 remove old ODE logging
+Former-commit-id: c8f5787153276cb5f4a875cca49937ba2f94c6eb
+2b8239e3ca2c5ed858ca8a9e6e39438128287971 diakoptics: refactor vector / matrix member names
+Former-commit-id: 4f740687ada777fbe592c57267bf26b1edec26af
+1d3f9bf09219e7f98bf70cf761856a48e6e81d29 diakoptics: parallelize solving for tear influences as well
+Former-commit-id: 9a271150f638f2729d81f3bced5d6c1b7dc51f96
+ba2a895faa8fcd4aa6d54f873f627af12c0e861f diakoptics: make available from Python
+Former-commit-id: e1283a52cb90b59c4600784b927854ed148ac8d8
+8808ab5bb80c8d8099dc27dffabe218774d93075 diakoptics: fix column names for DP logging
+Former-commit-id: 649cdacfa93ec79e3a4eb146bce4f02a257ee7f3
+653f92e5be8519ae5d0b3cfeb90804ec8c282411 diakoptics: multiple improvements / fixes
+- Adjust interface for torn components: create virtual nodes for them
+and pass them the solution voltages/currents after each step
+- Create separate Attributes for subnets' left-side vectors for proper
+dependency handling and state updates
+Former-commit-id: 187c0f3985bbceb2e6523ad850e537f1907582e1
+33c1000651c35bfadd6463542b87db798f642c11 fix wrong attribute name in DiakopticsSolver
+Former-commit-id: 9ed587f7ad56bac2a68986edc4a1ad1db0fb69f6
+2dd9ff481b9cb845a9fc76bbc2609d2ee4ccfaf9 diakoptics support for more general components (WIP)
+Former-commit-id: 308a0756300600318759d0a0d7c0e8c4cb74a12f
+0265aa50c675fc19452a72dcd44fc1a68e3ab787 adaptations for DQ SynGen class split
+Former-commit-id: fc5340979e8a548eb61d332c3bb337eb2998f752
+07284b4c2c2f51355726ed2d4398005dbc0b75a9 update cps submodule
+Former-commit-id: af245b39f56baf4bc789a969c2ff727b30eb63e0
+ac54da0691d569cbe765355639cc314ad6e2317a adjust left/right vector attribute names
+Former-commit-id: 29c45ef0da1b0a17f46e94386985b0774c4153b9
+e1458b0f93395ea331f389422fd066912fa63863 update libcps submodule
+Former-commit-id: 461b9afac8ad5f5375af96b2de8822516533d247
+28b820ba65802db0e1899f4bb2149fa439ce92c9 update libcps submodule
+Former-commit-id: 8cbe96055fcd301819a975f696e5962aabac7d1d
+7414469ff3db28f4453c3cf9b30083687771c53f adaptation to attribute changes in libcps
+Former-commit-id: eea454790f1287c659c02120c7731ac032914493
+15162eb002d0317c73a0bd24181112c210927522 diakoptics: use special interface for removed components
+Former-commit-id: c61d3d4af43f00fb6c8a5c45f0eb8c962878f22b
+c378aec505eac580ddb2110a1b648ff390c47aa2 diakoptics: handle imaginary part correctly for DP
+Former-commit-id: 53ed2011ad0a5103677d5c1e52533898c59c3df7
+4b0c874b508a86f56f9a55d0e04a99780021891b initial version of diakoptics solver
+Former-commit-id: 61c0306e78e562a0a8aae746723c73398432b5cb
+1fc0fe12bd755e88a15e167928d2c9d598554e6c remove unneeded Sim_ODE class
+Former-commit-id: e451393b9e6a8090dee48eeb911d7f2487e0de8c
+336a71b1986c3f4b9a79c18fd4399349ec3261e0 integrate ODE solver with tasking system
+Former-commit-id: 71a6e7dd60b543702a5c627c9488fb1844099fe4
+1a34ef01c4ed608beea834319dfbda9adf6b336a fix overlooked merge error
+Former-commit-id: 3cca60f44d01418e2a754dc939ae7732c6f87fde
+64d4ff8f0f3ca8a92f9eaa2614407bd02b9a4395 Python: new initial_voltage method on nodes; slight tweaks to load_cim
+Former-commit-id: 054a77b67a9788e43b295b87091781e890ec512d
+2d48dba02aa210e0a5b6f3a7d003a34d9d749f20 update cps submodule
+Former-commit-id: 22376532e534322d0d2339d705482ce4c6c95cbc
+62efc282e0292254f1ccee29a6dded392ef2ef87 scheduler: reduce (smart) pointer usage; use comma as separator in measurements file
+Former-commit-id: 0577bbecb218265f55bc266c855f193263b2c418
+4c3b131f8efa470f08fa7deb3aee6cd7dc8f6a73 add Cxx example for decoupled simulation
+Former-commit-id: 42592ee224a0562872d2ab1911ce39f5c3b451a0
+6396e6b6af86aec5bd4bb67fc1a2948d0c394bae add python method to automatically decouple system at suitable lines
+Former-commit-id: 85ec9f44fdb924bdfe78b162aefb5cb699c07546
+580455598e0ae5e4cb884bf4c337fe91f61ef1ea add highest-level-first list scheduler
+Former-commit-id: e8deacbb7bb7ba15d8998ced478b7e74afd9653a
+46954361dd34aa70eb4727d8a16225f716b98d75 thread_level: split thread handling into separate class
+Former-commit-id: 10af90d5d20c26c3ceeacd87f96909f111810bb8
+9798a423024f7098cb470ee53792fc5813ffd447 thread_level: use per-Task "counters" instead of barriers for synchronization
+Former-commit-id: fbcb47d2c25743fdab6fa955df4229ca2221de43
+dfb34953f7c75d256a5abba5badd6b33fc6a35cf move Barrier implementation to header to allow inlining
+Former-commit-id: ae024d13411a9c65c9166df2852eff21301e42d5
+f16264e6ea6e8fa9f2574488a2e0d769246da40e python: send stop event only after simulation is completely stopped
+Former-commit-id: 1950f47362b379374c54e38434b117b7337c41f7
+002c09d23868d15a0281a8fa294b7c08e34e98ff clarify barrier synchronization / memory order
+Former-commit-id: c80dcdb327735fc1b3f8fa9eb3ea8451b8dcc655
+0dd37e6c2c8e7416605d85d98a1b9e725d64e05c make release tag available in Python module
+Former-commit-id: 39f08fc03d836ab52c23e3710c059aac4b6998c6
+8fe696cbb8af0eb07815276ef75b28c3b980eee7 update libcps submodule
+Former-commit-id: e17167cad5b055f78b903c097230403bdb4154ff
+56b24fe28837ad23eab40c0810a86b6b250c6904 thread_level: barrier improvements
+- Use acquire/release memory order
+- "Merge" BarrierTasks if no task is scheduled in between (removing an
+  unnecessary spinlock)
+Former-commit-id: b4e11a10e039b0d563bac88c98c25d194d3ecb45
+a6e75a2fe236901c55ff899a6f0b0c2f75171a5d thread_level: handle combination of time measurements and task type sorting
+Former-commit-id: 198cd42ae5ff62cd8cc18b6386cd05f40f96e6db
+cbb4e14dd08a2d829c4a0f563085ffbfc67a4c91 thread_level: add option to sort tasks in level by type
+Former-commit-id: d38f46c6db88e29137ff5cecb1e97c61b2b93fee
+ef6d478fff5b422b52f44bc02ae631e6a06b7d75 fix missing include
+Former-commit-id: 91fd3e7d68b7dbbfe37282895612d80009524e45
+f9d430a939e0bd6346b8f3f779ea017a5fafecd7 update libcps submodule
+Former-commit-id: 57fc56c884078e1df1518f337cbe9fca203074e8
+a9e9bcbab5a1713bc7ab88352fcbddd1374faa4c don't schedule tasks which don't need to be executed
+Former-commit-id: 4b9178f0b2af55cb8d40642da5620bba8df08de1
+796f4416c98017f67dd4ae17566de09b119846d0 omp_level: avoid unnecessary thread join/fork at each level
+Former-commit-id: 1e5d31b335fad54b2d15b048cf2fabf86524a975
+1cc9a9c8b20479945969dda4cf45e4d4f3af61c5 Revert "thread_level: use CV barrier for level if at least one thread is idle"
+This reverts commit bf499acf7214dd409d5821689cca7ee4cce8f7f1 [formerly 88fcbd033adc624b8e52cccbae2a141f045df34e].
+Former-commit-id: f513bda758e87890d4b0a80bada051596f777955
+e4a3cba05407e72cc6b31e44fc030e42416a08d7 fixes for icc
+Former-commit-id: 16400b6c4f5dd89f314f783b58c820d85c6c5d66
+bf499acf7214dd409d5821689cca7ee4cce8f7f1 thread_level: use CV barrier for level if at least one thread is idle
+Former-commit-id: 88fcbd033adc624b8e52cccbae2a141f045df34e
+308bd1512247b295b4115a42060a94f86d9f1bb5 fixes for compiling with clang
+Former-commit-id: 30da8cb8ec6946c0c3fd13095bfc518b99ba2a74
+8e95dc6b6219d8fb5c8eb8d54f17d7efce3288e7 disable decoupling line logging from Python
+Former-commit-id: a88aedaa8fa9df4c0c52abee74d6cfaff1779d88
+c339f25d426c88ab90584399914b67ae0f0cb849 setup.py: honor CXXFLAGS env variable
+Former-commit-id: 9584422446cd1e89d2eded44e420b4f2142340f8
+7e2b9b12d6fb522a94c83115030a76c9bfc1da57 performance tweaks
+- Include performance tweaks in libcps
+- MNASolver: Avoid attribute system usage for calculating right-side
+  vector
+- ThreadLevelScheduler: Avoid unnecessary shared_ptr copies
+Former-commit-id: 588114c194325fc24630886a31ee2d0b92f848a9
+4a4592a9aa1794941e3934e3302546d4a75adb6c thread_level: add parameter for using CV-based barriers
+Former-commit-id: 2d87d0c02215656037ba7030ef48f88a06cf7393
+cf532ac9df05bcb915aaa2eb403f474251933845 fix C++11/17-related DAE example compilation error
+Former-commit-id: 90e4e3f9a897f66c7d456624b682c65e2828018e
+92d956c030392fa289ac20c0d5caf50bde949b63 fix C++11/17-related example compilation errors
+Former-commit-id: 2e553602cd23240a00f2b6482f44b1d6cccfd6ed
+3dfc287effc2c3a6eb59076b46b942e1e63862dc fixes for slightly older versions of gcc and CMake
+Former-commit-id: a488e136897600c1dfddde25b476e4d6f677037a
+71dba27f179db9573a7995ce8ca66d6c7dc3e06a python: handle compilation without VILLAS a bit nicer
+Former-commit-id: e66d3682237f4bb91676aaff7696c44410241b15
+83ff5551a98f02ce2d16026b5c2162b49b8ed568 update libcps submodule
+Former-commit-id: 86462c5a31a2dd2f3bb59e20c95672fb7c62ff8b
+12ee153ecbdc67d340be588888e7c615ab89e01b add python method to remove component
+Former-commit-id: 13bb2781919bc37a13803ef98d606d40058b056c
+5eea1d9d42177315b92814f3c998f5fa2a539b1d python: correctly update SystemTopology dicts
+Former-commit-id: 7da2e1f7da1448e7354cccbd19b6a74d40f3fd56
+67c26db2b859ac35b8d06e6b2a2b2eac0178cb30 add python method for decoupling line
+Former-commit-id: 0dfee0ec0aec3c4391b6c5565049d2d24a32e41d
+46bea32f96095a8d2b47a8a39c57406b9e94d6cb update libcps submodule
+Former-commit-id: aa4b20f6aba75df41f2acbef7a68c2c69c9a0a39
+0c1eee4eee118519ccbdae0853841e77d8d7c3a9 python: fix refcounting errors in SystemTopology
+Former-commit-id: 4dfff778ee595ee8f54203034e3aeeecbf6608c8
+68373d3e996d05748cd845289a625645ebbdd130 compile correctly without graphviz
+Former-commit-id: 03e5646c83b3de3f3265cf16080b5b2c456eb704
+08fa83dd63fdbde5ad434a5741c68ccaf4a240d0 allow passing CMake switches to setup.py
+Former-commit-id: 276fdb18bc5e9849c7e122a833a2230b3a909f3d
+5bcfdaff382f23227c5e3a78122236c7f4db9c38 fix build using setup.py
+Former-commit-id: ab061583ac59136bda4c9f5bd742a18a40093db1
+91479b4dcdd25b04640403bf53725f3db0932cc4 don't start whole scheduler just for printing dependency graph
+Former-commit-id: ad0787b44d9f7bf27ed2aace951ae541d4f07f18
+f4bd987c8f492bb779ee269bbc6e5a0450034085 thread_level: avoid unnecessary copy of measurements map
+Former-commit-id: 5326735bf56e784b4753ba724154a61301917696
+cf933d054de52f588bd8d3e1cb9f4722434354ee update libcps submodule
+Former-commit-id: f2da1db2b01afa8aa7b3ff144be7d7f747a43eb7
+73fc3810568b4a6e9bf33a7e2eea3319b2de5098 port remaining circuit notebooks to Python
+Former-commit-id: 242b31cc058d5676fde5ee3bf8833a5941a7e530
+f89f14ad2e5b5dae0889a2fa3b87acd6171d5894 update libcps submodule
+Former-commit-id: e6b00fbf9f187f3dcbd590e8f1cd4ee151a900ed
+e6f133e1aee79b0ab1911aae8e2f9f34ac909afc port VS_R2L3 notebook to pure Python
+Former-commit-id: 587013a32c0c26b5737999f308ad1a0db87dc9cc
+48c04f3242389b5264e628ee802f41cdbcad860b use Simulink reference results in pure-Python circuit nbs
+Former-commit-id: 35b9ee4ac15621c1bf58ced8d2e4f3acc81c9a84
+cd04f6df7cc87f830994430d53729913d507b256 correctly handle GND when splitting into subnets
+Former-commit-id: 277f4aa5ad0c374c78f096bc09b6017e12e49ac9
+41977e5a98044ffd1f99729933e4861048c389b8 automatically split unconnected networks to use separate solvers
+Former-commit-id: 5d0e1517d3389df1f0b1d05dd2c9079bd8aa75fa
+ac34aad64e8e3ff25e2989150c9ff908f6c51293 thread_level: use measurements to minimize per-thread execution time
+Also, remove the end barrier that is unnecessary now that the main
+thread is not just waiting.
+Former-commit-id: a21482f7b3923561fb66000b50fc43e349392d38
+e1543a94770292b4efab164162d5b6f9f6eff0ea thread_level: use main thread for Task execution, not just synchronisation
+Former-commit-id: fa729b9c5a40043db57a2235264a37116ad2fcec
+2d7999eaeb6b144a61ec3192c579598e4a58a8ff python: add SystemTopology.multiply()
+Former-commit-id: ae74c861903dd7fdeb01530c4a260fb6a8d2319e
+92327ab65308457da18eb8469b03c990af70856a measure Task times also for other schedulers
+Former-commit-id: 22112ce8eb333b1968a8cecd4339db5b7e67cfdd
+ae64a9ecdcd359485be946f2098bfa08f9cb9ccb implement per-Task measurements in Scheduler
+Former-commit-id: 36b9655ad5d0fe3e51242f51eeb85801a4781b6e
+c59d84b53d6860249e65c51ac77db4dadf4bdbcf disable Eigen parallelisation
+This is of course not bad in general, but for comparing scheduler
+performance, it would distort the measurements for the OpenMP scheduler.
+Former-commit-id: ff00cba53de017b6657e9e8dda2ed9f998952463
+3ca1c6817b8641ae3e69375d2b1d004133c67504 measure average wall time per step directly
+Former-commit-id: 06d37ec84a0e66a0c5fff6c4ce41988e39df403e
+e160d4366c91a799f7e575088dfcb0f47f238b01 move cleanup code out of destructors
+Python might not directly call the destructors as soon as possible, so
+some cleanup (like closing files and shutting down helper threads)
+should be done explicitly at simulation end.
+Former-commit-id: 4bca5568e901876c24286a0544b44675fb5b2a42
+ad4e5c08222af2b7feb6670d2515e08f31e1c5c3 python: tweaks for progress bar handling
+Former-commit-id: f351cc7e60d1f3c6c6e2abcba31b564b90d4a9d2
+40fcc2d5e77465778b0c99c39984fe887488ad50 python: don't throw exception when stopping a stopped simulation
+Former-commit-id: 4250c0eed5e42751632fe5522ebac1c816cc4fab
+dbbb364f32176ccf8b02c11bbe65025975a9e825 python: fix wrong decref leading to mem corruption in load_cim
+Former-commit-id: ac2ad6aeeaa3e4b7717a68441161b502a5b0d186
+04d47d44909d6014d3523f5a8b46a1b77586fada python: properly cleanup async tasks on simulation stop
+Former-commit-id: 412389d086aaef481ea0a1ba503bb5858194c280
+cc3d8742f4a49f78f8e632727199e8d96da5aec0 add alternative Barrier implementation using spinlocks
+Former-commit-id: f82e2929efa37111ef5e2f67e1d38f8dcd1dc5c8
+4483aec1170083847db5db4b8fbabb2e3ce04af8 allow number of threads to be set for OpenMP
+Former-commit-id: 0150af5743a1fb03b19c5f29c5d49d2e028f9b31
+e6cf92ec7c7fdc0ebfd6972fae254643bc32d89f implement std::thread-based level scheduler
+Former-commit-id: c0fb655d3c75031812a71b4d258fabbd8f1cd156
+ec5aa7463c5ad1e2623775ed5786f6cba613c00c make last step time available as Simulation attribute
+Former-commit-id: c9ba1795cea4ef7d43ca36ccbfe13a0f4ac97f14
+d7e38f37c9522bec6663cd8bdc556de56ec0c52d python: add Simulation.set_scheduler() method
+Former-commit-id: c49ba1f6581dab016797673a9329ad2f12dea513
+4ba6227793aea30872693d0ed65a788732b7d5b1 fix issue with WITH_OPENMP flag
+Former-commit-id: d4725d9e0e1c0f4bd0e58e533e4e86e84e9550e9
+6679381d6fa7edf12fd1d7590a006ceb9760e53c make detailed measurements of SequentialScheduler optional
+Former-commit-id: bb0b5e618ade5b2b0d3004c6033a59dcc7bbbfdd
+49c5aaa7a8e7ce6093fc67245b9776b44a7b4e02 correctly link Python module against OpenMP
+Former-commit-id: b2e0528204ae9a0aba58d25c9c4ccb1223311ef1
+ce5da1ac7b4f714bfdc53c3ff6ea959c13106945 implement OpenMP-based level scheduler
+Former-commit-id: d0a4315cef04247310ca1ee6dc260c3499820dcf
+815834e134c67edb80e0b3d2cdd2ea40967ed483 implement / restructure helpers for level scheduling and topological sort
+Former-commit-id: 5bc11097f75cb95becaf3b7fd882359b814a7d70
+01e092ef50ddcdbdd52cd6333aec39caf3ee6e8b adjustments to changes for derived attributes
+Former-commit-id: 10ba3dfe3fae226a8fad33f004d8a8388c454777
+73c7a5d236bf7c4572ddf25d8f93a6f4e1e5d03f implement simple dynamic pthread-pool based scheduler
+Former-commit-id: 357d4dea0f028b1d98184236eafd6eaad8cfed9d
+09c6e1977b050511496a82d32c24b3a29557940d allow scheduler to be set before simulation start
+Former-commit-id: 19f3c4914e9f6027aa6eed77993dff237cf01db5
+c1af0ef981f16184ff3800f26ff79f31b578dae8 update libcps submodule
+Former-commit-id: 559963237c47e39cf9b5290838629c01c1a93079
+dd01dee911d076ba6e840991157680633102d6e8 implement simple task-based benchmarking
+Former-commit-id: d67e41f9ae28accae3e0afae0bbc0e2e3c36186f
+3a6ea2a20ac9845f9bb9a32776489dd91ea8e431 handle steady state init correctly for switching systems
+Former-commit-id: bb68c7defde9b19ee278dfecde44f2612ce1e402
+8c80ccd61c42a9542b891c8b42f9bf55da70d6a0 cleanup in MNASolver
+Former-commit-id: 9bf20ae3a84f325d172f9e0665c43c3d75817b09
+ef9600bfc33a12cd2ce429a122dba6b8c40084c4 use task system / sequential scheduler for steady state initialization
+Former-commit-id: 9039d3ea37627e0e0da396d95b3d10d26818c72c
+08482d2fc918b723716193b1813fedc8af9d4da8 python: add Simulation._repr_svg_() to show task dependency graph
+Former-commit-id: 5790ed003a0339cbfebadfef2973812b7f212969
+177a0d8cd99055cd5f271c486dea29ff035b7bbd render dependency graph using cgraph
+Former-commit-id: bf05020308488264d46fc3575373507dd042ae49
+8368eda9869f5b9bc0889214b83ad8eb85433f58 update eaxmples/notebooks
+Former-commit-id: 8bfee6730c154f4ec51974bfd4f97a9c2dc2d0de
+ad2e8b302bdbeee627bdf210e55d01fb3e02565e make DataLogger format for complex values more consistent
+Former-commit-id: a970c97e187f58b2ab389fa908502b5527225cf3
+dc22716695a73c363f00ac98aab9ab57b2aa73ba Revert "use boost for topological sort and graph visualisation"
+This reverts commit 3de35f5d6360dca88e97cea890eb329b5bd5f796 [formerly 2aaa34efba091512600a89acfbd7074ac3d47318].
+After another consideration, prevent the dependency on boost (for easier
+compilation on windows).
+Former-commit-id: 967633ccc7da664ec59acd8d9d830b11e85d32ce
+a5acacd2aad6c0796e22ac04250754ef5c1dc2eb update libcps submodule
+Former-commit-id: 39ea88a8dab02d5216e57128d28150d127c0eaa3
+f49acf9b5ce711abfc7f1b01dff9b6e832360c7a update libcps submodule
+Former-commit-id: 03c56bf6316d447200a342465e443d91f226cd08
+c5862fd8950b1734ba2f1851664b177b4c6bff07 Examples: make some names more consistent for easier testing
+Former-commit-id: 9c0d4cfc71206a83f4339752889406af772a8f4a
+02556310f6e9af160fe8d05502ac7066a3ce8781 fix missing dependencies and typo in DataLogger
+Former-commit-id: 2b04e89d7a9f76e36c8112d5f2bf3b6d79793625
+81e304de94162a65be3384d0115b132dcbb7c8c2 update libcps submodule
+Former-commit-id: 9a1ca660c2a00b064e6ec3df8ef340dbc69a5d20
+697849296a53e22a9f0d0ac206fadfe05d290253 update libcps submodule
+Former-commit-id: 7861783666d952cf760d3775956d790335d44be3
+877678c2227aeb34bc3271ed38a233cf8abf2e40 fix segfault in Python simulation
+Former-commit-id: 5ce4e50487cb796af27506bb32e4732e63db303a
+c3a93df33222dc583ea5292f1655c922b04723e8 properly fix find_cps_components.py finding Tasks
+Former-commit-id: e2fa2a209ef2cea2d417a92a5b0bf63225f2d6fa
+a76ee84b530f85d75748d85de4d8a90c082137e4 update libcps submodule
+Former-commit-id: cf10307a6230cf231dc6f20dee67589eebfe0108
+eac260fb9098d1bdfe3179719d6a1cbdf6dd0961 fix segfault when using RealTimeSimulation
+Former-commit-id: 6cc7c3b6a6db238d71d94077610a0575553405f8
+1f023b04734a72c9a8a1f4ccad3c756120ab4213 update libcps submodule
+Former-commit-id: ad0b58a71a742b61e3bdfceaf0867bbb217699bd
+1e87a5767a176bc564fcb3e4f7a6bd5540727da9 add boost-devel to Docker image to fix CI
+Former-commit-id: 49a432da366d7bdc945374bad567cc15616365fc
+37abf6e5b8450be17ff896b6b9f3c8dec15635ca handle possibly empty right-vector stamp
+Former-commit-id: f0554a211007920d27c788469dcc23bfb4bd1381
+c5a4f4f9a386dbe05161e11869e11ea8d2168f32 correct boost package name to fix CI
+Former-commit-id: 208a0a86a0962b589b89d833ac4c1c7986b3dd22
+1497c90baac90d146aae14bad6562f2888593339 add boost to Dockerfile to fix CI
+Former-commit-id: 182ec4479c60e7c48c41faf7a18e4e28216b37e5
+2ce55bdffbd2ebba7c579355b318ea51aa0f56fc implement toString in Task, not subclasses
+Former-commit-id: bb3f778ff524f56e59f31947170eacc3f3f020dd
+04fdd5f98645b263affb3bf62bb98ae66d9d783e update libcps submodule
+Former-commit-id: 9fb378f264b0b09bdbcacabc0e9a4f400b593dbb
+2861cba36e1af6598c9835a6623d27802409742c fix attribute dependencies for DataLogger
+Former-commit-id: 4d2df30a8f417cb426ea576aa553e833805b7bc8
+da9e438e40f0706bb636bc5498129fd5f9c4f55d add MNA solver name to task name
+Former-commit-id: 4c54bf5df9c845177f5ee7cc933334b028ffad89
+4f0351c4ad7d14e7a66ac577ab8c5029c0aac040 add task for MNA right/left side vector logging
+Former-commit-id: 0f91f24b72e1d9edb34876d9f447e4ded492979b
+3de35f5d6360dca88e97cea890eb329b5bd5f796 use boost for topological sort and graph visualisation
+Former-commit-id: 2aaa34efba091512600a89acfbd7074ac3d47318
+ce1dc581c3ff736b3dbeef3bfd97d569005af12c implement toString for additional tasks
+Former-commit-id: 41f7cdc0493a542b38c060123af4d30b32188304
+fa6ea18df5e5fbaf6ffa71da663a8a51cb72593b use task system for logging
+Former-commit-id: 888b5fca721cf184a3dfba32b1809ad918c47cf8
+0bf27193b20a41e421e48a10510d8aba5379f956 implement interface reading and writing using Tasks
+Former-commit-id: 0a4216aa39e7d82a31604f922fcc8a452b386f7f
+3ab6b431bd2e4f55342b103adbf1655cb85cf977 change importing interfaces to better fit new attribute system
+Former-commit-id: b099a5c46d89a6df7719ca27e5712afb0775c264
+0821c00fcbc432f6cd83b88905e69633437fbd5e pass leftVector ref in mnaInitialize instead of mnaTasks
+Former-commit-id: 0ed606e16b253291d7ac996cd332819954d86509
+c668fbaa6d3faca0c37dc8b8f850a4b08d93117d adjust examples to modified FIRFilter
+Former-commit-id: 5b6393464a785627f37b24f52f9038c4c9d46bb4
+835b881e211a9b154afb5ed4b69b2e8aaa77a375 update libcps submodule
+Former-commit-id: 85dc9c646e76e9be54247bed6bf6dd21864e8e44
+bb93035df8183a1b90674cf3f8c3653e440a68d2 add sanity check and debugging output to scheduler
+Former-commit-id: 89e1d0c8642ec6f2771023f0671f6bf11f6906fd
+be2becaaa74e36c980cc286bf73fd3b1515efca2 fix crash if component doesn't affect right-side vector
+Former-commit-id: 1d816d9f0da57e47dc8f086037a7a63b1835e443
+c92172b89c9aac72d6c82189dfb37c4f8449a3af add missing declaration in DAESolver.h
+Former-commit-id: 4eaa6f3bed29f7123fdcb6b3726776683e2536c4
+9cb92860d25132f0e6778f32de88946288c226dd add DAE solver task stub to fix compilation
+Former-commit-id: eaea2ddd2f38a639791f3bedae8bc2f3d7cb0c9b
+e1ac1b82f353edc4423c8c378340b68ae814a3cf implement MNA solver task
+Former-commit-id: 42651b7e055420df03cb32de869514f5107cbe4b
+f0572e493319f82f49f2c78697019e45eed5cb82 add simple topological-sorting based task scheduler
+Former-commit-id: 2696eba97e791de688d7356efa24d59f6e80a426
+8d8f304a1dba66eb3bc8363432a58aa2c77f8bdf pass MNA matrix dimension to mnaInitialize
+Former-commit-id: ced87ccbbf209997c52118b9c53a116ce228fb55
+b5c1d3f033beab45d55c9870bb180802be7583f2 add left- and right-side vector as solver attributes
+Former-commit-id: 8e69f251b31b04f09c2a952f0c1204a2329c9b2f
+ae173174c42a48a878f8914b68c12819d94624af first draft of task / attribute dependency interface
+Former-commit-id: 0d266cfc46d32673f5070018d565110671e18a5f
+af24bf76399a21bba869929719c6518c30ced9db adjust CMakeLists.txt
+Former-commit-id: bef6690c369e2aad284f0d859cefd3e6422511db
+741a22a12df74a7e5a45890daeae055e95dfad6f add even more documentation (components etc.)
+Former-commit-id: f7e03c28fd5c2343c61d999551ed35eb45520da9
+b5a88912940520a698a34d35b4d0beec1b3ff070 fix typo in CMakeLists.txt
+Former-commit-id: 9241df492ffcffe79de8e60eed7db6d76313b033
+db57b30e65eab6df96295d5fedd8385e174f9783 fix build under Windows / update build instructions
+Former-commit-id: 07cc99024292e3c027a51f388d3dc16d3ee7de88
+cf82b132f0649719e658fc803dd07bdaa7cebb96 add docs stage to CI
+Former-commit-id: 50003735347c0f17abf17b5d5d94cb1c1bd5365b
+b74b87b7bd5f0aed63451e5d269b6df467d3c331 adjust README.md
+Former-commit-id: 47ca1e5f533722ea71bb0f928c94afd90abbc296
+42593fcc908286f8c2da94102828cd96d4d4d49a restructure documentation (add Sphinx build files)
+Former-commit-id: 592fe8678223c752f131faa93e4dc125f19ad92f
+7e204b334e8e4d570803b0e30298a66a921e13a3 tweaks to CMakeLists.txt
+Former-commit-id: 69b1e014dfa37a071ea9b9e194e907956958045a
+7d3c887bc5acc9478babf7bff9930298424c4abc more documentation/tweaks for Interface
+Former-commit-id: 6e50b0fff822ecfb08f8657a3a3178313069407e
+253d2712a86860449ff7cb95e8b122b31df899e6 add documentation for most of Simulation
+Former-commit-id: a67b9446e4b9fd1bf9169e73a773cd263d4ab797
+b19d5d36cf0b61cc7b154ac327267073718bceea fix CI
+Former-commit-id: d125e2df2fc68029f1260778c9ea91ecb3748a41
+cec89a57b7032c980f029520866fb3f7a1e5e6ed do tests completely in Python
+Former-commit-id: 64af35ea4bc917aeb528989291085d2ad389cbb2
+52a33d1e227d7f6aa0805dc5fa29fc4944317b11 implement RT simulation with Python interface
+Former-commit-id: 1cb9d17807d9c86a658e4e9de10e3e34a2750d21
+d09d1b5534399cbdcd0d173c2d0c853a8c8f48e0 add shmem Python example
+Former-commit-id: 905ff699d3325dd39d5dd88e89ac86b43a35d79b
+cfd9a48365cacb0415948ff35c6e96892186c727 add Python methods for exporting values over the shmem interface
+Former-commit-id: bfd0485418b4b10506f3e60a5dfdef8188c1a0e4
+acffb3cb7db205a210875fb354735065eecd2e07 add more component constructors and a basic Python example
+Former-commit-id: d92a8fd96dc8d4cfbe7c87ef7787ef8175db7076
+df9233b3be574f3897afecefaaa0b24b40551d8d add Python functions to create/register external sources
+Former-commit-id: 96bd310177f62774ea338c21187f370575b32f5f
+716667a0e4a2010c54008f3696363b4ca8ec0b82 add Python type for external interfaces
+Former-commit-id: eb34d246bd65fa39988763f4f6b2fdb19f5478c5
+508131f4e85bb017d4eff23548721054ee87d99b update build instructions
+Former-commit-id: 58eae23ccd9960b702ec9d8f8f7d9d7409b2ed30
+e8c6f66b3766c6af5d0fda4a30ab5f8645f956c9 fix CI
+Former-commit-id: 075f63728d3c8913044e9d6f27385ee8edeec790
+3b5ee93a5ef238e34d91ad3b84a8345f4e0fada9 CI debugging
+Former-commit-id: da9c925d96850b6bc6bcf84d80a9631d4cacdcf9
+14229902e34039680a8e27e9add150d4e03f883b Simulation: supoprt more loggers, add update_matrix() method
+Former-commit-id: d2c96994ad59a99afbd0f2929ed44801b9a4e86d
+06cd02dc81af75e545bb351e95400aaf807635a7 build DPsim as a Python module
+Former-commit-id: 5e7f1315baf003bf357813a0ea845542aa9f505a
+b1815d60cc97242d3f705267dce3f40b37544333 implement complex Python attributes; use Complex more consequently
+Former-commit-id: ad4b3f2dada32aff30a5691f6b01a800ee3ccc34
+b15be9d024bd53e617abed323d38f1b74c892ca8 remove old netlist code
+Former-commit-id: 5e3d3b8af28e954e2514e0b034dab21d9bd9ad07
+f8042150033785a0926ca9566117ca7f12ad0e38 add Python attributes to many components
+Former-commit-id: 348e7d7f64e9115caa08eb3bc9ef58885a4695d8
+0ac69ef526fd8b1d06459e07cc2c680451b6531f add string attributes; remove old BaseComponent constructors
+Former-commit-id: f9dcc3ea16452b1bdc9d6341c20551a64f45db8d
+f4c1e8e7b07c6a84cfb04e9b6c58404e66bcd254 add general possibility to access component attributes from Python
+Former-commit-id: 8d51db66298cb177d3090fcb9e4b99e9decf743f
+f94a3bbe2b57a867890dd0a6b4f21e9cf29c6c04 whitespace
+Former-commit-id: 94c409e00bbffcdd41f5ad6cd1961034732df8c8
+4a9609ad0685c6f24b03fb18d1d486924e08c71f simplify load_cim
+Former-commit-id: d110691993033d1c165c83ddc08ed924efac9ea8
+c4412aa9b7d620c01d9e41bb2a2c5fa5b20a3688 add option to pass additional Python files
+Former-commit-id: 1daa562d3c7a3e938cf347c3d76e606613cf9d72
+0d00e4410056aa8baf4e72d24d3e0c56360bf09f support loading components from CIM in Python; remove unneeded command-line args
+Former-commit-id: 84b4a698811d3355729b4a81aa73ec5beb5e22a1
+169b4b726950d4254de971af39ad02f70bb5a6b0 add lvector method to PySimulation
+Former-commit-id: 8e767e65e59f3b27d5afce75e772c15af2230ebf
+c7f2568335df9971aaf3e7245ad9af5c8a891932 few tweaks/fixes for PySimulation
+Former-commit-id: 1a6e1dbacbc51c82bef2ea6e1dbbd23fb0d53936
+fa5cdb595785fcbfe42e009886bb36c731e468f5 pass few parameters to Simulation constructor
+Former-commit-id: 2d7d552279d326dc74a89f47ed7951861f4f55d6
+e391959ba87b25ddec2cf5e81f6905fd5ee348d7 encapsulate simulation state / communication in a Python class
+Former-commit-id: 2c7053e9b53d3a47903cab9a71321572e67803cc
+c9532b89a44cabd293401d6e7ad0246d77e040b9 add another "done" simulation state
+Former-commit-id: 50c7da4ef0876d4ec0db051925daaf9406b57de7
+cac0c80e7d543c567e3753a61f3bd399dcb634cd resume simulation if start() is called when paused
+Former-commit-id: 269e8378b6b397e747a36095548853678ea6eb6f
+c067c58fbffdbe74f65b94f3c83e282726768b71 use C++11 std thread library instead of pthreads
+Former-commit-id: 66312bb86f1a3b04f8c26de7fcaeac4ff87c174f
+9940a47e56526a102c487ba4ef0b11b08ca9d5f9 add Python functionality as new command-line option
+Former-commit-id: 7d7a684a66e301247ac82ec27004ab2d4f726786
+6425cf64673900381af5b8626d410a8c77e169fb use a CV for Python/simulation thread communication
+Former-commit-id: 8223ee708e200784792c53fd5b4e044cc543e339
+06e3a67f93d0444636b42aa890d05ef9e7f911e2 playing around with embedding python
+Former-commit-id: 97be4bb43743fc8e4fb5efba72c3f2dfb4c47000
+9642130f930bc99ff090af3519f09fa8069757d7 remove files from old build systems
+Former-commit-id: 057d4f77a043d554684467ef1ad61cba5287409d
+fdddfc42fb984a89458d6396cdbd00c948626b3b fix tests
+Former-commit-id: fcacf8923569d01a7d132172c6e0a80eafb99e89
+1be401dcde28e864cd46edb19c1b867ba8ac19fb CI: actually run tests
+Former-commit-id: 69d9e4ee3a6d27d804c2ce6ad14acc44bf1f9c52
+94801581e35bc661737cc4a034eb499667245620 fix CI
+Former-commit-id: 21072bf4a61f1a3a0fc7dc3382162ee7be37e760
+a52a2f74cecf6d05feaf71aa4d66179860fbbf37 fix typo in .gitlab-ci.yml
+Former-commit-id: b6c96cbb6f73a2a22e36154ebfdc572d7fdc5a71
+908a5c2ebfc7f4b49074089e2e3fdcadd00aa0e6 add test stage to CI again
+Former-commit-id: 08e08e332feddedeab5ea86c3e8c2441e8927c91
+cac09a20ee2c25c29b0c78ea69db01a102c8e234 also build tests with CMake
+Former-commit-id: 35595a801bb003587f4a40ff3a5ef82f4717c222
+eaf6fe850abfaed7ac577d226b4c1df75d62360c change build instructions to use cmake
+Former-commit-id: 5e6b4ed08c3f0b4c76f7657c4766750b7fad4cff
+aa4e4430623bff2f28e8fd189c10ab4bfe39f83a adjust main for Windows
+Former-commit-id: bcca6ac47924d831d610206c75dff4f926d9a8ae
+2a1517cceb15b35a60e0796de405e7500f272a19 define PI in a platform-independent way
+Former-commit-id: e54a39d355a93bded79dc97851aaab0a74ffc2c7
+17a94ef688f15f40497f6f3bc47ee585e75cf949 adjust CMakeLists.txt for windows
+Former-commit-id: 4c0fbdf4fceded9eb2568b93867a7c007e0e0c2b
+1a6cec79dc2359c09c9c8a6bad942aee3a4a5910 fix CI
+Former-commit-id: 69179ee8404c3122aa373ae24eb4caddd4682013
+19fd095ee04442289b1280310c81e554293d0525 fix CI
+Former-commit-id: 4df295ccc3a3eba05bebcb4d6783324dcb117652
+2e731ad6f1015e35768ad52c245f8b9a6bc0c915 fix CI
+Former-commit-id: d4404f6205860cd5c1cee6d9efd8b83300f935c5
+6f8c91e5928c808f21a9b3806346fe3212d55ea8 fix CI
+Former-commit-id: 163049738550eee3c797ec5731d42fa8042a7df7
+ec455dccafc4a6e71516ca66c1e9941d73077429 use cmake for CI
+Former-commit-id: 4a0a49e4e5623f5e073ea2e366cd91b5311fec6d
+1261cc62eafff30caac0c03fdc0f0334931742b1 adjust main for proper distributed simulation
+Former-commit-id: 4573b5264aab0bca4b7006c326fe2efb0d20346c
+86faa71eeb744a68b5e4f13142cae0fc73b370a7 adjust usage string
+Former-commit-id: e68eaa8e9e783265da0144b4feaa480f2abd39c0
+d8db8f9d2405ae31f4e5ea9625ecb343c691ad50 actually parse CIM files
+Former-commit-id: 75e75cc5d6cd48a0e7db59dc81222f13cff53126
+df730c1640f5f670c9f884ea85a168fa39f738b0 fix possible invalid delete
+Former-commit-id: 927ad96f3a8365fd6ef618ffc209a426c0a0e328
+99888da8155a390b29a94ebcf904de9ac130edca add basic functionality for distributed sim based on CIM files
+Former-commit-id: 8f9b6cafa9fe27394b0ccce7c40f3c23bff7e602
+5dbf0a407da567b576fa619583799425a3b0557b add basic command-line argument parsing
+Former-commit-id: b552be917496ecdf7aca6a9c5b4f5fe426c2296c
+0d1f6dad5c6203f0f1a880b62dfcabc8ce5d640f ensure init is actually called for each component
+Former-commit-id: a68a606443ed248f3286789bd0306ae051e4b870
+3fb2424fbd6a7cf2e30a58110546ec82daf97667 fix frequency in CIM example
+Former-commit-id: b62496d2c65f2a2b1fc06f29911987631828e7c7
+7a0a00f04e1ea980144043c2f89293afd85fa3dd actually simulate network read from CIM
+Former-commit-id: 6cd72866a351be77b3174d4b9dd1f0ed18232674
+06a731f2efe41cdc75a8c0976d38179a97d12247 use SvVoltage to model PQLoad as impedance
+Former-commit-id: c4aab9cdc9e71bd4a93eca6ca20b7c3355e1b702
+6349144c02554be21e4ca74272eb91f377e7b030 use system frequency to correctly convert between reactance and inductance
+Former-commit-id: bc4dadd20a64644c893667066e424e97943d3650
+5706ca664ebb937692490774bba76692632d412f map EnergyConsumer as PQLoad as well
+Former-commit-id: 3f0a8a4a4dc3e1de34a11fa49a739cb6de172810
+def9f3413122b838458f1fd0254c0826ea81295b map ExternalNetworkInjection as IdealVoltageSource
+Former-commit-id: 7dbdaadf513460c919f3b0f2876c7bd653e86eab
+00b8f2f324012710188d217bda6eb800491e17de only compile shmem/RT parts on Linux
+Former-commit-id: 48f012dc6014991ceb7f495e2e38de390dede017
+c28f6a160f9ecb75dc007c76c0eef88082cc8098 map PowerTransformer to TwoWindingTransformer
+Former-commit-id: b4f36f0101cf07265b7237d42e6d41cac952d88b
+40dcaafba2f126ce99bbbf677917fbcf597f89c1 map AsynchronousMachine to PQLoad
+Former-commit-id: b74e3a5bee4ae00d857689d27e9aa0598e94625e
+f75e7c920a3fad259797f7bc4f161a6e7809c6ad map EquivalentInjection+SvPowerFlow to new component PQLoad
+Former-commit-id: 3d734cb476fecf53d930c5c7675637a29b7109d4
+a32169a7d4d02dae854ec0b7f1ef05edf17717ee map SynchronousMachines to voltage sources using SVs
+Former-commit-id: 4151832f51636c48f088fbcde0cac5c3668a80bb
+c7e3d423c75b97b4cedb10a1dac1ae586be2068b track voltage state variables
+Former-commit-id: 3662cb5bc17f67e3a42b1583c5d2e140ae20a6ed
+f74580ea84305949c99872801b274149fb2ed6a3 CI: adjust paths to shared libs
+Former-commit-id: 32f924f33152d5bbe0a62fee1e6218cbbcd7902f
+f990bc1c7f8d8118aeaccdcbe6a645ae97be701a CI: adjust paths to shared libs
+Former-commit-id: 84bd3aa895fd1344cd5356863e359d9405ac6023
+e0a995cb62b32a7053bdb5776d16b508e1c3418d CI: keep compiled libCIMParser between stages
+Former-commit-id: 325591bee0df0bd7a11ac5cdf8dc7aa3b26824ff
+e6f1193067ea854449c513af3e5506cf47caeeef uncomment RT simulation functions
+Former-commit-id: 6a573a13dd3ef681ec6c43450ed0b910fc82d12b
+562451617040d4ff50a09a27926cbcb522c2e3d4 fix typo in Makefile
+Former-commit-id: 9781d3376127cf69deb12a94bb4210b809047d03
+7b7c3fedf1fe9b6ebee4001dfc9e79912689c6fa CI: build arabica as shared lib
+Former-commit-id: 5392d31ff2aa2cb430cf3faf298de094883cc7fc
+8c4c9b46473afe3120a9ba86a7fd4e43da6645a1 CI: update Dockerfile
+Former-commit-id: ddf19028ef14985d2b998857ae73d7414f62542f
+ee1355a5502533d2bc593d0e6a29598b2a40b803 CI: install libxml2 instead of expat in Dockerfile
+Former-commit-id: cb650dcc10d21ca963ef9607edb27a5c9bb44e57
+89b030dca7f6c8762a871b250fe9a1b42c0f9ee9 CI: adjust before_script
+Former-commit-id: 4b3efbc3813fe51d16d72359f375d1c10ccb5dd5
+df1069d4d36c01b82acddc2e3eed20053e99c181 CI: adjust before_script
+Former-commit-id: 96c083c56736e7ae1558e8e910ee2fb57b74d7a1
+cbbd78d11ebbf6de775d5eaf40d61c82a91460ec CI: use relative URL for submodule
+Former-commit-id: 319309be239f30cd66f0c75ff73d28666f478fad
+110dbf6dfc70d5041533bb1db3dc7b8dd76052d8 CI: adjust submodule strategy
+Former-commit-id: a275e9c49a9a043bafa6d62f4783baecf6bc6cb0
+3c83581086060c69b56cf91836e81b094d9a041e CI: add git to Dockerfile
+Former-commit-id: 42abdc4ed31e23955b0a1929dc67063b10e3dab4
+2fd4dcd8c7a0662c7fb9796342296849af4db186 CI: check out submodules at start
+Former-commit-id: 88f413b3f63b4689c2c5e0678d027eca2c39b8a2
+5b42d1b38df0b6d249825da9eec9baa37d5e521c add cmake to Dockerfile
+Former-commit-id: 53232ae55997b250460a6ab45151b5ff7e08e28d
+73cd4b11600052e19fcd66d7746498138f074470 adjust CI for CIM-XML
+Former-commit-id: a1ee2c208e33b13c6e616fd6ec9bc4ff80c697e8
+71ab3b89e7e33e14aa39d3998782b622e67ba1fa first steps for integrating CIM-XML
+Former-commit-id: c18e2790f0fc3b8c41bbb3fc4c937a80331aa5eb
+2410bb43294bd2797cc6975d90074978e40c25b8 consolidate realtime stuff into one simulation loop
+Former-commit-id: 09dd87957120f6b7c30bbe5df628b105bc5d6aeb
+027237e092475ac6947801471ec178b7a44f4482 fix system matrix switching
+Former-commit-id: 94bc3fb14b592ee82a3aef674dc79bc24ec4403c
+2e00ebe2d7f9aca619150b521a56184cdda3c293 change resistor value in distributed test
+Former-commit-id: 2dc49208a40bb6c5f94d1854070e60d5c3aeff74
+40d4a7e10af2a2418644489a2f902e307d8eaf70 count synchronization step as first step for simulation time
+Former-commit-id: 222f41fdd2e2afe9faf396bb6db723a8c87ed095
+5e3902da8b906b466199d8927072496d6df4e540 allow lvector/rvector logging for simulation with timerfd
+Former-commit-id: 66f2d85a030e7d57c7c549b0111da49cb6958dac
+b4474879dc67c9c1fd42b9b92eda1635b46770e6 use correct clock for outgoing samples
+Former-commit-id: 8ae08a96fce7d02247a1e03a855bf5113a839efa
+022bb31c170a4bacef9d7d1552a682e41419f152 fix dumb typo
+Former-commit-id: 0c2b7688a63621a01a0ad3d642dbedb76bea06d6
+37753bc5e7da84a0b6917def6f585710f5b59d53 add new example for distributed simulation
+Former-commit-id: b1b1623a8e0650f9e87b86b3fb994bce90888f1e
+c7fd156c8c3c9fb7c3b6ac208909c9e889514796 actually increase timestep for timerfd simulation
+Former-commit-id: 9e5e6a3080e467593ca888749493e5f508d8c691
+78e4955df2b260fd291ae10b7483d2d28d1ae759 implement new synchronization for starting
+Former-commit-id: 552e7504c191fc952daa0bc7a614fb153f752bbf
+61eca44621ca8a385c500a1b807b403b1c5ab6f3 ShmemInterface: optionally don't block when reading
+Former-commit-id: b4c12079e2d2dd28409752565adaf40f41b47268
+76b9d8375e6167cf89056fc277dea996870b5c9a add timerfd synchronization method; adjust some examples
+Former-commit-id: 4478c7693060ae53c3978cd0de3418e5e71d6c0d
+d1fd0b1e9999c1a1c8b358a3d0a0b6855c970257 playing around with exceptions for RT
+Former-commit-id: 4340253691b5610481998eaadbd88e6a42c18f64
+00607cca508d3ed80310d7b94e1dad5ed8d91eb4 fix ShmemInterface constructor
+Former-commit-id: 71e7ee7fb76c4e4fc24a26d2c4978d03f288677c
+e138d53d6fca5aa85a41b0a0535e93fefc5c57ce fix CI settings
+Former-commit-id: 447f31798dd70ce6647c8288a96508346d7042a9
+ba9ed80969e15eed06d4e7bdc5310efbb9915ddd fix addSystemMatrix declaration
+Former-commit-id: d6335bb78d35362fc03746fe4391bcd1114de98f
+158735108f0204d9a5547cff65916d3a0f478c49 pass more matrixes by reference
+Former-commit-id: 8e16a60e8ec5411e12e774b8be86a77f1b62f525
+bc62854986b2d897b0bc4ea2a6e9dfaf0a104e0d make shmem interface somewhat exception-safe
+Former-commit-id: 894e033edfdd54945847150796a163fdf1fd7aa8
+8a6b38b026571980b3725c3d111e79fe7c83c218 fix logging in tests
+Former-commit-id: 4e3435d310a51ba1ffa4a812f48a2977f01a38d9
+5b4bcf848692be22b38fcd6ea80c45a9e608c543 rework Logger to write directly to files
+Former-commit-id: f6f655f7bb4369c7777bbe5f9619387a981723c9
+5d7dcfcf795a49e3f9440e3d476dc8ac5d562f26 additional missing component delete
+Former-commit-id: eed4d3dd0de3ffc8d1e6badf80dd974e7e851a4a
+495efc33f6d124067b3341ac19f0ed446ccd251b use dynamic phasors by default
+Former-commit-id: 84650232315381d72c75b11ab675199f3b54327a
+7a03905b874c53dc7bdab5fe1a0d723d84d2f62f properly delete all components add end of tests
+Former-commit-id: 057d111d23596f172c4e39c23d24c2e02069c8ca
+58b016a49be6f99519f40f0565fc7b08db4b1626 fix testscript
+Former-commit-id: 6bd786b14cd77cbcbee45ae8f03f1116642e3508
+cfdb8e9ad6c6e778e1654268f0484e28a16db0e0 fix CI
+Former-commit-id: d91df7fecc659e2f10f71e5a30b6f2541469193d
+4acdd48e3968c9559bca8d358f68066f247e364c rename VillasInterface to ShmemInteface; doc fixes
+Former-commit-id: 53eb218bee3e32d68111f218f8e43aed007c1881
+fb408d036a64a111de358b9aa8c4dbbd41880f15 adjust to VILLASnode shmem interface changes
+Former-commit-id: 664386f500e362157b4a776a40261dee705f6eae
+361fdccd5b62a7e584925a6359fe0cd55c256d6a adjust shmem interface to rework
+Former-commit-id: 4fe4c03f8e1ac7a05780bf4afe95ee1cf08b6660
+8d927a619a765fa998b26d46b1bcb3b599ca52a4 fix pandas package name in Dockerfile
+Former-commit-id: 15c9e838823a9e759a6586530622d437f7353640
+b605bff1b9d8bd0ef6a2ec9240d77fd3ea6b1abc fix numpy package name in Dockerfile
+Former-commit-id: 9515f73e1eb69b2f614c03c6e94cd2009bd5a2be
+10c38f45719b797da56054323ba6ad98f642e499 CI: include ref in image name
+Former-commit-id: aef3bd5a4b43cab944551dece70660ed8025a80b
+260e4de18fc913749d90e0d522715275b5a0740f fix CI (try 10)
+Former-commit-id: 0b108a397819ce7b3c3619d3e3134473af57e65a
+ec00c5d8b100c122aafc26236820862528172f67 fix CI (try 9)
+Former-commit-id: 41c9e773460a4554a5edfaaa18396e62aed14675
+9870ce4a92b7abfb1cb2424b079042857ae4d80d fix CI (try 8)
+Former-commit-id: 7c6012d26fe44e76e2df094cf33b2296eb059e17
+41124fe8191638ca3342977e2e8ff5641628a83d fix Ci (try 7)
+Former-commit-id: a0fae5307451304e3656a431c49f9345367b4480
+79f54966508cdf0ac1d5e7c5cc39f2f790d8e775 fix CI (try 6)
+Didn't know there was a devel package for VILLAS, this should solve the problem
+Former-commit-id: a3f2f0a6fae3d6bfbd0ade7277f495d018a24c2e
+ee5f80347c7af5ed0d93ef031bda3031a27376b4 fix CI (try 5)
+Former-commit-id: 2dfb70e7aa1da36b421afa78d45a69916b8229a6
+b457175cada483a14aa8ed46ff259a7b5cb7f5b8 fix CI (try 4)
+Former-commit-id: 75c7fdbf6208aac69303360fc699d7456bc46940
+1fbfad45482208790457666bb03b95a3b27afd92 fix CI (try 3)
+Including VILLASnode as a submodule should work, but there
+probably is a better way to do this.
+Former-commit-id: 85baa87b9bfb9d9bde87f9d44dd3175069558d11
+7017febd77cfe4fc9e5135255880abac304d61b4 fix CI (try 2)
+Former-commit-id: 17da9a577546d0cda82df3eeb699deeb8f69b896
+2afaf34e15a52f09e67a24b7e169418180c16360 fix CI
+Former-commit-id: 77cd661cc2075aa82a433ee50785e86e26ed1ff0
+36f3adac0807aa3e56b393a6de65eeec5b36a631 add CI task for tests
+Former-commit-id: 51b665c27326e51ffdbcb96631d93624e4679397
+d7722046958f6ca7af739e125df148d1e30729ff add basic testing/result verification
+Former-commit-id: 01faf73094f471936a501bd7dc1b27d5822f4fdb
+290e1866b4dd8aa9bf043f0ada3a9bd3109da6fe add plot function for comparing VILLAS tests
+Former-commit-id: c8d536e32b25ecf82f7bcffce934de18d9092d9a
+a6990c0889e005140a62febc6aa59390f8aa9364 add test for comparing operation with/without VILLAS interface
+Former-commit-id: 81e9061b03aa651386f33505d3b722c1835862b4
+3ae462d24701540a5e145a0c6ce0a3e9bb5987d6 add some documentation for VILLAS interface
+Former-commit-id: 0a28e4f3f6b6109408a4c26412693d172195186c
+aa57cc032fa7a23a6b2ef4ad2dcf1c7740dae835 add getCurrent for CurrentSource again
+Former-commit-id: f2569515742465fa7346f272954f995c5f8315ab
+04f9d0f5e8ce61a1d01812a5d1be44d585c3738a remove old functions for current calculation
+Former-commit-id: 115d5f09b0eedf0e1449413fce0d1a34767752de
+952aed6bf02ce4dadb9e64491bfe432d1a3ee63b adjust getCurrent implementations
+Former-commit-id: 5be5b05107d2febb4732a43aaf98bd4371344ddd
+b9292eab136c007e3a2636accc2783eb6bd8453f shmem: support initial values; add distributed example
+Former-commit-id: 1a8b90a63d45ce4e1d8c71034cd91fc91c215b59
+0528ed684089fef6a33732f8bb869858d65159fc adjust VILLAS example
+Former-commit-id: a6602c4df5502f7f8427ecc9e90d1d3c9724a269
+7554b3c0c49b4a534bdf8b6cdd1d9b4bdd31ccb6 fix segfault on shmem pool underrun
+Former-commit-id: acfcd68e4f6c00e0e64084b32368b34bff17f39b
+559c9d16fa7f4c2be665ae2d21c26196b407d1c5 implement getCurrent for more components
+Former-commit-id: 72c90bace662f7aac4033bbba75bfeaf96e91e76
+f96576dc610fc367939f8b7336961100f6c09c72 implement getCurrent for IdealVoltageSource
+Former-commit-id: 6910b01fa3b5d02aeb319e7a515f91714217d315
+418f3d6315d1ea1b5ac687c437b5db5510244585 implement getCurrent for some trivial components
+Former-commit-id: 644ca275defeb4a46ea2f3a8afc053782cf4fa1d
+e5f2099353cb2bc8f40367bc09513ac77ea8969b implement getCurrent for LinearResistor
+Former-commit-id: 4794b6eff20a89b6f00f9e92009ff8cda2929e8c
+32b024bfe46359c8c765e619099f45a95cacbe71 add interface for exporting currents to VILLASnode
+Former-commit-id: 8907783de470dc1c7a7f5abead56cdf2eba778c2
+dd95729e76d5ecd9598885cea03af584f4d33fb0 villas interface: read/write values as phasors
+Former-commit-id: 9667f481ecb35eeda964385d51c74ac3d0ed472e
+033dc796a18e36459a3c543459480dc73d255857 implement sending voltage values back to VILLASnode
+Former-commit-id: dabcba83562a44b1745b4e167a46c6b964564cc0
+6e218cb33dc5d11b07a59c2db9631681f6ef4696 restructure external interface a bit
+Former-commit-id: 87e565093bf04fcd7c3e5818dd5af872122387f2
+075b0d508d61a03348ca127c75e7bd2392a19c88 add support for external current sources
+Former-commit-id: 95974fdc6f821bb9ff020e413eeaef0740312e5c
+ca60fa47c6a14d5f3296281404cca851dd001ced fix ideal current source
+Former-commit-id: 05d99aa214c92ec9edbd86789da0933cc9a03a25
+9b6826ef5a6f1b567d745bf2b54a56fcaded4985 VillasInterface: close shmem object in destructor
+Former-commit-id: ae0acde0c1e94f99fffa81c5af0c1a4abfc222b1
+fde3a466baf8b70fd97897cee59c3e08ecdfd010 first work on VILLAS shmem interface
+Former-commit-id: 8042a16f0ba3dfaf84cb3b169a9271cde13dc53c
