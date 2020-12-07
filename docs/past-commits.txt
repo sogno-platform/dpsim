@@ -3262,3 +3262,77 @@ Former-commit-id: 05d99aa214c92ec9edbd86789da0933cc9a03a25
 Former-commit-id: ae0acde0c1e94f99fffa81c5af0c1a4abfc222b1
 fde3a466baf8b70fd97897cee59c3e08ecdfd010 first work on VILLAS shmem interface
 Former-commit-id: 8042a16f0ba3dfaf84cb3b169a9271cde13dc53c
+
+I, Daniel Doehring hereby sign-off-by all of my past commits to this repo subject to the Developer Certificate of Origin (DCO), Version 1.1. In the past I have used emails: daniel.doehring@rwth-aachen.de
+
+82e49fd3efbc4854074cedf6c25bc4252eb646f4 copied makefile from development branch
+Former-commit-id: 7b0970bde79c3f067eda3da568831a0a25509e58
+44b51294c7dffaf4062435da46f240b80386c56d restored makefile
+Former-commit-id: ebca957ff9c9b02f54441afbe0601c85772f7a77
+2d597900a1712fddcde55903a7fdcb9f9a84059c explained command line arguments for fault-test simulation
+Former-commit-id: 0c0dd534a434745ebfb9b53d9a1207ea77dca40e
+7400943a3b4100a75159ff896b653dd703daadd3 implicit solve
+Former-commit-id: e60144465c6daaf63c2f0ec5278c494ea038e8ad
+302f0ee003b8e277ea52d535f9b8c4872c813a08 enabled implicit solve
+Former-commit-id: b18695e271ae3bb353a15002a202739d86dca3af
+b20f4899fb09b90ab05aadc4381e1bb003a82df0 work on implicit solve; find method for extracting sunmatrix data
+Former-commit-id: 8c85c97be780fec959e0c3ba1cfa2065c75ac41f
+026d33cd0d2282393ad88e1deba426ba01afcfa0 cosmetical changes
+Former-commit-id: fe087295353ef4c5f8274c0b0f626fecb0a257f3
+2bb186e26cb45bf8cbfbf13949ef0666303bc61b shifted ArkODE memory allocation into step function
+Former-commit-id: 9d22ad631ac26bbb976e4e0ec9087f86ba923e60
+8aac269663f0d170b8dfc278562fe8ab1ff0fea6 command line option for chosing between ode-class solver/built in
+Former-commit-id: 1d4d2753aad5e05139c1c1a6e712f1c0da822869
+03a0dea938a470199a228375996d97d405d1e04b easy switch between ode-solver class and built-in solver
+Former-commit-id: 5295d7331e73d8e5b78675e73bfb58e3253702bd
+59ee430a2cbdfa61cd4f94fed7c17569e28879e4 minor changes
+Former-commit-id: dbb72041e4c2e1a9bc3b0cc0db7d2456ebcf4f90
+225498262eb9b99dd8313b84b10b97facbf74474 refactoring
+Former-commit-id: b08fc6602b4e552e9f964d438ae3a1039848a3c5
+abbde68958485c7bced4312c5865f911239cf628 producing similar results as before
+Former-commit-id: e082286cc3c14f184bbb116e54855c3418040628
+99d88acfa128423da5b804b06b30b8d16b5e9737 reduced build time
+Former-commit-id: bdff805a9cab1f3d19fdf5d513b25e24125072ca
+9700d5178c7f21b219f8ce8087ae0fb17190cc17 working on ode-class
+Former-commit-id: 02d8984ebb50f13805991abbce91b55b8173a9b7
+52da6f81f51e462ec8444545c6a781d6e93408ff work on write-back
+Former-commit-id: 754c0547dc5d5b2fd54bde5bb35c281f582cfbb2
+d983cca6202e82a5ec97e981595efefce8aa0775 event not properly triggered
+Former-commit-id: 77111e248e13cf386e016bed775743d1ac020491
+cff2827e274fbf8d16ee6bb6910a0e3de14037a0 not working yet; probably values not yet transferred between solver and class itself
+Former-commit-id: e2d7accd32e014a14c15db0b19bd3ac1d92e7d7c
+7e607e27ff37b290018d7c66e7f72fb192ab8fef building & executable; working on logging
+Former-commit-id: 92e9be976b967d2950deae988e60cea3743bf898
+a5976a9c7ac052808287738dcc86079905a9f2fe updated makefile and classes
+Former-commit-id: 7799800afaa65d46ace523b474ea6c68579d551d
+31906c2df67ae4a0f350867f68826ae66559ab1b working on way to test the extracted ode-solver
+Former-commit-id: 944af2bb2640304b67d9373d218de9e33c8f5cca
+844369788ee58e67f42a5fc2340ae8456971bab1 building
+Former-commit-id: e276c1c54fdaad8de614153522b04e68be9224fd
+7997e64aef583759c6008a48df4f4984f50b9588 added initial method of ode-solver
+Former-commit-id: 37324a3535a8a440ab6606547c0edfbe55957c16
+36734896f7ffe57760b665d0f0430405ab27df7c odesolver.h similar to DAESolver.h
+Former-commit-id: b252686def090f6896ed86a2cd90335bd699f55e
+ab10d32e57ec99ddadeb17466dc99fa72940c62d changed ode solver specific for one component
+Former-commit-id: 0e6bb4f6a9224451445e4638480304614ac620ec
+e70140d5abb89d6c557d336115ab843577fe979d commit with docker
+Former-commit-id: 5eebc425f7bc97b10f836f300cc858254550733e
+2d23b787d9080da28aa260cf35128f631f72c69c works
+Former-commit-id: 81ce4b9b87751b06a0cb123c77629f2e90e5d38c
+b674eaaac6d15c0d23176e6ae7fe378d5fc92d4e test commit
+Former-commit-id: 82718a48ce97b1ae25443787a2bdc708fe8c6f86
+3d8a3af07da95b071807a6305b36edfa386374a9 multiple solve in ODESolver
+Former-commit-id: 049853521164feff10b6d9aa793664ba513b0109
+09da65adca28035667929f821d4fdf206fe7c2f2 trying to log Ph3  Fault Test
+Former-commit-id: 83b0868ee5fb8ac2ecddacf6664f2497f1344099
+e411e3064d26bb8d8289692330e143e04001a1ee working on Logger include
+Former-commit-id: e47c3290a596fab8e2d353852ed619277f26201a
+b7fd082ae977585c728b9b6edcb711d1d1bd2979 examples for logger use
+Former-commit-id: 7267d248304c32ad85ea00f8ced0f293032147a5
+bdf6d011335c64d75a07bfca834855864a5db4ca checked states after solve
+Former-commit-id: 438fb1ee36ee4db96f96ae3bc2fec813e35d321c
+89a4b9f4c07664b604787778fa4096ee4bc26415 changed URL n gitmodules
+Former-commit-id: 494187abdabaab2d8847599b133695df3a29585d
+7352947fcbd759f344fdbb91521fd6bb44f21989 Enforce reading from ode-class branch
+Former-commit-id: dcdc29a39e1fea031752513b2641f641c90d5173
+
