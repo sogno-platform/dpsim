@@ -206,6 +206,7 @@ void Base::SynchronGenerator::initPerUnitStates() {
 	mMechPower = mInitMechPower / mNomPower;
 	mMechTorque = mMechPower / 1;
 	mThetaMech = mInitVoltAngle + init_delta - PI / 2.;
+	mDelta= init_delta;
 
 	if (mNumDampingWindings == 2) {
 		mVsr << init_vd, init_vfd, 0, init_vq, 0, 0, 0;

@@ -149,6 +149,8 @@ namespace Base {
 		Real mOmMech = 0;
 		/// theta
 		Real mThetaMech = 0;
+		/// rotor angle delta
+		Real mDelta = 0;
 		/// mechanical Power Pm [W]
 		Real mMechPower = 0;
 		/// mechanical torque
