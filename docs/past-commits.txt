@@ -3336,3 +3336,358 @@ Former-commit-id: 494187abdabaab2d8847599b133695df3a29585d
 7352947fcbd759f344fdbb91521fd6bb44f21989 Enforce reading from ode-class branch
 Former-commit-id: dcdc29a39e1fea031752513b2641f641c90d5173
 
+I, Viviane Sapucaia hereby sign-off-by all of my past commits to this repo subject to the Developer Certificate of Origin (DCO), Version 1.1. In the past I have used emails: vsapucaia@eonerc.rwth-aachen.de
+
+f8f33f352a13d09ec47060876faac026fb3ea6d0 Delete files with repeated functions or not working functions
+Former-commit-id: 2292bee822bd37d1b189f79908308c3a212e02db
+e5d8c0fd75cdbb291a6e61c5f7093bfc6f8c1a94 Multimachine Simulation with Classical model
+Renamed simplified models
+Former-commit-id: eb969068099b7337d08a66a3719efaa42003b394
+193d1c16de866e274f337fe1e98c0bd19e4c4f0e Change File names for synchronous generator log
+Former-commit-id: f7bee511a19c8f7aa19c90c4595563547bfedc25
+091003fa738a0a55c6d51cd6eac4589291a26ec3 Examples prepared for time measurement.
+Examples to simulate: EMT_SynchronousGenerator_Dq_LoadChange.cpp, DP_SynchronousGenerator_Dq_LoadChange.cpp, EMT_SynchronousGenerator_VBR_LoadChange.cpp, DP_SynchronousGenerator_VBR_LoadChange.cpp, EMT_Multimachine.cpp, DP_Multimachine.cpp
+Former-commit-id: ec65e998a2b44f066dbae8b86f93bc8c40fee575
+cb5c1dd077a1b8244f1b0e1663071aa22e5ac151 changed test with exciter and turbine
+Former-commit-id: 28e279f76c23f2803cd46c37fa6a52552b0754ba
+224c471b74466dcb943ab794014eb0b17ab01a0c Changed Exciter and Turbine Example
+Former-commit-id: abd9d5d8785333bc314369b4b1e3698d1885b60f
+9b4983bd292b9eed3f7dadb813365f3d08a2acfc Change tf in load change examples to get 100000 steps
+Former-commit-id: 6f79dfec01b4767f81a7015ac5a043499666accc
+3769b523ab60bf2f990bc32aae1d34514fa48441 Delete asv files
+Former-commit-id: f55d3d6ced7d46c5dddaafce6a5b812013b15d39
+297f4820c26715656facbc4409b2cfff97b41d33 Added bool MeasuringTime in SystemModel
+Former-commit-id: a32f1f24380b99727eb677d5de2090e1be18cd5c
+2596d67a8184f3141390ff34720b92a5d37f2122 Changed name of DP VBR 3 phase fault example
+Added header for dp log
+Former-commit-id: bed4fce80cad07d0bbb403957159860a724e25f6
+ad66242e19d6195c3bdc543baed87d22ea09c9b9 added load change example
+Former-commit-id: b4892f8c5addc89a0d2b18ceaaa28965bfda1fbe
+bd0048cf06c8a77afd9c41cec94161e4f2489a50 Added new examples and changed example names.
+Added matlab script to calculate erros
+Former-commit-id: 3ba84eebbd8bd8b07ce4528cff699904f2f99aca
+b0b0f71a9d27ed5554bb32bf25925428174eeca9 Added header for log, run simulation with different time steps
+Former-commit-id: 90f23583529cf94f73fc5b255cd3fc0b529923bf
+b83bd98a9cc4168e3720eb3f5004d07151a3daa2 updated examples
+Former-commit-id: 22caa7e6947b67aeca1125e8dbf1ee3dc0f3e9d3
+eefaf491c96913d0ba7344de94877834beaf4fd9 EMT_Inductor: Include variables to initialize current and voltage
+EMT Multimachine test working
+Former-commit-id: 7447fa56521570022dc0436af4353b83cf3e2fce
+145c4d7c16bb7989548a7842c54c5f4e15e74c65 Changed final simulation time
+Former-commit-id: a56eb4917a0ac23989db475307f4d435e117d74c
+0baa99467c30b23fa7d828106c890e7086184891 Created multimachine test
+Former-commit-id: 9a0d50bd29f04e3bb6be72bc4c2bd10a846f7699
+961c9dedc1a83506605ed06320dda2eb31c5c9df EMT simplified 3rd order model
+Former-commit-id: 712b66e53d91267dfdc15893bad8fc82d7d0fb23
+0e58467142089435d71009f54f012e46a8916100 Created DP Simplified model
+Former-commit-id: 5749fec728a33b306683e10de19a2660f8e8f091
+844c2b3f2081500f08035feeb810f2207783e738 Simplified model
+Former-commit-id: d0c31677caa1eca0603109497b78a7c1bb891970
+01b5c335c053653ab57175bb4f0f2941558a0063 Compare results and calculate errors
+Former-commit-id: 011cee027d494ecf168a67550b091b695b552c61
+c22bc183bdb972035f95880b3a903146012f190f Fixed example name in CMakeLists
+Former-commit-id: 39ccddd932d7c774c5a29170ad92c07d97eee2a4
+990df1e2927ad3bedd3f666f643b79c36f46f212 Created example for simplified model
+Corrected mistake in VBR model
+Former-commit-id: d90cb0bf9465e7418168977602c503228a9438af
+3c637fe38e47e30c4179c3329c7ec39ec826787c Fixed error in compensation resistance for DP
+Former-commit-id: acedbaa60e373d8b06ae3ce837eb8eea47ea77be
+17aa15fd1891043f89ae959bb7c3334a1fae441a Fixed error in compensation resistance
+Former-commit-id: 8ad0715d4c9229b61d3e9ea495b8b5765ea1e58e
+837155830b20449713f87f9ae027fac2b29ec369 Corrected examples with simplified DP
+Former-commit-id: c8578e8eb52f2a66edf190d358d9e6acfb314a4e
+fd148981ab69d7d50a8651cf43a229bb9773ebbc Corrected other examples using DP classical model
+Former-commit-id: 41cea21e3892d16d658bbe226093d902981880e3
+1072dc4245a8ee2f5be315077966c6758fe5a70c Corrected simplified example
+Former-commit-id: 4d16db7eec91e0c86c977a591cc9fedc89727384
+60052867b4bf192442f1ab61781e143c1a09d099 Classical model DP: Changed load power to 300MW in the 3 phase fault example and added resistance and current source compensation to the DP model
+Former-commit-id: d2c6a111d8ffebf9025996a2d9a1b8330d54964b
+fb7564650c1270c587cb974e0f21b3ca030fec16 Added Compensation Resistance to other examples using classical Sync Generator
+Former-commit-id: 11ef185cec1de28f6e6be4f0768aafc0a37fb56e
+e0846ed0e9d1ec4f4df5e049845408cf40d1fb2d EMT_SynchornousGenerator_ThreePhaseFault: Changed operation point to 300MW
+EMT_SynchronousGenerator: Added compensation resistance and current source to model
+Former-commit-id: d25c9fa50d8886b1f2506df337538d58e5835475
+cef28fbefb473becdf6826406fa01dcab1ae9f08 Classical model emt with compensation current source
+Former-commit-id: 9ca0ce3aa9d80e66ce6021f48c56205838407374
+d9dde730e26315590b1685a439fe76cce4d546ea EMT_SynchronGenerator_ThreePhaseFault: Fixes example
+Former-commit-id: 48c810527d0a86ce063239f8044e510bbd85cffb
+0dfc73af4e51f1ecbc55ec621048a04490a83f58 Reorganized new VBR models
+Former-commit-id: b5958d320455eeda87413a61a9aebfd36b252dbc
+d9a2d4d768b11f7829b292247a7156429924c7c1 fixed mistakes after merging
+Former-commit-id: 59bc5c72096b8dc77bf5536cd985c1b907f64364
+36e0c9d354a4d5e603264558c1490bdf7b005417 Use SynGenSimulation for VBR simulation
+Former-commit-id: 42a5dc4818ada5c94b24cb1c1f206b9a8c02be2c
+3f9290a830a0cd107e298fa2dcb0cc239a2dc18a New DP VBR model integrated with nodal analysis
+Former-commit-id: 4b93b66d4801ca05d6a5ed336c1adec3131ad9e8
+89f4f40cf356cc1109ce432f8ed10479c0055791 Base_SynchronGenerator: Save Log in folder Logs
+Former-commit-id: c7292851064d360178eabf5ba8e94b2e15caeec5
+627a19c7779adc81aada56a3c502dc4952c830d2 Changed name of example DP_SynchronGenerator_VBR
+Former-commit-id: 64ad86cd2910a52974ecbd840a4b58fa7cd6fa9b
+54f773c5e8a042ca99a93fd40ea9ffd09183bf0f Created new DP VBR Model
+Former-commit-id: 364b896edecdb81b49384322864b4134f542fb8e
+c2c60f7aac6dcc0f0d6e1ac623bef1e1d7797d08 CompareSynGenResults: Calculate error in percentag
+Former-commit-id: c44c7da4775d32d2d5d476368600a339474790a7
+7761e08ddc820ec289d72fb20dd3f7aa5d1410ea New VBR Model working
+Former-commit-id: 5084936101991c04c0b0a6c383663bd4fb3c723b
+c89d1e3eb9412cf8b00e23a2e252e4fef66f3e79 added new simulation class to CMakeLists
+Former-commit-id: c1dbebc551728e738b17896666f4503ab3a970b7
+88dbe211c9f5abdb9d7b7762561ddfb3fef5ff2a Added new simulation class
+Former-commit-id: d79f02ab5661a097507c4105f6b17671e7093a4f
+4e7f07891ec349b2ae6e3f48096d434cea897064 Changed name of VBR model in CMakeLists
+Former-commit-id: 648b4e0d407f7bf1fd172c2fab348e99c892bd40
+f0688f0495eed009170cc9771b183fa409e1857c Corrected new name of VBR model in components.h
+Former-commit-id: 4a2a1b6f8ea4cdd431797c8b28645846cde9b942
+d2f524ec5e2352fcf0e1694fa557e06fddcac95e Using new model in VBR example
+Former-commit-id: e653b486a3bab20fddadf8ea920faf8b16bcec54
+fb410d1f9deabc95a244b3aefdf3e333029259a2 Renamed New VBR EMT model
+Former-commit-id: 71096169b1f0bc1c90ed697c35b326a408a5b4dc
+31aa9c27e5bb804396ff44ef36d16fc38e52409e Change VBR Example name in CMakeLists
+Former-commit-id: 4d06e41f3e7783c7a4efc23080f26312e4216002
+088e17c74cd5e9b448ab942f7ec2a9baa6bf73f2 Fixed VBR Example
+Former-commit-id: 4088f4957b0681075a44b3094af99f0b5a359059
+9f3abce2bc8c978a443977ce96cc456ddadcf5f9 Fixed Components.h
+Former-commit-id: 08c76619a1f1faa408e0ec35d1330193c7616700
+ed58953e13e20b3547d24c046e9811fcf53a57af Created new VBR model: To integrate the model with the nodal analysis
+Former-commit-id: b0e75ddfc568eade503b91103942169c04c8c9a2
+3ec845d11e2d41182906368513284a490ea5b5e2 Corrected unit of omega
+Former-commit-id: a9e167ca5940c734761980249fa57b92fe984009
+a36ef768a52b20b2a6f5c56a40cfb619794e3824 Modification in Exciter and turbine applied to VBR model
+Former-commit-id: b76b400431de5e635fe59c2f50a8dbaaf4aa2215
+4027e11c36aeaac5a5f59c9495f1df13fc8ea69c Exciter Model: Changed saturation function and parameters
+Former-commit-id: e509e0624ea4490a079ea87e144762f2c734f794
+aa0ca1b2eb9fa41106ea4833d548289b19ea6f2b Created test for exciter
+Former-commit-id: 93700c1370970958914d8c2c9326824793f01955
+b6211fa3583b1babf8f021116906ae6fe58e3264 TurbineGovernor: Added init function to initialize governor variables
+Former-commit-id: e4fcb86b084932e3ca63b41546f569d4f55344cd
+345980df60e6c98d1895dba79935304b6fc62521 Added example to test turbine with input from simulink
+Former-commit-id: 3b201b3cf563719732e90b0009eb4b0aca4c19eb
+024788dcb3aa6e878534817bcf898f72dd4db915 Logger: Fixed error in detecting beginning of file
+Former-commit-id: 95f72f43e07bc37797267d2848720c8d3add9267
+ff813543bb5e7d4b352433a82b15f574aee58b1c Added function to convert standard parameters to fundamental
+Former-commit-id: 0766b40161812cc3b245376df08b3d6c0b33fd32
+141771cb7f155edd78ceb1d50adfef21ff8c544a Function to convert fundamental parameters to standard parameters
+Former-commit-id: 249585b0652e74c216ba950208046804297370b2
+47bcce2a7cb4b332dca93cab770802797cdda351 implemented exciter and turbine to VBR DP model
+Former-commit-id: 41f7539f85d896134a43fecb4581dfdb2802c1e9
+36b60faa025549f9e28ae70b17c98a7d0e8d5c4a fixed mistake in fault clearing function
+Former-commit-id: 2a1ce1dd38ae8ca0e5abb70a4194709eddc7dfd9
+09739a054f5b8733f314e9ee7ca8f30e3958d9c9 Added Turbine Governor model
+Former-commit-id: 5c56e4b192850b548aed68d1e98e66cb4fef2d89
+fd3aafb50fe43d5649cfb127d20b539b312ec2b0 Fixed error in Exciter model
+Added exciter model to detailed VBR model
+Former-commit-id: 66a41836e2d099d8ad46174f8ef0fa1e0853d636
+9f27c2d656eb51a7ad35dc7193e35e97186fb397 clearing fault when phase currents are equal to zero
+Former-commit-id: 49184cc1dc4cbd40e00f2da9d73295226d6cac00
+e7ae57dd1f100f8efd6f8fad8ec188a7b9831ba9 Changed parameter Tr
+Former-commit-id: f11bfe71199a4ea62e351c12c4e019a33cbb4101
+3e820009b0f09cf32167e17ca7d8a93c74602a49 Improved Simplified VBR Model and Exciter Model
+Former-commit-id: 7503052ff55cd9607f4ffa98320741087b74753b
+88cb9f2db0c67644f7936998595455dd20635a49 Exciter with Simplified VBR model
+Former-commit-id: 7809c23d8f7c57df1b2078c7b294873008d57cb0
+5eaf07d4b49ee7e32aa9b3aec6044fbce79c8f74 Exciter model with simplified VBR
+Former-commit-id: caa0c3c8383972e54d2601e3cbddffaa1efd6b7e
+5b2d89dea780e8cd29036173af020a6b8c5ed3fe added exciter model
+Former-commit-id: 159db24e52c9bcdf00b78e5ed929a42ce013111c
+578da9d90c60f850a5ae23bb804d7254fc25eb85 added exciter model
+Former-commit-id: aaff1bf1ae13502048c652b8fe5f635ce4d3bafb
+94b0f1cdba99bbf7967bf353a7f3dadc58557095 Simplified VBR Model
+Former-commit-id: 1393c6b69044a4f0a2f99accdda285e26cea57fc
+2f1e8b783c54170c26334fa6e56fd4c7cedbf071 new simplified synchronous generator model
+Former-commit-id: e9042746de74630612aa537e16cb5a50e327c304
+17ab40a0892701ba362dfca6c5dd2a700e22475e Created Ideal Voltage Source EMT and fixed "virtual node"
+Former-commit-id: 1ee00f3b06708013af8d091bc19065d04a64dcc8
+02b10bcb92994c71a7dc2a58b2df8db2b2f3c20b Simplified models with operational and fundamental parameters
+Former-commit-id: 91030b667297e00f25953f58de8b363e7d833152
+c0493b1d83c4622c77795003c64cbf518db21922 simplified model of synchronous machine
+Former-commit-id: 896ea4c955331c68126045a8d455166c06ceebc2
+eb355c35b009213d1faba2edd81bcde00dcf759d Created simplified model of synchronous machine
+Former-commit-id: 3485603ec1d4982cc8d658c96e6481690dad2d52
+ad6de618af649de9fbd54d3e0b832bc4c1519b58 All generator models use SynchGenBase
+Former-commit-id: d4baa447a858e447c8f699f62d0685ff92bf41fd
+9236300580d899bd50e6dbe72ee51eb6ca537d2b Used SynchGenBase in SynchronGeneratorEMT
+Former-commit-id: 96e2f601a645da0af8c65c753786d93452cfa77c
+78c90b983549f84b15f524b39adb01419283741c Fixed mistaked in VBR DP equation
+Former-commit-id: 881c29450423e950f166df2207f141a9ea8db119
+7ea39754d0eafe349ad08405d27b12c24031f120 changed file name in matlab script
+Former-commit-id: 175b4e994daf4a3e0ce44e33b9873eccb32827de
+8fd8501487e285c8db992cdb6647f956553aeb98 defined nNumDampingWindings equal 2 when Rkq2 and Llkq2 are not zero
+Former-commit-id: 9f35dd35269edfb09a60a2c7b7ac01811aee3233
+d0ca06246964b415f26e45e86fa59174fb9817f5 Used IntegrationMethod in Classical Model DP and changed Log file for all synchronous machine models.
+Former-commit-id: 617c674c9a7b91a576a21aef2ecdc011c98ffed2
+2b7676fbe90735188afde7a80d0fcb50b992631e Moved SynchronGeneratorEMT model without using IntegrationMethod.h to Archive.
+Actual SynchronGeneratorEMT uses IntegrationMethod.h
+Former-commit-id: 1bdf08f17eaf09ad96e7b89d79f02740dac9b73c
+df4d8854694176acfed72ff6993c71b9ab1176ce VBR models combined with MNA (first step)
+Former-commit-id: 33e52ab7cd5baa9f6338e72d67b14da4d8a3bab1
+cc45f6d18bde5791bcb4686d7f2da55b1e1bdf87 used "#ifdef __Linux__" for CIMTest.h and CIMReader.h
+Former-commit-id: 41f2fc2d2fdde76209bc839e0ca40aa25fbd3a68
+11aac8eea48507009a56bcc5319d3e5a6371f875 DP VBR working :)
+Former-commit-id: d77bf639c37ca7d7b5e80dc2d4d15d5529c4a65d
+5f34b563ed578af72d9187e3c866a4915ec09f9e Trapezoidal rule for VBR DP
+Former-commit-id: c4922b687145ec7745595c2c4480d1b61728cdf3
+d9c1f01e4e83f1953aea11ad21191c346700bf2f Added calculation of mPsimd and mPsimq. This corrected electrical torque calculation
+Former-commit-id: ecdfc8412efbc794e6c87651f1ab5ff5084ea17b
+1f804fe20f7eb89b2500e473bb45a2785fe9dffe VBR EMT model: Deleted variables which were not used and added the possibility to choose Euler or trapezoidal rule for integration method.
+Former-commit-id: f9087b0b8b88e23c6f0995ec7d4f59154a6eea62
+96c6cbc967e8d17186c5c02f461765ce07a6e10b VBR with trapezoidal rule
+Former-commit-id: 5525013e7d4b1a5a7eb9b0741e083191cac4d11f
+041c25ba7f4a2a5f0fd927fe9a25ac5a5801f6a1 Integration method with function pointer for angle and rotational speed.
+For Flux integration method is realized with a normal function.
+Former-commit-id: 72abdad503233e76301c9dfacc8045b13f0aa18c
+ca9d48fbe20896872b0b109fa38e15d1677e0406 Change in Function getType() in BaseComponent. Function works for linux and windows.
+Former-commit-id: fc7e3fbecf0c8982f3f1b487a3c697fe329761b0
+8907d9cd3f3794ec96e2538754ea4d8cfdd02626 Added Function for integration method
+Former-commit-id: faf794ba525e9ed72d344bf191cfc02fa1b0975a
+42f797d387ea3e7c858190c128fe84eaa0f6ff1d VBR DP _ simpler equation
+Former-commit-id: 56e025cd502128440101ad93162eff1bc83fe312
+e642dea794f1b006ca82e04547631208b472f8cc VBR DP
+Former-commit-id: 31cd0f15987349f8729b5959287fde35a634893f
+418908f92666e4ef0356f7f6eca68acf87bc5ed7 Simulations working with 1 or 2 damping windings in q axis
+Former-commit-id: 8a6f66c74f7f522aea8d12533b946065b2ca3559
+3163aa62977c8f5f5eb56ae0e2159064461a35a1 Script to compare DP results with PLECS
+Former-commit-id: daea2c2b3bae75fde036d04234ed3b605eba354a
+dfdc4d05eae48975cceb1f3d640a19ee353a774d VBR DP - in construction
+Former-commit-id: 1608e52bddb561cf194d81c196dd940601343646
+4e9fd99bd1138a0c4066564a6595685eb0499f02 changes to save torque, rotor speed and rotor position as simulation result
+Former-commit-id: 974fe91f070743cffd664eba515e60b47f462f38
+ef8c502cb18763c2e1e21d9aef1d0b6f70a28fd2 updated VBR model
+Former-commit-id: 9538dc8776f251e08b1c7095fd01bb343eb250cc
+33261208196cb875f21d465c46ad1c6e2b3341aa VBR euler
+Former-commit-id: 92dd4398a5cdbab194fa1011051c0c273606ca0e
+379f7adb2a6ceb6d272fbe9fe5c4d97bf1857f51 matlab script to compare plecs with c++ results for synchronous generator
+Former-commit-id: abcb376fee4eab58e43a2b98f28f36c2ce261c07
+9dba1807da3ee1322d170b3d812daa242180f179 VBR model - simulation of steady state
+Former-commit-id: cb25e3256bc8abe200636ca003588b51424df175
+a0a6ffc3c35aaf30d26e47b6ae28da6c08f00a8e Created voltage behind reactance model - in construction
+Former-commit-id: 133ae3a52569ee8c4d195cbf689fd8ec57a5ec30
+ff9f28733cfcbafd2bedb475d10c1e2a2b50e802 added trapezoidal rule to DP synchronous generator
+Former-commit-id: 3a3bd0f92122e62d536410f158a7f52323df97b3
+e49448e8e6f27285342a8788f7e4ed613468cf4a Added simulation of synchronous generator solving everything in dq.
+Former-commit-id: 40170493450894571301521f04f686c8dc9dfb6e
+3a45e00502b0bc6cab5478ace7c93d085be58da3 merging small changes
+Former-commit-id: 40510e51367651305575bed18618d4684753b8a3
+181b46ff54fa2cdaa310ac961452d17ae3421a27 corrected mistake in equation of ifd
+Former-commit-id: 045a6ffcf3854d7934df282ec4c0c438039c1498
+e25adfc7afee939f4ad5b75525fe01fef589d865 replacing matrix equations.
+Former-commit-id: 2d78a293a08eaf02464212f38fdef44520a35b04
+38f40532da567038d96efa85fa749ef5d5a5a816 substituting  matrix equations from dp model
+Former-commit-id: 00a96ad0cce092dec79e1ced841fbbf15b1eb09d
+323ace2672880739fdbb60cc580c2fc1476d83e3 change 3 phase fault resistance
+Former-commit-id: dadf34cc7fe1a5087574b8896829ebd23688091d
+0f2ff459fe4f5854e8e198e186832f35e345b454 ajustments to avoid conflict
+Former-commit-id: af13a7b33e084bcd3ff2e62530675c8045c9a066
+d97c6596c44a1a2553fa3a5dda71e64cdf09d662 created function to choose numerical method
+Former-commit-id: 90491dc4cc51ddec5f1d34496b1f5ba3b7a4bf75
+7b9a4a9451632bd4512a421acd8acc429ad6e934 changed switching time
+Former-commit-id: a08110a03dca36bd56154246a67d03072c8a5d30
+c6e12fb459992b9181812cc7b45714850ab70482 Changed SynGenUnitTestThreePhaseFault() function - it was not working.
+Former-commit-id: cc84510f30e776c2c714c8ccff7aaa577b4c9b35
+553ed55f6eac856030f1b3c862d89e8188d808b0 Changed from matrix equation to normal equations.
+Former-commit-id: dce69884d30afa22772e9bd55e0232b17a312e1b
+4435dc19aa75f9752c39b24cc86442ad60804035 Changing from matrix to equations.
+Former-commit-id: 2f87452c070bd2726489ac6690d08278930202dd
+68fa527b74da87f6bff1282fa071f2d3ddaae01a updated filters
+Former-commit-id: dd53d6ba1776d83d1afea0073b8deeb799e5430e
+4e70a066a690e98f468aaff6c71779eac1e7a5fd Added omega_base to the equations of trapezoidal rule and implemented trapezoidal rule with current as state variable.
+Former-commit-id: 00aba05c191357b90cefee33cd4782b9127c9971
+ece700d1e18ddfd6c16a2d81f9e707f5f4881e8a Implemented trapezoidal rule with flux as state for EMT
+Former-commit-id: 387ba69041eb4d116b6d74cc75011a15f56f471a
+717fcd4b83de4f7913c3fa9538973b423d973ffe updated simulator models chapter
+Former-commit-id: bafce148105e27249b73815e2c10a35d83573dfc
+685eebeb9d5f48a1cfcaf00f58c30c3762ea4925 Generator figures
+Former-commit-id: 8dc98de06dbdc8d2fb73dd0068ddd415ac50c63b
+7cab2ea3b3ad3ec754ff27d771ed2ef0c9353448 Figures for synchronous machine
+Former-commit-id: b2aca5e699b8dedda03c0ff756c6dc11feeb0cd5
+a519c3429d294fab9606ee38b4a6f3c217f637cc Synchronous generator figure
+Former-commit-id: 46498980ff476f0f04da9bca1e9695127143ea86
+ae374ba761c24aceebefc607d7e7e1f0e84141ad changed equations for 4 windings in the rotor
+Former-commit-id: d4fb8d90e56afaec93a118577c56335d3416a1d1
+ac80919714c21f3c8c4cb4e37153b6da93952aa1 documentation of PiLine
+Former-commit-id: 7894d9f7b68503c024d3195274b85ff798f3a22d
+3a1e665c9db5ee284b08ba43881d1a74a5bb15bb Modifications to  make SynGenUnitTestBalancedResLoad() run. (EMT simulation was not working)
+Former-commit-id: d0104ade2f473a32a00bbbbb89890e1b8f78d288
+49d1597df401d0f46cb6f573d2a2f9b3749a0803 continuation synchronous generator model
+Former-commit-id: 30a96dfbb8f1cdc5ab329e6a0060c0f063a39e7c
+6c9e59a4358f2032df15da7bef5f40c7434ddc28 model of generator - continuation
+added figure magnetic circuit
+Former-commit-id: 953f257e4c928371f8d3e3367d0d0a98a3dfaee6
+162133e34f02a0b0a31712d27303f68e33d6f8f2 updated generator docu
+Former-commit-id: 11b73916b28db6184521aa5ee5a4fc848feeb5b1
+e31c63b8523b4c8f7fe04eb8c37288f28e1bdfe1 added basic equations of synchronous machine
+Former-commit-id: 79ca05576abfedb5a07dff83484917ee8daeebe5
+5759b39339e9e29d63f3adfca29917a0f1e50df3 review of magnetic circuit equations for synchronous machine model
+Former-commit-id: 3426a3e41be4b2788ae8c00ac34160b6f509f474
+2d361a71be86192b7033f1355b7e8e35823acbc3 simulate all examples
+Former-commit-id: eab5d878ec14d3326296b4ce44d10263eab30825
+7d42fbf235bb539e4f019692a0a15a4f931a1206 matlab script to compare the pi model with a circuit using resistance, inductor and capacitors
+Former-commit-id: 3b4cf7a81128a35494ebde6daf0a0928335a67e3
+23f7bf3d810a3692707ebb43eb05ce12bf4f8ab2 finished PiLine model
+Former-commit-id: e7db8b4a57b318cd0285c04e999db3527e84c6a9
+6a1b9be016bb19b99d4757434b051ebcf0514192 started Pi Line model
+Former-commit-id: 4b8822e593ad365131c79ff3831c7832410dc9cf
+076d2168438324e3e49bdb85868b3e86bff656b7 continuation of doc. finished RXLine model.
+Former-commit-id: 341966b4b2205f0c2fa6ffae69cce88ba04ea771
+d9cff5f0651f0238dfaafe07e551d3d80936f390 continuation of doc
+Former-commit-id: cb1d265c0cfef7bbbfde209e8e3add2b0abe5a4f
+04c09d9f4210cef802281f078a2899b43ccb3008 Reverse order of voltage sources in system matrix
+Former-commit-id: a98b7de774fb3291a84a75d5b562db490676b1cd
+4f161af9e2c50c2f8e133d4db77ad693f38dca83 reorganized scrip. no change in code.
+Former-commit-id: 512cf8c1c3da8e76b88fb0107edb58971cd1dead
+a2d65435902d3dd4bb8cad05a3f29335565a9e91 new pictures for documentation
+wrote about nodal analysis and simulator models
+Former-commit-id: bad14c10adce05440fdeb68ed86ea33a86a4e7cc
+0aa58f7fbe378f52e3d29d524e6cdcde25bdeba4 comment added to code
+Former-commit-id: 941f1e095ed73e9dfc5bd5241164701b091931a0
+b203cf5f921c01d14adc4cfbef70b9281ac06d8e Fixed RxLine with two nodes and added matlab function to compare RxLine models
+Former-commit-id: df55fe49af759f865ac54a686b57ca5a3856e1f3
+19dced9995a3fa418806d43ee56638db30db19b5 Changed code to make it run
+Former-commit-id: 6701fa276e8842c3ca1ad2ad4d6630b69140645d
+e18ca773d9020be8e75e1d0d721a067010659383 small change
+Former-commit-id: be4569cea5ce85bb26c1eca99ee0bdc4a5dc80d5
+ace6ea2620a656dd54378c17d71f172173a4e9ff changed newNode to node3
+Former-commit-id: fa4bb85677e2a5b96b6300171433dc67201e9e02
+a52b2a05e4f947743a3cc5f4b8a8f3e14b597342 Added comments to the header files of capacitor, ideal voltage source, inductor, inductor2 and voltSourceRes.
+Former-commit-id: 80e7330f9f9925a52dd17f83869a046c43ccd22e
+2ed4630fe5c61ff5b19621a05e6c1a6841616f95 added documentation for ideal voltage source and real voltage source.
+Former-commit-id: 056a868de281ed762e1b82842f79eef724646fb5
+e6e37f1deb4ea0b25e583249158aa980f24c3393 matlab function to compare two DP simulations
+Former-commit-id: fe0ebbfe189c465e491fe7e52cc48ada6251134f
+78ab26e18979919fddac84eba57398a01a521641 Alternative model for RxLine
+New Matlab function to compare two DP simulations
+Former-commit-id: fd00174fb1ab68b1cfec749e0c5647fa34472c4b
+f9fc163cd0162130491798f659f9dba6d00d738e changed simulation time in simultionexampleRxLine
+Former-commit-id: d233a9a2cd23c9aefd7dab1452b8a0ccb5b6f5d3
+4eb33b0af4ea6cd596ff65fdd701269959f55a79 Created Rx Line Model
+Former-commit-id: 7944993c052ab9863d8267b583812c6ad4810873
+ed0c72abdfd225092f4a088ae2c160f22d501df5 Changed Ideal Voltage source so it works for more than one voltage source in the circuit
+Added simulation examples in Reference circuits to test the voltage source.
+Former-commit-id: 48720ecbe45ea96b389d6c08d67b65d8dfaee2a3
+1e8865586580b9b970611b385b59960f70fcc3b8 ideal voltage source
+Former-commit-id: 31665b161f7720e410c1cca2e7b071aa7bec6765
+d6754fbcb8db29aaab54ea457b7fda25b53e71fb Ideal Voltage Source
+Former-commit-id: dde178bc756440c7feefd634416f4fcd8c0e106f
+09a9bd7756a1d48b6a0f42c409e2db3ae02509c1 Example with Ideal Voltage Source
+Former-commit-id: 880967c9027439e86e70c89171a102b3021023eb
+21ccbdaa99c1b246e3673da869b4ca8e4fc583be Ideal Voltage source
+Former-commit-id: cfdd680b266d9364c92ce4069479047740179da0
+aa199b0f8f7dd9b45a8f958ff49168c9972986e4 moved Simulink models to other repo
+Former-commit-id: 0a441438a51342dce4e65a047513bf7330dba4aa
+553a4ca2845916d8a0c67de0969cd35207ad63ac Adding folder DPsimReferenceExamples
+Former-commit-id: 1fab4dba5f74e462a3682ed63680b8eee5a46e67
+dab8c53c9dbb960a95ac48997d4fefa487ad4d99 deleting folder SimulinkExamples
+Former-commit-id: a1dab7524e448b6376d2883f58a06b313a27b040
+44c5212a81597472d0245cb8c6d6fd05e89c3aee Added Simulation examples in Simulink
+Former-commit-id: cd320e79b65c72e1eb72a475d23ea167f52ec788
+09e97912b9b164804a92ac4b7af349e582de2e9f Creation of ReferenceCircuits.cpp and ReferenceCircuits.h with 4 simulation examples.
+Modification of Capacitor.cpp and Capacitor.h (it was not working before)
+Modification of Inductor 2 (else if changed to if)
+Former-commit-id: 73c1fc5254147538764387fb8bc056e3d48222a6
+479b6e381e858df21017bda553a36a5bc78fb9e0 capacitor in simulation models changed and figure of inductor model changed
+Former-commit-id: 08ca00d182ef021bc06867f41019a71cc584c3dc
+e77c4d722a1c8358d603baaee20595c39f3f8172 Changed inductor in Simulator models
+Former-commit-id: 2ce954f13b36cd1a05ad9559ae351830d9d61ad4
+0216e6bfcef7614b7459f130d33d09d7f704f765 Changed Inductor in Simulator models
+Former-commit-id: 7ab7f0205e192aae2cbf108701144883e8a24cd0
+965eaa2dc4020af346d5468448b862ee7f5c6ab7 added alternative inductor class
+Former-commit-id: d99698c2e29b8222e633deb4a1e65d1dcc7d00b6
+
