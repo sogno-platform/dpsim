@@ -117,7 +117,7 @@ void SP::Ph1::SynchronGeneratorTrStab::initializeFromNodesAndTerminals(Real freq
 	mInitMechPower = (mInitElecPower == Complex(0,0))
 		? mInitElecPower.real()
 		: mInitMechPower;
-	mIntfCurrent(0,0) = std::conj( mInitElecPower / mIntfVoltage(0,0) ); //why conj? P_e= v_intf*i_intf*cos(phi)
+	mIntfCurrent(0,0) = std::conj( mInitElecPower / mIntfVoltage(0,0) );
 	mImpedance = Complex(mRs, mXpd);
 
 	// Calculate emf behind reactance
@@ -125,7 +125,9 @@ void SP::Ph1::SynchronGeneratorTrStab::initializeFromNodesAndTerminals(Real freq
 	// The absolute value of Ep is constant, only delta_p changes every step
 	mEp_abs = Math::abs(mEp);
 	mDelta_p= Math::phase(mEp);
-	// mDelta_p = Math::phase(mEp)-Math::phase(mIntfVoltage(0,0));
+
+	// mElecActivePower = Math::abs(mIntfVoltage(0,0)) * Math::abs(mIntfCurrent(0,0)) * cos(Math::phase(mIntfVoltage(0,0))- Math::phase(mIntfCurrent(0,0)));
+
 	// // Update active electrical power that is compared with the mechanical power
 	// mElecActivePower = ( (mEp - mIntfVoltage(0,0)) / mImpedance *  mIntfVoltage(0,0) ).real();
 	// For infinite power bus
@@ -165,6 +167,9 @@ void SP::Ph1::SynchronGeneratorTrStab::initializeFromNodesAndTerminals(Real freq
 }
 
 void SP::Ph1::SynchronGeneratorTrStab::step(Real time) {
+	
+	// mElecActivePower = Math::abs(mIntfVoltage(0,0)) * Math::abs(mIntfCurrent(0,0)) * cos(Math::phase(mIntfVoltage(0,0))- Math::phase(mIntfCurrent(0,0)));
+	
 	// #### Calculations on input of time step k ####
 	// // Update electrical power
 	// mElecActivePower = ( (mEp - mIntfVoltage(0,0)) / mImpedance *  mIntfVoltage(0,0) ).real();

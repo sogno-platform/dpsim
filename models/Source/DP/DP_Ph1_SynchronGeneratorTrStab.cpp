@@ -125,8 +125,9 @@ void DP::Ph1::SynchronGeneratorTrStab::initializeFromNodesAndTerminals(Real freq
 	// The absolute value of Ep is constant, only delta_p changes every step
 	mEp_abs = Math::abs(mEp);
 	mDelta_p= Math::phase(mEp);
-	//angle of Ep relative to V_intf is the rotor angle -> crete new variable delta_r or change delta_p to mEp_phase
-	//mDelta_p = Math::phase(mEp)-Math::phase(mIntfVoltage(0,0));
+
+	// mElecActivePower = Math::abs(mIntfVoltage(0,0)) * Math::abs(mIntfCurrent(0,0)) * cos(Math::phase(mIntfVoltage(0,0))- Math::phase(mIntfCurrent(0,0)));
+
 	// // Update active electrical power that is compared with the mechanical power
 	//mElecActivePower = ( (mEp - mIntfVoltage(0,0)) / mImpedance *  mIntfVoltage(0,0) ).real();
 	// For infinite power bus
@@ -167,14 +168,7 @@ void DP::Ph1::SynchronGeneratorTrStab::initializeFromNodesAndTerminals(Real freq
 
 void DP::Ph1::SynchronGeneratorTrStab::step(Real time) {
 
-	// mEp = mIntfVoltage(0,0) + mImpedance * mIntfCurrent(0,0);
-	//mIntfVoltage(0,0) =mEp - mImpedance * mIntfCurrent(0,0);
-	// The absolute value of Ep is constant, only delta_p changes every step
-	//mEp_abs = Math::abs(mEp);
-	// mDelta_p = Math::phase(mEp);
-
-
-	//mMechPower = mElecActivePower - mKd*(mOmMech - mNomOmega);
+	//mElecActivePower = Math::abs(mIntfVoltage(0,0)) * Math::abs(mIntfCurrent(0,0)) * cos(Math::phase(mIntfVoltage(0,0))- Math::phase(mIntfCurrent(0,0)));
 
 	// #### Calculations on input of time step k ####
 	// Update electrical power
