@@ -78,7 +78,7 @@ void SP::Ph1::SynchronGeneratorTrStab::setStandardParametersSI(Real nomPower, Re
 }
 
 void SP::Ph1::SynchronGeneratorTrStab::setStandardParametersPU(Real nomPower, Real nomVolt, Real nomFreq,
-	Real Xpd, Real Rs, Real inertia, Real damping) {
+	Real Xpd, Real inertia, Real Rs, Real damping) {
 	setBaseParameters(nomPower, nomVolt, nomFreq);
 
 	// Input is in per unit but all values are converted to absolute values.
@@ -175,6 +175,7 @@ void SP::Ph1::SynchronGeneratorTrStab::step(Real time) {
 	// mElecActivePower = ( (mEp - mIntfVoltage(0,0)) / mImpedance *  mIntfVoltage(0,0) ).real();
 	// For infinite power bus
 	mElecActivePower = (Math::abs(mEp) * Math::abs(mIntfVoltage(0,0)) / mXpd) * sin(Math::phase(mEp)-Math::phase(mIntfVoltage(0,0)));
+	
 
 	// #### Calculate state for time step k+1 ####
 	// semi-implicit Euler or symplectic Euler method for mechanical equations

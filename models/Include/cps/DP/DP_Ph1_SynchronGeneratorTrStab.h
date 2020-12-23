@@ -68,7 +68,8 @@ namespace Ph1 {
 		void setStandardParametersSI(Real nomPower, Real nomVolt, Real nomFreq, Int polePairNumber,
 			Real Rs, Real Lpd, Real inertiaJ, Real Kd = 0);
 		/// \brief Initializes the machine parameters
-		void setStandardParametersPU(Real nomPower, Real nomVolt, Real nomFreq, Real Xpd, Real Rs, Real inertia, Real damping);
+		void setStandardParametersPU(Real nomPower, Real nomVolt, Real nomFreq, Real Xpd, Real inertia,
+			Real Rs=0, Real damping=0);
 		///
 		void step(Real time);
 		///
