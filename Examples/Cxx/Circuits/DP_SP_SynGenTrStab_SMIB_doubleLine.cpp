@@ -18,8 +18,8 @@ Real nomPhPhVoltRMS = 22e3;
 Real nomFreq = 60;
 Real H = 5;
 Real Xpd=0.4+0.1; //in p.u
-Real Rs = 0.003*10;
-Real Kd = 1.5;
+Real Rs = 0.003*0;
+Real Kd = 1;
 // Initialization parameters
 Real initActivePower = 300e6;
 Real initMechPower= 300e6;
@@ -73,10 +73,10 @@ Real lineCapacitance22 = lineCapacitance*0.9;
 Real lineConductance22 =lineConductance*0.9; 
 
 //Breaker to trigger fault between the two lines
-//Real BreakerOpen = 1e2;
-Real BreakerOpen = 5e2;
-// Real BreakerClosed = 0.001;
-Real BreakerClosed = 0.001;
+//Real BreakerOpen = 5e2;
+Real BreakerOpen = 2e2;
+//Real BreakerClosed = 0.001;
+Real BreakerClosed = 0.08;
 
 // Parameters for powerflow initialization
 // Slack voltage: 1pu
@@ -172,7 +172,7 @@ void SP_1ph_SynGenTrStab_Fault(Real timeStep, Real finalTime, bool startFaultEve
 	// Components
 	auto gen = CPS::SP::Ph1::SynchronGeneratorTrStab::make("SynGen", Logger::Level::debug);
 	//gen->setFundamentalParametersPU(nomPower, nomPhPhVoltRMS, nomFreq, Ll, Lmd, Llfd, H);
-	gen->setStandardParametersPU(nomPower, nomPhPhVoltRMS, nomFreq, Xpd, Rs, H, Kd );
+	gen->setStandardParametersPU(nomPower, nomPhPhVoltRMS, nomFreq, Xpd, H, Rs, Kd );
 	gen->setInitialValues(initActivePower, initMechPower);
 
 	// Governor
@@ -373,7 +373,7 @@ void DP_1ph_SynGenTrStab_Fault(Real timeStep, Real finalTime, bool startFaultEve
 	// Components
 	auto gen = CPS::DP::Ph1::SynchronGeneratorTrStab::make("SynGen", Logger::Level::debug);
 	//gen->setFundamentalParametersPU(nomPower, nomPhPhVoltRMS, nomFreq, Ll, Lmd, Llfd, H);
-	gen->setStandardParametersPU(nomPower, nomPhPhVoltRMS, nomFreq, Xpd, Rs, H, Kd );
+	gen->setStandardParametersPU(nomPower, nomPhPhVoltRMS, nomFreq, Xpd, H, Rs, Kd );
 	gen->setInitialValues(initActivePower, initMechPower);
 
 	// // Governor
@@ -664,8 +664,8 @@ int main(int argc, char* argv[]) {
 	Bool startFaultEvent=true;
 	// Bool startFaultEvent= false;
 	Bool endFaultEvent=true;
-	Real startTimeFault=5;
-	Real endTimeFault=5.05;
+	Real startTimeFault=10;
+	Real endTimeFault=10.2;
 	//Real endTimeFault=0.3401;
 
 	//Transient Stability model(classical model 2nd order)
