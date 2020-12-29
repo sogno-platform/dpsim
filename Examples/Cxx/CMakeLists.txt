@@ -54,6 +54,7 @@ set(CIRCUIT_SOURCES
 	Circuits/DP_1phSynGenTrStab_EMT_3phSynGenDQ7odTrapez_StartofLineFault.cpp
 	Circuits/DP_SP_SynGenTrStab_SMIB_doubleLine.cpp
 	Circuits/DP_SP_SynGenTrStab_3BusSystem.cpp
+	Circuits/DP_SP_SynGenTrStab_3BusSystem_infBus.cpp
 )
 
 set(SYNCGEN_SOURCES
