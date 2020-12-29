@@ -53,7 +53,7 @@ set(CIRCUIT_SOURCES
 	#MA gna
 	Circuits/DP_1phSynGenTrStab_EMT_3phSynGenDQ7odTrapez_StartofLineFault.cpp
 	Circuits/DP_SP_SynGenTrStab_SMIB_doubleLine.cpp
-	Circuits/DP_SP_SynGenTrStab_3BusSystem.cpp
+	Circuits/DP_SP_SynGenTrStab_3BusSystem_loadBus.cpp
 	Circuits/DP_SP_SynGenTrStab_3BusSystem_infBus.cpp
 )
 
