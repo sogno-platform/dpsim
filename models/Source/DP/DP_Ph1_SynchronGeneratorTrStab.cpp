@@ -99,33 +99,6 @@ void DP::Ph1::SynchronGeneratorTrStab::setStandardParametersPU(Real nomPower, Re
 				"\ninductance: {:f}", mXpd, mLpd);
 }
 
-// void DP::Ph1::SynchronGeneratorTrStab::setStandardParameters(Real nomPower, Real nomVolt, Real nomFreq, Int polePairNumber,
-// 	Real Rs, Real Lpd, Real inertia, Real Kd) {
-// 	setBaseParameters(nomPower, nomVolt, nomFreq);
-
-// 	mParameterType = ParameterType::statorReferred;
-// 	mStateType = StateType::statorReferred;
-
-// 	// M = 2*H where H = inertia
-// 	// H = J * 0.5 * omegaNom^2 / polePairNumber
-// 	// mInertia = calcHfromJ(inertiaJ, 2*PI*nomFreq, polePairNumber);
-
-// 	mInertia =inertia;
-
-// 	// X'd in absolute values
-// 	mXpd = mNomOmega * Lpd;
-// 	mLpd = Lpd;
-
-// 	mRs= Rs;
-// 	mKd= Kd;
-
-// 	mSLog->info("\n--- Parameters ---"
-// 				"\nimpedance: {:f}"
-// 				"\ninductance: {:f}", mXpd, mLpd);
-// }
-
-
-
 void DP::Ph1::SynchronGeneratorTrStab::setInitialValues(Complex elecPower, Real mechPower) {
 	mInitElecPower = elecPower;
 	mInitMechPower = mechPower;
@@ -151,15 +124,14 @@ void DP::Ph1::SynchronGeneratorTrStab::initializeFromNodesAndTerminals(Real freq
 	mEp = mIntfVoltage(0,0) + mImpedance * mIntfCurrent(0,0);
 	// The absolute value of Ep is constant, only delta_p changes every step
 	mEp_abs = Math::abs(mEp);
-	mDelta_p= Math::phase(mEp);
-
-	// mElecActivePower = Math::abs(mIntfVoltage(0,0)) * Math::abs(mIntfCurrent(0,0)) * cos(Math::phase(mIntfVoltage(0,0))- Math::phase(mIntfCurrent(0,0)));
+	mDelta_p= Math::phase(mEp)-Math::phase(mIntfVoltage(0,0));
 
 	// // Update active electrical power that is compared with the mechanical power
-	//mElecActivePower = ( (mEp - mIntfVoltage(0,0)) / mImpedance *  mIntfVoltage(0,0) ).real();
+	// mElecActivePower = ( (mEp - mIntfVoltage(0,0)) / mImpedance *  mIntfVoltage(0,0) ).real();
 	// For infinite power bus
-	mElecActivePower = (Math::abs(mEp) * Math::abs(mIntfVoltage(0,0)) / mXpd) * sin(Math::phase(mEp));
+	// mElecActivePower = (Math::abs(mEp) * Math::abs(mIntfVoltage(0,0)) / mXpd) * sin(mDelta_p);
 	mElecActivePower = (Math::abs(mEp) * Math::abs(mIntfVoltage(0,0)) / mXpd) * sin(Math::phase(mEp)-Math::phase(mIntfVoltage(0,0)));
+	
 	// Start in steady state so that electrical and mech. power are the same
 	mMechPower = mElecActivePower- mKd*(mOmMech - mNomOmega);
 
@@ -196,27 +168,20 @@ void DP::Ph1::SynchronGeneratorTrStab::initializeFromNodesAndTerminals(Real freq
 
 void DP::Ph1::SynchronGeneratorTrStab::step(Real time) {
 
-	//mElecActivePower = Math::abs(mIntfVoltage(0,0)) * Math::abs(mIntfCurrent(0,0)) * cos(Math::phase(mIntfVoltage(0,0))- Math::phase(mIntfCurrent(0,0)));
-
 	// #### Calculations on input of time step k ####
 	// Update electrical power
 	// mElecActivePower = ( (mEp - mIntfVoltage(0,0)) / mImpedance *  mIntfVoltage(0,0) ).real();
 	// For infinite power bus
+	mElecActivePower = (Math::abs(mEp) * Math::abs(mIntfVoltage(0,0)) / mXpd) * sin(mDelta_p);
 	mElecActivePower = (Math::abs(mEp) * Math::abs(mIntfVoltage(0,0)) / mXpd )* sin(Math::phase(mEp)-Math::phase(mIntfVoltage(0,0)));
-
-	// // Update of mechanical torque from turbine governor
-	// if (mHasTurbineGovernor == true) {
-	// 	mMechTorque = mTurbineGovernor->step(mOmMech, 1, mElecActivePower / mNomPower, mTimeStep);
-	// }
-
-	// mElecActivePower=(Math::abs((mEp - mIntfVoltage(0,0)) / mImpedance)*Math::abs(mIntfVoltage(0,0)))*cos( Math::phase(mIntfVoltage(0,0))- Math::phase((mEp - mIntfVoltage(0,0)) / mImpedance));
 	
-	// Damping power
-	//mDampPower= mKd*(mOmMech - mNomOmega);
+	// The damping factor Kd is adjusted to obtain a damping ratio of 0.3
+	Real MaxElecActivePower= Math::abs(mEp) * Math::abs(mIntfVoltage(0,0)) / mXpd;
+	mKd=4*0.3*sqrt(mNomOmega*mInertia*MaxElecActivePower*0.5);
 
 	// #### Calculate state for time step k+1 ####
 	// semi-implicit Euler or symplectic Euler method for mechanical equations
-	Real dOmMech = mNomOmega / (2.*mInertia * mNomPower) * (mMechPower - mElecActivePower- mKd*(mOmMech - mNomOmega));
+	Real dOmMech = mNomOmega / (2.*mInertia * mNomPower) * (mMechPower - mElecActivePower-mKd*(mOmMech - mNomOmega));
 	if (mBehaviour == Behaviour::Simulation)
 		mOmMech = mOmMech + mTimeStep * dOmMech;
 	Real dDelta_p = mOmMech - mNomOmega;
