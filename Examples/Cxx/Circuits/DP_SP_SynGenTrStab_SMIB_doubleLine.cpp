@@ -556,9 +556,9 @@ void EMT_3ph_SynGenDQ7odTrapez_Fault(Real timeStep, Real finalTime, bool startFa
 	String simName = "EMT_3ph_SynGenDQ7odTrapez_Fault_dl";
 	Logger::setLogDir("logs/"+simName);
 	
-	// angle in rad
-	Real initTerminalVolt=std::abs(n1PF->singleVoltage())*RMS3PH_TO_PEAK1PH;
-	Real initVoltAngle= Math::phase(n1PF->singleVoltage());
+	// // angle in rad
+	// Real initTerminalVolt=std::abs(n1PF->singleVoltage())*RMS3PH_TO_PEAK1PH;
+	// Real initVoltAngle= Math::phase(n1PF->singleVoltage());
 
 	// Nodes	
 	auto n1 = SimNode<Real>::make("n1", PhaseType::ABC);
@@ -567,12 +567,8 @@ void EMT_3ph_SynGenDQ7odTrapez_Fault(Real timeStep, Real finalTime, bool startFa
 
 	// Components
 	//Synch
-	auto gen = CPS::EMT::Ph3::SynchronGeneratorDQTrapez::make("SynGen");
-	gen->setParametersFundamentalPerUnit(
-		nomPower, nomPhPhVoltRMS, nomFreq, poleNum, nomFieldCurr,
-		Rs, Ll, Lmd, Lmq, Rfd, Llfd, Rkd, Llkd, Rkq1, Llkq1, Rkq2, Llkq2, H,
-		initActivePower, initReactivePower, initTerminalVolt,
-		initVoltAngle, fieldVoltage, initMechPower);
+	auto gen = CPS::EMT::Ph3::SynchronGeneratorTrStab::make("SynGen");
+	gen->setStandardParametersPU(nomPower, nomPhPhVoltRMS, nomFreq, Xpd, H, Rs, Kd );
 	
 	//Grid bus as Slack
 	auto extnet = EMT::Ph3::NetworkInjection::make("Slack", Logger::Level::debug);
@@ -659,7 +655,7 @@ void EMT_3ph_SynGenDQ7odTrapez_Fault(Real timeStep, Real finalTime, bool startFa
 int main(int argc, char* argv[]) {		
 
 	//Simultion parameters
-	Real finalTime = 50;
+	Real finalTime = 3;
 	Real timeStep = 0.001;
 	Bool startFaultEvent=true;
 	// Bool startFaultEvent= false;
@@ -675,7 +671,7 @@ int main(int argc, char* argv[]) {
 	DP_1ph_SynGenTrStab_Fault(timeStep, finalTime,startFaultEvent, endFaultEvent, startTimeFault, endTimeFault);
 	
 	//EMT reference 50us
-	//EMT_3ph_SynGenDQ7odTrapez_Fault(1e-6, 2 ,startFaultEvent, endFaultEvent, startTimeFault, endTimeFault);
+	EMT_3ph_SynGenDQ7odTrapez_Fault(50e-6, finalTime,startFaultEvent, endFaultEvent, startTimeFault, endTimeFault);
 
 	//loop for conductance value
 
