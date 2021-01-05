@@ -30,7 +30,7 @@ DP::Ph1::SynchronGeneratorTrStab::SynchronGeneratorTrStab(String uid, String nam
 
 SimPowerComp<Complex>::Ptr DP::Ph1::SynchronGeneratorTrStab::clone(String name) {
 	auto copy = SynchronGeneratorTrStab::make(name, mLogLevel);
-	copy->setStandardParametersPU(mNomPower, mNomVolt, mNomFreq, mXpd / mBase_Z, mRs, mInertia, mKd);
+	copy->setStandardParametersPU(mNomPower, mNomVolt, mNomFreq, mXpd / mBase_Z, mInertia, mRs, mKd);
 	return copy;
 }
 
@@ -172,7 +172,7 @@ void DP::Ph1::SynchronGeneratorTrStab::step(Real time) {
 	// Update electrical power
 	// mElecActivePower = ( (mEp - mIntfVoltage(0,0)) / mImpedance *  mIntfVoltage(0,0) ).real();
 	// For infinite power bus
-	mElecActivePower = (Math::abs(mEp) * Math::abs(mIntfVoltage(0,0)) / mXpd) * sin(mDelta_p);
+	// mElecActivePower = (Math::abs(mEp) * Math::abs(mIntfVoltage(0,0)) / mXpd) * sin(mDelta_p);
 	mElecActivePower = (Math::abs(mEp) * Math::abs(mIntfVoltage(0,0)) / mXpd )* sin(Math::phase(mEp)-Math::phase(mIntfVoltage(0,0)));
 	
 	// The damping factor Kd is adjusted to obtain a damping ratio of 0.3

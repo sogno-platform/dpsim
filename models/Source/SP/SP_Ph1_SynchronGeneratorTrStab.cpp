@@ -30,7 +30,7 @@ SP::Ph1::SynchronGeneratorTrStab::SynchronGeneratorTrStab(String uid, String nam
 
 SimPowerComp<Complex>::Ptr SP::Ph1::SynchronGeneratorTrStab::clone(String name) {
 	auto copy = SynchronGeneratorTrStab::make(name, mLogLevel);
-	copy->setStandardParametersPU(mNomPower, mNomVolt, mNomFreq, mXpd / mBase_Z, mRs, mInertia, mKd);
+	copy->setStandardParametersPU(mNomPower, mNomVolt, mNomFreq, mXpd / mBase_Z, mInertia, mRs, mKd);
 	return copy;
 }
 
