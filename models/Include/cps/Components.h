@@ -100,6 +100,7 @@
 #include <cps/EMT/EMT_Ph3_Transformer.h>
 #include <cps/EMT/EMT_Ph3_NetworkInjection.h>
 #include <cps/EMT/EMT_Ph3_Switch.h>
+#include <cps/EMT/EMT_Ph3_SynchronGeneratorTrStab.h>
 
 #include <cps/Signal/DecouplingLine.h>
 #include <cps/Signal/DecouplingLineEMT.h>
