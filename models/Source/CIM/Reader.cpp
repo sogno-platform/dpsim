@@ -298,10 +298,11 @@ TopologicalPowerComp::Ptr Reader::mapEnergyConsumer(CIMPP::EnergyConsumer* consu
 		}
 		if (consumer->q.value){
 			q = unitValue(consumer->q.value,UnitMultiplier::M);
-		}*/
+		}
+		load->setParameters(p, q, 0);
+		*/
 
-		// P and Q values will be set according to SvPowerFlow data
-		load->setParameters(0, 0, 0);
+		// P and Q values will be set according to SvPowerFlow data	
 		load->modifyPowerFlowBusType(PowerflowBusType::PQ); // for powerflow solver set as PQ component as default
 		return load;
 	}
