@@ -88,7 +88,7 @@ int main(int argc, char *argv[]) {
 			continue;
 		}
 
-		i--;
+		--i;
 
 		auto n_dp = std::dynamic_pointer_cast<CPS::DP::SimNode>(n);
 		auto v = n_dp->attributeMatrixComp("v")->coeff(0, 0);
@@ -96,8 +96,8 @@ int main(int argc, char *argv[]) {
 		std::cout << "Signal " << (i*2)+0 << ": Mag  " << n->name() << std::endl;
 		std::cout << "Signal " << (i*2)+1 << ": Phas " << n->name() << std::endl;
 
-		intf.exportReal(v->mag(),   (i*2)+0); o++;
-		intf.exportReal(v->phase(), (i*2)+1); o++;
+		intf.exportReal(v->mag(),   (i*2)+0); ++o;
+		intf.exportReal(v->phase(), (i*2)+1); ++o;
 
 		logger->addAttribute(fmt::format("mag_{}", i), v->mag());
 		logger->addAttribute(fmt::format("phase_{}", i), v->phase());

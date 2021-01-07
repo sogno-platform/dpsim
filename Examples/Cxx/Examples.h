@@ -80,12 +80,12 @@ namespace CIGREMV {
         Real pvUnitNominalVoltage = 1500.;
         Real pvUnitNominalPower = 50e3;
         Real pvUnitPowerFactor = 1;
-        
+
         // calculate PV units per plant to reach penetration level
         Int numberPVUnits = Int(totalLoad * penetrationLevel / pvUnitNominalPower);
         Int numberPVPlants = 9;
         Int numberPVUnitsPerPlant = numberPVUnits / numberPVPlants;
-                
+
         // PV controller parameters
         Real scaling_P = 10.0;
         Real scaling_I = 1000.0;
@@ -127,7 +127,7 @@ namespace CIGREMV {
         Real pvReactivePower = sqrt(std::pow(pvActivePower / scenario.pvUnitPowerFactor, 2) - std::pow(pvActivePower, 2));
 
         // add PVs to network topology
-        for (Int n = 3; n <= 11; n++) {	
+        for (Int n = 3; n <= 11; ++n) {
             // TODO: cast to BaseAverageVoltageSourceInverter and move set functions out of case distinction
             if (domain == Domain::SP) {
                 SimNode<Complex>::Ptr connectionNode = system.node<CPS::SimNode<Complex>>("N" + std::to_string(n));
@@ -185,11 +185,11 @@ namespace CIGREMV {
         logger->addAttribute(pv->name() + "_pll_output", pv->attribute("pll_output"));
         logger->addAttribute(pv->name() + "_vsref", pv->attribute("Vsref"));
         logger->addAttribute(pv->name() + "_vs", pv->attribute("Vs"));
-    }	
+    }
 
 }
         std::shared_ptr<DPsim::SwitchEvent> createEventAddPowerConsumption(String nodeName, Real eventTime, Real additionalActivePower, SystemTopology& system, Domain domain, DPsim::DataLogger::Ptr logger) {
-        
+
         // TODO: use base classes ph1
         if (domain == CPS::Domain::DP) {
             auto loadSwitch = DP::Ph1::Switch::make("Load_Add_Switch_" + nodeName, Logger::Level::debug);
@@ -217,7 +217,7 @@ namespace CIGREMV {
     }
 
     std::shared_ptr<DPsim::SwitchEvent3Ph> createEventAddPowerConsumption3Ph(String nodeName, Real eventTime, Real additionalActivePower, SystemTopology& system, Domain domain, DPsim::DataLogger::Ptr logger) {
-        
+
         // TODO: use base classes ph3
          if (domain == CPS::Domain::EMT) {
             auto loadSwitch = EMT::Ph3::Switch::make("Load_Add_Switch_" + nodeName, Logger::Level::debug);
@@ -233,7 +233,7 @@ namespace CIGREMV {
             return nullptr;
         }
     }
-    
+
 }
 }
 }

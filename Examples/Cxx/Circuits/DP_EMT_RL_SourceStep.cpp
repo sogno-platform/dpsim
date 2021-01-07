@@ -106,13 +106,13 @@ int main(int argc, char* argv[]) {
 	UInt maxVoltageStepIdx = 10;
 	UInt maxFreqStepIdx = 10;
 
-	for (UInt stepIdx = 1; stepIdx <= maxTimeStepIdx; stepIdx++) {
+	for (UInt stepIdx = 1; stepIdx <= maxTimeStepIdx; ++stepIdx) {
 		timeStep = stepIdx * 0.00005;
 
 		EMT_RL_SourceStep(timeStep, finalTime, 0, 0, stepTime, "_T" + std::to_string(stepIdx));
 		DP_RL_SourceStep(timeStep, finalTime, 0, 0, stepTime, "_T" + std::to_string(stepIdx));
 
-		for (UInt voltageStepIdx = 1; voltageStepIdx <= maxVoltageStepIdx; voltageStepIdx++) {
+		for (UInt voltageStepIdx = 1; voltageStepIdx <= maxVoltageStepIdx; ++voltageStepIdx) {
 			voltageStep = voltageStepIdx * 100;
 			EMT_RL_SourceStep(timeStep, finalTime, voltageStep, 0, stepTime,
 				"_T" + std::to_string(stepIdx) + "_V" + std::to_string(voltageStepIdx));
@@ -120,7 +120,7 @@ int main(int argc, char* argv[]) {
 				"_T" + std::to_string(stepIdx) + "_V" + std::to_string(voltageStepIdx));
 		}
 
-		for (UInt freqStepIdx = 1; freqStepIdx <= maxFreqStepIdx; freqStepIdx++) {
+		for (UInt freqStepIdx = 1; freqStepIdx <= maxFreqStepIdx; ++freqStepIdx) {
 			freqStep = freqStepIdx;
 			EMT_RL_SourceStep(timeStep, finalTime, 0, freqStep, stepTime,
 				"_T" + std::to_string(stepIdx) + "_F" + std::to_string(freqStepIdx));
@@ -135,7 +135,7 @@ int main(int argc, char* argv[]) {
 		EMT_RL_SourceStep(timeStep, finalTime, 0, 0, stepTime, "_T" + std::to_string(stepIdx));
 		DP_RL_SourceStep(timeStep, finalTime, 0, 0, stepTime, "_T" + std::to_string(stepIdx));
 
-		for (UInt voltageStepIdx = 1; voltageStepIdx <= maxVoltageStepIdx; voltageStepIdx++) {
+		for (UInt voltageStepIdx = 1; voltageStepIdx <= maxVoltageStepIdx; ++voltageStepIdx) {
 			voltageStep = voltageStepIdx * 100;
 			EMT_RL_SourceStep(timeStep, finalTime, voltageStep, 0, stepTime,
 				"_T" + std::to_string(stepIdx) + "_V" + std::to_string(voltageStepIdx));
@@ -143,7 +143,7 @@ int main(int argc, char* argv[]) {
 				"_T" + std::to_string(stepIdx) + "_V" + std::to_string(voltageStepIdx));
 		}
 
-		for (UInt freqStepIdx = 1; freqStepIdx <= maxFreqStepIdx; freqStepIdx++) {
+		for (UInt freqStepIdx = 1; freqStepIdx <= maxFreqStepIdx; ++freqStepIdx) {
 			freqStep = freqStepIdx;
 			EMT_RL_SourceStep(timeStep, finalTime, 0, freqStep, stepTime,
 				"_T" + std::to_string(stepIdx) + "_F" + std::to_string(freqStepIdx));

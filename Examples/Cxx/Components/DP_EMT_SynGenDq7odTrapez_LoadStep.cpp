@@ -165,11 +165,11 @@ int main(int argc, char* argv[]) {
 	UInt maxTimeStepIdx = 20;
 	UInt maxLoadStepIdx = 10;
 
-	for (UInt loadStepIdx = 0; loadStepIdx <= maxLoadStepIdx; loadStepIdx++) {
+	for (UInt loadStepIdx = 0; loadStepIdx <= maxLoadStepIdx; ++loadStepIdx) {
 		if (loadStepIdx == 0) breakerOpenR = 0;
 		else breakerOpenR = Rload / loadStepIdx;
 
-		for (UInt stepIdx = 1; stepIdx <= maxTimeStepIdx; stepIdx++) {
+		for (UInt stepIdx = 1; stepIdx <= maxTimeStepIdx; ++stepIdx) {
 			timeStep = stepIdx * 0.00005;
 
 			DP_SynGenDq7odTrapez_LoadStep(timeStep, finalTime, breakerOpenR,

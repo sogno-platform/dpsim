@@ -88,7 +88,7 @@ int main(int argc, char *argv[]) {
 				continue;
 			}
 
-			i--;
+			--i;
 
 			auto v = n->attributeComplex("v");
 

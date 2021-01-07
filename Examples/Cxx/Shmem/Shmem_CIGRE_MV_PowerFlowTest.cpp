@@ -64,8 +64,8 @@ int main(int argc, char** argv) {
 		std::cout << "Signal " << (i*2)+0 << ": Mag  " << n->name() << std::endl;
 		std::cout << "Signal " << (i*2)+1 << ": Phas " << n->name() << std::endl;
 
-		intf.exportReal(v->mag(),   (i*2)+0); o++;
-		intf.exportReal(v->phase(), (i*2)+1); o++;
+		intf.exportReal(v->mag(),   (i*2)+0); ++o;
+		intf.exportReal(v->phase(), (i*2)+1); ++o;
 	}
 
 	sim.addInterface(&intf, false);
