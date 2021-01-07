@@ -17,30 +17,36 @@ DP::Ph1::VoltageSource::VoltageSource(String uid, String name, Logger::Level log
 	mIntfVoltage = MatrixComp::Zero(1,1);
 	mIntfCurrent = MatrixComp::Zero(1,1);
 
-	addAttribute<Complex>("V_ref", Flags::read | Flags::write);
-	addAttribute<Real>("f_src", Flags::read | Flags::write);
+	//addAttribute<Complex>("V_in", Flags::read);
 }
 
 SimPowerComp<Complex>::Ptr DP::Ph1::VoltageSource::clone(String name) {
 	auto copy = VoltageSource::make(name, mLogLevel);
-	copy->setParameters(attribute<Complex>("V_ref")->get());
+	copy->setParameters(mSrcSig->getVoltage());
 	return copy;
 }
 
 void DP::Ph1::VoltageSource::setParameters(Complex voltageRef, Real srcFreq) {
-	attribute<Complex>("V_ref")->set(voltageRef);
-	attribute<Real>("f_src")->set(srcFreq);
+	Signal::SineWaveGenerator srcSigSine {mName};
+	srcSigSine.setParameters(voltageRef, srcFreq);
+	mSrcSig = std::make_shared<Signal::SineWaveGenerator>(srcSigSine);
+
+	mParametersSet = true;
+}
+
+void DP::Ph1::VoltageSource::setSourceSignal(CPS::Signal::SignalGenerator::Ptr srcSig) {
+	/// TODO: Copy signal generator?
+	mSrcSig = srcSig;
 
 	mParametersSet = true;
 }
 
 void DP::Ph1::VoltageSource::initializeFromNodesAndTerminals(Real frequency) {
-	mVoltageRef = attribute<Complex>("V_ref");
-	mSrcFreq = attribute<Real>("f_src");
-
-	// TODO: find more explicit way, e.g. make dependend on mParametersSet or other flag
-	if (mVoltageRef->get() == Complex(0, 0))	
-		mVoltageRef->set(initialSingleVoltage(1) - initialSingleVoltage(0));
+	if (!mParametersSet) {
+		Signal::SineWaveGenerator srcSigSine(mName);
+		srcSigSine.setParameters(initialSingleVoltage(1) - initialSingleVoltage(0));
+		mSrcSig = std::make_shared<Signal::SineWaveGenerator>(srcSigSine);
+	}
 
 	mSLog->info(
 		"\n--- Initialization from node voltages ---"
@@ -48,7 +54,7 @@ void DP::Ph1::VoltageSource::initializeFromNodesAndTerminals(Real frequency) {
 		"\nTerminal 0 voltage: {:s}"
 		"\nTerminal 1 voltage: {:s}"
 		"\n--- Initialization from node voltages ---",
-		Logger::phasorToString(mVoltageRef->get()),
+		Logger::phasorToString(mSrcSig->getVoltage()),
 		Logger::phasorToString(initialSingleVoltage(0)),
 		Logger::phasorToString(initialSingleVoltage(1)));
 }
@@ -56,7 +62,7 @@ void DP::Ph1::VoltageSource::initializeFromNodesAndTerminals(Real frequency) {
 // #### MNA functions ####
 
 void DP::Ph1::VoltageSource::mnaAddPreStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes) {
-	attributeDependencies.push_back(attribute("V_ref"));
+	//attributeDependencies.push_back(attribute("V_ref"));
 	modifiedAttributes.push_back(attribute("right_vector"));
 	modifiedAttributes.push_back(attribute("v_intf"));
 }
@@ -70,7 +76,7 @@ void DP::Ph1::VoltageSource::mnaInitialize(Real omega, Real timeStep, Attribute<
 	MNAInterface::mnaInitialize(omega, timeStep);
 	updateMatrixNodeIndices();
 
-	mIntfVoltage(0,0) = mVoltageRef->get();
+	mIntfVoltage(0,0) = mSrcSig->getVoltage();
 	mMnaTasks.push_back(std::make_shared<MnaPreStep>(*this));
 	mMnaTasks.push_back(std::make_shared<MnaPostStep>(*this, leftVector));
 	mRightVector = Matrix::Zero(leftVector->get().rows(), 1);
@@ -88,7 +94,7 @@ void DP::Ph1::VoltageSource::mnaInitializeHarm(Real omega, Real timeStep, std::v
 	MNAInterface::mnaInitialize(omega, timeStep);
 	updateMatrixNodeIndices();
 
-	mIntfVoltage(0,0) = mVoltageRef->get();
+	mIntfVoltage(0,0) = mSrcSig->getVoltage();
 
 	mMnaTasks.push_back(std::make_shared<MnaPreStepHarm>(*this));
 	mMnaTasks.push_back(std::make_shared<MnaPostStepHarm>(*this, leftVectors));
@@ -156,14 +162,7 @@ void DP::Ph1::VoltageSource::mnaApplyRightSideVectorStampHarm(Matrix& rightVecto
 }
 
 void DP::Ph1::VoltageSource::updateVoltage(Real time) {
-	if (mSrcFreq->get() < 0) {
-		mIntfVoltage(0,0) = mVoltageRef->get();
-	}
-	else {
-		mIntfVoltage(0,0) = Complex(
-			Math::abs(mVoltageRef->get()) * cos(time * 2.*PI*mSrcFreq->get() + Math::phase(mVoltageRef->get())),
-			Math::abs(mVoltageRef->get()) * sin(time * 2.*PI*mSrcFreq->get() + Math::phase(mVoltageRef->get())));
-	}
+	mIntfVoltage(0,0) = mSrcSig->step(time);
 
 	mSLog->debug("Update Voltage {:s}", Logger::phasorToString(mIntfVoltage(0,0)));
 }
@@ -218,6 +217,6 @@ void DP::Ph1::VoltageSource::daeResidual(double ttime, const double state[], con
 }
 
 Complex DP::Ph1::VoltageSource::daeInitialize() {
-	mIntfVoltage(0,0) = mVoltageRef->get();
-	return mVoltageRef->get();
+	mIntfVoltage(0,0) = mSrcSig->getVoltage();
+	return mSrcSig->getVoltage();
 }

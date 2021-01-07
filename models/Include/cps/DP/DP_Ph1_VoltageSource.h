@@ -11,6 +11,8 @@
 #include <cps/SimPowerComp.h>
 #include <cps/Solver/MNAInterface.h>
 #include <cps/Solver/DAEInterface.h>
+#include <cps/Signal/SineWaveGenerator.h>
+#include <cps/Signal/SignalGenerator.h>
 
 namespace CPS {
 namespace DP {
@@ -32,9 +34,11 @@ namespace Ph1 {
 		///
 		void updateVoltage(Real time);
 		///
-		Attribute<Complex>::Ptr mVoltageRef;
+		//Attribute<Complex>::Ptr mSigIn;
 		///
-		Attribute<Real>::Ptr mSrcFreq;
+		//Attribute<Real>::Ptr mSrcFreq;
+		/// 
+		CPS::Signal::SignalGenerator::Ptr mSrcSig;
 	public:
 		/// Defines UID, name, component parameters and logging level
 		VoltageSource(String uid, String name, Logger::Level loglevel = Logger::Level::off);
@@ -52,6 +56,8 @@ namespace Ph1 {
 		void initializeFromNodesAndTerminals(Real frequency);
 		///
 		void setSourceValue(Complex voltage);
+		///
+		void setSourceSignal(CPS::Signal::SignalGenerator::Ptr srcSig);
 		///
 		void setParameters(Complex voltageRef, Real srcFreq = -1);
 
