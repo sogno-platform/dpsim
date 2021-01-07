@@ -21,7 +21,7 @@ DP::Ph1::Inverter::Inverter(String uid, String name, Logger::Level logLevel)
 	mIntfCurrent = MatrixComp::Zero(1,1);
 }
 
-void DP::Ph1::Inverter::setParameters(std::vector<Int> carrierHarms, std::vector<Int> modulHarms,
+void DP::Ph1::Inverter::setParameters(const std::vector<Int> &carrierHarms, const std::vector<Int> &modulHarms,
 	Real inputVoltage, Real ratio, Real phase) {
 	mCarHarms = carrierHarms;
 	mModHarms = modulHarms;

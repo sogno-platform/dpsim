@@ -234,7 +234,7 @@ namespace Base {
 		Real mInitVoltAngle = 0;
 
 		/// Constructor - does nothing.
-		SynchronGenerator() { }
+		SynchronGenerator() = default;
 		///
 		void setBaseParameters(Real nomPower, Real nomVolt, Real nomFreq);
 

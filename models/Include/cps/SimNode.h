@@ -37,18 +37,18 @@ namespace CPS {
 
 		/// This very general constructor is used by other constructors.
 		SimNode(String uid, String name, std::vector<UInt> matrixNodeIndex,
-			PhaseType phaseType, std::vector<Complex> initialVoltage);
+			PhaseType phaseType, const std::vector<Complex> &initialVoltage);
 		/// Create ground node if no parameters are given.
 		SimNode(PhaseType phaseType = PhaseType::Single);
 		/// Create named node and optionally assigns an initial voltage.
 		/// This should be the constructor called by users in examples.
 		SimNode(String name, PhaseType phaseType = PhaseType::Single,
-			std::vector<Complex> initialVoltage = { 0, 0, 0 })
+			const std::vector<Complex> &initialVoltage = { 0, 0, 0 })
 			: SimNode(name, name, { 0, 0, 0 }, phaseType, initialVoltage) { }
 		/// Create node with name and node number.
 		/// This is mostly used by functions.
 		SimNode(String uid, String name, UInt matrixNodeIndex,
-			PhaseType phaseType = PhaseType::Single, std::vector<Complex> initialVoltage = { 0, 0, 0 })
+			PhaseType phaseType = PhaseType::Single, const std::vector<Complex> &initialVoltage = { 0, 0, 0 })
 			: SimNode(uid, name, { matrixNodeIndex, matrixNodeIndex + 1, matrixNodeIndex + 2 }, phaseType, initialVoltage) {}
 		/// Create node with default name and node number.
 		/// This is mostly used by functions.
@@ -109,7 +109,7 @@ namespace CPS {
 		///
 		class MnaPostStepHarm : public Task {
 		public:
-			MnaPostStepHarm(SimNode& node, std::vector<Attribute<Matrix>::Ptr> leftVectors) :
+			MnaPostStepHarm(SimNode& node, const std::vector<Attribute<Matrix>::Ptr> &leftVectors) :
 				Task(node.mName + ".MnaPostStepHarm"),
 				mNode(node), mLeftVectors(leftVectors) {
 				for (UInt i = 0; i < mLeftVectors.size(); i++)

@@ -116,7 +116,7 @@ namespace Ph1 {
 
 		class MnaPostStepHarm : public CPS::Task {
 		public:
-			MnaPostStepHarm(VoltageSource& voltageSource, std::vector<Attribute<Matrix>::Ptr> leftVectors) :
+			MnaPostStepHarm(VoltageSource& voltageSource, const std::vector<Attribute<Matrix>::Ptr> &leftVectors) :
 				Task(voltageSource.mName + ".MnaPostStepHarm"),
 				mVoltageSource(voltageSource), mLeftVectors(leftVectors) {
 				for (UInt i = 0; i < mLeftVectors.size(); i++)

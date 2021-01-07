@@ -26,7 +26,7 @@ namespace CPS {
 		TopologicalNode() { }
 		/// This very general constructor is used by other constructors.
 		TopologicalNode(String uid, String name,
-			PhaseType phaseType, std::vector<Complex> initialVoltage);
+			PhaseType phaseType, const std::vector<Complex> &initialVoltage);
 		///
 		virtual ~TopologicalNode() { }
 

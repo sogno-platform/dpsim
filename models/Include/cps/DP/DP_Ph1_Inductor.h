@@ -123,7 +123,7 @@ namespace Ph1 {
 
 		class MnaPostStepHarm : public Task {
 		public:
-			MnaPostStepHarm(Inductor& inductor, std::vector<Attribute<Matrix>::Ptr> leftVectors)
+			MnaPostStepHarm(Inductor& inductor, const std::vector<Attribute<Matrix>::Ptr> &leftVectors)
 				: Task(inductor.mName + ".MnaPostStepHarm"),
 				mInductor(inductor), mLeftVectors(leftVectors) {
 				for (UInt i = 0; i < mLeftVectors.size(); i++)

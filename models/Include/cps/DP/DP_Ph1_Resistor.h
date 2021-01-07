@@ -69,7 +69,7 @@ namespace Ph1 {
 
 		class MnaPostStepHarm : public Task {
 		public:
-			MnaPostStepHarm(Resistor& resistor, std::vector<Attribute<Matrix>::Ptr> leftVectors) :
+			MnaPostStepHarm(Resistor& resistor, std::vector<Attribute<Matrix>::Ptr> &leftVectors) :
 				Task(resistor.mName + ".MnaPostStepHarm"),
 				mResistor(resistor), mLeftVectors(leftVectors) {
 				for (UInt i = 0; i < mLeftVectors.size(); i++)

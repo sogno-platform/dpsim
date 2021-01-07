@@ -49,7 +49,7 @@ namespace CPS {
 		}
 
 	protected:
-		Task(std::string name) : mName(name) {}
+		Task(const std::string &name) : mName(name) {}
 		std::string mName;
 		std::vector<AttributeBase::Ptr> mAttributeDependencies;
 		std::vector<AttributeBase::Ptr> mModifiedAttributes;

@@ -37,7 +37,7 @@ namespace CPS {
 
         /// Define the type of bus the component is modelled by
 		PowerflowBusType mPowerflowBusType;
-		PFSolverInterfaceBus() {};
+		PFSolverInterfaceBus() = default;
 
 		virtual void modifyPowerFlowBusType(PowerflowBusType powerflowBusType)=0;
 		virtual void pfBusInitialize(){

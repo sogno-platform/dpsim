@@ -57,12 +57,12 @@ namespace CPS {
 		}
 
 		template<typename T, typename... Args>
-		void addAttributeRef(const String& name, std::shared_ptr<AttributeBase> ref, Args&&... args){
+		void addAttributeRef(const String& name, const std::shared_ptr<AttributeBase> &ref, Args&&... args){
 			addAttribute<T>(name, std::forward<Args>(args)...);
 			setAttributeRef(name, ref);
 		}
 
-		void setAttributeRef(const String& name, std::shared_ptr<AttributeBase> ref) {
+		void setAttributeRef(const String& name, const std::shared_ptr<AttributeBase> &ref) {
 			auto attr = attribute(name);
 
 			// clang complains here for some reason that the expressions in the typeid

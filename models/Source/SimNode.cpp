@@ -12,7 +12,7 @@ using namespace CPS;
 
 template <typename VarType>
 SimNode<VarType>::SimNode(String uid, String name,
-	std::vector<UInt> matrixNodeIndex, PhaseType phaseType, std::vector<Complex> initialVoltage)
+	std::vector<UInt> matrixNodeIndex, PhaseType phaseType, const std::vector<Complex> &initialVoltage)
 	: TopologicalNode(uid, name, phaseType, initialVoltage) {
 
 	if (phaseType == PhaseType::ABC) {

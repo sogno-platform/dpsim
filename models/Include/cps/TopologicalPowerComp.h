@@ -45,12 +45,13 @@ namespace CPS {
 
 		/// Basic constructor that takes UID, name and log level
 		TopologicalPowerComp(String uid, String name, Logger::Level logLevel = Logger::Level::off)
-			: IdentifiedObject(uid, name), mLogLevel(logLevel) {
+			: IdentifiedObject(uid, name),
 			/* We also want to set the CLI loglevel according to the logLevel
 			 * std::max(Logger::Level::info, logLevel). But because of excessive
 			 * logging to Level::info that is currently infeasible. */
-			mSLog = Logger::get(name, logLevel, Logger::Level::warn);
-		}
+			mSLog(Logger::get(name, logLevel, Logger::Level::warn)),
+			mLogLevel(logLevel) { }
+
 		/// Basic constructor that takes name and log level and sets the UID to name as well
 		TopologicalPowerComp(String name, Logger::Level logLevel = Logger::Level::off)
 			: TopologicalPowerComp(name, name, logLevel) { }

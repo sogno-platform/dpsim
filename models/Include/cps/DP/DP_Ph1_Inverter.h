@@ -82,7 +82,7 @@ namespace Ph1 {
 		/// Bessel function
 		Real besselFirstKind_n(Int n, Int k_max, Real x) {
 			Real Jn = 0;
-			for (Int k = 0; k <= k_max; k++) {
+			for (Int k = 0; k <= k_max; ++k) {
 				Real Jn_k = pow(-1,k) / factorial(k) * multInvFactorial(k+n) * pow(x/2., 2.*k+n);
 				Jn = Jn + Jn_k;
 				//mSLog->info("Jn_n = {:f}", Jn_n);
@@ -93,7 +93,7 @@ namespace Ph1 {
 		/// Bessel function using look up tables for factorials
 		Real besselFirstKind_n_opt(Int n, Int k_max, Real x) {
 			Real Jn = 0;
-			for (Int k = 0; k <= k_max; k++) {
+			for (Int k = 0; k <= k_max; ++k) {
 				Real Jn_k = pow(-1,k) / mFactorials[k] * mMultInvFactorials[k+n] * pow(x/2., 2.*k+n);
 				Jn = Jn + Jn_k;
 			}
@@ -127,7 +127,7 @@ namespace Ph1 {
 		///
 		void initialize(Matrix frequencies);
 		///
-		void setParameters(std::vector<Int> carrierHarms, std::vector<Int> modulHarms,
+		void setParameters(const std::vector<Int> &carrierHarms, const std::vector<Int> &modulHarms,
 			Real inputVoltage, Real ratio, Real phase);
 		///
 		void calculatePhasors();
@@ -185,7 +185,7 @@ namespace Ph1 {
 
 		class MnaPostStepHarm : public CPS::Task {
 		public:
-			MnaPostStepHarm(Inverter& inverter, std::vector<Attribute<Matrix>::Ptr> leftVectors) :
+			MnaPostStepHarm(Inverter& inverter, const std::vector<Attribute<Matrix>::Ptr> &leftVectors) :
 				Task(inverter.mName + ".MnaPostStepHarm"),
 				mInverter(inverter), mLeftVectors(leftVectors) {
 				for (UInt i = 0; i < mLeftVectors.size(); i++)

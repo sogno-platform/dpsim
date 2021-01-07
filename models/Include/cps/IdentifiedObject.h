@@ -28,9 +28,8 @@ namespace CPS {
 
 		IdentifiedObject() { }
 
-		IdentifiedObject(String uid, String name) {
-			mUID = uid;
-			mName = name;
+		IdentifiedObject(String uid, String name)
+		: mName(name), mUID(uid) {
 
 			addAttribute<String>("uid", &mUID, Flags::read);
 			addAttribute<String>("name", &mName, Flags::read);

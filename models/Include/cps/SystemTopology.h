@@ -47,17 +47,18 @@ namespace CPS {
 		/// Do not use this constructor
 		SystemTopology() { }
 
+		Matrix initFrequency(Real frequency) {
+			Matrix frequencies(1,1);
+			frequencies << frequency;
+			return frequencies;
+		}
+
 		/// Constructor to be used if components
 		/// and nodes are added one by one
-
-		SystemTopology(Real frequency) {
-			mSystemFrequency = frequency;
-			mSystemOmega = 2 * PI * mSystemFrequency;
-
-			Matrix frequencies(1,1);
-			frequencies << mSystemFrequency;
-			mFrequencies = frequencies;
-		}
+		SystemTopology(Real frequency)
+		: mFrequencies(initFrequency(frequency)),
+		  mSystemFrequency(frequency),
+		  mSystemOmega(2 * PI * frequency) { }
 
 		/// This constructor requires a search for all nodes
 		/// which is not implemented yet!
@@ -76,8 +77,9 @@ namespace CPS {
 
 		/// Standard constructor for multi frequency simulations
 		SystemTopology(Real frequency, Matrix frequencies, TopologicalNode::List nodes, IdentifiedObject::List components)
-		: SystemTopology(frequency) {
-			mFrequencies = frequencies;
+		: mFrequencies(frequencies),
+		  mSystemFrequency(frequency),
+		  mSystemOmega(2 * PI * frequency) {
 			addNodes(nodes);
 			addComponents(components);
 			componentsAtNodeList();

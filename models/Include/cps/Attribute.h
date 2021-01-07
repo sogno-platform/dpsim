@@ -57,7 +57,7 @@ namespace Flags {
 			mFlags(flags)
 		{ };
 
-		AttributeBase(int flags, std::shared_ptr<AttributeBase> refAttribute) :
+		AttributeBase(int flags, const std::shared_ptr<AttributeBase> &refAttribute) :
 			mFlags(flags), mRefAttribute(refAttribute)
 		{ };
 
@@ -76,7 +76,7 @@ namespace Flags {
 
 		virtual void reset() = 0;
 
-		static AttributeBase::Ptr getRefAttribute(AttributeBase::Ptr& attr) {
+		static AttributeBase::Ptr getRefAttribute(AttributeBase::Ptr &attr) {
 			AttributeBase::Ptr& p = attr;
 			while (p && p->mRefAttribute)
 				p = p->mRefAttribute;
@@ -114,23 +114,23 @@ namespace Flags {
 		typedef std::shared_ptr<Attribute<T>> Ptr;
 
 		Attribute(int flags = Flags::read) :
-			AttributeBase(flags | Flags::owner) {
-			mValue = new T;
-		}
+			AttributeBase(flags | Flags::owner), mValue(new T) { }
 
-		Attribute(T *v, int flags = Flags::read, AttributeBase::Ptr refAttribute = AttributeBase::Ptr()) :
+		Attribute(T *v, int flags = Flags::read, const AttributeBase::Ptr &refAttribute = AttributeBase::Ptr()) :
 			AttributeBase(flags, refAttribute),
 			mValue(v)
 		{ };
 
-		Attribute(Setter set = Setter(), Getter get = Getter(), int flags = Flags::read, AttributeBase::Ptr refAttribute = AttributeBase::Ptr()) :
+		Attribute(Setter set = Setter(), Getter get = Getter(), int flags = Flags::read, const AttributeBase::Ptr &refAttribute = AttributeBase::Ptr()) :
 			AttributeBase(flags | Flags::setter | Flags::getter, refAttribute),
+			mValue(nullptr),
 			mSetter(set),
 			mGetter(get)
 		{ };
 
-		Attribute(Getter get = Getter(), int flags = Flags::read, AttributeBase::Ptr refAttribute = AttributeBase::Ptr()) :
+		Attribute(Getter get = Getter(), int flags = Flags::read, const AttributeBase::Ptr &refAttribute = AttributeBase::Ptr()) :
 			AttributeBase(flags | Flags::getter, refAttribute),
+			mValue(nullptr),
 			mGetter(get)
 		{ };
 
@@ -237,11 +237,11 @@ namespace Flags {
 		typedef std::shared_ptr<ComplexAttribute> Ptr;
 
 		ComplexAttribute(Complex *v, int flags = Flags::read,
-			AttributeBase::Ptr refAttribute = AttributeBase::Ptr()) :
+			const AttributeBase::Ptr &refAttribute = AttributeBase::Ptr()) :
 			Attribute<Complex>(v, flags, refAttribute) { };
 
 		ComplexAttribute(Getter get = Getter(), int flags = Flags::read,
-			AttributeBase::Ptr refAttribute = AttributeBase::Ptr()) :
+			const AttributeBase::Ptr &refAttribute = AttributeBase::Ptr()) :
 			Attribute<Complex>(get, flags, refAttribute) { };
 
 		// From the C++ standard:

@@ -11,7 +11,7 @@
 using namespace CPS;
 
 TopologicalNode::TopologicalNode(String uid, String name,
-	PhaseType phaseType, std::vector<Complex> initialVoltage)
+	PhaseType phaseType, const std::vector<Complex> &initialVoltage)
 	: IdentifiedObject(uid, name) {
 
 	mPhaseType = phaseType;

@@ -115,7 +115,7 @@ namespace Ph1 {
 
 		class MnaPostStepHarm : public CPS::Task {
 		public:
-			MnaPostStepHarm(Capacitor& capacitor, std::vector<Attribute<Matrix>::Ptr> leftVectors)
+			MnaPostStepHarm(Capacitor& capacitor, const std::vector<Attribute<Matrix>::Ptr> &leftVectors)
 				: Task(capacitor.mName + ".MnaPostStepHarm"),
 				mCapacitor(capacitor), mLeftVectors(leftVectors) {
 				for (UInt i = 0; i < mLeftVectors.size(); i++)
