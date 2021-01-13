@@ -50,6 +50,8 @@ namespace Ph1 {
 		void initializeFromNodesAndTerminals(Real frequency);
 		/// Setter for reference voltage parameters
 		void setParameters(Complex voltageRef, Real srcFreq = -1);
+		/// More General setter for voltage source parameters
+		void setVoltageSource(std::shared_ptr<DP::Ph1::VoltageSource> subVoltageSource);
 
 		// #### MNA Section ####
 		/// Initializes internal variables of the component

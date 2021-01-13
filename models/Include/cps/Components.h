@@ -110,3 +110,6 @@
 #include <cps/Signal/TurbineGovernor.h>
 #include <cps/Signal/FIRFilter.h>
 #include <cps/Signal/Integrator.h>
+#include <cps/Signal/SignalGenerator.h>
+#include <cps/Signal/SineWaveGenerator.h>
+#include <cps/Signal/FrequencyRamp.h>
