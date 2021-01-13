@@ -10,14 +10,16 @@
 
 using namespace CPS;
 
-void Signal::FrequencyRamp::setParameters(Complex voltageRef, Real freqStart, Real freqEnd, Real ramp, Real timeStart) {
-    mVoltageRef = voltageRef;
+void Signal::FrequencyRamp::setParameters(Complex initialPhasor, Real freqStart, Real freqEnd, Real ramp, Real timeStart) {
+    mMagnitude = Math::abs(initialPhasor);
+    mInitialPhase = Math::phase(initialPhasor);
 
     mFreqStart = freqStart;
     mFreqEnd = freqEnd;
-    //mFreqCurr = freqStart;
     mRamp = ramp;
     mTimeStart = timeStart;
+
+    mSigOut = initialPhasor;
 }
 
 Complex Signal::FrequencyRamp::step(Real time) {
@@ -30,12 +32,8 @@ Complex Signal::FrequencyRamp::step(Real time) {
         freqCurr = mFreqStart;
     }
 
-    attribute<Complex>("sigOut")->set(Complex(
-        Math::abs(mVoltageRef) * cos(time * 2.*PI*freqCurr + Math::phase(mVoltageRef)),
-        Math::abs(mVoltageRef) * sin(time * 2.*PI*freqCurr + Math::phase(mVoltageRef))));
-    return attribute<Complex>("sigOut")->get();
-}
+    mSigOut.real(mMagnitude * cos(time * 2.*PI*freqCurr + mInitialPhase));
+    mSigOut.imag(mMagnitude * sin(time * 2.*PI*freqCurr + mInitialPhase));
 
-Complex Signal::FrequencyRamp::getVoltage() {
-    return mVoltageRef;
+    return mSigOut;
 }

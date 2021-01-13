@@ -23,7 +23,7 @@ DP::Ph1::VoltageSource::VoltageSource(String uid, String name, Logger::Level log
 
 SimPowerComp<Complex>::Ptr DP::Ph1::VoltageSource::clone(String name) {
 	auto copy = VoltageSource::make(name, mLogLevel);
-	copy->setParameters(mSrcSig->getVoltage());
+	copy->setParameters(mSrcSig->getSignal());
 	return copy;
 }
 
@@ -42,7 +42,7 @@ void DP::Ph1::VoltageSource::setSourceSignal(CPS::Signal::SignalGenerator::Ptr s
 	/// TODO: Copy signal generator?
 	mSrcSig = srcSig;
 
-	attribute<Complex>("V_ref")->set(mSrcSig->getVoltage());
+	attribute<Complex>("V_ref")->set(mSrcSig->getSignal());
 	/// TODO: dynamic cast if sine wave generator
 	attribute<Real>("f_src")->set(-1);
 
@@ -65,7 +65,7 @@ void DP::Ph1::VoltageSource::initializeFromNodesAndTerminals(Real frequency) {
 		"\nTerminal 0 voltage: {:s}"
 		"\nTerminal 1 voltage: {:s}"
 		"\n--- Initialization from node voltages ---",
-		Logger::phasorToString(mSrcSig->getVoltage()),
+		Logger::phasorToString(mSrcSig->getSignal()),
 		Logger::phasorToString(initialSingleVoltage(0)),
 		Logger::phasorToString(initialSingleVoltage(1)));
 }
@@ -87,7 +87,7 @@ void DP::Ph1::VoltageSource::mnaInitialize(Real omega, Real timeStep, Attribute<
 	MNAInterface::mnaInitialize(omega, timeStep);
 	updateMatrixNodeIndices();
 
-	mIntfVoltage(0,0) = mSrcSig->getVoltage();
+	mIntfVoltage(0,0) = mSrcSig->getSignal();
 	mMnaTasks.push_back(std::make_shared<MnaPreStep>(*this));
 	mMnaTasks.push_back(std::make_shared<MnaPostStep>(*this, leftVector));
 	mRightVector = Matrix::Zero(leftVector->get().rows(), 1);
@@ -105,7 +105,7 @@ void DP::Ph1::VoltageSource::mnaInitializeHarm(Real omega, Real timeStep, std::v
 	MNAInterface::mnaInitialize(omega, timeStep);
 	updateMatrixNodeIndices();
 
-	mIntfVoltage(0,0) = mSrcSig->getVoltage();
+	mIntfVoltage(0,0) = mSrcSig->getSignal();
 
 	mMnaTasks.push_back(std::make_shared<MnaPreStepHarm>(*this));
 	mMnaTasks.push_back(std::make_shared<MnaPostStepHarm>(*this, leftVectors));
@@ -228,6 +228,6 @@ void DP::Ph1::VoltageSource::daeResidual(double ttime, const double state[], con
 }
 
 Complex DP::Ph1::VoltageSource::daeInitialize() {
-	mIntfVoltage(0,0) = mSrcSig->getVoltage();
-	return mSrcSig->getVoltage();
+	mIntfVoltage(0,0) = mSrcSig->getSignal();
+	return mSrcSig->getSignal();
 }

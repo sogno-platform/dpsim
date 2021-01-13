@@ -15,23 +15,26 @@ namespace CPS {
 namespace Signal {
 	class SignalGenerator :
 		public SimSignalComp {
+	protected:
+		/// current signal value
+		Complex mSigOut;
     public:
 		typedef std::shared_ptr<SignalGenerator> Ptr;
 		typedef std::vector<Ptr> List;
 
-		//Attribute<Complex>::Ptr mSigOut;
-
-		SignalGenerator(String uid, String name, Logger::Level loglevel /*= Logger::Level::off*/);
+		SignalGenerator(String uid, String name, Logger::Level logLevel = Logger::Level::off) 
+			: SimSignalComp(name, logLevel) { }
 
 		SignalGenerator(String name, Logger::Level logLevel = Logger::Level::off)
 			: SignalGenerator(name, name, logLevel) { }
 
-		// maybe call it update
+		/// updates and returns current signal
         virtual Complex step(Real time) = 0;
-
-		// maybe call it getInitialValue
-		virtual Complex getVoltage() = 0;
-
+		/// returns current signal value without updating it
+		Complex getSignal();
+		
+		/// task not needed, update called by owning object
+		/// TODO: think about changing that and implementing a task here
 		/*
 		Task::List getTasks();
 

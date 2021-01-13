@@ -15,19 +15,19 @@ namespace Signal {
 	class SineWaveGenerator :
 		public SignalGenerator {
     private:
-		///
-		//Attribute<Complex>::Ptr mVoltageRef;
-		///
-		//Attribute<Real>::Ptr mSrcFreq;
+		/// initial signal phasor with magnitude and phase
+		Real mMagnitude;
+		Real mInitialPhase;
+		/// signal's frequency
+		Real mFrequency;
     public:
-        SineWaveGenerator(String name, Logger::Level logLevel = Logger::Level::off);
-
+		/// init the identified object
+        SineWaveGenerator(String name, Logger::Level logLevel = Logger::Level::off)
+			: SignalGenerator(name, logLevel) { }
+		/// set the source's parameters
+		void setParameters(Complex initialPhasor, Real frequency = -1);
+		/// implementation of inherited method step to update and return the current signal value
         Complex step(Real time);
-
-		Complex getVoltage();
-        
-		///
-		void setParameters(Complex voltageRef, Real srcFreq = -1);
     };
 }
 }

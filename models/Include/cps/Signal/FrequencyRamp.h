@@ -17,23 +17,22 @@ namespace Signal {
 		public SignalGenerator,
         public SharedFactory<FrequencyRamp> {
     private:
-        Complex mVoltageRef;
-        
+        /// initial signal phasor with magnitude and phase
+		Real mMagnitude;
+		Real mInitialPhase;
+
+        /// ramp parameters
         Real mFreqStart;
         Real mFreqEnd;
-        //Real mFreqCurr;
         Real mRamp;
         Real mTimeStart;
-        
     public:
         FrequencyRamp(String name, Logger::Level logLevel = Logger::Level::off)
             : SignalGenerator(name, logLevel) { }
-
-        void setParameters(Complex voltageRef, Real freqStart, Real freqEnd, Real ramp, Real timeStart);
-
+        /// set frequency ramp specific parameters
+        void setParameters(Complex initialPhasor, Real freqStart, Real freqEnd, Real ramp, Real timeStart);
+        /// implementation of inherited method step to update and return the current signal value
         Complex step(Real time);
-
-        Complex getVoltage();
     };
 }
 }

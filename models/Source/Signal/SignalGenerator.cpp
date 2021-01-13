@@ -10,11 +10,11 @@
 
 using namespace CPS;
 
-Signal::SignalGenerator::SignalGenerator(String uid, String name, Logger::Level logLevel = Logger::Level::off) :
-    SimSignalComp(name, logLevel) { 
-    
-    addAttribute<Complex>("sigOut", Flags::read | Flags::write);
+
+Complex Signal::SignalGenerator::getSignal() {
+    return mSigOut;
 }
+
 /*
 Task::List Signal::SignalGenerator::getTasks() {
     return Task::List({std::make_shared<Step>(*this)});
