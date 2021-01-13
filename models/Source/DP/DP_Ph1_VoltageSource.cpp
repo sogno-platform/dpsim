@@ -17,7 +17,8 @@ DP::Ph1::VoltageSource::VoltageSource(String uid, String name, Logger::Level log
 	mIntfVoltage = MatrixComp::Zero(1,1);
 	mIntfCurrent = MatrixComp::Zero(1,1);
 
-	//addAttribute<Complex>("V_in", Flags::read);
+	addAttribute<Complex>("V_ref", Flags::read | Flags::write);
+	addAttribute<Real>("f_src", Flags::read | Flags::write);
 }
 
 SimPowerComp<Complex>::Ptr DP::Ph1::VoltageSource::clone(String name) {
@@ -31,6 +32,9 @@ void DP::Ph1::VoltageSource::setParameters(Complex voltageRef, Real srcFreq) {
 	srcSigSine.setParameters(voltageRef, srcFreq);
 	mSrcSig = std::make_shared<Signal::SineWaveGenerator>(srcSigSine);
 
+	attribute<Complex>("V_ref")->set(voltageRef);
+	attribute<Real>("f_src")->set(srcFreq);
+
 	mParametersSet = true;
 }
 
@@ -38,13 +42,20 @@ void DP::Ph1::VoltageSource::setSourceSignal(CPS::Signal::SignalGenerator::Ptr s
 	/// TODO: Copy signal generator?
 	mSrcSig = srcSig;
 
+	attribute<Complex>("V_ref")->set(mSrcSig->getVoltage());
+	/// TODO: dynamic cast if sine wave generator
+	attribute<Real>("f_src")->set(-1);
+
 	mParametersSet = true;
 }
 
 void DP::Ph1::VoltageSource::initializeFromNodesAndTerminals(Real frequency) {
 	if (!mParametersSet) {
+		attribute<Complex>("V_ref")->set(initialSingleVoltage(1) - initialSingleVoltage(0));
+		attribute<Real>("f_src")->set(frequency);
+
 		Signal::SineWaveGenerator srcSigSine(mName);
-		srcSigSine.setParameters(initialSingleVoltage(1) - initialSingleVoltage(0));
+		srcSigSine.setParameters(attribute<Complex>("V_ref")->get(), attribute<Real>("f_src")->get());
 		mSrcSig = std::make_shared<Signal::SineWaveGenerator>(srcSigSine);
 	}
 
@@ -62,7 +73,7 @@ void DP::Ph1::VoltageSource::initializeFromNodesAndTerminals(Real frequency) {
 // #### MNA functions ####
 
 void DP::Ph1::VoltageSource::mnaAddPreStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes) {
-	//attributeDependencies.push_back(attribute("V_ref"));
+	attributeDependencies.push_back(attribute("V_ref"));
 	modifiedAttributes.push_back(attribute("right_vector"));
 	modifiedAttributes.push_back(attribute("v_intf"));
 }

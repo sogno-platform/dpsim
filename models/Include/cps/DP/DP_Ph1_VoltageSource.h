@@ -34,7 +34,7 @@ namespace Ph1 {
 		///
 		void updateVoltage(Real time);
 		///
-		//Attribute<Complex>::Ptr mSigIn;
+		//Attribute<Complex>::Ptr mVoltageRef;
 		///
 		//Attribute<Real>::Ptr mSrcFreq;
 		/// 
