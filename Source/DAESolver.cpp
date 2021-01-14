@@ -15,7 +15,7 @@ using namespace CPS;
 
 //#define NVECTOR_DATA(vec) NV_DATA_S (vec) // Returns pointer to the first element of array vec
 
-DAESolver::DAESolver(String name, CPS::SystemTopology system, Real dt, Real t0) :
+DAESolver::DAESolver(String name, const CPS::SystemTopology &system, Real dt, Real t0) :
 	Solver(name, CPS::Logger::Level::info),
 	mSystem(system),
 	mTimestep(dt) {
@@ -53,15 +53,15 @@ DAESolver::DAESolver(String name, CPS::SystemTopology system, Real dt, Real t0) 
     std::cout <<"Processing Nodes"<<std::endl;
     UInt matrixNodeIndexIdx = 0;
 
-    for (UInt idx = 0; idx < mNodes.size(); idx++) {
+    for (UInt idx = 0; idx < mNodes.size(); ++idx) {
 
         mNodes[idx]->setMatrixNodeIndex(0, matrixNodeIndexIdx);
-        matrixNodeIndexIdx++;
+        ++matrixNodeIndexIdx;
         if (mNodes[idx]->phaseType() == PhaseType::ABC) {
             mNodes[idx]->setMatrixNodeIndex(1, matrixNodeIndexIdx);
-            matrixNodeIndexIdx++;
+            ++matrixNodeIndexIdx;
             mNodes[idx]->setMatrixNodeIndex(2, matrixNodeIndexIdx);
-            matrixNodeIndexIdx++;
+            ++matrixNodeIndexIdx;
         }
     }
 

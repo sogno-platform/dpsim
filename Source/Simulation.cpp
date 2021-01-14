@@ -162,7 +162,7 @@ void Simulation::createMNASolver() {
 	else
 		subnets.push_back(mSystem);
 
-	for (UInt net = 0; net < subnets.size(); net++) {
+	for (UInt net = 0; net < subnets.size(); ++net) {
 		String copySuffix;
 	   	if (subnets.size() > 1)
 			copySuffix = "_" + std::to_string(net);
@@ -211,7 +211,7 @@ void Simulation::sync() {
 
 	int numOfSyncInterfaces = std::count_if(mInterfaces.begin(), mInterfaces.end(), [](InterfaceMapping ifm) {return ifm.syncStart;});
 	mLog->info("Start synchronization with remotes on {} interfaces", numOfSyncInterfaces);
-	
+
 	for (auto ifm : mInterfaces) {
 		if(ifm.syncStart) {
 			// Send initial state over interface
@@ -419,7 +419,7 @@ Real Simulation::step() {
 	mScheduler->step(mTime, mTimeStepCount);
 
 	mTime += mTimeStep;
-	mTimeStepCount++;
+	++mTimeStepCount;
 
 	auto end = std::chrono::steady_clock::now();
 	std::chrono::duration<double> diff = end-start;

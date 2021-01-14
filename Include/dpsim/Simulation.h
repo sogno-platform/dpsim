@@ -162,7 +162,7 @@ namespace DPsim {
 
 		// #### Simulation Settings ####
 		///
-		void setSystem(CPS::SystemTopology system) { mSystem = system; }
+		void setSystem(const CPS::SystemTopology &system) { mSystem = system; }
 		///
 		void setTimeStep(Real timeStep) { mTimeStep = timeStep; }
 		///
@@ -180,7 +180,7 @@ namespace DPsim {
 			mTearComponents = tearComponents;
 		}
 		/// Set the scheduling method
-		void setScheduler(std::shared_ptr<Scheduler> scheduler) {
+		void setScheduler(const std::shared_ptr<Scheduler> &scheduler) {
 			mScheduler = scheduler;
 		}
 		/// Compute phasors of different frequencies in parallel

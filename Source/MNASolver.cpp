@@ -25,7 +25,7 @@ MnaSolver<VarType>::MnaSolver(String name, CPS::Domain domain, CPS::Logger::Leve
 }
 
 template <typename VarType>
-void MnaSolver<VarType>::setSystem(CPS::SystemTopology system) {
+void MnaSolver<VarType>::setSystem(const CPS::SystemTopology &system) {
 	mSystem = system;
 }
 
@@ -56,7 +56,7 @@ void MnaSolver<VarType>::initialize() {
 	// Register attribute for solution vector
 	if (mFrequencyParallel) {
 		mSLog->info("Computing network harmonics in parallel.");
-		for(Int freq = 0; freq < mSystem.mFrequencies.size(); freq++) {
+		for(Int freq = 0; freq < mSystem.mFrequencies.size(); ++freq) {
 			addAttribute<Matrix>("left_vector_"+std::to_string(freq), mLeftSideVectorHarm.data()+freq, Flags::read);
 			mLeftVectorHarmAttributes.push_back(attribute<Matrix>("left_vector_"+std::to_string(freq)));
 		}
@@ -146,7 +146,7 @@ void MnaSolver<Complex>::initializeComponents() {
 			if (stamp.size() != 0) mRightVectorStamps.push_back(&stamp);
 		}
 		// Initialize nodes
-		for (UInt nodeIdx = 0; nodeIdx < mNodes.size(); nodeIdx++) {
+		for (UInt nodeIdx = 0; nodeIdx < mNodes.size(); ++nodeIdx) {
 			mNodes[nodeIdx]->mnaInitializeHarm(mLeftVectorHarmAttributes);
 		}
 	}
@@ -185,11 +185,11 @@ template <typename VarType>
 void MnaSolver<VarType>::initializeSystemWithParallelFrequencies() {
 	// iterate over all possible switch state combinations
 	for (std::size_t i = 0; i < (1ULL << mSwitches.size()); i++) {
-		for(Int freq = 0; freq < mSystem.mFrequencies.size(); freq++)
+		for(Int freq = 0; freq < mSystem.mFrequencies.size(); ++freq)
 			mSwitchedMatricesHarm[std::bitset<SWITCH_NUM>(i)][freq].setZero();
 	}
 
-	for(Int freq = 0; freq < mSystem.mFrequencies.size(); freq++) {
+	for(Int freq = 0; freq < mSystem.mFrequencies.size(); ++freq) {
 		// Create system matrix if no switches were added
 		// TODO add case for switches and possibly merge with no harmonics
 		for (auto comp : mMNAComponents)
@@ -235,7 +235,7 @@ void MnaSolver<VarType>::initializeSystemWithPrecomputedMatrices() {
 		for (auto& sys : mSwitchedMatrices) {
 			for (auto comp : mMNAComponents)
 				comp->mnaApplySystemMatrixStamp(sys.second);
-			for (UInt i = 0; i < mSwitches.size(); i++)
+			for (UInt i = 0; i < mSwitches.size(); ++i)
 				mSwitches[i]->mnaApplySwitchSystemMatrixStamp(sys.second, sys.first[i]);
 			// Compute LU-factorization for system matrix
 #ifdef WITH_SPARSE
@@ -250,7 +250,7 @@ void MnaSolver<VarType>::initializeSystemWithPrecomputedMatrices() {
 
 	// Initialize source vector for debugging
 	// CAUTION: this does not always deliver proper source vector initialization
-	// as not full pre-step is executed (not involving necessary electrical or signal 
+	// as not full pre-step is executed (not involving necessary electrical or signal
 	// subcomp updates before right vector calculation)
 	for (auto comp : mMNAComponents) {
 		comp->mnaApplyRightSideVectorStamp(mRightSideVector);
@@ -264,7 +264,7 @@ void MnaSolver<VarType>::initializeSystemWithPrecomputedMatrices() {
 
 template <typename VarType>
 void MnaSolver<VarType>::updateSwitchStatus() {
-	for (UInt i = 0; i < mSwitches.size(); i++) {
+	for (UInt i = 0; i < mSwitches.size(); ++i) {
 		mCurrentSwitchStatus.set(i, mSwitches[i]->mnaIsClosed());
 	}
 }
@@ -309,17 +309,17 @@ void MnaSolver<VarType>::identifyTopologyObjects() {
 template <typename VarType>
 void MnaSolver<VarType>::assignMatrixNodeIndices() {
 	UInt matrixNodeIndexIdx = 0;
-	for (UInt idx = 0; idx < mNodes.size(); idx++) {
+	for (UInt idx = 0; idx < mNodes.size(); ++idx) {
 		mNodes[idx]->setMatrixNodeIndex(0, matrixNodeIndexIdx);
 		mSLog->info("Assigned index {} to phase A of node {}", matrixNodeIndexIdx, idx);
-		matrixNodeIndexIdx++;
+		++matrixNodeIndexIdx;
 		if (mNodes[idx]->phaseType() == CPS::PhaseType::ABC) {
 			mNodes[idx]->setMatrixNodeIndex(1, matrixNodeIndexIdx);
 			mSLog->info("Assigned index {} to phase B of node {}", matrixNodeIndexIdx, idx);
-			matrixNodeIndexIdx++;
+			++matrixNodeIndexIdx;
 			mNodes[idx]->setMatrixNodeIndex(2, matrixNodeIndexIdx);
 			mSLog->info("Assigned index {} to phase B of node {}", matrixNodeIndexIdx, idx);
-			matrixNodeIndexIdx++;
+			++matrixNodeIndexIdx;
 		}
 		if (idx == mNumNetNodes-1) mNumNetMatrixNodeIndices = matrixNodeIndexIdx;
 	}
@@ -343,7 +343,7 @@ void MnaSolver<Real>::createEmptyVectors() {
 template<>
 void MnaSolver<Complex>::createEmptyVectors() {
 	if (mFrequencyParallel) {
-		for(Int freq = 0; freq < mSystem.mFrequencies.size(); freq++) {
+		for(Int freq = 0; freq < mSystem.mFrequencies.size(); ++freq) {
 			mRightSideVectorHarm.push_back(Matrix::Zero(2*(mNumMatrixNodeIndices), 1));
 			mLeftSideVectorHarm.push_back(Matrix::Zero(2*(mNumMatrixNodeIndices), 1));
 		}
@@ -378,8 +378,8 @@ void MnaSolver<Complex>::createEmptySystemMatrix() {
 		throw SystemError("Too many Switches.");
 
 	if (mFrequencyParallel) {
-		for (UInt i = 0; i < std::pow(2,mSwitches.size()); i++) {
-			for(Int freq = 0; freq < mSystem.mFrequencies.size(); freq++) {
+		for (UInt i = 0; i < std::pow(2,mSwitches.size()); ++i) {
+			for(Int freq = 0; freq < mSystem.mFrequencies.size(); ++freq) {
 				mSwitchedMatricesHarm[std::bitset<SWITCH_NUM>(i)].push_back(
 					Matrix::Zero(2*(mNumMatrixNodeIndices), 2*(mNumMatrixNodeIndices)));
 			}
@@ -414,7 +414,7 @@ void MnaSolver<VarType>::collectVirtualNodes() {
 
 		// Check if component requires virtual node and if so get a reference
 		if (pComp->hasVirtualNodes()) {
-			for (UInt node = 0; node < pComp->virtualNodesNumber(); node++) {
+			for (UInt node = 0; node < pComp->virtualNodesNumber(); ++node) {
 				mNodes.push_back(pComp->virtualNode(node));
 				mSLog->info("Collected virtual node {} of {}", virtualNode, node, pComp->name());
 			}
@@ -424,7 +424,7 @@ void MnaSolver<VarType>::collectVirtualNodes() {
 		// TODO: recursive behavior
 		if (pComp->hasSubComponents()) {
 			for (auto pSubComp : pComp->subComponents()) {
-				for (UInt node = 0; node < pSubComp->virtualNodesNumber(); node++) {
+				for (UInt node = 0; node < pSubComp->virtualNodesNumber(); ++node) {
 					mNodes.push_back(pSubComp->virtualNode(node));
 					mSLog->info("Collected virtual node {} of {}", virtualNode, node, pComp->name());
 				}
@@ -515,7 +515,7 @@ void MnaSolver<VarType>::steadyStateInitialization() {
 
 		// Calculate new simulation time
 		time = time + initTimeStep;
-		timeStepCount++;
+		++timeStepCount;
 
 		// Calculate difference
 		diff = prevLeftSideVector - mLeftSideVector;
@@ -560,7 +560,7 @@ Task::List MnaSolver<VarType>::getTasks() {
 		}
 	}
 	if (mFrequencyParallel) {
-		for (UInt i = 0; i < mSystem.mFrequencies.size(); i++)
+		for (UInt i = 0; i < mSystem.mFrequencies.size(); ++i)
 			l.push_back(std::make_shared<MnaSolver<VarType>::SolveTaskHarm>(*this, i));
 	} else {
 		l.push_back(std::make_shared<MnaSolver<VarType>::SolveTask>(*this));
@@ -583,7 +583,7 @@ void MnaSolver<VarType>::solve(Real time, Int timeStepCount) {
 		mLeftSideVector = mLuFactorizations[mCurrentSwitchStatus].solve(mRightSideVector);
 
 	// TODO split into separate task? (dependent on x, updating all v attributes)
-	for (UInt nodeIdx = 0; nodeIdx < mNumNetNodes; nodeIdx++)
+	for (UInt nodeIdx = 0; nodeIdx < mNumNetNodes; ++nodeIdx)
 		mNodes[nodeIdx]->mnaUpdateVoltage(mLeftSideVector);
 
 	if (!mIsInInitialization)
@@ -621,14 +621,14 @@ void MnaSolver<VarType>::log(Real time, Int timeStepCount) {
 template <typename VarType>
 void MnaSolver<VarType>::logSystemMatrices() {
 	if (mFrequencyParallel) {
-		for (UInt i = 0; i < mSwitchedMatricesHarm[std::bitset<SWITCH_NUM>(0)].size(); i++) {
+		for (UInt i = 0; i < mSwitchedMatricesHarm[std::bitset<SWITCH_NUM>(0)].size(); ++i) {
 			mSLog->info("System matrix for frequency: {:d} \n{:s}", i,
 				Logger::matrixToString(mSwitchedMatricesHarm[std::bitset<SWITCH_NUM>(0)][i]));
 			//mSLog->info("LU decomposition for frequency: {:d} \n{:s}", i,
 			//	Logger::matrixToString(mLuFactorizationsHarm[std::bitset<SWITCH_NUM>(0)][i].matrixLU()));
 		}
 
-		for (UInt i = 0; i < mRightSideVectorHarm.size(); i++)
+		for (UInt i = 0; i < mRightSideVectorHarm.size(); ++i)
 			mSLog->info("Right side vector for frequency: {:d} \n{:s}", i,
 				Logger::matrixToString(mRightSideVectorHarm[i]));
 

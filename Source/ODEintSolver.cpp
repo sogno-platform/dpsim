@@ -47,7 +47,7 @@ Real ODEintSolver::step(Real time) {
     return NextTime;
 }
 
-void ODEintSolver::StateSpaceWrapper( const std::vector<double> y, std::vector<double> ydot, double t){
+void ODEintSolver::StateSpaceWrapper( const std::vector<double> &y, std::vector<double> ydot, double t){
 
         for(auto comp : self->system){ // call system functions of the components with the state vector
                 comp(y.data(), ydot.data(), t);

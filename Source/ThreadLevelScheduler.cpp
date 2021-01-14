@@ -40,7 +40,7 @@ void ThreadLevelScheduler::createSchedule(const Task::List& tasks, const Edges& 
 			if (mSortTaskTypes)
 				sortTasksByType(levels[level].begin(), levels[level].end());
 			// Distribute tasks of one level evenly between threads
-			for (Int thread = 0; thread < mNumThreads; thread++) {
+			for (Int thread = 0; thread < mNumThreads; ++thread) {
 				Int start = static_cast<Int>(levels[level].size()) * thread / mNumThreads;
 				Int end = static_cast<Int>(levels[level].size()) * (thread + 1) / mNumThreads;
 				for (int idx = start; idx != end; idx++)

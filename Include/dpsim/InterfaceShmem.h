@@ -30,8 +30,8 @@
 
 namespace DPsim {
 	/// Shmem interface used in combination with VILLAS
-	class InterfaceShmem : 
-		public Interface, 
+	class InterfaceShmem :
+		public Interface,
 		public SharedFactory<InterfaceShmem> {
 
 	public:
@@ -106,7 +106,9 @@ namespace DPsim {
 		 * @param conf The configuration object for the output queue (see VILLASnode's documentation), or nullptr for sensible defaults.
 		 */
 		InterfaceShmem(const String &wn, const String &rn, Config *conf = nullptr, Bool sync = true, UInt downsampling = 1) :
+			mLastSample(nullptr),
 			mOpened(false),
+			mSequence(0),
 			mRName(rn),
 			mWName(wn),
 			mSync(sync),

@@ -198,7 +198,7 @@ void MnaSolverGpu<VarType>::solve(Real time, Int timeStepCount) {
     CUDA_ERROR_HANDLER(cudaMemcpy(&this->mLeftSideVector(0), mDeviceCopy.vector, mDeviceCopy.size * sizeof(Real), cudaMemcpyDeviceToHost))
 
 	// TODO split into separate task? (dependent on x, updating all v attributes)
-	for (UInt nodeIdx = 0; nodeIdx < this->mNumNetNodes; nodeIdx++)
+	for (UInt nodeIdx = 0; nodeIdx < this->mNumNetNodes; ++nodeIdx)
 		this->mNodes[nodeIdx]->mnaUpdateVoltage(this->mLeftSideVector);
 
 	if (!this->mIsInInitialization)

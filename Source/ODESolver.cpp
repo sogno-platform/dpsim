@@ -11,7 +11,7 @@
 
 using namespace DPsim;
 
-ODESolver::ODESolver(String name, CPS::ODEInterface::Ptr comp, bool implicit_integration, Real timestep) :
+ODESolver::ODESolver(String name, const CPS::ODEInterface::Ptr &comp, bool implicit_integration, Real timestep) :
 	Solver(name, CPS::Logger::Level::info),
 	mComponent(comp),
 	mImplicitIntegration(implicit_integration),
@@ -202,7 +202,7 @@ void ODESolver::SolveTask::execute(Real time, Int timeStepCount) {
 //			 flag >= 0
 //	opt == 2 means function allocates memory so check if returned
 //			 NULL pointer
-int ODESolver::check_flag(void *flagvalue, const std::string funcname, int opt){
+int ODESolver::check_flag(void *flagvalue, const std::string &funcname, int opt){
   int *errflag;
 
 // Check if SUNDIALS function returned NULL pointer - no memory allocated

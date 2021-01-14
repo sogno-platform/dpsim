@@ -12,7 +12,7 @@ using namespace DPsim;
 using namespace CPS;
 
 
-PFSolverPowerPolar::PFSolverPowerPolar(CPS::String name, CPS::SystemTopology system, CPS::Real timeStep, CPS::Logger::Level logLevel)
+PFSolverPowerPolar::PFSolverPowerPolar(CPS::String name, const CPS::SystemTopology &system, CPS::Real timeStep, CPS::Logger::Level logLevel)
     : PFSolver(name, system, timeStep, logLevel){ }
 
 void PFSolverPowerPolar::generateInitialSolution(Real time, bool keep_last_solution) {
@@ -117,7 +117,7 @@ void PFSolverPowerPolar::generateInitialSolution(Real time, bool keep_last_solut
 
 	mSLog->info("#### Initial solution: ");
 	mSLog->info("P\t\tQ\t\tV\t\tD");
-	for (UInt i = 0; i < mSystem.mNodes.size(); i++) {
+	for (UInt i = 0; i < mSystem.mNodes.size(); ++i) {
 		mSLog->info("{}\t{}\t{}\t{}", sol_P[i], sol_Q[i], sol_V[i], sol_D[i]);
 	}
     mSLog->flush();
@@ -128,7 +128,7 @@ void PFSolverPowerPolar::calculateMismatch() {
     UInt k;
     mF.setZero();
 
-    for (UInt a = 0; a < npqpv; a++) {
+    for (UInt a = 0; a < npqpv; ++a) {
         // For PQ and PV buses calculate active power mismatch
         k = mPQPVBusIndices[a];
         mF(a) = Pesp.coeff(k) - P(k);
@@ -148,13 +148,13 @@ void PFSolverPowerPolar::calculateJacobian() {
     mJ.setZero();
 
     //J1
-    for (UInt a = 0; a < npqpv; a++) { //rows
+    for (UInt a = 0; a < npqpv; ++a) { //rows
         k = mPQPVBusIndices[a];
         //diagonal
         mJ.coeffRef(a, a) = -Q(k) - B(k, k) * sol_V.coeff(k) * sol_V.coeff(k);
 
         //non diagonal elements
-        for (UInt b = 0; b < npqpv; b++) {
+        for (UInt b = 0; b < npqpv; ++b) {
             if (b != a) {
                 j = mPQPVBusIndices[b];
                 val = sol_V.coeff(k) * sol_V.coeff(j)
@@ -169,7 +169,7 @@ void PFSolverPowerPolar::calculateJacobian() {
     //J2
     da = 0;
     db = npqpv;
-    for (UInt a = 0; a < npqpv; a++) { //rows
+    for (UInt a = 0; a < npqpv; ++a) { //rows
         k = mPQPVBusIndices[a];
         //diagonal
         //std::cout << "J2D:" << (a + da) << "," << (a + db) << std::endl;
@@ -177,7 +177,7 @@ void PFSolverPowerPolar::calculateJacobian() {
             mJ.coeffRef(a + da, a + db) = P(k) + G(k, k) * sol_V.coeff(k) * sol_V.coeff(k);
 
         //non diagonal elements
-        for (UInt b = 0; b < mNumPQBuses; b++) {
+        for (UInt b = 0; b < mNumPQBuses; ++b) {
             if (b != a) {
                 j = mPQPVBusIndices[b];
                 val = sol_V.coeff(k) * sol_V.coeff(j)
@@ -194,14 +194,14 @@ void PFSolverPowerPolar::calculateJacobian() {
     //J3
     da = npqpv;
     db = 0;
-    for (UInt a = 0; a < mNumPQBuses; a++) { //rows
+    for (UInt a = 0; a < mNumPQBuses; ++a) { //rows
         k = mPQPVBusIndices[a];
         //diagonal
         //std::cout << "J3:" << (a + da) << "," << (a + db) << std::endl;
         mJ.coeffRef(a + da, a + db) = P(k) - G(k, k) * sol_V.coeff(k) * sol_V.coeff(k);
 
         //non diagonal elements
-        for (UInt b = 0; b < npqpv; b++) {
+        for (UInt b = 0; b < npqpv; ++b) {
             if (b != a) {
                 j = mPQPVBusIndices[b];
                 val = sol_V.coeff(k) * sol_V.coeff(j)
@@ -217,14 +217,14 @@ void PFSolverPowerPolar::calculateJacobian() {
     //J4
     da = npqpv;
     db = npqpv;
-    for (UInt a = 0; a < mNumPQBuses; a++) { //rows
+    for (UInt a = 0; a < mNumPQBuses; ++a) { //rows
         k = mPQPVBusIndices[a];
         //diagonal
         //std::cout << "J4:" << (a + da) << "," << (a + db) << std::endl;
         mJ.coeffRef(a + da, a + db) = Q(k) - B(k, k) * sol_V.coeff(k) * sol_V.coeff(k);
 
         //non diagonal elements
-        for (UInt b = 0; b < mNumPQBuses; b++) {
+        for (UInt b = 0; b < mNumPQBuses; ++b) {
             if (b != a) {
                 j = mPQPVBusIndices[b];
                 val = sol_V.coeff(k) * sol_V.coeff(j)
@@ -243,7 +243,7 @@ void PFSolverPowerPolar::updateSolution() {
     UInt npqpv = mNumPQBuses + mNumPVBuses;
     UInt k;
 
-    for (UInt a = 0; a < npqpv; a++) {
+    for (UInt a = 0; a < npqpv; ++a) {
         k = mPQPVBusIndices[a];
         sol_D(k) += mX.coeff(a);
 
@@ -252,7 +252,7 @@ void PFSolverPowerPolar::updateSolution() {
     }
 
     //Correct for PV buses
-    for (UInt i = mNumPQBuses; i < npqpv; i++) {
+    for (UInt i = mNumPQBuses; i < npqpv; ++i) {
         k = mPQPVBusIndices[i];
         Complex v = sol_Vcx(k);
         // v *= Model.buses[k].v_set_point / abs(v);
@@ -271,11 +271,11 @@ void PFSolverPowerPolar::setSolution() {
 		mSLog->info("converged in {} iterations",mIterations);
 		mSLog->info("Solution: ");
 		mSLog->info("P\t\tQ\t\tV\t\tD");
-		for (UInt i = 0; i < mSystem.mNodes.size(); i++) {
+		for (UInt i = 0; i < mSystem.mNodes.size(); ++i) {
 			mSLog->info("{}\t{}\t{}\t{}", sol_P[i], sol_Q[i], sol_V[i], sol_D[i]);
 		}
     }
-    for (UInt i = 0; i < mSystem.mNodes.size(); i++) {
+    for (UInt i = 0; i < mSystem.mNodes.size(); ++i) {
         sol_S_complex(i) = CPS::Complex(sol_P.coeff(i), sol_Q.coeff(i));
         sol_V_complex(i) = CPS::Complex(sol_V.coeff(i)*cos(sol_D.coeff(i)), sol_V.coeff(i)*sin(sol_D.coeff(i)));
     }
@@ -303,7 +303,7 @@ void PFSolverPowerPolar::setSolution() {
                     break;
                 }
 				else if (trans->terminal(1)->node()->name() == node->name()){
-                    baseVoltage_ = trans->attribute<CPS::Real>("nominal_voltage_end2")->get();				
+                    baseVoltage_ = trans->attribute<CPS::Real>("nominal_voltage_end2")->get();
                     break;
                 }
 			}
@@ -362,7 +362,7 @@ void PFSolverPowerPolar::calculateNodalInjection() {
 
 Real PFSolverPowerPolar::P(UInt k) {
     Real val = 0.0;
-    for (UInt j = 0; j < mSystem.mNodes.size(); j++) {
+    for (UInt j = 0; j < mSystem.mNodes.size(); ++j) {
         val += sol_V.coeff(j)
                 *(G(k, j) * cos(sol_D.coeff(k) - sol_D.coeff(j))
                 + B(k, j) * sin(sol_D.coeff(k) - sol_D.coeff(j)));
@@ -372,7 +372,7 @@ Real PFSolverPowerPolar::P(UInt k) {
 
 Real PFSolverPowerPolar::Q(UInt k) {
     Real val = 0.0;
-    for (UInt j = 0; j < mSystem.mNodes.size(); j++) {
+    for (UInt j = 0; j < mSystem.mNodes.size(); ++j) {
         val += sol_V.coeff(j)
                 *(G(k, j) * sin(sol_D.coeff(k) - sol_D.coeff(j))
                 - B(k, j) * cos(sol_D.coeff(k) - sol_D.coeff(j)));
@@ -383,7 +383,7 @@ Real PFSolverPowerPolar::Q(UInt k) {
 void PFSolverPowerPolar::calculatePAndQAtSlackBus() {
     for (auto k: mVDBusIndices) {
         CPS::Complex I(0.0, 0.0);
-        for (UInt j = 0; j < mSystem.mNodes.size(); j++) {
+        for (UInt j = 0; j < mSystem.mNodes.size(); ++j) {
             I += mY.coeff(k, j) * sol_Vcx(j);
         }
         CPS::Complex S(0.0, 0.0);
@@ -402,7 +402,7 @@ void PFSolverPowerPolar::calculatePAndQAtSlackBus() {
 void PFSolverPowerPolar::calculateQAtPVBuses() {
     double val;
     UInt k;
-    for (UInt i = mNumPQBuses - 1; i < mNumPQBuses + mNumPVBuses; i++) {
+    for (UInt i = mNumPQBuses - 1; i < mNumPQBuses + mNumPVBuses; ++i) {
         k = mPQPVBusIndices[i];
         val = Q(k);
         sol_Q(k) = val;

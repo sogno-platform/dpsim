@@ -32,17 +32,17 @@ namespace DPsim {
 
 		// ###ARKode-specific variables ###
 		/// Memory block allocated by ARKode
-		void* mArkode_mem=NULL;
+		void* mArkode_mem {nullptr};
 		/// State vector
-		N_Vector mStates = NULL;
+		N_Vector mStates {nullptr};
 
 		//for implicit solve:
 		/// Indicates whether the ODE shall be solved using an implicit scheme
 		bool mImplicitIntegration;
 		/// Empty matrix for linear solve in each Newton step while solving the Jacobian Matrix
-		SUNMatrix A = NULL;
+		SUNMatrix A {nullptr};
 		/// Empty linear solver object
-		SUNLinearSolver LS = NULL;
+		SUNLinearSolver LS {nullptr};
 
 		/// Constant time step
 		Real mTimestep;
@@ -60,7 +60,7 @@ namespace DPsim {
 		SUNLinearSolver LS = NULL; */
 
 		/// reusable error-checking flag
-		int mFlag;
+		int mFlag {0};
 
 		// Similar to DAE-Solver
 		CPS::ODEInterface::StSpFn mStSpFunction;
@@ -75,11 +75,11 @@ namespace DPsim {
 		int Jacobian(realtype t, N_Vector y, N_Vector fy, SUNMatrix J,
 		             N_Vector tmp1, N_Vector tmp2, N_Vector tmp3);
 		/// ARKode- standard error detection function; in DAE-solver not detection function is used -> for efficiency purposes?
-		int check_flag(void *flagvalue, const std::string funcname, int opt);
+		int check_flag(void *flagvalue, const std::string &funcname, int opt);
 
 	public:
 		/// Create solve object with corresponding component and information on the integration type
-		ODESolver(String name, CPS::ODEInterface::Ptr comp, bool implicit_integration, Real timestep);
+		ODESolver(String name, const CPS::ODEInterface::Ptr &comp, bool implicit_integration, Real timestep);
 		/// Deallocate all memory
 		~ODESolver();
 

@@ -43,7 +43,7 @@ namespace DPsim {
         ///static pointer to current object; only one instance currently allowed
         inline static ODEintSolver *self = nullptr;
         /// State space of the System and corresponding static wrapper
-        static void StateSpaceWrapper( const std::vector<double> y, std::vector<double> ydot, double t);
+        static void StateSpaceWrapper( const std::vector<double> &y, std::vector<double> ydot, double t);
 
 
     public:

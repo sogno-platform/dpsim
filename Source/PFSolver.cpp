@@ -60,10 +60,10 @@ void PFSolver::initialize(){
 void PFSolver::assignMatrixNodeIndices() {
 	mSLog->info("Assigning simulation nodes to topology nodes:");
 	UInt matrixNodeIndexIdx = 0;
-	for (UInt idx = 0; idx < mSystem.mNodes.size(); idx++) {
+	for (UInt idx = 0; idx < mSystem.mNodes.size(); ++idx) {
 		mSystem.mNodes[idx]->setMatrixNodeIndex(0, matrixNodeIndexIdx);
 		mSLog->info("Node {}: MatrixNodeIndex {}", mSystem.mNodes[idx]->uid(), mSystem.mNodes[idx]->matrixNodeIndex());
-		matrixNodeIndexIdx++;
+		++matrixNodeIndexIdx;
 	}
 	mSLog->info("Number of simulation nodes: {:d}", matrixNodeIndexIdx);
 }

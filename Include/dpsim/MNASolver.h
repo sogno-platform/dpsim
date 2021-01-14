@@ -167,7 +167,7 @@ namespace DPsim {
 
 		// #### Setter and Getter ####
 		///
-		void setSystem(CPS::SystemTopology system);
+		void setSystem(const CPS::SystemTopology &system);
 		///
 		Matrix& leftSideVector() { return mLeftSideVector; }
 		///
@@ -215,7 +215,7 @@ namespace DPsim {
 				for (auto node : solver.mNodes) {
 					mModifiedAttributes.push_back(node->attribute("v"));
 				}
-				for(Int freq = 0; freq < solver.mSystem.mFrequencies.size(); freq++) {
+				for(Int freq = 0; freq < solver.mSystem.mFrequencies.size(); ++freq) {
 					mModifiedAttributes.push_back(solver.attribute("left_vector_"+std::to_string(freq)));
 				}
 			}

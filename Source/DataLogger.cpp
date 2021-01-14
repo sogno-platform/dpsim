@@ -72,7 +72,7 @@ void DataLogger::logDataLine(Real time, const Matrix& data) {
 		return;
 
 	mLogFile << std::scientific << std::right << std::setw(14) << time;
-	for (Int i = 0; i < data.rows(); i++) {
+	for (Int i = 0; i < data.rows(); ++i) {
 		mLogFile << ", " << std::right << std::setw(13) << data(i, 0);
 	}
 	mLogFile << '\n';
@@ -82,7 +82,7 @@ void DataLogger::logDataLine(Real time, const MatrixComp& data) {
 	if (!mEnabled)
 		return;
 	mLogFile << std::scientific << std::right << std::setw(14) << time;
-	for (Int i = 0; i < data.rows(); i++) {
+	for (Int i = 0; i < data.rows(); ++i) {
 		mLogFile << ", " << std::right << std::setw(13) << data(i, 0);
 	}
 	mLogFile << '\n';
@@ -95,14 +95,14 @@ void DataLogger::logPhasorNodeValues(Real time, const Matrix& data, Int freqNum)
 		Int harmonicOffset = data.rows() / freqNum;
 		Int complexOffset = harmonicOffset / 2;
 
-		for (Int freq = 0; freq < freqNum; freq++) {
-			for (Int node = 0; node < complexOffset; node++) {
+		for (Int freq = 0; freq < freqNum; ++freq) {
+			for (Int node = 0; node < complexOffset; ++node) {
 				std::stringstream name;
 				name << "n" << std::setfill('0') << std::setw(5) << node
 						<< "f" << std::setfill('0') << std::setw(2) << freq << ".re";
 				names.push_back(name.str());
 			}
-			for (Int node = 0; node < complexOffset; node++) {
+			for (Int node = 0; node < complexOffset; ++node) {
 				std::stringstream name;
 				name << "n" << std::setfill('0') << std::setw(5) << node
 						<< "f" << std::setfill('0') << std::setw(2) << freq << ".im";
@@ -117,7 +117,7 @@ void DataLogger::logPhasorNodeValues(Real time, const Matrix& data, Int freqNum)
 void DataLogger::logEMTNodeValues(Real time, const Matrix& data) {
 	if (mLogFile.tellp() == std::ofstream::pos_type(0)) {
 		std::vector<String> names;
-		for (Int i = 0; i < data.rows(); i++) {
+		for (Int i = 0; i < data.rows(); ++i) {
 			std::stringstream name;
 			name << "node" << std::setfill('0') << std::setw(5) << i;
 			names.push_back(name.str());
@@ -179,14 +179,14 @@ void DataLogger::addAttribute(const std::vector<String> &name, CPS::MatrixRealAt
 		addAttribute(name[0], attrMat->coeff(0, 0));
 	}
 	else if (m.cols() == 1) {
-		for (UInt k = 0; k < m.rows(); k++) {
+		for (UInt k = 0; k < m.rows(); ++k) {
 			addAttribute(name[k],
 				attrMat->coeff(k, 0));
 		}
 	}
 	else {
-		for (UInt k = 0; k < m.rows(); k++) {
-			for (UInt l = 0; l < m.cols(); l++) {
+		for (UInt k = 0; k < m.rows(); ++k) {
+			for (UInt l = 0; l < m.cols(); ++l) {
 				addAttribute(name[k*m.cols()+l],
 					attrMat->coeff(k, l));
 			}
@@ -202,14 +202,14 @@ void DataLogger::addAttribute(const String &name, CPS::MatrixRealAttribute::Ptr 
 		addAttribute(name, attrMat->coeff(0, 0));
 	}
 	else if (m.cols() == 1) {
-		for (UInt k = 0; k < m.rows(); k++) {
+		for (UInt k = 0; k < m.rows(); ++k) {
 			addAttribute(name + "_" + std::to_string(k),
 				attrMat->coeff(k, 0));
 		}
 	}
 	else {
-		for (UInt k = 0; k < m.rows(); k++) {
-			for (UInt l = 0; l < m.cols(); l++) {
+		for (UInt k = 0; k < m.rows(); ++k) {
+			for (UInt l = 0; l < m.cols(); ++l) {
 				addAttribute(name + "_" + std::to_string(k) + "_" + std::to_string(l) + "_",
 					attrMat->coeff(k, l));
 			}
@@ -229,15 +229,15 @@ void DataLogger::addAttribute(const String &name, CPS::MatrixCompAttribute::Ptr 
 		mAttributes[name + ".im"] = attrMat->coeffImag(0,0);
 	}
 	else if (m.cols() == 1) {
-		for (UInt k = 0; k < rowsMax; k++) {
+		for (UInt k = 0; k < rowsMax; ++k) {
 			//addAttribute(name + "(" + std::to_string(k) + ")", attrMat->coeff(k, 0));
 			mAttributes[name + "_" + std::to_string(k) + ".re"] = attrMat->coeffReal(k,0);
 			mAttributes[name + "_" + std::to_string(k) + ".im"] = attrMat->coeffImag(k,0);
 		}
 	}
 	else {
-		for (UInt k = 0; k < rowsMax; k++) {
-			for (UInt l = 0; l < colsMax; l++) {
+		for (UInt k = 0; k < rowsMax; ++k) {
+			for (UInt l = 0; l < colsMax; ++l) {
 				mAttributes[name + "_" + std::to_string(k) + "_" + std::to_string(l)
 					+ ".re"] = attrMat->coeffReal(k,l);
 				mAttributes[name + "_" + std::to_string(k) + "_" + std::to_string(l)

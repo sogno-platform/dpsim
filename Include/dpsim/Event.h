@@ -78,7 +78,7 @@ namespace DPsim {
 	public:
 		using SharedFactory<SwitchEvent>::make;
 
-		SwitchEvent(CPS::Real t, std::shared_ptr<CPS::Base::Ph1::Switch> sw, CPS::Bool state) :
+		SwitchEvent(CPS::Real t, const std::shared_ptr<CPS::Base::Ph1::Switch> &sw, CPS::Bool state) :
 			Event(t),
 			mSwitch(sw),
 			mNewState(state)
@@ -101,7 +101,7 @@ namespace DPsim {
 	public:
 		using SharedFactory<SwitchEvent3Ph>::make;
 
-		SwitchEvent3Ph(CPS::Real t, std::shared_ptr<CPS::Base::Ph3::Switch> sw, CPS::Bool state) :
+		SwitchEvent3Ph(CPS::Real t, const std::shared_ptr<CPS::Base::Ph3::Switch> &sw, CPS::Bool state) :
 			Event(t),
 			mSwitch(sw),
 			mNewState(state)

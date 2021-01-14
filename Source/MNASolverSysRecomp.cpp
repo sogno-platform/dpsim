@@ -109,7 +109,7 @@ void MnaSolverSysRecomp<VarType>::solve(Real time, Int timeStepCount) {
 		this->mLeftSideVector = this->mLuFactorizations[this->mCurrentSwitchStatus].solve(this->mRightSideVector);
 
 	// TODO split into separate task? (dependent on x, updating all v attributes)
-	for (UInt nodeIdx = 0; nodeIdx < this->mNumNetNodes; nodeIdx++)
+	for (UInt nodeIdx = 0; nodeIdx < this->mNumNetNodes; ++nodeIdx)
 		this->mNodes[nodeIdx]->mnaUpdateVoltage(this->mLeftSideVector);
 
 	if (!this->mIsInInitialization) {

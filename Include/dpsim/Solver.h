@@ -57,11 +57,10 @@ namespace DPsim {
 		typedef std::vector<Ptr> List;
 
 		Solver(String name, CPS::Logger::Level logLevel) :
-			mName(name), mLogLevel(logLevel) {
-
+			mName(name),
+			mLogLevel(logLevel),
 			// Solver global logging
-			mSLog = CPS::Logger::get(name + "_Solver", logLevel);
-		}
+			mSLog(CPS::Logger::get(name + "_Solver", logLevel)) { }
 
 		virtual ~Solver() { }
 
@@ -78,7 +77,7 @@ namespace DPsim {
 			mFrequencyParallel = freqParallel;
 		}
 		///
-		virtual void setSystem(CPS::SystemTopology system) {}
+		virtual void setSystem(const CPS::SystemTopology &system) {}
 
 		// #### Initialization ####
 		///

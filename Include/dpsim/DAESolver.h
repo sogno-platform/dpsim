@@ -70,7 +70,7 @@ namespace DPsim {
 
 	public:
 		/// Create solve object with given parameters
-        DAESolver(String name, CPS::SystemTopology system, Real dt, Real t0);
+        DAESolver(String name, const CPS::SystemTopology &system, Real dt, Real t0);
 		/// Deallocate all memory
 		~DAESolver();
 		/// Initialize Components & Nodes with inital values
