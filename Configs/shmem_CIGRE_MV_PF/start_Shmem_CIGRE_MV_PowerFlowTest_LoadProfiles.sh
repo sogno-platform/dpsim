@@ -47,10 +47,10 @@ sleep 2
 if true; then
 	VILLAS_LOG_PREFIX="[Pipe] " \
 	#villas-pipe Configs/Shmem_CIGRE_MV.conf dpsim1
-	villas-node Configs/Shmem_CIGRE_MV.conf
+	villas-node Configs/shmem_CIGRE_MV_PF/Shmem_CIGRE_MV.conf
 else
 	VILLAS_LOG_PREFIX="[Node] " \
-	villas-node /projects/reserve/Shmem_CIGRE_MV.conf & VN=$!
+	villas-node Configs/shmem_CIGRE_MV_PF/Shmem_CIGRE_MV.conf & VN=$!
 fi
 
 # Wait until all child processed finished

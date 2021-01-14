@@ -31,18 +31,13 @@ int main(int argc, char** argv) {
 
 	// Find CIM files
 	std::list<fs::path> filenames;
-	if (argc <= 1) {
-		filenames = DPsim::Utils::findFiles({
-			"Rootnet_FULL_NE_06J16h_DI.xml",
-			"Rootnet_FULL_NE_06J16h_EQ.xml",
-			"Rootnet_FULL_NE_06J16h_SV.xml",
-			"Rootnet_FULL_NE_06J16h_TP.xml"
-		}, "Examples/CIM/CIGRE_MV_NoTap", "CIMPATH");
-	}
-	else {
-		filenames = args.positionalPaths();
-	}
-
+	filenames = DPsim::Utils::findFiles({
+		"Rootnet_FULL_NE_06J16h_DI.xml",
+		"Rootnet_FULL_NE_06J16h_EQ.xml",
+		"Rootnet_FULL_NE_06J16h_SV.xml",
+		"Rootnet_FULL_NE_06J16h_TP.xml"
+	}, "build/_deps/cim-data-src/CIGRE_MV/NEPLAN/CIGRE_MV_no_tapchanger_With_LoadFlow_Results", "CIMPATH");
+	
 	String simName = "Shmem_CIGRE_MV_PowerFlowTest";
 	CPS::Real system_freq = 50;
 
