@@ -52,17 +52,6 @@ docker:centos:
     - shell
     - linux
 
-docker:metrics:
-  stage: prepare
-  needs: []
-  script:
-    - docker build
-      --file Packaging/Docker/Dockerfile.metrics
-      --tag ${DOCKER_IMAGE_DEV}-metrics:${DOCKER_TAG} .
-  tags:
-    - shell
-    - linux
-
 build:linux:
   stage: build
   needs: ["docker:fedora"]
@@ -606,7 +595,7 @@ generate:metrics:
   script:
     - echo "set terminal svg size 800, 500; set output 'metrics.svg'; set title 'Speed of different Solver-Configurations'; set style data lines; set key outside; set xlabel \"Copies (WSCC-9bus Example)\"; set ylabel \"Average steptime (µs)\"; set xtics 1; set xtics nomirror; set ytics nomirror; set grid; plot \"cpu-dense-metrics.txt\" using (\$1 * 1000000) title \"Solving with CPU and dense matrices\", \"gpu-dense-metrics.txt\" using (\$1 * 1000000) title \"Solving with GPU and dense matrices\", \"cpu-sparse-metrics.txt\" using (\$1 * 1000000) title \"Solving with CPU and sparse matrices\"" > script.p
     - gnuplot script.p
-  image: ${DOCKER_IMAGE_DEV}-metrics:${DOCKER_TAG}
+  image: ${DOCKER_IMAGE_DEV}-centos:${DOCKER_TAG}
   artifacts:
     reports:
       metrics: metrics.svg
