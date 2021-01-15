@@ -44,16 +44,6 @@ if(WITH_PYTHON)
 	add_subdirectory(Python)
 endif()
 
-if(WITH_SHMEM)
-	list(APPEND DPSIM_SOURCES
-		InterfaceShmem.cpp
-		PthreadPoolScheduler.cpp
-	)
-
-	list(APPEND DPSIM_LIBRARIES ${VILLASNODE_LIBRARIES} pthread)
-	list(APPEND DPSIM_INCLUDE_DIRS ${VILLASNODE_INCLUDE_DIRS})
-endif()
-
 if(WITH_SPARSE)
 	list(APPEND DPSIM_SOURCES
 		MNASolverEigenSparse.cpp
@@ -87,9 +77,19 @@ if(WITH_OPENMP)
 	list(APPEND DPSIM_LIBRARIES ${OpenMP_CXX_FLAGS})
 endif()
 
-add_library(dpsim ${DPSIM_SOURCES})
-target_link_libraries(dpsim PUBLIC ${DPSIM_LIBRARIES})
-target_include_directories(dpsim PUBLIC ${DPSIM_INCLUDE_DIRS} ${CPS_LIBRARIES})
+if(WITH_SHMEM)
+	set(DPSIM_VILLAS_SOURCES
+		${CMAKE_SOURCE_DIR}/villas-dpsim/src/InterfaceShmem.cpp
+		${CMAKE_SOURCE_DIR}/villas-dpsim/src/PthreadPoolScheduler.cpp
+	)
+
+	set(DPSIM_VILLAS_LIBRARIES ${VILLASNODE_LIBRARIES} pthread)
+	set(DPSIM_VILLAS_INCLUDE_DIRS ${VILLASNODE_INCLUDE_DIRS} ${CMAKE_SOURCE_DIR}/villas-dpsim/include)
+endif()
+
+add_library(dpsim ${DPSIM_SOURCES} ${DPSIM_VILLAS_SOURCES})
+target_link_libraries(dpsim PUBLIC ${DPSIM_LIBRARIES} ${DPSIM_VILLAS_LIBRARIES})
+target_include_directories(dpsim PUBLIC ${DPSIM_INCLUDE_DIRS} ${DPSIM_VILLAS_INCLUDE_DIRS})
 target_compile_options(dpsim PUBLIC ${DPSIM_CXX_FLAGS})
 
 include_directories(${CMAKE_CURRENT_SOURCE_DIR} ${CMAKE_CURRENT_BINARY_DIR})

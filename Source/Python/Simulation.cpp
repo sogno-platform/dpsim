@@ -35,7 +35,7 @@
 #endif
 
 #ifdef WITH_SHMEM
-  #include <dpsim/PthreadPoolScheduler.h>
+  #include <villas-dpsim/PthreadPoolScheduler.h>
 #endif
 using namespace DPsim;
 using namespace CPS;

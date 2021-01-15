@@ -17,7 +17,7 @@
 #include <dpsim/Config.h>
 
 #ifdef WITH_SHMEM
-  #include <dpsim/InterfaceShmem.h>
+  #include <villas-dpsim/InterfaceShmem.h>
   #include <cps/AttributeList.h>
 #endif
 

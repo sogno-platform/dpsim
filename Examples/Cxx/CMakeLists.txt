@@ -89,22 +89,6 @@ if(WITH_RT)
 	)
 endif()
 
-if(WITH_SHMEM)
-	list(APPEND LIBRARIES ${VILLASNODE_LIBRARIES})
-	list(APPEND INCLUDE_DIRS ${VILLASNODE_INCLUDE_DIRS})
-
-	set(SHMEM_SOURCES
-		Shmem/ShmemExample.cpp
-		Shmem/ShmemDistributedReference.cpp
-		Shmem/ShmemDistributedDirect.cpp
-		Shmem/ShmemDistributedVillas.cpp
-		Shmem/ShmemControllableSource.cpp
-		Shmem/ShmemControllableFiltSource.cpp
-		Shmem/Shmem_CIGRE_MV_PowerFlowTest.cpp
-		Shmem/Shmem_CIGRE_MV_PowerFlowTest_LoadProfiles.cpp
-	)
-endif()
-
 if(WITH_CIM)
 	list(APPEND LIBRARIES ${CIMPP_LIBRARIES})
 	list(APPEND INCLUDE_DIRS ${CIMPP_INCLUDE_DIRS})
@@ -144,14 +128,6 @@ if(WITH_CIM)
 	endif()
 endif()
 
-if(WITH_CIM AND WITH_SHMEM)
-	set(CIM_SHMEM_SOURCES
-		Shmem/Shmem_WSCC-9bus.cpp
-		Shmem/Shmem_WSCC-9bus_Ctrl.cpp
-		Shmem/Shmem_WSCC-9bus_CtrlDist.cpp
-	)
-endif()
-
 if(WITH_PYTHON)
 	#list(APPEND LIBRARIES ${PYTHON_LIBRARIES})
 	list(APPEND INCLUDE_DIRS ${PYTHON_INCLUDE_DIRS})
@@ -162,7 +138,7 @@ if(WITH_OPENMP)
 	list(APPEND LIBRARIES ${OpenMP_CXX_FLAGS})
 endif()
 
-foreach(SOURCE ${CIRCUIT_SOURCES} ${SYNCGEN_SOURCES} ${VARFREQ_SOURCES} ${SHMEM_SOURCES} ${RT_SOURCES} ${CIM_SOURCES} ${CIM_SOURCES_POSIX} ${CIM_SHMEM_SOURCES} ${DAE_SOURCES} ${INVERTER_SOURCES})
+foreach(SOURCE ${CIRCUIT_SOURCES} ${SYNCGEN_SOURCES} ${VARFREQ_SOURCES} ${RT_SOURCES} ${CIM_SOURCES} ${CIM_SOURCES_POSIX} ${DAE_SOURCES} ${INVERTER_SOURCES})
 	get_filename_component(TARGET ${SOURCE} NAME_WE)
 
 	add_executable(${TARGET} ${SOURCE})
@@ -171,13 +147,6 @@ foreach(SOURCE ${CIRCUIT_SOURCES} ${SYNCGEN_SOURCES} ${VARFREQ_SOURCES} ${SHMEM_
 	target_include_directories(${TARGET} PRIVATE ${INCLUDE_DIRS})
 	target_compile_options(${TARGET} PUBLIC ${DPSIM_CXX_FLAGS})
 endforeach()
-
-if(WITH_SHMEM)
-	add_executable(ShmemRealtimeExample Shmem/ShmemExample.cpp)
-	target_link_libraries(ShmemRealtimeExample ${LIBRARIES})
-	target_include_directories(ShmemRealtimeExample PRIVATE ${INCLUDE_DIRS})
-	target_compile_definitions(ShmemRealtimeExample PUBLIC REALTIME)
-endif()
 
 add_subdirectory(cim_graphviz)
 add_subdirectory(signals)

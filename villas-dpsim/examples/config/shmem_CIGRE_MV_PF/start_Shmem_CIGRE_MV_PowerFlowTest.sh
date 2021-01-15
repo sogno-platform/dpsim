@@ -38,15 +38,15 @@ OPTS="--timestep 1 --duration $((5)) --system-freq 50 --start-at $TIME --solver-
 echo "Simulation params: $OPTS"
 
 CPS_LOG_PREFIX="[Sys ] " \
-build/Examples/Cxx/Shmem_CIGRE_MV_PowerFlowTest $OPTS & P1=$!
+build/villas-dpsim/examples/cxx/Shmem_CIGRE_MV_PowerFlowTest $OPTS & P1=$!
 
 CHILDS=$P1
 
 sleep 2
 
-if false; then
+if true; then
 	VILLAS_LOG_PREFIX="[Pipe] " \
-	villas-pipe Configs/shmem_CIGRE_MV_PF/Shmem_CIGRE_MV.conf dpsim1
+	villas-pipe villas-dpsim/examples/config/shmem_CIGRE_MV_PF/Shmem_CIGRE_MV.conf dpsim1
 else
 	VILLAS_LOG_PREFIX="[Node] " \
 	villas-node Configs/shmem_CIGRE_MV_PF/Shmem_CIGRE_MV.conf & VN=$!

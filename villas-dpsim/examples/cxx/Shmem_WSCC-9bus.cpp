@@ -18,7 +18,7 @@
 #include <list>
 
 #include <DPsim.h>
-#include <dpsim/InterfaceShmem.h>
+#include <villas-dpsim/InterfaceShmem.h>
 
 using namespace DPsim;
 using namespace CPS::DP;
