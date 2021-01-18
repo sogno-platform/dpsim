@@ -3753,3 +3753,1569 @@ c1eb3bbb738c97ae879a91815a19a70f99de2749  Continued expanding the DAESimulation 
 Former-commit-id: fc124a1ed7ab6f92ba0fa52b7848ec34aabb363e
 6b635ce37385bf84ad95a466910bca344175cbda Added rough DAE Simulation class based on the previous Simulation class.
 Former-commit-id: d3c8969db9b81b2e73d45bb23eedc4bc9a20bf29
+
+
+I, Steffen Vogel hereby sign-off-by all of my past commits to this repo subject to the Developer Certificate of Origin (DCO), Version 1.1. In the past I have used emails: stvogel@eonerc.rwth-aachen.de
+
+aa9a72b41fb25bb7254cfe17a2393e8cfa83f686 cmake: use cmake_dependent_option() to avoid caching issues
+Former-commit-id: a5560a572822da3ecd3467f32e24b962c2788434
+f03b28ad96aaf6ecfe5a8298d7e9103163eca588 minor tweaks to gitlab-ci
+Former-commit-id: 7863beb12380052f6f505ec64226b7c5c021d09b
+a36059fd09ec37fd4908c2b7a482322f727ad8e2 started working on developer documentation
+Former-commit-id: 8bd843d720f13d6e75010691f8b5e49b391e00b8
+5c83d4d9460af0d3b48664249d028bffebb08b75 python: fix invalid return value for Node::setInitialVoltage()
+Former-commit-id: e184629e048af44a6b88f4bb370c894ceaf8eaec
+b0e5f15c93faa532ef25e80361721fa353827ed8 Update Shmem_CIGRE_MV.conf to new VILLASnode config format
+Former-commit-id: ac1cc6dae539f876551e1e812c9d7b81c993dbac
+d11de0f537ab2b571198908e4af835974ebf0f46 avoid deadlock
+Former-commit-id: 9c7fa6822c297ae7b66e4465fd5c403b86edf718
+b069e6acd121125c7a51ec85da2b68320738f501 add log prefix
+Former-commit-id: 89cfd998602ec8f3696ace78ea5d358d498aed90
+73f7e51dfd6ff8e8d55bb3b6f1cb6b79c2484b62 add console logger for simulation and shmem interface
+Former-commit-id: d34da1e968945e4a9b00f12d35ae95ac921ac68c
+b88fb638edf03cc69151a9aa84c1ca86edb58aba configs: cleanup script
+Former-commit-id: 31b307ef57658a3fb07709c183c64bb0d866a94a
+e1c9ac47c4a86a41c650e054a335d8142da67701 configs: add example script for ShmemExample
+Former-commit-id: 634bc3c8662c145b4f8d134dc687766223eb2848
+fd6384dfab8ff3d78038dbcc2a2bd9a36cf29175 interface: export attributes by value rather than by reference
+Former-commit-id: 713456ffd8df0e74fe9aa0db912ad111c015b606
+1ba38630932f985f23376df6e24fc4ee22cd4c59 cmake: enable shmem support whenever the VILLAS libraries are available
+Former-commit-id: f6daefd45fd1382cdefb764caacd22f209e60fd5
+a3b2cc1499b24c9e113a2db63c0f2c525da54fbd update CPS
+Former-commit-id: 8e2a899cbca17984cb6648b8531ce2566757d6fe
+e7b7d41696bf3e5fcd9a366eeb2061c909131673 doc: add build instructions for macOS
+Former-commit-id: 011f376223ea796f6179c9ed890bc38feb7d3720
+512cabe19ec3d9f12a9309ca1e3862e0ecff1e23 ci: enable builds for macOS
+Former-commit-id: 5b3c8ca25a80ec03979fa420e2de5c890cdd2811
+35542576a5f9014ba5af418d89e65845c35de268 cmake: use cmake_dependent_option() to avoid caching issues
+Former-commit-id: f415c94759b0309b210dda86e43352c3aab5484a
+c8c8dad4fe95294099dc766e999b9763e0a78a53 ci: run windows build jobs in parallel
+Former-commit-id: e8a6ce50693ad38188f15d6349068dd018cd8190
+8e887b514bd570698eda9607d268144d0f402f19 ci: fix windows build
+Former-commit-id: 86b0a8cf1acd228fc2e1bc43b630d64d3cdb08b8
+3b0e34702384ded56b204796d5529e81c626d792 ci: fix Graphviz detection in cmake
+Former-commit-id: d054f2e4a25dda19a1a9f3e22d293a5241451fd0
+2f19db9003b61f887b42e993b784e9fe283a60f1 fix uninitialized values
+Former-commit-id: 75e864058c3d2393deacfafcb733bbcb673ebc5f
+9abc9e7dd835a7e21aa02ab44a0a8b99376e1220 ci: always build for windows
+Former-commit-id: 10bf372f69e9cf61e2b94970881852f3d2891a95
+45d8492fd421ea11be4dfe595a8cad7454046a39 use path::string() instead of path::native() which is unsupported on Windows
+Former-commit-id: 01afaa8a53dc7594b1c44843c66e208a61e6efc7
+029bbc72f1c80e1cd8add4d52b472a31637239c6 compat: fix #pragma
+Former-commit-id: 9e22d68e112a1eea5ae75201e0f359546d9b564c
+19ece2cec5ac629d3b47d518c118eeb1e8c02551 ci: fix Windows build
+Former-commit-id: 28be4c7f09d6794a4046228e9e49996ed611b0fd
+926a1dce1e35a03abf3ce7aafcda12c87b5fecd4 python: add missing Compontents (closes #118)
+Former-commit-id: 671ca378fbde7b84c81c21314c3ee9d252c8401e
+3ad43827ea4d829420d3cfc0700907d286da6c3d fix GPLv3 logo (closes #125)
+Former-commit-id: d56eafe155c21d49c753cd21059245a5fd99d5f8
+e1991c7f266704601e42c9136888c8212b2e0543 fix error in WSCC 9bus notebook
+Former-commit-id: 8b00931e28b8f6bbd9b0f88fa966498e773466af
+27254a22741e807ffc3f1872d506f75b2e7b3cac fix feature notebooks
+Former-commit-id: caf49a81ea0e78106cd700852d39d1945c583316
+52741ac7dbe071475ec2381dd2b3f68ca87d87cc update cps
+Former-commit-id: 2b5e2b633549f5aee88f00c3a65d6c25939ba602
+ce78676e9dbb1afec17bef60b94b9577d4ae6da3 simulation: use new loggers
+Former-commit-id: d99cf227ae45e9830c825d03baafeea7f45d161a
+ea9cc19265b7ec247214b61083842607d97cc609 simulation: allow simulation to be resetted
+Former-commit-id: 8ade37a20e4ffbaa05d098f23bde65dbf47661fb
+89dddcaf4ccc3f3d1f51c4ea71124a8e22f26dc6 simulation: add missing attributes
+Former-commit-id: 61a7d65d348c26f17d1ef9a4b685f99f9108c161
+78681940f1fddfe215798235d4906867365d9c59 python: allow changing of final_time attribute on simulation instances
+Former-commit-id: b88d1b0a9c05cf2a0e1f0abb575f12a45daf8435
+c37bc11b0ec90dbf6bf998188b431e90566c2690 docker: also install ipywidgets extension in user image
+Former-commit-id: 5e5f41e76c41e996444f072dec55229194f2e21c
+edbe91b20f5a7824b71d5f5b35c032366c0ba279 datalogger: allow logger to be reopened for simulation reset
+Former-commit-id: a42e84b1e0c84ab9cef22f40bafcb80371880e2d
+548bbd93f68cfa38d8396ab412986840b95badd4 python: keep event channel open until simulation object is released
+Former-commit-id: a5281d31481667ef87887d15aee44bd0eba8b494
+3c12b7b9e1eeeacf1026e3080e75ee7fe3e6bd4f docker: add entry page to docker image
+Former-commit-id: 139c87b4b7742a133d393a276957ce48dc3d7c5b
+7d1244ec6ddde8a9879310c8e273b911ae2a5a45 docker: copy examples into image
+Former-commit-id: b6794d2c0b3c48b1c6452f62d71b8c7fdc8551fa
+738accfc42a4fc0efe9517f1478167c98ac023a6 docker: start Jupyter Lab by default
+Former-commit-id: 6264a414171c0b21f8282329a572569207ba3996
+76ad984e89b8c8c63e642b722a10a6c3791f3290 fix path of solver log
+Former-commit-id: 808d030e4642411019c13acd90f0b2b13394a699
+3bbd121ad38b986524fe36e7e8ee5bf928ada2ac finish refactoring to spdlog logger
+Former-commit-id: ae17eb2d56e3e3c791e926ea0f91e94e2b0f2deb
+4b225f5caf5deff8924906c9a76cbdfc368e8ef0 refactor to spdlog
+Former-commit-id: 1bae29e76ce90746d8ff76e3d6a57c0f58494f52
+513f86d52c07ac26802080e5e5500fc067aeae10 disable test for certain broken notebooks
+Former-commit-id: 6365147a13e608bb7265c2f1f562b1c9b250d79a
+3c4c3ec274b9d74d08e9499c887ea7f07c195110 update cps
+Former-commit-id: 41dfcb9d041788f1bb8830b12fb87e416bcc3f37
+db6ac7a9bd1dcd3530acd3516453c3d501ddef7e update notebooks
+Former-commit-id: 5fb7301d571724601a92b6f0e26a046be66df4e7
+b66e76c3f1a1e21238fc7129ba5694f89de93aab update gitignore
+Former-commit-id: 3d2fabedc3d1b545bbf478a406428f725bef0d75
+42bec263bf3ee930beefe5f51894de11477a4317 update notebooks
+Former-commit-id: 455124e6fa356d5fed0fb063c18258f7918ff91f
+af8c8111624fea736d45cfbcfa2a6eb0427fde86 improve detection of CIM file locations
+Former-commit-id: c10593520ad3783f2da8e2bafbea672c7f7cb0b5
+a7e0c0f208524b4b80bd8b6a54f0de62cb07481e do not compile loadflow example without CIM support
+Former-commit-id: d41345cc8e85d19c8efd1c75074b4c816b7f0a56
+0b865b0674119df81cadeb2bc5c965722a8e7131 notebooks: skip tests based on notebook metadata
+Former-commit-id: 28a42b9aa1467d293f7efad7ccbe2fb91ddf4bfe
+f1767f75bf9ef7bcc4a6c611a4eaffff77a8a58f notebooks: move figure to subdir
+Former-commit-id: d5fb5f2d1dfbfa78f21996bdb3396ac1d4967bc6
+07ec820aaecb5a35d59c4fdbb0a960daf9c96e64 notebooks: check if directory change is required
+Former-commit-id: 661b8f9e7682836d588862574cfb744f25f3b69f
+d23dd9135e330cc69143170d8a540e28a062e166 ci: fix job name
+Former-commit-id: 7deef2344ff765fc0c5796b24f79140e7de9d0ff
+4fc15d62f5da70c01c87125d114e491e3dcb0545 bump dataprocessing version
+Former-commit-id: 62740a6de9b7d42b2dc93513bfac28cd4e2195e4
+9f83df20fb608f9ce760a71880578b4d7f3aa098 fix quickstart notebook
+Former-commit-id: 43671f4d68306007210759966e71e5783447d61d
+5f9bf6a4045250441dc54e6e7b3c3f8220ea9428 pytest: do not show traceback for cell execution errors
+Former-commit-id: aff4262b11c4556f04516c9a451244c5965814f2
+ddaa80a0609aceb52df9699ee9b9e75d99d2234f ci: build jupyter notebooks via pytest not cmake
+Former-commit-id: fd0f085d291ac931bd048f2bece6bebd802e0d38
+f0cb8c4865a0255ccf3118db5252701282a2e47c cmake: do not run nbconvert via cmake
+Former-commit-id: 4aa9d535d150ab84978a90a2c2e678930948e4f1
+57376496c56ed51e4a815ad3d7b02356e88436f7 pytest: run JupyterNotebooks
+Former-commit-id: 4e479393c406188956a4cea04c239e4a118fd626
+040ca1882ae934ec12d45fbe503182076f15055f fix CIM tests
+Former-commit-id: 069f304643f788b01574dc62004bdd9760f7ecc4
+ebe54139aaf1954898debc2c07fd2f6697234efa ci: add CIM tests to CI config
+Former-commit-id: 0440c8e862ec06f15f998c1d9419a2dea7cb302c
+941b336936fedd217a5cffb63c21b9bfc81c1c73 update cps
+Former-commit-id: 6139fbf52eac3b2981be56f7250d38bfe636952b
+2b251d3d9240e40eaf01e1a23a54cd3b0d00dfc8 python: fix component names
+Former-commit-id: 817a26025db06c44311b0135f482b9e5b4dd5cc4
+143a0304d9047f054ef9e505aa00cf316787f636 ci: fix runner selection
+Former-commit-id: 65566c5b056153d6803643ecd5d2a2a4ba603527
+0c73db4392060b88578f7fd7c750f16ed7e49c7e python: add support for static phasor / loadflow simulation (see #121)
+Former-commit-id: c4efd3c2b0b0e1c7cd924257caab779ddec224ed
+afb6f8ca80fc5a72889363ff2f19dd0b6b093cc0 re-enable CIM tests (see #65)
+Former-commit-id: 4e3bf7994439f8a054addbdd9635eb2e32b921e2
+9e03528a0f20d51e60d6205ff128b471932f6fb5 python: do not instantiate component in Python initialization
+Former-commit-id: 74b7d6d7ee4ac98a023b9df021bfd107d489de33
+7214cce725ec17eb1c376b646fa4a73f9c9f09a0 interface: use unsigned indices (closes #113)
+Former-commit-id: cc1691284e37c7bf76e7212b46e97b18d9444ae8
+a250b08d801f9f17fc66b3f5140a6614f489eb5e updated CPS submodule
+Former-commit-id: eaa82584ee3c2a18798ed0633e34cebcbb55f8a9
+f9429a7ae2074dfb191dcfa89ee0e6945840987e simplify CMakeLists.txt
+Former-commit-id: 25c36eb0fb3825cea286fa74e7cbedf203c568cf
+ff93e23f39744593556f5a796c9d0e55813f9062 update build instructions
+Former-commit-id: 197694f9ec7722a7916e7d57e4d675ad7b3a88bc
+7c4e92323168911f60e7c8183e6a2ef4d3c53b47 pep8 fixes for setup.py
+Former-commit-id: 64725d8abb5b43a4838e752406c52ef15c094de7
+3ff2f852eb8b278a3141c5262048fd1430286a61 add missing contact for Debian packages
+Former-commit-id: 9fa2bc231bb3ef5721eada5e1b89e2dd6c78b2f0
+84b624f0a7d19c66a1699eaa3d48eb43d033a562 fix indention
+Former-commit-id: 1fad64ba07eb973ef99c5b991c2361ec4f38f0df
+d09053d09dbd8e260c326fa3610cc1624477ebe4 add missing spdlog dependency
+Former-commit-id: 136188c7dd9fe63612c581c224e5c64a4eb6b5b3
+26b7a85143b8411c01c17d12600244c13bb90e97 update CPS submodule
+Former-commit-id: 10ac7d66f0072fd3e9043d4b5dd52e5379c3cc56
+b345acba9d71ae3b81af8c95725739520564855c update CPS submodule
+Former-commit-id: 29d42789a7b85f5f8f2602c5fff6048482c31ffe
+a436dcc5d3bc43c0c8c0dfcde6376290dec9d35b examples: DP_SynGen_dq_SteadyState is only supported with Sundials support enabled
+Former-commit-id: eea5994910c7f4b07f6fbf1a2c40cce782a220a7
+c2ed3674ad210b7e1f204ff639389d1fc362c186 update CPS submodule
+Former-commit-id: 3b39597d11f46564b81a4345fbf16a1b48fab645
+27ffc4880b540bb340dada026c060bfe48945acc update CPS submodule
+Former-commit-id: ad8bd117e0da95bbd2d2ad9eff903148a17fcd63
+05805d9829222025dbb8898b0a2de4876bc7d7b0 added documentation on real-time execution of DPsim (closes #108)
+Former-commit-id: 505a8ab0f3445b0a87fcd80d88ca2903489f3704
+43dbf7d28c03caee12509b70c20813503f188426 update CPS submodule
+Former-commit-id: 8a3e54f28d45a68ee3df9b15cfce2a3aa38e0b79
+9a1cfcd7b0688a6771e23f779f2eb71de6b29f3d update CPS submodule
+Former-commit-id: fd94936797363ab81c3254ac63f2b94943ca2992
+3b70c9b988905d8ab1c38b844def04e069176860 update CPS submodule
+Former-commit-id: daf6d0f1ff6ab7747cc1adac3fc190f9a3321ede
+e3953eef9c21b48c4d11d5011577126c37411bde examples: improve redability of console output
+Former-commit-id: bc9edd5a0e67f4b7057037bde79198910f0e838e
+d2e9fdf967fc56be0bc7a3607239de527a52a711 interface: set appropriate flags per sample
+Former-commit-id: 675e6e8cc44b7a7f542a9e2915b95ef096a884cb
+3623fbaf6000b84f17e8cb61a7e16fa88dfefd94 whitespaces
+Former-commit-id: 426c05bc4058687331e8b84a68455bd101f0f1b2
+4c4c8c008f0c058ccfb5dfe78690ca85e0971921 interface: close shmem interface before terminating
+Former-commit-id: 4948f2fa9e6bcb7d80a550dc8add231228889c08
+204a14b9c724e1fc398508133b6891f622a4c593 update CPS submodule
+Former-commit-id: 9fb3b4dd4d7e2cf10d6f5069216385c871de7b7b
+58d6f069de6b7f06777d57db216c814e6031f40b cmake: build Arkode examples only if Sundials is available
+Former-commit-id: 5f7e120aedbbe0a15df1ee2cc151bcc089812c73
+8f106c978abe08c78dc05a566b5969669368725c examples: fix attributes in Shmem_WSCC-9bus_Ctrl
+Former-commit-id: cad6d913942a6cdefb92b96acc5d8d63341ca9d7
+70d6d901b4f947c875380ee3a7482cb4ef78e0b3 fix compiler error
+Former-commit-id: 12c28eacc827db29a9645b2667a820261a320c38
+1e702693284ea122419988332d87cbb97cb562b2 fix MQTT broker address
+Former-commit-id: 9af8ef9b5549b4ab7f8a8924301c64b6e4c80ebf
+757e295ecb25c1b7e02d964f25ab7c68b797591c add configs for WSCC-9bus demo of RESERVE
+Former-commit-id: 472009e269a4b3b663ddd02cc35d42790c9bcb82
+3ece369fd601b706c73f3bf39f7091da5cfa2c6f change paths of VILLASnode configuration files
+Former-commit-id: a61b84cdfbfb6a01dc41c4970f6169074742950b
+8f8c0a9a56c0b560abc4616eb8fd32a717ea143d ci: trigger Jupyter pipeline
+Former-commit-id: f9fcb67e8d407b6cdd0aeea082ee8352f3aebe0c
+34e6249f598d45233271362939f4fbada3073ed5 docker: fix version detection during docker build process
+Former-commit-id: 6f135e1ba0821bb0568dae34a085f29d503f18e4
+bb951e13c5179b32bdfe01e561ba62335a988898 cmake: use same script to determine build versio as VILLASnode
+Former-commit-id: 2bbe3ae853aea2f9f44a821dc086e1e04bed0924
+cd0ca85e0df30684c1e9c854e026cbcadf740048 bump version to v0.1.6
+Former-commit-id: dfadcffff32594f337e4399ea07fa7de27a15b36
+7ea4f5e53bbeda3303c140a161e1af4553c71188 cmake: use new CMake script to build notebooks
+Former-commit-id: d5681b3410525a0d00c7da483115da94758d936b
+226c711940d644d67a2ee79794a575f2e81f9ffd add support for getopt on windows platforms (closes #82)
+Former-commit-id: d3a65d10bf125fbb84fa67c61a8e45786bc9218c
+19990d0755a5bcdb9ef68074402e5794c166e4fb remove find_cps_components.py (closes #101)
+Former-commit-id: 9a18f5d0e3912a7132a85dee7eec3e6eceb0495e
+4d59cad6571e9aadb76b1f187a098bb91e9210e5 doc: fix logos and notebooks in documentation (closes #105)
+Former-commit-id: 858e70ca97d16ad381cf9b7692a67552cccbc193
+1ba08e1da147b7554075bc7408b6a34a98dc2f41 cmake: fix quoting issue
+Former-commit-id: cc7e0df07d830003e32b6f6d87bb32c865cf6ffe
+c9c268428d15f55a59faaa9012aa20e10b5d5a2c use fix in villas-dataprocessing package
+Former-commit-id: 7b7a634dfaa50ca1359b6db60702c4e8b1cc74d1
+47d8af4c2b2a5a858a73c6c046e659ce0cc22619 cmake: fix quoting
+Former-commit-id: cef4b4b914dc39e4c63a9f1a0fcce1a6b7ddfa24
+e967c1b760190a52c34425d4135f2286c239a71e remove non-existing image
+Former-commit-id: 9a3ed0039dd329f6ec779a78d0d7f83623ff7364
+3b0c8799795074addafb5b6213f06d51a84ee680 ci: deploy dev image and add latest tags
+Former-commit-id: 7ac52a8b193132dc2d6defa1189d0cdabc4ea3e1
+3b8be44cc4a8c23cb468ee37db2022f996d5e335 cmake: build and move all notebooks in Examples folder
+Former-commit-id: fba5c47d3e0c5d0cedf11d860aab3e1f9c8aa14a
+00dc3fc0b2634d209672bc985c44c359e8651ca4 bump version
+Former-commit-id: aaa7118f59f9982faa37e66385c8fe984e3083c6
+58f5a1b93bae49ea33cca74d2d588866bccac0fe fix links in README
+Former-commit-id: 070bcdfdb473371b874378e8a10e5ffa6d53b072
+11e0184ba61b6b3406a011002fcfa6f8056a082c refactor imports of dataprocessing package
+Former-commit-id: acd209193e8dc690251d6626d23409c95c92011a
+b598f1a250c05101bd98848118fa602761427388 fix path of Notebook folder
+Former-commit-id: 665355ec8419f78502fb0a5f586be4c57f7cb2f5
+c85b545de0859b85741043bc80239e82b9adda64 move VILLASode python code to VILLASnode repo
+Former-commit-id: 3c988f9beeb862dfef40cba95f14b80e2c4d7d2e
+b7267ea50a73181fd7c267fcfb1fad2e4e12afd5 replace double by single quotes
+Former-commit-id: 71494a79d1aeb7cbec11198a11b7a8a56ac2ce22
+33da07f2d7dc2b41e734d2944bed6bdc55580990 switch to villas-dataprocessing
+Former-commit-id: f30852f1d2f619852a056733db5731b2212e172b
+60033eab55be97939409727a84ac523f8347d2d2 rename notebook dir
+Former-commit-id: 9fed0309e198ebd273d72bad7d50ebb0a602ded5
+7b01502f29d45148809775c12461e6b362ec2284 make sure that Docker usues the most recent packates
+Former-commit-id: ed8d564272099dffbb0a0d94239caa2847c01ec7
+03dfa0ee06c9d16bd58c9eff1e754001b62793d5 fix some smaller errors in Jupyter notebooks
+Former-commit-id: 71a7d098a8d539103d8a451cda10d1d846fc2692
+bef33fa123ea4e4617dc8d1db95dc4a32529f6ee avoid division by zero
+Former-commit-id: e727032c4862d8215f885ddca923f636ed07f9bc
+c2d29a770ac572ca88a1c6352e8ec094cf8bae86 fix inconsistent header source
+Former-commit-id: 053a3b7ebb3aeb4165241f6223d5ac5c130a0ad6
+5a1b53c623b325b6b2a6dfe87971c4f7ec2eb203 update CPS submodule
+Former-commit-id: d6a49fd1f2dc88523461b21e3853c4f53a5be9e6
+790226e5c1bd4236cfbfbea443ed00f4a2f5b993 python: create socketpair in python world
+Former-commit-id: 2b4c9b57e3891b579672924c3da598d51df300e6
+d48e6055fdaf58789babce163ac7a18eb6c665e7 first version of windows event channel
+Former-commit-id: fb7c249c627780832c53aa459ea9c45de7c1b6d6
+383d70f684c5f084ec74a9bfb7fd73d4147bcf3e re-enable timer and eventchannel in simumation on Windows
+Former-commit-id: c969f562186057e8f567ead7e35fa47c08bfe423
+e1a905623cd1a5fbc72ecd98fcf0bd6bb195957c fix warnings about implicit casts
+Former-commit-id: 98f0700eac0ed5110a308fa8e30b36a789a0b259
+7e20d698c3851d150e46e00500b92d21d7efd76b mna: remove non-existant function DPsim::MnaSolver::processSwitches()
+Former-commit-id: df2cf53251a26fc2b7c368294f6556fce8607d38
+f749a407b227e57b4e8b455338db5ef03c6fd611 remove unused variables in catch blocks
+Former-commit-id: 00e015de52a10f778be0da348abb9d12e94f16ff
+516ae53c5e052b68cb935a944cbf2c075aa0fbc9 timer: fix invalid conversion of Timer::StartClock::time_point
+Former-commit-id: 54f9c317eaa5ce8dac1eb100cda252244945d91d
+ede52d3cca0e1dad2b5b473ad8075d3436373eb9 timer: use long long instead of int
+Former-commit-id: 9b9b7de50521f5dc818d275c007d6bf9dd92ad70
+675082dac66bf410550f59e03aba3cb2b71a7731 python: use WITH_SHMEM instead of _MSG_VER or _WIN32 macros for detecting when we want to include shmem support
+Former-commit-id: c87f7f487c51b7636f127f66944f3d8d75ee23c3
+6dfcafb13791da81fdf0497fe6aacc1bf00393f9 started working on a eventchannel implementation for windows
+Former-commit-id: adadc9b9e2cbfd14e25450656b0a8ca40ba792bb
+28cd65753b8470f38ac788734d8634b55e6a87c7 docker: use fedora 29
+Former-commit-id: 510ab1f6c8bfcb0513d7585478a5e633381d0d3e
+1f79e81c8d059f791224ad20be72fbd7ff685b56 python: fix compilation without VILLASnode
+Former-commit-id: 8ae173fe602ceb770168d6fed6f6d08afd96b607
+31a679441c5d3112f1a8bf0338c4b91887c29469 flush data logs on simulation end
+Former-commit-id: 9f14d78453d892485e8c6c6106012161a116086c
+72ee0132c905488ed26670eb197583a416777f1a update notebooks
+Former-commit-id: fff827e064fc4f24a2db4e82ccda4f99e45b7634
+f8020742257d370f20dadf3244536287e15010c1 python: raise error when dpsim.Simulation.run() is used with an already running event loop
+Former-commit-id: 0dda0c84078dafe0aefa42f07ac54b63b62499c1
+a22aa931cb6a3961ef0d3b5bb6c1c4bc0d2dda0d docker: install jupyter instead of jupyterlab
+Former-commit-id: ddf358092f031eebfbc4cc6993d8f2c13de45b53
+902e6311154f357f3bdbc22f34b4ce00920453d6 docker: enable jupyter widgets
+Former-commit-id: 99f34b1f5dc83e18091c1f217cec34f01a38512d
+7eb1af2fc193f2a81ebe6e3d206e80bdd81c5fca docker: enable jupyter widgets
+Former-commit-id: 550e571a54a02b84416bf5b1ee1b686c339aeaee
+ca8b4839a85078b64ffd270f9e31f8803ab5ef2c python: add missing invocation of loggers to python simulation loop
+Former-commit-id: add42b0f263231766aff41632bfd8901e7d2d290
+b41b1448369aa3c2a676fde98eabf090691a8f34 python: add proper reference counting for logged Components/Nodes
+Former-commit-id: 94d532fd4a19a2873202bb6a53a1c4b255285cd6
+fda120a7053494e00204e3f13153e5d7004f1827 python: do not fail load _dpsim.Interface (closes #93)
+Former-commit-id: 3698c72400ee6e613cb338aed8d3d02e525ff6ba
+5501bddde6438c5334610c91e417a182153b4ce8 Revert "comment out interface python class"
+This reverts commit 0523bab7b2c309e977ed207638bb47bc2797cdba [formerly 92f74747bc3cf2b29feec300cca95e8113ee27fe].
+Former-commit-id: aa5b60973e3eff7dfccf9eebd73b1a741e4b68e0
+77800d566ace6ebda59e521d98a9a1fd623082b0 python: fix logging of node voltages (closes #97)
+Former-commit-id: 4a3005351b182e544f4f12c232202a4bdc15a60a
+f856557367e7c97c17e65e31b20f51f5a3d2a052 update CPS submodule
+Former-commit-id: 0ff9b317f647d53a8cd46abc88b3c12f9320adac
+2d9dd0df5819b03318e8835f047bbe6ee636ab9f examples: fix attribute names
+Former-commit-id: f86f0520d4730c33b2d99d814822ad9cbf0a758d
+c81621ec0b964740c5c41460098e563324a64b15 python: fix tests
+Former-commit-id: f7d82e7bd41afe5606cecbffc974f29d473d4385
+0304eb59a7682529d04b8212838449b4fd755c2f python: raise an exception on overrun
+Former-commit-id: 4d91bde2ec50fabf58a6ffae9ff685e81545dedd
+658b8c6fe05b7003c74ad0999cb3bf085d79cf86 python: add new option "fail_on_overrun" for dpsim.Simulation
+Former-commit-id: 5aa67ba5b41a427a3a33edfb8770d0e61cebf43a
+af5cd6eba0c1847a2c242b80ca725cb0e226d399 Revert "remove not finished tests"
+This reverts commit 1cd7e49a2adb8e02bb50a6fe060edb32ec552eeb [formerly 186b7f74358dfae3cbe0b416afb307b0aa45703c].
+Former-commit-id: 57a7d8af428d3904340556910a999888c4a65407
+c680e0409683f810de637f6e9486a42da871add2 added SPSC queue
+Former-commit-id: 05a3bf031f9752c31e648c5dd8b7ba266862b235
+4b41fc70f2be7d6173987bdb844399971623381e DataLogger: remove nullstream
+Former-commit-id: 0cb6392f6b757c74e06d839ef00f9ed014da6379
+a5fdebbf28131bbbe4617d70c64d8e6e94d2fa50 move CPS::Interface to DPsim repo (closes #78)
+Former-commit-id: 84a7d825e954f02248de91aef677b83964576307
+de2dd73ce9155c4cbdc85f4029301b359ed324ea fix file header according to doxygen convetion (closes #89)
+Former-commit-id: 1df2c0d5e7c6756cb85694d8b14f0d9de68a96c0
+799cad85484255708248297ed7c5d496eaeb78f4 updated CPS submodule
+Former-commit-id: 562cdb11dfe8fb7c938e3f769304bf79084102fe
+b63de6c9e2d0f5dd157c59fcc40710af8725ff89 python: added first class support for data loggers
+Former-commit-id: f54d217d60e6b4f06316eb4f82187db8b15c78ab
+41de51e6776256478d5591470d7dfe74bd33488e add support for steady state initialization to DPsim::RealTimeSimulation class (closes #87)
+Former-commit-id: 4a3483426471ce11705762178a1d7631dacf6839
+e1e10aa7c7cbf74170c294c806a9f0ba2ea0f067 doxygen: remove @file from .cpp files
+Former-commit-id: 188c520265c146b7a6de64b0984d8bfc402ccc92
+587b3642f44ab958fc4f25f5028769394c02c6ac update author infos
+Former-commit-id: c7e14756c229ed3894bcabbd64a692d2e6ea90c3
+f432ffcdb915b20e9d2285d6891a88e4b8ba337b update copyright year in file headers
+Former-commit-id: 3a915dda0c4af32958eb706b75a4f3859a5bf0d3
+a9e0909c325634c7e0493a11bf6e5430a8a11524 fix invalid project name in file headers
+Former-commit-id: 7d01cfa102979702d5ae32e404d7b1a3fa4cf40d
+9394b3077d232961d858e4e088c9266a9bdc2457 merge AttributeDataLogger and DataLogger in a single class
+Former-commit-id: 8861b8e1b3c43088cad42e47a1ca1a40cf2abb9b
+c41e816e36bb0aa9fbe519be41f1f7ef9b099b11 fix invalid docker tag in CI builds
+Former-commit-id: f6386210bec1a6342a2e88e6714800af6d976188
+a9ad34564a2bdbf17ffbf261ad9e4e6557498d88 fix dependency of dpsim package
+Former-commit-id: 6e54d2e1317dc611dd271b8895583e5ab7e24219
+b3362dce7ad89901e0058502df7d0c2525b03e54 add implementation of concurrent MPMC queue for events and data logger interface to Python
+Former-commit-id: 9cb15d8f23733374b8fb03fb540bac3758fa3f51
+c6a32fd894dc76dd4e38e6d15ced7d8904e45d36 update CPS submodule
+Former-commit-id: 44e5d2c023da8d769a8602351428ab335d995cdc
+31b27ff9eec3410cc63c8c8c07a572fce5458d2e move attribute logger out of simulation class
+Former-commit-id: af80117ec4c0eff56fbac5b0897f0d2b886be86a
+7b109bdf39f278804bff74b544e6b88a23b9b9b9 fix usage of invalid component construtors
+Former-commit-id: eb752b39033bda78036fe6516f32c1ed652b8901
+5f70e0d05fefb290810582fed9a225ab4b84bffd fix whitespaces
+Former-commit-id: fe022abfa918a22a211a972bf3c2fee0189dfbce
+62846239246dc43f42ce043455dce0b430c951bb fix inconsistent naming of getters
+Former-commit-id: b607c2e8ff718a61bcfadcacf2335faf6dd9769d
+46523ee7788698fd7b0d43bfc351e011d72640fc updated CPS submodule
+Former-commit-id: 0403061f54b11f7f4919390be1f85ab1203bc25f
+365b97a0943e5a7d92e20062375238f00df6464c added DataLogger from CPS repo
+Former-commit-id: 07cbb7ac70c37895207fe681bdf0a2e4bf08cd73
+600de399005d00e0544364c323589c06ae903ef2 update CPS submodule
+Former-commit-id: 49f237fe62fefecd104db5e39014e8797867e4ec
+090fd75ffd8ef409aa818594107c4d5895f74ba6 added new example config
+Former-commit-id: fb4cb353a6aff030d85163b85c7ca841b25159de
+5e6407300a79a21f4e636e46c7e1142269cc0d21 update Jupyter notebooks
+Former-commit-id: e68806c5582320ba9239196b29269c5994c00d7e
+bd81d4cfc2960a06286f98080994dee13a02492f refactor: use CPS::IdentifiedObject insteadof CPS::AttributeList
+Former-commit-id: 93aac861271ccc1853907c2902d9cc7653cde2c5
+01a04e4d7ecaf32f22a43e9befdbe4fd5519c116 fix attribute names
+Former-commit-id: 3096959dd1d7f179ff3ab32f5a069ebf28ba9484
+2ff685f043127eaf83b111febc0b6db33d4a50b8 python: add new param 'log_level' to dpsim.Simulation.__init__
+Former-commit-id: ae5fb32f887867496b7565d345caa2abb001c457
+1d6f1339abcb0c05f5ec5bc3c775263cb97a5fee python: use dpsim.Interface.__init__ instead of dpsim.open_interface
+Former-commit-id: 6d49db0c665a2207d6d6ca993dc47c22b4f4d161
+89575148bdd08ebf83fd5b5de87be27b301506ce python: add some simple module to start VILLASnode
+Former-commit-id: c5392be934314524c4b37bc9432533c952bde024
+7bd54b9d22d7795975a66198623359d7df23f045 events: fix sorting of events
+Former-commit-id: 07ee2f044f0c32d9c965aeefbb87590059d92165
+b14ce902891e3565e7ee3b92867f0f4a21e8e253 remove unused variable
+Former-commit-id: 2ca5636cf60a87083b552a1415cffb0291b25fa9
+132695970af6b521f4319462f80ec09f9a17cde6 python: open interfaces at simulation start
+Former-commit-id: bfc61f1f8fd086b9be84a569dd13800d17ef781d
+fced4e5a1196bccbbd65a2ff174d41d4af7e9754 python: show overrun warnings
+Former-commit-id: 7d834d45ef7268716d965106e930be7f8d6b7fb8
+343a326a0514bd62158321c7f2714134bd851e80 remove tp_getset from SystemTopology class
+Former-commit-id: 83d27248e0ef809bf29a3d14e644edc660e9d8c5
+69a7eb8cb3a2a3ac7f42fecd013d3625d6bf9509 change default indention to 4 instead of 8 spaces
+Former-commit-id: b8bf27495b7595c8e005ddc62f647450f1bac318
+1badab1143b36fce6440d66e7c973fed4b71d667 whitespace changes
+Former-commit-id: 2f775a01ae7b552c4e291b27e90f6c16664d2030
+0ee40310e4941eefd3638680e4e0d22a8b68448c shmem: open interfaces at simulation start rather init
+Former-commit-id: b3cf217fe723eb399821298cde335e740e7480fd
+72b676c3549c196b6d8e28299e0183bf2abad6e6 refactor: DPsim::Python::Interface
+Former-commit-id: c6d70665fb5c46c1484d18a4436c78b6b504661f
+461e96ac691cf4b9770e4be6b0535b9a8888d593 merge
+Former-commit-id: 6606d6c3b41f24797117e1388609ada999ca2c48
+b25a758acf5dbff10e2fd7dc1fa292df365ddc02 use Py_RETURN_None
+Former-commit-id: 2df203996d98033e5da6f7062381476be86e184d
+d326c147fd27b3049f894748dd81f5a3a540cc57 use new VILLASnode version
+Former-commit-id: 96eea1d522dc28c5ceda93bf1bd87161fe7adb3a
+587af6530ed45f64176440f3ac632831106e5a60 shmem: libvillas-ext has been obsoleted by libvillas
+Former-commit-id: 1376a30740e68c009bdcdd364fc35741a4d68b67
+9e29726885046877fb5e47e604ba524f0f1ed402 python: simplify dpsim.Simulation.run()
+Former-commit-id: 0608f54f0bf598a46cdb76b38b0595945865f244
+239b33fa06fde0de8cc4d3744e89ab2b9719b196 python: fix error messages in CPS::Python::Component:getattro()
+Former-commit-id: 6bd7328a81fcd018d566adbda25b1d7e476eda66
+b4d93dca5ac3e69ec5e1a9a538d79b48729c5b98 examples: fix CI
+Former-commit-id: e649f8cb1f8972308a39d9df7e99db196adfba72
+5411bde31892284339934b7ec4d5d254b2f63d9f python: improve dpsim.Interface.add_{import,export}() functions and add support for complex mag/phase attributes
+Former-commit-id: 939197ceed2b9af4a8c90b819e76172af8afa029
+961365784a34b5cd6d32e870610e9136c74d90e7 python: fixes for dpsim.Simulation.add_event()
+Former-commit-id: f26b806f05a3152daad325e304d4aa70e34bcb56
+25601f751999607e1d44d717c3fa5b6f707c64c5 python: support for steady state initialization parameter
+Former-commit-id: 429f0e325a05d29be85613e4e556f307669f5821
+33f0ac4c44b4909f10dfd98d703668641600b21b examples: use new event system
+Former-commit-id: 96be68321cfba5408be998d55a92c94263e6c5c9
+546715a5404e06674ef56a64ed2cfc91b0eac7ca new event system for scheduled attribute adjustments
+Former-commit-id: 7071f5dbd49462928efec388cab33aaa41594bb8
+e7954cd87953f0725e89d63a95e3c756e053bfaa small adjustments to Utils::CommandlineArgs
+Former-commit-id: 991947b3853d0d4dde4ec550503698b64d3741d2
+d2543180ad9791f0655a0410c4ddceb244b55949 small adjustments to Utils::CommandlineArgs
+Former-commit-id: eaf8b777e8c3b98bfa7bae29ca59050eac424d30
+4fbc3a5fd18e821eb25681acbf6defa9f006b7fb reworked standalone DPsim tool for running CIM simulations
+Former-commit-id: 520b0e955225839f619a777921909889624367cc
+60327d52fea5ae63f4942f11342841e2de17e7c8 python: update Jupyter notebooks
+Former-commit-id: 582312c45158dc78a65fe7a5697f544ea05c7cc6
+c9898ae6e7eedc0b64b015e9642b90847f0e4d80 python: add missing import
+Former-commit-id: 6681d2b5daa6c77eba7ea44506e4d605f2b2da78
+1d9c17d9eb7019ace32fe409f881429b6ebaabe9 python: fix methods of dpsim.Component class
+Former-commit-id: b4bbebc027bdc17d904e6dc5fb4bbc45894e75ce
+521d839a25c23d48a2cfe00589fdea4f2a79c928 python: add dpsim.Simulation.add_switch_event()
+Former-commit-id: 8db4daeacabfb3c48f0879a06ccdeb9571876711
+2b45091bc0ee8a559a754ac13b79959699167861 python: add ipywidgets as requirement
+Former-commit-id: 208dcb7ce32dfef69d9d4963725ab1b0555faed4
+ad7030112fb47e371ebe148224229df87c974e04 python: fix unititialized PyDict
+Former-commit-id: ae7d636f7e0d13d5b59476836bc1aefcf1a97925
+95a5600634e95d21b0aeee221d017b3f9df094aa update CPS submodule
+Former-commit-id: bf972b43043733a11a5f64e235b3939cb109e8aa
+b5cd435437df891b39a9588918ca7a690e556a69 fix DPsim.h on systems without CIMpp
+Former-commit-id: db6a51e62ead8b18588e6001feb2f44c53e242ed
+029e12227736b77baa8fbdbff5aa44e7c47055a0 python: more fixes for CIM simulations
+Former-commit-id: 678c5d05472c0ce8e6244ad88ccfae1df1acc4bb
+44dc8e05823ea45ad5da471affa4f5189c3fdcc2 fixing invalid attribute names
+Former-commit-id: c645760d3a724b15cb741c8fb74ece82ec9d4bc4
+9a8400e5c7dfc54eccaa98ea27bcf78e4cbd5b4a fixing filenames of WSCC_9bus CIM files
+Former-commit-id: af86f4e37dd01515758867d3a64ec8a50b27cecb
+79783f86bf8a59f17b4dea563b6004d26c118379 use new getter function for nodes
+Former-commit-id: 9f3554299c97c908d64cd5ef1bc0fc03c996add9
+9fc5c9e329c88ddad0a6c49fd1b25605e0c77f4d fix log name of simulation class
+Former-commit-id: b9af417be387b4862c03804b86c3d2b47f7faf0d
+d87f1de06d541e698e78b1d28ad8114549538f13 use new DataLogger
+Former-commit-id: 31009f9a8c18af6bc8ad024520b459d81c933e3f
+881a884ecd14a6dbca5ca90ff8f96b7cc5527cdf MNASolver does not rely on CIM::Reader
+Former-commit-id: bd73d0f291e8051360760eaed2e314606146471e
+f6b1da524574fb8cbf571c0ca841e8022024cdc1 fix pytests
+Former-commit-id: 615b615f0864b5a981872c7e52a6906cd8979085
+78b6c3b9123a65735a1bb40428dfe36d37a596ff update CPS submodule
+Former-commit-id: e4c0ad9eb9fbdf7d4debc9b45ee2b21e40a8fda9
+82729c190fd93c02212fb394c54d2bfb7a3b8b9b improve compile time
+Former-commit-id: a997757c92ae58fc2e757439bbb30c3db7061549
+06d176ffc72ca756aaddecb5fe4a0614ec3e530c ci: reenable pytests
+Former-commit-id: 6648cac2c7b55ae977f551f67bce238441f7a5c1
+c8e1d76522b6debdffe9c93f451b7649f8bb26de examples: fixing shmem examples
+Former-commit-id: 21ac462a94ef6b42bb613210ebf388737c61f54f
+45e44b3936a60eb022b06e7d105fcb74ebacdbeb examples: fix includes of syngen exmaples
+Former-commit-id: 2de81fac1af1a89d9d9207ac5f9cd2260da6b583
+a9add56f4420722dee597b3033cd30d01dbe1035 python: fixed real-time simulation
+Former-commit-id: ae7228617b8716b2764a67bb309973acad898103
+b9882f6afbf204c643bf7f4a935060e4042d4304 python: remove buggy datetime conversion code
+Former-commit-id: b26b3fcb02ff6e38b8d0ec909147b3515d7e8af1
+4de5c1ddf4d9b90e8d1b0837b9334162caed9d5d timer: properly stop timerfd
+Former-commit-id: 392b20581060d6294313b7b412e319ba60e214ed
+7dc6d0cc83a5ab7a25cecbef4f867fc5a917e8c2 throw exception if no components are provided in SystemTopology
+Former-commit-id: 941c7bf300a7e14e7b2ca543a0db8c8697ed1e1d
+f62b325efcc9d4a61df1a635a5d7271bb11bc5c2 refactor: DPsim::MNASolver::IdentifyTopologyObject() -> DPsim::MNASolver::identifyTopologyObject()
+Former-commit-id: b2769a031b20e2293263edcf1aea3e03be9026c9
+9b5daef00e6b950344b8ca76ec2287c7a5d35e89 python: separate EventChannel in header/source
+Former-commit-id: b7790d8176d418497f6163c514b607a6522f2dad
+52642a6e45a0c28b212ad646c15bd4115e53e2fc docker: added ninja and clang to dockerfile
+Former-commit-id: 31c31d6444e27b80f18b91a4d8f68f7d50ae0d30
+95d3c71c42289a234659f12e156c1a95b4056021 tests: updated python example
+Former-commit-id: e5471684178ffff6a6e662f28f465c2be03b6ac3
+5bb6ddb85a2366be8b6c4eefe02e0c03a3866a3b python: refactor EventQueue to EventChannel
+Former-commit-id: 1b0390e719dbc42e31b7422386c41d98691d50f2
+9462a88cf86e149c4794f6977534899a6f6d4cb9 tests: updated timer test
+Former-commit-id: 0e6891f6f932d2d4fb060e8f9d6daf7f25a873b2
+274c22a1789096c364afa735830bd56c58978f7b fix file headers
+Former-commit-id: babde1dfdfd73c5d4baf175e8faea7b6f8e3b64b
+44caaf30efa2a21ff8a3b9ca8e53e3c0b69f56ca refactor: IDA -> DAE
+Former-commit-id: 5ad18930a7f8abf900b0db5416e69da7fda84699
+e6724bdc14dbebc907f418b17bbd82e32da17004 examples: fixed real-time examples. They are now available on all platforms!
+Former-commit-id: fca89fb5e42251b3597e6b4bff7774e36c13a7dc
+33f4efafff643ea12f2d6c7c8c10f4fd3f3ede92 python: rewrote real-time support
+Former-commit-id: 7b1574ec8edd9b18d62ce106fe09a3db5e50578d
+2b6818b61caaa411ccd46347342253a5251156f8 timer: stop in dtor
+Former-commit-id: 4a32ad44eb550e2864c7f50abb06c9297f105137
+90500993b1be4ff68263416da4364318ff887427 timer: little tweaks to start time point
+Former-commit-id: 5cc8798590b2bc16f5f2b23f0fef094cda944714
+13b620b037409e0d4fcebf22ca8b56a867a990a8 moved Exciter and TurbineGovernor unit tests to CPS repo
+Former-commit-id: 162c9012c3db090c8604ebd22e38515df5dcfcf9
+47f33a47efc1ebd61d0a62d3ba6b88e239d0c729 check if getopt is available
+Former-commit-id: 12f8dbb433a55ef1c4d0c0a0327fed3dbddd41b6
+66e677c05d45c2038a3e937d63fe9faa15a609b6 added class for portable real-time timer
+Former-commit-id: c221aebe1964ef20e8462e96eb6bb43b9f27cbc9
+39eae128955fa908ac266e4e36202804423cb7cd examples: fix Shmem_WSCC-9bus_Ctrl
+Former-commit-id: 4e6627e942196ee695daa4aeb1e6cae2b8e7821a
+2151d552784a878ba2ccf10090184a150c568499 update CPS submodule
+Former-commit-id: 4a01deff3aa4f03b74e589d8d3da1897759f705b
+01d25a52e209fe9960d7922a94e54ed6feebe1d8 fix WSCC Shmem example
+Former-commit-id: 3e6be9ec521c88aca652425302ecc2f5ecc23712
+7409c63b3b2190c03bd8d50870d48efd510ff790 fix DAE example (untested)
+Former-commit-id: 5a24a775441f1869148f8ed35e6ae24a3c60e47f
+27c6eeeaecca0901f7dfe8101fb5896fef16ee57 adapt remaining examples
+Former-commit-id: 79914cec29131a3835ad725cb0c76aa0d5c431d3
+d5747471698e613de79db13a25ad502b731784e6 fix indention of Synchron Generator examples
+Former-commit-id: 65cfeae6664c10d683d466eebacddda4b2840318
+c30cce0e6f1f86ec2152b32f30f98891d8105b61 fixed circuit examples
+Former-commit-id: 7aef388d7069462c8e419f6f5392506bbf1957c1
+3fd3088c222b2139f45db6a002441737204a48d8 refactor: setNodes() -> connect()
+Former-commit-id: ad285e1a97a2b71504d2b50749a68ab35a421f8a
+7227644f920e18d5eff01d16f2f2608f10fa5ff2 cmake: DPsim does not require experimental filesystem lib
+Former-commit-id: 063dd82fa819780375cf8636ca9c6a11fd2cc7b1
+2ed38a3f23703e05fa13e97b230821092b5d7fcb use MNAInterface inside MNASolver
+Former-commit-id: a4f8bbbb72e3fa44da1327bcdf7241bab7a82510
+305e5dfbba9f72a92dc5cab7a4af2a5096de98e0 clean whitespaces
+Former-commit-id: eba683843b315795eb0409af622d79bb2ee7a14d
+947979da94fedb8a9cf9dcedfd097d5472f6f42c cmake: fix regeneration of header files
+Former-commit-id: 99159d63410c24a5b0517fbdf9e746d8818d2c22
+2aa9c1e7edbd787326ea2ee11dc2dcf6657fa3ca reenable compiler warning -Wwrite-strings
+Former-commit-id: b4e90b602e07b584ff0110485782cb5b16d68919
+6a278d9df05f8481c5b1807eabbfed885b872201 examples: do not explicitly initialize SignalComponents. This is handled by the solver
+Former-commit-id: 98b65a7459ec4d40707671b2029ffa450e27940b
+32e27b28bf428e0414df9242ab1013491c4dc832 smaller fixes and updated CPS submodule
+Former-commit-id: 709ab89c7c5f3a1d932911a815ddcfdaefc79030
+820d67fbb3384d81b07ca41888642561192311f5 cmake: check for platform support of timerfd and pipe
+Former-commit-id: 8a3e0c2f6fb03eea124e4e1322866ecf0915d6e3
+605d1001d60d9e89e2f5966e6f86a8392f24b1ff use new function addAttribute()
+Former-commit-id: a18ceb622e2f65beae6b4c19a8477124f3c99714
+dfa02fcb8e8ac19525767b8dff04055d415c9dfe include DAESolver into Simulation if Sundials available
+Former-commit-id: 1bbc4914893b03043dd024932802022dae35ae58
+85d8258d1a24aef4bf0b7650f10e8fda9df4d2a0 fix indention
+Former-commit-id: 4db9c03a3c59bbf81a7f8398f74780278e6025ff
+5c884c1b8ff3bbfb6cb8786cdd401105ecee53dc refactor CPS::PowerComponent::setNodes() -> CPS::PowerComponent::connect()
+Former-commit-id: 84953dd18380b8a0877a0c51f8c473630e3a8019
+239ad408de3a17ca4c603b08581d732115685f16 DAESolver: refactored large parts to improve code quality and get rid of static members.
+Former-commit-id: 91fe2071538f51083c240ebdb0ebbbace54c8b57
+ecf8fed0a2098e196bed4ae27990ee37b85d1da3 cmake: add detection of Sundials on Linux based builds
+Former-commit-id: bc2557c843988ae579576d1ef9b6946c6018eac8
+e66f6502582b24d82111e4c1baca1704c9adb2ad DAESolver: make file headers consistent
+Former-commit-id: af772c13964fecf6c20d4b32ab83c8be317e47b9
+dfc73f2da66ee9f00373396122407cbca15f3a2a rt: remove exception based real-time simulation
+Former-commit-id: b214e6d25af5d42fac098f7ab64e0c41e113809a
+862b6310d1caaf2500c54b9b6064fc500c05fc6e python: remove real time code from Simulation class
+Former-commit-id: 372a9ce567916645a88c7326e26ec4b39260d47d
+b71973735d82acea689ed52ae895aa7aedfa56e4 fix refactoring
+Former-commit-id: 256581f6e7532cef4e66edf206bb254ba3fb544a
+85d6989dbe519184f5375e2bec776737d71f36a3 python: cast to PyCFunction
+Former-commit-id: 7070054847ffee27a786082b2672f94aff9dafa8
+aa2326cda7dd9de56e553ee66c6f6f66cde4e24e refactor: fix include paths in order to use DPsim as a library in an external project
+Former-commit-id: a7b5ef78ed06638bcd07924aa818f4c5e90130dc
+2faf20b973cc070c6b82a46c4f36d1009fe58aea refactor: add dpsim prefix to all include in header files (required for using dpsim in external project)
+Former-commit-id: c0c0ad8a18a9b20cb516fc784d0029922eda1761
+6145b34101d197f19a2c99c7ac000b43f7418469 refactor: use brackets for including CPS
+Former-commit-id: fe8ab2f09db8321cfb25a4ffbc8be7d7d145e032
+71ac007db20cac3b6b825b8e3741d682a8cf231b add missing copyright header to DAESolver
+Former-commit-id: 0e5402baf3c8370586af0e769be0117711b91690
+7dc37c9168313628df462b895c5fbc675c89ceac refactor: name file consistently like the class they implement (DAESolver.cpp vs MNA_Solver.cpp)
+Former-commit-id: d222653564af50f1ceca5f09d91e6ddbd169e5c3
+67519cbbe6d654fd091da1530c69a828c936ff9b fix invalid return type in lambda expression
+Former-commit-id: 075066dc642eab8c6779188d9eed732a0bd59fb0
+c62ba64000ba79345af31fbce7ab1d232cff13fa refactor: rename more getters
+Former-commit-id: 8e03d1b4711052660bb2705ea8d8b70fc36bb11d
+e4badbd9ff84a4b8890f7e9882203fcc960ee5d9 fix merge
+Former-commit-id: e51d1a52efd990ee882ead01378318b91c598548
+81fc583b22387a2290a61634c70fc80ab1b11905 python: add some documentation to factory functions
+Former-commit-id: 997422e878540d9dbc5533d1d1893959b722ea50
+fdc2b62fd22e3fa74b281616212f5ac8221fbc40 python: fix unit tests
+Former-commit-id: 29748941dbcd09c1374372b8320146aff4c0c590
+c353af473d0bb597bc34473ecc577c07f08044ff refactor: NULL -> nullptr
+Former-commit-id: 9a4fb47fa1013ae5bbdc01ba5bf58b2dfd2d2d07
+f15b52288ba41f00bdbf5b713ee4a7e4dcda299d refactor: DPsim::Simulation::sendNotification() -> DPsim::Simulation::sendEvent()
+Former-commit-id: a624438d838a1bae5358029ddc0bdf5f4fb677c9
+51dad3c3ffd891b45d7c513ac78cb6f157c697fb moved most of the Python examples to the validation repo
+Former-commit-id: dbc6e1275c37259e8044e7871fedb291cc1860af
+a79e64f4c0dabd0d3c8c8623b5933c197a31814f python: update examples to use new keyword based API
+Former-commit-id: 6067bccad9afa4348938cef3d8dad131c948debe
+d2796753bacad1a3fbb7ab417f1fb4c1fe9b21d3 python: rewrite component creation process based on attributes
+Former-commit-id: 14f2d1bedfeac8e994e063080e4d4d5b39623e81
+9c806824771f3d83c80e85abe1b3d8d58f709a20 fixing exceptions
+Former-commit-id: 2a16bc3de9e50727d97536c5612825861a3da44d
+a44feb08b2ad958c2a54601faa4b5fbd6726e837 fixing whitespaces
+Former-commit-id: 6abc22192a429e5a50f40f8b2fde80fc867a79d0
+b4319df028db6898ed1c5547861ab945bfba408c python: added utiltities
+Former-commit-id: 0d438a13bd086cb1cbe925d792e6fef3cd600dcf
+302f66dd65276d70766ec84c9590ec203b4b138c python: added script to find all CPS components
+Former-commit-id: 0061a70031abd796dc6007d2e4f9f3b0be151d90
+b3c898bd4778150076c5805e32f3f375cb4669da python: remove node-list from constructor of component classes
+Former-commit-id: 82eae95c3d83a7f13877b32f7643c8e6d4c1cdfe
+b6fb68a92afb660445ce5310ce55eec2b2b866ff python: added connect() method to Component classes
+Former-commit-id: a9b40811f5f9280da418575253665f40896e744c
+2143b8f2175a255cbf5a020c5503bdbb648b635d Update Build.rst
+Former-commit-id: 3609761c855166db8d553dcca1bb101e5a1b59ea
+7113b418e756a54610dc66b688ac9e9caffc148e fix DPsim logo in README.md
+Former-commit-id: 04327e30b00210075589074d01fd48d4a91a5962
+211b931355c1d274de0995c0a11e7de45f69495c examples: add load profile to Shmem_WSCC-9bus_CtrlDist
+Former-commit-id: b4a5f41b877a8b158e5bbe0d6c9f10ca07432a5b
+5c4579be5e4004e3a271404f48e9ea1e49a693c3 examples: add CIM file with a single component and not topology
+Former-commit-id: b5414818cfd9a30c6bd239d90b7f7fab4fea0cbc
+22b2cbe95a2eb2ce683cb24972ff711afe1927f7 docker: use all available cores during build of docker image
+Former-commit-id: 4c040b4ef1d5f23366a2a3c276f67edd3950866f
+1278648db3df1f09c53f7b3c94baca5818c7b05d ci: some more tweaks to the docker build process in the CI config
+Former-commit-id: 917b6c2226b30f3b9a14d3eadfbd781f10477d65
+6998b98b1de87387e07b129c463cb2243a8b4941 docker: build and deploy new docker via CI
+Former-commit-id: fd15c712e0a37d3f3bf1c2e06abb7700aa3d00de
+4adfdbf2170ce457e54ec6ebd349aaec1681602f examples: added load profile to bus 6 of Shmem_WSCC-9bus_Ctrl
+Former-commit-id: dbe0007425b805046d5fe087f8a06509d7bd33e2
+a55673730d6e965d32b56e12f1b01b3a52871684 jupyter: update quickstart guide
+Former-commit-id: 0e3ad35d7831a7e9f98b47bbca715d5f19753f18
+74a0640197e3f6f36af744c63814d233cde66a97 python: raise required Python version to 3.6
+Former-commit-id: e9038250704d22200aa82629cefcd6882b1e4cc9
+9e27bcb1e856d4fbe278a8b45e22e9cb35e1f514 jupyter: moved synchron generator examples
+Former-commit-id: d53733368ccdad58347f6613234497f8962a43f1
+5363a10c3d5addd580de6cf727c7015f9da214c6 python: add support for asynchronous simulations
+Former-commit-id: 67f54acc8a540b76cb9bdb28f2e012961840e647
+5645c0fa1372ca7790c9fc34862bf6c8dc2f8d08 updated Jupyter notebooks for basic DPsim Python features
+Former-commit-id: 4f6eebc448d7001649d2a3da64add22bdf87385b
+6bc331dc5c0d24f71c50abbc1207959533336ae3 update CPS submodule
+Former-commit-id: 0998807e3cb17a9d9889a0a872d2189901a995eb
+7cf0f2782ed582c554629d9d85052b5c8d364021 python: fix initialization of DPsim::Python::Simulation
+Former-commit-id: 8751c0b6e081f7a2565229406428b682a29c4461
+618f7faf81ee0959058030caf59897fbf6548360 examples: changed some names and signal mappings of Shmem_WSCC example
+Former-commit-id: a2cc2f1233b9802c815f950d26cb012c8e94a173
+6a23f32ece72f5fb5188f6e549b2fbd7d1168994 update CPS submodule
+Former-commit-id: 9f5d518f4e9231dcd7186dd5c970f510e5d8a842
+b5713df83ef5bc83861d723dd6039b820e81328b fix Docker build
+Former-commit-id: df55602fc07ddb25efb5ee75a71c0cc333f3e259
+32f6b40e6331cb901c81ddc03ec8bd0b9de7f784 examples: use more command line args
+Former-commit-id: a0d2ab80c043e5093699677fbce38ecd303a1f78
+f37b07b6b84ec97d10a165b776bba968ae82cdde update CPS submodule
+Former-commit-id: 1d1a6c2458d096e78013465a6f6df5c94913d0f2
+1c02255086333b2ed245f2f15dc1115b43f8f927 interface: provide synchronization settings per interface, not in DPsim::Simulation::run()
+Former-commit-id: 6523b78cfd3954fb5d186514998c6de54752cf66
+a27bfa69c49b05ef05e288e2078f6358d2082e0e make start script executable
+Former-commit-id: dd11dd6a000e3b8a29457f5b60f964b2d883efeb
+ff7a17d37df7ae7d6bf7e3afb592b761158fea0d remove duplicate field in setup.py
+Former-commit-id: 98c49f7b13ea16313eadbb377ea484727b7f2e82
+e0242da9e4e3543142abd88cc99b3f123be7aab1 update CPS submodule
+Former-commit-id: d17cfe84a1890eb535549322afdd26de1cbc5e56
+dd06580936e6ba00a37c09f5299ff80269937a8f use -Werror -Wall also for MSVC
+Former-commit-id: 7953232c1b9a0be93c17c0850b664a528f602962
+eb80426c427de7bbb5007a4fd9a212775270517b fix compiler warnings about undefined behaviour
+Former-commit-id: 8f6754792e3dbc1c968c8bca0abe1c6e17653a7b
+6390ff78e0ee56452ad2634c58ebe6e5fd9282c4 more unused
+Former-commit-id: 5d5bae53730ccae835f79bb170878a1b3a1080a9
+36074b24a8ce3668ad28a6d7f209046f0cb25dbf allow default values of command line parser to be provided via ctor
+also added new paramter for system frequency
+Former-commit-id: 33f2178bfd56a4dba1f93a25f9e101ee016aa9f3
+2fd01f0aca6e5e412208aaf40b3857372ac4972e fix compiler warnings about unused variables
+Former-commit-id: 997026abc115083b2977ffac7ac80db1b32b7a39
+daddd02817fd5397177187888889ce845138cbd8 fix compiler warnings about reordered constructor initialization
+Former-commit-id: 6b256b5346ee114b390193ad6d4a17bbab8bea17
+404a66eaaa22ecc6f73e425a08054d9f1b1eecf1 fix compiler warnings about comparison of different signedness
+Former-commit-id: 2b312b5f56be0145c36dcedf2239a395071921a8
+3ba230f6a86676870324c451925539253e53a86c cmake: enable -Werror compiler flag if supported (closes #69)
+Former-commit-id: 071793cd801a8060137ac7cdd7a95cdd02715f66
+db1a47de2d1f9864ff8f43f6e232b04200902dff cmake: some of the Shmem examples require real-time support
+Former-commit-id: ece70dcd9a70c3cc609922b4769d2c23be89442b
+aef8d21f15711c4f5aa8f032c7f00674454e6c5e last buf fixes before merging
+Former-commit-id: 5181cd31c07d6da5b8aaebb3ac4b510b5c9f1610
+3809b53b83f0922d9f6082c3325af9ca84d6c19e improve usage infos for command line args
+Former-commit-id: 9cb1d945fd9cc542f8e12114634dee97be7c9530
+953008d5345ede2691865f1bbda7c5124e280654 add missing header file
+Former-commit-id: 91c2c3798fcbe6709a0ca339d8ad182441b15d91
+935c841ca6d9f8c07fe9e26a96169751de5fe623 fix paths to CIM files
+Former-commit-id: 3729679dabf83119df706acc3b4de8cce2e324e8
+98487cb184fd4270b833d4145f4fc64d3bfea2ac Shmem_WSCC-9bus_Ctrl: fix filter
+Former-commit-id: fff6d78ff2698e0a9c659b0a9ff426bccf4e23f6
+6c4b8de29be6c0db3d9fa9084abfae22a276b389 adjust Shmem_WSCC-9bus_Ctrl for tests with VILLASweb
+Former-commit-id: d999ce62876fbfa4b33440f3a9ed4e11b5f77afb
+14bfbba8f466ce87dcc6fb3985de705f2ea6ac0b be less verbose in WSCC example
+Former-commit-id: d59d8b0557ac4dca48f9d0654b09c8d89457aa01
+98da9865f58def7d7ea3fd5b67dd3421812074ab examples: make use of new CommandLineArg parser in Shmem_WSCC-9bus_Ctrl
+Former-commit-id: 8352eccec80436cce540ee58007db4c0ace8042a
+8ca2105f931508c4e6149b588b2088f21aee5cf4 make DPsim::RealTimeSimulation::StartClock public
+Former-commit-id: fb6119868ee713ac27c19e7b36e0ee8d37b58e3d
+00fc3dcc9fc1375a846035ffe86aea186f9bbae5 extended and tested command line parser
+Former-commit-id: d5c3d976b7e98aef8efaab736cd75ca2d2c5cf35
+d5141d0a8ce00b05f431a6c92910cdb12345baa2 first version of command line parser
+Former-commit-id: 40f4891a0784d3b99a5e67812211021e65b6c6a6
+30c2029f947a4cd093f9d256d80cb42f9174213e fix small bugs in Graphviz Notebook
+Former-commit-id: 367b15968e662200dec72286cc1b2310338d0c4a
+7ff08cb2e1e9ba742ee4c152b16af3c7260e3b5f wscc: change shmem ids
+Former-commit-id: d6e05c20302aebddb9b8db4b44f6c2db8bebaefa
+d167d5501d0b1aa9b88b2cc00adbfdcfdf3c7728 wscc: increase simulation time
+Former-commit-id: 3e8c4018df5331ae5a51c0659ec5536b1059367e
+6e483305a465fa1dc1bc5139be4654a36bd6e969 fix real time simulation
+Former-commit-id: 39ac05c57c0d06810d6926e01170ee42d1b07688
+72bbf1726782adaefc955e20fdb8d001d53f3c2d examples: delay simulation start by 5 seconds
+Former-commit-id: 2e4eb06df147f7b47c6eb229c144b79aa76c7ddf
+5f38330fe6b8c0939cbc259aae2d56fdf6b656d6 examples: move all RT examples into RealTime folder
+Former-commit-id: 11e7a5b98f6c24f7b8ffef8550de8b423a693132
+13c5fcc948be9b9b7d5209edcd67430fc93ede59 rt: fix new DPsim::RealTimeSimulation::run(startAt) code
+Former-commit-id: 76f875c88202f2477f6be1f32b10fac3e964a6e4
+6445c04ca24b184a18fcccf7dabe7da724ec4e9a update CPS submodule
+Former-commit-id: 69b1e751b7dcb73edc67163c29ec519130ad9570
+cf540ce248062851a9339c6f6a547481b90689b6 docs: added example of new Rich Display of GraphViz rendered topologies
+Former-commit-id: 7e18e2a30476606e6e625b670f6e7b7a4821b65e
+ec66fae6d2ae5c0f20b9632291281c34aa95501f add GraphViz as dependency to Docker and RPM
+Former-commit-id: b9682e0d224fc08ca9ac55cbe92aafe271d53b9a
+7e17dfb7355afb776b5a0b22cf2608c01e6e7f1f cmake: only integrate interface code if the platform supports it
+Former-commit-id: cbdb434d03c04a6ce867a7e5de8edb2f1b08742e
+d9a8ccb23dbbf2c6a327a30a7be4b3c1afe84e8f rt: add more parameters to DPsim::RealTimeSimulation::run() for starting the simulation at a specifc point in time
+Former-commit-id: d58cd8590fae04561df134a046b1da770bf61291
+5bc3c1fdd5b27c82d97fa0865c581201de60d5e7 rt: move creation of timers into DPsim::RealTimeSimulation::{create,destroy}Timer()
+Former-commit-id: c179337f8a77b3c54ea694aeae1958b54a4eb649
+67f877ff6495d9f3a7c7b26dff8c0d62c34560a2 rt: add new overrun attribute
+Former-commit-id: 4a2c5ff1282dca8a0d5ae6f6c3576a03c676ad9e
+5cd78c812758d12d4f77d2fb820f16665aed006f add attributes to DPsim::Simulation classes
+Former-commit-id: af433aae338b91e59475d8a9b43c282b14418b19
+53fb303e20c3657955674b6f6dc07bd839e494a4 examples: updated new Shmem_WSCC-9bus_CtrlDist example to use new interface API
+Former-commit-id: a637d5ced4d61b22d5fbf531de4fd55235162c1c
+fcb8771bf3fabdefc6316862a0327668411bd3dc updated CPS submodule
+Former-commit-id: 1071a42a9e2e313732fb8ac36ff0dacfb78c5d75
+46337879d70fba7144e49e6fa0eb980d4408237b tests: renamed python script in order to selected by pytest
+Former-commit-id: 05a36f8dff7d2e40d139f59c52bebdf35c278cfd
+0e74fca210aa57d4fb89486a00307705583aca3e examples: update Python version of ShmemDistributedDirect test
+Former-commit-id: 1dc4020b4335e253f4d4320e77704fee6e2c0429
+92f620222ae3123e8e72e47899ff0a0f33e10c5f examples: more refactoring for new lambda interface
+Former-commit-id: 8eb6fe365e8ead89b50ff888ce240e8b0868c315
+3fd5239ac2d1ef4f657c4b604e86904ba55c643e fix python tests
+Former-commit-id: c867a3a46b75895f7505cc1f58beafc2a1c04d4a
+84b90ca64875dc1a7c90d96470275f6a2abbcb65 examples: use new CPS::Interface API
+Former-commit-id: a211a3850555857d9b096a73b82a44fe87b1614e
+81ff97f689556234ce562219cf8a8329c1753072 docker: add Dockerfile for building a ready-to-run version of DPsim
+Former-commit-id: 8589c7b4ace562f6fc33db5bb0c7e0ec40b4f672
+8173c9d6d5870dcaa235660d55cb9be5b5442a6a cmake: fix RPM dependencies
+Former-commit-id: 0a12cc42b0526d1199f32fc3118c5d26e72a5bb0
+2a208ee749cd4362e1a1b36c9dd0e1abf106aadc cmake: fix building RPM packages
+Former-commit-id: 81e5a2486bd31667ad922228e68ac0ae725285fd
+411a4bc48a133e9126dce182869ea086e023cae3 add some bdist_rpm specific settings to setup.py
+Former-commit-id: 6387771c4a321c9fab0682b2e33517b6fa3f0b42
+378f2295b3929bfd8c48297a3892e068d2f9c5ff fix Shmem_WSCC-9bus_CIM example
+Former-commit-id: 318d871841eafcdb703aab064d3f9d23612a2a11
+ed13a7bed7dd6148404c47f0af1ea4d42a13bf34 fix CI
+Former-commit-id: 1d8bb3f39ab03fb402aa9366726de7f3342a8a8f
+3c7ac5e00499a88bf357265879703b6bd34d2ff0 renamed directory
+Former-commit-id: 58717d70aa377e1abc0597b6350d25b29cbbfa3c
+80b54b05f100529af41c1e8bf9ddf5fe3b3f7ce0 moved Figures/ to Documentation/
+Former-commit-id: f9afd2d639bceafc6dd803e9e62a16fad23058d9
+321fc365351963f43d0eae248047ad715ef6c08a move configs to subdir
+Former-commit-id: a3c122c42c0831d30e65668385c0e5a2ec05d059
+5513f408c43a68e47e8d0e83f0db54308386df65 added link to Doxygen documentation
+Former-commit-id: 18d8a652a1b603050bd3166d185db7fd42deec06
+633d5845cfc3053fdbcf297122375cfd61db416f docs: fixed typo in Doxygen config
+Former-commit-id: 14212a97f009644e9a3677cf2f7eb65767de0b03
+3977d1cece3445ad19561657278e820430fea36c update CPS submodule
+Former-commit-id: a8854729ff409242dc9e1ad81a23f44512314b2c
+8cce258ed25f44135071e774c396f324e0b572dc examples: change Shmem examples to use new gain attribute
+Former-commit-id: 8fbf02985a81ab07781170f5cec07cf1fcea0ee1
+403201db10cb10d13c680bc5848dd9fe80122af4 update CPS submodules
+Former-commit-id: eb0b992c58dd811d6571f0302d665258e8f1e5b6
+cf9bcfe49c9803692d311ebf01943eac1268c66c shmem: add web interface to example config
+Former-commit-id: ac429a38fe876708f65305b74eaea8065cbd38e4
+ce098279d0c9df6bd95fa3c9c1f16e5fd2dbb06b remove mGnd members
+Former-commit-id: fd21a4518d01d254c61c1666fab49f9a6097f470
+08e63962a608cba17c21cfe35269f5aa420b7755 docker: add VILLASnode debug info
+Former-commit-id: 29a80d11225af1f2a4bfcbde1f626c370c592bbe
+6af06a278bd40a97cbad34772219cc2ad90ab0bd examples: run ShmemControllableSource in real time
+Former-commit-id: 5a6c436e51653bc567229e1336ea33a32a013479
+7f631e3b369b2c440f9c61d3766c0409cbe45056 updated CPS submodule
+Former-commit-id: 6f2e88e8f3f172571140f89f80e19cf8c55ef68e
+059f990fee304e40ba59cf2cd97a1da597c2a39a python: add missing progressbar package as dependency
+Former-commit-id: 77b47ee5145606262be42a038d0c767b18cab48b
+e6248823185e0b146748ce89dd34a1845d506cf6 tests: pause and resume simulation asynchronously
+Former-commit-id: 36431cf236a39b155a4acf6c1a65d382b30f82bc
+0b70bba93ebc6b50f17a7c036227e0fa25359aef python: add more async events
+Former-commit-id: efe938ee5eb6e9b6d51c0cfa4438ab9806972529
+9bd083403bc458b5911227ed0391880cdbca9059 python: allow passing of arguments to user callbacks
+Former-commit-id: 9034b7eb05ff06098521d4d6dff31be7dbf04110
+df3c2f722b7cabd41bef3ff77be610568c9c6cf2 remove obsolete statement
+Former-commit-id: 2e0d4d301058b545774021ea5da65ff4d6f34e3e
+0a73d747fd9018730e4c35ad2b56a33c40ad9f72 fix typo
+Former-commit-id: 4426ac4560c54188ea7c91e05988746b099317fb
+052666438c9712e1bb2d0ebc770fa72a09cbb508 tests: add Python example for asynchronous execution
+Former-commit-id: ad21b85b163cb3ae19596bed710259cb05cbd52b
+ae4f6954c9201c9bcf0cf6600a81a536bf8b1025 remove obsolete progressbar
+Former-commit-id: 9baa2e45fed8f64562c41f9ee6016fb72b7a2442
+84b370726e0ab4fb922bb62ef7d12c76b43c247f python: add fancy progressbar in Python
+Former-commit-id: ac9f5c412de3f2e46c81e6633ff7958c58b64c5a
+fb62b8a436cd038e2803fa5307d11e49da0488ca python: add user-definable callbacks to dpsim.Simulation class
+Former-commit-id: 35150b89801da06ba6a300fa61b97a6d9e1366bd
+93a02f6cd770fb0b022a09363b600af9d5fd2bb0 python: add more attributes to dpsim.Simulation class
+Former-commit-id: 5c15744ab9978b9c511a33d7da67d976d09d7149
+3ff4811a1ad25bf9cccda914483067d7eb70f525 python: prepare asynchronous notification of changes in the simulation
+Former-commit-id: a81b23e521243e75dc361f7c167609ed5da0ccf5
+6ead9190ac8dfd511c57a80e68d5dcbe3ba36f95 python: fix typo in setup.py
+Former-commit-id: 406a1382ac3f5c7a40435b1fdbee466f43893e01
+a707cadbecd66dffe02afa68134962af769db94b moved header files into separate include directory
+Former-commit-id: 672759cb529bda16afd1ca3b2641d51993b7b1c4
+3dd3726efee527ab716f3ad3ad6777fa409c8358 remove accidentially commited tests
+Former-commit-id: 9e3076fade79c1548759a3ac6a6c074dd5b37527
+bd830d73afa42d32988f540519065a6f03cadbfe refactor: rename CPS::GLOBALGND to CPS::GND and CPS::GND to CPS::DEPRECATEDGND
+Former-commit-id: 6799c090953cd00c3dbe9a2cd158b0b8bb914683
+3f48983aff3f1573eeef2fe2e1920916e58d22b5 fix Windows build on CI
+Former-commit-id: 13ec25f8f5adde9e54e8e5b3fc46a3a8641abd23
+8ad89c54e4353220b2c3347b3ba7fa081d1379c6 move windwos build to last CI stage
+Former-commit-id: 6d267fe7748211081d342f514430e9f9eec9f4c8
+b426c05cc4742b402e6de548adea4a34973bca6c update CPS submodule
+Former-commit-id: 93ea54287df397c9a39cb6aa9a7071ef905d074a
+a26bc668b7a3662c66bc716145bb424a0161a286 examples: fix RealTime example
+Former-commit-id: e6657827cd99fae8ada56fe3b61509f94aefc26b
+812ce65597161d714234ad35162595b826a047bf fix and re-enable DPsim::RealTimeSimulation
+Former-commit-id: 46392b7cf38a08058ca908a591feec5d28b5f50f
+19a7befc79ce0af009a43fdc2a679f1ed54d9114 add missing dtor to DPsim::RealTimeSimulation
+Former-commit-id: 1ec1d9f021e48c0976c81e1a4dca89f1c21f8046
+807fd0b608dedd27ec85452d00061913b3cf9eb2 examples: fix C++ Shmem examples (2)
+Former-commit-id: 6367e22cc977969d163824ac5b90a34c7cd007e7
+99ce391a64ba81d2f86de2aa56d3ef425e5a1e5b python: prepare async signalling
+Former-commit-id: 7d46d80c8c93f4559a1d194856fbb793464e5de9
+7641d35c1763f30140996e961f5551e02428282e examples: fix C++ Shmem examples
+Former-commit-id: 8094022bd7ebe1ceb265ab53f8d2cb45cedea105
+e2295816a75370b15a5ab53f525e970457573247 test: fix undefined variable error
+Former-commit-id: 23f6c40050dc73237db32d29f7a50a1d1347c77b
+bd8996328637c855c5709ac1331e7bf11a73fa67 tests: fix attribute test
+Former-commit-id: c0fb4a70ab39c8115daa37159731dfdabe1003b5
+bb549bff3e2b671c97945476091639258a20d897 python: updated ShmemDistributedDirect example
+Former-commit-id: fc1d66d8251973949efd10b7d24fbadc1de918b9
+041f0da977d581ff632ced1fcead4ff04f2d3944 python: fix examples
+Former-commit-id: 501e5ef01fe7302c9077a48106c96082ddd4e1c0
+ed87507d0fc5041d845ca556fa175938d4fe8cbe update CPS submodule
+Former-commit-id: 788fc65b60e6f5692d1364038faa4f13bb2d0c37
+29d456733b4c9a62902920ea2ef4d4dc292aeb5f python: replace simulation getters with attributes
+Former-commit-id: 25d15d937548d64b4db0998cafcce6184aac9396
+41618d602397229da8ea623887de5dfcc6539d84 update python examples to use new API
+Former-commit-id: a9b4c6b29cb9ed81fae52ca63ae2e455a3ddfbbe
+482d713622889b749cb566dc90bb658454688029 python: fix simulation binding
+Former-commit-id: 18c816d09722e7f9dff3c681c51245e0de1bb524
+8fc02452381a2f0f2334b4707baed009e513bdf5 fix Python example circuit
+Former-commit-id: 8b3e1b426d4d4cb2b3d6c520b9956795ba1ee2e2
+6f097e09ab6654a7e3a6cbc639716b91a810a51a fix typo
+Former-commit-id: c15e06b32b7af5679a0c3754dff8f3069523a552
+9ad481f2052afb1a4b284bbd19ebc03d8d158322 add some TODOs
+Former-commit-id: 35331cded910f58b81d93372670d4c1fec217aac
+fde97f50ee8efab4319ba366db58b5a54145575f move Solver::run() functions to Simulation class
+Former-commit-id: 9a41aa28af75974b2885107c761efcfea085f374
+7a1b5bec75837e012d9b4b9b09afd1e6470107b4 remove mName property from DPsim::Solver
+Former-commit-id: bf66a3e9dc9e6736f3a74504ad63b21e20c21132
+a39d4d7594b8ee256463f1ee3f07cb17a581bedb refactored: CPS::Component<Complex> -> CPS::ComponentBase
+Former-commit-id: 90c282f401f5a4bb39f11c8b402ee248e685ea07
+787d34007dcaba7ebff92f202bf9e3104193c389 whitespace cleanup
+Former-commit-id: 23e09f500649151a53cd939720bcdeb550558ebe
+66af79be89ef8ff0ca5c5a5ce7a3d584579546ee refactored: CPS::ExternalInterface -> CPS::Interface
+Former-commit-id: 937d9d447f5db1bdc974c7f456d084c93ac900a0
+543280d5a703b1638633bfbcbaf09c2c659bb728 refactored: CPS::Component<Complex> -> CPS::ComponentBase
+Former-commit-id: d380112b6ecce7a16cceba1e533d4335bd70acb8
+ffdb9770c683c63154dc7cc3a1985490b5a60250 python: add Node class
+Former-commit-id: 300465d7cfa15a54d98f8959b56dbd38e09b6732
+833cb165bcb89b096e516cb096eb9c8da38a65d9 do not use templates for Python bindings of Voltage and Current sources
+Former-commit-id: 1940478ae5908351bdd033a40a87d2a5bff34b4e
+5d8c06c7bee8968fa4a71d515100b777ecf0b7c8 refactored: CPS::ExternalInterface -> CPS::Interface
+Former-commit-id: 9e4a6d3fc498e7d79dcb7c9555e96b8992186175
+46dee2f4ea9756e75139fdf11d4c75c069e3535c add CPS to Doxygen (see #72)
+Former-commit-id: 969acdf44811500f77d778b48c22dd9be9232b46
+e672308b4e0517875912c29db380a9132739bfb3 python: add SystemTopology to dpsim package
+Former-commit-id: c3d975464cd2f2582f09dddd9bcc31874e9f2f3b
+213b24765ef54f93fa6ebb5270e1f6c0a9be7ce7 fix CI
+Former-commit-id: a0f64eab3cd2fc23420a80deaaeb726514186408
+245ed4b9ed776daca05f6e84231004ab7bea0d79 updated CPS submodule
+Former-commit-id: 3ce6ec4a363cb1398a777720439bc2b5d6782543
+7b2373adf6e068bccef908b435d8b5067ff61981 fix filename on OS X
+Former-commit-id: eb376513010dc23502685ec7d9c72835c68ab71c
+3e83061b3c8a460a19e7abf484ebcbc113e675d8 ci: fix long filename problem on win
+Former-commit-id: 3aaf2e335477d9e31b7dbbd862f30a3124c56f00
+3e964076a5821b081e12744f8c29cb1ce953246a do not recursively clone submodules as this will exceed the path length limit on windows
+Former-commit-id: 8b2540a2f8133e54374eacfb39546f3b3c652dd0
+43fe46c587285554ed40bdb90f7f10afe1ddf215 add missing CPS namespace
+Former-commit-id: 38b4fb07bb5e659efa901212511d1e63d3025ccf
+a126c10947ac3acc8f7e90731acfa94cc2f06a25 allow allow compilation on OS X
+Former-commit-id: 8e2802cc3b1a1cbba6b4bb9cad0d683d115c4e1f
+b76edc682c35c6d0d273edcb632e5ec46bc07ad1 ci: enable compilation on windows runner
+Former-commit-id: 06a06d39324dc41799f1d03dd3a40871cd19b9be
+e694f4d514e07b02e1f086634f04c6bd7709167a update CPS submodule
+Former-commit-id: 73317c3811cbd701907eba793052dd3b2a8af322
+2a0320832d590026594f86a67b5a866541d40af4 cmake: get rid of WITH_DPSIM variable as the presence of DPsim can be detected much nicer via 'if(TARGET dpsim)'
+Former-commit-id: c3d4fba63b45ddb1c00fbaf730e246a77bd12b4f
+d66f738644ed6e3f4db0c490928ac6dee34cd509 disable remaining synchron generator examples as they are also broken by new simulation api
+Former-commit-id: 8a66af5c57f3bd5b18ba4e6a1ce6ad089ed2e5dc
+76681883aa8527107fcefdcfdfe922cfc02f50ec ci: prepare compilation for Windows
+Former-commit-id: 38b3ab17f5c8d3682c823ecc9fd3578a9e012c38
+62772199eb68fa757dc5f325ed9caf22e5eaffec use C++ 17
+Former-commit-id: 68360fb25802272f4003963c96b3e92f64c5b564
+d491f5fba647eed6b462720a220694572f1cb33d fix circular dep of SimulationType
+Former-commit-id: 9201f1e835ef762d4e9436495736372bcaebefb5
+d94a8ba87098c3e12117f1de635d6c38a98ef836 update CPS submodule for fixing linking errors
+Former-commit-id: 48526d9554f79b98e293007829d6de05dc46b13a
+66b58c6b2524988134eb2573e9fb5bc32e96d457 moved Python bindings for components to CPS
+Former-commit-id: a6eae0fd8db88c2fbb9a21e8aaf58f5046297b22
+e2eea061265c769131db6eb1d57a541bc2c25f22 use new CMakeLists for CPS and moved some dependencies to CPS repo
+Former-commit-id: 4121578f3e1bd6bd586e3541487d18c6f6d55615
+ad1798db04bcf0499948709cfe2c58682d2839b9 using new CPS namespace
+Former-commit-id: 6f6b56f3c79c9b3a0c66f7df15c375cbdc9a6bd9
+399f585faed003be516c712adcd9c244d04650ad examples: fix usage SimulationType enum
+Former-commit-id: a2698e8ff9298f564747cdc3d38dc286eafdec90
+332abaee59f5b8c64ed2565baf3f8156627fb577 python: continue work on SystemTopology binding
+Former-commit-id: 8012f1b5184da2c8a2a26f359242fb22a0a3afac
+8adea96518e9a32543c49611012691cfdc1a302f refactor DPsim::Python::Simulatiom::name() => DPsim::Python::Simulatiom::getName()
+Former-commit-id: 5f31f7008606f82668c0eea985854e51caa7cc96
+f1276e0e014b68852a4dd8ae1ce607e9ac09c62d python: disable lvector for now as it is not exposed by DPsim::Simulation
+Former-commit-id: 0c29a5a19ced804b939f5a796f5a51c932653c3c
+ec2432fb7a25b649f5f75074af3bb882d77a4d3f python: register DPsim::Python::SystemTopology in _dpsim module
+Former-commit-id: fec175c4531685fef6d7c34d05ade939e2c41d39
+eb1c4c666f8b90f700691c39b35fb21cfb770aea python: remove logger from python bindings
+Former-commit-id: 77032add88425b9ba8bdbe5bcecde3c5bd63baed
+bc9322cab369c36760abbe8e7df6fbf64600ca1b refactor: DPsim::Python::SimState => DPsim::Python::Simulation::State
+Former-commit-id: db2247b53372210b03bfd2f54c10679c55c60bc5
+4eea7c523ecfb112a26c6c4015452b165b63515b solver: remove constructor which parses CIM files, this should be handled by DPsim::Simulation
+Former-commit-id: 34a3475294d390728ca7ec255ce2208df2b1a257
+49d21014f1b7952e1fe8fbba04030d38261a1e32 refactor: DPsim::Simulation::Type => DPsim::Solver::Domain
+Former-commit-id: af43da11f2567f25fac4a07c06d45791ed949464
+20343e74c018f9a881b61fb8c05d3968c3d6f304 docker: add gdb and Python debug symbols to Dockerfile
+Former-commit-id: 6f652203bba81d8398946362a2b01e25d6e35ff9
+d1bb2f88b2f13def122ca3d8b8f3c61c57672d04 python: fix compilation of DPsim extension in debug mode via setuptools
+Former-commit-id: bbbe1667f208dd9efc37ed535cafcfa8a1ec646f
+887f964c3fdde97cdd1f81c3455c2b07dee01cca refactor DPsim::SimulationType => DPsim::Simulation::Type
+Former-commit-id: 8f611ca88a0f358b6a219e0bc0d152751c3e3f22
+fb6c2116b9fef5901dc2f399ea92cfbbddf9dc1b fix whitespaces
+Former-commit-id: 4e04a81dbdea646d39671a090c534cedadaf6e4e
+e53cee5007d63accbc2ca71e9db68161b69c6259 solver: move generic solver types from MNA_Solver.h to Solver.h
+Former-commit-id: c911f9283b73ec699cfecf99af03694ba0f6498c
+8d2249d53f1493c2805455b42d589d7937cf1236 python: remove incomplete code for switching topologies
+Former-commit-id: cb8e79a17f29515c340ec9e773fc51089ecaddeb
+fa17d92342b69d10550b66255713c21ffaf533bc python: introduce new SystemTopology class
+Former-commit-id: dd0e449ab6710fe3a71c856705154713a4d184c2
+874eae4d8f9516a8b9d15952b0689799591035a3 cmake: simplify list of include directories
+Former-commit-id: 59ec34d843513e08bed686f5f8878ef2edd257f3
+bdcd2d75259dfe8e429d0e423537846621bc6b20 python: added new function to get current simulation state
+Former-commit-id: 4f19784cc33840b13a15b919fc47a4c84a493230
+d76c074791e3cad340005b8fecd75a85c063a726 python: separate simThreadFunction in RT and non-RT part
+Former-commit-id: 8d6521e1d5c9a5b4b7b2909cae5921376c470536
+46884cd0da005824c151f949da5ec7b4ed1bdd7f fix whitespaces
+Former-commit-id: e06b4e4b0e5e807bb86cf3b6c5e79f6592bb8a87
+922ae100f397a2e4a37144a5d04c8bdc108e499f added simple Jupyter notebook for showing live plotting results
+Former-commit-id: 267ee150fe9e23c7e5e0c68dcf9adc543801226c
+5a1912af06f188c842211328d6eeb9999719c4a6 python: do not abort if m2r module is missing (closes #60)
+Former-commit-id: 55e569ce50960ec448b84ebf8b04686b4bb766e7
+22c365be6bba7d75bfc46db3e44c8ea7d0497a46 do not crash if there are now CIM tests
+Former-commit-id: f3a4e02f6ee0066ec348d7c37969581f727ade74
+352f96868027f0624fb9f9b3d91ecde652acad7a disable CIM tests for now as they are broken (see #65)
+Former-commit-id: fcbc43861d6ba926fe3d5e05e5a81ae191e1a709
+01ce26d6a987ad7f39dafa54247034a58f8589d1 resolved ambigious ctor call
+Former-commit-id: be732aa3bebac956e4a77f4c9616fc9fbd986bd7
+310cfa85725ad90bd5240eb10a5211cd4ecfc6c0 add missing semicolon
+Former-commit-id: 21509e07ad267d4ddf78eaa326fc48a99059994c
+982ff1dcc88b85a9ee0c5b86e55ffe17df4033bb updated CPS submodule
+Former-commit-id: 09c7fb23f520defbcf5c77e6a084226d92fc38bd
+c87824e4f59f6e790628d3a84fed504b6d5597bf change includes and include paths for new location of CPS submodule
+Former-commit-id: 2252c20c96e46d26ca29019ed566086a57c54870
+974e8928bb6920e112d78eb0e99e9863a5714d20 moved CPS submodule to dependencies folder
+Former-commit-id: 153bcb297c1c214f7ea43eeabb2b8c5ceaa84c50
+d38bb840b4e7f71e5fb6022487905f4c073557c1 add missing ifdefs for CIM support (closes #61)
+Former-commit-id: dd9a37603e45d30a350e9a00501ef16de5f4a7c8
+36fb7ceaae77a3fec9d8fcc00725108a345c0c39 update build documenation to include submodules
+Former-commit-id: 8695bfbfa4f628efac5a3827fe93a7993f178472
+b6df5f03f98050c0ac275ff3ac1ada9eb804ccf9 update CPowerSystems submodule
+Former-commit-id: 8507515549a1e69c44c936392549ad8ce229692a
+c3292b4575041113622147bdc928cf2d93583640 refactor: Add{Excitor,Goveronor} -> add{Excitor,Goveronor}
+Former-commit-id: e801180a45acb93d77be08f252e455de94b5a1d2
+d5a59e4b47ba9740aad41654e8f2ef5de17af828 fix indention
+Former-commit-id: 0b47694d391a9e1640571754413bbb1b4c6d9e73
+622ef8b1941264e8420bf05b8a6a02e8be158bf4 examples: fix node numbers of synchron generator examples (closes #36)
+Former-commit-id: 770f3be616a25f06bea60c725774ebb1f198cf71
+f0561687d08f1d8c166f0a71a99542c65e99f636 examples: there is no need to specify the full namespace if it is in scope via using
+Former-commit-id: aac90d50b2802a226380264a67a19ad551fb6e2a
+467b28e11f9940c3a90df2c062c5e341ec9a0198 examples: remove logging output which is now obsolete because it is logged by the Simulation class automatically
+Former-commit-id: 04383e473ed2e427117fdc1ba26ee9fbb6159d92
+c0ccf76e343c33d501f63e46a4143da804efa2f9 examples: remove duplicated example of Exciter and Turbine with slightly different different parameters
+Former-commit-id: caf72d45f2958e35c66e29b952a7a2615e61ca8e
+e45a57c4a6fb6c08d37d15e8d7ea4445aa1dc958 refactor: DPsim::Components::EMT::VoltageBehindReactanceEMTNew ->  DPsim::Components::EMT::SynchronGeneratorVBRNew
+Former-commit-id: 47027b49ce3c3f99ab3f06c0465a6f4c3d3e8114
+eebc2659ff7424d0d57b976f7ab6f3d035f44f67 examples: whitespace cleanup
+Former-commit-id: 6248d41e4b18aefa4178726eab4aa1a699e8c400
+f6123b845d144903c5be8da0b4eb8ce6d4537582 examples: remove obsolete logger instances
+Former-commit-id: 6501a10944e83b298b457154ae58e93bef6af0dd
+6c9f3b0680e29d79647a0d36d67abbffd9d76648 fix node numbers for Shmem examples (see #36)
+Former-commit-id: 4fbae0f5b1a352e8c434315d2c5b6c61868b5ad9
+022bea6470074921c4d6e2327f7e9c388042c3d5 fix matplotlib
+Former-commit-id: d2edd707d5fca9324b04c0aa47669e3ee53e2464
+3b723fed94e0718a520e04d8f20ea351a9ec6d1e fix CMakeFiles for linking Python
+Former-commit-id: 0bcacd008c97606835b4512b17599ad28c5ca401
+342888aa5b09b0b4206166ecccb60329e24a445c update CPowerSystems submodule
+Former-commit-id: 48d1f74ea49b089826f5341502f0721725c3731b
+e2d88dca933f4c3e7b2bb40be0c6dea13a38567c added two new functions to set and get values of attributes
+Former-commit-id: bd91ee0a341f4afa03ca66fbd803c0de59918daa
+a5f23a9a7eca49b227738eebcfa99a0da96a30dc added test for new attribute features
+Former-commit-id: 460daaea103c3cdbcd901c87f27c674ce788e440
+c7eccad4f13cda0964c5fbc352c4eaa1c92df9e3 use new attribute class in Python bindings
+Former-commit-id: 16102a630d5d46594d4806e41287228f666b1caf
+a938c004505599b58edaadadfe51a5e1e5099f8c use new attribute class in all components
+Former-commit-id: ab61b77c5f359722ca04be991eec2767b7729a0c
+5048768a8318342f4dc65e7a7fbc98d2f0c4bff8 introduce new Attribute class
+Former-commit-id: 524dde9f268ae1d0b75c375d73eae3890523392e
+72c65fdba03844746e480108d27b59a74a17e863 added new factory class for unique_ptrs
+Former-commit-id: 409ea698a31b2a407b5ecd0e35e984de30cbd880
+16acc36833ac60ede923d97eb92c8b5fbc68f8a8 add missing _dpsim module to binary Python packages
+Former-commit-id: 490e621a4bcda396efb464be83e52082e8225a5f
+9f12aea18a6bcabeebd5617ec23133caec973464 reenable CIM tests (see #46)
+Former-commit-id: 9b51b16e55ed5913979ba69d6abd1a980adf5379
+e57b0061f5b0188970f4630633f1385814ba84b9 added Dockerfile for building Jupyter notebook
+Former-commit-id: af667a4a7e01131e9c075dbbf32b7f4a04cd7fc6
+735cba7fe7a576b6212f37f1174f957487f26719 version bump
+Former-commit-id: 8d3e865a36f23fab4edef91b6cf19c4b4b06fa88
+3cf8086160cc880bee5455f351e164cef027b2e6 readme: fix url
+Former-commit-id: e9c75fc7fe12dbef1e87a744a43656b808811688
+719f3db2348eabedea6422fd7a93b5981a629cfd readme: fix image links
+Former-commit-id: d27c43f168f7f3ee7ee92fc0f91d0d9881b67f1d
+1b6abfedfe8351e3789eef108d3870e293f5ba1c setup: fix rendering of README on PyPi
+Former-commit-id: af1bbcb23c8148301dde734067bc3876853265de
+73684309450a622de4a3570613b7cd4e15f167ba added Dockerfile based on Ubuntu 16.04 LTS
+Former-commit-id: 4986b2bc343e685594921fafbcf462146404ec15
+b27f04b15bf5da33c762eacc9bdb3e74d1d7e9fa examples: harmonize naming of log files
+Former-commit-id: d4e89dec61d25e524c821f6213856986d73f3cd7
+b9aa57f473cb9a880a09826ba59a453e1a8c422a python: fix typo
+Former-commit-id: 4b95949c37f184878b145fd75c6b2eedcb8bd0f8
+1bf68b2b800e02bc3dd8fcf63e054f31c7e5b56e python: enable EMT simulations by providing "type" attribute to ctor
+Former-commit-id: eddba3f85d3d345554aa216dcc7a03a3da6cfe57
+040c753f280c107488d45e3c57f1d3d2cdd85814 refactor: DynPhasor -> DP
+Former-commit-id: 5fbed3287484ca630a8c1b69812b6126f8e56127
+848c18cbd404e2ead71b860fd51acec635a54171 python: added new bindings to wrapper
+Former-commit-id: eb6b05176bbae6e43a1ca5a95f454d5a9673a1b2
+d15033fa09d4fa14cf5af8a651e42a2076d1fa75 python: fix documentation
+Former-commit-id: ce85a1beb19fc6517c06f21e5ae8cae1aee8f029
+f21304a0f47327849d9e10946de78979fc6aa830 python: default to 3 node version of PiLine
+Former-commit-id: 0591018cece8fcdb250b7690b4a69ec655ecc328
+fb2c35afed0f82554adbd19201325dceb90dfd0f refactored: LineRx::LineTypes
+Former-commit-id: 4364b1441d805b057f286e80ba985dabb4526411
+afbc4dacae7ff977bf94e049f1160900023dd76a python: added bindings for LineRx, LinePI, and LoadPQ
+Former-commit-id: ae0ecee6047fdbd09e67ac224501e33e47f16e0f
+9de11bc9698da02605c0f0b33b778d3d89152752 fix some links in documentation
+Former-commit-id: dbe9975e029fac0771b1ab269ae8fb2c3b270c2a
+4505f690d627cc8a5db2bc6f05eaec87f915c324 add another ctor to current source
+Former-commit-id: 39a8cbf5de499973e8856aadab8058bc31a4fdee
+7a1f48c9b7bd0311258e1d6d99758a48c8562e92 remove superflous internal states
+Former-commit-id: 365604971f5398b14569d0670f801699751d0295
+b563237cd98d3adf924b74c5c57dd0b611116588 python: separate template from documentation
+Former-commit-id: f2894e99e0c4b7bf8ca7cecb82cf872b2b63f0a2
+ae70bf1bbdf5b6490a4fe4113bbe3c7bbf250acb python: update wrapper code
+Former-commit-id: 88d56c0264b72b4eb2d0191fa86fec401fb96021
+f7e6f1d0f03d1d67d42332be2beb842cd64648c1 python: use function template for component constructors to minimize code duplication
+Former-commit-id: ad60654b582d0af4ecc320e365ee7b0edfec3c64
+964e12c43c1906c12385244056d7142192415bd0 python: add binding for DPsim::Components::EMT::VoltageSourceNorton
+Former-commit-id: 2461e03bbcf36a2e639a63a0e4a3314e677b8089
+67de27866284f2fd867cc2c1ef08da30f61cf73e python: add binding for DPsim::Components::EMT::VoltageSource
+Former-commit-id: 2094443ad9b22e97b7adef29c895956477f91b40
+5e52e8f673453081011dd0abca2a6c70d0a77c2b added EMT current source
+Former-commit-id: c4888364960bd22adc52baa77ba7202ced2e9a13
+1fbc05d9ffc33c9f41d73e61e5099d41e96bed05 added EMT capacitor
+Former-commit-id: 943c3c4158217acf74f8edbcdaf2618bf5e47cac
+2c6aea52bbe23984b2f2f2cc8d67aed5e5ed6d3b added missing constructors for voltage sources
+Former-commit-id: 3922cd27789f55430e84d8302b24c4ca31d01347
+829acb14746a6a63d4280f5e6ad6f593d66ce47f refactor: DPsim::Components::Base -> DPsim::Component (closes #44)
+Former-commit-id: 0ac093098e918b581da30a56d276f550caee261e
+c54081fe9da307663da67c2e2c23222d30171031 rename "EMT_VoltageSourceNorton.{h, cpp}" to "EMT_VoltageSource_Norton.{h,cpp}" (see #43)
+Former-commit-id: 1fa4268d6a1d052ed7fd20717985b822ac7367aa
+d774e18fd7a1a35c572920f919c48cda8e631b6b only provide jupyter target if Python support is available (closes #47)
+Former-commit-id: 095c1ff0057974851fe1ef028af6bd5ce10589e2
+ce8b41d2507276162e51111a079d5b7fdabce142 fix rendering of code blocks
+Former-commit-id: 9a7a06bc0de85cf68603a01a03921ec24450ae72
+f7e1c00fc320fe7190c0c2dc2b642b79084937de added explanation in how to use Jupyter notebooks
+Former-commit-id: f617d8ae2c5838e711255c4dd1033914560d453b
+d85692ac225db01941f420d08196a22ee92bab1e examples: fix Python version of ShmemDistributedDirect test
+Former-commit-id: ed69d75b624f084b9b42638228189ebe25de3ffe
+8cbf743377ff82802190b2c93d64c02f218699ea examples: rename Shmem test cases
+Former-commit-id: 91bfd2b1f244aed5e4a5de3bd01d3d442ed7b11e
+bbff1ee33401b6fd7604307fa6b54831ca56949f examples: enable CI tests for Shmem interface
+Former-commit-id: b42b2df5d64c2a11ee6f4173934ce8690037e930
+0cc5938d7965da79cc3c1b307b684473e6823192 docs: update build documentation
+Former-commit-id: bc674d1dd65d74bd661dbdb976de31ca6764ee99
+adc42eb4db480d53ca515bfae85d795b827be74a examples: fix shared memory interface examples
+Former-commit-id: 8af943076fab254edb0025fb9a58924ae221911b
+b6ae1a874405a0c624f1e257e0e49f63db9934ca examples: make CIM test platform portable
+Former-commit-id: ef75c224e4d36f39f3ff60ca37c303e489f8f7c4
+714701218925680abcb868122d1de28d86e6879f add real time test case
+Former-commit-id: 06c36acbfe99b3304724ce4e69c29d91e7b186ac
+f1c71f3792d8b71102361a15fb63acd26f8e3cc5 fix realtime simulation code
+Former-commit-id: ad337045a7c9ec392b48d6eca35779e14512970e
+adfcc61f1684128cd78d0a7ca65512d8fbbcaf3e python: use new SystemError() exception
+Former-commit-id: d6e9c64fd06814d34b1bbffb8e20ce52d9fc1782
+df6845bd965dd84f5c4551d394161fc59b2514d5 remove duplicate function DPsim::Simulation::run() == DPsim::SynGenSimulation::run()
+Former-commit-id: 4338a0838726ef06b051212f146a9ddb318e5b1f
+5676bb53b15a877ce93dcc568b0c0d57d24ae781 cleanup: fix indention
+Former-commit-id: 2a7c948f16cad7b4a922570712abcb73e4d5cb2a
+f4bb527c229c97c2fa36224b2750ec7259ae91f3 examples: disable another failing CIM test
+Former-commit-id: dd8155c42206bef41f57057b977a725c4994a779
+957c433561d0c3c29f51fca40fb8160a10256908 rename "DP_VoltageSourceNorton.{h, cpp}" to "DP_VoltageSource_Norton.{h,cpp}" (closes #43)
+Former-commit-id: 02730b1e518dd3bd62ed130136efef9630853584
+5675c14f855841e212a4b86141e097be7373a9ac examples: disable broken IEEE- 9-bus CIM test
+Former-commit-id: 38045faf9ff5961b806472365da190dcc0bb801b
+7a685b3be75067856892f4e9ef7183cb7ff47dae added new target "jupyter" to compile Python module and start interactive session
+Former-commit-id: 5623ceb6c47b32c2cb8079bcff94bb75e6131ac0
+521ecdbd9540dfd5ad1bc7803846abdb67e7e013 add missing pandoc package
+Former-commit-id: 3270369ab665cddca4d5f7ace752e28b535982b5
+4ed2b22e9bcc9dfc528fb8c7c5672ff4aab96bf2 doc: use Jupyter notebooks to document examples
+Former-commit-id: 6e84bf15d3a9725ebb2727dd9253386ffb395558
+7703c8495e0ae64868e2addb2d18f40f4be6a38a refactor: mSeq -> mSequence
+Former-commit-id: e2f852d9f6224962fb7e30f3dfb417bbc5f97b7a
+6c7c3d916200eba4b4d2697cfc0202bc0ce6c8a8 added exception class for handling system errors indicated by errno
+Former-commit-id: 30e9a64246feb3b25a53d170aea272f98fdd0464
+6452db01a95c1919c1e2cbf273bb54a2ee7b3b30 examples: renamed some Shmem examples
+Former-commit-id: 376789e67815f74979b0c19d0cba16ff37192f6f
+9d8477f231fd5a2276d38a208109e5b556ffa670 interface: move mInit to subclass
+Former-commit-id: ba563b475d58105d5f9229ef6011839e38106b07
+6d992714df978211a6ce9d9f21bb8cc56b98ec32 examples: fix compiler error in CIM example
+Former-commit-id: f1a432ccd54795d7cd56a030a1d8299c645e7d09
+1ec0099fcbf2655024d1036ae33536c7a078fe72 examples: fix broken RT examples
+Former-commit-id: de4c1bdc8477ffcc81e057966593e0cc6312dc0a
+0f02b6d83ddae843ba1a23c9f7966c529b058ddb examples: fix broken Shmem examples
+Former-commit-id: 0fe20179d67c4187d3ba93dafe01495b95ae2ced
+0ec31948dc2545de2e0cdc47e4813ad9db7b7c17 cim: fix python integration
+Former-commit-id: 0237b49a8a107b6e15df93a0fff37dcde276119b
+5864b23707320a09f500828840cca5e8d72277b4 interface: use new ControllableSourceBase and ExportableCurrentBase classes
+Former-commit-id: 4c6e51758f9529b4fec1d06e27b9120b6ae1f46a
+a6b72644b64c592556018fdcc32f3f3e129bce6e shmem: use DPsim::String instead of char * for paths
+Former-commit-id: 18985375f64e8bbe646f10a6a3691a8c81c11e7a
+923d929f108b34946c328acf89e57ac16c6c9182 add missing constructor to DPsim::RealTimeSimulation
+Former-commit-id: 71161fb41cddf000b006d70c6188a2cddabc3090
+69878658b3349461925e6f2269300894ff239be8 mark getter of SystemModel as const
+Former-commit-id: e88cfc47996cbb50aafe08bb3fb6b2f44557f48f
+1e4c8f61e4f785ad7fbf268baa0446088bc06696 more gitignores
+Former-commit-id: 8c5fa22284da894e8c5c6a8c25c72ce9a410c6bc
+5ca138998ac2fca5be6350063366161130060876 cmake: fix compilation of CIM, Shmem and RT support
+Former-commit-id: 24c735b5a8424610b31d00964f9695c8e77571b8
+9a1832106f9759137aebff9a754f078ada37f78e test: add list of CIM test cases
+Former-commit-id: 024b0c9d76c90a932915daaefc114fce8e0e2348
+469e6c2453a39428b93a05cb4a14a3571b9749da disable real-time tests for now as they are broken
+Former-commit-id: 8d32f0da116d06dab9db93ace506a283b38a6e77
+ec8bdcd2ee8b2957bbc2227c79f1fd47e9514d27 test: fix copy&paste mistake which had run all tests as a shell command
+Former-commit-id: c638b32d57193fbf806d8075001222d19265f897
+14aa6283ceedca9b0ab12a7506363936c9fa35ca examples: abort if CIM files can not be parsed correctly
+Former-commit-id: 4c3e9d4462f71c8d7ac20619f03a72cb4cc33c74
+fbfac109c48c6310db20ef9e5f004610960ba2d8 examples: build RT, shmem and CIM examples only if the respective feature is enabled
+Former-commit-id: 7f052d5923d714db71da704633ac4a40841c767a
+67fea7ba7914a7da55839f794622b850c7a717e5 disable shmem interface for now as it is broken
+Former-commit-id: e07317859f2273b42028172f394f277ed157132f
+0e62d78b2e60ddfe8da6e8ab7b9607093c1acd5d fix compilation of CIM support
+Former-commit-id: ddbbf541418090135b4875543718fc04c25a4598
+9e1c9eb2a06a66020811c536e3e993969630df4a simulation: added new function Simulation::run(double duration) for running the simulation a limited time
+Former-commit-id: 9ce464fdc769be71db5d9968d5ebc0f6bed52b59
+8ab4f1ee0cabd4219d756ad4afa9ce46c0aef537 examples: simplify C++ examples even more by moving log output to Simulation::run()
+Former-commit-id: 6f2d3ac166c116fe97a6f04d41017a0dcda3462c
+43e680829cc7e053744cee1126f97d96f8458d8e test: show each test individually
+Former-commit-id: 8545e3638a0ec5cea6b4aed28d5b639cd15b1ad1
+559a1879aa7e5af08c41790ff1f2f930905cc39e use requirements.txt instead of specifiying the Python dependencies in the Dockerfile
+Former-commit-id: a79d16d61f7d060dc6f32ec145b99360dad8e522
+41bb7ed37f5675f68dfb8b1bee272ace8710a251 test: added missing PyYAML and dataprocessing requirements
+Former-commit-id: 22345a374d448ed7818a30e2a0c61115e2618647
+a5d6558c673738c0e8526ba3eda9d275da4087ae examples: decrement all node numbers by 1 and use DPsim::GND constant for reference node
+Former-commit-id: deaf3e443ed1a590f7a5e4964a7796815bb2dcbc
+10e7936b4cab121473a4a0c859f0365dfe510a91 docker: install missing pytest package
+Former-commit-id: ab067c14ea292225ea18e8f9b170568ba0c593a5
+036afee8c13ddc6037bc6cddae1bf5b5f97bda07 bump version requirement for dataprocessing
+Former-commit-id: 0c5d2a3290bd3e087f428df63c33ad3810d2a015
+da5f1b25ed175809f6d11398c2a7f25808b4647b test: ./setup.py test
+Former-commit-id: 496d548d36def46fa62586ea1833d254c9b94382
+bd9d6780a75cc71360be1f60cde030d6f7e2dee6 test: run pytest during CI runs
+Former-commit-id: d2541b0707eb53fc5d43b97f45ec218fc2c08487
+72189acdd9eeac977709c56562fc391645a45fc4 test: update submodule for reference results
+Former-commit-id: 3e2f283c320fcf116987fc5617d601dc69c1f927
+2a91a9278e4aee35127170f42d47679369b7300b test: remove old test code and results
+Former-commit-id: 8ddac83ccfb7835422d483c5d937ac9e71954365
+cc3b436444e212a35857c4bccdc3a2d73db975f4 test: added Yaml files for C++ test case description
+Former-commit-id: 7b7ee4eaf06bf03da07871a3c7885e5ba302cc0f
+474e62a5b4c87d94f2654bbd6bd290333c6e3771 test: added conftest.py for custom Yaml test case collector / executor
+Former-commit-id: b748448ace1f235156f76b61d731a802305b5b5d
+d701fd3013bffdee32cd2178db2e45aed3b1a46e test: added first pytest case
+Former-commit-id: e215b563ae36bb7286e082635e86642417b3c2aa
+fe8e090fa8d98a74c4b9d91317cb85a35be91530 added reference result repo as submodule
+Former-commit-id: f7d47e3bf856fd3bca370bf81b904e181349c0eb
+fdf64139dfd3d30e3976498710d7fe6e2a8e1f31 doc: fix TOC
+Former-commit-id: f395c76578dce056eb886f042d8f9f6ec46bf588
+598a4546ca59b9bcad91c956a97cacd46f5fc066 version bump
+Former-commit-id: c38fdb61ab994e463e7e8953ad217292ec231f80
+5973cc70f5f9b4542930b273fc95adeec32adac3 updated gitignore
+Former-commit-id: 7a104a7d749730a14159828d0396a252119b501a
+8c07e587152364f8f66d7babed9149c05896679b cmake: build relocatable
+Former-commit-id: 437350bc5ff7ee82413ff1eb9e09c7e259ee98b8
+1db47e29d0b21ec1a40261c1d292875320b39388 doc: add installation page
+Former-commit-id: 3ba79eeeb3a745e97d53ad078492cc4e477e5226
+771daebea6d7925add5ba7b0cbec9b7508f8338d python: cleanup of setup.py
+Former-commit-id: bee8adae375ff6e38a4ec6f205355aa21d0443ae
+fac5a3404b5107ba861a4b61544d1b86e727943f add wheel to python dependencies
+Former-commit-id: 77115048ae82d60374b792861c5762592216dc79
+e31e05c5bbec8e431791562c3f9cfbccadd01fa4 python: use CMAKE_RUNTIME_OUTPUT_* properties instead of CMAKE_LIBRARY_OUTPUT_* for Windows
+Former-commit-id: 427778303a7f0b09b40d23fcff689139b509dae0
+84231deb0c233aa8c2dca7c7ed14f4eb38b6f9f4 cmake: do not build dpsim as shared libarry by default
+Former-commit-id: 7a8d34364cb5d5602210b66c9961f93eb5c96fe5
+c1abd997e7cebc859a7c1ccca4d585592acb329a fix compiler warning on MSVC
+Former-commit-id: 103790f9708023703c361626c3184272f389cfba
+3d6b2a74fa37c508141a1635afc8c4a4b6cff2cd python: add more classifiers to setup.py
+Former-commit-id: 7c4d992613cbd282a80469aa14abf8df6d6c7a50
+87b2ab9079f6d95dc9d555b739fcf48a5687b59e added GND node constant
+Former-commit-id: 1aa16fdd89e2fb4c7ee0c1e6f13a4e21165644bb
+0b41eebe55dff5faa2be1fb96cd49169f27e49c1 fix node numbers in Python CI code
+Former-commit-id: d53d94bec0d63f43952af21b7d731bbc17bb0293
+ffb3cb5b7530c1af9ce53d04a221bee28a93d8ee smaller cleanups
+Former-commit-id: 9b2cae5ee63e795ce5ac0f6873e63aa453485e96
+be1ad967a72ebaf1f44d680e993873a33f7cb63f examples: use new SharedFactory in all examples
+Former-commit-id: 8d0bd73a92f459cae46c7e7f935a38f6f24bfff2
+78a9f66e2e8e1928264ea4a05440388509e135b1 make all components a subclass of the new SharedFactory
+Former-commit-id: 4a38d29ab690d5f248dfff388426de33fe9f57dc
+5d283135c24a1bcd2452ce88cc8974afc8e9c5c9 added SharedFactory curiously recurring template (CRTP) in order to easily create shared_ptrs for new instances
+See: https://en.wikipedia.org/wiki/Curiously_recurring_template_pattern
+Former-commit-id: 8f87437c2bb1b9d2e3a3ff958a548c0164c873ad
+6b3e4258b37a2b498f39c14d9e032f2b9a5534a1 remove obsolete real time includes from Simulation.h
+Former-commit-id: 11599e1e3741f42c5e6bc3f0da0ce915b7ddb447
+d4a2e60554b7f63dd336e63556d5a71f1e36f932 refactor: consistently use the term "component" instead of "element" to avoid confusion
+Former-commit-id: 445880c66564514932487e4d7022ec6da846f33d
+2af5837522b83d5ed076f6196c58514cb9e7e333 do not use shared_ptrs for simulation Loggers
+Former-commit-id: 4bcc19f8022b4897ee356baf1504afa7ceb8ec6e
+1c04cc7b4be6c990c28697b87b5888b078128379 simulation: remove obsolete Generator test classes
+Former-commit-id: 1c7f4bd5447d6b35a77967c7b7c698d723cd074d
+c771cc59edd5ec556d305999681f63024a20be13 examples: fix Python CI test
+Former-commit-id: 8e87168670093532b98867fd7346a056b4ccb79a
+d6ef104fc9c6508fcb12d7f5a3b4f224f7c51da6 python: fix ctor of Simulation class
+Former-commit-id: 9fbcef3579d03d2a6b6a505b53ef15fa6916b008
+c3f50c9e6c948e30a982b412b158abcda2953df9 python: added new method "name()" to Simulation class
+Former-commit-id: 40ac48b0ea5c39ea04ef8b8bc4877f888c008605
+c6715d044bb254981fd09fd7cf8736a513586fad examples: use std::initializer_list for more elegant initialization of component list
+Former-commit-id: 7c0e8b7cde21643eab92283802c4156cee1f3056
+7d14a1b64ca8f7d79a3be690adccd49d8d251cde code style: simplify expression
+Former-commit-id: 9a4298e3372ce102f59d107da0f3ed6ea665e13b
+1ab9a2823fc76c726d06a44970b928c2c3a14856 python: fix real time simulation support
+Former-commit-id: 3eeef1b54f84038f5b69943f7edbe59877dd6b61
+a8bc70523e7cd12afc20583f854d31feae6fbaa2 examples: use new Simulation classes
+Former-commit-id: cf5a938a7a931cda35e2d7f5dc29faa819113a6e
+76c1986c50a7209c038009f27d19c25a2e2e8225 simulation: added run() method
+Former-commit-id: 04bf4cd461dcefd51a067db43c4e5b3a20a1a01b
+90362e5d59958a8609175406cd062c1a665e717e simulation: separated Simulation class into: {Fault,RealTime,GeneratorTest,GeneratorVBR}Simulation sub-classes
+Former-commit-id: dadd351fe52b938b511db7f7505dd710f98a8a60
+44f0982c33e08fed26df45c8fe6fedde3fcb561d coding style: parentheses
+Former-commit-id: 74e8b869ca9dc350f51c00f6dfc11ba6b8e5f7c8
+d746b56d3f578af101610f7dfb0d788eb95ca949 simulation: theres no need for a default constructor
+Former-commit-id: cddd68893afa93528698ba25bcbef3e784f0e20d
+cd7e8940a2ede39447fb7387c39ed4406412995d simulation: remove obsolete function
+Former-commit-id: 0249ac45873d8fada7ccc67d5153aed8656046ab
+2499135324c5da4dbd5fed64359947aa1036ad9c refactor: LogLevel -> Logger::Level
+Former-commit-id: e473a2742542c17c09c2cce9c0a0a5070099ea95
+31380176ecc4eaefb05ba34277f659d84597561d refactor: Components::Base::init() -> Components::Base::initialize()
+Former-commit-id: 6a58174de50f430b989bbf096564752f2ef2c7fc
+621386db8ba1a72529658e876ef0f434ab08598f refactor: rename namespace "DPsim::Component" -> "DPsim::Components"
+Former-commit-id: c2cfcf5ce6c0f590aa4bae0e521125173c4a08ed
+f14ae961b010dade1530964f16e880b151c501d7 refactor: components should have no default constructor
+Former-commit-id: 9fe889c7bf8a70c5c6675017173282b77d353ced
+92690f6ce05cae51358aa059a5ee71b05be58854 refactor: name base class files "Base_*.h"
+Former-commit-id: 607a9ed308c209ee60fcc581b426a973861c6963
+6fc3896fbf08c9be03a91ddd92e4bf4f2706e30a refactor: use common base class for current sources
+Former-commit-id: edd5feee849b4f0bf470d101c8ea0e7d593d878f
+888c6b82ec2cb4d1b174bdd48f4e18265979b16d refactor: use common base class for voltage sources
+Former-commit-id: 1b6fe35df0ae73d19b22ed23afbe9206facbdfe6
+64026bc9de527f6de55db8d8af501aeb8b382f49 fix compiler error in Exciter
+Former-commit-id: cb0b169fc5cfa99dffd2855da693b7e4d347f5f0
+fa32bfe8bce33a23b24027a410b81a57cb2c3ffe fix external interface
+Former-commit-id: 2a2a99b5d24c6ef0c61f7fe0f813119ad8848250
+2c1f759bb5c7d991b8c60b3c3d4e399ebec1b466 add setter for Voltage/Current sources
+Former-commit-id: 83c749fb37b202cedeb427f92fdd1f30e413e796
+5ca9658b01b8fe98a5be4873ec5ffd79b5eb6842 refactor: remove superfluous #includes
+Former-commit-id: 1ac5c121bf592870bcac4d3168a58b801e16df71
+7916e9b3d3221b0d0c5cd96513b1232d365b19a6 code style: avoid using "this->"
+Former-commit-id: 48d36ff78d57b64e05463e5827d3cf8fd8927d73
+a9943807470471d317f234121a45e80fb31c80d2 code style: unify commeting style
+Former-commit-id: 8a9c67c00d7aaeb88499d6b1c3553617a5bf19c7
+ac0a4b6cca1175c7e1fab3279aa60334fb65040d code style: fix indention
+Former-commit-id: 7379b60fde55c45f1b5be282d0e24c25ede48c7c
+aca93f368aa08a90136b1e2348cb3c62e45980ee  code style: prefix member variables with "m"
+Former-commit-id: f7a2ceba1a09746ab0d9eba84b9dfc2e9ec294e0
+82f46212269483e7562cca8cdd00d90af8639262 code style: remove / add superfluous / missing empty lines
+Former-commit-id: e78bfe11cb12cb2e6662716dbb6906cf38094a86
+04cb6e5edf8e8950c3eb74a27b4f6d38100747e4 code style: use consistent style for opening paratheses
+Former-commit-id: 794d821f9a242441f42081a3b5cc8f6f048323e9
+1179802a1cd7e1bbc2b30c94539cdf7b6065323b refactor: use proper signature for main()
+Former-commit-id: b4f8e019ac2b4a5fe3b363747cc13815706408c7
+1a0f276bdbcaa771ba91dd9f31beb2d62979b483 refactor: remove obsolete utility functions
+Former-commit-id: 219b803864d3f3428dbfbd8a808234005cf497e1
+592d2f1df5dbe31fabf9d0621f5454755735de0f refactor: remove Common_Line.h and and Common_SynchronGenerator.h as they are currently only used in a single place
+Former-commit-id: 651e746f987b36a0da23e5f5470c852dc9d9cc72
+d2e5550e689ec6683215cf4408d25b752e522934 refactor:
+- SynchronGenerators::Add{Governor,Exciter} -> SynchronGenerators::add{Governor,Exciter}
+- SynchronGenerators::With{TurbineGovernor,Exciter} -> SynchronGenerators::mHas{TurbineGovernor,Exciter}
+Former-commit-id: b82e78c0202f0b294e60468c816921f7fef67ebf
+03639fe211160c04a4c965f8f0a95eae9106aa08 whitespace and indention cleanup
+Former-commit-id: 35ca0bbbfbf380c5aed7a24e777d692e3c01fbd6
+b7f1062e5667c03824ff5367e425f06cf1a13e6f major refactoring of component classes (closes #28):
+- Introduced new namespaces: DPsim::Component::{DP,EMT}
+- Renamed several component files and class names according to new schema
+- Renamed C++ synchron generator examples according to schema introduced for circuit examples
+- Added missing examples to CMake
+Other refactorings:
+- CompAttr -> Component::Attribute
+- AttrType -> Component::Attribute::Type
+- BaseComponent -> Component::Base
+Former-commit-id: 9242f3d58dd41b822b27cb70cc0703ad222a285c
+e5fc2938206ba126d59857db40e82a96146d8515 added missing license and copyright headers (closes #23)
+Former-commit-id: b3fef69fe770ed20b81d47d76aa61aa6b6a63096
+e2ac3be17d31b1cc510827865e88297d64d3d009 examples: fix hardcoded path (this is still ugly)
+Former-commit-id: 27a8103b378c4df2d03d7c80ec4c4356bcb8b17a
+095ed4ab8ca457028e44f90dc11e0e27a71bcabc cmake: install libraries to correct location on Fedora
+Former-commit-id: f8f371c37311a8ee00ecde3dae9165eed393ed0c
+1f03cdc2e177d2b63ccd571b0b7712940bd6d7a0 python: add setup.py for installing / packaging with setuptools
+Former-commit-id: 69b70eab6b3bcecd6a35abc0a7386815bc9c1896
+2f60da1c7e9e4c07b3d2508bab5bcb19cf8b93c5 python: fix CI test with new wrapper code
+Former-commit-id: c0a51fccbd7f076e7f7739cb01caaff2fd5db970
+0dd9c9ffaab9a8767d6c5273cbee883c75831a74 documentation: restructured Python reference
+Former-commit-id: 8704d7a8cdf30103c3efa8b02d88fec34480809f
+98485f22f3f69f596b24967504abd12fdc7017eb python: added more wrappers for new components
+Former-commit-id: e0c68b418ba6100d8443983505d553640b1d323b
+2ed5cb38a81dfb3dd2729a82a3e14d86ce1584ac python: move component bindings into subdir
+also added new components
+Former-commit-id: 5765e85eef77e66279720976a1fa77ee32d2b936
+d480fa6af97b34b100278967f27bd04d24609f48 python: include dpsim.load_cim() even if no CIM support is built in but throw an exception instead
+Former-commit-id: f3c2250f403a0cbb8fc4cd711b1dfb3f0a1fe980
+65383a2142506afb7581819fabd771df920d695a use tabs in Dockerfiles
+Former-commit-id: d111a2fe40cac512ec1e964481cf19a0ba97817e
+d6fe8cae1b48ac9ea80ee61e90301712e925466c cmake: make compilation of examples optional via -DBUILD_EXAMPLES=OFF/ON
+Former-commit-id: b365ea9010a5fe4b48e4616b3fc8131c3cbd4255
+746cb09befcd7b5928ae708654a4a3f7dc6426d6 python: fix generation of Sphinx docs
+Former-commit-id: 00471b00eabe8f465c461e2f11e7a91517c3467b
+04a840f669b2976cc420c2c250d006a17a04b824 python: separate libdpsim.so (C++ library) and _dpsim.so (Python bindings) into two libraries
+Former-commit-id: a86ed81d83481a60a1bd961a54c6fedb20a3817c
+82987da8b3ec4e32949f7480021a1cd8785c7fef python: rename native Python extension to _dpsim and add Python wrappers
+Former-commit-id: c877f40569768980286c80fac365ffd53c01cc6b
+6b4c6316f566b82ee86f82b2a2b5d81048276e68 documentation: fix capitalization of filenames
+Former-commit-id: 4cdd7c0ab3eaf0e34f577b99a81703bc8e4807a6
+08deacb4a0fecaf6b0233c4e9f73a1f0e2082705 documentation: exclude certain parts from Doxygen as they break Breathe
+Former-commit-id: f19f5b55a40ebb0567691685d17535c2e577be8b
+61753f8f38bcb6031f72d713be2f30a9a9205440 documentation: another fix
+Former-commit-id: e35041c6aef546af3777c5114d9a2be7554b7d39
+29676ae10ad6057c6a84f6ff92c383dd7b700e23 documentation: added first version of getting start guide
+Former-commit-id: beae6936a0753c0f626e6be065e5e260c7552c11
+b0c08ad058d86c296c1c7d5f52631e2807127cb5 documentation: refactoring
+Former-commit-id: 14c63c2f366aed59960f12efdb98088213299545
+b6c665eb90ab196c7188aa9ead34d714cc337ead documentation: added changelog and license to Sphinx
+Former-commit-id: fb8edb2db0076c00515f0a83d7e6c897304acfaa
+4a65e874f4578d0e1a855afdd51c0565fc9bf02b documentation: added C++ documentation to Sphinx (via Doxygen + Breathe)
+Former-commit-id: 1e0a42061e91b9e990319bde72fb59aa4c1712f7
+1edef9ea9ce5c22b488321af8dab79296139ce22 refactor: remove invalid Doxygen command @license
+Former-commit-id: 7bae83fe06c298bd42567278d2c4294a3ffeb2da
+301ba418eb32cccf3dbd897d7bb1507a56bc9875 python: moved shmem examples into Shmem/ subdir, just like for C++
+Former-commit-id: 1d3171ac2c4a8616b0b83a802ae7a95e36af4401
+7e2623573833538773d9f2adb0e27d749f126483 added an editorconfig file
+Former-commit-id: cd1804dec51f357eb3a1ec3bb4915d587e809e26
+172d54959ade730e27e93700f1d5b50e67d7df44 removed obsolete Dockerfile for serving docs
+Former-commit-id: 853acbf8412ab1064e53ac439727c0bb720e51a9
+e68fb35c4a15072d08c8a032d985127644558f7e logger: imprive alignment and padding of output
+Former-commit-id: edc5ef7e4aa241cd6517a8d96ebeb413f95efe4b
+061686b95410f2d6fac1b16a2e199def93fca51f python: parse CSV header
+Former-commit-id: 0258015093f0aa19785541ab27e11d3f56c64753
+ef50c30969c8b65dec716f226bcf94313285b6b8 python: fix undefined variable
+Former-commit-id: c7975193b9f20e4b05f3764a868e4de8a51ae1ad
+6c40665015ea2167851195ce0a99025d06a0ee79 logger: some whitespace cleanups
+Former-commit-id: d0ace68a5d11cf97bd2dc94193354fa151ef68e4
+bc1d04cafa108b598193ee740afcd9bdea2e844e logger: use ofstream position instead of time for detecting beginning of file
+Former-commit-id: b8f4977918bc837c655180775c5d55c21a6d7a76
+b4767f04ca4428de17550ab470f90827b461cbe9 logger: move code to print file header into separate function
+Former-commit-id: 60859c0f59e3421145057b0f7a4acede8a7a1eb4
+d293a0eb60feb717da7b8a1dded658eb33bd034b adjust names of result files
+Former-commit-id: 668071a99671d41d33a24d027ace9c2439e87c10
+73ee782e4d8cd47b00c4d9a1a11d5beb266856c8 moved more examples
+Former-commit-id: a15df98b31d447b084a29ba19f19557b614f7f0c
+7760a9402b5a30a8729882fc3cd27ad099892a57 moved variable frequency study examples to separate folder
+Former-commit-id: c25e1bae20aed512f54bae264ee01b1df979df56
+1c1ce815fcfe47f770cc0af04a6eb49225d4dd08 renamed examples
+Former-commit-id: 6b6a248510e107e08705a9d56919a8ffc9802f0b
+dcaf066e8dff613a46f6dacda31f5acbc3c9cfa3 remove duplicated refernce circuit Example1L2 which is exactly the same as Example1
+Former-commit-id: d7796f30f6a154edab77cca8b69300f163589137
+31535a63f3d1a4c3c8e84a564468083a749ab9f6 use same names and directory structure for Python and C++ examples
+Former-commit-id: 2b9a2e81df06c3c3fcb2545394b2919b00fbd450
+a68a2ee76c4a42c79dd04a59051ce10f3ce89896 logger: fix directory creation if relative path is given
+Former-commit-id: 255bd069efec765311b1f6c1803000e60beab23b
+f36054e9ac16915154eb70dd4d586ca73b7ddbbf refactoring: use range-based for loops throughout the code base
+Former-commit-id: 86ec9ebfbc3a55e0ff278bfba124f4805707829e
+e2602ca10258607ddea61019cfa292bc0ad67eb7 logger: create output directory if it does not exist yet (closes #14)
+Former-commit-id: 3a1af48e43754399491dd832fabbd90db6449a49
+6ffa477fa53f87a6b53f3fd8905cc91a5e16ca00 only build packages for tagged releases
+Former-commit-id: 24296c06fff67417becdb937e147a85e8c4ba5c0
+496e15a7dd413625fba4f14ae0289c9893235506 ci: optimise build time
+Former-commit-id: 773eed291072aa1941817f8258517c8658c2bccb
+35377a1de8086374a908e9d0f681e785bc926249 ci: fix Python CI tests
+Former-commit-id: 1791a2729715440a71ad0c38f672b9b2183260e7
+a5161b5cdf8bccf4b3fbbe0b477c289e88ffc0ca fix Python CI test
+Former-commit-id: 6c7b78bba2e9b68aa11df25a3fe8f31dbb6ec55c
+766451ecb751dd5ad90055f8649b8438f84fab3d python: fix shebangs for python3 code
+Former-commit-id: 665a44423c1d379bc93109170a8593cec9b64fe4
+d21b7558c53f44b91de0e8af84f5418979617967 python: hot fix for initialization of shared_ptr
+Former-commit-id: 18ee5ba537c259615496b807164ddb9bd2f0d756
+e5e7215d0d50a485118f8748e0c4cce4674e753d fix invalid branch name in CI builds
+Former-commit-id: 88998a3fc3fef458d3914e50f99a59a9ed4713a8
+35eebd6e0e0377fe56b50a205cfc5ebf98978d6e ci: fix typo
+Former-commit-id: e9bc8525fbf847db0f0947b07108a3ac48b0b3c0
+62a336560cdb751717bb20c7a7ca985522f4409c add changelog
+Former-commit-id: 0c23114adc3a547cdde860e747e8a22cae5f0654
+5c08f880f39f38a29ab9cf47d9e28b5b006db890 cmake: add new version variables to Config.h
+Former-commit-id: 06ef6119c996c3319901fe699fb80e00b4e0c360
+20954c927d98565d4d9415955b8e67d6dabed62a ci: build packages with ci
+Former-commit-id: 90b428e1420c3d8c4025466a2adad9517f23f5b5
+bec15ace078e40fc1444b48dbaecb65dbf553f91 cmake: whitespace cleanup
+Former-commit-id: 0e2d19c16785c1ea90bb1c475875e3451e38eae5
+6740550ce4f714cfcbe185e960acae3abd70f535 cmake: build packages with version information from Git tags
+Former-commit-id: 50e3b1e6fdbf912aeb47aaff8f2f3b11f86a6aa6
+3d01aac6e6b5e02d4eb113eeaae8b2ddc2d6653f cmake: add new function to get branch name
+Former-commit-id: 3336af166b779f080a45b1c5f5c500c07882e45d
+d2b32111407daa404d8f7e582ce31505942e2fad cmake: added functions to get Git refspec and hash info
+Former-commit-id: 455557c28673aa524b7cdd18da6ecde9be86c1c5
+c9159d46b7966a26c1b4a2520df8a9979dc050a6 move ElementPtr and ElementPtr typedefs into BaseComponent class (closes #16)
+Former-commit-id: bfdac6da654518593e2130427452cfcaceac62f8
+3bb586760cb8c24028a82a9e8b025bb19cf19c60 fix Sphinx warnings (closes #18)
+Former-commit-id: 7c4c3db046c61c9696e80e68edd8ad7edca2b213
+ee7b86747b4a0d90214e56d1e5c6a4255d1ed4d8 update links to documentation
+Former-commit-id: 3e9a024bdeab767353d96d87816ae9038a99e09e
+4c0852507526ef68ccd832365a367313031b2d6b fix Sphinx docuementation of Python module
+Former-commit-id: 8373588d4151fdedd251f356299b71855fe10e14
+36c081e5e66320048b3ac3fb80634aac5e93166c fix compilation with Python but without CIM
+Former-commit-id: 857df2a36cd010a05b7d98011b616310390ef08c
+dfa8b97f19fdced7b7542e35bcb02cafeb246731 add SVG graphs to Doxygen docs
+Former-commit-id: 6abe350c44f97766c6361bfa2ee5a4c6fd171d8d
+d95f12aa12c6568302b0471cdde78d1b383bda7e do not create html/ directoies while deploying
+Former-commit-id: 195370018f73f4eec4f7e86a183dd752c6e4476b
+73b5f2cb33e02bb783c7dbead286424a1584336f use correct Python version to build DPsim Python module
+Former-commit-id: 904289ed13fe6b32dea07e7ae789af89a87f2ba6
+eadf60ec01a7cf3cb2b3e29e6ce239cc938b3b4c fix CI build of docs
+Former-commit-id: 72942b932787ee62eaf8f9d1ce45d4152ad85145
+824a2ff9b9c3945a70c97f5add274db98a64aa0e deploy docs to dpsim.fein-aachen.org
+Former-commit-id: a645c806fa035a07fcc59cd16f0305b2e7095df3
+db82f085eff2ffea51d0cfa7bc38feaa3344fd0a add missing python dependency
+Former-commit-id: 9dadfa55f64be978dae94d6e6ddd4acc39d2ad0e
+caa30851b58f66c7c95f7bc91193f08628db6613 fix missing package
+Former-commit-id: 8b1ed04f5655958a494173b79be4bdf1a7c0133a
+1f91f4dad298ad5efdb2049c19087ccc0022f16c add python dependency
+Former-commit-id: f1beed0e180ff0320075dd64d76b69704739cb84
+b1ee441b673531adaf140dd243061aa3c9fba671 libcimpp package does not exist yet
+Former-commit-id: 45e411bd100c22368f99c864d8e1f987e8ca8a43
+daede2d710aaadbdbb8859bda2fb6708eb2f57d3 use Docker image from official registry
+Former-commit-id: 3a9804f1171e1a19609157cac0522238caf04dd5
+944c8e91db1e3718e0e3cc119bd3161fffe26dbe fix CI
+Former-commit-id: eb585e82e6b56da627cebe44f0874e8d030a6259
+6673dc814bda8b4fef09bf5f30ff1bec4ffca563 more improvements to CMake
+Former-commit-id: 9069f2e53cca043406e38f3a94c29461f3b2ddb6
+1b21a3557bf0909bac35797ba409cf95c4d008fc whitespace cleanup
+Former-commit-id: 1984b55cd529c5565c1b4c07f786a0edf3310464
+c90d66f0880cb978244f4eab692cafa7a66cb7e1 fix compiler warnings about signed / unsigned comparison
+Former-commit-id: 3a5fe4a38c88fa67167742615f77bfd8c2b75ed9
+43882019d05b6a7acfe1b1a6b4c2ff939e68c3cb remove constructor from Simulation class as it is not required
+Former-commit-id: ef40dc86469cf36c4cdb7e8612f6793b6a7bc85e
+40318a833dc36ad78d6cf3f08b934d27d734272a moved C++ examples to Cxx folder because Visual Studio does not properly escape plus signs -.-
+Former-commit-id: 1c3340846c9e587b736d925a04959fc1996098c8
+b664da055481036d6ecfa7d531532c10e9553cdc fix CMakeLists for examples
+Former-commit-id: 7572fb95d839b1ff92c6349b44e268fa633ee7ea
+0c587db0ecc0e4ac2beda3dd772aafe99b59d657 fix reference examples:
+- main() always must return int
+- do not put examples into DPsim namespace
+- several other smaller issues
+Former-commit-id: 295435a24b7a943030fb9d16630e0e72ebd717f9
+0e109bbe2a3ac59ecffe8327a4e88f3f8cd799d2 fix CIM example
+Former-commit-id: f848c655aab02a1ea280f975a310abaa73fbddf4
+3e3d2ed41634f1b04c7c12c7b1870107549c8f95 removed DPsimExample main() routine. main() rountines are now all in their respective examples
+Former-commit-id: 7913c82094196486d655806540638e7ea089c8b3
+63413dce9192f572a0ffdcc4997bec361bb5d506 splitted synchron generator examples into separate files
+Former-commit-id: 58e57306674d32b606cfe50bd4c4fc032ba77c0f
+a246b9f88734e22036d341b0ad8c7a3d5e986a2c splitted shmem examples into separate files
+Former-commit-id: 945c015ddff9f6df7fbcefaac1832fb182b86d82
+a1fb49b036bae0226a2d0cac43b05f7109ec20ae removed obsolete Python C++ example
+Former-commit-id: c844b5b8e969768216f87e15472273ab9e946301
+920ecfcdd14eb66140eba86bc791daea56ca2989 add Config.h to conditionally compile Python, CIM, Shmem support
+Former-commit-id: 93b490cea77a4e1669a19fcee8e54cae3587e994
+1c5bf8143217ef2d7a64fc0f4a2a6c2ba2651ba8 do not mix STL with Eigen includes
+Former-commit-id: 1a48ad13ffd895bd5fcd41f44e8d802095e98673
+d9684742ee3c7c58ab8359337ab832d519d560cf python: fix after introduction of Element{Ptr,List}
+Former-commit-id: 4b5b41c6f3ad394d60054861bfd0f7e9ca8269a5
+17a87d93b22a77d90847482a169a7fa613eeec9a a bunch of whitespace changes for better readability
+Former-commit-id: b3b0d642e2f260c0fc74226917866500cb0aacd5
+e4c1b60d0e51feb344511c1244ffadc388ac727e updated Components.h and sorted it
+Former-commit-id: 6d34d6db5c72ed379aa57c5c6eb096a803012ae8
+233d14433f570303713de11c6c0e8b2fde911691 do not create typedefs for shared_ptrs
+Former-commit-id: dd27c182362ba0904aa9dda2b0c273531013fff4
+bf02b02c7ec71e34b664bf8491f11f59ebc60111 cmake fixes for Linux and OS X
+Former-commit-id: 3fe728c7399d90b20b1594b92ad887a07bf656f2
+09ee417ea493dab486207131d13a0d0b83dbaaf3 remove #pragma once from source file
+Former-commit-id: a8ea943c33803581c3bfe29fdc558c5d76fe1414
+338031d380057c7932074668812b3e2aea9905a3 move CIM related code into separate namespace
+Former-commit-id: fc93a6060bd031bd3c22fb0933d9e1cd59f9929f
+6eacdac1277545ae9804648bb4b392814761298d fix compiler warnings (closes #15)
+Former-commit-id: efadd6214567c0bd0fb53809d2c6c5fb83f34dec
+9e408dc2b10980a7217c71ae30b05dfee5883e12 added CMake module for finding CIMpp
+Former-commit-id: a4aed907dfd1df95a9093cf2f7f66a8766aafd91
+ba8ceaa77fa2b0cb96ca3c5f5807cbd326a873c3 moved CPack packaging to extra file
+Former-commit-id: f3990445ea0d06cdc92905fcaca3bd9f742c7a0c
+8032cc620f8c02b227d6fb4ad782ad36455056da fix CMakeLists for Windows / CLion
+Former-commit-id: cb7378fd9df8af5456f108b2b658a408a741f4ae
+f7f3c9322690c822d0929441b124c1d61da6652e remove VisualStudio files
+Former-commit-id: 1ac216c8382dca4889f069c8afc6d4b4f42a88f6
+05d8273236bc1dcaa544a21637e7c9d155ad1b97 build documentation only if Sphinx is available
+Former-commit-id: 6e311eacb7e7c3d785a2809827273222d5468a72
+544f8836be8b26e825546490091a265b3e3d1f8b fixed typo for GCC / Clang compilation
+Former-commit-id: ecb0009b4fd516c58085fec6d0b752129716e8dd
+91f8f8784d0f078645ae1da93553cdcd141f8d8b moved images to Figures/ dir
+Former-commit-id: 669fc544aa94ff1ab98d021399cee7976f1598d1
+559a5f072e90587afbb6ce6c9d814c92f7ec6927 added some more features and usage info to the README
+Former-commit-id: 72217731d45002e7b49f9ff0b28fcdb7e0b01545
+9a3de180858235bbf4b48b25c1571540a2224214 remove old license
+Former-commit-id: 976ae63995e8ca00a009f6391540a0ef408418ec
+566fb9cb180203f358537f34c387e723d3bdd43d added logo to readme
+Former-commit-id: 8918382cc79b7ef644cfd8a7e303926dd3aff592
+bfcce4c6739158bad4c639a2860ff269d16ca0c8 move build instructions to Documentation
+Former-commit-id: 535e388a0ff211751c27a7ef8b57837f6ed58e3c
+db4804b42b55caf3351796dd875b4b6c4ae7687e updated README
+Former-commit-id: 077af0a35a77f531deba0a049775d89a63b791f0
+afa76dc37346ea46346bc0c73f94ce7fe1b6ef4d whitespace cleanup
+Former-commit-id: 3643bdae3432bfcb872da8d8347ca377af0b4045
+d292367100a16de2a5c6b342123102cc0e57472d fix include path
+Former-commit-id: 2550a63b15edd7fa0e6b0ab816678fa59fbab5f1
+f2539d498f6c1862fe55fe03a3ad6d7fe907fb74 some cleanups for the C++ examples
+Former-commit-id: cd316b8b08c2a3d6be1d4d58899c8ef911b4126c
+25cb420cb221c83659664efe563377e8a9076ecf some cleanups to the Python examples
+Former-commit-id: d6d1d987a33447d1b006690fbc7f28c13defb108
+2814b14e43a527b10da2259cff15cae00b5a42f4  missing CMake module for building the documentation
+Former-commit-id: 1d480b9bba04d1c59439dd8803b73fe2138853fb
+0afd80248819f8f8d6a3b54a433372e85d91aaae update gitignore files
+Former-commit-id: 6c8b7a000a3afbd77ccfdaa161a9b0e598cfe154
+c2986a5b9899abf899b41adc60a821979bb0b088 build documentation now with CMake instead of Make
+Former-commit-id: fc99e002e92bfa06d18b7385bee0ebb1b327b760
+805fc60a19ce140680a3458eb9748a7a602212c8 do not declare unused variables to avoid compiler warnings
+Former-commit-id: 8886beb41b199282af47ce24a585808f9bb73b1d
+e84498a69bc8f50e2c77ff66d598e718efa9295e use cxxabi and typeinfo to show the correct type of the component in log
+Former-commit-id: 869d18462b322336539b45bda66683d5158ed3df
+a849e421f72600037eba38acda2a5f7fd3b9e0f1 add some CMake files to gitignore
+Former-commit-id: 9d0c6b9cbe30bfcc65ef7941a662c9d20cb878cb
+a86a92181fc1220ee9b35ea503413752cdeefda2 Netlist code was removed in b15be9d024bd53e617abed323d38f1b74c892ca8 [formerly 5e3d3b8af28e954e2514e0b034dab21d9bd9ad07]. Lets remove the netlists as well
+Former-commit-id: 002dcdc464cef2502147b7941ae0b28fd2db766a
+a1ab7d66764cac53c9f839a56a4d2e93d3130aca - add license to examples
+- use #pragma once
+- fix include paths
+Former-commit-id: 0b01f7fa7ffc7044a216fbbdf87734e78b6f3f64
+3fb24c9110db1db04fa534bb06df5448b848a07c fix compilation of C++ examples
+Former-commit-id: 1c88a99fe4308de9240ee24fbaa8b52b3056b15c
+8d42a811849b7972bc684d6d3b55060f3c285a34 move Python code into subdirectory and separate namespace
+Former-commit-id: 1561215be6f5167c137e771f1f2c29853d47e840
+f7a3c1703e2b7e5f137f68962765d37dcbf8dd9d DPsimMain lives from now on as an example in the Examples/ folder
+Former-commit-id: f8d3b5c4a31481199bef63629204da79467f36f9
+3a46f1a706b7b9cc4ef912f1bbd14bddfeaee7e8 require same CMake version as for CIM-XML-Parser
+Former-commit-id: 7e84f486adec6094d998cd76697d61562357397f
+425dc3b8b33463f13b1480fbf7c2898820a9e6c9 use #pragma once througout the code (please do not use #ifdefs from now on)
+Former-commit-id: df90bfbbcdffa35fec1000c1971c27985daa4421
+d75a66b13094b8ea383cd3dd2a59fcbd74aefa42 whitespace cleanups
+Former-commit-id: c8b00904bb0ec011caf5a1d416837fad0b3f554c
+fed1b300adf37f81a4d971ce4b664825118a7dcb added GPLv3 headers to source files (closes #9)
+Former-commit-id: ad2dea7fb287fa4cfe2a1a8ef2e9386537f5f35d
+1eb7e888c06252172f5b4beef18adc7edf263125 moved Source/Examples to Examples/
+Former-commit-id: 12f872a92395e7316c26259443001b1498b4b6b4
+2031d21305b20c3ba53f32fce5418b30a5e5d3c9 whitespace cleanups
+Former-commit-id: 1be79696439fd697a5fde79a5d357bc9e3417444
+51f8bfe4f3fc57687de579451edd6826aaf572f7 unused variables are treated as errors in Clang
+Former-commit-id: 03ac5435ed75e9b52e6b94a133a4724da9c21ffc
+828f9531c0f09a597fa20ae3e26088a46cc6a235 add --std=c++11 switch for Clang compiler
+Former-commit-id: 4972d2ecbceac72226e0605ab99136dd6bec7900
+031414e32093213d455026d44debc667db4bc430 fix copy & paste mistake
+Former-commit-id: c7aa2bf605e992a16e697c6e9926051f76507cf1
+8687e4cd0fea4c74bf32d4384e1a926f83009475 pass matrices via reference to silence compiler errors
+How did this every worked?
+Former-commit-id: 2b52e62c32c9429d67d08de1494106a3e9d4bbd1
+8a04054a1703bdb3e80b1462696fc42014ce8a9d add Dockerfile and GitLab CI configuration in order to build DPsim in a Docker container on the CI
+Former-commit-id: 25c36d2e1d15e7631c6ee94548a79a9d4c0f356d
+de4a03b811dae2d7441302a446c25b755680a022 search in standard location for Eigen
+Former-commit-id: c9310bac6e209da1b93386e119e21f011f92cc3c
+b3397eaff3d785202d6d1333400b66891454ca9b compile examples to avoid undefined references
+Former-commit-id: 095db5bbf729884810ff9d3b4cdb805557d92e04
+
