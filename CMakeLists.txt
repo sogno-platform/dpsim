@@ -125,7 +125,6 @@ find_package(VILLASnode)
 if(NOT PYBIND)
 	find_package(PythonInterp 3.6)
 	find_package(PythonLibs 3.6)
-	find_package(NumPy)
 
 	if(PythonInterp_FOUND AND PythonLibs_FOUND)
 		set(Python_FOUND ON)

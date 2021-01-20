@@ -32,15 +32,15 @@ void OpenMPLevelScheduler::createSchedule(const Task::List& tasks, const Edges& 
 }
 
 void OpenMPLevelScheduler::step(Real time, Int timeStepCount) {
-	size_t i = 0, level = 0;
+	long i, level = 0;
 	std::chrono::steady_clock::time_point start, end;
 
 	if (!mOutMeasurementFile.empty()) {
 		#pragma omp parallel shared(time,timeStepCount) private(level, i, start, end) num_threads(mNumThreads)
-		for (level = 0; level < mLevels.size(); level++) {
+		for (level = 0; level < static_cast<long>(mLevels.size()); level++) {
 			{
 				#pragma omp for schedule(static)
-				for (i = 0; i < mLevels[level].size(); i++) {
+				for (i = 0; i < static_cast<long>(mLevels[level].size()); i++) {
 					start = std::chrono::steady_clock::now();
 					mLevels[level][i]->execute(time, timeStepCount);
 					end = std::chrono::steady_clock::now();
@@ -50,10 +50,10 @@ void OpenMPLevelScheduler::step(Real time, Int timeStepCount) {
 		}
 	} else {
 		#pragma omp parallel shared(time,timeStepCount) private(level, i) num_threads(mNumThreads)
-		for (level = 0; level < mLevels.size(); level++) {
+		for (level = 0; level < static_cast<long>(mLevels.size()); level++) {
 			{
 				#pragma omp for schedule(static)
-				for (i = 0; i < mLevels[level].size(); i++) {
+				for (i = 0; i < static_cast<long>(mLevels[level].size()); i++) {
 					mLevels[level][i]->execute(time, timeStepCount);
 				}
 			}

@@ -68,7 +68,7 @@ function(GetVersion DIR PREFIX)
             set(VARIANT "release")
         endif()
 
-        if(DEFINED ENV{CI})
+        if((DEFINED ENV{CI}) AND (DEFINED ENV{CI_COMMIT_SHA}))
             string(APPEND VARIANT "-ci")
             string(SUBSTRING $ENV{CI_COMMIT_SHA} 0 7 GIT_REV)
             set(GIT_BRANCH $ENV{CI_COMMIT_REF_NAME})
