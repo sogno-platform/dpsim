@@ -122,17 +122,18 @@ void DP::Ph1::SynchronGeneratorTrStab::initializeFromNodesAndTerminals(Real freq
 
 	// Calculate emf behind reactance
 	mEp = mIntfVoltage(0,0) + mImpedance * mIntfCurrent(0,0);
+	
 	// The absolute value of Ep is constant, only delta_p changes every step
 	mEp_abs = Math::abs(mEp);
 	mDelta_p= Math::phase(mEp)-Math::phase(mIntfVoltage(0,0));
 
-	// // Update active electrical power that is compared with the mechanical power
-	// mElecActivePower = ( (mEp - mIntfVoltage(0,0)) / mImpedance *  mIntfVoltage(0,0) ).real();
+	// Update active electrical power that is compared with the mechanical power
+	mElecActivePower = ( (mEp - mIntfVoltage(0,0)) / mImpedance *  mIntfVoltage(0,0) ).real();
 	// For infinite power bus
-	// mElecActivePower = (Math::abs(mEp) * Math::abs(mIntfVoltage(0,0)) / mXpd) * sin(mDelta_p);
-	mElecActivePower = (Math::abs(mEp) * Math::abs(mIntfVoltage(0,0)) / mXpd) * sin(Math::phase(mEp)-Math::phase(mIntfVoltage(0,0)));
-	
+	//mElecActivePower = (Math::abs(mEp) * Math::abs(mIntfVoltage(0,0)) / mXpd) * sin(Math::phase(mEp)-Math::phase(mIntfVoltage(0,0)));
+
 	// Start in steady state so that electrical and mech. power are the same
+	// because of the initial condition mOmMech = mNomOmega the damping factor is not considered at the initialisation
 	mMechPower = mElecActivePower- mKd*(mOmMech - mNomOmega);
 
 	// Initialize node between X'd and Ep
@@ -170,14 +171,12 @@ void DP::Ph1::SynchronGeneratorTrStab::step(Real time) {
 
 	// #### Calculations on input of time step k ####
 	// Update electrical power
-	// mElecActivePower = ( (mEp - mIntfVoltage(0,0)) / mImpedance *  mIntfVoltage(0,0) ).real();
+	mElecActivePower = ( (mEp - mIntfVoltage(0,0)) / mImpedance *  mIntfVoltage(0,0) ).real();
 	// For infinite power bus
-	// mElecActivePower = (Math::abs(mEp) * Math::abs(mIntfVoltage(0,0)) / mXpd) * sin(mDelta_p);
-	mElecActivePower = (Math::abs(mEp) * Math::abs(mIntfVoltage(0,0)) / mXpd )* sin(Math::phase(mEp)-Math::phase(mIntfVoltage(0,0)));
+	//mElecActivePower = (Math::abs(mEp) * Math::abs(mIntfVoltage(0,0)) / mXpd )* sin(Math::phase(mEp)-Math::phase(mIntfVoltage(0,0)));
 	
-	// The damping factor Kd is adjusted to obtain a damping ratio of 0.3
-	Real MaxElecActivePower= Math::abs(mEp) * Math::abs(mIntfVoltage(0,0)) / mXpd;
-	mKd=4*0.3*sqrt(mNomOmega*mInertia*MaxElecActivePower*0.5);
+	// The damping factor Kd is calculated from a p.u value of eg. 0.1
+	mKd=0.1*mNomPower;
 
 	// #### Calculate state for time step k+1 ####
 	// semi-implicit Euler or symplectic Euler method for mechanical equations
@@ -189,8 +188,7 @@ void DP::Ph1::SynchronGeneratorTrStab::step(Real time) {
 		mDelta_p = mDelta_p + mTimeStep * dDelta_p;
 	// Update emf - only phase changes
 	if (mBehaviour == Behaviour::Simulation)
-		mEp = Complex(mEp_abs * cos(mDelta_p), mEp_abs * sin(mDelta_p));
-
+		mEp = Complex(mEp_abs * cos(mDelta_p + Math::phase(mIntfVoltage(0,0))), mEp_abs * sin(mDelta_p + Math::phase(mIntfVoltage(0,0))));
 
 	mStates << Math::abs(mEp), Math::phaseDeg(mEp), mElecActivePower, mMechPower,
 		mDelta_p, mOmMech, dOmMech, dDelta_p, mIntfVoltage(0,0).real(), mIntfVoltage(0,0).imag();
