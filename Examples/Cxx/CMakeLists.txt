@@ -57,6 +57,7 @@ set(CIRCUIT_SOURCES
 	
 	Circuits/SP_SynGenTrStab_SMIB.cpp
 	Circuits/DP_SynGenTrStab_SMIB.cpp
+	Circuits/DP_SynGenTrStab_SMIB_SteadyState.cpp
 )
 
 set(SYNCGEN_SOURCES
