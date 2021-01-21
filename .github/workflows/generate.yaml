@@ -1,0 +1,29 @@
+name: Generate
+on:
+  [push]
+# Works only on master?!
+# workflow_run:
+#   workflows: ["Build & Test"]
+#   types:
+#   - completed
+
+jobs:
+  generate-docs:
+    runs-on: ubuntu-latest
+    container: pfensch/dpsim:latest
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v2
+
+    - name: Create Build Environment
+      run: mkdir build
+
+    - name: Configure CMake
+      shell: bash
+      working-directory: ${{github.workspace}}/build
+      run: cmake $GITHUB_WORKSPACE -DWITH_SPDLOG_SUBMODULE=ON
+
+    - name: Generate docs
+      run: |
+        make -j$(nproc) -C build docs
+        make -j$(nproc) -C build docs_cxx

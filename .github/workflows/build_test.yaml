@@ -1,0 +1,90 @@
+name: Build & Test
+on:
+  [push]
+# Works only on master?!
+# workflow_run:
+#   workflows: ["Container"]
+#   types:
+#   - completed
+
+
+## Build ##
+
+jobs:
+  windows:
+    name: Build on Windows
+    runs-on: windows-latest
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v1
+
+    - id: build
+      run: |
+        cd ${{ github.workspace }}
+        mkdir build
+        cd build
+        git describe --tags --abbrev=0 --match "v*"
+        cmake -WITH_PYTHON=OFF ..
+        cmake --build .
+  linux:
+    name: Build on Linux
+    runs-on: self-hosted
+    container: pfensch/dpsim:latest
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v2
+      with:
+        submodules: recursive
+
+    - name: Create Build Environment
+      run: mkdir build
+
+    - name: Configure CMake
+      shell: bash
+      working-directory: ${{ github.workspace }}/build
+      run: cmake $GITHUB_WORKSPACE -DWITH_SPDLOG_SUBMODULE=ON
+
+    - name: Build every target
+      shell: bash
+      working-directory: ${{ github.workspace }}/build
+      run: cmake --build .
+      env:
+        MAKEFLAGS: "-j2"
+
+    - name: Cache build directory
+      uses: actions/cache@v2
+      with:
+        path: ${{ github.workspace }}/build
+        key: build-cache-${{ github.sha }}
+
+## Tests ##
+
+  test-binaries:
+    name: Execute Example
+    runs-on: self-hosted
+    container: pfensch/dpsim:latest
+    needs: [linux]
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v2
+
+    - name: Restore Cache
+      uses: actions/cache@v2
+      with:
+        path: ${{ github.workspace }}/build
+        key: build-cache-${{ github.sha }}
+
+    - name: Run Binaries
+      run: ./build/Examples/Cxx/WSCC_9bus_mult_coupled
+
+  cpp-check:
+    name: Scan Sourcecode with Cppcheck
+    runs-on: self-hosted
+    container: pfensch/dpsim:latest
+    needs: [linux]
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v2
+
+    - name: Run checks
+      run: cppcheck --max-configs=32 -j2 --error-exitcode=1 -q --enable=warning,performance,portability,information,missingInclude --std=c++11 -I Include/ -I models/Include/ Source/ Examples/ models/Source/
