@@ -19,21 +19,29 @@ void Signal::FrequencyRamp::setParameters(Complex initialPhasor, Real freqStart,
     mRamp = ramp;
     mTimeStart = timeStart;
 
-    mSigOut = initialPhasor;
+    attribute<Complex>("sigOut")->set(initialPhasor);
+	attribute<Real>("freq")->set(freqStart);
 }
 
-Complex Signal::FrequencyRamp::step(Real time) {
-    Real freqCurr;
+void Signal::FrequencyRamp::step(Real time) {
+    Real freq;
+	//Real abs = Math::abs(attribute<Complex>("sigOut")->get());
+	//Real phase = Math::phase(attribute<Complex>("sigOut")->get());
+    
     /// TODO: calculate signal value and set mSigOut attribute 
     if(time > mTimeStart) {
-        freqCurr = mFreqStart + mRamp * (time - mTimeStart);
-        if(freqCurr > mFreqEnd) freqCurr = mFreqEnd;
+        freq = mFreqStart + mRamp * (time - mTimeStart);
+        if((freq < mFreqEnd) == (mRamp < 0)) freq = mFreqEnd;
     } else {
-        freqCurr = mFreqStart;
+        freq = mFreqStart;
     }
 
-    mSigOut.real(mMagnitude * cos(time * 2.*PI*freqCurr + mInitialPhase));
-    mSigOut.imag(mMagnitude * sin(time * 2.*PI*freqCurr + mInitialPhase));
+    if(time > 2) {
+        freq = freq;
+    }
 
-    return mSigOut;
+    attribute<Complex>("sigOut")->set(Complex(
+        mMagnitude * cos(time * 2.*PI*freq + mInitialPhase),
+        mMagnitude * sin(time * 2.*PI*freq + mInitialPhase)));
+    attribute<Real>("freq")->set(freq);
 }

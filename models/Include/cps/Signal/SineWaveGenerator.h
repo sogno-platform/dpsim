@@ -13,13 +13,14 @@
 namespace CPS {
 namespace Signal {
 	class SineWaveGenerator :
-		public SignalGenerator {
+		public SignalGenerator,
+        public SharedFactory<SineWaveGenerator>  {
     private:
 		/// initial signal phasor with magnitude and phase
-		Real mMagnitude;
-		Real mInitialPhase;
+		//Real mMagnitude;
+		//Real mInitialPhase;
 		/// signal's frequency
-		Real mFrequency;
+		//Real mFrequency;
     public:
 		/// init the identified object
         SineWaveGenerator(String name, Logger::Level logLevel = Logger::Level::off)
@@ -27,7 +28,7 @@ namespace Signal {
 		/// set the source's parameters
 		void setParameters(Complex initialPhasor, Real frequency = -1);
 		/// implementation of inherited method step to update and return the current signal value
-        Complex step(Real time);
+        void step(Real time);
     };
 }
 }

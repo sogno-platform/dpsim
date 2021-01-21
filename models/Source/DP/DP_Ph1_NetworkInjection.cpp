@@ -47,6 +47,17 @@ void DP::Ph1::NetworkInjection::setParameters(Complex voltageRef, Real srcFreq) 
 				Logger::realToString(srcFreq));
 }
 
+void DP::Ph1::NetworkInjection::setParameters(Complex initialPhasor, Real freqStart, Real freqEnd, Real ramp, Real timeStart) {
+	mParametersSet = true;
+
+	mSubVoltageSource->setParameters(initialPhasor, freqStart, freqEnd, ramp, timeStart);
+
+	mSLog->info("\nVoltage Ref={:s} [V]"
+				"\nFrequency={:s} [Hz]", 
+				Logger::phasorToString(initialPhasor),
+				Logger::realToString(freqStart));
+}
+/*
 void DP::Ph1::NetworkInjection::setVoltageSource(std::shared_ptr<DP::Ph1::VoltageSource> subVoltageSource) {
 	mParametersSet = true;
 
@@ -55,8 +66,8 @@ void DP::Ph1::NetworkInjection::setVoltageSource(std::shared_ptr<DP::Ph1::Voltag
 	/*mSLog->info("\nVoltage Ref={:s} [V]"
 				"\nFrequency={:s} [Hz]", 
 				Logger::phasorToString(voltageRef),
-				Logger::realToString(srcFreq));*/
-}
+				Logger::realToString(srcFreq));
+}*/
 
 void DP::Ph1::NetworkInjection::initializeFromNodesAndTerminals(Real frequency) {
 	// Connect electrical subcomponents

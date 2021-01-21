@@ -17,19 +17,18 @@ namespace Signal {
 		public SimSignalComp {
 	protected:
 		/// current signal value
-		Complex mSigOut;
+		// Complex mSigOut; replaced by attribute
     public:
 		typedef std::shared_ptr<SignalGenerator> Ptr;
 		typedef std::vector<Ptr> List;
 
-		SignalGenerator(String uid, String name, Logger::Level logLevel = Logger::Level::off) 
-			: SimSignalComp(name, logLevel) { }
+		SignalGenerator(String uid, String name, Logger::Level logLevel = Logger::Level::off);
 
 		SignalGenerator(String name, Logger::Level logLevel = Logger::Level::off)
 			: SignalGenerator(name, name, logLevel) { }
 
-		/// updates and returns current signal
-        virtual Complex step(Real time) = 0;
+		/// updates current signal
+        virtual void step(Real time) = 0;
 		/// returns current signal value without updating it
 		Complex getSignal();
 		
@@ -41,16 +40,15 @@ namespace Signal {
         class Step : public Task {
 		public:
 			Step(SignalGenerator& sigGen) :
-				Task(sigGen.mName + ".Step"), mSigGen(sigGen) {
-				mModifiedAttributes.push_back(sigGen.mSigOut);
+					Task(sigGen.mName + ".Step"), mSigGen(sigGen) {
+				mModifiedAttributes.push_back();
 			}
 
 			void execute(Real time, Int timeStepCount);
 
 		private:
 			SignalGenerator& mSigGen;
-		};
-		*/
+		};*/
     };
 }
 }

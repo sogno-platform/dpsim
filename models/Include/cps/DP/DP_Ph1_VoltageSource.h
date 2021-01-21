@@ -13,6 +13,7 @@
 #include <cps/Solver/DAEInterface.h>
 #include <cps/Signal/SineWaveGenerator.h>
 #include <cps/Signal/SignalGenerator.h>
+#include <cps/Signal/FrequencyRamp.h>
 
 namespace CPS {
 namespace DP {
@@ -57,9 +58,11 @@ namespace Ph1 {
 		///
 		void setSourceValue(Complex voltage);
 		///
-		void setSourceSignal(CPS::Signal::SignalGenerator::Ptr srcSig);
+		//void setSourceSignal(CPS::Signal::SignalGenerator::Ptr srcSig);
 		///
 		void setParameters(Complex voltageRef, Real srcFreq = -1);
+		/// Setter for reference signal of type frequency ramp
+		void setParameters(Complex initialPhasor, Real freqStart, Real freqEnd, Real ramp, Real timeStart);
 
 		// #### MNA Section ####
 		/// Initializes internal variables of the component

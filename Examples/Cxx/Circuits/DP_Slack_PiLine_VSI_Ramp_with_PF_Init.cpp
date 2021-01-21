@@ -95,12 +95,8 @@ int main(int argc, char* argv[]) {
 	auto n1DP = SimNode<Complex>::make("n1", PhaseType::Single);
 	auto n2DP = SimNode<Complex>::make("n2", PhaseType::Single);
 
-	auto extnetDPRamp = Signal::FrequencyRamp::make("RampGen", Logger::Level::debug);
-	extnetDPRamp->setParameters(Complex(scenario.systemNominalVoltage,0), 50, 47, 6.25, std::round(2.0/timeStep)*timeStep);
-	auto extnetDPVs = DP::Ph1::VoltageSource::make("VoltageSource", Logger::Level::debug);
-	extnetDPVs->setSourceSignal(extnetDPRamp);
 	auto extnetDP = DP::Ph1::NetworkInjection::make("Slack", Logger::Level::debug);
-	extnetDP->setVoltageSource(extnetDPVs);
+	extnetDP->setParameters(Complex(scenario.systemNominalVoltage,0), 50, 47, -6.25, std::round(2.0/timeStep)*timeStep);
 	
 	(Complex(scenario.systemNominalVoltage,0));
 

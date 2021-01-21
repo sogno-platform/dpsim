@@ -32,7 +32,7 @@ namespace Signal {
         /// set frequency ramp specific parameters
         void setParameters(Complex initialPhasor, Real freqStart, Real freqEnd, Real ramp, Real timeStart);
         /// implementation of inherited method step to update and return the current signal value
-        Complex step(Real time);
+        void step(Real time);
     };
 }
 }

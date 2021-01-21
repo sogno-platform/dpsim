@@ -28,16 +28,27 @@ SimPowerComp<Complex>::Ptr DP::Ph1::VoltageSource::clone(String name) {
 }
 
 void DP::Ph1::VoltageSource::setParameters(Complex voltageRef, Real srcFreq) {
-	Signal::SineWaveGenerator srcSigSine {mName};
-	srcSigSine.setParameters(voltageRef, srcFreq);
-	mSrcSig = std::make_shared<Signal::SineWaveGenerator>(srcSigSine);
+	auto srcSigSine = Signal::SineWaveGenerator::make(mName);
+	srcSigSine->setParameters(voltageRef, srcFreq);
+	mSrcSig = srcSigSine; //std::make_shared<Signal::SineWaveGenerator>(srcSigSine);
 
-	attribute<Complex>("V_ref")->set(voltageRef);
-	attribute<Real>("f_src")->set(srcFreq);
+	setAttributeRef("V_ref", mSrcSig->attribute<Complex>("sigOut"));
+	setAttributeRef("f_src", mSrcSig->attribute<Real>("freq"));
 
 	mParametersSet = true;
 }
 
+void DP::Ph1::VoltageSource::setParameters(Complex initialPhasor, Real freqStart, Real freqEnd, Real ramp, Real timeStart) {
+	auto srcSigFreqRamp = Signal::FrequencyRamp::make(mName);
+	srcSigFreqRamp->setParameters(initialPhasor, freqStart, freqEnd, ramp, timeStart);
+	mSrcSig = srcSigFreqRamp; //std::make_shared<Signal::FrequencyRamp>(srcSigFreqRamp);
+
+	setAttributeRef("V_ref", mSrcSig->attribute<Complex>("sigOut"));
+	setAttributeRef("f_src", mSrcSig->attribute<Real>("freq"));
+
+	mParametersSet = true;
+}
+/*
 void DP::Ph1::VoltageSource::setSourceSignal(CPS::Signal::SignalGenerator::Ptr srcSig) {
 	/// TODO: Copy signal generator?
 	mSrcSig = srcSig;
@@ -48,7 +59,7 @@ void DP::Ph1::VoltageSource::setSourceSignal(CPS::Signal::SignalGenerator::Ptr s
 
 	mParametersSet = true;
 }
-
+*/
 void DP::Ph1::VoltageSource::initializeFromNodesAndTerminals(Real frequency) {
 	if (!mParametersSet) {
 		attribute<Complex>("V_ref")->set(initialSingleVoltage(1) - initialSingleVoltage(0));
@@ -173,8 +184,9 @@ void DP::Ph1::VoltageSource::mnaApplyRightSideVectorStampHarm(Matrix& rightVecto
 }
 
 void DP::Ph1::VoltageSource::updateVoltage(Real time) {
-	mIntfVoltage(0,0) = mSrcSig->step(time);
-
+	mSrcSig->step(time);
+	mIntfVoltage(0,0) = mSrcSig->getSignal();
+	
 	mSLog->debug("Update Voltage {:s}", Logger::phasorToString(mIntfVoltage(0,0)));
 }
 
