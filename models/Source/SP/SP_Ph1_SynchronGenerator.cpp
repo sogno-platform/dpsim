@@ -17,7 +17,7 @@ SP::Ph1::SynchronGenerator::SynchronGenerator(String uid, String name, Logger::L
     mSLog->flush();
 
     setTerminalNumber(1);
-
+    addAttribute<Real>("base_Voltage", &mBaseVoltage, Flags::read | Flags::write);
     addAttribute<Real>("P_set", &mSetPointActivePower, Flags::read | Flags::write);
     addAttribute<Real>("V_set", &mSetPointVoltage, Flags::read | Flags::write);
     addAttribute<Real>("P_set_pu", &mSetPointActivePowerPerUnit, Flags::read | Flags::write);

@@ -306,12 +306,16 @@ void PFSolverPowerPolar::setSolution() {
                     baseVoltage_ = trans->attribute<CPS::Real>("nominal_voltage_end2")->get();
                     break;
                 }
-			}
+            else if (std::shared_ptr<CPS::SP::Ph1::SynchronGenerator> gen = std::dynamic_pointer_cast<CPS::SP::Ph1::SynchronGenerator>(comp)) {
+                    baseVoltage_ =gen->attribute<CPS::Real>("base_Voltage")->get();
+                    break;
+                }
             else
                 mSLog->warn("Unable to get base voltage at {}", node->name());
-		}
+            }
+        }
 		std::dynamic_pointer_cast<CPS::SimNode<CPS::Complex>>(node)->setVoltage(sol_V_complex(node->matrixNodeIndex())*baseVoltage_);
-	}
+    }
     calculateBranchFlow();
     calculateNodalInjection();
 }
