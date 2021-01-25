@@ -404,12 +404,21 @@ void PFSolverPowerPolar::calculatePAndQAtSlackBus() {
 }
 
 void PFSolverPowerPolar::calculateQAtPVBuses() {
-    double val;
-    UInt k;
-    for (UInt i = mNumPQBuses - 1; i < mNumPQBuses + mNumPVBuses; ++i) {
-        k = mPQPVBusIndices[i];
-        val = Q(k);
-        sol_Q(k) = val;
+        for (auto k: mPVBusIndices) {
+        CPS::Complex I(0.0, 0.0);
+        for (UInt j = 0; j < mSystem.mNodes.size(); ++j) {
+            I += mY.coeff(k, j) * sol_Vcx(j);
+        }
+        CPS::Complex S(0.0, 0.0);
+        S = sol_Vcx(k) * conj(I);
+        // sol_P(k) = S.real();
+        sol_Q(k) = S.imag();
+        for(auto gen : mSynchronGenerators){
+            if(gen->mPowerflowBusType==CPS::PowerflowBusType::PV){
+			    gen->updateReactivePowerInjection(S*mBaseApparentPower);
+                break;
+            }        
+        }
     }
 }
 

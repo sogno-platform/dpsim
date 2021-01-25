@@ -29,6 +29,8 @@ namespace Ph1 {
 
 			/// Active power set point of the machine [W]
 			Real mSetPointActivePower;
+			/// Reactive power set point of the machine [VAr] to get from Power flow solution
+			Real mSetPointReactivePower;
 			/// Voltage set point of the machine [V]
 			Real mSetPointVoltage;
 			/// Maximum reactive power [VAr]
@@ -42,6 +44,8 @@ namespace Ph1 {
 			Real mBaseVoltage;
 			/// Active power set point of the machine [pu]
 			Real mSetPointActivePowerPerUnit;
+			/// Reactive power set point of the machine [pu]
+			Real mSetPointReactivePowerPerUnit;
 			/// Voltage set point of the machine [pu]
 			Real mSetPointVoltagePerUnit;
 
@@ -53,8 +57,8 @@ namespace Ph1 {
 			SynchronGenerator(String name, Logger::Level logLevel = Logger::Level::off)
 				: SynchronGenerator(name, name, logLevel) { }
 			/// Setter for synchronous generator parameters
-			void setParameters(Real ratedApparentPower, Real ratedVoltage, Real setPointActivePower, Real setPointVoltage, PowerflowBusType powerflowBusType);
-
+			//SetpointReactivePower is calculated from PF
+			void setParameters(Real ratedApparentPower, Real ratedVoltage, Real setPointActivePower, Real setPointVoltage, PowerflowBusType powerflowBusType, Real setPointReactivepower=0);
 			// #### Powerflow section ####
 			/// Set base voltage
 			void setBaseVoltage(Real baseVoltage);
@@ -62,6 +66,10 @@ namespace Ph1 {
 			void calculatePerUnitParameters(Real baseApparentPower, Real baseOmega);
             /// Modify powerflow bus type
 			void modifyPowerFlowBusType(PowerflowBusType powerflowBusType) override;
+			/// Update reactive power injection
+			void updateReactivePowerInjection(Complex powerInj);
+			/// Get Apparent power of Powerflow solution
+			Complex getApparentPower() { return Complex (mSetPointActivePower, mSetPointReactivePower);}
 		};
 }
 }

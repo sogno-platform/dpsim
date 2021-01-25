@@ -19,15 +19,18 @@ SP::Ph1::SynchronGenerator::SynchronGenerator(String uid, String name, Logger::L
     setTerminalNumber(1);
     addAttribute<Real>("base_Voltage", &mBaseVoltage, Flags::read | Flags::write);
     addAttribute<Real>("P_set", &mSetPointActivePower, Flags::read | Flags::write);
+    addAttribute<Real>("Q_set", &mSetPointReactivePower, Flags::read | Flags::write);
     addAttribute<Real>("V_set", &mSetPointVoltage, Flags::read | Flags::write);
     addAttribute<Real>("P_set_pu", &mSetPointActivePowerPerUnit, Flags::read | Flags::write);
+    addAttribute<Real>("Q_set_pu", &mSetPointReactivePowerPerUnit, Flags::read | Flags::write);
     addAttribute<Real>("V_set_pu", &mSetPointVoltagePerUnit, Flags::read | Flags::write);
 };
 
-void SP::Ph1::SynchronGenerator::setParameters(Real ratedApparentPower, Real ratedVoltage, Real setPointActivePower, Real setPointVoltage, PowerflowBusType powerflowBusType) {
+void SP::Ph1::SynchronGenerator::setParameters(Real ratedApparentPower, Real ratedVoltage, Real setPointActivePower, Real setPointVoltage, PowerflowBusType powerflowBusType, Real setPointReactivePower) {
 	mRatedApparentPower = ratedApparentPower;
     mRatedVoltage = ratedVoltage;
     mSetPointActivePower = setPointActivePower;
+    mSetPointReactivePower= setPointReactivePower;
     mSetPointVoltage = setPointVoltage;
     mPowerflowBusType = powerflowBusType;
 
@@ -48,6 +51,7 @@ void SP::Ph1::SynchronGenerator::calculatePerUnitParameters(Real baseApparentPow
     mSLog->info("Base Power={} [VA]  Base Omega={} [1/s]", mBaseApparentPower, mBaseOmega);
 
 	mSetPointActivePowerPerUnit = mSetPointActivePower/mBaseApparentPower;
+    mSetPointReactivePowerPerUnit = mSetPointReactivePower/mBaseApparentPower;
 	mSetPointVoltagePerUnit = mSetPointVoltage/mBaseVoltage;
 	mSLog->info("Active Power Set Point={} [pu] Voltage Set Point={} [pu]", mSetPointActivePowerPerUnit, mSetPointVoltagePerUnit);
 	mSLog->flush();
@@ -73,4 +77,8 @@ void SP::Ph1::SynchronGenerator::modifyPowerFlowBusType(PowerflowBusType powerfl
     }
 }
 
+void SP::Ph1::SynchronGenerator::updateReactivePowerInjection(Complex powerInj) {
+	mSetPointReactivePower = powerInj.imag();
+    mSetPointReactivePowerPerUnit= mSetPointReactivePower/mBaseApparentPower;
+}
 
