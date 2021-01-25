@@ -33,7 +33,7 @@ Real lineConductance =0;
 // Slack voltage: 1pu
 Real Vslack = Vnom;
 
-void DP_1ph_SynGenTrStab_SteadyState(String simName, Real timeStep, Real finalTime, bool startFaultEvent, bool endFaultEvent, Real startTimeFault, Real endTimeFault, Real cmdInertia) {
+void SP_1ph_SynGenTrStab_SteadyState(String simName, Real timeStep, Real finalTime, bool startFaultEvent, bool endFaultEvent, Real startTimeFault, Real endTimeFault, Real cmdInertia) {
 	//  // ----- POWERFLOW FOR INITIALIZATION -----
 	Real timeStepPF = finalTime;
 	Real finalTimePF = finalTime+timeStepPF;
@@ -86,77 +86,77 @@ void DP_1ph_SynGenTrStab_SteadyState(String simName, Real timeStep, Real finalTi
 	simPF.run();
 
 	// ----- Dynamic simulation ------
-	String simNameDP = simName + "_DP";
-	Logger::setLogDir("logs/"+simNameDP);
+	String simNameSP = simName + "_SP";
+	Logger::setLogDir("logs/"+simNameSP);
 	
 	// Nodes
-	auto n1DP = SimNode<Complex>::make("n1", PhaseType::Single);
-	auto n2DP = SimNode<Complex>::make("n2", PhaseType::Single);
+	auto n1SP = SimNode<Complex>::make("n1", PhaseType::Single);
+	auto n2SP = SimNode<Complex>::make("n2", PhaseType::Single);
 
 	// Components
-	auto genDP = DP::Ph1::SynchronGeneratorTrStab::make("SynGen", Logger::Level::debug);
-	genDP->setStandardParametersPU(nomPower, Vnom, nomFreq, Xpd, cmdInertia*H, Rs, Kd );
+	auto genSP = SP::Ph1::SynchronGeneratorTrStab::make("SynGen", Logger::Level::debug);
+	genSP->setStandardParametersPU(nomPower, Vnom, nomFreq, Xpd, cmdInertia*H, Rs, Kd );
 	// Get actual active and reactive power of generator's Terminal from Powerflow solution
 	Complex initApparentPower= genPF->getApparentPower();
-	genDP->setInitialValues(initApparentPower, initMechPower);
+	genSP->setInitialValues(initApparentPower, initMechPower);
 
 	//Grid bus as Slack
-	auto extnetDP = DP::Ph1::NetworkInjection::make("Slack", Logger::Level::debug);
-	extnetDP->setParameters(Vslack);
+	auto extnetSP = SP::Ph1::NetworkInjection::make("Slack", Logger::Level::debug);
+	extnetSP->setParameters(Vslack);
 	// Line
-	auto lineDP = DP::Ph1::PiLine::make("PiLine", Logger::Level::debug);
-	lineDP->setParameters(lineResistance, lineInductance, lineCapacitance, lineConductance);
+	auto lineSP = SP::Ph1::PiLine::make("PiLine", Logger::Level::debug);
+	lineSP->setParameters(lineResistance, lineInductance, lineCapacitance, lineConductance);
 
 	// Topology
-	genDP->connect({ n1DP });
-	lineDP->connect({ n1DP, n2DP });
-	extnetDP->connect({ n2DP });
-	auto systemDP = SystemTopology(60,
-			SystemNodeList{n1DP, n2DP},
-			SystemComponentList{genDP, lineDP, extnetDP});
+	genSP->connect({ n1SP });
+	lineSP->connect({ n1SP, n2SP });
+	extnetSP->connect({ n2SP });
+	auto systemSP = SystemTopology(60,
+			SystemNodeList{n1SP, n2SP},
+			SystemComponentList{genSP, lineSP, extnetSP});
 
 	// Initialization of dynamic topology
-	CIM::Reader reader(simNameDP, Logger::Level::debug);
-	reader.initDynamicSystemTopologyWithPowerflow(systemPF, systemDP);
+	CIM::Reader reader(simNameSP, Logger::Level::debug);
+	reader.initDynamicSystemTopologyWithPowerflow(systemPF, systemSP);
 
 
 	// Logging
-	auto loggerDP = DataLogger::make(simNameDP);
-	loggerDP->addAttribute("v1", n1DP->attribute("v"));
-	loggerDP->addAttribute("v2", n2DP->attribute("v"));
+	auto loggerSP = DataLogger::make(simNameSP);
+	loggerSP->addAttribute("v1", n1SP->attribute("v"));
+	loggerSP->addAttribute("v2", n2SP->attribute("v"));
 	//gen
-	loggerDP->addAttribute("Ep", genDP->attribute("Ep"));
-	loggerDP->addAttribute("v_gen", genDP->attribute("v_intf"));
-	loggerDP->addAttribute("i_gen", genDP->attribute("i_intf"));
-	loggerDP->addAttribute("wr_gen", genDP->attribute("w_r"));
-	loggerDP->addAttribute("delta_r_gen", genDP->attribute("delta_r"));
-	loggerDP->addAttribute("P_elec", genDP->attribute("P_elec"));
-	loggerDP->addAttribute("P_mech", genDP->attribute("P_mech"));
+	loggerSP->addAttribute("Ep", genSP->attribute("Ep"));
+	loggerSP->addAttribute("v_gen", genSP->attribute("v_intf"));
+	loggerSP->addAttribute("i_gen", genSP->attribute("i_intf"));
+	loggerSP->addAttribute("wr_gen", genSP->attribute("w_r"));
+	loggerSP->addAttribute("delta_r_gen", genSP->attribute("delta_r"));
+	loggerSP->addAttribute("P_elec", genSP->attribute("P_elec"));
+	loggerSP->addAttribute("P_mech", genSP->attribute("P_mech"));
 	//line
-	loggerDP->addAttribute("v_line", lineDP->attribute("v_intf"));
-	loggerDP->addAttribute("i_line", lineDP->attribute("i_intf"));
+	loggerSP->addAttribute("v_line", lineSP->attribute("v_intf"));
+	loggerSP->addAttribute("i_line", lineSP->attribute("i_intf"));
 	//slack
-	loggerDP->addAttribute("v_slack", extnetDP->attribute("v_intf"));
-	loggerDP->addAttribute("i_slack", extnetDP->attribute("i_intf"));
+	loggerSP->addAttribute("v_slack", extnetSP->attribute("v_intf"));
+	loggerSP->addAttribute("i_slack", extnetSP->attribute("i_intf"));
 
 
 
-	Simulation simDP(simNameDP, Logger::Level::debug);
-	simDP.setSystem(systemDP);
-	simDP.setTimeStep(timeStep);
-	simDP.setFinalTime(finalTime);
-	simDP.setDomain(Domain::DP);
-	simDP.doPowerFlowInit(false);
-	simDP.addLogger(loggerDP);
+	Simulation simSP(simNameSP, Logger::Level::debug);
+	simSP.setSystem(systemSP);
+	simSP.setTimeStep(timeStep);
+	simSP.setFinalTime(finalTime);
+	simSP.setDomain(Domain::SP);
+	simSP.doPowerFlowInit(false);
+	simSP.addLogger(loggerSP);
 
-	simDP.run();
+	simSP.run();
 }
 
 int main(int argc, char* argv[]) {	
 		
 
 	//Simultion parameters
-	String simName="DP_SynGenTrStab_SMIB_SteadyState";
+	String simName="SP_SynGenTrStab_SMIB_SteadyState";
 	Real finalTime = 10;
 	Real timeStep = 0.001;
 	Bool startFaultEvent=false;
@@ -165,5 +165,5 @@ int main(int argc, char* argv[]) {
 	Real endTimeFault=10.1;
 	Real cmdInertia= 1.0;
 
-	DP_1ph_SynGenTrStab_SteadyState(simName, timeStep, finalTime, startFaultEvent, endFaultEvent, startTimeFault, endTimeFault, cmdInertia);
+	SP_1ph_SynGenTrStab_SteadyState(simName, timeStep, finalTime, startFaultEvent, endFaultEvent, startTimeFault, endTimeFault, cmdInertia);
 }
