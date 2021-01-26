@@ -205,7 +205,7 @@ add_subdirectory(docs)
 
 if(BUILD_EXAMPLES)
 	add_subdirectory(Examples)
-	add_subdirectory(third-party/villas-dpsim/examples)
+	add_subdirectory(villas-dpsim/examples)
 endif(BUILD_EXAMPLES)
 
 if(WITH_PYBIND)
