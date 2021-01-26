@@ -79,12 +79,12 @@ endif()
 
 if(WITH_SHMEM)
 	set(DPSIM_VILLAS_SOURCES
-		${CMAKE_SOURCE_DIR}/villas-dpsim/src/InterfaceShmem.cpp
-		${CMAKE_SOURCE_DIR}/villas-dpsim/src/PthreadPoolScheduler.cpp
+		${CMAKE_SOURCE_DIR}/third-party/villas-dpsim/src/InterfaceShmem.cpp
+		${CMAKE_SOURCE_DIR}/third-party/villas-dpsim/src/PthreadPoolScheduler.cpp
 	)
 
 	set(DPSIM_VILLAS_LIBRARIES ${VILLASNODE_LIBRARIES} pthread)
-	set(DPSIM_VILLAS_INCLUDE_DIRS ${VILLASNODE_INCLUDE_DIRS} ${CMAKE_SOURCE_DIR}/villas-dpsim/include)
+	set(DPSIM_VILLAS_INCLUDE_DIRS ${VILLASNODE_INCLUDE_DIRS} ${CMAKE_SOURCE_DIR}/third-party/villas-dpsim/include)
 endif()
 
 add_library(dpsim ${DPSIM_SOURCES} ${DPSIM_VILLAS_SOURCES})
