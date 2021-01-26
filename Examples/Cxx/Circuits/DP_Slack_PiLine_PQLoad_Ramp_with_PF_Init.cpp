@@ -24,7 +24,7 @@ int main(int argc, char* argv[]) {
 	
 	// Simulation parameters
 	Real timeStep = 0.001;
-	Real finalTime = 2.0;
+	Real finalTime = 6.0;
 	CommandLineArgs args(argc, argv);
 	if (argc > 1) {
 		timeStep = args.timeStep;
@@ -89,7 +89,7 @@ int main(int argc, char* argv[]) {
 	auto n2DP = SimNode<Complex>::make("n2", PhaseType::Single);
 
 	auto extnetDP = DP::Ph1::NetworkInjection::make("Slack", Logger::Level::debug);
-	extnetDP->setParameters(Complex(Vnom,0), 50.0, 45.0, -3.0, 1.0);
+	extnetDP->setParameters(Complex(Vnom,0), 0.0, -5.0, -6.0, 5.0);
 
 	auto lineDP = DP::Ph1::PiLine::make("PiLine", Logger::Level::debug);
 	lineDP->setParameters(lineResistance, lineInductance, lineCapacitance);
@@ -116,6 +116,7 @@ int main(int argc, char* argv[]) {
 	loggerDP->addAttribute("v2", n2DP->attribute("v"));
 	loggerDP->addAttribute("i12", lineDP->attribute("i_intf"));
 	loggerDP->addAttribute("irx", loadDP->attribute("i_intf"));
+	loggerDP->addAttribute("f_src", extnetDP->attribute("f_src"));
 
 	// load step sized in absolute terms
 	//std::shared_ptr<SwitchEvent> loadStepEvent = CIM::Examples::createEventAddPowerConsumption("n2", 0.1-timeStepDP, 100e3, systemDP, Domain::DP, loggerDP);
@@ -126,7 +127,7 @@ int main(int argc, char* argv[]) {
 	sim.setTimeStep(timeStepDP);
 	sim.setFinalTime(finalTimeDP);
 	sim.setDomain(Domain::DP);
-	sim.doPowerFlowInit(false);
+	//sim.doPowerFlowInit(false);
 	sim.addLogger(loggerDP);
 	//sim.addEvent(loadStepEvent);
 	sim.run();

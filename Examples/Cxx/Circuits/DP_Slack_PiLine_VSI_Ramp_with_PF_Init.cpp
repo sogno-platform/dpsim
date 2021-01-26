@@ -16,7 +16,7 @@ int main(int argc, char* argv[]) {
 
 	CIM::Examples::SGIB::ScenarioConfig scenario;
 	
-	Real finalTime = 3;
+	Real finalTime = 6.0;
 	Real timeStep = 0.001;
 	String simName = "DP_Slack_PiLine_VSI_Ramp_with_PF_Init";
 	Bool pvWithControl = true;
@@ -96,7 +96,7 @@ int main(int argc, char* argv[]) {
 	auto n2DP = SimNode<Complex>::make("n2", PhaseType::Single);
 
 	auto extnetDP = DP::Ph1::NetworkInjection::make("Slack", Logger::Level::debug);
-	extnetDP->setParameters(Complex(scenario.systemNominalVoltage,0), 50, 47, -6.25, std::round(2.0/timeStep)*timeStep);
+	extnetDP->setParameters(Complex(scenario.systemNominalVoltage,0), 0, -5.0, -3, 5.0);
 	
 	(Complex(scenario.systemNominalVoltage,0));
 
@@ -129,6 +129,7 @@ int main(int argc, char* argv[]) {
 	loggerDP->addAttribute("v1", n1DP->attribute("v"));
 	loggerDP->addAttribute("v2", n2DP->attribute("v"));
 	loggerDP->addAttribute("i12", lineDP->attribute("i_intf"));
+	loggerDP->addAttribute("f_src", extnetDP->attribute("f_src"));
 
 	CIM::Examples::CIGREMV::logPVAttributes(loggerDP, pv);
 
