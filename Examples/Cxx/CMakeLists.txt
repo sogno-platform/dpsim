@@ -19,6 +19,7 @@ set(CIRCUIT_SOURCES
 
 	# DP examples with PF initialization
 	Circuits/DP_Slack_PiLine_PQLoad_with_PF_Init.cpp
+	Circuits/DP_Slack_PiLine_PQLoad_Ramp_with_PF_Init.cpp
 	Circuits/DP_Slack_PiLine_VSI_with_PF_Init.cpp
 	Circuits/DP_Slack_PiLine_VSI_Ramp_with_PF_Init.cpp
 	
