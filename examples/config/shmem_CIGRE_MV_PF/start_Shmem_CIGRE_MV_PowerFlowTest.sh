@@ -49,7 +49,7 @@ if true; then
 	villas-pipe villas-dpsim/examples/config/shmem_CIGRE_MV_PF/Shmem_CIGRE_MV.conf dpsim1
 else
 	VILLAS_LOG_PREFIX="[Node] " \
-	villas-node Configs/shmem_CIGRE_MV_PF/Shmem_CIGRE_MV.conf & VN=$!
+	villas-node villas-dpsim/examples/config/shmem_CIGRE_MV_PF/Shmem_CIGRE_MV.conf & VN=$!
 fi
 
 # Wait until all child processed finished
