@@ -21,7 +21,10 @@ Real Kd = 1;
 // Initialization parameters
 Real initMechPower= 300e6;
 Real initActivePower = 300e6;
-Real setPointVoltage=Vnom + 0.05*Vnom;
+Real setPointVoltage=nomPhPhVoltRMS + 0.05*nomPhPhVoltRMS;
+
+//-----------Transformer-----------//
+Real t_ratio=Vnom/nomPhPhVoltRMS;
 
 //PiLine parameters calculated from CIGRE Benchmark system
 Real lineResistance = 6.7;
@@ -46,7 +49,8 @@ void DP_1ph_SynGenTrStab_SteadyState(String simName, Real timeStep, Real finalTi
 
 	//Synchronous generator ideal model
 	auto genPF = SP::Ph1::SynchronGenerator::make("Generator", Logger::Level::debug);
-	genPF->setParameters(nomPower, nomPhPhVoltRMS, initActivePower, setPointVoltage, PowerflowBusType::PV);
+	// setPointVoltage is defined as the voltage at the transfomer primary side and should be transformed to network side
+	genPF->setParameters(nomPower, nomPhPhVoltRMS, initActivePower, setPointVoltage*t_ratio, PowerflowBusType::PV);
 	genPF->setBaseVoltage(Vnom);
 	genPF->modifyPowerFlowBusType(PowerflowBusType::PV);
 
@@ -95,7 +99,8 @@ void DP_1ph_SynGenTrStab_SteadyState(String simName, Real timeStep, Real finalTi
 
 	// Components
 	auto genDP = DP::Ph1::SynchronGeneratorTrStab::make("SynGen", Logger::Level::debug);
-	genDP->setStandardParametersPU(nomPower, Vnom, nomFreq, Xpd, cmdInertia*H, Rs, Kd );
+	// Xpd is given in p.u of generator base at transfomer primary side and should be transformed to network side
+	genDP->setStandardParametersPU(nomPower, nomPhPhVoltRMS, nomFreq, Xpd*std::pow(t_ratio,2), cmdInertia*H, Rs, Kd );
 	// Get actual active and reactive power of generator's Terminal from Powerflow solution
 	Complex initApparentPower= genPF->getApparentPower();
 	genDP->setInitialValues(initApparentPower, initMechPower);
