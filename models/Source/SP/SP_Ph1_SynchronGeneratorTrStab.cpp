@@ -17,6 +17,7 @@ SP::Ph1::SynchronGeneratorTrStab::SynchronGeneratorTrStab(String uid, String nam
 	mIntfCurrent = MatrixComp::Zero(1, 1);
 
 	// Register attributes
+	addAttribute<Complex>("Ep", &mEp, Flags::read);
 	addAttribute<Real>("Ep_mag", &mEp_abs, Flags::read);
 	addAttribute<Real>("Ep_phase", &mEp_phase, Flags::read);
 	addAttribute<Real>("delta_r", &mDelta_p, Flags::read);
@@ -117,22 +118,27 @@ void SP::Ph1::SynchronGeneratorTrStab::initializeFromNodesAndTerminals(Real freq
 	mInitMechPower = (mInitElecPower == Complex(0,0))
 		? mInitElecPower.real()
 		: mInitMechPower;
-	mIntfCurrent(0,0) = std::conj( mInitElecPower / mIntfVoltage(0,0) );
+
+	//I_intf is the current which is flowing into the Component
+	mIntfCurrent(0,0) = std::conj( - mInitElecPower / mIntfVoltage(0,0) );
+
 	mImpedance = Complex(mRs, mXpd);
 
 	// Calculate emf behind reactance
-	mEp = mIntfVoltage(0,0) + mImpedance * mIntfCurrent(0,0);
+	mEp = mIntfVoltage(0,0) - mImpedance * mIntfCurrent(0,0);
+
 	// The absolute value of Ep is constant, only delta_p changes every step
 	mEp_abs = Math::abs(mEp);
 	mDelta_p= Math::phase(mEp)-Math::phase(mIntfVoltage(0,0));
 
-	// // Update active electrical power that is compared with the mechanical power
+	// Update active electrical power that is compared with the mechanical power
+	mElecActivePower = ( mIntfVoltage(0,0) *  std::conj( -mIntfCurrent(0,0)) ).real();
 	//mElecActivePower = ( (mEp - mIntfVoltage(0,0)) / mImpedance *  mIntfVoltage(0,0) ).real();
 	// For infinite power bus
-	// mElecActivePower = (Math::abs(mEp) * Math::abs(mIntfVoltage(0,0)) / mXpd) * sin(mDelta_p);
-	mElecActivePower = (Math::abs(mEp) * Math::abs(mIntfVoltage(0,0)) / mXpd) * sin(Math::phase(mEp)-Math::phase(mIntfVoltage(0,0)));
+	//mElecActivePower = (Math::abs(mEp) * Math::abs(mIntfVoltage(0,0)) / mXpd) * sin(Math::phase(mEp)-Math::phase(mIntfVoltage(0,0)));
 
 	// Start in steady state so that electrical and mech. power are the same
+	// because of the initial condition mOmMech = mNomOmega the damping factor is not considered at the initialisation
 	mMechPower = mElecActivePower - mKd*(mOmMech - mNomOmega);
 
 	// Initialize node between X'd and Ep
@@ -149,7 +155,7 @@ void SP::Ph1::SynchronGeneratorTrStab::initializeFromNodesAndTerminals(Real freq
 	// Create sub inductor as Xpd
 	mSubInductor = SP::Ph1::Inductor::make(mName + "_ind", mLogLevel);
 	mSubInductor->setParameters(mLpd);
-	mSubInductor->connect({mVirtualNodes[0],terminal(0)->node()});
+	mSubInductor->connect({mVirtualNodes[0], terminal(0)->node()});
 	mSubInductor->initialize(mFrequencies);
 	mSubInductor->initializeFromNodesAndTerminals(frequency);
 
@@ -167,17 +173,18 @@ void SP::Ph1::SynchronGeneratorTrStab::initializeFromNodesAndTerminals(Real freq
 }
 
 void SP::Ph1::SynchronGeneratorTrStab::step(Real time) {
-	
+
 	// #### Calculations on input of time step k ####
-	// // Update electrical power
-	// mElecActivePower = ( (mEp - mIntfVoltage(0,0)) / mImpedance *  mIntfVoltage(0,0) ).real();
+	// Update electrical power
+	//mElecActivePower = ( (mEp - mIntfVoltage(0,0)) / mImpedance *  mIntfVoltage(0,0) ).real();
+	mElecActivePower = (mIntfVoltage(0,0) *  std::conj( -mIntfCurrent(0,0)) ).real();
 	// For infinite power bus
-	// mElecActivePower = (Math::abs(mEp) * Math::abs(mIntfVoltage(0,0)) / mXpd) * sin(mDelta_p);
-	mElecActivePower = (Math::abs(mEp) * Math::abs(mIntfVoltage(0,0)) / mXpd) * sin(Math::phase(mEp)-Math::phase(mIntfVoltage(0,0)));
+	//mElecActivePower = (Math::abs(mEp) * Math::abs(mIntfVoltage(0,0)) / mXpd)* sin(Math::phase(mEp)-Math::phase(mIntfVoltage(0,0)));
 	
-	// The damping factor Kd is adjusted to obtain a damping ratio of 0.3
-	Real MaxElecActivePower= Math::abs(mEp) * Math::abs(mIntfVoltage(0,0)) / mXpd;
-	mKd=4*0.3*sqrt(mNomOmega*mInertia*MaxElecActivePower*0.5);
+	// //without damping
+	mKd=0;
+	// The damping factor Kd is calculated from a damping p.u value of eg. 0.1
+	//mKd=1.5*mNomPower;
 
 	// #### Calculate state for time step k+1 ####
 	// semi-implicit Euler or symplectic Euler method for mechanical equations
@@ -189,7 +196,7 @@ void SP::Ph1::SynchronGeneratorTrStab::step(Real time) {
 		mDelta_p = mDelta_p + mTimeStep * dDelta_p;
 	// Update emf - only phase changes
 	if (mBehaviour == Behaviour::Simulation)
-		mEp = Complex(mEp_abs * cos(mDelta_p), mEp_abs * sin(mDelta_p));
+		mEp = Complex(mEp_abs * cos(mDelta_p + Math::phase(mIntfVoltage(0,0))), mEp_abs * sin(mDelta_p + Math::phase(mIntfVoltage(0,0))));
 
 	mStates << Math::abs(mEp), Math::phaseDeg(mEp), mElecActivePower, mMechPower,
 		mDelta_p, mOmMech, dOmMech, dDelta_p, mIntfVoltage(0,0).real(), mIntfVoltage(0,0).imag();
@@ -227,6 +234,7 @@ void SP::Ph1::SynchronGeneratorTrStab::mnaApplyRightSideVectorStamp(Matrix& righ
 
 void SP::Ph1::SynchronGeneratorTrStab::MnaPreStep::execute(Real time, Int timeStepCount) {
 	mGenerator.step(time);
+	//change V_ref of subvoltage source
 	mGenerator.mSubVoltageSource->attribute<Complex>("V_ref")->set(mGenerator.mEp);
 }
 
@@ -244,10 +252,10 @@ void SP::Ph1::SynchronGeneratorTrStab::MnaPostStep::execute(Real time, Int timeS
 void SP::Ph1::SynchronGeneratorTrStab::mnaUpdateVoltage(const Matrix& leftVector) {
 	SPDLOG_LOGGER_DEBUG(mSLog, "Read voltage from {:d}", matrixNodeIndex(0));
 	mIntfVoltage(0,0) = Math::complexFromVectorElement(leftVector, matrixNodeIndex(0));
-	//mIntfVoltage = mSubInductor->attribute<MatrixComp>("v_intf")->get();
 }
 
 void SP::Ph1::SynchronGeneratorTrStab::mnaUpdateCurrent(const Matrix& leftVector) {
 	SPDLOG_LOGGER_DEBUG(mSLog, "Read current from {:d}", matrixNodeIndex(0));
+	//Current flowing out of component
 	mIntfCurrent = mSubInductor->attribute<MatrixComp>("i_intf")->get();
 }

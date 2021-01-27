@@ -17,6 +17,7 @@ DP::Ph1::SynchronGeneratorTrStab::SynchronGeneratorTrStab(String uid, String nam
 	mIntfCurrent = MatrixComp::Zero(1, 1);
 
 	// Register attributes
+	addAttribute<Complex>("Ep", &mEp, Flags::read);
 	addAttribute<Real>("Ep_mag", &mEp_abs, Flags::read);
 	addAttribute<Real>("Ep_phase", &mEp_phase, Flags::read);
 	addAttribute<Real>("delta_r", &mDelta_p, Flags::read);
@@ -77,8 +78,8 @@ void DP::Ph1::SynchronGeneratorTrStab::setStandardParametersSI(Real nomPower, Re
 				"\ninductance: {:f}", mXpd, mLpd);
 }
 
-void DP::Ph1::SynchronGeneratorTrStab::setStandardParametersPU(Real nomPower, Real nomVolt, Real nomFreq, Real Xpd, 
-	Real inertia, Real Rs, Real Kd) {
+void DP::Ph1::SynchronGeneratorTrStab::setStandardParametersPU(Real nomPower, Real nomVolt, Real nomFreq,
+	Real Xpd, Real inertia, Real Rs, Real Kd) {
 	setBaseParameters(nomPower, nomVolt, nomFreq);
 
 	// Input is in per unit but all values are converted to absolute values.
@@ -117,24 +118,28 @@ void DP::Ph1::SynchronGeneratorTrStab::initializeFromNodesAndTerminals(Real freq
 	mInitMechPower = (mInitElecPower == Complex(0,0))
 		? mInitElecPower.real()
 		: mInitMechPower;
-	mIntfCurrent(0,0) = std::conj( mInitElecPower / mIntfVoltage(0,0) );
+
+	//I_intf is the current which is flowing into the Component
+	mIntfCurrent(0,0) = std::conj( - mInitElecPower / mIntfVoltage(0,0) );
+
 	mImpedance = Complex(mRs, mXpd);
 
 	// Calculate emf behind reactance
-	mEp = mIntfVoltage(0,0) + mImpedance * mIntfCurrent(0,0);
-	
+	mEp = mIntfVoltage(0,0) - mImpedance * mIntfCurrent(0,0);
+
 	// The absolute value of Ep is constant, only delta_p changes every step
 	mEp_abs = Math::abs(mEp);
 	mDelta_p= Math::phase(mEp)-Math::phase(mIntfVoltage(0,0));
 
 	// Update active electrical power that is compared with the mechanical power
-	mElecActivePower = ( (mEp - mIntfVoltage(0,0)) / mImpedance *  mIntfVoltage(0,0) ).real();
+	mElecActivePower = ( mIntfVoltage(0,0) *  std::conj( -mIntfCurrent(0,0)) ).real();
+	//mElecActivePower = ( (mEp - mIntfVoltage(0,0)) / mImpedance *  mIntfVoltage(0,0) ).real();
 	// For infinite power bus
 	//mElecActivePower = (Math::abs(mEp) * Math::abs(mIntfVoltage(0,0)) / mXpd) * sin(Math::phase(mEp)-Math::phase(mIntfVoltage(0,0)));
 
 	// Start in steady state so that electrical and mech. power are the same
 	// because of the initial condition mOmMech = mNomOmega the damping factor is not considered at the initialisation
-	mMechPower = mElecActivePower- mKd*(mOmMech - mNomOmega);
+	mMechPower = mElecActivePower - mKd*(mOmMech - mNomOmega);
 
 	// Initialize node between X'd and Ep
 	mVirtualNodes[0]->setInitialVoltage(mEp);
@@ -150,7 +155,7 @@ void DP::Ph1::SynchronGeneratorTrStab::initializeFromNodesAndTerminals(Real freq
 	// Create sub inductor as Xpd
 	mSubInductor = DP::Ph1::Inductor::make(mName + "_ind", mLogLevel);
 	mSubInductor->setParameters(mLpd);
-	mSubInductor->connect({mVirtualNodes[0],terminal(0)->node()});
+	mSubInductor->connect({mVirtualNodes[0], terminal(0)->node()});
 	mSubInductor->initialize(mFrequencies);
 	mSubInductor->initializeFromNodesAndTerminals(frequency);
 
@@ -171,16 +176,19 @@ void DP::Ph1::SynchronGeneratorTrStab::step(Real time) {
 
 	// #### Calculations on input of time step k ####
 	// Update electrical power
-	mElecActivePower = ( (mEp - mIntfVoltage(0,0)) / mImpedance *  mIntfVoltage(0,0) ).real();
+	//mElecActivePower = ( (mEp - mIntfVoltage(0,0)) / mImpedance *  mIntfVoltage(0,0) ).real();
+	mElecActivePower = (mIntfVoltage(0,0) *  std::conj( -mIntfCurrent(0,0)) ).real();
 	// For infinite power bus
-	//mElecActivePower = (Math::abs(mEp) * Math::abs(mIntfVoltage(0,0)) / mXpd )* sin(Math::phase(mEp)-Math::phase(mIntfVoltage(0,0)));
+	//mElecActivePower = (Math::abs(mEp) * Math::abs(mIntfVoltage(0,0)) / mXpd)* sin(Math::phase(mEp)-Math::phase(mIntfVoltage(0,0)));
 	
-	// The damping factor Kd is calculated from a p.u value of eg. 0.1
-	mKd=0.1*mNomPower;
+	// //without damping
+	mKd=0;
+	// The damping factor Kd is calculated from a damping p.u value of eg. 0.1
+	//mKd=1.5*mNomPower;
 
 	// #### Calculate state for time step k+1 ####
 	// semi-implicit Euler or symplectic Euler method for mechanical equations
-	Real dOmMech = mNomOmega / (2.*mInertia * mNomPower) * (mMechPower - mElecActivePower-mKd*(mOmMech - mNomOmega));
+	Real dOmMech = mNomOmega / (2.*mInertia * mNomPower) * (mMechPower - mElecActivePower - mKd*(mOmMech - mNomOmega));
 	if (mBehaviour == Behaviour::Simulation)
 		mOmMech = mOmMech + mTimeStep * dOmMech;
 	Real dDelta_p = mOmMech - mNomOmega;
@@ -226,7 +234,7 @@ void DP::Ph1::SynchronGeneratorTrStab::mnaApplyRightSideVectorStamp(Matrix& righ
 
 void DP::Ph1::SynchronGeneratorTrStab::MnaPreStep::execute(Real time, Int timeStepCount) {
 	mGenerator.step(time);
-	//change magnitude of subvoltage source
+	//change V_ref of subvoltage source
 	mGenerator.mSubVoltageSource->attribute<Complex>("V_ref")->set(mGenerator.mEp);
 }
 
@@ -248,5 +256,6 @@ void DP::Ph1::SynchronGeneratorTrStab::mnaUpdateVoltage(const Matrix& leftVector
 
 void DP::Ph1::SynchronGeneratorTrStab::mnaUpdateCurrent(const Matrix& leftVector) {
 	SPDLOG_LOGGER_DEBUG(mSLog, "Read current from {:d}", matrixNodeIndex(0));
+	//Current flowing out of component
 	mIntfCurrent = mSubInductor->attribute<MatrixComp>("i_intf")->get();
 }
