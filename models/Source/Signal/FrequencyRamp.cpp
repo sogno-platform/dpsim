@@ -36,10 +36,6 @@ void Signal::FrequencyRamp::step(Real time) {
         freq = mFreqStart;
     }
 
-    if(time > 2) {
-        freq = freq;
-    }
-
     attribute<Complex>("sigOut")->set(Complex(
         mMagnitude * cos(time * 2.*PI*freq + mInitialPhase),
         mMagnitude * sin(time * 2.*PI*freq + mInitialPhase)));

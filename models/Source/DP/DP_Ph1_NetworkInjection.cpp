@@ -41,6 +41,9 @@ void DP::Ph1::NetworkInjection::setParameters(Complex voltageRef, Real srcFreq) 
 
 	mSubVoltageSource->setParameters(voltageRef, srcFreq);
 
+	setAttributeRef("V_ref", mSubVoltageSource->attribute<Complex>("V_ref"));
+	setAttributeRef("f_src", mSubVoltageSource->attribute<Real>("f_src"));
+
 	mSLog->info("\nVoltage Ref={:s} [V]"
 				"\nFrequency={:s} [Hz]", 
 				Logger::phasorToString(voltageRef),
@@ -51,6 +54,9 @@ void DP::Ph1::NetworkInjection::setParameters(Complex initialPhasor, Real freqSt
 	mParametersSet = true;
 
 	mSubVoltageSource->setParameters(initialPhasor, freqStart, freqEnd, ramp, timeStart);
+	
+	setAttributeRef("V_ref", mSubVoltageSource->attribute<Complex>("V_ref"));
+	setAttributeRef("f_src", mSubVoltageSource->attribute<Real>("f_src"));
 
 	mSLog->info("\nVoltage Ref={:s} [V]"
 				"\nFrequency={:s} [Hz]", 

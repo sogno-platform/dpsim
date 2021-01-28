@@ -42,7 +42,7 @@ int main(int argc, char* argv[]) {
 	Real timeStepPF = finalTime;
 	Real finalTimePF = finalTime+timeStepPF;
 	String simNamePF = simName+"_PF";
-	Logger::setLogDir("logs/" + simNamePF);
+	Logger::setLogDir("/home/rsa/logs/" + simNamePF);
 
 	// Components
 	auto n1PF = SimNode<Complex>::make("n1", PhaseType::Single);
@@ -89,7 +89,7 @@ int main(int argc, char* argv[]) {
 	Real timeStepDP = timeStep;
 	Real finalTimeDP = finalTime+timeStepDP;
 	String simNameDP = simName+"_DP";
-	Logger::setLogDir("logs/" + simNameDP);
+	Logger::setLogDir("/home/rsa/logs/" + simNameDP);
 
 	// Components
 	auto n1DP = SimNode<Complex>::make("n1", PhaseType::Single);

@@ -34,8 +34,8 @@ int main(int argc, char* argv[]) {
 	// ----- POWERFLOW FOR INITIALIZATION -----
 	Real timeStepPF = finalTime;
 	Real finalTimePF = finalTime+timeStepPF;
-	String simNamePF = "DP_Slack_PiLine_PQLoad_with_PF_Init_PF";
-	Logger::setLogDir("logs/" + simNamePF);
+	String simNamePF = "DP_Slack_PiLine_PQLoad_Ramp_with_PF_Init_PF";
+	Logger::setLogDir("/home/rsa/logs/" + simNamePF);
 
 	// Components
 	auto n1PF = SimNode<Complex>::make("n1", PhaseType::Single);
@@ -81,8 +81,8 @@ int main(int argc, char* argv[]) {
 	// ----- DYNAMIC SIMULATION -----
 	Real timeStepDP = timeStep;
 	Real finalTimeDP = finalTime+timeStepDP;
-	String simNameDP = "DP_Slack_PiLine_PQLoad_with_PF_Init_DP";
-	Logger::setLogDir("logs/" + simNameDP);
+	String simNameDP = "DP_Slack_PiLine_PQLoad_Ramp_with_PF_Init_DP";
+	Logger::setLogDir("/home/rsa/logs/" + simNameDP);
 
 	// Components
 	auto n1DP = SimNode<Complex>::make("n1", PhaseType::Single);
