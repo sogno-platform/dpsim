@@ -26,13 +26,19 @@ namespace Signal {
         Real mFreqEnd;
         Real mRamp;
         Real mTimeStart;
+        Real mDuration;
+        Real mOldTime;
+
+        bool mUseAbsoluteCalc;
     public:
         FrequencyRamp(String name, Logger::Level logLevel = Logger::Level::off)
             : SignalGenerator(name, logLevel) { }
         /// set frequency ramp specific parameters
-        void setParameters(Complex initialPhasor, Real freqStart, Real freqEnd, Real ramp, Real timeStart);
+        void setParameters(Complex initialPhasor, Real freqStart, Real ramp, Real timeStart, Real duration, bool useAbsoluteCalc);
         /// implementation of inherited method step to update and return the current signal value
         void step(Real time);
+        /// implementation of inherited method step to update and return the current signal value
+        void stepAbsolute(Real time);
     };
 }
 }

@@ -62,7 +62,7 @@ namespace Ph1 {
 		///
 		void setParameters(Complex voltageRef, Real srcFreq = -1);
 		/// Setter for reference signal of type frequency ramp
-		void setParameters(Complex initialPhasor, Real freqStart, Real freqEnd, Real ramp, Real timeStart);
+		void setParameters(Complex initialPhasor, Real freqStart, Real ramp, Real timeStart, Real duration, bool useAbsoluteCalc = false);
 
 		// #### MNA Section ####
 		/// Initializes internal variables of the component

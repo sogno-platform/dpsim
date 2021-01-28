@@ -23,6 +23,10 @@ int main(int argc, char* argv[]) {
 	Real cmdScaleP = 1.0;
 	Real cmdScaleI = 1.0;
 
+	Real ramp = -6.25;
+	Real timeStart = 5.0;
+	Real duration = 0.4;
+
 	CommandLineArgs args(argc, argv);
 	if (argc > 1) {
 		timeStep = args.timeStep;
@@ -36,13 +40,20 @@ int main(int argc, char* argv[]) {
 			cmdScaleI = args.options["scale_kp"];
 		if (args.options.find("scale_ki") != args.options.end())
 			cmdScaleI = args.options["scale_ki"];
+			
+		if (args.options.find("ramp") != args.options.end())
+			ramp = args.options["ramp"];
+		if (args.options.find("timeStart") != args.options.end())
+			timeStart = args.options["timeStart"];
+		if (args.options.find("duration") != args.options.end())
+			duration = args.options["duration"];
 	}
 
 	// ----- POWERFLOW FOR INITIALIZATION -----
 	Real timeStepPF = finalTime;
 	Real finalTimePF = finalTime+timeStepPF;
 	String simNamePF = simName+"_PF";
-	Logger::setLogDir("/home/rsa/logs/" + simNamePF);
+	Logger::setLogDir("logs/" + simNamePF);
 
 	// Components
 	auto n1PF = SimNode<Complex>::make("n1", PhaseType::Single);
@@ -89,14 +100,14 @@ int main(int argc, char* argv[]) {
 	Real timeStepDP = timeStep;
 	Real finalTimeDP = finalTime+timeStepDP;
 	String simNameDP = simName+"_DP";
-	Logger::setLogDir("/home/rsa/logs/" + simNameDP);
+	Logger::setLogDir("logs/" + simNameDP);
 
 	// Components
 	auto n1DP = SimNode<Complex>::make("n1", PhaseType::Single);
 	auto n2DP = SimNode<Complex>::make("n2", PhaseType::Single);
 
 	auto extnetDP = DP::Ph1::NetworkInjection::make("Slack", Logger::Level::debug);
-	extnetDP->setParameters(Complex(scenario.systemNominalVoltage,0), 0, -5.0, -3, 5.0);
+	extnetDP->setParameters(Complex(scenario.systemNominalVoltage,0), 0.0, ramp, timeStart, duration, true);
 	
 	(Complex(scenario.systemNominalVoltage,0));
 

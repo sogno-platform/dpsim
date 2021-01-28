@@ -10,34 +10,68 @@
 
 using namespace CPS;
 
-void Signal::FrequencyRamp::setParameters(Complex initialPhasor, Real freqStart, Real freqEnd, Real ramp, Real timeStart) {
+void Signal::FrequencyRamp::setParameters(Complex initialPhasor, Real freqStart, Real ramp, Real timeStart, Real duration, bool useAbsoluteCalc) {
     mMagnitude = Math::abs(initialPhasor);
     mInitialPhase = Math::phase(initialPhasor);
 
     mFreqStart = freqStart;
-    mFreqEnd = freqEnd;
     mRamp = ramp;
     mTimeStart = timeStart;
+    mDuration = duration;
+    mFreqEnd = freqStart + ramp * duration;
+    mOldTime = 0.0;
+
+    mUseAbsoluteCalc = useAbsoluteCalc;
 
     attribute<Complex>("sigOut")->set(initialPhasor);
 	attribute<Real>("freq")->set(freqStart);
 }
 
 void Signal::FrequencyRamp::step(Real time) {
-    Real freq;
-	//Real abs = Math::abs(attribute<Complex>("sigOut")->get());
-	//Real phase = Math::phase(attribute<Complex>("sigOut")->get());
-    
-    /// TODO: calculate signal value and set mSigOut attribute 
-    if(time > mTimeStart) {
-        freq = mFreqStart + mRamp * (time - mTimeStart);
-        if((freq < mFreqEnd) == (mRamp < 0)) freq = mFreqEnd;
-    } else {
-        freq = mFreqStart;
+    if(mUseAbsoluteCalc) {
+        stepAbsolute(time);
+        return;
     }
 
-    attribute<Complex>("sigOut")->set(Complex(
-        mMagnitude * cos(time * 2.*PI*freq + mInitialPhase),
-        mMagnitude * sin(time * 2.*PI*freq + mInitialPhase)));
-    attribute<Real>("freq")->set(freq);
+    Real currPhase;
+    Real currFreq;
+    Real timestep = time - mOldTime;
+    mOldTime = time;
+    
+    currPhase = Math::phase(attribute<Complex>("sigOut")->get());
+
+    if(time <= mTimeStart) {
+        currFreq = mFreqStart;
+    } else if(time <= mTimeStart + mDuration) {
+        currFreq = mFreqStart + mRamp * (time - mTimeStart);
+    } else {
+        currFreq = mFreqEnd;
+    }
+    currPhase += 2. * PI * currFreq * timestep;
+
+    attribute<Complex>("sigOut")->set(mMagnitude * Complex(cos(currPhase), sin(currPhase)));
+    attribute<Real>("freq")->set(currFreq);
+}
+
+void Signal::FrequencyRamp::stepAbsolute(Real time) {
+    Real currPhase = mInitialPhase;
+    Real currFreq = mFreqStart;
+
+    if(time <= mTimeStart) {
+        currPhase += 2 * PI * time * mFreqStart;
+    } else {
+        currPhase += 2 * PI * mTimeStart * mFreqStart;
+
+        if(time <= mTimeStart + mDuration) {
+            currPhase += 2 * PI * mRamp / 2 * pow(time - mTimeStart, 2);
+            currFreq += mRamp * (time - mTimeStart);
+        } else {
+            currPhase += 2 * PI * mRamp / 2 * pow(mDuration, 2);
+            currPhase += 2 * PI * mFreqEnd * (time - (mTimeStart + mDuration));
+            currFreq = mFreqEnd;
+        }
+    }
+
+    attribute<Complex>("sigOut")->set(mMagnitude * Complex(cos(currPhase), sin(currPhase)));
+    attribute<Real>("freq")->set(currFreq);
 }

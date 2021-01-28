@@ -38,9 +38,9 @@ void DP::Ph1::VoltageSource::setParameters(Complex voltageRef, Real srcFreq) {
 	mParametersSet = true;
 }
 
-void DP::Ph1::VoltageSource::setParameters(Complex initialPhasor, Real freqStart, Real freqEnd, Real ramp, Real timeStart) {
+void DP::Ph1::VoltageSource::setParameters(Complex initialPhasor, Real freqStart, Real ramp, Real timeStart, Real duration, bool useAbsoluteCalc) {
 	auto srcSigFreqRamp = Signal::FrequencyRamp::make(mName);
-	srcSigFreqRamp->setParameters(initialPhasor, freqStart, freqEnd, ramp, timeStart);
+	srcSigFreqRamp->setParameters(initialPhasor, freqStart, ramp, timeStart, duration, useAbsoluteCalc);
 	mSrcSig = srcSigFreqRamp; //std::make_shared<Signal::FrequencyRamp>(srcSigFreqRamp);
 
 	setAttributeRef("V_ref", mSrcSig->attribute<Complex>("sigOut"));

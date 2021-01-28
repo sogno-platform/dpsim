@@ -22,6 +22,7 @@ set(CIRCUIT_SOURCES
 	Circuits/DP_Slack_PiLine_PQLoad_Ramp_with_PF_Init.cpp
 	Circuits/DP_Slack_PiLine_VSI_with_PF_Init.cpp
 	Circuits/DP_Slack_PiLine_VSI_Ramp_with_PF_Init.cpp
+	Circuits/DP_Slack_PiLine_PQLoad_Compare_Rel_Abs.cpp
 	
 	# Powerflow examples
 	Circuits/PF_Slack_PiLine_PQLoad.cpp

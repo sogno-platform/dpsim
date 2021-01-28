@@ -50,10 +50,10 @@ void DP::Ph1::NetworkInjection::setParameters(Complex voltageRef, Real srcFreq) 
 				Logger::realToString(srcFreq));
 }
 
-void DP::Ph1::NetworkInjection::setParameters(Complex initialPhasor, Real freqStart, Real freqEnd, Real ramp, Real timeStart) {
+void DP::Ph1::NetworkInjection::setParameters(Complex initialPhasor, Real freqStart, Real ramp, Real timeStart, Real duration, bool useAbsoluteCalc) {
 	mParametersSet = true;
 
-	mSubVoltageSource->setParameters(initialPhasor, freqStart, freqEnd, ramp, timeStart);
+	mSubVoltageSource->setParameters(initialPhasor, freqStart, ramp, timeStart, duration, useAbsoluteCalc);
 	
 	setAttributeRef("V_ref", mSubVoltageSource->attribute<Complex>("V_ref"));
 	setAttributeRef("f_src", mSubVoltageSource->attribute<Real>("f_src"));

@@ -51,7 +51,7 @@ namespace Ph1 {
 		/// Setter for reference voltage parameters
 		void setParameters(Complex voltageRef, Real srcFreq = -1);
 		/// Setter for reference signal of type frequency ramp
-		void setParameters(Complex initialPhasor, Real freqStart, Real freqEnd, Real ramp, Real timeStart);
+		void setParameters(Complex initialPhasor, Real freqStart, Real ramp, Real timeStart, Real duration, bool useAbsoluteCalc = false);
 		/// More General setter for voltage source parameters
 		//void setVoltageSource(std::shared_ptr<DP::Ph1::VoltageSource> subVoltageSource);
 

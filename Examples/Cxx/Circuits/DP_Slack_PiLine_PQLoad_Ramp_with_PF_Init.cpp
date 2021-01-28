@@ -21,21 +21,32 @@ int main(int argc, char* argv[]) {
 	Real lineResistance = 0.05;
 	Real lineInductance = 0.1;
 	Real lineCapacitance = 0.1e-6;
-	
-	// Simulation parameters
 	Real timeStep = 0.001;
-	Real finalTime = 6.0;
+	Real finalTime = 10.0;
+
+	// Simulation parameters
+	Real ramp = -6.25;
+	Real timeStart = 5.0;
+	Real rampDuration = 0.4;
+	
 	CommandLineArgs args(argc, argv);
 	if (argc > 1) {
-		timeStep = args.timeStep;
-		finalTime = args.duration;
+		//timeStep = args.timeStep;
+		//finalTime = args.duration;
+		
+		if (args.options.find("ramp") != args.options.end())
+			ramp = args.options["ramp"];
+		if (args.options.find("timeStart") != args.options.end())
+			timeStart = args.options["timeStart"];
+		if (args.options.find("rampDuration") != args.options.end())
+			rampDuration = args.options["rampDuration"];
 	}
 
 	// ----- POWERFLOW FOR INITIALIZATION -----
 	Real timeStepPF = finalTime;
 	Real finalTimePF = finalTime+timeStepPF;
 	String simNamePF = "DP_Slack_PiLine_PQLoad_Ramp_with_PF_Init_PF";
-	Logger::setLogDir("/home/rsa/logs/" + simNamePF);
+	Logger::setLogDir("logs/" + simNamePF);
 
 	// Components
 	auto n1PF = SimNode<Complex>::make("n1", PhaseType::Single);
@@ -82,14 +93,14 @@ int main(int argc, char* argv[]) {
 	Real timeStepDP = timeStep;
 	Real finalTimeDP = finalTime+timeStepDP;
 	String simNameDP = "DP_Slack_PiLine_PQLoad_Ramp_with_PF_Init_DP";
-	Logger::setLogDir("/home/rsa/logs/" + simNameDP);
+	Logger::setLogDir("logs/" + simNameDP);
 
 	// Components
 	auto n1DP = SimNode<Complex>::make("n1", PhaseType::Single);
 	auto n2DP = SimNode<Complex>::make("n2", PhaseType::Single);
 
 	auto extnetDP = DP::Ph1::NetworkInjection::make("Slack", Logger::Level::debug);
-	extnetDP->setParameters(Complex(Vnom,0), 0.0, -5.0, -6.0, 5.0);
+	extnetDP->setParameters(Complex(Vnom,0), 0.0, ramp, timeStart, rampDuration, true);
 
 	auto lineDP = DP::Ph1::PiLine::make("PiLine", Logger::Level::debug);
 	lineDP->setParameters(lineResistance, lineInductance, lineCapacitance);
@@ -127,7 +138,7 @@ int main(int argc, char* argv[]) {
 	sim.setTimeStep(timeStepDP);
 	sim.setFinalTime(finalTimeDP);
 	sim.setDomain(Domain::DP);
-	//sim.doPowerFlowInit(false);
+	sim.doPowerFlowInit(false);
 	sim.addLogger(loggerDP);
 	//sim.addEvent(loadStepEvent);
 	sim.run();
