@@ -66,8 +66,10 @@ namespace Ph1 {
 			void calculatePerUnitParameters(Real baseApparentPower, Real baseOmega);
             /// Modify powerflow bus type
 			void modifyPowerFlowBusType(PowerflowBusType powerflowBusType) override;
-			/// Update reactive power injection
+			/// Update reactive power injection (PV Bus)
 			void updateReactivePowerInjection(Complex powerInj);
+			/// Update active & reactive power injection (VD bus)
+			void updatePowerInjection(Complex powerInj);
 			/// Get Apparent power of Powerflow solution
 			Complex getApparentPower() { return Complex (mSetPointActivePower, mSetPointReactivePower);}
 		};

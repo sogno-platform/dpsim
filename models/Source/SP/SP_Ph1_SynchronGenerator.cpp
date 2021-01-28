@@ -77,8 +77,17 @@ void SP::Ph1::SynchronGenerator::modifyPowerFlowBusType(PowerflowBusType powerfl
     }
 }
 
+//Method used in PF to update reactive power for PV-Bus generator 
 void SP::Ph1::SynchronGenerator::updateReactivePowerInjection(Complex powerInj) {
 	mSetPointReactivePower = powerInj.imag();
+    mSetPointReactivePowerPerUnit= mSetPointReactivePower/mBaseApparentPower;
+}
+
+//Method used in PF to update active & reactive power for VD-Bus generator 
+void SP::Ph1::SynchronGenerator::updatePowerInjection(Complex powerInj) {
+	mSetPointActivePower = powerInj.real();
+    mSetPointActivePowerPerUnit= mSetPointActivePower/mBaseApparentPower;
+    mSetPointReactivePower = powerInj.imag();
     mSetPointReactivePowerPerUnit= mSetPointReactivePower/mBaseApparentPower;
 }
 

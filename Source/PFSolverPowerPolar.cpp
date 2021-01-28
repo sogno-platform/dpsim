@@ -400,6 +400,12 @@ void PFSolverPowerPolar::calculatePAndQAtSlackBus() {
                 break;
             }
         }
+        for(auto gen : mSynchronGenerators){
+            if(gen->mPowerflowBusType==CPS::PowerflowBusType::VD){
+			    gen->updatePowerInjection(S*mBaseApparentPower);
+                break;
+            } 
+        }
     }
 }
 
