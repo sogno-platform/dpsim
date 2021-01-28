@@ -52,17 +52,19 @@ set(CIRCUIT_SOURCES
 	
 	#MA gna
 	#Circuits/DP_1phSynGenTrStab_EMT_3phSynGenDQ7odTrapez_StartofLineFault.cpp
-	#Circuits/DP_SP_SynGenTrStab_3BusSystem_loadBus.cpp
-	#Circuits/DP_SP_SynGenTrStab_3BusSystem_infBus.cpp
 	
-	#Circuits/SP_SynGenTrStab_SMIB.cpp
-	#Circuits/DP_SynGenTrStab_SMIB.cpp
-	
-
-	Circuits/DP_SynGenTrStab_SMIB_SteadyState.cpp
+	#SMIB
 	Circuits/SP_SynGenTrStab_SMIB_SteadyState.cpp
+	Circuits/DP_SynGenTrStab_SMIB_SteadyState.cpp
 	Circuits/SP_SynGenTrStab_SMIB_Fault.cpp
 	Circuits/DP_SynGenTrStab_SMIB_Fault.cpp
+
+	#3Bus System
+	Circuits/SP_SynGenTrStab_3Bus_SteadyState.cpp
+	Circuits/DP_SynGenTrStab_3Bus_SteadyState.cpp
+	Circuits/DP_SynGenTrStab_3Bus_Fault.cpp
+	Circuits/SP_SynGenTrStab_3Bus_Fault.cpp
+
 )
 
 set(SYNCGEN_SOURCES
