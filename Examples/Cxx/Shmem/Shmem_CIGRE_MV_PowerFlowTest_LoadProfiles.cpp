@@ -33,11 +33,7 @@ using namespace CPS::CIM;
 int main(int argc, char** argv){
 	CommandLineArgs args(argc, argv);
 
-	#ifdef _WIN32
-		String loadProfilePath("..\\..\\..\\..\\..\\sogno-grid-data-public\\Load_Data\\CIGRE_MV_NoTap\\");
-	#elif defined(__linux__) || defined(__APPLE__)
-		String loadProfilePath("../sogno-grid-data-public/Load_Data/CIGRE_MV_NoTap/");
-	#endif
+	String loadProfilePath("build/_deps/profile-data-src/CIGRE_MV_NoTap/load_profiles/");
 
 	std::map<String,String> assignList = {
 	// {load mRID, file name}

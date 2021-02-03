@@ -44,10 +44,9 @@ CHILDS=$P1
 
 sleep 2
 
-if true; then
+if false; then
 	VILLAS_LOG_PREFIX="[Pipe] " \
-	#villas-pipe Configs/Shmem_CIGRE_MV.conf dpsim1
-	villas-node Configs/shmem_CIGRE_MV_PF/Shmem_CIGRE_MV.conf
+	villas-pipe Configs/shmem_CIGRE_MV_PF/Shmem_CIGRE_MV.conf dpsim1
 else
 	VILLAS_LOG_PREFIX="[Node] " \
 	villas-node Configs/shmem_CIGRE_MV_PF/Shmem_CIGRE_MV.conf & VN=$!
