@@ -61,9 +61,14 @@ void DP::Ph1::VoltageSource::setSourceSignal(CPS::Signal::SignalGenerator::Ptr s
 }
 */
 void DP::Ph1::VoltageSource::initializeFromNodesAndTerminals(Real frequency) {
-	if (!mParametersSet) {
+	Complex voltageRef = attribute<Complex>("V_ref")->get();
+	
+	if (voltageRef == Complex(0, 0))	
+		voltageRef = initialSingleVoltage(1) - initialSingleVoltage(0);
+
+	if (mSrcSig == 0) {
 		Signal::SineWaveGenerator srcSigSine(mName);
-		srcSigSine.setParameters(attribute<Complex>("V_ref")->get(), attribute<Real>("f_src")->get());
+		srcSigSine.setParameters(voltageRef); //, mSrcSig->attribute<Real>("freq"));
 		mSrcSig = std::make_shared<Signal::SineWaveGenerator>(srcSigSine);
 		
 		setAttributeRef("V_ref", mSrcSig->attribute<Complex>("sigOut"));
