@@ -2,6 +2,7 @@
 
 #include <dpsim/MNASolver.h>
 #include <dpsim/Cuda/CudaUtility.h>
+#include <cusolverSp.h>
 
 namespace DPsim {
 
@@ -12,9 +13,11 @@ namespace DPsim {
 		// #### Attributes required for GPU ####
 		/// Solver-Handle
 		cusparseHandle_t mCusparsehandle;
+		cusolverSpHandle_t mCusolverhandle;
 
 		/// Systemmatrix on Device
 		std::unique_ptr<cuda::CudaMatrix<double, int>> mSysMat;
+		std::unique_ptr<Eigen::PermutationMatrix<Eigen::Dynamic>> mTransp;
 
 		/// RHS-Vector
 		cuda::Vector<double> mGpuRhsVec;
@@ -34,9 +37,9 @@ namespace DPsim {
 		///Required shared Variables
 		cuda::Vector<char> pBuffer;
 		cusparseMatDescr_t descr_L = nullptr;
-    	cusparseMatDescr_t descr_U = nullptr;
+		cusparseMatDescr_t descr_U = nullptr;
 		csrsv2Info_t info_L = nullptr;
-    	csrsv2Info_t info_U = nullptr;
+		csrsv2Info_t info_U = nullptr;
 
 	public:
 		MnaSolverGpuSparse(String name,

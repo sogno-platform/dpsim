@@ -1,5 +1,6 @@
 #include <dpsim/MNASolverGpuSparse.h>
 #include <dpsim/SequentialScheduler.h>
+#include <Eigen/Eigen>
 
 using namespace DPsim;
 using namespace CPS;
@@ -11,11 +12,14 @@ MnaSolverGpuSparse<VarType>::MnaSolverGpuSparse(String name,
 	CPS::Domain domain, CPS::Logger::Level logLevel) :
     MnaSolver<VarType>(name, domain, logLevel),
     mCusparsehandle(nullptr), mSysMat(nullptr),
+	mTransp(nullptr),
 	mGpuRhsVec(0), mGpuLhsVec(0), mGpuIntermediateVec(0),
 	pBuffer(0){
 
 	//TODO Error-Handling
     cusparseCreate(&mCusparsehandle);
+	//TODO: Error-Handling
+	cusolverSpCreate(&mCusolverhandle);
 }
 
 template <typename VarType>
@@ -28,32 +32,19 @@ void MnaSolverGpuSparse<VarType>::initialize() {
     MnaSolver<VarType>::initialize();
 
     int dim = this->mRightSideVector.rows();
+	auto hMat = this->mSwitchedMatrices[std::bitset<SWITCH_NUM>(0)];
 
-    mSysMat = std::unique_ptr<cuda::CudaMatrix<double, int>>(new cuda::CudaMatrix<double, int>(this->mSwitchedMatrices[std::bitset<SWITCH_NUM>(0)], dim));
 	mGpuRhsVec = cuda::Vector<double>(dim);
 	mGpuLhsVec = cuda::Vector<double>(dim);
 	mGpuIntermediateVec = cuda::Vector<double>(dim);
 
-	std::cout << this->mSwitchedMatrices[std::bitset<SWITCH_NUM>(0)] << std::endl;
-	const cuda::CudaMatrix<double, int> &x = *mSysMat.get();
-    std::cout << x << std::endl;
-
-    //ILU factorization
-	iluPreconditioner();
-}
-
-template <typename VarType>
-void MnaSolverGpuSparse<VarType>::iluPreconditioner() {
 	cusparseMatDescr_t descr_M = 0;
     csrilu02Info_t info_M  = 0;
     int structural_zero;
     int numerical_zero;
 
-	double *d_csrVal = mSysMat->val.data();
-	int *d_csrRowPtr = mSysMat->row.data();
-	int *d_csrColInd = mSysMat->col.data();
 	int N = this->mRightSideVector.rows();
-	int nnz = mSysMat->non_zero;
+	int nnz = hMat.nonZeros();
 
     // step 1: create a descriptor which contains
     // - matrix M is base-1
@@ -85,6 +76,39 @@ void MnaSolverGpuSparse<VarType>::iluPreconditioner() {
     cusparseCreateCsrsv2Info(&info_L);
     cusparseCreateCsrsv2Info(&info_U);
 
+	// step 2a: permutate Matrix M' = P*M
+	//int p[N];
+	int p_nnz = 0;
+	int p[N];
+
+	cusolverStatus_t ret = cusolverSpDcsrzfdHost(
+		mCusolverhandle, N,nnz, descr_M,
+		hMat.valuePtr(),
+		hMat.outerIndexPtr(),
+		hMat.innerIndexPtr(),
+		p, &p_nnz);
+
+	if (ret != CUSOLVER_STATUS_SUCCESS) {
+		this->mSLog->error("cusolverSpDcsrzfdHost returend an error");
+	}
+
+
+	mTransp = std::unique_ptr<Eigen::PermutationMatrix<Eigen::Dynamic> >(
+			new Eigen::PermutationMatrix<Eigen::Dynamic>(
+			Eigen::Map< Eigen::Matrix<int, Eigen::Dynamic, 1> >(p, N, 1)));
+
+	//std::cout << "Transposition:" << std::endl;
+	//std::cout << mTransp->indices() << std::endl;
+
+	hMat = *mTransp * hMat;
+
+    mSysMat = std::unique_ptr<cuda::CudaMatrix<double, int>>(new cuda::CudaMatrix<double, int>(hMat, dim));
+
+	double *d_csrVal = mSysMat->val.data();
+	int *d_csrRowPtr = mSysMat->row.data();
+	int *d_csrColInd = mSysMat->col.data();
+
+
     // step 3: query how much memory used in csrilu02 and csrsv2, and allocate the buffer
 	int pBufferSize_M, pBufferSize_L, pBufferSize_U;
 	int pBufferSize;
@@ -110,13 +134,14 @@ void MnaSolverGpuSparse<VarType>::iluPreconditioner() {
     cusparseDcsrsv2_analysis(mCusparsehandle, CUSPARSE_OPERATION_NON_TRANSPOSE, N, nnz, descr_U, d_csrVal, d_csrRowPtr, d_csrColInd, info_U, CUSPARSE_SOLVE_POLICY_USE_LEVEL, pBuffer.data());
 
     // step 5: M = L * U
+
     cusparseDcsrilu02(mCusparsehandle, N, nnz, descr_M, d_csrVal, d_csrRowPtr, d_csrColInd, info_M, CUSPARSE_SOLVE_POLICY_NO_LEVEL, pBuffer.data());
     status = cusparseXcsrilu02_zeroPivot(mCusparsehandle, info_M, &numerical_zero);
     if (CUSPARSE_STATUS_ZERO_PIVOT == status){
         printf("U(%d,%d) is zero\n", numerical_zero, numerical_zero);
     }
 
-    std::cout << *mSysMat.get() << std::endl;
+    //std::cout << *mSysMat.get() << std::endl;
 }
 
 template <typename VarType>
@@ -155,6 +180,8 @@ void MnaSolverGpuSparse<VarType>::solve(Real time, Int timeStepCount) {
 		this->mRightSideVector += *stamp;
 
     //Copy right vector to device
+	//Permutate right side: R' = P * R
+	this->mRightSideVector = *mTransp * this->mRightSideVector;
     cudaMemcpy(mGpuRhsVec.data(), &this->mRightSideVector(0), size * sizeof(Real), cudaMemcpyHostToDevice);
 
 	const double alpha = 1.;
@@ -171,6 +198,9 @@ void MnaSolverGpuSparse<VarType>::solve(Real time, Int timeStepCount) {
 
     //Copy Solution back
     cudaMemcpy(&this->mLeftSideVector(0), mGpuLhsVec.data(), size * sizeof(Real), cudaMemcpyDeviceToHost);
+
+	//Apply inverse Permutation L = P' * L'
+	this->mLeftSideVector = mTransp->inverse() * this->mLeftSideVector;
 
 	// TODO split into separate task? (dependent on x, updating all v attributes)
 	for (UInt nodeIdx = 0; nodeIdx < this->mNumNetNodes; ++nodeIdx)

@@ -61,7 +61,7 @@ if(WITH_CUDA)
 			MNASolverGpuSparse.cpp
 		)
 
-		list(APPEND DPSIM_LIBRARIES ${CUDA_LIBRARIES} ${CUDA_cusparse_LIBRARY})
+		list(APPEND DPSIM_LIBRARIES ${CUDA_LIBRARIES} ${CUDA_cusparse_LIBRARY} ${CUDA_cusolver_LIBRARY})
 	else()
 		list(APPEND DPSIM_SOURCES
 			MNASolverGpuDense.cpp
