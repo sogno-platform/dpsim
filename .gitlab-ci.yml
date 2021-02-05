@@ -45,6 +45,7 @@ docker:centos:
   needs: []
   script:
     - docker build
+        --no-cache
         --file Packaging/Docker/Dockerfile.dev-centos
         --tag ${DOCKER_IMAGE_DEV}-centos:${DOCKER_TAG}
         --tag ${DOCKER_IMAGE_DEV}-centos:latest .

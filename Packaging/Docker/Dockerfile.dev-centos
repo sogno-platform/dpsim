@@ -79,7 +79,9 @@ RUN dnf -y install \
     graphviz \
     libasan \
     cppcheck \
-    gnuplot
+    gnuplot \
+	qt5-qtbase \
+    qt5-qtsvg
 RUN pip3 install gprof2dot
 
 # Install CIMpp
