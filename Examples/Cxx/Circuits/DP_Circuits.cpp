@@ -43,52 +43,6 @@ void DP_CS_R1() {
 	sim.run();
 }
 
-void DP_CS_R5() {
-	Real timeStep = 0.0001;
-	Real finalTime = 0.1;
-	String simName = "DP_CS_R5";
-	Logger::setLogDir("logs/"+simName);
-
-	// Nodes
-	auto n1 = SimNode::make("n1");
-	auto n2 = SimNode::make("n2");
-	auto n3 = SimNode::make("n3");
-
-	// Components
-	auto cs = Ph1::CurrentSource::make("cs");
-	cs->setParameters(Complex(10, 0));
-	auto r1 = Ph1::Resistor::make("r_1");
-	r1->setParameters(1);
-	auto r2 = Ph1::Resistor::make("r_2");
-	r2->setParameters(1);
-	auto r3 = Ph1::Resistor::make("r_3");
-	r3->setParameters(1);
-	auto r4 = Ph1::Resistor::make("r_4");
-	r4->setParameters(1);
-	auto r5 = Ph1::Resistor::make("r_5");
-	r5->setParameters(1);
-
-	// Topology
-	cs->connect({ SimNode::GND, n1 });
-	r1->connect({ SimNode::GND, n1 });
-	r2->connect({ n1, n2 });
-	r3->connect({ SimNode::GND, n2 });
-	r4->connect({ n2, n3 });
-	r5->connect({ SimNode::GND, n3 });
-
-	auto sys = SystemTopology(50, SystemNodeList{n1, n2, n3}, SystemComponentList{cs, r1, r2, r3, r4, r5});
-
-	// Logging
-	auto logger = DataLogger::make(simName);
-	logger->addAttribute("v1", n1->attribute("v"));
-	logger->addAttribute("i10", r1->attribute("i_intf"));
-
-	Simulation sim(simName, sys, timeStep, finalTime, Domain::DP, Solver::Type::MNA, Logger::Level::debug);
-	sim.addLogger(logger);
-
-	sim.run();
-}
-
 void DP_VS_R1() {
 	Real timeStep = 0.0001;
 	Real finalTime = 0.1;
@@ -462,15 +416,14 @@ void DP_Ph3_VS_RC1() {
 }
 
 int main(int argc, char* argv[]) {
-	//DP_CS_R1();
-	DP_CS_R5();
-	//DP_VS_R1();
-	//DP_CS_R2CL();
-	//DP_VS_CS_R4();
-	//DP_VS_R2L3();
-	//DP_VS_RC1();
-	//DP_VS_RL2();
+	DP_CS_R1();
+	DP_VS_R1();
+	DP_CS_R2CL();
+	DP_VS_CS_R4();
+	DP_VS_R2L3();
+	DP_VS_RC1();
+	DP_VS_RL2();
 
-	//DP_Ph3_VS_R2L3();
-	//DP_Ph3_VS_RC1();
+	DP_Ph3_VS_R2L3();
+	DP_Ph3_VS_RC1();
 }
