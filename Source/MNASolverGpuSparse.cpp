@@ -14,7 +14,7 @@ MnaSolverGpuSparse<VarType>::MnaSolverGpuSparse(String name,
     mCusparsehandle(nullptr), mSysMat(nullptr),
 	mTransp(nullptr),
 	mGpuRhsVec(0), mGpuLhsVec(0), mGpuIntermediateVec(0),
-	pBuffer(0){
+	pBuffer(0) {
 
 	//TODO Error-Handling
     cusparseCreate(&mCusparsehandle);
@@ -31,20 +31,19 @@ template <typename VarType>
 void MnaSolverGpuSparse<VarType>::initialize() {
     MnaSolver<VarType>::initialize();
 
-    int dim = this->mRightSideVector.rows();
+	size_t N = this->mRightSideVector.rows();
 	auto hMat = this->mSwitchedMatrices[std::bitset<SWITCH_NUM>(0)];
 
-	mGpuRhsVec = cuda::Vector<double>(dim);
-	mGpuLhsVec = cuda::Vector<double>(dim);
-	mGpuIntermediateVec = cuda::Vector<double>(dim);
+	mGpuRhsVec = cuda::Vector<double>(N);
+	mGpuLhsVec = cuda::Vector<double>(N);
+	mGpuIntermediateVec = cuda::Vector<double>(N);
 
 	cusparseMatDescr_t descr_M = 0;
     csrilu02Info_t info_M  = 0;
     int structural_zero;
     int numerical_zero;
 
-	int N = this->mRightSideVector.rows();
-	int nnz = hMat.nonZeros();
+	size_t nnz = hMat.nonZeros();
 
     // step 1: create a descriptor which contains
     // - matrix M is base-1
@@ -77,7 +76,6 @@ void MnaSolverGpuSparse<VarType>::initialize() {
     cusparseCreateCsrsv2Info(&info_U);
 
 	// step 2a: permutate Matrix M' = P*M
-	//int p[N];
 	int p_nnz = 0;
 	int p[N];
 
@@ -91,8 +89,7 @@ void MnaSolverGpuSparse<VarType>::initialize() {
 	if (ret != CUSOLVER_STATUS_SUCCESS) {
 		this->mSLog->error("cusolverSpDcsrzfdHost returend an error");
 	}
-
-
+	// create Eigen::PermutationMatrix from the p
 	mTransp = std::unique_ptr<Eigen::PermutationMatrix<Eigen::Dynamic> >(
 			new Eigen::PermutationMatrix<Eigen::Dynamic>(
 			Eigen::Map< Eigen::Matrix<int, Eigen::Dynamic, 1> >(p, N, 1)));
@@ -100,9 +97,11 @@ void MnaSolverGpuSparse<VarType>::initialize() {
 	//std::cout << "Transposition:" << std::endl;
 	//std::cout << mTransp->indices() << std::endl;
 
+	// apply permutation
 	hMat = *mTransp * hMat;
 
-    mSysMat = std::unique_ptr<cuda::CudaMatrix<double, int>>(new cuda::CudaMatrix<double, int>(hMat, dim));
+	// copy P' to GPU
+    mSysMat = std::unique_ptr<cuda::CudaMatrix<double, int>>(new cuda::CudaMatrix<double, int>(hMat, N));
 
 	double *d_csrVal = mSysMat->val.data();
 	int *d_csrRowPtr = mSysMat->row.data();
