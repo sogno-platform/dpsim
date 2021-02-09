@@ -1,0 +1,19 @@
+# rwthacs/dpsim-dev is built by dpsim-git/Packaging/Docker/Dockerfile.dev
+ARG DOCKER_TAG=latest
+
+FROM rwthacs/dpsim-dev:${DOCKER_TAG}
+
+ADD . /dpsim
+
+RUN rm -rf /dpsim/build && mkdir /dpsim/build
+WORKDIR /dpsim/build
+RUN cmake ..
+RUN cmake --build . --target Shmem_CIGRE_MV_PowerFlowTest_LoadProfiles
+
+EXPOSE 1883
+
+WORKDIR /
+RUN chmod +x /dpsim/Configs/shmem_CIGRE_MV_PF/start_Shmem_CIGRE_MV_PowerFlowTest_LoadProfiles.sh
+RUN dnf install procps -y
+
+CMD ["sh", "-c", "sleep 5 && cd /dpsim && ./Configs/shmem_CIGRE_MV_PF/start_Shmem_CIGRE_MV_PowerFlowTest_LoadProfiles.sh"]
