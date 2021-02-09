@@ -15,10 +15,10 @@ LABEL \
 RUN dnf -y update && \
     dnf install -y epel-release dnf-plugins-core && \
     dnf install -y https://rpms.remirepo.net/enterprise/remi-release-8.rpm && \
-    dnf config-manager --set-enabled PowerTools && \
+    dnf config-manager --set-enabled powertools && \
     dnf config-manager --set-enabled remi
 # We probably want to remove this once EPEL fixes their repos
-RUN dnf config-manager --enable Devel
+#RUN dnf config-manager --enable devel
 
 # CUDA dependencies
 RUN dnf -y install https://developer.download.nvidia.com/compute/cuda/repos/rhel8/x86_64/cuda-repo-rhel8-10.2.89-1.x86_64.rpm && \
