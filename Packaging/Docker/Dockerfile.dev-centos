@@ -1,6 +1,7 @@
 FROM centos:8
 
 ARG VILLAS_VERSION=0.8.0
+ARG CIM_VERSION=IEC61970_16v29a
 
 LABEL \
 	org.label-schema.schema-version = "1.0" \
@@ -94,11 +95,11 @@ RUN dnf -y install \
     qt5-qtsvg
 RUN pip3 install gprof2dot
 
-# Install CIMpp
+# Install CIMpp from source
 RUN cd /tmp && \
-	git clone --recurse-submodules https://github.com/CIM-IEC/libcimpp.git && \
+	git clone --recursive https://github.com/cim-iec/libcimpp.git && \
 	mkdir -p libcimpp/build && cd libcimpp/build && \
-	cmake -DCMAKE_INSTALL_LIBDIR=/usr/local/lib64 -DUSE_CIM_VERSION=IEC61970_16v29a -DBUILD_SHARED_LIBS=ON -DBUILD_ARABICA_EXAMPLES=OFF .. && make -j$(nproc) install && \
+	cmake -DCMAKE_INSTALL_LIBDIR=/usr/local/lib64 -DUSE_CIM_VERSION=${CIM_VERSION} -DBUILD_SHARED_LIBS=ON -DBUILD_ARABICA_EXAMPLES=OFF .. && make -j$(nproc) install && \
 	rm -rf /tmp/libcimpp
 
 # CIMpp and VILLAS are installed here
