@@ -99,10 +99,10 @@ build:linux-profiling:
     - cmake -DWITH_PROFILING=ON -DWITH_ASAN=ON -DWITH_CUDA=OFF -DWITH_SPDLOG_SUBMODULE=ON ..
     - make -j 32
   image: ${DOCKER_IMAGE_DEV}-centos:${DOCKER_TAG}
-  cache:
-    paths:
-        - build
-    key: build-linux-profiling
+  #cache:
+      # paths:
+      #  - build
+      # key: build-linux-profiling
   artifacts:
     paths:
       - build

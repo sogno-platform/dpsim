@@ -26,6 +26,8 @@ namespace DPsim {
 		/// Intermediate Vector
 		cuda::Vector<double> mGpuIntermediateVec;
 
+		using Solver::mSLog;
+
 		/// Initialize cuSparse-library
         void initialize();
 		/// ILU factorization
@@ -40,6 +42,8 @@ namespace DPsim {
 		cusparseMatDescr_t descr_U = nullptr;
 		csrsv2Info_t info_L = nullptr;
 		csrsv2Info_t info_U = nullptr;
+
+		void checkCusparseStatus(cusparseStatus_t status, std::string additionalInfo="cuSparse Error:");
 
 	public:
 		MnaSolverGpuSparse(String name,
