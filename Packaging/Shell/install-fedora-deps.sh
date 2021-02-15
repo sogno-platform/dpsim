@@ -23,11 +23,11 @@ dnf --refresh -y install \
 	gsl-devel
 
 # Python
-pip3 install --user -r requirements.txt
-pip3 install --user -r requirements-jupyter.txt
+pip3 install -r requirements.txt
+
+# Activate Jupyter extensions
 dnf -y --refresh install npm
-jupyter nbextension enable --py widgetsnbextension
-jupyter labextension install @jupyter-widgets/jupyterlab-manager
+pip3 install jupyterlab jupyter_contrib_nbextensions nbconvert nbformat
 
 # VILLAS dependencies
 sudo dnf install \

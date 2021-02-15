@@ -70,7 +70,5 @@ cd /tmp && \
 	rm -rf /tmp/villasnode
 
 # Activate Jupyter extensions
-pip3 install -r requirements-jupyter.txt
 dnf -y --refresh install npm
-jupyter nbextension enable --py widgetsnbextension
-jupyter labextension install @jupyter-widgets/jupyterlab-manager
+pip3 install jupyterlab jupyter_contrib_nbextensions nbconvert nbformat
