@@ -592,13 +592,19 @@ TopologicalPowerComp::Ptr Reader::mapExternalNetworkInjection(CIMPP::ExternalNet
 			auto cpsextnet = std::make_shared<SP::Ph1::NetworkInjection>(extnet->mRID, extnet->name, mComponentLogLevel);
 			cpsextnet->modifyPowerFlowBusType(PowerflowBusType::VD); // for powerflow solver set as VD component as default
 			cpsextnet->setBaseVoltage(baseVoltage);
-			if(extnet->RegulatingControl){
-				mSLog->info("       Voltage set-point={}", (float) extnet->RegulatingControl->targetValue);
-				cpsextnet->setParameters(extnet->RegulatingControl->targetValue*baseVoltage); // assumes that value is specified in CIM data in per unit
-			} else {
-				mSLog->info("       No voltage set-point defined. Using 1 per unit.");
-				cpsextnet->setParameters(1.*baseVoltage);
+
+			try {
+				if(extnet->RegulatingControl){
+					mSLog->info("       Voltage set-point={}", (float) extnet->RegulatingControl->targetValue);
+					cpsextnet->setParameters(extnet->RegulatingControl->targetValue*baseVoltage); // assumes that value is specified in CIM data in per unit
+				} else {
+					mSLog->info("       No voltage set-point defined. Using 1 per unit.");
+					cpsextnet->setParameters(1.*baseVoltage);
+				}
+			} catch (ReadingUninitializedField* e ) {
+				std::cerr << "Ignore incomplete RegulatingControl" << std::endl;
 			}
+
 			return cpsextnet;
 		}
 		else {
