@@ -26,8 +26,7 @@ stages:
         ${TAGS}
         ${BUILD_ARGS} .
   tags:
-    - shell
-    - linux
+    - docker
 
 docker:fedora:
   <<: *docker-fedora-template
