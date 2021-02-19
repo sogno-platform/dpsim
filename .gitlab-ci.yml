@@ -1,13 +1,11 @@
 variables:
+  GIT_STRATEGY: fetch
+  GIT_SUBMODULE_STRATEGY: recursive
   RSYNC_OPTS: --recursive --ignore-missing-args --chown ${DEPLOY_USER}:${DEPLOY_USER}
   DOCKER_TAG: ${CI_COMMIT_REF_NAME}
   DOCKER_IMAGE: rwthacs/dpsim
   DOCKER_IMAGE_DEV: rwthacs/dpsim-dev
 
-before_script:
-  - git config --local core.longpaths true
-  - git submodule sync --recursive
-  - git submodule update --init --recursive
 
 stages:
   - prepare
@@ -19,6 +17,7 @@ stages:
 
 .docker-fedora-template: &docker-fedora-template
   stage: prepare
+  image: docker:20.10
   needs: []
   script:
     - docker build
@@ -48,8 +47,7 @@ docker:centos:
         --tag ${DOCKER_IMAGE_DEV}-centos:${DOCKER_TAG}
         --tag ${DOCKER_IMAGE_DEV}-centos:latest .
   tags:
-    - shell
-    - linux
+    - docker
 
 build:linux:
   stage: build
@@ -204,8 +202,7 @@ build:docker:
         --tag ${DOCKER_IMAGE}:${DOCKER_TAG}
         --tag ${DOCKER_IMAGE}:latest .
   tags:
-    - shell
-    - linux
+    - docker
   only:
     - tags
 
@@ -623,8 +620,7 @@ pages:
   only:
     - deploy
   tags:
-    - shell
-    - linux
+    - docker
 
 deploy:docker:
   stage: deploy
@@ -636,22 +632,6 @@ deploy:docker:
   dependencies:
     - build:docker
   tags:
-    - shell
-    - linux
+    - docker
   only:
     - tags
-
-deploy:packages:
-  stage: deploy
-  script:
-    - rsync ${RSYNC_OPTS} build/*.rpm ${DEPLOY_USER}@${DEPLOY_HOST}:/var/www/packages/fedora/29/x86_64
-    - rsync ${RSYNC_OPTS} build/*.tar.gz ${DEPLOY_USER}@${DEPLOY_HOST}:/var/www/dpsim/src
-    - ssh ${DEPLOY_USER}@${DEPLOY_HOST} createrepo /var/www/packages/fedora/29
-  dependencies:
-    - generate:packages
-  only:
-    - tags
-  tags:
-    - fein-deploy
-    - shell
-    - linux
