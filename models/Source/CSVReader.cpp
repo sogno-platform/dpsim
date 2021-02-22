@@ -6,11 +6,30 @@
  * file, You can obtain one at https://mozilla.org/MPL/2.0/.
  *********************************************************************************/
 
+
 #include <cps/CSVReader.h>
 
 namespace fs = std::experimental::filesystem;
 
 using namespace CPS;
+
+MatrixRow CSVReader::csv2Eigen(const std::string& path) {
+    std::ifstream inputFile;
+    inputFile.open(path);
+    std::string line;
+    std::vector<double> values;
+    uint rows = 0;
+    while (std::getline(inputFile, line)) {
+        std::stringstream lineStream(line);
+        std::string cell;
+        while (std::getline(lineStream, cell, ',')) {
+            values.push_back(std::stod(cell));
+        }
+        ++rows;
+    }
+	uint columns = values.size()/rows;
+    return Eigen::Map<const MatrixRow>(values.data(), rows, columns);
+}
 
 void CSVRow::readNextRow(std::istream& str) {
 	std::string line;

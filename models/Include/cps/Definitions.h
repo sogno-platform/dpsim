@@ -76,6 +76,8 @@ namespace CPS {
 	/// @brief Dense matrix for integers.
 	typedef Eigen::Matrix<Int, Eigen::Dynamic, Eigen::Dynamic, Eigen::ColMajor> MatrixInt;
 	///
+	typedef Eigen::Matrix<Real, Eigen::Dynamic, Eigen::Dynamic, Eigen::RowMajor> MatrixRow;
+	///
 	typedef Eigen::PartialPivLU<Matrix> LUFactorized;
 	///
 	typedef Eigen::SparseLU<SparseMatrix> LUFactorizedSparse;

@@ -64,7 +64,8 @@ namespace CPS {
 		Real time_format_convert(const String& time);
 		/// Skip first row if it has no digits at beginning
 		void doSkipFirstRow(Bool value = true) { mSkipFirstRow = value; }
-
+		///
+		MatrixRow csv2Eigen(const std::string& path);
 
 		std::vector<PQData> readLoadProfileDP(std::experimental::filesystem::path file,
 			Real start_time = -1, Real time_step = 1, Real end_time = -1, Real scale_factor= 1,
