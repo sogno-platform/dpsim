@@ -9,6 +9,27 @@
 #include <cps/EMT/EMT_Ph3_SynchronGeneratorTrStab.h>
 using namespace CPS;
 
+Matrix EMT::Ph3::SynchronGeneratorTrStab::parkTransformPowerInvariant(Real theta, const Matrix &fabc) {
+	// Calculates fdq = Tdq * fabc
+	// Assumes that d-axis starts aligned with phase a
+	Matrix Tdq = getParkTransformMatrixPowerInvariant(theta);
+	Matrix dqvector = Tdq * fabc;
+	return dqvector;
+}
+
+
+Matrix EMT::Ph3::SynchronGeneratorTrStab::getParkTransformMatrixPowerInvariant(Real theta) {
+	// Return park matrix for theta
+	// Assumes that d-axis starts aligned with phase a
+	Matrix Tdq = Matrix::Zero(2, 3);
+	Real k = sqrt(2. / 3.);
+	Tdq <<
+		k * cos(theta), k * cos(theta - 2. * M_PI / 3.), k * cos(theta + 2. * M_PI / 3.),
+		-k * sin(theta), -k * sin(theta - 2. * M_PI / 3.), -k * sin(theta + 2. * M_PI / 3.);
+	return Tdq;
+}
+
+
 EMT::Ph3::SynchronGeneratorTrStab::SynchronGeneratorTrStab(String uid, String name, Logger::Level logLevel)
 	: SimPowerComp<Real>(uid, name, logLevel) {
 	setVirtualNodeNumber(2);
@@ -188,14 +209,13 @@ void EMT::Ph3::SynchronGeneratorTrStab::initializeFromNodesAndTerminals(Real fre
 }
 
 void EMT::Ph3::SynchronGeneratorTrStab::step(Real time) {
-
 	// #### Calculations on input of time step k ####
-	// Update electrical power
-	// mElecActivePower = ( (mEp - mIntfVoltage(0,0)) / mImpedance *  mIntfVoltage(0,0) ).real();
-	mElecActivePower = ( 3./2. * mIntfVoltage(0,0) *  std::conj( - mIntfCurrent(0,0)) ).real();
-	// For infinite power bus
-	// mElecActivePower = (Math::abs(mEp) * Math::abs(mIntfVoltage(0,0)) / mXpd )* sin(Math::phase(mEp)-Math::phase(mIntfVoltage(0,0)));
-	
+	// Transform interface quantities to synchronously rotating DQ reference frame
+	Matrix intfVoltageDQ = parkTransformPowerInvariant(mThetaN, mIntfVoltage);
+	Matrix intfCurrentDQ = parkTransformPowerInvariant(mThetaN, mIntfCurrent);	
+	// Update electrical power (minus sign to calculate generated power from consumed current)
+	mElecActivePower = - 1. * (intfVoltageDQ(0, 0)*intfCurrentDQ(0, 0) + intfVoltageDQ(1, 0)*intfCurrentDQ(1, 0));
+
 	// The damping factor Kd is adjusted to obtain a damping ratio of 0.3
 	// Real MaxElecActivePower= Math::abs(mEp) * Math::abs(mIntfVoltage(0,0)) / mXpd;
 	// mKd=4*0.3*sqrt(mNomOmega*mInertia*MaxElecActivePower*0.5);
@@ -213,6 +233,8 @@ void EMT::Ph3::SynchronGeneratorTrStab::step(Real time) {
 	if (mBehaviour == Behaviour::Simulation)
 		mEp = Complex(mEp_abs * cos(mDelta_p + Math::phase(mIntfVoltage(0,0))), mEp_abs * sin(mDelta_p + Math::phase(mIntfVoltage(0,0))));
 
+	// Update nominal system angle
+	mThetaN = mThetaN + mTimeStep * mNomOmega;
 
 	// mStates << Math::abs(mEp), Math::phaseDeg(mEp), mElecActivePower, mMechPower,
 	// 	mDelta_p, mOmMech, dOmMech, dDelta_p, mIntfVoltage(0,0).real(), mIntfVoltage(0,0).imag();

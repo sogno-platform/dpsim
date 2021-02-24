@@ -49,7 +49,10 @@ namespace Ph3 {
 		std::shared_ptr<Inductor> mSubInductor;
 		// Logging
 		Matrix mStates;
-	
+		/// Nominal system angle
+		Real mThetaN = 0;
+		/// Interface voltage in synchronously rotating DQ frame
+		
 	public:
 		///
 		SynchronGeneratorTrStab(String uid, String name, Logger::Level logLevel = Logger::Level::off);
@@ -58,6 +61,11 @@ namespace Ph3 {
 			: SynchronGeneratorTrStab(name, name, logLevel) { }
 
 		SimPowerComp<Real>::Ptr clone(String name);
+
+		///
+		Matrix parkTransformPowerInvariant(Real theta, const Matrix &fabc);
+		///
+		Matrix getInverseParkTransformMatrixPowerInvariant(Real theta);
 
 		// #### General Functions ####
 		///
