@@ -11,9 +11,12 @@
 #include <pybind11/stl.h>
 
 #include <dpsim/Simulation.h>
+#include <dpsim/RealTimeSimulation.h>
 #include <cps/IdentifiedObject.h>
 #include <cps/CIM/Reader.h>
 #include <DPsim.h>
+
+#include <cps/CSVReader.h>
 
 namespace py = pybind11;
 
@@ -27,6 +30,23 @@ PYBIND11_MODULE(dpsimpy, m) {
     )pbdoc";
 
     py::class_<DPsim::Simulation>(m, "Simulation")
+	    .def(py::init<std::string>())
+		.def("name", &DPsim::Simulation::name)
+		.def("set_time_step", &DPsim::Simulation::setTimeStep)
+		.def("set_final_time", &DPsim::Simulation::setFinalTime)
+		.def("add_logger", &DPsim::Simulation::addLogger)
+		.def("set_system", &DPsim::Simulation::setSystem)
+		.def("run", &DPsim::Simulation::run)
+		.def("set_solver", &DPsim::Simulation::setSolverType)
+		.def("set_domain", &DPsim::Simulation::setDomain)
+		.def("start", &DPsim::Simulation::start)
+		.def("next", &DPsim::Simulation::next)
+		.def("set_attribute", static_cast<void (DPsim::Simulation::*)(const std::string&, const std::string&, CPS::Real)>(&DPsim::Simulation::setAttribute))
+		.def("set_attribute", static_cast<void (DPsim::Simulation::*)(const std::string&, const std::string&, CPS::Complex)>(&DPsim::Simulation::setAttribute))
+		.def("get_real_attribute", &DPsim::Simulation::getRealAttribute)
+		.def("get_complex_attribute", &DPsim::Simulation::getComplexAttribute);
+
+	py::class_<DPsim::RealTimeSimulation>(m, "RealTimeSimulation")
 	    .def(py::init<std::string>())
 		.def("name", &DPsim::Simulation::name)
 		.def("set_time_step", &DPsim::Simulation::setTimeStep)
@@ -69,9 +89,32 @@ PYBIND11_MODULE(dpsimpy, m) {
 		.value("DAE", DPsim::Solver::Type::DAE)
 		.value("NRP", DPsim::Solver::Type::NRP);
 
+	py::enum_<CPS::Logger::Level>(m, "LogLevel")
+		.value("trace", CPS::Logger::Level::trace)
+		.value("debug", CPS::Logger::Level::debug)
+		.value("info", CPS::Logger::Level::info)
+		.value("warn", CPS::Logger::Level::warn)
+		.value("err", CPS::Logger::Level::err)
+		.value("critical", CPS::Logger::Level::critical)
+		.value("off", CPS::Logger::Level::off);		
+
+	py::enum_<CPS::CSVReader::Mode>(m, "CSVReaderMode")
+		.value("AUTO", CPS::CSVReader::Mode::AUTO)
+		.value("MANUAL", CPS::CSVReader::Mode::MANUAL);		
+
+	py::enum_<CPS::CSVReader::DataFormat>(m, "CSVReaderFormat")
+		.value("HHMMSS", CPS::CSVReader::DataFormat::HHMMSS)
+		.value("SECONDS", CPS::CSVReader::DataFormat::SECONDS)
+		.value("HOURS", CPS::CSVReader::DataFormat::HOURS)
+		.value("MINUTES", CPS::CSVReader::DataFormat::MINUTES);
+		
 	py::class_<CPS::CIM::Reader>(m, "CIMReader")
 		.def(py::init<std::string>())
 		.def("loadCIM", (CPS::SystemTopology (CPS::CIM::Reader::*)(CPS::Real, const std::list<CPS::String> &, CPS::Domain, CPS::PhaseType)) &CPS::CIM::Reader::loadCIM);
+
+	py::class_<CPS::CSVReader>(m, "CSVReader")
+		.def(py::init<std::string, const std::string &, std::map<std::string, std::string> &, CPS::Logger::Level>())
+		.def("assignLoadProfile", &CPS::CSVReader::assignLoadProfile);
 
 	py::class_<CPS::TopologicalPowerComp, std::shared_ptr<CPS::TopologicalPowerComp>, CPS::IdentifiedObject>(m, "TopologicalPowerComp");
 	py::class_<CPS::SimPowerComp<CPS::Complex>, std::shared_ptr<CPS::SimPowerComp<CPS::Complex>>, CPS::TopologicalPowerComp>(m, "SimPowerCompComplex");
