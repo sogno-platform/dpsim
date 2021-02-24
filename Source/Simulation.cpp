@@ -73,7 +73,7 @@ Simulation::Simulation(String name, SystemTopology system,
 	Real timeStep, Real finalTime,
 	Domain domain, Solver::Type solverType,
 	Logger::Level logLevel,
-	Bool powerFlowInit,
+	Bool initFromNodesAndTerminals,
 	Bool steadyStateInit,
 	Bool splitSubnets,
 	IdentifiedObject::List tearComponents) :
@@ -84,7 +84,7 @@ Simulation::Simulation(String name, SystemTopology system,
 	mDomain = domain;
 	mSystem = system;
 	mSolverType = solverType;
-	mPowerFlowInit = powerFlowInit;
+	mInitFromNodesAndTerminals = initFromNodesAndTerminals;
 	mSteadyStateInit = steadyStateInit;
 	mSplitSubnets = splitSubnets;
 	mTearComponents = tearComponents;
@@ -132,7 +132,7 @@ void Simulation::createSolvers() {
 #endif /* WITH_SUNDIALS */
 		case Solver::Type::NRP:
 			solver = std::make_shared<PFSolverPowerPolar>(mName, mSystem, mTimeStep, mLogLevel);
-			solver->doPowerFlowInit(mPowerFlowInit);
+			solver->doInitFromNodesAndTerminals(mInitFromNodesAndTerminals);
 			solver->initialize();
 			mSolvers.push_back(solver);
 			break;

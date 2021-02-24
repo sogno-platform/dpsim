@@ -63,7 +63,7 @@ int main(int argc, char* argv[]) {
 	sim.setFinalTime(finalTime);
 	sim.setDomain(Domain::SP);
 	sim.setSolverType(Solver::Type::NRP);
-	sim.doPowerFlowInit(false);
+	sim.doInitFromNodesAndTerminals(false);
 	sim.addLogger(logger);
 	sim.run();
 }

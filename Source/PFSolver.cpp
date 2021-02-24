@@ -77,7 +77,7 @@ void PFSolver::initializeComponents(){
 	for (auto comp : mSystem.mComponents) {
 		auto pComp = std::dynamic_pointer_cast<SimPowerComp<Complex>>(comp);
 		if (!pComp)	continue;
-		if (mPowerFlowInit)
+		if (mInitFromNodesAndTerminals)
 			pComp->initializeFromNodesAndTerminals(mSystem.mSystemFrequency);
 	}
 

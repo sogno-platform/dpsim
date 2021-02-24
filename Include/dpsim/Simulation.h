@@ -63,7 +63,7 @@ namespace DPsim {
 		///
 		Solver::List mSolvers;
 		///
-		Bool mPowerFlowInit = false;
+		Bool mInitFromNodesAndTerminals = true;
 		/// Enable recomputation of system matrix during simulation
 		Bool mSystemMatrixRecomputation = false;
 
@@ -152,7 +152,7 @@ namespace DPsim {
 			CPS::Domain domain = CPS::Domain::DP,
 			Solver::Type solverType = Solver::Type::MNA,
 			CPS::Logger::Level logLevel = CPS::Logger::Level::info,
-			Bool powerFlowInit = false,
+			Bool initFromNodesAndTerminals = true,
 			Bool steadyStateInit = false,
 			Bool splitSubnets = true,
 			CPS::IdentifiedObject::List tearComponents = CPS::IdentifiedObject::List());
@@ -172,7 +172,7 @@ namespace DPsim {
 		///
 		void setSolverType(Solver::Type solverType = Solver::Type::MNA) { mSolverType = solverType; }
 		///
-		void doPowerFlowInit(Bool powerFlowInit = true) { mPowerFlowInit = powerFlowInit; }
+		void doInitFromNodesAndTerminals(Bool f = true) { mInitFromNodesAndTerminals = f; }
 		///
 		void doSplitSubnets(Bool splitSubnets = true) { mSplitSubnets = splitSubnets; }
 		///

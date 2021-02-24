@@ -50,7 +50,7 @@ namespace DPsim {
 		Bool mIsInInitialization = false;
 		/// Activates powerflow initialization
 		/// If this is false, all voltages are initialized with zero
-		Bool mPowerFlowInit = true;
+		Bool mInitFromNodesAndTerminals = true;
 
 	public:
 		typedef std::shared_ptr<Solver> Ptr;
@@ -89,7 +89,7 @@ namespace DPsim {
 		/// set steady state initialization accuracy limit
 		void setSteadStIniAccLimit(Real v) { mSteadStIniAccLimit = v; }
 		/// activate powerflow initialization
-		void doPowerFlowInit(Bool f) { mPowerFlowInit = f; }
+		void doInitFromNodesAndTerminals(Bool f) { mInitFromNodesAndTerminals = f; }
 
 		// #### Simulation ####
 		/// Get tasks for scheduler
