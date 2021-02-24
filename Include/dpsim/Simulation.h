@@ -199,6 +199,12 @@ namespace DPsim {
 		// #### Simulation Control ####
 		/// Create solver instances etc.
 		void initialize();
+		/// Start simulation without advancing in time
+		void start();
+		/// Stop simulation including scheduler and interfaces
+		void stop();
+		/// Run until next time step
+		Real next();
 		/// Run simulation until total time is elapsed.
 		void run();
 		/// Solve system A * x = z for x and current time
@@ -243,5 +249,13 @@ namespace DPsim {
 		DataLogger::List& loggers() { return mLoggers; }
 		std::shared_ptr<Scheduler> scheduler() { return mScheduler; }
 		std::vector<Real>& stepTimes() { return mStepTimes; }
+
+		// #### Set component attributes during simulation ####
+		void setAttribute(const String &comp, const String &attr, Real value);
+		void setAttribute(const String &comp, const String &attr, Complex value);
+
+		// #### Get component attributes during simulation ####
+		Real getRealAttribute(const String &comp, const String &attr);
+		Complex getComplexAttribute(const String &comp, const String &attr);
 	};
 }

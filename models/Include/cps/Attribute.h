@@ -205,6 +205,8 @@ namespace Flags {
 			return get();
 		}
 
+		/// Do not use!
+		/// Only used for Eigen Matrix - Sundials N_Vector interfacing in N_VSetArrayPointer
 		operator T&() {
 			return *mValue;
 		}

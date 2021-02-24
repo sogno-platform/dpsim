@@ -388,7 +388,7 @@ Graph::Graph Simulation::dependencyGraph() {
 }
 #endif
 
-void Simulation::run() {
+void Simulation::start() {
 	mLog->info("Initialize simulation: {}", mName);
 	if (!mInitialized)
 		initialize();
@@ -403,11 +403,9 @@ void Simulation::run() {
 #endif
 
 	mLog->info("Start simulation: {}", mName);
+}
 
-	while (mTime < mFinalTime) {
-		step();
-	}
-
+void Simulation::stop() {
 	mScheduler->stop();
 
 #ifdef WITH_SHMEM
@@ -419,6 +417,26 @@ void Simulation::run() {
 		lg->close();
 
 	mLog->info("Simulation finished.");
+}
+
+Real Simulation::next() {
+	if (mTime < mFinalTime)
+		step();
+	else
+		stop();
+
+	return mTime;
+}
+
+
+void Simulation::run() {
+	start();
+
+	while (mTime < mFinalTime) {
+		step();
+	}
+
+	stop();
 }
 
 Real Simulation::step() {
@@ -459,4 +477,58 @@ void Simulation::logStepTimes(String logName) {
 		stepTimeLog->info("{:f}", meas);
 	}
 	mLog->info("Average step time: {:.6f}", stepTimeSum / mStepTimes.size());
+}
+
+void Simulation::setAttribute(const String &comp, const String &attr, Real value) {
+	IdentifiedObject::Ptr compObj = mSystem.component<IdentifiedObject>(comp);
+	if (compObj) {
+		try {
+			compObj->attribute<Real>(attr)->set(value);
+		} catch (InvalidAttributeException &e) {
+			mLog->error("Attribute not found");
+		}			
+	}
+	else
+		mLog->error("Component not found");
+}
+		
+void Simulation::setAttribute(const String &comp, const String &attr, Complex value){
+	IdentifiedObject::Ptr compObj = mSystem.component<IdentifiedObject>(comp);	
+	if (compObj) {
+		try {
+			compObj->attributeComplex(attr)->set(value);
+		} catch (InvalidAttributeException &e) {
+			mLog->error("Attribute not found");
+		}			
+	}
+	else
+		mLog->error("Component not found");
+}
+
+Real Simulation::getRealAttribute(const String &comp, const String &attr) {
+	IdentifiedObject::Ptr compObj = mSystem.component<IdentifiedObject>(comp);
+	if (compObj) {
+		try {
+			return compObj->attribute<Real>(attr)->getByValue();
+		} catch (InvalidAttributeException &e) {
+			mLog->error("Attribute not found");
+		}			
+	}
+	
+	mLog->error("Component not found");
+	return 10;	
+}
+		
+Complex Simulation::getComplexAttribute(const String &comp, const String &attr){
+	IdentifiedObject::Ptr compObj = mSystem.component<IdentifiedObject>(comp);
+	if (compObj) {
+		try {
+			return compObj->attributeComplex(attr)->getByValue();
+		} catch (InvalidAttributeException &e) {
+			mLog->error("Attribute not found");
+		}			
+	}
+	
+	mLog->error("Component not found");
+	return 10;
 }
