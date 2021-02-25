@@ -13,21 +13,21 @@ namespace fs = std::experimental::filesystem;
 
 using namespace CPS;
 
-MatrixRow CSVReader::csv2Eigen(const std::string& path) {
+MatrixRow CSVReader::csv2Eigen(const String& path) {
     std::ifstream inputFile;
     inputFile.open(path);
-    std::string line;
+    String line;
     std::vector<double> values;
-    uint rows = 0;
+    UInt rows = 0;
     while (std::getline(inputFile, line)) {
         std::stringstream lineStream(line);
-        std::string cell;
+        String cell;
         while (std::getline(lineStream, cell, ',')) {
             values.push_back(std::stod(cell));
         }
         ++rows;
     }
-	uint columns = values.size()/rows;
+	UInt columns = values.size()/rows;
     return Eigen::Map<const MatrixRow>(values.data(), rows, columns);
 }
 
