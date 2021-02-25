@@ -31,8 +31,7 @@
 namespace DPsim {
 	/// Shmem interface used in combination with VILLAS
 	class InterfaceShmem :
-		public Interface,
-		public SharedFactory<InterfaceShmem> {
+		public Interface {
 
 	public:
 		typedef std::shared_ptr<InterfaceShmem> Ptr;

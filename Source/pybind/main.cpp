@@ -16,6 +16,8 @@
 #include <cps/CIM/Reader.h>
 #include <DPsim.h>
 
+#include <dpsim/InterfaceShmem.h>
+
 #include <cps/CSVReader.h>
 
 namespace py = pybind11;
@@ -44,7 +46,8 @@ PYBIND11_MODULE(dpsimpy, m) {
 		.def("set_attribute", static_cast<void (DPsim::Simulation::*)(const std::string&, const std::string&, CPS::Real)>(&DPsim::Simulation::setAttribute))
 		.def("set_attribute", static_cast<void (DPsim::Simulation::*)(const std::string&, const std::string&, CPS::Complex)>(&DPsim::Simulation::setAttribute))
 		.def("get_real_attribute", &DPsim::Simulation::getRealAttribute)
-		.def("get_complex_attribute", &DPsim::Simulation::getComplexAttribute);
+		.def("get_complex_attribute", &DPsim::Simulation::getComplexAttribute)
+		.def("add_interface", &DPsim::Simulation::addInterface, py::arg("interface"), py::arg("syncStart") = true);
 
 	py::class_<DPsim::RealTimeSimulation>(m, "RealTimeSimulation")
 	    .def(py::init<std::string>())
@@ -64,6 +67,11 @@ PYBIND11_MODULE(dpsimpy, m) {
 		.def("_repr_svg_", &DPsim::SystemTopology::render)
 		.def("render_to_file", &DPsim::SystemTopology::renderToFile)
 		.def_readwrite("nodes", &DPsim::SystemTopology::mNodes);
+
+	py::class_<DPsim::Interface>(m, "Interface");
+
+	py::class_<DPsim::InterfaceShmem, DPsim::Interface>(m, "InterfaceShmem")
+	    .def(py::init<const CPS::String &, const CPS::String &>());
 
 	py::class_<DPsim::DataLogger, std::shared_ptr<DPsim::DataLogger>>(m, "Logger")
         .def(py::init<std::string>())
@@ -150,8 +158,7 @@ PYBIND11_MODULE(dpsimpy, m) {
         .def("set_parameters", &CPS::DP::Ph1::Inductor::setParameters)
 		.def("connect", &CPS::DP::Ph1::Inductor::connect);
 
-
-
+	
 #ifdef VERSION_INFO
     m.attr("__version__") = VERSION_INFO;
 #else
