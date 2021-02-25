@@ -58,7 +58,7 @@ SimPowerComp<Real>::Ptr EMT::Ph3::SynchronGeneratorTrStab::clone(String name) {
 }
 
 void EMT::Ph3::SynchronGeneratorTrStab::setFundamentalParametersPU(Real nomPower, Real nomVolt, Real nomFreq,
-	Real Ll, Real Lmd, Real Llfd, Real inertia) {
+	Real Ll, Real Lmd, Real Llfd, Real inertia, Real D) {
 	setBaseParameters(nomPower, nomVolt, nomFreq);
 
 	// Input is in per unit but all values are converted to absolute values.
@@ -101,7 +101,7 @@ void EMT::Ph3::SynchronGeneratorTrStab::setStandardParametersSI(Real nomPower, R
 }
 
 void EMT::Ph3::SynchronGeneratorTrStab::setStandardParametersPU(Real nomPower, Real nomVolt, Real nomFreq, Real Xpd, 
-	Real inertia, Real Rs, Real Kd) {
+	Real inertia, Real Rs, Real D) {
 	setBaseParameters(nomPower, nomVolt, nomFreq);
 
 	// Input is in per unit but all values are converted to absolute values.
@@ -115,7 +115,9 @@ void EMT::Ph3::SynchronGeneratorTrStab::setStandardParametersPU(Real nomPower, R
 	mLpd = Xpd * mBase_L;
 
 	mRs= Rs;
-	mKd= Kd;
+	//The units of D are per unit power divided by per unit speed deviation.
+	// D is transformed to an absolute value to obtain Kd, which will be used in the swing equation
+	mKd= D*mNomPower/mNomOmega;
 
 	mSLog->info("\n--- Parameters ---"
 				"\nimpedance: {:f}"
@@ -157,25 +159,26 @@ void EMT::Ph3::SynchronGeneratorTrStab::initializeFromNodesAndTerminals(Real fre
 
 	mImpedance = Complex(mRs, mXpd);
 
-	// Calculate emf behind reactance
+	// Calculate initial emf behind reactance from power flow results
 	mEp = intfVoltageComplex(0, 0) - mImpedance * intfCurrentComplex(0, 0);
+
 	// The absolute value of Ep is constant, only delta_p changes every step
 	mEp_abs = Math::abs(mEp);
-	mDelta_p= Math::phase(mEp)-Math::phase(intfVoltageComplex(0, 0));
+	// Delta_p is the angular position of mEp with respect to the synchronously rotating reference
+	mDelta_p= Math::phase(mEp);
 
 	// // Update active electrical power that is compared with the mechanical power
 	mElecActivePower = ( 3./2. * intfVoltageComplex(0,0) *  std::conj( - intfCurrentComplex(0,0)) ).real();
 	// mElecActivePower = ( (mEp - mIntfVoltage(0,0)) / mImpedance *  mIntfVoltage(0,0) ).real();
 	// For infinite power bus
 	// mElecActivePower = (Math::abs(mEp) * Math::abs(mIntfVoltage(0,0)) / mXpd) * sin(mDelta_p);
-	//mElecActivePower = (Math::abs(mEp) * Math::abs(intfVoltageComplex(0, 0)) / mXpd) * sin(Math::phase(mEp)-Math::phase(intfVoltageComplex(0, 0)));
 	
 	// Start in steady state so that electrical and mech. power are the same
+	// because of the initial condition mOmMech = mNomOmega the damping factor is not considered at the initialisation
 	mMechPower = mElecActivePower- mKd*(mOmMech - mNomOmega);
 
 	// Initialize node between X'd and Ep
-	// mVirtualNodes[0]->setInitialVoltage(PEAK1PH_TO_RMS3PH*mEp);
-	mVirtualNodes[0]->setInitialVoltage(mEp);
+	mVirtualNodes[0]->setInitialVoltage(PEAK1PH_TO_RMS3PH*mEp);
 
 	MatrixComp vref = MatrixComp::Zero(3,1);
 	vref= CPS::Math::singlePhaseVariableToThreePhase(mEp);
@@ -231,7 +234,7 @@ void EMT::Ph3::SynchronGeneratorTrStab::step(Real time) {
 		mDelta_p = mDelta_p + mTimeStep * dDelta_p;
 	// Update emf - only phase changes
 	if (mBehaviour == Behaviour::Simulation)
-		mEp = Complex(mEp_abs * cos(mDelta_p + Math::phase(mIntfVoltage(0,0))), mEp_abs * sin(mDelta_p + Math::phase(mIntfVoltage(0,0))));
+		mEp = Complex(mEp_abs * cos(mDelta_p), mEp_abs * sin(mDelta_p));
 
 	// Update nominal system angle
 	mThetaN = mThetaN + mTimeStep * mNomOmega;
