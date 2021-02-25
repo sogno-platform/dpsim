@@ -36,7 +36,7 @@ SimPowerComp<Complex>::Ptr SP::Ph1::SynchronGeneratorTrStab::clone(String name) 
 }
 
 void SP::Ph1::SynchronGeneratorTrStab::setFundamentalParametersPU(Real nomPower, Real nomVolt, Real nomFreq,
-	Real Ll, Real Lmd, Real Llfd, Real inertia) {
+	Real Ll, Real Lmd, Real Llfd, Real inertia, Real D) {
 	setBaseParameters(nomPower, nomVolt, nomFreq);
 
 	// Input is in per unit but all values are converted to absolute values.
@@ -97,7 +97,6 @@ void SP::Ph1::SynchronGeneratorTrStab::setStandardParametersPU(Real nomPower, Re
 	// D is transformed to an absolute value to obtain Kd, which will be used in the swing equation
 	mKd= D*mNomPower/mNomOmega;
 
-
 	mSLog->info("\n--- Parameters ---"
 				"\nimpedance: {:f}"
 				"\ninductance: {:f}", mXpd, mLpd);
@@ -122,7 +121,7 @@ void SP::Ph1::SynchronGeneratorTrStab::initializeFromNodesAndTerminals(Real freq
 		? mInitElecPower.real()
 		: mInitMechPower;
 
-	//I_intf is the current which is flowing into the Component
+	//I_intf is the current which is flowing into the Component, while mInitElecPower is flowing out of it
 	mIntfCurrent(0,0) = std::conj( - mInitElecPower / mIntfVoltage(0,0) );
 
 	mImpedance = Complex(mRs, mXpd);
@@ -139,7 +138,7 @@ void SP::Ph1::SynchronGeneratorTrStab::initializeFromNodesAndTerminals(Real freq
 	mElecActivePower = ( mIntfVoltage(0,0) *  std::conj( -mIntfCurrent(0,0)) ).real();
 	//mElecActivePower = ( (mEp - mIntfVoltage(0,0)) / mImpedance *  mIntfVoltage(0,0) ).real();
 	// For infinite power bus
-	//mElecActivePower = (Math::abs(mEp) * Math::abs(mIntfVoltage(0,0)) / mXpd) * sin(Math::phase(mEp)-Math::phase(mIntfVoltage(0,0)));
+	//mElecActivePower = (Math::abs(mEp) * Math::abs(mIntfVoltage(0,0)) / mXpd) * sin(mDelta_p);
 
 	// Start in steady state so that electrical and mech. power are the same
 	// because of the initial condition mOmMech = mNomOmega the damping factor is not considered at the initialisation
@@ -183,7 +182,7 @@ void SP::Ph1::SynchronGeneratorTrStab::step(Real time) {
 	//mElecActivePower = ( (mEp - mIntfVoltage(0,0)) / mImpedance *  mIntfVoltage(0,0) ).real();
 	mElecActivePower = (mIntfVoltage(0,0) *  std::conj( -mIntfCurrent(0,0)) ).real();
 	// For infinite power bus
-	//mElecActivePower = (Math::abs(mEp) * Math::abs(mIntfVoltage(0,0)) / mXpd)* sin(Math::phase(mEp)-Math::phase(mIntfVoltage(0,0)));
+	//mElecActivePower = (Math::abs(mEp) * Math::abs(mIntfVoltage(0,0)) / mXpd)* sin(mDelta_p);
 
 	// #### Calculate state for time step k+1 ####
 	// semi-implicit Euler or symplectic Euler method for mechanical equations

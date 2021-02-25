@@ -63,13 +63,13 @@ namespace Ph1 {
 		void setInitialValues(Complex elecPower, Real mechPower);
 		/// \brief Initializes the machine parameters
 		void setFundamentalParametersPU(Real nomPower, Real nomVolt, Real nomFreq,
-			Real Ll, Real Lmd, Real Llfd, Real inertia);
+			Real Ll, Real Lmd, Real Llfd, Real inertia, Real D=0);
 		/// \brief Initializes the machine parameters
 		void setStandardParametersSI(Real nomPower, Real nomVolt, Real nomFreq, Int polePairNumber,
 			Real Rs, Real Lpd, Real inertiaJ, Real Kd = 0);
 		/// \brief Initializes the machine parameters
 		void setStandardParametersPU(Real nomPower, Real nomVolt, Real nomFreq, Real Xpd, Real inertia,
-			Real Rs=0, Real damping=0);
+			Real Rs=0, Real D=0);
 		///
 		void step(Real time);
 		///

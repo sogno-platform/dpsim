@@ -36,7 +36,7 @@ SimPowerComp<Complex>::Ptr DP::Ph1::SynchronGeneratorTrStab::clone(String name) 
 }
 
 void DP::Ph1::SynchronGeneratorTrStab::setFundamentalParametersPU(Real nomPower, Real nomVolt, Real nomFreq,
-	Real Ll, Real Lmd, Real Llfd, Real inertia) {
+	Real Ll, Real Lmd, Real Llfd, Real inertia, Real D) {
 	setBaseParameters(nomPower, nomVolt, nomFreq);
 	mSLog->info("\n--- Base Parameters ---"
 	"\nnomPower: {:f}"
@@ -156,7 +156,7 @@ void DP::Ph1::SynchronGeneratorTrStab::initializeFromNodesAndTerminals(Real freq
 	mElecActivePower = ( mIntfVoltage(0,0) *  std::conj( -mIntfCurrent(0,0)) ).real();
 	//mElecActivePower = ( (mEp - mIntfVoltage(0,0)) / mImpedance *  mIntfVoltage(0,0) ).real();
 	// For infinite power bus
-	//mElecActivePower = (Math::abs(mEp) * Math::abs(mIntfVoltage(0,0)) / mXpd) * sin(Math::phase(mEp)-Math::phase(mIntfVoltage(0,0)));
+	//mElecActivePower = (Math::abs(mEp) * Math::abs(mIntfVoltage(0,0)) / mXpd) * sin(mDelta_p);
 
 	// Start in steady state so that electrical and mech. power are the same
 	// because of the initial condition mOmMech = mNomOmega the damping factor is not considered at the initialisation
@@ -200,7 +200,7 @@ void DP::Ph1::SynchronGeneratorTrStab::step(Real time) {
 	//mElecActivePower = ( (mEp - mIntfVoltage(0,0)) / mImpedance *  mIntfVoltage(0,0) ).real();
 	mElecActivePower = (mIntfVoltage(0,0) *  std::conj( -mIntfCurrent(0,0)) ).real();
 	// For infinite power bus
-	//mElecActivePower = (Math::abs(mEp) * Math::abs(mIntfVoltage(0,0)) / mXpd)* sin(Math::phase(mEp)-Math::phase(mIntfVoltage(0,0)));
+	//mElecActivePower = (Math::abs(mEp) * Math::abs(mIntfVoltage(0,0)) / mXpd)* sin(mDelta_p);
 
 	// #### Calculate state for time step k+1 ####
 	// semi-implicit Euler or symplectic Euler method for mechanical equations
