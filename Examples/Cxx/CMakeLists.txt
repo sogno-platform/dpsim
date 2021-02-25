@@ -53,12 +53,14 @@ set(CIRCUIT_SOURCES
 	#SMIB
 	Circuits/SP_SynGenTrStab_SMIB_SteadyState.cpp
 	Circuits/DP_SynGenTrStab_SMIB_SteadyState.cpp
+	Circuits/EMT_SynGenTrStab_SMIB_SteadyState.cpp
 	Circuits/SP_SynGenTrStab_SMIB_Fault.cpp
 	Circuits/DP_SynGenTrStab_SMIB_Fault.cpp
 	Circuits/EMT_SynGenDQ7odTrapez_SMIB_Fault.cpp
 	Circuits/EMT_SynGenDQ7odTrapez_OperationalParams_SMIB_Fault.cpp
 	Circuits/EMT_SynGenDQ7odTrapez_OperationalParams_SMIB_Fault_JsonSyngenParams.cpp
 	Circuits/EMT_SynGenDQ7odTrapez_DP_SynGenTrStab_SMIB_Fault.cpp
+	Circuits/EMT_SynGenTrStab_SMIB_Fault.cpp
 
 	#3Bus System
 	Circuits/SP_SynGenTrStab_3Bus_SteadyState.cpp
