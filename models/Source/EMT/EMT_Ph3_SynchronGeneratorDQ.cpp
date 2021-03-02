@@ -45,6 +45,37 @@ void EMT::Ph3::SynchronGeneratorDQ::setParametersFundamentalPerUnit(
 		initTerminalVolt, initVoltAngle, initFieldVoltage, initMechPower);
 }
 
+void EMT::Ph3::SynchronGeneratorDQ::setParametersOperationalPerUnit(
+	Real nomPower, Real nomVolt, Real nomFreq, Int poleNumber, Real nomFieldCur,
+	Real Rs, Real Ld, Real Lq, Real Ld_t, Real Lq_t, Real Ld_s, Real Lq_s,
+	Real Ll, Real Td0_t, Real Tq0_t, Real Td0_s, Real Tq0_s,
+	Real inertia, Real initActivePower, Real initReactivePower, Real initTerminalVolt, Real initVoltAngle,
+	Real initFieldVoltage, Real initMechPower) {
+
+	Real nomOmega = 2*PI*nomFreq;
+
+	Real Lmd = Ld - Ll;
+	Real Lmq = Lq - Ll;
+
+	Real Llfd = Lmd*(Ld_t - Ll)/(Lmd-Ld_t+Ll);
+	Real Llkq1 = Lmq*(Lq_t - Ll)/(Lmq-Lq_t+Ll);
+
+	Real Llkd = Lmd*Llfd*(Ld_s-Ll)/(Llfd*Lmd-(Lmd+Llfd)*(Ld_s-Ll));
+	Real Llkq2 = Lmq*Llkq1*(Lq_s-Ll)/(Llkq1*Lmq-(Lmq+Llkq1)*(Lq_s-Ll));
+
+	Real Rfd = (Lmd + Llfd)/(Td0_t*nomOmega);
+	Real Rkd = (1/(Td0_s*nomOmega))*(Llkd + Lmd*Llfd/(Lmd+Llfd));
+	Real Rkq1 = (Lmq + Llkq1)/(Tq0_t*nomOmega);
+	Real Rkq2 = (1/(Tq0_s*nomOmega))*(Llkq2 + Lmq*Llkq1/(Lmq+Llkq1));
+
+	EMT::Ph3::SynchronGeneratorDQ::setParametersFundamentalPerUnit(
+	nomPower, nomVolt, nomFreq, poleNumber, nomFieldCur,
+	Rs, Ll, Lmd, Lmq, Rfd, Llfd, Rkd, Llkd, Rkq1, Llkq1, Rkq2, Llkq2, 
+	inertia, initActivePower, initReactivePower, initTerminalVolt, initVoltAngle,
+	initFieldVoltage, initMechPower);
+}
+
+
 void EMT::Ph3::SynchronGeneratorDQ::initialize(Matrix frequencies) {
 	SimPowerComp<Real>::initialize(frequencies);
 

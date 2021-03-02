@@ -45,6 +45,8 @@ namespace SynchronousGeneratorKundur {
         Real nomFieldCurr = 1300;
         Int poleNum = 2;
         Real H = 3.7;
+
+        // Fundamental parameters
         Real Rs = 0.003;
         Real Ll = 0.15;
         Real Lmd = 1.6599;
@@ -57,6 +59,21 @@ namespace SynchronousGeneratorKundur {
         Real Llkq1 = 0.7252;
         Real Rkq2 = 0.0237;
         Real Llkq2 = 0.125;
+
+        // Operational parameters
+        Real Td0_t = 8.0669;
+        Real Td0_s = 0.0300;
+        Real Td_t = 1.3368;
+        Real Td_s = 0.0230;
+        Real Ld_t = 0.2999;
+        Real Ld_s = 0.2299;
+        Real Tq0_t = 0.9991;
+        Real Tq0_s = 0.0700;
+        Real Lq_t = 0.6500;
+        Real Lq_s = 0.2500;
+        Real Ld = 1.8099;
+        Real Lq = 1.7600;
+
         Real fieldVoltage = 7.0821; //TODO: specify operating conditions
     };
 }

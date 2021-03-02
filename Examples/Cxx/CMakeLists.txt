@@ -56,6 +56,7 @@ set(CIRCUIT_SOURCES
 	Circuits/SP_SynGenTrStab_SMIB_Fault.cpp
 	Circuits/DP_SynGenTrStab_SMIB_Fault.cpp
 	Circuits/EMT_SynGenDQ7odTrapez_SMIB_Fault.cpp
+	Circuits/EMT_SynGenDQ7odTrapez_OperationalParams_SMIB_Fault.cpp
 	Circuits/EMT_SynGenDQ7odTrapez_DP_SynGenTrStab_SMIB_Fault.cpp
 
 	#3Bus System

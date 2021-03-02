@@ -52,6 +52,13 @@ namespace Ph3 {
 			Real initFieldVoltage, Real initMechPower);
 
 		///
+		void setParametersOperationalPerUnit(Real nomPower, Real nomVolt, Real nomFreq, Int poleNumber, Real nomFieldCur,
+			Real Rs, Real Ld, Real Lq, Real Ld_t, Real Lq_t, Real Ld_s, Real Lq_s,
+			Real Ll, Real Td0_t, Real Tq0_t, Real Td0_s, Real Tq0_s,
+			Real inertia, Real initActivePower, Real initReactivePower, Real initTerminalVolt, Real initVoltAngle,
+			Real initFieldVoltage, Real initMechPower);
+
+		///
 		void initialize(Matrix frequencies);
 		///
 		Real electricalTorque() { return mElecTorque * mBase_T; }
