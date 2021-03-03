@@ -534,6 +534,7 @@ Complex Simulation::getComplexIdObjAttr(const String &comp, const String &attr) 
 }
 
 void Simulation::exportIdObjAttr(const String &comp, const String &attr, UInt idx, AttributeBase::Modifier mod, UInt row, UInt col) {
+#ifdef WITH_SHMEM	
 	Bool found = false;
 	IdentifiedObject::Ptr compObj = mSystem.component<IdentifiedObject>(comp);
 	if (!compObj) compObj = mSystem.node<TopologicalNode>(comp);
@@ -599,6 +600,7 @@ void Simulation::exportIdObjAttr(const String &comp, const String &attr, UInt id
 	else {
 		mLog->error("Component not found");
 	}	
+#endif
 }
 
 void Simulation::logIdObjAttr(const String &comp, const String &attr) {
