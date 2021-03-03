@@ -320,7 +320,7 @@ int Python::Interface::init(Python::Interface *self, PyObject *args, PyObject *k
 		return -1;
 	}
 
-	self->intf = DPsim::InterfaceShmem::make(self->wname, self->rname, &self->conf);
+	self->intf = std::make_shared<DPsim::InterfaceShmem>(self->wname, self->rname, &self->conf);
 
 	return 0;
 #else
