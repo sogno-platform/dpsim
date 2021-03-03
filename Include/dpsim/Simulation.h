@@ -251,11 +251,14 @@ namespace DPsim {
 		std::vector<Real>& stepTimes() { return mStepTimes; }
 
 		// #### Set component attributes during simulation ####
-		void setAttribute(const String &comp, const String &attr, Real value);
-		void setAttribute(const String &comp, const String &attr, Complex value);
+		void setIdObjAttr(const String &comp, const String &attr, Real value);
+		void setIdObjAttr(const String &comp, const String &attr, Complex value);
 
 		// #### Get component attributes during simulation ####
-		Real getRealAttribute(const String &comp, const String &attr);
-		Complex getComplexAttribute(const String &comp, const String &attr);
+		Real getRealIdObjAttr(const String &comp, const String &attr);
+		Complex getComplexIdObjAttr(const String &comp, const String &attr);
+
+		void exportIdObjAttr(const String &comp, const String &attr, UInt idx, CPS::AttributeBase::Modifier mod = CPS::AttributeBase::Modifier::real, UInt row = 0, UInt col = 0);
+		void logIdObjAttr(const String &comp, const String &attr);
 	};
 }

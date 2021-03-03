@@ -68,6 +68,8 @@ namespace Flags {
 		typedef std::vector<Ptr> List;
 		typedef std::map<String, Ptr> Map;
 
+		enum class Modifier { real, imag, mag, phase };
+
 		virtual String toString() const = 0;
 
 		int flags() const {

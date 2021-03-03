@@ -41,6 +41,8 @@ namespace DPsim {
 		void run(const Timer::StartClock::duration &startIn = std::chrono::seconds(1));
 
 		void run(const Timer::StartClock::time_point &startAt);
+
+		void run(Int startIn) { run(std::chrono::seconds(startIn)); }
 	};
 }
 

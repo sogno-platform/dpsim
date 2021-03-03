@@ -479,7 +479,7 @@ void Simulation::logStepTimes(String logName) {
 	mLog->info("Average step time: {:.6f}", stepTimeSum / mStepTimes.size());
 }
 
-void Simulation::setAttribute(const String &comp, const String &attr, Real value) {
+void Simulation::setIdObjAttr(const String &comp, const String &attr, Real value) {
 	IdentifiedObject::Ptr compObj = mSystem.component<IdentifiedObject>(comp);
 	if (compObj) {
 		try {
@@ -492,7 +492,7 @@ void Simulation::setAttribute(const String &comp, const String &attr, Real value
 		mLog->error("Component not found");
 }
 		
-void Simulation::setAttribute(const String &comp, const String &attr, Complex value){
+void Simulation::setIdObjAttr(const String &comp, const String &attr, Complex value){
 	IdentifiedObject::Ptr compObj = mSystem.component<IdentifiedObject>(comp);	
 	if (compObj) {
 		try {
@@ -505,7 +505,7 @@ void Simulation::setAttribute(const String &comp, const String &attr, Complex va
 		mLog->error("Component not found");
 }
 
-Real Simulation::getRealAttribute(const String &comp, const String &attr) {
+Real Simulation::getRealIdObjAttr(const String &comp, const String &attr) {
 	IdentifiedObject::Ptr compObj = mSystem.component<IdentifiedObject>(comp);
 	if (compObj) {
 		try {
@@ -516,10 +516,10 @@ Real Simulation::getRealAttribute(const String &comp, const String &attr) {
 	}
 	
 	mLog->error("Component not found");
-	return 10;	
+	return 0;	
 }
 		
-Complex Simulation::getComplexAttribute(const String &comp, const String &attr){
+Complex Simulation::getComplexIdObjAttr(const String &comp, const String &attr) {
 	IdentifiedObject::Ptr compObj = mSystem.component<IdentifiedObject>(comp);
 	if (compObj) {
 		try {
@@ -530,5 +530,101 @@ Complex Simulation::getComplexAttribute(const String &comp, const String &attr){
 	}
 	
 	mLog->error("Component not found");
-	return 10;
+	return 0;
+}
+
+void Simulation::exportIdObjAttr(const String &comp, const String &attr, UInt idx, AttributeBase::Modifier mod, UInt row, UInt col) {
+	Bool found = false;
+	IdentifiedObject::Ptr compObj = mSystem.component<IdentifiedObject>(comp);
+	if (!compObj) compObj = mSystem.node<TopologicalNode>(comp);
+
+	if (compObj) {
+		try {
+			auto v = compObj->attribute<Real>(attr);
+			mInterfaces[0].interface->exportReal(v, idx);
+			found = true;
+		} catch (InvalidAttributeException &e) { }			
+
+		try {			
+			auto v = compObj->attributeComplex(attr);
+			switch(mod) {
+				case AttributeBase::Modifier::real :
+					mInterfaces[0].interface->exportReal(v->real(), idx);
+					found = true;
+					break;
+				case AttributeBase::Modifier::imag :
+					mInterfaces[0].interface->exportReal(v->imag(), idx);
+					found = true;
+					break;
+				case AttributeBase::Modifier::mag :
+					mInterfaces[0].interface->exportReal(v->mag(), idx);
+					found = true;
+					break;
+				case AttributeBase::Modifier::phase :
+					mInterfaces[0].interface->exportReal(v->phase(), idx);
+					found = true;
+					break;
+			}			
+		} catch (InvalidAttributeException &e) { }		
+
+		try {			
+			auto v = compObj->attributeMatrixReal(attr)->coeff(row, col);
+			found = true;			
+		} catch (InvalidAttributeException &e) { }		
+
+		try {			
+			auto v = compObj->attributeMatrixComp(attr);
+			switch(mod) {
+				case AttributeBase::Modifier::real :
+					mInterfaces[0].interface->exportReal(v->coeffReal(row, col), idx);
+					found = true;
+					break;
+				case AttributeBase::Modifier::imag :
+					mInterfaces[0].interface->exportReal(v->coeffImag(row, col), idx);
+					found = true;
+					break;
+				case AttributeBase::Modifier::mag :
+					mInterfaces[0].interface->exportReal(v->coeffMag(row, col), idx);
+					found = true;
+					break;
+				case AttributeBase::Modifier::phase :
+					mInterfaces[0].interface->exportReal(v->coeffPhase(row, col), idx);
+					found = true;
+					break;
+			}			
+		} catch (InvalidAttributeException &e) { }		
+
+		if (!found) mLog->error("Attribute not found");
+	}	
+	else {
+		mLog->error("Component not found");
+	}	
+}
+
+void Simulation::logIdObjAttr(const String &comp, const String &attr) {
+	IdentifiedObject::Ptr compObj = mSystem.component<IdentifiedObject>(comp);
+	IdentifiedObject::Ptr nodeObj = mSystem.node<TopologicalNode>(comp);
+
+	if (compObj) {
+		try {
+			auto name = compObj->name() + "." + attr;
+			auto v = compObj->attribute(attr);
+			mLoggers[0]->addAttribute(name, v);
+
+		} catch (InvalidAttributeException &e) {
+			mLog->error("Attribute not found");
+		}			
+	} else if (nodeObj) {
+		try {
+			auto name = nodeObj->name() + "." + attr;
+			auto v = nodeObj->attribute(attr);
+			mLoggers[0]->addAttribute(name, v);
+
+		} catch (InvalidAttributeException &e) {
+			mLog->error("Attribute not found");
+		}		
+	}
+	else {
+		mLog->error("Component not found");
+	}	
 }

@@ -43,22 +43,32 @@ PYBIND11_MODULE(dpsimpy, m) {
 		.def("set_domain", &DPsim::Simulation::setDomain)
 		.def("start", &DPsim::Simulation::start)
 		.def("next", &DPsim::Simulation::next)
-		.def("set_attribute", static_cast<void (DPsim::Simulation::*)(const std::string&, const std::string&, CPS::Real)>(&DPsim::Simulation::setAttribute))
-		.def("set_attribute", static_cast<void (DPsim::Simulation::*)(const std::string&, const std::string&, CPS::Complex)>(&DPsim::Simulation::setAttribute))
-		.def("get_real_attribute", &DPsim::Simulation::getRealAttribute)
-		.def("get_complex_attribute", &DPsim::Simulation::getComplexAttribute)
-		.def("add_interface", &DPsim::Simulation::addInterface, py::arg("interface"), py::arg("syncStart") = true);
+		.def("set_idobj_attr", static_cast<void (DPsim::Simulation::*)(const std::string&, const std::string&, CPS::Real)>(&DPsim::Simulation::setIdObjAttr))
+		.def("set_idobj_attr", static_cast<void (DPsim::Simulation::*)(const std::string&, const std::string&, CPS::Complex)>(&DPsim::Simulation::setIdObjAttr))
+		.def("get_real_idobj_attr", &DPsim::Simulation::getRealIdObjAttr)
+		.def("get_comp_idobj_attr", &DPsim::Simulation::getComplexIdObjAttr)
+		.def("add_interface", &DPsim::Simulation::addInterface, py::arg("interface"), py::arg("syncStart") = false)
+		.def("export_attr", &DPsim::Simulation::exportIdObjAttr, py::arg("obj"), py::arg("attr"), py::arg("idx"), py::arg("modifier"), py::arg("row") = 0, py::arg("col") = 0)
+		.def("log_attr", &DPsim::Simulation::logIdObjAttr);
 
-	py::class_<DPsim::RealTimeSimulation>(m, "RealTimeSimulation")
+	py::class_<DPsim::RealTimeSimulation, DPsim::Simulation>(m, "RealTimeSimulation")
 	    .def(py::init<std::string>())
-		.def("name", &DPsim::Simulation::name)
-		.def("set_time_step", &DPsim::Simulation::setTimeStep)
-		.def("set_final_time", &DPsim::Simulation::setFinalTime)
-		.def("add_logger", &DPsim::Simulation::addLogger)
-		.def("set_system", &DPsim::Simulation::setSystem)
-		.def("run", &DPsim::Simulation::run)
-		.def("set_solver", &DPsim::Simulation::setSolverType)
-		.def("set_domain", &DPsim::Simulation::setDomain);
+		.def("name", &DPsim::RealTimeSimulation::name)
+		.def("set_time_step", &DPsim::RealTimeSimulation::setTimeStep)
+		.def("set_final_time", &DPsim::RealTimeSimulation::setFinalTime)
+		.def("add_logger", &DPsim::RealTimeSimulation::addLogger)
+		.def("set_system", &DPsim::RealTimeSimulation::setSystem)
+		.def("run", static_cast<void (DPsim::RealTimeSimulation::*)(CPS::Int startIn)>(&DPsim::RealTimeSimulation::run))
+		.def("set_solver", &DPsim::RealTimeSimulation::setSolverType)
+		.def("set_domain", &DPsim::RealTimeSimulation::setDomain)
+		.def("set_idobj_attr", static_cast<void (DPsim::RealTimeSimulation::*)(const std::string&, const std::string&, CPS::Real)>(&DPsim::Simulation::setIdObjAttr))
+		.def("set_idobj_attr", static_cast<void (DPsim::RealTimeSimulation::*)(const std::string&, const std::string&, CPS::Complex)>(&DPsim::Simulation::setIdObjAttr))
+		.def("get_real_idobj_attr", &DPsim::RealTimeSimulation::getRealIdObjAttr)
+		.def("get_comp_idobj_attr", &DPsim::RealTimeSimulation::getComplexIdObjAttr)
+		.def("add_interface", &DPsim::RealTimeSimulation::addInterface, py::arg("interface"), py::arg("syncStart") = false)
+		.def("export_attr", &DPsim::RealTimeSimulation::exportIdObjAttr, py::arg("obj"), py::arg("attr"), py::arg("idx"), py::arg("modifier"), py::arg("row") = 0, py::arg("col") = 0)
+		.def("log_attr", &DPsim::RealTimeSimulation::logIdObjAttr);
+
 
 	py::class_<CPS::SystemTopology, std::shared_ptr<CPS::SystemTopology>>(m, "SystemTopology")
         .def(py::init<CPS::Real, CPS::TopologicalNode::List, CPS::IdentifiedObject::List>())
@@ -66,12 +76,13 @@ PYBIND11_MODULE(dpsimpy, m) {
 		.def("add", &DPsim::SystemTopology::addComponent)
 		.def("_repr_svg_", &DPsim::SystemTopology::render)
 		.def("render_to_file", &DPsim::SystemTopology::renderToFile)
-		.def_readwrite("nodes", &DPsim::SystemTopology::mNodes);
+		.def_readwrite("nodes", &DPsim::SystemTopology::mNodes)
+		.def("list_idobjects", &DPsim::SystemTopology::listIdObjects);
 
 	py::class_<DPsim::Interface>(m, "Interface");
 
 	py::class_<DPsim::InterfaceShmem, DPsim::Interface>(m, "InterfaceShmem")
-	    .def(py::init<const CPS::String &, const CPS::String &>());
+	    .def(py::init<const CPS::String&, const CPS::String&>(), py::arg("shmwrite") = "/dpsim-villas", py::arg("shmread") = "/villas-dpsim");
 
 	py::class_<DPsim::DataLogger, std::shared_ptr<DPsim::DataLogger>>(m, "Logger")
         .def(py::init<std::string>())
@@ -79,6 +90,12 @@ PYBIND11_MODULE(dpsimpy, m) {
 
 	py::class_<CPS::IdentifiedObject, std::shared_ptr<CPS::IdentifiedObject>>(m, "IdentifiedObject")
 		.def("name", &CPS::IdentifiedObject::name);
+
+	py::enum_<CPS::AttributeBase::Modifier>(m, "AttrModifier")
+		.value("real", CPS::AttributeBase::Modifier::real)
+		.value("imag", CPS::AttributeBase::Modifier::imag)
+		.value("mag", CPS::AttributeBase::Modifier::mag)
+		.value("phase", CPS::AttributeBase::Modifier::phase);
 
 	py::enum_<CPS::Domain>(m, "Domain")
 		.value("SP", CPS::Domain::SP)
