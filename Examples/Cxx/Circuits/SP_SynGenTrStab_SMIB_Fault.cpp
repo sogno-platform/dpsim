@@ -17,7 +17,7 @@ Real nomOmega= nomFreq* 2*PI;
 Real H = 5;
 Real Xpd=0.31;
 Real Rs = 0.003*0;
-Real D = 1;
+Real D = 1*50;
 // Initialization parameters
 Real initMechPower= 300e6;
 Real initActivePower = 300e6;
@@ -197,7 +197,7 @@ int main(int argc, char* argv[]) {
 	Bool startFaultEvent=true;
 	Bool endFaultEvent=true;
 	Real startTimeFault=10;
-	Real endTimeFault=10.3;
+	Real endTimeFault=10.2;
 	Real cmdInertia= 1.0;
 
 	CommandLineArgs args(argc, argv);
