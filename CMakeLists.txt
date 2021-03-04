@@ -194,6 +194,10 @@ configure_file(
 	${CMAKE_CURRENT_BINARY_DIR}/Include/dpsim/Config.h
 )
 
+if(WITH_SHMEM)
+	include(cmake/GetVillasDPsim.cmake)
+endif()
+
 set(DPSIM_INCLUDE_DIRS
 	${CMAKE_CURRENT_BINARY_DIR}/Include
 	${CMAKE_CURRENT_SOURCE_DIR}/Include
@@ -205,7 +209,6 @@ add_subdirectory(docs)
 
 if(BUILD_EXAMPLES)
 	add_subdirectory(Examples)
-	add_subdirectory(villas-dpsim/examples)
 endif(BUILD_EXAMPLES)
 
 if(WITH_PYBIND)
