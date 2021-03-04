@@ -207,7 +207,11 @@ int main(int argc, char* argv[]) {
 		if (args.name != "dpsim")
 			simName = args.name;
 		if (args.options.find("SCALEINERTIA") != args.options.end())
-			cmdInertia = args.options["SCALEINERTIA"];		
+			cmdInertia = args.options["SCALEINERTIA"];
+		if (args.options.find("STARTTIMEFAULT") != args.options.end())
+			startTimeFault = args.options["STARTTIMEFAULT"];
+		if (args.options.find("ENDTIMEFAULT") != args.options.end())
+			endTimeFault = args.options["ENDTIMEFAULT"];	
 	}
 
 
