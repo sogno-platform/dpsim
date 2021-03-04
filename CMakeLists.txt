@@ -213,10 +213,14 @@ endif(BUILD_EXAMPLES)
 
 if(WITH_PYBIND)
 	set(PYBIND11_CPP_STANDARD -std=c++11)
-	pybind11_add_module(dpsimpy Source/pybind/main.cpp)
-	pybind11_add_module(dpsimpyvillas Source/pybind/dpsim-villas.cpp)
+
+	pybind11_add_module(dpsimpy Source/pybind/main.cpp)	
 	target_link_libraries(dpsimpy PRIVATE dpsim)
-	target_link_libraries(dpsimpyvillas PRIVATE dpsim)
+
+	if(WITH_SHMEM)
+		pybind11_add_module(dpsimpyvillas ${CMAKE_BINARY_DIR}/_deps/villas-dpsim-src/src/dpsim-villas.cpp)
+		target_link_libraries(dpsimpyvillas PRIVATE dpsim)
+	endif()	
 endif()
 
 include(cmake/GetGridData.cmake)
