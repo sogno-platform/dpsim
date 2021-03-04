@@ -38,7 +38,7 @@ OPTS="--timestep 1 --duration $((300)) --system-freq 50 --start-at $TIME --solve
 echo "Simulation params: $OPTS"
 
 CPS_LOG_PREFIX="[Sys ] " \
-build/Examples/Cxx/Shmem_CIGRE_MV_PowerFlowTest_LoadProfiles $OPTS & P1=$!
+build/build/_deps/villas-dpsim-src/examples/cxx/Shmem_CIGRE_MV_PowerFlowTest_LoadProfiles $OPTS & P1=$!
 
 CHILDS=$P1
 
@@ -47,10 +47,10 @@ sleep 2
 if true; then
 	VILLAS_LOG_PREFIX="[Pipe] " \
 	#villas-pipe Configs/Shmem_CIGRE_MV.conf dpsim1
-	villas-node villas-dpsim/examples/config/shmem_CIGRE_MV_PF/Shmem_CIGRE_MV.conf
+	villas-node build/_deps/villas-dpsim-src/examples/config/shmem_CIGRE_MV_PF/Shmem_CIGRE_MV.conf
 else
 	VILLAS_LOG_PREFIX="[Node] " \
-	villas-node villas-dpsim/examples/config/shmem_CIGRE_MV_PF/Shmem_CIGRE_MV.conf & VN=$!
+	villas-node build/_deps/villas-dpsim-src/examples/config/shmem_CIGRE_MV_PF/Shmem_CIGRE_MV.conf & VN=$!
 fi
 
 # Wait until all child processed finished
