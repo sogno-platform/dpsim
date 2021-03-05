@@ -38,6 +38,15 @@
 #endif
 
 namespace DPsim {
+	/// \brief The implementations of the MNA solvers MnaSolver can support.
+	///
+	enum MnaSolverImpl {
+		EigenDense,
+		EigenSparse,
+		CUDADense,
+		CUDASparse,
+	};
+
 	/// Solver class using Modified Nodal Analysis (MNA).
 	template <typename VarType>
 	class MnaSolver : public Solver, public CPS::AttributeList {
@@ -63,6 +72,11 @@ namespace DPsim {
 		CPS::SystemTopology mSystem;
 		/// List of simulation nodes
 		typename CPS::SimNode<VarType>::List mNodes;
+
+		/// MNA implementations supported by this compilation
+		static const std::vector<MnaSolverImpl> mSupportedSolverImpls;
+		/// MNA implementation chosen for this instance
+		MnaSolverImpl mSolverImpl;
 
 		// #### MNA specific attributes ####
 		/// List of MNA components with static stamp into system matrix
@@ -155,9 +169,11 @@ namespace DPsim {
 
 	public:
 		/// Constructor should not be called by users but by Simulation
+		/// sovlerImpl: choose the most advanced solver implementation available by default
 		MnaSolver(String name,
 			CPS::Domain domain = CPS::Domain::DP,
-			CPS::Logger::Level logLevel = CPS::Logger::Level::info);
+			CPS::Logger::Level logLevel = CPS::Logger::Level::info,
+			MnaSolverImpl solverImpl = *mSupportedSolverImpls.end());
 
 		/// Destructor
 		virtual ~MnaSolver() { };

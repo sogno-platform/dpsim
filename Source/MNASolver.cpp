@@ -16,8 +16,22 @@ using namespace CPS;
 namespace DPsim {
 
 template <typename VarType>
-MnaSolver<VarType>::MnaSolver(String name, CPS::Domain domain, CPS::Logger::Level logLevel) :
-	Solver(name, logLevel), mDomain(domain) {
+const std::vector<MnaSolverImpl> MnaSolver<VarType>::mSupportedSolverImpls = {
+EigenDense,
+#ifdef WITH_SPARSE
+EigenSparse,
+#endif //WITH_SPARSE
+#ifdef WITH_CUDA
+CUDADense,
+#ifdef WITH_SPARSE
+CUDASparse,
+#endif //WITH_SPARSE
+#endif //WITH_CUDA
+};
+
+template <typename VarType>
+MnaSolver<VarType>::MnaSolver(String name, CPS::Domain domain, CPS::Logger::Level logLevel, MnaSolverImpl solverImpl) :
+	Solver(name, logLevel), mDomain(domain), mSolverImpl(solverImpl) {
 
 	// Raw source and solution vector logging
 	mLeftVectorLog = std::make_shared<DataLogger>(name + "_LeftVector", logLevel != CPS::Logger::Level::off);
