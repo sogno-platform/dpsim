@@ -255,8 +255,8 @@ namespace DPsim {
 		void setIdObjAttr(const String &comp, const String &attr, Complex value);
 
 		// #### Get component attributes during simulation ####
-		Real getRealIdObjAttr(const String &comp, const String &attr);
-		Complex getComplexIdObjAttr(const String &comp, const String &attr);
+		Real getRealIdObjAttr(const String &comp, const String &attr, UInt row = 0, UInt col = 0);
+		Complex getComplexIdObjAttr(const String &comp, const String &attr, UInt row = 0, UInt col = 0);
 
 		void exportIdObjAttr(const String &comp, const String &attr, UInt idx, CPS::AttributeBase::Modifier mod = CPS::AttributeBase::Modifier::real, UInt row = 0, UInt col = 0);
 		void logIdObjAttr(const String &comp, const String &attr);

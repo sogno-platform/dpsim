@@ -45,8 +45,8 @@ PYBIND11_MODULE(dpsimpy, m) {
 		.def("next", &DPsim::Simulation::next)
 		.def("set_idobj_attr", static_cast<void (DPsim::Simulation::*)(const std::string&, const std::string&, CPS::Real)>(&DPsim::Simulation::setIdObjAttr))
 		.def("set_idobj_attr", static_cast<void (DPsim::Simulation::*)(const std::string&, const std::string&, CPS::Complex)>(&DPsim::Simulation::setIdObjAttr))
-		.def("get_real_idobj_attr", &DPsim::Simulation::getRealIdObjAttr)
-		.def("get_comp_idobj_attr", &DPsim::Simulation::getComplexIdObjAttr)
+		.def("get_real_idobj_attr", &DPsim::Simulation::getRealIdObjAttr, py::arg("obj"), py::arg("attr"), py::arg("row") = 0, py::arg("col") = 0)
+		.def("get_comp_idobj_attr", &DPsim::Simulation::getComplexIdObjAttr, py::arg("obj"), py::arg("attr"), py::arg("row") = 0, py::arg("col") = 0)
 		.def("add_interface", &DPsim::Simulation::addInterface, py::arg("interface"), py::arg("syncStart") = false)
 		.def("export_attr", &DPsim::Simulation::exportIdObjAttr, py::arg("obj"), py::arg("attr"), py::arg("idx"), py::arg("modifier"), py::arg("row") = 0, py::arg("col") = 0)
 		.def("log_attr", &DPsim::Simulation::logIdObjAttr);
@@ -63,8 +63,8 @@ PYBIND11_MODULE(dpsimpy, m) {
 		.def("set_domain", &DPsim::RealTimeSimulation::setDomain)
 		.def("set_idobj_attr", static_cast<void (DPsim::RealTimeSimulation::*)(const std::string&, const std::string&, CPS::Real)>(&DPsim::Simulation::setIdObjAttr))
 		.def("set_idobj_attr", static_cast<void (DPsim::RealTimeSimulation::*)(const std::string&, const std::string&, CPS::Complex)>(&DPsim::Simulation::setIdObjAttr))
-		.def("get_real_idobj_attr", &DPsim::RealTimeSimulation::getRealIdObjAttr)
-		.def("get_comp_idobj_attr", &DPsim::RealTimeSimulation::getComplexIdObjAttr)
+		.def("get_real_idobj_attr", &DPsim::RealTimeSimulation::getRealIdObjAttr, py::arg("obj"), py::arg("attr"), py::arg("row") = 0, py::arg("col") = 0)
+		.def("get_comp_idobj_attr", &DPsim::RealTimeSimulation::getComplexIdObjAttr, py::arg("obj"), py::arg("attr"), py::arg("row") = 0, py::arg("col") = 0)
 		.def("add_interface", &DPsim::RealTimeSimulation::addInterface, py::arg("interface"), py::arg("syncStart") = false)
 		.def("export_attr", &DPsim::RealTimeSimulation::exportIdObjAttr, py::arg("obj"), py::arg("attr"), py::arg("idx"), py::arg("modifier"), py::arg("row") = 0, py::arg("col") = 0)
 		.def("log_attr", &DPsim::RealTimeSimulation::logIdObjAttr);

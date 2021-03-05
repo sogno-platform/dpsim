@@ -505,31 +505,47 @@ void Simulation::setIdObjAttr(const String &comp, const String &attr, Complex va
 		mLog->error("Component not found");
 }
 
-Real Simulation::getRealIdObjAttr(const String &comp, const String &attr) {
+Real Simulation::getRealIdObjAttr(const String &comp, const String &attr, UInt row, UInt col) {
 	IdentifiedObject::Ptr compObj = mSystem.component<IdentifiedObject>(comp);
+	if (!compObj) compObj = mSystem.node<IdentifiedObject>(comp);
+
 	if (compObj) {
 		try {
 			return compObj->attribute<Real>(attr)->getByValue();
-		} catch (InvalidAttributeException &e) {
-			mLog->error("Attribute not found");
-		}			
+		} catch (InvalidAttributeException &e) { }			
+		
+		try {			
+			return compObj->attributeMatrixReal(attr)->coeff(row, col)->getByValue();		
+		} catch (InvalidAttributeException &e) { }		
+
+		mLog->error("Attribute not found");
+	}
+	else {
+		mLog->error("Component not found");
 	}
 	
-	mLog->error("Component not found");
 	return 0;	
 }
 		
-Complex Simulation::getComplexIdObjAttr(const String &comp, const String &attr) {
+Complex Simulation::getComplexIdObjAttr(const String &comp, const String &attr, UInt row, UInt col) {
 	IdentifiedObject::Ptr compObj = mSystem.component<IdentifiedObject>(comp);
+	if (!compObj) compObj = mSystem.node<IdentifiedObject>(comp);
+
 	if (compObj) {
 		try {
 			return compObj->attributeComplex(attr)->getByValue();
-		} catch (InvalidAttributeException &e) {
-			mLog->error("Attribute not found");
-		}			
+		} catch (InvalidAttributeException &e) { }			
+		
+		try {			
+			return compObj->attributeMatrixComp(attr)->coeff(row, col)->getByValue();		
+		} catch (InvalidAttributeException &e) { }		
+
+		mLog->error("Attribute not found");
+	}
+	else {
+		mLog->error("Component not found");
 	}
 	
-	mLog->error("Component not found");
 	return 0;
 }
 
