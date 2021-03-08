@@ -28,6 +28,7 @@ cmake-build-debug/
 .idea/
 .vs/
 *.json
+!Configs/example_configs_json/*.json
 .vscode/
 
 # CMake

@@ -22,10 +22,13 @@
 #include <cps/SimNode.h>
 #include <dpsim/Interface.h>
 #include <dpsim/Utils.h>
+#include <nlohmann/json.hpp>
 
 #ifdef WITH_GRAPHVIZ
   #include <cps/Graph.h>
 #endif
+
+using json = nlohmann::json;
 
 namespace DPsim {
 	/// \brief The Simulation holds a SystemTopology and a Solver.
@@ -148,6 +151,9 @@ namespace DPsim {
 		/// Creates simulation with name and CommandLineArgs
 		Simulation(String name, CommandLineArgs& args);
 
+		/// Creates simulation
+		Simulation();
+
 		/// Creates simulation with name and log level
 		Simulation(String name, CPS::Logger::Level logLevel = CPS::Logger::Level::info);
 
@@ -166,6 +172,8 @@ namespace DPsim {
 		virtual ~Simulation() { }
 
 		// #### Simulation Settings ####
+		/// 
+		void configFromJson(const json simConfig);
 		///
 		void setSystem(const CPS::SystemTopology &system) { mSystem = system; }
 		///

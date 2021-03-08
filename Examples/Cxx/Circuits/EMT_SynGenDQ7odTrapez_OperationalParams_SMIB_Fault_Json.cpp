@@ -52,27 +52,17 @@ int main(int argc, char* argv[]) {
 	Real lineConductance = 8e-2; //change to allow bigger time steps and to stabilize simulation (8e-2 used for 10us)
 
 	// Simulation parameters
-	String simName = "EMT_SynGenDQ7odTrapez_OperationalParams_SMIB_Fault_with_PF_Init";
-	Real timeStep = 10e-6;
-	Real finalTime = 1.0;
-	Real startTimeFault=0.2;
+	const Real startTimeFault=0.2;
 
 	// Json config processing
-	// create an empty structure (null)
-	json j;
-	// add a number that is stored as double (note the implicit conversion of j to an object)
-	j["finalTime"] = 0.8;
-	// extract from json
-	finalTime = j["finalTime"].get<double>();
+	std::ifstream jsonFile("../../../Configs/example_configs_json/EMT_SynGenDQ7odTrapez_OperationalParams_SMIB_Fault.json");
+	json simConfig;
+	jsonFile >> simConfig;
+	const String simName = simConfig["name"].get<std::string>();
 
 	// Command line args processing
 	CommandLineArgs args(argc, argv);
 	if (argc > 1) {
-
-		// Simulation parameters
-		if (args.name != "dpsim")
-			simName = args.name;
-
 		// Machine parameters
 		if (args.options.find("H") != args.options.end())
 			H = args.options["H"];
@@ -105,8 +95,8 @@ int main(int argc, char* argv[]) {
 	// ----- POWERFLOW FOR INITIALIZATION -----
 	String simNamePF = simName + "_PF";
 	Logger::setLogDir("logs/" + simNamePF);
-	Real timeStepPF = finalTime;
-	Real finalTimePF = finalTime+timeStepPF;
+	Real timeStepPF = simConfig["duration"].get<double>();
+	Real finalTimePF = simConfig["duration"].get<double>()+timeStepPF;
 
 	// Components
 	auto n1PF = SimNode<Complex>::make("n1", PhaseType::Single);
@@ -149,9 +139,11 @@ int main(int argc, char* argv[]) {
 	// Simulation
 	Simulation simPF(simNamePF, Logger::Level::debug);
 	simPF.setSystem(systemPF);
+
 	simPF.setTimeStep(timeStepPF);
 	simPF.setFinalTime(finalTimePF);
 	simPF.setDomain(Domain::SP);
+
 	simPF.setSolverType(Solver::Type::NRP);
 	simPF.doPowerFlowInit(false);
 	simPF.addLogger(loggerPF);
@@ -226,12 +218,9 @@ int main(int argc, char* argv[]) {
 	auto sw1 = SwitchEvent3Ph::make(startTimeFault, fault, true);
 
 	// Simulation
-	Simulation sim(simName, Logger::Level::debug);
+	Simulation sim;
+	sim.configFromJson(simConfig);
 	sim.setSystem(system);
-	sim.setTimeStep(timeStep);
-	sim.setFinalTime(finalTime);
-	sim.setDomain(Domain::EMT);
-	sim.doPowerFlowInit(false);
 	sim.addLogger(logger);
 	sim.addEvent(sw1);
 	sim.run();

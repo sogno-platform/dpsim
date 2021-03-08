@@ -1,0 +1,7 @@
+{
+    "name": "EMT_SynGenDQ7odTrapez_OperationalParams_SMIB_Fault_Json",
+    "timestep": 10e-6,
+    "duration": 0.5,
+    "log-level": "DEBUG",
+    "domain": "EMT"
+}
