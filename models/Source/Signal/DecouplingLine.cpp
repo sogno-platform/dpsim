@@ -6,6 +6,7 @@
  * file, You can obtain one at https://mozilla.org/MPL/2.0/.
  *********************************************************************************/
 
+#include "cps/Definitions.h"
 #include <cps/Signal/DecouplingLine.h>
 
 using namespace CPS;
@@ -15,7 +16,8 @@ using namespace CPS::Signal;
 DecouplingLine::DecouplingLine(String name, SimNode<Complex>::Ptr node1, SimNode<Complex>::Ptr node2,
 	Real resistance, Real inductance, Real capacitance, Logger::Level logLevel) :
 	SimSignalComp(name, name, logLevel),
-	mResistance(resistance), mInductance(inductance), mCapacitance(capacitance) {
+	mResistance(resistance), mInductance(inductance), mCapacitance(capacitance),
+	mNode1(node1), mNode2(node2) {
 
 	addAttribute<Matrix>("states", &mStates);
 	addAttribute<Complex>("i_src1", &mSrcCur1Ref, Flags::read);
@@ -86,6 +88,9 @@ void DecouplingLine::setParameters(SimNode<Complex>::Ptr node1, SimNode<Complex>
 void DecouplingLine::initialize(Real omega, Real timeStep) {
 	if (mDelay < timeStep)
 		throw SystemError("Timestep too large for decoupling");
+
+	if (mNode1 == nullptr || mNode2 == nullptr)
+		throw SystemError("nodes not initialized!");
 
 	mBufSize = static_cast<UInt>(ceil(mDelay / timeStep));
 	mAlpha = 1 - (mBufSize - mDelay / timeStep);
