@@ -44,6 +44,20 @@ if(WITH_PYTHON)
 	add_subdirectory(Python)
 endif()
 
+if(WITH_JSON)
+	list(APPEND DPSIM_LIBRARIES nlohmann_json::nlohmann_json)
+endif()
+
+if(WITH_SHMEM)
+	list(APPEND DPSIM_SOURCES
+		InterfaceShmem.cpp
+		PthreadPoolScheduler.cpp
+	)
+
+	list(APPEND DPSIM_LIBRARIES ${VILLASNODE_LIBRARIES} pthread)
+	list(APPEND DPSIM_INCLUDE_DIRS ${VILLASNODE_INCLUDE_DIRS})
+endif()
+
 if(WITH_SPARSE)
 	list(APPEND DPSIM_SOURCES
 		MNASolverEigenSparse.cpp
