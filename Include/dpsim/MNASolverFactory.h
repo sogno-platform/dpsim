@@ -55,7 +55,7 @@ class MnaSolverFactory {
 	static std::shared_ptr<MnaSolver<VarType>> factory(String name,
 		CPS::Domain domain = CPS::Domain::DP,
 		CPS::Logger::Level logLevel = CPS::Logger::Level::info,
-		MnaSolverImpl implementation = *mSupportedSolverImpls().end())
+		MnaSolverImpl implementation = mSupportedSolverImpls().back())
 	{
 		switch(implementation) {
 		case MnaSolverImpl::EigenDense:
