@@ -24,7 +24,9 @@
 #include <dpsim/Utils.h>
 #include <cps/Utils.h>
 #include <dpsim/MNASolverFactory.h>
+#ifdef WITH_SPARSE
 #include <dpsim/MNASolverSysRecomp.h>
+#endif
 #include <dpsim/PFSolverPowerPolar.h>
 #include <dpsim/DiakopticsSolver.h>
 
@@ -171,6 +173,7 @@ void Simulation::createMNASolver() {
 				subnets[net], mTearComponents, mTimeStep, mLogLevel);
 		}
 		else if (mSystemMatrixRecomputation) {
+#ifdef WITH_SPARSE
 			// Recompute system matrix if switches or other components change
 			solver = std::make_shared<MnaSolverSysRecomp<VarType>>(
 				mName + copySuffix, mDomain, mLogLevel);
@@ -180,6 +183,9 @@ void Simulation::createMNASolver() {
 			solver->setSteadStIniAccLimit(mSteadStIniAccLimit);
 			solver->setSystem(subnets[net]);
 			solver->initialize();
+#else
+			throw SystemError("Recomputation Solver requires WITH_SPARSE to be set.");
+#endif
 		}
 		else {
 			// Default case with precomputed system matrices for different configurations
