@@ -8,12 +8,12 @@
 
 #pragma once
 
-#include <dpsim/MNASolver.h>
+#include <dpsim/MNASolverEigenSparse.h>
 
 namespace DPsim {
 	/// Solver class using Modified Nodal Analysis (MNA).
 	template <typename VarType>
-	class MnaSolverSysRecomp : public MnaSolver<VarType> {
+	class MnaSolverSysRecomp : public MnaSolverEigenSparse<VarType> {
 	protected:
 		/// Initialization of system matrices and source vector
 		virtual void initializeSystem() override;

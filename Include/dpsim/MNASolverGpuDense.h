@@ -1,6 +1,6 @@
 #pragma once
 
-#include <dpsim/MNASolver.h>
+#include <dpsim/MNASolverEigenDense.h>
 
 #include <cuda_runtime.h>
 #include <cusolverDn.h>
@@ -9,7 +9,7 @@
 
 namespace DPsim {
 	template <typename VarType>
-    class MnaSolverGpuDense : public MnaSolver<VarType>{
+    class MnaSolverGpuDense : public MnaSolverEigenDense<VarType>{
 	protected:
 
 		// #### Attributes required for GPU ####

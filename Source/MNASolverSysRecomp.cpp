@@ -17,7 +17,7 @@ namespace DPsim {
 template <typename VarType>
 MnaSolverSysRecomp<VarType>::MnaSolverSysRecomp(String name,
 	CPS::Domain domain, CPS::Logger::Level logLevel) :
-    MnaSolver<VarType>(name, domain, logLevel) { }
+    MnaSolverEigenSparse<VarType>(name, domain, logLevel) { }
 
 template <typename VarType>
 void MnaSolverSysRecomp<VarType>::initializeSystem() {
@@ -47,12 +47,8 @@ void MnaSolverSysRecomp<VarType>::initializeSystem() {
 	for (auto varElem : this->mMNAIntfVariableComps) {
 		varElem->mnaApplySystemMatrixStamp(this->mSwitchedMatrices[std::bitset<SWITCH_NUM>(0)]);
 	}
-#ifdef WITH_SPARSE
 	this->mLuFactorizations[std::bitset<SWITCH_NUM>(0)].analyzePattern(this->mSwitchedMatrices[std::bitset<SWITCH_NUM>(0)]);
 	this->mLuFactorizations[std::bitset<SWITCH_NUM>(0)].factorize(this->mSwitchedMatrices[std::bitset<SWITCH_NUM>(0)]);
-#else
-	this->mLuFactorizations[std::bitset<SWITCH_NUM>(0)] = Eigen::PartialPivLU<Matrix>(this->mSwitchedMatrices[std::bitset<SWITCH_NUM>(0)]);
-#endif
 	// Initialize source vector for debugging
 	for (auto comp : this->mMNAComponents) {
 		comp->mnaApplyRightSideVectorStamp(this->mRightSideVector);
@@ -85,12 +81,8 @@ void MnaSolverSysRecomp<VarType>::updateSystemMatrix(Real time) {
 		this->mSLog->debug("Updating {:s} {:s} in system matrix (variabel component)",
 			idObj->type(), idObj->name());
 	}
-#ifdef WITH_SPARSE
 	this->mLuFactorizations[std::bitset<SWITCH_NUM>(0)].analyzePattern(this->mSwitchedMatrices[std::bitset<SWITCH_NUM>(0)]);
 	this->mLuFactorizations[std::bitset<SWITCH_NUM>(0)].factorize(this->mSwitchedMatrices[std::bitset<SWITCH_NUM>(0)]);
-#else
-	this->mLuFactorizations[std::bitset<SWITCH_NUM>(0)] = Eigen::PartialPivLU<Matrix>(this->mSwitchedMatrices[std::bitset<SWITCH_NUM>(0)]);
-#endif
 	mUpdateSysMatrix = false;
 }
 

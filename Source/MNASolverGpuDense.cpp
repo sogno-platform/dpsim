@@ -9,7 +9,7 @@ namespace DPsim {
 template <typename VarType>
 MnaSolverGpuDense<VarType>::MnaSolverGpuDense(String name,
 	CPS::Domain domain, CPS::Logger::Level logLevel) :
-    MnaSolver<VarType>(name, domain, logLevel),
+    MnaSolverEigenDense<VarType>(name, domain, logLevel),
     mCusolverHandle(nullptr), mStream(nullptr) {
 
     mDeviceCopy = {};
@@ -96,11 +96,7 @@ void MnaSolverGpuDense<VarType>::allocateDeviceMemory() {
 
 template <typename VarType>
 void MnaSolverGpuDense<VarType>::copySystemMatrixToDevice() {
-#ifdef WITH_SPARSE
-    auto *data = Matrix(MnaSolver<VarType>::systemMatrix()).data();
-#else
-	auto *data = MnaSolver<VarType>::systemMatrix().data();
-#endif
+	auto *data = MnaSolverEigenDense<VarType>::mSwitchedMatrices[MnaSolverEigenDense<VarType>::mCurrentSwitchStatus].data();
     CUDA_ERROR_HANDLER(cudaMemcpy(mDeviceCopy.matrix, data, mDeviceCopy.size * mDeviceCopy.size * sizeof(Real), cudaMemcpyHostToDevice))
 }
 

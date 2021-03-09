@@ -1,4 +1,4 @@
-﻿/* Copyright 2017-2020 Institute for Automation of Complex Power Systems,
+/* Copyright 2017-2020 Institute for Automation of Complex Power Systems,
  *                     EONERC, RWTH Aachen University
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
@@ -95,6 +95,6 @@ namespace DPsim {
 		/// Get tasks for scheduler
 		virtual CPS::Task::List getTasks() = 0;
 		/// Log results
-		virtual void log(Real time) { };
+		virtual void log(Real time, Int timeStepCount) { };
 	};
 }

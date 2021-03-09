@@ -1,13 +1,13 @@
 #pragma once
 
-#include <dpsim/MNASolver.h>
+#include <dpsim/MNASolverEigenSparse.h>
 #include <dpsim/Cuda/CudaUtility.h>
 #include <cusolverSp.h>
 
 namespace DPsim {
 
 	template <typename VarType>
-    class MnaSolverGpuSparse : public MnaSolver<VarType>{
+    class MnaSolverGpuSparse : public MnaSolverEigenSparse<VarType>{
 	protected:
 
 		// #### Attributes required for GPU ####
@@ -29,11 +29,11 @@ namespace DPsim {
 		using Solver::mSLog;
 
 		/// Initialize cuSparse-library
-        void initialize();
+        void initialize() override;
 		/// ILU factorization
 		void iluPreconditioner();
 		///
-		void solve(Real time, Int timeStepCount);
+		void solve(Real time, Int timeStepCount) override;
 
 	private:
 		///Required shared Variables
@@ -52,7 +52,7 @@ namespace DPsim {
 
 		virtual ~MnaSolverGpuSparse();
 
-		CPS::Task::List getTasks();
+		CPS::Task::List getTasks() override;
 
 		class SolveTask : public CPS::Task {
 		public:
@@ -89,8 +89,5 @@ namespace DPsim {
 			MnaSolverGpuSparse<VarType>& mSolver;
 		};
     };
-
-template class DPsim::MnaSolverGpuSparse<Real>;
-template class DPsim::MnaSolverGpuSparse<Complex>;
 
 }

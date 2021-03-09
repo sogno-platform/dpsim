@@ -1,4 +1,3 @@
-#include "dpsim/Definitions.h"
 #include <dpsim/MNASolverGpuSparse.h>
 #include <dpsim/SequentialScheduler.h>
 #include <Eigen/Eigen>
@@ -11,7 +10,7 @@ namespace DPsim {
 template <typename VarType>
 MnaSolverGpuSparse<VarType>::MnaSolverGpuSparse(String name,
 	CPS::Domain domain, CPS::Logger::Level logLevel) :
-    MnaSolver<VarType>(name, domain, logLevel),
+    MnaSolverEigenSparse<VarType>(name, domain, logLevel),
     mCusparsehandle(nullptr), mSysMat(nullptr),
 	mTransp(nullptr),
 	mGpuRhsVec(0), mGpuLhsVec(0), mGpuIntermediateVec(0),
@@ -291,3 +290,5 @@ void MnaSolverGpuSparse<VarType>::solve(Real time, Int timeStepCount) {
 }
 
 }
+template class DPsim::MnaSolverGpuSparse<Real>;
+template class DPsim::MnaSolverGpuSparse<Complex>;

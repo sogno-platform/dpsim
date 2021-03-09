@@ -9,29 +9,17 @@
 
 #include <dpsim/MNASolver.h>
 #include <dpsim/SequentialScheduler.h>
+#include <memory>
 
 using namespace DPsim;
 using namespace CPS;
 
 namespace DPsim {
 
-template <typename VarType>
-const std::vector<MnaSolverImpl> MnaSolver<VarType>::mSupportedSolverImpls = {
-EigenDense,
-#ifdef WITH_SPARSE
-EigenSparse,
-#endif //WITH_SPARSE
-#ifdef WITH_CUDA
-CUDADense,
-#ifdef WITH_SPARSE
-CUDASparse,
-#endif //WITH_SPARSE
-#endif //WITH_CUDA
-};
 
 template <typename VarType>
-MnaSolver<VarType>::MnaSolver(String name, CPS::Domain domain, CPS::Logger::Level logLevel, MnaSolverImpl solverImpl) :
-	Solver(name, logLevel), mDomain(domain), mSolverImpl(solverImpl) {
+MnaSolver<VarType>::MnaSolver(String name, CPS::Domain domain, CPS::Logger::Level logLevel) :
+	Solver(name, logLevel), mDomain(domain) {
 
 	// Raw source and solution vector logging
 	mLeftVectorLog = std::make_shared<DataLogger>(name + "_LeftVector", logLevel != CPS::Logger::Level::off);
@@ -222,42 +210,16 @@ template <typename VarType>
 void MnaSolver<VarType>::initializeSystemWithPrecomputedMatrices() {
 	// iterate over all possible switch state combinations
 	for (std::size_t i = 0; i < (1ULL << mSwitches.size()); i++) {
-		mSwitchedMatrices[std::bitset<SWITCH_NUM>(i)].setZero();
+		switchedMatrixEmpty(i);
 	}
 
 	if (mSwitches.size() < 1) {
-		// Create system matrix if no switches were added
-		for (auto comp : mMNAComponents) {
-			comp->mnaApplySystemMatrixStamp(mSwitchedMatrices[std::bitset<SWITCH_NUM>(0)]);
-			auto idObj = std::dynamic_pointer_cast<IdentifiedObject>(comp);
-			mSLog->debug("Stamping {:s} {:s} into system matrix",
-				idObj->type(), idObj->name());
-			if (mSLog->should_log(spdlog::level::trace)) {
-				mSLog->trace("\n{:s}",
-					Logger::matrixToString(mSwitchedMatrices[std::bitset<SWITCH_NUM>(0)]));
-			}
-		}
-#ifdef WITH_SPARSE
-		mLuFactorizations[std::bitset<SWITCH_NUM>(0)].analyzePattern(mSwitchedMatrices[std::bitset<SWITCH_NUM>(0)]);
-		mLuFactorizations[std::bitset<SWITCH_NUM>(0)].factorize(mSwitchedMatrices[std::bitset<SWITCH_NUM>(0)]);
-#else
-		mLuFactorizations[std::bitset<SWITCH_NUM>(0)] = Eigen::PartialPivLU<Matrix>(mSwitchedMatrices[std::bitset<SWITCH_NUM>(0)]);
-#endif
+		switchedMatrixStamp(0, mMNAComponents);
 	}
 	else {
 		// Generate switching state dependent system matrices
-		for (auto& sys : mSwitchedMatrices) {
-			for (auto comp : mMNAComponents)
-				comp->mnaApplySystemMatrixStamp(sys.second);
-			for (UInt i = 0; i < mSwitches.size(); ++i)
-				mSwitches[i]->mnaApplySwitchSystemMatrixStamp(sys.second, sys.first[i]);
-			// Compute LU-factorization for system matrix
-#ifdef WITH_SPARSE
-			mLuFactorizations[sys.first].analyzePattern(sys.second);
-			mLuFactorizations[sys.first].factorize(sys.second);
-#else
-			mLuFactorizations[sys.first] = Eigen::PartialPivLU<Matrix>(sys.second);
-#endif
+		for (std::size_t i = 0; i < (1ULL << mSwitches.size()); i++) {
+			switchedMatrixStamp(i, mMNAComponents);
 		}
 		updateSwitchStatus();
 	}
@@ -368,53 +330,6 @@ void MnaSolver<Complex>::createEmptyVectors() {
 	}
 }
 
-template<>
-void MnaSolver<Real>::createEmptySystemMatrix() {
-	if (mSwitches.size() > SWITCH_NUM)
-		throw SystemError("Too many Switches.");
-
-#ifdef WITH_SPARSE
-	for (std::size_t i = 0; i < (1ULL << mSwitches.size()); i++)
-		mSwitchedMatrices[std::bitset<SWITCH_NUM>(i)].resize(mNumMatrixNodeIndices, mNumMatrixNodeIndices);
-
-	mBaseSystemMatrix.resize(mNumMatrixNodeIndices, mNumMatrixNodeIndices);
-#else
-	for (std::size_t i = 0; i < (1ULL << mSwitches.size()); i++)
-		mSwitchedMatrices[std::bitset<SWITCH_NUM>(i)] = Matrix::Zero(mNumMatrixNodeIndices, mNumMatrixNodeIndices);
-
-	mBaseSystemMatrix = Matrix::Zero(mNumMatrixNodeIndices, mNumMatrixNodeIndices);
-#endif
-}
-
-template<>
-void MnaSolver<Complex>::createEmptySystemMatrix() {
-	if (mSwitches.size() > SWITCH_NUM)
-		throw SystemError("Too many Switches.");
-
-	if (mFrequencyParallel) {
-		for (UInt i = 0; i < std::pow(2,mSwitches.size()); ++i) {
-			for(Int freq = 0; freq < mSystem.mFrequencies.size(); ++freq) {
-				mSwitchedMatricesHarm[std::bitset<SWITCH_NUM>(i)].push_back(
-					Matrix::Zero(2*(mNumMatrixNodeIndices), 2*(mNumMatrixNodeIndices)));
-			}
-		}
-	}
-	else {
-		for (std::size_t i = 0; i < (1ULL << mSwitches.size()); i++) {
-#ifdef WITH_SPARSE
-			mSwitchedMatrices[std::bitset<SWITCH_NUM>(i)].resize(2*(mNumMatrixNodeIndices + mNumHarmMatrixNodeIndices), 2*(mNumMatrixNodeIndices + mNumHarmMatrixNodeIndices));
-#else
-			mSwitchedMatrices[std::bitset<SWITCH_NUM>(i)] = Matrix::Zero(2*(mNumMatrixNodeIndices + mNumHarmMatrixNodeIndices), 2*(mNumMatrixNodeIndices + mNumHarmMatrixNodeIndices));
-#endif
-		}
-	}
-#ifdef WITH_SPARSE
-	mBaseSystemMatrix.resize(2 * (mNumMatrixNodeIndices + mNumHarmMatrixNodeIndices), 2 * (mNumMatrixNodeIndices + mNumHarmMatrixNodeIndices));
-#else
-	mBaseSystemMatrix = Matrix::Zero(2 * (mNumMatrixNodeIndices + mNumHarmMatrixNodeIndices), 2 * (mNumMatrixNodeIndices + mNumHarmMatrixNodeIndices));
-#endif
-}
-
 template <typename VarType>
 void MnaSolver<VarType>::collectVirtualNodes() {
 	// We have not added virtual nodes yet so the list has only network nodes
@@ -507,7 +422,7 @@ void MnaSolver<VarType>::steadyStateInitialization() {
 			tasks.push_back(task);
 		}
 	}
-	tasks.push_back(std::make_shared<MnaSolver<VarType>::SolveTask>(*this));
+	tasks.push_back(createSolveTask());
 
 	sched.resolveDeps(tasks, inEdges, outEdges);
 	sched.createSchedule(tasks, inEdges, outEdges);
@@ -575,47 +490,14 @@ Task::List MnaSolver<VarType>::getTasks() {
 	}
 	if (mFrequencyParallel) {
 		for (UInt i = 0; i < mSystem.mFrequencies.size(); ++i)
-			l.push_back(std::make_shared<MnaSolver<VarType>::SolveTaskHarm>(*this, i));
+			l.push_back(createSolveTaskHarm(i));
 	} else {
-		l.push_back(std::make_shared<MnaSolver<VarType>::SolveTask>(*this));
-		l.push_back(std::make_shared<MnaSolver<VarType>::LogTask>(*this));
+		l.push_back(createSolveTask());
+		l.push_back(createLogTask());
 	}
 	return l;
 }
 
-template <typename VarType>
-void MnaSolver<VarType>::solve(Real time, Int timeStepCount) {
-	// Reset source vector
-	mRightSideVector.setZero();
-
-	// Add together the right side vector (computed by the components'
-	// pre-step tasks)
-	for (auto stamp : mRightVectorStamps)
-		mRightSideVector += *stamp;
-
-	if (mSwitchedMatrices.size() > 0)
-		mLeftSideVector = mLuFactorizations[mCurrentSwitchStatus].solve(mRightSideVector);
-
-	// TODO split into separate task? (dependent on x, updating all v attributes)
-	for (UInt nodeIdx = 0; nodeIdx < mNumNetNodes; ++nodeIdx)
-		mNodes[nodeIdx]->mnaUpdateVoltage(mLeftSideVector);
-
-	if (!mIsInInitialization)
-		updateSwitchStatus();
-
-	// Components' states will be updated by the post-step tasks
-}
-
-template <typename VarType>
-void MnaSolver<VarType>::solveWithHarmonics(Real time, Int timeStepCount, Int freqIdx) {
-	mRightSideVectorHarm[freqIdx].setZero();
-
-	// Sum of right side vectors (computed by the components' pre-step tasks)
-	for (auto stamp : mRightVectorStamps)
-		mRightSideVectorHarm[freqIdx] += stamp->col(freqIdx);
-
-	mLeftSideVectorHarm[freqIdx] =	mLuFactorizationsHarm[mCurrentSwitchStatus][freqIdx].solve(mRightSideVectorHarm[freqIdx]);
-}
 
 template <typename VarType>
 void MnaSolver<VarType>::log(Real time, Int timeStepCount) {
@@ -629,40 +511,6 @@ void MnaSolver<VarType>::log(Real time, Int timeStepCount) {
 	else {
 		mLeftVectorLog->logPhasorNodeValues(time, leftSideVector());
 		mRightVectorLog->logPhasorNodeValues(time, rightSideVector());
-	}
-}
-
-template <typename VarType>
-void MnaSolver<VarType>::logSystemMatrices() {
-	if (mFrequencyParallel) {
-		for (UInt i = 0; i < mSwitchedMatricesHarm[std::bitset<SWITCH_NUM>(0)].size(); ++i) {
-			mSLog->info("System matrix for frequency: {:d} \n{:s}", i,
-				Logger::matrixToString(mSwitchedMatricesHarm[std::bitset<SWITCH_NUM>(0)][i]));
-			//mSLog->info("LU decomposition for frequency: {:d} \n{:s}", i,
-			//	Logger::matrixToString(mLuFactorizationsHarm[std::bitset<SWITCH_NUM>(0)][i].matrixLU()));
-		}
-
-		for (UInt i = 0; i < mRightSideVectorHarm.size(); ++i)
-			mSLog->info("Right side vector for frequency: {:d} \n{:s}", i,
-				Logger::matrixToString(mRightSideVectorHarm[i]));
-
-	}
-	else {
-		if (mSwitches.size() < 1) {
-			mSLog->info("System matrix: \n{}", mSwitchedMatrices[std::bitset<SWITCH_NUM>(0)]);
-			//mSLog->info("LU decomposition: \n{}",	mLuFactorizations[std::bitset<SWITCH_NUM>(0)].matrixLU());
-		}
-		else {
-			mSLog->info("Initial switch status: {:s}", mCurrentSwitchStatus.to_string());
-
-			for (auto sys : mSwitchedMatrices) {
-				mSLog->info("Switching System matrix {:s} \n{:s}",
-					sys.first.to_string(), Logger::matrixToString(sys.second));
-				//mSLog->info("LU Factorization for System Matrix {:s} \n{:s}",
-				//	sys.first.to_string(), Logger::matrixToString(mLuFactorizations[sys.first].matrixLU()));
-			}
-		}
-		mSLog->info("Right side vector: \n{}", mRightSideVector);
 	}
 }
 

@@ -23,7 +23,7 @@
 #include <dpsim/Simulation.h>
 #include <dpsim/Utils.h>
 #include <cps/Utils.h>
-#include <dpsim/MNASolver.h>
+#include <dpsim/MNASolverFactory.h>
 #include <dpsim/MNASolverSysRecomp.h>
 #include <dpsim/PFSolverPowerPolar.h>
 #include <dpsim/DiakopticsSolver.h>
@@ -38,14 +38,6 @@
   #include <cps/Solver/ODEInterface.h>
   #include <dpsim/DAESolver.h>
   #include <dpsim/ODESolver.h>
-#endif
-
-#ifdef WITH_CUDA
-#ifdef WITH_SPARSE
-	#include <dpsim/MNASolverGpuSparse.h>
-#else
-	#include <dpsim/MNASolverGpuDense.h>
-#endif
 #endif
 
 using namespace CPS;
@@ -191,18 +183,8 @@ void Simulation::createMNASolver() {
 		}
 		else {
 			// Default case with precomputed system matrices for different configurations
-#ifdef WITH_CUDA
-#ifdef WITH_SPARSE
-			solver = std::make_shared<MnaSolverGpuSparse<VarType>>(
-				mName + copySuffix, mDomain, mLogLevel);
-#else
-			solver = std::make_shared<MnaSolverGpuDense<VarType>>(
-				mName + copySuffix, mDomain, mLogLevel);
-#endif
-#else
-			solver = std::make_shared<MnaSolver<VarType>>(
-				mName + copySuffix, mDomain, mLogLevel);
-#endif /* WITH_CUDA */
+			solver = MnaSolverFactory::factory<VarType>(mName + copySuffix, mDomain,
+												 mLogLevel);
 			solver->setTimeStep(mTimeStep);
 			solver->doSteadyStateInit(mSteadyStateInit);
 			solver->doFrequencyParallelization(mFreqParallel);
@@ -486,20 +468,20 @@ void Simulation::setIdObjAttr(const String &comp, const String &attr, Real value
 			compObj->attribute<Real>(attr)->set(value);
 		} catch (InvalidAttributeException &e) {
 			mLog->error("Attribute not found");
-		}			
+		}
 	}
 	else
 		mLog->error("Component not found");
 }
-		
+
 void Simulation::setIdObjAttr(const String &comp, const String &attr, Complex value){
-	IdentifiedObject::Ptr compObj = mSystem.component<IdentifiedObject>(comp);	
+	IdentifiedObject::Ptr compObj = mSystem.component<IdentifiedObject>(comp);
 	if (compObj) {
 		try {
 			compObj->attributeComplex(attr)->set(value);
 		} catch (InvalidAttributeException &e) {
 			mLog->error("Attribute not found");
-		}			
+		}
 	}
 	else
 		mLog->error("Component not found");
@@ -512,21 +494,21 @@ Real Simulation::getRealIdObjAttr(const String &comp, const String &attr, UInt r
 	if (compObj) {
 		try {
 			return compObj->attribute<Real>(attr)->getByValue();
-		} catch (InvalidAttributeException &e) { }			
-		
-		try {			
-			return compObj->attributeMatrixReal(attr)->coeff(row, col)->getByValue();		
-		} catch (InvalidAttributeException &e) { }		
+		} catch (InvalidAttributeException &e) { }
+
+		try {
+			return compObj->attributeMatrixReal(attr)->coeff(row, col)->getByValue();
+		} catch (InvalidAttributeException &e) { }
 
 		mLog->error("Attribute not found");
 	}
 	else {
 		mLog->error("Component not found");
 	}
-	
-	return 0;	
+
+	return 0;
 }
-		
+
 Complex Simulation::getComplexIdObjAttr(const String &comp, const String &attr, UInt row, UInt col) {
 	IdentifiedObject::Ptr compObj = mSystem.component<IdentifiedObject>(comp);
 	if (!compObj) compObj = mSystem.node<IdentifiedObject>(comp);
@@ -534,23 +516,23 @@ Complex Simulation::getComplexIdObjAttr(const String &comp, const String &attr, 
 	if (compObj) {
 		try {
 			return compObj->attributeComplex(attr)->getByValue();
-		} catch (InvalidAttributeException &e) { }			
-		
-		try {			
-			return compObj->attributeMatrixComp(attr)->coeff(row, col)->getByValue();		
-		} catch (InvalidAttributeException &e) { }		
+		} catch (InvalidAttributeException &e) { }
+
+		try {
+			return compObj->attributeMatrixComp(attr)->coeff(row, col)->getByValue();
+		} catch (InvalidAttributeException &e) { }
 
 		mLog->error("Attribute not found");
 	}
 	else {
 		mLog->error("Component not found");
 	}
-	
+
 	return 0;
 }
 
 void Simulation::exportIdObjAttr(const String &comp, const String &attr, UInt idx, AttributeBase::Modifier mod, UInt row, UInt col) {
-#ifdef WITH_SHMEM	
+#ifdef WITH_SHMEM
 	Bool found = false;
 	IdentifiedObject::Ptr compObj = mSystem.component<IdentifiedObject>(comp);
 	if (!compObj) compObj = mSystem.node<TopologicalNode>(comp);
@@ -560,9 +542,9 @@ void Simulation::exportIdObjAttr(const String &comp, const String &attr, UInt id
 			auto v = compObj->attribute<Real>(attr);
 			mInterfaces[0].interface->exportReal(v, idx);
 			found = true;
-		} catch (InvalidAttributeException &e) { }			
+		} catch (InvalidAttributeException &e) { }
 
-		try {			
+		try {
 			auto v = compObj->attributeComplex(attr);
 			switch(mod) {
 				case AttributeBase::Modifier::real :
@@ -581,15 +563,15 @@ void Simulation::exportIdObjAttr(const String &comp, const String &attr, UInt id
 					mInterfaces[0].interface->exportReal(v->phase(), idx);
 					found = true;
 					break;
-			}			
-		} catch (InvalidAttributeException &e) { }		
+			}
+		} catch (InvalidAttributeException &e) { }
 
-		try {			
+		try {
 			auto v = compObj->attributeMatrixReal(attr)->coeff(row, col);
-			found = true;			
-		} catch (InvalidAttributeException &e) { }		
+			found = true;
+		} catch (InvalidAttributeException &e) { }
 
-		try {			
+		try {
 			auto v = compObj->attributeMatrixComp(attr);
 			switch(mod) {
 				case AttributeBase::Modifier::real :
@@ -608,14 +590,14 @@ void Simulation::exportIdObjAttr(const String &comp, const String &attr, UInt id
 					mInterfaces[0].interface->exportReal(v->coeffPhase(row, col), idx);
 					found = true;
 					break;
-			}			
-		} catch (InvalidAttributeException &e) { }		
+			}
+		} catch (InvalidAttributeException &e) { }
 
 		if (!found) mLog->error("Attribute not found");
-	}	
+	}
 	else {
 		mLog->error("Component not found");
-	}	
+	}
 #endif
 }
 
@@ -631,7 +613,7 @@ void Simulation::logIdObjAttr(const String &comp, const String &attr) {
 
 		} catch (InvalidAttributeException &e) {
 			mLog->error("Attribute not found");
-		}			
+		}
 	} else if (nodeObj) {
 		try {
 			auto name = nodeObj->name() + "." + attr;
@@ -640,9 +622,9 @@ void Simulation::logIdObjAttr(const String &comp, const String &attr) {
 
 		} catch (InvalidAttributeException &e) {
 			mLog->error("Attribute not found");
-		}		
+		}
 	}
 	else {
 		mLog->error("Component not found");
-	}	
+	}
 }

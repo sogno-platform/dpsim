@@ -2,6 +2,7 @@ set(DPSIM_SOURCES
 	Simulation.cpp
 	RealTimeSimulation.cpp
 	MNASolver.cpp
+	MNASolverEigenDense.cpp
 	MNASolverSysRecomp.cpp
 	PFSolver.cpp
 	PFSolverPowerPolar.cpp
@@ -53,21 +54,27 @@ if(WITH_SHMEM)
 	list(APPEND DPSIM_INCLUDE_DIRS ${VILLASNODE_INCLUDE_DIRS})
 endif()
 
+if(WITH_SPARSE)
+	list(APPEND DPSIM_SOURCES
+		MNASolverEigenSparse.cpp
+	)
+endif()
+
 if(WITH_CUDA)
 	list(APPEND DPSIM_INCLUDE_DIRS ${CUDA_INCLUDE_DIRS} ${CMAKE_CUDA_TOOLKIT_INCLUDE_DIRECTORIES})
+
+		list(APPEND DPSIM_SOURCES
+			MNASolverGpuDense.cpp
+		)
+		
+		list(APPEND DPSIM_LIBRARIES ${CUDA_LIBRARIES} ${CUDA_cusolver_LIBRARY})
 
 	if(WITH_SPARSE)
 		list(APPEND DPSIM_SOURCES
 			MNASolverGpuSparse.cpp
 		)
 
-		list(APPEND DPSIM_LIBRARIES ${CUDA_LIBRARIES} ${CUDA_cusparse_LIBRARY} ${CUDA_cusolver_LIBRARY})
-	else()
-		list(APPEND DPSIM_SOURCES
-			MNASolverGpuDense.cpp
-		)
-		
-		list(APPEND DPSIM_LIBRARIES ${CUDA_LIBRARIES} ${CUDA_cusolver_LIBRARY})
+		list(APPEND DPSIM_LIBRARIES ${CUDA_cusparse_LIBRARY})
 	endif()
 endif()
 
