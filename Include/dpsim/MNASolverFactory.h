@@ -9,6 +9,7 @@
 #pragma once
 
 #include <dpsim/MNASolver.h>
+#include <dpsim/DataLogger.h>
 #include <dpsim/MNASolverEigenDense.h>
 #ifdef WITH_SPARSE
 #include <dpsim/MNASolverEigenSparse.h>
@@ -27,6 +28,7 @@ class MnaSolverFactory {
 	/// \brief The implementations of the MNA solvers MnaSolver can support.
 	///
 	enum MnaSolverImpl {
+		Undef = 0,
 		EigenDense,
 		EigenSparse,
 		CUDADense,
@@ -57,18 +59,28 @@ class MnaSolverFactory {
 		CPS::Logger::Level logLevel = CPS::Logger::Level::info,
 		MnaSolverImpl implementation = mSupportedSolverImpls().back())
 	{
+		//To avoid regression we use EigenDense in case of undefined implementation
+		if (implementation == MnaSolverImpl::Undef) {
+			implementation = MnaSolverImpl::EigenDense;
+		}
+		CPS::Logger::Log log = CPS::Logger::get("MnaSolverFactory", CPS::Logger::Level::info, CPS::Logger::Level::info);
+
 		switch(implementation) {
 		case MnaSolverImpl::EigenDense:
+			log->info("creating EigenDense solver implementation");
 			return std::make_shared<MnaSolverEigenDense<VarType>>(name, domain, logLevel);
 #ifdef WITH_SPARSE
 		case MnaSolverImpl::EigenSparse:
+			log->info("creating EigenSparse solver implementation");
 			return std::make_shared<MnaSolverEigenSparse<VarType>>(name, domain, logLevel);
 #endif
 #ifdef WITH_CUDA
 		case MnaSolverImpl::CUDADense:
+			log->info("creating CUDADense solver implementation");
 			return std::make_shared<MnaSolverGpuDense<VarType>>(name, domain, logLevel);
 #ifdef WITH_SPARSE
 		case MnaSolverImpl::CUDASparse:
+			log->info("creating CUDASparse solver implementation");
 			return std::make_shared<MnaSolverGpuSparse<VarType>>(name, domain, logLevel);
 #endif
 #endif

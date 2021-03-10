@@ -45,6 +45,31 @@
 using namespace CPS;
 using namespace DPsim;
 
+Simulation::Simulation(String name, CommandLineArgs& args) :
+	mName(name),
+	mFinalTime(args.duration),
+	mTimeStep(args.timeStep),
+	mLogLevel(args.logLevel),
+	mDomain(args.solver.domain),
+	mSolverType(args.solver.type),
+	mMnaImpl(args.mnaImpl)
+	{
+
+	addAttribute<String>("name", &mName, Flags::read);
+	addAttribute<Real>("time_step", &mTimeStep, Flags::read);
+	addAttribute<Real>("final_time", &mFinalTime, Flags::read|Flags::write);
+	addAttribute<Bool>("steady_state_init", &mSteadyStateInit, Flags::read|Flags::write);
+	addAttribute<Bool>("split_subnets", &mSplitSubnets, Flags::read|Flags::write);
+	addAttribute<Real>("time_step", &mTimeStep, Flags::read);
+
+	Eigen::setNbThreads(1);
+
+	// Logging
+	mLog = Logger::get(name, mLogLevel, std::max(Logger::Level::info, mLogLevel));
+
+	mInitialized = false;
+}
+
 Simulation::Simulation(String name,	Logger::Level logLevel) :
 	mName(name), mLogLevel(logLevel) {
 
@@ -190,7 +215,7 @@ void Simulation::createMNASolver() {
 		else {
 			// Default case with precomputed system matrices for different configurations
 			solver = MnaSolverFactory::factory<VarType>(mName + copySuffix, mDomain,
-												 mLogLevel);
+												 mLogLevel, mMnaImpl);
 			solver->setTimeStep(mTimeStep);
 			solver->doSteadyStateInit(mSteadyStateInit);
 			solver->doFrequencyParallelization(mFreqParallel);

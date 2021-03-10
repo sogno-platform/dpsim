@@ -6,6 +6,7 @@
  * file, You can obtain one at https://mozilla.org/MPL/2.0/.
  *********************************************************************************/
 
+#include "dpsim/MNASolverFactory.h"
 #include <string>
 
 #include <dpsim/Config.h>
@@ -32,8 +33,9 @@ CommandLineArgs::CommandLineArgs(int argc, char *argv[],
 		Bool b,
 		Bool si,
 		CPS::Domain sd,
-		Solver::Type st
-	) :
+		Solver::Type st,
+		MnaSolverFactory::MnaSolverImpl mi
+		) :
 	mProgramName(argv[0]),
 	mArguments {
 		{ "start-synch",	no_argument,		0, 'S', NULL, "" },
@@ -49,6 +51,7 @@ CommandLineArgs::CommandLineArgs(int argc, char *argv[],
 		{ "start-in",		required_argument,	0, 'i', "SECS", "" },
 		{ "solver-domain",	required_argument,	0, 'D', "(SP|DP|EMT)", "Domain of solver" },
 		{ "solver-type",	required_argument,	0, 'T', "(NRP|MNA)", "Type of solver" },
+		{ "solver-mna-impl", required_argument, 0, 'U', "(EigenDense|EigenSparse|CUDADense|CUDASparse)", "Type of MNA Solver implementation"},
 		{ "option",		required_argument,	0, 'o', "KEY=VALUE", "User-definable options" },
 		{ "name",		required_argument,	0, 'n', "NAME", "Name of log files" },
 		{ 0 }
@@ -62,7 +65,8 @@ CommandLineArgs::CommandLineArgs(int argc, char *argv[],
 	startSynch(ss),
 	blocking(b),
 	steadyInit(si),
-	solver{sd, st}
+	solver{sd, st},
+	mnaImpl(mi)
 {
 	std::vector<option> long_options;
 	for (auto a : mArguments)
@@ -73,7 +77,7 @@ CommandLineArgs::CommandLineArgs(int argc, char *argv[],
 		/* getopt_long stores the option index here. */
 		int option_index = 0;
 
-		c = getopt_long(argc, argv, "ht:d:s:l:a:i:f:D:T:o:Sbn:", long_options.data(), &option_index);
+		c = getopt_long(argc, argv, "ht:d:s:l:a:i:f:D:T:U:o:Sbn:", long_options.data(), &option_index);
 
 		/* Detect the end of the options. */
 		if (c == -1)
@@ -116,7 +120,7 @@ CommandLineArgs::CommandLineArgs(int argc, char *argv[],
 				auto value = arg.substr(p + 1);
 
 				if (p != String::npos) {
-					
+
 					// try to convert to real number
 					try {
 						options[key] = std::stod(value);
@@ -124,11 +128,11 @@ CommandLineArgs::CommandLineArgs(int argc, char *argv[],
 					catch (...) {}
 
 					// try to convert to boolean
-					if (value == "true") 
+					if (value == "true")
 						options_bool[key] = true;
 					else if (value == "false")
 					 	options_bool[key] = false;
-				
+
 					// check if at least one conversion was successful
 					if ((options.find(key) == options.end()) && (options_bool.find(key) == options_bool.end()))
 						std::cerr << "Value " << value << " of option with key " << key << " could not be converted.";
@@ -178,6 +182,21 @@ CommandLineArgs::CommandLineArgs(int argc, char *argv[],
 					solver.type = Solver::Type::NRP;
 				else
 					throw std::invalid_argument("Invalid value for --solver-type: must be a string of NRP or MNA");
+				break;
+			}
+			case 'U': {
+				String arg = optarg;
+				if (arg == "EigenDense") {
+					mnaImpl = MnaSolverFactory::EigenDense;
+				} else if (arg == "EigenSparse") {
+					mnaImpl = MnaSolverFactory::EigenSparse;
+				} else if (arg == "CUDADense") {
+					mnaImpl = MnaSolverFactory::CUDADense;
+				} else if (arg == "CUDASparse") {
+					mnaImpl = MnaSolverFactory::CUDASparse;
+				} else {
+					throw std::invalid_argument("Invalid value for --solver-mna-impl");
+				}
 				break;
 			}
 

@@ -65,22 +65,19 @@ void multiply_connected(SystemTopology& sys, int copies,
 	}
 }
 
-void simulateCoupled(std::list<fs::path> filenames, Int copies, Int threads, Int seq = 0, Logger::Level logLevel = Logger::Level::off) {
+void simulateCoupled(std::list<fs::path> filenames, CommandLineArgs& args, Int copies, Int threads, Int seq = 0) {
 	String simName = "WSCC_9bus_coupled_" + std::to_string(copies)
 		+ "_" + std::to_string(threads) + "_" + std::to_string(seq);
 	Logger::setLogDir("logs/"+simName);
 
-	CIM::Reader reader(simName, logLevel, logLevel);
+	CIM::Reader reader(simName, args.logLevel, args.logLevel);
 	SystemTopology sys = reader.loadCIM(60, filenames);
 
 	if (copies > 0)
 		multiply_connected(sys, copies, 12.5, 0.16, 1e-6);
 
-	Simulation sim(simName, logLevel);
+	Simulation sim(simName, args);
 	sim.setSystem(sys);
-	sim.setTimeStep(0.0001);
-	sim.setFinalTime(0.5);
-	sim.setDomain(Domain::DP);
 	if (threads > 0)
 		sim.setScheduler(std::make_shared<OpenMPLevelScheduler>(threads));
 
@@ -105,6 +102,10 @@ void simulateCoupled(std::list<fs::path> filenames, Int copies, Int threads, Int
 
 int main(int argc, char *argv[]) {
 	CommandLineArgs args(argc, argv);
+	args.timeStep = 0.0001;
+	args.duration = 0.5;
+	args.solver.domain = Domain::DP;
+	args.solver.type = Solver::Type::MNA;
 
 	std::list<fs::path> filenames;
 	filenames = DPsim::Utils::findFiles({
@@ -122,6 +123,6 @@ int main(int argc, char *argv[]) {
 	std::cout << "Simulate with " << Int(args.options["copies"]) << " copies, "
 		<< Int(args.options["threads"]) << " threads, sequence number "
 		<< Int(args.options["seq"]) << std::endl;
-	simulateCoupled(filenames, Int(args.options["copies"]),
-		Int(args.options["threads"]), Int(args.options["seq"]), args.logLevel);
+	simulateCoupled(filenames, args, Int(args.options["copies"]),
+		Int(args.options["threads"]), Int(args.options["seq"]));
 }

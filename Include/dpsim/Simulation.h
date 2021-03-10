@@ -8,6 +8,7 @@
 
 #pragma once
 
+#include "dpsim/MNASolverFactory.h"
 #include <vector>
 
 #include <dpsim/Config.h>
@@ -20,6 +21,7 @@
 #include <cps/SystemTopology.h>
 #include <cps/SimNode.h>
 #include <dpsim/Interface.h>
+#include <dpsim/Utils.h>
 
 #ifdef WITH_GRAPHVIZ
   #include <cps/Graph.h>
@@ -62,6 +64,8 @@ namespace DPsim {
 		Solver::Type mSolverType = Solver::Type::MNA;
 		///
 		Solver::List mSolvers;
+		///
+		MnaSolverFactory::MnaSolverImpl mMnaImpl = MnaSolverFactory::MnaSolverImpl::Undef;
 		///
 		Bool mInitFromNodesAndTerminals = true;
 		/// Enable recomputation of system matrix during simulation
@@ -142,6 +146,9 @@ namespace DPsim {
 	public:
 		/// Simulation logger
 		CPS::Logger::Log mLog;
+
+		/// Creates simulation with name and CommandLineArgs
+		Simulation(String name, CommandLineArgs& args);
 
 		/// Creates simulation with name and log level
 		Simulation(String name, CPS::Logger::Level logLevel = CPS::Logger::Level::info);

@@ -23,6 +23,7 @@
 #include <dpsim/Timer.h>
 #include <dpsim/Solver.h>
 #include <cps/Logger.h>
+#include <dpsim/MNASolverFactory.h>
 
 namespace fs = std::experimental::filesystem;
 
@@ -56,7 +57,8 @@ public:
 		Bool b = false,
 		Bool si = false,
 		CPS::Domain sd = CPS::Domain::DP,
-		Solver::Type st = Solver::Type::MNA
+		Solver::Type st = Solver::Type::MNA,
+		MnaSolverFactory::MnaSolverImpl mi = MnaSolverFactory::mSupportedSolverImpls().back()
 	);
 
 	void showUsage();
@@ -78,6 +80,7 @@ public:
 		CPS::Domain domain;
 		Solver::Type type;
 	} solver;
+	DPsim::MnaSolverFactory::MnaSolverImpl mnaImpl;
 
 	DPsim::Timer::StartClock::time_point startTime;
 
