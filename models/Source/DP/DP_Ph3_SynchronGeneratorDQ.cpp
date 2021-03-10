@@ -40,8 +40,8 @@ void DP::Ph3::SynchronGeneratorDQ::setParametersFundamentalPerUnit(
 	Real initFieldVoltage, Real initMechPower) {
 
 	Base::SynchronGenerator::setBaseAndFundamentalPerUnitParameters(
-		nomPower, nomVolt, nomFreq, poleNumber, nomFieldCur,
-		Rs, Ll, Lmd, Lmq, Rfd, Llfd, Rkd, Llkd, Rkq1, Llkq1, Rkq2, Llkq2, inertia);
+		nomPower, nomVolt, nomFreq, nomFieldCur,
+		poleNumber, Rs, Ll, Lmd, Lmq, Rfd, Llfd, Rkd, Llkd, Rkq1, Llkq1, Rkq2, Llkq2, inertia);
 	Base::SynchronGenerator::setInitialValues(initActivePower, initReactivePower,
 		initTerminalVolt, initVoltAngle, initFieldVoltage, initMechPower);
 }

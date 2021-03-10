@@ -218,7 +218,7 @@ namespace Base {
 		Real mRcomp;
 
 		void setFundamentalPerUnitParameters(
-			Real Rs, Real Ll, Real Lmd, Real Lmq,
+			Int poleNumber, Real Rs, Real Ll, Real Lmd, Real Lmq,
 			Real Rfd, Real Llfd, Real Rkd, Real Llkd, Real Rkq1, Real Llkq1,
 			Real Rkq2, Real Llkq2,
 			Real inertia);
@@ -239,6 +239,8 @@ namespace Base {
 		SynchronGenerator() = default;
 		///
 		void setBaseParameters(Real nomPower, Real nomVolt, Real nomFreq);
+		/// 
+		void setBaseParameters(Real nomPower, Real nomVolt, Real nomFreq, Real nomFieldCur);
 
 		// ### Deprecated ####
 		///
@@ -263,8 +265,8 @@ namespace Base {
 		/// stator referred parameters depending on the setting of parameter type.
 		/// The initialization mode depends on the setting of state type.
 		void setBaseAndFundamentalPerUnitParameters(
-			Real nomPower, Real nomVolt, Real nomFreq, Int poleNumber, Real nomFieldCur,
-			Real Rs, Real Ll, Real Lmd, Real Lmq, Real Rfd, Real Llfd,
+			Real nomPower, Real nomVolt, Real nomFreq, Real nomFieldCur,
+			Int poleNumber, Real Rs, Real Ll, Real Lmd, Real Lmq, Real Rfd, Real Llfd,
 			Real Rkd, Real Llkd, Real Rkq1, Real Llkq1, Real Rkq2, Real Llkq2,
 			Real inertia);
 

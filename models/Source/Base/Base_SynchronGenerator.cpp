@@ -31,33 +31,32 @@ void Base::SynchronGenerator::setBaseParameters(Real nomPower, Real nomVolt, Rea
 	mBase_T = mNomPower / mBase_OmMech;
 }
 
+void Base::SynchronGenerator::setBaseParameters(Real nomPower, Real nomVolt, Real nomFreq, Real nomFieldCur) {
+	mNomFieldCur = nomFieldCur;
+	Base::SynchronGenerator::setBaseParameters(nomPower, nomVolt, nomFreq);
+}
+
 void Base::SynchronGenerator::setBaseAndFundamentalPerUnitParameters(
-	Real nomPower, Real nomVolt, Real nomFreq, Int poleNumber, Real nomFieldCur,
-	Real Rs, Real Ll, Real Lmd, Real Lmq, Real Rfd, Real Llfd,
+	Real nomPower, Real nomVolt, Real nomFreq, Real nomFieldCur, 
+	Int poleNumber, Real Rs, Real Ll, Real Lmd, Real Lmq, Real Rfd, Real Llfd,
 	Real Rkd, Real Llkd, Real Rkq1, Real Llkq1, Real Rkq2, Real Llkq2,
 	Real inertia) {
-
-	// PoleNumber otherwise not set but currently not used in SynchronGeneratorDQ
-	mPoleNumber = poleNumber;
 
 	mParameterType = ParameterType::perUnit;
 	mNumericalMethod = NumericalMethod::Trapezoidal;
 
-	setBaseParameters(nomPower, nomVolt, nomFreq);
-
-	if (Rkq2 == 0 && Llkq2 == 0)
-		mNumDampingWindings = 1;
-	else
-		mNumDampingWindings = 2;
-
-	setFundamentalPerUnitParameters(Rs, Ll, Lmd, Lmq, Rfd, Llfd, Rkd, Llkd, Rkq1, Llkq1, Rkq2, Llkq2, inertia);
+	setBaseParameters(nomPower, nomVolt, nomFreq, nomFieldCur);
+	setFundamentalPerUnitParameters(poleNumber, Rs, Ll, Lmd, Lmq, Rfd, Llfd, Rkd, Llkd, Rkq1, Llkq1, Rkq2, Llkq2, inertia);
 }
 
 void Base::SynchronGenerator::setFundamentalPerUnitParameters(
-	Real Rs, Real Ll, Real Lmd, Real Lmq,
+	Int poleNumber, Real Rs, Real Ll, Real Lmd, Real Lmq,
 	Real Rfd, Real Llfd, Real Rkd, Real Llkd,
 	Real Rkq1, Real Llkq1, Real Rkq2, Real Llkq2,
 	Real inertia) {
+
+	// PoleNumber otherwise not set but currently not used in SynchronGeneratorDQ
+	mPoleNumber = poleNumber;
 
 	// base rotor values
 	mBase_ifd = Lmd * mNomFieldCur;
@@ -84,6 +83,11 @@ void Base::SynchronGenerator::setFundamentalPerUnitParameters(
 	mLlkq2 = Llkq2;
 	mLkq2 = mLlkq2 + mLmq;
 	mInertia = inertia;
+
+	if (Rkq2 == 0 && Llkq2 == 0)
+		mNumDampingWindings = 1;
+	else
+		mNumDampingWindings = 2;
 
 	if (mNumDampingWindings == 1) {
 		mVsr = Matrix::Zero(6, 1);
