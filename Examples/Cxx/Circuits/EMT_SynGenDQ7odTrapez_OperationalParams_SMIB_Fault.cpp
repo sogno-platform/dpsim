@@ -50,7 +50,7 @@ int main(int argc, char* argv[]) {
 	Real lineConductance = 8e-2; //change to allow bigger time steps and to stabilize simulation (8e-2 used for 10us)
 
 	// Simulation parameters
-	String simName = "EMT_SynGenDQ7odTrapez_OperationalParams_SMIB_Fault_with_PF_Init";
+	String simName = "EMT_SynGenDQ7odTrapez_OperationalParams_SMIB_Fault";
 	Real finalTime = 1.0;
 	Real timeStep = 10e-6;
 	Real startTimeFault=0.2;
