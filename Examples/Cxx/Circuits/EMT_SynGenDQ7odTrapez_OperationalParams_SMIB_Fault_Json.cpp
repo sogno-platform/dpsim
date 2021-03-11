@@ -145,7 +145,7 @@ int main(int argc, char* argv[]) {
 	simPF.setDomain(Domain::SP);
 
 	simPF.setSolverType(Solver::Type::NRP);
-	simPF.doPowerFlowInit(false);
+	simPF.doInitFromNodesAndTerminals(false);
 	simPF.addLogger(loggerPF);
 	simPF.run();
 

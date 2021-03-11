@@ -85,7 +85,7 @@ void SP_1ph_SynGenTrStab_SteadyState(String simName, Real timeStep, Real finalTi
 	simPF.setFinalTime(finalTimePF);
 	simPF.setDomain(Domain::SP);
 	simPF.setSolverType(Solver::Type::NRP);
-	simPF.doPowerFlowInit(false);
+	simPF.doInitFromNodesAndTerminals(false);
 	simPF.addLogger(loggerPF);
 	simPF.run();
 
@@ -151,7 +151,6 @@ void SP_1ph_SynGenTrStab_SteadyState(String simName, Real timeStep, Real finalTi
 	simSP.setTimeStep(timeStep);
 	simSP.setFinalTime(finalTime);
 	simSP.setDomain(Domain::SP);
-	simSP.doPowerFlowInit(false);
 	simSP.addLogger(loggerSP);
 
 	simSP.run();

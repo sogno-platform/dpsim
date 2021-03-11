@@ -140,7 +140,7 @@ void DP_SynGenTrStab_3Bus_Fault(String simName, Real timeStep, Real finalTime, b
 	simPF.setFinalTime(finalTimePF);
 	simPF.setDomain(Domain::SP);
 	simPF.setSolverType(Solver::Type::NRP);
-	simPF.doPowerFlowInit(false);
+	simPF.doInitFromNodesAndTerminals(false);
 	simPF.addLogger(loggerPF);
 	simPF.run();
 
@@ -239,7 +239,6 @@ void DP_SynGenTrStab_3Bus_Fault(String simName, Real timeStep, Real finalTime, b
 	simDP.setTimeStep(timeStep);
 	simDP.setFinalTime(finalTime);
 	simDP.setDomain(Domain::DP);
-	simDP.doPowerFlowInit(false);
 	simDP.addLogger(loggerDP);
 
 	// Events

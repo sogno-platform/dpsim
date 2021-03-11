@@ -132,7 +132,7 @@ void SP_SynGenTrStab_3Bus_SteadyState(String simName, Real timeStep, Real finalT
 	simPF.setFinalTime(finalTimePF);
 	simPF.setDomain(Domain::SP);
 	simPF.setSolverType(Solver::Type::NRP);
-	simPF.doPowerFlowInit(false);
+	simPF.doInitFromNodesAndTerminals(false);
 	simPF.addLogger(loggerPF);
 	simPF.run();
 
@@ -223,7 +223,6 @@ void SP_SynGenTrStab_3Bus_SteadyState(String simName, Real timeStep, Real finalT
 	sim.setTimeStep(timeStep);
 	sim.setFinalTime(finalTime);
 	sim.setDomain(Domain::SP);
-	sim.doPowerFlowInit(false);
 	sim.addLogger(loggerSP);
 
 	sim.run();

@@ -95,7 +95,7 @@ void SP_1ph_SynGenTrStab_Fault(String simName, Real timeStep, Real finalTime, bo
 	simPF.setFinalTime(finalTimePF);
 	simPF.setDomain(Domain::SP);
 	simPF.setSolverType(Solver::Type::NRP);
-	simPF.doPowerFlowInit(false);
+	simPF.doInitFromNodesAndTerminals(false);
 	simPF.addLogger(loggerPF);
 	simPF.run();
 
@@ -168,7 +168,6 @@ void SP_1ph_SynGenTrStab_Fault(String simName, Real timeStep, Real finalTime, bo
 	simSP.setTimeStep(timeStep);
 	simSP.setFinalTime(finalTime);
 	simSP.setDomain(Domain::SP);
-	simSP.doPowerFlowInit(false);
 	simSP.addLogger(loggerSP);
 
 	// Events
