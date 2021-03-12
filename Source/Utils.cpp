@@ -436,3 +436,24 @@ std::list<fs::path> DPsim::Utils::findFiles(std::list<fs::path> filennames, cons
 
 	return foundnames;
 }
+
+void DPsim::Utils::applySimulationParametersFromJson(const json config, Simulation &sim){
+	if (config.contains("timestep"))		
+			sim.setTimeStep(config["timestep"].get<double>());
+	if (config.contains("duration"))
+			sim.setFinalTime(config["duration"].get<double>());
+}
+
+void DPsim::Utils::applySynchronousGeneratorParametersFromJson(const json config, std::shared_ptr<CPS::EMT::Ph3::SynchronGeneratorDQ> syngen){
+	if (config.contains("options")) {
+		Bool containsSyngenOptions = false;
+		for (String attrName : syngen->attrParamNames) {
+			if (config["options"].contains(attrName)) {
+				syngen->attribute<Real>(attrName)->set(config["options"][attrName].get<double>());
+				containsSyngenOptions = true;
+			}
+		}
+		if (containsSyngenOptions)
+			syngen->applyParametersOperationalPerUnit();
+	}
+}

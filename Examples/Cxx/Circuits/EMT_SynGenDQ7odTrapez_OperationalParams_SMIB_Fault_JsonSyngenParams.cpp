@@ -7,35 +7,22 @@
 using namespace DPsim;
 using namespace CPS;
 using namespace CPS::CIM;
+using namespace Examples::Components;
 using json = nlohmann::json;
+using syngenParametersKundur = Examples::Components::SynchronousGeneratorKundur::MachineParameters;
 
 int main(int argc, char* argv[]) {	
 
 	// ----- PARAMETRIZATION -----
-	// General grid parameters
+	// General
 	Real VnomMV = 24e3;
 	Real VnomHV = 230e3;
 	Real nomFreq = 60;
 	Real ratio = VnomMV/VnomHV;
 	Real nomOmega= nomFreq* 2*PI;
 
-	// Machine parameters synchronous generator 
-	const Examples::Components::SynchronousGeneratorKundur::MachineParameters syngenKundur;
-	Real H = syngenKundur.H;
-	Real Rs = syngenKundur.Rs;
-	Real Ld = syngenKundur.Ld;
-	Real Lq = syngenKundur.Lq;
-	Real Ld_t = syngenKundur.Ld_t;
-	Real Lq_t = syngenKundur.Lq_t;
-	Real Ld_s = syngenKundur.Ld_s;
-	Real Lq_s = syngenKundur.Lq_s;
-	Real Ll = syngenKundur.Ll;
-	Real Td0_t = syngenKundur.Td0_t;
-	Real Tq0_t = syngenKundur.Tq0_t;
-	Real Td0_s = syngenKundur.Td0_s;
-	Real Tq0_s= syngenKundur.Tq0_s;	
-
-	// Operation point synchronous generator 
+	// Synchronous generator 
+	SynchronousGeneratorKundur::MachineParameters syngenKundur;
 	Real setPointActivePower=300e6;
 	Real setPointVoltage=1.05*VnomMV;
 
@@ -43,60 +30,27 @@ int main(int argc, char* argv[]) {
 	Real BreakerOpen = 1e9;
 	Real BreakerClosed = 0.001;
 
-	// Line 
-	const Examples::Components::CIGREHVAmerican::LineParameters lineCIGREHV;
+	// Line
+	// Parameters of HV line referred to MV side
+	const CIGREHVAmerican::LineParameters lineCIGREHV;
 	Real lineLength = 100;
-	Real lineResistance = lineCIGREHV.lineResistancePerKm*lineLength*std::pow(ratio,2); // HV parameters referred to MV side
+	Real lineResistance = lineCIGREHV.lineResistancePerKm*lineLength*std::pow(ratio,2);
 	Real lineInductance = lineCIGREHV.lineReactancePerKm*lineLength*std::pow(ratio,2)/nomOmega;
 	Real lineCapacitance = lineCIGREHV.lineSusceptancePerKm*lineLength/std::pow(ratio,2)/nomOmega;
 	Real lineConductance = 8e-2; //change to allow bigger time steps and to stabilize simulation (8e-2 used for 10us)
 
-	// Simulation parameters
+	// Simulation
 	const Real startTimeFault=0.2;
 
 	// Json config processing
-	std::ifstream jsonFile("../../../Configs/example_configs_json/EMT_SynGenDQ7odTrapez_OperationalParams_SMIB_Fault.json");
-	json simConfig;
-	jsonFile >> simConfig;
+	std::ifstream jsonFile("../../../Configs/example_configs_json/EMT_SynGenDQ7odTrapez_OperationalParams_SMIB_Fault_SyngenParams.json");
+	json simConfig = json::parse(jsonFile);
 	const String simName = simConfig["name"].get<std::string>();
 
-	// Command line args processing
-	CommandLineArgs args(argc, argv);
-	if (argc > 1) {
-		// Machine parameters
-		if (args.options.find("H") != args.options.end())
-			H = args.options["H"];
-		if (args.options.find("Rs") != args.options.end())
-			Rs = args.options["Rs"];
-		if (args.options.find("Ld") != args.options.end())
-			Ld = args.options["Ld"];
-		if (args.options.find("Lq") != args.options.end())
-			Lq = args.options["Lq"];
-		if (args.options.find("Ld_t") != args.options.end())
-			Ld_t = args.options["Ld_t"];
-		if (args.options.find("Lq_t") != args.options.end())
-			Lq_t = args.options["Lq_t"];
-		if (args.options.find("Ld_s") != args.options.end())
-			Ld_s = args.options["Ld_s"];
-		if (args.options.find("Lq_s") != args.options.end())
-			Lq_s = args.options["Lq_s"];
-		if (args.options.find("Ll") != args.options.end())
-			Ll = args.options["Ll"];
-		if (args.options.find("Td0_t") != args.options.end())
-			Td0_t = args.options["Td0_t"];
-		if (args.options.find("Tq0_t") != args.options.end())
-			Tq0_t = args.options["Tq0_t"];
-		if (args.options.find("Td0_s") != args.options.end())
-			Td0_s = args.options["Td0_s"];
-		if (args.options.find("Tq0_s") != args.options.end())
-			Tq0_s = args.options["Tq0_s"];
-	}
 
 	// ----- POWERFLOW FOR INITIALIZATION -----
 	String simNamePF = simName + "_PF";
 	Logger::setLogDir("logs/" + simNamePF);
-	Real timeStepPF = simConfig["duration"].get<double>();
-	Real finalTimePF = simConfig["duration"].get<double>()+timeStepPF;
 
 	// Components
 	auto n1PF = SimNode<Complex>::make("n1", PhaseType::Single);
@@ -139,11 +93,9 @@ int main(int argc, char* argv[]) {
 	// Simulation
 	Simulation simPF(simNamePF, Logger::Level::debug);
 	simPF.setSystem(systemPF);
-
-	simPF.setTimeStep(timeStepPF);
-	simPF.setFinalTime(finalTimePF);
+	simPF.setTimeStep(1.0);
+	simPF.setFinalTime(2.0);
 	simPF.setDomain(Domain::SP);
-
 	simPF.setSolverType(Solver::Type::NRP);
 	simPF.doInitFromNodesAndTerminals(false);
 	simPF.addLogger(loggerPF);
@@ -151,7 +103,7 @@ int main(int argc, char* argv[]) {
 
 	// ----- DYNAMIC SIMULATION ------	
 	Logger::setLogDir("logs/"+simName);
-	
+
 	// Extract relevant powerflow results
 	Real initTerminalVolt=std::abs(n1PF->singleVoltage())*RMS3PH_TO_PEAK1PH;
 	Real initVoltAngle= Math::phase(n1PF->singleVoltage()); // angle in rad
@@ -164,15 +116,16 @@ int main(int argc, char* argv[]) {
 	auto n2 = SimNode<Real>::make("n2", PhaseType::ABC);
 
 	// Components
-	//Synch
-	auto gen = CPS::EMT::Ph3::SynchronGeneratorDQTrapez::make("SynGen");
+	// Synchronous generator
+	auto gen = CPS::EMT::Ph3::SynchronGeneratorDQTrapez::make("SynGen", Logger::Level::debug);
 	gen->setParametersOperationalPerUnit(
 		syngenKundur.nomPower, syngenKundur.nomVoltage, syngenKundur.nomFreq, syngenKundur.poleNum, syngenKundur.nomFieldCurr,
-		Rs, Ld, Lq, Ld_t, Lq_t, Ld_s,
-		Lq_s, Ll, Td0_t, Tq0_t, Td0_s, Tq0_s, H,
+		0, 0, 0, 0, 0, 0,
+		0, 0, 0, 0, 0, 0, syngenKundur.H,
 	 	initActivePower, initReactivePower, initTerminalVolt,
 	 	initVoltAngle, syngenKundur.fieldVoltage, initMechPower
 	); 
+	DPsim::Utils::applySynchronousGeneratorParametersFromJson(simConfig, gen);
 	
 	//Grid bus as Slack
 	auto extnet = EMT::Ph3::NetworkInjection::make("Slack", Logger::Level::debug);
@@ -218,8 +171,10 @@ int main(int argc, char* argv[]) {
 	auto sw1 = SwitchEvent3Ph::make(startTimeFault, fault, true);
 
 	// Simulation
-	Simulation sim;
-	sim.configFromJson(simConfig);
+	Simulation sim(simName, Logger::Level::debug);
+	sim.setTimeStep(10e-6);
+	sim.setFinalTime(1.0);
+	sim.setDomain(Domain::EMT);
 	sim.setSystem(system);
 	sim.addLogger(logger);
 	sim.addEvent(sw1);

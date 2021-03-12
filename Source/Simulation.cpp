@@ -110,42 +110,6 @@ Simulation::Simulation(String name, SystemTopology system,
 	mInitialized = false;
 }
 
-void Simulation::configFromJson(const json simConfig){
-	mName = simConfig["name"].get<std::string>();
-	mTimeStep = simConfig["timestep"].get<double>();
-	mFinalTime = simConfig["duration"].get<double>();
-
-	if (simConfig["domain"].get<std::string>() == "EMT")
-		mDomain = Domain::EMT;
-	else if (simConfig["domain"].get<std::string>() == "DP")
-		mDomain = Domain::DP;
-	else if (simConfig["domain"].get<std::string>() == "SP")
-		mDomain = Domain::SP;
-	else
-		throw std::invalid_argument("Invalid value for domain: must be a string of SP, DP, EMT");
-
-	if (simConfig["log-level"].get<std::string>() == "DEBUG")
-		mLogLevel = Logger::Level::debug;
-	else if (simConfig["log-level"].get<std::string>() == "INFO")
-		mLogLevel = Logger::Level::info;
-	else if (simConfig["log-level"].get<std::string>() == "ERR")
-		mLogLevel = Logger::Level::err;
-	else if (simConfig["log-level"].get<std::string>() == "WARN")
-		mLogLevel = Logger::Level::warn;
-	else if (simConfig["log-level"].get<std::string>() == "NONE")
-		mLogLevel = Logger::Level::off;
-	else
-		throw std::invalid_argument("Invalid value for log-level: must be a string of DEBUG, INFO, ERR, WARN or NONE");
-
-	// Create logger according to sim name and log level
-	mLog = Logger::get(mName, mLogLevel, std::max(Logger::Level::info, mLogLevel));
-
-	mLog->info("Simulation configuration from json.");
-	mLog->info("Time step: {:e}", mTimeStep);
-	mLog->info("Final time: {:e}", mFinalTime);
-	mLog->info("Domain: {:s}", simConfig["domain"].get<std::string>());
-	mLog->info("Log-level: {:s}", simConfig["log-level"].get<std::string>());
-}
 
 void Simulation::initialize() {
 	if (mInitialized)
@@ -447,6 +411,8 @@ void Simulation::start() {
 	sync();
 
 	mLog->info("Start simulation: {}", mName);
+	mLog->info("Time step: {:e}", mTimeStep);
+	mLog->info("Final time: {:e}", mFinalTime);
 }
 
 void Simulation::stop() {

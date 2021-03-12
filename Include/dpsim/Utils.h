@@ -24,6 +24,11 @@
 #include <dpsim/Solver.h>
 #include <cps/Logger.h>
 #include <dpsim/MNASolverFactory.h>
+#include <cps/Components.h>
+#include <dpsim/Simulation.h>
+#include <nlohmann/json.hpp>
+
+using json = nlohmann::json;
 
 namespace fs = std::experimental::filesystem;
 
@@ -111,6 +116,9 @@ public:
 };
 
 namespace Utils {
+
+void applySimulationParametersFromJson(const json config, Simulation &sim);
+void applySynchronousGeneratorParametersFromJson(const json config, std::shared_ptr<CPS::EMT::Ph3::SynchronGeneratorDQ> syngen);
 
 String encodeXml(String& data);
 

@@ -59,6 +59,9 @@ namespace Ph3 {
 			Real initFieldVoltage, Real initMechPower);
 
 		///
+		void applyParametersOperationalPerUnit();
+
+		///
 		void initialize(Matrix frequencies);
 		///
 		Real electricalTorque() { return mElecTorque * mBase_T; }
@@ -66,6 +69,9 @@ namespace Ph3 {
 		Real rotationalSpeed() { return mOmMech * mBase_OmMech; }
 		///
 		Real rotorPosition() { return mThetaMech; }
+
+		///
+		const std::vector<String> attrParamNames = {"Rs", "Ll", "Ld", "Lq", "Ld_t", "Ld_s", "Lq_t", "Lq_s", "Td0_t", "Td0_s", "Tq0_t", "Tq0_s"};
 
 		/// General step function for standalone simulation
 		void step(Matrix& voltage, Real time);

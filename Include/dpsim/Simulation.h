@@ -172,8 +172,6 @@ namespace DPsim {
 		virtual ~Simulation() { }
 
 		// #### Simulation Settings ####
-		/// 
-		void configFromJson(const json simConfig);
 		///
 		void setSystem(const CPS::SystemTopology &system) { mSystem = system; }
 		///
