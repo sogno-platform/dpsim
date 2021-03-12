@@ -163,7 +163,7 @@ int main(int argc, char* argv[]) {
 
 	// Components
 	//Synch
-	auto gen = CPS::EMT::Ph3::SynchronGeneratorDQTrapez::make("SynGen");
+	auto gen = CPS::EMT::Ph3::SynchronGeneratorDQTrapez::make("SynGen", Logger::Level::debug);
 	gen->setParametersOperationalPerUnit(
 		syngenKundur.nomPower, syngenKundur.nomVoltage, syngenKundur.nomFreq, syngenKundur.poleNum, syngenKundur.nomFieldCurr,
 		Rs, Ld, Lq, Ld_t, Lq_t, Ld_s,

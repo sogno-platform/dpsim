@@ -46,8 +46,8 @@ void EMT::Ph3::SynchronGeneratorDQ::setParametersFundamentalPerUnit(
 				"nomPower: {:e}\nnomVolt: {:e}\nnomFreq: {:e}\npoleNumber: {:d}\nnomFieldCur: {:e}\n"
 				"Rs: {:e}\nLl: {:e}\nLmd: {:e}\nLmq: {:e}\nRfd: {:e}\nLlfd: {:e}\nRkd: {:e}\n"
 				"Llkd: {:e}\nRkq1: {:e}\nLlkq1: {:e}\nRkq2: {:e}\nLlkq2: {:e}\ninertia: {:e}",
-		nomPower, nomVolt, nomFreq, poleNumber, nomFieldCur,
-		Rs, Ll, Lmd, Lmq, Rfd, Llfd, Rkd, Llkd, Rkq1, Llkq1, Rkq2, Llkq2, inertia);
+				nomPower, nomVolt, nomFreq, poleNumber, nomFieldCur,
+				Rs, Ll, Lmd, Lmq, Rfd, Llfd, Rkd, Llkd, Rkq1, Llkq1, Rkq2, Llkq2, inertia);
 
 	Base::SynchronGenerator::setInitialValues(initActivePower, initReactivePower,
 		initTerminalVolt, initVoltAngle, initFieldVoltage, initMechPower);
@@ -66,27 +66,38 @@ void EMT::Ph3::SynchronGeneratorDQ::setParametersOperationalPerUnit(
 	Real inertia, Real initActivePower, Real initReactivePower, Real initTerminalVolt, Real initVoltAngle,
 	Real initFieldVoltage, Real initMechPower) {
 
-	Real nomOmega = 2*PI*nomFreq;
+	setBaseParameters(nomPower, nomVolt, nomFreq, nomFieldCur);
+	mSLog->info("Set base parameters: \n"
+				"nomPower: {:e}\nnomVolt: {:e}\nnomFreq: {:e}\n nomFieldCur: {:e}\n",
+				nomPower, nomVolt, nomFreq, nomFieldCur);
 
-	Real Lmd = Ld - Ll;
-	Real Lmq = Lq - Ll;
+	setOperationalPerUnitParameters(poleNumber, inertia,
+									Rs, Ld, Lq, Ll, 
+									Ld_t, Lq_t, Ld_s, Lq_s,
+									Td0_t, Tq0_t, Td0_s, Tq0_s);
+	mSLog->info("Set operational parameters in per unit: \n"
+			"poleNumber: {:d}\ninertia: {:e}\n"
+			"Rs: {:e}\nLd: {:e}\nLq: {:e}\nLl: {:e}\n"
+			"Ld_t: {:e}\nLq_t: {:e}\nLd_s: {:e}\nLq_s: {:e}\n"
+			"Td0_t: {:e}\nTq0_t: {:e}\nTd0_s: {:e}\nTq0_s: {:e}\n",
+			poleNumber, inertia,
+			Rs, Ld, Lq, Ll, 
+			Ld_t, Lq_t, Ld_s, Lq_s,
+			Td0_t, Tq0_t, Td0_s, Tq0_s);
 
-	Real Llfd = Lmd*(Ld_t - Ll)/(Lmd-Ld_t+Ll);
-	Real Llkq1 = Lmq*(Lq_t - Ll)/(Lmq-Lq_t+Ll);
+	Base::SynchronGenerator::calculateFundamentalFromOperationalParameters();
+	mSLog->info("Set fundamental parameters in per unit: \n"
+			"Rs: {:e}\nLl: {:e}\nLmd: {:e}\nLmq: {:e}\nRfd: {:e}\nLlfd: {:e}\nRkd: {:e}\n"
+			"Llkd: {:e}\nRkq1: {:e}\nLlkq1: {:e}\nRkq2: {:e}\nLlkq2: {:e}\n",
+			mRs, mLl, mLmd, mLmq, mRfd, mLlfd, mRkd, mLlkd, mRkq1, mLlkq1, mRkq2, mLlkq2);
 
-	Real Llkd = Lmd*Llfd*(Ld_s-Ll)/(Llfd*Lmd-(Lmd+Llfd)*(Ld_s-Ll));
-	Real Llkq2 = Lmq*Llkq1*(Lq_s-Ll)/(Llkq1*Lmq-(Lmq+Llkq1)*(Lq_s-Ll));
-
-	Real Rfd = (Lmd + Llfd)/(Td0_t*nomOmega);
-	Real Rkd = (1/(Td0_s*nomOmega))*(Llkd + Lmd*Llfd/(Lmd+Llfd));
-	Real Rkq1 = (Lmq + Llkq1)/(Tq0_t*nomOmega);
-	Real Rkq2 = (1/(Tq0_s*nomOmega))*(Llkq2 + Lmq*Llkq1/(Lmq+Llkq1));
-
-	EMT::Ph3::SynchronGeneratorDQ::setParametersFundamentalPerUnit(
-	nomPower, nomVolt, nomFreq, poleNumber, nomFieldCur,
-	Rs, Ll, Lmd, Lmq, Rfd, Llfd, Rkd, Llkd, Rkq1, Llkq1, Rkq2, Llkq2, 
-	inertia, initActivePower, initReactivePower, initTerminalVolt, initVoltAngle,
-	initFieldVoltage, initMechPower);
+	Base::SynchronGenerator::setInitialValues(initActivePower, initReactivePower,
+	initTerminalVolt, initVoltAngle, initFieldVoltage, initMechPower);
+	mSLog->info("Set initial values: \n"
+				"initActivePower: {:e}\ninitReactivePower: {:e}\ninitTerminalVolt: {:e}\n"
+				"initVoltAngle: {:e}\ninitFieldVoltage: {:e}\ninitMechPower: {:e}",
+				initActivePower, initReactivePower, initTerminalVolt, 
+				initVoltAngle, initFieldVoltage, initMechPower);
 }
 
 

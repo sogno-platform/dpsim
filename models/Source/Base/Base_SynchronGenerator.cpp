@@ -46,7 +46,43 @@ void Base::SynchronGenerator::setBaseAndFundamentalPerUnitParameters(
 	mNumericalMethod = NumericalMethod::Trapezoidal;
 
 	setBaseParameters(nomPower, nomVolt, nomFreq, nomFieldCur);
-	setFundamentalPerUnitParameters(poleNumber, Rs, Ll, Lmd, Lmq, Rfd, Llfd, Rkd, Llkd, Rkq1, Llkq1, Rkq2, Llkq2, inertia);
+	setAndApplyFundamentalPerUnitParameters(poleNumber, Rs, Ll, Lmd, Lmq, Rfd, Llfd, Rkd, Llkd, Rkq1, Llkq1, Rkq2, Llkq2, inertia);
+}
+
+void Base::SynchronGenerator::setOperationalPerUnitParameters(
+		Int poleNumber, Real inertia,
+		Real Rs, Real Ld, Real Lq, Real Ll, 
+		Real Ld_t, Real Lq_t, Real Ld_s, Real Lq_s,
+		Real Td0_t, Real Tq0_t, Real Td0_s, Real Tq0_s){
+
+		mPoleNumber = poleNumber;
+		mInertia = inertia;
+
+		mRs = Rs;
+		mLl = Ll;
+		mLd = Ld;
+		mLq = Lq;
+		
+		mLd_t = Ld_t;
+		mLq_t = Lq_t;
+		mLd_s = Ld_s;
+		mLq_s = Lq_s;
+		mTd0_t = Td0_t;
+		mTq0_t = Tq0_t;
+		mTd0_s = Td0_s;
+		mTq0_s = Tq0_s;
+}
+
+void Base::SynchronGenerator::setAndApplyFundamentalPerUnitParameters(
+	Int poleNumber, Real Rs, Real Ll, Real Lmd, Real Lmq,
+	Real Rfd, Real Llfd, Real Rkd, Real Llkd,
+	Real Rkq1, Real Llkq1, Real Rkq2, Real Llkq2,
+	Real inertia) {
+
+	Base::SynchronGenerator::setFundamentalPerUnitParameters(poleNumber, Rs, Ll, Lmd, Lmq, Rfd, Llfd, Rkd, Llkd,
+									Rkq1, Llkq1, Rkq2, Llkq2, inertia);
+
+	Base::SynchronGenerator::applyFundamentalPerUnitParameters();
 }
 
 void Base::SynchronGenerator::setFundamentalPerUnitParameters(
@@ -57,34 +93,42 @@ void Base::SynchronGenerator::setFundamentalPerUnitParameters(
 
 	// PoleNumber otherwise not set but currently not used in SynchronGeneratorDQ
 	mPoleNumber = poleNumber;
-
-	// base rotor values
-	mBase_ifd = Lmd * mNomFieldCur;
-	mBase_vfd = mNomPower / mBase_ifd;
-	mBase_Zfd = mBase_vfd / mBase_ifd;
-	mBase_Lfd = mBase_Zfd / mBase_OmElec;
+	mInertia = inertia;
 
 	mRs = Rs;
 	mLl = Ll;
 	mLmd = Lmd;
-	mLd = mLl + mLmd;
 	mLmq = Lmq;
-	mLq = mLl + mLmq;
+
 	mRfd = Rfd;
 	mLlfd = Llfd;
-	mLfd = mLlfd + mLmd;
 	mRkd = Rkd;
 	mLlkd = Llkd;
-	mLkd = mLlkd + mLmd;
 	mRkq1 = Rkq1;
 	mLlkq1 = Llkq1;
-	mLkq1 = mLlkq1 + mLmq;
 	mRkq2 = Rkq2;
 	mLlkq2 = Llkq2;
-	mLkq2 = mLlkq2 + mLmq;
-	mInertia = inertia;
+}
 
-	if (Rkq2 == 0 && Llkq2 == 0)
+
+void Base::SynchronGenerator::applyFundamentalPerUnitParameters() {
+
+	// derive further parameters
+	mLd = mLl + mLmd;
+	mLq = mLl + mLmq;
+	mLfd = mLlfd + mLmd;
+	mLkd = mLlkd + mLmd;
+	mLkq1 = mLlkq1 + mLmq;
+	mLkq2 = mLlkq2 + mLmq;
+
+	// base rotor values
+	mBase_ifd = mLmd * mNomFieldCur;
+	mBase_vfd = mNomPower / mBase_ifd;
+	mBase_Zfd = mBase_vfd / mBase_ifd;
+	mBase_Lfd = mBase_Zfd / mBase_OmElec;
+
+	// derive number of damping windings
+	if (mRkq2 == 0 && mLlkq2 == 0)
 		mNumDampingWindings = 1;
 	else
 		mNumDampingWindings = 2;
@@ -153,6 +197,25 @@ void Base::SynchronGenerator::setFundamentalPerUnitParameters(
 		//Compute inverse Inductance Matrix:
 		mInvInductanceMat = mInductanceMat.inverse();
 	}
+}
+
+void Base::SynchronGenerator::calculateFundamentalFromOperationalParameters() {
+
+	mLmd = mLd - mLl;
+	mLmq = mLq - mLl;
+
+	mLlfd = mLmd*(mLd_t - mLl)/(mLmd-mLd_t+mLl);
+	mLlkq1 = mLmq*(mLq_t - mLl)/(mLmq-mLq_t+mLl);
+
+	mLlkd = mLmd*mLlfd*(mLd_s-mLl)/(mLlfd*mLmd-(mLmd+mLlfd)*(mLd_s-mLl));
+	mLlkq2 = mLmq*mLlkq1*(mLq_s-mLl)/(mLlkq1*mLmq-(mLmq+mLlkq1)*(mLq_s-mLl));
+
+	mRfd = (mLmd + mLlfd)/(mTd0_t*mNomOmega);
+	mRkd = (1/(mTd0_s*mNomOmega))*(mLlkd + mLmd*mLlfd/(mLmd+mLlfd));
+	mRkq1 = (mLmq + mLlkq1)/(mTq0_t*mNomOmega);
+	mRkq2 = (1/(mTq0_s*mNomOmega))*(mLlkq2 + mLmq*mLlkq1/(mLmq+mLlkq1));
+
+	Base::SynchronGenerator::applyFundamentalPerUnitParameters();
 }
 
 void Base::SynchronGenerator::setInitialValues(Real initActivePower, Real initReactivePower,

@@ -99,6 +99,24 @@ namespace Base {
 		/// q-axis damper inductance 2 Lkq2 [H]
 		Real mLkq2 = 0;
 
+		// Operational parameters
+		/// Transient d-axis inductance [H]
+		Real mLd_t = 0;
+		/// Transient q-axis inductance [H]
+		Real mLq_t = 0;
+		/// Subtransient d-axis inductance [H]
+		Real mLd_s = 0;
+		/// Subtransient q-axis inductance [H]
+		Real mLq_s = 0;
+		/// Transient time constant of d-axis [s]
+		Real mTd0_t = 0;
+		/// Transient time constant of q-axis [s]
+		Real mTq0_t = 0;
+		/// Subtransient time constant of d-axis [s]
+		Real mTd0_s = 0;
+		/// Subtransient time constant of q-axis [s]
+		Real mTq0_s = 0;
+
 		// #### Initial Values ####
 		Complex mInitElecPower = 0;
 		Complex mInitTermVoltage = 0;
@@ -217,11 +235,6 @@ namespace Base {
 		/// Compensation Resistance
 		Real mRcomp;
 
-		void setFundamentalPerUnitParameters(
-			Int poleNumber, Real Rs, Real Ll, Real Lmd, Real Lmq,
-			Real Rfd, Real Llfd, Real Rkd, Real Llkd, Real Rkq1, Real Llkq1,
-			Real Rkq2, Real Llkq2,
-			Real inertia);
 		/// Initializes states in per unit. All machine parameters are assumed to be in per unit.
 		/// Function parameters have to be given in real units.
 		void initPerUnitStates();
@@ -269,6 +282,28 @@ namespace Base {
 			Int poleNumber, Real Rs, Real Ll, Real Lmd, Real Lmq, Real Rfd, Real Llfd,
 			Real Rkd, Real Llkd, Real Rkq1, Real Llkq1, Real Rkq2, Real Llkq2,
 			Real inertia);
+
+		void setFundamentalPerUnitParameters(Int poleNumber, 
+			Real Rs, Real Ll, Real Lmd, Real Lmq,
+			Real Rfd, Real Llfd, Real Rkd, Real Llkd, Real Rkq1, Real Llkq1,
+			Real Rkq2, Real Llkq2,
+			Real inertia);
+
+		void applyFundamentalPerUnitParameters();
+
+		void setAndApplyFundamentalPerUnitParameters(
+			Int poleNumber, Real Rs, Real Ll, Real Lmd, Real Lmq,
+			Real Rfd, Real Llfd, Real Rkd, Real Llkd,
+			Real Rkq1, Real Llkq1, Real Rkq2, Real Llkq2,
+			Real inertia);
+
+		void setOperationalPerUnitParameters(
+			Int poleNumber, Real inertia,
+			Real Rs, Real Ld, Real Lq, Real Ll, 
+			Real Ld_t, Real Lq_t, Real Ld_s, Real Lq_s,
+			Real Td0_t, Real Tq0_t, Real Td0_s, Real Tq0_s);
+
+		void calculateFundamentalFromOperationalParameters();
 
 		///
 		void setInitialValues(
