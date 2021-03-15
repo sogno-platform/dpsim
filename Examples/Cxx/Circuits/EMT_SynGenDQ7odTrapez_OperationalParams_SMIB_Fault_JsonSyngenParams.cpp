@@ -42,8 +42,18 @@ int main(int argc, char* argv[]) {
 	// Simulation
 	const Real startTimeFault=0.2;
 
-	// Json config processing
-	std::ifstream jsonFile("../../../Configs/example_configs_json/EMT_SynGenDQ7odTrapez_OperationalParams_SMIB_Fault_SyngenParams.json");
+	fs::path configFilename;
+	
+	CommandLineArgs args(argc, argv);
+	if (args.params != "default.json")
+		configFilename = args.params;
+	else 
+		configFilename = DPsim::Utils::findFile({
+			"EMT_SynGenDQ7odTrapez_OperationalParams_SMIB_Fault_SyngenParams.json"
+			}, "Configs/example_configs_json");
+
+
+	std::ifstream jsonFile(configFilename);
 	json simConfig = json::parse(jsonFile);
 	const String simName = simConfig["name"].get<std::string>();
 

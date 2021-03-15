@@ -81,6 +81,7 @@ public:
 		CPS::Domain sd = CPS::Domain::DP,
 		Solver::Type st = Solver::Type::MNA,
 		MnaSolverFactory::MnaSolverImpl mi = MnaSolverFactory::mSupportedSolverImpls().back()
+		String params = "default.json"
 	);
 
 	void parseArguments(int argc, char *argv[]);
@@ -95,6 +96,7 @@ public:
 	CPS::Logger::Level logLevel;
 	CPS::Logger::Level cliLogLevel;
 	String name;
+	String params;
 
 	bool startSynch;
 	bool blocking;

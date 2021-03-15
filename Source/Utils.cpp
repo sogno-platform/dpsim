@@ -35,8 +35,9 @@ CommandLineArgs::CommandLineArgs(int argc, char *argv[],
 		Bool si,
 		CPS::Domain sd,
 		Solver::Type st,
-		MnaSolverFactory::MnaSolverImpl mi
-		) :
+		MnaSolverFactory::MnaSolverImpl mi,
+		String ps
+	) :
 	mProgramName(argv[0]),
 	mArguments {
 		{ "start-synch",	no_argument,		0, 'S', NULL, "" },
@@ -55,6 +56,7 @@ CommandLineArgs::CommandLineArgs(int argc, char *argv[],
 		{ "solver-mna-impl", required_argument, 0, 'U', "(EigenDense|EigenSparse|CUDADense|CUDASparse)", "Type of MNA Solver implementation"},
 		{ "option",		required_argument,	0, 'o', "KEY=VALUE", "User-definable options" },
 		{ "name",		required_argument,	0, 'n', "NAME", "Name of log files" },
+		{ "params",		required_argument,	0, 'p', "PATH", "Json file containing parametrization"},
 		{ 0 }
 	},
 	timeStep(dt),
@@ -64,6 +66,7 @@ CommandLineArgs::CommandLineArgs(int argc, char *argv[],
 	logLevel(ll),
 	cliLogLevel(clill),
 	name(nm),
+	params(ps),
 	startSynch(ss),
 	blocking(b),
 	steadyInit(si),
@@ -286,6 +289,10 @@ void CommandLineArgs::parseArguments(int argc, char *argv[])
 				name = optarg;
 				break;
 
+			case 'p':
+				params = optarg;
+				break;
+
 			case 'h':
 				showUsage();
 				exit(0);
@@ -421,7 +428,11 @@ fs::path DPsim::Utils::findFile(const fs::path &name, const fs::path &hint, cons
 		}
 	}
 
-	throw std::runtime_error(fmt::format("File not found: {}", name.string()));
+	String searchPathsString;
+	for (auto searchPath : searchPaths)
+		searchPathsString.append(searchPath.string().append("\n"));
+
+	throw std::runtime_error(fmt::format("File not found: {}\nSearch paths:\n{}", name.string(), searchPathsString));
 }
 
 std::list<fs::path> DPsim::Utils::findFiles(std::list<fs::path> filennames, const fs::path &hint, const std::string &useEnv) {
