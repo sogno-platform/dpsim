@@ -1,0 +1,30 @@
+# rwthacs/dpsim-dev is built by dpsim-git/Packaging/Docker/Dockerfile.dev
+ARG BUILDER_IMAGE=rwthacs/dpsim-dev
+ARG DOCKER_TAG=latest
+
+FROM ${BUILDER_IMAGE}:${DOCKER_TAG}
+
+COPY . /dpsim/
+
+RUN rm -rf /dpsim/build && mkdir /dpsim/build
+WORKDIR /dpsim/build
+
+RUN cmake ..
+RUN cmake --build . -j$(nproc)
+
+RUN mkdir /usr/local/bin/dpsim && cp -r /dpsim/build/Examples/Cxx/* /usr/local/bin/dpsim
+RUN rm -rf /dpsim/build
+
+ENV PATH="${PATH}:/usr/local/bin/dpsim"
+
+WORKDIR /dpsim
+
+LABEL \
+	org.label-schema.schema-version = "1.0" \
+	org.label-schema.name = "DPsim" \
+	org.label-schema.license = "GPL-3.0" \
+	org.label-schema.vendor = "Institute for Automation of Complex Power Systems, RWTH Aachen University" \
+	org.label-schema.author.name = "Markus Mirz" \
+	org.label-schema.author.email = "mmirz@eonerc.rwth-aachen.de" \
+	org.label-schema.url = "http://fein-aachen.org/projects/dpsim/" \
+	org.label-schema.vcs-url = "https://git.rwth-aachen.de/acs/public/simulation/dpsim"
