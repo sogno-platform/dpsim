@@ -45,7 +45,8 @@ class MnaSolverFactory {
 #ifdef WITH_CUDA
 			CUDADense,
 #ifdef WITH_SPARSE
-			CUDASparse,
+			/* CUDASparse is not currently wokring correctly, DO NOT USE IT! */
+			//CUDASparse,
 #endif //WITH_SPARSE
 #endif //WITH_CUDA
 		};
