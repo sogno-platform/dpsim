@@ -122,13 +122,15 @@ find_package(GSL)
 find_package(Graphviz)
 find_package(VILLASnode)
 
-if(NOT PYBIND)
-	find_package(PythonInterp 3.6)
-	find_package(PythonLibs 3.6)
+if (WITH_PYBIND_SUBMODULE OR WIN32)
+	include(cmake/GetPybindSubmodule.cmake)
+else()
+	find_package(pybind11)
+endif()
 
-	if(PythonInterp_FOUND AND PythonLibs_FOUND)
-		set(Python_FOUND ON)
-	endif()
+find_package (Python3 COMPONENTS Interpreter Development)
+if(Python3_FOUND)
+	set(Python_FOUND ON)
 endif()
 
 if("${CMAKE_SYSTEM}" MATCHES "Linux")
@@ -143,11 +145,6 @@ option(GET_GRID_DATA     	"Download grid data"               	ON )
 
 # WITH_SPARSE and WITH_CUDA can be combined
 option(WITH_SPARSE       	"Use sparse matrices in MNA-Solver"	ON )
-
-option(PYBIND "Build pybind module" OFF)
-if(PYBIND)
-	set(BUILD_SHARED_LIBS ON)
-endif()
 
 include(CMakeDependentOption)
 cmake_dependent_option(WITH_GSL     	"Enable GSL"                         	ON 	"GSL_FOUND"       	OFF)
@@ -209,17 +206,10 @@ if(BUILD_EXAMPLES)
 	add_subdirectory(Examples)
 endif(BUILD_EXAMPLES)
 
-if(PYBIND)
-	if (WITH_PYBIND_SUBMODULE OR WIN32)
-		include(cmake/GetPybindSubmodule.cmake)
-	else()
-		find_package(pybind11)
-	endif()
 
-	set(PYBIND11_CPP_STANDARD -std=c++11)
-	pybind11_add_module(dpsimpy Source/pybind/main.cpp)
-	target_link_libraries(dpsimpy PRIVATE dpsim)
-endif()
+set(PYBIND11_CPP_STANDARD -std=c++11)
+pybind11_add_module(dpsimpy Source/pybind/main.cpp)
+target_link_libraries(dpsimpy PRIVATE dpsim)
 
 include(cmake/GetGridData.cmake)
 
