@@ -37,7 +37,8 @@ RUN dnf --refresh -y install \
 	graphviz-devel \
 	gsl-devel \
 	spdlog-devel \
-	fmt-devel
+	fmt-devel \
+	pybind11-devel
 
 ## Build & Install fmtlib
 #RUN cd /tmp && \
@@ -80,9 +81,9 @@ RUN dnf -y install \
 
 # optional VILLAS dependencies
 RUN dnf -y install \
-  mosquitto-devel \
+  	mosquitto-devel \
 	libconfig-devel \
-  libnl3-devel
+  	libnl3-devel
 
 # Python dependencies
 ADD requirements.txt .
