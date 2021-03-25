@@ -122,7 +122,7 @@ find_package(GSL)
 find_package(Graphviz)
 find_package(VILLASnode)
 
-if (WITH_PYBIND_SUBMODULE OR WIN32)
+if (WITH_PYBIND_SUBMODULE)
 	include(cmake/GetPybindSubmodule.cmake)
 else()
 	find_package(pybind11)
