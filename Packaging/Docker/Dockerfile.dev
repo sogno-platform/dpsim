@@ -1,15 +1,16 @@
 FROM fedora:32
 
 ARG VILLAS_VERSION=0.8.0
-ARG CIM_VERSION=IEC61970_16v29a
+ARG CIM_VERSION=CGMES_2.4.15_16FEB2016
+
 
 LABEL \
 	org.label-schema.schema-version = "1.0" \
 	org.label-schema.name = "DPsim" \
 	org.label-schema.license = "GPL-3.0" \
 	org.label-schema.vendor = "Institute for Automation of Complex Power Systems, RWTH Aachen University" \
-	org.label-schema.author.name = "Steffen Vogel" \
-	org.label-schema.author.email = "stvogel@eonerc.rwth-aachen.de" \
+	org.label-schema.author.name = "Markus Mirz" \
+	org.label-schema.author.email = "mmirz@eonerc.rwth-aachen.de" \
 	org.label-schema.url = "http://fein-aachen.org/projects/dpsim/" \
 	org.label-schema.vcs-url = "https://git.rwth-aachen.de/acs/public/simulation/dpsim"
 
@@ -96,7 +97,7 @@ RUN cd /tmp && \
 
 # Install VILLAS from source
 RUN cd /tmp && \
-	git -c submodule.fpga.update=none clone --recursive https://git.rwth-aachen.de/acs/public/villas/node.git villasnode && \
+	git -c submodule.fpga.update=none clone --recursive https://git.rwth-aachen.de/acs/public/villas/node.git villasnode && \	
 	mkdir -p villasnode/build && cd villasnode/build && \
 	git checkout 5f6a28ca && git -c submodule.fpga.update=none submodule update --recursive && \
 	cmake -DCMAKE_INSTALL_LIBDIR=/usr/local/lib64 .. && make -j$(nproc) install && \

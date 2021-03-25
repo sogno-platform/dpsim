@@ -1,7 +1,7 @@
 # Workaround for cimpp on Windows and as submodule
 
 if(NOT CIM_VERSION)
-	set(CIM_VERSION "16v29a")
+	set(CIM_VERSION "CGMES_2.4.15_16FEB2016")
 endif()
 
 message(STATUS "CIM Version: ${CIM_VERSION}")

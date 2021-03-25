@@ -27,15 +27,16 @@ stages:
   tags:
     - docker
 
-docker:fedora:
+docker:fedora-cim:
   <<: *docker-fedora-template
   variables:
-    TAGS: --tag ${DOCKER_IMAGE_DEV}:${CI_COMMIT_REF_NAME} --tag ${DOCKER_IMAGE_DEV}:latest
+    TAGS:       --tag ${DOCKER_IMAGE_DEV}:${CI_COMMIT_REF_NAME}-cim
+    BUILD_ARGS: --build-arg CIM_VERSION=IEC61970_16v29a
 
 docker:fedora-cgmes:
   <<: *docker-fedora-template
   variables:
-    TAGS:        --tag ${DOCKER_IMAGE_DEV}:${CI_COMMIT_REF_NAME}-CGMES_2.4.15_16FEB2016
+    TAGS:        --tag ${DOCKER_IMAGE_DEV}:${CI_COMMIT_REF_NAME}-cgmes --tag ${DOCKER_IMAGE_DEV}:latest
     BUILD_ARGS:  --build-arg CIM_VERSION=CGMES_2.4.15_16FEB2016
 
 docker:centos:
@@ -49,15 +50,15 @@ docker:centos:
   tags:
     - docker
 
-build:linux:
+build:linux-cim:
   stage: build
-  needs: ["docker:fedora"]
+  needs: ["docker:fedora-cim"]
   script:
     - mkdir -p build
     - cd build
-    - cmake ..
+    - cmake -DCIM_VERSION=IEC61970_16v29a ..
     - make -j 32
-  image: ${DOCKER_IMAGE_DEV}:${DOCKER_TAG}
+  image: ${DOCKER_IMAGE_DEV}:${DOCKER_TAG}-cim
   cache:
     paths:
       - build
@@ -76,7 +77,7 @@ build:linux-cgmes:
     - cd build
     - cmake -DCIM_VERSION=CGMES_2.4.15_16FEB2016 ..
     - make -j 32
-  image: ${DOCKER_IMAGE_DEV}:${DOCKER_TAG}-CGMES_2.4.15_16FEB2016
+  image: ${DOCKER_IMAGE_DEV}:${DOCKER_TAG}-cgmes
   cache:
     paths:
       - build
@@ -249,14 +250,14 @@ build:docker:
 
 test:jupyter:
   stage: test
-  needs: ["build:linux"]
+  needs: ["build:linux-cim"]
   variables:
     PYTHONPATH: "build/Source/Python:Source/Python"
   script:
     - pytest -v Examples/Notebooks
   dependencies:
-    - build:linux
-  image: ${DOCKER_IMAGE_DEV}:${DOCKER_TAG}
+    - build:linux-cim
+  image: ${DOCKER_IMAGE_DEV}:${DOCKER_TAG}-cim
   tags:
     - docker
   artifacts:
@@ -272,7 +273,7 @@ test:jupyter-cgmes:
     - pytest -v Examples/Notebooks
   dependencies:
     - build:linux-cgmes
-  image: ${DOCKER_IMAGE_DEV}:${DOCKER_TAG}-CGMES_2.4.15_16FEB2016
+  image: ${DOCKER_IMAGE_DEV}:${DOCKER_TAG}-cgmes
   tags:
     - docker
   artifacts:
@@ -552,13 +553,13 @@ test:cuda 2/2:
 
 generate:docs:
   stage: generate
-  needs: ["build:linux"]
+  needs: ["build:linux-cgmes"]
   script:
     - make -j$(nproc) -C build docs
     - make -j$(nproc) -C build docs_cxx
-  image: ${DOCKER_IMAGE_DEV}:${DOCKER_TAG}
+  image: ${DOCKER_IMAGE_DEV}:${DOCKER_TAG}-cgmes
   dependencies:
-    - build:linux
+    - build:linux-cgmes
   artifacts:
     paths:
       - build/docs/sphinx/html
@@ -568,16 +569,16 @@ generate:docs:
 
 generate:packages:
   stage: generate
-  needs: ["build:linux"]
+  needs: ["build:linux-cgmes"]
   script:
     - make -j$(nproc) -C build package
   only:
     - tags
   tags:
     - docker
-  image: ${DOCKER_IMAGE_DEV}:${DOCKER_TAG}
+  image: ${DOCKER_IMAGE_DEV}:${DOCKER_TAG}-cgmes
   dependencies:
-    - build:linux
+    - build:linux-cgmes
   artifacts:
     paths:
       - build/*.rpm
@@ -623,9 +624,9 @@ pages:
 deploy:docker:
   stage: deploy
   script:
-    - docker push ${DOCKER_IMAGE_DEV}:${DOCKER_TAG}
+    - docker push ${DOCKER_IMAGE_DEV}:${DOCKER_TAG}-cgmes
     - docker push ${DOCKER_IMAGE_DEV}:latest
-    - docker push ${DOCKER_IMAGE}:${DOCKER_TAG}
+    - docker push ${DOCKER_IMAGE}:${DOCKER_TAG}-cgmes
     - docker push ${DOCKER_IMAGE}:latest
   dependencies:
     - build:docker

@@ -1,7 +1,7 @@
 FROM centos:8
 
 ARG VILLAS_VERSION=0.8.0
-ARG CIM_VERSION=IEC61970_16v29a
+ARG CIM_VERSION=CGMES_2.4.15_16FEB2016
 
 LABEL \
 	org.label-schema.schema-version = "1.0" \
