@@ -156,6 +156,7 @@ cmake_dependent_option(WITH_CIM     	"Enable support for parsing CIM"     	ON 	"
 cmake_dependent_option(WITH_OPENMP  	"Enable OpenMP-based parallelisation"	ON 	"OPENMP_FOUND"    	OFF)
 cmake_dependent_option(WITH_CUDA    	"Enable CUDA-based parallelisation"  	OFF	"CUDA_FOUND"      	OFF)
 cmake_dependent_option(WITH_GRAPHVIZ	"Enable Graphviz Graphs"             	ON 	"GRAPHVIZ_FOUND"  	OFF)
+cmake_dependent_option(WITH_PYBIND     	"Enable PYBIND support"                	ON 	"pybind11_FOUND"   	OFF)
 
 if(WITH_CUDA)
     # BEGIN OF WORKAROUND - enable cuda dynamic linking.
@@ -206,25 +207,27 @@ if(BUILD_EXAMPLES)
 	add_subdirectory(Examples)
 endif(BUILD_EXAMPLES)
 
-
-set(PYBIND11_CPP_STANDARD -std=c++11)
-pybind11_add_module(dpsimpy Source/pybind/main.cpp)
-target_link_libraries(dpsimpy PRIVATE dpsim)
+if(WITH_PYBIND)
+	set(PYBIND11_CPP_STANDARD -std=c++11)
+	pybind11_add_module(dpsimpy Source/pybind/main.cpp)
+	target_link_libraries(dpsimpy PRIVATE dpsim)
+endif()
 
 include(cmake/GetGridData.cmake)
 
 message(VERBOSE "Compiler Release Flags: " 	${CMAKE_CXX_FLAGS_RELEASE})
-message(VERBOSE "Compiler Debug Flags: " 		${CMAKE_CXX_FLAGS_DEBUG})
+message(VERBOSE "Compiler Debug Flags: " 	${CMAKE_CXX_FLAGS_DEBUG})
 
 if(TOPLEVEL_PROJECT)
 	include(FeatureSummary)
-	add_feature_info(CIM				WITH_CIM				"Loading Common Information Model Files")
-	add_feature_info(Python 		WITH_PYTHON 		"Use DPsim as a Python module")
-	add_feature_info(Shmem  		WITH_SHMEM  		"Interface DPsim solvers via shared-memory interfaces")
-	add_feature_info(RT	    		WITH_RT     		"Extended real-time features")
-	add_feature_info(GSL				WITH_GSL  			"Use GNU Scientific library")
+	add_feature_info(CIM		WITH_CIM		"Loading Common Information Model Files")
+	add_feature_info(Python 	WITH_PYTHON 	"Use DPsim as a Python module")
+	add_feature_info(Shmem  	WITH_SHMEM  	"Interface DPsim solvers via shared-memory interfaces")
+	add_feature_info(RT	    	WITH_RT     	"Extended real-time features")
+	add_feature_info(GSL		WITH_GSL  		"Use GNU Scientific library")
 	add_feature_info(Graphviz  	WITH_GRAPHVIZ  	"Graphviz Graphs")
 	add_feature_info(Sundials  	WITH_SUNDIALS  	"Sundials solvers")
+	add_feature_info(PYBIND 	WITH_PYBIND 	"Use DPsim as a PYBIND module")
 	feature_summary(WHAT ALL VAR enabledFeaturesText)
 
 	if (FOUND_GIT_VERSION)
