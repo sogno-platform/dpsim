@@ -24,7 +24,7 @@ jobs:
         mkdir build
         cd build
         git describe --tags --abbrev=0 --match "v*"
-        cmake -WITH_PYTHON=OFF ..
+        cmake -DWITH_PYTHON=OFF ..
         cmake --build .
   linux:
     name: Build on Linux
