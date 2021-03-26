@@ -123,11 +123,6 @@ if(WITH_CIM)
 		CIM/IEEE_LV_PowerFlowTest.cpp
 		CIM/IEEE_LV_PowerFlowTest_LoadProfiles.cpp
 
-		# Mat2CIM examples
-		CIM/case145.cpp
-		CIM/case300.cpp
-		CIM/case9.cpp
-		CIM/case14.cpp
 		CIM/powerflow-cim.cpp
 
 		# WSCC examples
