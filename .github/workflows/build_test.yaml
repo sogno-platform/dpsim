@@ -26,10 +26,42 @@ jobs:
         git describe --tags --abbrev=0 --match "v*"
         cmake -DWITH_PYTHON=OFF ..
         cmake --build .
-  linux:
-    name: Build on Linux
-    runs-on: self-hosted
-    container: pfensch/dpsim:latest
+
+  linux-fedora:
+    name: Build on Linux fedora
+    runs-on: ubuntu-latest
+    container: registry.git.rwth-aachen.de/acs/public/simulation/dpsim/dpsim:dpsim-dev
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v2
+      with:
+        submodules: recursive
+
+    - name: Create Build Environment
+      run: mkdir build
+
+    - name: Configure CMake
+      shell: bash
+      working-directory: ${{ github.workspace }}/build
+      run: cmake $GITHUB_WORKSPACE
+
+    - name: Build every target
+      shell: bash
+      working-directory: ${{ github.workspace }}/build
+      run: cmake --build .
+      env:
+        MAKEFLAGS: "-j2"
+
+    - name: Cache build directory
+      uses: actions/cache@v2
+      with:
+        path: ${{ github.workspace }}/build
+        key: build-cache-${{ github.sha }}
+
+  linux-centos:
+    name: Build on Linux centos
+    runs-on: ubuntu-latest
+    container: registry.git.rwth-aachen.de/acs/public/simulation/dpsim/dpsim:dpsim-dev
     steps:
     - name: Checkout
       uses: actions/checkout@v2
@@ -61,9 +93,9 @@ jobs:
 
   test-binaries:
     name: Execute Example
-    runs-on: self-hosted
-    container: pfensch/dpsim:latest
-    needs: [linux]
+    runs-on: ubuntu-latest
+    container: registry.git.rwth-aachen.de/acs/public/simulation/dpsim/dpsim:dpsim-centos
+    needs: [linux-centos]
     steps:
     - name: Checkout
       uses: actions/checkout@v2
@@ -81,7 +113,7 @@ jobs:
     name: Scan Sourcecode with Cppcheck
     runs-on: self-hosted
     container: pfensch/dpsim:latest
-    needs: [linux]
+    needs: [linux-centos]
     steps:
     - name: Checkout
       uses: actions/checkout@v2
