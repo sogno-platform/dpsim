@@ -430,6 +430,7 @@ void Simulation::stop() {
 		lg->close();
 
 	mLog->info("Simulation finished.");
+	mLog->flush();
 }
 
 Real Simulation::next() {

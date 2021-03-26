@@ -31,8 +31,17 @@ PYBIND11_MODULE(dpsimpy, m) {
            :toctree: _generate
     )pbdoc";
 
+	py::enum_<CPS::Logger::Level>(m, "LogLevel")
+		.value("trace", CPS::Logger::Level::trace)
+		.value("debug", CPS::Logger::Level::debug)
+		.value("info", CPS::Logger::Level::info)
+		.value("warn", CPS::Logger::Level::warn)
+		.value("err", CPS::Logger::Level::err)
+		.value("critical", CPS::Logger::Level::critical)
+		.value("off", CPS::Logger::Level::off);		
+
     py::class_<DPsim::Simulation>(m, "Simulation")
-	    .def(py::init<std::string>())
+	    .def(py::init<std::string, CPS::Logger::Level>(), py::arg("name"), py::arg("loglevel") = CPS::Logger::Level::off)
 		.def("name", &DPsim::Simulation::name)
 		.def("set_time_step", &DPsim::Simulation::setTimeStep)
 		.def("set_final_time", &DPsim::Simulation::setFinalTime)
@@ -52,7 +61,7 @@ PYBIND11_MODULE(dpsimpy, m) {
 		.def("log_attr", &DPsim::Simulation::logIdObjAttr);
 
 	py::class_<DPsim::RealTimeSimulation, DPsim::Simulation>(m, "RealTimeSimulation")
-	    .def(py::init<std::string>())
+		.def(py::init<std::string, CPS::Logger::Level>(), py::arg("name"), py::arg("loglevel") = CPS::Logger::Level::info)
 		.def("name", &DPsim::RealTimeSimulation::name)
 		.def("set_time_step", &DPsim::RealTimeSimulation::setTimeStep)
 		.def("set_final_time", &DPsim::RealTimeSimulation::setFinalTime)
@@ -114,15 +123,6 @@ PYBIND11_MODULE(dpsimpy, m) {
 		.value("DAE", DPsim::Solver::Type::DAE)
 		.value("NRP", DPsim::Solver::Type::NRP);
 
-	py::enum_<CPS::Logger::Level>(m, "LogLevel")
-		.value("trace", CPS::Logger::Level::trace)
-		.value("debug", CPS::Logger::Level::debug)
-		.value("info", CPS::Logger::Level::info)
-		.value("warn", CPS::Logger::Level::warn)
-		.value("err", CPS::Logger::Level::err)
-		.value("critical", CPS::Logger::Level::critical)
-		.value("off", CPS::Logger::Level::off);		
-
 	py::enum_<CPS::CSVReader::Mode>(m, "CSVReaderMode")
 		.value("AUTO", CPS::CSVReader::Mode::AUTO)
 		.value("MANUAL", CPS::CSVReader::Mode::MANUAL);		
@@ -134,7 +134,7 @@ PYBIND11_MODULE(dpsimpy, m) {
 		.value("MINUTES", CPS::CSVReader::DataFormat::MINUTES);
 		
 	py::class_<CPS::CIM::Reader>(m, "CIMReader")
-		.def(py::init<std::string>())
+		.def(py::init<std::string, CPS::Logger::Level, CPS::Logger::Level>(), py::arg("name"), py::arg("loglevel") = CPS::Logger::Level::info, py::arg("comploglevel") = CPS::Logger::Level::off)
 		.def("loadCIM", (CPS::SystemTopology (CPS::CIM::Reader::*)(CPS::Real, const std::list<CPS::String> &, CPS::Domain, CPS::PhaseType)) &CPS::CIM::Reader::loadCIM);
 
 	py::class_<CPS::CSVReader>(m, "CSVReader")
