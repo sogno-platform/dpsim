@@ -15,8 +15,10 @@ RUN rm -rf /dpsim/build && mkdir /dpsim/build
 WORKDIR /dpsim/build
 
 RUN cmake -DBUILD_EXAMPLES=OFF ..
-RUN make -j$(nproc) install && \
-		ldconfig
+ENV PYTHONPATH=/dpsim/build:/dpsim/build/Source/Python:/dpsim/Source/Python:
+# PYBIND package cannot be installed yet
+#RUN make -j$(nproc) install && ldconfig
+RUN make -j$(nproc)
 
 WORKDIR /dpsim
 EXPOSE 8888
