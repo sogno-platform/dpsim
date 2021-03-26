@@ -248,22 +248,6 @@ build:docker:
 # Stage test
 ##############################################################################
 
-test:jupyter:
-  stage: test
-  needs: ["build:linux-cim"]
-  variables:
-    PYTHONPATH: "build:build/Source/Python:Source/Python"
-  script:
-    - pytest -v Examples/Notebooks
-  dependencies:
-    - build:linux-cim
-  image: ${DOCKER_IMAGE_DEV}:${DOCKER_TAG}-cim
-  tags:
-    - docker
-  artifacts:
-    paths:
-      - outputs/Examples/Notebooks/
-
 test:jupyter-cgmes:
   stage: test
   needs: ["build:linux-cgmes"]
