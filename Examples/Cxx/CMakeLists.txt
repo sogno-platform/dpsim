@@ -110,7 +110,6 @@ if(WITH_CIM)
 	list(APPEND INCLUDE_DIRS ${CIMPP_INCLUDE_DIRS})
 
 	set(CIM_SOURCES
-		CIM/dpsim-cim.cpp
 		CIM/WSCC-9bus_CIM.cpp
 		CIM/WSCC-9bus_CIM_Dyn.cpp
 		CIM/WSCC-9bus_CIM_Dyn_Switch.cpp
@@ -121,9 +120,6 @@ if(WITH_CIM)
 		CIM/CIGRE_MV_PowerFlowTest.cpp
 		CIM/CIGRE_MV_PowerFlowTest_LoadProfiles.cpp
 		CIM/IEEE_LV_PowerFlowTest.cpp
-		CIM/IEEE_LV_PowerFlowTest_LoadProfiles.cpp
-
-		CIM/powerflow-cim.cpp
 
 		# WSCC examples
 		CIM/WSCC_9bus_mult_decoupled.cpp
