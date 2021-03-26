@@ -252,7 +252,7 @@ test:jupyter:
   stage: test
   needs: ["build:linux-cim"]
   variables:
-    PYTHONPATH: "build/Source/Python:Source/Python"
+    PYTHONPATH: "build:build/Source/Python:Source/Python"
   script:
     - pytest -v Examples/Notebooks
   dependencies:
@@ -268,7 +268,7 @@ test:jupyter-cgmes:
   stage: test
   needs: ["build:linux-cgmes"]
   variables:
-    PYTHONPATH: "build/Source/Python:Source/Python"
+    PYTHONPATH: "build:build/Source/Python:Source/Python"
   script:
     - pytest -v Examples/Notebooks
   dependencies:
