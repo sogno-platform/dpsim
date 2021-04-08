@@ -18,12 +18,51 @@ namespace Examples {
 
 namespace Components {
 
+// The network transmission voltages used are 220 kV and 380 kV, which are
+// typical in European transmission systems. Generation bus voltages are 22 kV, and the
+// system frequency is 50 Hz.
 namespace CIGREHVEuropean {
     struct LineParameters {
         // 220 kV
         Real lineResistancePerKm = 1.35e-4 * 484.0;
         Real lineReactancePerKm = 8.22e-4 * 484.0;
         Real lineSusceptancePerKm = 1.38e-3 / 484.0;
+        Real lineConductancePerKm = 0;
+    };
+
+    // All generators are rated at 22 kV, 50 Hz.
+    // Base power for p.u values: S_base=100 MVA 
+    struct GeneratorUnit_1 {
+        Real nomPower = 700e6;
+        Real nomVoltage = 22e3; // Phase-to-Phase RMS
+        Real nomFreq = 50;
+        Real setPointActivePower = 500e6;
+        Real setPointVoltage=1.03*nomVoltage;
+        Real Xd=1.25; //p.u
+        Real Xpd=0.333; //p.u
+        Real Rs=0; //p.u
+        Real H = 5; //p.u 
+        Real D = 1; //p.u
+    };
+
+    struct GeneratorUnit_2 {
+        Real nomPower = 500e6;
+        Real nomVoltage = 22e3; // Phase-to-Phase RMS
+        Real nomFreq = 50;
+        Real setPointActivePower = 300e6;
+        Real setPointVoltage=1.03*nomVoltage; 
+        Real Xd=1.25;
+        Real Xpd=0.333;
+        Real Rs=0; //p.u
+        Real H = 5;
+        Real D = 1;
+    };
+
+    struct RefBus {
+        // p.u
+        Real refVoltagePU= 1.03; //Bus voltage magnitude
+        Real refAngle= 0;    //Bus voltage angle
+        Real refFreq=50;
     };
 }
 

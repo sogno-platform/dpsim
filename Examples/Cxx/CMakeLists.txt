@@ -49,7 +49,10 @@ set(CIRCUIT_SOURCES
 	Circuits/EMT_DP_SP_VS_RLC.cpp
 	Circuits/DP_EMT_RL_SourceStep.cpp
 	Circuits/EMT_DP_SP_Trafo.cpp
-	
+
+	#FullVsClassical
+	Circuits/DP_1phSynGenTrStab_EMT_3phSynGenDQ7odTrapez_Fault.cpp
+
 	#SMIB
 	Circuits/SP_SynGenTrStab_SMIB_SteadyState.cpp
 	Circuits/DP_SynGenTrStab_SMIB_SteadyState.cpp
