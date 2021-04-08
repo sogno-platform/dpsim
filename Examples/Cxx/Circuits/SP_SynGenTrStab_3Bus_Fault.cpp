@@ -17,7 +17,7 @@ Real nomFreq_G1 = 60;
 Real H_G1 = 6;
 Real Xpd_G1=0.3; //in p.u
 Real Rs_G1 = 0.003*0;
-Real Kd_G1 = 1;
+Real Kd_G1 = 1.5;
 // Initialization parameters 
 Real initActivePower_G1 = 270e6;
 Real initMechPower_G1 = 270e6;
@@ -31,7 +31,7 @@ Real nomFreq_G2 = 60;
 Real H_G2 = 2;
 Real Xpd_G2=0.1; //in p.u
 Real Rs_G2 = 0.003*0;
-Real Kd_G2 =1;
+Real Kd_G2 =1.5;
 // Initialization parameters 
 Real initActivePower_G2 = 45e6;
 // Real initReactivePower_G2 = 106e6;
@@ -121,8 +121,10 @@ void SP_SynGenTrStab_3Bus_Fault(String simName, Real timeStep, Real finalTime, b
 	loadPF->connect({ n3PF });
 	line12PF->connect({ n1PF, n2PF });
 	line13PF->connect({ n1PF, n3PF });
-	line23PF->connect({ n2PF, n3PF });
-	faultPF->connect({SP::SimNode::GND , n2PF });
+	line23PF->connect({ n2PF, n3PF });	
+	// faultPF->connect({SP::SimNode::GND , n1PF }); //terminal of generator 1
+	faultPF->connect({SP::SimNode::GND , n2PF }); //terminal of generator 2
+	// faultPF->connect({SP::SimNode::GND , n3PF }); //Load bus
 	auto systemPF = SystemTopology(60,
 			SystemNodeList{n1PF, n2PF, n3PF},
 			SystemComponentList{gen1PF, gen2PF, loadPF, line12PF, line13PF, line23PF, faultPF});
@@ -170,6 +172,8 @@ void SP_SynGenTrStab_3Bus_Fault(String simName, Real timeStep, Real finalTime, b
 	Complex initApparentPower_G2= gen2PF->getApparentPower();
 	gen2SP->setInitialValues(initApparentPower_G2, initMechPower_G2);
 
+	gen2SP->setReferenceOmega(gen1SP->attribute<Real>("w_r"), gen1SP->attribute<Real>("delta_r"));
+
 	//Load
 	auto loadSP = SP::Ph1::Load::make("Load", Logger::Level::debug);
 	loadSP->setParameters(activePower_L, reactivePower_L, Vnom);
@@ -183,9 +187,15 @@ void SP_SynGenTrStab_3Bus_Fault(String simName, Real timeStep, Real finalTime, b
 	//Line23
 	auto line23SP = SP::Ph1::PiLine::make("PiLine23", Logger::Level::debug);
 	line23SP->setParameters(lineResistance23, lineInductance23, lineCapacitance23, lineConductance23);
+	// //Switch
+	// auto faultSP = SP::Ph1::Switch::make("Br_fault", Logger::Level::debug);
+	// faultSP->setParameters(SwitchOpen, SwitchClosed);
+	// faultSP->open();
+
 	//Switch
-	auto faultSP = SP::Ph1::Switch::make("Br_fault", Logger::Level::debug);
+	auto faultSP = SP::Ph1::varResSwitch::make("Br_fault", Logger::Level::debug);
 	faultSP->setParameters(SwitchOpen, SwitchClosed);
+	faultSP->setInitParameters(timeStep);
 	faultSP->open();
 
 		// Topology
@@ -195,7 +205,9 @@ void SP_SynGenTrStab_3Bus_Fault(String simName, Real timeStep, Real finalTime, b
 	line12SP->connect({ n1SP, n2SP });
 	line13SP->connect({ n1SP, n3SP });
 	line23SP->connect({ n2SP, n3SP });
-	faultSP->connect({SP::SimNode::GND , n2SP });
+	// faultSP->connect({SP::SimNode::GND , n1SP }); //terminal of generator 1
+	faultSP->connect({SP::SimNode::GND , n2SP }); //terminal of generator 2
+	// faultSP->connect({SP::SimNode::GND , n3SP }); //Load bus
 	auto systemSP = SystemTopology(60,
 			SystemNodeList{n1SP, n2SP, n3SP},
 			SystemComponentList{gen1SP, gen2SP, loadSP, line12SP, line13SP, line23SP, faultSP});
@@ -206,32 +218,40 @@ void SP_SynGenTrStab_3Bus_Fault(String simName, Real timeStep, Real finalTime, b
 
 	// Logging
 	auto loggerSP = DataLogger::make(simNameSP);
-	loggerSP->addAttribute("v1", n1SP->attribute("v"));
-	loggerSP->addAttribute("v2", n2SP->attribute("v"));
-	loggerSP->addAttribute("v3", n3SP->attribute("v"));
-	loggerSP->addAttribute("v_line12", line12SP->attribute("v_intf"));
-	loggerSP->addAttribute("i_line12", line12SP->attribute("i_intf"));
-	loggerSP->addAttribute("v_line13", line13SP->attribute("v_intf"));
-	loggerSP->addAttribute("i_line13", line13SP->attribute("i_intf"));
-	loggerSP->addAttribute("v_line23", line23SP->attribute("v_intf"));
-	loggerSP->addAttribute("i_line23", line23SP->attribute("i_intf"));
-	loggerSP->addAttribute("v_gen1", gen1SP->attribute("v_intf"));
-	loggerSP->addAttribute("i_gen1", gen1SP->attribute("i_intf"));
-	loggerSP->addAttribute("wr_gen1", gen1SP->attribute("w_r"));
+	// loggerSP->addAttribute("v1", n1SP->attribute("v"));
+	// loggerSP->addAttribute("v2", n2SP->attribute("v"));
+	// loggerSP->addAttribute("v3", n3SP->attribute("v"));
+	// loggerSP->addAttribute("v_line12", line12SP->attribute("v_intf"));
+	// loggerSP->addAttribute("i_line12", line12SP->attribute("i_intf"));
+	// loggerSP->addAttribute("v_line13", line13SP->attribute("v_intf"));
+	// loggerSP->addAttribute("i_line13", line13SP->attribute("i_intf"));
+	// loggerSP->addAttribute("v_line23", line23SP->attribute("v_intf"));
+	// loggerSP->addAttribute("i_line23", line23SP->attribute("i_intf"));
+	// loggerSP->addAttribute("Ep_gen1", gen1SP->attribute("Ep_mag"));
+	// loggerSP->addAttribute("Ep_gen2", gen2SP->attribute("Ep_mag"));
+	// loggerSP->addAttribute("v_gen1", gen1SP->attribute("v_intf"));
+	// loggerSP->addAttribute("i_gen1", gen1SP->attribute("i_intf"));
+	// loggerSP->addAttribute("wr_gen1", gen1SP->attribute("w_r"));
 	loggerSP->addAttribute("delta_gen1", gen1SP->attribute("delta_r"));
-	loggerSP->addAttribute("Ep_gen1", gen1SP->attribute("Ep_mag"));
-	loggerSP->addAttribute("v_gen2", gen2SP->attribute("v_intf"));
-	loggerSP->addAttribute("i_gen2", gen2SP->attribute("i_intf"));
-	loggerSP->addAttribute("wr_gen2", gen2SP->attribute("w_r"));
+
+	// loggerSP->addAttribute("v_gen2", gen2SP->attribute("v_intf"));
+	// loggerSP->addAttribute("i_gen2", gen2SP->attribute("i_intf"));
+	// loggerSP->addAttribute("wr_gen2", gen2SP->attribute("w_r"));
+	// loggerSP->addAttribute("wref_gen2", gen2SP->attribute("w_ref"));
 	loggerSP->addAttribute("delta_gen2", gen2SP->attribute("delta_r"));
-	loggerSP->addAttribute("Ep_gen2", gen2SP->attribute("Ep_mag"));
+	
 	////ADD LOAD v_intf & i_intf to log attributes
 	// loggerSP->addAttribute("v_load", loadSP->attribute("v_intf"));
 	// loggerSP->addAttribute("i_load", loadSP->attribute("i_intf"));
 	//Switch
-	loggerSP->addAttribute("i_fault", faultSP->attribute("i_intf"));
+	// loggerSP->addAttribute("i_fault", faultSP->attribute("i_intf"));
+	
+	// loggerSP->addAttribute("P_mech1", gen1SP->attribute("P_mech"));
+	// loggerSP->addAttribute("P_mech2", gen2SP->attribute("P_mech"));
 
-	loggerSP->addAttribute("P_elec2", gen2SP->attribute("P_elec"));
+	// loggerSP->addAttribute("P_elec1", gen1SP->attribute("P_elec"));
+	// loggerSP->addAttribute("P_elec2", gen2SP->attribute("P_elec"));
+
 
 	Simulation simSP(simNameSP, Logger::Level::debug);
 	simSP.setSystem(systemSP);
@@ -239,6 +259,7 @@ void SP_SynGenTrStab_3Bus_Fault(String simName, Real timeStep, Real finalTime, b
 	simSP.setFinalTime(finalTime);
 	simSP.setDomain(Domain::SP);
 	simSP.addLogger(loggerSP);
+	simSP.doSystemMatrixRecomputation(true);
 
 		// Events
 	if (startFaultEvent){
@@ -262,12 +283,12 @@ int main(int argc, char* argv[]) {
 
 	//Simultion parameters
 	String simName="SP_SynGenTrStab_3Bus_Fault";
-	Real finalTime = 20;
+	Real finalTime = 30;
 	Real timeStep = 0.001;
 	Bool startFaultEvent=true;
 	Bool endFaultEvent=true;
 	Real startTimeFault=10;
-	Real endTimeFault=10.1;
+	Real endTimeFault=10.2;
 	Real cmdInertia= 1.0;
 
 	CommandLineArgs args(argc, argv);
@@ -277,7 +298,11 @@ int main(int argc, char* argv[]) {
 		if (args.name != "dpsim")
 			simName = args.name;
 		if (args.options.find("SCALEINERTIA") != args.options.end())
-			cmdInertia = args.options["SCALEINERTIA"];		
+			cmdInertia = args.options["SCALEINERTIA"];
+		if (args.options.find("STARTTIMEFAULT") != args.options.end())
+			startTimeFault = args.options["STARTTIMEFAULT"];
+		if (args.options.find("ENDTIMEFAULT") != args.options.end())
+			endTimeFault = args.options["ENDTIMEFAULT"];	
 	}
 
 	SP_SynGenTrStab_3Bus_Fault(simName, timeStep, finalTime, startFaultEvent, endFaultEvent, startTimeFault, endTimeFault, cmdInertia);

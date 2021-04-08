@@ -17,7 +17,7 @@ Real nomOmega= nomFreq* 2*PI;
 Real H = 5;
 Real Xpd=0.31;
 Real Rs = 0.003*0;
-Real D = 1*50;
+Real D = 1.5;
 // Initialization parameters
 Real initMechPower= 300e6;
 Real initActivePower = 300e6;
@@ -37,10 +37,10 @@ Real lineConductance =0;
 Real Vslack = Vnom;
 
 //Switch to trigger fault at generator terminal
-Real SwitchOpen = 3e3;
+Real SwitchOpen = 1e6;
 Real SwitchClosed = 0.1;
 
-void DP_1ph_SynGenTrStab_Fault(String simName, Real timeStep, Real finalTime, bool startFaultEvent, bool endFaultEvent, Real startTimeFault, Real endTimeFault, Real cmdInertia) {
+void DP_1ph_SynGenTrStab_Fault(String simName, Real timeStep, Real finalTime, bool startFaultEvent, bool endFaultEvent, Real startTimeFault, Real endTimeFault, Real cmdInertia, Real cmdDamping) {
 	//  // ----- POWERFLOW FOR INITIALIZATION -----
 	Real timeStepPF = finalTime;
 	Real finalTimePF = finalTime+timeStepPF;
@@ -110,7 +110,7 @@ void DP_1ph_SynGenTrStab_Fault(String simName, Real timeStep, Real finalTime, bo
 	// Components
 	auto genDP = DP::Ph1::SynchronGeneratorTrStab::make("SynGen", Logger::Level::debug);
 	// Xpd is given in p.u of generator base at transfomer primary side and should be transformed to network side
-	genDP->setStandardParametersPU(nomPower, nomPhPhVoltRMS, nomFreq, Xpd*std::pow(t_ratio,2), cmdInertia*H, Rs, D );
+	genDP->setStandardParametersPU(nomPower, nomPhPhVoltRMS, nomFreq, Xpd*std::pow(t_ratio,2), cmdInertia*H, Rs, cmdDamping*D );
 	// Get actual active and reactive power of generator's Terminal from Powerflow solution
 	Complex initApparentPower= genPF->getApparentPower();
 	genDP->setInitialValues(initApparentPower, initMechPower);
@@ -121,9 +121,15 @@ void DP_1ph_SynGenTrStab_Fault(String simName, Real timeStep, Real finalTime, bo
 	// Line
 	auto lineDP = DP::Ph1::PiLine::make("PiLine", Logger::Level::debug);
 	lineDP->setParameters(lineResistance, lineInductance, lineCapacitance, lineConductance);
+	// //Switch
+	// auto faultDP = DP::Ph1::Switch::make("Br_fault", Logger::Level::debug);
+	// faultDP->setParameters(SwitchOpen, SwitchClosed);
+	// faultDP->open();
+
 	//Switch
-	auto faultDP = DP::Ph1::Switch::make("Br_fault", Logger::Level::debug);
+	auto faultDP = DP::Ph1::varResSwitch::make("Br_fault", Logger::Level::debug);
 	faultDP->setParameters(SwitchOpen, SwitchClosed);
+	faultDP->setInitParameters(timeStep);
 	faultDP->open();
 
 	// Topology
@@ -169,6 +175,7 @@ void DP_1ph_SynGenTrStab_Fault(String simName, Real timeStep, Real finalTime, bo
 	simDP.setFinalTime(finalTime);
 	simDP.setDomain(Domain::DP);
 	simDP.addLogger(loggerDP);
+	simDP.doSystemMatrixRecomputation(true);
 
 	// Events
 	if (startFaultEvent){
@@ -199,6 +206,7 @@ int main(int argc, char* argv[]) {
 	Real startTimeFault=10;
 	Real endTimeFault=10.2;
 	Real cmdInertia= 1.0;
+	Real cmdDamping=1.0;
 
 	CommandLineArgs args(argc, argv);
 	if (argc > 1) {
@@ -211,9 +219,11 @@ int main(int argc, char* argv[]) {
 		if (args.options.find("STARTTIMEFAULT") != args.options.end())
 			startTimeFault = args.options["STARTTIMEFAULT"];
 		if (args.options.find("ENDTIMEFAULT") != args.options.end())
-			endTimeFault = args.options["ENDTIMEFAULT"];	
+			endTimeFault = args.options["ENDTIMEFAULT"];
+		if (args.options.find("SCALEDAMPING") != args.options.end())
+			cmdDamping = args.options["SCALEDAMPING"];		
 	}
 
 
-	DP_1ph_SynGenTrStab_Fault(simName, timeStep, finalTime, startFaultEvent, endFaultEvent, startTimeFault, endTimeFault, cmdInertia);
+	DP_1ph_SynGenTrStab_Fault(simName, timeStep, finalTime, startFaultEvent, endFaultEvent, startTimeFault, endTimeFault, cmdInertia, cmdDamping);
 }

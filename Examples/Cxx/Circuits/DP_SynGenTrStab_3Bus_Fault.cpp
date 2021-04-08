@@ -17,7 +17,7 @@ Real nomFreq_G1 = 60;
 Real H_G1 = 6;
 Real Xpd_G1=0.3; //in p.u
 Real Rs_G1 = 0.003*0;
-Real Kd_G1 = 1;
+Real Kd_G1 = 1.5;
 // Initialization parameters 
 Real initActivePower_G1 = 270e6;
 Real initMechPower_G1 = 270e6;
@@ -31,7 +31,7 @@ Real nomFreq_G2 = 60;
 Real H_G2 = 2;
 Real Xpd_G2=0.1; //in p.u
 Real Rs_G2 = 0.003*0;
-Real Kd_G2 =1;
+Real Kd_G2 =1.5;
 // Initialization parameters 
 Real initActivePower_G2 = 45e6;
 // Real initReactivePower_G2 = 106e6;
@@ -122,7 +122,9 @@ void DP_SynGenTrStab_3Bus_Fault(String simName, Real timeStep, Real finalTime, b
 	line12PF->connect({ n1PF, n2PF });
 	line13PF->connect({ n1PF, n3PF });
 	line23PF->connect({ n2PF, n3PF });
-	faultPF->connect({SP::SimNode::GND , n2PF });
+	// faultPF->connect({SP::SimNode::GND , n1PF }); //terminal of generator 1
+	faultPF->connect({SP::SimNode::GND , n2PF }); //terminal of generator 2
+	// faultPF->connect({SP::SimNode::GND , n3PF }); //Load bus
 	auto systemPF = SystemTopology(60,
 			SystemNodeList{n1PF, n2PF, n3PF},
 			SystemComponentList{gen1PF, gen2PF, loadPF, line12PF, line13PF, line23PF, faultPF});
@@ -170,6 +172,8 @@ void DP_SynGenTrStab_3Bus_Fault(String simName, Real timeStep, Real finalTime, b
 	Complex initApparentPower_G2= gen2PF->getApparentPower();
 	gen2DP->setInitialValues(initApparentPower_G2, initMechPower_G2);
 
+	gen2DP->setReferenceOmega(gen1DP->attribute<Real>("w_r"), gen1DP->attribute<Real>("delta_r"));
+	
 	///Load
 	auto loadDP=DP::Ph1::RXLoad::make("Load", Logger::Level::debug);
 	loadDP->setParameters(activePower_L, reactivePower_L, Vnom);
@@ -184,9 +188,15 @@ void DP_SynGenTrStab_3Bus_Fault(String simName, Real timeStep, Real finalTime, b
 	auto line23DP = DP::Ph1::PiLine::make("PiLine23", Logger::Level::debug);
 	line23DP->setParameters(lineResistance23, lineInductance23, lineCapacitance23, lineConductance23);
 
+	// //Switch
+	// auto faultDP = DP::Ph1::Switch::make("Br_fault", Logger::Level::debug);
+	// faultDP->setParameters(SwitchOpen, SwitchClosed);
+	// faultDP->open();
+
 	//Switch
-	auto faultDP = DP::Ph1::Switch::make("Br_fault", Logger::Level::debug);
+	auto faultDP = DP::Ph1::varResSwitch::make("Br_fault", Logger::Level::debug);
 	faultDP->setParameters(SwitchOpen, SwitchClosed);
+	faultDP->setInitParameters(timeStep);
 	faultDP->open();
 
 		// Topology
@@ -196,7 +206,9 @@ void DP_SynGenTrStab_3Bus_Fault(String simName, Real timeStep, Real finalTime, b
 	line12DP->connect({ n1DP, n2DP });
 	line13DP->connect({ n1DP, n3DP });
 	line23DP->connect({ n2DP, n3DP });
-	faultDP->connect({DP::SimNode::GND , n2DP });
+	// faultDP->connect({DP::SimNode::GND , n1DP }); //terminal of generator 1
+	faultDP->connect({DP::SimNode::GND , n2DP }); //terminal of generator 2	
+	// faultDP->connect({DP::SimNode::GND , n3DP }); //Load bus
 	auto systemDP = SystemTopology(60,
 			SystemNodeList{n1DP, n2DP, n3DP},
 			SystemComponentList{gen1DP, gen2DP, loadDP, line12DP, line13DP, line23DP, faultDP});
@@ -207,32 +219,37 @@ void DP_SynGenTrStab_3Bus_Fault(String simName, Real timeStep, Real finalTime, b
 
 	// Logging
 	auto loggerDP = DataLogger::make(simNameDP);
-	loggerDP->addAttribute("v1", n1DP->attribute("v"));
-	loggerDP->addAttribute("v2", n2DP->attribute("v"));
-	loggerDP->addAttribute("v3", n3DP->attribute("v"));
-	loggerDP->addAttribute("v_line12", line12DP->attribute("v_intf"));
-	loggerDP->addAttribute("i_line12", line12DP->attribute("i_intf"));
-	loggerDP->addAttribute("v_line13", line13DP->attribute("v_intf"));
-	loggerDP->addAttribute("i_line13", line13DP->attribute("i_intf"));
-	loggerDP->addAttribute("v_line23", line23DP->attribute("v_intf"));
-	loggerDP->addAttribute("i_line23", line23DP->attribute("i_intf"));
-	loggerDP->addAttribute("v_gen1", gen1DP->attribute("v_intf"));
-	loggerDP->addAttribute("i_gen1", gen1DP->attribute("i_intf"));
-	loggerDP->addAttribute("wr_gen1", gen1DP->attribute("w_r"));
+	// loggerDP->addAttribute("v1", n1DP->attribute("v"));
+	// loggerDP->addAttribute("v2", n2DP->attribute("v"));
+	// loggerDP->addAttribute("v3", n3DP->attribute("v"));
+	// loggerDP->addAttribute("v_line12", line12DP->attribute("v_intf"));
+	// loggerDP->addAttribute("i_line12", line12DP->attribute("i_intf"));
+	// loggerDP->addAttribute("v_line13", line13DP->attribute("v_intf"));
+	// loggerDP->addAttribute("i_line13", line13DP->attribute("i_intf"));
+	// loggerDP->addAttribute("v_line23", line23DP->attribute("v_intf"));
+	// loggerDP->addAttribute("i_line23", line23DP->attribute("i_intf"));
+	// loggerDP->addAttribute("Ep_gen1", gen1DP->attribute("Ep_mag"));	
+	// loggerDP->addAttribute("Ep_gen2", gen2DP->attribute("Ep_mag"));
+	// loggerDP->addAttribute("v_gen1", gen1DP->attribute("v_intf"));
+	// loggerDP->addAttribute("i_gen1", gen1DP->attribute("i_intf"));
+	// loggerDP->addAttribute("wr_gen1", gen1DP->attribute("w_r"));
 	loggerDP->addAttribute("delta_gen1", gen1DP->attribute("delta_r"));
-	loggerDP->addAttribute("Ep_gen1", gen1DP->attribute("Ep_mag"));
-	loggerDP->addAttribute("v_gen2", gen2DP->attribute("v_intf"));
-	loggerDP->addAttribute("i_gen2", gen2DP->attribute("i_intf"));
-	loggerDP->addAttribute("wr_gen2", gen2DP->attribute("w_r"));
+	// loggerDP->addAttribute("v_gen2", gen2DP->attribute("v_intf"));
+	// loggerDP->addAttribute("i_gen2", gen2DP->attribute("i_intf"));
+	// loggerDP->addAttribute("wr_gen2", gen2DP->attribute("w_r"));
+	// loggerDP->addAttribute("wref_gen2", gen2DP->attribute("w_ref"));
 	loggerDP->addAttribute("delta_gen2", gen2DP->attribute("delta_r"));
-	loggerDP->addAttribute("Ep_gen2", gen2DP->attribute("Ep_mag"));
+
 	//Switch
-	loggerDP->addAttribute("i_fault", faultDP->attribute("i_intf"));
+	// loggerDP->addAttribute("i_fault", faultDP->attribute("i_intf"));
 	////ADD LOAD v_intf & i_intf to log attributes
 	// loggerDP->addAttribute("v_load", loadDP->attribute("v_intf"));
 	// loggerDP->addAttribute("i_load", loadDP->attribute("i_intf"));
+	// loggerDP->addAttribute("P_mech1", gen1DP->attribute("P_mech"));
+	// loggerDP->addAttribute("P_mech2", gen2DP->attribute("P_mech"));
 
-	loggerDP->addAttribute("P_elec2", gen2DP->attribute("P_elec"));
+	// loggerDP->addAttribute("P_elec1", gen1DP->attribute("P_elec"));
+	// loggerDP->addAttribute("P_elec2", gen2DP->attribute("P_elec"));
 
 	Simulation simDP(simNameDP, Logger::Level::debug);
 	simDP.setSystem(systemDP);
@@ -240,6 +257,7 @@ void DP_SynGenTrStab_3Bus_Fault(String simName, Real timeStep, Real finalTime, b
 	simDP.setFinalTime(finalTime);
 	simDP.setDomain(Domain::DP);
 	simDP.addLogger(loggerDP);
+	simDP.doSystemMatrixRecomputation(true);
 
 	// Events
 	if (startFaultEvent){
@@ -263,12 +281,12 @@ int main(int argc, char* argv[]) {
 
 	//Simultion parameters
 	String simName="DP_SynGenTrStab_3Bus_Fault";
-	Real finalTime = 20;
+	Real finalTime = 30;
 	Real timeStep = 0.001;
 	Bool startFaultEvent=true;
 	Bool endFaultEvent=true;
 	Real startTimeFault=10;
-	Real endTimeFault=10.1;
+	Real endTimeFault=10.2;
 	Real cmdInertia= 1.0;
 
 	CommandLineArgs args(argc, argv);
@@ -278,7 +296,11 @@ int main(int argc, char* argv[]) {
 		if (args.name != "dpsim")
 			simName = args.name;
 		if (args.options.find("SCALEINERTIA") != args.options.end())
-			cmdInertia = args.options["SCALEINERTIA"];		
+			cmdInertia = args.options["SCALEINERTIA"];
+		if (args.options.find("STARTTIMEFAULT") != args.options.end())
+			startTimeFault = args.options["STARTTIMEFAULT"];
+		if (args.options.find("ENDTIMEFAULT") != args.options.end())
+			endTimeFault = args.options["ENDTIMEFAULT"];	
 	}
 	
 	DP_SynGenTrStab_3Bus_Fault(simName, timeStep, finalTime, startFaultEvent, endFaultEvent, startTimeFault, endTimeFault, cmdInertia);

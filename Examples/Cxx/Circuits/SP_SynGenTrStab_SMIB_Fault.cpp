@@ -17,7 +17,7 @@ Real nomOmega= nomFreq* 2*PI;
 Real H = 5;
 Real Xpd=0.31;
 Real Rs = 0.003*0;
-Real D = 1*50;
+Real D = 1.5;
 // Initialization parameters
 Real initMechPower= 300e6;
 Real initActivePower = 300e6;
@@ -37,7 +37,7 @@ Real lineConductance =0;
 Real Vslack = Vnom;
 
 //Switch to trigger fault at generator terminal
-Real SwitchOpen = 3e3;
+Real SwitchOpen = 1e6;
 Real SwitchClosed = 0.1;
 
 void SP_1ph_SynGenTrStab_Fault(String simName, Real timeStep, Real finalTime, bool startFaultEvent, bool endFaultEvent, Real startTimeFault, Real endTimeFault, Real cmdInertia) {
@@ -121,9 +121,15 @@ void SP_1ph_SynGenTrStab_Fault(String simName, Real timeStep, Real finalTime, bo
 	// Line
 	auto lineSP = SP::Ph1::PiLine::make("PiLine", Logger::Level::debug);
 	lineSP->setParameters(lineResistance, lineInductance, lineCapacitance, lineConductance);
+	// //Switch
+	// auto faultSP = SP::Ph1::Switch::make("Br_fault", Logger::Level::debug);
+	// faultSP->setParameters(SwitchOpen, SwitchClosed);
+	// faultSP->open();
+
 	//Switch
-	auto faultSP = SP::Ph1::Switch::make("Br_fault", Logger::Level::debug);
+	auto faultSP = SP::Ph1::varResSwitch::make("Br_fault", Logger::Level::debug);
 	faultSP->setParameters(SwitchOpen, SwitchClosed);
+	faultSP->setInitParameters(timeStep);
 	faultSP->open();
 
 	// Topology
@@ -169,6 +175,7 @@ void SP_1ph_SynGenTrStab_Fault(String simName, Real timeStep, Real finalTime, bo
 	simSP.setFinalTime(finalTime);
 	simSP.setDomain(Domain::SP);
 	simSP.addLogger(loggerSP);
+	simSP.doSystemMatrixRecomputation(true);
 
 	// Events
 	if (startFaultEvent){
