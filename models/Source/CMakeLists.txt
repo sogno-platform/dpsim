@@ -101,6 +101,7 @@ list(APPEND CPS_SOURCES
 	SP/SP_Ph1_VDNode.cpp
 	SP/SP_Ph1_NetworkInjection.cpp
 	SP/SP_Ph1_SynchronGeneratorTrStab.cpp
+	SP/SP_Ph1_varResSwitch.cpp
 
 	SP/SP_Ph3_Capacitor.cpp
 	SP/SP_Ph3_Inductor.cpp

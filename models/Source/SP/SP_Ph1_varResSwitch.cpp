@@ -6,11 +6,11 @@
  * file, You can obtain one at https://mozilla.org/MPL/2.0/.
  *********************************************************************************/
 
-#include <cps/DP/DP_Ph1_varResSwitch.h>
+#include <cps/SP/SP_Ph1_varResSwitch.h>
 
 using namespace CPS;
 
-DP::Ph1::varResSwitch::varResSwitch(String uid, String name, Logger::Level logLevel)
+SP::Ph1::varResSwitch::varResSwitch(String uid, String name, Logger::Level logLevel)
 	: SimPowerComp<Complex>(uid, name, logLevel) {
 	setTerminalNumber(2);
     mIntfVoltage = MatrixComp::Zero(1,1);
@@ -19,15 +19,15 @@ DP::Ph1::varResSwitch::varResSwitch(String uid, String name, Logger::Level logLe
 	addAttribute<Real>("R_open", &mOpenResistance, Flags::read | Flags::write);
 	addAttribute<Real>("R_closed", &mClosedResistance, Flags::read | Flags::write);
 	addAttribute<Bool>("is_closed", &mIsClosed, Flags::read | Flags::write);
-	}
+}
 
-SimPowerComp<Complex>::Ptr DP::Ph1::varResSwitch::clone(String name) {
+SimPowerComp<Complex>::Ptr SP::Ph1::varResSwitch::clone(String name) {
 	auto copy = varResSwitch::make(name, mLogLevel);
 	copy->setParameters(mOpenResistance, mClosedResistance, mIsClosed);
 	return copy;
 }
 
-void DP::Ph1::varResSwitch::initializeFromNodesAndTerminals(Real frequency) {
+void SP::Ph1::varResSwitch::initializeFromNodesAndTerminals(Real frequency) {
 
 	// // This function is not used!!!!!!
 
@@ -39,7 +39,7 @@ void DP::Ph1::varResSwitch::initializeFromNodesAndTerminals(Real frequency) {
 }
 
 // #### MNA functions ####
-void DP::Ph1::varResSwitch::mnaInitialize(Real omega, Real timeStep, Attribute<Matrix>::Ptr leftVector) {
+void SP::Ph1::varResSwitch::mnaInitialize(Real omega, Real timeStep, Attribute<Matrix>::Ptr leftVector) {
 	MNAInterface::mnaInitialize(omega, timeStep);
 	updateMatrixNodeIndices();
 
@@ -47,7 +47,7 @@ void DP::Ph1::varResSwitch::mnaInitialize(Real omega, Real timeStep, Attribute<M
 	mRightVector = Matrix::Zero(leftVector->get().rows(), 1);
 }
 
-void DP::Ph1::varResSwitch::mnaApplySystemMatrixStamp(Matrix& systemMatrix) {
+void SP::Ph1::varResSwitch::mnaApplySystemMatrixStamp(Matrix& systemMatrix) {
 	Complex conductance = (mIsClosed) ?
 		Complex( 1./mClosedResistance, 0 ) : Complex( 1./mOpenResistance, 0 );
 
@@ -63,7 +63,7 @@ void DP::Ph1::varResSwitch::mnaApplySystemMatrixStamp(Matrix& systemMatrix) {
 	}
 }
 
-void DP::Ph1::varResSwitch::mnaApplySwitchSystemMatrixStamp(Matrix& systemMatrix, Bool closed) {
+void SP::Ph1::varResSwitch::mnaApplySwitchSystemMatrixStamp(Matrix& systemMatrix, Bool closed) {
 	Complex conductance = (closed) ?
 		Complex( 1./mClosedResistance, 0 ) :
 		Complex( 1./mOpenResistance, 0 );
@@ -91,9 +91,9 @@ void DP::Ph1::varResSwitch::mnaApplySwitchSystemMatrixStamp(Matrix& systemMatrix
 	}
 }
 
-void DP::Ph1::varResSwitch::mnaApplyRightSideVectorStamp(Matrix& rightVector) {}
+void SP::Ph1::varResSwitch::mnaApplyRightSideVectorStamp(Matrix& rightVector) {}
 
-void DP::Ph1::varResSwitch::mnaAddPostStepDependencies(AttributeBase::List &prevStepDependencies,
+void SP::Ph1::varResSwitch::mnaAddPostStepDependencies(AttributeBase::List &prevStepDependencies,
 	AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes,
 	Attribute<Matrix>::Ptr &leftVector) {
 
@@ -102,25 +102,25 @@ void DP::Ph1::varResSwitch::mnaAddPostStepDependencies(AttributeBase::List &prev
 	modifiedAttributes.push_back(attribute("i_intf"));
 }
 
-void DP::Ph1::varResSwitch::mnaPostStep(Real time, Int timeStepCount, Attribute<Matrix>::Ptr &leftVector) {
+void SP::Ph1::varResSwitch::mnaPostStep(Real time, Int timeStepCount, Attribute<Matrix>::Ptr &leftVector) {
 	mnaUpdateVoltage(*leftVector);
 	mnaUpdateCurrent(*leftVector);
 }
 
-void DP::Ph1::varResSwitch::mnaUpdateVoltage(const Matrix& leftVector) {
+void SP::Ph1::varResSwitch::mnaUpdateVoltage(const Matrix& leftVector) {
 	// Voltage across component is defined as V1 - V0
 	mIntfVoltage(0, 0) = 0;
 	if (terminalNotGrounded(1)) mIntfVoltage(0,0) = Math::complexFromVectorElement(leftVector, matrixNodeIndex(1));
 	if (terminalNotGrounded(0)) mIntfVoltage(0,0) = mIntfVoltage(0,0) - Math::complexFromVectorElement(leftVector, matrixNodeIndex(0));
 }
 
-void DP::Ph1::varResSwitch::mnaUpdateCurrent(const Matrix& leftVector) {
+void SP::Ph1::varResSwitch::mnaUpdateCurrent(const Matrix& leftVector) {
 	mIntfCurrent(0,0) = (mIsClosed) ?
 		mIntfVoltage(0,0) / mClosedResistance :
 		mIntfVoltage(0,0) / mOpenResistance;
 }
 
-Bool DP::Ph1::varResSwitch::hasParameterChanged() {
+Bool SP::Ph1::varResSwitch::hasParameterChanged() {
 //Get present state
 Bool presentState=this->mnaIsClosed();
 
@@ -156,7 +156,7 @@ else{
 	}
 }
 
-void DP::Ph1::varResSwitch::setInitParameters(Real timestep) {
+void SP::Ph1::varResSwitch::setInitParameters(Real timestep) {
 	//Define variables for the transition
 	mDeltaResClosed= 0;
 	// mDeltaResOpen = 1.5; // assumption for 1ms step size

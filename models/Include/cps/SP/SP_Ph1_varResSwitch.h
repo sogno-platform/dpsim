@@ -15,7 +15,7 @@
 #include <cps/Base/Base_Ph1_Switch.h>
 
 namespace CPS {
-namespace DP {
+namespace SP {
 namespace Ph1 {
 	/// \brief
 	///
@@ -33,7 +33,7 @@ namespace Ph1 {
 	
 	protected:
 
-		Bool mPrevState=false;
+		Bool mPrevState=false; 
 		Real mDeltaResClosed = 0; 
 		Real mDeltaResOpen = 1.5;
 		Real mPrevRes; // previous resistance value to multiply with rate of change
