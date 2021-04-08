@@ -25,6 +25,8 @@ SP::Ph1::SynchronGeneratorTrStab::SynchronGeneratorTrStab(String uid, String nam
 	addAttribute<Real>("P_mech", &mMechPower, Flags::read);
 	addAttribute<Real>("w_r", &mOmMech, Flags::read);
 	addAttribute<Real>("inertia", &mInertia, Flags::read | Flags::write);
+	addAttribute<Real>("w_ref", Flags::read | Flags::write);
+	addAttribute<Real>("delta_ref", Flags::read | Flags::write);
 
 	mStates = Matrix::Zero(10,1);
 }
@@ -53,6 +55,10 @@ void SP::Ph1::SynchronGeneratorTrStab::setFundamentalParametersPU(Real nomPower,
 	// X'd in absolute values
 	mXpd = mNomOmega * (mLd - mLmd*mLmd / mLfd) * mBase_L;
 	mLpd = (mLd - mLmd*mLmd / mLfd) * mBase_L;
+
+	//The units of D are per unit power divided by per unit speed deviation.
+	// D is transformed to an absolute value to obtain Kd, which will be used in the swing equation
+	mKd= D*mNomPower/mNomOmega;
 
 	mSLog->info("\n--- Parameters ---"
 				"\nimpedance: {:f}"
@@ -186,11 +192,30 @@ void SP::Ph1::SynchronGeneratorTrStab::step(Real time) {
 
 	// #### Calculate state for time step k+1 ####
 	// semi-implicit Euler or symplectic Euler method for mechanical equations
-	Real dOmMech = mNomOmega / (2.*mInertia * mNomPower) * (mMechPower - mElecActivePower - mKd*(mOmMech - mNomOmega));
+	// convert torque to power with rated rotor angular velocity
+	// Real dOmMech = mNomOmega / (2.*mInertia * mNomPower) * (mMechPower - mElecActivePower - mKd*(mOmMech - mNomOmega));
+
+	// convert torque to power with actual rotor angular velocity
+	Real dOmMech = mNomOmega*mNomOmega / (2.*mInertia * mNomPower*mOmMech) * (mMechPower - mElecActivePower - mKd*(mOmMech - mNomOmega));
+
 	if (mBehaviour == Behaviour::Simulation)
 		mOmMech = mOmMech + mTimeStep * dOmMech;
+
 	Real dDelta_p = mOmMech - mNomOmega;
+
+	Real refDelta=0;
+	
+		//if new reference is set, calculate delta with respect to reference 
+		if (msetOmegaRef)
+		{
+			Real refOmega= attribute<Real>("w_ref")->get();
+			dDelta_p = mOmMech - refOmega;
+
+			Real refDelta= attribute<Real>("delta_ref")->get();
+		}
+
 	if (mBehaviour == Behaviour::Simulation)
+		// mDelta_p = mDelta_p + mTimeStep * dDelta_p + refDelta;
 		mDelta_p = mDelta_p + mTimeStep * dDelta_p;
 	// Update emf - only phase changes
 	if (mBehaviour == Behaviour::Simulation)
@@ -256,4 +281,12 @@ void SP::Ph1::SynchronGeneratorTrStab::mnaUpdateCurrent(const Matrix& leftVector
 	SPDLOG_LOGGER_DEBUG(mSLog, "Read current from {:d}", matrixNodeIndex(0));
 	//Current flowing out of component
 	mIntfCurrent = mSubInductor->attribute<MatrixComp>("i_intf")->get();
+}
+
+void SP::Ph1::SynchronGeneratorTrStab::setReferenceOmega(Attribute<Real>::Ptr refOmegaPtr, Attribute<Real>::Ptr refDeltaPtr) {
+
+setAttributeRef("w_ref", refOmegaPtr);
+setAttributeRef("delta_ref", refDeltaPtr);
+msetOmegaRef=true;
+
 }

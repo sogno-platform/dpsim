@@ -49,6 +49,8 @@ namespace Ph1 {
 		std::shared_ptr<Inductor> mSubInductor;
 		// Logging
 		Matrix mStates;
+		// check if new reference has been set. If not w_syn will be used as reference
+		Bool msetOmegaRef= false;
 	public:
 		///
 		SynchronGeneratorTrStab(String uid, String name, Logger::Level logLevel = Logger::Level::off);
@@ -91,6 +93,8 @@ namespace Ph1 {
 		void mnaUpdateCurrent(const Matrix& leftVector);
 		///
 		void mnaUpdateVoltage(const Matrix& leftVector);
+
+		void setReferenceOmega(Attribute<Real>::Ptr refOmegaPtr, Attribute<Real>::Ptr refDeltaPtr);
 
 		class MnaPreStep : public Task {
 		public:
