@@ -33,7 +33,7 @@
 #include <dpsim/Interface.h>
 
 #ifdef WITH_SHMEM
-#include <villas-dpsim/InterfaceShmem.h>
+#include <dpsim-villas/InterfaceShmem.h>
 #endif
 
 namespace DPsim {

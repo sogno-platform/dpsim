@@ -218,7 +218,7 @@ if(WITH_PYBIND)
 	target_link_libraries(dpsimpy PRIVATE dpsim)
 
 	if(WITH_SHMEM)
-		pybind11_add_module(dpsimpyvillas ${CMAKE_BINARY_DIR}/_deps/villas-dpsim-src/src/dpsim-villas.cpp)
+		pybind11_add_module(dpsimpyvillas ${CMAKE_BINARY_DIR}/_deps/dpsim-villas-src/src/pybind-dpsim-villas.cpp)
 		target_link_libraries(dpsimpyvillas PRIVATE dpsim)
 	endif()	
 endif()
