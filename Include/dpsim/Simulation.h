@@ -106,7 +106,6 @@ namespace DPsim {
 		/// Task dependencies as incoming / outgoing edges
 		Scheduler::Edges mTaskInEdges, mTaskOutEdges;
 
-#ifdef WITH_SHMEM
 		struct InterfaceMapping {
 			/// A pointer to the external interface
 			Interface *interface;
@@ -116,7 +115,6 @@ namespace DPsim {
 
 		/// Vector of Interfaces
 		std::vector<InterfaceMapping> mInterfaces;
-#endif /* WITH_SHMEM */
 
 		struct LoggerMapping {
 			/// Simulation data logger
@@ -234,14 +232,13 @@ namespace DPsim {
 		/// Write step time measurements to log file
 		void logStepTimes(String logName);
 
-#ifdef WITH_SHMEM
 		///
 		void addInterface(Interface *eint, Bool syncStart = true) {
 			mInterfaces.push_back({eint, syncStart});
 		}
 		/// Return list of interfaces
 		std::vector<InterfaceMapping> & interfaces() { return mInterfaces; }
-#endif
+
 #ifdef WITH_GRAPHVIZ
 		///
 		CPS::Graph::Graph dependencyGraph();

@@ -229,8 +229,6 @@ void Simulation::createMNASolver() {
 }
 
 void Simulation::sync() {
-#ifdef WITH_SHMEM
-
 	int numOfSyncInterfaces = std::count_if(mInterfaces.begin(), mInterfaces.end(), [](InterfaceMapping ifm) {return ifm.syncStart;});
 	mLog->info("Start synchronization with remotes on {} interfaces", numOfSyncInterfaces);
 
@@ -247,7 +245,6 @@ void Simulation::sync() {
 	}
 
 	mLog->info("Synchronized simulation start with remotes");
-#endif
 }
 
 void Simulation::prepSchedule() {
@@ -259,13 +256,13 @@ void Simulation::prepSchedule() {
 			mTasks.push_back(t);
 		}
 	}
-#ifdef WITH_SHMEM
+
 	for (auto intfm : mInterfaces) {
 		for (auto t : intfm.interface->getTasks()) {
 			mTasks.push_back(t);
 		}
 	}
-#endif
+
 	for (auto logger : mLoggers) {
 		mTasks.push_back(logger->getTask());
 	}
@@ -406,14 +403,12 @@ void Simulation::start() {
 	if (!mInitialized)
 		initialize();
 
-#ifdef WITH_SHMEM
 	mLog->info("Opening interfaces.");
 
 	for (auto ifm : mInterfaces)
 		ifm.interface->open(mLog);
 
 	sync();
-#endif
 
 	mLog->info("Start simulation: {}", mName);
 }
@@ -421,10 +416,8 @@ void Simulation::start() {
 void Simulation::stop() {
 	mScheduler->stop();
 
-#ifdef WITH_SHMEM
 	for (auto ifm : mInterfaces)
 		ifm.interface->close();
-#endif
 
 	for (auto lg : mLoggers)
 		lg->close();
@@ -564,7 +557,6 @@ Complex Simulation::getComplexIdObjAttr(const String &comp, const String &attr, 
 }
 
 void Simulation::exportIdObjAttr(const String &comp, const String &attr, UInt idx, AttributeBase::Modifier mod, UInt row, UInt col) {
-#ifdef WITH_SHMEM
 	Bool found = false;
 	IdentifiedObject::Ptr compObj = mSystem.component<IdentifiedObject>(comp);
 	if (!compObj) compObj = mSystem.node<TopologicalNode>(comp);
@@ -630,7 +622,6 @@ void Simulation::exportIdObjAttr(const String &comp, const String &attr, UInt id
 	else {
 		mLog->error("Component not found");
 	}
-#endif
 }
 
 void Simulation::logIdObjAttr(const String &comp, const String &attr) {
