@@ -16,8 +16,6 @@
 #include <cps/CIM/Reader.h>
 #include <DPsim.h>
 
-#include <dpsim/InterfaceShmem.h>
-
 #include <cps/CSVReader.h>
 
 namespace py = pybind11;
@@ -89,9 +87,6 @@ PYBIND11_MODULE(dpsimpy, m) {
 		.def("list_idobjects", &DPsim::SystemTopology::listIdObjects);
 
 	py::class_<DPsim::Interface>(m, "Interface");
-
-	py::class_<DPsim::InterfaceShmem, DPsim::Interface>(m, "InterfaceShmem")
-	    .def(py::init<const CPS::String&, const CPS::String&>(), py::arg("shmwrite") = "/dpsim-villas", py::arg("shmread") = "/villas-dpsim");
 
 	py::class_<DPsim::DataLogger, std::shared_ptr<DPsim::DataLogger>>(m, "Logger")
         .def(py::init<std::string>())

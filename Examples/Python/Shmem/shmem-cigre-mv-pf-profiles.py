@@ -3,6 +3,7 @@ import urllib.request
 import glob
 
 import dpsimpy
+import dpsimpyvillas
 
 from multiprocessing import Process, Queue
 
@@ -110,7 +111,7 @@ def dpsim():
     logger = dpsimpy.Logger(name)
     sim.add_logger(logger)
 
-    intf = dpsimpy.InterfaceShmem()
+    intf = dpsimpyvillas.InterfaceShmem()
     sim.add_interface(intf)
 
     obj_list = system.list_idobjects()
