@@ -19,7 +19,7 @@
 // #############################################
 
 #include <cps/Logger.h>
-#include <villas-dpsim/PthreadPoolScheduler.h>
+#include <dpsim-villas/PthreadPoolScheduler.h>
 
 #include <iostream>
 

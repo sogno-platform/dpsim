@@ -20,7 +20,7 @@
 
 #include <spdlog/sinks/stdout_color_sinks.h>
 
-#include <villas-dpsim/InterfaceShmem.h>
+#include <dpsim-villas/InterfaceShmem.h>
 #include <cps/Logger.h>
 
 using namespace CPS;

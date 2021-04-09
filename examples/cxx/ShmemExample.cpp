@@ -17,7 +17,7 @@
 #include <fstream>
 
 #include <DPsim.h>
-#include <villas-dpsim/InterfaceShmem.h>
+#include <dpsim-villas/InterfaceShmem.h>
 
 using namespace DPsim;
 using namespace CPS::DP;
