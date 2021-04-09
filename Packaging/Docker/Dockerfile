@@ -27,7 +27,7 @@ CMD [ "jupyter", "lab", "--ip=0.0.0.0", "--allow-root", "--no-browser", "--LabAp
 LABEL \
 	org.label-schema.schema-version = "1.0" \
 	org.label-schema.name = "DPsim" \
-	org.label-schema.license = "GPL-3.0" \
+	org.label-schema.license = "MPL 2.0" \
 	org.label-schema.vendor = "Institute for Automation of Complex Power Systems, RWTH Aachen University" \
 	org.label-schema.author.name = "Markus Mirz" \
 	org.label-schema.author.email = "mmirz@eonerc.rwth-aachen.de" \

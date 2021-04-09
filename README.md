@@ -20,10 +20,7 @@ The DPsim [documentation source](https://github.com/dpsim-simulator/docs) reposi
 
 ## License
 
-Most of the DPsim source files are dual-licensed under the [MPL2](https://mozilla.org/MPL/2.0/) and [GPL3](http://www.gnu.org/licenses/).
-The project is released under the terms of the GPL3 due to its dependency on VILLASnode.
-
-For other licensing options, please consult [Prof. Antonello Monti](mailto:amonti@eonerc.rwth-aachen.de).
+The project is released under the terms of the [MPL 2.0](https://mozilla.org/MPL/2.0/).
 
 ## Contact
 

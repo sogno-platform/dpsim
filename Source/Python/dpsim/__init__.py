@@ -5,7 +5,7 @@
 __author__ = "Markus Mirz, Steffen Vogel"
 __copyright__ = "Copyright 2017-2018, Institute for Automation of Complex Power Systems, EONERC"
 __credits__ = [ "Georg Reinke", "Steffen Vogel", "Markus Mirz" ]
-__license__ = "GPL-3.0"
+__license__ = "MPL 2.0"
 __version__ = "0.1.0"
 __maintainer__ = "Steffen Vogel"
 __email__ = "stvogel@eonerc.rwth-aachen.de"

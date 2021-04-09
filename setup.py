@@ -118,7 +118,7 @@ setup(
     description='A real-time simulator that operates in the dynamic phasor as'
                 ' well as electromagentic transient domain',
     long_description_content_type='text/markdown',
-    license='GPL-3.0',
+    license='MPL 2.0',
     keywords='simulation power system real-time',
     url='https://www.fein-aachen.org/projects/dpsim/',
     packages=find_packages('Source/Python'),
@@ -130,7 +130,7 @@ setup(
     classifiers=[
         'Development Status :: 4 - Beta',
         'Topic :: Scientific/Engineering',
-        'License :: OSI Approved :: GNU General Public License v3 or later (GPLv3+)',
+        'License :: OSI Approved :: Mozilla Public License 2.0 (MPL 2.0)',
         'Operating System :: MacOS :: MacOS X',
         'Operating System :: Microsoft :: Windows',
         'Operating System :: POSIX :: Linux',

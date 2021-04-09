@@ -5,7 +5,7 @@ FROM rwthacs/dpsim:${DOCKER_TAG}
 LABEL \
 	org.label-schema.schema-version = "1.0" \
 	org.label-schema.name = "DPsim" \
-	org.label-schema.license = "GPL-3.0" \
+	org.label-schema.license = "MPL 2.0" \
 	org.label-schema.vendor = "Institute for Automation of Complex Power Systems, RWTH Aachen University" \
 	org.label-schema.author.name = "Steffen Vogel" \
 	org.label-schema.author.email = "stvogel@eonerc.rwth-aachen.de" \
