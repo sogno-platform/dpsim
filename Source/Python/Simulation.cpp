@@ -1,17 +1,9 @@
 /* Copyright 2017-2020 Institute for Automation of Complex Power Systems,
  *                     EONERC, RWTH Aachen University
- * DPsim
  *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * any later version.
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- * GNU General Public License for more details.
- * You should have received a copy of the GNU General Public License
- * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at https://mozilla.org/MPL/2.0/.
  *********************************************************************************/
 
 #include <chrono>
@@ -34,9 +26,6 @@
   #include <dpsim/OpenMPLevelScheduler.h>
 #endif
 
-#ifdef WITH_SHMEM
-  #include <dpsim-villas/PthreadPoolScheduler.h>
-#endif
 using namespace DPsim;
 using namespace CPS;
 
@@ -54,16 +43,6 @@ void Python::Simulation::threadFunction(Python::Simulation *self)
 	self->sim->initialize();
 
 	Timer timer(Timer::Flags::fail_on_overrun);
-
-#ifdef WITH_SHMEM
-	for (auto ifm : self->sim->interfaces())
-		ifm.interface->open(self->sim->mLog);
-
-	// optional start synchronization
-	if (self->startSync) {
-		self->sim->sync();
-	}
-#endif
 
 	if (self->realTime) {
 		timer.setStartTime(self->startTime);
@@ -123,11 +102,6 @@ void Python::Simulation::threadFunction(Python::Simulation *self)
 	}
 
 	self->sim->scheduler()->stop();
-
-#ifdef WITH_SHMEM
-	for (auto ifm : self->sim->interfaces())
-		ifm.interface->close();
-#endif
 
 	for (auto lg : self->sim->loggers())
 		lg->close();
@@ -396,44 +370,6 @@ fail:
 	return nullptr;
 }
 
-const char* Python::Simulation::docAddInterface =
-"add_interface(intf,sync_start=True)\n"
-"Add an external interface to the simulation. "
-"Before each timestep, values are read from this interface and results are written to this interface afterwards. "
-"See the documentation of `Interface` for more details.\n"
-"\n"
-":param intf: The `Interface` to be added.\n"
-":param sync_start: Whether to use the interface to synchronize at the start of the simulation.";
-PyObject* Python::Simulation::addInterface(Simulation* self, PyObject* args, PyObject *kwargs)
-{
-#ifdef WITH_SHMEM
-	PyObject* pyObj;
-	Python::Interface* pyIntf;
-	int start_sync = 1;
-
-	const char *kwlist[] = {"intf", "sync_start", nullptr};
-
-	if (!PyArg_ParseTupleAndKeywords(args, kwargs, "O|p", (char **) kwlist, &pyObj, &start_sync))
-		return nullptr;
-
-	if (!PyObject_TypeCheck(pyObj, &Python::Interface::type)) {
-		PyErr_SetString(PyExc_TypeError, "Argument must be dpsim.Interface");
-		return nullptr;
-	}
-
-	pyIntf = (Python::Interface*) pyObj;
-	self->sim->addInterface(pyIntf->intf.get(), start_sync);
-	Py_INCREF(pyObj);
-
-	self->refs.push_back(pyObj);
-
-	Py_RETURN_NONE;
-#else
-	PyErr_SetString(PyExc_NotImplementedError, "not implemented on this platform");
-	return nullptr;
-#endif
-}
-
 const char *Python::Simulation::docAddLogger =
 "add_logger(logger)";
 PyObject* Python::Simulation::addLogger(Simulation *self, PyObject *args, PyObject *kwargs)
@@ -656,15 +592,6 @@ PyObject* Python::Simulation::setScheduler(Simulation *self, PyObject *args, PyO
 	} else if (!strcmp(schedName, "omp_level")) {
 #ifdef WITH_OPENMP
 		self->sim->setScheduler(std::make_shared<OpenMPLevelScheduler>(threads, outMeasurementFile));
-#else
-		PyErr_SetString(PyExc_NotImplementedError, "not implemented on this platform");
-		return nullptr;
-#endif
-	} else if (!strcmp(schedName, "pthread_pool")) {
-#ifdef WITH_SHMEM
-		if (threads <= 0)
-			threads = 1;
-		self->sim->setScheduler(std::make_shared<PthreadPoolScheduler>(threads));
 #else
 		PyErr_SetString(PyExc_NotImplementedError, "not implemented on this platform");
 		return nullptr;

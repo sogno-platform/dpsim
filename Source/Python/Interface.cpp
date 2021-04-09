@@ -1,25 +1,12 @@
 /* Copyright 2017-2020 Institute for Automation of Complex Power Systems,
  *                     EONERC, RWTH Aachen University
- * DPsim
  *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * any later version.
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- * GNU General Public License for more details.
- * You should have received a copy of the GNU General Public License
- * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at https://mozilla.org/MPL/2.0/.
  *********************************************************************************/
 
 #include <dpsim/Config.h>
-
-#ifdef WITH_SHMEM
-  #include <dpsim-villas/InterfaceShmem.h>
-  #include <cps/AttributeList.h>
-#endif
 
 #include <dpsim/Python/Interface.h>
 #include <dpsim/Python/Component.h>
@@ -30,7 +17,6 @@ using namespace DPsim;
 
 void Python::Interface::addExportDesc(Python::Interface* self, int idx, const CPS::String &type, const CPS::String &name, const CPS::String &suffix)
 {
-#ifdef WITH_SHMEM
 	while (PyList_Size(self->pyExports) < idx + 1)
 		PyList_Append(self->pyExports, PyDict_New());
 
@@ -39,7 +25,6 @@ void Python::Interface::addExportDesc(Python::Interface* self, int idx, const CP
 	PyDict_SetItemString(pyExport, "type", PyUnicode_FromString(type.c_str()));
 
 	PyList_SetItem(self->pyExports, idx, pyExport);
-#endif
 }
 
 PyObject* Python::Interface::newfunc(PyTypeObject *type, PyObject *args, PyObject *kwds)
@@ -48,13 +33,11 @@ PyObject* Python::Interface::newfunc(PyTypeObject *type, PyObject *args, PyObjec
 
 	self = (Python::Interface*) type->tp_alloc(type, 0);
 	if (self) {
-#ifdef WITH_SHMEM
 		using SharedIntfPtr = std::shared_ptr<DPsim::Interface>;
 
 		new (&self->intf) SharedIntfPtr();
 
 		self->pyExports = PyList_New(0);
-#endif
 	}
 
 	return (PyObject*) self;
@@ -62,13 +45,11 @@ PyObject* Python::Interface::newfunc(PyTypeObject *type, PyObject *args, PyObjec
 
 void Python::Interface::dealloc(Python::Interface* self)
 {
-#ifdef WITH_SHMEM
 		using SharedIntfPtr = std::shared_ptr<DPsim::Interface>;
 
 		self->intf.~SharedIntfPtr();
 
 		Py_DECREF(self->pyExports);
-#endif
 
 	Py_TYPE(self)->tp_free((PyObject*) self);
 }
@@ -84,7 +65,6 @@ const char* Python::Interface::docAddImport =
 ":param imag_idx: Index of the imaginary part of the current or voltage.\n";
 PyObject* Python::Interface::addImport(Interface* self, PyObject* args, PyObject *kwargs)
 {
-#ifdef WITH_SHMEM
 	PyObject *pyObj;
 	int idx;
 	const char *attrName;
@@ -146,10 +126,6 @@ PyObject* Python::Interface::addImport(Interface* self, PyObject* args, PyObject
 	}
 
 	Py_RETURN_NONE;
-#else
-	PyErr_SetString(PyExc_NotImplementedError, "not implemented on this platform");
-	return nullptr;
-#endif
 }
 
 const char* Python::Interface::docAddExport =
@@ -162,7 +138,6 @@ const char* Python::Interface::docAddExport =
 ":param imag_idx: Index where the imaginary part of the voltage is written.\n";
 PyObject* Python::Interface::addExport(Interface* self, PyObject* args, PyObject* kwargs)
 {
-#ifdef WITH_SHMEM
 	PyObject* pyObj;
 	int idx;
 	const char *attrName;
@@ -299,15 +274,10 @@ PyObject* Python::Interface::addExport(Interface* self, PyObject* args, PyObject
 	}
 
 	Py_RETURN_NONE;
-#else
-	PyErr_SetString(PyExc_NotImplementedError, "not implemented on this platform");
-	return nullptr;
-#endif
 }
 
 int Python::Interface::init(Python::Interface *self, PyObject *args, PyObject *kwds)
 {
-#ifdef WITH_SHMEM
 	static const char *kwlist[] = {"wname", "rname", "queuelen", "samplelen", "polling", nullptr};
 
 	/* Default values */
@@ -320,24 +290,19 @@ int Python::Interface::init(Python::Interface *self, PyObject *args, PyObject *k
 		return -1;
 	}
 
-	self->intf = std::make_shared<DPsim::InterfaceShmem>(self->wname, self->rname, &self->conf);
+	// instantiate specific interface here
+	//self->intf = std::make_shared<DPsim::Interface>(self->wname, self->rname, &self->conf);
 
 	return 0;
-#else
-	PyErr_SetString(PyExc_NotImplementedError, "not implemented on this platform");
-	return -1;
-#endif
 }
 
 PyMemberDef Python::Interface::members[] = {
-#ifdef WITH_SHMEM
 	{(char *) "wname",     T_STRING, offsetof(Python::Interface, wname),          READONLY, nullptr},
 	{(char *) "rname",     T_STRING, offsetof(Python::Interface, rname),          READONLY, nullptr},
 	{(char *) "queuelen",  T_INT,    offsetof(Python::Interface, conf.queuelen),  READONLY, nullptr},
 	{(char *) "samplelen", T_INT,    offsetof(Python::Interface, conf.samplelen), READONLY, nullptr},
 	{(char *) "polling",   T_INT,    offsetof(Python::Interface, conf.polling),   READONLY, nullptr},
 	{(char *) "exports",   T_OBJECT, offsetof(Python::Interface, pyExports),      READONLY, nullptr},
-#endif
 	{nullptr}
 };
 

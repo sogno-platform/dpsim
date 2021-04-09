@@ -19,10 +19,6 @@ if(WIN32)
 	)
 endif()
 
-if(WITH_SHMEM)
-	target_sources(dpsim_python PUBLIC Interface.cpp)
-endif()
-
 target_link_libraries(dpsim_python dpsim cps ${LIBRARIES} ${WIN_LIBRARIES})
 target_include_directories(dpsim_python PRIVATE ${INCLUDE_DIRS})
 target_compile_options(dpsim_python PUBLIC ${DPSIM_CXX_FLAGS})
