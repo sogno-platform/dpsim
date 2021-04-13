@@ -128,10 +128,7 @@ else()
 	find_package(pybind11)
 endif()
 
-find_package (Python3 COMPONENTS Interpreter Development)
-if(Python3_FOUND)
-	set(Python_FOUND ON)
-endif()
+find_package (Python COMPONENTS Interpreter Development)
 
 if("${CMAKE_SYSTEM}" MATCHES "Linux")
 	set(Linux_FOUND ON)
