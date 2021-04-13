@@ -15,7 +15,6 @@
 #include <dpsim/Python/Simulation.h>
 #include <dpsim/Python/Logger.h>
 #include <dpsim/Python/Component.h>
-#include <dpsim/Python/Interface.h>
 #include <dpsim/RealTimeSimulation.h>
 #include <dpsim/SequentialScheduler.h>
 #include <dpsim/ThreadLevelScheduler.h>
@@ -707,7 +706,6 @@ PyGetSetDef Python::Simulation::getset[] = {
 };
 
 PyMethodDef Python::Simulation::methods[] = {
-	{"add_interface", (PyCFunction) Python::Simulation::addInterface, METH_VARARGS | METH_KEYWORDS, (char *) Python::Simulation::docAddInterface},
 	{"add_logger",    (PyCFunction) Python::Simulation::addLogger, METH_VARARGS | METH_KEYWORDS, (char *) Python::Simulation::docAddLogger},
 	{"add_event",     (PyCFunction) Python::Simulation::addEvent, METH_VARARGS, (char *) docAddEvent},
 	{"pause",         (PyCFunction) Python::Simulation::pause, METH_NOARGS, (char *) Python::Simulation::docPause},

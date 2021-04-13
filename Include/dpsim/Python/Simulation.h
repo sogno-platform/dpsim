@@ -68,7 +68,7 @@ namespace Python {
 
 		// List of additional objects that aren't directly used from Simulation
 		// methods, but that a reference has be kept to to avoid them from being
-		// freed (e.g. Interfaces).
+		// freed.
 		std::vector<PyObject*> refs;
 
 		/// Function executed by the simulation thread
@@ -85,7 +85,6 @@ namespace Python {
 		static void dealloc(Simulation *self);
 
 		// Methods that are actually available from Python
-		static PyObject* addInterface(Simulation *self, PyObject *args, PyObject *kwargs);
 		static PyObject* addLogger(Simulation* self, PyObject* args, PyObject *kwargs);
 		static PyObject* addEvent(Simulation* self, PyObject* args);
 		static PyObject* pause(Simulation *self, PyObject *args);
@@ -114,7 +113,6 @@ namespace Python {
 		static const char *docStop;
 		static const char *docReset;
 		static const char *docStep;
-		static const char *docAddInterface;
 		static const char *docAddEvent;
 		static const char *docAddLogger;
 		static const char *docAddEventFD;
