@@ -21,7 +21,6 @@
 #include <cps/SystemTopology.h>
 #include <cps/SimNode.h>
 #include <dpsim/Interface.h>
-#include <dpsim/Utils.h>
 #include <nlohmann/json.hpp>
 
 #ifdef WITH_GRAPHVIZ
@@ -31,6 +30,9 @@
 using json = nlohmann::json;
 
 namespace DPsim {
+	/// Forward declaration of CommandLineArgs from Utils
+	class CommandLineArgs;
+
 	/// \brief The Simulation holds a SystemTopology and a Solver.
 	///
 	/// Every time step, the Simulation calls the step function of the Solver.

@@ -37,33 +37,6 @@
 using namespace CPS;
 using namespace DPsim;
 
-Simulation::Simulation(String name, CommandLineArgs& args) :
-	mName(name),
-	mFinalTime(args.duration),
-	mTimeStep(args.timeStep),
-	mLogLevel(args.logLevel),
-	mDomain(args.solver.domain),
-	mSolverType(args.solver.type),
-	mMnaImpl(args.mnaImpl)
-	{
-
-	addAttribute<String>("name", &mName, Flags::read);
-	addAttribute<Real>("time_step", &mTimeStep, Flags::read);
-	addAttribute<Real>("final_time", &mFinalTime, Flags::read|Flags::write);
-	addAttribute<Bool>("steady_state_init", &mSteadyStateInit, Flags::read|Flags::write);
-	addAttribute<Bool>("split_subnets", &mSplitSubnets, Flags::read|Flags::write);
-	addAttribute<Real>("time_step", &mTimeStep, Flags::read);
-
-	Eigen::setNbThreads(1);
-
-	// Logging
-	mLog = Logger::get(name, mLogLevel, std::max(Logger::Level::info, mLogLevel));
-
-	mInitialized = false;
-}
-
-Simulation::Simulation(String name,	Logger::Level logLevel) :
-	mName(name), mLogLevel(logLevel) {
 Simulation::Simulation() {
 
 	addAttribute<String>("name", &mName, Flags::read);
@@ -78,13 +51,25 @@ Simulation::Simulation() {
 	mInitialized = false;
 }
 
-Simulation::Simulation(String name,	Logger::Level logLevel) : Simulation() {
-	
+Simulation::Simulation(String name,	Logger::Level logLevel) : Simulation::Simulation() {
 	mName = name;
 	mLogLevel = logLevel;
 
 	// Logging
 	mLog = Logger::get(mName, mLogLevel, std::max(Logger::Level::info, logLevel));
+}
+
+Simulation::Simulation(String name, CommandLineArgs& args) : Simulation::Simulation() {
+	mName = name;
+	mFinalTime = args.duration;
+	mTimeStep = args.timeStep;
+	mLogLevel = args.logLevel;
+	mDomain = args.solver.domain;
+	mSolverType = args.solver.type;
+	mMnaImpl = args.mnaImpl;
+
+	// Logging
+	mLog = Logger::get(name, mLogLevel, std::max(Logger::Level::info, mLogLevel));
 }
 
 Simulation::Simulation(String name, SystemTopology system,

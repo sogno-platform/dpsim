@@ -80,7 +80,7 @@ public:
 		Bool si = false,
 		CPS::Domain sd = CPS::Domain::DP,
 		Solver::Type st = Solver::Type::MNA,
-		MnaSolverFactory::MnaSolverImpl mi = MnaSolverFactory::mSupportedSolverImpls().back()
+		MnaSolverFactory::MnaSolverImpl mi = MnaSolverFactory::mSupportedSolverImpls().back(),
 		String params = "default.json"
 	);
 
