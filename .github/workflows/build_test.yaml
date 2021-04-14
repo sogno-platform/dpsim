@@ -56,12 +56,12 @@ jobs:
       uses: actions/cache@v2
       with:
         path: ${{ github.workspace }}/build
-        key: build-cache-${{ github.sha }}
+        key: build-cache-fedora-${{ github.sha }}
 
   linux-centos:
     name: Build on Linux centos
     runs-on: ubuntu-latest
-    container: registry.git.rwth-aachen.de/acs/public/simulation/dpsim/dpsim:dpsim-dev
+    container: registry.git.rwth-aachen.de/acs/public/simulation/dpsim/dpsim:dpsim-centos
     steps:
     - name: Checkout
       uses: actions/checkout@v2
@@ -87,7 +87,7 @@ jobs:
       uses: actions/cache@v2
       with:
         path: ${{ github.workspace }}/build
-        key: build-cache-${{ github.sha }}
+        key: build-cache-centos-${{ github.sha }}
 
 ## Tests ##
 
@@ -104,15 +104,15 @@ jobs:
       uses: actions/cache@v2
       with:
         path: ${{ github.workspace }}/build
-        key: build-cache-${{ github.sha }}
+        key: build-cache-centos-${{ github.sha }}
 
     - name: Run Binaries
       run: ./build/Examples/Cxx/WSCC_9bus_mult_coupled
 
   cpp-check:
     name: Scan Sourcecode with Cppcheck
-    runs-on: self-hosted
-    container: pfensch/dpsim:latest
+    runs-on: ubuntu-latest
+    container: registry.git.rwth-aachen.de/acs/public/simulation/dpsim/dpsim:dpsim-centos
     needs: [linux-centos]
     steps:
     - name: Checkout
