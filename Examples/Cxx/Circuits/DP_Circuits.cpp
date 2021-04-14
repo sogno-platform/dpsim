@@ -6,14 +6,13 @@
  * file, You can obtain one at https://mozilla.org/MPL/2.0/.
  *********************************************************************************/
 
+#include "dpsim/Utils.h"
 #include <DPsim.h>
 
 using namespace DPsim;
 using namespace CPS::DP;
 
-void DP_CS_R1() {
-	Real timeStep = 0.0001;
-	Real finalTime = 0.1;
+void DP_CS_R1(CommandLineArgs& args) {
 	String simName = "DP_CS_R1";
 	Logger::setLogDir("logs/"+simName);
 
@@ -37,15 +36,14 @@ void DP_CS_R1() {
 	logger->addAttribute("v1", n1->attribute("v"));
 	logger->addAttribute("i10", r1->attribute("i_intf"));
 
-	Simulation sim(simName, sys, timeStep, finalTime, Domain::DP, Solver::Type::MNA, Logger::Level::debug);
+	Simulation sim(simName, args);
+	sim.setSystem(sys);
 	sim.addLogger(logger);
 
 	sim.run();
 }
 
-void DP_VS_R1() {
-	Real timeStep = 0.0001;
-	Real finalTime = 0.1;
+void DP_VS_R1(CommandLineArgs& args) {
 	String simName = "DP_VS_R1";
 	Logger::setLogDir("logs/"+simName);
 
@@ -68,15 +66,14 @@ void DP_VS_R1() {
 	auto logger = DataLogger::make(simName);
 	logger->addAttribute("v1", n1->attribute("v"));
 
-	Simulation sim(simName, sys, timeStep, finalTime);
+	Simulation sim(simName, args);
+	sim.setSystem(sys);
 	sim.addLogger(logger);
 
 	sim.run();
 }
 
-void DP_CS_R2CL() {
-	Real timeStep = 0.0001;
-	Real finalTime = 0.1;
+void DP_CS_R2CL(CommandLineArgs& args) {
 	String simName = "DP_CS_R2CL";
 	Logger::setLogDir("logs/"+simName);
 
@@ -112,15 +109,14 @@ void DP_CS_R2CL() {
 	logger->addAttribute("i12", cs->attribute("i_intf"));
 	logger->addAttribute("i34", c1->attribute("i_intf"));
 
-	Simulation sim(simName, sys, timeStep, finalTime);
+	Simulation sim(simName, args);
+	sim.setSystem(sys);
 	sim.addLogger(logger);
 
 	sim.run();
 }
 
-void DP_VS_CS_R4() {
-	Real timeStep = 0.0001;
-	Real finalTime = 0.1;
+void DP_VS_CS_R4(CommandLineArgs& args) {
 	String simName = "DP_VS_CS_R4";
 	Logger::setLogDir("logs/"+simName);
 
@@ -162,15 +158,14 @@ void DP_VS_CS_R4() {
 	logger->addAttribute("i12", r1->attribute("i_intf"));
 	logger->addAttribute("i23", r3->attribute("i_intf"));
 
-	Simulation sim(simName, sys, timeStep, finalTime);
+	Simulation sim(simName, args);
+	sim.setSystem(sys);
 	sim.addLogger(logger);
 
 	sim.run();
 }
 
-void DP_VS_R2L3() {
-	Real timeStep = 0.0001;
-	Real finalTime = 0.1;
+void DP_VS_R2L3(CommandLineArgs& args) {
 	String simName = "DP_VS_R2L3";
 	Logger::setLogDir("logs/"+simName);
 
@@ -213,15 +208,14 @@ void DP_VS_R2L3() {
 	logger->addAttribute("i12", r1->attribute("i_intf"));
 	logger->addAttribute("i34", l3->attribute("i_intf"));
 
-	Simulation sim(simName, sys, timeStep, finalTime);
+	Simulation sim(simName, args);
+	sim.setSystem(sys);
 	sim.addLogger(logger);
 
 	sim.run();
 }
 
-void DP_VS_RC1() {
-	Real timeStep = 0.0001;
-	Real finalTime = 0.1;
+void DP_VS_RC1(CommandLineArgs& args) {
 	String simName = "DP_VS_RC1";
 	Logger::setLogDir("logs/"+simName);
 
@@ -250,15 +244,14 @@ void DP_VS_RC1() {
 	logger->addAttribute("v2", n2->attribute("v"));
 	logger->addAttribute("i12", r1->attribute("i_intf"));
 
-	Simulation sim(simName, sys, timeStep, finalTime);
+	Simulation sim(simName, args);
+	sim.setSystem(sys);
 	sim.addLogger(logger);
 
 	sim.run();
 }
 
-void DP_VS_RL2() {
-	Real timeStep = 0.0001;
-	Real finalTime = 0.1;
+void DP_VS_RL2(CommandLineArgs& args) {
 	String simName = "DP_VS_RL2";
 	Logger::setLogDir("logs/"+simName);
 
@@ -292,16 +285,15 @@ void DP_VS_RL2() {
 	logger->addAttribute("v2", n2->attribute("v"));
 	logger->addAttribute("i12", rL->attribute("i_intf"));
 
-	Simulation sim(simName, sys, timeStep, finalTime, Domain::DP, Solver::Type::MNA, Logger::Level::debug);
+	Simulation sim(simName, args);
+	sim.setSystem(sys);
 	sim.addLogger(logger);
 
 	sim.run();
 }
 
-void DP_Ph3_VS_R2L3() {
+void DP_Ph3_VS_R2L3(CommandLineArgs& args) {
 	// Define simulation scenario
-	Real timeStep = 0.0001;
-	Real finalTime = 0.1;
 	String simName = "DP_Ph3_VS_R2L3";
 	Logger::setLogDir("logs/" + simName);
 
@@ -355,19 +347,14 @@ void DP_Ph3_VS_R2L3() {
 	logger->addAttribute("i34", l3->attribute("i_intf"));
 
 
-	Simulation sim(simName, Logger::Level::info);
+	Simulation sim(simName, args);
 	sim.setSystem(sys);
 	sim.addLogger(logger);
-	sim.setDomain(Domain::DP);
-	sim.setTimeStep(timeStep);
-	sim.setFinalTime(finalTime);
 	sim.run();
 }
 
-void DP_Ph3_VS_RC1() {
+void DP_Ph3_VS_RC1(CommandLineArgs& args) {
 	// Define simulation scenario
-	Real timeStep = 0.0001;
-	Real finalTime = 0.1;
 	String simName = "DP_Ph3_VS_RC1";
 	Logger::setLogDir("logs/" + simName);
 
@@ -406,24 +393,27 @@ void DP_Ph3_VS_RC1() {
 	logger->addAttribute("v2", n2->attribute("v"));
 	logger->addAttribute("i12", r1->attribute("i_intf"));
 
-	Simulation sim(simName, Logger::Level::info);
+	Simulation sim(simName, args);
 	sim.setSystem(sys);
 	sim.addLogger(logger);
-	sim.setDomain(Domain::DP);
-	sim.setTimeStep(timeStep);
-	sim.setFinalTime(finalTime);
 	sim.run();
 }
 
 int main(int argc, char* argv[]) {
-	DP_CS_R1();
-	DP_VS_R1();
-	DP_CS_R2CL();
-	DP_VS_CS_R4();
-	DP_VS_R2L3();
-	DP_VS_RC1();
-	DP_VS_RL2();
+	CommandLineArgs args(argc, argv);
+	args.timeStep = 0.0001;
+	args.duration = 0.1;
+	args.solver.domain = Domain::DP;
+	args.solver.type = Solver::Type::MNA;
 
-	DP_Ph3_VS_R2L3();
-	DP_Ph3_VS_RC1();
+	DP_CS_R1(args);
+	DP_VS_R1(args);
+	DP_CS_R2CL(args);
+	DP_VS_CS_R4(args);
+	DP_VS_R2L3(args);
+	DP_VS_RC1(args);
+	DP_VS_RL2(args);
+
+	DP_Ph3_VS_R2L3(args);
+	DP_Ph3_VS_RC1(args);
 }
