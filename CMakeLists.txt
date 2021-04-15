@@ -137,7 +137,7 @@ elseif("${CMAKE_SYSTEM}" MATCHES "Darwin")
 endif()
 
 option(BUILD_SHARED_LIBS 	"Build shared library"             	OFF)
-option(BUILD_EXAMPLES    	"Build C++ examples"               	ON )
+option(DPSIM_BUILD_EXAMPLES    	"Build C++ examples"               	ON )
 option(GET_GRID_DATA     	"Download grid data"               	ON )
 
 # WITH_SPARSE and WITH_CUDA can be combined
@@ -204,9 +204,9 @@ add_subdirectory(models)
 add_subdirectory(Source)
 add_subdirectory(docs)
 
-if(BUILD_EXAMPLES)
+if(DPSIM_BUILD_EXAMPLES)
 	add_subdirectory(Examples)
-endif(BUILD_EXAMPLES)
+endif(DPSIM_BUILD_EXAMPLES)
 
 if(WITH_PYBIND)
 	set(PYBIND11_CPP_STANDARD -std=c++11)
