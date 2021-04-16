@@ -64,7 +64,7 @@ namespace Ph3 {
 		///
 		Matrix parkTransformPowerInvariant(Real theta, const Matrix &fabc);
 		///
-		Matrix getInverseParkTransformMatrixPowerInvariant(Real theta);
+		Matrix getParkTransformMatrixPowerInvariant(Real theta);
 
 		// #### General Functions ####
 		///

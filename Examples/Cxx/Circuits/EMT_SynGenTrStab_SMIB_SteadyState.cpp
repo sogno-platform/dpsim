@@ -86,7 +86,7 @@ void EMT_1ph_SynGenTrStab_SteadyState(String simName, Real timeStep, Real finalT
 	simPF.setFinalTime(finalTimePF);
 	simPF.setDomain(Domain::SP);
 	simPF.setSolverType(Solver::Type::NRP);
-	simPF.doPowerFlowInit(false);
+	simPF.doInitFromNodesAndTerminals(false);
 	simPF.addLogger(loggerPF);
 	simPF.run();
 
@@ -156,7 +156,6 @@ void EMT_1ph_SynGenTrStab_SteadyState(String simName, Real timeStep, Real finalT
 	simEMT.setTimeStep(timeStep);
 	simEMT.setFinalTime(finalTime);
 	simEMT.setDomain(Domain::EMT);
-	simEMT.doPowerFlowInit(false);
 	simEMT.addLogger(loggerEMT);
 
 	simEMT.run();

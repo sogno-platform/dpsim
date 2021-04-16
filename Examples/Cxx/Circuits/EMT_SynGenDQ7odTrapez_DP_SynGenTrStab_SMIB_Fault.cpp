@@ -380,7 +380,7 @@ void SP_1ph_SynGenTrStab_Fault(Real timeStep, Real finalTime, bool startFaultEve
 	simPF.setFinalTime(finalTimePF);
 	simPF.setDomain(Domain::SP);
 	simPF.setSolverType(Solver::Type::NRP);
-	simPF.doPowerFlowInit(false);
+	simPF.doInitFromNodesAndTerminals(false);
 	simPF.addLogger(loggerPF);
 	simPF.run();
 
@@ -451,7 +451,6 @@ void SP_1ph_SynGenTrStab_Fault(Real timeStep, Real finalTime, bool startFaultEve
 	sim.setTimeStep(timeStep);
 	sim.setFinalTime(finalTime);
 	sim.setDomain(Domain::SP);
-	//sim.doPowerFlowInit(false);
 	sim.addLogger(logger);
 	sim.doSystemMatrixRecomputation(true);
 
