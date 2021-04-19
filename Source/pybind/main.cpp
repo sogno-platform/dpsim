@@ -56,6 +56,7 @@ PYBIND11_MODULE(dpsimpy, m) {
 		.def("get_comp_idobj_attr", &DPsim::Simulation::getComplexIdObjAttr, py::arg("obj"), py::arg("attr"), py::arg("row") = 0, py::arg("col") = 0)
 		.def("add_interface", &DPsim::Simulation::addInterface, py::arg("interface"), py::arg("syncStart") = false)
 		.def("export_attr", &DPsim::Simulation::exportIdObjAttr, py::arg("obj"), py::arg("attr"), py::arg("idx"), py::arg("modifier"), py::arg("row") = 0, py::arg("col") = 0)
+		.def("import_attr", &DPsim::Simulation::importIdObjAttr, py::arg("obj"), py::arg("attr"), py::arg("idx"))
 		.def("log_attr", &DPsim::Simulation::logIdObjAttr);
 
 	py::class_<DPsim::RealTimeSimulation, DPsim::Simulation>(m, "RealTimeSimulation")

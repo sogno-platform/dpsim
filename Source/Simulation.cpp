@@ -616,6 +616,32 @@ void Simulation::exportIdObjAttr(const String &comp, const String &attr, UInt id
 	}
 }
 
+void Simulation::importIdObjAttr(const String &comp, const String &attr, UInt idx) {
+	Bool found = false;
+	IdentifiedObject::Ptr compObj = mSystem.component<IdentifiedObject>(comp);
+	if (!compObj) compObj = mSystem.node<TopologicalNode>(comp);
+
+	if (compObj) {
+		try {
+			auto v = compObj->attribute<Real>(attr);
+			compObj->setAttributeRef(attr, mInterfaces[0].interface->importReal(idx));
+			found = true;
+		} catch (InvalidAttributeException &e) { }
+
+		try {
+			auto v = compObj->attributeComplex(attr);			
+			compObj->setAttributeRef(attr, mInterfaces[0].interface->importComplex(idx));
+			found = true;				
+		} catch (InvalidAttributeException &e) { }		
+
+		if (!found) mLog->error("Attribute not found");
+	}
+	else {
+		mLog->error("Component not found");
+	}
+}
+
+
 void Simulation::logIdObjAttr(const String &comp, const String &attr) {
 	IdentifiedObject::Ptr compObj = mSystem.component<IdentifiedObject>(comp);
 	IdentifiedObject::Ptr nodeObj = mSystem.node<TopologicalNode>(comp);
