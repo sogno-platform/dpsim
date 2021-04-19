@@ -53,6 +53,23 @@ public:
 		Real sf = 50,
 		Int s = -1,
 		CPS::Logger::Level ll = CPS::Logger::Level::info,
+		CPS::Logger::Level clill = CPS::Logger::Level::off,
+		Bool ss = false,
+		Bool b = false,
+		Bool si = false,
+		CPS::Domain sd = CPS::Domain::DP,
+		Solver::Type st = Solver::Type::MNA,
+		MnaSolverFactory::MnaSolverImpl mi = MnaSolverFactory::mSupportedSolverImpls().back()
+	);
+	CommandLineArgs(
+		/* Default settings */
+		String name = "dpsim",
+		Real dt = 0.001,
+		Real d = 1,
+		Real sf = 50,
+		Int s = -1,
+		CPS::Logger::Level ll = CPS::Logger::Level::info,
+		CPS::Logger::Level clill = CPS::Logger::Level::off,
 		Bool ss = false,
 		Bool b = false,
 		Bool si = false,
@@ -61,6 +78,7 @@ public:
 		MnaSolverFactory::MnaSolverImpl mi = MnaSolverFactory::mSupportedSolverImpls().back()
 	);
 
+	void parseArguments(int argc, char *argv[]);
 	void showUsage();
 	void showCopyright();
 
@@ -70,6 +88,7 @@ public:
 	int scenario;
 
 	CPS::Logger::Level logLevel;
+	CPS::Logger::Level cliLogLevel;
 	String name;
 
 	bool startSynch;

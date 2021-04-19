@@ -29,6 +29,7 @@ CommandLineArgs::CommandLineArgs(int argc, char *argv[],
 		Real sf,
 		Int s,
 		CPS::Logger::Level ll,
+		CPS::Logger::Level clill,
 		Bool ss,
 		Bool b,
 		Bool si,
@@ -61,6 +62,7 @@ CommandLineArgs::CommandLineArgs(int argc, char *argv[],
 	sysFreq(sf),
 	scenario(s),
 	logLevel(ll),
+	cliLogLevel(clill),
 	name(nm),
 	startSynch(ss),
 	blocking(b),
@@ -68,6 +70,62 @@ CommandLineArgs::CommandLineArgs(int argc, char *argv[],
 	solver{sd, st},
 	mnaImpl(mi)
 {
+	parseArguments(argc, argv);
+}
+
+CommandLineArgs::CommandLineArgs(
+		String nm,
+		Real dt,
+		Real d,
+		Real sf,
+		Int s,
+		CPS::Logger::Level ll,
+		CPS::Logger::Level clill,
+		Bool ss,
+		Bool b,
+		Bool si,
+		CPS::Domain sd,
+		Solver::Type st,
+		MnaSolverFactory::MnaSolverImpl mi
+		) :
+	mProgramName("dpsim"),
+	mArguments {
+		{ "start-synch",	no_argument,		0, 'S', NULL, "" },
+		{ "steady-init",	no_argument,		0, 'I', NULL, "" },
+		{ "blocking",		no_argument,		0, 'b', NULL, "" },
+		{ "help",		no_argument,		0, 'h', NULL, "" },
+		{ "timestep",		required_argument,	0, 't', "SECS", "Simulation time-step" },
+		{ "duration",		required_argument,	0, 'd', "SECS", "Simulation duration" },
+		{ "system-freq",	required_argument,	0, 'f', "HZ", "System Frequency" },
+		{ "scenario",		required_argument,	0, 's', "NUM", "Scenario selection" },
+		{ "log-level",		required_argument,	0, 'l', "(NONE|INFO|DEBUG|WARN|ERR)", "Logging level" },
+		{ "start-at",		required_argument,	0, 'a', "ISO8601", "Start time of real-time simulation" },
+		{ "start-in",		required_argument,	0, 'i', "SECS", "" },
+		{ "solver-domain",	required_argument,	0, 'D', "(SP|DP|EMT)", "Domain of solver" },
+		{ "solver-type",	required_argument,	0, 'T', "(NRP|MNA)", "Type of solver" },
+		{ "solver-mna-impl", required_argument, 0, 'U', "(EigenDense|EigenSparse|CUDADense|CUDASparse)", "Type of MNA Solver implementation"},
+		{ "option",		required_argument,	0, 'o', "KEY=VALUE", "User-definable options" },
+		{ "name",		required_argument,	0, 'n', "NAME", "Name of log files" },
+		{ 0 }
+	},
+	timeStep(dt),
+	duration(d),
+	sysFreq(sf),
+	scenario(s),
+	logLevel(ll),
+	cliLogLevel(clill),
+	name(nm),
+	startSynch(ss),
+	blocking(b),
+	steadyInit(si),
+	solver{sd, st},
+	mnaImpl(mi)
+{
+}
+
+void CommandLineArgs::parseArguments(int argc, char *argv[])
+{
+	mProgramName = argv[0];
 	std::vector<option> long_options;
 	for (auto a : mArguments)
 		long_options.push_back({ a.name, a.has_arg, a.flag, a.val});

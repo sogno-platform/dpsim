@@ -400,11 +400,12 @@ void DP_Ph3_VS_RC1(CommandLineArgs& args) {
 }
 
 int main(int argc, char* argv[]) {
-	CommandLineArgs args(argc, argv);
+	CommandLineArgs args;
 	args.timeStep = 0.0001;
 	args.duration = 0.1;
 	args.solver.domain = Domain::DP;
 	args.solver.type = Solver::Type::MNA;
+	args.parseArguments(argc, argv);
 
 	DP_CS_R1(args);
 	DP_VS_R1(args);
