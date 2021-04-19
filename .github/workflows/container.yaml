@@ -1,6 +1,9 @@
 name: Container
+
 on:
-  [push]
+  push:
+    branches:
+      - master
 
 jobs:
   create-docker-centos:

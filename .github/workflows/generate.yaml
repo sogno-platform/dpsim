@@ -1,11 +1,9 @@
 name: Generate
+
 on:
-  [push]
-# Works only on master?!
-# workflow_run:
-#   workflows: ["Build & Test"]
-#   types:
-#   - completed
+  push:
+    branches:
+      - master
 
 jobs:
   generate-docs:
