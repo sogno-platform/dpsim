@@ -1,14 +1,15 @@
 name: Generate
 
 on:
-  push:
-    branches:
-      - master
+  workflow_run:
+      workflows: ["Container"]
+      branches: [master]
+      types: [completed]
 
 jobs:
   generate-docs:
     runs-on: ubuntu-latest
-    container: registry.git.rwth-aachen.de/acs/public/simulation/dpsim/dpsim:dpsim-dev
+    container: sogno/dpsim:dev
     steps:
     - name: Checkout
       uses: actions/checkout@v2

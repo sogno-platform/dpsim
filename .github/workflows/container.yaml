@@ -16,8 +16,8 @@ jobs:
         uses: docker/login-action@v1 
         with:
           registry: registry.git.rwth-aachen.de
-          username: ${{ secrets.RWTH_GITLAB_REGISTRY_USER }}
-          password: ${{ secrets.RWTH_GITLAB_REGISTRY }}
+          username: ${{ secrets.DOCKERHUB_USER }}
+          password: ${{ secrets.DOCKERHUB_SECRET }}
 
       - name: Build and push
         id: docker_build
@@ -25,7 +25,7 @@ jobs:
         with:
          file: Packaging/Docker/Dockerfile.dev-centos
          push: true
-         tags: registry.git.rwth-aachen.de/acs/public/simulation/dpsim/dpsim:dpsim-centos
+         tags: sogno/dpsim:dev-centos
 
   create-docker-fedora-dev:
     runs-on: ubuntu-latest
@@ -37,8 +37,8 @@ jobs:
         uses: docker/login-action@v1 
         with:
           registry: registry.git.rwth-aachen.de
-          username: ${{ secrets.RWTH_GITLAB_REGISTRY_USER }}
-          password: ${{ secrets.RWTH_GITLAB_REGISTRY }}
+          username: ${{ secrets.DOCKERHUB_USER }}
+          password: ${{ secrets.DOCKERHUB_SECRET }}
 
       - name: Build and push
         id: docker_build
@@ -46,5 +46,5 @@ jobs:
         with:
          file: Packaging/Docker/Dockerfile.dev
          push: true
-         tags: registry.git.rwth-aachen.de/acs/public/simulation/dpsim/dpsim:dpsim-dev
+         tags: sogno/dpsim:dev
 

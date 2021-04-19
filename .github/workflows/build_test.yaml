@@ -1,12 +1,10 @@
 name: Build & Test
-on:
-  [push]
-# Works only on master?!
-# workflow_run:
-#   workflows: ["Container"]
-#   types:
-#   - completed
 
+on:
+  workflow_run:
+      workflows: ["Container"]
+      branches: [master]
+      types: [completed]
 
 ## Build ##
 
@@ -30,7 +28,7 @@ jobs:
   linux-fedora:
     name: Build on Linux fedora
     runs-on: ubuntu-latest
-    container: registry.git.rwth-aachen.de/acs/public/simulation/dpsim/dpsim:dpsim-dev
+    container: sogno/dpsim:dev
     steps:
     - name: Checkout
       uses: actions/checkout@v2
@@ -61,7 +59,7 @@ jobs:
   linux-centos:
     name: Build on Linux centos
     runs-on: ubuntu-latest
-    container: registry.git.rwth-aachen.de/acs/public/simulation/dpsim/dpsim:dpsim-centos
+    container: sogno/dpsim:dev-centos
     steps:
     - name: Checkout
       uses: actions/checkout@v2
@@ -94,7 +92,7 @@ jobs:
   test-binaries:
     name: Execute Example
     runs-on: ubuntu-latest
-    container: registry.git.rwth-aachen.de/acs/public/simulation/dpsim/dpsim:dpsim-centos
+    container: sogno/dpsim:dev-centos
     needs: [linux-centos]
     steps:
     - name: Checkout
@@ -112,7 +110,7 @@ jobs:
   cpp-check:
     name: Scan Sourcecode with Cppcheck
     runs-on: ubuntu-latest
-    container: registry.git.rwth-aachen.de/acs/public/simulation/dpsim/dpsim:dpsim-centos
+    container: sogno/dpsim:dev-centos
     needs: [linux-centos]
     steps:
     - name: Checkout
