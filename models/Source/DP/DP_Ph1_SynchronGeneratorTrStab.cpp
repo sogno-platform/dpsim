@@ -160,13 +160,10 @@ void DP::Ph1::SynchronGeneratorTrStab::initializeFromNodesAndTerminals(Real freq
 
 	// Update active electrical power that is compared with the mechanical power
 	mElecActivePower = ( mIntfVoltage(0,0) *  std::conj( -mIntfCurrent(0,0)) ).real();
-	//mElecActivePower = ( (mEp - mIntfVoltage(0,0)) / mImpedance *  mIntfVoltage(0,0) ).real();
-	// For infinite power bus
-	//mElecActivePower = (Math::abs(mEp) * Math::abs(mIntfVoltage(0,0)) / mXpd) * sin(mDelta_p);
 
 	// Start in steady state so that electrical and mech. power are the same
 	// because of the initial condition mOmMech = mNomOmega the damping factor is not considered at the initialisation
-	mMechPower = mElecActivePower - mKd*(mOmMech - mNomOmega);
+	mMechPower = mElecActivePower;
 
 	// Initialize node between X'd and Ep
 	mVirtualNodes[0]->setInitialVoltage(mEp);
@@ -201,43 +198,38 @@ void DP::Ph1::SynchronGeneratorTrStab::initializeFromNodesAndTerminals(Real freq
 
 void DP::Ph1::SynchronGeneratorTrStab::step(Real time) {
 
-	// #### Calculations on input of time step k ####
-	// Update electrical power
-	//mElecActivePower = ( (mEp - mIntfVoltage(0,0)) / mImpedance *  mIntfVoltage(0,0) ).real();
+	// #### Calculations based on values from time step k ####
+	// Electrical power at time step k
 	mElecActivePower = (mIntfVoltage(0,0) *  std::conj( -mIntfCurrent(0,0)) ).real();
-	// For infinite power bus
-	//mElecActivePower = (Math::abs(mEp) * Math::abs(mIntfVoltage(0,0)) / mXpd)* sin(mDelta_p);
 
-	// #### Calculate state for time step k+1 ####
-	// semi-implicit Euler or symplectic Euler method for mechanical equations
-	// convert torque to power with rated rotor angular velocity
-	// Real dOmMech = mNomOmega / (2.*mInertia * mNomPower) * (mMechPower - mElecActivePower - mKd*(mOmMech - mNomOmega));
-
+	// Mechanical speed derivative at time step k
 	// convert torque to power with actual rotor angular velocity
 	Real dOmMech = mNomOmega*mNomOmega / (2.*mInertia * mNomPower*mOmMech) * (mMechPower - mElecActivePower - mKd*(mOmMech - mNomOmega));
 
-
+	// #### Calculate states for time step k+1 applying semi-implicit Euler ####
+	// Mechanical speed at time step k+1 applying Euler forward
 	if (mBehaviour == Behaviour::Simulation)
 		mOmMech = mOmMech + mTimeStep * dOmMech;
 	
-	Real dDelta_p = mOmMech - mNomOmega;
-	Real refDelta=0;
-	
-		//if new reference is set, calculate delta with respect to reference 
-		if (msetOmegaRef)
-		{
-			Real refOmega= attribute<Real>("w_ref")->get();
-			dDelta_p = mOmMech - refOmega;
+	// Derivative of rotor angle at time step k + 1
+	// if reference omega is set, calculate delta with respect to reference 
+	Real refOmega;
+	Real refDelta;
+	if (mUseOmegaRef) {
+		refOmega = attribute<Real>("w_ref")->get();
+		refDelta = attribute<Real>("delta_ref")->get();
+	} else {
+		refOmega = mNomOmega;
+		refDelta = 0;
+	}
+	Real dDelta_p = mOmMech - refOmega;
 
-			Real refDelta= attribute<Real>("delta_ref")->get();
-		}
-
-	if (mBehaviour == Behaviour::Simulation)
-		// mDelta_p = mDelta_p + mTimeStep * dDelta_p + refDelta;
-		mDelta_p = mDelta_p + mTimeStep * dDelta_p;
+	// Rotor angle at time step k + 1 applying Euler backward
 	// Update emf - only phase changes
-	if (mBehaviour == Behaviour::Simulation)
+	if (mBehaviour == Behaviour::Simulation) {
+		mDelta_p = mDelta_p + mTimeStep * dDelta_p;
 		mEp = Complex(mEp_abs * cos(mDelta_p), mEp_abs * sin(mDelta_p));
+	}		
 
 	mStates << Math::abs(mEp), Math::phaseDeg(mEp), mElecActivePower, mMechPower,
 		mDelta_p, mOmMech, dOmMech, dDelta_p, mIntfVoltage(0,0).real(), mIntfVoltage(0,0).imag();
@@ -302,9 +294,9 @@ void DP::Ph1::SynchronGeneratorTrStab::mnaUpdateCurrent(const Matrix& leftVector
 }
 
 void DP::Ph1::SynchronGeneratorTrStab::setReferenceOmega(Attribute<Real>::Ptr refOmegaPtr, Attribute<Real>::Ptr refDeltaPtr) {
+	setAttributeRef("w_ref", refOmegaPtr);
+	setAttributeRef("delta_ref", refDeltaPtr);
+	mUseOmegaRef=true;
 
-setAttributeRef("w_ref", refOmegaPtr);
-setAttributeRef("delta_ref", refDeltaPtr);
-msetOmegaRef=true;
-
+	mSLog->info("Use of reference omega.");
 }

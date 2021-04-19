@@ -50,7 +50,7 @@ namespace Ph1 {
 		// Logging
 		Matrix mStates;
 		// check if new reference has been set. If not w_syn will be used as reference
-		Bool msetOmegaRef= false;
+		Bool mUseOmegaRef= false;
 	public:
 		///
 		SynchronGeneratorTrStab(String uid, String name, Logger::Level logLevel = Logger::Level::off);
