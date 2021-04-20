@@ -126,6 +126,15 @@ void DP::Ph1::SynchronGeneratorTrStab::setStandardParametersPU(Real nomPower, Re
 			"\ndamping: {:f}", mXpd, mLpd, mInertia, mKd);
 }
 
+void DP::Ph1::SynchronGeneratorTrStab::setModelFlags(Bool useOmegaRef, Bool convertWithOmegaMech) {
+	mUseOmegaRef = useOmegaRef;
+	mConvertWithOmegaMech = convertWithOmegaMech;
+
+	mSLog->info("\n--- Model flags ---"
+			"\nuseOmegaRef: {:s}"
+			"\nconvertWithOmegaMech: {:s}", std::to_string(mUseOmegaRef), std::to_string(mConvertWithOmegaMech));
+}
+
 void DP::Ph1::SynchronGeneratorTrStab::setInitialValues(Complex elecPower, Real mechPower) {
 	mInitElecPower = elecPower;
 	mInitMechPower = mechPower;
@@ -203,8 +212,12 @@ void DP::Ph1::SynchronGeneratorTrStab::step(Real time) {
 	mElecActivePower = (mIntfVoltage(0,0) *  std::conj( -mIntfCurrent(0,0)) ).real();
 
 	// Mechanical speed derivative at time step k
-	// convert torque to power with actual rotor angular velocity
-	Real dOmMech = mNomOmega*mNomOmega / (2.*mInertia * mNomPower*mOmMech) * (mMechPower - mElecActivePower - mKd*(mOmMech - mNomOmega));
+	// convert torque to power with actual rotor angular velocity or nominal omega
+	Real dOmMech;
+	if (mConvertWithOmegaMech)
+		dOmMech = mNomOmega*mNomOmega / (2.*mInertia * mNomPower*mOmMech) * (mMechPower - mElecActivePower - mKd*(mOmMech - mNomOmega));
+	else
+		dOmMech = mNomOmega / (2.*mInertia * mNomPower) * (mMechPower - mElecActivePower - mKd*(mOmMech - mNomOmega));
 
 	// #### Calculate states for time step k+1 applying semi-implicit Euler ####
 	// Mechanical speed at time step k+1 applying Euler forward

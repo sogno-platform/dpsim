@@ -39,9 +39,14 @@ int main(int argc, char *argv[]) {
 	// Extend topology with switch
 	auto sw = Ph1::Switch::make("StepLoad", Logger::Level::info);
 	sw->setParameters(1e9, 0.1);
-	sw->connect({ SimNode::GND, sys.node<SimNode>("BUS6") });
+	sw->connect({ SimNode::GND, sys.node<SimNode>("BUS7") });
 	sw->open();
 	sys.addComponent(sw);
+
+	// Use omegNom for torque conversion in SG models for validation with PSAT
+	sys.component<Ph1::SynchronGeneratorTrStab>("GEN1")->setModelFlags(false, false);
+	sys.component<Ph1::SynchronGeneratorTrStab>("GEN2")->setModelFlags(false, false);
+	sys.component<Ph1::SynchronGeneratorTrStab>("GEN3")->setModelFlags(false, false);
 
 	// Logging
 	auto logger = DataLogger::make(simName);
@@ -58,8 +63,6 @@ int main(int argc, char *argv[]) {
 	logger->addAttribute("wr_2", sys.component<Ph1::SynchronGeneratorTrStab>("GEN2")->attribute("w_r"));
 	logger->addAttribute("wr_3", sys.component<Ph1::SynchronGeneratorTrStab>("GEN3")->attribute("w_r"));
 
-	sys.component<Ph1::SynchronGeneratorTrStab>("GEN3")->attribute<Real>("inertia")->set(
-		sys.component<Ph1::SynchronGeneratorTrStab>("GEN3")->attribute<Real>("inertia")->get()*2);
 
 	Simulation sim(simName, sys, 0.0001, 2,
 		Domain::DP, Solver::Type::MNA, Logger::Level::info, true);

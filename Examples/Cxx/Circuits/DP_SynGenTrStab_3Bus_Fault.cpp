@@ -157,7 +157,7 @@ void DP_SynGenTrStab_3Bus_Fault(String simName, Real timeStep, Real finalTime, b
 
 	// Components
 	//Synchronous generator 1
-	auto gen1DP = DP::Ph1::SynchronGeneratorTrStab::make("SynGen", Logger::Level::debug);
+	auto gen1DP = DP::Ph1::SynchronGeneratorTrStab::make("SynGen1", Logger::Level::debug);
 	// Xpd is given in p.u of generator base at transfomer primary side and should be transformed to network side
 	gen1DP->setStandardParametersPU(nomPower_G1, nomPhPhVoltRMS_G1, nomFreq_G1, Xpd_G1*std::pow(t1_ratio,2), cmdInertia*H_G1, Rs_G1, Kd_G1 );
 	// Get actual active and reactive power of generator's Terminal from Powerflow solution
@@ -165,13 +165,14 @@ void DP_SynGenTrStab_3Bus_Fault(String simName, Real timeStep, Real finalTime, b
 	gen1DP->setInitialValues(initApparentPower_G1, initMechPower_G1);
 
 	//Synchronous generator 2
-	auto gen2DP = DP::Ph1::SynchronGeneratorTrStab::make("SynGen", Logger::Level::debug);
+	auto gen2DP = DP::Ph1::SynchronGeneratorTrStab::make("SynGen2", Logger::Level::debug);
 	// Xpd is given in p.u of generator base at transfomer primary side and should be transformed to network side
 	gen2DP->setStandardParametersPU(nomPower_G2, nomPhPhVoltRMS_G2, nomFreq_G2, Xpd_G2*std::pow(t2_ratio,2), cmdInertia*H_G2, Rs_G2, Kd_G2 );
 	// Get actual active and reactive power of generator's Terminal from Powerflow solution
 	Complex initApparentPower_G2= gen2PF->getApparentPower();
 	gen2DP->setInitialValues(initApparentPower_G2, initMechPower_G2);
 
+	gen2DP->setModelFlags(true, true);
 	gen2DP->setReferenceOmega(gen1DP->attribute<Real>("w_r"), gen1DP->attribute<Real>("delta_r"));
 	
 	///Load
@@ -219,37 +220,36 @@ void DP_SynGenTrStab_3Bus_Fault(String simName, Real timeStep, Real finalTime, b
 
 	// Logging
 	auto loggerDP = DataLogger::make(simNameDP);
-	// loggerDP->addAttribute("v1", n1DP->attribute("v"));
-	// loggerDP->addAttribute("v2", n2DP->attribute("v"));
-	// loggerDP->addAttribute("v3", n3DP->attribute("v"));
-	// loggerDP->addAttribute("v_line12", line12DP->attribute("v_intf"));
-	// loggerDP->addAttribute("i_line12", line12DP->attribute("i_intf"));
-	// loggerDP->addAttribute("v_line13", line13DP->attribute("v_intf"));
-	// loggerDP->addAttribute("i_line13", line13DP->attribute("i_intf"));
-	// loggerDP->addAttribute("v_line23", line23DP->attribute("v_intf"));
-	// loggerDP->addAttribute("i_line23", line23DP->attribute("i_intf"));
-	// loggerDP->addAttribute("Ep_gen1", gen1DP->attribute("Ep_mag"));	
-	// loggerDP->addAttribute("Ep_gen2", gen2DP->attribute("Ep_mag"));
-	// loggerDP->addAttribute("v_gen1", gen1DP->attribute("v_intf"));
-	// loggerDP->addAttribute("i_gen1", gen1DP->attribute("i_intf"));
-	// loggerDP->addAttribute("wr_gen1", gen1DP->attribute("w_r"));
+	loggerDP->addAttribute("v1", n1DP->attribute("v"));
+	loggerDP->addAttribute("v2", n2DP->attribute("v"));
+	loggerDP->addAttribute("v3", n3DP->attribute("v"));
+	loggerDP->addAttribute("v_line12", line12DP->attribute("v_intf"));
+	loggerDP->addAttribute("i_line12", line12DP->attribute("i_intf"));
+	loggerDP->addAttribute("v_line13", line13DP->attribute("v_intf"));
+	loggerDP->addAttribute("i_line13", line13DP->attribute("i_intf"));
+	loggerDP->addAttribute("v_line23", line23DP->attribute("v_intf"));
+	loggerDP->addAttribute("i_line23", line23DP->attribute("i_intf"));
+	loggerDP->addAttribute("Ep_gen1", gen1DP->attribute("Ep_mag"));	
+	loggerDP->addAttribute("Ep_gen2", gen2DP->attribute("Ep_mag"));
+	loggerDP->addAttribute("v_gen1", gen1DP->attribute("v_intf"));
+	loggerDP->addAttribute("i_gen1", gen1DP->attribute("i_intf"));
+	loggerDP->addAttribute("wr_gen1", gen1DP->attribute("w_r"));
 	loggerDP->addAttribute("delta_gen1", gen1DP->attribute("delta_r"));
-	// loggerDP->addAttribute("v_gen2", gen2DP->attribute("v_intf"));
-	// loggerDP->addAttribute("i_gen2", gen2DP->attribute("i_intf"));
-	// loggerDP->addAttribute("wr_gen2", gen2DP->attribute("w_r"));
-	// loggerDP->addAttribute("wref_gen2", gen2DP->attribute("w_ref"));
+	loggerDP->addAttribute("v_gen2", gen2DP->attribute("v_intf"));
+	loggerDP->addAttribute("i_gen2", gen2DP->attribute("i_intf"));
+	loggerDP->addAttribute("wr_gen2", gen2DP->attribute("w_r"));
+	loggerDP->addAttribute("wref_gen2", gen2DP->attribute("w_ref"));
 	loggerDP->addAttribute("delta_gen2", gen2DP->attribute("delta_r"));
 
-	//Switch
-	// loggerDP->addAttribute("i_fault", faultDP->attribute("i_intf"));
-	////ADD LOAD v_intf & i_intf to log attributes
-	// loggerDP->addAttribute("v_load", loadDP->attribute("v_intf"));
-	// loggerDP->addAttribute("i_load", loadDP->attribute("i_intf"));
-	// loggerDP->addAttribute("P_mech1", gen1DP->attribute("P_mech"));
-	// loggerDP->addAttribute("P_mech2", gen2DP->attribute("P_mech"));
+	loggerDP->addAttribute("i_fault", faultDP->attribute("i_intf"));
 
-	// loggerDP->addAttribute("P_elec1", gen1DP->attribute("P_elec"));
-	// loggerDP->addAttribute("P_elec2", gen2DP->attribute("P_elec"));
+	loggerDP->addAttribute("v_load", loadDP->attribute("v_intf"));
+	loggerDP->addAttribute("i_load", loadDP->attribute("i_intf"));
+	loggerDP->addAttribute("P_mech1", gen1DP->attribute("P_mech"));
+	loggerDP->addAttribute("P_mech2", gen2DP->attribute("P_mech"));
+
+	loggerDP->addAttribute("P_elec1", gen1DP->attribute("P_elec"));
+	loggerDP->addAttribute("P_elec2", gen2DP->attribute("P_elec"));
 
 	Simulation simDP(simNameDP, Logger::Level::debug);
 	simDP.setSystem(systemDP);
