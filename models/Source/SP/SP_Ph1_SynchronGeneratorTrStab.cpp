@@ -40,6 +40,10 @@ SimPowerComp<Complex>::Ptr SP::Ph1::SynchronGeneratorTrStab::clone(String name) 
 void SP::Ph1::SynchronGeneratorTrStab::setFundamentalParametersPU(Real nomPower, Real nomVolt, Real nomFreq,
 	Real Ll, Real Lmd, Real Llfd, Real inertia, Real D) {
 	setBaseParameters(nomPower, nomVolt, nomFreq);
+	mSLog->info("\n--- Base Parameters ---"
+	"\nnomPower: {:f}"
+	"\nnomVolt: {:f}"
+	"\nnomFreq: {:f}", mNomPower, mNomVolt, mNomFreq);
 
 	// Input is in per unit but all values are converted to absolute values.
 	mParameterType = ParameterType::statorReferred;
@@ -62,12 +66,18 @@ void SP::Ph1::SynchronGeneratorTrStab::setFundamentalParametersPU(Real nomPower,
 
 	mSLog->info("\n--- Parameters ---"
 				"\nimpedance: {:f}"
-				"\ninductance: {:f}", mXpd, mLpd);
+				"\ninductance: {:f}"
+				"\ninertia: {:f}"
+				"\ndamping: {:f}", mXpd, mLpd, mInertia, mKd);
 }
 
 void SP::Ph1::SynchronGeneratorTrStab::setStandardParametersSI(Real nomPower, Real nomVolt, Real nomFreq, Int polePairNumber,
 	Real Rs, Real Lpd, Real inertiaJ, Real Kd) {
 	setBaseParameters(nomPower, nomVolt, nomFreq);
+	mSLog->info("\n--- Base Parameters ---"
+		"\nnomPower: {:f}"
+		"\nnomVolt: {:f}"
+		"\nnomFreq: {:f}", mNomPower, mNomVolt, mNomFreq);
 
 	mParameterType = ParameterType::statorReferred;
 	mStateType = StateType::statorReferred;
@@ -81,12 +91,21 @@ void SP::Ph1::SynchronGeneratorTrStab::setStandardParametersSI(Real nomPower, Re
 
 	mSLog->info("\n--- Parameters ---"
 				"\nimpedance: {:f}"
-				"\ninductance: {:f}", mXpd, mLpd);
+			"\ninductance: {:f}"
+			"\ninertia: {:f}"
+			"\ndamping: {:f}", mXpd, mLpd, mInertia, mKd);
 }
 
 void SP::Ph1::SynchronGeneratorTrStab::setStandardParametersPU(Real nomPower, Real nomVolt, Real nomFreq,
 	Real Xpd, Real inertia, Real Rs, Real D) {
 	setBaseParameters(nomPower, nomVolt, nomFreq);
+	mSLog->info("\n--- Base Parameters ---"
+	"\nnomPower: {:f}"
+	"\nnomVolt: {:f}"
+	"\nnomFreq: {:f}", mNomPower, mNomVolt, mNomFreq);
+
+	mSLog->info("\n--- Parameters Per-Unit ---"
+				"\n Xpd: {:f} [p.u.]", Xpd);
 
 	// Input is in per unit but all values are converted to absolute values.
 	mParameterType = ParameterType::statorReferred;
@@ -104,8 +123,11 @@ void SP::Ph1::SynchronGeneratorTrStab::setStandardParametersPU(Real nomPower, Re
 	mKd= D*mNomPower/mNomOmega;
 
 	mSLog->info("\n--- Parameters ---"
-				"\nimpedance: {:f}"
-				"\ninductance: {:f}", mXpd, mLpd);
+				"\nXpd: {:f} [Ohm]"
+				"\nLpd: {:f} [H]"
+				"\nInertia: {:f} [s]"
+				"\nDamping: {:f}", mXpd, mLpd, mInertia, mKd);
+}
 }
 
 void SP::Ph1::SynchronGeneratorTrStab::setInitialValues(Complex elecPower, Real mechPower) {
@@ -289,4 +311,5 @@ setAttributeRef("w_ref", refOmegaPtr);
 setAttributeRef("delta_ref", refDeltaPtr);
 msetOmegaRef=true;
 
+	mSLog->info("Use of reference omega.");
 }

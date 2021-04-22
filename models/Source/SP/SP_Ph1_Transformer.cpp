@@ -50,8 +50,8 @@ void SP::Ph1::Transformer::setParameters(Real nomVoltageEnd1, Real nomVoltageEnd
 	Base::Ph1::Transformer::setParameters(nomVoltageEnd1, nomVoltageEnd2, ratioAbs, ratioPhase, resistance, inductance);
 	
 	mSLog->info("Nominal Voltage End 1={} [V] Nominal Voltage End 2={} [V]", mNominalVoltageEnd1, mNominalVoltageEnd2);
-	mSLog->info("Resistance={} [Ohm] Inductance={} [Ohm] (referred to primary side)", mResistance, mInductance);
-    mSLog->info("Tap Ratio={} [ ] Phase Shift={} [deg]", std::abs(mRatio), std::arg(mRatio));
+	mSLog->info("Resistance={} [Ohm] Inductance={} [H] (referred to primary side)", mResistance, mInductance);
+    mSLog->info("Tap Ratio={} [/] Phase Shift={} [deg]", std::abs(mRatio), std::arg(mRatio));
 
 	mRatioAbs = std::abs(mRatio);
 	mRatioPhase = std::arg(mRatio);
@@ -80,7 +80,7 @@ SimPowerComp<Complex>::Ptr SP::Ph1::Transformer::clone(String name) {
 void SP::Ph1::Transformer::initializeFromNodesAndTerminals(Real frequency) {
 	mNominalOmega = 2. * PI * frequency;
 	mReactance = mNominalOmega * mInductance;
-	mSLog->info("Reactance={} [Ohm] (referred to primary side)");
+	mSLog->info("Reactance={} [Ohm] (referred to primary side)", mReactance);
 	
 	// Component parameters are referred to high voltage side.
 	// Switch terminals if transformer is connected the other way around.
