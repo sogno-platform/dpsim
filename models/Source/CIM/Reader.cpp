@@ -168,21 +168,23 @@ void Reader::parseFiles() {
 	}
 }
 
-SystemTopology Reader::loadCIM(Real systemFrequency, const fs::path &filename, Domain domain, PhaseType phase) {
+SystemTopology Reader::loadCIM(Real systemFrequency, const fs::path &filename, Domain domain, PhaseType phase, GeneratorType genType) {
 	mFrequency = systemFrequency;
 	mOmega = 2 * PI*mFrequency;
 	mDomain = domain;
 	mPhase = phase;
+	mGeneratorType = genType;
 	addFiles(filename);
 	parseFiles();
 	return systemTopology();
 }
 
-SystemTopology Reader::loadCIM(Real systemFrequency, const std::list<fs::path> &filenames, Domain domain, PhaseType phase) {
+SystemTopology Reader::loadCIM(Real systemFrequency, const std::list<fs::path> &filenames, Domain domain, PhaseType phase, GeneratorType genType) {
 	mFrequency = systemFrequency;
 	mOmega = 2 * PI*mFrequency;
 	mDomain = domain;
 	mPhase = phase;
+	mGeneratorType = genType;
 	addFiles(filenames);
 	parseFiles();
 	return systemTopology();
@@ -494,85 +496,106 @@ TopologicalPowerComp::Ptr Reader::mapPowerTransformer(CIMPP::PowerTransformer* t
 TopologicalPowerComp::Ptr Reader::mapSynchronousMachine(CIMPP::SynchronousMachine* machine) {
 	mSLog->info("    Found  Synchronous machine {}", machine->name);
 
-	if (mGeneratorType == GeneratorType::Transient) {
-		Real directTransientReactance;
-		Real inertiaCoefficient;
-		Real ratedPower;
-		Real ratedVoltage;
+	if (mDomain == Domain::DP) {
+		if (mGeneratorType == GeneratorType::Transient) {
+			Real directTransientReactance;
+			Real inertiaCoefficient;
+			Real ratedPower;
+			Real ratedVoltage;
 
-		for (auto obj : mModel->Objects) {
-			// Check if object is not TopologicalNode, SvVoltage or SvPowerFlow
-			if (CIMPP::SynchronousMachineTimeConstantReactance* genDyn =
-				dynamic_cast<CIMPP::SynchronousMachineTimeConstantReactance*>(obj)) {
-				if (genDyn->SynchronousMachine->mRID == machine->mRID) {
-					directTransientReactance = genDyn->xDirectTrans.value;
-					inertiaCoefficient = genDyn->inertia.value;
+			for (auto obj : mModel->Objects) {
+				// Check if object is not TopologicalNode, SvVoltage or SvPowerFlow
+				if (CIMPP::SynchronousMachineTimeConstantReactance* genDyn =
+					dynamic_cast<CIMPP::SynchronousMachineTimeConstantReactance*>(obj)) {
+					if (genDyn->SynchronousMachine->mRID == machine->mRID) {
+						directTransientReactance = genDyn->xDirectTrans.value;
+						inertiaCoefficient = genDyn->inertia.value;
 
-					ratedPower = unitValue(machine->ratedS.value, UnitMultiplier::M);
+						ratedPower = unitValue(machine->ratedS.value, UnitMultiplier::M);
 
-					ratedVoltage = unitValue(machine->ratedU.value, UnitMultiplier::k);
-					auto gen = DP::Ph1::SynchronGeneratorTrStab::make(machine->mRID, machine->name, mComponentLogLevel);
-					gen->setStandardParametersPU(ratedPower, ratedVoltage, mFrequency,
-					directTransientReactance, inertiaCoefficient);
-					return gen;
-				}
-			}
-		}
-	}
-
-	if (mDomain == Domain::SP) {
-		for (auto obj : mModel->Objects) {
-			if (CIMPP::GeneratingUnit* genUnit
-				= dynamic_cast<CIMPP::GeneratingUnit*>(obj))
-			{
-
-				for (auto syncGen : genUnit->RotatingMachine)
-				{
-                    if (syncGen->mRID == machine->mRID){
-
-						// Check whether relevant input data are set, otherwise set default values
-						Real setPointActivePower = 0;
-						Real setPointVoltage = 0;
-						Real maximumReactivePower = 1e12;
-						try{
-							setPointActivePower = unitValue(genUnit->initialP.value, UnitMultiplier::M);
-							mSLog->info("    setPointActivePower={}", setPointActivePower);
-						}catch(ReadingUninitializedField* e){
-							std::cerr << "Uninitalized setPointActivePower for GeneratingUnit " << machine->name << ". Using default value of " << setPointActivePower << std::endl;
-						}
-						if (machine->RegulatingControl) {
-							setPointVoltage = unitValue(machine->RegulatingControl->targetValue.value, UnitMultiplier::k);
-							mSLog->info("    setPointVoltage={}", setPointVoltage);
-						} else {
-							std::cerr << "Uninitalized setPointVoltage for GeneratingUnit " <<  machine->name << ". Using default value of " << setPointVoltage << std::endl;
-						}
-						try{
-							maximumReactivePower = unitValue(machine->maxQ.value, UnitMultiplier::M);
-							mSLog->info("    maximumReactivePower={}", maximumReactivePower);
-						}catch(ReadingUninitializedField* e){
-							std::cerr << "Uninitalized maximumReactivePower for GeneratingUnit " <<  machine->name << ". Using default value of " << maximumReactivePower << std::endl;
-						}
-
-						auto gen = std::make_shared<SP::Ph1::SynchronGenerator>(machine->mRID, machine->name, mComponentLogLevel);
-							gen->setParameters(unitValue(machine->ratedS.value, UnitMultiplier::M),
-									unitValue(machine->ratedU.value, UnitMultiplier::k),
-									setPointActivePower,
-									setPointVoltage,
-									PowerflowBusType::PV);
-							gen->setBaseVoltage(unitValue(machine->ratedU.value, UnitMultiplier::k));
+						ratedVoltage = unitValue(machine->ratedU.value, UnitMultiplier::k);
+						auto gen = DP::Ph1::SynchronGeneratorTrStab::make(machine->mRID, machine->name, mComponentLogLevel);
+						gen->setStandardParametersPU(ratedPower, ratedVoltage, mFrequency,
+						directTransientReactance, inertiaCoefficient);
 						return gen;
 					}
 				}
-
 			}
-
+		} else {
+			return std::make_shared<DP::Ph1::SynchronGeneratorIdeal>(machine->mRID, machine->name, mComponentLogLevel);
 		}
-		mSLog->info("no corresponding initial power for {}", machine->name);
-		return std::make_shared<SP::Ph1::SynchronGenerator>(machine->mRID, machine->name, mComponentLogLevel);
-	}
-    else {
-        return std::make_shared<DP::Ph1::SynchronGeneratorIdeal>(machine->mRID, machine->name, mComponentLogLevel);
+	} else if (mDomain == Domain::SP) {
+		if (mGeneratorType == GeneratorType::Transient) {
+			Real directTransientReactance;
+			Real inertiaCoefficient;
+			Real ratedPower;
+			Real ratedVoltage;
+
+			for (auto obj : mModel->Objects) {
+				// Check if object is not TopologicalNode, SvVoltage or SvPowerFlow
+				if (CIMPP::SynchronousMachineTimeConstantReactance* genDyn =
+					dynamic_cast<CIMPP::SynchronousMachineTimeConstantReactance*>(obj)) {
+					if (genDyn->SynchronousMachine->mRID == machine->mRID) {
+						directTransientReactance = genDyn->xDirectTrans.value;
+						inertiaCoefficient = genDyn->inertia.value;
+
+						ratedPower = unitValue(machine->ratedS.value, UnitMultiplier::M);
+
+						ratedVoltage = unitValue(machine->ratedU.value, UnitMultiplier::k);
+						auto gen = SP::Ph1::SynchronGeneratorTrStab::make(machine->mRID, machine->name, mComponentLogLevel);
+						gen->setStandardParametersPU(ratedPower, ratedVoltage, mFrequency,
+						directTransientReactance, inertiaCoefficient);
+						return gen;
+					}
+				}
+			}
+		} else if (mGeneratorType == GeneratorType::Static) {
+			for (auto obj : mModel->Objects) {
+				if (CIMPP::GeneratingUnit* genUnit = dynamic_cast<CIMPP::GeneratingUnit*>(obj)) {
+					for (auto syncGen : genUnit->RotatingMachine) {
+						if (syncGen->mRID == machine->mRID){
+							// Check whether relevant input data are set, otherwise set default values
+							Real setPointActivePower = 0;
+							Real setPointVoltage = 0;
+							Real maximumReactivePower = 1e12;
+							try{
+								setPointActivePower = unitValue(genUnit->initialP.value, UnitMultiplier::M);
+								mSLog->info("    setPointActivePower={}", setPointActivePower);
+							}catch(ReadingUninitializedField* e){
+								std::cerr << "Uninitalized setPointActivePower for GeneratingUnit " << machine->name << ". Using default value of " << setPointActivePower << std::endl;
+							}
+							if (machine->RegulatingControl) {
+								setPointVoltage = unitValue(machine->RegulatingControl->targetValue.value, UnitMultiplier::k);
+								mSLog->info("    setPointVoltage={}", setPointVoltage);
+							} else {
+								std::cerr << "Uninitalized setPointVoltage for GeneratingUnit " <<  machine->name << ". Using default value of " << setPointVoltage << std::endl;
+							}
+							try{
+								maximumReactivePower = unitValue(machine->maxQ.value, UnitMultiplier::M);
+								mSLog->info("    maximumReactivePower={}", maximumReactivePower);
+							}catch(ReadingUninitializedField* e){
+								std::cerr << "Uninitalized maximumReactivePower for GeneratingUnit " <<  machine->name << ". Using default value of " << maximumReactivePower << std::endl;
+							}
+
+							auto gen = std::make_shared<SP::Ph1::SynchronGenerator>(machine->mRID, machine->name, mComponentLogLevel);
+								gen->setParameters(unitValue(machine->ratedS.value, UnitMultiplier::M),
+										unitValue(machine->ratedU.value, UnitMultiplier::k),
+										setPointActivePower,
+										setPointVoltage,
+										PowerflowBusType::PV);
+								gen->setBaseVoltage(unitValue(machine->ratedU.value, UnitMultiplier::k));
+							return gen;
+						}
+					}
+				}
+			}
+			mSLog->info("no corresponding initial power for {}", machine->name);
+			return std::make_shared<SP::Ph1::SynchronGenerator>(machine->mRID, machine->name, mComponentLogLevel);
+		}
+	} else {
+        throw SystemError("Mapping of SynchronousMachine for EMT not existent yet!");
     }
+	return nullptr;
 }
 
 TopologicalPowerComp::Ptr Reader::mapExternalNetworkInjection(CIMPP::ExternalNetworkInjection* extnet) {

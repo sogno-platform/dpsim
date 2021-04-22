@@ -162,16 +162,19 @@ namespace CIM {
 		virtual ~Reader();
 
 		/// Parses data from CIM files into the CPS data structure
-		SystemTopology loadCIM(Real systemFrequency, const std::experimental::filesystem::path &filename, Domain domain = Domain::DP, PhaseType phase = PhaseType::Single);
+		SystemTopology loadCIM(Real systemFrequency, const std::experimental::filesystem::path &filename, Domain domain = Domain::DP, PhaseType phase = PhaseType::Single,
+			GeneratorType genType = GeneratorType::Transient);
 		/// Parses data from CIM files into the CPS data structure
-		SystemTopology loadCIM(Real systemFrequency, const std::list<std::experimental::filesystem::path> &filenames, Domain domain = Domain::DP, PhaseType phase = PhaseType::Single);
+		SystemTopology loadCIM(Real systemFrequency, const std::list<std::experimental::filesystem::path> &filenames, Domain domain = Domain::DP, PhaseType phase = PhaseType::Single,
+			GeneratorType genType = GeneratorType::Transient);
 		///
-		SystemTopology loadCIM(Real systemFrequency, const std::list<CPS::String> &filenamesString, Domain domain = Domain::DP, PhaseType phase = PhaseType::Single) {
+		SystemTopology loadCIM(Real systemFrequency, const std::list<CPS::String> &filenamesString, Domain domain = Domain::DP, PhaseType phase = PhaseType::Single,
+			GeneratorType genType = GeneratorType::Transient) {
 			std::list<std::experimental::filesystem::path> filenames;
 			for (auto f : filenamesString)
 				filenames.emplace_back(f);
 
-			return loadCIM(systemFrequency, filenames, domain, phase);
+			return loadCIM(systemFrequency, filenames, domain, phase, genType);
 		}
 
 		///
