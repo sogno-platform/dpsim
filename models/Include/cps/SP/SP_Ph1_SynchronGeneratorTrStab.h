@@ -47,10 +47,12 @@ namespace Ph1 {
 		std::shared_ptr<VoltageSource> mSubVoltageSource;
 		/// Inner inductor that represents the generator impedance
 		std::shared_ptr<Inductor> mSubInductor;
-		// Logging
+		/// Logging
 		Matrix mStates;
-		// check if new reference has been set. If not w_syn will be used as reference
-		Bool msetOmegaRef= false;
+		/// Flag for usage of attribute of w_ref (otherwise mNomOmega is used)
+		Bool mUseOmegaRef = false;
+		/// Flag for usage of actual mechanical speed for torque conversion (otherwise mNomOmega is used)
+		Bool mConvertWithOmegaMech = true;
 	public:
 		///
 		SynchronGeneratorTrStab(String uid, String name, Logger::Level logLevel = Logger::Level::off);
@@ -61,6 +63,8 @@ namespace Ph1 {
 		SimPowerComp<Complex>::Ptr clone(String name);
 
 		// #### General Functions ####
+		/// Flags to modify model behavior
+		void setModelFlags(Bool useOmegaRef, Bool convertWithOmegaMech);
 		///
 		void setInitialValues(Complex elecPower, Real mechPower);
 		/// \brief Initializes the machine parameters
