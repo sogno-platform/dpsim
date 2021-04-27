@@ -7,5 +7,6 @@ wheel
 pytest
 pyyaml
 
+scipy
 villas-dataprocessing>=0.2.5
 progressbar2

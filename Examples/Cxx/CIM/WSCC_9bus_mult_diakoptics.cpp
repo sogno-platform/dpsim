@@ -68,7 +68,7 @@ void simulateDiakoptics(std::list<fs::path> filenames,
 	Logger::setLogDir("logs/"+simName);
 
 	CIM::Reader reader(simName, Logger::Level::off, Logger::Level::off);
-	SystemTopology sys = reader.loadCIM(60, filenames);
+	SystemTopology sys = reader.loadCIM(60, filenames, Domain::DP, PhaseType::Single, CPS::GeneratorType::IdealVoltageSource);
 
 	if (copies > 0)
 		IdentifiedObject::List tearComps = multiply_diakoptics(sys, copies, 12.5, 0.16, 1e-6, splits);

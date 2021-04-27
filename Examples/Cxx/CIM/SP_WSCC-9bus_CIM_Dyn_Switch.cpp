@@ -34,7 +34,7 @@ int main(int argc, char *argv[]) {
 	Logger::setLogDir("logs/"+simName);
 
 	CPS::CIM::Reader reader(simName, Logger::Level::debug, Logger::Level::info);
-	SystemTopology sys = reader.loadCIM(60, filenames, Domain::SP, PhaseType::Single, CPS::CIM::Reader::GeneratorType::Transient);
+	SystemTopology sys = reader.loadCIM(60, filenames, Domain::SP, PhaseType::Single, CPS::GeneratorType::TransientStability);
 
 	// Extend topology with switch
 	auto sw = Ph1::Switch::make("Fault", Logger::Level::info);

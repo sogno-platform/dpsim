@@ -73,7 +73,7 @@ def dpsim():
     print(files)
 
     reader = dpsimpy.CIMReader(name)
-    system = reader.loadCIM(50, files, dpsimpy.Domain.SP, dpsimpy.PhaseType.Single)
+    system = reader.loadCIM(50, files, dpsimpy.Domain.SP, dpsimpy.PhaseType.Single, dpsimpy.GeneratorType.PVNode))
 
     csv_files = glob.glob('build/_deps/profile-data-src/CIGRE_MV_NoTap/load_profiles/')[0]
     print(csv_files)

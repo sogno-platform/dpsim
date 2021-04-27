@@ -113,6 +113,12 @@ PYBIND11_MODULE(dpsimpy, m) {
 		.value("C", CPS::PhaseType::C)
 		.value("ABC", CPS::PhaseType::ABC)
 		.value("Single", CPS::PhaseType::Single);
+	
+	py::enum_<CPS::GeneratorType>(m, "GeneratorType")
+		.value("PVNode", CPS::GeneratorType::PVNode)
+		.value("TransientStability", CPS::GeneratorType::TransientStability)
+		.value("IdealVoltageSource", CPS::GeneratorType::IdealVoltageSource)
+		.value("None", CPS::GeneratorType::None);
 
 	py::enum_<DPsim::Solver::Type>(m, "Solver")
 		.value("MNA", DPsim::Solver::Type::MNA)
@@ -131,7 +137,7 @@ PYBIND11_MODULE(dpsimpy, m) {
 		
 	py::class_<CPS::CIM::Reader>(m, "CIMReader")
 		.def(py::init<std::string, CPS::Logger::Level, CPS::Logger::Level>(), py::arg("name"), py::arg("loglevel") = CPS::Logger::Level::info, py::arg("comploglevel") = CPS::Logger::Level::off)
-		.def("loadCIM", (CPS::SystemTopology (CPS::CIM::Reader::*)(CPS::Real, const std::list<CPS::String> &, CPS::Domain, CPS::PhaseType)) &CPS::CIM::Reader::loadCIM);
+		.def("loadCIM", (CPS::SystemTopology (CPS::CIM::Reader::*)(CPS::Real, const std::list<CPS::String> &, CPS::Domain, CPS::PhaseType, CPS::GeneratorType)) &CPS::CIM::Reader::loadCIM);
 
 	py::class_<CPS::CSVReader>(m, "CSVReader")
 		.def(py::init<std::string, const std::string &, std::map<std::string, std::string> &, CPS::Logger::Level>())

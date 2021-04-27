@@ -497,12 +497,12 @@ TopologicalPowerComp::Ptr Reader::mapSynchronousMachine(CIMPP::SynchronousMachin
 	mSLog->info("    Found  Synchronous machine {}", machine->name);
 
 	if (mDomain == Domain::DP) {
-		if (mGeneratorType == GeneratorType::Transient) {
+		if (mGeneratorType == GeneratorType::TransientStability) {
+			mSLog->info("    GeneratorType is TransientStability.");
 			Real directTransientReactance;
 			Real inertiaCoefficient;
 			Real ratedPower;
 			Real ratedVoltage;
-
 			for (auto obj : mModel->Objects) {
 				// Check if object is not TopologicalNode, SvVoltage or SvPowerFlow
 				if (CIMPP::SynchronousMachineTimeConstantReactance* genDyn =
@@ -521,11 +521,18 @@ TopologicalPowerComp::Ptr Reader::mapSynchronousMachine(CIMPP::SynchronousMachin
 					}
 				}
 			}
-		} else {
+			mSLog->warn("    Dynamic parameters for {} not found. Not able to instantiate SynchronGeneratorTrStab.", machine->name);
+		} else if (mGeneratorType == GeneratorType::IdealVoltageSource) {
+			mSLog->info("    GeneratorType is IdealVoltageSource.");
 			return std::make_shared<DP::Ph1::SynchronGeneratorIdeal>(machine->mRID, machine->name, mComponentLogLevel);
+		} else if (mGeneratorType == GeneratorType::None) {
+			throw SystemError("GeneratorType is None. Specify!");
+		} else {
+			throw SystemError("GeneratorType setting unfeasible.");
 		}
 	} else if (mDomain == Domain::SP) {
-		if (mGeneratorType == GeneratorType::Transient) {
+		if (mGeneratorType == GeneratorType::TransientStability) {
+			mSLog->info("    GeneratorType is TransientStability.");
 			Real directTransientReactance;
 			Real inertiaCoefficient;
 			Real ratedPower;
@@ -549,7 +556,8 @@ TopologicalPowerComp::Ptr Reader::mapSynchronousMachine(CIMPP::SynchronousMachin
 					}
 				}
 			}
-		} else if (mGeneratorType == GeneratorType::Static) {
+		} else if (mGeneratorType == GeneratorType::PVNode) {
+			mSLog->info("    GeneratorType is PVNode.");
 			for (auto obj : mModel->Objects) {
 				if (CIMPP::GeneratingUnit* genUnit = dynamic_cast<CIMPP::GeneratingUnit*>(obj)) {
 					for (auto syncGen : genUnit->RotatingMachine) {
@@ -591,6 +599,10 @@ TopologicalPowerComp::Ptr Reader::mapSynchronousMachine(CIMPP::SynchronousMachin
 			}
 			mSLog->info("no corresponding initial power for {}", machine->name);
 			return std::make_shared<SP::Ph1::SynchronGenerator>(machine->mRID, machine->name, mComponentLogLevel);
+		} else if (mGeneratorType == GeneratorType::None) {
+			throw SystemError("GeneratorType is None. Specify!");
+		} else {
+			throw SystemError("GeneratorType setting unfeasible.");
 		}
 	} else {
         throw SystemError("Mapping of SynchronousMachine for EMT not existent yet!");

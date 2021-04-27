@@ -34,7 +34,7 @@ int main(int argc, char *argv[]) {
 	Logger::setLogDir("logs/"+simName);
 
 	CPS::CIM::Reader reader(simName, Logger::Level::debug, Logger::Level::off);
-	SystemTopology sys = reader.loadCIM(60, filenames);
+	SystemTopology sys = reader.loadCIM(60, filenames, Domain::DP, PhaseType::Single, CPS::GeneratorType::IdealVoltageSource);
 
 	// Logging
 	auto logger = DataLogger::make(simName);

@@ -74,6 +74,8 @@ namespace CIM {
 		Real mOmega;
 		/// Domain of the simulation components that are created by the reader
 		Domain mDomain;
+		/// Type of generator to be instantiated
+		GeneratorType mGeneratorType;
 		/// \brief Determines the overall phase configuration of the simulation.
 		///
 		/// This can be different from the phase type of an individual node.
@@ -149,10 +151,6 @@ namespace CIM {
 		Real determineBaseVoltageAssociatedWithEquipment(CIMPP::ConductingEquipment* equipment);
 
 	public:
-		///
-		enum GeneratorType{Static, Transient};
-		///
-		GeneratorType mGeneratorType = GeneratorType::Transient;
 		/// Creates new reader with a name for logging.
 		/// The first log level is for the reader and the second for the generated components.
 		Reader(String name,
@@ -163,13 +161,13 @@ namespace CIM {
 
 		/// Parses data from CIM files into the CPS data structure
 		SystemTopology loadCIM(Real systemFrequency, const std::experimental::filesystem::path &filename, Domain domain = Domain::DP, PhaseType phase = PhaseType::Single,
-			GeneratorType genType = GeneratorType::Transient);
+			GeneratorType genType = GeneratorType::None);
 		/// Parses data from CIM files into the CPS data structure
 		SystemTopology loadCIM(Real systemFrequency, const std::list<std::experimental::filesystem::path> &filenames, Domain domain = Domain::DP, PhaseType phase = PhaseType::Single,
-			GeneratorType genType = GeneratorType::Transient);
+			GeneratorType genType = GeneratorType::None);
 		///
 		SystemTopology loadCIM(Real systemFrequency, const std::list<CPS::String> &filenamesString, Domain domain = Domain::DP, PhaseType phase = PhaseType::Single,
-			GeneratorType genType = GeneratorType::Transient) {
+			GeneratorType genType = GeneratorType::None) {
 			std::list<std::experimental::filesystem::path> filenames;
 			for (auto f : filenamesString)
 				filenames.emplace_back(f);

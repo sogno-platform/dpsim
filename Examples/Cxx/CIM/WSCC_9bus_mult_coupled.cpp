@@ -71,7 +71,7 @@ void simulateCoupled(std::list<fs::path> filenames, CommandLineArgs& args, Int c
 	Logger::setLogDir("logs/"+simName);
 
 	CIM::Reader reader(simName, args.logLevel, args.logLevel);
-	SystemTopology sys = reader.loadCIM(60, filenames);
+	SystemTopology sys = reader.loadCIM(60, filenames, Domain::DP, PhaseType::Single, CPS::GeneratorType::IdealVoltageSource);
 
 	if (copies > 0)
 		multiply_connected(sys, copies, 12.5, 0.16, 1e-6);
