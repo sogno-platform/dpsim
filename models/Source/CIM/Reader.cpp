@@ -498,6 +498,8 @@ TopologicalPowerComp::Ptr Reader::mapSynchronousMachine(CIMPP::SynchronousMachin
 		Real inertiaCoefficient;
 		Real ratedPower;
 		Real ratedVoltage;
+		Real statorResistance;
+		Real dampingCoefficient;
 
 		for (auto obj : mModel->Objects) {
 			// Check if object is not TopologicalNode, SvVoltage or SvPowerFlow
@@ -506,13 +508,15 @@ TopologicalPowerComp::Ptr Reader::mapSynchronousMachine(CIMPP::SynchronousMachin
 				if (genDyn->SynchronousMachine->mRID == machine->mRID) {
 					directTransientReactance = genDyn->xDirectTrans.value;
 					inertiaCoefficient = genDyn->inertia.value;
+					statorResistance= genDyn->statorResistance.value;
+					dampingCoefficient=genDyn->damping.value;
 
 					ratedPower = unitValue(machine->ratedS.value, UnitMultiplier::M);
 
 					ratedVoltage = unitValue(machine->ratedU.value, UnitMultiplier::k);
 					auto gen = DP::Ph1::SynchronGeneratorTrStab::make(machine->mRID, machine->name, mComponentLogLevel);
 					gen->setStandardParametersPU(ratedPower, ratedVoltage, mFrequency,
-						directTransientReactance, inertiaCoefficient);
+						directTransientReactance, statorResistance, inertiaCoefficient, dampingCoefficient);
 					return gen;
 				}
 			}

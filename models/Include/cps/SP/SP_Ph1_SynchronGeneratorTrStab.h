@@ -32,11 +32,15 @@ namespace Ph1 {
 		/// fixed absolute value of emf behind transient reactance
 		Real mEp_abs;
 		/// Angle by which the emf Ep is leading the system reference frame
+		Real mEp_phase;
+		/// Angle by which the emf Ep is leading the terminal voltage
 		Real mDelta_p;
 		/// Absolute d-axis transient reactance X'd
  		Real mXpd;
 		/// Absolute d-axis transient inductance
 		Real mLpd;
+		/// Damping coefficient
+		Real mKd;
 		/// Equivalent impedance for loadflow calculation
 		Complex mImpedance;
 		/// Inner voltage source that represents the generator
@@ -64,7 +68,7 @@ namespace Ph1 {
 		void setStandardParametersSI(Real nomPower, Real nomVolt, Real nomFreq, Int polePairNumber,
 			Real Rs, Real Lpd, Real inertiaJ, Real Kd = 0);
 		/// \brief Initializes the machine parameters
-		void setStandardParametersPU(Real nomPower, Real nomVolt, Real nomFreq, Real Xpd, Real inertia);
+		void setStandardParametersPU(Real nomPower, Real nomVolt, Real nomFreq, Real Xpd, Real Rs, Real inertia, Real damping);
 		///
 		void step(Real time);
 		///
@@ -81,7 +85,7 @@ namespace Ph1 {
 		///
 		void mnaApplySystemMatrixStamp(Matrix& systemMatrix);
 		/// Retrieves calculated voltage from simulation for next step
-		// remove -> void mnaPostStep(Matrix& rightVector, Matrix& leftVector, Real time);
+		void mnaPostStep(Matrix& rightVector, Matrix& leftVector, Real time);
 		///
 		void mnaUpdateCurrent(const Matrix& leftVector);
 		///

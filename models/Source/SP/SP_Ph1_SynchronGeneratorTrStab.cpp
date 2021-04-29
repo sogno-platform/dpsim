@@ -11,14 +11,15 @@ using namespace CPS;
 
 SP::Ph1::SynchronGeneratorTrStab::SynchronGeneratorTrStab(String uid, String name, Logger::Level logLevel)
 	: SimPowerComp<Complex>(uid, name, logLevel) {
-	setVirtualNodeNumber(2);
+	setVirtualNodeNumber(2); //why 2 virtual nodes?
 	setTerminalNumber(1);
 	mIntfVoltage = MatrixComp::Zero(1, 1);
 	mIntfCurrent = MatrixComp::Zero(1, 1);
 
 	// Register attributes
 	addAttribute<Real>("Ep_mag", &mEp_abs, Flags::read);
-	addAttribute<Real>("Ep_phase", &mDelta_p, Flags::read);
+	addAttribute<Real>("Ep_phase", &mEp_phase, Flags::read);
+	addAttribute<Real>("delta_r", &mDelta_p, Flags::read);
 	addAttribute<Real>("P_elec", &mElecActivePower, Flags::read);
 	addAttribute<Real>("P_mech", &mMechPower, Flags::read);
 	addAttribute<Real>("w_r", &mOmMech, Flags::read);
@@ -29,7 +30,7 @@ SP::Ph1::SynchronGeneratorTrStab::SynchronGeneratorTrStab(String uid, String nam
 
 SimPowerComp<Complex>::Ptr SP::Ph1::SynchronGeneratorTrStab::clone(String name) {
 	auto copy = SynchronGeneratorTrStab::make(name, mLogLevel);
-	copy->setStandardParametersPU(mNomPower, mNomVolt, mNomFreq, mXpd / mBase_Z, mInertia);
+	copy->setStandardParametersPU(mNomPower, mNomVolt, mNomFreq, mXpd / mBase_Z, mRs, mInertia, mKd);
 	return copy;
 }
 
@@ -77,7 +78,7 @@ void SP::Ph1::SynchronGeneratorTrStab::setStandardParametersSI(Real nomPower, Re
 }
 
 void SP::Ph1::SynchronGeneratorTrStab::setStandardParametersPU(Real nomPower, Real nomVolt, Real nomFreq,
-	Real Xpd, Real inertia) {
+	Real Xpd, Real Rs, Real inertia, Real damping) {
 	setBaseParameters(nomPower, nomVolt, nomFreq);
 
 	// Input is in per unit but all values are converted to absolute values.
@@ -89,6 +90,9 @@ void SP::Ph1::SynchronGeneratorTrStab::setStandardParametersPU(Real nomPower, Re
 	// X'd in absolute values
 	mXpd = Xpd * mBase_Z;
 	mLpd = Xpd * mBase_L;
+
+	mRs= Rs;
+	mKd= damping;
 
 	mSLog->info("\n--- Parameters ---"
 				"\nimpedance: {:f}"
@@ -113,20 +117,21 @@ void SP::Ph1::SynchronGeneratorTrStab::initializeFromNodesAndTerminals(Real freq
 	mInitMechPower = (mInitElecPower == Complex(0,0))
 		? mInitElecPower.real()
 		: mInitMechPower;
-	mIntfCurrent(0,0) = std::conj( mInitElecPower / mIntfVoltage(0,0) );
-	mImpedance = Complex(0, mXpd);
+	mIntfCurrent(0,0) = std::conj( mInitElecPower / mIntfVoltage(0,0) ); //why conj? P_e= v_intf*i_intf*cos(phi)
+	mImpedance = Complex(mRs, mXpd);
 
 	// Calculate emf behind reactance
 	mEp = mIntfVoltage(0,0) + mImpedance * mIntfCurrent(0,0);
 	// The absolute value of Ep is constant, only delta_p changes every step
 	mEp_abs = Math::abs(mEp);
-	mDelta_p = Math::phase(mEp);
+	mDelta_p= Math::phase(mEp);
+	// mDelta_p = Math::phase(mEp)-Math::phase(mIntfVoltage(0,0));
 	// // Update active electrical power that is compared with the mechanical power
 	// mElecActivePower = ( (mEp - mIntfVoltage(0,0)) / mImpedance *  mIntfVoltage(0,0) ).real();
 	// For infinite power bus
-	mElecActivePower = (Math::abs(mEp) * Math::abs(mIntfVoltage(0,0)) / mXpd) * sin(mDelta_p);
+	mElecActivePower = (Math::abs(mEp) * Math::abs(mIntfVoltage(0,0)) / mXpd) * sin(Math::phase(mEp)-Math::phase(mIntfVoltage(0,0)));
 	// Start in steady state so that electrical and mech. power are the same
-	mMechPower = mElecActivePower;
+	mMechPower = mElecActivePower - mKd*(mOmMech - mNomOmega);
 
 	// Initialize node between X'd and Ep
 	mVirtualNodes[0]->setInitialVoltage(mEp);
@@ -135,14 +140,14 @@ void SP::Ph1::SynchronGeneratorTrStab::initializeFromNodesAndTerminals(Real freq
 	mSubVoltageSource = SP::Ph1::VoltageSource::make(mName + "_src", mLogLevel);
 	mSubVoltageSource->setParameters(mEp);
 	mSubVoltageSource->connect({SimNode::GND, mVirtualNodes[0]});
-	mSubVoltageSource->setVirtualNodeAt(mVirtualNodes[1], 0);
+	mSubVoltageSource->setVirtualNodeAt(mVirtualNodes[1], 0); //mVirtualNodes[0]?
 	mSubVoltageSource->initialize(mFrequencies);
 	mSubVoltageSource->initializeFromNodesAndTerminals(frequency);
 
 	// Create sub inductor as Xpd
 	mSubInductor = SP::Ph1::Inductor::make(mName + "_ind", mLogLevel);
 	mSubInductor->setParameters(mLpd);
-	mSubInductor->connect({mVirtualNodes[0],terminal(0)->node() });
+	mSubInductor->connect({mVirtualNodes[0],terminal(0)->node()});
 	mSubInductor->initialize(mFrequencies);
 	mSubInductor->initializeFromNodesAndTerminals(frequency);
 
@@ -164,11 +169,11 @@ void SP::Ph1::SynchronGeneratorTrStab::step(Real time) {
 	// // Update electrical power
 	// mElecActivePower = ( (mEp - mIntfVoltage(0,0)) / mImpedance *  mIntfVoltage(0,0) ).real();
 	// For infinite power bus
-	mElecActivePower = (Math::abs(mEp) * Math::abs(mIntfVoltage(0,0)) / mXpd) * sin(mDelta_p);
+	mElecActivePower = (Math::abs(mEp) * Math::abs(mIntfVoltage(0,0)) / mXpd) * sin(Math::phase(mEp)-Math::phase(mIntfVoltage(0,0)));
 
 	// #### Calculate state for time step k+1 ####
 	// semi-implicit Euler or symplectic Euler method for mechanical equations
-	Real dOmMech = mNomOmega / (2.*mInertia * mNomPower) * (mMechPower - mElecActivePower);
+	Real dOmMech = mNomOmega / (2.*mInertia * mNomPower) * (mMechPower - mElecActivePower - mKd*(mOmMech - mNomOmega));
 	if (mBehaviour == Behaviour::Simulation)
 		mOmMech = mOmMech + mTimeStep * dOmMech;
 	Real dDelta_p = mOmMech - mNomOmega;
@@ -231,6 +236,7 @@ void SP::Ph1::SynchronGeneratorTrStab::MnaPostStep::execute(Real time, Int timeS
 void SP::Ph1::SynchronGeneratorTrStab::mnaUpdateVoltage(const Matrix& leftVector) {
 	SPDLOG_LOGGER_DEBUG(mSLog, "Read voltage from {:d}", matrixNodeIndex(0));
 	mIntfVoltage(0,0) = Math::complexFromVectorElement(leftVector, matrixNodeIndex(0));
+	//mIntfVoltage = mSubInductor->attribute<MatrixComp>("v_intf")->get();
 }
 
 void SP::Ph1::SynchronGeneratorTrStab::mnaUpdateCurrent(const Matrix& leftVector) {

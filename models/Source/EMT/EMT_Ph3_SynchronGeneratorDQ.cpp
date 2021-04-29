@@ -21,6 +21,7 @@ EMT::Ph3::SynchronGeneratorDQ::SynchronGeneratorDQ(String uid, String name, Logg
 	mIntfCurrent = Matrix::Zero(3,1);
 
 	addAttribute<Real>("w_r", &mOmMech, Flags::read);
+	addAttribute<Real>("delta_r", &mDelta, Flags::read);
 }
 
 EMT::Ph3::SynchronGeneratorDQ::SynchronGeneratorDQ(String name, Logger::Level logLevel)

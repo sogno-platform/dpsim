@@ -70,6 +70,9 @@ void EMT::Ph3::SynchronGeneratorDQTrapez::stepInPerUnit(Real time) {
 	// Update of omega using Euler
 	mOmMech = mOmMech + mTimeStep * (1./(2.*mInertia) * (mMechTorque - mElecTorque));
 
+	// Update using euler
+	mDelta = mDelta + mTimeStep * (mOmMech - 1);
+
 	// Update of fluxes
 	if (mNumericalMethod == NumericalMethod::Euler)
 		mPsisr = Math::StateSpaceEuler(mPsisr, mBase_OmElec*(mFluxStateSpaceMat + mOmegaFluxMat*mOmMech), mBase_OmElec*mVsr, mTimeStep);
