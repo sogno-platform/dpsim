@@ -39,7 +39,7 @@ namespace Ph1 {
  		Real mXpd;
 		/// Absolute d-axis transient inductance
 		Real mLpd;
-		/// Damping coefficient
+		/// Absolute damping coefficient
 		Real mKd;
 		/// Equivalent impedance for loadflow calculation
 		Complex mImpedance;

@@ -508,8 +508,6 @@ TopologicalPowerComp::Ptr Reader::mapSynchronousMachine(CIMPP::SynchronousMachin
 					directTransientReactance = genDyn->xDirectTrans.value;
 					inertiaCoefficient = genDyn->inertia.value;
 
-
-
 					ratedPower = unitValue(machine->ratedS.value, UnitMultiplier::M);
 
 					ratedVoltage = unitValue(machine->ratedU.value, UnitMultiplier::k);

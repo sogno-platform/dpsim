@@ -271,5 +271,15 @@ int main(int argc, char* argv[]) {
 	Real endTimeFault=10.1;
 	Real cmdInertia= 1.0;
 
+	CommandLineArgs args(argc, argv);
+	if (argc > 1) {
+		timeStep = args.timeStep;
+		finalTime = args.duration;
+		if (args.name != "dpsim")
+			simName = args.name;
+		if (args.options.find("SCALEINERTIA") != args.options.end())
+			cmdInertia = args.options["SCALEINERTIA"];		
+	}
+
 	SP_SynGenTrStab_3Bus_Fault(simName, timeStep, finalTime, startFaultEvent, endFaultEvent, startTimeFault, endTimeFault, cmdInertia);
 }

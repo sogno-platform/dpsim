@@ -34,6 +34,7 @@ list(APPEND CPS_SOURCES
 	DP/DP_Ph1_Inverter.cpp
 	DP/DP_Ph1_AvVoltageSourceInverterDQ.cpp
 	DP/DP_Ph1_NetworkInjection.cpp
+	DP/DP_Ph1_varResSwitch.cpp
 
 	DP/DP_Ph3_ControlledVoltageSource.cpp
 	DP/DP_Ph3_VoltageSource.cpp
@@ -72,14 +73,13 @@ list(APPEND CPS_SOURCES
 	EMT/EMT_Ph3_NetworkInjection.cpp
 	EMT/EMT_Ph3_Transformer.cpp
 	EMT/EMT_Ph3_Switch.cpp
-	# EMT/EMT_Ph3_SynchronGeneratorDQ.cpp
 	EMT/EMT_Ph3_SynchronGeneratorDQ.cpp
 	EMT/EMT_Ph3_SynchronGeneratorDQTrapez.cpp
 	# EMT/EMT_Ph3_SynchronGeneratorDQSmpl.cpp
 	# EMT/EMT_Ph3_SynchronGeneratorDQSmplCompSource.cpp
 	# EMT/EMT_Ph3_SynchronGeneratorVBR.cpp
 	# EMT/EMT_Ph3_SynchronGeneratorVBRStandalone.cpp
-	EMT/EMT_Ph3_SynchronGeneratorTrStab.cpp
+	# EMT/EMT_Ph3_SynchronGeneratorTrStab.cpp
 
 	SP/SP_Ph1_ControlledVoltageSource.cpp
 	SP/SP_Ph1_VoltageSource.cpp

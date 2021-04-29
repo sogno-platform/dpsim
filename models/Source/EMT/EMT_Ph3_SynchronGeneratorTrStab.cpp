@@ -18,6 +18,7 @@ EMT::Ph3::SynchronGeneratorTrStab::SynchronGeneratorTrStab(String uid, String na
 	
 
 	// Register attributes
+	addAttribute<Complex>("Ep", &mEp, Flags::read);
 	addAttribute<Real>("Ep_mag", &mEp_abs, Flags::read);
 	addAttribute<Real>("Ep_phase", &mEp_phase, Flags::read);
 	addAttribute<Real>("delta_r", &mDelta_p, Flags::read);
@@ -125,8 +126,7 @@ void EMT::Ph3::SynchronGeneratorTrStab::initializeFromNodesAndTerminals(Real fre
 	intfVoltageComplex(0, 0) = initialSingleVoltage(0);
 	intfVoltageComplex(1, 0) = intfVoltageComplex(0, 0) * SHIFT_TO_PHASE_B;
 	intfVoltageComplex(2, 0) = intfVoltageComplex(0, 0) * SHIFT_TO_PHASE_C;
-	// intfCurrentComplex(0, 0) = std::conj(2./3.*mInitElecPower / intfVoltageComplex(0, 0));
-	intfCurrentComplex(0, 0) = std::conj(1./3.*mInitElecPower / intfVoltageComplex(0, 0));
+	intfCurrentComplex(0, 0) = std::conj(-2./3.*mInitElecPower / intfVoltageComplex(0, 0));
 	intfCurrentComplex(1, 0) = intfCurrentComplex(0, 0) * SHIFT_TO_PHASE_B;
 	intfCurrentComplex(2, 0) = intfCurrentComplex(0, 0) * SHIFT_TO_PHASE_C;
 
@@ -137,16 +137,17 @@ void EMT::Ph3::SynchronGeneratorTrStab::initializeFromNodesAndTerminals(Real fre
 	mImpedance = Complex(mRs, mXpd);
 
 	// Calculate emf behind reactance
-	mEp = intfVoltageComplex(0, 0) + mImpedance * intfCurrentComplex(0, 0);
+	mEp = intfVoltageComplex(0, 0) - mImpedance * intfCurrentComplex(0, 0);
 	// The absolute value of Ep is constant, only delta_p changes every step
 	mEp_abs = Math::abs(mEp);
 	mDelta_p= Math::phase(mEp)-Math::phase(intfVoltageComplex(0, 0));
 
 	// // Update active electrical power that is compared with the mechanical power
+	mElecActivePower = ( 3./2. * intfVoltageComplex(0,0) *  std::conj( - intfCurrentComplex(0,0)) ).real();
 	// mElecActivePower = ( (mEp - mIntfVoltage(0,0)) / mImpedance *  mIntfVoltage(0,0) ).real();
 	// For infinite power bus
 	// mElecActivePower = (Math::abs(mEp) * Math::abs(mIntfVoltage(0,0)) / mXpd) * sin(mDelta_p);
-	mElecActivePower = (Math::abs(mEp) * Math::abs(intfVoltageComplex(0, 0)) / mXpd) * sin(Math::phase(mEp)-Math::phase(intfVoltageComplex(0, 0)));
+	//mElecActivePower = (Math::abs(mEp) * Math::abs(intfVoltageComplex(0, 0)) / mXpd) * sin(Math::phase(mEp)-Math::phase(intfVoltageComplex(0, 0)));
 	
 	// Start in steady state so that electrical and mech. power are the same
 	mMechPower = mElecActivePower- mKd*(mOmMech - mNomOmega);
@@ -191,12 +192,14 @@ void EMT::Ph3::SynchronGeneratorTrStab::step(Real time) {
 	// #### Calculations on input of time step k ####
 	// Update electrical power
 	// mElecActivePower = ( (mEp - mIntfVoltage(0,0)) / mImpedance *  mIntfVoltage(0,0) ).real();
+	mElecActivePower = ( 3./2. * mIntfVoltage(0,0) *  std::conj( - mIntfCurrent(0,0)) ).real();
 	// For infinite power bus
-	mElecActivePower = (Math::abs(mEp) * Math::abs(mIntfVoltage(0,0)) / mXpd )* sin(Math::phase(mEp)-Math::phase(mIntfVoltage(0,0)));
+	// mElecActivePower = (Math::abs(mEp) * Math::abs(mIntfVoltage(0,0)) / mXpd )* sin(Math::phase(mEp)-Math::phase(mIntfVoltage(0,0)));
 	
 	// The damping factor Kd is adjusted to obtain a damping ratio of 0.3
-	Real MaxElecActivePower= Math::abs(mEp) * Math::abs(mIntfVoltage(0,0)) / mXpd;
-	mKd=4*0.3*sqrt(mNomOmega*mInertia*MaxElecActivePower*0.5);
+	// Real MaxElecActivePower= Math::abs(mEp) * Math::abs(mIntfVoltage(0,0)) / mXpd;
+	// mKd=4*0.3*sqrt(mNomOmega*mInertia*MaxElecActivePower*0.5);
+	mKd=1*mNomPower;
 
 	// #### Calculate state for time step k+1 ####
 	// semi-implicit Euler or symplectic Euler method for mechanical equations
@@ -208,7 +211,7 @@ void EMT::Ph3::SynchronGeneratorTrStab::step(Real time) {
 		mDelta_p = mDelta_p + mTimeStep * dDelta_p;
 	// Update emf - only phase changes
 	if (mBehaviour == Behaviour::Simulation)
-		mEp = Complex(mEp_abs * cos(mDelta_p), mEp_abs * sin(mDelta_p));
+		mEp = Complex(mEp_abs * cos(mDelta_p + Math::phase(mIntfVoltage(0,0))), mEp_abs * sin(mDelta_p + Math::phase(mIntfVoltage(0,0))));
 
 
 	// mStates << Math::abs(mEp), Math::phaseDeg(mEp), mElecActivePower, mMechPower,

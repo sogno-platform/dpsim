@@ -17,7 +17,7 @@ Real nomOmega= nomFreq* 2*PI;
 Real H = 5;
 Real Xpd=0.31;
 Real Rs = 0.003*0;
-Real Kd = 1;
+Real D = 1;
 // Initialization parameters
 Real initMechPower= 300e6;
 Real initActivePower = 300e6;
@@ -110,7 +110,7 @@ void DP_1ph_SynGenTrStab_Fault(String simName, Real timeStep, Real finalTime, bo
 	// Components
 	auto genDP = DP::Ph1::SynchronGeneratorTrStab::make("SynGen", Logger::Level::debug);
 	// Xpd is given in p.u of generator base at transfomer primary side and should be transformed to network side
-	genDP->setStandardParametersPU(nomPower, nomPhPhVoltRMS, nomFreq, Xpd*std::pow(t_ratio,2), cmdInertia*H, Rs, Kd );
+	genDP->setStandardParametersPU(nomPower, nomPhPhVoltRMS, nomFreq, Xpd*std::pow(t_ratio,2), cmdInertia*H, Rs, D );
 	// Get actual active and reactive power of generator's Terminal from Powerflow solution
 	Complex initApparentPower= genPF->getApparentPower();
 	genDP->setInitialValues(initApparentPower, initMechPower);
@@ -198,8 +198,19 @@ int main(int argc, char* argv[]) {
 	Bool startFaultEvent=true;
 	Bool endFaultEvent=true;
 	Real startTimeFault=10;
-	Real endTimeFault=10.05;
+	Real endTimeFault=10.3;
 	Real cmdInertia= 1.0;
+
+	CommandLineArgs args(argc, argv);
+	if (argc > 1) {
+		timeStep = args.timeStep;
+		finalTime = args.duration;
+		if (args.name != "dpsim")
+			simName = args.name;
+		if (args.options.find("SCALEINERTIA") != args.options.end())
+			cmdInertia = args.options["SCALEINERTIA"];		
+	}
+
 
 	DP_1ph_SynGenTrStab_Fault(simName, timeStep, finalTime, startFaultEvent, endFaultEvent, startTimeFault, endTimeFault, cmdInertia);
 }

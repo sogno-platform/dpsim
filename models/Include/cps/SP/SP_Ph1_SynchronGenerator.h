@@ -29,7 +29,7 @@ namespace Ph1 {
 
 			/// Active power set point of the machine [W]
 			Real mSetPointActivePower;
-			/// Reactive power set point of the machine [VAr] to get from Power flow solution
+			/// Reactive power set point of the machine [VAr]
 			Real mSetPointReactivePower;
 			/// Voltage set point of the machine [V]
 			Real mSetPointVoltage;
@@ -57,7 +57,6 @@ namespace Ph1 {
 			SynchronGenerator(String name, Logger::Level logLevel = Logger::Level::off)
 				: SynchronGenerator(name, name, logLevel) { }
 			/// Setter for synchronous generator parameters
-			//SetpointReactivePower is calculated from PF
 			void setParameters(Real ratedApparentPower, Real ratedVoltage, Real setPointActivePower, Real setPointVoltage, PowerflowBusType powerflowBusType, Real setPointReactivepower=0);
 			// #### Powerflow section ####
 			/// Set base voltage

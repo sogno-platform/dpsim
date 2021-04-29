@@ -16,6 +16,52 @@ namespace CPS {
 namespace CIM {
 namespace Examples {
 
+namespace Components {
+
+namespace CIGREHVEuropean {
+    struct LineParameters {
+        // 220 kV
+        Real lineResistancePerKm = 1.35e-4 * 484.0;
+        Real lineReactancePerKm = 8.22e-4 * 484.0;
+        Real lineSusceptancePerKm = 1.38e-3 / 484.0;
+    };
+}
+
+namespace CIGREHVAmerican {
+    struct LineParameters {
+        // 230 kV
+        Real lineResistancePerKm = 1.27e-4 * 529.0;
+        Real lineReactancePerKm = 9.05e-4 * 529.0;
+        Real lineSusceptancePerKm = 1.81e-3 / 529.0;
+    };
+}
+
+namespace SynchronousGeneratorKundur {
+    struct MachineParameters {
+        // Define machine parameters in per unit
+        Real nomPower = 555e6;
+        Real nomVoltage = 24e3; // Phase-to-Phase RMS
+        Real nomFreq = 60; 
+        Real nomFieldCurr = 1300;
+        Int poleNum = 2;
+        Real H = 3.7;
+        Real Rs = 0.003;
+        Real Ll = 0.15;
+        Real Lmd = 1.6599;
+        Real Lmq = 1.61;
+        Real Rfd = 0.0006;
+        Real Llfd = 0.1648;
+        Real Rkd = 0.0284;
+        Real Llkd = 0.1713;
+        Real Rkq1 = 0.0062;
+        Real Llkq1 = 0.7252;
+        Real Rkq2 = 0.0237;
+        Real Llkq2 = 0.125;
+        Real fieldVoltage = 7.0821; //TODO: specify operating conditions
+    };
+}
+}
+
 namespace SGIB {
 
     struct ScenarioConfig {

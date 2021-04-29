@@ -170,7 +170,7 @@ void EMT_3ph_SynGenDQ7odTrapez_ThreePhFault(Real timeStep, Real finalTime, bool 
 	logger->addAttribute("v_gen", gen->attribute("v_intf"));
 	logger->addAttribute("i_gen", gen->attribute("i_intf"));
 	logger->addAttribute("wr_gen", gen->attribute("w_r"));
-	//logger->addAttribute("delta_r", gen->attribute("delta_r"));
+	logger->addAttribute("delta_r", gen->attribute("delta_r"));
 
 	// Simulation
 	Simulation sim(simName, Logger::Level::debug);

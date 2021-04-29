@@ -50,14 +50,13 @@ set(CIRCUIT_SOURCES
 	Circuits/DP_EMT_RL_SourceStep.cpp
 	Circuits/EMT_DP_SP_Trafo.cpp
 	
-	#MA gna
-	#Circuits/DP_1phSynGenTrStab_EMT_3phSynGenDQ7odTrapez_StartofLineFault.cpp
-	
 	#SMIB
 	Circuits/SP_SynGenTrStab_SMIB_SteadyState.cpp
 	Circuits/DP_SynGenTrStab_SMIB_SteadyState.cpp
 	Circuits/SP_SynGenTrStab_SMIB_Fault.cpp
 	Circuits/DP_SynGenTrStab_SMIB_Fault.cpp
+	Circuits/EMT_SynGenDQ7odTrapez_SMIB_Fault.cpp
+	Circuits/EMT_SynGenDQ7odTrapez_DP_SynGenTrStab_SMIB_Fault.cpp
 
 	#3Bus System
 	Circuits/SP_SynGenTrStab_3Bus_SteadyState.cpp
