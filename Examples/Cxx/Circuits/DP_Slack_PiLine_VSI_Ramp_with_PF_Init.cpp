@@ -81,7 +81,7 @@ int main(int argc, char* argv[]) {
 	simPF.setFinalTime(finalTimePF);
 	simPF.setDomain(Domain::SP);
 	simPF.setSolverType(Solver::Type::NRP);
-	simPF.doPowerFlowInit(false);
+	simPF.doInitFromNodesAndTerminals(false);
 	simPF.addLogger(loggerPF);
 	simPF.run();
 
@@ -141,7 +141,7 @@ int main(int argc, char* argv[]) {
 	sim.setFinalTime(finalTimeDP);
 	sim.setDomain(Domain::DP);
 	// sim.addEvent(loadStepEvent);
-	sim.doPowerFlowInit(false);
+	
 	sim.addLogger(loggerDP);
 	sim.run();
 	
