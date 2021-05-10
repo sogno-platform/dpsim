@@ -22,6 +22,7 @@ SP::Ph1::SynchronGeneratorTrStab::SynchronGeneratorTrStab(String uid, String nam
 	addAttribute<Real>("Ep_phase", &mEp_phase, Flags::read);
 	addAttribute<Real>("delta_r", &mDelta_p, Flags::read);
 	addAttribute<Real>("P_elec", &mElecActivePower, Flags::read);
+	addAttribute<Real>("Q_elec", &mElecReactivePower, Flags::read);
 	addAttribute<Real>("P_mech", &mMechPower, Flags::read);
 	addAttribute<Real>("w_r", &mOmMech, Flags::read);
 	addAttribute<Real>("inertia", &mInertia, Flags::read | Flags::write);
@@ -170,11 +171,14 @@ void SP::Ph1::SynchronGeneratorTrStab::initializeFromNodesAndTerminals(Real freq
 	// Delta_p is the angular position of mEp with respect to the synchronously rotating reference
 	mDelta_p= Math::phase(mEp);
 
-	// Update active electrical power that is compared with the mechanical power
+	// Update electrical power
+	// TODO: review for Rs != 0
 	mElecActivePower = ( mIntfVoltage(0,0) *  std::conj( -mIntfCurrent(0,0)) ).real();
+	mElecReactivePower = ( mIntfVoltage(0,0) *  std::conj( -mIntfCurrent(0,0)) ).imag();
 
 	// Start in steady state so that electrical and mech. power are the same
 	// because of the initial condition mOmMech = mNomOmega the damping factor is not considered at the initialisation
+	// TODO: review for Rs != 0
 	mMechPower = mElecActivePower;
 
 	// Initialize node between X'd and Ep
@@ -200,19 +204,22 @@ void SP::Ph1::SynchronGeneratorTrStab::initializeFromNodesAndTerminals(Real freq
 				"\nVoltage behind reactance: {:e}<{:e}"
 				"\ninitial electrical power: {:e}+j{:e}"
 				"\nactive electrical power: {:e}"
+				"\nreactive electrical power: {:e}"
 				"\nmechanical power: {:e}"
 				"\n--- End of powerflow initialization ---",
 				Math::abs(mIntfVoltage(0,0)), Math::phaseDeg(mIntfVoltage(0,0)),
 				Math::abs(mEp), Math::phaseDeg(mEp),
 				mInitElecPower.real(), mInitElecPower.imag(),
-				mElecActivePower, mMechPower);
+				mElecActivePower, mElecReactivePower, mMechPower);
 }
 
 void SP::Ph1::SynchronGeneratorTrStab::step(Real time) {
 
 	// #### Calculations based on values from time step k ####
 	// Electrical power at time step k
+	// TODO: review for Rs != 0
 	mElecActivePower = (mIntfVoltage(0,0) *  std::conj( -mIntfCurrent(0,0)) ).real();
+	mElecReactivePower = (mIntfVoltage(0,0) *  std::conj( -mIntfCurrent(0,0)) ).imag();
 
 	// Mechanical speed derivative at time step k
 	// convert torque to power with actual rotor angular velocity or nominal omega

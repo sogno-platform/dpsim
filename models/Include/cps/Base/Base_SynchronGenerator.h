@@ -175,6 +175,8 @@ namespace Base {
 		Real mMechTorque = 0;
 		/// Active part of the electrical power
 		Real mElecActivePower = 0;
+		/// Reactive part of the electrical power
+		Real mElecReactivePower = 0;
 		/// electrical torque
 		Real mElecTorque = 0;
 		/// \brief Vector of stator and rotor voltages.

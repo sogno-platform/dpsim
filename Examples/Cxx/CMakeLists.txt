@@ -61,6 +61,7 @@ set(CIRCUIT_SOURCES
 	Circuits/EMT_SynGenDQ7odTrapez_OperationalParams_SMIB_Fault_JsonSyngenParams.cpp
 	Circuits/EMT_SynGenDQ7odTrapez_DP_SynGenTrStab_SMIB_Fault.cpp
 	Circuits/EMT_SynGenTrStab_SMIB_Fault.cpp
+	Circuits/SP_SynGenTrStab_SMIB_Fault_KundurExample1.cpp
 
 	#3Bus System
 	Circuits/SP_SynGenTrStab_3Bus_SteadyState.cpp
