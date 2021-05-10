@@ -240,6 +240,9 @@ void MnaSolverGpuSparse<VarType>::solve(Real time, Int timeStepCount) {
 	for (const auto &stamp : this->mRightVectorStamps)
 		this->mRightSideVector += *stamp;
 
+	if (!this->mIsInInitialization)
+		this->updateSwitchStatus();
+
     //Copy right vector to device
 	//Permutate right side: R' = P * R
 	this->mRightSideVector = *mTransp * this->mRightSideVector;
@@ -283,8 +286,6 @@ void MnaSolverGpuSparse<VarType>::solve(Real time, Int timeStepCount) {
 	for (UInt nodeIdx = 0; nodeIdx < this->mNumNetNodes; ++nodeIdx)
 		this->mNodes[nodeIdx]->mnaUpdateVoltage(this->mLeftSideVector);
 
-	if (!this->mIsInInitialization)
-		this->updateSwitchStatus();
 
 	// Components' states will be updated by the post-step tasks
 }

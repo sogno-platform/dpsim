@@ -101,15 +101,15 @@ void MnaSolverEigenDense<VarType>::solve(Real time, Int timeStepCount) {
 	for (auto stamp : mRightVectorStamps)
 		mRightSideVector += *stamp;
 
+	if (!mIsInInitialization)
+		MnaSolver<VarType>::updateSwitchStatus();
+
 	if (mSwitchedMatrices.size() > 0)
 		mLeftSideVector = mLuFactorizations[mCurrentSwitchStatus].solve(mRightSideVector);
 
 	// TODO split into separate task? (dependent on x, updating all v attributes)
 	for (UInt nodeIdx = 0; nodeIdx < mNumNetNodes; ++nodeIdx)
 		mNodes[nodeIdx]->mnaUpdateVoltage(mLeftSideVector);
-
-	if (!mIsInInitialization)
-		MnaSolver<VarType>::updateSwitchStatus();
 
 	// Components' states will be updated by the post-step tasks
 }
