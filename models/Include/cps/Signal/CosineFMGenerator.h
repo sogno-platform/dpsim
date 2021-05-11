@@ -12,9 +12,9 @@
 
 namespace CPS {
 namespace Signal {
-	class FmGenerator :
+	class CosineFMGenerator :
 		public SignalGenerator,
-        public SharedFactory<FmGenerator>  {
+        public SharedFactory<CosineFMGenerator>  {
     private:
 		/// initial signal phasor with magnitude and phase
 		Real mMagnitude;
@@ -29,7 +29,7 @@ namespace Signal {
 
     public:
 		/// init the identified object
-        FmGenerator(String name, Logger::Level logLevel = Logger::Level::off)
+        CosineFMGenerator(String name, Logger::Level logLevel = Logger::Level::off)
 			: SignalGenerator(name, logLevel) { }
 		/// set the source's parameters
 		void setParameters(Complex initialPhasor, Real modulationFrequency, Real modulationAmplitude, Real frequency = 0.0, bool zigzag = false);

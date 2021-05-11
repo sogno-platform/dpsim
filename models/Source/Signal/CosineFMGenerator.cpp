@@ -6,11 +6,11 @@
  * file, You can obtain one at https://mozilla.org/MPL/2.0/.
  *********************************************************************************/
 
-#include <cps/Signal/FmGenerator.h>
+#include <cps/Signal/CosineFMGenerator.h>
 
 using namespace CPS;
 
-void Signal::FmGenerator::setParameters(Complex initialPhasor, Real modulationFrequency, Real modulationAmplitude, Real frequency /*= 0.0*/, bool zigzag /*= false*/) {
+void Signal::CosineFMGenerator::setParameters(Complex initialPhasor, Real modulationFrequency, Real modulationAmplitude, Real frequency /*= 0.0*/, bool zigzag /*= false*/) {
     mMagnitude = Math::abs(initialPhasor);
     mInitialPhase = Math::phase(initialPhasor);
 	mBaseFrequency = frequency;
@@ -24,7 +24,7 @@ void Signal::FmGenerator::setParameters(Complex initialPhasor, Real modulationFr
 	attribute<Real>("freq")->set(frequency);
 }
 
-void Signal::FmGenerator::step(Real time) {
+void Signal::CosineFMGenerator::step(Real time) {
 	Real phase = 2.*PI*mBaseFrequency*time + mInitialPhase;
 
 	if(mZigZag) {

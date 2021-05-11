@@ -53,7 +53,7 @@ void SP::Ph1::VoltageSource::setParameters(Complex initialPhasor, Real freqStart
 }
 
 void SP::Ph1::VoltageSource::setParameters(Complex initialPhasor, Real modulationFrequency, Real modulationAmplitude, Real baseFrequency /*= 0.0*/, bool zigzag /*= false*/) {
-    auto srcSigFm = Signal::FmGenerator::make(mName + "_fm");
+    auto srcSigFm = Signal::CosineFMGenerator::make(mName + "_fm");
 	srcSigFm->setParameters(initialPhasor, modulationFrequency, modulationAmplitude, baseFrequency, zigzag);
 	mSrcSig = srcSigFm;
 
