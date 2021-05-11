@@ -187,7 +187,19 @@ PYBIND11_MODULE(dpsimpy, m) {
 	py::class_<CPS::EMT::Ph1::CurrentSource, std::shared_ptr<CPS::EMT::Ph1::CurrentSource>, CPS::SimPowerComp<CPS::Real>>(mEMTPh1, "CurrentSource", py::multiple_inheritance())
         .def(py::init<std::string>())
         .def("set_parameters", &CPS::EMT::Ph1::CurrentSource::setParameters)
-		.def("connect", &CPS::EMT::Ph1::CurrentSource::connect);
+		.def("connect", &CPS::EMT::Ph1::CurrentSource::connect)
+		.def_property("I_ref", [](CPS::EMT::Ph1::CurrentSource &cs) {
+			return cs.attribute<CPS::Complex>("I_ref")->get();
+		},
+		[](CPS::EMT::Ph1::CurrentSource &cs, CPS::Complex &value) {
+			cs.attribute<CPS::Complex>("I_ref")->set(value);
+		})
+		.def_property("f_src", [](CPS::EMT::Ph1::CurrentSource &cs) {
+			return cs.attribute<CPS::Real>("f_src")->get();
+		},
+		[](CPS::EMT::Ph1::CurrentSource &cs, CPS::Real &value) {
+			cs.attribute<CPS::Real>("f_src")->set(value);
+		});;
 
 	py::class_<CPS::EMT::Ph1::Resistor, std::shared_ptr<CPS::EMT::Ph1::Resistor>, CPS::SimPowerComp<CPS::Real>>(mEMTPh1, "Resistor", py::multiple_inheritance())
         .def(py::init<std::string>())
