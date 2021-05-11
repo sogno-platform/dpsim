@@ -13,9 +13,9 @@
 
 namespace CPS {
 namespace Signal {
-	class FrequencyRamp :
+	class FrequencyRampGenerator :
 		public SignalGenerator,
-        public SharedFactory<FrequencyRamp> {
+        public SharedFactory<FrequencyRampGenerator> {
     private:
         /// initial signal phasor with magnitude and phase
 		Real mMagnitude;
@@ -32,7 +32,7 @@ namespace Signal {
         bool mUseAbsoluteCalc;
         bool mSmooth;
     public:
-        FrequencyRamp(String name, Logger::Level logLevel = Logger::Level::off)
+        FrequencyRampGenerator(String name, Logger::Level logLevel = Logger::Level::off)
             : SignalGenerator(name, logLevel) { }
         /// set frequency ramp specific parameters
         void setParameters(Complex initialPhasor, Real freqStart, Real ramp, Real timeStart, Real duration, bool useAbsoluteCalc);

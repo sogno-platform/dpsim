@@ -42,9 +42,9 @@ void EMT::Ph3::VoltageSource::setParameters(MatrixComp voltageRef, Real srcFreq)
 }
 
 void EMT::Ph3::VoltageSource::setParameters(MatrixComp voltageRef, Real freqStart, Real rocof, Real timeStart, Real duration, bool useAbsoluteCalc) {
-	auto srcSigFreqRamp = Signal::FrequencyRamp::make(mName + "_fr");
+	auto srcSigFreqRamp = Signal::FrequencyRampGenerator::make(mName + "_fr");
 	srcSigFreqRamp->setParameters(Complex(1,0), freqStart, rocof, timeStart, duration, useAbsoluteCalc);
-	mSrcSig = srcSigFreqRamp; //std::make_shared<Signal::FrequencyRamp>(srcSigFreqRamp);
+	mSrcSig = srcSigFreqRamp; //std::make_shared<Signal::FrequencyRampGenerator>(srcSigFreqRamp);
 
 	attribute<MatrixComp>("V_ref")->set(voltageRef);
 	setAttributeRef("f_src", mSrcSig->attribute<Real>("freq"));

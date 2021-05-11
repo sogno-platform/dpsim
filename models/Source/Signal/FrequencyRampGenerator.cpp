@@ -6,11 +6,11 @@
  * file, You can obtain one at https://mozilla.org/MPL/2.0/.
  *********************************************************************************/
 
-#include <cps/Signal/FrequencyRamp.h>
+#include <cps/Signal/FrequencyRampGenerator.h>
 
 using namespace CPS;
 
-void Signal::FrequencyRamp::setParameters(Complex initialPhasor, Real freqStart, Real rocof, Real timeStart, Real duration, bool useAbsoluteCalc) {
+void Signal::FrequencyRampGenerator::setParameters(Complex initialPhasor, Real freqStart, Real rocof, Real timeStart, Real duration, bool useAbsoluteCalc) {
     mMagnitude = Math::abs(initialPhasor);
     mInitialPhase = Math::phase(initialPhasor);
 
@@ -28,7 +28,7 @@ void Signal::FrequencyRamp::setParameters(Complex initialPhasor, Real freqStart,
 	attribute<Real>("freq")->set(freqStart);
 }
 
-void Signal::FrequencyRamp::step(Real time) {
+void Signal::FrequencyRampGenerator::step(Real time) {
     if(mUseAbsoluteCalc) {
         stepAbsolute(time);
         return;
@@ -54,7 +54,7 @@ void Signal::FrequencyRamp::step(Real time) {
     attribute<Real>("freq")->set(currFreq);
 }
 
-void Signal::FrequencyRamp::stepAbsolute(Real time) {
+void Signal::FrequencyRampGenerator::stepAbsolute(Real time) {
     Real currPhase = mInitialPhase + 2 * PI * time * mFreqStart;
     Real currFreq = mFreqStart;
 
