@@ -36,7 +36,7 @@ PYBIND11_MODULE(dpsimpy, m) {
 		.value("warn", CPS::Logger::Level::warn)
 		.value("err", CPS::Logger::Level::err)
 		.value("critical", CPS::Logger::Level::critical)
-		.value("off", CPS::Logger::Level::off);		
+		.value("off", CPS::Logger::Level::off);
 
     py::class_<DPsim::Simulation>(m, "Simulation")
 	    .def(py::init<std::string, CPS::Logger::Level>(), py::arg("name"), py::arg("loglevel") = CPS::Logger::Level::off)
@@ -113,7 +113,7 @@ PYBIND11_MODULE(dpsimpy, m) {
 		.value("C", CPS::PhaseType::C)
 		.value("ABC", CPS::PhaseType::ABC)
 		.value("Single", CPS::PhaseType::Single);
-	
+
 	py::enum_<CPS::GeneratorType>(m, "GeneratorType")
 		.value("PVNode", CPS::GeneratorType::PVNode)
 		.value("TransientStability", CPS::GeneratorType::TransientStability)
@@ -127,14 +127,14 @@ PYBIND11_MODULE(dpsimpy, m) {
 
 	py::enum_<CPS::CSVReader::Mode>(m, "CSVReaderMode")
 		.value("AUTO", CPS::CSVReader::Mode::AUTO)
-		.value("MANUAL", CPS::CSVReader::Mode::MANUAL);		
+		.value("MANUAL", CPS::CSVReader::Mode::MANUAL);
 
 	py::enum_<CPS::CSVReader::DataFormat>(m, "CSVReaderFormat")
 		.value("HHMMSS", CPS::CSVReader::DataFormat::HHMMSS)
 		.value("SECONDS", CPS::CSVReader::DataFormat::SECONDS)
 		.value("HOURS", CPS::CSVReader::DataFormat::HOURS)
 		.value("MINUTES", CPS::CSVReader::DataFormat::MINUTES);
-		
+
 	py::class_<CPS::CIM::Reader>(m, "CIMReader")
 		.def(py::init<std::string, CPS::Logger::Level, CPS::Logger::Level>(), py::arg("name"), py::arg("loglevel") = CPS::Logger::Level::info, py::arg("comploglevel") = CPS::Logger::Level::off)
 		.def("loadCIM", (CPS::SystemTopology (CPS::CIM::Reader::*)(CPS::Real, const std::list<CPS::String> &, CPS::Domain, CPS::PhaseType, CPS::GeneratorType)) &CPS::CIM::Reader::loadCIM);
@@ -145,6 +145,7 @@ PYBIND11_MODULE(dpsimpy, m) {
 
 	py::class_<CPS::TopologicalPowerComp, std::shared_ptr<CPS::TopologicalPowerComp>, CPS::IdentifiedObject>(m, "TopologicalPowerComp");
 	py::class_<CPS::SimPowerComp<CPS::Complex>, std::shared_ptr<CPS::SimPowerComp<CPS::Complex>>, CPS::TopologicalPowerComp>(m, "SimPowerCompComplex");
+	py::class_<CPS::SimPowerComp<CPS::Real>, std::shared_ptr<CPS::SimPowerComp<CPS::Real>>, CPS::TopologicalPowerComp>(m, "SimPowerCompReal");
 
 	py::class_<CPS::TopologicalNode, std::shared_ptr<CPS::TopologicalNode>, CPS::IdentifiedObject>(m, "TopologicalNode");
 
@@ -153,6 +154,7 @@ PYBIND11_MODULE(dpsimpy, m) {
 	py::module mEMT = m.def_submodule("emt", "electromagnetic-transient models");
 	py::module mEMTPh1 = mEMT.def_submodule("ph1", "single phase electromagnetic-transient models");
 
+	//DP-Components
     py::class_<CPS::DP::SimNode, std::shared_ptr<CPS::DP::SimNode>, CPS::TopologicalNode>(mDP, "SimNode")
         .def(py::init<std::string>())
 		.def_readonly_static("gnd", &CPS::DP::SimNode::GND);
@@ -177,7 +179,34 @@ PYBIND11_MODULE(dpsimpy, m) {
         .def("set_parameters", &CPS::DP::Ph1::Inductor::setParameters)
 		.def("connect", &CPS::DP::Ph1::Inductor::connect);
 
-	
+	//EMT Components
+	py::class_<CPS::EMT::SimNode, std::shared_ptr<CPS::EMT::SimNode>, CPS::TopologicalNode>(mEMT, "SimNode")
+        .def(py::init<std::string>())
+		.def_readonly_static("gnd", &CPS::EMT::SimNode::GND);
+
+	py::class_<CPS::EMT::Ph1::CurrentSource, std::shared_ptr<CPS::EMT::Ph1::CurrentSource>, CPS::SimPowerComp<CPS::Real>>(mEMTPh1, "CurrentSource", py::multiple_inheritance())
+        .def(py::init<std::string>())
+        .def("set_parameters", &CPS::EMT::Ph1::CurrentSource::setParameters)
+		.def("connect", &CPS::EMT::Ph1::CurrentSource::connect);
+
+	py::class_<CPS::EMT::Ph1::Resistor, std::shared_ptr<CPS::EMT::Ph1::Resistor>, CPS::SimPowerComp<CPS::Real>>(mEMTPh1, "Resistor", py::multiple_inheritance())
+        .def(py::init<std::string>())
+        .def("set_parameters", &CPS::EMT::Ph1::Resistor::setParameters)
+		.def("connect", &CPS::EMT::Ph1::Resistor::connect);
+
+	py::class_<CPS::EMT::Ph1::Capacitor, std::shared_ptr<CPS::EMT::Ph1::Capacitor>, CPS::SimPowerComp<CPS::Real>>(mEMTPh1, "Capacitor", py::multiple_inheritance())
+        .def(py::init<std::string>())
+        .def("set_parameters", &CPS::EMT::Ph1::Capacitor::setParameters)
+		.def("connect", &CPS::EMT::Ph1::Capacitor::connect);
+
+	py::class_<CPS::EMT::Ph1::Inductor, std::shared_ptr<CPS::EMT::Ph1::Inductor>, CPS::SimPowerComp<CPS::Real>>(mEMTPh1, "Inductor", py::multiple_inheritance())
+        .def(py::init<std::string>())
+        .def("set_parameters", &CPS::EMT::Ph1::Inductor::setParameters)
+		.def("connect", &CPS::EMT::Ph1::Inductor::connect);
+
+
+
+
 #ifdef VERSION_INFO
     m.attr("__version__") = VERSION_INFO;
 #else
