@@ -294,7 +294,7 @@ void MnaSolver<VarType>::assignMatrixNodeIndices() {
 			mSLog->info("Assigned index {} to phase B of node {}", matrixNodeIndexIdx, idx);
 			++matrixNodeIndexIdx;
 			mNodes[idx]->setMatrixNodeIndex(2, matrixNodeIndexIdx);
-			mSLog->info("Assigned index {} to phase B of node {}", matrixNodeIndexIdx, idx);
+			mSLog->info("Assigned index {} to phase C of node {}", matrixNodeIndexIdx, idx);
 			++matrixNodeIndexIdx;
 		}
 		if (idx == mNumNetNodes-1) mNumNetMatrixNodeIndices = matrixNodeIndexIdx;
