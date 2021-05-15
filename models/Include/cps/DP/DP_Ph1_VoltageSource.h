@@ -13,8 +13,8 @@
 #include <cps/Solver/DAEInterface.h>
 #include <cps/Signal/SineWaveGenerator.h>
 #include <cps/Signal/SignalGenerator.h>
-#include <cps/Signal/FrequencyRamp.h>
-#include <cps/Signal/FmGenerator.h>
+#include <cps/Signal/FrequencyRampGenerator.h>
+#include <cps/Signal/CosineFMGenerator.h>
 
 namespace CPS {
 namespace DP {

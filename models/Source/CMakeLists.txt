@@ -119,8 +119,8 @@ list(APPEND CPS_SOURCES
 	Signal/PowerControllerVSI.cpp
 	Signal/SineWaveGenerator.cpp
 	Signal/SignalGenerator.cpp
-	Signal/FrequencyRamp.cpp
-	Signal/FmGenerator.cpp
+	Signal/FrequencyRampGenerator.cpp
+	Signal/CosineFMGenerator.cpp
 )
 
 if(WITH_CIM)

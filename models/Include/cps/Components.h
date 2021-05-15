@@ -112,4 +112,5 @@
 #include <cps/Signal/Integrator.h>
 #include <cps/Signal/SignalGenerator.h>
 #include <cps/Signal/SineWaveGenerator.h>
-#include <cps/Signal/FrequencyRamp.h>
+#include <cps/Signal/FrequencyRampGenerator.h>
+#include <cps/Signal/CosineFMGenerator.h>

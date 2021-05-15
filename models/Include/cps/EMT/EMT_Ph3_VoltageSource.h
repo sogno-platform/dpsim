@@ -11,7 +11,7 @@
 #include <cps/Solver/MNAInterface.h>
 #include <cps/Signal/SineWaveGenerator.h>
 #include <cps/Signal/SignalGenerator.h>
-#include <cps/Signal/FrequencyRamp.h>
+#include <cps/Signal/FrequencyRampGenerator.h>
 
 namespace CPS {
 	namespace EMT {
