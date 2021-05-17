@@ -159,6 +159,12 @@ PYBIND11_MODULE(dpsimpy, m) {
         .def(py::init<std::string>())
 		.def_readonly_static("gnd", &CPS::DP::SimNode::GND);
 
+	//TODO: setParameters for DP-VS requires srcFreq while DP-CS does not (defaults to 0)
+	py::class_<CPS::DP::Ph1::VoltageSource, std::shared_ptr<CPS::DP::Ph1::VoltageSource>, CPS::SimPowerComp<CPS::Complex>>(mDPPh1, "VoltageSource", py::multiple_inheritance())
+        .def(py::init<std::string>())
+        .def("set_parameters", &CPS::DP::Ph1::VoltageSource::setParameters)
+		.def("connect", &CPS::DP::Ph1::VoltageSource::connect);
+
 	py::class_<CPS::DP::Ph1::CurrentSource, std::shared_ptr<CPS::DP::Ph1::CurrentSource>, CPS::SimPowerComp<CPS::Complex>>(mDPPh1, "CurrentSource", py::multiple_inheritance())
         .def(py::init<std::string>())
         .def("set_parameters", &CPS::DP::Ph1::CurrentSource::setParameters)
@@ -199,7 +205,12 @@ PYBIND11_MODULE(dpsimpy, m) {
 		},
 		[](CPS::EMT::Ph1::CurrentSource &cs, CPS::Real &value) {
 			cs.attribute<CPS::Real>("f_src")->set(value);
-		});;
+		});
+
+	py::class_<CPS::EMT::Ph1::VoltageSource, std::shared_ptr<CPS::EMT::Ph1::VoltageSource>, CPS::SimPowerComp<CPS::Real>>(mEMTPh1, "VoltageSource", py::multiple_inheritance())
+        .def(py::init<std::string>())
+        .def("set_parameters", &CPS::EMT::Ph1::VoltageSource::setParameters)
+		.def("connect", &CPS::EMT::Ph1::VoltageSource::connect);
 
 	py::class_<CPS::EMT::Ph1::Resistor, std::shared_ptr<CPS::EMT::Ph1::Resistor>, CPS::SimPowerComp<CPS::Real>>(mEMTPh1, "Resistor", py::multiple_inheritance())
         .def(py::init<std::string>())
