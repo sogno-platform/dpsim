@@ -7,6 +7,9 @@ using namespace CPS;
 using namespace CPS::CIM;
 using namespace Examples::Components;
 
+// This example is taken from:
+// P. Kundur, "Power System Stability and Control", Example 13.2, pp. 864-869.
+
 // Network
 KundurExample1::Network net;
 Real nomVoltNetwork = net.nomVoltage;
@@ -49,7 +52,7 @@ Real Vslack = 0.90081*nomVoltNetwork;
 Real SwitchOpen = 1e12;
 Real SwitchClosed = 7.21;
 
-void SP_1ph_SynGenTrStab_Fault(String simName, Real timeStep, Real finalTime, Real startTimeFault, Real endTimeFault, Real cmdInertia) {
+void SP_1ph_SynGenTrStab_Fault(String simName, Real timeStep, Real finalTime, Real startTimeFault, Real endTimeFault, Real cmdInertiaFactor) {
 	// ----- POWERFLOW FOR INITIALIZATION -----
 	Real timeStepPF = finalTime;
 	Real finalTimePF = finalTime+timeStepPF;
@@ -130,7 +133,7 @@ void SP_1ph_SynGenTrStab_Fault(String simName, Real timeStep, Real finalTime, Re
 	auto genSP = CPS::SP::Ph1::SynchronGeneratorTrStab::make("SynGen", Logger::Level::debug);
 	
 	// Xpd is given in p.u of generator base at transfomer primary side and should be transformed to network side
-	genSP->setStandardParametersPU(syngenNomPower, syngenNomVoltage, nomFreq, syngenXpdPU, syngenH, syngenRsPU, syngenD);
+	genSP->setStandardParametersPU(syngenNomPower, syngenNomVoltage, nomFreq, syngenXpdPU, cmdInertiaFactor*syngenH, syngenRsPU, syngenD);
 	genSP->setModelFlags(false, false);
 	
 	// Get actual active and reactive power of generator's Terminal from Powerflow solution
@@ -219,25 +222,24 @@ int main(int argc, char* argv[]) {
 
 	//Simultion parameters
 	String simName="SP_SynGenTrStab_SMIB_Fault";
-	Real finalTime = 20;
+	Real finalTime = 10;
 	Real timeStep = 0.001;
 	Real startTimeFault=0.5;
 	Real endTimeFault=0.57;
-	Real cmdInertia= 1.0;
+	Real cmdInertiaFactor= 1.0;
 
 	CommandLineArgs args(argc, argv);
 	if (argc > 1) {
 		timeStep = args.timeStep;
-		finalTime = args.duration;
 		if (args.name != "dpsim")
 			simName = args.name;
 		if (args.options.find("SCALEINERTIA") != args.options.end())
-			cmdInertia = args.options["SCALEINERTIA"];
+			cmdInertiaFactor = args.options["SCALEINERTIA"];
 		if (args.options.find("STARTTIMEFAULT") != args.options.end())
 			startTimeFault = args.options["STARTTIMEFAULT"];
 		if (args.options.find("ENDTIMEFAULT") != args.options.end())
 			endTimeFault = args.options["ENDTIMEFAULT"];
 	}
 
-	SP_1ph_SynGenTrStab_Fault(simName, timeStep, finalTime, startTimeFault, endTimeFault, cmdInertia);
+	SP_1ph_SynGenTrStab_Fault(simName, timeStep, finalTime, startTimeFault, endTimeFault, cmdInertiaFactor);
 }
