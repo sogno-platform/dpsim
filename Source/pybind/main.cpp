@@ -19,6 +19,7 @@
 #include <cps/CSVReader.h>
 
 namespace py = pybind11;
+using namespace pybind11::literals;
 
 PYBIND11_MODULE(dpsimpy, m) {
     m.doc() = R"pbdoc(
@@ -159,30 +160,29 @@ PYBIND11_MODULE(dpsimpy, m) {
         .def(py::init<std::string>())
 		.def_readonly_static("gnd", &CPS::DP::SimNode::GND);
 
-	//TODO: setParameters for DP-VS requires srcFreq while DP-CS does not (defaults to 0)
 	py::class_<CPS::DP::Ph1::VoltageSource, std::shared_ptr<CPS::DP::Ph1::VoltageSource>, CPS::SimPowerComp<CPS::Complex>>(mDPPh1, "VoltageSource", py::multiple_inheritance())
         .def(py::init<std::string>())
-        .def("set_parameters", &CPS::DP::Ph1::VoltageSource::setParameters)
+        .def("set_parameters", &CPS::DP::Ph1::VoltageSource::setParameters, "V_ref"_a, "f_src"_a=0)
 		.def("connect", &CPS::DP::Ph1::VoltageSource::connect);
 
 	py::class_<CPS::DP::Ph1::CurrentSource, std::shared_ptr<CPS::DP::Ph1::CurrentSource>, CPS::SimPowerComp<CPS::Complex>>(mDPPh1, "CurrentSource", py::multiple_inheritance())
         .def(py::init<std::string>())
-        .def("set_parameters", &CPS::DP::Ph1::CurrentSource::setParameters)
+        .def("set_parameters", &CPS::DP::Ph1::CurrentSource::setParameters, "I_ref"_a)
 		.def("connect", &CPS::DP::Ph1::CurrentSource::connect);
 
 	py::class_<CPS::DP::Ph1::Resistor, std::shared_ptr<CPS::DP::Ph1::Resistor>, CPS::SimPowerComp<CPS::Complex>>(mDPPh1, "Resistor", py::multiple_inheritance())
         .def(py::init<std::string>())
-        .def("set_parameters", &CPS::DP::Ph1::Resistor::setParameters)
+        .def("set_parameters", &CPS::DP::Ph1::Resistor::setParameters, "R"_a)
 		.def("connect", &CPS::DP::Ph1::Resistor::connect);
 
 	py::class_<CPS::DP::Ph1::Capacitor, std::shared_ptr<CPS::DP::Ph1::Capacitor>, CPS::SimPowerComp<CPS::Complex>>(mDPPh1, "Capacitor", py::multiple_inheritance())
         .def(py::init<std::string>())
-        .def("set_parameters", &CPS::DP::Ph1::Capacitor::setParameters)
+        .def("set_parameters", &CPS::DP::Ph1::Capacitor::setParameters, "C"_a)
 		.def("connect", &CPS::DP::Ph1::Capacitor::connect);
 
 	py::class_<CPS::DP::Ph1::Inductor, std::shared_ptr<CPS::DP::Ph1::Inductor>, CPS::SimPowerComp<CPS::Complex>>(mDPPh1, "Inductor", py::multiple_inheritance())
         .def(py::init<std::string>())
-        .def("set_parameters", &CPS::DP::Ph1::Inductor::setParameters)
+        .def("set_parameters", &CPS::DP::Ph1::Inductor::setParameters, "L"_a)
 		.def("connect", &CPS::DP::Ph1::Inductor::connect);
 
 	//EMT Components
@@ -192,7 +192,7 @@ PYBIND11_MODULE(dpsimpy, m) {
 
 	py::class_<CPS::EMT::Ph1::CurrentSource, std::shared_ptr<CPS::EMT::Ph1::CurrentSource>, CPS::SimPowerComp<CPS::Real>>(mEMTPh1, "CurrentSource", py::multiple_inheritance())
         .def(py::init<std::string>())
-        .def("set_parameters", &CPS::EMT::Ph1::CurrentSource::setParameters)
+        .def("set_parameters", &CPS::EMT::Ph1::CurrentSource::setParameters, "I_ref"_a, "f_src"_a)
 		.def("connect", &CPS::EMT::Ph1::CurrentSource::connect)
 		.def_property("I_ref", [](CPS::EMT::Ph1::CurrentSource &cs) {
 			return cs.attribute<CPS::Complex>("I_ref")->get();
@@ -209,22 +209,22 @@ PYBIND11_MODULE(dpsimpy, m) {
 
 	py::class_<CPS::EMT::Ph1::VoltageSource, std::shared_ptr<CPS::EMT::Ph1::VoltageSource>, CPS::SimPowerComp<CPS::Real>>(mEMTPh1, "VoltageSource", py::multiple_inheritance())
         .def(py::init<std::string>())
-        .def("set_parameters", &CPS::EMT::Ph1::VoltageSource::setParameters)
+        .def("set_parameters", &CPS::EMT::Ph1::VoltageSource::setParameters, "V_ref"_a, "f_src"_a)
 		.def("connect", &CPS::EMT::Ph1::VoltageSource::connect);
 
 	py::class_<CPS::EMT::Ph1::Resistor, std::shared_ptr<CPS::EMT::Ph1::Resistor>, CPS::SimPowerComp<CPS::Real>>(mEMTPh1, "Resistor", py::multiple_inheritance())
         .def(py::init<std::string>())
-        .def("set_parameters", &CPS::EMT::Ph1::Resistor::setParameters)
+        .def("set_parameters", &CPS::EMT::Ph1::Resistor::setParameters, "R"_a)
 		.def("connect", &CPS::EMT::Ph1::Resistor::connect);
 
 	py::class_<CPS::EMT::Ph1::Capacitor, std::shared_ptr<CPS::EMT::Ph1::Capacitor>, CPS::SimPowerComp<CPS::Real>>(mEMTPh1, "Capacitor", py::multiple_inheritance())
         .def(py::init<std::string>())
-        .def("set_parameters", &CPS::EMT::Ph1::Capacitor::setParameters)
+        .def("set_parameters", &CPS::EMT::Ph1::Capacitor::setParameters, "C"_a)
 		.def("connect", &CPS::EMT::Ph1::Capacitor::connect);
 
 	py::class_<CPS::EMT::Ph1::Inductor, std::shared_ptr<CPS::EMT::Ph1::Inductor>, CPS::SimPowerComp<CPS::Real>>(mEMTPh1, "Inductor", py::multiple_inheritance())
         .def(py::init<std::string>())
-        .def("set_parameters", &CPS::EMT::Ph1::Inductor::setParameters)
+        .def("set_parameters", &CPS::EMT::Ph1::Inductor::setParameters, "L"_a)
 		.def("connect", &CPS::EMT::Ph1::Inductor::connect);
 
 
