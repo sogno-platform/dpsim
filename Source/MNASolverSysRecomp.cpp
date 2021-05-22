@@ -34,21 +34,21 @@ void MnaSolverSysRecomp<VarType>::initializeSystem() {
 		// Do not stamp variable elements yet
 		auto varcomp = std::dynamic_pointer_cast<MNAVariableCompInterface>(comp);
 		if (varcomp) continue;
- 		comp->mnaApplySystemMatrixStamp(this->mSwitchedMatrices[std::bitset<SWITCH_NUM>(0)]);
+ 		comp->mnaApplySystemMatrixStamp(this->mSwitchedMatrices[std::bitset<SWITCH_NUM>(0)][0]);
 		auto idObj = std::dynamic_pointer_cast<IdentifiedObject>(comp);
 	}
 
 	// Save base matrix with only static elements
 	this->mSLog->info("Save base matrix");
-	this->mBaseSystemMatrix = this->mSwitchedMatrices[std::bitset<SWITCH_NUM>(0)];
+	this->mBaseSystemMatrix = this->mSwitchedMatrices[std::bitset<SWITCH_NUM>(0)][0];
 
 	// Now stamp variable elements
 	this->mSLog->info("Stamping variable elements");
 	for (auto varElem : this->mMNAIntfVariableComps) {
-		varElem->mnaApplySystemMatrixStamp(this->mSwitchedMatrices[std::bitset<SWITCH_NUM>(0)]);
+		varElem->mnaApplySystemMatrixStamp(this->mSwitchedMatrices[std::bitset<SWITCH_NUM>(0)][0]);
 	}
-	this->mLuFactorizations[std::bitset<SWITCH_NUM>(0)].analyzePattern(this->mSwitchedMatrices[std::bitset<SWITCH_NUM>(0)]);
-	this->mLuFactorizations[std::bitset<SWITCH_NUM>(0)].factorize(this->mSwitchedMatrices[std::bitset<SWITCH_NUM>(0)]);
+	this->mLuFactorizations[std::bitset<SWITCH_NUM>(0)][0]->analyzePattern(this->mSwitchedMatrices[std::bitset<SWITCH_NUM>(0)][0]);
+	this->mLuFactorizations[std::bitset<SWITCH_NUM>(0)][0]->factorize(this->mSwitchedMatrices[std::bitset<SWITCH_NUM>(0)][0]);
 	// Initialize source vector for debugging
 	for (auto comp : this->mMNAComponents) {
 		comp->mnaApplyRightSideVectorStamp(this->mRightSideVector);
@@ -72,17 +72,17 @@ template <typename VarType>
 void MnaSolverSysRecomp<VarType>::updateSystemMatrix(Real time) {
 	this->mSLog->info("Updating System Matrix at {}\n", time);
 	// Start from base matrix
-	this->mSwitchedMatrices[std::bitset<SWITCH_NUM>(0)] = this->mBaseSystemMatrix;
+	this->mSwitchedMatrices[std::bitset<SWITCH_NUM>(0)][0] = this->mBaseSystemMatrix;
 
 	// Create system matrix with changed variable elements
 	for (auto comp : this->mMNAIntfVariableComps) {
-		comp->mnaApplySystemMatrixStamp(this->mSwitchedMatrices[std::bitset<SWITCH_NUM>(0)]);
+		comp->mnaApplySystemMatrixStamp(this->mSwitchedMatrices[std::bitset<SWITCH_NUM>(0)][0]);
 		auto idObj = std::dynamic_pointer_cast<IdentifiedObject>(comp);
 		this->mSLog->debug("Updating {:s} {:s} in system matrix (variabel component)",
 			idObj->type(), idObj->name());
 	}
-	this->mLuFactorizations[std::bitset<SWITCH_NUM>(0)].analyzePattern(this->mSwitchedMatrices[std::bitset<SWITCH_NUM>(0)]);
-	this->mLuFactorizations[std::bitset<SWITCH_NUM>(0)].factorize(this->mSwitchedMatrices[std::bitset<SWITCH_NUM>(0)]);
+	this->mLuFactorizations[std::bitset<SWITCH_NUM>(0)][0]->analyzePattern(this->mSwitchedMatrices[std::bitset<SWITCH_NUM>(0)][0]);
+	this->mLuFactorizations[std::bitset<SWITCH_NUM>(0)][0]->factorize(this->mSwitchedMatrices[std::bitset<SWITCH_NUM>(0)][0]);
 	mUpdateSysMatrix = false;
 }
 
@@ -98,7 +98,7 @@ void MnaSolverSysRecomp<VarType>::solve(Real time, Int timeStepCount) {
 		this->mRightSideVector += *stamp;
 
 	if (this->mSwitchedMatrices.size() > 0)
-		this->mLeftSideVector = this->mLuFactorizations[this->mCurrentSwitchStatus].solve(this->mRightSideVector);
+		this->mLeftSideVector = this->mLuFactorizations[this->mCurrentSwitchStatus][0]->solve(this->mRightSideVector);
 
 	// TODO split into separate task? (dependent on x, updating all v attributes)
 	for (UInt nodeIdx = 0; nodeIdx < this->mNumNetNodes; ++nodeIdx)

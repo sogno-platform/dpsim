@@ -39,21 +39,23 @@ namespace DPsim {
 		// #### General simulation settings ####
 		/// Simulation domain, which can be dynamic phasor (DP) or EMT
 		CPS::Domain mDomain;
-		/// Number of nodes
+		/// Number of network and virtual nodes, single line equivalent
 		UInt mNumNodes = 0;
-		/// Number of network nodes
+		/// Number of network nodes, single line equivalent
 		UInt mNumNetNodes = 0;
-		/// Number of virtual nodes
+		/// Number of virtual nodes, single line equivalent
 		UInt mNumVirtualNodes = 0;
-		/// Number of simulation nodes
+		/// Number of network and virtual nodes, considering individual phases
 		UInt mNumMatrixNodeIndices = 0;
-		/// Number of simulation network nodes
+		/// Number of network nodes, considering individual phases
 		UInt mNumNetMatrixNodeIndices = 0;
-		/// Number of simulation virtual nodes
+		/// Number of virtual nodes, considering individual phases
 		UInt mNumVirtualMatrixNodeIndices = 0;
-		/// Number of harmonic nodes
+		/// Number of nodes, excluding the primary frequency
 		UInt mNumHarmMatrixNodeIndices = 0;
-		/// System list
+		/// Total number of network and virtual nodes, considering individual phases and additional frequencies
+		UInt mNumTotalMatrixNodeIndices = 0;
+		/// System topology
 		CPS::SystemTopology mSystem;
 		/// List of simulation nodes
 		typename CPS::SimNode<VarType>::List mNodes;
@@ -64,30 +66,32 @@ namespace DPsim {
 		/// List of switches that stamp differently depending on their state
 		/// and indicate the solver to choose a different system matrix
 		CPS::MNASwitchInterface::List mSwitches;
-		/// List of MNA components with SwitchInterface
+		/// List of switches if they must be accessed as MNAInterface objects
 		CPS::MNAInterface::List mMNAIntfSwitches;
 		/// List of components that indicate the solver to recompute the system matrix
 		/// depending on their state
 		CPS::MNAVariableCompInterface::List mVariableComps;
-		/// List of MNA components with VariableCompInterface
+		/// List of variable components if they must be accessed as MNAInterface objects
 		CPS::MNAInterface::List mMNAIntfVariableComps;
-		/// List of signal type components that do not directly interact
-		/// with the MNA solver
+		/// List of signal type components that do not directly interact with the MNA solver
 		CPS::SimSignalComp::List mSimSignalComps;
-		/// System matrix A that is modified by matrix stamps
+		/// Current status of all switches encoded as bitset
 		std::bitset<SWITCH_NUM> mCurrentSwitchStatus;
+
 		/// Source vector of known quantities
 		Matrix mRightSideVector;
-		std::vector<Matrix> mRightSideVectorHarm;
 		/// List of all right side vector contributions
 		std::vector<const Matrix*> mRightVectorStamps;
 		/// Solution vector of unknown quantities
 		Matrix mLeftSideVector;
+				
+		// #### MNA specific attributes related to harmonics / additional frequencies ####
+		/// Source vector of known quantities
+		std::vector<Matrix> mRightSideVectorHarm;
+		/// Solution vector of unknown quantities
 		std::vector<Matrix> mLeftSideVectorHarm;
+		///
 		std::vector< CPS::Attribute<Matrix>::Ptr > mLeftVectorHarmAttributes;
-
-		std::unordered_map< std::bitset<SWITCH_NUM>, std::vector<Matrix> > mSwitchedMatricesHarm;
-		std::unordered_map< std::bitset<SWITCH_NUM>, std::vector<CPS::LUFactorized> > mLuFactorizationsHarm;
 
 		// #### Attributes related to switching ####
 		/// Index of the next switching event
@@ -127,16 +131,23 @@ namespace DPsim {
 		void collectVirtualNodes();
 		// TODO: check if this works with AC sources
 		void steadyStateInitialization();
+		
 		/// Create left and right side vector
 		void createEmptyVectors();
-		/// Logging of system matrices and source vector
-		virtual void logSystemMatrices() = 0;
-		/// Sets all entries in the matrix with the given switch index to zero
-		virtual void switchedMatrixEmpty(std::size_t index) = 0;
 		/// Create system matrix
 		virtual void createEmptySystemMatrix() = 0;
+		/// Sets all entries in the matrix with the given switch index to zero
+		virtual void switchedMatrixEmpty(std::size_t index) = 0;
+		/// Sets all entries in the matrix with the given switch index and frequency index to zero
+		virtual void switchedMatrixEmpty(std::size_t swIdx, Int freqIdx) = 0;
 		/// Applies a component stamp to the matrix with the given switch index
 		virtual void switchedMatrixStamp(std::size_t index, std::vector<std::shared_ptr<CPS::MNAInterface>>& comp) = 0;
+		/// Applies a component and switch stamp to the matrix with the given switch index
+		virtual void switchedMatrixStamp(std::size_t swIdx, Int freqIdx, CPS::MNAInterface::List& components, CPS::MNASwitchInterface::List& switches) { }
+
+		/// Logging of system matrices and source vector
+		virtual void logSystemMatrices() = 0;
+		
 		/// Create a solve task for this solver implementation
 		virtual std::shared_ptr<CPS::Task> createSolveTask() = 0;
 		/// Create a solve task for this solver implementation

@@ -185,22 +185,19 @@ void MnaSolver<VarType>::initializeSystem() {
 
 template <typename VarType>
 void MnaSolver<VarType>::initializeSystemWithParallelFrequencies() {
-	// iterate over all possible switch state combinations
-	for (std::size_t i = 0; i < (1ULL << mSwitches.size()); i++) {
-		for(Int freq = 0; freq < mSystem.mFrequencies.size(); ++freq)
-			mSwitchedMatricesHarm[std::bitset<SWITCH_NUM>(i)][freq].setZero();
+	// iterate over all possible switch state combinations and frequencies
+	for (std::size_t sw = 0; sw < (1ULL << mSwitches.size()); sw++) {
+		for(Int freq = 0; freq < mSystem.mFrequencies.size(); freq++) {
+			switchedMatrixEmpty(sw, freq);
+			switchedMatrixStamp(sw, freq, mMNAComponents, mSwitches);
+		}
 	}
 
+	if (mSwitches.size() > 0)
+		updateSwitchStatus();
+
+	// Initialize source vector
 	for(Int freq = 0; freq < mSystem.mFrequencies.size(); ++freq) {
-		// Create system matrix if no switches were added
-		// TODO add case for switches and possibly merge with no harmonics
-		for (auto comp : mMNAComponents)
-			comp->mnaApplySystemMatrixStampHarm(mSwitchedMatricesHarm[std::bitset<SWITCH_NUM>(0)][freq], freq);
-
-		mLuFactorizationsHarm[std::bitset<SWITCH_NUM>(0)].push_back(
-			Eigen::PartialPivLU<Matrix>(mSwitchedMatricesHarm[std::bitset<SWITCH_NUM>(0)][freq]));
-
-		// Initialize source vector
 		for (auto comp : mMNAComponents)
 			comp->mnaApplyRightSideVectorStampHarm(mRightSideVectorHarm[freq], freq);
 	}
@@ -297,12 +294,14 @@ void MnaSolver<VarType>::assignMatrixNodeIndices() {
 			mSLog->info("Assigned index {} to phase C of node {}", matrixNodeIndexIdx, idx);
 			++matrixNodeIndexIdx;
 		}
+		// This should be true when the final network node is reached, not considering virtual nodes
 		if (idx == mNumNetNodes-1) mNumNetMatrixNodeIndices = matrixNodeIndexIdx;
 	}
-	// Total number of network nodes is matrixNodeIndexIdx + 1
+	// Total number of network nodes including virtual nodes is matrixNodeIndexIdx + 1, which is why the variable is incremented after assignment
 	mNumMatrixNodeIndices = matrixNodeIndexIdx;
 	mNumVirtualMatrixNodeIndices = mNumMatrixNodeIndices - mNumNetMatrixNodeIndices;
 	mNumHarmMatrixNodeIndices = static_cast<UInt>(mSystem.mFrequencies.size()-1) * mNumMatrixNodeIndices;
+	mNumTotalMatrixNodeIndices = static_cast<UInt>(mSystem.mFrequencies.size()) * mNumMatrixNodeIndices;
 
 	mSLog->info("Assigned simulation nodes to topology nodes:");
 	mSLog->info("Number of network simulation nodes: {:d}", mNumNetMatrixNodeIndices);

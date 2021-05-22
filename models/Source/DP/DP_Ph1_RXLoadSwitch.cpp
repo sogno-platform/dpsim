@@ -97,9 +97,9 @@ void DP::Ph1::RXLoadSwitch::mnaApplySystemMatrixStamp(Matrix& systemMatrix) {
 	mSubSwitch->mnaApplySystemMatrixStamp(systemMatrix);
 }
 
-void DP::Ph1::RXLoadSwitch::mnaApplySwitchSystemMatrixStamp(Matrix& systemMatrix, Bool closed) {
+void DP::Ph1::RXLoadSwitch::mnaApplySwitchSystemMatrixStamp(Bool closed, Matrix& systemMatrix, Int freqIdx) {
 	mSubRXLoad->mnaApplySystemMatrixStamp(systemMatrix);
-	mSubSwitch->mnaApplySwitchSystemMatrixStamp(systemMatrix, closed);
+	mSubSwitch->mnaApplySwitchSystemMatrixStamp(closed, systemMatrix, freqIdx);
 }
 
 void DP::Ph1::RXLoadSwitch::mnaAddPreStepDependencies(AttributeBase::List &prevStepDependencies,
