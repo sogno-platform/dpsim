@@ -73,7 +73,7 @@ namespace Ph1 {
 		/// Check if switch is closed
 		Bool mnaIsClosed() { return mSubSwitch->isClosed(); }
 		/// Stamps system matrix considering the defined switch position
-		void mnaApplySwitchSystemMatrixStamp(Matrix& systemMatrix, Bool closed);
+		void mnaApplySwitchSystemMatrixStamp(Bool closed, Matrix& systemMatrix, Int freqIdx);
 
 		class MnaPreStep : public Task {
 		public:

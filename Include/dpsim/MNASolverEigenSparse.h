@@ -14,6 +14,7 @@
 #include <list>
 #include <unordered_map>
 #include <bitset>
+#include <memory>
 
 #include <dpsim/Config.h>
 #include <dpsim/Solver.h>
@@ -35,9 +36,10 @@ namespace DPsim {
 		/// Base matrix that includes all static MNA elements to speed up recomputation
 		SparseMatrix mBaseSystemMatrix;
 		/// Map of system matrices where the key is the bitset describing the switch states
-		std::unordered_map< std::bitset<SWITCH_NUM>, SparseMatrix > mSwitchedMatrices;
+		std::unordered_map< std::bitset<SWITCH_NUM>, std::vector<SparseMatrix> > mSwitchedMatrices;
 		/// Map of LU factorizations related to the system matrices
-		std::unordered_map< std::bitset<SWITCH_NUM>, CPS::LUFactorizedSparse > mLuFactorizations;
+		std::unordered_map< std::bitset<SWITCH_NUM>, std::vector< std::shared_ptr< CPS::LUFactorizedSparse> > > mLuFactorizations;
+
 		using MnaSolver<VarType>::mSwitches;
 		using MnaSolver<VarType>::mRightSideVector;
 		using MnaSolver<VarType>::mLeftSideVector;
@@ -48,14 +50,14 @@ namespace DPsim {
 		using MnaSolver<VarType>::mIsInInitialization;
 		using MnaSolver<VarType>::mRightSideVectorHarm;
 		using MnaSolver<VarType>::mLeftSideVectorHarm;
-		using MnaSolver<VarType>::mLuFactorizationsHarm;
 		using MnaSolver<VarType>::mFrequencyParallel;
-		using MnaSolver<VarType>::mSwitchedMatricesHarm;
 		using MnaSolver<VarType>::mSLog;
 
 
 		/// Sets all entries in the matrix with the given switch index to zero
 		virtual void switchedMatrixEmpty(std::size_t index) override;
+		/// Sets all entries in the matrix with the given switch index and frequency index to zero
+		virtual void switchedMatrixEmpty(std::size_t swIdx, Int freqIdx) override;
 		/// Create system matrix
 		virtual void createEmptySystemMatrix() override;
 		/// Applies a component stamp to the matrix with the given switch index
