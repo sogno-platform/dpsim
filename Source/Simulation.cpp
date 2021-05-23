@@ -59,17 +59,12 @@ Simulation::Simulation(String name,	Logger::Level logLevel) : Simulation::Simula
 	mLog = Logger::get(mName, mLogLevel, std::max(Logger::Level::info, logLevel));
 }
 
-Simulation::Simulation(String name, CommandLineArgs& args) : Simulation::Simulation() {
-	mName = name;
+Simulation::Simulation(String name, CommandLineArgs& args) : Simulation(name, args.logLevel) {
 	mFinalTime = args.duration;
 	mTimeStep = args.timeStep;
-	mLogLevel = args.logLevel;
 	mDomain = args.solver.domain;
 	mSolverType = args.solver.type;
 	mMnaImpl = args.mnaImpl;
-
-	// Logging
-	mLog = Logger::get(name, mLogLevel, std::max(Logger::Level::info, mLogLevel));
 }
 
 Simulation::Simulation(String name, SystemTopology system,
