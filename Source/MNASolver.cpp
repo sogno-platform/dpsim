@@ -186,8 +186,8 @@ void MnaSolver<VarType>::initializeSystem() {
 template <typename VarType>
 void MnaSolver<VarType>::initializeSystemWithParallelFrequencies() {
 	// iterate over all possible switch state combinations and frequencies
-	for (std::size_t sw = 0; sw < (1ULL << mSwitches.size()); sw++) {
-		for(Int freq = 0; freq < mSystem.mFrequencies.size(); freq++) {
+	for (std::size_t sw = 0; sw < (1ULL << mSwitches.size()); ++sw) {
+		for(Int freq = 0; freq < mSystem.mFrequencies.size(); ++freq) {
 			switchedMatrixEmpty(sw, freq);
 			switchedMatrixStamp(sw, freq, mMNAComponents, mSwitches);
 		}
