@@ -58,7 +58,9 @@ PYBIND11_MODULE(dpsimpy, m) {
 	py::class_<CPS::MatrixComp>(m, "MatrixComp");
 
 	py::class_<CPS::Math>(m, "Math")
-		.def_static("single_phase_variable_to_three_phase", &CPS::Math::singlePhaseVariableToThreePhase);
+		.def_static("single_phase_variable_to_three_phase", &CPS::Math::singlePhaseVariableToThreePhase)
+		.def_static("single_phase_parameter_to_three_phase", &CPS::Math::singlePhaseParameterToThreePhase);
+
 
     py::class_<DPsim::Simulation>(m, "Simulation")
 	    .def(py::init<std::string, CPS::Logger::Level>(), "name"_a, "loglevel"_a = CPS::Logger::Level::off)
@@ -179,9 +181,12 @@ PYBIND11_MODULE(dpsimpy, m) {
 	py::module mEMT = m.def_submodule("emt", "electromagnetic-transient models");
 	py::module mEMTPh1 = mEMT.def_submodule("ph1", "single phase electromagnetic-transient models");
 	py::module mEMTPh3 = mEMT.def_submodule("ph3", "three phase electromagnetic-transient models");
+	py::module mSP = m.def_submodule("sp", "static phasor models");
+	py::module mSPPh1 = mSP.def_submodule("ph1", "single phase static phasor models");
+	py::module mSPPh3 = mSP.def_submodule("ph3", "three phase static phasor models");
 
 	//DP-Components
-    py::class_<CPS::DP::SimNode, std::shared_ptr<CPS::DP::SimNode>, CPS::TopologicalNode>(mDP, "SimNode")
+    py::class_<CPS::DP::SimNode, std::shared_ptr<CPS::DP::SimNode>, CPS::TopologicalNode>(mDP, "SimNode", py::module_local())
         .def(py::init<std::string>())
 		.def(py::init<std::string, CPS::PhaseType>())
 		.def(py::init<std::string, CPS::PhaseType, const std::vector<CPS::Complex>>())
@@ -192,6 +197,7 @@ PYBIND11_MODULE(dpsimpy, m) {
 
 	py::class_<CPS::DP::Ph1::VoltageSource, std::shared_ptr<CPS::DP::Ph1::VoltageSource>, CPS::SimPowerComp<CPS::Complex>>(mDPPh1, "VoltageSource", py::multiple_inheritance())
         .def(py::init<std::string>())
+		.def(py::init<std::string, CPS::Logger::Level>())
         .def("set_parameters", &CPS::DP::Ph1::VoltageSource::setParameters, "V_ref"_a, "f_src"_a=-1)
 		.def("connect", &CPS::DP::Ph1::VoltageSource::connect)
 		.def_property("V_ref", createAttributeGetter<CPS::Complex>("V_ref"), createAttributeSetter<CPS::Complex>("V_ref"))
@@ -199,41 +205,46 @@ PYBIND11_MODULE(dpsimpy, m) {
 
 	py::class_<CPS::DP::Ph1::CurrentSource, std::shared_ptr<CPS::DP::Ph1::CurrentSource>, CPS::SimPowerComp<CPS::Complex>>(mDPPh1, "CurrentSource", py::multiple_inheritance())
         .def(py::init<std::string>())
+		.def(py::init<std::string, CPS::Logger::Level>())
         .def("set_parameters", &CPS::DP::Ph1::CurrentSource::setParameters, "I_ref"_a)
 		.def("connect", &CPS::DP::Ph1::CurrentSource::connect)
 		.def_property("I_ref", createAttributeGetter<CPS::Complex>("I_ref"), createAttributeSetter<CPS::Complex>("I_ref"));
 
 	py::class_<CPS::DP::Ph1::Resistor, std::shared_ptr<CPS::DP::Ph1::Resistor>, CPS::SimPowerComp<CPS::Complex>>(mDPPh1, "Resistor", py::multiple_inheritance())
         .def(py::init<std::string>())
+		.def(py::init<std::string, CPS::Logger::Level>())
         .def("set_parameters", &CPS::DP::Ph1::Resistor::setParameters, "R"_a)
 		.def("connect", &CPS::DP::Ph1::Resistor::connect)
 		.def_property("R", createAttributeGetter<CPS::Real>("R"), createAttributeSetter<CPS::Real>("R"));
 
 	py::class_<CPS::DP::Ph1::Capacitor, std::shared_ptr<CPS::DP::Ph1::Capacitor>, CPS::SimPowerComp<CPS::Complex>>(mDPPh1, "Capacitor", py::multiple_inheritance())
         .def(py::init<std::string>())
+		.def(py::init<std::string, CPS::Logger::Level>())
         .def("set_parameters", &CPS::DP::Ph1::Capacitor::setParameters, "C"_a)
 		.def("connect", &CPS::DP::Ph1::Capacitor::connect)
 		.def_property("C", createAttributeGetter<CPS::Real>("C"), createAttributeSetter<CPS::Real>("C"));
 
 	py::class_<CPS::DP::Ph1::Inductor, std::shared_ptr<CPS::DP::Ph1::Inductor>, CPS::SimPowerComp<CPS::Complex>>(mDPPh1, "Inductor", py::multiple_inheritance())
         .def(py::init<std::string>())
+		.def(py::init<std::string, CPS::Logger::Level>())
         .def("set_parameters", &CPS::DP::Ph1::Inductor::setParameters, "L"_a)
 		.def("connect", &CPS::DP::Ph1::Inductor::connect)
 		.def_property("L", createAttributeGetter<CPS::Real>("L"), createAttributeSetter<CPS::Real>("L"));
 
 	//EMT Components
-	py::class_<CPS::EMT::SimNode, std::shared_ptr<CPS::EMT::SimNode>, CPS::TopologicalNode>(mEMT, "SimNode")
+	py::class_<CPS::EMT::SimNode, std::shared_ptr<CPS::EMT::SimNode>, CPS::TopologicalNode>(mEMT, "SimNode", py::module_local())
         .def(py::init<std::string>())
 		.def(py::init<std::string, CPS::PhaseType>())
 		.def(py::init<std::string, CPS::PhaseType, const std::vector<CPS::Complex>>())
-		.def("set_initial_voltage", py::detail::overload_cast_impl<CPS::MatrixComp>()(&CPS::DP::SimNode::setInitialVoltage))
-		.def("set_initial_voltage", py::detail::overload_cast_impl<CPS::Complex>()(&CPS::DP::SimNode::setInitialVoltage))
-		.def("set_initial_voltage", py::detail::overload_cast_impl<CPS::Complex, int>()(&CPS::DP::SimNode::setInitialVoltage))
+		.def("set_initial_voltage", py::detail::overload_cast_impl<CPS::MatrixComp>()(&CPS::EMT::SimNode::setInitialVoltage))
+		.def("set_initial_voltage", py::detail::overload_cast_impl<CPS::Complex>()(&CPS::EMT::SimNode::setInitialVoltage))
+		.def("set_initial_voltage", py::detail::overload_cast_impl<CPS::Complex, int>()(&CPS::EMT::SimNode::setInitialVoltage))
 		.def_readonly_static("gnd", &CPS::EMT::SimNode::GND);
 
 	//EMT Ph1 Components
 	py::class_<CPS::EMT::Ph1::CurrentSource, std::shared_ptr<CPS::EMT::Ph1::CurrentSource>, CPS::SimPowerComp<CPS::Real>>(mEMTPh1, "CurrentSource", py::multiple_inheritance())
         .def(py::init<std::string>())
+		.def(py::init<std::string, CPS::Logger::Level>())
         .def("set_parameters", &CPS::EMT::Ph1::CurrentSource::setParameters, "I_ref"_a, "f_src"_a = -1)
 		.def("connect", &CPS::EMT::Ph1::CurrentSource::connect)
 		.def_property("I_ref", createAttributeGetter<CPS::Complex>("I_ref"), createAttributeSetter<CPS::Complex>("I_ref"))
@@ -241,6 +252,7 @@ PYBIND11_MODULE(dpsimpy, m) {
 
 	py::class_<CPS::EMT::Ph1::VoltageSource, std::shared_ptr<CPS::EMT::Ph1::VoltageSource>, CPS::SimPowerComp<CPS::Real>>(mEMTPh1, "VoltageSource", py::multiple_inheritance())
         .def(py::init<std::string>())
+		.def(py::init<std::string, CPS::Logger::Level>())
         .def("set_parameters", &CPS::EMT::Ph1::VoltageSource::setParameters, "V_ref"_a, "f_src"_a = -1)
 		.def("connect", &CPS::EMT::Ph1::VoltageSource::connect)
 		.def_property("V_ref", createAttributeGetter<CPS::Complex>("V_ref"), createAttributeSetter<CPS::Complex>("V_ref"))
@@ -248,18 +260,21 @@ PYBIND11_MODULE(dpsimpy, m) {
 
 	py::class_<CPS::EMT::Ph1::Resistor, std::shared_ptr<CPS::EMT::Ph1::Resistor>, CPS::SimPowerComp<CPS::Real>>(mEMTPh1, "Resistor", py::multiple_inheritance())
         .def(py::init<std::string>())
+		.def(py::init<std::string, CPS::Logger::Level>())
         .def("set_parameters", &CPS::EMT::Ph1::Resistor::setParameters, "R"_a)
 		.def("connect", &CPS::EMT::Ph1::Resistor::connect)
 		.def_property("R", createAttributeGetter<CPS::Real>("R"), createAttributeSetter<CPS::Real>("R"));
 
 	py::class_<CPS::EMT::Ph1::Capacitor, std::shared_ptr<CPS::EMT::Ph1::Capacitor>, CPS::SimPowerComp<CPS::Real>>(mEMTPh1, "Capacitor", py::multiple_inheritance())
         .def(py::init<std::string>())
+		.def(py::init<std::string, CPS::Logger::Level>())
         .def("set_parameters", &CPS::EMT::Ph1::Capacitor::setParameters, "C"_a)
 		.def("connect", &CPS::EMT::Ph1::Capacitor::connect)
 		.def_property("C", createAttributeGetter<CPS::Real>("C"), createAttributeSetter<CPS::Real>("C"));
 
 	py::class_<CPS::EMT::Ph1::Inductor, std::shared_ptr<CPS::EMT::Ph1::Inductor>, CPS::SimPowerComp<CPS::Real>>(mEMTPh1, "Inductor", py::multiple_inheritance())
         .def(py::init<std::string>())
+		.def(py::init<std::string, CPS::Logger::Level>())
         .def("set_parameters", &CPS::EMT::Ph1::Inductor::setParameters, "L"_a)
 		.def("connect", &CPS::EMT::Ph1::Inductor::connect)
 		.def_property("L", createAttributeGetter<CPS::Real>("L"), createAttributeSetter<CPS::Real>("L"));
@@ -267,6 +282,7 @@ PYBIND11_MODULE(dpsimpy, m) {
 	//EMT Ph3 Components
 	py::class_<CPS::EMT::Ph3::VoltageSource, std::shared_ptr<CPS::EMT::Ph3::VoltageSource>, CPS::SimPowerComp<CPS::Real>>(mEMTPh3, "VoltageSource", py::multiple_inheritance())
         .def(py::init<std::string>())
+		.def(py::init<std::string, CPS::Logger::Level>())
         .def("set_parameters", &CPS::EMT::Ph3::VoltageSource::setParameters, "V_ref"_a, "f_src"_a = -1)
 		.def("connect", &CPS::EMT::Ph3::VoltageSource::connect)
 		.def_property("V_ref", createAttributeGetter<CPS::MatrixComp>("V_ref"), createAttributeSetter<CPS::MatrixComp>("V_ref"))
@@ -274,17 +290,82 @@ PYBIND11_MODULE(dpsimpy, m) {
 
 	py::class_<CPS::EMT::Ph3::Resistor, std::shared_ptr<CPS::EMT::Ph3::Resistor>, CPS::SimPowerComp<CPS::Real>>(mEMTPh3, "Resistor", py::multiple_inheritance())
         .def(py::init<std::string>())
-        .def("set_parameters", &CPS::EMT::Ph3::Resistor::setParameters, "R"_a);
+		.def(py::init<std::string, CPS::Logger::Level>())
+        .def("set_parameters", &CPS::EMT::Ph3::Resistor::setParameters, "R"_a)
+		.def("connect", &CPS::EMT::Ph3::Resistor::connect);;
 
 	py::class_<CPS::EMT::Ph3::Capacitor, std::shared_ptr<CPS::EMT::Ph3::Capacitor>, CPS::SimPowerComp<CPS::Real>>(mEMTPh3, "Capacitor", py::multiple_inheritance())
         .def(py::init<std::string>())
+		.def(py::init<std::string, CPS::Logger::Level>())
         .def("set_parameters", &CPS::EMT::Ph3::Capacitor::setParameters, "C"_a)
 		.def("connect", &CPS::EMT::Ph3::Capacitor::connect);
 
 	py::class_<CPS::EMT::Ph3::Inductor, std::shared_ptr<CPS::EMT::Ph3::Inductor>, CPS::SimPowerComp<CPS::Real>>(mEMTPh3, "Inductor", py::multiple_inheritance())
         .def(py::init<std::string>())
+		.def(py::init<std::string, CPS::Logger::Level>())
         .def("set_parameters", &CPS::EMT::Ph3::Inductor::setParameters, "L"_a)
 		.def("connect", &CPS::EMT::Ph3::Inductor::connect);
+
+
+	//SP Components
+	mSP.attr("SimNode") = mDP.attr("SimNode");
+
+	//SP Ph1 Components
+	py::class_<CPS::SP::Ph1::VoltageSource, std::shared_ptr<CPS::SP::Ph1::VoltageSource>, CPS::SimPowerComp<CPS::Complex>>(mSPPh1, "VoltageSource", py::multiple_inheritance())
+        .def(py::init<std::string>())
+		.def(py::init<std::string, CPS::Logger::Level>())
+        .def("set_parameters", &CPS::SP::Ph1::VoltageSource::setParameters, "V_ref"_a, "f_src"_a = -1)
+		.def("connect", &CPS::SP::Ph1::VoltageSource::connect)
+		.def_property("V_ref", createAttributeGetter<CPS::Complex>("V_ref"), createAttributeSetter<CPS::Complex>("V_ref"))
+		.def_property("f_src", createAttributeGetter<CPS::Real>("f_src"), createAttributeSetter<CPS::Real>("f_src"));
+
+	py::class_<CPS::SP::Ph1::Resistor, std::shared_ptr<CPS::SP::Ph1::Resistor>, CPS::SimPowerComp<CPS::Complex>>(mSPPh1, "Resistor", py::multiple_inheritance())
+        .def(py::init<std::string>())
+		.def(py::init<std::string, CPS::Logger::Level>())
+        .def("set_parameters", &CPS::SP::Ph1::Resistor::setParameters, "R"_a)
+		.def("connect", &CPS::SP::Ph1::Resistor::connect)
+		.def_property("R", createAttributeGetter<CPS::Real>("R"), createAttributeSetter<CPS::Complex>("R"));
+
+	py::class_<CPS::SP::Ph1::Capacitor, std::shared_ptr<CPS::SP::Ph1::Capacitor>, CPS::SimPowerComp<CPS::Complex>>(mSPPh1, "Capacitor", py::multiple_inheritance())
+        .def(py::init<std::string>())
+		.def(py::init<std::string, CPS::Logger::Level>())
+        .def("set_parameters", &CPS::SP::Ph1::Capacitor::setParameters, "C"_a)
+		.def("connect", &CPS::SP::Ph1::Capacitor::connect)
+		.def_property("C", createAttributeGetter<CPS::Real>("C"), createAttributeSetter<CPS::Real>("C"));
+
+	py::class_<CPS::SP::Ph1::Inductor, std::shared_ptr<CPS::SP::Ph1::Inductor>, CPS::SimPowerComp<CPS::Complex>>(mSPPh1, "Inductor", py::multiple_inheritance())
+        .def(py::init<std::string>())
+		.def(py::init<std::string, CPS::Logger::Level>())
+        .def("set_parameters", &CPS::SP::Ph1::Inductor::setParameters, "L"_a)
+		.def("connect", &CPS::SP::Ph1::Inductor::connect)
+		.def_property("L", createAttributeGetter<CPS::Real>("L"), createAttributeSetter<CPS::Real>("L"));
+
+	//SP Ph3 Components
+	py::class_<CPS::SP::Ph3::VoltageSource, std::shared_ptr<CPS::SP::Ph3::VoltageSource>, CPS::SimPowerComp<CPS::Complex>>(mSPPh3, "VoltageSource", py::multiple_inheritance())
+        .def(py::init<std::string>())
+		.def(py::init<std::string, CPS::Logger::Level>())
+        .def("set_parameters", &CPS::SP::Ph3::VoltageSource::setParameters, "V_ref"_a)
+		.def("connect", &CPS::SP::Ph3::VoltageSource::connect)
+		.def_property("V_ref", createAttributeGetter<CPS::MatrixComp>("V_ref"), createAttributeSetter<CPS::MatrixComp>("V_ref"))
+		.def_property("f_src", createAttributeGetter<CPS::Real>("f_src"), createAttributeSetter<CPS::Real>("f_src"));
+
+	py::class_<CPS::SP::Ph3::Resistor, std::shared_ptr<CPS::SP::Ph3::Resistor>, CPS::SimPowerComp<CPS::Complex>>(mSPPh3, "Resistor", py::multiple_inheritance())
+        .def(py::init<std::string>())
+		.def(py::init<std::string, CPS::Logger::Level>())
+        .def("set_parameters", &CPS::SP::Ph3::Resistor::setParameters, "R"_a)
+		.def("connect", &CPS::SP::Ph3::Resistor::connect);;
+
+	py::class_<CPS::SP::Ph3::Capacitor, std::shared_ptr<CPS::SP::Ph3::Capacitor>, CPS::SimPowerComp<CPS::Complex>>(mSPPh3, "Capacitor", py::multiple_inheritance())
+        .def(py::init<std::string>())
+		.def(py::init<std::string, CPS::Logger::Level>())
+        .def("set_parameters", &CPS::SP::Ph3::Capacitor::setParameters, "C"_a)
+		.def("connect", &CPS::SP::Ph3::Capacitor::connect);
+
+	py::class_<CPS::SP::Ph3::Inductor, std::shared_ptr<CPS::SP::Ph3::Inductor>, CPS::SimPowerComp<CPS::Complex>>(mSPPh3, "Inductor", py::multiple_inheritance())
+        .def(py::init<std::string>())
+		.def(py::init<std::string, CPS::Logger::Level>())
+        .def("set_parameters", &CPS::SP::Ph3::Inductor::setParameters, "L"_a)
+		.def("connect", &CPS::SP::Ph3::Inductor::connect);
 
 
 #ifdef VERSION_INFO
