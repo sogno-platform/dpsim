@@ -78,7 +78,12 @@ int main(int argc, char** argv){
 	CSVReader csvreader(simName, loadProfilePath, assignList, Logger::Level::info);
 	csvreader.assignLoadProfile(sys, 0, args.timeStep, args.duration, CSVReader::Mode::MANUAL);
 
-	RealTimeSimulation sim(simName, sys, args.timeStep, args.duration, args.solver.domain, args.solver.type, args.logLevel);
+	RealTimeSimulation sim(simName, args.logLevel);
+	sim.setSystem(sys);
+	sim.setTimeStep(args.timeStep);
+	sim.setFinalTime(args.duration);
+	sim.setDomain(args.solver.domain);
+	sim.setSolverType(args.solver.type);
 	InterfaceShmem intf("/dpsim1-villas", "/villas-dpsim1");
 
 	ofstream villas_conf;

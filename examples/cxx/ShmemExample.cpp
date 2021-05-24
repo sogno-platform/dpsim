@@ -60,10 +60,16 @@ int main(int argc, char* argv[]) {
 		SystemComponentList{evs, rs, rl, ll, rL});
 
 #ifdef REALTIME
-	RealTimeSimulation sim(simName, sys, timeStep, 1.0);
+	RealTimeSimulation sim(simName);
+	sim.setSystem(sys);
+	sim.setTimeStep(timeStep);
+	sim.setFinalTime(1.0);
 	InterfaceShmem intf("/villas1-in", "/villas1-out", nullptr, false);
 #else
-	Simulation sim(simName, sys, timeStep, 1.0);
+	Simulation sim(simName);
+	sim.setSystem(sys);
+	sim.setTimeStep(timeStep);
+	sim.setFinalTime(1.0);
 	InterfaceShmem intf("/villas1-in", "/villas1-out");
 #endif
 

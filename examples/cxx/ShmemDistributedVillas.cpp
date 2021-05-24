@@ -113,7 +113,10 @@ int main(int argc, char *argv[]) {
 
 	auto sys = SystemTopology(50, nodes, comps);
 
-	RealTimeSimulation sim(simName + argv[1], sys, timeStep, 20);
+	RealTimeSimulation sim(simName + argv[1]);
+	sim.setSystem(sys);
+	sim.setTimeStep(timeStep);
+	sim.setFinalTime(20);
 	sim.addInterface(&intf);
 
 	if (String(argv[1]) == "1") {

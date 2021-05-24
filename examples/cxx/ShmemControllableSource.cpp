@@ -44,8 +44,13 @@ int main(int argc, char *argv[]) {
 	intf.exportComplex(ecs->attributeMatrixComp("v_intf")->coeff(0, 0), 0);
 
 	auto sys = SystemTopology(50, SystemNodeList{n1}, SystemComponentList{ecs, r1});
-	RealTimeSimulation sim(simName, sys, timeStep, finalTime,
-		Domain::DP, Solver::Type::MNA, Logger::Level::info);
+	
+	RealTimeSimulation sim(simName, Logger::Level::info);
+	sim.setSystem(sys);
+	sim.setTimeStep(timeStep);
+	sim.setFinalTime(finalTime);
+	sim.setDomain(Domain::DP);
+	sim.setSolverType(Solver::Type::MNA);
 
 	sim.addInterface(&intf);
 	sim.run();

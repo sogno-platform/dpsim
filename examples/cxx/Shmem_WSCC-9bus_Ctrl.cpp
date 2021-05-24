@@ -73,7 +73,13 @@ int main(int argc, char *argv[]) {
 	load->setAttributeRef("P", filtP->attribute<Real>("output"));
 	sys.mComponents.push_back(filtP);
 
-	RealTimeSimulation sim(simName, sys, args.timeStep, args.duration, Domain::DP, Solver::Type::MNA, Logger::Level::off, true);
+	RealTimeSimulation sim(simName, Logger::Level::off);
+	sim.setSystem(sys);
+	sim.setTimeStep(args.timeStep);
+	sim.setFinalTime(args.duration);
+	sim.setDomain(Domain::DP);
+	sim.setSolverType(Solver::Type::MNA);
+	sim.doInitFromNodesAndTerminals(true);
 
 	InterfaceShmem intf("/dpsim1-villas", "/villas-dpsim1", nullptr, false);
 

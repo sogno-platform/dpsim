@@ -58,8 +58,13 @@ int main(int argc, char *argv[]) {
 		ecs->connect({ sys.node<DP::SimNode>("BUS4"), DP::SimNode::GND });
 		sys.mComponents.push_back(ecs);
 
-		RealTimeSimulation sim(args.name + "_1", sys, args.timeStep, args.duration,
-			Domain::DP, Solver::Type::MNA, Logger::Level::debug, true);
+		RealTimeSimulation sim(args.name + "_1", Logger::Level::debug);
+		sim.setSystem(sys);
+		sim.setTimeStep(args.timeStep);
+		sim.setFinalTime(args.duration);
+		sim.setDomain(Domain::DP);
+		sim.setSolverType(Solver::Type::MNA);
+		sim.doInitFromNodesAndTerminals(true);
 
 		InterfaceShmem intf1("/dpsim01", "/dpsim10", nullptr, false);
 		InterfaceShmem intf2("/dpsim1-villas", "/villas-dpsim1", nullptr, false);
@@ -121,7 +126,10 @@ int main(int argc, char *argv[]) {
 		load->setAttributeRef("active_power", filtP->attribute<Real>("output"));
 
 		auto sys = SystemTopology(args.sysFreq, SystemNodeList{n1}, SystemComponentList{evs, load, filtP});
-		RealTimeSimulation sim(args.name + "_2", sys, args.timeStep, args.duration);
+		RealTimeSimulation sim(args.name + "_2");
+		sim.setSystem(sys);
+		sim.setTimeStep(args.timeStep);
+		sim.setFinalTime(args.duration);
 
 		InterfaceShmem intf1("/dpsim10", "/dpsim01", nullptr, false);
 		sim.addInterface(&intf1);

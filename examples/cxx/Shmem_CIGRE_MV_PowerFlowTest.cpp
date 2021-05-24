@@ -44,9 +44,12 @@ int main(int argc, char** argv) {
     CIM::Reader reader(simName, Logger::Level::debug, Logger::Level::off);
     SystemTopology sys = reader.loadCIM(system_freq, filenames, CPS::Domain::SP);
 
-	RealTimeSimulation sim(simName, sys,
-		args.timeStep, args.duration,
-		args.solver.domain, args.solver.type, args.logLevel);
+	RealTimeSimulation sim(simName, args.logLevel);
+	sim.setSystem(sys);
+	sim.setTimeStep(args.timeStep);
+	sim.setFinalTime(args.duration);
+	sim.setDomain(args.solver.domain);
+	sim.setSolverType(args.solver.type);
 	InterfaceShmem intf("/dpsim1-villas", "/villas-dpsim1");
 
 	// Register exportable node voltages

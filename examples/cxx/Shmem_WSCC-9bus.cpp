@@ -38,8 +38,13 @@ int main(int argc, char *argv[]) {
 	CIMReader reader(simName, Logger::Level::info, Logger::Level::info);
 	SystemTopology sys = reader.loadCIM(60, filenames);
 
-	RealTimeSimulation sim(simName, sys, 0.001, 120,
-		Domain::DP, Solver::Type::MNA, Logger::Level::debug, true);
+	RealTimeSimulation sim(simName, Logger::Level::debug);
+	sim.setSystem(sys);
+	sim.setTimeStep(0.001);
+	sim.setFinalTime(120);
+	sim.setDomain(Domain::DP);
+	sim.setSolverType(Solver::Type::MNA);
+	sim.doInitFromNodesAndTerminals(true);
 
 	InterfaceShmem intf("/dpsim-villas", "/villas-dpsim");
 
