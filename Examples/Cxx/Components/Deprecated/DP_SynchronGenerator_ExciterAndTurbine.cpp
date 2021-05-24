@@ -94,8 +94,12 @@ int main(int argc, char* argv[]) {
 	Real dt = 0.0001;
 	Int downSampling = 1;
 
-	Simulation sim("DP_SynchronGenerator_ExciterAndTurbine", system, dt, tf,
-		Domain::DP, Solver::Type::MNA, Logger::Level::info);
+	Simulation sim("DP_SynchronGenerator_ExciterAndTurbine", Logger::Level::info);
+	sim.setSystem(system);
+	sim.setTimeStep(dt);
+	sim.setFinalTime(tf);
+	sim.setDomain(Domain::DP);
+	sim.setSolverType(Solver::Type::MNA);
 	sim.setLogDownsamplingRate(downSampling);
 	sim.addSystemTopology(systemBreakerOn);
 

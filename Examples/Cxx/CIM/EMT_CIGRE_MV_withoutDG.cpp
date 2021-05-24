@@ -46,7 +46,14 @@ int main(int argc, char** argv){
     {
         loggerPF->addAttribute(node->name() + ".V", node->attribute("v"));
     }
-    Simulation simPF(simNamePF, systemPF, 1, 2, Domain::SP, Solver::Type::NRP, Logger::Level::debug, true);
+    Simulation simPF(simNamePF, Logger::Level::debug);
+	simPF.setSystem(systemPF);
+	simPF.setTimeStep(1);
+	simPF.setFinalTime(2);
+	simPF.setDomain(Domain::SP);
+	simPF.setSolverType(Solver::Type::NRP);
+	simPF.doInitFromNodesAndTerminals(true);
+	simPF.doSteadyStateInit(false);
     simPF.addLogger(loggerPF);
     simPF.run();
 
@@ -74,10 +81,15 @@ int main(int argc, char** argv){
 			logger->addAttribute(comp->name() + ".I", comp->attribute("i_intf"));
 	}
 
-	Simulation sim(simName, systemEMT, timeStep, finalTime, Domain::EMT, Solver::Type::MNA, Logger::Level::debug, true);
-
+	Simulation sim(simName, Logger::Level::debug);
+	sim.setSystem(systemEMT);
+	sim.setTimeStep(timeStep);
+	sim.setFinalTime(finalTime);
+	sim.setDomain(Domain::EMT);
+	sim.setSolverType(Solver::Type::MNA);
+	sim.doInitFromNodesAndTerminals(true);
 	sim.doSteadyStateInit(false);
 	sim.addLogger(logger);
-	sim.run();
 
+	sim.run();
 }

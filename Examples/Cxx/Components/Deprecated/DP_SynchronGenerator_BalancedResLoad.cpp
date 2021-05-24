@@ -57,7 +57,12 @@ int main(int argc, char* argv[]) {
 	SystemTopology system(60);
 	system.mComponents = { gen, r1, r2, r3 };
 
-	Simulation sim("DP_SynchronGeneratorDQ_BalancedResLoad", system, dt, tf, Domain::DP, Solver::Type::MNA, Logger::Level::info);
+	Simulation sim("DP_SynchronGeneratorDQ_BalancedResLoad", Logger::Level::info);
+	sim.setSystem(system);
+	sim.setTimeStep(dt);
+	sim.setFinalTime(tf);
+	sim.setDomain(Domain::DP);
+	sim.setSolverType(Solver::Type::MNA);
 
 	// Initialize generator
 	Real initActivePower = 555e3;

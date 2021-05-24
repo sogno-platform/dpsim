@@ -73,15 +73,20 @@ int main(int argc, char *argv[]) {
 	logger->addAttribute("P_elec_3", sys.component<Ph1::SynchronGeneratorTrStab>("GEN3")->attribute("P_elec"));
 
 
-	Simulation sim(simName, sys, 0.0001, 2,
-		Domain::SP, Solver::Type::MNA, Logger::Level::info, true);
+	Simulation sim(simName, Logger::Level::info);
+	sim.setSystem(sys);
+	sim.setTimeStep(0.0001);
+	sim.setFinalTime(2);
+	sim.setDomain(Domain::SP);
+	sim.setSolverType(Solver::Type::MNA);
+	sim.doInitFromNodesAndTerminals(true);
 
 	auto swEvent1 = SwitchEvent::make(0.2-0.0001, sw, true);
 	//auto swEvent2 = SwitchEvent::make(0.07, sw, false);
-
 	sim.addEvent(swEvent1);
 	//sim.addEvent(swEvent2);
 	sim.addLogger(logger);
+
 	sim.run();
 
 	return 0;

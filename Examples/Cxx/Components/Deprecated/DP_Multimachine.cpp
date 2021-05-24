@@ -136,7 +136,12 @@ int main(int argc, char* argv[]) {
 			Res12, Res22, Res32, rBreaker1, rBreaker2, rBreaker3, };
 
 	String mSimulationName = "DP_SynchronGenerator_VBR_Multimachine" + std::to_string(dt);
-	SynGenSimulation sim(mSimulationName, comps, om, dt, tf, Logger::Level::info, SimulationType::DP, downSampling);
+	SynGenSimulation sim(mSimulationName, Logger::Level::info);
+	sim.setSystem(comps);
+	sim.setTimeStep(dt);
+	sim.setFinalTime(tf);
+	sim.setDomain(Domain::DP);
+	sim.setSolverType(Solver::Type::MNA);
 	sim.setNumericalMethod(NumericalMethod::Trapezoidal_flux);
 	sim.addSystemTopology(compsBreakerOn);
 	sim.switchSystemMatrix(0);

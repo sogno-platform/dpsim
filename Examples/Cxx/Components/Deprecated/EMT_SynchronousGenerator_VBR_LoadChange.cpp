@@ -71,7 +71,12 @@ int main(int argc, char* argv[]) {
 			tf = 0.3;
 			Int downSampling = 1;
 			String mSimulationName = "EMT_SynchronGenerator_VBR_" + std::to_string(i);
-			SynGenSimulation sim(mSimulationName, comps, om, dt, tf, Logger::Level::info, SimulationType::EMT, downSampling);
+			SynGenSimulation sim(mSimulationName, Logger::Level::info);
+			sim.setSystem(comps);
+			sim.setTimeStep(dt);
+			sim.setFinalTime(tf);
+			sim.setDomain(Domain::EMT);
+			sim.setSolverType(Solver::Type::MNA);
 			sim.setNumericalMethod(NumericalMethod::Trapezoidal_flux);
 			sim.addSystemTopology(compsBreakerOn);
 			sim.switchSystemMatrix(0);

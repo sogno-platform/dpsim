@@ -37,8 +37,28 @@
 using namespace CPS;
 using namespace DPsim;
 
-Simulation::Simulation() {
+Simulation::Simulation(String name,	Logger::Level logLevel) :
+	mName(name),
+	mLogLevel(logLevel) {
+	create();
+}
 
+Simulation::Simulation(String name, CommandLineArgs& args) : 	
+	mName(name),
+	mFinalTime(args.duration),
+	mTimeStep(args.timeStep),
+	mLogLevel(args.logLevel),
+	mDomain(args.solver.domain),
+	mSolverType(args.solver.type),
+	mMnaImpl(args.mnaImpl) {
+	create();
+}
+
+void Simulation::create() {
+	// Logging
+	mLog = Logger::get(mName, mLogLevel, std::max(Logger::Level::info, mLogLevel));
+
+	// Attributes
 	addAttribute<String>("name", &mName, Flags::read);
 	addAttribute<Real>("time_step", &mTimeStep, Flags::read);
 	addAttribute<Real>("final_time", &mFinalTime, Flags::read|Flags::write);
@@ -50,46 +70,6 @@ Simulation::Simulation() {
 
 	mInitialized = false;
 }
-
-Simulation::Simulation(String name,	Logger::Level logLevel) : Simulation::Simulation() {
-	mName = name;
-	mLogLevel = logLevel;
-
-	// Logging
-	mLog = Logger::get(mName, mLogLevel, std::max(Logger::Level::info, logLevel));
-}
-
-Simulation::Simulation(String name, CommandLineArgs& args) : Simulation(name, args.logLevel) {
-	mFinalTime = args.duration;
-	mTimeStep = args.timeStep;
-	mDomain = args.solver.domain;
-	mSolverType = args.solver.type;
-	mMnaImpl = args.mnaImpl;
-}
-
-Simulation::Simulation(String name, SystemTopology system,
-	Real timeStep, Real finalTime,
-	Domain domain, Solver::Type solverType,
-	Logger::Level logLevel,
-	Bool initFromNodesAndTerminals,
-	Bool steadyStateInit,
-	Bool splitSubnets,
-	IdentifiedObject::List tearComponents) :
-	Simulation(name, logLevel) {
-
-	mTimeStep = timeStep;
-	mFinalTime = finalTime;
-	mDomain = domain;
-	mSystem = system;
-	mSolverType = solverType;
-	mInitFromNodesAndTerminals = initFromNodesAndTerminals;
-	mSteadyStateInit = steadyStateInit;
-	mSplitSubnets = splitSubnets;
-	mTearComponents = tearComponents;
-
-	mInitialized = false;
-}
-
 
 void Simulation::initialize() {
 	if (mInitialized)

@@ -207,7 +207,11 @@ void EMT_Ph3_VSI2_4bus_SampleGrid() {
 	//logger->addAttribute("vsi2", vsi2->attribute("v_intf"));
 	//logger->addAttribute("vsi2_dq", vsi2->attribute("Vsdq"));
 
-	Simulation sim(simName, sys, timeStep, finalTime, Domain::EMT);
+	Simulation sim(simName);
+	sim.setSystem(sys);
+	sim.setTimeStep(timeStep);
+	sim.setFinalTime(finalTime);
+	sim.setDomain(Domain::EMT);
 	//sim.addLogger(logger);
 	sim.addLogger(logger_vsi);
 	sim.addLogger(logger_vsi2);

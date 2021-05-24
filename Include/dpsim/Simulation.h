@@ -131,12 +131,8 @@ namespace DPsim {
 		/// The data loggers
 		DataLogger::List mLoggers;
 
-		/// Creates system matrix according to
-		Simulation(String name,
-			Real timeStep, Real finalTime,
-			CPS::Domain domain = CPS::Domain::DP,
-			CPS::Logger::Level logLevel = CPS::Logger::Level::info);
-
+		/// Helper function for constructors 
+		void create();
 		/// Create solvers depending on simulation settings
 		template <typename VarType>
 		void createSolvers();
@@ -153,23 +149,9 @@ namespace DPsim {
 		/// Creates simulation with name and CommandLineArgs
 		Simulation(String name, CommandLineArgs& args);
 
-		/// Creates simulation
-		Simulation();
-
 		/// Creates simulation with name and log level
 		Simulation(String name, CPS::Logger::Level logLevel = CPS::Logger::Level::info);
-
-		/// Creates system matrix according to a given System topology
-		Simulation(String name, CPS::SystemTopology system,
-			Real timeStep, Real finalTime,
-			CPS::Domain domain = CPS::Domain::DP,
-			Solver::Type solverType = Solver::Type::MNA,
-			CPS::Logger::Level logLevel = CPS::Logger::Level::info,
-			Bool initFromNodesAndTerminals = true,
-			Bool steadyStateInit = false,
-			Bool splitSubnets = true,
-			CPS::IdentifiedObject::List tearComponents = CPS::IdentifiedObject::List());
-
+		
 		/// Desctructor
 		virtual ~Simulation() { }
 

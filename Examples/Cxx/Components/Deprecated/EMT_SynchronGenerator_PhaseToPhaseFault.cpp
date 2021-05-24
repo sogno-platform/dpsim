@@ -65,7 +65,12 @@ int main(int argc, char* argv[]) {
 	systemBreakerOn.mComponents = { rBreaker, r1, r2, r3 };
 
 
-	Simulation sim("EMT_SynchronGeneratorDQ_PhaseToPhaseFault", system, dt, tf, Domain::EMT);
+	Simulation sim("EMT_SynchronGeneratorDQ_PhaseToPhaseFault");
+	sim.setSystem(system);
+	sim.setTimeStep(dt);
+	sim.setFinalTime(tf);
+	sim.setDomain(Domain::EMT);
+	sim.setSolverType(Solver::Type::MNA);
 	sim.addSystemTopology(systemBreakerOn);
 
 	// Initialize generator

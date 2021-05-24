@@ -77,7 +77,13 @@ int main(int argc, char* argv[]) {
 		SystemComponentList compsBreakerOn = { gen, rBreaker1, rBreaker2, rBreaker3, r1, r2, r3 };
 
 		String mSimulationName = "EMT_SynchronGenerator_Dq_" + std::to_string(i);
-		SynGenSimulation sim(mSimulationName, comps, om, dt, tf, Logger::Level::info, SimulationType::EMT, downSampling);
+		SynGenSimulation sim(mSimulationName, Logger::Level::info);
+		sim.setSystem(comps);
+		sim.setTimeStep(dt);
+		sim.setFinalTime(tf);
+		sim.setDomain(Domain::EMT);
+		sim.setSolverType(Solver::Type::MNA);
+		
 		sim.setNumericalMethod(NumericalMethod::Trapezoidal_flux);
 		sim.addSystemTopology(compsBreakerOn);
 		sim.switchSystemMatrix(0);

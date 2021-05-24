@@ -26,13 +26,6 @@ namespace DPsim {
 	public:
 		/// Standard constructor
 		RealTimeSimulation(String name, CPS::Logger::Level logLevel = CPS::Logger::Level::info);
-		/// Creates system matrix according to a given System topology
-		RealTimeSimulation(String name, CPS::SystemTopology system,
-			Real timeStep, Real finalTime,
-			CPS::Domain domain = CPS::Domain::DP,
-			Solver::Type solverType = Solver::Type::MNA,
-			CPS::Logger::Level logLevel = CPS::Logger::Level::info,
-			Bool steadyStateInit = false);
 
 		/** Perform the main simulation loop in real time.
 		 *

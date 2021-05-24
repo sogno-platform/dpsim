@@ -78,7 +78,12 @@ int main(int argc, char* argv[]) {
 	logger->addAttribute("i_load", res->attribute("i_intf"));
 
 	// Simulation
-	Simulation sim(simName, sys, timeStep, finalTime, Domain::DP, Solver::Type::MNA, Logger::Level::info);
+	Simulation sim(simName, Logger::Level::info);
+	sim.setSystem(sys);
+	sim.setTimeStep(timeStep);
+	sim.setFinalTime(finalTime);
+	sim.setDomain(Domain::DP);
+	sim.setSolverType(Solver::Type::MNA);
 	sim.addLogger(logger);
 	sim.run();
 
