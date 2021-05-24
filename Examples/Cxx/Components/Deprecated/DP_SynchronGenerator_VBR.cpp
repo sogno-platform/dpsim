@@ -64,7 +64,12 @@ int main(int argc, char* argv[]) {
 	Real dt = 0.00001;
 	Int downSampling = 1;
 
-	Simulation sim("DP_SynchronGenerator_VBR", system, dt, tf);
+	Simulation sim("DP_SynchronGenerator_VBR");
+	sim.setSystem(system);
+	sim.setTimeStep(dt);
+	sim.setFinalTime(tf);
+	sim.setDomain(Domain::DP);
+	sim.setSolverType(Solver::Type::MNA);
 	sim.setLogDownsamplingRate(downSampling);
 	sim.addSystemTopology(systemBreakerOn);
 

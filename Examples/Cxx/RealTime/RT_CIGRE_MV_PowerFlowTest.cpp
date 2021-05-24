@@ -46,8 +46,13 @@ int main(int argc, char** argv){
 		logger->addAttribute(node->name(), node->attribute("v"));
 	}
 
-	RealTimeSimulation sim(simName, system, 1, 30, Domain::SP, Solver::Type::NRP, Logger::Level::debug, true);
-
+	RealTimeSimulation sim(simName, Logger::Level::debug);
+	sim.setSystem(system);
+	sim.setTimeStep(1);
+	sim.setFinalTime(30);
+	sim.setDomain(Domain::SP);
+	sim.setSolverType(Solver::Type::NRP);
+	sim.doInitFromNodesAndTerminals(true);
 	sim.addLogger(logger);
 	sim.run();
 

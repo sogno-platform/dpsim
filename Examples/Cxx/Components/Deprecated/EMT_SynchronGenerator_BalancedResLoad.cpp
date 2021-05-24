@@ -59,8 +59,12 @@ int main(int argc, char* argv[]) {
 	SystemTopology system(50);
 	system.mComponents = { gen, r1, r2, r3 };
 
-	Simulation sim("EMT_SynchronGeneratorDQ_BalanceResLoad", system, dt, tf,
-		Domain::EMT, Solver::Type::MNA, Logger::Level::info);
+	Simulation sim("EMT_SynchronGeneratorDQ_BalanceResLoad", Logger::Level::info);
+	sim.setSystem(system);
+	sim.setTimeStep(dt);
+	sim.setFinalTime(tf);
+	sim.setDomain(Domain::EMT);
+	sim.setSolverType(Solver::Type::MNA);
 	sim.setLogDownsamplingRate(downSampling);
 
 	// Initialize generator

@@ -69,8 +69,12 @@ int main(int argc, char* argv[]) {
 	SystemTopology systemBreakerOn(60);
 	systemBreakerOn.mComponents = { gen, rBreaker1, rBreaker2, rBreaker3, r1, r2, r3 };
 
-	Simulation sim("DP_SynchronGeneratorDQ_ThreePhaseFault", system, dt, tf,
-		Domain::DP, Solver::Type::MNA, Logger::Level::info);
+	Simulation sim("DP_SynchronGeneratorDQ_ThreePhaseFault", Logger::Level::info);
+	sim.setSystem(system);
+	sim.setTimeStep(dt);
+	sim.setFinalTime(tf);
+	sim.setDomain(Domain::DP);
+	sim.setSolverType(Solver::Type::MNA);
 	sim.setLogDownsamplingRate(downSampling);
 	sim.addSystemTopology(systemBreakerOn);
 

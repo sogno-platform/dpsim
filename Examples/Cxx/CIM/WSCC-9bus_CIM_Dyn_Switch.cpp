@@ -59,8 +59,13 @@ int main(int argc, char *argv[]) {
 	logger->addAttribute("wr_3", sys.component<Ph1::SynchronGeneratorTrStab>("GEN3")->attribute("w_r"));
 
 
-	Simulation sim(simName, sys, 0.0001, 2,
-		Domain::DP, Solver::Type::MNA, Logger::Level::info, true);
+	Simulation sim(simName, Logger::Level::info);
+	sim.setSystem(sys);
+	sim.setTimeStep(0.0001);
+	sim.setFinalTime(2);
+	sim.setDomain(Domain::DP);
+	sim.setSolverType(Solver::Type::MNA);
+	sim.doInitFromNodesAndTerminals(true);
 
 	auto swEvent1 = SwitchEvent::make(0.2, sw, true);
 	//auto swEvent2 = SwitchEvent::make(0.07, sw, false);

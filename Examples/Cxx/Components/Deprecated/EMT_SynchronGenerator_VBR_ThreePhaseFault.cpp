@@ -68,7 +68,12 @@ int main(int argc, char* argv[]) {
 
 	// Set up simulation
 	String mSimulationName = "EMT_SynchronGenerator_VBR_" + std::to_string(dt);
-	Simulation sim(mSimulationName, system, dt, tf, Domain::EMT);
+	Simulation sim(mSimulationName);
+	sim.setSystem(system);
+	sim.setTimeStep(dt);
+	sim.setFinalTime(tf);
+	sim.setDomain(Domain::EMT);
+	sim.setSolverType(Solver::Type::MNA);
 	sim.setLogDownsamplingRate(downSampling);
 	sim.addSystemTopology(systemBreakerOn);
 

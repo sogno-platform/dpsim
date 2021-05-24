@@ -131,7 +131,12 @@ int main(int argc, char* argv[]) {
 		Res12, Res22, Res32, rBreaker1, rBreaker2, rBreaker3, };
 
 	String mSimulationName = "EMT_SynchronGenerator_VBR_Multimachine" + std::to_string(dt);
-	Simulation sim(mSimulationName, system, dt, tf, Domain::EMT, Solver::Type::MNA, Logger::Level::info);
+	Simulation sim(mSimulationName, Logger::Level::info);
+	sim.setSystem(system);
+	sim.setTimeStep(dt);
+	sim.setFinalTime(tf);
+	sim.setDomain(Domain::EMT);
+	sim.setSolverType(Solver::Type::MNA);
 	sim.addSystemTopology(compsBreakerOn);
 
 	// Initialize generator

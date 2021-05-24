@@ -85,12 +85,12 @@ int main(int argc, char* argv[]) {
 
 	// System
 	auto sys = SystemTopology(60, SystemNodeList{n1}, SystemComponentList{gen, res, fault});
-	Simulation sim(simName, sys, timeStep, finalTime, Domain::DP, Solver::Type::MNA, Logger::Level::info);
-	//Simulation sim(simName, Logger::Level::info);
-	//im.setSystem(sys);
-	//im.setTimeStep(timeStep);
-	//im.setFinalTime(finalTime);
-	//im.initialize();
+	Simulation sim(simName, Logger::Level::info);
+	sim.setSystem(sys);
+	sim.setTimeStep(timeStep);
+	sim.setFinalTime(finalTime);
+	sim.setDomain(Domain::DP);
+	sim.setSolverType(Solver::Type::MNA);
 	sim.addLogger(logger);
 
 	// Events

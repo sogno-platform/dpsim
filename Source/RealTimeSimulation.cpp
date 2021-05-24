@@ -21,15 +21,6 @@ RealTimeSimulation::RealTimeSimulation(String name, Logger::Level logLevel)
 	//addAttribute<Int >("overruns", nullptr, nullptr, Flags::read);
 }
 
-RealTimeSimulation::RealTimeSimulation(String name, SystemTopology system, Real timeStep, Real finalTime,
-		Domain domain, Solver::Type type, Logger::Level logLevel, Bool steadyStateInit)
-	: Simulation(name, system, timeStep, finalTime, domain, type, logLevel, steadyStateInit),
-	mTimer() {
-
-	addAttribute<Int >("overruns", nullptr, [=](){ return mTimer.overruns(); }, Flags::read);
-	//addAttribute<Int >("overruns", nullptr, nullptr, Flags::read);
-}
-
 void RealTimeSimulation::run(const Timer::StartClock::duration &startIn) {
 	run(Timer::StartClock::now() + startIn);
 }

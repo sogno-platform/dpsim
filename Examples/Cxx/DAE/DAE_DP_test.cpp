@@ -42,7 +42,12 @@ int main(int argc, char* argv[])
 	String simName = "DAE_DP_test" + std::to_string(timeStep);
 
     auto sys = SystemTopology(50, SystemNodeList{SimNode::GND, n1, n2}, SystemComponentList{vs, rl, rL});
-	Simulation sim(simName, sys, timeStep, 1.0, Domain::DP, Solver::Type::DAE);
+	Simulation sim(simName);
+	sim.setSystem(sys);
+	sim.setTimeStep(timeStep);
+	sim.setFinalTime(1);
+	sim.setDomain(Domain::DP);
+	sim.setSolverType(Solver::Type::DAE);
 
 	sim.run();
 

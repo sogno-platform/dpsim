@@ -34,7 +34,11 @@ void EMT_CS_R1() {
 	auto logger = DataLogger::make(simName);
 	logger->addAttribute("v1", n1->attribute("v"));
 
-	Simulation sim(simName, sys, timeStep, finalTime, Domain::EMT);
+	Simulation sim(simName);
+	sim.setSystem(sys);
+	sim.setTimeStep(timeStep);
+	sim.setFinalTime(finalTime);
+	sim.setDomain(Domain::EMT);
 	sim.addLogger(logger);
 
 	sim.run();
@@ -65,7 +69,11 @@ void EMT_VS_R1() {
 	auto logger = DataLogger::make(simName);
 	logger->addAttribute("v1", n1->attribute("v"));
 
-	Simulation sim(simName, sys, timeStep, finalTime, Domain::EMT);
+	Simulation sim(simName);
+	sim.setSystem(sys);
+	sim.setTimeStep(timeStep);
+	sim.setFinalTime(finalTime);
+	sim.setDomain(Domain::EMT);
 	sim.addLogger(logger);
 
 	sim.run();
@@ -107,7 +115,11 @@ void EMT_CS_R2CL() {
 	logger->addAttribute("i12", cs->attribute("i_intf"));
 	logger->addAttribute("i34", c1->attribute("i_intf"));
 
-	Simulation sim(simName, sys, timeStep, finalTime, Domain::EMT);
+	Simulation sim(simName);
+	sim.setSystem(sys);
+	sim.setTimeStep(timeStep);
+	sim.setFinalTime(finalTime);
+	sim.setDomain(Domain::EMT);
 	sim.addLogger(logger);
 
 	sim.run();
@@ -156,7 +168,11 @@ void EMT_VS_CS_R4_AC() {
 	logger->addAttribute("i12", r1->attribute("i_intf"));
 	logger->addAttribute("i23", r3->attribute("i_intf"));
 
-	Simulation sim(simName, sys, timeStep, finalTime, Domain::EMT);
+	Simulation sim(simName);
+	sim.setSystem(sys);
+	sim.setTimeStep(timeStep);
+	sim.setFinalTime(finalTime);
+	sim.setDomain(Domain::EMT);
 	sim.addLogger(logger);
 
 	sim.run();
@@ -203,7 +219,11 @@ void EMT_VS_CS_R4_DC() {
 	logger->addAttribute("v2", n2->attribute("v"));
 	logger->addAttribute("v3", n3->attribute("v"));
 
-	Simulation sim(simName, sys, timeStep, finalTime, Domain::EMT);
+	Simulation sim(simName);
+	sim.setSystem(sys);
+	sim.setTimeStep(timeStep);
+	sim.setFinalTime(finalTime);
+	sim.setDomain(Domain::EMT);
 	sim.addLogger(logger);
 
 	sim.run();
@@ -254,7 +274,11 @@ void EMT_VS_R2L3() {
 	logger->addAttribute("i12", r1->attribute("i_intf"));
 	logger->addAttribute("i34", l3->attribute("i_intf"));
 
-	Simulation sim(simName, sys, timeStep, finalTime, Domain::EMT);
+	Simulation sim(simName);
+	sim.setSystem(sys);
+	sim.setTimeStep(timeStep);
+	sim.setFinalTime(finalTime);
+	sim.setDomain(Domain::EMT);
 	sim.addLogger(logger);
 
 	sim.run();
@@ -291,7 +315,11 @@ void EMT_VS_RC1() {
 	logger->addAttribute("v2", n2->attribute("v"));
 	logger->addAttribute("i12", r1->attribute("i_intf"));
 
-	Simulation sim(simName, sys, timeStep, finalTime, Domain::EMT);
+	Simulation sim(simName);
+	sim.setSystem(sys);
+	sim.setTimeStep(timeStep);
+	sim.setFinalTime(finalTime);
+	sim.setDomain(Domain::EMT);
 	sim.addLogger(logger);
 
 	sim.run();

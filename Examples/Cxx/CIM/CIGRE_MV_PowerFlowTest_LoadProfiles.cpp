@@ -134,9 +134,15 @@ int main(int argc, char** argv){
 		}
 	}
 
-	Simulation sim(simName, system, time_step, time_end, Domain::SP, Solver::Type::NRP, Logger::Level::info, true);
-
+	Simulation sim(simName, Logger::Level::info);
+	sim.setSystem(system);
+	sim.setTimeStep(time_step);
+	sim.setFinalTime(time_end);
+	sim.setDomain(Domain::SP);
+	sim.setSolverType(Solver::Type::NRP);
+	sim.doInitFromNodesAndTerminals(true);
 	sim.addLogger(logger);
+	
 	sim.run();
 
 	return 0;

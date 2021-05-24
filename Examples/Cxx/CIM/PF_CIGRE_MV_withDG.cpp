@@ -42,7 +42,13 @@ int main(int argc, char** argv){
     {
         loggerPF->addAttribute(node->name() + ".V", node->attribute("v"));
     }
-    Simulation simPF(simName, system, timeStep, finalTime, Domain::SP, Solver::Type::NRP, Logger::Level::debug, true);
+    Simulation simPF(simName, Logger::Level::debug);
+	simPF.setSystem(system);
+	simPF.setTimeStep(timeStep);
+	simPF.setFinalTime(finalTime);
+	simPF.setDomain(Domain::SP);
+	simPF.setSolverType(Solver::Type::NRP);
+	simPF.doInitFromNodesAndTerminals(true);
     simPF.addLogger(loggerPF);
     simPF.run();
 }

@@ -45,7 +45,11 @@ int main(int argc, char* argv[]) {
 	logger->addAttribute("v2", n2->attribute("v"));
 	logger->addAttribute("i12", r1->attribute("i_intf"));
 
-	Simulation sim(simName, sys, timeStep, finalTime, Domain::EMT);
+	Simulation sim(simName);
+	sim.setSystem(sys);
+	sim.setTimeStep(timeStep);
+	sim.setFinalTime(finalTime);
+	sim.setDomain(Domain::EMT);
 	sim.addLogger(logger);
 
 	sim.run();

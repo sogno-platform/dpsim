@@ -55,7 +55,13 @@ int main(int argc, char** argv){
     }
 
 	// run powerflow
-    Simulation simPF(simNamePF, systemPF, 1, 2, Domain::SP, Solver::Type::NRP, Logger::Level::debug, true);
+    Simulation simPF(simNamePF, Logger::Level::debug);
+	simPF.setSystem(systemPF);
+	simPF.setTimeStep(1);
+	simPF.setFinalTime(2);
+	simPF.setDomain(Domain::SP);
+	simPF.setSolverType(Solver::Type::NRP);
+	simPF.doInitFromNodesAndTerminals(true);
     simPF.addLogger(loggerPF);
     simPF.run();
 
@@ -92,7 +98,13 @@ int main(int argc, char** argv){
 	auto pv = systemDP.component<CPS::SimPowerComp<Complex>>(pv_name);
 	Examples::CIGREMV::logPVAttributes(logger, pv);
 
-	Simulation sim(simName, systemDP, timeStep, finalTime, Domain::DP, Solver::Type::MNA, Logger::Level::debug, true);
+	Simulation sim(simName, Logger::Level::debug);
+	sim.setSystem(systemDP);
+	sim.setTimeStep(timeStep);
+	sim.setFinalTime(finalTime);
+	sim.setDomain(Domain::DP);
+	sim.setSolverType(Solver::Type::MNA);
+	sim.doInitFromNodesAndTerminals(true);
 
 	sim.doSteadyStateInit(steadyStateInit);
 	sim.addLogger(logger);

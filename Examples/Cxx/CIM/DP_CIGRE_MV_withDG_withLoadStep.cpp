@@ -46,13 +46,18 @@ int main(int argc, char** argv){
 
 	// define logging
     auto loggerPF = DPsim::DataLogger::make(simNamePF);
-    for (auto node : systemPF.mNodes)
-    {
+    for (auto node : systemPF.mNodes) {
         loggerPF->addAttribute(node->name() + ".V", node->attribute("v"));
     }
 
 	// run powerflow
-    Simulation simPF(simNamePF, systemPF, 1, 2, Domain::SP, Solver::Type::NRP, Logger::Level::debug, true);
+    Simulation simPF(simNamePF, Logger::Level::debug);
+	simPF.setSystem(systemPF);
+	simPF.setTimeStep(1);
+	simPF.setFinalTime(2);
+	simPF.setDomain(Domain::SP);
+	simPF.setSolverType(Solver::Type::NRP);
+	simPF.doInitFromNodesAndTerminals(true);
     simPF.addLogger(loggerPF);
     simPF.run();
 
@@ -95,11 +100,16 @@ int main(int argc, char** argv){
 	// load step sized in absolute terms
 	std::shared_ptr<SwitchEvent> loadStepEvent = Examples::createEventAddPowerConsumption("N11", 2-timeStep, 1500.0e3, systemDP, Domain::DP, logger);
 	
-	Simulation sim(simName, systemDP, timeStep, finalTime, Domain::DP, Solver::Type::MNA, Logger::Level::debug, true);
-
-	sim.addEvent(loadStepEvent);
+	Simulation sim(simName, Logger::Level::debug);
+	sim.setSystem(systemDP);
+	sim.setTimeStep(timeStep);
+	sim.setFinalTime(finalTime);
+	sim.setDomain(Domain::DP);
+	sim.setSolverType(Solver::Type::MNA);
+	sim.doInitFromNodesAndTerminals(true);
 	sim.doSteadyStateInit(false);
 	sim.addLogger(logger);
-	sim.run();
+	sim.addEvent(loadStepEvent);
 
+	sim.run();
 }

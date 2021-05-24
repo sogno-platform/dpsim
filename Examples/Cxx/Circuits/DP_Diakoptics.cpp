@@ -58,7 +58,7 @@ void DP_VS_CS_R4() {
 	logger->addAttribute("i12", r1->attribute("i_intf"));
 	logger->addAttribute("i23", r3->attribute("i_intf"));
 
-	Simulation sim(simName, sys, timeStep, finalTime);
+	Simulation sim(simName);
 	sim.setSystem(sys);
 	sim.setTearingComponents(sys.mTearComponents);
 	sim.setTimeStep(timeStep);
@@ -172,7 +172,7 @@ void DP_VS_R2L3() {
 	logger->addAttribute("i12", r1->attribute("i_intf"));
 	logger->addAttribute("i34", l3->attribute("i_intf"));
 
-	Simulation sim(simName, sys, timeStep, finalTime);
+	Simulation sim(simName);
 	sim.setSystem(sys);
 	sim.setTimeStep(timeStep);
 	sim.setFinalTime(finalTime);
@@ -229,7 +229,7 @@ void DP_VS_R2L3_Diakoptics() {
 	logger->addAttribute("i12", r1->attribute("i_intf"));
 	logger->addAttribute("i34", l3->attribute("i_intf"));
 
-	Simulation sim(simName, sys, timeStep, finalTime);
+	Simulation sim(simName);
 	sim.setSystem(sys);
 	sim.setTearingComponents(sys.mTearComponents);
 	sim.setTimeStep(timeStep);

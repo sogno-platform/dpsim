@@ -43,7 +43,10 @@ int main(int argc, char* argv[]) {
 		SystemNodeList{SimNode::GND, n1, n2, n3},
 		SystemComponentList{vs, rl, ll, rL});
 
-	RealTimeSimulation sim(simName, sys, timeStep, finalTime);
+	RealTimeSimulation sim(simName);
+	sim.setSystem(sys);
+	sim.setTimeStep(timeStep);
+	sim.setFinalTime(finalTime);
 
 	auto startIn = std::chrono::seconds(5);
 	sim.run(startIn);

@@ -149,7 +149,10 @@ void DP_Ph1_VSI2_4bus_SampleGrid() {
 	logger->addAttribute("vsi", vsi->attribute("v_intf"));
 	logger->addAttribute("vsi2", vsi2->attribute("v_intf"));
 
-	Simulation sim(simName, sys, timeStep, finalTime);
+	Simulation sim(simName);
+	sim.setSystem(sys);
+	sim.setTimeStep(timeStep);
+	sim.setFinalTime(finalTime);
 	sim.addLogger(logger);
 
 	sim.run();
