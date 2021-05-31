@@ -1,0 +1,13 @@
+set(DPSIMPY_SOURCES
+	DPComponents.cpp
+	main.cpp
+	Utils.cpp
+)
+
+pybind11_add_module(dpsimpy ${DPSIMPY_SOURCES})
+set_target_properties(dpsimpy
+  PROPERTIES
+  LIBRARY_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}"
+)
+target_link_libraries(dpsimpy PRIVATE dpsim)
+target_include_directories(dpsimpy PUBLIC ${DPSIMPY_INCLUDE_DIRS})

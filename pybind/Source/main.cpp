@@ -20,26 +20,11 @@
 
 #include <cps/CSVReader.h>
 
+#include <DPComponents.h>
+#include <Utils.h>
+
 namespace py = pybind11;
 using namespace pybind11::literals;
-
-template <typename T>
-py::cpp_function createAttributeSetter(const std::string name) {
-	return [name](CPS::IdentifiedObject &object, T &value) {
-		object.attribute<T>(name)->set(value);
-	};
-}
-
-template <typename T>
-py::cpp_function createAttributeGetter(const std::string name) {
-	return [name](CPS::IdentifiedObject &object) {
-		return object.attribute<T>(name)->get();
-	};
-}
-
-CPS::Matrix zeroMatrix(int dim) {
-	return CPS::Matrix::Zero(dim, dim);
-}
 
 PYBIND11_MODULE(dpsimpy, m) {
     m.doc() = R"pbdoc(
@@ -111,14 +96,14 @@ PYBIND11_MODULE(dpsimpy, m) {
         .def(py::init<CPS::Real, CPS::TopologicalNode::List, CPS::IdentifiedObject::List>())
 		.def(py::init<CPS::Real>())
 		.def("add", &DPsim::SystemTopology::addComponent)
-		.def("emt_node", py::detail::overload_cast_impl<const CPS::String&>()(&DPsim::SystemTopology::node<CPS::EMT::SimNode>))
-		.def("emt_node", py::detail::overload_cast_impl<CPS::UInt>()(&DPsim::SystemTopology::node<CPS::EMT::SimNode>))
-		.def("dp_node", py::detail::overload_cast_impl<const CPS::String&>()(&DPsim::SystemTopology::node<CPS::DP::SimNode>))
-		.def("dp_node", py::detail::overload_cast_impl<CPS::UInt>()(&DPsim::SystemTopology::node<CPS::DP::SimNode>))
-		.def("sp_node", py::detail::overload_cast_impl<const CPS::String&>()(&DPsim::SystemTopology::node<CPS::SP::SimNode>))
-		.def("sp_node", py::detail::overload_cast_impl<CPS::UInt>()(&DPsim::SystemTopology::node<CPS::SP::SimNode>))
-		.def("connect_component", py::detail::overload_cast_impl<CPS::SimPowerComp<CPS::Real>::Ptr, CPS::SimNode<CPS::Real>::List>()(&DPsim::SystemTopology::connectComponentToNodes<CPS::Real>))
-		.def("connect_component", py::detail::overload_cast_impl<CPS::SimPowerComp<CPS::Complex>::Ptr, CPS::SimNode<CPS::Complex>::List>()(&DPsim::SystemTopology::connectComponentToNodes<CPS::Complex>))
+		.def("emt_node", py::overload_cast<const CPS::String&>(&DPsim::SystemTopology::node<CPS::EMT::SimNode>))
+		.def("emt_node", py::overload_cast<CPS::UInt>(&DPsim::SystemTopology::node<CPS::EMT::SimNode>))
+		.def("dp_node", py::overload_cast<const CPS::String&>(&DPsim::SystemTopology::node<CPS::DP::SimNode>))
+		.def("dp_node", py::overload_cast<CPS::UInt>(&DPsim::SystemTopology::node<CPS::DP::SimNode>))
+		.def("sp_node", py::overload_cast<const CPS::String&>(&DPsim::SystemTopology::node<CPS::SP::SimNode>))
+		.def("sp_node", py::overload_cast<CPS::UInt>(&DPsim::SystemTopology::node<CPS::SP::SimNode>))
+		.def("connect_component", py::overload_cast<CPS::SimPowerComp<CPS::Real>::Ptr, CPS::SimNode<CPS::Real>::List>(&DPsim::SystemTopology::connectComponentToNodes<CPS::Real>))
+		.def("connect_component", py::overload_cast<CPS::SimPowerComp<CPS::Complex>::Ptr, CPS::SimNode<CPS::Complex>::List>(&DPsim::SystemTopology::connectComponentToNodes<CPS::Complex>))
 		.def("_repr_svg_", &DPsim::SystemTopology::render)
 		.def("render_to_file", &DPsim::SystemTopology::renderToFile)
 		.def_readwrite("nodes", &DPsim::SystemTopology::mNodes)
@@ -220,14 +205,13 @@ PYBIND11_MODULE(dpsimpy, m) {
 	py::module mSPPh1 = mSP.def_submodule("ph1", "single phase static phasor models");
 	py::module mSPPh3 = mSP.def_submodule("ph3", "three phase static phasor models");
 
-	//DP-Components
-    py::class_<CPS::DP::SimNode, std::shared_ptr<CPS::DP::SimNode>, CPS::TopologicalNode>(mDP, "SimNode", py::module_local())
+	py::class_<CPS::DP::SimNode, std::shared_ptr<CPS::DP::SimNode>, CPS::TopologicalNode>(mDP, "SimNode", py::module_local())
         .def(py::init<std::string>())
 		.def(py::init<std::string, CPS::PhaseType>())
 		.def(py::init<std::string, CPS::PhaseType, const std::vector<CPS::Complex>>())
-		.def("set_initial_voltage", py::detail::overload_cast_impl<CPS::MatrixComp>()(&CPS::DP::SimNode::setInitialVoltage))
-		.def("set_initial_voltage", py::detail::overload_cast_impl<CPS::Complex>()(&CPS::DP::SimNode::setInitialVoltage))
-		.def("set_initial_voltage", py::detail::overload_cast_impl<CPS::Complex, int>()(&CPS::DP::SimNode::setInitialVoltage))
+		.def("set_initial_voltage", py::overload_cast<CPS::MatrixComp>(&CPS::DP::SimNode::setInitialVoltage))
+		.def("set_initial_voltage", py::overload_cast<CPS::Complex>(&CPS::DP::SimNode::setInitialVoltage))
+		.def("set_initial_voltage", py::overload_cast<CPS::Complex, CPS::Int>(&CPS::DP::SimNode::setInitialVoltage))
 		.def_readonly_static("gnd", &CPS::DP::SimNode::GND);
 
 	py::class_<CPS::DP::Ph1::VoltageSource, std::shared_ptr<CPS::DP::Ph1::VoltageSource>, CPS::SimPowerComp<CPS::Complex>>(mDPPh1, "VoltageSource", py::multiple_inheritance())
@@ -293,9 +277,9 @@ PYBIND11_MODULE(dpsimpy, m) {
         .def(py::init<std::string>())
 		.def(py::init<std::string, CPS::PhaseType>())
 		.def(py::init<std::string, CPS::PhaseType, const std::vector<CPS::Complex>>())
-		.def("set_initial_voltage", py::detail::overload_cast_impl<CPS::MatrixComp>()(&CPS::EMT::SimNode::setInitialVoltage))
-		.def("set_initial_voltage", py::detail::overload_cast_impl<CPS::Complex>()(&CPS::EMT::SimNode::setInitialVoltage))
-		.def("set_initial_voltage", py::detail::overload_cast_impl<CPS::Complex, int>()(&CPS::EMT::SimNode::setInitialVoltage))
+		.def("set_initial_voltage", py::overload_cast<CPS::MatrixComp>(&CPS::EMT::SimNode::setInitialVoltage))
+		.def("set_initial_voltage", py::overload_cast<CPS::Complex>(&CPS::EMT::SimNode::setInitialVoltage))
+		.def("set_initial_voltage", py::overload_cast<CPS::Complex, int>(&CPS::EMT::SimNode::setInitialVoltage))
 		.def_readonly_static("gnd", &CPS::EMT::SimNode::GND);
 
 	//EMT Ph1 Components
@@ -420,8 +404,8 @@ PYBIND11_MODULE(dpsimpy, m) {
 
 	py::class_<CPS::SP::Ph1::NetworkInjection, std::shared_ptr<CPS::SP::Ph1::NetworkInjection>, CPS::SimPowerComp<CPS::Complex>>(mSPPh1, "NetworkInjection", py::multiple_inheritance())
         .def(py::init<std::string, CPS::Logger::Level>(), "name"_a, "loglevel"_a = CPS::Logger::Level::off)
-        .def("set_parameters", py::detail::overload_cast_impl<CPS::Real>()(&CPS::SP::Ph1::NetworkInjection::setParameters), "voltage_set_point"_a)
-        .def("set_parameters", py::detail::overload_cast_impl<CPS::Complex, CPS::Real>()(&CPS::SP::Ph1::NetworkInjection::setParameters), "V_ref"_a, "f_src"_a)
+        .def("set_parameters", py::overload_cast<CPS::Real>(&CPS::SP::Ph1::NetworkInjection::setParameters), "voltage_set_point"_a)
+        .def("set_parameters", py::overload_cast<CPS::Complex, CPS::Real>(&CPS::SP::Ph1::NetworkInjection::setParameters), "V_ref"_a, "f_src"_a)
 		.def("set_base_voltage", &CPS::SP::Ph1::NetworkInjection::setBaseVoltage, "base_voltage"_a)
 		.def("connect", &CPS::SP::Ph1::NetworkInjection::connect)
 		.def("modify_power_flow_bus_type", &CPS::SP::Ph1::NetworkInjection::modifyPowerFlowBusType, "bus_type"_a);

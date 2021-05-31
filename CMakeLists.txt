@@ -214,15 +214,20 @@ add_subdirectory(models)
 add_subdirectory(Source)
 add_subdirectory(docs)
 
+
 if(DPSIM_BUILD_EXAMPLES)
 	add_subdirectory(Examples)
 endif(DPSIM_BUILD_EXAMPLES)
 
 if(WITH_PYBIND)
+	set(DPSIMPY_INCLUDE_DIRS
+		${CMAKE_CURRENT_BINARY_DIR}/pybind/Include
+		${CMAKE_CURRENT_SOURCE_DIR}/pybind/Include
+	)
+
 	set(PYBIND11_CPP_STANDARD -std=c++17)
 
-	pybind11_add_module(dpsimpy Source/pybind/main.cpp)	
-	target_link_libraries(dpsimpy PRIVATE dpsim)
+	add_subdirectory(pybind/Source)
 
 	if(WITH_SHMEM)
 		pybind11_add_module(dpsimpyvillas ${CMAKE_BINARY_DIR}/_deps/dpsim-villas-src/src/pybind-dpsim-villas.cpp)
