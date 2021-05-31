@@ -26,4 +26,6 @@
 namespace py = pybind11;
 using namespace pybind11::literals;
 
-void addDPComponents(py::module_ mDP);
+void addEMTComponents(py::module_ mEMT);
+void addEMTPh1Components(py::module_ mEMTPh1);
+void addEMTPh3Components(py::module_ mEMTPh3);

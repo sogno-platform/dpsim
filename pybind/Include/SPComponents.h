@@ -26,4 +26,6 @@
 namespace py = pybind11;
 using namespace pybind11::literals;
 
-void addDPComponents(py::module_ mDP);
+void addSPComponents(py::module_ mSP);
+void addSPPh1Components(py::module_ mSPPh1);
+void addSPPh3Components(py::module_ mSPPh3);
