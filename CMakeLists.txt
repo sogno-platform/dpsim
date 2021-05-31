@@ -23,10 +23,10 @@ else()
 endif()
 
 # Enable C++11 support
-set(CMAKE_CXX_STANDARD 11)
+set(CMAKE_CXX_STANDARD 17)
 if(CMAKE_CXX_COMPILER_ID STREQUAL Intel)
 	# needed by icc, but for some reason not added by CMake
-	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
+	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++17")
 endif()
 
 if(NOT WIN32)
@@ -219,7 +219,7 @@ if(DPSIM_BUILD_EXAMPLES)
 endif(DPSIM_BUILD_EXAMPLES)
 
 if(WITH_PYBIND)
-	set(PYBIND11_CPP_STANDARD -std=c++11)
+	set(PYBIND11_CPP_STANDARD -std=c++17)
 
 	pybind11_add_module(dpsimpy Source/pybind/main.cpp)	
 	target_link_libraries(dpsimpy PRIVATE dpsim)
