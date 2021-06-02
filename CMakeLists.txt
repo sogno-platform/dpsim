@@ -221,13 +221,13 @@ endif(DPSIM_BUILD_EXAMPLES)
 
 if(WITH_PYBIND)
 	set(DPSIMPY_INCLUDE_DIRS
-		${CMAKE_CURRENT_BINARY_DIR}/pybind/Include
-		${CMAKE_CURRENT_SOURCE_DIR}/pybind/Include
+		${CMAKE_CURRENT_BINARY_DIR}/Include/dpsim/pybind
+		${CMAKE_CURRENT_SOURCE_DIR}/Include/dpsim/pybind
 	)
 
 	set(PYBIND11_CPP_STANDARD -std=c++17)
 
-	add_subdirectory(pybind/Source)
+	add_subdirectory(Source/pybind)
 
 	if(WITH_SHMEM)
 		pybind11_add_module(dpsimpyvillas ${CMAKE_BINARY_DIR}/_deps/dpsim-villas-src/src/pybind-dpsim-villas.cpp)
