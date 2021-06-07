@@ -51,6 +51,9 @@ PYBIND11_MODULE(dpsimpy, m) {
 		.def_static("single_phase_parameter_to_three_phase", &CPS::Math::singlePhaseParameterToThreePhase)
 		.def_static("single_phase_power_to_three_phase", &CPS::Math::singlePhasePowerToThreePhase);
 
+	m.attr("RMS3PH_TO_PEAK1PH") = RMS3PH_TO_PEAK1PH;
+	m.attr("PEAK1PH_TO_RMS3PH") = PEAK1PH_TO_RMS3PH;
+
     py::class_<DPsim::Simulation>(m, "Simulation")
 	    .def(py::init<std::string, CPS::Logger::Level>(), "name"_a, "loglevel"_a = CPS::Logger::Level::off)
 		.def("name", &DPsim::Simulation::name)
@@ -72,6 +75,7 @@ PYBIND11_MODULE(dpsimpy, m) {
 		.def("import_attr", &DPsim::Simulation::importIdObjAttr, "obj"_a, "attr"_a, "idx"_a)
 		.def("log_attr", &DPsim::Simulation::logIdObjAttr)
 		.def("do_init_from_nodes_and_terminals", &DPsim::Simulation::doInitFromNodesAndTerminals)
+		.def("do_system_matrix_recomputation", &DPsim::Simulation::doSystemMatrixRecomputation)
 		.def("add_event", &DPsim::Simulation::addEvent);
 
 	py::class_<DPsim::RealTimeSimulation, DPsim::Simulation>(m, "RealTimeSimulation")
@@ -188,7 +192,8 @@ PYBIND11_MODULE(dpsimpy, m) {
 	py::module mEvent = m.def_submodule("event", "events");
 	py::class_<DPsim::Event, std::shared_ptr<DPsim::Event>>(mEvent, "Event");
 	py::class_<DPsim::SwitchEvent, std::shared_ptr<DPsim::SwitchEvent>, DPsim::Event>(mEvent, "SwitchEvent", py::multiple_inheritance())
-		.def(py::init<CPS::Real,const std::shared_ptr<CPS::DP::Ph1::Switch>,CPS::Bool>());
+		.def(py::init<CPS::Real,const std::shared_ptr<CPS::DP::Ph1::Switch>,CPS::Bool>())
+		.def(py::init<CPS::Real,const std::shared_ptr<CPS::DP::Ph1::varResSwitch>,CPS::Bool>());
 	py::class_<DPsim::SwitchEvent3Ph, std::shared_ptr<DPsim::SwitchEvent3Ph>, DPsim::Event>(mEvent, "SwitchEvent3Ph", py::multiple_inheritance())
 		.def(py::init<CPS::Real,const std::shared_ptr<CPS::EMT::Ph3::Switch>,CPS::Bool>());
 

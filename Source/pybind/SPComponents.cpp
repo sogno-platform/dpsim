@@ -19,7 +19,7 @@ void addSPComponents(py::module_ mSP) {
 }
 
 void addSPPh1Components(py::module_ mSPPh1) {
-//SP Ph1 Components
+	//SP Ph1 Components
 	py::class_<CPS::SP::Ph1::VoltageSource, std::shared_ptr<CPS::SP::Ph1::VoltageSource>, CPS::SimPowerComp<CPS::Complex>>(mSPPh1, "VoltageSource", py::multiple_inheritance())
         .def(py::init<std::string>())
 		.def(py::init<std::string, CPS::Logger::Level>())
@@ -68,6 +68,22 @@ void addSPPh1Components(py::module_ mSPPh1) {
         .def("set_parameters", &CPS::SP::Ph1::Shunt::setParameters, "G"_a, "B"_a)
 		.def("set_base_voltage", &CPS::SP::Ph1::Shunt::setBaseVoltage, "base_voltage"_a)
 		.def("connect", &CPS::SP::Ph1::Shunt::connect);
+
+	py::class_<CPS::SP::Ph1::Switch, std::shared_ptr<CPS::SP::Ph1::Switch>, CPS::SimPowerComp<CPS::Complex>>(mSPPh1, "Switch", py::multiple_inheritance())
+        .def(py::init<std::string, CPS::Logger::Level>(), "name"_a, "loglevel"_a = CPS::Logger::Level::off)
+        .def("set_parameters", &CPS::SP::Ph1::Switch::setParameters, "open_resistance"_a, "closed_resistance"_a, "closed"_a = false)
+		.def("open", &CPS::SP::Ph1::Switch::open)
+		.def("close", &CPS::SP::Ph1::Switch::close)
+		.def("connect", &CPS::SP::Ph1::Switch::connect);
+
+	py::class_<CPS::SP::Ph1::SynchronGenerator, std::shared_ptr<CPS::SP::Ph1::SynchronGenerator>, CPS::SimPowerComp<CPS::Complex>>(mSPPh1, "SynchronGenerator", py::multiple_inheritance())
+        .def(py::init<std::string, CPS::Logger::Level>(), "name"_a, "loglevel"_a = CPS::Logger::Level::off)
+        .def("set_parameters", (&CPS::SP::Ph1::SynchronGenerator::setParameters), "rated_apparent_power"_a, "rated_voltage"_a, "set_point_active_power"_a,
+			"set_point_voltage"_a, "powerflow_bus_type"_a, "set_point_reactive_power"_a=0)
+        .def("set_base_voltage", &CPS::SP::Ph1::SynchronGenerator::setBaseVoltage, "base_voltage"_a)
+		.def("connect", &CPS::SP::Ph1::SynchronGenerator::connect)
+		.def("modify_power_flow_bus_type", &CPS::SP::Ph1::SynchronGenerator::modifyPowerFlowBusType, "bus_type"_a)
+		.def("get_apparent_power", &CPS::SP::Ph1::SynchronGenerator::getApparentPower);
 }
 
 void addSPPh3Components(py::module_ mSPPh3) {

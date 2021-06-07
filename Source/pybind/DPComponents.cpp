@@ -19,9 +19,10 @@ void addDPComponents(py::module_ mDP) {
         .def(py::init<std::string>())
 		.def(py::init<std::string, CPS::PhaseType>())
 		.def(py::init<std::string, CPS::PhaseType, const std::vector<CPS::Complex>>())
-		.def("set_initial_voltage", py::detail::overload_cast_impl<CPS::MatrixComp>()(&CPS::DP::SimNode::setInitialVoltage))
-		.def("set_initial_voltage", py::detail::overload_cast_impl<CPS::Complex>()(&CPS::DP::SimNode::setInitialVoltage))
-		.def("set_initial_voltage", py::detail::overload_cast_impl<CPS::Complex, int>()(&CPS::DP::SimNode::setInitialVoltage))
+		.def("set_initial_voltage", py::overload_cast<CPS::MatrixComp>(&CPS::DP::SimNode::setInitialVoltage))
+		.def("set_initial_voltage", py::overload_cast<CPS::Complex>(&CPS::DP::SimNode::setInitialVoltage))
+		.def("set_initial_voltage", py::overload_cast<CPS::Complex, int>(&CPS::DP::SimNode::setInitialVoltage))
+		.def("single_voltage", &CPS::DP::SimNode::singleVoltage, "phase_type"_a=CPS::PhaseType::Single)
 		.def_readonly_static("gnd", &CPS::DP::SimNode::GND);
 
 	py::class_<CPS::DP::Ph1::VoltageSource, std::shared_ptr<CPS::DP::Ph1::VoltageSource>, CPS::SimPowerComp<CPS::Complex>>(mDPPh1, "VoltageSource", py::multiple_inheritance())
@@ -81,4 +82,19 @@ void addDPComponents(py::module_ mDP) {
 		.def("open", &CPS::DP::Ph1::Switch::open)
 		.def("close", &CPS::DP::Ph1::Switch::close)
 		.def("connect", &CPS::DP::Ph1::Switch::connect);
+
+	py::class_<CPS::DP::Ph1::varResSwitch, std::shared_ptr<CPS::DP::Ph1::varResSwitch>, CPS::SimPowerComp<CPS::Complex>>(mDPPh1, "varResSwitch", py::multiple_inheritance())
+        .def(py::init<std::string, CPS::Logger::Level>(), "name"_a, "loglevel"_a = CPS::Logger::Level::off)
+        .def("set_parameters", &CPS::DP::Ph1::varResSwitch::setParameters, "open_resistance"_a, "closed_resistance"_a, "closed"_a = false)
+		.def("open", &CPS::DP::Ph1::varResSwitch::open)
+		.def("close", &CPS::DP::Ph1::varResSwitch::close)
+		.def("set_init_parameters", &CPS::DP::Ph1::varResSwitch::setInitParameters, "time_step"_a)
+		.def("connect", &CPS::DP::Ph1::varResSwitch::connect);
+
+	py::class_<CPS::DP::Ph1::SynchronGeneratorTrStab, std::shared_ptr<CPS::DP::Ph1::SynchronGeneratorTrStab>, CPS::SimPowerComp<CPS::Complex>>(mDPPh1, "SynchronGeneratorTrStab", py::multiple_inheritance())
+        .def(py::init<std::string, CPS::Logger::Level>(), "name"_a, "loglevel"_a = CPS::Logger::Level::off)
+		.def("set_standard_parameters_PU", &CPS::DP::Ph1::SynchronGeneratorTrStab::setStandardParametersPU,
+				"nom_power"_a, "nom_volt"_a, "nom_freq"_a, "Xpd"_a, "inertia"_a, "Rs"_a=0, "D"_a=0)
+		.def("set_initial_values", &CPS::DP::Ph1::SynchronGeneratorTrStab::setInitialValues, "elec_power"_a, "mech_power"_a)
+		.def("connect", &CPS::DP::Ph1::SynchronGeneratorTrStab::connect);
 }
