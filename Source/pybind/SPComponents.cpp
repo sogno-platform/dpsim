@@ -84,6 +84,21 @@ void addSPPh1Components(py::module_ mSPPh1) {
 		.def("connect", &CPS::SP::Ph1::SynchronGenerator::connect)
 		.def("modify_power_flow_bus_type", &CPS::SP::Ph1::SynchronGenerator::modifyPowerFlowBusType, "bus_type"_a)
 		.def("get_apparent_power", &CPS::SP::Ph1::SynchronGenerator::getApparentPower);
+
+	py::class_<CPS::SP::Ph1::varResSwitch, std::shared_ptr<CPS::SP::Ph1::varResSwitch>, CPS::SimPowerComp<CPS::Complex>>(mSPPh1, "varResSwitch", py::multiple_inheritance())
+        .def(py::init<std::string, CPS::Logger::Level>(), "name"_a, "loglevel"_a = CPS::Logger::Level::off)
+        .def("set_parameters", &CPS::SP::Ph1::varResSwitch::setParameters, "open_resistance"_a, "closed_resistance"_a, "closed"_a = false)
+		.def("open", &CPS::SP::Ph1::varResSwitch::open)
+		.def("close", &CPS::SP::Ph1::varResSwitch::close)
+		.def("set_init_parameters", &CPS::SP::Ph1::varResSwitch::setInitParameters, "time_step"_a)
+		.def("connect", &CPS::SP::Ph1::varResSwitch::connect);
+
+	py::class_<CPS::SP::Ph1::SynchronGeneratorTrStab, std::shared_ptr<CPS::SP::Ph1::SynchronGeneratorTrStab>, CPS::SimPowerComp<CPS::Complex>>(mSPPh1, "SynchronGeneratorTrStab", py::multiple_inheritance())
+        .def(py::init<std::string, CPS::Logger::Level>(), "name"_a, "loglevel"_a = CPS::Logger::Level::off)
+		.def("set_standard_parameters_PU", &CPS::SP::Ph1::SynchronGeneratorTrStab::setStandardParametersPU,
+				"nom_power"_a, "nom_volt"_a, "nom_freq"_a, "Xpd"_a, "inertia"_a, "Rs"_a=0, "D"_a=0)
+		.def("set_initial_values", &CPS::SP::Ph1::SynchronGeneratorTrStab::setInitialValues, "elec_power"_a, "mech_power"_a)
+		.def("connect", &CPS::SP::Ph1::SynchronGeneratorTrStab::connect);
 }
 
 void addSPPh3Components(py::module_ mSPPh3) {
