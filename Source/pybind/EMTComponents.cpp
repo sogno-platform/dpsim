@@ -120,12 +120,15 @@ void addEMTPh3Components(py::module_ mEMTPh3) {
 		.def("close", &CPS::EMT::Ph3::Switch::closeSwitch)
 		.def("connect", &CPS::EMT::Ph3::Switch::connect);
 
-
 	py::class_<CPS::EMT::Ph3::SynchronGeneratorDQTrapez, std::shared_ptr<CPS::EMT::Ph3::SynchronGeneratorDQTrapez>, CPS::SimPowerComp<CPS::Real>>(mEMTPh3, "SynchronGeneratorDQTrapez", py::multiple_inheritance())
         .def(py::init<std::string, CPS::Logger::Level>(), "name"_a, "loglevel"_a = CPS::Logger::Level::off)
 		.def("set_parameters_operational_per_unit", &CPS::EMT::Ph3::SynchronGeneratorDQTrapez::setParametersOperationalPerUnit,
 			"nom_power"_a, "nom_volt"_a, "nom_freq"_a, "pole_number"_a, "nom_field_cur"_a, "Rs"_a, "Ld"_a, "Lq"_a, "Ld_t"_a, "Lq_t"_a, "Ld_s"_a,
 			"Lq_s"_a, "Ll"_a, "Td0_t"_a, "Tq0_t"_a, "Td0_s"_a, "Tq0_s"_a, "inertia"_a, "init_active_power"_a, "init_reactive_power"_a,
+			"init_terminal_volt"_a, "init_volt_angle"_a, "init_field_voltage"_a, "init_mech_power"_a)
+		.def("set_parameters_fundamental_per_unit", &CPS::EMT::Ph3::SynchronGeneratorDQTrapez::setParametersFundamentalPerUnit,
+			"nom_power"_a, "nom_volt"_a, "nom_freq"_a, "pole_number"_a, "nom_field_cur"_a, "Rs"_a, "Ll"_a, "Lmd"_a, "Lmq"_a, "Rfd"_a, "Llfd"_a,
+			"Rkd"_a, "Llkd"_a, "Rkq1"_a, "Llkq1"_a, "Rkq2"_a, "Llkq2"_a, "inertia"_a, "init_active_power"_a, "init_reactive_power"_a,
 			"init_terminal_volt"_a, "init_volt_angle"_a, "init_field_voltage"_a, "init_mech_power"_a);
 
 }
