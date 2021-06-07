@@ -121,7 +121,8 @@ PYBIND11_MODULE(dpsimpy, m) {
 		.def_static("set_log_dir", [](std::string dir) {
             CPS::Logger::setLogDir(dir);
         })
-		.def("log_attribute", (void (DPsim::DataLogger::*)(const CPS::String &, const CPS::String &, CPS::IdentifiedObject::Ptr)) &DPsim::DataLogger::addAttribute);
+		.def("log_attribute", (void (DPsim::DataLogger::*)(const CPS::String &, const CPS::String &, CPS::IdentifiedObject::Ptr)) &DPsim::DataLogger::addAttribute)
+		.def("log_attribute", (void (DPsim::DataLogger::*)(const std::vector<CPS::String> &, const CPS::String &, CPS::IdentifiedObject::Ptr)) &DPsim::DataLogger::addAttribute);
 
 	py::class_<CPS::IdentifiedObject, std::shared_ptr<CPS::IdentifiedObject>>(m, "IdentifiedObject")
 		.def("name", &CPS::IdentifiedObject::name);
@@ -191,6 +192,7 @@ PYBIND11_MODULE(dpsimpy, m) {
 	//Events
 	py::module mEvent = m.def_submodule("event", "events");
 	py::class_<DPsim::Event, std::shared_ptr<DPsim::Event>>(mEvent, "Event");
+	//TODO: Implement custom base class for abstraction of CPS::Base::Switch
 	py::class_<DPsim::SwitchEvent, std::shared_ptr<DPsim::SwitchEvent>, DPsim::Event>(mEvent, "SwitchEvent", py::multiple_inheritance())
 		.def(py::init<CPS::Real,const std::shared_ptr<CPS::DP::Ph1::Switch>,CPS::Bool>())
 		.def(py::init<CPS::Real,const std::shared_ptr<CPS::DP::Ph1::varResSwitch>,CPS::Bool>())

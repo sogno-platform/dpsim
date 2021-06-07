@@ -69,6 +69,12 @@ void addSPPh1Components(py::module_ mSPPh1) {
 		.def("set_base_voltage", &CPS::SP::Ph1::Shunt::setBaseVoltage, "base_voltage"_a)
 		.def("connect", &CPS::SP::Ph1::Shunt::connect);
 
+	py::class_<CPS::SP::Ph1::Load, std::shared_ptr<CPS::SP::Ph1::Load>, CPS::SimPowerComp<CPS::Complex>>(mSPPh1, "Load", py::multiple_inheritance())
+        .def(py::init<std::string, CPS::Logger::Level>(), "name"_a, "loglevel"_a = CPS::Logger::Level::off)
+        .def("set_parameters", &CPS::SP::Ph1::Load::setParameters, "active_power"_a, "reactive_power"_a, "nominal_voltage"_a)
+		.def("modify_power_flow_bus_type", &CPS::SP::Ph1::Load::modifyPowerFlowBusType, "bus_type"_a)
+		.def("connect", &CPS::SP::Ph1::Load::connect);
+
 	py::class_<CPS::SP::Ph1::Switch, std::shared_ptr<CPS::SP::Ph1::Switch>, CPS::SimPowerComp<CPS::Complex>>(mSPPh1, "Switch", py::multiple_inheritance())
         .def(py::init<std::string, CPS::Logger::Level>(), "name"_a, "loglevel"_a = CPS::Logger::Level::off)
         .def("set_parameters", &CPS::SP::Ph1::Switch::setParameters, "open_resistance"_a, "closed_resistance"_a, "closed"_a = false)

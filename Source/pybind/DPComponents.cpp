@@ -97,4 +97,19 @@ void addDPComponents(py::module_ mDP) {
 				"nom_power"_a, "nom_volt"_a, "nom_freq"_a, "Xpd"_a, "inertia"_a, "Rs"_a=0, "D"_a=0)
 		.def("set_initial_values", &CPS::DP::Ph1::SynchronGeneratorTrStab::setInitialValues, "elec_power"_a, "mech_power"_a)
 		.def("connect", &CPS::DP::Ph1::SynchronGeneratorTrStab::connect);
+
+
+	py::class_<CPS::DP::Ph1::AvVoltageSourceInverterDQ, std::shared_ptr<CPS::DP::Ph1::AvVoltageSourceInverterDQ>, CPS::SimPowerComp<CPS::Complex>>(mDPPh1, "AvVoltageSourceInverterDQ", py::multiple_inheritance())
+        .def(py::init<std::string, CPS::Logger::Level>(), "name"_a, "loglevel"_a = CPS::Logger::Level::off)
+		.def(py::init<std::string, std::string, CPS::Logger::Level, CPS::Bool>(), "uid"_a, "name"_a, "loglevel"_a = CPS::Logger::Level::off, "with_trafo"_a=false)
+		.def("set_parameters", &CPS::DP::Ph1::AvVoltageSourceInverterDQ::setParameters, "sys_omega"_a, "sys_volt_nom"_a, "p_ref"_a, "q_ref"_a)
+		.def("set_filter_parameters", &CPS::DP::Ph1::AvVoltageSourceInverterDQ::setFilterParameters, "Lf"_a, "Cf"_a, "Rf"_a, "Rc"_a)
+		.def("set_controller_parameters", &CPS::DP::Ph1::AvVoltageSourceInverterDQ::setControllerParameters,
+			"Kp_pll"_a, "Ki_pll"_a, "Kp_power_ctrl"_a, "Ki_power_ctrl"_a, "Kp_curr_ctrl"_a, "Ki_curr_ctrl"_a, "omega_cuttoff"_a)
+		.def("set_transformer_parameters", &CPS::DP::Ph1::AvVoltageSourceInverterDQ::setTransformerParameters,
+			"nom_voltage_end_1"_a, "nom_voltage_end_2"_a, "ratio_abs"_a, "ratio_phase"_a, "resistance"_a, "inductance"_a)
+		.def("set_initial_state_values", &CPS::DP::Ph1::AvVoltageSourceInverterDQ::setInitialStateValues,
+			"p_init"_a, "q_init"_a, "phi_d_init"_a, "phi_q_init"_a, "gamma_d_init"_a, "gamma_q_init"_a)
+		.def("with_control", &CPS::DP::Ph1::AvVoltageSourceInverterDQ::withControl)
+		.def("connect", &CPS::DP::Ph1::AvVoltageSourceInverterDQ::connect);
 }
