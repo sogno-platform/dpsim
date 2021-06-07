@@ -164,6 +164,10 @@ void DataLogger::addAttribute(const String &name, const String &attr, CPS::Ident
 	addAttribute(name, obj->attribute(attr));
 }
 
+void DataLogger::addAttribute(const std::vector<String> &name, const String &attr, CPS::IdentifiedObject::Ptr obj) {
+	addAttribute(name, obj->attribute(attr));
+}
+
 void DataLogger::addAttribute(const String &name, CPS::Attribute<Complex>::Ptr attr) {
 	auto attrComp = std::static_pointer_cast<CPS::ComplexAttribute>(attr);
 
