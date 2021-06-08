@@ -23,7 +23,7 @@ jobs:
         cd build
         git describe --tags --abbrev=0 --match "v*"
         cmake -DWITH_PYTHON=OFF ..
-        cmake --build .
+        cmake --build . --target dpsim
 
   linux-fedora:
     name: Build on Linux fedora
