@@ -75,7 +75,7 @@ list(APPEND CPS_SOURCES
 	EMT/EMT_Ph3_SynchronGeneratorDQTrapez.cpp
 	# EMT/EMT_Ph3_SynchronGeneratorDQSmpl.cpp
 	# EMT/EMT_Ph3_SynchronGeneratorDQSmplCompSource.cpp
-	# EMT/EMT_Ph3_SynchronGeneratorVBR.cpp
+	EMT/EMT_Ph3_SynchronGeneratorVBR.cpp
 	# EMT/EMT_Ph3_SynchronGeneratorVBRStandalone.cpp
 	EMT/EMT_Ph3_SynchronGeneratorTrStab.cpp
 
