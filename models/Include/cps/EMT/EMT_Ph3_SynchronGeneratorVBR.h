@@ -76,6 +76,31 @@ namespace Ph3 {
 		/// Interface curent phase c
 		Real mIc;
 
+		/// Interface voltage q component
+		Real mVq;
+		/// Interface voltage d component
+		Real mVd;
+		/// Interface voltage 0 component
+		Real mV0;
+
+		/// Interface current q component
+		Real mIq;
+		/// Interface current d component
+		Real mId;
+		/// Interface current 0 component
+		Real mI0;
+
+		/// Magnetizing flux linkage 1st damper winding q axis
+		Real mPsikq1;
+		/// Magnetizing flux linkage 2nd damper winding q axis
+		Real mPsikq2;
+		/// Magnetizing flux linkage damper winding d axis
+		Real mPsikd;
+		/// Magnetizing flux linkage excitation
+		Real mPsifd;
+		/// Voltage excitation
+		Real mVfd;
+
 		/// Phase currents in pu
 		Matrix mIabc = Matrix::Zero(3, 1);
 		///Phase Voltages in pu
@@ -177,15 +202,19 @@ namespace Ph3 {
 
 
 	public:
+		/// Defines UID, name and logging level
+		SynchronGeneratorVBR(String name, String uid, Logger::Level logLevel = Logger::Level::off);
+		/// Defines name and logging level
+		SynchronGeneratorVBR(String name, Logger::Level logLevel = Logger::Level::off);
+
 		/// Initializes the per unit or stator referred machine parameters with the machine parameters given in per unit or
 		/// stator referred parameters depending on the setting of parameter type.
 		/// The initialization mode depends on the setting of state type.
-		SynchronGeneratorVBR(String name,
-			Real nomPower, Real nomVolt, Real nomFreq, Int poleNumber, Real nomFieldCur,
-			Real Rs, Real Ll, Real Lmd, Real Lmd0, Real Lmq, Real Lmq0,
-			Real Rfd, Real Llfd, Real Rkd, Real Llkd,
-			Real Rkq1, Real Llkq1, Real Rkq2, Real Llkq2,
-			Real inertia, Logger::Level logLevel = Logger::Level::off);
+		void setParametersFundamentalPerUnit(Real nomPower, Real nomVolt, Real nomFreq, Int poleNumber, Real nomFieldCur,
+			Real Rs, Real Ll, Real Lmd, Real Lmq, Real Rfd, Real Llfd, Real Rkd, Real Llkd,
+			Real Rkq1, Real Llkq1, Real Rkq2, Real Llkq2, Real inertia,
+			Real initActivePower, Real initReactivePower, Real initTerminalVolt, Real initVoltAngle,
+			Real initFieldVoltage, Real initMechPower);
 
 		/// Function to initialize Exciter
 		void addExciter(Real Ta, Real Ka, Real Te, Real Ke, Real Tf, Real Kf, Real Tr, Real Lad, Real Rfd);
@@ -198,12 +227,14 @@ namespace Ph3 {
 		}
 		/// Initializes states in per unit or stator referred variables depending on the setting of the state type.
 		/// Function parameters have to be given in real units.
-		void initialize(Real om, Real dt,
-			Real initActivePower, Real initReactivePower, Real initTerminalVolt, Real initVoltAngle, Real initFieldVoltage, Real initMechPower);
+		void initialize(Real om, Real dt);
+
+		/// Initializes internal variables of the component
+		void mnaInitialize(Real omega, Real timeStep, Attribute<Matrix>::Ptr leftVector);
 
 		/// Performs an Euler forward step with the state space model of a synchronous generator
 		/// to calculate the flux and current from the voltage vector in per unit.
-		void stepInPerUnit(Real om, Real dt, Real time, NumericalMethod numMethod);
+		void stepInPerUnit();
 
 		/// Park transform as described in Krause
 		Matrix parkTransform(Real theta, Real a, Real b, Real c);
@@ -223,11 +254,42 @@ namespace Ph3 {
 		Real rotorPosition() { return mThetaMech; }
 		Matrix& statorCurrents() { return mIabc; }
 
-		/// Performs with the model of a synchronous generator
-		/// to calculate the flux and current from the voltage vector.
-		void mnaStep(Matrix& systemMatrix, Matrix& rightVector, Matrix& leftVector, Real time);
-		/// Retrieves calculated voltage from simulation for next step
-		void mnaPostStep(Matrix& rightVector, Matrix& leftVector, Real time);
+		// #### MNA section ####
+		/// Stamps right side (source) vector
+		void mnaApplyRightSideVectorStamp(Matrix& rightVector);
+		/// MNA pre step operations
+		void mnaPreStep(Real time, Int timeStepCount);
+		/// MNA post step operations
+		void mnaPostStep(Real time, Int timeStepCount, Attribute<Matrix>::Ptr &leftVector);
+		/// Add MNA pre step dependencies
+		void mnaAddPreStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes);
+		/// Add MNA post step dependencies
+		void mnaAddPostStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes, Attribute<Matrix>::Ptr &leftVector);
+
+		class MnaPreStep : public CPS::Task {
+		public:
+			MnaPreStep(SynchronGeneratorVBR& SynchronGeneratorVBR) :
+				Task(SynchronGeneratorVBR.mName + ".MnaPreStep"), mSynchronGeneratorVBR(SynchronGeneratorVBR) {
+					mSynchronGeneratorVBR.mnaAddPreStepDependencies(mPrevStepDependencies, mAttributeDependencies, mModifiedAttributes);
+			}
+			void execute(Real time, Int timeStepCount) { mSynchronGeneratorVBR.mnaPreStep(time, timeStepCount); };
+
+		private:
+			SynchronGeneratorVBR& mSynchronGeneratorVBR;
+		};
+
+		class MnaPostStep : public CPS::Task {
+		public:
+			MnaPostStep(SynchronGeneratorVBR& SynchronGeneratorVBR, Attribute<Matrix>::Ptr leftVector) :
+				Task(SynchronGeneratorVBR.mName + ".MnaPostStep"), mSynchronGeneratorVBR(SynchronGeneratorVBR), mLeftVector(leftVector) {
+				mSynchronGeneratorVBR.mnaAddPostStepDependencies(mPrevStepDependencies, mAttributeDependencies, mModifiedAttributes, mLeftVector);
+			}
+			void execute(Real time, Int timeStepCount) { mSynchronGeneratorVBR.mnaPostStep(time, timeStepCount, mLeftVector); };
+
+		private:
+			SynchronGeneratorVBR& mSynchronGeneratorVBR;
+			Attribute<Matrix>::Ptr mLeftVector;
+		};
 	};
 }
 }
