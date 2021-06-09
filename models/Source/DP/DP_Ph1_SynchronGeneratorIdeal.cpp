@@ -31,16 +31,13 @@ SimPowerComp<Complex>::Ptr DP::Ph1::SynchronGeneratorIdeal::clone(String name) {
 }
 
 void DP::Ph1::SynchronGeneratorIdeal::initializeFromNodesAndTerminals(Real frequency) {
-
-	// maybe not necessary because voltage source is also set up from powerflow
-	mVoltageRef = initialSingleVoltage(0);
-
 	mSubVoltageSource = DP::Ph1::VoltageSource::make(mName + "_src", mLogLevel);
-	mSubVoltageSource->setParameters(0);
 	mSubVoltageSource->connect({ SimNode::GND, node(0) });
 	mSubVoltageSource->setVirtualNodeAt(mVirtualNodes[0], 0);
 	mSubVoltageSource->initialize(mFrequencies);
 	mSubVoltageSource->initializeFromNodesAndTerminals(frequency);
+	
+	setAttributeRef("V_ref", mSubVoltageSource->attribute<Complex>("V_ref"));
 
 	mSLog->info(
 		"\n--- Initialization from powerflow ---"
