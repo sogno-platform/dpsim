@@ -88,6 +88,8 @@ void DP::Ph1::VoltageSource::initializeFromNodesAndTerminals(Real frequency) {
 		
 		setAttributeRef("V_ref", mSrcSig->attribute<Complex>("sigOut"));
 		setAttributeRef("f_src", mSrcSig->attribute<Real>("freq"));
+	} else {
+		attribute<Complex>("V_ref")->set(voltageRef);
 	}
 
 	mSLog->info(
