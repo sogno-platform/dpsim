@@ -51,6 +51,12 @@ namespace DPsim {
 					if (it->template attribute<Matrix>("right_vector")->get().size() != 0)
 						mAttributeDependencies.push_back(it->attribute("right_vector"));
 				}
+
+				for (auto it : solver.mMNAIntfVariableComps) {
+					if (it->template attribute<Matrix>("right_vector")->get().size() != 0)
+						mAttributeDependencies.push_back(it->attribute("right_vector"));
+				}
+
 				for (auto node : solver.mNodes) {
 					mModifiedAttributes.push_back(node->attribute("v"));
 				}

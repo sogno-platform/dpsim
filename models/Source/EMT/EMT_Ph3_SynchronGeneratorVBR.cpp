@@ -37,6 +37,10 @@ EMT::Ph3::SynchronGeneratorVBR::SynchronGeneratorVBR(String uid, String name, Lo
 
 	addAttribute<Real>("w_r", &mOmMech, Flags::read);
 	addAttribute<Real>("delta_r", &mDelta, Flags::read);
+
+	addAttribute<Real>("T_e", &mElecTorque, Flags::read);
+	addAttribute<Real>("T_m", &mMechTorque, Flags::read);
+	
 }
 
 EMT::Ph3::SynchronGeneratorVBR::SynchronGeneratorVBR(String name, Logger::Level logLevel)
@@ -121,6 +125,27 @@ void EMT::Ph3::SynchronGeneratorVBR::mnaInitialize(Real omega, Real timeStep, At
 	mIq = -mIq;
 	mId = -mId;
 
+	// Init stator currents
+	mIq = mIsr(3,0);
+	mId = mIsr(0,0);
+	mI0 = mIsr(6,0);
+
+	// Init stator voltages
+	mVq = mVsr(3,0);
+	mVd = mVsr(0,0);
+	mV0 = mVsr(6,0);
+
+	// Init magnetizing flux linkage
+	mPsikq1 = mPsisr(4,0);
+	mPsikq2 = mPsisr(5,0);
+	mPsikd = mPsisr(2,0);
+	mPsifd = mPsisr(1,0);
+	mPsimq = mPsisr(3,0);
+	mPsimd = mPsisr(0,0);
+
+	/// Init voltage excitation
+	mVfd = mVsr(1,0);
+
 
 	// #### VBR Model Dynamic variables #######################################
 	CalculateAuxiliarConstants(mTimeStep*mBase_OmElec);
@@ -177,21 +202,25 @@ void EMT::Ph3::SynchronGeneratorVBR::mnaInitialize(Real omega, Real timeStep, At
 }
 
 void EMT::Ph3::SynchronGeneratorVBR::mnaPreStep(Real time, Int timeStepCount) {
-
 	stepInPerUnit();
 	mnaApplyRightSideVectorStamp(mRightVector);
+}
 
-	// TODO: move to ApplySystemMatrixStamp, inherit from MNAVariableCompInterface, return 1 from hasParameterChanged
-	// Update Equivalent Resistance
-	// Math::addToMatrixElement(systemMatrix, matrixNodeIndex(0), matrixNodeIndex(0), mConductanceMat(0, 0));
-	// Math::addToMatrixElement(systemMatrix, matrixNodeIndex(0), matrixNodeIndex(1), mConductanceMat(0, 1));
-	// Math::addToMatrixElement(systemMatrix, matrixNodeIndex(0), matrixNodeIndex(2), mConductanceMat(0, 2));
-	// Math::addToMatrixElement(systemMatrix, matrixNodeIndex(1), matrixNodeIndex(0), mConductanceMat(1, 0));
-	// Math::addToMatrixElement(systemMatrix, matrixNodeIndex(1), matrixNodeIndex(1), mConductanceMat(1, 1));
-	// Math::addToMatrixElement(systemMatrix, matrixNodeIndex(1), matrixNodeIndex(2), mConductanceMat(1, 2));
-	// Math::addToMatrixElement(systemMatrix, matrixNodeIndex(2), matrixNodeIndex(0), mConductanceMat(2, 0));
-	// Math::addToMatrixElement(systemMatrix, matrixNodeIndex(2), matrixNodeIndex(1), mConductanceMat(2, 1));
-	// Math::addToMatrixElement(systemMatrix, matrixNodeIndex(2), matrixNodeIndex(2), mConductanceMat(2, 2));
+void EMT::Ph3::SynchronGeneratorVBR::mnaApplySystemMatrixStamp(Matrix& systemMatrix) {
+	if (terminalNotGrounded(0)) {
+		Math::addToMatrixElement(systemMatrix, matrixNodeIndex(0, 0), matrixNodeIndex(0, 0), mConductanceMat(0, 0));
+		Math::addToMatrixElement(systemMatrix, matrixNodeIndex(0, 0), matrixNodeIndex(0, 1), mConductanceMat(0, 1));
+		Math::addToMatrixElement(systemMatrix, matrixNodeIndex(0, 0), matrixNodeIndex(0, 2), mConductanceMat(0, 2));
+		Math::addToMatrixElement(systemMatrix, matrixNodeIndex(0, 1), matrixNodeIndex(0, 0), mConductanceMat(1, 0));
+		Math::addToMatrixElement(systemMatrix, matrixNodeIndex(0, 1), matrixNodeIndex(0, 1), mConductanceMat(1, 1));
+		Math::addToMatrixElement(systemMatrix, matrixNodeIndex(0, 1), matrixNodeIndex(0, 2), mConductanceMat(1, 2));
+		Math::addToMatrixElement(systemMatrix, matrixNodeIndex(0, 2), matrixNodeIndex(0, 0), mConductanceMat(2, 0));
+		Math::addToMatrixElement(systemMatrix, matrixNodeIndex(0, 2), matrixNodeIndex(0, 1), mConductanceMat(2, 1));
+		Math::addToMatrixElement(systemMatrix, matrixNodeIndex(0, 2), matrixNodeIndex(0, 2), mConductanceMat(2, 2));
+		// mSLog->info("Add {} to {}, {}", conductance, matrixNodeIndex(0,0), matrixNodeIndex(0,0));
+		// mSLog->info("Add {} to {}, {}", conductance, matrixNodeIndex(0,1), matrixNodeIndex(0,1));
+		// mSLog->info("Add {} to {}, {}", conductance, matrixNodeIndex(0,2), matrixNodeIndex(0,2));
+	}
 }
 
 void EMT::Ph3::SynchronGeneratorVBR::mnaAddPreStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes) {
@@ -343,8 +372,8 @@ void EMT::Ph3::SynchronGeneratorVBR::mnaPostStep(Real time, Int timeStepCount, A
 		mDVb,
 		mDVc;
 
-	mIntfVoltage = mVabc;
-	mIntfCurrent = mIabc;
+	mIntfVoltage = mVabc*mBase_V;
+	mIntfCurrent = mIabc*mBase_I;
 }
 
 void EMT::Ph3::SynchronGeneratorVBR::mnaAddPostStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes, Attribute<Matrix>::Ptr &leftVector) {

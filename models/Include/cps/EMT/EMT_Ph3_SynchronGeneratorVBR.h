@@ -10,6 +10,7 @@
 
 #include <cps/SimPowerComp.h>
 #include <cps/Solver/MNAInterface.h>
+#include <cps/Solver/MNAVariableCompInterface.h>
 #include <cps/Base/Base_SynchronGenerator.h>
 #include <cps/Signal/Exciter.h>
 #include <cps/Signal/TurbineGovernor.h>
@@ -28,6 +29,7 @@ namespace Ph3 {
 	class SynchronGeneratorVBR :
 		public SimPowerComp<Real>,
 		public MNAInterface,
+		public MNAVariableCompInterface,
 		public Base::SynchronGenerator,
 		public SharedFactory<SynchronGeneratorVBR> {
 	protected:
@@ -98,6 +100,11 @@ namespace Ph3 {
 		Real mPsikd;
 		/// Magnetizing flux linkage excitation
 		Real mPsifd;
+		/// Magnetizing flux linkage in q axis
+		Real mPsimq;
+		/// Magnetizing flux linkage in d axis
+		Real mPsimd;
+
 		/// Voltage excitation
 		Real mVfd;
 
@@ -107,11 +114,6 @@ namespace Ph3 {
 		Matrix mVabc = Matrix::Zero(3, 1);
 		/// Subtransient voltage in pu
 		Matrix mDVabc = Matrix::Zero(3, 1);
-
-		/// Magnetizing flux linkage in q axis
-		Real mPsimq;
-		/// Magnetizing flux linkage in d axis
-		Real mPsimd;
 
 		/// Dq stator current vector
 		Matrix mDqStatorCurrents = Matrix::Zero(2, 1);
@@ -221,10 +223,10 @@ namespace Ph3 {
 		/// Function to initialize Governor and Turbine
 		void addGovernor(Real Ta, Real Tb, Real Tc, Real Fa, Real Fb, Real Fc, Real K, Real Tsr, Real Tsm, Real Tm_init, Real PmRef);
 
-		void initialize(Matrix frequencies) override
-		{
+		void initialize(Matrix frequencies) override {
 			SimPowerComp<Real>::initialize(frequencies);
 		}
+
 		/// Initializes states in per unit or stator referred variables depending on the setting of the state type.
 		/// Function parameters have to be given in real units.
 		void initialize(Real om, Real dt);
@@ -255,6 +257,8 @@ namespace Ph3 {
 		Matrix& statorCurrents() { return mIabc; }
 
 		// #### MNA section ####
+		/// Stamps system matrix
+		void mnaApplySystemMatrixStamp(Matrix& systemMatrix);
 		/// Stamps right side (source) vector
 		void mnaApplyRightSideVectorStamp(Matrix& rightVector);
 		/// MNA pre step operations
@@ -265,6 +269,8 @@ namespace Ph3 {
 		void mnaAddPreStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes);
 		/// Add MNA post step dependencies
 		void mnaAddPostStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes, Attribute<Matrix>::Ptr &leftVector);
+		/// Mark that parameter changes so that system matrix is updated
+		Bool hasParameterChanged() override { return 1; };
 
 		class MnaPreStep : public CPS::Task {
 		public:
