@@ -31,8 +31,6 @@ namespace DPsim {
 	template <typename VarType>
 	class MnaSolverEigenDense : public MnaSolver<VarType> {
 	protected:
-		/// Base matrix that includes all static MNA elements to speed up recomputation
-		Matrix mBaseSystemMatrix;
 		/// Map of system matrices where the key is the bitset describing the switch states
 		std::unordered_map< std::bitset<SWITCH_NUM>, std::vector<Matrix> > mSwitchedMatrices;
 		/// Map of LU factorizations related to the system matrices

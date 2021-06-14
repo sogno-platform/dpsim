@@ -32,8 +32,8 @@ namespace DPsim {
 	template <typename VarType>
 	class MnaSolverEigenSparse : public MnaSolver<VarType> {
 	protected:
-		/// Base matrix that includes all static MNA elements to speed up recomputation
-		SparseMatrix mBaseSystemMatrix;
+		/// Map of base matrices that include all static MNA elements to speed up recomputation and where the key is the bitset describing the switch states
+		std::unordered_map< std::bitset<SWITCH_NUM>, std::vector<SparseMatrix> > mBaseSystemMatrix;
 		/// Map of system matrices where the key is the bitset describing the switch states
 		std::unordered_map< std::bitset<SWITCH_NUM>, std::vector<SparseMatrix> > mSwitchedMatrices;
 		/// Map of LU factorizations related to the system matrices

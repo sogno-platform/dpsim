@@ -50,10 +50,12 @@ void MnaSolverEigenSparse<Real>::createEmptySystemMatrix() {
 	if (mSwitches.size() > SWITCH_NUM)
 		throw SystemError("Too many Switches.");
 
-	for (std::size_t i = 0; i < (1ULL << mSwitches.size()); i++)
-		mSwitchedMatrices[std::bitset<SWITCH_NUM>(i)].push_back(SparseMatrix(mNumMatrixNodeIndices, mNumMatrixNodeIndices));
-
-	mBaseSystemMatrix.resize(mNumMatrixNodeIndices, mNumMatrixNodeIndices);
+	for (std::size_t i = 0; i < (1ULL << mSwitches.size()); i++){
+		auto bit = std::bitset<SWITCH_NUM>(i);
+		mSwitchedMatrices[bit].push_back(SparseMatrix(mNumMatrixNodeIndices, mNumMatrixNodeIndices));
+		mLuFactorizations[bit].push_back(std::make_shared<LUFactorizedSparse>());
+		mBaseSystemMatrix[bit].push_back(SparseMatrix(mNumMatrixNodeIndices, mNumMatrixNodeIndices));
+	}
 }
 
 template <>
@@ -75,8 +77,8 @@ void MnaSolverEigenSparse<Complex>::createEmptySystemMatrix() {
 			auto bit = std::bitset<SWITCH_NUM>(i);
 			mSwitchedMatrices[bit].push_back(SparseMatrix(2*(mNumTotalMatrixNodeIndices), 2*(mNumTotalMatrixNodeIndices)));
 			mLuFactorizations[bit].push_back(std::make_shared<LUFactorizedSparse>());
+			mBaseSystemMatrix[bit].push_back(SparseMatrix(2*(mNumTotalMatrixNodeIndices), 2*(mNumTotalMatrixNodeIndices)));
 		}
-		mBaseSystemMatrix.resize(2 * (mNumTotalMatrixNodeIndices), 2 * (mNumTotalMatrixNodeIndices));
 	}
 }
 

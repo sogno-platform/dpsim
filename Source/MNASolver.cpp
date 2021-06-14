@@ -118,6 +118,15 @@ void MnaSolver<Real>::initializeComponents() {
 			mRightVectorStamps.push_back(&stamp);
 		}
 	}
+
+	for (auto comp : mMNAIntfVariableComps) {
+		comp->mnaInitialize(mSystem.mSystemOmega, mTimeStep, attribute<Matrix>("left_vector"));
+		const Matrix& stamp = comp->template attribute<Matrix>("right_vector")->get();
+		if (stamp.size() != 0) {
+			mRightVectorStamps.push_back(&stamp);
+		}
+	}
+
 	for (auto comp : mSwitches)
 		comp->mnaInitialize(mSystem.mSystemOmega, mTimeStep, attribute<Matrix>("left_vector"));
 }
@@ -161,6 +170,15 @@ void MnaSolver<Complex>::initializeComponents() {
 				mRightVectorStamps.push_back(&stamp);
 			}
 		}
+
+		for (auto comp : mMNAIntfVariableComps) {
+			comp->mnaInitialize(mSystem.mSystemOmega, mTimeStep, attribute<Matrix>("left_vector"));
+			const Matrix& stamp = comp->template attribute<Matrix>("right_vector")->get();
+			if (stamp.size() != 0) {
+				mRightVectorStamps.push_back(&stamp);
+			}
+		}
+
 		for (auto comp : mSwitches)
 			comp->mnaInitialize(mSystem.mSystemOmega, mTimeStep, attribute<Matrix>("left_vector"));
 	}

@@ -37,6 +37,9 @@ EMT::Ph3::SynchronGeneratorDQ::SynchronGeneratorDQ(String uid, String name, Logg
 
 	addAttribute<Real>("w_r", &mOmMech, Flags::read);
 	addAttribute<Real>("delta_r", &mDelta, Flags::read);
+
+	addAttribute<Real>("T_e", &mElecTorque, Flags::read);
+	addAttribute<Real>("T_m", &mMechTorque, Flags::read);
 }
 
 EMT::Ph3::SynchronGeneratorDQ::SynchronGeneratorDQ(String name, Logger::Level logLevel)

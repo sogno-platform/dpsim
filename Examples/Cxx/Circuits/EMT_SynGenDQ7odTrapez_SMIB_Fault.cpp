@@ -162,6 +162,8 @@ int main(int argc, char* argv[]) {
 	logger->addAttribute("i_gen", gen->attribute("i_intf"));
 	logger->addAttribute("wr_gen", gen->attribute("w_r"));
 	logger->addAttribute("delta_r", gen->attribute("delta_r"));
+	logger->addAttribute("T_e", gen->attribute("T_e"));
+	logger->addAttribute("T_m", gen->attribute("T_m"));
 
 	// Events
 	auto sw1 = SwitchEvent3Ph::make(startTimeFault, fault, true);
