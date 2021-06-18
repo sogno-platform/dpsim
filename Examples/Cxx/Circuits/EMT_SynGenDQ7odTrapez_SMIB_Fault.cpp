@@ -46,6 +46,12 @@ Real startTimeFault=0.2;
 
 int main(int argc, char* argv[]) {
 
+	if (argc > 1) {
+		CommandLineArgs args(argc, argv);
+		simName = args.name;
+		timeStep = args.timeStep;
+	}
+
 	// ----- POWERFLOW FOR INITIALIZATION -----
 	String simNamePF = simName + "_PF";
 	Logger::setLogDir("logs/" + simNamePF);
