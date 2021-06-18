@@ -131,4 +131,18 @@ void addEMTPh3Components(py::module_ mEMTPh3) {
 			"Rkd"_a, "Llkd"_a, "Rkq1"_a, "Llkq1"_a, "Rkq2"_a, "Llkq2"_a, "inertia"_a, "init_active_power"_a, "init_reactive_power"_a,
 			"init_terminal_volt"_a, "init_volt_angle"_a, "init_field_voltage"_a, "init_mech_power"_a);
 
+	py::class_<CPS::EMT::Ph3::AvVoltageSourceInverterDQ, std::shared_ptr<CPS::EMT::Ph3::AvVoltageSourceInverterDQ>, CPS::SimPowerComp<CPS::Real>>(mEMTPh3, "AvVoltageSourceInverterDQ", py::multiple_inheritance())
+        .def(py::init<std::string, CPS::Logger::Level>(), "name"_a, "loglevel"_a = CPS::Logger::Level::off)
+		.def(py::init<std::string, std::string, CPS::Logger::Level, CPS::Bool>(), "uid"_a, "name"_a, "loglevel"_a = CPS::Logger::Level::off, "with_trafo"_a=false)
+		.def("set_parameters", &CPS::EMT::Ph3::AvVoltageSourceInverterDQ::setParameters, "sys_omega"_a, "sys_volt_nom"_a, "p_ref"_a, "q_ref"_a)
+		.def("set_filter_parameters", &CPS::EMT::Ph3::AvVoltageSourceInverterDQ::setFilterParameters, "Lf"_a, "Cf"_a, "Rf"_a, "Rc"_a)
+		.def("set_controller_parameters", &CPS::EMT::Ph3::AvVoltageSourceInverterDQ::setControllerParameters,
+			"Kp_pll"_a, "Ki_pll"_a, "Kp_power_ctrl"_a, "Ki_power_ctrl"_a, "Kp_curr_ctrl"_a, "Ki_curr_ctrl"_a, "omega_cutoff"_a)
+		.def("set_transformer_parameters", &CPS::EMT::Ph3::AvVoltageSourceInverterDQ::setTransformerParameters,
+			"nom_voltage_end_1"_a, "nom_voltage_end_2"_a, "rated_power"_a, "ratio_abs"_a, "ratio_phase"_a, "resistance"_a, "inductance"_a, "omega"_a)
+		.def("set_initial_state_values", &CPS::EMT::Ph3::AvVoltageSourceInverterDQ::setInitialStateValues,
+			"p_init"_a, "q_init"_a, "phi_d_init"_a, "phi_q_init"_a, "gamma_d_init"_a, "gamma_q_init"_a)
+		.def("with_control", &CPS::EMT::Ph3::AvVoltageSourceInverterDQ::withControl)
+		.def("connect", &CPS::EMT::Ph3::AvVoltageSourceInverterDQ::connect);
+
 }

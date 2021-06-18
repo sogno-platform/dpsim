@@ -109,7 +109,7 @@ void addDPComponents(py::module_ mDP) {
 		.def("set_parameters", &CPS::DP::Ph1::AvVoltageSourceInverterDQ::setParameters, "sys_omega"_a, "sys_volt_nom"_a, "p_ref"_a, "q_ref"_a)
 		.def("set_filter_parameters", &CPS::DP::Ph1::AvVoltageSourceInverterDQ::setFilterParameters, "Lf"_a, "Cf"_a, "Rf"_a, "Rc"_a)
 		.def("set_controller_parameters", &CPS::DP::Ph1::AvVoltageSourceInverterDQ::setControllerParameters,
-			"Kp_pll"_a, "Ki_pll"_a, "Kp_power_ctrl"_a, "Ki_power_ctrl"_a, "Kp_curr_ctrl"_a, "Ki_curr_ctrl"_a, "omega_cuttoff"_a)
+			"Kp_pll"_a, "Ki_pll"_a, "Kp_power_ctrl"_a, "Ki_power_ctrl"_a, "Kp_curr_ctrl"_a, "Ki_curr_ctrl"_a, "omega_cutoff"_a)
 		.def("set_transformer_parameters", &CPS::DP::Ph1::AvVoltageSourceInverterDQ::setTransformerParameters,
 			"nom_voltage_end_1"_a, "nom_voltage_end_2"_a, "ratio_abs"_a, "ratio_phase"_a, "resistance"_a, "inductance"_a)
 		.def("set_initial_state_values", &CPS::DP::Ph1::AvVoltageSourceInverterDQ::setInitialStateValues,
