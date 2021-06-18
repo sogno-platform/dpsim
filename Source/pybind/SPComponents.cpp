@@ -52,7 +52,7 @@ void addSPPh1Components(py::module_ mSPPh1) {
 	py::class_<CPS::SP::Ph1::NetworkInjection, std::shared_ptr<CPS::SP::Ph1::NetworkInjection>, CPS::SimPowerComp<CPS::Complex>>(mSPPh1, "NetworkInjection", py::multiple_inheritance())
         .def(py::init<std::string, CPS::Logger::Level>(), "name"_a, "loglevel"_a = CPS::Logger::Level::off)
         .def("set_parameters", py::overload_cast<CPS::Real>(&CPS::SP::Ph1::NetworkInjection::setParameters), "voltage_set_point"_a)
-        .def("set_parameters", py::overload_cast<CPS::Complex, CPS::Real>(&CPS::SP::Ph1::NetworkInjection::setParameters), "V_ref"_a, "f_src"_a)
+        .def("set_parameters", py::overload_cast<CPS::Complex, CPS::Real>(&CPS::SP::Ph1::NetworkInjection::setParameters), "V_ref"_a, "f_src"_a = -1)
 		.def("set_base_voltage", &CPS::SP::Ph1::NetworkInjection::setBaseVoltage, "base_voltage"_a)
 		.def("connect", &CPS::SP::Ph1::NetworkInjection::connect)
 		.def("modify_power_flow_bus_type", &CPS::SP::Ph1::NetworkInjection::modifyPowerFlowBusType, "bus_type"_a);
@@ -111,6 +111,19 @@ void addSPPh1Components(py::module_ mSPPh1) {
 				gen.setReferenceOmega(refOmegaComp->attribute<CPS::Real>(refOmegaName), refDeltaComp->attribute<CPS::Real>(refDeltaName));
 			}, "ref_omega_name"_a="w_r", "ref_omage_comp"_a, "ref_delta_name"_a="delta_r", "ref_delta_comp"_a);
 
+	py::class_<CPS::SP::Ph1::AvVoltageSourceInverterDQ, std::shared_ptr<CPS::SP::Ph1::AvVoltageSourceInverterDQ>, CPS::SimPowerComp<CPS::Complex>>(mSPPh1, "AvVoltageSourceInverterDQ", py::multiple_inheritance())
+        .def(py::init<std::string, CPS::Logger::Level>(), "name"_a, "loglevel"_a = CPS::Logger::Level::off)
+		.def(py::init<std::string, std::string, CPS::Logger::Level, CPS::Bool>(), "uid"_a, "name"_a, "loglevel"_a = CPS::Logger::Level::off, "with_trafo"_a=false)
+		.def("set_parameters", &CPS::SP::Ph1::AvVoltageSourceInverterDQ::setParameters, "sys_omega"_a, "sys_volt_nom"_a, "p_ref"_a, "q_ref"_a)
+		.def("set_filter_parameters", &CPS::SP::Ph1::AvVoltageSourceInverterDQ::setFilterParameters, "Lf"_a, "Cf"_a, "Rf"_a, "Rc"_a)
+		.def("set_controller_parameters", &CPS::SP::Ph1::AvVoltageSourceInverterDQ::setControllerParameters,
+			"Kp_pll"_a, "Ki_pll"_a, "Kp_power_ctrl"_a, "Ki_power_ctrl"_a, "Kp_curr_ctrl"_a, "Ki_curr_ctrl"_a, "omega_cutoff"_a)
+		.def("set_transformer_parameters", &CPS::SP::Ph1::AvVoltageSourceInverterDQ::setTransformerParameters,
+			"nom_voltage_end_1"_a, "nom_voltage_end_2"_a, "ratio_abs"_a, "ratio_phase"_a, "resistance"_a, "inductance"_a)
+		.def("set_initial_state_values", &CPS::SP::Ph1::AvVoltageSourceInverterDQ::setInitialStateValues,
+			"p_init"_a, "q_init"_a, "phi_d_init"_a, "phi_q_init"_a, "gamma_d_init"_a, "gamma_q_init"_a)
+		.def("with_control", &CPS::SP::Ph1::AvVoltageSourceInverterDQ::withControl)
+		.def("connect", &CPS::SP::Ph1::AvVoltageSourceInverterDQ::connect);
 }
 
 void addSPPh3Components(py::module_ mSPPh3) {
