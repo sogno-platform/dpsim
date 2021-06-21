@@ -33,6 +33,12 @@ void addDPComponents(py::module_ mDP) {
 		.def_property("V_ref", createAttributeGetter<CPS::Complex>("V_ref"), createAttributeSetter<CPS::Complex>("V_ref"))
 		.def_property("f_src", createAttributeGetter<CPS::Real>("f_src"), createAttributeSetter<CPS::Real>("f_src"));
 
+	py::class_<CPS::DP::Ph1::VoltageSourceNorton, std::shared_ptr<CPS::DP::Ph1::VoltageSourceNorton>, CPS::SimPowerComp<CPS::Complex>>(mDPPh1, "VoltageSourceNorton", py::multiple_inheritance())
+        .def(py::init<std::string>())
+		.def(py::init<std::string, CPS::Logger::Level>())
+        .def("set_parameters", py::overload_cast<CPS::Complex, CPS::Real>(&CPS::DP::Ph1::VoltageSourceNorton::setParameters), "V_ref"_a, "f_src"_a=-1)
+		.def("connect", &CPS::DP::Ph1::VoltageSourceNorton::connect);
+
 	py::class_<CPS::DP::Ph1::CurrentSource, std::shared_ptr<CPS::DP::Ph1::CurrentSource>, CPS::SimPowerComp<CPS::Complex>>(mDPPh1, "CurrentSource", py::multiple_inheritance())
         .def(py::init<std::string>())
 		.def(py::init<std::string, CPS::Logger::Level>())
