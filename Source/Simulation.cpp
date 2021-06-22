@@ -518,6 +518,43 @@ Complex Simulation::getComplexIdObjAttr(const String &comp, const String &attr, 
 	return 0;
 }
 
+void Simulation::exportIdObjAttr(const String &comp, const String &attr, UInt idx, UInt row, UInt col) {
+	Bool found = false;
+	IdentifiedObject::Ptr compObj = mSystem.component<IdentifiedObject>(comp);
+	if (!compObj) compObj = mSystem.node<TopologicalNode>(comp);
+
+	if (compObj) {
+		try {
+			auto v = compObj->attribute<Real>(attr);
+			mInterfaces[0].interface->exportReal(v, idx);
+			found = true;
+		} catch (InvalidAttributeException &e) { }
+
+		try {
+			auto v = compObj->attributeComplex(attr);
+			mInterfaces[0].interface->exportComplex(v, idx);
+			found = true;
+		} catch (InvalidAttributeException &e) { }
+
+		try {
+			auto v = compObj->attributeMatrixReal(attr)->coeff(row, col);
+			mInterfaces[0].interface->exportReal(v, idx);
+			found = true;
+		} catch (InvalidAttributeException &e) { }
+
+		try {
+			auto v = compObj->attributeMatrixComp(attr);
+			mInterfaces[0].interface->exportComplex(v->coeff(row, col), idx);
+			found = true;
+		} catch (InvalidAttributeException &e) { }
+
+		if (!found) mLog->error("Attribute not found");
+	}
+	else {
+		mLog->error("Component not found");
+	}
+}
+
 void Simulation::exportIdObjAttr(const String &comp, const String &attr, UInt idx, AttributeBase::Modifier mod, UInt row, UInt col) {
 	Bool found = false;
 	IdentifiedObject::Ptr compObj = mSystem.component<IdentifiedObject>(comp);
@@ -554,6 +591,7 @@ void Simulation::exportIdObjAttr(const String &comp, const String &attr, UInt id
 
 		try {
 			auto v = compObj->attributeMatrixReal(attr)->coeff(row, col);
+			mInterfaces[0].interface->exportReal(v, idx);
 			found = true;
 		} catch (InvalidAttributeException &e) { }
 
@@ -599,10 +637,10 @@ void Simulation::importIdObjAttr(const String &comp, const String &attr, UInt id
 		} catch (InvalidAttributeException &e) { }
 
 		try {
-			auto v = compObj->attributeComplex(attr);			
+			auto v = compObj->attributeComplex(attr);
 			compObj->setAttributeRef(attr, mInterfaces[0].interface->importComplex(idx));
-			found = true;				
-		} catch (InvalidAttributeException &e) { }		
+			found = true;
+		} catch (InvalidAttributeException &e) { }
 
 		if (!found) mLog->error("Attribute not found");
 	}
