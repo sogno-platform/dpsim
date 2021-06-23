@@ -253,7 +253,7 @@ namespace DPsim {
 		Complex getComplexIdObjAttr(const String &comp, const String &attr, UInt row = 0, UInt col = 0);
 
 		void exportIdObjAttr(const String &comp, const String &attr, UInt idx, CPS::AttributeBase::Modifier mod, UInt row = 0, UInt col = 0);
-		void exportIdObjAttr(const String &comp, const String &attr, UInt idx, UInt row = 0, UInt col = 0);
+		void exportIdObjAttr(const String &comp, const String &attr, UInt idx, UInt row = 0, UInt col = 0, Complex scale = Complex(1, 0));
 		void importIdObjAttr(const String &comp, const String &attr, UInt idx);
 		void logIdObjAttr(const String &comp, const String &attr);
 	};

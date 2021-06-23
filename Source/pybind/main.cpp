@@ -72,7 +72,7 @@ PYBIND11_MODULE(dpsimpy, m) {
 		.def("get_comp_idobj_attr", &DPsim::Simulation::getComplexIdObjAttr, "obj"_a, "attr"_a, "row"_a = 0, "col"_a = 0)
 		.def("add_interface", &DPsim::Simulation::addInterface, "interface"_a, "syncStart"_a = false)
 		.def("export_attr", py::overload_cast<const CPS::String&, const CPS::String&, CPS::UInt, CPS::AttributeBase::Modifier, CPS::UInt, CPS::UInt>(&DPsim::Simulation::exportIdObjAttr), "obj"_a, "attr"_a, "idx"_a, "modifier"_a, "row"_a = 0, "col"_a = 0)
-		.def("export_attr", py::overload_cast<const CPS::String&, const CPS::String&, CPS::UInt, CPS::UInt, CPS::UInt>(&DPsim::Simulation::exportIdObjAttr), "obj"_a, "attr"_a, "idx"_a, "row"_a = 0, "col"_a = 0)
+		.def("export_attr", py::overload_cast<const CPS::String&, const CPS::String&, CPS::UInt, CPS::UInt, CPS::UInt, CPS::Complex>(&DPsim::Simulation::exportIdObjAttr), "obj"_a, "attr"_a, "idx"_a, "row"_a = 0, "col"_a = 0, "scale"_a = CPS::Complex(1, 0))
 		.def("import_attr", &DPsim::Simulation::importIdObjAttr, "obj"_a, "attr"_a, "idx"_a)
 		.def("log_attr", &DPsim::Simulation::logIdObjAttr)
 		.def("do_init_from_nodes_and_terminals", &DPsim::Simulation::doInitFromNodesAndTerminals)
@@ -183,9 +183,13 @@ PYBIND11_MODULE(dpsimpy, m) {
 
 	py::class_<CPS::TopologicalPowerComp, std::shared_ptr<CPS::TopologicalPowerComp>, CPS::IdentifiedObject>(m, "TopologicalPowerComp");
 	py::class_<CPS::SimPowerComp<CPS::Complex>, std::shared_ptr<CPS::SimPowerComp<CPS::Complex>>, CPS::TopologicalPowerComp>(m, "SimPowerCompComplex")
-		.def("connect", &CPS::SimPowerComp<CPS::Complex>::connect);
+		.def("connect", &CPS::SimPowerComp<CPS::Complex>::connect)
+		.def("set_intf_current", &CPS::SimPowerComp<CPS::Complex>::setIntfCurrent)
+		.def("set_intf_voltage", &CPS::SimPowerComp<CPS::Complex>::setIntfVoltage);
 	py::class_<CPS::SimPowerComp<CPS::Real>, std::shared_ptr<CPS::SimPowerComp<CPS::Real>>, CPS::TopologicalPowerComp>(m, "SimPowerCompReal")
-		.def("connect", &CPS::SimPowerComp<CPS::Real>::connect);
+		.def("connect", &CPS::SimPowerComp<CPS::Real>::connect)
+		.def("set_intf_current", &CPS::SimPowerComp<CPS::Real>::setIntfCurrent)
+		.def("set_intf_voltage", &CPS::SimPowerComp<CPS::Real>::setIntfVoltage);
 	py::class_<CPS::TopologicalNode, std::shared_ptr<CPS::TopologicalNode>, CPS::IdentifiedObject>(m, "TopologicalNode")
 		.def("initial_single_voltage", &CPS::TopologicalNode::initialSingleVoltage, "phase_type"_a = CPS::PhaseType::Single);
 
