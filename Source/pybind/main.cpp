@@ -77,6 +77,7 @@ PYBIND11_MODULE(dpsimpy, m) {
 		.def("log_attr", &DPsim::Simulation::logIdObjAttr)
 		.def("do_init_from_nodes_and_terminals", &DPsim::Simulation::doInitFromNodesAndTerminals)
 		.def("do_system_matrix_recomputation", &DPsim::Simulation::doSystemMatrixRecomputation)
+		.def("do_steady_state_init", &DPsim::Simulation::doSteadyStateInit)
 		.def("add_event", &DPsim::Simulation::addEvent);
 
 	py::class_<DPsim::RealTimeSimulation, DPsim::Simulation>(m, "RealTimeSimulation")
@@ -109,9 +110,13 @@ PYBIND11_MODULE(dpsimpy, m) {
 		.def("sp_node", py::overload_cast<CPS::UInt>(&DPsim::SystemTopology::node<CPS::SP::SimNode>))
 		.def("connect_component", py::overload_cast<CPS::SimPowerComp<CPS::Real>::Ptr, CPS::SimNode<CPS::Real>::List>(&DPsim::SystemTopology::connectComponentToNodes<CPS::Real>))
 		.def("connect_component", py::overload_cast<CPS::SimPowerComp<CPS::Complex>::Ptr, CPS::SimNode<CPS::Complex>::List>(&DPsim::SystemTopology::connectComponentToNodes<CPS::Complex>))
+		.def("emt_component", &DPsim::SystemTopology::component<CPS::SimPowerComp<CPS::Real>>)
+		.def("dp_component", &DPsim::SystemTopology::component<CPS::SimPowerComp<CPS::Complex>>)
+		.def("sp_component", &DPsim::SystemTopology::component<CPS::SimPowerComp<CPS::Complex>>)
 		.def("_repr_svg_", &DPsim::SystemTopology::render)
 		.def("render_to_file", &DPsim::SystemTopology::renderToFile)
 		.def_readwrite("nodes", &DPsim::SystemTopology::mNodes)
+		.def_readwrite("components", &DPsim::SystemTopology::mComponents)
 		.def("list_idobjects", &DPsim::SystemTopology::listIdObjects);
 
 	py::class_<DPsim::Interface>(m, "Interface");
