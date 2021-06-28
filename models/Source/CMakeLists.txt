@@ -36,7 +36,6 @@ list(APPEND CPS_SOURCES
 	DP/DP_Ph1_NetworkInjection.cpp
 	DP/DP_Ph1_varResSwitch.cpp
 
-	DP/DP_Ph3_ControlledVoltageSource.cpp
 	DP/DP_Ph3_VoltageSource.cpp
 	DP/DP_Ph3_Capacitor.cpp
 	DP/DP_Ph3_Inductor.cpp
@@ -66,7 +65,6 @@ list(APPEND CPS_SOURCES
 	EMT/EMT_Ph3_SeriesResistor.cpp
 	EMT/EMT_Ph3_SeriesSwitch.cpp
 	EMT/EMT_Ph3_VoltageSourceNorton.cpp
-	EMT/EMT_Ph3_ControlledVoltageSource.cpp
 	EMT/EMT_Ph3_PiLine.cpp
 	EMT/EMT_Ph3_RxLine.cpp
 	EMT/EMT_Ph3_RXLoad.cpp
@@ -81,7 +79,6 @@ list(APPEND CPS_SOURCES
 	# EMT/EMT_Ph3_SynchronGeneratorVBRStandalone.cpp
 	EMT/EMT_Ph3_SynchronGeneratorTrStab.cpp
 
-	SP/SP_Ph1_ControlledVoltageSource.cpp
 	SP/SP_Ph1_VoltageSource.cpp
 	SP/SP_Ph1_Capacitor.cpp
 	SP/SP_Ph1_Inductor.cpp
@@ -107,7 +104,6 @@ list(APPEND CPS_SOURCES
 	SP/SP_Ph3_Inductor.cpp
 	SP/SP_Ph3_Resistor.cpp
 	SP/SP_Ph3_VoltageSource.cpp
-	SP/SP_Ph3_ControlledVoltageSource.cpp
 
 	Signal/DecouplingLine.cpp
 	Signal/DecouplingLineEMT.cpp

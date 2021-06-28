@@ -21,12 +21,3 @@ Complex Signal::SignalGenerator::getSignal() {
     Complex sigOut = attribute<Complex>("sigOut")->get();
     return sigOut;
 }
-
-/*
-Task::List Signal::SignalGenerator::getTasks() {
-    return Task::List({std::make_shared<Step>(*this)});
-}
-
-void Signal::SignalGenerator::Step::execute(Real time, Int timeStepCount) {
-	mSigGen.step(time);
-}*/

@@ -15,9 +15,6 @@ namespace CPS {
 namespace Signal {
 	class SignalGenerator :
 		public SimSignalComp {
-	protected:
-		/// current signal value
-		// Complex mSigOut; replaced by attribute
     public:
 		typedef std::shared_ptr<SignalGenerator> Ptr;
 		typedef std::vector<Ptr> List;

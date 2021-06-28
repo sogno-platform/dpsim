@@ -9,9 +9,10 @@
 
 #include <cps/SimPowerComp.h>
 #include <cps/Solver/MNAInterface.h>
-#include <cps/Signal/SineWaveGenerator.h>
 #include <cps/Signal/SignalGenerator.h>
+#include <cps/Signal/SineWaveGenerator.h>
 #include <cps/Signal/FrequencyRampGenerator.h>
+#include <cps/Signal/CosineFMGenerator.h>
 
 namespace CPS {
 	namespace EMT {

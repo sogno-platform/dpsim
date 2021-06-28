@@ -7,7 +7,6 @@
  *********************************************************************************/
 
 #include <cps/EMT/EMT_Ph3_VoltageSource.h>
-#include <cps/CIM/Reader.h>
 
 
 using namespace CPS;
@@ -27,8 +26,9 @@ EMT::Ph3::VoltageSource::VoltageSource(String uid, String name, Logger::Level lo
 
 void EMT::Ph3::VoltageSource::setParameters(MatrixComp voltageRef, Real srcFreq) {
 	auto srcSigSine = Signal::SineWaveGenerator::make(mName + "_sw");
+	// Complex(1,0) is used as initialPhasor for signal generator as only phase is used
 	srcSigSine->setParameters(Complex(1,0), srcFreq);
-	mSrcSig = srcSigSine; //std::make_shared<Signal::SineWaveGenerator>(srcSigSine);
+	mSrcSig = srcSigSine; 
 
 	attribute<MatrixComp>("V_ref")->set(voltageRef);
 	setAttributeRef("f_src", mSrcSig->attribute<Real>("freq"));
@@ -43,8 +43,9 @@ void EMT::Ph3::VoltageSource::setParameters(MatrixComp voltageRef, Real srcFreq)
 
 void EMT::Ph3::VoltageSource::setParameters(MatrixComp voltageRef, Real freqStart, Real rocof, Real timeStart, Real duration, bool useAbsoluteCalc) {
 	auto srcSigFreqRamp = Signal::FrequencyRampGenerator::make(mName + "_fr");
+	// Complex(1,0) is used as initialPhasor for signal generator as only phase is used
 	srcSigFreqRamp->setParameters(Complex(1,0), freqStart, rocof, timeStart, duration, useAbsoluteCalc);
-	mSrcSig = srcSigFreqRamp; //std::make_shared<Signal::FrequencyRampGenerator>(srcSigFreqRamp);
+	mSrcSig = srcSigFreqRamp;
 
 	attribute<MatrixComp>("V_ref")->set(voltageRef);
 	setAttributeRef("f_src", mSrcSig->attribute<Real>("freq"));
@@ -55,6 +56,7 @@ void EMT::Ph3::VoltageSource::setParameters(MatrixComp voltageRef, Real freqStar
 
 void EMT::Ph3::VoltageSource::setParameters(MatrixComp voltageRef, Real modulationFrequency, Real modulationAmplitude, Real baseFrequency /*= 0.0*/, bool zigzag /*= false*/) {
     auto srcSigFm = Signal::CosineFMGenerator::make(mName + "_fm");
+	// Complex(1,0) is used as initialPhasor for signal generator as only phase is used
 	srcSigFm->setParameters(Complex(1,0), modulationFrequency, modulationAmplitude, baseFrequency, zigzag);
 	mSrcSig = srcSigFm;
 
@@ -69,8 +71,9 @@ void EMT::Ph3::VoltageSource::initializeFromNodesAndTerminals(Real frequency) {
 	// TODO: this approach currently overwrites voltage reference set from outside, when not using setParameters
 	if (!mParametersSet) {
 		auto srcSigSine = Signal::SineWaveGenerator::make(mName + "_sw");
+		// Complex(1,0) is used as initialPhasor for signal generator as only phase is used
 		srcSigSine->setParameters(Complex(1,0), frequency);
-		mSrcSig = srcSigSine; //std::make_shared<Signal::SineWaveGenerator>(srcSigSine);
+		mSrcSig = srcSigSine; 
 
 		attribute<MatrixComp>("V_ref")->set(CPS::Math::singlePhaseVariableToThreePhase(initialSingleVoltage(1) - initialSingleVoltage(0)));
 		setAttributeRef("f_src", mSrcSig->attribute<Real>("freq"));
@@ -149,7 +152,7 @@ void EMT::Ph3::VoltageSource::mnaApplyRightSideVectorStamp(Matrix& rightVector) 
 }
 
 void EMT::Ph3::VoltageSource::updateVoltage(Real time) {
-	if(mSrcSig != NULL) {
+	if(mSrcSig != nullptr) {
 		mSrcSig->step(time);
 		for(int i = 0; i < 3; i++) {
 			mIntfVoltage(i, 0) = RMS3PH_TO_PEAK1PH * Math::abs(attribute<MatrixComp>("V_ref")->get()(i, 0)) 

@@ -35,10 +35,6 @@ namespace Ph1 {
 	private:
 		///
 		void updateVoltage(Real time);
-		///
-		//Attribute<Complex>::Ptr mVoltageRef;
-		///
-		//Attribute<Real>::Ptr mSrcFreq;
 		/// 
 		CPS::Signal::SignalGenerator::Ptr mSrcSig;
 	public:

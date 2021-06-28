@@ -35,10 +35,6 @@ namespace Ph1 {
 	private:
 	///
 	void updateVoltage(Real time);
-	///
-	//Attribute<Complex>::Ptr mVoltageRef;
-	///
-	//Attribute<Real>::Ptr mSrcFreq;
 	/// 
 	CPS::Signal::SignalGenerator::Ptr mSrcSig;
 	public:
@@ -58,7 +54,7 @@ namespace Ph1 {
 		void initializeFromNodesAndTerminals(Real frequency);
 		///
 		void setSourceValue(Complex voltage);
-		///
+		/// Setter for reference signal of type sine wave
 		void setParameters(Complex voltageRef, Real srcFreq = 0.0);
 		/// Setter for reference signal of type frequency ramp
 		void setParameters(Complex initialPhasor, Real freqStart, Real rocof, Real timeStart, Real duration, bool useAbsoluteCalc = true);

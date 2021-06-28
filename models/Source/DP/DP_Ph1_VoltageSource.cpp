@@ -23,7 +23,7 @@ DP::Ph1::VoltageSource::VoltageSource(String uid, String name, Logger::Level log
 
 SimPowerComp<Complex>::Ptr DP::Ph1::VoltageSource::clone(String name) {
 	auto copy = VoltageSource::make(name, mLogLevel);
-	if(mSrcSig == 0)
+	if(mSrcSig == nullptr)
 		copy->setParameters(attribute<Complex>("V_ref")->get());
 	else
 		copy->setParameters(mSrcSig->getSignal());
@@ -33,7 +33,7 @@ SimPowerComp<Complex>::Ptr DP::Ph1::VoltageSource::clone(String name) {
 void DP::Ph1::VoltageSource::setParameters(Complex voltageRef, Real srcFreq) {
 	auto srcSigSine = Signal::SineWaveGenerator::make(mName + "_sw");
 	srcSigSine->setParameters(voltageRef, srcFreq);
-	mSrcSig = srcSigSine; //std::make_shared<Signal::SineWaveGenerator>(srcSigSine);
+	mSrcSig = srcSigSine;
 
 	setAttributeRef("V_ref", mSrcSig->attribute<Complex>("sigOut"));
 	setAttributeRef("f_src", mSrcSig->attribute<Real>("freq"));
@@ -44,7 +44,7 @@ void DP::Ph1::VoltageSource::setParameters(Complex voltageRef, Real srcFreq) {
 void DP::Ph1::VoltageSource::setParameters(Complex initialPhasor, Real freqStart, Real rocof, Real timeStart, Real duration, bool useAbsoluteCalc) {
 	auto srcSigFreqRamp = Signal::FrequencyRampGenerator::make(mName + "_fr");
 	srcSigFreqRamp->setParameters(initialPhasor, freqStart, rocof, timeStart, duration, useAbsoluteCalc);
-	mSrcSig = srcSigFreqRamp; //std::make_shared<Signal::FrequencyRampGenerator>(srcSigFreqRamp);
+	mSrcSig = srcSigFreqRamp;
 
 	setAttributeRef("V_ref", mSrcSig->attribute<Complex>("sigOut"));
 	setAttributeRef("f_src", mSrcSig->attribute<Real>("freq"));
@@ -63,27 +63,15 @@ void DP::Ph1::VoltageSource::setParameters(Complex initialPhasor, Real modulatio
 	mParametersSet = true;
 }
 
-/*
-void DP::Ph1::VoltageSource::setSourceSignal(CPS::Signal::SignalGenerator::Ptr srcSig) {
-	/// TODO: Copy signal generator?
-	mSrcSig = srcSig;
-
-	attribute<Complex>("V_ref")->set(mSrcSig->getSignal());
-	/// TODO: dynamic cast if sine wave generator
-	attribute<Real>("f_src")->set(-1);
-
-	mParametersSet = true;
-}
-*/
 void DP::Ph1::VoltageSource::initializeFromNodesAndTerminals(Real frequency) {
 	Complex voltageRef = attribute<Complex>("V_ref")->get();
 	
 	if (voltageRef == Complex(0, 0))	
 		voltageRef = initialSingleVoltage(1) - initialSingleVoltage(0);
 
-	if (mSrcSig == 0) {
+	if (mSrcSig == nullptr) {
 		Signal::SineWaveGenerator srcSigSine(mName);
-		srcSigSine.setParameters(voltageRef); //, mSrcSig->attribute<Real>("freq"));
+		srcSigSine.setParameters(voltageRef);
 		mSrcSig = std::make_shared<Signal::SineWaveGenerator>(srcSigSine);
 		
 		setAttributeRef("V_ref", mSrcSig->attribute<Complex>("sigOut"));
@@ -206,7 +194,7 @@ void DP::Ph1::VoltageSource::mnaApplyRightSideVectorStampHarm(Matrix& rightVecto
 }
 
 void DP::Ph1::VoltageSource::updateVoltage(Real time) {
-	if(mSrcSig != NULL) {
+	if(mSrcSig != nullptr) {
 		mSrcSig->step(time);
 		mIntfVoltage(0,0) = mSrcSig->getSignal();
 	} else {
