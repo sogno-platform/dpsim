@@ -129,7 +129,10 @@ void addEMTPh3Components(py::module_ mEMTPh3) {
 		.def("set_parameters_fundamental_per_unit", &CPS::EMT::Ph3::SynchronGeneratorDQTrapez::setParametersFundamentalPerUnit,
 			"nom_power"_a, "nom_volt"_a, "nom_freq"_a, "pole_number"_a, "nom_field_cur"_a, "Rs"_a, "Ll"_a, "Lmd"_a, "Lmq"_a, "Rfd"_a, "Llfd"_a,
 			"Rkd"_a, "Llkd"_a, "Rkq1"_a, "Llkq1"_a, "Rkq2"_a, "Llkq2"_a, "inertia"_a, "init_active_power"_a, "init_reactive_power"_a,
-			"init_terminal_volt"_a, "init_volt_angle"_a, "init_field_voltage"_a, "init_mech_power"_a);
+			"init_terminal_volt"_a, "init_volt_angle"_a, "init_field_voltage"_a, "init_mech_power"_a)
+		.def("apply_parameters_from_json", [](std::shared_ptr<CPS::EMT::Ph3::SynchronGeneratorDQTrapez> syngen, const CPS::String json) {
+				DPsim::Utils::applySynchronousGeneratorParametersFromJson(json::parse(json), syngen);
+			});
 
 	py::class_<CPS::EMT::Ph3::AvVoltageSourceInverterDQ, std::shared_ptr<CPS::EMT::Ph3::AvVoltageSourceInverterDQ>, CPS::SimPowerComp<CPS::Real>>(mEMTPh3, "AvVoltageSourceInverterDQ", py::multiple_inheritance())
         .def(py::init<std::string, CPS::Logger::Level>(), "name"_a, "loglevel"_a = CPS::Logger::Level::off)
