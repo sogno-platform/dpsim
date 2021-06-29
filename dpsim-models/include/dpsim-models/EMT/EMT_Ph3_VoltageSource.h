@@ -38,7 +38,6 @@ namespace CPS {
 			public:
 				const CPS::Attribute<MatrixComp>::Ptr mVoltageRef;
 				const CPS::Attribute<Real>::Ptr mSrcFreq;
-				const CPS::Attribute<Complex>::Ptr mSigOut;
 
 				/// Defines UID, name and logging level
 				VoltageSource(String uid, String name, Logger::Level logLevel = Logger::Level::off);

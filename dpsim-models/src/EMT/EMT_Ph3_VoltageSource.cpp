@@ -14,8 +14,7 @@ using namespace CPS;
 EMT::Ph3::VoltageSource::VoltageSource(String uid, String name, Logger::Level logLevel)
 	: SimPowerComp<Real>(uid, name, logLevel),
 	mVoltageRef(Attribute<MatrixComp>::create("V_ref", mAttributes)), // rms-value, phase-to-phase
-	mSrcFreq(Attribute<Real>::createDynamic("f_src", mAttributes)),
-	mSigOut(Attribute<Complex>::createDynamic("sigOut", mAttributes)) {
+	mSrcFreq(Attribute<Real>::createDynamic("f_src", mAttributes)) {
 	mPhaseType = PhaseType::ABC;
 	setVirtualNodeNumber(1);
 	setTerminalNumber(2);
@@ -26,8 +25,8 @@ EMT::Ph3::VoltageSource::VoltageSource(String uid, String name, Logger::Level lo
 void EMT::Ph3::VoltageSource::setParameters(MatrixComp voltageRef) {
 	attribute<MatrixComp>("V_ref")->set(voltageRef);
 
-	mSLog->info("\nVoltage reference phasor [V]: {:s}", 
-				Logger::matrixCompToString(voltageRef), 
+	mSLog->info("\nVoltage reference phasor [V]: {:s}",
+				Logger::matrixCompToString(voltageRef),
 				Logger::realToString(srcFreq));
 
 	mParametersSet = true;
@@ -58,7 +57,6 @@ void EMT::Ph3::VoltageSource::setParameters(MatrixComp voltageRef, Real freqStar
 
 	**mVoltageRef = voltageRef;
 	mSrcFreq->setReference(mSrcSig->mFreq);
-	mSigOut->setReference(mSrcSig->mSigOut);
 
 	mParametersSet = true;
 }
