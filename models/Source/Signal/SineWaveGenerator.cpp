@@ -23,6 +23,11 @@ void Signal::SineWaveGenerator::setParameters(Complex initialPhasor, Real freque
 
 	attribute<Complex>("sigOut")->set(initialPhasor);
 	attribute<Real>("freq")->set(frequency);
+
+	mSLog->info("Parameters:");
+	mSLog->info("\nInitial Phasor={}"
+				"\nFrequency={} [Hz]",
+				Logger::phasorToString(initialPhasor), frequency);
 }
 
 void Signal::SineWaveGenerator::step(Real time) {
