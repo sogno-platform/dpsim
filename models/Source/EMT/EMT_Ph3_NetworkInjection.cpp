@@ -29,7 +29,6 @@ EMT::Ph3::NetworkInjection::NetworkInjection(String uid, String name, Logger::Le
 
 	addAttributeRef<MatrixComp>("V_ref", mSubVoltageSource->attribute<MatrixComp>("V_ref"), Flags::read | Flags::write);
 	addAttributeRef<Real>("f_src", mSubVoltageSource->attribute<Real>("f_src"), Flags::read | Flags::write);
-	addAttributeRef<Complex>("sigOut", mSubVoltageSource->attribute<Complex>("sigOut"), Flags::read | Flags::write);
 }
 
 SimPowerComp<Real>::Ptr EMT::Ph3::NetworkInjection::clone(String name) {
@@ -59,7 +58,6 @@ void EMT::Ph3::NetworkInjection::setParameters(MatrixComp voltageRef, Real freqS
 
 	setAttributeRef("V_ref", mSubVoltageSource->attribute<MatrixComp>("V_ref"));
 	setAttributeRef("f_src", mSubVoltageSource->attribute<Real>("f_src"));
-	setAttributeRef("sigOut", mSubVoltageSource->attribute<Complex>("sigOut"));
 
 	mSLog->info("\nVoltage Ref={:s} [V]"
 				"\nFrequency={:s} [Hz]",

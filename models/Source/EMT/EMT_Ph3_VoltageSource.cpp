@@ -21,14 +21,13 @@ EMT::Ph3::VoltageSource::VoltageSource(String uid, String name, Logger::Level lo
 
 	addAttribute<MatrixComp>("V_ref", Flags::read | Flags::write);  // rms-value, phase-to-phase
 	addAttribute<Real>("f_src", Flags::read | Flags::write);
-	addAttribute<Complex>("sigOut", Flags::read | Flags::write);
 }
 
 void EMT::Ph3::VoltageSource::setParameters(MatrixComp voltageRef) {
 	attribute<MatrixComp>("V_ref")->set(voltageRef);
 
-	mSLog->info("\nVoltage reference phasor [V]: {:s}", 
-				Logger::matrixCompToString(voltageRef), 
+	mSLog->info("\nVoltage reference phasor [V]: {:s}",
+				Logger::matrixCompToString(voltageRef),
 				Logger::realToString(srcFreq));
 
 	mParametersSet = true;
@@ -59,7 +58,6 @@ void EMT::Ph3::VoltageSource::setParameters(MatrixComp voltageRef, Real freqStar
 
 	attribute<MatrixComp>("V_ref")->set(voltageRef);
 	setAttributeRef("f_src", mSrcSig->attribute<Real>("freq"));
-	setAttributeRef("sigOut", mSrcSig->attribute<Complex>("sigOut"));
 
 	mParametersSet = true;
 }
