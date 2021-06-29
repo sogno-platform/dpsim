@@ -20,7 +20,7 @@ void Signal::SineWaveGenerator::setParameters(Complex initialPhasor, Real freque
 					 "Sine wave magnitude: {} [V] \n"
 					 "Sine wave initial phase: {} [rad] \n"
 					 "Sine wave frequency: {} [Hz] \n",
-					mMagnitude, mInitialPhase, **mFreq);				 
+					mMagnitude, mInitialPhase, **mFreq);
 }
 
 void Signal::SineWaveGenerator::step(Real time) {

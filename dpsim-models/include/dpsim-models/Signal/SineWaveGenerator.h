@@ -22,7 +22,9 @@ namespace Signal {
     public:
 		/// init the identified object
         SineWaveGenerator(String name, Logger::Level logLevel = Logger::Level::off)
-			: SignalGenerator(name, logLevel) { }
+			: SignalGenerator(name, logLevel) {
+				mSLog->info("Create {} {}", type(), name);
+			}
 		/// set the source's parameters
 		void setParameters(Complex initialPhasor, Real frequency = 0.0);
 		/// implementation of inherited method step to update and return the current signal value
