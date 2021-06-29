@@ -160,7 +160,7 @@ PYBIND11_MODULE(dpsimpy, m) {
 		.value("PVNode", CPS::GeneratorType::PVNode)
 		.value("TransientStability", CPS::GeneratorType::TransientStability)
 		.value("IdealVoltageSource", CPS::GeneratorType::IdealVoltageSource)
-		.value("None", CPS::GeneratorType::None);
+		.value("NONE", CPS::GeneratorType::None);
 
 	py::enum_<DPsim::Solver::Type>(m, "Solver")
 		.value("MNA", DPsim::Solver::Type::MNA)
