@@ -27,8 +27,7 @@ void EMT::Ph3::VoltageSource::setParameters(MatrixComp voltageRef) {
 	attribute<MatrixComp>("V_ref")->set(voltageRef);
 
 	mSLog->info("\nVoltage reference phasor [V]: {:s}",
-				Logger::matrixCompToString(voltageRef),
-				Logger::realToString(srcFreq));
+				Logger::matrixCompToString(voltageRef));
 
 	mParametersSet = true;
 }
