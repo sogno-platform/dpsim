@@ -29,6 +29,12 @@ SimPowerComp<Complex>::Ptr SP::Ph1::VoltageSource::clone(String name) {
 	return copy;
 }
 
+void SP::Ph1::VoltageSource::setParameters(Complex voltageRef) {
+	setAttributeRef("V_ref", mSrcSig->attribute<Complex>("sigOut"));
+
+	mParametersSet = true;
+}
+
 void SP::Ph1::VoltageSource::setParameters(Complex voltageRef, Real srcFreq) {
 	auto srcSigSine = Signal::SineWaveGenerator::make(**mName + "_sw");
 	srcSigSine->setParameters(voltageRef, srcFreq);
