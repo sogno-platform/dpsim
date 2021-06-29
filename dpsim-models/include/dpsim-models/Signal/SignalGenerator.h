@@ -25,13 +25,15 @@ namespace Signal {
 		SignalGenerator(String uid, String name, Logger::Level logLevel = Logger::Level::off);
 
 		SignalGenerator(String name, Logger::Level logLevel = Logger::Level::off)
-			: SignalGenerator(name, name, logLevel) { }
+			: SignalGenerator(name, name, logLevel) {
+				mSLog->info("Create {} {}", type(), name);
+			}
 
 		/// updates current signal
         virtual void step(Real time) = 0;
 		/// returns current signal value without updating it
 		Complex getSignal();
-		
+
 		/// task not needed, update called by owning object
 		/// TODO: think about changing that and implementing a task here
 		/*
