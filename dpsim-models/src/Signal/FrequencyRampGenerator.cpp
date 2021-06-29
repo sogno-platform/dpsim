@@ -22,7 +22,6 @@ void Signal::FrequencyRampGenerator::setParameters(Complex initialPhasor, Real f
     mOldTime = 0.0;
 
     mUseAbsoluteCalc = useAbsoluteCalc;
-    mSmooth = true;
 
     attribute<Complex>("sigOut")->set(initialPhasor);
 	attribute<Real>("freq")->set(freqStart);
