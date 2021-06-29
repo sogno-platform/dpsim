@@ -57,8 +57,10 @@ namespace Ph1 {
 		void initializeFromNodesAndTerminals(Real frequency);
 		///
 		void setSourceValue(Complex voltage);
-		/// Setter for reference signal of type sine wave
-		void setParameters(Complex voltageRef, Real srcFreq = 0.0);
+		/// Setter for reference voltage without creating a signal generator
+		void setParameters(Complex voltageRef);
+		/// Setter for reference voltage and frequency with a sine wave generator
+		void setParameters(Complex voltageRef, Real srcFreq);
 		/// Setter for reference signal of type frequency ramp
 		void setParameters(Complex initialPhasor, Real freqStart, Real rocof, Real timeStart, Real duration, bool useAbsoluteCalc = true);
 		/// Setter for reference signal of type cosine frequency modulation
