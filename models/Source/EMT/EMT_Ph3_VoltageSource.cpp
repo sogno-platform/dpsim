@@ -24,6 +24,16 @@ EMT::Ph3::VoltageSource::VoltageSource(String uid, String name, Logger::Level lo
 	addAttribute<Complex>("sigOut", Flags::read | Flags::write);
 }
 
+void EMT::Ph3::VoltageSource::setParameters(MatrixComp voltageRef) {
+	attribute<MatrixComp>("V_ref")->set(voltageRef);
+
+	mSLog->info("\nVoltage reference phasor [V]: {:s}", 
+				Logger::matrixCompToString(voltageRef), 
+				Logger::realToString(srcFreq));
+
+	mParametersSet = true;
+}
+
 void EMT::Ph3::VoltageSource::setParameters(MatrixComp voltageRef, Real srcFreq) {
 	auto srcSigSine = Signal::SineWaveGenerator::make(mName + "_sw");
 	// Complex(1,0) is used as initialPhasor for signal generator as only phase is used
