@@ -22,6 +22,13 @@ void Signal::CosineFMGenerator::setParameters(Complex initialPhasor, Real modula
 
 	attribute<Complex>("sigOut")->set(initialPhasor);
 	attribute<Real>("freq")->set(frequency);
+
+	mSLog->info("Parameters:");
+	mSLog->info("\nInitial Phasor={}"
+				"\nModulation Frequency={} [Hz]"
+				"\nModulation Amplitude={}"
+				"\nBase Frequency={} [Hz]",
+				Logger::phasorToString(initialPhasor), modulationFrequency, modulationAmplitude, frequency);
 }
 
 void Signal::CosineFMGenerator::step(Real time) {
@@ -36,7 +43,7 @@ void Signal::CosineFMGenerator::step(Real time) {
 		phase += mModulationAmplitude / mModulationFrequency * sin(2.*PI*mModulationFrequency*time);
 		attribute<Real>("freq")->set(mBaseFrequency + mModulationAmplitude * cos(2.*PI*mModulationFrequency*time));
 	}
-	
+
 	attribute<Complex>("sigOut")->set(Complex(
 		mMagnitude * cos(phase),
 		mMagnitude * sin(phase)));

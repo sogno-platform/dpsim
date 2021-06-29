@@ -30,7 +30,9 @@ namespace Signal {
     public:
 		/// init the identified object
         CosineFMGenerator(String name, Logger::Level logLevel = Logger::Level::off)
-			: SignalGenerator(name, logLevel) { }
+			: SignalGenerator(name, logLevel) {
+				mSLog->info("Create {} {}", type(), name);
+			}
 		/// set the source's parameters
 		void setParameters(Complex initialPhasor, Real modulationFrequency, Real modulationAmplitude, Real frequency = 0.0, bool zigzag = false);
 		/// implementation of inherited method step to update and return the current signal value

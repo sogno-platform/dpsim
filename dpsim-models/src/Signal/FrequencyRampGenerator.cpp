@@ -26,6 +26,14 @@ void Signal::FrequencyRampGenerator::setParameters(Complex initialPhasor, Real f
 
     attribute<Complex>("sigOut")->set(initialPhasor);
 	attribute<Real>("freq")->set(freqStart);
+
+	mSLog->info("Parameters:");
+	mSLog->info("\nInitial Phasor={}"
+				"\nStart Frequency={} [Hz]"
+				"\nRoCoF={} [Hz/s]"
+				"\nStart time={} [s]"
+				"\nDuration={} [s]",
+				Logger::phasorToString(initialPhasor), freqStart, rocof, timeStart, duration);
 }
 
 void Signal::FrequencyRampGenerator::step(Real time) {
@@ -38,7 +46,7 @@ void Signal::FrequencyRampGenerator::step(Real time) {
     Real currFreq;
     Real timestep = time - mOldTime;
     mOldTime = time;
-    
+
     currPhase = Math::phase(attribute<Complex>("sigOut")->get());
 
     if(time <= mTimeStart) {
@@ -71,7 +79,7 @@ void Signal::FrequencyRampGenerator::stepAbsolute(Real time) {
             currPhase += 2 * PI * mRocof * pow(time - mTimeStart, 2) / 2;
             currFreq += mRocof * (time - mTimeStart);
         }
-    } 
+    }
 
     attribute<Complex>("sigOut")->set(mMagnitude * Complex(cos(currPhase), sin(currPhase)));
     attribute<Real>("freq")->set(currFreq);
