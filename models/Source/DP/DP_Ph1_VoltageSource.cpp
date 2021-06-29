@@ -31,7 +31,7 @@ SimPowerComp<Complex>::Ptr DP::Ph1::VoltageSource::clone(String name) {
 }
 
 void DP::Ph1::VoltageSource::setParameters(Complex voltageRef) {
-	setAttributeRef("V_ref", mSrcSig->attribute<Complex>("sigOut"));
+	attribute<Complex>("V_ref")->set(voltageRef);
 
 	mParametersSet = true;
 }
