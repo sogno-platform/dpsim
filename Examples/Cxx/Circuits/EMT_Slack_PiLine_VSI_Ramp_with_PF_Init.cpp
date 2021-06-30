@@ -127,7 +127,6 @@ int main(int argc, char* argv[]) {
 	loggerEMT->addAttribute("v2", n2EMT->attribute("v"));
 	loggerEMT->addAttribute("i12", lineEMT->attribute("i_intf"));
 	loggerEMT->addAttribute("f_src", extnetEMT->attribute("f_src"));
-	loggerEMT->addAttribute("sigOut", extnetEMT->attribute("sigOut"));
 
 	CIM::Examples::Grids::CIGREMV::logPVAttributes(loggerEMT, pv);
 
