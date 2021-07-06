@@ -6,11 +6,14 @@
  * file, You can obtain one at https://mozilla.org/MPL/2.0/.
  *********************************************************************************/
 
+#include <iomanip>
+
 #include <pybind11/pybind11.h>
 #include <pybind11/complex.h>
 #include <pybind11/stl.h>
 #include <pybind11/functional.h>
 #include <pybind11/eigen.h>
+#include <pybind11/iostream.h>
 
 #include <dpsim/Simulation.h>
 #include <dpsim/RealTimeSimulation.h>
@@ -124,7 +127,8 @@ PYBIND11_MODULE(dpsimpy, m) {
 		.def("log_attribute", (void (DPsim::DataLogger::*)(const std::vector<CPS::String> &, const CPS::String &, CPS::IdentifiedObject::Ptr)) &DPsim::DataLogger::addAttribute);
 
 	py::class_<CPS::IdentifiedObject, std::shared_ptr<CPS::IdentifiedObject>>(m, "IdentifiedObject")
-		.def("name", &CPS::IdentifiedObject::name);
+		.def("name", &CPS::IdentifiedObject::name)
+		.def("print_attributes", &printAttributes);
 
 	py::enum_<CPS::AttributeBase::Modifier>(m, "AttrModifier")
 		.value("real", CPS::AttributeBase::Modifier::real)

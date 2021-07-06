@@ -7,6 +7,7 @@
  *********************************************************************************/
 #pragma once
 
+#include <iomanip>
 #include <pybind11/pybind11.h>
 #include <pybind11/stl.h>
 #include <pybind11/functional.h>
@@ -30,3 +31,5 @@ py::cpp_function createAttributeGetter(const std::string name) {
 }
 
 CPS::Matrix zeroMatrix(int dim);
+
+void printAttributes(CPS::IdentifiedObject &obj);
