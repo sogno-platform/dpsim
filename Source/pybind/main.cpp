@@ -128,7 +128,9 @@ PYBIND11_MODULE(dpsimpy, m) {
 
 	py::class_<CPS::IdentifiedObject, std::shared_ptr<CPS::IdentifiedObject>>(m, "IdentifiedObject")
 		.def("name", &CPS::IdentifiedObject::name)
-		.def("print_attributes", &printAttributes);
+		.def("print_attribute_list", &printAttributes)
+		.def("print_attribute", &printAttribute, "attribute_name"_a)
+		.def("__str__", &getAttributeList);
 
 	py::enum_<CPS::AttributeBase::Modifier>(m, "AttrModifier")
 		.value("real", CPS::AttributeBase::Modifier::real)

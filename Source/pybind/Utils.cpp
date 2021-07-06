@@ -12,7 +12,7 @@ CPS::Matrix zeroMatrix(int dim) {
 	return CPS::Matrix::Zero(dim, dim);
 }
 
-void printAttributes(CPS::IdentifiedObject &obj) {
+std::string getAttributeList(CPS::IdentifiedObject &obj) {
 	std::stringstream output;
 	output << std::setiosflags(std::ios::left);
 	output << "Attribute list for object with name " << obj.name() << ":" << std::endl;
@@ -50,5 +50,31 @@ void printAttributes(CPS::IdentifiedObject &obj) {
 		}
 		output << std::setw(30) << name << std::setw(20) << type << std::setw(15) << size << std::setw(30) << value << std::endl;
 	}
-	py::print(output.str());
+	return output.str();
+}
+
+void printAttributes(CPS::IdentifiedObject &obj) {
+	py::print(getAttributeList(obj));
+}
+
+void printAttribute(CPS::IdentifiedObject &obj, std::string attrName) {
+	auto attr = obj.attribute(attrName);
+	if (auto tryReal = std::dynamic_pointer_cast<CPS::Attribute<CPS::Real>>(attr)) {
+		py::print("Attribute " + attrName + " on object " + obj.name() + " has type Real and value " + std::to_string(tryReal->get()));
+	} else if (auto tryComplex = std::dynamic_pointer_cast<CPS::Attribute<CPS::Complex>>(attr)) {
+		std::string value = std::to_string(abs(tryComplex->get())) + "<" + std::to_string(arg(tryComplex->get()));
+		py::print("Attribute " + attrName + " on object " + obj.name() + " has type Complex and value " + value);
+	} else if (auto tryMatrixReal = std::dynamic_pointer_cast<CPS::Attribute<CPS::Matrix>>(attr)) {
+		std::string size = std::to_string(tryMatrixReal->get().rows()) + "x" + std::to_string(tryMatrixReal->get().cols());
+		py::print("Attribute " + attrName + " on object " + obj.name() + " has type MatrixReal (size " + size + ") and value:");
+		py::print(py::cast(tryMatrixReal->get()));
+	} else if (auto tryMatrixComp = std::dynamic_pointer_cast<CPS::Attribute<CPS::MatrixComp>>(attr)) {
+		std::string size = std::to_string(tryMatrixComp->get().rows()) + "x" + std::to_string(tryMatrixComp->get().cols());
+		py::print("Attribute " + attrName + " on object " + obj.name() + " has type MatrixComplex (size " + size + ") and value:");
+		py::print(py::cast(tryMatrixComp->get()));
+	} else if (auto tryString = std::dynamic_pointer_cast<CPS::Attribute<CPS::String>>(attr)) {
+		py::print("Attribute " + attrName + " on object " + obj.name() + " has type String and value \"" + tryString->get() + "\"");
+	} else {
+		py::print("Could not determine type of attribute " + attrName);
+	}
 }

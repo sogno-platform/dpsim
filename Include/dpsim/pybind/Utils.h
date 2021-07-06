@@ -32,4 +32,6 @@ py::cpp_function createAttributeGetter(const std::string name) {
 
 CPS::Matrix zeroMatrix(int dim);
 
+std::string getAttributeList(CPS::IdentifiedObject &obj);
 void printAttributes(CPS::IdentifiedObject &obj);
+void printAttribute(CPS::IdentifiedObject &obj, std::string attr);
