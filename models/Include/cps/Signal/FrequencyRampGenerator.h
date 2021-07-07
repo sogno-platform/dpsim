@@ -29,8 +29,8 @@ namespace Signal {
         Real mDuration;
         Real mOldTime;
 
-        bool mUseAbsoluteCalc;
-        bool mSmooth;
+        bool mUseAbsoluteCalc = true;
+        bool mSmooth = true;
     public:
         FrequencyRampGenerator(String name, Logger::Level logLevel = Logger::Level::off)
             : SignalGenerator(name, logLevel) { }

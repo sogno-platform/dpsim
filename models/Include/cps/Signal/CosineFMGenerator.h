@@ -25,7 +25,7 @@ namespace Signal {
 		Real mModulationFrequency;
 		Real mModulationAmplitude;
 		/// toggle a zig zag like frequency modulation
-		bool mZigZag;
+		bool mZigZag = false;
 
     public:
 		/// init the identified object
