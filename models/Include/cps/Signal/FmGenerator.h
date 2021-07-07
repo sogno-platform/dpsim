@@ -12,21 +12,27 @@
 
 namespace CPS {
 namespace Signal {
-	class SineWaveGenerator :
+	class FmGenerator :
 		public SignalGenerator,
-        public SharedFactory<SineWaveGenerator>  {
+        public SharedFactory<FmGenerator>  {
     private:
 		/// initial signal phasor with magnitude and phase
 		Real mMagnitude;
 		Real mInitialPhase;
 		/// signal's frequency
-		Real mFrequency;
+		Real mBaseFrequency;
+		/// Modulation parameters
+		Real mModulationFrequency;
+		Real mModulationAmplitude;
+		/// toggle a zig zag like frequency modulation
+		bool mZigZag;
+
     public:
 		/// init the identified object
-        SineWaveGenerator(String name, Logger::Level logLevel = Logger::Level::off)
+        FmGenerator(String name, Logger::Level logLevel = Logger::Level::off)
 			: SignalGenerator(name, logLevel) { }
 		/// set the source's parameters
-		void setParameters(Complex initialPhasor, Real frequency = 0.0);
+		void setParameters(Complex initialPhasor, Real modulationFrequency, Real modulationAmplitude, Real frequency = 0.0, bool zigzag = false);
 		/// implementation of inherited method step to update and return the current signal value
         void step(Real time);
     };

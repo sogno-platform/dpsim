@@ -18,7 +18,7 @@ int main(int argc, char* argv[]) {
 	
 	Real finalTime = 2;
 	Real timeStep = 0.0001;
-	String simName = "SP_Slack_PiLine_VSI_with_PF_Init";
+	String simName = "SP_Slack_PiLine_VSI_Ramp_with_PF_Init";
 	Bool pvWithControl = true;
 	Real cmdScaleP = 1.0;
 	Real cmdScaleI = 1.0;
@@ -81,7 +81,7 @@ int main(int argc, char* argv[]) {
 	simPF.setFinalTime(finalTimePF);
 	simPF.setDomain(Domain::SP);
 	simPF.setSolverType(Solver::Type::NRP);
-	simPF.doInitFromNodesAndTerminals(false);
+	simPF.doPowerFlowInit(false);
 	simPF.addLogger(loggerPF);
 	simPF.run();
 
@@ -96,7 +96,7 @@ int main(int argc, char* argv[]) {
 	auto n2SP = SimNode<Complex>::make("n2", PhaseType::Single);
 
 	auto extnetSP = SP::Ph1::NetworkInjection::make("Slack", Logger::Level::debug);
-	extnetSP->setParameters(Complex(scenario.systemNominalVoltage,0));
+	extnetSP->setParameters(Complex(scenario.systemNominalVoltage, 0), 0, -6.25, 5.0, 0.4);
 
 	auto lineSP = SP::Ph1::PiLine::make("PiLine", Logger::Level::debug);
 	lineSP->setParameters(scenario.lineResistance, scenario.lineInductance, scenario.lineCapacitance);
@@ -127,6 +127,7 @@ int main(int argc, char* argv[]) {
 	loggerSP->addAttribute("v1", n1SP->attribute("v"));
 	loggerSP->addAttribute("v2", n2SP->attribute("v"));
 	loggerSP->addAttribute("i12", lineSP->attribute("i_intf"));
+	loggerSP->addAttribute("f_src", extnetSP->attribute("f_src"));
 
 	CIM::Examples::CIGREMV::logPVAttributes(loggerSP, pv);
 
@@ -139,7 +140,7 @@ int main(int argc, char* argv[]) {
 	sim.setTimeStep(timeStepSP);
 	sim.setFinalTime(finalTimeSP);
 	sim.setDomain(Domain::SP);
-	//sim.addEvent(loadStepEvent);
+	// sim.addEvent(loadStepEvent);
 	sim.addLogger(loggerSP);
 	sim.run();
 	

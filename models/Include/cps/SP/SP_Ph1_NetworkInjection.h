@@ -79,7 +79,11 @@ namespace Ph1 {
 
 		// #### MNA Section ####
 		/// Set parameters relevant for MNA solver
-		void setParameters(Complex voltageRef, Real srcFreq = -1);
+		void setParameters(Complex voltageRef, Real srcFreq = 0.0);
+		/// Setter for reference signal of type frequency ramp
+		void setParameters(Complex initialPhasor, Real freqStart, Real rocof, Real timeStart, Real duration, bool useAbsoluteCalc = true);
+		/// Setter for reference signal of type cosine frequency modulation
+		void setParameters(Complex initialPhasor, Real modulationFrequency, Real modulationAmplitude, Real baseFrequency = 0.0, bool zigzag = false);
 		/// Initializes internal variables of the component
 		void mnaInitialize(Real omega, Real timeStep, Attribute<Matrix>::Ptr leftVector) override;
 		/// Stamps system matrix

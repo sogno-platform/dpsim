@@ -9,6 +9,9 @@
 
 #include <cps/SimPowerComp.h>
 #include <cps/Solver/MNAInterface.h>
+#include <cps/Signal/SineWaveGenerator.h>
+#include <cps/Signal/SignalGenerator.h>
+#include <cps/Signal/FrequencyRamp.h>
 
 namespace CPS {
 	namespace EMT {
@@ -25,6 +28,9 @@ namespace CPS {
 				public MNAInterface,
 				public SimPowerComp<Real>,
 				public SharedFactory<VoltageSource> {
+			private:
+				/// 
+				CPS::Signal::SignalGenerator::Ptr mSrcSig;
 			protected:
 				// Updates voltage according to reference phasor and frequency
 				void updateVoltage(Real time);
@@ -40,7 +46,11 @@ namespace CPS {
 				/// Initializes component from power flow data
 				void initializeFromNodesAndTerminals(Real frequency);
 				/// Setter for reference voltage
-				void setParameters(MatrixComp voltageRef, Real srcFreq = -1);
+				void setParameters(MatrixComp voltageRef, Real srcFreq = 50.0);
+				/// Setter for reference signal of type frequency ramp
+				void setParameters(MatrixComp voltageRef, Real freqStart, Real rocof, Real timeStart, Real duration, bool useAbsoluteCalc = true);
+				/// Setter for reference signal of type cosine frequency modulation
+				void setParameters(MatrixComp voltageRef, Real modulationFrequency, Real modulationAmplitude, Real baseFrequency = 50.0, bool zigzag = false);
 
 				// #### MNA section ####
 				/// Initializes internal variables of the component

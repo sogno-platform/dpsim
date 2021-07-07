@@ -16,16 +16,12 @@ int main(int argc, char* argv[]) {
 
 	CIM::Examples::SGIB::ScenarioConfig scenario;
 	
-	Real finalTime = 6.0;
-	Real timeStep = 0.001;
+	Real finalTime = 2;
+	Real timeStep = 0.0001;
 	String simName = "DP_Slack_PiLine_VSI_Ramp_with_PF_Init";
 	Bool pvWithControl = true;
 	Real cmdScaleP = 1.0;
 	Real cmdScaleI = 1.0;
-
-	Real ramp = -6.25;
-	Real timeStart = 5.0;
-	Real duration = 0.4;
 
 	CommandLineArgs args(argc, argv);
 	if (argc > 1) {
@@ -40,13 +36,6 @@ int main(int argc, char* argv[]) {
 			cmdScaleI = args.options["scale_kp"];
 		if (args.options.find("scale_ki") != args.options.end())
 			cmdScaleI = args.options["scale_ki"];
-			
-		if (args.options.find("ramp") != args.options.end())
-			ramp = args.options["ramp"];
-		if (args.options.find("timeStart") != args.options.end())
-			timeStart = args.options["timeStart"];
-		if (args.options.find("duration") != args.options.end())
-			duration = args.options["duration"];
 	}
 
 	// ----- POWERFLOW FOR INITIALIZATION -----
@@ -107,9 +96,7 @@ int main(int argc, char* argv[]) {
 	auto n2DP = SimNode<Complex>::make("n2", PhaseType::Single);
 
 	auto extnetDP = DP::Ph1::NetworkInjection::make("Slack", Logger::Level::debug);
-	extnetDP->setParameters(Complex(scenario.systemNominalVoltage,0), 0.0, ramp, timeStart, duration, true);
-	
-	(Complex(scenario.systemNominalVoltage,0));
+	extnetDP->setParameters(Complex(scenario.systemNominalVoltage, 0), 0, -6.25, 5.0, 0.4);
 
 	auto lineDP = DP::Ph1::PiLine::make("PiLine", Logger::Level::debug);
 	lineDP->setParameters(scenario.lineResistance, scenario.lineInductance, scenario.lineCapacitance);
@@ -145,7 +132,7 @@ int main(int argc, char* argv[]) {
 	CIM::Examples::CIGREMV::logPVAttributes(loggerDP, pv);
 
 	// load step sized in absolute terms
-	//std::shared_ptr<SwitchEvent> loadStepEvent = CIM::Examples::createEventAddPowerConsumption("n2", std::round(5.0/timeStep)*timeStep, 10e6, systemDP, Domain::DP, loggerDP);
+	// std::shared_ptr<SwitchEvent> loadStepEvent = CIM::Examples::createEventAddPowerConsumption("n2", std::round(5.0/timeStep)*timeStep, 10e6, systemDP, Domain::DP, loggerDP);
 
 	// Simulation
 	Simulation sim(simNameDP, Logger::Level::debug);
@@ -153,7 +140,7 @@ int main(int argc, char* argv[]) {
 	sim.setTimeStep(timeStepDP);
 	sim.setFinalTime(finalTimeDP);
 	sim.setDomain(Domain::DP);
-	//sim.addEvent(loadStepEvent);
+	// sim.addEvent(loadStepEvent);
 	sim.doPowerFlowInit(false);
 	sim.addLogger(loggerDP);
 	sim.run();

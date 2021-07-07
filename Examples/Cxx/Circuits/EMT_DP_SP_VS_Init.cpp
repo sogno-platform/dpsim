@@ -37,6 +37,40 @@ void vsSetParamsDP1ph() {
 	sim.run();
 }
 
+void vsSetParamsSP1ph() {
+	Real timeStep = 0.00005;
+	Real finalTime = 0.1;
+	String simName = "SP_VS_SetParams";
+	Logger::setLogDir("logs/"+simName);
+
+	// Nodes
+	auto n1 = SimNode<Complex>::make("n1");
+
+	// Components
+	auto vs = SP::Ph1::VoltageSource::make("vs1");
+	vs->setParameters(CPS::Math::polar(100000, 0));
+
+	// Topology
+	vs->connect({ SimNode<Complex>::GND, n1 });
+
+	auto sys = SystemTopology(50,
+		SystemNodeList{n1},
+		SystemComponentList{vs});
+
+	// Logging
+	auto logger = DataLogger::make(simName);
+	logger->addAttribute("v1", n1->attribute("v"));
+
+	// Simulation
+	Simulation sim(simName);
+	sim.setSystem(sys);
+	sim.setTimeStep(timeStep);
+	sim.setFinalTime(finalTime);
+	sim.setDomain(Domain::SP);
+	sim.addLogger(logger);
+	sim.run();
+}
+
 void vsSetParamsEMT3ph() {
 	Real timeStep = 0.00005;
 	Real finalTime = 0.1;
@@ -103,6 +137,42 @@ void vsSetAttrDP1ph() {
 	sim.setTimeStep(timeStep);
 	sim.setFinalTime(finalTime);
 	sim.setDomain(Domain::DP);
+	sim.addLogger(logger);
+	sim.run();
+}
+
+void vsSetAttrSP1ph() {
+	Real timeStep = 0.00005;
+	Real finalTime = 0.1;
+	String simName = "SP_VS_SetAttr";
+	Logger::setLogDir("logs/"+simName);
+
+    Complex vref = CPS::Math::polar(100000, 0);
+
+	// Nodes
+	auto n1 = SimNode<Complex>::make("n1");
+
+	// Components
+	auto vs = SP::Ph1::VoltageSource::make("vs1");
+	vs->attribute<Complex>("V_ref")->set(vref);
+
+	// Topology
+	vs->connect({ SimNode<Complex>::GND, n1 });
+
+	auto sys = SystemTopology(50,
+		SystemNodeList{n1},
+		SystemComponentList{vs});
+
+	// Logging
+	auto logger = DataLogger::make(simName);
+	logger->addAttribute("v1", n1->attribute("v"));
+
+	// Simulation
+	Simulation sim(simName);
+	sim.setSystem(sys);
+	sim.setTimeStep(timeStep);
+	sim.setFinalTime(finalTime);
+	sim.setDomain(Domain::SP);
 	sim.addLogger(logger);
 	sim.run();
 }
@@ -179,6 +249,42 @@ void vsSetFromNodeDP1ph() {
 	sim.run();
 }
 
+void vsSetFromNodeSP1ph() {
+	Real timeStep = 0.00005;
+	Real finalTime = 0.1;
+	String simName = "SP_VS_SetFromNode";
+	Logger::setLogDir("logs/"+simName);
+
+	Complex vref = CPS::Math::polar(100000, 0);
+
+	// Nodes
+	auto n1 = SimNode<Complex>::make("n1", PhaseType::Single, std::vector<Complex>{vref});
+	n1->setInitialVoltage(vref);
+
+	// Components
+	auto vs = SP::Ph1::VoltageSource::make("vs1");
+
+	// Topology
+	vs->connect({ SimNode<Complex>::GND, n1 });
+
+	auto sys = SystemTopology(50,
+		SystemNodeList{n1},
+		SystemComponentList{vs});
+
+	// Logging
+	auto logger = DataLogger::make(simName);
+	logger->addAttribute("v1", n1->attribute("v"));
+
+	// Simulation
+	Simulation sim(simName);
+	sim.setSystem(sys);
+	sim.setTimeStep(timeStep);
+	sim.setFinalTime(finalTime);
+	sim.setDomain(Domain::SP);
+	sim.addLogger(logger);
+	sim.run();
+}
+
 void vsSetFromNodeEMT3ph() {
 	Real timeStep = 0.00005;
 	Real finalTime = 0.1;
@@ -217,11 +323,14 @@ void vsSetFromNodeEMT3ph() {
 
 int main(int argc, char* argv[]) {
 	vsSetParamsDP1ph();
+	vsSetParamsSP1ph();
     vsSetParamsEMT3ph();
 
     vsSetAttrDP1ph();
+    vsSetAttrSP1ph();
     vsSetAttrEMT3ph();
 
 	vsSetFromNodeDP1ph();
+	vsSetFromNodeSP1ph();
 	vsSetFromNodeEMT3ph();
 }

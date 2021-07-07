@@ -29,6 +29,7 @@ EMT::Ph3::NetworkInjection::NetworkInjection(String uid, String name, Logger::Le
 
 	addAttributeRef<MatrixComp>("V_ref", mSubVoltageSource->attribute<MatrixComp>("V_ref"), Flags::read | Flags::write);
 	addAttributeRef<Real>("f_src", mSubVoltageSource->attribute<Real>("f_src"), Flags::read | Flags::write);
+	addAttributeRef<Complex>("sigOut", mSubVoltageSource->attribute<Complex>("sigOut"), Flags::read | Flags::write);
 }
 
 SimPowerComp<Real>::Ptr EMT::Ph3::NetworkInjection::clone(String name) {
@@ -42,10 +43,42 @@ void EMT::Ph3::NetworkInjection::setParameters(MatrixComp voltageRef, Real srcFr
 
 	mSubVoltageSource->setParameters(voltageRef, srcFreq);
 
+	setAttributeRef("V_ref", mSubVoltageSource->attribute<MatrixComp>("V_ref"));
+	setAttributeRef("f_src", mSubVoltageSource->attribute<Real>("f_src"));
+
 	mSLog->info("\nVoltage Ref={:s} [V]"
 				"\nFrequency={:s} [Hz]", 
 				Logger::matrixCompToString(voltageRef),
 				Logger::realToString(srcFreq));
+}
+
+void EMT::Ph3::NetworkInjection::setParameters(MatrixComp voltageRef, Real freqStart, Real rocof, Real timeStart, Real duration, bool useAbsoluteCalc) {
+	mParametersSet = true;
+
+	mSubVoltageSource->setParameters(voltageRef, freqStart, rocof, timeStart, duration, useAbsoluteCalc);
+	
+	setAttributeRef("V_ref", mSubVoltageSource->attribute<MatrixComp>("V_ref"));
+	setAttributeRef("f_src", mSubVoltageSource->attribute<Real>("f_src"));
+	setAttributeRef("sigOut", mSubVoltageSource->attribute<Complex>("sigOut"));
+
+	mSLog->info("\nVoltage Ref={:s} [V]"
+				"\nFrequency={:s} [Hz]", 
+				Logger::matrixCompToString(voltageRef),
+				Logger::realToString(freqStart));
+}
+
+void EMT::Ph3::NetworkInjection::setParameters(MatrixComp voltageRef, Real modulationFrequency, Real modulationAmplitude, Real baseFrequency /*= 0.0*/, bool zigzag /*= false*/) {
+	mParametersSet = true;
+
+	mSubVoltageSource->setParameters(voltageRef, modulationFrequency, modulationAmplitude, baseFrequency, zigzag);
+	
+	setAttributeRef("V_ref", mSubVoltageSource->attribute<MatrixComp>("V_ref"));
+	setAttributeRef("f_src", mSubVoltageSource->attribute<Real>("f_src"));
+
+	mSLog->info("\nVoltage Ref={:s} [V]"
+				"\nFrequency={:s} [Hz]", 
+				Logger::matrixCompToString(voltageRef),
+				Logger::realToString(baseFrequency));
 }
 
 void EMT::Ph3::NetworkInjection::initializeFromNodesAndTerminals(Real frequency) {
@@ -57,6 +90,9 @@ void EMT::Ph3::NetworkInjection::initializeFromNodesAndTerminals(Real frequency)
 		subcomp->initialize(mFrequencies);
 		subcomp->initializeFromNodesAndTerminals(frequency);
 	}
+	
+	setAttributeRef("V_ref", mSubVoltageSource->attribute<MatrixComp>("V_ref"));
+	setAttributeRef("f_src", mSubVoltageSource->attribute<Real>("f_src"));
 }
 
 // #### MNA functions ####

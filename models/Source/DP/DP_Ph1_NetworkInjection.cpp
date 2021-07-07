@@ -50,10 +50,10 @@ void DP::Ph1::NetworkInjection::setParameters(Complex voltageRef, Real srcFreq) 
 				Logger::realToString(srcFreq));
 }
 
-void DP::Ph1::NetworkInjection::setParameters(Complex initialPhasor, Real freqStart, Real ramp, Real timeStart, Real duration, bool useAbsoluteCalc) {
+void DP::Ph1::NetworkInjection::setParameters(Complex initialPhasor, Real freqStart, Real rocof, Real timeStart, Real duration, bool useAbsoluteCalc) {
 	mParametersSet = true;
 
-	mSubVoltageSource->setParameters(initialPhasor, freqStart, ramp, timeStart, duration, useAbsoluteCalc);
+	mSubVoltageSource->setParameters(initialPhasor, freqStart, rocof, timeStart, duration, useAbsoluteCalc);
 	
 	setAttributeRef("V_ref", mSubVoltageSource->attribute<Complex>("V_ref"));
 	setAttributeRef("f_src", mSubVoltageSource->attribute<Real>("f_src"));
@@ -62,6 +62,20 @@ void DP::Ph1::NetworkInjection::setParameters(Complex initialPhasor, Real freqSt
 				"\nFrequency={:s} [Hz]", 
 				Logger::phasorToString(initialPhasor),
 				Logger::realToString(freqStart));
+}
+
+void DP::Ph1::NetworkInjection::setParameters(Complex initialPhasor, Real modulationFrequency, Real modulationAmplitude, Real baseFrequency /*= 0.0*/, bool zigzag /*= false*/) {
+	mParametersSet = true;
+
+	mSubVoltageSource->setParameters(initialPhasor, modulationFrequency, modulationAmplitude, baseFrequency, zigzag);
+	
+	setAttributeRef("V_ref", mSubVoltageSource->attribute<Complex>("V_ref"));
+	setAttributeRef("f_src", mSubVoltageSource->attribute<Real>("f_src"));
+
+	mSLog->info("\nVoltage Ref={:s} [V]"
+				"\nFrequency={:s} [Hz]", 
+				Logger::phasorToString(initialPhasor),
+				Logger::realToString(baseFrequency));
 }
 /*
 void DP::Ph1::NetworkInjection::setVoltageSource(std::shared_ptr<DP::Ph1::VoltageSource> subVoltageSource) {

@@ -120,6 +120,7 @@ list(APPEND CPS_SOURCES
 	Signal/SineWaveGenerator.cpp
 	Signal/SignalGenerator.cpp
 	Signal/FrequencyRamp.cpp
+	Signal/FmGenerator.cpp
 )
 
 if(WITH_CIM)

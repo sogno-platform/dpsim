@@ -13,16 +13,25 @@ using namespace DPsim;
 using namespace CPS;
 
 int main(int argc, char* argv[]) {
+	String simName = "SP_Slack_PiLine_PQLoad_Ramp_with_PF_Init";
 
-	CIM::Examples::SGIB::ScenarioConfig scenario;
+	// Component parameters
+	Real Vnom = 20e3;
+	Real pLoadNom = 100e3;
+	Real qLoadNom = 50e3;
+	Real lineResistance = 0.05;
+	Real lineInductance = 0.1;
+	Real lineCapacitance = 0.1e-6;
+	Real timeStep = 0.001;
+	Real finalTime = 10.0;
+
+	// Simulation parameters
+	Real startFrequency = 0.0;
+	Real rocof = -6.25;
+	Real timeStart = 5.0;
+	Real rampDuration = 0.4;
+	bool useAbsoluteCalc = true;
 	
-	Real finalTime = 2;
-	Real timeStep = 0.0001;
-	String simName = "SP_Slack_PiLine_VSI_with_PF_Init";
-	Bool pvWithControl = true;
-	Real cmdScaleP = 1.0;
-	Real cmdScaleI = 1.0;
-
 	CommandLineArgs args(argc, argv);
 	if (argc > 1) {
 		timeStep = args.timeStep;
@@ -30,12 +39,16 @@ int main(int argc, char* argv[]) {
 
 		if (args.name != "dpsim")
 			simName = args.name;
-		if (args.options_bool.find("control") != args.options_bool.end())
-			pvWithControl = args.options_bool["control"];
-		if (args.options.find("scale_kp") != args.options.end())
-			cmdScaleI = args.options["scale_kp"];
-		if (args.options.find("scale_ki") != args.options.end())
-			cmdScaleI = args.options["scale_ki"];
+		if (args.options.find("startFrequency") != args.options.end())
+			startFrequency = args.options["startFrequency"];
+		if (args.options.find("rocof") != args.options.end())
+			rocof = args.options["rocof"];
+		if (args.options.find("timeStart") != args.options.end())
+			timeStart = args.options["timeStart"];
+		if (args.options.find("rampDuration") != args.options.end())
+			rampDuration = args.options["rampDuration"];
+		if (args.options_bool.find("relative") != args.options_bool.end())
+			useAbsoluteCalc = !args.options["relative"];
 	}
 
 	// ----- POWERFLOW FOR INITIALIZATION -----
@@ -49,17 +62,17 @@ int main(int argc, char* argv[]) {
 	auto n2PF = SimNode<Complex>::make("n2", PhaseType::Single);
 
 	auto extnetPF = SP::Ph1::NetworkInjection::make("Slack", Logger::Level::debug);
-	extnetPF->setParameters(scenario.systemNominalVoltage);
-	extnetPF->setBaseVoltage(scenario.systemNominalVoltage);
+	extnetPF->setParameters(Vnom);
+	extnetPF->setBaseVoltage(Vnom);
 	extnetPF->modifyPowerFlowBusType(PowerflowBusType::VD);
 
 	auto linePF = SP::Ph1::PiLine::make("PiLine", Logger::Level::debug);
-	linePF->setParameters(scenario.lineResistance, scenario.lineInductance, scenario.lineCapacitance);
-	linePF->setBaseVoltage(scenario.systemNominalVoltage);
+	linePF->setParameters(lineResistance, lineInductance, lineCapacitance);
+	linePF->setBaseVoltage(Vnom);
 
-	auto loadPF = SP::Ph1::Load::make("Load", Logger::Level::debug);
-	loadPF->setParameters(-scenario.pvNominalActivePower, -scenario.pvNominalReactivePower, scenario.systemNominalVoltage);
-	loadPF->modifyPowerFlowBusType(PowerflowBusType::PQ); 
+	auto loadPF = SP::Ph1::Shunt::make("Load", Logger::Level::debug);
+	loadPF->setParameters(pLoadNom / std::pow(Vnom, 2), - qLoadNom / std::pow(Vnom, 2));
+	loadPF->setBaseVoltage(Vnom);
 
 	// Topology
 	extnetPF->connect({ n1PF });
@@ -81,11 +94,11 @@ int main(int argc, char* argv[]) {
 	simPF.setFinalTime(finalTimePF);
 	simPF.setDomain(Domain::SP);
 	simPF.setSolverType(Solver::Type::NRP);
-	simPF.doInitFromNodesAndTerminals(false);
+	simPF.doPowerFlowInit(false);
 	simPF.addLogger(loggerPF);
 	simPF.run();
 
-	// ----- DYNAMIC SIMULATION -----
+	// ----- SP SIMULATION -----
 	Real timeStepSP = timeStep;
 	Real finalTimeSP = finalTime+timeStepSP;
 	String simNameSP = simName+"_SP";
@@ -96,27 +109,21 @@ int main(int argc, char* argv[]) {
 	auto n2SP = SimNode<Complex>::make("n2", PhaseType::Single);
 
 	auto extnetSP = SP::Ph1::NetworkInjection::make("Slack", Logger::Level::debug);
-	extnetSP->setParameters(Complex(scenario.systemNominalVoltage,0));
+	extnetSP->setParameters(Complex(Vnom,0), startFrequency, rocof, timeStart, rampDuration, useAbsoluteCalc);
 
 	auto lineSP = SP::Ph1::PiLine::make("PiLine", Logger::Level::debug);
-	lineSP->setParameters(scenario.lineResistance, scenario.lineInductance, scenario.lineCapacitance);
+	lineSP->setParameters(lineResistance, lineInductance, lineCapacitance);
 
-	
-	auto pv = SP::Ph1::AvVoltageSourceInverterDQ::make("pv", "pv", Logger::Level::debug, true);
-	pv->setParameters(scenario.systemOmega, scenario.pvNominalVoltage, scenario.pvNominalActivePower, scenario.pvNominalReactivePower);
-	pv->setControllerParameters(cmdScaleP*scenario.KpPLL, cmdScaleI*scenario.KiPLL, cmdScaleP*scenario.KpPowerCtrl, cmdScaleI*scenario.KiPowerCtrl, cmdScaleP*scenario.KpCurrCtrl, cmdScaleI*scenario.KiCurrCtrl, scenario.OmegaCutoff);
-	pv->setFilterParameters(scenario.Lf, scenario.Cf, scenario.Rf, scenario.Rc);
-	pv->setTransformerParameters(scenario.systemNominalVoltage, scenario.pvNominalVoltage, scenario.systemNominalVoltage/scenario.pvNominalVoltage, 0, 0, scenario.transformerInductance);
-	pv->setInitialStateValues(scenario.pvNominalActivePower, scenario.pvNominalReactivePower, scenario.phi_dInit, scenario.phi_qInit, scenario.gamma_dInit, scenario.gamma_qInit);
-	pv->withControl(pvWithControl);
+	auto loadSP = SP::Ph1::Load::make("Load", Logger::Level::debug);	
+	loadSP->setParameters(pLoadNom, qLoadNom, Vnom);
 
 	// Topology
 	extnetSP->connect({ n1SP });
 	lineSP->connect({ n1SP, n2SP });
-	pv->connect({ n2SP });	
+	loadSP->connect({ n2SP });	
 	auto systemSP = SystemTopology(50,
 			SystemNodeList{n1SP, n2SP},
-			SystemComponentList{extnetSP, lineSP, pv});
+			SystemComponentList{extnetSP, lineSP, loadSP});
 
 	// Initialization of dynamic topology with values from powerflow
 	CIM::Reader reader(simNameSP, Logger::Level::debug);
@@ -127,11 +134,7 @@ int main(int argc, char* argv[]) {
 	loggerSP->addAttribute("v1", n1SP->attribute("v"));
 	loggerSP->addAttribute("v2", n2SP->attribute("v"));
 	loggerSP->addAttribute("i12", lineSP->attribute("i_intf"));
-
-	CIM::Examples::CIGREMV::logPVAttributes(loggerSP, pv);
-
-	// load step sized in absolute terms
-	// std::shared_ptr<SwitchEvent> loadStepEvent = CIM::Examples::createEventAddPowerConsumption("n2", std::round(5.0/timeStep)*timeStep, 10e6, systemSP, Domain::SP, loggerSP);
+	loggerSP->addAttribute("f_src", extnetSP->attribute("f_src"));
 
 	// Simulation
 	Simulation sim(simNameSP, Logger::Level::debug);
@@ -139,7 +142,7 @@ int main(int argc, char* argv[]) {
 	sim.setTimeStep(timeStepSP);
 	sim.setFinalTime(finalTimeSP);
 	sim.setDomain(Domain::SP);
-	//sim.addEvent(loadStepEvent);
+	sim.doPowerFlowInit(false);
 	sim.addLogger(loggerSP);
 	sim.run();
 	

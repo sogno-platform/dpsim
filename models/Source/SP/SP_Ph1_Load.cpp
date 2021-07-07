@@ -101,10 +101,10 @@ void SP::Ph1::Load::updatePQ(Real time) {
 void SP::Ph1::Load::initializeFromNodesAndTerminals(Real frequency) {
 
 	if(!mParametersSet){
-		mActivePower = mTerminals[0]->singleActivePower();
-		mReactivePower = mTerminals[0]->singleReactivePower();
-		mPower = { mActivePower, mReactivePower };
-		mNomVoltage = std::abs(mTerminals[0]->initialSingleVoltage());
+		setParameters(
+			mTerminals[0]->singleActivePower(),
+			mTerminals[0]->singleReactivePower(),
+			std::abs(mTerminals[0]->initialSingleVoltage()));
 	}
 
 	// instantiate subResistor for active power consumption

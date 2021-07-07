@@ -24,12 +24,13 @@ namespace Signal {
         /// ramp parameters
         Real mFreqStart;
         Real mFreqEnd;
-        Real mRamp;
+        Real mRocof;
         Real mTimeStart;
         Real mDuration;
         Real mOldTime;
 
         bool mUseAbsoluteCalc;
+        bool mSmooth;
     public:
         FrequencyRamp(String name, Logger::Level logLevel = Logger::Level::off)
             : SignalGenerator(name, logLevel) { }
@@ -39,6 +40,8 @@ namespace Signal {
         void step(Real time);
         /// implementation of inherited method step to update and return the current signal value
         void stepAbsolute(Real time);
+        /// update and return signal value using a cosine shaped ramp
+        void stepSmooth(Real time);
     };
 }
 }

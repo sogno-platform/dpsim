@@ -13,7 +13,7 @@ using namespace DPsim;
 using namespace CPS;
 
 int main(int argc, char* argv[]) {
-	String simName = "EMT_Slack_PiLine_PQLoad_with_PF_Init";
+	String simName = "EMT_Slack_PiLine_PQLoad_FM_with_PF_Init";
 	
 	// Parameters
 	Real Vnom = 20e3;
@@ -22,10 +22,9 @@ int main(int argc, char* argv[]) {
 	Real lineResistance = 0.05;
 	Real lineInductance = 0.1;
 	Real lineCapacitance = 0.1e-6;
-	
-	// Simulation parameters
 	Real timeStep = 0.001;
 	Real finalTime = 10.0;
+
 	CommandLineArgs args(argc, argv);
 	if (argc > 1) {
 		timeStep = args.timeStep;
@@ -79,7 +78,7 @@ int main(int argc, char* argv[]) {
 	simPF.setFinalTime(finalTimePF);
 	simPF.setDomain(Domain::SP);
 	simPF.setSolverType(Solver::Type::NRP);
-	simPF.doInitFromNodesAndTerminals(false);
+	simPF.doPowerFlowInit(false);
 	simPF.addLogger(loggerPF);
 	simPF.run();
 
@@ -94,7 +93,7 @@ int main(int argc, char* argv[]) {
 	auto n2EMT = SimNode<Real>::make("n2", PhaseType::ABC);
 
 	auto extnetEMT = EMT::Ph3::NetworkInjection::make("Slack", Logger::Level::debug);
-	extnetEMT->setParameters(CPS::Math::singlePhaseVariableToThreePhase(Vnom), 50);
+	extnetEMT->setParameters(CPS::Math::singlePhaseVariableToThreePhase(Vnom), 1.25, 1.25, 48.75);
 
 	auto lineEMT = EMT::Ph3::PiLine::make("PiLine", Logger::Level::debug);
 	lineEMT->setParameters(CPS::Math::singlePhaseParameterToThreePhase(lineResistance), CPS::Math::singlePhaseParameterToThreePhase(lineInductance), CPS::Math::singlePhaseParameterToThreePhase(lineCapacitance));
@@ -118,9 +117,9 @@ int main(int argc, char* argv[]) {
 	auto loggerEMT = DataLogger::make(simNameEMT);
 	loggerEMT->addAttribute("v1", n1EMT->attribute("v"));
 	loggerEMT->addAttribute("v2", n2EMT->attribute("v"));
-	loggerEMT->addAttribute("isrc", extnetEMT->attribute("i_intf"));
 	loggerEMT->addAttribute("i12", lineEMT->attribute("i_intf"));
 	loggerEMT->addAttribute("irx", loadEMT->attribute("i_intf"));
+	loggerEMT->addAttribute("isrc", extnetEMT->attribute("i_intf"));
 	loggerEMT->addAttribute("f_src", extnetEMT->attribute("f_src"));
 
 	// load step sized in absolute terms

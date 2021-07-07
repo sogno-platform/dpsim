@@ -49,6 +49,34 @@ void SP::Ph1::NetworkInjection::setParameters(Real voltageSetPoint) {
 	mParametersSet = true;
 }
 
+void SP::Ph1::NetworkInjection::setParameters(Complex initialPhasor, Real freqStart, Real rocof, Real timeStart, Real duration, bool useAbsoluteCalc) {
+	mParametersSet = true;
+
+	mSubVoltageSource->setParameters(initialPhasor, freqStart, rocof, timeStart, duration, useAbsoluteCalc);
+	
+	setAttributeRef("V_ref", mSubVoltageSource->attribute<Complex>("V_ref"));
+	setAttributeRef("f_src", mSubVoltageSource->attribute<Real>("f_src"));
+
+	mSLog->info("\nVoltage Ref={:s} [V]"
+				"\nFrequency={:s} [Hz]", 
+				Logger::phasorToString(initialPhasor),
+				Logger::realToString(freqStart));
+}
+
+void SP::Ph1::NetworkInjection::setParameters(Complex initialPhasor, Real modulationFrequency, Real modulationAmplitude, Real baseFrequency /*= 0.0*/, bool zigzag /*= false*/) {
+	mParametersSet = true;
+
+	mSubVoltageSource->setParameters(initialPhasor, modulationFrequency, modulationAmplitude, baseFrequency, zigzag);
+	
+	setAttributeRef("V_ref", mSubVoltageSource->attribute<Complex>("V_ref"));
+	setAttributeRef("f_src", mSubVoltageSource->attribute<Real>("f_src"));
+
+	mSLog->info("\nVoltage Ref={:s} [V]"
+				"\nFrequency={:s} [Hz]", 
+				Logger::phasorToString(initialPhasor),
+				Logger::realToString(baseFrequency));
+}
+
 void SP::Ph1::NetworkInjection::setBaseVoltage(Real baseVoltage) {
     mBaseVoltage = baseVoltage;
 }

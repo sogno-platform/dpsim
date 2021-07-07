@@ -11,6 +11,10 @@
 #include <cps/SimPowerComp.h>
 #include <cps/Solver/MNAInterface.h>
 #include <cps/Solver/DAEInterface.h>
+#include <cps/Signal/SineWaveGenerator.h>
+#include <cps/Signal/SignalGenerator.h>
+#include <cps/Signal/FrequencyRamp.h>
+#include <cps/Signal/FmGenerator.h>
 
 namespace CPS {
 namespace SP {
@@ -32,9 +36,11 @@ namespace Ph1 {
 	///
 	void updateVoltage(Real time);
 	///
-	Attribute<Complex>::Ptr mVoltageRef;
+	//Attribute<Complex>::Ptr mVoltageRef;
 	///
-	Attribute<Real>::Ptr mSrcFreq;
+	//Attribute<Real>::Ptr mSrcFreq;
+	/// 
+	CPS::Signal::SignalGenerator::Ptr mSrcSig;
 	public:
 		/// Defines UID, name, component parameters and logging level
 		VoltageSource(String uid, String name, Logger::Level loglevel = Logger::Level::off);
@@ -53,7 +59,11 @@ namespace Ph1 {
 		///
 		void setSourceValue(Complex voltage);
 		///
-		void setParameters(Complex voltageRef, Real srcFreq = -1);
+		void setParameters(Complex voltageRef, Real srcFreq = 0.0);
+		/// Setter for reference signal of type frequency ramp
+		void setParameters(Complex initialPhasor, Real freqStart, Real rocof, Real timeStart, Real duration, bool useAbsoluteCalc = true);
+		/// Setter for reference signal of type cosine frequency modulation
+		void setParameters(Complex initialPhasor, Real modulationFrequency, Real modulationAmplitude, Real baseFrequency = 0.0, bool zigzag = false);
 
 		// #### MNA Section ####
 		/// Initializes internal variables of the component

@@ -13,25 +13,18 @@ using namespace DPsim;
 using namespace CPS;
 
 int main(int argc, char* argv[]) {
-	String simName = "DP_Slack_PiLine_PQLoad_Ramp_with_PF_Init";
+	String simName = "DP_Slack_RxLine_RLoad";
 	
 	// Component parameters
 	Real Vnom = 20e3;
 	Real pLoadNom = 100e3;
-	Real qLoadNom = 50e3;
+	//Real loadResistance = 4e3;
 	Real lineResistance = 0.05;
 	Real lineInductance = 0.1;
-	Real lineCapacitance = 0.1e-6;
+	
+	// Simulation parameters
 	Real timeStep = 0.001;
 	Real finalTime = 10.0;
-
-	// Simulation parameters
-	Real startFrequency = 0.0;
-	Real rocof = -6.25;
-	Real timeStart = 5.0;
-	Real rampDuration = 0.4;
-	bool useAbsoluteCalc = true;
-	
 	CommandLineArgs args(argc, argv);
 	if (argc > 1) {
 		timeStep = args.timeStep;
@@ -39,16 +32,6 @@ int main(int argc, char* argv[]) {
 		
 		if (args.name != "dpsim")
 			simName = args.name;
-		if (args.options.find("startFrequency") != args.options.end())
-			startFrequency = args.options["startFrequency"];
-		if (args.options.find("rocof") != args.options.end())
-			rocof = args.options["rocof"];
-		if (args.options.find("timeStart") != args.options.end())
-			timeStart = args.options["timeStart"];
-		if (args.options.find("rampDuration") != args.options.end())
-			rampDuration = args.options["rampDuration"];
-		if (args.options.find("relative") != args.options.end())
-			useAbsoluteCalc = !args.options["relative"];
 	}
 
 	// ----- POWERFLOW FOR INITIALIZATION -----
@@ -66,18 +49,18 @@ int main(int argc, char* argv[]) {
 	extnetPF->setBaseVoltage(Vnom);
 	extnetPF->modifyPowerFlowBusType(PowerflowBusType::VD);
 
-	auto linePF = SP::Ph1::PiLine::make("PiLine", Logger::Level::debug);
-	linePF->setParameters(lineResistance, lineInductance, lineCapacitance);
+	auto linePF = SP::Ph1::PiLine::make("RxLine", Logger::Level::debug);
+	linePF->setParameters(lineResistance, lineInductance);
 	linePF->setBaseVoltage(Vnom);
 
-	auto loadPF = SP::Ph1::Shunt::make("Load", Logger::Level::debug);
-	loadPF->setParameters(pLoadNom / std::pow(Vnom, 2), - qLoadNom / std::pow(Vnom, 2));
+	auto loadPF = SP::Ph1::Resistor::make("RLoad", Logger::Level::debug);
+	loadPF->setParameters(std::pow(Vnom, 2) / pLoadNom);
 	loadPF->setBaseVoltage(Vnom);
 
 	// Topology
 	extnetPF->connect({ n1PF });
-	linePF->connect({ n1PF, n2PF });
-	loadPF->connect({ n2PF });	
+	linePF->connect({ n2PF, n1PF });
+	loadPF->connect({ n2PF, SimNode<Complex>::GND });	
 	auto systemPF = SystemTopology(50,
 			SystemNodeList{n1PF, n2PF},
 			SystemComponentList{extnetPF, linePF, loadPF});
@@ -109,25 +92,25 @@ int main(int argc, char* argv[]) {
 	auto n2DP = SimNode<Complex>::make("n2", PhaseType::Single);
 
 	auto extnetDP = DP::Ph1::NetworkInjection::make("Slack", Logger::Level::debug);
-	extnetDP->setParameters(Complex(Vnom,0), startFrequency, rocof, timeStart, rampDuration, useAbsoluteCalc);
+	// extnetDP->setParameters(Complex(Vnom,0), 0, -6.25, 0.05, 0.4);
+	extnetDP->setParameters(Complex(Vnom,0), 1.25, 1.25, -1.25);
+	
+	auto lineDP = DP::Ph1::PiLine::make("RxLine", Logger::Level::debug);
+	lineDP->setParameters(lineResistance, lineInductance);
 
-	auto lineDP = DP::Ph1::PiLine::make("PiLine", Logger::Level::debug);
-	lineDP->setParameters(lineResistance, lineInductance, lineCapacitance);
-
-	auto loadDP = DP::Ph1::RXLoad::make("Load", Logger::Level::debug);	
-	loadDP->setParameters(pLoadNom, qLoadNom, Vnom);
+	auto loadDP = DP::Ph1::Resistor::make("RLoad", Logger::Level::debug);	
+	loadDP->setParameters(std::pow(Vnom, 2) / pLoadNom);
 
 	// Topology
 	extnetDP->connect({ n1DP });
-	lineDP->connect({ n1DP, n2DP });
-	loadDP->connect({ n2DP });	
+	lineDP->connect({ n2DP, n1DP });
+	loadDP->connect({ n2DP, SimNode<Complex>::GND });	
 	auto systemDP = SystemTopology(50,
 			SystemNodeList{n1DP, n2DP},
 			SystemComponentList{extnetDP, lineDP, loadDP});
 
-	// Initialization of dynamic topology
 	CIM::Reader reader(simNameDP, Logger::Level::debug);
-	reader.initDynamicSystemTopologyWithPowerflow(systemPF, systemDP);			
+	reader.initDynamicSystemTopologyWithPowerflow(systemPF, systemDP);		
 
 	// Logging
 	auto loggerDP = DataLogger::make(simNameDP);
@@ -135,11 +118,8 @@ int main(int argc, char* argv[]) {
 	loggerDP->addAttribute("v2", n2DP->attribute("v"));
 	loggerDP->addAttribute("isrc", extnetDP->attribute("i_intf"));
 	loggerDP->addAttribute("i12", lineDP->attribute("i_intf"));
-	loggerDP->addAttribute("irx", loadDP->attribute("i_intf"));
+	loggerDP->addAttribute("iL", loadDP->attribute("i_intf"));
 	loggerDP->addAttribute("f_src", extnetDP->attribute("f_src"));
-
-	// load step sized in absolute terms
-	//std::shared_ptr<SwitchEvent> loadStepEvent = CIM::Examples::createEventAddPowerConsumption("n2", 0.1-timeStepDP, 100e3, systemDP, Domain::DP, loggerDP);
 
 	// Simulation
 	Simulation sim(simNameDP, Logger::Level::debug);
@@ -149,6 +129,6 @@ int main(int argc, char* argv[]) {
 	sim.setDomain(Domain::DP);
 	sim.doPowerFlowInit(false);
 	sim.addLogger(loggerDP);
-	//sim.addEvent(loadStepEvent);
 	sim.run();
+	
 }

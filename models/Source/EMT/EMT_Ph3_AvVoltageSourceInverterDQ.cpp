@@ -193,7 +193,7 @@ void EMT::Ph3::AvVoltageSourceInverterDQ::initializeFromNodesAndTerminals(Real f
 	mIntfCurrent = intfCurrentComplex.real();
 
 	// Initialize controlled source
-	mSubCtrledVoltageSource->setParameters(mVirtualNodes[0]->initialVoltage(), 50);
+	mSubCtrledVoltageSource->setParameters(mVirtualNodes[0]->initialVoltage(), 0.0);
 
 	// Connect electrical subcomponents
 	mSubCtrledVoltageSource->connect({ SimNode::GND, mVirtualNodes[0] });
@@ -398,7 +398,7 @@ void EMT::Ph3::AvVoltageSourceInverterDQ::mnaAddPreStepDependencies(AttributeBas
 void EMT::Ph3::AvVoltageSourceInverterDQ::mnaPreStep(Real time, Int timeStepCount) {
 	// pre-step of subcomponents - controlled source
 	if (mWithControl)
-		mSubCtrledVoltageSource->setParameters(PEAK1PH_TO_RMS3PH * mVsref, -1);
+		mSubCtrledVoltageSource->attribute<MatrixComp>("V_ref")->set(PEAK1PH_TO_RMS3PH * mVsref);
 	// pre-step of subcomponents - others
 	for (auto subcomp: mSubComponents)
 		if (auto mnasubcomp = std::dynamic_pointer_cast<MNAInterface>(subcomp))
