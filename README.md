@@ -1,8 +1,5 @@
 # <img src="docs/images/dpsim.png" width=40 /> DPsim
 
-[![pipeline status](https://git.rwth-aachen.de/acs/public/simulation/dpsim/dpsim/badges/master/pipeline.svg)](https://git.rwth-aachen.de/acs/public/simulation/dpsim/dpsim/commits/master)
-[![coverage report](https://git.rwth-aachen.de/acs/public/simulation/dpsim/dpsim/badges/master/coverage.svg)](https://git.rwth-aachen.de/acs/public/simulation/dpsim/dpsim/commits/master)
-
 DPsim is a solver library for dynamic power system simulation.
 
 - It supports both the electromagnetic transient (EMT) and dynamic phasor (DP) domain for dynamic simulation.
