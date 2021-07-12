@@ -18,7 +18,7 @@ int main(int argc, char* argv[]) {
 	
 	Real finalTime = 2;
 	Real timeStep = 0.0001;
-	String simName = "SP_Slack_PiLine_VSI_with_PF_Init";
+	String simName = "EMT_Slack_PiLine_VSI_Ramp_with_PF_Init";
 	Bool pvWithControl = true;
 	Real cmdScaleP = 1.0;
 	Real cmdScaleI = 1.0;
@@ -41,7 +41,7 @@ int main(int argc, char* argv[]) {
 	// ----- POWERFLOW FOR INITIALIZATION -----
 	Real timeStepPF = finalTime;
 	Real finalTimePF = finalTime+timeStepPF;
-	String simNamePF = simName+"_PF";
+	String simNamePF = simName + "_PF";
 	Logger::setLogDir("logs/" + simNamePF);
 
 	// Components
@@ -86,61 +86,61 @@ int main(int argc, char* argv[]) {
 	simPF.run();
 
 	// ----- DYNAMIC SIMULATION -----
-	Real timeStepSP = timeStep;
-	Real finalTimeSP = finalTime+timeStepSP;
-	String simNameSP = simName+"_SP";
-	Logger::setLogDir("logs/" + simNameSP);
+	Real timeStepEMT = timeStep;
+	Real finalTimeEMT = finalTime+timeStepEMT;
+	String simNameEMT = simName + "_EMT";
+	Logger::setLogDir("logs/" + simNameEMT);
 
 	// Components
-	auto n1SP = SimNode<Complex>::make("n1", PhaseType::Single);
-	auto n2SP = SimNode<Complex>::make("n2", PhaseType::Single);
+	auto n1EMT = SimNode<Real>::make("n1", PhaseType::ABC);
+	auto n2EMT = SimNode<Real>::make("n2", PhaseType::ABC);
 
-	auto extnetSP = SP::Ph1::NetworkInjection::make("Slack", Logger::Level::debug);
-	extnetSP->setParameters(Complex(scenario.systemNominalVoltage,0));
+	auto extnetEMT = EMT::Ph3::NetworkInjection::make("Slack", Logger::Level::debug);
+	extnetEMT->setParameters(CPS::Math::singlePhaseVariableToThreePhase(scenario.systemNominalVoltage), 50, -6.25, 5.0, 0.4);
 
-	auto lineSP = SP::Ph1::PiLine::make("PiLine", Logger::Level::debug);
-	lineSP->setParameters(scenario.lineResistance, scenario.lineInductance, scenario.lineCapacitance);
+	auto lineEMT = EMT::Ph3::PiLine::make("PiLine", Logger::Level::debug);
+	lineEMT->setParameters(CPS::Math::singlePhaseParameterToThreePhase(scenario.lineResistance), CPS::Math::singlePhaseParameterToThreePhase(scenario.lineInductance), CPS::Math::singlePhaseParameterToThreePhase(scenario.lineCapacitance));
 
-	
-	auto pv = SP::Ph1::AvVoltageSourceInverterDQ::make("pv", "pv", Logger::Level::debug, true);
+	auto pv = EMT::Ph3::AvVoltageSourceInverterDQ::make("pv", "pv", Logger::Level::debug, true);
 	pv->setParameters(scenario.systemOmega, scenario.pvNominalVoltage, scenario.pvNominalActivePower, scenario.pvNominalReactivePower);
 	pv->setControllerParameters(cmdScaleP*scenario.KpPLL, cmdScaleI*scenario.KiPLL, cmdScaleP*scenario.KpPowerCtrl, cmdScaleI*scenario.KiPowerCtrl, cmdScaleP*scenario.KpCurrCtrl, cmdScaleI*scenario.KiCurrCtrl, scenario.OmegaCutoff);
 	pv->setFilterParameters(scenario.Lf, scenario.Cf, scenario.Rf, scenario.Rc);
-	pv->setTransformerParameters(scenario.systemNominalVoltage, scenario.pvNominalVoltage, scenario.systemNominalVoltage/scenario.pvNominalVoltage, 0, 0, scenario.transformerInductance);
+	pv->setTransformerParameters(scenario.systemNominalVoltage, scenario.pvNominalVoltage, scenario.transformerNominalPower, scenario.systemNominalVoltage/scenario.pvNominalVoltage, 0, 0, scenario.transformerInductance, scenario.systemOmega);
 	pv->setInitialStateValues(scenario.pvNominalActivePower, scenario.pvNominalReactivePower, scenario.phi_dInit, scenario.phi_qInit, scenario.gamma_dInit, scenario.gamma_qInit);
 	pv->withControl(pvWithControl);
 
 	// Topology
-	extnetSP->connect({ n1SP });
-	lineSP->connect({ n1SP, n2SP });
-	pv->connect({ n2SP });	
-	auto systemSP = SystemTopology(50,
-			SystemNodeList{n1SP, n2SP},
-			SystemComponentList{extnetSP, lineSP, pv});
+	extnetEMT->connect({ n1EMT });
+	lineEMT->connect({ n1EMT, n2EMT });
+	pv->connect({ n2EMT });	
+	auto systemEMT = SystemTopology(50,
+			SystemNodeList{n1EMT, n2EMT},
+			SystemComponentList{extnetEMT, lineEMT, pv});
 
-	// Initialization of dynamic topology with values from powerflow
-	CIM::Reader reader(simNameSP, Logger::Level::debug);
-	reader.initDynamicSystemTopologyWithPowerflow(systemPF, systemSP);			
+	// Initialization of dynamic topology
+	CIM::Reader reader(simNameEMT, Logger::Level::debug);
+	reader.initDynamicSystemTopologyWithPowerflow(systemPF, systemEMT);			
 
 	// Logging
-	auto loggerSP = DataLogger::make(simNameSP);
-	loggerSP->addAttribute("v1", n1SP->attribute("v"));
-	loggerSP->addAttribute("v2", n2SP->attribute("v"));
-	loggerSP->addAttribute("i12", lineSP->attribute("i_intf"));
+	auto loggerEMT = DataLogger::make(simNameEMT);
+	loggerEMT->addAttribute("v1", n1EMT->attribute("v"));
+	loggerEMT->addAttribute("v2", n2EMT->attribute("v"));
+	loggerEMT->addAttribute("i12", lineEMT->attribute("i_intf"));
+	loggerEMT->addAttribute("f_src", extnetEMT->attribute("f_src"));
+	loggerEMT->addAttribute("sigOut", extnetEMT->attribute("sigOut"));
 
-	CIM::Examples::CIGREMV::logPVAttributes(loggerSP, pv);
+	CIM::Examples::CIGREMV::logPVAttributes(loggerEMT, pv);
 
 	// load step sized in absolute terms
-	// std::shared_ptr<SwitchEvent> loadStepEvent = CIM::Examples::createEventAddPowerConsumption("n2", std::round(5.0/timeStep)*timeStep, 10e6, systemSP, Domain::SP, loggerSP);
+	// std::shared_ptr<SwitchEvent3Ph> loadStepEvent = CIM::Examples::createEventAddPowerConsumption3Ph("n2", std::round(5.0/timeStep)*timeStep, 10e6, systemEMT, Domain::EMT, loggerEMT);
 
 	// Simulation
-	Simulation sim(simNameSP, Logger::Level::debug);
-	sim.setSystem(systemSP);
-	sim.setTimeStep(timeStepSP);
-	sim.setFinalTime(finalTimeSP);
-	sim.setDomain(Domain::SP);
-	//sim.addEvent(loadStepEvent);
-	sim.addLogger(loggerSP);
+	Simulation sim(simNameEMT, Logger::Level::debug);
+	sim.setSystem(systemEMT);
+	sim.setTimeStep(timeStepEMT);
+	sim.setFinalTime(finalTimeEMT);
+	sim.setDomain(Domain::EMT);
+	sim.addLogger(loggerEMT);
+	// sim.addEvent(loadStepEvent);
 	sim.run();
-	
 }

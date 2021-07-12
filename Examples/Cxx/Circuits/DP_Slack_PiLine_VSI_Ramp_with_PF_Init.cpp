@@ -18,7 +18,7 @@ int main(int argc, char* argv[]) {
 	
 	Real finalTime = 2;
 	Real timeStep = 0.0001;
-	String simName = "SP_Slack_PiLine_VSI_with_PF_Init";
+	String simName = "DP_Slack_PiLine_VSI_Ramp_with_PF_Init";
 	Bool pvWithControl = true;
 	Real cmdScaleP = 1.0;
 	Real cmdScaleI = 1.0;
@@ -86,23 +86,23 @@ int main(int argc, char* argv[]) {
 	simPF.run();
 
 	// ----- DYNAMIC SIMULATION -----
-	Real timeStepSP = timeStep;
-	Real finalTimeSP = finalTime+timeStepSP;
-	String simNameSP = simName+"_SP";
-	Logger::setLogDir("logs/" + simNameSP);
+	Real timeStepDP = timeStep;
+	Real finalTimeDP = finalTime+timeStepDP;
+	String simNameDP = simName+"_DP";
+	Logger::setLogDir("logs/" + simNameDP);
 
 	// Components
-	auto n1SP = SimNode<Complex>::make("n1", PhaseType::Single);
-	auto n2SP = SimNode<Complex>::make("n2", PhaseType::Single);
+	auto n1DP = SimNode<Complex>::make("n1", PhaseType::Single);
+	auto n2DP = SimNode<Complex>::make("n2", PhaseType::Single);
 
-	auto extnetSP = SP::Ph1::NetworkInjection::make("Slack", Logger::Level::debug);
-	extnetSP->setParameters(Complex(scenario.systemNominalVoltage,0));
+	auto extnetDP = DP::Ph1::NetworkInjection::make("Slack", Logger::Level::debug);
+	extnetDP->setParameters(Complex(scenario.systemNominalVoltage, 0), 0, -6.25, 5.0, 0.4);
 
-	auto lineSP = SP::Ph1::PiLine::make("PiLine", Logger::Level::debug);
-	lineSP->setParameters(scenario.lineResistance, scenario.lineInductance, scenario.lineCapacitance);
+	auto lineDP = DP::Ph1::PiLine::make("PiLine", Logger::Level::debug);
+	lineDP->setParameters(scenario.lineResistance, scenario.lineInductance, scenario.lineCapacitance);
 
 	
-	auto pv = SP::Ph1::AvVoltageSourceInverterDQ::make("pv", "pv", Logger::Level::debug, true);
+	auto pv = DP::Ph1::AvVoltageSourceInverterDQ::make("pv", "pv", Logger::Level::debug, true);
 	pv->setParameters(scenario.systemOmega, scenario.pvNominalVoltage, scenario.pvNominalActivePower, scenario.pvNominalReactivePower);
 	pv->setControllerParameters(cmdScaleP*scenario.KpPLL, cmdScaleI*scenario.KiPLL, cmdScaleP*scenario.KpPowerCtrl, cmdScaleI*scenario.KiPowerCtrl, cmdScaleP*scenario.KpCurrCtrl, cmdScaleI*scenario.KiCurrCtrl, scenario.OmegaCutoff);
 	pv->setFilterParameters(scenario.Lf, scenario.Cf, scenario.Rf, scenario.Rc);
@@ -111,36 +111,38 @@ int main(int argc, char* argv[]) {
 	pv->withControl(pvWithControl);
 
 	// Topology
-	extnetSP->connect({ n1SP });
-	lineSP->connect({ n1SP, n2SP });
-	pv->connect({ n2SP });	
-	auto systemSP = SystemTopology(50,
-			SystemNodeList{n1SP, n2SP},
-			SystemComponentList{extnetSP, lineSP, pv});
+	extnetDP->connect({ n1DP });
+	lineDP->connect({ n1DP, n2DP });
+	pv->connect({ n2DP });	
+	auto systemDP = SystemTopology(50,
+			SystemNodeList{n1DP, n2DP},
+			SystemComponentList{extnetDP, lineDP, pv});
 
 	// Initialization of dynamic topology with values from powerflow
-	CIM::Reader reader(simNameSP, Logger::Level::debug);
-	reader.initDynamicSystemTopologyWithPowerflow(systemPF, systemSP);			
+	CIM::Reader reader(simNameDP, Logger::Level::debug);
+	reader.initDynamicSystemTopologyWithPowerflow(systemPF, systemDP);			
 
 	// Logging
-	auto loggerSP = DataLogger::make(simNameSP);
-	loggerSP->addAttribute("v1", n1SP->attribute("v"));
-	loggerSP->addAttribute("v2", n2SP->attribute("v"));
-	loggerSP->addAttribute("i12", lineSP->attribute("i_intf"));
+	auto loggerDP = DataLogger::make(simNameDP);
+	loggerDP->addAttribute("v1", n1DP->attribute("v"));
+	loggerDP->addAttribute("v2", n2DP->attribute("v"));
+	loggerDP->addAttribute("i12", lineDP->attribute("i_intf"));
+	loggerDP->addAttribute("f_src", extnetDP->attribute("f_src"));
 
-	CIM::Examples::CIGREMV::logPVAttributes(loggerSP, pv);
+	CIM::Examples::CIGREMV::logPVAttributes(loggerDP, pv);
 
 	// load step sized in absolute terms
-	// std::shared_ptr<SwitchEvent> loadStepEvent = CIM::Examples::createEventAddPowerConsumption("n2", std::round(5.0/timeStep)*timeStep, 10e6, systemSP, Domain::SP, loggerSP);
+	// std::shared_ptr<SwitchEvent> loadStepEvent = CIM::Examples::createEventAddPowerConsumption("n2", std::round(5.0/timeStep)*timeStep, 10e6, systemDP, Domain::DP, loggerDP);
 
 	// Simulation
-	Simulation sim(simNameSP, Logger::Level::debug);
-	sim.setSystem(systemSP);
-	sim.setTimeStep(timeStepSP);
-	sim.setFinalTime(finalTimeSP);
-	sim.setDomain(Domain::SP);
-	//sim.addEvent(loadStepEvent);
-	sim.addLogger(loggerSP);
+	Simulation sim(simNameDP, Logger::Level::debug);
+	sim.setSystem(systemDP);
+	sim.setTimeStep(timeStepDP);
+	sim.setFinalTime(finalTimeDP);
+	sim.setDomain(Domain::DP);
+	// sim.addEvent(loadStepEvent);
+	
+	sim.addLogger(loggerDP);
 	sim.run();
 	
 }

@@ -13,6 +13,7 @@ using namespace DPsim;
 using namespace CPS;
 
 int main(int argc, char* argv[]) {
+	String simName = "EMT_Slack_PiLine_PQLoad_with_PF_Init";
 	
 	// Parameters
 	Real Vnom = 20e3;
@@ -23,18 +24,21 @@ int main(int argc, char* argv[]) {
 	Real lineCapacitance = 0.1e-6;
 	
 	// Simulation parameters
-	Real timeStep = 0.0001;
-	Real finalTime = 2.0;
+	Real timeStep = 0.001;
+	Real finalTime = 10.0;
 	CommandLineArgs args(argc, argv);
 	if (argc > 1) {
 		timeStep = args.timeStep;
 		finalTime = args.duration;
+		
+		if (args.name != "dpsim")
+			simName = args.name;
 	}
 
 	// ----- POWERFLOW FOR INITIALIZATION -----
 	Real timeStepPF = finalTime;
 	Real finalTimePF = finalTime+timeStepPF;
-	String simNamePF = "EMT_Slack_PiLine_PQLoad_with_PF_Init_PF";
+	String simNamePF = simName + "_PF";
 	Logger::setLogDir("logs/" + simNamePF);
 
 	// Components
@@ -82,7 +86,7 @@ int main(int argc, char* argv[]) {
 	// ----- DYNAMIC SIMULATION -----
 	Real timeStepEMT = timeStep;
 	Real finalTimeEMT = finalTime+timeStepEMT;
-	String simNameEMT = "EMT_Slack_PiLine_PQLoad_with_PF_Init_EMT";
+	String simNameEMT = simName + "_EMT";
 	Logger::setLogDir("logs/" + simNameEMT);
 
 	// Components
@@ -90,6 +94,7 @@ int main(int argc, char* argv[]) {
 	auto n2EMT = SimNode<Real>::make("n2", PhaseType::ABC);
 
 	auto extnetEMT = EMT::Ph3::NetworkInjection::make("Slack", Logger::Level::debug);
+	extnetEMT->setParameters(CPS::Math::singlePhaseVariableToThreePhase(Vnom), 50);
 
 	auto lineEMT = EMT::Ph3::PiLine::make("PiLine", Logger::Level::debug);
 	lineEMT->setParameters(CPS::Math::singlePhaseParameterToThreePhase(lineResistance), CPS::Math::singlePhaseParameterToThreePhase(lineInductance), CPS::Math::singlePhaseParameterToThreePhase(lineCapacitance));
@@ -113,11 +118,13 @@ int main(int argc, char* argv[]) {
 	auto loggerEMT = DataLogger::make(simNameEMT);
 	loggerEMT->addAttribute("v1", n1EMT->attribute("v"));
 	loggerEMT->addAttribute("v2", n2EMT->attribute("v"));
+	loggerEMT->addAttribute("isrc", extnetEMT->attribute("i_intf"));
 	loggerEMT->addAttribute("i12", lineEMT->attribute("i_intf"));
 	loggerEMT->addAttribute("irx", loadEMT->attribute("i_intf"));
+	loggerEMT->addAttribute("f_src", extnetEMT->attribute("f_src"));
 
 	// load step sized in absolute terms
-	std::shared_ptr<SwitchEvent3Ph> loadStepEvent = CIM::Examples::createEventAddPowerConsumption3Ph("n2", 0.1-timeStepEMT, 100e3, systemEMT, Domain::EMT, loggerEMT);
+	//std::shared_ptr<SwitchEvent3Ph> loadStepEvent = CIM::Examples::createEventAddPowerConsumption3Ph("n2", 0.1-timeStepEMT, 100e3, systemEMT, Domain::EMT, loggerEMT);
 
 	// Simulation
 	Simulation sim(simNameEMT, Logger::Level::debug);
@@ -126,7 +133,7 @@ int main(int argc, char* argv[]) {
 	sim.setFinalTime(finalTimeEMT);
 	sim.setDomain(Domain::EMT);
 	sim.addLogger(loggerEMT);
-	sim.addEvent(loadStepEvent);
+	//sim.addEvent(loadStepEvent);
 	sim.run();
 	
 }

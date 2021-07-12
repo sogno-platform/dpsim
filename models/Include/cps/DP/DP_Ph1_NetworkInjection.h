@@ -49,7 +49,13 @@ namespace Ph1 {
 		/// Initializes component from power flow data
 		void initializeFromNodesAndTerminals(Real frequency);
 		/// Setter for reference voltage parameters
-		void setParameters(Complex voltageRef, Real srcFreq = -1);
+		void setParameters(Complex voltageRef, Real srcFreq = 0.0);
+		/// Setter for reference signal of type frequency ramp
+		void setParameters(Complex initialPhasor, Real freqStart, Real rocof, Real timeStart, Real duration, bool useAbsoluteCalc = true);
+		/// Setter for reference signal of type cosine frequency modulation
+		void setParameters(Complex initialPhasor, Real modulationFrequency, Real modulationAmplitude, Real baseFrequency = 0.0, bool zigzag = false);
+		/// More General setter for voltage source parameters
+		//void setVoltageSource(std::shared_ptr<DP::Ph1::VoltageSource> subVoltageSource);
 
 		// #### MNA Section ####
 		/// Initializes internal variables of the component

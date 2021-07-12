@@ -20,6 +20,7 @@ set(CIRCUIT_SOURCES
 	# DP examples with PF initialization
 	Circuits/DP_Slack_PiLine_PQLoad_with_PF_Init.cpp
 	Circuits/DP_Slack_PiLine_VSI_with_PF_Init.cpp
+	Circuits/DP_Slack_PiLine_VSI_Ramp_with_PF_Init.cpp
 	
 	# Powerflow examples
 	Circuits/PF_Slack_PiLine_PQLoad.cpp
@@ -32,23 +33,25 @@ set(CIRCUIT_SOURCES
 	#Circuits/EMT_ResVS_RL_Switch.cpp
 	Circuits/EMT_VSI.cpp
 	Circuits/EMT_PiLine.cpp
-	Circuits/EMT_VS_Controlled.cpp
 
 	# EMT examples with PF initialization
 	Circuits/EMT_Slack_PiLine_PQLoad_with_PF_Init.cpp
 	Circuits/EMT_Slack_PiLine_VSI_with_PF_Init.cpp
+	Circuits/EMT_Slack_PiLine_VSI_Ramp_with_PF_Init.cpp
 
 	# SP examples
 	Circuits/SP_Circuits.cpp
 	Circuits/SP_PiLine.cpp
 	Circuits/SP_Slack_PiLine_VSI_with_PF_Init.cpp
+	Circuits/SP_Slack_PiLine_PQLoad_with_PF_Init.cpp
 
 	# Combined EMT/DP/SP examples
 	Circuits/EMT_DP_SP_Slack.cpp
-	Circuits/EMT_DP_VS_Init.cpp
+	Circuits/EMT_DP_SP_VS_Init.cpp
 	Circuits/EMT_DP_SP_VS_RLC.cpp
 	Circuits/DP_EMT_RL_SourceStep.cpp
 	Circuits/EMT_DP_SP_Trafo.cpp
+	Circuits/EMT_DP_SP_Slack_PiLine_PQLoad_FM.cpp
 
 	#SMIB
 	Circuits/SP_SynGenTrStab_SMIB_SteadyState.cpp

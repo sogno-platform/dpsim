@@ -13,6 +13,7 @@ using namespace DPsim;
 using namespace CPS;
 
 int main(int argc, char* argv[]) {
+	String simName = "DP_Slack_PiLine_PQLoad_with_PF_Init";
 	
 	// Component parameters
 	Real Vnom = 20e3;
@@ -29,12 +30,15 @@ int main(int argc, char* argv[]) {
 	if (argc > 1) {
 		timeStep = args.timeStep;
 		finalTime = args.duration;
+		
+		if (args.name != "dpsim")
+			simName = args.name;
 	}
 
 	// ----- POWERFLOW FOR INITIALIZATION -----
 	Real timeStepPF = finalTime;
 	Real finalTimePF = finalTime+timeStepPF;
-	String simNamePF = "DP_Slack_PiLine_PQLoad_with_PF_Init_PF";
+	String simNamePF = simName + "_PF";
 	Logger::setLogDir("logs/" + simNamePF);
 
 	// Components
@@ -81,7 +85,7 @@ int main(int argc, char* argv[]) {
 	// ----- DYNAMIC SIMULATION -----
 	Real timeStepDP = timeStep;
 	Real finalTimeDP = finalTime+timeStepDP;
-	String simNameDP = "DP_Slack_PiLine_PQLoad_with_PF_Init_DP";
+	String simNameDP = simName + "_DP";
 	Logger::setLogDir("logs/" + simNameDP);
 
 	// Components
@@ -95,7 +99,6 @@ int main(int argc, char* argv[]) {
 	lineDP->setParameters(lineResistance, lineInductance, lineCapacitance);
 
 	auto loadDP = DP::Ph1::RXLoad::make("Load", Logger::Level::debug);	
-	loadDP->setParameters(pLoadNom, qLoadNom, Vnom);
 	loadDP->setParameters(pLoadNom, qLoadNom, Vnom);
 
 	// Topology
@@ -114,11 +117,13 @@ int main(int argc, char* argv[]) {
 	auto loggerDP = DataLogger::make(simNameDP);
 	loggerDP->addAttribute("v1", n1DP->attribute("v"));
 	loggerDP->addAttribute("v2", n2DP->attribute("v"));
+	loggerDP->addAttribute("isrc", extnetDP->attribute("i_intf"));
 	loggerDP->addAttribute("i12", lineDP->attribute("i_intf"));
 	loggerDP->addAttribute("irx", loadDP->attribute("i_intf"));
+	loggerDP->addAttribute("f_src", extnetDP->attribute("f_src"));
 
 	// load step sized in absolute terms
-	std::shared_ptr<SwitchEvent> loadStepEvent = CIM::Examples::createEventAddPowerConsumption("n2", 0.1-timeStepDP, 100e3, systemDP, Domain::DP, loggerDP);
+	//std::shared_ptr<SwitchEvent> loadStepEvent = CIM::Examples::createEventAddPowerConsumption("n2", 0.1-timeStepDP, 100e3, systemDP, Domain::DP, loggerDP);
 
 	// Simulation
 	Simulation sim(simNameDP, Logger::Level::debug);
@@ -127,7 +132,7 @@ int main(int argc, char* argv[]) {
 	sim.setFinalTime(finalTimeDP);
 	sim.setDomain(Domain::DP);
 	sim.addLogger(loggerDP);
-	sim.addEvent(loadStepEvent);
+	//sim.addEvent(loadStepEvent);
 	sim.run();
 	
 }

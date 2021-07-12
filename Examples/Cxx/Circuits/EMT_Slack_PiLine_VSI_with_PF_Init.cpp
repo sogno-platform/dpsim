@@ -129,7 +129,7 @@ int main(int argc, char* argv[]) {
 	CIM::Examples::CIGREMV::logPVAttributes(loggerEMT, pv);
 
 	// load step sized in absolute terms
-	std::shared_ptr<SwitchEvent3Ph> loadStepEvent = CIM::Examples::createEventAddPowerConsumption3Ph("n2", std::round(5.0/timeStep)*timeStep, 10e6, systemEMT, Domain::EMT, loggerEMT);
+	// std::shared_ptr<SwitchEvent3Ph> loadStepEvent = CIM::Examples::createEventAddPowerConsumption3Ph("n2", std::round(5.0/timeStep)*timeStep, 10e6, systemEMT, Domain::EMT, loggerEMT);
 
 	// Simulation
 	Simulation sim(simNameEMT, Logger::Level::debug);
@@ -138,6 +138,6 @@ int main(int argc, char* argv[]) {
 	sim.setFinalTime(finalTimeEMT);
 	sim.setDomain(Domain::EMT);
 	sim.addLogger(loggerEMT);
-	sim.addEvent(loadStepEvent);
+	// sim.addEvent(loadStepEvent);
 	sim.run();
 }

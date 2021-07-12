@@ -10,7 +10,6 @@
 
 #include <cps/Config.h>
 
-#include <cps/SP/SP_Ph1_ControlledVoltageSource.h>
 #include <cps/SP/SP_Ph1_AvVoltageSourceInverterDQ.h>
 #include <cps/SP/SP_Ph1_RXLine.h>
 #include <cps/SP/SP_Ph1_VoltageSourceInverter.h>
@@ -33,7 +32,6 @@
 #include <cps/SP/SP_Ph3_Inductor.h>
 #include <cps/SP/SP_Ph3_Resistor.h>
 #include <cps/SP/SP_Ph3_VoltageSource.h>
-#include <cps/SP/SP_Ph3_ControlledVoltageSource.h>
 
 #include <cps/DP/DP_Ph1_Capacitor.h>
 #include <cps/DP/DP_Ph1_CurrentSource.h>
@@ -57,7 +55,6 @@
 #include <cps/DP/DP_Ph1_SVC.h>
 #include <cps/DP/DP_Ph1_varResSwitch.h>
 
-#include <cps/DP/DP_Ph3_ControlledVoltageSource.h>
 #include <cps/DP/DP_Ph3_Capacitor.h>
 #include <cps/DP/DP_Ph3_Inductor.h>
 #include <cps/DP/DP_Ph3_VoltageSource.h>
@@ -87,7 +84,6 @@
 #include <cps/EMT/EMT_Ph3_SeriesSwitch.h>
 #include <cps/EMT/EMT_Ph3_VoltageSource.h>
 #include <cps/EMT/EMT_Ph3_VoltageSourceNorton.h>
-#include <cps/EMT/EMT_Ph3_ControlledVoltageSource.h>
 #include <cps/EMT/EMT_Ph3_SynchronGeneratorDQ.h>
 #include <cps/EMT/EMT_Ph3_SynchronGeneratorDQTrapez.h>
 #ifdef WITH_SUNDIALS
@@ -110,3 +106,7 @@
 #include <cps/Signal/TurbineGovernor.h>
 #include <cps/Signal/FIRFilter.h>
 #include <cps/Signal/Integrator.h>
+#include <cps/Signal/SignalGenerator.h>
+#include <cps/Signal/SineWaveGenerator.h>
+#include <cps/Signal/FrequencyRampGenerator.h>
+#include <cps/Signal/CosineFMGenerator.h>

@@ -339,7 +339,7 @@ void SP::Ph1::AvVoltageSourceInverterDQ::mnaAddPreStepDependencies(AttributeBase
 void SP::Ph1::AvVoltageSourceInverterDQ::mnaPreStep(Real time, Int timeStepCount) {
 	// pre-steo of subcomponents - controlled source
 	if (mWithControl)
-		mSubCtrledVoltageSource->setParameters(mVsref(0,0));
+		mSubCtrledVoltageSource->attribute<Complex>("V_ref")->set(mVsref(0,0));
 	// pre-step of subcomponents - others
 	for (auto subcomp: mSubComponents)
 		if (auto mnasubcomp = std::dynamic_pointer_cast<MNAInterface>(subcomp))

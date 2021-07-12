@@ -23,24 +23,62 @@ SP::Ph1::VoltageSource::VoltageSource(String uid, String name, Logger::Level log
 
 SimPowerComp<Complex>::Ptr SP::Ph1::VoltageSource::clone(String name) {
 	auto copy = VoltageSource::make(name, mLogLevel);
-	copy->setParameters(attribute<Complex>("V_ref")->get());
+	if(mSrcSig == 0)
+		copy->setParameters(attribute<Complex>("V_ref")->get());
+	else
+		copy->setParameters(mSrcSig->getSignal());
 	return copy;
 }
 
 void SP::Ph1::VoltageSource::setParameters(Complex voltageRef, Real srcFreq) {
-	attribute<Complex>("V_ref")->set(voltageRef);
-	attribute<Real>("f_src")->set(srcFreq);
+	auto srcSigSine = Signal::SineWaveGenerator::make(mName + "_sw");
+	srcSigSine->setParameters(voltageRef, srcFreq);
+	mSrcSig = srcSigSine; 
+
+	setAttributeRef("V_ref", mSrcSig->attribute<Complex>("sigOut"));
+	setAttributeRef("f_src", mSrcSig->attribute<Real>("freq"));
+
+	mParametersSet = true;
+}
+
+void SP::Ph1::VoltageSource::setParameters(Complex initialPhasor, Real freqStart, Real rocof, Real timeStart, Real duration, bool useAbsoluteCalc) {
+	auto srcSigFreqRamp = Signal::FrequencyRampGenerator::make(mName + "_fr");
+	srcSigFreqRamp->setParameters(initialPhasor, freqStart, rocof, timeStart, duration, useAbsoluteCalc);
+	mSrcSig = srcSigFreqRamp;
+
+	setAttributeRef("V_ref", mSrcSig->attribute<Complex>("sigOut"));
+	setAttributeRef("f_src", mSrcSig->attribute<Real>("freq"));
+
+	mParametersSet = true;
+}
+
+void SP::Ph1::VoltageSource::setParameters(Complex initialPhasor, Real modulationFrequency, Real modulationAmplitude, Real baseFrequency, bool zigzag) {
+    auto srcSigFm = Signal::CosineFMGenerator::make(mName + "_fm");
+	srcSigFm->setParameters(initialPhasor, modulationFrequency, modulationAmplitude, baseFrequency, zigzag);
+	mSrcSig = srcSigFm;
+
+	setAttributeRef("V_ref", mSrcSig->attribute<Complex>("sigOut"));
+	setAttributeRef("f_src", mSrcSig->attribute<Real>("freq"));
 
 	mParametersSet = true;
 }
 
 void SP::Ph1::VoltageSource::initializeFromNodesAndTerminals(Real frequency) {
-	mVoltageRef = attribute<Complex>("V_ref");
-	mSrcFreq = attribute<Real>("f_src");
+	Complex voltageRef = attribute<Complex>("V_ref")->get();
+	
+	if (voltageRef == Complex(0, 0))	
+		voltageRef = initialSingleVoltage(1) - initialSingleVoltage(0);
 
-	// TODO: find more explicit way, e.g. make dependend on mParametersSet or other flag
-	if (mVoltageRef->get() == Complex(0, 0))	
-		mVoltageRef->set(initialSingleVoltage(1) - initialSingleVoltage(0));
+	if (mSrcSig == nullptr) {
+		Signal::SineWaveGenerator srcSigSine(mName);
+		srcSigSine.setParameters(voltageRef); 
+		mSrcSig = std::make_shared<Signal::SineWaveGenerator>(srcSigSine);
+		
+		setAttributeRef("V_ref", mSrcSig->attribute<Complex>("sigOut"));
+		setAttributeRef("f_src", mSrcSig->attribute<Real>("freq"));
+	} else {
+		attribute<Complex>("V_ref")->set(voltageRef);
+	}
 
 	mSLog->info(
 		"\n--- Initialization from node voltages ---"
@@ -48,7 +86,7 @@ void SP::Ph1::VoltageSource::initializeFromNodesAndTerminals(Real frequency) {
 		"\nTerminal 0 voltage: {:s}"
 		"\nTerminal 1 voltage: {:s}"
 		"\n--- Initialization from node voltages ---",
-		Logger::phasorToString(mVoltageRef->get()),
+		Logger::phasorToString(mSrcSig->getSignal()),
 		Logger::phasorToString(initialSingleVoltage(0)),
 		Logger::phasorToString(initialSingleVoltage(1)));
 }
@@ -70,7 +108,7 @@ void SP::Ph1::VoltageSource::mnaInitialize(Real omega, Real timeStep, Attribute<
 	MNAInterface::mnaInitialize(omega, timeStep);
 	updateMatrixNodeIndices();
 
-	mIntfVoltage(0,0) = mVoltageRef->get();
+	mIntfVoltage(0,0) = mSrcSig->getSignal();
 	mMnaTasks.push_back(std::make_shared<MnaPreStep>(*this));
 	mMnaTasks.push_back(std::make_shared<MnaPostStep>(*this, leftVector));
 	mRightVector = Matrix::Zero(leftVector->get().rows(), 1);
@@ -115,13 +153,11 @@ void SP::Ph1::VoltageSource::mnaApplyRightSideVectorStamp(Matrix& rightVector) {
 }
 
 void SP::Ph1::VoltageSource::updateVoltage(Real time) {
-	if (mSrcFreq->get() < 0) {
-		mIntfVoltage(0,0) = mVoltageRef->get();
-	}
-	else {
-		mIntfVoltage(0,0) = Complex(
-			Math::abs(mVoltageRef->get()) * cos(time * 2.*PI*mSrcFreq->get() + Math::phase(mVoltageRef->get())),
-			Math::abs(mVoltageRef->get()) * sin(time * 2.*PI*mSrcFreq->get() + Math::phase(mVoltageRef->get())));
+	if(mSrcSig != nullptr) {
+		mSrcSig->step(time);
+		mIntfVoltage(0,0) = mSrcSig->getSignal();
+	} else {
+		mIntfVoltage(0,0) = attribute<Complex>("V_ref")->get();
 	}
 
 	mSLog->debug("Update Voltage {:s}", Logger::phasorToString(mIntfVoltage(0,0)));
@@ -168,6 +204,6 @@ void SP::Ph1::VoltageSource::daeResidual(double ttime, const double state[], con
 }
 
 Complex SP::Ph1::VoltageSource::daeInitialize() {
-	mIntfVoltage(0, 0) = mVoltageRef->get();
-	return mVoltageRef->get();
+	mIntfVoltage(0, 0) = mSrcSig->getSignal();
+	return mSrcSig->getSignal();
 }
