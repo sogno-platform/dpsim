@@ -81,6 +81,8 @@ PYBIND11_MODULE(dpsimpy, m) {
 		.def("do_init_from_nodes_and_terminals", &DPsim::Simulation::doInitFromNodesAndTerminals)
 		.def("do_system_matrix_recomputation", &DPsim::Simulation::doSystemMatrixRecomputation)
 		.def("do_steady_state_init", &DPsim::Simulation::doSteadyStateInit)
+		.def("do_frequency_parallelization", &DPsim::Simulation::doFrequencyParallelization)
+		.def("set_tearing_components", &DPsim::Simulation::setTearingComponents)
 		.def("add_event", &DPsim::Simulation::addEvent);
 
 	py::class_<DPsim::RealTimeSimulation, DPsim::Simulation>(m, "RealTimeSimulation")
@@ -103,6 +105,7 @@ PYBIND11_MODULE(dpsimpy, m) {
 
 	py::class_<CPS::SystemTopology, std::shared_ptr<CPS::SystemTopology>>(m, "SystemTopology")
         .def(py::init<CPS::Real, CPS::TopologicalNode::List, CPS::IdentifiedObject::List>())
+		.def(py::init<CPS::Real, CPS::Matrix, CPS::TopologicalNode::List, CPS::IdentifiedObject::List>())
 		.def(py::init<CPS::Real>())
 		.def("add", &DPsim::SystemTopology::addComponent)
 		.def("node", py::overload_cast<const CPS::String&>(&DPsim::SystemTopology::node<CPS::TopologicalNode>))
@@ -110,10 +113,12 @@ PYBIND11_MODULE(dpsimpy, m) {
 		.def("connect_component", py::overload_cast<CPS::SimPowerComp<CPS::Real>::Ptr, CPS::SimNode<CPS::Real>::List>(&DPsim::SystemTopology::connectComponentToNodes<CPS::Real>))
 		.def("connect_component", py::overload_cast<CPS::SimPowerComp<CPS::Complex>::Ptr, CPS::SimNode<CPS::Complex>::List>(&DPsim::SystemTopology::connectComponentToNodes<CPS::Complex>))
 		.def("component", &DPsim::SystemTopology::component<CPS::TopologicalPowerComp>)
+		.def("add_tear_component", &DPsim::SystemTopology::addTearComponent)
 		.def("_repr_svg_", &DPsim::SystemTopology::render)
 		.def("render_to_file", &DPsim::SystemTopology::renderToFile)
 		.def_readwrite("nodes", &DPsim::SystemTopology::mNodes)
 		.def_readwrite("components", &DPsim::SystemTopology::mComponents)
+		.def_readonly("tear_components", &DPsim::SystemTopology::mTearComponents)
 		.def("list_idobjects", &DPsim::SystemTopology::listIdObjects);
 
 	py::class_<DPsim::Interface>(m, "Interface");
@@ -124,6 +129,7 @@ PYBIND11_MODULE(dpsimpy, m) {
             CPS::Logger::setLogDir(dir);
         })
 		.def("log_attribute", (void (DPsim::DataLogger::*)(const CPS::String &, const CPS::String &, CPS::IdentifiedObject::Ptr)) &DPsim::DataLogger::addAttribute)
+		.def("log_attribute", (void (DPsim::DataLogger::*)(const CPS::String &, const CPS::String &, CPS::IdentifiedObject::Ptr, CPS::UInt, CPS::UInt)) &DPsim::DataLogger::addAttribute)
 		.def("log_attribute", (void (DPsim::DataLogger::*)(const std::vector<CPS::String> &, const CPS::String &, CPS::IdentifiedObject::Ptr)) &DPsim::DataLogger::addAttribute);
 
 	py::class_<CPS::IdentifiedObject, std::shared_ptr<CPS::IdentifiedObject>>(m, "IdentifiedObject")

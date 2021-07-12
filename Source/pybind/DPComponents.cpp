@@ -122,4 +122,9 @@ void addDPComponents(py::module_ mDP) {
 			"p_init"_a, "q_init"_a, "phi_d_init"_a, "phi_q_init"_a, "gamma_d_init"_a, "gamma_q_init"_a)
 		.def("with_control", &CPS::DP::Ph1::AvVoltageSourceInverterDQ::withControl)
 		.def("connect", &CPS::DP::Ph1::AvVoltageSourceInverterDQ::connect);
+
+	py::class_<CPS::DP::Ph1::Inverter, std::shared_ptr<CPS::DP::Ph1::Inverter>, CPS::SimPowerComp<CPS::Complex>>(mDPPh1, "Inverter", py::multiple_inheritance())
+        .def(py::init<std::string, CPS::Logger::Level>(), "name"_a, "loglevel"_a = CPS::Logger::Level::off)
+		.def("set_parameters", &CPS::DP::Ph1::Inverter::setParameters, "carrier_harms"_a, "modul_harms"_a, "input_voltage"_a, "ratio"_a, "phase"_a)
+		.def("connect", &CPS::DP::Ph1::Inverter::connect);
 }
