@@ -101,6 +101,8 @@ void addDPComponents(py::module_ mDP) {
         .def(py::init<std::string, CPS::Logger::Level>(), "name"_a, "loglevel"_a = CPS::Logger::Level::off)
 		.def("set_standard_parameters_PU", &CPS::DP::Ph1::SynchronGeneratorTrStab::setStandardParametersPU,
 				"nom_power"_a, "nom_volt"_a, "nom_freq"_a, "Xpd"_a, "inertia"_a, "Rs"_a=0, "D"_a=0)
+		.def("set_fundamental_parameters_PU", &CPS::DP::Ph1::SynchronGeneratorTrStab::setFundamentalParametersPU,
+				"nom_power"_a, "nom_volt"_a, "nom_freq"_a, "Ll"_a, "Lmd"_a, "Llfd"_a, "H"_a, "D"_a = 0)
 		.def("set_initial_values", &CPS::DP::Ph1::SynchronGeneratorTrStab::setInitialValues, "elec_power"_a, "mech_power"_a)
 		.def("connect", &CPS::DP::Ph1::SynchronGeneratorTrStab::connect)
 		.def("set_model_flags", &CPS::DP::Ph1::SynchronGeneratorTrStab::setModelFlags, "use_omega_ref"_a, "convert_with_omega_mech"_a)
@@ -127,4 +129,10 @@ void addDPComponents(py::module_ mDP) {
         .def(py::init<std::string, CPS::Logger::Level>(), "name"_a, "loglevel"_a = CPS::Logger::Level::off)
 		.def("set_parameters", &CPS::DP::Ph1::Inverter::setParameters, "carrier_harms"_a, "modul_harms"_a, "input_voltage"_a, "ratio"_a, "phase"_a)
 		.def("connect", &CPS::DP::Ph1::Inverter::connect);
+
+	py::class_<CPS::DP::Ph1::Transformer, std::shared_ptr<CPS::DP::Ph1::Transformer>, CPS::SimPowerComp<CPS::Complex>>(mDPPh1, "Transformer", py::multiple_inheritance())
+        .def(py::init<std::string, CPS::Logger::Level>(), "name"_a, "loglevel"_a = CPS::Logger::Level::off)
+		.def(py::init<std::string, std::string, CPS::Logger::Level, CPS::Bool>(), "uid"_a, "name"_a, "loglevel"_a = CPS::Logger::Level::off, "with_resistive_losses"_a = false)
+		.def("set_parameters", py::overload_cast<CPS::Real, CPS::Real, CPS::Real, CPS::Real, CPS::Real, CPS::Real>(&CPS::DP::Ph1::Transformer::setParameters), "nom_voltage_end_1"_a, "nom_voltage_end_2"_a, "ratio_abs"_a, "ratio_phase"_a, "resistance"_a, "inductance"_a)
+		.def("connect", &CPS::DP::Ph1::Transformer::connect);
 }
