@@ -26,6 +26,7 @@
 #cmakedefine WITH_OPENMP
 #cmakedefine WITH_CUDA
 #cmakedefine WITH_SPARSE
+#cmakedefine WITH_MAGMA
 #cmakedefine CGMES_BUILD
 
 #cmakedefine HAVE_TIMERFD

@@ -18,6 +18,9 @@
 	#include <dpsim/MNASolverGpuDense.h>
 #ifdef WITH_SPARSE
 	#include <dpsim/MNASolverGpuSparse.h>
+#ifdef WITH_MAGMA
+	#include <dpsim/MNASolverGpuMagma.h>
+#endif
 #endif
 #endif
 
@@ -33,6 +36,7 @@ class MnaSolverFactory {
 		EigenSparse,
 		CUDADense,
 		CUDASparse,
+		CUDAMagma,
 	};
 
 	/// MNA implementations supported by this compilation
@@ -47,6 +51,9 @@ class MnaSolverFactory {
 #ifdef WITH_SPARSE
 			/* CUDASparse is not currently wokring correctly, DO NOT USE IT! */
 			//CUDASparse,
+#ifdef WITH_MAGMA
+			CUDAMagma,
+#endif //WITH_MAGMA
 #endif //WITH_SPARSE
 #endif //WITH_CUDA
 		};
@@ -83,6 +90,11 @@ class MnaSolverFactory {
 		case MnaSolverImpl::CUDASparse:
 			log->info("creating CUDASparse solver implementation");
 			return std::make_shared<MnaSolverGpuSparse<VarType>>(name, domain, logLevel);
+#ifdef WITH_MAGMA
+		case MnaSolverImpl::CUDAMagma:
+			log->info("creating CUDAMagma solver implementation");
+			return std::make_shared<MnaSolverGpuMagma<VarType>>(name, domain, logLevel);
+#endif
 #endif
 #endif
 		default:
