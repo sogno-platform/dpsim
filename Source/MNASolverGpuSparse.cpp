@@ -67,7 +67,7 @@ void MnaSolverGpuSparse<VarType>::initialize() {
     int structural_zero;
     int numerical_zero;
 
-	size_t nnz = hMat.nonZeros();
+	size_t nnz = hMat[0].nonZeros();
 
     // step 1: create a descriptor which contains
     // - matrix M is base-1
@@ -105,9 +105,9 @@ void MnaSolverGpuSparse<VarType>::initialize() {
 
 	cso_status = cusolverSpDcsrzfdHost(
 		mCusolverhandle, N,nnz, descr_M,
-		hMat.valuePtr(),
-		hMat.outerIndexPtr(),
-		hMat.innerIndexPtr(),
+		hMat[0].valuePtr(),
+		hMat[0].outerIndexPtr(),
+		hMat[0].innerIndexPtr(),
 		p, &p_nnz);
 
 	if (cso_status != CUSOLVER_STATUS_SUCCESS) {
@@ -119,10 +119,10 @@ void MnaSolverGpuSparse<VarType>::initialize() {
 			Eigen::Map< Eigen::Matrix<int, Eigen::Dynamic, 1> >(p, N, 1)));
 
 	// apply permutation
-	hMat = *mTransp * hMat;
+	hMat[0] = *mTransp * hMat[0];
 
 	// copy P' to GPU
-    mSysMat = std::unique_ptr<cuda::CudaMatrix<double, int>>(new cuda::CudaMatrix<double, int>(hMat, N));
+    mSysMat = std::unique_ptr<cuda::CudaMatrix<double, int>>(new cuda::CudaMatrix<double, int>(hMat[0], N));
 
 	double *d_csrVal = mSysMat->val.data();
 	int *d_csrRowPtr = mSysMat->row.data();
