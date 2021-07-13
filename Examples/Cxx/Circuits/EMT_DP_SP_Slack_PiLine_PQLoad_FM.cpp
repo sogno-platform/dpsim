@@ -24,7 +24,7 @@ Real lineCapacitance = 0.1e-6;
 
 // Simulation parameters
 Real timeStep = 0.001;
-Real finalTime = 10.0;
+Real finalTime = 1.0;
 
 void powerFlow(SystemTopology& systemPF) {
 	// ----- POWERFLOW FOR INITIALIZATION -----
