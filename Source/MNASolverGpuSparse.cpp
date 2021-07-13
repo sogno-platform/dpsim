@@ -280,7 +280,7 @@ void MnaSolverGpuSparse<VarType>::solve(Real time, Int timeStepCount) {
 	}
 
 	//Apply inverse Permutation L = P' * L'
-	this->mLeftSideVector = mTransp->inverse() * this->mLeftSideVector;
+	//this->mLeftSideVector = mTransp->inverse() * this->mLeftSideVector;
 
 	// TODO split into separate task? (dependent on x, updating all v attributes)
 	for (UInt nodeIdx = 0; nodeIdx < this->mNumNetNodes; ++nodeIdx)
