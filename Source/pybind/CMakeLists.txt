@@ -2,6 +2,7 @@ set(DPSIMPY_SOURCES
 	DPComponents.cpp
 	EMTComponents.cpp
 	SPComponents.cpp
+	SignalComponents.cpp
 	main.cpp
 	Utils.cpp
 )

@@ -26,6 +26,7 @@
 #include <DPComponents.h>
 #include <EMTComponents.h>
 #include <SPComponents.h>
+#include <SignalComponents.h>
 #include <Utils.h>
 
 namespace py = pybind11;
@@ -108,6 +109,7 @@ PYBIND11_MODULE(dpsimpy, m) {
 		.def(py::init<CPS::Real, CPS::Matrix, CPS::TopologicalNode::List, CPS::IdentifiedObject::List>())
 		.def(py::init<CPS::Real>())
 		.def("add", &DPsim::SystemTopology::addComponent)
+		.def("add", &DPsim::SystemTopology::addComponents)
 		.def("node", py::overload_cast<const CPS::String&>(&DPsim::SystemTopology::node<CPS::TopologicalNode>))
 		.def("node", py::overload_cast<CPS::UInt>(&DPsim::SystemTopology::node<CPS::TopologicalNode>))
 		.def("connect_component", py::overload_cast<CPS::SimPowerComp<CPS::Real>::Ptr, CPS::SimNode<CPS::Real>::List>(&DPsim::SystemTopology::connectComponentToNodes<CPS::Real>))
@@ -229,6 +231,9 @@ PYBIND11_MODULE(dpsimpy, m) {
 	py::module mSP = m.def_submodule("sp", "static phasor models");
 	mSP.attr("SimNode") = mDP.attr("SimNode");
 	addSPComponents(mSP);
+
+	py::module mSignal = m.def_submodule("signal", "signal models");
+	addSignalComponents(mSignal);
 
 
 #ifdef VERSION_INFO
