@@ -27,3 +27,5 @@ namespace py = pybind11;
 using namespace pybind11::literals;
 
 void addDPComponents(py::module_ mDP);
+void addDPPh1Components(py::module_ mDPPh1);
+void addDPPh3Components(py::module_ mDPPh3);
