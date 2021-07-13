@@ -5,6 +5,8 @@
 using namespace DPsim;
 using namespace CPS;
 
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wdeprecated-declarations"
 namespace DPsim {
 
 template <typename VarType>
@@ -293,3 +295,4 @@ void MnaSolverGpuSparse<VarType>::solve(Real time, Int timeStepCount) {
 }
 template class DPsim::MnaSolverGpuSparse<Real>;
 template class DPsim::MnaSolverGpuSparse<Complex>;
+#pragma GCC diagnostic pop
