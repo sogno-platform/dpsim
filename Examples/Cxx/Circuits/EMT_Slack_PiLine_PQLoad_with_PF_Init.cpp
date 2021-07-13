@@ -25,7 +25,7 @@ int main(int argc, char* argv[]) {
 	
 	// Simulation parameters
 	Real timeStep = 0.001;
-	Real finalTime = 10.0;
+	Real finalTime = 1.0;
 	CommandLineArgs args(argc, argv);
 	if (argc > 1) {
 		timeStep = args.timeStep;

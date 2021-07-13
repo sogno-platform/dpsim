@@ -23,7 +23,7 @@ int main(int argc, char* argv[]) {
 	Real lineInductance = 0.1;
 	Real lineCapacitance = 0.1e-6;
 	Real timeStep = 0.001;
-	Real finalTime = 10.0;
+	Real finalTime = 1.0;
 	
 	CommandLineArgs args(argc, argv);
 	if (argc > 1) {
