@@ -12,6 +12,7 @@ namespace DPsim {
     class MnaSolverGpuMagma : public MnaSolverEigenSparse<VarType>{
 	protected:
 
+		std::unique_ptr<Eigen::PermutationMatrix<Eigen::Dynamic>> mTransp;
 		// #### Attributes required for GPU ####
 		/// Solver-Handle
 		magma_dopts mMagmaOpts;

@@ -2,6 +2,7 @@
 #include <dpsim/MNASolverGpuMagma.h>
 #include <dpsim/SequentialScheduler.h>
 #include <Eigen/Eigen>
+#include <cusolverSp.h>
 
 using namespace DPsim;
 using namespace CPS;
@@ -38,8 +39,53 @@ template <typename VarType>
 void MnaSolverGpuMagma<VarType>::initialize() {
     MnaSolver<VarType>::initialize();
 
-	auto hMat = this->mSwitchedMatrices[std::bitset<SWITCH_NUM>(0)];
     int size = this->mRightSideVector.rows();
+	int p_nnz = 0;
+	int p[size];
+	auto hMat = this->mSwitchedMatrices[std::bitset<SWITCH_NUM>(0)];
+	size_t nnz = hMat[0].nonZeros();
+	cusparseMatDescr_t descr_M = 0;
+
+	cusolverSpHandle_t mCusolverhandle;
+	if (cusolverSpCreate(&mCusolverhandle) != CUSOLVER_STATUS_SUCCESS) {
+		mSLog->error("cusolverSpCreate returend an error");
+		return;
+	}
+    if(cusparseCreateMatDescr(&descr_M) != CUSPARSE_STATUS_SUCCESS) {
+		mSLog->error("cusolver returend an error");
+		return;
+	}
+
+	if(cusparseSetMatIndexBase(descr_M, CUSPARSE_INDEX_BASE_ZERO) != CUSPARSE_STATUS_SUCCESS) {
+		mSLog->error("cusolver returend an error");
+		return;
+	}
+    if(cusparseSetMatType(descr_M, CUSPARSE_MATRIX_TYPE_GENERAL) != CUSPARSE_STATUS_SUCCESS) {
+		mSLog->error("cusolver returend an error");
+		return;
+	}
+
+	if (cusolverSpDcsrzfdHost(
+		mCusolverhandle, size, nnz, descr_M,
+		hMat[0].valuePtr(),
+		hMat[0].outerIndexPtr(),
+		hMat[0].innerIndexPtr(),
+		p, &p_nnz) != CUSOLVER_STATUS_SUCCESS) {
+		mSLog->error("cusolverSpDcsrzfdHost returend an error");
+		return;
+	}
+
+	// create Eigen::PermutationMatrix from the p
+	mTransp = std::unique_ptr<Eigen::PermutationMatrix<Eigen::Dynamic> >(
+			new Eigen::PermutationMatrix<Eigen::Dynamic>(
+			Eigen::Map< Eigen::Matrix<int, Eigen::Dynamic, 1> >(p, size, 1)));
+
+	// apply permutation
+	//std::cout << "Before System Matrix:" << std::endl << hMat[0] << std::endl;
+	hMat[0] = *mTransp * hMat[0];
+	//std::cout << "permutation:" << std::endl << mTransp->toDenseMatrix() << std::endl;
+	//std::cout << "inverse permutation:" << std::endl << mTransp->inverse().toDenseMatrix() << std::endl;
+	//std::cout << "System Matrix:" << std::endl << hMat[0] << std::endl;
 	magma_dcsrset(size, size,
 				  hMat[0].outerIndexPtr(),
 				  hMat[0].innerIndexPtr(),
@@ -60,8 +106,13 @@ void MnaSolverGpuMagma<VarType>::initialize() {
 						   &mMagmaOpts.precond_par,
 						   mMagmaQueue);
 
+	magma_dvinit(&mDevRhsVec, Magma_DEV, size, 1, 0.0, mMagmaQueue);
 	magma_dmtransfer(mHostSysMat, &mDevSysMat, Magma_CPU, Magma_DEV, mMagmaQueue);
-    magma_d_precondsetup(mDevSysMat, mDevSysMat, &mMagmaOpts.solver_par, &mMagmaOpts.precond_par, mMagmaQueue);
+    magma_d_precondsetup(mDevSysMat, mDevRhsVec, &mMagmaOpts.solver_par, &mMagmaOpts.precond_par, mMagmaQueue);
+
+	cusolverSpDestroy(mCusolverhandle);
+	cusparseDestroyMatDescr(descr_M);
+
 }
 
 template <typename VarType>
@@ -103,6 +154,7 @@ void MnaSolverGpuMagma<VarType>::solve(Real time, Int timeStepCount) {
 	if (!this->mIsInInitialization)
 		this->updateSwitchStatus();
 
+	this->mRightSideVector = *mTransp * this->mRightSideVector;
     //Copy right vector to device
 	magma_dvset(size, 1, this->mRightSideVector.data(), &mHostRhsVec, mMagmaQueue);
 	magma_dmtransfer(mHostRhsVec, &mDevRhsVec, Magma_CPU, Magma_DEV, mMagmaQueue);
@@ -117,6 +169,9 @@ void MnaSolverGpuMagma<VarType>::solve(Real time, Int timeStepCount) {
 
     mSLog->debug("result has size ({},{})", size, one);
 
+	//Apply inverse Permutation: TODO: This seems to be wrong, but why?
+	//this->mLeftSideVector = mTransp->inverse() * this->mLeftSideVector;
+
 	// TODO split into separate task? (dependent on x, updating all v attributes)
 	for (UInt nodeIdx = 0; nodeIdx < this->mNumNetNodes; ++nodeIdx)
 		this->mNodes[nodeIdx]->mnaUpdateVoltage(this->mLeftSideVector);
@@ -124,6 +179,7 @@ void MnaSolverGpuMagma<VarType>::solve(Real time, Int timeStepCount) {
 
 	// Components' states will be updated by the post-step tasks
 }
+
 
 }
 template class DPsim::MnaSolverGpuMagma<Real>;
