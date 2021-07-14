@@ -16,7 +16,7 @@ int main(int argc, char* argv[]) {
 
 	CIM::Examples::SGIB::ScenarioConfig scenario;
 	
-	Real finalTime = 2;
+	Real finalTime = 1;
 	Real timeStep = 0.0001;
 	String simName = "SP_Slack_PiLine_VSI_with_PF_Init";
 	Bool pvWithControl = true;
