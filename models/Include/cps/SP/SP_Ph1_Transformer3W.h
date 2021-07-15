@@ -108,9 +108,17 @@ namespace Ph1 {
 		Real mReactancePerUnit3;
 
         /// inductance
-        Real mInductancePerUnit;
+        Real mInductancePerUnit1;
+		/// inductance
+        Real mInductancePerUnit2;
+		/// inductance
+        Real mInductancePerUnit3;
 		/// leakage impedance
-		Complex mLeakagePerUnit;
+		Complex mLeakagePerUnit1;
+		/// leakage impedance
+		Complex mLeakagePerUnit2;
+		/// leakage impedance
+		Complex mLeakagePerUnit3;
 		/// magnetizing impedance
 		Complex mMagnetizingPerUnit;
 

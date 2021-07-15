@@ -14,9 +14,9 @@ using namespace CPS;
 SP::Ph1::Transformer3W::Transformer3W(String uid, String name, Logger::Level logLevel, Bool withResistiveLosses)
 	: SimPowerComp<Complex>(uid, name, logLevel) {
 	if (withResistiveLosses)
-		setVirtualNodeNumber(4);
+		setVirtualNodeNumber(9);
 	else
-		setVirtualNodeNumber(3);
+		setVirtualNodeNumber(6);
 
 	mSLog->info("Create {} {}", this->type(), name);
 	mIntfVoltage = MatrixComp::Zero(3, 1);
@@ -174,7 +174,9 @@ void SP::Ph1::Transformer3W::initializeFromNodesAndTerminals(Real frequency) {
 	}
 	
 	// Set initial voltage of virtual node in between
-	mVirtualNodes[0]->setInitialVoltage(initialSingleVoltage(1) * mRatio1);
+	mVirtualNodes[0]->setInitialVoltage(initialSingleVoltage(0) * mRatio1);
+	mVirtualNodes[3]->setInitialVoltage(initialSingleVoltage(1) * mRatio2);
+	mVirtualNodes[6]->setInitialVoltage(initialSingleVoltage(2) * mRatio3);
 
 	// Static calculations from load flow data
 	Complex impedance1 = { mResistance1, mReactance1 };
@@ -184,10 +186,10 @@ void SP::Ph1::Transformer3W::initializeFromNodesAndTerminals(Real frequency) {
 	mIntfVoltage(0, 0) = mVirtualNodes[0]->initialSingleVoltage() - initialSingleVoltage(1);
 	mIntfCurrent(0, 0) = mIntfVoltage(0, 0) / impedance1;
 
-	mIntfVoltage(1, 0) = mVirtualNodes[0]->initialSingleVoltage() - initialSingleVoltage(2);
+	mIntfVoltage(1, 0) = mVirtualNodes[1]->initialSingleVoltage() - initialSingleVoltage(2);
 	mIntfCurrent(1, 0) = mIntfVoltage(1, 0) / impedance2;
 
-	mIntfVoltage(2, 0) = mVirtualNodes[0]->initialSingleVoltage() - initialSingleVoltage(3);
+	mIntfVoltage(2, 0) = mVirtualNodes[2]->initialSingleVoltage() - initialSingleVoltage(3);
 	mIntfCurrent(2, 0) = mIntfVoltage(2, 0) / impedance3;
 
 	// Create series sub components
@@ -199,26 +201,49 @@ void SP::Ph1::Transformer3W::initializeFromNodesAndTerminals(Real frequency) {
 	mSubInductor3->setParameters(mInductance3);
 
 
-	if (mNumVirtualNodes == 4) {
-		mVirtualNodes[3]->setInitialVoltage(initialSingleVoltage(0));
+	if (mNumVirtualNodes == 9) {
+		mVirtualNodes[2]->setInitialVoltage(initialSingleVoltage(0));
 		mSubResistor1 = std::make_shared<SP::Ph1::Resistor>(mUID + "_res1", mName + "_res1", Logger::Level::off);
 		mSubResistor1->setParameters(mResistance1);
 		mSubResistor1->connect({ node(0), mVirtualNodes[2] });
 		mSubResistor1->initialize(mFrequencies);
 		mSubResistor1->initializeFromNodesAndTerminals(frequency);
 		mSubInductor1->connect({ mVirtualNodes[2], mVirtualNodes[0] });
+
+		mVirtualNodes[5]->setInitialVoltage(initialSingleVoltage(1));
+		mSubResistor2 = std::make_shared<SP::Ph1::Resistor>(mUID + "_res2", mName + "_res2", Logger::Level::off);
+		mSubResistor2->setParameters(mResistance1);
+		mSubResistor2->connect({ node(1), mVirtualNodes[5] });
+		mSubResistor2->initialize(mFrequencies);
+		mSubResistor2->initializeFromNodesAndTerminals(frequency);
+		mSubInductor2->connect({ mVirtualNodes[5], mVirtualNodes[3] });
+
+		mVirtualNodes[8]->setInitialVoltage(initialSingleVoltage(2));
+		mSubResistor2 = std::make_shared<SP::Ph1::Resistor>(mUID + "_res3", mName + "_res3", Logger::Level::off);
+		mSubResistor2->setParameters(mResistance1);
+		mSubResistor2->connect({ node(2), mVirtualNodes[6] });
+		mSubResistor2->initialize(mFrequencies);
+		mSubResistor2->initializeFromNodesAndTerminals(frequency);
+		mSubInductor2->connect({ mVirtualNodes[8], mVirtualNodes[6] });
+
 	} else {
 		mSubInductor1->connect({ node(0), mVirtualNodes[0] });
+		mSubInductor1->connect({ node(1), mVirtualNodes[3] });
+		mSubInductor1->connect({ node(2), mVirtualNodes[6] });
 	}
-	mSubInductor->initialize(mFrequencies);
-	mSubInductor->initializeFromNodesAndTerminals(frequency);
+	mSubInductor1->initialize(mFrequencies);
+	mSubInductor1->initializeFromNodesAndTerminals(frequency);
+	mSubInductor2->initialize(mFrequencies);
+	mSubInductor2->initializeFromNodesAndTerminals(frequency);
+	mSubInductor3->initialize(mFrequencies);
+	mSubInductor3->initializeFromNodesAndTerminals(frequency);
 
 	// Create parallel sub components
 	// A snubber conductance is added on the low voltage side (resistance scaled with lower voltage side)
 	mSnubberResistance = mNominalVoltageEnd1 > mNominalVoltageEnd2 ? std::abs(mNominalVoltageEnd2)*1e6 : std::abs(mNominalVoltageEnd1)*1e6;
 	mSubSnubResistor = std::make_shared<SP::Ph1::Resistor>(mUID + "_snub_res", mName + "_snub_res", Logger::Level::off);
 	mSubSnubResistor->setParameters(mSnubberResistance);
-	mSubSnubResistor->connect({ node(1), SP::SimNode::GND });
+	mSubSnubResistor->connect({ node(2), SP::SimNode::GND });
 	mSubSnubResistor->initialize(mFrequencies);
 	mSubSnubResistor->initializeFromNodesAndTerminals(frequency);
 	mSLog->info("Snubber Resistance={} [Ohm] (connected to LV side)", mSnubberResistance);
@@ -233,21 +258,28 @@ void SP::Ph1::Transformer3W::initializeFromNodesAndTerminals(Real frequency) {
 		"\n--- Initialization from powerflow finished ---",
 		Logger::phasorToString(mIntfVoltage(0, 0)),
 		Logger::phasorToString(mIntfCurrent(0, 0)),
+		Logger::phasorToString(mIntfVoltage(1, 0)),
+		Logger::phasorToString(mIntfCurrent(1, 0)),
+		Logger::phasorToString(mIntfVoltage(2, 0)),
+		Logger::phasorToString(mIntfCurrent(2, 0)),
 		Logger::phasorToString(initialSingleVoltage(0)),
 		Logger::phasorToString(initialSingleVoltage(1)),
-		Logger::phasorToString(mVirtualNodes[0]->initialSingleVoltage()));
+		Logger::phasorToString(initialSingleVoltage(2)),
+		Logger::phasorToString(mVirtualNodes[0]->initialSingleVoltage()),
+		Logger::phasorToString(mVirtualNodes[1]->initialSingleVoltage()),
+		Logger::phasorToString(mVirtualNodes[2]->initialSingleVoltage()));
 }
 
 
 // #### Powerflow section ####
 
-void SP::Ph1::Transformer::setBaseVoltage(Real baseVoltage) {
+void SP::Ph1::Transformer3W::setBaseVoltage(Real baseVoltage) {
 	// Note: to be consistent set base voltage to higher voltage (and impedance values must be referred to high voltage side)
 	// TODO: use attribute setter for setting base voltage
     mBaseVoltage = baseVoltage;
 }
 
-void SP::Ph1::Transformer::calculatePerUnitParameters(Real baseApparentPower, Real baseOmega) {
+void SP::Ph1::Transformer3W::calculatePerUnitParameters(Real baseApparentPower, Real baseOmega) {
 	mSLog->info("#### Calculate Per Unit Parameters for {}", mName);
     mBaseApparentPower = baseApparentPower;
 	mBaseOmega = baseOmega;
@@ -258,15 +290,27 @@ void SP::Ph1::Transformer::calculatePerUnitParameters(Real baseApparentPower, Re
 	mBaseCurrent = baseApparentPower / (mBaseVoltage*sqrt(3)); // I_base=(S_threephase/3)/(V_line_to_line/sqrt(3))
 	mSLog->info("Base Voltage={} [V]  Base Impedance={} [Ohm]", mBaseVoltage, mBaseImpedance);
 
-	mResistancePerUnit = mResistance / mBaseImpedance;
-	mReactancePerUnit = mReactance / mBaseImpedance;
-    mSLog->info("Resistance={} [pu]  Reactance={} [pu]", mResistancePerUnit, mReactancePerUnit);
+	mResistancePerUnit1 = mResistance1 / mBaseImpedance;
+	mReactancePerUnit1 = mReactance1 / mBaseImpedance;
+    mSLog->info("Resistance={} [pu]  Reactance={} [pu]", mResistancePerUnit1, mReactancePerUnit1);
+
+	mResistancePerUnit2 = mResistance2 / mBaseImpedance;
+	mReactancePerUnit2 = mReactance2 / mBaseImpedance;
+    mSLog->info("Resistance={} [pu]  Reactance={} [pu]", mResistancePerUnit2, mReactancePerUnit2);
+
+	mResistancePerUnit3 = mResistance3 / mBaseImpedance;
+	mReactancePerUnit3 = mReactance3 / mBaseImpedance;
+    mSLog->info("Resistance={} [pu]  Reactance={} [pu]", mResistancePerUnit3, mReactancePerUnit3);
 
 	mBaseInductance = mBaseImpedance / mBaseOmega;
-	mInductancePerUnit = mInductance / mBaseInductance;
+	mInductancePerUnit1 = mInductance1 / mBaseInductance;
+	mInductancePerUnit2 = mInductance2 / mBaseInductance;
+	mInductancePerUnit3 = mInductance3 / mBaseInductance;
 	mMagnetizing = mMagnetizingReactance / mBaseImpedance;
 	// omega per unit=1, hence 1.0*mInductancePerUnit.
-	mLeakagePerUnit = Complex(mResistancePerUnit,1.*mInductancePerUnit);
+	mLeakagePerUnit1 = Complex(mResistancePerUnit1,1.*mInductancePerUnit1);
+	mLeakagePerUnit2 = Complex(mResistancePerUnit2,1.*mInductancePerUnit2);
+	mLeakagePerUnit3 = Complex(mResistancePerUnit3,1.*mInductancePerUnit3);
 	mMagnetizingPerUnit = mMagnetizing / mBaseImpedance;
 
     mRatioAbsPerUnit = mRatioAbs / mNominalVoltageEnd1 * mNominalVoltageEnd2;
@@ -277,7 +321,7 @@ void SP::Ph1::Transformer::calculatePerUnitParameters(Real baseApparentPower, Re
 		Real snubberResistance = 1e3;
 		mSubSnubResistor = std::make_shared<SP::Ph1::Resistor>(mUID + "_snub_res", mName + "_snub_res", mLogLevel);
 		mSubSnubResistor->setParameters(snubberResistance);
-		mSubSnubResistor->connect({ node(1), SP::SimNode::GND });
+		mSubSnubResistor->connect({ node(2), SP::SimNode::GND });
 		mSubSnubResistor->initializeFromNodesAndTerminals(mBaseOmega);
 	}
 	if (mSubSnubResistor) {
@@ -285,7 +329,9 @@ void SP::Ph1::Transformer::calculatePerUnitParameters(Real baseApparentPower, Re
 		mSubSnubResistor->calculatePerUnitParameters(baseApparentPower);
 	}
 
-	mSLog->info("Leakage Impedance Per Unit={} [Ohm] ", mLeakagePerUnit);
+	mSLog->info("Leakage Impedance Per Unit={} [Ohm] ", mLeakagePerUnit1);
+	mSLog->info("Leakage Impedance Per Unit={} [Ohm] ", mLeakagePerUnit2);
+	mSLog->info("Leakage Impedance Per Unit={} [Ohm] ", mLeakagePerUnit3);
 }
 
 void SP::Ph1::Transformer::pfApplyAdmittanceMatrixStamp(SparseMatrixCompRow & Y) {
