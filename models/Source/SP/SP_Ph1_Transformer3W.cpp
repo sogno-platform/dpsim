@@ -308,13 +308,14 @@ void SP::Ph1::Transformer3W::calculatePerUnitParameters(Real baseApparentPower, 
 	mInductancePerUnit3 = mInductance3 / mBaseInductance;
 	mMagnetizing = mMagnetizingReactance / mBaseImpedance;
 	// omega per unit=1, hence 1.0*mInductancePerUnit.
-	mLeakagePerUnit1 = Complex(mResistancePerUnit1,1.*mInductancePerUnit1);
-	mLeakagePerUnit2 = Complex(mResistancePerUnit2,1.*mInductancePerUnit2);
-	mLeakagePerUnit3 = Complex(mResistancePerUnit3,1.*mInductancePerUnit3);
+	mLeakagePerUnit1 = Complex(mResistancePerUnit1, 1.*mInductancePerUnit1);
+	mLeakagePerUnit2 = Complex(mResistancePerUnit2, 1.*mInductancePerUnit2);
+	mLeakagePerUnit3 = Complex(mResistancePerUnit3, 1.*mInductancePerUnit3);
 	mMagnetizingPerUnit = mMagnetizing / mBaseImpedance;
 
-    mRatioAbsPerUnit = mRatioAbs / mNominalVoltageEnd1 * mNominalVoltageEnd2;
-    mSLog->info("Tap Ratio={} [pu]", mRatioAbsPerUnit);
+	// ?? at 3-winding
+	//mRatioAbsPerUnit = mRatioAbs / mNominalVoltageEnd1 * mNominalVoltageEnd2;
+    //mSLog->info("Tap Ratio={} [pu]", mRatioAbsPerUnit);
 
 	// set snubber resistance
 	if (mBehaviour == Behaviour::Initialization) {
@@ -334,24 +335,39 @@ void SP::Ph1::Transformer3W::calculatePerUnitParameters(Real baseApparentPower, 
 	mSLog->info("Leakage Impedance Per Unit={} [Ohm] ", mLeakagePerUnit3);
 }
 
-void SP::Ph1::Transformer::pfApplyAdmittanceMatrixStamp(SparseMatrixCompRow & Y) {
+void SP::Ph1::Transformer3W::pfApplyAdmittanceMatrixStamp(SparseMatrixCompRow & Y) {
 	// calculate matrix stamp
-	mY_element = MatrixComp(2, 2);
-	Complex y = Complex(1, 0) / mLeakagePerUnit;
-	Complex ys = Complex(1, 0) / mMagnetizingPerUnit;
-	mY_element(0, 0) = (y + ys);
-	mY_element(0, 1) = -y*mRatioAbsPerUnit;
-	mY_element(1, 0) = -y*mRatioAbsPerUnit;
-	mY_element(1, 1) = (y + ys)*std::pow(mRatioAbsPerUnit, 2);
+	mY_element = MatrixComp(3, 3);
+	Complex a, b, c, d;
+
+	a = mLeakagePerUnit3 * mLeakagePerUnit2 * mRatioAbs1;
+	b = mLeakagePerUnit1 * mLeakagePerUnit2 * mRatioAbs3;
+	c = mLeakagePerUnit1 * mLeakagePerUnit3 * mRatioAbs2;
+	
+	if ((std::abs(mMagnetizingPerUnit) > 1e9)) {
+		d = a * mRatioAbs1 + b * mRatioAbs2 + c * mRatioAbs3;
+	}
+	else {
+		d = a * mRatioAbs1 + b * mRatioAbs2 + c * mRatioAbs3 + 
+				(mLeakagePerUnit3 * mLeakagePerUnit2 * mLeakagePerUnit3 / mMagnetizingPerUnit);
+	}
+
+	mY_element(0, 0) = (d - mRatioAbs1 * a) / (mLeakagePerUnit1 * d);
+	mY_element(0, 1) = - mRatioAbs1 * c / (mLeakagePerUnit1 * d);
+	mY_element(0, 2) = - mRatioAbs1 * b / (mLeakagePerUnit1 * d);
+	mY_element(1, 0) = - mRatioAbs2 * a / (mLeakagePerUnit2 * d);
+	mY_element(1, 1) = (d - mRatioAbs2 * c) / (mLeakagePerUnit2 * d);
+	mY_element(1, 2) = - mRatioAbs2 * b / (mLeakagePerUnit2 * d);
+	mY_element(2, 0) = - mRatioAbs3 * a / (mLeakagePerUnit3 * d);
+	mY_element(2, 1) = - mRatioAbs3 * c / (mLeakagePerUnit3 * d);
+	mY_element(2, 2) = (d - mRatioAbs3 * b) / (mLeakagePerUnit3 * d);
 
 	//check for inf or nan
-	for (int i = 0; i < 2; i++)
-		for (int j = 0; j < 2; j++)
+	for (int i = 0; i < 3; i++)
+		for (int j = 0; j < 3; j++)
 			if (std::isinf(mY_element.coeff(i, j).real()) || std::isinf(mY_element.coeff(i, j).imag())) {
 				std::cout << mY_element << std::endl;
 				std::cout << "Zm:" << mMagnetizing << std::endl;
-				std::cout << "Zl:" << mLeakage << std::endl;
-				std::cout << "tap:" << mRatioAbsPerUnit << std::endl;
 				std::stringstream ss;
 				ss << "Transformer>>" << this->name() << ": infinite or nan values in the element Y at: " << i << "," << j;
 				throw std::invalid_argument(ss.str());
@@ -360,8 +376,13 @@ void SP::Ph1::Transformer::pfApplyAdmittanceMatrixStamp(SparseMatrixCompRow & Y)
 	//set the circuit matrix values
 	Y.coeffRef(this->matrixNodeIndex(0), this->matrixNodeIndex(0)) += mY_element.coeff(0, 0);
 	Y.coeffRef(this->matrixNodeIndex(0), this->matrixNodeIndex(1)) += mY_element.coeff(0, 1);
-	Y.coeffRef(this->matrixNodeIndex(1), this->matrixNodeIndex(1)) += mY_element.coeff(1, 1);
+	Y.coeffRef(this->matrixNodeIndex(0), this->matrixNodeIndex(2)) += mY_element.coeff(0, 2);
 	Y.coeffRef(this->matrixNodeIndex(1), this->matrixNodeIndex(0)) += mY_element.coeff(1, 0);
+	Y.coeffRef(this->matrixNodeIndex(1), this->matrixNodeIndex(1)) += mY_element.coeff(1, 1);
+	Y.coeffRef(this->matrixNodeIndex(1), this->matrixNodeIndex(2)) += mY_element.coeff(1, 2);
+	Y.coeffRef(this->matrixNodeIndex(2), this->matrixNodeIndex(0)) += mY_element.coeff(2, 0);
+	Y.coeffRef(this->matrixNodeIndex(2), this->matrixNodeIndex(1)) += mY_element.coeff(2, 1);
+	Y.coeffRef(this->matrixNodeIndex(2), this->matrixNodeIndex(2)) += mY_element.coeff(2, 2);
 
 	mSLog->info("#### Y matrix stamping: {}", mY_element);
 }

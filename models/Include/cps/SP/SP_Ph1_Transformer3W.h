@@ -75,7 +75,9 @@ namespace Ph1 {
 		/// Magnetizing reactance [Ohm]
 		Real mMagnetizingReactance=1e9;
 		/// Leakage
-		Complex mLeakage;
+		Complex mLeakage1;
+		Complex mLeakage2;
+		Complex mLeakage3;
 		/// Magnetizing impedance
 		Complex mMagnetizing;
 
@@ -121,11 +123,6 @@ namespace Ph1 {
 		Complex mLeakagePerUnit3;
 		/// magnetizing impedance
 		Complex mMagnetizingPerUnit;
-
-        /// transformer ratios
-        Real mRatioAbsPerUnit1;
-        Real mRatioAbsPerUnit2;
-        Real mRatioAbsPerUnit3;
 
 		// #### Admittance matrix stamp ####
 		MatrixComp mY_element;
@@ -204,7 +201,7 @@ namespace Ph1 {
 		void mnaAddPostStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes, Attribute<Matrix>::Ptr &leftVector);
 		class MnaPostStep : public Task {
 		public:
-			MnaPostStep(Transforme3W& transformer, Attribute<Matrix>::Ptr leftVector) :
+			MnaPostStep(Transformer3W& transformer, Attribute<Matrix>::Ptr leftVector) :
 				Task(transformer.mName + ".MnaPostStep"), mTransformer(transformer), mLeftVector(leftVector) {
 					mTransformer.mnaAddPostStepDependencies(mPrevStepDependencies, mAttributeDependencies, mModifiedAttributes, mLeftVector);
 			}
