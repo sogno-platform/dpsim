@@ -186,10 +186,10 @@ void SP::Ph1::Transformer3W::initializeFromNodesAndTerminals(Real frequency) {
 	mIntfVoltage(0, 0) = mVirtualNodes[0]->initialSingleVoltage() - initialSingleVoltage(1);
 	mIntfCurrent(0, 0) = mIntfVoltage(0, 0) / impedance1;
 
-	mIntfVoltage(1, 0) = mVirtualNodes[1]->initialSingleVoltage() - initialSingleVoltage(2);
+	mIntfVoltage(1, 0) = mVirtualNodes[3]->initialSingleVoltage() - initialSingleVoltage(2);
 	mIntfCurrent(1, 0) = mIntfVoltage(1, 0) / impedance2;
 
-	mIntfVoltage(2, 0) = mVirtualNodes[2]->initialSingleVoltage() - initialSingleVoltage(3);
+	mIntfVoltage(2, 0) = mVirtualNodes[6]->initialSingleVoltage() - initialSingleVoltage(3);
 	mIntfCurrent(2, 0) = mIntfVoltage(2, 0) / impedance3;
 
 	// Create series sub components
@@ -313,10 +313,6 @@ void SP::Ph1::Transformer3W::calculatePerUnitParameters(Real baseApparentPower, 
 	mLeakagePerUnit3 = Complex(mResistancePerUnit3, 1.*mInductancePerUnit3);
 	mMagnetizingPerUnit = mMagnetizing / mBaseImpedance;
 
-	// ?? at 3-winding
-	//mRatioAbsPerUnit = mRatioAbs / mNominalVoltageEnd1 * mNominalVoltageEnd2;
-    //mSLog->info("Tap Ratio={} [pu]", mRatioAbsPerUnit);
-
 	// set snubber resistance
 	if (mBehaviour == Behaviour::Initialization) {
 		Real snubberResistance = 1e3;
@@ -388,26 +384,26 @@ void SP::Ph1::Transformer3W::pfApplyAdmittanceMatrixStamp(SparseMatrixCompRow & 
 }
 
 
-void SP::Ph1::Transformer::updateBranchFlow(VectorComp& current, VectorComp& powerflow) {
+void SP::Ph1::Transformer3W::updateBranchFlow(VectorComp& current, VectorComp& powerflow) {
 	mCurrent = current * mBaseCurrent;
 	mActivePowerBranch = powerflow.real()*mBaseApparentPower;
 	mReactivePowerBranch = powerflow.imag()*mBaseApparentPower;
 }
 
 
-void SP::Ph1::Transformer::storeNodalInjection(Complex powerInjection) {
+void SP::Ph1::Transformer3W::storeNodalInjection(Complex powerInjection) {
 	mActivePowerInjection = std::real(powerInjection)*mBaseApparentPower;
 	mReactivePowerInjection = std::imag(powerInjection)*mBaseApparentPower;
 	mStoreNodalPowerInjection = true;
 }
 
-MatrixComp SP::Ph1::Transformer::Y_element() {
+MatrixComp SP::Ph1::Transformer3W::Y_element() {
 	return mY_element;
 }
 
 // #### MNA Section ####
 
-void SP::Ph1::Transformer::mnaInitialize(Real omega, Real timeStep, Attribute<Matrix>::Ptr leftVector) {
+void SP::Ph1::Transformer3W::mnaInitialize(Real omega, Real timeStep, Attribute<Matrix>::Ptr leftVector) {
 	MNAInterface::mnaInitialize(omega, timeStep);
 	updateMatrixNodeIndices();
 
@@ -433,8 +429,7 @@ void SP::Ph1::Transformer::mnaInitialize(Real omega, Real timeStep, Attribute<Ma
 		mTerminals[1]->node()->name(), mTerminals[1]->node()->matrixNodeIndex());
 }
 
-
-void SP::Ph1::Transformer::mnaApplySystemMatrixStamp(Matrix& systemMatrix) {
+void SP::Ph1::Transformer3W::mnaApplySystemMatrixStamp(Matrix& systemMatrix) {
 	// Ideal transformer equations
 	if (terminalNotGrounded(0)) {
 		Math::setMatrixElement(systemMatrix, mVirtualNodes[0]->matrixNodeIndex(), mVirtualNodes[1]->matrixNodeIndex(), Complex(-1.0, 0));
@@ -465,10 +460,16 @@ void SP::Ph1::Transformer::mnaApplySystemMatrixStamp(Matrix& systemMatrix) {
 		mSLog->info("Add {:s} to system at ({:d},{:d})", Logger::complexToString(-mRatio),
 			mVirtualNodes[1]->matrixNodeIndex(), matrixNodeIndex(1));
 	}
+
+	if (terminalNotGrounded(2)) {
+		mSLog->info("Add {:s} to system at ({:d},{:d})", Logger::complexToString(mRatio),
+			matrixNodeIndex(1), mVirtualNodes[1]->matrixNodeIndex());
+		mSLog->info("Add {:s} to system at ({:d},{:d})", Logger::complexToString(-mRatio),
+			mVirtualNodes[1]->matrixNodeIndex(), matrixNodeIndex(1));
+	}
 }
 
-
-void SP::Ph1::Transformer::mnaAddPostStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes, Attribute<Matrix>::Ptr &leftVector) {
+void SP::Ph1::Transformer3W::mnaAddPostStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes, Attribute<Matrix>::Ptr &leftVector) {
 	// add post-step dependencies of subcomponents
 	if (mSubResistor)
 		this->mSubResistor->mnaAddPostStepDependencies(prevStepDependencies, attributeDependencies, modifiedAttributes, leftVector);
@@ -480,7 +481,7 @@ void SP::Ph1::Transformer::mnaAddPostStepDependencies(AttributeBase::List &prevS
 	modifiedAttributes.push_back(this->attribute("i_intf"));
 }
 
-void SP::Ph1::Transformer::mnaPostStep(Real time, Int timeStepCount, Attribute<Matrix>::Ptr &leftVector) {
+void SP::Ph1::Transformer3W::mnaPostStep(Real time, Int timeStepCount, Attribute<Matrix>::Ptr &leftVector) {
 	// post-step of subcomponents
 	if (mSubResistor)
 		this->mSubResistor->mnaPostStep(time, timeStepCount, leftVector);
@@ -491,13 +492,13 @@ void SP::Ph1::Transformer::mnaPostStep(Real time, Int timeStepCount, Attribute<M
 	this->mnaUpdateCurrent(*leftVector);
 }
 
-void SP::Ph1::Transformer::mnaUpdateCurrent(const Matrix& leftVector) {
+void SP::Ph1::Transformer3W::mnaUpdateCurrent(const Matrix& leftVector) {
 	mIntfCurrent(0, 0) = mSubInductor->intfCurrent()(0, 0);
 	mSLog->debug("Current {:s}", Logger::phasorToString(mIntfCurrent(0, 0)));
 
 }
 
-void SP::Ph1::Transformer::mnaUpdateVoltage(const Matrix& leftVector) {
+void SP::Ph1::Transformer3W::mnaUpdateVoltage(const Matrix& leftVector) {
 	// v1 - v0
 	mIntfVoltage(0, 0) = 0;
 	mIntfVoltage(0, 0) = Math::complexFromVectorElement(leftVector, matrixNodeIndex(1));

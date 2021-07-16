@@ -372,124 +372,236 @@ TopologicalPowerComp::Ptr Reader::mapACLineSegment(CIMPP::ACLineSegment* line) {
 }
 
 TopologicalPowerComp::Ptr Reader::mapPowerTransformer(CIMPP::PowerTransformer* trans) {
-	if (trans->PowerTransformerEnd.size() != 2) {
-		mSLog->warn("PowerTransformer {} does not have exactly two windings, ignoring", trans->name);
+	if (trans->PowerTransformerEnd.size() != 2 || trans->PowerTransformerEnd.size() != 3 ) {
+		mSLog->warn("PowerTransformer {} does not have exactly two or three windings, ignoring", trans->name);
 		return nullptr;
 	}
 	mSLog->info("Found PowerTransformer {}", trans->name);
 
 	// assign transformer ends
-	CIMPP::PowerTransformerEnd* end1 = nullptr, *end2 = nullptr;
+	CIMPP::PowerTransformerEnd* end1 = nullptr, *end2 = nullptr, *end3 = nullptr;
 	for (auto end : trans->PowerTransformerEnd) {
 		if (end->Terminal->sequenceNumber == 1) end1 = end;
 		else if (end->Terminal->sequenceNumber == 2) end2 = end;
+		else if (end->Terminal->sequenceNumber == 3) end3 = end;
 		else return nullptr;
 	}
 
 	// setting default values for non-set resistances and reactances
 	mSLog->info("    PowerTransformerEnd_1 {}", end1->name);
     mSLog->info("    Srated={} Vrated={}", (float) end1->ratedS.value, (float) end1->ratedU.value);
-	try{
+	try {
 		mSLog->info("       R={}", (float) end1->r.value);
-	}catch(ReadingUninitializedField* e1){
+	} catch(ReadingUninitializedField* e1){
 		end1->r.value = 1e-12;
         mSLog->warn("       Uninitialized value for PowerTrafoEnd1 setting default value of R={}", (float) end1->r.value);
 	}
-	try{
+	try {
 		mSLog->info("       X={}", (float) end1->x.value);
-	}catch(ReadingUninitializedField* e1){
+	} catch(ReadingUninitializedField* e1){
 		end1->x.value = 1e-12;
         mSLog->warn("       Uninitialized value for PowerTrafoEnd1 setting default value of X={}", (float) end1->x.value);
 	}
     mSLog->info("    PowerTransformerEnd_2 {}", end2->name);
     mSLog->info("    Srated={} Vrated={}", (float) end2->ratedS.value, (float) end2->ratedU.value);
-	try{
+	try {
 		mSLog->info("       R={}", (float) end2->r.value);
-	}catch(ReadingUninitializedField* e1){
+	} catch(ReadingUninitializedField* e1){
 		end2->r.value = 1e-12;
         mSLog->warn("       Uninitialized value for PowerTrafoEnd2 setting default value of R={}", (float) end2->r.value);
 	}
-	try{
+	try {
 		mSLog->info("       X={}", (float) end2->x.value);
-	}catch(ReadingUninitializedField* e1){
+	} catch(ReadingUninitializedField* e1){
 		end2->x.value = 1e-12;
         mSLog->warn("       Uninitialized value for PowerTrafoEnd2 setting default value of X={}", (float) end2->x.value);
 	}
 
-	if (end1->ratedS.value != end2->ratedS.value) {
+	if (end3) {
+		mSLog->info("    PowerTransformerEnd_3 {}", end3->name);
+		mSLog->info("    Srated={} Vrated={}", (float) end3->ratedS.value, (float) end3->ratedU.value);
+		try {
+			mSLog->info("       R={}", (float) end3->r.value);
+		} catch(ReadingUninitializedField* e1){
+			end3->r.value = 1e-12;
+			mSLog->warn("       Uninitialized value for PowerTrafoEnd3 setting default value of R={}", (float) end3->r.value);
+		}
+		try {
+			mSLog->info("       X={}", (float) end3->x.value);
+		} catch(ReadingUninitializedField* e1){
+			end3->x.value = 1e-12;
+			mSLog->warn("       Uninitialized value for PowerTrafoEnd3 setting default value of X={}", (float) end3->x.value);
+		}
+	}
+
+	if (!end3 && end1->ratedS.value != end2->ratedS.value) {
 		mSLog->warn("    PowerTransformerEnds of {} come with distinct rated power values. Using rated power of PowerTransformerEnd_1.", trans->name);
 	}
-	Real ratedPower = unitValue(end1->ratedS.value, UnitMultiplier::M);
+
 	Real voltageNode1 = unitValue(end1->ratedU.value, UnitMultiplier::k);
 	Real voltageNode2 = unitValue(end2->ratedU.value, UnitMultiplier::k);
+	
+	Real ratedPower1 = unitValue(end1->ratedS.value, UnitMultiplier::M);
+	Real ratedPower2 = unitValue(end2->ratedS.value, UnitMultiplier::M);
 
-    Real ratioAbsNominal = voltageNode1 / voltageNode2;
+	Real ratioAbsNominal = voltageNode1 / voltageNode2;
 	Real ratioAbs = ratioAbsNominal;
 
 	// use normalStep from RatioTapChanger
-	if (end1->RatioTapChanger) {
+	if (end1->RatioTapChanger && !end3) {
 		ratioAbs = voltageNode1 / voltageNode2 * (1 + (end1->RatioTapChanger->normalStep - end1->RatioTapChanger->neutralStep) * end1->RatioTapChanger->stepVoltageIncrement.value / 100);
 	}
 
 	// if corresponding SvTapStep available, use instead tap position from there
-	if (end1->RatioTapChanger) {
+	if (end1->RatioTapChanger && !end3) {
 		for (auto obj : mModel->Objects) {
 			auto tapStep = dynamic_cast<CIMPP::SvTapStep*>(obj);
 			if (tapStep && tapStep->TapChanger == end1->RatioTapChanger) {
-				ratioAbs = voltageNode1 / voltageNode2 * (1 + (tapStep->position - end1->RatioTapChanger->neutralStep) * end1->RatioTapChanger->stepVoltageIncrement.value / 100);
+				ratioAbsNominal = voltageNode1 / voltageNode2 * (1 + (tapStep->position - end1->RatioTapChanger->neutralStep) * end1->RatioTapChanger->stepVoltageIncrement.value / 100);
 			}
 		}
 	}
 
-	// TODO: To be extracted from cim class
-	Real ratioPhase = 0;
+	if (!end3) {
+		// TODO: To be extracted from cim class
+		Real ratioPhase = 0;
 
-    // Calculate resistance and inductance referred to high voltage side
-	Real resistance = 0;
-    Real inductance = 0;
-	if (voltageNode1 >= voltageNode2 && abs(end1->x.value) > 1e-12) {
-		inductance = end1->x.value / mOmega;
-		resistance = end1->r.value;
-	} else if (voltageNode1 >= voltageNode2 && abs(end2->x.value) > 1e-12) {
-		inductance = end2->x.value / mOmega * std::pow(ratioAbsNominal, 2);
-		resistance = end2->r.value * std::pow(ratioAbsNominal, 2);
-	}
-	else if (voltageNode2 > voltageNode1 && abs(end2->x.value) > 1e-12) {
-		inductance = end2->x.value / mOmega;
-		resistance = end2->r.value;
-	}
-	else if (voltageNode2 > voltageNode1 && abs(end1->x.value) > 1e-12) {
-		inductance = end1->x.value / mOmega / std::pow(ratioAbsNominal, 2);
-		resistance = end1->r.value / std::pow(ratioAbsNominal, 2);
-	}
+		// Calculate resistance and inductance referred to high voltage side
+		Real resistance = 0;
+		Real inductance = 0;
 
-	if (mDomain == Domain::EMT) {
-		if (mPhase == PhaseType::ABC) {
-			Matrix resistance_3ph = CPS::Math::singlePhaseParameterToThreePhase(resistance);
-			Matrix inductance_3ph = CPS::Math::singlePhaseParameterToThreePhase(inductance);
+		if (voltageNode1 >= voltageNode2 && abs(end1->x.value) > 1e-12) {
+			inductance = end1->x.value / mOmega;
+			resistance = end1->r.value;
+		} else if (voltageNode1 >= voltageNode2 && abs(end2->x.value) > 1e-12) {
+			inductance = end2->x.value / mOmega * std::pow(ratioAbsNominal, 2);
+			resistance = end2->r.value * std::pow(ratioAbsNominal, 2);
+		} else if (voltageNode2 > voltageNode1 && abs(end2->x.value) > 1e-12) {
+			inductance = end2->x.value / mOmega;
+			resistance = end2->r.value;
+		} else if (voltageNode2 > voltageNode1 && abs(end1->x.value) > 1e-12) {
+			inductance = end1->x.value / mOmega / std::pow(ratioAbsNominal, 2);
+			resistance = end1->r.value / std::pow(ratioAbsNominal, 2);
+		}
+
+		if (mDomain == Domain::EMT) {
+			if (mPhase == PhaseType::ABC) {
+				Matrix resistance_3ph = CPS::Math::singlePhaseParameterToThreePhase(resistance);
+				Matrix inductance_3ph = CPS::Math::singlePhaseParameterToThreePhase(inductance);
+				Bool withResistiveLosses = resistance > 0;
+				auto transformer = std::make_shared<EMT::Ph3::Transformer>(trans->mRID, trans->name, mComponentLogLevel, withResistiveLosses);
+				transformer->setParameters(voltageNode1, voltageNode2, ratioAbs, ratioPhase, resistance_3ph, inductance_3ph);
+				return transformer;
+			} else {
+				mSLog->info("    Transformer for EMT not implemented yet");
+				return nullptr;
+			}
+		} else if (mDomain == Domain::SP) {
+			auto transformer = std::make_shared<SP::Ph1::Transformer>(trans->mRID, trans->name, mComponentLogLevel);
+			transformer->setParameters(voltageNode1, voltageNode2, ratedPower1, ratioAbs, ratioPhase, resistance, inductance);
+			Real baseVolt = voltageNode1 >= voltageNode2 ? voltageNode1 : voltageNode2;
+			transformer->setBaseVoltage(baseVolt);
+			return transformer;
+		} else {
 			Bool withResistiveLosses = resistance > 0;
-			auto transformer = std::make_shared<EMT::Ph3::Transformer>(trans->mRID, trans->name, mComponentLogLevel, withResistiveLosses);
-			transformer->setParameters(voltageNode1, voltageNode2, ratioAbs, ratioPhase, resistance_3ph, inductance_3ph);
+			auto transformer = std::make_shared<DP::Ph1::Transformer>(trans->mRID, trans->name, mComponentLogLevel, withResistiveLosses);
+			transformer->setParameters(voltageNode1, voltageNode2, ratioAbs, ratioPhase, resistance, inductance);
 			return transformer;
 		}
-		else
-		{
-			mSLog->info("    Transformer for EMT not implemented yet");
+	}
+
+
+	else {
+		Real ratedPower3 = unitValue(end3->ratedS.value, UnitMultiplier::M);
+		Real voltageNode3 = unitValue(end2->ratedU.value, UnitMultiplier::k);
+
+		Real ratioAbs1 = 1.0;
+		// use normalStep from RatioTapChanger
+		if (end1->RatioTapChanger) {
+			ratioAbs1 = (1 + (end1->RatioTapChanger->normalStep - end1->RatioTapChanger->neutralStep) * end1->RatioTapChanger->stepVoltageIncrement.value / 100);
+		}
+		// if corresponding SvTapStep available, use instead tap position from there
+		if (end1->RatioTapChanger) {
+			for (auto obj : mModel->Objects) {
+				auto tapStep = dynamic_cast<CIMPP::SvTapStep*>(obj);
+				if (tapStep && tapStep->TapChanger == end1->RatioTapChanger) {
+					ratioAbs1 = (1 + (tapStep->position - end1->RatioTapChanger->neutralStep) * end1->RatioTapChanger->stepVoltageIncrement.value / 100);
+				}
+			}
+		}
+
+		Real ratioAbs2 = 1.0;
+		// use normalStep from RatioTapChanger
+		if (end2->RatioTapChanger) {
+			ratioAbs2 = (1 + (end2->RatioTapChanger->normalStep - end2->RatioTapChanger->neutralStep) * end2->RatioTapChanger->stepVoltageIncrement.value / 100);
+		}
+		// if corresponding SvTapStep available, use instead tap position from there
+		if (end2->RatioTapChanger) {
+			for (auto obj : mModel->Objects) {
+				auto tapStep = dynamic_cast<CIMPP::SvTapStep*>(obj);
+				if (tapStep && tapStep->TapChanger == end2->RatioTapChanger) {
+					ratioAbs2 = (1 + (tapStep->position - end2->RatioTapChanger->neutralStep) * end2->RatioTapChanger->stepVoltageIncrement.value / 100);
+				}
+			}
+		}
+
+		Real ratioAbs3 = 1.0;
+		// use normalStep from RatioTapChanger
+		if (end3->RatioTapChanger) {
+			ratioAbs2 = (1 + (end3->RatioTapChanger->normalStep - end3->RatioTapChanger->neutralStep) * end3->RatioTapChanger->stepVoltageIncrement.value / 100);
+		}
+		// if corresponding SvTapStep available, use instead tap position from there
+		if (end3->RatioTapChanger) {
+			for (auto obj : mModel->Objects) {
+				auto tapStep = dynamic_cast<CIMPP::SvTapStep*>(obj);
+				if (tapStep && tapStep->TapChanger == end3->RatioTapChanger) {
+					ratioAbs3 = (1 + (tapStep->position - end3->RatioTapChanger->neutralStep) * end3->RatioTapChanger->stepVoltageIncrement.value / 100);
+				}
+			}
+		}
+
+		// TODO: To be extracted from cim class
+		Real ratioPhase1 = 0;
+		Real ratioPhase2 = 0;
+		Real ratioPhase3 = 0;
+
+		// Calculate resistance and inductance referred to high voltage side
+		Real resistance1 = 0;
+		Real resistance2 = 0;
+		Real resistance3 = 0;
+		Real inductance1 = 0;
+		Real inductance2 = 0;
+		Real inductance3 = 0;
+
+		// TODO: Should verify if any inductance is < 1e-12
+		resistance1 = end1->r.value;
+		resistance2 = end2->r.value;
+		resistance3 = end3->r.value;
+		inductance1 = end1->x.value / mOmega;
+		inductance2 = end2->x.value / mOmega;
+		inductance3 = end1->x.value / mOmega;
+
+		if (mDomain == Domain::EMT) {
+			mSLog->info("    3-Winding transformer for EMT not implemented yet");
+			return nullptr;
+		} else if (mDomain == Domain::SP) {
+			auto transformer = std::make_shared<SP::Ph1::Transformer3W>(trans->mRID, trans->name, mComponentLogLevel);
+			transformer->setParameters(
+				voltageNode1, voltageNode2, voltageNode3, 
+				ratedPower1, ratedPower2, ratedPower3, 
+				ratioAbs1, ratioAbs2, ratioAbs3, 
+				ratioPhase1, ratioPhase2, ratioPhase3,
+				resistance1, resistance2, resistance3, 
+				inductance1, inductance2, inductance3
+			);
+			Real baseVolt = voltageNode1 >= voltageNode2 ? voltageNode1 : voltageNode2 >= voltageNode3 ? voltageNode2 : voltageNode3;
+			transformer->setBaseVoltage(baseVolt);
+			return transformer;
+		} else {
+			mSLog->info("    3-Winding transformer for DP not implemented yet");
 			return nullptr;
 		}
-	}
-	else if (mDomain == Domain::SP) {
-		auto transformer = std::make_shared<SP::Ph1::Transformer>(trans->mRID, trans->name, mComponentLogLevel);
-		transformer->setParameters(voltageNode1, voltageNode2, ratedPower, ratioAbs, ratioPhase, resistance, inductance);
-		Real baseVolt = voltageNode1 >= voltageNode2 ? voltageNode1 : voltageNode2;
-		transformer->setBaseVoltage(baseVolt);
-		return transformer;
-	}
-	else {
-		Bool withResistiveLosses = resistance > 0;
-		auto transformer = std::make_shared<DP::Ph1::Transformer>(trans->mRID, trans->name, mComponentLogLevel, withResistiveLosses);
-		transformer->setParameters(voltageNode1, voltageNode2, ratioAbs, ratioPhase, resistance, inductance);
-		return transformer;
+
 	}
 }
 
