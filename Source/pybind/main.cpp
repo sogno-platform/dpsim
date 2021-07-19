@@ -127,9 +127,8 @@ PYBIND11_MODULE(dpsimpy, m) {
 
 	py::class_<DPsim::DataLogger, std::shared_ptr<DPsim::DataLogger>>(m, "Logger")
         .def(py::init<std::string>())
-		.def_static("set_log_dir", [](std::string dir) {
-            CPS::Logger::setLogDir(dir);
-        })
+		.def_static("set_log_dir", &CPS::Logger::setLogDir)
+		.def_static("get_log_dir", &CPS::Logger::logDir)
 		.def("log_attribute", (void (DPsim::DataLogger::*)(const CPS::String &, const CPS::String &, CPS::IdentifiedObject::Ptr)) &DPsim::DataLogger::addAttribute)
 		.def("log_attribute", (void (DPsim::DataLogger::*)(const CPS::String &, const CPS::String &, CPS::IdentifiedObject::Ptr, CPS::UInt, CPS::UInt)) &DPsim::DataLogger::addAttribute)
 		.def("log_attribute", (void (DPsim::DataLogger::*)(const std::vector<CPS::String> &, const CPS::String &, CPS::IdentifiedObject::Ptr)) &DPsim::DataLogger::addAttribute);
