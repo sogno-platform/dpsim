@@ -215,7 +215,8 @@ PYBIND11_MODULE(dpsimpy, m) {
 		.def(py::init<CPS::Real,const std::shared_ptr<CPS::DP::Ph1::varResSwitch>,CPS::Bool>())
 		.def(py::init<CPS::Real,const std::shared_ptr<CPS::DP::Ph3::SeriesSwitch>,CPS::Bool>())
 		.def(py::init<CPS::Real,const std::shared_ptr<CPS::SP::Ph1::Switch>,CPS::Bool>())
-		.def(py::init<CPS::Real,const std::shared_ptr<CPS::SP::Ph1::varResSwitch>,CPS::Bool>());
+		.def(py::init<CPS::Real,const std::shared_ptr<CPS::SP::Ph1::varResSwitch>,CPS::Bool>())
+		.def(py::init<CPS::Real,const std::shared_ptr<CPS::EMT::Ph3::SeriesSwitch>,CPS::Bool>());
 	py::class_<DPsim::SwitchEvent3Ph, std::shared_ptr<DPsim::SwitchEvent3Ph>, DPsim::Event>(mEvent, "SwitchEvent3Ph", py::multiple_inheritance())
 		.def(py::init<CPS::Real,const std::shared_ptr<CPS::EMT::Ph3::Switch>,CPS::Bool>());
 
