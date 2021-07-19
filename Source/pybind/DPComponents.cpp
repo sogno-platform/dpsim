@@ -88,14 +88,14 @@ void addDPPh1Components(py::module_ mDPPh1) {
         .def("set_parameters", &CPS::DP::Ph1::RXLoad::setParameters, "active_power"_a, "reactive_power"_a, "volt"_a)
 		.def("connect", &CPS::DP::Ph1::RXLoad::connect);
 
-	py::class_<CPS::DP::Ph1::Switch, std::shared_ptr<CPS::DP::Ph1::Switch>, CPS::SimPowerComp<CPS::Complex>>(mDPPh1, "Switch", py::multiple_inheritance())
+	py::class_<CPS::DP::Ph1::Switch, std::shared_ptr<CPS::DP::Ph1::Switch>, CPS::SimPowerComp<CPS::Complex>, CPS::Base::Ph1::Switch>(mDPPh1, "Switch", py::multiple_inheritance())
         .def(py::init<std::string, CPS::Logger::Level>(), "name"_a, "loglevel"_a = CPS::Logger::Level::off)
         .def("set_parameters", &CPS::DP::Ph1::Switch::setParameters, "open_resistance"_a, "closed_resistance"_a, "closed"_a = false)
 		.def("open", &CPS::DP::Ph1::Switch::open)
 		.def("close", &CPS::DP::Ph1::Switch::close)
 		.def("connect", &CPS::DP::Ph1::Switch::connect);
 
-	py::class_<CPS::DP::Ph1::varResSwitch, std::shared_ptr<CPS::DP::Ph1::varResSwitch>, CPS::SimPowerComp<CPS::Complex>>(mDPPh1, "varResSwitch", py::multiple_inheritance())
+	py::class_<CPS::DP::Ph1::varResSwitch, std::shared_ptr<CPS::DP::Ph1::varResSwitch>, CPS::SimPowerComp<CPS::Complex>, CPS::Base::Ph1::Switch>(mDPPh1, "varResSwitch", py::multiple_inheritance())
         .def(py::init<std::string, CPS::Logger::Level>(), "name"_a, "loglevel"_a = CPS::Logger::Level::off)
         .def("set_parameters", &CPS::DP::Ph1::varResSwitch::setParameters, "open_resistance"_a, "closed_resistance"_a, "closed"_a = false)
 		.def("open", &CPS::DP::Ph1::varResSwitch::open)
@@ -170,7 +170,7 @@ void addDPPh3Components(py::module_ mDPPh3) {
         .def("set_parameters", &CPS::DP::Ph3::SeriesResistor::setParameters, "R"_a)
 		.def("connect", &CPS::DP::Ph3::SeriesResistor::connect);
 
-	py::class_<CPS::DP::Ph3::SeriesSwitch, std::shared_ptr<CPS::DP::Ph3::SeriesSwitch>, CPS::SimPowerComp<CPS::Complex>>(mDPPh3, "SeriesSwitch", py::multiple_inheritance())
+	py::class_<CPS::DP::Ph3::SeriesSwitch, std::shared_ptr<CPS::DP::Ph3::SeriesSwitch>, CPS::SimPowerComp<CPS::Complex>, CPS::Base::Ph1::Switch>(mDPPh3, "SeriesSwitch", py::multiple_inheritance())
         .def(py::init<std::string, CPS::Logger::Level>(), "name"_a, "loglevel"_a = CPS::Logger::Level::off)
         .def("set_parameters", &CPS::DP::Ph3::SeriesSwitch::setParameters, "open_resistance"_a, "closed_resistance"_a, "closed"_a = false)
 		.def("open", &CPS::DP::Ph3::SeriesSwitch::open)

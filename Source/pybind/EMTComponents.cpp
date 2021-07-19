@@ -174,7 +174,7 @@ void addEMTPh3Components(py::module_ mEMTPh3) {
         .def("set_parameters", &CPS::EMT::Ph3::SeriesResistor::setParameters, "R"_a)
 		.def("connect", &CPS::EMT::Ph3::SeriesResistor::connect);
 
-	py::class_<CPS::EMT::Ph3::SeriesSwitch, std::shared_ptr<CPS::EMT::Ph3::SeriesSwitch>, CPS::SimPowerComp<CPS::Real>>(mEMTPh3, "SeriesSwitch", py::multiple_inheritance())
+	py::class_<CPS::EMT::Ph3::SeriesSwitch, std::shared_ptr<CPS::EMT::Ph3::SeriesSwitch>, CPS::SimPowerComp<CPS::Real>, CPS::Base::Ph1::Switch>(mEMTPh3, "SeriesSwitch", py::multiple_inheritance())
         .def(py::init<std::string, CPS::Logger::Level>(), "name"_a, "loglevel"_a = CPS::Logger::Level::off)
         .def("set_parameters", &CPS::EMT::Ph3::SeriesSwitch::setParameters, "open_resistance"_a, "closed_resistance"_a, "closed"_a = false)
 		.def("open", &CPS::EMT::Ph3::SeriesSwitch::open)

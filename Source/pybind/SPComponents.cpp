@@ -75,7 +75,7 @@ void addSPPh1Components(py::module_ mSPPh1) {
 		.def("modify_power_flow_bus_type", &CPS::SP::Ph1::Load::modifyPowerFlowBusType, "bus_type"_a)
 		.def("connect", &CPS::SP::Ph1::Load::connect);
 
-	py::class_<CPS::SP::Ph1::Switch, std::shared_ptr<CPS::SP::Ph1::Switch>, CPS::SimPowerComp<CPS::Complex>>(mSPPh1, "Switch", py::multiple_inheritance())
+	py::class_<CPS::SP::Ph1::Switch, std::shared_ptr<CPS::SP::Ph1::Switch>, CPS::SimPowerComp<CPS::Complex>, CPS::Base::Ph1::Switch>(mSPPh1, "Switch", py::multiple_inheritance())
         .def(py::init<std::string, CPS::Logger::Level>(), "name"_a, "loglevel"_a = CPS::Logger::Level::off)
         .def("set_parameters", &CPS::SP::Ph1::Switch::setParameters, "open_resistance"_a, "closed_resistance"_a, "closed"_a = false)
 		.def("open", &CPS::SP::Ph1::Switch::open)
@@ -91,7 +91,7 @@ void addSPPh1Components(py::module_ mSPPh1) {
 		.def("modify_power_flow_bus_type", &CPS::SP::Ph1::SynchronGenerator::modifyPowerFlowBusType, "bus_type"_a)
 		.def("get_apparent_power", &CPS::SP::Ph1::SynchronGenerator::getApparentPower);
 
-	py::class_<CPS::SP::Ph1::varResSwitch, std::shared_ptr<CPS::SP::Ph1::varResSwitch>, CPS::SimPowerComp<CPS::Complex>>(mSPPh1, "varResSwitch", py::multiple_inheritance())
+	py::class_<CPS::SP::Ph1::varResSwitch, std::shared_ptr<CPS::SP::Ph1::varResSwitch>, CPS::SimPowerComp<CPS::Complex>, CPS::Base::Ph1::Switch>(mSPPh1, "varResSwitch", py::multiple_inheritance())
         .def(py::init<std::string, CPS::Logger::Level>(), "name"_a, "loglevel"_a = CPS::Logger::Level::off)
         .def("set_parameters", &CPS::SP::Ph1::varResSwitch::setParameters, "open_resistance"_a, "closed_resistance"_a, "closed"_a = false)
 		.def("open", &CPS::SP::Ph1::varResSwitch::open)

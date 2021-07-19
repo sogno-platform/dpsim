@@ -27,6 +27,7 @@
 #include <EMTComponents.h>
 #include <SPComponents.h>
 #include <SignalComponents.h>
+#include <BaseComponents.h>
 #include <Utils.h>
 
 namespace py = pybind11;
@@ -208,16 +209,10 @@ PYBIND11_MODULE(dpsimpy, m) {
 	//Events
 	py::module mEvent = m.def_submodule("event", "events");
 	py::class_<DPsim::Event, std::shared_ptr<DPsim::Event>>(mEvent, "Event");
-	//TODO: Implement custom base class for abstraction of CPS::Base::Switch
 	py::class_<DPsim::SwitchEvent, std::shared_ptr<DPsim::SwitchEvent>, DPsim::Event>(mEvent, "SwitchEvent", py::multiple_inheritance())
-		.def(py::init<CPS::Real,const std::shared_ptr<CPS::DP::Ph1::Switch>,CPS::Bool>())
-		.def(py::init<CPS::Real,const std::shared_ptr<CPS::DP::Ph1::varResSwitch>,CPS::Bool>())
-		.def(py::init<CPS::Real,const std::shared_ptr<CPS::DP::Ph3::SeriesSwitch>,CPS::Bool>())
-		.def(py::init<CPS::Real,const std::shared_ptr<CPS::SP::Ph1::Switch>,CPS::Bool>())
-		.def(py::init<CPS::Real,const std::shared_ptr<CPS::SP::Ph1::varResSwitch>,CPS::Bool>())
-		.def(py::init<CPS::Real,const std::shared_ptr<CPS::EMT::Ph3::SeriesSwitch>,CPS::Bool>());
+		.def(py::init<CPS::Real,const std::shared_ptr<CPS::Base::Ph1::Switch>,CPS::Bool>());
 	py::class_<DPsim::SwitchEvent3Ph, std::shared_ptr<DPsim::SwitchEvent3Ph>, DPsim::Event>(mEvent, "SwitchEvent3Ph", py::multiple_inheritance())
-		.def(py::init<CPS::Real,const std::shared_ptr<CPS::EMT::Ph3::Switch>,CPS::Bool>());
+		.def(py::init<CPS::Real,const std::shared_ptr<CPS::Base::Ph3::Switch>,CPS::Bool>());
 
 	//Utils
 	py::module mUtil = m.def_submodule("util", "utility functions used in examples");
@@ -235,6 +230,9 @@ PYBIND11_MODULE(dpsimpy, m) {
 
 	py::module mSignal = m.def_submodule("signal", "signal models");
 	addSignalComponents(mSignal);
+
+	py::module mBase = m.def_submodule("base", "base models");
+	addBaseComponents(mBase);
 
 
 #ifdef VERSION_INFO
