@@ -214,10 +214,10 @@ PYBIND11_MODULE(dpsimpy, m) {
 	py::class_<DPsim::SwitchEvent3Ph, std::shared_ptr<DPsim::SwitchEvent3Ph>, DPsim::Event>(mEvent, "SwitchEvent3Ph", py::multiple_inheritance())
 		.def(py::init<CPS::Real,const std::shared_ptr<CPS::Base::Ph3::Switch>,CPS::Bool>());
 
-	//Utils
-	py::module mUtil = m.def_submodule("util", "utility functions used in examples");
-
 	//Components
+	py::module mBase = m.def_submodule("base", "base models");
+	addBaseComponents(mBase);
+
 	py::module mDP = m.def_submodule("dp", "dynamic phasor models");
 	addDPComponents(mDP);
 
@@ -230,9 +230,6 @@ PYBIND11_MODULE(dpsimpy, m) {
 
 	py::module mSignal = m.def_submodule("signal", "signal models");
 	addSignalComponents(mSignal);
-
-	py::module mBase = m.def_submodule("base", "base models");
-	addBaseComponents(mBase);
 
 
 #ifdef VERSION_INFO
