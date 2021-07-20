@@ -495,6 +495,7 @@ TopologicalPowerComp::Ptr Reader::mapSynchronousMachine(CIMPP::SynchronousMachin
 	mSLog->info("    Found  Synchronous machine {}", machine->name);
 
 	if (mDomain == Domain::DP) {
+		mSLog->info("    Create generator in DP domain.");
 		if (mGeneratorType == GeneratorType::TransientStability) {
 			mSLog->info("    GeneratorType is TransientStability.");
 			Real directTransientReactance;
@@ -529,6 +530,7 @@ TopologicalPowerComp::Ptr Reader::mapSynchronousMachine(CIMPP::SynchronousMachin
 			throw SystemError("GeneratorType setting unfeasible.");
 		}
 	} else if (mDomain == Domain::SP) {
+		mSLog->info("    Create generator in SP domain.");
 		if (mGeneratorType == GeneratorType::TransientStability) {
 			mSLog->info("    GeneratorType is TransientStability.");
 			Real directTransientReactance;
@@ -603,7 +605,15 @@ TopologicalPowerComp::Ptr Reader::mapSynchronousMachine(CIMPP::SynchronousMachin
 			throw SystemError("GeneratorType setting unfeasible.");
 		}
 	} else {
-        throw SystemError("Mapping of SynchronousMachine for EMT not existent yet!");
+		mSLog->info("    Create generator in EMT domain.");
+		if (mGeneratorType == GeneratorType::IdealVoltageSource) {
+			mSLog->info("    GeneratorType is IdealVoltageSource.");
+			return std::make_shared<EMT::Ph3::SynchronGeneratorIdeal>(machine->mRID, machine->name, mComponentLogLevel);
+		} else if (mGeneratorType == GeneratorType::None) {
+			throw SystemError("GeneratorType is None. Specify!");
+		} else {
+			throw SystemError("GeneratorType setting unfeasible.");
+		}
     }
 	return nullptr;
 }
