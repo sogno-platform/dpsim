@@ -97,7 +97,7 @@ int main(int argc, char* argv[]) {
 	auto n2DP = SimNode<Complex>::make("n2", PhaseType::Single);
 
 	auto extnetDP = DP::Ph1::NetworkInjection::make("Slack", Logger::Level::debug);
-	extnetDP->setParameters(Complex(scenario.systemNominalVoltage,0));
+	extnetDP->setParameters(Complex(scenario.systemNominalVoltage,0), 0.0);
 
 	auto lineDP = DP::Ph1::PiLine::make("PiLine", Logger::Level::debug);
 	lineDP->setParameters(scenario.lineResistance, scenario.lineInductance, scenario.lineCapacitance);
