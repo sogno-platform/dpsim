@@ -124,6 +124,7 @@ if(WITH_CIM)
 		CIM/WSCC-9bus_CIM_Dyn.cpp
 		CIM/WSCC-9bus_CIM_Dyn_Switch.cpp
 		CIM/SP_WSCC-9bus_CIM_Dyn_Switch.cpp
+		CIM/EMT_WSCC-9bus_CIM.cpp
 
 		# PF(Power Flow) example
 		CIM/Slack_Trafo_Load.cpp

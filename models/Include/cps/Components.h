@@ -66,7 +66,6 @@
   #include <cps/DP/DP_Ph3_SynchronGeneratorDQODE.h>
 #endif
 #include <cps/DP/DP_Ph3_SynchronGeneratorVBR.h>
-
 #include <cps/EMT/EMT_Ph1_Capacitor.h>
 #include <cps/EMT/EMT_Ph1_CurrentSource.h>
 #include <cps/EMT/EMT_Ph1_Inductor.h>
@@ -89,6 +88,7 @@
 #ifdef WITH_SUNDIALS
   #include <cps/EMT/EMT_Ph3_SynchronGeneratorDQODE.h>
 #endif
+#include <cps/EMT/EMT_Ph3_SynchronGeneratorIdeal.h>
 #include <cps/EMT/EMT_Ph3_SynchronGeneratorVBR.h>
 #include <cps/EMT/EMT_Ph3_SynchronGeneratorVBRSmpl.h>
 #include <cps/EMT/EMT_Ph3_SynchronGeneratorVBRStandalone.h>
