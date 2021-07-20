@@ -80,7 +80,7 @@ void powerFlow(SystemTopology& systemPF) {
 void simulateDP(SystemTopology& systemPF, String waveform) {
 	Real timeStepDP = timeStep;
 	Real finalTimeDP = finalTime+timeStepDP;
-	String simNameDP = simName + "_DP";
+	String simNameDP = simName + "_" + waveform + "_DP";
 	Logger::setLogDir("logs/" + simNameDP);
 
 	// Components
@@ -91,7 +91,7 @@ void simulateDP(SystemTopology& systemPF, String waveform) {
 	if(waveform == "cosineFM")
 		extnetDP->setParameters(Complex(Vnom,0), 1.25, 1.25, -1.25);
 	else
-		extnetDP->setParameters(Complex(Vnom,0), 0.0, -6.25, 5.0, 0.4);
+		extnetDP->setParameters(Complex(Vnom,0), 0.0, -6.25, 0.2, 0.4);
 
 	auto lineDP = DP::Ph1::PiLine::make("PiLine", Logger::Level::debug);
 	lineDP->setParameters(lineResistance, lineInductance, lineCapacitance);
@@ -134,8 +134,8 @@ void simulateDP(SystemTopology& systemPF, String waveform) {
 void simulateSP(SystemTopology& systemPF, String waveform) {
 
 	Real timeStepSP = timeStep;
-	Real finalTimeSP = finalTime+timeStepSP;
-	String simNameSP = simName+"_SP";
+	Real finalTimeSP = finalTime + timeStepSP;
+	String simNameSP = simName + "_" + waveform + "_SP";
 	Logger::setLogDir("logs/" + simNameSP);
 
 	// Components
@@ -146,7 +146,7 @@ void simulateSP(SystemTopology& systemPF, String waveform) {
 	if(waveform == "cosineFM")
 		extnetSP->setParameters(Complex(Vnom,0), 1.25, 1.25, -1.25);
 	else
-		extnetSP->setParameters(Complex(Vnom,0), 0.0, -6.25, 5.0, 0.4);
+		extnetSP->setParameters(Complex(Vnom,0), 0.0, -6.25, 0.2, 0.4);
 
 	auto lineSP = SP::Ph1::PiLine::make("PiLine", Logger::Level::debug);
 	lineSP->setParameters(lineResistance, lineInductance, lineCapacitance);
@@ -188,8 +188,8 @@ void simulateEMT(SystemTopology& systemPF, String waveform) {
 	String simName = "EMT_DP_SP_Slack_PiLine_PQLoad_FM";
 
 	Real timeStepEMT = timeStep;
-	Real finalTimeEMT = finalTime+timeStepEMT;
-	String simNameEMT = simName + "_EMT";
+	Real finalTimeEMT = finalTime + timeStepEMT;
+	String simNameEMT = simName + "_" + waveform + "_EMT";
 	Logger::setLogDir("logs/" + simNameEMT);
 
 	// Components
@@ -200,7 +200,7 @@ void simulateEMT(SystemTopology& systemPF, String waveform) {
 	if(waveform == "cosineFM")
 		extnetEMT->setParameters(CPS::Math::singlePhaseVariableToThreePhase(Vnom), 1.25, 1.25, 48.75);
 	else
-		extnetEMT->setParameters(CPS::Math::singlePhaseVariableToThreePhase(Vnom), 48.75, -6.25, 5.0, 0.4);
+		extnetEMT->setParameters(CPS::Math::singlePhaseVariableToThreePhase(Vnom), 50, -6.25, 0.2, 0.4);
 
 	auto lineEMT = EMT::Ph3::PiLine::make("PiLine", Logger::Level::debug);
 	lineEMT->setParameters(CPS::Math::singlePhaseParameterToThreePhase(lineResistance), CPS::Math::singlePhaseParameterToThreePhase(lineInductance), CPS::Math::singlePhaseParameterToThreePhase(lineCapacitance));
