@@ -173,23 +173,38 @@ void SP::Ph1::Transformer3W::initializeFromNodesAndTerminals(Real frequency) {
 		mTerminals[2] = tmp;
 	}
 	
+	// TODO: Temporary for some reason its resetting to 1x1 the matrix ignoring L22 and L23
+	mIntfVoltage = MatrixComp::Zero(3, 1);
+	mIntfCurrent = MatrixComp::Zero(3, 1);
+
 	// Set initial voltage of virtual node in between
-	mVirtualNodes[0]->setInitialVoltage(initialSingleVoltage(0) * mRatio1);
-	mVirtualNodes[3]->setInitialVoltage(initialSingleVoltage(1) * mRatio2);
-	mVirtualNodes[6]->setInitialVoltage(initialSingleVoltage(2) * mRatio3);
+	if(mNumVirtualNodes == 9) {
+		mVirtualNodes[0]->setInitialVoltage(initialSingleVoltage(0) * mRatio1);
+		mVirtualNodes[3]->setInitialVoltage(initialSingleVoltage(1) * mRatio2);
+		mVirtualNodes[6]->setInitialVoltage(initialSingleVoltage(2) * mRatio3);
+
+		mIntfVoltage(0, 0) = mVirtualNodes[0]->initialSingleVoltage() - initialSingleVoltage(0);
+		mIntfVoltage(1, 0) = mVirtualNodes[3]->initialSingleVoltage() - initialSingleVoltage(1);
+		mIntfVoltage(2, 0) = mVirtualNodes[6]->initialSingleVoltage() - initialSingleVoltage(2);
+	}
+	else {
+		mVirtualNodes[0]->setInitialVoltage(initialSingleVoltage(0) * mRatio1);
+		mVirtualNodes[2]->setInitialVoltage(initialSingleVoltage(1) * mRatio2);
+		mVirtualNodes[4]->setInitialVoltage(initialSingleVoltage(2) * mRatio3);
+
+		mIntfVoltage(0, 0) = mVirtualNodes[0]->initialSingleVoltage() - initialSingleVoltage(0);
+		mIntfVoltage(1, 0) = mVirtualNodes[2]->initialSingleVoltage() - initialSingleVoltage(1);
+		mIntfVoltage(2, 0) = mVirtualNodes[4]->initialSingleVoltage() - initialSingleVoltage(2);
+	}
 
 	// Static calculations from load flow data
 	Complex impedance1 = { mResistance1, mReactance1 };
 	Complex impedance2 = { mResistance2, mReactance2 };
 	Complex impedance3 = { mResistance3, mReactance3 };
 
-	mIntfVoltage(0, 0) = mVirtualNodes[0]->initialSingleVoltage() - initialSingleVoltage(1);
+	
 	mIntfCurrent(0, 0) = mIntfVoltage(0, 0) / impedance1;
-
-	mIntfVoltage(1, 0) = mVirtualNodes[3]->initialSingleVoltage() - initialSingleVoltage(2);
 	mIntfCurrent(1, 0) = mIntfVoltage(1, 0) / impedance2;
-
-	mIntfVoltage(2, 0) = mVirtualNodes[6]->initialSingleVoltage() - initialSingleVoltage(3);
 	mIntfCurrent(2, 0) = mIntfVoltage(2, 0) / impedance3;
 
 	// Create series sub components
@@ -228,8 +243,8 @@ void SP::Ph1::Transformer3W::initializeFromNodesAndTerminals(Real frequency) {
 
 	} else {
 		mSubInductor1->connect({ node(0), mVirtualNodes[0] });
-		mSubInductor1->connect({ node(1), mVirtualNodes[3] });
-		mSubInductor1->connect({ node(2), mVirtualNodes[6] });
+		mSubInductor2->connect({ node(1), mVirtualNodes[2] });
+		mSubInductor3->connect({ node(2), mVirtualNodes[4] });
 	}
 	mSubInductor1->initialize(mFrequencies);
 	mSubInductor1->initializeFromNodesAndTerminals(frequency);
@@ -250,11 +265,15 @@ void SP::Ph1::Transformer3W::initializeFromNodesAndTerminals(Real frequency) {
 
 	mSLog->info(
 		"\n--- Initialization from powerflow ---"
-		"\nVoltage across: {:s}"
-		"\nCurrent: {:s}"
-		"\nTerminal 0 voltage: {:s}"
+		"\nVoltage across 1: {:s}"
+		"\nCurrent 1: {:s}"
+		"\nVoltage across 2: {:s}"
+		"\nCurrent 2: {:s}"
+		"\nVoltage across 3: {:s}"
+		"\nCurrent 3: {:s}"
 		"\nTerminal 1 voltage: {:s}"
-		"\nVirtual Node 1 voltage: {:s}"
+		"\nTerminal 2 voltage: {:s}"
+		"\nTerminal 3 voltage: {:s}"
 		"\n--- Initialization from powerflow finished ---",
 		Logger::phasorToString(mIntfVoltage(0, 0)),
 		Logger::phasorToString(mIntfCurrent(0, 0)),
@@ -264,10 +283,7 @@ void SP::Ph1::Transformer3W::initializeFromNodesAndTerminals(Real frequency) {
 		Logger::phasorToString(mIntfCurrent(2, 0)),
 		Logger::phasorToString(initialSingleVoltage(0)),
 		Logger::phasorToString(initialSingleVoltage(1)),
-		Logger::phasorToString(initialSingleVoltage(2)),
-		Logger::phasorToString(mVirtualNodes[0]->initialSingleVoltage()),
-		Logger::phasorToString(mVirtualNodes[1]->initialSingleVoltage()),
-		Logger::phasorToString(mVirtualNodes[2]->initialSingleVoltage()));
+		Logger::phasorToString(initialSingleVoltage(2)));
 }
 
 
