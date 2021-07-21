@@ -23,7 +23,7 @@ void addSPPh1Components(py::module_ mSPPh1) {
 	py::class_<CPS::SP::Ph1::VoltageSource, std::shared_ptr<CPS::SP::Ph1::VoltageSource>, CPS::SimPowerComp<CPS::Complex>>(mSPPh1, "VoltageSource", py::multiple_inheritance())
         .def(py::init<std::string>())
 		.def(py::init<std::string, CPS::Logger::Level>())
-        .def("set_parameters", &CPS::SP::Ph1::VoltageSource::setParameters, "V_ref"_a, "f_src"_a = -1)
+        .def("set_parameters", py::overload_cast<CPS::Complex, CPS::Real>(&CPS::SP::Ph1::VoltageSource::setParameters), "V_ref"_a, "f_src"_a = -1)
 		.def("connect", &CPS::SP::Ph1::VoltageSource::connect)
 		.def_property("V_ref", createAttributeGetter<CPS::Complex>("V_ref"), createAttributeSetter<CPS::Complex>("V_ref"))
 		.def_property("f_src", createAttributeGetter<CPS::Real>("f_src"), createAttributeSetter<CPS::Real>("f_src"));

@@ -71,14 +71,10 @@ void addEMTPh3Components(py::module_ mEMTPh3) {
 	py::class_<CPS::EMT::Ph3::VoltageSource, std::shared_ptr<CPS::EMT::Ph3::VoltageSource>, CPS::SimPowerComp<CPS::Real>>(mEMTPh3, "VoltageSource", py::multiple_inheritance())
         .def(py::init<std::string>())
 		.def(py::init<std::string, CPS::Logger::Level>())
-        .def("set_parameters", &CPS::EMT::Ph3::VoltageSource::setParameters, "V_ref"_a, "f_src"_a = -1)
+        .def("set_parameters", py::overload_cast<CPS::MatrixComp, CPS::Real>(&CPS::EMT::Ph3::VoltageSource::setParameters), "V_ref"_a, "f_src"_a = -1)
 		.def("connect", &CPS::EMT::Ph3::VoltageSource::connect)
 		.def_property("V_ref", createAttributeGetter<CPS::MatrixComp>("V_ref"), createAttributeSetter<CPS::MatrixComp>("V_ref"))
 		.def_property("f_src", createAttributeGetter<CPS::Real>("f_src"), createAttributeSetter<CPS::Real>("f_src"));
-
-	py::class_<CPS::EMT::Ph3::ControlledVoltageSource, std::shared_ptr<CPS::EMT::Ph3::ControlledVoltageSource>, CPS::SimPowerComp<CPS::Real>>(mEMTPh3, "ControlledVoltageSource", py::multiple_inheritance())
-		.def(py::init<std::string, CPS::Logger::Level>(), "name"_a, "loglevel"_a = CPS::Logger::Level::off)
-        .def("connect", &CPS::EMT::Ph3::ControlledVoltageSource::connect);
 
 	py::class_<CPS::EMT::Ph3::Resistor, std::shared_ptr<CPS::EMT::Ph3::Resistor>, CPS::SimPowerComp<CPS::Real>>(mEMTPh3, "Resistor", py::multiple_inheritance())
         .def(py::init<std::string>())
@@ -100,7 +96,7 @@ void addEMTPh3Components(py::module_ mEMTPh3) {
 
 	py::class_<CPS::EMT::Ph3::NetworkInjection, std::shared_ptr<CPS::EMT::Ph3::NetworkInjection>, CPS::SimPowerComp<CPS::Real>>(mEMTPh3, "NetworkInjection", py::multiple_inheritance())
         .def(py::init<std::string, CPS::Logger::Level>(), "name"_a, "loglevel"_a = CPS::Logger::Level::off)
-		.def("set_parameters", &CPS::EMT::Ph3::NetworkInjection::setParameters, "V_ref"_a, "f_src"_a)
+		.def("set_parameters", py::overload_cast<CPS::MatrixComp, CPS::Real>(&CPS::EMT::Ph3::NetworkInjection::setParameters), "V_ref"_a, "f_src"_a)
 		.def("connect", &CPS::EMT::Ph3::NetworkInjection::connect);
 
 	py::class_<CPS::EMT::Ph3::PiLine, std::shared_ptr<CPS::EMT::Ph3::PiLine>, CPS::SimPowerComp<CPS::Real>>(mEMTPh3, "PiLine", py::multiple_inheritance())
