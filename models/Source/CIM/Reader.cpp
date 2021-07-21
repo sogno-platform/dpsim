@@ -372,7 +372,7 @@ TopologicalPowerComp::Ptr Reader::mapACLineSegment(CIMPP::ACLineSegment* line) {
 }
 
 TopologicalPowerComp::Ptr Reader::mapPowerTransformer(CIMPP::PowerTransformer* trans) {
-	if (trans->PowerTransformerEnd.size() != 2 || trans->PowerTransformerEnd.size() != 3 ) {
+	if (trans->PowerTransformerEnd.size() != 2 && trans->PowerTransformerEnd.size() != 3) {
 		mSLog->warn("PowerTransformer {} does not have exactly two or three windings, ignoring", trans->name);
 		return nullptr;
 	}
@@ -548,7 +548,7 @@ TopologicalPowerComp::Ptr Reader::mapPowerTransformer(CIMPP::PowerTransformer* t
 		Real ratioAbs3 = 1.0;
 		// use normalStep from RatioTapChanger
 		if (end3->RatioTapChanger) {
-			ratioAbs2 = (1 + (end3->RatioTapChanger->normalStep - end3->RatioTapChanger->neutralStep) * end3->RatioTapChanger->stepVoltageIncrement.value / 100);
+			ratioAbs3 = (1 + (end3->RatioTapChanger->normalStep - end3->RatioTapChanger->neutralStep) * end3->RatioTapChanger->stepVoltageIncrement.value / 100);
 		}
 		// if corresponding SvTapStep available, use instead tap position from there
 		if (end3->RatioTapChanger) {
