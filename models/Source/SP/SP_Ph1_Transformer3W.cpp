@@ -42,15 +42,15 @@ SP::Ph1::Transformer3W::Transformer3W(String uid, String name, Logger::Level log
 	addAttribute<Bool>("nodal_injection_stored", &mStoreNodalPowerInjection, Flags::read | Flags::write);
 	addAttribute<Real>("p_inj", &mActivePowerInjection, Flags::read | Flags::write);
 	addAttribute<Real>("q_inj", &mReactivePowerInjection, Flags::read | Flags::write);
-	addAttribute<Complex>("current", &mCurrent(0), Flags::read | Flags::write);
-	addAttribute<Complex>("current_1", &mCurrent(1), Flags::read | Flags::write);
-	addAttribute<Complex>("current_2", &mCurrent(2), Flags::read | Flags::write);
-	addAttribute<Real>("p_branch", &mActivePowerBranch(0), Flags::read | Flags::write);
-	addAttribute<Real>("q_branch", &mReactivePowerBranch(0), Flags::read | Flags::write);
-	addAttribute<Real>("p_branch_1", &mActivePowerBranch(1), Flags::read | Flags::write);
-	addAttribute<Real>("q_branch_1", &mReactivePowerBranch(1), Flags::read | Flags::write);
-	addAttribute<Real>("p_branch_2", &mActivePowerBranch(2), Flags::read | Flags::write);
-	addAttribute<Real>("q_branch_2", &mReactivePowerBranch(2), Flags::read | Flags::write);
+	addAttribute<Complex>("current_1", &mCurrent(0), Flags::read | Flags::write);
+	addAttribute<Complex>("current_2", &mCurrent(1), Flags::read | Flags::write);
+	addAttribute<Complex>("current_3", &mCurrent(2), Flags::read | Flags::write);
+	addAttribute<Real>("p_branch_1", &mActivePowerBranch(0), Flags::read | Flags::write);
+	addAttribute<Real>("q_branch_1", &mReactivePowerBranch(0), Flags::read | Flags::write);
+	addAttribute<Real>("p_branch_2", &mActivePowerBranch(1), Flags::read | Flags::write);
+	addAttribute<Real>("q_branch_2", &mReactivePowerBranch(1), Flags::read | Flags::write);
+	addAttribute<Real>("p_branch_3", &mActivePowerBranch(2), Flags::read | Flags::write);
+	addAttribute<Real>("q_branch_3", &mReactivePowerBranch(2), Flags::read | Flags::write);
 }
 
 
@@ -357,11 +357,11 @@ void SP::Ph1::Transformer3W::pfApplyAdmittanceMatrixStamp(SparseMatrixCompRow & 
 	c = mLeakagePerUnit1 * mLeakagePerUnit3 * mRatioAbs2;
 	
 	if ((std::abs(mMagnetizingPerUnit) > 1e9)) {
-		d = a * mRatioAbs1 + b * mRatioAbs2 + c * mRatioAbs3;
+		d = a * mRatioAbs1 + b * mRatioAbs3 + c * mRatioAbs2;
 	}
 	else {
-		d = a * mRatioAbs1 + b * mRatioAbs2 + c * mRatioAbs3 + 
-				(mLeakagePerUnit3 * mLeakagePerUnit2 * mLeakagePerUnit3 / mMagnetizingPerUnit);
+		d = a * mRatioAbs1 + b * mRatioAbs3+ c * mRatioAbs2 + 
+				(mLeakagePerUnit1 * mLeakagePerUnit2 * mLeakagePerUnit3 / mMagnetizingPerUnit);
 	}
 
 	mY_element(0, 0) = (d - mRatioAbs1 * a) / (mLeakagePerUnit1 * d);
