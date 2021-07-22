@@ -107,70 +107,24 @@ build:linux-profiling:
   tags:
     - docker
 
-.build-solver-benchmark-template:
-  stage: build
-  needs: ["docker:centos"]
-  image: ${DOCKER_IMAGE_DEV}-centos:${DOCKER_TAG}
-  artifacts:
-    paths:
-      - build
-  tags:
-    - docker
-
-build:solver-benchmark 1/3:
-  extends: .build-solver-benchmark-template
-  script:
-    - mkdir -p build
-    - cd build
-    - cmake -DWITH_CUDA=OFF -DWITH_SPARSE=OFF -DWITH_SPDLOG_SUBMODULE=ON ..
-    - make -j $(nproc) WSCC_9bus_mult_coupled
-  cache:
-    paths:
-      - build
-    key: build-solver-benchmark-dense-cpu
-
-build:solver-benchmark 2/3:
-  extends: .build-solver-benchmark-template
-  script:
-    - mkdir -p build
-    - cd build
-    - cmake -DWITH_CUDA=ON -DWITH_SPARSE=OFF -DWITH_SPDLOG_SUBMODULE=ON ..
-    - make -j $(nproc) WSCC_9bus_mult_coupled
-  cache:
-    paths:
-      - build
-    key: build-solver-benchmark-dense-gpu
-  
-build:solver-benchmark 3/3:
-  extends: .build-solver-benchmark-template
-  script:
-    - mkdir -p build
-    - cd build
-    - cmake -DWITH_CUDA=OFF -DWITH_SPARSE=ON -DWITH_SPDLOG_SUBMODULE=ON ..
-    - make -j $(nproc) WSCC_9bus_mult_coupled
-  cache:
-    paths:
-      - build
-    key: build-solver-benchmark-sparse-cpu
-
 build:linux-cuda:
   stage: build
   needs: ["docker:centos"]
+  image: ${DOCKER_IMAGE_DEV}-centos:${DOCKER_TAG}
+  artifacts:
+    paths:
+      - build
+  tags:
+    - docker
   script:
     - mkdir -p build
     - cd build
-    - cmake -DWITH_SPDLOG_SUBMODULE=ON ..
-    - make -j 32
-  image: ${DOCKER_IMAGE_DEV}-centos:${DOCKER_TAG}
+    - cmake -DWITH_CUDA=ON -DWITH_SPARSE=ON -DWITH_SPDLOG_SUBMODULE=ON -DWITH_MAGMA=ON ..
+    - make -j$(nproc)
   cache:
     paths:
       - build
-    key: build-linux-cuda
-  artifacts:
-    paths:
-     - build
-  tags:
-    - docker
+    key: build-linux-cuda-sparse
 
 #build:windows:
 #  stage: build
@@ -357,11 +311,11 @@ test:examples 2/2:
   tags:
     - docker
 
-test:solver-benchmark 1/3:
+test:solver-benchmark 1/2:
     extends: .benchmark-step-times
-    needs: ["build:solver-benchmark 1/3"]
+    needs: ["build:linux-cuda"]
     dependencies:
-      - build:solver-benchmark 1/3
+      - build:linux-cuda
     variables:
 # Metrics-filename
       METRICS_ID: 'cpu-dense'
@@ -371,6 +325,7 @@ test:solver-benchmark 1/3:
       TEST_BINARY_PATH: 'build/Examples/Cxx'
 # Up to how many copies should be benchmarked (WSCC_9bus - Example)
       TEST_NUM_COPIES: 6
+      TEST_PARAM: "-U EigenDense"
     artifacts:
       reports:
           metrics: cpu-dense-metrics.txt
@@ -378,32 +333,12 @@ test:solver-benchmark 1/3:
         - cpu-dense-metrics.txt
       expose_as: 'step-times-benchmark'
 
-test:solver-benchmark 2/3:
-    extends: .remote-gpu
-    needs: ["build:solver-benchmark 2/3"]
-    dependencies:
-      - build:solver-benchmark 2/3
-    variables:
-# Metrics-filename
-      METRICS_ID: 'gpu-dense'
-# Name of the test binary
-      TEST_BINARY: 'WSCC_9bus_mult_coupled'
-# Path where the test binary is located
-      TEST_BINARY_PATH: 'build/Examples/Cxx'
-# Up to how many copies should be benchmarked (WSCC_9bus - Example)
-      TEST_NUM_COPIES: 6
-    artifacts:
-      reports:
-          metrics: gpu-dense-metrics.txt
-      paths:
-        - gpu-dense-metrics.txt
-      expose_as: 'step-times-benchmark'
 
-test:solver-benchmark 3/3:
+test:solver-benchmark 2/2:
     extends: .benchmark-step-times
-    needs: ["build:solver-benchmark 3/3"]
+    needs: ["build:linux-cuda"]
     dependencies:
-      - build:solver-benchmark 3/3
+      - build:linux-cuda
     variables:
 # Metrics-filename
       METRICS_ID: 'cpu-sparse'
@@ -413,12 +348,14 @@ test:solver-benchmark 3/3:
       TEST_BINARY_PATH: 'build/Examples/Cxx'
 # Up to how many copies should be benchmarked (WSCC_9bus - Example)
       TEST_NUM_COPIES: 6
+      TEST_PARAM: "-U EigenSparse"
     artifacts:
       reports:
           metrics: cpu-sparse-metrics.txt
       paths:
         - cpu-sparse-metrics.txt
       expose_as: 'step-times-benchmark'
+
 
 .gpu-init-script: &gpu-init-script |
     mkdir ~/.ssh &&
@@ -436,16 +373,12 @@ test:solver-benchmark 3/3:
     scp -r $LDIR/* $GPU_TARGET:$RDIR/
 
 .gpu-run-script: &gpu-run-script |
-    for ((copies=0;copies<=$TEST_NUM_COPIES;copies++))
-    do
-      ssh $GPU_TARGET "LD_LIBRARY_PATH=$RDIR:${LD_LIBRARY_PATH} LD_PRELOAD=$RDIR/cricket-server.so $RDIR/$TEST_BINARY" &
-      sleep 2
-      echo "Running with $copies copies"
-      PATH=$LDIR:${PATH} LD_PRELOAD=$LDIR/cricket-client.so $TEST_BINARY_PATH/$TEST_BINARY $TEST_PARAM -o copies=$copies 2>&1 | tee output.log
-      cat output.log |
-      sed -n -E -e 's/^.*Average step time. ([0-9]+\.[0-9]+)$/\1/p' |
-      tee -a ${METRICS_ID}-metrics.txt
-    done
+  ssh $GPU_TARGET "LD_LIBRARY_PATH=$RDIR:${LD_LIBRARY_PATH} LD_PRELOAD=$RDIR/cricket-server.so $RDIR/$TEST_BINARY" &
+  sleep 2
+  PATH=$LDIR:${PATH} REMOTE_GPU_ADDRESS=ghost.acs-lab.eonerc.rwth-aachen.de LD_PRELOAD=$LDIR/cricket-client.so $TEST_BINARY_PATH/$TEST_BINARY $TEST_PARAM 2>&1 | tee output.log
+  cat output.log |
+  sed -n -E -e 's/^.*Average step time. ([0-9]+\.[0-9]+)$/\1/p' |
+  tee -a ${METRICS_ID}-metrics.txt
 
 .remote-gpu:
   stage: test
@@ -478,25 +411,22 @@ test:solver-benchmark 3/3:
   tags:
     - docker
 
-test:cuda 1/2:
+test:cuda 1/3:
     extends: .remote-gpu
     needs: ["build:linux-cuda"]
     dependencies:
     - build:linux-cuda
-    allow_failure: true
     variables:
 # Metrics-filename
       METRICS_ID: 'cuda'
 # Name of the test binary
-      TEST_BINARY: 'WSCC_9bus_mult_decoupled'
+      TEST_BINARY: 'WSCC_9bus_mult_coupled'
 # Path where the test binary is located
       TEST_BINARY_PATH: 'build/Examples/Cxx'
 # Additional files that are necessary to run the application on the GPU node
       TEST_FILE: ''
 # Command line parameters for the test binary
-      TEST_PARAM: ''
-# Up to how many copies should be benchmarked (WSCC_9bus - Example)
-      TEST_NUM_COPIES: 0
+      TEST_PARAM: "-U CUDADense"
     artifacts:
       reports:
           metrics: cuda-metrics.txt
@@ -504,7 +434,7 @@ test:cuda 1/2:
         - cuda-metrics.txt
       expose_as: 'step-times-benchmark'
 
-test:cuda 2/2:
+test:cuda 2/3:
     extends: .remote-gpu
     needs: ["build:linux-cuda"]
     dependencies:
@@ -520,15 +450,38 @@ test:cuda 2/2:
 # Additional files that are necessary to run the application on the GPU node
       TEST_FILE: ''
 # Command line parameters for the test binary
-      TEST_PARAM: ''
-# Up to how many copies should be benchmarked (WSCC_9bus - Example)
-      TEST_NUM_COPIES: 0
+      TEST_PARAM: '-U CUDASparse'
     artifacts:
       reports:
           metrics: cuda-metrics.txt
       paths:
         - cuda-metrics.txt
       expose_as: 'step-times-benchmark'
+
+test:cuda 3/3:
+    extends: .remote-gpu
+    needs: ["build:linux-cuda"]
+    allow_failure: true
+    dependencies:
+    - build:linux-cuda
+    variables:
+# Metrics-filename
+      METRICS_ID: 'cuda'
+# Name of the test binary
+      TEST_BINARY: 'WSCC_9bus_mult_coupled'
+# Path where the test binary is located
+      TEST_BINARY_PATH: 'build/Examples/Cxx'
+# Additional files that are necessary to run the application on the GPU node
+      TEST_FILE: ''
+# Command line parameters for the test binary
+      TEST_PARAM: '-U CUDAMagma'
+    artifacts:
+      reports:
+          metrics: cuda-metrics.txt
+      paths:
+        - cuda-metrics.txt
+      expose_as: 'step-times-benchmark'
+
 
 
 ##############################################################################
@@ -570,7 +523,7 @@ generate:packages:
 
 generate:metrics:
   stage: generate
-  needs: ["test:solver-benchmark 1/3", "test:solver-benchmark 2/3", "test:solver-benchmark 3/3"]
+  needs: ["test:solver-benchmark 1/2", "test:solver-benchmark 2/2"]
   script:
     - echo "set terminal svg size 800, 500; set output 'metrics.svg'; set title 'Speed of different Solver-Configurations'; set style data lines; set key outside; set xlabel \"Copies (WSCC-9bus Example)\"; set ylabel \"Average steptime (µs)\"; set xtics 1; set xtics nomirror; set ytics nomirror; set grid; plot \"cpu-dense-metrics.txt\" using (\$1 * 1000000) title \"Solving with CPU and dense matrices\", \"gpu-dense-metrics.txt\" using (\$1 * 1000000) title \"Solving with GPU and dense matrices\", \"cpu-sparse-metrics.txt\" using (\$1 * 1000000) title \"Solving with CPU and sparse matrices\"" > script.p
     - gnuplot script.p

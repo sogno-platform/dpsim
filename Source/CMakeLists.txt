@@ -63,12 +63,20 @@ if(WITH_CUDA)
 		
 		list(APPEND DPSIM_LIBRARIES ${CUDA_LIBRARIES} ${CUDA_cusolver_LIBRARY})
 
+	if(WITH_MAGMA)
+		list(APPEND DPSIM_SOURCES
+			MNASolverGpuMagma.cpp
+			)
+		list(APPEND DPSIM_LIBRARIES ${MAGMA_LIBRARIES})
+		list(APPEND DPSIM_INCLUDE_DIRS ${MAGMA_INCLUDE_DIR})
+	endif()
 	if(WITH_SPARSE)
 		list(APPEND DPSIM_SOURCES
 			MNASolverGpuSparse.cpp
 		)
 
 		list(APPEND DPSIM_LIBRARIES ${CUDA_cusparse_LIBRARY})
+
 	endif()
 endif()
 

@@ -20,27 +20,12 @@ RUN dnf -y update && \
     dnf config-manager --set-enabled remi
 
 # CUDA dependencies
-RUN dnf -y install https://developer.download.nvidia.com/compute/cuda/repos/rhel8/x86_64/cuda-repo-rhel8-10.2.89-1.x86_64.rpm && \
-    dnf --refresh -y install cuda-compiler-10-2 cuda-libraries-dev-10-2 && \
-    ln -s cuda-10.2 /usr/local/cuda
+RUN dnf config-manager --add-repo https://developer.download.nvidia.com/compute/cuda/repos/rhel8/x86_64/cuda-rhel8.repo && \
+    dnf --refresh -y install cuda-compiler-11-4 cuda-libraries-devel-11-4 cuda-nvprof-11-4 && \
+    ln -s cuda-11.4 /usr/local/cuda
 
 ENV PATH="/usr/local/cuda/bin:${PATH}"
 ENV LD_LIBRARY_PATH="/usr/local/cuda/lib64:${LD_LIBRARY_PATH}"
-
-# CUDARPC and dependencies
-RUN dnf install -y make bash git gcc autoconf libtool automake \
-                   ncurses-devel zlib-devel binutils-devel mesa-libGL-devel \
-                   libvdpau-devel mesa-libEGL-devel openssl-devel rpcbind \
-                   rpcgen texinfo bison flex
-
-ENV LD_LIBRARY_PATH="/usr/local/lib:/usr/local/lib64:${LD_LIBRARY_PATH}"
-# copy gitlab-runner ssh credentials into build container
-RUN git clone -b 1.0  --depth 1 --recurse-submodules https://git.rwth-aachen.de/acs/public/virtualization/cricket.git && \
-    cd cricket && \
-    make -j 16 LOG=INFO
-
-ENV PATH="$PWD/cricket/bin:${PATH}"
-ENV LD_LIBRARY_PATH="$PWD/cricket/bin:${LD_LIBRARY_PATH}"
 
 # Toolchain
 RUN dnf -y install \
@@ -52,7 +37,11 @@ RUN dnf -y install \
 	graphviz \
 	pandoc \
 	python3-pip \
-	pkg-config
+	pkg-config \
+    wget \
+    libarchive \
+    openblas-devel \
+    gcc-gfortran
 
 # Dependencies
 RUN dnf --refresh -y install \
@@ -71,6 +60,24 @@ RUN dnf -y install \
     libcurl-devel \
     jansson-devel \
     mosquitto-devel
+
+# CUDARPC and dependencies
+RUN dnf install -y make bash git gcc autoconf libtool automake \
+                   ncurses-devel zlib-devel binutils-devel mesa-libGL-devel \
+                   libvdpau-devel mesa-libEGL-devel openssl-devel rpcbind \
+                   rpcgen texinfo bison flex
+
+ENV LD_LIBRARY_PATH="/usr/local/lib:/usr/local/lib64:${LD_LIBRARY_PATH}"
+# copy gitlab-runner ssh credentials into build container
+RUN git clone -b 2.0  --depth 1 --recurse-submodules https://git.rwth-aachen.de/acs/public/virtualization/cricket.git && \
+    cd cricket && \
+    make -j16 bin/cricket-client.so LOG=INFO && \
+    make -j16 bin/cricket-server.so LOG=INFO && \
+    make -j16 bin/libtirpc.so LOG=INFO && \
+    make -j16 bin/libtirpc.so.3 LOG=INFO
+
+ENV PATH="$PWD/cricket/bin:${PATH}"
+ENV LD_LIBRARY_PATH="$PWD/cricket/bin:${LD_LIBRARY_PATH}"
 
 # Install Libwebsockets from source because the repo variant is not suitable
 RUN git clone --branch v4.0-stable --depth 1 https://libwebsockets.org/repo/libwebsockets && \
@@ -101,6 +108,16 @@ RUN cd /tmp && \
 	mkdir -p libcimpp/build && cd libcimpp/build && \
 	cmake -DCMAKE_INSTALL_LIBDIR=/usr/local/lib64 -DUSE_CIM_VERSION=${CIM_VERSION} -DBUILD_SHARED_LIBS=ON -DBUILD_ARABICA_EXAMPLES=OFF .. && make -j$(nproc) install && \
 	rm -rf /tmp/libcimpp
+
+# Install MAGMA from source
+RUN cd /tmp && \
+    wget http://icl.utk.edu/projectsfiles/magma/downloads/magma-2.6.0.tar.gz && \
+    tar -xvzf magma-2.6.0.tar.gz && \
+    mkdir -p magma-2.6.0/build && cd magma-2.6.0/build && \
+    cmake .. -DMAGMA_ENABLE_CUDA=ON -DCMAKE_INSTALL_PREFIX=/ -DGPU_TARGET='Pascal Turing Ampere' -DBUILD_SHARED_LIBS=on && \
+    make -j$(nproc) install && rm -rf /tmp/magma-2.6.0
+
+
 
 # CIMpp and VILLAS are installed here
 ENV LD_LIBRARY_PATH="/usr/local/lib64:${LD_LIBRARY_PATH}"
