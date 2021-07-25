@@ -207,7 +207,7 @@ namespace Ph3 {
 		/// Function parameters have to be given in real units.
 		void initialize(Real om, Real dt,
 			Real initActivePower, Real initReactivePower, Real initTerminalVolt,
-			Real initVoltAngle, Real initFieldVoltage, Real initMechPower);
+			Real initVoltAngle, Real initMechPower);
 
 		/// Performs an Euler forward step with the state space model of a synchronous generator
 		/// to calculate the flux and current from the voltage vector.

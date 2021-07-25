@@ -151,15 +151,14 @@ int main(int argc, char* argv[]) {
 	Real initReactivePower = 51.261e6;
 	Real initTerminalVolt = 24000 / sqrt(3) * sqrt(2);
 	Real initVoltAngle = -DPS_PI / 2;
-	Real fieldVoltage = 7.0821;
 	Real mechPower = 286.34e6;
 	auto genPtr = std::dynamic_pointer_cast<DP::Ph3SynchronGeneratorVBRNew>(gen);
-	genPtr->initialize(om, dt, initActivePower, initReactivePower, initTerminalVolt, initVoltAngle, fieldVoltage, mechPower);
+	genPtr->initialize(om, dt, initActivePower, initReactivePower, initTerminalVolt, initVoltAngle, mechPower);
 	genPtr->AddExciter(Ta, Ka, Te, Ke, Tf, Kf, Tr, Lmd, Rfd);
 	genPtr->AddGovernor(Ta_t, Tb, Tc, Fa, Fb, Fc, Kg, Tsr, Tsm, initActivePower / nomPower, mechPower / nomPower);
 
 	auto genPtr2 = std::dynamic_pointer_cast<DP::Ph3SynchronGeneratorVBRNew>(gen2);
-	genPtr2->initialize(om, dt, initActivePower, initReactivePower, initTerminalVolt, initVoltAngle, fieldVoltage, mechPower);
+	genPtr2->initialize(om, dt, initActivePower, initReactivePower, initTerminalVolt, initVoltAngle, mechPower);
 	genPtr2->AddExciter(Ta, Ka, Te, Ke, Tf, Kf, Tr, Lmd, Rfd);
 	genPtr2->AddGovernor(Ta_t, Tb, Tc, Fa, Fb, Fc, Kg, Tsr, Tsm, initActivePower / nomPower, mechPower / nomPower);
 

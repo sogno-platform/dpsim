@@ -173,10 +173,8 @@ int main(int argc, char* argv[]) {
 	gen->setParametersOperationalPerUnit(
 		syngenKundur.nomPower, syngenKundur.nomVoltage, syngenKundur.nomFreq, syngenKundur.poleNum, syngenKundur.nomFieldCurr,
 		Rs, Ld, Lq, Ld_t, Lq_t, Ld_s,
-		Lq_s, Ll, Td0_t, Tq0_t, Td0_s, Tq0_s, H,
-	 	initActivePower, initReactivePower, initTerminalVolt,
-	 	initVoltAngle, syngenKundur.fieldVoltage, initMechPower
-	);
+		Lq_s, Ll, Td0_t, Tq0_t, Td0_s, Tq0_s, H);
+	gen->setInitialValues(initActivePower, initReactivePower, initTerminalVolt,	initVoltAngle, initMechPower);
 
 	//Grid bus as Slack
 	auto extnet = EMT::Ph3::NetworkInjection::make("Slack", Logger::Level::debug);

@@ -69,10 +69,9 @@ int main(int argc, char* argv[]) {
 	Real initReactivePower = 0;
 	Real initTerminalVolt = 24000 / sqrt(3) * sqrt(2);
 	Real initVoltAngle = -DPS_PI / 2;
-	Real fieldVoltage = 7.0821;
 	Real mechPower = 5.5558e5;
 	auto genPtr = std::dynamic_pointer_cast<SynchronGeneratorDQ>(gen);
-	genPtr->initialize(om, dt, initActivePower, initReactivePower, initTerminalVolt, initVoltAngle, fieldVoltage, mechPower);
+	genPtr->initialize(om, dt, initActivePower, initReactivePower, initTerminalVolt, initVoltAngle, mechPower);
 
 	// Calculate initial values for circuit at generator connection point
 #if 0

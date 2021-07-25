@@ -54,7 +54,6 @@ int main(int argc, char* argv[]) {
     Real initReactivePower = 0;
     Real initTerminalVolt = 24000 / sqrt(3) * sqrt(2);
     Real initVoltAngle = -PI / 2;
-    Real fieldVoltage = 7.0821;
     Real mechPower = 300e6;
 
 
@@ -72,7 +71,7 @@ int main(int argc, char* argv[]) {
     auto gen = Ph3::SynchronGeneratorDQ::make("DP_SynGen_dq_ThreePhFault_SynGen", ode_class);
     gen->setParametersFundamentalPerUnit(nomPower, nomPhPhVoltRMS, nomFreq, poleNum, nomFieldCurr,
                                     Rs, Ll, Lmd, Lmq, Rfd, Llfd, Rkd, Llkd, Rkq1, Llkq1, Rkq2, Llkq2, H,
-                                    initActivePower, initReactivePower, initTerminalVolt, initVoltAngle, fieldVoltage, mechPower);
+                                    initActivePower, initReactivePower, initTerminalVolt, initVoltAngle, mechPower);
 
     ODEintSolver sim(simName, gen, timeStep, timeStep);
 

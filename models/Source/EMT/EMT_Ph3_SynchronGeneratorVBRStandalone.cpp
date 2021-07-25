@@ -42,7 +42,7 @@ void EMT::Ph3::SynchronGeneratorVBRStandalone::addGovernor(Real Ta, Real Tb, Rea
 
 void EMT::Ph3::SynchronGeneratorVBRStandalone::initialize(Real om, Real dt,
 	Real initActivePower, Real initReactivePower, Real initTerminalVolt,
-	Real initVoltAngle, Real initFieldVoltage, Real initMechPower) {
+	Real initVoltAngle, Real initMechPower) {
 
 	mSystemOmega = om;
 	mSystemTimeStep = dt;
@@ -98,7 +98,7 @@ void EMT::Ph3::SynchronGeneratorVBRStandalone::initialize(Real om, Real dt,
 	mLb = (mDLmd - mDLmq) / 3.;
 
 	// steady state per unit initial value
-	initStatesInPerUnit(initActivePower, initReactivePower, initTerminalVolt, initVoltAngle, initFieldVoltage, initMechPower);
+	initStatesInPerUnit(initActivePower, initReactivePower, initTerminalVolt, initVoltAngle, initMechPower);
 
 	// Correcting variables
 	mThetaMech = mThetaMech + PI/2;

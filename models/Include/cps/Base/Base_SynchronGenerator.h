@@ -120,7 +120,6 @@ namespace Base {
 		// #### Initial Values ####
 		Complex mInitElecPower = 0;
 		Complex mInitTermVoltage = 0;
-		Real mInitFieldVoltage = 0;
 		Real mInitMechPower = 0;
 
 		// ### Stator base values ###
@@ -310,8 +309,7 @@ namespace Base {
 		///
 		void setInitialValues(
 			Real initActivePower, Real initReactivePower,
-			Real initTerminalVolt, Real initVoltAngle,
-			Real initFieldVoltage, Real initMechPower);
+			Real initTerminalVolt, Real initVoltAngle, Real initMechPower);
 
 		/// Switch to determine the integration method for the machine model.
 		void setNumericalMethod(NumericalMethod method) { mNumericalMethod = method; }
