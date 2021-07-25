@@ -219,12 +219,10 @@ void Base::SynchronGenerator::calculateFundamentalFromOperationalParameters() {
 }
 
 void Base::SynchronGenerator::setInitialValues(Real initActivePower, Real initReactivePower,
-	Real initTerminalVolt, Real initVoltAngle,
-	Real initFieldVoltage, Real initMechPower) {
+	Real initTerminalVolt, Real initVoltAngle, Real initMechPower) {
 	mInitElecPower = Complex(initActivePower, initReactivePower);
 	mInitTerminalVoltage = initTerminalVolt;
 	mInitVoltAngle = initVoltAngle;
-	mInitFieldVoltage = initFieldVoltage;
 	mInitMechPower = initMechPower;
 }
 

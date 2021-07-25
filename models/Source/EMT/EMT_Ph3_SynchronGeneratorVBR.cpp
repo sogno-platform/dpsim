@@ -51,8 +51,7 @@ void EMT::Ph3::SynchronGeneratorVBR::setParametersFundamentalPerUnit(
 	Real nomPower, Real nomVolt, Real nomFreq, Int poleNumber, Real nomFieldCur,
 	Real Rs, Real Ll, Real Lmd, Real Lmq, Real Rfd, Real Llfd, Real Rkd, Real Llkd,
 	Real Rkq1, Real Llkq1, Real Rkq2, Real Llkq2, Real inertia,
-	Real initActivePower, Real initReactivePower, Real initTerminalVolt, Real initVoltAngle,
-	Real initFieldVoltage, Real initMechPower) {
+	Real initActivePower, Real initReactivePower, Real initTerminalVolt, Real initVoltAngle, Real initMechPower) {
 
 	Base::SynchronGenerator::setBaseAndFundamentalPerUnitParameters(
 		nomPower, nomVolt, nomFreq, nomFieldCur,
@@ -66,13 +65,13 @@ void EMT::Ph3::SynchronGeneratorVBR::setParametersFundamentalPerUnit(
 				Rs, Ll, Lmd, Lmq, Rfd, Llfd, Rkd, Llkd, Rkq1, Llkq1, Rkq2, Llkq2, inertia);
 
 	Base::SynchronGenerator::setInitialValues(initActivePower, initReactivePower,
-		initTerminalVolt, initVoltAngle, initFieldVoltage, initMechPower);
+		initTerminalVolt, initVoltAngle, initMechPower);
 
 	mSLog->info("Set initial values: \n"
 				"initActivePower: {:e}\ninitReactivePower: {:e}\ninitTerminalVolt: {:e}\n"
-				"initVoltAngle: {:e}\ninitFieldVoltage: {:e}\ninitMechPower: {:e}",
+				"initVoltAngle: {:e} \ninitMechPower: {:e}",
 				initActivePower, initReactivePower, initTerminalVolt, 
-				initVoltAngle, initFieldVoltage, initMechPower);
+				initVoltAngle, initMechPower);
 }
 
 void EMT::Ph3::SynchronGeneratorVBR::addExciter(Real Ta, Real Ka, Real Te, Real Ke, Real Tf, Real Kf, Real Tr, Real Lad, Real Rfd) {

@@ -47,7 +47,6 @@ void doSim(int threads, int generators, int repNumber) {
 	Real initMechPower = 300e6;
 	Real initTerminalVolt = 24000 / sqrt(3) * sqrt(2);
 	Real initVoltAngle = -PI / 2;
-	Real fieldVoltage = 7.0821;
 
 	// Define grid parameters
 	Real Rload = 1.92;
@@ -75,7 +74,7 @@ void doSim(int threads, int generators, int repNumber) {
 			nomPower, nomPhPhVoltRMS, nomFreq, poleNum, nomFieldCurr,
 			Rs, Ll, Lmd, Lmq, Rfd, Llfd, Rkd, Llkd, Rkq1, Llkq1, Rkq2, Llkq2, H,
 			initActivePower, initReactivePower, initTerminalVolt,
-			initVoltAngle, fieldVoltage, initMechPower);
+			initVoltAngle, initMechPower);
 
 		auto line = Ph3::SeriesResistor::make("R_line" + std::to_string(i));
 		line->setParameters(Rline);

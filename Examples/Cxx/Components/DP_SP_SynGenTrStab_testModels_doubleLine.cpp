@@ -36,7 +36,6 @@ Real initReactivePower = 0;
 Real initMechPower = 300e6;
 // Real initTerminalVolt = 24000 / sqrt(3) * sqrt(2);
 // Real initVoltAngle = -PI / 2;
-Real fieldVoltage = 7.0821;
 
 
 //PiLine parameters calculated from CIGRE Benchmark system

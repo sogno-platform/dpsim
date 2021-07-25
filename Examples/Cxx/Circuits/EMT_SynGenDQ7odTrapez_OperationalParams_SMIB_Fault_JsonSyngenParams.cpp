@@ -138,10 +138,8 @@ int main(int argc, char* argv[]) {
 	gen->setParametersOperationalPerUnit(
 		syngenKundur.nomPower, syngenKundur.nomVoltage, syngenKundur.nomFreq, syngenKundur.poleNum, syngenKundur.nomFieldCurr,
 		0, 0, 0, 0, 0, 0,
-		0, 0, 0, 0, 0, 0, syngenKundur.H,
-	 	initActivePower, initReactivePower, initTerminalVolt,
-	 	initVoltAngle, syngenKundur.fieldVoltage, initMechPower
-	);
+		0, 0, 0, 0, 0, 0, syngenKundur.H);
+	gen->setInitialValues(initActivePower, initReactivePower, initTerminalVolt,	initVoltAngle, initMechPower);
 	DPsim::Utils::applySynchronousGeneratorParametersFromJson(simConfig, gen);
 
 	//Grid bus as Slack

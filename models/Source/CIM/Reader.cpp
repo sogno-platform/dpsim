@@ -606,7 +606,54 @@ TopologicalPowerComp::Ptr Reader::mapSynchronousMachine(CIMPP::SynchronousMachin
 		}
 	} else {
 		mSLog->info("    Create generator in EMT domain.");
-		if (mGeneratorType == GeneratorType::IdealVoltageSource) {
+		if (mGeneratorType == GeneratorType::FullOrder) {
+			mSLog->info("    GeneratorType is FullOrder.");
+			
+			Real ratedPower = unitValue(machine->ratedS.value, UnitMultiplier::M);
+			Real ratedVoltage = unitValue(machine->ratedU.value, UnitMultiplier::k);
+
+			for (auto obj : mModel->Objects) {
+				// Check if object is not TopologicalNode, SvVoltage or SvPowerFlow
+				if (CIMPP::SynchronousMachineTimeConstantReactance* genDyn =
+					dynamic_cast<CIMPP::SynchronousMachineTimeConstantReactance*>(obj)) {
+					if (genDyn->SynchronousMachine->mRID == machine->mRID) {
+						
+						// stator
+						Real Rs = genDyn->statorResistance.value;
+						Real Ll = genDyn->statorLeakageReactance.value;
+						
+						// reactances
+						Real Ld = genDyn->xDirectSync.value;
+						Real Lq = genDyn->xQuadSync.value;
+						Real Ld_t = genDyn->xDirectTrans.value;
+						Real Lq_t = genDyn->xQuadTrans.value;
+						Real Ld_s = genDyn->xDirectSubtrans.value;
+						Real Lq_s = genDyn->xQuadSubtrans.value;
+						
+						// time constants
+						Real Td0_t = genDyn->tpdo.value;
+						Real Tq0_t = genDyn->tpqo.value;
+						Real Td0_s = genDyn->tppdo.value;
+						Real Tq0_s = genDyn->tppqo.value;
+
+						// inertia
+						Real H = genDyn->inertia.value;
+
+						// not available in CIM -> set to 0, as actually no impact on machine equations
+						Int poleNum = 0;
+						Real nomFieldCurr = 0;
+
+						auto gen = std::make_shared<EMT::Ph3::SynchronGeneratorDQTrapez>(machine->mRID, machine->name, mComponentLogLevel);
+						gen->setParametersOperationalPerUnit(
+						ratedPower, ratedVoltage, mFrequency, poleNum, nomFieldCurr,
+						Rs, Ld, Lq, Ld_t, Lq_t, Ld_s, Lq_s, Ll, 
+						Td0_t, Tq0_t, Td0_s, Tq0_s, H); 
+						
+						return gen;
+					}
+				}
+			}
+		} else if (mGeneratorType == GeneratorType::IdealVoltageSource) {
 			mSLog->info("    GeneratorType is IdealVoltageSource.");
 			return std::make_shared<EMT::Ph3::SynchronGeneratorIdeal>(machine->mRID, machine->name, mComponentLogLevel);
 		} else if (mGeneratorType == GeneratorType::None) {

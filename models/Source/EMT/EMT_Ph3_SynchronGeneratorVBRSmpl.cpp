@@ -34,7 +34,7 @@ void EMT::Ph3::SynchronGeneratorVBRSmpl::addExciter(Real Ta, Real Ka, Real Te, R
 
 void EMT::Ph3::SynchronGeneratorVBRSmpl::initialize(Real om, Real dt,
 	Real initActivePower, Real initReactivePower,
-	Real initTerminalVolt, Real initVoltAngle, Real initFieldVoltage, Real initMechPower) {
+	Real initTerminalVolt, Real initVoltAngle, Real initMechPower) {
 
 	mSystemOmega = om;
 	mSystemTimeStep = dt;
@@ -74,7 +74,7 @@ void EMT::Ph3::SynchronGeneratorVBRSmpl::initialize(Real om, Real dt,
 	mDLq = mLl + mDLmq;
 
 	// steady state per unit initial value
-	initStatesInPerUnit(initActivePower, initReactivePower, initTerminalVolt, initVoltAngle, initFieldVoltage, initMechPower);
+	initStatesInPerUnit(initActivePower, initReactivePower, initTerminalVolt, initVoltAngle, initMechPower);
 
 	// Correcting variables
 	mThetaMech = mThetaMech + PI / 2;

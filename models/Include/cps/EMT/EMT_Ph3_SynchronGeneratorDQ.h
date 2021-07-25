@@ -48,15 +48,16 @@ namespace Ph3 {
 		void setParametersFundamentalPerUnit(Real nomPower, Real nomVolt, Real nomFreq, Int poleNumber, Real nomFieldCur,
 			Real Rs, Real Ll, Real Lmd, Real Lmq, Real Rfd, Real Llfd, Real Rkd, Real Llkd,
 			Real Rkq1, Real Llkq1, Real Rkq2, Real Llkq2, Real inertia,
-			Real initActivePower, Real initReactivePower, Real initTerminalVolt, Real initVoltAngle,
-			Real initFieldVoltage, Real initMechPower);
+			Real initActivePower, Real initReactivePower, Real initTerminalVolt, Real initVoltAngle, Real initMechPower);
 
 		///
 		void setParametersOperationalPerUnit(Real nomPower, Real nomVolt, Real nomFreq, Int poleNumber, Real nomFieldCur,
 			Real Rs, Real Ld, Real Lq, Real Ld_t, Real Lq_t, Real Ld_s, Real Lq_s,
 			Real Ll, Real Td0_t, Real Tq0_t, Real Td0_s, Real Tq0_s,
-			Real inertia, Real initActivePower, Real initReactivePower, Real initTerminalVolt, Real initVoltAngle,
-			Real initFieldVoltage, Real initMechPower);
+			Real inertia);
+
+		///
+		void setInitialValues(Real initActivePower, Real initReactivePower, Real initTerminalVolt, Real initVoltAngle, Real initMechPower);
 
 		///
 		void applyParametersOperationalPerUnit();

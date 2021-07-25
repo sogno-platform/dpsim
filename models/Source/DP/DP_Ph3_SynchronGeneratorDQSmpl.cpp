@@ -43,7 +43,7 @@ void DP::Ph3::SynchronGeneratorDQSmpl::mnaApplySystemMatrixStamp(Matrix& systemM
 
 void DP::Ph3::SynchronGeneratorDQSmpl::initialize(Real om, Real dt,
 	Real initActivePower, Real initReactivePower, Real initTerminalVolt,
-	Real initVoltAngle, Real initFieldVoltage, Real initMechPower) {
+	Real initVoltAngle, Real initMechPower) {
 
 	mSystemOmega = om;
 	mSystemTimeStep = dt;
@@ -75,7 +75,7 @@ void DP::Ph3::SynchronGeneratorDQSmpl::initialize(Real om, Real dt,
 	mReactanceMat = mInductanceMat.inverse();
 
 	// steady state per unit initial value
-	initStatesInPerUnit(initActivePower, initReactivePower, initTerminalVolt, initVoltAngle, initFieldVoltage, initMechPower);
+	initStatesInPerUnit(initActivePower, initReactivePower, initTerminalVolt, initVoltAngle, initMechPower);
 
 	mVaRe = dq0ToAbcTransform(mThetaMech, mVd* mBase_V,  mVq* mBase_V,  mV0* mBase_v)(0);
 	mVbRe = dq0ToAbcTransform(mThetaMech, mVd* mBase_V,  mVq* mBase_V,  mV0* mBase_v)(1);

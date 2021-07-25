@@ -39,7 +39,7 @@ void DP::Ph3::SynchronGeneratorVBR::addGovernor(Real Ta, Real Tb, Real Tc, Real 
 
 void DP::Ph3::SynchronGeneratorVBR::initialize(Real om, Real dt,
 	Real initActivePower, Real initReactivePower,
-	Real initTerminalVolt, Real initVoltAngle, Real initFieldVoltage, Real initMechPower) {
+	Real initTerminalVolt, Real initVoltAngle, Real initMechPower) {
 
 	mSystemOmega = om;
 	mSystemTimeStep = dt;
@@ -71,7 +71,7 @@ void DP::Ph3::SynchronGeneratorVBR::initialize(Real om, Real dt,
 		-mLa / 2, -mLa / 2, mLl + mLa;
 
 	// steady state per unit initial value
-	initStatesInPerUnit(initActivePower, initReactivePower, initTerminalVolt, initVoltAngle, initFieldVoltage, initMechPower);
+	initStatesInPerUnit(initActivePower, initReactivePower, initTerminalVolt, initVoltAngle, initMechPower);
 
 	mThetaMech2 = mThetaMech + PI / 2;
 	mThetaMech = mThetaMech + PI / 2;

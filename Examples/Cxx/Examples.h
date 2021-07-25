@@ -54,8 +54,6 @@ namespace SynchronousGeneratorKundur {
         Real Lq_s = 0.2500;
         Real Ld = 1.8099;
         Real Lq = 1.7600;
-
-        Real fieldVoltage = 7.0821; //TODO: specify operating conditions
     };
 }
 }
