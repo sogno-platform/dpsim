@@ -41,11 +41,13 @@ namespace Base {
 		StateType mStateType = StateType::perUnit;
 		///
 		ParameterType mParameterType;
+		/// Flag to remember when initial values are set
+		Bool mInitialValuesSet = false;
 
 		// ### Machine parameters ###
 		/// nominal power Pn [VA]
 		Real mNomPower = 0;
-		/// nominal voltage Vn [V] (RMS)
+		/// nominal voltage Vn [V] (phase-to-phase RMS)
 		Real mNomVolt = 0;
 		/// nominal frequency fn [Hz]
 		Real mNomFreq = 0;
@@ -123,11 +125,11 @@ namespace Base {
 		Real mInitMechPower = 0;
 
 		// ### Stator base values ###
-		/// base stator voltage
+		/// base stator voltage (phase-to-ground peak)
 		Real mBase_V  = 0;
-		/// base stator voltage RMS
+		/// base stator voltage (phase-to-ground RMS)
 		Real mBase_V_RMS = 0;
-		/// base stator current
+		/// base stator current peak
 		Real mBase_I = 0;
 		/// base stator current RMS
 		Real mBase_I_RMS = 0;

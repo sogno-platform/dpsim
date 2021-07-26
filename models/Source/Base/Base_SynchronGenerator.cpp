@@ -224,6 +224,7 @@ void Base::SynchronGenerator::setInitialValues(Real initActivePower, Real initRe
 	mInitTerminalVoltage = initTerminalVolt;
 	mInitVoltAngle = initVoltAngle;
 	mInitMechPower = initMechPower;
+	mInitialValuesSet = true;
 }
 
 void Base::SynchronGenerator::initPerUnitStates() {
