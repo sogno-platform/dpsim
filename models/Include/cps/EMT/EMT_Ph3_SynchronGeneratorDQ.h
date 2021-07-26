@@ -62,6 +62,11 @@ namespace Ph3 {
 		///
 		void applyParametersOperationalPerUnit();
 
+		/// Initializes component from power flow data
+		void initializeFromNodesAndTerminals(Real frequency);
+		/// Initializes internal states and matrix
+		void initializeMatrixAndStates();
+
 		///
 		void initialize(Matrix frequencies);
 		///

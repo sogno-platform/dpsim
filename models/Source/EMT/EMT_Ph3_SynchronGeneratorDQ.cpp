@@ -70,10 +70,13 @@ void EMT::Ph3::SynchronGeneratorDQ::setParametersFundamentalPerUnit(
 		initTerminalVolt, initVoltAngle, initMechPower);
 
 	mSLog->info("Set initial values: \n"
-				"initActivePower: {:e}\ninitReactivePower: {:e}\ninitTerminalVolt: {:e}\n"
-				"initVoltAngle: {:e} \ninitMechPower: {:e}",
-				initActivePower, initReactivePower, initTerminalVolt,
-				initVoltAngle, initMechPower);
+					"initActivePower: {:e} [W]\n"
+					"initReactivePower: {:e} [VAr]\n"
+					"initTerminalVolt: {:e} [V] (initTerminalVolt: {:e} [pu])\n"
+					"initVoltAngle: {:e} [deg] \n"
+					"initMechPower: {:e} [W]",
+					mInitElecPower.real(), mInitElecPower.imag(), mInitTerminalVoltage, mInitTerminalVoltage/mBase_V,
+					CPS::Math::radtoDeg(mInitVoltAngle), mInitMechPower);
 }
 
 void EMT::Ph3::SynchronGeneratorDQ::setParametersOperationalPerUnit(
@@ -113,10 +116,13 @@ void EMT::Ph3::SynchronGeneratorDQ::setInitialValues(Real initActivePower, Real 
 	initTerminalVolt, initVoltAngle, initMechPower);
 
 	mSLog->info("Set initial values: \n"
-				"initActivePower: {:e}\ninitReactivePower: {:e}\ninitTerminalVolt: {:e}\n"
-				"initVoltAngle: {:e}\ninitMechPower: {:e}",
-				initActivePower, initReactivePower, initTerminalVolt,
-				initVoltAngle, initMechPower);
+				"initActivePower: {:e} [W]\n"
+				"initReactivePower: {:e} [VAr]\n"
+				"initTerminalVolt: {:e} [V] (initTerminalVolt: {:e} [pu])\n"
+				"initVoltAngle: {:e} [deg] \n"
+				"initMechPower: {:e} [W]",
+				mInitElecPower.real(), mInitElecPower.imag(), mInitTerminalVoltage, mInitTerminalVoltage/mBase_V,
+				CPS::Math::radtoDeg(mInitVoltAngle), mInitMechPower);
 }
 
 void EMT::Ph3::SynchronGeneratorDQ::applyParametersOperationalPerUnit() {
@@ -138,10 +144,26 @@ void EMT::Ph3::SynchronGeneratorDQ::applyParametersOperationalPerUnit() {
 			mRs, mLl, mLmd, mLmq, mRfd, mLlfd, mRkd, mLlkd, mRkq1, mLlkq1, mRkq2, mLlkq2);
 }
 
+void EMT::Ph3::SynchronGeneratorDQ::initializeFromNodesAndTerminals(Real frequency) {
+	if(!mInitialValuesSet) {
+		// terminal powers in consumer system -> convert to generator system
+		Real activePower = -terminal(0)->singlePower().real();
+		Real reactivePower = -terminal(0)->singlePower().imag();
+
+		// 	voltage magnitude in phase-to-phase RMS -> convert to phase-to-ground peak expected by setInitialValues
+		Real voltMagnitude = RMS3PH_TO_PEAK1PH*Math::abs(initialSingleVoltage(0));
+
+		this->setInitialValues(activePower, reactivePower, voltMagnitude, Math::phase(initialSingleVoltage(0)), activePower);
+	} else {
+		mSLog->info("Initial values already set, skipping initializeFromNodesAndTerminals.");
+	}
+}
 
 void EMT::Ph3::SynchronGeneratorDQ::initialize(Matrix frequencies) {
 	SimPowerComp<Real>::initialize(frequencies);
+}
 
+void EMT::Ph3::SynchronGeneratorDQ::initializeMatrixAndStates(){
 	// #### Compensation ####
 	mCompensationOn = false;
 	mCompensationCurrent = Matrix::Zero(3,1);
