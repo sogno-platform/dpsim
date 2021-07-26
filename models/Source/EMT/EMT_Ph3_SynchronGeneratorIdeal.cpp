@@ -54,12 +54,56 @@ void EMT::Ph3::SynchronGeneratorIdeal::initializeFromNodesAndTerminals(Real freq
 void EMT::Ph3::SynchronGeneratorIdeal::mnaInitialize(Real omega, Real timeStep, Attribute<Matrix>::Ptr leftVector) {
 	MNAInterface::mnaInitialize(omega, timeStep);
 	updateMatrixNodeIndices();
+	
+	// initialize subcomponent
 	mSubVoltageSource->mnaInitialize(omega, timeStep, leftVector);
-	// since there is no additional behaviour, just use the tasks and right-vector from the voltage source
-	setAttributeRef("right_vector", mSubVoltageSource->attribute("right_vector"));
-	for (auto task : mSubVoltageSource->mnaTasks()) {
-		mMnaTasks.push_back(task);
-	}
+
+	// collect tasks
+	mMnaTasks.push_back(std::make_shared<MnaPreStep>(*this));
+	mMnaTasks.push_back(std::make_shared<MnaPostStep>(*this, leftVector));
+
+	mRightVector = Matrix::Zero(leftVector->get().rows(), 1);
+}
+
+void EMT::Ph3::SynchronGeneratorIdeal::mnaAddPreStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes) {
+	// add pre-step dependencies of subcomponents
+	mSubVoltageSource->mnaAddPreStepDependencies(prevStepDependencies, attributeDependencies, modifiedAttributes);
+	// add pre-step dependencies of component itself
+	prevStepDependencies.push_back(attribute("i_intf"));
+	prevStepDependencies.push_back(attribute("v_intf"));
+	modifiedAttributes.push_back(attribute("right_vector"));
+}
+
+void EMT::Ph3::SynchronGeneratorIdeal::mnaPreStep(Real time, Int timeStepCount) {
+	// pre-step of subcomponents
+	mSubVoltageSource->mnaPreStep(time, timeStepCount);
+	// pre-step of component itself
+	mnaApplyRightSideVectorStamp(mRightVector);
+}
+
+void EMT::Ph3::SynchronGeneratorIdeal::mnaAddPostStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes, Attribute<Matrix>::Ptr &leftVector) {
+	// add post-step dependencies of subcomponents
+	mSubVoltageSource->mnaAddPostStepDependencies(prevStepDependencies, attributeDependencies, modifiedAttributes, leftVector);
+	// add post-step dependencies of component itself
+	attributeDependencies.push_back(leftVector);
+	modifiedAttributes.push_back(attribute("v_intf"));
+	modifiedAttributes.push_back(attribute("i_intf"));
+}
+
+void EMT::Ph3::SynchronGeneratorIdeal::mnaPostStep(Real time, Int timeStepCount, Attribute<Matrix>::Ptr &leftVector) {
+	// post-step of subcomponents
+	mSubVoltageSource->mnaPostStep(time, timeStepCount, leftVector);
+	// post-step of component itself
+	mnaUpdateCurrent(*leftVector);
+	mnaUpdateVoltage(*leftVector);
+}
+
+void EMT::Ph3::SynchronGeneratorIdeal::mnaUpdateCurrent(const Matrix& leftvector) {
+	mIntfCurrent = mSubVoltageSource->attribute<Matrix>("i_intf")->get();
+}
+
+void EMT::Ph3::SynchronGeneratorIdeal::mnaUpdateVoltage(const Matrix& leftVector) {
+	mIntfVoltage = mSubVoltageSource->attribute<Matrix>("v_intf")->get();
 }
 
 void EMT::Ph3::SynchronGeneratorIdeal::mnaApplySystemMatrixStamp(Matrix& systemMatrix) {
