@@ -573,13 +573,13 @@ TopologicalPowerComp::Ptr Reader::mapPowerTransformer(CIMPP::PowerTransformer* t
 		Real inductance2 = 0;
 		Real inductance3 = 0;
 
-		// TODO: Should verify if any inductance is < 1e-12
+		// TODO: Should verify if any inductance is < 1e-12		resistance1 = end1->r.value;
 		resistance1 = end1->r.value;
 		resistance2 = end2->r.value;
 		resistance3 = end3->r.value;
 		inductance1 = end1->x.value / mOmega;
 		inductance2 = end2->x.value / mOmega;
-		inductance3 = end1->x.value / mOmega;
+		inductance3 = end3->x.value / mOmega;
 
 		if (mDomain == Domain::EMT) {
 			mSLog->info("    3-Winding transformer for EMT not implemented yet");

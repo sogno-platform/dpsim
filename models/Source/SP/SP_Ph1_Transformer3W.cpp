@@ -14,9 +14,9 @@ using namespace CPS;
 SP::Ph1::Transformer3W::Transformer3W(String uid, String name, Logger::Level logLevel, Bool withResistiveLosses)
 	: SimPowerComp<Complex>(uid, name, logLevel) {
 	if (withResistiveLosses)
-		setVirtualNodeNumber(9);
+		setVirtualNodeNumber(7);
 	else
-		setVirtualNodeNumber(6);
+		setVirtualNodeNumber(4);
 
 	mSLog->info("Create {} {}", this->type(), name);
 	mIntfVoltage = MatrixComp::Zero(3, 1);
@@ -177,31 +177,19 @@ void SP::Ph1::Transformer3W::initializeFromNodesAndTerminals(Real frequency) {
 	mIntfVoltage = MatrixComp::Zero(3, 1);
 	mIntfCurrent = MatrixComp::Zero(3, 1);
 
-	// Set initial voltage of virtual node in between
-	if(mNumVirtualNodes == 9) {
-		mVirtualNodes[0]->setInitialVoltage(initialSingleVoltage(0) * mRatio1);
-		mVirtualNodes[3]->setInitialVoltage(initialSingleVoltage(1) * mRatio2);
-		mVirtualNodes[6]->setInitialVoltage(initialSingleVoltage(2) * mRatio3);
-
-		mIntfVoltage(0, 0) = mVirtualNodes[0]->initialSingleVoltage() - initialSingleVoltage(0);
-		mIntfVoltage(1, 0) = mVirtualNodes[3]->initialSingleVoltage() - initialSingleVoltage(1);
-		mIntfVoltage(2, 0) = mVirtualNodes[6]->initialSingleVoltage() - initialSingleVoltage(2);
-	}
-	else {
-		mVirtualNodes[0]->setInitialVoltage(initialSingleVoltage(0) * mRatio1);
-		mVirtualNodes[2]->setInitialVoltage(initialSingleVoltage(1) * mRatio2);
-		mVirtualNodes[4]->setInitialVoltage(initialSingleVoltage(2) * mRatio3);
-
-		mIntfVoltage(0, 0) = mVirtualNodes[0]->initialSingleVoltage() - initialSingleVoltage(0);
-		mIntfVoltage(1, 0) = mVirtualNodes[2]->initialSingleVoltage() - initialSingleVoltage(1);
-		mIntfVoltage(2, 0) = mVirtualNodes[4]->initialSingleVoltage() - initialSingleVoltage(2);
-	}
-
 	// Static calculations from load flow data
 	Complex impedance1 = { mResistance1, mReactance1 };
 	Complex impedance2 = { mResistance2, mReactance2 };
 	Complex impedance3 = { mResistance3, mReactance3 };
 
+	// Set initial voltage of virtual node in between
+	mVirtualNodes[1]->setInitialVoltage(initialSingleVoltage(0));
+	mVirtualNodes[2]->setInitialVoltage(initialSingleVoltage(1));
+	mVirtualNodes[3]->setInitialVoltage(initialSingleVoltage(2));
+
+	mIntfVoltage(0, 0) = mVirtualNodes[0]->initialSingleVoltage() - initialSingleVoltage(0) * mRatio1;
+	mIntfVoltage(1, 0) = mVirtualNodes[0]->initialSingleVoltage() - initialSingleVoltage(1) * mRatio2;
+	mIntfVoltage(2, 0) = mVirtualNodes[0]->initialSingleVoltage() - initialSingleVoltage(2) * mRatio3;
 	
 	mIntfCurrent(0, 0) = mIntfVoltage(0, 0) / impedance1;
 	mIntfCurrent(1, 0) = mIntfVoltage(1, 0) / impedance2;
@@ -216,14 +204,14 @@ void SP::Ph1::Transformer3W::initializeFromNodesAndTerminals(Real frequency) {
 	mSubInductor3->setParameters(mInductance3);
 
 
-	if (mNumVirtualNodes == 9) {
-		mVirtualNodes[2]->setInitialVoltage(initialSingleVoltage(0));
+	if (mNumVirtualNodes == 7) {
+		mVirtualNodes[4]->setInitialVoltage(initialSingleVoltage(0));
 		mSubResistor1 = std::make_shared<SP::Ph1::Resistor>(mUID + "_res1", mName + "_res1", Logger::Level::off);
 		mSubResistor1->setParameters(mResistance1);
-		mSubResistor1->connect({ node(0), mVirtualNodes[2] });
+		mSubResistor1->connect({ node(0), mVirtualNodes[4] });
 		mSubResistor1->initialize(mFrequencies);
 		mSubResistor1->initializeFromNodesAndTerminals(frequency);
-		mSubInductor1->connect({ mVirtualNodes[2], mVirtualNodes[0] });
+		mSubInductor1->connect({ mVirtualNodes[4], mVirtualNodes[1] });
 
 		mVirtualNodes[5]->setInitialVoltage(initialSingleVoltage(1));
 		mSubResistor2 = std::make_shared<SP::Ph1::Resistor>(mUID + "_res2", mName + "_res2", Logger::Level::off);
@@ -231,20 +219,20 @@ void SP::Ph1::Transformer3W::initializeFromNodesAndTerminals(Real frequency) {
 		mSubResistor2->connect({ node(1), mVirtualNodes[5] });
 		mSubResistor2->initialize(mFrequencies);
 		mSubResistor2->initializeFromNodesAndTerminals(frequency);
-		mSubInductor2->connect({ mVirtualNodes[5], mVirtualNodes[3] });
+		mSubInductor2->connect({ mVirtualNodes[5], mVirtualNodes[2] });
 
-		mVirtualNodes[8]->setInitialVoltage(initialSingleVoltage(2));
+		mVirtualNodes[6]->setInitialVoltage(initialSingleVoltage(2));
 		mSubResistor2 = std::make_shared<SP::Ph1::Resistor>(mUID + "_res3", mName + "_res3", Logger::Level::off);
 		mSubResistor2->setParameters(mResistance1);
 		mSubResistor2->connect({ node(2), mVirtualNodes[6] });
 		mSubResistor2->initialize(mFrequencies);
 		mSubResistor2->initializeFromNodesAndTerminals(frequency);
-		mSubInductor2->connect({ mVirtualNodes[8], mVirtualNodes[6] });
+		mSubInductor2->connect({ mVirtualNodes[6], mVirtualNodes[3] });
 
 	} else {
-		mSubInductor1->connect({ node(0), mVirtualNodes[0] });
+		mSubInductor1->connect({ node(0), mVirtualNodes[1] });
 		mSubInductor2->connect({ node(1), mVirtualNodes[2] });
-		mSubInductor3->connect({ node(2), mVirtualNodes[4] });
+		mSubInductor3->connect({ node(2), mVirtualNodes[3] });
 	}
 	mSubInductor1->initialize(mFrequencies);
 	mSubInductor1->initializeFromNodesAndTerminals(frequency);
@@ -352,27 +340,27 @@ void SP::Ph1::Transformer3W::pfApplyAdmittanceMatrixStamp(SparseMatrixCompRow & 
 	mY_element = MatrixComp(3, 3);
 	Complex a, b, c, d;
 
-	a = mLeakagePerUnit3 * mLeakagePerUnit2 * mRatioAbs1;
-	b = mLeakagePerUnit1 * mLeakagePerUnit2 * mRatioAbs3;
-	c = mLeakagePerUnit1 * mLeakagePerUnit3 * mRatioAbs2;
+	a = mLeakagePerUnit2 * mLeakagePerUnit3 * mRatioAbs1;
+	b = mLeakagePerUnit3 * mLeakagePerUnit1 * mRatioAbs2;
+	c = mLeakagePerUnit1 * mLeakagePerUnit2 * mRatioAbs3;
 	
 	if ((std::abs(mMagnetizingPerUnit) > 1e9)) {
-		d = a * mRatioAbs1 + b * mRatioAbs3 + c * mRatioAbs2;
+		d = a * mRatioAbs1 + b * mRatioAbs2 + c * mRatioAbs3;
 	}
 	else {
-		d = a * mRatioAbs1 + b * mRatioAbs3+ c * mRatioAbs2 + 
+		d = a * mRatioAbs1 + b * mRatioAbs2 + c * mRatioAbs3 + 
 				(mLeakagePerUnit1 * mLeakagePerUnit2 * mLeakagePerUnit3 / mMagnetizingPerUnit);
 	}
 
 	mY_element(0, 0) = (d - mRatioAbs1 * a) / (mLeakagePerUnit1 * d);
-	mY_element(0, 1) = - mRatioAbs1 * c / (mLeakagePerUnit1 * d);
-	mY_element(0, 2) = - mRatioAbs1 * b / (mLeakagePerUnit1 * d);
+	mY_element(0, 1) = - mRatioAbs1 * b / (mLeakagePerUnit1 * d);
+	mY_element(0, 2) = - mRatioAbs1 * c / (mLeakagePerUnit1 * d);
 	mY_element(1, 0) = - mRatioAbs2 * a / (mLeakagePerUnit2 * d);
-	mY_element(1, 1) = (d - mRatioAbs2 * c) / (mLeakagePerUnit2 * d);
-	mY_element(1, 2) = - mRatioAbs2 * b / (mLeakagePerUnit2 * d);
+	mY_element(1, 1) = (d - mRatioAbs2 * b) / (mLeakagePerUnit2 * d);
+	mY_element(1, 2) = - mRatioAbs2 * c / (mLeakagePerUnit2 * d);
 	mY_element(2, 0) = - mRatioAbs3 * a / (mLeakagePerUnit3 * d);
-	mY_element(2, 1) = - mRatioAbs3 * c / (mLeakagePerUnit3 * d);
-	mY_element(2, 2) = (d - mRatioAbs3 * b) / (mLeakagePerUnit3 * d);
+	mY_element(2, 1) = - mRatioAbs3 * b / (mLeakagePerUnit3 * d);
+	mY_element(2, 2) = (d - mRatioAbs3 * c) / (mLeakagePerUnit3 * d);
 
 	//check for inf or nan
 	for (int i = 0; i < 3; i++)
