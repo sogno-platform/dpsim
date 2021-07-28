@@ -48,6 +48,12 @@ int main(int argc, char *argv[]) {
 	logger->addAttribute("v8", sys.node<SimNode>("BUS8")->attribute("v"));
 	logger->addAttribute("v9", sys.node<SimNode>("BUS9")->attribute("v"));
 
+	// log generator's current
+	for (auto comp : sys.mComponents) {
+		if (std::dynamic_pointer_cast<CPS::DP::Ph1::SynchronGeneratorIdeal>(comp))
+			logger->addAttribute(comp->name() + ".I", comp->attribute("i_intf"));
+	}
+
 	Simulation sim(simName, Logger::Level::info);
 	sim.setSystem(sys);
 	sim.setDomain(Domain::DP);
