@@ -32,23 +32,23 @@ SimPowerComp<Real>::Ptr EMT::Ph3::SynchronGeneratorIdeal::clone(String name) {
 }
 
 void EMT::Ph3::SynchronGeneratorIdeal::initializeFromNodesAndTerminals(Real frequency) {
-	mSubVoltageSource = EMT::Ph3::VoltageSource::make(mName + "_src", mLogLevel);
-	mSubVoltageSource->connect({ SimNode::GND, node(0) });
-	mSubVoltageSource->setVirtualNodeAt(mVirtualNodes[0], 0);
-	mSubVoltageSource->initialize(mFrequencies);
-	mSubVoltageSource->initializeFromNodesAndTerminals(frequency);
+		mSubVoltageSource = EMT::Ph3::VoltageSource::make(mName + "_vs", mLogLevel);
+		mSubComponents.push_back(mSubVoltageSource);
+	mSubComponents[0]->connect({ SimNode::GND, node(0) });
+		mSubComponents[0]->setVirtualNodeAt(mVirtualNodes[0], 0);
 	
-	setAttributeRef("V_ref", mSubVoltageSource->attribute<MatrixComp>("V_ref"));
+	
+	mSubComponents[0]->initialize(mFrequencies);
+	mSubComponents[0]->initializeFromNodesAndTerminals(frequency);
+		setAttributeRef("V_ref", mSubComponents[0]->attribute<MatrixComp>("V_ref"));
 
 	mSLog->info(
 		"\n--- Initialization from powerflow ---"
-		"\nVoltage across: {:s}"
-		"\nCurrent: {:s}"
 		"\nTerminal 0 voltage: {:s}"
+		"\nTerminal 0 power: {:s}"
 		"\n--- Initialization from powerflow finished ---",
-		Logger::matrixToString(mIntfVoltage),
-		Logger::matrixToString(mIntfCurrent),
-		Logger::phasorToString(initialSingleVoltage(0)));
+		Logger::phasorToString(initialSingleVoltage(0)),
+		Logger::complexToString(terminal(0)->singlePower()));
 }
 
 void EMT::Ph3::SynchronGeneratorIdeal::mnaInitialize(Real omega, Real timeStep, Attribute<Matrix>::Ptr leftVector) {
@@ -56,7 +56,7 @@ void EMT::Ph3::SynchronGeneratorIdeal::mnaInitialize(Real omega, Real timeStep, 
 	updateMatrixNodeIndices();
 	
 	// initialize subcomponent
-	mSubVoltageSource->mnaInitialize(omega, timeStep, leftVector);
+	std::dynamic_pointer_cast<MNAInterface>(mSubComponents[0])->mnaInitialize(omega, timeStep, leftVector);
 
 	// collect tasks
 	mMnaTasks.push_back(std::make_shared<MnaPreStep>(*this));
@@ -67,7 +67,7 @@ void EMT::Ph3::SynchronGeneratorIdeal::mnaInitialize(Real omega, Real timeStep, 
 
 void EMT::Ph3::SynchronGeneratorIdeal::mnaAddPreStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes) {
 	// add pre-step dependencies of subcomponents
-	mSubVoltageSource->mnaAddPreStepDependencies(prevStepDependencies, attributeDependencies, modifiedAttributes);
+	std::dynamic_pointer_cast<MNAInterface>(mSubComponents[0])->mnaAddPreStepDependencies(prevStepDependencies, attributeDependencies, modifiedAttributes);
 	// add pre-step dependencies of component itself
 	prevStepDependencies.push_back(attribute("i_intf"));
 	prevStepDependencies.push_back(attribute("v_intf"));
@@ -76,14 +76,14 @@ void EMT::Ph3::SynchronGeneratorIdeal::mnaAddPreStepDependencies(AttributeBase::
 
 void EMT::Ph3::SynchronGeneratorIdeal::mnaPreStep(Real time, Int timeStepCount) {
 	// pre-step of subcomponents
-	mSubVoltageSource->mnaPreStep(time, timeStepCount);
+	std::dynamic_pointer_cast<MNAInterface>(mSubComponents[0])->mnaPreStep(time, timeStepCount);
 	// pre-step of component itself
 	mnaApplyRightSideVectorStamp(mRightVector);
 }
 
 void EMT::Ph3::SynchronGeneratorIdeal::mnaAddPostStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes, Attribute<Matrix>::Ptr &leftVector) {
 	// add post-step dependencies of subcomponents
-	mSubVoltageSource->mnaAddPostStepDependencies(prevStepDependencies, attributeDependencies, modifiedAttributes, leftVector);
+	std::dynamic_pointer_cast<MNAInterface>(mSubComponents[0])->mnaAddPostStepDependencies(prevStepDependencies, attributeDependencies, modifiedAttributes, leftVector);
 	// add post-step dependencies of component itself
 	attributeDependencies.push_back(leftVector);
 	modifiedAttributes.push_back(attribute("v_intf"));
@@ -92,25 +92,25 @@ void EMT::Ph3::SynchronGeneratorIdeal::mnaAddPostStepDependencies(AttributeBase:
 
 void EMT::Ph3::SynchronGeneratorIdeal::mnaPostStep(Real time, Int timeStepCount, Attribute<Matrix>::Ptr &leftVector) {
 	// post-step of subcomponents
-	mSubVoltageSource->mnaPostStep(time, timeStepCount, leftVector);
+	std::dynamic_pointer_cast<MNAInterface>(mSubComponents[0])->mnaPostStep(time, timeStepCount, leftVector);
 	// post-step of component itself
 	mnaUpdateCurrent(*leftVector);
 	mnaUpdateVoltage(*leftVector);
 }
 
 void EMT::Ph3::SynchronGeneratorIdeal::mnaUpdateCurrent(const Matrix& leftvector) {
-	mIntfCurrent = mSubVoltageSource->attribute<Matrix>("i_intf")->get();
+	mIntfCurrent = mSubComponents[0]->attribute<Matrix>("i_intf")->get();
 }
 
 void EMT::Ph3::SynchronGeneratorIdeal::mnaUpdateVoltage(const Matrix& leftVector) {
-	mIntfVoltage = mSubVoltageSource->attribute<Matrix>("v_intf")->get();
+	mIntfVoltage = mSubComponents[0]->attribute<Matrix>("v_intf")->get();
 }
 
 void EMT::Ph3::SynchronGeneratorIdeal::mnaApplySystemMatrixStamp(Matrix& systemMatrix) {
-	mSubVoltageSource->mnaApplySystemMatrixStamp(systemMatrix);
+	std::dynamic_pointer_cast<MNAInterface>(mSubComponents[0])->mnaApplySystemMatrixStamp(systemMatrix);
 }
 
 void EMT::Ph3::SynchronGeneratorIdeal::mnaApplyRightSideVectorStamp(Matrix& rightVector) {
-	mSubVoltageSource->mnaApplyRightSideVectorStamp(rightVector);
+	std::dynamic_pointer_cast<MNAInterface>(mSubComponents[0])->mnaApplyRightSideVectorStamp(rightVector);
 }
 

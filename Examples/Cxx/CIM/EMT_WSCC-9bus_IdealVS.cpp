@@ -16,8 +16,12 @@ using namespace CPS::EMT;
 
 int main(int argc, char *argv[]) {
 
+	Real timeStep;
+	Real finalTime;
+
 	// Find CIM files
 	std::list<fs::path> filenames;
+	CommandLineArgs args(argc, argv);
 	if (argc <= 1) {
 		filenames = Utils::findFiles({
 			"WSCC-09_RX_DI.xml",
@@ -25,15 +29,19 @@ int main(int argc, char *argv[]) {
 			"WSCC-09_RX_SV.xml",
 			"WSCC-09_RX_TP.xml"
 		}, "build/_deps/cim-data-src/WSCC-09/WSCC-09_RX", "CIMPATH");
+		timeStep = 1e-6;
+		finalTime = 10e-6;
 	}
 	else {
-		filenames = std::list<fs::path>(argv + 1, argv + argc);
+		filenames = args.positionalPaths();
+		timeStep = args.timeStep;
+		finalTime = args.duration;
 	}
 
-	String simName = "EMT_WSCC-9bus";
+	String simName = "EMT_WSCC-9bus_IdealVS";
 	Logger::setLogDir("logs/"+simName);
 
-	CPS::CIM::Reader reader(simName, Logger::Level::debug, Logger::Level::off);
+	CPS::CIM::Reader reader(simName, Logger::Level::debug, Logger::Level::debug);
 	SystemTopology sys = reader.loadCIM(60, filenames, Domain::EMT, PhaseType::ABC, CPS::GeneratorType::IdealVoltageSource);
 
 	// Logging
@@ -57,9 +65,8 @@ int main(int argc, char *argv[]) {
 	Simulation sim(simName, Logger::Level::info);
 	sim.setSystem(sys);
 	sim.setDomain(Domain::EMT);
-	sim.setTimeStep(0.0001);
-	sim.setFinalTime(0.1);
-	// sim.doSteadyStateInit(true);
+	sim.setTimeStep(timeStep);
+	sim.setFinalTime(finalTime);
 	sim.addLogger(logger);
 	sim.run();
 
