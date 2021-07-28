@@ -35,7 +35,7 @@ namespace Signal {
         FrequencyRampGenerator(String name, Logger::Level logLevel = Logger::Level::off)
             : SignalGenerator(name, logLevel) {
 				mUseAbsoluteCalc = true;
-				mSmooth = true;
+				mSmooth = false;
 				mSLog->info("Create {} {}", type(), name);
 			}
         /// set frequency ramp specific parameters
