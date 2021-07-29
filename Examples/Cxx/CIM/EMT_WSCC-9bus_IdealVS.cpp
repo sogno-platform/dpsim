@@ -16,6 +16,8 @@ using namespace CPS::EMT;
 
 int main(int argc, char *argv[]) {
 
+	// Simulation parameters
+	String simName = "EMT_WSCC-9bus_IdealVS";
 	Real timeStep;
 	Real finalTime;
 
@@ -38,11 +40,38 @@ int main(int argc, char *argv[]) {
 		finalTime = args.duration;
 	}
 
-	String simName = "EMT_WSCC-9bus_IdealVS";
+	// ----- POWERFLOW FOR INITIALIZATION -----
+	// read original network topology
+	String simNamePF = simName + "_PF";
+	Logger::setLogDir("logs/" + simNamePF);
+    CPS::CIM::Reader reader(simNamePF, Logger::Level::debug, Logger::Level::debug);
+    SystemTopology systemPF = reader.loadCIM(60, filenames, Domain::SP, PhaseType::Single, CPS::GeneratorType::PVNode);
+	systemPF.component<CPS::SP::Ph1::SynchronGenerator>("GEN1")->modifyPowerFlowBusType(CPS::PowerflowBusType::VD);
+	
+	// define logging
+    auto loggerPF = DPsim::DataLogger::make(simNamePF);
+    for (auto node : systemPF.mNodes)
+    {
+        loggerPF->addAttribute(node->name() + ".V", node->attribute("v"));
+    }
+
+	// run powerflow
+    Simulation simPF(simNamePF, Logger::Level::debug);
+	simPF.setSystem(systemPF);
+	simPF.setTimeStep(finalTime);
+	simPF.setFinalTime(2*finalTime);
+	simPF.setDomain(Domain::SP);
+	simPF.setSolverType(Solver::Type::NRP);
+	simPF.doInitFromNodesAndTerminals(true);
+    simPF.addLogger(loggerPF);
+    simPF.run();
+
+	// ----- DYNAMIC SIMULATION -----
 	Logger::setLogDir("logs/"+simName);
 
-	CPS::CIM::Reader reader(simName, Logger::Level::debug, Logger::Level::debug);
-	SystemTopology sys = reader.loadCIM(60, filenames, Domain::EMT, PhaseType::ABC, CPS::GeneratorType::IdealVoltageSource);
+	CPS::CIM::Reader reader2(simName, Logger::Level::debug, Logger::Level::debug);
+	SystemTopology sys = reader2.loadCIM(60, filenames, Domain::EMT, PhaseType::ABC, CPS::GeneratorType::IdealVoltageSource);
+	reader2.initDynamicSystemTopologyWithPowerflow(systemPF, sys);
 
 	// Logging
 	auto logger = DataLogger::make(simName);
