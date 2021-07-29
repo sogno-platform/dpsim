@@ -279,42 +279,10 @@ void PFSolverPowerPolar::setSolution() {
         sol_V_complex(i) = CPS::Complex(sol_V.coeff(i)*cos(sol_D.coeff(i)), sol_V.coeff(i)*sin(sol_D.coeff(i)));
     }
 
-    /* update V to each node*/
-    /* base voltage is based on component */
-	for (auto node : mSystem.mNodes) {
-		CPS::Real baseVoltage_ = 0;
-		for (auto comp : mSystem.mComponentsAtNode[node]) {
-            if (std::shared_ptr<CPS::SP::Ph1::AvVoltageSourceInverterDQ> vsi = std::dynamic_pointer_cast<CPS::SP::Ph1::AvVoltageSourceInverterDQ>(comp)) {
-				baseVoltage_=Math::abs(vsi->attribute<CPS::Complex>("vnom")->get());
-				break;
-			}
-            else if (std::shared_ptr<CPS::SP::Ph1::RXLine> rxline = std::dynamic_pointer_cast<CPS::SP::Ph1::RXLine>(comp)) {
-				baseVoltage_ = rxline->attribute<CPS::Real>("base_Voltage")->get();
-                break;
-			}
-            else if (std::shared_ptr<CPS::SP::Ph1::PiLine> line = std::dynamic_pointer_cast<CPS::SP::Ph1::PiLine>(comp)) {
-				baseVoltage_ = line->attribute<CPS::Real>("base_Voltage")->get();
-                break;
-			}
-			else if (std::shared_ptr<CPS::SP::Ph1::Transformer> trans = std::dynamic_pointer_cast<CPS::SP::Ph1::Transformer>(comp)) {
-				if (trans->terminal(0)->node()->name() == node->name()){
-                    baseVoltage_ = trans->attribute<CPS::Real>("nominal_voltage_end1")->get();
-                    break;
-                }
-				else if (trans->terminal(1)->node()->name() == node->name()){
-                    baseVoltage_ = trans->attribute<CPS::Real>("nominal_voltage_end2")->get();
-                    break;
-                }
-            else if (std::shared_ptr<CPS::SP::Ph1::SynchronGenerator> gen = std::dynamic_pointer_cast<CPS::SP::Ph1::SynchronGenerator>(comp)) {
-                    baseVoltage_ =gen->attribute<CPS::Real>("base_Voltage")->get();
-                    break;
-                }
-            else
-                mSLog->warn("Unable to get base voltage at {}", node->name());
-            }
-        }
-		std::dynamic_pointer_cast<CPS::SimNode<CPS::Complex>>(node)->setVoltage(sol_V_complex(node->matrixNodeIndex())*baseVoltage_);
-    }
+    // update voltage at each node
+    for (auto node : mSystem.mNodes)
+        std::dynamic_pointer_cast<CPS::SimNode<CPS::Complex>>(node)->setVoltage(sol_V_complex(node->matrixNodeIndex())*mBaseVoltageAtNode[node]);
+
     calculateBranchFlow();
     calculateNodalInjection();
 }
@@ -409,21 +377,22 @@ void PFSolverPowerPolar::calculatePAndQAtSlackBus() {
 }
 
 void PFSolverPowerPolar::calculateQAtPVBuses() {
-        for (auto k: mPVBusIndices) {
+    for (auto k: mPVBusIndices) {
         CPS::Complex I(0.0, 0.0);
         for (UInt j = 0; j < mSystem.mNodes.size(); ++j) {
             I += mY.coeff(k, j) * sol_Vcx(j);
         }
         CPS::Complex S(0.0, 0.0);
         S = sol_Vcx(k) * conj(I);
-        // sol_P(k) = S.real();
         sol_Q(k) = S.imag();
-        for(auto gen : mSynchronGenerators){
-            if(gen->mPowerflowBusType==CPS::PowerflowBusType::PV){
-			    gen->updateReactivePowerInjection(S*mBaseApparentPower);
-                break;
-            }
-        }
+
+        for (auto topoNode : mSystem.mNodes)
+            if (topoNode->matrixNodeIndex() == k)
+                for(auto comp : mSystem.mComponentsAtNode[topoNode])
+                    if(auto genPtr = std::dynamic_pointer_cast<CPS::SP::Ph1::SynchronGenerator>(comp))
+                        if (genPtr->mPowerflowBusType==CPS::PowerflowBusType::PV)
+                            genPtr->updateReactivePowerInjection(S*mBaseApparentPower);
+
     }
 }
 
