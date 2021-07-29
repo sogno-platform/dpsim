@@ -34,7 +34,7 @@ void addDPPh1Components(py::module_ mDPPh1) {
 	py::class_<CPS::DP::Ph1::VoltageSource, std::shared_ptr<CPS::DP::Ph1::VoltageSource>, CPS::SimPowerComp<CPS::Complex>>(mDPPh1, "VoltageSource", py::multiple_inheritance())
         .def(py::init<std::string>())
 		.def(py::init<std::string, CPS::Logger::Level>())
-        .def("set_parameters", py::overload_cast<CPS::Complex, CPS::Real>(&CPS::DP::Ph1::VoltageSource::setParameters), "V_ref"_a, "f_src"_a=-1)
+        .def("set_parameters", py::overload_cast<CPS::Complex, CPS::Real>(&CPS::DP::Ph1::VoltageSource::setParameters), "V_ref"_a, "f_src"_a=0)
 		.def("connect", &CPS::DP::Ph1::VoltageSource::connect)
 		.def_property("V_ref", createAttributeGetter<CPS::Complex>("V_ref"), createAttributeSetter<CPS::Complex>("V_ref"))
 		.def_property("f_src", createAttributeGetter<CPS::Real>("f_src"), createAttributeSetter<CPS::Real>("f_src"));
@@ -75,7 +75,7 @@ void addDPPh1Components(py::module_ mDPPh1) {
 
 	py::class_<CPS::DP::Ph1::NetworkInjection, std::shared_ptr<CPS::DP::Ph1::NetworkInjection>, CPS::SimPowerComp<CPS::Complex>>(mDPPh1, "NetworkInjection", py::multiple_inheritance())
         .def(py::init<std::string, CPS::Logger::Level>(), "name"_a, "loglevel"_a = CPS::Logger::Level::off)
-		.def("set_parameters", py::overload_cast<CPS::Complex, CPS::Real>(&CPS::DP::Ph1::NetworkInjection::setParameters), "V_ref"_a, "f_src"_a = -1)
+		.def("set_parameters", py::overload_cast<CPS::Complex, CPS::Real>(&CPS::DP::Ph1::NetworkInjection::setParameters), "V_ref"_a, "f_src"_a = 0)
 		.def("connect", &CPS::DP::Ph1::NetworkInjection::connect);
 
 	py::class_<CPS::DP::Ph1::PiLine, std::shared_ptr<CPS::DP::Ph1::PiLine>, CPS::SimPowerComp<CPS::Complex>>(mDPPh1, "PiLine", py::multiple_inheritance())
