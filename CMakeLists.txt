@@ -22,7 +22,11 @@ else()
 	set(TOPLEVEL_PROJECT OFF)
 endif()
 
-# Enable C++11 support
+# Select C++-Version
+# For the pybind11-python interface to compile, a minimum version of C++14 is required
+# If you need to compile using C++11, either disable the python interface or modify the source-files in Source/pybind,
+# replacing all occurences of py::overload_cast with py::detail::overload_cast_impl as specified on
+# https://pybind11.readthedocs.io/en/stable/classes.html#overloaded-methods
 set(CMAKE_CXX_STANDARD 17)
 if(CMAKE_CXX_COMPILER_ID STREQUAL Intel)
 	# needed by icc, but for some reason not added by CMake
@@ -224,8 +228,6 @@ if(WITH_PYBIND)
 		${CMAKE_CURRENT_BINARY_DIR}/Include/dpsim/pybind
 		${CMAKE_CURRENT_SOURCE_DIR}/Include/dpsim/pybind
 	)
-
-	set(PYBIND11_CPP_STANDARD -std=c++17)
 
 	add_subdirectory(Source/pybind)
 
