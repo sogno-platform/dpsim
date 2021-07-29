@@ -44,6 +44,8 @@
 
 #define SHIFT_TO_PHASE_B Complex(cos(-2 * M_PI / 3), sin(-2 * M_PI / 3))
 #define SHIFT_TO_PHASE_C Complex(cos(2 * M_PI / 3), sin(2 * M_PI / 3))
+#define RMS_TO_PEAK sqrt(2.)
+#define PEAK_TO_RMS sqrt(1/2.)
 #define RMS3PH_TO_PEAK1PH sqrt(2./3.)
 #define PEAK1PH_TO_RMS3PH sqrt(3./2.)
 
@@ -97,7 +99,7 @@ namespace CPS {
 	enum class PhaseType { A, B, C, ABC, Single };
 	enum class Domain { SP, DP, EMT };
 	enum class PowerflowBusType { PV, PQ, VD, None };
-	enum class GeneratorType {PVNode, IdealVoltageSource, TransientStability, FullOrder, FullOrderVBR, None};
+	enum class GeneratorType {PVNode, IdealVoltageSource, IdealCurrentSource, TransientStability, FullOrder, FullOrderVBR, None};
 
 	// ### Exceptions ###
 	class Exception : public std::exception { };

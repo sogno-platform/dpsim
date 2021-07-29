@@ -11,6 +11,7 @@
 #include <cps/SimPowerComp.h>
 #include <cps/Solver/MNAInterface.h>
 #include <cps/EMT/EMT_Ph3_VoltageSource.h>
+#include <cps/EMT/EMT_Ph3_CurrentSource.h>
 
 namespace CPS {
 namespace EMT {
@@ -21,12 +22,16 @@ namespace Ph3 {
 		public MNAInterface,
 		public SharedFactory<SynchronGeneratorIdeal> {
 	private:
+		/// Specifies type of ideal source
+		CPS::GeneratorType mSourceType;
 		/// Inner voltage source that represents the generator
 		std::shared_ptr<EMT::Ph3::VoltageSource> mSubVoltageSource;
+		/// Inner voltage source that represents the generator
+		std::shared_ptr<EMT::Ph3::CurrentSource> mSubCurrentSource;
 	public:
 		/// Defines UID, name, component parameters and logging level
 		SynchronGeneratorIdeal(String uid, String name,
-			Logger::Level logLevel = Logger::Level::off);
+			Logger::Level logLevel = Logger::Level::off, CPS::GeneratorType sourceType = CPS::GeneratorType::IdealVoltageSource);
 		/// Defines name, component parameters and logging level
 		SynchronGeneratorIdeal(String name,
 			Logger::Level logLevel = Logger::Level::off);
