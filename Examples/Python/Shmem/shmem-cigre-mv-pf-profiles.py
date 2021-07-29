@@ -1,3 +1,8 @@
+# To run this example, an MQTT broker is required
+# docker run -it -p 1883:1883 -p 9001:9001 eclipse-mosquitto
+# test message: mosquitto_pub -t 'test/topic' -m "test"
+# get messages: mosquitto_sub -v -t '#'
+
 import os
 import urllib.request
 import glob
@@ -73,7 +78,7 @@ def dpsim():
     print(files)
 
     reader = dpsimpy.CIMReader(name)
-    system = reader.loadCIM(50, files, dpsimpy.Domain.SP, dpsimpy.PhaseType.Single, dpsimpy.GeneratorType.PVNode))
+    system = reader.loadCIM(50, files, dpsimpy.Domain.SP, dpsimpy.PhaseType.Single, dpsimpy.GeneratorType.PVNode)
 
     csv_files = glob.glob('build/_deps/profile-data-src/CIGRE_MV_NoTap/load_profiles/')[0]
     print(csv_files)
