@@ -11,11 +11,16 @@
 using namespace CPS;
 
 
-EMT::Ph3::SynchronGeneratorIdeal::SynchronGeneratorIdeal(String uid, String name,
-	Logger::Level logLevel)
+EMT::Ph3::SynchronGeneratorIdeal::SynchronGeneratorIdeal(String uid, String name, Logger::Level logLevel, CPS::GeneratorType sourceType)
 	: SimPowerComp<Real>(uid, name, logLevel) {
 	mPhaseType = PhaseType::ABC;
-	setVirtualNodeNumber(1);
+	mSourceType = sourceType;
+
+	if (mSourceType == CPS::GeneratorType::IdealVoltageSource)
+		setVirtualNodeNumber(1);
+	else
+		setVirtualNodeNumber(0);
+		
 	setTerminalNumber(1);
 	mIntfVoltage = Matrix::Zero(3, 1);
 	mIntfCurrent = Matrix::Zero(3, 1);
@@ -32,14 +37,27 @@ SimPowerComp<Real>::Ptr EMT::Ph3::SynchronGeneratorIdeal::clone(String name) {
 }
 
 void EMT::Ph3::SynchronGeneratorIdeal::initializeFromNodesAndTerminals(Real frequency) {
+
+	if (mSourceType == CPS::GeneratorType::IdealVoltageSource) {
 		mSubVoltageSource = EMT::Ph3::VoltageSource::make(mName + "_vs", mLogLevel);
 		mSubComponents.push_back(mSubVoltageSource);
+	} else {
+		mSubCurrentSource = EMT::Ph3::CurrentSource::make(mName + "_cs", mLogLevel);
+		mSubComponents.push_back(mSubCurrentSource);
+	}
+
 	mSubComponents[0]->connect({ SimNode::GND, node(0) });
+
+	if (mSourceType == CPS::GeneratorType::IdealVoltageSource)
 		mSubComponents[0]->setVirtualNodeAt(mVirtualNodes[0], 0);
 	
+	if (mSourceType == CPS::GeneratorType::IdealCurrentSource)
+		mSubComponents[0]->setTerminalAt(terminal(0), 1);	
 	
 	mSubComponents[0]->initialize(mFrequencies);
 	mSubComponents[0]->initializeFromNodesAndTerminals(frequency);
+	
+	if (mSourceType == CPS::GeneratorType::IdealVoltageSource)
 		setAttributeRef("V_ref", mSubComponents[0]->attribute<MatrixComp>("V_ref"));
 
 	mSLog->info(

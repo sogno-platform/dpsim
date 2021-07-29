@@ -81,6 +81,7 @@
 #include <cps/EMT/EMT_Ph3_Resistor.h>
 #include <cps/EMT/EMT_Ph3_SeriesResistor.h>
 #include <cps/EMT/EMT_Ph3_SeriesSwitch.h>
+#include <cps/EMT/EMT_Ph3_CurrentSource.h>
 #include <cps/EMT/EMT_Ph3_VoltageSource.h>
 #include <cps/EMT/EMT_Ph3_VoltageSourceNorton.h>
 #include <cps/EMT/EMT_Ph3_SynchronGeneratorDQ.h>

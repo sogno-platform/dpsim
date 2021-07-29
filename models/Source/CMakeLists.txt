@@ -56,6 +56,7 @@ list(APPEND CPS_SOURCES
 	EMT/EMT_Ph1_VoltageSourceRamp.cpp
 	EMT/EMT_Ph1_VoltageSourceNorton.cpp
 
+	EMT/EMT_Ph3_CurrentSource.cpp
 	EMT/EMT_Ph3_VoltageSource.cpp
 	EMT/EMT_Ph3_Inductor.cpp
 	EMT/EMT_Ph3_Capacitor.cpp

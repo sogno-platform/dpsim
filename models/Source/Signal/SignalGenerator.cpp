@@ -12,6 +12,8 @@ using namespace CPS;
 
 Signal::SignalGenerator::SignalGenerator(String uid, String name, Logger::Level logLevel) 
     : SimSignalComp(name, logLevel) {
+
+    mSLog->info("Create {} {}", type(), name);
     
     addAttribute<Complex>("sigOut", Flags::read | Flags::write);
 	addAttribute<Real>("freq", Flags::read | Flags::write);

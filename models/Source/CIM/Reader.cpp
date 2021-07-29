@@ -655,7 +655,10 @@ TopologicalPowerComp::Ptr Reader::mapSynchronousMachine(CIMPP::SynchronousMachin
 			}
 		} else if (mGeneratorType == GeneratorType::IdealVoltageSource) {
 			mSLog->info("    GeneratorType is IdealVoltageSource.");
-			return std::make_shared<EMT::Ph3::SynchronGeneratorIdeal>(machine->mRID, machine->name, mComponentLogLevel);
+			return std::make_shared<EMT::Ph3::SynchronGeneratorIdeal>(machine->mRID, machine->name, mComponentLogLevel, GeneratorType::IdealVoltageSource);
+		} else if (mGeneratorType == GeneratorType::IdealCurrentSource) {
+			mSLog->info("    GeneratorType is IdealCurrentSource.");
+			return std::make_shared<EMT::Ph3::SynchronGeneratorIdeal>(machine->mRID, machine->name, mComponentLogLevel, GeneratorType::IdealCurrentSource);
 		} else if (mGeneratorType == GeneratorType::None) {
 			throw SystemError("GeneratorType is None. Specify!");
 		} else {
