@@ -116,7 +116,7 @@ namespace CIGREHVAmerican {
         Real lineConductancePerKm = 0;
     };
 }
-
+}
 namespace SMIB {
     struct ScenarioConfig {
         //-----------Network-----------//
@@ -138,7 +138,7 @@ namespace SMIB {
         Real t_ratio=Vnom/nomPhPhVoltRMS;
         //-----------Transmission Line-----------//
         // CIGREHVAmerican (230 kV)
-        CIGREHVAmerican::LineParameters lineCIGREHV;
+        Components::CIGREHVAmerican::LineParameters lineCIGREHV;
         Real lineLeng=100;
         Real lineResistance = lineCIGREHV.lineResistancePerKm*lineLeng;
         Real lineInductance = lineCIGREHV.lineReactancePerKm/nomOmega*lineLeng;
@@ -191,7 +191,7 @@ namespace ThreeBus {
 
         // -----------Transmission Lines-----------//
         // CIGREHVAmerican (230 kV)
-        CIGREHVAmerican::LineParameters lineCIGREHV;
+        Components::CIGREHVAmerican::LineParameters lineCIGREHV;
         //line 1-2 (180km)
         Real lineResistance12 = lineCIGREHV.lineResistancePerKm*180;
         Real lineInductance12 = lineCIGREHV.lineReactancePerKm/nomOmega*180;
@@ -428,7 +428,6 @@ namespace CIGREMV {
         }
     }
 
-}
 }
 }
 }

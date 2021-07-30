@@ -4,7 +4,7 @@
 using namespace DPsim;
 using namespace CPS;
 
-CIM::Examples::Components::ThreeBus::ScenarioConfig ThreeBus;
+CIM::Examples::ThreeBus::ScenarioConfig ThreeBus;
 
 void DP_SynGenTrStab_3Bus_SteadyState(String simName, Real timeStep, Real finalTime, Real cmdInertia_G1, Real cmdInertia_G2, Real cmdDamping_G1, Real cmdDamping_G2) {
 	// ----- POWERFLOW FOR INITIALIZATION -----

@@ -4,7 +4,7 @@
 using namespace DPsim;
 using namespace CPS;
 
-CIM::Examples::Components::SMIB::ScenarioConfig smib;
+CIM::Examples::SMIB::ScenarioConfig smib;
 
 //Switch to trigger fault at generator terminal
 Real SwitchOpen = 1e6;
