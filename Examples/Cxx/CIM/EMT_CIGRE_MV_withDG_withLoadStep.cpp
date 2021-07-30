@@ -92,7 +92,7 @@ int main(int argc, char** argv){
 	auto pv = systemEMT.component<CPS::SimPowerComp<Real>>("pv_N11");
 	Examples::Grids::CIGREMV::logPVAttributes(logger, pv);
 
-	std::shared_ptr<SwitchEvent3Ph> loadStepEvent = Examples::createEventAddPowerConsumption3Ph("N11", 2-timeStep, 1500.0e3, systemEMT, Domain::EMT, logger);
+	std::shared_ptr<SwitchEvent3Ph> loadStepEvent = Examples::Events::createEventAddPowerConsumption3Ph("N11", 2-timeStep, 1500.0e3, systemEMT, Domain::EMT, logger);
 	Simulation sim(simName, Logger::Level::debug);
 	sim.setSystem(systemEMT);
 	sim.setTimeStep(timeStep);

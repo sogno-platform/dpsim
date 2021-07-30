@@ -132,7 +132,7 @@ int main(int argc, char* argv[]) {
 	CIM::Examples::Grids::CIGREMV::logPVAttributes(loggerDP, pv);
 
 	// load step sized in absolute terms
-	// std::shared_ptr<SwitchEvent> loadStepEvent = CIM::Examples::createEventAddPowerConsumption("n2", std::round(5.0/timeStep)*timeStep, 10e6, systemDP, Domain::DP, loggerDP);
+	// std::shared_ptr<SwitchEvent> loadStepEvent = CIM::Examples::Events::createEventAddPowerConsumption("n2", std::round(5.0/timeStep)*timeStep, 10e6, systemDP, Domain::DP, loggerDP);
 
 	// Simulation
 	Simulation sim(simNameDP, Logger::Level::debug);

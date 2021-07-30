@@ -382,6 +382,9 @@ namespace CIGREMV {
     }
 
 }
+}
+
+namespace Events {
         std::shared_ptr<DPsim::SwitchEvent> createEventAddPowerConsumption(String nodeName, Real eventTime, Real additionalActivePower, SystemTopology& system, Domain domain, DPsim::DataLogger::Ptr logger) {
 
         // TODO: use base classes ph1

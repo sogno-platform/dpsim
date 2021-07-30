@@ -231,7 +231,7 @@ void simulateEMT(SystemTopology& systemPF, String waveform) {
 	loggerEMT->addAttribute("f_src", extnetEMT->attribute("f_src"));
 
 	// load step sized in absolute terms
-	//std::shared_ptr<SwitchEvent3Ph> loadStepEvent = CIM::Examples::createEventAddPowerConsumption3Ph("n2", 0.1-timeStepEMT, 100e3, systemEMT, Domain::EMT, loggerEMT);
+	//std::shared_ptr<SwitchEvent3Ph> loadStepEvent = CIM::Examples::Events::createEventAddPowerConsumption3Ph("n2", 0.1-timeStepEMT, 100e3, systemEMT, Domain::EMT, loggerEMT);
 
 	// Simulation
 	Simulation sim(simNameEMT, Logger::Level::debug);
