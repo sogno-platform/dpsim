@@ -78,7 +78,7 @@ void MnaSolverEigenSparse<Complex>::createEmptySystemMatrix() {
 			mLuFactorizations[bit].push_back(std::make_shared<LUFactorizedSparse>());
 		}
 		mBaseSystemMatrix.resize(2 * (mNumTotalMatrixNodeIndices), 2 * (mNumTotalMatrixNodeIndices));
-	}	
+	}
 }
 
 template <typename VarType>
@@ -114,6 +114,7 @@ void MnaSolverEigenSparse<VarType>::solve(Real time, Int timeStepCount) {
 
 	if (mSwitchedMatrices.size() > 0)
 		mLeftSideVector = mLuFactorizations[mCurrentSwitchStatus][0]->solve(mRightSideVector);
+
 
 	// TODO split into separate task? (dependent on x, updating all v attributes)
 	for (UInt nodeIdx = 0; nodeIdx < mNumNetNodes; ++nodeIdx)

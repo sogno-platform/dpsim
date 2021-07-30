@@ -122,6 +122,7 @@ find_package(CUDA)
 find_package(GSL)
 find_package(Graphviz)
 find_package(VILLASnode)
+find_package(MAGMA)
 
 if (WITH_PYBIND_MODULE)
 	include(cmake/GetPybindModule.cmake)
@@ -161,7 +162,8 @@ cmake_dependent_option(WITH_CIM     	"Enable support for parsing CIM"     	ON 	"
 cmake_dependent_option(WITH_OPENMP  	"Enable OpenMP-based parallelisation"	ON 	"OPENMP_FOUND"    	OFF)
 cmake_dependent_option(WITH_CUDA    	"Enable CUDA-based parallelisation"  	OFF	"CUDA_FOUND"      	OFF)
 cmake_dependent_option(WITH_GRAPHVIZ	"Enable Graphviz Graphs"             	ON 	"GRAPHVIZ_FOUND"  	OFF)
-cmake_dependent_option(WITH_PYBIND     	"Enable PYBIND support"                	ON 	"pybind11_FOUND"   	OFF)
+cmake_dependent_option(WITH_PYBIND     	"Enable PYBIND support"            	ON 	"pybind11_FOUND"   	OFF)
+cmake_dependent_option(WITH_MAGMA     	"Enable MAGMA features"            	ON 	"MAGMA_FOUND"   	OFF)
 
 if(WITH_CUDA)
     # BEGIN OF WORKAROUND - enable cuda dynamic linking.

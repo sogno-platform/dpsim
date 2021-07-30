@@ -255,6 +255,8 @@ void CommandLineArgs::parseArguments(int argc, char *argv[])
 					mnaImpl = MnaSolverFactory::CUDADense;
 				} else if (arg == "CUDASparse") {
 					mnaImpl = MnaSolverFactory::CUDASparse;
+				} else if (arg == "CUDAMagma") {
+					mnaImpl = MnaSolverFactory::CUDAMagma;
 				} else {
 					throw std::invalid_argument("Invalid value for --solver-mna-impl");
 				}
@@ -449,7 +451,7 @@ std::list<fs::path> DPsim::Utils::findFiles(std::list<fs::path> filennames, cons
 }
 
 void DPsim::Utils::applySimulationParametersFromJson(const json config, Simulation &sim){
-	if (config.contains("timestep"))		
+	if (config.contains("timestep"))
 			sim.setTimeStep(config["timestep"].get<double>());
 	if (config.contains("duration"))
 			sim.setFinalTime(config["duration"].get<double>());
