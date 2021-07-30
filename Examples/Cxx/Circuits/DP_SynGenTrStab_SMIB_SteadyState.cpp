@@ -4,7 +4,7 @@
 using namespace DPsim;
 using namespace CPS;
 
-CIM::Examples::SMIB::ScenarioConfig smib;
+CIM::Examples::Grids::SMIB::ScenarioConfig smib;
 
 void DP_1ph_SynGenTrStab_SteadyState(String simName, Real timeStep, Real finalTime, Real cmdInertia, Real cmdDamping) {
 	// ----- POWERFLOW FOR INITIALIZATION -----

@@ -17,37 +17,6 @@ namespace CIM {
 namespace Examples {
 
 namespace Components {
-
-// P. Kundur, "Power System Stability and Control", Example 13.2, pp. 864-869.
-namespace KundurExample1 {
-    struct Network {
-        Real nomVoltage = 400e3;
-    };
-
-    struct Gen {
-        Real nomPower = 2220e6;
-        Real nomVoltage = 400e3;
-        Real H = 3.5;
-        Real XpdPU = 0.3;
-        Real RsPU = 0;
-        Real D = 1.0;
-    };
-    struct Line1 {
-        // Vnom = 400kV
-        Real lineResistance = 0.0721;
-        Real lineReactance = 36.0360; 
-        Real lineSusceptance = 0;
-        Real lineConductance =0;
-    };
-
-    struct Transf1 {
-	    Real nomVoltageHV = 400e3; 
-        Real nomVoltageMV = 400e3;
-        Real transformerResistance = 0; // referred to HV side
-        Real transformerReactance = 10.8108; // referred to HV side
-    };
-}
-
 namespace SynchronousGeneratorKundur {
     struct MachineParameters {
         // Define machine parameters in per unit
@@ -89,7 +58,9 @@ namespace SynchronousGeneratorKundur {
         Real fieldVoltage = 7.0821; //TODO: specify operating conditions
     };
 }
+}
 
+namespace Grids {
 namespace CIGREHVEuropean {
     struct LineParameters {
         // 220 kV
@@ -116,6 +87,35 @@ namespace CIGREHVAmerican {
         Real lineConductancePerKm = 0;
     };
 }
+
+// P. Kundur, "Power System Stability and Control", Example 13.2, pp. 864-869.
+namespace KundurExample1 {
+    struct Network {
+        Real nomVoltage = 400e3;
+    };
+
+    struct Gen {
+        Real nomPower = 2220e6;
+        Real nomVoltage = 400e3;
+        Real H = 3.5;
+        Real XpdPU = 0.3;
+        Real RsPU = 0;
+        Real D = 1.0;
+    };
+    struct Line1 {
+        // Vnom = 400kV
+        Real lineResistance = 0.0721;
+        Real lineReactance = 36.0360; 
+        Real lineSusceptance = 0;
+        Real lineConductance =0;
+    };
+
+    struct Transf1 {
+	    Real nomVoltageHV = 400e3; 
+        Real nomVoltageMV = 400e3;
+        Real transformerResistance = 0; // referred to HV side
+        Real transformerReactance = 10.8108; // referred to HV side
+    };
 }
 namespace SMIB {
     struct ScenarioConfig {
@@ -138,7 +138,7 @@ namespace SMIB {
         Real t_ratio=Vnom/nomPhPhVoltRMS;
         //-----------Transmission Line-----------//
         // CIGREHVAmerican (230 kV)
-        Components::CIGREHVAmerican::LineParameters lineCIGREHV;
+        Grids::CIGREHVAmerican::LineParameters lineCIGREHV;
         Real lineLeng=100;
         Real lineResistance = lineCIGREHV.lineResistancePerKm*lineLeng;
         Real lineInductance = lineCIGREHV.lineReactancePerKm/nomOmega*lineLeng;
@@ -191,7 +191,7 @@ namespace ThreeBus {
 
         // -----------Transmission Lines-----------//
         // CIGREHVAmerican (230 kV)
-        Components::CIGREHVAmerican::LineParameters lineCIGREHV;
+        Grids::CIGREHVAmerican::LineParameters lineCIGREHV;
         //line 1-2 (180km)
         Real lineResistance12 = lineCIGREHV.lineResistancePerKm*180;
         Real lineInductance12 = lineCIGREHV.lineReactancePerKm/nomOmega*180;
@@ -427,7 +427,7 @@ namespace CIGREMV {
             return nullptr;
         }
     }
-
+}
 }
 }
 }
