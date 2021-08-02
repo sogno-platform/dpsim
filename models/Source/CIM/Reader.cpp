@@ -442,7 +442,7 @@ TopologicalPowerComp::Ptr Reader::mapPowerTransformer(CIMPP::PowerTransformer* t
 	// TODO: To be extracted from cim class
 	Real ratioPhase = 0;
 
-    // Calculate resistance and inductance referred to high voltage side
+    // Calculate resistance and inductance referred to higher voltage side
 	Real resistance = 0;
     Real inductance = 0;
 	if (voltageNode1 >= voltageNode2 && abs(end1->x.value) > 1e-12) {
@@ -467,7 +467,7 @@ TopologicalPowerComp::Ptr Reader::mapPowerTransformer(CIMPP::PowerTransformer* t
 			Matrix inductance_3ph = CPS::Math::singlePhaseParameterToThreePhase(inductance);
 			Bool withResistiveLosses = resistance > 0;
 			auto transformer = std::make_shared<EMT::Ph3::Transformer>(trans->mRID, trans->name, mComponentLogLevel, withResistiveLosses);
-			transformer->setParameters(voltageNode1, voltageNode2, ratioAbs, ratioPhase, resistance_3ph, inductance_3ph);
+			transformer->setParameters(voltageNode1, voltageNode2, ratedPower, ratioAbs, ratioPhase, resistance_3ph, inductance_3ph);
 			return transformer;
 		}
 		else

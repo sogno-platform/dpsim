@@ -167,6 +167,8 @@ namespace DPsim {
 		///
 		void setSolverType(Solver::Type solverType = Solver::Type::MNA) { mSolverType = solverType; }
 		///
+		void setMnaSolverImplementation(MnaSolverFactory::MnaSolverImpl mnaImpl) { mMnaImpl = mnaImpl; }
+		///
 		void doInitFromNodesAndTerminals(Bool f = true) { mInitFromNodesAndTerminals = f; }
 		///
 		void doSplitSubnets(Bool splitSubnets = true) { mSplitSubnets = splitSubnets; }

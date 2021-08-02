@@ -26,13 +26,13 @@ int main(int argc, char *argv[]) {
 	CommandLineArgs args(argc, argv);
 	if (argc <= 1) {
 		filenames = Utils::findFiles({
-			"WSCC-09_RX_DI.xml",
-			"WSCC-09_RX_EQ.xml",
-			"WSCC-09_RX_SV.xml",
-			"WSCC-09_RX_TP.xml"
-		}, "build/_deps/cim-data-src/WSCC-09/WSCC-09_RX", "CIMPATH");
-		timeStep = 1e-6;
-		finalTime = 10e-6;
+			"WSCC-09_DI.xml",
+			"WSCC-09_EQ.xml",
+			"WSCC-09_SV.xml",
+			"WSCC-09_TP.xml"
+		}, "build/_deps/cim-data-src/WSCC-09/WSCC-09", "CIMPATH");
+		timeStep = 10e-6;
+		finalTime = 0.1;
 	}
 	else {
 		filenames = args.positionalPaths();
