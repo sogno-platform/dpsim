@@ -47,7 +47,7 @@ int main(int argc, char *argv[]) {
     CPS::CIM::Reader reader(simNamePF, Logger::Level::debug, Logger::Level::debug);
     SystemTopology systemPF = reader.loadCIM(60, filenames, Domain::SP, PhaseType::Single, CPS::GeneratorType::PVNode);
 	systemPF.component<CPS::SP::Ph1::SynchronGenerator>("GEN1")->modifyPowerFlowBusType(CPS::PowerflowBusType::VD);
-
+	
 	// define logging
     auto loggerPF = DPsim::DataLogger::make(simNamePF);
     for (auto node : systemPF.mNodes)
@@ -97,6 +97,7 @@ int main(int argc, char *argv[]) {
 	sim.setDomain(Domain::DP);
 	sim.setTimeStep(timeStep);
 	sim.setFinalTime(finalTime);
+	sim.doSteadyStateInit(true);
 	sim.addLogger(logger);
 	sim.run();
 
