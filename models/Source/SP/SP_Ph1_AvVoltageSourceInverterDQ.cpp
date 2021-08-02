@@ -92,14 +92,15 @@ void SP::Ph1::AvVoltageSourceInverterDQ::setParameters(Real sysOmega, Real sysVo
 	mQref = Qref;
 }
 
-void SP::Ph1::AvVoltageSourceInverterDQ::setTransformerParameters(Real nomVoltageEnd1, Real nomVoltageEnd2,
+void SP::Ph1::AvVoltageSourceInverterDQ::setTransformerParameters(Real nomVoltageEnd1, Real nomVoltageEnd2, Real ratedPower,
 	Real ratioAbs,	Real ratioPhase, Real resistance, Real inductance) {
 
-	Base::AvVoltageSourceInverterDQ::setTransformerParameters(nomVoltageEnd1, nomVoltageEnd2,
+	Base::AvVoltageSourceInverterDQ::setTransformerParameters(nomVoltageEnd1, nomVoltageEnd2, ratedPower,
 		ratioAbs, ratioPhase, resistance, inductance);
 
 	mSLog->info("Connection Transformer Parameters:");
 	mSLog->info("Nominal Voltage End 1={} [V] Nominal Voltage End 2={} [V]", mTransformerNominalVoltageEnd1, mTransformerNominalVoltageEnd2);
+	mSLog->info("Rated Apparent Power = {} [VA]", mTransformerRatedPower);
 	mSLog->info("Resistance={} [Ohm] Inductance={} [H]", mTransformerResistance, mTransformerInductance);
     mSLog->info("Tap Ratio={} [ ] Phase Shift={} [deg]", mTransformerRatioAbs, mTransformerRatioPhase);
 

@@ -12,12 +12,12 @@
 #include <DPsim.h>
 
 using namespace DPsim;
-using namespace CPS::EMT;
+using namespace CPS::DP;
 
 int main(int argc, char *argv[]) {
 
 	// Simulation parameters
-	String simName = "EMT_WSCC-9bus_IdealCS";
+	String simName = "DP_WSCC-9bus_IdealVS";
 	Real timeStep;
 	Real finalTime;
 
@@ -31,11 +31,11 @@ int main(int argc, char *argv[]) {
 			"WSCC-09_SV.xml",
 			"WSCC-09_TP.xml"
 		}, "build/_deps/cim-data-src/WSCC-09/WSCC-09", "CIMPATH");
-		timeStep = 10e-6;
+		timeStep = 100e-6;
 		finalTime = 0.1;
 	}
 	else {
-		filenames = args.positionalPaths();
+		filenames = std::list<fs::path>(argv + 1, argv + argc);
 		timeStep = args.timeStep;
 		finalTime = args.duration;
 	}
@@ -69,16 +69,9 @@ int main(int argc, char *argv[]) {
 	// ----- DYNAMIC SIMULATION -----
 	Logger::setLogDir("logs/"+simName);
 
-	CPS::CIM::Reader reader2(simName, Logger::Level::debug, Logger::Level::debug);
-	SystemTopology sys = reader2.loadCIM(60, filenames, Domain::EMT, PhaseType::ABC, CPS::GeneratorType::IdealCurrentSource);
-
+	CPS::CIM::Reader reader2(simName, Logger::Level::debug, Logger::Level::off);
+	SystemTopology sys = reader2.loadCIM(60, filenames, Domain::DP, PhaseType::Single, CPS::GeneratorType::IdealVoltageSource);
 	reader2.initDynamicSystemTopologyWithPowerflow(systemPF, sys);
-	for (auto comp : sys.mComponents) {
-		if (auto genEMT = std::dynamic_pointer_cast<CPS::EMT::Ph3::SynchronGeneratorIdeal>(comp)) {
-			auto genPF = systemPF.component<CPS::SP::Ph1::SynchronGenerator>(comp->name());
-			genEMT->terminal(0)->setPower(-genPF->getApparentPower());
-		}
-	}
 
 	// Logging
 	auto logger = DataLogger::make(simName);
@@ -94,15 +87,16 @@ int main(int argc, char *argv[]) {
 
 	// log generator's current
 	for (auto comp : sys.mComponents) {
-		if (std::dynamic_pointer_cast<CPS::EMT::Ph3::SynchronGeneratorIdeal>(comp))
+		if (std::dynamic_pointer_cast<CPS::DP::Ph1::SynchronGeneratorIdeal>(comp))
 			logger->addAttribute(comp->name() + ".I", comp->attribute("i_intf"));
 	}
 
 	Simulation sim(simName, Logger::Level::info);
 	sim.setSystem(sys);
-	sim.setDomain(Domain::EMT);
+	sim.setDomain(Domain::DP);
 	sim.setTimeStep(timeStep);
 	sim.setFinalTime(finalTime);
+	sim.doSteadyStateInit(true);
 	sim.addLogger(logger);
 	sim.run();
 
