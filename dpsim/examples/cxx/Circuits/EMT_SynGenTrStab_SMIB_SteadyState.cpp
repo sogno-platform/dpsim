@@ -1,49 +1,12 @@
-/* Copyright 2017-2021 Institute for Automation of Complex Power Systems,
- *                     EONERC, RWTH Aachen University
- *
- * This Source Code Form is subject to the terms of the Mozilla Public
- * License, v. 2.0. If a copy of the MPL was not distributed with this
- * file, You can obtain one at https://mozilla.org/MPL/2.0/.
- *********************************************************************************/
-
 #include <DPsim.h>
+#include "../Examples.h"
 
 using namespace DPsim;
 using namespace CPS;
 
-//-----------Power system-----------//
-//Voltage level as Base Voltage
-Real Vnom = 230e3;
+CIM::Examples::Components::SMIB::ScenarioConfig smib;
 
-//-----------Generator-----------//
-Real nomPower = 500e6;
-Real nomPhPhVoltRMS = 22e3;
-Real nomFreq = 60;
-Real nomOmega= nomFreq* 2*PI;
-Real H = 5;
-Real Xpd=0.31;
-Real Rs = 0.003*0;
-Real D = 1*50;
-// Initialization parameters
-Real initMechPower= 300e6;
-Real initActivePower = 300e6;
-Real setPointVoltage=nomPhPhVoltRMS + 0.05*nomPhPhVoltRMS;
-
-//-----------Transformer-----------//
-Real t_ratio=Vnom/nomPhPhVoltRMS;
-
-//PiLine parameters calculated from CIGRE Benchmark system
-Real lineResistance = 6.7;
-Real lineInductance = 47./nomOmega;
-// Real lineCapacitance = 3.42e-4/nomOmega;
-Real lineCapacitance = 0;
-Real lineConductance =0;
-
-// Parameters for powerflow initialization
-// Slack voltage: 1pu
-Real Vslack = Vnom;
-
-void EMT_1ph_SynGenTrStab_SteadyState(String simName, Real timeStep, Real finalTime, bool startFaultEvent, bool endFaultEvent, Real startTimeFault, Real endTimeFault, Real cmdInertia) {
+void EMT_1ph_SynGenTrStab_SteadyState(String simName, Real timeStep, Real finalTime, Real cmdInertia, Real cmdDamping) {
 	//  // ----- POWERFLOW FOR INITIALIZATION -----
 	Real timeStepPF = finalTime;
 	Real finalTimePF = finalTime+timeStepPF;
@@ -57,20 +20,20 @@ void EMT_1ph_SynGenTrStab_SteadyState(String simName, Real timeStep, Real finalT
 	//Synchronous generator ideal model
 	auto genPF = SP::Ph1::SynchronGenerator::make("Generator", Logger::Level::debug);
 	// setPointVoltage is defined as the voltage at the transfomer primary side and should be transformed to network side
-	genPF->setParameters(nomPower, nomPhPhVoltRMS, initActivePower, setPointVoltage*t_ratio, PowerflowBusType::PV);
-	genPF->setBaseVoltage(Vnom);
+	genPF->setParameters(smib.nomPower, smib.nomPhPhVoltRMS, smib.initActivePower, smib.setPointVoltage*smib.t_ratio, PowerflowBusType::PV);
+	genPF->setBaseVoltage(smib.Vnom);
 	genPF->modifyPowerFlowBusType(PowerflowBusType::PV);
 
 	//Grid bus as Slack
 	auto extnetPF = SP::Ph1::NetworkInjection::make("Slack", Logger::Level::debug);
-	extnetPF->setParameters(Vslack);
-	extnetPF->setBaseVoltage(Vnom);
+	extnetPF->setParameters(smib.Vnom);
+	extnetPF->setBaseVoltage(smib.Vnom);
 	extnetPF->modifyPowerFlowBusType(PowerflowBusType::VD);
 
 	//Line
 	auto linePF = SP::Ph1::PiLine::make("PiLine", Logger::Level::debug);
-	linePF->setParameters(lineResistance, lineInductance, lineCapacitance, lineConductance);
-	linePF->setBaseVoltage(Vnom);
+	linePF->setParameters(smib.lineResistance, smib.lineInductance, smib.lineCapacitance, smib.lineConductance);
+	linePF->setBaseVoltage(smib.Vnom);
 
 	// Topology
 	genPF->connect({ n1PF });
@@ -108,21 +71,20 @@ void EMT_1ph_SynGenTrStab_SteadyState(String simName, Real timeStep, Real finalT
 	// Components
 	auto genEMT = EMT::Ph3::SynchronGeneratorTrStab::make("SynGen", Logger::Level::debug);
 	// Xpd is given in p.u of generator base at transfomer primary side and should be transformed to network side
-	genEMT->setStandardParametersPU(nomPower, nomPhPhVoltRMS, nomFreq, Xpd*std::pow(t_ratio,2), cmdInertia*H, Rs, D );
-
+	genEMT->setStandardParametersPU(smib.nomPower, smib.nomPhPhVoltRMS, smib.nomFreq, smib.Xpd*std::pow(smib.t_ratio,2), cmdInertia*smib.H, smib.Rs, cmdDamping*smib.D );
 	// Get actual active and reactive power of generator's Terminal from Powerflow solution
 	Complex initApparentPower= genPF->getApparentPower();
-	genEMT->setInitialValues(initApparentPower, initMechPower);
+	genEMT->setInitialValues(initApparentPower, smib.initMechPower);
 
 	//Grid bus as Slack
 	auto extnetEMT = EMT::Ph3::NetworkInjection::make("Slack", Logger::Level::debug);
 
 	// Line
 	auto lineEMT = EMT::Ph3::PiLine::make("PiLine", Logger::Level::debug);
-	lineEMT->setParameters(Math::singlePhaseParameterToThreePhase(lineResistance),
-	                      Math::singlePhaseParameterToThreePhase(lineInductance),
-					      Math::singlePhaseParameterToThreePhase(lineCapacitance),
-						  Math::singlePhaseParameterToThreePhase(lineConductance));
+	lineEMT->setParameters(Math::singlePhaseParameterToThreePhase(smib.lineResistance), 
+	                      Math::singlePhaseParameterToThreePhase(smib.lineInductance), 
+					      Math::singlePhaseParameterToThreePhase(smib.lineCapacitance),
+						  Math::singlePhaseParameterToThreePhase(smib.lineConductance));
 
 	// Topology
 	genEMT->connect({ n1EMT });
@@ -172,13 +134,22 @@ int main(int argc, char* argv[]) {
 
 	//Simultion parameters
 	String simName="EMT_SynGenTrStab_SMIB_SteadyState";
-	Real finalTime = 0.1;
-	Real timeStep = 0.000001;
-	Bool startFaultEvent=false;
-	Bool endFaultEvent=false;
-	Real startTimeFault=10;
-	Real endTimeFault=10.1;
+	Real finalTime = 2;
+	Real timeStep = 0.00005;
 	Real cmdInertia= 1.0;
+	Real cmdDamping=1.0;
 
-	EMT_1ph_SynGenTrStab_SteadyState(simName, timeStep, finalTime, startFaultEvent, endFaultEvent, startTimeFault, endTimeFault, cmdInertia);
+		CommandLineArgs args(argc, argv);
+	if (argc > 1) {
+		timeStep = args.timeStep;
+		finalTime = args.duration;
+		if (args.name != "dpsim")
+			simName = args.name;
+		if (args.options.find("SCALEINERTIA") != args.options.end())
+			cmdInertia = args.options["SCALEINERTIA"];
+		if (args.options.find("SCALEDAMPING") != args.options.end())
+			cmdDamping = args.options["SCALEDAMPING"];
+	}
+
+	EMT_1ph_SynGenTrStab_SteadyState(simName, timeStep, finalTime, cmdInertia, cmdDamping);
 }

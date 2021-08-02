@@ -71,14 +71,24 @@ void EMT::Ph3::SynchronGeneratorTrStab::setFundamentalParametersPU(Real nomPower
 	mXpd = mNomOmega * (**mLd - mLmd*mLmd / mLfd) * mBase_L;
 	mLpd = (**mLd - mLmd*mLmd / mLfd) * mBase_L;
 
-	SPDLOG_LOGGER_INFO(mSLog, "\n--- Parameters ---"
+	//The units of D are per unit power divided by per unit speed deviation.
+	// D is transformed to an absolute value to obtain Kd, which will be used in the swing equation
+	mKd= D*mNomPower/mNomOmega;
+
+	mSLog->info("\n--- Parameters ---"
 				"\nimpedance: {:f}"
-				"\ninductance: {:f}", mXpd, mLpd);
+				"\ninductance: {:f}"				
+				"\ninertia: {:f}"
+				"\ndamping: {:f}", mXpd, mLpd, mInertia, mKd);
 }
 
 void EMT::Ph3::SynchronGeneratorTrStab::setStandardParametersSI(Real nomPower, Real nomVolt, Real nomFreq, Int polePairNumber,
 	Real Rs, Real Lpd, Real inertiaJ, Real Kd) {
 	setBaseParameters(nomPower, nomVolt, nomFreq);
+	mSLog->info("\n--- Base Parameters ---"
+		"\nnomPower: {:f}"
+		"\nnomVolt: {:f}"
+		"\nnomFreq: {:f}", mNomPower, mNomVolt, mNomFreq);
 
 	mParameterType = ParameterType::statorReferred;
 	mStateType = StateType::statorReferred;
@@ -90,14 +100,20 @@ void EMT::Ph3::SynchronGeneratorTrStab::setStandardParametersSI(Real nomPower, R
 	mXpd = mNomOmega * Lpd;
 	mLpd = Lpd;
 
-	SPDLOG_LOGGER_INFO(mSLog, "\n--- Parameters ---"
-				"\nimpedance: {:f}"
-				"\ninductance: {:f}", mXpd, mLpd);
+	mSLog->info("\n--- Parameters ---"
+			"\nimpedance: {:f}"
+			"\ninductance: {:f}"
+			"\ninertia: {:f}"
+			"\ndamping: {:f}", mXpd, mLpd, mInertia, mKd);
 }
 
 void EMT::Ph3::SynchronGeneratorTrStab::setStandardParametersPU(Real nomPower, Real nomVolt, Real nomFreq, Real Xpd,
 	Real inertia, Real Rs, Real D) {
 	setBaseParameters(nomPower, nomVolt, nomFreq);
+	mSLog->info("\n--- Base Parameters ---"
+	"\nnomPower: {:f}"
+	"\nnomVolt: {:f}"
+	"\nnomFreq: {:f}", mNomPower, mNomVolt, mNomFreq);
 
 	// Input is in per unit but all values are converted to absolute values.
 	mParameterType = ParameterType::statorReferred;
@@ -114,9 +130,11 @@ void EMT::Ph3::SynchronGeneratorTrStab::setStandardParametersPU(Real nomPower, R
 	// D is transformed to an absolute value to obtain Kd, which will be used in the swing equation
 	mKd= D*mNomPower/mNomOmega;
 
-	SPDLOG_LOGGER_INFO(mSLog, "\n--- Parameters ---"
-				"\nimpedance: {:f}"
-				"\ninductance: {:f}", mXpd, mLpd);
+	mSLog->info("\n--- Parameters ---"
+			"\nimpedance: {:f}"
+			"\ninductance: {:f}"
+			"\ninertia: {:f}"
+			"\ndamping: {:f}", mXpd, mLpd, mInertia, mKd);
 }
 
 void EMT::Ph3::SynchronGeneratorTrStab::setInitialValues(Complex elecPower, Real mechPower) {
@@ -144,7 +162,8 @@ void EMT::Ph3::SynchronGeneratorTrStab::initializeFromNodesAndTerminals(Real fre
 	intfVoltageComplex(0, 0) = initialSingleVoltage(0);
 	intfVoltageComplex(1, 0) = intfVoltageComplex(0, 0) * SHIFT_TO_PHASE_B;
 	intfVoltageComplex(2, 0) = intfVoltageComplex(0, 0) * SHIFT_TO_PHASE_C;
-	intfCurrentComplex(0, 0) = std::conj(-2./3.*mInitElecPower / intfVoltageComplex(0, 0));
+	// intfCurrentComplex(0, 0) = std::conj(-2./3.*mInitElecPower / intfVoltageComplex(0, 0));
+	intfCurrentComplex(0, 0) = std::conj(-1./3.* mInitElecPower / intfVoltageComplex(0, 0));
 	intfCurrentComplex(1, 0) = intfCurrentComplex(0, 0) * SHIFT_TO_PHASE_B;
 	intfCurrentComplex(2, 0) = intfCurrentComplex(0, 0) * SHIFT_TO_PHASE_C;
 
@@ -163,8 +182,8 @@ void EMT::Ph3::SynchronGeneratorTrStab::initializeFromNodesAndTerminals(Real fre
 	**mDelta_p= Math::phase(**mEp);
 
 	// // Update active electrical power that is compared with the mechanical power
-	**mElecActivePower = ( 3./2. * intfVoltageComplex(0,0) *  std::conj( - intfCurrentComplex(0,0)) ).real();
-	// mElecActivePower = ( (mEp - (**mIntfVoltage)(0,0)) / mImpedance *  (**mIntfVoltage)(0,0) ).real();
+	mElecActivePower = ( 3. * intfVoltageComplex(0,0) *  std::conj( - intfCurrentComplex(0,0)) ).real();
+	// mElecActivePower = ( (mEp - mIntfVoltage(0,0)) / mImpedance *  mIntfVoltage(0,0) ).real();
 	// For infinite power bus
 	// mElecActivePower = (Math::abs(mEp) * Math::abs((**mIntfVoltage)(0,0)) / mXpd) * sin(mDelta_p);
 
@@ -176,7 +195,7 @@ void EMT::Ph3::SynchronGeneratorTrStab::initializeFromNodesAndTerminals(Real fre
 	mVirtualNodes[0]->setInitialVoltage(PEAK1PH_TO_RMS3PH* **mEp);
 
 	MatrixComp vref = MatrixComp::Zero(3,1);
-	vref= CPS::Math::singlePhaseVariableToThreePhase(**mEp);
+	vref= CPS::Math::singlePhaseVariableToThreePhase(PEAK1PH_TO_RMS3PH*mEp);
 
 	// Create sub voltage source for emf
 	mSubVoltageSource = EMT::Ph3::VoltageSource::make(**mName + "_src", mLogLevel);
