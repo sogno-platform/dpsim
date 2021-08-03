@@ -99,7 +99,12 @@ void MnaSolver<VarType>::initialize() {
 template <>
 void MnaSolver<Real>::initializeComponents() {
 	mSLog->info("-- Initialize components from power flow");
-	for (auto comp : mMNAComponents) {
+
+	CPS::MNAInterface::List allMNAComps;
+	allMNAComps.insert(allMNAComps.end(), mMNAComponents.begin(), mMNAComponents.end());
+	allMNAComps.insert(allMNAComps.end(), mMNAIntfVariableComps.begin(), mMNAIntfVariableComps.end());
+
+	for (auto comp : allMNAComps) {
 		auto pComp = std::dynamic_pointer_cast<SimPowerComp<Real>>(comp);
 		if (!pComp)	continue;
 		pComp->checkForUnconnectedTerminals();
@@ -111,15 +116,7 @@ void MnaSolver<Real>::initializeComponents() {
 		comp->initialize(mSystem.mSystemOmega, mTimeStep);
 
 	// Initialize MNA specific parts of components.
-	for (auto comp : mMNAComponents) {
-		comp->mnaInitialize(mSystem.mSystemOmega, mTimeStep, attribute<Matrix>("left_vector"));
-		const Matrix& stamp = comp->template attribute<Matrix>("right_vector")->get();
-		if (stamp.size() != 0) {
-			mRightVectorStamps.push_back(&stamp);
-		}
-	}
-
-	for (auto comp : mMNAIntfVariableComps) {
+	for (auto comp : allMNAComps) {
 		comp->mnaInitialize(mSystem.mSystemOmega, mTimeStep, attribute<Matrix>("left_vector"));
 		const Matrix& stamp = comp->template attribute<Matrix>("right_vector")->get();
 		if (stamp.size() != 0) {
@@ -135,8 +132,12 @@ template <>
 void MnaSolver<Complex>::initializeComponents() {
 	mSLog->info("-- Initialize components from power flow");
 
+	CPS::MNAInterface::List allMNAComps;
+	allMNAComps.insert(allMNAComps.end(), mMNAComponents.begin(), mMNAComponents.end());
+	allMNAComps.insert(allMNAComps.end(), mMNAIntfVariableComps.begin(), mMNAIntfVariableComps.end());
+
 	// Initialize power components with frequencies and from powerflow results
-	for (auto comp : mMNAComponents) {
+	for (auto comp : allMNAComps) {
 		auto pComp = std::dynamic_pointer_cast<SimPowerComp<Complex>>(comp);
 		if (!pComp)	continue;
 		pComp->checkForUnconnectedTerminals();
@@ -163,15 +164,7 @@ void MnaSolver<Complex>::initializeComponents() {
 	}
 	else {
 		// Initialize MNA specific parts of components.
-		for (auto comp : mMNAComponents) {
-			comp->mnaInitialize(mSystem.mSystemOmega, mTimeStep, attribute<Matrix>("left_vector"));
-			const Matrix& stamp = comp->template attribute<Matrix>("right_vector")->get();
-			if (stamp.size() != 0) {
-				mRightVectorStamps.push_back(&stamp);
-			}
-		}
-
-		for (auto comp : mMNAIntfVariableComps) {
+		for (auto comp : allMNAComps) {
 			comp->mnaInitialize(mSystem.mSystemOmega, mTimeStep, attribute<Matrix>("left_vector"));
 			const Matrix& stamp = comp->template attribute<Matrix>("right_vector")->get();
 			if (stamp.size() != 0) {

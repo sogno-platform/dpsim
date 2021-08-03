@@ -146,6 +146,8 @@ void EMT::Ph3::SynchronGeneratorDQ::applyParametersOperationalPerUnit() {
 
 void EMT::Ph3::SynchronGeneratorDQ::initializeFromNodesAndTerminals(Real frequency) {
 	if(!mInitialValuesSet) {
+		mSLog->info("--- Initialization from powerflow ---");
+		
 		// terminal powers in consumer system -> convert to generator system
 		Real activePower = -terminal(0)->singlePower().real();
 		Real reactivePower = -terminal(0)->singlePower().imag();
@@ -154,8 +156,16 @@ void EMT::Ph3::SynchronGeneratorDQ::initializeFromNodesAndTerminals(Real frequen
 		Real voltMagnitude = RMS3PH_TO_PEAK1PH*Math::abs(initialSingleVoltage(0));
 
 		this->setInitialValues(activePower, reactivePower, voltMagnitude, Math::phase(initialSingleVoltage(0)), activePower);
+
+		mSLog->info("\nTerminal 0 voltage: {:s}"
+					"\nTerminal 0 power: {:s}"
+					"\n--- Initialization from powerflow finished ---",
+					Logger::phasorToString(initialSingleVoltage(0)),
+					Logger::complexToString(terminal(0)->singlePower()));
+		mSLog->flush();
 	} else {
 		mSLog->info("Initial values already set, skipping initializeFromNodesAndTerminals.");
+		mSLog->flush();
 	}
 }
 

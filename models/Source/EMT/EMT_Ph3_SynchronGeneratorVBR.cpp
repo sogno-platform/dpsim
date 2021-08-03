@@ -50,8 +50,7 @@ EMT::Ph3::SynchronGeneratorVBR::SynchronGeneratorVBR(String name, Logger::Level 
 void EMT::Ph3::SynchronGeneratorVBR::setParametersFundamentalPerUnit(
 	Real nomPower, Real nomVolt, Real nomFreq, Int poleNumber, Real nomFieldCur,
 	Real Rs, Real Ll, Real Lmd, Real Lmq, Real Rfd, Real Llfd, Real Rkd, Real Llkd,
-	Real Rkq1, Real Llkq1, Real Rkq2, Real Llkq2, Real inertia,
-	Real initActivePower, Real initReactivePower, Real initTerminalVolt, Real initVoltAngle, Real initMechPower) {
+	Real Rkq1, Real Llkq1, Real Rkq2, Real Llkq2, Real inertia) {
 
 	Base::SynchronGenerator::setBaseAndFundamentalPerUnitParameters(
 		nomPower, nomVolt, nomFreq, nomFieldCur,
@@ -63,6 +62,10 @@ void EMT::Ph3::SynchronGeneratorVBR::setParametersFundamentalPerUnit(
 				"Llkd: {:e}\nRkq1: {:e}\nLlkq1: {:e}\nRkq2: {:e}\nLlkq2: {:e}\ninertia: {:e}",
 				nomPower, nomVolt, nomFreq, poleNumber, nomFieldCur,
 				Rs, Ll, Lmd, Lmq, Rfd, Llfd, Rkd, Llkd, Rkq1, Llkq1, Rkq2, Llkq2, inertia);
+}
+
+void EMT::Ph3::SynchronGeneratorVBR::setInitialValues(Real initActivePower, Real initReactivePower,
+			Real initTerminalVolt, Real initVoltAngle, Real initMechPower) {
 
 	Base::SynchronGenerator::setInitialValues(initActivePower, initReactivePower,
 		initTerminalVolt, initVoltAngle, initMechPower);
@@ -72,6 +75,31 @@ void EMT::Ph3::SynchronGeneratorVBR::setParametersFundamentalPerUnit(
 				"initVoltAngle: {:e} \ninitMechPower: {:e}",
 				initActivePower, initReactivePower, initTerminalVolt, 
 				initVoltAngle, initMechPower);
+}
+
+void EMT::Ph3::SynchronGeneratorVBR::initializeFromNodesAndTerminals(Real frequency) {
+	if(!mInitialValuesSet) {
+		mSLog->info("--- Initialization from powerflow ---");
+		
+		// terminal powers in consumer system -> convert to generator system
+		Real activePower = -terminal(0)->singlePower().real();
+		Real reactivePower = -terminal(0)->singlePower().imag();
+
+		// 	voltage magnitude in phase-to-phase RMS -> convert to phase-to-ground peak expected by setInitialValues 
+		Real voltMagnitude = RMS3PH_TO_PEAK1PH*Math::abs(initialSingleVoltage(0));
+		
+		this->setInitialValues(activePower, reactivePower, voltMagnitude, Math::phase(initialSingleVoltage(0)), activePower);
+
+		mSLog->info("\nTerminal 0 voltage: {:s}"
+					"\nTerminal 0 power: {:s}"
+					"\n--- Initialization from powerflow finished ---",
+					Logger::phasorToString(initialSingleVoltage(0)),
+					Logger::complexToString(terminal(0)->singlePower()));
+		mSLog->flush();
+	} else {
+		mSLog->info("Initial values already set, skipping initializeFromNodesAndTerminals.");
+		mSLog->flush();
+	}
 }
 
 void EMT::Ph3::SynchronGeneratorVBR::addExciter(Real Ta, Real Ka, Real Te, Real Ke, Real Tf, Real Kf, Real Tr, Real Lad, Real Rfd) {

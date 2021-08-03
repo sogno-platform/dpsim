@@ -214,17 +214,23 @@ namespace Ph3 {
 		/// The initialization mode depends on the setting of state type.
 		void setParametersFundamentalPerUnit(Real nomPower, Real nomVolt, Real nomFreq, Int poleNumber, Real nomFieldCur,
 			Real Rs, Real Ll, Real Lmd, Real Lmq, Real Rfd, Real Llfd, Real Rkd, Real Llkd,
-			Real Rkq1, Real Llkq1, Real Rkq2, Real Llkq2, Real inertia,
-			Real initActivePower, Real initReactivePower, Real initTerminalVolt, Real initVoltAngle, Real initMechPower);
+			Real Rkq1, Real Llkq1, Real Rkq2, Real Llkq2, Real inertia);
+
+		/// Initialize states according to desired initial electrical powerflow and mechanical input power
+		void setInitialValues(Real initActivePower, Real initReactivePower, Real initTerminalVolt, Real initVoltAngle, Real initMechPower);
 
 		/// Function to initialize Exciter
 		void addExciter(Real Ta, Real Ka, Real Te, Real Ke, Real Tf, Real Kf, Real Tr, Real Lad, Real Rfd);
 		/// Function to initialize Governor and Turbine
 		void addGovernor(Real Ta, Real Tb, Real Tc, Real Fa, Real Fb, Real Fc, Real K, Real Tsr, Real Tsm, Real Tm_init, Real PmRef);
 
+		/// Initialize components with correct network frequencies
 		void initialize(Matrix frequencies) override {
 			SimPowerComp<Real>::initialize(frequencies);
 		}
+
+		/// Initializes component from power flow data
+		void initializeFromNodesAndTerminals(Real frequency);
 
 		/// Initializes states in per unit or stator referred variables depending on the setting of the state type.
 		/// Function parameters have to be given in real units.

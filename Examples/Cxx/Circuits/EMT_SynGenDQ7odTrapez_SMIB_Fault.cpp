@@ -50,6 +50,7 @@ int main(int argc, char* argv[]) {
 		CommandLineArgs args(argc, argv);
 		simName = args.name;
 		timeStep = args.timeStep;
+		finalTime = args.duration;
 	}
 
 	// ----- POWERFLOW FOR INITIALIZATION -----
