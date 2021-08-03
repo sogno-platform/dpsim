@@ -56,10 +56,10 @@ namespace Ph3 {
 			Real Ll, Real Td0_t, Real Tq0_t, Real Td0_s, Real Tq0_s,
 			Real inertia);
 
-		///
+		/// Initialize states according to desired initial electrical powerflow and mechanical input power
 		void setInitialValues(Real initActivePower, Real initReactivePower, Real initTerminalVolt, Real initVoltAngle, Real initMechPower);
 
-		///
+		/// Calculates fundamental from operational parameters and applies them to the model
 		void applyParametersOperationalPerUnit();
 
 		/// Initializes component from power flow data
