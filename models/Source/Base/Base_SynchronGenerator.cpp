@@ -49,6 +49,22 @@ void Base::SynchronGenerator::setBaseAndFundamentalPerUnitParameters(
 	setAndApplyFundamentalPerUnitParameters(poleNumber, Rs, Ll, Lmd, Lmq, Rfd, Llfd, Rkd, Llkd, Rkq1, Llkq1, Rkq2, Llkq2, inertia);
 }
 
+void Base::SynchronGenerator::setBaseAndOperationalPerUnitParameters(
+	Real nomPower, Real nomVolt, Real nomFreq, Int poleNumber, Real nomFieldCur,
+	Real Rs, Real Ld, Real Lq, Real Ld_t, Real Lq_t, Real Ld_s, Real Lq_s,
+	Real Ll, Real Td0_t, Real Tq0_t, Real Td0_s, Real Tq0_s, Real inertia) {
+
+	mParameterType = ParameterType::perUnit;
+	mNumericalMethod = NumericalMethod::Trapezoidal;
+
+	setBaseParameters(nomPower, nomVolt, nomFreq, nomFieldCur);
+	setOperationalPerUnitParameters(poleNumber, inertia,
+									Rs, Ld, Lq, Ll, 
+									Ld_t, Lq_t, Ld_s, Lq_s,
+									Td0_t, Tq0_t, Td0_s, Tq0_s);
+	calculateFundamentalFromOperationalParameters();
+}
+
 void Base::SynchronGenerator::setOperationalPerUnitParameters(
 		Int poleNumber, Real inertia,
 		Real Rs, Real Ld, Real Lq, Real Ll,

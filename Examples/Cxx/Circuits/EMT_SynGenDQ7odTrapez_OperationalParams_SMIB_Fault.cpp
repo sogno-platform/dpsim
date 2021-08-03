@@ -66,8 +66,9 @@ int main(int argc, char* argv[]) {
 	if (argc > 1) {
 
 		// Simulation parameters
-		if (args.name != "dpsim")
-			simName = args.name;
+		simName = args.name;
+		timeStep = args.timeStep;
+		finalTime = args.duration;
 
 		// Machine parameters
 		if (args.options.find("H") != args.options.end())

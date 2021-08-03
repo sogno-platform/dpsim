@@ -209,12 +209,16 @@ namespace Ph3 {
 		/// Defines name and logging level
 		SynchronGeneratorVBR(String name, Logger::Level logLevel = Logger::Level::off);
 
-		/// Initializes the per unit or stator referred machine parameters with the machine parameters given in per unit or
-		/// stator referred parameters depending on the setting of parameter type.
-		/// The initialization mode depends on the setting of state type.
-		void setParametersFundamentalPerUnit(Real nomPower, Real nomVolt, Real nomFreq, Int poleNumber, Real nomFieldCur,
+		/// Initializes the base and fundamental machine parameters in per unit
+		void setBaseAndFundamentalPerUnitParameters(Real nomPower, Real nomVolt, Real nomFreq, Int poleNumber, Real nomFieldCur,
 			Real Rs, Real Ll, Real Lmd, Real Lmq, Real Rfd, Real Llfd, Real Rkd, Real Llkd,
 			Real Rkq1, Real Llkq1, Real Rkq2, Real Llkq2, Real inertia);
+
+		/// Initializes the base and operational machine parameters in per unit.
+		/// The fundamental machine parameters in per unit are calculated and set accordingly.
+		void setBaseAndOperationalPerUnitParameters(Real nomPower, Real nomVolt, Real nomFreq, Int poleNumber, Real nomFieldCur,
+			Real Rs, Real Ld, Real Lq, Real Ld_t, Real Lq_t, Real Ld_s, Real Lq_s,
+			Real Ll, Real Td0_t, Real Tq0_t, Real Td0_s, Real Tq0_s, Real inertia);
 
 		/// Initialize states according to desired initial electrical powerflow and mechanical input power
 		void setInitialValues(Real initActivePower, Real initReactivePower, Real initTerminalVolt, Real initVoltAngle, Real initMechPower);

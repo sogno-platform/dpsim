@@ -47,7 +47,36 @@ EMT::Ph3::SynchronGeneratorVBR::SynchronGeneratorVBR(String name, Logger::Level 
 	: SynchronGeneratorVBR(name, name, logLevel) {
 }
 
-void EMT::Ph3::SynchronGeneratorVBR::setParametersFundamentalPerUnit(
+void EMT::Ph3::SynchronGeneratorVBR::setBaseAndOperationalPerUnitParameters(
+	Real nomPower, Real nomVolt, Real nomFreq, Int poleNumber, Real nomFieldCur,
+	Real Rs, Real Ld, Real Lq, Real Ld_t, Real Lq_t, Real Ld_s, Real Lq_s,
+	Real Ll, Real Td0_t, Real Tq0_t, Real Td0_s, Real Tq0_s, Real inertia) {
+
+	Base::SynchronGenerator::setBaseAndOperationalPerUnitParameters(nomPower, nomVolt, nomFreq, poleNumber, nomFieldCur,
+	 																Rs, Ld, Lq, Ld_t, Lq_t, Ld_s, Lq_s,
+	 																Ll, Td0_t, Tq0_t, Td0_s, Tq0_s, inertia);
+
+	mSLog->info("Set base parameters: \n"
+				"nomPower: {:e}\nnomVolt: {:e}\nnomFreq: {:e}\n nomFieldCur: {:e}\n",
+				nomPower, nomVolt, nomFreq, nomFieldCur);
+
+	mSLog->info("Set operational parameters in per unit: \n"
+			"poleNumber: {:d}\ninertia: {:e}\n"
+			"Rs: {:e}\nLd: {:e}\nLq: {:e}\nLl: {:e}\n"
+			"Ld_t: {:e}\nLq_t: {:e}\nLd_s: {:e}\nLq_s: {:e}\n"
+			"Td0_t: {:e}\nTq0_t: {:e}\nTd0_s: {:e}\nTq0_s: {:e}\n",
+			poleNumber, inertia,
+			Rs, Ld, Lq, Ll, 
+			Ld_t, Lq_t, Ld_s, Lq_s,
+			Td0_t, Tq0_t, Td0_s, Tq0_s);
+
+	mSLog->info("Set fundamental parameters in per unit: \n"
+			"Rs: {:e}\nLl: {:e}\nLmd: {:e}\nLmq: {:e}\nRfd: {:e}\nLlfd: {:e}\nRkd: {:e}\n"
+			"Llkd: {:e}\nRkq1: {:e}\nLlkq1: {:e}\nRkq2: {:e}\nLlkq2: {:e}\n",
+			mRs, mLl, mLmd, mLmq, mRfd, mLlfd, mRkd, mLlkd, mRkq1, mLlkq1, mRkq2, mLlkq2);
+}
+
+void EMT::Ph3::SynchronGeneratorVBR::setBaseAndFundamentalPerUnitParameters(
 	Real nomPower, Real nomVolt, Real nomFreq, Int poleNumber, Real nomFieldCur,
 	Real Rs, Real Ll, Real Lmd, Real Lmq, Real Rfd, Real Llfd, Real Rkd, Real Llkd,
 	Real Rkq1, Real Llkq1, Real Rkq2, Real Llkq2, Real inertia) {
