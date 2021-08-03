@@ -1,10 +1,4 @@
-/* Copyright 2017-2021 Institute for Automation of Complex Power Systems,
- *                     EONERC, RWTH Aachen University
- *
- * This Source Code Form is subject to the terms of the Mozilla Public
- * License, v. 2.0. If a copy of the MPL was not distributed with this
- * file, You can obtain one at https://mozilla.org/MPL/2.0/.
- *********************************************************************************/
+
 
 #include <DPsim.h>
 #include "../Examples.h"
@@ -13,90 +7,44 @@ using namespace DPsim;
 using namespace CPS;
 using namespace CPS::CIM;
 
-int main(int argc, char* argv[]) {
+// General grid parameters
+Real VnomMV = 24e3;
+Real VnomHV = 230e3;
+Real nomFreq = 60;
+Real ratio = VnomMV/VnomHV;
+Real nomOmega= nomFreq* 2*PI;
 
-	// ----- PARAMETRIZATION -----
-	// General grid parameters
-	Real VnomMV = 24e3;
-	Real VnomHV = 230e3;
-	Real nomFreq = 60;
-	Real ratio = VnomMV/VnomHV;
-	Real nomOmega= nomFreq* 2*PI;
+Examples::Components::SynchronousGeneratorKundur::MachineParameters syngenKundur;
+Examples::Components::CIGREHVAmerican::LineParameters lineCIGREHV;
 
-	// Machine parameters synchronous generator
-	const Examples::Components::SynchronousGeneratorKundur::MachineParameters syngenKundur;
-	Real H = syngenKundur.H;
-	Real Rs = syngenKundur.Rs;
-	Real Ld = syngenKundur.Ld;
-	Real Lq = syngenKundur.Lq;
-	Real Ld_t = syngenKundur.Ld_t;
-	Real Lq_t = syngenKundur.Lq_t;
-	Real Ld_s = syngenKundur.Ld_s;
-	Real Lq_s = syngenKundur.Lq_s;
-	Real Ll = syngenKundur.Ll;
-	Real Td0_t = syngenKundur.Td0_t;
-	Real Tq0_t = syngenKundur.Tq0_t;
-	Real Td0_s = syngenKundur.Td0_s;
-	Real Tq0_s= syngenKundur.Tq0_s;
+// HV line parameters referred to MV side
+Real lineLength = 100;
+Real lineResistance = lineCIGREHV.lineResistancePerKm*lineLength*std::pow(ratio,2);
+Real lineInductance = lineCIGREHV.lineReactancePerKm*lineLength*std::pow(ratio,2)/nomOmega;
+Real lineCapacitance = lineCIGREHV.lineSusceptancePerKm*lineLength/std::pow(ratio,2)/nomOmega;
+Real lineConductance = 8e-2; //change to allow bigger time steps and to stabilize simulation (8e-2 used for 10us)
 
-	// Operation point synchronous generator
-	Real setPointActivePower=300e6;
-	Real setPointVoltage=1.05*VnomMV;
+// Breaker to trigger fault between the two lines
+Real BreakerOpen = 1e9;
+Real BreakerClosed = 0.001;
 
-	// Breaker
-	Real BreakerOpen = 1e9;
-	Real BreakerClosed = 0.001;
+//Synchronous generator 
+Real setPointActivePower=300e6;
+Real setPointVoltage=1.05*VnomMV;
 
-	// Line
-	const Examples::Grids::CIGREHVAmerican::LineParameters lineCIGREHV;
-	Real lineLength = 100;
-	Real lineResistance = lineCIGREHV.lineResistancePerKm*lineLength*std::pow(ratio,2); // HV parameters referred to MV side
-	Real lineInductance = lineCIGREHV.lineReactancePerKm*lineLength*std::pow(ratio,2)/nomOmega;
-	Real lineCapacitance = lineCIGREHV.lineSusceptancePerKm*lineLength/std::pow(ratio,2)/nomOmega;
-	Real lineConductance = 8e-2; //change to allow bigger time steps and to stabilize simulation (8e-2 used for 10us)
+//Simulation parameters
+String simName = "EMT_SynGenVBR_SMIB_Fault";
+Real finalTime = 1.0;
+Real timeStep = 10e-6;
+Real startTimeFault=0.2;
 
-	// Simulation parameters
-	String simName = "EMT_SynGenDQ7odTrapez_OperationalParams_SMIB_Fault";
-	Real finalTime = 1.0;
-	Real timeStep = 10e-6;
-	Real startTimeFault=0.2;
+int main(int argc, char* argv[]) {	
 
-	// Command line args processing
-	CommandLineArgs args(argc, argv);
 	if (argc > 1) {
-
-		// Simulation parameters
+		CommandLineArgs args(argc, argv);
 		simName = args.name;
 		timeStep = args.timeStep;
 		finalTime = args.duration;
-
-		// Machine parameters
-		if (args.options.find("H") != args.options.end())
-			H = args.options["H"];
-		if (args.options.find("Rs") != args.options.end())
-			Rs = args.options["Rs"];
-		if (args.options.find("Ld") != args.options.end())
-			Ld = args.options["Ld"];
-		if (args.options.find("Lq") != args.options.end())
-			Lq = args.options["Lq"];
-		if (args.options.find("Ld_t") != args.options.end())
-			Ld_t = args.options["Ld_t"];
-		if (args.options.find("Lq_t") != args.options.end())
-			Lq_t = args.options["Lq_t"];
-		if (args.options.find("Ld_s") != args.options.end())
-			Ld_s = args.options["Ld_s"];
-		if (args.options.find("Lq_s") != args.options.end())
-			Lq_s = args.options["Lq_s"];
-		if (args.options.find("Ll") != args.options.end())
-			Ll = args.options["Ll"];
-		if (args.options.find("Td0_t") != args.options.end())
-			Td0_t = args.options["Td0_t"];
-		if (args.options.find("Tq0_t") != args.options.end())
-			Tq0_t = args.options["Tq0_t"];
-		if (args.options.find("Td0_s") != args.options.end())
-			Td0_s = args.options["Td0_s"];
-		if (args.options.find("Tq0_s") != args.options.end())
-			Tq0_s = args.options["Tq0_s"];
 	}
 
 	// ----- POWERFLOW FOR INITIALIZATION -----
@@ -120,7 +68,7 @@ int main(int argc, char* argv[]) {
 	extnetPF->setParameters(VnomMV);
 	extnetPF->setBaseVoltage(VnomMV);
 	extnetPF->modifyPowerFlowBusType(PowerflowBusType::VD);
-
+	
 	//Line
 	auto linePF = SP::Ph1::PiLine::make("PiLine", Logger::Level::debug);
 	linePF->setParameters(lineResistance, lineInductance, lineCapacitance, lineConductance);
@@ -154,34 +102,34 @@ int main(int argc, char* argv[]) {
 	simPF.addLogger(loggerPF);
 	simPF.run();
 
-	// ----- DYNAMIC SIMULATION ------
+	// ----- Dynamic simulation ------	
 	Logger::setLogDir("logs/"+simName);
 
-	// Nodes
+	// Nodes	
 	auto n1 = SimNode<Real>::make("n1", PhaseType::ABC);
 	auto n2 = SimNode<Real>::make("n2", PhaseType::ABC);
 
 	// Components
 	//Synch
-	auto gen = CPS::EMT::Ph3::SynchronGeneratorDQTrapez::make("SynGen", Logger::Level::debug);
-	gen->setParametersOperationalPerUnit(
+	auto gen = CPS::EMT::Ph3::SynchronGeneratorVBR::make("SynGen", Logger::Level::debug);
+	gen->setBaseAndOperationalPerUnitParameters(
 		syngenKundur.nomPower, syngenKundur.nomVoltage, syngenKundur.nomFreq, syngenKundur.poleNum, syngenKundur.nomFieldCurr,
-		Rs, Ld, Lq, Ld_t, Lq_t, Ld_s,
-		Lq_s, Ll, Td0_t, Tq0_t, Td0_s, Tq0_s, H);
-
+		syngenKundur.Rs, syngenKundur.Ld, syngenKundur.Lq, syngenKundur.Ld_t, syngenKundur.Lq_t, syngenKundur.Ld_s,
+		syngenKundur.Lq_s, syngenKundur.Ll, syngenKundur.Td0_t, syngenKundur.Tq0_t, syngenKundur.Td0_s, syngenKundur.Tq0_s, syngenKundur.H);
+	
 	//Grid bus as Slack
 	auto extnet = EMT::Ph3::NetworkInjection::make("Slack", Logger::Level::debug);
 
 	// Line
 	auto line = EMT::Ph3::PiLine::make("PiLine", Logger::Level::debug);
-	line->setParameters(Math::singlePhaseParameterToThreePhase(lineResistance),
-	                      Math::singlePhaseParameterToThreePhase(lineInductance),
+	line->setParameters(Math::singlePhaseParameterToThreePhase(lineResistance), 
+	                      Math::singlePhaseParameterToThreePhase(lineInductance), 
 					      Math::singlePhaseParameterToThreePhase(lineCapacitance),
 						  Math::singlePhaseParameterToThreePhase(lineConductance));
-
+				  
 	//Breaker
 	auto fault = CPS::EMT::Ph3::Switch::make("Br_fault", Logger::Level::debug);
-	fault->setParameters(Math::singlePhaseParameterToThreePhase(BreakerOpen),
+	fault->setParameters(Math::singlePhaseParameterToThreePhase(BreakerOpen), 
 						 Math::singlePhaseParameterToThreePhase(BreakerClosed));
 	fault->openSwitch();
 
@@ -195,7 +143,8 @@ int main(int argc, char* argv[]) {
 			SystemComponentList{gen, line, fault, extnet});
 
 	// Initialization of dynamic topology
-	system.initWithPowerflow(systemPF);
+	CIM::Reader reader(simName, Logger::Level::debug);
+	reader.initDynamicSystemTopologyWithPowerflow(systemPF, system);
 	gen->terminal(0)->setPower(-genPF->getApparentPower());
 
 	// Logging
@@ -208,6 +157,8 @@ int main(int argc, char* argv[]) {
 	logger->addAttribute("i_gen", gen->attribute("i_intf"));
 	logger->addAttribute("wr_gen", gen->attribute("w_r"));
 	logger->addAttribute("delta_r", gen->attribute("delta_r"));
+	logger->addAttribute("T_e", gen->attribute("T_e"));
+	logger->addAttribute("T_m", gen->attribute("T_m"));
 
 	// Events
 	auto sw1 = SwitchEvent3Ph::make(startTimeFault, fault, true);
@@ -220,5 +171,6 @@ int main(int argc, char* argv[]) {
 	sim.setDomain(Domain::EMT);
 	sim.addLogger(logger);
 	sim.addEvent(sw1);
+	sim.doSystemMatrixRecomputation(true);
 	sim.run();
 }
