@@ -606,8 +606,7 @@ TopologicalPowerComp::Ptr Reader::mapSynchronousMachine(CIMPP::SynchronousMachin
 		}
 	} else {
 		mSLog->info("    Create generator in EMT domain.");
-		if (mGeneratorType == GeneratorType::FullOrder) {
-			mSLog->info("    GeneratorType is FullOrder.");
+		if (mGeneratorType == GeneratorType::FullOrder || mGeneratorType == GeneratorType::FullOrderVBR) {
 			
 			Real ratedPower = unitValue(machine->ratedS.value, UnitMultiplier::M);
 			Real ratedVoltage = unitValue(machine->ratedU.value, UnitMultiplier::k);
@@ -643,13 +642,25 @@ TopologicalPowerComp::Ptr Reader::mapSynchronousMachine(CIMPP::SynchronousMachin
 						Int poleNum = 0;
 						Real nomFieldCurr = 0;
 
-						auto gen = std::make_shared<EMT::Ph3::SynchronGeneratorDQTrapez>(machine->mRID, machine->name, mComponentLogLevel);
-						gen->setParametersOperationalPerUnit(
-						ratedPower, ratedVoltage, mFrequency, poleNum, nomFieldCurr,
-						Rs, Ld, Lq, Ld_t, Lq_t, Ld_s, Lq_s, Ll, 
-						Td0_t, Tq0_t, Td0_s, Tq0_s, H); 
+						if (mGeneratorType == GeneratorType::FullOrder) {
+							mSLog->info("    GeneratorType is FullOrder.");
+							auto gen = std::make_shared<EMT::Ph3::SynchronGeneratorDQTrapez>(machine->mRID, machine->name, mComponentLogLevel);
+							gen->setParametersOperationalPerUnit(
+							ratedPower, ratedVoltage, mFrequency, poleNum, nomFieldCurr,
+							Rs, Ld, Lq, Ld_t, Lq_t, Ld_s, Lq_s, Ll, 
+							Td0_t, Tq0_t, Td0_s, Tq0_s, H); 
+							return gen;
+						} else if (mGeneratorType == GeneratorType::FullOrderVBR) {
+							mSLog->info("    GeneratorType is FullOrderVBR.");
+							auto gen = std::make_shared<EMT::Ph3::SynchronGeneratorVBR>(machine->mRID, machine->name, mComponentLogLevel);
+							gen->setBaseAndOperationalPerUnitParameters(
+							ratedPower, ratedVoltage, mFrequency, poleNum, nomFieldCurr,
+							Rs, Ld, Lq, Ld_t, Lq_t, Ld_s,
+							Lq_s, Ll, Td0_t, Tq0_t, Td0_s, Tq0_s, H); 
+							return gen;
+						}
 						
-						return gen;
+						
 					}
 				}
 			}
