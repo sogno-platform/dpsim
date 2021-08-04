@@ -13,10 +13,12 @@
 #include <dpsim/Simulation.h>
 #include <dpsim/RealTimeSimulation.h>
 #include <cps/IdentifiedObject.h>
-#include <cps/CIM/Reader.h>
 #include <DPsim.h>
 
 #include <cps/CSVReader.h>
+#ifdef WITH_CIM
+  #include <cps/CIM/Reader.h>
+#endif
 
 namespace py = pybind11;
 
@@ -36,7 +38,7 @@ PYBIND11_MODULE(dpsimpy, m) {
 		.value("warn", CPS::Logger::Level::warn)
 		.value("err", CPS::Logger::Level::err)
 		.value("critical", CPS::Logger::Level::critical)
-		.value("off", CPS::Logger::Level::off);		
+		.value("off", CPS::Logger::Level::off);
 
     py::class_<DPsim::Simulation>(m, "Simulation")
 	    .def(py::init<std::string, CPS::Logger::Level>(), py::arg("name"), py::arg("loglevel") = CPS::Logger::Level::off)
@@ -113,7 +115,7 @@ PYBIND11_MODULE(dpsimpy, m) {
 		.value("C", CPS::PhaseType::C)
 		.value("ABC", CPS::PhaseType::ABC)
 		.value("Single", CPS::PhaseType::Single);
-	
+
 	py::enum_<CPS::GeneratorType>(m, "GeneratorType")
 		.value("PVNode", CPS::GeneratorType::PVNode)
 		.value("TransientStability", CPS::GeneratorType::TransientStability)
@@ -127,17 +129,19 @@ PYBIND11_MODULE(dpsimpy, m) {
 
 	py::enum_<CPS::CSVReader::Mode>(m, "CSVReaderMode")
 		.value("AUTO", CPS::CSVReader::Mode::AUTO)
-		.value("MANUAL", CPS::CSVReader::Mode::MANUAL);		
+		.value("MANUAL", CPS::CSVReader::Mode::MANUAL);
 
 	py::enum_<CPS::CSVReader::DataFormat>(m, "CSVReaderFormat")
 		.value("HHMMSS", CPS::CSVReader::DataFormat::HHMMSS)
 		.value("SECONDS", CPS::CSVReader::DataFormat::SECONDS)
 		.value("HOURS", CPS::CSVReader::DataFormat::HOURS)
 		.value("MINUTES", CPS::CSVReader::DataFormat::MINUTES);
-		
+
+#ifdef WITH_CIM
 	py::class_<CPS::CIM::Reader>(m, "CIMReader")
 		.def(py::init<std::string, CPS::Logger::Level, CPS::Logger::Level>(), py::arg("name"), py::arg("loglevel") = CPS::Logger::Level::info, py::arg("comploglevel") = CPS::Logger::Level::off)
 		.def("loadCIM", (CPS::SystemTopology (CPS::CIM::Reader::*)(CPS::Real, const std::list<CPS::String> &, CPS::Domain, CPS::PhaseType, CPS::GeneratorType)) &CPS::CIM::Reader::loadCIM);
+#endif
 
 	py::class_<CPS::CSVReader>(m, "CSVReader")
 		.def(py::init<std::string, const std::string &, std::map<std::string, std::string> &, CPS::Logger::Level>())
@@ -177,7 +181,7 @@ PYBIND11_MODULE(dpsimpy, m) {
         .def("set_parameters", &CPS::DP::Ph1::Inductor::setParameters)
 		.def("connect", &CPS::DP::Ph1::Inductor::connect);
 
-	
+
 #ifdef VERSION_INFO
     m.attr("__version__") = VERSION_INFO;
 #else
