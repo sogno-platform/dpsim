@@ -14,13 +14,13 @@ set(CPS_LIBRARIES
 	Threads::Threads
 )
 
-if (WITH_SPDLOG_SUBMODULE OR WIN32)
+if(WITH_SPDLOG_SUBMODULE OR WIN32)
 	list(APPEND CPS_LIBRARIES spdlog::spdlog)
 else()
 	list(APPEND CPS_LIBRARIES spdlog::spdlog fmt::fmt)
 endif()
 
-if (WITH_EIGEN_SUBMODULE OR WIN32)
+if(WITH_EIGEN_SUBMODULE OR WIN32)
 	# do not add eigen here
 else()
 	list(APPEND CPS_LIBRARIES Eigen3::Eigen)
