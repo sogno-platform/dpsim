@@ -1,4 +1,5 @@
-VILLAS_VERSION=0.8.0
+#!/bin/bash
+
 CIM_VERSION=IEC61970_16v29a
 
 dnf -y update
