@@ -77,7 +77,6 @@ PYBIND11_MODULE(dpsimpy, m) {
 		.def("export_attr", &DPsim::RealTimeSimulation::exportIdObjAttr, py::arg("obj"), py::arg("attr"), py::arg("idx"), py::arg("modifier"), py::arg("row") = 0, py::arg("col") = 0)
 		.def("log_attr", &DPsim::RealTimeSimulation::logIdObjAttr);
 
-
 	py::class_<CPS::SystemTopology, std::shared_ptr<CPS::SystemTopology>>(m, "SystemTopology")
         .def(py::init<CPS::Real, CPS::TopologicalNode::List, CPS::IdentifiedObject::List>())
 		.def(py::init<CPS::Real>())
