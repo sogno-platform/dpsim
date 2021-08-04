@@ -230,7 +230,7 @@ Attribute<Complex>::Ptr InterfaceShmem::importComplexMagPhase(UInt idx) {
 	return attr;
 }
 
-void InterfaceShmem::exportInt(Attribute<Int>::Ptr attr, UInt idx) {
+void InterfaceShmem::exportInt(Attribute<Int>::Ptr attr, UInt idx, const std::string &name, const std::string &unit) {
 	addExport([attr, idx](Sample *smp) {
 		if (idx >= smp->capacity)
 			throw std::out_of_range("not enough space in allocated sample");
@@ -240,9 +240,10 @@ void InterfaceShmem::exportInt(Attribute<Int>::Ptr attr, UInt idx) {
 		smp->data[idx].i = attr->getByValue();
 	});
 	mExportAttrs.push_back(attr);
+	mExportSignals[idx] = Signal(idx, SignalType::INTEGER, name, unit);
 }
 
-void InterfaceShmem::exportReal(Attribute<Real>::Ptr attr, UInt idx) {
+void InterfaceShmem::exportReal(Attribute<Real>::Ptr attr, UInt idx, const std::string &name, const std::string &unit) {
 	addExport([attr, idx](Sample *smp) {
 		if (idx >= smp->capacity)
 			throw std::out_of_range("not enough space in allocated sample");
@@ -252,9 +253,10 @@ void InterfaceShmem::exportReal(Attribute<Real>::Ptr attr, UInt idx) {
 		smp->data[idx].f = attr->getByValue();
 	});
 	mExportAttrs.push_back(attr);
+	mExportSignals[idx] = Signal(idx, SignalType::FLOAT, name, unit);
 }
 
-void InterfaceShmem::exportBool(Attribute<Bool>::Ptr attr, UInt idx) {
+void InterfaceShmem::exportBool(Attribute<Bool>::Ptr attr, UInt idx, const std::string &name, const std::string &unit) {
 	addExport([attr, idx](Sample *smp) {
 		if (idx >= smp->capacity)
 			throw std::out_of_range("not enough space in allocated sample");
@@ -264,9 +266,10 @@ void InterfaceShmem::exportBool(Attribute<Bool>::Ptr attr, UInt idx) {
 		smp->data[idx].b = attr->getByValue();
 	});
 	mExportAttrs.push_back(attr);
+	mExportSignals[idx] = Signal(idx, SignalType::BOOLEAN, name, unit);
 }
 
-void InterfaceShmem::exportComplex(Attribute<Complex>::Ptr attr, UInt idx) {
+void InterfaceShmem::exportComplex(Attribute<Complex>::Ptr attr, UInt idx, const std::string &name, const std::string &unit) {
 	addExport([attr, idx](Sample *smp) {
 		if (idx >= smp->capacity)
 			throw std::out_of_range("not enough space in allocated sample");
@@ -280,6 +283,7 @@ void InterfaceShmem::exportComplex(Attribute<Complex>::Ptr attr, UInt idx) {
 		z[1] = y.imag();
 	});
 	mExportAttrs.push_back(attr);
+	mExportSignals[idx] = Signal(idx, SignalType::COMPLEX, name, unit);
 }
 
 Task::List InterfaceShmem::getTasks() {

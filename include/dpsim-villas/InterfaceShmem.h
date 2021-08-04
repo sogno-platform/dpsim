@@ -21,6 +21,7 @@
 #pragma once
 
 #include <vector>
+#include <map>
 
 #include <cps/PtrFactory.h>
 #include <dpsim/Interface.h>
@@ -30,8 +31,8 @@
 
 namespace DPsim {
 	/// Shmem interface used in combination with VILLAS
-	class InterfaceShmem : 
-		public Interface, 
+	class InterfaceShmem :
+		public Interface,
 		public SharedFactory<InterfaceShmem> {
 
 	public:
@@ -65,6 +66,25 @@ namespace DPsim {
 		bool mSync;
 		/// Downsampling
 		UInt mDownsampling;
+
+		class Signal {
+			public:
+			std::string mName;
+			std::string mUnit;
+			SignalType mType;
+
+			Signal() {}
+			Signal(UInt idx, enum SignalType type, const std::string &name="", const std::string &unit="") :
+				mName(name),
+				mUnit(unit),
+				mType(type) {
+
+				if (mName.empty())
+					mName = fmt::format("signal_{}", idx);
+			}
+		};
+
+		std::map<int, Signal> mExportSignals;
 
 	public:
 
@@ -135,10 +155,10 @@ namespace DPsim {
 		CPS::Attribute<Complex>::Ptr importComplex(UInt idx);
 		CPS::Attribute<Complex>::Ptr importComplexMagPhase(UInt idx);
 
-		void exportInt(CPS::Attribute<Int>::Ptr attr, UInt idx);
-		void exportReal(CPS::Attribute<Real>::Ptr attr, UInt idx);
-		void exportBool(CPS::Attribute<Bool>::Ptr attr, UInt idx);
-		void exportComplex(CPS::Attribute<Complex>::Ptr attr, UInt idx);
+		void exportInt(CPS::Attribute<Int>::Ptr attr, UInt idx, const std::string &name="", const std::string &unit="");
+		void exportReal(CPS::Attribute<Real>::Ptr attr, UInt idx, const std::string &name="", const std::string &unit="");
+		void exportBool(CPS::Attribute<Bool>::Ptr attr, UInt idx, const std::string &name="", const std::string &unit="");
+		void exportComplex(CPS::Attribute<Complex>::Ptr attr, UInt idx, const std::string &name="", const std::string &unit="");
 
 		/** Read data for a timestep from the InterfaceShmem and passes the values
 		 * to all registered current / voltage sources.
