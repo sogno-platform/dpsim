@@ -28,7 +28,7 @@ int main(int argc, char** argv){
 			"Traf3W-PowerFlowTest_TP.xml",
 			"Traf3W-PowerFlowTest_SV.xml",
 			"Traf3W-PowerFlowTest_SSH.xml"
-		}, " ", "CIMPATH");
+		}, "./path/to/cim/files", "CIMPATH");
 	}
 	else {
 		filenames = std::list<fs::path>(argv + 1, argv + argc);
