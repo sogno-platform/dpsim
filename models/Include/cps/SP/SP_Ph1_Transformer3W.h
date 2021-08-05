@@ -186,31 +186,31 @@ namespace Ph1 {
 		/// get admittance matrix
 		MatrixComp Y_element();
 
-		// #### MNA Section ####
-		/// Initializes internal variables of the component
-		void mnaInitialize(Real omega, Real timeStep, Attribute<Matrix>::Ptr leftVector) override;
-		/// Stamps system matrix
-		void mnaApplySystemMatrixStamp(Matrix& systemMatrix) override;
-		/// Updates internal current variable of the component
-		void mnaUpdateCurrent(const Matrix& leftVector) override;
-		/// Updates internal voltage variable of the component
-		void mnaUpdateVoltage(const Matrix& leftVector) override;
-		/// MNA post step operations
-		void mnaPostStep(Real time, Int timeStepCount, Attribute<Matrix>::Ptr &leftVector);
-		/// Add MNA post step dependencies
-		void mnaAddPostStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes, Attribute<Matrix>::Ptr &leftVector);
-		class MnaPostStep : public Task {
-		public:
-			MnaPostStep(Transformer3W& transformer, Attribute<Matrix>::Ptr leftVector) :
-				Task(transformer.mName + ".MnaPostStep"), mTransformer(transformer), mLeftVector(leftVector) {
-					mTransformer.mnaAddPostStepDependencies(mPrevStepDependencies, mAttributeDependencies, mModifiedAttributes, mLeftVector);
-			}
-			void execute(Real time, Int timeStepCount) { mTransformer.mnaPostStep(time, timeStepCount, mLeftVector); };
+		// // #### MNA Section ####
+		// /// Initializes internal variables of the component
+		// void mnaInitialize(Real omega, Real timeStep, Attribute<Matrix>::Ptr leftVector) override;
+		// /// Stamps system matrix
+		// void mnaApplySystemMatrixStamp(Matrix& systemMatrix) override;
+		// /// Updates internal current variable of the component
+		// void mnaUpdateCurrent(const Matrix& leftVector) override;
+		// /// Updates internal voltage variable of the component
+		// void mnaUpdateVoltage(const Matrix& leftVector) override;
+		// /// MNA post step operations
+		// void mnaPostStep(Real time, Int timeStepCount, Attribute<Matrix>::Ptr &leftVector);
+		// /// Add MNA post step dependencies
+		// void mnaAddPostStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes, Attribute<Matrix>::Ptr &leftVector);
+		// class MnaPostStep : public Task {
+		// public:
+		// 	MnaPostStep(Transformer3W& transformer, Attribute<Matrix>::Ptr leftVector) :
+		// 		Task(transformer.mName + ".MnaPostStep"), mTransformer(transformer), mLeftVector(leftVector) {
+		// 			mTransformer.mnaAddPostStepDependencies(mPrevStepDependencies, mAttributeDependencies, mModifiedAttributes, mLeftVector);
+		// 	}
+		// 	void execute(Real time, Int timeStepCount) { mTransformer.mnaPostStep(time, timeStepCount, mLeftVector); };
 
-		private:
-			Transformer3W& mTransformer;
-			Attribute<Matrix>::Ptr mLeftVector;
-		};
+		// private:
+		// 	Transformer3W& mTransformer;
+		// 	Attribute<Matrix>::Ptr mLeftVector;
+		// };
     };
 }
 }
