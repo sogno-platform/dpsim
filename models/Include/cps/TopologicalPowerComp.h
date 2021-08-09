@@ -23,7 +23,7 @@ namespace CPS {
 	/// connected to nodes via terminals
 	class TopologicalPowerComp : public IdentifiedObject {
 	public:
-		enum Behaviour { Initialization, Simulation };
+		enum Behaviour { Initialization, MNASimulation, PFSimulation };
 	protected:
 		/// Determines the number of Terminals which can be connected to network Nodes
 		UInt mNumTerminals = 0;
@@ -35,7 +35,7 @@ namespace CPS {
 		Logger::Level mLogLevel;
 		/// Determine state of the simulation, e.g. to implement
 		/// special behavior for components during initialization
-		Bool mBehaviour = Behaviour::Simulation;
+		Behaviour mBehaviour = Behaviour::MNASimulation;
 		/// Flag indicating that parameters are set via setParameters() function
 		bool mParametersSet = false;
 
@@ -63,6 +63,16 @@ namespace CPS {
 		/// Returns terminal that are part of the component
 		virtual TopologicalTerminal::List topologicalTerminals() = 0;
 		/// Set behavior of component, e.g. initialization
-		void setBehaviour(Behaviour behaviour) { mBehaviour = behaviour; }
+		void setBehaviour(Behaviour behaviour) { 
+			mBehaviour = behaviour; 
+			if (mBehaviour == Behaviour::Initialization)
+				mSLog->info("Set component behaviour to Initialization");
+			else if (mBehaviour == Behaviour::PFSimulation)
+				mSLog->info("Set component behaviour to PFSimulation");
+			else if (mBehaviour == Behaviour::MNASimulation)
+				mSLog->info("Set component behaviour to MNASimulation");
+			else 
+				mSLog->warn("Set component behaviour not fully supported yet");
+		}
 	};
 }

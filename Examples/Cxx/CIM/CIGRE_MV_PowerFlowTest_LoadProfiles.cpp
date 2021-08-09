@@ -140,6 +140,7 @@ int main(int argc, char** argv){
 	sim.setFinalTime(time_end);
 	sim.setDomain(Domain::SP);
 	sim.setSolverType(Solver::Type::NRP);
+	sim.setSolverAndComponentBehaviour(Solver::Behaviour::Simulation);
 	sim.doInitFromNodesAndTerminals(true);
 	sim.addLogger(logger);
 

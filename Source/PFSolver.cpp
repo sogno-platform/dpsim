@@ -297,6 +297,30 @@ void PFSolver::modifyPowerFlowBusComponent(CPS::String name, CPS::PowerflowBusTy
 	}
 }
 
+void PFSolver::setSolverAndComponentBehaviour(Solver::Behaviour behaviour) {
+	mBehaviour = behaviour;
+	if (mBehaviour == Behaviour::Initialization) {
+		mSLog->info("-- Set solver behaviour to Initialization");
+		// TODO: solver setting specific to initialization (e.g. one single PF run)
+
+		mSLog->info("-- Set component behaviour to Initialization");
+		for (auto comp : mSystem.mComponents) {
+			auto powerComp = std::dynamic_pointer_cast<CPS::TopologicalPowerComp>(comp);
+			if (powerComp) powerComp->setBehaviour(TopologicalPowerComp::Behaviour::Initialization);
+		}
+	}
+	else {
+		mSLog->info("-- Set solver behaviour to Simulation");
+		// TODO: solver setting specific to simulation
+
+		mSLog->info("-- Set component behaviour to PFSimulation");
+		for (auto comp : mSystem.mComponents) {
+			auto powerComp = std::dynamic_pointer_cast<CPS::TopologicalPowerComp>(comp);
+			if (powerComp) powerComp->setBehaviour(TopologicalPowerComp::Behaviour::PFSimulation);
+		}
+	}
+}
+
 void PFSolver::composeAdmittanceMatrix() {
 	int n = mSystem.mNodes.size();
 	if (n > 0) {

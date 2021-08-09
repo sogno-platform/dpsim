@@ -68,6 +68,8 @@ namespace DPsim {
 		///
 		Solver::Type mSolverType = Solver::Type::MNA;
 		///
+		Solver::Behaviour mSolverBehaviour = Solver::Behaviour::Simulation;
+		///
 		Solver::List mSolvers;
 		///
 		MnaSolverFactory::MnaSolverImpl mMnaImpl = MnaSolverFactory::MnaSolverImpl::Undef;
@@ -166,6 +168,8 @@ namespace DPsim {
 		void setDomain(CPS::Domain domain = CPS::Domain::DP) { mDomain = domain; }
 		///
 		void setSolverType(Solver::Type solverType = Solver::Type::MNA) { mSolverType = solverType; }
+		/// set solver and component to initialization or simulation behaviour
+		void setSolverAndComponentBehaviour(Solver::Behaviour behaviour) { mSolverBehaviour = behaviour; }
 		///
 		void setMnaSolverImplementation(MnaSolverFactory::MnaSolverImpl mnaImpl) { mMnaImpl = mnaImpl; }
 		///

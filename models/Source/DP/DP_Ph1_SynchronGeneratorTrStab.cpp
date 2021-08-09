@@ -221,7 +221,7 @@ void DP::Ph1::SynchronGeneratorTrStab::step(Real time) {
 
 	// #### Calculate states for time step k+1 applying semi-implicit Euler ####
 	// Mechanical speed at time step k+1 applying Euler forward
-	if (mBehaviour == Behaviour::Simulation)
+	if (mBehaviour == Behaviour::MNASimulation)
 		mOmMech = mOmMech + mTimeStep * dOmMech;
 
 	// Derivative of rotor angle at time step k + 1
@@ -239,7 +239,7 @@ void DP::Ph1::SynchronGeneratorTrStab::step(Real time) {
 
 	// Rotor angle at time step k + 1 applying Euler backward
 	// Update emf - only phase changes
-	if (mBehaviour == Behaviour::Simulation) {
+	if (mBehaviour == Behaviour::MNASimulation) {
 		mDelta_p = mDelta_p + mTimeStep * dDelta_p;
 		mEp = Complex(mEp_abs * cos(mDelta_p), mEp_abs * sin(mDelta_p));
 	}
