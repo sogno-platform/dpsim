@@ -97,7 +97,6 @@ int main(int argc, char *argv[]) {
 	sim.setDomain(Domain::DP);
 	sim.setTimeStep(timeStep);
 	sim.setFinalTime(finalTime);
-	sim.doSteadyStateInit(true);
 	sim.addLogger(logger);
 	sim.run();
 
