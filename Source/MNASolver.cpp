@@ -80,7 +80,7 @@ void MnaSolver<VarType>::initialize() {
 	// Some components feature a different behaviour for simulation and initialization
 	for (auto comp : mSystem.mComponents) {
 		auto powerComp = std::dynamic_pointer_cast<CPS::TopologicalPowerComp>(comp);
-		if (powerComp) powerComp->setBehaviour(TopologicalPowerComp::Behaviour::Simulation);
+		if (powerComp) powerComp->setBehaviour(TopologicalPowerComp::Behaviour::MNASimulation);
 
 		auto sigComp = std::dynamic_pointer_cast<CPS::SimSignalComp>(comp);
 		if (sigComp) sigComp->setBehaviour(SimSignalComp::Behaviour::Simulation);

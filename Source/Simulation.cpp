@@ -88,6 +88,9 @@ void Simulation::initialize() {
 		break;
 	}
 
+	for (auto solver : mSolvers)
+		solver->setSolverAndComponentBehaviour(mSolverBehaviour);
+
 	mTime = 0;
 	mTimeStepCount = 0;
 

@@ -27,6 +27,12 @@ namespace DPsim {
 
 	/// Base class for more specific solvers such as MNA, ODE or IDA.
 	class Solver {
+	public:
+		typedef std::shared_ptr<Solver> Ptr;
+		typedef std::vector<Ptr> List;
+
+		enum Behaviour { Initialization, Simulation };
+
 	protected:
 		/// Name for logging
 		String mName;
@@ -52,9 +58,10 @@ namespace DPsim {
 		/// If this is false, all voltages are initialized with zero
 		Bool mInitFromNodesAndTerminals = true;
 
+		/// Solver behaviour initialization or simulation
+        Behaviour mBehaviour = Solver::Behaviour::Simulation;
+
 	public:
-		typedef std::shared_ptr<Solver> Ptr;
-		typedef std::vector<Ptr> List;
 
 		Solver(String name, CPS::Logger::Level logLevel) :
 			mName(name),
@@ -88,6 +95,8 @@ namespace DPsim {
 		void setSteadStIniTimeLimit(Real v) { mSteadStIniTimeLimit = v; }
 		/// set steady state initialization accuracy limit
 		void setSteadStIniAccLimit(Real v) { mSteadStIniAccLimit = v; }
+		/// set solver and component to initialization or simulation behaviour
+		virtual void setSolverAndComponentBehaviour(Solver::Behaviour behaviour) {}
 		/// activate powerflow initialization
 		void doInitFromNodesAndTerminals(Bool f) { mInitFromNodesAndTerminals = f; }
 

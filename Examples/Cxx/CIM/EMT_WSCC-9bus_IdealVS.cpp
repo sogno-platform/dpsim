@@ -62,6 +62,7 @@ int main(int argc, char *argv[]) {
 	simPF.setFinalTime(2*finalTime);
 	simPF.setDomain(Domain::SP);
 	simPF.setSolverType(Solver::Type::NRP);
+	simPF.setSolverAndComponentBehaviour(Solver::Behaviour::Initialization);
 	simPF.doInitFromNodesAndTerminals(true);
     simPF.addLogger(loggerPF);
     simPF.run();
