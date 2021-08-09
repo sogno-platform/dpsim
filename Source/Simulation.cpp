@@ -88,9 +88,6 @@ void Simulation::initialize() {
 		break;
 	}
 
-	for (auto solver : mSolvers)
-		solver->setSolverAndComponentBehaviour(mSolverBehaviour);
-
 	mTime = 0;
 	mTimeStepCount = 0;
 
@@ -115,6 +112,7 @@ void Simulation::createSolvers() {
 		case Solver::Type::NRP:
 			solver = std::make_shared<PFSolverPowerPolar>(mName, mSystem, mTimeStep, mLogLevel);
 			solver->doInitFromNodesAndTerminals(mInitFromNodesAndTerminals);
+			solver->setSolverAndComponentBehaviour(mSolverBehaviour);
 			solver->initialize();
 			mSolvers.push_back(solver);
 			break;
@@ -170,6 +168,7 @@ void Simulation::createMNASolver() {
 			solver->setSteadStIniTimeLimit(mSteadStIniTimeLimit);
 			solver->setSteadStIniAccLimit(mSteadStIniAccLimit);
 			solver->setSystem(subnets[net]);
+			solver->setSolverAndComponentBehaviour(mSolverBehaviour);
 			solver->initialize();
 #else
 			throw SystemError("Recomputation Solver requires WITH_SPARSE to be set.");
@@ -185,6 +184,7 @@ void Simulation::createMNASolver() {
 			solver->setSteadStIniTimeLimit(mSteadStIniTimeLimit);
 			solver->setSteadStIniAccLimit(mSteadStIniAccLimit);
 			solver->setSystem(subnets[net]);
+			solver->setSolverAndComponentBehaviour(mSolverBehaviour);
 			solver->initialize();
 		}
 		mSolvers.push_back(solver);

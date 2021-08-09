@@ -10,7 +10,8 @@
 
 #include <cps/SimPowerComp.h>
 #include <cps/Solver/MNAInterface.h>
-#include <cps/DP/DP_Ph1_RxLine.h>
+#include <cps/DP/DP_Ph1_Resistor.h>
+#include <cps/DP/DP_Ph1_Capacitor.h>
 #include <cps/DP/DP_Ph1_Inductor.h>
 #include <cps/Base/Base_Ph1_Transformer.h>
 
@@ -24,14 +25,28 @@ namespace Ph1 {
 		public SharedFactory<Transformer>,
 		public Base::Ph1::Transformer {
 	private:
+		/// Internal resistor to model losses
+		std::shared_ptr<DP::Ph1::Resistor> mSubResistor;
 		/// Internal inductor to model losses
 		std::shared_ptr<DP::Ph1::Inductor> mSubInductor;
-		/// Internal parallel resistance as snubber
-		std::shared_ptr<DP::Ph1::Resistor> mSubSnubResistor;
-		std::shared_ptr<DP::Ph1::Resistor> mSubResistor;
 
-		/// Snubber resistance added on the low voltage side
-		Real mSnubberResistance;
+		/// Internal parallel resistance 1 as snubber
+		std::shared_ptr<DP::Ph1::Resistor> mSubSnubResistor1;
+		/// Internal parallel resistance 2 as snubber
+		std::shared_ptr<DP::Ph1::Resistor> mSubSnubResistor2;
+		/// Internal parallel capacitance 1 as snubber
+		std::shared_ptr<DP::Ph1::Capacitor> mSubSnubCapacitor1;
+		/// Internal parallel capacitance 2 as snubber
+		std::shared_ptr<DP::Ph1::Capacitor> mSubSnubCapacitor2;
+
+		/// Snubber resistance 1 [Ohm]
+		Real mSnubberResistance1;
+		/// Snubber resistance 2 [Ohm]
+		Real mSnubberResistance2;
+		/// Snubber capacitance 1 [F]
+		Real mSnubberCapacitance1;
+		/// Snubber capacitance 2 [F]
+		Real mSnubberCapacitance2;
 
 		/// Boolean for considering resistive losses with sub resistor
 		Bool mWithResistiveLosses;
@@ -48,6 +63,8 @@ namespace Ph1 {
 		// #### General ####
 		/// Defines component parameters
 		void setParameters(Real nomVoltageEnd1, Real nomVoltageEnd2, Real ratioAbs, Real ratioPhase, Real resistance, Real inductance);
+		/// Set transformer specific parameters
+		void setParameters(Real nomVoltageEnd1, Real nomVoltageEnd2, Real ratedPower, Real ratioAbs, Real ratioPhase, Real resistance, Real inductance);
 		/// Initializes component from power flow data
 		void initializeFromNodesAndTerminals(Real frequency);
 
