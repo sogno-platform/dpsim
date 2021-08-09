@@ -19,6 +19,8 @@ namespace Ph1 {
 		Real mNominalVoltageEnd1;
 		/// Nominal voltage of secondary side
 		Real mNominalVoltageEnd2;
+		/// Rated Apparent Power [VA]
+		Real mRatedPower;
 		/// Complex transformer ratio
 		Complex mRatio;
 		/// Resistance [Ohm]

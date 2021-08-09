@@ -70,7 +70,7 @@ int main(int argc, char *argv[]) {
 	// ----- DYNAMIC SIMULATION -----
 	Logger::setLogDir("logs/"+simName);
 
-	CPS::CIM::Reader reader2(simName, Logger::Level::debug, Logger::Level::off);
+	CPS::CIM::Reader reader2(simName, Logger::Level::debug, Logger::Level::debug);
 	SystemTopology sys = reader2.loadCIM(60, filenames, Domain::DP, PhaseType::Single, CPS::GeneratorType::IdealVoltageSource);
 	reader2.initDynamicSystemTopologyWithPowerflow(systemPF, sys);
 
@@ -97,7 +97,6 @@ int main(int argc, char *argv[]) {
 	sim.setDomain(Domain::DP);
 	sim.setTimeStep(timeStep);
 	sim.setFinalTime(finalTime);
-	sim.doSteadyStateInit(true);
 	sim.addLogger(logger);
 	sim.run();
 
