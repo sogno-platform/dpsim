@@ -32,12 +32,17 @@ namespace DPsim {
 	template <typename VarType>
 	class MnaSolverEigenSparse : public MnaSolver<VarType> {
 	protected:
-		/// Map of base matrices that include all static MNA elements to speed up recomputation and where the key is the bitset describing the switch states
-		std::unordered_map< std::bitset<SWITCH_NUM>, std::vector<SparseMatrix> > mBaseSystemMatrix;
 		/// Map of system matrices where the key is the bitset describing the switch states
 		std::unordered_map< std::bitset<SWITCH_NUM>, std::vector<SparseMatrix> > mSwitchedMatrices;
 		/// Map of LU factorizations related to the system matrices
 		std::unordered_map< std::bitset<SWITCH_NUM>, std::vector< std::shared_ptr< CPS::LUFactorizedSparse> > > mLuFactorizations;
+
+		/// System matrix including all static elements
+		SparseMatrix mBaseSystemMatrix;
+		/// System matrix including stamp of static and variable elements
+		SparseMatrix mVariableSystemMatrix;
+		/// LU factorization of variable system matrix
+		CPS::LUFactorizedSparse mLuFactorizationVariableSystemMatrix;
 
 		using MnaSolver<VarType>::mSwitches;
 		using MnaSolver<VarType>::mRightSideVector;
@@ -51,6 +56,7 @@ namespace DPsim {
 		using MnaSolver<VarType>::mLeftSideVectorHarm;
 		using MnaSolver<VarType>::mFrequencyParallel;
 		using MnaSolver<VarType>::mSLog;
+		using MnaSolver<VarType>::mSystemMatrixRecomputation;
 
 
 		/// Sets all entries in the matrix with the given switch index to zero

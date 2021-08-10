@@ -21,14 +21,10 @@ namespace DPsim {
 		virtual void solve(Real time, Int timeStepCount) override;
 
 		// #### Dynamic matrix recomputation ####
-		/// Flag that initiates recomputation of system matrix
-		Bool mUpdateSysMatrix;
 		/// Recomputes systems matrix
 		void updateSystemMatrix(Real time);
-		/// Collects the status of variable MNA elements to decide if system matrix has to be recomputed
-		void updateVariableCompStatus();
-		/// Initialization of system matrices and source vector
-		void initializeSystemWithDynamicMatrix();
+		/// Checks whether the status of variable MNA elements have changed
+		Bool hasVariableComponentChanged();
 
 	public:
 		///

@@ -190,7 +190,7 @@ void MnaSolver<VarType>::initializeSystem() {
 
 	if (mFrequencyParallel)
 		initializeSystemWithParallelFrequencies();
-	else
+	else if (!mSystemMatrixRecomputation)
 		initializeSystemWithPrecomputedMatrices();
 }
 
