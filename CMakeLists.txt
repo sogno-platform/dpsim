@@ -225,7 +225,6 @@ endif(DPSIM_BUILD_EXAMPLES)
 
 if(WITH_PYBIND)
 	set(DPSIMPY_INCLUDE_DIRS
-		${CMAKE_CURRENT_BINARY_DIR}/Include/dpsim/pybind
 		${CMAKE_CURRENT_SOURCE_DIR}/Include/dpsim/pybind
 	)
 
