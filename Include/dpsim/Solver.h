@@ -57,6 +57,8 @@ namespace DPsim {
 		/// Activates powerflow initialization
 		/// If this is false, all voltages are initialized with zero
 		Bool mInitFromNodesAndTerminals = true;
+		/// Enable recomputation of system matrix during simulation
+		Bool mSystemMatrixRecomputation = false;
 
 		/// Solver behaviour initialization or simulation
         Behaviour mBehaviour = Solver::Behaviour::Simulation;
@@ -85,6 +87,8 @@ namespace DPsim {
 		}
 		///
 		virtual void setSystem(const CPS::SystemTopology &system) {}
+		///
+		void doSystemMatrixRecomputation(Bool value) { mSystemMatrixRecomputation = value; }
 
 		// #### Initialization ####
 		///

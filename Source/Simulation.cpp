@@ -169,6 +169,7 @@ void Simulation::createMNASolver() {
 			solver->setSteadStIniAccLimit(mSteadStIniAccLimit);
 			solver->setSystem(subnets[net]);
 			solver->setSolverAndComponentBehaviour(mSolverBehaviour);
+			solver->doSystemMatrixRecomputation(mSystemMatrixRecomputation);
 			solver->initialize();
 #else
 			throw SystemError("Recomputation Solver requires WITH_SPARSE to be set.");

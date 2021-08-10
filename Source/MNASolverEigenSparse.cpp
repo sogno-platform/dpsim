@@ -40,6 +40,7 @@ void MnaSolverEigenSparse<VarType>::switchedMatrixStamp(std::size_t index, std::
 	}
 	for (UInt i = 0; i < mSwitches.size(); ++i)
 		mSwitches[i]->mnaApplySwitchSystemMatrixStamp(bit[i], sys, 0);
+
 	// Compute LU-factorization for system matrix
 	mLuFactorizations[bit][0]->analyzePattern(sys);
 	mLuFactorizations[bit][0]->factorize(sys);
@@ -50,11 +51,15 @@ void MnaSolverEigenSparse<Real>::createEmptySystemMatrix() {
 	if (mSwitches.size() > SWITCH_NUM)
 		throw SystemError("Too many Switches.");
 
-	for (std::size_t i = 0; i < (1ULL << mSwitches.size()); i++){
-		auto bit = std::bitset<SWITCH_NUM>(i);
-		mSwitchedMatrices[bit].push_back(SparseMatrix(mNumMatrixNodeIndices, mNumMatrixNodeIndices));
-		mLuFactorizations[bit].push_back(std::make_shared<LUFactorizedSparse>());
-		mBaseSystemMatrix[bit].push_back(SparseMatrix(mNumMatrixNodeIndices, mNumMatrixNodeIndices));
+	if (mSystemMatrixRecomputation) {
+		mBaseSystemMatrix = SparseMatrix(mNumMatrixNodeIndices, mNumMatrixNodeIndices);
+		mVariableSystemMatrix = SparseMatrix(mNumMatrixNodeIndices, mNumMatrixNodeIndices);
+	} else {
+		for (std::size_t i = 0; i < (1ULL << mSwitches.size()); i++){
+			auto bit = std::bitset<SWITCH_NUM>(i);
+			mSwitchedMatrices[bit].push_back(SparseMatrix(mNumMatrixNodeIndices, mNumMatrixNodeIndices));
+			mLuFactorizations[bit].push_back(std::make_shared<LUFactorizedSparse>());
+		}
 	}
 }
 
@@ -72,12 +77,14 @@ void MnaSolverEigenSparse<Complex>::createEmptySystemMatrix() {
 			}
 		}
 	}
-	else {
+	else if (mSystemMatrixRecomputation) {
+		mBaseSystemMatrix = SparseMatrix(2*(mNumMatrixNodeIndices), 2*(mNumMatrixNodeIndices));
+		mVariableSystemMatrix = SparseMatrix(2*(mNumMatrixNodeIndices), 2*(mNumMatrixNodeIndices));
+	} else {
 		for (std::size_t i = 0; i < (1ULL << mSwitches.size()); i++) {
 			auto bit = std::bitset<SWITCH_NUM>(i);
 			mSwitchedMatrices[bit].push_back(SparseMatrix(2*(mNumTotalMatrixNodeIndices), 2*(mNumTotalMatrixNodeIndices)));
 			mLuFactorizations[bit].push_back(std::make_shared<LUFactorizedSparse>());
-			mBaseSystemMatrix[bit].push_back(SparseMatrix(2*(mNumTotalMatrixNodeIndices), 2*(mNumTotalMatrixNodeIndices)));
 		}
 	}
 }
@@ -150,7 +157,12 @@ void MnaSolverEigenSparse<VarType>::logSystemMatrices() {
 				Logger::matrixToString(mRightSideVectorHarm[i]));
 
 	}
-	else {
+	else if (mSystemMatrixRecomputation) {
+		mSLog->info("Summarizing matrices: ");
+		mSLog->info("Base matrix with only static elements: {}", Logger::matrixToString(mBaseSystemMatrix));
+		mSLog->info("Initial system matrix with variable elements {}", Logger::matrixToString(mVariableSystemMatrix));
+		mSLog->info("Right side vector: {}", Logger::matrixToString(mRightSideVector));
+	} else {
 		if (mSwitches.size() < 1) {
 			mSLog->info("System matrix: \n{}", mSwitchedMatrices[std::bitset<SWITCH_NUM>(0)][0]);
 			//mSLog->info("LU decomposition: \n{}",	mLuFactorizations[std::bitset<SWITCH_NUM>(0)]->matrixLU());
