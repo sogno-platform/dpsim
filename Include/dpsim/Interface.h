@@ -29,7 +29,7 @@ namespace DPsim {
 
 	public:
 		typedef std::shared_ptr<Interface> Ptr;
-        
+
         Interface() = default;
 		virtual ~Interface() { };
 
@@ -42,10 +42,10 @@ namespace DPsim {
 		virtual CPS::Attribute<Complex>::Ptr importComplex(UInt idx) = 0;
 		virtual CPS::Attribute<Complex>::Ptr importComplexMagPhase(UInt idx) = 0;
 
-		virtual void exportInt(CPS::Attribute<Int>::Ptr attr, UInt idx) = 0;
-		virtual void exportReal(CPS::Attribute<Real>::Ptr attr, UInt idx) = 0;
-		virtual void exportBool(CPS::Attribute<Bool>::Ptr attr, UInt idx) = 0;
-		virtual void exportComplex(CPS::Attribute<Complex>::Ptr attr, UInt idx) = 0;
+		virtual void exportInt(CPS::Attribute<Int>::Ptr attr, UInt idx, const std::string &name="", const std::string &unit="") = 0;
+		virtual void exportReal(CPS::Attribute<Real>::Ptr attr, UInt idx, const std::string &name="", const std::string &unit="") = 0;
+		virtual void exportBool(CPS::Attribute<Bool>::Ptr attr, UInt idx, const std::string &name="", const std::string &unit="") = 0;
+		virtual void exportComplex(CPS::Attribute<Complex>::Ptr attr, UInt idx, const std::string &name="", const std::string &unit="") = 0;
 
 		/** Read data for a timestep from the interface and passes the values
 		 * to all registered current / voltage sources.

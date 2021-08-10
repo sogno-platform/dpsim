@@ -43,7 +43,7 @@ Simulation::Simulation(String name,	Logger::Level logLevel) :
 	create();
 }
 
-Simulation::Simulation(String name, CommandLineArgs& args) : 	
+Simulation::Simulation(String name, CommandLineArgs& args) :
 	mName(name),
 	mFinalTime(args.duration),
 	mTimeStep(args.timeStep),
@@ -568,6 +568,8 @@ void Simulation::exportIdObjAttr(const String &comp, const String &attr, UInt id
 	IdentifiedObject::Ptr compObj = mSystem.component<IdentifiedObject>(comp);
 	if (!compObj) compObj = mSystem.node<TopologicalNode>(comp);
 
+	auto name = fmt::format("{}.{}", comp, attr);
+
 	if (compObj) {
 		try {
 			auto v = compObj->attribute<Real>(attr);
@@ -579,19 +581,19 @@ void Simulation::exportIdObjAttr(const String &comp, const String &attr, UInt id
 			auto v = compObj->attributeComplex(attr);
 			switch(mod) {
 				case AttributeBase::Modifier::real :
-					mInterfaces[0].interface->exportReal(v->real(), idx);
+					mInterfaces[0].interface->exportReal(v->real(), idx, name);
 					found = true;
 					break;
 				case AttributeBase::Modifier::imag :
-					mInterfaces[0].interface->exportReal(v->imag(), idx);
+					mInterfaces[0].interface->exportReal(v->imag(), idx, name);
 					found = true;
 					break;
 				case AttributeBase::Modifier::mag :
-					mInterfaces[0].interface->exportReal(v->mag(), idx);
+					mInterfaces[0].interface->exportReal(v->mag(), idx, name);
 					found = true;
 					break;
 				case AttributeBase::Modifier::phase :
-					mInterfaces[0].interface->exportReal(v->phase(), idx);
+					mInterfaces[0].interface->exportReal(v->phase(), idx, name);
 					found = true;
 					break;
 			}
@@ -607,19 +609,19 @@ void Simulation::exportIdObjAttr(const String &comp, const String &attr, UInt id
 			auto v = compObj->attributeMatrixComp(attr);
 			switch(mod) {
 				case AttributeBase::Modifier::real :
-					mInterfaces[0].interface->exportReal(v->coeffReal(row, col), idx);
+					mInterfaces[0].interface->exportReal(v->coeffReal(row, col), idx, name);
 					found = true;
 					break;
 				case AttributeBase::Modifier::imag :
-					mInterfaces[0].interface->exportReal(v->coeffImag(row, col), idx);
+					mInterfaces[0].interface->exportReal(v->coeffImag(row, col), idx, name);
 					found = true;
 					break;
 				case AttributeBase::Modifier::mag :
-					mInterfaces[0].interface->exportReal(v->coeffMag(row, col), idx);
+					mInterfaces[0].interface->exportReal(v->coeffMag(row, col), idx, name);
 					found = true;
 					break;
 				case AttributeBase::Modifier::phase :
-					mInterfaces[0].interface->exportReal(v->coeffPhase(row, col), idx);
+					mInterfaces[0].interface->exportReal(v->coeffPhase(row, col), idx, name);
 					found = true;
 					break;
 			}
