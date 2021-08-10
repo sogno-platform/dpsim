@@ -22,11 +22,15 @@ else()
 	set(TOPLEVEL_PROJECT OFF)
 endif()
 
-# Enable C++11 support
-set(CMAKE_CXX_STANDARD 11)
+# Select C++-Version
+# For the pybind11-python interface to compile, a minimum version of C++14 is required
+# If you need to compile using C++11, either disable the python interface or modify the source-files in Source/pybind,
+# replacing all occurences of py::overload_cast with py::detail::overload_cast_impl as specified on
+# https://pybind11.readthedocs.io/en/stable/classes.html#overloaded-methods
+set(CMAKE_CXX_STANDARD 17)
 if(CMAKE_CXX_COMPILER_ID STREQUAL Intel)
 	# needed by icc, but for some reason not added by CMake
-	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
+	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++17")
 endif()
 
 if(NOT WIN32)
@@ -214,15 +218,17 @@ add_subdirectory(models)
 add_subdirectory(Source)
 add_subdirectory(docs)
 
+
 if(DPSIM_BUILD_EXAMPLES)
 	add_subdirectory(Examples)
 endif(DPSIM_BUILD_EXAMPLES)
 
 if(WITH_PYBIND)
-	set(PYBIND11_CPP_STANDARD -std=c++11)
+	set(DPSIMPY_INCLUDE_DIRS
+		${CMAKE_CURRENT_SOURCE_DIR}/Include/dpsim/pybind
+	)
 
-	pybind11_add_module(dpsimpy Source/pybind/main.cpp)	
-	target_link_libraries(dpsimpy PRIVATE dpsim)
+	add_subdirectory(Source/pybind)
 
 	if(WITH_SHMEM)
 		pybind11_add_module(dpsimpyvillas ${CMAKE_BINARY_DIR}/_deps/dpsim-villas-src/src/pybind-dpsim-villas.cpp)

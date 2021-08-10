@@ -5,19 +5,17 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at https://mozilla.org/MPL/2.0/.
  *********************************************************************************/
+#pragma once
 
 #include <pybind11/pybind11.h>
 #include <pybind11/complex.h>
 #include <pybind11/stl.h>
-
-#include <dpsim/InterfaceShmem.h>
+#include <pybind11/functional.h>
+#include <pybind11/eigen.h>
 
 namespace py = pybind11;
+using namespace pybind11::literals;
 
-PYBIND11_MODULE(dpsimpyvillas, m) {
-	py::object interface = (py::object) py::module_::import("dpsimpy").attr("Interface");
-
-	py::class_<DPsim::InterfaceShmem>(m, "InterfaceShmem", interface)
-	    .def(py::init<const CPS::String&, const CPS::String&>(), py::arg("shmwrite") = "/dpsim-villas", py::arg("shmread") = "/villas-dpsim");
-
-}
+void addSPComponents(py::module_ mSP);
+void addSPPh1Components(py::module_ mSPPh1);
+void addSPPh3Components(py::module_ mSPPh3);
