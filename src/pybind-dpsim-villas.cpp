@@ -37,7 +37,7 @@ public:
 				maxIdx = a.first;
 		}
 
-		for (int i = 0; i < maxIdx; i++) {
+		for (int i = 0; i <= maxIdx; i++) {
 			Signal s;
 			try {
 				s = mExportSignals.at(i);
