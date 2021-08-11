@@ -95,6 +95,7 @@ namespace DPsim {
 				for (auto attr : intf.mImportAttrs) {
 					mModifiedAttributes.push_back(attr);
 				}
+				mModifiedAttributes.push_back(Scheduler::external);
 			}
 
 			void execute(Real time, Int timeStepCount);
