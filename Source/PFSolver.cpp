@@ -211,7 +211,12 @@ void PFSolver::determinePFBusType() {
 			mSLog->debug("{}: VD, PV and PQ type component connect -> set as VD bus", node->name());
 			mVDBusIndices.push_back(node->matrixNodeIndex());
 			mVDBuses.push_back(node);
-		}
+		} // VD and PQ type component connect -> set as VD bus
+		else if (!connectedPV && connectedPQ && connectedVD) {
+			mSLog->debug("{}: VD and PQ type component connect -> set as VD bus", node->name());
+			mVDBusIndices.push_back(node->matrixNodeIndex());
+			mVDBuses.push_back(node);
+		} // VD, PV and PQ type component connect -> set as VD bus
 		else {
 			std::stringstream ss;
 			ss << "Node>>" << node->name() << ": combination of connected components is invalid";
