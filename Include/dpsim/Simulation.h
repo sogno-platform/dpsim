@@ -56,6 +56,13 @@ namespace DPsim {
 		/// System list
 		CPS::SystemTopology mSystem;
 
+		/// Start time point to measure calculation time
+		std::chrono::time_point<std::chrono::steady_clock> mSimulationStartTimePoint;
+		/// End time point to measure calculation time
+		std::chrono::time_point<std::chrono::steady_clock> mSimulationEndTimePoint;
+		/// Measured calculation time for simulation
+		std::chrono::duration<double> mSimulationCalculationTime;
+
 		// #### Logging ####
 		/// Simulation log level
 		CPS::Logger::Level mLogLevel;

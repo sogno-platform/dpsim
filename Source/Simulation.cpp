@@ -357,9 +357,16 @@ void Simulation::start() {
 	mLog->info("Start simulation: {}", mName);
 	mLog->info("Time step: {:e}", mTimeStep);
 	mLog->info("Final time: {:e}", mFinalTime);
+
+	mSimulationStartTimePoint = std::chrono::steady_clock::now();
 }
 
 void Simulation::stop() {
+
+	mSimulationEndTimePoint = std::chrono::steady_clock::now();
+	mSimulationCalculationTime = mSimulationEndTimePoint-mSimulationStartTimePoint;
+	mLog->info("Simulation calculation time: {:.6f}", mSimulationCalculationTime.count());
+
 	mScheduler->stop();
 
 	for (auto ifm : mInterfaces)
