@@ -56,8 +56,8 @@ void SP::Ph1::Load::calculatePerUnitParameters(Real baseApparentPower, Real base
 	mBaseOmega = baseOmega;
     mSLog->info("Base Power={} [VA]  Base Omega={} [1/s]", mBaseApparentPower, mBaseOmega);
 
-	mActivePowerPerUnit = mActivePower/mBaseApparentPower;
-	mReactivePowerPerUnit = mReactivePower/mBaseApparentPower;
+	mActivePowerPerUnit = attribute<Real>("P")->get()/mBaseApparentPower;
+	mReactivePowerPerUnit = attribute<Real>("Q")->get()/mBaseApparentPower;
 	mSLog->info("Active Power={} [pu] Reactive Power={} [pu]", mActivePowerPerUnit, mReactivePowerPerUnit);
 	mSLog->flush();
 }
@@ -108,8 +108,8 @@ void SP::Ph1::Load::initializeFromNodesAndTerminals(Real frequency) {
 	}
 
 	// instantiate subResistor for active power consumption
-	if (mActivePower != 0) {
-		mResistance = std::pow(mNomVoltage, 2) / mActivePower;
+	if (attribute<Real>("P")->get() != 0) {
+		mResistance = std::pow(mNomVoltage, 2) / attribute<Real>("P")->get();
 		mConductance = 1.0 / mResistance;
 		mSubResistor = std::make_shared<SP::Ph1::Resistor>(mUID + "_res", mName + "_res", Logger::Level::off);
 		mSubResistor->setParameters(mResistance);
@@ -118,8 +118,8 @@ void SP::Ph1::Load::initializeFromNodesAndTerminals(Real frequency) {
 		mSubResistor->initializeFromNodesAndTerminals(frequency);
 	}
 
-	if (mReactivePower != 0)
-		mReactance = std::pow(mNomVoltage, 2) / mReactivePower;
+	if (attribute<Real>("Q")->get() != 0)
+		mReactance = std::pow(mNomVoltage, 2) / attribute<Real>("Q")->get();
 	else
 		mReactance = 0;
 
@@ -141,7 +141,7 @@ void SP::Ph1::Load::initializeFromNodesAndTerminals(Real frequency) {
 	}
 
 	mIntfVoltage(0, 0) = mTerminals[0]->initialSingleVoltage();
-	mIntfCurrent(0, 0) = std::conj(Complex(mActivePower, mReactivePower) / mIntfVoltage(0, 0));
+	mIntfCurrent(0, 0) = std::conj(Complex(attribute<Real>("P")->get(), attribute<Real>("Q")->get()) / mIntfVoltage(0, 0));
 
 	mSLog->info(
 		"\n--- Initialization from powerflow ---"
@@ -154,7 +154,7 @@ void SP::Ph1::Load::initializeFromNodesAndTerminals(Real frequency) {
 		Logger::phasorToString(initialSingleVoltage(0)));
 	mSLog->info(
 		"Updated parameters according to powerflow:\n"
-		"Active Power={} [W] Reactive Power={} [VAr]", mActivePower, mReactivePower);
+		"Active Power={} [W] Reactive Power={} [VAr]", attribute<Real>("P")->get(), attribute<Real>("Q")->get());
 	mSLog->flush();
 }
 
