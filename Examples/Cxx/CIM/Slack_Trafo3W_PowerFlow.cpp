@@ -24,17 +24,16 @@ int main(int argc, char** argv){
 	std::list<fs::path> filenames;
 	if (argc <= 1) {
 		filenames = DPsim::Utils::findFiles({
-			"Traf3W-PowerFlowTest_EQ.xml",
-			"Traf3W-PowerFlowTest_TP.xml",
-			"Traf3W-PowerFlowTest_SV.xml",
-			"Traf3W-PowerFlowTest_SSH.xml"
-		}, "./path/to/cim/files", "CIMPATH");
+			"Trafo3W_PowerFlowTest_EQ.xml",
+			"Trafo3W_PowerFlowTest_TP.xml",
+			"Trafo3W_PowerFlowTest_SV.xml"
+		}, "build/_deps/cim-data-src/BasicGrids/PowerFactory/Slack_Trafo3W_PowerFlow", "CIMPATH");
 	}
 	else {
 		filenames = std::list<fs::path>(argv + 1, argv + argc);
 	}
 
-	String simName = "Traf3W_PowerFlowTest";
+	String simName = "Trafo3W_PFSolver";
 	CPS::Real system_freq = 60;
 
     CIM::Reader reader(simName, Logger::Level::debug, Logger::Level::off);
@@ -45,6 +44,7 @@ int main(int argc, char** argv){
 								CPS::PhaseType::Single, 
 								CPS::GeneratorType::PVNode
 							);
+	system.renderToFile("build/_deps/cim-data-src/BasicGrids/PowerFactory/Slack_Trafo3W_PowerFlow/Trafo3W_PowerFlowTest.svg");
 
 	auto logger = DPsim::DataLogger::make(simName);
 	for (auto node : system.mNodes)
