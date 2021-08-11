@@ -46,6 +46,84 @@ void MnaSolverEigenSparse<VarType>::switchedMatrixStamp(std::size_t index, std::
 	mLuFactorizations[bit][0]->factorize(sys);
 }
 
+template <typename VarType>
+void MnaSolverEigenSparse<VarType>::stampVariableSystemMatrix() {
+
+	mSLog->info("Number of variable Elements: {}"
+				"\nNumber of MNA components: {}",
+				mVariableComps.size(),
+				mMNAComponents.size());
+
+	// Build base matrix with only static elements
+	mBaseSystemMatrix.setZero();
+	for (auto statElem : mMNAComponents)
+		statElem->mnaApplySystemMatrixStamp(mBaseSystemMatrix);
+	mSLog->info("Base matrix with only static elements: {}", Logger::matrixToString(mBaseSystemMatrix));
+	mSLog->flush();
+	
+	// Use matrix with only static elements as basis for variable system matrix
+	mVariableSystemMatrix = mBaseSystemMatrix;
+
+	// Now stamp switches into matrix
+	mSLog->info("Stamping switches");
+	for (auto sw : mSwitches)
+		sw->mnaApplySystemMatrixStamp(mVariableSystemMatrix);
+
+	// Now stamp initial state of variable elements into matrix
+	mSLog->info("Stamping variable elements");
+	for (auto varElem : mMNAIntfVariableComps)
+		varElem->mnaApplySystemMatrixStamp(mVariableSystemMatrix);
+
+	mSLog->info("Initial system matrix with variable elements {}", Logger::matrixToString(mVariableSystemMatrix));
+	mSLog->flush();
+
+	// Calculate factorization of current matrix
+	mLuFactorizationVariableSystemMatrix.analyzePattern(mVariableSystemMatrix);
+	mLuFactorizationVariableSystemMatrix.factorize(mVariableSystemMatrix);
+}
+
+template <typename VarType>
+void MnaSolverEigenSparse<VarType>::solveWithSystemMatrixRecomputation(Real time, Int timeStepCount) {
+	// Reset source vector
+	mRightSideVector.setZero();
+	
+	// Add together the right side vector (computed by the components'
+	// pre-step tasks)
+	for (auto stamp : mRightVectorStamps)
+		mRightSideVector += *stamp;
+
+	// Get switch and variable comp status and update system matrix and lu factorization accordingly
+	if (hasVariableComponentChanged())
+		recomputeSystemMatrix(time);
+
+	// Calculate new solution vector
+	mLeftSideVector = mLuFactorizationVariableSystemMatrix.solve(mRightSideVector);
+
+	// TODO split into separate task? (dependent on x, updating all v attributes)
+	for (UInt nodeIdx = 0; nodeIdx < mNumNetNodes; ++nodeIdx)
+		mNodes[nodeIdx]->mnaUpdateVoltage(mLeftSideVector);
+
+	// Components' states will be updated by the post-step tasks
+}
+
+template <typename VarType>
+void MnaSolverEigenSparse<VarType>::recomputeSystemMatrix(Real time) {
+	// Start from base matrix
+	mVariableSystemMatrix = mBaseSystemMatrix;
+
+	// Now stamp switches into matrix
+	for (auto sw : mSwitches)
+		sw->mnaApplySystemMatrixStamp(mVariableSystemMatrix);
+
+	// Now stamp variable elements into matrix
+	for (auto comp : mMNAIntfVariableComps)
+		comp->mnaApplySystemMatrixStamp(mVariableSystemMatrix);
+
+	// Calculate factorization of current matrix
+	mLuFactorizationVariableSystemMatrix.analyzePattern(mVariableSystemMatrix);
+	mLuFactorizationVariableSystemMatrix.factorize(mVariableSystemMatrix);
+}
+
 template <>
 void MnaSolverEigenSparse<Real>::createEmptySystemMatrix() {
 	if (mSwitches.size() > SWITCH_NUM)
@@ -76,8 +154,7 @@ void MnaSolverEigenSparse<Complex>::createEmptySystemMatrix() {
 				mLuFactorizations[bit].push_back(std::make_shared<LUFactorizedSparse>());
 			}
 		}
-	}
-	else if (mSystemMatrixRecomputation) {
+	} else if (mSystemMatrixRecomputation) {
 		mBaseSystemMatrix = SparseMatrix(2*(mNumMatrixNodeIndices), 2*(mNumMatrixNodeIndices));
 		mVariableSystemMatrix = SparseMatrix(2*(mNumMatrixNodeIndices), 2*(mNumMatrixNodeIndices));
 	} else {
@@ -93,6 +170,12 @@ template <typename VarType>
 std::shared_ptr<CPS::Task> MnaSolverEigenSparse<VarType>::createSolveTask()
 {
 	return std::make_shared<MnaSolverEigenSparse<VarType>::SolveTask>(*this);
+}
+
+template <typename VarType>
+std::shared_ptr<CPS::Task> MnaSolverEigenSparse<VarType>::createSolveTaskRecomp()
+{
+	return std::make_shared<MnaSolverEigenSparse<VarType>::SolveTaskRecomp>(*this);
 }
 
 template <typename VarType>

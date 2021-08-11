@@ -205,6 +205,7 @@ void DP_SynGenTrStab_3Bus_Fault(String simName, Real timeStep, Real finalTime, b
 	simDP.setDomain(Domain::DP);
 	simDP.addLogger(loggerDP);
 	simDP.doSystemMatrixRecomputation(true);
+	simDP.setMnaSolverImplementation(MnaSolverFactory::MnaSolverImpl::EigenSparse);
 
 	// Events
 	if (startFaultEvent){

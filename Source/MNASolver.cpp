@@ -190,7 +190,9 @@ void MnaSolver<VarType>::initializeSystem() {
 
 	if (mFrequencyParallel)
 		initializeSystemWithParallelFrequencies();
-	else if (!mSystemMatrixRecomputation)
+	else if (mSystemMatrixRecomputation)
+		initializeSystemWithVariableMatrix();
+	else
 		initializeSystemWithPrecomputedMatrices();
 }
 
@@ -244,6 +246,38 @@ void MnaSolver<VarType>::initializeSystemWithPrecomputedMatrices() {
 		if (mSLog->should_log(spdlog::level::trace))
 			mSLog->trace("\n{:s}", Logger::matrixToString(mRightSideVector));
 	}
+}
+
+template <typename VarType>
+void MnaSolver<VarType>::initializeSystemWithVariableMatrix() {
+	
+	stampVariableSystemMatrix();
+
+	// Initialize source vector for debugging
+	// CAUTION: this does not always deliver proper source vector initialization
+	// as not full pre-step is executed (not involving necessary electrical or signal
+	// subcomp updates before right vector calculation)
+	for (auto comp : mMNAComponents) {
+		comp->mnaApplyRightSideVectorStamp(mRightSideVector);
+		auto idObj = std::dynamic_pointer_cast<IdentifiedObject>(comp);
+		mSLog->debug("Stamping {:s} {:s} into source vector",
+			idObj->type(), idObj->name());
+		if (mSLog->should_log(spdlog::level::trace))
+			mSLog->trace("\n{:s}", Logger::matrixToString(mRightSideVector));
+	}
+}
+
+template <typename VarType>
+Bool MnaSolver<VarType>::hasVariableComponentChanged() {
+	for (auto varElem : mVariableComps) {
+		if (varElem->hasParameterChanged()) {
+			auto idObj = std::dynamic_pointer_cast<IdentifiedObject>(varElem);
+			this->mSLog->info("Component ({:s} {:s}) value changed -> Update System Matrix",
+				idObj->type(), idObj->name());
+			return true;
+		}
+	}
+	return false;
 }
 
 template <typename VarType>
@@ -501,6 +535,12 @@ Task::List MnaSolver<VarType>::getTasks() {
 	if (mFrequencyParallel) {
 		for (UInt i = 0; i < mSystem.mFrequencies.size(); ++i)
 			l.push_back(createSolveTaskHarm(i));
+	} else if (mSystemMatrixRecomputation) {
+		for (auto comp : this->mMNAIntfVariableComps) {
+			for (auto task : comp->mnaTasks())
+				l.push_back(task);
+		}
+		l.push_back(createSolveTaskRecomp());
 	} else {
 		l.push_back(createSolveTask());
 		l.push_back(createLogTask());
