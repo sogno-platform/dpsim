@@ -119,8 +119,8 @@ void MnaSolverEigenSparse<VarType>::recomputeSystemMatrix(Real time) {
 	for (auto comp : mMNAIntfVariableComps)
 		comp->mnaApplySystemMatrixStamp(mVariableSystemMatrix);
 
-	// Calculate factorization of current matrix
-	mLuFactorizationVariableSystemMatrix.analyzePattern(mVariableSystemMatrix);
+	// Refactorization of matrix assuming that structure remained
+	// constant by omitting analyzePattern
 	mLuFactorizationVariableSystemMatrix.factorize(mVariableSystemMatrix);
 }
 
