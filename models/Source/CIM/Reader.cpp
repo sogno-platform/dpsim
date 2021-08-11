@@ -510,10 +510,9 @@ TopologicalPowerComp::Ptr Reader::mapPowerTransformer(CIMPP::PowerTransformer* t
 		}
 	}
 
-
 	else {
 		Real ratedPower3 = unitValue(end3->ratedS.value, UnitMultiplier::M);
-		Real voltageNode3 = unitValue(end2->ratedU.value, UnitMultiplier::k);
+		Real voltageNode3 = unitValue(end3->ratedU.value, UnitMultiplier::k);
 
 		Real ratioAbs1 = 1.0;
 		// use normalStep from RatioTapChanger
@@ -701,7 +700,8 @@ TopologicalPowerComp::Ptr Reader::mapSynchronousMachine(CIMPP::SynchronousMachin
 								gen->setParameters(unitValue(machine->ratedS.value, UnitMultiplier::M),
 										unitValue(machine->ratedU.value, UnitMultiplier::k),
 										setPointActivePower,
-										setPointVoltage,
+										//setPointVoltage,
+										unitValue(machine->ratedU.value, UnitMultiplier::k),
 										PowerflowBusType::PV);
 								gen->setBaseVoltage(unitValue(machine->ratedU.value, UnitMultiplier::k));
 							return gen;
@@ -750,6 +750,7 @@ TopologicalPowerComp::Ptr Reader::mapExternalNetworkInjection(CIMPP::ExternalNet
 					cpsextnet->setParameters(1.*baseVoltage);
 				}
 			} catch (ReadingUninitializedField* e ) {
+				cpsextnet->setParameters(1.*baseVoltage);
 				std::cerr << "Ignore incomplete RegulatingControl" << std::endl;
 			}
 
