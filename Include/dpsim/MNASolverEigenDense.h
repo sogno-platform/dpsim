@@ -69,6 +69,15 @@ namespace DPsim {
 		/// Logging of system matrices and source vector
 		virtual void logSystemMatrices() override;
 
+		// #### Methods for system recomputation over time ####
+		// -------- TODO: Implement methods for EigenDense ----
+		/// Stamps components into the variable system matrix
+		void stampVariableSystemMatrix() override { throw CPS::SystemError("SysRecomp not supported yet by EigenDense."); };
+		/// Solves the system with variable system matrix
+		void solveWithSystemMatrixRecomputation(Real time, Int timeStepCount) override { throw CPS::SystemError("SysRecomp not supported yet by EigenDense."); };
+		/// Create a solve task for recomputation solver
+		virtual std::shared_ptr<CPS::Task> createSolveTaskRecomp() override { throw CPS::SystemError("SysRecomp not supported yet by EigenDense."); };
+
 		// #### Scheduler Task Methods ####
 		/// Solves system for single frequency
 		virtual void solve(Real time, Int timeStepCount) override;

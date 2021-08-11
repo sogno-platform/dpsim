@@ -319,6 +319,7 @@ void DP_1ph_SynGenTrStab_Fault(Real timeStep, Real finalTime, bool startFaultEve
 	sim.setDomain(Domain::DP);
 	sim.addLogger(logger);
 	sim.doSystemMatrixRecomputation(true);
+	sim.setMnaSolverImplementation(MnaSolverFactory::MnaSolverImpl::EigenSparse);
 
 	// Events
 	if (startFaultEvent){
@@ -461,6 +462,7 @@ void SP_1ph_SynGenTrStab_Fault(Real timeStep, Real finalTime, bool startFaultEve
 	sim.setDomain(Domain::SP);
 	sim.addLogger(logger);
 	sim.doSystemMatrixRecomputation(true);
+	sim.setMnaSolverImplementation(MnaSolverFactory::MnaSolverImpl::EigenSparse);
 
 	// Events
 	if (startFaultEvent){
