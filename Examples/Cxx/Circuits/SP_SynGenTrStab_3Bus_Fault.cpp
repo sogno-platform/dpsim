@@ -3,8 +3,9 @@
 
 using namespace DPsim;
 using namespace CPS;
+using namespace CIM::Examples::Grids::ThreeBus;
 
-CIM::Examples::Grids::ThreeBus::ScenarioConfig ThreeBus;
+ScenarioConfig ThreeBus;
 
 //Switch to trigger fault at generator terminal
 Real SwitchOpen = 1e12;
