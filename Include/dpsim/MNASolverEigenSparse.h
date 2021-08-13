@@ -63,6 +63,7 @@ namespace DPsim {
 		using MnaSolver<VarType>::mSLog;
 		using MnaSolver<VarType>::mSystemMatrixRecomputation;
 		using MnaSolver<VarType>::hasVariableComponentChanged;
+		using MnaSolver<VarType>::mNumRecomputations;
 
 		// #### General
 		/// Create system matrix

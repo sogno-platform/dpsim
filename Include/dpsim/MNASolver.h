@@ -68,11 +68,6 @@ namespace DPsim {
 		CPS::MNASwitchInterface::List mSwitches;
 		/// List of switches if they must be accessed as MNAInterface objects
 		CPS::MNAInterface::List mMNAIntfSwitches;
-		/// List of components that indicate the solver to recompute the system matrix
-		/// depending on their state
-		CPS::MNAVariableCompInterface::List mVariableComps;
-		/// List of variable components if they must be accessed as MNAInterface objects
-		CPS::MNAInterface::List mMNAIntfVariableComps;
 		/// List of signal type components that do not directly interact with the MNA solver
 		CPS::SimSignalComp::List mSimSignalComps;
 		/// Current status of all switches encoded as bitset
@@ -92,6 +87,15 @@ namespace DPsim {
 		std::vector<Matrix> mLeftSideVectorHarm;
 		///
 		std::vector< CPS::Attribute<Matrix>::Ptr > mLeftVectorHarmAttributes;
+
+		// #### MNA specific attributes related to system recomputation
+		/// Number of system matrix recomputations
+		Int mNumRecomputations;
+		/// List of components that indicate the solver to recompute the system matrix
+		/// depending on their state
+		CPS::MNAVariableCompInterface::List mVariableComps;
+		/// List of variable components if they must be accessed as MNAInterface objects
+		CPS::MNAInterface::List mMNAIntfVariableComps;
 
 		// #### Attributes related to switching ####
 		/// Index of the next switching event
@@ -178,7 +182,10 @@ namespace DPsim {
 	public:
 
 		/// Destructor
-		virtual ~MnaSolver() { };
+		virtual ~MnaSolver() { 
+			if (mSystemMatrixRecomputation)
+				mSLog->info("Number of system matrix recomputations: {:}", mNumRecomputations);
+		};
 
 		/// Calls subroutines to set up everything that is required before simulation
 		virtual void initialize() override;
