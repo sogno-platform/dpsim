@@ -127,6 +127,8 @@ if(WITH_CIM)
 		CIM/SP_WSCC-9bus_CIM_Dyn_Switch.cpp
 		CIM/EMT_WSCC-9bus_IdealVS.cpp
 		CIM/EMT_WSCC-9bus_IdealCS.cpp
+		CIM/EMT_WSCC-9bus_FullOrderSG.cpp
+		CIM/EMT_WSCC-9bus_VBR.cpp
 		CIM/DP_WSCC-9bus_IdealVS.cpp
 
 		# PF(Power Flow) example

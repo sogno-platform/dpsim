@@ -272,7 +272,7 @@ Bool MnaSolver<VarType>::hasVariableComponentChanged() {
 	for (auto varElem : mVariableComps) {
 		if (varElem->hasParameterChanged()) {
 			auto idObj = std::dynamic_pointer_cast<IdentifiedObject>(varElem);
-			this->mSLog->info("Component ({:s} {:s}) value changed -> Update System Matrix",
+			this->mSLog->debug("Component ({:s} {:s}) value changed -> Update System Matrix",
 				idObj->type(), idObj->name());
 			return true;
 		}

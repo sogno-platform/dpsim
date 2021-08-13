@@ -122,6 +122,7 @@ void MnaSolverEigenSparse<VarType>::recomputeSystemMatrix(Real time) {
 	// Refactorization of matrix assuming that structure remained
 	// constant by omitting analyzePattern
 	mLuFactorizationVariableSystemMatrix.factorize(mVariableSystemMatrix);
+	++mNumRecomputations;
 }
 
 template <>
