@@ -183,7 +183,7 @@ int main(int argc, char* argv[]) {
 
 	// Simulation
 	Simulation sim(simName, Logger::Level::debug);
-	sim.setTimeStep(10e-6);
+	sim.setTimeStep(20e-6);
 	sim.setFinalTime(1.0);
 	sim.setDomain(Domain::EMT);
 	sim.setSystem(system);

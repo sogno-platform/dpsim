@@ -52,7 +52,7 @@ int main(int argc, char* argv[]) {
 	// Simulation parameters
 	String simName = "EMT_SynGenDQ7odTrapez_OperationalParams_SMIB_Fault";
 	Real finalTime = 1.0;
-	Real timeStep = 10e-6;
+	Real timeStep = 20e-6;
 	Real startTimeFault=0.2;
 
 	// Command line args processing
