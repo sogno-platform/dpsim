@@ -17,94 +17,6 @@ namespace CIM {
 namespace Examples {
 
 namespace Components {
-
-// P. Kundur, "Power System Stability and Control", Example 13.2, pp. 864-869.
-namespace KundurExample1 {
-    struct Network {
-        Real nomVoltage = 400e3;
-    };
-
-    struct Gen {
-        Real nomPower = 2220e6;
-        Real nomVoltage = 400e3;
-        Real H = 3.5;
-        Real XpdPU = 0.3;
-        Real RsPU = 0;
-        Real D = 1.0;
-    };
-    struct Line1 {
-        // Vnom = 400kV
-        Real lineResistance = 0.0721;
-        Real lineReactance = 36.0360; 
-        Real lineSusceptance = 0;
-        Real lineConductance =0;
-    };
-
-    struct Transf1 {
-	    Real nomVoltageHV = 400e3; 
-        Real nomVoltageMV = 400e3;
-        Real transformerResistance = 0; // referred to HV side
-        Real transformerReactance = 10.8108; // referred to HV side
-    };
-}
-
-// The network transmission voltages used are 220 kV and 380 kV, which are
-// typical in European transmission systems. Generation bus voltages are 22 kV, and the
-// system frequency is 50 Hz.
-namespace CIGREHVEuropean {
-    struct LineParameters {
-        // 220 kV
-        Real lineResistancePerKm = 1.35e-4 * 484.0;
-        Real lineReactancePerKm = 8.22e-4 * 484.0;
-        Real lineSusceptancePerKm = 1.38e-3 / 484.0;
-        Real lineConductancePerKm = 0;
-    };
-
-    // All generators are rated at 22 kV, 50 Hz.
-    // Base power for p.u values: S_base=100 MVA 
-    struct GeneratorUnit_1 {
-        Real nomPower = 700e6;
-        Real nomVoltage = 22e3; // Phase-to-Phase RMS
-        Real nomFreq = 50;
-        Real setPointActivePower = 500e6;
-        Real setPointVoltage=1.03*nomVoltage;
-        Real Xd=1.25; //p.u
-        Real Xpd=0.333; //p.u
-        Real Rs=0; //p.u
-        Real H = 5; //p.u 
-        Real D = 1; //p.u
-    };
-
-    struct GeneratorUnit_2 {
-        Real nomPower = 500e6;
-        Real nomVoltage = 22e3; // Phase-to-Phase RMS
-        Real nomFreq = 50;
-        Real setPointActivePower = 300e6;
-        Real setPointVoltage=1.03*nomVoltage; 
-        Real Xd=1.25;
-        Real Xpd=0.333;
-        Real Rs=0; //p.u
-        Real H = 5;
-        Real D = 1;
-    };
-
-    struct RefBus {
-        // p.u
-        Real refVoltagePU= 1.03; //Bus voltage magnitude
-        Real refAngle= 0;    //Bus voltage angle
-        Real refFreq=50;
-    };
-}
-
-namespace CIGREHVAmerican {
-    struct LineParameters {
-        // 230 kV
-        Real lineResistancePerKm = 1.27e-4 * 529.0;
-        Real lineReactancePerKm = 9.05e-4 * 529.0;
-        Real lineSusceptancePerKm = 1.81e-3 / 529.0;
-    };
-}
-
 namespace SynchronousGeneratorKundur {
     struct MachineParameters {
         // Define machine parameters in per unit
@@ -146,6 +58,156 @@ namespace SynchronousGeneratorKundur {
         Real fieldVoltage = 7.0821; //TODO: specify operating conditions
     };
 }
+}
+
+namespace Grids {
+namespace CIGREHVEuropean {
+    struct LineParameters {
+        // 220 kV
+        Real Vnom = 220e3;
+        Real nomFreq = 50;
+        Real nomOmega= nomFreq* 2*PI;
+        //PiLine parameters (given in [p.u/km] with Z_base= 529ohm)
+        Real lineResistancePerKm = 1.35e-4  * 529;
+        Real lineReactancePerKm = 8.22e-4  * 529;
+        Real lineSusceptancePerKm = 1.38e-3  / 529;
+        Real lineConductancePerKm = 0;
+    };
+}
+namespace CIGREHVAmerican {
+    struct LineParameters {
+        // 230 kV
+        Real Vnom = 230e3;
+        Real nomFreq = 60;
+        Real nomOmega= nomFreq* 2*PI;
+        //PiLine parameters (given in [p.u/km] with Z_base= 529ohm)
+        Real lineResistancePerKm = 1.27e-4 * 529;
+        Real lineReactancePerKm = 9.05e-4 * 529;
+        Real lineSusceptancePerKm = 1.81e-3 / 529;
+        Real lineConductancePerKm = 0;
+    };
+}
+
+// P. Kundur, "Power System Stability and Control", Example 13.2, pp. 864-869.
+namespace KundurExample1 {
+    struct Network {
+        Real nomVoltage = 400e3;
+    };
+
+    struct Gen {
+        Real nomPower = 2220e6;
+        Real nomVoltage = 400e3;
+        Real H = 3.5;
+        Real XpdPU = 0.3;
+        Real RsPU = 0;
+        Real D = 1.0;
+    };
+    struct Line1 {
+        // Vnom = 400kV
+        Real lineResistance = 0.0721;
+        Real lineReactance = 36.0360; 
+        Real lineSusceptance = 0;
+        Real lineConductance =0;
+    };
+
+    struct Transf1 {
+	    Real nomVoltageHV = 400e3; 
+        Real nomVoltageMV = 400e3;
+        Real transformerResistance = 0; // referred to HV side
+        Real transformerReactance = 10.8108; // referred to HV side
+    };
+}
+namespace SMIB {
+    struct ScenarioConfig {
+        //-----------Network-----------//
+        Real Vnom = 230e3;
+        Real nomFreq = 60;
+        Real nomOmega= nomFreq* 2*PI;
+        //-----------Generator-----------//
+        Real nomPower = 500e6;
+        Real nomPhPhVoltRMS = 22e3;
+        Real H = 5;
+        Real Xpd=0.31;
+        Real Rs = 0.003*0;
+        Real D = 1.5;
+        // Initialization parameters
+        Real initMechPower= 300e6;
+        Real initActivePower = 300e6;
+        Real setPointVoltage=nomPhPhVoltRMS + 0.05*nomPhPhVoltRMS;
+        //-----------Transformer-----------//
+        Real t_ratio=Vnom/nomPhPhVoltRMS;
+        //-----------Transmission Line-----------//
+        // CIGREHVAmerican (230 kV)
+        Grids::CIGREHVAmerican::LineParameters lineCIGREHV;
+        Real lineLeng=100;
+        Real lineResistance = lineCIGREHV.lineResistancePerKm*lineLeng;
+        Real lineInductance = lineCIGREHV.lineReactancePerKm/nomOmega*lineLeng;
+        Real lineCapacitance = lineCIGREHV.lineSusceptancePerKm/nomOmega*lineLeng;
+        Real lineConductance =lineCIGREHV.lineConductancePerKm*lineLeng;;
+    };
+}
+
+namespace ThreeBus {
+    struct ScenarioConfig {
+        
+        //-----------Network-----------//
+        Real Vnom = 230e3;
+        Real nomFreq = 60;
+        Real nomOmega= nomFreq* 2*PI;
+
+        //-----------Generator 1 (bus1)-----------//
+        Real nomPower_G1 = 300e6;
+        Real nomPhPhVoltRMS_G1 = 25e3;
+        Real nomFreq_G1 = 60;
+        Real H_G1 = 6; 
+        Real Xpd_G1=0.3; //in p.u
+        Real Rs_G1 = 0.003*0; //in p.u
+        Real D_G1 = 1.5; //in p.u 
+        // Initialization parameters 
+        Real initActivePower_G1 = 270e6;
+        Real initMechPower_G1 = 270e6;
+        Real setPointVoltage_G1=nomPhPhVoltRMS_G1+0.05*nomPhPhVoltRMS_G1;
+        
+        //-----------Generator 2 (bus2)-----------//
+        Real nomPower_G2 = 50e6;
+        Real nomPhPhVoltRMS_G2 = 13.8e3;
+        Real nomFreq_G2 = 60;
+        Real H_G2 = 2; 
+        Real Xpd_G2=0.1; //in p.u
+        Real Rs_G2 = 0.003*0; //in p.u
+        Real D_G2 =1.5; //in p.u
+        // Initialization parameters 
+        Real initActivePower_G2 = 45e6;
+        Real initMechPower_G2 = 45e6;
+        Real setPointVoltage_G2=nomPhPhVoltRMS_G2-0.05*nomPhPhVoltRMS_G2;
+
+        //-----------Transformers-----------//
+        Real t1_ratio=Vnom/nomPhPhVoltRMS_G1;
+        Real t2_ratio=Vnom/nomPhPhVoltRMS_G2;
+
+        //-----------Load (bus3)-----------
+        Real activePower_L= 310e6;
+        Real reactivePower_L= 150e6;
+
+        // -----------Transmission Lines-----------//
+        // CIGREHVAmerican (230 kV)
+        Grids::CIGREHVAmerican::LineParameters lineCIGREHV;
+        //line 1-2 (180km)
+        Real lineResistance12 = lineCIGREHV.lineResistancePerKm*180;
+        Real lineInductance12 = lineCIGREHV.lineReactancePerKm/nomOmega*180;
+        Real lineCapacitance12 = lineCIGREHV.lineSusceptancePerKm/nomOmega*180;
+        Real lineConductance12 = lineCIGREHV.lineConductancePerKm*180;
+        //line 1-3 (150km)
+        Real lineResistance13 = lineCIGREHV.lineResistancePerKm*150;
+        Real lineInductance13 = lineCIGREHV.lineReactancePerKm/nomOmega*150;
+        Real lineCapacitance13 = lineCIGREHV.lineSusceptancePerKm/nomOmega*150;
+        Real lineConductance13 = lineCIGREHV.lineConductancePerKm*150;
+        //line 2-3 (80km)
+        Real lineResistance23 = lineCIGREHV.lineResistancePerKm*80;
+        Real lineInductance23 = lineCIGREHV.lineReactancePerKm/nomOmega*80;
+        Real lineCapacitance23 = lineCIGREHV.lineSusceptancePerKm/nomOmega*80;
+        Real lineConductance23 = lineCIGREHV.lineConductancePerKm*80;
+    };
 }
 
 namespace SGIB {
@@ -320,6 +382,9 @@ namespace CIGREMV {
     }
 
 }
+}
+
+namespace Events {
         std::shared_ptr<DPsim::SwitchEvent> createEventAddPowerConsumption(String nodeName, Real eventTime, Real additionalActivePower, SystemTopology& system, Domain domain, DPsim::DataLogger::Ptr logger) {
 
         // TODO: use base classes ph1
@@ -365,7 +430,7 @@ namespace CIGREMV {
             return nullptr;
         }
     }
-
+}
 }
 }
 }

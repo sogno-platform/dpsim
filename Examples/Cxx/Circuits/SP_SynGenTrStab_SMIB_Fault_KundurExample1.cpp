@@ -5,7 +5,7 @@
 using namespace DPsim;
 using namespace CPS;
 using namespace CPS::CIM;
-using namespace Examples::Components;
+using namespace Examples::Grids;
 
 // This example is taken from:
 // P. Kundur, "Power System Stability and Control", Example 13.2, pp. 864-869.

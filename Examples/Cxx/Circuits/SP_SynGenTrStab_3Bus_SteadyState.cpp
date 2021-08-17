@@ -1,73 +1,14 @@
 #include <DPsim.h>
-
+#include "../Examples.h"
 
 using namespace DPsim;
 using namespace CPS;
+using namespace CIM::Examples::Grids::ThreeBus;
 
+ScenarioConfig ThreeBus;
 
-//-----------Power system-----------//
-//Voltage level as Base Voltage
-Real Vnom = 230e3;
-
-//-----------Generator 1 (bus1)-----------//
-//Machine parameters
-Real nomPower_G1 = 300e6;
-Real nomPhPhVoltRMS_G1 = 25e3;
-Real nomFreq_G1 = 60;
-Real H_G1 = 6;
-Real Xpd_G1=0.3; //in p.u
-Real Rs_G1 = 0.003*0;
-Real Kd_G1 = 1;
-// Initialization parameters 
-Real initActivePower_G1 = 270e6;
-//Real initReactivePower_G1 = 106e6;
-Real initMechPower_G1 = 270e6;
-Real setPointVoltage_G1=nomPhPhVoltRMS_G1+0.05*nomPhPhVoltRMS_G1;
-
-//-----------Generator 2 (bus2)-----------//
-//Machine parameters in per unit
-Real nomPower_G2 = 50e6;
-Real nomPhPhVoltRMS_G2 = 13.8e3;
-Real nomFreq_G2 = 60;
-Real H_G2 = 2;
-Real Xpd_G2=0.1; //in p.u
-Real Rs_G2 = 0.003*0;
-Real Kd_G2 =1;
-// Initialization parameters 
-Real initActivePower_G2 = 45e6;
-// Real initReactivePower_G2 = 106e6;
-Real initMechPower_G2 = 45e6;
-Real setPointVoltage_G2=nomPhPhVoltRMS_G2-0.05*nomPhPhVoltRMS_G2;
-
-//-----------Transformers-----------//
-Real t1_ratio=Vnom/nomPhPhVoltRMS_G1;
-Real t2_ratio=Vnom/nomPhPhVoltRMS_G2;
-
-//-----------Load (bus3)-----------
-Real activePower_L= 310e6;
-Real reactivePower_L= 150e6;
-
-//-----------Transmission Lines-----------//
-//PiLine parameters
-//line 1-2 (180km)
-Real lineResistance12 = 0.04*180;
-Real lineInductance12 = (0.4/377)*180;
-Real lineCapacitance12 = (4.3e-6/377)*180;
-// Real lineCapacitance12 =0;
-Real lineConductance12 =0;
-//line 1-3 (150km)
-Real lineResistance13 = 0.0267*150;
-Real lineInductance13 = (0.267/377)*150;
-Real lineCapacitance13 = (4.3e-6/377)*150;
-Real lineConductance13 =0;
-//line 2-3 (80km)
-Real lineResistance23 = 0.04*80;
-Real lineInductance23 = (0.267/377)*80;
-Real lineCapacitance23 = (4.3e-6/377)*80;
-Real lineConductance23 =0;
-
-void SP_SynGenTrStab_3Bus_SteadyState(String simName, Real timeStep, Real finalTime, bool startFaultEvent, bool endFaultEvent, Real startTimeFault, Real endTimeFault, Real cmdInertia) {
-	//  // ----- POWERFLOW FOR INITIALIZATION -----
+void SP_SynGenTrStab_3Bus_SteadyState(String simName, Real timeStep, Real finalTime, Real cmdInertia_G1, Real cmdInertia_G2, Real cmdDamping_G1, Real cmdDamping_G2) {
+	// ----- POWERFLOW FOR INITIALIZATION -----
 	Real timeStepPF = finalTime;
 	Real finalTimePF = finalTime+timeStepPF;
 	String simNamePF = simName + "_PF";
@@ -81,32 +22,32 @@ void SP_SynGenTrStab_3Bus_SteadyState(String simName, Real timeStep, Real finalT
 	//Synchronous generator 1
 	auto gen1PF = SP::Ph1::SynchronGenerator::make("Generator", Logger::Level::debug);
 	// setPointVoltage is defined as the voltage at the transfomer primary side and should be transformed to network side
-	gen1PF->setParameters(nomPower_G1, nomPhPhVoltRMS_G1, initActivePower_G1, setPointVoltage_G1*t1_ratio, PowerflowBusType::VD);
-	gen1PF->setBaseVoltage(Vnom);
+	gen1PF->setParameters(ThreeBus.nomPower_G1, ThreeBus.nomPhPhVoltRMS_G1, ThreeBus.initActivePower_G1, ThreeBus.setPointVoltage_G1*ThreeBus.t1_ratio, PowerflowBusType::VD);
+	gen1PF->setBaseVoltage(ThreeBus.Vnom);
 
 	//Synchronous generator 2
 	auto gen2PF = SP::Ph1::SynchronGenerator::make("Generator", Logger::Level::debug);
 	// setPointVoltage is defined as the voltage at the transfomer primary side and should be transformed to network side
-	gen2PF->setParameters(nomPower_G2, nomPhPhVoltRMS_G2, initActivePower_G2, setPointVoltage_G2*t2_ratio, PowerflowBusType::PV);
-	gen2PF->setBaseVoltage(Vnom);
+	gen2PF->setParameters(ThreeBus.nomPower_G2, ThreeBus.nomPhPhVoltRMS_G2, ThreeBus.initActivePower_G2, ThreeBus.setPointVoltage_G2*ThreeBus.t2_ratio, PowerflowBusType::PV);
+	gen2PF->setBaseVoltage(ThreeBus.Vnom);
 
 	//use Shunt as Load for powerflow
 	auto loadPF = SP::Ph1::Shunt::make("Load", Logger::Level::debug);
-	loadPF->setParameters(activePower_L / std::pow(Vnom, 2), - reactivePower_L / std::pow(Vnom, 2));
-	loadPF->setBaseVoltage(Vnom);
+	loadPF->setParameters(ThreeBus.activePower_L / std::pow(ThreeBus.Vnom, 2), - ThreeBus.reactivePower_L / std::pow(ThreeBus.Vnom, 2));
+	loadPF->setBaseVoltage(ThreeBus.Vnom);
 	
 	//Line12
 	auto line12PF = SP::Ph1::PiLine::make("PiLine12", Logger::Level::debug);
-	line12PF->setParameters(lineResistance12, lineInductance12, lineCapacitance12, lineConductance12);
-	line12PF->setBaseVoltage(Vnom);
+	line12PF->setParameters(ThreeBus.lineResistance12, ThreeBus.lineInductance12, ThreeBus.lineCapacitance12, ThreeBus.lineConductance12);
+	line12PF->setBaseVoltage(ThreeBus.Vnom);
 	//Line13
 	auto line13PF = SP::Ph1::PiLine::make("PiLine13", Logger::Level::debug);
-	line13PF->setParameters(lineResistance13, lineInductance13, lineCapacitance13, lineConductance13);
-	line13PF->setBaseVoltage(Vnom);
+	line13PF->setParameters(ThreeBus.lineResistance13, ThreeBus.lineInductance13, ThreeBus.lineCapacitance13, ThreeBus.lineConductance13);
+	line13PF->setBaseVoltage(ThreeBus.Vnom);
 	//Line23
 	auto line23PF = SP::Ph1::PiLine::make("PiLine23", Logger::Level::debug);
-	line23PF->setParameters(lineResistance23, lineInductance23, lineCapacitance23, lineConductance23);
-	line23PF->setBaseVoltage(Vnom);
+	line23PF->setParameters(ThreeBus.lineResistance23, ThreeBus.lineInductance23, ThreeBus.lineCapacitance23, ThreeBus.lineConductance23);
+	line23PF->setBaseVoltage(ThreeBus.Vnom);
 
 	// Topology
 	gen1PF->connect({ n1PF });
@@ -149,34 +90,34 @@ void SP_SynGenTrStab_3Bus_SteadyState(String simName, Real timeStep, Real finalT
 	//Synchronous generator 1
 	auto gen1SP = SP::Ph1::SynchronGeneratorTrStab::make("SynGen", Logger::Level::debug);
 	// Xpd is given in p.u of generator base at transfomer primary side and should be transformed to network side
-	gen1SP->setStandardParametersPU(nomPower_G1, nomPhPhVoltRMS_G1, nomFreq_G1, Xpd_G1*std::pow(t1_ratio,2), cmdInertia*H_G1, Rs_G1, Kd_G1 );
+	gen1SP->setStandardParametersPU(ThreeBus.nomPower_G1, ThreeBus.nomPhPhVoltRMS_G1, ThreeBus.nomFreq_G1, ThreeBus.Xpd_G1*std::pow(ThreeBus.t1_ratio,2), cmdInertia_G1*ThreeBus.H_G1, ThreeBus.Rs_G1, cmdDamping_G1*ThreeBus.D_G1);
 	// Get actual active and reactive power of generator's Terminal from Powerflow solution
 	Complex initApparentPower_G1= gen1PF->getApparentPower();
-	gen1SP->setInitialValues(initApparentPower_G1, initMechPower_G1);
+	gen1SP->setInitialValues(initApparentPower_G1, ThreeBus.initMechPower_G1);
 
 	//Synchronous generator 2
 	auto gen2SP = SP::Ph1::SynchronGeneratorTrStab::make("SynGen", Logger::Level::debug);
 	// Xpd is given in p.u of generator base at transfomer primary side and should be transformed to network side
-	gen2SP->setStandardParametersPU(nomPower_G2, nomPhPhVoltRMS_G2, nomFreq_G2, Xpd_G2*std::pow(t2_ratio,2), cmdInertia*H_G2, Rs_G2, Kd_G2 );
+	gen2SP->setStandardParametersPU(ThreeBus.nomPower_G2, ThreeBus.nomPhPhVoltRMS_G2, ThreeBus.nomFreq_G2, ThreeBus.Xpd_G2*std::pow(ThreeBus.t2_ratio,2), cmdInertia_G2*ThreeBus.H_G2, ThreeBus.Rs_G2, cmdDamping_G2*ThreeBus.D_G2);
 	// Get actual active and reactive power of generator's Terminal from Powerflow solution
 	Complex initApparentPower_G2= gen2PF->getApparentPower();
-	gen2SP->setInitialValues(initApparentPower_G2, initMechPower_G2);
+	gen2SP->setInitialValues(initApparentPower_G2, ThreeBus.initMechPower_G2);
 
 	//Load
 	auto loadSP = SP::Ph1::Load::make("Load", Logger::Level::debug);
-	loadSP->setParameters(activePower_L, reactivePower_L, Vnom);
+	loadSP->setParameters(ThreeBus.activePower_L, ThreeBus.reactivePower_L, ThreeBus.Vnom);
 	
 	//Line12
 	auto line12SP = SP::Ph1::PiLine::make("PiLine12", Logger::Level::debug);
-	line12SP->setParameters(lineResistance12, lineInductance12, lineCapacitance12, lineConductance12);
+	line12SP->setParameters(ThreeBus.lineResistance12, ThreeBus.lineInductance12, ThreeBus.lineCapacitance12, ThreeBus.lineConductance12);
 	//Line13
 	auto line13SP = SP::Ph1::PiLine::make("PiLine13", Logger::Level::debug);
-	line13SP->setParameters(lineResistance13, lineInductance13, lineCapacitance13, lineConductance13);
+	line13SP->setParameters(ThreeBus.lineResistance13, ThreeBus.lineInductance13, ThreeBus.lineCapacitance13, ThreeBus.lineConductance13);
 	//Line23
 	auto line23SP = SP::Ph1::PiLine::make("PiLine23", Logger::Level::debug);
-	line23SP->setParameters(lineResistance23, lineInductance23, lineCapacitance23, lineConductance23);
+	line23SP->setParameters(ThreeBus.lineResistance23, ThreeBus.lineInductance23, ThreeBus.lineCapacitance23, ThreeBus.lineConductance23);
 
-		// Topology
+	// Topology
 	gen1SP->connect({ n1SP });
 	gen2SP->connect({ n2SP });
 	loadSP->connect({ n3SP });
@@ -202,20 +143,22 @@ void SP_SynGenTrStab_3Bus_SteadyState(String simName, Real timeStep, Real finalT
 	loggerSP->addAttribute("i_line13", line13SP->attribute("i_intf"));
 	loggerSP->addAttribute("v_line23", line23SP->attribute("v_intf"));
 	loggerSP->addAttribute("i_line23", line23SP->attribute("i_intf"));
+	loggerSP->addAttribute("Ep_gen1", gen1SP->attribute("Ep_mag"));
 	loggerSP->addAttribute("v_gen1", gen1SP->attribute("v_intf"));
 	loggerSP->addAttribute("i_gen1", gen1SP->attribute("i_intf"));
 	loggerSP->addAttribute("wr_gen1", gen1SP->attribute("w_r"));
 	loggerSP->addAttribute("delta_gen1", gen1SP->attribute("delta_r"));
-	loggerSP->addAttribute("Ep_gen1", gen1SP->attribute("Ep_mag"));
+	loggerSP->addAttribute("Ep_gen2", gen2SP->attribute("Ep_mag"));
 	loggerSP->addAttribute("v_gen2", gen2SP->attribute("v_intf"));
 	loggerSP->addAttribute("i_gen2", gen2SP->attribute("i_intf"));
-	loggerSP->addAttribute("wr_gen2", gen2SP->attribute("w_r"));
-	loggerSP->addAttribute("delta_gen2", gen2SP->attribute("delta_r"));
-	loggerSP->addAttribute("Ep_gen2", gen2SP->attribute("Ep_mag"));
-	////ADD LOAD v_intf & i_intf to log attributes
-	// loggerSP->addAttribute("v_load", loadSP->attribute("v_intf"));
-	// loggerSP->addAttribute("i_load", loadSP->attribute("i_intf"));
-
+	loggerSP->addAttribute("wr_gen2", gen2SP->attribute("w_r"));	
+	loggerSP->addAttribute("wref_gen2", gen2SP->attribute("w_ref"));
+	loggerSP->addAttribute("delta_gen2", gen2SP->attribute("delta_r"));	
+	loggerSP->addAttribute("v_load", loadSP->attribute("v_intf"));
+	loggerSP->addAttribute("i_load", loadSP->attribute("i_intf"));
+	loggerSP->addAttribute("P_mech1", gen1SP->attribute("P_mech"));
+	loggerSP->addAttribute("P_mech2", gen2SP->attribute("P_mech"));
+	loggerSP->addAttribute("P_elec1", gen1SP->attribute("P_elec"));
 	loggerSP->addAttribute("P_elec2", gen2SP->attribute("P_elec"));
 
 	Simulation sim(simNameSP, Logger::Level::debug);
@@ -233,13 +176,28 @@ int main(int argc, char* argv[]) {
 
 	//Simultion parameters
 	String simName="SP_SynGenTrStab_3Bus_SteadyState";
-	Real finalTime = 10;
+	Real finalTime = 30;
 	Real timeStep = 0.001;
-	Bool startFaultEvent=false;
-	Bool endFaultEvent=false;
-	Real startTimeFault=10;
-	Real endTimeFault=10.1;
-	Real cmdInertia= 1.0;
+	Real cmdInertia_G1= 1.0;
+	Real cmdInertia_G2= 1.0;
+	Real cmdDamping_G1=1.0;
+	Real cmdDamping_G2=1.0;
 
-	SP_SynGenTrStab_3Bus_SteadyState(simName, timeStep, finalTime, startFaultEvent, endFaultEvent, startTimeFault, endTimeFault, cmdInertia);
+		CommandLineArgs args(argc, argv);
+	if (argc > 1) {
+		timeStep = args.timeStep;
+		finalTime = args.duration;
+		if (args.name != "dpsim")
+			simName = args.name;
+		if (args.options.find("SCALEINERTIA_G1") != args.options.end())
+			cmdInertia_G1 = args.options["SCALEINERTIA_G1"];
+		if (args.options.find("SCALEINERTIA_G2") != args.options.end())
+			cmdInertia_G2 = args.options["SCALEINERTIA_G2"];
+		if (args.options.find("SCALEDAMPING_G1") != args.options.end())
+			cmdDamping_G1 = args.options["SCALEDAMPING_G1"];
+		if (args.options.find("SCALEDAMPING_G2") != args.options.end())
+			cmdDamping_G2 = args.options["SCALEDAMPING_G2"];
+	}
+
+	SP_SynGenTrStab_3Bus_SteadyState(simName, timeStep, finalTime, cmdInertia_G1, cmdInertia_G2, cmdDamping_G1, cmdDamping_G2);
 }

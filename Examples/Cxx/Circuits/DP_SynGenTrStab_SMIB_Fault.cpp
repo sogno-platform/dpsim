@@ -1,47 +1,18 @@
 #include <DPsim.h>
-
+#include "../Examples.h"
 
 using namespace DPsim;
 using namespace CPS;
+using namespace CIM::Examples::Grids::SMIB;
 
-
-//-----------Power system-----------//
-//Voltage level as Base Voltage
-Real Vnom = 230e3;
-
-//-----------Generator-----------//
-Real nomPower = 500e6;
-Real nomPhPhVoltRMS = 22e3;
-Real nomFreq = 60;
-Real nomOmega= nomFreq* 2*PI;
-Real H = 5;
-Real Xpd=0.31;
-Real Rs = 0.003*0;
-Real D = 1.5;
-// Initialization parameters
-Real initMechPower= 300e6;
-Real initActivePower = 300e6;
-Real setPointVoltage=nomPhPhVoltRMS + 0.05*nomPhPhVoltRMS;
-
-//-----------Transformer-----------//
-Real t_ratio=Vnom/nomPhPhVoltRMS;
-
-//PiLine parameters calculated from CIGRE Benchmark system
-Real lineResistance = 6.7;
-Real lineInductance = 47./nomOmega;
-Real lineCapacitance = 3.42e-4/nomOmega;
-Real lineConductance =0;
-
-// Parameters for powerflow initialization
-// Slack voltage: 1pu
-Real Vslack = Vnom;
+ScenarioConfig smib;
 
 //Switch to trigger fault at generator terminal
 Real SwitchOpen = 1e6;
 Real SwitchClosed = 0.1;
 
 void DP_1ph_SynGenTrStab_Fault(String simName, Real timeStep, Real finalTime, bool startFaultEvent, bool endFaultEvent, Real startTimeFault, Real endTimeFault, Real cmdInertia, Real cmdDamping) {
-	//  // ----- POWERFLOW FOR INITIALIZATION -----
+	// ----- POWERFLOW FOR INITIALIZATION -----
 	Real timeStepPF = finalTime;
 	Real finalTimePF = finalTime+timeStepPF;
 	String simNamePF = simName + "_PF";
@@ -54,20 +25,20 @@ void DP_1ph_SynGenTrStab_Fault(String simName, Real timeStep, Real finalTime, bo
 	//Synchronous generator ideal model
 	auto genPF = SP::Ph1::SynchronGenerator::make("Generator", Logger::Level::debug);
 	// setPointVoltage is defined as the voltage at the transfomer primary side and should be transformed to network side
-	genPF->setParameters(nomPower, nomPhPhVoltRMS, initActivePower, setPointVoltage*t_ratio, PowerflowBusType::PV);
-	genPF->setBaseVoltage(Vnom);
+	genPF->setParameters(smib.nomPower, smib.nomPhPhVoltRMS, smib.initActivePower, smib.setPointVoltage*smib.t_ratio, PowerflowBusType::PV);
+	genPF->setBaseVoltage(smib.Vnom);
 	genPF->modifyPowerFlowBusType(PowerflowBusType::PV);
 
 	//Grid bus as Slack
 	auto extnetPF = SP::Ph1::NetworkInjection::make("Slack", Logger::Level::debug);
-	extnetPF->setParameters(Vslack);
-	extnetPF->setBaseVoltage(Vnom);
+	extnetPF->setParameters(smib.Vnom);
+	extnetPF->setBaseVoltage(smib.Vnom);
 	extnetPF->modifyPowerFlowBusType(PowerflowBusType::VD);
 	
 	//Line
 	auto linePF = SP::Ph1::PiLine::make("PiLine", Logger::Level::debug);
-	linePF->setParameters(lineResistance, lineInductance, lineCapacitance, lineConductance);
-	linePF->setBaseVoltage(Vnom);
+	linePF->setParameters(smib.lineResistance, smib.lineInductance, smib.lineCapacitance, smib.lineConductance);
+	linePF->setBaseVoltage(smib.Vnom);
 
 	//Switch
 	auto faultPF = CPS::SP::Ph1::Switch::make("Br_fault", Logger::Level::debug);
@@ -110,23 +81,24 @@ void DP_1ph_SynGenTrStab_Fault(String simName, Real timeStep, Real finalTime, bo
 	// Components
 	auto genDP = DP::Ph1::SynchronGeneratorTrStab::make("SynGen", Logger::Level::debug);
 	// Xpd is given in p.u of generator base at transfomer primary side and should be transformed to network side
-	genDP->setStandardParametersPU(nomPower, nomPhPhVoltRMS, nomFreq, Xpd*std::pow(t_ratio,2), cmdInertia*H, Rs, cmdDamping*D );
+	genDP->setStandardParametersPU(smib.nomPower, smib.nomPhPhVoltRMS, smib.nomFreq, smib.Xpd*std::pow(smib.t_ratio,2), cmdInertia*smib.H, smib.Rs, cmdDamping*smib.D );
 	// Get actual active and reactive power of generator's Terminal from Powerflow solution
 	Complex initApparentPower= genPF->getApparentPower();
-	genDP->setInitialValues(initApparentPower, initMechPower);
+	genDP->setInitialValues(initApparentPower, smib.initMechPower);
 
 	//Grid bus as Slack
 	auto extnetDP = DP::Ph1::NetworkInjection::make("Slack", Logger::Level::debug);
-	// extnetDP->setParameters(Vslack);
+	extnetDP->setParameters(smib.Vnom);
 	// Line
 	auto lineDP = DP::Ph1::PiLine::make("PiLine", Logger::Level::debug);
-	lineDP->setParameters(lineResistance, lineInductance, lineCapacitance, lineConductance);
+	lineDP->setParameters(smib.lineResistance, smib.lineInductance, smib.lineCapacitance, smib.lineConductance);
+	
 	// //Switch
 	// auto faultDP = DP::Ph1::Switch::make("Br_fault", Logger::Level::debug);
 	// faultDP->setParameters(SwitchOpen, SwitchClosed);
 	// faultDP->open();
 
-	//Switch
+	// Variable resistance Switch
 	auto faultDP = DP::Ph1::varResSwitch::make("Br_fault", Logger::Level::debug);
 	faultDP->setParameters(SwitchOpen, SwitchClosed);
 	faultDP->setInitParameters(timeStep);
@@ -168,7 +140,6 @@ void DP_1ph_SynGenTrStab_Fault(String simName, Real timeStep, Real finalTime, bo
 	loggerDP->addAttribute("i_slack", extnetDP->attribute("i_intf"));
 
 
-
 	Simulation simDP(simNameDP, Logger::Level::debug);
 	simDP.setSystem(systemDP);
 	simDP.setTimeStep(timeStep);
@@ -199,7 +170,7 @@ int main(int argc, char* argv[]) {
 
 	//Simultion parameters
 	String simName="DP_SynGenTrStab_SMIB_Fault";
-	Real finalTime = 20;
+	Real finalTime = 30;
 	Real timeStep = 0.001;
 	Bool startFaultEvent=true;
 	Bool endFaultEvent=true;
@@ -216,14 +187,13 @@ int main(int argc, char* argv[]) {
 			simName = args.name;
 		if (args.options.find("SCALEINERTIA") != args.options.end())
 			cmdInertia = args.options["SCALEINERTIA"];
+		if (args.options.find("SCALEDAMPING") != args.options.end())
+			cmdDamping = args.options["SCALEDAMPING"];
 		if (args.options.find("STARTTIMEFAULT") != args.options.end())
 			startTimeFault = args.options["STARTTIMEFAULT"];
 		if (args.options.find("ENDTIMEFAULT") != args.options.end())
-			endTimeFault = args.options["ENDTIMEFAULT"];
-		if (args.options.find("SCALEDAMPING") != args.options.end())
-			cmdDamping = args.options["SCALEDAMPING"];		
+			endTimeFault = args.options["ENDTIMEFAULT"];	
 	}
-
 
 	DP_1ph_SynGenTrStab_Fault(simName, timeStep, finalTime, startFaultEvent, endFaultEvent, startTimeFault, endTimeFault, cmdInertia, cmdDamping);
 }

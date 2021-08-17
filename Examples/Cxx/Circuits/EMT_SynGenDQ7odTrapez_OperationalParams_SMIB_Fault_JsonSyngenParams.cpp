@@ -7,6 +7,7 @@
 using namespace DPsim;
 using namespace CPS;
 using namespace CPS::CIM;
+using namespace Examples::Grids;
 using namespace Examples::Components;
 using json = nlohmann::json;
 using syngenParametersKundur = Examples::Components::SynchronousGeneratorKundur::MachineParameters;

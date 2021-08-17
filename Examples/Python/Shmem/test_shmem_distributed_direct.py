@@ -56,3 +56,6 @@ def test_ShmemDistributedDirect():
 
     left_thread.join()
     right_thread.join()
+
+if __name__ == '__main__':
+    test_ShmemDistributedDirect()

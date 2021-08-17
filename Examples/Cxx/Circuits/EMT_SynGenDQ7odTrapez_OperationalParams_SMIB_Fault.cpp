@@ -42,7 +42,7 @@ int main(int argc, char* argv[]) {
 	Real BreakerClosed = 0.001;
 
 	// Line 
-	const Examples::Components::CIGREHVAmerican::LineParameters lineCIGREHV;
+	const Examples::Grids::CIGREHVAmerican::LineParameters lineCIGREHV;
 	Real lineLength = 100;
 	Real lineResistance = lineCIGREHV.lineResistancePerKm*lineLength*std::pow(ratio,2); // HV parameters referred to MV side
 	Real lineInductance = lineCIGREHV.lineReactancePerKm*lineLength*std::pow(ratio,2)/nomOmega;
