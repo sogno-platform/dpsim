@@ -35,10 +35,10 @@ int main(int argc, char *argv[]) {
 
 	String simName = "Shmem_WSCC-9bus";
 
-	CIMReader reader(simName, Logger::Level::info, Logger::Level::info);
+	CIMReader reader(simName, CPS::Logger::Level::info, CPS::Logger::Level::info);
 	SystemTopology sys = reader.loadCIM(60, filenames);
 
-	RealTimeSimulation sim(simName, Logger::Level::debug);
+	RealTimeSimulation sim(simName, CPS::Logger::Level::debug);
 	sim.setSystem(sys);
 	sim.setTimeStep(0.001);
 	sim.setFinalTime(120);

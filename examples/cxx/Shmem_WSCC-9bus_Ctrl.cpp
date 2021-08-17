@@ -43,9 +43,9 @@ int main(int argc, char *argv[]) {
 	}
 
 	String simName = "Shmem_WSCC-9bus_Ctrl";
-	Logger::setLogDir("logs/"+simName);
+	CPS::Logger::setLogDir("logs/"+simName);
 
-	CPS::CIM::Reader reader(simName, Logger::Level::info, Logger::Level::off);
+	CPS::CIM::Reader reader(simName, CPS::Logger::Level::info, CPS::Logger::Level::off);
 	SystemTopology sys = reader.loadCIM(60, filenames);
 
 	// Extend system with controllable load (Profile)
@@ -64,16 +64,16 @@ int main(int argc, char *argv[]) {
 	std::vector<Real> coefficients_profile = std::vector<Real>(2000, 1./2000);
 	std::vector<Real> coefficients = std::vector<Real>(100, 1./100);
 
-	auto filtP_profile = FIRFilter::make("filter_p_profile", coefficients_profile, 0, Logger::Level::off);
+	auto filtP_profile = FIRFilter::make("filter_p_profile", coefficients_profile, 0, CPS::Logger::Level::off);
 	load_profile->setAttributeRef("P", filtP_profile->attribute<Real>("output"));
 
 	sys.mComponents.push_back(filtP_profile);
 
-	auto filtP = FIRFilter::make("filter_p", coefficients, 0, Logger::Level::off);
+	auto filtP = FIRFilter::make("filter_p", coefficients, 0, CPS::Logger::Level::off);
 	load->setAttributeRef("P", filtP->attribute<Real>("output"));
 	sys.mComponents.push_back(filtP);
 
-	RealTimeSimulation sim(simName, Logger::Level::off);
+	RealTimeSimulation sim(simName, CPS::Logger::Level::off);
 	sim.setSystem(sys);
 	sim.setTimeStep(args.timeStep);
 	sim.setFinalTime(args.duration);

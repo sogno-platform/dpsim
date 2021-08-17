@@ -54,18 +54,18 @@ int main(int argc, char *argv[]) {
 
 	if (String(argv[1]) == "0") {
 		String simName = "ShmemDistributedDirect_1";
-		Logger::setLogDir("logs/"+simName);
+		CPS::Logger::setLogDir("logs/"+simName);
 
 		// Nodes
 		auto n1 = SimNode::make("n1", PhaseType::Single, std::vector<Complex>{ 10 });
 		auto n2 = SimNode::make("n2", PhaseType::Single, std::vector<Complex>{ 5 });
 
 		// Components
-		auto evs = VoltageSource::make("v_intf", Logger::Level::debug);
+		auto evs = VoltageSource::make("v_intf", CPS::Logger::Level::debug);
 		evs->setParameters(Complex(5, 0));
-		auto vs1 = VoltageSource::make("vs_1", Logger::Level::debug);
+		auto vs1 = VoltageSource::make("vs_1", CPS::Logger::Level::debug);
 		vs1->setParameters(Complex(10, 0));
-		auto r12 = Resistor::make("r_12", Logger::Level::debug);
+		auto r12 = Resistor::make("r_12", CPS::Logger::Level::debug);
 		r12->setParameters(1);
 
 		// Connections
@@ -106,15 +106,15 @@ int main(int argc, char *argv[]) {
 	}
 	else if (String(argv[1]) == "1") {
 		String simName = "ShmemDistributedDirect_2";
-		Logger::setLogDir("logs/"+simName);
+		CPS::Logger::setLogDir("logs/"+simName);
 
 		// Nodes
 		auto n2 = SimNode::make("n2", PhaseType::Single, std::vector<Complex>{ 5 });
 
 		// Components
-		auto ecs = CurrentSource::make("i_intf", Logger::Level::debug);
+		auto ecs = CurrentSource::make("i_intf", CPS::Logger::Level::debug);
 		ecs->setParameters(Complex(5, 0));
-		auto r02 = Resistor::make("r_02", Logger::Level::debug);
+		auto r02 = Resistor::make("r_02", CPS::Logger::Level::debug);
 		r02->setParameters(1);
 
 		// Connections

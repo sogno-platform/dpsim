@@ -114,7 +114,7 @@ void InterfaceShmem::writeValues() {
 		}
 
 		sample->sequence = mSequence++;
-		sample->flags |= (int) SampleFlags::HAS_DATA;
+		sample->flags |= (int) villas::node::SampleFlags::HAS_DATA;
 		clock_gettime(CLOCK_REALTIME, &sample->ts.origin);
 		done = true;
 
@@ -240,7 +240,7 @@ void InterfaceShmem::exportInt(Attribute<Int>::Ptr attr, UInt idx, const std::st
 		smp->data[idx].i = attr->getByValue();
 	});
 	mExportAttrs.push_back(attr);
-	mExportSignals[idx] = Signal(idx, SignalType::INTEGER, name, unit);
+	mExportSignals[idx] = Signal(idx, villas::node::SignalType::INTEGER, name, unit);
 }
 
 void InterfaceShmem::exportReal(Attribute<Real>::Ptr attr, UInt idx, const std::string &name, const std::string &unit) {
@@ -253,7 +253,7 @@ void InterfaceShmem::exportReal(Attribute<Real>::Ptr attr, UInt idx, const std::
 		smp->data[idx].f = attr->getByValue();
 	});
 	mExportAttrs.push_back(attr);
-	mExportSignals[idx] = Signal(idx, SignalType::FLOAT, name, unit);
+	mExportSignals[idx] = Signal(idx, villas::node::SignalType::FLOAT, name, unit);
 }
 
 void InterfaceShmem::exportBool(Attribute<Bool>::Ptr attr, UInt idx, const std::string &name, const std::string &unit) {
@@ -266,7 +266,7 @@ void InterfaceShmem::exportBool(Attribute<Bool>::Ptr attr, UInt idx, const std::
 		smp->data[idx].b = attr->getByValue();
 	});
 	mExportAttrs.push_back(attr);
-	mExportSignals[idx] = Signal(idx, SignalType::BOOLEAN, name, unit);
+	mExportSignals[idx] = Signal(idx, villas::node::SignalType::BOOLEAN, name, unit);
 }
 
 void InterfaceShmem::exportComplex(Attribute<Complex>::Ptr attr, UInt idx, const std::string &name, const std::string &unit) {
@@ -283,7 +283,7 @@ void InterfaceShmem::exportComplex(Attribute<Complex>::Ptr attr, UInt idx, const
 		z[1] = y.imag();
 	});
 	mExportAttrs.push_back(attr);
-	mExportSignals[idx] = Signal(idx, SignalType::COMPLEX, name, unit);
+	mExportSignals[idx] = Signal(idx, villas::node::SignalType::COMPLEX, name, unit);
 }
 
 Task::List InterfaceShmem::getTasks() {

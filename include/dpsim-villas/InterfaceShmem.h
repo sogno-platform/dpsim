@@ -26,8 +26,10 @@
 #include <cps/PtrFactory.h>
 #include <dpsim/Interface.h>
 
-#include <villas/sample.h>
-#include <villas/shmem.h>
+#include <villas/sample.hpp>
+#include <villas/shmem.hpp>
+
+using namespace villas;
 
 namespace DPsim {
 	/// Shmem interface used in combination with VILLAS
@@ -37,9 +39,9 @@ namespace DPsim {
 
 	public:
 		typedef std::shared_ptr<InterfaceShmem> Ptr;
-		typedef struct ::sample Sample;
-		typedef struct ::shmem_conf Config;
-		typedef struct ::shmem_int ShmemInt;
+		typedef struct node::Sample Sample;
+		typedef struct node::ShmemConfig Config;
+		typedef struct node::ShmemInterface ShmemInt;
 
 	protected:
 		// Using std::function / lambda makes the other template code nicer, but from
@@ -71,10 +73,10 @@ namespace DPsim {
 			public:
 			std::string mName;
 			std::string mUnit;
-			SignalType mType;
+			node::SignalType mType;
 
 			Signal() {}
-			Signal(UInt idx, enum SignalType type, const std::string &name="", const std::string &unit="") :
+			Signal(UInt idx, enum node::SignalType type, const std::string &name="", const std::string &unit="") :
 				mName(name),
 				mUnit(unit),
 				mType(type) {

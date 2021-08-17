@@ -45,20 +45,20 @@ int main(int argc, char *argv[]) {
 			filenames = args.positionalPaths();
 		}
 
-		CIM::Reader reader(args.name, Logger::Level::info, Logger::Level::info);
+		CIM::Reader reader(args.name, CPS::Logger::Level::info, CPS::Logger::Level::info);
 		SystemTopology sys = reader.loadCIM(args.sysFreq, filenames);
 
 		// Extend system with controllable load (Profile)
-		auto load_profile = PQLoadCS::make("load_cs_profile", 0, 0, 230000, Logger::Level::info);
+		auto load_profile = PQLoadCS::make("load_cs_profile", 0, 0, 230000, CPS::Logger::Level::info);
 		load_profile->connect({ sys.node<DP::SimNode>("BUS7") });
 		sys.mComponents.push_back(load_profile);
 
 		// Extend system with controllable load
-		auto ecs = CurrentSource::make("i_intf", Complex(0, 0), Logger::Level::debug);
+		auto ecs = CurrentSource::make("i_intf", Complex(0, 0), CPS::Logger::Level::debug);
 		ecs->connect({ sys.node<DP::SimNode>("BUS4"), DP::SimNode::GND });
 		sys.mComponents.push_back(ecs);
 
-		RealTimeSimulation sim(args.name + "_1", Logger::Level::debug);
+		RealTimeSimulation sim(args.name + "_1", CPS::Logger::Level::debug);
 		sim.setSystem(sys);
 		sim.setTimeStep(args.timeStep);
 		sim.setFinalTime(args.duration);
@@ -74,7 +74,7 @@ int main(int argc, char *argv[]) {
 		// Controllers and filter
 		std::vector<Real> coefficients_profile = std::vector<Real>(2000, 1./2000);
 
-		auto filtP_profile = FIRFilter::make("filter_p_profile", coefficients_profile, 0, Logger::Level::info);
+		auto filtP_profile = FIRFilter::make("filter_p_profile", coefficients_profile, 0, CPS::Logger::Level::info);
 		load_profile->setAttributeRef("power_active", filtP_profile->attribute<Real>("output"));
 		sys.mComponents.push_back(filtP_profile);
 
@@ -112,7 +112,7 @@ int main(int argc, char *argv[]) {
 		auto n1 = DP::SimNode::make("n1", PhaseType::Single, std::vector<Complex>({Complex(02.180675e+05, -1.583367e+04)}));
 
 		// Add interface voltage source
-		auto evs = VoltageSource::make("v_intf", Logger::Level::debug);
+		auto evs = VoltageSource::make("v_intf", CPS::Logger::Level::debug);
 		evs->setParameters(Complex(0, 0));
 		evs->connect({ DP::SimNode::GND, n1 });
 
@@ -122,7 +122,7 @@ int main(int argc, char *argv[]) {
 
 		// Controllers and filter
 		std::vector<Real> coefficients = std::vector<Real>(100, 1./100);
-		auto filtP = FIRFilter::make("filter_p", coefficients, 0, Logger::Level::info);
+		auto filtP = FIRFilter::make("filter_p", coefficients, 0, CPS::Logger::Level::info);
 		load->setAttributeRef("active_power", filtP->attribute<Real>("output"));
 
 		auto sys = SystemTopology(args.sysFreq, SystemNodeList{n1}, SystemComponentList{evs, load, filtP});

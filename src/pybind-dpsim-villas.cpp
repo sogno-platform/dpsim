@@ -42,7 +42,7 @@ public:
 			try {
 				s = mExportSignals.at(i);
 			} catch(std::out_of_range &) {
-				s = Signal(i, SignalType::FLOAT);
+				s = Signal(i, villas::node::SignalType::FLOAT);
 			}
 
 			auto signal = py::dict(
@@ -79,5 +79,4 @@ PYBIND11_MODULE(dpsimpyvillas, m) {
 	py::class_<PyInterfaceShmem>(m, "InterfaceShmem", interface)
 	    .def(py::init<const CPS::String&, const CPS::String&>(), py::arg("shmwrite") = "/dpsim-villas", py::arg("shmread") = "/villas-dpsim")
 		.def("get_config", &PyInterfaceShmem::getConfig);
-
 }

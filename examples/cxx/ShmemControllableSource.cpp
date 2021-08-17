@@ -45,7 +45,7 @@ int main(int argc, char *argv[]) {
 
 	auto sys = SystemTopology(50, SystemNodeList{n1}, SystemComponentList{ecs, r1});
 	
-	RealTimeSimulation sim(simName, Logger::Level::info);
+	RealTimeSimulation sim(simName, CPS::Logger::Level::info);
 	sim.setSystem(sys);
 	sim.setTimeStep(timeStep);
 	sim.setFinalTime(finalTime);

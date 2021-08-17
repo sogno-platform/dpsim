@@ -27,7 +27,7 @@ int main(int argc, char* argv[]) {
 	// Very simple test circuit. Just a few resistors and an inductance.
 	// Voltage is read from VILLASnode and current through everything is written back.
 	String simName = "Shmem_Example";
-	Logger::setLogDir("logs/"+simName);
+	CPS::Logger::setLogDir("logs/"+simName);
 	Real timeStep = 0.001;
 
 	// Nodes
