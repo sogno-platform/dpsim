@@ -29,119 +29,19 @@ using namespace DPsim;
 void InterfaceVillas::open(CPS::Logger::Log log) {
 	mLog = log;
 
-	mLog->info("Opening InterfaceVillas: {} <-> {}", mWName, mRName);
-
-	if (shmem_int_open(mWName.c_str(), mRName.c_str(), &mShmem, &mConf) < 0) {
-		mLog->error("Failed to open/map shared memory object");
-		std::exit(1);
-	}
-
-	mLog->info("Opened InterfaceVillas: {} <-> {}", mWName, mRName);
-
-	mSequence = 0;
-
-	if (shmem_int_alloc(&mShmem, &mLastSample, 1) < 0) {
-		mLog->info("Failed to allocate single sample from pool");
-		close();
-		std::exit(1);
-	}
-
-	mLastSample->sequence = 0;
-	mLastSample->ts.origin.tv_sec = 0;
-	mLastSample->ts.origin.tv_nsec = 0;
-
-	std::memset(&mLastSample->data, 0, mLastSample->capacity * sizeof(float));
+	mLog->info("Opening InterfaceVillas...");
 }
 
 void InterfaceVillas::close() {
-	shmem_int_close(&mShmem);
+	mLog->info("Closing InterfaceVillas...");
 }
 
 void InterfaceVillas::readValues(bool blocking) {
-	Sample *sample = nullptr;
-	int ret = 0;
-	try {
-		if (!blocking) {
-			// Check if theres actually data available
-			ret = queue_signalled_available(&mShmem.read.shared->queue);
-			if (ret <= 0)
-				return;
-
-			ret = shmem_int_read(&mShmem, &sample, 1);
-			if (ret == 0)
-				return;
-		}
-		else {
-			while (ret == 0)
-				ret = shmem_int_read(&mShmem, &sample, 1);
-		}
-		if (ret < 0) {
-			mLog->error("Fatal error: failed to read sample from InterfaceVillas");
-			close();
-			std::exit(1);
-		}
-
-		for (auto imp : mImports) {
-			imp(sample);
-		}
-
-		sample_decref(sample);
-	}
-	catch (std::exception& exc) {
-		/* probably won't happen (if the timer expires while we're still reading data,
-		 * we have a bigger problem somewhere else), but nevertheless, make sure that
-		 * we're not leaking memory from the queue pool */
-		if (sample)
-			sample_decref(sample);
-
-		throw exc;
-	}
+	
 }
 
 void InterfaceVillas::writeValues() {
-	Sample *sample = nullptr;
-	Int ret = 0;
-	bool done = false;
-	try {
-		if (shmem_int_alloc(&mShmem, &sample, 1) < 1) {
-			mLog->error("Fatal error: pool underrun in: {} <-> {} at sequence no {}", mWName, mRName, mSequence);
-			close();
-			std::exit(1);
-		}
-
-		for (auto exp : mExports) {
-			exp(sample);
-		}
-
-		sample->sequence = mSequence++;
-		sample->flags |= (int) villas::node::SampleFlags::HAS_DATA;
-		clock_gettime(CLOCK_REALTIME, &sample->ts.origin);
-		done = true;
-
-		do {
-			ret = shmem_int_write(&mShmem, &sample, 1);
-		} while (ret == 0);
-		if (ret < 0)
-			mLog->error("Failed to write samples to InterfaceVillas");
-
-		sample_copy(mLastSample, sample);
-	}
-	catch (std::exception& exc) {
-		/* We need to at least send something, so determine where exactly the
-		 * timer expired and either resend the last successfully sent sample or
-		 * just try to send this one again.
-		 * TODO: can this be handled better? */
-		if (!done)
-			sample = mLastSample;
-
-		while (ret == 0)
-			ret = shmem_int_write(&mShmem, &sample, 1);
-
-		if (ret < 0)
-			mLog->error("Failed to write samples to InterfaceVillas");
-
-		/* Don't throw here, because we managed to send something */
-	}
+	
 }
 
 void InterfaceVillas::PreStep::execute(Real time, Int timeStepCount) {

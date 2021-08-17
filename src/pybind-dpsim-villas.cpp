@@ -78,50 +78,6 @@ class PyInterfaceVillas : public DPsim::InterfaceVillas {
 
 public:
 	using DPsim::InterfaceVillas::InterfaceVillas;
-
-	py::dict getConfig() {
-		auto signals = std::list<py::dict>();
-
-		int maxIdx = 0;
-		for (auto const& a : mExportSignals) {
-			if (a.first > maxIdx)
-				maxIdx = a.first;
-		}
-
-		for (int i = 0; i <= maxIdx; i++) {
-			Signal s;
-			try {
-				s = mExportSignals.at(i);
-			} catch(std::out_of_range &) {
-				s = Signal(i, villas::node::SignalType::FLOAT);
-			}
-
-			auto signal = py::dict(
-				"name"_a = s.mName,
-				"type"_a = signal_type_to_str(s.mType)
-			);
-
-			if (!s.mUnit.empty()) {
-				signal["unit"] = s.mUnit;
-			}
-
-			signals.push_back(signal);
-		}
-
-		return py::dict(
-			"type"_a = "shmem",
-			"queuelen"_a = mConf.queuelen,
-			"samplelen"_a = mConf.samplelen,
-			"mode"_a = mConf.polling ? "polling" : "pthread",
-			"in"_a = py::dict(
-				"name"_a = mWName,
-				"signals"_a = signals
-			),
-			"out"_a = py::dict(
-				"name"_a = mRName
-			)
-		);
-	}
 };
 
 PYBIND11_MODULE(dpsimpyvillas, m) {
@@ -132,6 +88,5 @@ PYBIND11_MODULE(dpsimpyvillas, m) {
 		.def("get_config", &PyInterfaceShmem::getConfig);
 
 	py::class_<PyInterfaceVillas>(m, "InterfaceVillas", interface)
-	    .def(py::init<const CPS::String&, const CPS::String&>(), py::arg("shmwrite") = "/dpsim-villas", py::arg("shmread") = "/villas-dpsim")
-		.def("get_config", &PyInterfaceVillas::getConfig);
+	    .def(py::init<const CPS::String&>());
 }

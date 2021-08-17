@@ -27,7 +27,7 @@
 #include <dpsim/Interface.h>
 
 #include <villas/sample.hpp>
-#include <villas/shmem.hpp>
+#include <villas/node.hpp>
 
 using namespace villas;
 
@@ -39,8 +39,6 @@ namespace DPsim {
 	public:
 		typedef std::shared_ptr<InterfaceVillas> Ptr;
 		typedef struct node::Sample Sample;
-		typedef struct node::ShmemConfig Config;
-		typedef struct node::ShmemInterface ShmemInt;
 
 	protected:
 		// Using std::function / lambda makes the other template code nicer, but from
@@ -53,17 +51,16 @@ namespace DPsim {
 		std::vector<std::function<void(Sample*)>> mExports, mImports;
 		CPS::AttributeBase::List mExportAttrs, mImportAttrs;
 
-		ShmemInt mShmem;
+		//VillasNode instance
+		//node::Node mNode;
 		Sample *mLastSample;
-
+		String mName;
 		bool mOpened;
 		int mSequence;
-		String mRName, mWName;
-		Config mConf;
 
 		CPS::Logger::Log mLog;
 
-		/// Is this InterfaceVillas used for synchorinzation?
+		/// Is this InterfaceVillas used for synchronization?
 		bool mSync;
 		/// Downsampling
 		UInt mDownsampling;
@@ -92,7 +89,7 @@ namespace DPsim {
 		class PreStep : public CPS::Task {
 		public:
 			PreStep(InterfaceVillas& intf) :
-				Task(intf.mRName + ".Read"), mIntf(intf) {
+				Task(intf.mName + ".Read"), mIntf(intf) {
 				for (auto attr : intf.mImportAttrs) {
 					mModifiedAttributes.push_back(attr);
 				}
@@ -108,7 +105,7 @@ namespace DPsim {
 		class PostStep : public CPS::Task {
 		public:
 			PostStep(InterfaceVillas& intf) :
-				Task(intf.mWName + ".Write"), mIntf(intf) {
+				Task(intf.mName+ ".Write"), mIntf(intf) {
 				for (auto attr : intf.mExportAttrs) {
 					mAttributeDependencies.push_back(attr);
 				}
@@ -121,26 +118,16 @@ namespace DPsim {
 			InterfaceVillas& mIntf;
 		};
 
-		/** Create a InterfaceVillas with a specific configuration for the output queue.
+		/** Create a InterfaceVillas with a specific configuration for the VillasNode
 		 *
-		 * @param wname The name of the POSIX shmem object where samples will be written to.
-		 * @param rname The name of the POSIX shmem object where samples will be read from.
-		 * @param conf The configuration object for the output queue (see VILLASnode's documentation), or nullptr for sensible defaults.
+		 * @param name The name of the newly created VillasNode
 		 */
-		InterfaceVillas(const String &wn, const String &rn, Config *conf = nullptr, Bool sync = true, UInt downsampling = 1) :
+		InterfaceVillas(const String &name, Bool sync = true, UInt downsampling = 1) :
+			mName(name),
 			mOpened(false),
-			mRName(rn),
-			mWName(wn),
 			mSync(sync),
 			mDownsampling(downsampling)
 		{
-			if (conf != nullptr) {
-				mConf = *conf;
-			} else {
-				mConf.queuelen = 512;
-				mConf.samplelen = 64;
-				mConf.polling = 0;
-			}
 		}
 
 		~InterfaceVillas() {
