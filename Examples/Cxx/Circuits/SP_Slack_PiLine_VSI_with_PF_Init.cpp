@@ -14,7 +14,7 @@ using namespace CPS;
 
 int main(int argc, char* argv[]) {
 
-	CIM::Examples::SGIB::ScenarioConfig scenario;
+	CIM::Examples::Grids::SGIB::ScenarioConfig scenario;
 	
 	Real finalTime = 1;
 	Real timeStep = 0.0001;
@@ -128,10 +128,10 @@ int main(int argc, char* argv[]) {
 	loggerSP->addAttribute("v2", n2SP->attribute("v"));
 	loggerSP->addAttribute("i12", lineSP->attribute("i_intf"));
 
-	CIM::Examples::CIGREMV::logPVAttributes(loggerSP, pv);
+	CIM::Examples::Grids::CIGREMV::logPVAttributes(loggerSP, pv);
 
 	// load step sized in absolute terms
-	// std::shared_ptr<SwitchEvent> loadStepEvent = CIM::Examples::createEventAddPowerConsumption("n2", std::round(5.0/timeStep)*timeStep, 10e6, systemSP, Domain::SP, loggerSP);
+	// std::shared_ptr<SwitchEvent> loadStepEvent = CIM::Examples::Events::createEventAddPowerConsumption("n2", std::round(5.0/timeStep)*timeStep, 10e6, systemSP, Domain::SP, loggerSP);
 
 	// Simulation
 	Simulation sim(simNameSP, Logger::Level::debug);

@@ -12,7 +12,7 @@ int main(int argc, char** argv){
 
 	// Simulation parameters
 	String simName = "DP_CIGRE_MV_withDG";
-	Examples::CIGREMV::ScenarioConfig scenario;
+	Examples::Grids::CIGREMV::ScenarioConfig scenario;
 	std::list<fs::path> filenames;
 	Real timeStep;
 	Real finalTime;
@@ -45,7 +45,7 @@ int main(int argc, char** argv){
 	Logger::setLogDir("logs/" + simNamePF);
     CIM::Reader reader(simNamePF, Logger::Level::debug, Logger::Level::debug);
     SystemTopology systemPF = reader.loadCIM(scenario.systemFrequency, filenames, Domain::SP);
-	Examples::CIGREMV::addInvertersToCIGREMV(systemPF, scenario, Domain::SP);
+	Examples::Grids::CIGREMV::addInvertersToCIGREMV(systemPF, scenario, Domain::SP);
 
 	// define logging
     auto loggerPF = DPsim::DataLogger::make(simNamePF);
@@ -70,7 +70,7 @@ int main(int argc, char** argv){
 	Logger::setLogDir("logs/" + simName);
 	CIM::Reader reader2(simName, Logger::Level::debug, Logger::Level::debug);
     SystemTopology systemDP = reader2.loadCIM(scenario.systemFrequency, filenames, CPS::Domain::DP);
-	Examples::CIGREMV::addInvertersToCIGREMV(systemDP, scenario, Domain::DP);
+	Examples::Grids::CIGREMV::addInvertersToCIGREMV(systemDP, scenario, Domain::DP);
 	reader2.initDynamicSystemTopologyWithPowerflow(systemPF, systemDP);
 
 	auto logger = DPsim::DataLogger::make(simName);
@@ -96,7 +96,7 @@ int main(int argc, char** argv){
 	// log output of PV connected at N11
 	String pv_name = "pv_N11";
 	auto pv = systemDP.component<CPS::SimPowerComp<Complex>>(pv_name);
-	Examples::CIGREMV::logPVAttributes(logger, pv);
+	Examples::Grids::CIGREMV::logPVAttributes(logger, pv);
 
 	Simulation sim(simName, Logger::Level::debug);
 	sim.setSystem(systemDP);
