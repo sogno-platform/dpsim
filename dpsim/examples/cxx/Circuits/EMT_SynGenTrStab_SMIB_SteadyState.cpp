@@ -134,8 +134,8 @@ int main(int argc, char* argv[]) {
 
 	//Simultion parameters
 	String simName="EMT_SynGenTrStab_SMIB_SteadyState";
-	Real finalTime = 2;
-	Real timeStep = 0.00005;
+	Real finalTime = 20;
+	Real timeStep = 0.001;
 	Real cmdInertia= 1.0;
 	Real cmdDamping=1.0;
 

@@ -22,7 +22,8 @@ Matrix EMT::Ph3::SynchronGeneratorTrStab::getParkTransformMatrixPowerInvariant(R
 	// Return park matrix for theta
 	// Assumes that d-axis starts aligned with phase a
 	Matrix Tdq = Matrix::Zero(2, 3);
-	Real k = sqrt(2. / 3.);
+	// Real k = sqrt(2. / 3.);
+	Real k = 2. / 3.; // Assumes that d-axis starts aligned with phase a Eremia pp 26
 	Tdq <<
 		k * cos(theta), k * cos(theta - 2. * M_PI / 3.), k * cos(theta + 2. * M_PI / 3.),
 		-k * sin(theta), -k * sin(theta - 2. * M_PI / 3.), -k * sin(theta + 2. * M_PI / 3.);
@@ -43,6 +44,17 @@ EMT::Ph3::SynchronGeneratorTrStab::SynchronGeneratorTrStab(String uid, String na
 	**mIntfVoltage = Matrix::Zero(3,1);
 	**mIntfCurrent = Matrix::Zero(3,1);
 
+
+	// Register attributes
+	///CHECK: Are all of these used in this class or in subclasses?
+	mRs = Attribute<Real>::create("Rs", mAttributes, 0);
+	mLl = Attribute<Real>::create("Ll", mAttributes, 0);
+	mLd = Attribute<Real>::create("Ld", mAttributes, 0);
+	mLq = Attribute<Real>::create("Lq", mAttributes, 0);
+	mElecActivePower = Attribute<Real>::create("P_elec", mAttributes, 0);
+	mMechPower = Attribute<Real>::create("P_mech", mAttributes, 0);
+	mOmMech = Attribute<Real>::create("w_r", mAttributes, 0);
+	mInertia = Attribute<Real>::create("inertia", mAttributes, 0);
 	mStates = Matrix::Zero(10,1);
 }
 
@@ -158,12 +170,10 @@ void EMT::Ph3::SynchronGeneratorTrStab::initializeFromNodesAndTerminals(Real fre
 	MatrixComp intfVoltageComplex = MatrixComp::Zero(3, 1);
 	MatrixComp intfCurrentComplex = MatrixComp::Zero(3, 1);
 	// // derive complex threephase initialization from single phase initial values (only valid for balanced systems)
-	// intfVoltageComplex(0, 0) = RMS3PH_TO_PEAK1PH * initialSingleVoltage(0);
-	intfVoltageComplex(0, 0) = initialSingleVoltage(0);
+	intfVoltageComplex(0, 0) = RMS3PH_TO_PEAK1PH * initialSingleVoltage(0);
 	intfVoltageComplex(1, 0) = intfVoltageComplex(0, 0) * SHIFT_TO_PHASE_B;
 	intfVoltageComplex(2, 0) = intfVoltageComplex(0, 0) * SHIFT_TO_PHASE_C;
-	// intfCurrentComplex(0, 0) = std::conj(-2./3.*mInitElecPower / intfVoltageComplex(0, 0));
-	intfCurrentComplex(0, 0) = std::conj(-1./3.* mInitElecPower / intfVoltageComplex(0, 0));
+	intfCurrentComplex(0, 0) = -std::conj(2./3.*mInitElecPower / intfVoltageComplex(0, 0));
 	intfCurrentComplex(1, 0) = intfCurrentComplex(0, 0) * SHIFT_TO_PHASE_B;
 	intfCurrentComplex(2, 0) = intfCurrentComplex(0, 0) * SHIFT_TO_PHASE_C;
 
@@ -181,11 +191,12 @@ void EMT::Ph3::SynchronGeneratorTrStab::initializeFromNodesAndTerminals(Real fre
 	// Delta_p is the angular position of mEp with respect to the synchronously rotating reference
 	**mDelta_p= Math::phase(**mEp);
 
-	// // Update active electrical power that is compared with the mechanical power
-	mElecActivePower = ( 3. * intfVoltageComplex(0,0) *  std::conj( - intfCurrentComplex(0,0)) ).real();
-	// mElecActivePower = ( (mEp - mIntfVoltage(0,0)) / mImpedance *  mIntfVoltage(0,0) ).real();
-	// For infinite power bus
-	// mElecActivePower = (Math::abs(mEp) * Math::abs((**mIntfVoltage)(0,0)) / mXpd) * sin(mDelta_p);
+	// Transform interface quantities to synchronously rotating DQ reference frame
+	Matrix intfVoltageDQ = parkTransformPowerInvariant(mThetaN, mIntfVoltage);
+	Matrix intfCurrentDQ = parkTransformPowerInvariant(mThetaN, mIntfCurrent);
+
+	// Electric active power from DQ quantities
+	mElecActivePower =  -3./2. * (intfVoltageDQ(0, 0)*intfCurrentDQ(0, 0) + intfVoltageDQ(1, 0)*intfCurrentDQ(1, 0)); //Eremia pp 32
 
 	// Start in steady state so that electrical and mech. power are the same
 	// because of the initial condition mOmMech = mNomOmega the damping factor is not considered at the initialisation
@@ -228,17 +239,12 @@ void EMT::Ph3::SynchronGeneratorTrStab::initializeFromNodesAndTerminals(Real fre
 }
 
 void EMT::Ph3::SynchronGeneratorTrStab::step(Real time) {
-	// #### Calculations on input of time step k ####
+	// // #### Calculations on input of time step k ####
 	// Transform interface quantities to synchronously rotating DQ reference frame
 	Matrix intfVoltageDQ = parkTransformPowerInvariant(mThetaN, **mIntfVoltage);
 	Matrix intfCurrentDQ = parkTransformPowerInvariant(mThetaN, **mIntfCurrent);
 	// Update electrical power (minus sign to calculate generated power from consumed current)
-	**mElecActivePower = - 1. * (intfVoltageDQ(0, 0)*intfCurrentDQ(0, 0) + intfVoltageDQ(1, 0)*intfCurrentDQ(1, 0));
-
-	// The damping factor Kd is adjusted to obtain a damping ratio of 0.3
-	// Real MaxElecActivePower= Math::abs(mEp) * Math::abs((**mIntfVoltage)(0,0)) / mXpd;
-	// mKd=4*0.3*sqrt(mNomOmega*mInertia*MaxElecActivePower*0.5);
-	mKd=1*mNomPower;
+	mElecActivePower =  - 3./2. * (intfVoltageDQ(0, 0)*intfCurrentDQ(0, 0) + intfVoltageDQ(1, 0)*intfCurrentDQ(1, 0));
 
 	// #### Calculate state for time step k+1 ####
 	// semi-implicit Euler or symplectic Euler method for mechanical equations
@@ -253,7 +259,8 @@ void EMT::Ph3::SynchronGeneratorTrStab::step(Real time) {
 		**mEp = Complex(**mEp_abs * cos(**mDelta_p), **mEp_abs * sin(**mDelta_p));
 
 	// Update nominal system angle
-	mThetaN = mThetaN + mTimeStep * mNomOmega;
+	// mThetaN = mThetaN + mTimeStep * mNomOmega;
+	mThetaN = mThetaN + mTimeStep * mOmMech;
 
 	// mStates << Math::abs(mEp), Math::phaseDeg(mEp), mElecActivePower, mMechPower,
 	// 	mDelta_p, mOmMech, dOmMech, dDelta_p, (**mIntfVoltage)(0,0).real(), (**mIntfVoltage)(0,0).imag();
@@ -295,6 +302,9 @@ void EMT::Ph3::SynchronGeneratorTrStab::mnaParentPostStep(Real time, Int timeSte
 
 void EMT::Ph3::SynchronGeneratorTrStab::mnaCompUpdateVoltage(const Matrix& leftVector) {
 	SPDLOG_LOGGER_DEBUG(mSLog, "Read voltage from {:d}", matrixNodeIndex(0));
+	for (auto virtualNode : mVirtualNodes)
+		virtualNode->mnaUpdateVoltage(leftVector);
+
 	(**mIntfVoltage)(0, 0) = Math::realFromVectorElement(leftVector, matrixNodeIndex(0, 0));
 	(**mIntfVoltage)(1, 0) = Math::realFromVectorElement(leftVector, matrixNodeIndex(0, 1));
 	(**mIntfVoltage)(2, 0) = Math::realFromVectorElement(leftVector, matrixNodeIndex(0, 2));
