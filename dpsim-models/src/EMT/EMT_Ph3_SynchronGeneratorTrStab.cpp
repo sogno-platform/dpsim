@@ -23,7 +23,7 @@ Matrix EMT::Ph3::SynchronGeneratorTrStab::getParkTransformMatrixPowerInvariant(R
 	// Assumes that d-axis starts aligned with phase a
 	Matrix Tdq = Matrix::Zero(2, 3);
 	// Real k = sqrt(2. / 3.);
-	Real k = 2. / 3.; // Assumes that d-axis starts aligned with phase a Eremia pp 26
+	Real k = 2. / 3.; // choice of k affects the DQ power eq. (see Eremia pp 26)
 	Tdq <<
 		k * cos(theta), k * cos(theta - 2. * M_PI / 3.), k * cos(theta + 2. * M_PI / 3.),
 		-k * sin(theta), -k * sin(theta - 2. * M_PI / 3.), -k * sin(theta + 2. * M_PI / 3.);
@@ -192,12 +192,16 @@ void EMT::Ph3::SynchronGeneratorTrStab::initializeFromNodesAndTerminals(Real fre
 	// Delta_p is the angular position of mEp with respect to the synchronously rotating reference
 	**mDelta_p= Math::phase(**mEp);
 
-	// Transform interface quantities to synchronously rotating DQ reference frame
-	Matrix intfVoltageDQ = parkTransformPowerInvariant(mThetaN, mIntfVoltage);
-	Matrix intfCurrentDQ = parkTransformPowerInvariant(mThetaN, mIntfCurrent);
+	// without DQ transformation
+	mElecActivePower = 3./2. *( intfVoltageComplex(0, 0) *  std::conj( -intfCurrentComplex(0, 0)) ).real();
 
-	// Electric active power from DQ quantities
-	mElecActivePower =  -3./2. * (intfVoltageDQ(0, 0)*intfCurrentDQ(0, 0) + intfVoltageDQ(1, 0)*intfCurrentDQ(1, 0)); //Eremia pp 32
+	// // Transform interface quantities to synchronously rotating DQ reference frame
+	// Matrix intfVoltageDQ = parkTransformPowerInvariant(mThetaN, mIntfVoltage);
+	// Matrix intfCurrentDQ = parkTransformPowerInvariant(mThetaN, mIntfCurrent);
+
+	// // Electric active power from DQ quantities
+	// mElecActivePower =  -3./2. * (intfVoltageDQ(0, 0)*intfCurrentDQ(0, 0) + intfVoltageDQ(1, 0)*intfCurrentDQ(1, 0)); //using DQ with k= 2. / 3.
+	// // mElecActivePower =  -1. * (intfVoltageDQ(0, 0)*intfCurrentDQ(0, 0) + intfVoltageDQ(1, 0)*intfCurrentDQ(1, 0)); //using DQ with k=sqrt(2. / 3.)
 
 	// Start in steady state so that electrical and mech. power are the same
 	// because of the initial condition mOmMech = mNomOmega the damping factor is not considered at the initialisation
@@ -245,7 +249,8 @@ void EMT::Ph3::SynchronGeneratorTrStab::step(Real time) {
 	Matrix intfVoltageDQ = parkTransformPowerInvariant(mThetaN, **mIntfVoltage);
 	Matrix intfCurrentDQ = parkTransformPowerInvariant(mThetaN, **mIntfCurrent);
 	// Update electrical power (minus sign to calculate generated power from consumed current)
-	mElecActivePower =  - 3./2. * (intfVoltageDQ(0, 0)*intfCurrentDQ(0, 0) + intfVoltageDQ(1, 0)*intfCurrentDQ(1, 0));
+	mElecActivePower =  -3./2. * (intfVoltageDQ(0, 0)*intfCurrentDQ(0, 0) + intfVoltageDQ(1, 0)*intfCurrentDQ(1, 0)); //using DQ with k= 2. / 3.
+	// mElecActivePower =  -1. * (intfVoltageDQ(0, 0)*intfCurrentDQ(0, 0) + intfVoltageDQ(1, 0)*intfCurrentDQ(1, 0)); //using DQ with k=sqrt(2. / 3.)
 
 	// #### Calculate state for time step k+1 ####
 	// semi-implicit Euler or symplectic Euler method for mechanical equations
