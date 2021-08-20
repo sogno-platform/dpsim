@@ -183,6 +183,7 @@ void EMT::Ph3::SynchronGeneratorTrStab::initializeFromNodesAndTerminals(Real fre
 
 	mImpedance = Complex(**mRs, mXpd);
 
+	mImpedance = Complex(mRs, mXpd);
 	// Calculate initial emf behind reactance from power flow results
 	**mEp = intfVoltageComplex(0, 0) - mImpedance * intfCurrentComplex(0, 0);
 
