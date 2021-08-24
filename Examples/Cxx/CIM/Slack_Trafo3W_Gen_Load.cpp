@@ -27,7 +27,7 @@ int main(int argc, char** argv) {
 			"Slack_Trafo3W_PowerFlow_TP.xml",
 			"Slack_Trafo3W_PowerFlow_SV.xml",
 			"Slack_Trafo3W_PowerFlow_SSH.xml"
-		}, "build/_deps/cim-data-src/BasicGrids/Slack_Trafo3W_PowerFlow", "CIMPATH");
+		}, "build/_deps/cim-data-src/BasicGrids/PowerFactory/Slack_Trafo3W_PowerFlow", "CIMPATH");
 	}
 	else {
 		filenames = std::list<fs::path>(argv + 1, argv + argc);
