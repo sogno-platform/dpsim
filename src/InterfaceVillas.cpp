@@ -186,8 +186,8 @@ void InterfaceVillas::exportComplex(Attribute<Complex>::Ptr attr, UInt idx, cons
 	mExportSignals[idx] = Signal(idx, villas::node::SignalType::COMPLEX, name, unit);
 }
 
-Task::List InterfaceVillas::getTasks() {
-	return Task::List({
+CPS::Task::List InterfaceVillas::getTasks() {
+	return CPS::Task::List({
 		std::make_shared<InterfaceVillas::PreStep>(*this),
 		std::make_shared<InterfaceVillas::PostStep>(*this)
 	});
