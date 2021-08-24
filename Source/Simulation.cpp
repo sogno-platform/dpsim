@@ -556,6 +556,17 @@ void Simulation::exportIdObjAttr(const String &comp, const String &attr, UInt id
 			found = true;
 		} catch (InvalidAttributeException &e) { }
 
+		try {
+			auto v = compObj->attribute<Bool>(attr);
+
+			if (scale != Complex(1, 0)) {
+				throw TypeException();
+			}
+			mLog->info("Exporting boolean attribute {} at Index {}", attr, idx);
+			mInterfaces[0].interface->exportBool(v, idx);
+			found = true;
+		} catch (InvalidAttributeException &e) { }
+
 		if (!found) mLog->error("Attribute not found");
 	}
 	else {
