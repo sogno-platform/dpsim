@@ -316,7 +316,7 @@ void PFSolverPowerPolar::setSolution() {
                     baseVoltage_ = trans3W->attribute<CPS::Real>("nominal_voltage_end2")->get();
                     break;
                 }
-                else if (trans3W->terminal(3)->node()->name() == node->name()){
+                else if (trans3W->terminal(2)->node()->name() == node->name()){
                     baseVoltage_ = trans3W->attribute<CPS::Real>("nominal_voltage_end3")->get();
                     break;
                 }
@@ -325,7 +325,7 @@ void PFSolverPowerPolar::setSolution() {
                 baseVoltage_ =gen->attribute<CPS::Real>("base_Voltage")->get();
                 break;
             }
-            else
+            else {
                 mSLog->warn("Unable to get base voltage at {}", node->name());
             }
         }
