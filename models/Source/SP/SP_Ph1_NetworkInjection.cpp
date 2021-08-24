@@ -28,6 +28,7 @@ SP::Ph1::NetworkInjection::NetworkInjection(String uid, String name,
 	for (auto subcomp: mSubComponents)
 		mSLog->info("- {}", subcomp->name());
 
+	addAttribute<Real>("base_Voltage", &mBaseVoltage, Flags::read | Flags::write);
     addAttribute<Real>("V_set", &mVoltageSetPoint, Flags::read | Flags::write);
     addAttribute<Real>("V_set_pu", &mVoltageSetPointPerUnit, Flags::read | Flags::write);
 	addAttribute<Real>("p_inj", &mActivePowerInjection, Flags::read | Flags::write);

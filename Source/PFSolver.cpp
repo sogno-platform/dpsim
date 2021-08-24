@@ -300,6 +300,8 @@ void PFSolver::composeAdmittanceMatrix() {
 	if(mLines.empty() && mTransformers.empty() && mTransformers3W.empty()) {
 		throw std::invalid_argument("There are no bus");
 	}
+
+	mSLog->info("#### System matrix:\n{}", mY);
 }
 
 CPS::Real PFSolver::G(int i, int j) {

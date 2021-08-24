@@ -322,7 +322,19 @@ void PFSolverPowerPolar::setSolution() {
                 }
             }
             else if (std::shared_ptr<CPS::SP::Ph1::SynchronGenerator> gen = std::dynamic_pointer_cast<CPS::SP::Ph1::SynchronGenerator>(comp)) {
-                baseVoltage_ =gen->attribute<CPS::Real>("base_Voltage")->get();
+                baseVoltage_ = gen->attribute<CPS::Real>("base_Voltage")->get();
+                break;
+            }
+            else if (std::shared_ptr<CPS::SP::Ph1::NetworkInjection> extnet = std::dynamic_pointer_cast<CPS::SP::Ph1::NetworkInjection>(comp)) {
+                baseVoltage_ = extnet->attribute<CPS::Real>("base_Voltage")->get();
+                break;
+            }
+            else if (std::shared_ptr<CPS::SP::Ph1::Shunt> shunt = std::dynamic_pointer_cast<CPS::SP::Ph1::Shunt>(comp)) {
+                baseVoltage_ = shunt->attribute<CPS::Real>("base_Voltage")->get();
+                break;
+            }
+            else if (std::shared_ptr<CPS::SP::Ph1::Load> load = std::dynamic_pointer_cast<CPS::SP::Ph1::Load>(comp)) {
+                baseVoltage_ = load->attribute<CPS::Real>("V_nom")->get();
                 break;
             }
             else {
