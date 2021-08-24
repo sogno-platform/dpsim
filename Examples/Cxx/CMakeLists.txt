@@ -126,6 +126,7 @@ if(WITH_CIM)
 
 		# PF(Power Flow) example
 		CIM/Slack_Trafo_Load.cpp
+		CIM/Slack_Trafo3W_Gen_Load.cpp
 		CIM/Slack_TrafoTapChanger_Load.cpp
 		CIM/CIGRE_MV_PowerFlowTest.cpp
 		CIM/CIGRE_MV_PowerFlowTest_LoadProfiles.cpp
