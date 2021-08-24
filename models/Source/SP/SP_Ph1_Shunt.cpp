@@ -16,6 +16,7 @@ SP::Ph1::Shunt::Shunt(String uid, String name, Logger::Level logLevel)
 	mSLog->info("Create {} of type {}", this->type(), name);
 	setTerminalNumber(1);
 
+	addAttribute<Real>("base_Voltage", &mBaseVoltage, Flags::read | Flags::write);
 	addAttribute<Real>("G", &mConductance, Flags::write | Flags::read);
 	addAttribute<Real>("B", &mSusceptance, Flags::write | Flags::read);
 }

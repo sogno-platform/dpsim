@@ -28,6 +28,8 @@ void PFSolver::initialize(){
             mLoads.push_back(load);
         else if (std::shared_ptr<CPS::SP::Ph1::Transformer> trafo = std::dynamic_pointer_cast<CPS::SP::Ph1::Transformer>(comp))
             mTransformers.push_back(trafo);
+		else if (std::shared_ptr<CPS::SP::Ph1::Transformer3W> trafo3W = std::dynamic_pointer_cast<CPS::SP::Ph1::Transformer3W>(comp))
+            mTransformers3W.push_back(trafo3W);
         else if (std::shared_ptr<CPS::SP::Ph1::PiLine> line = std::dynamic_pointer_cast<CPS::SP::Ph1::PiLine>(comp))
             mLines.push_back(line);
         else if (std::shared_ptr<CPS::SP::Ph1::NetworkInjection> extnet = std::dynamic_pointer_cast<CPS::SP::Ph1::NetworkInjection>(comp))
@@ -86,6 +88,9 @@ void PFSolver::initializeComponents(){
 	for(auto trans : mTransformers) {
 		trans->calculatePerUnitParameters(mBaseApparentPower, mSystem.mSystemOmega);
 	}
+	for(auto trans3w : mTransformers3W) {
+ 		trans3w->calculatePerUnitParameters(mBaseApparentPower, mSystem.mSystemOmega);
+ 	}
 	for(auto shunt : mShunts) {
 		shunt->calculatePerUnitParameters(mBaseApparentPower, mSystem.mSystemOmega);
 	}
@@ -112,6 +117,16 @@ void PFSolver::setBaseApparentPower() {
 		for (auto trafo : mTransformers)
 			if (trafo->attribute<Real>("S")->get() > maxPower)
 				maxPower = trafo->attribute<Real>("S")->get();
+	}
+	else if (!mTransformers3W.empty()) {
+		for (auto trafo3w : mTransformers3W){
+			if (trafo3w->attribute<Real>("S1")->get() > maxPower)
+				maxPower = trafo3w->attribute<Real>("S1")->get();
+			if (trafo3w->attribute<Real>("S2")->get() > maxPower)
+				maxPower = trafo3w->attribute<Real>("S2")->get();
+			if (trafo3w->attribute<Real>("S3")->get() > maxPower)
+				maxPower = trafo3w->attribute<Real>("S3")->get();			
+		}
 	}
     if (maxPower != 0.)
         mBaseApparentPower = pow(10, 1 + floor(log10(maxPower)));
@@ -196,6 +211,11 @@ void PFSolver::determinePFBusType() {
 			mSLog->debug("{}: VD, PV and PQ type component connect -> set as VD bus", node->name());
 			mVDBusIndices.push_back(node->matrixNodeIndex());
 			mVDBuses.push_back(node);
+		} // VD and PQ type component connect -> set as VD bus
+		else if (!connectedPV && connectedPQ && connectedVD) {
+			mSLog->debug("{}: VD and PQ type component connect -> set as VD bus", node->name());
+			mVDBusIndices.push_back(node->matrixNodeIndex());
+			mVDBuses.push_back(node);
 		}
 		else {
 			std::stringstream ss;
@@ -263,13 +283,25 @@ void PFSolver::composeAdmittanceMatrix() {
 			}
 			trans->pfApplyAdmittanceMatrixStamp(mY);
 		}
+		for(auto trans3W : mTransformers3W) {
+			//to check if this transformer could be ignored
+			if (trans3W->attribute("R1") == 0 && trans3W->attribute("L1") == 0 &&
+				trans3W->attribute("R2") == 0 && trans3W->attribute("L2") == 0 &&
+				trans3W->attribute("R3") == 0 && trans3W->attribute("L3") == 0) {
+				mSLog->info("{} {} ignored for R = 0 and L = 0 in all windings", trans3W->type(), trans3W->name());
+				continue;
+			}
+			trans3W->pfApplyAdmittanceMatrixStamp(mY);
+		}
 		for(auto shunt : mShunts) {
 			shunt->pfApplyAdmittanceMatrixStamp(mY);
 		}
 	}
-	if(mLines.empty() && mTransformers.empty()) {
+	if(mLines.empty() && mTransformers.empty() && mTransformers3W.empty()) {
 		throw std::invalid_argument("There are no bus");
 	}
+
+	mSLog->info("#### System matrix:\n{}", mY);
 }
 
 CPS::Real PFSolver::G(int i, int j) {
