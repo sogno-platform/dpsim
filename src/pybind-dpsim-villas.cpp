@@ -88,5 +88,5 @@ PYBIND11_MODULE(dpsimpyvillas, m) {
 		.def("get_config", &PyInterfaceShmem::getConfig);
 
 	py::class_<PyInterfaceVillas>(m, "InterfaceVillas", interface)
-	    .def(py::init<const CPS::String&>());
+	    .def(py::init<const CPS::String&, const CPS::String&, const CPS::String&>(), "name"_a, "node_type"_a, "config"_a);
 }

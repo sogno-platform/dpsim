@@ -28,6 +28,7 @@
 
 #include <villas/sample.hpp>
 #include <villas/node.hpp>
+#include <villas/exceptions.hpp>
 
 using namespace villas;
 
@@ -51,8 +52,11 @@ namespace DPsim {
 		std::vector<std::function<void(Sample*)>> mExports, mImports;
 		CPS::AttributeBase::List mExportAttrs, mImportAttrs;
 
-		//VillasNode instance
-		//node::Node mNode;
+		//Villas node to send / receive data to / from
+		String mNodeType;
+		String mNodeConfig;
+		std::unique_ptr<node::Node> mNode;
+
 		Sample *mLastSample;
 		String mName;
 		bool mOpened;
@@ -61,7 +65,7 @@ namespace DPsim {
 		CPS::Logger::Log mLog;
 
 		/// Is this InterfaceVillas used for synchronization?
-		bool mSync;
+		//bool mSync;
 		/// Downsampling
 		UInt mDownsampling;
 
@@ -122,14 +126,8 @@ namespace DPsim {
 		 *
 		 * @param name The name of the newly created VillasNode
 		 */
-		InterfaceVillas(const String &name, Bool sync = true, UInt downsampling = 1) :
-			mName(name),
-			mOpened(false),
-			mSync(sync),
-			mDownsampling(downsampling)
-		{
-		}
-
+		InterfaceVillas(const String &name, const String &nodeType, const String &nodeConfig, UInt downsampling = 1);
+			
 		~InterfaceVillas() {
 			if (mOpened)
 				close();

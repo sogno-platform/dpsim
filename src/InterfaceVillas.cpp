@@ -26,27 +26,142 @@
 using namespace CPS;
 using namespace DPsim;
 
+InterfaceVillas::InterfaceVillas(const String &name, const String &nodeType, const String &nodeConfig, UInt downsampling) :
+	mNodeType(nodeType),
+	mNodeConfig(nodeConfig),
+	mName(name),
+	mOpened(false),
+	//mSync(sync),
+	mDownsampling(downsampling) {
+	
+	node::NodeType* nodeTypeStruct = node::node_type_lookup(mNodeType);
+	if (nodeTypeStruct != nullptr) {
+		mNode = std::make_unique<node::Node>(nodeTypeStruct);
+		json_error_t error;
+		json_t* config = json_loads(mNodeConfig.c_str(), 0, &error);
+		if (config == nullptr) {
+			throw JsonError(config, error);
+		}
+
+		int ret = 0;
+		uuid_t fakeSuperNodeUUID;
+		uuid_generate_random(fakeSuperNodeUUID);
+		ret = mNode->parse(config, fakeSuperNodeUUID);
+		if (ret < 0) {
+			mLog->error("Error: Node in InterfaceVillas failed to parse config. Parse returned code {}", ret);
+			std::exit(1);
+		}
+		ret = mNode->check();
+		if (ret < 0) {
+			mLog->error("Error: Node in InterfaceVillas failed check. Check returned code {}", ret);
+			std::exit(1);
+		}
+		ret = mNode->prepare();
+		if (ret < 0) {
+			mLog->error("Error: Node in InterfaceVillas failed to prepare. Prepare returned code {}", ret);
+			std::exit(1);
+		}
+	} else {
+		mLog->error("Error: NodeType {} is not known to VILLASnode!", mNodeType);
+		std::exit(1);
+	}
+}
+
 void InterfaceVillas::open(CPS::Logger::Log log) {
 	mLog = log;
-
 	mLog->info("Opening InterfaceVillas...");
+	int ret = mNode->start();
+	if (ret < 0) {
+		mLog->error("Fatal error: failed to start node in InterfaceVillas. Start returned code {}", ret);
+		close();
+		std::exit(1);
+	}
+	mOpened = true;
 }
 
 void InterfaceVillas::close() {
 	mLog->info("Closing InterfaceVillas...");
+	int ret = mNode->stop();
+	if (ret < 0) {
+		mLog->error("Error: failed to stop node in InterfaceVillas. Stop returned code {}", ret);
+		std::exit(1);
+	}
+	mOpened = false;
 }
 
 void InterfaceVillas::readValues(bool blocking) {
-	
+	Sample *sample = nullptr;
+	int ret = 0;
+	try {
+		while (ret == 0)
+			ret = mNode->read(&sample, 1);
+		if (ret < 0) {
+			mLog->error("Fatal error: failed to read sample from InterfaceVillas. Read returned code {}", ret);
+			close();
+			std::exit(1);
+		}
+
+		for (auto imp : mImports) {
+			imp(sample);
+		}
+
+		sample_decref(sample);
+	}
+	catch (std::exception& exc) {
+		/* probably won't happen (if the timer expires while we're still reading data,
+		 * we have a bigger problem somewhere else), but nevertheless, make sure that
+		 * we're not leaking memory from the queue pool */
+		if (sample)
+			sample_decref(sample);
+
+		throw exc;
+	}
 }
 
 void InterfaceVillas::writeValues() {
-	
+	Sample *sample = nullptr;
+	Int ret = 0;
+	bool done = false;
+	try {
+		for (auto exp : mExports) {
+			exp(sample);
+		}
+
+		sample->sequence = mSequence++;
+		sample->flags |= (int) villas::node::SampleFlags::HAS_DATA;
+		clock_gettime(CLOCK_REALTIME, &sample->ts.origin);
+		done = true;
+
+		do {
+			ret = mNode->write(&sample, 1);
+		} while (ret == 0);
+		if (ret < 0)
+			mLog->error("Failed to write samples to InterfaceShmem. Write returned code {}", ret);
+
+		sample_copy(mLastSample, sample);
+	}
+	catch (std::exception& exc) {
+		/* We need to at least send something, so determine where exactly the
+		 * timer expired and either resend the last successfully sent sample or
+		 * just try to send this one again.
+		 * TODO: can this be handled better? */
+		if (!done)
+			sample = mLastSample;
+
+		while (ret == 0)
+			ret = mNode->write(&sample, 1);
+
+		if (ret < 0)
+			mLog->error("Failed to write samples to InterfaceShmem. Write returned code {}", ret);
+
+		/* Don't throw here, because we managed to send something */
+	}
 }
 
 void InterfaceVillas::PreStep::execute(Real time, Int timeStepCount) {
 	if (timeStepCount % mIntf.mDownsampling == 0)
-		mIntf.readValues(mIntf.mSync);
+		mIntf.readValues(true);
+		//mIntf.readValues(mIntf.mSync);
 }
 
 void InterfaceVillas::PostStep::execute(Real time, Int timeStepCount) {
