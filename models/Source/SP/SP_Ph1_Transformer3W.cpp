@@ -310,7 +310,7 @@ void SP::Ph1::Transformer3W::calculatePerUnitParameters(Real baseApparentPower, 
 	mInductancePerUnit1 = mInductance1 / mBaseInductance;
 	mInductancePerUnit2 = mInductance2 / mBaseInductance;
 	mInductancePerUnit3 = mInductance3 / mBaseInductance;
-	mMagnetizing = mMagnetizingReactance / mBaseImpedance;
+	mMagnetizing = Complex(0., mMagnetizingReactance);
 	// omega per unit=1, hence 1.0*mInductancePerUnit.
 	mLeakagePerUnit1 = Complex(mResistancePerUnit1, 1.*mInductancePerUnit1);
 	mLeakagePerUnit2 = Complex(mResistancePerUnit2, 1.*mInductancePerUnit2);
@@ -330,9 +330,9 @@ void SP::Ph1::Transformer3W::calculatePerUnitParameters(Real baseApparentPower, 
 		mSubSnubResistor->calculatePerUnitParameters(baseApparentPower);
 	}
 
-	mSLog->info("Leakage Impedance Per Unit={} [Ohm] ", mLeakagePerUnit1);
-	mSLog->info("Leakage Impedance Per Unit={} [Ohm] ", mLeakagePerUnit2);
-	mSLog->info("Leakage Impedance Per Unit={} [Ohm] ", mLeakagePerUnit3);
+	mSLog->info("Leakage Impedance 12 Per Unit={} [pu] ", mLeakagePerUnit1 + mLeakagePerUnit2);
+	mSLog->info("Leakage Impedance 23 Per Unit={} [pu] ", mLeakagePerUnit2 + mLeakagePerUnit3);
+	mSLog->info("Leakage Impedance 31 Per Unit={} [pu] ", mLeakagePerUnit3 + mLeakagePerUnit1);
 }
 
 void SP::Ph1::Transformer3W::pfApplyAdmittanceMatrixStamp(SparseMatrixCompRow & Y) {
@@ -355,9 +355,11 @@ void SP::Ph1::Transformer3W::pfApplyAdmittanceMatrixStamp(SparseMatrixCompRow & 
 	mY_element(0, 0) = (d - mRatioAbs1 * a) / (mLeakagePerUnit1 * d);
 	mY_element(0, 1) = - mRatioAbs1 * b / (mLeakagePerUnit1 * d);
 	mY_element(0, 2) = - mRatioAbs1 * c / (mLeakagePerUnit1 * d);
+
 	mY_element(1, 0) = - mRatioAbs2 * a / (mLeakagePerUnit2 * d);
 	mY_element(1, 1) = (d - mRatioAbs2 * b) / (mLeakagePerUnit2 * d);
 	mY_element(1, 2) = - mRatioAbs2 * c / (mLeakagePerUnit2 * d);
+	
 	mY_element(2, 0) = - mRatioAbs3 * a / (mLeakagePerUnit3 * d);
 	mY_element(2, 1) = - mRatioAbs3 * b / (mLeakagePerUnit3 * d);
 	mY_element(2, 2) = (d - mRatioAbs3 * c) / (mLeakagePerUnit3 * d);
@@ -377,9 +379,11 @@ void SP::Ph1::Transformer3W::pfApplyAdmittanceMatrixStamp(SparseMatrixCompRow & 
 	Y.coeffRef(this->matrixNodeIndex(0), this->matrixNodeIndex(0)) += mY_element.coeff(0, 0);
 	Y.coeffRef(this->matrixNodeIndex(0), this->matrixNodeIndex(1)) += mY_element.coeff(0, 1);
 	Y.coeffRef(this->matrixNodeIndex(0), this->matrixNodeIndex(2)) += mY_element.coeff(0, 2);
+
 	Y.coeffRef(this->matrixNodeIndex(1), this->matrixNodeIndex(0)) += mY_element.coeff(1, 0);
 	Y.coeffRef(this->matrixNodeIndex(1), this->matrixNodeIndex(1)) += mY_element.coeff(1, 1);
 	Y.coeffRef(this->matrixNodeIndex(1), this->matrixNodeIndex(2)) += mY_element.coeff(1, 2);
+
 	Y.coeffRef(this->matrixNodeIndex(2), this->matrixNodeIndex(0)) += mY_element.coeff(2, 0);
 	Y.coeffRef(this->matrixNodeIndex(2), this->matrixNodeIndex(1)) += mY_element.coeff(2, 1);
 	Y.coeffRef(this->matrixNodeIndex(2), this->matrixNodeIndex(2)) += mY_element.coeff(2, 2);

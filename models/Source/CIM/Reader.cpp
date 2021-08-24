@@ -83,6 +83,8 @@ TopologicalPowerComp::Ptr Reader::mapComponent(BaseClass* obj) {
 		return mapExternalNetworkInjection(extnet);
 	if (CIMPP::EquivalentShunt *shunt = dynamic_cast<CIMPP::EquivalentShunt*>(obj))
 		return mapEquivalentShunt(shunt);
+	if (CIMPP::LinearShuntCompensator *shunt = dynamic_cast<CIMPP::LinearShuntCompensator*>(obj))
+		return mapEquivalentShunt(shunt);
 	return nullptr;
 }
 
@@ -444,25 +446,25 @@ TopologicalPowerComp::Ptr Reader::mapPowerTransformer(CIMPP::PowerTransformer* t
 	Real ratedPower1 = unitValue(end1->ratedS.value, UnitMultiplier::M);
 	Real ratedPower2 = unitValue(end2->ratedS.value, UnitMultiplier::M);
 
-	Real ratioAbsNominal = voltageNode1 / voltageNode2;
-	Real ratioAbs = ratioAbsNominal;
+	if (!end3) {
+		Real ratioAbsNominal = voltageNode1 / voltageNode2;
+		Real ratioAbs = ratioAbsNominal;
 
-	// use normalStep from RatioTapChanger
-	if (end1->RatioTapChanger && !end3) {
-		ratioAbs = voltageNode1 / voltageNode2 * (1 + (end1->RatioTapChanger->normalStep - end1->RatioTapChanger->neutralStep) * end1->RatioTapChanger->stepVoltageIncrement.value / 100);
-	}
+		// use normalStep from RatioTapChanger
+		if (end1->RatioTapChanger && !end3) {
+			ratioAbs = voltageNode1 / voltageNode2 * (1 + (end1->RatioTapChanger->normalStep - end1->RatioTapChanger->neutralStep) * end1->RatioTapChanger->stepVoltageIncrement.value / 100);
+		}
 
-	// if corresponding SvTapStep available, use instead tap position from there
-	if (end1->RatioTapChanger && !end3) {
-		for (auto obj : mModel->Objects) {
-			auto tapStep = dynamic_cast<CIMPP::SvTapStep*>(obj);
-			if (tapStep && tapStep->TapChanger == end1->RatioTapChanger) {
-				ratioAbsNominal = voltageNode1 / voltageNode2 * (1 + (tapStep->position - end1->RatioTapChanger->neutralStep) * end1->RatioTapChanger->stepVoltageIncrement.value / 100);
+		// if corresponding SvTapStep available, use instead tap position from there
+		if (end1->RatioTapChanger && !end3) {
+			for (auto obj : mModel->Objects) {
+				auto tapStep = dynamic_cast<CIMPP::SvTapStep*>(obj);
+				if (tapStep && tapStep->TapChanger == end1->RatioTapChanger) {
+					ratioAbsNominal = voltageNode1 / voltageNode2 * (1 + (tapStep->position - end1->RatioTapChanger->neutralStep) * end1->RatioTapChanger->stepVoltageIncrement.value / 100);
+				}
 			}
 		}
-	}
 
-	if (!end3) {
 		// TODO: To be extracted from cim class
 		Real ratioPhase = 0;
 
@@ -513,6 +515,10 @@ TopologicalPowerComp::Ptr Reader::mapPowerTransformer(CIMPP::PowerTransformer* t
 	else {
 		Real ratedPower3 = unitValue(end3->ratedS.value, UnitMultiplier::M);
 		Real voltageNode3 = unitValue(end3->ratedU.value, UnitMultiplier::k);
+
+		Real ratioAbsNominal12 = voltageNode1 / voltageNode2;
+		Real ratioAbsNominal23 = voltageNode2 / voltageNode3;
+		Real ratioAbsNominal13 = voltageNode1 / voltageNode3;
 
 		Real ratioAbs1 = 1.0;
 		// use normalStep from RatioTapChanger
@@ -572,13 +578,28 @@ TopologicalPowerComp::Ptr Reader::mapPowerTransformer(CIMPP::PowerTransformer* t
 		Real inductance2 = 0;
 		Real inductance3 = 0;
 
-		// TODO: Should verify if any inductance is < 1e-12		resistance1 = end1->r.value;
-		resistance1 = end1->r.value;
-		resistance2 = end2->r.value;
-		resistance3 = end3->r.value;
-		inductance1 = end1->x.value / mOmega;
-		inductance2 = end2->x.value / mOmega;
-		inductance3 = end3->x.value / mOmega;
+		if (voltageNode1 >= voltageNode2 && voltageNode1 >= voltageNode3) {
+			inductance1 = end1->x.value / mOmega;
+			resistance1 = end1->r.value;
+			inductance2 = end2->x.value / mOmega * std::pow(ratioAbsNominal12, 2);
+			resistance2 = end2->r.value * std::pow(ratioAbsNominal12, 2);
+			inductance3 = end3->x.value / mOmega * std::pow(ratioAbsNominal13, 2);
+			resistance3 = end3->r.value * std::pow(ratioAbsNominal13, 2);
+		} else if (voltageNode2 >= voltageNode1 && voltageNode2 >= voltageNode3) {
+			inductance2 = end2->x.value / mOmega;
+			resistance2 = end2->r.value;
+			inductance1 = end1->x.value / mOmega / std::pow(ratioAbsNominal12, 2);
+			resistance1 = end1->r.value / std::pow(ratioAbsNominal12, 2);
+			inductance3 = end3->x.value / mOmega * std::pow(ratioAbsNominal23, 2);
+			resistance3 = end3->r.value * std::pow(ratioAbsNominal23, 2);
+		} else if (voltageNode3 >= voltageNode1 && voltageNode3 >= voltageNode2) {
+			inductance3 = end3->x.value / mOmega;
+			resistance3 = end3->r.value;
+			inductance1 = end1->x.value / mOmega / std::pow(ratioAbsNominal13, 2);
+			resistance1 = end1->r.value / std::pow(ratioAbsNominal13, 2);
+			inductance2 = end2->x.value / mOmega / std::pow(ratioAbsNominal23, 2);
+			resistance2 = end2->r.value / std::pow(ratioAbsNominal23, 2);
+		}
 
 		if (mDomain == Domain::EMT) {
 			mSLog->info("    3-Winding transformer for EMT not implemented yet");
@@ -675,7 +696,7 @@ TopologicalPowerComp::Ptr Reader::mapSynchronousMachine(CIMPP::SynchronousMachin
 						if (syncGen->mRID == machine->mRID){
 							// Check whether relevant input data are set, otherwise set default values
 							Real setPointActivePower = 0;
-							Real setPointVoltage = 0;
+							Real setPointVoltage = unitValue(machine->ratedU.value, UnitMultiplier::k);
 							Real maximumReactivePower = 1e12;
 							try{
 								setPointActivePower = unitValue(genUnit->initialP.value, UnitMultiplier::M);
@@ -700,8 +721,7 @@ TopologicalPowerComp::Ptr Reader::mapSynchronousMachine(CIMPP::SynchronousMachin
 								gen->setParameters(unitValue(machine->ratedS.value, UnitMultiplier::M),
 										unitValue(machine->ratedU.value, UnitMultiplier::k),
 										setPointActivePower,
-										//setPointVoltage,
-										unitValue(machine->ratedU.value, UnitMultiplier::k),
+										setPointVoltage,
 										PowerflowBusType::PV);
 								gen->setBaseVoltage(unitValue(machine->ratedU.value, UnitMultiplier::k));
 							return gen;
@@ -744,7 +764,7 @@ TopologicalPowerComp::Ptr Reader::mapExternalNetworkInjection(CIMPP::ExternalNet
 			try {
 				if(extnet->RegulatingControl){
 					mSLog->info("       Voltage set-point={}", (float) extnet->RegulatingControl->targetValue);
-					cpsextnet->setParameters(extnet->RegulatingControl->targetValue*baseVoltage); // assumes that value is specified in CIM data in per unit
+					cpsextnet->setParameters(unitValue(extnet->RegulatingControl->targetValue, UnitMultiplier::k)); // assumes that value is specified in CIM data in per unit
 				} else {
 					mSLog->info("       No voltage set-point defined. Using 1 per unit.");
 					cpsextnet->setParameters(1.*baseVoltage);
@@ -777,6 +797,17 @@ TopologicalPowerComp::Ptr Reader::mapEquivalentShunt(CIMPP::EquivalentShunt* shu
 
 	auto cpsShunt = std::make_shared<SP::Ph1::Shunt>(shunt->mRID, shunt->name, mComponentLogLevel);
 	cpsShunt->setParameters(shunt->g.value, shunt->b.value);
+	cpsShunt->setBaseVoltage(baseVoltage);
+	return cpsShunt;
+}
+
+TopologicalPowerComp::Ptr Reader::mapEquivalentShunt(CIMPP::LinearShuntCompensator* shunt){
+	mSLog->info("Found linear shunt compensator {}", shunt->name);
+
+	Real baseVoltage = determineBaseVoltageAssociatedWithEquipment(shunt);
+
+	auto cpsShunt = std::make_shared<SP::Ph1::Shunt>(shunt->mRID, shunt->name, mComponentLogLevel);
+	cpsShunt->setParameters(shunt->gPerSection.value, shunt->bPerSection.value);
 	cpsShunt->setBaseVoltage(baseVoltage);
 	return cpsShunt;
 }
