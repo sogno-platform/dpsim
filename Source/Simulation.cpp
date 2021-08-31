@@ -663,6 +663,12 @@ void Simulation::importIdObjAttr(const String &comp, const String &attr, UInt id
 			found = true;
 		} catch (InvalidAttributeException &e) { }
 
+		try {
+			auto v = compObj->attribute<Bool>(attr);
+			compObj->setAttributeRef(attr, mInterfaces[0].interface->importBool(idx));
+			found = true;
+		} catch (InvalidAttributeException &e) { }
+
 		if (!found) mLog->error("Attribute not found");
 	}
 	else {
