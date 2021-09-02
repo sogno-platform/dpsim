@@ -54,6 +54,7 @@
 #include <cps/DP/DP_Ph1_AvVoltageSourceInverterDQ.h>
 #include <cps/DP/DP_Ph1_SVC.h>
 #include <cps/DP/DP_Ph1_varResSwitch.h>
+#include <cps/DP/DP_Ph1_TriggeredSwitch.h>
 
 #include <cps/DP/DP_Ph3_Capacitor.h>
 #include <cps/DP/DP_Ph3_Inductor.h>
