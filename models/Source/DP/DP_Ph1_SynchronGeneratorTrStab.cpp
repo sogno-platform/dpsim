@@ -21,6 +21,7 @@ DP::Ph1::SynchronGeneratorTrStab::SynchronGeneratorTrStab(String uid, String nam
 	addAttribute<Real>("Ep_mag", &mEp_abs, Flags::read);
 	addAttribute<Real>("Ep_phase", &mEp_phase, Flags::read);
 	addAttribute<Real>("delta_r", &mDelta_p, Flags::read);
+	addAttribute<Real>("delta_r_rel", &mDelta_p_rel, Flags::read);
 	addAttribute<Real>("P_elec", &mElecActivePower, Flags::read);
 	addAttribute<Real>("P_mech", &mMechPower, Flags::read);
 	addAttribute<Real>("w_r", &mOmMech, Flags::read);
@@ -166,6 +167,10 @@ void DP::Ph1::SynchronGeneratorTrStab::initializeFromNodesAndTerminals(Real freq
 	mEp_abs = Math::abs(mEp);
 	// Delta_p is the angular position of mEp with respect to the synchronously rotating reference
 	mDelta_p= Math::phase(mEp);
+	
+	// Determine rotor angle relative to reference angle
+	Real refDelta = mUseOmegaRef ? attribute<Real>("delta_ref")->get() : 0;
+	mDelta_p_rel = mDelta_p - refDelta;
 
 	// Update active electrical power that is compared with the mechanical power
 	mElecActivePower = ( mIntfVoltage(0,0) *  std::conj( -mIntfCurrent(0,0)) ).real();
@@ -235,6 +240,7 @@ void DP::Ph1::SynchronGeneratorTrStab::step(Real time) {
 		refOmega = mNomOmega;
 		refDelta = 0;
 	}
+	
 	Real dDelta_p = mOmMech - refOmega;
 
 	// Rotor angle at time step k + 1 applying Euler backward
@@ -242,7 +248,10 @@ void DP::Ph1::SynchronGeneratorTrStab::step(Real time) {
 	if (mBehaviour == Behaviour::Simulation) {
 		mDelta_p = mDelta_p + mTimeStep * dDelta_p;
 		mEp = Complex(mEp_abs * cos(mDelta_p), mEp_abs * sin(mDelta_p));
-	}		
+	}
+
+	// Rotor angle relative to reference angle
+	mDelta_p_rel = mDelta_p - refDelta;
 
 	mStates << Math::abs(mEp), Math::phaseDeg(mEp), mElecActivePower, mMechPower,
 		mDelta_p, mOmMech, dOmMech, dDelta_p, mIntfVoltage(0,0).real(), mIntfVoltage(0,0).imag();

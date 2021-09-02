@@ -35,6 +35,8 @@ namespace Ph1 {
 		Real mEp_phase;
 		/// Angle by which the emf Ep is leading the terminal voltage
 		Real mDelta_p;
+		/// Angle by which the emf Ep is leading the terminal voltage relative to the provided reference angle
+		Real mDelta_p_rel;
 		/// Absolute d-axis transient reactance X'd
  		Real mXpd;
 		/// Absolute d-axis transient inductance
