@@ -26,6 +26,7 @@ DP::Ph1::SynchronGeneratorTrStab::SynchronGeneratorTrStab(String uid, String nam
 	addAttribute<Real>("P_mech", &mMechPower, Flags::read);
 	addAttribute<Real>("w_r", &mOmMech, Flags::read);
 	addAttribute<Real>("inertia", &mInertia, Flags::read | Flags::write);
+	addAttribute<Real>("damping", &mD, Flags::read | Flags::write);
 	addAttribute<Real>("w_ref", Flags::read | Flags::write);
 	addAttribute<Real>("delta_ref", Flags::read | Flags::write);
 
@@ -34,7 +35,7 @@ DP::Ph1::SynchronGeneratorTrStab::SynchronGeneratorTrStab(String uid, String nam
 
 SimPowerComp<Complex>::Ptr DP::Ph1::SynchronGeneratorTrStab::clone(String name) {
 	auto copy = SynchronGeneratorTrStab::make(name, mLogLevel);
-	copy->setStandardParametersPU(mNomPower, mNomVolt, mNomFreq, mXpd / mBase_Z, mInertia, mRs, mKd);
+	copy->setStandardParametersPU(mNomPower, mNomVolt, mNomFreq, mXpd / mBase_Z, mInertia, mRs, mD);
 	return copy;
 }
 
@@ -60,16 +61,13 @@ void DP::Ph1::SynchronGeneratorTrStab::setFundamentalParametersPU(Real nomPower,
 	// X'd in absolute values
 	mXpd = mNomOmega * (mLd - mLmd*mLmd / mLfd) * mBase_L;
 	mLpd = (mLd - mLmd*mLmd / mLfd) * mBase_L;
-
-	//The units of D are per unit power divided by per unit speed deviation.
-	// D is transformed to an absolute value to obtain Kd, which will be used in the swing equation
-	mKd= D*mNomPower/mNomOmega;
+	mD = D;
 
 	mSLog->info("\n--- Parameters ---"
 				"\nimpedance: {:f}"
 				"\ninductance: {:f}"
 				"\ninertia: {:f}"
-				"\ndamping: {:f}", mXpd, mLpd, mInertia, mKd);
+				"\ndamping: {:f}", mXpd, mLpd, mInertia, mD);
 }
 
 void DP::Ph1::SynchronGeneratorTrStab::setStandardParametersSI(Real nomPower, Real nomVolt, Real nomFreq, Int polePairNumber,
@@ -89,6 +87,7 @@ void DP::Ph1::SynchronGeneratorTrStab::setStandardParametersSI(Real nomPower, Re
 	// X'd in absolute values
 	mXpd = mNomOmega * Lpd;
 	mLpd = Lpd;
+	mKd = Kd;
 
 	mSLog->info("\n--- Parameters ---"
 			"\nimpedance: {:f}"
@@ -116,15 +115,13 @@ void DP::Ph1::SynchronGeneratorTrStab::setStandardParametersPU(Real nomPower, Re
 	mLpd = Xpd * mBase_L;
 
 	mRs= Rs;
-	//The units of D are per unit power divided by per unit speed deviation.
-	// D is transformed to an absolute value to obtain Kd, which will be used in the swing equation
-	mKd= D*mNomPower/mNomOmega;
+	mD = D;
 
 	mSLog->info("\n--- Parameters ---"
 			"\nimpedance: {:f}"
 			"\ninductance: {:f}"
 			"\ninertia: {:f}"
-			"\ndamping: {:f}", mXpd, mLpd, mInertia, mKd);
+			"\ndamping: {:f}", mXpd, mLpd, mInertia, mD);
 }
 
 void DP::Ph1::SynchronGeneratorTrStab::setModelFlags(Bool useOmegaRef, Bool convertWithOmegaMech) {
@@ -215,6 +212,10 @@ void DP::Ph1::SynchronGeneratorTrStab::step(Real time) {
 	// #### Calculations based on values from time step k ####
 	// Electrical power at time step k
 	mElecActivePower = (mIntfVoltage(0,0) *  std::conj( -mIntfCurrent(0,0)) ).real();
+
+	// Parameter conversion from mD in per unit power divided by per unit speed deviation
+	// to mKd as absolute value used in the swing equation
+	mKd = attribute<Real>("damping")->get()*mNomPower/mNomOmega;
 
 	// Mechanical speed derivative at time step k
 	// convert torque to power with actual rotor angular velocity or nominal omega
