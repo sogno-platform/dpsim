@@ -96,6 +96,16 @@ void InterfaceVillas::open(CPS::Logger::Log log) {
 		std::exit(1);
 	}
 	mOpened = true;
+
+	mSequence = 0;
+	mLastSample = node::sample_alloc(&mSamplePool);
+	mLastSample->signals = mNode->getInputSignals(false);
+	mLastSample->sequence = 0;
+	mLastSample->ts.origin.tv_sec = 0;
+	mLastSample->ts.origin.tv_nsec = 0;
+
+	std::memset(&mLastSample->data, 0, mLastSample->capacity * sizeof(float));
+
 }
 
 void InterfaceVillas::close() {
@@ -114,7 +124,7 @@ void InterfaceVillas::close() {
 }
 
 void InterfaceVillas::readValues(bool blocking) {
-	Sample *sample = nullptr;
+	Sample *sample = nullptr; //FIXME: sample needs to be initialized to call mNode->read
 	int ret = 0;
 	try {
 		while (ret == 0)
@@ -149,6 +159,7 @@ void InterfaceVillas::writeValues() {
 	try {
 
 		sample = node::sample_alloc(&mSamplePool);
+		sample->signals = mNode->getInputSignals(false);
 
 		for (auto exp : mExports) {
 			exp(sample);
