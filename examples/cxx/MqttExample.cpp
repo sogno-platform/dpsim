@@ -79,7 +79,7 @@ int main(int argc, char* argv[]) {
     InterfaceVillas intf("dpsim-mqtt", "mqtt", mqttConfig);
 
 	// Interface
-	//evs->setAttributeRef("V_ref", intf.importComplex(0));
+	evs->setAttributeRef("V_ref", intf.importComplex(0));
 	intf.exportComplex(evs->attributeMatrixComp("i_intf")->coeff(0, 0), 0);
 	sim.addInterface(&intf);
 

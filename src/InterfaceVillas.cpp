@@ -26,22 +26,25 @@
 using namespace CPS;
 using namespace DPsim;
 
-InterfaceVillas::InterfaceVillas(const String &name, const String &nodeType, const String &nodeConfig, UInt downsampling) :
+InterfaceVillas::InterfaceVillas(const String &name, const String &nodeType, const String &nodeConfig, UInt queueLenght, UInt sampleLenght, UInt downsampling) :
 	InterfaceSampleBased(name, name, true, downsampling), // Set sync=true for all InterfaceVillas instances
 	mNodeType(nodeType),
-	mNodeConfig(nodeConfig)
+	mNodeConfig(nodeConfig),
+	mQueueLenght(queueLenght),
+	mSampleLenght(sampleLenght)
 	{
 	
 	node::NodeType* nodeTypeStruct = node::node_type_lookup(mNodeType);
 	if (nodeTypeStruct != nullptr) {
 		mNode = std::make_unique<node::Node>(nodeTypeStruct);
+		int ret = 0;
+
 		json_error_t error;
 		json_t* config = json_loads(mNodeConfig.c_str(), 0, &error);
 		if (config == nullptr) {
 			throw JsonError(config, error);
 		}
 
-		int ret = 0;
 		uuid_t fakeSuperNodeUUID;
 		uuid_generate_random(fakeSuperNodeUUID);
 		ret = mNode->parse(config, fakeSuperNodeUUID);
@@ -54,6 +57,19 @@ InterfaceVillas::InterfaceVillas(const String &name, const String &nodeType, con
 			mLog->error("Error: Node in InterfaceVillas failed check. Check returned code {}", ret);
 			std::exit(1);
 		}
+
+		ret = node::memory::init(100);
+		if (ret)
+			throw RuntimeError("Error: VillasNode failed to initialize memory system");
+
+		//villas::kernel::rt::init(priority, affinity);
+
+		ret = node::pool_init(&mSamplePool, mQueueLenght, sizeof(Sample) + SAMPLE_DATA_LENGTH(mSampleLenght));
+		if (ret < 0) {
+			mLog->error("Error: InterfaceVillas failed to init sample pool. pool_init returned code {}", ret);
+			std::exit(1);
+		}
+
 		ret = mNode->prepare();
 		if (ret < 0) {
 			mLog->error("Error: Node in InterfaceVillas failed to prepare. Prepare returned code {}", ret);
@@ -68,7 +84,12 @@ InterfaceVillas::InterfaceVillas(const String &name, const String &nodeType, con
 void InterfaceVillas::open(CPS::Logger::Log log) {
 	mLog = log;
 	mLog->info("Opening InterfaceVillas...");
-	int ret = mNode->start();
+
+	int ret = node::node_type_start(mNode->getType(), nullptr); //We have no SuperNode, so just hope type_start doesnt use it...
+	if (ret)
+		throw RuntimeError("Failed to start node-type: {}", *mNode->getType());
+
+	ret = mNode->start();
 	if (ret < 0) {
 		mLog->error("Fatal error: failed to start node in InterfaceVillas. Start returned code {}", ret);
 		close();
@@ -85,6 +106,11 @@ void InterfaceVillas::close() {
 		std::exit(1);
 	}
 	mOpened = false;
+	ret = node::pool_destroy(&mSamplePool);
+	if (ret < 0) {
+		mLog->error("Error: failed to destroy SamplePool in InterfaceVillas. pool_destroy returned code {}", ret);
+		std::exit(1);
+	}
 }
 
 void InterfaceVillas::readValues(bool blocking) {
@@ -121,6 +147,9 @@ void InterfaceVillas::writeValues() {
 	Int ret = 0;
 	bool done = false;
 	try {
+
+		sample = node::sample_alloc(&mSamplePool);
+
 		for (auto exp : mExports) {
 			exp(sample);
 		}
@@ -134,7 +163,7 @@ void InterfaceVillas::writeValues() {
 			ret = mNode->write(&sample, 1);
 		} while (ret == 0);
 		if (ret < 0)
-			mLog->error("Failed to write samples to InterfaceShmem. Write returned code {}", ret);
+			mLog->error("Failed to write samples to InterfaceVillas. Write returned code {}", ret);
 
 		sample_copy(mLastSample, sample);
 	}
@@ -150,7 +179,7 @@ void InterfaceVillas::writeValues() {
 			ret = mNode->write(&sample, 1);
 
 		if (ret < 0)
-			mLog->error("Failed to write samples to InterfaceShmem. Write returned code {}", ret);
+			mLog->error("Failed to write samples to InterfaceVillas. Write returned code {}", ret);
 
 		/* Don't throw here, because we managed to send something */
 	}

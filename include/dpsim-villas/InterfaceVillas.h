@@ -24,6 +24,9 @@
 
 #include <villas/node.hpp>
 #include <villas/exceptions.hpp>
+#include <villas/memory.hpp>
+#include <villas/kernel/rt.hpp>
+#include <villas/pool.hpp>
 
 using namespace villas;
 
@@ -41,12 +44,16 @@ namespace DPsim {
 		String mNodeConfig;
 		std::unique_ptr<node::Node> mNode;
 
+		int mQueueLenght;
+		int mSampleLenght;
+		node::Pool mSamplePool;
+
 	public:
 		/** Create a InterfaceVillas with a specific configuration for the VillasNode
 		 *
 		 * @param name The name of the newly created VillasNode
 		 */
-		InterfaceVillas(const String &name, const String &nodeType, const String &nodeConfig, UInt downsampling = 1);
+		InterfaceVillas(const String &name, const String &nodeType, const String &nodeConfig, UInt queueLenght = 512, UInt sampleLenght = 64, UInt downsampling = 1);
 
 		void open(CPS::Logger::Log log);
 		void close();
