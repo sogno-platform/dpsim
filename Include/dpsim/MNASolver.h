@@ -55,6 +55,9 @@ namespace DPsim {
 		UInt mNumHarmMatrixNodeIndices = 0;
 		/// Total number of network and virtual nodes, considering individual phases and additional frequencies
 		UInt mNumTotalMatrixNodeIndices = 0;
+		/// List of index pairs of varying matrix entries
+		std::vector<std::pair<UInt, UInt>> mListVariableSystemMatrixEntries;
+
 		/// System topology
 		CPS::SystemTopology mSystem;
 		/// List of simulation nodes

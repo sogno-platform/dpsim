@@ -147,6 +147,15 @@ void EMT::Ph3::SynchronGeneratorVBR::mnaInitialize(Real omega, Real timeStep, At
 	MNAInterface::mnaInitialize(omega, timeStep);
 	updateMatrixNodeIndices();
 
+	for (UInt phase1Idx = 0; phase1Idx < 3; ++phase1Idx)
+		for (UInt phase2Idx = 0; phase2Idx < 3; ++phase2Idx)
+			mVariableSystemMatrixEntries.push_back(std::make_pair<UInt,UInt>(matrixNodeIndex(0, phase1Idx),matrixNodeIndex(0, phase2Idx)));
+	
+	mSLog->info("List of index pairs of varying matrix entries: ");
+	for (auto indexPair : mVariableSystemMatrixEntries)
+		mSLog->info("({}, {})", indexPair.first, indexPair.second);
+	
+
 	mSystemOmega = omega;
 	mTimeStep = timeStep;
 
