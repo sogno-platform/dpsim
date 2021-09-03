@@ -251,6 +251,14 @@ void MnaSolver<VarType>::initializeSystemWithPrecomputedMatrices() {
 template <typename VarType>
 void MnaSolver<VarType>::initializeSystemWithVariableMatrix() {
 	
+	// Collect index pairs of varying matrix entries from components
+	for (auto varElem : mVariableComps)
+		for (auto varEntry : varElem->mVariableSystemMatrixEntries)
+			mListVariableSystemMatrixEntries.push_back(varEntry);
+	mSLog->info("List of index pairs of varying matrix entries: ");
+	for (auto indexPair : mListVariableSystemMatrixEntries)
+		mSLog->info("({}, {})", indexPair.first, indexPair.second);
+
 	stampVariableSystemMatrix();
 
 	// Initialize source vector for debugging
