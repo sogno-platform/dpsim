@@ -45,6 +45,11 @@ void InterfaceSampleBased::PostStep::execute(Real time, Int timeStepCount) {
 }
 
 Attribute<Int>::Ptr InterfaceSampleBased::importInt(UInt idx) {
+	if (mOpened) {
+		mLog->warn("InterfaceVillas has already been opened! Configuration will remain unchanged.");
+		return nullptr;
+	}
+	
 	Attribute<Int>::Ptr attr = Attribute<Int>::make(Flags::read | Flags::write);
 	auto& log = mLog;
 	addImport([attr, idx, log](Sample *smp) {
@@ -55,10 +60,16 @@ Attribute<Int>::Ptr InterfaceSampleBased::importInt(UInt idx) {
 		attr->set(smp->data[idx].i);
 	});
 	mImportAttrs.push_back(attr);
+	mImportSignals[idx] = node::signal_create("", nullptr, node::SignalType::INTEGER);
 	return attr;
 }
 
 Attribute<Real>::Ptr InterfaceSampleBased::importReal(UInt idx) {
+	if (mOpened) {
+		mLog->warn("InterfaceVillas has already been opened! Configuration will remain unchanged.");
+		return nullptr;
+	}
+
 	Attribute<Real>::Ptr attr = Attribute<Real>::make(Flags::read | Flags::write);
 	auto& log = mLog;
 	addImport([attr, idx, log](Sample *smp) {
@@ -69,10 +80,16 @@ Attribute<Real>::Ptr InterfaceSampleBased::importReal(UInt idx) {
 		attr->set(smp->data[idx].f);
 	});
 	mImportAttrs.push_back(attr);
+	mImportSignals[idx] = node::signal_create("", nullptr, node::SignalType::FLOAT);
 	return attr;
 }
 
 Attribute<Bool>::Ptr InterfaceSampleBased::importBool(UInt idx) {
+	if (mOpened) {
+		mLog->warn("InterfaceVillas has already been opened! Configuration will remain unchanged.");
+		return nullptr;
+	}
+
 	Attribute<Bool>::Ptr attr = Attribute<Bool>::make(Flags::read | Flags::write);
 	auto& log = mLog;
 	addImport([attr, idx, log](Sample *smp) {
@@ -83,10 +100,16 @@ Attribute<Bool>::Ptr InterfaceSampleBased::importBool(UInt idx) {
 		attr->set(smp->data[idx].b);
 	});
 	mImportAttrs.push_back(attr);
+	mImportSignals[idx] = node::signal_create("", nullptr, node::SignalType::BOOLEAN);
 	return attr;
 }
 
 Attribute<Complex>::Ptr InterfaceSampleBased::importComplex(UInt idx) {
+	if (mOpened) {
+		mLog->warn("InterfaceVillas has already been opened! Configuration will remain unchanged.");
+		return nullptr;
+	}
+
 	Attribute<Complex>::Ptr attr = Attribute<Complex>::make(Flags::read | Flags::write);
 	auto& log = mLog;
 	addImport([attr, idx, log](Sample *smp) {
@@ -100,10 +123,16 @@ Attribute<Complex>::Ptr InterfaceSampleBased::importComplex(UInt idx) {
 		attr->set(y);
 	});
 	mImportAttrs.push_back(attr);
+	mImportSignals[idx] = node::signal_create("", nullptr, node::SignalType::COMPLEX);
 	return attr;
 }
 
 Attribute<Complex>::Ptr InterfaceSampleBased::importComplexMagPhase(UInt idx) {
+	if (mOpened) {
+		mLog->warn("InterfaceVillas has already been opened! Configuration will remain unchanged.");
+		return nullptr;
+	}
+
 	Attribute<Complex>::Ptr attr = Attribute<Complex>::make(Flags::read | Flags::write);
 	auto& log = mLog;
 	addImport([attr, idx, log](Sample *smp) {
@@ -117,10 +146,16 @@ Attribute<Complex>::Ptr InterfaceSampleBased::importComplexMagPhase(UInt idx) {
 		attr->set(y);
 	});
 	mImportAttrs.push_back(attr);
+	mImportSignals[idx] = node::signal_create("", nullptr, node::SignalType::COMPLEX);
 	return attr;
 }
 
 void InterfaceSampleBased::exportInt(Attribute<Int>::Ptr attr, UInt idx, const std::string &name, const std::string &unit) {
+	if (mOpened) {
+		mLog->warn("InterfaceVillas has already been opened! Configuration will remain unchanged.");
+		return;
+	}
+
 	addExport([attr, idx](Sample *smp) {
 		if (idx >= smp->capacity)
 			throw std::out_of_range("not enough space in allocated sample");
@@ -130,7 +165,7 @@ void InterfaceSampleBased::exportInt(Attribute<Int>::Ptr attr, UInt idx, const s
 		smp->data[idx].i = attr->getByValue();
 	});
 	mExportAttrs.push_back(attr);
-	mExportSignals[idx] = Signal(idx, villas::node::SignalType::INTEGER, name, unit);
+	mExportSignals[idx] = node::signal_create(name.c_str(), unit.c_str(), node::SignalType::INTEGER);
 }
 
 void InterfaceSampleBased::exportReal(Attribute<Real>::Ptr attr, UInt idx, const std::string &name, const std::string &unit) {
@@ -143,10 +178,15 @@ void InterfaceSampleBased::exportReal(Attribute<Real>::Ptr attr, UInt idx, const
 		smp->data[idx].f = attr->getByValue();
 	});
 	mExportAttrs.push_back(attr);
-	mExportSignals[idx] = Signal(idx, villas::node::SignalType::FLOAT, name, unit);
+	mExportSignals[idx] = node::signal_create(name.c_str(), unit.c_str(), node::SignalType::FLOAT);
 }
 
 void InterfaceSampleBased::exportBool(Attribute<Bool>::Ptr attr, UInt idx, const std::string &name, const std::string &unit) {
+	if (mOpened) {
+		mLog->warn("InterfaceVillas has already been opened! Configuration will remain unchanged.");
+		return;
+	}
+	
 	addExport([attr, idx](Sample *smp) {
 		if (idx >= smp->capacity)
 			throw std::out_of_range("not enough space in allocated sample");
@@ -156,10 +196,15 @@ void InterfaceSampleBased::exportBool(Attribute<Bool>::Ptr attr, UInt idx, const
 		smp->data[idx].b = attr->getByValue();
 	});
 	mExportAttrs.push_back(attr);
-	mExportSignals[idx] = Signal(idx, villas::node::SignalType::BOOLEAN, name, unit);
+	mExportSignals[idx] = node::signal_create(name.c_str(), unit.c_str(), node::SignalType::BOOLEAN);
 }
 
 void InterfaceSampleBased::exportComplex(Attribute<Complex>::Ptr attr, UInt idx, const std::string &name, const std::string &unit) {
+	if (mOpened) {
+		mLog->warn("InterfaceVillas has already been opened! Configuration will remain unchanged.");
+		return;
+	}
+	
 	addExport([attr, idx](Sample *smp) {
 		if (idx >= smp->capacity)
 			throw std::out_of_range("not enough space in allocated sample");
@@ -167,13 +212,11 @@ void InterfaceSampleBased::exportComplex(Attribute<Complex>::Ptr attr, UInt idx,
 			smp->length = idx + 1;
 
 		auto  y = attr->getByValue();
-		auto *z = reinterpret_cast<float*>(&smp->data[idx].z);
 
-		z[0] = y.real();
-		z[1] = y.imag();
+		smp->data[idx].z = std::complex<float>(y.real(), y.imag());
 	});
 	mExportAttrs.push_back(attr);
-	mExportSignals[idx] = Signal(idx, villas::node::SignalType::COMPLEX, name, unit);
+	mExportSignals[idx] = node::signal_create(name.c_str(), unit.c_str(), node::SignalType::COMPLEX);
 }
 
 CPS::Task::List InterfaceSampleBased::getTasks() {

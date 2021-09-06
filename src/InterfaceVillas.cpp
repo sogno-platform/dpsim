@@ -22,6 +22,7 @@
 
 #include <dpsim-villas/InterfaceVillas.h>
 #include <cps/Logger.h>
+#include <villas/list.hpp>
 
 using namespace CPS;
 using namespace DPsim;
@@ -60,25 +61,6 @@ InterfaceVillas::InterfaceVillas(const String &name, const String &nodeType, con
 			std::exit(1);
 		}
 
-		ret = node::memory::init(100);
-		if (ret)
-			throw RuntimeError("Error: VillasNode failed to initialize memory system");
-
-		//villas::kernel::rt::init(priority, affinity);
-
-		ret = node::pool_init(&mSamplePool, mQueueLenght, sizeof(Sample) + SAMPLE_DATA_LENGTH(mSampleLenght));
-		if (ret < 0) {
-			//FIXME: mLog is not set yet, so this crashes. Maybe do the whole initialization in open?
-			mLog->error("Error: InterfaceVillas failed to init sample pool. pool_init returned code {}", ret);
-			std::exit(1);
-		}
-
-		ret = mNode->prepare();
-		if (ret < 0) {
-			//FIXME: mLog is not set yet, so this crashes. Maybe do the whole initialization in open?
-			mLog->error("Error: Node in InterfaceVillas failed to prepare. Prepare returned code {}", ret);
-			std::exit(1);
-		}
 	} else {
 		//FIXME: mLog is not set yet, so this crashes. Maybe do the whole initialization in open?
 		mLog->error("Error: NodeType {} is not known to VILLASnode!", mNodeType);
@@ -90,16 +72,10 @@ void InterfaceVillas::open(CPS::Logger::Log log) {
 	mLog = log;
 	mLog->info("Opening InterfaceVillas...");
 
-	int ret = node::node_type_start(mNode->getType(), nullptr); //We have no SuperNode, so just hope type_start doesnt use it...
-	if (ret)
-		throw RuntimeError("Failed to start node-type: {}", *mNode->getType());
-
-	ret = mNode->start();
-	if (ret < 0) {
-		mLog->error("Fatal error: failed to start node in InterfaceVillas. Start returned code {}", ret);
-		close();
-		std::exit(1);
-	}
+	mLog->info("Preparing VILLASNode instance...");
+	prepareNode();
+	setupNodeSignals();
+	mLog->info("Node is ready to send / receive data!");
 	mOpened = true;
 
 	mSequence = 0;
@@ -110,7 +86,52 @@ void InterfaceVillas::open(CPS::Logger::Log log) {
 	mLastSample->ts.origin.tv_nsec = 0;
 
 	std::memset(&mLastSample->data, 0, mLastSample->capacity * sizeof(float));
+}
 
+
+void InterfaceVillas::prepareNode() {
+	int ret = node::memory::init(100);
+	if (ret)
+		throw RuntimeError("Error: VillasNode failed to initialize memory system");
+
+	//villas::kernel::rt::init(priority, affinity);
+
+	ret = node::pool_init(&mSamplePool, mQueueLenght, sizeof(Sample) + SAMPLE_DATA_LENGTH(mSampleLenght));
+	if (ret < 0) {
+		mLog->error("Error: InterfaceVillas failed to init sample pool. pool_init returned code {}", ret);
+		std::exit(1);
+	}
+
+	ret = mNode->prepare();
+	if (ret < 0) {
+		mLog->error("Error: Node in InterfaceVillas failed to prepare. Prepare returned code {}", ret);
+		std::exit(1);
+	}
+
+	ret = node::node_type_start(mNode->getType(), nullptr); //We have no SuperNode, so just hope type_start doesnt use it...
+	if (ret)
+		throw RuntimeError("Failed to start node-type: {}", *mNode->getType());
+
+	ret = mNode->start();
+	if (ret < 0) {
+		mLog->error("Fatal error: failed to start node in InterfaceVillas. Start returned code {}", ret);
+		close();
+		std::exit(1);
+	}
+}
+
+void InterfaceVillas::setupNodeSignals() {
+	List* nodeInputSignals = mNode->getInputSignals(false);
+	node::signal_list_clear(nodeInputSignals);
+	int idx = 0;
+	for (auto sig : mExportSignals) {
+		while (sig.first > idx) {
+			villas::list_push(nodeInputSignals, node::signal_create("", nullptr, node::SignalType::INVALID));
+			idx++;
+		}
+		villas::list_push(nodeInputSignals, sig.second);
+		idx++;
+	}
 }
 
 void InterfaceVillas::close() {
@@ -129,7 +150,7 @@ void InterfaceVillas::close() {
 }
 
 void InterfaceVillas::readValues(bool blocking) {
-	Sample *sample = nullptr; //FIXME: sample needs to be initialized to call mNode->read
+	Sample *sample = node::sample_alloc(&mSamplePool);
 	int ret = 0;
 	try {
 		while (ret == 0)

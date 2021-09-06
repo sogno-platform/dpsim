@@ -29,6 +29,8 @@
 #include <villas/sample.hpp>
 #include <villas/node.hpp>
 #include <villas/exceptions.hpp>
+#include <villas/signal.hpp>
+#include <villas/signal_list.hpp>
 
 using namespace villas;
 
@@ -63,25 +65,8 @@ namespace DPsim {
 		bool mSync;
 		/// Downsampling
 		UInt mDownsampling;
-
-		class Signal {
-			public:
-			std::string mName;
-			std::string mUnit;
-			node::SignalType mType;
-
-			Signal() {}
-			Signal(UInt idx, enum node::SignalType type, const std::string &name="", const std::string &unit="") :
-				mName(name),
-				mUnit(unit),
-				mType(type) {
-
-				if (mName.empty())
-					mName = fmt::format("signal_{}", idx);
-			}
-		};
-
-		std::map<int, Signal> mExportSignals;
+		std::map<int, node::Signal*> mExportSignals;
+		std::map<int, node::Signal*> mImportSignals;
 
 	public:
 

@@ -60,6 +60,10 @@ namespace DPsim {
 
 		void readValues(bool blocking = true);
 		void writeValues();
+
+	private:
+		void prepareNode();
+		void setupNodeSignals();
 	};
 }
 
