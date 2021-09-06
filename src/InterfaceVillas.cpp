@@ -176,8 +176,10 @@ void InterfaceVillas::writeValues() {
 		}
 
 		sample->sequence = mSequence++;
+		sample->flags |= (int) villas::node::SampleFlags::HAS_SEQUENCE;
 		sample->flags |= (int) villas::node::SampleFlags::HAS_DATA;
 		clock_gettime(CLOCK_REALTIME, &sample->ts.origin);
+		sample->flags |= (int) villas::node::SampleFlags::HAS_TS_ORIGIN;
 		done = true;
 
 		do {

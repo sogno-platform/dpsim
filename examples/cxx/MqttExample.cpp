@@ -80,7 +80,8 @@ int main(int argc, char* argv[]) {
 
 	// Interface
 	//evs->setAttributeRef("V_ref", intf.importComplex(0));
-	intf.exportComplex(evs->attributeMatrixComp("i_intf")->coeff(0, 0), 0);
+	intf.exportComplex(evs->attributeMatrixComp("i_intf")->coeff(0, 0), 0, "i_src");
+	intf.exportComplex(rL->attributeMatrixComp("v_intf")->coeff(0, 0), 1, "v_load");
 	sim.addInterface(&intf, false);
 
 	// Logger
