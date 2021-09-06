@@ -2,7 +2,7 @@ import dpsimpy
 import dpsimpyvillas
 
 sim_name = "DPsim_MQTT"
-time_step = 0.001
+time_step = 0.01
 final_time = 10
 
 n1 = dpsimpy.dp.SimNode('n1', dpsimpy.PhaseType.Single, [10])
@@ -51,10 +51,11 @@ mqtt_config = '''{
 
 intf = dpsimpyvillas.InterfaceVillas('dpsim-mqtt', 'mqtt', mqtt_config)
 
+sim.add_interface(intf, True)
+
 sim.import_attr('v_intf', 'V_ref', 0)
 sim.export_attr('v_intf', 'i_intf', 0, 0, 0)
 
-sim.add_interface(intf, True)
 sim.add_logger(logger)
 
 evs.set_intf_current([[complex(5, 0)]])

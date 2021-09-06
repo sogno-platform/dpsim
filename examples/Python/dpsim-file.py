@@ -48,10 +48,10 @@ file_config = '''{
 
 intf = dpsimpyvillas.InterfaceVillas('dpsim-file', 'file', file_config)
 
-sim.import_attr('v_intf', 'V_ref', 0)
+sim.add_interface(intf, False)
+#sim.import_attr('v_intf', 'V_ref', 0)
 sim.export_attr('v_intf', 'i_intf', 0, 0, 0)
 
-sim.add_interface(intf, True)
 sim.add_logger(logger)
 
 evs.set_intf_current([[complex(5, 0)]])
