@@ -117,8 +117,7 @@ Attribute<Complex>::Ptr InterfaceSampleBased::importComplex(UInt idx) {
 			log->error("incomplete data received from InterfaceVillas");
 			return;
 		}
-		auto *z = reinterpret_cast<float*>(&smp->data[idx].z);
-		auto  y = Complex(z[0], z[1]);
+		auto y = Complex(smp->data[idx].z.real(), smp->data[idx].z.imag());
 
 		attr->set(y);
 	});
