@@ -64,14 +64,14 @@ int main(int argc, char* argv[]) {
 	sim.setTimeStep(timeStep);
 	sim.setFinalTime(10.0);
 	
-    std::string fileConfig = "{\n \
-        \"type\": \"file\",\n \
-		\"uri\": \"logs/output.csv\", \
-        \"format\": \"csv\",\n \
-        \"out\": {\n  \
-            \"flush\": true\n \
-        }\n \
-    }";
+    std::string fileConfig = R"STRING({
+        "type": "file",
+		"uri": "logs/output.csv",
+        "format": "csv",
+        "out": {
+            "flush": true
+        }
+    })STRING";
 
     InterfaceVillas intf("dpsim-file", "file", fileConfig);
 

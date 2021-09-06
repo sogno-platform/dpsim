@@ -64,17 +64,17 @@ int main(int argc, char* argv[]) {
 	sim.setTimeStep(timeStep);
 	sim.setFinalTime(2.0);
 	
-    std::string mqttConfig = "{\n \
-        \"type\": \"mqtt\",\n \
-        \"format\": \"json\",\n \
-        \"host\": \"mqtt\",\n \
-        \"in\": {\n \
-            \"subscribe\": \"/mqtt-dpsim\"\n \
-        },\n \
-        \"out\": {\n  \
-            \"publish\": \"/dpsim-mqtt\"\n \
-        }\n \
-    }";
+    std::string mqttConfig = R"STRING({
+        "type": "mqtt",
+        "format": "json",
+        "host": "mqtt",
+        "in": {
+            "subscribe": "/mqtt-dpsim"
+        },
+        "out\": {
+            "publish": "/dpsim-mqtt"
+        }
+    })STRING";
 
     InterfaceVillas intf("dpsim-mqtt", "mqtt", mqttConfig);
 

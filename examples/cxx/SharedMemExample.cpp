@@ -64,16 +64,17 @@ int main(int argc, char* argv[]) {
 	sim.setTimeStep(timeStep);
 	sim.setFinalTime(2.0);
 	
-    std::string shmemConfig = "{\n \
-        \"type\": \"shmem\",\n \
-        \"in\": {\n \
-            \"name\": \"shmem-dpsim\"\n \
-        },\n \
-        \"out\": {\n  \
-            \"name\": \"dpsim-shmem\"\n \
-        },\n \
-		\"queuelen\": 1024 \n \
-    }";
+    std::string shmemConfig = R"STRING(
+		{
+        "type": "shmem",
+        "in": {
+            "name": "shmem-dpsim"
+        },
+        "out": {
+            "name": "dpsim-shmem"
+        },
+		"queuelen": 1024
+    })STRING";
 
     InterfaceVillas intf("dpsim-shmem", "shmem", shmemConfig);
 
