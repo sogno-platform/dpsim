@@ -49,11 +49,13 @@ InterfaceVillas::InterfaceVillas(const String &name, const String &nodeType, con
 		uuid_generate_random(fakeSuperNodeUUID);
 		ret = mNode->parse(config, fakeSuperNodeUUID);
 		if (ret < 0) {
+			//FIXME: mLog is not set yet, so this crashes. Maybe do the whole initialization in open?
 			mLog->error("Error: Node in InterfaceVillas failed to parse config. Parse returned code {}", ret);
 			std::exit(1);
 		}
 		ret = mNode->check();
 		if (ret < 0) {
+			//FIXME: mLog is not set yet, so this crashes. Maybe do the whole initialization in open?
 			mLog->error("Error: Node in InterfaceVillas failed check. Check returned code {}", ret);
 			std::exit(1);
 		}
@@ -66,16 +68,19 @@ InterfaceVillas::InterfaceVillas(const String &name, const String &nodeType, con
 
 		ret = node::pool_init(&mSamplePool, mQueueLenght, sizeof(Sample) + SAMPLE_DATA_LENGTH(mSampleLenght));
 		if (ret < 0) {
+			//FIXME: mLog is not set yet, so this crashes. Maybe do the whole initialization in open?
 			mLog->error("Error: InterfaceVillas failed to init sample pool. pool_init returned code {}", ret);
 			std::exit(1);
 		}
 
 		ret = mNode->prepare();
 		if (ret < 0) {
+			//FIXME: mLog is not set yet, so this crashes. Maybe do the whole initialization in open?
 			mLog->error("Error: Node in InterfaceVillas failed to prepare. Prepare returned code {}", ret);
 			std::exit(1);
 		}
 	} else {
+		//FIXME: mLog is not set yet, so this crashes. Maybe do the whole initialization in open?
 		mLog->error("Error: NodeType {} is not known to VILLASnode!", mNodeType);
 		std::exit(1);
 	}
@@ -159,6 +164,11 @@ void InterfaceVillas::writeValues() {
 	try {
 
 		sample = node::sample_alloc(&mSamplePool);
+		if (sample == nullptr) {
+			mLog->error("InterfaceVillas could not allocate a new sample! Not sending any data!");
+			return;
+		}
+
 		sample->signals = mNode->getInputSignals(false);
 
 		for (auto exp : mExports) {
@@ -177,6 +187,7 @@ void InterfaceVillas::writeValues() {
 			mLog->error("Failed to write samples to InterfaceVillas. Write returned code {}", ret);
 
 		sample_copy(mLastSample, sample);
+		sample_decref(sample);
 	}
 	catch (std::exception& exc) {
 		/* We need to at least send something, so determine where exactly the
@@ -188,6 +199,8 @@ void InterfaceVillas::writeValues() {
 
 		while (ret == 0)
 			ret = mNode->write(&sample, 1);
+
+		sample_decref(sample);
 
 		if (ret < 0)
 			mLog->error("Failed to write samples to InterfaceVillas. Write returned code {}", ret);

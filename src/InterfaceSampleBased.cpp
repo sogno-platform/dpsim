@@ -31,13 +31,17 @@ void InterfaceSampleBased::close() {
 }
 
 void InterfaceSampleBased::PreStep::execute(Real time, Int timeStepCount) {
-	if (timeStepCount % mIntf.mDownsampling == 0)
-		mIntf.readValues(mIntf.mSync);
+	if (!mIntf.mImportAttrs.empty()) {
+		if (timeStepCount % mIntf.mDownsampling == 0)
+			mIntf.readValues(mIntf.mSync);
+	}	
 }
 
 void InterfaceSampleBased::PostStep::execute(Real time, Int timeStepCount) {
-	if (timeStepCount % mIntf.mDownsampling == 0)
-		mIntf.writeValues();
+	if (!mIntf.mExportAttrs.empty()) {
+		if (timeStepCount % mIntf.mDownsampling == 0)
+			mIntf.writeValues();
+	}
 }
 
 Attribute<Int>::Ptr InterfaceSampleBased::importInt(UInt idx) {

@@ -38,7 +38,7 @@ int main(int argc, char* argv[]) {
 
 	// Components
 	auto evs = VoltageSource::make("v_s");
-	evs->setParameters(Complex(0, 0));
+	evs->setParameters(Complex(1000, 0));
 	auto rs =  Resistor::make("r_s");
 	rs->setParameters(1);
 	auto rl =  Resistor::make("r_line");
@@ -79,9 +79,9 @@ int main(int argc, char* argv[]) {
     InterfaceVillas intf("dpsim-mqtt", "mqtt", mqttConfig);
 
 	// Interface
-	evs->setAttributeRef("V_ref", intf.importComplex(0));
+	//evs->setAttributeRef("V_ref", intf.importComplex(0));
 	intf.exportComplex(evs->attributeMatrixComp("i_intf")->coeff(0, 0), 0);
-	sim.addInterface(&intf);
+	sim.addInterface(&intf, false);
 
 	// Logger
 	auto logger = DataLogger::make(simName);
@@ -89,7 +89,6 @@ int main(int argc, char* argv[]) {
 	logger->addAttribute("v2", n2->attribute("v"));
 	logger->addAttribute("v3", n3->attribute("v"));
 	logger->addAttribute("v4", n4->attribute("v"));
-	logger->addAttribute("V_ref", evs->attribute("V_ref"));
 	logger->addAttribute("i_evs", evs->attributeMatrixComp("i_intf"), 1, 1);
 	sim.addLogger(logger);
 
