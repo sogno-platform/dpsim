@@ -16,6 +16,7 @@ if(WITH_SHMEM)
 	set(SHMEM_SOURCES
 		FileExample.cpp
 		MqttExample.cpp
+		SharedMemExample.cpp
 		ShmemExample.cpp
 		ShmemDistributedReference.cpp
 		ShmemDistributedDirect.cpp
