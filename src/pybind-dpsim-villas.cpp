@@ -23,12 +23,76 @@
 
 namespace py = pybind11;
 using namespace py::literals;
+using namespace villas;
+
+class PyInterfaceShmem : public DPsim::InterfaceShmem {
+
+public:
+	using DPsim::InterfaceShmem::InterfaceShmem;
+
+	py::dict getConfig() {
+		auto signals = std::list<py::dict>();
+
+		int maxIdx = 0;
+		for (auto const& a : mExportSignals) {
+			if (a.first > maxIdx)
+				maxIdx = a.first;
+		}
+
+		for (int i = 0; i <= maxIdx; i++) {
+			node::Signal* s;
+			try {
+				s = mExportSignals.at(i);
+			} catch(std::out_of_range &) {
+				s = node::signal_create("", "", node::SignalType::FLOAT);
+			}
+
+			std::string name = "";
+			std::string unit = "";
+
+			if (s->name != nullptr) {
+				name = s->name;
+			}
+			if (s->unit != nullptr) {
+				unit = s->unit;
+			}
+
+			auto signal = py::dict(
+				"name"_a = name,
+				"type"_a = node::signal_type_to_str(s->type)
+			);
+
+			if (!unit.empty()) {
+				signal["unit"] = unit;
+			}
+
+			signals.push_back(signal);
+		}
+
+		return py::dict(
+			"type"_a = "shmem",
+			"queuelen"_a = mConf.queuelen,
+			"samplelen"_a = mConf.samplelen,
+			"mode"_a = mConf.polling ? "polling" : "pthread",
+			"in"_a = py::dict(
+				"name"_a = mWName,
+				"signals"_a = signals
+			),
+			"out"_a = py::dict(
+				"name"_a = mRName
+			)
+		);
+	}
+};
+
+
 
 PYBIND11_MODULE(dpsimpyvillas, m) {
 	py::object interface = (py::object) py::module_::import("dpsimpy").attr("Interface");
 
-	py::class_<DPsim::InterfaceShmem>(m, "InterfaceShmem", interface)
-	    .def(py::init<const CPS::String&, const CPS::String&>(), py::arg("shmwrite") = "/dpsim-villas", py::arg("shmread") = "/villas-dpsim");
+	py::class_<PyInterfaceShmem>(m, "InterfaceShmem", interface)
+	    .def(py::init<const CPS::String&, const CPS::String&>(), py::arg("shmwrite") = "/dpsim-villas", py::arg("shmread") = "/villas-dpsim")
+		.def("get_config", &PyInterfaceShmem::getConfig);
 
 	py::class_<DPsim::InterfaceVillas>(m, "InterfaceVillas", interface)
 	    .def(py::init<const CPS::String&, const CPS::String&, const CPS::String&>(), "name"_a, "node_type"_a, "config"_a);
