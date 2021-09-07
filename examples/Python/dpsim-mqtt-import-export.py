@@ -129,18 +129,17 @@ def dpsim():
     sim.add_interface(intf)
     sim.import_attr('Load', 'P', 0)
     sim.export_attr('n2', 'v', 0, dpsimpy.AttrModifier.mag)
-
-    return sim
+  
+    return sim, intf
 
 def test_shmem_import_export():
     logging.basicConfig(format='[%(asctime)s %(name)s %(levelname)s] %(message)s', datefmt='%H:%M:%S', level=logging.INFO)
 
-    sim = dpsim()
+    sim, intf = dpsim() #intf needs to be extracted from the dpsim-Method since the interface object gets deleted otherwise leading to SegFault when starting the simulation
     node = villas()
-
+    
     node.start()
     sim.run(1)
-
     node.stop()
 
 if __name__ == '__main__':
