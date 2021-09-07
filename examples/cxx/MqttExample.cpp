@@ -71,7 +71,7 @@ int main(int argc, char* argv[]) {
         "in": {
             "subscribe": "/mqtt-dpsim"
         },
-        "out\": {
+        "out": {
             "publish": "/dpsim-mqtt"
         }
     })STRING";

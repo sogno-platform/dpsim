@@ -49,7 +49,7 @@ mqtt_config = '''{
         }
 }'''
 
-intf = dpsimpyvillas.InterfaceVillas('dpsim-mqtt', 'mqtt', mqtt_config)
+intf = dpsimpyvillas.InterfaceVillas(name='dpsim-mqtt', node_type='mqtt', config=mqtt_config)
 
 sim.add_interface(intf, True)
 
