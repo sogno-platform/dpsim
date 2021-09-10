@@ -139,6 +139,16 @@ void addDPPh1Components(py::module_ mDPPh1) {
            "parallel_capacitance"_a = 0, "parallel_conductance"_a = 0)
       .def("connect", &CPS::DP::Ph1::PiLine::connect);
 
+  py::class_<CPS::DP::Ph1::ResIndSeries,
+             std::shared_ptr<CPS::DP::Ph1::ResIndSeries>,
+             CPS::SimPowerComp<CPS::Complex>>(mDPPh1, "ResInductor",
+                                              py::multiple_inheritance())
+      .def(py::init<std::string>())
+      .def(py::init<std::string, CPS::Logger::Level>())
+      .def("set_parameters", &CPS::DP::Ph1::ResIndSeries::setParameters, "R"_a,
+           "L"_a)
+      .def("connect", &CPS::DP::Ph1::ResIndSeries::connect);
+
   py::class_<CPS::DP::Ph1::RXLoad, std::shared_ptr<CPS::DP::Ph1::RXLoad>,
              CPS::SimPowerComp<CPS::Complex>>(mDPPh1, "RXLoad",
                                               py::multiple_inheritance())
