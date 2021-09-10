@@ -1,0 +1,12 @@
+<map id="CPS::EMT::Ph3::SynchronGeneratorVBRSmpl" name="CPS::EMT::Ph3::SynchronGeneratorVBRSmpl">
+<area shape="rect" id="node1" title=" " alt="" coords="1537,109,1784,151"/>
+<area shape="rect" id="node2" href="$class_c_p_s_1_1_sim_power_comp.html" title=" " alt="" coords="1276,25,1445,67"/>
+<area shape="rect" id="node3" href="$class_c_p_s_1_1_topological_power_comp.html" title=" " alt="" coords="540,33,747,59"/>
+<area shape="rect" id="node6" href="$class_c_p_s_1_1_sim_power_comp.html" title="Base class for all components that are transmitting power." alt="" coords="796,25,965,67"/>
+<area shape="rect" id="node4" href="$class_c_p_s_1_1_identified_object.html" title=" " alt="" coords="189,34,348,61"/>
+<area shape="rect" id="node5" href="$class_c_p_s_1_1_attribute_list.html" title="Base class of objects having attributes to access member variables." alt="" coords="5,70,140,97"/>
+<area shape="rect" id="node7" href="$class_c_p_s_1_1_m_n_a_interface.html" title="Interface to be implemented by all models used by the MNA solver." alt="" coords="372,87,516,114"/>
+<area shape="rect" id="node8" href="$class_c_p_s_1_1_base_1_1_synchron_generator.html" title="Base synchronous generator model." alt="" coords="1251,142,1471,169"/>
+<area shape="rect" id="node9" href="$class_shared_factory.html" title=" " alt="" coords="1233,193,1488,235"/>
+<area shape="rect" id="node10" href="$class_shared_factory.html" title=" " alt="" coords="805,201,957,227"/>
+</map>

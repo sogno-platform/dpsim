@@ -1,0 +1,5 @@
+<map id="CPS::MNASwitchInterface" name="CPS::MNASwitchInterface">
+<area shape="rect" id="node1" title="MNA interface to be used by switching devices." alt="" coords="5,155,192,181"/>
+<area shape="rect" id="node2" href="$class_c_p_s_1_1_m_n_a_interface.html" title="Interface to be implemented by all models used by the MNA solver." alt="" coords="27,80,171,107"/>
+<area shape="rect" id="node3" href="$class_c_p_s_1_1_attribute_list.html" title="Base class of objects having attributes to access member variables." alt="" coords="31,5,166,32"/>
+</map>

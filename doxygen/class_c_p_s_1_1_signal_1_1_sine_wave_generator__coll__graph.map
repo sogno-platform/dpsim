@@ -1,0 +1,10 @@
+<map id="CPS::Signal::SineWaveGenerator" name="CPS::Signal::SineWaveGenerator">
+<area shape="rect" id="node1" title=" " alt="" coords="125,399,357,425"/>
+<area shape="rect" id="node2" href="$class_c_p_s_1_1_signal_1_1_signal_generator.html" title=" " alt="" coords="5,323,213,349"/>
+<area shape="rect" id="node3" href="$class_c_p_s_1_1_sim_signal_comp.html" title=" " alt="" coords="30,233,189,260"/>
+<area shape="rect" id="node4" href="$class_c_p_s_1_1_topological_signal_comp.html" title=" " alt="" coords="6,157,213,184"/>
+<area shape="rect" id="node5" href="$class_c_p_s_1_1_identified_object.html" title=" " alt="" coords="30,81,189,108"/>
+<area shape="rect" id="node6" href="$class_c_p_s_1_1_attribute_list.html" title="Base class of objects having attributes to access member variables." alt="" coords="42,5,177,32"/>
+<area shape="rect" id="node7" href="$class_shared_factory.html" title=" " alt="" coords="238,323,511,349"/>
+<area shape="rect" id="node8" href="$class_shared_factory.html" title=" " alt="" coords="299,233,451,260"/>
+</map>

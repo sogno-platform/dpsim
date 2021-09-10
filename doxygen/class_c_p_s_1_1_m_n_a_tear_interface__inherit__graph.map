@@ -1,0 +1,15 @@
+<map id="CPS::MNATearInterface" name="CPS::MNATearInterface">
+<area shape="rect" id="node1" title=" " alt="" coords="380,233,551,260"/>
+<area shape="rect" id="node4" href="$class_c_p_s_1_1_d_p_1_1_ph1_1_1_inductor.html" title="Inductor." alt="" coords="614,5,781,32"/>
+<area shape="rect" id="node5" href="$class_c_p_s_1_1_d_p_1_1_ph1_1_1_pi_line.html" title="PI&#45;line dynamic phasor model." alt="" coords="621,56,773,83"/>
+<area shape="rect" id="node6" href="$class_c_p_s_1_1_d_p_1_1_ph1_1_1_res_ind_series.html" title="resistor inductor series element" alt="" coords="599,107,796,133"/>
+<area shape="rect" id="node7" href="$class_c_p_s_1_1_d_p_1_1_ph1_1_1_resistor.html" title="Dynamic phasor resistor model." alt="" coords="614,157,781,184"/>
+<area shape="rect" id="node8" href="$class_c_p_s_1_1_d_p_1_1_ph3_1_1_inductor.html" title="Inductor." alt="" coords="614,208,781,235"/>
+<area shape="rect" id="node9" href="$class_c_p_s_1_1_s_p_1_1_ph1_1_1_inductor.html" title="Static phasor inductor model." alt="" coords="615,259,779,285"/>
+<area shape="rect" id="node10" href="$class_c_p_s_1_1_s_p_1_1_ph1_1_1_pi_line.html" title="PI&#45;line static phasor model." alt="" coords="622,309,773,336"/>
+<area shape="rect" id="node11" href="$class_c_p_s_1_1_s_p_1_1_ph1_1_1_resistor.html" title="Static phasor resistor model." alt="" coords="615,360,779,387"/>
+<area shape="rect" id="node12" href="$class_c_p_s_1_1_s_p_1_1_ph3_1_1_inductor.html" title="Inductor." alt="" coords="615,411,779,437"/>
+<area shape="rect" id="node13" href="$class_c_p_s_1_1_s_p_1_1_ph3_1_1_resistor.html" title=" " alt="" coords="615,461,779,488"/>
+<area shape="rect" id="node2" href="$class_c_p_s_1_1_m_n_a_interface.html" title="Interface to be implemented by all models used by the MNA solver." alt="" coords="188,233,332,260"/>
+<area shape="rect" id="node3" href="$class_c_p_s_1_1_attribute_list.html" title="Base class of objects having attributes to access member variables." alt="" coords="5,233,140,260"/>
+</map>

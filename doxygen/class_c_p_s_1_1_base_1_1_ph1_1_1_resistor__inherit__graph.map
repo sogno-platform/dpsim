@@ -1,0 +1,8 @@
+<map id="CPS::Base::Ph1::Resistor" name="CPS::Base::Ph1::Resistor">
+<area shape="rect" id="node1" title=" " alt="" coords="5,107,185,133"/>
+<area shape="rect" id="node2" href="$class_c_p_s_1_1_d_p_1_1_ph1_1_1_resistor.html" title="Dynamic phasor resistor model." alt="" coords="257,5,424,32"/>
+<area shape="rect" id="node3" href="$class_c_p_s_1_1_d_p_1_1_ph3_1_1_series_resistor.html" title=" " alt="" coords="237,56,444,83"/>
+<area shape="rect" id="node4" href="$class_c_p_s_1_1_e_m_t_1_1_ph1_1_1_resistor.html" title="EMT Resistor." alt="" coords="253,107,428,133"/>
+<area shape="rect" id="node5" href="$class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_series_resistor.html" title="EMT three&#45;phase resistor." alt="" coords="233,157,448,184"/>
+<area shape="rect" id="node6" href="$class_c_p_s_1_1_s_p_1_1_ph1_1_1_resistor.html" title="Static phasor resistor model." alt="" coords="259,208,423,235"/>
+</map>

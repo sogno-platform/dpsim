@@ -1,0 +1,6 @@
+<map id="CPS::Base::Ph3::Capacitor" name="CPS::Base::Ph3::Capacitor">
+<area shape="rect" id="node1" title=" " alt="" coords="202,5,391,32"/>
+<area shape="rect" id="node2" href="$class_c_p_s_1_1_d_p_1_1_ph3_1_1_capacitor.html" title="Capacitor model." alt="" coords="5,80,180,107"/>
+<area shape="rect" id="node3" href="$class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_capacitor.html" title="Capacitor model." alt="" coords="205,80,389,107"/>
+<area shape="rect" id="node4" href="$class_c_p_s_1_1_s_p_1_1_ph3_1_1_capacitor.html" title="Capacitor model." alt="" coords="413,80,586,107"/>
+</map>
