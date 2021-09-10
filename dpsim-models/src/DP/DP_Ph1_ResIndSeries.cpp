@@ -9,11 +9,11 @@
 #include <dpsim-models/DP/DP_Ph1_ResIndSeries.h>
 
 using namespace CPS;
+using namespace std;
 
 DP::Ph1::ResIndSeries::ResIndSeries(String uid, String name, Logger::Level logLevel)
 	: MNASimPowerComp<Complex>(uid, name, true, true, logLevel),
 	mInductance(mAttributes->create<Real>("L")),
-	///FIXME: The resistance is never used anywhere...
 	mResistance(mAttributes->create<Real>("R")) {
 	mEquivCurrent = { 0, 0 };
 	**mIntfVoltage = MatrixComp::Zero(1,1);
@@ -68,11 +68,11 @@ void DP::Ph1::ResIndSeries::initVars(Real timeStep) {
 		Real a = timeStep / (2. * **mInductance);
 		Real b = timeStep * 2.*PI * mFrequencies(freq,0) / 2.;
 
-		Real equivCondReal = a / (1. + b * b);
-		Real equivCondImag =  -a * b / (1. + b * b);
+		Real equivCondReal = ( a + mResistance * sqrt(a,2) ) / ( sqrt((1.+R*a),2) + sqrt(b,2) );
+		Real equivCondImag =  -a*b / ( sqrt((1.+R*a),2) + sqrt(b,2) );
 		mEquivCond(freq,0) = { equivCondReal, equivCondImag };
-		Real preCurrFracReal = (1. - b * b) / (1. + b * b);
-		Real preCurrFracImag =  (-2. * b) / (1. + b * b);
+		Real preCurrFracReal = ( 1. - sqrt(b,2) + 2*R*a + sqrt((R*a),2) ) / ( sqrt((1.+R*a),2) + sqrt(b,2) );
+		Real preCurrFracImag =  ( -2.*b -2.*a*b*R ) / ( sqrt((1.+R*a),2) + sqrt(b,2) );
 		mPrevCurrFac(freq,0) = { preCurrFracReal, preCurrFracImag };
 
 		// TODO: check if this is correct or if it should be only computed before the step
