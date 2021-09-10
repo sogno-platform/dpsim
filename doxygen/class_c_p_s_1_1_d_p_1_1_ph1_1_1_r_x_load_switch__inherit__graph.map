@@ -1,0 +1,12 @@
+<map id="CPS::DP::Ph1::RXLoadSwitch" name="CPS::DP::Ph1::RXLoadSwitch">
+<area shape="rect" id="node1" title="Constant impedance load model consisting of RLC elements." alt="" coords="1468,90,1673,117"/>
+<area shape="rect" id="node2" href="$class_c_p_s_1_1_sim_power_comp.html" title=" " alt="" coords="1216,24,1385,65"/>
+<area shape="rect" id="node3" href="$class_c_p_s_1_1_topological_power_comp.html" title=" " alt="" coords="397,31,604,58"/>
+<area shape="rect" id="node6" href="$class_c_p_s_1_1_sim_power_comp.html" title="Base class for all components that are transmitting power." alt="" coords="839,24,1008,65"/>
+<area shape="rect" id="node4" href="$class_c_p_s_1_1_identified_object.html" title=" " alt="" coords="189,31,348,58"/>
+<area shape="rect" id="node5" href="$class_c_p_s_1_1_attribute_list.html" title="Base class of objects having attributes to access member variables." alt="" coords="5,59,140,86"/>
+<area shape="rect" id="node8" href="$class_c_p_s_1_1_m_n_a_interface.html" title="Interface to be implemented by all models used by the MNA solver." alt="" coords="197,83,341,110"/>
+<area shape="rect" id="node7" href="$class_c_p_s_1_1_m_n_a_switch_interface.html" title="MNA interface to be used by switching devices." alt="" coords="628,89,815,115"/>
+<area shape="rect" id="node9" href="$class_shared_factory.html" title=" " alt="" coords="1183,141,1419,167"/>
+<area shape="rect" id="node10" href="$class_shared_factory.html" title=" " alt="" coords="847,141,999,167"/>
+</map>

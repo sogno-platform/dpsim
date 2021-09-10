@@ -1,0 +1,9 @@
+<map id="CPS::Signal::PowerControllerVSI" name="CPS::Signal::PowerControllerVSI">
+<area shape="rect" id="node1" title=" " alt="" coords="104,337,332,364"/>
+<area shape="rect" id="node2" href="$class_c_p_s_1_1_sim_signal_comp.html" title=" " alt="" coords="29,254,188,281"/>
+<area shape="rect" id="node3" href="$class_c_p_s_1_1_topological_signal_comp.html" title=" " alt="" coords="5,157,212,184"/>
+<area shape="rect" id="node4" href="$class_c_p_s_1_1_identified_object.html" title=" " alt="" coords="29,81,188,108"/>
+<area shape="rect" id="node5" href="$class_c_p_s_1_1_attribute_list.html" title="Base class of objects having attributes to access member variables." alt="" coords="41,5,176,32"/>
+<area shape="rect" id="node6" href="$class_shared_factory.html" title=" " alt="" coords="212,247,445,288"/>
+<area shape="rect" id="node7" href="$class_shared_factory.html" title=" " alt="" coords="253,157,405,184"/>
+</map>

@@ -1,0 +1,12 @@
+<map id="CPS::DP::Ph1::SVC" name="CPS::DP::Ph1::SVC">
+<area shape="rect" id="node1" title="SVC." alt="" coords="1248,73,1387,100"/>
+<area shape="rect" id="node2" href="$class_c_p_s_1_1_base_1_1_ph1_1_1_s_v_c.html" title="Static VAR compensator (SVC)" alt="" coords="1005,5,1158,32"/>
+<area shape="rect" id="node3" href="$class_c_p_s_1_1_m_n_a_variable_comp_interface.html" title="MNA interface to be used by elements that require recomputing of the system matrix." alt="" coords="964,56,1199,83"/>
+<area shape="rect" id="node4" href="$class_c_p_s_1_1_sim_power_comp.html" title=" " alt="" coords="997,107,1166,149"/>
+<area shape="rect" id="node5" href="$class_c_p_s_1_1_topological_power_comp.html" title=" " alt="" coords="397,85,604,112"/>
+<area shape="rect" id="node8" href="$class_c_p_s_1_1_sim_power_comp.html" title="Base class for all components that are transmitting power." alt="" coords="653,107,823,149"/>
+<area shape="rect" id="node6" href="$class_c_p_s_1_1_identified_object.html" title=" " alt="" coords="189,85,348,112"/>
+<area shape="rect" id="node7" href="$class_c_p_s_1_1_attribute_list.html" title="Base class of objects having attributes to access member variables." alt="" coords="5,85,140,112"/>
+<area shape="rect" id="node9" href="$class_shared_factory.html" title=" " alt="" coords="996,173,1167,200"/>
+<area shape="rect" id="node10" href="$class_shared_factory.html" title=" " alt="" coords="662,173,814,200"/>
+</map>
