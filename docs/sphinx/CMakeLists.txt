@@ -22,7 +22,7 @@ if(WITH_PYTHON)
 		# We add the path of the freshly build dpsim.so module to Python path here
 		add_custom_target(docs
 			COMMAND
-				${CMAKE_COMMAND} -E env PYTHONPATH=${CMAKE_CURRENT_BINARY_DIR}:$ENV{PYTHONPATH}
+				${CMAKE_COMMAND} -E env PYTHONPATH=${CMAKE_BINARY_DIR}:$ENV{PYTHONPATH}
 				${SPHINX_EXECUTABLE}
 					-q -b html
 					-c "${BINARY_BUILD_DIR}"
