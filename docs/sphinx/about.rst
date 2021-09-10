@@ -6,10 +6,9 @@
 DPsim
 ======
 
-.. meta::
-   :generator: GitLab Pages
+DPsim is a real-time capable power system simulator that supports dynamic phasor and electromagnetic transient simulation as well as continuous powerflow.
 
-DPsim is a solver library for power system simulation.
+The documentation here is automatically generated from the Python module.
 
 The `main documentation <http://dpsim.fein-aachen.org/>`__ has build / installation instructions, links to examples and explains the concepts implemented in DPsim as well as its architecture.
 

@@ -1,11 +1,11 @@
 cmake_minimum_required(VERSION 3.11)
 project(DPsim CXX)
 
-set(PROJECT_AUTHOR "Institute for Automation of Complex Power Systems, RWTH Aachen University")
-set(PROJECT_COPYRIGHT "2017-2020, Institute for Automation of Complex Power Systems, RWTH Aachen University")
+set(PROJECT_AUTHOR "The DPsim Authors.")
+set(PROJECT_COPYRIGHT "2017-2021, The DPsim Authors.")
 set(PROJECT_DESCRIPTION "C++ Power System Simulation Library")
 set(PROJECT_HOMEPAGE_URL "https://dpsim.fein-aachen.org/")
-set(PROJECT_VCS_URL "https://github.com/dpsim-simulator/dpsim.git")
+set(PROJECT_VCS_URL "https://github.com/sogno-platform/dpsim")
 
 # Required for dpsim_python
 if(POLICY CMP0076)
