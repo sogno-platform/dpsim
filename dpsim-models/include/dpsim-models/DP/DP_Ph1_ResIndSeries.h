@@ -35,7 +35,7 @@ namespace Ph1 {
 		ResIndSeries(String uid, String name, Logger::Level logLevel = Logger::Level::off);
 		/// Defines name and log level
 		ResIndSeries(String name, Logger::Level logLevel = Logger::Level::off)
-			: Inductor(name, name, logLevel) { }
+			: ResIndSeries(name, name, logLevel) { }
 
 		// #### General ####
 		/// Sets model specific parameters
