@@ -1,10 +1,9 @@
 name: Build & Test
 
 on:
-  workflow_run:
-      workflows: ["Container"]
-      branches: [master]
-      types: [completed]
+  push:
+    branches:
+      - master
 
 ## Build ##
 
