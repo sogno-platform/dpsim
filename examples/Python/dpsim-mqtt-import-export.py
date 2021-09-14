@@ -39,7 +39,7 @@ def villas():
         'sine' : {
             'type': 'signal',
             'signal': 'sine',
-            'rate': 1,
+            'rate': 10,
             'frequency': 0.1,
             'amplitude': 50000,  
             'offset': 100000
@@ -105,7 +105,7 @@ def dpsim():
     sim.set_system(system)
     sim.set_domain(dpsimpy.Domain.SP)
     sim.set_solver(dpsimpy.Solver.NRP)
-    sim.set_time_step(1)
+    sim.set_time_step(0.1)
     sim.set_final_time(10)
     sim.do_init_from_nodes_and_terminals(False)
     
