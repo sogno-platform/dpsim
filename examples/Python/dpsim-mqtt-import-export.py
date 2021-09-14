@@ -49,7 +49,8 @@ def villas():
     paths = [
         {
             'in': 'mqtt',
-            'out': 'file1'
+            'out': 'file1',
+            'hooks': [{'type':'print'}]
         },
         {
             'in': 'sine',

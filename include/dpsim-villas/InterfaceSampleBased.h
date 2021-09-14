@@ -65,8 +65,8 @@ namespace DPsim {
 		bool mSync;
 		/// Downsampling
 		UInt mDownsampling;
-		std::map<int, node::Signal*> mExportSignals;
-		std::map<int, node::Signal*> mImportSignals;
+		std::map<int, node::Signal::Ptr> mExportSignals;
+		std::map<int, node::Signal::Ptr> mImportSignals;
 
 	public:
 

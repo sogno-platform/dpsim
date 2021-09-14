@@ -22,7 +22,7 @@
 
 #include <dpsim-villas/InterfaceVillas.h>
 #include <cps/Logger.h>
-#include <villas/list.hpp>
+#include <villas/signal_list.hpp>
 
 using namespace CPS;
 using namespace DPsim;
@@ -121,15 +121,15 @@ void InterfaceVillas::prepareNode() {
 }
 
 void InterfaceVillas::setupNodeSignals() {
-	List* nodeInputSignals = mNode->getInputSignals(false);
-	node::signal_list_clear(nodeInputSignals);
+	node::SignalList::Ptr nodeInputSignals = mNode->getInputSignals(false);
+	nodeInputSignals->clear();
 	int idx = 0;
 	for (auto sig : mExportSignals) {
 		while (sig.first > idx) {
-			villas::list_push(nodeInputSignals, node::signal_create("", nullptr, node::SignalType::INVALID));
+			nodeInputSignals->push_back(std::make_shared<node::Signal>("", "", node::SignalType::INVALID));
 			idx++;
 		}
-		villas::list_push(nodeInputSignals, sig.second);
+		nodeInputSignals->push_back(sig.second);
 		idx++;
 	}
 }
@@ -183,7 +183,6 @@ void InterfaceVillas::writeValues() {
 	Int ret = 0;
 	bool done = false;
 	try {
-
 		sample = node::sample_alloc(&mSamplePool);
 		if (sample == nullptr) {
 			mLog->error("InterfaceVillas could not allocate a new sample! Not sending any data!");

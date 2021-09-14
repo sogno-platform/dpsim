@@ -40,30 +40,20 @@ public:
 		}
 
 		for (int i = 0; i <= maxIdx; i++) {
-			node::Signal* s;
+			node::Signal::Ptr s;
 			try {
 				s = mExportSignals.at(i);
 			} catch(std::out_of_range &) {
-				s = node::signal_create("", "", node::SignalType::FLOAT);
-			}
-
-			std::string name = "";
-			std::string unit = "";
-
-			if (s->name != nullptr) {
-				name = s->name;
-			}
-			if (s->unit != nullptr) {
-				unit = s->unit;
+				s = std::make_shared<node::Signal>("", "", node::SignalType::FLOAT);
 			}
 
 			auto signal = py::dict(
-				"name"_a = name,
+				"name"_a = s->name,
 				"type"_a = node::signal_type_to_str(s->type)
 			);
 
-			if (!unit.empty()) {
-				signal["unit"] = unit;
+			if (!s->unit.empty()) {
+				signal["unit"] = s->unit;
 			}
 
 			signals.push_back(signal);
