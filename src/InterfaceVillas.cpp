@@ -23,6 +23,7 @@
 #include <dpsim-villas/InterfaceVillas.h>
 #include <cps/Logger.h>
 #include <villas/signal_list.hpp>
+#include <villas/path.hpp>
 
 using namespace CPS;
 using namespace DPsim;
@@ -121,10 +122,24 @@ void InterfaceVillas::prepareNode() {
 }
 
 void InterfaceVillas::setupNodeSignals() {
-	node::SignalList::Ptr nodeInputSignals = mNode->getInputSignals(false);
-	nodeInputSignals->clear();
+	mNode->out.path = new node::Path();
+	mNode->out.path->signals = std::make_shared<node::SignalList>();
+	node::SignalList::Ptr nodeOutputSignals = mNode->out.path->getOutputSignals(false);
+	nodeOutputSignals->clear();
 	int idx = 0;
 	for (auto sig : mExportSignals) {
+		while (sig.first > idx) {
+			nodeOutputSignals->push_back(std::make_shared<node::Signal>("", "", node::SignalType::INVALID));
+			idx++;
+		}
+		nodeOutputSignals->push_back(sig.second);
+		idx++;
+	}
+
+	node::SignalList::Ptr nodeInputSignals = mNode->getInputSignals(false);
+	nodeInputSignals->clear();
+	idx = 0;
+	for (auto sig : mImportSignals) {
 		while (sig.first > idx) {
 			nodeInputSignals->push_back(std::make_shared<node::Signal>("", "", node::SignalType::INVALID));
 			idx++;
@@ -189,7 +204,7 @@ void InterfaceVillas::writeValues() {
 			return;
 		}
 
-		sample->signals = mNode->getInputSignals(false);
+		sample->signals = mNode->getOutputSignals(false);
 
 		for (auto exp : mExports) {
 			exp(sample);
