@@ -37,6 +37,9 @@ namespace DPsim {
 
 	public:
 		typedef std::shared_ptr<InterfaceVillas> Ptr;
+		static UInt villasPriority;
+		static UInt villasAffinity;
+		static UInt villasHugePages;
 
 	protected:
 		//Villas node to send / receive data to / from
@@ -47,6 +50,8 @@ namespace DPsim {
 		int mQueueLenght;
 		int mSampleLenght;
 		node::Pool mSamplePool;
+
+		static Bool villasInitialized;
 
 	public:
 		/** Create a InterfaceVillas with a specific configuration for the VillasNode
@@ -60,6 +65,7 @@ namespace DPsim {
 
 		void readValues(bool blocking = true);
 		void writeValues();
+		void initVillas();
 
 	private:
 		void prepareNode();

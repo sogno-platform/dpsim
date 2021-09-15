@@ -28,14 +28,29 @@
 using namespace CPS;
 using namespace DPsim;
 
+Bool InterfaceVillas::villasInitialized = false;
+UInt InterfaceVillas::villasAffinity = 0;
+UInt InterfaceVillas::villasPriority = 0;
+UInt InterfaceVillas::villasHugePages = 100;
+
 InterfaceVillas::InterfaceVillas(const String &name, const String &nodeType, const String &nodeConfig, UInt queueLenght, UInt sampleLenght, UInt downsampling) :
 	InterfaceSampleBased(name, name, true, downsampling), // Set sync=true for all InterfaceVillas instances
 	mNodeType(nodeType),
 	mNodeConfig(nodeConfig),
 	mQueueLenght(queueLenght),
 	mSampleLenght(sampleLenght)
-	{
-	
+	{ }
+
+void InterfaceVillas::open(CPS::Logger::Log log) {
+	mLog = log;
+	mLog->info("Opening InterfaceVillas...");
+
+	if (!InterfaceVillas::villasInitialized) {
+		mLog->info("Initializing Villas...");
+		initVillas();
+		InterfaceVillas::villasInitialized = true;
+	}
+
 	node::NodeType* nodeTypeStruct = node::node_type_lookup(mNodeType);
 	if (nodeTypeStruct != nullptr) {
 		mNode = std::make_unique<node::Node>(nodeTypeStruct);
@@ -51,31 +66,22 @@ InterfaceVillas::InterfaceVillas(const String &name, const String &nodeType, con
 		uuid_generate_random(fakeSuperNodeUUID);
 		ret = mNode->parse(config, fakeSuperNodeUUID);
 		if (ret < 0) {
-			//FIXME: mLog is not set yet, so this crashes. Maybe do the whole initialization in open?
 			mLog->error("Error: Node in InterfaceVillas failed to parse config. Parse returned code {}", ret);
 			std::exit(1);
 		}
 		ret = mNode->check();
 		if (ret < 0) {
-			//FIXME: mLog is not set yet, so this crashes. Maybe do the whole initialization in open?
 			mLog->error("Error: Node in InterfaceVillas failed check. Check returned code {}", ret);
 			std::exit(1);
 		}
-
 	} else {
-		//FIXME: mLog is not set yet, so this crashes. Maybe do the whole initialization in open?
 		mLog->error("Error: NodeType {} is not known to VILLASnode!", mNodeType);
 		std::exit(1);
 	}
-}
-
-void InterfaceVillas::open(CPS::Logger::Log log) {
-	mLog = log;
-	mLog->info("Opening InterfaceVillas...");
 
 	mLog->info("Preparing VILLASNode instance...");
-	prepareNode();
 	setupNodeSignals();
+	prepareNode();
 	mLog->info("Node is ready to send / receive data!");
 	mOpened = true;
 
@@ -91,13 +97,7 @@ void InterfaceVillas::open(CPS::Logger::Log log) {
 
 
 void InterfaceVillas::prepareNode() {
-	int ret = node::memory::init(100);
-	if (ret)
-		throw RuntimeError("Error: VillasNode failed to initialize memory system");
-
-	//villas::kernel::rt::init(priority, affinity);
-
-	ret = node::pool_init(&mSamplePool, mQueueLenght, sizeof(Sample) + SAMPLE_DATA_LENGTH(mSampleLenght));
+	int ret = node::pool_init(&mSamplePool, mQueueLenght, sizeof(Sample) + SAMPLE_DATA_LENGTH(mSampleLenght));
 	if (ret < 0) {
 		mLog->error("Error: InterfaceVillas failed to init sample pool. pool_init returned code {}", ret);
 		std::exit(1);
@@ -244,4 +244,12 @@ void InterfaceVillas::writeValues() {
 
 		/* Don't throw here, because we managed to send something */
 	}
+}
+
+void InterfaceVillas::initVillas() {
+	int ret = node::memory::init(villasHugePages);
+	if (ret)
+		throw RuntimeError("Error: VillasNode failed to initialize memory system");
+
+	villas::kernel::rt::init(villasPriority, villasAffinity);
 }
