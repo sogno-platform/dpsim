@@ -97,18 +97,19 @@ void EMT_1ph_SynGenTrStab_Fault(String simName, Real timeStep, Real finalTime, b
 					      Math::singlePhaseParameterToThreePhase(smib.lineCapacitance),
 						  Math::singlePhaseParameterToThreePhase(smib.lineConductance));
 
-	// //Switch
-	auto faultEMT = CPS::EMT::Ph3::Switch::make("Br_fault", Logger::Level::debug);
-	faultEMT->setParameters(Math::singlePhaseParameterToThreePhase(SwitchOpen),
-						 Math::singlePhaseParameterToThreePhase(SwitchClosed));
-	faultEMT->openSwitch();
+	// // //Switch
+	// auto faultEMT = CPS::EMT::Ph3::Switch::make("Br_fault", Logger::Level::debug);
+	// faultEMT->setParameters(Math::singlePhaseParameterToThreePhase(SwitchOpen), 
+	// 					 Math::singlePhaseParameterToThreePhase(SwitchClosed));
+	// faultEMT->openSwitch();
 	
 	// TODO: implement var res switch in EMT
-	// // Variable resistance Switch
-	// auto faultSP = SP::Ph1::varResSwitch::make("Br_fault", Logger::Level::debug);
-	// faultSP->setParameters(SwitchOpen, SwitchClosed);
-	// faultSP->setInitParameters(timeStep);
-	// faultSP->open();
+	// Variable resistance Switch
+	auto faultEMT = EMT::Ph3::varResSwitch::make("Br_fault", Logger::Level::debug);
+	faultEMT->setParameters(Math::singlePhaseParameterToThreePhase(SwitchOpen), 
+						 Math::singlePhaseParameterToThreePhase(SwitchClosed));
+	faultEMT->setInitParameters(timeStep);
+	faultEMT->openSwitch();
 
 	// Topology
 	genEMT->connect({ n1EMT });
@@ -152,7 +153,7 @@ void EMT_1ph_SynGenTrStab_Fault(String simName, Real timeStep, Real finalTime, b
 	simEMT.setFinalTime(finalTime);
 	simEMT.setDomain(Domain::EMT);
 	simEMT.addLogger(loggerEMT);
-	// simEMT.doSystemMatrixRecomputation(true); //for varres switch
+	simEMT.doSystemMatrixRecomputation(true); //for varres switch
 
 		// Events
 	if (startFaultEvent){
@@ -177,7 +178,7 @@ int main(int argc, char* argv[]) {
 	//Simultion parameters
 	String simName="EMT_SynGenTrStab_SMIB_Fault";
 	Real finalTime = 20;
-	Real timeStep = 0.001;
+	Real timeStep = 0.00005;
 	Bool startFaultEvent=true;
 	Bool endFaultEvent=true;
 	Real startTimeFault=10;
