@@ -7,6 +7,9 @@ Reference
     :members:
     :undoc-members:
 
+Dynamic Phasor / SFA Models
+---------------------------
+
 .. automodule:: dpsimpy.dp
     :members:
     :undoc-members:
@@ -19,6 +22,9 @@ Reference
     :members:
     :undoc-members:
 
+Electromagnetic Transient Models
+--------------------------------
+
 .. automodule:: dpsimpy.emt
     :members:
     :undoc-members:
@@ -30,6 +36,9 @@ Reference
 .. automodule:: dpsimpy.emt.ph1
     :members:
     :undoc-members:
+
+(Quasi) Static / RMS Models
+---------------------------
 
 .. automodule:: dpsimpy.sp
     :members:
