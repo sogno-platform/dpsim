@@ -124,7 +124,7 @@ def dpsim():
     sim.log_attr('n1', 'v')
     sim.log_attr('n2', 'v')
 
-    intf_config = '''{
+    intf_config = {
         "type": "mqtt",
         "format": "json",
         "host": "mqtt",
@@ -134,7 +134,7 @@ def dpsim():
         "out": {
             "publish": "/dpsim-mqtt"
         }
-    }'''
+    }
 
     intf = dpsimpyvillas.InterfaceVillas(name="dpsim-mqtt", node_type="mqtt", config=intf_config)
     sim.add_interface(intf)

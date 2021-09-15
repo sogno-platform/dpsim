@@ -75,6 +75,22 @@ public:
 	}
 };
 
+class PyInterfaceVillas: public DPsim::InterfaceVillas {
+
+public:
+	using DPsim::InterfaceVillas::InterfaceVillas;
+
+	PyInterfaceVillas(const CPS::String &name, const CPS::String &nodeType, py::dict config, CPS::UInt queueLenght, CPS::UInt sampleLenght, CPS::UInt downsampling) :
+		InterfaceVillas(
+			name,
+			nodeType, 
+			(py::str) py::module_::import("json").attr("dumps")(config, "indent"_a = py::none()), //json.dumps(config, indent=None)
+			queueLenght,
+			sampleLenght,
+			downsampling)
+		{}
+};
+
 
 
 PYBIND11_MODULE(dpsimpyvillas, m) {
@@ -84,6 +100,7 @@ PYBIND11_MODULE(dpsimpyvillas, m) {
 	    .def(py::init<const CPS::String&, const CPS::String&>(), py::arg("shmwrite") = "/dpsim-villas", py::arg("shmread") = "/villas-dpsim")
 		.def("get_config", &PyInterfaceShmem::getConfig);
 
-	py::class_<DPsim::InterfaceVillas>(m, "InterfaceVillas", interface)
-	    .def(py::init<const CPS::String&, const CPS::String&, const CPS::String&>(), "name"_a, "node_type"_a, "config"_a);
+	py::class_<PyInterfaceVillas>(m, "InterfaceVillas", interface)
+	    .def(py::init<const CPS::String&, const CPS::String&, const CPS::String&, CPS::UInt, CPS::UInt, CPS::UInt>(), "name"_a, "node_type"_a, "config"_a, "queue_lenght"_a=512, "sample_lenght"_a = 64, "downsampling"_a=1)
+		.def(py::init<const CPS::String&, const CPS::String&, py::dict, CPS::UInt, CPS::UInt, CPS::UInt>(), "name"_a, "node_type"_a, "config"_a, "queue_lenght"_a=512, "sample_lenght"_a = 64, "downsampling"_a=1);
 }
