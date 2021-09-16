@@ -86,8 +86,10 @@ set(CIRCUIT_SOURCES
 	#3Bus System
 	Circuits/SP_SynGenTrStab_3Bus_SteadyState.cpp
 	Circuits/DP_SynGenTrStab_3Bus_SteadyState.cpp
+	Circuits/EMT_SynGenTrStab_3Bus_SteadyState.cpp
 	Circuits/DP_SynGenTrStab_3Bus_Fault.cpp
 	Circuits/SP_SynGenTrStab_3Bus_Fault.cpp
+	Circuits/EMT_SynGenTrStab_3Bus_Fault.cpp
 
 )
 
