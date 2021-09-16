@@ -11,7 +11,6 @@
 using namespace DPsim;
 using namespace CPS;
 
-
 PFSolverPowerPolar::PFSolverPowerPolar(CPS::String name, const CPS::SystemTopology &system, CPS::Real timeStep, CPS::Logger::Level logLevel)
     : PFSolver(name, system, timeStep, logLevel){ }
 

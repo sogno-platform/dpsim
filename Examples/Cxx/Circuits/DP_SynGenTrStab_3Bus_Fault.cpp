@@ -1,3 +1,11 @@
+/* Copyright 2017-2021 Institute for Automation of Complex Power Systems,
+ *                     EONERC, RWTH Aachen University
+ *
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at https://mozilla.org/MPL/2.0/.
+ *********************************************************************************/
+
 #include <DPsim.h>
 #include "../Examples.h"
 
@@ -39,7 +47,7 @@ void DP_SynGenTrStab_3Bus_Fault(String simName, Real timeStep, Real finalTime, b
 	auto loadPF = SP::Ph1::Shunt::make("Load", Logger::Level::debug);
 	loadPF->setParameters(ThreeBus.activePower_L / std::pow(ThreeBus.Vnom, 2), - ThreeBus.reactivePower_L / std::pow(ThreeBus.Vnom, 2));
 	loadPF->setBaseVoltage(ThreeBus.Vnom);
-	
+
 	//Line12
 	auto line12PF = SP::Ph1::PiLine::make("PiLine12", Logger::Level::debug);
 	line12PF->setParameters(ThreeBus.lineResistance12, ThreeBus.lineInductance12, ThreeBus.lineCapacitance12, ThreeBus.lineConductance12);
@@ -91,7 +99,7 @@ void DP_SynGenTrStab_3Bus_Fault(String simName, Real timeStep, Real finalTime, b
 	// ----- Dynamic simulation ------
 	String simNameDP = simName + "_DP";
 	Logger::setLogDir("logs/"+simNameDP);
-	
+
 	// Nodes
 	auto n1DP = SimNode<Complex>::make("n1", PhaseType::Single);
 	auto n2DP = SimNode<Complex>::make("n2", PhaseType::Single);
@@ -116,7 +124,7 @@ void DP_SynGenTrStab_3Bus_Fault(String simName, Real timeStep, Real finalTime, b
 
 	gen2DP->setModelFlags(true, true);
 	gen2DP->setReferenceOmega(gen1DP->attribute<Real>("w_r"), gen1DP->attribute<Real>("delta_r"));
-	
+
 	///Load
 	auto loadDP=DP::Ph1::RXLoad::make("Load", Logger::Level::debug);
 	loadDP->setParameters(ThreeBus.activePower_L, ThreeBus.reactivePower_L, ThreeBus.Vnom);
@@ -150,7 +158,7 @@ void DP_SynGenTrStab_3Bus_Fault(String simName, Real timeStep, Real finalTime, b
 	line13DP->connect({ n1DP, n3DP });
 	line23DP->connect({ n2DP, n3DP });
 	// faultDP->connect({DP::SimNode::GND , n1DP }); //terminal of generator 1
-	faultDP->connect({DP::SimNode::GND , n2DP }); //terminal of generator 2	
+	faultDP->connect({DP::SimNode::GND , n2DP }); //terminal of generator 2
 	// faultDP->connect({DP::SimNode::GND , n3DP }); //Load bus
 	auto systemDP = SystemTopology(60,
 			SystemNodeList{n1DP, n2DP, n3DP},
@@ -171,7 +179,7 @@ void DP_SynGenTrStab_3Bus_Fault(String simName, Real timeStep, Real finalTime, b
 	loggerDP->addAttribute("i_line13", line13DP->attribute("i_intf"));
 	loggerDP->addAttribute("v_line23", line23DP->attribute("v_intf"));
 	loggerDP->addAttribute("i_line23", line23DP->attribute("i_intf"));
-	loggerDP->addAttribute("Ep_gen1", gen1DP->attribute("Ep_mag"));	
+	loggerDP->addAttribute("Ep_gen1", gen1DP->attribute("Ep_mag"));
 	loggerDP->addAttribute("v_gen1", gen1DP->attribute("v_intf"));
 	loggerDP->addAttribute("i_gen1", gen1DP->attribute("i_intf"));
 	loggerDP->addAttribute("wr_gen1", gen1DP->attribute("w_r"));
@@ -209,14 +217,14 @@ void DP_SynGenTrStab_3Bus_Fault(String simName, Real timeStep, Real finalTime, b
 
 		auto sw2 = SwitchEvent::make(endTimeFault, faultDP, false);
 		simDP.addEvent(sw2);
-	
+
 	}
 
 	simDP.run();
 }
 
-int main(int argc, char* argv[]) {	
-		
+int main(int argc, char* argv[]) {
+
 
 	//Simultion parameters
 	String simName="DP_SynGenTrStab_3Bus_Fault";
@@ -244,12 +252,12 @@ int main(int argc, char* argv[]) {
 		if (args.options.find("SCALEDAMPING_G1") != args.options.end())
 			cmdDamping_G1 = args.options["SCALEDAMPING_G1"];
 		if (args.options.find("SCALEDAMPING_G2") != args.options.end())
-			cmdDamping_G2 = args.options["SCALEDAMPING_G2"];	
+			cmdDamping_G2 = args.options["SCALEDAMPING_G2"];
 		if (args.options.find("STARTTIMEFAULT") != args.options.end())
 			startTimeFault = args.options["STARTTIMEFAULT"];
 		if (args.options.find("ENDTIMEFAULT") != args.options.end())
-			endTimeFault = args.options["ENDTIMEFAULT"];	
+			endTimeFault = args.options["ENDTIMEFAULT"];
 	}
-	
+
 	DP_SynGenTrStab_3Bus_Fault(simName, timeStep, finalTime, startFaultEvent, endFaultEvent, startTimeFault, endTimeFault, cmdInertia_G1, cmdInertia_G2, cmdDamping_G1, cmdDamping_G2);
 }

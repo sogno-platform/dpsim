@@ -1,6 +1,12 @@
+/* Copyright 2017-2021 Institute for Automation of Complex Power Systems,
+ *                     EONERC, RWTH Aachen University
+ *
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at https://mozilla.org/MPL/2.0/.
+ *********************************************************************************/
 
 #include <DPsim.h>
-
 
 using namespace DPsim;
 using namespace CPS;
@@ -8,7 +14,7 @@ using namespace CPS;
 // Define machine parameters in per unit
 Real nomPower = 555e6;
 Real nomPhPhVoltRMS = 24e3;
-Real nomFreq = 60; 
+Real nomFreq = 60;
 Real nomFieldCurr = 1300;
 Int poleNum = 2;
 Real H = 3.7/10;
@@ -43,12 +49,12 @@ Real lineConductance =8e-2; //change inductance to allow bigger time steps and t
 Real lineResistance21 = lineResistance*0.1;
 Real lineInductance21 = lineInductance*0.1;
 Real lineCapacitance21 = lineCapacitance*0.1;
-Real lineConductance21 =lineConductance*0.1; 
+Real lineConductance21 =lineConductance*0.1;
 
 Real lineResistance22 = lineResistance*0.9;
 Real lineInductance22 = lineInductance*0.9;
 Real lineCapacitance22 = lineCapacitance*0.9;
-Real lineConductance22 =lineConductance*0.9; 
+Real lineConductance22 =lineConductance*0.9;
 
 //Breaker to trigger fault between the two lines
 Real BreakerOpen = 1e3;
@@ -59,7 +65,7 @@ Real BreakerClosed = 0.005;
 Real Vnom = nomPhPhVoltRMS;
 // Slack voltage: 24kV
 Real Vslack = Vnom;
-//Synchronous generator 
+//Synchronous generator
 Real ratedApparentPower=555e6;
 Real ratedVoltage=Vnom;
 Real setPointActivePower=300e6;
@@ -138,7 +144,7 @@ void SP_1ph_SynGenTrStab_Fault(Real timeStep, Real finalTime, bool startFaultEve
 	// ----- Dynamic simulation ------
 	String simName = "SP_1ph_SynGenTrStab_Fault_dl";
 	Logger::setLogDir("logs/"+simName);
-	
+
 	// Nodes
 	auto n1 = SimNode<Complex>::make("n1", PhaseType::Single);
 	auto n2 = SimNode<Complex>::make("n2", PhaseType::Single);
@@ -170,7 +176,7 @@ void SP_1ph_SynGenTrStab_Fault(Real timeStep, Real finalTime, bool startFaultEve
 	auto fault = CPS::SP::Ph1::Switch::make("Br_fault", Logger::Level::debug);
 	fault->setParameters(BreakerOpen, BreakerClosed);
 	fault->open();
-	
+
 	// Topology
 	gen->connect({ n1 });
 	line1->connect({ n1, n3 });
@@ -223,7 +229,7 @@ void SP_1ph_SynGenTrStab_Fault(Real timeStep, Real finalTime, bool startFaultEve
 
 		auto sw2 = SwitchEvent::make(endTimeFault, fault, false);
 		sim.addEvent(sw2);
-	
+
 	}
 
 	sim.run();
@@ -301,7 +307,7 @@ void DP_1ph_SynGenTrStab_Fault(Real timeStep, Real finalTime, bool startFaultEve
 	// ----- Dynamic simulation ------
 	String simName = "DP_1ph_SynGenTrStab_Fault_dl";
 	Logger::setLogDir("logs/"+simName);
-	
+
 	// Nodes
 	auto n1 = SimNode<Complex>::make("n1", PhaseType::Single);
 	auto n2 = SimNode<Complex>::make("n2", PhaseType::Single);
@@ -380,13 +386,13 @@ void DP_1ph_SynGenTrStab_Fault(Real timeStep, Real finalTime, bool startFaultEve
 
 		auto sw2 = SwitchEvent::make(endTimeFault, fault, false);
 		sim.addEvent(sw2);
-	
+
 	}
 
 	sim.run();
 }
 
-int main(int argc, char* argv[]) {		
+int main(int argc, char* argv[]) {
 
 	//Simultion parameters
 	Real finalTime = 5;
@@ -402,5 +408,5 @@ int main(int argc, char* argv[]) {
 
 	//Transient Stability model(classical model 2nd order)
 	DP_1ph_SynGenTrStab_Fault(timeStep, finalTime,startFaultEvent, endFaultEvent, startTimeFault, endTimeFault);
-	
+
 }

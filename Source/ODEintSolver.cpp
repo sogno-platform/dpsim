@@ -8,7 +8,6 @@
 
 #include <dpsim/ODEintSolver.h>
 
-
 using namespace DPsim;
 
 ODEintSolver::ODEintSolver(String name, CPS::ODEintInterface::Ptr comp, Real dt, Real t0) :

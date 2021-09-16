@@ -1,6 +1,13 @@
+/* Copyright 2017-2021 Institute for Automation of Complex Power Systems,
+ *                     EONERC, RWTH Aachen University
+ *
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at https://mozilla.org/MPL/2.0/.
+ *********************************************************************************/
+
 #include <DPsim.h>
 #include "../Examples.h"
-
 
 using namespace DPsim;
 using namespace CPS;
@@ -32,10 +39,10 @@ Real setPointVoltage = syngenNomVoltage;
 
 // Transformer
 KundurExample1::Transf1 transf1;
-Real transformerNomVoltageHV = transf1.nomVoltageHV; 
+Real transformerNomVoltageHV = transf1.nomVoltageHV;
 Real transformerNomVoltageMV = transf1.nomVoltageMV;
-Real transformerResistance = transf1.transformerResistance; 
-Real transformerInductance = transf1.transformerReactance/nomOmega; 
+Real transformerResistance = transf1.transformerResistance;
+Real transformerInductance = transf1.transformerReactance/nomOmega;
 Real transformerRatio = transformerNomVoltageHV/transformerNomVoltageMV;
 
 // Line
@@ -81,7 +88,7 @@ void SP_1ph_SynGenTrStab_Fault(String simName, Real timeStep, Real finalTime, Re
 	extnetPF->setParameters(Vslack);
 	extnetPF->setBaseVoltage(nomVoltNetwork);
 	extnetPF->modifyPowerFlowBusType(PowerflowBusType::VD);
-	
+
 	// Line
 	auto linePF = SP::Ph1::PiLine::make("PiLine", Logger::Level::debug);
 	linePF->setParameters(lineResistance, lineInductance, lineCapacitance, lineConductance);
@@ -122,7 +129,7 @@ void SP_1ph_SynGenTrStab_Fault(String simName, Real timeStep, Real finalTime, Re
 	// ----- Dynamic simulation ------
 	String simNameSP = simName + "_SP";
 	Logger::setLogDir("logs/"+simNameSP);
-	
+
 	// Nodes
 	auto n1SP = SimNode<Complex>::make("n1", PhaseType::Single);
 	auto n2SP = SimNode<Complex>::make("n2", PhaseType::Single);
@@ -131,11 +138,11 @@ void SP_1ph_SynGenTrStab_Fault(String simName, Real timeStep, Real finalTime, Re
 	// Components
 	// Synchronous generator
 	auto genSP = CPS::SP::Ph1::SynchronGeneratorTrStab::make("SynGen", Logger::Level::debug);
-	
+
 	// Xpd is given in p.u of generator base at transfomer primary side and should be transformed to network side
 	genSP->setStandardParametersPU(syngenNomPower, syngenNomVoltage, nomFreq, syngenXpdPU, cmdInertiaFactor*syngenH, syngenRsPU, syngenD);
 	genSP->setModelFlags(false, false);
-	
+
 	// Get actual active and reactive power of generator's Terminal from Powerflow solution
 	Complex initApparentPower= genPF->getApparentPower();
 	genSP->setInitialValues(initApparentPower, initMechPower);
@@ -217,8 +224,8 @@ void SP_1ph_SynGenTrStab_Fault(String simName, Real timeStep, Real finalTime, Re
 	simSP.run();
 }
 
-int main(int argc, char* argv[]) {	
-		
+int main(int argc, char* argv[]) {
+
 
 	//Simultion parameters
 	String simName="SP_SynGenTrStab_SMIB_Fault";
