@@ -8,7 +8,6 @@
 
 #pragma once
 
-#include <cps/Solver/ODEInterface.h>
 #include <cps/DP/DP_Ph3_SynchronGeneratorDQ.h>
 
 #ifdef WITH_SUNDIALS
@@ -19,6 +18,7 @@
   #include <sunlinsol/sunlinsol_dense.h>  /* access to dense SUNLinearSolver		  */
   #include <arkode/arkode_direct.h>		   /* access to ARKDls interface				   */
 
+  #include <cps/Solver/ODEInterface.h>
   // Needed to print the computed to the console
   #if defined(SUNDIALS_EXTENDED_PRECISION)
 		#define GSYM "Lg"

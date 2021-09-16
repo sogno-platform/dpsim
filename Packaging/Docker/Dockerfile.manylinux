@@ -5,6 +5,7 @@
 
 FROM quay.io/pypa/manylinux2010_x86_64
 
+ENV VILLAS_VERSION=0.8.0
 ENV PLAT=manylinux2010_x86_64
 
 LABEL \
@@ -36,6 +37,8 @@ RUN yum -y install \
     libxml2-devel \
 	libpng-devel \
 	freetype-devel
+	# libvillas-devel-${VILLAS_VERSION} \
+	# villas-node-${VILLAS_VERSION}
 
 RUN update-alternatives --install /usr/bin/cmake cmake /usr/bin/cmake3 1
 
