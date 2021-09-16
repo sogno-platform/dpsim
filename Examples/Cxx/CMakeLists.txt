@@ -1,6 +1,6 @@
 set(LIBRARIES "dpsim")
 
-if(NOT WIN32)
+if (NOT WIN32)
 	# needed so CIMParser and arabica (which are first compiled into static libs)
 	# can be included in the .so
 	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fPIC")
@@ -16,6 +16,11 @@ set(CIRCUIT_SOURCES
 	Circuits/DP_DecouplingLine.cpp
 	Circuits/DP_Diakoptics.cpp
 	Circuits/DP_VSI.cpp
+
+	# DP examples with PF initialization
+	Circuits/DP_Slack_PiLine_PQLoad_with_PF_Init.cpp
+	Circuits/DP_Slack_PiLine_VSI_with_PF_Init.cpp
+	Circuits/DP_Slack_PiLine_VSI_Ramp_with_PF_Init.cpp
 	
 	# Powerflow examples
 	Circuits/PF_Slack_PiLine_PQLoad.cpp
@@ -29,9 +34,16 @@ set(CIRCUIT_SOURCES
 	Circuits/EMT_VSI.cpp
 	Circuits/EMT_PiLine.cpp
 
+	# EMT examples with PF initialization
+	Circuits/EMT_Slack_PiLine_PQLoad_with_PF_Init.cpp
+	Circuits/EMT_Slack_PiLine_VSI_with_PF_Init.cpp
+	Circuits/EMT_Slack_PiLine_VSI_Ramp_with_PF_Init.cpp
+
 	# SP examples
 	Circuits/SP_Circuits.cpp
 	Circuits/SP_PiLine.cpp
+	Circuits/SP_Slack_PiLine_VSI_with_PF_Init.cpp
+	Circuits/SP_Slack_PiLine_PQLoad_with_PF_Init.cpp
 
 	# Combined EMT/DP/SP examples
 	Circuits/EMT_DP_SP_Slack.cpp
@@ -39,45 +51,28 @@ set(CIRCUIT_SOURCES
 	Circuits/EMT_DP_SP_VS_RLC.cpp
 	Circuits/DP_EMT_RL_SourceStep.cpp
 	Circuits/EMT_DP_SP_Trafo.cpp
+	Circuits/EMT_DP_SP_Slack_PiLine_PQLoad_FM.cpp
+
+	#SMIB
+	Circuits/SP_SynGenTrStab_SMIB_SteadyState.cpp
+	Circuits/DP_SynGenTrStab_SMIB_SteadyState.cpp
+	Circuits/EMT_SynGenTrStab_SMIB_SteadyState.cpp
+	Circuits/SP_SynGenTrStab_SMIB_Fault.cpp
+	Circuits/DP_SynGenTrStab_SMIB_Fault.cpp
+	Circuits/EMT_SynGenDQ7odTrapez_SMIB_Fault.cpp
+	Circuits/EMT_SynGenDQ7odTrapez_OperationalParams_SMIB_Fault.cpp
+	Circuits/EMT_SynGenDQ7odTrapez_OperationalParams_SMIB_Fault_JsonSyngenParams.cpp
+	Circuits/EMT_SynGenDQ7odTrapez_DP_SynGenTrStab_SMIB_Fault.cpp
+	Circuits/EMT_SynGenTrStab_SMIB_Fault.cpp
+	Circuits/SP_SynGenTrStab_SMIB_Fault_KundurExample1.cpp
+
+	#3Bus System
+	Circuits/SP_SynGenTrStab_3Bus_SteadyState.cpp
+	Circuits/DP_SynGenTrStab_3Bus_SteadyState.cpp
+	Circuits/DP_SynGenTrStab_3Bus_Fault.cpp
+	Circuits/SP_SynGenTrStab_3Bus_Fault.cpp
+
 )
-
-if(WITH_CIM)
-	list(APPEND CIRCUIT_SOURCES
-		# DP examples with PF initialization
-		Circuits/DP_Slack_PiLine_PQLoad_with_PF_Init.cpp
-		Circuits/DP_Slack_PiLine_VSI_with_PF_Init.cpp
-		Circuits/DP_Slack_PiLine_VSI_Ramp_with_PF_Init.cpp
-
-		# EMT examples with PF initialization
-		Circuits/EMT_Slack_PiLine_VSI_with_PF_Init.cpp
-		Circuits/EMT_Slack_PiLine_VSI_Ramp_with_PF_Init.cpp
-		
-		# 3Bus System
-		Circuits/DP_SynGenTrStab_3Bus_Fault.cpp
-		Circuits/SP_SynGenTrStab_3Bus_Fault.cpp
-  	Circuits/SP_SynGenTrStab_3Bus_SteadyState.cpp
-  	Circuits/DP_SynGenTrStab_3Bus_SteadyState.cpp
-
-		Circuits/EMT_Slack_PiLine_PQLoad_with_PF_Init.cpp
-		Circuits/EMT_DP_SP_Slack_PiLine_PQLoad_FM.cpp
-
-		Circuits/SP_Slack_PiLine_VSI_with_PF_Init.cpp
-		Circuits/SP_Slack_PiLine_PQLoad_with_PF_Init.cpp
-
-		# SMIB
-		Circuits/EMT_SynGenDQ7odTrapez_OperationalParams_SMIB_Fault.cpp
-		Circuits/EMT_SynGenDQ7odTrapez_OperationalParams_SMIB_Fault_JsonSyngenParams.cpp
-		Circuits/DP_SynGenTrStab_SMIB_Fault.cpp
-		Circuits/SP_SynGenTrStab_SMIB_Fault.cpp
-		Circuits/EMT_SynGenTrStab_SMIB_SteadyState.cpp
-		Circuits/SP_SynGenTrStab_SMIB_Fault_KundurExample1.cpp
-		Circuits/EMT_SynGenTrStab_SMIB_Fault.cpp
-		Circuits/EMT_SynGenDQ7odTrapez_DP_SynGenTrStab_SMIB_Fault.cpp
-		Circuits/SP_SynGenTrStab_SMIB_SteadyState.cpp
-		Circuits/DP_SynGenTrStab_SMIB_SteadyState.cpp
-		Circuits/EMT_SynGenDQ7odTrapez_SMIB_Fault.cpp
-	)
-endif()
 
 set(SYNCGEN_SOURCES
 	Components/DP_SynGenDq7odTrapez_SteadyState.cpp
@@ -87,14 +82,9 @@ set(SYNCGEN_SOURCES
 	Components/DP_EMT_SynGenDq7odTrapez_SteadyState.cpp
 	Components/DP_EMT_SynGenDq7odTrapez_ThreePhFault.cpp
 	Components/DP_EMT_SynGenDq7odTrapez_LoadStep.cpp
+	Components/DP_SP_SynGenTrStab_testModels.cpp
+	Components/DP_SP_SynGenTrStab_testModels_doubleLine.cpp
 )
-
-if(WITH_CIM)
-	list(APPEND SYNCGEN_SOURCES
-  	Components/DP_SP_SynGenTrStab_testModels.cpp
-  	Components/DP_SP_SynGenTrStab_testModels_doubleLine.cpp
-	)
-endif()
 
 set(INVERTER_SOURCES
 	Components/DP_Inverter_Grid.cpp
