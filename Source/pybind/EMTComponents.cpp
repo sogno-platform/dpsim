@@ -6,17 +6,19 @@
  * file, You can obtain one at https://mozilla.org/MPL/2.0/.
  *********************************************************************************/
 
-#include <EMTComponents.h>
-#include <dpsim/Simulation.h>
-#include <dpsim/RealTimeSimulation.h>
-#include <cps/IdentifiedObject.h>
-#include <cps/CIM/Reader.h>
-#include <DPsim.h>
-#include <cps/CSVReader.h>
+#include <pybind11/pybind11.h>
+#include <nlohmann/json.hpp>
+
 #include <Utils.h>
+#include <EMTComponents.h>
+
+#include <dpsim/Utils.h>
+#include <cps/Components.h>
+
+using namespace pybind11::literals;
+using json = nlohmann::json;
 
 namespace py = pybind11;
-using namespace pybind11::literals;
 
 void addEMTComponents(py::module_ mEMT) {
 	py::class_<CPS::EMT::SimNode, std::shared_ptr<CPS::EMT::SimNode>, CPS::TopologicalNode>(mEMT, "SimNode", py::module_local())
@@ -137,6 +139,7 @@ void addEMTPh3Components(py::module_ mEMTPh3) {
 				DPsim::Utils::applySynchronousGeneratorParametersFromJson(json::parse(json), syngen);
 			});
 
+#ifdef WITH_SUNDIALS
 	py::class_<CPS::EMT::Ph3::SynchronGeneratorDQODE, std::shared_ptr<CPS::EMT::Ph3::SynchronGeneratorDQODE>, CPS::SimPowerComp<CPS::Real>>(mEMTPh3, "SynchronGeneratorDQODE", py::multiple_inheritance())
         .def(py::init<std::string, CPS::Logger::Level>(), "name"_a, "loglevel"_a = CPS::Logger::Level::off)
 		.def("set_parameters_operational_per_unit", &CPS::EMT::Ph3::SynchronGeneratorDQODE::setParametersOperationalPerUnit,
@@ -150,6 +153,7 @@ void addEMTPh3Components(py::module_ mEMTPh3) {
 		.def("apply_parameters_from_json", [](std::shared_ptr<CPS::EMT::Ph3::SynchronGeneratorDQODE> syngen, const CPS::String json) {
 				DPsim::Utils::applySynchronousGeneratorParametersFromJson(json::parse(json), syngen);
 			});
+#endif
 
 	py::class_<CPS::EMT::Ph3::AvVoltageSourceInverterDQ, std::shared_ptr<CPS::EMT::Ph3::AvVoltageSourceInverterDQ>, CPS::SimPowerComp<CPS::Real>>(mEMTPh3, "AvVoltageSourceInverterDQ", py::multiple_inheritance())
         .def(py::init<std::string, CPS::Logger::Level>(), "name"_a, "loglevel"_a = CPS::Logger::Level::off)
