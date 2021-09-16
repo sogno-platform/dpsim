@@ -1,10 +1,9 @@
 name: Generate
 
 on:
-  workflow_run:
-      workflows: ["Container"]
-      branches: [master]
-      types: [completed]
+  push:
+    branches:
+      - master
 
 jobs:
   generate-docs:
@@ -26,3 +25,16 @@ jobs:
       run: |
         make -j$(nproc) -C build docs
         make -j$(nproc) -C build docs_cxx
+
+    - name: Copy docs
+      run: |
+        cp -r build/docs/sphinx/html/. public/sphinx
+        cp -r build/docs/doxygen/html/. public/doxygen
+
+    - name: Deploy page
+      uses: peaceiris/actions-gh-pages@v3
+      with:
+        github_token: ${{ secrets.GITHUB_TOKEN }}     
+        publish_dir: ./public
+        #   keep_files: true
+        publish_branch: gh-pages
