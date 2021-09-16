@@ -1,4 +1,10 @@
-
+/* Copyright 2017-2021 Institute for Automation of Complex Power Systems,
+ *                     EONERC, RWTH Aachen University
+ *
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at https://mozilla.org/MPL/2.0/.
+ *********************************************************************************/
 
 #include <DPsim.h>
 #include "../Examples.h"
@@ -7,7 +13,7 @@ using namespace DPsim;
 using namespace CPS;
 using namespace CPS::CIM;
 
-int main(int argc, char* argv[]) {	
+int main(int argc, char* argv[]) {
 
 	// ----- PARAMETRIZATION -----
 	// General grid parameters
@@ -17,7 +23,7 @@ int main(int argc, char* argv[]) {
 	Real ratio = VnomMV/VnomHV;
 	Real nomOmega= nomFreq* 2*PI;
 
-	// Machine parameters synchronous generator 
+	// Machine parameters synchronous generator
 	const Examples::Components::SynchronousGeneratorKundur::MachineParameters syngenKundur;
 	Real H = syngenKundur.H;
 	Real Rs = syngenKundur.Rs;
@@ -31,9 +37,9 @@ int main(int argc, char* argv[]) {
 	Real Td0_t = syngenKundur.Td0_t;
 	Real Tq0_t = syngenKundur.Tq0_t;
 	Real Td0_s = syngenKundur.Td0_s;
-	Real Tq0_s= syngenKundur.Tq0_s;	
+	Real Tq0_s= syngenKundur.Tq0_s;
 
-	// Operation point synchronous generator 
+	// Operation point synchronous generator
 	Real setPointActivePower=300e6;
 	Real setPointVoltage=1.05*VnomMV;
 
@@ -41,7 +47,7 @@ int main(int argc, char* argv[]) {
 	Real BreakerOpen = 1e9;
 	Real BreakerClosed = 0.001;
 
-	// Line 
+	// Line
 	const Examples::Grids::CIGREHVAmerican::LineParameters lineCIGREHV;
 	Real lineLength = 100;
 	Real lineResistance = lineCIGREHV.lineResistancePerKm*lineLength*std::pow(ratio,2); // HV parameters referred to MV side
@@ -113,7 +119,7 @@ int main(int argc, char* argv[]) {
 	extnetPF->setParameters(VnomMV);
 	extnetPF->setBaseVoltage(VnomMV);
 	extnetPF->modifyPowerFlowBusType(PowerflowBusType::VD);
-	
+
 	//Line
 	auto linePF = SP::Ph1::PiLine::make("PiLine", Logger::Level::debug);
 	linePF->setParameters(lineResistance, lineInductance, lineCapacitance, lineConductance);
@@ -147,9 +153,9 @@ int main(int argc, char* argv[]) {
 	simPF.addLogger(loggerPF);
 	simPF.run();
 
-	// ----- DYNAMIC SIMULATION ------	
+	// ----- DYNAMIC SIMULATION ------
 	Logger::setLogDir("logs/"+simName);
-	
+
 	// Extract relevant powerflow results
 	Real initTerminalVolt=std::abs(n1PF->singleVoltage())*RMS3PH_TO_PEAK1PH;
 	Real initVoltAngle= Math::phase(n1PF->singleVoltage()); // angle in rad
@@ -157,7 +163,7 @@ int main(int argc, char* argv[]) {
 	Real initReactivePower = genPF->getApparentPower().imag();
 	Real initMechPower = initActivePower;
 
-	// Nodes	
+	// Nodes
 	auto n1 = SimNode<Real>::make("n1", PhaseType::ABC);
 	auto n2 = SimNode<Real>::make("n2", PhaseType::ABC);
 
@@ -170,21 +176,21 @@ int main(int argc, char* argv[]) {
 		Lq_s, Ll, Td0_t, Tq0_t, Td0_s, Tq0_s, H,
 	 	initActivePower, initReactivePower, initTerminalVolt,
 	 	initVoltAngle, syngenKundur.fieldVoltage, initMechPower
-	); 
-	
+	);
+
 	//Grid bus as Slack
 	auto extnet = EMT::Ph3::NetworkInjection::make("Slack", Logger::Level::debug);
 
 	// Line
 	auto line = EMT::Ph3::PiLine::make("PiLine", Logger::Level::debug);
-	line->setParameters(Math::singlePhaseParameterToThreePhase(lineResistance), 
-	                      Math::singlePhaseParameterToThreePhase(lineInductance), 
+	line->setParameters(Math::singlePhaseParameterToThreePhase(lineResistance),
+	                      Math::singlePhaseParameterToThreePhase(lineInductance),
 					      Math::singlePhaseParameterToThreePhase(lineCapacitance),
 						  Math::singlePhaseParameterToThreePhase(lineConductance));
-				  
+
 	//Breaker
 	auto fault = CPS::EMT::Ph3::Switch::make("Br_fault", Logger::Level::debug);
-	fault->setParameters(Math::singlePhaseParameterToThreePhase(BreakerOpen), 
+	fault->setParameters(Math::singlePhaseParameterToThreePhase(BreakerOpen),
 						 Math::singlePhaseParameterToThreePhase(BreakerClosed));
 	fault->openSwitch();
 

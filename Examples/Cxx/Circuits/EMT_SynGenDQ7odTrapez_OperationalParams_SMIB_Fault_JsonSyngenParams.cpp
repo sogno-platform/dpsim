@@ -1,4 +1,10 @@
-
+/* Copyright 2017-2021 Institute for Automation of Complex Power Systems,
+ *                     EONERC, RWTH Aachen University
+ *
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at https://mozilla.org/MPL/2.0/.
+ *********************************************************************************/
 
 #include <DPsim.h>
 #include "../Examples.h"
@@ -12,7 +18,7 @@ using namespace Examples::Components;
 using json = nlohmann::json;
 using syngenParametersKundur = Examples::Components::SynchronousGeneratorKundur::MachineParameters;
 
-int main(int argc, char* argv[]) {	
+int main(int argc, char* argv[]) {
 
 	// ----- PARAMETRIZATION -----
 	// General
@@ -22,7 +28,7 @@ int main(int argc, char* argv[]) {
 	Real ratio = VnomMV/VnomHV;
 	Real nomOmega= nomFreq* 2*PI;
 
-	// Synchronous generator 
+	// Synchronous generator
 	SynchronousGeneratorKundur::MachineParameters syngenKundur;
 	Real setPointActivePower=300e6;
 	Real setPointVoltage=1.05*VnomMV;
@@ -44,11 +50,11 @@ int main(int argc, char* argv[]) {
 	const Real startTimeFault=0.2;
 
 	fs::path configFilename;
-	
+
 	CommandLineArgs args(argc, argv);
 	if (args.params != "default.json")
 		configFilename = args.params;
-	else 
+	else
 		configFilename = DPsim::Utils::findFile({
 			"EMT_SynGenDQ7odTrapez_OperationalParams_SMIB_Fault_SyngenParams.json"
 			}, "Configs/example_configs_json");
@@ -78,7 +84,7 @@ int main(int argc, char* argv[]) {
 	extnetPF->setParameters(VnomMV);
 	extnetPF->setBaseVoltage(VnomMV);
 	extnetPF->modifyPowerFlowBusType(PowerflowBusType::VD);
-	
+
 	//Line
 	auto linePF = SP::Ph1::PiLine::make("PiLine", Logger::Level::debug);
 	linePF->setParameters(lineResistance, lineInductance, lineCapacitance, lineConductance);
@@ -112,7 +118,7 @@ int main(int argc, char* argv[]) {
 	simPF.addLogger(loggerPF);
 	simPF.run();
 
-	// ----- DYNAMIC SIMULATION ------	
+	// ----- DYNAMIC SIMULATION ------
 	Logger::setLogDir("logs/"+simName);
 
 	// Extract relevant powerflow results
@@ -122,7 +128,7 @@ int main(int argc, char* argv[]) {
 	Real initReactivePower = genPF->getApparentPower().imag();
 	Real initMechPower = initActivePower;
 
-	// Nodes	
+	// Nodes
 	auto n1 = SimNode<Real>::make("n1", PhaseType::ABC);
 	auto n2 = SimNode<Real>::make("n2", PhaseType::ABC);
 
@@ -135,22 +141,22 @@ int main(int argc, char* argv[]) {
 		0, 0, 0, 0, 0, 0, syngenKundur.H,
 	 	initActivePower, initReactivePower, initTerminalVolt,
 	 	initVoltAngle, syngenKundur.fieldVoltage, initMechPower
-	); 
+	);
 	DPsim::Utils::applySynchronousGeneratorParametersFromJson(simConfig, gen);
-	
+
 	//Grid bus as Slack
 	auto extnet = EMT::Ph3::NetworkInjection::make("Slack", Logger::Level::debug);
 
 	// Line
 	auto line = EMT::Ph3::PiLine::make("PiLine", Logger::Level::debug);
-	line->setParameters(Math::singlePhaseParameterToThreePhase(lineResistance), 
-	                      Math::singlePhaseParameterToThreePhase(lineInductance), 
+	line->setParameters(Math::singlePhaseParameterToThreePhase(lineResistance),
+	                      Math::singlePhaseParameterToThreePhase(lineInductance),
 					      Math::singlePhaseParameterToThreePhase(lineCapacitance),
 						  Math::singlePhaseParameterToThreePhase(lineConductance));
-				  
+
 	//Breaker
 	auto fault = CPS::EMT::Ph3::Switch::make("Br_fault", Logger::Level::debug);
-	fault->setParameters(Math::singlePhaseParameterToThreePhase(BreakerOpen), 
+	fault->setParameters(Math::singlePhaseParameterToThreePhase(BreakerOpen),
 						 Math::singlePhaseParameterToThreePhase(BreakerClosed));
 	fault->openSwitch();
 
