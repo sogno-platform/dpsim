@@ -16,9 +16,8 @@ int main(int argc, char** argv){
 	Real timeStep;
 	Real finalTime;
 	Bool steadyStateInit;
-		
+
 	// Set remaining simulation parameters using default values or command line infos
-	std::cout<<std::experimental::filesystem::current_path()<<std::endl;
 	CommandLineArgs args(argc, argv);
 	if (argc <= 1) {
 		filenames = DPsim::Utils::findFiles({
