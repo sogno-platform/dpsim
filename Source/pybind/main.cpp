@@ -18,10 +18,12 @@
 #include <dpsim/Simulation.h>
 #include <dpsim/RealTimeSimulation.h>
 #include <cps/IdentifiedObject.h>
-#include <cps/CIM/Reader.h>
 #include <DPsim.h>
 
 #include <cps/CSVReader.h>
+#ifdef WITH_CIM
+  #include <cps/CIM/Reader.h>
+#endif
 
 #include <DPComponents.h>
 #include <EMTComponents.h>
@@ -184,10 +186,12 @@ PYBIND11_MODULE(dpsimpy, m) {
 		.value("HOURS", CPS::CSVReader::DataFormat::HOURS)
 		.value("MINUTES", CPS::CSVReader::DataFormat::MINUTES);
 
+#ifdef WITH_CIM
 	py::class_<CPS::CIM::Reader>(m, "CIMReader")
 		.def(py::init<std::string, CPS::Logger::Level, CPS::Logger::Level>(), "name"_a, "loglevel"_a = CPS::Logger::Level::info, "comploglevel"_a = CPS::Logger::Level::off)
 		.def("loadCIM", (CPS::SystemTopology (CPS::CIM::Reader::*)(CPS::Real, const std::list<CPS::String> &, CPS::Domain, CPS::PhaseType, CPS::GeneratorType)) &CPS::CIM::Reader::loadCIM)
 		.def("init_dynamic_system_topology_with_powerflow", &CPS::CIM::Reader::initDynamicSystemTopologyWithPowerflow);
+#endif
 
 	py::class_<CPS::CSVReader>(m, "CSVReader")
 		.def(py::init<std::string, const std::string &, std::map<std::string, std::string> &, CPS::Logger::Level>())
@@ -229,7 +233,6 @@ PYBIND11_MODULE(dpsimpy, m) {
 
 	py::module mSignal = m.def_submodule("signal", "signal models");
 	addSignalComponents(mSignal);
-
 
 #ifdef VERSION_INFO
     m.attr("__version__") = VERSION_INFO;

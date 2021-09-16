@@ -6,14 +6,11 @@
  * file, You can obtain one at https://mozilla.org/MPL/2.0/.
  *********************************************************************************/
 
-#include <DPComponents.h>
-#include <dpsim/Simulation.h>
-#include <dpsim/RealTimeSimulation.h>
-#include <cps/IdentifiedObject.h>
-#include <cps/CIM/Reader.h>
-#include <DPsim.h>
-#include <cps/CSVReader.h>
+#include <pybind11/pybind11.h>
+
 #include <Utils.h>
+#include <DPComponents.h>
+#include <cps/Components.h>
 
 namespace py = pybind11;
 using namespace pybind11::literals;
@@ -29,7 +26,7 @@ void addDPComponents(py::module_ mDP) {
 		.def("single_voltage", &CPS::DP::SimNode::singleVoltage, "phase_type"_a=CPS::PhaseType::Single)
 		.def_readonly_static("gnd", &CPS::DP::SimNode::GND);
 
-	
+
 	py::module mDPPh1 = mDP.def_submodule("ph1", "single phase dynamic phasor models");
 	addDPPh1Components(mDPPh1);
 
@@ -151,6 +148,7 @@ void addDPPh1Components(py::module_ mDPPh1) {
 }
 
 void addDPPh3Components(py::module_ mDPPh3) {
+#ifdef WITH_SUNDIALS
 	py::class_<CPS::DP::Ph3::SynchronGeneratorDQODE, std::shared_ptr<CPS::DP::Ph3::SynchronGeneratorDQODE>, CPS::SimPowerComp<CPS::Complex>>(mDPPh3, "SynchronGeneratorDQODE", py::multiple_inheritance())
         .def(py::init<std::string, CPS::Logger::Level>(), "name"_a, "loglevel"_a = CPS::Logger::Level::off)
 		.def("set_parameters_fundamental_per_unit", &CPS::DP::Ph3::SynchronGeneratorDQODE::setParametersFundamentalPerUnit,
@@ -160,6 +158,7 @@ void addDPPh3Components(py::module_ mDPPh3) {
 				"init_reactive_power"_a, "init_terminal_volt"_a, "init_volt_angle"_a,
 				"init_field_voltage"_a, "init_mech_power"_a)
 		.def("connect", &CPS::DP::Ph3::SynchronGeneratorDQODE::connect);
+#endif
 
 	py::class_<CPS::DP::Ph3::SynchronGeneratorDQTrapez, std::shared_ptr<CPS::DP::Ph3::SynchronGeneratorDQTrapez>, CPS::SimPowerComp<CPS::Complex>>(mDPPh3, "SynchronGeneratorDQTrapez", py::multiple_inheritance())
         .def(py::init<std::string, CPS::Logger::Level>(), "name"_a, "loglevel"_a = CPS::Logger::Level::off)
