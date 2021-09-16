@@ -1,4 +1,4 @@
-/* Copyright 2017-2020 Institute for Automation of Complex Power Systems,
+/* Copyright 2017-2021 Institute for Automation of Complex Power Systems,
  *                     EONERC, RWTH Aachen University
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
@@ -14,7 +14,7 @@ using namespace CPS;
 
 int main(int argc, char* argv[]) {
 	String simName = "DP_Slack_PiLine_PQLoad_with_PF_Init";
-	
+
 	// Component parameters
 	Real Vnom = 20e3;
 	Real pLoadNom = 100e3;
@@ -22,7 +22,7 @@ int main(int argc, char* argv[]) {
 	Real lineResistance = 0.05;
 	Real lineInductance = 0.1;
 	Real lineCapacitance = 0.1e-6;
-	
+
 	// Simulation parameters
 	Real timeStep = 0.001;
 	Real finalTime = 2.0;
@@ -30,7 +30,7 @@ int main(int argc, char* argv[]) {
 	if (argc > 1) {
 		timeStep = args.timeStep;
 		finalTime = args.duration;
-		
+
 		if (args.name != "dpsim")
 			simName = args.name;
 	}
@@ -61,7 +61,7 @@ int main(int argc, char* argv[]) {
 	// Topology
 	extnetPF->connect({ n1PF });
 	linePF->connect({ n1PF, n2PF });
-	loadPF->connect({ n2PF });	
+	loadPF->connect({ n2PF });
 	auto systemPF = SystemTopology(50,
 			SystemNodeList{n1PF, n2PF},
 			SystemComponentList{extnetPF, linePF, loadPF});
@@ -98,20 +98,20 @@ int main(int argc, char* argv[]) {
 	auto lineDP = DP::Ph1::PiLine::make("PiLine", Logger::Level::debug);
 	lineDP->setParameters(lineResistance, lineInductance, lineCapacitance);
 
-	auto loadDP = DP::Ph1::RXLoad::make("Load", Logger::Level::debug);	
+	auto loadDP = DP::Ph1::RXLoad::make("Load", Logger::Level::debug);
 	loadDP->setParameters(pLoadNom, qLoadNom, Vnom);
 
 	// Topology
 	extnetDP->connect({ n1DP });
 	lineDP->connect({ n1DP, n2DP });
-	loadDP->connect({ n2DP });	
+	loadDP->connect({ n2DP });
 	auto systemDP = SystemTopology(50,
 			SystemNodeList{n1DP, n2DP},
 			SystemComponentList{extnetDP, lineDP, loadDP});
 
 	// Initialization of dynamic topology
 	CIM::Reader reader(simNameDP, Logger::Level::debug);
-	reader.initDynamicSystemTopologyWithPowerflow(systemPF, systemDP);			
+	reader.initDynamicSystemTopologyWithPowerflow(systemPF, systemDP);
 
 	// Logging
 	auto loggerDP = DataLogger::make(simNameDP);
@@ -134,5 +134,5 @@ int main(int argc, char* argv[]) {
 	sim.addLogger(loggerDP);
 	//sim.addEvent(loadStepEvent);
 	sim.run();
-	
+
 }

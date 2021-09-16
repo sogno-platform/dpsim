@@ -1,4 +1,4 @@
-/* Copyright 2017-2020 Institute for Automation of Complex Power Systems,
+/* Copyright 2017-2021 Institute for Automation of Complex Power Systems,
  *                     EONERC, RWTH Aachen University
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
@@ -40,7 +40,7 @@ void DP::Ph1::Transformer::setParameters(Real nomVoltageEnd1, Real nomVoltageEnd
 	Real resistance, Real inductance) {
 
 	Base::Ph1::Transformer::setParameters(nomVoltageEnd1, nomVoltageEnd2, ratioAbs, ratioPhase, resistance, inductance);
-	
+
 	mSLog->info("Nominal Voltage End 1={} [V] Nominal Voltage End 2={} [V]", mNominalVoltageEnd1, mNominalVoltageEnd2);
 	mSLog->info("Resistance={} [Ohm] Inductance={} [Ohm] (referred to primary side)", mResistance, mInductance);
     mSLog->info("Tap Ratio={} [ ] Phase Shift={} [deg]", std::abs(mRatio), std::arg(mRatio));

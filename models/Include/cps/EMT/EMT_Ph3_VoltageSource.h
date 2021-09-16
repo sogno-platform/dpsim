@@ -1,4 +1,4 @@
-/* Copyright 2017-2020 Institute for Automation of Complex Power Systems,
+/* Copyright 2017-2021 Institute for Automation of Complex Power Systems,
  *                     EONERC, RWTH Aachen University
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
@@ -30,7 +30,7 @@ namespace CPS {
 				public SimPowerComp<Real>,
 				public SharedFactory<VoltageSource> {
 			private:
-				/// 
+				///
 				CPS::Signal::SignalGenerator::Ptr mSrcSig;
 			protected:
 				// Updates voltage according to reference phasor and frequency
@@ -85,7 +85,7 @@ namespace CPS {
 				class MnaPostStep : public Task {
 				public:
 					MnaPostStep(VoltageSource& voltageSource, Attribute<Matrix>::Ptr leftVector) :
-						Task(voltageSource.mName + ".MnaPostStep"),			
+						Task(voltageSource.mName + ".MnaPostStep"),
 						mVoltageSource(voltageSource), mLeftVector(leftVector) {
 							mVoltageSource.mnaAddPostStepDependencies(mPrevStepDependencies, mAttributeDependencies, mModifiedAttributes, mLeftVector);
 					}

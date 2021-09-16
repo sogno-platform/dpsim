@@ -1,4 +1,4 @@
-/* Copyright 2017-2020 Institute for Automation of Complex Power Systems,
+/* Copyright 2017-2021 Institute for Automation of Complex Power Systems,
  *                     EONERC, RWTH Aachen University
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
@@ -139,7 +139,7 @@ std::vector<PQData> CSVReader::readLoadProfileDP(std::experimental::filesystem::
 	std::ifstream csvfile(file);
 	CSVReaderIterator row_(csvfile);
 
-	
+
 	// ignore the first row if it is a title
 	if (mSkipFirstRow && !std::isdigit((*row_).get(0)[0])) {
 		row_.next();

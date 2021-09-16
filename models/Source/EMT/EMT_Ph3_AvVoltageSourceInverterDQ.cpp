@@ -1,4 +1,4 @@
-/* Copyright 2017-2020 Institute for Automation of Complex Power Systems,
+/* Copyright 2017-2021 Institute for Automation of Complex Power Systems,
  *                     EONERC, RWTH Aachen University
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
@@ -96,7 +96,7 @@ void EMT::Ph3::AvVoltageSourceInverterDQ::setParameters(Real sysOmega, Real sysV
 
 void EMT::Ph3::AvVoltageSourceInverterDQ::setTransformerParameters(Real nomVoltageEnd1, Real nomVoltageEnd2,
 	Real ratedPower, Real ratioAbs,	Real ratioPhase, Real resistance, Real inductance, Real omega) {
-	
+
 	Base::AvVoltageSourceInverterDQ::setTransformerParameters(nomVoltageEnd1, nomVoltageEnd2,
 	ratioAbs, ratioPhase, resistance, inductance);
 
@@ -217,7 +217,7 @@ void EMT::Ph3::AvVoltageSourceInverterDQ::initializeFromNodesAndTerminals(Real f
 	Real theta = std::arg(mVirtualNodes[3]->initialSingleVoltage());
 	vcdq = parkTransformPowerInvariant(theta, filterInterfaceInitialVoltage.real());
 	ircdq = parkTransformPowerInvariant(theta, -1 * filterInterfaceInitialCurrent.real());
-	
+
 	mVcd = vcdq(0, 0);
 	mVcq = vcdq(1, 0);
 	mIrcd = ircdq(0, 0);
@@ -364,7 +364,7 @@ void EMT::Ph3::AvVoltageSourceInverterDQ::controlStep(Real time, Int timeStepCou
 	Real theta = mPLL->attribute<Matrix>("output_prev")->get()(0, 0);
 	vcdq = parkTransformPowerInvariant(theta, mVirtualNodes[3]->attribute<Matrix>("v")->get());
 	ircdq = parkTransformPowerInvariant(theta, - mSubResistorC->attribute<Matrix>("i_intf")->get());
-	
+
 	mVcd = vcdq(0, 0);
 	mVcq = vcdq(1, 0);
 	mIrcd = ircdq(0, 0);

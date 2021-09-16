@@ -1,4 +1,4 @@
-/* Copyright 2017-2020 Institute for Automation of Complex Power Systems,
+/* Copyright 2017-2021 Institute for Automation of Complex Power Systems,
  *                     EONERC, RWTH Aachen University
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
@@ -75,7 +75,7 @@ namespace Signal {
 
 	public:
 		PowerControllerVSI(String name, Logger::Level logLevel = Logger::Level::off);
-		
+
 		/// Setter for general parameters
 		void setParameters(Real Pref, Real Qref);
 		/// Setter for parameters of control loops

@@ -1,4 +1,4 @@
-/* Copyright 2017-2020 Institute for Automation of Complex Power Systems,
+/* Copyright 2017-2021 Institute for Automation of Complex Power Systems,
  *                     EONERC, RWTH Aachen University
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
@@ -11,7 +11,7 @@
 
 using namespace DPsim;
 using namespace CPS;
-	
+
 String simName = "EMT_DP_SP_Slack_PiLine_PQLoad_FM";
 
 // Component parameters
@@ -53,7 +53,7 @@ void powerFlow(SystemTopology& systemPF) {
 	// Topology
 	extnetPF->connect({ n1PF });
 	linePF->connect({ n1PF, n2PF });
-	loadPF->connect({ n2PF });	
+	loadPF->connect({ n2PF });
 	systemPF = SystemTopology(50,
 			SystemNodeList{n1PF, n2PF},
 			SystemComponentList{extnetPF, linePF, loadPF});
@@ -95,20 +95,20 @@ void simulateDP(SystemTopology& systemPF, String waveform) {
 	auto lineDP = DP::Ph1::PiLine::make("PiLine", Logger::Level::debug);
 	lineDP->setParameters(lineResistance, lineInductance, lineCapacitance);
 
-	auto loadDP = DP::Ph1::RXLoad::make("Load", Logger::Level::debug);	
+	auto loadDP = DP::Ph1::RXLoad::make("Load", Logger::Level::debug);
 	loadDP->setParameters(pLoadNom, qLoadNom, Vnom);
 
 	// Topology
 	extnetDP->connect({ n1DP });
 	lineDP->connect({ n1DP, n2DP });
-	loadDP->connect({ n2DP });	
+	loadDP->connect({ n2DP });
 	auto systemDP = SystemTopology(50,
 			SystemNodeList{n1DP, n2DP},
 			SystemComponentList{extnetDP, lineDP, loadDP});
 
 	// Initialization of dynamic topology
 	CIM::Reader reader(simNameDP, Logger::Level::debug);
-	reader.initDynamicSystemTopologyWithPowerflow(systemPF, systemDP);			
+	reader.initDynamicSystemTopologyWithPowerflow(systemPF, systemDP);
 
 	// Logging
 	auto loggerDP = DataLogger::make(simNameDP);
@@ -125,14 +125,14 @@ void simulateDP(SystemTopology& systemPF, String waveform) {
 	sim.setTimeStep(timeStepDP);
 	sim.setFinalTime(finalTimeDP);
 	sim.setDomain(Domain::DP);
-	
+
 	sim.addLogger(loggerDP);
 	sim.run();
 }
 
 // ----- SP SIMULATION -----
 void simulateSP(SystemTopology& systemPF, String waveform) {
-	
+
 	Real timeStepSP = timeStep;
 	Real finalTimeSP = finalTime+timeStepSP;
 	String simNameSP = simName+"_SP";
@@ -151,20 +151,20 @@ void simulateSP(SystemTopology& systemPF, String waveform) {
 	auto lineSP = SP::Ph1::PiLine::make("PiLine", Logger::Level::debug);
 	lineSP->setParameters(lineResistance, lineInductance, lineCapacitance);
 
-	auto loadSP = SP::Ph1::Load::make("Load", Logger::Level::debug);	
+	auto loadSP = SP::Ph1::Load::make("Load", Logger::Level::debug);
 	loadSP->setParameters(pLoadNom, qLoadNom, Vnom);
 
 	// Topology
 	extnetSP->connect({ n1SP });
 	lineSP->connect({ n1SP, n2SP });
-	loadSP->connect({ n2SP });	
+	loadSP->connect({ n2SP });
 	auto systemSP = SystemTopology(50,
 			SystemNodeList{n1SP, n2SP},
 			SystemComponentList{extnetSP, lineSP, loadSP});
 
 	// Initialization of dynamic topology with values from powerflow
 	CIM::Reader reader(simNameSP, Logger::Level::debug);
-	reader.initDynamicSystemTopologyWithPowerflow(systemPF, systemSP);			
+	reader.initDynamicSystemTopologyWithPowerflow(systemPF, systemSP);
 
 	// Logging
 	auto loggerSP = DataLogger::make(simNameSP);
@@ -179,7 +179,7 @@ void simulateSP(SystemTopology& systemPF, String waveform) {
 	sim.setTimeStep(timeStepSP);
 	sim.setFinalTime(finalTimeSP);
 	sim.setDomain(Domain::SP);
-	
+
 	sim.addLogger(loggerSP);
 	sim.run();
 }
@@ -212,14 +212,14 @@ void simulateEMT(SystemTopology& systemPF, String waveform) {
 	// Topology
 	extnetEMT->connect({ n1EMT });
 	lineEMT->connect({ n1EMT, n2EMT });
-	loadEMT->connect({ n2EMT });	
+	loadEMT->connect({ n2EMT });
 	auto systemEMT = SystemTopology(50,
 			SystemNodeList{n1EMT, n2EMT},
 			SystemComponentList{extnetEMT, lineEMT, loadEMT});
 
 	// Initialization of dynamic topology
 	CIM::Reader reader(simNameEMT, Logger::Level::debug);
-	reader.initDynamicSystemTopologyWithPowerflow(systemPF, systemEMT);			
+	reader.initDynamicSystemTopologyWithPowerflow(systemPF, systemEMT);
 
 	// Logging
 	auto loggerEMT = DataLogger::make(simNameEMT);
@@ -249,7 +249,7 @@ int main(int argc, char* argv[]) {
 	if (argc > 1) {
 		timeStep = args.timeStep;
 		finalTime = args.duration;
-	
+
 		if (args.name != "dpsim")
 			simName = args.name;
 	}

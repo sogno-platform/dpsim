@@ -1,4 +1,4 @@
-/* Copyright 2017-2020 Institute for Automation of Complex Power Systems,
+/* Copyright 2017-2021 Institute for Automation of Complex Power Systems,
  *                     EONERC, RWTH Aachen University
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
@@ -304,7 +304,7 @@ TopologicalPowerComp::Ptr Reader::mapEnergyConsumer(CIMPP::EnergyConsumer* consu
 		load->setParameters(p, q, 0);
 		*/
 
-		// P and Q values will be set according to SvPowerFlow data	
+		// P and Q values will be set according to SvPowerFlow data
 		load->modifyPowerFlowBusType(PowerflowBusType::PQ); // for powerflow solver set as PQ component as default
 		return load;
 	}

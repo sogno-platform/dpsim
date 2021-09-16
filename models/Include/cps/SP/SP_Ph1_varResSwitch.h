@@ -1,4 +1,4 @@
-/* Copyright 2017-2020 Institute for Automation of Complex Power Systems,
+/* Copyright 2017-2021 Institute for Automation of Complex Power Systems,
  *                     EONERC, RWTH Aachen University
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
@@ -30,11 +30,11 @@ namespace Ph1 {
 		public MNASwitchInterface,
 		public SimPowerComp<Complex>,
 		public SharedFactory<varResSwitch> {
-	
+
 	protected:
 
-		Bool mPrevState=false; 
-		Real mDeltaResClosed = 0; 
+		Bool mPrevState=false;
+		Real mDeltaResClosed = 0;
 		Real mDeltaResOpen = 1.5;
 		Real mPrevRes; // previous resistance value to multiply with rate of change
 		// because we change the base value mClosedResistance & mOpenResistance to recompute the system Matrix
@@ -42,19 +42,19 @@ namespace Ph1 {
 		Real mInitClosedRes;
 		Real mInitOpenRes;
 
-		
+
 
 	public:
-		
+
 		void setInitParameters(Real timestep);
-		
+
 		/// Defines UID, name and log level
 		varResSwitch(String uid, String name, Logger::Level logLevel = Logger::Level::off);
 		/// Defines name and log level
 		varResSwitch(String name, Logger::Level logLevel = Logger::Level::off)
 			: varResSwitch(name, name, logLevel) { }
 
-		// varResSwitch(String name, Real openRes, Real closedRes , 
+		// varResSwitch(String name, Real openRes, Real closedRes ,
 		// 		Logger::Level logLevel = Logger::Level::off);
 
 		SimPowerComp<Complex>::Ptr clone(String name);
