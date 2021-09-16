@@ -1,4 +1,4 @@
-/* Copyright 2017-2020 Institute for Automation of Complex Power Systems,
+/* Copyright 2017-2021 Institute for Automation of Complex Power Systems,
  *                     EONERC, RWTH Aachen University
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
@@ -36,7 +36,7 @@ void simTrafoElementsSP1ph() {
 	auto trafoRes = SP::Ph1::Resistor::make("trafo_res");
 	auto trafoSnubberRes  = SP::Ph1::Resistor::make("trafo_snub_res");
 	auto trafoInd = SP::Ph1::Inductor::make("trafo_ind");
-	auto loadRes = SP::Ph1::Resistor::make("r_1");	
+	auto loadRes = SP::Ph1::Resistor::make("r_1");
 
 	// Topology
 	vs->connect({ SimNode<Complex>::GND, n1 });
@@ -147,7 +147,7 @@ void simTrafoElementsDP1ph() {
 	auto trafoRes = DP::Ph1::Resistor::make("trafo_res");
 	auto trafoSnubberRes  = DP::Ph1::Resistor::make("trafo_snub_res");
 	auto trafoInd = DP::Ph1::Inductor::make("trafo_ind");
-	auto loadRes = DP::Ph1::Resistor::make("r_1");	
+	auto loadRes = DP::Ph1::Resistor::make("r_1");
 
 	// Topology
 	vs->connect({ SimNode<Complex>::GND, n1 });
@@ -258,7 +258,7 @@ void simTrafoElementsEMT3ph() {
 	auto trafoRes = EMT::Ph3::Resistor::make("trafo_res");
 	auto trafoSnubberRes  = EMT::Ph3::Resistor::make("trafo_snub_res");
 	auto trafoInd = EMT::Ph3::Inductor::make("trafo_ind");
-	auto loadRes = EMT::Ph3::Resistor::make("r_1");	
+	auto loadRes = EMT::Ph3::Resistor::make("r_1");
 
 	// Topology
 	vs->connect({ SimNode<Real>::GND, n1 });
@@ -354,7 +354,7 @@ int main(int argc, char* argv[]) {
 	simTrafoDP1ph();
 
 	simTrafoElementsEMT3ph();
-	simTrafoEMT3ph(); 
+	simTrafoEMT3ph();
 
 	return 0;
 }

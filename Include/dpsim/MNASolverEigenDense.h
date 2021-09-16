@@ -1,4 +1,4 @@
-/* Copyright 2017-2020 Institute for Automation of Complex Power Systems,
+/* Copyright 2017-2021 Institute for Automation of Complex Power Systems,
  *                     EONERC, RWTH Aachen University
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
@@ -61,7 +61,7 @@ namespace DPsim {
 		virtual void switchedMatrixStamp(std::size_t index, std::vector<std::shared_ptr<CPS::MNAInterface>>& comp) override;
 		/// Applies a component and switch stamp to the matrix with the given switch index
 		virtual void switchedMatrixStamp(std::size_t swIdx, Int freqIdx, CPS::MNAInterface::List& components, CPS::MNASwitchInterface::List& switches) override;
-		
+
 		/// Create a solve task for this solver implementation
 		virtual std::shared_ptr<CPS::Task> createSolveTask() override;
 		/// Create a solve task for this solver implementation

@@ -1,4 +1,4 @@
-/* Copyright 2017-2020 Institute for Automation of Complex Power Systems,
+/* Copyright 2017-2021 Institute for Automation of Complex Power Systems,
  *                     EONERC, RWTH Aachen University
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
@@ -29,7 +29,7 @@ void addDPComponents(py::module_ mDP) {
 		.def("single_voltage", &CPS::DP::SimNode::singleVoltage, "phase_type"_a=CPS::PhaseType::Single)
 		.def_readonly_static("gnd", &CPS::DP::SimNode::GND);
 
-	
+
 	py::module mDPPh1 = mDP.def_submodule("ph1", "single phase dynamic phasor models");
 	addDPPh1Components(mDPPh1);
 

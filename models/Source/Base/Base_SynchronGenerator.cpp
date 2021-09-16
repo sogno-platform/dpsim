@@ -1,4 +1,4 @@
-/* Copyright 2017-2020 Institute for Automation of Complex Power Systems,
+/* Copyright 2017-2021 Institute for Automation of Complex Power Systems,
  *                     EONERC, RWTH Aachen University
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
@@ -37,7 +37,7 @@ void Base::SynchronGenerator::setBaseParameters(Real nomPower, Real nomVolt, Rea
 }
 
 void Base::SynchronGenerator::setBaseAndFundamentalPerUnitParameters(
-	Real nomPower, Real nomVolt, Real nomFreq, Real nomFieldCur, 
+	Real nomPower, Real nomVolt, Real nomFreq, Real nomFieldCur,
 	Int poleNumber, Real Rs, Real Ll, Real Lmd, Real Lmq, Real Rfd, Real Llfd,
 	Real Rkd, Real Llkd, Real Rkq1, Real Llkq1, Real Rkq2, Real Llkq2,
 	Real inertia) {
@@ -51,7 +51,7 @@ void Base::SynchronGenerator::setBaseAndFundamentalPerUnitParameters(
 
 void Base::SynchronGenerator::setOperationalPerUnitParameters(
 		Int poleNumber, Real inertia,
-		Real Rs, Real Ld, Real Lq, Real Ll, 
+		Real Rs, Real Ld, Real Lq, Real Ll,
 		Real Ld_t, Real Lq_t, Real Ld_s, Real Lq_s,
 		Real Td0_t, Real Tq0_t, Real Td0_s, Real Tq0_s){
 
@@ -62,7 +62,7 @@ void Base::SynchronGenerator::setOperationalPerUnitParameters(
 		mLl = Ll;
 		mLd = Ld;
 		mLq = Lq;
-		
+
 		mLd_t = Ld_t;
 		mLq_t = Lq_t;
 		mLd_s = Ld_s;

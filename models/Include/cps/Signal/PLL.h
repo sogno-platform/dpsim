@@ -1,4 +1,4 @@
-/* Copyright 2017-2020 Institute for Automation of Complex Power Systems,
+/* Copyright 2017-2021 Institute for Automation of Complex Power Systems,
  *                     EONERC, RWTH Aachen University
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
@@ -52,7 +52,7 @@ namespace Signal {
 		Matrix mC = Matrix::Zero(2, 2);
 		/// matrix D of state space model
 		Matrix mD = Matrix::Zero(2, 2);
-		
+
 	public:
 		PLL(String name, Logger::Level logLevel = Logger::Level::off);
 		/// Setter for PLL parameters

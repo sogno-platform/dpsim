@@ -1,4 +1,4 @@
-/* Copyright 2017-2020 Institute for Automation of Complex Power Systems,
+/* Copyright 2017-2021 Institute for Automation of Complex Power Systems,
  *                     EONERC, RWTH Aachen University
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
@@ -121,7 +121,7 @@ void EMT::Ph3::Capacitor::mnaApplySystemMatrixStamp(Matrix& systemMatrix) {
 		Math::addToMatrixElement(systemMatrix, matrixNodeIndex(1, 2), matrixNodeIndex(0, 1), -mEquivCond(2, 1));
 		Math::addToMatrixElement(systemMatrix, matrixNodeIndex(1, 2), matrixNodeIndex(0, 2), -mEquivCond(2, 2));
 	}
-	
+
 	mSLog->info(
 			"\nEquivalent Conductance: {:s}",
 			Logger::matrixToString(mEquivCond));
@@ -145,7 +145,7 @@ void EMT::Ph3::Capacitor::mnaApplyRightSideVectorStamp(Matrix& rightVector) {
 }
 
 void EMT::Ph3::Capacitor::mnaAddPreStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes) {
-	// actually depends on C, but then we'd have to modify the system matrix anyway	
+	// actually depends on C, but then we'd have to modify the system matrix anyway
 	prevStepDependencies.push_back(attribute("i_intf"));
 	prevStepDependencies.push_back(attribute("v_intf"));
 	modifiedAttributes.push_back(attribute("right_vector"));

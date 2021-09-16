@@ -1,4 +1,4 @@
-/* Copyright 2017-2020 Institute for Automation of Complex Power Systems,
+/* Copyright 2017-2021 Institute for Automation of Complex Power Systems,
  *                     EONERC, RWTH Aachen University
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
@@ -47,7 +47,7 @@ void EMT::Ph3::NetworkInjection::setParameters(MatrixComp voltageRef, Real srcFr
 	setAttributeRef("f_src", mSubVoltageSource->attribute<Real>("f_src"));
 
 	mSLog->info("\nVoltage Ref={:s} [V]"
-				"\nFrequency={:s} [Hz]", 
+				"\nFrequency={:s} [Hz]",
 				Logger::matrixCompToString(voltageRef),
 				Logger::realToString(srcFreq));
 }
@@ -56,13 +56,13 @@ void EMT::Ph3::NetworkInjection::setParameters(MatrixComp voltageRef, Real freqS
 	mParametersSet = true;
 
 	mSubVoltageSource->setParameters(voltageRef, freqStart, rocof, timeStart, duration, useAbsoluteCalc);
-	
+
 	setAttributeRef("V_ref", mSubVoltageSource->attribute<MatrixComp>("V_ref"));
 	setAttributeRef("f_src", mSubVoltageSource->attribute<Real>("f_src"));
 	setAttributeRef("sigOut", mSubVoltageSource->attribute<Complex>("sigOut"));
 
 	mSLog->info("\nVoltage Ref={:s} [V]"
-				"\nFrequency={:s} [Hz]", 
+				"\nFrequency={:s} [Hz]",
 				Logger::matrixCompToString(voltageRef),
 				Logger::realToString(freqStart));
 }
@@ -71,12 +71,12 @@ void EMT::Ph3::NetworkInjection::setParameters(MatrixComp voltageRef, Real modul
 	mParametersSet = true;
 
 	mSubVoltageSource->setParameters(voltageRef, modulationFrequency, modulationAmplitude, baseFrequency, zigzag);
-	
+
 	setAttributeRef("V_ref", mSubVoltageSource->attribute<MatrixComp>("V_ref"));
 	setAttributeRef("f_src", mSubVoltageSource->attribute<Real>("f_src"));
 
 	mSLog->info("\nVoltage Ref={:s} [V]"
-				"\nFrequency={:s} [Hz]", 
+				"\nFrequency={:s} [Hz]",
 				Logger::matrixCompToString(voltageRef),
 				Logger::realToString(baseFrequency));
 }
@@ -84,13 +84,13 @@ void EMT::Ph3::NetworkInjection::setParameters(MatrixComp voltageRef, Real modul
 void EMT::Ph3::NetworkInjection::initializeFromNodesAndTerminals(Real frequency) {
 	// Connect electrical subcomponents
 	mSubVoltageSource->connect({ SimNode::GND, node(0) });
-	
+
 	// Initialize electrical subcomponents
 	for (auto subcomp: mSubComponents) {
 		subcomp->initialize(mFrequencies);
 		subcomp->initializeFromNodesAndTerminals(frequency);
 	}
-	
+
 	setAttributeRef("V_ref", mSubVoltageSource->attribute<MatrixComp>("V_ref"));
 	setAttributeRef("f_src", mSubVoltageSource->attribute<Real>("f_src"));
 }

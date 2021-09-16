@@ -1,4 +1,4 @@
-/* Copyright 2017-2020 Institute for Automation of Complex Power Systems,
+/* Copyright 2017-2021 Institute for Automation of Complex Power Systems,
  *                     EONERC, RWTH Aachen University
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
@@ -151,7 +151,7 @@ void EMT::Ph3::PiLine::mnaInitialize(Real omega, Real timeStep, Attribute<Matrix
 	mSubParallelResistor1->mnaInitialize(omega, timeStep, leftVector);
 	subComps.push_back(mSubParallelResistor0);
 	subComps.push_back(mSubParallelResistor1);
-	
+
 	if (mParallelCap(0,0) > 0) {
 		mSubParallelCapacitor0->mnaInitialize(omega, timeStep, leftVector);
 		mSubParallelCapacitor1->mnaInitialize(omega, timeStep, leftVector);
@@ -190,7 +190,7 @@ void EMT::Ph3::PiLine::mnaAddPreStepDependencies(AttributeBase::List &prevStepDe
 	mSubSeriesInductor->mnaAddPreStepDependencies(prevStepDependencies, attributeDependencies, modifiedAttributes);
 	mSubParallelResistor0->mnaAddPreStepDependencies(prevStepDependencies, attributeDependencies, modifiedAttributes);
 	mSubParallelResistor1->mnaAddPreStepDependencies(prevStepDependencies, attributeDependencies, modifiedAttributes);
-	
+
 	if (mParallelCap(0, 0) > 0) {
 		mSubParallelCapacitor0->mnaAddPreStepDependencies(prevStepDependencies, attributeDependencies, modifiedAttributes);
 		mSubParallelCapacitor1->mnaAddPreStepDependencies(prevStepDependencies, attributeDependencies, modifiedAttributes);

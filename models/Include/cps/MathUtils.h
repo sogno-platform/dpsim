@@ -1,4 +1,4 @@
-/* Copyright 2017-2020 Institute for Automation of Complex Power Systems,
+/* Copyright 2017-2021 Institute for Automation of Complex Power Systems,
  *                     EONERC, RWTH Aachen University
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
@@ -190,13 +190,13 @@ namespace CPS {
 		static MatrixComp singlePhaseVariableToThreePhase(Complex var_1ph) {
 			MatrixComp var_3ph = MatrixComp::Zero(3, 1);
 			var_3ph <<
-				var_1ph, 
-				var_1ph * SHIFT_TO_PHASE_B, 
+				var_1ph,
+				var_1ph * SHIFT_TO_PHASE_B,
 				var_1ph * SHIFT_TO_PHASE_C;
 			return var_3ph;
 		}
 
-		/// To convert single phase real variables (voltages, currents) to symmetrical three phase ones 
+		/// To convert single phase real variables (voltages, currents) to symmetrical three phase ones
 		static Matrix singlePhaseParameterToThreePhase(Real parameter) {
 			Matrix param_3ph = Matrix::Zero(3, 3);
 			param_3ph <<

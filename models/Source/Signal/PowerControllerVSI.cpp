@@ -1,4 +1,4 @@
-/* Copyright 2017-2020 Institute for Automation of Complex Power Systems,
+/* Copyright 2017-2021 Institute for Automation of Complex Power Systems,
  *                     EONERC, RWTH Aachen University
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
@@ -15,7 +15,7 @@ PowerControllerVSI::PowerControllerVSI(String name, Logger::Level logLevel) :
 	SimSignalComp(name, name, logLevel) {
 
 	mSLog->info("Create {} {}", type(), name);
-	
+
 	// attributes of full state space model vectors
 	addAttribute<Matrix>("input_prev", &mInputPrev, Flags::read | Flags::write);
     addAttribute<Matrix>("state_prev", &mStatePrev, Flags::read | Flags::write);

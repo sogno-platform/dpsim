@@ -1,4 +1,4 @@
-/* Copyright 2017-2020 Institute for Automation of Complex Power Systems,
+/* Copyright 2017-2021 Institute for Automation of Complex Power Systems,
  *                     EONERC, RWTH Aachen University
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
@@ -39,9 +39,9 @@ SimPowerComp<Real>::Ptr EMT::Ph3::Transformer::clone(String name) {
 
 void EMT::Ph3::Transformer::setParameters(Real nomVoltageEnd1, Real nomVoltageEnd2, Real ratioAbs, Real ratioPhase,
 	Matrix resistance, Matrix inductance) {
-	
+
 	Base::Ph3::Transformer::setParameters(nomVoltageEnd1, nomVoltageEnd2, ratioAbs, ratioPhase, resistance, inductance);
-	
+
 	mSLog->info("Nominal Voltage End 1={} [V] Nominal Voltage End 2={} [V]", mNominalVoltageEnd1, mNominalVoltageEnd2);
 	mSLog->info("Resistance={} [Ohm] Inductance={} [Ohm] (referred to primary side)", mResistance, mInductance);
     mSLog->info("Tap Ratio={} [ ] Phase Shift={} [deg]", std::abs(mRatio), std::arg(mRatio));
@@ -224,7 +224,7 @@ void EMT::Ph3::Transformer::mnaAddPreStepDependencies(AttributeBase::List &prevS
 	modifiedAttributes.push_back(attribute("right_vector"));
 }
 
-void EMT::Ph3::Transformer::mnaPreStep(Real time, Int timeStepCount) {	
+void EMT::Ph3::Transformer::mnaPreStep(Real time, Int timeStepCount) {
 	// pre-step of subcomponents
 	mSubInductor->mnaPreStep(time, timeStepCount);
 	// pre-step of component itself
