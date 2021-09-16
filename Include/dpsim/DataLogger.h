@@ -12,7 +12,6 @@
 #include <iostream>
 #include <fstream>
 #include <experimental/filesystem>
-namespace fs = std::experimental::filesystem;
 
 #include <dpsim/Definitions.h>
 #include <dpsim/Scheduler.h>
@@ -20,6 +19,8 @@ namespace fs = std::experimental::filesystem;
 #include <cps/Attribute.h>
 #include <cps/SimNode.h>
 #include <cps/Task.h>
+
+namespace fs = std::experimental::filesystem;
 
 namespace DPsim {
 
