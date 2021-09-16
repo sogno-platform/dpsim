@@ -18,8 +18,6 @@ using namespace CPS;
 using namespace CPS::CIM;
 using CIMPP::UnitMultiplier;
 
-namespace fs = std::experimental::filesystem;
-
 Reader::Reader(String name, Logger::Level logLevel, Logger::Level componentLogLevel) {
 	mSLog = Logger::get(name + "_CIM", logLevel);
 
@@ -304,7 +302,7 @@ TopologicalPowerComp::Ptr Reader::mapEnergyConsumer(CIMPP::EnergyConsumer* consu
 		load->setParameters(p, q, 0);
 		*/
 
-		// P and Q values will be set according to SvPowerFlow data	
+		// P and Q values will be set according to SvPowerFlow data
 		load->modifyPowerFlowBusType(PowerflowBusType::PQ); // for powerflow solver set as PQ component as default
 		return load;
 	}
