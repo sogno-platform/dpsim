@@ -12,7 +12,6 @@ int main(int argc, char** argv){
 
 	// Find CIM files
 	std::list<fs::path> filenames;
-	std::cout<<std::experimental::filesystem::current_path()<<std::endl;
 	if (argc <= 1) {
 		filenames = DPsim::Utils::findFiles({
 			"Rootnet_FULL_NE_28J17h_DI.xml",

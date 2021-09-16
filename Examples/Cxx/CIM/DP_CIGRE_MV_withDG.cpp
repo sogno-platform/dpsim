@@ -17,9 +17,8 @@ int main(int argc, char** argv){
 	Real timeStep;
 	Real finalTime;
 	Bool steadyStateInit;
-		
+
 	// Set remaining simulation parameters using default values or command line infos
-	std::cout<<std::experimental::filesystem::current_path()<<std::endl;
 	CommandLineArgs args(argc, argv);
 	if (argc <= 1) {
 		filenames = DPsim::Utils::findFiles({
@@ -38,7 +37,7 @@ int main(int argc, char** argv){
 		finalTime = args.duration;
 		steadyStateInit = args.steadyInit;
 	}
-	
+
 	// ----- POWERFLOW FOR INITIALIZATION -----
 	// read original network topology
 	String simNamePF = simName + "_Powerflow";
@@ -65,7 +64,7 @@ int main(int argc, char** argv){
     simPF.addLogger(loggerPF);
     simPF.run();
 
-	
+
 	// ----- DYNAMIC SIMULATION -----
 	Logger::setLogDir("logs/" + simName);
 	CIM::Reader reader2(simName, Logger::Level::debug, Logger::Level::debug);
