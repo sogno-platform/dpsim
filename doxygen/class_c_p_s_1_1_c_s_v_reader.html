@@ -94,15 +94,15 @@ Public Types</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:a852fc60ad430f8a283c2a90c270de29f"><td class="memItemLeft" align="right" valign="top"><a id="a852fc60ad430f8a283c2a90c270de29f"></a>
-&#160;</td><td class="memItemRight" valign="bottom"><b>CSVReader</b> (String name, std::list&lt; std::experimental::filesystem::path &gt; path, Logger::Level logLevel)</td></tr>
-<tr class="separator:a852fc60ad430f8a283c2a90c270de29f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a72974ae698b3fec9110130b62400849d"><td class="memItemLeft" align="right" valign="top"><a id="a72974ae698b3fec9110130b62400849d"></a>
+&#160;</td><td class="memItemRight" valign="bottom"><b>CSVReader</b> (String name, std::list&lt; fs::path &gt; path, Logger::Level logLevel)</td></tr>
+<tr class="separator:a72974ae698b3fec9110130b62400849d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a2bcb49f4a4b8cad68e8e058c52615526"><td class="memItemLeft" align="right" valign="top"><a id="a2bcb49f4a4b8cad68e8e058c52615526"></a>
 &#160;</td><td class="memItemRight" valign="bottom"><b>CSVReader</b> (String name, String path, Logger::Level logLevel)</td></tr>
 <tr class="separator:a2bcb49f4a4b8cad68e8e058c52615526"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ac94df0594faa31f7f07d68615905d3eb"><td class="memItemLeft" align="right" valign="top"><a id="ac94df0594faa31f7f07d68615905d3eb"></a>
-&#160;</td><td class="memItemRight" valign="bottom"><b>CSVReader</b> (String name, std::list&lt; std::experimental::filesystem::path &gt; path, std::map&lt; String, String &gt; &amp;assignList, Logger::Level logLevel)</td></tr>
-<tr class="separator:ac94df0594faa31f7f07d68615905d3eb"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aab9fc2acb6bcd4fc98235efc2f4e8607"><td class="memItemLeft" align="right" valign="top"><a id="aab9fc2acb6bcd4fc98235efc2f4e8607"></a>
+&#160;</td><td class="memItemRight" valign="bottom"><b>CSVReader</b> (String name, std::list&lt; fs::path &gt; path, std::map&lt; String, String &gt; &amp;assignList, Logger::Level logLevel)</td></tr>
+<tr class="separator:aab9fc2acb6bcd4fc98235efc2f4e8607"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ac0f59e6b3b0949c5cb0eb0657d53741c"><td class="memItemLeft" align="right" valign="top"><a id="ac0f59e6b3b0949c5cb0eb0657d53741c"></a>
 &#160;</td><td class="memItemRight" valign="bottom"><b>CSVReader</b> (String name, String path, std::map&lt; String, String &gt; &amp;assignList, Logger::Level logLevel)</td></tr>
 <tr class="separator:ac0f59e6b3b0949c5cb0eb0657d53741c"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -115,17 +115,17 @@ void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="clas
 <tr class="memitem:ad032428164768eabb2014c65254cc277"><td class="memItemLeft" align="right" valign="top"><a id="ad032428164768eabb2014c65254cc277"></a>
 MatrixRow&#160;</td><td class="memItemRight" valign="bottom"><b>csv2Eigen</b> (const String &amp;path)</td></tr>
 <tr class="separator:ad032428164768eabb2014c65254cc277"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aee8f144241d61ff6cc72945bce102172"><td class="memItemLeft" align="right" valign="top"><a id="aee8f144241d61ff6cc72945bce102172"></a>
-std::vector&lt; <a class="el" href="struct_c_p_s_1_1_p_q_data.html">PQData</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>readLoadProfileDP</b> (std::experimental::filesystem::path file, Real start_time=-1, Real time_step=1, Real end_time=-1, Real scale_factor=1, CSVReader::DataFormat format=CSVReader::DataFormat::SECONDS)</td></tr>
-<tr class="separator:aee8f144241d61ff6cc72945bce102172"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aeaab644dbddc681ae65bd0e3125941a3"><td class="memItemLeft" align="right" valign="top"><a id="aeaab644dbddc681ae65bd0e3125941a3"></a>
+std::vector&lt; <a class="el" href="struct_c_p_s_1_1_p_q_data.html">PQData</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>readLoadProfileDP</b> (fs::path file, Real start_time=-1, Real time_step=1, Real end_time=-1, Real scale_factor=1, CSVReader::DataFormat format=CSVReader::DataFormat::SECONDS)</td></tr>
+<tr class="separator:aeaab644dbddc681ae65bd0e3125941a3"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aab09375a178f7e68dfd696ffad42868f"><td class="memItemLeft" align="right" valign="top"><a id="aab09375a178f7e68dfd696ffad42868f"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>assignLoadProfileDP</b> (std::vector&lt; std::shared_ptr&lt; <a class="el" href="class_c_p_s_1_1_d_p_1_1_ph1_1_1_av_voltage_source_inverter_d_q.html">CPS::DP::Ph1::AvVoltageSourceInverterDQ</a> &gt;&gt; &amp;loads, Real start_time=-1, Real time_step=1, Real end_time=-1, Real scale_factor=1, <a class="el" href="class_c_p_s_1_1_c_s_v_reader.html#a07ab85b64411bd9e48d7a2e4a6df6b18">CSVReader::Mode</a> mode=CSVReader::Mode::AUTO, CSVReader::DataFormat format=CSVReader::DataFormat::SECONDS)</td></tr>
 <tr class="separator:aab09375a178f7e68dfd696ffad42868f"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a9f7b79f8a504c46dabde061d0a35e088"><td class="memItemLeft" align="right" valign="top"><a class="el" href="struct_c_p_s_1_1_power_profile.html">PowerProfile</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_p_s_1_1_c_s_v_reader.html#a9f7b79f8a504c46dabde061d0a35e088">readLoadProfile</a> (std::experimental::filesystem::path file, Real start_time=-1, Real time_step=1, Real end_time=-1, CSVReader::DataFormat format=CSVReader::DataFormat::SECONDS)</td></tr>
-<tr class="separator:a9f7b79f8a504c46dabde061d0a35e088"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a2b866f909378e42f045471105ad4648f"><td class="memItemLeft" align="right" valign="top"><a id="a2b866f909378e42f045471105ad4648f"></a>
-std::vector&lt; Real &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>readPQData</b> (std::experimental::filesystem::path file, Real start_time=-1, Real time_step=1, Real end_time=-1, CSVReader::DataFormat format=CSVReader::DataFormat::SECONDS)</td></tr>
-<tr class="separator:a2b866f909378e42f045471105ad4648f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6d2d9b2ae5cff7b334d9fa571796f82a"><td class="memItemLeft" align="right" valign="top"><a class="el" href="struct_c_p_s_1_1_power_profile.html">PowerProfile</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_p_s_1_1_c_s_v_reader.html#a6d2d9b2ae5cff7b334d9fa571796f82a">readLoadProfile</a> (fs::path file, Real start_time=-1, Real time_step=1, Real end_time=-1, CSVReader::DataFormat format=CSVReader::DataFormat::SECONDS)</td></tr>
+<tr class="separator:a6d2d9b2ae5cff7b334d9fa571796f82a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2607ea94f260d1661a1521ccba97d6e0"><td class="memItemLeft" align="right" valign="top"><a id="a2607ea94f260d1661a1521ccba97d6e0"></a>
+std::vector&lt; Real &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>readPQData</b> (fs::path file, Real start_time=-1, Real time_step=1, Real end_time=-1, CSVReader::DataFormat format=CSVReader::DataFormat::SECONDS)</td></tr>
+<tr class="separator:a2607ea94f260d1661a1521ccba97d6e0"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aee322f4b844dce6629b34aaa49e2a736"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_p_s_1_1_c_s_v_reader.html#aee322f4b844dce6629b34aaa49e2a736">assignLoadProfile</a> (<a class="el" href="class_c_p_s_1_1_system_topology.html">SystemTopology</a> &amp;sys, Real start_time=-1, Real time_step=1, Real end_time=-1, <a class="el" href="class_c_p_s_1_1_c_s_v_reader.html#a07ab85b64411bd9e48d7a2e4a6df6b18">CSVReader::Mode</a> mode=CSVReader::Mode::AUTO, CSVReader::DataFormat format=CSVReader::DataFormat::SECONDS)</td></tr>
 <tr class="memdesc:aee322f4b844dce6629b34aaa49e2a736"><td class="mdescLeft">&#160;</td><td class="mdescRight">assign load profile to corresponding load object  <a href="class_c_p_s_1_1_c_s_v_reader.html#aee322f4b844dce6629b34aaa49e2a736">More...</a><br /></td></tr>
 <tr class="separator:aee322f4b844dce6629b34aaa49e2a736"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -144,7 +144,7 @@ Real&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="clas
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>reads load profiles (csv files only) and assign them to the corresponding load object </p>
 
-<p class="definition">Definition at line <a class="el" href="_c_s_v_reader_8h_source.html#l00027">27</a> of file <a class="el" href="_c_s_v_reader_8h_source.html">CSVReader.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_c_s_v_reader_8h_source.html#l00029">29</a> of file <a class="el" href="_c_s_v_reader_8h_source.html">CSVReader.h</a>.</p>
 </div><h2 class="groupheader">Member Enumeration Documentation</h2>
 <a id="a07ab85b64411bd9e48d7a2e4a6df6b18"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a07ab85b64411bd9e48d7a2e4a6df6b18">&#9670;&nbsp;</a></span>Mode</h2>
@@ -167,7 +167,7 @@ Real&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="clas
 </div><div class="memdoc">
 <p>set load profile assigning pattern. AUTO for assigning load profile name (csv file name) to load object with the same name (mName) MANUAL for providing an assign pattern manually. see power flow example: CIM/CIGRE_MV_PowerFlowTest_LoadProfiles.cpp </p>
 
-<p class="definition">Definition at line <a class="el" href="_c_s_v_reader_8h_source.html#l00043">43</a> of file <a class="el" href="_c_s_v_reader_8h_source.html">CSVReader.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_c_s_v_reader_8h_source.html#l00045">45</a> of file <a class="el" href="_c_s_v_reader_8h_source.html">CSVReader.h</a>.</p>
 
 </div>
 </div>
@@ -226,12 +226,12 @@ Real&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="clas
 <p>changing file name and load name to upper case for later matching</p>
 <p>strip off all non-alphanumeric characters</p>
 
-<p class="definition">Definition at line <a class="el" href="_c_s_v_reader_8cpp_source.html#l00482">482</a> of file <a class="el" href="_c_s_v_reader_8cpp_source.html">CSVReader.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_c_s_v_reader_8cpp_source.html#l00480">480</a> of file <a class="el" href="_c_s_v_reader_8cpp_source.html">CSVReader.cpp</a>.</p>
 
 </div>
 </div>
-<a id="a9f7b79f8a504c46dabde061d0a35e088"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a9f7b79f8a504c46dabde061d0a35e088">&#9670;&nbsp;</a></span>readLoadProfile()</h2>
+<a id="a6d2d9b2ae5cff7b334d9fa571796f82a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a6d2d9b2ae5cff7b334d9fa571796f82a">&#9670;&nbsp;</a></span>readLoadProfile()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -239,7 +239,7 @@ Real&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="clas
         <tr>
           <td class="memname"><a class="el" href="struct_c_p_s_1_1_power_profile.html">PowerProfile</a> CSVReader::readLoadProfile </td>
           <td>(</td>
-          <td class="paramtype">std::experimental::filesystem::path&#160;</td>
+          <td class="paramtype">fs::path&#160;</td>
           <td class="paramname"><em>file</em>, </td>
         </tr>
         <tr>
@@ -275,7 +275,7 @@ Real&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="clas
 </div><div class="memdoc">
 <p>TODO : deprecate in the future read in load profile with time stamp format specified </p>
 
-<p class="definition">Definition at line <a class="el" href="_c_s_v_reader_8cpp_source.html#l00366">366</a> of file <a class="el" href="_c_s_v_reader_8cpp_source.html">CSVReader.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_c_s_v_reader_8cpp_source.html#l00364">364</a> of file <a class="el" href="_c_s_v_reader_8cpp_source.html">CSVReader.cpp</a>.</p>
 
 </div>
 </div>
@@ -296,7 +296,7 @@ Real&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="clas
 </div><div class="memdoc">
 <p>convert HH:MM:SS format timestamp into total seconds. e.g.: 00 : 01 : 00 &ndash; &gt; 60. </p>
 
-<p class="definition">Definition at line <a class="el" href="_c_s_v_reader_8cpp_source.html#l00126">126</a> of file <a class="el" href="_c_s_v_reader_8cpp_source.html">CSVReader.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_c_s_v_reader_8cpp_source.html#l00124">124</a> of file <a class="el" href="_c_s_v_reader_8cpp_source.html">CSVReader.cpp</a>.</p>
 
 </div>
 </div>
