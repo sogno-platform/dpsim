@@ -1,0 +1,34 @@
+FROM fedora:34
+
+ARG VILLAS_VERSION=0.8.0
+ARG CIM_VERSION=CGMES_2.4.15_16FEB2016
+
+LABEL \
+	org.label-schema.schema-version = "1.0" \
+	org.label-schema.name = "DPsim" \
+	org.label-schema.license = "MPL 2.0" \
+	org.label-schema.vendor = "Institute for Automation of Complex Power Systems, RWTH Aachen University" \
+	org.label-schema.author.name = "Markus Mirz" \
+	org.label-schema.author.email = "mmirz@eonerc.rwth-aachen.de" \
+	org.label-schema.url = "http://fein-aachen.org/projects/dpsim/" \
+	org.label-schema.vcs-url = "https://git.rwth-aachen.de/acs/public/simulation/dpsim"
+
+RUN dnf -y update
+
+# Toolchain
+RUN dnf -y install \
+	gcc gcc-c++ \
+	git \
+	make cmake pkgconfig \
+	python3-pip
+
+# Dependencies
+RUN dnf --refresh -y install \
+	python3-devel \
+	eigen3-devel
+
+# Python dependencies
+ADD requirements.txt .
+RUN pip3 install -r requirements.txt
+
+EXPOSE 8888
