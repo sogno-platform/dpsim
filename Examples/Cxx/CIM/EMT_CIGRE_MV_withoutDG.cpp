@@ -15,9 +15,8 @@ int main(int argc, char** argv){
 	std::list<fs::path> filenames;
 	Real timeStep;
 	Real finalTime;
-		
+
 	// Set remaining simulation parameters using default values or command line infos
-	std::cout<<std::experimental::filesystem::current_path()<<std::endl;
 	CommandLineArgs args(argc, argv);
 	if (argc <= 1) {
 		filenames = DPsim::Utils::findFiles({
@@ -64,7 +63,7 @@ int main(int argc, char** argv){
 	reader2.initDynamicSystemTopologyWithPowerflow(systemPF, systemEMT);
 
 	auto logger = DPsim::DataLogger::make(simName);
-	
+
 	// log node voltages
 	for (auto node : systemEMT.mNodes)
 		logger->addAttribute(node->name() + ".V", node->attribute("v"));
@@ -74,7 +73,7 @@ int main(int argc, char** argv){
 		if (dynamic_pointer_cast<CPS::EMT::Ph3::PiLine>(comp))
 			logger->addAttribute(comp->name() + ".I", comp->attribute("i_intf"));
 	}
-	
+
 	// log load currents
 	for (auto comp : systemEMT.mComponents) {
 		if (dynamic_pointer_cast<CPS::EMT::Ph3::RXLoad>(comp))

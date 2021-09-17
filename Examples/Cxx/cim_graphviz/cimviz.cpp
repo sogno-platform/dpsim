@@ -56,7 +56,7 @@ int main(int argc, char *argv[]) {
 
 	Reader reader("cimviz", Logger::Level::info);
 
-	std::list<std::experimental::filesystem::path> filenames;
+	std::list<fs::path> filenames;
 	for (i = 0; gvc->input_filenames[i]; i++) {
 		filenames.emplace_back(gvc->input_filenames[i]);
 	}
