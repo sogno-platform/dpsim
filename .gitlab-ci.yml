@@ -3,56 +3,57 @@ variables:
   GIT_SUBMODULE_STRATEGY: recursive
   RSYNC_OPTS: --recursive --ignore-missing-args --chown ${DEPLOY_USER}:${DEPLOY_USER}
   DOCKER_TAG: ${CI_COMMIT_REF_NAME}
-  DOCKER_IMAGE: rwthacs/dpsim
-  DOCKER_IMAGE_DEV: rwthacs/dpsim-dev
+  DOCKER_IMAGE: sogno/dpsim
+  DOCKER_IMAGE_DEV: sogno/dpsim-dev
 
 
 stages:
-  - prepare
+#  - prepare
   - build
   - test
   - generate
 #  - deploy
 
-.docker-fedora-template: &docker-fedora-template
-  stage: prepare
-  image: docker:20.10
-  needs: []
-  script:
-    - docker build
-        --file Packaging/Docker/Dockerfile.dev
-        ${TAGS}
-        ${BUILD_ARGS} .
-  tags:
-    - docker
-
-docker:fedora-cgmes:
-  <<: *docker-fedora-template
-  variables:
-    TAGS:        --tag ${DOCKER_IMAGE_DEV}:${CI_COMMIT_REF_NAME}-cgmes --tag ${DOCKER_IMAGE_DEV}:latest
-    BUILD_ARGS:  --build-arg CIM_VERSION=CGMES_2.4.15_16FEB2016
-
+# moved to GitHub actions
+#.docker-fedora-template: &docker-fedora-template
+#  stage: prepare
+#  image: docker:20.10
+#  needs: []
+#  script:
+#    - docker build
+#        --file Packaging/Docker/Dockerfile.dev
+#        ${TAGS}
+#        ${BUILD_ARGS} .
+#  tags:
+#    - docker
+#
+#docker:fedora-cgmes:
+#  <<: *docker-fedora-template
+#  variables:
+#    TAGS:        --tag ${DOCKER_IMAGE_DEV}:${CI_COMMIT_REF_NAME}-cgmes --tag ${DOCKER_IMAGE_DEV}:latest
+#    BUILD_ARGS:  --build-arg CIM_VERSION=CGMES_2.4.15_16FEB2016
+#
 # CGMES is the preferred CIM flavor
 #docker:fedora-cim:
 #  <<: *docker-fedora-template
 #  variables:
 #    TAGS:       --tag ${DOCKER_IMAGE_DEV}:${CI_COMMIT_REF_NAME}-cim
 #    BUILD_ARGS: --build-arg CIM_VERSION=IEC61970_16v29a
-
-docker:centos:
-  stage: prepare
-  needs: []
-  script:
-    - docker build
-        --file Packaging/Docker/Dockerfile.dev-centos
-        --tag ${DOCKER_IMAGE_DEV}-centos:${DOCKER_TAG}
-        --tag ${DOCKER_IMAGE_DEV}-centos:latest .
-  tags:
-    - docker
+#
+#docker:centos:
+#  stage: prepare
+#  needs: []
+#  script:
+#    - docker build
+#        --file Packaging/Docker/Dockerfile.dev-centos
+#        --tag ${DOCKER_IMAGE_DEV}-centos:${DOCKER_TAG}
+#        --tag ${DOCKER_IMAGE_DEV}-centos:latest .
+#  tags:
+#    - docker
 
 build:linux-cgmes:
   stage: build
-  needs: ["docker:fedora-cgmes"]
+# needs: ["docker:fedora-cgmes"]
   script:
     - mkdir -p build
     - cd build
@@ -88,7 +89,7 @@ build:linux-cgmes:
 
 build:linux-profiling:
   stage: build
-  needs: ["docker:centos"]
+# needs: ["docker:centos"]
   script:
     - mkdir -p build
     - cd build
@@ -107,7 +108,7 @@ build:linux-profiling:
 
 build:linux-cuda:
   stage: build
-  needs: ["docker:centos"]
+# needs: ["docker:centos"]
   image: ${DOCKER_IMAGE_DEV}-centos:${DOCKER_TAG}
   artifacts:
     paths:
