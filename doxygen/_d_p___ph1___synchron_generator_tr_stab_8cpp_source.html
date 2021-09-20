@@ -69,7 +69,7 @@ $(function() {
 <div class="title">DP_Ph1_SynchronGeneratorTrStab.cpp</div>  </div>
 </div><!--header-->
 <div class="contents">
-<div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;<span class="comment">/* Copyright 2017-2020 Institute for Automation of Complex Power Systems,</span></div>
+<div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;<span class="comment">/* Copyright 2017-2021 Institute for Automation of Complex Power Systems,</span></div>
 <div class="line"><a name="l00002"></a><span class="lineno">    2</span>&#160;<span class="comment"> *                     EONERC, RWTH Aachen University</span></div>
 <div class="line"><a name="l00003"></a><span class="lineno">    3</span>&#160;<span class="comment"> *</span></div>
 <div class="line"><a name="l00004"></a><span class="lineno">    4</span>&#160;<span class="comment"> * This Source Code Form is subject to the terms of the Mozilla Public</span></div>
@@ -294,9 +294,9 @@ $(function() {
 <div class="line"><a name="l00223"></a><span class="lineno">  223</span>&#160;    <span class="comment">// Mechanical speed at time step k+1 applying Euler forward</span></div>
 <div class="line"><a name="l00224"></a><span class="lineno">  224</span>&#160;    <span class="keywordflow">if</span> (mBehaviour == Behaviour::Simulation)</div>
 <div class="line"><a name="l00225"></a><span class="lineno">  225</span>&#160;        mOmMech = mOmMech + mTimeStep * dOmMech;</div>
-<div class="line"><a name="l00226"></a><span class="lineno">  226</span>&#160;    </div>
+<div class="line"><a name="l00226"></a><span class="lineno">  226</span>&#160; </div>
 <div class="line"><a name="l00227"></a><span class="lineno">  227</span>&#160;    <span class="comment">// Derivative of rotor angle at time step k + 1</span></div>
-<div class="line"><a name="l00228"></a><span class="lineno">  228</span>&#160;    <span class="comment">// if reference omega is set, calculate delta with respect to reference </span></div>
+<div class="line"><a name="l00228"></a><span class="lineno">  228</span>&#160;    <span class="comment">// if reference omega is set, calculate delta with respect to reference</span></div>
 <div class="line"><a name="l00229"></a><span class="lineno">  229</span>&#160;    Real refOmega;</div>
 <div class="line"><a name="l00230"></a><span class="lineno">  230</span>&#160;    Real refDelta;</div>
 <div class="line"><a name="l00231"></a><span class="lineno">  231</span>&#160;    <span class="keywordflow">if</span> (mUseOmegaRef) {</div>
@@ -313,7 +313,7 @@ $(function() {
 <div class="line"><a name="l00242"></a><span class="lineno">  242</span>&#160;    <span class="keywordflow">if</span> (mBehaviour == Behaviour::Simulation) {</div>
 <div class="line"><a name="l00243"></a><span class="lineno">  243</span>&#160;        mDelta_p = mDelta_p + mTimeStep * dDelta_p;</div>
 <div class="line"><a name="l00244"></a><span class="lineno">  244</span>&#160;        mEp = Complex(mEp_abs * cos(mDelta_p), mEp_abs * sin(mDelta_p));</div>
-<div class="line"><a name="l00245"></a><span class="lineno">  245</span>&#160;    }       </div>
+<div class="line"><a name="l00245"></a><span class="lineno">  245</span>&#160;    }</div>
 <div class="line"><a name="l00246"></a><span class="lineno">  246</span>&#160; </div>
 <div class="line"><a name="l00247"></a><span class="lineno">  247</span>&#160;    mStates &lt;&lt; Math::abs(mEp), Math::phaseDeg(mEp), mElecActivePower, mMechPower,</div>
 <div class="line"><a name="l00248"></a><span class="lineno">  248</span>&#160;        mDelta_p, mOmMech, dOmMech, dDelta_p, mIntfVoltage(0,0).real(), mIntfVoltage(0,0).imag();</div>

@@ -69,7 +69,7 @@ $(function() {
 <div class="title">SP_Ph1_SynchronGenerator.cpp</div>  </div>
 </div><!--header-->
 <div class="contents">
-<div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;<span class="comment">/* Copyright 2017-2020 Institute for Automation of Complex Power Systems,</span></div>
+<div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;<span class="comment">/* Copyright 2017-2021 Institute for Automation of Complex Power Systems,</span></div>
 <div class="line"><a name="l00002"></a><span class="lineno">    2</span>&#160;<span class="comment"> *                     EONERC, RWTH Aachen University</span></div>
 <div class="line"><a name="l00003"></a><span class="lineno">    3</span>&#160;<span class="comment"> *</span></div>
 <div class="line"><a name="l00004"></a><span class="lineno">    4</span>&#160;<span class="comment"> * This Source Code Form is subject to the terms of the Mozilla Public</span></div>
@@ -148,13 +148,13 @@ $(function() {
 <div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;    }</div>
 <div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;}</div>
 <div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160; </div>
-<div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160;<span class="comment">//Method used in PF to update reactive power for PV-Bus generator </span></div>
+<div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160;<span class="comment">//Method used in PF to update reactive power for PV-Bus generator</span></div>
 <div class="line"><a name="l00081"></a><span class="lineno"><a class="line" href="class_c_p_s_1_1_s_p_1_1_ph1_1_1_synchron_generator.html#ab8024e3d12b3b12bc4b318c718ecce16">   81</a></span>&#160;<span class="keywordtype">void</span> <a class="code" href="class_c_p_s_1_1_s_p_1_1_ph1_1_1_synchron_generator.html#ab8024e3d12b3b12bc4b318c718ecce16">SP::Ph1::SynchronGenerator::updateReactivePowerInjection</a>(Complex powerInj) {</div>
 <div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160;    mSetPointReactivePower = powerInj.imag();</div>
 <div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160;    mSetPointReactivePowerPerUnit= mSetPointReactivePower/mBaseApparentPower;</div>
 <div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160;}</div>
 <div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160; </div>
-<div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160;<span class="comment">//Method used in PF to update active &amp; reactive power for VD-Bus generator </span></div>
+<div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160;<span class="comment">//Method used in PF to update active &amp; reactive power for VD-Bus generator</span></div>
 <div class="line"><a name="l00087"></a><span class="lineno"><a class="line" href="class_c_p_s_1_1_s_p_1_1_ph1_1_1_synchron_generator.html#ad9ca5cf9df9637943797db64ec2131f1">   87</a></span>&#160;<span class="keywordtype">void</span> <a class="code" href="class_c_p_s_1_1_s_p_1_1_ph1_1_1_synchron_generator.html#ad9ca5cf9df9637943797db64ec2131f1">SP::Ph1::SynchronGenerator::updatePowerInjection</a>(Complex powerInj) {</div>
 <div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160;    mSetPointActivePower = powerInj.real();</div>
 <div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160;    mSetPointActivePowerPerUnit= mSetPointActivePower/mBaseApparentPower;</div>

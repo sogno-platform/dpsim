@@ -69,7 +69,7 @@ $(function() {
 <div class="title">DP_Ph1_VoltageSource.cpp</div>  </div>
 </div><!--header-->
 <div class="contents">
-<div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;<span class="comment">/* Copyright 2017-2020 Institute for Automation of Complex Power Systems,</span></div>
+<div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;<span class="comment">/* Copyright 2017-2021 Institute for Automation of Complex Power Systems,</span></div>
 <div class="line"><a name="l00002"></a><span class="lineno">    2</span>&#160;<span class="comment"> *                     EONERC, RWTH Aachen University</span></div>
 <div class="line"><a name="l00003"></a><span class="lineno">    3</span>&#160;<span class="comment"> *</span></div>
 <div class="line"><a name="l00004"></a><span class="lineno">    4</span>&#160;<span class="comment"> * This Source Code Form is subject to the terms of the Mozilla Public</span></div>
@@ -136,15 +136,15 @@ $(function() {
 <div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160; </div>
 <div class="line"><a name="l00066"></a><span class="lineno"><a class="line" href="class_c_p_s_1_1_d_p_1_1_ph1_1_1_voltage_source.html#a64ca642c6a3d7297e8038846ec06fcd6">   66</a></span>&#160;<span class="keywordtype">void</span> <a class="code" href="class_c_p_s_1_1_d_p_1_1_ph1_1_1_voltage_source.html#a64ca642c6a3d7297e8038846ec06fcd6">DP::Ph1::VoltageSource::initializeFromNodesAndTerminals</a>(Real frequency) {</div>
 <div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;    Complex voltageRef = attribute&lt;Complex&gt;(<span class="stringliteral">&quot;V_ref&quot;</span>)-&gt;get();</div>
-<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;    </div>
-<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;    <span class="keywordflow">if</span> (voltageRef == Complex(0, 0))    </div>
+<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160; </div>
+<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;    <span class="keywordflow">if</span> (voltageRef == Complex(0, 0))</div>
 <div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;        voltageRef = initialSingleVoltage(1) - initialSingleVoltage(0);</div>
 <div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160; </div>
 <div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;    <span class="keywordflow">if</span> (mSrcSig == <span class="keyword">nullptr</span>) {</div>
 <div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;        <a class="code" href="class_c_p_s_1_1_signal_1_1_sine_wave_generator.html">Signal::SineWaveGenerator</a> srcSigSine(mName);</div>
 <div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;        srcSigSine.<a class="code" href="class_c_p_s_1_1_signal_1_1_sine_wave_generator.html#a0a45155b01669f8d31bbbbd8e3d05bc0">setParameters</a>(voltageRef);</div>
 <div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;        mSrcSig = std::make_shared&lt;Signal::SineWaveGenerator&gt;(srcSigSine);</div>
-<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;        </div>
+<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160; </div>
 <div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;        setAttributeRef(<span class="stringliteral">&quot;V_ref&quot;</span>, mSrcSig-&gt;attribute&lt;Complex&gt;(<span class="stringliteral">&quot;sigOut&quot;</span>));</div>
 <div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;        setAttributeRef(<span class="stringliteral">&quot;f_src&quot;</span>, mSrcSig-&gt;attribute&lt;Real&gt;(<span class="stringliteral">&quot;freq&quot;</span>));</div>
 <div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160;    } <span class="keywordflow">else</span> {</div>
@@ -271,7 +271,7 @@ $(function() {
 <div class="line"><a name="l00200"></a><span class="lineno">  200</span>&#160;    } <span class="keywordflow">else</span> {</div>
 <div class="line"><a name="l00201"></a><span class="lineno">  201</span>&#160;        mIntfVoltage(0,0) = attribute&lt;Complex&gt;(<span class="stringliteral">&quot;V_ref&quot;</span>)-&gt;get();</div>
 <div class="line"><a name="l00202"></a><span class="lineno">  202</span>&#160;    }</div>
-<div class="line"><a name="l00203"></a><span class="lineno">  203</span>&#160;    </div>
+<div class="line"><a name="l00203"></a><span class="lineno">  203</span>&#160; </div>
 <div class="line"><a name="l00204"></a><span class="lineno">  204</span>&#160;    mSLog-&gt;debug(<span class="stringliteral">&quot;Update Voltage {:s}&quot;</span>, Logger::phasorToString(mIntfVoltage(0,0)));</div>
 <div class="line"><a name="l00205"></a><span class="lineno">  205</span>&#160;}</div>
 <div class="line"><a name="l00206"></a><span class="lineno">  206</span>&#160; </div>

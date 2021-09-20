@@ -69,7 +69,7 @@ $(function() {
 <div class="title">SP_Ph1_VoltageSource.cpp</div>  </div>
 </div><!--header-->
 <div class="contents">
-<div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;<span class="comment">/* Copyright 2017-2020 Institute for Automation of Complex Power Systems,</span></div>
+<div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;<span class="comment">/* Copyright 2017-2021 Institute for Automation of Complex Power Systems,</span></div>
 <div class="line"><a name="l00002"></a><span class="lineno">    2</span>&#160;<span class="comment"> *                     EONERC, RWTH Aachen University</span></div>
 <div class="line"><a name="l00003"></a><span class="lineno">    3</span>&#160;<span class="comment"> *</span></div>
 <div class="line"><a name="l00004"></a><span class="lineno">    4</span>&#160;<span class="comment"> * This Source Code Form is subject to the terms of the Mozilla Public</span></div>
@@ -104,7 +104,7 @@ $(function() {
 <div class="line"><a name="l00033"></a><span class="lineno"><a class="line" href="class_c_p_s_1_1_s_p_1_1_ph1_1_1_voltage_source.html#a775c6356787edee16e0aac6d20f62bc7">   33</a></span>&#160;<span class="keywordtype">void</span> <a class="code" href="class_c_p_s_1_1_s_p_1_1_ph1_1_1_voltage_source.html#a775c6356787edee16e0aac6d20f62bc7">SP::Ph1::VoltageSource::setParameters</a>(Complex voltageRef, Real srcFreq) {</div>
 <div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;    <span class="keyword">auto</span> srcSigSine = Signal::SineWaveGenerator::make(mName + <span class="stringliteral">&quot;_sw&quot;</span>);</div>
 <div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;    srcSigSine-&gt;setParameters(voltageRef, srcFreq);</div>
-<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;    mSrcSig = srcSigSine; </div>
+<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;    mSrcSig = srcSigSine;</div>
 <div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160; </div>
 <div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;    setAttributeRef(<span class="stringliteral">&quot;V_ref&quot;</span>, mSrcSig-&gt;attribute&lt;Complex&gt;(<span class="stringliteral">&quot;sigOut&quot;</span>));</div>
 <div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;    setAttributeRef(<span class="stringliteral">&quot;f_src&quot;</span>, mSrcSig-&gt;attribute&lt;Real&gt;(<span class="stringliteral">&quot;freq&quot;</span>));</div>
@@ -136,15 +136,15 @@ $(function() {
 <div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160; </div>
 <div class="line"><a name="l00066"></a><span class="lineno"><a class="line" href="class_c_p_s_1_1_s_p_1_1_ph1_1_1_voltage_source.html#a585c16acb40919857e95ccb90b8b9fd3">   66</a></span>&#160;<span class="keywordtype">void</span> <a class="code" href="class_c_p_s_1_1_s_p_1_1_ph1_1_1_voltage_source.html#a585c16acb40919857e95ccb90b8b9fd3">SP::Ph1::VoltageSource::initializeFromNodesAndTerminals</a>(Real frequency) {</div>
 <div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;    Complex voltageRef = attribute&lt;Complex&gt;(<span class="stringliteral">&quot;V_ref&quot;</span>)-&gt;get();</div>
-<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;    </div>
-<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;    <span class="keywordflow">if</span> (voltageRef == Complex(0, 0))    </div>
+<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160; </div>
+<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;    <span class="keywordflow">if</span> (voltageRef == Complex(0, 0))</div>
 <div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;        voltageRef = initialSingleVoltage(1) - initialSingleVoltage(0);</div>
 <div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160; </div>
 <div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;    <span class="keywordflow">if</span> (mSrcSig == <span class="keyword">nullptr</span>) {</div>
 <div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;        <a class="code" href="class_c_p_s_1_1_signal_1_1_sine_wave_generator.html">Signal::SineWaveGenerator</a> srcSigSine(mName);</div>
-<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;        srcSigSine.<a class="code" href="class_c_p_s_1_1_signal_1_1_sine_wave_generator.html#a0a45155b01669f8d31bbbbd8e3d05bc0">setParameters</a>(voltageRef); </div>
+<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;        srcSigSine.<a class="code" href="class_c_p_s_1_1_signal_1_1_sine_wave_generator.html#a0a45155b01669f8d31bbbbd8e3d05bc0">setParameters</a>(voltageRef);</div>
 <div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;        mSrcSig = std::make_shared&lt;Signal::SineWaveGenerator&gt;(srcSigSine);</div>
-<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;        </div>
+<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160; </div>
 <div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;        setAttributeRef(<span class="stringliteral">&quot;V_ref&quot;</span>, mSrcSig-&gt;attribute&lt;Complex&gt;(<span class="stringliteral">&quot;sigOut&quot;</span>));</div>
 <div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;        setAttributeRef(<span class="stringliteral">&quot;f_src&quot;</span>, mSrcSig-&gt;attribute&lt;Real&gt;(<span class="stringliteral">&quot;freq&quot;</span>));</div>
 <div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160;    } <span class="keywordflow">else</span> {</div>

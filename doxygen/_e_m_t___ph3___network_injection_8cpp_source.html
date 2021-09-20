@@ -69,7 +69,7 @@ $(function() {
 <div class="title">EMT_Ph3_NetworkInjection.cpp</div>  </div>
 </div><!--header-->
 <div class="contents">
-<div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;<span class="comment">/* Copyright 2017-2020 Institute for Automation of Complex Power Systems,</span></div>
+<div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;<span class="comment">/* Copyright 2017-2021 Institute for Automation of Complex Power Systems,</span></div>
 <div class="line"><a name="l00002"></a><span class="lineno">    2</span>&#160;<span class="comment"> *                     EONERC, RWTH Aachen University</span></div>
 <div class="line"><a name="l00003"></a><span class="lineno">    3</span>&#160;<span class="comment"> *</span></div>
 <div class="line"><a name="l00004"></a><span class="lineno">    4</span>&#160;<span class="comment"> * This Source Code Form is subject to the terms of the Mozilla Public</span></div>
@@ -118,7 +118,7 @@ $(function() {
 <div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;    setAttributeRef(<span class="stringliteral">&quot;f_src&quot;</span>, mSubVoltageSource-&gt;attribute&lt;Real&gt;(<span class="stringliteral">&quot;f_src&quot;</span>));</div>
 <div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160; </div>
 <div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;    mSLog-&gt;info(<span class="stringliteral">&quot;\nVoltage Ref={:s} [V]&quot;</span></div>
-<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;                <span class="stringliteral">&quot;\nFrequency={:s} [Hz]&quot;</span>, </div>
+<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;                <span class="stringliteral">&quot;\nFrequency={:s} [Hz]&quot;</span>,</div>
 <div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;                Logger::matrixCompToString(voltageRef),</div>
 <div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;                Logger::realToString(srcFreq));</div>
 <div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;}</div>
@@ -127,13 +127,13 @@ $(function() {
 <div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;    mParametersSet = <span class="keyword">true</span>;</div>
 <div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160; </div>
 <div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;    mSubVoltageSource-&gt;setParameters(voltageRef, freqStart, rocof, timeStart, duration, useAbsoluteCalc);</div>
-<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;    </div>
+<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160; </div>
 <div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;    setAttributeRef(<span class="stringliteral">&quot;V_ref&quot;</span>, mSubVoltageSource-&gt;attribute&lt;MatrixComp&gt;(<span class="stringliteral">&quot;V_ref&quot;</span>));</div>
 <div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;    setAttributeRef(<span class="stringliteral">&quot;f_src&quot;</span>, mSubVoltageSource-&gt;attribute&lt;Real&gt;(<span class="stringliteral">&quot;f_src&quot;</span>));</div>
 <div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;    setAttributeRef(<span class="stringliteral">&quot;sigOut&quot;</span>, mSubVoltageSource-&gt;attribute&lt;Complex&gt;(<span class="stringliteral">&quot;sigOut&quot;</span>));</div>
 <div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160; </div>
 <div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;    mSLog-&gt;info(<span class="stringliteral">&quot;\nVoltage Ref={:s} [V]&quot;</span></div>
-<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;                <span class="stringliteral">&quot;\nFrequency={:s} [Hz]&quot;</span>, </div>
+<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;                <span class="stringliteral">&quot;\nFrequency={:s} [Hz]&quot;</span>,</div>
 <div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;                Logger::matrixCompToString(voltageRef),</div>
 <div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;                Logger::realToString(freqStart));</div>
 <div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;}</div>
@@ -142,12 +142,12 @@ $(function() {
 <div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;    mParametersSet = <span class="keyword">true</span>;</div>
 <div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160; </div>
 <div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;    mSubVoltageSource-&gt;setParameters(voltageRef, modulationFrequency, modulationAmplitude, baseFrequency, zigzag);</div>
-<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;    </div>
+<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160; </div>
 <div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;    setAttributeRef(<span class="stringliteral">&quot;V_ref&quot;</span>, mSubVoltageSource-&gt;attribute&lt;MatrixComp&gt;(<span class="stringliteral">&quot;V_ref&quot;</span>));</div>
 <div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;    setAttributeRef(<span class="stringliteral">&quot;f_src&quot;</span>, mSubVoltageSource-&gt;attribute&lt;Real&gt;(<span class="stringliteral">&quot;f_src&quot;</span>));</div>
 <div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160; </div>
 <div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;    mSLog-&gt;info(<span class="stringliteral">&quot;\nVoltage Ref={:s} [V]&quot;</span></div>
-<div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160;                <span class="stringliteral">&quot;\nFrequency={:s} [Hz]&quot;</span>, </div>
+<div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160;                <span class="stringliteral">&quot;\nFrequency={:s} [Hz]&quot;</span>,</div>
 <div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160;                Logger::matrixCompToString(voltageRef),</div>
 <div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;                Logger::realToString(baseFrequency));</div>
 <div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160;}</div>
@@ -155,13 +155,13 @@ $(function() {
 <div class="line"><a name="l00084"></a><span class="lineno"><a class="line" href="class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_network_injection.html#a6cc74cfbae7334c4d089bbef916d3415">   84</a></span>&#160;<span class="keywordtype">void</span> <a class="code" href="class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_network_injection.html#a6cc74cfbae7334c4d089bbef916d3415">EMT::Ph3::NetworkInjection::initializeFromNodesAndTerminals</a>(Real frequency) {</div>
 <div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160;    <span class="comment">// Connect electrical subcomponents</span></div>
 <div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160;    mSubVoltageSource-&gt;connect({ SimNode::GND, node(0) });</div>
-<div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160;    </div>
+<div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160; </div>
 <div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160;    <span class="comment">// Initialize electrical subcomponents</span></div>
 <div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160;    <span class="keywordflow">for</span> (<span class="keyword">auto</span> subcomp: mSubComponents) {</div>
 <div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160;        subcomp-&gt;initialize(mFrequencies);</div>
 <div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160;        subcomp-&gt;initializeFromNodesAndTerminals(frequency);</div>
 <div class="line"><a name="l00092"></a><span class="lineno">   92</span>&#160;    }</div>
-<div class="line"><a name="l00093"></a><span class="lineno">   93</span>&#160;    </div>
+<div class="line"><a name="l00093"></a><span class="lineno">   93</span>&#160; </div>
 <div class="line"><a name="l00094"></a><span class="lineno">   94</span>&#160;    setAttributeRef(<span class="stringliteral">&quot;V_ref&quot;</span>, mSubVoltageSource-&gt;attribute&lt;MatrixComp&gt;(<span class="stringliteral">&quot;V_ref&quot;</span>));</div>
 <div class="line"><a name="l00095"></a><span class="lineno">   95</span>&#160;    setAttributeRef(<span class="stringliteral">&quot;f_src&quot;</span>, mSubVoltageSource-&gt;attribute&lt;Real&gt;(<span class="stringliteral">&quot;f_src&quot;</span>));</div>
 <div class="line"><a name="l00096"></a><span class="lineno">   96</span>&#160;}</div>

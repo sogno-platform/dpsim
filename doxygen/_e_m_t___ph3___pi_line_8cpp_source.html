@@ -69,7 +69,7 @@ $(function() {
 <div class="title">EMT_Ph3_PiLine.cpp</div>  </div>
 </div><!--header-->
 <div class="contents">
-<div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;<span class="comment">/* Copyright 2017-2020 Institute for Automation of Complex Power Systems,</span></div>
+<div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;<span class="comment">/* Copyright 2017-2021 Institute for Automation of Complex Power Systems,</span></div>
 <div class="line"><a name="l00002"></a><span class="lineno">    2</span>&#160;<span class="comment"> *                     EONERC, RWTH Aachen University</span></div>
 <div class="line"><a name="l00003"></a><span class="lineno">    3</span>&#160;<span class="comment"> *</span></div>
 <div class="line"><a name="l00004"></a><span class="lineno">    4</span>&#160;<span class="comment"> * This Source Code Form is subject to the terms of the Mozilla Public</span></div>
@@ -222,7 +222,7 @@ $(function() {
 <div class="line"><a name="l00151"></a><span class="lineno">  151</span>&#160;    mSubParallelResistor1-&gt;mnaInitialize(omega, timeStep, leftVector);</div>
 <div class="line"><a name="l00152"></a><span class="lineno">  152</span>&#160;    subComps.push_back(mSubParallelResistor0);</div>
 <div class="line"><a name="l00153"></a><span class="lineno">  153</span>&#160;    subComps.push_back(mSubParallelResistor1);</div>
-<div class="line"><a name="l00154"></a><span class="lineno">  154</span>&#160;    </div>
+<div class="line"><a name="l00154"></a><span class="lineno">  154</span>&#160; </div>
 <div class="line"><a name="l00155"></a><span class="lineno">  155</span>&#160;    <span class="keywordflow">if</span> (mParallelCap(0,0) &gt; 0) {</div>
 <div class="line"><a name="l00156"></a><span class="lineno">  156</span>&#160;        mSubParallelCapacitor0-&gt;mnaInitialize(omega, timeStep, leftVector);</div>
 <div class="line"><a name="l00157"></a><span class="lineno">  157</span>&#160;        mSubParallelCapacitor1-&gt;mnaInitialize(omega, timeStep, leftVector);</div>
@@ -261,7 +261,7 @@ $(function() {
 <div class="line"><a name="l00190"></a><span class="lineno">  190</span>&#160;    mSubSeriesInductor-&gt;mnaAddPreStepDependencies(prevStepDependencies, attributeDependencies, modifiedAttributes);</div>
 <div class="line"><a name="l00191"></a><span class="lineno">  191</span>&#160;    mSubParallelResistor0-&gt;mnaAddPreStepDependencies(prevStepDependencies, attributeDependencies, modifiedAttributes);</div>
 <div class="line"><a name="l00192"></a><span class="lineno">  192</span>&#160;    mSubParallelResistor1-&gt;mnaAddPreStepDependencies(prevStepDependencies, attributeDependencies, modifiedAttributes);</div>
-<div class="line"><a name="l00193"></a><span class="lineno">  193</span>&#160;    </div>
+<div class="line"><a name="l00193"></a><span class="lineno">  193</span>&#160; </div>
 <div class="line"><a name="l00194"></a><span class="lineno">  194</span>&#160;    <span class="keywordflow">if</span> (mParallelCap(0, 0) &gt; 0) {</div>
 <div class="line"><a name="l00195"></a><span class="lineno">  195</span>&#160;        mSubParallelCapacitor0-&gt;mnaAddPreStepDependencies(prevStepDependencies, attributeDependencies, modifiedAttributes);</div>
 <div class="line"><a name="l00196"></a><span class="lineno">  196</span>&#160;        mSubParallelCapacitor1-&gt;mnaAddPreStepDependencies(prevStepDependencies, attributeDependencies, modifiedAttributes);</div>

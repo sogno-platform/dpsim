@@ -69,7 +69,7 @@ $(function() {
 <div class="title">SP_Ph1_Transformer.cpp</div>  </div>
 </div><!--header-->
 <div class="contents">
-<div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;<span class="comment">/* Copyright 2017-2020 Institute for Automation of Complex Power Systems,</span></div>
+<div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;<span class="comment">/* Copyright 2017-2021 Institute for Automation of Complex Power Systems,</span></div>
 <div class="line"><a name="l00002"></a><span class="lineno">    2</span>&#160;<span class="comment"> *                     EONERC, RWTH Aachen University</span></div>
 <div class="line"><a name="l00003"></a><span class="lineno">    3</span>&#160;<span class="comment"> *</span></div>
 <div class="line"><a name="l00004"></a><span class="lineno">    4</span>&#160;<span class="comment"> * This Source Code Form is subject to the terms of the Mozilla Public</span></div>
@@ -119,7 +119,7 @@ $(function() {
 <div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160; </div>
 <div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;    <span class="comment">// Note: to be consistent impedance values must be referred to high voltage side (and base voltage set to higher voltage)</span></div>
 <div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;    Base::Ph1::Transformer::setParameters(nomVoltageEnd1, nomVoltageEnd2, ratioAbs, ratioPhase, resistance, inductance);</div>
-<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;    </div>
+<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160; </div>
 <div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;    mSLog-&gt;info(<span class="stringliteral">&quot;Nominal Voltage End 1={} [V] Nominal Voltage End 2={} [V]&quot;</span>, mNominalVoltageEnd1, mNominalVoltageEnd2);</div>
 <div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;    mSLog-&gt;info(<span class="stringliteral">&quot;Resistance={} [Ohm] Inductance={} [H] (referred to primary side)&quot;</span>, mResistance, mInductance);</div>
 <div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;    mSLog-&gt;info(<span class="stringliteral">&quot;Tap Ratio={} [/] Phase Shift={} [deg]&quot;</span>, std::abs(mRatio), std::arg(mRatio));</div>
@@ -152,7 +152,7 @@ $(function() {
 <div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;    mNominalOmega = 2. * PI * frequency;</div>
 <div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160;    mReactance = mNominalOmega * mInductance;</div>
 <div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160;    mSLog-&gt;info(<span class="stringliteral">&quot;Reactance={} [Ohm] (referred to primary side)&quot;</span>, mReactance);</div>
-<div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160;    </div>
+<div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160; </div>
 <div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160;    <span class="comment">// Component parameters are referred to high voltage side.</span></div>
 <div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160;    <span class="comment">// Switch terminals if transformer is connected the other way around.</span></div>
 <div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160;    <span class="keywordflow">if</span> (Math::abs(mRatio) &lt; 1.) {</div>

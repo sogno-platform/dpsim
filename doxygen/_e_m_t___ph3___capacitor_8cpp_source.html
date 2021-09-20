@@ -69,7 +69,7 @@ $(function() {
 <div class="title">EMT_Ph3_Capacitor.cpp</div>  </div>
 </div><!--header-->
 <div class="contents">
-<div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;<span class="comment">/* Copyright 2017-2020 Institute for Automation of Complex Power Systems,</span></div>
+<div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;<span class="comment">/* Copyright 2017-2021 Institute for Automation of Complex Power Systems,</span></div>
 <div class="line"><a name="l00002"></a><span class="lineno">    2</span>&#160;<span class="comment"> *                     EONERC, RWTH Aachen University</span></div>
 <div class="line"><a name="l00003"></a><span class="lineno">    3</span>&#160;<span class="comment"> *</span></div>
 <div class="line"><a name="l00004"></a><span class="lineno">    4</span>&#160;<span class="comment"> * This Source Code Form is subject to the terms of the Mozilla Public</span></div>
@@ -192,7 +192,7 @@ $(function() {
 <div class="line"><a name="l00121"></a><span class="lineno">  121</span>&#160;        Math::addToMatrixElement(systemMatrix, matrixNodeIndex(1, 2), matrixNodeIndex(0, 1), -mEquivCond(2, 1));</div>
 <div class="line"><a name="l00122"></a><span class="lineno">  122</span>&#160;        Math::addToMatrixElement(systemMatrix, matrixNodeIndex(1, 2), matrixNodeIndex(0, 2), -mEquivCond(2, 2));</div>
 <div class="line"><a name="l00123"></a><span class="lineno">  123</span>&#160;    }</div>
-<div class="line"><a name="l00124"></a><span class="lineno">  124</span>&#160;    </div>
+<div class="line"><a name="l00124"></a><span class="lineno">  124</span>&#160; </div>
 <div class="line"><a name="l00125"></a><span class="lineno">  125</span>&#160;    mSLog-&gt;info(</div>
 <div class="line"><a name="l00126"></a><span class="lineno">  126</span>&#160;            <span class="stringliteral">&quot;\nEquivalent Conductance: {:s}&quot;</span>,</div>
 <div class="line"><a name="l00127"></a><span class="lineno">  127</span>&#160;            Logger::matrixToString(mEquivCond));</div>
@@ -216,7 +216,7 @@ $(function() {
 <div class="line"><a name="l00145"></a><span class="lineno">  145</span>&#160;}</div>
 <div class="line"><a name="l00146"></a><span class="lineno">  146</span>&#160; </div>
 <div class="line"><a name="l00147"></a><span class="lineno"><a class="line" href="class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_capacitor.html#a9255709d96c4b3fa515b9c29be23b0df">  147</a></span>&#160;<span class="keywordtype">void</span> <a class="code" href="class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_capacitor.html#a9255709d96c4b3fa515b9c29be23b0df">EMT::Ph3::Capacitor::mnaAddPreStepDependencies</a>(AttributeBase::List &amp;prevStepDependencies, AttributeBase::List &amp;attributeDependencies, AttributeBase::List &amp;modifiedAttributes) {</div>
-<div class="line"><a name="l00148"></a><span class="lineno">  148</span>&#160;    <span class="comment">// actually depends on C, but then we&#39;d have to modify the system matrix anyway </span></div>
+<div class="line"><a name="l00148"></a><span class="lineno">  148</span>&#160;    <span class="comment">// actually depends on C, but then we&#39;d have to modify the system matrix anyway</span></div>
 <div class="line"><a name="l00149"></a><span class="lineno">  149</span>&#160;    prevStepDependencies.push_back(attribute(<span class="stringliteral">&quot;i_intf&quot;</span>));</div>
 <div class="line"><a name="l00150"></a><span class="lineno">  150</span>&#160;    prevStepDependencies.push_back(attribute(<span class="stringliteral">&quot;v_intf&quot;</span>));</div>
 <div class="line"><a name="l00151"></a><span class="lineno">  151</span>&#160;    modifiedAttributes.push_back(attribute(<span class="stringliteral">&quot;right_vector&quot;</span>));</div>

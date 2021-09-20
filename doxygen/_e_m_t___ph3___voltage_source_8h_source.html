@@ -69,7 +69,7 @@ $(function() {
 <div class="title">EMT_Ph3_VoltageSource.h</div>  </div>
 </div><!--header-->
 <div class="contents">
-<div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;<span class="comment">/* Copyright 2017-2020 Institute for Automation of Complex Power Systems,</span></div>
+<div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;<span class="comment">/* Copyright 2017-2021 Institute for Automation of Complex Power Systems,</span></div>
 <div class="line"><a name="l00002"></a><span class="lineno">    2</span>&#160;<span class="comment"> *                     EONERC, RWTH Aachen University</span></div>
 <div class="line"><a name="l00003"></a><span class="lineno">    3</span>&#160;<span class="comment"> *</span></div>
 <div class="line"><a name="l00004"></a><span class="lineno">    4</span>&#160;<span class="comment"> * This Source Code Form is subject to the terms of the Mozilla Public</span></div>
@@ -133,7 +133,7 @@ $(function() {
 <div class="line"><a name="l00085"></a><span class="lineno"><a class="line" href="class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_voltage_source_1_1_mna_post_step.html">   85</a></span>&#160;                <span class="keyword">class </span><a class="code" href="class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_voltage_source_1_1_mna_post_step.html">MnaPostStep</a> : <span class="keyword">public</span> <a class="code" href="class_c_p_s_1_1_task.html">Task</a> {</div>
 <div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160;                <span class="keyword">public</span>:</div>
 <div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160;                    <a class="code" href="class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_voltage_source_1_1_mna_post_step.html">MnaPostStep</a>(<a class="code" href="class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_voltage_source.html">VoltageSource</a>&amp; voltageSource, <a class="code" href="class_c_p_s_1_1_attribute.html">Attribute&lt;Matrix&gt;::Ptr</a> leftVector) :</div>
-<div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160;                        <a class="code" href="class_c_p_s_1_1_task.html">Task</a>(voltageSource.<a class="code" href="class_c_p_s_1_1_identified_object.html#ae227717144399dcbf768b1dac14698da">mName</a> + <span class="stringliteral">&quot;.MnaPostStep&quot;</span>),         </div>
+<div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160;                        <a class="code" href="class_c_p_s_1_1_task.html">Task</a>(voltageSource.<a class="code" href="class_c_p_s_1_1_identified_object.html#ae227717144399dcbf768b1dac14698da">mName</a> + <span class="stringliteral">&quot;.MnaPostStep&quot;</span>),</div>
 <div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160;                        mVoltageSource(voltageSource), mLeftVector(leftVector) {</div>
 <div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160;                            mVoltageSource.<a class="code" href="class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_voltage_source.html#aca48d07357c13d33b65ef656a1980308">mnaAddPostStepDependencies</a>(mPrevStepDependencies, mAttributeDependencies, mModifiedAttributes, mLeftVector);</div>
 <div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160;                    }</div>

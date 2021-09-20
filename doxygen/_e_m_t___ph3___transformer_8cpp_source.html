@@ -69,7 +69,7 @@ $(function() {
 <div class="title">EMT_Ph3_Transformer.cpp</div>  </div>
 </div><!--header-->
 <div class="contents">
-<div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;<span class="comment">/* Copyright 2017-2020 Institute for Automation of Complex Power Systems,</span></div>
+<div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;<span class="comment">/* Copyright 2017-2021 Institute for Automation of Complex Power Systems,</span></div>
 <div class="line"><a name="l00002"></a><span class="lineno">    2</span>&#160;<span class="comment"> *                     EONERC, RWTH Aachen University</span></div>
 <div class="line"><a name="l00003"></a><span class="lineno">    3</span>&#160;<span class="comment"> *</span></div>
 <div class="line"><a name="l00004"></a><span class="lineno">    4</span>&#160;<span class="comment"> * This Source Code Form is subject to the terms of the Mozilla Public</span></div>
@@ -110,9 +110,9 @@ $(function() {
 <div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160; </div>
 <div class="line"><a name="l00040"></a><span class="lineno"><a class="line" href="class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_transformer.html#ad49e5fe2c3127d9001bd348eaac5a1ea">   40</a></span>&#160;<span class="keywordtype">void</span> <a class="code" href="class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_transformer.html#ad49e5fe2c3127d9001bd348eaac5a1ea">EMT::Ph3::Transformer::setParameters</a>(Real nomVoltageEnd1, Real nomVoltageEnd2, Real ratioAbs, Real ratioPhase,</div>
 <div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;    Matrix resistance, Matrix inductance) {</div>
-<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;    </div>
+<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160; </div>
 <div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;    Base::Ph3::Transformer::setParameters(nomVoltageEnd1, nomVoltageEnd2, ratioAbs, ratioPhase, resistance, inductance);</div>
-<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;    </div>
+<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160; </div>
 <div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;    mSLog-&gt;info(<span class="stringliteral">&quot;Nominal Voltage End 1={} [V] Nominal Voltage End 2={} [V]&quot;</span>, mNominalVoltageEnd1, mNominalVoltageEnd2);</div>
 <div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;    mSLog-&gt;info(<span class="stringliteral">&quot;Resistance={} [Ohm] Inductance={} [Ohm] (referred to primary side)&quot;</span>, mResistance, mInductance);</div>
 <div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;    mSLog-&gt;info(<span class="stringliteral">&quot;Tap Ratio={} [ ] Phase Shift={} [deg]&quot;</span>, std::abs(mRatio), std::arg(mRatio));</div>
@@ -295,7 +295,7 @@ $(function() {
 <div class="line"><a name="l00224"></a><span class="lineno">  224</span>&#160;    modifiedAttributes.push_back(attribute(<span class="stringliteral">&quot;right_vector&quot;</span>));</div>
 <div class="line"><a name="l00225"></a><span class="lineno">  225</span>&#160;}</div>
 <div class="line"><a name="l00226"></a><span class="lineno">  226</span>&#160; </div>
-<div class="line"><a name="l00227"></a><span class="lineno"><a class="line" href="class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_transformer.html#ac01c2050419b6cba878b06dc6ffff88c">  227</a></span>&#160;<span class="keywordtype">void</span> <a class="code" href="class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_transformer.html#ac01c2050419b6cba878b06dc6ffff88c">EMT::Ph3::Transformer::mnaPreStep</a>(Real time, Int timeStepCount) {  </div>
+<div class="line"><a name="l00227"></a><span class="lineno"><a class="line" href="class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_transformer.html#ac01c2050419b6cba878b06dc6ffff88c">  227</a></span>&#160;<span class="keywordtype">void</span> <a class="code" href="class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_transformer.html#ac01c2050419b6cba878b06dc6ffff88c">EMT::Ph3::Transformer::mnaPreStep</a>(Real time, Int timeStepCount) {</div>
 <div class="line"><a name="l00228"></a><span class="lineno">  228</span>&#160;    <span class="comment">// pre-step of subcomponents</span></div>
 <div class="line"><a name="l00229"></a><span class="lineno">  229</span>&#160;    mSubInductor-&gt;mnaPreStep(time, timeStepCount);</div>
 <div class="line"><a name="l00230"></a><span class="lineno">  230</span>&#160;    <span class="comment">// pre-step of component itself</span></div>

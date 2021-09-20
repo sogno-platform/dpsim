@@ -69,7 +69,7 @@ $(function() {
 <div class="title">EMT_Ph3_AvVoltageSourceInverterDQ.cpp</div>  </div>
 </div><!--header-->
 <div class="contents">
-<div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;<span class="comment">/* Copyright 2017-2020 Institute for Automation of Complex Power Systems,</span></div>
+<div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;<span class="comment">/* Copyright 2017-2021 Institute for Automation of Complex Power Systems,</span></div>
 <div class="line"><a name="l00002"></a><span class="lineno">    2</span>&#160;<span class="comment"> *                     EONERC, RWTH Aachen University</span></div>
 <div class="line"><a name="l00003"></a><span class="lineno">    3</span>&#160;<span class="comment"> *</span></div>
 <div class="line"><a name="l00004"></a><span class="lineno">    4</span>&#160;<span class="comment"> * This Source Code Form is subject to the terms of the Mozilla Public</span></div>
@@ -167,7 +167,7 @@ $(function() {
 <div class="line"><a name="l00096"></a><span class="lineno">   96</span>&#160; </div>
 <div class="line"><a name="l00097"></a><span class="lineno"><a class="line" href="class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_av_voltage_source_inverter_d_q.html#a054432458dab0c707136eb3c623bebfb">   97</a></span>&#160;<span class="keywordtype">void</span> <a class="code" href="class_c_p_s_1_1_e_m_t_1_1_ph3_1_1_av_voltage_source_inverter_d_q.html#a054432458dab0c707136eb3c623bebfb">EMT::Ph3::AvVoltageSourceInverterDQ::setTransformerParameters</a>(Real nomVoltageEnd1, Real nomVoltageEnd2,</div>
 <div class="line"><a name="l00098"></a><span class="lineno">   98</span>&#160;    Real ratedPower, Real ratioAbs, Real ratioPhase, Real resistance, Real inductance, Real omega) {</div>
-<div class="line"><a name="l00099"></a><span class="lineno">   99</span>&#160;    </div>
+<div class="line"><a name="l00099"></a><span class="lineno">   99</span>&#160; </div>
 <div class="line"><a name="l00100"></a><span class="lineno">  100</span>&#160;    <a class="code" href="class_c_p_s_1_1_base_1_1_av_voltage_source_inverter_d_q.html#a4ef9f820bba62763b7039440c520a5e4">Base::AvVoltageSourceInverterDQ::setTransformerParameters</a>(nomVoltageEnd1, nomVoltageEnd2,</div>
 <div class="line"><a name="l00101"></a><span class="lineno">  101</span>&#160;    ratioAbs, ratioPhase, resistance, inductance);</div>
 <div class="line"><a name="l00102"></a><span class="lineno">  102</span>&#160; </div>
@@ -288,7 +288,7 @@ $(function() {
 <div class="line"><a name="l00217"></a><span class="lineno">  217</span>&#160;    Real theta = std::arg(mVirtualNodes[3]-&gt;initialSingleVoltage());</div>
 <div class="line"><a name="l00218"></a><span class="lineno">  218</span>&#160;    vcdq = parkTransformPowerInvariant(theta, filterInterfaceInitialVoltage.real());</div>
 <div class="line"><a name="l00219"></a><span class="lineno">  219</span>&#160;    ircdq = parkTransformPowerInvariant(theta, -1 * filterInterfaceInitialCurrent.real());</div>
-<div class="line"><a name="l00220"></a><span class="lineno">  220</span>&#160;    </div>
+<div class="line"><a name="l00220"></a><span class="lineno">  220</span>&#160; </div>
 <div class="line"><a name="l00221"></a><span class="lineno">  221</span>&#160;    mVcd = vcdq(0, 0);</div>
 <div class="line"><a name="l00222"></a><span class="lineno">  222</span>&#160;    mVcq = vcdq(1, 0);</div>
 <div class="line"><a name="l00223"></a><span class="lineno">  223</span>&#160;    mIrcd = ircdq(0, 0);</div>
@@ -434,7 +434,7 @@ $(function() {
 <div class="line"><a name="l00364"></a><span class="lineno">  364</span>&#160;    Real theta = mPLL-&gt;attribute&lt;Matrix&gt;(<span class="stringliteral">&quot;output_prev&quot;</span>)-&gt;get()(0, 0);</div>
 <div class="line"><a name="l00365"></a><span class="lineno">  365</span>&#160;    vcdq = parkTransformPowerInvariant(theta, mVirtualNodes[3]-&gt;attribute&lt;Matrix&gt;(<span class="stringliteral">&quot;v&quot;</span>)-&gt;get());</div>
 <div class="line"><a name="l00366"></a><span class="lineno">  366</span>&#160;    ircdq = parkTransformPowerInvariant(theta, - mSubResistorC-&gt;attribute&lt;Matrix&gt;(<span class="stringliteral">&quot;i_intf&quot;</span>)-&gt;get());</div>
-<div class="line"><a name="l00367"></a><span class="lineno">  367</span>&#160;    </div>
+<div class="line"><a name="l00367"></a><span class="lineno">  367</span>&#160; </div>
 <div class="line"><a name="l00368"></a><span class="lineno">  368</span>&#160;    mVcd = vcdq(0, 0);</div>
 <div class="line"><a name="l00369"></a><span class="lineno">  369</span>&#160;    mVcq = vcdq(1, 0);</div>
 <div class="line"><a name="l00370"></a><span class="lineno">  370</span>&#160;    mIrcd = ircdq(0, 0);</div>
