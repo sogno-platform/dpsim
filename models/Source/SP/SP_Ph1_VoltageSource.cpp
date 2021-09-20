@@ -1,4 +1,4 @@
-/* Copyright 2017-2020 Institute for Automation of Complex Power Systems,
+/* Copyright 2017-2021 Institute for Automation of Complex Power Systems,
  *                     EONERC, RWTH Aachen University
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
@@ -33,7 +33,7 @@ SimPowerComp<Complex>::Ptr SP::Ph1::VoltageSource::clone(String name) {
 void SP::Ph1::VoltageSource::setParameters(Complex voltageRef, Real srcFreq) {
 	auto srcSigSine = Signal::SineWaveGenerator::make(mName + "_sw");
 	srcSigSine->setParameters(voltageRef, srcFreq);
-	mSrcSig = srcSigSine; 
+	mSrcSig = srcSigSine;
 
 	setAttributeRef("V_ref", mSrcSig->attribute<Complex>("sigOut"));
 	setAttributeRef("f_src", mSrcSig->attribute<Real>("freq"));
@@ -65,15 +65,15 @@ void SP::Ph1::VoltageSource::setParameters(Complex initialPhasor, Real modulatio
 
 void SP::Ph1::VoltageSource::initializeFromNodesAndTerminals(Real frequency) {
 	Complex voltageRef = attribute<Complex>("V_ref")->get();
-	
-	if (voltageRef == Complex(0, 0))	
+
+	if (voltageRef == Complex(0, 0))
 		voltageRef = initialSingleVoltage(1) - initialSingleVoltage(0);
 
 	if (mSrcSig == nullptr) {
 		Signal::SineWaveGenerator srcSigSine(mName);
-		srcSigSine.setParameters(voltageRef); 
+		srcSigSine.setParameters(voltageRef);
 		mSrcSig = std::make_shared<Signal::SineWaveGenerator>(srcSigSine);
-		
+
 		setAttributeRef("V_ref", mSrcSig->attribute<Complex>("sigOut"));
 		setAttributeRef("f_src", mSrcSig->attribute<Real>("freq"));
 	} else {

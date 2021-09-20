@@ -1,3 +1,11 @@
+/* Copyright 2017-2021 Institute for Automation of Complex Power Systems,
+ *                     EONERC, RWTH Aachen University
+ *
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at https://mozilla.org/MPL/2.0/.
+ *********************************************************************************/
+
 #include <DPsim.h>
 #include "../Examples.h"
 
@@ -35,7 +43,7 @@ void DP_SynGenTrStab_3Bus_SteadyState(String simName, Real timeStep, Real finalT
 	auto loadPF = SP::Ph1::Shunt::make("Load", Logger::Level::debug);
 	loadPF->setParameters(ThreeBus.activePower_L / std::pow(ThreeBus.Vnom, 2), - ThreeBus.reactivePower_L / std::pow(ThreeBus.Vnom, 2));
 	loadPF->setBaseVoltage(ThreeBus.Vnom);
-	
+
 	//Line12
 	auto line12PF = SP::Ph1::PiLine::make("PiLine12", Logger::Level::debug);
 	line12PF->setParameters(ThreeBus.lineResistance12, ThreeBus.lineInductance12, ThreeBus.lineCapacitance12, ThreeBus.lineConductance12);
@@ -80,7 +88,7 @@ void DP_SynGenTrStab_3Bus_SteadyState(String simName, Real timeStep, Real finalT
 	// ----- Dynamic simulation ------
 	String simNameDP = simName + "_DP";
 	Logger::setLogDir("logs/"+simNameDP);
-	
+
 	// Nodes
 	auto n1DP = SimNode<Complex>::make("n1", PhaseType::Single);
 	auto n2DP = SimNode<Complex>::make("n2", PhaseType::Single);
@@ -151,9 +159,9 @@ void DP_SynGenTrStab_3Bus_SteadyState(String simName, Real timeStep, Real finalT
 	loggerDP->addAttribute("Ep_gen2", gen2DP->attribute("Ep_mag"));
 	loggerDP->addAttribute("v_gen2", gen2DP->attribute("v_intf"));
 	loggerDP->addAttribute("i_gen2", gen2DP->attribute("i_intf"));
-	loggerDP->addAttribute("wr_gen2", gen2DP->attribute("w_r"));	
+	loggerDP->addAttribute("wr_gen2", gen2DP->attribute("w_r"));
 	loggerDP->addAttribute("wref_gen2", gen2DP->attribute("w_ref"));
-	loggerDP->addAttribute("delta_gen2", gen2DP->attribute("delta_r"));	
+	loggerDP->addAttribute("delta_gen2", gen2DP->attribute("delta_r"));
 	loggerDP->addAttribute("v_load", loadDP->attribute("v_intf"));
 	loggerDP->addAttribute("i_load", loadDP->attribute("i_intf"));
 	loggerDP->addAttribute("P_mech1", gen1DP->attribute("P_mech"));
@@ -171,8 +179,8 @@ void DP_SynGenTrStab_3Bus_SteadyState(String simName, Real timeStep, Real finalT
 	sim.run();
 }
 
-int main(int argc, char* argv[]) {	
-		
+int main(int argc, char* argv[]) {
+
 
 	//Simultion parameters
 	String simName="DP_SynGenTrStab_3Bus_SteadyState";

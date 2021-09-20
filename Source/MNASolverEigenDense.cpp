@@ -1,11 +1,10 @@
-/* Copyright 2017-2020 Institute for Automation of Complex Power Systems,
+/* Copyright 2017-2021 Institute for Automation of Complex Power Systems,
  *                     EONERC, RWTH Aachen University
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at https://mozilla.org/MPL/2.0/.
  *********************************************************************************/
-
 
 #include <dpsim/MNASolverEigenDense.h>
 #include <dpsim/SequentialScheduler.h>
@@ -38,7 +37,7 @@ void MnaSolverEigenDense<VarType>::switchedMatrixStamp(std::size_t index, MNAInt
 
 	for (auto comp : components)
 		comp->mnaApplySystemMatrixStamp(sys);
-	
+
 	for (UInt i = 0; i < mSwitches.size(); ++i)
 		mSwitches[i]->mnaApplySwitchSystemMatrixStamp(bit[i], sys, 0);
 
@@ -47,7 +46,7 @@ void MnaSolverEigenDense<VarType>::switchedMatrixStamp(std::size_t index, MNAInt
 }
 
 template <typename VarType>
-void MnaSolverEigenDense<VarType>::switchedMatrixStamp(std::size_t swIdx, Int freqIdx, 
+void MnaSolverEigenDense<VarType>::switchedMatrixStamp(std::size_t swIdx, Int freqIdx,
 	MNAInterface::List& components, MNASwitchInterface::List& switches) {
 
 	auto bit = std::bitset<SWITCH_NUM>(swIdx);
@@ -93,10 +92,10 @@ void MnaSolverEigenDense<Complex>::createEmptySystemMatrix() {
 		for (std::size_t i = 0; i < (1ULL << mSwitches.size()); i++) {
 			auto bit = std::bitset<SWITCH_NUM>(i);
 			mSwitchedMatrices[bit].push_back(Matrix::Zero(2*(mNumTotalMatrixNodeIndices), 2*(mNumTotalMatrixNodeIndices)));
-			mLuFactorizations[bit].push_back(Eigen::PartialPivLU<Matrix>());			
+			mLuFactorizations[bit].push_back(Eigen::PartialPivLU<Matrix>());
 		}
 		mBaseSystemMatrix = Matrix::Zero(2 * (mNumTotalMatrixNodeIndices), 2 * (mNumTotalMatrixNodeIndices));
-	}	
+	}
 }
 
 template <typename VarType>

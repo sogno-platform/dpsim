@@ -1,8 +1,13 @@
-
+/* Copyright 2017-2021 Institute for Automation of Complex Power Systems,
+ *                     EONERC, RWTH Aachen University
+ *
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at https://mozilla.org/MPL/2.0/.
+ *********************************************************************************/
 
 #include <DPsim.h>
 #include "../Examples.h"
-
 
 using namespace DPsim;
 using namespace CPS;
@@ -37,7 +42,7 @@ Real Vnom = VnomMV;
 // Slack voltage
 Real Vslack = Vnom;
 
-//Synchronous generator 
+//Synchronous generator
 Real setPointActivePower=300e6;
 Real setPointVoltage=Vnom+0.05*Vnom;
 
@@ -66,7 +71,7 @@ void EMT_3ph_SynGenDQ7odTrapez_ThreePhFault(Real timeStep, Real finalTime, bool 
 	extnetPF->setParameters(VnomMV);
 	extnetPF->setBaseVoltage(VnomMV);
 	extnetPF->modifyPowerFlowBusType(PowerflowBusType::VD);
-	
+
 	//Line
 	auto linePF = SP::Ph1::PiLine::make("PiLine", Logger::Level::debug);
 	linePF->setParameters(lineResistance, lineInductance, lineCapacitance, lineConductance);
@@ -100,10 +105,10 @@ void EMT_3ph_SynGenDQ7odTrapez_ThreePhFault(Real timeStep, Real finalTime, bool 
 	simPF.addLogger(loggerPF);
 	simPF.run();
 
-	// ----- Dynamic simulation ------	
+	// ----- Dynamic simulation ------
 	String simName = "EMT_3ph_SynGenDQ7odTrapez_ThreePhFault";
 	Logger::setLogDir("logs/"+simName);
-	
+
 	// Extract relevant powerflow results
 	Real initTerminalVolt=std::abs(n1PF->singleVoltage())*RMS3PH_TO_PEAK1PH;
 	Real initVoltAngle= Math::phase(n1PF->singleVoltage()); // angle in rad
@@ -111,7 +116,7 @@ void EMT_3ph_SynGenDQ7odTrapez_ThreePhFault(Real timeStep, Real finalTime, bool 
 	Real initReactivePower = genPF->getApparentPower().imag();
 	Real initMechPower = initActivePower;
 
-	// Nodes	
+	// Nodes
 	auto n1 = SimNode<Real>::make("n1", PhaseType::ABC);
 	auto n2 = SimNode<Real>::make("n2", PhaseType::ABC);
 
@@ -123,20 +128,20 @@ void EMT_3ph_SynGenDQ7odTrapez_ThreePhFault(Real timeStep, Real finalTime, bool 
 		syngenKundur.Rs, syngenKundur.Ll, syngenKundur.Lmd, syngenKundur.Lmq, syngenKundur.Rfd, syngenKundur.Llfd, syngenKundur.Rkd, syngenKundur.Llkd, syngenKundur.Rkq1, syngenKundur.Llkq1, syngenKundur.Rkq2, syngenKundur.Llkq2, syngenKundur.H,
 		initActivePower, initReactivePower, initTerminalVolt,
 		initVoltAngle, syngenKundur.fieldVoltage, initMechPower);
-	
+
 	//Grid bus as Slack
 	auto extnet = EMT::Ph3::NetworkInjection::make("Slack", Logger::Level::debug);
 
 	// Line
 	auto line = EMT::Ph3::PiLine::make("PiLine", Logger::Level::debug);
-	line->setParameters(Math::singlePhaseParameterToThreePhase(lineResistance), 
-	                      Math::singlePhaseParameterToThreePhase(lineInductance), 
+	line->setParameters(Math::singlePhaseParameterToThreePhase(lineResistance),
+	                      Math::singlePhaseParameterToThreePhase(lineInductance),
 					      Math::singlePhaseParameterToThreePhase(lineCapacitance),
 						  Math::singlePhaseParameterToThreePhase(lineConductance));
-				  
+
 	//Breaker
 	auto fault = CPS::EMT::Ph3::Switch::make("Br_fault", Logger::Level::debug);
-	fault->setParameters(Math::singlePhaseParameterToThreePhase(BreakerOpen), 
+	fault->setParameters(Math::singlePhaseParameterToThreePhase(BreakerOpen),
 						 Math::singlePhaseParameterToThreePhase(BreakerClosed));
 	fault->openSwitch();
 
@@ -179,7 +184,7 @@ void EMT_3ph_SynGenDQ7odTrapez_ThreePhFault(Real timeStep, Real finalTime, bool 
 		sim.addEvent(sw1);
 		}
 
-		
+
 	if(endFaultEvent){
 
 		auto sw2 = SwitchEvent3Ph::make(endTimeFault, fault, false);
@@ -250,7 +255,7 @@ void DP_1ph_SynGenTrStab_Fault(Real timeStep, Real finalTime, bool startFaultEve
 	// Extract relevant powerflow results
 	Real initActivePower = genPF->getApparentPower().real();
 	Real initMechPower = initActivePower;
-	
+
 	// Nodes
 	auto n1 = SimNode<Complex>::make("n1", PhaseType::Single);
 	auto n2 = SimNode<Complex>::make("n2", PhaseType::Single);
@@ -264,10 +269,10 @@ void DP_1ph_SynGenTrStab_Fault(Real timeStep, Real finalTime, bool startFaultEve
 	//Grid bus as Slack
 	auto extnet = DP::Ph1::NetworkInjection::make("Slack", Logger::Level::debug);
 
-	// Line 
+	// Line
 	auto line = DP::Ph1::PiLine::make("PiLine", Logger::Level::debug);
 	line->setParameters(lineResistance, lineInductance, lineCapacitance, lineConductance);
-	
+
 	// //Breaker
 	// auto fault = CPS::DP::Ph1::Switch::make("Br_fault", Logger::Level::debug);
 	// fault->setParameters(BreakerOpen, BreakerClosed);
@@ -324,7 +329,7 @@ void DP_1ph_SynGenTrStab_Fault(Real timeStep, Real finalTime, bool startFaultEve
 
 		auto sw2 = SwitchEvent::make(endTimeFault, fault, false);
 		sim.addEvent(sw2);
-	
+
 	}
 
 	sim.run();
@@ -391,7 +396,7 @@ void SP_1ph_SynGenTrStab_Fault(Real timeStep, Real finalTime, bool startFaultEve
 	// Extract relevant powerflow results
 	Real initActivePower = genPF->getApparentPower().real();
 	Real initMechPower = initActivePower;
-	
+
 	// Nodes
 	auto n1 = SimNode<Complex>::make("n1", PhaseType::Single);
 	auto n2 = SimNode<Complex>::make("n2", PhaseType::Single);
@@ -405,10 +410,10 @@ void SP_1ph_SynGenTrStab_Fault(Real timeStep, Real finalTime, bool startFaultEve
 	//Grid bus as Slack
 	auto extnet = SP::Ph1::NetworkInjection::make("Slack", Logger::Level::debug);
 
-	// Line 
+	// Line
 	auto line = SP::Ph1::PiLine::make("PiLine", Logger::Level::debug);
 	line->setParameters(lineResistance, lineInductance, lineCapacitance, lineConductance);
-	
+
 	// //Breaker
 	// auto fault = CPS::SP::Ph1::Switch::make("Br_fault", Logger::Level::debug);
 	// fault->setParameters(BreakerOpen, BreakerClosed);
@@ -465,13 +470,13 @@ void SP_1ph_SynGenTrStab_Fault(Real timeStep, Real finalTime, bool startFaultEve
 
 		auto sw2 = SwitchEvent::make(endTimeFault, fault, false);
 		sim.addEvent(sw2);
-	
+
 	}
 
 	sim.run();
 }
 
-int main(int argc, char* argv[]) {		
+int main(int argc, char* argv[]) {
 
 	//Simultion parameters
 	Real finalTime = 3;

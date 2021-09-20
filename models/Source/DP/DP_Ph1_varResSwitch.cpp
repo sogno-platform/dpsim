@@ -1,4 +1,4 @@
-/* Copyright 2017-2020 Institute for Automation of Complex Power Systems,
+/* Copyright 2017-2021 Institute for Automation of Complex Power Systems,
  *                     EONERC, RWTH Aachen University
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
@@ -129,7 +129,7 @@ if (!(mPrevState == presentState)) {
 	// Switch is closed : change with 1/mDeltaRes
 	if (this->mnaIsClosed()==true) {
 		// mClosedResistance= 1./mDeltaRes*mPrevRes;
-		mClosedResistance= mDeltaResClosed*mPrevRes;	
+		mClosedResistance= mDeltaResClosed*mPrevRes;
 		mPrevRes= mClosedResistance;
 		// check if target value is reached
 		if (mClosedResistance < mInitClosedRes) {
@@ -140,7 +140,7 @@ if (!(mPrevState == presentState)) {
 	}
 	// Switch is opened : change with mDeltaRes
 	else if (this->mnaIsClosed()==false) {
-		mOpenResistance= mDeltaResOpen*mPrevRes;		
+		mOpenResistance= mDeltaResOpen*mPrevRes;
 		mPrevRes= mOpenResistance;
 		// check if target value is reached
 		if ( mOpenResistance > mInitOpenRes) {
@@ -148,7 +148,7 @@ if (!(mPrevState == presentState)) {
 			mPrevRes= mOpenResistance;
 			mPrevState= this->mnaIsClosed();
 		}
-	}		
+	}
 	return 1; //recompute system matrix
 }
 else{

@@ -1,3 +1,11 @@
+/* Copyright 2017-2021 Institute for Automation of Complex Power Systems,
+ *                     EONERC, RWTH Aachen University
+ *
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at https://mozilla.org/MPL/2.0/.
+ *********************************************************************************/
+
 #include <DPsim.h>
 #include "../Examples.h"
 
@@ -35,7 +43,7 @@ void SP_SynGenTrStab_3Bus_SteadyState(String simName, Real timeStep, Real finalT
 	auto loadPF = SP::Ph1::Shunt::make("Load", Logger::Level::debug);
 	loadPF->setParameters(ThreeBus.activePower_L / std::pow(ThreeBus.Vnom, 2), - ThreeBus.reactivePower_L / std::pow(ThreeBus.Vnom, 2));
 	loadPF->setBaseVoltage(ThreeBus.Vnom);
-	
+
 	//Line12
 	auto line12PF = SP::Ph1::PiLine::make("PiLine12", Logger::Level::debug);
 	line12PF->setParameters(ThreeBus.lineResistance12, ThreeBus.lineInductance12, ThreeBus.lineCapacitance12, ThreeBus.lineConductance12);
@@ -80,7 +88,7 @@ void SP_SynGenTrStab_3Bus_SteadyState(String simName, Real timeStep, Real finalT
 	// ----- Dynamic simulation ------
 	String simNameSP = simName + "_SP";
 	Logger::setLogDir("logs/"+simNameSP);
-	
+
 	// Nodes
 	auto n1SP = SimNode<Complex>::make("n1", PhaseType::Single);
 	auto n2SP = SimNode<Complex>::make("n2", PhaseType::Single);
@@ -106,7 +114,7 @@ void SP_SynGenTrStab_3Bus_SteadyState(String simName, Real timeStep, Real finalT
 	//Load
 	auto loadSP = SP::Ph1::Load::make("Load", Logger::Level::debug);
 	loadSP->setParameters(ThreeBus.activePower_L, ThreeBus.reactivePower_L, ThreeBus.Vnom);
-	
+
 	//Line12
 	auto line12SP = SP::Ph1::PiLine::make("PiLine12", Logger::Level::debug);
 	line12SP->setParameters(ThreeBus.lineResistance12, ThreeBus.lineInductance12, ThreeBus.lineCapacitance12, ThreeBus.lineConductance12);
@@ -151,9 +159,9 @@ void SP_SynGenTrStab_3Bus_SteadyState(String simName, Real timeStep, Real finalT
 	loggerSP->addAttribute("Ep_gen2", gen2SP->attribute("Ep_mag"));
 	loggerSP->addAttribute("v_gen2", gen2SP->attribute("v_intf"));
 	loggerSP->addAttribute("i_gen2", gen2SP->attribute("i_intf"));
-	loggerSP->addAttribute("wr_gen2", gen2SP->attribute("w_r"));	
+	loggerSP->addAttribute("wr_gen2", gen2SP->attribute("w_r"));
 	loggerSP->addAttribute("wref_gen2", gen2SP->attribute("w_ref"));
-	loggerSP->addAttribute("delta_gen2", gen2SP->attribute("delta_r"));	
+	loggerSP->addAttribute("delta_gen2", gen2SP->attribute("delta_r"));
 	loggerSP->addAttribute("v_load", loadSP->attribute("v_intf"));
 	loggerSP->addAttribute("i_load", loadSP->attribute("i_intf"));
 	loggerSP->addAttribute("P_mech1", gen1SP->attribute("P_mech"));
@@ -171,8 +179,8 @@ void SP_SynGenTrStab_3Bus_SteadyState(String simName, Real timeStep, Real finalT
 	sim.run();
 }
 
-int main(int argc, char* argv[]) {	
-		
+int main(int argc, char* argv[]) {
+
 
 	//Simultion parameters
 	String simName="SP_SynGenTrStab_3Bus_SteadyState";

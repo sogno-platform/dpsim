@@ -1,9 +1,15 @@
-#include <DPsim.h>
+/* Copyright 2017-2021 Institute for Automation of Complex Power Systems,
+ *                     EONERC, RWTH Aachen University
+ *
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at https://mozilla.org/MPL/2.0/.
+ *********************************************************************************/
 
+#include <DPsim.h>
 
 using namespace DPsim;
 using namespace CPS;
-
 
 //-----------Power system-----------//
 //Voltage level as Base Voltage
@@ -60,7 +66,7 @@ void EMT_1ph_SynGenTrStab_SteadyState(String simName, Real timeStep, Real finalT
 	extnetPF->setParameters(Vslack);
 	extnetPF->setBaseVoltage(Vnom);
 	extnetPF->modifyPowerFlowBusType(PowerflowBusType::VD);
-	
+
 	//Line
 	auto linePF = SP::Ph1::PiLine::make("PiLine", Logger::Level::debug);
 	linePF->setParameters(lineResistance, lineInductance, lineCapacitance, lineConductance);
@@ -93,7 +99,7 @@ void EMT_1ph_SynGenTrStab_SteadyState(String simName, Real timeStep, Real finalT
 	// ----- Dynamic simulation ------
 	String simNameEMT = simName + "_EMT";
 	Logger::setLogDir("logs/"+simNameEMT);
-	
+
 	// Nodes
 	auto n1EMT = SimNode<Real>::make("n1", PhaseType::ABC);
 	auto n2EMT = SimNode<Real>::make("n2", PhaseType::ABC);
@@ -112,8 +118,8 @@ void EMT_1ph_SynGenTrStab_SteadyState(String simName, Real timeStep, Real finalT
 
 	// Line
 	auto lineEMT = EMT::Ph3::PiLine::make("PiLine", Logger::Level::debug);
-	lineEMT->setParameters(Math::singlePhaseParameterToThreePhase(lineResistance), 
-	                      Math::singlePhaseParameterToThreePhase(lineInductance), 
+	lineEMT->setParameters(Math::singlePhaseParameterToThreePhase(lineResistance),
+	                      Math::singlePhaseParameterToThreePhase(lineInductance),
 					      Math::singlePhaseParameterToThreePhase(lineCapacitance),
 						  Math::singlePhaseParameterToThreePhase(lineConductance));
 
@@ -161,8 +167,8 @@ void EMT_1ph_SynGenTrStab_SteadyState(String simName, Real timeStep, Real finalT
 	simEMT.run();
 }
 
-int main(int argc, char* argv[]) {	
-		
+int main(int argc, char* argv[]) {
+
 
 	//Simultion parameters
 	String simName="EMT_SynGenTrStab_SMIB_SteadyState";
