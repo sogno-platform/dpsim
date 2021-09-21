@@ -1,4 +1,10 @@
-
+/* Copyright 2017-2021 Institute for Automation of Complex Power Systems,
+ *                     EONERC, RWTH Aachen University
+ *
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at https://mozilla.org/MPL/2.0/.
+ *********************************************************************************/
 
 #include <DPsim.h>
 #include "../Examples.h"
@@ -28,7 +34,7 @@ Real lineConductance = 8e-2; //change to allow bigger time steps and to stabiliz
 Real BreakerOpen = 1e9;
 Real BreakerClosed = 0.001;
 
-//Synchronous generator 
+//Synchronous generator
 Real setPointActivePower=300e6;
 Real setPointVoltage=1.05*VnomMV;
 
@@ -38,7 +44,7 @@ Real finalTime = 1.0;
 Real timeStep = 10e-6;
 Real startTimeFault=0.2;
 
-int main(int argc, char* argv[]) {	
+int main(int argc, char* argv[]) {
 
 	// ----- POWERFLOW FOR INITIALIZATION -----
 	String simNamePF = simName + "_PF";
@@ -61,7 +67,7 @@ int main(int argc, char* argv[]) {
 	extnetPF->setParameters(VnomMV);
 	extnetPF->setBaseVoltage(VnomMV);
 	extnetPF->modifyPowerFlowBusType(PowerflowBusType::VD);
-	
+
 	//Line
 	auto linePF = SP::Ph1::PiLine::make("PiLine", Logger::Level::debug);
 	linePF->setParameters(lineResistance, lineInductance, lineCapacitance, lineConductance);
@@ -95,9 +101,9 @@ int main(int argc, char* argv[]) {
 	simPF.addLogger(loggerPF);
 	simPF.run();
 
-	// ----- Dynamic simulation ------	
+	// ----- Dynamic simulation ------
 	Logger::setLogDir("logs/"+simName);
-	
+
 	// Extract relevant powerflow results
 	Real initTerminalVolt=std::abs(n1PF->singleVoltage())*RMS3PH_TO_PEAK1PH;
 	Real initVoltAngle= Math::phase(n1PF->singleVoltage()); // angle in rad
@@ -105,7 +111,7 @@ int main(int argc, char* argv[]) {
 	Real initReactivePower = genPF->getApparentPower().imag();
 	Real initMechPower = initActivePower;
 
-	// Nodes	
+	// Nodes
 	auto n1 = SimNode<Real>::make("n1", PhaseType::ABC);
 	auto n2 = SimNode<Real>::make("n2", PhaseType::ABC);
 
@@ -117,20 +123,20 @@ int main(int argc, char* argv[]) {
 		syngenKundur.Rs, syngenKundur.Ll, syngenKundur.Lmd, syngenKundur.Lmq, syngenKundur.Rfd, syngenKundur.Llfd, syngenKundur.Rkd, syngenKundur.Llkd, syngenKundur.Rkq1, syngenKundur.Llkq1, syngenKundur.Rkq2, syngenKundur.Llkq2, syngenKundur.H,
 		initActivePower, initReactivePower, initTerminalVolt,
 		initVoltAngle, syngenKundur.fieldVoltage, initMechPower);
-	
+
 	//Grid bus as Slack
 	auto extnet = EMT::Ph3::NetworkInjection::make("Slack", Logger::Level::debug);
 
 	// Line
 	auto line = EMT::Ph3::PiLine::make("PiLine", Logger::Level::debug);
-	line->setParameters(Math::singlePhaseParameterToThreePhase(lineResistance), 
-	                      Math::singlePhaseParameterToThreePhase(lineInductance), 
+	line->setParameters(Math::singlePhaseParameterToThreePhase(lineResistance),
+	                      Math::singlePhaseParameterToThreePhase(lineInductance),
 					      Math::singlePhaseParameterToThreePhase(lineCapacitance),
 						  Math::singlePhaseParameterToThreePhase(lineConductance));
-				  
+
 	//Breaker
 	auto fault = CPS::EMT::Ph3::Switch::make("Br_fault", Logger::Level::debug);
-	fault->setParameters(Math::singlePhaseParameterToThreePhase(BreakerOpen), 
+	fault->setParameters(Math::singlePhaseParameterToThreePhase(BreakerOpen),
 						 Math::singlePhaseParameterToThreePhase(BreakerClosed));
 	fault->openSwitch();
 

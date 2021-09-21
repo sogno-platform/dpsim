@@ -1,4 +1,4 @@
-/* Copyright 2017-2020 Institute for Automation of Complex Power Systems,
+/* Copyright 2017-2021 Institute for Automation of Complex Power Systems,
  *                     EONERC, RWTH Aachen University
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
@@ -28,14 +28,14 @@ void EMT::Ph3::VoltageSource::setParameters(MatrixComp voltageRef, Real srcFreq)
 	auto srcSigSine = Signal::SineWaveGenerator::make(mName + "_sw");
 	// Complex(1,0) is used as initialPhasor for signal generator as only phase is used
 	srcSigSine->setParameters(Complex(1,0), srcFreq);
-	mSrcSig = srcSigSine; 
+	mSrcSig = srcSigSine;
 
 	attribute<MatrixComp>("V_ref")->set(voltageRef);
 	setAttributeRef("f_src", mSrcSig->attribute<Real>("freq"));
 
 	mSLog->info("\nVoltage reference phasor [V]: {:s}"
-				"\nFrequency [Hz]: {:s}", 
-				Logger::matrixCompToString(voltageRef), 
+				"\nFrequency [Hz]: {:s}",
+				Logger::matrixCompToString(voltageRef),
 				Logger::realToString(srcFreq));
 
 	mParametersSet = true;
@@ -73,7 +73,7 @@ void EMT::Ph3::VoltageSource::initializeFromNodesAndTerminals(Real frequency) {
 		auto srcSigSine = Signal::SineWaveGenerator::make(mName + "_sw");
 		// Complex(1,0) is used as initialPhasor for signal generator as only phase is used
 		srcSigSine->setParameters(Complex(1,0), frequency);
-		mSrcSig = srcSigSine; 
+		mSrcSig = srcSigSine;
 
 		attribute<MatrixComp>("V_ref")->set(CPS::Math::singlePhaseVariableToThreePhase(initialSingleVoltage(1) - initialSingleVoltage(0)));
 		setAttributeRef("f_src", mSrcSig->attribute<Real>("freq"));
@@ -155,7 +155,7 @@ void EMT::Ph3::VoltageSource::updateVoltage(Real time) {
 	if(mSrcSig != nullptr) {
 		mSrcSig->step(time);
 		for(int i = 0; i < 3; i++) {
-			mIntfVoltage(i, 0) = RMS3PH_TO_PEAK1PH * Math::abs(attribute<MatrixComp>("V_ref")->get()(i, 0)) 
+			mIntfVoltage(i, 0) = RMS3PH_TO_PEAK1PH * Math::abs(attribute<MatrixComp>("V_ref")->get()(i, 0))
 				* cos(Math::phase(mSrcSig->getSignal()) + Math::phase(attribute<MatrixComp>("V_ref")->get()(i, 0)));
 		}
 	} else {

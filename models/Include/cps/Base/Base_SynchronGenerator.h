@@ -1,4 +1,4 @@
-/* Copyright 2017-2020 Institute for Automation of Complex Power Systems,
+/* Copyright 2017-2021 Institute for Automation of Complex Power Systems,
  *                     EONERC, RWTH Aachen University
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
@@ -254,7 +254,7 @@ namespace Base {
 		SynchronGenerator() = default;
 		///
 		void setBaseParameters(Real nomPower, Real nomVolt, Real nomFreq);
-		/// 
+		///
 		void setBaseParameters(Real nomPower, Real nomVolt, Real nomFreq, Real nomFieldCur);
 
 		// ### Deprecated ####
@@ -285,7 +285,7 @@ namespace Base {
 			Real Rkd, Real Llkd, Real Rkq1, Real Llkq1, Real Rkq2, Real Llkq2,
 			Real inertia);
 
-		void setFundamentalPerUnitParameters(Int poleNumber, 
+		void setFundamentalPerUnitParameters(Int poleNumber,
 			Real Rs, Real Ll, Real Lmd, Real Lmq,
 			Real Rfd, Real Llfd, Real Rkd, Real Llkd, Real Rkq1, Real Llkq1,
 			Real Rkq2, Real Llkq2,
@@ -301,7 +301,7 @@ namespace Base {
 
 		void setOperationalPerUnitParameters(
 			Int poleNumber, Real inertia,
-			Real Rs, Real Ld, Real Lq, Real Ll, 
+			Real Rs, Real Ld, Real Lq, Real Ll,
 			Real Ld_t, Real Lq_t, Real Ld_s, Real Lq_s,
 			Real Td0_t, Real Tq0_t, Real Td0_s, Real Tq0_s);
 

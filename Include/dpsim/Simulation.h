@@ -1,4 +1,4 @@
-/* Copyright 2017-2020 Institute for Automation of Complex Power Systems,
+/* Copyright 2017-2021 Institute for Automation of Complex Power Systems,
  *                     EONERC, RWTH Aachen University
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
@@ -131,7 +131,7 @@ namespace DPsim {
 		/// The data loggers
 		DataLogger::List mLoggers;
 
-		/// Helper function for constructors 
+		/// Helper function for constructors
 		void create();
 		/// Create solvers depending on simulation settings
 		template <typename VarType>
@@ -151,7 +151,7 @@ namespace DPsim {
 
 		/// Creates simulation with name and log level
 		Simulation(String name, CPS::Logger::Level logLevel = CPS::Logger::Level::info);
-		
+
 		/// Desctructor
 		virtual ~Simulation() { }
 

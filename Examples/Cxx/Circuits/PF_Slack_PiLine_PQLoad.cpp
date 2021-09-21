@@ -1,4 +1,4 @@
-/* Copyright 2017-2020 Institute for Automation of Complex Power Systems,
+/* Copyright 2017-2021 Institute for Automation of Complex Power Systems,
  *                     EONERC, RWTH Aachen University
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
@@ -12,7 +12,7 @@ using namespace DPsim;
 using namespace CPS;
 
 int main(int argc, char* argv[]) {
-	
+
 	Real timeStep = 0.001;
 	Real finalTime = 0.001;
 	String simName = "PF_Slack_PiLine_PQLoad";
@@ -28,7 +28,7 @@ int main(int argc, char* argv[]) {
 	// Components
 	auto n1 = SimNode<Complex>::make("n1", PhaseType::Single);
 	auto n2 = SimNode<Complex>::make("n2", PhaseType::Single);
-	
+
 	auto extnetPF = SP::Ph1::NetworkInjection::make("Slack", Logger::Level::debug);
 	extnetPF->setParameters(Vnom);
 	extnetPF->setBaseVoltage(Vnom);
@@ -40,12 +40,12 @@ int main(int argc, char* argv[]) {
 
 	auto loadPF = SP::Ph1::Load::make("Load", Logger::Level::debug);
 	loadPF->setParameters(pLoadNom, qLoadNom, Vnom);
-	loadPF->modifyPowerFlowBusType(PowerflowBusType::PQ); 
+	loadPF->modifyPowerFlowBusType(PowerflowBusType::PQ);
 
 	// Topology
 	extnetPF->connect({ n1 });
 	linePF->connect({ n1, n2 });
-	loadPF->connect({ n2 });	
+	loadPF->connect({ n2 });
 
 	auto systemPF = SystemTopology(50,
 			SystemNodeList{n1, n2},

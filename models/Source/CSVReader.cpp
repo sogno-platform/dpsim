@@ -1,4 +1,4 @@
-/* Copyright 2017-2020 Institute for Automation of Complex Power Systems,
+/* Copyright 2017-2021 Institute for Automation of Complex Power Systems,
  *                     EONERC, RWTH Aachen University
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
@@ -8,8 +8,6 @@
 
 
 #include <cps/CSVReader.h>
-
-namespace fs = std::experimental::filesystem;
 
 using namespace CPS;
 
@@ -106,7 +104,7 @@ CSVReader::CSVReader(CPS::String name, CPS::String path,  CPS::Logger::Level log
 	mSLog = Logger::get(name + "_csvReader", logLevel);
 
 	mPath = path;
-	for (const auto & entry : std::experimental::filesystem::directory_iterator(path)) {
+	for (const auto & entry : fs::directory_iterator(path)) {
 			mFileList.push_back(entry.path());
 
 	}
@@ -132,14 +130,14 @@ CPS::Real CSVReader::time_format_convert(const CPS::String& time) {
 	return secs;
 }
 
-std::vector<PQData> CSVReader::readLoadProfileDP(std::experimental::filesystem::path file,
+std::vector<PQData> CSVReader::readLoadProfileDP(fs::path file,
 	Real start_time, Real time_step, Real end_time, Real scale_factor, CSVReader::DataFormat format) {
 
 	std::vector<PQData> load_profileDP;
 	std::ifstream csvfile(file);
 	CSVReaderIterator row_(csvfile);
 
-	
+
 	// ignore the first row if it is a title
 	if (mSkipFirstRow && !std::isdigit((*row_).get(0)[0])) {
 		row_.next();
@@ -257,7 +255,7 @@ std::vector<PQData> CSVReader::readLoadProfileDP(std::experimental::filesystem::
 // 					load_name.erase(remove_if(load_name.begin(), load_name.end(), [](char c) { return !isalnum(c); }), load_name.end());
 // 					file_name.erase(remove_if(file_name.begin(), file_name.end(), [](char c) { return !isalnum(c); }), file_name.end());
 // 					if (std::stoi(file_name) == std::stoi(load_name)) {
-// 						load->mPFAvVoltageSourceInverter->mLoadProfile = readLoadProfile(std::experimental::filesystem::path(mPath + file->second + ".csv"), start_time, time_step, end_time);
+// 						load->mPFAvVoltageSourceInverter->mLoadProfile = readLoadProfile(fs::path(mPath + file->second + ".csv"), start_time, time_step, end_time);
 // 						load->mPFAvVoltageSourceInverter->use_profile = true;
 // 						mSLog->info("Assigned {} to {}", file.filename().string(), load->name());
 // 					}
@@ -280,7 +278,7 @@ std::vector<PQData> CSVReader::readLoadProfileDP(std::experimental::filesystem::
 // 					}
 // 					for(auto path: mFileList){
 // 						if(path.string().find(file->second)!= std::string::npos){
-// 							load->mPFAvVoltageSourceInverter->mLoadProfile = readLoadProfile(std::experimental::filesystem::path(mPath + file->second + ".csv"), start_time, time_step, end_time);
+// 							load->mPFAvVoltageSourceInverter->mLoadProfile = readLoadProfile(fs::path(mPath + file->second + ".csv"), start_time, time_step, end_time);
 // 							load->mPFAvVoltageSourceInverter->use_profile = true;
 // 							mSLog->info("Assigned {}.csv to {}", file->second, load->name());
 // 							LP_assigned_counter++;
@@ -363,7 +361,7 @@ std::vector<PQData> CSVReader::readLoadProfileDP(std::experimental::filesystem::
 
 
 
-PowerProfile CSVReader::readLoadProfile(std::experimental::filesystem::path file,
+PowerProfile CSVReader::readLoadProfile(fs::path file,
 	Real start_time, Real time_step, Real end_time, CSVReader::DataFormat format) {
 
 	PowerProfile load_profile;
@@ -519,7 +517,7 @@ void CSVReader::assignLoadProfile(CPS::SystemTopology& sys, Real start_time, Rea
 						LP_not_assigned_counter++;
 						continue;
 					}
-					load->mLoadProfile = readLoadProfile(std::experimental::filesystem::path(mPath + file->second + ".csv"), start_time, time_step, end_time);
+					load->mLoadProfile = readLoadProfile(fs::path(mPath + file->second + ".csv"), start_time, time_step, end_time);
 					load->use_profile = true;
 					std::cout<<" Assigned "<< file->second<< " to " <<load->name()<<std::endl;
 					mSLog->info("Assigned {}.csv to {}", file->second, load->name());

@@ -1,4 +1,4 @@
-/* Copyright 2017-2020 Institute for Automation of Complex Power Systems,
+/* Copyright 2017-2021 Institute for Automation of Complex Power Systems,
  *                     EONERC, RWTH Aachen University
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
@@ -19,6 +19,8 @@
 #include <cps/SimTerminal.h>
 #include <cps/Logger.h>
 #include <cps/SystemTopology.h>
+
+namespace fs = std::experimental::filesystem;
 
 /* ====== WARNING =======
  *
@@ -111,9 +113,9 @@ namespace CIM {
 		template<typename VarType>
 		void processTopologicalNode(CIMPP::TopologicalNode* topNode);
 		///
-		void addFiles(const std::experimental::filesystem::path &filename);
+		void addFiles(const fs::path &filename);
 		/// Adds CIM files to list of files to be parsed.
-		void addFiles(const std::list<std::experimental::filesystem::path> &filenames);
+		void addFiles(const std::list<fs::path> &filenames);
 		/// First, go through all topological nodes and collect them in a list.
 		/// Since all nodes have references to the equipment connected to them (via Terminals), but not
 		/// the other way around (which we need for instantiating the components), we collect that information here as well.
@@ -160,15 +162,15 @@ namespace CIM {
 		virtual ~Reader();
 
 		/// Parses data from CIM files into the CPS data structure
-		SystemTopology loadCIM(Real systemFrequency, const std::experimental::filesystem::path &filename, Domain domain = Domain::DP, PhaseType phase = PhaseType::Single,
+		SystemTopology loadCIM(Real systemFrequency, const fs::path &filename, Domain domain = Domain::DP, PhaseType phase = PhaseType::Single,
 			GeneratorType genType = GeneratorType::None);
 		/// Parses data from CIM files into the CPS data structure
-		SystemTopology loadCIM(Real systemFrequency, const std::list<std::experimental::filesystem::path> &filenames, Domain domain = Domain::DP, PhaseType phase = PhaseType::Single,
+		SystemTopology loadCIM(Real systemFrequency, const std::list<fs::path> &filenames, Domain domain = Domain::DP, PhaseType phase = PhaseType::Single,
 			GeneratorType genType = GeneratorType::None);
 		///
 		SystemTopology loadCIM(Real systemFrequency, const std::list<CPS::String> &filenamesString, Domain domain = Domain::DP, PhaseType phase = PhaseType::Single,
 			GeneratorType genType = GeneratorType::None) {
-			std::list<std::experimental::filesystem::path> filenames;
+			std::list<fs::path> filenames;
 			for (auto f : filenamesString)
 				filenames.emplace_back(f);
 

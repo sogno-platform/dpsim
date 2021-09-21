@@ -1,4 +1,4 @@
-/* Copyright 2017-2020 Institute for Automation of Complex Power Systems,
+/* Copyright 2017-2021 Institute for Automation of Complex Power Systems,
  *                     EONERC, RWTH Aachen University
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
@@ -35,7 +35,7 @@ namespace Ph1 {
 	private:
 	///
 	void updateVoltage(Real time);
-	/// 
+	///
 	CPS::Signal::SignalGenerator::Ptr mSrcSig;
 	public:
 		/// Defines UID, name, component parameters and logging level

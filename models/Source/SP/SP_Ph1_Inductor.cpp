@@ -1,4 +1,4 @@
-/* Copyright 2017-2020 Institute for Automation of Complex Power Systems,
+/* Copyright 2017-2021 Institute for Automation of Complex Power Systems,
  *                     EONERC, RWTH Aachen University
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
@@ -31,7 +31,7 @@ void SP::Ph1::Inductor::initializeFromNodesAndTerminals(Real frequency) {
 	mSusceptance = Complex(0, -1 / omega / mInductance);
 	mIntfVoltage(0, 0) = initialSingleVoltage(1) - initialSingleVoltage(0);
 	mIntfCurrent = mSusceptance * mIntfVoltage;
-	
+
 	mSLog->info("\nInductance [H]: {:s}"
 				"\nImpedance [Ohm]: {:s}",
 				Logger::realToString(mInductance),

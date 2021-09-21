@@ -1,4 +1,4 @@
-/* Copyright 2017-2020 Institute for Automation of Complex Power Systems,
+/* Copyright 2017-2021 Institute for Automation of Complex Power Systems,
  *                     EONERC, RWTH Aachen University
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
@@ -10,7 +10,6 @@
 
 using namespace DPsim;
 using namespace CPS;
-
 
 PFSolverPowerPolar::PFSolverPowerPolar(CPS::String name, const CPS::SystemTopology &system, CPS::Real timeStep, CPS::Logger::Level logLevel)
     : PFSolver(name, system, timeStep, logLevel){ }
@@ -404,7 +403,7 @@ void PFSolverPowerPolar::calculatePAndQAtSlackBus() {
             if(gen->mPowerflowBusType==CPS::PowerflowBusType::VD){
 			    gen->updatePowerInjection(S*mBaseApparentPower);
                 break;
-            } 
+            }
         }
     }
 }
@@ -423,7 +422,7 @@ void PFSolverPowerPolar::calculateQAtPVBuses() {
             if(gen->mPowerflowBusType==CPS::PowerflowBusType::PV){
 			    gen->updateReactivePowerInjection(S*mBaseApparentPower);
                 break;
-            }        
+            }
         }
     }
 }
