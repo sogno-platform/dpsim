@@ -214,10 +214,16 @@ set(DPSIM_INCLUDE_DIRS
 	${CMAKE_CURRENT_SOURCE_DIR}/Include
 )
 
+set(DPSIM_VILLAS_SRC_DIR
+${CMAKE_BINARY_DIR}/_deps/dpsim-villas-src)
+
+if(WITH_SHMEM)
+	add_subdirectory(${DPSIM_VILLAS_SRC_DIR})
+endif()
+
 add_subdirectory(models)
 add_subdirectory(Source)
 add_subdirectory(docs)
-
 
 if(DPSIM_BUILD_EXAMPLES)
 	add_subdirectory(Examples)
@@ -228,12 +234,12 @@ if(WITH_PYBIND)
 		${CMAKE_CURRENT_SOURCE_DIR}/Include/dpsim/pybind
 	)
 
-	add_subdirectory(Source/pybind)
-
 	if(WITH_SHMEM)
-		pybind11_add_module(dpsimpyvillas ${CMAKE_BINARY_DIR}/_deps/dpsim-villas-src/src/pybind-dpsim-villas.cpp)
-		target_link_libraries(dpsimpyvillas PRIVATE dpsim)
-	endif()	
+    	pybind11_add_module(dpsimpyvillas ${DPSIM_VILLAS_SRC_DIR}/src/pybind-dpsim-villas.cpp)
+    	target_link_libraries(dpsimpyvillas PRIVATE dpsim)
+	endif()
+
+	add_subdirectory(Source/pybind)
 endif()
 
 include(cmake/GetGridData.cmake)

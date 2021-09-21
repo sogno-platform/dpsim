@@ -1,5 +1,5 @@
 find_path(VILLASNODE_INCLUDE_DIR
-	NAMES villas/shmem.h
+	NAMES villas/node.hpp
 )
 
 find_library(VILLASNODE_LIBRARY
