@@ -33,12 +33,11 @@ UInt InterfaceVillas::villasAffinity = 0;
 UInt InterfaceVillas::villasPriority = 0;
 UInt InterfaceVillas::villasHugePages = 100;
 
-InterfaceVillas::InterfaceVillas(const String &name, const String &nodeType, const String &nodeConfig, UInt queueLenght, UInt sampleLenght, UInt downsampling) :
+InterfaceVillas::InterfaceVillas(const String &name, const String &nodeConfig, UInt queueLength, UInt sampleLength, UInt downsampling) :
 	InterfaceSampleBased(name, name, true, downsampling), // Set sync=true for all InterfaceVillas instances
-	mNodeType(nodeType),
 	mNodeConfig(nodeConfig),
-	mQueueLenght(queueLenght),
-	mSampleLenght(sampleLenght)
+	mQueueLength(queueLength),
+	mSampleLength(sampleLength)
 	{ }
 
 void InterfaceVillas::open(CPS::Logger::Log log) {
@@ -51,17 +50,23 @@ void InterfaceVillas::open(CPS::Logger::Log log) {
 		InterfaceVillas::villasInitialized = true;
 	}
 
-	node::NodeType* nodeTypeStruct = node::node_type_lookup(mNodeType);
+	json_error_t error;
+	json_t* config = json_loads(mNodeConfig.c_str(), 0, &error);
+	if (config == nullptr) {
+		throw JsonError(config, error);
+	}
+
+	json_t* nodeType = json_object_get(config, "type");
+	if (nodeType == nullptr) {
+		mLog->error("Error: Node config does not contain type-key!");
+		std::exit(1);
+	}
+	String nodeTypeString = json_string_value(nodeType);
+
+	node::NodeType* nodeTypeStruct = node::node_type_lookup(nodeTypeString);
 	if (nodeTypeStruct != nullptr) {
 		mNode = std::make_unique<node::Node>(nodeTypeStruct);
 		int ret = 0;
-
-		json_error_t error;
-		json_t* config = json_loads(mNodeConfig.c_str(), 0, &error);
-		if (config == nullptr) {
-			throw JsonError(config, error);
-		}
-
 		uuid_t fakeSuperNodeUUID;
 		uuid_generate_random(fakeSuperNodeUUID);
 		ret = mNode->parse(config, fakeSuperNodeUUID);
@@ -75,7 +80,7 @@ void InterfaceVillas::open(CPS::Logger::Log log) {
 			std::exit(1);
 		}
 	} else {
-		mLog->error("Error: NodeType {} is not known to VILLASnode!", mNodeType);
+		mLog->error("Error: NodeType {} is not known to VILLASnode!", nodeTypeString);
 		std::exit(1);
 	}
 
@@ -97,7 +102,7 @@ void InterfaceVillas::open(CPS::Logger::Log log) {
 
 
 void InterfaceVillas::prepareNode() {
-	int ret = node::pool_init(&mSamplePool, mQueueLenght, sizeof(Sample) + SAMPLE_DATA_LENGTH(mSampleLenght));
+	int ret = node::pool_init(&mSamplePool, mQueueLength, sizeof(Sample) + SAMPLE_DATA_LENGTH(mSampleLength));
 	if (ret < 0) {
 		mLog->error("Error: InterfaceVillas failed to init sample pool. pool_init returned code {}", ret);
 		std::exit(1);

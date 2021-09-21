@@ -76,7 +76,7 @@ int main(int argc, char* argv[]) {
         }
     })STRING";
 
-    InterfaceVillas intf("dpsim-mqtt", "mqtt", mqttConfig);
+    InterfaceVillas intf("dpsim-mqtt", mqttConfig);
 
 	// Interface
 	evs->setAttributeRef("V_ref", intf.importComplex(0));

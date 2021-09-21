@@ -73,7 +73,7 @@ int main(int argc, char* argv[]) {
         }
     })STRING";
 
-    InterfaceVillas intf("dpsim-file", "file", fileConfig);
+    InterfaceVillas intf("dpsim-file", fileConfig);
 
 	// Interface
 	//evs->setAttributeRef("V_ref", intf.importComplex(0));

@@ -43,12 +43,11 @@ namespace DPsim {
 
 	protected:
 		//Villas node to send / receive data to / from
-		String mNodeType;
 		String mNodeConfig;
 		std::unique_ptr<node::Node> mNode;
 
-		int mQueueLenght;
-		int mSampleLenght;
+		int mQueueLength;
+		int mSampleLength;
 		node::Pool mSamplePool;
 
 		static Bool villasInitialized;
@@ -58,7 +57,7 @@ namespace DPsim {
 		 *
 		 * @param name The name of the newly created VillasNode
 		 */
-		InterfaceVillas(const String &name, const String &nodeType, const String &nodeConfig, UInt queueLenght = 512, UInt sampleLenght = 64, UInt downsampling = 1);
+		InterfaceVillas(const String &name, const String &nodeConfig, UInt queueLenght = 512, UInt sampleLenght = 64, UInt downsampling = 1);
 
 		void open(CPS::Logger::Log log);
 		void close();

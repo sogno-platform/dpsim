@@ -76,7 +76,7 @@ int main(int argc, char* argv[]) {
 		"queuelen": 1024
     })STRING";
 
-    InterfaceVillas intf("dpsim-shmem", "shmem", shmemConfig);
+    InterfaceVillas intf("dpsim-shmem", shmemConfig);
 
 	// Interface
 	//evs->setAttributeRef("V_ref", intf.importComplex(0));
