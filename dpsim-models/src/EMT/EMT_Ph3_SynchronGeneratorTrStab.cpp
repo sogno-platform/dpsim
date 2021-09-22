@@ -54,7 +54,9 @@ EMT::Ph3::SynchronGeneratorTrStab::SynchronGeneratorTrStab(String uid, String na
 	mElecActivePower = Attribute<Real>::create("P_elec", mAttributes, 0);
 	mMechPower = Attribute<Real>::create("P_mech", mAttributes, 0);
 	mOmMech = Attribute<Real>::create("w_r", mAttributes, 0);
-	mInertia = Attribute<Real>::create("inertia", mAttributes, 0);
+	mInertia = Attribute<Real>::create("inertia", mAttributes, 0);	addAttribute<Real>("w_ref", Flags::read | Flags::write);
+	addAttribute<Real>("delta_ref", Flags::read | Flags::write);
+
 	mStates = Matrix::Zero(10,1);
 }
 
@@ -67,6 +69,10 @@ SimPowerComp<Real>::Ptr EMT::Ph3::SynchronGeneratorTrStab::clone(String name) {
 void EMT::Ph3::SynchronGeneratorTrStab::setFundamentalParametersPU(Real nomPower, Real nomVolt, Real nomFreq,
 	Real Ll, Real Lmd, Real Llfd, Real inertia, Real D) {
 	setBaseParameters(nomPower, nomVolt, nomFreq);
+	mSLog->info("\n--- Base Parameters ---"
+	"\nnomPower: {:f}"
+	"\nnomVolt: {:f}"
+	"\nnomFreq: {:f}", mNomPower, mNomVolt, mNomFreq);
 
 	// Input is in per unit but all values are converted to absolute values.
 	mParameterType = ParameterType::statorReferred;
@@ -147,6 +153,15 @@ void EMT::Ph3::SynchronGeneratorTrStab::setStandardParametersPU(Real nomPower, R
 			"\ninductance: {:f}"
 			"\ninertia: {:f}"
 			"\ndamping: {:f}", mXpd, mLpd, mInertia, mKd);
+}
+
+void EMT::Ph3::SynchronGeneratorTrStab::setModelFlags(Bool useOmegaRef, Bool convertWithOmegaMech) {
+	mUseOmegaRef = useOmegaRef;
+	mConvertWithOmegaMech = convertWithOmegaMech;
+
+	mSLog->info("\n--- Model flags ---"
+			"\nuseOmegaRef: {:s}"
+			"\nconvertWithOmegaMech: {:s}", std::to_string(mUseOmegaRef), std::to_string(mConvertWithOmegaMech));
 }
 
 void EMT::Ph3::SynchronGeneratorTrStab::setInitialValues(Complex elecPower, Real mechPower) {
@@ -251,18 +266,40 @@ void EMT::Ph3::SynchronGeneratorTrStab::step(Real time) {
 	// Update electrical power (minus sign to calculate generated power from consumed current)
 	mElecActivePower =  -3./2. * (intfVoltageDQ(0, 0)*intfCurrentDQ(0, 0) + intfVoltageDQ(1, 0)*intfCurrentDQ(1, 0)); //using DQ with k= 2. / 3.
 	// mElecActivePower =  -1. * (intfVoltageDQ(0, 0)*intfCurrentDQ(0, 0) + intfVoltageDQ(1, 0)*intfCurrentDQ(1, 0)); //using DQ with k=sqrt(2. / 3.)
+	
+	// Mechanical speed derivative at time step k
+	// convert torque to power with actual rotor angular velocity or nominal omega
+	Real dOmMech;
+	if (mConvertWithOmegaMech)
+		dOmMech = mNomOmega*mNomOmega / (2.*mInertia * mNomPower*mOmMech) * (mMechPower - mElecActivePower - mKd*(mOmMech - mNomOmega));
+	else
+		dOmMech = mNomOmega / (2. * **mInertia * mNomPower) * (**mMechPower - **mElecActivePower - mKd*(**mOmMech - mNomOmega));
 
-	// #### Calculate state for time step k+1 ####
-	// semi-implicit Euler or symplectic Euler method for mechanical equations
-	Real dOmMech = mNomOmega / (2. * **mInertia * mNomPower) * (**mMechPower - **mElecActivePower-mKd*(**mOmMech - mNomOmega));
-	if (mBehaviour == Behaviour::MNASimulation)
+	// #### Calculate states for time step k+1 applying semi-implicit Euler ####
+	// Mechanical speed at time step k+1 applying Euler forward
+	if (mBehaviour == Behaviour::Simulation)
 		**mOmMech = **mOmMech + mTimeStep * dOmMech;
-	Real dDelta_p = **mOmMech - mNomOmega;
-	if (mBehaviour == Behaviour::MNASimulation)
-		**mDelta_p = **mDelta_p + mTimeStep * dDelta_p;
+		
+	// Derivative of rotor angle at time step k + 1
+	// if reference omega is set, calculate delta with respect to reference 
+	Real refOmega;
+	Real refDelta;
+	if (mUseOmegaRef) {
+		refOmega = attribute<Real>("w_ref")->get();
+		refDelta = attribute<Real>("delta_ref")->get();
+	} else {
+		refOmega = mNomOmega;
+		refDelta = 0;
+	}
+
+	Real dDelta_p = **mOmMech - refOmega;
+
+	// Rotor angle at time step k + 1 applying Euler backward
 	// Update emf - only phase changes
-	if (mBehaviour == Behaviour::MNASimulation)
+	if (mBehaviour == Behaviour::Simulation) {
+		**mDelta_p = **mDelta_p + mTimeStep * dDelta_p;
 		**mEp = Complex(**mEp_abs * cos(**mDelta_p), **mEp_abs * sin(**mDelta_p));
+	}
 
 	// Update nominal system angle
 	// mThetaN = mThetaN + mTimeStep * mNomOmega;
@@ -320,4 +357,12 @@ void EMT::Ph3::SynchronGeneratorTrStab::mnaCompUpdateCurrent(const Matrix& leftV
 	SPDLOG_LOGGER_DEBUG(mSLog, "Read current from {:d}", matrixNodeIndex(0));
 
 	**mIntfCurrent = **mSubInductor->mIntfCurrent;
+}
+
+void EMT::Ph3::SynchronGeneratorTrStab::setReferenceOmega(Attribute<Real>::Ptr refOmegaPtr, Attribute<Real>::Ptr refDeltaPtr) {
+	setAttributeRef("w_ref", refOmegaPtr);
+	setAttributeRef("delta_ref", refDeltaPtr);
+	mUseOmegaRef=true;
+
+	mSLog->info("Use of reference omega.");
 }

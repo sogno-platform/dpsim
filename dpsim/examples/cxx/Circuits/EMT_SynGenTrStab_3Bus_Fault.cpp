@@ -113,6 +113,9 @@ void EMT_SynGenTrStab_3Bus_Fault(String simName, Real timeStep, Real finalTime, 
 	// Get actual active and reactive power of generator's Terminal from Powerflow solution
 	Complex initApparentPower_G2= gen2PF->getApparentPower();
 	gen2EMT->setInitialValues(initApparentPower_G2, ThreeBus.initMechPower_G2);
+
+	gen2EMT->setModelFlags(true, true);
+	gen2EMT->setReferenceOmega(gen1EMT->attribute<Real>("w_r"), gen1EMT->attribute<Real>("delta_r"));
 	
 	//Load
 	auto loadEMT = EMT::Ph3::RXLoad::make("Load", Logger::Level::debug);
@@ -243,7 +246,7 @@ int main(int argc, char* argv[]) {
 	Real cmdDamping_G2=1.0;
 
 
-		CommandLineArgs args(argc, argv);
+	CommandLineArgs args(argc, argv);
 	if (argc > 1) {
 		timeStep = args.timeStep;
 		finalTime = args.duration;
@@ -256,8 +259,12 @@ int main(int argc, char* argv[]) {
 		if (args.options.find("SCALEDAMPING_G1") != args.options.end())
 			cmdDamping_G1 = args.options["SCALEDAMPING_G1"];
 		if (args.options.find("SCALEDAMPING_G2") != args.options.end())
-			cmdDamping_G2 = args.options["SCALEDAMPING_G2"];
+			cmdDamping_G2 = args.options["SCALEDAMPING_G2"];	
+		if (args.options.find("STARTTIMEFAULT") != args.options.end())
+			startTimeFault = args.options["STARTTIMEFAULT"];
+		if (args.options.find("ENDTIMEFAULT") != args.options.end())
+			endTimeFault = args.options["ENDTIMEFAULT"];	
 	}
-
+	
 	EMT_SynGenTrStab_3Bus_Fault(simName, timeStep, finalTime, startFaultEvent, endFaultEvent, startTimeFault, endTimeFault, cmdInertia_G1, cmdInertia_G2, cmdDamping_G1, cmdDamping_G2);
 }

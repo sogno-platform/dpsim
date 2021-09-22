@@ -42,7 +42,11 @@ namespace Ph3 {
 		Matrix mStates;
 		/// Nominal system angle
 		Real mThetaN = 0;
-
+		/// Flag for usage of attribute of w_ref (otherwise mNomOmega is used)
+		Bool mUseOmegaRef = false;
+		/// Flag for usage of actual mechanical speed for torque conversion (otherwise mNomOmega is used)
+		Bool mConvertWithOmegaMech = true;
+		
 	public:
 		// #### Model specific variables ####
 		/// emf behind transient reactance
@@ -73,6 +77,8 @@ namespace Ph3 {
 		Matrix getParkTransformMatrixPowerInvariant(Real theta);
 
 		// #### General Functions ####
+		/// Flags to modify model behavior
+		void setModelFlags(Bool useOmegaRef, Bool convertWithOmegaMech);
 		///
 		void setInitialValues(Complex elecPower, Real mechPower);
 		/// \brief Initializes the machine parameters
@@ -104,6 +110,8 @@ namespace Ph3 {
 
 		void mnaParentAddPreStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes) override;
 		void mnaParentAddPostStepDependencies(AttributeBase::List &prevStepDependencies, AttributeBase::List &attributeDependencies, AttributeBase::List &modifiedAttributes, Attribute<Matrix>::Ptr &leftVector) override;
+
+		void setReferenceOmega(Attribute<Real>::Ptr refOmegaPtr, Attribute<Real>::Ptr refDeltaPtr);
 
 		class AddBStep : public Task {
 		public:
