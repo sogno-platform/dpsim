@@ -205,20 +205,13 @@ configure_file(
 	${CMAKE_CURRENT_BINARY_DIR}/Include/dpsim/Config.h
 )
 
-if(WITH_SHMEM)
-	include(cmake/GetVillasDPsim.cmake)
-endif()
-
 set(DPSIM_INCLUDE_DIRS
 	${CMAKE_CURRENT_BINARY_DIR}/Include
 	${CMAKE_CURRENT_SOURCE_DIR}/Include
 )
 
-set(DPSIM_VILLAS_SRC_DIR
-${CMAKE_BINARY_DIR}/_deps/dpsim-villas-src)
-
 if(WITH_SHMEM)
-	add_subdirectory(${DPSIM_VILLAS_SRC_DIR})
+	include(cmake/GetVillasDPsim.cmake)
 endif()
 
 add_subdirectory(models)
@@ -235,7 +228,7 @@ if(WITH_PYBIND)
 	)
 
 	if(WITH_SHMEM)
-    	pybind11_add_module(dpsimpyvillas ${DPSIM_VILLAS_SRC_DIR}/src/pybind-dpsim-villas.cpp)
+    	pybind11_add_module(dpsimpyvillas ${dpsim-villas_SOURCE_DIR}/src/pybind-dpsim-villas.cpp)
     	target_link_libraries(dpsimpyvillas PRIVATE dpsim)
 	endif()
 
