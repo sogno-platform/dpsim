@@ -2,7 +2,7 @@ include(FetchContent)
 FetchContent_Declare(
   dpsim-villas
   GIT_REPOSITORY https://github.com/sogno-platform/dpsim-villas.git
-  GIT_TAG        c14a887531bae6e5067bff39991b78e479003856
+  GIT_TAG        main
 )
 
 if(${CMAKE_VERSION} VERSION_LESS "3.14.0")
