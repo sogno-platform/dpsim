@@ -128,15 +128,14 @@ find_package(Graphviz)
 find_package(VILLASnode)
 find_package(MAGMA)
 
+
+find_package (Python COMPONENTS Interpreter Development)
 if (WITH_PYBIND_MODULE)
 	include(cmake/GetPybindModule.cmake)
 else()
-	find_package(pybind11 QUIET)
+	find_package(pybind11 CONFIG QUIET)
 endif()
 
-if (pybind11_FOUND)
-	find_package (Python COMPONENTS Interpreter Development)
-endif()
 
 if("${CMAKE_SYSTEM}" MATCHES "Linux")
 	set(Linux_FOUND ON)
