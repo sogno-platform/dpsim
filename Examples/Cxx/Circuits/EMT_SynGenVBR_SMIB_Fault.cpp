@@ -15,7 +15,7 @@ Real ratio = VnomMV/VnomHV;
 Real nomOmega= nomFreq* 2*PI;
 
 Examples::Components::SynchronousGeneratorKundur::MachineParameters syngenKundur;
-Examples::Components::CIGREHVAmerican::LineParameters lineCIGREHV;
+Examples::Grids::CIGREHVAmerican::LineParameters lineCIGREHV;
 
 // HV line parameters referred to MV side
 Real lineLength = 100;
