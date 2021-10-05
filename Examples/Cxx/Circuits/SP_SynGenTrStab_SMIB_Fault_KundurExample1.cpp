@@ -175,7 +175,6 @@ void SP_1ph_SynGenTrStab_Fault(String simName, Real timeStep, Real finalTime, Re
 			SystemComponentList{genSP, trafoSP, lineSP, extnetSP, faultSP});
 
 	// Initialization of dynamic topology
-	CIM::Reader reader(simNameSP, Logger::Level::debug);
 	systemSP.initWithPowerflow(systemPF);
 
 

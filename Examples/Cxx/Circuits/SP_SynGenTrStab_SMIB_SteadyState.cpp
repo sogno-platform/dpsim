@@ -100,7 +100,6 @@ void SP_1ph_SynGenTrStab_SteadyState(String simName, Real timeStep, Real finalTi
 			SystemComponentList{genSP, lineSP, extnetSP});
 
 	// Initialization of dynamic topology
-	CIM::Reader reader(simNameSP, Logger::Level::debug);
 	systemSP.initWithPowerflow(systemPF);
 
 

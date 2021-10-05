@@ -137,7 +137,6 @@ void SP_SynGenTrStab_3Bus_SteadyState(String simName, Real timeStep, Real finalT
 			SystemComponentList{gen1SP, gen2SP, loadSP, line12SP, line13SP, line23SP});
 
 	// Initialization of dynamic topology
-	CIM::Reader reader(simNameSP, Logger::Level::debug);
 	systemSP.initWithPowerflow(systemPF);
 
 	// Logging

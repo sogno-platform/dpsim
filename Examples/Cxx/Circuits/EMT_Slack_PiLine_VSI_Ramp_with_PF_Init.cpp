@@ -118,7 +118,6 @@ int main(int argc, char* argv[]) {
 			SystemComponentList{extnetEMT, lineEMT, pv});
 
 	// Initialization of dynamic topology
-	CIM::Reader reader(simNameEMT, Logger::Level::debug);
 	systemEMT.initWithPowerflow(systemPF);
 
 	// Logging

@@ -155,7 +155,6 @@ void EMT_3ph_SynGenDQ7odTrapez_ThreePhFault(Real timeStep, Real finalTime, bool 
 			SystemComponentList{gen, line, fault, extnet});
 
 	// Initialization of dynamic topology
-	CIM::Reader reader(simName, Logger::Level::debug);
 	system.initWithPowerflow(systemPF);
 
 	// Logging
@@ -294,7 +293,6 @@ void DP_1ph_SynGenTrStab_Fault(Real timeStep, Real finalTime, bool startFaultEve
 			SystemComponentList{gen, line, fault, extnet});
 
 	// Initialization of dynamic topology
-	CIM::Reader reader(simName, Logger::Level::debug);
 	system.initWithPowerflow(systemPF);
 
 
@@ -435,7 +433,6 @@ void SP_1ph_SynGenTrStab_Fault(Real timeStep, Real finalTime, bool startFaultEve
 			SystemComponentList{gen, line, fault, extnet});
 
 	// Initialization of dynamic topology
-	CIM::Reader reader(simName, Logger::Level::debug);
 	system.initWithPowerflow(systemPF);
 
 

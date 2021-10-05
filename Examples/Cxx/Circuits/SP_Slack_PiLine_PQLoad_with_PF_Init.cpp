@@ -109,7 +109,6 @@ int main(int argc, char* argv[]) {
 			SystemComponentList{extnetSP, lineSP, loadSP});
 
 	// Initialization of dynamic topology with values from powerflow
-	CIM::Reader reader(simNameSP, Logger::Level::debug);
 	systemSP.initWithPowerflow(systemPF);
 
 	// Logging
