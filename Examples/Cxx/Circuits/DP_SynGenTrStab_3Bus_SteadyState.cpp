@@ -138,7 +138,7 @@ void DP_SynGenTrStab_3Bus_SteadyState(String simName, Real timeStep, Real finalT
 
 	// Initialization of dynamic topology
 	CIM::Reader reader(simNameDP, Logger::Level::debug);
-	reader.initDynamicSystemTopologyWithPowerflow(systemPF, systemDP);
+	systemDP.initWithPowerflow(systemPF);
 
 	// Logging
 	auto loggerDP = DataLogger::make(simNameDP);

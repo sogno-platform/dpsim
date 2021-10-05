@@ -133,7 +133,7 @@ void EMT_1ph_SynGenTrStab_SteadyState(String simName, Real timeStep, Real finalT
 
 	// Initialization of dynamic topology
 	CIM::Reader reader(simNameEMT, Logger::Level::debug);
-	reader.initDynamicSystemTopologyWithPowerflow(systemPF, systemEMT);
+	systemEMT.initWithPowerflow(systemPF);
 
 
 	// Logging

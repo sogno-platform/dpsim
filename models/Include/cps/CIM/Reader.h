@@ -177,9 +177,6 @@ namespace CIM {
 			return loadCIM(systemFrequency, filenames, domain, phase, genType);
 		}
 
-		///
-		void initDynamicSystemTopologyWithPowerflow(SystemTopology& systemPF, SystemTopology& system);
-
 		// #### shunt component settings ####
 		/// set shunt capacitor value
 		void setShuntCapacitor(Real v) {

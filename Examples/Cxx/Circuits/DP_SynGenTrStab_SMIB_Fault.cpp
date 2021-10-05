@@ -123,7 +123,7 @@ void DP_1ph_SynGenTrStab_Fault(String simName, Real timeStep, Real finalTime, bo
 
 	// Initialization of dynamic topology
 	CIM::Reader reader(simNameDP, Logger::Level::debug);
-	reader.initDynamicSystemTopologyWithPowerflow(systemPF, systemDP);
+	systemDP.initWithPowerflow(systemPF);
 
 
 	// Logging

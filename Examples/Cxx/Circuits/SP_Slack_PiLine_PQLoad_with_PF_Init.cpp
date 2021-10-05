@@ -110,7 +110,7 @@ int main(int argc, char* argv[]) {
 
 	// Initialization of dynamic topology with values from powerflow
 	CIM::Reader reader(simNameSP, Logger::Level::debug);
-	reader.initDynamicSystemTopologyWithPowerflow(systemPF, systemSP);
+	systemSP.initWithPowerflow(systemPF);
 
 	// Logging
 	auto loggerSP = DataLogger::make(simNameSP);

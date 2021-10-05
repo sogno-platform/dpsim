@@ -166,7 +166,7 @@ void SP_SynGenTrStab_3Bus_Fault(String simName, Real timeStep, Real finalTime, b
 
 	// Initialization of dynamic topology
 	CIM::Reader reader(simNameSP, Logger::Level::debug);
-	reader.initDynamicSystemTopologyWithPowerflow(systemPF, systemSP);
+	systemSP.initWithPowerflow(systemPF);
 
 	// Logging
 	auto loggerSP = DataLogger::make(simNameSP);

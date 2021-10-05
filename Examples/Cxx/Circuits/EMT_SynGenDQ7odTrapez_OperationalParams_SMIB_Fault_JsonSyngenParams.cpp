@@ -171,7 +171,7 @@ int main(int argc, char* argv[]) {
 
 	// Initialization of dynamic topology
 	CIM::Reader reader(simName, Logger::Level::debug);
-	reader.initDynamicSystemTopologyWithPowerflow(systemPF, system);
+	system.initWithPowerflow(systemPF);
 
 	// Logging
 	auto logger = DataLogger::make(simName);

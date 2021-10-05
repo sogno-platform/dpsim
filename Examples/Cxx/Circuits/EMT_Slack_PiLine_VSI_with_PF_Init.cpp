@@ -118,7 +118,7 @@ int main(int argc, char* argv[]) {
 
 	// Initialization of dynamic topology
 	CIM::Reader reader(simNameEMT, Logger::Level::debug);
-	reader.initDynamicSystemTopologyWithPowerflow(systemPF, systemEMT);
+	systemEMT.initWithPowerflow(systemPF);
 
 	// Logging
 	auto loggerEMT = DataLogger::make(simNameEMT);

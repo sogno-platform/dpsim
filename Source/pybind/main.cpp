@@ -121,7 +121,8 @@ PYBIND11_MODULE(dpsimpy, m) {
 		.def_readwrite("nodes", &DPsim::SystemTopology::mNodes)
 		.def_readwrite("components", &DPsim::SystemTopology::mComponents)
 		.def_readonly("tear_components", &DPsim::SystemTopology::mTearComponents)
-		.def("list_idobjects", &DPsim::SystemTopology::listIdObjects);
+		.def("list_idobjects", &DPsim::SystemTopology::listIdObjects)
+		.def("init_with_powerflow", &DPsim::SystemTopology::initWithPowerflow);
 
 	py::class_<DPsim::Interface>(m, "Interface");
 
@@ -186,8 +187,7 @@ PYBIND11_MODULE(dpsimpy, m) {
 
 	py::class_<CPS::CIM::Reader>(m, "CIMReader")
 		.def(py::init<std::string, CPS::Logger::Level, CPS::Logger::Level>(), "name"_a, "loglevel"_a = CPS::Logger::Level::info, "comploglevel"_a = CPS::Logger::Level::off)
-		.def("loadCIM", (CPS::SystemTopology (CPS::CIM::Reader::*)(CPS::Real, const std::list<CPS::String> &, CPS::Domain, CPS::PhaseType, CPS::GeneratorType)) &CPS::CIM::Reader::loadCIM)
-		.def("init_dynamic_system_topology_with_powerflow", &CPS::CIM::Reader::initDynamicSystemTopologyWithPowerflow);
+		.def("loadCIM", (CPS::SystemTopology (CPS::CIM::Reader::*)(CPS::Real, const std::list<CPS::String> &, CPS::Domain, CPS::PhaseType, CPS::GeneratorType)) &CPS::CIM::Reader::loadCIM);
 
 	py::class_<CPS::CSVReader>(m, "CSVReader")
 		.def(py::init<std::string, const std::string &, std::map<std::string, std::string> &, CPS::Logger::Level>())
