@@ -58,15 +58,3 @@ jobs:
 
     - name: Run Binaries
       run: ./build/Examples/Cxx/WSCC_9bus_mult_coupled
-
-  cpp-check:
-    name: Scan Sourcecode with Cppcheck
-    runs-on: ubuntu-latest
-    container: sogno/dpsim:dev
-    needs: [linux-fedora]
-    steps:
-    - name: Checkout
-      uses: actions/checkout@v2
-
-    - name: Run checks
-      run: cppcheck --max-configs=32 -j2 --error-exitcode=1 -q --enable=warning,performance,portability,information,missingInclude --std=c++11 -I Include/ -I models/Include/ Source/ Examples/ models/Source/
