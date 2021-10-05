@@ -1,0 +1,25 @@
+name: Build & Test Windows
+
+on:
+  push:
+    branches:
+      - master
+
+## Build ##
+
+jobs:
+  windows:
+    name: Build on Windows
+    runs-on: windows-latest
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v1
+
+    - id: build
+      run: |
+        cd ${{ github.workspace }}
+        mkdir build
+        cd build
+        git describe --tags --abbrev=0 --match "v*"
+        cmake -DWITH_PYTHON=OFF ..
+        cmake --build . --target dpsim
