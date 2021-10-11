@@ -39,21 +39,4 @@ jobs:
         path: ${{ github.workspace }}/build
         key: build-cache-fedora-minimal-${{ github.sha }}
 ## Tests ##
-
-  test-binaries:
-    name: Execute Example
-    runs-on: ubuntu-latest
-    container: sogno/dpsim:dev-minimal
-    needs: [linux-fedora-minimal]
-    steps:
-    - name: Checkout
-      uses: actions/checkout@v2
-
-    - name: Restore Cache
-      uses: actions/cache@v2
-      with:
-        path: ${{ github.workspace }}/build
-        key: build-cache-fedora-minimal-${{ github.sha }}
-
-    - name: Run Binaries
-      run: ./build/Examples/Cxx/WSCC_9bus_mult_coupled
+  #TODO

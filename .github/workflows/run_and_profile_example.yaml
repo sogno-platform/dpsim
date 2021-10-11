@@ -1,0 +1,47 @@
+name: Run the profiler for an example
+
+on:
+  workflow_call:
+    inputs:
+      path:
+        description: 'Path to the example to be run'
+        required: true
+        type: string
+
+
+jobs:
+  profiling-examples:
+    name: Run example with profiling
+    runs-on: ubuntu-latest
+    container: sogno/dpsim:dev-centos
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v2
+
+    - name: Restore Cache
+      uses: actions/cache@v2
+      with:
+        path: ${{ github.workspace }}/build
+        key: build-cache-centos-profiling-${{ github.sha }}
+
+    - name: Run Binary
+      run: ${{ inputs.path }} 2>&1 | tee output.log
+    
+    - name: Extract metrics
+      shell: bash
+      working-directory: ${{ github.workspace }}
+      run: |
+        cat output.log |
+        sed -n -E -e 's/^.*Average step time. ([0-9]+\.[0-9]+)$/step-time \1/p' |
+        tee -a metrics.txt
+    
+    - name: Run Profiler
+      run: gprof ${{ inputs.path }} | gprof2dot -s | dot -Tpng -o profiling.png || true
+
+    - name: Archive profiler output
+      uses: actions/upload-artifact@v2
+      with:
+        name: profiler-output
+        path: |
+          metrics.txt
+          profiling.png

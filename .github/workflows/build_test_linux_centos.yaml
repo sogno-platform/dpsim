@@ -39,6 +39,37 @@ jobs:
         path: ${{ github.workspace }}/build
         key: build-cache-centos-${{ github.sha }}
 
+  profiling:
+    name: Build with Profiling options
+    runs-on: ubuntu-latest
+    container: sogno/dpsim:dev-centos
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v2
+      with:
+        submodules: recursive
+
+    - name: Create Build Environment
+      run: mkdir build
+
+    - name: Configure CMake
+      shell: bash
+      working-directory: ${{ github.workspace }}/build
+      run: cmake $GITHUB_WORKSPACE -DWITH_PROFILING=ON -DWITH_ASAN=ON -DWITH_CUDA=OFF -DWITH_SPDLOG_SUBMODULE=ON
+
+    - name: Build every target
+      shell: bash
+      working-directory: ${{ github.workspace }}/build
+      run: cmake --build .
+      env:
+        MAKEFLAGS: "-j2"
+
+    - name: Cache build directory
+      uses: actions/cache@v2
+      with:
+        path: ${{ github.workspace }}/build
+        key: build-cache-centos-profiling-${{ github.sha }}
+
 ## Tests ##
 
   test-binaries:
@@ -56,8 +87,22 @@ jobs:
         path: ${{ github.workspace }}/build
         key: build-cache-centos-${{ github.sha }}
 
-    - name: Run Binaries
-      run: ./build/Examples/Cxx/WSCC_9bus_mult_coupled
+    - name: Run Binary
+      run: ./build/Examples/Cxx/WSCC_9bus_mult_coupled 2>&1 | tee output.log
+
+  test-examples-1:
+    name: Test Examples 1/2
+    needs: [profiling]
+    uses: sogno-platform/dpsim/.github/workflows/run_and_profile_example.yaml@master
+    with:
+      path: ./build/Examples/Cxx/WSCC_9bus_mult_decoupled
+
+  test-examples-2:
+    name: Test Examples 2/2
+    needs: [profiling]
+    uses: sogno-platform/dpsim/.github/workflows/run_and_profile_example.yaml@master
+    with:
+      path: ./build/Examples/Cxx/WSCC_9bus_mult_coupled
 
   cpp-check:
     name: Scan Sourcecode with Cppcheck
@@ -69,4 +114,4 @@ jobs:
       uses: actions/checkout@v2
 
     - name: Run checks
-      run: cppcheck --max-configs=32 -j2 --error-exitcode=1 -q --enable=warning,performance,portability,information,missingInclude --std=c++11 -I Include/ -I models/Include/ Source/ Examples/ models/Source/
+      run: cppcheck --max-configs=32 -j2 --error-exitcode=1 -q --enable=warning,performance,portability,information,missingInclude --std=c++17 -I Include/ -I models/Include/ Source/ Examples/ models/Source/
