@@ -96,6 +96,7 @@ jobs:
     uses: sogno-platform/dpsim/.github/workflows/run_and_profile_example.yaml@master
     with:
       path: ./build/Examples/Cxx/WSCC_9bus_mult_decoupled
+      name: WSCC_9bus_mult_decoupled
 
   test-examples-2:
     name: Test Examples 2/2
@@ -103,6 +104,7 @@ jobs:
     uses: sogno-platform/dpsim/.github/workflows/run_and_profile_example.yaml@master
     with:
       path: ./build/Examples/Cxx/WSCC_9bus_mult_coupled
+      name: WSCC_9bus_mult_coupled
 
   cpp-check:
     name: Scan Sourcecode with Cppcheck
@@ -114,4 +116,4 @@ jobs:
       uses: actions/checkout@v2
 
     - name: Run checks
-      run: cppcheck --max-configs=32 -j2 --error-exitcode=1 -q --enable=warning,performance,portability,information,missingInclude --std=c++17 -I Include/ -I models/Include/ Source/ Examples/ models/Source/
+      run: cppcheck --max-configs=32 -j2 --error-exitcode=1 -q --enable=warning,performance,portability,information,missingInclude --std=c++11 -I Include/ -I models/Include/ Source/ Examples/ models/Source/

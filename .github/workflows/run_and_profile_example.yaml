@@ -7,6 +7,10 @@ on:
         description: 'Path to the example to be run'
         required: true
         type: string
+      name:
+        description: 'Example name'
+        required: true
+        type: string
 
 
 jobs:
@@ -15,9 +19,6 @@ jobs:
     runs-on: ubuntu-latest
     container: sogno/dpsim:dev-centos
     steps:
-    - name: Checkout
-      uses: actions/checkout@v2
-
     - name: Restore Cache
       uses: actions/cache@v2
       with:
@@ -41,7 +42,7 @@ jobs:
     - name: Archive profiler output
       uses: actions/upload-artifact@v2
       with:
-        name: profiler-output
+        name: profiler-output-${{ inputs.name }}
         path: |
           metrics.txt
           profiling.png
