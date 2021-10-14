@@ -1,7 +1,7 @@
 include(FetchContent)
 FetchContent_Declare(
   dpsim-villas
-  GIT_REPOSITORY https://github.com/sogno-platform/dpsim-villas
+  GIT_REPOSITORY https://github.com/sogno-platform/dpsim-villas.git
   GIT_TAG        main
 )
 
