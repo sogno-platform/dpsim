@@ -660,8 +660,8 @@ and to parameterize all components of the network from Python.</p>
 <span class="sig-name descname"><span class="pre">export_attr</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#dpsimpy.Simulation.export_attr" title="Permalink to this definition"></a></dt>
 <dd><p>Overloaded function.</p>
 <ol class="arabic simple">
-<li><p>export_attr(self: dpsimpy.Simulation, obj: str, attr: str, idx: int, modifier: CPS::AttributeBase::Modifier, row: int = 0, col: int = 0) -&gt; None</p></li>
-<li><p>export_attr(self: dpsimpy.Simulation, obj: str, attr: str, idx: int, row: int = 0, col: int = 0, scale: complex = (1+0j)) -&gt; None</p></li>
+<li><p>export_attr(self: dpsimpy.Simulation, obj: str, attr: str, idx: int, modifier: CPS::AttributeBase::Modifier, row: int = 0, col: int = 0, intf: DPsim::Interface = None) -&gt; None</p></li>
+<li><p>export_attr(self: dpsimpy.Simulation, obj: str, attr: str, idx: int, row: int = 0, col: int = 0, scale: complex = (1+0j), intf: DPsim::Interface = None) -&gt; None</p></li>
 </ol>
 </dd></dl>
 
@@ -677,7 +677,7 @@ and to parameterize all components of the network from Python.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="dpsimpy.Simulation.import_attr">
-<span class="sig-name descname"><span class="pre">import_attr</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><a class="reference internal" href="#dpsimpy.Simulation" title="dpsimpy.Simulation"><span class="pre">dpsimpy.Simulation</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">obj</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">attr</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">idx</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#dpsimpy.Simulation.import_attr" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">import_attr</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">self:</span> <span class="pre">dpsimpy.Simulation</span></em>, <em class="sig-param"><span class="pre">obj:</span> <span class="pre">str</span></em>, <em class="sig-param"><span class="pre">attr:</span> <span class="pre">str</span></em>, <em class="sig-param"><span class="pre">idx:</span> <span class="pre">int</span></em>, <em class="sig-param"><span class="pre">intf:</span> <span class="pre">DPsim::Interface</span> <span class="pre">=</span> <span class="pre">None</span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#dpsimpy.Simulation.import_attr" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
