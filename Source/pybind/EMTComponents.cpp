@@ -127,12 +127,11 @@ void addEMTPh3Components(py::module_ mEMTPh3) {
         .def(py::init<std::string, CPS::Logger::Level>(), "name"_a, "loglevel"_a = CPS::Logger::Level::off)
 		.def("set_parameters_operational_per_unit", &CPS::EMT::Ph3::SynchronGeneratorDQTrapez::setParametersOperationalPerUnit,
 			"nom_power"_a, "nom_volt"_a, "nom_freq"_a, "pole_number"_a, "nom_field_cur"_a, "Rs"_a, "Ld"_a, "Lq"_a, "Ld_t"_a, "Lq_t"_a, "Ld_s"_a,
-			"Lq_s"_a, "Ll"_a, "Td0_t"_a, "Tq0_t"_a, "Td0_s"_a, "Tq0_s"_a, "inertia"_a, "init_active_power"_a, "init_reactive_power"_a,
-			"init_terminal_volt"_a, "init_volt_angle"_a, "init_field_voltage"_a, "init_mech_power"_a)
+			"Lq_s"_a, "Ll"_a, "Td0_t"_a, "Tq0_t"_a, "Td0_s"_a, "Tq0_s"_a, "inertia"_a)
 		.def("set_parameters_fundamental_per_unit", &CPS::EMT::Ph3::SynchronGeneratorDQTrapez::setParametersFundamentalPerUnit,
 			"nom_power"_a, "nom_volt"_a, "nom_freq"_a, "pole_number"_a, "nom_field_cur"_a, "Rs"_a, "Ll"_a, "Lmd"_a, "Lmq"_a, "Rfd"_a, "Llfd"_a,
 			"Rkd"_a, "Llkd"_a, "Rkq1"_a, "Llkq1"_a, "Rkq2"_a, "Llkq2"_a, "inertia"_a, "init_active_power"_a, "init_reactive_power"_a,
-			"init_terminal_volt"_a, "init_volt_angle"_a, "init_field_voltage"_a, "init_mech_power"_a)
+			"init_terminal_volt"_a, "init_volt_angle"_a, "init_mech_power"_a)
 		.def("apply_parameters_from_json", [](std::shared_ptr<CPS::EMT::Ph3::SynchronGeneratorDQTrapez> syngen, const CPS::String json) {
 				DPsim::Utils::applySynchronousGeneratorParametersFromJson(json::parse(json), syngen);
 			});
@@ -143,16 +142,15 @@ void addEMTPh3Components(py::module_ mEMTPh3) {
         .def(py::init<std::string, CPS::Logger::Level>(), "name"_a, "loglevel"_a = CPS::Logger::Level::off)
 		.def("set_parameters_operational_per_unit", &CPS::EMT::Ph3::SynchronGeneratorDQODE::setParametersOperationalPerUnit,
 			"nom_power"_a, "nom_volt"_a, "nom_freq"_a, "pole_number"_a, "nom_field_cur"_a, "Rs"_a, "Ld"_a, "Lq"_a, "Ld_t"_a, "Lq_t"_a, "Ld_s"_a,
-			"Lq_s"_a, "Ll"_a, "Td0_t"_a, "Tq0_t"_a, "Td0_s"_a, "Tq0_s"_a, "inertia"_a, "init_active_power"_a, "init_reactive_power"_a,
-			"init_terminal_volt"_a, "init_volt_angle"_a, "init_field_voltage"_a, "init_mech_power"_a)
+			"Lq_s"_a, "Ll"_a, "Td0_t"_a, "Tq0_t"_a, "Td0_s"_a, "Tq0_s"_a, "inertia"_a)
 		.def("set_parameters_fundamental_per_unit", &CPS::EMT::Ph3::SynchronGeneratorDQODE::setParametersFundamentalPerUnit,
 			"nom_power"_a, "nom_volt"_a, "nom_freq"_a, "pole_number"_a, "nom_field_cur"_a, "Rs"_a, "Ll"_a, "Lmd"_a, "Lmq"_a, "Rfd"_a, "Llfd"_a,
 			"Rkd"_a, "Llkd"_a, "Rkq1"_a, "Llkq1"_a, "Rkq2"_a, "Llkq2"_a, "inertia"_a, "init_active_power"_a, "init_reactive_power"_a,
-			"init_terminal_volt"_a, "init_volt_angle"_a, "init_field_voltage"_a, "init_mech_power"_a)
+			"init_terminal_volt"_a, "init_volt_angle"_a, "init_mech_power"_a)
 		.def("apply_parameters_from_json", [](std::shared_ptr<CPS::EMT::Ph3::SynchronGeneratorDQODE> syngen, const CPS::String json) {
 				DPsim::Utils::applySynchronousGeneratorParametersFromJson(json::parse(json), syngen);
 			});
-			
+
 	#endif
 
 	py::class_<CPS::EMT::Ph3::AvVoltageSourceInverterDQ, std::shared_ptr<CPS::EMT::Ph3::AvVoltageSourceInverterDQ>, CPS::SimPowerComp<CPS::Real>>(mEMTPh3, "AvVoltageSourceInverterDQ", py::multiple_inheritance())
@@ -172,7 +170,7 @@ void addEMTPh3Components(py::module_ mEMTPh3) {
 	py::class_<CPS::EMT::Ph3::Transformer, std::shared_ptr<CPS::EMT::Ph3::Transformer>, CPS::SimPowerComp<CPS::Real>>(mEMTPh3, "Transformer", py::multiple_inheritance())
         .def(py::init<std::string, CPS::Logger::Level>(), "name"_a, "loglevel"_a = CPS::Logger::Level::off)
 		.def(py::init<std::string, std::string, CPS::Logger::Level, CPS::Bool>(), "uid"_a, "name"_a, "loglevel"_a = CPS::Logger::Level::off, "with_resistive_losses"_a = false) // cppcheck-suppress assignBoolToPointer
-		.def("set_parameters", &CPS::EMT::Ph3::Transformer::setParameters, "nom_voltage_end_1"_a, "nom_voltage_end_2"_a, "ratio_abs"_a, "ratio_phase"_a, "resistance"_a, "inductance"_a)
+		.def("set_parameters", &CPS::EMT::Ph3::Transformer::setParameters, "nom_voltage_end_1"_a, "nom_voltage_end_2"_a, "rated_power"_a, "ratio_abs"_a, "ratio_phase"_a, "resistance"_a, "inductance"_a)
 		.def("connect", &CPS::EMT::Ph3::Transformer::connect);
 
 	py::class_<CPS::EMT::Ph3::SeriesResistor, std::shared_ptr<CPS::EMT::Ph3::SeriesResistor>, CPS::SimPowerComp<CPS::Real>>(mEMTPh3, "SeriesResistor", py::multiple_inheritance())
