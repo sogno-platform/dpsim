@@ -60,9 +60,6 @@ build:linux-cgmes:
     - make -j 32
   image: ${DOCKER_IMAGE_DEV}:${DOCKER_TAG}-cgmes
   cache:
-    paths:
-      - build
-    key: build-linux-cgmes
   artifacts:
     paths:
       - build
@@ -96,9 +93,6 @@ build:linux-profiling:
     - make -j 32
   image: ${DOCKER_IMAGE_DEV}-centos:${DOCKER_TAG}
   cache:
-       paths:
-        - build
-       key: build-linux-profiling
   artifacts:
     paths:
       - build
@@ -120,9 +114,6 @@ build:linux-cuda:
     - cmake -DWITH_CUDA=ON -DWITH_SPARSE=ON -DWITH_SPDLOG_SUBMODULE=ON -DWITH_MAGMA=ON ..
     - make -j$(nproc)
   cache:
-    paths:
-      - build
-    key: build-linux-cuda-sparse
 
 # moved to GitHub actions
 #build:windows:

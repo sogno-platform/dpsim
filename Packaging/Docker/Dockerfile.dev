@@ -1,4 +1,4 @@
-FROM fedora:32
+FROM fedora:34
 
 ARG VILLAS_VERSION=0.8.0
 ARG CIM_VERSION=CGMES_2.4.15_16FEB2016
@@ -37,8 +37,7 @@ RUN dnf --refresh -y install \
 	graphviz-devel \
 	gsl-devel \
 	spdlog-devel \
-	fmt-devel \
-	pybind11-devel
+	fmt-devel
 
 ## Build & Install fmtlib
 #RUN cd /tmp && \
@@ -87,6 +86,7 @@ RUN dnf -y install \
 
 # Python dependencies
 ADD requirements.txt .
+RUN pip3 install wheel
 RUN pip3 install -r requirements.txt
 
 # Install CIMpp from source
@@ -100,7 +100,7 @@ RUN cd /tmp && \
 RUN cd /tmp && \
 	git -c submodule.fpga.update=none clone --recursive https://git.rwth-aachen.de/acs/public/villas/node.git villasnode && \	
 	mkdir -p villasnode/build && cd villasnode/build && \
-	git checkout 5f6a28ca && git -c submodule.fpga.update=none submodule update --recursive && \
+	git -c submodule.fpga.update=none checkout dpsim-villas && git -c submodule.fpga.update=none submodule update --recursive && \
 	cmake -DCMAKE_INSTALL_LIBDIR=/usr/local/lib64 .. && make -j$(nproc) install && \
 	rm -rf /tmp/villasnode
 
