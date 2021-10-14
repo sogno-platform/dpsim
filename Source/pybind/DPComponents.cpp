@@ -160,8 +160,7 @@ void addDPPh3Components(py::module_ mDPPh3) {
 				"nom_power"_a, "nom_volt"_a, "nom_freq"_a, "pole_number"_a, "nom_field_cur"_a,
 				"Rs"_a, "Ll"_a, "Lmd"_a, "Lmq"_a, "Rfd"_a, "Llfd"_a, "Rkd"_a, "Llkd"_a,
 				"Rkq1"_a, "Llkq1"_a, "Rkq2"_a, "Llkq2"_a, "inertia"_a, "init_active_power"_a,
-				"init_reactive_power"_a, "init_terminal_volt"_a, "init_volt_angle"_a,
-				"init_field_voltage"_a, "init_mech_power"_a)
+				"init_reactive_power"_a, "init_terminal_volt"_a, "init_volt_angle"_a, "init_mech_power"_a)
 		.def("connect", &CPS::DP::Ph3::SynchronGeneratorDQODE::connect);
 
 	#endif
@@ -172,8 +171,7 @@ void addDPPh3Components(py::module_ mDPPh3) {
 				"nom_power"_a, "nom_volt"_a, "nom_freq"_a, "pole_number"_a, "nom_field_cur"_a,
 				"Rs"_a, "Ll"_a, "Lmd"_a, "Lmq"_a, "Rfd"_a, "Llfd"_a, "Rkd"_a, "Llkd"_a,
 				"Rkq1"_a, "Llkq1"_a, "Rkq2"_a, "Llkq2"_a, "inertia"_a, "init_active_power"_a,
-				"init_reactive_power"_a, "init_terminal_volt"_a, "init_volt_angle"_a,
-				"init_field_voltage"_a, "init_mech_power"_a)
+				"init_reactive_power"_a, "init_terminal_volt"_a, "init_volt_angle"_a, "init_mech_power"_a)
 		.def("connect", &CPS::DP::Ph3::SynchronGeneratorDQTrapez::connect);
 
 	py::class_<CPS::DP::Ph3::SeriesResistor, std::shared_ptr<CPS::DP::Ph3::SeriesResistor>, CPS::SimPowerComp<CPS::Complex>>(mDPPh3, "SeriesResistor", py::multiple_inheritance())
