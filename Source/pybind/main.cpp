@@ -59,6 +59,10 @@ PYBIND11_MODULE(dpsimpy, m) {
 	m.attr("RMS3PH_TO_PEAK1PH") = RMS3PH_TO_PEAK1PH;
 	m.attr("PEAK1PH_TO_RMS3PH") = PEAK1PH_TO_RMS3PH;
 
+	py::enum_<DPsim::Solver::Behaviour>(m, "SolverBehaviour")
+		.value("Initialization", DPsim::Solver::Behaviour::Initialization)
+		.value("Simulation", DPsim::Solver::Behaviour::Simulation);
+
     py::class_<DPsim::Simulation>(m, "Simulation")
 	    .def(py::init<std::string, CPS::Logger::Level>(), "name"_a, "loglevel"_a = CPS::Logger::Level::off)
 		.def("name", &DPsim::Simulation::name)
@@ -85,7 +89,8 @@ PYBIND11_MODULE(dpsimpy, m) {
 		.def("do_steady_state_init", &DPsim::Simulation::doSteadyStateInit)
 		.def("do_frequency_parallelization", &DPsim::Simulation::doFrequencyParallelization)
 		.def("set_tearing_components", &DPsim::Simulation::setTearingComponents)
-		.def("add_event", &DPsim::Simulation::addEvent);
+		.def("add_event", &DPsim::Simulation::addEvent)
+		.def("set_solver_component_behaviour", &DPsim::Simulation::setSolverAndComponentBehaviour);
 
 	py::class_<DPsim::RealTimeSimulation, DPsim::Simulation>(m, "RealTimeSimulation")
 		.def(py::init<std::string, CPS::Logger::Level>(), "name"_a, "loglevel"_a = CPS::Logger::Level::info)
