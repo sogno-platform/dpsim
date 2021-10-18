@@ -24,12 +24,12 @@ jobs:
     - name: Configure CMake
       shell: bash
       working-directory: ${{ github.workspace }}/build
-      run: cmake $GITHUB_WORKSPACE
+      run: cmake -DCIM_VERSION=CGMES_2.4.15_16FEB2016 $GITHUB_WORKSPACE
 
     - name: Build every target
       shell: bash
       working-directory: ${{ github.workspace }}/build
-      run: cmake -DCIM_VERSION=CGMES_2.4.15_16FEB2016 --build .
+      run: cmake --build .
       env:
         MAKEFLAGS: "-j2"
 
