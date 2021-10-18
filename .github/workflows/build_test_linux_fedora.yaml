@@ -29,7 +29,7 @@ jobs:
     - name: Build every target
       shell: bash
       working-directory: ${{ github.workspace }}/build
-      run: cmake --build .
+      run: cmake -DCIM_VERSION=CGMES_2.4.15_16FEB2016 --build .
       env:
         MAKEFLAGS: "-j2"
 
@@ -40,12 +40,11 @@ jobs:
         key: build-cache-fedora-${{ github.sha }}
 
 ## Tests ##
-
-  test-binaries:
-    name: Execute Example
+  test-jupyter-notebooks:
+    name: Run pytest over all notebooks
     runs-on: ubuntu-latest
-    container: sogno/dpsim:dev
     needs: [linux-fedora]
+    container: sogno/dpsim:dev
     steps:
     - name: Checkout
       uses: actions/checkout@v2
@@ -55,6 +54,61 @@ jobs:
       with:
         path: ${{ github.workspace }}/build
         key: build-cache-fedora-${{ github.sha }}
+    
+    - name: Run pytest
+      shell: bash
+      working-directory: ${{ github.workspace }}
+      env:
+        PYTHONPATH: "${{ github.workspace }}/build"
+      run: pytest -v Examples/Notebooks
+    
+    - name: Archive notebook outputs
+      uses: actions/upload-artifact@v2
+      with:
+        name: pytest-output
+        path: outputs/Examples/Notebooks/
 
-    - name: Run Binaries
-      run: ./build/Examples/Cxx/WSCC_9bus_mult_coupled
+  test-binaries:
+    name: Execute Example
+    runs-on: ubuntu-latest
+    container: sogno/dpsim:dev
+    needs: [linux-fedora]
+    steps:
+    - name: Restore Cache
+      uses: actions/cache@v2
+      with:
+        path: ${{ github.workspace }}/build
+        key: build-cache-fedora-${{ github.sha }}
+
+    - name: Run Binaries 1/2
+      run: ${{ github.workspace }}/build/Examples/Cxx/WSCC_9bus_mult_coupled
+
+    - name: Run Binaries 2/2
+      run: ${{ github.workspace }}/build/Examples/Cxx/WSCC_9bus_mult_decoupled
+
+  cpp-check:
+    name: Scan Sourcecode with Cppcheck
+    runs-on: ubuntu-latest
+    container: sogno/dpsim:dev
+    #needs: [linux-fedora]
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v2
+
+    - name: Run checks for errors
+      working-directory: ${{ github.workspace }}
+      run: cppcheck --max-configs=32 -j 32 --error-exitcode=1 -q --std=c++11 -I Include/ -I models/Include/ Source/ Examples/ models/Source/ | tee cppcheck-error.log
+
+    - name: Run checks for warnings
+      working-directory: ${{ github.workspace }}
+      run: cppcheck --max-configs=32 -j 32 --error-exitcode=1 -q --enable=warning,performance,portability,information,missingInclude --std=c++11 -I Include/ -I models/Include/ Source/ Examples/ models/Source/ | tee cppcheck-warn.log
+      continue-on-error: true
+
+    - name: Archive profiler output
+      uses: actions/upload-artifact@v2
+      if: failure()
+      with:
+        name: cppcheck-output
+        path: |
+          cppcheck-error.log
+          cppcheck-warn.log
