@@ -95,20 +95,59 @@ jobs:
     - name: Checkout
       uses: actions/checkout@v2
 
-    - name: Run checks for errors
+    - name: Run cppcheck
       working-directory: ${{ github.workspace }}
-      run: cppcheck --max-configs=32 -j 32 --error-exitcode=1 -q --std=c++11 -I Include/ -I models/Include/ Source/ Examples/ models/Source/ | tee cppcheck-error.log
-
-    - name: Run checks for warnings
-      working-directory: ${{ github.workspace }}
-      run: cppcheck --max-configs=32 -j 32 --error-exitcode=1 -q --enable=warning,performance,portability,information,missingInclude --std=c++11 -I Include/ -I models/Include/ Source/ Examples/ models/Source/ | tee cppcheck-warn.log
+      shell: bash
+      id: cppcheck
+      run: |
+        set -o pipefail
+        cppcheck --max-configs=32 -j 32 --inline-suppr --error-exitcode=1 -q --enable=warning,performance,portability,information,missingInclude --std=c++11 -I Include/ -I models/Include/ Source/pybind models/Source/DP 2>&1 | tee cppcheck-output.log
       continue-on-error: true
 
-    - name: Archive profiler output
+    - name: Print cppcheck errors
+      if: ${{ always() && steps.cppcheck.outcome == 'failure' }}
+      working-directory: ${{ github.workspace }}
+      shell: bash
+      run: (! cat cppcheck-output.log | grep -A 2 "error:")
+
+    - name: Print cppcheck warnings
+      if: ${{ always() && steps.cppcheck.outcome == 'failure' }}
+      working-directory: ${{ github.workspace }}
+      shell: bash
+      run: (! cat cppcheck-output.log | grep -A 2 "warning:")
+      continue-on-error: true
+
+    - name: Print cppcheck performance
+      if: ${{ always() && steps.cppcheck.outcome == 'failure' }}
+      working-directory: ${{ github.workspace }}
+      shell: bash
+      run: (! cat cppcheck-output.log | grep -A 2 "performance:")
+      continue-on-error: true
+
+    - name: Print cppcheck portability
+      if: ${{ always() && steps.cppcheck.outcome == 'failure' }}
+      working-directory: ${{ github.workspace }}
+      shell: bash
+      run: (! cat cppcheck-output.log | grep -A 2 "portability:")
+      continue-on-error: true
+
+    - name: Print cppcheck missingInclude
+      if: ${{ always() && steps.cppcheck.outcome == 'failure' }}
+      working-directory: ${{ github.workspace }}
+      shell: bash
+      run: (! cat cppcheck-output.log | grep -A 2 "missingInclude:")
+      continue-on-error: true
+
+    - name: Print cppcheck information
+      if: ${{ always() && steps.cppcheck.outcome == 'failure' }}
+      working-directory: ${{ github.workspace }}
+      shell: bash
+      run: (! cat cppcheck-output.log | grep -A 2 "information:")
+      continue-on-error: true
+
+    - name: Archive cppcheck output
       uses: actions/upload-artifact@v2
-      if: failure()
+      if: ${{ always() && steps.cppcheck.outcome == 'failure' }}
       with:
         name: cppcheck-output
-        path: |
-          cppcheck-error.log
-          cppcheck-warn.log
+        path: cppcheck-output.log
