@@ -101,7 +101,7 @@ jobs:
       id: cppcheck
       run: |
         set -o pipefail
-        cppcheck --max-configs=32 -j 32 --inline-suppr --error-exitcode=1 -q --enable=warning,performance,portability,information,missingInclude --std=c++11 -I Include/ -I models/Include/ Source/pybind models/Source/DP 2>&1 | tee cppcheck-output.log
+        cppcheck --max-configs=32 -j 32 --inline-suppr --error-exitcode=1 -q --enable=warning,performance,portability,information,missingInclude --std=c++11 -I Include/ -I models/Include/ Source/ Examples/ models/Source/ 2>&1 | tee cppcheck-output.log
       continue-on-error: true
 
     - name: Print cppcheck errors
@@ -143,6 +143,13 @@ jobs:
       working-directory: ${{ github.workspace }}
       shell: bash
       run: (! cat cppcheck-output.log | grep -A 2 "information:")
+      continue-on-error: true
+
+    - name: Print cppcheck notes
+      if: ${{ always() && steps.cppcheck.outcome == 'failure' }}
+      working-directory: ${{ github.workspace }}
+      shell: bash
+      run: (! cat cppcheck-output.log | grep -A 2 "note:")
       continue-on-error: true
 
     - name: Archive cppcheck output
