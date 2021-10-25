@@ -101,7 +101,7 @@ jobs:
       id: cppcheck
       run: |
         set -o pipefail
-        cppcheck --max-configs=32 -j 32 --inline-suppr --error-exitcode=1 -q --enable=warning,performance,portability,information,missingInclude --std=c++11 -I Include/ -I models/Include/ Source/ Examples/ models/Source/ 2>&1 | tee cppcheck-output.log
+        cppcheck --max-configs=32 -j 32 --inline-suppr --error-exitcode=1 -q --enable=warning,performance,portability,information,missingInclude --std=c++11 -I Include/ -I models/Include/ Source/ models/Source/ 2>&1 | tee cppcheck-output.log
       continue-on-error: true
 
     - name: Print cppcheck errors
