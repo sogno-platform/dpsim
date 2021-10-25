@@ -81,10 +81,10 @@ jobs:
         key: build-cache-fedora-${{ github.sha }}
 
     - name: Run Binaries 1/2
-      run: ${{ github.workspace }}/build/Examples/Cxx/WSCC_9bus_mult_coupled
+      run: ./build/Examples/Cxx/WSCC_9bus_mult_coupled
 
     - name: Run Binaries 2/2
-      run: ${{ github.workspace }}/build/Examples/Cxx/WSCC_9bus_mult_decoupled
+      run: ./build/Examples/Cxx/WSCC_9bus_mult_decoupled
 
   cpp-check:
     name: Scan Sourcecode with Cppcheck
