@@ -1,4 +1,4 @@
-/* Copyright 2017-2020 Institute for Automation of Complex Power Systems,
+/* Copyright 2017-2021 Institute for Automation of Complex Power Systems,
 *                     EONERC, RWTH Aachen University
 *
 * This Source Code Form is subject to the terms of the Mozilla Public
@@ -84,7 +84,7 @@ namespace DPsim {
 		std::vector<const Matrix*> mRightVectorStamps;
 		/// Solution vector of unknown quantities
 		Matrix mLeftSideVector;
-				
+
 		// #### MNA specific attributes related to harmonics / additional frequencies ####
 		/// Source vector of known quantities
 		std::vector<Matrix> mRightSideVectorHarm;
@@ -131,7 +131,7 @@ namespace DPsim {
 		void collectVirtualNodes();
 		// TODO: check if this works with AC sources
 		void steadyStateInitialization();
-		
+
 		/// Create left and right side vector
 		void createEmptyVectors();
 		/// Create system matrix
@@ -147,7 +147,7 @@ namespace DPsim {
 
 		/// Logging of system matrices and source vector
 		virtual void logSystemMatrices() = 0;
-		
+
 		/// Create a solve task for this solver implementation
 		virtual std::shared_ptr<CPS::Task> createSolveTask() = 0;
 		/// Create a solve task for this solver implementation

@@ -1,4 +1,4 @@
-/* Copyright 2017-2020 Institute for Automation of Complex Power Systems,
+/* Copyright 2017-2021 Institute for Automation of Complex Power Systems,
  *                     EONERC, RWTH Aachen University
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
@@ -131,7 +131,7 @@ namespace DPsim {
 		/// The data loggers
 		DataLogger::List mLoggers;
 
-		/// Helper function for constructors 
+		/// Helper function for constructors
 		void create();
 		/// Create solvers depending on simulation settings
 		template <typename VarType>
@@ -151,7 +151,7 @@ namespace DPsim {
 
 		/// Creates simulation with name and log level
 		Simulation(String name, CPS::Logger::Level logLevel = CPS::Logger::Level::info);
-		
+
 		/// Desctructor
 		virtual ~Simulation() { }
 
@@ -224,6 +224,10 @@ namespace DPsim {
 
 		///
 		void addInterface(Interface *eint, Bool syncStart = true) {
+			if (mInterfaces.size() > 0) {
+				mLog->warn(
+					"This simulation contains more than one interface! When using multiple InterfaceVillas instances, all of them will block the simulation thread in undefined order until the data is read / written! Continue with caution!");
+			}
 			mInterfaces.push_back({eint, syncStart});
 		}
 		/// Return list of interfaces
@@ -252,9 +256,9 @@ namespace DPsim {
 		Real getRealIdObjAttr(const String &comp, const String &attr, UInt row = 0, UInt col = 0);
 		Complex getComplexIdObjAttr(const String &comp, const String &attr, UInt row = 0, UInt col = 0);
 
-		void exportIdObjAttr(const String &comp, const String &attr, UInt idx, CPS::AttributeBase::Modifier mod, UInt row = 0, UInt col = 0);
-		void exportIdObjAttr(const String &comp, const String &attr, UInt idx, UInt row = 0, UInt col = 0, Complex scale = Complex(1, 0));
-		void importIdObjAttr(const String &comp, const String &attr, UInt idx);
+		void exportIdObjAttr(const String &comp, const String &attr, UInt idx, CPS::AttributeBase::Modifier mod, UInt row = 0, UInt col = 0, Interface* intf = nullptr);
+		void exportIdObjAttr(const String &comp, const String &attr, UInt idx, UInt row = 0, UInt col = 0, Complex scale = Complex(1, 0), Interface* intf = nullptr);
+		void importIdObjAttr(const String &comp, const String &attr, UInt idx, Interface* intf = nullptr);
 		void logIdObjAttr(const String &comp, const String &attr);
 	};
 }

@@ -1,4 +1,4 @@
-/* Copyright 2017-2020 Institute for Automation of Complex Power Systems,
+/* Copyright 2017-2021 Institute for Automation of Complex Power Systems,
  *                     EONERC, RWTH Aachen University
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
@@ -223,9 +223,9 @@ void DP::Ph1::SynchronGeneratorTrStab::step(Real time) {
 	// Mechanical speed at time step k+1 applying Euler forward
 	if (mBehaviour == Behaviour::Simulation)
 		mOmMech = mOmMech + mTimeStep * dOmMech;
-	
+
 	// Derivative of rotor angle at time step k + 1
-	// if reference omega is set, calculate delta with respect to reference 
+	// if reference omega is set, calculate delta with respect to reference
 	Real refOmega;
 	Real refDelta;
 	if (mUseOmegaRef) {
@@ -242,7 +242,7 @@ void DP::Ph1::SynchronGeneratorTrStab::step(Real time) {
 	if (mBehaviour == Behaviour::Simulation) {
 		mDelta_p = mDelta_p + mTimeStep * dDelta_p;
 		mEp = Complex(mEp_abs * cos(mDelta_p), mEp_abs * sin(mDelta_p));
-	}		
+	}
 
 	mStates << Math::abs(mEp), Math::phaseDeg(mEp), mElecActivePower, mMechPower,
 		mDelta_p, mOmMech, dOmMech, dDelta_p, mIntfVoltage(0,0).real(), mIntfVoltage(0,0).imag();

@@ -1,4 +1,4 @@
-/* Copyright 2017-2020 Institute for Automation of Complex Power Systems,
+/* Copyright 2017-2021 Institute for Automation of Complex Power Systems,
  *                     EONERC, RWTH Aachen University
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
@@ -70,7 +70,7 @@ void EMT::Ph3::SynchronGeneratorDQ::setParametersFundamentalPerUnit(
 	mSLog->info("Set initial values: \n"
 				"initActivePower: {:e}\ninitReactivePower: {:e}\ninitTerminalVolt: {:e}\n"
 				"initVoltAngle: {:e}\ninitFieldVoltage: {:e}\ninitMechPower: {:e}",
-				initActivePower, initReactivePower, initTerminalVolt, 
+				initActivePower, initReactivePower, initTerminalVolt,
 				initVoltAngle, initFieldVoltage, initMechPower);
 }
 
@@ -87,7 +87,7 @@ void EMT::Ph3::SynchronGeneratorDQ::setParametersOperationalPerUnit(
 				nomPower, nomVolt, nomFreq, nomFieldCur);
 
 	setOperationalPerUnitParameters(poleNumber, inertia,
-									Rs, Ld, Lq, Ll, 
+									Rs, Ld, Lq, Ll,
 									Ld_t, Lq_t, Ld_s, Lq_s,
 									Td0_t, Tq0_t, Td0_s, Tq0_s);
 	mSLog->info("Set operational parameters in per unit: \n"
@@ -96,7 +96,7 @@ void EMT::Ph3::SynchronGeneratorDQ::setParametersOperationalPerUnit(
 			"Ld_t: {:e}\nLq_t: {:e}\nLd_s: {:e}\nLq_s: {:e}\n"
 			"Td0_t: {:e}\nTq0_t: {:e}\nTd0_s: {:e}\nTq0_s: {:e}\n",
 			poleNumber, inertia,
-			Rs, Ld, Lq, Ll, 
+			Rs, Ld, Lq, Ll,
 			Ld_t, Lq_t, Ld_s, Lq_s,
 			Td0_t, Tq0_t, Td0_s, Tq0_s);
 
@@ -111,7 +111,7 @@ void EMT::Ph3::SynchronGeneratorDQ::setParametersOperationalPerUnit(
 	mSLog->info("Set initial values: \n"
 				"initActivePower: {:e}\ninitReactivePower: {:e}\ninitTerminalVolt: {:e}\n"
 				"initVoltAngle: {:e}\ninitFieldVoltage: {:e}\ninitMechPower: {:e}",
-				initActivePower, initReactivePower, initTerminalVolt, 
+				initActivePower, initReactivePower, initTerminalVolt,
 				initVoltAngle, initFieldVoltage, initMechPower);
 }
 
@@ -123,7 +123,7 @@ void EMT::Ph3::SynchronGeneratorDQ::applyParametersOperationalPerUnit() {
 			"Ld_t: {:e}\nLq_t: {:e}\nLd_s: {:e}\nLq_s: {:e}\n"
 			"Td0_t: {:e}\nTq0_t: {:e}\nTd0_s: {:e}\nTq0_s: {:e}\n",
 			mPoleNumber, mInertia,
-			mRs, mLd, mLq, mLl, 
+			mRs, mLd, mLq, mLl,
 			mLd_t, mLq_t, mLd_s, mLq_s,
 			mTd0_t, mTq0_t, mTd0_s, mTq0_s);
 

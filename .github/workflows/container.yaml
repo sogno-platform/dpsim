@@ -3,7 +3,7 @@ name: Container
 on:
   push:
     branches:
-      - master
+      - deploy-docker
 
 jobs:
   create-docker-centos:
@@ -12,14 +12,14 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2
 
-      - name: Login to GitLab
+      - name: Login to Docker Hub
         uses: docker/login-action@v1 
         with:
           username: ${{ secrets.DOCKERHUB_USER }}
           password: ${{ secrets.DOCKERHUB_SECRET }}
 
       - name: Build and push
-        id: docker_build
+        id: docker_build_dev_centos
         uses: docker/build-push-action@v2
         with:
          file: Packaging/Docker/Dockerfile.dev-centos
@@ -32,17 +32,37 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2
 
-      - name: Login to GitLab
+      - name: Login to Docker Hub
         uses: docker/login-action@v1 
         with:
           username: ${{ secrets.DOCKERHUB_USER }}
           password: ${{ secrets.DOCKERHUB_SECRET }}
 
       - name: Build and push
-        id: docker_build
+        id: docker_build_dev
         uses: docker/build-push-action@v2
         with:
          file: Packaging/Docker/Dockerfile.dev
          push: true
          tags: sogno/dpsim:dev
+
+  create-docker-fedora-minimal-dev:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Login to Docker Hub
+        uses: docker/login-action@v1 
+        with:
+          username: ${{ secrets.DOCKERHUB_USER }}
+          password: ${{ secrets.DOCKERHUB_SECRET }}
+
+      - name: Build and push
+        id: docker_build_dev
+        uses: docker/build-push-action@v2
+        with:
+         file: Packaging/Docker/Dockerfile.dev-minimal
+         push: true
+         tags: sogno/dpsim:dev-minimal
 

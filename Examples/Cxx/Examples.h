@@ -1,4 +1,4 @@
-/* Copyright 2017-2020 Institute for Automation of Complex Power Systems,
+/* Copyright 2017-2021 Institute for Automation of Complex Power Systems,
  *                     EONERC, RWTH Aachen University
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
@@ -22,7 +22,7 @@ namespace SynchronousGeneratorKundur {
         // Define machine parameters in per unit
         Real nomPower = 555e6;
         Real nomVoltage = 24e3; // Phase-to-Phase RMS
-        Real nomFreq = 60; 
+        Real nomFreq = 60;
         Real nomFieldCurr = 1300;
         Int poleNum = 2;
         Real H = 3.7;
@@ -105,13 +105,13 @@ namespace KundurExample1 {
     struct Line1 {
         // Vnom = 400kV
         Real lineResistance = 0.0721;
-        Real lineReactance = 36.0360; 
+        Real lineReactance = 36.0360;
         Real lineSusceptance = 0;
         Real lineConductance =0;
     };
 
     struct Transf1 {
-	    Real nomVoltageHV = 400e3; 
+	    Real nomVoltageHV = 400e3;
         Real nomVoltageMV = 400e3;
         Real transformerResistance = 0; // referred to HV side
         Real transformerReactance = 10.8108; // referred to HV side
@@ -149,7 +149,7 @@ namespace SMIB {
 
 namespace ThreeBus {
     struct ScenarioConfig {
-        
+
         //-----------Network-----------//
         Real Vnom = 230e3;
         Real nomFreq = 60;
@@ -159,24 +159,24 @@ namespace ThreeBus {
         Real nomPower_G1 = 300e6;
         Real nomPhPhVoltRMS_G1 = 25e3;
         Real nomFreq_G1 = 60;
-        Real H_G1 = 6; 
+        Real H_G1 = 6;
         Real Xpd_G1=0.3; //in p.u
         Real Rs_G1 = 0.003*0; //in p.u
-        Real D_G1 = 1.5; //in p.u 
-        // Initialization parameters 
+        Real D_G1 = 1.5; //in p.u
+        // Initialization parameters
         Real initActivePower_G1 = 270e6;
         Real initMechPower_G1 = 270e6;
         Real setPointVoltage_G1=nomPhPhVoltRMS_G1+0.05*nomPhPhVoltRMS_G1;
-        
+
         //-----------Generator 2 (bus2)-----------//
         Real nomPower_G2 = 50e6;
         Real nomPhPhVoltRMS_G2 = 13.8e3;
         Real nomFreq_G2 = 60;
-        Real H_G2 = 2; 
+        Real H_G2 = 2;
         Real Xpd_G2=0.1; //in p.u
         Real Rs_G2 = 0.003*0; //in p.u
         Real D_G2 =1.5; //in p.u
-        // Initialization parameters 
+        // Initialization parameters
         Real initActivePower_G2 = 45e6;
         Real initMechPower_G2 = 45e6;
         Real setPointVoltage_G2=nomPhPhVoltRMS_G2-0.05*nomPhPhVoltRMS_G2;

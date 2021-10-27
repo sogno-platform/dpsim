@@ -3,9 +3,10 @@ nbsphinx
 sphinx_rtd_theme
 
 pytest-runner
-wheel
 pytest
 pyyaml
+pybind11[global]
 
 villas-dataprocessing>=0.2.6
+villas-node
 progressbar2

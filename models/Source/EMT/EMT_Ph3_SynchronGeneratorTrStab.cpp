@@ -1,4 +1,4 @@
-/* Copyright 2017-2020 Institute for Automation of Complex Power Systems,
+/* Copyright 2017-2021 Institute for Automation of Complex Power Systems,
  *                     EONERC, RWTH Aachen University
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
@@ -36,7 +36,7 @@ EMT::Ph3::SynchronGeneratorTrStab::SynchronGeneratorTrStab(String uid, String na
 	setTerminalNumber(1);
 	mIntfVoltage = Matrix::Zero(3,1);
 	mIntfCurrent = Matrix::Zero(3,1);
-	
+
 
 	// Register attributes
 	addAttribute<Complex>("Ep", &mEp, Flags::read);
@@ -100,7 +100,7 @@ void EMT::Ph3::SynchronGeneratorTrStab::setStandardParametersSI(Real nomPower, R
 				"\ninductance: {:f}", mXpd, mLpd);
 }
 
-void EMT::Ph3::SynchronGeneratorTrStab::setStandardParametersPU(Real nomPower, Real nomVolt, Real nomFreq, Real Xpd, 
+void EMT::Ph3::SynchronGeneratorTrStab::setStandardParametersPU(Real nomPower, Real nomVolt, Real nomFreq, Real Xpd,
 	Real inertia, Real Rs, Real D) {
 	setBaseParameters(nomPower, nomVolt, nomFreq);
 
@@ -133,14 +133,14 @@ void EMT::Ph3::SynchronGeneratorTrStab::initializeFromNodesAndTerminals(Real fre
 
 	// Initialize omega mech with nominal system frequency
 	mOmMech = mNomOmega;
-	
+
 	mInitElecPower = (mInitElecPower == Complex(0,0))
 		? -terminal(0)->singlePower()
 		: mInitElecPower;
 	mInitMechPower = (mInitElecPower == Complex(0,0))
 		? mInitElecPower.real()
 		: mInitMechPower;
-	
+
 	// use complex interface quantities for initialization calculations
 	MatrixComp intfVoltageComplex = MatrixComp::Zero(3, 1);
 	MatrixComp intfCurrentComplex = MatrixComp::Zero(3, 1);
@@ -172,7 +172,7 @@ void EMT::Ph3::SynchronGeneratorTrStab::initializeFromNodesAndTerminals(Real fre
 	// mElecActivePower = ( (mEp - mIntfVoltage(0,0)) / mImpedance *  mIntfVoltage(0,0) ).real();
 	// For infinite power bus
 	// mElecActivePower = (Math::abs(mEp) * Math::abs(mIntfVoltage(0,0)) / mXpd) * sin(mDelta_p);
-	
+
 	// Start in steady state so that electrical and mech. power are the same
 	// because of the initial condition mOmMech = mNomOmega the damping factor is not considered at the initialisation
 	mMechPower = mElecActivePower- mKd*(mOmMech - mNomOmega);
@@ -215,7 +215,7 @@ void EMT::Ph3::SynchronGeneratorTrStab::step(Real time) {
 	// #### Calculations on input of time step k ####
 	// Transform interface quantities to synchronously rotating DQ reference frame
 	Matrix intfVoltageDQ = parkTransformPowerInvariant(mThetaN, mIntfVoltage);
-	Matrix intfCurrentDQ = parkTransformPowerInvariant(mThetaN, mIntfCurrent);	
+	Matrix intfCurrentDQ = parkTransformPowerInvariant(mThetaN, mIntfCurrent);
 	// Update electrical power (minus sign to calculate generated power from consumed current)
 	mElecActivePower = - 1. * (intfVoltageDQ(0, 0)*intfCurrentDQ(0, 0) + intfVoltageDQ(1, 0)*intfCurrentDQ(1, 0));
 

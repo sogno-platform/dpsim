@@ -1,3 +1,11 @@
+/* Copyright 2017-2021 Institute for Automation of Complex Power Systems,
+ *                     EONERC, RWTH Aachen University
+ *
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at https://mozilla.org/MPL/2.0/.
+ *********************************************************************************/
+
 #include <DPsim.h>
 #include "../Examples.h"
 
@@ -34,7 +42,7 @@ void SP_1ph_SynGenTrStab_Fault(String simName, Real timeStep, Real finalTime, bo
 	extnetPF->setParameters(smib.Vnom);
 	extnetPF->setBaseVoltage(smib.Vnom);
 	extnetPF->modifyPowerFlowBusType(PowerflowBusType::VD);
-	
+
 	//Line
 	auto linePF = SP::Ph1::PiLine::make("PiLine", Logger::Level::debug);
 	linePF->setParameters(smib.lineResistance, smib.lineInductance, smib.lineCapacitance, smib.lineConductance);
@@ -73,7 +81,7 @@ void SP_1ph_SynGenTrStab_Fault(String simName, Real timeStep, Real finalTime, bo
 	// ----- Dynamic simulation ------
 	String simNameSP = simName + "_SP";
 	Logger::setLogDir("logs/"+simNameSP);
-	
+
 	// Nodes
 	auto n1SP = SimNode<Complex>::make("n1", PhaseType::Single);
 	auto n2SP = SimNode<Complex>::make("n2", PhaseType::Single);
@@ -92,7 +100,7 @@ void SP_1ph_SynGenTrStab_Fault(String simName, Real timeStep, Real finalTime, bo
 	// Line
 	auto lineSP = SP::Ph1::PiLine::make("PiLine", Logger::Level::debug);
 	lineSP->setParameters(smib.lineResistance, smib.lineInductance, smib.lineCapacitance, smib.lineConductance);
-	
+
 	// //Switch
 	// auto faultSP = SP::Ph1::Switch::make("Br_fault", Logger::Level::debug);
 	// faultSP->setParameters(SwitchOpen, SwitchClosed);
@@ -159,14 +167,14 @@ void SP_1ph_SynGenTrStab_Fault(String simName, Real timeStep, Real finalTime, bo
 
 		auto sw2 = SwitchEvent::make(endTimeFault, faultSP, false);
 		simSP.addEvent(sw2);
-	
+
 	}
 
 	simSP.run();
 }
 
-int main(int argc, char* argv[]) {	
-		
+int main(int argc, char* argv[]) {
+
 
 	//Simultion parameters
 	String simName="SP_SynGenTrStab_SMIB_Fault";
@@ -188,7 +196,7 @@ int main(int argc, char* argv[]) {
 		if (args.options.find("SCALEINERTIA") != args.options.end())
 			cmdInertia = args.options["SCALEINERTIA"];
 		if (args.options.find("SCALEDAMPING") != args.options.end())
-			cmdDamping = args.options["SCALEDAMPING"];	
+			cmdDamping = args.options["SCALEDAMPING"];
 		if (args.options.find("STARTTIMEFAULT") != args.options.end())
 			startTimeFault = args.options["STARTTIMEFAULT"];
 		if (args.options.find("ENDTIMEFAULT") != args.options.end())

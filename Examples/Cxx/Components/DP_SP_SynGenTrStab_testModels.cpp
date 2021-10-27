@@ -1,6 +1,12 @@
+/* Copyright 2017-2021 Institute for Automation of Complex Power Systems,
+ *                     EONERC, RWTH Aachen University
+ *
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at https://mozilla.org/MPL/2.0/.
+ *********************************************************************************/
 
 #include <DPsim.h>
-
 
 using namespace DPsim;
 using namespace CPS;
@@ -8,7 +14,7 @@ using namespace CPS;
 // Define machine parameters in per unit
 Real nomPower = 555e6;
 Real nomPhPhVoltRMS = 24e3;
-Real nomFreq = 60; 
+Real nomFreq = 60;
 Real nomFieldCurr = 1300;
 Int poleNum = 2;
 Real H = 3.7;
@@ -40,7 +46,7 @@ Real fieldVoltage = 7.0821;
 // Real lineConductance =1e-2;
 
 
-// 
+//
 Real lineResistance = 0.073;
 Real lineInductance = 0.518/377;
 Real lineCapacitance = 0.032/377;
@@ -62,7 +68,7 @@ Real BreakerClosed = 0.005;
 Real Vnom = nomPhPhVoltRMS;
 // Slack voltage: 24kV
 Real Vslack = Vnom;
-//Synchronous generator 
+//Synchronous generator
 Real ratedApparentPower=555e6;
 Real ratedVoltage=Vnom;
 Real setPointActivePower=300e6;
@@ -123,10 +129,10 @@ void SP_1ph_SynGenTrStab_Fault(Real timeStep, Real finalTime, bool startFaultEve
 	simPF.addLogger(loggerPF);
 	simPF.run();
 
-	// ----- Dynamic simulation ------	
+	// ----- Dynamic simulation ------
 	String simName = "SP_1ph_SynGenTrStab_Fault";
 	Logger::setLogDir("logs/"+simName);
-	
+
 	// Nodes
 	auto n1 = SimNode<Complex>::make("n1", PhaseType::Single);
 	auto n2 = SimNode<Complex>::make("n2", PhaseType::Single);
@@ -139,10 +145,10 @@ void SP_1ph_SynGenTrStab_Fault(Real timeStep, Real finalTime, bool startFaultEve
 	//Grid bus as Slack
 	auto extnet = SP::Ph1::NetworkInjection::make("Slack", Logger::Level::debug);
 
-	// Line 
+	// Line
 	auto line = SP::Ph1::PiLine::make("PiLine", Logger::Level::debug);
 	line->setParameters(lineResistance, lineInductance, lineCapacitance, lineConductance);
-	
+
 	//Breaker
 	auto fault = CPS::SP::Ph1::Switch::make("Br_fault", Logger::Level::debug);
 	fault->setParameters(BreakerOpen, BreakerClosed);
@@ -192,7 +198,7 @@ void SP_1ph_SynGenTrStab_Fault(Real timeStep, Real finalTime, bool startFaultEve
 
 		auto sw2 = SwitchEvent::make(endTimeFault, fault, false);
 		sim.addEvent(sw2);
-	
+
 	}
 
 	sim.run();
@@ -255,7 +261,7 @@ void DP_1ph_SynGenTrStab_Fault(Real timeStep, Real finalTime, bool startFaultEve
 	// ----- Dynamic simulation ------
 	String simName = "DP_1ph_SynGenTrStab_Fault";
 	Logger::setLogDir("logs/"+simName);
-	
+
 	// Nodes
 	auto n1 = SimNode<Complex>::make("n1", PhaseType::Single);
 	auto n2 = SimNode<Complex>::make("n2", PhaseType::Single);
@@ -268,10 +274,10 @@ void DP_1ph_SynGenTrStab_Fault(Real timeStep, Real finalTime, bool startFaultEve
 	//Grid bus as Slack
 	auto extnet = DP::Ph1::NetworkInjection::make("Slack", Logger::Level::debug);
 
-	// Line 
+	// Line
 	auto line = DP::Ph1::PiLine::make("PiLine", Logger::Level::debug);
 	line->setParameters(lineResistance, lineInductance, lineCapacitance, lineConductance);
-	
+
 	//Breaker
 	auto fault = CPS::DP::Ph1::Switch::make("Br_fault", Logger::Level::debug);
 	fault->setParameters(BreakerOpen, BreakerClosed);
@@ -321,13 +327,13 @@ void DP_1ph_SynGenTrStab_Fault(Real timeStep, Real finalTime, bool startFaultEve
 
 		auto sw2 = SwitchEvent::make(endTimeFault, fault, false);
 		sim.addEvent(sw2);
-	
+
 	}
 
 	sim.run();
 }
 
-int main(int argc, char* argv[]) {		
+int main(int argc, char* argv[]) {
 
 	//Simultion parameters
 	Real finalTime = 5;
@@ -345,5 +351,5 @@ int main(int argc, char* argv[]) {
 	DP_1ph_SynGenTrStab_Fault(timeStep, finalTime,startFaultEvent, endFaultEvent, startTimeFault, endTimeFault);
 
 	//change file names DP_SP_...
-	
+
 }

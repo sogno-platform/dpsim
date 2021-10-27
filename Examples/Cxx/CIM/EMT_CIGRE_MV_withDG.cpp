@@ -1,3 +1,11 @@
+/* Copyright 2017-2021 Institute for Automation of Complex Power Systems,
+ *                     EONERC, RWTH Aachen University
+ *
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at https://mozilla.org/MPL/2.0/.
+ *********************************************************************************/
+
 #include "cps/CIM/Reader.h"
 #include <DPsim.h>
 #include <cps/CSVReader.h>
@@ -16,9 +24,8 @@ int main(int argc, char** argv){
 	std::list<fs::path> filenames;
 	Real timeStep;
 	Real finalTime;
-		
+
 	// Set remaining simulation parameters using default values or command line infos
-	std::cout<<std::experimental::filesystem::current_path()<<std::endl;
 	CommandLineArgs args(argc, argv);
 	if (argc <= 1) {
 		filenames = DPsim::Utils::findFiles({
@@ -35,7 +42,7 @@ int main(int argc, char** argv){
 		timeStep = args.timeStep;
 		finalTime = args.duration;
 	}
-	
+
 	// ----- POWERFLOW FOR INITIALIZATION -----
 	// read original network topology
 	String simNamePF = simName + "_Powerflow";
@@ -62,7 +69,7 @@ int main(int argc, char** argv){
     simPF.addLogger(loggerPF);
     simPF.run();
 
-	
+
 	// ----- DYNAMIC SIMULATION -----
 	Logger::setLogDir("logs/" + simName);
 	CIM::Reader reader2(simName, Logger::Level::debug, Logger::Level::debug);
@@ -81,13 +88,13 @@ int main(int argc, char** argv){
 		if (dynamic_pointer_cast<CPS::EMT::Ph3::PiLine>(comp))
 			logger->addAttribute(comp->name() + ".I", comp->attribute("i_intf"));
 	}
-	
+
 	// log load currents
 	for (auto comp : systemEMT.mComponents) {
 		if (dynamic_pointer_cast<CPS::EMT::Ph3::RXLoad>(comp))
 			logger->addAttribute(comp->name() + ".I", comp->attribute("i_intf"));
 	}
-	
+
 	// log output of PV connected at N11
 	auto pv = systemEMT.component<CPS::SimPowerComp<Real>>("pv_N11");
 	Examples::Grids::CIGREMV::logPVAttributes(logger, pv);
@@ -101,6 +108,6 @@ int main(int argc, char** argv){
 	sim.doInitFromNodesAndTerminals(true);
 	sim.doSteadyStateInit(false);
 	sim.addLogger(logger);
-	
+
 	sim.run();
 }

@@ -1,4 +1,4 @@
-/* Copyright 2017-2020 Institute for Automation of Complex Power Systems,
+/* Copyright 2017-2021 Institute for Automation of Complex Power Systems,
  *                     EONERC, RWTH Aachen University
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
@@ -45,7 +45,7 @@ void DP::Ph1::NetworkInjection::setParameters(Complex voltageRef, Real srcFreq) 
 	setAttributeRef("f_src", mSubVoltageSource->attribute<Real>("f_src"));
 
 	mSLog->info("\nVoltage Ref={:s} [V]"
-				"\nFrequency={:s} [Hz]", 
+				"\nFrequency={:s} [Hz]",
 				Logger::phasorToString(voltageRef),
 				Logger::realToString(srcFreq));
 }
@@ -54,12 +54,12 @@ void DP::Ph1::NetworkInjection::setParameters(Complex initialPhasor, Real freqSt
 	mParametersSet = true;
 
 	mSubVoltageSource->setParameters(initialPhasor, freqStart, rocof, timeStart, duration, useAbsoluteCalc);
-	
+
 	setAttributeRef("V_ref", mSubVoltageSource->attribute<Complex>("V_ref"));
 	setAttributeRef("f_src", mSubVoltageSource->attribute<Real>("f_src"));
 
 	mSLog->info("\nVoltage Ref={:s} [V]"
-				"\nFrequency={:s} [Hz]", 
+				"\nFrequency={:s} [Hz]",
 				Logger::phasorToString(initialPhasor),
 				Logger::realToString(freqStart));
 }
@@ -68,12 +68,12 @@ void DP::Ph1::NetworkInjection::setParameters(Complex initialPhasor, Real modula
 	mParametersSet = true;
 
 	mSubVoltageSource->setParameters(initialPhasor, modulationFrequency, modulationAmplitude, baseFrequency, zigzag);
-	
+
 	setAttributeRef("V_ref", mSubVoltageSource->attribute<Complex>("V_ref"));
 	setAttributeRef("f_src", mSubVoltageSource->attribute<Real>("f_src"));
 
 	mSLog->info("\nVoltage Ref={:s} [V]"
-				"\nFrequency={:s} [Hz]", 
+				"\nFrequency={:s} [Hz]",
 				Logger::phasorToString(initialPhasor),
 				Logger::realToString(baseFrequency));
 }
@@ -81,7 +81,7 @@ void DP::Ph1::NetworkInjection::setParameters(Complex initialPhasor, Real modula
 void DP::Ph1::NetworkInjection::initializeFromNodesAndTerminals(Real frequency) {
 	// Connect electrical subcomponents
 	mSubVoltageSource->connect({ SimNode::GND, node(0) });
-	
+
 	// Initialize electrical subcomponents
 	for (auto subcomp: mSubComponents) {
 		subcomp->initialize(mFrequencies);

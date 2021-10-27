@@ -10,10 +10,9 @@ variables:
 stages:
   - prepare
   - build
-  - compile
   - test
   - generate
-  - deploy
+#  - deploy
 
 .docker-fedora-template: &docker-fedora-template
   stage: prepare
@@ -27,17 +26,18 @@ stages:
   tags:
     - docker
 
-docker:fedora-cim:
-  <<: *docker-fedora-template
-  variables:
-    TAGS:       --tag ${DOCKER_IMAGE_DEV}:${CI_COMMIT_REF_NAME}-cim
-    BUILD_ARGS: --build-arg CIM_VERSION=IEC61970_16v29a
-
 docker:fedora-cgmes:
   <<: *docker-fedora-template
   variables:
     TAGS:        --tag ${DOCKER_IMAGE_DEV}:${CI_COMMIT_REF_NAME}-cgmes --tag ${DOCKER_IMAGE_DEV}:latest
     BUILD_ARGS:  --build-arg CIM_VERSION=CGMES_2.4.15_16FEB2016
+
+# CGMES is the preferred CIM flavor
+#docker:fedora-cim:
+#  <<: *docker-fedora-template
+#  variables:
+#    TAGS:       --tag ${DOCKER_IMAGE_DEV}:${CI_COMMIT_REF_NAME}-cim
+#    BUILD_ARGS: --build-arg CIM_VERSION=IEC61970_16v29a
 
 docker:centos:
   stage: prepare
@@ -47,25 +47,6 @@ docker:centos:
         --file Packaging/Docker/Dockerfile.dev-centos
         --tag ${DOCKER_IMAGE_DEV}-centos:${DOCKER_TAG}
         --tag ${DOCKER_IMAGE_DEV}-centos:latest .
-  tags:
-    - docker
-
-build:linux-cim:
-  stage: build
-  needs: ["docker:fedora-cim"]
-  script:
-    - mkdir -p build
-    - cd build
-    - cmake -DCIM_VERSION=IEC61970_16v29a ..
-    - make -j 32
-  image: ${DOCKER_IMAGE_DEV}:${DOCKER_TAG}-cim
-  cache:
-    paths:
-      - build
-    key: build-linux
-  artifacts:
-    paths:
-      - build
   tags:
     - docker
 
@@ -79,14 +60,28 @@ build:linux-cgmes:
     - make -j 32
   image: ${DOCKER_IMAGE_DEV}:${DOCKER_TAG}-cgmes
   cache:
-    paths:
-      - build
-    key: build-linux-cgmes
   artifacts:
     paths:
       - build
   tags:
     - docker
+
+# CGMES is the preferred CIM flavor
+#build:linux-cim:
+#  stage: build
+#  needs: ["docker:fedora-cim"]
+#  script:
+#    - mkdir -p build
+#    - cd build
+#    - cmake -DCIM_VERSION=IEC61970_16v29a ..
+#    - make -j 32
+#  image: ${DOCKER_IMAGE_DEV}:${DOCKER_TAG}-cim
+#  cache:
+#    paths:
+#      - build
+#    key: build-linux
+#  tags:
+#    - docker
 
 build:linux-profiling:
   stage: build
@@ -98,9 +93,6 @@ build:linux-profiling:
     - make -j 32
   image: ${DOCKER_IMAGE_DEV}-centos:${DOCKER_TAG}
   cache:
-       paths:
-        - build
-       key: build-linux-profiling
   artifacts:
     paths:
       - build
@@ -122,10 +114,8 @@ build:linux-cuda:
     - cmake -DWITH_CUDA=ON -DWITH_SPARSE=ON -DWITH_SPDLOG_SUBMODULE=ON -DWITH_MAGMA=ON ..
     - make -j$(nproc)
   cache:
-    paths:
-      - build
-    key: build-linux-cuda-sparse
 
+# moved to GitHub actions
 #build:windows:
 #  stage: build
 #  needs: []
@@ -134,12 +124,6 @@ build:linux-cuda:
 #    - Set-Location -Path build
 #    - cmake ..
 #    - cmake --build . -j 24
-#  tags:
-#    - win10
-#  cache:
-#    paths:
-#      - build
-#    key: build-win10
 
 build:docker:
   stage: build
@@ -185,13 +169,6 @@ build:docker:
 #    PYTHONPATH: "build/Source/Python:Source/Python"
 #  script:
 #    - pytest -v Examples/CIM/test_CIM.yml
-#    - pytest -v Examples/Cxx/test_Circuits.yml
-#    - pytest -v Examples/Cxx/test_RealTime.yml
-#    #- pytest -v Examples/Cxx/test_Shmem.yml
-#    - pytest -v Examples/Python/Base
-#    - pytest -v Examples/Python/Circuits
-#    - pytest -v Examples/Python/RealTime
-#    #- pytest -v Examples/Python/Shmem
 #  image: ${DOCKER_IMAGE_DEV}:${DOCKER_TAG}
 #  dependencies:
 #    - build:linux
@@ -483,43 +460,43 @@ test:cuda 3/3:
       expose_as: 'step-times-benchmark'
 
 
-
 ##############################################################################
 # Stage generate
 ##############################################################################
 
-generate:docs:
-  stage: generate
-  needs: ["build:linux-cgmes"]
-  script:
-    - make -j$(nproc) -C build docs
-    - make -j$(nproc) -C build docs_cxx
-  image: ${DOCKER_IMAGE_DEV}:${DOCKER_TAG}-cgmes
-  dependencies:
-    - build:linux-cgmes
-  artifacts:
-    paths:
-      - build/docs/sphinx/html
-      - build/docs/doxygen/html
-  tags:
-    - docker
-
-generate:packages:
-  stage: generate
-  needs: ["build:linux-cgmes"]
-  script:
-    - make -j$(nproc) -C build package
-  only:
-    - tags
-  tags:
-    - docker
-  image: ${DOCKER_IMAGE_DEV}:${DOCKER_TAG}-cgmes
-  dependencies:
-    - build:linux-cgmes
-  artifacts:
-    paths:
-      - build/*.rpm
-      - build/*.tar.gz
+# moved to GitHub actions
+#generate:docs:
+#  stage: generate
+#  needs: ["build:linux-cgmes"]
+#  script:
+#    - make -j$(nproc) -C build docs
+#    - make -j$(nproc) -C build docs_cxx
+#  image: ${DOCKER_IMAGE_DEV}:${DOCKER_TAG}-cgmes
+#  dependencies:
+#    - build:linux-cgmes
+#  artifacts:
+#    paths:
+#      - build/docs/sphinx/html
+#      - build/docs/doxygen/html
+#  tags:
+#    - docker
+#
+#generate:packages:
+#  stage: generate
+#  needs: ["build:linux-cgmes"]
+#  script:
+#    - make -j$(nproc) -C build package
+#  only:
+#    - tags
+#  tags:
+#    - docker
+#  image: ${DOCKER_IMAGE_DEV}:${DOCKER_TAG}-cgmes
+#  dependencies:
+#    - build:linux-cgmes
+#  artifacts:
+#    paths:
+#      - build/*.rpm
+#      - build/*.tar.gz
 
 generate:metrics:
   stage: generate
@@ -542,32 +519,33 @@ generate:metrics:
 # Stage deploy
 ##############################################################################
 
-pages:
-  stage: deploy
-  needs: ["generate:docs"]
-  script:
-    - cp -r build/docs/sphinx/html/. public/sphinx
-    - cp -r build/docs/doxygen/html/. public/doxygen
-  artifacts:
-    paths:
-      - public
-  dependencies:
-    - generate:docs
-  only:
-    - deploy
-  tags:
-    - docker
-
-deploy:docker:
-  stage: deploy
-  script:
-    - docker push ${DOCKER_IMAGE_DEV}:${DOCKER_TAG}-cgmes
-    - docker push ${DOCKER_IMAGE_DEV}:latest
-    - docker push ${DOCKER_IMAGE}:${DOCKER_TAG}-cgmes
-    - docker push ${DOCKER_IMAGE}:latest
-  dependencies:
-    - build:docker
-  tags:
-    - docker
-  only:
-    - tags
+# moved to GitHub actions
+#pages:
+#  stage: deploy
+#  needs: ["generate:docs"]
+#  script:
+#    - cp -r build/docs/sphinx/html/. public/sphinx
+#    - cp -r build/docs/doxygen/html/. public/doxygen
+#  artifacts:
+#    paths:
+#      - public
+#  dependencies:
+#    - generate:docs
+#  only:
+#    - deploy
+#  tags:
+#    - docker
+#
+#deploy:docker:
+#  stage: deploy
+#  script:
+#    - docker push ${DOCKER_IMAGE_DEV}:${DOCKER_TAG}-cgmes
+#    - docker push ${DOCKER_IMAGE_DEV}:latest
+#    - docker push ${DOCKER_IMAGE}:${DOCKER_TAG}-cgmes
+#    - docker push ${DOCKER_IMAGE}:latest
+#  dependencies:
+#    - build:docker
+#  tags:
+#    - docker
+#  only:
+#    - tags

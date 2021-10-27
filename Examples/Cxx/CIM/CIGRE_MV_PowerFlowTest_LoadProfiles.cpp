@@ -1,4 +1,4 @@
-/* Copyright 2017-2020 Institute for Automation of Complex Power Systems,
+/* Copyright 2017-2021 Institute for Automation of Complex Power Systems,
  *                     EONERC, RWTH Aachen University
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
@@ -142,7 +142,7 @@ int main(int argc, char** argv){
 	sim.setSolverType(Solver::Type::NRP);
 	sim.doInitFromNodesAndTerminals(true);
 	sim.addLogger(logger);
-	
+
 	sim.run();
 
 	return 0;

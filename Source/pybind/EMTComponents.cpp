@@ -1,4 +1,4 @@
-/* Copyright 2017-2020 Institute for Automation of Complex Power Systems,
+/* Copyright 2017-2021 Institute for Automation of Complex Power Systems,
  *                     EONERC, RWTH Aachen University
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
@@ -137,6 +137,8 @@ void addEMTPh3Components(py::module_ mEMTPh3) {
 				DPsim::Utils::applySynchronousGeneratorParametersFromJson(json::parse(json), syngen);
 			});
 
+	#ifdef WITH_SUNDIALS
+
 	py::class_<CPS::EMT::Ph3::SynchronGeneratorDQODE, std::shared_ptr<CPS::EMT::Ph3::SynchronGeneratorDQODE>, CPS::SimPowerComp<CPS::Real>>(mEMTPh3, "SynchronGeneratorDQODE", py::multiple_inheritance())
         .def(py::init<std::string, CPS::Logger::Level>(), "name"_a, "loglevel"_a = CPS::Logger::Level::off)
 		.def("set_parameters_operational_per_unit", &CPS::EMT::Ph3::SynchronGeneratorDQODE::setParametersOperationalPerUnit,
@@ -150,6 +152,8 @@ void addEMTPh3Components(py::module_ mEMTPh3) {
 		.def("apply_parameters_from_json", [](std::shared_ptr<CPS::EMT::Ph3::SynchronGeneratorDQODE> syngen, const CPS::String json) {
 				DPsim::Utils::applySynchronousGeneratorParametersFromJson(json::parse(json), syngen);
 			});
+			
+	#endif
 
 	py::class_<CPS::EMT::Ph3::AvVoltageSourceInverterDQ, std::shared_ptr<CPS::EMT::Ph3::AvVoltageSourceInverterDQ>, CPS::SimPowerComp<CPS::Real>>(mEMTPh3, "AvVoltageSourceInverterDQ", py::multiple_inheritance())
         .def(py::init<std::string, CPS::Logger::Level>(), "name"_a, "loglevel"_a = CPS::Logger::Level::off)

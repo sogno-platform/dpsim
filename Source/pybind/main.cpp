@@ -1,4 +1,4 @@
-/* Copyright 2017-2020 Institute for Automation of Complex Power Systems,
+/* Copyright 2017-2021 Institute for Automation of Complex Power Systems,
  *                     EONERC, RWTH Aachen University
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
@@ -35,11 +35,11 @@ using namespace pybind11::literals;
 
 PYBIND11_MODULE(dpsimpy, m) {
     m.doc() = R"pbdoc(
-        Pybind11 DPsim plugin
-        -----------------------
-        .. currentmodule:: dpsimpy
-        .. autosummary::
-           :toctree: _generate
+	DPsim Python bindings
+	-----------------------
+	The Python bindings provide access to most of the DPsim features implemented in C++.
+	It is possible to run powerflow, quasi-static, dynamic phasor and electromagnetic transient simulations
+	and to parameterize all components of the network from Python.
     )pbdoc";
 
 	py::enum_<CPS::Logger::Level>(m, "LogLevel")
@@ -76,9 +76,9 @@ PYBIND11_MODULE(dpsimpy, m) {
 		.def("get_real_idobj_attr", &DPsim::Simulation::getRealIdObjAttr, "obj"_a, "attr"_a, "row"_a = 0, "col"_a = 0)
 		.def("get_comp_idobj_attr", &DPsim::Simulation::getComplexIdObjAttr, "obj"_a, "attr"_a, "row"_a = 0, "col"_a = 0)
 		.def("add_interface", &DPsim::Simulation::addInterface, "interface"_a, "syncStart"_a = false)
-		.def("export_attr", py::overload_cast<const CPS::String&, const CPS::String&, CPS::UInt, CPS::AttributeBase::Modifier, CPS::UInt, CPS::UInt>(&DPsim::Simulation::exportIdObjAttr), "obj"_a, "attr"_a, "idx"_a, "modifier"_a, "row"_a = 0, "col"_a = 0)
-		.def("export_attr", py::overload_cast<const CPS::String&, const CPS::String&, CPS::UInt, CPS::UInt, CPS::UInt, CPS::Complex>(&DPsim::Simulation::exportIdObjAttr), "obj"_a, "attr"_a, "idx"_a, "row"_a = 0, "col"_a = 0, "scale"_a = CPS::Complex(1, 0))
-		.def("import_attr", &DPsim::Simulation::importIdObjAttr, "obj"_a, "attr"_a, "idx"_a)
+		.def("export_attr", py::overload_cast<const CPS::String&, const CPS::String&, CPS::UInt, CPS::AttributeBase::Modifier, CPS::UInt, CPS::UInt, DPsim::Interface*>(&DPsim::Simulation::exportIdObjAttr), "obj"_a, "attr"_a, "idx"_a, "modifier"_a, "row"_a = 0, "col"_a = 0, "intf"_a = nullptr)
+		.def("export_attr", py::overload_cast<const CPS::String&, const CPS::String&, CPS::UInt, CPS::UInt, CPS::UInt, CPS::Complex, DPsim::Interface*>(&DPsim::Simulation::exportIdObjAttr), "obj"_a, "attr"_a, "idx"_a, "row"_a = 0, "col"_a = 0, "scale"_a = CPS::Complex(1, 0), "intf"_a = nullptr)
+		.def("import_attr", &DPsim::Simulation::importIdObjAttr, "obj"_a, "attr"_a, "idx"_a, "intf"_a = nullptr)
 		.def("log_attr", &DPsim::Simulation::logIdObjAttr)
 		.def("do_init_from_nodes_and_terminals", &DPsim::Simulation::doInitFromNodesAndTerminals)
 		.def("do_system_matrix_recomputation", &DPsim::Simulation::doSystemMatrixRecomputation)

@@ -1,4 +1,4 @@
-/* Copyright 2017-2020 Institute for Automation of Complex Power Systems,
+/* Copyright 2017-2021 Institute for Automation of Complex Power Systems,
  *                     EONERC, RWTH Aachen University
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
@@ -81,7 +81,7 @@ namespace Ph3 {
 		Bool mWithConnectionTransformer=false;
 		/// Flag for controller usage
 		Bool mWithControl=true;
-		
+
 		// #### solver ####
 		///
 		std::vector<const Matrix*> mRightVectorStamps;

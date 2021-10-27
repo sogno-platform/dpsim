@@ -1,3 +1,11 @@
+/* Copyright 2017-2021 Institute for Automation of Complex Power Systems,
+ *                     EONERC, RWTH Aachen University
+ *
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at https://mozilla.org/MPL/2.0/.
+ *********************************************************************************/
+
 #include <DPsim.h>
 #include "../Examples.h"
 
@@ -30,7 +38,7 @@ void DP_1ph_SynGenTrStab_SteadyState(String simName, Real timeStep, Real finalTi
 	extnetPF->setParameters(smib.Vnom);
 	extnetPF->setBaseVoltage(smib.Vnom);
 	extnetPF->modifyPowerFlowBusType(PowerflowBusType::VD);
-	
+
 	//Line
 	auto linePF = SP::Ph1::PiLine::make("PiLine", Logger::Level::debug);
 	linePF->setParameters(smib.lineResistance, smib.lineInductance, smib.lineCapacitance, smib.lineConductance);
@@ -63,7 +71,7 @@ void DP_1ph_SynGenTrStab_SteadyState(String simName, Real timeStep, Real finalTi
 	// ----- Dynamic simulation ------
 	String simNameDP = simName + "_DP";
 	Logger::setLogDir("logs/"+simNameDP);
-	
+
 	// Nodes
 	auto n1DP = SimNode<Complex>::make("n1", PhaseType::Single);
 	auto n2DP = SimNode<Complex>::make("n2", PhaseType::Single);
@@ -127,8 +135,8 @@ void DP_1ph_SynGenTrStab_SteadyState(String simName, Real timeStep, Real finalTi
 	simDP.run();
 }
 
-int main(int argc, char* argv[]) {	
-		
+int main(int argc, char* argv[]) {
+
 
 	//Simulation parameters
 	String simName="DP_SynGenTrStab_SMIB_SteadyState";
@@ -148,6 +156,6 @@ int main(int argc, char* argv[]) {
 		if (args.options.find("SCALEDAMPING") != args.options.end())
 			cmdDamping = args.options["SCALEDAMPING"];
 	}
-	
+
 	DP_1ph_SynGenTrStab_SteadyState(simName, timeStep, finalTime, cmdInertia, cmdDamping);
 }

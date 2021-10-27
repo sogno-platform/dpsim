@@ -1,4 +1,4 @@
-/* Copyright 2017-2020 Institute for Automation of Complex Power Systems,
+/* Copyright 2017-2021 Institute for Automation of Complex Power Systems,
  *                     EONERC, RWTH Aachen University
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
@@ -51,7 +51,7 @@ namespace Ph3 {
 		Matrix mStates;
 		/// Nominal system angle
 		Real mThetaN = 0;
-		
+
 	public:
 		///
 		SynchronGeneratorTrStab(String uid, String name, Logger::Level logLevel = Logger::Level::off);

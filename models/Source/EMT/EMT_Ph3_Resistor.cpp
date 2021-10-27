@@ -1,4 +1,4 @@
-/* Copyright 2017-2020 Institute for Automation of Complex Power Systems,
+/* Copyright 2017-2021 Institute for Automation of Complex Power Systems,
  *                     EONERC, RWTH Aachen University
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
@@ -38,8 +38,8 @@ void EMT::Ph3::Resistor::initializeFromNodesAndTerminals(Real frequency) {
 	mIntfCurrent = (mConductance * vInitABC).real();
 
 	mSLog->info("\nResistance [Ohm]: {:s}"
-				"\nConductance [S]: {:s}", 
-				Logger::matrixToString(mResistance), 
+				"\nConductance [S]: {:s}",
+				Logger::matrixToString(mResistance),
 				Logger::matrixToString(mConductance));
 	mSLog->info(
 		"\n--- Initialization from powerflow ---"

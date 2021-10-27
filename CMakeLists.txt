@@ -1,11 +1,11 @@
 cmake_minimum_required(VERSION 3.11)
 project(DPsim CXX)
 
-set(PROJECT_AUTHOR "Institute for Automation of Complex Power Systems, RWTH Aachen University")
-set(PROJECT_COPYRIGHT "2017-2020, Institute for Automation of Complex Power Systems, RWTH Aachen University")
+set(PROJECT_AUTHOR "The DPsim Authors.")
+set(PROJECT_COPYRIGHT "2017-2021, The DPsim Authors.")
 set(PROJECT_DESCRIPTION "C++ Power System Simulation Library")
 set(PROJECT_HOMEPAGE_URL "https://dpsim.fein-aachen.org/")
-set(PROJECT_VCS_URL "https://github.com/dpsim-simulator/dpsim.git")
+set(PROJECT_VCS_URL "https://github.com/sogno-platform/dpsim")
 
 # Required for dpsim_python
 if(POLICY CMP0076)
@@ -128,15 +128,14 @@ find_package(Graphviz)
 find_package(VILLASnode)
 find_package(MAGMA)
 
+
+find_package (Python COMPONENTS Interpreter Development)
 if (WITH_PYBIND_MODULE)
 	include(cmake/GetPybindModule.cmake)
 else()
-	find_package(pybind11 QUIET)
+	find_package(pybind11 CONFIG QUIET)
 endif()
 
-if (pybind11_FOUND)
-	find_package (Python COMPONENTS Interpreter Development)
-endif()
 
 if("${CMAKE_SYSTEM}" MATCHES "Linux")
 	set(Linux_FOUND ON)
@@ -205,19 +204,18 @@ configure_file(
 	${CMAKE_CURRENT_BINARY_DIR}/Include/dpsim/Config.h
 )
 
-if(WITH_SHMEM)
-	include(cmake/GetVillasDPsim.cmake)
-endif()
-
 set(DPSIM_INCLUDE_DIRS
 	${CMAKE_CURRENT_BINARY_DIR}/Include
 	${CMAKE_CURRENT_SOURCE_DIR}/Include
 )
 
+if(WITH_SHMEM)
+	include(cmake/GetVillasDPsim.cmake)
+endif()
+
 add_subdirectory(models)
 add_subdirectory(Source)
 add_subdirectory(docs)
-
 
 if(DPSIM_BUILD_EXAMPLES)
 	add_subdirectory(Examples)
@@ -228,12 +226,12 @@ if(WITH_PYBIND)
 		${CMAKE_CURRENT_SOURCE_DIR}/Include/dpsim/pybind
 	)
 
-	add_subdirectory(Source/pybind)
-
 	if(WITH_SHMEM)
-		pybind11_add_module(dpsimpyvillas ${CMAKE_BINARY_DIR}/_deps/dpsim-villas-src/src/pybind-dpsim-villas.cpp)
-		target_link_libraries(dpsimpyvillas PRIVATE dpsim)
-	endif()	
+    	pybind11_add_module(dpsimpyvillas ${dpsim-villas_SOURCE_DIR}/src/pybind-dpsim-villas.cpp)
+    	target_link_libraries(dpsimpyvillas PRIVATE dpsim)
+	endif()
+
+	add_subdirectory(Source/pybind)
 endif()
 
 include(cmake/GetGridData.cmake)

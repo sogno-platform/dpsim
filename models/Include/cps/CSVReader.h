@@ -1,4 +1,4 @@
-/* Copyright 2017-2020 Institute for Automation of Complex Power Systems,
+/* Copyright 2017-2021 Institute for Automation of Complex Power Systems,
  *                     EONERC, RWTH Aachen University
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
@@ -22,6 +22,8 @@
 #include <cps/DP/DP_Ph1_AvVoltageSourceInverterDQ.h>
 #include <cps/SP/SP_Ph1_AvVoltageSourceInverterDQ.h>
 
+namespace fs = std::experimental::filesystem;
+
 namespace CPS {
 	/// reads load profiles (csv files only) and assign them to the corresponding load object
 	class CSVReader {
@@ -31,7 +33,7 @@ namespace CPS {
 		/// path of load profile files (csv file)
 		String mPath;
 		/// list of load profile files with path
-		std::list<std::experimental::filesystem::path> mFileList;
+		std::list<fs::path> mFileList;
 		/// assign pattern, used when the MANUAL mode is selected
 		std::map <String, String> mAssignPattern;
 		/// Skip first row if it has no digits at beginning
@@ -51,11 +53,11 @@ namespace CPS {
 		enum class DataFormat { HHMMSS, SECONDS, HOURS, MINUTES };
 
 		///
-		CSVReader(String name, std::list<std::experimental::filesystem::path> path, Logger::Level logLevel);
+		CSVReader(String name, std::list<fs::path> path, Logger::Level logLevel);
 		///
 		CSVReader(String name, String path, Logger::Level logLevel);
 		///
-		CSVReader(String name, std::list<std::experimental::filesystem::path> path, std::map<String, String>& assignList, Logger::Level logLevel);
+		CSVReader(String name, std::list<fs::path> path, std::map<String, String>& assignList, Logger::Level logLevel);
 		///
 		CSVReader(String name, String path, std::map<String, String>& assignList, Logger::Level logLevel);
 
@@ -67,7 +69,7 @@ namespace CPS {
 		///
 		MatrixRow csv2Eigen(const String& path);
 
-		std::vector<PQData> readLoadProfileDP(std::experimental::filesystem::path file,
+		std::vector<PQData> readLoadProfileDP(fs::path file,
 			Real start_time = -1, Real time_step = 1, Real end_time = -1, Real scale_factor= 1,
 			CSVReader::DataFormat format = CSVReader::DataFormat::SECONDS);
 
@@ -88,11 +90,11 @@ namespace CPS {
 
 		/// TODO : deprecate in the future
 		/// read in load profile with time stamp format specified
-		PowerProfile readLoadProfile(std::experimental::filesystem::path file,
+		PowerProfile readLoadProfile(fs::path file,
 			Real start_time = -1, Real time_step = 1, Real end_time = -1,
 			CSVReader::DataFormat format = CSVReader::DataFormat::SECONDS);
 		///
-		std::vector<Real> readPQData (std::experimental::filesystem::path file,
+		std::vector<Real> readPQData (fs::path file,
 			Real start_time = -1, Real time_step = 1, Real end_time = -1,
 			CSVReader::DataFormat format = CSVReader::DataFormat::SECONDS);
 		/// assign load profile to corresponding load object

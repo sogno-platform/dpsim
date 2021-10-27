@@ -1,4 +1,4 @@
-/* Copyright 2017-2020 Institute for Automation of Complex Power Systems,
+/* Copyright 2017-2021 Institute for Automation of Complex Power Systems,
  *                     EONERC, RWTH Aachen University
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
@@ -56,7 +56,7 @@ int main(int argc, char *argv[]) {
 
 	Reader reader("cimviz", Logger::Level::info);
 
-	std::list<std::experimental::filesystem::path> filenames;
+	std::list<fs::path> filenames;
 	for (i = 0; gvc->input_filenames[i]; i++) {
 		filenames.emplace_back(gvc->input_filenames[i]);
 	}

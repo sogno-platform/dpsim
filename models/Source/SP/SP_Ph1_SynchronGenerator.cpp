@@ -1,4 +1,4 @@
-/* Copyright 2017-2020 Institute for Automation of Complex Power Systems,
+/* Copyright 2017-2021 Institute for Automation of Complex Power Systems,
  *                     EONERC, RWTH Aachen University
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
@@ -77,13 +77,13 @@ void SP::Ph1::SynchronGenerator::modifyPowerFlowBusType(PowerflowBusType powerfl
     }
 }
 
-//Method used in PF to update reactive power for PV-Bus generator 
+//Method used in PF to update reactive power for PV-Bus generator
 void SP::Ph1::SynchronGenerator::updateReactivePowerInjection(Complex powerInj) {
 	mSetPointReactivePower = powerInj.imag();
     mSetPointReactivePowerPerUnit= mSetPointReactivePower/mBaseApparentPower;
 }
 
-//Method used in PF to update active & reactive power for VD-Bus generator 
+//Method used in PF to update active & reactive power for VD-Bus generator
 void SP::Ph1::SynchronGenerator::updatePowerInjection(Complex powerInj) {
 	mSetPointActivePower = powerInj.real();
     mSetPointActivePowerPerUnit= mSetPointActivePower/mBaseApparentPower;

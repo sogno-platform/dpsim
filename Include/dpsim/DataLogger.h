@@ -1,4 +1,4 @@
-/* Copyright 2017-2020 Institute for Automation of Complex Power Systems,
+/* Copyright 2017-2021 Institute for Automation of Complex Power Systems,
  *                     EONERC, RWTH Aachen University
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
@@ -12,7 +12,6 @@
 #include <iostream>
 #include <fstream>
 #include <experimental/filesystem>
-namespace fs = std::experimental::filesystem;
 
 #include <dpsim/Definitions.h>
 #include <dpsim/Scheduler.h>
@@ -20,6 +19,8 @@ namespace fs = std::experimental::filesystem;
 #include <cps/Attribute.h>
 #include <cps/SimNode.h>
 #include <cps/Task.h>
+
+namespace fs = std::experimental::filesystem;
 
 namespace DPsim {
 

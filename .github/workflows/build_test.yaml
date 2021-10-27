@@ -1,10 +1,9 @@
 name: Build & Test
 
 on:
-  workflow_run:
-      workflows: ["Container"]
-      branches: [master]
-      types: [completed]
+  push:
+    branches:
+      - master
 
 ## Build ##
 
@@ -26,7 +25,7 @@ jobs:
         cmake --build . --target dpsim
 
   linux-fedora:
-    name: Build on Linux fedora
+    name: Build on Fedora Linux
     runs-on: ubuntu-latest
     container: sogno/dpsim:dev
     steps:
@@ -56,8 +55,39 @@ jobs:
         path: ${{ github.workspace }}/build
         key: build-cache-fedora-${{ github.sha }}
 
+  linux-fedora-minimal:
+    name: Build with minimal configuration on Fedora Linux
+    runs-on: ubuntu-latest
+    container: sogno/dpsim:dev-minimal
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v2
+      with:
+        submodules: recursive
+
+    - name: Create Build Environment
+      run: mkdir build
+
+    - name: Configure CMake
+      shell: bash
+      working-directory: ${{ github.workspace }}/build
+      run: cmake -DWITH_SPDLOG_SUBMODULE=ON $GITHUB_WORKSPACE
+
+    - name: Build every target
+      shell: bash
+      working-directory: ${{ github.workspace }}/build
+      run: cmake --build .
+      env:
+        MAKEFLAGS: "-j2"
+
+    - name: Cache build directory
+      uses: actions/cache@v2
+      with:
+        path: ${{ github.workspace }}/build
+        key: build-cache-fedora-${{ github.sha }}
+
   linux-centos:
-    name: Build on Linux centos
+    name: Build on CentOS Linux
     runs-on: ubuntu-latest
     container: sogno/dpsim:dev-centos
     steps:
