@@ -86,7 +86,8 @@ RUN dnf -y install \
 
 # Python dependencies
 ADD requirements.txt .
-RUN pip3 install wheel
+RUN pip3 install -U setuptools
+RUN pip3 install -U wheel
 RUN pip3 install -r requirements.txt
 
 # Install CIMpp from source

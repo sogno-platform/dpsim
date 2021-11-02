@@ -1,3 +1,5 @@
+CIM_VERSION=CGMES_2.4.15_16FEB2016
+
 dnf -y update
 
 # Toolchain
@@ -23,6 +25,8 @@ dnf --refresh -y install \
 	gsl-devel
 
 # Python
+pip3 install -U setuptools
+pip3 install -U wheel
 pip3 install -r requirements.txt
 
 # Activate Jupyter extensions
@@ -46,14 +50,15 @@ sudo ldconfig
 
 # Install CIMpp from source
 cd /tmp && \
-git clone --recurse-submodules https://github.com/CIM-IEC/libcimpp.git && \
-mkdir -p libcimpp/build && cd libcimpp/build && \
-cmake -DCMAKE_INSTALL_LIBDIR=/usr/local/lib64 -DUSE_CIM_VERSION=IEC61970_16v29a -DBUILD_SHARED_LIBS=ON -DBUILD_ARABICA_EXAMPLES=OFF .. && sudo make -j$(nproc) install && \
-rm -rf /tmp/libcimpp
+	git clone --recursive https://github.com/cim-iec/libcimpp.git && \
+	mkdir -p libcimpp/build && cd libcimpp/build && \
+	cmake -DCMAKE_INSTALL_LIBDIR=/usr/local/lib64 -DUSE_CIM_VERSION=${CIM_VERSION} -DBUILD_SHARED_LIBS=ON -DBUILD_ARABICA_EXAMPLES=OFF .. && make -j$(nproc) install && \
+	rm -rf /tmp/libcimpp
 
 # Install VILLAS from source
 cd /tmp && \
-git -c submodule.fpga.update=none clone --recursive https://git.rwth-aachen.de/acs/public/villas/node.git villasnode && \
-mkdir -p villasnode/build && cd villasnode/build && \
-cmake -DCMAKE_INSTALL_LIBDIR=/usr/local/lib64 .. && make -j$(nproc) install && \
-rm -rf /tmp/villasnode
+	git -c submodule.fpga.update=none clone --recursive https://git.rwth-aachen.de/acs/public/villas/node.git villasnode && \	
+	mkdir -p villasnode/build && cd villasnode/build && \
+	git -c submodule.fpga.update=none checkout dpsim-villas && git -c submodule.fpga.update=none submodule update --recursive && \
+	cmake -DCMAKE_INSTALL_LIBDIR=/usr/local/lib64 .. && make -j$(nproc) install && \
+	rm -rf /tmp/villasnode
