@@ -9,7 +9,8 @@ dnf -y install \
 	git \
 	rpmdevtools rpm-build \
 	make cmake pkgconfig \
-	python3-pip
+	python3-pip \
+	cppcheck
 
 # Tools needed for developement
 dnf -y install \
