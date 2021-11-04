@@ -224,6 +224,10 @@ namespace DPsim {
 
 		///
 		void addInterface(Interface *eint, Bool syncStart = true) {
+			if (mInterfaces.size() > 0) {
+				mLog->warn(
+					"This simulation contains more than one interface! When using multiple InterfaceVillas instances, all of them will block the simulation thread in undefined order until the data is read / written! Continue with caution!");
+			}
 			mInterfaces.push_back({eint, syncStart});
 		}
 		/// Return list of interfaces
@@ -252,9 +256,9 @@ namespace DPsim {
 		Real getRealIdObjAttr(const String &comp, const String &attr, UInt row = 0, UInt col = 0);
 		Complex getComplexIdObjAttr(const String &comp, const String &attr, UInt row = 0, UInt col = 0);
 
-		void exportIdObjAttr(const String &comp, const String &attr, UInt idx, CPS::AttributeBase::Modifier mod, UInt row = 0, UInt col = 0);
-		void exportIdObjAttr(const String &comp, const String &attr, UInt idx, UInt row = 0, UInt col = 0, Complex scale = Complex(1, 0));
-		void importIdObjAttr(const String &comp, const String &attr, UInt idx);
+		void exportIdObjAttr(const String &comp, const String &attr, UInt idx, CPS::AttributeBase::Modifier mod, UInt row = 0, UInt col = 0, Interface* intf = nullptr);
+		void exportIdObjAttr(const String &comp, const String &attr, UInt idx, UInt row = 0, UInt col = 0, Complex scale = Complex(1, 0), Interface* intf = nullptr);
+		void importIdObjAttr(const String &comp, const String &attr, UInt idx, Interface* intf = nullptr);
 		void logIdObjAttr(const String &comp, const String &attr);
 	};
 }

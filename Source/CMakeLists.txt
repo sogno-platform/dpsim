@@ -38,7 +38,7 @@ if(WITH_GSL)
 endif()
 
 if(WITH_PYTHON)
-	list(APPEND DPSIM_INCLUDE_DIRS ${PYTHON_INCLUDE_DIRS})
+	list(APPEND DPSIM_INCLUDE_DIRS ${Python_INCLUDE_DIRS})
 	#list(APPEND DPSIM_LIBRARIES ${PYTHON_LIBRARIES})
 
 	add_subdirectory(Python)
@@ -87,16 +87,6 @@ if(WITH_OPENMP)
 
 	list(APPEND DPSIM_CXX_FLAGS ${OpenMP_CXX_FLAGS})
 	list(APPEND DPSIM_LIBRARIES ${OpenMP_CXX_FLAGS})
-endif()
-
-if(WITH_SHMEM)
-	set(DPSIM_VILLAS_SOURCES
-		${CMAKE_BINARY_DIR}/_deps/dpsim-villas-src/src/InterfaceShmem.cpp
-		${CMAKE_BINARY_DIR}/_deps/dpsim-villas-src/src/PthreadPoolScheduler.cpp
-	)
-
-	set(DPSIM_VILLAS_LIBRARIES ${VILLASNODE_LIBRARIES} pthread)
-	set(DPSIM_VILLAS_INCLUDE_DIRS ${VILLASNODE_INCLUDE_DIRS} ${CMAKE_BINARY_DIR}/_deps/dpsim-villas-src/include)
 endif()
 
 add_library(dpsim ${DPSIM_SOURCES} ${DPSIM_VILLAS_SOURCES})

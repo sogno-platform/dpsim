@@ -151,6 +151,9 @@ void addDPPh1Components(py::module_ mDPPh1) {
 }
 
 void addDPPh3Components(py::module_ mDPPh3) {
+
+	#ifdef WITH_SUNDIALS
+
 	py::class_<CPS::DP::Ph3::SynchronGeneratorDQODE, std::shared_ptr<CPS::DP::Ph3::SynchronGeneratorDQODE>, CPS::SimPowerComp<CPS::Complex>>(mDPPh3, "SynchronGeneratorDQODE", py::multiple_inheritance())
         .def(py::init<std::string, CPS::Logger::Level>(), "name"_a, "loglevel"_a = CPS::Logger::Level::off)
 		.def("set_parameters_fundamental_per_unit", &CPS::DP::Ph3::SynchronGeneratorDQODE::setParametersFundamentalPerUnit,
@@ -160,6 +163,8 @@ void addDPPh3Components(py::module_ mDPPh3) {
 				"init_reactive_power"_a, "init_terminal_volt"_a, "init_volt_angle"_a,
 				"init_field_voltage"_a, "init_mech_power"_a)
 		.def("connect", &CPS::DP::Ph3::SynchronGeneratorDQODE::connect);
+
+	#endif
 
 	py::class_<CPS::DP::Ph3::SynchronGeneratorDQTrapez, std::shared_ptr<CPS::DP::Ph3::SynchronGeneratorDQTrapez>, CPS::SimPowerComp<CPS::Complex>>(mDPPh3, "SynchronGeneratorDQTrapez", py::multiple_inheritance())
         .def(py::init<std::string, CPS::Logger::Level>(), "name"_a, "loglevel"_a = CPS::Logger::Level::off)
