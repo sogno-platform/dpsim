@@ -210,6 +210,39 @@ namespace ThreeBus {
     };
 }
 
+namespace SMIB {
+    namespace SlewCase2 {
+    struct ScenarioConfig {
+        //-----------Network-----------//
+        Real Vnom = 230e3;
+        Real nomFreq = 50;
+        Real nomOmega= nomFreq*2*PI;
+        //-----------Generator-----------//
+        Real nomPower = 200e6;
+        // Real nomPhPhVoltRMS = 22e3;
+        Real nomPhPhVoltRMS = 230e3;
+        Real H = 4;
+        Real Xpd=0.23 + 0.13; // transformer reactance 0.13
+        Real Rs = 0.003*0;
+        Real D = 1;
+        // Initialization parameters
+        Real initMechPower= 0.6*nomPower;
+        Real initActivePower = 0.6*nomPower;
+        // Real setPointVoltage=nomPhPhVoltRMS + 0.0456*nomPhPhVoltRMS;
+        Real setPointVoltage=nomPhPhVoltRMS + 0.022*nomPhPhVoltRMS;
+        //-----------Transformer-----------//
+        Real t_ratio=1;
+
+        //-----------Transmission Line-----------//
+        Real lineResistance =1e-12;
+        Real lineReactance= 0.17*(std::pow(Vnom,2)/nomPower); // calculated from X_line_pu= 0.17 , basePower= nomPower and baseVoltage=230kV 
+        Real lineInductance = lineReactance/nomOmega;
+        Real lineCapacitance =0;
+        Real lineConductance =0;
+    };
+    }
+}
+
 namespace SGIB {
 
     struct ScenarioConfig {
