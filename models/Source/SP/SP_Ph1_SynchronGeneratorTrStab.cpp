@@ -221,6 +221,11 @@ void SP::Ph1::SynchronGeneratorTrStab::step(Real time) {
 	mElecActivePower = (mIntfVoltage(0,0) *  std::conj( -mIntfCurrent(0,0)) ).real();
 	mElecReactivePower = (mIntfVoltage(0,0) *  std::conj( -mIntfCurrent(0,0)) ).imag();
 
+	if (1e-9 < (time - 10))
+	{
+	mMechPower =0.605*mNomPower;
+	}
+
 	// Mechanical speed derivative at time step k
 	// convert torque to power with actual rotor angular velocity or nominal omega
 	Real dOmMech;
