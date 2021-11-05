@@ -105,8 +105,8 @@ void PFSolver::setBaseApparentPower() {
 	Real maxPower = 0.;
 	if (!mSynchronGenerators.empty()) {
 		for (auto gen : mSynchronGenerators)
-			if (std::abs(gen->attribute<Real>("P_set")->get()) > maxPower)
-				maxPower = std::abs(gen->attribute<Real>("P_set")->get());
+			if (std::abs(gen->attribute<Real>("S_nom")->get()) > maxPower)
+				maxPower = std::abs(gen->attribute<Real>("S_nom")->get());
 	}
 	else if (!mTransformers.empty()) {
 		for (auto trafo : mTransformers)
@@ -114,7 +114,8 @@ void PFSolver::setBaseApparentPower() {
 				maxPower = trafo->attribute<Real>("S")->get();
 	}
     if (maxPower != 0.)
-        mBaseApparentPower = pow(10, 1 + floor(log10(maxPower)));
+        // mBaseApparentPower = pow(10, 1 + floor(log10(maxPower)));
+		mBaseApparentPower = maxPower;
 	else
 	{
 		mBaseApparentPower = 100000000;
