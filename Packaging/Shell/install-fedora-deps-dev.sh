@@ -1,5 +1,5 @@
 VILLAS_VERSION=0.8.0
-CIM_VERSION=IEC61970_16v29a
+CIM_VERSION=CGMES_2.4.15_16FEB2016
 
 dnf -y update
 
@@ -9,7 +9,8 @@ dnf -y install \
 	git \
 	rpmdevtools rpm-build \
 	make cmake pkgconfig \
-	python3-pip
+	python3-pip \
+	cppcheck
 
 # Tools needed for developement
 dnf -y install \
@@ -55,17 +56,20 @@ dnf -y install \
 	libconfig-devel \
     libnl3-devel
 
+pip3 install -U setuptools
+pip3 install -U wheel
 pip3 install -r requirements.txt
 
 cd /tmp && \
-    git clone --recursive https://github.com/CIM-IEC/libcimpp.git && \
-    mkdir -p libcimpp/build && cd libcimpp/build && \
-    cmake -DCMAKE_INSTALL_LIBDIR=/usr/local/lib64 -DUSE_CIM_VERSION=${CIM_VERSION} -DBUILD_SHARED_LIBS=ON -DBUILD_ARABICA_EXAMPLES=OFF .. && make -j$(nproc) install && \
-    rm -rf /tmp/libcimpp
+	git clone --recursive https://github.com/cim-iec/libcimpp.git && \
+	mkdir -p libcimpp/build && cd libcimpp/build && \
+	cmake -DCMAKE_INSTALL_LIBDIR=/usr/local/lib64 -DUSE_CIM_VERSION=${CIM_VERSION} -DBUILD_SHARED_LIBS=ON -DBUILD_ARABICA_EXAMPLES=OFF .. && make -j$(nproc) install && \
+	rm -rf /tmp/libcimpp
 
 cd /tmp && \
-	git -c submodule.fpga.update=none clone --recursive https://git.rwth-aachen.de/acs/public/villas/node.git villasnode && \
+	git -c submodule.fpga.update=none clone --recursive https://git.rwth-aachen.de/acs/public/villas/node.git villasnode && \	
 	mkdir -p villasnode/build && cd villasnode/build && \
+	git -c submodule.fpga.update=none checkout dpsim-villas && git -c submodule.fpga.update=none submodule update --recursive && \
 	cmake -DCMAKE_INSTALL_LIBDIR=/usr/local/lib64 .. && make -j$(nproc) install && \
 	rm -rf /tmp/villasnode
 
